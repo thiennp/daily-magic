@@ -21,3 +21,11 @@ export function getSql(): Sql {
 
   return sqlHolder.value;
 }
+
+export function asRowArray(rows: unknown): Record<string, unknown>[] {
+  if (Array.isArray(rows)) {
+    return rows as Record<string, unknown>[];
+  }
+
+  return [];
+}
