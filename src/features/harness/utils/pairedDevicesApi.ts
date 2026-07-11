@@ -1,3 +1,5 @@
+import { type DispatchPolicyValue } from "@/lib/dispatch/DispatchPolicy.constant";
+
 interface PairedDevice {
   readonly id: string;
   readonly deviceLabel: string | null;
@@ -5,6 +7,7 @@ interface PairedDevice {
   readonly lastSeenAt: string | null;
   readonly revokedAt: string | null;
   readonly isActive: boolean;
+  readonly dispatchPolicy: DispatchPolicyValue | null;
 }
 
 interface LoadedDevicesResult {
@@ -60,6 +63,24 @@ export const revokePairedDevice = async (
   const response = await fetch(`/api/agent-witch/devices/${deviceId}`, {
     method: "DELETE",
   });
+
+  return response.ok;
+};
+
+export const updateDeviceDispatchPolicy = async (
+  deviceId: string,
+  dispatchPolicy: DispatchPolicyValue | "inherit",
+): Promise<boolean> => {
+  const response = await fetch(
+    `/api/agent-witch/devices/${deviceId}/dispatch-policy`,
+    {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        dispatchPolicy: dispatchPolicy === "inherit" ? null : dispatchPolicy,
+      }),
+    },
+  );
 
   return response.ok;
 };

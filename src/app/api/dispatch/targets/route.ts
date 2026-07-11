@@ -1,6 +1,8 @@
 import { listGroupsForMember } from "@/lib/auth/listGroupsForMember";
 import { listGroupMemberships } from "@/lib/auth/groupMembershipQueries";
 import { getUserById } from "@/lib/auth/userRepository";
+import { listActivePairedUserIds } from "@/lib/dispatch/listActivePairedUserIds";
+import { listOnlineAgentUserIds } from "@/lib/dispatch/listOnlineAgentUserIds";
 import { requireAuth } from "@/lib/auth/requireAuth";
 
 export const dynamic = "force-dynamic";
@@ -16,6 +18,14 @@ export async function GET(): Promise<Response> {
   const targets = await Promise.all(
     groups.map(async (group) => {
       const memberships = await listGroupMemberships(group.id);
+      const memberUserIds = memberships
+        .filter((membership) => membership.userId !== actor.id)
+        .map((membership) => membership.userId);
+      const [pairedUserIds, onlineUserIds] = await Promise.all([
+        listActivePairedUserIds(memberUserIds),
+        Promise.resolve(listOnlineAgentUserIds(memberUserIds)),
+      ]);
+
       const members = await Promise.all(
         memberships
           .filter((membership) => membership.userId !== actor.id)
@@ -26,6 +36,8 @@ export async function GET(): Promise<Response> {
               email: user?.email ?? membership.userId,
               name: user?.name ?? null,
               role: membership.role,
+              isPaired: pairedUserIds.has(membership.userId),
+              isOnline: onlineUserIds.has(membership.userId),
             };
           }),
       );

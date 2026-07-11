@@ -21,6 +21,7 @@ export async function GET(): Promise<Response> {
       lastSeenAt: device.lastSeenAt,
       revokedAt: device.revokedAt,
       isActive: device.revokedAt === null,
+      dispatchPolicy: device.dispatchPolicy,
     })),
   });
 }

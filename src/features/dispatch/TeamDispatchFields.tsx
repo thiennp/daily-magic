@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 
+import TeamMemberPicker from "@/features/dispatch/TeamMemberPicker";
 import { useDispatchTargets } from "@/features/dispatch/hooks/useDispatchTargets";
 
 interface TeamDispatchFieldsProps {
@@ -58,24 +59,15 @@ export default function TeamDispatchFields({
         </select>
       </label>
 
-      <label className="text-sm font-medium text-gray-800 dark:text-white/90">
+      <div className="text-sm font-medium text-gray-800 dark:text-white/90">
         Teammate
-        <select
-          value={selectedTargetUserId}
-          onChange={(event) => {
-            onTargetChange(event.target.value);
-          }}
+        <TeamMemberPicker
+          members={selectedGroup?.members ?? []}
+          selectedUserId={selectedTargetUserId}
           disabled={selectedGroupId.length === 0}
-          className="mt-2 w-full rounded-lg border border-gray-200 px-3 py-2 text-sm disabled:opacity-50 dark:border-gray-700 dark:bg-gray-900"
-        >
-          <option value="">Select teammate</option>
-          {(selectedGroup?.members ?? []).map((member) => (
-            <option key={member.userId} value={member.userId}>
-              {member.name ?? member.email}
-            </option>
-          ))}
-        </select>
-      </label>
+          onSelect={onTargetChange}
+        />
+      </div>
     </div>
   );
 }

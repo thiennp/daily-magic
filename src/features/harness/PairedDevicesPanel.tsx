@@ -22,6 +22,9 @@ export default function PairedDevicesPanel() {
           devices={pairedDevices.devices}
           isLoading={pairedDevices.isLoading}
           onRevokeRequest={pairedDevices.requestRevoke}
+          onPolicySaved={() => {
+            void pairedDevices.reloadDevices();
+          }}
         />
 
         {pairedDevices.message ? (

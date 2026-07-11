@@ -2,10 +2,14 @@
 
 import { useEffect, useState } from "react";
 
+import { POLL_INTERVAL_MS } from "@/features/reports/agentRunsPolling.constant";
+
 export interface DispatchTargetMember {
   readonly userId: string;
   readonly email: string;
   readonly name: string | null;
+  readonly isPaired: boolean;
+  readonly isOnline: boolean;
 }
 
 export interface DispatchTargetGroup {
@@ -23,7 +27,7 @@ export function useDispatchTargets(): {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    void (async () => {
+    const loadTargets = async (): Promise<void> => {
       try {
         const response = await fetch("/api/dispatch/targets");
         if (!response.ok) {
@@ -42,7 +46,16 @@ export function useDispatchTargets(): {
       } finally {
         setIsLoading(false);
       }
-    })();
+    };
+
+    void loadTargets();
+    const timer = setInterval(() => {
+      void loadTargets();
+    }, POLL_INTERVAL_MS);
+
+    return () => {
+      clearInterval(timer);
+    };
   }, []);
 
   return { groups, isLoading };

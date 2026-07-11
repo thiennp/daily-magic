@@ -1,6 +1,6 @@
 import { enrichAgentRunRecord } from "@/lib/dispatch/enrichAgentRunRecords";
 import { expireStaleDispatchApprovals } from "@/lib/dispatch/expireStaleDispatchApprovals";
-import { getAgentRunForParticipant } from "@/lib/dispatch/listAgentRunsForUser";
+import { getAgentRunForParticipant } from "@/lib/dispatch/getAgentRunForParticipant";
 import { ensureDispatchApprovalsHydrated } from "@/lib/dispatch/restoreDispatchApprovalRegistry";
 import { requireAuth } from "@/lib/auth/requireAuth";
 

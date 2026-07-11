@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 
 import Button from "@/components/ui/button/Button";
+import DispatchPolicyPreviewControls from "@/features/dispatch/DispatchPolicyPreviewControls";
 import {
   DispatchPolicy,
   type DispatchPolicyValue,
@@ -84,6 +85,7 @@ export default function AgentDispatchPolicyPanel() {
           {message}
         </p>
       ) : null}
+      <DispatchPolicyPreviewControls />
     </section>
   );
 }

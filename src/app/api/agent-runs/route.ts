@@ -1,7 +1,7 @@
 import { enrichAgentRunRecords } from "@/lib/dispatch/enrichAgentRunRecords";
 import { expireStaleDispatchApprovals } from "@/lib/dispatch/expireStaleDispatchApprovals";
 import { listAgentRunsForUser } from "@/lib/dispatch/listAgentRunsForUser";
-import { isAgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
+import { parseAgentRunListFilters } from "@/lib/dispatch/parseAgentRunListFilters";
 import { ensureDispatchApprovalsHydrated } from "@/lib/dispatch/restoreDispatchApprovalRegistry";
 import { requireAuth } from "@/lib/auth/requireAuth";
 
@@ -17,14 +17,12 @@ export async function GET(request: Request): Promise<Response> {
   ensureDispatchApprovalsHydrated();
   await expireStaleDispatchApprovals();
 
-  const url = new URL(request.url);
-  const statusParam = url.searchParams.get("status");
-  const status =
-    statusParam !== null && isAgentRunStatus(statusParam)
-      ? statusParam
-      : undefined;
+  const filters = await parseAgentRunListFilters(actor.id, request);
+  if (filters.forbidden === true) {
+    return Response.json({ error: "Forbidden." }, { status: 403 });
+  }
 
-  const runs = await listAgentRunsForUser(actor.id, { status });
+  const runs = await listAgentRunsForUser(actor.id, filters);
   const enrichedRuns = await enrichAgentRunRecords(runs);
 
   return Response.json({ ok: true, runs: enrichedRuns });

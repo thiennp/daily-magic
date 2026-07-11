@@ -12,6 +12,7 @@ interface UsePairedDevicesResult {
   readonly message: string | null;
   readonly pendingDeviceId: string | null;
   readonly pendingDevice: PairedDevice | undefined;
+  readonly reloadDevices: () => Promise<void>;
   readonly requestRevoke: (deviceId: string) => void;
   readonly cancelRevoke: () => void;
   readonly confirmRevoke: () => Promise<void>;
@@ -70,6 +71,7 @@ export function usePairedDevices(): UsePairedDevicesResult {
     message,
     pendingDeviceId,
     pendingDevice,
+    reloadDevices,
     requestRevoke: setPendingDeviceId,
     cancelRevoke: () => {
       setPendingDeviceId(null);
