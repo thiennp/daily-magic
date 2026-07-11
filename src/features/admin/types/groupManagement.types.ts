@@ -16,6 +16,10 @@ export interface MemberItem {
     readonly email: string;
     readonly name: string | null;
   } | null;
+  readonly presence?: {
+    readonly isOnline: boolean;
+    readonly isPaired: boolean;
+  };
 }
 
 export const GROUP_ROLE_OPTIONS = [

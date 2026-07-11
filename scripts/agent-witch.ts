@@ -482,6 +482,10 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
             })();
           }
         }
+
+        if (parsed.type === "harness.manifest.request") {
+          reportHarnessManifest(socket);
+        }
       } catch {
         console.error("[agent-witch] Failed to parse inbound message.");
       }

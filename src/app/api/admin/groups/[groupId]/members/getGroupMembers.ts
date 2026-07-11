@@ -6,6 +6,7 @@ import {
   buildMembershipRows,
   getActorMembershipContext,
 } from "@/app/api/admin/groups/[groupId]/members/buildMembershipRows";
+import { attachAgentPresenceToMemberRows } from "@/lib/dispatch/attachAgentPresenceToMemberRows";
 
 export async function getGroupMembers(groupId: string): Promise<Response> {
   const { actor, error } = await requireAuth();
@@ -26,7 +27,9 @@ export async function getGroupMembers(groupId: string): Promise<Response> {
     return Response.json({ error: "Forbidden" }, { status: 403 });
   }
 
-  const members = await buildMembershipRows(groupId);
+  const members = await attachAgentPresenceToMemberRows(
+    await buildMembershipRows(groupId),
+  );
 
   return Response.json({ group, members });
 }

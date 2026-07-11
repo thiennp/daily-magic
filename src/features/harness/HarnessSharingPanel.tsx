@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 
 import Button from "@/components/ui/button/Button";
+import HarnessCatalogPublishPanel from "@/features/harness/HarnessCatalogPublishPanel";
 import HarnessSetSharingPanel from "@/features/harness/HarnessSetSharingPanel";
 import {
   HarnessSharingVisibility,
@@ -87,6 +88,7 @@ export default function HarnessSharingPanel() {
           {message}
         </p>
       ) : null}
+      <HarnessCatalogPublishPanel />
       <HarnessSetSharingPanel />
     </section>
   );

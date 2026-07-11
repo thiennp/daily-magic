@@ -1,4 +1,5 @@
 import Button from "@/components/ui/button/Button";
+import TargetPresenceBadges from "@/features/dispatch/TargetPresenceBadges";
 import {
   GROUP_ROLE_OPTIONS,
   type MemberItem,
@@ -21,6 +22,7 @@ export default function GroupMembersTable({
         <thead>
           <tr className="border-b border-gray-200 dark:border-gray-800">
             <th className="px-3 py-2">Email</th>
+            <th className="px-3 py-2">Agent</th>
             <th className="px-3 py-2">Role</th>
             <th className="px-3 py-2">Actions</th>
           </tr>
@@ -33,6 +35,12 @@ export default function GroupMembersTable({
             >
               <td className="px-3 py-2">
                 {member.user?.email ?? member.membership.userId}
+              </td>
+              <td className="px-3 py-2">
+                <TargetPresenceBadges
+                  isOnline={member.presence?.isOnline ?? false}
+                  isPaired={member.presence?.isPaired ?? false}
+                />
               </td>
               <td className="px-3 py-2">
                 <select

@@ -10,6 +10,7 @@ export const AGENT_WITCH_MESSAGE_TYPES = {
   HARNESS_REQUEST_ACK: "harness.request.ack",
   HARNESS_REQUEST_RESULT: "harness.request.result",
   HARNESS_MANIFEST_REPORT: "harness.manifest.report",
+  HARNESS_MANIFEST_REQUEST: "harness.manifest.request",
   HARNESS_BORROW_EXPORT: "harness.borrow.export",
   HARNESS_EXPORT_REQUEST: "harness.export.request",
   HARNESS_EXPORT_RESULT: "harness.export.result",
