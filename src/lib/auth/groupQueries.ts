@@ -6,7 +6,7 @@ export async function listGroups(): Promise<readonly GroupRecord[]> {
   const sql = getSql();
   const result = asRowArray(
     await sql`
-      SELECT id, name, created_at
+      SELECT id, name, dispatch_policy, created_at
       FROM groups
       ORDER BY created_at DESC
     `,
@@ -21,7 +21,7 @@ export async function listManageableGroupsForUser(
   const sql = getSql();
   const result = asRowArray(
     await sql`
-      SELECT g.id, g.name, g.created_at
+      SELECT g.id, g.name, g.dispatch_policy, g.created_at
       FROM groups g
       INNER JOIN group_memberships gm ON gm.group_id = g.id
       WHERE gm.user_id = ${userId}
@@ -39,7 +39,7 @@ export async function getGroupById(
   const sql = getSql();
   const result = asRowArray(
     await sql`
-      SELECT id, name, created_at
+      SELECT id, name, dispatch_policy, created_at
       FROM groups
       WHERE id = ${groupId}
     `,
@@ -58,7 +58,7 @@ export async function createGroup(name: string): Promise<GroupRecord> {
     await sql`
       INSERT INTO groups (name)
       VALUES (${name})
-      RETURNING id, name, created_at
+      RETURNING id, name, dispatch_policy, created_at
     `,
   );
 

@@ -1,11 +1,20 @@
 import { isGroupRole } from "@/lib/auth/roles";
+import {
+  DEFAULT_DISPATCH_POLICY,
+  isDispatchPolicy,
+} from "@/lib/dispatch/DispatchPolicy.constant";
 import type GroupMembershipRecord from "@/lib/auth/types/GroupMembershipRecord.type";
 import type GroupRecord from "@/lib/auth/types/GroupRecord.type";
 
 export function mapGroupRow(row: Record<string, unknown>): GroupRecord {
+  const dispatchPolicy = String(row.dispatch_policy ?? DEFAULT_DISPATCH_POLICY);
+
   return {
     id: String(row.id),
     name: String(row.name),
+    dispatchPolicy: isDispatchPolicy(dispatchPolicy)
+      ? dispatchPolicy
+      : DEFAULT_DISPATCH_POLICY,
     createdAt: String(row.created_at),
   };
 }
