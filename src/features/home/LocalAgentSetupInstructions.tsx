@@ -1,5 +1,6 @@
 import { headers } from "next/headers";
 
+import CopyableBashCommand from "@/features/home/CopyableBashCommand";
 import { buildLocalAgentInstallCommandFromHeaders } from "@/lib/agentWitch/buildLocalAgentInstallCommand";
 
 export default async function LocalAgentSetupInstructions() {
@@ -20,9 +21,7 @@ export default async function LocalAgentSetupInstructions() {
         . The install script is served by this app and starts immediately on
         macOS (LaunchAgent), with auto-reconnect and crash recovery.
       </p>
-      <pre className="mt-4 overflow-x-auto rounded-lg border border-gray-200 bg-white p-4 text-left text-sm text-gray-800 dark:border-gray-700 dark:bg-gray-950 dark:text-gray-200">
-        <code>{installCommand}</code>
-      </pre>
+      <CopyableBashCommand command={installCommand} />
       <p className="mt-3 text-xs text-gray-500 dark:text-gray-400">
         Script URL:{" "}
         <a
