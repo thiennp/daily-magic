@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 
+import AgentWitchUnsupportedHostNotice from "@/features/home/AgentWitchUnsupportedHostNotice";
+import isAgentWitchWebSocketSupportedHost from "@/lib/agentWitch/isAgentWitchWebSocketSupportedHost";
 import { useAgentWitchSocket } from "./hooks/useAgentWitchSocket";
 
 import type { WsTestConnectionStatus } from "./types/WsTestConnectionStatus.type";
@@ -18,9 +20,14 @@ export default function WsTestPanel() {
   const { connectionStatus, lastResponse, sendClaudePrompt } =
     useAgentWitchSocket();
   const [prompt, setPrompt] = useState("");
+  const host = typeof window !== "undefined" ? window.location.host : "";
+  const isWebSocketSupported = isAgentWitchWebSocketSupportedHost(host);
 
   return (
     <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
+      {!isWebSocketSupported ? (
+        <AgentWitchUnsupportedHostNotice host={host} />
+      ) : null}
       <header className="rounded-2xl border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-white/[0.03]">
         <p className="text-xs font-medium uppercase tracking-wide text-brand-500">
           Agent Witch

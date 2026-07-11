@@ -42,4 +42,31 @@ describe("buildAgentWitchInstallUrls", () => {
       "ws://localhost:3000/api/agent-witch/ws",
     );
   });
+
+  it("builds agentwitch.com production websocket url", () => {
+    expect(buildAgentWitchWsUrl("https://agentwitch.com")).toBe(
+      "wss://agentwitch.com/api/agent-witch/ws",
+    );
+    expect(buildAgentWitchInstallScriptUrl("https://www.agentwitch.com")).toBe(
+      "https://www.agentwitch.com/install/agent-witch.sh",
+    );
+  });
+
+  it("prefers AUTH_URL over VERCEL_URL for fallback origin", () => {
+    const previousAuthUrl = process.env.AUTH_URL;
+    const previousVercelUrl = process.env.VERCEL_URL;
+    const previousPublicUrl = process.env.NEXT_PUBLIC_APP_URL;
+
+    process.env.NEXT_PUBLIC_APP_URL = "";
+    process.env.AUTH_URL = "https://agentwitch.com";
+    process.env.VERCEL_URL = "daily-magic-five.vercel.app";
+
+    expect(buildAppOriginFromHeaders(new Headers())).toBe(
+      "https://agentwitch.com",
+    );
+
+    process.env.AUTH_URL = previousAuthUrl;
+    process.env.VERCEL_URL = previousVercelUrl;
+    process.env.NEXT_PUBLIC_APP_URL = previousPublicUrl;
+  });
 });

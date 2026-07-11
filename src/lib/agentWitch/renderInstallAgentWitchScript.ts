@@ -2,13 +2,22 @@ import {
   buildAgentWitchClientScriptUrl,
   buildAgentWitchWsUrl,
 } from "./buildAgentWitchInstallUrls";
+import { isAgentWitchWebSocketSupportedOrigin } from "./isAgentWitchWebSocketSupportedHost";
 
 export const renderInstallAgentWitchScript = (origin: string): string => {
   const wsUrl = buildAgentWitchWsUrl(origin);
   const clientScriptUrl = buildAgentWitchClientScriptUrl(origin);
+  const websocketSupportWarning = isAgentWitchWebSocketSupportedOrigin(origin)
+    ? ""
+    : `
+echo "WARNING: ${origin} cannot host Agent Witch WebSockets on Vercel/serverless." >&2
+echo "Use a Node deployment with npm run start, or install from http://localhost:3000." >&2
+echo "Target WebSocket ${wsUrl} will stay disconnected on this host." >&2
+`;
 
   return `#!/usr/bin/env bash
 set -euo pipefail
+${websocketSupportWarning}
 
 INSTALL_DIR="\${HOME}/.agent-witch"
 CLIENT_SCRIPT_URL="${clientScriptUrl}"
