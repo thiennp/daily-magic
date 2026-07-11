@@ -54,90 +54,95 @@ export const attachAgentWitchWebSocket = (
   };
 
   socket.on("message", (data) => {
-    const raw = typeof data === "string" ? data : data.toString("utf8");
-    const message = parseAgentWitchMessage(raw);
+    void (async () => {
+      const raw = typeof data === "string" ? data : data.toString("utf8");
+      const message = parseAgentWitchMessage(raw);
 
-    if (message === null) {
-      sendSocketMessage(socket, {
-        type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR,
-        payload: {
-          errorMessage: "Invalid Agent Witch message payload.",
-        },
-      });
-      return;
-    }
-
-    if (message.type === AGENT_WITCH_MESSAGE_TYPES.AGENT_REGISTER) {
-      const resolvedRole = hub.resolveRoleFromRegisterPayload(message.payload);
-
-      if (resolvedRole === "dashboard") {
-        if (authContext.dashboardActor === null) {
-          sendSocketMessage(socket, {
-            type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR,
-            payload: {
-              errorMessage:
-                "Dashboard connections require an authenticated browser session.",
-            },
-            requestId: message.requestId,
-          });
-          socket.close();
-          return;
-        }
-
-        connectionState.role = "dashboard";
-        connectionState.userId = authContext.dashboardActor.id;
-        connectionState.email = authContext.dashboardActor.email;
+      if (message === null) {
+        sendSocketMessage(socket, {
+          type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR,
+          payload: {
+            errorMessage: "Invalid Agent Witch message payload.",
+          },
+        });
+        return;
       }
 
-      if (resolvedRole === "agent") {
-        const pairingToken = hub.resolvePairingTokenFromRegisterPayload(
+      if (message.type === AGENT_WITCH_MESSAGE_TYPES.AGENT_REGISTER) {
+        const resolvedRole = hub.resolveRoleFromRegisterPayload(
           message.payload,
         );
 
-        if (pairingToken === null) {
-          sendSocketMessage(socket, {
-            type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR,
-            payload: {
-              errorMessage:
-                "Agent connections require payload.pairingToken from ~/.agent-witch/config.json.",
-            },
-            requestId: message.requestId,
-          });
-          socket.close();
-          return;
+        if (resolvedRole === "dashboard") {
+          if (authContext.dashboardActor === null) {
+            sendSocketMessage(socket, {
+              type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR,
+              payload: {
+                errorMessage:
+                  "Dashboard connections require an authenticated browser session.",
+              },
+              requestId: message.requestId,
+            });
+            socket.close();
+            return;
+          }
+
+          connectionState.role = "dashboard";
+          connectionState.userId = authContext.dashboardActor.id;
+          connectionState.email = authContext.dashboardActor.email;
         }
 
-        connectionState.role = "agent";
-        connectionState.pairingToken = pairingToken;
-        connectionState.userId =
-          hub.resolveUserIdForAgentRegister(pairingToken);
-      }
+        if (resolvedRole === "agent") {
+          const pairingToken = hub.resolvePairingTokenFromRegisterPayload(
+            message.payload,
+          );
 
-      if (resolvedRole !== null) {
-        if (connectionState.registered) {
-          hub.unregisterClient(clientId);
+          if (pairingToken === null) {
+            sendSocketMessage(socket, {
+              type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR,
+              payload: {
+                errorMessage:
+                  "Agent connections require payload.pairingToken from ~/.agent-witch/config.json.",
+              },
+              requestId: message.requestId,
+            });
+            socket.close();
+            return;
+          }
+
+          connectionState.role = "agent";
+          connectionState.pairingToken = pairingToken;
+          connectionState.userId =
+            await hub.resolveUserIdForAgentRegister(pairingToken);
         }
 
-        registerClient();
+        if (resolvedRole !== null) {
+          if (connectionState.registered) {
+            hub.unregisterClient(clientId);
+            connectionState.registered = false;
+          }
+
+          registerClient();
+        }
       }
-    }
 
-    if (!connectionState.registered) {
-      sendSocketMessage(socket, {
-        type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR,
-        payload: {
-          errorMessage:
-            "Send agent.register before other Agent Witch messages.",
-        },
-        requestId: message.requestId,
-      });
-      return;
-    }
+      if (!connectionState.registered) {
+        sendSocketMessage(socket, {
+          type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR,
+          payload: {
+            errorMessage:
+              "Send agent.register before other Agent Witch messages.",
+          },
+          requestId: message.requestId,
+        });
+        return;
+      }
 
-    const response = hub.handleMessage(clientId, message);
-    if (response !== null) {
-      sendSocketMessage(socket, response);
-    }
+      const response = await hub.handleMessageAsync(clientId, message);
+      if (response !== null) {
+        sendSocketMessage(socket, response);
+      }
+    })();
   });
 
   socket.on("close", () => {

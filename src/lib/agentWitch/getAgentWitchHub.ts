@@ -6,7 +6,9 @@ const hubHolder: { value?: AgentWitchHub } = {};
 
 export const getAgentWitchPairingStore = (): AgentWitchPairingStore => {
   if (pairingStoreHolder.value === undefined) {
-    pairingStoreHolder.value = new AgentWitchPairingStore();
+    pairingStoreHolder.value = new AgentWitchPairingStore({
+      persistToDatabase: process.env.NODE_ENV !== "test",
+    });
   }
 
   return pairingStoreHolder.value;

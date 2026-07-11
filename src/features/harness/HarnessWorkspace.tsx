@@ -2,6 +2,7 @@
 
 import AgentPairingPanel from "@/features/harness/AgentPairingPanel";
 import HarnessManagerPanel from "@/features/harness/HarnessManagerPanel";
+import PairedDevicesPanel from "@/features/harness/PairedDevicesPanel";
 import { useAgentWitchHarnessSocket } from "@/features/harness/hooks/useAgentWitchHarnessSocket";
 
 export default function HarnessWorkspace() {
@@ -10,6 +11,7 @@ export default function HarnessWorkspace() {
   return (
     <>
       <AgentPairingPanel harnessSocket={harnessSocket} />
+      <PairedDevicesPanel key={harnessSocket.pairingStatus} />
       <HarnessManagerPanel harnessSocket={harnessSocket} />
     </>
   );

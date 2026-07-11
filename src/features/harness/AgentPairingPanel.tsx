@@ -34,8 +34,8 @@ export default function AgentPairingPanel({
         <code className="rounded bg-gray-100 px-1 py-0.5 text-xs dark:bg-gray-900">
           ~/.agent-witch/config.json
         </code>{" "}
-        and save it here. Only your authenticated browser session can claim that
-        token and send commands to your local agent.
+        and save it here once. After that, your browser will auto-pair on future
+        logins when the dashboard WebSocket connects.
       </p>
 
       <label className="mt-4 block text-sm">

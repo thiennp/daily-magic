@@ -102,24 +102,18 @@ export class AgentWitchHub {
   ): AgentWitchMessage | null {
     const sender = this.clients.get(senderId);
 
-    if (message.type === AGENT_WITCH_MESSAGE_TYPES.AGENT_REGISTER) {
-      return {
-        type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ACK,
-        payload: {
-          clientId: senderId,
-          role: sender?.role ?? "dashboard",
-          userId: sender?.userId,
-        },
-        requestId: message.requestId,
-      };
+    if (message.type !== AGENT_WITCH_MESSAGE_TYPES.AGENT_PAIR) {
+      return this.handleSyncMessage(senderId, message, sender);
     }
 
-    if (message.type === AGENT_WITCH_MESSAGE_TYPES.AGENT_HEARTBEAT) {
-      return {
-        type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ACK,
-        requestId: message.requestId,
-      };
-    }
+    return null;
+  }
+
+  async handleMessageAsync(
+    senderId: string,
+    message: AgentWitchMessage,
+  ): Promise<AgentWitchMessage | null> {
+    const sender = this.clients.get(senderId);
 
     if (message.type === AGENT_WITCH_MESSAGE_TYPES.AGENT_PAIR) {
       if (sender?.role !== "dashboard" || !isNonEmptyString(sender.userId)) {
@@ -144,11 +138,24 @@ export class AgentWitchHub {
       }
 
       const pairingToken = message.payload.pairingToken.trim();
-      this.pairingStore.claimPairing(
+      const claimResult = await this.pairingStore.claimPairing(
         pairingToken,
         sender.userId,
         sender.email ?? sender.userId,
       );
+
+      if (!claimResult.success) {
+        return {
+          type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR,
+          payload: {
+            errorMessage:
+              claimResult.errorMessage ??
+              "Could not pair this local agent token.",
+          },
+          requestId: message.requestId,
+        };
+      }
+
       this.bindAgentClientsToPairing(pairingToken);
 
       return {
@@ -156,6 +163,44 @@ export class AgentWitchHub {
         payload: {
           paired: true,
           pairingToken,
+          deviceId: claimResult.claimedPairing?.deviceId,
+        },
+        requestId: message.requestId,
+      };
+    }
+
+    return this.handleSyncMessage(senderId, message, sender);
+  }
+
+  private handleSyncMessage(
+    senderId: string,
+    message: AgentWitchMessage,
+    sender: AgentWitchHubClient | undefined,
+  ): AgentWitchMessage | null {
+    if (message.type === AGENT_WITCH_MESSAGE_TYPES.AGENT_REGISTER) {
+      return {
+        type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ACK,
+        payload: {
+          clientId: senderId,
+          role: sender?.role ?? "dashboard",
+          userId: sender?.userId,
+        },
+        requestId: message.requestId,
+      };
+    }
+
+    if (message.type === AGENT_WITCH_MESSAGE_TYPES.AGENT_HEARTBEAT) {
+      return {
+        type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ACK,
+        requestId: message.requestId,
+      };
+    }
+
+    if (message.type === AGENT_WITCH_MESSAGE_TYPES.AGENT_PAIR) {
+      return {
+        type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR,
+        payload: {
+          errorMessage: "agent.pair must be handled asynchronously.",
         },
         requestId: message.requestId,
       };
@@ -271,6 +316,12 @@ export class AgentWitchHub {
         userId: sender.userId,
       };
       this.manifestByAgentClientId.set(senderId, report);
+      if (sender.pairingToken !== undefined) {
+        void this.pairingStore.touchLastSeen(
+          sender.pairingToken,
+          payload.hostname,
+        );
+      }
       this.broadcastToDashboardUser(sender.userId, message);
 
       return {
@@ -383,8 +434,15 @@ export class AgentWitchHub {
     return null;
   }
 
-  resolveUserIdForAgentRegister(pairingToken: string): string | undefined {
-    return this.pairingStore.getClaimedPairing(pairingToken)?.userId;
+  async resolveUserIdForAgentRegister(
+    pairingToken: string,
+  ): Promise<string | undefined> {
+    const claimedPairing =
+      await this.pairingStore.resolveClaimedPairing(pairingToken);
+    if (claimedPairing !== null) {
+      void this.pairingStore.touchLastSeen(pairingToken);
+    }
+    return claimedPairing?.userId;
   }
 
   private bindAgentClientsToPairing(pairingToken: string): void {

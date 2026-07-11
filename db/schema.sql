@@ -67,3 +67,20 @@ CREATE UNIQUE INDEX IF NOT EXISTS users_one_super_admin
 CREATE UNIQUE INDEX IF NOT EXISTS group_memberships_one_super_admin
   ON group_memberships (group_id)
   WHERE role = 'group_super_admin';
+
+CREATE TABLE IF NOT EXISTS agent_witch_devices (
+  id TEXT PRIMARY KEY DEFAULT gen_random_uuid()::text,
+  user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  token_hash TEXT NOT NULL UNIQUE,
+  device_label TEXT,
+  claimed_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  last_seen_at TIMESTAMPTZ,
+  revoked_at TIMESTAMPTZ
+);
+
+CREATE INDEX IF NOT EXISTS agent_witch_devices_user_id_idx
+  ON agent_witch_devices (user_id);
+
+CREATE INDEX IF NOT EXISTS agent_witch_devices_active_user_idx
+  ON agent_witch_devices (user_id)
+  WHERE revoked_at IS NULL;

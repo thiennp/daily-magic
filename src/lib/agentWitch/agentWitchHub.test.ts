@@ -19,13 +19,13 @@ const createCollector = () => {
   };
 };
 
-const registerPairedClients = (
+const registerPairedClients = async (
   hub: AgentWitchHub,
   pairingStore: AgentWitchPairingStore,
   agentSend: (message: AgentWitchMessage) => void,
   dashboardSend: (message: AgentWitchMessage) => void,
-): void => {
-  pairingStore.claimPairing(PAIRING_TOKEN, USER_ID, USER_EMAIL);
+): Promise<void> => {
+  await pairingStore.claimPairing(PAIRING_TOKEN, USER_ID, USER_EMAIL);
   hub.registerClient({
     id: "agent-1",
     role: "agent",
@@ -93,9 +93,9 @@ describe("AgentWitchHub", () => {
     });
   });
 
-  it("dispatches Claude commands from authenticated dashboard to paired agent", () => {
+  it("dispatches Claude commands from authenticated dashboard to paired agent", async () => {
     const agent = createCollector();
-    registerPairedClients(hub, pairingStore, agent.send, () => undefined);
+    await registerPairedClients(hub, pairingStore, agent.send, () => undefined);
 
     const response = hub.handleMessage("dash-1", {
       type: AGENT_WITCH_MESSAGE_TYPES.COMMAND_CLAUDE_RUN,
@@ -146,9 +146,14 @@ describe("AgentWitchHub", () => {
     );
   });
 
-  it("forwards Claude results from paired agent to matching dashboard", () => {
+  it("forwards Claude results from paired agent to matching dashboard", async () => {
     const dashboard = createCollector();
-    registerPairedClients(hub, pairingStore, () => undefined, dashboard.send);
+    await registerPairedClients(
+      hub,
+      pairingStore,
+      () => undefined,
+      dashboard.send,
+    );
 
     const response = hub.handleMessage("agent-1", {
       type: AGENT_WITCH_MESSAGE_TYPES.COMMAND_CLAUDE_RESULT,
@@ -177,7 +182,7 @@ describe("AgentWitchHub", () => {
     expect(response?.type).toBe(AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR);
   });
 
-  it("claims pairing tokens for authenticated dashboard clients", () => {
+  it("claims pairing tokens for authenticated dashboard clients", async () => {
     hub.registerClient({
       id: "dash-1",
       role: "dashboard",
@@ -186,7 +191,7 @@ describe("AgentWitchHub", () => {
       send: () => undefined,
     });
 
-    const response = hub.handleMessage("dash-1", {
+    const response = await hub.handleMessageAsync("dash-1", {
       type: AGENT_WITCH_MESSAGE_TYPES.AGENT_PAIR,
       payload: { pairingToken: PAIRING_TOKEN },
       requestId: "pair-1",
@@ -196,15 +201,39 @@ describe("AgentWitchHub", () => {
     expect(pairingStore.getClaimedPairing(PAIRING_TOKEN)?.userId).toBe(USER_ID);
   });
 
+  it("rejects pairing tokens already claimed by another account", async () => {
+    await pairingStore.claimPairing(
+      PAIRING_TOKEN,
+      "other-user",
+      "other@example.com",
+    );
+    hub.registerClient({
+      id: "dash-1",
+      role: "dashboard",
+      userId: USER_ID,
+      email: USER_EMAIL,
+      send: () => undefined,
+    });
+
+    const response = await hub.handleMessageAsync("dash-1", {
+      type: AGENT_WITCH_MESSAGE_TYPES.AGENT_PAIR,
+      payload: { pairingToken: PAIRING_TOKEN },
+      requestId: "pair-2",
+    });
+
+    expect(response?.type).toBe(AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR);
+    expect(response?.payload?.errorMessage).toContain("another account");
+  });
+
   it("resolves register roles from payload", () => {
     expect(hub.resolveRoleFromRegisterPayload({ role: "agent" })).toBe("agent");
     expect(hub.resolveRoleFromRegisterPayload({ role: "invalid" })).toBeNull();
     expect(hub.resolveRoleFromRegisterPayload(undefined)).toBeNull();
   });
 
-  it("dispatches harness requests from authenticated dashboard to paired agent", () => {
+  it("dispatches harness requests from authenticated dashboard to paired agent", async () => {
     const agent = createCollector();
-    registerPairedClients(hub, pairingStore, agent.send, () => undefined);
+    await registerPairedClients(hub, pairingStore, agent.send, () => undefined);
 
     const response = hub.handleMessage("dash-1", {
       type: AGENT_WITCH_MESSAGE_TYPES.HARNESS_REQUEST,
@@ -235,9 +264,14 @@ describe("AgentWitchHub", () => {
     expect(agent.messages[0]?.payload?.writerAgent).toBe("claude-cli");
   });
 
-  it("stores and forwards harness manifest reports to matching dashboards", () => {
+  it("stores and forwards harness manifest reports to matching dashboards", async () => {
     const dashboard = createCollector();
-    registerPairedClients(hub, pairingStore, () => undefined, dashboard.send);
+    await registerPairedClients(
+      hub,
+      pairingStore,
+      () => undefined,
+      dashboard.send,
+    );
 
     const response = hub.handleMessage("agent-1", {
       type: AGENT_WITCH_MESSAGE_TYPES.HARNESS_MANIFEST_REPORT,
@@ -259,9 +293,14 @@ describe("AgentWitchHub", () => {
     expect(hub.listHarnessManifestReports()[0]?.hostname).toBe("local-mac");
   });
 
-  it("forwards harness request results from paired agent to matching dashboard", () => {
+  it("forwards harness request results from paired agent to matching dashboard", async () => {
     const dashboard = createCollector();
-    registerPairedClients(hub, pairingStore, () => undefined, dashboard.send);
+    await registerPairedClients(
+      hub,
+      pairingStore,
+      () => undefined,
+      dashboard.send,
+    );
 
     hub.handleMessage("agent-1", {
       type: AGENT_WITCH_MESSAGE_TYPES.HARNESS_REQUEST_RESULT,
