@@ -3,18 +3,9 @@
 import { useState } from "react";
 
 import AgentWitchUnsupportedHostNotice from "@/features/home/AgentWitchUnsupportedHostNotice";
+import { ConnectionStatusBadge } from "@/features/shell/ConnectionStatusBadge";
 import isAgentWitchWebSocketSupportedHost from "@/lib/agentWitch/isAgentWitchWebSocketSupportedHost";
 import { useAgentWitchSocket } from "./hooks/useAgentWitchSocket";
-
-import type { WsTestConnectionStatus } from "./types/WsTestConnectionStatus.type";
-
-const CONNECTION_LABELS: Record<WsTestConnectionStatus, string> = {
-  idle: "Idle",
-  connecting: "Connecting…",
-  connected: "Connected",
-  disconnected: "Disconnected",
-  error: "Connection error",
-};
 
 export default function WsTestPanel() {
   const { connectionStatus, lastResponse, sendClaudePrompt } =
@@ -22,30 +13,25 @@ export default function WsTestPanel() {
   const [prompt, setPrompt] = useState("");
   const host = typeof window !== "undefined" ? window.location.host : "";
   const isWebSocketSupported = isAgentWitchWebSocketSupportedHost(host);
+  const isSendDisabled =
+    connectionStatus !== "connected" || prompt.trim().length === 0;
 
   return (
-    <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
+    <div className="flex w-full flex-col gap-6">
       {!isWebSocketSupported ? (
         <AgentWitchUnsupportedHostNotice host={host} />
       ) : null}
-      <header className="rounded-2xl border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-white/[0.03]">
-        <p className="text-xs font-medium uppercase tracking-wide text-brand-500">
-          Agent Witch
-        </p>
-        <h1 className="mt-2 text-2xl font-semibold text-gray-800 dark:text-white/90">
-          WebSocket test
-        </h1>
-        <p className="mt-3 text-sm text-gray-600 dark:text-gray-400">
-          Send a task to the local Agent Witch client. When connected, it runs
-          the Claude CLI on your computer.
-        </p>
-        <p className="mt-4 text-sm text-gray-700 dark:text-gray-300">
-          Status:{" "}
-          <span className="font-medium text-brand-600 dark:text-brand-400">
-            {CONNECTION_LABELS[connectionStatus]}
-          </span>
-        </p>
-      </header>
+      <section className="rounded-2xl border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-white/[0.03]">
+        <div className="flex flex-wrap items-start justify-between gap-3">
+          <div>
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+              Send a task to your paired local agent. When connected, it runs
+              the Claude CLI on your computer.
+            </p>
+          </div>
+          <ConnectionStatusBadge status={connectionStatus} />
+        </div>
+      </section>
 
       <section className="rounded-2xl border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-white/[0.03]">
         <label
@@ -70,8 +56,9 @@ export default function WsTestPanel() {
             onClick={() => {
               sendClaudePrompt(prompt);
             }}
-            disabled={
-              connectionStatus !== "connected" || prompt.trim().length === 0
+            disabled={isSendDisabled}
+            aria-describedby={
+              isSendDisabled ? "agent-send-disabled-hint" : undefined
             }
             className="inline-flex h-11 items-center justify-center rounded-lg bg-brand-500 px-5 text-sm font-medium text-white transition hover:bg-brand-600 disabled:cursor-not-allowed disabled:opacity-50"
           >
@@ -87,11 +74,21 @@ export default function WsTestPanel() {
             Clear
           </button>
         </div>
+        {isSendDisabled ? (
+          <p
+            id="agent-send-disabled-hint"
+            className="mt-3 text-sm text-gray-500 dark:text-gray-400"
+          >
+            {connectionStatus !== "connected"
+              ? "Connect and pair your local agent from Home before sending a task."
+              : "Enter a task description to continue."}
+          </p>
+        ) : null}
       </section>
 
       <section className="rounded-2xl border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-white/[0.03]">
         <h2 className="text-sm font-medium text-gray-800 dark:text-white/90">
-          Last WebSocket response
+          Last response
         </h2>
         <pre className="mt-3 max-h-80 overflow-auto rounded-lg bg-gray-50 p-4 text-xs text-gray-700 dark:bg-gray-900 dark:text-gray-300">
           {lastResponse.length > 0 ? lastResponse : "No messages yet."}

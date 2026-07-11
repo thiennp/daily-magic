@@ -4,7 +4,12 @@ import { signIn } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 
+import Alert from "@/components/ui/alert/Alert";
 import Button from "@/components/ui/button/Button";
+import {
+  buildLoginFeedback,
+  type LoginFeedback,
+} from "@/features/auth/utils/buildLoginFeedback";
 import { SUPER_ADMIN_EMAIL } from "@/lib/auth/constants";
 import isSuperAdminEmail from "@/lib/auth/isSuperAdminEmail";
 
@@ -13,29 +18,30 @@ interface LoginFormProps {
 }
 
 export default function LoginForm({
-  defaultCallbackUrl = "/admin/groups",
+  defaultCallbackUrl = "/",
 }: LoginFormProps) {
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") ?? defaultCallbackUrl;
   const [email, setEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [message, setMessage] = useState<string | null>(null);
+  const [feedback, setFeedback] = useState<LoginFeedback | null>(null);
+  const emailInputId = "login-email";
 
   const handleEmailSignIn = async () => {
     const trimmedEmail = email.trim();
 
     if (!trimmedEmail) {
-      setMessage("Enter your email address.");
+      setFeedback(buildLoginFeedback("Enter your email address."));
       return;
     }
 
     if (isSuperAdminEmail(trimmedEmail)) {
-      setMessage("Super admin must sign in with Google.");
+      setFeedback(buildLoginFeedback("Super admin must sign in with Google."));
       return;
     }
 
     setIsSubmitting(true);
-    setMessage(null);
+    setFeedback(null);
 
     try {
       await signIn("resend", {
@@ -43,25 +49,22 @@ export default function LoginForm({
         callbackUrl,
         redirect: false,
       });
-      setMessage("Check your inbox for the sign-in link.");
+      setFeedback(buildLoginFeedback("Check your inbox for the sign-in link."));
     } catch {
-      setMessage("Could not send the sign-in email.");
+      setFeedback(buildLoginFeedback("Could not send the sign-in email."));
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <div className="mx-auto w-full max-w-md rounded-2xl border border-gray-200 bg-white p-6 shadow-theme-sm dark:border-gray-800 dark:bg-gray-900">
-      <h1 className="text-xl font-semibold text-gray-800 dark:text-white/90">
-        Sign in
-      </h1>
-      <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+    <div className="space-y-6">
+      <p className="text-sm text-gray-600 dark:text-gray-400">
         Use Google or a magic link sent to your email. Super admin (
         {SUPER_ADMIN_EMAIL}) must use Google.
       </p>
 
-      <div className="mt-6 space-y-4">
+      <div className="space-y-4">
         <Button
           variant="outline"
           className="w-full"
@@ -76,9 +79,13 @@ export default function LoginForm({
           or email
         </div>
 
-        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+        <label
+          htmlFor={emailInputId}
+          className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+        >
           Email
           <input
+            id={emailInputId}
             type="email"
             value={email}
             onChange={(event) => {
@@ -86,6 +93,7 @@ export default function LoginForm({
             }}
             className="mt-2 w-full rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-800 outline-none focus:border-brand-500 dark:border-gray-700 dark:bg-gray-950 dark:text-gray-200"
             placeholder="you@example.com"
+            autoComplete="email"
           />
         </label>
 
@@ -99,8 +107,12 @@ export default function LoginForm({
           {isSubmitting ? "Sending..." : "Email me a sign-in link"}
         </Button>
 
-        {message ? (
-          <p className="text-sm text-gray-600 dark:text-gray-400">{message}</p>
+        {feedback ? (
+          <Alert
+            variant={feedback.variant}
+            title={feedback.title}
+            message={feedback.message}
+          />
         ) : null}
       </div>
     </div>

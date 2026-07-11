@@ -3,15 +3,11 @@
 import { useSession } from "next-auth/react";
 import { useState } from "react";
 
-import Button from "@/components/ui/button/Button";
+import UsersTable, {
+  type UserItem,
+} from "@/features/admin/components/UsersTable";
+import ConfirmDestructiveModal from "@/features/shell/ConfirmDestructiveModal";
 import { isPrivilegedGlobalRole } from "@/lib/auth/roles";
-
-interface UserItem {
-  readonly id: string;
-  readonly email: string;
-  readonly name: string | null;
-  readonly globalRole: string;
-}
 
 interface UserManagementPanelProps {
   readonly initialUsers: readonly UserItem[];
@@ -26,6 +22,8 @@ export default function UserManagementPanel({
     isPrivilegedGlobalRole(session.user.globalRole);
   const [users, setUsers] = useState<readonly UserItem[]>(initialUsers);
   const [message, setMessage] = useState<string | null>(null);
+  const [pendingUserId, setPendingUserId] = useState<string | null>(null);
+  const pendingUser = users.find((user) => user.id === pendingUserId);
 
   const loadUsers = async () => {
     const response = await fetch("/api/admin/users");
@@ -73,46 +71,32 @@ export default function UserManagementPanel({
         <h2 className="text-lg font-semibold text-gray-800 dark:text-white/90">
           Users
         </h2>
-
-        <div className="mt-4 overflow-x-auto">
-          <table className="min-w-full text-left text-sm">
-            <thead>
-              <tr className="border-b border-gray-200 dark:border-gray-800">
-                <th className="px-3 py-2">Email</th>
-                <th className="px-3 py-2">Global role</th>
-                <th className="px-3 py-2">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {users.map((user) => (
-                <tr
-                  key={user.id}
-                  className="border-b border-gray-100 dark:border-gray-800/80"
-                >
-                  <td className="px-3 py-2">{user.email}</td>
-                  <td className="px-3 py-2">{user.globalRole}</td>
-                  <td className="px-3 py-2">
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      disabled={user.id === session?.user?.id}
-                      onClick={() => {
-                        void handleDeleteUser(user.id);
-                      }}
-                    >
-                      Remove
-                    </Button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <UsersTable
+          users={users}
+          currentUserId={session?.user?.id}
+          onRemoveRequest={setPendingUserId}
+        />
       </section>
 
       {message ? (
         <p className="text-sm text-gray-600 dark:text-gray-400">{message}</p>
       ) : null}
+
+      <ConfirmDestructiveModal
+        isOpen={pendingUserId !== null}
+        title="Remove user?"
+        description={`Permanently remove ${pendingUser?.email ?? "this user"} from Daily Magic.`}
+        confirmLabel="Remove user"
+        onClose={() => {
+          setPendingUserId(null);
+        }}
+        onConfirm={() => {
+          if (pendingUserId !== null) {
+            void handleDeleteUser(pendingUserId);
+          }
+          setPendingUserId(null);
+        }}
+      />
     </div>
   );
 }

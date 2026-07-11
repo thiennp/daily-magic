@@ -1,4 +1,5 @@
 import Button from "@/components/ui/button/Button";
+import GroupDeleteControls from "@/features/admin/components/GroupDeleteControls";
 import type { GroupItem } from "@/features/admin/types/groupManagement.types";
 
 interface GroupSelectionSectionProps {
@@ -67,21 +68,13 @@ export default function GroupSelectionSection({
       </div>
 
       {isAdmin && selectedGroupId ? (
-        <div className="mt-4 flex flex-wrap items-center gap-3">
-          <label className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
-            <input
-              type="checkbox"
-              checked={deleteMembers}
-              onChange={(event) => {
-                onDeleteMembersChange(event.target.checked);
-              }}
-            />
-            Also delete all users in this group
-          </label>
-          <Button variant="outline" onClick={() => void onDeleteGroup()}>
-            Delete group
-          </Button>
-        </div>
+        <GroupDeleteControls
+          groups={groups}
+          selectedGroupId={selectedGroupId}
+          deleteMembers={deleteMembers}
+          onDeleteMembersChange={onDeleteMembersChange}
+          onDeleteGroup={onDeleteGroup}
+        />
       ) : null}
     </section>
   );

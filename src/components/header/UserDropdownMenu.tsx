@@ -5,6 +5,8 @@ import type { Session } from "next-auth";
 
 import { Dropdown } from "@/components/ui/dropdown/Dropdown";
 import { DropdownItem } from "@/components/ui/dropdown/DropdownItem";
+import formatGlobalRole from "@/lib/auth/formatGlobalRole";
+import type { GlobalRoleValue } from "@/lib/auth/roles";
 
 interface UserDropdownMenuProps {
   readonly isOpen: boolean;
@@ -33,7 +35,7 @@ export default function UserDropdownMenu({
           {session.user.email}
         </span>
         <span className="text-theme-xs mt-1 block text-brand-600 dark:text-brand-400">
-          {session.user.globalRole}
+          {formatGlobalRole(session.user.globalRole as GlobalRoleValue)}
         </span>
       </div>
 

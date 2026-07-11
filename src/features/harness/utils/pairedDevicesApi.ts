@@ -1,49 +1,65 @@
-import type PairedDevice from "@/features/harness/types/PairedDevice.type";
+interface PairedDevice {
+  readonly id: string;
+  readonly deviceLabel: string | null;
+  readonly claimedAt: string;
+  readonly lastSeenAt: string | null;
+  readonly revokedAt: string | null;
+  readonly isActive: boolean;
+}
 
 interface LoadedDevicesResult {
   readonly devices: readonly PairedDevice[];
   readonly errorMessage: string | null;
 }
 
-export async function fetchActivePairedDevices(): Promise<LoadedDevicesResult> {
-  try {
-    const response = await fetch("/api/agent-witch/devices");
-    const payload: unknown = await response.json();
+export type { LoadedDevicesResult, PairedDevice };
 
-    if (
-      !response.ok ||
-      typeof payload !== "object" ||
-      payload === null ||
-      !Array.isArray((payload as { devices?: unknown }).devices)
-    ) {
+export const formatPairedDeviceTimestamp = (value: string | null): string => {
+  if (value === null) {
+    return "—";
+  }
+
+  return new Date(value).toLocaleString();
+};
+
+export const fetchActivePairedDevices =
+  async (): Promise<LoadedDevicesResult> => {
+    try {
+      const response = await fetch("/api/agent-witch/devices");
+      const payload: unknown = await response.json();
+
+      if (
+        !response.ok ||
+        typeof payload !== "object" ||
+        payload === null ||
+        !Array.isArray((payload as { devices?: unknown }).devices)
+      ) {
+        return {
+          devices: [],
+          errorMessage: "Could not load paired devices.",
+        };
+      }
+
+      return {
+        devices: (payload as { devices: PairedDevice[] }).devices.filter(
+          (device) => device.isActive,
+        ),
+        errorMessage: null,
+      };
+    } catch {
       return {
         devices: [],
         errorMessage: "Could not load paired devices.",
       };
     }
+  };
 
-    return {
-      devices: (payload as { devices: PairedDevice[] }).devices.filter(
-        (device) => device.isActive,
-      ),
-      errorMessage: null,
-    };
-  } catch {
-    return {
-      devices: [],
-      errorMessage: "Could not load paired devices.",
-    };
-  }
-}
+export const revokePairedDevice = async (
+  deviceId: string,
+): Promise<boolean> => {
+  const response = await fetch(`/api/agent-witch/devices/${deviceId}`, {
+    method: "DELETE",
+  });
 
-export async function revokePairedDevice(deviceId: string): Promise<boolean> {
-  try {
-    const response = await fetch(`/api/agent-witch/devices/${deviceId}`, {
-      method: "DELETE",
-    });
-
-    return response.ok;
-  } catch {
-    return false;
-  }
-}
+  return response.ok;
+};

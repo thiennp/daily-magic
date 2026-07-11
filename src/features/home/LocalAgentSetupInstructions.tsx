@@ -56,10 +56,10 @@ export default async function LocalAgentSetupInstructions() {
         </code>{" "}
         and retries until the app is up. Send tasks from{" "}
         <a
-          href="/ws-test"
+          href="/agent"
           className="text-brand-600 hover:underline dark:text-brand-400"
         >
-          WebSocket test
+          Send a test task
         </a>
         .
       </p>

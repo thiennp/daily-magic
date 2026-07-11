@@ -39,6 +39,8 @@ export default function UserDropdown() {
       <button
         type="button"
         onClick={toggleDropdown}
+        aria-expanded={isOpen}
+        aria-haspopup="menu"
         className="dropdown-toggle flex items-center text-gray-700 dark:text-gray-400"
       >
         <span className="mr-3 flex h-11 w-11 items-center justify-center overflow-hidden rounded-full bg-brand-50 text-sm font-semibold text-brand-600 dark:bg-brand-500/10 dark:text-brand-400">

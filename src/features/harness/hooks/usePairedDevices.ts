@@ -1,22 +1,27 @@
 import { useCallback, useEffect, useState } from "react";
 
-import type PairedDevice from "@/features/harness/types/PairedDevice.type";
 import {
   fetchActivePairedDevices,
   revokePairedDevice,
+  type PairedDevice,
 } from "@/features/harness/utils/pairedDevicesApi";
 
 interface UsePairedDevicesResult {
   readonly devices: readonly PairedDevice[];
   readonly isLoading: boolean;
   readonly message: string | null;
-  readonly revokeDevice: (deviceId: string) => Promise<void>;
+  readonly pendingDeviceId: string | null;
+  readonly pendingDevice: PairedDevice | undefined;
+  readonly requestRevoke: (deviceId: string) => void;
+  readonly cancelRevoke: () => void;
+  readonly confirmRevoke: () => Promise<void>;
 }
 
 export function usePairedDevices(): UsePairedDevicesResult {
   const [devices, setDevices] = useState<readonly PairedDevice[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [message, setMessage] = useState<string | null>(null);
+  const [pendingDeviceId, setPendingDeviceId] = useState<string | null>(null);
 
   const reloadDevices = useCallback(async () => {
     const result = await fetchActivePairedDevices();
@@ -31,29 +36,44 @@ export function usePairedDevices(): UsePairedDevicesResult {
     })();
   }, [reloadDevices]);
 
-  const revokeDevice = useCallback(
-    async (deviceId: string) => {
-      setIsLoading(true);
-      setMessage(null);
+  const pendingDevice = devices.find((device) => device.id === pendingDeviceId);
 
-      const revoked = await revokePairedDevice(deviceId);
+  const confirmRevoke = useCallback(async () => {
+    if (pendingDeviceId === null) {
+      return;
+    }
 
-      if (!revoked) {
+    setIsLoading(true);
+    setMessage(null);
+
+    try {
+      const didRevoke = await revokePairedDevice(pendingDeviceId);
+
+      if (!didRevoke) {
         setMessage("Could not revoke this device.");
         setIsLoading(false);
         return;
       }
 
       setMessage("Device revoked. Re-pair after reinstalling the local agent.");
+      setPendingDeviceId(null);
       await reloadDevices();
-    },
-    [reloadDevices],
-  );
+    } catch {
+      setMessage("Could not revoke this device.");
+      setIsLoading(false);
+    }
+  }, [pendingDeviceId, reloadDevices]);
 
   return {
     devices,
     isLoading,
     message,
-    revokeDevice,
+    pendingDeviceId,
+    pendingDevice,
+    requestRevoke: setPendingDeviceId,
+    cancelRevoke: () => {
+      setPendingDeviceId(null);
+    },
+    confirmRevoke,
   };
 }
