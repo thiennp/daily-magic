@@ -38,7 +38,7 @@ export default function LoginForm({
     setMessage(null);
 
     try {
-      await signIn("nodemailer", {
+      await signIn("resend", {
         email: trimmedEmail,
         callbackUrl,
         redirect: false,

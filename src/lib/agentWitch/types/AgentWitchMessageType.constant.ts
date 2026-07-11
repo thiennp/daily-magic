@@ -7,6 +7,7 @@ export const AGENT_WITCH_MESSAGE_TYPES = {
   HARNESS_REQUEST_ACK: "harness.request.ack",
   HARNESS_REQUEST_RESULT: "harness.request.result",
   HARNESS_MANIFEST_REPORT: "harness.manifest.report",
+  AGENT_PAIR: "agent.pair",
   SYSTEM_ACK: "system.ack",
   SYSTEM_ERROR: "system.error",
 } as const;

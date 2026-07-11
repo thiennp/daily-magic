@@ -1,3 +1,5 @@
+import type { AgentWitchPairingStore } from "./agentWitchPairingStore";
+import isAgentPairPayload from "./isAgentPairPayload";
 import isHarnessRequestPayload from "./harness/isHarnessRequestPayload";
 import isNonEmptyString from "./isNonEmptyString";
 import isAgentWitchRole from "./isAgentWitchRole";
@@ -22,6 +24,7 @@ export interface AgentWitchConnectedClient {
   readonly id: string;
   readonly role: AgentWitchRole;
   readonly connectedAt: string;
+  readonly userId?: string;
 }
 
 export interface AgentWitchHarnessManifestReport {
@@ -29,11 +32,15 @@ export interface AgentWitchHarnessManifestReport {
   readonly hostname: string;
   readonly manifest: Readonly<Record<string, unknown>>;
   readonly reportedAt: string;
+  readonly userId?: string;
 }
 
-export interface AgentWitchHubClient {
+interface AgentWitchHubClient {
   readonly id: string;
   readonly role: AgentWitchRole;
+  readonly userId?: string;
+  readonly email?: string;
+  readonly pairingToken?: string;
   readonly send: (message: AgentWitchMessage) => void;
 }
 
@@ -44,6 +51,8 @@ export class AgentWitchHub {
     string,
     AgentWitchHarnessManifestReport
   >();
+
+  constructor(private readonly pairingStore: AgentWitchPairingStore) {}
 
   registerClient(client: AgentWitchHubClient): void {
     if (!this.connectedAtByClientId.has(client.id)) {
@@ -76,6 +85,7 @@ export class AgentWitchHub {
         connectedAt: new Date(
           this.connectedAtByClientId.get(client.id) ?? Date.now(),
         ).toISOString(),
+        userId: client.userId,
       }))
       .sort((left, right) => left.connectedAt.localeCompare(right.connectedAt));
   }
@@ -98,6 +108,7 @@ export class AgentWitchHub {
         payload: {
           clientId: senderId,
           role: sender?.role ?? "dashboard",
+          userId: sender?.userId,
         },
         requestId: message.requestId,
       };
@@ -110,13 +121,53 @@ export class AgentWitchHub {
       };
     }
 
-    if (message.type === AGENT_WITCH_MESSAGE_TYPES.HARNESS_REQUEST) {
-      if (sender?.role !== "dashboard") {
+    if (message.type === AGENT_WITCH_MESSAGE_TYPES.AGENT_PAIR) {
+      if (sender?.role !== "dashboard" || !isNonEmptyString(sender.userId)) {
         return {
           type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR,
           payload: {
             errorMessage:
-              "Only dashboard clients can dispatch harness requests.",
+              "Only authenticated dashboard clients can pair local agents.",
+          },
+          requestId: message.requestId,
+        };
+      }
+
+      if (!isAgentPairPayload(message.payload)) {
+        return {
+          type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR,
+          payload: {
+            errorMessage: "agent.pair requires payload.pairingToken.",
+          },
+          requestId: message.requestId,
+        };
+      }
+
+      const pairingToken = message.payload.pairingToken.trim();
+      this.pairingStore.claimPairing(
+        pairingToken,
+        sender.userId,
+        sender.email ?? sender.userId,
+      );
+      this.bindAgentClientsToPairing(pairingToken);
+
+      return {
+        type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ACK,
+        payload: {
+          paired: true,
+          pairingToken,
+        },
+        requestId: message.requestId,
+      };
+    }
+
+    if (message.type === AGENT_WITCH_MESSAGE_TYPES.HARNESS_REQUEST) {
+      if (sender?.role !== "dashboard" || !isNonEmptyString(sender.userId)) {
+        return {
+          type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR,
+          payload: {
+            errorMessage:
+              "Only authenticated dashboard clients can dispatch harness requests.",
           },
           requestId: message.requestId,
         };
@@ -133,15 +184,14 @@ export class AgentWitchHub {
         };
       }
 
-      const agentClient = [...this.clients.values()].find(
-        (client) => client.role === "agent",
-      );
+      const agentClient = this.findAgentClientForUser(sender.userId);
 
       if (agentClient === undefined) {
         return {
           type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR,
           payload: {
-            errorMessage: "No local agent is connected.",
+            errorMessage:
+              "No paired local agent is connected for your account.",
           },
           requestId: message.requestId,
         };
@@ -170,17 +220,10 @@ export class AgentWitchHub {
 
     if (message.type === AGENT_WITCH_MESSAGE_TYPES.HARNESS_REQUEST_ACK) {
       if (sender?.role !== "agent") {
-        return {
-          type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR,
-          payload: {
-            errorMessage:
-              "Only agent clients can publish harness request acks.",
-          },
-          requestId: message.requestId,
-        };
+        return this.unauthorizedAgentOnlyError(message.requestId);
       }
 
-      this.broadcastToRole("dashboard", message);
+      this.broadcastToDashboardUser(sender.userId, message);
       return {
         type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ACK,
         requestId: message.requestId,
@@ -189,17 +232,10 @@ export class AgentWitchHub {
 
     if (message.type === AGENT_WITCH_MESSAGE_TYPES.HARNESS_REQUEST_RESULT) {
       if (sender?.role !== "agent") {
-        return {
-          type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR,
-          payload: {
-            errorMessage:
-              "Only agent clients can publish harness request results.",
-          },
-          requestId: message.requestId,
-        };
+        return this.unauthorizedAgentOnlyError(message.requestId);
       }
 
-      this.broadcastToRole("dashboard", message);
+      this.broadcastToDashboardUser(sender.userId, message);
       return {
         type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ACK,
         requestId: message.requestId,
@@ -208,14 +244,7 @@ export class AgentWitchHub {
 
     if (message.type === AGENT_WITCH_MESSAGE_TYPES.HARNESS_MANIFEST_REPORT) {
       if (sender?.role !== "agent") {
-        return {
-          type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR,
-          payload: {
-            errorMessage:
-              "Only agent clients can publish harness manifest reports.",
-          },
-          requestId: message.requestId,
-        };
+        return this.unauthorizedAgentOnlyError(message.requestId);
       }
 
       const payload = message.payload;
@@ -239,9 +268,10 @@ export class AgentWitchHub {
         hostname: payload.hostname,
         manifest: payload.manifest,
         reportedAt: new Date().toISOString(),
+        userId: sender.userId,
       };
       this.manifestByAgentClientId.set(senderId, report);
-      this.broadcastToRole("dashboard", message);
+      this.broadcastToDashboardUser(sender.userId, message);
 
       return {
         type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ACK,
@@ -250,12 +280,12 @@ export class AgentWitchHub {
     }
 
     if (message.type === AGENT_WITCH_MESSAGE_TYPES.COMMAND_CLAUDE_RUN) {
-      if (sender?.role !== "dashboard") {
+      if (sender?.role !== "dashboard" || !isNonEmptyString(sender.userId)) {
         return {
           type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR,
           payload: {
             errorMessage:
-              "Only dashboard clients can dispatch Claude commands.",
+              "Only authenticated dashboard clients can dispatch Claude commands.",
           },
           requestId: message.requestId,
         };
@@ -271,15 +301,14 @@ export class AgentWitchHub {
         };
       }
 
-      const agentClient = [...this.clients.values()].find(
-        (client) => client.role === "agent",
-      );
+      const agentClient = this.findAgentClientForUser(sender.userId);
 
       if (agentClient === undefined) {
         return {
           type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR,
           payload: {
-            errorMessage: "No local agent is connected.",
+            errorMessage:
+              "No paired local agent is connected for your account.",
           },
           requestId: message.requestId,
         };
@@ -305,16 +334,10 @@ export class AgentWitchHub {
 
     if (message.type === AGENT_WITCH_MESSAGE_TYPES.COMMAND_CLAUDE_RESULT) {
       if (sender?.role !== "agent") {
-        return {
-          type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR,
-          payload: {
-            errorMessage: "Only agent clients can publish Claude results.",
-          },
-          requestId: message.requestId,
-        };
+        return this.unauthorizedAgentOnlyError(message.requestId);
       }
 
-      this.broadcastToRole("dashboard", message);
+      this.broadcastToDashboardUser(sender.userId, message);
       return {
         type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ACK,
         requestId: message.requestId,
@@ -345,11 +368,73 @@ export class AgentWitchHub {
     return null;
   }
 
-  broadcastToRole(role: AgentWitchRole, message: AgentWitchMessage): void {
+  resolvePairingTokenFromRegisterPayload(
+    payload: Readonly<Record<string, unknown>> | undefined,
+  ): string | null {
+    if (payload === undefined) {
+      return null;
+    }
+
+    const pairingToken = payload.pairingToken;
+    if (isNonEmptyString(pairingToken)) {
+      return pairingToken.trim();
+    }
+
+    return null;
+  }
+
+  resolveUserIdForAgentRegister(pairingToken: string): string | undefined {
+    return this.pairingStore.getClaimedPairing(pairingToken)?.userId;
+  }
+
+  private bindAgentClientsToPairing(pairingToken: string): void {
+    const claimedPairing = this.pairingStore.getClaimedPairing(pairingToken);
+    if (claimedPairing === null) {
+      return;
+    }
+
+    [...this.clients.entries()].forEach(([clientId, client]) => {
+      if (client.role === "agent" && client.pairingToken === pairingToken) {
+        this.clients.set(clientId, {
+          ...client,
+          userId: claimedPairing.userId,
+        });
+      }
+    });
+  }
+
+  private findAgentClientForUser(
+    userId: string,
+  ): AgentWitchHubClient | undefined {
+    return [...this.clients.values()].find(
+      (client) => client.role === "agent" && client.userId === userId,
+    );
+  }
+
+  private broadcastToDashboardUser(
+    userId: string | undefined,
+    message: AgentWitchMessage,
+  ): void {
     [...this.clients.values()]
-      .filter((client) => client.role === role)
+      .filter(
+        (client) =>
+          client.role === "dashboard" &&
+          (userId === undefined || client.userId === userId),
+      )
       .forEach((client) => {
         client.send(message);
       });
+  }
+
+  private unauthorizedAgentOnlyError(
+    requestId: string | undefined,
+  ): AgentWitchMessage {
+    return {
+      type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR,
+      payload: {
+        errorMessage: "Only paired agent clients can publish this message.",
+      },
+      requestId,
+    };
   }
 }

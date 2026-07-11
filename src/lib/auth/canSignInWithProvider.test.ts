@@ -12,10 +12,10 @@ describe("super admin auth rules", () => {
 
   it("allows super admin to sign in only with Google", () => {
     expect(canSignInWithProvider(SUPER_ADMIN_EMAIL, "google")).toBe(true);
-    expect(canSignInWithProvider(SUPER_ADMIN_EMAIL, "nodemailer")).toBe(false);
+    expect(canSignInWithProvider(SUPER_ADMIN_EMAIL, "resend")).toBe(false);
   });
 
   it("allows other users to sign in with email", () => {
-    expect(canSignInWithProvider("user@example.com", "nodemailer")).toBe(true);
+    expect(canSignInWithProvider("user@example.com", "resend")).toBe(true);
   });
 });

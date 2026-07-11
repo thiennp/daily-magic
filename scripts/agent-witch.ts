@@ -17,6 +17,7 @@ interface AgentWitchConfig {
   readonly workspace: string;
   readonly claudeCommand: string;
   readonly codexCommand: string;
+  readonly pairingToken: string;
 }
 
 const DEFAULT_WS_URL = "ws://localhost:3000/api/agent-witch/ws";
@@ -34,12 +35,7 @@ const isRecord = (value: unknown): value is Record<string, unknown> =>
 
 const readConfig = (): AgentWitchConfig | null => {
   if (!fs.existsSync(CONFIG_PATH)) {
-    return {
-      wsUrl: process.env.AGENT_WITCH_WS_URL ?? DEFAULT_WS_URL,
-      workspace: process.cwd(),
-      claudeCommand: process.env.CLAUDE_COMMAND ?? DEFAULT_CLAUDE_COMMAND,
-      codexCommand: process.env.CODEX_COMMAND ?? DEFAULT_CODEX_COMMAND,
-    };
+    return null;
   }
 
   try {
@@ -65,8 +61,19 @@ const readConfig = (): AgentWitchConfig | null => {
       typeof parsed.codexCommand === "string" && parsed.codexCommand.length > 0
         ? parsed.codexCommand
         : (process.env.CODEX_COMMAND ?? DEFAULT_CODEX_COMMAND);
+    const pairingToken =
+      typeof parsed.pairingToken === "string" && parsed.pairingToken.length > 0
+        ? parsed.pairingToken.trim()
+        : "";
 
-    return { wsUrl, workspace, claudeCommand, codexCommand };
+    if (pairingToken.length === 0) {
+      console.error(
+        `[agent-witch] Missing pairingToken in ${CONFIG_PATH}. Re-run the install script.`,
+      );
+      return null;
+    }
+
+    return { wsUrl, workspace, claudeCommand, codexCommand, pairingToken };
   } catch (error) {
     const message =
       error instanceof Error ? error.message : "Unknown config error";
@@ -373,6 +380,7 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
         payload: {
           role: "agent",
           hostname: os.hostname(),
+          pairingToken: config.pairingToken,
         },
       });
       reportHarnessManifest(socket);

@@ -38,6 +38,11 @@ export default async function LocalAgentSetupInstructions() {
         <CopyableBashCommand command={installCommand} />
       ) : null}
       <p className="mt-3 text-xs text-gray-500 dark:text-gray-400">
+        After install, copy the pairing token printed by the script into{" "}
+        <strong>Local agent pairing</strong> on this page. The dashboard only
+        routes harness and Claude commands to your paired local agent.
+      </p>
+      <p className="mt-3 text-xs text-gray-500 dark:text-gray-400">
         Script URL:{" "}
         <a
           href={installScriptUrl}

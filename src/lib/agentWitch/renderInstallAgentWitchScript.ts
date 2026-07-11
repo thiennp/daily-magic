@@ -42,18 +42,32 @@ TSX_CLI="\${INSTALL_DIR}/node_modules/tsx/dist/cli.mjs"
 
 mkdir -p "\${INSTALL_DIR}"
 
-echo "Downloading Agent Witch client from \${CLIENT_SCRIPT_URL}…"
-"\${CURL_BIN}" -fsSL "\${CLIENT_SCRIPT_URL}" -o "\${INSTALL_DIR}/agent-witch.ts"
+PAIRING_TOKEN="\$( "\${NODE_BIN}" -e "console.log(require('crypto').randomBytes(32).toString('hex'))" )"
 
 if [[ ! -f "\${INSTALL_DIR}/config.json" ]]; then
   cat > "\${INSTALL_DIR}/config.json" <<EOF
 {
   "wsUrl": "${wsUrl}",
   "workspace": "\${HOME}",
-  "claudeCommand": "claude"
+  "claudeCommand": "claude",
+  "pairingToken": "\${PAIRING_TOKEN}"
 }
 EOF
+else
+  "\${NODE_BIN}" - "\${INSTALL_DIR}/config.json" <<'NODE'
+const fs = require("node:fs");
+const configPath = process.argv[1];
+const config = JSON.parse(fs.readFileSync(configPath, "utf8"));
+if (typeof config.pairingToken !== "string" || config.pairingToken.length === 0) {
+  config.pairingToken = require("node:crypto").randomBytes(32).toString("hex");
+  fs.writeFileSync(configPath, \`\${JSON.stringify(config, null, 2)}\\n\`);
+}
+NODE
+  PAIRING_TOKEN="\$( "\${NODE_BIN}" -e "console.log(JSON.parse(require('node:fs').readFileSync(process.argv[1], 'utf8')).pairingToken)" "\${INSTALL_DIR}/config.json" )"
 fi
+
+echo "Downloading Agent Witch client from \${CLIENT_SCRIPT_URL}…"
+"\${CURL_BIN}" -fsSL "\${CLIENT_SCRIPT_URL}" -o "\${INSTALL_DIR}/agent-witch.ts"
 
 cat > "\${INSTALL_DIR}/package.json" <<EOF
 {
@@ -150,6 +164,8 @@ fi
 
 echo "Installed Agent Witch to \${INSTALL_DIR}"
 echo "Config: \${INSTALL_DIR}/config.json"
+echo "Pairing token: \${PAIRING_TOKEN}"
+echo "Paste this token into the app under Local agent pairing."
 echo "Logs (macOS): \${INSTALL_DIR}/agent-witch.log"
 echo "The client starts immediately and revives after crashes or disconnects."
 `;

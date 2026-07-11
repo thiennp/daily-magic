@@ -7,6 +7,7 @@ import sanitizeHarnessSlug from "@/lib/agentWitch/harness/sanitizeHarnessSlug";
 import type HarnessManifest from "@/lib/agentWitch/harness/types/HarnessManifest.type";
 import type HarnessItemSpec from "@/lib/agentWitch/harness/types/HarnessItemSpec.type";
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
+import { AGENT_WITCH_PAIRING_TOKEN_STORAGE_KEY } from "@/lib/agentWitch/constants/pairingTokenStorageKey.constant";
 import type { WsTestConnectionStatus } from "@/features/wsTest/types/WsTestConnectionStatus.type";
 
 const WS_PATH = "/api/agent-witch/ws";
@@ -34,6 +35,9 @@ const createRequestId = (): string => {
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === "object" && value !== null && !Array.isArray(value);
 
+export type AgentPairingStatus =
+  "not_connected" | "ready_to_pair" | "paired" | "pairing_failed";
+
 export interface HarnessRequestResult {
   readonly success: boolean;
   readonly writerAgent: string;
@@ -44,10 +48,12 @@ export interface HarnessRequestResult {
 
 export interface UseAgentWitchHarnessSocketResult {
   readonly connectionStatus: WsTestConnectionStatus;
+  readonly pairingStatus: AgentPairingStatus;
   readonly localManifest: HarnessManifest | null;
   readonly manifestHostname: string | null;
   readonly lastRequestResult: HarnessRequestResult | null;
   readonly lastMessage: string;
+  readonly pairLocalAgent: (pairingToken: string) => void;
   readonly sendHarnessRequest: (input: {
     readonly setName: string;
     readonly writerAgent: HarnessWriterAgent;
@@ -59,6 +65,8 @@ export function useAgentWitchHarnessSocket(): UseAgentWitchHarnessSocketResult {
   const socketRef = useRef<WebSocket | null>(null);
   const [connectionStatus, setConnectionStatus] =
     useState<WsTestConnectionStatus>("connecting");
+  const [pairingStatus, setPairingStatus] =
+    useState<AgentPairingStatus>("not_connected");
   const [localManifest, setLocalManifest] = useState<HarnessManifest | null>(
     null,
   );
@@ -66,6 +74,28 @@ export function useAgentWitchHarnessSocket(): UseAgentWitchHarnessSocketResult {
   const [lastRequestResult, setLastRequestResult] =
     useState<HarnessRequestResult | null>(null);
   const [lastMessage, setLastMessage] = useState("");
+
+  const pairLocalAgent = useCallback((pairingToken: string) => {
+    const trimmedToken = pairingToken.trim();
+    if (trimmedToken.length === 0) {
+      return;
+    }
+
+    const socket = socketRef.current;
+    if (socket === null || socket.readyState !== WebSocket.OPEN) {
+      setPairingStatus("not_connected");
+      return;
+    }
+
+    socket.send(
+      JSON.stringify({
+        type: "agent.pair",
+        payload: { pairingToken: trimmedToken },
+        requestId: createRequestId(),
+      }),
+    );
+    setPairingStatus("ready_to_pair");
+  }, []);
 
   useEffect(() => {
     const wsUrl = buildWebSocketUrl();
@@ -84,6 +114,20 @@ export function useAgentWitchHarnessSocket(): UseAgentWitchHarnessSocketResult {
           payload: { role: "dashboard" },
         }),
       );
+
+      const savedToken = window.localStorage.getItem(
+        AGENT_WITCH_PAIRING_TOKEN_STORAGE_KEY,
+      );
+      if (savedToken !== null && savedToken.trim().length > 0) {
+        socket.send(
+          JSON.stringify({
+            type: "agent.pair",
+            payload: { pairingToken: savedToken.trim() },
+            requestId: createRequestId(),
+          }),
+        );
+        setPairingStatus("ready_to_pair");
+      }
     });
 
     socket.addEventListener("message", (event) => {
@@ -94,6 +138,26 @@ export function useAgentWitchHarnessSocket(): UseAgentWitchHarnessSocketResult {
         const parsed: unknown = JSON.parse(raw);
         if (!isRecord(parsed) || typeof parsed.type !== "string") {
           return;
+        }
+
+        if (
+          parsed.type === "system.ack" &&
+          isRecord(parsed.payload) &&
+          parsed.payload.paired === true
+        ) {
+          setPairingStatus("paired");
+        }
+
+        if (parsed.type === "system.error") {
+          if (isRecord(parsed.payload)) {
+            const errorMessage =
+              typeof parsed.payload.errorMessage === "string"
+                ? parsed.payload.errorMessage
+                : "";
+            if (errorMessage.includes("pair")) {
+              setPairingStatus("pairing_failed");
+            }
+          }
         }
 
         if (
@@ -109,6 +173,7 @@ export function useAgentWitchHarnessSocket(): UseAgentWitchHarnessSocketResult {
               ? parsed.payload.hostname
               : null,
           );
+          setPairingStatus("paired");
         }
 
         if (
@@ -142,12 +207,14 @@ export function useAgentWitchHarnessSocket(): UseAgentWitchHarnessSocketResult {
 
     socket.addEventListener("close", () => {
       setConnectionStatus("disconnected");
+      setPairingStatus("not_connected");
       setLocalManifest(null);
       setManifestHostname(null);
     });
 
     socket.addEventListener("error", () => {
       setConnectionStatus("error");
+      setPairingStatus("not_connected");
     });
 
     return () => {
@@ -202,10 +269,12 @@ export function useAgentWitchHarnessSocket(): UseAgentWitchHarnessSocketResult {
 
   return {
     connectionStatus,
+    pairingStatus,
     localManifest,
     manifestHostname,
     lastRequestResult,
     lastMessage,
+    pairLocalAgent,
     sendHarnessRequest,
   };
 }

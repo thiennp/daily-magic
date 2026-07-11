@@ -1,6 +1,6 @@
 import NextAuth from "next-auth";
 import Google from "next-auth/providers/google";
-import Nodemailer from "next-auth/providers/nodemailer";
+import Resend from "next-auth/providers/resend";
 import type { Provider } from "next-auth/providers";
 
 import {
@@ -10,6 +10,10 @@ import {
 import canSignInWithProvider from "@/lib/auth/canSignInWithProvider";
 import { GlobalRole, isGlobalRole } from "@/lib/auth/roles";
 import { getUserById } from "@/lib/auth/userRepository";
+import sendSignInVerificationEmail from "@/lib/email/sendSignInVerificationEmail";
+
+const resolveResendApiKey = (): string | undefined =>
+  process.env.AUTH_RESEND_KEY ?? process.env.RESEND_API_KEY;
 
 function buildAuthProviders(): Provider[] {
   const providers: Provider[] = [];
@@ -23,11 +27,24 @@ function buildAuthProviders(): Provider[] {
     );
   }
 
-  if (process.env.EMAIL_SERVER && process.env.EMAIL_FROM) {
+  const resendApiKey = resolveResendApiKey();
+  if (resendApiKey && process.env.EMAIL_FROM) {
     providers.push(
-      Nodemailer({
-        server: process.env.EMAIL_SERVER,
+      Resend({
+        apiKey: resendApiKey,
         from: process.env.EMAIL_FROM,
+        sendVerificationRequest(params) {
+          const { identifier: to, provider, url, theme } = params;
+          const { host } = new URL(url);
+
+          return sendSignInVerificationEmail({
+            to,
+            url,
+            from: provider.from ?? process.env.EMAIL_FROM ?? "",
+            host,
+            theme,
+          });
+        },
       }),
     );
   }

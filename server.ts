@@ -5,6 +5,11 @@ import next from "next";
 import { WebSocketServer } from "ws";
 
 import { getAgentWitchHub } from "./src/lib/agentWitch/getAgentWitchHub";
+import {
+  isAllowedAgentWitchOrigin,
+  isSecureAgentWitchUpgrade,
+} from "./src/lib/agentWitch/isAllowedAgentWitchUpgrade";
+import resolveAuthActorFromCookieHeader from "./src/lib/auth/resolveAuthActorFromCookieHeader";
 import { attachAgentWitchWebSocket } from "./src/server/agentWitch/attachAgentWitchWebSocket";
 
 const dev = process.env.NODE_ENV !== "production";
@@ -24,21 +29,31 @@ app.prepare().then(() => {
 
   const webSocketServer = new WebSocketServer({ noServer: true });
 
-  webSocketServer.on("connection", (socket) => {
-    attachAgentWitchWebSocket(hub, socket);
-  });
-
   server.on("upgrade", (request, socket, head) => {
     const { pathname } = parse(request.url ?? "", true);
 
-    if (pathname === wsPath) {
-      webSocketServer.handleUpgrade(request, socket, head, (ws) => {
-        webSocketServer.emit("connection", ws, request);
-      });
+    if (pathname !== wsPath) {
+      socket.destroy();
       return;
     }
 
-    socket.destroy();
+    if (!isSecureAgentWitchUpgrade(request)) {
+      socket.destroy();
+      return;
+    }
+
+    if (!isAllowedAgentWitchOrigin(request)) {
+      socket.destroy();
+      return;
+    }
+
+    void resolveAuthActorFromCookieHeader(request.headers.cookie ?? "").then(
+      (dashboardActor) => {
+        webSocketServer.handleUpgrade(request, socket, head, (ws) => {
+          attachAgentWitchWebSocket(hub, ws, { dashboardActor });
+        });
+      },
+    );
   });
 
   server.listen(port, () => {

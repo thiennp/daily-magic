@@ -3,7 +3,7 @@ import Link from "next/link";
 import UserDropdown from "@/components/header/UserDropdown";
 import ConnectedClientsList from "@/features/home/ConnectedClientsList";
 import LocalAgentSetupInstructions from "@/features/home/LocalAgentSetupInstructions";
-import HarnessManagerPanel from "@/features/harness/HarnessManagerPanel";
+import HarnessWorkspace from "@/features/harness/HarnessWorkspace";
 import type { GlobalRoleValue } from "@/lib/auth/roles";
 
 interface HomeAuthenticatedViewProps {
@@ -41,7 +41,7 @@ export default function HomeAuthenticatedView({
       </div>
 
       <ConnectedClientsList />
-      <HarnessManagerPanel />
+      <HarnessWorkspace />
       <LocalAgentSetupInstructions />
 
       <div className="flex flex-wrap gap-3 pt-2">

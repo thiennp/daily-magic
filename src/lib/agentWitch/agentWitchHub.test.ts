@@ -1,8 +1,13 @@
 import { describe, expect, it, beforeEach } from "vitest";
 
+import { AgentWitchPairingStore } from "./agentWitchPairingStore";
 import { AgentWitchHub } from "./agentWitchHub";
 import type AgentWitchMessage from "./types/AgentWitchMessage.type";
 import { AGENT_WITCH_MESSAGE_TYPES } from "./types/AgentWitchMessageType.constant";
+
+const USER_ID = "user-1";
+const USER_EMAIL = "user@example.com";
+const PAIRING_TOKEN = "pair-token-1";
 
 const createCollector = () => {
   const messages: AgentWitchMessage[] = [];
@@ -14,11 +19,36 @@ const createCollector = () => {
   };
 };
 
+const registerPairedClients = (
+  hub: AgentWitchHub,
+  pairingStore: AgentWitchPairingStore,
+  agentSend: (message: AgentWitchMessage) => void,
+  dashboardSend: (message: AgentWitchMessage) => void,
+): void => {
+  pairingStore.claimPairing(PAIRING_TOKEN, USER_ID, USER_EMAIL);
+  hub.registerClient({
+    id: "agent-1",
+    role: "agent",
+    userId: USER_ID,
+    pairingToken: PAIRING_TOKEN,
+    send: agentSend,
+  });
+  hub.registerClient({
+    id: "dash-1",
+    role: "dashboard",
+    userId: USER_ID,
+    email: USER_EMAIL,
+    send: dashboardSend,
+  });
+};
+
 describe("AgentWitchHub", () => {
   let hub: AgentWitchHub;
+  let pairingStore: AgentWitchPairingStore;
 
   beforeEach(() => {
-    hub = new AgentWitchHub();
+    pairingStore = new AgentWitchPairingStore();
+    hub = new AgentWitchHub(pairingStore);
   });
 
   it("lists connected clients with roles and timestamps", () => {
@@ -30,6 +60,7 @@ describe("AgentWitchHub", () => {
     hub.registerClient({
       id: "dash-1",
       role: "dashboard",
+      userId: USER_ID,
       send: () => undefined,
     });
 
@@ -52,6 +83,7 @@ describe("AgentWitchHub", () => {
     hub.registerClient({
       id: "dash-1",
       role: "dashboard",
+      userId: USER_ID,
       send: () => undefined,
     });
 
@@ -61,18 +93,9 @@ describe("AgentWitchHub", () => {
     });
   });
 
-  it("dispatches Claude commands from dashboard to agent", () => {
+  it("dispatches Claude commands from authenticated dashboard to paired agent", () => {
     const agent = createCollector();
-    hub.registerClient({
-      id: "agent-1",
-      role: "agent",
-      send: agent.send,
-    });
-    hub.registerClient({
-      id: "dash-1",
-      role: "dashboard",
-      send: () => undefined,
-    });
+    registerPairedClients(hub, pairingStore, agent.send, () => undefined);
 
     const response = hub.handleMessage("dash-1", {
       type: AGENT_WITCH_MESSAGE_TYPES.COMMAND_CLAUDE_RUN,
@@ -88,7 +111,7 @@ describe("AgentWitchHub", () => {
     expect(agent.messages[0]?.payload?.prompt).toBe("run lint");
   });
 
-  it("returns an error when no agent is connected", () => {
+  it("rejects Claude commands from unauthenticated dashboard clients", () => {
     hub.registerClient({
       id: "dash-1",
       role: "dashboard",
@@ -101,23 +124,31 @@ describe("AgentWitchHub", () => {
     });
 
     expect(response?.type).toBe(AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR);
-    expect(response?.payload?.errorMessage).toBe(
-      "No local agent is connected.",
-    );
+    expect(response?.payload?.errorMessage).toContain("authenticated");
   });
 
-  it("forwards Claude results from agent to dashboards", () => {
-    const dashboard = createCollector();
-    hub.registerClient({
-      id: "agent-1",
-      role: "agent",
-      send: () => undefined,
-    });
+  it("returns an error when no paired agent is connected", () => {
     hub.registerClient({
       id: "dash-1",
       role: "dashboard",
-      send: dashboard.send,
+      userId: USER_ID,
+      send: () => undefined,
     });
+
+    const response = hub.handleMessage("dash-1", {
+      type: AGENT_WITCH_MESSAGE_TYPES.COMMAND_CLAUDE_RUN,
+      payload: { prompt: "run lint" },
+    });
+
+    expect(response?.type).toBe(AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR);
+    expect(response?.payload?.errorMessage).toBe(
+      "No paired local agent is connected for your account.",
+    );
+  });
+
+  it("forwards Claude results from paired agent to matching dashboard", () => {
+    const dashboard = createCollector();
+    registerPairedClients(hub, pairingStore, () => undefined, dashboard.send);
 
     const response = hub.handleMessage("agent-1", {
       type: AGENT_WITCH_MESSAGE_TYPES.COMMAND_CLAUDE_RESULT,
@@ -134,6 +165,7 @@ describe("AgentWitchHub", () => {
     hub.registerClient({
       id: "agent-1",
       role: "agent",
+      userId: USER_ID,
       send: () => undefined,
     });
 
@@ -145,24 +177,34 @@ describe("AgentWitchHub", () => {
     expect(response?.type).toBe(AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR);
   });
 
+  it("claims pairing tokens for authenticated dashboard clients", () => {
+    hub.registerClient({
+      id: "dash-1",
+      role: "dashboard",
+      userId: USER_ID,
+      email: USER_EMAIL,
+      send: () => undefined,
+    });
+
+    const response = hub.handleMessage("dash-1", {
+      type: AGENT_WITCH_MESSAGE_TYPES.AGENT_PAIR,
+      payload: { pairingToken: PAIRING_TOKEN },
+      requestId: "pair-1",
+    });
+
+    expect(response?.type).toBe(AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ACK);
+    expect(pairingStore.getClaimedPairing(PAIRING_TOKEN)?.userId).toBe(USER_ID);
+  });
+
   it("resolves register roles from payload", () => {
     expect(hub.resolveRoleFromRegisterPayload({ role: "agent" })).toBe("agent");
     expect(hub.resolveRoleFromRegisterPayload({ role: "invalid" })).toBeNull();
     expect(hub.resolveRoleFromRegisterPayload(undefined)).toBeNull();
   });
 
-  it("dispatches harness requests from dashboard to agent", () => {
+  it("dispatches harness requests from authenticated dashboard to paired agent", () => {
     const agent = createCollector();
-    hub.registerClient({
-      id: "agent-1",
-      role: "agent",
-      send: agent.send,
-    });
-    hub.registerClient({
-      id: "dash-1",
-      role: "dashboard",
-      send: () => undefined,
-    });
+    registerPairedClients(hub, pairingStore, agent.send, () => undefined);
 
     const response = hub.handleMessage("dash-1", {
       type: AGENT_WITCH_MESSAGE_TYPES.HARNESS_REQUEST,
@@ -176,7 +218,7 @@ describe("AgentWitchHub", () => {
             {
               id: "item-1",
               kind: "rule",
-              title: "No Let",
+              title: "Prefer Const",
               content: "Prefer const.",
             },
           ],
@@ -193,18 +235,9 @@ describe("AgentWitchHub", () => {
     expect(agent.messages[0]?.payload?.writerAgent).toBe("claude-cli");
   });
 
-  it("stores and forwards harness manifest reports to dashboards", () => {
+  it("stores and forwards harness manifest reports to matching dashboards", () => {
     const dashboard = createCollector();
-    hub.registerClient({
-      id: "agent-1",
-      role: "agent",
-      send: () => undefined,
-    });
-    hub.registerClient({
-      id: "dash-1",
-      role: "dashboard",
-      send: dashboard.send,
-    });
+    registerPairedClients(hub, pairingStore, () => undefined, dashboard.send);
 
     const response = hub.handleMessage("agent-1", {
       type: AGENT_WITCH_MESSAGE_TYPES.HARNESS_MANIFEST_REPORT,
@@ -226,18 +259,9 @@ describe("AgentWitchHub", () => {
     expect(hub.listHarnessManifestReports()[0]?.hostname).toBe("local-mac");
   });
 
-  it("forwards harness request results from agent to dashboards", () => {
+  it("forwards harness request results from paired agent to matching dashboard", () => {
     const dashboard = createCollector();
-    hub.registerClient({
-      id: "agent-1",
-      role: "agent",
-      send: () => undefined,
-    });
-    hub.registerClient({
-      id: "dash-1",
-      role: "dashboard",
-      send: dashboard.send,
-    });
+    registerPairedClients(hub, pairingStore, () => undefined, dashboard.send);
 
     hub.handleMessage("agent-1", {
       type: AGENT_WITCH_MESSAGE_TYPES.HARNESS_REQUEST_RESULT,

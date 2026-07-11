@@ -8,7 +8,7 @@ import {
   HARNESS_KIND_OPTIONS,
   HARNESS_WRITER_OPTIONS,
 } from "@/features/harness/constants/harnessFormOptions";
-import { useAgentWitchHarnessSocket } from "@/features/harness/hooks/useAgentWitchHarnessSocket";
+import type { UseAgentWitchHarnessSocketResult } from "@/features/harness/hooks/useAgentWitchHarnessSocket";
 import isAgentWitchWebSocketSupportedHost from "@/lib/agentWitch/isAgentWitchWebSocketSupportedHost";
 import type { HarnessItemKind } from "@/lib/agentWitch/harness/types/HarnessItemKind.constant";
 import type HarnessItemSpec from "@/lib/agentWitch/harness/types/HarnessItemSpec.type";
@@ -37,14 +37,19 @@ const createEmptyItem = (): HarnessItemDraft => ({
   content: "",
 });
 
-export default function HarnessManagerPanel() {
+export default function HarnessManagerPanel({
+  harnessSocket,
+}: {
+  readonly harnessSocket: UseAgentWitchHarnessSocketResult;
+}) {
   const {
     connectionStatus,
     localManifest,
     manifestHostname,
     lastRequestResult,
     sendHarnessRequest,
-  } = useAgentWitchHarnessSocket();
+    pairingStatus,
+  } = harnessSocket;
   const [setName, setSetName] = useState("");
   const [writerAgent, setWriterAgent] =
     useState<HarnessWriterAgent>("claude-cli");
@@ -73,6 +78,7 @@ export default function HarnessManagerPanel() {
 
   const canSubmit =
     connectionStatus === "connected" &&
+    pairingStatus === "paired" &&
     setName.trim().length > 0 &&
     readyItems.length > 0;
 

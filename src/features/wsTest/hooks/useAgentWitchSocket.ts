@@ -2,6 +2,8 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 
+import { AGENT_WITCH_PAIRING_TOKEN_STORAGE_KEY } from "@/lib/agentWitch/constants/pairingTokenStorageKey.constant";
+
 import type { WsTestConnectionStatus } from "../types/WsTestConnectionStatus.type";
 
 const WS_PATH = "/api/agent-witch/ws";
@@ -55,6 +57,19 @@ export function useAgentWitchSocket(): UseAgentWitchSocketResult {
           payload: { role: "dashboard" },
         }),
       );
+
+      const savedToken = window.localStorage.getItem(
+        AGENT_WITCH_PAIRING_TOKEN_STORAGE_KEY,
+      );
+      if (savedToken !== null && savedToken.trim().length > 0) {
+        socket.send(
+          JSON.stringify({
+            type: "agent.pair",
+            payload: { pairingToken: savedToken.trim() },
+            requestId: createRequestId(),
+          }),
+        );
+      }
     });
 
     socket.addEventListener("message", (event) => {
