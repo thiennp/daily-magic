@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+import LocalAgentSetupInstructions from "@/features/home/LocalAgentSetupInstructions";
+
 export default function Home() {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-gray-50 px-6 dark:bg-gray-900">
@@ -36,6 +38,7 @@ export default function Home() {
             TailAdmin source
           </a>
         </div>
+        <LocalAgentSetupInstructions />
       </main>
     </div>
   );
