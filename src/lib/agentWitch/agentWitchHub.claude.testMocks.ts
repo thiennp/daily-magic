@@ -1,0 +1,39 @@
+import { vi } from "vitest";
+
+import { USER_ID } from "./agentWitchHub.testHelpers";
+import { DispatchPolicy } from "@/lib/dispatch/DispatchPolicy.constant";
+
+vi.mock("@/lib/dispatch/createAgentRun", () => ({
+  createAgentRun: vi.fn(async () => ({
+    id: "run-1",
+    groupId: null,
+    requesterUserId: USER_ID,
+    executorUserId: USER_ID,
+    prompt: "run lint",
+    status: "running",
+    dispatchPolicy: DispatchPolicy.OPEN,
+    resultOutput: null,
+    resultExitCode: null,
+    denialReason: null,
+    createdAt: "2026-01-01T00:00:00.000Z",
+    updatedAt: "2026-01-01T00:00:00.000Z",
+    startedAt: null,
+    completedAt: null,
+  })),
+}));
+
+vi.mock("@/lib/dispatch/resolveDispatchPolicyForExecutor", () => ({
+  resolveDispatchPolicyForExecutor: vi.fn(async () => DispatchPolicy.OPEN),
+}));
+
+vi.mock("@/lib/dispatch/dispatchClaudeRunToAgent", async () => {
+  const actual = await vi.importActual<
+    typeof import("@/lib/dispatch/dispatchClaudeRunToAgent")
+  >("@/lib/dispatch/dispatchClaudeRunToAgent");
+
+  return {
+    ...actual,
+    markAgentRunRunning: vi.fn(async () => undefined),
+    markAgentRunCompleted: vi.fn(async () => undefined),
+  };
+});

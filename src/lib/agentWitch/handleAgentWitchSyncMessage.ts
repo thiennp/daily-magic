@@ -1,7 +1,3 @@
-import {
-  handleClaudeResultMessage,
-  handleClaudeRunMessage,
-} from "./handleClaudeHubMessage";
 import { handleHarnessManifestReportMessage } from "./handleHarnessManifestReportMessage";
 import {
   handleHarnessAgentRelayMessage,
@@ -65,14 +61,6 @@ export const handleAgentWitchSyncMessage = (
       message,
       sender,
     );
-  }
-
-  if (message.type === AGENT_WITCH_MESSAGE_TYPES.COMMAND_CLAUDE_RUN) {
-    return handleClaudeRunMessage(runtime, message, sender);
-  }
-
-  if (message.type === AGENT_WITCH_MESSAGE_TYPES.COMMAND_CLAUDE_RESULT) {
-    return handleClaudeResultMessage(runtime, message, sender);
   }
 
   return {

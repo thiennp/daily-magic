@@ -1,3 +1,4 @@
+import "./agentWitchHub.claude.testMocks";
 import { describe, expect, it, beforeEach } from "vitest";
 
 import { AgentWitchHub } from "./agentWitchHub";
@@ -24,7 +25,7 @@ describe("AgentWitchHub Claude commands", () => {
     const agent = createCollector();
     await registerPairedClients(hub, pairingStore, agent.send, () => undefined);
 
-    const response = hub.handleMessage("dash-1", {
+    const response = await hub.handleMessageAsync("dash-1", {
       type: AGENT_WITCH_MESSAGE_TYPES.COMMAND_CLAUDE_RUN,
       payload: { prompt: "run lint" },
       requestId: "req-1",
@@ -38,14 +39,14 @@ describe("AgentWitchHub Claude commands", () => {
     expect(agent.messages[0]?.payload?.prompt).toBe("run lint");
   });
 
-  it("rejects Claude commands from unauthenticated dashboard clients", () => {
+  it("rejects Claude commands from unauthenticated dashboard clients", async () => {
     hub.registerClient({
       id: "dash-1",
       role: "dashboard",
       send: () => undefined,
     });
 
-    const response = hub.handleMessage("dash-1", {
+    const response = await hub.handleMessageAsync("dash-1", {
       type: AGENT_WITCH_MESSAGE_TYPES.COMMAND_CLAUDE_RUN,
       payload: { prompt: "run lint" },
     });
@@ -54,7 +55,7 @@ describe("AgentWitchHub Claude commands", () => {
     expect(response?.payload?.errorMessage).toContain("authenticated");
   });
 
-  it("returns an error when no paired agent is connected", () => {
+  it("returns an error when no paired agent is connected", async () => {
     hub.registerClient({
       id: "dash-1",
       role: "dashboard",
@@ -62,7 +63,7 @@ describe("AgentWitchHub Claude commands", () => {
       send: () => undefined,
     });
 
-    const response = hub.handleMessage("dash-1", {
+    const response = await hub.handleMessageAsync("dash-1", {
       type: AGENT_WITCH_MESSAGE_TYPES.COMMAND_CLAUDE_RUN,
       payload: { prompt: "run lint" },
     });
@@ -82,7 +83,7 @@ describe("AgentWitchHub Claude commands", () => {
       dashboard.send,
     );
 
-    const response = hub.handleMessage("agent-1", {
+    const response = await hub.handleMessageAsync("agent-1", {
       type: AGENT_WITCH_MESSAGE_TYPES.COMMAND_CLAUDE_RESULT,
       payload: { exitCode: 0, output: "done" },
       requestId: "req-2",
@@ -93,7 +94,7 @@ describe("AgentWitchHub Claude commands", () => {
     expect(dashboard.messages[0]?.payload?.output).toBe("done");
   });
 
-  it("rejects Claude commands from agent clients", () => {
+  it("rejects Claude commands from agent clients", async () => {
     hub.registerClient({
       id: "agent-1",
       role: "agent",
@@ -101,7 +102,7 @@ describe("AgentWitchHub Claude commands", () => {
       send: () => undefined,
     });
 
-    const response = hub.handleMessage("agent-1", {
+    const response = await hub.handleMessageAsync("agent-1", {
       type: AGENT_WITCH_MESSAGE_TYPES.COMMAND_CLAUDE_RUN,
       payload: { prompt: "run lint" },
     });

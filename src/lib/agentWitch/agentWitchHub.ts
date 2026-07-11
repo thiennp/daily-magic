@@ -9,8 +9,8 @@ import {
   listConnectedAgentWitchClients,
   listSortedHarnessManifestReports,
 } from "./agentWitchHubQueries";
-import { handleAgentPairMessageAsync } from "./handleAgentPairMessageAsync";
 import { handleAgentWitchSyncMessage } from "./handleAgentWitchSyncMessage";
+import { routeAgentWitchMessageAsync } from "./routeAgentWitchMessageAsync";
 import {
   resolvePairingTokenFromRegisterPayload,
   resolveRoleFromRegisterPayload,
@@ -86,13 +86,12 @@ export class AgentWitchHub implements AgentWitchHubRuntime {
     senderId: string,
     message: AgentWitchMessage,
   ): Promise<AgentWitchMessage | null> {
-    const sender = this.clients.get(senderId);
-
-    if (message.type === AGENT_WITCH_MESSAGE_TYPES.AGENT_PAIR) {
-      return handleAgentPairMessageAsync(this, senderId, message, sender);
-    }
-
-    return handleAgentWitchSyncMessage(this, senderId, message, sender);
+    return routeAgentWitchMessageAsync(
+      this,
+      senderId,
+      this.clients.get(senderId),
+      message,
+    );
   }
 
   resolveRoleFromRegisterPayload(

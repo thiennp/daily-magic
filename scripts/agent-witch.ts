@@ -175,6 +175,7 @@ const runClaudeTask = (
   prompt: string,
   requestId: string | undefined,
   socket: WebSocket,
+  agentRunId?: string,
 ): void => {
   const child = spawn(config.claudeCommand, ["-p", prompt], {
     cwd: config.workspace,
@@ -198,6 +199,7 @@ const runClaudeTask = (
       payload: {
         exitCode: exitCode ?? -1,
         output: outputChunks.join("").trim(),
+        ...(agentRunId !== undefined ? { agentRunId } : {}),
       },
       requestId,
     });
@@ -210,6 +212,7 @@ const runClaudeTask = (
         exitCode: -1,
         output: "",
         errorMessage: error.message,
+        ...(agentRunId !== undefined ? { agentRunId } : {}),
       },
       requestId,
     });
@@ -401,10 +404,41 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
 
         if (parsed.type === "command.claude.run" && isRecord(parsed.payload)) {
           const prompt = parsed.payload.prompt;
+          const agentRunId =
+            typeof parsed.payload.agentRunId === "string"
+              ? parsed.payload.agentRunId
+              : undefined;
 
           if (typeof prompt === "string" && prompt.trim().length > 0) {
             console.log("[agent-witch] Running Claude CLI task…");
-            runClaudeTask(config, prompt.trim(), requestId, socket);
+            runClaudeTask(config, prompt.trim(), requestId, socket, agentRunId);
+          }
+        }
+
+        if (
+          parsed.type === "dispatch.approval.required" &&
+          isRecord(parsed.payload)
+        ) {
+          const requesterEmail =
+            typeof parsed.payload.requesterEmail === "string"
+              ? parsed.payload.requesterEmail
+              : "A teammate";
+          const promptPreview =
+            typeof parsed.payload.prompt === "string"
+              ? parsed.payload.prompt.slice(0, 120)
+              : "agent task";
+          console.log(
+            `[agent-witch] Approval required from ${requesterEmail}: ${promptPreview}`,
+          );
+          if (process.platform === "darwin") {
+            spawn(
+              "osascript",
+              [
+                "-e",
+                `display notification "${promptPreview.replace(/"/g, '\\"')}" with title "Agent dispatch approval" subtitle "${requesterEmail.replace(/"/g, '\\"')}"`,
+              ],
+              { stdio: "ignore" },
+            );
           }
         }
 
