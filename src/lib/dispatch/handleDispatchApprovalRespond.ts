@@ -8,6 +8,7 @@ import { updateAgentRunStatus } from "@/lib/dispatch/agentRunQueries";
 import { dispatchApprovalRegistry } from "@/lib/dispatch/dispatchApprovalRegistry";
 import { expireStaleDispatchApprovals } from "@/lib/dispatch/expireStaleDispatchApprovals";
 import { ensureDispatchApprovalsHydrated } from "@/lib/dispatch/restoreDispatchApprovalRegistry";
+import { resolvePendingDispatchApproval } from "@/lib/dispatch/resolvePendingDispatchApproval";
 import {
   dispatchClaudeRunToAgent,
   markAgentRunRunning,
@@ -51,9 +52,9 @@ export const handleDispatchApprovalRespondAsync = async (
     };
   }
 
-  const pending = dispatchApprovalRegistry.get(runId);
+  const pending = await resolvePendingDispatchApproval(runId, sender.userId);
 
-  if (pending === undefined || pending.executorUserId !== sender.userId) {
+  if (pending === null) {
     return {
       type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR,
       payload: {

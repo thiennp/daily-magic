@@ -1,6 +1,7 @@
 import AgentDispatchPolicyPanel from "@/features/dispatch/AgentDispatchPolicyPanel";
 import BorrowHarnessCatalog from "@/features/harness/BorrowHarnessCatalog";
 import HomeDashboardHero from "@/features/home/HomeDashboardHero";
+import HomeOnboardingChecklist from "@/features/home/HomeOnboardingChecklist";
 import LocalAgentSetupInstructions from "@/features/home/LocalAgentSetupInstructions";
 import HarnessWorkspace from "@/features/harness/HarnessWorkspace";
 import type { GlobalRoleValue } from "@/lib/auth/roles";
@@ -19,6 +20,7 @@ export default function HomeAuthenticatedView({
   return (
     <div className="space-y-8 text-left">
       <HomeDashboardHero user={user} />
+      <HomeOnboardingChecklist />
       <BorrowHarnessCatalog />
 
       <details className="rounded-2xl border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-white/[0.03]">

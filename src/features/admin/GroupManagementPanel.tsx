@@ -5,6 +5,7 @@ import { useSession } from "next-auth/react";
 import GroupDispatchPolicyControl from "@/features/admin/components/GroupDispatchPolicyControl";
 import GroupMembersSection from "@/features/admin/components/GroupMembersSection";
 import GroupSelectionSection from "@/features/admin/components/GroupSelectionSection";
+import GroupTeamActivityPanel from "@/features/admin/components/GroupTeamActivityPanel";
 import { useGroupManagement } from "@/features/admin/hooks/useGroupManagement";
 import type { GroupItem } from "@/features/admin/types/groupManagement.types";
 import { isPrivilegedGlobalRole } from "@/lib/auth/roles";
@@ -52,6 +53,7 @@ export default function GroupManagementPanel({
             onRoleChange={groupManagement.handleRoleChange}
             onRemoveMember={groupManagement.handleRemoveMember}
           />
+          <GroupTeamActivityPanel groupId={groupManagement.selectedGroupId} />
         </>
       ) : null}
 

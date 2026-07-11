@@ -40,7 +40,10 @@ export default function HomeMarketingLanding() {
             <HomeMarketingFeatures />
           </div>
 
-          <div className="rounded-2xl border border-gray-200 bg-white p-8 shadow-theme-sm dark:border-gray-800 dark:bg-white/[0.03]">
+          <div
+            className="rounded-2xl border border-gray-200 bg-white p-8 shadow-theme-sm dark:border-gray-800 dark:bg-white/[0.03]"
+            id="get-started"
+          >
             <h2 className="text-xl font-semibold text-gray-800 dark:text-white/90">
               Get started
             </h2>

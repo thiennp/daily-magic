@@ -7,6 +7,7 @@ import type { AgentWitchRole } from "@/lib/agentWitch/types/AgentWitchRole.type"
 import type { AuthActorFromCookies } from "@/lib/auth/resolveAuthActorFromCookieHeader";
 
 import { sendAgentWitchSocketMessage } from "@/server/agentWitch/sendAgentWitchSocketMessage";
+import { replayPendingDispatchApprovalsForUser } from "@/lib/dispatch/replayPendingDispatchApprovalsForUser";
 
 export interface AgentWitchConnectionState {
   registered: boolean;
@@ -85,6 +86,13 @@ export const processAgentWitchRegisterMessage = async (
     }
 
     registerClient();
+
+    if (
+      connectionState.role === "dashboard" &&
+      connectionState.userId !== undefined
+    ) {
+      void replayPendingDispatchApprovalsForUser(hub, connectionState.userId);
+    }
   }
 
   return true;
