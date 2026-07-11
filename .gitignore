@@ -42,3 +42,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# structure-validation local cache (updated on every validate run)
+.structure-validation-cache/
