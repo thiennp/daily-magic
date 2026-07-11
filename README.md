@@ -107,12 +107,16 @@ Agent docs: `CLAUDE.md`, `AGENTS.md`
 
 ## Agent Witch (local Claude bridge)
 
-Use the custom server so WebSocket upgrades work:
+Use the custom server so WebSocket upgrades work (`npm run dev`).
 
 ```bash
-npm run dev              # app + ws://localhost:3000/api/agent-witch/ws
-npm run agent-witch      # local client (runs claude CLI)
-npm run agent-witch:install  # ~/.agent-witch + macOS LaunchAgent
+curl -fsSL https://your-domain.com/install/agent-witch.sh | bash
+```
+
+Or locally:
+
+```bash
+npm run agent-witch:install  # fetches from http://localhost:3000/install/agent-witch.sh
 ```
 
 Open http://localhost:3000/ws-test, type a task, and send it to the local agent.

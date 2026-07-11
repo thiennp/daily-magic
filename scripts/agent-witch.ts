@@ -20,13 +20,15 @@ interface AgentWitchConfig {
 
 const DEFAULT_WS_URL = "ws://localhost:3000/api/agent-witch/ws";
 const DEFAULT_CLAUDE_COMMAND = "claude";
+const HEARTBEAT_INTERVAL_MS = 30_000;
+const MAX_RECONNECT_DELAY_MS = 30_000;
 const CONFIG_DIR = path.join(os.homedir(), ".agent-witch");
 const CONFIG_PATH = path.join(CONFIG_DIR, "config.json");
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === "object" && value !== null && !Array.isArray(value);
 
-const readConfig = (): AgentWitchConfig => {
+const readConfig = (): AgentWitchConfig | null => {
   if (!fs.existsSync(CONFIG_PATH)) {
     return {
       wsUrl: process.env.AGENT_WITCH_WS_URL ?? DEFAULT_WS_URL,
@@ -60,7 +62,7 @@ const readConfig = (): AgentWitchConfig => {
     const message =
       error instanceof Error ? error.message : "Unknown config error";
     console.error(`[agent-witch] Invalid config at ${CONFIG_PATH}: ${message}`);
-    process.exit(1);
+    return null;
   }
 };
 
@@ -77,6 +79,7 @@ const runClaudeTask = (
   config: AgentWitchConfig,
   prompt: string,
   requestId: string | undefined,
+  socket: WebSocket,
 ): void => {
   const child = spawn(config.claudeCommand, ["-p", prompt], {
     cwd: config.workspace,
@@ -95,11 +98,6 @@ const runClaudeTask = (
   });
 
   child.on("close", (exitCode) => {
-    const socket = connectionHolder.socket;
-    if (socket === undefined) {
-      return;
-    }
-
     sendMessage(socket, {
       type: "command.claude.result",
       payload: {
@@ -111,11 +109,6 @@ const runClaudeTask = (
   });
 
   child.on("error", (error) => {
-    const socket = connectionHolder.socket;
-    if (socket === undefined) {
-      return;
-    }
-
     sendMessage(socket, {
       type: "command.claude.result",
       payload: {
@@ -128,59 +121,186 @@ const runClaudeTask = (
   });
 };
 
-const connectionHolder: { socket?: WebSocket } = {};
+const computeReconnectDelayMs = (attempt: number): number => {
+  const delayMs = 1000 * 2 ** attempt;
+  return Math.min(MAX_RECONNECT_DELAY_MS, delayMs);
+};
 
-const connect = (config: AgentWitchConfig): void => {
-  const socket = new WebSocket(config.wsUrl);
-  connectionHolder.socket = socket;
+const createAgentWitchClient = (config: AgentWitchConfig) => {
+  const state: {
+    socket?: WebSocket;
+    heartbeatTimer?: NodeJS.Timeout;
+    reconnectTimer?: NodeJS.Timeout;
+    reconnectAttempt: number;
+    stopped: boolean;
+  } = {
+    reconnectAttempt: 0,
+    stopped: false,
+  };
 
-  socket.on("open", () => {
-    console.log(`[agent-witch] Connected to ${config.wsUrl}`);
-    sendMessage(socket, {
-      type: "agent.register",
-      payload: {
-        role: "agent",
-        hostname: os.hostname(),
-      },
+  const clearHeartbeat = (): void => {
+    if (state.heartbeatTimer !== undefined) {
+      clearInterval(state.heartbeatTimer);
+      state.heartbeatTimer = undefined;
+    }
+  };
+
+  const clearReconnectTimer = (): void => {
+    if (state.reconnectTimer !== undefined) {
+      clearTimeout(state.reconnectTimer);
+      state.reconnectTimer = undefined;
+    }
+  };
+
+  const closeSocket = (): void => {
+    if (state.socket !== undefined) {
+      state.socket.removeAllListeners();
+      if (
+        state.socket.readyState === WebSocket.OPEN ||
+        state.socket.readyState === WebSocket.CONNECTING
+      ) {
+        state.socket.close();
+      }
+      state.socket = undefined;
+    }
+  };
+
+  const scheduleReconnect = (): void => {
+    if (state.stopped || state.reconnectTimer !== undefined) {
+      return;
+    }
+
+    const delayMs = computeReconnectDelayMs(state.reconnectAttempt);
+    console.log(`[agent-witch] Reconnecting in ${delayMs}ms…`);
+
+    state.reconnectTimer = setTimeout(() => {
+      state.reconnectTimer = undefined;
+      connect();
+    }, delayMs);
+  };
+
+  const startHeartbeat = (socket: WebSocket): void => {
+    clearHeartbeat();
+    state.heartbeatTimer = setInterval(() => {
+      sendMessage(socket, {
+        type: "agent.heartbeat",
+        payload: {
+          hostname: os.hostname(),
+        },
+      });
+    }, HEARTBEAT_INTERVAL_MS);
+  };
+
+  const connect = (): void => {
+    if (state.stopped) {
+      return;
+    }
+
+    clearReconnectTimer();
+    closeSocket();
+
+    const socket = new WebSocket(config.wsUrl);
+    state.socket = socket;
+
+    socket.on("open", () => {
+      state.reconnectAttempt = 0;
+      console.log(`[agent-witch] Connected to ${config.wsUrl}`);
+      sendMessage(socket, {
+        type: "agent.register",
+        payload: {
+          role: "agent",
+          hostname: os.hostname(),
+        },
+      });
+      startHeartbeat(socket);
     });
-  });
 
-  socket.on("message", (data) => {
-    const raw = typeof data === "string" ? data : data.toString("utf8");
+    socket.on("message", (data) => {
+      const raw = typeof data === "string" ? data : data.toString("utf8");
 
-    try {
-      const parsed: unknown = JSON.parse(raw);
-      if (!isRecord(parsed) || typeof parsed.type !== "string") {
+      try {
+        const parsed: unknown = JSON.parse(raw);
+        if (!isRecord(parsed) || typeof parsed.type !== "string") {
+          return;
+        }
+
+        if (parsed.type === "command.claude.run" && isRecord(parsed.payload)) {
+          const prompt = parsed.payload.prompt;
+          const requestId =
+            typeof parsed.requestId === "string" ? parsed.requestId : undefined;
+
+          if (typeof prompt === "string" && prompt.trim().length > 0) {
+            console.log("[agent-witch] Running Claude CLI task…");
+            runClaudeTask(config, prompt.trim(), requestId, socket);
+          }
+        }
+      } catch {
+        console.error("[agent-witch] Failed to parse inbound message.");
+      }
+    });
+
+    socket.on("close", () => {
+      clearHeartbeat();
+      state.socket = undefined;
+      state.reconnectAttempt += 1;
+      console.log("[agent-witch] Disconnected from server.");
+      scheduleReconnect();
+    });
+
+    socket.on("error", (error) => {
+      console.error(`[agent-witch] Socket error: ${error.message}`);
+    });
+  };
+
+  const stop = (): void => {
+    state.stopped = true;
+    clearHeartbeat();
+    clearReconnectTimer();
+    closeSocket();
+  };
+
+  return {
+    connect,
+    stop,
+  };
+};
+
+const waitForConfig = async (): Promise<AgentWitchConfig> => {
+  const existingConfig = readConfig();
+  if (existingConfig !== null) {
+    return existingConfig;
+  }
+
+  console.error("[agent-witch] Waiting for valid config…");
+
+  return new Promise((resolve) => {
+    const retry = (): void => {
+      const config = readConfig();
+      if (config !== null) {
+        resolve(config);
         return;
       }
 
-      if (parsed.type === "command.claude.run" && isRecord(parsed.payload)) {
-        const prompt = parsed.payload.prompt;
-        const requestId =
-          typeof parsed.requestId === "string" ? parsed.requestId : undefined;
+      setTimeout(retry, 10_000);
+    };
 
-        if (typeof prompt === "string" && prompt.trim().length > 0) {
-          console.log("[agent-witch] Running Claude CLI task…");
-          runClaudeTask(config, prompt.trim(), requestId);
-        }
-      }
-    } catch {
-      console.error("[agent-witch] Failed to parse inbound message.");
-    }
-  });
-
-  socket.on("close", () => {
-    console.log("[agent-witch] Disconnected. Reconnecting in 5s…");
-    connectionHolder.socket = undefined;
-    setTimeout(() => {
-      connect(config);
-    }, 5000);
-  });
-
-  socket.on("error", (error) => {
-    console.error(`[agent-witch] Socket error: ${error.message}`);
+    retry();
   });
 };
 
-const config = readConfig();
-connect(config);
+const main = async (): Promise<void> => {
+  const config = await waitForConfig();
+  const client = createAgentWitchClient(config);
+  client.connect();
+
+  const shutdown = (): void => {
+    console.log("[agent-witch] Shutting down.");
+    client.stop();
+    process.exit(0);
+  };
+
+  process.on("SIGINT", shutdown);
+  process.on("SIGTERM", shutdown);
+};
+
+void main();
