@@ -26,5 +26,8 @@ export default function mapAgentRunRow(
     updatedAt: String(row.updated_at),
     startedAt: row.started_at ? String(row.started_at) : null,
     completedAt: row.completed_at ? String(row.completed_at) : null,
+    approvalExpiresAt: row.approval_expires_at
+      ? String(row.approval_expires_at)
+      : null,
   };
 }

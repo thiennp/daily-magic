@@ -16,4 +16,5 @@ export default interface AgentRunRecord {
   readonly updatedAt: string;
   readonly startedAt: string | null;
   readonly completedAt: string | null;
+  readonly approvalExpiresAt: string | null;
 }

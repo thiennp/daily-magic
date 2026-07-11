@@ -92,7 +92,14 @@ CREATE TABLE IF NOT EXISTS agent_runs (
   executor_user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
   prompt TEXT NOT NULL,
   status TEXT NOT NULL CHECK (
-    status IN ('pending_approval', 'running', 'completed', 'failed', 'denied')
+    status IN (
+      'pending_approval',
+      'running',
+      'completed',
+      'failed',
+      'denied',
+      'expired'
+    )
   ),
   dispatch_policy TEXT NOT NULL CHECK (dispatch_policy IN ('open', 'approval')),
   result_output TEXT,
@@ -101,7 +108,8 @@ CREATE TABLE IF NOT EXISTS agent_runs (
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   started_at TIMESTAMPTZ,
-  completed_at TIMESTAMPTZ
+  completed_at TIMESTAMPTZ,
+  approval_expires_at TIMESTAMPTZ
 );
 
 CREATE INDEX IF NOT EXISTS agent_runs_requester_idx

@@ -19,7 +19,8 @@ export async function updateAgentRunStatus(
   const completedAt =
     status === AgentRunStatus.COMPLETED ||
     status === AgentRunStatus.FAILED ||
-    status === AgentRunStatus.DENIED
+    status === AgentRunStatus.DENIED ||
+    status === AgentRunStatus.EXPIRED
       ? new Date().toISOString()
       : null;
 
@@ -63,23 +64,4 @@ export async function getAgentRunById(
   }
 
   return mapAgentRunRow(result[0]);
-}
-
-export async function listAgentRunsForUser(
-  userId: string,
-  limit = 50,
-): Promise<readonly AgentRunRecord[]> {
-  const sql = getSql();
-  const result = asRowArray(
-    await sql`
-      SELECT *
-      FROM agent_runs
-      WHERE requester_user_id = ${userId}
-         OR executor_user_id = ${userId}
-      ORDER BY created_at DESC
-      LIMIT ${limit}
-    `,
-  );
-
-  return result.map((row) => mapAgentRunRow(row));
 }

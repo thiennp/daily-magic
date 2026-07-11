@@ -2,10 +2,12 @@ import type AgentWitchHubClient from "@/lib/agentWitch/types/AgentWitchHubClient
 import type AgentWitchHubRuntime from "@/lib/agentWitch/types/AgentWitchHubRuntime.type";
 import type AgentWitchMessage from "@/lib/agentWitch/types/AgentWitchMessage.type";
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
+import type AgentRunRecord from "@/lib/dispatch/types/AgentRunRecord.type";
+import { buildDispatchApprovalExpiresAt } from "@/lib/dispatch/dispatchApprovalTtl.constant";
+import { setAgentRunApprovalExpiry } from "@/lib/dispatch/setAgentRunApprovalExpiry";
 import { dispatchApprovalRegistry } from "@/lib/dispatch/dispatchApprovalRegistry";
 import { notifyDashboardUser } from "@/lib/dispatch/dispatchClaudeRunToAgent";
 import type { DispatchPolicyValue } from "@/lib/dispatch/DispatchPolicy.constant";
-import type AgentRunRecord from "@/lib/dispatch/types/AgentRunRecord.type";
 
 export const sendPendingApprovalDispatch = (
   runtime: AgentWitchHubRuntime,
@@ -17,6 +19,10 @@ export const sendPendingApprovalDispatch = (
   dispatchPolicy: DispatchPolicyValue,
   requestId?: string,
 ): AgentWitchMessage => {
+  const approvalExpiresAt = buildDispatchApprovalExpiresAt();
+
+  void setAgentRunApprovalExpiry(run.id, approvalExpiresAt);
+
   dispatchApprovalRegistry.register({
     runId: run.id,
     requesterUserId: sender.userId ?? "",
@@ -48,6 +54,7 @@ export const sendPendingApprovalDispatch = (
       pendingApproval: true,
       agentRunId: run.id,
       dispatchPolicy,
+      approvalExpiresAt,
     },
     requestId,
   };

@@ -1,0 +1,72 @@
+import AgentRunStatusBadge from "@/features/reports/AgentRunStatusBadge";
+import type EnrichedAgentRunRecord from "@/lib/dispatch/types/EnrichedAgentRunRecord.type";
+
+interface AgentRunDetailContentProps {
+  readonly run: EnrichedAgentRunRecord;
+}
+
+export default function AgentRunDetailContent({
+  run,
+}: AgentRunDetailContentProps) {
+  return (
+    <div className="rounded-2xl border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-white/[0.03]">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <AgentRunStatusBadge status={run.status} />
+        <p className="text-xs text-gray-500 dark:text-gray-400">
+          Created {new Date(run.createdAt).toLocaleString()}
+        </p>
+      </div>
+      <dl className="mt-4 grid gap-3 text-sm sm:grid-cols-2">
+        <div>
+          <dt className="text-gray-500 dark:text-gray-400">Requester</dt>
+          <dd className="text-gray-800 dark:text-white/90">
+            {run.requesterEmail}
+          </dd>
+        </div>
+        <div>
+          <dt className="text-gray-500 dark:text-gray-400">Executor</dt>
+          <dd className="text-gray-800 dark:text-white/90">
+            {run.executorEmail}
+          </dd>
+        </div>
+        <div>
+          <dt className="text-gray-500 dark:text-gray-400">Policy</dt>
+          <dd className="capitalize text-gray-800 dark:text-white/90">
+            {run.dispatchPolicy}
+          </dd>
+        </div>
+        {run.approvalExpiresAt ? (
+          <div>
+            <dt className="text-gray-500 dark:text-gray-400">
+              Approval expires
+            </dt>
+            <dd className="text-gray-800 dark:text-white/90">
+              {new Date(run.approvalExpiresAt).toLocaleString()}
+            </dd>
+          </div>
+        ) : null}
+      </dl>
+      <h2 className="mt-6 text-sm font-medium text-gray-800 dark:text-white/90">
+        Prompt
+      </h2>
+      <pre className="mt-2 max-h-64 overflow-auto rounded-lg bg-gray-50 p-3 text-xs text-gray-700 dark:bg-gray-900 dark:text-gray-300">
+        {run.prompt}
+      </pre>
+      {run.resultOutput ? (
+        <>
+          <h2 className="mt-6 text-sm font-medium text-gray-800 dark:text-white/90">
+            Result
+          </h2>
+          <pre className="mt-2 max-h-96 overflow-auto rounded-lg bg-gray-50 p-3 text-xs text-gray-700 dark:bg-gray-900 dark:text-gray-300">
+            {run.resultOutput}
+          </pre>
+        </>
+      ) : null}
+      {run.denialReason ? (
+        <p className="mt-4 text-sm text-rose-600 dark:text-rose-400">
+          {run.denialReason}
+        </p>
+      ) : null}
+    </div>
+  );
+}

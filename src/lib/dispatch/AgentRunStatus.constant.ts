@@ -4,6 +4,7 @@ export const AgentRunStatus = {
   COMPLETED: "completed",
   FAILED: "failed",
   DENIED: "denied",
+  EXPIRED: "expired",
 } as const;
 
 export type AgentRunStatusValue =

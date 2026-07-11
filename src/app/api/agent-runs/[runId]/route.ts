@@ -1,4 +1,7 @@
-import { getAgentRunById } from "@/lib/dispatch/agentRunQueries";
+import { enrichAgentRunRecord } from "@/lib/dispatch/enrichAgentRunRecords";
+import { expireStaleDispatchApprovals } from "@/lib/dispatch/expireStaleDispatchApprovals";
+import { getAgentRunForParticipant } from "@/lib/dispatch/listAgentRunsForUser";
+import { ensureDispatchApprovalsHydrated } from "@/lib/dispatch/restoreDispatchApprovalRegistry";
 import { requireAuth } from "@/lib/auth/requireAuth";
 
 export const dynamic = "force-dynamic";
@@ -19,15 +22,17 @@ export async function GET(
     return error;
   }
 
-  const { runId } = await context.params;
-  const run = await getAgentRunById(runId);
+  ensureDispatchApprovalsHydrated();
+  await expireStaleDispatchApprovals();
 
-  if (
-    run === null ||
-    (run.requesterUserId !== actor.id && run.executorUserId !== actor.id)
-  ) {
+  const { runId } = await context.params;
+  const run = await getAgentRunForParticipant(runId, actor.id);
+
+  if (run === null) {
     return Response.json({ error: "Run not found." }, { status: 404 });
   }
 
-  return Response.json({ ok: true, run });
+  const enrichedRun = await enrichAgentRunRecord(run);
+
+  return Response.json({ ok: true, run: enrichedRun });
 }

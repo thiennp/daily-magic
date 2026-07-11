@@ -6,6 +6,8 @@ import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMess
 import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
 import { updateAgentRunStatus } from "@/lib/dispatch/agentRunQueries";
 import { dispatchApprovalRegistry } from "@/lib/dispatch/dispatchApprovalRegistry";
+import { expireStaleDispatchApprovals } from "@/lib/dispatch/expireStaleDispatchApprovals";
+import { ensureDispatchApprovalsHydrated } from "@/lib/dispatch/restoreDispatchApprovalRegistry";
 import {
   dispatchClaudeRunToAgent,
   markAgentRunRunning,
@@ -20,6 +22,9 @@ export const handleDispatchApprovalRespondAsync = async (
   message: AgentWitchMessage,
   sender: AgentWitchHubClient | undefined,
 ): Promise<AgentWitchMessage | null> => {
+  ensureDispatchApprovalsHydrated();
+  await expireStaleDispatchApprovals();
+
   if (sender?.role !== "dashboard" || !isNonEmptyString(sender.userId)) {
     return {
       type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR,
