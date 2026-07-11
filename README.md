@@ -105,6 +105,18 @@ npm run typecheck
 
 Agent docs: `CLAUDE.md`, `AGENTS.md`
 
+## Agent Witch (local Claude bridge)
+
+Use the custom server so WebSocket upgrades work:
+
+```bash
+npm run dev              # app + ws://localhost:3000/api/agent-witch/ws
+npm run agent-witch      # local client (runs claude CLI)
+npm run agent-witch:install  # ~/.agent-witch + macOS LaunchAgent
+```
+
+Open http://localhost:3000/ws-test, type a task, and send it to the local agent.
+
 ## Useful links
 
 - [Neon + Vercel guide](https://neon.tech/docs/guides/vercel)

@@ -16,6 +16,7 @@ Project guidance for Claude and other AI agents. Rules live in **`.cursor/rules/
 | ---------------- | ------------------------------ |
 | `/`              | Home                           |
 | `/styleguide`    | TailAdmin component styleguide |
+| `/ws-test`       | Agent Witch WebSocket test UI  |
 | `/api/db/health` | Neon connection health check   |
 | `/api/notes`     | Sample notes API               |
 
@@ -59,6 +60,7 @@ Project guidance for Claude and other AI agents. Rules live in **`.cursor/rules/
 ```bash
 npm run lint
 npm run typecheck
+npm run test
 npm run validate:all
 npm run cursor:architecture -- --all
 npm run build
@@ -89,6 +91,28 @@ This project uses **Tailwind CSS 4** (not SCSS modules). Follow TailAdmin utilit
 ## Database
 
 Set `DATABASE_URL` in `.env.local` (Neon connection string). Apply schema with `npm run db:schema`.
+
+---
+
+## Agent Witch (local WebSocket bridge)
+
+Runs Claude CLI on your computer when the app sends a task over WebSocket.
+
+```bash
+# Start app with WebSocket upgrade (required — not plain next dev)
+npm run dev
+
+# Local agent client (one terminal)
+npm run agent-witch
+
+# Install to ~/.agent-witch with macOS login autostart
+npm run agent-witch:install
+```
+
+- WebSocket: `ws://localhost:3000/api/agent-witch/ws`
+- Test UI: http://localhost:3000/ws-test
+- Status API: `GET /api/agent-witch/status`
+- Config: `~/.agent-witch/config.json`
 
 ---
 

@@ -21,6 +21,12 @@ export default function Home() {
           >
             Open styleguide
           </Link>
+          <Link
+            href="/ws-test"
+            className="inline-flex h-11 items-center justify-center rounded-lg border border-gray-200 px-5 text-sm font-medium text-gray-700 transition hover:bg-gray-50 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-white/5"
+          >
+            WebSocket test
+          </Link>
           <a
             href="https://github.com/TailAdmin/free-nextjs-admin-dashboard"
             target="_blank"

@@ -28,6 +28,10 @@
             "patterns": ["*.ts"]
           },
           {
+            "folder": "src/server",
+            "patterns": ["*.ts"]
+          },
+          {
             "folder": "src/context",
             "patterns": ["*.tsx"]
           },
@@ -77,12 +81,12 @@
         ],
         "root": "."
       },
-      "expiresAt": 1783780660696,
-      "timestamp": 1783780060696
+      "expiresAt": 1783782069759,
+      "timestamp": 1783781469759
     }
   },
   "fileTimestamps": {
-    "/Users/thien.nguyen/daily-magic/structure-validation.config.json": 1783775697474
+    "/Users/thien.nguyen/daily-magic/structure-validation.config.json": 1783781009657
   },
   "version": "1.0.0"
 }

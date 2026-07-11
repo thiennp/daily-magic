@@ -13,6 +13,7 @@
     "src/features": ["*.tsx"],
     "src/hooks": ["use*.ts"],
     "src/lib": ["*.ts"],
+    "src/server": ["*.ts"],
     "src/context": ["*.tsx"],
     "src/icons": ["*.svg", "index.tsx"],
     "src/components": ["*.tsx"],
