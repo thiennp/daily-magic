@@ -1,0 +1,187 @@
+---
+description: >-
+  Vitest tests, mocks, coverage, debugging failing tests.
+globs:
+  - "**/*.test.ts"
+  - "**/*.test.tsx"
+alwaysApply: false
+---
+
+
+# Testing Standards
+
+## Frameworks and Tools
+- Use **Vitest** (not Jest) for all testing
+- Use **fireEvent** (not userEvent) for DOM interactions
+- Mock external dependencies in test setup when needed (e.g. Next.js router, Neon client)
+
+## Core Principles
+- **No mocks when possible**: Prefer real implementations over mocks
+- **No unreal tests**: Never test with parameters that violate TypeScript types (e.g., `null as any`)
+- **Test real behavior**: Focus on testing actual functionality, not implementation details
+- **Type safety**: All test parameters must respect TypeScript type constraints
+
+## Mocking Strategy
+- **Avoid mocks when possible**: Use real dependencies and implementations
+- **Mock only external dependencies**: Mock external APIs, libraries, or services that are outside your control
+- **Never mock internal functions**: Don't mock functions, components, or utilities created within the project
+- **Use spies over mocks**: When you must mock, prefer `vi.spyOn()` to maintain original behavior
+- For **UI component** mocking (DO NOT mock stores; ONLY mock side-effect hooks, overlay hooks, router, external subjects): see **rules-bundle-react.mdc** § Testing Standards
+
+## Test Coverage Requirements
+- **100% on new/changed code (required)**: For every file touched by a change (including the same PR / Sonar “new code” scope), **line coverage on new code must be 100%**, and **uncovered conditions on new code must be 0**—same bar as **Sonar** “Coverage on New Code” / “Uncovered Lines on New Code” / “Uncovered Conditions on New Code”. Do not treat “high coverage” or repo-wide percentage as sufficient when new code leaves lines or branches untested.
+- **Statements, branches, functions, lines**: Keep full-file metrics high; for **guard/util** modules, add focused unit tests so every branch (including validation failures) is exercised.
+- **Test all code paths**: Ensure every conditional branch and function is tested
+- **Test edge cases**: Include boundary conditions and error scenarios
+- **Test error handling**: Verify proper error handling and fallback behavior
+- **Declarative maps and static constants** (e.g. `Record<Enum, Component>` glue in **`*.constant.ts`**) typically **do not need their own test file**—behavior is covered by **consumers** (components, loaders). Splitting them into separate files is for **clarity and SRP**, not to add redundant tests—see **rules-typescript-clean-code.mdc** § **File boundaries: constants, maps, and testable units**
+
+## Type Safety in Tests
+- **Respect TypeScript types**: Never use type assertions that violate the type system
+- **Use proper typing**: All test parameters should have correct types
+- **Avoid `any` type**: Use specific types or `unknown` when needed
+- **Test with valid data**: Use realistic, type-safe test data
+
+## Test Structure
+- **Descriptive test names**: Use clear, descriptive names that explain what is being tested
+- **Arrange-Act-Assert pattern**: Structure tests with clear setup, execution, and verification
+- **Single responsibility**: Each test should verify one specific behavior
+- **Independent tests**: Tests should not depend on each other
+
+## Real-World Testing Examples
+
+### ✅ Good Test (No Mocks, Type Safe)
+```typescript
+describe("convertToEuro", () => {
+  it("converts cents to euros correctly", () => {
+    expect(convertToEuro(150)).toBe(1.50);
+    expect(convertToEuro(0)).toBe(0.00);
+    expect(convertToEuro(100)).toBe(1.00);
+  });
+
+  it("handles negative values", () => {
+    expect(convertToEuro(-150)).toBe(-1.50);
+  });
+});
+```
+
+### ❌ Bad Test (Unreal Type Violation)
+```typescript
+// AVOID: Testing with invalid types
+it("handles invalid input", () => {
+  expect(convertToEuro(null as any)).toBe(0); // Violates type safety
+});
+```
+
+### ✅ Good Test (Minimal Mocking)
+```typescript
+describe("sessionMiddleware", () => {
+  it("processes request and sets session in context", async () => {
+    // Only mock external dependencies
+    const mockSession = { id: "test-session", data: {} };
+    vi.spyOn(sessionsServer, "getSession").mockResolvedValue(mockSession);
+    
+    // Test with real middleware logic
+    const result = await sessionMiddleware(mockRequest, mockContext, mockNext);
+    
+    expect(result).toBeDefined();
+    expect(mockContext.set).toHaveBeenCalledWith(expect.any(Object), mockSession);
+  });
+});
+```
+
+## Anti-Patterns to Avoid
+
+### ❌ Over-Mocking
+```typescript
+// AVOID: Mocking everything
+vi.mock("./internalFunction");
+vi.mock("./anotherInternalFunction");
+// This makes tests brittle and doesn't test real behavior
+```
+
+### ❌ Type Violations
+```typescript
+// AVOID: Testing with invalid types
+it("handles edge case", () => {
+  const result = functionUnderTest(undefined as any, null as any);
+  expect(result).toBeDefined();
+});
+```
+
+### ❌ Testing Implementation Details
+```typescript
+// AVOID: Testing internal implementation
+it("calls internal helper function", () => {
+  const spy = vi.spyOn(internalHelper, "process");
+  functionUnderTest(input);
+  expect(spy).toHaveBeenCalled(); // Don't test internal implementation
+});
+```
+
+## Best Practices
+
+1. **Test the public API**: Focus on testing the behavior that users of your code will experience
+2. **Use real data**: Test with realistic, valid data that represents actual usage
+3. **Test error conditions**: Verify that errors are handled gracefully
+4. **Keep tests simple**: Each test should be easy to understand and maintain
+5. **Use descriptive assertions**: Make test failures easy to debug
+6. **Test edge cases**: Include boundary conditions and unusual inputs
+7. **Maintain test independence**: Tests should not depend on each other or external state
+
+## CI gate (required before merge)
+- **Green CI, verified**: the full repository CI test gate must finish with exit code **0** before merge or hand-off (Vitest + coverage + junit; Jenkins-equivalent). Fast checks such as **`cursor:verify`** and targeted Vitest runs are for iteration only—they do not replace the full gate. Procedure: **`.cursor/commands/command-verify-full-ci-test.md`**.
+
+## Coverage Verification
+- Treat coverage analysis as mandatory for new code: confirm **no uncovered lines** and **no uncovered conditions** on the change set (Sonar “new code” scope where applicable). Detailed workflow and script names: **`.cursor/commands/command-test-raise-unit-coverage.md`**.
+- Verify overall metrics (statements, branches, functions, lines) for the areas you changed
+- Fix any uncovered code paths
+- Document any intentionally uncovered code with clear reasoning
+- **Vitest + `React.lazy` / `Suspense`**: global fake timers (e.g. in `setupTest.tsx`) can block lazy resolution—use **`vi.useRealTimers()`** in that test file or case when testing components that use `lazy()` imports
+
+## Sonar / accessibility / readability (common PR findings)
+- **Decorative visuals**: Prefer semantic patterns Sonar accepts—e.g. **`<img alt="">`** for decorative images, or **`aria-hidden="true"`** on decorative non-text chrome. Avoid **`role="presentation"`** on elements where the rule set expects **`img` + `alt`** or equivalent hiding.
+- **Negated conditions**: Prefer **`renderIfNotNull`** / positive branches over **`!== null ? … : null`** in JSX when it removes “unexpected negated condition” noise in reviews.
+
+## Integration Testing
+- Prefer integration tests over unit tests when possible
+- Test complete workflows and user scenarios
+- Use real dependencies to catch integration issues
+- Test error handling across component boundaries
+
+## Performance Testing
+- Test performance-critical code with realistic data volumes
+- Measure execution time for expensive operations
+- Test memory usage for large data processing
+- Verify that optimizations work as expected
+
+## Unit Test Structure (loaders / utilities)
+
+### Hoisted Mocks
+Use `vi.hoisted()` for mocks that need to be referenced both in the test body and mock definitions:
+
+```typescript
+const mocks = vi.hoisted(() => ({
+  fetchTariffDetails: vi.fn(),
+  handleLoaderError: vi.fn(),
+}));
+
+vi.mock("utils/handleLoaderError", () => ({
+  handleLoaderError: mocks.handleLoaderError,
+}));
+
+vi.mock("./utils/fetchTariffDetailsWithEvaluation/utils/fetchTariffDetails", () => ({
+  fetchTariffDetails: mocks.fetchTariffDetails.mockResolvedValue({ defaultEnergyMix: { test: "test" } }),
+}));
+```
+
+### UI Component Snapshot
+Every UI component test should include a snapshot: `expect(createSnapshotRootElm()).toMatchSnapshot()`. See **rules-bundle-react.mdc** for full UI testing and mocking rules.
+
+### Reference Implementations
+- Loader tests: `app/features/GetTariffDetails/services/getTariffDetailsLoader/getDefaultEnergyMixLoader.test.ts`
+- Component tests: `app/components/ActiveIndicator/ActiveIndicator.test.tsx`
+
+## Extended testing patterns
+
+Extended mocking drills live under **`@.cursor/commands/references/testing-extended/`** (index **`README.md`**). Entry skill for retrieval: **`@.cursor/skills/skill-testing-extended-patterns/SKILL.md`**. Enforce gates here only.

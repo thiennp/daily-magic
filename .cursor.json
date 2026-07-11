@@ -1,0 +1,76 @@
+{
+  "rules": [
+    {
+      "name": "rules-bundle-core",
+      "description": "Project invariants: commits, scaffolding preference, protected files",
+      "path": "rules-bundle-core.mdc",
+      "glob": "**/*"
+    },
+    {
+      "name": "rules-folder-organization",
+      "description": "Feature-first layout under src/: folders, naming, tests co-location",
+      "path": "rules-folder-organization.mdc",
+      "glob": "src/**"
+    },
+    {
+      "name": "rules-typescript-language",
+      "description": "Core TypeScript: interfaces, types, generics, strict null, React TS basics",
+      "path": "rules-typescript-language.mdc",
+      "glob": "**/*.{ts,tsx}"
+    },
+    {
+      "name": "rules-typescript-validation-and-typeguards",
+      "description": "Type guards, type files, JSON safety, enum validation",
+      "path": "rules-typescript-validation-and-typeguards.mdc",
+      "glob": "**/*.{ts,tsx}"
+    },
+    {
+      "name": "rules-typescript-clean-code",
+      "description": "Clean code, refactoring, JSX helpers, utilities, imports",
+      "path": "rules-typescript-clean-code.mdc",
+      "glob": "**/*.{ts,tsx}"
+    },
+    {
+      "name": "rules-bundle-react",
+      "description": "React/TSX UI standards: components, pages, JSX, maps",
+      "path": "rules-bundle-react.mdc",
+      "glob": "**/*.tsx"
+    },
+    {
+      "name": "rules-bundle-api",
+      "description": "API integration: requests, responses, validation, errors",
+      "path": "rules-bundle-api.mdc",
+      "glob": "**/*.{ts,tsx}"
+    },
+    {
+      "name": "rules-html-semantics-and-a11y",
+      "description": "Semantic HTML and a11y",
+      "path": "rules-html-semantics-and-a11y.mdc",
+      "glob": "**/*.tsx"
+    },
+    {
+      "name": "rules-state-ui-modeling",
+      "description": "UI/form state without magic strings; null and enums",
+      "path": "rules-state-ui-modeling.mdc",
+      "glob": "**/*.{ts,tsx}"
+    },
+    {
+      "name": "rules-performance-architecture",
+      "description": "Bundle budgets, list perf, architecture habits",
+      "path": "rules-performance-architecture.mdc",
+      "glob": "**/*.{ts,tsx}"
+    },
+    {
+      "name": "rules-bundle-testing",
+      "description": "Testing policy: mocks, coverage gates, structure",
+      "path": "rules-bundle-testing.mdc",
+      "glob": "**/*.test.{ts,tsx}"
+    },
+    {
+      "name": "rules-agent-request-routing",
+      "description": "Harness: route requests to matching orchestrator when one exists",
+      "path": "rules-agent-request-routing.mdc",
+      "glob": "**/*"
+    }
+  ]
+}

@@ -1,0 +1,834 @@
+---
+description: >-
+  Client/server API integration: requests, responses, validation, errors.
+globs:
+  - "**/*.ts"
+  - "**/*.tsx"
+alwaysApply: false
+---
+
+# API Error Handling Patterns
+
+**One line:** Use status codes (never message content) for error type; 401: detect in loader, handle login() in client hook.
+
+## Overview
+This rule defines standard patterns for handling API errors consistently across the codebase, with a focus on authentication errors and user-friendly error messaging.
+
+## General Principles
+- Handle common error codes with specific actions
+- Provide user-friendly error messages for expected errors
+- Log detailed error information for debugging
+- Maintain a consistent approach to authentication failures
+- **Important:** Separate server-side error detection from client-side actions
+- **Important:** Always use status codes, never error message content, for determining error types
+
+## Authentication Error Handling (401)
+
+### Correct Architecture Pattern
+
+Authentication errors require a two-part handling strategy due to React Router's separation between loaders (server-side) and components/hooks (client-side):
+
+1. **Server-side (Loader)**: Detect 401 errors but DO NOT call login() directly
+2. **Client-side (Hook/Component)**: Handle the 401 status and redirect to login
+
+```
+┌─────────────┐          ┌──────────────┐         ┌─────────────┐
+│  API Server │ ──401──> │    Loader    │ ──401─> │ Client Hook │ ──> login()
+└─────────────┘          └──────────────┘         └─────────────┘
+```
+
+### Implementation in Loaders
+
+Loaders should detect 401 errors but only return them with appropriate status:
+
+```typescript
+export async function loader({ request }: LoaderFunctionArgs): Promise<DataDTO | ErrorResponse> {
+  try {
+    // API call logic
+  } catch (error) {
+    // Proper error check with axios utility
+    if (axios.isAxiosError(error) && error.response?.status === 401) {
+      // Return 401 error with status code to be handled on client
+      return { 
+        errorMessage: "Authentication required", 
+        statusCode: 401 
+      };
+    }
+    
+    // Handle other errors with appropriate status codes
+    const errorMessage =
+      error instanceof Error
+        ? `Operation failed: ${error.message}`
+        : "Operation failed: Unknown error";
+        
+    debug(errorMessage, error);
+    return { 
+      errorMessage, 
+      statusCode: 500
+    };
+  }
+}
+```
+
+### Implementation in Hooks
+
+Response processing hooks handle the 401 error and call login() based on the status code, NEVER the error message:
+
+```typescript
+export function useProcessApiResponse(response: unknown, onSuccess: () => void): void {
+  useEffect(() => {
+    if (isSuccessResponse(response)) {
+      onSuccess();
+    } else if (isErrorResponse(response)) {
+      // Handle authentication errors first based on status code
+      if (response.statusCode === 401) {
+        debug("Authentication error, redirecting to login");
+        login();
+        return;
+      }
+      
+      // Handle other errors
+      debug("Error in response", response.errorMessage);
+    }
+  }, [response, onSuccess]);
+}
+```
+
+### Implementation in Direct API Calls
+
+For direct API calls in hooks (without loaders):
+
+```typescript
+const apiCall = useCallback(async () => {
+  try {
+    const response = await api.getData();
+    // Process response
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response?.status === 401) {
+      debug("Authentication error in API call");
+      login();
+      setError("Session expired, redirecting to login");
+    } else {
+      // Handle other errors
+      setError("Failed to load data");
+      debug("API error", error);
+    }
+  }
+}, [api]);
+```
+
+## Common HTTP Error Status Codes
+
+Handle these common status codes consistently:
+
+| Status Code | Meaning | Recommended Action |
+|-------------|---------|-------------------|
+| 400 | Bad Request | Show validation errors to the user |
+| 401 | Unauthorized | Return from loader, handle in hook with login redirect |
+| 403 | Forbidden | Show access denied message |
+| 404 | Not Found | Show resource not found message |
+| 409 | Conflict | Explain the conflict to the user |
+| 422 | Unprocessable Entity | Show validation errors |
+| 429 | Too Many Requests | Show rate limit error with retry info |
+| 500+ | Server Errors | Show generic error and log details |
+
+## Anti-Pattern: Checking Error Messages
+
+```typescript
+// AVOID: Using error message content to determine error type
+if (response.errorMessage.includes("Authentication required")) {
+  // This is fragile and may break if error messages change
+  login();
+}
+
+// CORRECT: Use status codes for error type determination
+if (response.statusCode === 401) {
+  // This relies on standard HTTP status codes which are stable
+  login();
+}
+```
+
+## Handling Network Errors
+
+For network-related errors (non-HTTP status errors):
+
+```typescript
+try {
+  // API call
+} catch (error) {
+  if (!axios.isAxiosError(error)) {
+    // Network or other non-HTTP error
+    debug("Network error", error);
+    return { errorMessage: "Network error, please check your connection" };
+  }
+  
+  // Handle HTTP errors
+}
+```
+
+## Error Response Structure
+
+The `ErrorResponse` interface includes an optional status code:
+
+```typescript
+export interface ErrorResponse {
+  errorMessage: string;
+  statusCode?: number; // HTTP status code when applicable
+}
+```
+
+## Examples from Codebase
+
+See implementation examples in:
+- `app/features/CustomerEvaluation/components/CustomerEvaluationTab/features/Like/services/submitLikeLoader.ts`
+- `app/features/CustomerEvaluation/components/CustomerEvaluationTab/features/Like/hooks/useProcessLikeResponse.ts`
+
+
+# API Integration Pattern
+
+**One line:** Loader/fetcher for data; process in hooks with type guards; update state via standalone store setters. Details below.
+
+## Overview
+Separate API request logic from component rendering. Use React Router loader/fetcher; process responses in dedicated hooks; update state via standalone store setters. **Implementation details: rules-bundle-api.mdc.**
+
+## Folder Structure
+```
+FeatureName/
+├── services/                      # API-related services
+│   └── featureNameLoader.ts       # Loader function for API route
+├── hooks/                         # Feature-specific hooks
+│   ├── useProcessResponse.ts      # Process API response
+│   └── useFeatureSubmit.ts       # Handle submission logic
+├── utils/                         # Utility functions
+│   └── handleDataSubmit.util.ts  # Form submission utility
+├── types/                         # Type definitions
+│   ├── ResponseDTO/               # Response data types
+│   └── RequestParams/             # Request parameter types
+├── components/                    # UI components
+│   └── ...                        # Feature-specific components
+```
+
+## Flow
+1. Register route: `route("/api/feature-endpoint", "./features/FeatureName/services/featureNameLoader.ts")`.
+2. Loader extracts URL params, validates, calls API, returns validated response (see rules-bundle-api.mdc, rules-bundle-api.mdc).
+3. Component uses `useFetcher()`; a hook processes `fetcher.data` in `useEffect` and updates store via standalone setters (rules-state-zustand.mdc).
+4. Submit: utility validates params, builds URL, calls `fetcher.load(url)`.
+
+## Performance
+- useCallback/useMemo only when needed (rules-typescript-clean-code.mdc).
+- Store: use selectors, not whole state (rules-state-zustand.mdc).
+- Effect deps: include only `fetcher.data` (and stable args), not the process-response callback.
+
+## Examples from Codebase
+- `app/pages/Result/features/Teaser/features/TeaserZipCodeAndCity`
+- `app/features/SmartAlarm/features/CreateSmartAlarm`
+- `app/features/CustomerEvaluation/hooks/useProcessCustomerEvaluationResponse.ts`
+
+
+# API Request Pattern
+
+**One line:** Loader extracts URL params, validates, calls API service; response hooks validate with type guards and update store via standalone setters (see rules-state-zustand.mdc).
+
+## Overview
+This rule defines the standard pattern for implementing API requests in the codebase, focusing on the React Router loader pattern for data fetching with clear separation of concerns.
+
+## Architecture Diagram
+
+```
+┌─────────────────┐          ┌──────────────────┐         ┌────────────────────┐
+│   Component     │ ──────→  │   Custom Hook    │ ──────→ │ Request Submission  │
+│ (Tariff Details)│          │(useGetTariffDet.)│         │  (handleSubmit)     │
+└─────────────────┘          └──────────────────┘         └────────────────────┘
+        ↑                             │                             │
+        │                             │                             │
+        │                             ↓                             ↓
+┌─────────────────┐          ┌──────────────────┐         ┌────────────────────┐
+│  Response Hook  │ ←──────  │  useFetcher()    │ ←─────  │   API Route        │
+│(useProcessResp.)│          │  (React Router)  │         │  (/api/endpoint)   │
+└─────────────────┘          └──────────────────┘         └────────────────────┘
+        │                                                           │
+        │                                                           │
+        ↓                                                           ↓
+┌─────────────────┐                                       ┌────────────────────┐
+│   Store Update  │                                       │  Loader Function   │
+│  (Zustand)      │                                       │  (Parameter Valid.)│
+└─────────────────┘                                       └────────────────────┘
+                                                                    │
+                                                                    │
+                                                                    ↓
+                                                          ┌────────────────────┐
+                                                          │    API Service     │
+                                                          │  (HTTP Request)    │
+                                                          └────────────────────┘
+                                                                    │
+                                                                    │
+                                                                    ↓
+                                                          ┌────────────────────┐
+                                                          │ Response Validation│
+                                                          │ (Type Guards)      │
+                                                          └────────────────────┘
+```
+
+## Implementation Components
+
+### 1. API Service Layer
+The fundamental service that performs the actual HTTP request:
+
+```typescript
+// services/getTariffDetailsPage.api.ts
+export const getTariffDetailsPage = async (
+  productId: ProductEnum,
+  c24session: Nullable<string>,
+  data: GetTariffDetailsRequestParams,
+  requestContext: RequestContext,
+): Promise<TariffDetailsDTO> => {
+  return new Promise((resolve, reject) => {
+    createMDWApiClient({ productId, c24session, requestContext, authorization: null, cookies: null })
+      .post(GET_TARIFF_DETAIL_PAGE_URL, data)
+      .then((response) => {
+        resolve(
+          guardWithTolerance(response.data, isTariffDetailsDTO, {
+            callbackOnError: logger.warn,
+            identifier: "getTariffDetailsPage TariffDetailsDTO",
+          }),
+        );
+      })
+      .catch((error) => {
+        logger.error(error);
+        reject(error);
+      });
+  });
+};
+
+```
+
+### 2. Loader Function
+React Router loader that extracts parameters from the URL and calls the API service:
+
+```typescript
+// features/GetTariffDetails/services/getTariffDetailsLoader.ts
+export async function loader({ request }: LoaderFunctionArgs): Promise<ErrorResponse | TariffDetailsDTO> {
+  const url = new URL(request.url);
+  const productId = Number(url.searchParams.get("productId"));
+  const c24session = getSessionID(request);
+
+  // Extract required parameters from URL
+  const tariffVersionId = Number(url.searchParams.get("tariffVersionId"));
+  const tariffVersionVariationKey = url.searchParams.get("tariffVersionVariationKey") ?? "";
+  const calculationParameterId = url.searchParams.get("calculationParameterId") ?? undefined;
+
+  try {
+    const response = await getTariffDetailsPage(
+      productId,
+      c24session,
+      // Validate parameters
+      guardWithTolerance<GetTariffDetailsRequestParams>(
+        {
+          productId,
+          tariffVersionId,
+          tariffVersionVariationKey,
+          calculationParameterId,
+        },
+        isGetTariffDetailsRequestParams,
+        {
+          callbackOnError: debug,
+          identifier: "GetTariffDetailsRequestParams",
+        },
+      ),
+    );
+
+    return guardWithTolerance(response, isTariffDetailsDTO, {
+      callbackOnError: debug,
+      identifier: "TariffDetailsDTO",
+    });
+  } catch (error) {
+    // Error handling
+    return { errorMessage: `Failed to get tariff details: ${error instanceof Error ? error.message : "Unknown error"}` };
+  }
+}
+```
+
+### 3. Request Submission Utility
+Utility function to handle parameter validation and URL creation:
+
+```typescript
+// features/GetTariffDetails/utils/handleTariffDetailsSubmit.util.ts
+export function handleTariffDetailsSubmit(
+  params: GetTariffDetailsRequestParams,
+  triggerRequestFunction: (url: string) => void,
+): void {
+  if (!isGetTariffDetailsRequestParams(params)) {
+    debug("Invalid tariff details request parameters", params);
+    return;
+  }
+
+  triggerRequestFunction(`/api/tariff-details?${convertObjectToURLQueryString(params)}`);
+}
+```
+
+### 4. Custom Hook for Data Fetching
+Hook that uses React Router's fetcher to call the loader:
+
+```typescript
+// features/GetTariffDetails/hooks/useGetTariffDetails.ts
+export function useGetTariffDetails(requestParams: GetTariffDetailsRequestParams): Nullable<TariffDetailsDTO> {
+  const fetcher = useFetcher();
+  const { tariffDetails } = useTariffDetailsStore();
+
+  useProcessTariffDetailsResponse(fetcher.data, requestParams.tariffVersionId);
+
+  useEffect(() => {
+    if (isNil(tariffDetails[requestParams.tariffVersionId])) {
+      handleTariffDetailsSubmit(requestParams, (url) => void fetcher.load(url));
+    }
+  }, []);
+
+  return tariffDetails[requestParams.tariffVersionId] ?? null;
+}
+```
+
+### 5. Response Processing Hook
+Hook to validate response data and update the store. Use a **standalone setter** (see rules-state-zustand.mdc) so the hook does not subscribe to store actions:
+
+```typescript
+// features/GetTariffDetails/hooks/useProcessTariffDetailsResponse.ts
+export function useProcessTariffDetailsResponse(response: unknown, tariffVersionId: number): void {
+  useEffect(() => {
+    if (isDefined(response)) {
+      const validatedResponse = guardWithTolerance<TariffDetailsDTO>(response, isTariffDetailsDTO, {
+        callbackOnError: debug,
+        identifier: "TariffDetailsDTO",
+      });
+      setTariffDetailsInStore(tariffVersionId, validatedResponse);
+      if (!isTariffDetailsDTO(response)) {
+        debug("Response format doesn't match expected type", response);
+      }
+    }
+  }, [response, tariffVersionId]);
+}
+```
+
+### 6. Store for State Management
+Zustand store: **data only**; export standalone setters so components do not subscribe for action references (see rules-state-zustand.mdc, rules-state-zustand.mdc):
+
+```typescript
+// features/GetTariffDetails/stores/useTariffDetailsStore.ts
+interface TariffDetailsStoreType {
+  readonly tariffDetails: Record<number, TariffDetailsDTO>;
+  readonly requestStarted: Record<number, boolean>;
+}
+
+export const useTariffDetailsStore = create<TariffDetailsStoreType>(() => ({
+  tariffDetails: {},
+  requestStarted: {},
+}));
+
+export const setTariffDetailsInStore = (tariffVersionId: number, tariffDetails: TariffDetailsDTO): void => {
+  useTariffDetailsStore.setState((state) => ({
+    tariffDetails: { ...state.tariffDetails, [tariffVersionId]: tariffDetails },
+  }));
+};
+```
+
+### 7. Component Usage
+Using the custom hook in a component:
+
+```typescript
+// components/TariffDetails.tsx
+export default function TariffDetails(props: TariffDetailsProps): ReactElement {
+  const tariffDetailsParams = useGetTariffDetailsParams(false)(props.tariff.key);
+  const tariffDetails = useGetTariffDetails(tariffDetailsParams);
+  
+  if (!tariffDetails) {
+    return <TariffDetailsSkeleton />;
+  }
+  
+  return <TariffDetailsContent details={tariffDetails} />;
+}
+```
+
+## Router Configuration
+Register the API route in routes.ts:
+
+```typescript
+// routes.ts
+export default [
+  // Other routes...
+  route("/api/tariff-details", "./pages/Result/features/GetTariffDetails/services/getTariffDetailsLoader.ts"),
+] satisfies RouteConfig;
+```
+
+## Data Flow Explained
+
+1. **Component Initialization**:
+   - Component triggers data request via custom hook
+   
+2. **Request Creation**:
+   - Custom hook calls utility to format request URL
+   - Parameters are validated before submission
+   
+3. **API Route Invocation**:
+   - React Router fetcher loads the route with parameters
+   
+4. **Loader Execution**:
+   - Loader function extracts URL parameters
+   - Validates parameters and calls API service
+   
+5. **API Service Call**:
+   - Service performs HTTP request to backend
+   - Response is received from the API
+   
+6. **Validation & Processing**:
+   - Response is validated using type guards
+   - Data is normalized if needed
+   
+7. **Response Handling**:
+   - Processing hook receives data from fetcher
+   - Validates response format and updates store
+   
+8. **UI Rendering**:
+   - Component accesses store data
+   - UI renders based on store state
+
+## Benefits of This Pattern
+
+1. **Separation of Concerns**:
+   - API services handle HTTP requests
+   - Loaders handle parameter extraction and validation
+   - Hooks handle UI integration and state management
+   
+2. **Type Safety**:
+   - Each step includes type validation
+   - guardWithTolerance provides type safety with error logging
+   
+3. **Testability**:
+   - Each component can be tested independently
+   - Mocking is simplified by the clear boundaries
+   
+4. **Reusability**:
+   - Response processing pattern is consistent
+   - Store update pattern is standardized
+   
+5. **Error Handling**:
+   - Clear path for error detection and reporting
+   - Consistent error formatting through the chain
+
+## Anti-Patterns to Avoid
+
+```typescript
+// AVOID: Direct API calls in components
+function BadComponent() {
+  useEffect(() => {
+    // Don't call API directly from component
+    fetch('/api/endpoint').then(/* ... */);
+  }, []);
+}
+
+// AVOID: Mixing API calls with UI logic
+function handleButtonClick() {
+  // Don't mix API logic with UI handlers
+  apiCall().then(updateUI);
+}
+
+// AVOID: Inadequate validation
+function missingValidation(data) {
+  // Always validate parameters and responses
+  apiService.call(data); // Missing validation
+}
+```
+
+## Examples from Codebase
+
+Refer to the following implementations for reference:
+- `app/pages/Result/features/GetTariffDetails/*`
+- `app/pages/Result/features/TariffDetailsDesktop/*`
+- `app/features/CustomerEvaluation/*`
+
+## Parameter Validation in Loaders
+
+Required/optional params, enum validation, and boolean conversion: see **rules-bundle-api.mdc**.
+
+
+# API Response Processing Patterns
+
+**One line:** Use type guards in process hooks; guardWithTolerance always returns T (no null check after); with guardWithTolerance use isDefined(response) before calling.
+
+## Response Processing Hook Patterns
+
+When creating hooks that process API responses (typically named `useProcess*Response`), follow these consistent patterns to ensure codebase-wide uniformity:
+
+### Direct Type Guard Pattern
+
+```typescript
+// PREFERRED - Let the type guard handle undefined/null checks
+export function useProcessApiResponse(response: unknown, ...args): void {
+ useEffect(() => {
+   if (
+     isResponseDTO(response, {
+       callbackOnError: debug,
+       identifier: "ResponseDTO",
+     })
+   ) {
+     // Success handling
+     // ...
+   } else {
+     // Error handling
+     // ...
+   }
+ }, [response, ...args]);
+}
+```
+
+### Avoid Redundant Checks (direct type guard only)
+
+When using **direct type guards** (e.g. `isResponseDTO(response, config)`), the guard handles null/undefined; do not add `if (!isDefined(response)) return`. When using **guardWithTolerance**, you do need `if (isDefined(response))` before calling it, then use the returned value (always T).
+
+### Using `guardWithTolerance` Correctly
+
+The `guardWithTolerance` function has a specific behavior you must understand:
+
+```typescript
+// Implementation of guardWithTolerance
+export function guardWithTolerance<T>(
+ data: unknown,
+ typeGuardFn: TypeGuardFn<T>,
+ config?: Nullable<TypeGuardFnConfig>,
+): T {
+ return typeGuardFn(data, config) ? data : (data as T);
+}
+```
+
+Important: This function **always returns a value of type T**, even if validation fails. It will:
+1. Return the original data with the proper type if validation passes
+2. Return the original data cast to type T even if validation fails
+
+When using `guardWithTolerance`:
+
+```typescript
+// CORRECT - No null check needed after guardWithTolerance
+export function useProcessApiResponse(response: unknown, ...args): void {
+ useEffect(() => {
+   if (isDefined(response)) {
+     const validatedResponse = guardWithTolerance<ResponseDTO>(
+       response,
+       isResponseDTO,
+       {
+         callbackOnError: debug,
+         identifier: "ResponseDTO",
+       }
+     );
+
+     // No need to check if validatedResponse exists - it always will
+     processValidatedData(validatedResponse);
+
+     // But you may want to log when validation actually failed
+     if (!isResponseDTO(response)) {
+       debug("Response format doesn't match expected type", response);
+     }
+   }
+ }, [response, ...args]);
+}
+```
+
+```typescript
+// INCORRECT - Redundant check after guardWithTolerance
+if (isDefined(validatedResponse)) { // Always true!
+ processValidatedData(validatedResponse);
+}
+```
+
+### Pattern for Multiple Response Types
+
+When handling multiple possible response types:
+
+```typescript
+export function useProcessApiResponse(response: unknown, ...args): void {
+ useEffect(() => {
+   // Success case
+   if (
+     isSuccessResponseDTO(response, {
+       callbackOnError: debug,
+       identifier: "SuccessResponseDTO",
+     })
+   ) {
+     // Success handling
+     return;
+   }
+
+   // Error case
+   if (
+     isErrorResponse(response, {
+       callbackOnError: debug,
+       identifier: "ErrorResponse",
+     })
+   ) {
+     // Error handling
+     return;
+   }
+
+   // Default case - unhandled response type
+   debug("Unhandled response type", response);
+ }, [response, ...args]);
+}
+```
+
+## Type Guard Usage
+
+- Let type guards handle null/undefined checks
+- Always pass error callback and identifier config to type guards
+- Include clear error logging for invalid response formats
+
+## Store Updates
+
+- Always update loading states in both success and error cases
+- Set consistent patterns for storing API data in the application state
+- Use appropriate error handling based on the application's error management strategy
+
+## Examples from Codebase
+
+See implementations in:
+- `app/features/CustomerEvaluation/hooks/useProcessCustomerEvaluationResponse.ts`
+- `app/features/SmartAlarm/features/CreateSmartAlarm/hooks/useProcessSmartAlarmResponse.ts`
+- `app/pages/Result/features/TariffDetailsDesktop/hooks/useProcessTariffDetailsResponse.ts`
+
+
+# API Validation Patterns
+
+## Parameter Validation in Loaders
+
+### Type Guards Over Type Assertions
+- Use proper type guards (`isNumber`, `isNonEmptyString`) instead of direct assertions or manual checks
+- Prefer `isNumber(productId)` over `Number.isNaN(productId)` or type assertions
+- This provides better TypeScript type narrowing and clearer error paths
+
+### Enum Validation Pattern (Updated)
+- Use the `isEnum` utility to validate enum values rather than custom validation functions
+- Follow the curried function pattern `isEnum(EnumType)(value)` for type checking
+- Add debug callbacks when appropriate: `isEnum(ProductEnum)(value, { callbackOnError: debug, identifier: "enumName" })`
+
+```typescript
+// AVOID - Custom enum validation function
+function isValidProductEnum(value: number): value is ProductEnum {
+  return Object.values(ProductEnum).includes(value);
+}
+
+// GOOD - Using the isEnum utility
+if (!isEnum(ProductEnum)(productIdNumber)) {
+  return {
+    errorMessage: "Invalid productId",
+    statusCode: 400
+  };
+}
+```
+
+### Functional Validation Approach
+- Use functional programming patterns for parameter validation
+- Create dedicated type guard functions rather than imperative validation blocks
+- Prefer declarative array methods over mutating arrays with push
+- Example of functional pattern:
+  ```typescript
+  // AVOID - Imperative approach with array mutations
+  const missingParams = [];
+  if (!isNonEmptyString(param1)) missingParams.push("param1");
+  if (!isNumber(param2)) missingParams.push("param2");
+  
+  // GOOD - Declarative functional approach
+  const validations = [
+    { field: "param1", valid: isNonEmptyString(param1) },
+    { field: "param2", valid: isNumber(param2) }
+  ];
+  const invalidFields = validations.filter(validation => !validation.valid)
+    .map(validation => validation.field);
+  ```
+
+### Best Practices for Validation
+```typescript
+// AVOID - Redundant conversion
+const productId = Number(url.searchParams.get("productId"));
+const response = await apiCall(Number(productId)); // Redundant conversion
+
+// AVOID - Unclear error cases
+if (isDefined(hash) && hash !== "") {
+  // Implementation
+}
+
+// GOOD - Dedicated utilities
+import isNonEmptyString from "utils/typeguards/isNonEmptyString";
+import isNumber from "utils/typeguards/isNumber";
+
+if (isNumber(productId) && isNonEmptyString(hash)) {
+  // Implementation
+}
+```
+
+### Error Handling in Loaders
+- Provide detailed error messages that list all missing parameters
+- Use the same declarative filter/map pattern as in Functional Validation Approach above
+- Dynamically adjust error messages for grammar (singular/plural)
+
+```typescript
+const validations = [
+  { field: "productId", valid: isNumber(productId) },
+  { field: "hash", valid: isNonEmptyString(hash) },
+];
+const missingParams = validations.filter((v) => !v.valid).map((v) => v.field);
+
+if (missingParams.length > 0) {
+  return {
+    errorMessage: `Invalid request parameters: missing ${missingParams.join(", ")} parameter${missingParams.length > 1 ? "s" : ""}`,
+  };
+}
+```
+
+## Loader Pattern Implementation
+
+### Creating Request Parameters
+- Only create parameter objects when needed
+- Narrower scope for variables is preferable
+- Avoid null coalescing operators for optional parameters
+
+```typescript
+// AVOID
+const params = {
+  hash: hash ?? "",
+};
+
+// GOOD
+if (isNonEmptyString(hash)) {
+  const params = { hash };
+  // Use params here when you're sure it's valid
+}
+```
+
+### Type Validation in API Calls
+
+`guardWithTolerance` always returns T (see **rules-bundle-api.mdc**). In loaders:
+
+```typescript
+try {
+  const response = await apiCall(params);
+  const validatedResponse = guardWithTolerance<ResponseDTO>(response, isResponseDTO, {
+    callbackOnError: debug,
+    identifier: "ResponseDTO",
+  });
+  return validatedResponse;
+} catch (error) {
+  return { errorMessage: `Failed to process request: ${error.message}` };
+}
+// Optional: if (!isResponseDTO(response)) debug("...", response);
+```
+
+## Migrating from Action to Loader Pattern
+
+### Key Migration Steps
+1. Create a loader file with the React Router loader function pattern
+2. Configure the API route in routes.ts
+3. Update hooks to use React Router's useFetcher
+4. Remove action file references from action registration
+5. Clean up any unused imports
+
+### API Route Configuration
+```typescript
+// In routes.ts
+route("/api/feature-endpoint", "./features/FeatureName/services/featureNameLoader.ts")
+```

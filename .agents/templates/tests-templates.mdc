@@ -1,0 +1,59 @@
+---
+description: Test file templates from .agents/file-lists/tests.json
+alwaysApply: false
+---
+
+# Tests templates (from `tests.json`)
+
+Summarizes **710** files matching **`*.test.ts`**, **`*.test.tsx`**, **`*.spec.ts`** (see [`.agents/file-lists/tests.json`](../file-lists/tests.json)). Framework: **Vitest**; UI: **`@testing-library/react`**, **`fireEvent`** (not `userEvent`) per **`@testing-standards.mdc`**.
+
+## Inventory snapshot
+
+| Fact | Typical value |
+| --- | --- |
+| Extensions | `.ts` / `.tsx` roughly even; small `.js` |
+| Path depth (median) | 6 segments |
+| Common roots | `app/pages` (~45%), `app/utils` (~21%), `app/features` (~15%), `app/components` (~10%) |
+| Largest slice | `app/pages/Result/...` (~41%) |
+
+**Co-location:** `Foo.test.tsx` next to `Foo.tsx`; `utility.test.ts` next to `utility.ts`.
+
+## Template — component snapshot
+
+```typescript
+import { render } from "@testing-library/react";
+import { createSnapshotRootElm } from "test-utils/createSnapshotRootElm";
+import { describe, expect, it } from "vitest";
+
+import Foo from "./Foo";
+
+describe("Foo", () => {
+  it("renders correctly", (): void => {
+    render(<Foo />);
+    expect(createSnapshotRootElm()).toMatchSnapshot();
+  });
+});
+```
+
+## Template — utility
+
+```typescript
+import { describe, expect, it } from "vitest";
+
+import { addOne } from "./addOne";
+
+describe("addOne", () => {
+  it("adds one", () => {
+    expect(addOne(1)).toBe(2);
+  });
+});
+```
+
+## Policy pointers
+
+- **Do not mock** internal components/stores for UI snapshots unless **`rules-bundle-react.mdc`** exceptions apply.
+- **100% coverage** target for utilities: **`@utility-test-coverage-standards.mdc`**.
+
+## Related
+
+- **`test-utils-templates.mdc`**, **`mocks-templates.mdc`**

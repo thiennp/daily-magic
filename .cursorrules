@@ -1,0 +1,19 @@
+# Agent harness — daily-magic
+
+Use **`.cursor/harness/agent-request-routing.md`** for orchestration when a matching command exists.
+
+# Structure validation
+
+Run **`npm run validate:staged`** before commits. Config: **`structure-validation.config.json`**.
+
+# Architecture checks
+
+Run **`npm run cursor:architecture`** for layer imports, barrel allowlist, and TypeScript hygiene on changed **`src/`** files.
+
+# Styling
+
+This repo uses **Tailwind CSS 4**, not SCSS modules. Do not apply EnergyCenter SCSS scoping rules (`enrg-tariff-details`, `:global(body.desktop)`, etc.).
+
+# Removed EnergyCenter-only integrations
+
+Do not use Jira, Bitbucket, Sentry, hybrid RAG, or React Router patterns from **enrg-web-frontend** in this repo unless explicitly reintroduced.

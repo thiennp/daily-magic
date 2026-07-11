@@ -90,6 +90,21 @@ npx vercel env pull .env.local
 - `src/app/api/notes/route.ts` — sample CRUD endpoint
 - `db/schema.sql` — starter Postgres schema
 
+## AI harness & quality gates
+
+- `.cursor/` — AI rules, commands, skills (GitHub / Linear friendly)
+- `.agents/scripts/` — architecture checks for `src/`
+- `.husky/` — pre-commit hooks
+- `structure-validation.config.json` — folder layout rules
+
+```bash
+npm run validate:staged
+npm run cursor:architecture -- --staged
+npm run typecheck
+```
+
+Agent docs: `CLAUDE.md`, `AGENTS.md`
+
 ## Useful links
 
 - [Neon + Vercel guide](https://neon.tech/docs/guides/vercel)

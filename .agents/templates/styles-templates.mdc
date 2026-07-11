@@ -1,0 +1,54 @@
+---
+description: Stylesheet templates from .agents/file-lists/styles.json
+alwaysApply: false
+---
+
+# Styles templates (from `styles.json`)
+
+Summarizes **269** stylesheet files: **`.scss`** / **`.css`** (see [`.agents/file-lists/styles.json`](../file-lists/styles.json)). Almost all **`.scss`**; co-located with components, layouts, and pages.
+
+## Inventory snapshot
+
+| Fact | Typical value |
+| --- | --- |
+| `.scss` vs `.css` | ~99% `.scss` |
+| Path depth (median) | 8 segments |
+| Common roots | `app/pages` (~66%), `app/components` (~16%), `app/features` (~16%) |
+| Largest slice | `app/pages/Result/...` (~55%) |
+
+## Module pattern (next to component)
+
+**`Component.module.scss`**
+
+```scss
+.Foo {
+  display: flex;
+
+  &_title {
+    font-weight: 600;
+  }
+
+  &___active {
+    opacity: 1;
+  }
+
+  &___inactive {
+    opacity: 0.5;
+  }
+}
+```
+
+## BEM (project)
+
+- **Block:** `.Foo`
+- **Element:** `&_title` → `.Foo_title`
+- **Modifier:** `&___modifier` → `.Foo___modifier` (three underscores in source)
+
+## Global / root
+
+- Root-level **`app/root.css`**, **`app/App.module.scss`** exist for app shell; prefer **feature-local modules** for scoped UI.
+
+## Related
+
+- **`component-templates.mdc`**, **`layouts-templates.mdc`**
+- **`rules-typescript-clean-code.mdc`** (BEM, semantic HTML)

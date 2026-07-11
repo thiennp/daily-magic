@@ -1,0 +1,71 @@
+---
+description: >-
+  Semantic HTML and a11y: real buttons only — never div/span with role="button".
+globs:
+  - "**/*.tsx"
+alwaysApply: false
+---
+
+# HTML semantics and accessibility
+
+## Interactive controls — real buttons only
+
+Do **not** use non-button elements as click targets for actions. This is **forbidden**:
+
+- `<div role="button">` / `<span role="button">`
+- Any element with `role="button"` that is not a native **`<button>`** (or an approved styleguide **`Button`** wrapper around one)
+- Hand-rolled “buttons” that rely on `tabIndex={0}` + `onKeyDown` on a `div`/`span` instead of a real button
+
+### Required pattern (in order)
+
+1. **Prefer TailAdmin UI** — `Button`, inputs, and related primitives from `src/components/ui/` when they fit (see **`rules-typescript-clean-code.mdc`** § design system).
+2. **Otherwise use native `<button>`** — `type="button"` for actions that are not form submit; style via SCSS modules or styleguide variants. Reset browser chrome in CSS when needed (`border: none; background: none;` etc.) — do **not** substitute a `div`.
+
+### Anti-pattern
+
+```tsx
+// FORBIDDEN
+<div
+  role="button"
+  tabIndex={0}
+  onClick={onToggle}
+  onKeyDown={(event) => {
+    if (event.key === "Enter" || event.key === " ") {
+      onToggle();
+    }
+  }}
+>
+  {title}
+</div>
+```
+
+### Preferred pattern
+
+```tsx
+// Styleguide when available
+<Button variant={ButtonVariantEnum.GHOST} onClick={onToggle} text={title} />
+
+// Or native button + module styles
+<button type="button" className={styles.AccordionSection_titleButton} onClick={onToggle}>
+  {title}
+</button>
+```
+
+## Other semantics (changed markup)
+
+- **Links vs buttons:** use **`<a href="…">`** for navigation; **`<button type="button">`** (or styleguide **`Button`**) for in-page actions. Do not use `<a href="#">` or `<div onClick>` for actions.
+- **Forms:** associate **`label`** with **`input`** via `htmlFor` / `id` for new fields.
+- **Headings:** preserve logical heading order in touched templates; do not skip levels for styling.
+- **ARIA:** add roles/states only when native semantics are insufficient; do not duplicate what `<button>` already provides.
+- **Images:** intentional `alt` text or decorative `alt=""`.
+
+## When reviewing or refactoring
+
+- Flag every new **`role="button"`** on non-`<button>` elements as **`[x]`** — merge blocker unless an documented, reviewed exception exists (rare; prefer fixing the markup).
+- Existing legacy usages should be migrated to `<button>` or styleguide **`Button`** when the file is already being changed for the ticket.
+
+## Related
+
+- **`rules-bundle-react.mdc`** — JSX and control patterns
+- **`rules-bundle-styles.mdc`** — styling native buttons in SCSS modules
+- **`rules-typescript-clean-code.mdc`** — TailAdmin / Tailwind UI primitives

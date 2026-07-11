@@ -1,0 +1,514 @@
+---
+description: >-
+  Type guards, type file layout, JSON safety, enum validation.
+globs:
+  - "**/*.ts"
+  - "**/*.tsx"
+alwaysApply: false
+---
+
+
+
+# TypeScript Type Guard Patterns
+
+## Overview
+This rule defines the recommended patterns for creating and using type guards in the codebase to ensure consistent type validation across all components.
+
+## General Principles
+- Use existing type guard utilities rather than creating new ones
+- Apply the composition pattern for complex type validations
+- Use standard error handling patterns with proper debug information
+- Ensure type guards provide precise TypeScript type narrowing
+
+## File Organization
+
+### Recommended Structure
+To maintain consistency across the codebase:
+
+1. Organize types and type guards in a dedicated folder structure:
+   ```
+   FeatureName/
+     ├── types/
+     │   └── ResponseDTO/
+     │       ├── ResponseDTO.type.ts       # Type definition
+     │       └── isResponseDTO.ts          # Type guard
+   ```
+
+2. Use dedicated files for types and their corresponding type guards:
+   - `*.type.ts` files should contain just the type definition
+   - `is*.ts` files should contain just the type guard function
+
+3. Export types and type guards with appropriate defaults:
+   - Types should use `export default interface TypeName`
+   - Type guards should use `export default isTypeName`
+
+### Separation of Type Definition and Type Guards
+- **Never** define types in the same file as type guards
+- Type definitions should be in `*.type.ts` files
+- Import types in type guard files with `import type TypeName from "./TypeName.type"`
+- Example:
+
+```typescript
+// ErrorResponse.type.ts - Only contains the type definition
+export default interface ErrorResponse {
+  readonly errorMessage: string;
+  readonly statusCode?: number;
+}
+
+// isErrorResponse.ts - Only contains the type guard
+import isNumber from "./isNumber";
+import isString from "./isString";
+import isType from "./isType";
+import isUndefinedOr from "./isUndefinedOr";
+import type ErrorResponse from "./ErrorResponse.type";
+
+const isErrorResponse = isType<ErrorResponse>({
+  errorMessage: isString,
+  statusCode: isUndefinedOr(isNumber)
+});
+
+export default isErrorResponse;
+```
+
+### Example Implementation
+
+**MyDTO.type.ts:**
+```typescript
+export default interface MyDTO {
+  readonly id: number;
+  readonly name: string; 
+}
+```
+
+**isMyDTO.ts:**
+```typescript
+import isNumber from "utils/typeguards/isNumber";
+import isString from "utils/typeguards/isString";
+import isType from "utils/typeguards/isType";
+
+import type MyDTO from "./MyDTO.type";
+
+const isMyDTO = isType<MyDTO>({
+  id: isNumber,
+  name: isString,
+});
+
+export default isMyDTO;
+```
+
+## Using `isType` For Object Validation
+
+### Pattern Description
+The `isType` utility provides a declarative way to compose type guards for objects with multiple properties. This is the preferred method for validating complex objects over creating custom type guard functions.
+
+### Implementation Pattern
+
+```typescript
+// 1. Define your DTO interface
+export interface ExampleResponseDTO {
+  readonly id: number;
+  readonly name: string;
+  readonly active: boolean;
+}
+
+// 2. Create a type guard using isType
+export const isExampleResponseDTO = isType<ExampleResponseDTO>({
+  id: isNumber,
+  name: isString,
+  active: isBoolean,
+});
+
+// 3. Use with guardWithTolerance if appropriate
+const validatedResponse = guardWithTolerance(response, isExampleResponseDTO, {
+  callbackOnError: debug,
+  identifier: "ExampleResponseDTO",
+});
+```
+
+### Avoid Creating Custom Type Guards
+```typescript
+// AVOID: Custom type guard implementation
+export const isExampleResponseDTO = (value: unknown): value is ExampleResponseDTO => {
+  if (value === null || typeof value !== "object") {
+    return false;
+  }
+  
+  const typedValue = value as Record<string, unknown>;
+  return (
+    typeof typedValue.id === "number" &&
+    typeof typedValue.name === "string" &&
+    typeof typedValue.active === "boolean"
+  );
+};
+
+// PREFERRED: Using isType utility
+export const isExampleResponseDTO = isType<ExampleResponseDTO>({
+  id: isNumber,
+  name: isString,
+  active: isBoolean,
+});
+```
+
+## Handling Nested Objects
+
+```typescript
+// 1. Define nested interfaces
+export interface NestedDTO {
+  readonly subProperty: string;
+}
+
+export interface ParentDTO {
+  readonly id: number;
+  readonly nested: NestedDTO;
+}
+
+// 2. Create type guards for each level
+export const isNestedDTO = isType<NestedDTO>({
+  subProperty: isString,
+});
+
+export const isParentDTO = isType<ParentDTO>({
+  id: isNumber,
+  nested: isNestedDTO,
+});
+```
+
+## Type Guards with Conditional Properties
+
+For objects with optional properties:
+
+```typescript
+export interface OptionalPropsDTO {
+  readonly id: number;
+  readonly name?: string;
+}
+
+// Use isOptional to handle properties that might be undefined
+export const isOptionalPropsDTO = isType<OptionalPropsDTO>({
+  id: isNumber,
+  name: isOptional(isString),
+});
+```
+
+## Processing Response in React Components
+
+```typescript
+// In a React hook
+export function useProcessResponse(response: unknown, onSuccess: () => void): void {
+  useEffect(() => {
+    if (isExampleResponseDTO(response)) {
+      // Handle successful response
+      onSuccess();
+    } else if (isErrorResponse(response)) {
+      // Handle error response
+      debug("Error in response", response.errorMessage);
+    }
+  }, [response, onSuccess]);
+}
+```
+
+## Additional Type Guard Utilities
+
+The codebase provides several useful type guard utilities:
+
+- `isString`: Validates string values
+- `isNumber`: Validates number values
+- `isBoolean`: Validates boolean values
+- `isArray`: Validates arrays
+- `isArrayWithEachItem`: Validates arrays with specific item types
+- `isOneOf`: Validates against a set of allowed values (useful for enums)
+- `isOptional`: Validates optional properties
+- `isNonEmptyString`: Validates non-empty strings
+- `isEnum`: Type guards for enum values
+
+## Examples from Codebase
+
+Check these implementation examples:
+- `app/features/CustomerEvaluation/components/CustomerEvaluationTab/features/Like/types/SubmitLikeResponseDTO`
+- `app/pages/Result/types/ResultDTO/TariffDTO/EcoDTO`
+- `app/utils/form/validations/MaxLengthValidationType/isMaxLengthValidationType.ts`
+
+
+# Type File Organization
+
+## Naming and Location
+- Use `.type.ts` extension for all type definition files
+- Place each type definition in its own file for better modularity
+- Keep type files close to their implementation files
+- Group related types in a dedicated `types` folder within feature directories
+
+## Structure
+```
+FeatureName/
+├── utils/
+│   ├── someUtility/
+│   │   ├── types/
+│   │   │   ├── TypeOne.type.ts
+│   │   │   ├── TypeTwo.type.ts
+│   │   │   └── SharedType.type.ts
+│   │   ├── transformers/
+│   │   │   ├── transformerOne.ts
+│   │   │   └── transformerTwo.ts
+│   │   └── mainUtility.ts
+```
+
+## Direct Imports
+- Import types directly from their specific files
+- Avoid using barrel exports (index.ts) for types
+- Use explicit import paths for better code navigation and understanding
+- Example: `import type { MyType } from './types/MyType.type';`
+
+## Type Definition Best Practices
+- Define one type or interface per file
+- Use descriptive names for type files matching the type name
+- Add JSDoc only when the type’s purpose or contract isn’t obvious from the name (align with rules-bundle-core.mdc: comments for "why")
+- Use proper TypeScript conventions (readonly, etc.)
+
+## Type Re-exports
+- Avoid re-exporting types through index files unless absolutely necessary
+- When re-exports are needed, be explicit about what is being exported
+
+## Benefits
+- Improved code navigation
+- Better IDE support for finding type definitions
+- Clearer dependency relationships
+- Reduced risk of circular dependencies
+- Easier to maintain as the codebase grows
+
+
+# JSON Safety Standards
+
+## Avoid Direct Use of JSON.parse and JSON.stringify
+
+JSON.parse and JSON.stringify operations present several risks:
+
+1. Type Safety Issues:
+   - No compile-time type checking
+   - Runtime type errors when the structure doesn't match expectations
+   - Can introduce `any` types which bypass TypeScript's safety mechanisms
+
+2. Error Handling Problems:
+   - JSON.parse throws exceptions on invalid input
+   - These exceptions are often not properly caught and handled
+   - Can lead to unhandled promise rejections
+
+3. Security Considerations:
+   - Potential injection vulnerabilities if used with untrusted data
+   - Reviver functions in JSON.parse can execute code
+   - Circular references can cause application crashes
+
+## Recommended Alternatives
+
+### For API Requests
+- Use typed request/response objects with proper validation
+- Leverage built-in serialization of fetch/Axios/similar libraries
+- Implement proper error boundaries around parsing operations
+
+### For Form Data
+- Use FormData for sending complex data structures
+- Separate individual fields where possible
+- Apply proper validation before and after transmission
+
+### For Local Storage
+- Create wrapper functions with proper typing and error handling
+- Validate data structure when retrieving from storage
+- Use type guards to ensure type safety
+
+## Implementation Patterns
+
+### Safe Parsing Pattern
+```typescript
+function safelyParseJSON<T>(
+  input: string, 
+  typeGuardFn: (value: unknown) => value is T,
+  errorCallback: (error: unknown) => void
+): T | null {
+  try {
+    const parsed = JSON.parse(input);
+    if (typeGuardFn(parsed)) {
+      return parsed;
+    }
+    errorCallback(new Error("Validation failed for parsed JSON"));
+    return null;
+  } catch (error) {
+    errorCallback(error);
+    return null;
+  }
+}
+
+// Usage
+const data = safelyParseJSON<UserData>(
+  jsonString, 
+  isUserData,
+  error => debug("Failed to parse user data", error)
+);
+```
+
+### FormData Pattern for Complex Objects
+```typescript
+// Sending
+const formData = new FormData();
+formData.append("simpleField", "value");
+
+// For complex objects, add individual properties
+Object.entries(complexObject).forEach(([key, value]) => {
+  if (value !== undefined && value !== null) {
+    formData.append(`complexObject.${key}`, String(value));
+  }
+});
+
+// Receiving
+const formData = await request.formData();
+const complexObject: Record<string, unknown> = {};
+
+for (const [key, value] of formData.entries()) {
+  if (key.startsWith("complexObject.") && typeof value === "string") {
+    const propKey = key.replace("complexObject.", "");
+    complexObject[propKey] = value;
+  }
+}
+
+// Validate the reconstructed object
+if (isValidComplexObject(complexObject)) {
+  // Use the validated object
+}
+```
+
+### Type Guard Pattern
+```typescript
+function isUserProfile(value: unknown): value is UserProfile {
+  return (
+    typeof value === "object" &&
+    value !== null &&
+    "name" in value &&
+    typeof (value as UserProfile).name === "string" &&
+    "age" in value &&
+    typeof (value as UserProfile).age === "number"
+  );
+}
+
+// Usage with JSON
+try {
+  const data = JSON.parse(jsonString);
+  if (isUserProfile(data)) {
+    // Type-safe usage
+    console.log(data.name);
+  } else {
+    console.error("Invalid user profile data", data);
+  }
+} catch (error) {
+  console.error("Failed to parse JSON", error);
+}
+```
+
+## Examples from Codebase
+
+### Using FormData for API Requests
+```typescript
+// In a submit action
+const formData = new FormData();
+formData.append("productId", String(params.productId));
+formData.append("page", String(params.page));
+
+// For complex objects, add properties individually
+Object.entries(params.calculationParameter).forEach(([key, value]) => {
+  formData.append(`calculationParameter.${key}`, String(value));
+});
+
+void fetcher.submit(formData, {
+  method: "POST",
+  action: "/api/endpoint"
+});
+```
+
+### Receiving and Validating Form Data
+```typescript
+// In an action function
+const formData = await request.formData();
+const productId = Number(formData.get("productId"));
+const page = Number(formData.get("page"));
+
+// Validate required fields
+if (!isNumber(productId) || !isNumber(page)) {
+  return { error: "Invalid parameters" };
+}
+
+// Extract complex object properties
+const calculationParams: Record<string, unknown> = {};
+for (const [key, value] of formData.entries()) {
+  if (key.startsWith("calculationParameter.") && typeof value === "string") {
+    const paramKey = key.replace("calculationParameter.", "");
+    calculationParams[paramKey] = parseValue(value);
+  }
+}
+
+// Validate with type guard
+if (!isCalculationParameterDTO(calculationParams)) {
+  return { error: "Invalid calculation parameters" };
+}
+
+// Use validated data
+const result = await api.getResult(productId, calculationParams);
+```
+
+
+# Enum Validation Pattern
+
+## Overview
+This rule describes the standard pattern for validating enum values in the codebase using the isEnum utility.
+
+## Key Principles
+- Use the `isEnum` utility instead of custom validation functions
+- Follow the curried function pattern for type safety and clean code
+- Add appropriate debug callbacks for better error reporting
+
+## Implementation Pattern
+
+```typescript
+// Import the utility
+import isEnum from "utils/typeguards/isEnum";
+import { ProductEnum } from "enums/Product.enum";
+
+// In validation logic:
+const productIdNumber = Number(productIdParam);
+if (!isEnum(ProductEnum)(productIdNumber)) {
+  return {
+    errorMessage: "Invalid productId",
+    statusCode: 400
+  };
+}
+
+// Use with debug for better error reporting
+if (
+  isEnum(ProductEnum)(productId, {
+    callbackOnError: debug,
+    identifier: "productId",
+  })
+) {
+  // Proceed with valid enum value
+}
+```
+
+## Anti-Pattern
+Avoid creating custom validation functions that duplicate the isEnum functionality:
+
+```typescript
+// AVOID: Custom validation function
+function isValidProductEnum(value: number): value is ProductEnum {
+  return Object.values(ProductEnum).includes(value);
+}
+```
+
+## Example from submitLikeLoader.ts
+```typescript
+// Convert and validate parameters
+const productIdNumber = Number(productIdParam);
+if (!isEnum(ProductEnum)(productIdNumber)) {
+  return {
+    errorMessage: "Invalid productId",
+    statusCode: 400
+  };
+}
+
+const productId = productIdNumber;
+```

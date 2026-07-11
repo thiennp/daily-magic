@@ -1,0 +1,50 @@
+---
+description: >-
+  Project invariants: commits, hooks, scaffolding, TypeScript hygiene.
+globs:
+  - "**/*"
+alwaysApply: true
+---
+
+# Project invariants (daily-magic)
+
+## Code clarity and types
+
+- Prefer self-documenting structure and names. Comments justify non-obvious decisions (“why”), not mechanics the code already expresses.
+- Do not use the `any` type. Prefer explicit types, generics, or `unknown` with safe narrowing.
+- Prefer `const` over `let`.
+
+## Layout
+
+- Routes and API handlers live under `src/app/`.
+- Feature modules live under `src/features/`.
+- Shared UI lives under `src/components/` (TailAdmin vendored components).
+- Framework utilities live under `src/lib/`.
+
+## Commits and Git hooks
+
+- Husky accepts **conventional commits**: `feat: …`, `fix(scope): …`, `chore: …`, etc.
+- Ticket-prefixed commits are also accepted: `LIN-123: (feat) …` or `00000: (chore) …`.
+- Do not bypass hooks (`--no-verify`) unless a human explicitly requests it.
+
+## Verification
+
+After substantive changes:
+
+```bash
+npm run lint
+npm run typecheck
+npm run validate:staged
+npm run cursor:architecture -- --staged
+npm run build
+```
+
+## Styling
+
+This repo uses **Tailwind CSS 4**, not SCSS modules or `enrg-frontend-styleguide`.
+
+## Hosting & trackers
+
+- **GitHub** for git remote, issues, and pull requests.
+- **Linear** (or similar) for issue keys in branch names when useful.
+- No Bitbucket, Jira CLI scripts, or Sentry harness automation in this repository.

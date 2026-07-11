@@ -7,7 +7,16 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "db:schema": "psql \"$DATABASE_URL\" -f db/schema.sql"
+    "typecheck": "npm run lint && tsc --noEmit",
+    "db:schema": "psql \"$DATABASE_URL\" -f db/schema.sql",
+    "prepare": "npx is-ci || npx husky",
+    "cursor:verify": "tsx .agents/scripts/verify-rules.ts",
+    "cursor:architecture": "tsx .agents/scripts/architecture-check.ts",
+    "ci:architecture": "tsx .agents/scripts/architecture-check.ts --base=origin/main",
+    "validate:staged": "sh .agents/scripts/validate-structure-staged.sh",
+    "validate:all": "find src db -type f \\( -name '*.ts' -o -name '*.tsx' -o -name '*.sql' \\) -print0 | xargs -0 npx structure-validation --files --verify-root --skip-error",
+    "validate:fix": "structure-validation --scope staged --fix --verify-root",
+    "validate:preview": "structure-validation --scope staged --dry-run"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",
@@ -29,7 +38,12 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.2.10",
+    "husky": "^9.1.7",
+    "is-ci": "^4.1.0",
+    "prettier": "^3.6.2",
+    "structure-validation": "^0.0.14",
     "tailwindcss": "^4",
+    "tsx": "^4.20.3",
     "typescript": "^5"
   }
 }

@@ -1,0 +1,47 @@
+---
+description: Test utility templates from .agents/file-lists/test_utils.json
+alwaysApply: false
+---
+
+# Test-utils templates (from `test_utils.json`)
+
+Summarizes **4** files under **`app/test-utils/`** (see [`.agents/file-lists/test_utils.json`](../file-lists/test_utils.json)). Shared helpers for **Vitest** and snapshot tests.
+
+## Inventory snapshot
+
+| Fact | Typical value |
+| --- | --- |
+| Files | `createSnapshotRootElm.ts`, `fixSnapshotHashClassName.ts`, `mockTypeGuardFnConfig.ts`, `replaceSnapshotMarkers.ts` |
+| Extensions | `.ts` |
+
+## Snapshot root (UI tests)
+
+```typescript
+import { fixSnapshotHashClassName } from "./fixSnapshotHashClassName";
+import { replaceSnapshotMarkers } from "./replaceSnapshotMarkers";
+
+export function createSnapshotRootElm(): HTMLElement {
+  fixSnapshotHashClassName(document.body);
+  replaceSnapshotMarkers();
+  return document.body;
+}
+```
+
+## Usage in tests
+
+```typescript
+import { render } from "@testing-library/react";
+import { createSnapshotRootElm } from "test-utils/createSnapshotRootElm";
+import { describe, expect, it } from "vitest";
+
+describe("Foo", () => {
+  it("renders", (): void => {
+    render(<Foo />);
+    expect(createSnapshotRootElm()).toMatchSnapshot();
+  });
+});
+```
+
+## Related
+
+- **`tests-templates.mdc`**, **`rules-bundle-react.mdc`** (snapshot policy)

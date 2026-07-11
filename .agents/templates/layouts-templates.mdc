@@ -1,0 +1,68 @@
+---
+description: Layout component templates from .agents/file-lists/layouts.json
+alwaysApply: false
+---
+
+# Layout templates (from `layouts.json`)
+
+Summarizes **171** files under **`**/layouts/**`** (see [`.agents/file-lists/layouts.json`](../file-lists/layouts.json)). Layouts compose **slots** (header/body/footer) and page chrome; often paired with **`.module.scss`**.
+
+## Inventory snapshot
+
+| Fact | Typical value |
+| --- | --- |
+| Extensions | `.tsx` (~53%), `.scss` (~44%), small `.js` / `.ts` |
+| Path depth (median) | 9 segments |
+| Common roots | `app/pages` (~75%), `app/features` (~14%), `app/components` (~10%) |
+| Largest slice | `app/pages/Result/...` (~66%) |
+
+**Path examples:**
+
+- `app/layouts/OverlayLayout.tsx`
+- `app/pages/Result/layouts/ResultTabsLayout.tsx`
+- `app/pages/Result/features/TariffsOverview/components/TariffTile/features/TariffHints/layouts/TariffHintsLayout.module.scss`
+
+## Role
+
+- **Layout** = structural wrapper (grid, overlay chrome, tab shell), often **default export** function returning **`ReactElement`**.
+- **Feature components** vs layouts: layouts focus on **composition** and **named slots** (`components` prop bag, render props, or children).
+
+## Template — slot-based overlay
+
+```typescript
+import type { ReactElement } from "react";
+import { renderIfNotNull } from "utils/renderIfNotNull";
+
+interface Props {
+  readonly components: {
+    readonly header?: ReactElement;
+    readonly body?: ReactElement;
+    readonly footer?: ReactElement;
+  };
+}
+
+export default function ExampleOverlayLayout(props: Props): ReactElement {
+  return (
+    <div>
+      {renderIfNotNull(props.components.header, (header) => (
+        <header>{header}</header>
+      ))}
+      {renderIfNotNull(props.components.body, (body) => (
+        <main>{body}</main>
+      ))}
+      {renderIfNotNull(props.components.footer, (footer) => (
+        <footer>{footer}</footer>
+      ))}
+    </div>
+  );
+}
+```
+
+## Styling
+
+- Co-locate **`LayoutName.module.scss`**; use **BEM** block names matching the layout (**`rules-typescript-clean-code.mdc`**).
+
+## Related
+
+- **`component-templates.mdc`**
+- **`styles-templates.mdc`**

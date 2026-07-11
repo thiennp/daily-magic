@@ -1,0 +1,27 @@
+---
+description: >-
+  Cursor harness: on every request, match intent to a command playbook when one exists; otherwise proceed normally.
+globs:
+  - "**/*"
+alwaysApply: true
+---
+
+# Agent request routing (daily-magic harness)
+
+## First step on every request
+
+Before planning or editing, scan **`.cursor/harness/agent-request-routing.md`**:
+
+1. Match the user message against the **Routing table**.
+2. **If a row matches:** attach the listed **`@.cursor/commands/<command>.md`** playbook.
+3. **If no row matches:** continue with normal project rules and skills.
+
+## Out of scope
+
+Do not route to removed EnergyCenter agents (Bitbucket PR review, Jira delivery, Sentry incident, hybrid RAG). This repo uses Next.js + Neon + Tailwind, not React Router / SCSS modules / `enrg-frontend-styleguide`.
+
+## Related
+
+- **`.cursor/harness/agent-request-routing.md`** — routing table
+- **`.cursor/commands/command-README.md`** — command index
+- **`CLAUDE.md`** / **`AGENTS.md`** — project agent instructions

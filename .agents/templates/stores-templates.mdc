@@ -1,0 +1,60 @@
+---
+description: Zustand store templates from .agents/file-lists/stores.json
+alwaysApply: false
+---
+
+# Store templates (from `stores.json`)
+
+Summarizes **61** files under **`**/stores/**`** (see [`.agents/file-lists/stores.json`](../file-lists/stores.json)). Data-only store shape and standalone setters: **`rules-state-zustand.mdc`**, **`@performance-architecture-standards.mdc`**.
+
+## Inventory snapshot
+
+| Fact | Typical value |
+| --- | --- |
+| Basename starts with `use` | ~87% |
+| Basename contains `Store` | ~67% |
+| Extensions | `.ts` (~95%), `.js` |
+| Path depth (median) | 5 segments |
+| Common roots | `app/stores` (~57%), `app/features` (~26%), `app/pages` (~16%) |
+
+**Path examples:**
+
+- `app/stores/resultListStore/useResultListStore.ts`
+- `app/features/BPM/stores/useBPMStore.ts`
+- `app/stores/calculationParameterStore/stores/useCalculationParameterStore.ts`
+
+## Template — Zustand store + named setters
+
+```typescript
+import type { Nullable } from "guardz";
+import { create } from "zustand";
+
+interface ExampleStoreState {
+  readonly items: readonly string[];
+  readonly selectedId: Nullable<string>;
+}
+
+export const useExampleStore = create<ExampleStoreState>(() => ({
+  items: [],
+  selectedId: null,
+}));
+
+export const setExampleItems = (items: readonly string[]): void => {
+  useExampleStore.setState({ items });
+};
+
+export const setSelectedId = (selectedId: Nullable<string>): void => {
+  useExampleStore.setState({ selectedId });
+};
+```
+
+## Conventions
+
+- **State interface:** all fields **`readonly`**.
+- **Exports:** `useExampleStore` hook + **pure setter functions** beside the file (not methods on a class).
+- **Imports:** direct path to store module (no barrel); see **`rules-folder-organization.mdc`**.
+
+## Related
+
+- Hooks that read stores: **`hooks-templates.mdc`**
+- Testing: **`rules-bundle-react.mdc`** (prefer real stores in tests when applicable)

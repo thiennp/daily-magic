@@ -1,0 +1,171 @@
+---
+description: Common React component templates derived from .agents/file-lists/components.json inventory and codebase patterns
+alwaysApply: false
+---
+
+# Component templates (from `components.json`)
+
+This document summarizes **recurring shapes** used across the **310** component files listed in [`.agents/file-lists/components.json`](../file-lists/components.json). Use it as a quick reference when adding or refactoring UI. **Prefer `pnpm scaffold component <Name>`** (see **`rules-bundle-core.mdc`** + **`.agents/scaffold/README.md`**, **`.agents/scaffold/README.md`**) for new files instead of copying this by hand. Authoritative rules remain in **`rules-typescript-clean-code.mdc`**, **`rules-folder-organization.mdc`**, **`rules-bundle-react.mdc`**, and **`rules-bundle-react.mdc`**.
+
+## Inventory snapshot (generated metadata)
+
+| Fact | Typical value |
+| --- | --- |
+| Extensions | `.tsx` only in this list |
+| Path depth (segments) | min 4, median 8, max 14 under `app/` |
+| Top roots | `app/pages` (~61%), `app/components` (~22%), `app/features` (~16%) |
+| Largest page area | `app/pages/Result/...` (~51% of listed files) |
+| Co-located folder name = file stem | ~43% use `ComponentName/ComponentName.tsx` |
+
+**Path examples** from the list (depth varies):
+
+- `app/components/ActionButtonsLayout/ActionButtonsLayout.tsx`
+- `app/features/CustomerEvaluation/components/CustomerEvaluationTab/features/CommentList/CommentList.tsx`
+- `app/pages/Result/features/TariffsOverview/components/TariffTile/features/Chips/ChipsDesktop.tsx`
+
+## Folder layout patterns
+
+Pick the shallowest structure that matches responsibility; nest `components/`, `features/`, `layouts/`, `assets/`, `utils/` as the tree grows.
+
+### A — Root + co-located entry (common under `app/components/`)
+
+```text
+Foo/
+  Foo.tsx
+  Foo.module.scss
+  Foo.test.tsx          # when tests exist
+```
+
+### B — Platform or variant split (Desktop / Mobile / App)
+
+```text
+Foo/
+  FooDesktop/
+    FooDesktop.tsx
+    FooDesktop.module.scss
+  FooMobile/
+    FooMobile.tsx
+```
+
+### C — Feature slice with sub-features
+
+```text
+FeatureName/
+  components/
+    SubWidget/
+      SubWidget.tsx
+  features/
+    DeepFeature/
+      DeepFeature.tsx
+  FeatureName.tsx
+```
+
+### D — Page-local component
+
+```text
+app/pages/Result/features/SomeFeature/components/SomeWidget/SomeWidget.tsx
+```
+
+**Imports:** prefer direct paths to source files (no `index.ts` barrels except where the repo explicitly allows multi-export or lazy-load). See **`rules-folder-organization.mdc`**.
+
+## TypeScript + export pattern
+
+- **`export default function`** for the main component in the file (matches most listed files).
+- Return type: **`ReactElement`** (import `ReactElement` from `"react"`; avoid `React.ReactElement` per **`rules-bundle-react.mdc`**).
+- Props: dedicated **`interface FooProps`** with **`readonly`** on every field.
+- Extend DOM props only when wrapping a native element, e.g. `extends ButtonHTMLAttributes<HTMLButtonElement>`.
+
+### Template — presentational component
+
+```tsx
+import type { ReactElement, ReactNode } from "react";
+
+import styles from "./Foo.module.scss";
+
+interface FooProps {
+  readonly title: ReactNode;
+  readonly className?: string;
+}
+
+export default function Foo(props: FooProps): ReactElement {
+  return (
+    <section className={styles.Foo}>
+      <h2 className={styles.Foo_title}>{props.title}</h2>
+    </section>
+  );
+}
+```
+
+### Template — wrapper with native element props
+
+```tsx
+import classNames from "classnames";
+import type { ButtonHTMLAttributes, ReactElement, ReactNode } from "react";
+
+import styles from "./Foo.module.scss";
+
+interface FooProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  readonly children: ReactNode;
+  readonly active: boolean;
+}
+
+export default function Foo({ children, active, className, ...props }: FooProps): ReactElement {
+  return (
+    <button
+      {...props}
+      type="button"
+      className={classNames(styles.Foo, active ? styles.Foo___active : styles.Foo___inactive, className)}
+    >
+      {children}
+    </button>
+  );
+}
+```
+
+## Styling (SCSS modules + BEM)
+
+- One **`.module.scss`** next to the component (or next to each variant file).
+- **Block** name matches the component: `.Foo { ... }`.
+- **Element**: `&_title` → `.Foo_title`.
+- **Modifier**: `&___active` → `.Foo___active` (three underscores in source; see existing components).
+
+Use **`classnames`** when combining module classes with optional `className` from props.
+
+## Conditional rendering (project utilities)
+
+Align with **`rules-typescript-clean-code.mdc`** and **`rules-bundle-react.mdc`**:
+
+- **`renderIfNotNull(value, render)`** — nullable data → UI.
+- **`renderWithCondition(condition, whenTrue, whenFalse?)`** — boolean gates.
+- **Enum-keyed maps** for multiple variants (define **outside** the component):
+
+```tsx
+import type { ReactElement } from "react";
+
+import type { SomeEnum } from "enums/SomeEnum.enum";
+
+const SUBVIEW_MAP: Record<SomeEnum, () => ReactElement> = {
+  [SomeEnum.A]: () => <AView />,
+  [SomeEnum.B]: () => <BView />,
+};
+
+// In JSX: {SUBVIEW_MAP[someEnum]()}
+```
+
+Device-specific trees often use **`useDeviceOutputRenderer`** (see `app/hooks/useDeviceOutputRenderer.tsx`) or separate `*Desktop` / `*Mobile` components in the file list.
+
+## Data / effects
+
+- Prefer **hooks** in `hooks/` for non-trivial logic; keep the component thin.
+- Use **`useEffect`** only for real side effects (e.g. logging route errors in **`ErrorInfo`**).
+- Avoid `useMemo` / `useCallback` unless needed for expensive work or referential stability (**`rules-typescript-clean-code.mdc`**).
+
+## Related rules and files
+
+| Topic | Where |
+| --- | --- |
+| Three-tier (container / content / skeleton), tests | **`rules-bundle-react.mdc`** |
+| Conditional rendering, enums, maps | **`rules-bundle-react.mdc`**, **`rules-typescript-clean-code.mdc`** |
+| Feature folders, imports | **`rules-folder-organization.mdc`** |
+| Full file list | **`.agents/file-lists/components.json`** |
+| Hooks, stores, tests, etc. | **[`.agents/templates/README.md`](README.md)** (index of all `*-templates.mdc`) |

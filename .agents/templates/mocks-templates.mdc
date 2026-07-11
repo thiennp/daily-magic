@@ -1,0 +1,40 @@
+---
+description: Mock data templates from .agents/file-lists/mocks.json
+alwaysApply: false
+---
+
+# Mocks templates (from `mocks.json`)
+
+Summarizes **8** files under **`app/mocks/`** (see [`.agents/file-lists/mocks.json`](../file-lists/mocks.json)). Shared **fixtures** for tests and local development; keep imports explicit (no barrel).
+
+## Inventory snapshot
+
+| Fact | Typical value |
+| --- | --- |
+| Extensions | `.ts` |
+| Path depth | 3 (`app/mocks/*.ts`) |
+
+**Files in list:** `EnergyMix.mock.ts`, `detailMobile.mock.ts`, `details.mock.ts`, `evaluation.mock.ts`, `logger.mock.ts`, `mockAPI.ts`, `mocksBrowser.ts`, `result.mock.ts`
+
+## Naming
+
+- **`*.mock.ts`** for domain-shaped fixtures.
+- **`mockAPI.ts` / `mocksBrowser.ts`** for wiring test doubles.
+
+## Template — exported fixture object
+
+```typescript
+import { ProductEnum } from "enums/Product.enum";
+
+export const MOCK_RESULT = {
+  product: ProductEnum.POWER,
+  items: [],
+} as const;
+```
+
+Large aggregates (e.g. full **`ResultDTO`**) may live in one file; **import enums and nested types** from real modules to stay type-aligned.
+
+## Related
+
+- **`tests-templates.mdc`**
+- **`test-utils-templates.mdc`**

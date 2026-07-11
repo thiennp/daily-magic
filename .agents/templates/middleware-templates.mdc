@@ -1,0 +1,44 @@
+---
+description: Middleware templates from .agents/file-lists/middleware.json
+alwaysApply: false
+---
+
+# Middleware templates (from `middleware.json`)
+
+The list currently contains **1** file under **`**/middleware/**`**: `app/middleware/requestContext.ts` (see [`.agents/file-lists/middleware.json`](../file-lists/middleware.json)).
+
+## Pattern — React Router middleware + context
+
+```typescript
+import type { RouterContextProvider } from "react-router";
+import { createContext, type MiddlewareFunction } from "react-router";
+
+export interface RequestContext {
+  readonly id: string;
+  readonly ip: string | null;
+}
+
+const requestContext = createContext<RequestContext>();
+
+export const requestContextMiddleware: MiddlewareFunction<Response> = async ({ request, context }, next) => {
+  context.set(requestContext, {
+    id: `${Date.now()}${Math.random()}`,
+    ip: null,
+  });
+
+  return next();
+};
+
+export function getRequestContext(context: Readonly<RouterContextProvider>): RequestContext {
+  return context.get(requestContext);
+}
+```
+
+## Notes
+
+- Keep **context types** small and **readonly**.
+- Prefer **pure** helpers for reading context; side effects stay in the middleware body.
+
+## Related
+
+- **`other-templates.mdc`** (loaders, server utilities)

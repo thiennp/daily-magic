@@ -1,0 +1,52 @@
+---
+description: Catch-all TypeScript templates from .agents/file-lists/other.json
+alwaysApply: false
+---
+
+# “Other” TypeScript templates (from `other.json`)
+
+Summarizes **`.ts`** (and a few **`.js`**) utility and service files. Typical content: **`src/lib/`**, **`src/features/`** services, **`.agents/scripts`**.
+
+## Inventory snapshot
+
+| Fact | Typical value |
+| --- | --- |
+| Extensions | `.ts` (~92%), `.js`, `.mjs`, `.cjs` |
+| Path depth (median) | 5 segments |
+| Top roots | `app/utils` (~32%), `app/pages` (~31%), `app/features` (~18%), `.agents/tools/rag` (~4%), `app/services` (~4%) |
+
+## Buckets
+
+| Area | Examples |
+| --- | --- |
+| Pure utilities | `app/utils/**` — functions, small modules, **`camelCase`** file names (**`@utility-naming-conventions.mdc`**) |
+| Loaders / actions | `app/pages/**` route data loading, form actions |
+| Services | `app/features/**/services/**`, `app/services/**` |
+| Rx subjects | `app/subjects/**` |
+| Tooling | `.agents/tools/rag/**`, `.agents/scripts/**` |
+
+## Template — pure function module
+
+```typescript
+const add = (a: number, b: number): number => a + b;
+
+export default add;
+```
+
+## Template — named exports
+
+```typescript
+export const toUpper = (value: string): string => value.toUpperCase();
+
+export const toLower = (value: string): string => value.toLowerCase();
+```
+
+## Boundaries
+
+- If a file **starts using React hooks**, move it to **`hooks/`** and name with **`use`**.
+- If it is **only types**, use **`types/`** or **`*.type.ts`** so it lands in **`types.json`**, not **`other.json`**, next time lists are generated.
+
+## Related
+
+- **`@existing-utilities.mdc`** (reuse before adding)
+- **`hooks-templates.mdc`**, **`types-templates.mdc`**

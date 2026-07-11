@@ -1,0 +1,51 @@
+---
+description: Type definition templates from .agents/file-lists/types.json
+alwaysApply: false
+---
+
+# Types templates (from `types.json`)
+
+Summarizes **430** files: **`**/types/**`**, **`*.type.ts`**, **`*.guardz.ts`** (see [`.agents/file-lists/types.json`](../file-lists/types.json)). Strict typing, **`readonly`** on DTO fields; **`any` forbidden** (**`rules-bundle-core.mdc`**).
+
+## Inventory snapshot
+
+| Fact | Typical value |
+| --- | --- |
+| `.type.` in basename | ~56% of files |
+| `.guardz.` in basename | significant share (guardz validators) |
+| Extensions | `.ts` (~96%), small `.js` / `.tsx` |
+| Path depth (median) | 7 segments |
+| Common roots | `app/pages` (~43%), `app/services/types` (~37%), `app/features` (~10%) |
+
+**Path examples:**
+
+- `app/pages/Result/types/ResultDTO/TariffDTO/TariffDTO.type.ts`
+- `types/OverlayOrBottomSheetLayoutProps.ts`
+- `app/services/types/.../SomeDTO.type.ts`
+
+## Template — DTO `interface`
+
+```typescript
+import type { Nullable } from "guardz";
+
+import type { KeyDTO } from "types/KeyDTO/KeyDTO.type";
+
+export interface ExampleDTO {
+  readonly id: string;
+  readonly name: Nullable<string>;
+  readonly key: KeyDTO;
+}
+```
+
+## Guardz
+
+- Files ending in **`.guardz.ts`** hold runtime validators / guards; align with **`guardz`** usage elsewhere in the feature.
+
+## Immutability files
+
+- **Do not** modify files whose names contain **`DTO`** or **`RequestParams`** in ways that violate immutable-file rules (**`rules-bundle-core.mdc`**, **`pnpm run cursor:verify`**).
+
+## Related
+
+- **`enums-templates.mdc`**
+- **`@type-file-organization.mdc`**

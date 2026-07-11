@@ -1,0 +1,62 @@
+---
+description: Hook file templates from .agents/file-lists/hooks.json and codebase patterns
+alwaysApply: false
+---
+
+# Hook templates (from `hooks.json`)
+
+Summarizes **156** hook files under paths containing **`/hooks/`** (see [`.agents/file-lists/hooks.json`](../file-lists/hooks.json)). Rules: **`rules-typescript-clean-code.mdc`** (only name with `use` if the function calls React or another hook), **`rules-bundle-react.mdc`**, **`rules-state-zustand.mdc`** where relevant.
+
+## Inventory snapshot
+
+| Fact | Typical value |
+| --- | --- |
+| Basename starts with `use` | ~96% |
+| Extensions | `.ts` (~66%), `.tsx` (~28%); small `.scss` / `.js` |
+| Path depth (median) | 7 segments |
+| Common roots | `app/pages` (~66%), `app/features` & `app/hooks` (~16% each) |
+| Largest slice | `app/pages/Result/...` (~59%) |
+
+**Path examples:**
+
+- `app/hooks/useBehaviorSubject.ts`
+- `app/pages/Result/features/Filter/hooks/useFilterForm.ts`
+- `app/features/CustomerEvaluation/hooks/useRatingInfoClickHandler.ts`
+
+## Naming
+
+- **`use` prefix** when the function uses at least one React hook or custom hook (project convention).
+- **File name** matches the exported hook: `useFoo.ts` → `export const useFoo = ...` or `export default function useFoo`.
+
+## Template — subscription / external observable
+
+```typescript
+import { useEffect, useState } from "react";
+import type { BehaviorSubject } from "rxjs";
+
+export const useBehaviorSubject = <T>(subject$: BehaviorSubject<T>): T => {
+  const [value, setValue] = useState(subject$.value);
+
+  useEffect(() => {
+    const subscription = subject$.subscribe(setValue);
+    return (): void => {
+      subscription.unsubscribe();
+    };
+  }, []);
+
+  return value;
+};
+```
+
+## Template — hook returning elements or maps
+
+- Prefer **pure data + small JSX factories** in the hook when building `Record<Enum, () => ReactElement>` maps; keep **map constants at module scope** when they do not close over props (see **`rules-typescript-clean-code.mdc`**).
+
+## Template — `.tsx` hooks
+
+- Use when the hook returns JSX or is tightly coupled to rendering; same naming and `use` rules apply.
+
+## Related
+
+- Stores: **`stores-templates.mdc`**
+- Components consuming hooks: **`component-templates.mdc`**

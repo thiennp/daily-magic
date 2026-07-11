@@ -12,9 +12,12 @@ function createSql(): Sql {
   return neon(databaseUrl);
 }
 
-let sql: Sql | undefined;
+const sqlHolder: { value?: Sql } = {};
 
 export function getSql(): Sql {
-  sql ??= createSql();
-  return sql;
+  if (!sqlHolder.value) {
+    sqlHolder.value = createSql();
+  }
+
+  return sqlHolder.value;
 }

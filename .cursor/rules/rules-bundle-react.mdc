@@ -1,0 +1,61 @@
+---
+description: >-
+  React/TSX UI standards for Next.js App Router: components, pages, JSX, conditional maps.
+globs:
+  - "**/*.tsx"
+alwaysApply: false
+---
+
+# React / TSX standards (daily-magic)
+
+## Imports
+
+- Import named exports from `react`; use `import type` for types.
+- Use `@/` path alias for `src/` imports.
+
+## Organization
+
+- Route pages and layouts: `src/app/`
+- Feature modules: `src/features/`
+- Shared UI: `src/components/` (TailAdmin)
+- Hooks: `src/hooks/`
+- Server utilities: `src/lib/`
+
+## Components
+
+- PascalCase component names; camelCase for hooks and handlers.
+- Extract layout and business logic into focused child components and hooks.
+- Prefer function components; use `memo` only when profiling shows benefit.
+
+## Styling
+
+- **Tailwind CSS 4** — utility classes and TailAdmin patterns.
+- Do not introduce SCSS modules or `enrg-frontend-styleguide`.
+
+## UI primitives
+
+- Prefer TailAdmin components from `src/components/ui/` (`Button`, `Badge`, `Alert`, form inputs).
+- Use native `<button type="button">` with semantics when no shared component fits.
+- Never use `<div role="button">` or `<span role="button">`.
+
+## Conditional rendering
+
+- Use component maps: `Record<EnumType, () => ReactElement>` defined outside the component.
+- Render with `{COMPONENT_MAP[key]()}`.
+- Extract complex JSX into variables or small subcomponents.
+
+## Next.js App Router
+
+- Server Components by default; add `"use client"` only when needed (state, effects, browser APIs).
+- Route handlers in `src/app/api/**/route.ts`.
+- Colocate feature-specific sections under `src/features/<Feature>/`.
+
+## State
+
+- `useState` / `useReducer` for local UI state.
+- React Context is acceptable for theme/sidebar (TailAdmin pattern).
+- Server state via route handlers and `fetch` / Neon client in `src/lib/`.
+
+## Trackers
+
+- Link work to **GitHub issues** or **Linear** issues in branch names and PR descriptions — not Jira PRE tickets.

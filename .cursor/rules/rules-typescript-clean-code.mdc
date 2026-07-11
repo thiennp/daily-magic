@@ -1,0 +1,1380 @@
+---
+description: >-
+  Clean code, refactoring, conditional JSX helpers, styleguide, utilities, imports, component patterns.
+globs:
+  - "**/*.ts"
+  - "**/*.tsx"
+alwaysApply: false
+---
+
+
+
+# Clean Code Principles
+
+Defer to **`rules-typescript-language.mdc`**, **`rules-typescript-validation-and-typeguards.mdc`**, **`rules-bundle-core.mdc`**, **`rules-state-zustand.mdc`**, and **`rules-performance-architecture.mdc`**.
+
+Principles: names intention-revealing; functions small, 0–2 args; comments only "why"; DRY; prefer component maps for conditionals (rules-typescript-clean-code.mdc § Conditional Rendering).
+
+
+# Clean Code Refactoring Patterns
+
+## Overview
+This rule defines the standard patterns for refactoring complex React hooks and functions to follow clean code principles. These patterns were established during the refactoring of [useWireframeData.ts](mdc:app/wireframe/hooks/useWireframeData.ts) and should be applied consistently across the codebase.
+
+## Core Refactoring Principles
+
+### 1. Extract Complex Logic into Well-Named Functions
+When a function or hook contains complex logic, break it down into smaller, focused functions with descriptive names.
+
+#### Before Refactoring
+```typescript
+// Complex logic mixed with side effects
+useEffect(() => {
+  setLogoutLink(
+    `https://kundenbereich.${GLOBAL_STATE_UTILS_CLIENT_SIDE.getBaseDomain()}/user/logout.html?ref=${encodeURIComponent(window.location.href)}`,
+  );
+  if (isDefined(window.Check24) && GLOBAL_STATE_UTILS_CLIENT_SIDE.getEnvironment() !== EnvironmentEnum.PROD) {
+    window.Check24.uliloginlayer.config.env = "test";
+  }
+}, []);
+```
+
+#### After Refactoring
+```typescript
+// Clean, focused functions with clear responsibilities
+const buildLogoutLink = (): string => {
+  const baseDomain = GLOBAL_STATE_UTILS_CLIENT_SIDE.getBaseDomain();
+  const currentUrl = encodeURIComponent(window.location.href);
+  return `https://kundenbereich.${baseDomain}/user/logout.html?ref=${currentUrl}`;
+};
+
+const configureTestEnvironment = (): void => {
+  if (isDefined(window.Check24) && GLOBAL_STATE_UTILS_CLIENT_SIDE.getEnvironment() !== EnvironmentEnum.PROD) {
+    window.Check24.uliloginlayer.config.env = "test";
+  }
+};
+
+useEffect(() => {
+  setLogoutLink(buildLogoutLink());
+  configureTestEnvironment();
+}, []);
+```
+
+### 2. Function Naming Guidelines
+- Use verb-noun combinations that describe the action being performed
+- Make names specific and intention-revealing
+- Avoid generic names like `process`, `handle`, or `doSomething`
+
+#### Good Examples
+- `buildLogoutLink()` - Clearly builds a logout URL
+- `configureTestEnvironment()` - Configures environment for testing
+- `initializeUnifiedLoginLayer()` - Initializes a specific component
+- `setSessionCookie()` - Sets a session cookie
+- `fetchAndUpdateUser()` - Fetches and updates user data
+
+#### Avoid
+- `process()` - Too generic
+- `handle()` - Doesn't describe what's being handled
+- `doSomething()` - Vague and unhelpful
+
+### 3. Single Responsibility Principle
+Each extracted function should have one clear purpose and responsibility.
+
+```typescript
+// GOOD: Single responsibility
+const setSessionCookie = (sessionId: string): void => {
+  const cookieDomains = getCookieDomain();
+  const domain = cookieDomains[0];
+  document.cookie = `c24session=${sessionId};path=/;SameSite=lax;domain=${domain}`;
+};
+
+// GOOD: Another single responsibility
+const fetchAndUpdateUser = async (sessionId: string): Promise<void> => {
+  try {
+    const response = await fetch(`/api/user?c24session=${sessionId}`);
+    const result = await response.json();
+    
+    if (isType({ data: isUserDTO })(result)) {
+      setUserInStore(result.data);
+      debug("User updated from /api/user", result);
+    } else {
+      debug("Invalid user data from /api/user", result);
+    }
+  } catch (error) {
+    debug("Failed to update user from /api/user", error);
+  }
+};
+```
+
+### 4. Type Safety Improvements
+When refactoring, improve type safety by:
+- Using proper return types for functions
+- Handling nullable types correctly
+- Using union types for constrained values
+
+```typescript
+// GOOD: Proper typing for constrained values
+const getDeviceOutput = (): "mobile" | "desktop" => {
+  const currentDeviceOutput = GLOBAL_STATE_UTILS_CLIENT_SIDE.getDeviceOutput();
+  const mobileDevices = [DeviceOutputEnum.MOBILE, DeviceOutputEnum.APP];
+  return mobileDevices.includes(currentDeviceOutput) ? "mobile" : "desktop";
+};
+
+// GOOD: Handling nullable types properly
+const initializeUnifiedLoginLayer = (product: string, socialClosingUrl: string | null, onePagerURL: string | null): void => {
+  if (!isDefined(window.Check24)) {
+    return;
+  }
+
+  const config = {
+    deviceoutput: getDeviceOutput(),
+    api_product: product,
+    ...(socialClosingUrl && { social_login_closing_url: socialClosingUrl }),
+    ...(onePagerURL && { social_login_callback_url: onePagerURL }),
+  };
+
+  window.Check24.uliloginlayer.init(config);
+};
+```
+
+### 5. Error Handling and Debugging
+Maintain proper error handling and debugging when refactoring:
+
+```typescript
+// GOOD: Preserve error handling and debugging (setUserInStore = standalone store setter per rules-state-zustand.mdc)
+const fetchAndUpdateUser = async (sessionId: string): Promise<void> => {
+  try {
+    const response = await fetch(`/api/user?c24session=${sessionId}`);
+    const result = await response.json();
+    
+    if (isType({ data: isUserDTO })(result)) {
+      setUserInStore(result.data);
+      debug("User updated from /api/user", result);
+    } else {
+      debug("Invalid user data from /api/user", result);
+    }
+  } catch (error) {
+    debug("Failed to update user from /api/user", error);
+  }
+};
+```
+
+### 6. Hook Structure After Refactoring
+The main hook should be clean and focused on orchestration:
+
+```typescript
+export function useWireframeData(): {
+  readonly logoutLink: string;
+  readonly loginState: LoginStateEnum;
+  readonly username: string;
+} {
+  const [logoutLink, setLogoutLink] = useState("");
+  const { user } = useSSOUserStore();
+  const username = getUsername(user);
+  const loginState = getLoginState(user);
+  const { onePagerURL, socialClosingUrl, product } = useUnifiedLogin();
+
+  useEffect(() => {
+    setLogoutLink(buildLogoutLink());
+    configureTestEnvironment();
+  }, []);
+
+  useEffect(() => {
+    initializeMeinKonto();
+  }, [loginState]);
+
+  useEffect(() => {
+    setupUnifiedLoginEventListener();
+    initializeUnifiedLoginLayer(product, socialClosingUrl, onePagerURL);
+    initializeCookieBanner();
+  }, [product, socialClosingUrl, onePagerURL]);
+
+  return {
+    logoutLink,
+    username,
+    loginState,
+  };
+}
+```
+
+## Refactoring Process
+
+### Step 1: Identify Complex Logic
+Look for:
+- Functions with multiple responsibilities
+- Complex conditional logic
+- Long functions (>20 lines)
+- Mixed concerns (UI logic with business logic)
+
+### Step 2: Extract Functions
+- Create functions with descriptive names
+- Ensure single responsibility
+- Maintain proper typing
+- Preserve error handling
+
+### Step 3: Update Dependencies
+- Update useEffect dependencies to include only necessary values
+- Ensure proper dependency arrays
+- Avoid unnecessary re-renders
+
+### Step 4: Test and Verify
+- Run verification via **`.cursor/commands/command-verify-post-change-lint-typecheck-tests.md`** (or **`command-README.md`** § Verification).
+- Verify functionality remains intact
+- Check for any performance regressions
+
+## Benefits of This Approach
+
+1. **Maintainability**: Smaller functions are easier to understand and modify
+2. **Testability**: Individual functions can be tested in isolation
+3. **Reusability**: Extracted functions can be reused elsewhere
+4. **Readability**: Code is self-documenting and easier to follow
+5. **Type Safety**: Better TypeScript support with proper typing
+
+## Examples from Codebase
+
+See the complete refactoring example in [useWireframeData.ts](mdc:app/wireframe/hooks/useWireframeData.ts) for a full implementation of these patterns.
+
+## Related Rules
+- [Clean Code Principles](mdc:.cursor/rules/rules-typescript-clean-code.mdc)
+- [React Component Standards](mdc:.cursor/rules/rules-bundle-react.mdc)
+- [TypeScript Standards](mdc:.cursor/rules/rules-typescript-clean-code.mdc)
+
+
+# Code Standards
+
+## General Principles
+- Self-explanatory code; no comments for what/how (rules-bundle-core.mdc for "why" only).
+- Meaningful variable names; prefer long over vague.
+- Follow feature-based structure
+- Strictly following functional programming paradigm
+- Strictly following SOLID principle
+- Never use "let"
+- Never commit with --no-verify
+- Never commit with failed tests
+- Follow Semantic HTML rule
+- Follow BEM for SCSS; for colors in SCSS use **CSS variables** (`var(--…)`) instead of raw hex where a token exists—see **rules-bundle-styles.mdc** § Color variables
+- Always check prettier and lint
+- Strictly separate functions, hooks, layouts, types, constants
+- useCallback/useMemo only when needed (expensive computation or referential identity for memo children); avoid by default (React 19).
+
+### File boundaries: constants, maps, and testable units
+- **Avoid packing** several **named exports** (multiple pure functions, large **constant maps**, or unrelated helpers) into a **single file** when splitting them makes **each unit testable on its own** with a small, focused **`*.test.ts`** / **`*.test.tsx`**.
+- **Declarative data** (literal configs, **`Record<Enum, …>`** wiring such as component maps, static lookup tables) belongs in a **dedicated file**—commonly **`*.constant.ts`** or a clearly named map module (e.g. `smilyTariffDetailSectionMap.ts`) **next to the feature**. The **default-export component** should mainly **import** that map and handle props/state—not define a large map inline.
+- **Pure functions** (transforms, formatters, non-trivial guards) **should** live in **their own modules** with **co-located tests** when behavior is non-obvious.
+- **Declarative maps and static constants** that only **wire** existing components or values **do not need their own test files**; coverage comes from **tests of the consuming component** or integration behavior. Do not duplicate test effort on “glue-only” constants.
+
+### Design system: TailAdmin + Tailwind
+- Prefer shared components under **`src/components/ui/`** and **`src/components/form/`** (TailAdmin) before ad hoc markup.
+- Use Tailwind utility classes consistent with existing styleguide pages (`/styleguide`).
+- Do not import **`enrg-frontend-styleguide`** or add SCSS modules.
+
+## Conditional Rendering
+- Use map constants for conditional component rendering instead of multiple conditional checks in TSX
+- Define component maps at the top level, outside of component functions; **large `Record` maps** should live in a **dedicated file** (see **§ File boundaries: constants, maps, and testable units**)
+- Use enums as keys for type safety in component maps
+- Follow the pattern: `const COMPONENT_MAP: Record<EnumType, () => ReactElement>`
+- Access map values by key: `{COMPONENT_MAP[someEnum]()}`
+
+### Nullable values and booleans in JSX (project helpers)
+- Prefer **`renderIfNotNull`** from **`utils/renderIfNotNull`** over `value !== null ? … : …` (or `value ? … : …`) **when the non-null value is used inside the branch** (the callback receives a narrowed `T`). Omit the third argument when the null/undefined branch should render nothing.
+- When the null branch must render alternate UI, pass it as the **optional third argument** `renderWhenNull` (instead of a ternary for `null` vs fallback).
+- Prefer **`renderWithCondition`** from **`utils/renderWithCondition`** over inline `condition ? … : …` for boolean guards when you are not using a component map (optional second branch: `renderWhenFalse`).
+- Do **not** use `!== null` / `=== null` / raw boolean ternaries directly in JSX for these cases; keep the same patterns as the rest of the app for consistency.
+
+## Hook Naming
+- A `use`-prefixed function MUST call at least one React hook or custom hook; otherwise it is a plain function
+- Avoid unnecessary higher-order functions that just wrap a single call
+
+## Component Organization
+- No index.ts barrel files; import directly from source. Exception: multi-export or lazy-load only (see **rules-folder-organization.mdc**). The `cursor:verify` automation enforces this policy.
+
+## New file boilerplate
+- Prefer the scaffold workflow documented in **`.agents/scaffold/README.md`** (summarized in **rules-bundle-core.mdc**) instead of hand-written empty files.
+
+## Post-change verification
+- After substantive edits, follow **`.cursor/commands/command-verify-post-change-lint-typecheck-tests.md`** before treating a task as finished.
+- Use **`.cursor/commands/command-verify-full-ci-test.md`** for the Jenkins-equivalent gate ahead of merge.
+
+
+# Practical Functional Programming and Clean Code
+
+Canonical rules: **rules-state-zustand.mdc** (KISS/YAGNI/DRY/SOLID/Self-Doc and data-only stores with standalone setters), **rules-bundle-api.mdc** (`guardWithTolerance` contracts), **rules-bundle-core.mdc** (self-documentation and “why-only” comments).
+
+## Key points
+- **KISS/YAGNI/DRY:** See rules-state-zustand.mdc.
+- **Zustand:** Data-only stores; standalone setters; selective subscriptions (rules-state-zustand.mdc).
+- **guardWithTolerance:** Always returns T; do not check null/undefined after (rules-bundle-api.mdc).
+- **Type guards:** Prefer direct guard in condition; avoid redundant isDefined when guard handles it.
+
+## Example: Type guard in condition (no redundant isDefined)
+```typescript
+// BAD - Redundant check when type guard handles undefined/null
+if (!isDefined(response)) return;
+if (isResponseDTO(response, { callbackOnError: debug, identifier: "ResponseDTO" })) { ... }
+
+// GOOD - Let the type guard handle it
+if (isResponseDTO(response, { callbackOnError: debug, identifier: "ResponseDTO" })) { ... }
+```
+
+## Example: Standalone setter in effect deps (minimal deps)
+```typescript
+// GOOD - setDataInStore is a standalone function; no store subscription, so deps stay minimal
+useEffect(() => {
+  if (isDefined(response)) setDataInStore(validatedData);
+}, [response]);
+```
+
+## Related Rules
+- rules-state-zustand.mdc, rules-state-zustand.mdc, rules-bundle-api.mdc, rules-bundle-core.mdc
+
+
+# Single Return Pattern
+
+Prefer single exit when the main path is linear; guard clauses are acceptable when they reduce nesting.
+
+## Overview
+This rule defines the standard pattern for avoiding multiple return statements in functions. Functions should have a single exit point to improve readability, maintainability, and control flow predictability.
+
+## Exceptions (when multiple returns are acceptable)
+
+- **Guard clauses**: Early returns for invalid input or preconditions (e.g. `if (!isDefined(x)) return;`) when they avoid deep nesting.
+- **Recursive functions**: Base-case returns.
+- **Performance-critical code**: When early exit gives a clear benefit.
+
+## Problem: Multiple Return Statements
+Multiple return statements make code harder to follow and control. They create multiple exit points that can lead to:
+- Unpredictable control flow
+- Difficulty in debugging
+- Harder to add logging or cleanup logic
+- Reduced code maintainability
+
+### Anti-Pattern Example
+```typescript
+// ❌ BAD: Multiple return statements
+export const initializeComponent = (config: Config): void => {
+  if (!isDefined(config)) {
+    return;
+  }
+
+  if (!isValidConfig(config)) {
+    return;
+  }
+
+  // Main logic here
+  processConfig(config);
+};
+```
+
+## Solution: Single Return Pattern
+Use conditional logic without early returns. For void functions, no explicit return is needed.
+
+### Implementation Pattern
+```typescript
+// ✅ GOOD: Single exit point with conditional logic
+export const initializeComponent = (config: Config): void => {
+  if (isDefined(config) && isValidConfig(config)) {
+    // Main logic here
+    processConfig(config);
+  }
+};
+```
+
+## Pattern Structure
+
+### 1. Use Positive Conditionals
+```typescript
+// ✅ GOOD: Positive conditions
+if (isValid(data)) {
+  // Process valid data
+}
+
+// ❌ AVOID: Negative conditions with early returns
+if (!isValid(data)) {
+  return;
+}
+```
+
+### 2. No Explicit Return for Void Functions
+```typescript
+// ✅ GOOD: No explicit return needed for void functions
+export const doSomething = (): void => {
+  if (condition) {
+    // Do work
+  }
+};
+
+// ❌ AVOID: Unnecessary return for void functions
+export const doSomething = (): void => {
+  let result: void = undefined;
+  if (condition) {
+    // Do work
+  }
+  return result; // Unnecessary
+};
+```
+
+### 3. Single Return for Non-Void Functions
+```typescript
+// ✅ GOOD: Single return with conditional assignment
+export const processData = (data: unknown): ProcessedData | null => {
+  if (isValidData(data)) {
+    return {
+      id: data.id,
+      name: data.name,
+      processed: true
+    };
+  }
+  
+  return null;
+};
+```
+
+## Examples from Codebase
+
+### Void Functions
+```typescript
+// From: app/wireframe/hooks/useWireframeAuth/utils/initializeUnifiedLoginLayer.ts
+export const initializeUnifiedLoginLayer = (
+  product: string,
+  socialClosingUrl: string | null,
+  onePagerURL: string | null,
+): void => {
+  if (isDefined(window.Check24)) {
+    const config = {
+      deviceoutput: getUnifiedLoginDeviceOutput(),
+      api_product: product,
+      ...(socialClosingUrl && { social_login_closing_url: socialClosingUrl }),
+      ...(onePagerURL && { social_login_callback_url: onePagerURL }),
+    };
+
+    window.Check24.uliloginlayer.init(config);
+  }
+};
+```
+
+### Async Functions
+```typescript
+// From: app/wireframe/hooks/useWireframeAuth/utils/handleUnifiedLoginEvent.ts
+export const handleUnifiedLoginEvent = async (event: Event): Promise<void> => {
+  const unifiedLoginData = (event as { detail?: { ul?: { STATE: string; SSO_SESSION?: string } } }).detail?.ul;
+
+  if (isDefined(unifiedLoginData) && isNonEmptyString(unifiedLoginData.SSO_SESSION)) {
+    setSessionCookie(unifiedLoginData.SSO_SESSION);
+
+    const isLoggedIn = unifiedLoginData.STATE === "loggedin" || unifiedLoginData.STATE === unifiedLoginData.SSO_SESSION;
+    if (isLoggedIn) {
+      await fetchAndUpdateUser(unifiedLoginData.SSO_SESSION);
+    }
+  }
+};
+```
+
+### Functions with Return Values
+```typescript
+// ✅ GOOD: Single return with conditional assignment
+export const processData = (data: unknown): ProcessedData | null => {
+  if (isValidData(data)) {
+    return {
+      id: data.id,
+      name: data.name,
+      processed: true
+    };
+  }
+  
+  return null;
+};
+```
+
+## Benefits
+
+1. **Predictable Control Flow**: Single exit point makes the function flow easier to follow
+2. **Easier Debugging**: Set breakpoints at the single return point
+3. **Better Maintainability**: Adding logging or cleanup is straightforward
+4. **Consistent Pattern**: All functions follow the same structure
+5. **Functional Programming**: Avoids mutable variables and unnecessary returns
+6. **Type Safety**: Proper typing without artificial result variables
+
+## When to Apply
+
+Apply this pattern to:
+- Utility functions
+- Event handlers
+- Initialization functions
+- Data processing functions
+- Any function with conditional logic
+
+## Refactoring Process
+
+When refactoring existing functions:
+
+1. **Identify early returns**: Look for `if (!condition) return;` patterns
+2. **Invert conditions**: Change negative conditions to positive
+3. **Remove unnecessary variables**: Don't create artificial result variables for void functions
+4. **Move logic inside conditionals**: Place main logic inside positive conditions
+5. **Add single return only if needed**: Only for non-void functions
+
+## Testing Considerations
+
+- Ensure the refactored function produces identical results
+- Test all conditional branches
+- Verify async functions maintain proper behavior
+- Check that error handling remains intact
+
+## Related Rules
+- [Clean Code Refactoring Patterns](mdc:.cursor/rules/rules-typescript-clean-code.mdc) - For extracting complex logic
+- [Functional Programming Principles](mdc:.cursor/rules/rules-typescript-clean-code.mdc) - For functional programming patterns
+- [TypeScript Standards](mdc:.cursor/rules/rules-typescript-clean-code.mdc) - For proper typing
+
+
+# Existing Utilities Usage Guide
+
+Import directly from source files (no barrel); see rules-typescript-clean-code.mdc § Component Organization.
+
+## Overview
+This rule documents the existing utilities in the codebase to promote reuse and prevent duplication. Before creating new utility functions or installing new packages, check if the functionality already exists in these utilities.
+
+## Core Utility Categories
+
+### Type Guards (`app/utils/typeguards/`)
+Common type validation utilities:
+
+| Utility | Purpose | Example Usage |
+|---------|---------|---------------|
+| `isDefined` | Check if value is not undefined/null | `if (isDefined(value)) { ... }` |
+| `isString` | Validate string values | `if (isString(value)) { ... }` |
+| `isNumber` | Validate number values | `if (isNumber(value)) { ... }` |
+| `isBoolean` | Validate boolean values | `if (isBoolean(value)) { ... }` |
+| `isDate` | Validate Date objects | `if (isDate(value)) { ... }` |
+| `isEnum` | Validate enum values | `if (isEnum(EnumType)(value)) { ... }` |
+| `isNonEmptyString` | Validate non-empty strings | `if (isNonEmptyString(value)) { ... }` |
+| `isNonEmptyArray` | Validate non-empty arrays | `if (isNonEmptyArray(value)) { ... }` |
+| `isType` | Create type guards for objects | `const isMyType = isType<MyType>({ ... })` |
+| `isErrorResponse` | Validate error responses | `if (isErrorResponse(response)) { ... }` |
+| `isAxiosError` | Check for Axios errors | `if (isAxiosError(error)) { ... }` |
+| `guardWithTolerance` | Flexible type validation | `guardWithTolerance(value, typeGuard)` |
+
+### Data Transformers (`app/utils/transformers/`)
+Data transformation utilities:
+
+| Transformer | Purpose |
+|-------------|---------|
+| `toNumberTransformer` | Convert values to numbers |
+| `toStringTransformer` | Convert values to strings |
+| `toBooleanTransformer` | Convert values to booleans |
+| `toEnumTransformer` | Convert values to enum members |
+
+### Value Conversion (`app/utils/`)
+Common value conversion utilities:
+
+| Utility | Purpose |
+|---------|---------|
+| `convertToCent` | Convert Euro amounts to cents |
+| `convertToEuro` | Convert cent amounts to Euros |
+| `convertValueToGross` | Convert net values to gross |
+| `convertValueToNet` | Convert gross values to net |
+| `convertToYesNo` | Convert boolean to Yes/No strings |
+| `convertEnumToArray` | Convert enum to array of values |
+| `convertObjectToURLQueryString` | Convert object to URL query string |
+
+### Date Handling (`app/utils/date/`)
+Date manipulation utilities:
+
+| Utility | Purpose |
+|---------|---------|
+| `toBeginningOfDay` | Set time to start of day |
+| `dateString` | Format dates as strings |
+
+### Form Handling (`app/utils/form/`)
+Form-related utilities:
+
+| Utility | Purpose |
+|---------|---------|
+| `convertToFormData` | Convert object to FormData |
+| `getDataFromFormData` | Extract data from FormData |
+
+### Cookie Management (`app/utils/`)
+Cookie-related utilities:
+
+| Utility | Purpose |
+|---------|---------|
+| `getCookie` | Get cookie value |
+| `getCookieFromString` | Read one cookie by name from a full `Cookie` header string |
+| `isCoreWebviewFromHideToolBarCookieValue` | Core-webview predicate from raw `hideToolBar` value (`"1"` → not core webview) |
+| `isCoreWebviewFromRequestCookieHeader` | Core-webview flag from a nullable cookie header using `hideToolBar` |
+| `cookieRawEncode` | Encode cookie value |
+| `cookieRawDecode` | Decode cookie value |
+
+### Rendering Utilities (`app/utils/`)
+React rendering helpers:
+
+| Utility | Purpose |
+|---------|---------|
+| `renderWithCondition` | Boolean guard: `renderWithCondition(condition, whenTrue, whenFalse?)` — prefer over `condition ? … : …` in JSX when not using a component map |
+| `renderIfNotNull` | Nullable guard: `renderIfNotNull(value, (v) => …, whenNull?)` — prefer over `value !== null ? … : …` in JSX; third argument is the null/undefined fallback |
+| `renderWithTypeGuard` | Render after type validation |
+
+### Debug and Environment (`app/utils/`)
+Development utilities:
+
+| Utility | Purpose |
+|---------|---------|
+| `debug` | Consistent debug logging |
+| `getEnv` | Get environment variables |
+
+## Best Practices
+
+1. **Check Existing Utils First**
+   - Before creating new utility functions, check this document
+   - Search the codebase for similar functionality
+   - Review test files for usage examples
+
+2. **Type Guard Usage**
+   - Use existing type guards instead of creating new ones
+   - Combine type guards for complex validations
+   - Use `guardWithTolerance` for flexible validation
+
+3. **Data Transformation**
+   - Use transformer utilities for consistent data conversion
+   - Chain transformers for complex transformations
+   - Add new transformers to existing categories
+
+4. **Form Handling**
+   - Use form utilities for consistent data handling
+   - Follow existing patterns for form validation
+   - Extend existing utilities instead of creating new ones
+
+5. **Date Manipulation**
+   - Use date utilities for consistent formatting
+   - Follow existing date format standards
+   - Add new date utilities to the date folder
+
+6. **Rendering Patterns**
+   - Use rendering utilities for consistent conditional rendering
+   - Follow existing patterns for component rendering
+   - Keep rendering logic reusable
+
+## Examples from Codebase
+
+### Type Guard Usage
+```typescript
+import isDefined from "utils/typeguards/isDefined";
+import isString from "utils/typeguards/isString";
+
+if (isDefined(value) && isString(value)) {
+  // Process string value
+}
+```
+
+### Data Transformation
+```typescript
+import { toNumberTransformer } from "utils/transformers/toNumberTransformer";
+import convertToEuro from "utils/convertToEuro";
+
+const amount = toNumberTransformer(rawValue);
+const euros = convertToEuro(amount);
+```
+
+### Form Handling
+```typescript
+import { getDataFromFormData } from "utils/getDataFromFormData";
+
+const extractedData = getDataFromFormData(formData);
+```
+
+## Anti-patterns to Avoid
+
+1. **Don't Create Duplicate Utilities**
+```typescript
+// ❌ BAD: Creating new utility
+const isValidString = (value: unknown): value is string => 
+  typeof value === 'string' && value.length > 0;
+
+// ✅ GOOD: Use existing utility
+import isNonEmptyString from "utils/typeguards/isNonEmptyString";
+if (isNonEmptyString(value)) { ... }
+```
+
+2. **Don't Install New Packages for Existing Functionality**
+```typescript
+// ❌ BAD: Installing new package
+import { isString } from 'lodash';
+
+// ✅ GOOD: Use existing utility
+import isString from "utils/typeguards/isString";
+```
+
+3. **Don't Copy-Paste Utility Logic**
+```typescript
+// ❌ BAD: Copying validation logic
+if (typeof value === 'string' && value.trim().length > 0) { ... }
+
+// ✅ GOOD: Use existing utility
+import isNonEmptyString from "utils/typeguards/isNonEmptyString";
+if (isNonEmptyString(value)) { ... }
+```
+
+## Adding New Utilities
+
+If you need to add a new utility:
+
+1. Check if it fits into an existing category
+2. Place it in the appropriate directory
+3. Follow existing naming conventions
+4. Add comprehensive tests
+5. Update this documentation
+6. Consider making it generic for reuse
+
+## Testing Utilities
+
+All utilities have corresponding test files. Review these for:
+- Usage examples
+- Edge cases
+- Error handling
+- Type safety
+
+## Related Rules
+- See `typescript-standards.mdc` for type guard patterns
+- See `functional-principles.mdc` for function composition
+- See `rules-state-zustand.mdc` for optimization
+
+
+# Global Utility Organization
+
+## Overview
+This rule defines standards for organizing globally reusable utilities in the codebase. Utilities that can be used across multiple features should be placed at a higher level in the project structure.
+
+## Utility Placement Principles
+
+### Local vs. Global Utilities
+- **Local Utilities**: Specific to a single feature or component, placed within that feature's directory
+- **Global Utilities**: Reusable across multiple features, placed in a shared location
+
+### Placement Hierarchy
+1. **Component-specific utilities**: `app/components/ComponentName/utils/`
+2. **Feature-specific utilities**: `app/features/FeatureName/utils/`
+3. **Page-specific but shared utilities**: `app/pages/PageName/utils/`
+4. **Global utilities**: `app/utils/`
+
+## Global Utility Structure
+```
+app/
+├── utils/                         # Root utilities directory
+│   ├── typeguards/                # Type guard utilities
+│   │   ├── isDefined.ts
+│   │   └── isEnum.ts
+│   ├── paramTransformers/         # Parameter transformation utilities
+│   │   ├── types/                 # Type definitions
+│   │   │   ├── ParamTransformer.type.ts
+│   │   │   └── ...
+│   │   ├── transformers/          # Transformer implementations
+│   │   │   ├── toBooleanTransformer.ts
+│   │   │   └── ...
+│   │   └── transformSearchParams.ts
+│   └── ...
+```
+
+## When to Globalize Utilities
+Move a utility to the global level when:
+1. It's used by 3+ different features or components
+2. It provides fundamental functionality not tied to specific business logic
+3. It has minimal dependencies on feature-specific code
+4. Its behavior is consistent regardless of where it's used
+
+## Refactoring Existing Utilities
+When globalizing a utility:
+1. Move the code to the appropriate global location
+2. Update imports in existing code
+3. Review dependencies to ensure they are also globalized or accessible
+4. Update tests to reflect the new location
+5. Document the utility's purpose and usage
+
+## Naming Conventions
+- Use clear, descriptive names that indicate functionality
+- Prefer verb-noun pattern for functions (e.g., `transformData`, `validateInput`)
+- Group related utilities in subdirectories with descriptive names
+- Use consistent file naming patterns for similar utilities
+
+## Documentation
+- Include JSDoc comments for all global utilities
+- Document parameters, return values, and examples
+- Note any side effects or important behaviors
+- Provide usage examples for complex utilities
+
+## Testing
+- All global utilities must have comprehensive test coverage
+- Test edge cases and typical usage patterns
+- Consider creating a test utils directory alongside the global utils
+
+
+# Import Path Optimization
+
+## Verification
+Prefer path aliases over relative imports with more than two `../` segments (see **import-path-optimization.mdc**).
+
+## Overview
+This rule defines standards for using the shortest and most maintainable import paths in the codebase. Always prefer established aliases and direct paths over long relative paths to improve code readability and maintainability.
+
+## Problem: Long Relative Paths
+Long relative paths with multiple `../` segments are:
+- Hard to read and understand
+- Fragile when files are moved
+- Difficult to maintain
+- Error-prone when counting directory levels
+
+### Anti-Pattern Example
+```typescript
+// ❌ BAD: Long relative path with multiple ../ segments
+import { DeviceOutputEnum } from "../../../../enums/DeviceOutput.enum";
+import { SomeType } from "../../../types/SomeType.type";
+import { someUtility } from "../../../../utils/someUtility";
+```
+
+## Solution: Use Established Aliases and Direct Paths
+Prefer established path aliases and direct imports over long relative paths.
+
+### Implementation Pattern
+```typescript
+// ✅ GOOD: Using established aliases
+import { DeviceOutputEnum } from "enums/DeviceOutput.enum";
+import { SomeType } from "types/SomeType.type";
+import { someUtility } from "utils/someUtility";
+```
+
+## Established Path Aliases
+
+### Core Directories
+The codebase has established aliases for common directories:
+
+| Alias | Path | Purpose |
+|-------|------|---------|
+| `enums/` | `app/enums/` | Enumeration definitions |
+| `types/` | `app/types/` | TypeScript type definitions |
+| `utils/` | `app/utils/` | Utility functions |
+| `constants/` | `app/constants/` | Application constants |
+| `services/` | `app/services/` | API services and business logic |
+| `components/` | `app/components/` | Reusable components |
+| `features/` | `app/features/` | Feature-specific code |
+| `hooks/` | `app/hooks/` | React hooks |
+| `globalStateClientSide` | `app/globalStateClientSide` | Client-side global state utilities |
+
+### Examples from Codebase
+
+#### Enum Imports
+```typescript
+// ✅ GOOD: Using enums alias
+import { DeviceOutputEnum } from "enums/DeviceOutput.enum";
+import { ProductEnum } from "enums/Product.enum";
+import { LoginStateEnum } from "enums/LoginState.enum";
+
+// ❌ AVOID: Long relative paths
+import { DeviceOutputEnum } from "../../../../enums/DeviceOutput.enum";
+```
+
+#### Utility Imports
+```typescript
+// ✅ GOOD: Using utils alias
+import { isDefined } from "utils/typeguards/isDefined";
+import { debug } from "utils/debug";
+import { convertToEuro } from "utils";
+
+// ❌ AVOID: Long relative paths
+import { isDefined } from "../../../../utils/typeguards/isDefined";
+```
+
+#### Type Imports
+```typescript
+// ✅ GOOD: Using types alias
+import type { UserDTO } from "types/UserDTO.type";
+import type { ConfigType } from "types/ConfigType.type";
+
+// ❌ AVOID: Long relative paths
+import type { UserDTO } from "../../../types/UserDTO.type";
+```
+
+## When to Use Relative Paths
+
+### Short Relative Paths (1-2 levels)
+Use relative paths only for closely related files within the same feature:
+
+```typescript
+// ✅ GOOD: Short relative path for closely related files
+import { ComponentProps } from "./types/ComponentProps.type";
+import { ComponentUtils } from "../utils/ComponentUtils";
+import { SubComponent } from "./components/SubComponent/SubComponent";
+```
+
+### Cross-Feature Imports
+Always use aliases for imports across different features:
+
+```typescript
+// ✅ GOOD: Using aliases for cross-feature imports
+import { useAuthStore } from "stores/useAuthStore";
+import { Button } from "components/Button/Button";
+import { formatDate } from "utils/date/formatDate";
+
+// ❌ AVOID: Long relative paths across features
+import { useAuthStore } from "../../../stores/useAuthStore";
+```
+
+## Refactoring Process
+
+When encountering long relative paths:
+
+1. **Identify the target directory**: Determine which established alias it belongs to
+2. **Check existing usage**: Look for how other files import from the same directory
+3. **Replace with alias**: Use the appropriate alias instead of relative path
+4. **Verify imports work**: Ensure the new path resolves correctly
+
+### Example Refactoring
+```typescript
+// Before: Long relative path
+import { DeviceOutputEnum } from "../../../../enums/DeviceOutput.enum";
+
+// After: Using established alias
+import { DeviceOutputEnum } from "enums/DeviceOutput.enum";
+```
+
+## Benefits
+
+1. **Readability**: Shorter, clearer import paths
+2. **Maintainability**: Less fragile when files are moved
+3. **Consistency**: All developers use the same import patterns
+4. **Error Prevention**: No need to count directory levels
+5. **IDE Support**: Better autocomplete and navigation
+
+## Validation
+
+### TypeScript Configuration
+The aliases are configured in [tsconfig.json](mdc:tsconfig.json) and [vite.stories.config.ts](mdc:vite.stories.config.ts):
+
+```json
+{
+  "compilerOptions": {
+    "paths": {
+      "enums/*": ["app/enums/*"],
+      "utils/*": ["app/utils/*"],
+      "types/*": ["app/types/*"],
+      // ... other aliases
+    }
+  }
+}
+```
+
+### Storybook Configuration
+Aliases are also configured in Storybook for consistent import resolution:
+
+```typescript
+// vite.stories.config.ts
+resolve: {
+  alias: {
+    "enums": path.resolve(__dirname, "app/enums"),
+    "utils": path.resolve(__dirname, "app/utils"),
+    // ... other aliases
+  }
+}
+```
+
+## Anti-Patterns to Avoid
+
+### 1. Counting Directory Levels
+```typescript
+// ❌ BAD: Manually counting ../ levels
+import { something } from "../../../../../../utils/something";
+
+// ✅ GOOD: Using established alias
+import { something } from "utils/something";
+```
+
+### 2. Inconsistent Import Patterns
+```typescript
+// ❌ BAD: Mixing relative and alias imports inconsistently
+import { DeviceOutputEnum } from "enums/DeviceOutput.enum";
+import { SomeType } from "../../../types/SomeType.type"; // Inconsistent!
+
+// ✅ GOOD: Consistent use of aliases
+import { DeviceOutputEnum } from "enums/DeviceOutput.enum";
+import { SomeType } from "types/SomeType.type";
+```
+
+### 3. Overly Specific Relative Paths
+```typescript
+// ❌ BAD: Too specific relative path
+import { utility } from "../../../../utils/specific/category/utility";
+
+// ✅ GOOD: Using alias with specific path
+import { utility } from "utils/specific/category/utility";
+```
+
+## Examples from Codebase
+
+### Good Import Patterns
+- [app/services/getDeviceOutputFromRequest.ts](mdc:app/services/getDeviceOutputFromRequest.ts) - Uses `enums/DeviceOutput.enum`
+- [app/utils/isMobileOrApp.ts](mdc:app/utils/isMobileOrApp.ts) - Uses `enums/DeviceOutput.enum`
+- [app/globalStateClientSide.ts](mdc:app/globalStateClientSide.ts) - Uses `enums/DeviceOutput.enum`
+
+### Refactored Examples
+- [app/wireframe/hooks/useWireframeAuth/utils/getUnifiedLoginDeviceOutput.ts](mdc:app/wireframe/hooks/useWireframeAuth/utils/getUnifiedLoginDeviceOutput.ts) - Refactored from long relative path to `enums/DeviceOutput.enum`
+
+## Related Rules
+- [TypeScript Standards](mdc:.cursor/rules/rules-typescript-clean-code.mdc) - For proper import organization
+- [Folder Organization Standards](mdc:.cursor/rules/rules-bundle-core.mdc) - For understanding directory structure
+- [Existing Utilities Usage Guide](mdc:.cursor/rules/rules-typescript-clean-code.mdc) - For finding existing utilities before creating new ones
+
+
+# Utility Function Naming Conventions
+
+## Verification
+Utility naming is enforced by **`cursor:verify`**. Address findings using **`.cursor/commands/command-verify-post-change-lint-typecheck-tests.md`** or **`command-git-commit-comprehensive-review.md`** before merge.
+
+## Convention
+- **Utility files under `app/.../utils` must use camelCase** (e.g. `handleNumericInput.ts`).
+- File name should match the exported function name (except extension).
+- PascalCase is reserved for React components.
+- **Compound names** use the segment before the first dot as the primary name (e.g. `handleSubmit.util.ts` → `handleSubmit`).
+
+## What `utility-naming.ts` skips (not function-style utilities)
+- Test and spec files (`*.test.*`, `*.spec.*`), type modules (`*.type.ts`, `*.types.*`), constants (`*.constant(s).*`), `*.guardz.ts`, `*.dto.ts`, `*.enum.ts`
+- Paths under `**/enums/**`, `**/form/validations/**`, `**/typeguards/**`
+
+## Related
+- [Testing standards](mdc:.cursor/rules/rules-bundle-testing.mdc)
+- [Existing Utilities Usage Guide](mdc:.cursor/rules/rules-typescript-clean-code.mdc)
+
+
+# Utility Reusability Standards
+
+## Overview
+This rule defines the standards for determining when utility functions should be extracted to global locations versus kept local to their specific context. These standards were established during the analysis of [useWireframeData.ts](mdc:app/wireframe/hooks/useWireframeData.ts) utilities and should be applied consistently across the codebase.
+
+## Criteria for Global Utility Extraction
+
+### ✅ Good Candidates for Global Utilities
+
+Utilities should be extracted to global locations when they meet **ALL** of the following criteria:
+
+1. **Generic Purpose**: The function serves a general, reusable purpose not tied to specific business logic
+2. **Multiple Usage**: Evidence of similar functionality in 3+ different locations in the codebase
+3. **Clear Naming**: The function name accurately describes its generic purpose
+4. **Minimal Dependencies**: Few dependencies on feature-specific code or business logic
+5. **Consistent Behavior**: The function behaves the same regardless of where it's used
+
+### Examples of Good Global Utilities
+
+#### Cookie Management (`app/utils/cookieManagement/`)
+```typescript
+// ✅ GOOD: Generic cookie domain selection
+export const getCookieDomain = (): string[] => {
+  // Environment-based domain logic used across multiple cookie implementations
+};
+
+// ✅ GOOD: Secure session cookie setting
+export const setSessionCookie = (sessionId: string): void => {
+  // Reusable session cookie logic with proper security settings
+};
+```
+
+**Why these are good candidates:**
+- Used in multiple places: `energyUserActivityComparisonCookie.util.ts`, `cookies.server.ts`, `trackingStore/useSetInitialTrackingData.ts`
+- Generic purpose: Cookie management is a cross-cutting concern
+- Clear naming: Function names describe their purpose accurately
+- Minimal dependencies: Only depend on environment utilities
+
+## Criteria for Keeping Utilities Local
+
+### ❌ Poor Candidates for Global Utilities
+
+Utilities should **NOT** be extracted to global locations when they meet **ANY** of the following criteria:
+
+1. **Specific Purpose**: The function is designed for a specific feature or API
+2. **Misleading Name**: The function name suggests generic purpose but serves specific functionality
+3. **Business Logic Coupling**: Tightly coupled to specific business requirements
+4. **Single Usage**: Only used in one context or feature
+5. **Wrong Abstraction Level**: Extracting would create the wrong level of abstraction
+
+### Examples of Poor Global Utilities
+
+#### Device Output Conversion
+```typescript
+// ❌ BAD: Misleading name and specific purpose
+export const getDeviceOutput = (): "mobile" | "desktop" => {
+  // Actually converts device output for unified login layer only
+};
+
+// ✅ GOOD: Specific name and purpose
+export const getUnifiedLoginDeviceOutput = (): "mobile" | "desktop" => {
+  // Clearly indicates this is for unified login configuration
+};
+```
+
+**Why this was a poor candidate:**
+- Misleading name: `getDeviceOutput` suggests generic device utility
+- Specific purpose: Only used for unified login layer configuration
+- Wrong location: Would be misplaced in general device utilities
+- Single usage: Only used in wireframe unified login setup
+
+## Decision Framework
+
+### Step 1: Analyze Current Usage
+Search the codebase for similar functionality (symbols, imports, and naming patterns) before promoting or extracting utilities—executable search habits stay out of rules; use editor search or documented workflows.
+
+### Step 2: Evaluate Function Name
+- Does the name accurately describe the function's purpose?
+- Does it suggest generic utility when it's actually specific?
+- Would the name be misleading in a global context?
+
+### Step 3: Assess Dependencies
+- What dependencies does the function have?
+- Are they feature-specific or general utilities?
+- Would extracting create circular dependencies?
+
+### Step 4: Check Behavior Consistency
+- Does the function behave the same in all contexts?
+- Are there context-specific variations that would break if extracted?
+
+## Implementation Patterns
+
+### Global Utility Extraction
+When extracting to global utilities:
+
+1. **Create appropriate directory structure**:
+   ```
+   app/utils/
+   ├── cookieManagement/
+   │   ├── getCookieDomain.ts
+   │   └── setSessionCookie.ts
+   ├── deviceOutput/
+   │   └── (for general device utilities only)
+   └── ...
+   ```
+
+2. **Add comprehensive documentation**:
+   ```typescript
+   /**
+    * Gets the appropriate cookie domain based on the current environment.
+    * Returns an array of valid domains for the current environment.
+    */
+   export const getCookieDomain = (): string[] => {
+     // Implementation
+   };
+   ```
+
+3. **Re-export for backward compatibility**:
+   ```typescript
+   // In original location
+   export { getCookieDomain } from "utils/cookieManagement/getCookieDomain";
+   ```
+
+### Local Utility Organization
+When keeping utilities local:
+
+1. **Use descriptive, specific names**:
+   ```typescript
+   // ✅ GOOD: Specific to unified login
+   export const getUnifiedLoginDeviceOutput = (): "mobile" | "desktop" => {
+     // Implementation
+   };
+   ```
+
+2. **Add context-specific documentation**:
+   ```typescript
+   /**
+    * Converts device output to unified login layer format.
+    * Returns "mobile" for mobile and app devices, "desktop" for all others.
+    * This is specific to the unified login layer configuration.
+    */
+   ```
+
+3. **Keep in feature-specific directories**:
+   ```
+   FeatureName/
+   ├── utils/
+   │   ├── specificUtility.ts
+   │   └── anotherSpecificUtility.ts
+   ```
+
+## Anti-Patterns to Avoid
+
+### 1. Premature Extraction
+```typescript
+// ❌ BAD: Extracting before evidence of reuse
+export const someUtility = () => {
+  // Only used in one place, but extracted "just in case"
+};
+```
+
+### 2. Misleading Names
+```typescript
+// ❌ BAD: Generic name for specific purpose
+export const getDeviceOutput = () => {
+  // Actually for unified login only
+};
+
+// ✅ GOOD: Specific name
+export const getUnifiedLoginDeviceOutput = () => {
+  // Clear purpose
+};
+```
+
+### 3. Wrong Abstraction Level
+```typescript
+// ❌ BAD: Too specific for global utility
+export const getCheck24UnifiedLoginDeviceOutput = () => {
+  // Too specific to be reusable
+};
+
+// ✅ GOOD: Appropriate level
+export const getUnifiedLoginDeviceOutput = () => {
+  // Specific enough for its context
+};
+```
+
+## Examples from Codebase
+
+### Successfully Extracted Utilities
+- `app/utils/cookieManagement/getCookieDomain.ts` - Environment-based domain selection
+- `app/utils/cookieManagement/setSessionCookie.ts` - Secure session cookie setting
+
+### Correctly Kept Local
+- `app/wireframe/hooks/useWireframeData/utils/getUnifiedLoginDeviceOutput.ts` - Unified login specific
+- `app/wireframe/hooks/useWireframeData/utils/buildLogoutLink.ts` - Wireframe specific
+
+## Related Rules
+- [Clean Code Refactoring Patterns](mdc:.cursor/rules/rules-typescript-clean-code.mdc) - For refactoring complex functions
+- [Folder Organization Standards](mdc:.cursor/rules/rules-bundle-core.mdc) - For organizing utilities
+- [Existing Utilities Usage Guide](mdc:.cursor/rules/rules-typescript-clean-code.mdc) - For finding existing utilities before creating new ones
+
+
+# Component Patterns and Standards
+
+## Design system primitives
+- Prefer TailAdmin components from **`src/components/ui/`** over bare **`<button>`** / **`<input>`** for standard patterns.
+
+## Feature Component Architecture
+- Use a hierarchical, three-tier component pattern when appropriate:
+  - Main/Container component: Handles state and user interactions
+  - Content component: Displays data with proper rendering logic
+  - Skeleton component: Provides loading state placeholders
+- Each component should have single responsibility with clearly defined props
+- Follow consistent naming patterns (e.g., ComponentName, ComponentNameContent, ComponentNameSkeleton)
+
+## Component Organization
+- Group related components in a feature-based structure
+- Each component should be in its own folder with associated files
+- Follow a standardized folder structure:
+  ```
+  FeatureName/
+    ├── components/
+    │   ├── FeatureComponent/
+    │   │   ├── FeatureComponent.tsx
+    │   │   ├── FeatureComponent.test.tsx
+    │   │   └── FeatureComponent.stories.tsx
+    │   ├── FeatureComponentContent/
+    │   │   ├── FeatureComponentContent.tsx
+    │   │   ├── FeatureComponentContent.test.tsx
+    │   │   └── FeatureComponentContent.stories.tsx
+    │   └── FeatureComponentSkeleton/
+    │       ├── FeatureComponentSkeleton.tsx
+    │       ├── FeatureComponentSkeleton.test.tsx
+    │       └── FeatureComponentSkeleton.stories.tsx
+    ├── FeatureName.tsx
+    └── development.mdx
+  ```
+
+## Testing Standards
+General testing (frameworks, coverage, type safety, mocking strategy): see **testing-standards.mdc**. For UI components:
+- Use Vitest, not Jest for testing
+- Use fireEvent, not userEvent for DOM interactions
+- Achieve high test coverage for all components
+- **Always add snapshot tests to UI component tests** using `expect(createSnapshotRootElm()).toMatchSnapshot()`
+- This simplifies tests and increases coverage by capturing the complete rendered output
+- **DO NOT mock stores** - Use real store implementations with default states; set values via store actions if needed
+- **DO NOT mock components** - Use real component implementations for realistic snapshots
+- **ONLY mock:**
+  - Side-effect hooks (e.g., `useReloadCommentsHandler`, `useLikeSubmit`)
+  - Overlay/BottomSheet hooks (e.g., `useCreateSmartAlarmBottomSheet`)
+  - Router hooks (e.g., `useFetcher`)
+  - External subjects (e.g., `toast$`)
+- For data fetching components, test both loading and loaded states
+- Standard pattern for mocking router:
+  ```typescript
+  vi.mock("react-router", async (): Promise<Record<string, unknown>> => {
+    return {
+      useFetcher: (): Record<string, unknown> => ({
+        submit: vi.fn(),
+        state: "idle",
+        data: null,
+        Form: ({ children }: { children: React.ReactNode }): React.ReactElement => <div>{children}</div>,
+      }),
+    };
+  });
+  ```
+
+## Snapshot Testing Pattern
+
+### Standard Snapshot Test
+Every UI component test should include a snapshot test to capture the complete rendered output:
+
+```typescript
+import { createSnapshotRootElm } from "test-utils/createSnapshotRootElm";
+
+describe("ComponentName", () => {
+  it("renders correctly", () => {
+    render(<ComponentName {...props} />);
+    expect(createSnapshotRootElm()).toMatchSnapshot();
+  });
+});
+```
+
+### Benefits of Snapshot Testing
+- **Simplifies tests**: One line captures the entire component output
+- **Increases coverage**: Automatically tests all rendered elements and attributes
+- **Catches regressions**: Detects unexpected changes in component structure
+- **Documents behavior**: Snapshots serve as living documentation of component output
+- **Reduces maintenance**: Less need for individual element assertions
+
+### When to Use Snapshots
+- **Always for UI components**: Every component test should have at least one snapshot
+- **Multiple states**: Test different prop combinations and states
+- **Error states**: Capture error boundaries and fallback UI
+- **Loading states**: Test skeleton components and loading indicators
+
+### Snapshot Test Examples
+```typescript
+// Basic component snapshot
+it("renders with default props", () => {
+  render(<Button>Click me</Button>);
+  expect(createSnapshotRootElm()).toMatchSnapshot();
+});
+
+// Component with different states
+it("renders disabled state", () => {
+  render(<Button disabled>Disabled</Button>);
+  expect(createSnapshotRootElm()).toMatchSnapshot();
+});
+
+// Component with error state
+it("renders error state", () => {
+  render(<FormField error="Required field" />);
+  expect(createSnapshotRootElm()).toMatchSnapshot();
+});
+```
+
+## TypeScript Standards
+- Avoid using `React.` prefix (e.g., use `ReactElement` instead of `React.ReactElement`)
+- Explicitly type all component props with interfaces
+- Mark all interface properties as `readonly` to enforce immutability, not just props interfaces
+- Use specific DTO types from the domain model where available
+- Properly type all function parameters and return values
+
+## State Management
+- Use React hooks for local component state
+- For data fetching components, implement proper loading states with skeleton components
+- Separate data fetching logic from presentation components
+- Establish clear boundaries between stateful and presentational components
+
+## UI Design Patterns
+- Implement accessible UI components
+- Ensure responsive behavior across different screen sizes
+- Follow the application's styling standards
+- Use tooltips for additional information that shouldn't always be visible
+- Implement proper loading states for async operations

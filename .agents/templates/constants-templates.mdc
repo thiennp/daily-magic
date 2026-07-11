@@ -1,0 +1,53 @@
+---
+description: Constants file templates from .agents/file-lists/constants.json
+alwaysApply: false
+---
+
+# Constants templates (from `constants.json`)
+
+Summarizes **102** files matched by **`**/constants/**`** or **`*.constant.ts`** (see [`.agents/file-lists/constants.json`](../file-lists/constants.json)). Keep constants separate from types and components (**`rules-typescript-clean-code.mdc`**).
+
+## Inventory snapshot
+
+| Fact | Typical value |
+| --- | --- |
+| Basename contains `.constant` | ~83% |
+| Extensions | `.ts` mostly; some `.tsx`, `.scss`, `.js` |
+| Path depth (median) | 7 segments |
+| Common roots | `app/pages` (~52%), `app/features` (~21%), `app/constants` (~18%), `wireframe/configuration` (~8%) |
+
+**Path examples:**
+
+- `app/constants/PartnerId.constant.ts`
+- `app/constants/DetailsPageUrlStorageKey.ts`
+- `app/pages/Result/constants/Foo.constant.ts` (when feature-local)
+
+## Patterns
+
+### A — `*.constant.ts` (scalar or object config)
+
+```typescript
+export const PARTNER_ID = 24;
+export const API_TIMEOUT_MS = 5000;
+```
+
+### B — Multiple related exports (storage keys, URLs)
+
+```typescript
+export const NOTES_STORAGE_KEY = "daily_magic_notes_draft";
+export const THEME_STORAGE_KEY = "daily_magic_theme";
+```
+
+### C — `constants/` folder
+
+- Group by domain; use **UPPER_SNAKE** for immutable primitives and key strings when they are true constants.
+
+## Immutability
+
+- Prefer **`export const`** and **readonly** shapes when exporting objects.
+- Do not mutate imported constants.
+
+## Related
+
+- Enums: **`enums-templates.mdc`**
+- Text keys: use **`TEXT_MANAGER`** / **`generate-texts`** per **`rules-bundle-core.mdc`** (do not hand-edit `TextManager.constant.ts`).

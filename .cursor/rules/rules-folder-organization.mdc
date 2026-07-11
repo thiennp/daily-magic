@@ -1,0 +1,55 @@
+---
+description: >-
+  Feature-first layout, component folders, naming, tests, imports, constants/maps, MDX doc shape.
+globs:
+  - "src/**"
+  - "**/*.mdx"
+alwaysApply: false
+---
+
+# Folder and feature layout
+
+## Feature-first structure
+
+- Organize product code by feature under `src/features/{FeatureName}` (and route-owned code under `src/app/`) instead of grouping unrelated UI by technical layer only.
+- Prefer PascalCase directories and files for components; camelCase for utilities; kebab-case for configuration files.
+
+## Components and subcomponents
+
+- Place each component with stories, tests, or multiple files in its own folder. Keep tightly coupled, tiny helpers in the same folder when splitting would only add navigation cost (YAGNI).
+- Name subcomponent directories `components/`. Avoid `views`, `containers`, `presenters`, or other alternate folder names.
+- For complex trees, use a predictable layout:
+  - `ComponentName/ComponentName.tsx`
+  - Co-located `ComponentName.test.tsx`, `ComponentName.stories.tsx`, optional `ComponentName.mdx`
+  - Nested `components/` for real subcomponents with the same pattern
+
+## Hooks and utilities
+
+- When a hook grows multiple helpers, move helpers under `HookName/utils/` with one focused module per file and keep `HookName.ts` as the orchestrating hook.
+- Prefer verb–noun utility names (`buildLogoutLink`, `normalizeTariffDTO`). Avoid vague names like `process` or `handleData`.
+
+## Types and constants
+
+- Store reusable types as `*.type.ts` in `types/` folders next to their feature.
+- Put static maps (`Record<Enum, …>`), registries, and feature constants in `*.constant.ts` or similarly named map modules—not buried inside unrelated components.
+
+## Tests and fixtures
+
+- Co-locate tests with the code under test.
+- Store snapshots in `__snapshots__/`.
+- Keep shared fixtures near the feature that owns them.
+
+## Imports
+
+- Prefer path aliases (`@/…`) for shared modules; use relative imports inside a feature’s boundary.
+- Create barrels or lazy indexes only for documented reasons (multi-export surface, lazy loading boundaries). Do not add index files that only obscure one component.
+
+## Documentation per feature
+
+- Add `development.mdx` for complex features to explain architecture, data flow, and extension points.
+
+## MDX documentation shape
+
+- Use the section headings **Description**, **Usage**, and **Preview** only.
+- Do not paste full `import` statements inside TypeScript snippets; show usage readers can paste without redundant import noise.
+- Mirror the structural example in `app/components/ActiveIndicator/ActiveIndicator.mdx` when authoring new MDX docs.

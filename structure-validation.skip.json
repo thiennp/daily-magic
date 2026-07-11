@@ -1,0 +1,3 @@
+{
+  "skippedFiles": [".next/**", "node_modules/**", "public/images/**"]
+}

@@ -1,0 +1,48 @@
+---
+description: Enum file templates from .agents/file-lists/enums.json
+alwaysApply: false
+---
+
+# Enum templates (from `enums.json`)
+
+Summarizes **55** files: **`**/enums/**`** or **`*.enum.ts`** (see [`.agents/file-lists/enums.json`](../file-lists/enums.json)). Use enums as **keys for component maps** and discriminated unions (**`rules-typescript-clean-code.mdc`**, **`rules-bundle-react.mdc`**).
+
+## Inventory snapshot
+
+| Fact | Typical value |
+| --- | --- |
+| Extensions | `.ts` (~95%), tiny `.js` / `.tsx` |
+| Path depth (median) | 4 segments |
+| Common roots | `app/enums` (~45%), `app/services` (~33%), `app/pages` / `app/utils` / `app/wireframe` |
+
+**Path examples:**
+
+- `app/enums/DeviceOutput.enum.ts`
+- `app/services/enums/CountersWithCosts.enum.ts`
+
+## Template — string enum (common)
+
+```typescript
+export enum DeviceOutputEnum {
+  MOBILE = "mobile",
+  DESKTOP = "desktop",
+  APP = "app",
+  TABLET = "tablet",
+  TABLET_APP = "tabletapp",
+}
+```
+
+## Naming
+
+- **Type name** ends with `Enum` in this codebase (`DeviceOutputEnum`).
+- **Members:** UPPER_SNAKE for enum keys with string values as needed for APIs.
+
+## Usage
+
+- **`Record<SomeEnum, ...>`** for conditional UI maps; **never** use `let` for switching on enum keys (**`rules-typescript-clean-code.mdc`**).
+- Import from **`enums/...`** or **`services/enums/...`** consistently with existing feature boundaries.
+
+## Related
+
+- Constants: **`constants-templates.mdc`**
+- Types: **`types-templates.mdc`**

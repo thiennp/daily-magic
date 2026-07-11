@@ -1,0 +1,52 @@
+---
+description: TSX outside components/ templates from .agents/file-lists/tsx_other.json
+alwaysApply: false
+---
+
+# TSX “other” templates (from `tsx_other.json`)
+
+Summarizes **130** files that are **`.tsx`** but **not** under **`**/components/**`** (see [`.agents/file-lists/tsx_other.json`](../file-lists/tsx_other.json)): **routes/pages**, **app shell**, **entry** files, and **feature-level** TSX not classified as components.
+
+## Inventory snapshot
+
+| Fact | Typical value |
+| --- | --- |
+| Path depth (median) | 7 segments |
+| Common roots | `app/pages` (~82%), `app/features` (~8%), `app/utils` (~5%) |
+| Largest slice | `app/pages/Result/...` (~76%) |
+| Root files | `App.tsx`, `Index.tsx`, `root.tsx`, `entry.client.tsx`, `entry.server.tsx` |
+
+## Roles
+
+| Kind | Examples |
+| --- | --- |
+| Route / page module | `app/pages/Result/Result.tsx`, route feature shells |
+| Renderers | `ResultDesktopRenderer.tsx`, `ResultAppRenderer.tsx` |
+| App shell | `app/root.tsx`, `app/App.tsx` |
+| Entry | `entry.client.tsx`, `entry.server.tsx` |
+
+## Template — page with loader data
+
+```typescript
+import type { ReactElement } from "react";
+import type { ServerComponentPropsType } from "types/ServerComponentProps.type";
+
+import type { PageLoaderDataType } from "./types/PageLoaderData.type";
+
+type PageProps = ServerComponentPropsType<PageLoaderDataType>;
+
+export default function Page({ loaderData }: PageProps): ReactElement {
+  return <div>{loaderData.title}</div>;
+}
+```
+
+## Conventions
+
+- **Default export** for the routable page component is common.
+- **`memo`** when the team already uses it for expensive page trees (see **`Result.tsx`** pattern).
+- Compose **device renderers** via hooks like **`useDeviceOutputRenderer`** instead of duplicating branches.
+
+## Related
+
+- **`component-templates.mdc`** (true UI building blocks under `components/`)
+- **`hooks-templates.mdc`**

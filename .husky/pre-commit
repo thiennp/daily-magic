@@ -1,0 +1,56 @@
+#!/bin/sh
+STAGED_FOR_PRETTIER=$(
+  git diff --cached --name-only --diff-filter=ACM |
+    while IFS= read -r file; do
+      [ -L "$file" ] && continue
+      echo "$file"
+    done |
+    grep -E '\.(js|jsx|ts|tsx|json|css|md)$' || true
+)
+
+if [ -n "$STAGED_FOR_PRETTIER" ]; then
+  echo "$STAGED_FOR_PRETTIER" | xargs npx prettier --write
+  echo "$STAGED_FOR_PRETTIER" | xargs git add
+fi
+
+STAGED_ALL=$(git diff --cached --name-only --diff-filter=ACM || true)
+
+STAGED_SRC_SOURCES=$(
+  echo "$STAGED_ALL" | grep -E '^src/.*\.(ts|tsx|js|jsx)$' || true
+)
+if [ -n "$STAGED_SRC_SOURCES" ]; then
+  echo "Running ESLint --fix on staged src sources..."
+  echo "$STAGED_SRC_SOURCES" | xargs npx eslint --fix --
+  echo "$STAGED_SRC_SOURCES" | xargs git add
+fi
+
+TYPECHECK_TRIGGER=$(
+  echo "$STAGED_ALL" | grep -E '^src/.*\.(ts|tsx|js|jsx)$|^package\.json$|^tsconfig(\..*)?\.json$|^next\.config\.(m?ts|js)$' || true
+)
+
+ARCHITECTURE_TRIGGER=$(
+  echo "$STAGED_ALL" | grep -E '^src/.*\.(ts|tsx)$' || true
+)
+
+STRUCTURE_TRIGGER=$(
+  echo "$STAGED_ALL" | grep -E '^src/|^db/|^public/' || true
+)
+
+if [ -n "$STRUCTURE_TRIGGER" ]; then
+  echo "Running structure-validation on staged files..."
+  sh .agents/scripts/validate-structure-staged.sh
+fi
+
+if [ -n "$ARCHITECTURE_TRIGGER" ]; then
+  echo "Running architecture checks on staged src sources..."
+  npm run cursor:architecture -- --staged
+else
+  echo "No staged src .ts/.tsx — skipping architecture checks."
+fi
+
+if [ -n "$TYPECHECK_TRIGGER" ]; then
+  echo "Running typecheck..."
+  npm run typecheck
+else
+  echo "No staged src JS/TS or project toolchain files — skipping typecheck."
+fi

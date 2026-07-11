@@ -1,0 +1,25 @@
+COMMIT_MSG_FILE=$1
+COMMIT_MSG=$(cat "$COMMIT_MSG_FILE")
+
+if echo "$COMMIT_MSG" | grep -q "^Merge\|^Revert"; then
+  exit 0
+fi
+
+# Allow conventional commits or ticket-prefixed commits from EnergyCenter workflow
+CONVENTIONAL_REGEX="^(feat|fix|chore|refactor|docs|test|style|perf|build|ci)(\(.+\))?: .+"
+TICKET_REGEX="^((?:[A-Z]+-\d+)|00000): \((feat|fix|chore|refactor|docs|test|style|perf|build|ci)\) .+"
+
+if echo "$COMMIT_MSG" | grep -Eq "$CONVENTIONAL_REGEX"; then
+  exit 0
+fi
+
+if echo "$COMMIT_MSG" | grep -Eq "$TICKET_REGEX"; then
+  exit 0
+fi
+
+echo "Aborting commit." >&2
+echo "Use one of these formats:" >&2
+echo "  feat: add styleguide section" >&2
+echo "  fix(api): handle missing DATABASE_URL" >&2
+echo "  00000: (chore) Sync harness tooling" >&2
+exit 1
