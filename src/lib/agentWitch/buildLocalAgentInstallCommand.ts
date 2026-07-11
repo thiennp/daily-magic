@@ -1,7 +1,7 @@
 import {
   buildAgentWitchInstallScriptUrl,
   buildAgentWitchWsUrl,
-  buildAppOrigin,
+  buildAppOriginFromHeaders,
 } from "@/lib/agentWitch/buildAgentWitchInstallUrls";
 
 export interface LocalAgentInstallCommand {
@@ -10,10 +10,10 @@ export interface LocalAgentInstallCommand {
   readonly wsUrl: string;
 }
 
-export const buildLocalAgentInstallCommand = (
-  request: Request,
+export const buildLocalAgentInstallCommandFromHeaders = (
+  headerList: Headers,
 ): LocalAgentInstallCommand => {
-  const origin = buildAppOrigin(request);
+  const origin = buildAppOriginFromHeaders(headerList);
   const installScriptUrl = buildAgentWitchInstallScriptUrl(origin);
 
   return {
@@ -22,3 +22,8 @@ export const buildLocalAgentInstallCommand = (
     wsUrl: buildAgentWitchWsUrl(origin),
   };
 };
+
+export const buildLocalAgentInstallCommand = (
+  request: Request,
+): LocalAgentInstallCommand =>
+  buildLocalAgentInstallCommandFromHeaders(request.headers);

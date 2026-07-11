@@ -1,7 +1,12 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-DAILY_MAGIC_URL="${DAILY_MAGIC_URL:-http://localhost:3000}"
+if [[ -f ".env.local" ]]; then
+  # shellcheck disable=SC1091
+  source ".env.local" 2>/dev/null || true
+fi
+
+DAILY_MAGIC_URL="${DAILY_MAGIC_URL:-${NEXT_PUBLIC_APP_URL:-http://localhost:3000}}"
 INSTALL_URL="${DAILY_MAGIC_URL%/}/install/agent-witch.sh"
 
 echo "Fetching install script from ${INSTALL_URL}…"

@@ -1,17 +1,11 @@
 import { headers } from "next/headers";
 
-import { buildLocalAgentInstallCommand } from "@/lib/agentWitch/buildLocalAgentInstallCommand";
+import { buildLocalAgentInstallCommandFromHeaders } from "@/lib/agentWitch/buildLocalAgentInstallCommand";
 
 export default async function LocalAgentSetupInstructions() {
   const requestHeaders = await headers();
-  const host =
-    requestHeaders.get("x-forwarded-host") ??
-    requestHeaders.get("host") ??
-    "localhost:3000";
-  const protocol = requestHeaders.get("x-forwarded-proto") ?? "http";
-
   const { installCommand, installScriptUrl, wsUrl } =
-    buildLocalAgentInstallCommand(new Request(`${protocol}://${host}/`));
+    buildLocalAgentInstallCommandFromHeaders(requestHeaders);
 
   return (
     <section className="mt-8 rounded-xl border border-gray-200 bg-gray-50 p-5 text-left dark:border-gray-700 dark:bg-gray-900/50">

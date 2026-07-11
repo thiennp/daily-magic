@@ -2,6 +2,8 @@ import Link from "next/link";
 
 import LocalAgentSetupInstructions from "@/features/home/LocalAgentSetupInstructions";
 
+export const dynamic = "force-dynamic";
+
 export default function Home() {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-gray-50 px-6 dark:bg-gray-900">
