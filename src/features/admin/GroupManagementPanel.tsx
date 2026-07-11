@@ -2,6 +2,7 @@
 
 import { useSession } from "next-auth/react";
 
+import GroupDispatchPolicyControl from "@/features/admin/components/GroupDispatchPolicyControl";
 import GroupMembersSection from "@/features/admin/components/GroupMembersSection";
 import GroupSelectionSection from "@/features/admin/components/GroupSelectionSection";
 import { useGroupManagement } from "@/features/admin/hooks/useGroupManagement";
@@ -37,16 +38,21 @@ export default function GroupManagementPanel({
       />
 
       {groupManagement.selectedGroupId ? (
-        <GroupMembersSection
-          members={groupManagement.members}
-          memberEmail={groupManagement.memberEmail}
-          memberRole={groupManagement.memberRole}
-          onMemberEmailChange={groupManagement.setMemberEmail}
-          onMemberRoleChange={groupManagement.setMemberRole}
-          onAddMember={() => void groupManagement.handleAddMember()}
-          onRoleChange={groupManagement.handleRoleChange}
-          onRemoveMember={groupManagement.handleRemoveMember}
-        />
+        <>
+          <GroupDispatchPolicyControl
+            groupId={groupManagement.selectedGroupId}
+          />
+          <GroupMembersSection
+            members={groupManagement.members}
+            memberEmail={groupManagement.memberEmail}
+            memberRole={groupManagement.memberRole}
+            onMemberEmailChange={groupManagement.setMemberEmail}
+            onMemberRoleChange={groupManagement.setMemberRole}
+            onAddMember={() => void groupManagement.handleAddMember()}
+            onRoleChange={groupManagement.handleRoleChange}
+            onRemoveMember={groupManagement.handleRemoveMember}
+          />
+        </>
       ) : null}
 
       {groupManagement.message ? (
