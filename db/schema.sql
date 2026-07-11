@@ -15,6 +15,9 @@ CREATE TABLE IF NOT EXISTS users (
   image TEXT,
   global_role TEXT NOT NULL DEFAULT 'user' CHECK (global_role IN ('super_admin', 'admin', 'user')),
   agent_dispatch_policy TEXT CHECK (agent_dispatch_policy IN ('open', 'approval')),
+  harness_sharing_visibility TEXT CHECK (
+    harness_sharing_visibility IN ('private', 'group', 'public')
+  ),
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
@@ -106,6 +109,19 @@ CREATE INDEX IF NOT EXISTS agent_runs_requester_idx
 
 CREATE INDEX IF NOT EXISTS agent_runs_executor_idx
   ON agent_runs (executor_user_id, created_at DESC);
+
+CREATE TABLE IF NOT EXISTS harness_catalog_snapshots (
+  owner_user_id TEXT PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+  visibility TEXT NOT NULL DEFAULT 'group'
+    CHECK (visibility IN ('private', 'group', 'public')),
+  hostname TEXT NOT NULL DEFAULT '',
+  manifest_json JSONB NOT NULL DEFAULT '{}'::jsonb,
+  reported_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS harness_catalog_snapshots_visibility_idx
+  ON harness_catalog_snapshots (visibility, reported_at DESC);
 
 CREATE INDEX IF NOT EXISTS agent_witch_devices_user_id_idx
   ON agent_witch_devices (user_id);

@@ -1,4 +1,8 @@
-import { describe, expect, it, beforeEach } from "vitest";
+import { describe, expect, it, beforeEach, vi } from "vitest";
+
+vi.mock("@/lib/harness/syncHarnessCatalogFromReport", () => ({
+  syncHarnessCatalogFromReport: vi.fn(async () => undefined),
+}));
 
 import { AgentWitchHub } from "./agentWitchHub";
 import { AgentWitchPairingStore } from "./agentWitchPairingStore";

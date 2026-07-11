@@ -1,5 +1,6 @@
 import isRecord from "./isRecord";
 import { unauthorizedAgentOnlyError } from "./agentWitchHubClientOperations";
+import { syncHarnessCatalogFromReport } from "@/lib/harness/syncHarnessCatalogFromReport";
 import type AgentWitchHubClient from "./types/AgentWitchHubClient.type";
 import type AgentWitchHubRuntime from "./types/AgentWitchHubRuntime.type";
 import type { AgentWitchHarnessManifestReport } from "./types/AgentWitchHubStatus.type";
@@ -47,6 +48,7 @@ export const handleHarnessManifestReportMessage = (
     );
   }
   runtime.broadcastToDashboardUser(sender.userId, message);
+  void syncHarnessCatalogFromReport(report);
 
   return {
     type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ACK,
