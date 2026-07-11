@@ -1,48 +1,26 @@
-import Link from "next/link";
-
-import UserDropdown from "@/components/header/UserDropdown";
-import LocalAgentSetupInstructions from "@/features/home/LocalAgentSetupInstructions";
+import { getAuthActor } from "@/lib/auth/auth";
+import HomeAuthenticatedView from "@/features/home/HomeAuthenticatedView";
+import HomeLoginView from "@/features/home/HomeLoginView";
 
 export const dynamic = "force-dynamic";
 
-export default function Home() {
+export default async function Home() {
+  const actor = await getAuthActor();
+
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-gray-50 px-6 dark:bg-gray-900">
-      <div className="absolute right-4 top-4">
-        <UserDropdown />
-      </div>
-      <main className="w-full max-w-2xl rounded-2xl border border-gray-200 bg-white p-10 text-center shadow-theme-sm dark:border-gray-800 dark:bg-white/[0.03]">
-        <p className="text-sm font-medium uppercase tracking-wide text-brand-500">
-          Daily Magic
-        </p>
-        <h1 className="mt-3 text-3xl font-semibold text-gray-800 dark:text-white/90">
-          Next.js + Neon + TailAdmin
-        </h1>
-        <p className="mt-4 text-gray-600 dark:text-gray-400">
-          Local app scaffold with Neon database wiring and a TailAdmin-based
-          component styleguide.
-        </p>
-        <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-          <Link
-            href="/styleguide"
-            className="inline-flex h-11 items-center justify-center rounded-lg bg-brand-500 px-5 text-sm font-medium text-white transition hover:bg-brand-600"
-          >
-            Open styleguide
-          </Link>
-          <Link
-            href="/ws-test"
-            className="inline-flex h-11 items-center justify-center rounded-lg border border-gray-200 px-5 text-sm font-medium text-gray-700 transition hover:bg-gray-50 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-white/5"
-          >
-            WebSocket test
-          </Link>
-          <Link
-            href="/admin/groups"
-            className="inline-flex h-11 items-center justify-center rounded-lg border border-gray-200 px-5 text-sm font-medium text-gray-700 transition hover:bg-gray-50 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-white/5"
-          >
-            Administration
-          </Link>
-        </div>
-        <LocalAgentSetupInstructions />
+    <div className="flex min-h-screen items-center justify-center bg-gray-50 px-6 py-10 dark:bg-gray-900">
+      <main className="w-full max-w-3xl rounded-2xl border border-gray-200 bg-white p-8 shadow-theme-sm dark:border-gray-800 dark:bg-white/[0.03] sm:p-10">
+        {actor ? (
+          <HomeAuthenticatedView
+            user={{
+              email: actor.email,
+              name: actor.name,
+              globalRole: actor.globalRole,
+            }}
+          />
+        ) : (
+          <HomeLoginView />
+        )}
       </main>
     </div>
   );

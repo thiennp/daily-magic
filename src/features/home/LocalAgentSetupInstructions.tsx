@@ -9,7 +9,7 @@ export default async function LocalAgentSetupInstructions() {
     buildLocalAgentInstallCommandFromHeaders(requestHeaders);
 
   return (
-    <section className="mt-8 rounded-xl border border-gray-200 bg-gray-50 p-5 text-left dark:border-gray-700 dark:bg-gray-900/50">
+    <section className="rounded-xl border border-gray-200 bg-gray-50 p-5 text-left dark:border-gray-700 dark:bg-gray-900/50">
       <h2 className="text-sm font-semibold text-gray-800 dark:text-white/90">
         Connect local Agent Witch
       </h2>

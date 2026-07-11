@@ -8,9 +8,15 @@ import Button from "@/components/ui/button/Button";
 import { SUPER_ADMIN_EMAIL } from "@/lib/auth/constants";
 import isSuperAdminEmail from "@/lib/auth/isSuperAdminEmail";
 
-export default function LoginForm() {
+interface LoginFormProps {
+  readonly defaultCallbackUrl?: string;
+}
+
+export default function LoginForm({
+  defaultCallbackUrl = "/admin/groups",
+}: LoginFormProps) {
   const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get("callbackUrl") ?? "/admin/groups";
+  const callbackUrl = searchParams.get("callbackUrl") ?? defaultCallbackUrl;
   const [email, setEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [message, setMessage] = useState<string | null>(null);

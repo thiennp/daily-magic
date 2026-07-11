@@ -14,6 +14,12 @@ export interface AgentWitchHubStatus {
   readonly dashboardCount: number;
 }
 
+export interface AgentWitchConnectedClient {
+  readonly id: string;
+  readonly role: AgentWitchRole;
+  readonly connectedAt: string;
+}
+
 export interface AgentWitchHubClient {
   readonly id: string;
   readonly role: AgentWitchRole;
@@ -22,13 +28,19 @@ export interface AgentWitchHubClient {
 
 export class AgentWitchHub {
   private readonly clients = new Map<string, AgentWitchHubClient>();
+  private readonly connectedAtByClientId = new Map<string, number>();
 
   registerClient(client: AgentWitchHubClient): void {
+    if (!this.connectedAtByClientId.has(client.id)) {
+      this.connectedAtByClientId.set(client.id, Date.now());
+    }
+
     this.clients.set(client.id, client);
   }
 
   unregisterClient(clientId: string): void {
     this.clients.delete(clientId);
+    this.connectedAtByClientId.delete(clientId);
   }
 
   getStatus(): AgentWitchHubStatus {
@@ -38,6 +50,18 @@ export class AgentWitchHub {
       dashboardCount: clients.filter((client) => client.role === "dashboard")
         .length,
     };
+  }
+
+  listConnectedClients(): readonly AgentWitchConnectedClient[] {
+    return [...this.clients.values()]
+      .map((client) => ({
+        id: client.id,
+        role: client.role,
+        connectedAt: new Date(
+          this.connectedAtByClientId.get(client.id) ?? Date.now(),
+        ).toISOString(),
+      }))
+      .sort((left, right) => left.connectedAt.localeCompare(right.connectedAt));
   }
 
   handleMessage(
