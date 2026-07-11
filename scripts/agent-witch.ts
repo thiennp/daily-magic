@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Agent Witch — local WebSocket client that runs Claude CLI tasks from the app.
+ * Agent Witch — local WebSocket client that runs writer agents from the app.
  *
  * Run: npx tsx scripts/agent-witch.ts
  * Config: ~/.agent-witch/config.json
@@ -16,14 +16,18 @@ interface AgentWitchConfig {
   readonly wsUrl: string;
   readonly workspace: string;
   readonly claudeCommand: string;
+  readonly codexCommand: string;
 }
 
 const DEFAULT_WS_URL = "ws://localhost:3000/api/agent-witch/ws";
 const DEFAULT_CLAUDE_COMMAND = "claude";
+const DEFAULT_CODEX_COMMAND = "codex";
 const HEARTBEAT_INTERVAL_MS = 30_000;
 const MAX_RECONNECT_DELAY_MS = 30_000;
 const CONFIG_DIR = path.join(os.homedir(), ".agent-witch");
 const CONFIG_PATH = path.join(CONFIG_DIR, "config.json");
+const HARNESS_ROOT_DIR = path.join(CONFIG_DIR, "harness");
+const HARNESS_MANIFEST_PATH = path.join(HARNESS_ROOT_DIR, "manifest.json");
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === "object" && value !== null && !Array.isArray(value);
@@ -34,6 +38,7 @@ const readConfig = (): AgentWitchConfig | null => {
       wsUrl: process.env.AGENT_WITCH_WS_URL ?? DEFAULT_WS_URL,
       workspace: process.cwd(),
       claudeCommand: process.env.CLAUDE_COMMAND ?? DEFAULT_CLAUDE_COMMAND,
+      codexCommand: process.env.CODEX_COMMAND ?? DEFAULT_CODEX_COMMAND,
     };
   }
 
@@ -56,8 +61,12 @@ const readConfig = (): AgentWitchConfig | null => {
       parsed.claudeCommand.length > 0
         ? parsed.claudeCommand
         : (process.env.CLAUDE_COMMAND ?? DEFAULT_CLAUDE_COMMAND);
+    const codexCommand =
+      typeof parsed.codexCommand === "string" && parsed.codexCommand.length > 0
+        ? parsed.codexCommand
+        : (process.env.CODEX_COMMAND ?? DEFAULT_CODEX_COMMAND);
 
-    return { wsUrl, workspace, claudeCommand };
+    return { wsUrl, workspace, claudeCommand, codexCommand };
   } catch (error) {
     const message =
       error instanceof Error ? error.message : "Unknown config error";
@@ -75,6 +84,85 @@ const sendMessage = (
   }
 };
 
+const readHarnessManifest = (): Record<string, unknown> | null => {
+  if (!fs.existsSync(HARNESS_MANIFEST_PATH)) {
+    return null;
+  }
+
+  try {
+    const parsed: unknown = JSON.parse(
+      fs.readFileSync(HARNESS_MANIFEST_PATH, "utf8"),
+    );
+    if (isRecord(parsed)) {
+      return parsed;
+    }
+  } catch {
+    console.error("[agent-witch] Could not parse harness manifest.");
+  }
+
+  return null;
+};
+
+const reportHarnessManifest = (socket: WebSocket): void => {
+  const manifest = readHarnessManifest();
+  if (manifest === null) {
+    return;
+  }
+
+  sendMessage(socket, {
+    type: "harness.manifest.report",
+    payload: {
+      hostname: os.hostname(),
+      manifest,
+    },
+  });
+};
+
+const runWriterProcess = (
+  config: AgentWitchConfig,
+  writerAgent: string,
+  instruction: string,
+): Promise<{ readonly exitCode: number; readonly output: string }> =>
+  new Promise((resolve) => {
+    const outputChunks: string[] = [];
+    const spawnProcess = (
+      command: string,
+      args: readonly string[],
+    ): ReturnType<typeof spawn> =>
+      spawn(command, args, {
+        cwd: config.workspace,
+        stdio: ["ignore", "pipe", "pipe"],
+        env: process.env,
+      });
+
+    const child =
+      writerAgent === "codex"
+        ? spawnProcess(config.codexCommand, ["-p", instruction])
+        : spawnProcess(config.claudeCommand, ["-p", instruction]);
+
+    child.stdout?.on("data", (chunk: Buffer) => {
+      outputChunks.push(chunk.toString("utf8"));
+    });
+
+    child.stderr?.on("data", (chunk: Buffer) => {
+      outputChunks.push(chunk.toString("utf8"));
+    });
+
+    child.on("close", (exitCode) => {
+      resolve({
+        exitCode: exitCode ?? -1,
+        output: outputChunks.join("").trim(),
+      });
+    });
+
+    child.on("error", (error) => {
+      resolve({
+        exitCode: -1,
+        output: error.message,
+      });
+    });
+  });
+
 const runClaudeTask = (
   config: AgentWitchConfig,
   prompt: string,
@@ -89,11 +177,11 @@ const runClaudeTask = (
 
   const outputChunks: string[] = [];
 
-  child.stdout.on("data", (chunk: Buffer) => {
+  child.stdout?.on("data", (chunk: Buffer) => {
     outputChunks.push(chunk.toString("utf8"));
   });
 
-  child.stderr.on("data", (chunk: Buffer) => {
+  child.stderr?.on("data", (chunk: Buffer) => {
     outputChunks.push(chunk.toString("utf8"));
   });
 
@@ -119,6 +207,81 @@ const runClaudeTask = (
       requestId,
     });
   });
+};
+
+const runHarnessRequest = async (
+  config: AgentWitchConfig,
+  payload: Readonly<Record<string, unknown>>,
+  requestId: string | undefined,
+  socket: WebSocket,
+): Promise<void> => {
+  const writerAgent =
+    typeof payload.writerAgent === "string" ? payload.writerAgent : "";
+  const instruction =
+    typeof payload.instruction === "string" ? payload.instruction.trim() : "";
+
+  sendMessage(socket, {
+    type: "harness.request.ack",
+    payload: {
+      writerAgent,
+      status: "dispatching",
+    },
+    requestId,
+  });
+
+  if (instruction.length === 0) {
+    sendMessage(socket, {
+      type: "harness.request.result",
+      payload: {
+        success: false,
+        writerAgent,
+        errorMessage: "harness.request requires a non-empty instruction.",
+      },
+      requestId,
+    });
+    return;
+  }
+
+  if (writerAgent === "cursor" || writerAgent === "antigravity") {
+    sendMessage(socket, {
+      type: "harness.request.result",
+      payload: {
+        success: false,
+        writerAgent,
+        errorMessage: `${writerAgent} writer dispatch is not configured yet. Choose Claude CLI or Codex.`,
+      },
+      requestId,
+    });
+    return;
+  }
+
+  if (writerAgent !== "claude-cli" && writerAgent !== "codex") {
+    sendMessage(socket, {
+      type: "harness.request.result",
+      payload: {
+        success: false,
+        writerAgent,
+        errorMessage: `Unsupported writer agent: ${writerAgent}`,
+      },
+      requestId,
+    });
+    return;
+  }
+
+  const result = await runWriterProcess(config, writerAgent, instruction);
+
+  sendMessage(socket, {
+    type: "harness.request.result",
+    payload: {
+      success: result.exitCode === 0,
+      writerAgent,
+      exitCode: result.exitCode,
+      output: result.output,
+    },
+    requestId,
+  });
+
+  reportHarnessManifest(socket);
 };
 
 const computeReconnectDelayMs = (attempt: number): number => {
@@ -212,6 +375,7 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
           hostname: os.hostname(),
         },
       });
+      reportHarnessManifest(socket);
       startHeartbeat(socket);
     });
 
@@ -224,15 +388,21 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
           return;
         }
 
+        const requestId =
+          typeof parsed.requestId === "string" ? parsed.requestId : undefined;
+
         if (parsed.type === "command.claude.run" && isRecord(parsed.payload)) {
           const prompt = parsed.payload.prompt;
-          const requestId =
-            typeof parsed.requestId === "string" ? parsed.requestId : undefined;
 
           if (typeof prompt === "string" && prompt.trim().length > 0) {
             console.log("[agent-witch] Running Claude CLI task…");
             runClaudeTask(config, prompt.trim(), requestId, socket);
           }
+        }
+
+        if (parsed.type === "harness.request" && isRecord(parsed.payload)) {
+          console.log("[agent-witch] Dispatching harness request…");
+          void runHarnessRequest(config, parsed.payload, requestId, socket);
         }
       } catch {
         console.error("[agent-witch] Failed to parse inbound message.");

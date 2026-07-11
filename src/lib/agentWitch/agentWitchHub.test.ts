@@ -150,4 +150,107 @@ describe("AgentWitchHub", () => {
     expect(hub.resolveRoleFromRegisterPayload({ role: "invalid" })).toBeNull();
     expect(hub.resolveRoleFromRegisterPayload(undefined)).toBeNull();
   });
+
+  it("dispatches harness requests from dashboard to agent", () => {
+    const agent = createCollector();
+    hub.registerClient({
+      id: "agent-1",
+      role: "agent",
+      send: agent.send,
+    });
+    hub.registerClient({
+      id: "dash-1",
+      role: "dashboard",
+      send: () => undefined,
+    });
+
+    const response = hub.handleMessage("dash-1", {
+      type: AGENT_WITCH_MESSAGE_TYPES.HARNESS_REQUEST,
+      payload: {
+        writerAgent: "claude-cli",
+        instruction: "write harness",
+        spec: {
+          name: "Rules",
+          slug: "rules",
+          items: [
+            {
+              id: "item-1",
+              kind: "rule",
+              title: "No Let",
+              content: "Prefer const.",
+            },
+          ],
+        },
+      },
+      requestId: "req-harness-1",
+    });
+
+    expect(response?.type).toBe(AGENT_WITCH_MESSAGE_TYPES.HARNESS_REQUEST_ACK);
+    expect(agent.messages).toHaveLength(1);
+    expect(agent.messages[0]?.type).toBe(
+      AGENT_WITCH_MESSAGE_TYPES.HARNESS_REQUEST,
+    );
+    expect(agent.messages[0]?.payload?.writerAgent).toBe("claude-cli");
+  });
+
+  it("stores and forwards harness manifest reports to dashboards", () => {
+    const dashboard = createCollector();
+    hub.registerClient({
+      id: "agent-1",
+      role: "agent",
+      send: () => undefined,
+    });
+    hub.registerClient({
+      id: "dash-1",
+      role: "dashboard",
+      send: dashboard.send,
+    });
+
+    const response = hub.handleMessage("agent-1", {
+      type: AGENT_WITCH_MESSAGE_TYPES.HARNESS_MANIFEST_REPORT,
+      payload: {
+        hostname: "local-mac",
+        manifest: {
+          version: 1,
+          hostname: "local-mac",
+          updatedAt: "2026-07-11T21:00:00.000Z",
+          activeSetSlugs: ["rules"],
+          sets: {},
+        },
+      },
+    });
+
+    expect(response?.type).toBe(AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ACK);
+    expect(dashboard.messages).toHaveLength(1);
+    expect(hub.listHarnessManifestReports()).toHaveLength(1);
+    expect(hub.listHarnessManifestReports()[0]?.hostname).toBe("local-mac");
+  });
+
+  it("forwards harness request results from agent to dashboards", () => {
+    const dashboard = createCollector();
+    hub.registerClient({
+      id: "agent-1",
+      role: "agent",
+      send: () => undefined,
+    });
+    hub.registerClient({
+      id: "dash-1",
+      role: "dashboard",
+      send: dashboard.send,
+    });
+
+    hub.handleMessage("agent-1", {
+      type: AGENT_WITCH_MESSAGE_TYPES.HARNESS_REQUEST_RESULT,
+      payload: {
+        success: true,
+        writerAgent: "claude-cli",
+        exitCode: 0,
+        output: "done",
+      },
+      requestId: "req-harness-2",
+    });
+
+    expect(dashboard.messages).toHaveLength(1);
+    expect(dashboard.messages[0]?.payload?.success).toBe(true);
+  });
 });
