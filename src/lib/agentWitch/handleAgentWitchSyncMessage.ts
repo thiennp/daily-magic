@@ -1,4 +1,6 @@
 import { handleHarnessManifestReportMessage } from "./handleHarnessManifestReportMessage";
+import { handleHarnessBorrowExportMessage } from "./handleHarnessBorrowExportMessage";
+import { handleHarnessExportResultMessage } from "./handleHarnessExportResultMessage";
 import {
   handleHarnessAgentRelayMessage,
   handleHarnessRequestMessage,
@@ -45,6 +47,14 @@ export const handleAgentWitchSyncMessage = (
 
   if (message.type === AGENT_WITCH_MESSAGE_TYPES.HARNESS_REQUEST) {
     return handleHarnessRequestMessage(runtime, message, sender);
+  }
+
+  if (message.type === AGENT_WITCH_MESSAGE_TYPES.HARNESS_BORROW_EXPORT) {
+    return handleHarnessBorrowExportMessage(runtime, message, sender);
+  }
+
+  if (message.type === AGENT_WITCH_MESSAGE_TYPES.HARNESS_EXPORT_RESULT) {
+    return handleHarnessExportResultMessage(runtime, message, sender);
   }
 
   if (

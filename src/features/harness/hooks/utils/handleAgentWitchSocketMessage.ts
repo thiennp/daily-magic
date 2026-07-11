@@ -1,5 +1,9 @@
 import type { AgentPairingStatus } from "@/features/harness/hooks/types/HarnessRequestResult.type";
 import type HarnessRequestResult from "@/features/harness/hooks/types/HarnessRequestResult.type";
+import {
+  parseHarnessExportResultPayload,
+  type HarnessExportResultPayload,
+} from "@/features/harness/types/HarnessExportResult.type";
 import { isAgentWitchRecord } from "@/features/harness/hooks/utils/agentWitchSocketUtils";
 import type HarnessManifest from "@/lib/agentWitch/harness/types/HarnessManifest.type";
 
@@ -9,6 +13,9 @@ interface AgentWitchSocketMessageHandlers {
   readonly setLocalManifest: (manifest: HarnessManifest | null) => void;
   readonly setManifestHostname: (hostname: string | null) => void;
   readonly setLastRequestResult: (result: HarnessRequestResult | null) => void;
+  readonly onHarnessExportResult?: (
+    payload: HarnessExportResultPayload,
+  ) => void;
 }
 
 export const handleAgentWitchSocketMessage = (
@@ -82,6 +89,15 @@ export const handleAgentWitchSocketMessage = (
             ? parsed.payload.errorMessage
             : undefined,
       });
+    }
+    if (
+      parsed.type === "harness.export.result" &&
+      isAgentWitchRecord(parsed.payload)
+    ) {
+      const exportPayload = parseHarnessExportResultPayload(parsed.payload);
+      if (exportPayload !== null) {
+        handlers.onHarnessExportResult?.(exportPayload);
+      }
     }
   } catch {
     // Keep raw message visible in lastMessage.

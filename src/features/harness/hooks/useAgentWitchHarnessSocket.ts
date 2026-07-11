@@ -1,14 +1,15 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import type { AgentPairingStatus } from "@/features/harness/hooks/types/HarnessRequestResult.type";
 import type HarnessRequestResult from "@/features/harness/hooks/types/HarnessRequestResult.type";
 import type { UseAgentWitchHarnessSocketResult } from "@/features/harness/hooks/types/UseAgentWitchHarnessSocketResult.type";
+import type { BorrowImportStatus } from "@/features/harness/hooks/types/BorrowImportStatus.type";
+import { createAgentWitchSocketStore } from "@/features/harness/hooks/utils/agentWitchSocketStore";
 import { connectAgentWitchHarnessSocket } from "@/features/harness/hooks/utils/connectAgentWitchHarnessSocket";
-import { createAgentWitchRequestId } from "@/features/harness/hooks/utils/agentWitchSocketUtils";
-import buildHarnessWritePrompt from "@/lib/agentWitch/harness/buildHarnessWritePrompt";
-import sanitizeHarnessSlug from "@/lib/agentWitch/harness/sanitizeHarnessSlug";
+import { createHarnessExportResultHandler } from "@/features/harness/hooks/utils/createHarnessExportResultHandler";
+import { createHarnessSocketActions } from "@/features/harness/hooks/utils/createHarnessSocketActions";
 import type HarnessManifest from "@/lib/agentWitch/harness/types/HarnessManifest.type";
 import type HarnessItemSpec from "@/lib/agentWitch/harness/types/HarnessItemSpec.type";
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
@@ -21,7 +22,14 @@ export type {
 };
 
 export function useAgentWitchHarnessSocket(): UseAgentWitchHarnessSocketResult {
-  const socketRef = useRef<WebSocket | null>(null);
+  const socketStore = useMemo(() => createAgentWitchSocketStore(), []);
+  const sendHarnessRequestRef = useRef<
+    (input: {
+      readonly setName: string;
+      readonly writerAgent: HarnessWriterAgent;
+      readonly items: readonly HarnessItemSpec[];
+    }) => void
+  >(() => undefined);
   const [connectionStatus, setConnectionStatus] =
     useState<WsTestConnectionStatus>("connecting");
   const [pairingStatus, setPairingStatus] =
@@ -33,84 +41,41 @@ export function useAgentWitchHarnessSocket(): UseAgentWitchHarnessSocketResult {
   const [lastRequestResult, setLastRequestResult] =
     useState<HarnessRequestResult | null>(null);
   const [lastMessage, setLastMessage] = useState("");
+  const [borrowImportStatus, setBorrowImportStatus] =
+    useState<BorrowImportStatus>("idle");
+  const [borrowImportMessage, setBorrowImportMessage] = useState<string | null>(
+    null,
+  );
 
-  const pairLocalAgent = useCallback((pairingToken: string) => {
-    const trimmedToken = pairingToken.trim();
-    if (trimmedToken.length === 0) {
-      return;
-    }
+  const [actions] = useState(() =>
+    createHarnessSocketActions({
+      socketStore,
+      setPairingStatus,
+      setBorrowImportStatus,
+      setBorrowImportMessage,
+    }),
+  );
 
-    const socket = socketRef.current;
-    if (socket === null || socket.readyState !== WebSocket.OPEN) {
-      setPairingStatus("not_connected");
-      return;
-    }
-
-    socket.send(
-      JSON.stringify({
-        type: "agent.pair",
-        payload: { pairingToken: trimmedToken },
-        requestId: createAgentWitchRequestId(),
-      }),
-    );
-    setPairingStatus("ready_to_pair");
-  }, []);
+  useEffect(() => {
+    sendHarnessRequestRef.current = actions.sendHarnessRequest;
+  }, [actions.sendHarnessRequest]);
 
   useEffect(() => {
     return connectAgentWitchHarnessSocket({
-      socketRef,
+      socketStore,
       setConnectionStatus,
       setPairingStatus,
       setLocalManifest,
       setManifestHostname,
       setLastRequestResult,
       setLastMessage,
+      onHarnessExportResult: createHarnessExportResultHandler({
+        sendHarnessRequestRef,
+        setBorrowImportStatus,
+        setBorrowImportMessage,
+      }),
     });
-  }, []);
-
-  const sendHarnessRequest = useCallback(
-    (input: {
-      readonly setName: string;
-      readonly writerAgent: HarnessWriterAgent;
-      readonly items: readonly HarnessItemSpec[];
-    }) => {
-      const trimmedName = input.setName.trim();
-      if (trimmedName.length === 0 || input.items.length === 0) {
-        return;
-      }
-
-      const socket = socketRef.current;
-      if (socket === null || socket.readyState !== WebSocket.OPEN) {
-        setLastMessage(
-          JSON.stringify({
-            type: "system.error",
-            payload: { errorMessage: "WebSocket is not connected." },
-          }),
-        );
-        return;
-      }
-
-      const spec = {
-        name: trimmedName,
-        slug: sanitizeHarnessSlug(trimmedName),
-        items: input.items,
-      };
-      const instruction = buildHarnessWritePrompt(spec);
-
-      socket.send(
-        JSON.stringify({
-          type: "harness.request",
-          payload: {
-            writerAgent: input.writerAgent,
-            spec,
-            instruction,
-          },
-          requestId: createAgentWitchRequestId(),
-        }),
-      );
-    },
-    [],
-  );
+  }, [socketStore]);
 
   return {
     connectionStatus,
@@ -119,7 +84,10 @@ export function useAgentWitchHarnessSocket(): UseAgentWitchHarnessSocketResult {
     manifestHostname,
     lastRequestResult,
     lastMessage,
-    pairLocalAgent,
-    sendHarnessRequest,
+    pairLocalAgent: actions.pairLocalAgent,
+    sendHarnessRequest: actions.sendHarnessRequest,
+    borrowImportStatus,
+    borrowImportMessage,
+    requestBorrowedHarnessExport: actions.requestBorrowedHarnessExport,
   };
 }

@@ -1,5 +1,6 @@
 import { getUserById } from "@/lib/auth/userRepository";
 import { canViewHarnessCatalog } from "@/lib/harness/canViewHarnessCatalog";
+import { filterVisibleSetSlugs } from "@/lib/harness/filterBorrowableManifest";
 import mapHarnessCatalogRow from "@/lib/harness/mapHarnessCatalogRow";
 import { HarnessSharingVisibility } from "@/lib/harness/HarnessSharingVisibility.constant";
 import { asRowArray, getSql } from "@/lib/db";
@@ -20,7 +21,7 @@ const extractManifestSummary = (
   manifestJson: Readonly<Record<string, unknown>>,
 ): {
   readonly activeSetSlugs: readonly string[];
-  readonly setNames: readonly string[];
+  readonly setNamesBySlug: Readonly<Record<string, string>>;
 } => {
   const activeSetSlugs = Array.isArray(manifestJson.activeSetSlugs)
     ? manifestJson.activeSetSlugs.filter(
@@ -34,11 +35,14 @@ const extractManifestSummary = (
       ? (manifestJson.sets as Record<string, { readonly name?: string }>)
       : {};
 
-  const setNames = Object.values(sets)
-    .map((set) => set.name)
-    .filter((name): name is string => typeof name === "string");
+  const setNamesBySlug: Record<string, string> = {};
+  for (const [slug, set] of Object.entries(sets)) {
+    if (typeof set.name === "string") {
+      setNamesBySlug[slug] = set.name;
+    }
+  }
 
-  return { activeSetSlugs, setNames };
+  return { activeSetSlugs, setNamesBySlug };
 };
 
 export async function listHarnessCatalogForViewer(
@@ -71,6 +75,15 @@ export async function listHarnessCatalogForViewer(
 
     const owner = await getUserById(entry.ownerUserId);
     const summary = extractManifestSummary(entry.manifestJson);
+    const visibleSlugs = await filterVisibleSetSlugs(
+      summary.activeSetSlugs,
+      viewerUserId,
+      entry.ownerUserId,
+      entry.visibility,
+    );
+    const visibleSetNames = visibleSlugs
+      .map((slug) => summary.setNamesBySlug[slug])
+      .filter((name): name is string => typeof name === "string");
 
     items.push({
       ownerUserId: entry.ownerUserId,
@@ -80,8 +93,8 @@ export async function listHarnessCatalogForViewer(
       hostname: entry.hostname,
       reportedAt: entry.reportedAt,
       isOnline: onlineOwnerIds.has(entry.ownerUserId),
-      activeSetSlugs: summary.activeSetSlugs,
-      setNames: summary.setNames,
+      activeSetSlugs: visibleSlugs,
+      setNames: visibleSetNames,
     });
   }
 

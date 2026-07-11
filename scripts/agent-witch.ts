@@ -446,6 +446,42 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
           console.log("[agent-witch] Dispatching harness request…");
           void runHarnessRequest(config, parsed.payload, requestId, socket);
         }
+
+        if (
+          parsed.type === "harness.export.request" &&
+          isRecord(parsed.payload)
+        ) {
+          const borrowerUserId =
+            typeof parsed.payload.borrowerUserId === "string"
+              ? parsed.payload.borrowerUserId
+              : "";
+          const setSlugs = Array.isArray(parsed.payload.setSlugs)
+            ? parsed.payload.setSlugs.filter(
+                (slug): slug is string => typeof slug === "string",
+              )
+            : [];
+
+          if (borrowerUserId.length > 0 && setSlugs.length > 0) {
+            void (async () => {
+              const { readHarnessExportSets } =
+                await import("./readHarnessExportSets");
+              const sets = readHarnessExportSets(setSlugs);
+              sendMessage(socket, {
+                type: "harness.export.result",
+                payload: {
+                  success: sets.length > 0,
+                  borrowerUserId,
+                  sets,
+                  errorMessage:
+                    sets.length > 0
+                      ? undefined
+                      : "No readable harness sets were found on this machine.",
+                },
+                requestId,
+              });
+            })();
+          }
+        }
       } catch {
         console.error("[agent-witch] Failed to parse inbound message.");
       }

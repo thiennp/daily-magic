@@ -1,34 +1,38 @@
-import type { RefObject } from "react";
-
 import type { AgentPairingStatus } from "@/features/harness/hooks/types/HarnessRequestResult.type";
 import type HarnessRequestResult from "@/features/harness/hooks/types/HarnessRequestResult.type";
+import type { AgentWitchSocketStore } from "@/features/harness/hooks/utils/agentWitchSocketStore";
 import {
   buildAgentWitchWebSocketUrl,
   createAgentWitchRequestId,
 } from "@/features/harness/hooks/utils/agentWitchSocketUtils";
 import { handleAgentWitchSocketMessage } from "@/features/harness/hooks/utils/handleAgentWitchSocketMessage";
+import type { HarnessExportResultPayload } from "@/features/harness/types/HarnessExportResult.type";
 import { AGENT_WITCH_PAIRING_TOKEN_STORAGE_KEY } from "@/lib/agentWitch/constants/pairingTokenStorageKey.constant";
 import type HarnessManifest from "@/lib/agentWitch/harness/types/HarnessManifest.type";
 import type { WsTestConnectionStatus } from "@/features/wsTest/types/WsTestConnectionStatus.type";
 
 interface ConnectAgentWitchHarnessSocketOptions {
-  readonly socketRef: RefObject<WebSocket | null>;
+  readonly socketStore: AgentWitchSocketStore;
   readonly setConnectionStatus: (status: WsTestConnectionStatus) => void;
   readonly setPairingStatus: (status: AgentPairingStatus) => void;
   readonly setLocalManifest: (manifest: HarnessManifest | null) => void;
   readonly setManifestHostname: (hostname: string | null) => void;
   readonly setLastRequestResult: (result: HarnessRequestResult | null) => void;
   readonly setLastMessage: (message: string) => void;
+  readonly onHarnessExportResult?: (
+    payload: HarnessExportResultPayload,
+  ) => void;
 }
 
 export const connectAgentWitchHarnessSocket = ({
-  socketRef,
+  socketStore,
   setConnectionStatus,
   setPairingStatus,
   setLocalManifest,
   setManifestHostname,
   setLastRequestResult,
   setLastMessage,
+  onHarnessExportResult,
 }: ConnectAgentWitchHarnessSocketOptions): (() => void) => {
   const wsUrl = buildAgentWitchWebSocketUrl();
   if (wsUrl.length === 0) {
@@ -36,7 +40,7 @@ export const connectAgentWitchHarnessSocket = ({
   }
 
   const socket = new WebSocket(wsUrl);
-  socketRef.current = socket;
+  socketStore.socket = socket;
 
   const messageHandlers = {
     setLastMessage,
@@ -44,6 +48,7 @@ export const connectAgentWitchHarnessSocket = ({
     setLocalManifest,
     setManifestHostname,
     setLastRequestResult,
+    onHarnessExportResult,
   };
 
   socket.addEventListener("open", () => {
@@ -88,6 +93,6 @@ export const connectAgentWitchHarnessSocket = ({
 
   return () => {
     socket.close();
-    socketRef.current = null;
+    socketStore.socket = null;
   };
 };

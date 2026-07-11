@@ -131,6 +131,26 @@ CREATE TABLE IF NOT EXISTS harness_catalog_snapshots (
 CREATE INDEX IF NOT EXISTS harness_catalog_snapshots_visibility_idx
   ON harness_catalog_snapshots (visibility, reported_at DESC);
 
+CREATE TABLE IF NOT EXISTS harness_borrows (
+  id TEXT PRIMARY KEY DEFAULT gen_random_uuid()::text,
+  borrower_user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  owner_user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  borrowed_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS harness_borrows_borrower_idx
+  ON harness_borrows (borrower_user_id, borrowed_at DESC);
+
+CREATE TABLE IF NOT EXISTS harness_set_sharing (
+  owner_user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  set_slug TEXT NOT NULL,
+  visibility TEXT NOT NULL CHECK (
+    visibility IN ('inherit', 'private', 'group', 'public')
+  ),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  PRIMARY KEY (owner_user_id, set_slug)
+);
+
 CREATE INDEX IF NOT EXISTS agent_witch_devices_user_id_idx
   ON agent_witch_devices (user_id);
 

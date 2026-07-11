@@ -1,71 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
-
 import BorrowedHarnessPreview from "@/features/harness/BorrowedHarnessPreview";
-import HarnessCatalogList, {
-  type HarnessCatalogItem,
-} from "@/features/harness/HarnessCatalogList";
-
-interface BorrowedHarness {
-  readonly ownerEmail: string;
-  readonly hostname: string;
-  readonly manifest: Readonly<Record<string, unknown>>;
-}
+import BorrowHarnessImportActions from "@/features/harness/BorrowHarnessImportActions";
+import HarnessCatalogList from "@/features/harness/HarnessCatalogList";
+import { useAgentWitchHarnessSocket } from "@/features/harness/hooks/useAgentWitchHarnessSocket";
+import { useBorrowHarnessCatalogState } from "@/features/harness/hooks/useBorrowHarnessCatalogState";
 
 export default function BorrowHarnessCatalog() {
-  const [entries, setEntries] = useState<readonly HarnessCatalogItem[]>([]);
-  const [borrowed, setBorrowed] = useState<BorrowedHarness | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    void (async () => {
-      try {
-        const response = await fetch("/api/harness/catalog");
-        if (!response.ok) {
-          return;
-        }
-
-        const data: unknown = await response.json();
-        if (
-          typeof data === "object" &&
-          data !== null &&
-          "entries" in data &&
-          Array.isArray((data as { entries: unknown }).entries)
-        ) {
-          setEntries((data as { entries: HarnessCatalogItem[] }).entries);
-        }
-      } finally {
-        setIsLoading(false);
-      }
-    })();
-  }, []);
-
-  const borrowHarness = async (ownerUserId: string): Promise<void> => {
-    const response = await fetch(`/api/harness/catalog/${ownerUserId}`);
-    if (!response.ok) {
-      return;
-    }
-
-    const data: unknown = await response.json();
-    if (
-      typeof data === "object" &&
-      data !== null &&
-      "borrow" in data &&
-      typeof (data as { borrow: BorrowedHarness }).borrow === "object"
-    ) {
-      const borrow = (
-        data as {
-          borrow: BorrowedHarness & { manifest: Record<string, unknown> };
-        }
-      ).borrow;
-      setBorrowed({
-        ownerEmail: borrow.ownerEmail,
-        hostname: borrow.hostname,
-        manifest: borrow.manifest,
-      });
-    }
-  };
+  const harnessSocket = useAgentWitchHarnessSocket();
+  const { entries, borrowed, isLoading, borrowHarness } =
+    useBorrowHarnessCatalogState();
 
   return (
     <section className="rounded-2xl border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-white/[0.03]">
@@ -86,11 +30,26 @@ export default function BorrowHarnessCatalog() {
       />
 
       {borrowed !== null ? (
-        <BorrowedHarnessPreview
-          ownerEmail={borrowed.ownerEmail}
-          hostname={borrowed.hostname}
-          manifest={borrowed.manifest}
-        />
+        <>
+          <BorrowedHarnessPreview
+            ownerEmail={borrowed.ownerEmail}
+            hostname={borrowed.hostname}
+            manifest={borrowed.manifest}
+          />
+          <BorrowHarnessImportActions
+            ownerUserId={borrowed.ownerUserId}
+            isOnline={borrowed.isOnline}
+            activeSetSlugs={borrowed.activeSetSlugs}
+            importStatus={harnessSocket.borrowImportStatus}
+            importMessage={harnessSocket.borrowImportMessage}
+            onImport={() => {
+              harnessSocket.requestBorrowedHarnessExport(
+                borrowed.ownerUserId,
+                borrowed.activeSetSlugs,
+              );
+            }}
+          />
+        </>
       ) : null}
     </section>
   );

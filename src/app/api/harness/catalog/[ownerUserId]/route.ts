@@ -1,4 +1,10 @@
 import { canViewHarnessCatalog } from "@/lib/harness/canViewHarnessCatalog";
+import { filterBorrowableManifest } from "@/lib/harness/filterBorrowableManifest";
+import {
+  HARNESS_BORROW_RATE_LIMIT,
+  isHarnessBorrowRateLimited,
+  recordHarnessBorrow,
+} from "@/lib/harness/harnessBorrowAudit";
 import { getHarnessCatalogSnapshot } from "@/lib/harness/harnessCatalogMutations";
 import { listOnlineHarnessOwnerIds } from "@/lib/harness/listOnlineHarnessOwnerIds";
 import { getUserById } from "@/lib/auth/userRepository";
@@ -39,7 +45,27 @@ export async function GET(
     return Response.json({ error: "Forbidden." }, { status: 403 });
   }
 
+  if (await isHarnessBorrowRateLimited(actor.id)) {
+    return Response.json(
+      {
+        error: `Borrow limit reached (${HARNESS_BORROW_RATE_LIMIT} per hour).`,
+      },
+      { status: 429 },
+    );
+  }
+
+  await recordHarnessBorrow({
+    borrowerUserId: actor.id,
+    ownerUserId,
+  });
+
   const owner = await getUserById(ownerUserId);
+  const manifest = await filterBorrowableManifest(
+    snapshot.manifestJson,
+    actor.id,
+    ownerUserId,
+    snapshot.visibility,
+  );
 
   return Response.json({
     ok: true,
@@ -51,7 +77,7 @@ export async function GET(
       visibility: snapshot.visibility,
       reportedAt: snapshot.reportedAt,
       isOnline: listOnlineHarnessOwnerIds().has(ownerUserId),
-      manifest: snapshot.manifestJson,
+      manifest,
     },
   });
 }
