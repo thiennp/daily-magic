@@ -18,8 +18,11 @@ import {
   getChangedFiles,
   type ChangedFilesMode,
 } from "./lib/getChangedFiles";
+import { countEffectiveSourceLines } from "./lib/countEffectiveSourceLines";
 import { parseImportStatements } from "./lib/parseImportStatements";
 import { findLayerImportViolations } from "./lib/srcLayerImportRules";
+
+const MAX_EFFECTIVE_SOURCE_LINES = 100;
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = path.resolve(__dirname, "../..");
@@ -177,6 +180,22 @@ const checkUtilityNaming = (srcRelativePath: string): Violation | null => {
 const isVendoredUiFile = (srcRelativePath: string): boolean =>
   srcRelativePath.replace(/\\/g, "/").startsWith("src/components/");
 
+const checkMaxEffectiveSourceLines = (
+  srcRelativePath: string,
+  content: string,
+): Violation | null => {
+  const effectiveLineCount = countEffectiveSourceLines(content);
+  if (effectiveLineCount <= MAX_EFFECTIVE_SOURCE_LINES) {
+    return null;
+  }
+
+  return {
+    file: srcRelativePath,
+    rule: "max-effective-lines",
+    message: `File exceeds ${MAX_EFFECTIVE_SOURCE_LINES} effective lines (${effectiveLineCount} lines excluding blank lines and imports)`,
+  };
+};
+
 const checkSourceStandards = (
   srcRelativePath: string,
   content: string,
@@ -243,6 +262,12 @@ export const runArchitectureChecks = (
     }
 
     const content = fs.readFileSync(absolutePath, "utf-8");
+
+    const maxLinesViolation = checkMaxEffectiveSourceLines(filePath, content);
+    if (maxLinesViolation !== null) {
+      violations.push(maxLinesViolation);
+    }
+
     violations.push(...checkSourceStandards(filePath, content));
 
     const imports = parseImportStatements(content);

@@ -1,26 +1,18 @@
-export interface AgentWitchClaimedPairing {
-  readonly userId: string;
-  readonly email: string;
-  readonly claimedAt: string;
-  readonly deviceId?: string;
-}
-
-export interface ClaimPairingResult {
-  readonly success: boolean;
-  readonly claimedPairing?: AgentWitchClaimedPairing;
-  readonly errorMessage?: string;
-}
-
-export interface AgentWitchPairingStoreOptions {
-  readonly persistToDatabase?: boolean;
-}
-
-const PAIR_ATTEMPT_WINDOW_MS = 60_000;
-const MAX_PAIR_ATTEMPTS_PER_WINDOW = 10;
+import { claimPairingInDatabase } from "@/lib/agentWitch/claimPairingInDatabase";
+import { claimPairingInMemory } from "@/lib/agentWitch/claimPairingInMemory";
+import {
+  evictDeviceFromPairingCache,
+  evictPairingTokenFromCache,
+} from "@/lib/agentWitch/evictPairingCache";
+import { createPairAttemptRateLimiter } from "@/lib/agentWitch/pairAttemptRateLimiter";
+import { resolveClaimedPairingFromDatabase } from "@/lib/agentWitch/resolveClaimedPairingFromDatabase";
+import type AgentWitchClaimedPairing from "@/lib/agentWitch/types/AgentWitchClaimedPairing.type";
+import type AgentWitchPairingStoreOptions from "@/lib/agentWitch/types/AgentWitchPairingStoreOptions.type";
+import type ClaimPairingResult from "@/lib/agentWitch/types/ClaimPairingResult.type";
 
 export class AgentWitchPairingStore {
   private readonly claimedByToken = new Map<string, AgentWitchClaimedPairing>();
-  private readonly pairAttemptsByUserId = new Map<string, number[]>();
+  private readonly pairAttemptRateLimiter = createPairAttemptRateLimiter();
   private readonly persistToDatabase: boolean;
 
   constructor(options: AgentWitchPairingStoreOptions = {}) {
@@ -41,17 +33,17 @@ export class AgentWitchPairingStore {
       };
     }
 
-    if (!this.isPairAttemptAllowed(userId)) {
+    if (!this.pairAttemptRateLimiter.isPairAttemptAllowed(userId)) {
       return {
         success: false,
         errorMessage: "Too many pairing attempts. Try again in a minute.",
       };
     }
 
-    this.recordPairAttempt(userId);
+    this.pairAttemptRateLimiter.recordPairAttempt(userId);
 
     if (this.persistToDatabase) {
-      const databaseResult = await this.claimPairingInDatabase(
+      const databaseResult = await claimPairingInDatabase(
         trimmedToken,
         userId,
         email,
@@ -61,29 +53,19 @@ export class AgentWitchPairingStore {
         return databaseResult;
       }
 
+      if (databaseResult.claimedPairing) {
+        this.claimedByToken.set(trimmedToken, databaseResult.claimedPairing);
+      }
+
       return databaseResult;
     }
 
-    const existingPairing = this.getClaimedPairing(trimmedToken);
-    if (existingPairing !== null && existingPairing.userId !== userId) {
-      return {
-        success: false,
-        errorMessage:
-          "This pairing token is already linked to another account.",
-      };
-    }
-
-    const claimedPairing: AgentWitchClaimedPairing = {
+    return claimPairingInMemory(
+      this.claimedByToken,
+      trimmedToken,
       userId,
       email,
-      claimedAt: new Date().toISOString(),
-    };
-    this.claimedByToken.set(trimmedToken, claimedPairing);
-
-    return {
-      success: true,
-      claimedPairing,
-    };
+    );
   }
 
   getClaimedPairing(pairingToken: string): AgentWitchClaimedPairing | null {
@@ -104,26 +86,14 @@ export class AgentWitchPairingStore {
       return null;
     }
 
-    const { findAgentWitchDeviceByToken } =
-      await import("./agentWitchDeviceRepository");
-    const device = await findAgentWitchDeviceByToken(trimmedToken);
-
-    if (device === null || device.revokedAt !== null) {
-      return null;
+    const claimedPairing = await resolveClaimedPairingFromDatabase(
+      trimmedToken,
+      emailByUserId,
+    );
+    if (claimedPairing !== null) {
+      this.claimedByToken.set(trimmedToken, claimedPairing);
     }
 
-    const resolvedEmail =
-      emailByUserId === undefined
-        ? device.userId
-        : ((await emailByUserId(device.userId)) ?? device.userId);
-
-    const claimedPairing: AgentWitchClaimedPairing = {
-      userId: device.userId,
-      email: resolvedEmail,
-      claimedAt: device.claimedAt,
-      deviceId: device.id,
-    };
-    this.claimedByToken.set(trimmedToken, claimedPairing);
     return claimedPairing;
   }
 
@@ -134,7 +104,7 @@ export class AgentWitchPairingStore {
     const trimmedToken = pairingToken.trim();
     if (this.persistToDatabase) {
       const { touchAgentWitchDeviceLastSeen } =
-        await import("./agentWitchDeviceRepository");
+        await import("@/lib/agentWitch/touchAgentWitchDeviceLastSeen");
       await touchAgentWitchDeviceLastSeen(trimmedToken, deviceLabel);
     }
 
@@ -145,106 +115,15 @@ export class AgentWitchPairingStore {
   }
 
   evictDeviceFromCache(deviceId: string): void {
-    [...this.claimedByToken.entries()].forEach(([token, pairing]) => {
-      if (pairing.deviceId === deviceId) {
-        this.claimedByToken.delete(token);
-      }
-    });
+    evictDeviceFromPairingCache(this.claimedByToken, deviceId);
   }
 
   evictPairingToken(pairingToken: string): void {
-    this.claimedByToken.delete(pairingToken.trim());
+    evictPairingTokenFromCache(this.claimedByToken, pairingToken);
   }
 
   isPairingOwnedByUser(pairingToken: string, userId: string): boolean {
     const claimedPairing = this.getClaimedPairing(pairingToken);
     return claimedPairing?.userId === userId;
-  }
-
-  private async claimPairingInDatabase(
-    pairingToken: string,
-    userId: string,
-    email: string,
-    deviceLabel?: string | null,
-  ): Promise<ClaimPairingResult> {
-    const { claimAgentWitchDevice, findAgentWitchDeviceByToken } =
-      await import("./agentWitchDeviceRepository");
-    const existingDevice = await findAgentWitchDeviceByToken(pairingToken);
-
-    if (
-      existingDevice !== null &&
-      existingDevice.revokedAt === null &&
-      existingDevice.userId !== userId
-    ) {
-      return {
-        success: false,
-        errorMessage:
-          "This pairing token is already linked to another account.",
-      };
-    }
-
-    if (
-      existingDevice !== null &&
-      existingDevice.revokedAt !== null &&
-      existingDevice.userId !== userId
-    ) {
-      return {
-        success: false,
-        errorMessage:
-          "This pairing token was revoked and cannot be claimed by another account.",
-      };
-    }
-
-    const device = await claimAgentWitchDevice({
-      pairingToken,
-      userId,
-      deviceLabel: deviceLabel ?? existingDevice?.deviceLabel ?? null,
-    });
-
-    if (device.revokedAt !== null) {
-      return {
-        success: false,
-        errorMessage: "This device has been revoked.",
-      };
-    }
-
-    if (device.userId !== userId) {
-      return {
-        success: false,
-        errorMessage:
-          "This pairing token is already linked to another account.",
-      };
-    }
-
-    const claimedPairing: AgentWitchClaimedPairing = {
-      userId,
-      email,
-      claimedAt: device.claimedAt,
-      deviceId: device.id,
-    };
-    this.claimedByToken.set(pairingToken, claimedPairing);
-
-    return {
-      success: true,
-      claimedPairing,
-    };
-  }
-
-  private isPairAttemptAllowed(userId: string): boolean {
-    const now = Date.now();
-    const recentAttempts = (this.pairAttemptsByUserId.get(userId) ?? []).filter(
-      (timestamp) => now - timestamp < PAIR_ATTEMPT_WINDOW_MS,
-    );
-    this.pairAttemptsByUserId.set(userId, recentAttempts);
-    return recentAttempts.length < MAX_PAIR_ATTEMPTS_PER_WINDOW;
-  }
-
-  private recordPairAttempt(userId: string): void {
-    const now = Date.now();
-    const recentAttempts = (this.pairAttemptsByUserId.get(userId) ?? []).filter(
-      (timestamp) => now - timestamp < PAIR_ATTEMPT_WINDOW_MS,
-    );
-    recentAttempts.push(now);
-    this.pairAttemptsByUserId.set(userId, recentAttempts);
   }
 }

@@ -12,7 +12,8 @@ Run from repo root. Hygiene and verification only — **no Jira/Bitbucket/Sentry
 
 ## Structure
 
-- `lib/` — shared helpers for architecture checks (`srcLayerImportRules`, barrel allowlist)
+- `lib/` — shared helpers for architecture checks (`srcLayerImportRules`, barrel allowlist, `countEffectiveSourceLines`)
+- Enforces **max 100 effective lines** per `src/` file (excluding blank lines and `import` statements); runs on staged files in pre-commit via `npm run cursor:architecture -- --staged`
 - `codemods/` — optional test generation utilities
 - `audit/` — SOLID audit Python drivers (optional)
 

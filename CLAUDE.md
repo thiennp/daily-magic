@@ -66,7 +66,7 @@ npm run cursor:architecture -- --all
 npm run build
 ```
 
-Pre-commit runs Prettier, ESLint, `structure-validation`, architecture checks, and typecheck on staged `src/` files.
+Pre-commit runs Prettier, ESLint, `structure-validation`, architecture checks (including **max 100 effective lines** per `src/` file, excluding blank lines and imports), and typecheck on staged `src/` files.
 
 ---
 

@@ -2,7 +2,7 @@ import {
   canDeleteUser,
   canManageAllUsers,
   isGlobalAdmin,
-} from "@/lib/auth/permissions";
+} from "@/lib/auth/globalRolePermissions";
 import { requireAuth } from "@/lib/auth/requireAuth";
 import {
   deleteUserById,

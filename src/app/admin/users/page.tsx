@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 
 import UserManagementPanel from "@/features/admin/UserManagementPanel";
 import { getAuthActor } from "@/lib/auth/auth";
-import { isGlobalAdmin } from "@/lib/auth/permissions";
+import { isGlobalAdmin } from "@/lib/auth/globalRolePermissions";
 import { listUsers } from "@/lib/auth/userRepository";
 
 export default async function AdminUsersPage() {

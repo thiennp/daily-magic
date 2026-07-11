@@ -1,37 +1,8 @@
-import type { GlobalRoleValue, GroupRoleValue } from "@/lib/auth/roles";
-import { GlobalRole, GroupRole } from "@/lib/auth/roles";
-import type UserRecord from "@/lib/auth/types/UserRecord.type";
-
-export interface AuthActor {
-  readonly id: string;
-  readonly email: string;
-  readonly globalRole: GlobalRoleValue;
-}
-
-export interface GroupMembershipContext {
-  readonly groupId: string;
-  readonly userId: string;
-  readonly role: GroupRoleValue;
-}
-
-export function isSuperAdmin(actor: AuthActor): boolean {
-  return actor.globalRole === GlobalRole.SUPER_ADMIN;
-}
-
-export function isGlobalAdmin(actor: AuthActor): boolean {
-  return (
-    actor.globalRole === GlobalRole.SUPER_ADMIN ||
-    actor.globalRole === GlobalRole.ADMIN
-  );
-}
-
-export function canManageAllGroups(actor: AuthActor): boolean {
-  return isGlobalAdmin(actor);
-}
-
-export function canManageAllUsers(actor: AuthActor): boolean {
-  return isGlobalAdmin(actor);
-}
+import { GroupRole } from "@/lib/auth/roles";
+import { isGlobalAdmin } from "@/lib/auth/globalRolePermissions";
+import type AuthActor from "@/lib/auth/types/AuthActor.type";
+import type GroupMembershipContext from "@/lib/auth/types/GroupMembershipContext.type";
+import type { GroupRoleValue } from "@/lib/auth/roles";
 
 export function canManageGroupMembers(
   actor: AuthActor,
@@ -133,12 +104,4 @@ export function canRemoveMember(
   }
 
   return true;
-}
-
-export function canDeleteUser(actor: AuthActor, target: UserRecord): boolean {
-  if (!isGlobalAdmin(actor)) {
-    return false;
-  }
-
-  return actor.id !== target.id;
 }

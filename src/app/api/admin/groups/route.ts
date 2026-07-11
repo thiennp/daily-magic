@@ -1,11 +1,14 @@
-import { canManageAllGroups, isGlobalAdmin } from "@/lib/auth/permissions";
+import {
+  canManageAllGroups,
+  isGlobalAdmin,
+} from "@/lib/auth/globalRolePermissions";
 import { requireAuth } from "@/lib/auth/requireAuth";
 import {
   createGroup,
   deleteGroupById,
   listGroups,
   listManageableGroupsForUser,
-} from "@/lib/auth/groupRepository";
+} from "@/lib/auth/groupQueries";
 
 export async function GET() {
   const { actor, error } = await requireAuth();

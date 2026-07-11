@@ -5,8 +5,8 @@ import { getAuthActor } from "@/lib/auth/auth";
 import {
   listGroups,
   listManageableGroupsForUser,
-} from "@/lib/auth/groupRepository";
-import { isGlobalAdmin } from "@/lib/auth/permissions";
+} from "@/lib/auth/groupQueries";
+import { isGlobalAdmin } from "@/lib/auth/globalRolePermissions";
 
 export default async function AdminGroupsPage() {
   const actor = await getAuthActor();

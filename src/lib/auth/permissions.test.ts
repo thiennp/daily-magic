@@ -3,9 +3,9 @@ import { describe, expect, it } from "vitest";
 import {
   canChangeMemberRole,
   canRemoveMember,
-  type AuthActor,
-  type GroupMembershipContext,
-} from "@/lib/auth/permissions";
+} from "@/lib/auth/groupMemberPermissions";
+import type AuthActor from "@/lib/auth/types/AuthActor.type";
+import type GroupMembershipContext from "@/lib/auth/types/GroupMembershipContext.type";
 import { GlobalRole, GroupRole } from "@/lib/auth/roles";
 
 const globalSuperAdmin: AuthActor = {

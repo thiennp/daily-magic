@@ -2,36 +2,10 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 
-interface ConnectedClient {
-  readonly id: string;
-  readonly role: string;
-  readonly connectedAt: string;
-}
-
-interface AgentWitchStatusResponse {
-  readonly clients?: readonly ConnectedClient[];
-  readonly agentCount?: number;
-  readonly dashboardCount?: number;
-  readonly error?: string;
-}
-
-function formatClientId(clientId: string): string {
-  if (clientId.length <= 12) {
-    return clientId;
-  }
-
-  return `${clientId.slice(0, 8)}…${clientId.slice(-4)}`;
-}
-
-function formatConnectedAt(connectedAt: string): string {
-  const date = new Date(connectedAt);
-
-  if (Number.isNaN(date.getTime())) {
-    return connectedAt;
-  }
-
-  return date.toLocaleString();
-}
+import { formatClientId } from "@/features/home/formatClientId";
+import { formatConnectedAt } from "@/features/home/formatConnectedAt";
+import type AgentWitchStatusResponse from "@/features/home/types/AgentWitchStatusResponse.type";
+import type ConnectedClient from "@/features/home/types/ConnectedClient.type";
 
 export default function ConnectedClientsList() {
   const [clients, setClients] = useState<readonly ConnectedClient[]>([]);

@@ -1,4 +1,4 @@
-import { listAgentWitchDevicesForUser } from "@/lib/agentWitch/agentWitchDeviceRepository";
+import { listAgentWitchDevicesForUser } from "@/lib/agentWitch/listAgentWitchDevicesForUser";
 import { requireAuth } from "@/lib/auth/requireAuth";
 
 export const dynamic = "force-dynamic";

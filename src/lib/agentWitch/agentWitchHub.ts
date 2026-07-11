@@ -1,58 +1,41 @@
 import type { AgentWitchPairingStore } from "./agentWitchPairingStore";
-import isAgentPairPayload from "./isAgentPairPayload";
-import isHarnessRequestPayload from "./harness/isHarnessRequestPayload";
-import isNonEmptyString from "./isNonEmptyString";
-import isAgentWitchRole from "./isAgentWitchRole";
-import type { AgentWitchRole } from "./types/AgentWitchRole.type";
+import {
+  bindAgentClientsToPairing,
+  broadcastToDashboardUser,
+  findAgentClientForUser,
+} from "./agentWitchHubClientOperations";
+import {
+  buildAgentWitchHubStatus,
+  listConnectedAgentWitchClients,
+  listSortedHarnessManifestReports,
+} from "./agentWitchHubQueries";
+import { handleAgentPairMessageAsync } from "./handleAgentPairMessageAsync";
+import { handleAgentWitchSyncMessage } from "./handleAgentWitchSyncMessage";
+import {
+  resolvePairingTokenFromRegisterPayload,
+  resolveRoleFromRegisterPayload,
+} from "./resolveAgentWitchRegisterPayload";
+import type AgentWitchHubClient from "./types/AgentWitchHubClient.type";
+import type AgentWitchHubRuntime from "./types/AgentWitchHubRuntime.type";
+import type { AgentWitchHarnessManifestReport } from "./types/AgentWitchHubStatus.type";
 import type AgentWitchMessage from "./types/AgentWitchMessage.type";
 import { AGENT_WITCH_MESSAGE_TYPES } from "./types/AgentWitchMessageType.constant";
 
-const isClaudeRunPayload = (
-  payload: Readonly<Record<string, unknown>> | undefined,
-): payload is { readonly prompt: string } =>
-  payload !== undefined && isNonEmptyString(payload.prompt);
+export type {
+  AgentWitchConnectedClient,
+  AgentWitchHarnessManifestReport,
+} from "./types/AgentWitchHubStatus.type";
+export type { default as AgentWitchHubStatus } from "./types/AgentWitchHubStatus.type";
 
-const isRecord = (value: unknown): value is Record<string, unknown> =>
-  typeof value === "object" && value !== null && !Array.isArray(value);
-
-export interface AgentWitchHubStatus {
-  readonly agentCount: number;
-  readonly dashboardCount: number;
-}
-
-export interface AgentWitchConnectedClient {
-  readonly id: string;
-  readonly role: AgentWitchRole;
-  readonly connectedAt: string;
-  readonly userId?: string;
-}
-
-export interface AgentWitchHarnessManifestReport {
-  readonly agentClientId: string;
-  readonly hostname: string;
-  readonly manifest: Readonly<Record<string, unknown>>;
-  readonly reportedAt: string;
-  readonly userId?: string;
-}
-
-interface AgentWitchHubClient {
-  readonly id: string;
-  readonly role: AgentWitchRole;
-  readonly userId?: string;
-  readonly email?: string;
-  readonly pairingToken?: string;
-  readonly send: (message: AgentWitchMessage) => void;
-}
-
-export class AgentWitchHub {
+export class AgentWitchHub implements AgentWitchHubRuntime {
   private readonly clients = new Map<string, AgentWitchHubClient>();
   private readonly connectedAtByClientId = new Map<string, number>();
-  private readonly manifestByAgentClientId = new Map<
+  readonly manifestByAgentClientId = new Map<
     string,
     AgentWitchHarnessManifestReport
   >();
 
-  constructor(private readonly pairingStore: AgentWitchPairingStore) {}
+  constructor(readonly pairingStore: AgentWitchPairingStore) {}
 
   registerClient(client: AgentWitchHubClient): void {
     if (!this.connectedAtByClientId.has(client.id)) {
@@ -68,45 +51,35 @@ export class AgentWitchHub {
     this.manifestByAgentClientId.delete(clientId);
   }
 
-  getStatus(): AgentWitchHubStatus {
-    const clients = [...this.clients.values()];
-    return {
-      agentCount: clients.filter((client) => client.role === "agent").length,
-      dashboardCount: clients.filter((client) => client.role === "dashboard")
-        .length,
-    };
+  getStatus() {
+    return buildAgentWitchHubStatus([...this.clients.values()]);
   }
 
-  listConnectedClients(): readonly AgentWitchConnectedClient[] {
-    return [...this.clients.values()]
-      .map((client) => ({
-        id: client.id,
-        role: client.role,
-        connectedAt: new Date(
-          this.connectedAtByClientId.get(client.id) ?? Date.now(),
-        ).toISOString(),
-        userId: client.userId,
-      }))
-      .sort((left, right) => left.connectedAt.localeCompare(right.connectedAt));
-  }
-
-  listHarnessManifestReports(): readonly AgentWitchHarnessManifestReport[] {
-    return [...this.manifestByAgentClientId.values()].sort((left, right) =>
-      right.reportedAt.localeCompare(left.reportedAt),
+  listConnectedClients() {
+    return listConnectedAgentWitchClients(
+      this.clients,
+      this.connectedAtByClientId,
     );
+  }
+
+  listHarnessManifestReports() {
+    return listSortedHarnessManifestReports(this.manifestByAgentClientId);
   }
 
   handleMessage(
     senderId: string,
     message: AgentWitchMessage,
   ): AgentWitchMessage | null {
-    const sender = this.clients.get(senderId);
-
-    if (message.type !== AGENT_WITCH_MESSAGE_TYPES.AGENT_PAIR) {
-      return this.handleSyncMessage(senderId, message, sender);
+    if (message.type === AGENT_WITCH_MESSAGE_TYPES.AGENT_PAIR) {
+      return null;
     }
 
-    return null;
+    return handleAgentWitchSyncMessage(
+      this,
+      senderId,
+      message,
+      this.clients.get(senderId),
+    );
   }
 
   async handleMessageAsync(
@@ -116,322 +89,22 @@ export class AgentWitchHub {
     const sender = this.clients.get(senderId);
 
     if (message.type === AGENT_WITCH_MESSAGE_TYPES.AGENT_PAIR) {
-      if (sender?.role !== "dashboard" || !isNonEmptyString(sender.userId)) {
-        return {
-          type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR,
-          payload: {
-            errorMessage:
-              "Only authenticated dashboard clients can pair local agents.",
-          },
-          requestId: message.requestId,
-        };
-      }
-
-      if (!isAgentPairPayload(message.payload)) {
-        return {
-          type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR,
-          payload: {
-            errorMessage: "agent.pair requires payload.pairingToken.",
-          },
-          requestId: message.requestId,
-        };
-      }
-
-      const pairingToken = message.payload.pairingToken.trim();
-      const claimResult = await this.pairingStore.claimPairing(
-        pairingToken,
-        sender.userId,
-        sender.email ?? sender.userId,
-      );
-
-      if (!claimResult.success) {
-        return {
-          type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR,
-          payload: {
-            errorMessage:
-              claimResult.errorMessage ??
-              "Could not pair this local agent token.",
-          },
-          requestId: message.requestId,
-        };
-      }
-
-      this.bindAgentClientsToPairing(pairingToken);
-
-      return {
-        type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ACK,
-        payload: {
-          paired: true,
-          pairingToken,
-          deviceId: claimResult.claimedPairing?.deviceId,
-        },
-        requestId: message.requestId,
-      };
+      return handleAgentPairMessageAsync(this, senderId, message, sender);
     }
 
-    return this.handleSyncMessage(senderId, message, sender);
-  }
-
-  private handleSyncMessage(
-    senderId: string,
-    message: AgentWitchMessage,
-    sender: AgentWitchHubClient | undefined,
-  ): AgentWitchMessage | null {
-    if (message.type === AGENT_WITCH_MESSAGE_TYPES.AGENT_REGISTER) {
-      return {
-        type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ACK,
-        payload: {
-          clientId: senderId,
-          role: sender?.role ?? "dashboard",
-          userId: sender?.userId,
-        },
-        requestId: message.requestId,
-      };
-    }
-
-    if (message.type === AGENT_WITCH_MESSAGE_TYPES.AGENT_HEARTBEAT) {
-      return {
-        type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ACK,
-        requestId: message.requestId,
-      };
-    }
-
-    if (message.type === AGENT_WITCH_MESSAGE_TYPES.AGENT_PAIR) {
-      return {
-        type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR,
-        payload: {
-          errorMessage: "agent.pair must be handled asynchronously.",
-        },
-        requestId: message.requestId,
-      };
-    }
-
-    if (message.type === AGENT_WITCH_MESSAGE_TYPES.HARNESS_REQUEST) {
-      if (sender?.role !== "dashboard" || !isNonEmptyString(sender.userId)) {
-        return {
-          type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR,
-          payload: {
-            errorMessage:
-              "Only authenticated dashboard clients can dispatch harness requests.",
-          },
-          requestId: message.requestId,
-        };
-      }
-
-      if (!isHarnessRequestPayload(message.payload)) {
-        return {
-          type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR,
-          payload: {
-            errorMessage:
-              "harness.request requires writerAgent, spec, and instruction.",
-          },
-          requestId: message.requestId,
-        };
-      }
-
-      const agentClient = this.findAgentClientForUser(sender.userId);
-
-      if (agentClient === undefined) {
-        return {
-          type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR,
-          payload: {
-            errorMessage:
-              "No paired local agent is connected for your account.",
-          },
-          requestId: message.requestId,
-        };
-      }
-
-      agentClient.send({
-        type: AGENT_WITCH_MESSAGE_TYPES.HARNESS_REQUEST,
-        payload: {
-          writerAgent: message.payload.writerAgent,
-          spec: message.payload.spec,
-          instruction: message.payload.instruction,
-        },
-        requestId: message.requestId,
-      });
-
-      return {
-        type: AGENT_WITCH_MESSAGE_TYPES.HARNESS_REQUEST_ACK,
-        payload: {
-          dispatched: true,
-          agentClientId: agentClient.id,
-          writerAgent: message.payload.writerAgent,
-        },
-        requestId: message.requestId,
-      };
-    }
-
-    if (message.type === AGENT_WITCH_MESSAGE_TYPES.HARNESS_REQUEST_ACK) {
-      if (sender?.role !== "agent") {
-        return this.unauthorizedAgentOnlyError(message.requestId);
-      }
-
-      this.broadcastToDashboardUser(sender.userId, message);
-      return {
-        type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ACK,
-        requestId: message.requestId,
-      };
-    }
-
-    if (message.type === AGENT_WITCH_MESSAGE_TYPES.HARNESS_REQUEST_RESULT) {
-      if (sender?.role !== "agent") {
-        return this.unauthorizedAgentOnlyError(message.requestId);
-      }
-
-      this.broadcastToDashboardUser(sender.userId, message);
-      return {
-        type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ACK,
-        requestId: message.requestId,
-      };
-    }
-
-    if (message.type === AGENT_WITCH_MESSAGE_TYPES.HARNESS_MANIFEST_REPORT) {
-      if (sender?.role !== "agent") {
-        return this.unauthorizedAgentOnlyError(message.requestId);
-      }
-
-      const payload = message.payload;
-      if (
-        payload === undefined ||
-        !isRecord(payload.manifest) ||
-        typeof payload.hostname !== "string"
-      ) {
-        return {
-          type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR,
-          payload: {
-            errorMessage:
-              "harness.manifest.report requires payload.hostname and payload.manifest.",
-          },
-          requestId: message.requestId,
-        };
-      }
-
-      const report: AgentWitchHarnessManifestReport = {
-        agentClientId: senderId,
-        hostname: payload.hostname,
-        manifest: payload.manifest,
-        reportedAt: new Date().toISOString(),
-        userId: sender.userId,
-      };
-      this.manifestByAgentClientId.set(senderId, report);
-      if (sender.pairingToken !== undefined) {
-        void this.pairingStore.touchLastSeen(
-          sender.pairingToken,
-          payload.hostname,
-        );
-      }
-      this.broadcastToDashboardUser(sender.userId, message);
-
-      return {
-        type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ACK,
-        requestId: message.requestId,
-      };
-    }
-
-    if (message.type === AGENT_WITCH_MESSAGE_TYPES.COMMAND_CLAUDE_RUN) {
-      if (sender?.role !== "dashboard" || !isNonEmptyString(sender.userId)) {
-        return {
-          type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR,
-          payload: {
-            errorMessage:
-              "Only authenticated dashboard clients can dispatch Claude commands.",
-          },
-          requestId: message.requestId,
-        };
-      }
-
-      if (!isClaudeRunPayload(message.payload)) {
-        return {
-          type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR,
-          payload: {
-            errorMessage: "command.claude.run requires payload.prompt.",
-          },
-          requestId: message.requestId,
-        };
-      }
-
-      const agentClient = this.findAgentClientForUser(sender.userId);
-
-      if (agentClient === undefined) {
-        return {
-          type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR,
-          payload: {
-            errorMessage:
-              "No paired local agent is connected for your account.",
-          },
-          requestId: message.requestId,
-        };
-      }
-
-      agentClient.send({
-        type: AGENT_WITCH_MESSAGE_TYPES.COMMAND_CLAUDE_RUN,
-        payload: {
-          prompt: message.payload.prompt,
-        },
-        requestId: message.requestId,
-      });
-
-      return {
-        type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ACK,
-        payload: {
-          dispatched: true,
-          agentClientId: agentClient.id,
-        },
-        requestId: message.requestId,
-      };
-    }
-
-    if (message.type === AGENT_WITCH_MESSAGE_TYPES.COMMAND_CLAUDE_RESULT) {
-      if (sender?.role !== "agent") {
-        return this.unauthorizedAgentOnlyError(message.requestId);
-      }
-
-      this.broadcastToDashboardUser(sender.userId, message);
-      return {
-        type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ACK,
-        requestId: message.requestId,
-      };
-    }
-
-    return {
-      type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR,
-      payload: {
-        errorMessage: `Unsupported message type: ${message.type}`,
-      },
-      requestId: message.requestId,
-    };
+    return handleAgentWitchSyncMessage(this, senderId, message, sender);
   }
 
   resolveRoleFromRegisterPayload(
     payload: Readonly<Record<string, unknown>> | undefined,
-  ): AgentWitchRole | null {
-    if (payload === undefined) {
-      return null;
-    }
-
-    const role = payload.role;
-    if (isAgentWitchRole(role)) {
-      return role;
-    }
-
-    return null;
+  ) {
+    return resolveRoleFromRegisterPayload(payload);
   }
 
   resolvePairingTokenFromRegisterPayload(
     payload: Readonly<Record<string, unknown>> | undefined,
-  ): string | null {
-    if (payload === undefined) {
-      return null;
-    }
-
-    const pairingToken = payload.pairingToken;
-    if (isNonEmptyString(pairingToken)) {
-      return pairingToken.trim();
-    }
-
-    return null;
+  ) {
+    return resolvePairingTokenFromRegisterPayload(payload);
   }
 
   async resolveUserIdForAgentRegister(
@@ -445,54 +118,18 @@ export class AgentWitchHub {
     return claimedPairing?.userId;
   }
 
-  private bindAgentClientsToPairing(pairingToken: string): void {
-    const claimedPairing = this.pairingStore.getClaimedPairing(pairingToken);
-    if (claimedPairing === null) {
-      return;
-    }
-
-    [...this.clients.entries()].forEach(([clientId, client]) => {
-      if (client.role === "agent" && client.pairingToken === pairingToken) {
-        this.clients.set(clientId, {
-          ...client,
-          userId: claimedPairing.userId,
-        });
-      }
-    });
+  findAgentClientForUser(userId: string): AgentWitchHubClient | undefined {
+    return findAgentClientForUser(this.clients, userId);
   }
 
-  private findAgentClientForUser(
-    userId: string,
-  ): AgentWitchHubClient | undefined {
-    return [...this.clients.values()].find(
-      (client) => client.role === "agent" && client.userId === userId,
-    );
-  }
-
-  private broadcastToDashboardUser(
+  broadcastToDashboardUser(
     userId: string | undefined,
     message: AgentWitchMessage,
   ): void {
-    [...this.clients.values()]
-      .filter(
-        (client) =>
-          client.role === "dashboard" &&
-          (userId === undefined || client.userId === userId),
-      )
-      .forEach((client) => {
-        client.send(message);
-      });
+    broadcastToDashboardUser(this.clients, userId, message);
   }
 
-  private unauthorizedAgentOnlyError(
-    requestId: string | undefined,
-  ): AgentWitchMessage {
-    return {
-      type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR,
-      payload: {
-        errorMessage: "Only paired agent clients can publish this message.",
-      },
-      requestId,
-    };
+  bindAgentClientsToPairing(pairingToken: string): void {
+    bindAgentClientsToPairing(this.clients, this.pairingStore, pairingToken);
   }
 }

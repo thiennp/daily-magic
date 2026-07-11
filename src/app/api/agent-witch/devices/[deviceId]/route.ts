@@ -1,5 +1,5 @@
 import { getAgentWitchPairingStore } from "@/lib/agentWitch/getAgentWitchHub";
-import { revokeAgentWitchDevice } from "@/lib/agentWitch/agentWitchDeviceRepository";
+import { revokeAgentWitchDevice } from "@/lib/agentWitch/revokeAgentWitchDevice";
 import { requireAuth } from "@/lib/auth/requireAuth";
 
 export const dynamic = "force-dynamic";
