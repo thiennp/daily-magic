@@ -18,6 +18,11 @@ export const PRIMARY_NAV: readonly AppNavItem[] = [
     isActive: (pathname) => pathname.startsWith("/marketplace"),
   },
   {
+    href: "/library",
+    label: "Library",
+    isActive: (pathname) => pathname.startsWith("/library"),
+  },
+  {
     href: "/agent",
     label: "Send a task",
     isActive: (pathname) =>

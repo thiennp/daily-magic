@@ -30,9 +30,11 @@ export default function AppShellHeader({ sectionTitle }: AppShellHeaderProps) {
         ? "Send a task"
         : normalizedPath.startsWith("/reports")
           ? "Job history"
-          : normalizedPath.startsWith("/marketplace")
-            ? "Marketplace"
-            : "Home");
+          : normalizedPath.startsWith("/library")
+            ? "My library"
+            : normalizedPath.startsWith("/marketplace")
+              ? "Marketplace"
+              : "Home");
 
   return (
     <header className="sticky top-0 z-50 border-b border-gray-200 bg-white/95 backdrop-blur dark:border-gray-800 dark:bg-gray-900/95">

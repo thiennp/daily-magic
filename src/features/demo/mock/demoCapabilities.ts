@@ -49,4 +49,23 @@ export const demoCapabilities: readonly PublishedCapabilityRecord[] = [
     createdAt: demoTimestamp,
     updatedAt: demoTimestamp,
   },
+  {
+    id: "cap-demo-forked-research",
+    ownerUserId: "user-demo-alex",
+    groupId: "group-demo-product",
+    type: CapabilityType.AGENT,
+    name: "Competitor scan (copy)",
+    description:
+      "Saved from Jordan's research assistant. Summarize competitors and list differentiators.",
+    exampleRequest: "Research competitors for our onboarding flow.",
+    visibility: "private",
+    status: CapabilityStatus.DRAFT,
+    dispatchPolicyOverride: null,
+    harnessSetSlug: null,
+    currentVersionId: null,
+    workflowFields: [],
+    forkedFromCapabilityId: "cap-demo-jordan-research",
+    createdAt: demoTimestamp,
+    updatedAt: demoTimestamp,
+  },
 ];

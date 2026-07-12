@@ -1,4 +1,6 @@
+import AgentRunAgainButton from "@/features/reports/AgentRunAgainButton";
 import AgentRunStatusBadge from "@/features/reports/AgentRunStatusBadge";
+import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
 import type EnrichedAgentRunRecord from "@/lib/dispatch/types/EnrichedAgentRunRecord.type";
 
 interface AgentRunDetailContentProps {
@@ -66,6 +68,11 @@ export default function AgentRunDetailContent({
         <p className="mt-4 text-sm text-rose-600 dark:text-rose-400">
           {run.denialReason}
         </p>
+      ) : null}
+      {run.status === AgentRunStatus.COMPLETED ? (
+        <div className="mt-6">
+          <AgentRunAgainButton prompt={run.prompt} />
+        </div>
       ) : null}
     </div>
   );

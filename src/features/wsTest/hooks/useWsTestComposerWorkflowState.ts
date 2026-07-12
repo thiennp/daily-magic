@@ -8,10 +8,14 @@ import {
   buildWorkflowPrompt,
   validateWorkflowFieldValues,
 } from "@/lib/workflows/buildWorkflowPrompt";
+import type LibraryPlaybookTemplate from "@/lib/library/types/LibraryPlaybookTemplate.type";
+import { CapabilityType } from "@/lib/capabilities/CapabilityType.constant";
 import type WorkflowFieldDefinition from "@/lib/workflows/types/WorkflowFieldDefinition.type";
 
 export function useWsTestComposerWorkflowState(
   selectedCapability: DispatchTargetCapability | null,
+  libraryPlaybook: LibraryPlaybookTemplate | null,
+  rerunPrompt: string,
 ): {
   readonly prompt: string;
   readonly setPrompt: (value: string) => void;
@@ -23,34 +27,40 @@ export function useWsTestComposerWorkflowState(
   readonly workflowFields: readonly WorkflowFieldDefinition[];
   readonly workflowValidationErrors: readonly string[];
   readonly resolvedPrompt: string;
+  readonly isLibraryPlaybook: boolean;
 } {
   const demoPreview = useDemoPreview();
-  const [prompt, setPrompt] = useState(demoPreview?.agentComposer.prompt ?? "");
+  const initialPrompt =
+    rerunPrompt.length > 0
+      ? rerunPrompt
+      : libraryPlaybook?.type === CapabilityType.AGENT
+        ? libraryPlaybook.exampleRequest
+        : (demoPreview?.agentComposer.prompt ?? "");
+  const [prompt, setPrompt] = useState(initialPrompt);
   const [workflowFieldValues, setWorkflowFieldValues] = useState<
     Record<string, string>
   >({});
-  const isWorkflowTask = selectedCapability?.type === "workflow";
-  const workflowFields = selectedCapability?.workflowFields ?? [];
+  const isLibraryPlaybook = libraryPlaybook !== null;
+  const playbookName = libraryPlaybook?.name ?? selectedCapability?.name ?? "";
+  const playbookType =
+    libraryPlaybook?.type ?? selectedCapability?.type ?? CapabilityType.AGENT;
+  const isWorkflowTask = playbookType === CapabilityType.WORKFLOW;
+  const workflowFields =
+    libraryPlaybook?.workflowFields ?? selectedCapability?.workflowFields ?? [];
   const workflowValidationErrors = isWorkflowTask
     ? validateWorkflowFieldValues(workflowFields, workflowFieldValues)
     : [];
   const resolvedPrompt = useMemo(
     () =>
-      isWorkflowTask && selectedCapability
+      isWorkflowTask && playbookName.length > 0
         ? buildWorkflowPrompt(
-            selectedCapability.name,
+            playbookName,
             workflowFields,
             workflowFieldValues,
             prompt,
           )
         : prompt,
-    [
-      isWorkflowTask,
-      selectedCapability,
-      workflowFields,
-      workflowFieldValues,
-      prompt,
-    ],
+    [isWorkflowTask, playbookName, workflowFields, workflowFieldValues, prompt],
   );
 
   return {
@@ -62,5 +72,6 @@ export function useWsTestComposerWorkflowState(
     workflowFields,
     workflowValidationErrors,
     resolvedPrompt,
+    isLibraryPlaybook,
   };
 }

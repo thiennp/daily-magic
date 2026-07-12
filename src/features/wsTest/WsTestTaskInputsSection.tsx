@@ -1,10 +1,12 @@
 "use client";
 
 import WorkflowTaskFields from "@/features/workflows/WorkflowTaskFields";
+import MobileWorkflowStepper from "@/features/workflows/MobileWorkflowStepper";
 import type WorkflowFieldDefinition from "@/lib/workflows/types/WorkflowFieldDefinition.type";
 
 interface WsTestTaskInputsSectionProps {
   readonly isWorkflowTask: boolean;
+  readonly useMobileStepper: boolean;
   readonly prompt: string;
   readonly workflowFields: readonly WorkflowFieldDefinition[];
   readonly workflowFieldValues: Readonly<Record<string, string>>;
@@ -15,6 +17,7 @@ interface WsTestTaskInputsSectionProps {
 
 export default function WsTestTaskInputsSection({
   isWorkflowTask,
+  useMobileStepper,
   prompt,
   workflowFields,
   workflowFieldValues,
@@ -28,11 +31,20 @@ export default function WsTestTaskInputsSection({
         <h2 className="text-sm font-medium text-gray-800 dark:text-white/90">
           Workflow inputs
         </h2>
-        <WorkflowTaskFields
-          fields={workflowFields}
-          values={workflowFieldValues}
-          onChange={onWorkflowFieldChange}
-        />
+        {useMobileStepper ? (
+          <MobileWorkflowStepper
+            fields={workflowFields}
+            values={workflowFieldValues}
+            onChange={onWorkflowFieldChange}
+          />
+        ) : null}
+        <div className={useMobileStepper ? "hidden md:block" : undefined}>
+          <WorkflowTaskFields
+            fields={workflowFields}
+            values={workflowFieldValues}
+            onChange={onWorkflowFieldChange}
+          />
+        </div>
         <label
           htmlFor="agent-witch-workflow-notes"
           className="mt-4 block text-sm font-medium text-gray-800 dark:text-white/90"
