@@ -56,7 +56,7 @@ export const demoAgentRuns: readonly EnrichedAgentRunRecord[] = [
     requesterUserId: "user-demo-sam",
     executorUserId: "user-demo-alex",
     prompt:
-      "Run workflow: Weekly report workflow\n\nInputs:\n- Week of: Jul 7\n- Highlights: Shipped team directory",
+      "Run workflow: Weekly report workflow\n\nInputs:\n- Week of: Jul 7\n- Highlights: Shipped company directory",
     status: "pending_approval",
     dispatchPolicy: "approval",
     resultOutput: null,

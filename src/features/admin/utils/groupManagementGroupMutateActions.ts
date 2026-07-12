@@ -1,4 +1,5 @@
 import type { GroupManagementMutationDeps } from "@/features/admin/utils/groupManagementMutateActions.types";
+import { COMPANY_ENTITY_LABEL } from "@/lib/admin/companyGroupCopy.constant";
 import { loadAdminGroups } from "@/features/admin/utils/groupManagementLoadActions";
 import {
   createAdminGroup,
@@ -16,7 +17,7 @@ export const createAdminGroupAction = async (
   }
 
   deps.setNewGroupName("");
-  deps.setMessage("Group created.");
+  deps.setMessage(`${COMPANY_ENTITY_LABEL} created.`);
   await loadAdminGroups(deps);
 };
 
@@ -39,6 +40,6 @@ export const deleteAdminGroupAction = async (
 
   deps.setSelectedGroupId("");
   deps.setMembers([]);
-  deps.setMessage("Group deleted.");
+  deps.setMessage(`${COMPANY_ENTITY_LABEL} deleted.`);
   await loadAdminGroups(deps);
 };

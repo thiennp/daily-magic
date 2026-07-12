@@ -7,7 +7,12 @@ export const demoOnboardingSteps = [
     done: true,
     href: "/#your-setup",
   },
-  { id: "join-team", label: "Join a team", done: true, href: "/admin/groups" },
+  {
+    id: "join-team",
+    label: "Join a company",
+    done: true,
+    href: "/admin/groups",
+  },
   {
     id: "publish-assistant",
     label: "Publish an assistant",

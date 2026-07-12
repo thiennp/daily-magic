@@ -20,7 +20,7 @@ const DISPATCH_PREVIEW = (): ReactElement => (
 const APPROVE_PREVIEW = (): ReactElement => (
   <div className="space-y-2 rounded-xl border border-gray-200 bg-gray-50 p-3 text-xs">
     <div className="flex items-center justify-between">
-      <span className="font-medium text-gray-700">Team rule</span>
+      <span className="font-medium text-gray-700">Company rule</span>
       <Badge color="warning" size="sm">
         Ask first
       </Badge>

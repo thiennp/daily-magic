@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { COMPANIES_ENTITY_LABEL } from "@/lib/admin/companyGroupCopy.constant";
 import { AGENT_WITCH_PRODUCT_NAME } from "@/lib/agentWitch/agentWitchProductName.constant";
 
 const FOOTER_PRODUCT_LINKS = [
@@ -9,7 +10,7 @@ const FOOTER_PRODUCT_LINKS = [
 ] as const;
 
 const FOOTER_ADMIN_LINKS = [
-  { label: "Groups", href: "/admin/groups" },
+  { label: COMPANIES_ENTITY_LABEL, href: "/admin/groups" },
   { label: "Users", href: "/admin/users" },
 ] as const;
 

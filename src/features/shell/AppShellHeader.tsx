@@ -9,6 +9,7 @@ import {
   normalizeAppPathname,
   useAppPath,
 } from "@/features/demo/DemoPreviewContext";
+import { COMPANY_RULES_NAV_LABEL } from "@/lib/admin/companyGroupCopy.constant";
 import AppShellNav from "@/features/shell/AppShellNav";
 import { AGENT_WITCH_PRODUCT_NAME } from "@/lib/agentWitch/agentWitchProductName.constant";
 
@@ -23,7 +24,7 @@ export default function AppShellHeader({ sectionTitle }: AppShellHeaderProps) {
   const resolvedTitle =
     sectionTitle ??
     (normalizedPath.startsWith("/admin")
-      ? "Teams & rules"
+      ? COMPANY_RULES_NAV_LABEL
       : normalizedPath.startsWith("/agent") ||
           normalizedPath.startsWith("/ws-test")
         ? "Send a task"

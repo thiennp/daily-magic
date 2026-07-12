@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 
 import AgentRunStatusBadge from "@/features/reports/AgentRunStatusBadge";
+import { COMPANY_ENTITY_LABEL } from "@/lib/admin/companyGroupCopy.constant";
 import type EnrichedAgentRunRecord from "@/lib/dispatch/types/EnrichedAgentRunRecord.type";
 
 interface GroupTeamActivityPanelProps {
@@ -41,19 +42,20 @@ export default function GroupTeamActivityPanel({
   return (
     <section className="rounded-2xl border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-white/[0.03]">
       <h3 className="text-base font-semibold text-gray-800 dark:text-white/90">
-        Recent team agent runs
+        Recent company agent runs
       </h3>
       <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-        Latest dispatches for members of this group.
+        Latest dispatches for members of this{" "}
+        {COMPANY_ENTITY_LABEL.toLowerCase()}.
       </p>
 
       {isLoading ? (
         <p className="mt-4 text-sm text-gray-500 dark:text-gray-400">
-          Loading team activity…
+          Loading company activity…
         </p>
       ) : runs.length === 0 ? (
         <p className="mt-4 text-sm text-gray-500 dark:text-gray-400">
-          No group agent runs yet.
+          No company agent runs yet.
         </p>
       ) : (
         <ul className="mt-4 space-y-3">

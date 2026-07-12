@@ -16,7 +16,7 @@ const MARKETING_STEPS = [
   },
   {
     title: "Connect & invite",
-    body: "Link your Mac and invite teammates from Groups.",
+    body: "Link your Mac and invite colleagues from Companies.",
     href: "/admin/groups",
   },
   {

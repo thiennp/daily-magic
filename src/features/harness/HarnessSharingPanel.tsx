@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 
 import Button from "@/components/ui/button/Button";
+import { COMPANY_MEMBERS_LABEL } from "@/lib/admin/companyGroupCopy.constant";
 import HarnessCatalogPublishPanel from "@/features/harness/HarnessCatalogPublishPanel";
 import HarnessSetSharingPanel from "@/features/harness/HarnessSetSharingPanel";
 import {
@@ -74,7 +75,7 @@ export default function HarnessSharingPanel() {
       >
         <option value={HarnessSharingVisibility.PRIVATE}>Private</option>
         <option value={HarnessSharingVisibility.GROUP}>
-          Group members only
+          {COMPANY_MEMBERS_LABEL} only
         </option>
         <option value={HarnessSharingVisibility.PUBLIC}>
           Public (signed-in users)

@@ -3,7 +3,7 @@ import type { DispatchTargetGroup } from "@/features/dispatch/hooks/useDispatchT
 export const demoDispatchGroups: readonly DispatchTargetGroup[] = [
   {
     groupId: "group-demo-product",
-    groupName: "Product team",
+    groupName: "Daily Magic GmbH",
     dispatchPolicy: "approval",
     members: [
       {

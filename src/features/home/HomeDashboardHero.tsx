@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 
+import { COMPANY_RULES_NAV_LABEL } from "@/lib/admin/companyGroupCopy.constant";
 import { useAppPath } from "@/features/demo/DemoPreviewContext";
 import formatGlobalRole from "@/lib/auth/formatGlobalRole";
 import type { GlobalRoleValue } from "@/lib/auth/roles";
@@ -49,7 +50,7 @@ export default function HomeDashboardHero({ user }: HomeDashboardHeroProps) {
             href={appPath("/admin/groups")}
             className="font-medium text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200"
           >
-            Teams & rules
+            {COMPANY_RULES_NAV_LABEL}
           </Link>
         </div>
       </div>

@@ -1,3 +1,5 @@
+import { COMPANY_RULES_NAV_LABEL } from "@/lib/admin/companyGroupCopy.constant";
+
 export interface AppNavItem {
   readonly href: string;
   readonly label: string;
@@ -23,7 +25,7 @@ export const PRIMARY_NAV: readonly AppNavItem[] = [
   },
   {
     href: "/admin/groups",
-    label: "Teams & rules",
+    label: COMPANY_RULES_NAV_LABEL,
     isActive: (pathname) => pathname.startsWith("/admin"),
   },
 ];

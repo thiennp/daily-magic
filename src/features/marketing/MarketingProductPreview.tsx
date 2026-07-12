@@ -2,7 +2,7 @@ import Badge from "@/components/ui/badge/Badge";
 
 const PREVIEW_FLOW_STEPS = [
   { label: "Browser", detail: "You send a task" },
-  { label: "Approval", detail: "If your team requires it" },
+  { label: "Approval", detail: "If your company requires it" },
   { label: "Your Mac", detail: "The assistant runs" },
   { label: "Report", detail: "Results are saved" },
 ] as const;

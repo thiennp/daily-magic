@@ -9,6 +9,6 @@ export const SCOPE_FILTER_OPTIONS: readonly {
 }[] = [
   { value: AgentRunScope.ALL, label: "All my runs" },
   { value: AgentRunScope.MINE, label: "Self only" },
-  { value: AgentRunScope.TEAM, label: "Team dispatches" },
+  { value: AgentRunScope.TEAM, label: "Company dispatches" },
   { value: AgentRunScope.GROUP, label: "By group" },
 ];

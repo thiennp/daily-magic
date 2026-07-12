@@ -2,8 +2,8 @@ import type { MemberItem } from "@/features/admin/types/groupManagement.types";
 import { GroupRole } from "@/lib/auth/roles";
 
 export const demoGroups = [
-  { id: "group-demo-product", name: "Product team" },
-  { id: "group-demo-ops", name: "Ops" },
+  { id: "group-demo-product", name: "Daily Magic GmbH" },
+  { id: "group-demo-ops", name: "Northwind Energy AG" },
 ] as const;
 
 export const demoMembers: readonly MemberItem[] = [

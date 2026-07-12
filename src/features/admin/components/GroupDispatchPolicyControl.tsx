@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 
 import Button from "@/components/ui/button/Button";
+import { COMPANY_ENTITY_LABEL } from "@/lib/admin/companyGroupCopy.constant";
 import { useDemoPreview } from "@/features/demo/DemoPreviewContext";
 import {
   DispatchPolicy,
@@ -71,7 +72,7 @@ export default function GroupDispatchPolicyControl({
 
     setMessage(
       response.ok
-        ? "Group dispatch policy saved."
+        ? `${COMPANY_ENTITY_LABEL} dispatch policy saved.`
         : "Could not save dispatch policy.",
     );
   };
@@ -79,7 +80,7 @@ export default function GroupDispatchPolicyControl({
   return (
     <div className="mt-4 rounded-xl border border-gray-200 p-4 dark:border-gray-800">
       <h3 className="text-sm font-semibold text-gray-800 dark:text-white/90">
-        Group dispatch policy
+        {COMPANY_ENTITY_LABEL} dispatch policy
       </h3>
       <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
         Default for members: open runs immediately, approval requires browser

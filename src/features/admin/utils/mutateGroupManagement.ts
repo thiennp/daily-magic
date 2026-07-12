@@ -1,6 +1,10 @@
+import { COMPANY_ENTITY_LABEL } from "@/lib/admin/companyGroupCopy.constant";
+
 interface ApiErrorPayload {
   readonly error?: string;
 }
+
+const companyLabel = COMPANY_ENTITY_LABEL.toLowerCase();
 
 const readApiError = (
   payload: ApiErrorPayload,
@@ -16,7 +20,7 @@ export async function createAdminGroup(name: string): Promise<string | null> {
   const payload = (await response.json()) as ApiErrorPayload;
 
   if (!response.ok) {
-    return readApiError(payload, "Could not create group.");
+    return readApiError(payload, `Could not create ${companyLabel}.`);
   }
 
   return null;
@@ -37,7 +41,7 @@ export async function deleteAdminGroup(
   const payload = (await response.json()) as ApiErrorPayload;
 
   if (!response.ok) {
-    return readApiError(payload, "Could not delete group.");
+    return readApiError(payload, `Could not delete ${companyLabel}.`);
   }
 
   return null;

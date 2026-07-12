@@ -1,6 +1,7 @@
 "use client";
 
 import CapabilityPicker from "@/features/capabilities/CapabilityPicker";
+import { COMPANY_ENTITY_LABEL } from "@/lib/admin/companyGroupCopy.constant";
 import TeamMemberPicker from "@/features/dispatch/TeamMemberPicker";
 import { useDispatchTargets } from "@/features/dispatch/hooks/useDispatchTargets";
 
@@ -40,7 +41,7 @@ export default function TeamDispatchFields({
   if (groups.length === 0) {
     return (
       <p className="text-sm text-gray-500 dark:text-gray-400">
-        Join a team to send tasks to colleagues.
+        Join a {COMPANY_ENTITY_LABEL.toLowerCase()} to send tasks to colleagues.
       </p>
     );
   }
@@ -49,7 +50,7 @@ export default function TeamDispatchFields({
     <div className="grid gap-4">
       <div className="grid gap-4 sm:grid-cols-2">
         <label className="text-sm font-medium text-gray-800 dark:text-white/90">
-          Team
+          {COMPANY_ENTITY_LABEL}
           <select
             value={selectedGroupId}
             onChange={(event) => {

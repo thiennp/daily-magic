@@ -55,8 +55,8 @@ export default function MyOfferingsPanel() {
         What teammates can request
       </h2>
       <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-        Published assistants appear in your team directory when colleagues send
-        you a task.
+        Published assistants appear in your company directory when colleagues
+        send you a task.
       </p>
       {isLoading ? (
         <p className="mt-4 text-sm text-gray-500 dark:text-gray-400">

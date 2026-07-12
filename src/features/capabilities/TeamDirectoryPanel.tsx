@@ -1,6 +1,7 @@
 "use client";
 
 import { useDispatchTargets } from "@/features/dispatch/hooks/useDispatchTargets";
+import { COMPANY_DIRECTORY_TITLE } from "@/lib/admin/companyGroupCopy.constant";
 
 export default function TeamDirectoryPanel() {
   const { groups, isLoading } = useDispatchTargets();
@@ -9,7 +10,7 @@ export default function TeamDirectoryPanel() {
     return (
       <section className="rounded-2xl border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-white/[0.03]">
         <p className="text-sm text-gray-500 dark:text-gray-400">
-          Loading team directory…
+          Loading {COMPANY_DIRECTORY_TITLE.toLowerCase()}…
         </p>
       </section>
     );
@@ -22,7 +23,7 @@ export default function TeamDirectoryPanel() {
   return (
     <section className="rounded-2xl border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-white/[0.03]">
       <h2 className="text-lg font-semibold text-gray-800 dark:text-white/90">
-        Team directory
+        {COMPANY_DIRECTORY_TITLE}
       </h2>
       <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
         See which assistants your teammates offer before you send a task.

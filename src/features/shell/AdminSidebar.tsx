@@ -3,8 +3,10 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
+import { COMPANIES_ENTITY_LABEL } from "@/lib/admin/companyGroupCopy.constant";
+
 const ADMIN_NAV = [
-  { href: "/admin/groups", label: "Groups" },
+  { href: "/admin/groups", label: COMPANIES_ENTITY_LABEL },
   { href: "/admin/users", label: "Users" },
 ] as const;
 

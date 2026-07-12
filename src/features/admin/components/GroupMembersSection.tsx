@@ -4,6 +4,10 @@ import { useState } from "react";
 
 import GroupMemberInviteForm from "@/features/admin/components/GroupMemberInviteForm";
 import GroupMembersTable from "@/features/admin/components/GroupMembersTable";
+import {
+  COMPANY_ENTITY_LABEL,
+  COMPANY_MEMBERS_LABEL,
+} from "@/lib/admin/companyGroupCopy.constant";
 import ConfirmDestructiveModal from "@/features/shell/ConfirmDestructiveModal";
 import type { MemberItem } from "@/features/admin/types/groupManagement.types";
 
@@ -39,7 +43,7 @@ export default function GroupMembersSection({
     <>
       <section className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03]">
         <h2 className="text-lg font-semibold text-gray-800 dark:text-white/90">
-          Group members
+          {COMPANY_MEMBERS_LABEL}
         </h2>
 
         <GroupMemberInviteForm
@@ -64,7 +68,7 @@ export default function GroupMembersSection({
         title="Remove member?"
         description={`Remove ${
           pendingMember?.user?.email ?? "this member"
-        } from the group.`}
+        } from the ${COMPANY_ENTITY_LABEL.toLowerCase()}.`}
         confirmLabel="Remove member"
         onClose={() => {
           setPendingMembershipId(null);

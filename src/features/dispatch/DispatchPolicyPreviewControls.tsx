@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 
 import DispatchPolicyPreview from "@/features/dispatch/DispatchPolicyPreview";
+import { COMPANY_ENTITY_LABEL } from "@/lib/admin/companyGroupCopy.constant";
 import type { PairedDevice } from "@/features/harness/utils/pairedDevicesApi";
 import { fetchActivePairedDevices } from "@/features/harness/utils/pairedDevicesApi";
 import { useDispatchTargets } from "@/features/dispatch/hooks/useDispatchTargets";
@@ -49,7 +50,7 @@ export default function DispatchPolicyPreviewControls() {
           </select>
         </label>
         <label className="text-xs text-gray-600 dark:text-gray-400">
-          Group context
+          {COMPANY_ENTITY_LABEL} context
           <select
             value={groupId}
             onChange={(event) => {
@@ -57,7 +58,7 @@ export default function DispatchPolicyPreviewControls() {
             }}
             className="mt-1 w-full rounded-lg border border-gray-200 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-950"
           >
-            <option value="">No group</option>
+            <option value="">No {COMPANY_ENTITY_LABEL.toLowerCase()}</option>
             {groups.map((group) => (
               <option key={group.groupId} value={group.groupId}>
                 {group.groupName}

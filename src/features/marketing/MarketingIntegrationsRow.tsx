@@ -8,8 +8,8 @@ export default function MarketingIntegrationsRow() {
       <MarketingSectionHeader
         align="center"
         eyebrow="What you get"
-        title="Built for everyday team work"
-        description="Use the assistants you already have on your Mac, with a shared website your team can manage together."
+        title="Built for everyday company work"
+        description="Use the assistants you already have on your Mac, with a shared website your company can manage together."
       />
       <div className="mt-8 flex flex-wrap justify-center gap-3">
         {MARKETING_INTEGRATION_ITEMS.map((item) => (

@@ -5,6 +5,7 @@ import type { Session } from "next-auth";
 
 import { Dropdown } from "@/components/ui/dropdown/Dropdown";
 import { DropdownItem } from "@/components/ui/dropdown/DropdownItem";
+import { COMPANIES_ENTITY_LABEL } from "@/lib/admin/companyGroupCopy.constant";
 import formatGlobalRole from "@/lib/auth/formatGlobalRole";
 import type { GlobalRoleValue } from "@/lib/auth/roles";
 
@@ -47,7 +48,7 @@ export default function UserDropdownMenu({
             href="/admin/groups"
             className="group flex items-center gap-3 rounded-lg px-3 py-2 text-theme-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
           >
-            Group management
+            {COMPANIES_ENTITY_LABEL} management
           </DropdownItem>
         </li>
         <li>

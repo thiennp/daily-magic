@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 
 import Button from "@/components/ui/button/Button";
+import { COMPANY_ENTITY_LABEL } from "@/lib/admin/companyGroupCopy.constant";
 import DispatchPolicyPreviewControls from "@/features/dispatch/DispatchPolicyPreviewControls";
 import {
   DispatchPolicy,
@@ -53,8 +54,8 @@ export default function AgentDispatchPolicyPanel() {
 
     setMessage(
       response.ok
-        ? "Team rule preference saved."
-        : "Could not save team rule preference.",
+        ? `${COMPANY_ENTITY_LABEL} rule preference saved.`
+        : `Could not save ${COMPANY_ENTITY_LABEL.toLowerCase()} rule preference.`,
     );
   };
 
@@ -64,7 +65,7 @@ export default function AgentDispatchPolicyPanel() {
         Who can send tasks to your Mac
       </h2>
       <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-        Override your team default for tasks sent to your computer.
+        Override your company default for tasks sent to your computer.
       </p>
       <select
         value={policy}
@@ -73,9 +74,11 @@ export default function AgentDispatchPolicyPanel() {
         }}
         className="mt-4 w-full rounded-lg border border-gray-200 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-950"
       >
-        <option value="inherit">Use team default</option>
+        <option value="inherit">Use company default</option>
         <option value={DispatchPolicy.APPROVAL}>Ask me first</option>
-        <option value={DispatchPolicy.OPEN}>Anyone on the team can send</option>
+        <option value={DispatchPolicy.OPEN}>
+          Anyone in the company can send
+        </option>
       </select>
       <div className="mt-4">
         <Button onClick={() => void savePolicy()}>Save preference</Button>

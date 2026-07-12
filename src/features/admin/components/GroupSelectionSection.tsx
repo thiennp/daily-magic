@@ -1,3 +1,7 @@
+import {
+  COMPANIES_ENTITY_LABEL,
+  COMPANY_ENTITY_LABEL,
+} from "@/lib/admin/companyGroupCopy.constant";
 import Button from "@/components/ui/button/Button";
 import GroupDeleteControls from "@/features/admin/components/GroupDeleteControls";
 import type { GroupItem } from "@/features/admin/types/groupManagement.types";
@@ -30,7 +34,7 @@ export default function GroupSelectionSection({
   return (
     <section className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03]">
       <h2 className="text-lg font-semibold text-gray-800 dark:text-white/90">
-        Groups
+        {COMPANIES_ENTITY_LABEL}
       </h2>
 
       {isAdmin ? (
@@ -40,16 +44,18 @@ export default function GroupSelectionSection({
             onChange={(event) => {
               onNewGroupNameChange(event.target.value);
             }}
-            placeholder="New group name"
+            placeholder={`New ${COMPANY_ENTITY_LABEL.toLowerCase()} name`}
             className="flex-1 rounded-lg border border-gray-200 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-950"
           />
-          <Button onClick={() => void onCreateGroup()}>Add group</Button>
+          <Button onClick={() => void onCreateGroup()}>
+            Add {COMPANY_ENTITY_LABEL.toLowerCase()}
+          </Button>
         </div>
       ) : null}
 
       <div className="mt-4">
         <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-          Selected group
+          Selected {COMPANY_ENTITY_LABEL.toLowerCase()}
           <select
             value={selectedGroupId}
             onChange={(event) => {
@@ -57,7 +63,9 @@ export default function GroupSelectionSection({
             }}
             className="mt-2 w-full rounded-lg border border-gray-200 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-950"
           >
-            <option value="">Select a group</option>
+            <option value="">
+              Select a {COMPANY_ENTITY_LABEL.toLowerCase()}
+            </option>
             {groups.map((group) => (
               <option key={group.id} value={group.id}>
                 {group.name}

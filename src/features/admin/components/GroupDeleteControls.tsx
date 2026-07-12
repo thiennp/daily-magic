@@ -4,6 +4,7 @@ import { useState } from "react";
 
 import Button from "@/components/ui/button/Button";
 import ConfirmDestructiveModal from "@/features/shell/ConfirmDestructiveModal";
+import { COMPANY_ENTITY_LABEL } from "@/lib/admin/companyGroupCopy.constant";
 import type { GroupItem } from "@/features/admin/types/groupManagement.types";
 
 interface GroupDeleteControlsProps {
@@ -22,6 +23,7 @@ export default function GroupDeleteControls({
   onDeleteGroup,
 }: GroupDeleteControlsProps) {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const companyLabel = COMPANY_ENTITY_LABEL.toLowerCase();
   const selectedGroup = groups.find((group) => group.id === selectedGroupId);
 
   return (
@@ -35,7 +37,7 @@ export default function GroupDeleteControls({
               onDeleteMembersChange(event.target.checked);
             }}
           />
-          Also delete all users in this group
+          Also delete all users in this {companyLabel}
         </label>
         <Button
           variant="outline"
@@ -43,19 +45,19 @@ export default function GroupDeleteControls({
             setIsDeleteModalOpen(true);
           }}
         >
-          Delete group
+          Delete {companyLabel}
         </Button>
       </div>
 
       <ConfirmDestructiveModal
         isOpen={isDeleteModalOpen}
-        title="Delete group?"
+        title={`Delete ${companyLabel}?`}
         description={
           deleteMembers
-            ? `Delete "${selectedGroup?.name ?? "this group"}" and remove all users in it. This cannot be undone.`
-            : `Delete "${selectedGroup?.name ?? "this group"}". Members will lose access to this group.`
+            ? `Delete "${selectedGroup?.name ?? `this ${companyLabel}`}" and remove all users in it. This cannot be undone.`
+            : `Delete "${selectedGroup?.name ?? `this ${companyLabel}`}". Members will lose access to this ${companyLabel}.`
         }
-        confirmLabel="Delete group"
+        confirmLabel={`Delete ${companyLabel}`}
         onClose={() => {
           setIsDeleteModalOpen(false);
         }}

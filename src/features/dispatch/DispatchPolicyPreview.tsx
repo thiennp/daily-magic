@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 
+import { COMPANY_ENTITY_LABEL } from "@/lib/admin/companyGroupCopy.constant";
 import type { EffectiveDispatchPolicyBreakdown } from "@/lib/dispatch/buildEffectiveDispatchPolicyBreakdown";
 
 interface DispatchPolicyPreviewProps {
@@ -59,7 +60,7 @@ export default function DispatchPolicyPreview({
   const rows = [
     { label: "Device", value: breakdown.devicePolicy, key: "device" },
     { label: "User", value: breakdown.userPolicy, key: "user" },
-    { label: "Group", value: breakdown.groupPolicy, key: "group" },
+    { label: COMPANY_ENTITY_LABEL, value: breakdown.groupPolicy, key: "group" },
     { label: "Default", value: breakdown.defaultPolicy, key: "default" },
   ] as const;
 
