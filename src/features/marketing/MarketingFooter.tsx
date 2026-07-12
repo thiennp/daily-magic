@@ -4,6 +4,7 @@ import { COMPANIES_ENTITY_LABEL } from "@/lib/admin/companyGroupCopy.constant";
 import { AGENT_WITCH_PRODUCT_NAME } from "@/lib/agentWitch/agentWitchProductName.constant";
 
 const FOOTER_PRODUCT_LINKS = [
+  { label: "Real examples", href: "/showcases" },
   { label: "Send a task", href: "/agent" },
   { label: "Reports", href: "/reports" },
   { label: "Styleguide", href: "/styleguide" },

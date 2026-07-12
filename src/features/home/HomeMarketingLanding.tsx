@@ -3,6 +3,7 @@ import { Suspense } from "react";
 
 import LoginForm from "@/features/auth/LoginForm";
 import HomeMarketingFeatures from "@/features/home/HomeMarketingFeatures";
+import HomeMarketingShowcases from "@/features/home/HomeMarketingShowcases";
 import HomeMarketingSteps from "@/features/home/HomeMarketingSteps";
 import MarketingCard from "@/features/marketing/MarketingCard";
 import MarketingIntegrationsRow from "@/features/marketing/MarketingIntegrationsRow";
@@ -68,6 +69,7 @@ export default function HomeMarketingLanding() {
       </section>
 
       <HomeMarketingFeatures />
+      <HomeMarketingShowcases />
       <HomeMarketingSteps />
       <MarketingIntegrationsRow />
     </MarketingShell>
