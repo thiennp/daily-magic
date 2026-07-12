@@ -5,6 +5,8 @@ import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 
 import LoginFormEmailField from "@/features/auth/components/LoginFormEmailField";
+import LoginFormEmailSubmitButton from "@/features/auth/components/LoginFormEmailSubmitButton";
+import LoginFormGoogleButton from "@/features/auth/components/LoginFormGoogleButton";
 import type { LoginFormAppearance } from "@/features/auth/loginFormAppearance.constant";
 import { LOGIN_FORM_APPEARANCE_CLASSES } from "@/features/auth/loginFormAppearance.constant";
 import {
@@ -12,7 +14,6 @@ import {
   type LoginFeedback,
 } from "@/features/auth/utils/buildLoginFeedback";
 import Alert from "@/components/ui/alert/Alert";
-import Button from "@/components/ui/button/Button";
 import { SUPER_ADMIN_EMAIL } from "@/lib/auth/constants";
 import isSuperAdminEmail from "@/lib/auth/isSuperAdminEmail";
 
@@ -71,15 +72,12 @@ export default function LoginForm({
       </p>
 
       <div className="space-y-4">
-        <Button
-          variant="outline"
-          className="w-full"
-          onClick={() => {
+        <LoginFormGoogleButton
+          appearance={appearance}
+          onGoogleSignIn={() => {
             void signIn("google", { callbackUrl });
           }}
-        >
-          Continue with Google
-        </Button>
+        />
 
         <div className={appearanceClasses.divider}>or email</div>
 
@@ -90,15 +88,13 @@ export default function LoginForm({
           onEmailChange={setEmail}
         />
 
-        <Button
-          className="w-full"
-          disabled={isSubmitting}
-          onClick={() => {
+        <LoginFormEmailSubmitButton
+          appearance={appearance}
+          isSubmitting={isSubmitting}
+          onEmailSignIn={() => {
             void handleEmailSignIn();
           }}
-        >
-          {isSubmitting ? "Sending..." : "Email me a sign-in link"}
-        </Button>
+        />
 
         {feedback ? (
           <Alert

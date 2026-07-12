@@ -1,5 +1,8 @@
+import Link from "next/link";
+
 import MarketingProductPreview from "@/features/marketing/MarketingProductPreview";
 import MarketingTrustStrip from "@/features/marketing/MarketingTrustStrip";
+import { MARKETING_CTA_GHOST_CLASSES } from "@/features/marketing/marketingInteractiveClasses.constant";
 import {
   MARKETING_TEXT_PRIMARY_CLASSES,
   MARKETING_TEXT_SECONDARY_CLASSES,
@@ -8,14 +11,13 @@ import { mergeMarketingClasses } from "@/features/marketing/mergeMarketingClasse
 import { AGENT_WITCH_PRODUCT_NAME } from "@/lib/agentWitch/agentWitchProductName.constant";
 
 import HomeMarketingAuthSection from "./HomeMarketingAuthSection";
-import HomeMarketingHeroActions from "./HomeMarketingHeroActions";
 
 export default function HomeMarketingHero() {
   return (
-    <header className="grid gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:gap-20 xl:gap-24">
-      <div className="space-y-8">
+    <header className="grid gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:items-start lg:gap-20 xl:gap-24">
+      <div className="space-y-8 lg:pt-2">
         <div className="space-y-6">
-          <p className="text-sm font-semibold uppercase tracking-wider text-brand-600">
+          <p className="text-sm font-medium uppercase tracking-wider text-zinc-500">
             AI tasks for teams
           </p>
           <h1
@@ -39,21 +41,24 @@ export default function HomeMarketingHero() {
             job.
           </p>
         </div>
-        <HomeMarketingHeroActions />
+
+        <nav aria-label="Jump to sign in">
+          <Link href="#get-started" className={MARKETING_CTA_GHOST_CLASSES}>
+            Get started with your email or Google →
+          </Link>
+        </nav>
+
         <MarketingTrustStrip />
       </div>
 
-      <aside aria-label="Product preview and sign in" className="space-y-6">
-        <div className="relative">
-          <div
-            className="pointer-events-none absolute -inset-6 rounded-[2rem] bg-gradient-to-br from-brand-400/15 via-brand-500/5 to-slate-400/5 blur-3xl"
-            aria-hidden
-          />
-          <div className="relative translate-y-0 transition duration-300 hover:-translate-y-1 motion-reduce:transition-none motion-reduce:hover:translate-y-0">
-            <MarketingProductPreview />
-          </div>
-        </div>
+      <aside aria-label="Sign in and product preview" className="space-y-5">
         <HomeMarketingAuthSection />
+        <div className="px-1">
+          <p className="mb-2 text-[11px] font-medium uppercase tracking-wider text-zinc-400">
+            Product preview
+          </p>
+          <MarketingProductPreview />
+        </div>
       </aside>
     </header>
   );

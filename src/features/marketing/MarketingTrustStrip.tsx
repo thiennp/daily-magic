@@ -12,10 +12,10 @@ export default function MarketingTrustStrip() {
         <li key={item.label}>
           <span
             className={mergeMarketingClasses(
-              "inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-medium text-slate-700 transition duration-200",
+              "inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-medium",
               item.emphasized
-                ? "bg-brand-500/10 text-brand-800"
-                : "bg-brand-500/[0.06] text-slate-600",
+                ? "bg-zinc-100 text-zinc-800"
+                : "bg-zinc-50 text-zinc-600",
             )}
           >
             <MarketingTrustIcon icon={item.icon} />

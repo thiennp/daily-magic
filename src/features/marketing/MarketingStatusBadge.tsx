@@ -4,27 +4,39 @@ import { mergeMarketingClasses } from "@/features/marketing/mergeMarketingClasse
 
 export type MarketingStatusTone = "success" | "warning";
 
-const TONE_CLASSES: Record<MarketingStatusTone, string> = {
-  success:
-    "bg-emerald-500/10 text-emerald-700 ring-1 ring-emerald-500/15 dark:bg-emerald-500/10 dark:text-emerald-400",
-  warning:
-    "bg-amber-500/10 text-amber-800 ring-1 ring-amber-500/15 dark:bg-amber-500/10 dark:text-amber-400",
-};
-
 interface MarketingStatusBadgeProps {
   readonly tone: MarketingStatusTone;
   readonly children: ReactNode;
+  readonly onDark?: boolean;
 }
+
+const TONE_CLASSES: Record<
+  MarketingStatusTone,
+  { readonly light: string; readonly dark: string }
+> = {
+  success: {
+    light:
+      "bg-emerald-500/10 text-emerald-700 ring-1 ring-emerald-500/15",
+    dark: "bg-zinc-800 text-zinc-500 ring-1 ring-zinc-700/80",
+  },
+  warning: {
+    light: "bg-amber-500/10 text-amber-800 ring-1 ring-amber-500/15",
+    dark: "bg-zinc-800 text-zinc-500 ring-1 ring-zinc-700/80",
+  },
+};
 
 export default function MarketingStatusBadge({
   tone,
   children,
+  onDark = false,
 }: MarketingStatusBadgeProps) {
+  const palette = onDark ? TONE_CLASSES[tone].dark : TONE_CLASSES[tone].light;
+
   return (
     <span
       className={mergeMarketingClasses(
         "inline-flex items-center justify-center rounded-full px-2.5 py-0.5 text-theme-xs font-medium",
-        TONE_CLASSES[tone],
+        palette,
       )}
     >
       {children}

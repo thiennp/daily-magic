@@ -20,7 +20,7 @@ export default function MarketingFeatureCard({
       interactive
       className={mergeMarketingClasses(
         "flex h-full flex-col gap-4 p-5",
-        item.emphasized ? "bg-gradient-to-b from-brand-500/[0.04] to-white" : "",
+        item.emphasized ? "bg-gradient-to-b from-zinc-50 to-white" : "",
       )}
     >
       <MarketingFeaturePreview preview={item.preview} />

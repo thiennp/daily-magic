@@ -47,7 +47,7 @@ export default function HomeMarketingSteps() {
               key={step.title}
               className="group space-y-3 rounded-xl p-2 transition duration-200 hover:bg-slate-50/80"
             >
-              <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-brand-500 text-sm font-semibold text-white shadow-sm transition duration-200 group-hover:scale-105">
+              <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-zinc-900 text-sm font-semibold text-white shadow-sm transition duration-200 group-hover:scale-105">
                 {index + 1}
               </span>
               <p

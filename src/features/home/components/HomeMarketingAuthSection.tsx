@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 
 import LoginForm from "@/features/auth/LoginForm";
-import MarketingCard from "@/features/marketing/MarketingCard";
+import { MARKETING_FOCAL_CARD_CLASSES } from "@/features/marketing/marketingPalette.constant";
 import {
   MARKETING_TEXT_MUTED_CLASSES,
   MARKETING_TEXT_PRIMARY_CLASSES,
@@ -11,12 +11,10 @@ import { mergeMarketingClasses } from "@/features/marketing/mergeMarketingClasse
 
 export default function HomeMarketingAuthSection() {
   return (
-    <MarketingCard
-      as="section"
+    <section
       id="get-started"
-      interactive
       aria-labelledby="get-started-heading"
-      className="p-6 sm:p-8"
+      className={mergeMarketingClasses(MARKETING_FOCAL_CARD_CLASSES, "p-6 sm:p-8")}
     >
       <h2
         id="get-started-heading"
@@ -49,6 +47,6 @@ export default function HomeMarketingAuthSection() {
           <LoginForm defaultCallbackUrl="/" appearance="marketing" />
         </Suspense>
       </div>
-    </MarketingCard>
+    </section>
   );
 }

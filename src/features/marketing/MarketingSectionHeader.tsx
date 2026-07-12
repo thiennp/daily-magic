@@ -25,7 +25,7 @@ export default function MarketingSectionHeader({
   return (
     <header className={alignment}>
       {eyebrow !== undefined && eyebrow.length > 0 ? (
-        <p className="text-sm font-semibold uppercase tracking-wider text-brand-600">
+        <p className="text-sm font-medium uppercase tracking-wider text-zinc-500">
           {eyebrow}
         </p>
       ) : null}
