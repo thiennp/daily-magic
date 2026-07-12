@@ -3,14 +3,18 @@ import Link from "next/link";
 import MarketingSectionHeader from "@/features/marketing/MarketingSectionHeader";
 import ShowcaseCard from "@/features/showcases/ShowcaseCard";
 import {
+  getHomeAllShowcaseSlugsForSeo,
   getHomeFeaturedShowcases,
   getHomeMoreShowcases,
+  getHomeTeamsShowcases,
+  SHOWCASE_ARTICLES,
 } from "@/features/showcases/showcaseArticleRegistry";
 
 export default function HomeMarketingShowcases() {
   const featured = getHomeFeaturedShowcases();
   const more = getHomeMoreShowcases();
-  const allForSchema = [...featured, ...more];
+  const teams = getHomeTeamsShowcases();
+  const allForSchema = getHomeAllShowcaseSlugsForSeo();
 
   return (
     <section className="mt-20" aria-labelledby="showcases-heading">
@@ -39,12 +43,24 @@ export default function HomeMarketingShowcases() {
           ))}
         </div>
       </div>
+      <div className="mt-14">
+        <MarketingSectionHeader
+          eyebrow="For teams"
+          title="Company & managers"
+          description="One agent per employee, shared playbooks, approval before run."
+        />
+        <div className="mt-8 grid gap-6 md:grid-cols-3">
+          {teams.map((article) => (
+            <ShowcaseCard key={article.slug} article={article} />
+          ))}
+        </div>
+      </div>
       <p className="mt-8 text-center">
         <Link
           href="/showcases"
           className="text-sm font-medium text-brand-600 hover:text-brand-700"
         >
-          See all {allForSchema.length} examples →
+          See all {SHOWCASE_ARTICLES.length} examples →
         </Link>
       </p>
       <script

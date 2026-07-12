@@ -1,6 +1,12 @@
+import companyWorkflowsSetupOnce from "@/features/showcases/articles/companyWorkflowsSetupOnce.article";
 import controlMacFromPhone from "@/features/showcases/articles/controlMacFromPhone.article";
 import findBestPromptInCompany from "@/features/showcases/articles/findBestPromptInCompany.article";
 import firstAgentTaskIn5Minutes from "@/features/showcases/articles/firstAgentTaskIn5Minutes.article";
+import fromMyPromptToOurWorkflow from "@/features/showcases/articles/fromMyPromptToOurWorkflow.article";
+import manageCompanyAgents from "@/features/showcases/articles/manageCompanyAgents.article";
+import managerApprovesBeforeRun from "@/features/showcases/articles/managerApprovesBeforeRun.article";
+import newHiresCompanyPlaybooks from "@/features/showcases/articles/newHiresCompanyPlaybooks.article";
+import oneEmployeeOneAgent from "@/features/showcases/articles/oneEmployeeOneAgent.article";
 import phoneAsksCoworkerMacRuns from "@/features/showcases/articles/phoneAsksCoworkerMacRuns.article";
 import runAgainWithoutRetyping from "@/features/showcases/articles/runAgainWithoutRetyping.article";
 import saveTeammateWorkflowOneTap from "@/features/showcases/articles/saveTeammateWorkflowOneTap.article";
@@ -30,9 +36,19 @@ export const SHOWCASE_ARTICLES_PHASE_2: readonly ShowcaseArticle[] = [
   phoneAsksCoworkerMacRuns,
 ] as const;
 
+export const SHOWCASE_ARTICLES_PHASE_3: readonly ShowcaseArticle[] = [
+  oneEmployeeOneAgent,
+  companyWorkflowsSetupOnce,
+  manageCompanyAgents,
+  managerApprovesBeforeRun,
+  fromMyPromptToOurWorkflow,
+  newHiresCompanyPlaybooks,
+] as const;
+
 export const SHOWCASE_ARTICLES: readonly ShowcaseArticle[] = [
   ...SHOWCASE_ARTICLES_PHASE_1,
   ...SHOWCASE_ARTICLES_PHASE_2,
+  ...SHOWCASE_ARTICLES_PHASE_3,
 ] as const;
 
 export const HOME_FEATURED_SHOWCASE_SLUGS: readonly string[] = [
@@ -45,6 +61,12 @@ export const HOME_MORE_SHOWCASE_SLUGS: readonly string[] = [
   saveTeammateWorkflowOneTap.slug,
   controlMacFromPhone.slug,
   weeklyReportInFiveMinutes.slug,
+] as const;
+
+export const HOME_TEAMS_SHOWCASE_SLUGS: readonly string[] = [
+  oneEmployeeOneAgent.slug,
+  managerApprovesBeforeRun.slug,
+  newHiresCompanyPlaybooks.slug,
 ] as const;
 
 export function getShowcaseArticleBySlug(
@@ -68,4 +90,16 @@ export function getHomeFeaturedShowcases(): readonly ShowcaseArticle[] {
 
 export function getHomeMoreShowcases(): readonly ShowcaseArticle[] {
   return resolveShowcasesBySlugs(HOME_MORE_SHOWCASE_SLUGS);
+}
+
+export function getHomeTeamsShowcases(): readonly ShowcaseArticle[] {
+  return resolveShowcasesBySlugs(HOME_TEAMS_SHOWCASE_SLUGS);
+}
+
+export function getHomeAllShowcaseSlugsForSeo(): readonly ShowcaseArticle[] {
+  return [
+    ...getHomeFeaturedShowcases(),
+    ...getHomeMoreShowcases(),
+    ...getHomeTeamsShowcases(),
+  ];
 }
