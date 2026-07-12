@@ -2,7 +2,12 @@ import Link from "next/link";
 
 import MarketingCard from "@/features/marketing/MarketingCard";
 import { MARKETING_TEXT_LINK_CLASSES } from "@/features/marketing/marketingInteractiveClasses.constant";
+import {
+  MARKETING_TEXT_PRIMARY_CLASSES,
+  MARKETING_TEXT_SECONDARY_CLASSES,
+} from "@/features/marketing/marketingSurfaceClasses.constant";
 import MarketingSectionHeader from "@/features/marketing/MarketingSectionHeader";
+import { mergeMarketingClasses } from "@/features/marketing/mergeMarketingClasses";
 
 const MARKETING_STEPS = [
   {
@@ -40,13 +45,27 @@ export default function HomeMarketingSteps() {
           {MARKETING_STEPS.map((step, index) => (
             <li
               key={step.title}
-              className="group space-y-3 rounded-xl p-2 transition duration-200 hover:bg-gray-50/80"
+              className="group space-y-3 rounded-xl p-2 transition duration-200 hover:bg-slate-50/80"
             >
-              <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-brand-500 text-sm font-semibold text-white shadow-theme-xs transition duration-200 group-hover:scale-105">
+              <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-brand-500 text-sm font-semibold text-white shadow-sm transition duration-200 group-hover:scale-105">
                 {index + 1}
               </span>
-              <p className="text-sm font-semibold text-gray-900">{step.title}</p>
-              <p className="text-sm leading-relaxed text-gray-600">{step.body}</p>
+              <p
+                className={mergeMarketingClasses(
+                  "text-sm font-semibold",
+                  MARKETING_TEXT_PRIMARY_CLASSES,
+                )}
+              >
+                {step.title}
+              </p>
+              <p
+                className={mergeMarketingClasses(
+                  "text-sm leading-relaxed",
+                  MARKETING_TEXT_SECONDARY_CLASSES,
+                )}
+              >
+                {step.body}
+              </p>
               <Link href={step.href} className={MARKETING_TEXT_LINK_CLASSES}>
                 Learn more →
               </Link>

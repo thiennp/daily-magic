@@ -1,6 +1,7 @@
 import type { ElementType, ReactNode } from "react";
 
 import { MARKETING_CARD_INTERACTIVE_CLASSES } from "@/features/marketing/marketingInteractiveClasses.constant";
+import { MARKETING_SURFACE_BASE_CLASSES } from "@/features/marketing/marketingSurfaceClasses.constant";
 import { mergeMarketingClasses } from "@/features/marketing/mergeMarketingClasses";
 
 interface MarketingCardProps {
@@ -24,7 +25,8 @@ export default function MarketingCard({
     <Tag
       id={id}
       className={mergeMarketingClasses(
-        "rounded-2xl border border-gray-200/80 bg-white/95 p-6 shadow-theme-sm ring-1 ring-gray-200/50 sm:p-8",
+        MARKETING_SURFACE_BASE_CLASSES,
+        "p-6 sm:p-8",
         interactive ? MARKETING_CARD_INTERACTIVE_CLASSES : "",
         className,
       )}

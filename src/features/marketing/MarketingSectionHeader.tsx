@@ -1,3 +1,9 @@
+import {
+  MARKETING_TEXT_PRIMARY_CLASSES,
+  MARKETING_TEXT_SECONDARY_CLASSES,
+} from "@/features/marketing/marketingSurfaceClasses.constant";
+import { mergeMarketingClasses } from "@/features/marketing/mergeMarketingClasses";
+
 interface MarketingSectionHeaderProps {
   readonly eyebrow?: string;
   readonly title: string;
@@ -25,12 +31,20 @@ export default function MarketingSectionHeader({
       ) : null}
       <h2
         id={headingId}
-        className="mt-2 text-2xl font-semibold tracking-tight text-gray-900 sm:text-3xl"
+        className={mergeMarketingClasses(
+          "mt-2 text-2xl font-semibold tracking-[-0.02em] sm:text-3xl",
+          MARKETING_TEXT_PRIMARY_CLASSES,
+        )}
       >
         {title}
       </h2>
       {description !== undefined && description.length > 0 ? (
-        <p className="mt-3 text-base leading-relaxed text-gray-600">
+        <p
+          className={mergeMarketingClasses(
+            "mt-3 text-base leading-relaxed",
+            MARKETING_TEXT_SECONDARY_CLASSES,
+          )}
+        >
           {description}
         </p>
       ) : null}

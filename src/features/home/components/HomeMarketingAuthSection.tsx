@@ -2,6 +2,12 @@ import { Suspense } from "react";
 
 import LoginForm from "@/features/auth/LoginForm";
 import MarketingCard from "@/features/marketing/MarketingCard";
+import {
+  MARKETING_TEXT_MUTED_CLASSES,
+  MARKETING_TEXT_PRIMARY_CLASSES,
+  MARKETING_TEXT_SECONDARY_CLASSES,
+} from "@/features/marketing/marketingSurfaceClasses.constant";
+import { mergeMarketingClasses } from "@/features/marketing/mergeMarketingClasses";
 
 export default function HomeMarketingAuthSection() {
   return (
@@ -14,22 +20,33 @@ export default function HomeMarketingAuthSection() {
     >
       <h2
         id="get-started-heading"
-        className="text-xl font-semibold tracking-tight text-gray-900"
+        className={mergeMarketingClasses(
+          "text-xl font-semibold tracking-[-0.02em]",
+          MARKETING_TEXT_PRIMARY_CLASSES,
+        )}
       >
         Get started
       </h2>
-      <p className="mt-2 text-sm leading-relaxed text-gray-600">
+      <p
+        className={mergeMarketingClasses(
+          "mt-2 text-sm leading-relaxed",
+          MARKETING_TEXT_SECONDARY_CLASSES,
+        )}
+      >
         Sign in, connect your Mac, and send your first task in a few minutes.
       </p>
       <div className="mt-6">
         <Suspense
           fallback={
-            <p className="text-sm text-gray-500" role="status">
+            <p
+              className={mergeMarketingClasses("text-sm", MARKETING_TEXT_MUTED_CLASSES)}
+              role="status"
+            >
               Loading sign-in form…
             </p>
           }
         >
-          <LoginForm defaultCallbackUrl="/" />
+          <LoginForm defaultCallbackUrl="/" appearance="marketing" />
         </Suspense>
       </div>
     </MarketingCard>
