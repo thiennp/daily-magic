@@ -11,7 +11,7 @@ import { connectAgentWitchHarnessSocket } from "@/features/harness/hooks/utils/c
 import { createHarnessExportResultHandler } from "@/features/harness/hooks/utils/createHarnessExportResultHandler";
 import { createHarnessSocketActions } from "@/features/harness/hooks/utils/createHarnessSocketActions";
 import type HarnessManifest from "@/lib/agentWitch/harness/types/HarnessManifest.type";
-import type HarnessItemSpec from "@/lib/agentWitch/harness/types/HarnessItemSpec.type";
+import type HarnessItemWriteSpec from "@/lib/agentWitch/harness/types/HarnessItemWriteSpec.type";
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
 import type { WsTestConnectionStatus } from "@/features/wsTest/types/WsTestConnectionStatus.type";
 
@@ -23,11 +23,16 @@ export type {
 
 export function useAgentWitchHarnessSocket(): UseAgentWitchHarnessSocketResult {
   const socketStore = useMemo(() => createAgentWitchSocketStore(), []);
-  const sendHarnessRequestRef = useRef<
+  const sendWriteHarnessItemsRef = useRef<
     (input: {
-      readonly setName: string;
       readonly writerAgent: HarnessWriterAgent;
-      readonly items: readonly HarnessItemSpec[];
+      readonly items: readonly HarnessItemWriteSpec[];
+    }) => void
+  >(() => undefined);
+  const sendCreateHarnessSetRef = useRef<
+    (input: {
+      readonly name: string;
+      readonly writerAgent: HarnessWriterAgent;
     }) => void
   >(() => undefined);
   const [connectionStatus, setConnectionStatus] =
@@ -57,8 +62,9 @@ export function useAgentWitchHarnessSocket(): UseAgentWitchHarnessSocketResult {
   );
 
   useEffect(() => {
-    sendHarnessRequestRef.current = actions.sendHarnessRequest;
-  }, [actions.sendHarnessRequest]);
+    sendWriteHarnessItemsRef.current = actions.sendWriteHarnessItems;
+    sendCreateHarnessSetRef.current = actions.sendCreateHarnessSet;
+  }, [actions.sendCreateHarnessSet, actions.sendWriteHarnessItems]);
 
   useEffect(() => {
     return connectAgentWitchHarnessSocket({
@@ -70,7 +76,8 @@ export function useAgentWitchHarnessSocket(): UseAgentWitchHarnessSocketResult {
       setLastRequestResult,
       setLastMessage,
       onHarnessExportResult: createHarnessExportResultHandler({
-        sendHarnessRequestRef,
+        sendWriteHarnessItemsRef,
+        sendCreateHarnessSetRef,
         setBorrowImportStatus,
         setBorrowImportMessage,
       }),
@@ -85,7 +92,8 @@ export function useAgentWitchHarnessSocket(): UseAgentWitchHarnessSocketResult {
     lastRequestResult,
     lastMessage,
     pairLocalAgent: actions.pairLocalAgent,
-    sendHarnessRequest: actions.sendHarnessRequest,
+    sendCreateHarnessSet: actions.sendCreateHarnessSet,
+    sendWriteHarnessItems: actions.sendWriteHarnessItems,
     borrowImportStatus,
     borrowImportMessage,
     requestBorrowedHarnessExport: actions.requestBorrowedHarnessExport,

@@ -83,7 +83,9 @@ export const readHarnessExportSets = (
         continue;
       }
 
-      const absolutePath = path.join(layout.harnessSetsDir, slug, relativePath);
+      const absolutePath = relativePath.startsWith("shared/")
+        ? path.join(layout.harnessRootDir, relativePath)
+        : path.join(layout.harnessSetsDir, slug, relativePath);
       if (!fs.existsSync(absolutePath)) {
         continue;
       }

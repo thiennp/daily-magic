@@ -5,9 +5,10 @@ import HarnessItemEditor from "@/features/harness/components/HarnessItemEditor";
 import HarnessLastRequestResult from "@/features/harness/components/HarnessLastRequestResult";
 import HarnessLocalManifest from "@/features/harness/components/HarnessLocalManifest";
 import HarnessManagerHeader from "@/features/harness/components/HarnessManagerHeader";
-import HarnessSetConfigurationFields from "@/features/harness/components/HarnessSetConfigurationFields";
+import HarnessSetManager from "@/features/harness/components/HarnessSetManager";
 import type { UseAgentWitchHarnessSocketResult } from "@/features/harness/hooks/useAgentWitchHarnessSocket";
 import { useHarnessManagerForm } from "@/features/harness/hooks/useHarnessManagerForm";
+import listHarnessManifestSets from "@/lib/agentWitch/harness/listHarnessManifestSets";
 import isAgentWitchWebSocketSupportedHost from "@/lib/agentWitch/isAgentWitchWebSocketSupportedHost";
 
 export default function HarnessManagerPanel({
@@ -20,19 +21,20 @@ export default function HarnessManagerPanel({
     localManifest,
     manifestHostname,
     lastRequestResult,
-    sendHarnessRequest,
+    sendCreateHarnessSet,
+    sendWriteHarnessItems,
     pairingStatus,
   } = harnessSocket;
   const form = useHarnessManagerForm();
+  const availableSets = listHarnessManifestSets(localManifest);
 
   const host = typeof window !== "undefined" ? window.location.host : "";
   const isWebSocketSupported = isAgentWitchWebSocketSupportedHost(host);
+  const isConnected =
+    connectionStatus === "connected" && pairingStatus === "paired";
 
-  const canSubmit =
-    connectionStatus === "connected" &&
-    pairingStatus === "paired" &&
-    form.setName.trim().length > 0 &&
-    form.readyItems.length > 0;
+  const canCreateSet = isConnected && form.newSetName.trim().length > 0;
+  const canSubmitItems = isConnected && form.readyItems.length > 0;
 
   return (
     <section className="rounded-xl border border-gray-200 bg-white p-5 text-left dark:border-gray-800 dark:bg-white/[0.03]">
@@ -44,11 +46,20 @@ export default function HarnessManagerPanel({
         </div>
       ) : null}
 
-      <HarnessSetConfigurationFields
-        setName={form.setName}
+      <HarnessSetManager
+        localManifest={localManifest}
+        newSetName={form.newSetName}
         writerAgent={form.writerAgent}
-        onSetNameChange={form.setSetName}
+        canCreateSet={canCreateSet}
+        onNewSetNameChange={form.setNewSetName}
         onWriterAgentChange={form.setWriterAgent}
+        onCreateSet={() => {
+          sendCreateHarnessSet({
+            name: form.newSetName,
+            writerAgent: form.writerAgent,
+          });
+          form.setNewSetName("");
+        }}
       />
 
       <div className="mt-6 space-y-4">
@@ -57,6 +68,7 @@ export default function HarnessManagerPanel({
             key={item.id}
             item={item}
             index={index}
+            availableSets={availableSets}
             canRemove={form.items.length > 1}
             onRemove={() => {
               form.removeItem(item.id);
@@ -76,17 +88,16 @@ export default function HarnessManagerPanel({
         </button>
         <button
           type="button"
-          disabled={!canSubmit}
+          disabled={!canSubmitItems}
           onClick={() => {
-            sendHarnessRequest({
-              setName: form.setName,
+            sendWriteHarnessItems({
               writerAgent: form.writerAgent,
               items: form.readyItems,
             });
           }}
           className="inline-flex h-10 items-center justify-center rounded-lg bg-brand-500 px-5 text-sm font-medium text-white transition hover:bg-brand-600 disabled:cursor-not-allowed disabled:opacity-50"
         >
-          Send to local writer
+          Send items to local writer
         </button>
       </div>
 

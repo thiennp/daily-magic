@@ -6,6 +6,7 @@ export interface HarnessItemDraft {
   readonly kind: HarnessItemKind;
   readonly title: string;
   readonly content: string;
+  readonly setSlugs: readonly string[];
 }
 
 export const createEmptyHarnessItemDraft = (): HarnessItemDraft => ({
@@ -13,4 +14,5 @@ export const createEmptyHarnessItemDraft = (): HarnessItemDraft => ({
   kind: "rule",
   title: "",
   content: "",
+  setSlugs: [],
 });

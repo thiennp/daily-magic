@@ -1,8 +1,10 @@
 import { describe, expect, it } from "vitest";
 
-import buildHarnessWritePrompt from "./buildHarnessWritePrompt";
+import buildHarnessCreateSetPrompt from "./buildHarnessCreateSetPrompt";
+import buildHarnessWriteItemsPrompt from "./buildHarnessWriteItemsPrompt";
 import sanitizeHarnessSlug from "./sanitizeHarnessSlug";
 import resolveHarnessItemPath from "./resolveHarnessItemPath";
+import resolveHarnessSharedItemPath from "./resolveHarnessSharedItemPath";
 
 describe("sanitizeHarnessSlug", () => {
   it("normalizes harness set names", () => {
@@ -23,23 +25,41 @@ describe("resolveHarnessItemPath", () => {
   });
 });
 
-describe("buildHarnessWritePrompt", () => {
-  it("includes set metadata and item content", () => {
-    const prompt = buildHarnessWritePrompt({
+describe("resolveHarnessSharedItemPath", () => {
+  it("stores items under shared/items/{id}", () => {
+    expect(resolveHarnessSharedItemPath("item-1", "rule", "No Let")).toBe(
+      "shared/items/item-1/rules/no-let.mdc",
+    );
+  });
+});
+
+describe("buildHarnessCreateSetPrompt", () => {
+  it("includes set metadata for empty set creation", () => {
+    const prompt = buildHarnessCreateSetPrompt({
       name: "Daily Magic Rules",
       slug: "daily-magic-rules",
-      items: [
-        {
-          id: "item-1",
-          kind: "rule",
-          title: "No Let",
-          content: "Prefer const.",
-        },
-      ],
     });
 
     expect(prompt).toContain("daily-magic-rules");
-    expect(prompt).toContain("rules/no-let.mdc");
+    expect(prompt).toContain("items: []");
+    expect(prompt).toContain("HARNESS_MANIFEST_JSON_START");
+  });
+});
+
+describe("buildHarnessWriteItemsPrompt", () => {
+  it("includes shared item paths and target sets", () => {
+    const prompt = buildHarnessWriteItemsPrompt([
+      {
+        id: "item-1",
+        kind: "rule",
+        title: "No Let",
+        content: "Prefer const.",
+        setSlugs: ["daily-magic-rules", "team-defaults"],
+      },
+    ]);
+
+    expect(prompt).toContain("shared/items/item-1/rules/no-let.mdc");
+    expect(prompt).toContain("daily-magic-rules, team-defaults");
     expect(prompt).toContain("Prefer const.");
     expect(prompt).toContain("HARNESS_MANIFEST_JSON_START");
   });

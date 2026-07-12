@@ -1,10 +1,13 @@
 import { HARNESS_KIND_OPTIONS } from "@/features/harness/constants/harnessFormOptions";
+import HarnessItemSetSelector from "@/features/harness/components/HarnessItemSetSelector";
 import type { HarnessItemDraft } from "@/features/harness/types/HarnessItemDraft.type";
+import type { HarnessManifestSetSummary } from "@/lib/agentWitch/harness/listHarnessManifestSets";
 import type { HarnessItemKind } from "@/lib/agentWitch/harness/types/HarnessItemKind.constant";
 
 interface HarnessItemEditorProps {
   readonly item: HarnessItemDraft;
   readonly index: number;
+  readonly availableSets: readonly HarnessManifestSetSummary[];
   readonly canRemove: boolean;
   readonly onRemove: () => void;
   readonly onChange: (nextItem: HarnessItemDraft) => void;
@@ -13,6 +16,7 @@ interface HarnessItemEditorProps {
 export default function HarnessItemEditor({
   item,
   index,
+  availableSets,
   canRemove,
   onRemove,
   onChange,
@@ -72,6 +76,14 @@ export default function HarnessItemEditor({
           />
         </label>
       </div>
+
+      <HarnessItemSetSelector
+        availableSets={availableSets}
+        selectedSetSlugs={item.setSlugs}
+        onSelectedSetSlugsChange={(setSlugs) => {
+          onChange({ ...item, setSlugs });
+        }}
+      />
 
       <label className="mt-3 block text-sm">
         <span className="font-medium text-gray-800 dark:text-white/90">

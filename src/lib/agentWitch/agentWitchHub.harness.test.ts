@@ -33,14 +33,14 @@ describe("AgentWitchHub harness", () => {
         writerAgent: "claude-cli",
         instruction: "write harness",
         spec: {
-          name: "Rules",
-          slug: "rules",
+          mode: "write-items",
           items: [
             {
               id: "item-1",
               kind: "rule",
               title: "Prefer Const",
               content: "Prefer const.",
+              setSlugs: ["rules"],
             },
           ],
         },

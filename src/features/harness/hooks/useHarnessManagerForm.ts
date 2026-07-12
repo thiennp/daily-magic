@@ -4,15 +4,15 @@ import {
   createEmptyHarnessItemDraft,
   type HarnessItemDraft,
 } from "@/features/harness/types/HarnessItemDraft.type";
-import type HarnessItemSpec from "@/lib/agentWitch/harness/types/HarnessItemSpec.type";
+import type HarnessItemWriteSpec from "@/lib/agentWitch/harness/types/HarnessItemWriteSpec.type";
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
 
 interface UseHarnessManagerFormResult {
-  readonly setName: string;
+  readonly newSetName: string;
   readonly writerAgent: HarnessWriterAgent;
   readonly items: readonly HarnessItemDraft[];
-  readonly readyItems: readonly HarnessItemSpec[];
-  readonly setSetName: (value: string) => void;
+  readonly readyItems: readonly HarnessItemWriteSpec[];
+  readonly setNewSetName: (value: string) => void;
   readonly setWriterAgent: (value: HarnessWriterAgent) => void;
   readonly addItem: () => void;
   readonly removeItem: (itemId: string) => void;
@@ -20,7 +20,7 @@ interface UseHarnessManagerFormResult {
 }
 
 export function useHarnessManagerForm(): UseHarnessManagerFormResult {
-  const [setName, setSetName] = useState("");
+  const [newSetName, setNewSetName] = useState("");
   const [writerAgent, setWriterAgent] =
     useState<HarnessWriterAgent>("claude-cli");
   const [items, setItems] = useState<readonly HarnessItemDraft[]>([
@@ -28,17 +28,20 @@ export function useHarnessManagerForm(): UseHarnessManagerFormResult {
   ]);
 
   const readyItems = useMemo(
-    (): readonly HarnessItemSpec[] =>
+    (): readonly HarnessItemWriteSpec[] =>
       items
         .filter(
           (item) =>
-            item.title.trim().length > 0 && item.content.trim().length > 0,
+            item.title.trim().length > 0 &&
+            item.content.trim().length > 0 &&
+            item.setSlugs.length > 0,
         )
         .map((item) => ({
           id: item.id,
           kind: item.kind,
           title: item.title.trim(),
           content: item.content.trim(),
+          setSlugs: item.setSlugs,
         })),
     [items],
   );
@@ -58,11 +61,11 @@ export function useHarnessManagerForm(): UseHarnessManagerFormResult {
   };
 
   return {
-    setName,
+    newSetName,
     writerAgent,
     items,
     readyItems,
-    setSetName,
+    setNewSetName,
     setWriterAgent,
     addItem,
     removeItem,

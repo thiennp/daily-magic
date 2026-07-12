@@ -3,20 +3,34 @@ import { describe, expect, it } from "vitest";
 import isHarnessRequestPayload from "./isHarnessRequestPayload";
 
 describe("isHarnessRequestPayload", () => {
-  it("accepts valid harness request payloads", () => {
+  it("accepts create-set harness request payloads", () => {
     expect(
       isHarnessRequestPayload({
         writerAgent: "claude-cli",
-        instruction: "write harness",
+        instruction: "create harness set",
         spec: {
+          mode: "create-set",
           name: "Rules",
           slug: "rules",
+        },
+      }),
+    ).toBe(true);
+  });
+
+  it("accepts write-items harness request payloads", () => {
+    expect(
+      isHarnessRequestPayload({
+        writerAgent: "claude-cli",
+        instruction: "write harness items",
+        spec: {
+          mode: "write-items",
           items: [
             {
               id: "item-1",
               kind: "rule",
               title: "No Let",
               content: "Prefer const.",
+              setSlugs: ["rules"],
             },
           ],
         },
@@ -28,9 +42,9 @@ describe("isHarnessRequestPayload", () => {
     expect(
       isHarnessRequestPayload({
         writerAgent: "claude-cli",
+        instruction: "write harness items",
         spec: {
-          name: "Rules",
-          slug: "rules",
+          mode: "write-items",
           items: [],
         },
       }),

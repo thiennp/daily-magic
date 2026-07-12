@@ -7,6 +7,12 @@ import HomeDashboardHero from "@/features/home/HomeDashboardHero";
 import HomeOnboardingChecklist from "@/features/home/HomeOnboardingChecklist";
 import HomePresencePanel from "@/features/home/HomePresencePanel";
 import HomeSetupSection from "@/features/home/HomeSetupSection";
+import {
+  HOME_DASHBOARD_GRID_CLASS,
+  HOME_LEFT_RAIL_CLASS,
+  HOME_MAIN_COLUMN_CLASS,
+  HOME_RIGHT_RAIL_CLASS,
+} from "@/features/home/homeDashboardLayout.constant";
 import type { GlobalRoleValue } from "@/lib/auth/roles";
 
 interface HomeAuthenticatedViewProps {
@@ -21,19 +27,19 @@ export default function HomeAuthenticatedView({
   user,
 }: HomeAuthenticatedViewProps) {
   return (
-    <div className="grid grid-cols-1 gap-6 text-left lg:grid-cols-12 lg:items-start lg:gap-8">
-      <aside className="order-2 space-y-6 lg:order-1 lg:col-span-3">
+    <div className={HOME_DASHBOARD_GRID_CLASS}>
+      <aside className={HOME_LEFT_RAIL_CLASS}>
         <HomeOnboardingChecklist />
         <HomePresencePanel />
       </aside>
 
-      <main className="order-1 space-y-6 lg:order-2 lg:col-span-6">
+      <main className={HOME_MAIN_COLUMN_CLASS}>
         <HomeDashboardHero user={user} />
         <MyOfferingsPanel />
         <TeamDirectoryPanel />
       </main>
 
-      <aside className="order-3 space-y-6 lg:col-span-3">
+      <aside className={HOME_RIGHT_RAIL_CLASS}>
         <FeedbackInboxPanel />
         <ImprovementReviewPanel />
         <BorrowHarnessCatalog />
