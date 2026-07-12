@@ -1,16 +1,20 @@
+import { CapabilityType } from "@/lib/capabilities/CapabilityType.constant";
 import { isCapabilityType } from "@/lib/capabilities/CapabilityType.constant";
 import {
   isCapabilityVisibility,
   type CapabilityVisibilityValue,
 } from "@/lib/capabilities/CapabilityVisibility.constant";
+import { parseWorkflowFieldDefinitions } from "@/lib/workflows/parseWorkflowFieldDefinitions";
+import type WorkflowFieldDefinition from "@/lib/workflows/types/WorkflowFieldDefinition.type";
 
 export interface ParsedCapabilityBody {
-  readonly name?: string;
-  readonly description?: string;
-  readonly exampleRequest?: string;
+  readonly name: string;
+  readonly description: string;
+  readonly exampleRequest: string;
   readonly visibility?: CapabilityVisibilityValue;
   readonly groupId?: string | null;
-  readonly type?: "agent";
+  readonly type: typeof CapabilityType.AGENT | typeof CapabilityType.WORKFLOW;
+  readonly workflowFields: readonly WorkflowFieldDefinition[];
 }
 
 export function parseCreateCapabilityBody(
@@ -33,9 +37,14 @@ export function parseCreateCapabilityBody(
   const type =
     typeof record.type === "string" && isCapabilityType(record.type)
       ? record.type
-      : "agent";
+      : CapabilityType.AGENT;
 
-  if (type !== "agent") {
+  const workflowFields =
+    type === CapabilityType.WORKFLOW
+      ? parseWorkflowFieldDefinitions(record.workflowFields)
+      : [];
+
+  if (type === CapabilityType.WORKFLOW && workflowFields.length === 0) {
     return undefined;
   }
 
@@ -54,6 +63,7 @@ export function parseCreateCapabilityBody(
       typeof record.groupId === "string" && record.groupId.length > 0
         ? record.groupId
         : null,
-    type: "agent",
+    type,
+    workflowFields,
   };
 }

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 
 import { POLL_INTERVAL_MS } from "@/features/reports/agentRunsPolling.constant";
+import type WorkflowFieldDefinition from "@/lib/workflows/types/WorkflowFieldDefinition.type";
 
 export interface DispatchTargetCapability {
   readonly id: string;
@@ -12,6 +13,7 @@ export interface DispatchTargetCapability {
   readonly description: string;
   readonly exampleRequest: string;
   readonly visibility: string;
+  readonly workflowFields: readonly WorkflowFieldDefinition[];
 }
 
 export interface DispatchTargetMember {

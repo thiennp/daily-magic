@@ -2,6 +2,7 @@ import type { CapabilityStatusValue } from "@/lib/capabilities/CapabilityStatus.
 import type { CapabilityTypeValue } from "@/lib/capabilities/CapabilityType.constant";
 import type { CapabilityVisibilityValue } from "@/lib/capabilities/CapabilityVisibility.constant";
 import type { DispatchPolicyValue } from "@/lib/dispatch/DispatchPolicy.constant";
+import type WorkflowFieldDefinition from "@/lib/workflows/types/WorkflowFieldDefinition.type";
 
 export default interface PublishedCapabilityRecord {
   readonly id: string;
@@ -16,6 +17,7 @@ export default interface PublishedCapabilityRecord {
   readonly dispatchPolicyOverride: DispatchPolicyValue | null;
   readonly harnessSetSlug: string | null;
   readonly currentVersionId: string | null;
+  readonly workflowFields: readonly WorkflowFieldDefinition[];
   readonly createdAt: string;
   readonly updatedAt: string;
 }
@@ -28,4 +30,5 @@ export interface PublishedCapabilitySummary {
   readonly description: string;
   readonly exampleRequest: string;
   readonly visibility: CapabilityVisibilityValue;
+  readonly workflowFields: readonly WorkflowFieldDefinition[];
 }

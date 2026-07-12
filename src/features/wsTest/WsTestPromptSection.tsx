@@ -1,36 +1,22 @@
 "use client";
 
 import TeamDispatchFields from "@/features/dispatch/TeamDispatchFields";
+import type { useWsTestTaskComposer } from "@/features/wsTest/hooks/useWsTestTaskComposer";
+import WsTestTaskInputsSection from "@/features/wsTest/WsTestTaskInputsSection";
 import type { WsTestConnectionStatus } from "@/features/wsTest/types/WsTestConnectionStatus.type";
 
 interface WsTestPromptSectionProps {
-  readonly prompt: string;
+  readonly composer: ReturnType<typeof useWsTestTaskComposer>;
   readonly connectionStatus: WsTestConnectionStatus;
   readonly isSendDisabled: boolean;
-  readonly isTeamDispatch: boolean;
-  readonly selectedGroupId: string;
-  readonly selectedTargetUserId: string;
-  readonly selectedCapabilityId: string;
-  readonly onGroupChange: (groupId: string) => void;
-  readonly onTargetChange: (userId: string) => void;
-  readonly onCapabilityChange: (capabilityId: string) => void;
-  readonly onPromptChange: (value: string) => void;
   readonly onSend: () => void;
   readonly onClear: () => void;
 }
 
 export default function WsTestPromptSection({
-  prompt,
+  composer,
   connectionStatus,
   isSendDisabled,
-  isTeamDispatch,
-  selectedGroupId,
-  selectedTargetUserId,
-  selectedCapabilityId,
-  onGroupChange,
-  onTargetChange,
-  onCapabilityChange,
-  onPromptChange,
   onSend,
   onClear,
 }: WsTestPromptSectionProps) {
@@ -42,32 +28,25 @@ export default function WsTestPromptSection({
         </h2>
         <div className="mt-4">
           <TeamDispatchFields
-            selectedGroupId={selectedGroupId}
-            selectedTargetUserId={selectedTargetUserId}
-            selectedCapabilityId={selectedCapabilityId}
-            onGroupChange={onGroupChange}
-            onTargetChange={onTargetChange}
-            onCapabilityChange={onCapabilityChange}
+            selectedGroupId={composer.selectedGroupId}
+            selectedTargetUserId={composer.selectedTargetUserId}
+            selectedCapabilityId={composer.selectedCapabilityId}
+            onGroupChange={composer.setSelectedGroupId}
+            onTargetChange={composer.setSelectedTargetUserId}
+            onCapabilityChange={composer.setSelectedCapabilityId}
           />
         </div>
       </section>
 
       <section className="rounded-2xl border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-white/[0.03]">
-        <label
-          htmlFor="agent-witch-prompt"
-          className="mb-2 block text-sm font-medium text-gray-800 dark:text-white/90"
-        >
-          Task instructions
-        </label>
-        <textarea
-          id="agent-witch-prompt"
-          value={prompt}
-          onChange={(event) => {
-            onPromptChange(event.target.value);
-          }}
-          rows={8}
-          placeholder="Describe what you want done on the computer…"
-          className="w-full rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm text-gray-800 shadow-theme-xs outline-none transition focus:border-brand-300 focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90"
+        <WsTestTaskInputsSection
+          isWorkflowTask={composer.isWorkflowTask}
+          prompt={composer.prompt}
+          workflowFields={composer.workflowFields}
+          workflowFieldValues={composer.workflowFieldValues}
+          workflowValidationErrors={composer.workflowValidationErrors}
+          onPromptChange={composer.setPrompt}
+          onWorkflowFieldChange={composer.onWorkflowFieldChange}
         />
         <div className="mt-4 flex flex-wrap gap-3">
           <button
@@ -76,7 +55,7 @@ export default function WsTestPromptSection({
             disabled={isSendDisabled}
             className="inline-flex h-11 items-center justify-center rounded-lg bg-brand-500 px-5 text-sm font-medium text-white transition hover:bg-brand-600 disabled:cursor-not-allowed disabled:opacity-50"
           >
-            {isTeamDispatch ? "Send to teammate" : "Send to my Mac"}
+            {composer.isTeamDispatch ? "Send to teammate" : "Send to my Mac"}
           </button>
           <button
             type="button"
@@ -86,7 +65,9 @@ export default function WsTestPromptSection({
             Clear
           </button>
         </div>
-        {isSendDisabled ? (
+        {isSendDisabled &&
+        composer.workflowValidationErrors.length === 0 &&
+        !composer.isWorkflowTask ? (
           <p className="mt-3 text-sm text-gray-500 dark:text-gray-400">
             {connectionStatus !== "connected"
               ? "Connect your Mac from Home → Your setup before sending a task."

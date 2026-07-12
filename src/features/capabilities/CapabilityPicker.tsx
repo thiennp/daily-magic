@@ -35,6 +35,7 @@ export default function CapabilityPicker({
       <option value="">Choose an assistant…</option>
       {capabilities.map((capability) => (
         <option key={capability.id} value={capability.id}>
+          {capability.type === "workflow" ? "Workflow: " : "Assistant: "}
           {capability.name}
         </option>
       ))}

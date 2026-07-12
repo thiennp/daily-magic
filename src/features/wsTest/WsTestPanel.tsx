@@ -1,10 +1,8 @@
 "use client";
 
-import { useState } from "react";
-
 import AgentWitchUnsupportedHostNotice from "@/features/home/AgentWitchUnsupportedHostNotice";
-import { useTeamDispatchSelection } from "@/features/dispatch/hooks/useTeamDispatchSelection";
 import { ConnectionStatusBadge } from "@/features/shell/ConnectionStatusBadge";
+import { useWsTestTaskComposer } from "@/features/wsTest/hooks/useWsTestTaskComposer";
 import WsTestPromptSection from "@/features/wsTest/WsTestPromptSection";
 import isAgentWitchWebSocketSupportedHost from "@/lib/agentWitch/isAgentWitchWebSocketSupportedHost";
 import { useAgentWitchSocket } from "./hooks/useAgentWitchSocket";
@@ -12,24 +10,9 @@ import { useAgentWitchSocket } from "./hooks/useAgentWitchSocket";
 export default function WsTestPanel() {
   const { connectionStatus, lastResponse, sendClaudePrompt } =
     useAgentWitchSocket();
-  const [prompt, setPrompt] = useState("");
-  const {
-    selectedGroupId,
-    selectedTargetUserId,
-    selectedCapabilityId,
-    setSelectedGroupId,
-    setSelectedTargetUserId,
-    setSelectedCapabilityId,
-  } = useTeamDispatchSelection();
+  const composer = useWsTestTaskComposer();
   const host = typeof window !== "undefined" ? window.location.host : "";
   const isWebSocketSupported = isAgentWitchWebSocketSupportedHost(host);
-  const isTeamDispatch =
-    selectedGroupId.length > 0 && selectedTargetUserId.length > 0;
-  const isSendDisabled =
-    connectionStatus !== "connected" ||
-    prompt.trim().length === 0 ||
-    (selectedGroupId.length > 0 && selectedTargetUserId.length === 0) ||
-    (isTeamDispatch && selectedCapabilityId.length === 0);
 
   return (
     <div className="flex w-full flex-col gap-6">
@@ -47,31 +30,21 @@ export default function WsTestPanel() {
       </section>
 
       <WsTestPromptSection
-        prompt={prompt}
+        composer={composer}
         connectionStatus={connectionStatus}
-        isSendDisabled={isSendDisabled}
-        isTeamDispatch={isTeamDispatch}
-        selectedGroupId={selectedGroupId}
-        selectedTargetUserId={selectedTargetUserId}
-        selectedCapabilityId={selectedCapabilityId}
-        onGroupChange={setSelectedGroupId}
-        onTargetChange={setSelectedTargetUserId}
-        onCapabilityChange={setSelectedCapabilityId}
-        onPromptChange={setPrompt}
+        isSendDisabled={composer.isSendDisabled(connectionStatus)}
         onSend={() => {
-          sendClaudePrompt(prompt, {
-            ...(isTeamDispatch
+          sendClaudePrompt(composer.resolvedPrompt, {
+            ...(composer.isTeamDispatch
               ? {
-                  targetUserId: selectedTargetUserId,
-                  groupId: selectedGroupId,
-                  capabilityId: selectedCapabilityId,
+                  targetUserId: composer.selectedTargetUserId,
+                  groupId: composer.selectedGroupId,
+                  capabilityId: composer.selectedCapabilityId,
                 }
               : {}),
           });
         }}
-        onClear={() => {
-          setPrompt("");
-        }}
+        onClear={composer.resetComposer}
       />
 
       <section className="rounded-2xl border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-white/[0.03]">

@@ -43,6 +43,8 @@ export async function POST(request: Request): Promise<Response> {
     description: parsed.description,
     exampleRequest: parsed.exampleRequest,
     groupId: parsed.groupId,
+    type: parsed.type,
+    workflowFields: parsed.workflowFields,
   });
   const published = await publishCapabilityVersion(
     created.id,

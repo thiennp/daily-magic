@@ -175,6 +175,7 @@ CREATE TABLE IF NOT EXISTS published_capabilities (
   ),
   harness_set_slug TEXT,
   current_version_id TEXT,
+  workflow_fields JSONB NOT NULL DEFAULT '[]'::jsonb,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
