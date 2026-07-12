@@ -1,9 +1,10 @@
 export type MarketingFeaturePreviewKey = "dispatch" | "approve" | "report";
 
-export interface MarketingFeatureItem {
+export default interface MarketingFeatureItem {
   readonly title: string;
   readonly body: string;
   readonly preview: MarketingFeaturePreviewKey;
+  readonly emphasized?: boolean;
 }
 
 export const MARKETING_FEATURE_ITEMS: readonly MarketingFeatureItem[] = [
@@ -13,9 +14,10 @@ export const MARKETING_FEATURE_ITEMS: readonly MarketingFeatureItem[] = [
     preview: "dispatch",
   },
   {
-    title: "Ask first",
-    body: "Company admins can require approval before someone else's computer is used.",
+    title: "Manager approvals",
+    body: "Company admins can require approval before someone else's computer is used — managers stay in control.",
     preview: "approve",
+    emphasized: true,
   },
   {
     title: "See what happened",

@@ -1,6 +1,10 @@
 import Link from "next/link";
 
-import MarketingSectionHeader from "@/features/marketing/MarketingSectionHeader";
+import HomeMarketingFeaturedShowcases from "@/features/home/components/HomeMarketingFeaturedShowcases";
+import HomeMarketingShowcaseSection from "@/features/home/components/HomeMarketingShowcaseSection";
+import HomeMarketingTeamsShowcases from "@/features/home/components/HomeMarketingTeamsShowcases";
+import { buildHomeShowcaseSchemaJson } from "@/features/home/utils/buildHomeShowcaseSchemaJson";
+import { MARKETING_TEXT_LINK_CLASSES } from "@/features/marketing/marketingInteractiveClasses.constant";
 import ShowcaseCard from "@/features/showcases/ShowcaseCard";
 import {
   getHomeAllShowcaseSlugsForSeo,
@@ -19,78 +23,58 @@ export default function HomeMarketingShowcases() {
   const allForSchema = getHomeAllShowcaseSlugsForSeo();
 
   return (
-    <section className="mt-20" aria-labelledby="showcases-heading">
-      <MarketingSectionHeader
+    <section className="mt-24" aria-labelledby="showcases-heading">
+      <HomeMarketingShowcaseSection
+        className="mt-0"
         eyebrow="New to AI agents?"
         title="Start here"
         description="You don't need another hype thread. Pick a short story, see what you need, try the demo."
-      />
-      <div className="mt-8 grid gap-6 md:grid-cols-3">
-        {featured.map((article) => (
-          <ShowcaseCard
-            key={article.slug}
-            article={article}
-            variant="featured"
-          />
-        ))}
-      </div>
-      <div className="mt-14">
-        <MarketingSectionHeader
-          title="More examples"
-          description="Mobile, marketplace, and team workflows."
-        />
-        <div className="mt-8 grid gap-6 md:grid-cols-3">
+        headingId="showcases-heading"
+      >
+        <HomeMarketingFeaturedShowcases articles={featured} />
+      </HomeMarketingShowcaseSection>
+
+      <HomeMarketingShowcaseSection
+        title="More examples"
+        description="Mobile, marketplace, and team workflows."
+      >
+        <div className="grid gap-6 md:grid-cols-3">
           {more.map((article) => (
             <ShowcaseCard key={article.slug} article={article} />
           ))}
         </div>
-      </div>
-      <div className="mt-14">
-        <MarketingSectionHeader
-          eyebrow="For teams"
-          title="Company & managers"
-          description="One agent per employee, shared playbooks, approval before run."
-        />
-        <div className="mt-8 grid gap-6 md:grid-cols-3">
-          {teams.map((article) => (
-            <ShowcaseCard key={article.slug} article={article} />
-          ))}
-        </div>
-      </div>
-      <div className="mt-14">
-        <MarketingSectionHeader
-          eyebrow="Straight answers"
-          title="Common questions"
-          description="Not Slack, not n8n, not just chat — what Agent Witch actually is."
-        />
-        <div className="mt-8 grid gap-6 md:grid-cols-3">
+      </HomeMarketingShowcaseSection>
+
+      <HomeMarketingShowcaseSection
+        eyebrow="For teams"
+        title="Company & managers"
+        description="One agent per employee, shared playbooks, approval before run."
+      >
+        <HomeMarketingTeamsShowcases articles={teams} />
+      </HomeMarketingShowcaseSection>
+
+      <HomeMarketingShowcaseSection
+        eyebrow="Straight answers"
+        title="Common questions"
+        description="Not Slack, not n8n, not just chat — what Agent Witch actually is."
+      >
+        <div className="grid gap-6 md:grid-cols-3">
           {objections.map((article) => (
             <ShowcaseCard key={article.slug} article={article} />
           ))}
         </div>
-      </div>
-      <p className="mt-8 text-center">
-        <Link
-          href="/showcases"
-          className="text-sm font-medium text-brand-600 hover:text-brand-700"
-        >
+      </HomeMarketingShowcaseSection>
+
+      <p className="mt-10 text-center">
+        <Link href="/showcases" className={MARKETING_TEXT_LINK_CLASSES}>
           See all {SHOWCASE_ARTICLES.length} examples →
         </Link>
       </p>
+
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "ItemList",
-            name: "Agent Witch real examples",
-            itemListElement: allForSchema.map((article, index) => ({
-              "@type": "ListItem",
-              position: index + 1,
-              url: `https://agentwitch.com/showcases/${article.slug}`,
-              name: article.title,
-            })),
-          }),
+          __html: buildHomeShowcaseSchemaJson(allForSchema),
         }}
       />
     </section>
