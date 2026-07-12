@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 
+import { useDemoPreview } from "@/features/demo/DemoPreviewContext";
 import { POLL_INTERVAL_MS } from "@/features/reports/agentRunsPolling.constant";
 import type WorkflowFieldDefinition from "@/lib/workflows/types/WorkflowFieldDefinition.type";
 
@@ -36,10 +37,17 @@ export function useDispatchTargets(): {
   readonly groups: readonly DispatchTargetGroup[];
   readonly isLoading: boolean;
 } {
-  const [groups, setGroups] = useState<readonly DispatchTargetGroup[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const demoPreview = useDemoPreview();
+  const [groups, setGroups] = useState<readonly DispatchTargetGroup[]>(
+    () => demoPreview?.dispatchGroups ?? [],
+  );
+  const [isLoading, setIsLoading] = useState(() => !demoPreview);
 
   useEffect(() => {
+    if (demoPreview) {
+      return;
+    }
+
     const loadTargets = async (): Promise<void> => {
       try {
         const response = await fetch("/api/dispatch/targets");
@@ -69,7 +77,7 @@ export function useDispatchTargets(): {
     return () => {
       clearInterval(timer);
     };
-  }, []);
+  }, [demoPreview]);
 
   return { groups, isLoading };
 }

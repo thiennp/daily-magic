@@ -1,46 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
-
-import FeedbackImprovementDraft from "@/features/improvements/FeedbackImprovementDraft";
-import type { CapabilityFeedbackInboxItem } from "@/lib/feedback/types/CapabilityFeedbackRecord.type";
+import { useFeedbackInbox } from "@/features/feedback/hooks/useFeedbackInbox";
+import FeedbackInboxItemRow from "@/features/feedback/FeedbackInboxItemRow";
 
 export default function FeedbackInboxPanel() {
-  const [items, setItems] = useState<readonly CapabilityFeedbackInboxItem[]>(
-    [],
-  );
-  const [isLoading, setIsLoading] = useState(true);
+  const { items, isLoading, reloadInbox } = useFeedbackInbox();
 
-  const loadInbox = async (): Promise<void> => {
-    try {
-      const response = await fetch("/api/capabilities/feedback/inbox");
-      if (!response.ok) {
-        return;
-      }
-
-      const data: unknown = await response.json();
-      if (
-        typeof data === "object" &&
-        data !== null &&
-        "items" in data &&
-        Array.isArray((data as { items: unknown }).items)
-      ) {
-        setItems((data as { items: CapabilityFeedbackInboxItem[] }).items);
-      }
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    void loadInbox();
-  }, []);
-
-  if (isLoading) {
-    return null;
-  }
-
-  if (items.length === 0) {
+  if (isLoading || items.length === 0) {
     return null;
   }
 
@@ -55,54 +21,13 @@ export default function FeedbackInboxPanel() {
       </p>
       <ul className="mt-4 space-y-4">
         {items.map((item) => (
-          <li
+          <FeedbackInboxItemRow
             key={item.id}
-            className="rounded-xl border border-gray-100 p-4 dark:border-gray-800"
-          >
-            <p className="text-sm font-medium text-gray-800 dark:text-white/90">
-              {item.capabilityName ?? "Assistant"} · {item.reviewerEmail}
-            </p>
-            <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-              {item.comment}
-            </p>
-            <div className="mt-3 flex flex-wrap gap-2">
-              <button
-                type="button"
-                onClick={() => {
-                  void fetch(`/api/capabilities/feedback/${item.id}`, {
-                    method: "PATCH",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ status: "acknowledged" }),
-                  }).then(() => loadInbox());
-                }}
-                className="rounded-lg bg-brand-500 px-3 py-1.5 text-xs font-medium text-white"
-              >
-                Mark reviewed
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  void fetch(`/api/capabilities/feedback/${item.id}`, {
-                    method: "PATCH",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ status: "dismissed" }),
-                  }).then(() => loadInbox());
-                }}
-                className="rounded-lg border border-gray-200 px-3 py-1.5 text-xs font-medium text-gray-600 dark:border-gray-700"
-              >
-                Dismiss
-              </button>
-              {item.capabilityId ? (
-                <FeedbackImprovementDraft
-                  feedbackId={item.id}
-                  defaultSuggestion={item.comment}
-                  onCreated={() => {
-                    void loadInbox();
-                  }}
-                />
-              ) : null}
-            </div>
-          </li>
+            item={item}
+            onUpdated={() => {
+              void reloadInbox();
+            }}
+          />
         ))}
       </ul>
     </section>

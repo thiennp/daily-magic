@@ -1,19 +1,23 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import type {
   GroupItem,
   MemberItem,
 } from "@/features/admin/types/groupManagement.types";
 import {
+  loadGroupMembersForSelection,
+  selectAdminGroup,
+} from "@/features/admin/utils/groupManagementLoadActions";
+import {
   createAdminGroupAction,
   deleteAdminGroupAction,
 } from "@/features/admin/utils/groupManagementGroupMutateActions";
-import { selectAdminGroup } from "@/features/admin/utils/groupManagementLoadActions";
 import {
   addGroupMemberAction,
   removeGroupMemberAction,
   updateGroupMemberRoleAction,
 } from "@/features/admin/utils/groupManagementMemberMutateActions";
+import { useDemoPreview } from "@/features/demo/DemoPreviewContext";
 import { GroupRole } from "@/lib/auth/roles";
 
 interface UseGroupManagementResult {
@@ -43,11 +47,14 @@ interface UseGroupManagementResult {
 export function useGroupManagement(
   initialGroups: readonly GroupItem[],
 ): UseGroupManagementResult {
+  const demoPreview = useDemoPreview();
   const [groups, setGroups] = useState<readonly GroupItem[]>(initialGroups);
   const [selectedGroupId, setSelectedGroupId] = useState<string>(
     initialGroups[0]?.id ?? "",
   );
-  const [members, setMembers] = useState<readonly MemberItem[]>([]);
+  const [members, setMembers] = useState<readonly MemberItem[]>(
+    demoPreview?.membersByGroupId[initialGroups[0]?.id ?? ""] ?? [],
+  );
   const [newGroupName, setNewGroupName] = useState("");
   const [memberEmail, setMemberEmail] = useState("");
   const [memberRole, setMemberRole] = useState<string>(GroupRole.USER);
@@ -68,6 +75,17 @@ export function useGroupManagement(
     setMessage,
   };
 
+  useEffect(() => {
+    if (!selectedGroupId || demoPreview) {
+      return;
+    }
+
+    void loadGroupMembersForSelection(selectedGroupId, {
+      setMembers,
+      setMessage,
+    });
+  }, [demoPreview, selectedGroupId]);
+
   return {
     groups,
     selectedGroupId,
@@ -82,6 +100,12 @@ export function useGroupManagement(
     setMemberRole,
     setDeleteMembers,
     handleSelectGroup: (groupId) => {
+      if (demoPreview) {
+        setSelectedGroupId(groupId);
+        setMembers(demoPreview.membersByGroupId[groupId] ?? []);
+        return;
+      }
+
       selectAdminGroup(groupId, actionDeps);
     },
     handleCreateGroup: () => createAdminGroupAction(actionDeps),

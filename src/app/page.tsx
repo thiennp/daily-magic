@@ -1,6 +1,6 @@
 import { getAuthActor } from "@/lib/auth/auth";
-import HomeAuthenticatedView from "@/features/home/HomeAuthenticatedView";
 import HomeMarketingLanding from "@/features/home/HomeMarketingLanding";
+import HomePageLayout from "@/features/pages/layouts/HomePageLayout";
 import AppShell from "@/features/shell/AppShell";
 
 export const dynamic = "force-dynamic";
@@ -10,8 +10,8 @@ export default async function Home() {
 
   if (actor) {
     return (
-      <AppShell contentClassName="mx-auto max-w-6xl px-4 py-6 sm:px-6">
-        <HomeAuthenticatedView
+      <AppShell>
+        <HomePageLayout
           user={{
             email: actor.email,
             name: actor.name,

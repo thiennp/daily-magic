@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 
+import { useDemoPreview } from "@/features/demo/DemoPreviewContext";
 import { POLL_INTERVAL_MS } from "@/features/reports/agentRunsPolling.constant";
 import { buildAgentRunsQueryString } from "@/features/reports/buildAgentRunsQueryString";
 import type EnrichedAgentRunRecord from "@/lib/dispatch/types/EnrichedAgentRunRecord.type";
@@ -19,10 +20,17 @@ export function useAgentRunsList(input: {
   readonly runs: readonly EnrichedAgentRunRecord[];
   readonly isLoading: boolean;
 } {
-  const [runs, setRuns] = useState<readonly EnrichedAgentRunRecord[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const demoPreview = useDemoPreview();
+  const [runs, setRuns] = useState<readonly EnrichedAgentRunRecord[]>(
+    () => demoPreview?.agentRuns ?? [],
+  );
+  const [isLoading, setIsLoading] = useState(() => !demoPreview);
 
   useEffect(() => {
+    if (demoPreview) {
+      return;
+    }
+
     const loadRuns = async (): Promise<void> => {
       const query = buildAgentRunsQueryString({
         status: input.statusFilter === "all" ? undefined : input.statusFilter,
@@ -57,7 +65,7 @@ export function useAgentRunsList(input: {
     return () => {
       clearInterval(timer);
     };
-  }, [input.statusFilter, input.scopeFilter, input.groupFilter]);
+  }, [demoPreview, input.statusFilter, input.scopeFilter, input.groupFilter]);
 
   return { runs, isLoading };
 }

@@ -1,5 +1,8 @@
+"use client";
+
 import Link from "next/link";
 
+import { useAppPath } from "@/features/demo/DemoPreviewContext";
 import AgentRunStatusBadge from "@/features/reports/AgentRunStatusBadge";
 import type EnrichedAgentRunRecord from "@/lib/dispatch/types/EnrichedAgentRunRecord.type";
 
@@ -8,6 +11,8 @@ interface AgentRunCardProps {
 }
 
 export default function AgentRunCard({ run }: AgentRunCardProps) {
+  const appPath = useAppPath();
+
   return (
     <article className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03]">
       <div className="flex flex-wrap items-center justify-between gap-2">
@@ -26,7 +31,7 @@ export default function AgentRunCard({ run }: AgentRunCardProps) {
         {run.prompt}
       </pre>
       <Link
-        href={`/reports/${run.id}`}
+        href={appPath(`/reports/${run.id}`)}
         className="mt-4 inline-block text-sm font-medium text-brand-600 hover:text-brand-700 dark:text-brand-400"
       >
         View full report

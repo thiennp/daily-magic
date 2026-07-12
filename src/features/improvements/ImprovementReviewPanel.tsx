@@ -2,15 +2,21 @@
 
 import { useEffect, useState } from "react";
 
+import { useDemoPreview } from "@/features/demo/DemoPreviewContext";
 import type { CapabilityImprovementInboxItem } from "@/lib/improvements/types/CapabilityImprovementRecord.type";
 
 export default function ImprovementReviewPanel() {
+  const demoPreview = useDemoPreview();
   const [items, setItems] = useState<readonly CapabilityImprovementInboxItem[]>(
-    [],
+    demoPreview?.improvementItems ?? [],
   );
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(() => !demoPreview);
 
   const loadItems = async (): Promise<void> => {
+    if (demoPreview) {
+      return;
+    }
+
     try {
       const response = await fetch("/api/capabilities/improvements/inbox");
       if (!response.ok) {
@@ -32,8 +38,12 @@ export default function ImprovementReviewPanel() {
   };
 
   useEffect(() => {
+    if (demoPreview) {
+      return;
+    }
+
     void loadItems();
-  }, []);
+  }, [demoPreview]);
 
   if (isLoading || items.length === 0) {
     return null;

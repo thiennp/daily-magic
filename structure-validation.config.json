@@ -31,7 +31,8 @@
       "vercel.json",
       ".env.example",
       "CLAUDE.md",
-      "AGENTS.md"
+      "AGENTS.md",
+      ".gitignore"
     ],
     "**": ["*.test.ts", "*.test.tsx", "index.ts", "index.tsx"]
   }

@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 
-import GroupManagementPanel from "@/features/admin/GroupManagementPanel";
+import AdminGroupsPageLayout from "@/features/pages/layouts/AdminGroupsPageLayout";
+import AppShell from "@/features/shell/AppShell";
 import { getAuthActor } from "@/lib/auth/auth";
 import {
   listGroups,
@@ -19,5 +20,9 @@ export default async function AdminGroupsPage() {
     ? await listGroups()
     : await listManageableGroupsForUser(actor.id);
 
-  return <GroupManagementPanel initialGroups={groups} />;
+  return (
+    <AppShell>
+      <AdminGroupsPageLayout initialGroups={groups} />
+    </AppShell>
+  );
 }

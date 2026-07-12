@@ -5,6 +5,10 @@ import { usePathname } from "next/navigation";
 
 import { ThemeToggleButton } from "@/components/common/ThemeToggleButton";
 import UserDropdown from "@/components/header/UserDropdown";
+import {
+  normalizeAppPathname,
+  useAppPath,
+} from "@/features/demo/DemoPreviewContext";
 import AppShellNav from "@/features/shell/AppShellNav";
 import { AGENT_WITCH_PRODUCT_NAME } from "@/lib/agentWitch/agentWitchProductName.constant";
 
@@ -14,13 +18,16 @@ interface AppShellHeaderProps {
 
 export default function AppShellHeader({ sectionTitle }: AppShellHeaderProps) {
   const pathname = usePathname();
+  const appPath = useAppPath();
+  const normalizedPath = normalizeAppPathname(pathname);
   const resolvedTitle =
     sectionTitle ??
-    (pathname.startsWith("/admin")
+    (normalizedPath.startsWith("/admin")
       ? "Teams & rules"
-      : pathname.startsWith("/agent") || pathname.startsWith("/ws-test")
+      : normalizedPath.startsWith("/agent") ||
+          normalizedPath.startsWith("/ws-test")
         ? "Send a task"
-        : pathname.startsWith("/reports")
+        : normalizedPath.startsWith("/reports")
           ? "Job history"
           : "Home");
 
@@ -29,7 +36,7 @@ export default function AppShellHeader({ sectionTitle }: AppShellHeaderProps) {
       <div className="mx-auto flex max-w-[1600px] items-center justify-between gap-4 px-4 py-4 sm:px-6">
         <div className="min-w-0">
           <Link
-            href="/"
+            href={appPath("/")}
             className="text-xs font-medium uppercase tracking-wide text-brand-500"
           >
             {AGENT_WITCH_PRODUCT_NAME}

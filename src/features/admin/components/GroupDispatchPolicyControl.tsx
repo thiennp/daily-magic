@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 
 import Button from "@/components/ui/button/Button";
+import { useDemoPreview } from "@/features/demo/DemoPreviewContext";
 import {
   DispatchPolicy,
   type DispatchPolicyValue,
@@ -15,12 +16,18 @@ interface GroupDispatchPolicyControlProps {
 export default function GroupDispatchPolicyControl({
   groupId,
 }: GroupDispatchPolicyControlProps) {
+  const demoPreview = useDemoPreview();
   const [policy, setPolicy] = useState<DispatchPolicyValue>(
-    DispatchPolicy.APPROVAL,
+    () =>
+      demoPreview?.dispatchPolicyByGroupId[groupId] ?? DispatchPolicy.APPROVAL,
   );
   const [message, setMessage] = useState<string | null>(null);
 
   useEffect(() => {
+    if (demoPreview) {
+      return;
+    }
+
     void (async () => {
       const response = await fetch(
         `/api/admin/groups/${groupId}/dispatch-policy`,
@@ -45,9 +52,14 @@ export default function GroupDispatchPolicyControl({
         }
       }
     })();
-  }, [groupId]);
+  }, [demoPreview, groupId]);
 
   const savePolicy = async (): Promise<void> => {
+    if (demoPreview) {
+      setMessage("Demo preview — policy changes are not saved.");
+      return;
+    }
+
     const response = await fetch(
       `/api/admin/groups/${groupId}/dispatch-policy`,
       {

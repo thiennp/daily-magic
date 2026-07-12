@@ -2,12 +2,13 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 
+import { useDemoPreview } from "@/features/demo/DemoPreviewContext";
 import {
   buildAgentWitchWebSocketUrl,
-  createAgentWitchRequestId,
   sendAgentWitchPairingToken,
 } from "@/features/wsTest/utils/agentWitchSocketUtils";
-import { requestAgentWitchWake } from "@/lib/agentWitch/requestAgentWitchWake";
+import { buildDemoClaudePromptAck } from "@/features/wsTest/utils/buildDemoClaudePromptAck";
+import { sendClaudePromptOverSocket } from "@/features/wsTest/utils/sendClaudePromptOverSocket";
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
 
 import type { WsTestConnectionStatus } from "../types/WsTestConnectionStatus.type";
@@ -26,12 +27,19 @@ export interface UseAgentWitchSocketResult {
 }
 
 export function useAgentWitchSocket(): UseAgentWitchSocketResult {
+  const demoPreview = useDemoPreview();
   const socketRef = useRef<WebSocket | null>(null);
   const [connectionStatus, setConnectionStatus] =
-    useState<WsTestConnectionStatus>("connecting");
+    useState<WsTestConnectionStatus>(() =>
+      demoPreview ? "connected" : "connecting",
+    );
   const [lastResponse, setLastResponse] = useState("");
 
   useEffect(() => {
+    if (demoPreview) {
+      return;
+    }
+
     const wsUrl = buildAgentWitchWebSocketUrl();
     if (wsUrl.length === 0) {
       return;
@@ -67,7 +75,7 @@ export function useAgentWitchSocket(): UseAgentWitchSocketResult {
       socket.close();
       socketRef.current = null;
     };
-  }, []);
+  }, [demoPreview]);
 
   const sendClaudePrompt = useCallback(
     (
@@ -83,39 +91,21 @@ export function useAgentWitchSocket(): UseAgentWitchSocketResult {
         return;
       }
 
-      const sendPrompt = (): void => {
-        const socket = socketRef.current;
-        if (socket === null || socket.readyState !== WebSocket.OPEN) {
-          setLastResponse(
-            JSON.stringify({
-              type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR,
-              payload: { errorMessage: "WebSocket is not connected." },
-            }),
-          );
-          return;
-        }
+      if (demoPreview) {
+        setLastResponse(buildDemoClaudePromptAck());
+        return;
+      }
 
-        socket.send(
-          JSON.stringify({
-            type: AGENT_WITCH_MESSAGE_TYPES.COMMAND_CLAUDE_RUN,
-            payload: {
-              prompt: trimmedPrompt,
-              ...(options?.targetUserId
-                ? { targetUserId: options.targetUserId }
-                : {}),
-              ...(options?.groupId ? { groupId: options.groupId } : {}),
-              ...(options?.capabilityId
-                ? { capabilityId: options.capabilityId }
-                : {}),
-            },
-            requestId: createAgentWitchRequestId(),
-          }),
-        );
-      };
-
-      void requestAgentWitchWake().finally(sendPrompt);
+      sendClaudePromptOverSocket({
+        socket: socketRef.current,
+        prompt: trimmedPrompt,
+        targetUserId: options?.targetUserId,
+        groupId: options?.groupId,
+        capabilityId: options?.capabilityId,
+        onResponse: setLastResponse,
+      });
     },
-    [],
+    [demoPreview],
   );
 
   return {

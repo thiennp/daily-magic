@@ -2,16 +2,22 @@
 
 import { useEffect, useState } from "react";
 
+import { useDemoPreview } from "@/features/demo/DemoPreviewContext";
 import { CapabilityStatus } from "@/lib/capabilities/CapabilityStatus.constant";
 import type PublishedCapabilityRecord from "@/lib/capabilities/types/PublishedCapabilityRecord.type";
 
 export default function MyOfferingsPanel() {
+  const demoPreview = useDemoPreview();
   const [capabilities, setCapabilities] = useState<
     readonly PublishedCapabilityRecord[]
-  >([]);
-  const [isLoading, setIsLoading] = useState(true);
+  >(() => demoPreview?.capabilities ?? []);
+  const [isLoading, setIsLoading] = useState(() => !demoPreview);
 
   useEffect(() => {
+    if (demoPreview) {
+      return;
+    }
+
     const loadOfferings = async (): Promise<void> => {
       try {
         const response = await fetch("/api/capabilities/mine");
@@ -37,7 +43,7 @@ export default function MyOfferingsPanel() {
     };
 
     void loadOfferings();
-  }, []);
+  }, [demoPreview]);
 
   const publishedCount = capabilities.filter(
     (capability) => capability.status === CapabilityStatus.PUBLISHED,

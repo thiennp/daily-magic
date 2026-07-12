@@ -1,13 +1,9 @@
 "use client";
 
-import { useMemo, useState } from "react";
-
 import { useSelectedDispatchCapability } from "@/features/dispatch/hooks/useSelectedDispatchCapability";
 import { useTeamDispatchSelection } from "@/features/dispatch/hooks/useTeamDispatchSelection";
-import {
-  buildWorkflowPrompt,
-  validateWorkflowFieldValues,
-} from "@/lib/workflows/buildWorkflowPrompt";
+import { useWsTestComposerWorkflowState } from "@/features/wsTest/hooks/useWsTestComposerWorkflowState";
+import { isWsTestSendDisabled } from "@/features/wsTest/utils/isWsTestSendDisabled";
 import type WorkflowFieldDefinition from "@/lib/workflows/types/WorkflowFieldDefinition.type";
 
 export function useWsTestTaskComposer(): {
@@ -29,84 +25,64 @@ export function useWsTestTaskComposer(): {
   readonly onWorkflowFieldChange: (key: string, value: string) => void;
   readonly resetComposer: () => void;
 } {
-  const [prompt, setPrompt] = useState("");
-  const [workflowFieldValues, setWorkflowFieldValues] = useState<
-    Record<string, string>
-  >({});
   const selection = useTeamDispatchSelection();
   const selectedCapability = useSelectedDispatchCapability(
     selection.selectedGroupId,
     selection.selectedTargetUserId,
     selection.selectedCapabilityId,
   );
+  const workflow = useWsTestComposerWorkflowState(selectedCapability);
   const isTeamDispatch =
     selection.selectedGroupId.length > 0 &&
     selection.selectedTargetUserId.length > 0;
-  const isWorkflowTask = selectedCapability?.type === "workflow";
-  const workflowFields = selectedCapability?.workflowFields ?? [];
-  const workflowValidationErrors = isWorkflowTask
-    ? validateWorkflowFieldValues(workflowFields, workflowFieldValues)
-    : [];
-  const resolvedPrompt = useMemo(
-    () =>
-      isWorkflowTask && selectedCapability
-        ? buildWorkflowPrompt(
-            selectedCapability.name,
-            workflowFields,
-            workflowFieldValues,
-            prompt,
-          )
-        : prompt,
-    [
-      isWorkflowTask,
-      selectedCapability,
-      workflowFields,
-      workflowFieldValues,
-      prompt,
-    ],
-  );
+  const clearWorkflowFields = () => {
+    workflow.setWorkflowFieldValues({});
+  };
 
   return {
-    prompt,
-    setPrompt,
-    workflowFieldValues,
+    prompt: workflow.prompt,
+    setPrompt: workflow.setPrompt,
+    workflowFieldValues: workflow.workflowFieldValues,
     selectedGroupId: selection.selectedGroupId,
     selectedTargetUserId: selection.selectedTargetUserId,
     selectedCapabilityId: selection.selectedCapabilityId,
     setSelectedGroupId: (groupId: string) => {
       selection.setSelectedGroupId(groupId);
-      setWorkflowFieldValues({});
+      clearWorkflowFields();
     },
     setSelectedTargetUserId: (userId: string) => {
       selection.setSelectedTargetUserId(userId);
-      setWorkflowFieldValues({});
+      clearWorkflowFields();
     },
     setSelectedCapabilityId: (capabilityId: string) => {
       selection.setSelectedCapabilityId(capabilityId);
-      setWorkflowFieldValues({});
+      clearWorkflowFields();
     },
     isTeamDispatch,
-    isWorkflowTask,
-    workflowFields,
-    workflowValidationErrors,
-    resolvedPrompt,
+    isWorkflowTask: workflow.isWorkflowTask,
+    workflowFields: workflow.workflowFields,
+    workflowValidationErrors: workflow.workflowValidationErrors,
+    resolvedPrompt: workflow.resolvedPrompt,
     isSendDisabled: (connectionStatus: string) =>
-      connectionStatus !== "connected" ||
-      (isWorkflowTask
-        ? workflowValidationErrors.length > 0
-        : prompt.trim().length === 0) ||
-      (selection.selectedGroupId.length > 0 &&
-        selection.selectedTargetUserId.length === 0) ||
-      (isTeamDispatch && selection.selectedCapabilityId.length === 0),
+      isWsTestSendDisabled({
+        connectionStatus,
+        isWorkflowTask: workflow.isWorkflowTask,
+        workflowValidationErrors: workflow.workflowValidationErrors,
+        prompt: workflow.prompt,
+        selectedGroupId: selection.selectedGroupId,
+        selectedTargetUserId: selection.selectedTargetUserId,
+        isTeamDispatch,
+        selectedCapabilityId: selection.selectedCapabilityId,
+      }),
     onWorkflowFieldChange: (key: string, value: string) => {
-      setWorkflowFieldValues((current) => ({
+      workflow.setWorkflowFieldValues((current) => ({
         ...current,
         [key]: value,
       }));
     },
     resetComposer: () => {
-      setPrompt("");
-      setWorkflowFieldValues({});
+      workflow.setPrompt("");
+      clearWorkflowFields();
     },
   };
 }

@@ -3,17 +3,27 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
+import { useAppPath, useDemoPreview } from "@/features/demo/DemoPreviewContext";
 import {
   loadOnboardingSteps,
   type OnboardingStep,
 } from "@/features/home/loadOnboardingSteps";
+import { resolveOnboardingStepHref } from "@/features/home/resolveOnboardingStepHref";
 
 export default function HomeOnboardingChecklist() {
-  const [steps, setSteps] = useState<readonly OnboardingStep[]>([]);
+  const demoPreview = useDemoPreview();
+  const appPath = useAppPath();
+  const [steps, setSteps] = useState<readonly OnboardingStep[]>(
+    demoPreview?.onboardingSteps ?? [],
+  );
 
   useEffect(() => {
+    if (demoPreview) {
+      return;
+    }
+
     void loadOnboardingSteps().then(setSteps);
-  }, []);
+  }, [demoPreview]);
 
   if (steps.length === 0) {
     return null;
@@ -46,7 +56,7 @@ export default function HomeOnboardingChecklist() {
               <span className="text-xs font-medium text-success-600">Done</span>
             ) : (
               <Link
-                href={step.href}
+                href={resolveOnboardingStepHref(step.href, appPath)}
                 className="text-sm font-medium text-brand-600 hover:text-brand-700 dark:text-brand-400"
               >
                 Continue

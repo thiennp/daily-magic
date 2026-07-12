@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import ConnectedClientsTable from "@/features/home/ConnectedClientsTable";
+import { useDemoPreview } from "@/features/demo/DemoPreviewContext";
 import type AgentWitchStatusResponse from "@/features/home/types/AgentWitchStatusResponse.type";
 import type ConnectedClient from "@/features/home/types/ConnectedClient.type";
 
@@ -11,10 +12,17 @@ export default function ConnectedClientsList({
 }: {
   readonly compact?: boolean;
 }) {
-  const [clients, setClients] = useState<readonly ConnectedClient[]>([]);
+  const demoPreview = useDemoPreview();
+  const [clients, setClients] = useState<readonly ConnectedClient[]>(
+    demoPreview?.connectedClients ?? [],
+  );
   const [message, setMessage] = useState<string | null>(null);
 
   const loadClients = useCallback(async () => {
+    if (demoPreview) {
+      return;
+    }
+
     const response = await fetch("/api/agent-witch/status");
     const payload = (await response.json()) as AgentWitchStatusResponse;
 
@@ -25,12 +33,18 @@ export default function ConnectedClientsList({
 
     setMessage(null);
     setClients(payload.clients ?? []);
-  }, []);
+  }, [demoPreview]);
 
   const isMountedRef = useRef(true);
 
   useEffect(() => {
     isMountedRef.current = true;
+
+    if (demoPreview) {
+      return () => {
+        isMountedRef.current = false;
+      };
+    }
 
     const refresh = async () => {
       if (isMountedRef.current) {
@@ -47,7 +61,7 @@ export default function ConnectedClientsList({
       isMountedRef.current = false;
       window.clearInterval(intervalId);
     };
-  }, [loadClients]);
+  }, [loadClients, demoPreview]);
 
   const body =
     clients.length === 0 ? (

@@ -1,6 +1,9 @@
+"use client";
+
 import Link from "next/link";
 
 import ConnectedClientsList from "@/features/home/ConnectedClientsList";
+import { useAppPath } from "@/features/demo/DemoPreviewContext";
 import formatGlobalRole from "@/lib/auth/formatGlobalRole";
 import type { GlobalRoleValue } from "@/lib/auth/roles";
 
@@ -14,6 +17,7 @@ interface HomeDashboardHeroProps {
 
 export default function HomeDashboardHero({ user }: HomeDashboardHeroProps) {
   const displayName = user.name ?? user.email;
+  const appPath = useAppPath();
 
   return (
     <section className="overflow-hidden rounded-3xl border border-gray-200/80 bg-gradient-to-br from-brand-50 via-white to-white p-8 shadow-theme-sm ring-1 ring-gray-200/50">
@@ -32,20 +36,20 @@ export default function HomeDashboardHero({ user }: HomeDashboardHeroProps) {
           </p>
           <div className="mt-6">
             <Link
-              href="/agent"
+              href={appPath("/agent")}
               className="inline-flex h-11 items-center justify-center rounded-lg bg-brand-500 px-5 text-sm font-medium text-white transition hover:bg-brand-600"
             >
               Send a task
             </Link>
             <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-sm">
               <Link
-                href="/reports"
+                href={appPath("/reports")}
                 className="font-medium text-brand-600 hover:text-brand-700"
               >
                 View job history →
               </Link>
               <Link
-                href="/admin/groups"
+                href={appPath("/admin/groups")}
                 className="font-medium text-gray-600 hover:text-gray-800"
               >
                 Teams & rules

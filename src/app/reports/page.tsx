@@ -1,23 +1,12 @@
+import ReportsPageLayout from "@/features/pages/layouts/ReportsPageLayout";
 import AppShell from "@/features/shell/AppShell";
-import AgentRunsList from "@/features/reports/AgentRunsList";
 
 export const dynamic = "force-dynamic";
 
 export default function ReportsPage() {
   return (
-    <AppShell contentClassName="mx-auto max-w-4xl px-4 py-6 sm:px-6">
-      <div className="space-y-6">
-        <div>
-          <h1 className="text-2xl font-semibold text-gray-800 dark:text-white/90">
-            Job history
-          </h1>
-          <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-            Every task sent through Agent Witch is listed here — yours,
-            teammates&apos;, approvals, and results.
-          </p>
-        </div>
-        <AgentRunsList />
-      </div>
+    <AppShell>
+      <ReportsPageLayout />
     </AppShell>
   );
 }
