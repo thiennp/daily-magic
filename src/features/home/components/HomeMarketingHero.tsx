@@ -52,7 +52,9 @@ export default function HomeMarketingHero() {
           </Link>
         </nav>
 
-        <MarketingTrustStrip />
+        <div className="mt-8">
+          <MarketingTrustStrip />
+        </div>
       </div>
 
       <aside aria-label="Sign in and product preview" className="space-y-5">
