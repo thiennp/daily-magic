@@ -1,4 +1,4 @@
-import LibraryPanel from "@/features/library/LibraryPanel";
+import LibraryPageClient from "@/features/library/LibraryPageClient";
 
 export default function LibraryPageLayout() {
   return (
@@ -8,11 +8,11 @@ export default function LibraryPageLayout() {
           My library
         </h1>
         <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-          Your saved and published playbooks. Tap Use to run on your Mac with
-          fields prefilled, or copy a prompt for ChatGPT and Gemini.
+          Your saved and published playbooks. Create a workflow, tap Use to run
+          on your Mac, or copy a prompt for ChatGPT and Gemini.
         </p>
       </div>
-      <LibraryPanel />
+      <LibraryPageClient />
     </div>
   );
 }

@@ -2,12 +2,12 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import ShowcaseArticleLayout from "@/features/showcases/ShowcaseArticleLayout";
+import { buildShowcaseArticleMetadata } from "@/features/showcases/buildShowcaseArticleMetadata";
 import {
   SHOWCASE_ARTICLES,
   getShowcaseArticleBySlug,
 } from "@/features/showcases/showcaseArticleRegistry";
 import MarketingShell from "@/features/marketing/MarketingShell";
-import { AGENT_WITCH_PRODUCT_NAME } from "@/lib/agentWitch/agentWitchProductName.constant";
 
 interface ShowcaseArticlePageProps {
   readonly params: Promise<{ readonly slug: string }>;
@@ -27,15 +27,7 @@ export async function generateMetadata({
     return { title: "Example not found" };
   }
 
-  return {
-    title: `${article.title} | ${AGENT_WITCH_PRODUCT_NAME}`,
-    description: article.subtitle,
-    openGraph: {
-      title: article.title,
-      description: article.subtitle,
-      type: "article",
-    },
-  };
+  return buildShowcaseArticleMetadata(article);
 }
 
 export default async function ShowcaseArticlePage({

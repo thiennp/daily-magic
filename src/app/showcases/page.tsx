@@ -13,6 +13,12 @@ export const metadata: Metadata = {
       "Short stories for people who love AI but are not sure where to start with agents.",
     type: "website",
   },
+  twitter: {
+    card: "summary",
+    title: `Real examples | ${AGENT_WITCH_PRODUCT_NAME}`,
+    description:
+      "Short stories for people who love AI but are not sure where to start with agents.",
+  },
 };
 
 export default function ShowcasesPage() {

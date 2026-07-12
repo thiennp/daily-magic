@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { useDemoPreview } from "@/features/demo/DemoPreviewContext";
 import type PublishedCapabilityRecord from "@/lib/capabilities/types/PublishedCapabilityRecord.type";
 
-export function useLibraryCapabilities(): {
+export function useLibraryCapabilities(refreshKey = 0): {
   readonly capabilities: readonly PublishedCapabilityRecord[];
   readonly isLoading: boolean;
 } {
@@ -21,6 +21,7 @@ export function useLibraryCapabilities(): {
     }
 
     const loadLibrary = async (): Promise<void> => {
+      setIsLoading(true);
       try {
         const response = await fetch("/api/capabilities/mine");
         if (!response.ok) {
@@ -45,7 +46,7 @@ export function useLibraryCapabilities(): {
     };
 
     void loadLibrary();
-  }, [demoPreview]);
+  }, [demoPreview, refreshKey]);
 
   return { capabilities, isLoading };
 }

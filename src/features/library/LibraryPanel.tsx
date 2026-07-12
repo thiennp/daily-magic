@@ -4,8 +4,12 @@ import LibraryPlaybookCard from "@/features/library/LibraryPlaybookCard";
 import { useLibraryCapabilities } from "@/features/library/hooks/useLibraryCapabilities";
 import { CapabilityStatus } from "@/lib/capabilities/CapabilityStatus.constant";
 
-export default function LibraryPanel() {
-  const { capabilities, isLoading } = useLibraryCapabilities();
+interface LibraryPanelProps {
+  readonly refreshKey?: number;
+}
+
+export default function LibraryPanel({ refreshKey = 0 }: LibraryPanelProps) {
+  const { capabilities, isLoading } = useLibraryCapabilities(refreshKey);
   const libraryItems = capabilities.filter(
     (capability) => capability.status !== CapabilityStatus.ARCHIVED,
   );

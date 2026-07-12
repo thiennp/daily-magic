@@ -1,6 +1,7 @@
 "use client";
 
 import TeamDispatchFields from "@/features/dispatch/TeamDispatchFields";
+import WsTestComposerActions from "@/features/wsTest/WsTestComposerActions";
 import type { useWsTestTaskComposer } from "@/features/wsTest/hooks/useWsTestTaskComposer";
 import WsTestTaskInputsSection from "@/features/wsTest/WsTestTaskInputsSection";
 import type { WsTestConnectionStatus } from "@/features/wsTest/types/WsTestConnectionStatus.type";
@@ -20,6 +21,10 @@ export default function WsTestPromptSection({
   onSend,
   onClear,
 }: WsTestPromptSectionProps) {
+  const canCopyPrompt =
+    composer.resolvedPrompt.trim().length > 0 &&
+    composer.workflowValidationErrors.length === 0;
+
   return (
     <>
       {!composer.isLibraryPlaybook ? (
@@ -59,32 +64,18 @@ export default function WsTestPromptSection({
           onPromptChange={composer.setPrompt}
           onWorkflowFieldChange={composer.onWorkflowFieldChange}
         />
-        <div className="mt-4 flex flex-wrap gap-3">
-          <button
-            type="button"
-            onClick={onSend}
-            disabled={isSendDisabled}
-            className="inline-flex h-11 items-center justify-center rounded-lg bg-brand-500 px-5 text-sm font-medium text-white transition hover:bg-brand-600 disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            {composer.isTeamDispatch ? "Send to teammate" : "Send to my Mac"}
-          </button>
-          <button
-            type="button"
-            onClick={onClear}
-            className="inline-flex h-11 items-center justify-center rounded-lg border border-gray-200 px-5 text-sm font-medium text-gray-700 transition hover:bg-gray-50 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-white/5"
-          >
-            Clear
-          </button>
-        </div>
-        {isSendDisabled &&
-        composer.workflowValidationErrors.length === 0 &&
-        !composer.isWorkflowTask ? (
-          <p className="mt-3 text-sm text-gray-500 dark:text-gray-400">
-            {connectionStatus !== "connected"
-              ? "Connect your Mac from Home → Your setup before sending a task."
-              : "Enter a task description to continue."}
-          </p>
-        ) : null}
+        <WsTestComposerActions
+          connectionStatus={connectionStatus}
+          isSendDisabled={isSendDisabled}
+          canCopyPrompt={canCopyPrompt}
+          copyText={composer.resolvedPrompt}
+          sendLabel={
+            composer.isTeamDispatch ? "Send to teammate" : "Send to my Mac"
+          }
+          isWorkflowTask={composer.isWorkflowTask}
+          onSend={onSend}
+          onClear={onClear}
+        />
       </section>
     </>
   );

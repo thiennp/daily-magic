@@ -1,0 +1,95 @@
+"use client";
+
+import { useCopyToClipboard } from "@/hooks/useCopyToClipboard";
+import type { WsTestConnectionStatus } from "@/features/wsTest/types/WsTestConnectionStatus.type";
+
+interface WsTestComposerActionsProps {
+  readonly connectionStatus: WsTestConnectionStatus;
+  readonly isSendDisabled: boolean;
+  readonly canCopyPrompt: boolean;
+  readonly copyText: string;
+  readonly sendLabel: string;
+  readonly isWorkflowTask: boolean;
+  readonly onSend: () => void;
+  readonly onClear: () => void;
+}
+
+const primaryButtonClass =
+  "inline-flex h-11 items-center justify-center rounded-lg bg-brand-500 px-5 text-sm font-medium text-white transition hover:bg-brand-600 disabled:cursor-not-allowed disabled:opacity-50";
+const outlineButtonClass =
+  "inline-flex h-11 items-center justify-center rounded-lg border border-gray-200 px-5 text-sm font-medium text-gray-700 transition hover:bg-gray-50 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-white/5";
+
+export default function WsTestComposerActions({
+  connectionStatus,
+  isSendDisabled,
+  canCopyPrompt,
+  copyText,
+  sendLabel,
+  isWorkflowTask,
+  onSend,
+  onClear,
+}: WsTestComposerActionsProps) {
+  const isOffline = connectionStatus !== "connected";
+  const showCopyPrimary = isOffline && canCopyPrompt;
+  const { copied, copy } = useCopyToClipboard();
+
+  const handleCopy = () => {
+    void copy(copyText);
+  };
+
+  return (
+    <>
+      <div className="mt-4 flex flex-wrap gap-3">
+        {showCopyPrimary ? (
+          <button
+            type="button"
+            onClick={handleCopy}
+            className={`${primaryButtonClass} min-w-[10rem] flex-1 sm:flex-none`}
+          >
+            {copied ? "Copied" : "Copy prompt"}
+          </button>
+        ) : (
+          <button
+            type="button"
+            onClick={onSend}
+            disabled={isSendDisabled}
+            className={primaryButtonClass}
+          >
+            {sendLabel}
+          </button>
+        )}
+        {!showCopyPrimary && canCopyPrompt ? (
+          <button
+            type="button"
+            onClick={handleCopy}
+            className={outlineButtonClass}
+          >
+            {copied ? "Copied" : "Copy prompt"}
+          </button>
+        ) : null}
+        <button type="button" onClick={onClear} className={outlineButtonClass}>
+          Clear
+        </button>
+      </div>
+      {showCopyPrimary ? (
+        <p className="mt-3 text-sm text-gray-500 dark:text-gray-400">
+          Your Mac is not connected. Copy the assembled prompt for ChatGPT or
+          Gemini, or connect from Home → Your setup.
+        </p>
+      ) : null}
+      {isSendDisabled && !showCopyPrimary && !isWorkflowTask ? (
+        <p className="mt-3 text-sm text-gray-500 dark:text-gray-400">
+          {isOffline
+            ? "Connect your Mac from Home → Your setup before sending a task."
+            : "Enter a task description to continue."}
+        </p>
+      ) : null}
+      {isSendDisabled && !showCopyPrimary && isWorkflowTask && isOffline ? (
+        <p className="mt-3 text-sm text-gray-500 dark:text-gray-400">
+          Connect your Mac to send, or fill required fields and copy the
+          assembled prompt.
+        </p>
+      ) : null}
+    </>
+  );
+}
