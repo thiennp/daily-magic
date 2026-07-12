@@ -141,6 +141,17 @@ CREATE TABLE IF NOT EXISTS harness_borrows (
 CREATE INDEX IF NOT EXISTS harness_borrows_borrower_idx
   ON harness_borrows (borrower_user_id, borrowed_at DESC);
 
+CREATE TABLE IF NOT EXISTS capability_forks (
+  id TEXT PRIMARY KEY DEFAULT gen_random_uuid()::text,
+  borrower_user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  source_capability_id TEXT NOT NULL REFERENCES published_capabilities(id) ON DELETE CASCADE,
+  forked_capability_id TEXT NOT NULL REFERENCES published_capabilities(id) ON DELETE CASCADE,
+  forked_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS capability_forks_borrower_idx
+  ON capability_forks (borrower_user_id, forked_at DESC);
+
 CREATE TABLE IF NOT EXISTS harness_set_sharing (
   owner_user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
   set_slug TEXT NOT NULL,
@@ -176,9 +187,15 @@ CREATE TABLE IF NOT EXISTS published_capabilities (
   harness_set_slug TEXT,
   current_version_id TEXT,
   workflow_fields JSONB NOT NULL DEFAULT '[]'::jsonb,
+  forked_from_capability_id TEXT
+    REFERENCES published_capabilities(id) ON DELETE SET NULL,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
+
+CREATE INDEX IF NOT EXISTS published_capabilities_forked_from_idx
+  ON published_capabilities (forked_from_capability_id)
+  WHERE forked_from_capability_id IS NOT NULL;
 
 CREATE INDEX IF NOT EXISTS published_capabilities_owner_idx
   ON published_capabilities (owner_user_id, status);

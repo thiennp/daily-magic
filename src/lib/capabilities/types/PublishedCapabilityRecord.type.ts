@@ -18,6 +18,7 @@ export default interface PublishedCapabilityRecord {
   readonly harnessSetSlug: string | null;
   readonly currentVersionId: string | null;
   readonly workflowFields: readonly WorkflowFieldDefinition[];
+  readonly forkedFromCapabilityId: string | null;
   readonly createdAt: string;
   readonly updatedAt: string;
 }

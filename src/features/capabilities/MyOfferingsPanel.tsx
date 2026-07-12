@@ -79,6 +79,9 @@ export default function MyOfferingsPanel() {
               ) : null}
               <p className="mt-2 text-xs uppercase tracking-wide text-gray-500">
                 {capability.status}
+                {capability.forkedFromCapabilityId !== null
+                  ? " · saved from teammate"
+                  : ""}
               </p>
             </li>
           ))}

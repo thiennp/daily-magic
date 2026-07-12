@@ -34,6 +34,9 @@ export default function mapPublishedCapabilityRow(
       ? String(row.current_version_id)
       : null,
     workflowFields: parseWorkflowFieldDefinitions(row.workflow_fields),
+    forkedFromCapabilityId: row.forked_from_capability_id
+      ? String(row.forked_from_capability_id)
+      : null,
     createdAt: String(row.created_at),
     updatedAt: String(row.updated_at),
   };

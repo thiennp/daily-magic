@@ -3,6 +3,7 @@
 import BorrowHarnessImportActions from "@/features/harness/BorrowHarnessImportActions";
 import HarnessMarketplaceList from "@/features/harness/HarnessMarketplaceList";
 import HarnessMarketplaceListingPreview from "@/features/harness/HarnessMarketplaceListingPreview";
+import SaveCapabilityToLibraryActions from "@/features/harness/SaveCapabilityToLibraryActions";
 import { useAgentWitchHarnessSocket } from "@/features/harness/hooks/useAgentWitchHarnessSocket";
 import { useHarnessMarketplaceState } from "@/features/harness/hooks/useHarnessMarketplaceState";
 
@@ -45,6 +46,10 @@ export default function MarketplacePanel({
           harnessSetName={borrowed.harnessSetName}
           harnessItemPaths={borrowed.harnessItemPaths}
         />
+        <SaveCapabilityToLibraryActions
+          capabilityId={borrowed.capabilityId}
+          sourceOwnerLabel={borrowed.ownerName ?? borrowed.ownerEmail}
+        />
         <BorrowHarnessImportActions
           ownerUserId={borrowed.ownerUserId}
           isOnline={borrowed.isOnline}
@@ -82,8 +87,8 @@ export default function MarketplacePanel({
         Marketplace
       </h2>
       <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-        Browse agents and workflows shared by teammates. Borrowing installs the
-        linked bundle so you can run the same setup locally.
+        Browse agents and workflows shared by teammates. Save a copy to your
+        library or install the linked rules bundle on your Mac.
       </p>
       {list}
       {preview}
