@@ -2,12 +2,11 @@ import MyOfferingsPanel from "@/features/capabilities/MyOfferingsPanel";
 import TeamDirectoryPanel from "@/features/capabilities/TeamDirectoryPanel";
 import FeedbackInboxPanel from "@/features/feedback/FeedbackInboxPanel";
 import ImprovementReviewPanel from "@/features/improvements/ImprovementReviewPanel";
-import AgentDispatchPolicyPanel from "@/features/dispatch/AgentDispatchPolicyPanel";
 import BorrowHarnessCatalog from "@/features/harness/BorrowHarnessCatalog";
 import HomeDashboardHero from "@/features/home/HomeDashboardHero";
 import HomeOnboardingChecklist from "@/features/home/HomeOnboardingChecklist";
-import LocalAgentSetupInstructions from "@/features/home/LocalAgentSetupInstructions";
-import HarnessWorkspace from "@/features/harness/HarnessWorkspace";
+import HomePresencePanel from "@/features/home/HomePresencePanel";
+import HomeSetupSection from "@/features/home/HomeSetupSection";
 import type { GlobalRoleValue } from "@/lib/auth/roles";
 
 interface HomeAuthenticatedViewProps {
@@ -22,28 +21,24 @@ export default function HomeAuthenticatedView({
   user,
 }: HomeAuthenticatedViewProps) {
   return (
-    <div className="space-y-8 text-left">
-      <HomeDashboardHero user={user} />
-      <HomeOnboardingChecklist />
-      <MyOfferingsPanel />
-      <FeedbackInboxPanel />
-      <ImprovementReviewPanel />
-      <TeamDirectoryPanel />
-      <BorrowHarnessCatalog />
+    <div className="grid grid-cols-1 gap-6 text-left lg:grid-cols-12 lg:items-start lg:gap-8">
+      <aside className="order-2 space-y-6 lg:order-1 lg:col-span-3">
+        <HomeOnboardingChecklist />
+        <HomePresencePanel />
+      </aside>
 
-      <details
-        id="your-setup"
-        className="rounded-2xl border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-white/[0.03]"
-      >
-        <summary className="cursor-pointer text-lg font-semibold text-gray-800 dark:text-white/90">
-          Your setup (Mac, rules, and sharing)
-        </summary>
-        <div className="mt-6 space-y-6">
-          <AgentDispatchPolicyPanel />
-          <HarnessWorkspace />
-          <LocalAgentSetupInstructions />
-        </div>
-      </details>
+      <main className="order-1 space-y-6 lg:order-2 lg:col-span-6">
+        <HomeDashboardHero user={user} />
+        <MyOfferingsPanel />
+        <TeamDirectoryPanel />
+      </main>
+
+      <aside className="order-3 space-y-6 lg:col-span-3">
+        <FeedbackInboxPanel />
+        <ImprovementReviewPanel />
+        <BorrowHarnessCatalog />
+        <HomeSetupSection />
+      </aside>
     </div>
   );
 }
