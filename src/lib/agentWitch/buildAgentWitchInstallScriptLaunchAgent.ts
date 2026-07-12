@@ -24,6 +24,8 @@ if [[ "\$(uname -s)" == "Darwin" ]]; then
     <string>\${HOME}</string>
     <key>PATH</key>
     <string>\${NODE_DIR}:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin</string>
+    <key>AGENT_WITCH_PROFILE</key>
+    <string>\${PROFILE_EMAIL}</string>
   </dict>
   <key>RunAtLoad</key>
   <true/>
@@ -37,9 +39,9 @@ if [[ "\$(uname -s)" == "Darwin" ]]; then
   <key>ThrottleInterval</key>
   <integer>10</integer>
   <key>StandardOutPath</key>
-  <string>\${INSTALL_DIR}/agent-witch.log</string>
+  <string>\${INSTALL_DIR}/\${LOG_BASENAME}.log</string>
   <key>StandardErrorPath</key>
-  <string>\${INSTALL_DIR}/agent-witch.error.log</string>
+  <string>\${INSTALL_DIR}/\${LOG_BASENAME}.error.log</string>
 </dict>
 </plist>
 EOF
@@ -65,9 +67,14 @@ else
 fi
 
 echo "Installed Agent Witch to \${INSTALL_DIR}"
-echo "Config: \${INSTALL_DIR}/config.json"
+if [[ -n "\${PROFILE_EMAIL}" ]]; then
+  echo "Profile email: \${PROFILE_EMAIL}"
+  echo "Harness directory: \${INSTALL_DIR}/profiles/\${PROFILE_EMAIL}/harness"
+fi
+echo "Config: \${CONFIG_PATH}"
 echo "Pairing token: \${PAIRING_TOKEN}"
 echo "Paste this token into the app under Local agent pairing."
-echo "Logs (macOS): \${INSTALL_DIR}/agent-witch.log"
+echo "Logs (macOS): \${INSTALL_DIR}/\${LOG_BASENAME}.log"
 echo "The client starts immediately and revives after crashes or disconnects."
+echo "Run another account on this computer with: AGENT_WITCH_PROFILE=other@example.com curl -fsSL <install-url> | bash"
 `;

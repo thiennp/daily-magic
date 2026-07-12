@@ -1,4 +1,3 @@
-import os from "node:os";
 import path from "node:path";
 
 import {
@@ -7,17 +6,37 @@ import {
   HARNESS_SETS_DIR_NAME,
 } from "./constants";
 
+const sanitizeProfileEmailForDir = (email: string): string =>
+  email.trim().toLowerCase();
+
 export const getAgentWitchInstallDir = (): string =>
-  path.join(os.homedir(), ".agent-witch");
+  path.join(process.env.HOME ?? "", ".agent-witch");
 
-export const getHarnessRootDir = (): string =>
-  path.join(getAgentWitchInstallDir(), HARNESS_ROOT_DIR_NAME);
+export const getHarnessRootDir = (profileEmail?: string | null): string => {
+  const installDir = getAgentWitchInstallDir();
 
-export const getHarnessSetsDir = (): string =>
-  path.join(getHarnessRootDir(), HARNESS_SETS_DIR_NAME);
+  if (profileEmail !== undefined && profileEmail !== null) {
+    const normalizedEmail = sanitizeProfileEmailForDir(profileEmail);
+    if (normalizedEmail.length > 0) {
+      return path.join(
+        installDir,
+        "profiles",
+        normalizedEmail,
+        HARNESS_ROOT_DIR_NAME,
+      );
+    }
+  }
 
-export const getHarnessManifestPath = (): string =>
-  path.join(getHarnessRootDir(), HARNESS_MANIFEST_FILE_NAME);
+  return path.join(installDir, HARNESS_ROOT_DIR_NAME);
+};
 
-export const getHarnessSetDir = (slug: string): string =>
-  path.join(getHarnessSetsDir(), slug);
+export const getHarnessSetsDir = (profileEmail?: string | null): string =>
+  path.join(getHarnessRootDir(profileEmail), HARNESS_SETS_DIR_NAME);
+
+export const getHarnessManifestPath = (profileEmail?: string | null): string =>
+  path.join(getHarnessRootDir(profileEmail), HARNESS_MANIFEST_FILE_NAME);
+
+export const getHarnessSetDir = (
+  slug: string,
+  profileEmail?: string | null,
+): string => path.join(getHarnessSetsDir(profileEmail), slug);

@@ -3,12 +3,16 @@ import { headers } from "next/headers";
 import CopyableBashCommand from "@/features/home/CopyableBashCommand";
 import AgentWitchUnsupportedHostNotice from "@/features/home/AgentWitchUnsupportedHostNotice";
 import { buildLocalAgentInstallCommandFromHeaders } from "@/lib/agentWitch/buildLocalAgentInstallCommand";
+import { getAuthActor } from "@/lib/auth/auth";
 import isAgentWitchWebSocketSupportedHost from "@/lib/agentWitch/isAgentWitchWebSocketSupportedHost";
 
 export default async function LocalAgentSetupInstructions() {
+  const actor = await getAuthActor();
   const requestHeaders = await headers();
-  const { installCommand, installScriptUrl, wsUrl } =
-    buildLocalAgentInstallCommandFromHeaders(requestHeaders);
+  const { installCommand, installScriptUrl, wsUrl, harnessDirectory } =
+    buildLocalAgentInstallCommandFromHeaders(requestHeaders, {
+      profileEmail: actor?.email ?? null,
+    });
   const host =
     requestHeaders.get("x-forwarded-host") ?? requestHeaders.get("host") ?? "";
   const isWebSocketSupported = isAgentWitchWebSocketSupportedHost(host);
@@ -28,6 +32,15 @@ export default async function LocalAgentSetupInstructions() {
         <code className="rounded bg-white px-1.5 py-0.5 text-xs dark:bg-gray-800">
           ~/.agent-witch
         </code>
+        {harnessDirectory !== null ? (
+          <>
+            {" "}
+            with an account-scoped harness at{" "}
+            <code className="rounded bg-white px-1.5 py-0.5 text-xs dark:bg-gray-800">
+              {harnessDirectory}
+            </code>
+          </>
+        ) : null}
         . The install script is served by this app and starts immediately on
         macOS (LaunchAgent), with auto-reconnect and crash recovery.
         {!isWebSocketSupported
@@ -61,7 +74,9 @@ export default async function LocalAgentSetupInstructions() {
         >
           Send a test task
         </a>
-        .
+        . Add another account on the same computer by signing in as that user
+        and running the install command again (each profile gets its own
+        LaunchAgent, config, and harness folder).
       </p>
     </section>
   );

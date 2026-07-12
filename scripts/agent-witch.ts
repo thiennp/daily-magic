@@ -3,21 +3,30 @@
  * Agent Witch — local WebSocket client that runs writer agents from the app.
  *
  * Run: npx tsx scripts/agent-witch.ts
- * Config: ~/.agent-witch/config.json
+ * Config: ~/.agent-witch/config.json (legacy) or
+ *         ~/.agent-witch/profiles/<email>/config.json (multi-profile)
+ *
+ * Select profile: AGENT_WITCH_PROFILE=user@example.com
  */
 import { spawn } from "node:child_process";
 import fs from "node:fs";
 import os from "node:os";
-import path from "node:path";
 
 import WebSocket from "ws";
 
+import {
+  resolveAgentWitchLocalLayout,
+  type AgentWitchLocalLayout,
+} from "./resolveAgentWitchLocalLayout";
+
 interface AgentWitchConfig {
+  readonly email: string | null;
   readonly wsUrl: string;
   readonly workspace: string;
   readonly claudeCommand: string;
   readonly codexCommand: string;
   readonly pairingToken: string;
+  readonly layout: AgentWitchLocalLayout;
 }
 
 const DEFAULT_WS_URL = "ws://localhost:3000/api/agent-witch/ws";
@@ -25,21 +34,21 @@ const DEFAULT_CLAUDE_COMMAND = "claude";
 const DEFAULT_CODEX_COMMAND = "codex";
 const HEARTBEAT_INTERVAL_MS = 30_000;
 const MAX_RECONNECT_DELAY_MS = 30_000;
-const CONFIG_DIR = path.join(os.homedir(), ".agent-witch");
-const CONFIG_PATH = path.join(CONFIG_DIR, "config.json");
-const HARNESS_ROOT_DIR = path.join(CONFIG_DIR, "harness");
-const HARNESS_MANIFEST_PATH = path.join(HARNESS_ROOT_DIR, "manifest.json");
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === "object" && value !== null && !Array.isArray(value);
 
 const readConfig = (): AgentWitchConfig | null => {
-  if (!fs.existsSync(CONFIG_PATH)) {
+  const layout = resolveAgentWitchLocalLayout();
+
+  if (!fs.existsSync(layout.configPath)) {
     return null;
   }
 
   try {
-    const parsed: unknown = JSON.parse(fs.readFileSync(CONFIG_PATH, "utf8"));
+    const parsed: unknown = JSON.parse(
+      fs.readFileSync(layout.configPath, "utf8"),
+    );
     if (!isRecord(parsed)) {
       throw new Error("Config must be a JSON object.");
     }
@@ -65,19 +74,33 @@ const readConfig = (): AgentWitchConfig | null => {
       typeof parsed.pairingToken === "string" && parsed.pairingToken.length > 0
         ? parsed.pairingToken.trim()
         : "";
+    const configEmail =
+      typeof parsed.email === "string" && parsed.email.trim().length > 0
+        ? parsed.email.trim().toLowerCase()
+        : layout.profileEmail;
 
     if (pairingToken.length === 0) {
       console.error(
-        `[agent-witch] Missing pairingToken in ${CONFIG_PATH}. Re-run the install script.`,
+        `[agent-witch] Missing pairingToken in ${layout.configPath}. Re-run the install script.`,
       );
       return null;
     }
 
-    return { wsUrl, workspace, claudeCommand, codexCommand, pairingToken };
+    return {
+      email: configEmail,
+      wsUrl,
+      workspace,
+      claudeCommand,
+      codexCommand,
+      pairingToken,
+      layout,
+    };
   } catch (error) {
     const message =
       error instanceof Error ? error.message : "Unknown config error";
-    console.error(`[agent-witch] Invalid config at ${CONFIG_PATH}: ${message}`);
+    console.error(
+      `[agent-witch] Invalid config at ${layout.configPath}: ${message}`,
+    );
     return null;
   }
 };
@@ -91,14 +114,16 @@ const sendMessage = (
   }
 };
 
-const readHarnessManifest = (): Record<string, unknown> | null => {
-  if (!fs.existsSync(HARNESS_MANIFEST_PATH)) {
+const readHarnessManifest = (
+  layout: AgentWitchLocalLayout,
+): Record<string, unknown> | null => {
+  if (!fs.existsSync(layout.harnessManifestPath)) {
     return null;
   }
 
   try {
     const parsed: unknown = JSON.parse(
-      fs.readFileSync(HARNESS_MANIFEST_PATH, "utf8"),
+      fs.readFileSync(layout.harnessManifestPath, "utf8"),
     );
     if (isRecord(parsed)) {
       return parsed;
@@ -110,8 +135,11 @@ const readHarnessManifest = (): Record<string, unknown> | null => {
   return null;
 };
 
-const reportHarnessManifest = (socket: WebSocket): void => {
-  const manifest = readHarnessManifest();
+const reportHarnessManifest = (
+  socket: WebSocket,
+  layout: AgentWitchLocalLayout,
+): void => {
+  const manifest = readHarnessManifest(layout);
   if (manifest === null) {
     return;
   }
@@ -291,7 +319,7 @@ const runHarnessRequest = async (
     requestId,
   });
 
-  reportHarnessManifest(socket);
+  reportHarnessManifest(socket, config.layout);
 };
 
 const computeReconnectDelayMs = (attempt: number): number => {
@@ -378,6 +406,9 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
     socket.on("open", () => {
       state.reconnectAttempt = 0;
       console.log(`[agent-witch] Connected to ${config.wsUrl}`);
+      if (config.email !== null) {
+        console.log(`[agent-witch] Profile: ${config.email}`);
+      }
       sendMessage(socket, {
         type: "agent.register",
         payload: {
@@ -386,7 +417,7 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
           pairingToken: config.pairingToken,
         },
       });
-      reportHarnessManifest(socket);
+      reportHarnessManifest(socket, config.layout);
       startHeartbeat(socket);
     });
 
@@ -465,7 +496,7 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
             void (async () => {
               const { readHarnessExportSets } =
                 await import("./readHarnessExportSets");
-              const sets = readHarnessExportSets(setSlugs);
+              const sets = readHarnessExportSets(setSlugs, config.email);
               sendMessage(socket, {
                 type: "harness.export.result",
                 payload: {
@@ -484,7 +515,7 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
         }
 
         if (parsed.type === "harness.manifest.request") {
-          reportHarnessManifest(socket);
+          reportHarnessManifest(socket, config.layout);
         }
       } catch {
         console.error("[agent-witch] Failed to parse inbound message.");

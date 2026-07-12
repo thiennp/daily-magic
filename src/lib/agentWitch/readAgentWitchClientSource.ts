@@ -1,11 +1,7 @@
-import fs from "node:fs";
-import path from "node:path";
+export {
+  readAgentWitchClientSource,
+  readAgentWitchInstallScriptSource,
+  isAgentWitchInstallScriptName,
+} from "@/lib/agentWitch/readAgentWitchInstallScriptSource";
 
-const CLIENT_SOURCE_PATH = path.join(
-  process.cwd(),
-  "scripts",
-  "agent-witch.ts",
-);
-
-export const readAgentWitchClientSource = (): string =>
-  fs.readFileSync(CLIENT_SOURCE_PATH, "utf8");
+export type { AgentWitchInstallScriptName } from "@/lib/agentWitch/readAgentWitchInstallScriptSource";

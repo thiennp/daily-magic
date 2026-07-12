@@ -1,22 +1,24 @@
 import fs from "node:fs";
 import path from "node:path";
 
-const CONFIG_DIR = path.join(process.env.HOME ?? "", ".agent-witch");
-const HARNESS_ROOT_DIR = path.join(CONFIG_DIR, "harness");
-const HARNESS_MANIFEST_PATH = path.join(HARNESS_ROOT_DIR, "manifest.json");
-const HARNESS_SETS_DIR = path.join(HARNESS_ROOT_DIR, "sets");
+import {
+  resolveAgentWitchLocalLayout,
+  type AgentWitchLocalLayout,
+} from "./resolveAgentWitchLocalLayout";
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === "object" && value !== null && !Array.isArray(value);
 
-const readHarnessManifest = (): Record<string, unknown> | null => {
-  if (!fs.existsSync(HARNESS_MANIFEST_PATH)) {
+const readHarnessManifestFromLayout = (
+  layout: AgentWitchLocalLayout,
+): Record<string, unknown> | null => {
+  if (!fs.existsSync(layout.harnessManifestPath)) {
     return null;
   }
 
   try {
     const parsed: unknown = JSON.parse(
-      fs.readFileSync(HARNESS_MANIFEST_PATH, "utf8"),
+      fs.readFileSync(layout.harnessManifestPath, "utf8"),
     );
     if (isRecord(parsed)) {
       return parsed;
@@ -41,8 +43,10 @@ export interface HarnessExportSetSpec {
 
 export const readHarnessExportSets = (
   setSlugs: readonly string[],
+  profileEmail?: string | null,
 ): readonly HarnessExportSetSpec[] => {
-  const manifest = readHarnessManifest();
+  const layout = resolveAgentWitchLocalLayout(profileEmail);
+  const manifest = readHarnessManifestFromLayout(layout);
   if (manifest === null) {
     return [];
   }
@@ -79,7 +83,7 @@ export const readHarnessExportSets = (
         continue;
       }
 
-      const absolutePath = path.join(HARNESS_SETS_DIR, slug, relativePath);
+      const absolutePath = path.join(layout.harnessSetsDir, slug, relativePath);
       if (!fs.existsSync(absolutePath)) {
         continue;
       }
