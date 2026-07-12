@@ -12,18 +12,18 @@ export const PRIMARY_NAV: readonly AppNavItem[] = [
   },
   {
     href: "/agent",
-    label: "Agent",
+    label: "Send a task",
     isActive: (pathname) =>
       pathname === "/agent" || pathname.startsWith("/ws-test"),
   },
   {
     href: "/reports",
-    label: "Reports",
+    label: "Job history",
     isActive: (pathname) => pathname.startsWith("/reports"),
   },
   {
     href: "/admin/groups",
-    label: "Admin",
+    label: "Teams & rules",
     isActive: (pathname) => pathname.startsWith("/admin"),
   },
 ];

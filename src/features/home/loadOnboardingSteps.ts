@@ -47,19 +47,19 @@ export async function loadOnboardingSteps(): Promise<
   return [
     {
       id: "pair",
-      label: "Pair your local agent",
+      label: "Connect your Mac",
       done: hasPairedDevice,
-      href: "/agent",
+      href: "/#your-setup",
     },
     {
       id: "group",
-      label: "Join or create a group",
+      label: "Join a team",
       done: groupCount > 0,
       href: "/admin/groups",
     },
     {
       id: "task",
-      label: "Send your first agent task",
+      label: "Send your first task",
       done: hasSentTask,
       href: "/agent",
     },

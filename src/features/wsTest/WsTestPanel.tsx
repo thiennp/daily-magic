@@ -36,8 +36,8 @@ export default function WsTestPanel() {
       <section className="rounded-2xl border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-white/[0.03]">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <p className="text-sm text-gray-600 dark:text-gray-400">
-            Send a task to your paired local agent or dispatch to a teammate in
-            your group. Runs are recorded on the Reports page.
+            Send a task to your Mac or to a teammate on your team. Every job is
+            saved in Job history.
           </p>
           <ConnectionStatusBadge status={connectionStatus} />
         </div>

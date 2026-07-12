@@ -53,18 +53,18 @@ export default function AgentDispatchPolicyPanel() {
 
     setMessage(
       response.ok
-        ? "Agent dispatch preference saved."
-        : "Could not save agent dispatch preference.",
+        ? "Team rule preference saved."
+        : "Could not save team rule preference.",
     );
   };
 
   return (
     <section className="rounded-2xl border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-white/[0.03]">
       <h2 className="text-lg font-semibold text-gray-800 dark:text-white/90">
-        Your agent dispatch preference
+        Who can send tasks to your Mac
       </h2>
       <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-        Override your group default for tasks dispatched to your machine.
+        Override your team default for tasks sent to your computer.
       </p>
       <select
         value={policy}
@@ -73,9 +73,9 @@ export default function AgentDispatchPolicyPanel() {
         }}
         className="mt-4 w-full rounded-lg border border-gray-200 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-950"
       >
-        <option value="inherit">Inherit group default</option>
-        <option value={DispatchPolicy.APPROVAL}>Approval required</option>
-        <option value={DispatchPolicy.OPEN}>Open dispatch</option>
+        <option value="inherit">Use team default</option>
+        <option value={DispatchPolicy.APPROVAL}>Ask me first</option>
+        <option value={DispatchPolicy.OPEN}>Anyone on the team can send</option>
       </select>
       <div className="mt-4">
         <Button onClick={() => void savePolicy()}>Save preference</Button>

@@ -26,7 +26,7 @@ export default function TeamDispatchFields({
   if (isLoading) {
     return (
       <p className="text-sm text-gray-500 dark:text-gray-400">
-        Loading team dispatch targets…
+        Loading teammates…
       </p>
     );
   }
@@ -34,7 +34,7 @@ export default function TeamDispatchFields({
   if (groups.length === 0) {
     return (
       <p className="text-sm text-gray-500 dark:text-gray-400">
-        Join a group to dispatch tasks to teammates.
+        Join a team to send tasks to colleagues.
       </p>
     );
   }
@@ -42,7 +42,7 @@ export default function TeamDispatchFields({
   return (
     <div className="grid gap-4 sm:grid-cols-2">
       <label className="text-sm font-medium text-gray-800 dark:text-white/90">
-        Group
+        Team
         <select
           value={selectedGroupId}
           onChange={(event) => {
@@ -50,7 +50,7 @@ export default function TeamDispatchFields({
           }}
           className="mt-2 w-full rounded-lg border border-gray-200 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-900"
         >
-          <option value="">My machine (self)</option>
+          <option value="">My Mac (self)</option>
           {groups.map((group) => (
             <option key={group.groupId} value={group.groupId}>
               {group.groupName} ({group.dispatchPolicy})

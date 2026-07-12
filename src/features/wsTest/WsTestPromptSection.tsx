@@ -34,7 +34,7 @@ export default function WsTestPromptSection({
     <>
       <section className="rounded-2xl border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-white/[0.03]">
         <h2 className="text-sm font-medium text-gray-800 dark:text-white/90">
-          Dispatch target
+          Who receives this task
         </h2>
         <div className="mt-4">
           <TeamDispatchFields
@@ -51,7 +51,7 @@ export default function WsTestPromptSection({
           htmlFor="agent-witch-prompt"
           className="mb-2 block text-sm font-medium text-gray-800 dark:text-white/90"
         >
-          Task for Claude CLI
+          Task instructions
         </label>
         <textarea
           id="agent-witch-prompt"
@@ -60,7 +60,7 @@ export default function WsTestPromptSection({
             onPromptChange(event.target.value);
           }}
           rows={8}
-          placeholder="Describe what Claude should do on the local machine…"
+          placeholder="Describe what you want done on the computer…"
           className="w-full rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm text-gray-800 shadow-theme-xs outline-none transition focus:border-brand-300 focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90"
         />
         <div className="mt-4 flex flex-wrap gap-3">
@@ -70,7 +70,7 @@ export default function WsTestPromptSection({
             disabled={isSendDisabled}
             className="inline-flex h-11 items-center justify-center rounded-lg bg-brand-500 px-5 text-sm font-medium text-white transition hover:bg-brand-600 disabled:cursor-not-allowed disabled:opacity-50"
           >
-            {isTeamDispatch ? "Dispatch to teammate" : "Send to local agent"}
+            {isTeamDispatch ? "Send to teammate" : "Send to my Mac"}
           </button>
           <button
             type="button"
@@ -83,7 +83,7 @@ export default function WsTestPromptSection({
         {isSendDisabled ? (
           <p className="mt-3 text-sm text-gray-500 dark:text-gray-400">
             {connectionStatus !== "connected"
-              ? "Connect and pair your local agent from Home before sending a task."
+              ? "Connect your Mac from Home → Your setup before sending a task."
               : "Enter a task description to continue."}
           </p>
         ) : null}

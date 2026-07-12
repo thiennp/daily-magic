@@ -17,10 +17,12 @@ export default function AppShellHeader({ sectionTitle }: AppShellHeaderProps) {
   const resolvedTitle =
     sectionTitle ??
     (pathname.startsWith("/admin")
-      ? "Administration"
+      ? "Teams & rules"
       : pathname.startsWith("/agent") || pathname.startsWith("/ws-test")
-        ? "Agent"
-        : "Home");
+        ? "Send a task"
+        : pathname.startsWith("/reports")
+          ? "Job history"
+          : "Home");
 
   return (
     <header className="sticky top-0 z-50 border-b border-gray-200 bg-white/95 backdrop-blur dark:border-gray-800 dark:bg-gray-900/95">
