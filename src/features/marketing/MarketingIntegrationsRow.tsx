@@ -4,14 +4,15 @@ import MarketingSectionHeader from "@/features/marketing/MarketingSectionHeader"
 
 export default function MarketingIntegrationsRow() {
   return (
-    <section className="mt-20">
+    <section className="mt-24" aria-labelledby="integrations-heading">
       <MarketingSectionHeader
         align="center"
         eyebrow="What you get"
         title="Built for everyday company work"
         description="Use the assistants you already have on your Mac, with a shared website your company can manage together."
+        headingId="integrations-heading"
       />
-      <div className="mt-8 flex flex-wrap justify-center gap-3">
+      <div className="mt-10 flex flex-wrap justify-center gap-3">
         {MARKETING_INTEGRATION_ITEMS.map((item) => (
           <MarketingBadge key={item}>{item}</MarketingBadge>
         ))}
