@@ -13,6 +13,8 @@ export interface CreateAgentRunInput {
   readonly prompt: string;
   readonly status: AgentRunStatusValue;
   readonly dispatchPolicy: DispatchPolicyValue;
+  readonly capabilityId?: string | null;
+  readonly capabilityVersionId?: string | null;
 }
 
 export async function createAgentRun(
@@ -29,7 +31,9 @@ export async function createAgentRun(
         executor_user_id,
         prompt,
         status,
-        dispatch_policy
+        dispatch_policy,
+        capability_id,
+        capability_version_id
       )
       VALUES (
         ${runId},
@@ -38,7 +42,9 @@ export async function createAgentRun(
         ${input.executorUserId},
         ${input.prompt},
         ${input.status},
-        ${input.dispatchPolicy}
+        ${input.dispatchPolicy},
+        ${input.capabilityId ?? null},
+        ${input.capabilityVersionId ?? null}
       )
       RETURNING *
     `,

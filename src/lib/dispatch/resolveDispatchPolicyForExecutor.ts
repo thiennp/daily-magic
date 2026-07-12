@@ -12,11 +12,16 @@ import type { DispatchPolicyValue } from "@/lib/dispatch/DispatchPolicy.constant
 export interface ResolveDispatchPolicyInput {
   readonly executorUserId: string;
   readonly groupId?: string | null;
+  readonly capabilityPolicyOverride?: DispatchPolicyValue | null;
 }
 
 export const resolveDispatchPolicyForExecutor = async (
   input: ResolveDispatchPolicyInput,
 ): Promise<DispatchPolicyValue> => {
+  if (input.capabilityPolicyOverride) {
+    return input.capabilityPolicyOverride;
+  }
+
   const deviceId = await getActiveDeviceIdForUser(input.executorUserId);
   const devicePolicy =
     deviceId !== null ? await getDeviceDispatchPolicy(deviceId) : null;

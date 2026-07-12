@@ -29,5 +29,9 @@ export default function mapAgentRunRow(
     approvalExpiresAt: row.approval_expires_at
       ? String(row.approval_expires_at)
       : null,
+    capabilityId: row.capability_id ? String(row.capability_id) : null,
+    capabilityVersionId: row.capability_version_id
+      ? String(row.capability_version_id)
+      : null,
   };
 }

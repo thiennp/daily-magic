@@ -4,12 +4,23 @@ import { useEffect, useState } from "react";
 
 import { POLL_INTERVAL_MS } from "@/features/reports/agentRunsPolling.constant";
 
+export interface DispatchTargetCapability {
+  readonly id: string;
+  readonly ownerUserId: string;
+  readonly type: string;
+  readonly name: string;
+  readonly description: string;
+  readonly exampleRequest: string;
+  readonly visibility: string;
+}
+
 export interface DispatchTargetMember {
   readonly userId: string;
   readonly email: string;
   readonly name: string | null;
   readonly isPaired: boolean;
   readonly isOnline: boolean;
+  readonly capabilities: readonly DispatchTargetCapability[];
 }
 
 export interface DispatchTargetGroup {

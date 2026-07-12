@@ -4,6 +4,7 @@ export interface ClaudeDispatchPayload {
   readonly prompt: string;
   readonly targetUserId?: string;
   readonly groupId?: string;
+  readonly capabilityId?: string;
   readonly agentRunId?: string;
 }
 

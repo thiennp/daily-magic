@@ -10,8 +10,10 @@ interface WsTestPromptSectionProps {
   readonly isTeamDispatch: boolean;
   readonly selectedGroupId: string;
   readonly selectedTargetUserId: string;
+  readonly selectedCapabilityId: string;
   readonly onGroupChange: (groupId: string) => void;
   readonly onTargetChange: (userId: string) => void;
+  readonly onCapabilityChange: (capabilityId: string) => void;
   readonly onPromptChange: (value: string) => void;
   readonly onSend: () => void;
   readonly onClear: () => void;
@@ -24,8 +26,10 @@ export default function WsTestPromptSection({
   isTeamDispatch,
   selectedGroupId,
   selectedTargetUserId,
+  selectedCapabilityId,
   onGroupChange,
   onTargetChange,
+  onCapabilityChange,
   onPromptChange,
   onSend,
   onClear,
@@ -40,8 +44,10 @@ export default function WsTestPromptSection({
           <TeamDispatchFields
             selectedGroupId={selectedGroupId}
             selectedTargetUserId={selectedTargetUserId}
+            selectedCapabilityId={selectedCapabilityId}
             onGroupChange={onGroupChange}
             onTargetChange={onTargetChange}
+            onCapabilityChange={onCapabilityChange}
           />
         </div>
       </section>

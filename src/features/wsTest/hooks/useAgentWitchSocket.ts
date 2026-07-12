@@ -20,6 +20,7 @@ export interface UseAgentWitchSocketResult {
     options?: {
       readonly targetUserId?: string;
       readonly groupId?: string;
+      readonly capabilityId?: string;
     },
   ) => void;
 }
@@ -74,6 +75,7 @@ export function useAgentWitchSocket(): UseAgentWitchSocketResult {
       options?: {
         readonly targetUserId?: string;
         readonly groupId?: string;
+        readonly capabilityId?: string;
       },
     ) => {
       const trimmedPrompt = prompt.trim();
@@ -102,6 +104,9 @@ export function useAgentWitchSocket(): UseAgentWitchSocketResult {
                 ? { targetUserId: options.targetUserId }
                 : {}),
               ...(options?.groupId ? { groupId: options.groupId } : {}),
+              ...(options?.capabilityId
+                ? { capabilityId: options.capabilityId }
+                : {}),
             },
             requestId: createAgentWitchRequestId(),
           }),

@@ -1,3 +1,5 @@
+import MyOfferingsPanel from "@/features/capabilities/MyOfferingsPanel";
+import TeamDirectoryPanel from "@/features/capabilities/TeamDirectoryPanel";
 import AgentDispatchPolicyPanel from "@/features/dispatch/AgentDispatchPolicyPanel";
 import BorrowHarnessCatalog from "@/features/harness/BorrowHarnessCatalog";
 import HomeDashboardHero from "@/features/home/HomeDashboardHero";
@@ -21,6 +23,8 @@ export default function HomeAuthenticatedView({
     <div className="space-y-8 text-left">
       <HomeDashboardHero user={user} />
       <HomeOnboardingChecklist />
+      <MyOfferingsPanel />
+      <TeamDirectoryPanel />
       <BorrowHarnessCatalog />
 
       <details

@@ -3,7 +3,7 @@
 import { useState } from "react";
 
 import AgentWitchUnsupportedHostNotice from "@/features/home/AgentWitchUnsupportedHostNotice";
-import { useTeamDispatchSelection } from "@/features/dispatch/TeamDispatchFields";
+import { useTeamDispatchSelection } from "@/features/dispatch/hooks/useTeamDispatchSelection";
 import { ConnectionStatusBadge } from "@/features/shell/ConnectionStatusBadge";
 import WsTestPromptSection from "@/features/wsTest/WsTestPromptSection";
 import isAgentWitchWebSocketSupportedHost from "@/lib/agentWitch/isAgentWitchWebSocketSupportedHost";
@@ -16,8 +16,10 @@ export default function WsTestPanel() {
   const {
     selectedGroupId,
     selectedTargetUserId,
+    selectedCapabilityId,
     setSelectedGroupId,
     setSelectedTargetUserId,
+    setSelectedCapabilityId,
   } = useTeamDispatchSelection();
   const host = typeof window !== "undefined" ? window.location.host : "";
   const isWebSocketSupported = isAgentWitchWebSocketSupportedHost(host);
@@ -26,7 +28,8 @@ export default function WsTestPanel() {
   const isSendDisabled =
     connectionStatus !== "connected" ||
     prompt.trim().length === 0 ||
-    (selectedGroupId.length > 0 && selectedTargetUserId.length === 0);
+    (selectedGroupId.length > 0 && selectedTargetUserId.length === 0) ||
+    (isTeamDispatch && selectedCapabilityId.length === 0);
 
   return (
     <div className="flex w-full flex-col gap-6">
@@ -50,8 +53,10 @@ export default function WsTestPanel() {
         isTeamDispatch={isTeamDispatch}
         selectedGroupId={selectedGroupId}
         selectedTargetUserId={selectedTargetUserId}
+        selectedCapabilityId={selectedCapabilityId}
         onGroupChange={setSelectedGroupId}
         onTargetChange={setSelectedTargetUserId}
+        onCapabilityChange={setSelectedCapabilityId}
         onPromptChange={setPrompt}
         onSend={() => {
           sendClaudePrompt(prompt, {
@@ -59,6 +64,7 @@ export default function WsTestPanel() {
               ? {
                   targetUserId: selectedTargetUserId,
                   groupId: selectedGroupId,
+                  capabilityId: selectedCapabilityId,
                 }
               : {}),
           });

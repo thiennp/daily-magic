@@ -12,6 +12,7 @@ import {
 } from "@/lib/dispatch/dispatchClaudeRunToAgent";
 import { DispatchPolicy } from "@/lib/dispatch/DispatchPolicy.constant";
 import { resolveDispatchPolicyForExecutor } from "@/lib/dispatch/resolveDispatchPolicyForExecutor";
+import { resolveCapabilityForDispatch } from "@/lib/capabilities/resolveCapabilityForDispatch";
 import {
   resolveClaudeDispatchTarget,
   validateClaudeDispatchPayload,
@@ -46,6 +47,22 @@ export const handleClaudeRunMessageAsync = async (
     return target.error;
   }
 
+  const capabilityId =
+    typeof validatedPayload.payload.capabilityId === "string"
+      ? validatedPayload.payload.capabilityId
+      : undefined;
+  const capabilityResolution = await resolveCapabilityForDispatch(
+    sender.userId,
+    target.executorUserId,
+    capabilityId,
+    target.groupId,
+    message.requestId,
+  );
+
+  if (!capabilityResolution.ok) {
+    return capabilityResolution.error;
+  }
+
   const agentClient = runtime.findAgentClientForUser(target.executorUserId);
 
   if (agentClient === undefined) {
@@ -60,6 +77,8 @@ export const handleClaudeRunMessageAsync = async (
   const dispatchPolicy = await resolveDispatchPolicyForExecutor({
     executorUserId: target.executorUserId,
     groupId: target.groupId,
+    capabilityPolicyOverride:
+      capabilityResolution.capability?.dispatchPolicyOverride ?? null,
   });
 
   const run = await createAgentRun({
@@ -72,6 +91,8 @@ export const handleClaudeRunMessageAsync = async (
         ? AgentRunStatus.PENDING_APPROVAL
         : AgentRunStatus.RUNNING,
     dispatchPolicy,
+    capabilityId: capabilityResolution.capability?.id ?? null,
+    capabilityVersionId: capabilityResolution.capabilityVersionId,
   });
 
   if (dispatchPolicy === DispatchPolicy.APPROVAL) {
