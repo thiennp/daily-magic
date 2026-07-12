@@ -67,3 +67,33 @@ export async function updateCapabilityFeedbackStatus(
 
   return mapCapabilityFeedbackRow(rows[0]);
 }
+
+export async function getCapabilityFeedbackForOwner(
+  feedbackId: string,
+  ownerUserId: string,
+): Promise<CapabilityFeedbackRecord | null> {
+  const sql = getSql();
+  const rows = asRowArray(
+    await sql`
+      SELECT f.*
+      FROM capability_feedback f
+      LEFT JOIN published_capabilities c ON c.id = f.capability_id
+      LEFT JOIN agent_runs r ON r.id = f.agent_run_id
+      WHERE f.id = ${feedbackId}
+        AND (
+          c.owner_user_id = ${ownerUserId}
+          OR (
+            f.capability_id IS NULL
+            AND r.executor_user_id = ${ownerUserId}
+          )
+        )
+      LIMIT 1
+    `,
+  );
+
+  if (rows.length === 0) {
+    return null;
+  }
+
+  return mapCapabilityFeedbackRow(rows[0]);
+}

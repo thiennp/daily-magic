@@ -2,18 +2,17 @@
 
 import { useEffect, useState } from "react";
 
-import FeedbackImprovementDraft from "@/features/improvements/FeedbackImprovementDraft";
-import type { CapabilityFeedbackInboxItem } from "@/lib/feedback/types/CapabilityFeedbackRecord.type";
+import type { CapabilityImprovementInboxItem } from "@/lib/improvements/types/CapabilityImprovementRecord.type";
 
-export default function FeedbackInboxPanel() {
-  const [items, setItems] = useState<readonly CapabilityFeedbackInboxItem[]>(
+export default function ImprovementReviewPanel() {
+  const [items, setItems] = useState<readonly CapabilityImprovementInboxItem[]>(
     [],
   );
   const [isLoading, setIsLoading] = useState(true);
 
-  const loadInbox = async (): Promise<void> => {
+  const loadItems = async (): Promise<void> => {
     try {
-      const response = await fetch("/api/capabilities/feedback/inbox");
+      const response = await fetch("/api/capabilities/improvements/inbox");
       if (!response.ok) {
         return;
       }
@@ -25,7 +24,7 @@ export default function FeedbackInboxPanel() {
         "items" in data &&
         Array.isArray((data as { items: unknown }).items)
       ) {
-        setItems((data as { items: CapabilityFeedbackInboxItem[] }).items);
+        setItems((data as { items: CapabilityImprovementInboxItem[] }).items);
       }
     } finally {
       setIsLoading(false);
@@ -33,25 +32,21 @@ export default function FeedbackInboxPanel() {
   };
 
   useEffect(() => {
-    void loadInbox();
+    void loadItems();
   }, []);
 
-  if (isLoading) {
-    return null;
-  }
-
-  if (items.length === 0) {
+  if (isLoading || items.length === 0) {
     return null;
   }
 
   return (
     <section className="rounded-2xl border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-white/[0.03]">
       <h2 className="text-lg font-semibold text-gray-800 dark:text-white/90">
-        Feedback inbox
+        Planned assistant updates
       </h2>
       <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-        Teammates shared notes about your assistants. Review them when you have
-        time.
+        Accepting a plan publishes a new assistant version. Nothing changes
+        until you accept.
       </p>
       <ul className="mt-4 space-y-4">
         {items.map((item) => (
@@ -60,47 +55,36 @@ export default function FeedbackInboxPanel() {
             className="rounded-xl border border-gray-100 p-4 dark:border-gray-800"
           >
             <p className="text-sm font-medium text-gray-800 dark:text-white/90">
-              {item.capabilityName ?? "Assistant"} · {item.reviewerEmail}
+              {item.capabilityName}
             </p>
             <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-              {item.comment}
+              {item.suggestion}
             </p>
             <div className="mt-3 flex flex-wrap gap-2">
               <button
                 type="button"
                 onClick={() => {
-                  void fetch(`/api/capabilities/feedback/${item.id}`, {
-                    method: "PATCH",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ status: "acknowledged" }),
-                  }).then(() => loadInbox());
+                  void fetch(
+                    `/api/capabilities/improvements/${item.id}/accept`,
+                    { method: "POST" },
+                  ).then(() => loadItems());
                 }}
                 className="rounded-lg bg-brand-500 px-3 py-1.5 text-xs font-medium text-white"
               >
-                Mark reviewed
+                Accept and publish version
               </button>
               <button
                 type="button"
                 onClick={() => {
-                  void fetch(`/api/capabilities/feedback/${item.id}`, {
-                    method: "PATCH",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ status: "dismissed" }),
-                  }).then(() => loadInbox());
+                  void fetch(
+                    `/api/capabilities/improvements/${item.id}/reject`,
+                    { method: "POST" },
+                  ).then(() => loadItems());
                 }}
                 className="rounded-lg border border-gray-200 px-3 py-1.5 text-xs font-medium text-gray-600 dark:border-gray-700"
               >
-                Dismiss
+                Reject
               </button>
-              {item.capabilityId ? (
-                <FeedbackImprovementDraft
-                  feedbackId={item.id}
-                  defaultSuggestion={item.comment}
-                  onCreated={() => {
-                    void loadInbox();
-                  }}
-                />
-              ) : null}
             </div>
           </li>
         ))}
