@@ -7,9 +7,9 @@ export default function MarketingIntegrationsRow() {
     <section className="mt-20">
       <MarketingSectionHeader
         align="center"
-        eyebrow="Your stack"
-        title="Built for the tools you already run"
-        description="Pair a local client, connect over WebSocket, and keep harness context per account."
+        eyebrow="What you get"
+        title="Built for everyday team work"
+        description="Use the assistants you already have on your Mac, with a shared website your team can manage together."
       />
       <div className="mt-8 flex flex-wrap justify-center gap-3">
         {MARKETING_INTEGRATION_ITEMS.map((item) => (

@@ -1,10 +1,10 @@
 import Badge from "@/components/ui/badge/Badge";
 
 const PREVIEW_FLOW_STEPS = [
-  { label: "Dashboard", detail: "Send task" },
-  { label: "Policy", detail: "Approve if required" },
-  { label: "Local agent", detail: "Claude / Codex" },
-  { label: "Report", detail: "Status + output" },
+  { label: "Browser", detail: "You send a task" },
+  { label: "Approval", detail: "If your team requires it" },
+  { label: "Your Mac", detail: "The assistant runs" },
+  { label: "Report", detail: "Results are saved" },
 ] as const;
 
 export default function MarketingProductPreview() {
@@ -14,29 +14,32 @@ export default function MarketingProductPreview() {
         <span className="h-2.5 w-2.5 rounded-full bg-red-400" />
         <span className="h-2.5 w-2.5 rounded-full bg-amber-400" />
         <span className="h-2.5 w-2.5 rounded-full bg-green-400" />
-        <span className="ml-2 text-xs text-gray-500">daily-magic / agent</span>
+        <span className="ml-2 text-xs text-gray-500">
+          Agent Witch · Send task
+        </span>
       </div>
 
       <div className="space-y-4 p-5">
         <div className="flex items-center justify-between gap-3">
-          <p className="text-sm font-medium text-gray-800">New agent task</p>
+          <p className="text-sm font-medium text-gray-800">New task</p>
           <Badge color="success" size="sm">
-            Connected
+            Mac connected
           </Badge>
         </div>
 
         <div className="rounded-xl border border-gray-200 bg-gray-50 p-3">
           <p className="text-xs font-medium uppercase tracking-wide text-gray-500">
-            Prompt
+            What you want done
           </p>
           <p className="mt-2 text-sm text-gray-700">
-            Review the harness diff and summarize risks before merge.
+            Summarize this document and list anything we should fix before
+            sharing it.
           </p>
         </div>
 
         <div className="flex items-center gap-2">
           <span className="inline-flex h-9 flex-1 items-center justify-center rounded-lg bg-brand-500 text-xs font-medium text-white">
-            Send to local agent
+            Send to my Mac
           </span>
         </div>
 

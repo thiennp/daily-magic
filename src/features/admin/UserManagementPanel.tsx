@@ -7,6 +7,7 @@ import UsersTable, {
   type UserItem,
 } from "@/features/admin/components/UsersTable";
 import ConfirmDestructiveModal from "@/features/shell/ConfirmDestructiveModal";
+import { AGENT_WITCH_PRODUCT_NAME } from "@/lib/agentWitch/agentWitchProductName.constant";
 import { isPrivilegedGlobalRole } from "@/lib/auth/roles";
 
 interface UserManagementPanelProps {
@@ -85,7 +86,7 @@ export default function UserManagementPanel({
       <ConfirmDestructiveModal
         isOpen={pendingUserId !== null}
         title="Remove user?"
-        description={`Permanently remove ${pendingUser?.email ?? "this user"} from Daily Magic.`}
+        description={`Permanently remove ${pendingUser?.email ?? "this user"} from ${AGENT_WITCH_PRODUCT_NAME}.`}
         confirmLabel="Remove user"
         onClose={() => {
           setPendingUserId(null);

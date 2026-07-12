@@ -12,8 +12,8 @@ export default function ReportsPage() {
             Agent run reports
           </h1>
           <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-            Every dispatch from Daily Magic is tracked here — self tasks, team
-            dispatches, approvals, and results.
+            Every task sent through Agent Witch is listed here — yours,
+            teammates&apos;, approvals, and results.
           </p>
         </div>
         <AgentRunsList />

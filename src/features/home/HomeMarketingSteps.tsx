@@ -6,22 +6,22 @@ import MarketingSectionHeader from "@/features/marketing/MarketingSectionHeader"
 const MARKETING_STEPS = [
   {
     title: "Sign in",
-    body: "Create your account and open the dashboard.",
+    body: "Create your account and open your home page.",
     href: "#get-started",
   },
   {
-    title: "Install Agent Witch",
-    body: "Copy the install command from Your setup on the home page.",
+    title: "Install on your Mac",
+    body: "After sign-in, copy the install command from Your setup on the home page.",
     href: "/login",
   },
   {
-    title: "Pair & join a group",
-    body: "Link your Mac and invite teammates under Groups & policy.",
+    title: "Connect & invite",
+    body: "Link your Mac and invite teammates from Groups.",
     href: "/admin/groups",
   },
   {
-    title: "Dispatch & review",
-    body: "Send tasks from Agent and track outcomes in Reports.",
+    title: "Send & review",
+    body: "Send a task from Agent and read what happened in Reports.",
     href: "/agent",
   },
 ] as const;
@@ -31,7 +31,7 @@ export default function HomeMarketingSteps() {
     <section className="mt-20">
       <MarketingSectionHeader
         eyebrow="How it works"
-        title="From sign-in to first dispatch in four steps"
+        title="Four steps to your first task"
       />
       <MarketingCard className="mt-8">
         <ol className="grid gap-8 md:grid-cols-4">

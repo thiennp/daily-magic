@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { ThemeToggleButton } from "@/components/common/ThemeToggleButton";
 import UserDropdown from "@/components/header/UserDropdown";
 import AppShellNav from "@/features/shell/AppShellNav";
+import { AGENT_WITCH_PRODUCT_NAME } from "@/lib/agentWitch/agentWitchProductName.constant";
 
 interface AppShellHeaderProps {
   readonly sectionTitle?: string;
@@ -29,7 +30,7 @@ export default function AppShellHeader({ sectionTitle }: AppShellHeaderProps) {
             href="/"
             className="text-xs font-medium uppercase tracking-wide text-brand-500"
           >
-            Daily Magic
+            {AGENT_WITCH_PRODUCT_NAME}
           </Link>
           <h1 className="truncate text-xl font-semibold text-gray-800 dark:text-white/90">
             {resolvedTitle}

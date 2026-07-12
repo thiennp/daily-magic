@@ -20,14 +20,14 @@ export default function HomeDashboardHero({ user }: HomeDashboardHeroProps) {
       <div className="grid gap-8 lg:grid-cols-[1.2fr_0.8fr]">
         <div>
           <p className="text-sm font-medium uppercase tracking-wide text-brand-600">
-            Mission control
+            Your home
           </p>
           <h1 className="mt-3 text-3xl font-semibold tracking-tight text-gray-900">
             Welcome back, {displayName}
           </h1>
           <p className="mt-3 max-w-xl text-sm text-gray-600">
-            Dispatch agent tasks across your group, borrow harness context from
-            online teammates, and review every run in Reports. Signed in as{" "}
+            Send tasks from your browser, share setup files with teammates who
+            are online, and read what happened in Reports. Signed in as{" "}
             {user.email} ({formatGlobalRole(user.globalRole)}).
           </p>
           <div className="mt-6">
@@ -35,29 +35,29 @@ export default function HomeDashboardHero({ user }: HomeDashboardHeroProps) {
               href="/agent"
               className="inline-flex h-11 items-center justify-center rounded-lg bg-brand-500 px-5 text-sm font-medium text-white transition hover:bg-brand-600"
             >
-              New agent task
+              Send a task
             </Link>
             <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-sm">
               <Link
                 href="/reports"
                 className="font-medium text-brand-600 hover:text-brand-700"
               >
-                View reports →
+                View job history →
               </Link>
               <Link
                 href="/admin/groups"
                 className="font-medium text-gray-600 hover:text-gray-800"
               >
-                Groups & policy
+                Teams & rules
               </Link>
             </div>
           </div>
         </div>
 
         <div className="rounded-2xl border border-gray-200/80 bg-white p-5 shadow-theme-xs ring-1 ring-gray-200/50">
-          <h2 className="text-sm font-semibold text-gray-900">Team presence</h2>
+          <h2 className="text-sm font-semibold text-gray-900">Who is online</h2>
           <p className="mt-1 text-xs text-gray-600">
-            Connected dashboards and paired agents on this host.
+            Teammates and connected Macs right now.
           </p>
           <div className="mt-4">
             <ConnectedClientsList compact />

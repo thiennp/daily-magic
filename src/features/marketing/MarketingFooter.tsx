@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+import { AGENT_WITCH_PRODUCT_NAME } from "@/lib/agentWitch/agentWitchProductName.constant";
+
 const FOOTER_PRODUCT_LINKS = [
   { label: "Send a task", href: "/agent" },
   { label: "Reports", href: "/reports" },
@@ -16,10 +18,12 @@ export default function MarketingFooter() {
     <footer className="border-t border-gray-200 bg-white">
       <div className="mx-auto grid max-w-6xl gap-10 px-6 py-12 md:grid-cols-[1.2fr_1fr_1fr]">
         <div>
-          <p className="text-sm font-semibold text-gray-900">Daily Magic</p>
+          <p className="text-sm font-semibold text-gray-900">
+            {AGENT_WITCH_PRODUCT_NAME}
+          </p>
           <p className="mt-2 max-w-xs text-sm text-gray-600">
-            Dispatch local agents for your team with approval, harness sharing,
-            and run reports.
+            Send AI tasks to your team&apos;s Macs with approval rules and a
+            clear history of every job.
           </p>
         </div>
         <div>
@@ -58,7 +62,7 @@ export default function MarketingFooter() {
         </div>
       </div>
       <div className="border-t border-gray-200 py-4 text-center text-xs text-gray-500">
-        Team agent dispatch with human-in-the-loop policy.
+        AI tasks for teams — with approval when you need it.
       </div>
     </footer>
   );

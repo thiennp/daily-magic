@@ -2,20 +2,20 @@ import Link from "next/link";
 import { Suspense } from "react";
 
 import LoginForm from "@/features/auth/LoginForm";
+import { AGENT_WITCH_PRODUCT_NAME } from "@/lib/agentWitch/agentWitchProductName.constant";
 
 export default function HomeLoginView() {
   return (
     <div className="space-y-6 text-left">
       <div>
         <p className="text-sm font-medium uppercase tracking-wide text-brand-500">
-          Daily Magic
+          {AGENT_WITCH_PRODUCT_NAME}
         </p>
         <h1 className="mt-2 text-2xl font-semibold text-gray-800 dark:text-white/90">
           Sign in to continue
         </h1>
         <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-          Log in to see connected Agent Witch clients and install the local
-          client.
+          Log in to connect your Mac and see who is online on your team.
         </p>
       </div>
 

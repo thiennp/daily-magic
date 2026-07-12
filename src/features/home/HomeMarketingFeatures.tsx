@@ -9,8 +9,8 @@ export default function HomeMarketingFeatures() {
     <section className="mt-20">
       <MarketingSectionHeader
         eyebrow="Why teams use it"
-        title="Dispatch you can explain and audit"
-        description="Every step — policy, pairing, and run output — stays visible to admins and teammates."
+        title="Simple to follow, easy to trust"
+        description="Everyone can see who sent a task, whether it was approved, and what the computer returned."
       />
       <div className="mt-8 grid gap-4 sm:grid-cols-3">
         {MARKETING_FEATURE_ITEMS.map((item) => (
@@ -23,7 +23,7 @@ export default function HomeMarketingFeatures() {
           href="/#get-started"
           className="font-medium text-brand-600 hover:text-brand-700"
         >
-          Sign in to pair your agent
+          Sign in and connect your Mac
         </Link>
         .
       </p>

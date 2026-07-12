@@ -1,6 +1,7 @@
 import { Outfit } from "next/font/google";
 import "./globals.css";
 import "flatpickr/dist/flatpickr.css";
+import { AGENT_WITCH_PRODUCT_NAME } from "@/lib/agentWitch/agentWitchProductName.constant";
 import AuthSessionProvider from "@/features/auth/AuthSessionProvider";
 import { SidebarProvider } from "@/context/SidebarContext";
 import { ThemeProvider } from "@/context/ThemeContext";
@@ -11,8 +12,9 @@ const outfit = Outfit({
 });
 
 export const metadata: Metadata = {
-  title: "Daily Magic",
-  description: "Next.js app with Neon and TailAdmin styleguide",
+  title: AGENT_WITCH_PRODUCT_NAME,
+  description:
+    "Send AI tasks to your team's Macs with approval rules and job history.",
 };
 
 export default function RootLayout({

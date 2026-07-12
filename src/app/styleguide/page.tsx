@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import StyleguideShell from "@/features/styleguide/StyleguideShell";
+import { AGENT_WITCH_PRODUCT_NAME } from "@/lib/agentWitch/agentWitchProductName.constant";
 import AlertsSection from "@/features/styleguide/sections/AlertsSection";
 import AvatarsSection from "@/features/styleguide/sections/AvatarsSection";
 import BadgesSection from "@/features/styleguide/sections/BadgesSection";
@@ -12,7 +13,7 @@ import TablesSection from "@/features/styleguide/sections/TablesSection";
 import VideosSection from "@/features/styleguide/sections/VideosSection";
 
 export const metadata: Metadata = {
-  title: "Styleguide | Daily Magic",
+  title: `Styleguide | ${AGENT_WITCH_PRODUCT_NAME}`,
   description:
     "TailAdmin component styleguide with buttons, alerts, forms, tables, charts, and more.",
 };

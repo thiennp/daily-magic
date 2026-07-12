@@ -1,8 +1,8 @@
 export const MARKETING_INTEGRATION_ITEMS = [
-  "Claude CLI",
-  "Codex CLI",
-  "Next.js",
-  "Neon Postgres",
-  "WebSocket bridge",
-  "macOS LaunchAgent",
+  "Claude on your Mac",
+  "Codex on your Mac",
+  "Browser dashboard",
+  "Team accounts",
+  "Job history",
+  "Starts when you sign in",
 ] as const;

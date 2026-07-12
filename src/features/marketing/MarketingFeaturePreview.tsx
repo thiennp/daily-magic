@@ -6,13 +6,13 @@ import type { MarketingFeaturePreviewKey } from "@/features/marketing/marketingF
 const DISPATCH_PREVIEW = (): ReactElement => (
   <div className="space-y-2 rounded-xl border border-gray-200 bg-gray-50 p-3">
     <div className="flex items-center justify-between text-xs">
-      <span className="font-medium text-gray-700">Team presence</span>
+      <span className="font-medium text-gray-700">Who is online</span>
       <Badge color="success" size="sm">
-        2 online
+        2 teammates
       </Badge>
     </div>
     <div className="rounded-lg bg-white px-3 py-2 text-xs text-gray-600">
-      Dispatch to your Mac · paired
+      Send to your Mac · ready
     </div>
   </div>
 );
@@ -20,24 +20,26 @@ const DISPATCH_PREVIEW = (): ReactElement => (
 const APPROVE_PREVIEW = (): ReactElement => (
   <div className="space-y-2 rounded-xl border border-gray-200 bg-gray-50 p-3 text-xs">
     <div className="flex items-center justify-between">
-      <span className="font-medium text-gray-700">Group policy</span>
+      <span className="font-medium text-gray-700">Team rule</span>
       <Badge color="warning" size="sm">
-        Approval
+        Ask first
       </Badge>
     </div>
-    <p className="text-gray-600">Admin must approve cross-user dispatch.</p>
+    <p className="text-gray-600">
+      A manager approves before using someone else&apos;s Mac.
+    </p>
   </div>
 );
 
 const REPORT_PREVIEW = (): ReactElement => (
   <div className="space-y-2 rounded-xl border border-gray-200 bg-gray-50 p-3 text-xs">
     <div className="flex items-center justify-between">
-      <span className="font-medium text-gray-700">Run #1042</span>
+      <span className="font-medium text-gray-700">Job #1042</span>
       <Badge color="success" size="sm">
-        Completed
+        Finished
       </Badge>
     </div>
-    <p className="truncate text-gray-600">Output saved · policy: open</p>
+    <p className="truncate text-gray-600">Saved with the full answer</p>
   </div>
 );
 

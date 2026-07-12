@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+import { AGENT_WITCH_PRODUCT_NAME } from "@/lib/agentWitch/agentWitchProductName.constant";
+
 interface MarketingHeaderProps {
   readonly showSignIn?: boolean;
 }
@@ -14,7 +16,7 @@ export default function MarketingHeader({
           href="/"
           className="text-sm font-semibold tracking-tight text-gray-900"
         >
-          Daily Magic
+          {AGENT_WITCH_PRODUCT_NAME}
         </Link>
         <nav className="flex items-center gap-4 text-sm">
           <Link

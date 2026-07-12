@@ -8,18 +8,18 @@ export interface MarketingFeatureItem {
 
 export const MARKETING_FEATURE_ITEMS: readonly MarketingFeatureItem[] = [
   {
-    title: "Dispatch",
-    body: "Send tasks to your machine or a teammate in the same group.",
+    title: "Send tasks",
+    body: "Ask your Mac to do something from the browser — for yourself or a teammate on your team.",
     preview: "dispatch",
   },
   {
-    title: "Approve",
-    body: "Group admins set open vs approval; users can override in agent setup.",
+    title: "Ask first",
+    body: "Team leads can require approval before someone else's computer is used.",
     preview: "approve",
   },
   {
-    title: "Report",
-    body: "Every run is recorded with status, policy, and output.",
+    title: "See what happened",
+    body: "Every job is saved with its status, who sent it, and what came back.",
     preview: "report",
   },
 ] as const;
