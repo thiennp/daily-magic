@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
+import AgentWitchLogo from "@/components/branding/AgentWitchLogo";
 import { ThemeToggleButton } from "@/components/common/ThemeToggleButton";
 import UserDropdown from "@/components/header/UserDropdown";
 import {
@@ -11,7 +12,6 @@ import {
 } from "@/features/demo/DemoPreviewContext";
 import { COMPANY_RULES_NAV_LABEL } from "@/lib/admin/companyGroupCopy.constant";
 import AppShellNav from "@/features/shell/AppShellNav";
-import { AGENT_WITCH_PRODUCT_NAME } from "@/lib/agentWitch/agentWitchProductName.constant";
 
 interface AppShellHeaderProps {
   readonly sectionTitle?: string;
@@ -40,13 +40,13 @@ export default function AppShellHeader({ sectionTitle }: AppShellHeaderProps) {
     <header className="sticky top-0 z-50 border-b border-gray-200 bg-white/95 backdrop-blur dark:border-gray-800 dark:bg-gray-900/95">
       <div className="mx-auto flex max-w-[1600px] items-center justify-between gap-4 px-4 py-4 sm:px-6">
         <div className="min-w-0">
-          <Link
-            href={appPath("/")}
-            className="text-xs font-medium uppercase tracking-wide text-brand-500"
-          >
-            {AGENT_WITCH_PRODUCT_NAME}
+          <Link href={appPath("/")} aria-label="Agent Witch home">
+            <AgentWitchLogo
+              markClassName="h-6 w-6 text-zinc-900 dark:text-zinc-100"
+              textClassName="text-sm font-bold tracking-tight text-zinc-900 dark:text-zinc-100"
+            />
           </Link>
-          <h1 className="truncate text-xl font-semibold text-gray-800 dark:text-white/90">
+          <h1 className="mt-2 truncate text-xl font-semibold text-gray-800 dark:text-white/90">
             {resolvedTitle}
           </h1>
         </div>
