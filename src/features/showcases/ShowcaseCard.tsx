@@ -1,8 +1,12 @@
 import Link from "next/link";
 
 import type ShowcaseArticle from "@/features/showcases/types/ShowcaseArticle.type";
+import { MARKETING_SHOWCASE_CARD_BASE_CLASSES, MARKETING_TEXT_LINK_CLASSES } from "@/features/marketing/marketingInteractiveClasses.constant";
+import {
+  MARKETING_TEXT_PRIMARY_CLASSES,
+  MARKETING_TEXT_SECONDARY_CLASSES,
+} from "@/features/marketing/marketingSurfaceClasses.constant";
 import { mergeMarketingClasses } from "@/features/marketing/mergeMarketingClasses";
-import { MARKETING_TEXT_LINK_CLASSES } from "@/features/marketing/marketingInteractiveClasses.constant";
 
 export type ShowcaseCardVariant = "default" | "featured" | "spotlight";
 
@@ -13,12 +17,11 @@ interface ShowcaseCardProps {
 }
 
 const VARIANT_CLASSES: Record<ShowcaseCardVariant, string> = {
-  default:
-    "border-gray-200 hover:border-brand-200 dark:border-gray-800",
+  default: "dark:bg-white/[0.03]",
   featured:
-    "border-brand-200 bg-gradient-to-b from-brand-50/40 to-white shadow-theme-sm dark:border-brand-900/40",
+    "bg-gradient-to-b from-brand-500/[0.03] to-white dark:border-brand-900/40",
   spotlight:
-    "border-brand-200 bg-gradient-to-r from-brand-50/60 via-white to-white shadow-theme-md md:col-span-2 dark:border-brand-900/40",
+    "bg-gradient-to-r from-brand-500/[0.04] via-white to-white md:col-span-2 dark:border-brand-900/40",
 };
 
 export default function ShowcaseCard({
@@ -31,9 +34,7 @@ export default function ShowcaseCard({
   return (
     <article
       className={mergeMarketingClasses(
-        "group rounded-2xl border bg-white p-6 transition duration-300 ease-out",
-        "hover:-translate-y-0.5 hover:shadow-theme-md focus-within:ring-2 focus-within:ring-brand-500/30 focus-within:ring-offset-2",
-        "motion-reduce:transition-none motion-reduce:hover:translate-y-0 dark:bg-white/[0.03]",
+        MARKETING_SHOWCASE_CARD_BASE_CLASSES,
         VARIANT_CLASSES[variant],
         className,
       )}
@@ -43,18 +44,24 @@ export default function ShowcaseCard({
       </p>
       <h3
         className={mergeMarketingClasses(
-          "mt-2 font-semibold text-gray-900 dark:text-white/90",
+          "mt-2 font-semibold dark:text-white/90",
+          MARKETING_TEXT_PRIMARY_CLASSES,
           isFeatured ? "text-xl sm:text-2xl" : "text-lg",
         )}
       >
         <Link
           href={`/showcases/${article.slug}`}
-          className="rounded-sm transition hover:text-brand-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 dark:hover:text-brand-400"
+          className="rounded-sm transition hover:text-brand-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/40 focus-visible:ring-offset-2 dark:hover:text-brand-400"
         >
           {article.title}
         </Link>
       </h3>
-      <p className="mt-2 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+      <p
+        className={mergeMarketingClasses(
+          "mt-2 text-sm leading-relaxed dark:text-slate-400",
+          MARKETING_TEXT_SECONDARY_CLASSES,
+        )}
+      >
         {article.subtitle}
       </p>
       <Link

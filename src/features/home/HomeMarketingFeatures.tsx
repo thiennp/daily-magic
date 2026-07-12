@@ -3,7 +3,9 @@ import Link from "next/link";
 import MarketingFeatureCard from "@/features/marketing/MarketingFeatureCard";
 import { MARKETING_FEATURE_ITEMS } from "@/features/marketing/marketingFeatureItems.constant";
 import { MARKETING_TEXT_LINK_CLASSES } from "@/features/marketing/marketingInteractiveClasses.constant";
+import { MARKETING_TEXT_SECONDARY_CLASSES } from "@/features/marketing/marketingSurfaceClasses.constant";
 import MarketingSectionHeader from "@/features/marketing/MarketingSectionHeader";
+import { mergeMarketingClasses } from "@/features/marketing/mergeMarketingClasses";
 
 export default function HomeMarketingFeatures() {
   return (
@@ -19,7 +21,9 @@ export default function HomeMarketingFeatures() {
           <MarketingFeatureCard key={item.title} item={item} />
         ))}
       </div>
-      <p className="mt-8 text-sm text-gray-600">
+      <p
+        className={mergeMarketingClasses("mt-8 text-sm", MARKETING_TEXT_SECONDARY_CLASSES)}
+      >
         Ready to try it?{" "}
         <Link href="/#get-started" className={MARKETING_TEXT_LINK_CLASSES}>
           Sign in and connect your Mac

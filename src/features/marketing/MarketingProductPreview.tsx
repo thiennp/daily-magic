@@ -1,4 +1,10 @@
-import Badge from "@/components/ui/badge/Badge";
+import MarketingStatusBadge from "@/features/marketing/MarketingStatusBadge";
+import {
+  MARKETING_SURFACE_ELEVATED_CLASSES,
+  MARKETING_TEXT_MUTED_CLASSES,
+  MARKETING_TEXT_PRIMARY_CLASSES,
+  MARKETING_TEXT_SECONDARY_CLASSES,
+} from "@/features/marketing/marketingSurfaceClasses.constant";
 import { mergeMarketingClasses } from "@/features/marketing/mergeMarketingClasses";
 
 const PREVIEW_FLOW_STEPS = [
@@ -13,32 +19,47 @@ export default function MarketingProductPreview() {
     <aside
       aria-label="Agent Witch task flow preview"
       className={mergeMarketingClasses(
-        "overflow-hidden rounded-2xl border border-white/70 bg-white/75 shadow-theme-lg ring-1 ring-gray-200/50 backdrop-blur-xl",
-        "transition duration-300 hover:border-brand-200/70 hover:shadow-theme-md",
+        MARKETING_SURFACE_ELEVATED_CLASSES,
+        "relative overflow-hidden transition duration-300 hover:shadow-[0_12px_40px_rgb(15,23,42,0.1),0_4px_12px_rgb(15,23,42,0.05)]",
       )}
     >
-      <div className="flex items-center gap-2 border-b border-gray-200/70 bg-gray-50/80 px-4 py-3 backdrop-blur-sm">
-        <span className="h-2.5 w-2.5 rounded-full bg-red-400" aria-hidden />
-        <span className="h-2.5 w-2.5 rounded-full bg-amber-400" aria-hidden />
-        <span className="h-2.5 w-2.5 rounded-full bg-green-400" aria-hidden />
-        <span className="ml-2 text-xs font-medium text-gray-500">
+      <div className="flex items-center gap-2 border-b border-slate-200/60 bg-slate-50/70 px-4 py-3 backdrop-blur-sm">
+        <span className="h-2.5 w-2.5 rounded-full bg-red-400/90" aria-hidden />
+        <span className="h-2.5 w-2.5 rounded-full bg-amber-400/90" aria-hidden />
+        <span className="h-2.5 w-2.5 rounded-full bg-emerald-400/90" aria-hidden />
+        <span
+          className={mergeMarketingClasses(
+            "ml-2 text-xs font-medium",
+            MARKETING_TEXT_MUTED_CLASSES,
+          )}
+        >
           Agent Witch · Send task
         </span>
       </div>
 
       <div className="space-y-4 p-5">
         <div className="flex items-center justify-between gap-3">
-          <p className="text-sm font-semibold text-gray-900">New task</p>
-          <Badge color="success" size="sm">
-            Mac connected
-          </Badge>
+          <p className={mergeMarketingClasses("text-sm font-semibold", MARKETING_TEXT_PRIMARY_CLASSES)}>
+            New task
+          </p>
+          <MarketingStatusBadge tone="success">Mac connected</MarketingStatusBadge>
         </div>
 
-        <div className="rounded-xl border border-gray-200/80 bg-gray-50/90 p-3 backdrop-blur-sm">
-          <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+        <div className="rounded-xl bg-slate-50/90 p-3 ring-1 ring-slate-200/40 backdrop-blur-sm">
+          <p
+            className={mergeMarketingClasses(
+              "text-xs font-semibold uppercase tracking-wide",
+              MARKETING_TEXT_MUTED_CLASSES,
+            )}
+          >
             What you want done
           </p>
-          <p className="mt-2 text-sm leading-relaxed text-gray-700">
+          <p
+            className={mergeMarketingClasses(
+              "mt-2 text-sm leading-relaxed",
+              MARKETING_TEXT_SECONDARY_CLASSES,
+            )}
+          >
             Summarize this document and list anything we should fix before
             sharing it.
           </p>
@@ -46,23 +67,33 @@ export default function MarketingProductPreview() {
 
         <div className="flex items-center gap-2">
           <span
-            className="inline-flex h-9 flex-1 items-center justify-center rounded-lg bg-brand-500 text-xs font-semibold text-white shadow-theme-xs"
+            className="inline-flex h-9 flex-1 items-center justify-center rounded-lg bg-brand-500 text-xs font-semibold text-white shadow-sm"
             aria-hidden
           >
             Send to my Mac
           </span>
         </div>
 
-        <ol className="grid grid-cols-4 gap-2 border-t border-gray-100/80 pt-4">
+        <ol className="grid grid-cols-4 gap-2 border-t border-slate-100/80 pt-4">
           {PREVIEW_FLOW_STEPS.map((step, index) => (
             <li key={step.label} className="text-center">
-              <span className="mx-auto flex h-7 w-7 items-center justify-center rounded-full bg-brand-50 text-xs font-semibold text-brand-600 ring-1 ring-brand-100">
+              <span className="mx-auto flex h-7 w-7 items-center justify-center rounded-full bg-brand-500/10 text-xs font-semibold text-brand-700 ring-1 ring-brand-500/10">
                 {index + 1}
               </span>
-              <p className="mt-2 text-[11px] font-semibold text-gray-800">
+              <p
+                className={mergeMarketingClasses(
+                  "mt-2 text-[11px] font-semibold",
+                  MARKETING_TEXT_PRIMARY_CLASSES,
+                )}
+              >
                 {step.label}
               </p>
-              <p className="text-[10px] leading-snug text-gray-500">
+              <p
+                className={mergeMarketingClasses(
+                  "text-[10px] leading-snug",
+                  MARKETING_TEXT_MUTED_CLASSES,
+                )}
+              >
                 {step.detail}
               </p>
             </li>
