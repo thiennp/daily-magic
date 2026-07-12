@@ -12,9 +12,6 @@ import { GlobalRole, isGlobalRole } from "@/lib/auth/roles";
 import { getUserById } from "@/lib/auth/userRepository";
 import sendSignInVerificationEmail from "@/lib/email/sendSignInVerificationEmail";
 
-const resolveResendApiKey = (): string | undefined =>
-  process.env.AUTH_RESEND_KEY ?? process.env.RESEND_API_KEY;
-
 function buildAuthProviders(): Provider[] {
   const providers: Provider[] = [];
 
@@ -27,11 +24,10 @@ function buildAuthProviders(): Provider[] {
     );
   }
 
-  const resendApiKey = resolveResendApiKey();
-  if (resendApiKey && process.env.EMAIL_FROM) {
+  if (process.env.AUTH_RESEND_KEY && process.env.EMAIL_FROM) {
     providers.push(
       Resend({
-        apiKey: resendApiKey,
+        apiKey: process.env.AUTH_RESEND_KEY,
         from: process.env.EMAIL_FROM,
         sendVerificationRequest(params) {
           const { identifier: to, provider, url, theme } = params;
