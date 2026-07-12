@@ -76,7 +76,13 @@ export default async function LocalAgentSetupInstructions() {
         </a>
         . Add another account on the same computer by signing in as that user
         and running the install command again (each profile gets its own
-        LaunchAgent, config, and harness folder).
+        LaunchAgent, config, and harness folder). On macOS the install also
+        starts a localhost wake sidecar at{" "}
+        <code className="rounded bg-white px-1.5 py-0.5 text-xs dark:bg-gray-800">
+          http://127.0.0.1:47892/wake
+        </code>{" "}
+        that kickstarts sleeping Agent Witch LaunchAgents before you send a task
+        from this browser.
       </p>
     </section>
   );

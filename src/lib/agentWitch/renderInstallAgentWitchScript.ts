@@ -18,6 +18,26 @@ export const renderInstallAgentWitchScript = (origin: string): string => {
       origin,
       "readHarnessExportSets.ts",
     );
+  const wakeServerScriptUrl = buildAgentWitchInstallAuxiliaryScriptUrl(
+    origin,
+    "agent-witch-wake-server.ts",
+  );
+  const wakeConstantsScriptUrl = buildAgentWitchInstallAuxiliaryScriptUrl(
+    origin,
+    "agentWitchWakeConstants.ts",
+  );
+  const wakeListTargetsScriptUrl = buildAgentWitchInstallAuxiliaryScriptUrl(
+    origin,
+    "listAgentWitchLaunchTargets.ts",
+  );
+  const wakeKickstartScriptUrl = buildAgentWitchInstallAuxiliaryScriptUrl(
+    origin,
+    "kickstartAgentWitchLaunchAgent.ts",
+  );
+  const wakeHandlersScriptUrl = buildAgentWitchInstallAuxiliaryScriptUrl(
+    origin,
+    "agentWitchWakeHandlers.ts",
+  );
   const websocketSupportWarning = buildAgentWitchWebSocketSupportWarning(
     origin,
     wsUrl,
@@ -28,6 +48,11 @@ export const renderInstallAgentWitchScript = (origin: string): string => {
     clientScriptUrl,
     resolveLayoutScriptUrl,
     readHarnessExportSetsScriptUrl,
+    wakeServerScriptUrl,
+    wakeConstantsScriptUrl,
+    wakeListTargetsScriptUrl,
+    wakeKickstartScriptUrl,
+    wakeHandlersScriptUrl,
     websocketSupportWarning,
   });
 };

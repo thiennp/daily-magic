@@ -8,6 +8,7 @@
     "build": "next build",
     "start": "NODE_ENV=production tsx server.ts",
     "agent-witch": "tsx scripts/agent-witch.ts",
+    "agent-witch:wake-server": "tsx scripts/agent-witch-wake-server.ts",
     "agent-witch:install": "bash scripts/install-agent-witch.sh",
     "test": "vitest run",
     "test:watch": "vitest",

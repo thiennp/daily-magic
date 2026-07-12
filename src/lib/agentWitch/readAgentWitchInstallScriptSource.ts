@@ -3,6 +3,31 @@ import path from "node:path";
 
 const AGENT_WITCH_INSTALL_SCRIPT_ALLOWLIST = {
   "agent-witch.ts": path.join(process.cwd(), "scripts", "agent-witch.ts"),
+  "agent-witch-wake-server.ts": path.join(
+    process.cwd(),
+    "scripts",
+    "agent-witch-wake-server.ts",
+  ),
+  "agentWitchWakeConstants.ts": path.join(
+    process.cwd(),
+    "scripts",
+    "agentWitchWakeConstants.ts",
+  ),
+  "agentWitchWakeHandlers.ts": path.join(
+    process.cwd(),
+    "scripts",
+    "agentWitchWakeHandlers.ts",
+  ),
+  "kickstartAgentWitchLaunchAgent.ts": path.join(
+    process.cwd(),
+    "scripts",
+    "kickstartAgentWitchLaunchAgent.ts",
+  ),
+  "listAgentWitchLaunchTargets.ts": path.join(
+    process.cwd(),
+    "scripts",
+    "listAgentWitchLaunchTargets.ts",
+  ),
   "readHarnessExportSets.ts": path.join(
     process.cwd(),
     "scripts",
