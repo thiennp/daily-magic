@@ -30,7 +30,7 @@ export default function BorrowHarnessImportActions({
           ? "Importing bundle…"
           : importStatus === "exporting"
             ? "Requesting export…"
-            : "Install harness bundle"}
+            : "Install bundle"}
       </Button>
       {!isOnline ? (
         <p className="text-xs text-gray-500 dark:text-gray-400">

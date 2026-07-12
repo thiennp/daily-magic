@@ -51,7 +51,7 @@ export const createHarnessExportResultHandler = (input: {
     if (!payload.success || payload.sets === undefined) {
       input.setBorrowImportStatus("error");
       input.setBorrowImportMessage(
-        payload.errorMessage ?? "Could not export harness sets from owner.",
+        payload.errorMessage ?? "Could not export bundles from owner.",
       );
       return;
     }
@@ -74,7 +74,7 @@ export const createHarnessExportResultHandler = (input: {
 
     input.setBorrowImportStatus("done");
     input.setBorrowImportMessage(
-      `Requested import of ${payload.sets.length} harness set(s) to your local agent.`,
+      `Requested import of ${payload.sets.length} bundle(s) to your local agent.`,
     );
   };
 };

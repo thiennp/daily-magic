@@ -53,7 +53,7 @@ export default function HarnessMarketplaceListingPreview({
         Shared by {ownerName ?? ownerEmail} ({hostname})
       </p>
       <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
-        Harness bundle: {harnessSetName ?? harnessSetSlug}
+        Bundle: {harnessSetName ?? harnessSetSlug}
       </p>
       {exampleRequest ? (
         <p className="mt-3 text-sm text-gray-700 dark:text-gray-300">
@@ -78,7 +78,7 @@ export default function HarnessMarketplaceListingPreview({
       {harnessItemPaths.length > 0 ? (
         <div className="mt-3">
           <p className="text-xs font-medium text-gray-700 dark:text-gray-300">
-            Included harness items
+            Included items
           </p>
           <ul className="mt-1 max-h-40 space-y-1 overflow-auto text-xs text-gray-600 dark:text-gray-400">
             {harnessItemPaths.map((path) => (

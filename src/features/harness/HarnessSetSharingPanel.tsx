@@ -69,7 +69,7 @@ export default function HarnessSetSharingPanel() {
         Per-set visibility
       </h3>
       <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-        Override sharing for individual harness sets. Inherit uses your account
+        Override sharing for individual bundles. Inherit uses your account
         default above.
       </p>
       <HarnessSetSharingList

@@ -32,7 +32,7 @@ export async function GET(
   const snapshot = await getHarnessCatalogSnapshot(ownerUserId);
 
   if (snapshot === null) {
-    return Response.json({ error: "Harness not found." }, { status: 404 });
+    return Response.json({ error: "Catalog not found." }, { status: 404 });
   }
 
   const canView = await canViewHarnessCatalog(

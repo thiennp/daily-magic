@@ -26,7 +26,7 @@ export default function HarnessCatalogPublishPanel() {
     setIsPublishing(false);
 
     if (!result.ok) {
-      setMessage(result.errorMessage ?? "Could not publish harness catalog.");
+      setMessage(result.errorMessage ?? "Could not publish catalog snapshot.");
       return;
     }
 
@@ -56,7 +56,7 @@ export default function HarnessCatalogPublishPanel() {
             void publishCatalog();
           }}
         >
-          {isPublishing ? "Publishing…" : "Publish harness to catalog"}
+          {isPublishing ? "Publishing…" : "Publish to catalog"}
         </Button>
       </div>
       {!status?.isAgentOnline ? (

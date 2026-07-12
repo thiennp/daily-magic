@@ -28,7 +28,7 @@ export default function HarnessCatalogList({
   if (isLoading) {
     return (
       <p className="mt-4 text-sm text-gray-500 dark:text-gray-400">
-        Loading shared harnesses…
+        Loading shared setups…
       </p>
     );
   }
@@ -36,8 +36,8 @@ export default function HarnessCatalogList({
   if (entries.length === 0) {
     return (
       <p className="mt-4 text-sm text-gray-500 dark:text-gray-400">
-        No shared harnesses available yet. Teammates must set sharing to group
-        or public and have a paired agent online.
+        No shared setups available yet. Teammates must set sharing to group or
+        public and have a paired agent online.
       </p>
     );
   }

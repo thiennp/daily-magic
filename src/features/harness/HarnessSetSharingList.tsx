@@ -23,8 +23,8 @@ export default function HarnessSetSharingList({
   if (sets.length === 0) {
     return (
       <p className="mt-4 text-sm text-gray-500 dark:text-gray-400">
-        Publish a harness snapshot first — your agent reports the manifest when
-        it connects.
+        Publish a setup snapshot first — your agent reports the manifest when it
+        connects.
       </p>
     );
   }

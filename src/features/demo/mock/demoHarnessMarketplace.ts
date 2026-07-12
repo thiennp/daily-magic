@@ -17,7 +17,7 @@ export const demoHarnessMarketplaceListings: readonly HarnessMarketplaceListing[
       visibility: "group",
       workflowFields: [],
       harnessSetSlug: "demo-assistant",
-      harnessSetName: "Assistant harness",
+      harnessSetName: "Assistant bundle",
       harnessItemCount: 4,
       isOnline: true,
       hostname: "alex-macbook.demo",
@@ -42,7 +42,7 @@ export const demoHarnessMarketplaceListings: readonly HarnessMarketplaceListing[
         },
       ],
       harnessSetSlug: "demo-weekly-report",
-      harnessSetName: "Weekly report harness",
+      harnessSetName: "Weekly report bundle",
       harnessItemCount: 3,
       isOnline: true,
       hostname: "alex-macbook.demo",
@@ -60,7 +60,7 @@ export const demoHarnessMarketplaceBorrowManifest: Readonly<
     sets: {
       "demo-assistant": {
         slug: "demo-assistant",
-        name: "Assistant harness",
+        name: "Assistant bundle",
         version: 1,
         updatedAt: demoTimestamp,
         items: [
@@ -80,7 +80,7 @@ export const demoHarnessMarketplaceBorrowManifest: Readonly<
     sets: {
       "demo-weekly-report": {
         slug: "demo-weekly-report",
-        name: "Weekly report harness",
+        name: "Weekly report bundle",
         version: 1,
         updatedAt: demoTimestamp,
         items: [

@@ -60,7 +60,7 @@ export async function GET(
 
   if (snapshot === null) {
     return Response.json(
-      { error: "Owner has not published a harness catalog yet." },
+      { error: "Owner has not published a setup catalog yet." },
       { status: 404 },
     );
   }

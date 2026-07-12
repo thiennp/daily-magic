@@ -29,7 +29,7 @@ export default function HarnessSetManager({
       <div className="grid gap-4 md:grid-cols-[1.2fr_0.8fr]">
         <label className="block text-sm">
           <span className="font-medium text-gray-800 dark:text-white/90">
-            New harness set
+            New bundle
           </span>
           <div className="mt-2 flex gap-2">
             <input
@@ -75,7 +75,7 @@ export default function HarnessSetManager({
       {existingSets.length > 0 ? (
         <div className="rounded-lg border border-gray-200 bg-gray-50/80 p-4 dark:border-gray-700 dark:bg-white/[0.02]">
           <p className="text-sm font-medium text-gray-800 dark:text-white/90">
-            Your harness sets
+            Your bundles
           </p>
           <ul className="mt-2 flex flex-wrap gap-2">
             {existingSets.map((set) => (
@@ -90,8 +90,8 @@ export default function HarnessSetManager({
         </div>
       ) : (
         <p className="text-sm text-gray-500 dark:text-gray-400">
-          No harness sets yet. Create one, then attach rules, skills, and other
-          items to it.
+          No bundles yet. Create one, then attach rules, skills, and other items
+          to it.
         </p>
       )}
     </div>

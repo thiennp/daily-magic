@@ -31,8 +31,8 @@ export default function HarnessMarketplaceList({
   if (listings.length === 0) {
     return (
       <p className="mt-4 text-sm text-gray-500 dark:text-gray-400">
-        No agents or workflows with linked harness bundles are available yet.
-        Teammates must publish a capability and link a harness set.
+        No agents or workflows with linked bundles are available yet. Teammates
+        must publish a capability and link a rules bundle.
       </p>
     );
   }

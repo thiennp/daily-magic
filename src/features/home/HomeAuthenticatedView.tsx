@@ -2,7 +2,7 @@ import MyOfferingsPanel from "@/features/capabilities/MyOfferingsPanel";
 import TeamDirectoryPanel from "@/features/capabilities/TeamDirectoryPanel";
 import FeedbackInboxPanel from "@/features/feedback/FeedbackInboxPanel";
 import ImprovementReviewPanel from "@/features/improvements/ImprovementReviewPanel";
-import BorrowHarnessCatalog from "@/features/harness/BorrowHarnessCatalog";
+import MarketplaceHomePromo from "@/features/harness/MarketplaceHomePromo";
 import HomeDashboardHero from "@/features/home/HomeDashboardHero";
 import HomeOnboardingChecklist from "@/features/home/HomeOnboardingChecklist";
 import HomePresencePanel from "@/features/home/HomePresencePanel";
@@ -42,7 +42,7 @@ export default function HomeAuthenticatedView({
       <aside className={HOME_RIGHT_RAIL_CLASS}>
         <FeedbackInboxPanel />
         <ImprovementReviewPanel />
-        <BorrowHarnessCatalog />
+        <MarketplaceHomePromo />
         <HomeSetupSection />
       </aside>
     </div>

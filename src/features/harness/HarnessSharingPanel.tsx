@@ -52,18 +52,18 @@ export default function HarnessSharingPanel() {
 
     setMessage(
       response.ok
-        ? "Harness sharing preference saved."
-        : "Could not save harness sharing preference.",
+        ? "Sharing preference saved."
+        : "Could not save sharing preference.",
     );
   };
 
   return (
     <section className="rounded-2xl border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-white/[0.03]">
       <h2 className="text-lg font-semibold text-gray-800 dark:text-white/90">
-        Harness sharing
+        Sharing
       </h2>
       <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-        Control who can borrow your local harness catalog when your agent is
+        Control who can borrow your local rules catalog when your agent is
         online or from the last published snapshot.
       </p>
       <select

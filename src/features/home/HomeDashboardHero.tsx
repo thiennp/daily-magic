@@ -41,8 +41,14 @@ export default function HomeDashboardHero({ user }: HomeDashboardHeroProps) {
         </Link>
         <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-sm">
           <Link
-            href={appPath("/reports")}
+            href={appPath("/marketplace")}
             className="font-medium text-brand-600 hover:text-brand-700"
+          >
+            Browse marketplace →
+          </Link>
+          <Link
+            href={appPath("/reports")}
+            className="font-medium text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200"
           >
             View job history →
           </Link>

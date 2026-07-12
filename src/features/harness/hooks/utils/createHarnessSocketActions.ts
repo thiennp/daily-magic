@@ -91,7 +91,7 @@ export const createHarnessSocketActions = (input: {
     if (socket === null || socket.readyState !== WebSocket.OPEN) {
       input.setBorrowImportStatus("error");
       input.setBorrowImportMessage(
-        "Connect your local agent before importing harness sets.",
+        "Connect your local agent before importing bundles.",
       );
       return;
     }

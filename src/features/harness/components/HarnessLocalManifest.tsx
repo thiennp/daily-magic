@@ -12,7 +12,7 @@ export default function HarnessLocalManifest({
   return (
     <div className="mt-6">
       <h3 className="text-sm font-medium text-gray-800 dark:text-white/90">
-        Reported local harness
+        Reported local setup
       </h3>
       {localManifest ? (
         <>
@@ -25,8 +25,8 @@ export default function HarnessLocalManifest({
         </>
       ) : (
         <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
-          No local harness manifest reported yet. Connect your local agent and
-          send a harness request.
+          No local setup reported yet. Connect your local agent and sync rules
+          from the browser.
         </p>
       )}
     </div>

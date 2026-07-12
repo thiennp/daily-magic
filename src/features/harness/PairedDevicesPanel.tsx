@@ -15,7 +15,7 @@ export default function PairedDevicesPanel() {
         </h3>
         <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
           Devices linked to your account. Revoke a device if the local agent
-          should stop routing harness and Claude commands to that computer.
+          should stop routing rules and Claude commands to that computer.
         </p>
 
         <PairedDevicesList
