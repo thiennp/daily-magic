@@ -1,9 +1,11 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
 
-import { useAppPath } from "@/features/demo/DemoPreviewContext";
+import { useAppPath, useDemoPreview } from "@/features/demo/DemoPreviewContext";
 import LibraryPlaybookTypeBadge from "@/features/library/LibraryPlaybookTypeBadge";
+import EditWorkflowForm from "@/features/workflows/EditWorkflowForm";
 import Button from "@/components/ui/button/Button";
 import { useCopyToClipboard } from "@/hooks/useCopyToClipboard";
 import { resolveLibraryCopyPrompt } from "@/lib/library/resolveLibraryCopyPrompt";
@@ -13,17 +15,22 @@ import { CapabilityType } from "@/lib/capabilities/CapabilityType.constant";
 
 interface LibraryPlaybookCardProps {
   readonly capability: PublishedCapabilityRecord;
+  readonly onUpdated?: () => void;
 }
 
 export default function LibraryPlaybookCard({
   capability,
+  onUpdated,
 }: LibraryPlaybookCardProps) {
   const appPath = useAppPath();
+  const demoPreview = useDemoPreview();
+  const [isEditing, setIsEditing] = useState(false);
   const { copied, copy } = useCopyToClipboard();
   const useHref = buildAgentComposerHref({
     libraryCapabilityId: capability.id,
   });
   const copyPrompt = resolveLibraryCopyPrompt(capability);
+  const canEdit = !demoPreview && capability.type === CapabilityType.WORKFLOW;
 
   return (
     <article className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03]">
@@ -61,7 +68,28 @@ export default function LibraryPlaybookCard({
             {copied ? "Copied" : "Copy prompt"}
           </Button>
         ) : null}
+        {canEdit ? (
+          <Button
+            variant="outline"
+            onClick={() => {
+              setIsEditing((editing) => !editing);
+            }}
+          >
+            {isEditing ? "Close edit" : "Edit"}
+          </Button>
+        ) : null}
       </div>
+      {isEditing ? (
+        <EditWorkflowForm
+          capability={capability}
+          onSaved={() => {
+            onUpdated?.();
+          }}
+          onCancel={() => {
+            setIsEditing(false);
+          }}
+        />
+      ) : null}
     </article>
   );
 }

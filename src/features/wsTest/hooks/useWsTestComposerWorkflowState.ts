@@ -28,6 +28,7 @@ export function useWsTestComposerWorkflowState(
   readonly workflowValidationErrors: readonly string[];
   readonly resolvedPrompt: string;
   readonly isLibraryPlaybook: boolean;
+  readonly libraryCapabilityId: string;
 } {
   const demoPreview = useDemoPreview();
   const initialPrompt =
@@ -73,5 +74,6 @@ export function useWsTestComposerWorkflowState(
     workflowValidationErrors,
     resolvedPrompt,
     isLibraryPlaybook,
+    libraryCapabilityId: libraryPlaybook?.id ?? "",
   };
 }

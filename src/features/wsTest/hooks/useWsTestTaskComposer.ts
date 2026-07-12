@@ -20,6 +20,7 @@ export function useWsTestTaskComposer(): {
   readonly isTeamDispatch: boolean;
   readonly isWorkflowTask: boolean;
   readonly isLibraryPlaybook: boolean;
+  readonly libraryCapabilityId: string;
   readonly workflowFields: readonly WorkflowFieldDefinition[];
   readonly workflowValidationErrors: readonly string[];
   readonly resolvedPrompt: string;
@@ -70,6 +71,7 @@ export function useWsTestTaskComposer(): {
     isTeamDispatch,
     isWorkflowTask: workflow.isWorkflowTask,
     isLibraryPlaybook: workflow.isLibraryPlaybook,
+    libraryCapabilityId: workflow.libraryCapabilityId,
     workflowFields: workflow.workflowFields,
     workflowValidationErrors: workflow.workflowValidationErrors,
     resolvedPrompt: workflow.resolvedPrompt,

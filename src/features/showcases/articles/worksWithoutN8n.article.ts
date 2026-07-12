@@ -31,7 +31,7 @@ const worksWithoutN8n: ShowcaseArticle = {
     {
       heading: "What we do not do yet",
       paragraphs: [
-        "There is no visual workflow builder in the app today — publishing is API-oriented. There is no n8n webhook runner or offline job queue. If you need Zapier-style glue between SaaS tools, n8n may still be the right tool alongside Agent Witch for Mac-side AI work.",
+        "There is no drag-and-drop canvas like n8n. The library page has a simple workflow form (fields → prompt). There is no n8n webhook runner. If you need Zapier-style glue between SaaS tools, n8n may still be the right tool alongside Agent Witch for Mac-side AI work.",
       ],
     },
     {

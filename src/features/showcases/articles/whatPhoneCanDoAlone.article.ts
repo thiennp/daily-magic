@@ -25,6 +25,7 @@ const whatPhoneCanDoAlone: ShowcaseArticle = {
         "Browse library and marketplace playbooks",
         "Copy a prompt to paste elsewhere",
         "Save a marketplace capability to your library",
+        "Queue a task for when your Mac reconnects",
         "Request a job via team dispatch to someone online",
         "Review history and run again when executor is available",
       ],
@@ -38,9 +39,9 @@ const whatPhoneCanDoAlone: ShowcaseArticle = {
       ],
     },
     {
-      heading: "No offline queue yet",
+      heading: "No push notifications yet",
       paragraphs: [
-        "If nobody's executor is online, you cannot queue a run and get a push notification later. Copy prompt or draft the form and come back — or use team dispatch when a colleague's Mac is available.",
+        "Queued tasks send when your browser reconnects — not when your Mac wakes up in your pocket. Copy prompt or draft the form and come back, or use team dispatch when a colleague's Mac is available.",
       ],
     },
   ],

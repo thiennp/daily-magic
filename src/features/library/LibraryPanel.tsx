@@ -6,9 +6,13 @@ import { CapabilityStatus } from "@/lib/capabilities/CapabilityStatus.constant";
 
 interface LibraryPanelProps {
   readonly refreshKey?: number;
+  readonly onUpdated?: () => void;
 }
 
-export default function LibraryPanel({ refreshKey = 0 }: LibraryPanelProps) {
+export default function LibraryPanel({
+  refreshKey = 0,
+  onUpdated,
+}: LibraryPanelProps) {
   const { capabilities, isLoading } = useLibraryCapabilities(refreshKey);
   const libraryItems = capabilities.filter(
     (capability) => capability.status !== CapabilityStatus.ARCHIVED,
@@ -31,7 +35,11 @@ export default function LibraryPanel({ refreshKey = 0 }: LibraryPanelProps) {
       ) : (
         <div className="space-y-3">
           {libraryItems.map((capability) => (
-            <LibraryPlaybookCard key={capability.id} capability={capability} />
+            <LibraryPlaybookCard
+              key={capability.id}
+              capability={capability}
+              onUpdated={onUpdated}
+            />
           ))}
         </div>
       )}

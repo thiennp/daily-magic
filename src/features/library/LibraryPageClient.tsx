@@ -15,7 +15,12 @@ export default function LibraryPageClient() {
           setRefreshKey((key) => key + 1);
         }}
       />
-      <LibraryPanel refreshKey={refreshKey} />
+      <LibraryPanel
+        refreshKey={refreshKey}
+        onUpdated={() => {
+          setRefreshKey((key) => key + 1);
+        }}
+      />
     </div>
   );
 }

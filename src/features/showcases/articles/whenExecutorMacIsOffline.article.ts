@@ -40,7 +40,15 @@ const whenExecutorMacIsOffline: ShowcaseArticle = {
     {
       heading: "What is not built yet",
       paragraphs: [
-        "There is no background job queue that retries when a Mac wakes up, and no push notification when a run completes. If you need always-on automation, pair Agent Witch with tooling that keeps a machine awake or use scheduled jobs on a dedicated Mac.",
+        "There is no push notification when a run completes. If you need always-on automation, pair Agent Witch with tooling that keeps a machine awake or use scheduled jobs on a dedicated Mac.",
+      ],
+    },
+    {
+      heading: "What you can do now",
+      bullets: [
+        "Queue a task from the agent page when disconnected",
+        "Queued tasks send automatically when your browser reconnects",
+        "Copy prompt remains available for ChatGPT or Gemini",
       ],
     },
   ],

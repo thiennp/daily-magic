@@ -1,17 +1,20 @@
 "use client";
 
 import { useCopyToClipboard } from "@/hooks/useCopyToClipboard";
+import WsTestComposerHelperText from "@/features/wsTest/WsTestComposerHelperText";
 import type { WsTestConnectionStatus } from "@/features/wsTest/types/WsTestConnectionStatus.type";
 
 interface WsTestComposerActionsProps {
   readonly connectionStatus: WsTestConnectionStatus;
   readonly isSendDisabled: boolean;
   readonly canCopyPrompt: boolean;
+  readonly canQueue: boolean;
   readonly copyText: string;
   readonly sendLabel: string;
   readonly isWorkflowTask: boolean;
   readonly onSend: () => void;
   readonly onClear: () => void;
+  readonly onQueue: () => void;
 }
 
 const primaryButtonClass =
@@ -23,11 +26,13 @@ export default function WsTestComposerActions({
   connectionStatus,
   isSendDisabled,
   canCopyPrompt,
+  canQueue,
   copyText,
   sendLabel,
   isWorkflowTask,
   onSend,
   onClear,
+  onQueue,
 }: WsTestComposerActionsProps) {
   const isOffline = connectionStatus !== "connected";
   const showCopyPrimary = isOffline && canCopyPrompt;
@@ -41,13 +46,24 @@ export default function WsTestComposerActions({
     <>
       <div className="mt-4 flex flex-wrap gap-3">
         {showCopyPrimary ? (
-          <button
-            type="button"
-            onClick={handleCopy}
-            className={`${primaryButtonClass} min-w-[10rem] flex-1 sm:flex-none`}
-          >
-            {copied ? "Copied" : "Copy prompt"}
-          </button>
+          <>
+            <button
+              type="button"
+              onClick={handleCopy}
+              className={`${primaryButtonClass} min-w-[10rem] flex-1 sm:flex-none`}
+            >
+              {copied ? "Copied" : "Copy prompt"}
+            </button>
+            {canQueue ? (
+              <button
+                type="button"
+                onClick={onQueue}
+                className={`${outlineButtonClass} flex-1 sm:flex-none`}
+              >
+                Queue for later
+              </button>
+            ) : null}
+          </>
         ) : (
           <button
             type="button"
@@ -71,25 +87,12 @@ export default function WsTestComposerActions({
           Clear
         </button>
       </div>
-      {showCopyPrimary ? (
-        <p className="mt-3 text-sm text-gray-500 dark:text-gray-400">
-          Your Mac is not connected. Copy the assembled prompt for ChatGPT or
-          Gemini, or connect from Home → Your setup.
-        </p>
-      ) : null}
-      {isSendDisabled && !showCopyPrimary && !isWorkflowTask ? (
-        <p className="mt-3 text-sm text-gray-500 dark:text-gray-400">
-          {isOffline
-            ? "Connect your Mac from Home → Your setup before sending a task."
-            : "Enter a task description to continue."}
-        </p>
-      ) : null}
-      {isSendDisabled && !showCopyPrimary && isWorkflowTask && isOffline ? (
-        <p className="mt-3 text-sm text-gray-500 dark:text-gray-400">
-          Connect your Mac to send, or fill required fields and copy the
-          assembled prompt.
-        </p>
-      ) : null}
+      <WsTestComposerHelperText
+        showCopyPrimary={showCopyPrimary}
+        isSendDisabled={isSendDisabled}
+        isWorkflowTask={isWorkflowTask}
+        isOffline={isOffline}
+      />
     </>
   );
 }

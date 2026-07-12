@@ -10,16 +10,20 @@ interface WsTestPromptSectionProps {
   readonly composer: ReturnType<typeof useWsTestTaskComposer>;
   readonly connectionStatus: WsTestConnectionStatus;
   readonly isSendDisabled: boolean;
+  readonly canQueue: boolean;
   readonly onSend: () => void;
   readonly onClear: () => void;
+  readonly onQueue: () => void;
 }
 
 export default function WsTestPromptSection({
   composer,
   connectionStatus,
   isSendDisabled,
+  canQueue,
   onSend,
   onClear,
+  onQueue,
 }: WsTestPromptSectionProps) {
   const canCopyPrompt =
     composer.resolvedPrompt.trim().length > 0 &&
@@ -68,6 +72,7 @@ export default function WsTestPromptSection({
           connectionStatus={connectionStatus}
           isSendDisabled={isSendDisabled}
           canCopyPrompt={canCopyPrompt}
+          canQueue={canQueue}
           copyText={composer.resolvedPrompt}
           sendLabel={
             composer.isTeamDispatch ? "Send to teammate" : "Send to my Mac"
@@ -75,6 +80,7 @@ export default function WsTestPromptSection({
           isWorkflowTask={composer.isWorkflowTask}
           onSend={onSend}
           onClear={onClear}
+          onQueue={onQueue}
         />
       </section>
     </>
