@@ -6,6 +6,8 @@ import fromMyPromptToOurWorkflow from "@/features/showcases/articles/fromMyPromp
 import manageCompanyAgents from "@/features/showcases/articles/manageCompanyAgents.article";
 import managerApprovesBeforeRun from "@/features/showcases/articles/managerApprovesBeforeRun.article";
 import newHiresCompanyPlaybooks from "@/features/showcases/articles/newHiresCompanyPlaybooks.article";
+import notASlackReplacement from "@/features/showcases/articles/notASlackReplacement.article";
+import notJustAnotherChatgpt from "@/features/showcases/articles/notJustAnotherChatgpt.article";
 import oneEmployeeOneAgent from "@/features/showcases/articles/oneEmployeeOneAgent.article";
 import phoneAsksCoworkerMacRuns from "@/features/showcases/articles/phoneAsksCoworkerMacRuns.article";
 import runAgainWithoutRetyping from "@/features/showcases/articles/runAgainWithoutRetyping.article";
@@ -15,7 +17,11 @@ import stopCopyPasteEveryMonday from "@/features/showcases/articles/stopCopyPast
 import stopMemorizingPrompts from "@/features/showcases/articles/stopMemorizingPrompts.article";
 import weeklyReportInFiveMinutes from "@/features/showcases/articles/weeklyReportInFiveMinutes.article";
 import whatIsAnAiAgentSimple from "@/features/showcases/articles/whatIsAnAiAgentSimple.article";
+import whatPhoneCanDoAlone from "@/features/showcases/articles/whatPhoneCanDoAlone.article";
+import whenExecutorMacIsOffline from "@/features/showcases/articles/whenExecutorMacIsOffline.article";
 import whereToStartWithAiAgents from "@/features/showcases/articles/whereToStartWithAiAgents.article";
+import whyLocalMacNotCloud from "@/features/showcases/articles/whyLocalMacNotCloud.article";
+import worksWithoutN8n from "@/features/showcases/articles/worksWithoutN8n.article";
 import type ShowcaseArticle from "@/features/showcases/types/ShowcaseArticle.type";
 
 export const SHOWCASE_ARTICLES_PHASE_1: readonly ShowcaseArticle[] = [
@@ -45,10 +51,20 @@ export const SHOWCASE_ARTICLES_PHASE_3: readonly ShowcaseArticle[] = [
   newHiresCompanyPlaybooks,
 ] as const;
 
+export const SHOWCASE_ARTICLES_PHASE_4: readonly ShowcaseArticle[] = [
+  notASlackReplacement,
+  worksWithoutN8n,
+  notJustAnotherChatgpt,
+  whatPhoneCanDoAlone,
+  whenExecutorMacIsOffline,
+  whyLocalMacNotCloud,
+] as const;
+
 export const SHOWCASE_ARTICLES: readonly ShowcaseArticle[] = [
   ...SHOWCASE_ARTICLES_PHASE_1,
   ...SHOWCASE_ARTICLES_PHASE_2,
   ...SHOWCASE_ARTICLES_PHASE_3,
+  ...SHOWCASE_ARTICLES_PHASE_4,
 ] as const;
 
 export const HOME_FEATURED_SHOWCASE_SLUGS: readonly string[] = [
@@ -67,6 +83,12 @@ export const HOME_TEAMS_SHOWCASE_SLUGS: readonly string[] = [
   oneEmployeeOneAgent.slug,
   managerApprovesBeforeRun.slug,
   newHiresCompanyPlaybooks.slug,
+] as const;
+
+export const HOME_OBJECTIONS_SHOWCASE_SLUGS: readonly string[] = [
+  notASlackReplacement.slug,
+  worksWithoutN8n.slug,
+  notJustAnotherChatgpt.slug,
 ] as const;
 
 export function getShowcaseArticleBySlug(
@@ -96,10 +118,15 @@ export function getHomeTeamsShowcases(): readonly ShowcaseArticle[] {
   return resolveShowcasesBySlugs(HOME_TEAMS_SHOWCASE_SLUGS);
 }
 
+export function getHomeObjectionsShowcases(): readonly ShowcaseArticle[] {
+  return resolveShowcasesBySlugs(HOME_OBJECTIONS_SHOWCASE_SLUGS);
+}
+
 export function getHomeAllShowcaseSlugsForSeo(): readonly ShowcaseArticle[] {
   return [
     ...getHomeFeaturedShowcases(),
     ...getHomeMoreShowcases(),
     ...getHomeTeamsShowcases(),
+    ...getHomeObjectionsShowcases(),
   ];
 }

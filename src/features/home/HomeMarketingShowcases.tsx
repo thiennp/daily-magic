@@ -6,6 +6,7 @@ import {
   getHomeAllShowcaseSlugsForSeo,
   getHomeFeaturedShowcases,
   getHomeMoreShowcases,
+  getHomeObjectionsShowcases,
   getHomeTeamsShowcases,
   SHOWCASE_ARTICLES,
 } from "@/features/showcases/showcaseArticleRegistry";
@@ -14,6 +15,7 @@ export default function HomeMarketingShowcases() {
   const featured = getHomeFeaturedShowcases();
   const more = getHomeMoreShowcases();
   const teams = getHomeTeamsShowcases();
+  const objections = getHomeObjectionsShowcases();
   const allForSchema = getHomeAllShowcaseSlugsForSeo();
 
   return (
@@ -51,6 +53,18 @@ export default function HomeMarketingShowcases() {
         />
         <div className="mt-8 grid gap-6 md:grid-cols-3">
           {teams.map((article) => (
+            <ShowcaseCard key={article.slug} article={article} />
+          ))}
+        </div>
+      </div>
+      <div className="mt-14">
+        <MarketingSectionHeader
+          eyebrow="Straight answers"
+          title="Common questions"
+          description="Not Slack, not n8n, not just chat — what Agent Witch actually is."
+        />
+        <div className="mt-8 grid gap-6 md:grid-cols-3">
+          {objections.map((article) => (
             <ShowcaseCard key={article.slug} article={article} />
           ))}
         </div>

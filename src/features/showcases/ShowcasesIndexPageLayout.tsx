@@ -5,6 +5,7 @@ import {
   SHOWCASE_ARTICLES_PHASE_1,
   SHOWCASE_ARTICLES_PHASE_2,
   SHOWCASE_ARTICLES_PHASE_3,
+  SHOWCASE_ARTICLES_PHASE_4,
 } from "@/features/showcases/showcaseArticleRegistry";
 import MarketingShell from "@/features/marketing/MarketingShell";
 import MarketingSectionHeader from "@/features/marketing/MarketingSectionHeader";
@@ -44,6 +45,19 @@ export default function ShowcasesIndexPageLayout() {
         </p>
         <div className="mt-6 grid gap-6 md:grid-cols-2">
           {SHOWCASE_ARTICLES_PHASE_3.map((article) => (
+            <ShowcaseCard key={article.slug} article={article} />
+          ))}
+        </div>
+      </div>
+      <div className="mt-14">
+        <h2 className="text-lg font-semibold text-gray-900">
+          Common questions
+        </h2>
+        <p className="mt-2 max-w-2xl text-sm text-gray-600">
+          Slack, n8n, ChatGPT, mobile limits, offline Macs — straight answers.
+        </p>
+        <div className="mt-6 grid gap-6 md:grid-cols-2">
+          {SHOWCASE_ARTICLES_PHASE_4.map((article) => (
             <ShowcaseCard key={article.slug} article={article} />
           ))}
         </div>
