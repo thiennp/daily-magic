@@ -2,10 +2,15 @@ import Link from "next/link";
 
 import MarketingSectionHeader from "@/features/marketing/MarketingSectionHeader";
 import ShowcaseCard from "@/features/showcases/ShowcaseCard";
-import { getHomeFeaturedShowcases } from "@/features/showcases/showcaseArticleRegistry";
+import {
+  getHomeFeaturedShowcases,
+  getHomeMoreShowcases,
+} from "@/features/showcases/showcaseArticleRegistry";
 
 export default function HomeMarketingShowcases() {
   const featured = getHomeFeaturedShowcases();
+  const more = getHomeMoreShowcases();
+  const allForSchema = [...featured, ...more];
 
   return (
     <section className="mt-20" aria-labelledby="showcases-heading">
@@ -23,12 +28,23 @@ export default function HomeMarketingShowcases() {
           />
         ))}
       </div>
+      <div className="mt-14">
+        <MarketingSectionHeader
+          title="More examples"
+          description="Mobile, marketplace, and team workflows."
+        />
+        <div className="mt-8 grid gap-6 md:grid-cols-3">
+          {more.map((article) => (
+            <ShowcaseCard key={article.slug} article={article} />
+          ))}
+        </div>
+      </div>
       <p className="mt-8 text-center">
         <Link
           href="/showcases"
           className="text-sm font-medium text-brand-600 hover:text-brand-700"
         >
-          See all examples →
+          See all {allForSchema.length} examples →
         </Link>
       </p>
       <script
@@ -38,7 +54,7 @@ export default function HomeMarketingShowcases() {
             "@context": "https://schema.org",
             "@type": "ItemList",
             name: "Agent Witch real examples",
-            itemListElement: featured.map((article, index) => ({
+            itemListElement: allForSchema.map((article, index) => ({
               "@type": "ListItem",
               position: index + 1,
               url: `https://agentwitch.com/showcases/${article.slug}`,
