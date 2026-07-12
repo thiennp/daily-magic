@@ -4,6 +4,7 @@ import { ThemeToggleButton } from "@/components/common/ThemeToggleButton";
 import Link from "next/link";
 
 const STYLEGUIDE_SECTIONS = [
+  { id: "brand-logo", label: "Brand logo" },
   { id: "buttons", label: "Buttons" },
   { id: "alerts", label: "Alerts" },
   { id: "badges", label: "Badges" },
