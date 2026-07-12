@@ -1,6 +1,9 @@
 import MarketingTrustIcon from "@/features/marketing/components/MarketingTrustIcon";
+import {
+  MARKETING_TRUST_PILL_DEFAULT_CLASSES,
+  MARKETING_TRUST_PILL_EMPHASIZED_CLASSES,
+} from "@/features/marketing/marketingPalette.constant";
 import { MARKETING_TRUST_ITEMS } from "@/features/marketing/marketingTrustItems.constant";
-import { mergeMarketingClasses } from "@/features/marketing/mergeMarketingClasses";
 
 export default function MarketingTrustStrip() {
   return (
@@ -11,12 +14,11 @@ export default function MarketingTrustStrip() {
       {MARKETING_TRUST_ITEMS.map((item) => (
         <li key={item.label}>
           <span
-            className={mergeMarketingClasses(
-              "inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-medium",
+            className={
               item.emphasized
-                ? "bg-zinc-100 text-zinc-800"
-                : "bg-zinc-50 text-zinc-600",
-            )}
+                ? MARKETING_TRUST_PILL_EMPHASIZED_CLASSES
+                : MARKETING_TRUST_PILL_DEFAULT_CLASSES
+            }
           >
             <MarketingTrustIcon icon={item.icon} />
             {item.label}

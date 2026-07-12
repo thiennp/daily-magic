@@ -22,7 +22,10 @@ export default function LoginFormEmailField({
       <input
         id={emailInputId}
         type="email"
+        name="email"
         value={email}
+        required
+        aria-required="true"
         onChange={(event) => {
           onEmailChange(event.target.value);
         }}

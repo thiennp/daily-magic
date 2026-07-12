@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import { AGENT_WITCH_PRODUCT_NAME } from "@/lib/agentWitch/agentWitchProductName.constant";
 import { MARKETING_CTA_PRIMARY_CLASSES } from "@/features/marketing/marketingInteractiveClasses.constant";
+import { mergeMarketingClasses } from "@/features/marketing/mergeMarketingClasses";
 
 interface MarketingHeaderProps {
   readonly showSignIn?: boolean;
@@ -36,7 +37,8 @@ export default function MarketingHeader({
           ) : null}
           <Link
             href="/#get-started"
-            className={`${MARKETING_CTA_PRIMARY_CLASSES} h-10 px-4`}
+            aria-label="Get started with sign in"
+            className={mergeMarketingClasses(MARKETING_CTA_PRIMARY_CLASSES, "h-10 px-4")}
           >
             Get started
           </Link>

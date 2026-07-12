@@ -15,6 +15,7 @@ export default function LoginFormGoogleButton({
     return (
       <button
         type="button"
+        aria-label="Continue signing in with Google"
         className={LOGIN_FORM_APPEARANCE_CLASSES.marketing.googleButton}
         onClick={onGoogleSignIn}
       >
@@ -24,7 +25,12 @@ export default function LoginFormGoogleButton({
   }
 
   return (
-    <Button variant="outline" className="w-full" onClick={onGoogleSignIn}>
+    <Button
+      variant="outline"
+      className="w-full"
+      aria-label="Continue signing in with Google"
+      onClick={onGoogleSignIn}
+    >
       Continue with Google
     </Button>
   );

@@ -43,7 +43,11 @@ export default function HomeMarketingHero() {
         </div>
 
         <nav aria-label="Jump to sign in">
-          <Link href="#get-started" className={MARKETING_CTA_GHOST_CLASSES}>
+          <Link
+            href="#get-started"
+            className={MARKETING_CTA_GHOST_CLASSES}
+            aria-label="Jump to the get started sign-in form"
+          >
             Get started with your email or Google →
           </Link>
         </nav>
@@ -53,12 +57,7 @@ export default function HomeMarketingHero() {
 
       <aside aria-label="Sign in and product preview" className="space-y-5">
         <HomeMarketingAuthSection />
-        <div className="px-1">
-          <p className="mb-2 text-[11px] font-medium uppercase tracking-wider text-zinc-400">
-            Product preview
-          </p>
-          <MarketingProductPreview />
-        </div>
+        <MarketingProductPreview />
       </aside>
     </header>
   );
