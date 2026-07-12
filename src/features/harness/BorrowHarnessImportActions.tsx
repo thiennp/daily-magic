@@ -27,10 +27,10 @@ export default function BorrowHarnessImportActions({
         onClick={onImport}
       >
         {importStatus === "importing"
-          ? "Importing sets…"
+          ? "Importing bundle…"
           : importStatus === "exporting"
             ? "Requesting export…"
-            : "Import to my harness"}
+            : "Install harness bundle"}
       </Button>
       {!isOnline ? (
         <p className="text-xs text-gray-500 dark:text-gray-400">

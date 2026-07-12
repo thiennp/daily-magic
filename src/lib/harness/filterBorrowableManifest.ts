@@ -64,3 +64,41 @@ export const filterVisibleSetSlugs = async (
 
   return visibleSlugs;
 };
+
+export const filterBorrowableManifestToSetSlugs = async (
+  manifestJson: Readonly<Record<string, unknown>>,
+  viewerUserId: string,
+  ownerUserId: string,
+  accountVisibility: HarnessSharingVisibilityValue,
+  requestedSetSlugs: readonly string[],
+): Promise<Record<string, unknown>> => {
+  const filtered = await filterBorrowableManifest(
+    manifestJson,
+    viewerUserId,
+    ownerUserId,
+    accountVisibility,
+  );
+  const allowedSlugs = new Set(requestedSetSlugs);
+  const activeSetSlugs = Array.isArray(filtered.activeSetSlugs)
+    ? filtered.activeSetSlugs.filter((slug) => allowedSlugs.has(slug))
+    : [];
+  const sets =
+    typeof filtered.sets === "object" &&
+    filtered.sets !== null &&
+    !Array.isArray(filtered.sets)
+      ? (filtered.sets as Record<string, unknown>)
+      : {};
+  const visibleSets: Record<string, unknown> = {};
+
+  for (const slug of activeSetSlugs) {
+    if (sets[slug] !== undefined) {
+      visibleSets[slug] = sets[slug];
+    }
+  }
+
+  return {
+    ...filtered,
+    activeSetSlugs,
+    sets: visibleSets,
+  };
+};
