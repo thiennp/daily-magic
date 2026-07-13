@@ -11,6 +11,7 @@ import {
 import AgentWitchUnsupportedHostNotice from "@/features/home/AgentWitchUnsupportedHostNotice";
 import ConnectInstallPasteModal from "@/features/home/ConnectInstallPasteModal";
 import CopyableBashCommand from "@/features/home/CopyableBashCommand";
+import useConnectInstallPasteModalDismissal from "@/features/home/hooks/useConnectInstallPasteModalDismissal";
 import buildConnectComputerGuideSteps, {
   CONNECT_COMPUTER_COPY_STEP_TITLE,
 } from "@/features/home/utils/buildConnectComputerGuideSteps";
@@ -61,6 +62,12 @@ export default function HomeConnectComputerGuide({
   const handleClosePasteModal = useCallback(() => {
     setIsPasteModalOpen(false);
   }, []);
+
+  useConnectInstallPasteModalDismissal({
+    isOpen: isPasteModalOpen,
+    isLinking,
+    onClose: handleClosePasteModal,
+  });
 
   return (
     <AppHero variant="plain">
