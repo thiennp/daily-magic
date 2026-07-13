@@ -12,6 +12,9 @@ interface WsTestComposerActionsProps {
   readonly copyText: string;
   readonly sendLabel: string;
   readonly isWorkflowTask: boolean;
+  readonly isTeamDispatch: boolean;
+  readonly hasOnlineMac: boolean;
+  readonly selectedDeviceIsOnline: boolean;
   readonly onSend: () => void;
   readonly onClear: () => void;
   readonly onQueue: () => void;
@@ -30,11 +33,14 @@ export default function WsTestComposerActions({
   copyText,
   sendLabel,
   isWorkflowTask,
+  isTeamDispatch,
+  hasOnlineMac,
+  selectedDeviceIsOnline,
   onSend,
   onClear,
   onQueue,
 }: WsTestComposerActionsProps) {
-  const isOffline = connectionStatus !== "connected";
+  const isBrowserOffline = connectionStatus !== "connected";
   const { copied, copy } = useCopyToClipboard();
 
   const handleCopy = () => {
@@ -61,7 +67,7 @@ export default function WsTestComposerActions({
             {copied ? "Copied" : "Copy for other AI"}
           </button>
         ) : null}
-        {isOffline && canQueue ? (
+        {isBrowserOffline && canQueue ? (
           <button
             type="button"
             onClick={onQueue}
@@ -77,8 +83,11 @@ export default function WsTestComposerActions({
       <WsTestComposerHelperText
         isSendDisabled={isSendDisabled}
         isWorkflowTask={isWorkflowTask}
-        isOffline={isOffline}
+        isBrowserOffline={isBrowserOffline}
         canCopyPrompt={canCopyPrompt}
+        isTeamDispatch={isTeamDispatch}
+        hasOnlineMac={hasOnlineMac}
+        selectedDeviceIsOnline={selectedDeviceIsOnline}
       />
     </>
   );

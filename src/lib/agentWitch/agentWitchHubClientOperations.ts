@@ -1,15 +1,38 @@
-import type { AgentWitchPairingStore } from "./agentWitchPairingStore";
 import type AgentWitchHubClient from "./types/AgentWitchHubClient.type";
 import type AgentWitchMessage from "./types/AgentWitchMessage.type";
 import { AGENT_WITCH_MESSAGE_TYPES } from "./types/AgentWitchMessageType.constant";
 
+const sortAgentClientsByRecency = (
+  left: AgentWitchHubClient,
+  right: AgentWitchHubClient,
+): number => {
+  const leftHeartbeat = left.lastHeartbeatAt ?? "";
+  const rightHeartbeat = right.lastHeartbeatAt ?? "";
+
+  return rightHeartbeat.localeCompare(leftHeartbeat);
+};
+
+export const listOnlineAgentClientsForUser = (
+  clients: Map<string, AgentWitchHubClient>,
+  userId: string,
+): readonly AgentWitchHubClient[] =>
+  [...clients.values()]
+    .filter((client) => client.role === "agent" && client.userId === userId)
+    .sort(sortAgentClientsByRecency);
+
 export const findAgentClientForUser = (
   clients: Map<string, AgentWitchHubClient>,
   userId: string,
-): AgentWitchHubClient | undefined =>
-  [...clients.values()].find(
-    (client) => client.role === "agent" && client.userId === userId,
-  );
+  deviceId?: string,
+): AgentWitchHubClient | undefined => {
+  const onlineAgents = listOnlineAgentClientsForUser(clients, userId);
+
+  if (deviceId !== undefined) {
+    return onlineAgents.find((client) => client.deviceId === deviceId);
+  }
+
+  return onlineAgents[0];
+};
 
 export const broadcastToDashboardUser = (
   clients: Map<string, AgentWitchHubClient>,
@@ -25,26 +48,6 @@ export const broadcastToDashboardUser = (
     .forEach((client) => {
       client.send(message);
     });
-};
-
-export const bindAgentClientsToPairing = (
-  clients: Map<string, AgentWitchHubClient>,
-  pairingStore: AgentWitchPairingStore,
-  pairingToken: string,
-): void => {
-  const claimedPairing = pairingStore.getClaimedPairing(pairingToken);
-  if (claimedPairing === null) {
-    return;
-  }
-
-  [...clients.entries()].forEach(([clientId, client]) => {
-    if (client.role === "agent" && client.pairingToken === pairingToken) {
-      clients.set(clientId, {
-        ...client,
-        userId: claimedPairing.userId,
-      });
-    }
-  });
 };
 
 export const unauthorizedAgentOnlyError = (

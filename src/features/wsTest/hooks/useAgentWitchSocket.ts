@@ -24,6 +24,7 @@ export interface UseAgentWitchSocketResult {
       readonly targetUserId?: string;
       readonly groupId?: string;
       readonly capabilityId?: string;
+      readonly targetDeviceId?: string;
     },
   ) => void;
 }
@@ -87,6 +88,7 @@ export function useAgentWitchSocket(): UseAgentWitchSocketResult {
         readonly targetUserId?: string;
         readonly groupId?: string;
         readonly capabilityId?: string;
+        readonly targetDeviceId?: string;
       },
     ) => {
       const trimmedPrompt = prompt.trim();
@@ -106,6 +108,7 @@ export function useAgentWitchSocket(): UseAgentWitchSocketResult {
         targetUserId: options.targetUserId,
         groupId: options.groupId,
         capabilityId: options.capabilityId,
+        targetDeviceId: options.targetDeviceId,
         onResponse: setLastResponse,
       });
     },

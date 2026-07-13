@@ -4,6 +4,7 @@ import AppPanel from "@/components/surfaces/AppPanel";
 import TeamDispatchFields from "@/features/dispatch/TeamDispatchFields";
 import DelegatedWriterAgentField from "@/features/wsTest/DelegatedWriterAgentField";
 import WsTestComposerActions from "@/features/wsTest/WsTestComposerActions";
+import WsTestMacDispatchSection from "@/features/wsTest/WsTestMacDispatchSection";
 import type { useWsTestTaskComposer } from "@/features/wsTest/hooks/useWsTestTaskComposer";
 import WsTestTaskInputsSection from "@/features/wsTest/WsTestTaskInputsSection";
 import type { WsTestConnectionStatus } from "@/features/wsTest/types/WsTestConnectionStatus.type";
@@ -35,6 +36,7 @@ export default function WsTestPromptSection({
   const canCopyPrompt =
     composer.resolvedPrompt.trim().length > 0 &&
     composer.workflowValidationErrors.length === 0;
+  const showMacPicker = !composer.isTeamDispatch;
 
   return (
     <>
@@ -54,13 +56,17 @@ export default function WsTestPromptSection({
             />
           </div>
         </AppPanel>
-      ) : (
-        <section className="rounded-2xl border border-brand-200 bg-brand-50/40 p-4 dark:border-brand-900/40 dark:bg-brand-950/20">
-          <p className="text-sm text-gray-700 dark:text-gray-300">
-            Running a playbook from your library on your Mac.
-          </p>
-        </section>
-      )}
+      ) : null}
+
+      {showMacPicker ? (
+        <WsTestMacDispatchSection
+          isLibraryPlaybook={composer.isLibraryPlaybook}
+          macDevices={composer.macDevices}
+          selectedDeviceId={composer.selectedDeviceId}
+          isMacDevicesLoading={composer.isMacDevicesLoading}
+          onDeviceChange={composer.setSelectedDeviceId}
+        />
+      ) : null}
 
       <AppPanel>
         <DelegatedWriterAgentField
@@ -69,17 +75,17 @@ export default function WsTestPromptSection({
         />
         <div className="mt-6">
           <WsTestTaskInputsSection
-          isWorkflowTask={composer.isWorkflowTask}
-          useMobileStepper={
-            composer.isLibraryPlaybook && composer.isWorkflowTask
-          }
-          prompt={composer.prompt}
-          workflowFields={composer.workflowFields}
-          workflowFieldValues={composer.workflowFieldValues}
-          workflowValidationErrors={composer.workflowValidationErrors}
-          onPromptChange={composer.setPrompt}
-          onWorkflowFieldChange={composer.onWorkflowFieldChange}
-        />
+            isWorkflowTask={composer.isWorkflowTask}
+            useMobileStepper={
+              composer.isLibraryPlaybook && composer.isWorkflowTask
+            }
+            prompt={composer.prompt}
+            workflowFields={composer.workflowFields}
+            workflowFieldValues={composer.workflowFieldValues}
+            workflowValidationErrors={composer.workflowValidationErrors}
+            onPromptChange={composer.setPrompt}
+            onWorkflowFieldChange={composer.onWorkflowFieldChange}
+          />
         </div>
         <WsTestComposerActions
           connectionStatus={connectionStatus}
@@ -91,6 +97,9 @@ export default function WsTestPromptSection({
             composer.isTeamDispatch ? "Send to teammate" : "Send to your Mac"
           }
           isWorkflowTask={composer.isWorkflowTask}
+          isTeamDispatch={composer.isTeamDispatch}
+          hasOnlineMac={composer.hasOnlineMac}
+          selectedDeviceIsOnline={composer.selectedDeviceIsOnline}
           onSend={onSend}
           onClear={onClear}
           onQueue={onQueue}

@@ -24,6 +24,9 @@ export const listConnectedAgentWitchClients = (
         connectedAtByClientId.get(client.id) ?? Date.now(),
       ).toISOString(),
       userId: client.userId,
+      deviceId: client.deviceId,
+      deviceLabel: client.deviceLabel,
+      lastHeartbeatAt: client.lastHeartbeatAt,
     }))
     .sort((left, right) => left.connectedAt.localeCompare(right.connectedAt));
 

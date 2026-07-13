@@ -10,6 +10,7 @@ export function sendClaudePromptOverSocket(input: {
   readonly targetUserId?: string;
   readonly groupId?: string;
   readonly capabilityId?: string;
+  readonly targetDeviceId?: string;
   readonly onResponse: (response: string) => void;
 }): void {
   const sendPrompt = (): void => {
@@ -33,6 +34,9 @@ export function sendClaudePromptOverSocket(input: {
           ...(input.targetUserId ? { targetUserId: input.targetUserId } : {}),
           ...(input.groupId ? { groupId: input.groupId } : {}),
           ...(input.capabilityId ? { capabilityId: input.capabilityId } : {}),
+          ...(input.targetDeviceId
+            ? { targetDeviceId: input.targetDeviceId }
+            : {}),
         },
         requestId: createAgentWitchRequestId(),
       }),

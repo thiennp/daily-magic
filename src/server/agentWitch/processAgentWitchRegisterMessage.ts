@@ -1,6 +1,10 @@
 import type { WebSocket } from "ws";
 
 import type { AgentWitchHub } from "@/lib/agentWitch/agentWitchHub";
+import {
+  resolvePairingTokenFromRegisterPayload,
+  resolveRoleFromRegisterPayload,
+} from "@/lib/agentWitch/resolveAgentWitchRegisterPayload";
 import type AgentWitchMessage from "@/lib/agentWitch/types/AgentWitchMessage.type";
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
 import type { AgentWitchRole } from "@/lib/agentWitch/types/AgentWitchRole.type";
@@ -9,6 +13,7 @@ import type { AuthActorFromCookies } from "@/lib/auth/resolveAuthActorFromCookie
 import { sendAgentWitchSocketMessage } from "@/server/agentWitch/sendAgentWitchSocketMessage";
 import { replayPendingDispatchApprovalsForUser } from "@/lib/dispatch/replayPendingDispatchApprovalsForUser";
 import { replayPendingAgentRunInputsForUser } from "@/lib/dispatch/replayPendingAgentRunInputsForUser";
+import getAgentWitchDeviceForPairingToken from "@/lib/agentWitch/getAgentWitchDeviceForPairingToken";
 
 export interface AgentWitchConnectionState {
   registered: boolean;
@@ -16,6 +21,8 @@ export interface AgentWitchConnectionState {
   userId?: string;
   email?: string;
   pairingToken?: string;
+  deviceId?: string;
+  deviceLabel?: string;
 }
 
 export interface AgentWitchWebSocketAuthContext {
@@ -35,7 +42,7 @@ export const processAgentWitchRegisterMessage = async (
     return true;
   }
 
-  const resolvedRole = hub.resolveRoleFromRegisterPayload(message.payload);
+  const resolvedRole = resolveRoleFromRegisterPayload(message.payload);
 
   if (resolvedRole === "dashboard") {
     if (authContext.dashboardActor === null) {
@@ -57,7 +64,7 @@ export const processAgentWitchRegisterMessage = async (
   }
 
   if (resolvedRole === "agent") {
-    const pairingToken = hub.resolvePairingTokenFromRegisterPayload(
+    const pairingToken = resolvePairingTokenFromRegisterPayload(
       message.payload,
     );
 
@@ -78,6 +85,15 @@ export const processAgentWitchRegisterMessage = async (
     connectionState.pairingToken = pairingToken;
     connectionState.userId =
       await hub.resolveUserIdForAgentRegister(pairingToken);
+
+    const hostname =
+      typeof message.payload?.hostname === "string"
+        ? message.payload.hostname.trim()
+        : "";
+    const device = await getAgentWitchDeviceForPairingToken(pairingToken);
+    connectionState.deviceId = device?.id;
+    connectionState.deviceLabel =
+      hostname.length > 0 ? hostname : (device?.deviceLabel ?? undefined);
   }
 
   if (resolvedRole !== null) {

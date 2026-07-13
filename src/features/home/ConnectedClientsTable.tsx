@@ -6,6 +6,18 @@ interface ConnectedClientsTableProps {
   readonly clients: readonly ConnectedClient[];
 }
 
+const formatClientLabel = (client: ConnectedClient): string => {
+  if (client.role === "agent" && client.deviceLabel) {
+    return client.deviceLabel;
+  }
+
+  if (client.role === "dashboard") {
+    return "Browser";
+  }
+
+  return formatClientId(client.id);
+};
+
 export default function ConnectedClientsTable({
   clients,
 }: ConnectedClientsTableProps) {
@@ -25,10 +37,15 @@ export default function ConnectedClientsTable({
               key={client.id}
               className="border-b border-gray-100 dark:border-gray-800/80"
             >
-              <td className="px-3 py-2 font-mono text-xs text-gray-700 dark:text-gray-300">
-                {formatClientId(client.id)}
+              <td className="px-3 py-2 text-gray-700 dark:text-gray-300">
+                <span className="text-sm">{formatClientLabel(client)}</span>
+                {client.role === "agent" ? (
+                  <span className="ml-2 inline-flex items-center rounded-full bg-green-50 px-2 py-0.5 text-xs font-medium text-green-700 dark:bg-green-950/40 dark:text-green-300">
+                    Online
+                  </span>
+                ) : null}
               </td>
-              <td className="px-3 py-2">{client.role}</td>
+              <td className="px-3 py-2 capitalize">{client.role}</td>
               <td className="px-3 py-2 text-gray-600 dark:text-gray-400">
                 {formatConnectedAt(client.connectedAt)}
               </td>

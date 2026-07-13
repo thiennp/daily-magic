@@ -9,7 +9,17 @@ export default interface AgentWitchHubRuntime {
     AgentWitchHarnessManifestReport
   >;
   readonly pairingStore: AgentWitchPairingStore;
-  findAgentClientForUser(userId: string): AgentWitchHubClient | undefined;
+  findAgentClientForUser(
+    userId: string,
+    deviceId?: string,
+  ): AgentWitchHubClient | undefined;
+  listOnlineAgentClientsForUser(userId: string): readonly AgentWitchHubClient[];
+  updateClient(
+    clientId: string,
+    patch: Partial<
+      Pick<AgentWitchHubClient, "deviceLabel" | "lastHeartbeatAt" | "deviceId">
+    >,
+  ): void;
   broadcastToDashboardUser(
     userId: string | undefined,
     message: AgentWitchMessage,

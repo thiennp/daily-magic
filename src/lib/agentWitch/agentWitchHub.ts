@@ -1,8 +1,14 @@
 import type { AgentWitchPairingStore } from "./agentWitchPairingStore";
 import {
   bindAgentClientsToPairing,
+  registerAgentWitchHubClient,
+  unregisterAgentWitchHubClient,
+  updateAgentWitchHubClient,
+} from "./agentWitchHubClientRegistry";
+import {
   broadcastToDashboardUser,
   findAgentClientForUser,
+  listOnlineAgentClientsForUser,
 } from "./agentWitchHubClientOperations";
 import {
   buildAgentWitchHubStatus,
@@ -11,10 +17,7 @@ import {
 } from "./agentWitchHubQueries";
 import { handleAgentWitchSyncMessage } from "./handleAgentWitchSyncMessage";
 import { routeAgentWitchMessageAsync } from "./routeAgentWitchMessageAsync";
-import {
-  resolvePairingTokenFromRegisterPayload,
-  resolveRoleFromRegisterPayload,
-} from "./resolveAgentWitchRegisterPayload";
+import { resolveAgentUserIdForRegister } from "./resolveAgentUserIdForRegister";
 import type AgentWitchHubClient from "./types/AgentWitchHubClient.type";
 import type AgentWitchHubRuntime from "./types/AgentWitchHubRuntime.type";
 import type { AgentWitchHarnessManifestReport } from "./types/AgentWitchHubStatus.type";
@@ -38,17 +41,29 @@ export class AgentWitchHub implements AgentWitchHubRuntime {
   constructor(readonly pairingStore: AgentWitchPairingStore) {}
 
   registerClient(client: AgentWitchHubClient): void {
-    if (!this.connectedAtByClientId.has(client.id)) {
-      this.connectedAtByClientId.set(client.id, Date.now());
-    }
+    registerAgentWitchHubClient(
+      this.clients,
+      this.connectedAtByClientId,
+      client,
+    );
+  }
 
-    this.clients.set(client.id, client);
+  updateClient(
+    clientId: string,
+    patch: Partial<
+      Pick<AgentWitchHubClient, "deviceLabel" | "lastHeartbeatAt" | "deviceId">
+    >,
+  ): void {
+    updateAgentWitchHubClient(this.clients, clientId, patch);
   }
 
   unregisterClient(clientId: string): void {
-    this.clients.delete(clientId);
-    this.connectedAtByClientId.delete(clientId);
-    this.manifestByAgentClientId.delete(clientId);
+    unregisterAgentWitchHubClient(
+      this.clients,
+      this.connectedAtByClientId,
+      this.manifestByAgentClientId,
+      clientId,
+    );
   }
 
   getStatus() {
@@ -94,31 +109,21 @@ export class AgentWitchHub implements AgentWitchHubRuntime {
     );
   }
 
-  resolveRoleFromRegisterPayload(
-    payload: Readonly<Record<string, unknown>> | undefined,
-  ) {
-    return resolveRoleFromRegisterPayload(payload);
-  }
-
-  resolvePairingTokenFromRegisterPayload(
-    payload: Readonly<Record<string, unknown>> | undefined,
-  ) {
-    return resolvePairingTokenFromRegisterPayload(payload);
-  }
-
   async resolveUserIdForAgentRegister(
     pairingToken: string,
   ): Promise<string | undefined> {
-    const claimedPairing =
-      await this.pairingStore.resolveClaimedPairing(pairingToken);
-    if (claimedPairing !== null) {
-      void this.pairingStore.touchLastSeen(pairingToken);
-    }
-    return claimedPairing?.userId;
+    return resolveAgentUserIdForRegister(this.pairingStore, pairingToken);
   }
 
-  findAgentClientForUser(userId: string): AgentWitchHubClient | undefined {
-    return findAgentClientForUser(this.clients, userId);
+  findAgentClientForUser(
+    userId: string,
+    deviceId?: string,
+  ): AgentWitchHubClient | undefined {
+    return findAgentClientForUser(this.clients, userId, deviceId);
+  }
+
+  listOnlineAgentClientsForUser(userId: string): readonly AgentWitchHubClient[] {
+    return listOnlineAgentClientsForUser(this.clients, userId);
   }
 
   broadcastToDashboardUser(
