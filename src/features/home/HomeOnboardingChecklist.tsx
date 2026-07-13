@@ -5,15 +5,21 @@ import { useEffect, useState } from "react";
 import AppAccentPanel from "@/components/surfaces/AppAccentPanel";
 import { APP_SURFACE_SECTION_TITLE_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
 import { useDemoPreview } from "@/features/demo/DemoPreviewContext";
+import { useOptionalPairedDeviceContext } from "@/features/home/PairedDeviceContext";
 import {
   loadOnboardingSteps,
   type OnboardingStep,
 } from "@/features/home/loadOnboardingSteps";
 import buildOnboardingStepStatusLabel from "@/features/home/utils/buildOnboardingStepStatusLabel";
+import isConnectMacOnboardingStepDone from "@/features/home/utils/isConnectMacOnboardingStepDone";
 import OnboardingStepStatusIcon from "@/features/home/OnboardingStepStatusIcon";
+
+const ONBOARDING_STEPS_POLL_INTERVAL_MS = 5_000;
 
 export default function HomeOnboardingChecklist() {
   const demoPreview = useDemoPreview();
+  const pairedDeviceContext = useOptionalPairedDeviceContext();
+  const hasPairedDevice = pairedDeviceContext?.hasPairedDevice ?? false;
   const [steps, setSteps] = useState<readonly OnboardingStep[]>(
     demoPreview?.onboardingSteps ?? [],
   );
@@ -25,6 +31,30 @@ export default function HomeOnboardingChecklist() {
 
     void loadOnboardingSteps().then(setSteps);
   }, [demoPreview]);
+
+  useEffect(() => {
+    if (demoPreview || !hasPairedDevice) {
+      return;
+    }
+
+    void loadOnboardingSteps().then(setSteps);
+  }, [demoPreview, hasPairedDevice]);
+
+  const isConnectStepDone = isConnectMacOnboardingStepDone(steps);
+
+  useEffect(() => {
+    if (demoPreview || isConnectStepDone) {
+      return;
+    }
+
+    const timer = setInterval(() => {
+      void loadOnboardingSteps().then(setSteps);
+    }, ONBOARDING_STEPS_POLL_INTERVAL_MS);
+
+    return () => {
+      clearInterval(timer);
+    };
+  }, [demoPreview, isConnectStepDone]);
 
   if (steps.length === 0) {
     return null;

@@ -10,7 +10,10 @@ import {
   HOME_LEFT_RAIL_CLASS,
   HOME_MAIN_COLUMN_CLASS,
 } from "@/features/home/homeDashboardLayout.constant";
-import { useHasPairedDevice } from "@/features/home/hooks/useHasPairedDevice";
+import {
+  PairedDeviceProvider,
+  usePairedDeviceContext,
+} from "@/features/home/PairedDeviceContext";
 import { useLinkLocalAgentAccount } from "@/features/home/hooks/useLinkLocalAgentAccount";
 
 interface HomeLinkAccountGateProps {
@@ -28,10 +31,33 @@ export default function HomeLinkAccountGate({
   host,
   children,
 }: HomeLinkAccountGateProps) {
-  const { hasPairedDevice, isLoading, refresh } = useHasPairedDevice();
+  return (
+    <PairedDeviceProvider>
+      <HomeLinkAccountGateContent
+        appOrigin={appOrigin}
+        installCommand={installCommand}
+        isWebSocketSupported={isWebSocketSupported}
+        host={host}
+      >
+        {children}
+      </HomeLinkAccountGateContent>
+    </PairedDeviceProvider>
+  );
+}
+
+function HomeLinkAccountGateContent({
+  appOrigin,
+  installCommand,
+  isWebSocketSupported,
+  host,
+  children,
+}: HomeLinkAccountGateProps) {
+  const { hasPairedDevice, isLoading, refresh, markPaired } =
+    usePairedDeviceContext();
   const handleLinked = useCallback(() => {
+    markPaired();
     void refresh();
-  }, [refresh]);
+  }, [markPaired, refresh]);
   const { isLinking, linkError } = useLinkLocalAgentAccount({
     appOrigin,
     autoLink: !isLoading && !hasPairedDevice,

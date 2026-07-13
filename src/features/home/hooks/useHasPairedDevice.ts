@@ -4,11 +4,13 @@ import { useCallback, useEffect, useState } from "react";
 
 import { useDemoPreview } from "@/features/demo/DemoPreviewContext";
 import { fetchActivePairedDevices } from "@/features/harness/utils/pairedDevicesApi";
+import isConnectMacOnboardingStepDone from "@/features/home/utils/isConnectMacOnboardingStepDone";
 
 interface UseHasPairedDeviceResult {
   readonly hasPairedDevice: boolean;
   readonly isLoading: boolean;
   readonly refresh: () => Promise<void>;
+  readonly markPaired: () => void;
 }
 
 const isDemoComputerConnected = (
@@ -16,11 +18,7 @@ const isDemoComputerConnected = (
     readonly id: string;
     readonly done: boolean;
   }>,
-): boolean =>
-  onboardingSteps.some(
-    (step) =>
-      (step.id === "pair" || step.id === "connect-mac") && step.done === true,
-  );
+): boolean => isConnectMacOnboardingStepDone(onboardingSteps);
 
 const PAIRED_DEVICE_POLL_INTERVAL_MS = 5_000;
 
@@ -39,6 +37,15 @@ export function useHasPairedDevice(): UseHasPairedDeviceResult {
 
     const result = await fetchActivePairedDevices();
     setHasPairedDevice(result.devices.length > 0);
+    setIsLoading(false);
+  }, [isDemoMode]);
+
+  const markPaired = useCallback((): void => {
+    if (isDemoMode) {
+      return;
+    }
+
+    setHasPairedDevice(true);
     setIsLoading(false);
   }, [isDemoMode]);
 
@@ -72,8 +79,9 @@ export function useHasPairedDevice(): UseHasPairedDeviceResult {
       hasPairedDevice: demoHasPairedDevice,
       isLoading: false,
       refresh: async () => undefined,
+      markPaired: () => undefined,
     };
   }
 
-  return { hasPairedDevice, isLoading, refresh };
+  return { hasPairedDevice, isLoading, refresh, markPaired };
 }
