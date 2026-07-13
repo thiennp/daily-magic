@@ -2,6 +2,7 @@
 
 import Label from "@/components/form/Label";
 import MacDeviceRow from "@/features/macDevices/MacDeviceRow";
+import { canWakeMacDeviceFromBrowser } from "@/features/macDevices/utils/canWakeMacDeviceFromBrowser";
 import type { MyMacDevice } from "@/features/wsTest/hooks/useMyMacDevices";
 
 interface MacDevicePickerProps {
@@ -9,6 +10,8 @@ interface MacDevicePickerProps {
   readonly displayNameById: ReadonlyMap<string, string>;
   readonly selectedDeviceId: string;
   readonly isLoading: boolean;
+  readonly localHostname: string | null;
+  readonly isWakeServerReachable: boolean;
   readonly onChange: (deviceId: string) => void;
   readonly onRenamed: (deviceId: string, deviceLabel: string) => void;
 }
@@ -18,6 +21,8 @@ export default function MacDevicePicker({
   displayNameById,
   selectedDeviceId,
   isLoading,
+  localHostname,
+  isWakeServerReachable,
   onChange,
   onRenamed,
 }: MacDevicePickerProps) {
@@ -48,6 +53,11 @@ export default function MacDevicePicker({
             displayName={displayNameById.get(device.id) ?? "Your Mac"}
             isOnline={device.isOnline}
             isSelected={device.id === selectedDeviceId}
+            isWakeServerReachable={canWakeMacDeviceFromBrowser({
+              deviceLabel: device.deviceLabel,
+              localHostname,
+              isWakeServerReachable,
+            })}
             onSelect={() => {
               onChange(device.id);
             }}
