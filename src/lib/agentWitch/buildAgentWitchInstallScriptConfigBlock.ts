@@ -12,6 +12,8 @@ if [[ ! -f "\${CONFIG_PATH}" ]]; then
   "workspace": "\${HOME}",
   "claudeCommand": "claude",
   "codexCommand": "codex",
+  "cursorCommand": "cursor",
+  "antigravityCommand": "agy",
   "pairingToken": "\${PAIRING_TOKEN}"
 }
 EOF
@@ -29,6 +31,8 @@ EOF
   "workspace": "\${HOME}",
   "claudeCommand": "claude",
   "codexCommand": "codex",
+  "cursorCommand": "cursor",
+  "antigravityCommand": "agy",
   "pairingToken": "\${PAIRING_TOKEN}"
 }
 EOF
@@ -40,11 +44,22 @@ const crypto = require("node:crypto");
 const configPath = process.argv[2];
 const profileEmail = process.argv[3] ?? "";
 const config = JSON.parse(fs.readFileSync(configPath, "utf8"));
+const defaults = {
+  claudeCommand: "claude",
+  codexCommand: "codex",
+  cursorCommand: "cursor",
+  antigravityCommand: "agy",
+};
 if (typeof config.pairingToken !== "string" || config.pairingToken.length === 0) {
   config.pairingToken = crypto.randomBytes(32).toString("hex");
 }
 if (profileEmail.length > 0 && (typeof config.email !== "string" || config.email.length === 0)) {
   config.email = profileEmail;
+}
+for (const [key, value] of Object.entries(defaults)) {
+  if (typeof config[key] !== "string" || config[key].length === 0) {
+    config[key] = value;
+  }
 }
 fs.writeFileSync(configPath, \`\${JSON.stringify(config, null, 2)}\\n\`);
 NODE

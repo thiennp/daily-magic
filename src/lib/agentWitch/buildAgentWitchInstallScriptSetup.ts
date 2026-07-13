@@ -1,11 +1,13 @@
 import { buildAgentWitchInstallScriptClientBlock } from "@/lib/agentWitch/buildAgentWitchInstallScriptClientBlock";
 import { buildAgentWitchInstallScriptConfigBlock } from "@/lib/agentWitch/buildAgentWitchInstallScriptConfigBlock";
+import { buildAgentWitchInstallScriptWriterBootstrap } from "@/lib/agentWitch/buildAgentWitchInstallScriptWriterBootstrap";
 
 export const buildAgentWitchInstallScriptSetup = (input: {
   readonly wsUrl: string;
   readonly clientScriptUrl: string;
   readonly resolveLayoutScriptUrl: string;
   readonly readHarnessExportSetsScriptUrl: string;
+  readonly buildWriterCliScriptUrl: string;
   readonly websocketSupportWarning: string;
 }): string => `#!/usr/bin/env bash
 set -euo pipefail
@@ -15,6 +17,7 @@ INSTALL_DIR="\${HOME}/.agent-witch"
 CLIENT_SCRIPT_URL="${input.clientScriptUrl}"
 RESOLVE_LAYOUT_SCRIPT_URL="${input.resolveLayoutScriptUrl}"
 READ_HARNESS_EXPORT_SCRIPT_URL="${input.readHarnessExportSetsScriptUrl}"
+BUILD_WRITER_CLI_SCRIPT_URL="${input.buildWriterCliScriptUrl}"
 NODE_BIN="\$(command -v node)"
 CURL_BIN="\$(command -v curl)"
 
@@ -68,5 +71,5 @@ else
 fi
 
 PLIST_PATH="\${HOME}/Library/LaunchAgents/\${LAUNCH_AGENT_LABEL}.plist"
-${buildAgentWitchInstallScriptConfigBlock(input)}${buildAgentWitchInstallScriptClientBlock()}
+${buildAgentWitchInstallScriptConfigBlock(input)}${buildAgentWitchInstallScriptWriterBootstrap()}${buildAgentWitchInstallScriptClientBlock()}
 `;

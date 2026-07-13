@@ -1,3 +1,5 @@
+import { AGENT_WITCH_LAUNCH_AGENT_PATH_VALUE } from "@/lib/agentWitch/buildAgentWitchInstallScriptWriterPath";
+
 export const buildAgentWitchInstallScriptLaunchAgent = (
   wsUrl: string,
 ): string => `
@@ -23,7 +25,7 @@ if [[ "\$(uname -s)" == "Darwin" ]]; then
     <key>HOME</key>
     <string>\${HOME}</string>
     <key>PATH</key>
-    <string>\${NODE_DIR}:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin</string>
+    <string>${AGENT_WITCH_LAUNCH_AGENT_PATH_VALUE}</string>
     <key>AGENT_WITCH_PROFILE</key>
     <string>\${PROFILE_EMAIL}</string>
   </dict>

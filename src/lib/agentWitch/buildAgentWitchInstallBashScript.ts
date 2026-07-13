@@ -7,6 +7,7 @@ export const buildAgentWitchInstallBashScript = (input: {
   readonly clientScriptUrl: string;
   readonly resolveLayoutScriptUrl: string;
   readonly readHarnessExportSetsScriptUrl: string;
+  readonly buildWriterCliScriptUrl: string;
   readonly wakeServerScriptUrl: string;
   readonly wakeConstantsScriptUrl: string;
   readonly wakeListTargetsScriptUrl: string;
@@ -22,6 +23,7 @@ export const buildAgentWitchInstallBashScript = (input: {
     clientScriptUrl: input.clientScriptUrl,
     resolveLayoutScriptUrl: input.resolveLayoutScriptUrl,
     readHarnessExportSetsScriptUrl: input.readHarnessExportSetsScriptUrl,
+    buildWriterCliScriptUrl: input.buildWriterCliScriptUrl,
     websocketSupportWarning: input.websocketSupportWarning,
   })}${buildAgentWitchInstallScriptLaunchAgent(input.wsUrl)}${buildAgentWitchInstallScriptWakeServer(
     {

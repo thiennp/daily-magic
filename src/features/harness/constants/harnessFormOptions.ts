@@ -5,7 +5,7 @@ import { HARNESS_WRITER_AGENTS } from "@/lib/agentWitch/harness/types/HarnessWri
 
 export const HARNESS_WRITER_LABELS: Record<HarnessWriterAgent, string> = {
   "claude-cli": "Claude CLI",
-  codex: "Codex CLI",
+  codex: "Codex (ChatGPT)",
   cursor: "Cursor",
   antigravity: "Antigravity",
 };

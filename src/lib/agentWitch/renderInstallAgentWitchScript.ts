@@ -18,6 +18,10 @@ export const renderInstallAgentWitchScript = (origin: string): string => {
       origin,
       "readHarnessExportSets.ts",
     );
+  const buildWriterCliScriptUrl = buildAgentWitchInstallAuxiliaryScriptUrl(
+    origin,
+    "buildWriterCliInvocation.ts",
+  );
   const wakeServerScriptUrl = buildAgentWitchInstallAuxiliaryScriptUrl(
     origin,
     "agent-witch-wake-server.ts",
@@ -60,6 +64,7 @@ export const renderInstallAgentWitchScript = (origin: string): string => {
     clientScriptUrl,
     resolveLayoutScriptUrl,
     readHarnessExportSetsScriptUrl,
+    buildWriterCliScriptUrl,
     wakeServerScriptUrl,
     wakeConstantsScriptUrl,
     wakeListTargetsScriptUrl,

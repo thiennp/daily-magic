@@ -24,6 +24,11 @@ import {
   runClaudeTask,
 } from "./agentWitchRunSessions";
 import {
+  buildWriterCliInvocation,
+  isHarnessWriterAgentId,
+  resolveWriterCliCommands,
+} from "./buildWriterCliInvocation";
+import {
   listAgentRunsLocal,
   loadAgentRunLocal,
 } from "./agentWitchLocalRunStore";
@@ -35,6 +40,8 @@ interface AgentWitchConfig {
   readonly workspace: string;
   readonly claudeCommand: string;
   readonly codexCommand: string;
+  readonly cursorCommand: string;
+  readonly antigravityCommand: string;
   readonly pairingToken: string;
   readonly layout: AgentWitchLocalLayout;
 }
@@ -42,6 +49,8 @@ interface AgentWitchConfig {
 const DEFAULT_WS_URL = "ws://localhost:3000/api/agent-witch/ws";
 const DEFAULT_CLAUDE_COMMAND = "claude";
 const DEFAULT_CODEX_COMMAND = "codex";
+const DEFAULT_CURSOR_COMMAND = "cursor";
+const DEFAULT_ANTIGRAVITY_COMMAND = "agy";
 const HEARTBEAT_INTERVAL_MS = 30_000;
 const MAX_RECONNECT_DELAY_MS = 30_000;
 
@@ -80,6 +89,16 @@ const readConfig = (): AgentWitchConfig | null => {
       typeof parsed.codexCommand === "string" && parsed.codexCommand.length > 0
         ? parsed.codexCommand
         : (process.env.CODEX_COMMAND ?? DEFAULT_CODEX_COMMAND);
+    const cursorCommand =
+      typeof parsed.cursorCommand === "string" &&
+      parsed.cursorCommand.length > 0
+        ? parsed.cursorCommand
+        : (process.env.CURSOR_COMMAND ?? DEFAULT_CURSOR_COMMAND);
+    const antigravityCommand =
+      typeof parsed.antigravityCommand === "string" &&
+      parsed.antigravityCommand.length > 0
+        ? parsed.antigravityCommand
+        : (process.env.ANTIGRAVITY_COMMAND ?? DEFAULT_ANTIGRAVITY_COMMAND);
     const pairingToken =
       typeof parsed.pairingToken === "string" && parsed.pairingToken.length > 0
         ? parsed.pairingToken.trim()
@@ -102,6 +121,8 @@ const readConfig = (): AgentWitchConfig | null => {
       workspace,
       claudeCommand,
       codexCommand,
+      cursorCommand,
+      antigravityCommand,
       pairingToken,
       layout,
     };
@@ -169,21 +190,39 @@ const runWriterProcess = (
   instruction: string,
 ): Promise<{ readonly exitCode: number; readonly output: string }> =>
   new Promise((resolve) => {
-    const outputChunks: string[] = [];
-    const spawnProcess = (
-      command: string,
-      args: readonly string[],
-    ): ReturnType<typeof spawn> =>
-      spawn(command, args, {
-        cwd: config.workspace,
-        stdio: ["ignore", "pipe", "pipe"],
-        env: process.env,
+    if (!isHarnessWriterAgentId(writerAgent)) {
+      resolve({
+        exitCode: -1,
+        output: `Unsupported writer agent: ${writerAgent}`,
       });
+      return;
+    }
 
-    const child =
-      writerAgent === "codex"
-        ? spawnProcess(config.codexCommand, ["-p", instruction])
-        : spawnProcess(config.claudeCommand, ["-p", instruction]);
+    const invocation = buildWriterCliInvocation(
+      writerAgent,
+      instruction,
+      resolveWriterCliCommands({
+        claudeCommand: config.claudeCommand,
+        codexCommand: config.codexCommand,
+        cursorCommand: config.cursorCommand,
+        antigravityCommand: config.antigravityCommand,
+      }),
+    );
+
+    if (invocation === null) {
+      resolve({
+        exitCode: -1,
+        output: "Writer instruction must be a non-empty string.",
+      });
+      return;
+    }
+
+    const outputChunks: string[] = [];
+    const child = spawn(invocation.command, [...invocation.args], {
+      cwd: config.workspace,
+      stdio: ["ignore", "pipe", "pipe"],
+      env: process.env,
+    });
 
     child.stdout?.on("data", (chunk: Buffer) => {
       outputChunks.push(chunk.toString("utf8"));
@@ -241,20 +280,7 @@ const runHarnessRequest = async (
     return;
   }
 
-  if (writerAgent === "cursor" || writerAgent === "antigravity") {
-    sendMessage(socket, {
-      type: "harness.request.result",
-      payload: {
-        success: false,
-        writerAgent,
-        errorMessage: `${writerAgent} writer dispatch is not configured yet. Choose Claude CLI or Codex.`,
-      },
-      requestId,
-    });
-    return;
-  }
-
-  if (writerAgent !== "claude-cli" && writerAgent !== "codex") {
+  if (!isHarnessWriterAgentId(writerAgent)) {
     sendMessage(socket, {
       type: "harness.request.result",
       payload: {
