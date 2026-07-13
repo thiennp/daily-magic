@@ -1,6 +1,7 @@
 import { headers } from "next/headers";
 
 import HomeDashboardSectionClient from "@/features/home/HomeDashboardSectionClient";
+import { buildAppOriginFromHeaders } from "@/lib/agentWitch/buildAgentWitchInstallUrls";
 import { buildLocalAgentInstallCommandFromHeaders } from "@/lib/agentWitch/buildLocalAgentInstallCommand";
 import isAgentWitchWebSocketSupportedHost from "@/lib/agentWitch/isAgentWitchWebSocketSupportedHost";
 import type { GlobalRoleValue } from "@/lib/auth/roles";
@@ -17,6 +18,7 @@ export default async function HomeDashboardSection({
   user,
 }: HomeDashboardSectionProps) {
   const requestHeaders = await headers();
+  const appOrigin = buildAppOriginFromHeaders(requestHeaders);
   const { installCommand } =
     buildLocalAgentInstallCommandFromHeaders(requestHeaders);
   const host =
@@ -25,6 +27,7 @@ export default async function HomeDashboardSection({
   return (
     <HomeDashboardSectionClient
       user={user}
+      appOrigin={appOrigin}
       installCommand={installCommand}
       isWebSocketSupported={isAgentWitchWebSocketSupportedHost(host)}
       host={host}

@@ -28,7 +28,7 @@ export const requestLocalAgentLinkAccount = async (input: {
         appOrigin: input.appOrigin,
         profileEmail: input.profileEmail,
       }),
-      signal: AbortSignal.timeout(5_000),
+      signal: AbortSignal.timeout(30_000),
     });
 
     const data: unknown = await response.json();
@@ -53,7 +53,15 @@ export const requestLocalAgentLinkAccount = async (input: {
         : "Could not link this Mac.";
 
     return { ok: false, errorMessage };
-  } catch {
+  } catch (error) {
+    if (error instanceof DOMException && error.name === "TimeoutError") {
+      return {
+        ok: false,
+        errorMessage:
+          "Linking timed out. Confirm install finished, then open Home on this Mac again.",
+      };
+    }
+
     return {
       ok: false,
       errorMessage:

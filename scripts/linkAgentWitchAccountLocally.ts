@@ -33,19 +33,45 @@ const postJson = async (
   readonly ok: boolean;
   readonly data: Record<string, unknown>;
 }> => {
-  const response = await fetch(url, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body),
-  });
-  const data: unknown = await response.json();
-  return {
-    ok: response.ok,
-    data:
-      typeof data === "object" && data !== null
-        ? (data as Record<string, unknown>)
-        : {},
-  };
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+    let data: unknown = {};
+
+    try {
+      data = await response.json();
+    } catch {
+      data = {};
+    }
+
+    return {
+      ok: response.ok,
+      data:
+        typeof data === "object" && data !== null
+          ? (data as Record<string, unknown>)
+          : {},
+    };
+  } catch {
+    return {
+      ok: false,
+      data: { error: "Could not reach Agent Witch site." },
+    };
+  }
+};
+
+const kickstartLinkedAgent = async (launchAgentLabel: string): Promise<void> => {
+  const kickLegacy = await kickstartAgentWitchLaunchAgent(
+    AGENT_WITCH_LEGACY_LAUNCH_AGENT_LABEL,
+  );
+  if (!kickLegacy.ok) {
+    const kickProfile = await kickstartAgentWitchLaunchAgent(launchAgentLabel);
+    if (!kickProfile.ok) {
+      await wakeAgentWitchLaunchAgents();
+    }
+  }
 };
 
 const readProfilePairingToken = (
@@ -137,17 +163,7 @@ export const linkAgentWitchAccountLocally = async (
     wsUrl: pairing.wsUrl,
   });
 
-  const kickLegacy = await kickstartAgentWitchLaunchAgent(
-    AGENT_WITCH_LEGACY_LAUNCH_AGENT_LABEL,
-  );
-  if (!kickLegacy.ok) {
-    const kickProfile = await kickstartAgentWitchLaunchAgent(
-      profile.launchAgentLabel,
-    );
-    if (!kickProfile.ok) {
-      await wakeAgentWitchLaunchAgents();
-    }
-  }
+  void kickstartLinkedAgent(profile.launchAgentLabel).catch(() => undefined);
 
   return { ok: true, email: profile.profileEmail };
 };

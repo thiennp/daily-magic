@@ -19,7 +19,11 @@ export const buildConnectInstallConnectionStatus = (input: {
   readonly isLinking: boolean;
   readonly linkError: string | null;
 }): ConnectInstallConnectionStatus | null => {
-  if (input.linkError !== null && input.linkError.length > 0) {
+  if (
+    input.installEngaged &&
+    input.linkError !== null &&
+    input.linkError.length > 0
+  ) {
     return { message: input.linkError, tone: "error" };
   }
 

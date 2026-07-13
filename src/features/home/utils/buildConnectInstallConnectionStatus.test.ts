@@ -13,6 +13,16 @@ describe("buildConnectInstallConnectionStatus", () => {
     ).toBeNull();
   });
 
+  it("hides link errors until the install command is engaged", () => {
+    expect(
+      buildConnectInstallConnectionStatus({
+        installEngaged: false,
+        isLinking: false,
+        linkError: "Local API unreachable.",
+      }),
+    ).toBeNull();
+  });
+
   it("returns waiting after the install command is copied", () => {
     expect(
       buildConnectInstallConnectionStatus({

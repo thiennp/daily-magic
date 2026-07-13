@@ -6,15 +6,12 @@ import AppHero from "@/components/surfaces/AppHero";
 import {
   APP_SURFACE_BODY_TEXT_CLASS,
   APP_SURFACE_EYEBROW_TEXT_CLASS,
-  APP_SURFACE_NESTED_CARD_CLASS,
 } from "@/components/surfaces/appSurfaceStyles.constant";
 import AgentWitchUnsupportedHostNotice from "@/features/home/AgentWitchUnsupportedHostNotice";
+import ConnectComputerGuideSteps from "@/features/home/ConnectComputerGuideSteps";
 import ConnectInstallPasteModal from "@/features/home/ConnectInstallPasteModal";
-import CopyableBashCommand from "@/features/home/CopyableBashCommand";
 import useConnectInstallPasteModalDismissal from "@/features/home/hooks/useConnectInstallPasteModalDismissal";
-import buildConnectComputerGuideSteps, {
-  CONNECT_COMPUTER_COPY_STEP_TITLE,
-} from "@/features/home/utils/buildConnectComputerGuideSteps";
+import { useLinkLocalAgentAccount } from "@/features/home/hooks/useLinkLocalAgentAccount";
 import {
   buildConnectInstallConnectionStatus,
   buildConnectInstallConnectionStatusClassName,
@@ -22,11 +19,11 @@ import {
 import detectBrowserOperatingSystem from "@/features/home/utils/detectBrowserOperatingSystem";
 
 interface HomeConnectComputerGuideProps {
+  readonly appOrigin: string;
   readonly installCommand: string;
   readonly isWebSocketSupported: boolean;
   readonly host: string;
-  readonly isLinking?: boolean;
-  readonly linkError?: string | null;
+  readonly onLinked: () => void;
 }
 
 const subscribeToOperatingSystem = () => () => undefined;
@@ -34,20 +31,25 @@ const subscribeToOperatingSystem = () => () => undefined;
 const getServerOperatingSystemSnapshot = () => "other" as const;
 
 export default function HomeConnectComputerGuide({
+  appOrigin,
   installCommand,
   isWebSocketSupported,
   host,
-  isLinking = false,
-  linkError = null,
+  onLinked,
 }: HomeConnectComputerGuideProps) {
   const [installEngaged, setInstallEngaged] = useState(false);
   const [isPasteModalOpen, setIsPasteModalOpen] = useState(false);
+  const { isLinking, linkError } = useLinkLocalAgentAccount({
+    appOrigin,
+    autoLink: true,
+    silentFailures: !installEngaged,
+    onLinked,
+  });
   const operatingSystem = useSyncExternalStore(
     subscribeToOperatingSystem,
     detectBrowserOperatingSystem,
     getServerOperatingSystemSnapshot,
   );
-  const steps = buildConnectComputerGuideSteps(operatingSystem);
   const connectionStatus = buildConnectInstallConnectionStatus({
     installEngaged,
     isLinking,
@@ -87,35 +89,12 @@ export default function HomeConnectComputerGuide({
         </div>
       ) : null}
 
-      <ol className="mt-6 space-y-4">
-        {steps.map((step, index) => (
-          <li
-            key={step.title}
-            className={`flex gap-4 ${APP_SURFACE_NESTED_CARD_CLASS}`}
-          >
-            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-zinc-900 text-sm font-semibold text-white">
-              {index + 1}
-            </span>
-            <div className="min-w-0 flex-1">
-              <p className="text-sm font-semibold text-gray-900 dark:text-white/90">
-                {step.title}
-              </p>
-              <p className={`mt-1 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
-                {step.description}
-              </p>
-              {isWebSocketSupported &&
-              step.title === CONNECT_COMPUTER_COPY_STEP_TITLE ? (
-                <CopyableBashCommand
-                  command={installCommand}
-                  iconOnly
-                  variant="bash"
-                  onEngaged={handleInstallEngaged}
-                />
-              ) : null}
-            </div>
-          </li>
-        ))}
-      </ol>
+      <ConnectComputerGuideSteps
+        operatingSystem={operatingSystem}
+        installCommand={installCommand}
+        isWebSocketSupported={isWebSocketSupported}
+        onInstallEngaged={handleInstallEngaged}
+      />
 
       {isWebSocketSupported && connectionStatus !== null ? (
         <p

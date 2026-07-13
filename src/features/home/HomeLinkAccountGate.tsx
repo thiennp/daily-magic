@@ -58,9 +58,10 @@ function HomeLinkAccountGateContent({
     markPaired();
     void refresh();
   }, [markPaired, refresh]);
-  const { isLinking, linkError } = useLinkLocalAgentAccount({
+  useLinkLocalAgentAccount({
     appOrigin,
-    autoLink: !isLoading,
+    autoLink: !isLoading && hasPairedDevice,
+    silentFailures: true,
     onLinked: handleLinked,
   });
 
@@ -89,11 +90,11 @@ function HomeLinkAccountGateContent({
         </aside>
         <main className={HOME_MAIN_COLUMN_CLASS}>
           <HomeConnectComputerGuide
+            appOrigin={appOrigin}
             installCommand={installCommand}
             isWebSocketSupported={isWebSocketSupported}
             host={host}
-            isLinking={isLinking}
-            linkError={linkError}
+            onLinked={handleLinked}
           />
         </main>
       </div>

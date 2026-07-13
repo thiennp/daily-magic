@@ -31,77 +31,86 @@ const handleWakeRequest = async (
   const requestOrigin = request.headers.origin;
   const cors = buildWakeServerCorsHeaders(requestOrigin);
 
-  if (
-    requestOrigin !== undefined &&
-    requestOrigin.length > 0 &&
-    !cors.allowed
-  ) {
-    rejectOrigin(response);
-    return;
-  }
-
-  if (request.method === "OPTIONS") {
-    response.writeHead(204, cors.headers);
-    response.end();
-    return;
-  }
-
-  const pathname = request.url?.split("?")[0] ?? "/";
-
-  if (request.method === "GET" && pathname === "/health") {
-    sendJson(response, 200, buildAgentWitchWakeHealthResponse(), cors.headers);
-    return;
-  }
-
-  if (request.method === "GET" && pathname === "/identity") {
-    sendJson(
-      response,
-      200,
-      buildAgentWitchWakeIdentityResponse(),
-      cors.headers,
-    );
-    return;
-  }
-
-  if (request.method === "POST" && pathname === "/wake") {
-    const wakeResult = await wakeAgentWitchLaunchAgents();
-    sendJson(response, wakeResult.ok ? 200 : 503, wakeResult, cors.headers);
-    return;
-  }
-
-  if (request.method === "POST" && pathname === "/link-account") {
-    const chunks: Buffer[] = [];
-    for await (const chunk of request) {
-      chunks.push(Buffer.from(chunk));
+  try {
+    if (
+      requestOrigin !== undefined &&
+      requestOrigin.length > 0 &&
+      !cors.allowed
+    ) {
+      rejectOrigin(response);
+      return;
     }
 
-    let body: unknown = {};
-    try {
-      body = JSON.parse(Buffer.concat(chunks).toString("utf8"));
-    } catch {
+    if (request.method === "OPTIONS") {
+      response.writeHead(204, cors.headers);
+      response.end();
+      return;
+    }
+
+    const pathname = request.url?.split("?")[0] ?? "/";
+
+    if (request.method === "GET" && pathname === "/health") {
+      sendJson(response, 200, buildAgentWitchWakeHealthResponse(), cors.headers);
+      return;
+    }
+
+    if (request.method === "GET" && pathname === "/identity") {
       sendJson(
         response,
-        400,
-        {
-          ok: false,
-          errorMessage: "Invalid JSON body.",
-        },
+        200,
+        buildAgentWitchWakeIdentityResponse(),
         cors.headers,
       );
       return;
     }
 
-    const linkResult = await linkAgentWitchAccountFromWakeServer(body);
-    sendJson(response, linkResult.ok ? 200 : 400, linkResult, cors.headers);
-    return;
-  }
+    if (request.method === "POST" && pathname === "/wake") {
+      const wakeResult = await wakeAgentWitchLaunchAgents();
+      sendJson(response, wakeResult.ok ? 200 : 503, wakeResult, cors.headers);
+      return;
+    }
 
-  sendJson(
-    response,
-    404,
-    { ok: false, errorMessage: "Not found." },
-    cors.headers,
-  );
+    if (request.method === "POST" && pathname === "/link-account") {
+      const chunks: Buffer[] = [];
+      for await (const chunk of request) {
+        chunks.push(Buffer.from(chunk));
+      }
+
+      let body: unknown = {};
+      try {
+        body = JSON.parse(Buffer.concat(chunks).toString("utf8"));
+      } catch {
+        sendJson(
+          response,
+          400,
+          {
+            ok: false,
+            errorMessage: "Invalid JSON body.",
+          },
+          cors.headers,
+        );
+        return;
+      }
+
+      const linkResult = await linkAgentWitchAccountFromWakeServer(body);
+      sendJson(response, linkResult.ok ? 200 : 400, linkResult, cors.headers);
+      return;
+    }
+
+    sendJson(
+      response,
+      404,
+      { ok: false, errorMessage: "Not found." },
+      cors.headers,
+    );
+  } catch {
+    sendJson(
+      response,
+      500,
+      { ok: false, errorMessage: "Wake server error." },
+      cors.headers,
+    );
+  }
 };
 
 export const startAgentWitchWakeServer = (): http.Server => {

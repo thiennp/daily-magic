@@ -10,10 +10,12 @@ const AUTO_LINK_POLL_MS = 5_000;
 export function useLinkLocalAgentAccount({
   appOrigin,
   autoLink,
+  silentFailures = false,
   onLinked,
 }: {
   readonly appOrigin: string;
   readonly autoLink: boolean;
+  readonly silentFailures?: boolean;
   readonly onLinked?: () => void;
 }): {
   readonly isLinking: boolean;
@@ -24,25 +26,32 @@ export function useLinkLocalAgentAccount({
   const [isLinking, setIsLinking] = useState(false);
   const [linkError, setLinkError] = useState<string | null>(null);
 
-  const linkNow = useCallback(async (): Promise<void> => {
-    if (linkingInFlightRef.current) {
-      return;
-    }
+  const linkNow = useCallback(
+    async (options?: { readonly reportError?: boolean }): Promise<void> => {
+      if (linkingInFlightRef.current) {
+        return;
+      }
 
-    linkingInFlightRef.current = true;
-    setIsLinking(true);
-    setLinkError(null);
+      const shouldReportError = options?.reportError ?? !silentFailures;
 
-    const result = await linkLocalAgentToSignedInAccount(appOrigin);
-    if (result.ok) {
-      onLinked?.();
-    } else {
-      setLinkError(result.errorMessage ?? "Could not link this Mac.");
-    }
+      linkingInFlightRef.current = true;
+      setIsLinking(true);
+      if (shouldReportError) {
+        setLinkError(null);
+      }
 
-    linkingInFlightRef.current = false;
-    setIsLinking(false);
-  }, [appOrigin, onLinked]);
+      const result = await linkLocalAgentToSignedInAccount(appOrigin);
+      if (result.ok) {
+        onLinked?.();
+      } else if (shouldReportError) {
+        setLinkError(result.errorMessage ?? "Could not link this Mac.");
+      }
+
+      linkingInFlightRef.current = false;
+      setIsLinking(false);
+    },
+    [appOrigin, onLinked, silentFailures],
+  );
 
   useEffect(() => {
     if (!autoLink) {
@@ -61,7 +70,7 @@ export function useLinkLocalAgentAccount({
         return;
       }
 
-      await linkNow();
+      await linkNow({ reportError: !silentFailures });
     };
 
     const timer = setInterval(() => {
@@ -77,7 +86,7 @@ export function useLinkLocalAgentAccount({
       clearInterval(timer);
       clearTimeout(initialTimer);
     };
-  }, [autoLink, linkNow]);
+  }, [autoLink, linkNow, silentFailures]);
 
   return { isLinking, linkError, linkNow };
 }

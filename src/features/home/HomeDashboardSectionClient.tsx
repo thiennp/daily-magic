@@ -12,6 +12,7 @@ interface HomeDashboardSectionClientProps {
     readonly name: string | null;
     readonly globalRole: GlobalRoleValue;
   };
+  readonly appOrigin: string;
   readonly installCommand: string;
   readonly isWebSocketSupported: boolean;
   readonly host: string;
@@ -19,11 +20,13 @@ interface HomeDashboardSectionClientProps {
 
 export default function HomeDashboardSectionClient({
   user,
+  appOrigin,
   installCommand,
   isWebSocketSupported,
   host,
 }: HomeDashboardSectionClientProps) {
-  const { hasPairedDevice, isLoading } = useHasPairedDevice();
+  const { hasPairedDevice, isLoading, markPaired, refresh } =
+    useHasPairedDevice();
 
   if (isLoading) {
     return (
@@ -41,9 +44,14 @@ export default function HomeDashboardSectionClient({
 
   return (
     <HomeConnectComputerGuide
+      appOrigin={appOrigin}
       installCommand={installCommand}
       isWebSocketSupported={isWebSocketSupported}
       host={host}
+      onLinked={() => {
+        markPaired();
+        void refresh();
+      }}
     />
   );
 }
