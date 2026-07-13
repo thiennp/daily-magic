@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import AppPanel from "@/components/surfaces/AppPanel";
 import {
@@ -20,7 +20,7 @@ export default function ImprovementReviewPanel() {
   );
   const [isLoading, setIsLoading] = useState(() => !demoPreview);
 
-  const loadItems = async (): Promise<void> => {
+  const loadItems = useCallback(async (): Promise<void> => {
     if (demoPreview) {
       return;
     }
@@ -43,7 +43,7 @@ export default function ImprovementReviewPanel() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [demoPreview]);
 
   useEffect(() => {
     if (demoPreview) {
