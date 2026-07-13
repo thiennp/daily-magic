@@ -5,6 +5,7 @@ import { resolveAgentWitchWakePort } from "./agentWitchWakeConstants";
 import { kickstartAgentWitchLaunchAgent } from "./kickstartAgentWitchLaunchAgent";
 import { listAgentWitchLaunchTargets } from "./listAgentWitchLaunchTargets";
 import { linkAgentWitchAccountLocally } from "./linkAgentWitchAccountLocally";
+import { spawnAgentWitchClient } from "./spawnAgentWitchClient";
 
 export interface AgentWitchWakeHealthResponse {
   readonly ok: true;
@@ -117,6 +118,18 @@ export const wakeAgentWitchLaunchAgents =
         ok: result.ok,
         ...(result.errorMessage !== undefined
           ? { errorMessage: result.errorMessage }
+          : {}),
+      });
+    }
+
+    if (!kicked.some((entry) => entry.ok)) {
+      const spawned = spawnAgentWitchClient();
+      kicked.push({
+        launchAgentLabel: "direct-spawn",
+        profileEmail: null,
+        ok: spawned.ok,
+        ...(spawned.errorMessage !== undefined
+          ? { errorMessage: spawned.errorMessage }
           : {}),
       });
     }

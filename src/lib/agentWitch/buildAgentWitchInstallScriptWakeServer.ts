@@ -9,6 +9,7 @@ export const buildAgentWitchInstallScriptWakeServer = (input: {
   readonly wakeAllowedOriginsScriptUrl: string;
   readonly wakeEnsureProfileScriptUrl: string;
   readonly wakeLinkAccountScriptUrl: string;
+  readonly wakeSpawnClientScriptUrl: string;
 }): string => `
 WAKE_SERVER_SCRIPT_URL="${input.wakeServerScriptUrl}"
 WAKE_CONSTANTS_SCRIPT_URL="${input.wakeConstantsScriptUrl}"
@@ -18,6 +19,7 @@ WAKE_HANDLERS_SCRIPT_URL="${input.wakeHandlersScriptUrl}"
 WAKE_ALLOWED_ORIGINS_SCRIPT_URL="${input.wakeAllowedOriginsScriptUrl}"
 WAKE_ENSURE_PROFILE_SCRIPT_URL="${input.wakeEnsureProfileScriptUrl}"
 WAKE_LINK_ACCOUNT_SCRIPT_URL="${input.wakeLinkAccountScriptUrl}"
+WAKE_SPAWN_CLIENT_SCRIPT_URL="${input.wakeSpawnClientScriptUrl}"
 WAKE_LAUNCH_AGENT_LABEL="com.daily-magic.agent-witch-wake"
 WAKE_PLIST_PATH="\${HOME}/Library/LaunchAgents/\${WAKE_LAUNCH_AGENT_LABEL}.plist"
 
@@ -30,6 +32,7 @@ echo "Downloading Agent Witch wake server from \${WAKE_SERVER_SCRIPT_URL}…"
 "\${CURL_BIN}" -fsSL "\${WAKE_ALLOWED_ORIGINS_SCRIPT_URL}" -o "\${INSTALL_DIR}/agentWitchWakeAllowedOrigins.ts"
 "\${CURL_BIN}" -fsSL "\${WAKE_ENSURE_PROFILE_SCRIPT_URL}" -o "\${INSTALL_DIR}/ensureAgentWitchProfile.ts"
 "\${CURL_BIN}" -fsSL "\${WAKE_LINK_ACCOUNT_SCRIPT_URL}" -o "\${INSTALL_DIR}/linkAgentWitchAccountLocally.ts"
+"\${CURL_BIN}" -fsSL "\${WAKE_SPAWN_CLIENT_SCRIPT_URL}" -o "\${INSTALL_DIR}/spawnAgentWitchClient.ts"
 
 if [[ "\$(uname -s)" == "Darwin" ]]; then
   cat > "\${WAKE_PLIST_PATH}" <<EOF

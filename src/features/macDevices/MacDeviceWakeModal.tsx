@@ -31,6 +31,10 @@ export default function MacDeviceWakeModal({
         paste this command, and press Return:
       </p>
       <CopyableBashCommand command={wakeCommand} variant="bash" />
+      <p className={`mt-3 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
+        If this still returns an error, re-run the Agent Witch install from
+        Home → Your setup to refresh the local wake helper, then try again.
+      </p>
       {isWakeServerReachable ? (
         <button
           type="button"

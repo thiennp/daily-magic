@@ -53,6 +53,11 @@ const AGENT_WITCH_INSTALL_SCRIPT_ALLOWLIST = {
     "scripts",
     "linkAgentWitchAccountLocally.ts",
   ),
+  "spawnAgentWitchClient.ts": path.join(
+    process.cwd(),
+    "scripts",
+    "spawnAgentWitchClient.ts",
+  ),
   "buildWriterCliInvocation.ts": path.join(
     process.cwd(),
     "scripts",
