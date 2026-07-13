@@ -37,6 +37,19 @@ export default function AgentWitchUnsupportedHostNotice({
           https://agentwitch.com
         </code>{" "}
         on a Node host that supports WebSockets (Railway, Render, Fly.io, VPS).
+        Vercel serverless cannot run{" "}
+        <code className="rounded bg-white/70 px-1 py-0.5 text-xs dark:bg-black/20">
+          server.ts
+        </code>
+        , so production must use{" "}
+        <code className="rounded bg-white/70 px-1 py-0.5 text-xs dark:bg-black/20">
+          npm run start
+        </code>{" "}
+        instead of a plain{" "}
+        <code className="rounded bg-white/70 px-1 py-0.5 text-xs dark:bg-black/20">
+          next build
+        </code>{" "}
+        deploy.
       </p>
     </div>
   );

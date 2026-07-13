@@ -3,7 +3,7 @@ import { headers } from "next/headers";
 import HomeDashboardSectionClient from "@/features/home/HomeDashboardSectionClient";
 import { buildAppOriginFromHeaders } from "@/lib/agentWitch/buildAgentWitchInstallUrls";
 import { buildLocalAgentInstallCommandFromHeaders } from "@/lib/agentWitch/buildLocalAgentInstallCommand";
-import isAgentWitchWebSocketSupportedHost from "@/lib/agentWitch/isAgentWitchWebSocketSupportedHost";
+import { isAgentWitchWebSocketAvailableForHost } from "@/lib/agentWitch/isAgentWitchWebSocketAvailable";
 import type { GlobalRoleValue } from "@/lib/auth/roles";
 
 interface HomeDashboardSectionProps {
@@ -29,7 +29,7 @@ export default async function HomeDashboardSection({
       user={user}
       appOrigin={appOrigin}
       installCommand={installCommand}
-      isWebSocketSupported={isAgentWitchWebSocketSupportedHost(host)}
+      isWebSocketSupported={isAgentWitchWebSocketAvailableForHost(host)}
       host={host}
     />
   );

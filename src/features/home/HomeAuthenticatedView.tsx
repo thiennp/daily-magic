@@ -16,7 +16,7 @@ import {
 } from "@/features/home/homeDashboardLayout.constant";
 import { buildAppOriginFromHeaders } from "@/lib/agentWitch/buildAgentWitchInstallUrls";
 import { buildLocalAgentInstallCommandFromHeaders } from "@/lib/agentWitch/buildLocalAgentInstallCommand";
-import isAgentWitchWebSocketSupportedHost from "@/lib/agentWitch/isAgentWitchWebSocketSupportedHost";
+import { isAgentWitchWebSocketAvailableForHost } from "@/lib/agentWitch/isAgentWitchWebSocketAvailable";
 import type { GlobalRoleValue } from "@/lib/auth/roles";
 import { headers } from "next/headers";
 
@@ -37,7 +37,7 @@ export default async function HomeAuthenticatedView({
     buildLocalAgentInstallCommandFromHeaders(requestHeaders);
   const host =
     requestHeaders.get("x-forwarded-host") ?? requestHeaders.get("host") ?? "";
-  const isWebSocketSupported = isAgentWitchWebSocketSupportedHost(host);
+  const isWebSocketSupported = isAgentWitchWebSocketAvailableForHost(host);
 
   return (
     <HomeLinkAccountGate

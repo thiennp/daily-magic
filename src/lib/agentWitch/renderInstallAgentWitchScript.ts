@@ -1,13 +1,13 @@
 import {
   buildAgentWitchClientScriptUrl,
   buildAgentWitchInstallAuxiliaryScriptUrl,
-  buildAgentWitchWsUrl,
 } from "@/lib/agentWitch/buildAgentWitchInstallUrls";
 import { buildAgentWitchInstallBashScript } from "@/lib/agentWitch/buildAgentWitchInstallBashScript";
 import { buildAgentWitchWebSocketSupportWarning } from "@/lib/agentWitch/buildAgentWitchWebSocketSupportWarning";
+import { resolveAgentWitchWsUrl } from "@/lib/agentWitch/resolveAgentWitchWsUrl";
 
 export const renderInstallAgentWitchScript = (origin: string): string => {
-  const wsUrl = buildAgentWitchWsUrl(origin);
+  const wsUrl = resolveAgentWitchWsUrl(origin);
   const clientScriptUrl = buildAgentWitchClientScriptUrl(origin);
   const resolveLayoutScriptUrl = buildAgentWitchInstallAuxiliaryScriptUrl(
     origin,
