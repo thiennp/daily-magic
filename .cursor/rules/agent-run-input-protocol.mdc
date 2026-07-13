@@ -1,0 +1,32 @@
+# Agent run input protocol
+
+When a dispatched Claude task on a paired Mac needs a human decision mid-run, use the WebSocket protocol — not database columns.
+
+## Marker (required in model output)
+
+```
+[[AWAITING_INPUT]]
+<single clear question on the next line>
+```
+
+## Server behavior
+
+- Pending input lives in `dispatchAgentRunInputRegistry` (in-memory) until answered or the run completes.
+- `agent_runs.status` stays `running`; job history does not get a separate paused status.
+- Every `command.claude.run` prompt is wrapped with `wrapPromptWithAgentRunInputGuardrails()` before dispatch.
+
+## Local Mac behavior
+
+- `~/.agent-witch/profiles/<email>/pending-run-inputs.json` stores paused sessions across agent restarts.
+- On reconnect, agent-witch replays `command.claude.input_required` to the server.
+
+## Browser behavior
+
+- `DispatchApprovalListener` also shows `AgentRunInputModal` when `command.claude.input_required` arrives on the dashboard socket.
+- Answers are sent with `command.claude.input_respond` (not REST).
+
+## Related
+
+- `src/lib/dispatch/agentRunInputGuardrails.constant.ts`
+- `scripts/agentWitchRunSessions.ts`
+- `scripts/agentWitchPendingRunSessions.ts`

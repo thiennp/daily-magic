@@ -18,6 +18,11 @@ import {
   resolveAgentWitchLocalLayout,
   type AgentWitchLocalLayout,
 } from "./resolveAgentWitchLocalLayout";
+import {
+  continueClaudeTaskAfterInput,
+  replayPendingRunInputRequests,
+  runClaudeTask,
+} from "./agentWitchRunSessions";
 
 interface AgentWitchConfig {
   readonly email: string | null;
@@ -198,55 +203,6 @@ const runWriterProcess = (
     });
   });
 
-const runClaudeTask = (
-  config: AgentWitchConfig,
-  prompt: string,
-  requestId: string | undefined,
-  socket: WebSocket,
-  agentRunId?: string,
-): void => {
-  const child = spawn(config.claudeCommand, ["-p", prompt], {
-    cwd: config.workspace,
-    stdio: ["ignore", "pipe", "pipe"],
-    env: process.env,
-  });
-
-  const outputChunks: string[] = [];
-
-  child.stdout?.on("data", (chunk: Buffer) => {
-    outputChunks.push(chunk.toString("utf8"));
-  });
-
-  child.stderr?.on("data", (chunk: Buffer) => {
-    outputChunks.push(chunk.toString("utf8"));
-  });
-
-  child.on("close", (exitCode) => {
-    sendMessage(socket, {
-      type: "command.claude.result",
-      payload: {
-        exitCode: exitCode ?? -1,
-        output: outputChunks.join("").trim(),
-        ...(agentRunId !== undefined ? { agentRunId } : {}),
-      },
-      requestId,
-    });
-  });
-
-  child.on("error", (error) => {
-    sendMessage(socket, {
-      type: "command.claude.result",
-      payload: {
-        exitCode: -1,
-        output: "",
-        errorMessage: error.message,
-        ...(agentRunId !== undefined ? { agentRunId } : {}),
-      },
-      requestId,
-    });
-  });
-};
-
 const runHarnessRequest = async (
   config: AgentWitchConfig,
   payload: Readonly<Record<string, unknown>>,
@@ -418,6 +374,7 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
         },
       });
       reportHarnessManifest(socket, config.layout);
+      replayPendingRunInputRequests(config, socket);
       startHeartbeat(socket);
     });
 
@@ -443,6 +400,54 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
           if (typeof prompt === "string" && prompt.trim().length > 0) {
             console.log("[agent-witch] Running Claude CLI task…");
             runClaudeTask(config, prompt.trim(), requestId, socket, agentRunId);
+          }
+        }
+
+        if (
+          parsed.type === "command.claude.input_respond" &&
+          isRecord(parsed.payload)
+        ) {
+          const agentRunId =
+            typeof parsed.payload.agentRunId === "string"
+              ? parsed.payload.agentRunId
+              : "";
+          const response =
+            typeof parsed.payload.response === "string"
+              ? parsed.payload.response.trim()
+              : "";
+          const originalPrompt =
+            typeof parsed.payload.originalPrompt === "string"
+              ? parsed.payload.originalPrompt
+              : "";
+          const partialOutput =
+            typeof parsed.payload.partialOutput === "string"
+              ? parsed.payload.partialOutput
+              : "";
+          const question =
+            typeof parsed.payload.question === "string"
+              ? parsed.payload.question
+              : "";
+
+          if (
+            agentRunId.length > 0 &&
+            response.length > 0 &&
+            originalPrompt.length > 0
+          ) {
+            console.log(
+              "[agent-witch] Continuing Claude task after user input…",
+            );
+            continueClaudeTaskAfterInput(
+              config,
+              {
+                agentRunId,
+                originalPrompt,
+                partialOutput,
+                question,
+                response,
+              },
+              requestId,
+              socket,
+            );
           }
         }
 
