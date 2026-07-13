@@ -52,12 +52,10 @@ function HomeLinkAccountGateContent({
   host,
   children,
 }: HomeLinkAccountGateProps) {
-  const { hasPairedDevice, isLoading, refresh, markPaired } =
-    usePairedDeviceContext();
+  const { hasPairedDevice, isLoading, markPaired } = usePairedDeviceContext();
   const handleLinked = useCallback(() => {
     markPaired();
-    void refresh();
-  }, [markPaired, refresh]);
+  }, [markPaired]);
   useLinkLocalAgentAccount({
     appOrigin,
     autoLink: !isLoading && hasPairedDevice,

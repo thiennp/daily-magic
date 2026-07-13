@@ -36,7 +36,17 @@ export function useHasPairedDevice(): UseHasPairedDeviceResult {
     }
 
     const result = await fetchActivePairedDevices();
-    setHasPairedDevice(result.devices.length > 0);
+    setHasPairedDevice((current) => {
+      if (result.devices.length > 0) {
+        return true;
+      }
+
+      if (result.errorMessage !== null) {
+        return current;
+      }
+
+      return false;
+    });
     setIsLoading(false);
   }, [isDemoMode]);
 

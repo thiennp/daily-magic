@@ -25,8 +25,7 @@ export default function HomeDashboardSectionClient({
   isWebSocketSupported,
   host,
 }: HomeDashboardSectionClientProps) {
-  const { hasPairedDevice, isLoading, markPaired, refresh } =
-    useHasPairedDevice();
+  const { hasPairedDevice, isLoading, markPaired } = useHasPairedDevice();
 
   if (isLoading) {
     return (
@@ -50,7 +49,6 @@ export default function HomeDashboardSectionClient({
       host={host}
       onLinked={() => {
         markPaired();
-        void refresh();
       }}
     />
   );
