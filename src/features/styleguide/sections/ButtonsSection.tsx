@@ -1,5 +1,6 @@
 import ComponentCard from "@/components/common/ComponentCard";
 import Button from "@/components/ui/button/Button";
+import AppIcon from "@/components/ui/icon/AppIcon";
 import { BoxIcon } from "@/icons";
 
 export default function ButtonsSection() {
@@ -21,20 +22,20 @@ export default function ButtonsSection() {
         </ComponentCard>
         <ComponentCard title="Primary Button with Left Icon">
           <div className="flex items-center gap-5">
-            <Button size="sm" variant="primary" startIcon={<BoxIcon />}>
+            <Button size="sm" variant="primary" startIcon={<AppIcon icon={BoxIcon} size="md" />}>
               Button Text
             </Button>
-            <Button size="md" variant="primary" startIcon={<BoxIcon />}>
+            <Button size="md" variant="primary" startIcon={<AppIcon icon={BoxIcon} size="md" />}>
               Button Text
             </Button>
           </div>
         </ComponentCard>
         <ComponentCard title="Primary Button with Right Icon">
           <div className="flex items-center gap-5">
-            <Button size="sm" variant="primary" endIcon={<BoxIcon />}>
+            <Button size="sm" variant="primary" endIcon={<AppIcon icon={BoxIcon} size="md" />}>
               Button Text
             </Button>
-            <Button size="md" variant="primary" endIcon={<BoxIcon />}>
+            <Button size="md" variant="primary" endIcon={<AppIcon icon={BoxIcon} size="md" />}>
               Button Text
             </Button>
           </div>
@@ -51,20 +52,20 @@ export default function ButtonsSection() {
         </ComponentCard>
         <ComponentCard title="Outline Button with Left Icon">
           <div className="flex items-center gap-5">
-            <Button size="sm" variant="outline" startIcon={<BoxIcon />}>
+            <Button size="sm" variant="outline" startIcon={<AppIcon icon={BoxIcon} size="md" />}>
               Button Text
             </Button>
-            <Button size="md" variant="outline" startIcon={<BoxIcon />}>
+            <Button size="md" variant="outline" startIcon={<AppIcon icon={BoxIcon} size="md" />}>
               Button Text
             </Button>
           </div>
         </ComponentCard>
         <ComponentCard title="Outline Button with Right Icon">
           <div className="flex items-center gap-5">
-            <Button size="sm" variant="outline" endIcon={<BoxIcon />}>
+            <Button size="sm" variant="outline" endIcon={<AppIcon icon={BoxIcon} size="md" />}>
               Button Text
             </Button>
-            <Button size="md" variant="outline" endIcon={<BoxIcon />}>
+            <Button size="md" variant="outline" endIcon={<AppIcon icon={BoxIcon} size="md" />}>
               Button Text
             </Button>
           </div>
