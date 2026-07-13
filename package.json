@@ -37,6 +37,7 @@
     "react-dropzone": "^15.0.0",
     "resend": "^6.17.2",
     "tailwind-merge": "^3.6.0",
+    "tsx": "^4.20.3",
     "ws": "^8.18.3"
   },
   "devDependencies": {
@@ -53,7 +54,6 @@
     "prettier": "^3.6.2",
     "structure-validation": "^0.0.14",
     "tailwindcss": "^4",
-    "tsx": "^4.20.3",
     "typescript": "^5",
     "vitest": "^3.2.4"
   }
