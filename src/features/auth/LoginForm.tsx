@@ -67,8 +67,7 @@ export default function LoginForm({
   return (
     <div className="space-y-6">
       <p className={appearanceClasses.description}>
-        Use Google or a magic link sent to your email. Super admin (
-        {SUPER_ADMIN_EMAIL}) must use Google.
+        Use Google or a magic link sent to your email.
       </p>
 
       <div className="space-y-4">
