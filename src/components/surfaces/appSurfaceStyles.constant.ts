@@ -30,7 +30,7 @@ export const APP_SURFACE_TERMINAL_COPY_BUTTON_CLASS =
   "inline-flex h-9 w-9 items-center justify-center rounded-md border border-gray-200 bg-gray-100 text-gray-600 shadow-sm transition hover:bg-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700";
 
 export const APP_SURFACE_BASH_TERMINAL_COPY_BUTTON_CLASS =
-  "inline-flex h-9 w-9 items-center justify-center rounded-md border border-zinc-600 bg-zinc-800 text-gray-200 shadow-sm transition hover:bg-zinc-700";
+  "inline-flex h-full shrink-0 items-center justify-center px-3 text-zinc-400 transition hover:bg-zinc-800 hover:text-white";
 
 export const APP_SURFACE_EYEBROW_TEXT_CLASS =
   "text-sm font-medium uppercase tracking-wide text-zinc-500 dark:text-zinc-400";

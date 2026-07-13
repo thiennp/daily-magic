@@ -103,16 +103,14 @@ export default function CopyableBashCommand({
           >
             <code>{command}</code>
           </pre>
-          <div className="flex shrink-0 items-center border-l border-zinc-700 px-2">
-            <button
-              type="button"
-              onClick={handleCopyClick}
-              aria-label={copied ? "Copied" : "Copy install command"}
-              className={APP_SURFACE_BASH_TERMINAL_COPY_BUTTON_CLASS}
-            >
-              {renderCopyIcon(copied, true)}
-            </button>
-          </div>
+          <button
+            type="button"
+            onClick={handleCopyClick}
+            aria-label={copied ? "Copied" : "Copy install command"}
+            className={APP_SURFACE_BASH_TERMINAL_COPY_BUTTON_CLASS}
+          >
+            {renderCopyIcon(copied, true)}
+          </button>
         </div>
       </div>
     );
