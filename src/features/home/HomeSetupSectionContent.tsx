@@ -7,7 +7,6 @@ import AgentPairingPanel from "@/features/harness/AgentPairingPanel";
 import HarnessWorkspace from "@/features/harness/HarnessWorkspace";
 import { useAgentWitchHarnessSocket } from "@/features/harness/hooks/useAgentWitchHarnessSocket";
 import HomeSetupNextSteps from "@/features/home/HomeSetupNextSteps";
-import { useOptionalPairedDeviceContext } from "@/features/home/PairedDeviceContext";
 
 interface HomeSetupSectionContentProps {
   readonly macInstallPanel: ReactNode;
@@ -17,13 +16,11 @@ export default function HomeSetupSectionContent({
   macInstallPanel,
 }: HomeSetupSectionContentProps) {
   const harnessSocket = useAgentWitchHarnessSocket();
-  const pairedDeviceContext = useOptionalPairedDeviceContext();
-  const hasPairedDevice = pairedDeviceContext?.hasPairedDevice ?? false;
 
   return (
     <div className="mt-6 space-y-6">
       <HomeSetupNextSteps />
-      {!hasPairedDevice ? macInstallPanel : null}
+      {macInstallPanel}
       <AgentPairingPanel harnessSocket={harnessSocket} />
       <HarnessWorkspace harnessSocket={harnessSocket} />
       <AgentDispatchPolicyPanel />

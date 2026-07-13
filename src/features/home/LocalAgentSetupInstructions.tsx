@@ -24,7 +24,7 @@ export default async function LocalAgentSetupInstructions() {
       className="bg-gray-50 text-left dark:border-gray-700 dark:bg-gray-900/50"
     >
       <h2 className="text-sm font-semibold text-gray-800 dark:text-white/90">
-        Connect your Mac
+        Connect a Mac
       </h2>
       {!isWebSocketSupported ? (
         <div className="mt-4">
@@ -32,10 +32,9 @@ export default async function LocalAgentSetupInstructions() {
         </div>
       ) : null}
       <p className={`mt-2 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
-        Step 1 for a new Mac: run this install command in Terminal on the
-        computer you want to use. It sets up Agent Witch so this website can
-        send tasks to your machine. On macOS it also starts automatically when
-        you sign in.
+        Run this install command in Terminal on each Mac you want to use with
+        this account. It sets up Agent Witch so this website can send tasks to
+        that machine. On macOS it also starts automatically when you sign in.
         {!isWebSocketSupported
           ? " This website host cannot keep a live connection open — use a supported deployment before connecting."
           : null}
