@@ -37,7 +37,7 @@ export default function MacDevicePicker({
   if (devices.length === 0) {
     return (
       <p className="text-sm text-gray-500 dark:text-gray-400">
-        No paired Macs yet. Connect one from Home → Your setup.
+        No paired Macs yet. Connect one from Home → Your Macs.
       </p>
     );
   }
