@@ -2,6 +2,11 @@
 
 import { useState } from "react";
 
+import {
+  APP_SURFACE_CTA_PRIMARY_SM_CLASS,
+  APP_SURFACE_CTA_SECONDARY_SM_CLASS,
+} from "@/components/surfaces/appSurfaceStyles.constant";
+
 interface FeedbackImprovementDraftProps {
   readonly feedbackId: string;
   readonly defaultSuggestion: string;
@@ -23,7 +28,7 @@ export default function FeedbackImprovementDraft({
         onClick={() => {
           setIsOpen(true);
         }}
-        className="rounded-lg border border-gray-200 px-3 py-1.5 text-xs font-medium text-gray-700 dark:border-gray-700"
+        className={APP_SURFACE_CTA_SECONDARY_SM_CLASS}
       >
         Plan an update
       </button>
@@ -53,7 +58,7 @@ export default function FeedbackImprovementDraft({
             setIsOpen(false);
           });
         }}
-        className="rounded-lg bg-brand-500 px-3 py-1.5 text-xs font-medium text-white disabled:opacity-50"
+        className={`${APP_SURFACE_CTA_PRIMARY_SM_CLASS} disabled:opacity-50`}
       >
         Save improvement plan
       </button>

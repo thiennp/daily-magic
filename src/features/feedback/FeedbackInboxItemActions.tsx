@@ -1,3 +1,7 @@
+import {
+  APP_SURFACE_CTA_PRIMARY_SM_CLASS,
+  APP_SURFACE_CTA_SECONDARY_SM_CLASS,
+} from "@/components/surfaces/appSurfaceStyles.constant";
 import FeedbackImprovementDraft from "@/features/improvements/FeedbackImprovementDraft";
 import type { CapabilityFeedbackInboxItem } from "@/lib/feedback/types/CapabilityFeedbackRecord.type";
 
@@ -21,7 +25,7 @@ export default function FeedbackInboxItemActions({
             body: JSON.stringify({ status: "acknowledged" }),
           }).then(onUpdated);
         }}
-        className="rounded-lg bg-brand-500 px-3 py-1.5 text-xs font-medium text-white"
+        className={APP_SURFACE_CTA_PRIMARY_SM_CLASS}
       >
         Mark reviewed
       </button>
@@ -34,7 +38,7 @@ export default function FeedbackInboxItemActions({
             body: JSON.stringify({ status: "dismissed" }),
           }).then(onUpdated);
         }}
-        className="rounded-lg border border-gray-200 px-3 py-1.5 text-xs font-medium text-gray-600 dark:border-gray-700"
+        className={APP_SURFACE_CTA_SECONDARY_SM_CLASS}
       >
         Dismiss
       </button>

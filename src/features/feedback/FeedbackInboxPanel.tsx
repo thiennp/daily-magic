@@ -1,6 +1,10 @@
 "use client";
 
 import AppPanel from "@/components/surfaces/AppPanel";
+import {
+  APP_SURFACE_BODY_TEXT_CLASS,
+  APP_SURFACE_SECTION_TITLE_CLASS,
+} from "@/components/surfaces/appSurfaceStyles.constant";
 import { useFeedbackInbox } from "@/features/feedback/hooks/useFeedbackInbox";
 import FeedbackInboxItemRow from "@/features/feedback/FeedbackInboxItemRow";
 
@@ -13,10 +17,8 @@ export default function FeedbackInboxPanel() {
 
   return (
     <AppPanel>
-      <h2 className="text-lg font-semibold text-gray-800 dark:text-white/90">
-        Feedback inbox
-      </h2>
-      <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+      <h2 className={APP_SURFACE_SECTION_TITLE_CLASS}>Feedback inbox</h2>
+      <p className={`mt-2 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
         Teammates shared notes about your assistants. Review them when you have
         time.
       </p>

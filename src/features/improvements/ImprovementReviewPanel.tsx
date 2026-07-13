@@ -3,6 +3,13 @@
 import { useEffect, useState } from "react";
 
 import AppPanel from "@/components/surfaces/AppPanel";
+import {
+  APP_SURFACE_BODY_TEXT_CLASS,
+  APP_SURFACE_CTA_PRIMARY_SM_CLASS,
+  APP_SURFACE_CTA_SECONDARY_SM_CLASS,
+  APP_SURFACE_NESTED_CARD_CLASS,
+  APP_SURFACE_SECTION_TITLE_CLASS,
+} from "@/components/surfaces/appSurfaceStyles.constant";
 import { useDemoPreview } from "@/features/demo/DemoPreviewContext";
 import type { CapabilityImprovementInboxItem } from "@/lib/improvements/types/CapabilityImprovementRecord.type";
 
@@ -52,19 +59,16 @@ export default function ImprovementReviewPanel() {
 
   return (
     <AppPanel>
-      <h2 className="text-lg font-semibold text-gray-800 dark:text-white/90">
+      <h2 className={APP_SURFACE_SECTION_TITLE_CLASS}>
         Planned assistant updates
       </h2>
-      <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+      <p className={`mt-2 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
         Accepting a plan publishes a new assistant version. Nothing changes
         until you accept.
       </p>
       <ul className="mt-4 space-y-4">
         {items.map((item) => (
-          <li
-            key={item.id}
-            className="rounded-xl border border-gray-100 p-4 dark:border-gray-800"
-          >
+          <li key={item.id} className={APP_SURFACE_NESTED_CARD_CLASS}>
             <p className="text-sm font-medium text-gray-800 dark:text-white/90">
               {item.capabilityName}
             </p>
@@ -80,7 +84,7 @@ export default function ImprovementReviewPanel() {
                     { method: "POST" },
                   ).then(() => loadItems());
                 }}
-                className="rounded-lg bg-brand-500 px-3 py-1.5 text-xs font-medium text-white"
+                className={APP_SURFACE_CTA_PRIMARY_SM_CLASS}
               >
                 Accept and publish version
               </button>
@@ -92,7 +96,7 @@ export default function ImprovementReviewPanel() {
                     { method: "POST" },
                   ).then(() => loadItems());
                 }}
-                className="rounded-lg border border-gray-200 px-3 py-1.5 text-xs font-medium text-gray-600 dark:border-gray-700"
+                className={APP_SURFACE_CTA_SECONDARY_SM_CLASS}
               >
                 Reject
               </button>

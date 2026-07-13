@@ -1,3 +1,4 @@
+import { APP_SURFACE_NESTED_CARD_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
 import FeedbackInboxItemActions from "@/features/feedback/FeedbackInboxItemActions";
 import type { CapabilityFeedbackInboxItem } from "@/lib/feedback/types/CapabilityFeedbackRecord.type";
 
@@ -11,7 +12,7 @@ export default function FeedbackInboxItemRow({
   onUpdated,
 }: FeedbackInboxItemRowProps) {
   return (
-    <li className="rounded-xl border border-gray-100 p-4 dark:border-gray-800">
+    <li className={APP_SURFACE_NESTED_CARD_CLASS}>
       <p className="text-sm font-medium text-gray-800 dark:text-white/90">
         {item.capabilityName ?? "Assistant"} · {item.reviewerEmail}
       </p>

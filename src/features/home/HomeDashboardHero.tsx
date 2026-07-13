@@ -5,7 +5,10 @@ import Link from "next/link";
 import AppHero from "@/components/surfaces/AppHero";
 import {
   APP_SURFACE_BODY_TEXT_CLASS,
+  APP_SURFACE_CTA_PRIMARY_CLASS,
   APP_SURFACE_EYEBROW_TEXT_CLASS,
+  APP_SURFACE_TEXT_LINK_CLASS,
+  APP_SURFACE_TEXT_LINK_MUTED_CLASS,
 } from "@/components/surfaces/appSurfaceStyles.constant";
 import { useAppPath } from "@/features/demo/DemoPreviewContext";
 import { COMPANY_RULES_NAV_LABEL } from "@/lib/admin/companyGroupCopy.constant";
@@ -38,26 +41,26 @@ export default function HomeDashboardHero({ user }: HomeDashboardHeroProps) {
       <div className="mt-6">
         <Link
           href={appPath("/agent")}
-          className="inline-flex h-11 items-center justify-center rounded-lg bg-brand-500 px-5 text-sm font-medium text-white transition hover:bg-brand-600"
+          className={APP_SURFACE_CTA_PRIMARY_CLASS}
         >
           Send a task
         </Link>
         <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-sm">
           <Link
             href={appPath("/marketplace")}
-            className="font-medium text-brand-600 hover:text-brand-700"
+            className={APP_SURFACE_TEXT_LINK_CLASS}
           >
             Browse marketplace →
           </Link>
           <Link
             href={appPath("/reports")}
-            className="font-medium text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200"
+            className={APP_SURFACE_TEXT_LINK_MUTED_CLASS}
           >
             View job history →
           </Link>
           <Link
             href={appPath("/admin/groups")}
-            className="font-medium text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200"
+            className={APP_SURFACE_TEXT_LINK_MUTED_CLASS}
           >
             {COMPANY_RULES_NAV_LABEL}
           </Link>

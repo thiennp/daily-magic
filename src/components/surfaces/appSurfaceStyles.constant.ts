@@ -40,3 +40,21 @@ export const APP_SURFACE_SECTION_TITLE_CLASS =
 
 export const APP_SURFACE_BODY_TEXT_CLASS =
   "text-sm text-gray-600 dark:text-gray-400";
+
+export const APP_SURFACE_CTA_PRIMARY_CLASS =
+  "inline-flex h-11 items-center justify-center rounded-lg bg-zinc-900 px-5 text-sm font-medium text-white shadow-sm transition hover:bg-zinc-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-900/40 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50";
+
+export const APP_SURFACE_CTA_PRIMARY_SM_CLASS =
+  "inline-flex items-center justify-center rounded-lg bg-zinc-900 px-3 py-1.5 text-xs font-medium text-white shadow-sm transition hover:bg-zinc-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-900/40 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50";
+
+export const APP_SURFACE_CTA_SECONDARY_CLASS =
+  "inline-flex h-10 items-center justify-center rounded-lg bg-white px-4 text-sm font-medium text-zinc-900 shadow-sm ring-1 ring-inset ring-zinc-200 transition hover:bg-zinc-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400/40 focus-visible:ring-offset-2 dark:bg-gray-800 dark:text-gray-200 dark:ring-gray-700 dark:hover:bg-white/[0.03]";
+
+export const APP_SURFACE_CTA_SECONDARY_SM_CLASS =
+  "inline-flex items-center justify-center rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-xs font-medium text-gray-700 transition hover:bg-gray-50 dark:border-gray-700 dark:bg-transparent dark:text-gray-300 dark:hover:bg-white/5";
+
+export const APP_SURFACE_TEXT_LINK_CLASS =
+  "font-medium text-zinc-700 underline-offset-4 transition hover:text-zinc-900 hover:underline dark:text-gray-300 dark:hover:text-white";
+
+export const APP_SURFACE_TEXT_LINK_MUTED_CLASS =
+  "font-medium text-gray-600 transition hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200";

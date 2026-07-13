@@ -3,6 +3,11 @@
 import Link from "next/link";
 
 import AppPanel from "@/components/surfaces/AppPanel";
+import {
+  APP_SURFACE_BODY_TEXT_CLASS,
+  APP_SURFACE_CTA_SECONDARY_CLASS,
+  APP_SURFACE_SECTION_TITLE_CLASS,
+} from "@/components/surfaces/appSurfaceStyles.constant";
 import { useAppPath } from "@/features/demo/DemoPreviewContext";
 
 export default function MarketplaceHomePromo() {
@@ -10,16 +15,14 @@ export default function MarketplaceHomePromo() {
 
   return (
     <AppPanel>
-      <h2 className="text-lg font-semibold text-gray-800 dark:text-white/90">
-        Marketplace
-      </h2>
-      <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+      <h2 className={APP_SURFACE_SECTION_TITLE_CLASS}>Marketplace</h2>
+      <p className={`mt-2 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
         Browse agents and workflows teammates published for your company.
         Preview a listing, then install its rules bundle on your Mac.
       </p>
       <Link
         href={appPath("/marketplace")}
-        className="mt-4 inline-flex h-10 items-center justify-center rounded-lg border border-gray-200 px-4 text-sm font-medium text-gray-700 transition hover:bg-gray-50 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-white/5"
+        className={`mt-4 ${APP_SURFACE_CTA_SECONDARY_CLASS}`}
       >
         Open marketplace
       </Link>

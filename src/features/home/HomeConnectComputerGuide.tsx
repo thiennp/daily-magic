@@ -77,7 +77,7 @@ export default function HomeConnectComputerGuide({
             key={step.title}
             className={`flex gap-4 ${APP_SURFACE_NESTED_CARD_CLASS}`}
           >
-            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand-500 text-sm font-semibold text-white">
+            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-zinc-900 text-sm font-semibold text-white">
               {index + 1}
             </span>
             <div>

@@ -5,6 +5,8 @@ import AppPanel from "@/components/surfaces/AppPanel";
 import LocalTerminalPre from "@/components/surfaces/LocalTerminalPre";
 import {
   APP_SURFACE_BODY_TEXT_CLASS,
+  APP_SURFACE_CTA_PRIMARY_CLASS,
+  APP_SURFACE_CTA_SECONDARY_CLASS,
   APP_SURFACE_EYEBROW_TEXT_CLASS,
 } from "@/components/surfaces/appSurfaceStyles.constant";
 
@@ -64,6 +66,22 @@ export default function SurfacesSection() {
         <LocalTerminalPre className="mt-3">
           curl -fsSL https://agentwitch.com/install/agent-witch.sh | bash
         </LocalTerminalPre>
+      </AppPanel>
+
+      <AppPanel>
+        <h3 className="text-base font-medium text-gray-800 dark:text-white/90">
+          App CTAs
+        </h3>
+        <p className={`mt-2 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
+          Logged-in pages use zinc primary buttons and ring-based secondary
+          actions — not brand-500 fills.
+        </p>
+        <div className="mt-4 flex flex-wrap gap-3">
+          <span className={APP_SURFACE_CTA_PRIMARY_CLASS}>Primary action</span>
+          <span className={APP_SURFACE_CTA_SECONDARY_CLASS}>
+            Secondary action
+          </span>
+        </div>
       </AppPanel>
     </section>
   );

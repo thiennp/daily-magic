@@ -3,6 +3,11 @@
 import { useEffect, useState } from "react";
 
 import AppPanel from "@/components/surfaces/AppPanel";
+import {
+  APP_SURFACE_BODY_TEXT_CLASS,
+  APP_SURFACE_NESTED_CARD_CLASS,
+  APP_SURFACE_SECTION_TITLE_CLASS,
+} from "@/components/surfaces/appSurfaceStyles.constant";
 import { useDemoPreview } from "@/features/demo/DemoPreviewContext";
 import { CapabilityStatus } from "@/lib/capabilities/CapabilityStatus.constant";
 import type PublishedCapabilityRecord from "@/lib/capabilities/types/PublishedCapabilityRecord.type";
@@ -52,10 +57,10 @@ export default function MyOfferingsPanel() {
 
   return (
     <AppPanel>
-      <h2 className="text-lg font-semibold text-gray-800 dark:text-white/90">
+      <h2 className={APP_SURFACE_SECTION_TITLE_CLASS}>
         What teammates can request
       </h2>
-      <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+      <p className={`mt-2 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
         Published assistants appear in your company directory when colleagues
         send you a task.
       </p>
@@ -66,10 +71,7 @@ export default function MyOfferingsPanel() {
       ) : (
         <ul className="mt-4 space-y-3">
           {capabilities.map((capability) => (
-            <li
-              key={capability.id}
-              className="rounded-xl border border-gray-100 p-4 dark:border-gray-800"
-            >
+            <li key={capability.id} className={APP_SURFACE_NESTED_CARD_CLASS}>
               <p className="font-medium text-gray-800 dark:text-white/90">
                 {capability.name}
               </p>

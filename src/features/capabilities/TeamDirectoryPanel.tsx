@@ -1,6 +1,11 @@
 "use client";
 
 import AppPanel from "@/components/surfaces/AppPanel";
+import {
+  APP_SURFACE_BODY_TEXT_CLASS,
+  APP_SURFACE_NESTED_CARD_CLASS,
+  APP_SURFACE_SECTION_TITLE_CLASS,
+} from "@/components/surfaces/appSurfaceStyles.constant";
 import { useDispatchTargets } from "@/features/dispatch/hooks/useDispatchTargets";
 import { COMPANY_DIRECTORY_TITLE } from "@/lib/admin/companyGroupCopy.constant";
 
@@ -23,10 +28,10 @@ export default function TeamDirectoryPanel() {
 
   return (
     <AppPanel>
-      <h2 className="text-lg font-semibold text-gray-800 dark:text-white/90">
+      <h2 className={APP_SURFACE_SECTION_TITLE_CLASS}>
         {COMPANY_DIRECTORY_TITLE}
       </h2>
-      <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+      <p className={`mt-2 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
         See which assistants your teammates offer before you send a task.
       </p>
       <div className="mt-4 space-y-6">
@@ -39,7 +44,7 @@ export default function TeamDirectoryPanel() {
               {group.members.map((member) => (
                 <li
                   key={member.userId}
-                  className="rounded-xl border border-gray-100 p-4 dark:border-gray-800"
+                  className={APP_SURFACE_NESTED_CARD_CLASS}
                 >
                   <p className="font-medium text-gray-800 dark:text-white/90">
                     {member.name ?? member.email}
