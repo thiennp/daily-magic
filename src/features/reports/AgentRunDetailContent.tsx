@@ -1,4 +1,5 @@
 import AgentRunAgainButton from "@/features/reports/AgentRunAgainButton";
+import AgentRunLiveTerminal from "@/features/reports/AgentRunLiveTerminal";
 import AgentRunStatusBadge from "@/features/reports/AgentRunStatusBadge";
 import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
 import type EnrichedAgentRunRecord from "@/lib/dispatch/types/EnrichedAgentRunRecord.type";
@@ -54,6 +55,9 @@ export default function AgentRunDetailContent({
       <pre className="mt-2 max-h-64 overflow-auto rounded-lg bg-gray-50 p-3 text-xs text-gray-700 dark:bg-gray-900 dark:text-gray-300">
         {run.prompt}
       </pre>
+      {run.status === AgentRunStatus.RUNNING ? (
+        <AgentRunLiveTerminal runId={run.id} />
+      ) : null}
       {run.resultOutput ? (
         <>
           <h2 className="mt-6 text-sm font-medium text-gray-800 dark:text-white/90">

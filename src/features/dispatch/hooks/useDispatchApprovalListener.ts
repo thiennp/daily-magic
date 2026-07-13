@@ -8,6 +8,7 @@ import {
   sendDispatchApprovalResponse,
   type AgentRunInputRequest,
 } from "@/features/dispatch/utils/dispatchApprovalSocket";
+import { isAgentRunLiveTerminalActive } from "@/features/reports/utils/registerAgentRunLiveTerminal";
 
 export interface DispatchApprovalRequest {
   readonly runId: string;
@@ -39,6 +40,9 @@ export function useDispatchApprovalListener(): {
         setPendingApproval(request);
       },
       (request) => {
+        if (isAgentRunLiveTerminalActive(request.agentRunId)) {
+          return;
+        }
         setPendingInput(request);
       },
     );
