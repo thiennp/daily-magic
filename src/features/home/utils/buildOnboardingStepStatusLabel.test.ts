@@ -27,10 +27,10 @@ describe("buildOnboardingStepStatusLabel", () => {
     expect(
       buildOnboardingStepStatusLabel({
         id: "group",
-        label: "Join a team",
+        label: "Create a team",
         done: false,
         href: "/admin/groups",
       }),
-    ).toBe("Not joined");
+    ).toBe("Not created");
   });
 });

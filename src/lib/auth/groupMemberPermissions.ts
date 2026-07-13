@@ -68,6 +68,17 @@ export function canChangeMemberRole(
   return true;
 }
 
+export function canDeleteGroup(
+  actor: AuthActor,
+  actorMembership: GroupMembershipContext | null,
+): boolean {
+  if (isGlobalAdmin(actor)) {
+    return true;
+  }
+
+  return actorMembership?.role === GroupRole.GROUP_SUPER_ADMIN;
+}
+
 export function canRemoveMember(
   actor: AuthActor,
   actorMembership: GroupMembershipContext | null,

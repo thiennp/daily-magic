@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   canChangeMemberRole,
+  canDeleteGroup,
   canRemoveMember,
 } from "@/lib/auth/groupMemberPermissions";
 import type AuthActor from "@/lib/auth/types/AuthActor.type";
@@ -85,5 +86,13 @@ describe("permissions", () => {
     };
 
     expect(canRemoveMember(globalSuperAdmin, null, target)).toBe(true);
+  });
+
+  it("allows group super admin to delete their company", () => {
+    expect(canDeleteGroup(groupSuperAdmin, superMembership)).toBe(true);
+  });
+
+  it("prevents group admin from deleting a company", () => {
+    expect(canDeleteGroup(groupAdmin, adminMembership)).toBe(false);
   });
 });

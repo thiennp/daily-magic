@@ -8,8 +8,8 @@ export const demoOnboardingSteps = [
     href: "/#your-setup",
   },
   {
-    id: "join-team",
-    label: "Join a company",
+    id: "create-team",
+    label: "Create a company",
     done: true,
     href: "/admin/groups",
   },

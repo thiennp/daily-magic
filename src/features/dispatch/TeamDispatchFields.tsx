@@ -41,7 +41,8 @@ export default function TeamDispatchFields({
   if (groups.length === 0) {
     return (
       <p className="text-sm text-gray-500 dark:text-gray-400">
-        Join a {COMPANY_ENTITY_LABEL.toLowerCase()} to send tasks to colleagues.
+        Create a {COMPANY_ENTITY_LABEL.toLowerCase()} to send tasks to
+        colleagues, or ask an admin to add you to theirs.
       </p>
     );
   }

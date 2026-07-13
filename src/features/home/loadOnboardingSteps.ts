@@ -56,7 +56,7 @@ export async function loadOnboardingSteps(): Promise<
     },
     {
       id: "group",
-      label: "Join a team",
+      label: "Create a team",
       done: groupCount > 0,
       href: "/admin/groups",
     },

@@ -8,7 +8,7 @@ import GroupSelectionSection from "@/features/admin/components/GroupSelectionSec
 import GroupTeamActivityPanel from "@/features/admin/components/GroupTeamActivityPanel";
 import { useGroupManagement } from "@/features/admin/hooks/useGroupManagement";
 import type { GroupItem } from "@/features/admin/types/groupManagement.types";
-import { isPrivilegedGlobalRole } from "@/lib/auth/roles";
+import { GroupRole, isPrivilegedGlobalRole } from "@/lib/auth/roles";
 
 interface GroupManagementPanelProps {
   readonly initialGroups: readonly GroupItem[];
@@ -18,19 +18,29 @@ export default function GroupManagementPanel({
   initialGroups,
 }: GroupManagementPanelProps) {
   const { data: session } = useSession();
-  const isAdmin =
+  const groupManagement = useGroupManagement(initialGroups);
+  const actorUserId =
+    session?.user && "id" in session.user && typeof session.user.id === "string"
+      ? session.user.id
+      : null;
+  const actorMembership = groupManagement.members.find(
+    (member) => member.membership.userId === actorUserId,
+  )?.membership;
+  const isGlobalAdmin =
     session?.user?.globalRole &&
     isPrivilegedGlobalRole(session.user.globalRole);
-  const groupManagement = useGroupManagement(initialGroups);
+  const canDeleteTeam =
+    Boolean(isGlobalAdmin) ||
+    actorMembership?.role === GroupRole.GROUP_SUPER_ADMIN;
 
   return (
     <div className="space-y-6">
       <GroupSelectionSection
-        isAdmin={Boolean(isAdmin)}
         groups={groupManagement.groups}
         selectedGroupId={groupManagement.selectedGroupId}
         newGroupName={groupManagement.newGroupName}
         deleteMembers={groupManagement.deleteMembers}
+        canDeleteTeam={canDeleteTeam}
         onNewGroupNameChange={groupManagement.setNewGroupName}
         onSelectGroup={groupManagement.handleSelectGroup}
         onDeleteMembersChange={groupManagement.setDeleteMembers}

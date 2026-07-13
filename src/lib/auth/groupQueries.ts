@@ -1,4 +1,6 @@
+import { addUserToGroup } from "@/lib/auth/groupMembershipMutations";
 import { mapGroupRow } from "@/lib/auth/mapGroupRepositoryRow";
+import { GroupRole } from "@/lib/auth/roles";
 import type GroupRecord from "@/lib/auth/types/GroupRecord.type";
 import { asRowArray, getSql } from "@/lib/db";
 
@@ -63,6 +65,16 @@ export async function createGroup(name: string): Promise<GroupRecord> {
   );
 
   return mapGroupRow(result[0]);
+}
+
+export async function createGroupForOwner(
+  name: string,
+  ownerUserId: string,
+): Promise<GroupRecord> {
+  const group = await createGroup(name);
+  await addUserToGroup(group.id, ownerUserId, GroupRole.GROUP_SUPER_ADMIN);
+
+  return group;
 }
 
 export async function deleteGroupById(

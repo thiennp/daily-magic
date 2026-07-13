@@ -55,6 +55,23 @@ export async function listMembershipsForUser(
   return result.map((row) => mapMembershipRow(row));
 }
 
+export async function userOwnsGroupAsSuperAdmin(
+  userId: string,
+): Promise<boolean> {
+  const sql = getSql();
+  const result = asRowArray(
+    await sql`
+      SELECT 1
+      FROM group_memberships
+      WHERE user_id = ${userId}
+        AND role = 'group_super_admin'
+      LIMIT 1
+    `,
+  );
+
+  return result.length > 0;
+}
+
 export async function getMembershipById(
   membershipId: string,
 ): Promise<GroupMembershipRecord | null> {
