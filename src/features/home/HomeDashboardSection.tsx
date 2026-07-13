@@ -3,7 +3,6 @@ import { headers } from "next/headers";
 import HomeDashboardSectionClient from "@/features/home/HomeDashboardSectionClient";
 import { buildLocalAgentInstallCommandFromHeaders } from "@/lib/agentWitch/buildLocalAgentInstallCommand";
 import isAgentWitchWebSocketSupportedHost from "@/lib/agentWitch/isAgentWitchWebSocketSupportedHost";
-import { getAuthActor } from "@/lib/auth/auth";
 import type { GlobalRoleValue } from "@/lib/auth/roles";
 
 interface HomeDashboardSectionProps {
@@ -17,14 +16,9 @@ interface HomeDashboardSectionProps {
 export default async function HomeDashboardSection({
   user,
 }: HomeDashboardSectionProps) {
-  const actor = await getAuthActor();
   const requestHeaders = await headers();
-  const { installCommand } = buildLocalAgentInstallCommandFromHeaders(
-    requestHeaders,
-    {
-      profileEmail: actor?.email ?? null,
-    },
-  );
+  const { installCommand } =
+    buildLocalAgentInstallCommandFromHeaders(requestHeaders);
   const host =
     requestHeaders.get("x-forwarded-host") ?? requestHeaders.get("host") ?? "";
 

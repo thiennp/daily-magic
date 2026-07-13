@@ -72,8 +72,8 @@ if [[ -n "\${PROFILE_EMAIL}" ]]; then
   echo "Harness directory: \${INSTALL_DIR}/profiles/\${PROFILE_EMAIL}/harness"
 fi
 echo "Config: \${CONFIG_PATH}"
+echo "Local link API: http://127.0.0.1:47892/link-account"
 echo "Pairing token: \${PAIRING_TOKEN}"
-echo "Paste this token into the app under Local agent pairing."
 echo "Logs (macOS): \${INSTALL_DIR}/\${LOG_BASENAME}.log"
 echo "The client starts immediately and revives after crashes or disconnects."
 echo "Run another account on this computer with: AGENT_WITCH_PROFILE=other@example.com curl -fsSL <install-url> | bash"

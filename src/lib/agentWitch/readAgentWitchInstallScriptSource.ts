@@ -38,6 +38,16 @@ const AGENT_WITCH_INSTALL_SCRIPT_ALLOWLIST = {
     "scripts",
     "resolveAgentWitchLocalLayout.ts",
   ),
+  "ensureAgentWitchProfile.ts": path.join(
+    process.cwd(),
+    "scripts",
+    "ensureAgentWitchProfile.ts",
+  ),
+  "linkAgentWitchAccountLocally.ts": path.join(
+    process.cwd(),
+    "scripts",
+    "linkAgentWitchAccountLocally.ts",
+  ),
 } as const;
 
 export type AgentWitchInstallScriptName =

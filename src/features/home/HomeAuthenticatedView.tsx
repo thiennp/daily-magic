@@ -3,7 +3,8 @@ import TeamDirectoryPanel from "@/features/capabilities/TeamDirectoryPanel";
 import FeedbackInboxPanel from "@/features/feedback/FeedbackInboxPanel";
 import ImprovementReviewPanel from "@/features/improvements/ImprovementReviewPanel";
 import MarketplaceHomePromo from "@/features/harness/MarketplaceHomePromo";
-import HomeDashboardSection from "@/features/home/HomeDashboardSection";
+import HomeDashboardHero from "@/features/home/HomeDashboardHero";
+import HomeLinkAccountGate from "@/features/home/HomeLinkAccountGate";
 import HomeOnboardingChecklist from "@/features/home/HomeOnboardingChecklist";
 import HomePresencePanel from "@/features/home/HomePresencePanel";
 import HomeSetupSection from "@/features/home/HomeSetupSection";
@@ -13,7 +14,11 @@ import {
   HOME_MAIN_COLUMN_CLASS,
   HOME_RIGHT_RAIL_CLASS,
 } from "@/features/home/homeDashboardLayout.constant";
+import { buildAppOriginFromHeaders } from "@/lib/agentWitch/buildAgentWitchInstallUrls";
+import { buildLocalAgentInstallCommandFromHeaders } from "@/lib/agentWitch/buildLocalAgentInstallCommand";
+import isAgentWitchWebSocketSupportedHost from "@/lib/agentWitch/isAgentWitchWebSocketSupportedHost";
 import type { GlobalRoleValue } from "@/lib/auth/roles";
+import { headers } from "next/headers";
 
 interface HomeAuthenticatedViewProps {
   readonly user: {
@@ -23,28 +28,42 @@ interface HomeAuthenticatedViewProps {
   };
 }
 
-export default function HomeAuthenticatedView({
+export default async function HomeAuthenticatedView({
   user,
 }: HomeAuthenticatedViewProps) {
+  const requestHeaders = await headers();
+  const appOrigin = buildAppOriginFromHeaders(requestHeaders);
+  const { installCommand } =
+    buildLocalAgentInstallCommandFromHeaders(requestHeaders);
+  const host =
+    requestHeaders.get("x-forwarded-host") ?? requestHeaders.get("host") ?? "";
+
   return (
-    <div className={HOME_DASHBOARD_GRID_CLASS}>
-      <aside className={HOME_LEFT_RAIL_CLASS}>
-        <HomeOnboardingChecklist />
-        <HomePresencePanel />
-      </aside>
+    <HomeLinkAccountGate
+      appOrigin={appOrigin}
+      installCommand={installCommand}
+      isWebSocketSupported={isAgentWitchWebSocketSupportedHost(host)}
+      host={host}
+    >
+      <div className={HOME_DASHBOARD_GRID_CLASS}>
+        <aside className={HOME_LEFT_RAIL_CLASS}>
+          <HomeOnboardingChecklist />
+          <HomePresencePanel />
+        </aside>
 
-      <main className={HOME_MAIN_COLUMN_CLASS}>
-        <HomeDashboardSection user={user} />
-        <MyOfferingsPanel />
-        <TeamDirectoryPanel />
-      </main>
+        <main className={HOME_MAIN_COLUMN_CLASS}>
+          <HomeDashboardHero user={user} />
+          <MyOfferingsPanel />
+          <TeamDirectoryPanel />
+        </main>
 
-      <aside className={HOME_RIGHT_RAIL_CLASS}>
-        <FeedbackInboxPanel />
-        <ImprovementReviewPanel />
-        <MarketplaceHomePromo />
-        <HomeSetupSection />
-      </aside>
-    </div>
+        <aside className={HOME_RIGHT_RAIL_CLASS}>
+          <FeedbackInboxPanel />
+          <ImprovementReviewPanel />
+          <MarketplaceHomePromo />
+          <HomeSetupSection />
+        </aside>
+      </div>
+    </HomeLinkAccountGate>
   );
 }

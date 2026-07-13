@@ -13,7 +13,8 @@ const MAC_TERMINAL_STEPS: readonly ConnectComputerGuideStep[] = [
   },
   {
     title: "Copy the install command",
-    description: "Click the copy button next to the command below.",
+    description:
+      "The command is the same for every account on this Mac — it does not contain your email.",
   },
   {
     title: "Paste into Terminal and run it",
@@ -21,9 +22,9 @@ const MAC_TERMINAL_STEPS: readonly ConnectComputerGuideStep[] = [
       "Click inside Terminal, paste with Command (⌘) + V, then press Return.",
   },
   {
-    title: "Pair this browser",
+    title: "Link this account from the browser",
     description:
-      "When install finishes, copy the pairing code from Terminal. Open Your setup on the right, paste it under Connect this browser, and click Save and pair.",
+      "Come back here and click Link this Mac to my account. The browser calls http://127.0.0.1:47892/link-account on your Mac.",
   },
 ];
 

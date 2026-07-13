@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import { useDemoPreview } from "@/features/demo/DemoPreviewContext";
 import { fetchActivePairedDevices } from "@/features/harness/utils/pairedDevicesApi";
@@ -8,6 +8,7 @@ import { fetchActivePairedDevices } from "@/features/harness/utils/pairedDevices
 interface UseHasPairedDeviceResult {
   readonly hasPairedDevice: boolean;
   readonly isLoading: boolean;
+  readonly refresh: () => Promise<void>;
 }
 
 const isDemoComputerConnected = (
@@ -29,6 +30,16 @@ export function useHasPairedDevice(): UseHasPairedDeviceResult {
   const [hasPairedDevice, setHasPairedDevice] = useState(demoHasPairedDevice);
   const [isLoading, setIsLoading] = useState(!isDemoMode);
 
+  const refresh = useCallback(async (): Promise<void> => {
+    if (isDemoMode) {
+      return;
+    }
+
+    const result = await fetchActivePairedDevices();
+    setHasPairedDevice(result.devices.length > 0);
+    setIsLoading(false);
+  }, [isDemoMode]);
+
   useEffect(() => {
     if (isDemoMode) {
       return;
@@ -40,12 +51,27 @@ export function useHasPairedDevice(): UseHasPairedDeviceResult {
     });
   }, [isDemoMode]);
 
+  useEffect(() => {
+    if (isDemoMode || hasPairedDevice) {
+      return;
+    }
+
+    const timer = setInterval(() => {
+      void refresh();
+    }, 5000);
+
+    return () => {
+      clearInterval(timer);
+    };
+  }, [isDemoMode, hasPairedDevice, refresh]);
+
   if (isDemoMode) {
     return {
       hasPairedDevice: demoHasPairedDevice,
       isLoading: false,
+      refresh: async () => undefined,
     };
   }
 
-  return { hasPairedDevice, isLoading };
+  return { hasPairedDevice, isLoading, refresh };
 }

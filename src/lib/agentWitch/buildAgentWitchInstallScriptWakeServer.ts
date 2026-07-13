@@ -4,12 +4,16 @@ export const buildAgentWitchInstallScriptWakeServer = (input: {
   readonly wakeListTargetsScriptUrl: string;
   readonly wakeKickstartScriptUrl: string;
   readonly wakeHandlersScriptUrl: string;
+  readonly wakeEnsureProfileScriptUrl: string;
+  readonly wakeLinkAccountScriptUrl: string;
 }): string => `
 WAKE_SERVER_SCRIPT_URL="${input.wakeServerScriptUrl}"
 WAKE_CONSTANTS_SCRIPT_URL="${input.wakeConstantsScriptUrl}"
 WAKE_LIST_TARGETS_SCRIPT_URL="${input.wakeListTargetsScriptUrl}"
 WAKE_KICKSTART_SCRIPT_URL="${input.wakeKickstartScriptUrl}"
 WAKE_HANDLERS_SCRIPT_URL="${input.wakeHandlersScriptUrl}"
+WAKE_ENSURE_PROFILE_SCRIPT_URL="${input.wakeEnsureProfileScriptUrl}"
+WAKE_LINK_ACCOUNT_SCRIPT_URL="${input.wakeLinkAccountScriptUrl}"
 WAKE_LAUNCH_AGENT_LABEL="com.daily-magic.agent-witch-wake"
 WAKE_PLIST_PATH="\${HOME}/Library/LaunchAgents/\${WAKE_LAUNCH_AGENT_LABEL}.plist"
 
@@ -19,6 +23,8 @@ echo "Downloading Agent Witch wake server from \${WAKE_SERVER_SCRIPT_URL}…"
 "\${CURL_BIN}" -fsSL "\${WAKE_LIST_TARGETS_SCRIPT_URL}" -o "\${INSTALL_DIR}/listAgentWitchLaunchTargets.ts"
 "\${CURL_BIN}" -fsSL "\${WAKE_KICKSTART_SCRIPT_URL}" -o "\${INSTALL_DIR}/kickstartAgentWitchLaunchAgent.ts"
 "\${CURL_BIN}" -fsSL "\${WAKE_HANDLERS_SCRIPT_URL}" -o "\${INSTALL_DIR}/agentWitchWakeHandlers.ts"
+"\${CURL_BIN}" -fsSL "\${WAKE_ENSURE_PROFILE_SCRIPT_URL}" -o "\${INSTALL_DIR}/ensureAgentWitchProfile.ts"
+"\${CURL_BIN}" -fsSL "\${WAKE_LINK_ACCOUNT_SCRIPT_URL}" -o "\${INSTALL_DIR}/linkAgentWitchAccountLocally.ts"
 
 if [[ "\$(uname -s)" == "Darwin" ]]; then
   cat > "\${WAKE_PLIST_PATH}" <<EOF
@@ -63,6 +69,6 @@ EOF
   launchctl bootstrap "gui/\$(id -u)" "\${WAKE_PLIST_PATH}"
   launchctl enable "gui/\$(id -u)/\${WAKE_LAUNCH_AGENT_LABEL}"
   launchctl kickstart -k "gui/\$(id -u)/\${WAKE_LAUNCH_AGENT_LABEL}"
-  echo "Agent Witch wake server: http://127.0.0.1:47892/wake"
+  echo "Agent Witch local API: http://127.0.0.1:47892/link-account"
 fi
 `;

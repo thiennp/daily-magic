@@ -12,6 +12,8 @@ export const buildAgentWitchInstallBashScript = (input: {
   readonly wakeListTargetsScriptUrl: string;
   readonly wakeKickstartScriptUrl: string;
   readonly wakeHandlersScriptUrl: string;
+  readonly wakeEnsureProfileScriptUrl: string;
+  readonly wakeLinkAccountScriptUrl: string;
   readonly websocketSupportWarning: string;
 }): string =>
   `${buildAgentWitchInstallScriptSetup({
@@ -27,5 +29,7 @@ export const buildAgentWitchInstallBashScript = (input: {
       wakeListTargetsScriptUrl: input.wakeListTargetsScriptUrl,
       wakeKickstartScriptUrl: input.wakeKickstartScriptUrl,
       wakeHandlersScriptUrl: input.wakeHandlersScriptUrl,
+      wakeEnsureProfileScriptUrl: input.wakeEnsureProfileScriptUrl,
+      wakeLinkAccountScriptUrl: input.wakeLinkAccountScriptUrl,
     },
   )}`;

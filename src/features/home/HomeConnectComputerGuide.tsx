@@ -11,6 +11,9 @@ interface HomeConnectComputerGuideProps {
   readonly installCommand: string;
   readonly isWebSocketSupported: boolean;
   readonly host: string;
+  readonly isLinking?: boolean;
+  readonly linkError?: string | null;
+  readonly onLinkNow?: () => void;
 }
 
 const subscribeToOperatingSystem = () => () => undefined;
@@ -21,6 +24,9 @@ export default function HomeConnectComputerGuide({
   installCommand,
   isWebSocketSupported,
   host,
+  isLinking = false,
+  linkError = null,
+  onLinkNow,
 }: HomeConnectComputerGuideProps) {
   const operatingSystem = useSyncExternalStore(
     subscribeToOperatingSystem,
@@ -38,8 +44,9 @@ export default function HomeConnectComputerGuide({
         Link this account to your Mac
       </h1>
       <p className="mt-3 text-sm text-gray-600 dark:text-gray-400">
-        Follow these steps on the Mac you want Agent Witch to run on. When
-        pairing is complete, you can send tasks from this browser.
+        Run install once on your Mac. This browser talks to the local Agent
+        Witch API to link whichever account you are signed in with — no email in
+        the install command, and no reinstall when you switch users.
       </p>
 
       {!isWebSocketSupported ? (
@@ -70,7 +77,24 @@ export default function HomeConnectComputerGuide({
       </ol>
 
       {isWebSocketSupported ? (
-        <CopyableBashCommand command={installCommand} iconOnly />
+        <>
+          <CopyableBashCommand command={installCommand} iconOnly />
+          <div className="mt-4 flex flex-wrap items-center gap-3">
+            <button
+              type="button"
+              onClick={onLinkNow}
+              disabled={isLinking}
+              className="inline-flex h-10 items-center justify-center rounded-lg bg-brand-500 px-5 text-sm font-medium text-white transition hover:bg-brand-600 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {isLinking ? "Linking this Mac…" : "Link this Mac to my account"}
+            </button>
+            {linkError !== null ? (
+              <p className="text-sm text-error-600 dark:text-error-500">
+                {linkError}
+              </p>
+            ) : null}
+          </div>
+        </>
       ) : null}
     </section>
   );

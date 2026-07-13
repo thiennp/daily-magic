@@ -3,16 +3,12 @@ import { headers } from "next/headers";
 import CopyableBashCommand from "@/features/home/CopyableBashCommand";
 import AgentWitchUnsupportedHostNotice from "@/features/home/AgentWitchUnsupportedHostNotice";
 import { buildLocalAgentInstallCommandFromHeaders } from "@/lib/agentWitch/buildLocalAgentInstallCommand";
-import { getAuthActor } from "@/lib/auth/auth";
 import isAgentWitchWebSocketSupportedHost from "@/lib/agentWitch/isAgentWitchWebSocketSupportedHost";
 
 export default async function LocalAgentSetupInstructions() {
-  const actor = await getAuthActor();
   const requestHeaders = await headers();
   const { installCommand, installScriptUrl, wsUrl } =
-    buildLocalAgentInstallCommandFromHeaders(requestHeaders, {
-      profileEmail: actor?.email ?? null,
-    });
+    buildLocalAgentInstallCommandFromHeaders(requestHeaders);
   const host =
     requestHeaders.get("x-forwarded-host") ?? requestHeaders.get("host") ?? "";
   const isWebSocketSupported = isAgentWitchWebSocketSupportedHost(host);
@@ -39,16 +35,12 @@ export default async function LocalAgentSetupInstructions() {
         <CopyableBashCommand command={installCommand} />
       ) : null}
       <p className="mt-3 text-xs text-gray-500 dark:text-gray-400">
-        After install, copy the pairing code from the terminal into{" "}
-        <strong>Connect this browser</strong> above. Then you can send tasks
-        from{" "}
-        <a
-          href="/agent"
-          className="text-brand-600 hover:underline dark:text-brand-400"
-        >
-          Send a task
-        </a>
-        .
+        After install, use <strong>Link this Mac to my account</strong> on the
+        home page. The browser calls the local API at{" "}
+        <code className="rounded bg-white px-1 py-0.5 dark:bg-gray-800">
+          http://127.0.0.1:47892/link-account
+        </code>
+        . Sign in as a different user and link again — no reinstall needed.
       </p>
       <details className="mt-3 text-xs text-gray-500 dark:text-gray-400">
         <summary className="cursor-pointer font-medium text-gray-600 dark:text-gray-300">

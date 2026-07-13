@@ -38,6 +38,14 @@ export const renderInstallAgentWitchScript = (origin: string): string => {
     origin,
     "agentWitchWakeHandlers.ts",
   );
+  const wakeEnsureProfileScriptUrl = buildAgentWitchInstallAuxiliaryScriptUrl(
+    origin,
+    "ensureAgentWitchProfile.ts",
+  );
+  const wakeLinkAccountScriptUrl = buildAgentWitchInstallAuxiliaryScriptUrl(
+    origin,
+    "linkAgentWitchAccountLocally.ts",
+  );
   const websocketSupportWarning = buildAgentWitchWebSocketSupportWarning(
     origin,
     wsUrl,
@@ -53,6 +61,8 @@ export const renderInstallAgentWitchScript = (origin: string): string => {
     wakeListTargetsScriptUrl,
     wakeKickstartScriptUrl,
     wakeHandlersScriptUrl,
+    wakeEnsureProfileScriptUrl,
+    wakeLinkAccountScriptUrl,
     websocketSupportWarning,
   });
 };

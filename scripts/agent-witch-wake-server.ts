@@ -3,6 +3,7 @@ import http from "node:http";
 import {
   buildAgentWitchWakeHealthResponse,
   buildAgentWitchWakeIdentityResponse,
+  linkAgentWitchAccountFromWakeServer,
   wakeAgentWitchLaunchAgents,
 } from "./agentWitchWakeHandlers";
 import { resolveAgentWitchWakePort } from "./agentWitchWakeConstants";
@@ -11,6 +12,7 @@ const WAKE_SERVER_CORS_HEADERS = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
   "Access-Control-Allow-Headers": "Content-Type",
+  "Access-Control-Allow-Private-Network": "true",
   "Content-Type": "application/json; charset=utf-8",
 } as const;
 
@@ -48,6 +50,28 @@ const handleWakeRequest = async (
   if (request.method === "POST" && pathname === "/wake") {
     const wakeResult = await wakeAgentWitchLaunchAgents();
     sendJson(response, wakeResult.ok ? 200 : 503, wakeResult);
+    return;
+  }
+
+  if (request.method === "POST" && pathname === "/link-account") {
+    const chunks: Buffer[] = [];
+    for await (const chunk of request) {
+      chunks.push(Buffer.from(chunk));
+    }
+
+    let body: unknown = {};
+    try {
+      body = JSON.parse(Buffer.concat(chunks).toString("utf8"));
+    } catch {
+      sendJson(response, 400, {
+        ok: false,
+        errorMessage: "Invalid JSON body.",
+      });
+      return;
+    }
+
+    const linkResult = await linkAgentWitchAccountFromWakeServer(body);
+    sendJson(response, linkResult.ok ? 200 : 400, linkResult);
     return;
   }
 

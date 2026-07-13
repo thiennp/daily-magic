@@ -8,6 +8,7 @@ import {
   type OnboardingStep,
 } from "@/features/home/loadOnboardingSteps";
 import buildOnboardingStepStatusLabel from "@/features/home/utils/buildOnboardingStepStatusLabel";
+import OnboardingStepStatusIcon from "@/features/home/OnboardingStepStatusIcon";
 
 export default function HomeOnboardingChecklist() {
   const demoPreview = useDemoPreview();
@@ -41,14 +42,17 @@ export default function HomeOnboardingChecklist() {
       <ul className="mt-4 space-y-3">
         {steps.map((step) => (
           <li key={step.id} className="flex items-center justify-between gap-3">
-            <span
-              className={
-                step.done
-                  ? "text-sm text-gray-500 line-through dark:text-gray-400"
-                  : "text-sm text-gray-800 dark:text-white/90"
-              }
-            >
-              {step.label}
+            <span className="flex min-w-0 items-center gap-3">
+              <OnboardingStepStatusIcon step={step} />
+              <span
+                className={
+                  step.done
+                    ? "text-sm text-gray-500 line-through dark:text-gray-400"
+                    : "text-sm text-gray-800 dark:text-white/90"
+                }
+              >
+                {step.label}
+              </span>
             </span>
             <span
               className={
