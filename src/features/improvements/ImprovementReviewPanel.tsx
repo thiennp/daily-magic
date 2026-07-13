@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { useDemoPreview } from "@/features/demo/DemoPreviewContext";
 import type { CapabilityImprovementInboxItem } from "@/lib/improvements/types/CapabilityImprovementRecord.type";
@@ -12,7 +12,7 @@ export default function ImprovementReviewPanel() {
   );
   const [isLoading, setIsLoading] = useState(() => !demoPreview);
 
-  const loadItems = useCallback(async (): Promise<void> => {
+  const loadItems = async (): Promise<void> => {
     if (demoPreview) {
       return;
     }
@@ -35,7 +35,7 @@ export default function ImprovementReviewPanel() {
     } finally {
       setIsLoading(false);
     }
-  }, [demoPreview]);
+  };
 
   useEffect(() => {
     if (demoPreview) {
