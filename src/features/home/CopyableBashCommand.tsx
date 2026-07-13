@@ -1,28 +1,56 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 
+import {
+  LOCAL_TERMINAL_COPY_BUTTON_CLASS_NAME,
+  LOCAL_TERMINAL_PRE_CLASS_NAME,
+} from "@/features/home/localTerminalSurface.constant";
 import { CheckLineIcon, CopyIcon } from "@/icons";
 
 interface CopyableBashCommandProps {
   readonly command: string;
   readonly iconOnly?: boolean;
+  readonly onEngaged?: () => void;
 }
 
 export default function CopyableBashCommand({
   command,
   iconOnly = false,
+  onEngaged,
 }: CopyableBashCommandProps) {
+  const preRef = useRef<HTMLPreElement>(null);
   const [copied, setCopied] = useState(false);
 
+  const reportEngaged = useCallback(() => {
+    onEngaged?.();
+  }, [onEngaged]);
+
   const handleCopy = useCallback(() => {
+    reportEngaged();
     void navigator.clipboard.writeText(command).then(() => {
       setCopied(true);
       window.setTimeout(() => {
         setCopied(false);
       }, 2000);
     });
-  }, [command]);
+  }, [command, reportEngaged]);
+
+  const handleSelectionEngage = useCallback(() => {
+    const selection = window.getSelection();
+    const preElement = preRef.current;
+
+    if (
+      selection === null ||
+      selection.isCollapsed ||
+      preElement === null ||
+      !preElement.contains(selection.anchorNode)
+    ) {
+      return;
+    }
+
+    reportEngaged();
+  }, [reportEngaged]);
 
   return (
     <div className="relative mt-4">
@@ -32,8 +60,8 @@ export default function CopyableBashCommand({
         aria-label={copied ? "Copied" : "Copy install command"}
         className={
           iconOnly
-            ? "absolute right-3 top-3 inline-flex h-9 w-9 items-center justify-center rounded-md border border-gray-200 bg-white text-gray-600 shadow-sm transition hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
-            : "absolute right-3 top-3 inline-flex items-center gap-1.5 rounded-md border border-gray-200 bg-white px-2.5 py-1.5 text-xs font-medium text-gray-600 shadow-sm transition hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
+            ? `absolute right-3 top-3 ${LOCAL_TERMINAL_COPY_BUTTON_CLASS_NAME}`
+            : "absolute right-3 top-3 inline-flex items-center gap-1.5 rounded-md border border-gray-200 bg-gray-100 px-2.5 py-1.5 text-xs font-medium text-gray-600 shadow-sm transition hover:bg-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
         }
       >
         {copied ? (
@@ -55,10 +83,13 @@ export default function CopyableBashCommand({
         )}
       </button>
       <pre
+        ref={preRef}
+        onMouseUp={handleSelectionEngage}
+        onKeyUp={handleSelectionEngage}
         className={
           iconOnly
-            ? "overflow-x-auto rounded-lg border border-gray-200 bg-white p-4 pr-14 text-left text-sm text-gray-800 dark:border-gray-700 dark:bg-gray-950 dark:text-gray-200"
-            : "overflow-x-auto rounded-lg border border-gray-200 bg-white p-4 pr-24 text-left text-sm text-gray-800 dark:border-gray-700 dark:bg-gray-950 dark:text-gray-200"
+            ? `${LOCAL_TERMINAL_PRE_CLASS_NAME} pr-14`
+            : `${LOCAL_TERMINAL_PRE_CLASS_NAME} pr-24`
         }
       >
         <code>{command}</code>

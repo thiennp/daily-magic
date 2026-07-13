@@ -1,14 +1,19 @@
 "use client";
 
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
+import { isLocalAgentWitchWakeServerReachable } from "@/lib/agentWitch/isLocalAgentWitchWakeServerReachable";
 import { linkLocalAgentToSignedInAccount } from "@/lib/agentWitch/linkLocalAgentAccount";
+
+const AUTO_LINK_POLL_MS = 5_000;
 
 export function useLinkLocalAgentAccount({
   appOrigin,
+  autoLink,
   onLinked,
 }: {
   readonly appOrigin: string;
+  readonly autoLink: boolean;
   readonly onLinked?: () => void;
 }): {
   readonly isLinking: boolean;
@@ -38,6 +43,41 @@ export function useLinkLocalAgentAccount({
     linkingInFlightRef.current = false;
     setIsLinking(false);
   }, [appOrigin, onLinked]);
+
+  useEffect(() => {
+    if (!autoLink) {
+      return;
+    }
+
+    const activeRef = { current: true };
+
+    const tryAutoLink = async (): Promise<void> => {
+      if (!activeRef.current || linkingInFlightRef.current) {
+        return;
+      }
+
+      const isReachable = await isLocalAgentWitchWakeServerReachable();
+      if (!activeRef.current || !isReachable) {
+        return;
+      }
+
+      await linkNow();
+    };
+
+    const timer = setInterval(() => {
+      void tryAutoLink();
+    }, AUTO_LINK_POLL_MS);
+
+    const initialTimer = setTimeout(() => {
+      void tryAutoLink();
+    }, 0);
+
+    return () => {
+      activeRef.current = false;
+      clearInterval(timer);
+      clearTimeout(initialTimer);
+    };
+  }, [autoLink, linkNow]);
 
   return { isLinking, linkError, linkNow };
 }

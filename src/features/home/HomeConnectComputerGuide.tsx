@@ -1,10 +1,14 @@
 "use client";
 
-import { useSyncExternalStore } from "react";
+import { useCallback, useState, useSyncExternalStore } from "react";
 
 import AgentWitchUnsupportedHostNotice from "@/features/home/AgentWitchUnsupportedHostNotice";
 import CopyableBashCommand from "@/features/home/CopyableBashCommand";
 import buildConnectComputerGuideSteps from "@/features/home/utils/buildConnectComputerGuideSteps";
+import {
+  buildConnectInstallConnectionStatus,
+  buildConnectInstallConnectionStatusClassName,
+} from "@/features/home/utils/buildConnectInstallConnectionStatus";
 import detectBrowserOperatingSystem from "@/features/home/utils/detectBrowserOperatingSystem";
 
 interface HomeConnectComputerGuideProps {
@@ -13,7 +17,6 @@ interface HomeConnectComputerGuideProps {
   readonly host: string;
   readonly isLinking?: boolean;
   readonly linkError?: string | null;
-  readonly onLinkNow?: () => void;
 }
 
 const subscribeToOperatingSystem = () => () => undefined;
@@ -26,14 +29,23 @@ export default function HomeConnectComputerGuide({
   host,
   isLinking = false,
   linkError = null,
-  onLinkNow,
 }: HomeConnectComputerGuideProps) {
+  const [installEngaged, setInstallEngaged] = useState(false);
   const operatingSystem = useSyncExternalStore(
     subscribeToOperatingSystem,
     detectBrowserOperatingSystem,
     getServerOperatingSystemSnapshot,
   );
   const steps = buildConnectComputerGuideSteps(operatingSystem);
+  const connectionStatus = buildConnectInstallConnectionStatus({
+    installEngaged,
+    isLinking,
+    linkError,
+  });
+
+  const handleInstallEngaged = useCallback(() => {
+    setInstallEngaged(true);
+  }, []);
 
   return (
     <section className="overflow-hidden rounded-3xl border border-brand-200/80 bg-gradient-to-br from-brand-50 via-white to-white p-8 shadow-theme-sm ring-1 ring-brand-100/80 dark:border-brand-900/40 dark:from-brand-950/30 dark:via-white/[0.02] dark:to-white/[0.02] dark:ring-brand-900/30">
@@ -78,22 +90,21 @@ export default function HomeConnectComputerGuide({
 
       {isWebSocketSupported ? (
         <>
-          <CopyableBashCommand command={installCommand} iconOnly />
-          <div className="mt-4 flex flex-wrap items-center gap-3">
-            <button
-              type="button"
-              onClick={onLinkNow}
-              disabled={isLinking}
-              className="inline-flex h-10 items-center justify-center rounded-lg bg-brand-500 px-5 text-sm font-medium text-white transition hover:bg-brand-600 disabled:cursor-not-allowed disabled:opacity-50"
+          <CopyableBashCommand
+            command={installCommand}
+            iconOnly
+            onEngaged={handleInstallEngaged}
+          />
+          {connectionStatus !== null ? (
+            <p
+              className={buildConnectInstallConnectionStatusClassName(
+                connectionStatus.tone,
+              )}
+              role="status"
             >
-              {isLinking ? "Linking this Mac…" : "Link this Mac to my account"}
-            </button>
-            {linkError !== null ? (
-              <p className="text-sm text-error-600 dark:text-error-500">
-                {linkError}
-              </p>
-            ) : null}
-          </div>
+              {connectionStatus.message}
+            </p>
+          ) : null}
         </>
       ) : null}
     </section>

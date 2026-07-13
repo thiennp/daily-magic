@@ -31,8 +31,9 @@ export default function HomeLinkAccountGate({
   const handleLinked = useCallback(() => {
     void refresh();
   }, [refresh]);
-  const { isLinking, linkError, linkNow } = useLinkLocalAgentAccount({
+  const { isLinking, linkError } = useLinkLocalAgentAccount({
     appOrigin,
+    autoLink: !isLoading && !hasPairedDevice,
     onLinked: handleLinked,
   });
 
@@ -66,9 +67,6 @@ export default function HomeLinkAccountGate({
             host={host}
             isLinking={isLinking}
             linkError={linkError}
-            onLinkNow={() => {
-              void linkNow();
-            }}
           />
         </main>
       </div>

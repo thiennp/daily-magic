@@ -7,8 +7,8 @@ describe("buildConnectComputerGuideSteps", () => {
     const steps = buildConnectComputerGuideSteps("mac");
 
     expect(steps[0]?.title).toBe("Open Terminal");
-    expect(steps[3]?.title).toBe("Link this account from the browser");
-    expect(steps).toHaveLength(4);
+    expect(steps[2]?.title).toBe("Paste into Terminal and run it");
+    expect(steps).toHaveLength(3);
   });
 
   it("prepends a mac requirement step for windows users", () => {
@@ -16,6 +16,6 @@ describe("buildConnectComputerGuideSteps", () => {
 
     expect(steps[0]?.title).toBe("Use a Mac");
     expect(steps[1]?.title).toBe("Open Terminal");
-    expect(steps).toHaveLength(5);
+    expect(steps).toHaveLength(4);
   });
 });

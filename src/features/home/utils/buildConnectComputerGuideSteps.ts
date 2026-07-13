@@ -21,11 +21,6 @@ const MAC_TERMINAL_STEPS: readonly ConnectComputerGuideStep[] = [
     description:
       "Click inside Terminal, paste with Command (⌘) + V, then press Return.",
   },
-  {
-    title: "Link this account from the browser",
-    description:
-      "Come back here and click Link this Mac to my account. The browser calls http://127.0.0.1:47892/link-account on your Mac.",
-  },
 ];
 
 const buildConnectComputerGuideSteps = (
