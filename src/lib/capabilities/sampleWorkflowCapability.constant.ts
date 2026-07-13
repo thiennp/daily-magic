@@ -29,3 +29,11 @@ export const SAMPLE_WORKFLOW_FIELDS: readonly WorkflowFieldDefinition[] = [
     required: false,
   },
 ];
+
+export const SAMPLE_WORKFLOW_PREVIEW_FIELD_VALUES: Readonly<
+  Record<string, string>
+> = {
+  weekOf: "Jul 7",
+  highlights: "Shipped the library sample workflow and onboarding guide.",
+  blockers: "Waiting on design review for the hero copy.",
+};
