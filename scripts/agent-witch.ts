@@ -21,8 +21,9 @@ import {
 import {
   continueClaudeTaskAfterInput,
   replayPendingRunInputRequests,
-  runClaudeTask,
+  runWriterTask,
 } from "./agentWitchRunSessions";
+import { ensureHarnessWriterCli } from "./ensureHarnessWriterCli";
 import {
   buildWriterCliInvocation,
   isHarnessWriterAgentId,
@@ -184,6 +185,53 @@ const reportHarnessManifest = (
   });
 };
 
+const dispatchWriterTask = async (
+  config: AgentWitchConfig,
+  writerAgent: string,
+  prompt: string,
+  requestId: string | undefined,
+  socket: WebSocket,
+  agentRunId?: string,
+): Promise<void> => {
+  if (!isHarnessWriterAgentId(writerAgent)) {
+    sendMessage(socket, {
+      type: "command.claude.result",
+      payload: {
+        exitCode: -1,
+        output: `Unsupported writer agent: ${writerAgent}`,
+        ...(agentRunId !== undefined ? { agentRunId } : {}),
+      },
+      requestId,
+    });
+    return;
+  }
+
+  try {
+    await ensureHarnessWriterCli(config.layout.installDir, writerAgent);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    sendMessage(socket, {
+      type: "command.claude.result",
+      payload: {
+        exitCode: -1,
+        output: `Failed to prepare ${writerAgent}: ${message}`,
+        ...(agentRunId !== undefined ? { agentRunId } : {}),
+      },
+      requestId,
+    });
+    return;
+  }
+
+  runWriterTask(
+    config,
+    writerAgent,
+    prompt,
+    requestId,
+    socket,
+    agentRunId,
+  );
+};
+
 const runWriterProcess = (
   config: AgentWitchConfig,
   writerAgent: string,
@@ -293,7 +341,19 @@ const runHarnessRequest = async (
     return;
   }
 
-  const result = await runWriterProcess(config, writerAgent, instruction);
+  const result = await (async () => {
+    try {
+      await ensureHarnessWriterCli(config.layout.installDir, writerAgent);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      return {
+        exitCode: -1,
+        output: `Failed to prepare ${writerAgent}: ${message}`,
+      };
+    }
+
+    return runWriterProcess(config, writerAgent, instruction);
+  })();
 
   sendMessage(socket, {
     type: "harness.request.result",
@@ -458,14 +518,26 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
 
         if (parsed.type === "command.claude.run" && isRecord(parsed.payload)) {
           const prompt = parsed.payload.prompt;
+          const writerAgent =
+            typeof parsed.payload.writerAgent === "string" &&
+            isHarnessWriterAgentId(parsed.payload.writerAgent)
+              ? parsed.payload.writerAgent
+              : "claude-cli";
           const agentRunId =
             typeof parsed.payload.agentRunId === "string"
               ? parsed.payload.agentRunId
               : undefined;
 
           if (typeof prompt === "string" && prompt.trim().length > 0) {
-            console.log("[agent-witch] Running Claude CLI task…");
-            runClaudeTask(config, prompt.trim(), requestId, socket, agentRunId);
+            console.log(`[agent-witch] Running ${writerAgent} task…`);
+            void dispatchWriterTask(
+              config,
+              writerAgent,
+              prompt.trim(),
+              requestId,
+              socket,
+              agentRunId,
+            );
           }
         }
 

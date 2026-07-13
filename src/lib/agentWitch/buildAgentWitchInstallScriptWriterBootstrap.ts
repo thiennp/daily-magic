@@ -1,8 +1,21 @@
-import { AGENT_WITCH_INSTALL_SCRIPT_PATH_EXPORT } from "@/lib/agentWitch/buildAgentWitchInstallScriptWriterPath";
-
 export const buildAgentWitchInstallScriptWriterBootstrap = (): string => `
-echo "Bootstrapping local writer CLIs (Claude, Codex, Cursor, Antigravity)…"
-${AGENT_WITCH_INSTALL_SCRIPT_PATH_EXPORT}
+echo "Writer CLIs install on your first task — choose which AI to use in the browser."
+cat > "\${INSTALL_DIR}/ensure-writer.sh" <<'ENSURE_WRITER_EOF'
+#!/usr/bin/env bash
+set -euo pipefail
+NODE_BIN="$(command -v node)"
+CURL_BIN="$(command -v curl)"
+
+if [[ -z "\${NODE_BIN}" ]]; then
+  echo "Node.js is required." >&2
+  exit 1
+fi
+
+if [[ -z "\${CURL_BIN}" ]]; then
+  echo "curl is required." >&2
+  exit 1
+fi
+
 agent_witch_has_command() {
   command -v "$1" >/dev/null 2>&1
 }
@@ -85,8 +98,24 @@ agent_witch_ensure_antigravity_cli() {
   fi
 }
 
-agent_witch_ensure_claude_cli
-agent_witch_ensure_codex_cli
-agent_witch_ensure_cursor_cli
-agent_witch_ensure_antigravity_cli
+case "\${1:-}" in
+  claude-cli)
+    agent_witch_ensure_claude_cli
+    ;;
+  codex)
+    agent_witch_ensure_codex_cli
+    ;;
+  cursor)
+    agent_witch_ensure_cursor_cli
+    ;;
+  antigravity)
+    agent_witch_ensure_antigravity_cli
+    ;;
+  *)
+    echo "Unknown writer agent: \${1:-}" >&2
+    exit 1
+    ;;
+esac
+ENSURE_WRITER_EOF
+chmod +x "\${INSTALL_DIR}/ensure-writer.sh"
 `;

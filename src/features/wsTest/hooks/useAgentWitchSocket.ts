@@ -10,6 +10,7 @@ import {
 import { buildDemoClaudePromptAck } from "@/features/wsTest/utils/buildDemoClaudePromptAck";
 import { sendClaudePromptOverSocket } from "@/features/wsTest/utils/sendClaudePromptOverSocket";
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
+import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
 
 import type { WsTestConnectionStatus } from "../types/WsTestConnectionStatus.type";
 
@@ -19,6 +20,7 @@ export interface UseAgentWitchSocketResult {
   readonly sendClaudePrompt: (
     prompt: string,
     options?: {
+      readonly writerAgent: HarnessWriterAgent;
       readonly targetUserId?: string;
       readonly groupId?: string;
       readonly capabilityId?: string;
@@ -81,13 +83,14 @@ export function useAgentWitchSocket(): UseAgentWitchSocketResult {
     (
       prompt: string,
       options?: {
+        readonly writerAgent: HarnessWriterAgent;
         readonly targetUserId?: string;
         readonly groupId?: string;
         readonly capabilityId?: string;
       },
     ) => {
       const trimmedPrompt = prompt.trim();
-      if (trimmedPrompt.length === 0) {
+      if (trimmedPrompt.length === 0 || options === undefined) {
         return;
       }
 
@@ -99,9 +102,10 @@ export function useAgentWitchSocket(): UseAgentWitchSocketResult {
       sendClaudePromptOverSocket({
         socket: socketRef.current,
         prompt: trimmedPrompt,
-        targetUserId: options?.targetUserId,
-        groupId: options?.groupId,
-        capabilityId: options?.capabilityId,
+        writerAgent: options.writerAgent,
+        targetUserId: options.targetUserId,
+        groupId: options.groupId,
+        capabilityId: options.capabilityId,
         onResponse: setLastResponse,
       });
     },

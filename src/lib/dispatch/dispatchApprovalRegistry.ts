@@ -4,6 +4,7 @@ export interface PendingDispatchApproval {
   readonly executorUserId: string;
   readonly prompt: string;
   readonly groupId: string | null;
+  readonly writerAgent: string;
   readonly requestId?: string;
   readonly approvalExpiresAt?: string | null;
 }

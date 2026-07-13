@@ -8,6 +8,7 @@ import { setAgentRunApprovalExpiry } from "@/lib/dispatch/setAgentRunApprovalExp
 import { dispatchApprovalRegistry } from "@/lib/dispatch/dispatchApprovalRegistry";
 import { notifyDashboardUser } from "@/lib/dispatch/dispatchClaudeRunToAgent";
 import type { DispatchPolicyValue } from "@/lib/dispatch/DispatchPolicy.constant";
+import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
 
 export const sendPendingApprovalDispatch = (
   runtime: AgentWitchHubRuntime,
@@ -17,6 +18,7 @@ export const sendPendingApprovalDispatch = (
   prompt: string,
   groupId: string | null,
   dispatchPolicy: DispatchPolicyValue,
+  writerAgent: HarnessWriterAgent,
   requestId?: string,
 ): AgentWitchMessage => {
   const approvalExpiresAt = buildDispatchApprovalExpiresAt();
@@ -29,6 +31,7 @@ export const sendPendingApprovalDispatch = (
     executorUserId: run.executorUserId,
     prompt,
     groupId,
+    writerAgent,
     requestId,
     approvalExpiresAt,
   });

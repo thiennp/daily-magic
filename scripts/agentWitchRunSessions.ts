@@ -7,6 +7,11 @@ import {
 
 import type { AgentWitchLocalLayout } from "./resolveAgentWitchLocalLayout";
 import {
+  buildWriterCliInvocation,
+  type HarnessWriterAgentId,
+  resolveWriterCliCommands,
+} from "./buildWriterCliInvocation";
+import {
   listPendingRunInputSessions,
   removePendingRunInputSession,
   savePendingRunInputSession,
@@ -21,17 +26,29 @@ import type WebSocket from "ws";
 
 interface AgentWitchRunConfig {
   readonly claudeCommand: string;
+  readonly codexCommand: string;
+  readonly cursorCommand: string;
+  readonly antigravityCommand: string;
   readonly workspace: string;
   readonly layout: AgentWitchLocalLayout;
 }
 
 interface ActiveRunSession {
   readonly originalPrompt: string;
+  readonly writerAgent: HarnessWriterAgentId;
   accumulatedOutput: string;
 }
 
 const activeChildren = new Map<string, ChildProcess>();
 const runSessions = new Map<string, ActiveRunSession>();
+
+const resolveWriterCommands = (config: AgentWitchRunConfig) =>
+  resolveWriterCliCommands({
+    claudeCommand: config.claudeCommand,
+    codexCommand: config.codexCommand,
+    cursorCommand: config.cursorCommand,
+    antigravityCommand: config.antigravityCommand,
+  });
 
 const sendMessage = (
   socket: WebSocket,
@@ -171,6 +188,7 @@ const attachChildHandlers = (
   requestId: string | undefined,
   agentRunId: string | undefined,
   originalPrompt: string,
+  writerAgent: HarnessWriterAgentId,
 ): void => {
   const outputChunks: string[] = [];
   let inputRequested = false;
@@ -179,6 +197,7 @@ const attachChildHandlers = (
     activeChildren.set(agentRunId, child);
     runSessions.set(agentRunId, {
       originalPrompt,
+      writerAgent,
       accumulatedOutput: runSessions.get(agentRunId)?.accumulatedOutput ?? "",
     });
     sendMessage(socket, {
@@ -283,6 +302,50 @@ const attachChildHandlers = (
   });
 };
 
+export const runWriterTask = (
+  config: AgentWitchRunConfig,
+  writerAgent: HarnessWriterAgentId,
+  prompt: string,
+  requestId: string | undefined,
+  socket: WebSocket,
+  agentRunId?: string,
+): void => {
+  const invocation = buildWriterCliInvocation(
+    writerAgent,
+    prompt,
+    resolveWriterCommands(config),
+  );
+
+  if (invocation === null) {
+    finishRun(
+      config,
+      socket,
+      agentRunId,
+      requestId,
+      -1,
+      "Writer instruction must be a non-empty string.",
+      prompt,
+    );
+    return;
+  }
+
+  const child = spawn(invocation.command, [...invocation.args], {
+    cwd: config.workspace,
+    stdio: ["ignore", "pipe", "pipe"],
+    env: process.env,
+  });
+
+  attachChildHandlers(
+    config,
+    child,
+    socket,
+    requestId,
+    agentRunId,
+    prompt,
+    writerAgent,
+  );
+};
+
 export const runClaudeTask = (
   config: AgentWitchRunConfig,
   prompt: string,
@@ -290,13 +353,14 @@ export const runClaudeTask = (
   socket: WebSocket,
   agentRunId?: string,
 ): void => {
-  const child = spawn(config.claudeCommand, ["-p", prompt], {
-    cwd: config.workspace,
-    stdio: ["ignore", "pipe", "pipe"],
-    env: process.env,
-  });
-
-  attachChildHandlers(config, child, socket, requestId, agentRunId, prompt);
+  runWriterTask(
+    config,
+    "claude-cli",
+    prompt,
+    requestId,
+    socket,
+    agentRunId,
+  );
 };
 
 export const continueClaudeTaskAfterInput = (
@@ -313,8 +377,11 @@ export const continueClaudeTaskAfterInput = (
 ): void => {
   removePendingRunInputSession(config.layout, input.agentRunId);
   const continuationPrompt = buildContinuationPrompt(input);
-  runClaudeTask(
+  const writerAgent =
+    runSessions.get(input.agentRunId)?.writerAgent ?? "claude-cli";
+  runWriterTask(
     config,
+    writerAgent,
     continuationPrompt,
     requestId,
     socket,
@@ -329,6 +396,7 @@ export const replayPendingRunInputRequests = (
   for (const session of listPendingRunInputSessions(config.layout)) {
     runSessions.set(session.agentRunId, {
       originalPrompt: session.originalPrompt,
+      writerAgent: "claude-cli",
       accumulatedOutput: session.accumulatedOutput,
     });
     sendMessage(socket, {

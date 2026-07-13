@@ -7,6 +7,7 @@ import {
   enqueueAgentRunRequest,
   fetchQueuedAgentRuns,
 } from "@/features/wsTest/utils/agentRunQueueClient";
+import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
 
 export function useAgentRunQueue(): {
   readonly queueCount: number;
@@ -20,12 +21,14 @@ export function useAgentRunQueue(): {
   readonly flushQueue: (
     sendPrompt: (
       prompt: string,
-      options?: {
+      options: {
+        readonly writerAgent: HarnessWriterAgent;
         readonly targetUserId?: string;
         readonly groupId?: string;
         readonly capabilityId?: string;
       },
     ) => void,
+    writerAgent: HarnessWriterAgent,
   ) => Promise<void>;
   readonly refreshCount: () => Promise<void>;
 } {
@@ -61,12 +64,14 @@ export function useAgentRunQueue(): {
     async (
       sendPrompt: (
         prompt: string,
-        options?: {
+        options: {
+          readonly writerAgent: HarnessWriterAgent;
           readonly targetUserId?: string;
           readonly groupId?: string;
           readonly capabilityId?: string;
         },
       ) => void,
+      writerAgent: HarnessWriterAgent,
     ) => {
       const queued = await fetchQueuedAgentRuns();
       if (queued.length === 0) {
@@ -75,6 +80,7 @@ export function useAgentRunQueue(): {
 
       for (const item of queued) {
         sendPrompt(item.prompt, {
+          writerAgent,
           ...(item.groupId
             ? {
                 targetUserId: item.executorUserId,

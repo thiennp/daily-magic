@@ -1,6 +1,7 @@
 import type AgentWitchHubRuntime from "@/lib/agentWitch/types/AgentWitchHubRuntime.type";
 import type AgentWitchMessage from "@/lib/agentWitch/types/AgentWitchMessage.type";
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
+import isHarnessWriterAgent from "@/lib/agentWitch/harness/isHarnessWriterAgent";
 import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
 import { broadcastAgentRunRecord } from "@/lib/dispatch/broadcastAgentRunRecord";
 import { updateAgentRunStatus } from "@/lib/dispatch/agentRunQueries";
@@ -10,6 +11,7 @@ import {
   markAgentRunRunning,
   notifyDashboardUser,
 } from "@/lib/dispatch/dispatchClaudeRunToAgent";
+import { DEFAULT_DELEGATED_WRITER_AGENT } from "@/lib/dispatch/resolveDelegatedWriterAgent";
 
 export const denyDispatchApproval = async (
   runtime: AgentWitchHubRuntime,
@@ -65,6 +67,9 @@ export const approveDispatchApproval = async (
     agentClient,
     pending.prompt,
     runId,
+    isHarnessWriterAgent(pending.writerAgent)
+      ? pending.writerAgent
+      : DEFAULT_DELEGATED_WRITER_AGENT,
     pending.requestId,
   );
   await markAgentRunRunning(runtime, runId);

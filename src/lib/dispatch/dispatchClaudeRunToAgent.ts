@@ -1,3 +1,4 @@
+import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
 import type AgentWitchHubClient from "@/lib/agentWitch/types/AgentWitchHubClient.type";
 import type AgentWitchHubRuntime from "@/lib/agentWitch/types/AgentWitchHubRuntime.type";
 import type AgentWitchMessage from "@/lib/agentWitch/types/AgentWitchMessage.type";
@@ -13,6 +14,7 @@ export const dispatchClaudeRunToAgent = (
   agentClient: AgentWitchHubClient,
   prompt: string,
   agentRunId: string,
+  writerAgent: HarnessWriterAgent,
   requestId?: string,
 ): void => {
   agentClient.send({
@@ -20,6 +22,7 @@ export const dispatchClaudeRunToAgent = (
     payload: {
       prompt: wrapPromptWithAgentRunInputGuardrails(prompt),
       agentRunId,
+      writerAgent,
     },
     requestId,
   });

@@ -2,6 +2,7 @@ import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
 import { listAllAgentRunSessions } from "@/lib/dispatch/agentRunSessionRegistry";
 import { dispatchApprovalRegistry } from "@/lib/dispatch/dispatchApprovalRegistry";
 import { markDispatchApprovalsHydrationStarted } from "@/lib/dispatch/dispatchApprovalHydrationState";
+import { DEFAULT_DELEGATED_WRITER_AGENT } from "@/lib/dispatch/resolveDelegatedWriterAgent";
 
 export const ensureDispatchApprovalsHydrated = (): void => {
   if (!markDispatchApprovalsHydrationStarted()) {
@@ -24,6 +25,7 @@ export const ensureDispatchApprovalsHydrated = (): void => {
       executorUserId: run.executorUserId,
       prompt: run.prompt,
       groupId: run.groupId,
+      writerAgent: DEFAULT_DELEGATED_WRITER_AGENT,
       approvalExpiresAt: run.approvalExpiresAt,
     });
   }

@@ -6,6 +6,7 @@ import AppPanel from "@/components/surfaces/AppPanel";
 import AgentWitchUnsupportedHostNotice from "@/features/home/AgentWitchUnsupportedHostNotice";
 import { ConnectionStatusBadge } from "@/features/shell/ConnectionStatusBadge";
 import { useAgentRunQueue } from "@/features/wsTest/hooks/useAgentRunQueue";
+import { useDelegatedWriterAgent } from "@/features/wsTest/hooks/useDelegatedWriterAgent";
 import { useWsTestTaskComposer } from "@/features/wsTest/hooks/useWsTestTaskComposer";
 import WsTestPromptSection from "@/features/wsTest/WsTestPromptSection";
 import isAgentWitchWebSocketSupportedHost from "@/lib/agentWitch/isAgentWitchWebSocketSupportedHost";
@@ -15,6 +16,7 @@ export default function WsTestPanel() {
   const { connectionStatus, lastResponse, sendClaudePrompt } =
     useAgentWitchSocket();
   const composer = useWsTestTaskComposer();
+  const { writerAgent, setWriterAgent } = useDelegatedWriterAgent();
   const { queueCount, queueMessage, enqueueRun, flushQueue, refreshCount } =
     useAgentRunQueue();
   const flushedOnConnectRef = useRef(false);
@@ -32,13 +34,13 @@ export default function WsTestPanel() {
     if (connectionStatus === "connected") {
       if (!flushedOnConnectRef.current) {
         flushedOnConnectRef.current = true;
-        void flushQueue(sendClaudePrompt);
+        void flushQueue(sendClaudePrompt, writerAgent);
       }
       return;
     }
 
     flushedOnConnectRef.current = false;
-  }, [connectionStatus, flushQueue, sendClaudePrompt]);
+  }, [connectionStatus, flushQueue, sendClaudePrompt, writerAgent]);
 
   return (
     <div className="flex w-full flex-col gap-6">
@@ -68,11 +70,14 @@ export default function WsTestPanel() {
 
       <WsTestPromptSection
         composer={composer}
+        writerAgent={writerAgent}
+        onWriterAgentChange={setWriterAgent}
         connectionStatus={connectionStatus}
         isSendDisabled={composer.isSendDisabled(connectionStatus)}
         canQueue={canCopyPrompt}
         onSend={() => {
           sendClaudePrompt(composer.resolvedPrompt, {
+            writerAgent,
             ...(composer.isTeamDispatch
               ? {
                   targetUserId: composer.selectedTargetUserId,

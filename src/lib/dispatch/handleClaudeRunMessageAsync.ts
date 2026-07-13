@@ -15,6 +15,7 @@ import {
 import { DispatchPolicy } from "@/lib/dispatch/DispatchPolicy.constant";
 import { resolveDispatchPolicyForExecutor } from "@/lib/dispatch/resolveDispatchPolicyForExecutor";
 import { resolveCapabilityForDispatch } from "@/lib/capabilities/resolveCapabilityForDispatch";
+import { resolveDelegatedWriterAgent } from "@/lib/dispatch/resolveDelegatedWriterAgent";
 import {
   resolveClaudeDispatchTarget,
   validateClaudeDispatchPayload,
@@ -109,6 +110,7 @@ export const handleClaudeRunMessageAsync = async (
       validatedPayload.payload.prompt,
       target.groupId,
       dispatchPolicy,
+      resolveDelegatedWriterAgent(validatedPayload.payload),
       message.requestId,
     );
   }
@@ -118,6 +120,7 @@ export const handleClaudeRunMessageAsync = async (
     agentClient,
     validatedPayload.payload.prompt,
     run.id,
+    resolveDelegatedWriterAgent(validatedPayload.payload),
     message.requestId,
   );
   await markAgentRunRunning(runtime, run.id);

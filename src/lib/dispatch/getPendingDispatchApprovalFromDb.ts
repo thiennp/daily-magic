@@ -1,6 +1,7 @@
 import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
 import type { PendingDispatchApproval } from "@/lib/dispatch/dispatchApprovalRegistry";
 import mapAgentRunRow from "@/lib/dispatch/mapAgentRunRow";
+import { DEFAULT_DELEGATED_WRITER_AGENT } from "@/lib/dispatch/resolveDelegatedWriterAgent";
 import { asRowArray, getSql } from "@/lib/db";
 
 export async function getPendingDispatchApprovalFromDb(
@@ -31,5 +32,6 @@ export async function getPendingDispatchApprovalFromDb(
     executorUserId: run.executorUserId,
     prompt: run.prompt,
     groupId: run.groupId,
+    writerAgent: DEFAULT_DELEGATED_WRITER_AGENT,
   };
 }

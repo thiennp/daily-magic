@@ -6,6 +6,7 @@ export interface ClaudeDispatchPayload {
   readonly groupId?: string;
   readonly capabilityId?: string;
   readonly agentRunId?: string;
+  readonly writerAgent?: string;
 }
 
 const isClaudeDispatchPayload = (

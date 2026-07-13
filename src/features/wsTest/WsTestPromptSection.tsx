@@ -2,13 +2,17 @@
 
 import AppPanel from "@/components/surfaces/AppPanel";
 import TeamDispatchFields from "@/features/dispatch/TeamDispatchFields";
+import DelegatedWriterAgentField from "@/features/wsTest/DelegatedWriterAgentField";
 import WsTestComposerActions from "@/features/wsTest/WsTestComposerActions";
 import type { useWsTestTaskComposer } from "@/features/wsTest/hooks/useWsTestTaskComposer";
 import WsTestTaskInputsSection from "@/features/wsTest/WsTestTaskInputsSection";
 import type { WsTestConnectionStatus } from "@/features/wsTest/types/WsTestConnectionStatus.type";
+import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
 
 interface WsTestPromptSectionProps {
   readonly composer: ReturnType<typeof useWsTestTaskComposer>;
+  readonly writerAgent: HarnessWriterAgent;
+  readonly onWriterAgentChange: (value: HarnessWriterAgent) => void;
   readonly connectionStatus: WsTestConnectionStatus;
   readonly isSendDisabled: boolean;
   readonly canQueue: boolean;
@@ -19,6 +23,8 @@ interface WsTestPromptSectionProps {
 
 export default function WsTestPromptSection({
   composer,
+  writerAgent,
+  onWriterAgentChange,
   connectionStatus,
   isSendDisabled,
   canQueue,
@@ -57,7 +63,12 @@ export default function WsTestPromptSection({
       )}
 
       <AppPanel>
-        <WsTestTaskInputsSection
+        <DelegatedWriterAgentField
+          writerAgent={writerAgent}
+          onWriterAgentChange={onWriterAgentChange}
+        />
+        <div className="mt-6">
+          <WsTestTaskInputsSection
           isWorkflowTask={composer.isWorkflowTask}
           useMobileStepper={
             composer.isLibraryPlaybook && composer.isWorkflowTask
@@ -69,6 +80,7 @@ export default function WsTestPromptSection({
           onPromptChange={composer.setPrompt}
           onWorkflowFieldChange={composer.onWorkflowFieldChange}
         />
+        </div>
         <WsTestComposerActions
           connectionStatus={connectionStatus}
           isSendDisabled={isSendDisabled}
