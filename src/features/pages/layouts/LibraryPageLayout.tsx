@@ -7,7 +7,7 @@ export default function LibraryPageLayout() {
     <div className={APP_PAGE_STACK_CLASS}>
       <AppPageHeader
         title="My library"
-        description="Your saved and published playbooks. Create a workflow, tap Use to run on your Mac, or copy a prompt for ChatGPT and Gemini."
+        description="Your saved and published playbooks. Run on your Mac from Agent, or copy a prompt for ChatGPT and Gemini."
       />
       <LibraryPageClient />
     </div>
