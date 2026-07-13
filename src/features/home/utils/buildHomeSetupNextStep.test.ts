@@ -10,7 +10,7 @@ describe("buildHomeSetupNextStep", () => {
       }),
     ).toMatchObject({
       activeStep: "install-mac",
-      headline: "Next: install Agent Witch on this Mac",
+      headline: "Next: connect a Mac",
     });
   });
 
