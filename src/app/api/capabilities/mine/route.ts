@@ -1,6 +1,7 @@
 import { createPublishedCapability } from "@/lib/capabilities/createPublishedCapability";
 import { publishCapabilityVersion } from "@/lib/capabilities/publishCapabilityVersion";
 import { ensureDefaultAgentCapability } from "@/lib/capabilities/ensureDefaultAgentCapability";
+import ensureSampleWorkflowCapability from "@/lib/capabilities/ensureSampleWorkflowCapability";
 import { listPublishedCapabilitiesForOwner } from "@/lib/capabilities/capabilityQueries";
 import { parseCreateCapabilityBody } from "@/lib/capabilities/parseCapabilityBody";
 import { requireAuth } from "@/lib/auth/requireAuth";
@@ -15,6 +16,7 @@ export async function GET(): Promise<Response> {
   }
 
   await ensureDefaultAgentCapability(actor.id);
+  await ensureSampleWorkflowCapability(actor.id);
   const capabilities = await listPublishedCapabilitiesForOwner(actor.id);
 
   return Response.json({ ok: true, capabilities });
