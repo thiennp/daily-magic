@@ -429,14 +429,16 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
 
   const startHeartbeat = (socket: WebSocket): void => {
     clearHeartbeat();
-    state.heartbeatTimer = setInterval(() => {
+    const sendHeartbeat = (): void => {
       sendMessage(socket, {
         type: "agent.heartbeat",
         payload: {
           hostname: os.hostname(),
         },
       });
-    }, HEARTBEAT_INTERVAL_MS);
+    };
+    sendHeartbeat();
+    state.heartbeatTimer = setInterval(sendHeartbeat, HEARTBEAT_INTERVAL_MS);
   };
 
   const connect = (): void => {

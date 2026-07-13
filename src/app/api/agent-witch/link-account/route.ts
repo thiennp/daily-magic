@@ -1,4 +1,4 @@
-import { getAgentWitchPairingStore } from "@/lib/agentWitch/getAgentWitchHub";
+import { getAgentWitchHub, getAgentWitchPairingStore } from "@/lib/agentWitch/getAgentWitchHub";
 import { verifyLinkAccountToken } from "@/lib/agentWitch/linkAccountToken";
 import { asRowArray, getSql } from "@/lib/db";
 
@@ -82,6 +82,8 @@ export async function POST(request: Request): Promise<Response> {
       { status: 409 },
     );
   }
+
+  getAgentWitchHub().bindAgentClientsToPairing(pairingToken);
 
   return Response.json({
     ok: true,

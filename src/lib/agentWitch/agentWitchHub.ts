@@ -51,7 +51,10 @@ export class AgentWitchHub implements AgentWitchHubRuntime {
   updateClient(
     clientId: string,
     patch: Partial<
-      Pick<AgentWitchHubClient, "deviceLabel" | "lastHeartbeatAt" | "deviceId">
+      Pick<
+        AgentWitchHubClient,
+        "deviceLabel" | "lastHeartbeatAt" | "deviceId" | "userId"
+      >
     >,
   ): void {
     updateAgentWitchHubClient(this.clients, clientId, patch);

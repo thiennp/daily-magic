@@ -1,3 +1,4 @@
+import { isAgentWitchDeviceRecentlySeen } from "@/lib/agentWitch/agentWitchHeartbeat.constant";
 import type AgentWitchHubClient from "@/lib/agentWitch/types/AgentWitchHubClient.type";
 import type AgentWitchDeviceRecord from "@/lib/agentWitch/types/AgentWitchDeviceRecord.type";
 
@@ -27,6 +28,9 @@ const buildAgentWitchDevicesWithOnlineStatus = (
 
   return devices.map((device) => {
     const onlineClient = onlineByDeviceId.get(device.id);
+    const isOnline =
+      onlineClient !== undefined ||
+      isAgentWitchDeviceRecentlySeen(device.lastSeenAt);
 
     return {
       id: device.id,
@@ -36,7 +40,7 @@ const buildAgentWitchDevicesWithOnlineStatus = (
       revokedAt: device.revokedAt,
       isActive: device.revokedAt === null,
       dispatchPolicy: device.dispatchPolicy,
-      isOnline: onlineClient !== undefined,
+      isOnline,
       lastHeartbeatAt: onlineClient?.lastHeartbeatAt ?? null,
     };
   });

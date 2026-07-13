@@ -46,9 +46,9 @@ describe("buildAgentWitchDevicesWithOnlineStatus", () => {
     ]);
   });
 
-  it("marks devices offline when no matching agent client exists", () => {
+  it("marks devices offline when no hub client and last seen is stale", () => {
     const result = buildAgentWitchDevicesWithOnlineStatus(
-      [baseDevice()],
+      [baseDevice({ lastSeenAt: "2020-01-01T00:00:00.000Z" })],
       [],
     );
 
@@ -58,5 +58,14 @@ describe("buildAgentWitchDevicesWithOnlineStatus", () => {
       deviceLabel: "MacBook Pro",
       lastHeartbeatAt: null,
     });
+  });
+
+  it("marks devices online from a recent heartbeat in the database", () => {
+    const result = buildAgentWitchDevicesWithOnlineStatus(
+      [baseDevice({ lastSeenAt: new Date().toISOString() })],
+      [],
+    );
+
+    expect(result[0]?.isOnline).toBe(true);
   });
 });

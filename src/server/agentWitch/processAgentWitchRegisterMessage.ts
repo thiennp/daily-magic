@@ -83,15 +83,16 @@ export const processAgentWitchRegisterMessage = async (
 
     connectionState.role = "agent";
     connectionState.pairingToken = pairingToken;
-    connectionState.userId =
-      await hub.resolveUserIdForAgentRegister(pairingToken);
+    const claimedPairing =
+      await hub.pairingStore.resolveClaimedPairing(pairingToken);
+    connectionState.userId = claimedPairing?.userId;
 
     const hostname =
       typeof message.payload?.hostname === "string"
         ? message.payload.hostname.trim()
         : "";
     const device = await getAgentWitchDeviceForPairingToken(pairingToken);
-    connectionState.deviceId = device?.id;
+    connectionState.deviceId = device?.id ?? claimedPairing?.deviceId;
     connectionState.deviceLabel =
       hostname.length > 0 ? hostname : (device?.deviceLabel ?? undefined);
   }

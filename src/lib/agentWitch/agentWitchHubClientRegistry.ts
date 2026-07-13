@@ -5,7 +5,10 @@ export const updateAgentWitchHubClient = (
   clients: Map<string, AgentWitchHubClient>,
   clientId: string,
   patch: Partial<
-    Pick<AgentWitchHubClient, "deviceLabel" | "lastHeartbeatAt" | "deviceId">
+    Pick<
+      AgentWitchHubClient,
+      "deviceLabel" | "lastHeartbeatAt" | "deviceId" | "userId"
+    >
   >,
 ): void => {
   const existing = clients.get(clientId);
@@ -61,6 +64,9 @@ export const bindAgentClientsToPairing = (
       clients.set(clientId, {
         ...client,
         userId: claimedPairing.userId,
+        ...(claimedPairing.deviceId !== undefined
+          ? { deviceId: claimedPairing.deviceId }
+          : {}),
       });
     }
   });
