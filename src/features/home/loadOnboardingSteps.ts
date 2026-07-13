@@ -1,3 +1,5 @@
+import hasUserCreatedFirstWorkflowOrAgent from "@/features/home/utils/hasUserCreatedFirstWorkflowOrAgent";
+
 export interface OnboardingStep {
   readonly id: string;
   readonly label: string;
@@ -8,17 +10,18 @@ export interface OnboardingStep {
 export async function loadOnboardingSteps(): Promise<
   readonly OnboardingStep[]
 > {
-  const [devicesResponse, targetsResponse, runsResponse] = await Promise.all([
-    fetch("/api/agent-witch/devices"),
-    fetch("/api/dispatch/targets"),
-    fetch("/api/agent-runs?scope=mine"),
-  ]);
+  const [devicesResponse, capabilitiesResponse, runsResponse] =
+    await Promise.all([
+      fetch("/api/agent-witch/devices"),
+      fetch("/api/capabilities/mine"),
+      fetch("/api/agent-runs?scope=mine"),
+    ]);
 
   const devicesData: unknown = devicesResponse.ok
     ? await devicesResponse.json()
     : null;
-  const targetsData: unknown = targetsResponse.ok
-    ? await targetsResponse.json()
+  const capabilitiesData: unknown = capabilitiesResponse.ok
+    ? await capabilitiesResponse.json()
     : null;
   const runsData: unknown = runsResponse.ok ? await runsResponse.json() : null;
 
@@ -32,13 +35,20 @@ export async function loadOnboardingSteps(): Promise<
 
   const hasPairedDevice = devices.some((device) => device.isActive !== false);
 
-  const groupCount =
-    typeof targetsData === "object" &&
-    targetsData !== null &&
-    "groups" in targetsData &&
-    Array.isArray((targetsData as { groups: unknown[] }).groups)
-      ? (targetsData as { groups: unknown[] }).groups.length
-      : 0;
+  const capabilities =
+    typeof capabilitiesData === "object" &&
+    capabilitiesData !== null &&
+    "capabilities" in capabilitiesData &&
+    Array.isArray((capabilitiesData as { capabilities: unknown[] }).capabilities)
+      ? (
+          capabilitiesData as {
+            capabilities: Array<{ type: string; name: string }>;
+          }
+        ).capabilities
+      : [];
+
+  const hasCreatedWorkflowOrAgent =
+    hasUserCreatedFirstWorkflowOrAgent(capabilities);
 
   const hasSentTask =
     typeof runsData === "object" &&
@@ -55,10 +65,10 @@ export async function loadOnboardingSteps(): Promise<
       href: "/#your-setup",
     },
     {
-      id: "group",
-      label: "Create a team",
-      done: groupCount > 0,
-      href: "/admin/groups",
+      id: "workflow",
+      label: "Create your first workflow or agent",
+      done: hasCreatedWorkflowOrAgent,
+      href: "/library",
     },
     {
       id: "task",

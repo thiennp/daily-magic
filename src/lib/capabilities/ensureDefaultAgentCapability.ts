@@ -1,3 +1,4 @@
+import { DEFAULT_AGENT_CAPABILITY_NAME } from "@/lib/capabilities/defaultAgentCapability.constant";
 import { CapabilityStatus } from "@/lib/capabilities/CapabilityStatus.constant";
 import { CapabilityType } from "@/lib/capabilities/CapabilityType.constant";
 import { createPublishedCapability } from "@/lib/capabilities/createPublishedCapability";
@@ -5,7 +6,6 @@ import { publishCapabilityVersion } from "@/lib/capabilities/publishCapabilityVe
 import { listPublishedCapabilitiesForOwner } from "@/lib/capabilities/capabilityQueries";
 import type PublishedCapabilityRecord from "@/lib/capabilities/types/PublishedCapabilityRecord.type";
 
-const DEFAULT_AGENT_NAME = "My assistant";
 const DEFAULT_AGENT_DESCRIPTION =
   "Runs tasks on my Mac using my Agent Witch setup.";
 const DEFAULT_AGENT_EXAMPLE =
@@ -42,7 +42,7 @@ export async function ensureDefaultAgentCapability(
 
   const created = await createPublishedCapability({
     ownerUserId,
-    name: DEFAULT_AGENT_NAME,
+    name: DEFAULT_AGENT_CAPABILITY_NAME,
     description: DEFAULT_AGENT_DESCRIPTION,
     exampleRequest: DEFAULT_AGENT_EXAMPLE,
   });

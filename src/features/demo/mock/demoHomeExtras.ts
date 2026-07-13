@@ -8,10 +8,10 @@ export const demoOnboardingSteps = [
     href: "/#your-setup",
   },
   {
-    id: "create-team",
-    label: "Create a company",
+    id: "create-workflow",
+    label: "Create your first workflow or agent",
     done: true,
-    href: "/admin/groups",
+    href: "/library",
   },
   {
     id: "publish-assistant",

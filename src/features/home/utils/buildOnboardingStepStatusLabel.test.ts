@@ -26,10 +26,10 @@ describe("buildOnboardingStepStatusLabel", () => {
 
     expect(
       buildOnboardingStepStatusLabel({
-        id: "group",
-        label: "Create a team",
+        id: "workflow",
+        label: "Create your first workflow or agent",
         done: false,
-        href: "/admin/groups",
+        href: "/library",
       }),
     ).toBe("Not created");
   });
