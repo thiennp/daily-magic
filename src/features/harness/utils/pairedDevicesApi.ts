@@ -8,6 +8,8 @@ interface PairedDevice {
   readonly revokedAt: string | null;
   readonly isActive: boolean;
   readonly dispatchPolicy: DispatchPolicyValue | null;
+  readonly isOnline?: boolean;
+  readonly lastHeartbeatAt?: string | null;
 }
 
 interface LoadedDevicesResult {

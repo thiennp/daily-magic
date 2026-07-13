@@ -2,6 +2,7 @@ import type AgentWitchHubClient from "./types/AgentWitchHubClient.type";
 import type AgentWitchMessage from "./types/AgentWitchMessage.type";
 import { AGENT_WITCH_MESSAGE_TYPES } from "./types/AgentWitchMessageType.constant";
 import type { AgentWitchHub } from "./agentWitchHub";
+import { handleAgentHeartbeatMessageAsync } from "./handleAgentHeartbeatMessageAsync";
 import { handleAgentPairMessageAsync } from "./handleAgentPairMessageAsync";
 import { handleAgentWitchSyncMessage } from "./handleAgentWitchSyncMessage";
 import { handleClaudeInputRequiredMessageAsync } from "@/lib/dispatch/handleClaudeInputRequiredMessageAsync";
@@ -36,6 +37,10 @@ export const routeAgentWitchMessageAsync = async (
 ): Promise<AgentWitchMessage | null> => {
   if (message.type === AGENT_WITCH_MESSAGE_TYPES.AGENT_PAIR) {
     return handleAgentPairMessageAsync(hub, senderId, message, sender);
+  }
+
+  if (message.type === AGENT_WITCH_MESSAGE_TYPES.AGENT_HEARTBEAT) {
+    return handleAgentHeartbeatMessageAsync(hub, senderId, sender, message);
   }
 
   if (message.type === AGENT_WITCH_MESSAGE_TYPES.COMMAND_CLAUDE_RUN) {

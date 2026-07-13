@@ -7,5 +7,8 @@ export default interface AgentWitchHubClient {
   readonly userId?: string;
   readonly email?: string;
   readonly pairingToken?: string;
+  readonly deviceId?: string;
+  readonly deviceLabel?: string;
+  readonly lastHeartbeatAt?: string;
   readonly send: (message: AgentWitchMessage) => void;
 }

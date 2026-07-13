@@ -30,10 +30,7 @@ export const handleAgentWitchSyncMessage = (
   }
 
   if (message.type === AGENT_WITCH_MESSAGE_TYPES.AGENT_HEARTBEAT) {
-    return {
-      type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ACK,
-      requestId: message.requestId,
-    };
+    return null;
   }
 
   if (message.type === AGENT_WITCH_MESSAGE_TYPES.AGENT_PAIR) {

@@ -8,6 +8,7 @@ import Button from "@/components/ui/button/Button";
 import { useAppPath, useDemoPreview } from "@/features/demo/DemoPreviewContext";
 import LibraryPlaybookTypeBadge from "@/features/library/LibraryPlaybookTypeBadge";
 import LibraryPlaybookWorkflowActions from "@/features/library/LibraryPlaybookWorkflowActions";
+import { LIBRARY_PLAYBOOK_CARD_COPY } from "@/features/library/libraryPlaybookCardCopy.constant";
 import LibrarySampleWorkflowBadge from "@/features/library/LibrarySampleWorkflowBadge";
 import LibrarySampleWorkflowPromptPreview from "@/features/library/LibrarySampleWorkflowPromptPreview";
 import EditWorkflowForm from "@/features/workflows/EditWorkflowForm";
@@ -64,31 +65,36 @@ export default function LibraryPlaybookCard({
       {isSample ? (
         <LibrarySampleWorkflowPromptPreview capability={capability} />
       ) : null}
-      <div className="mt-4 flex flex-wrap gap-2">
-        <Link href={appPath(useHref)}>
-          <Button>Use playbook</Button>
-        </Link>
-        {copyPrompt.length > 0 ? (
-          <Button
-            variant="outline"
-            onClick={() => {
-              void copy(copyPrompt);
+      <div className="mt-4 space-y-2">
+        <div className="flex flex-wrap gap-2">
+          <Link href={appPath(useHref)}>
+            <Button>{LIBRARY_PLAYBOOK_CARD_COPY.runOnMac}</Button>
+          </Link>
+          {copyPrompt.length > 0 ? (
+            <Button
+              variant="outline"
+              onClick={() => {
+                void copy(copyPrompt);
+              }}
+            >
+              {copied ? "Copied" : LIBRARY_PLAYBOOK_CARD_COPY.copyForOtherAi}
+            </Button>
+          ) : null}
+          <LibraryPlaybookWorkflowActions
+            capability={capability}
+            canManage={canManage}
+            isEditing={isEditing}
+            onToggleEdit={() => {
+              setIsEditing((editing) => !editing);
             }}
-          >
-            {copied ? "Copied" : "Copy prompt"}
-          </Button>
-        ) : null}
-        <LibraryPlaybookWorkflowActions
-          capability={capability}
-          canManage={canManage}
-          isEditing={isEditing}
-          onToggleEdit={() => {
-            setIsEditing((editing) => !editing);
-          }}
-          onDeleted={() => {
-            onUpdated?.();
-          }}
-        />
+            onDeleted={() => {
+              onUpdated?.();
+            }}
+          />
+        </div>
+        <p className="text-xs text-gray-500 dark:text-gray-400">
+          {LIBRARY_PLAYBOOK_CARD_COPY.actionHint}
+        </p>
       </div>
       {isEditing ? (
         <EditWorkflowForm

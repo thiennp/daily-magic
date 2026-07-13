@@ -31,6 +31,8 @@ export const attachAgentWitchWebSocket = (
       userId: connectionState.userId,
       email: connectionState.email,
       pairingToken: connectionState.pairingToken,
+      deviceId: connectionState.deviceId,
+      deviceLabel: connectionState.deviceLabel,
       send: (message) => {
         sendAgentWitchSocketMessage(socket, message);
       },

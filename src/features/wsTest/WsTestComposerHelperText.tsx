@@ -1,21 +1,67 @@
+"use client";
+
+import Link from "next/link";
+
+import { useAppPath } from "@/features/demo/DemoPreviewContext";
+import { APP_SURFACE_TEXT_LINK_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
+
 interface WsTestComposerHelperTextProps {
-  readonly showCopyPrimary: boolean;
   readonly isSendDisabled: boolean;
   readonly isWorkflowTask: boolean;
-  readonly isOffline: boolean;
+  readonly isBrowserOffline: boolean;
+  readonly canCopyPrompt: boolean;
+  readonly isTeamDispatch: boolean;
+  readonly hasOnlineMac: boolean;
+  readonly selectedDeviceIsOnline: boolean;
 }
 
 export default function WsTestComposerHelperText({
-  showCopyPrimary,
   isSendDisabled,
   isWorkflowTask,
-  isOffline,
+  isBrowserOffline,
+  canCopyPrompt,
+  isTeamDispatch,
+  hasOnlineMac,
+  selectedDeviceIsOnline,
 }: WsTestComposerHelperTextProps) {
-  if (showCopyPrimary) {
+  const appPath = useAppPath();
+
+  if (isBrowserOffline) {
     return (
       <p className="mt-3 text-sm text-gray-500 dark:text-gray-400">
-        Your Mac is not connected. Copy for ChatGPT or Gemini, queue to send
-        when online, or connect from Home → Your setup.
+        <span className="font-medium text-gray-700 dark:text-gray-300">
+          Send to your Mac
+        </span>{" "}
+        needs this page connected to the server. Reconnect or refresh, then try
+        again.
+        {canCopyPrompt
+          ? " You can still copy the prompt or queue the task for later."
+          : null}
+      </p>
+    );
+  }
+
+  if (!isTeamDispatch && !hasOnlineMac) {
+    return (
+      <p className="mt-3 text-sm text-gray-500 dark:text-gray-400">
+        No Mac is online right now. Start Agent Witch on a paired Mac — it
+        sends a heartbeat every 30 seconds.{" "}
+        <Link href={appPath("/#your-setup")} className={APP_SURFACE_TEXT_LINK_CLASS}>
+          Connect or manage Macs
+        </Link>
+        {canCopyPrompt
+          ? ", or copy the prompt / queue the task until one comes online."
+          : "."}
+      </p>
+    );
+  }
+
+  if (!isTeamDispatch && hasOnlineMac && !selectedDeviceIsOnline) {
+    return (
+      <p className="mt-3 text-sm text-gray-500 dark:text-gray-400">
+        The selected Mac is offline. Choose an online Mac above, or wait for it
+        to reconnect.
+        {canCopyPrompt ? " You can still copy the assembled prompt." : null}
       </p>
     );
   }
@@ -23,18 +69,15 @@ export default function WsTestComposerHelperText({
   if (isSendDisabled && !isWorkflowTask) {
     return (
       <p className="mt-3 text-sm text-gray-500 dark:text-gray-400">
-        {isOffline
-          ? "Connect your Mac from Home → Your setup before sending a task."
-          : "Enter a task description to continue."}
+        Enter a task description to continue.
       </p>
     );
   }
 
-  if (isSendDisabled && isWorkflowTask && isOffline) {
+  if (isSendDisabled && isWorkflowTask) {
     return (
       <p className="mt-3 text-sm text-gray-500 dark:text-gray-400">
-        Connect your Mac to send, or fill required fields and copy or queue the
-        assembled prompt.
+        Fill required questions to send, or copy the assembled prompt.
       </p>
     );
   }

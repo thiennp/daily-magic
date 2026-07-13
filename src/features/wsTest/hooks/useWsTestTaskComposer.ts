@@ -3,8 +3,10 @@
 import { useSelectedDispatchCapability } from "@/features/dispatch/hooks/useSelectedDispatchCapability";
 import { useTeamDispatchSelection } from "@/features/dispatch/hooks/useTeamDispatchSelection";
 import { useAgentComposerPrefill } from "@/features/wsTest/hooks/useAgentComposerPrefill";
+import useMacDeviceSelection from "@/features/wsTest/hooks/useMacDeviceSelection";
 import { useWsTestComposerWorkflowState } from "@/features/wsTest/hooks/useWsTestComposerWorkflowState";
-import { isWsTestSendDisabled } from "@/features/wsTest/utils/isWsTestSendDisabled";
+import { buildWsTestComposerDispatchState } from "@/features/wsTest/utils/buildWsTestComposerDispatchState";
+import { createWsTestSelectionHandlers } from "@/features/wsTest/utils/createWsTestSelectionHandlers";
 import type WorkflowFieldDefinition from "@/lib/workflows/types/WorkflowFieldDefinition.type";
 
 export function useWsTestTaskComposer(): {
@@ -28,9 +30,17 @@ export function useWsTestTaskComposer(): {
   readonly onWorkflowFieldChange: (key: string, value: string) => void;
   readonly resetComposer: () => void;
   readonly isPrefillLoading: boolean;
+  readonly macDevices: ReturnType<typeof useMacDeviceSelection>["devices"];
+  readonly selectedDeviceId: string;
+  readonly setSelectedDeviceId: (deviceId: string) => void;
+  readonly isMacDevicesLoading: boolean;
+  readonly hasOnlineMac: boolean;
+  readonly onlineMacCount: number;
+  readonly selectedDeviceIsOnline: boolean;
 } {
   const prefill = useAgentComposerPrefill();
   const selection = useTeamDispatchSelection();
+  const macSelection = useMacDeviceSelection();
   const selectedCapability = useSelectedDispatchCapability(
     selection.selectedGroupId,
     selection.selectedTargetUserId,
@@ -48,6 +58,16 @@ export function useWsTestTaskComposer(): {
   const clearWorkflowFields = () => {
     workflow.setWorkflowFieldValues({});
   };
+  const dispatchState = buildWsTestComposerDispatchState({
+    selection,
+    macSelection,
+    workflow,
+    isTeamDispatch,
+  });
+  const selectionHandlers = createWsTestSelectionHandlers(
+    selection,
+    clearWorkflowFields,
+  );
 
   return {
     prompt: workflow.prompt,
@@ -56,18 +76,7 @@ export function useWsTestTaskComposer(): {
     selectedGroupId: selection.selectedGroupId,
     selectedTargetUserId: selection.selectedTargetUserId,
     selectedCapabilityId: selection.selectedCapabilityId,
-    setSelectedGroupId: (groupId: string) => {
-      selection.setSelectedGroupId(groupId);
-      clearWorkflowFields();
-    },
-    setSelectedTargetUserId: (userId: string) => {
-      selection.setSelectedTargetUserId(userId);
-      clearWorkflowFields();
-    },
-    setSelectedCapabilityId: (capabilityId: string) => {
-      selection.setSelectedCapabilityId(capabilityId);
-      clearWorkflowFields();
-    },
+    ...selectionHandlers,
     isTeamDispatch,
     isWorkflowTask: workflow.isWorkflowTask,
     isLibraryPlaybook: workflow.isLibraryPlaybook,
@@ -76,19 +85,7 @@ export function useWsTestTaskComposer(): {
     workflowValidationErrors: workflow.workflowValidationErrors,
     resolvedPrompt: workflow.resolvedPrompt,
     isPrefillLoading: prefill.isLoading,
-    isSendDisabled: (connectionStatus: string) =>
-      isWsTestSendDisabled({
-        connectionStatus,
-        isWorkflowTask: workflow.isWorkflowTask,
-        workflowValidationErrors: workflow.workflowValidationErrors,
-        prompt: workflow.prompt,
-        resolvedPrompt: workflow.resolvedPrompt,
-        selectedGroupId: selection.selectedGroupId,
-        selectedTargetUserId: selection.selectedTargetUserId,
-        isTeamDispatch,
-        selectedCapabilityId: selection.selectedCapabilityId,
-        isLibraryPlaybook: workflow.isLibraryPlaybook,
-      }),
+    ...dispatchState,
     onWorkflowFieldChange: (key: string, value: string) => {
       workflow.setWorkflowFieldValues((current) => ({
         ...current,

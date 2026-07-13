@@ -1,6 +1,8 @@
 "use client";
 
 import Label from "@/components/form/Label";
+import { WORKFLOW_BUILDER_QUESTIONS_SECTION } from "@/features/workflows/workflowBuilderCopy.constant";
+import resolveWorkflowFieldRowTitle from "@/features/workflows/resolveWorkflowFieldRowTitle";
 import {
   WorkflowFieldInputType,
   type WorkflowFieldInputTypeValue,
@@ -32,10 +34,10 @@ export default function WorkflowBuilderFieldRow({
   onRemove,
 }: WorkflowBuilderFieldRowProps) {
   return (
-    <div className="rounded-xl border border-gray-100 p-4 dark:border-gray-800">
+    <div className="rounded-xl border border-gray-200 bg-gray-50/80 p-4 dark:border-gray-700 dark:bg-gray-900/40">
       <div className="flex items-center justify-between gap-2">
-        <p className="text-xs font-medium uppercase tracking-wide text-gray-500">
-          Field {index + 1}
+        <p className="text-sm font-medium text-gray-800 dark:text-white/90">
+          {resolveWorkflowFieldRowTitle(field.label, index)}
         </p>
         {canRemove ? (
           <button
@@ -51,11 +53,13 @@ export default function WorkflowBuilderFieldRow({
       </div>
       <div className="mt-3 grid gap-3 sm:grid-cols-2">
         <div>
-          <Label htmlFor={`wf-label-${field.id}`}>Label</Label>
+          <Label htmlFor={`wf-label-${field.id}`}>
+            {WORKFLOW_BUILDER_QUESTIONS_SECTION.questionLabel}
+          </Label>
           <input
             id={`wf-label-${field.id}`}
             value={field.label}
-            placeholder="Week of"
+            placeholder={WORKFLOW_BUILDER_QUESTIONS_SECTION.questionPlaceholder}
             onChange={(event) => {
               onChange(field.id, { label: event.target.value });
             }}
@@ -63,7 +67,9 @@ export default function WorkflowBuilderFieldRow({
           />
         </div>
         <div>
-          <Label htmlFor={`wf-type-${field.id}`}>Input type</Label>
+          <Label htmlFor={`wf-type-${field.id}`}>
+            {WORKFLOW_BUILDER_QUESTIONS_SECTION.inputTypeLabel}
+          </Label>
           <select
             id={`wf-type-${field.id}`}
             value={field.type}
@@ -78,8 +84,10 @@ export default function WorkflowBuilderFieldRow({
             }}
             className={inputClass}
           >
-            <option value={WorkflowFieldInputType.TEXT}>Short text</option>
-            <option value={WorkflowFieldInputType.TEXTAREA}>Long text</option>
+            <option value={WorkflowFieldInputType.TEXT}>One line</option>
+            <option value={WorkflowFieldInputType.TEXTAREA}>
+              Multiple lines
+            </option>
           </select>
         </div>
       </div>
@@ -92,7 +100,7 @@ export default function WorkflowBuilderFieldRow({
           }}
           className="rounded border-gray-300"
         />
-        Required
+        {WORKFLOW_BUILDER_QUESTIONS_SECTION.requiredLabel}
       </label>
     </div>
   );

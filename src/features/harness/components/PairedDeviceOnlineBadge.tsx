@@ -1,0 +1,21 @@
+interface PairedDeviceOnlineBadgeProps {
+  readonly isOnline: boolean;
+}
+
+export default function PairedDeviceOnlineBadge({
+  isOnline,
+}: PairedDeviceOnlineBadgeProps) {
+  if (isOnline) {
+    return (
+      <span className="inline-flex items-center rounded-full bg-green-50 px-2 py-0.5 text-xs font-medium text-green-700 dark:bg-green-950/40 dark:text-green-300">
+        Online
+      </span>
+    );
+  }
+
+  return (
+    <span className="inline-flex items-center rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600 dark:bg-gray-800 dark:text-gray-400">
+      Offline
+    </span>
+  );
+}

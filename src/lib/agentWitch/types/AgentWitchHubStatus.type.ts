@@ -10,6 +10,9 @@ export interface AgentWitchConnectedClient {
   readonly role: AgentWitchRole;
   readonly connectedAt: string;
   readonly userId?: string;
+  readonly deviceId?: string;
+  readonly deviceLabel?: string;
+  readonly lastHeartbeatAt?: string;
 }
 
 export interface AgentWitchHarnessManifestReport {

@@ -9,6 +9,7 @@ import { useAgentRunQueue } from "@/features/wsTest/hooks/useAgentRunQueue";
 import { useDelegatedWriterAgent } from "@/features/wsTest/hooks/useDelegatedWriterAgent";
 import { useWsTestTaskComposer } from "@/features/wsTest/hooks/useWsTestTaskComposer";
 import WsTestPromptSection from "@/features/wsTest/WsTestPromptSection";
+import { buildWsTestSendOptions } from "@/features/wsTest/utils/buildWsTestSendOptions";
 import isAgentWitchWebSocketSupportedHost from "@/lib/agentWitch/isAgentWitchWebSocketSupportedHost";
 import { useAgentWitchSocket } from "./hooks/useAgentWitchSocket";
 
@@ -76,19 +77,10 @@ export default function WsTestPanel() {
         isSendDisabled={composer.isSendDisabled(connectionStatus)}
         canQueue={canCopyPrompt}
         onSend={() => {
-          sendClaudePrompt(composer.resolvedPrompt, {
-            writerAgent,
-            ...(composer.isTeamDispatch
-              ? {
-                  targetUserId: composer.selectedTargetUserId,
-                  groupId: composer.selectedGroupId,
-                  capabilityId: composer.selectedCapabilityId,
-                }
-              : composer.isLibraryPlaybook &&
-                  composer.libraryCapabilityId.length > 0
-                ? { capabilityId: composer.libraryCapabilityId }
-                : {}),
-          });
+          sendClaudePrompt(
+            composer.resolvedPrompt,
+            buildWsTestSendOptions(composer, writerAgent),
+          );
         }}
         onQueue={() => {
           void enqueueRun({

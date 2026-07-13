@@ -4,6 +4,7 @@ import Button from "@/components/ui/button/Button";
 import WorkflowBuilderFieldRow, {
   type DraftWorkflowField,
 } from "@/features/workflows/WorkflowBuilderFieldRow";
+import { WORKFLOW_BUILDER_QUESTIONS_SECTION } from "@/features/workflows/workflowBuilderCopy.constant";
 
 interface CreateWorkflowFieldsEditorProps {
   readonly fields: readonly DraftWorkflowField[];
@@ -19,7 +20,15 @@ export default function CreateWorkflowFieldsEditor({
   onRemove,
 }: CreateWorkflowFieldsEditorProps) {
   return (
-    <>
+    <section className="space-y-4 rounded-xl border border-gray-100 p-4 dark:border-gray-800">
+      <div>
+        <h3 className="text-sm font-semibold text-gray-900 dark:text-white/90">
+          {WORKFLOW_BUILDER_QUESTIONS_SECTION.title}
+        </h3>
+        <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+          {WORKFLOW_BUILDER_QUESTIONS_SECTION.description}
+        </p>
+      </div>
       <div className="space-y-3">
         {fields.map((field, index) => (
           <WorkflowBuilderFieldRow
@@ -33,8 +42,8 @@ export default function CreateWorkflowFieldsEditor({
         ))}
       </div>
       <Button variant="outline" onClick={onAdd}>
-        Add field
+        {WORKFLOW_BUILDER_QUESTIONS_SECTION.addButton}
       </Button>
-    </>
+    </section>
   );
 }

@@ -54,7 +54,7 @@ export default function EditWorkflowForm({
 
     const workflowFields = buildWorkflowFieldsFromDrafts(fields);
     if (workflowFields.length === 0) {
-      setError("Add at least one field with a label.");
+      setError("Add at least one question with a label.");
       return;
     }
 
