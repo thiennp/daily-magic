@@ -17,7 +17,10 @@ export default interface AgentWitchHubRuntime {
   updateClient(
     clientId: string,
     patch: Partial<
-      Pick<AgentWitchHubClient, "deviceLabel" | "lastHeartbeatAt" | "deviceId">
+      Pick<
+        AgentWitchHubClient,
+        "deviceLabel" | "lastHeartbeatAt" | "deviceId" | "userId"
+      >
     >,
   ): void;
   broadcastToDashboardUser(

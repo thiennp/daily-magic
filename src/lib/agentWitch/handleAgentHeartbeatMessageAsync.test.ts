@@ -8,6 +8,12 @@ import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMess
 const createRuntime = (): AgentWitchHubRuntime => {
   const pairingStore = {
     touchLastSeen: vi.fn().mockResolvedValue(undefined),
+    resolveClaimedPairing: vi.fn().mockResolvedValue({
+      userId: "user-1",
+      email: "user@example.com",
+      claimedAt: "2026-01-01T00:00:00.000Z",
+      deviceId: "device-1",
+    }),
   };
 
   return {

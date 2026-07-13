@@ -31,11 +31,20 @@ export const handleAgentHeartbeatMessageAsync = async (
   }
 
   const hostname = resolveHeartbeatHostname(message.payload);
+  const claimedPairing = await runtime.pairingStore.resolveClaimedPairing(
+    sender.pairingToken,
+  );
 
   await runtime.pairingStore.touchLastSeen(sender.pairingToken, hostname);
   runtime.updateClient(senderId, {
     lastHeartbeatAt: new Date().toISOString(),
     ...(hostname !== null ? { deviceLabel: hostname } : {}),
+    ...(sender.deviceId === undefined && claimedPairing?.deviceId !== undefined
+      ? { deviceId: claimedPairing.deviceId }
+      : {}),
+    ...(sender.userId === undefined && claimedPairing !== null
+      ? { userId: claimedPairing.userId }
+      : {}),
   });
 
   return {

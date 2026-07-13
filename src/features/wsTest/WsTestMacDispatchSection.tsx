@@ -1,6 +1,8 @@
 "use client";
 
 import AppPanel from "@/components/surfaces/AppPanel";
+import HomeLocalMacWakePrompt from "@/features/home/HomeLocalMacWakePrompt";
+import useLocalMacBrowserContext from "@/features/home/hooks/useLocalMacBrowserContext";
 import MacDevicePicker from "@/features/wsTest/MacDevicePicker";
 import type { MyMacDevice } from "@/features/wsTest/hooks/useMyMacDevices";
 
@@ -19,13 +21,21 @@ export default function WsTestMacDispatchSection({
   isMacDevicesLoading,
   onDeviceChange,
 }: WsTestMacDispatchSectionProps) {
+  const { localHostname, isWakeServerReachable } = useLocalMacBrowserContext();
   const picker = (
-    <MacDevicePicker
-      devices={macDevices}
-      selectedDeviceId={selectedDeviceId}
-      isLoading={isMacDevicesLoading}
-      onChange={onDeviceChange}
-    />
+    <>
+      <MacDevicePicker
+        devices={macDevices}
+        selectedDeviceId={selectedDeviceId}
+        isLoading={isMacDevicesLoading}
+        onChange={onDeviceChange}
+      />
+      <HomeLocalMacWakePrompt
+        devices={macDevices}
+        localHostname={localHostname}
+        isWakeServerReachable={isWakeServerReachable}
+      />
+    </>
   );
 
   if (isLibraryPlaybook) {
