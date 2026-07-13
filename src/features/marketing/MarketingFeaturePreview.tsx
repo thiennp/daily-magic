@@ -1,5 +1,6 @@
 import type { ReactElement } from "react";
 
+import AppIcon from "@/components/ui/icon/AppIcon";
 import MarketingStatusBadge from "@/features/marketing/MarketingStatusBadge";
 import { MARKETING_ACCENT_EMERALD_CLASSES } from "@/features/marketing/marketingPalette.constant";
 import type { MarketingFeaturePreviewKey } from "@/features/marketing/marketingFeatureItems.constant";
@@ -33,7 +34,11 @@ const APPROVE_PREVIEW = (): ReactElement => (
           MARKETING_ACCENT_EMERALD_CLASSES.text,
         )}
       >
-        <LockIcon className="h-3.5 w-3.5 shrink-0" aria-hidden />
+        <AppIcon
+          icon={LockIcon}
+          size="xs"
+          className={MARKETING_ACCENT_EMERALD_CLASSES.icon}
+        />
         Company rule
       </span>
       <MarketingStatusBadge tone="warning">Ask first</MarketingStatusBadge>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useRef, useState, type ReactNode } from "react";
+import { useCallback, useRef, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
 import LocalTerminalPre from "@/components/surfaces/LocalTerminalPre";
@@ -9,9 +9,8 @@ import {
   APP_SURFACE_BASH_TERMINAL_PRE_CLASS,
   APP_SURFACE_TERMINAL_COPY_BUTTON_CLASS,
 } from "@/components/surfaces/appSurfaceStyles.constant";
-import { doesClipboardMatchCommand } from "@/features/home/utils/doesClipboardMatchCommand";
-import { readClipboardText } from "@/features/home/utils/readClipboardText";
-import { CheckLineIcon, CopyIcon } from "@/icons";
+import renderCopyableBashCommandCopyIcon from "@/features/home/utils/renderCopyableBashCommandCopyIcon";
+import verifyClipboardAndEngage from "@/features/home/utils/verifyClipboardAndEngage";
 
 interface CopyableBashCommandProps {
   readonly command: string;
@@ -19,42 +18,6 @@ interface CopyableBashCommandProps {
   readonly variant?: "default" | "bash";
   readonly onEngaged?: () => void;
 }
-
-const verifyClipboardAndEngage = async (
-  command: string,
-  onEngaged?: () => void,
-): Promise<boolean> => {
-  const clipboardText = await readClipboardText();
-
-  if (!doesClipboardMatchCommand(command, clipboardText)) {
-    return false;
-  }
-
-  onEngaged?.();
-  return true;
-};
-
-const renderCopyIcon = (copied: boolean, iconOnly: boolean): ReactNode => {
-  if (copied) {
-    return iconOnly ? (
-      <CheckLineIcon className="h-5 w-5 shrink-0" />
-    ) : (
-      <>
-        <CheckLineIcon className="h-3.5 w-3.5" />
-        Copied
-      </>
-    );
-  }
-
-  return iconOnly ? (
-    <CopyIcon className="h-5 w-5 shrink-0" />
-  ) : (
-    <>
-      <CopyIcon className="h-3.5 w-3.5" />
-      Copy
-    </>
-  );
-};
 
 export default function CopyableBashCommand({
   command,
@@ -109,7 +72,7 @@ export default function CopyableBashCommand({
             aria-label={copied ? "Copied" : "Copy install command"}
             className={APP_SURFACE_BASH_TERMINAL_COPY_BUTTON_CLASS}
           >
-            {renderCopyIcon(copied, true)}
+            {renderCopyableBashCommandCopyIcon(copied, true)}
           </button>
         </div>
       </div>
@@ -130,7 +93,7 @@ export default function CopyableBashCommand({
         aria-label={copied ? "Copied" : "Copy install command"}
         className={twMerge("absolute right-3 top-3", copyButtonClassName)}
       >
-        {renderCopyIcon(copied, iconOnly)}
+        {renderCopyableBashCommandCopyIcon(copied, iconOnly)}
       </button>
       <LocalTerminalPre
         ref={preRef}

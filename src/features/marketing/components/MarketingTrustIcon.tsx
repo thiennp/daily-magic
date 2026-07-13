@@ -1,5 +1,6 @@
 import type { ReactElement } from "react";
 
+import AppIcon from "@/components/ui/icon/AppIcon";
 import { MARKETING_ACCENT_EMERALD_CLASSES } from "@/features/marketing/marketingPalette.constant";
 import type { MarketingTrustIconKey } from "@/features/marketing/types/MarketingTrustItem.type";
 import {
@@ -9,13 +10,27 @@ import {
   PlugInIcon,
 } from "@/icons";
 
-const ACCENT_ICON_CLASS = `h-4 w-4 shrink-0 ${MARKETING_ACCENT_EMERALD_CLASSES.icon}`;
-
 const TRUST_ICON_MAP: Record<MarketingTrustIconKey, () => ReactElement> = {
-  mac: () => <PlugInIcon className="h-4 w-4 shrink-0 text-zinc-500" aria-hidden />,
-  shield: () => <LockIcon className={ACCENT_ICON_CLASS} aria-hidden />,
-  approval: () => <CheckCircleIcon className={ACCENT_ICON_CLASS} aria-hidden />,
-  history: () => <DocsIcon className="h-4 w-4 shrink-0 text-zinc-500" aria-hidden />,
+  mac: () => (
+    <AppIcon icon={PlugInIcon} size="sm" className="text-zinc-500" />
+  ),
+  shield: () => (
+    <AppIcon
+      icon={LockIcon}
+      size="sm"
+      className={MARKETING_ACCENT_EMERALD_CLASSES.icon}
+    />
+  ),
+  approval: () => (
+    <AppIcon
+      icon={CheckCircleIcon}
+      size="sm"
+      className={MARKETING_ACCENT_EMERALD_CLASSES.icon}
+    />
+  ),
+  history: () => (
+    <AppIcon icon={DocsIcon} size="sm" className="text-zinc-500" />
+  ),
 };
 
 interface MarketingTrustIconProps {

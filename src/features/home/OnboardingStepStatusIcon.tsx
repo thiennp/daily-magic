@@ -1,3 +1,4 @@
+import AppIcon from "@/components/ui/icon/AppIcon";
 import type { OnboardingStep } from "@/features/home/loadOnboardingSteps";
 import { CheckCircleIcon, TimeIcon } from "@/icons";
 
@@ -10,17 +11,19 @@ export default function OnboardingStepStatusIcon({
 }: OnboardingStepStatusIconProps) {
   if (step.done) {
     return (
-      <CheckCircleIcon
-        aria-hidden="true"
-        className="h-5 w-5 shrink-0 text-success-600"
+      <AppIcon
+        icon={CheckCircleIcon}
+        size="md"
+        className="text-success-600"
       />
     );
   }
 
   return (
-    <TimeIcon
-      aria-hidden="true"
-      className="h-5 w-5 shrink-0 text-gray-400 dark:text-gray-500"
+    <AppIcon
+      icon={TimeIcon}
+      size="md"
+      className="text-gray-400 dark:text-gray-500"
     />
   );
 }
