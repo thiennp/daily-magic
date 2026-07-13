@@ -7,29 +7,20 @@ import {
 } from "@/lib/agentWitch/requestAgentWitchWake";
 
 describe("canRequestAgentWitchWake", () => {
-  it("allows localhost hostnames", () => {
-    Object.defineProperty(global, "window", {
-      value: { location: { hostname: "localhost" } },
-      configurable: true,
-    });
-
-    expect(canRequestAgentWitchWake()).toBe(true);
-  });
-
-  it("rejects remote hostnames", () => {
+  it("is available in the browser", () => {
     Object.defineProperty(global, "window", {
       value: { location: { hostname: "agentwitch.com" } },
       configurable: true,
     });
 
-    expect(canRequestAgentWitchWake()).toBe(false);
+    expect(canRequestAgentWitchWake()).toBe(true);
   });
 });
 
 describe("requestAgentWitchWake", () => {
-  it("posts to the wake endpoint on localhost", async () => {
+  it("posts to the local wake endpoint", async () => {
     Object.defineProperty(global, "window", {
-      value: { location: { hostname: "127.0.0.1" } },
+      value: { location: { hostname: "agentwitch.com" } },
       configurable: true,
     });
 

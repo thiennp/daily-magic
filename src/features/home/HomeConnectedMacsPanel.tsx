@@ -1,12 +1,15 @@
 "use client";
 
 import AppPanel from "@/components/surfaces/AppPanel";
+import HomeLocalMacWakePrompt from "@/features/home/HomeLocalMacWakePrompt";
 import PairedDeviceOnlineBadge from "@/features/harness/components/PairedDeviceOnlineBadge";
 import useHomeConnectedMacs from "@/features/home/hooks/useHomeConnectedMacs";
+import useLocalMacBrowserContext from "@/features/home/hooks/useLocalMacBrowserContext";
 import { formatPairedDeviceTimestamp } from "@/features/harness/utils/pairedDevicesApi";
 
 export default function HomeConnectedMacsPanel() {
   const { devices, isLoading } = useHomeConnectedMacs();
+  const { localHostname, isWakeServerReachable } = useLocalMacBrowserContext();
   const onlineCount = devices.filter((device) => device.isOnline).length;
 
   return (
@@ -53,6 +56,12 @@ export default function HomeConnectedMacsPanel() {
           ))}
         </ul>
       )}
+
+      <HomeLocalMacWakePrompt
+        devices={devices}
+        localHostname={localHostname}
+        isWakeServerReachable={isWakeServerReachable}
+      />
     </AppPanel>
   );
 }
