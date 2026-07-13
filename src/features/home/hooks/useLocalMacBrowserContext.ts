@@ -12,12 +12,13 @@ const useLocalMacBrowserContext = (): {
   readonly localHostname: string | null;
   readonly isWakeServerReachable: boolean;
 } => {
-  const [localHostname, setLocalHostname] = useState<string | null>(null);
+  const [localHostname, setLocalHostname] = useState<string | null>(() =>
+    readAgentWitchLocalHostCookie(),
+  );
   const [isWakeServerReachable, setIsWakeServerReachable] = useState(false);
 
   useEffect(() => {
     const abortController = new AbortController();
-    setLocalHostname(readAgentWitchLocalHostCookie());
 
     void requestLocalAgentWitchIdentity().then((identity) => {
       if (abortController.signal.aborted) {

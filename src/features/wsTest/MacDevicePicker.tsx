@@ -1,28 +1,25 @@
 "use client";
 
 import Label from "@/components/form/Label";
+import MacDeviceRow from "@/features/macDevices/MacDeviceRow";
 import type { MyMacDevice } from "@/features/wsTest/hooks/useMyMacDevices";
 
 interface MacDevicePickerProps {
   readonly devices: readonly MyMacDevice[];
+  readonly displayNameById: ReadonlyMap<string, string>;
   readonly selectedDeviceId: string;
   readonly isLoading: boolean;
   readonly onChange: (deviceId: string) => void;
+  readonly onRenamed: (deviceId: string, deviceLabel: string) => void;
 }
-
-const inputClass =
-  "h-11 w-full rounded-lg border border-gray-300 bg-transparent px-3 text-sm shadow-theme-xs focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900";
-
-const formatDeviceOptionLabel = (device: MyMacDevice): string => {
-  const label = device.deviceLabel ?? "Mac";
-  return device.isOnline ? `${label} · online` : `${label} · offline`;
-};
 
 export default function MacDevicePicker({
   devices,
+  displayNameById,
   selectedDeviceId,
   isLoading,
   onChange,
+  onRenamed,
 }: MacDevicePickerProps) {
   if (isLoading) {
     return (
@@ -42,21 +39,22 @@ export default function MacDevicePicker({
 
   return (
     <div>
-      <Label htmlFor="mac-device-picker">Which Mac should run this?</Label>
-      <select
-        id="mac-device-picker"
-        value={selectedDeviceId}
-        onChange={(event) => {
-          onChange(event.target.value);
-        }}
-        className={inputClass}
-      >
+      <Label>Which Mac should run this?</Label>
+      <div className="mt-3 space-y-2">
         {devices.map((device) => (
-          <option key={device.id} value={device.id}>
-            {formatDeviceOptionLabel(device)}
-          </option>
+          <MacDeviceRow
+            key={device.id}
+            deviceId={device.id}
+            displayName={displayNameById.get(device.id) ?? "Your Mac"}
+            isOnline={device.isOnline}
+            isSelected={device.id === selectedDeviceId}
+            onSelect={() => {
+              onChange(device.id);
+            }}
+            onRenamed={onRenamed}
+          />
         ))}
-      </select>
+      </div>
       <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
         Macs send a heartbeat every 30 seconds while Agent Witch is running.
         Offline Macs stay listed but cannot receive tasks.

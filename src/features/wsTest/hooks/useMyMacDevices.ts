@@ -1,6 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+
+import { buildMacDeviceDisplayNameById } from "@/lib/agentWitch/resolveMacDeviceDisplayName";
 
 export interface MyMacDevice {
   readonly id: string;
@@ -40,49 +42,71 @@ const parseMyMacDevices = (payload: unknown): readonly MyMacDevice[] => {
 
 const useMyMacDevices = (): {
   readonly devices: readonly MyMacDevice[];
+  readonly displayNameById: ReadonlyMap<string, string>;
   readonly isLoading: boolean;
+  readonly refresh: () => Promise<void>;
+  readonly renameDevice: (deviceId: string, deviceLabel: string) => void;
 } => {
   const [devices, setDevices] = useState<readonly MyMacDevice[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
+  const loadDevices = useCallback(async (): Promise<void> => {
+    try {
+      const response = await fetch("/api/agent-witch/devices");
+      const payload: unknown = await response.json();
+
+      if (!response.ok) {
+        return;
+      }
+
+      setDevices(parseMyMacDevices(payload));
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
   useEffect(() => {
     const abortController = new AbortController();
 
-    const loadDevices = async (): Promise<void> => {
-      try {
-        const response = await fetch("/api/agent-witch/devices", {
-          signal: abortController.signal,
-        });
-        const payload: unknown = await response.json();
-
-        if (!response.ok || abortController.signal.aborted) {
-          return;
-        }
-
-        setDevices(parseMyMacDevices(payload));
-      } catch (error) {
-        if (error instanceof DOMException && error.name === "AbortError") {
-          return;
-        }
-      } finally {
-        if (!abortController.signal.aborted) {
-          setIsLoading(false);
-        }
+    const pollDevices = async (): Promise<void> => {
+      if (abortController.signal.aborted) {
+        return;
       }
+
+      await loadDevices();
     };
 
-    void loadDevices();
+    void pollDevices();
     const timer = window.setInterval(() => {
-      void loadDevices();
+      void pollDevices();
     }, MY_MAC_DEVICES_POLL_INTERVAL_MS);
 
     return () => {
       abortController.abort();
       window.clearInterval(timer);
     };
+  }, [loadDevices]);
+
+  const displayNameById = useMemo(
+    () => buildMacDeviceDisplayNameById(devices),
+    [devices],
+  );
+
+  const renameDevice = useCallback((deviceId: string, deviceLabel: string) => {
+    setDevices((current) =>
+      current.map((device) =>
+        device.id === deviceId ? { ...device, deviceLabel } : device,
+      ),
+    );
   }, []);
 
-  return { devices, isLoading };
+  return {
+    devices,
+    displayNameById,
+    isLoading,
+    refresh: loadDevices,
+    renameDevice,
+  };
 };
 
 export default useMyMacDevices;

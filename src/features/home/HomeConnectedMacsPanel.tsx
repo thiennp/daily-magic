@@ -2,13 +2,33 @@
 
 import AppPanel from "@/components/surfaces/AppPanel";
 import HomeLocalMacWakePrompt from "@/features/home/HomeLocalMacWakePrompt";
-import PairedDeviceOnlineBadge from "@/features/harness/components/PairedDeviceOnlineBadge";
 import useHomeConnectedMacs from "@/features/home/hooks/useHomeConnectedMacs";
 import useLocalMacBrowserContext from "@/features/home/hooks/useLocalMacBrowserContext";
 import { formatPairedDeviceTimestamp } from "@/features/harness/utils/pairedDevicesApi";
+import MacDeviceRow from "@/features/macDevices/MacDeviceRow";
+
+const buildMacDeviceDetailText = (device: {
+  readonly claimedAt: string;
+  readonly isOnline: boolean;
+  readonly lastHeartbeatAt: string | null;
+  readonly lastSeenAt: string | null;
+}): string => {
+  const paired = `Paired ${formatPairedDeviceTimestamp(device.claimedAt)}`;
+
+  if (device.isOnline && device.lastHeartbeatAt) {
+    return `${paired} · Heartbeat ${formatPairedDeviceTimestamp(device.lastHeartbeatAt)}`;
+  }
+
+  if (device.lastSeenAt) {
+    return `${paired} · Last seen ${formatPairedDeviceTimestamp(device.lastSeenAt)}`;
+  }
+
+  return paired;
+};
 
 export default function HomeConnectedMacsPanel() {
-  const { devices, isLoading } = useHomeConnectedMacs();
+  const { devices, displayNameById, isLoading, renameDevice } =
+    useHomeConnectedMacs();
   const { localHostname, isWakeServerReachable } = useLocalMacBrowserContext();
   const onlineCount = devices.filter((device) => device.isOnline).length;
 
@@ -29,30 +49,19 @@ export default function HomeConnectedMacsPanel() {
         </p>
       ) : devices.length === 0 ? (
         <p className="mt-4 text-sm text-gray-500 dark:text-gray-400">
-          No Macs paired yet. Connect one from Your setup.
+          No paired Macs yet. Connect one from Your setup.
         </p>
       ) : (
         <ul className="mt-4 space-y-3">
           {devices.map((device) => (
-            <li
+            <MacDeviceRow
               key={device.id}
-              className="rounded-lg border border-gray-200 px-3 py-2.5 dark:border-gray-700"
-            >
-              <div className="flex flex-wrap items-center gap-2">
-                <p className="text-sm font-medium text-gray-800 dark:text-white/90">
-                  {device.deviceLabel ?? "Mac"}
-                </p>
-                <PairedDeviceOnlineBadge isOnline={device.isOnline} />
-              </div>
-              <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
-                Paired {formatPairedDeviceTimestamp(device.claimedAt)}
-                {device.isOnline && device.lastHeartbeatAt
-                  ? ` · Heartbeat ${formatPairedDeviceTimestamp(device.lastHeartbeatAt)}`
-                  : device.lastSeenAt
-                    ? ` · Last seen ${formatPairedDeviceTimestamp(device.lastSeenAt)}`
-                    : null}
-              </p>
-            </li>
+              deviceId={device.id}
+              displayName={displayNameById.get(device.id) ?? "Your Mac"}
+              isOnline={device.isOnline}
+              detailText={buildMacDeviceDetailText(device)}
+              onRenamed={renameDevice}
+            />
           ))}
         </ul>
       )}
