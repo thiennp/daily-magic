@@ -1,5 +1,6 @@
 "use client";
 
+import AppPanel from "@/components/surfaces/AppPanel";
 import useHomeConnectedMacs from "@/features/home/hooks/useHomeConnectedMacs";
 import useLocalMacBrowserContext from "@/features/home/hooks/useLocalMacBrowserContext";
 import MacDeviceRow from "@/features/macDevices/MacDeviceRow";
@@ -13,7 +14,7 @@ export default function HomeConnectedMacsPanel() {
   const onlineCount = devices.filter((device) => device.isOnline).length;
 
   return (
-    <section>
+    <AppPanel padding="compact">
       <h2 className="text-sm font-semibold text-gray-900 dark:text-white/90">
         Your Macs
       </h2>
@@ -50,6 +51,6 @@ export default function HomeConnectedMacsPanel() {
           ))}
         </ul>
       )}
-    </section>
+    </AppPanel>
   );
 }
