@@ -30,6 +30,7 @@ const secretLogin = async ({
 }: SecretLoginParams): Promise<SecretLoginResult> => {
   const response = await fetch("/api/auth/secret-login", {
     method: "POST",
+    credentials: "include",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email, secret }),
   });

@@ -21,10 +21,24 @@ const isSecureRequest = (request: Request): boolean => {
   }
 };
 
+const resolveAuthUrlUsesSecureCookies = (): boolean | null => {
+  const authUrl = process.env.AUTH_URL ?? process.env.NEXTAUTH_URL;
+
+  if (!authUrl) {
+    return null;
+  }
+
+  try {
+    return new URL(authUrl).protocol === "https:";
+  } catch {
+    return null;
+  }
+};
+
 const resolveAuthSessionCookieOptionsFromRequest = (
   request: Request,
 ): AuthSessionCookieOptions => {
-  const secure = isSecureRequest(request);
+  const secure = resolveAuthUrlUsesSecureCookies() ?? isSecureRequest(request);
 
   return {
     name: secure ? "__Secure-authjs.session-token" : "authjs.session-token",
