@@ -14,6 +14,7 @@ import { attachAgentWitchWebSocket } from "./src/server/agentWitch/attachAgentWi
 
 const dev = process.env.NODE_ENV !== "production";
 const hostname = process.env.HOSTNAME ?? "localhost";
+const host = process.env.HOST ?? "0.0.0.0";
 const port = Number(process.env.PORT ?? "3000");
 const wsPath = process.env.AGENT_WITCH_WS_PATH ?? "/api/agent-witch/ws";
 
@@ -56,7 +57,7 @@ app.prepare().then(() => {
     );
   });
 
-  server.listen(port, () => {
+  server.listen(port, host, () => {
     console.log(`> Daily Magic ready on http://${hostname}:${port}`);
     console.log(`> Agent Witch WebSocket: ws://${hostname}:${port}${wsPath}`);
   });
