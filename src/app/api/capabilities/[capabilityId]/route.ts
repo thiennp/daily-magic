@@ -1,4 +1,5 @@
 import { getPublishedCapabilityById } from "@/lib/capabilities/capabilityQueries";
+import archivePublishedCapability from "@/lib/capabilities/archivePublishedCapability";
 import { parseUpdateCapabilityBody } from "@/lib/capabilities/parseUpdateCapabilityBody";
 import { updatePublishedCapability } from "@/lib/capabilities/updatePublishedCapability";
 import { requireAuth } from "@/lib/auth/requireAuth";
@@ -46,4 +47,24 @@ export async function PATCH(
   }
 
   return Response.json({ ok: true, capability: updated });
+}
+
+export async function DELETE(
+  _request: Request,
+  context: { params: Promise<{ readonly capabilityId: string }> },
+): Promise<Response> {
+  const { actor, error } = await requireAuth();
+
+  if (error || !actor) {
+    return error;
+  }
+
+  const { capabilityId } = await context.params;
+  const archived = await archivePublishedCapability(capabilityId, actor.id);
+
+  if (!archived) {
+    return Response.json({ error: "Assistant not found." }, { status: 404 });
+  }
+
+  return Response.json({ ok: true });
 }

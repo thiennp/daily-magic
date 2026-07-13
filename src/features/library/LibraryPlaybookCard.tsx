@@ -5,6 +5,8 @@ import { useState } from "react";
 
 import { useAppPath, useDemoPreview } from "@/features/demo/DemoPreviewContext";
 import LibraryPlaybookTypeBadge from "@/features/library/LibraryPlaybookTypeBadge";
+import LibraryPlaybookWorkflowActions from "@/features/library/LibraryPlaybookWorkflowActions";
+import LibrarySampleWorkflowBadge from "@/features/library/LibrarySampleWorkflowBadge";
 import EditWorkflowForm from "@/features/workflows/EditWorkflowForm";
 import AppPanel from "@/components/surfaces/AppPanel";
 import Button from "@/components/ui/button/Button";
@@ -31,18 +33,19 @@ export default function LibraryPlaybookCard({
     libraryCapabilityId: capability.id,
   });
   const copyPrompt = resolveLibraryCopyPrompt(capability);
-  const canEdit = !demoPreview && capability.type === CapabilityType.WORKFLOW;
+  const canManage = !demoPreview && capability.type === CapabilityType.WORKFLOW;
 
   return (
     <AppPanel as="article" padding="compact">
       <div className="flex flex-wrap items-center gap-2">
         <LibraryPlaybookTypeBadge type={capability.type} />
+        <LibrarySampleWorkflowBadge capability={capability} />
         <p className="text-sm font-medium text-gray-800 dark:text-white/90">
           {capability.name}
         </p>
       </div>
       {capability.description.length > 0 ? (
-        <p className="mt-2 line-clamp-2 text-sm text-gray-600 dark:text-gray-400">
+        <p className="mt-2 line-clamp-3 text-sm text-gray-600 dark:text-gray-400">
           {capability.description}
         </p>
       ) : null}
@@ -69,16 +72,17 @@ export default function LibraryPlaybookCard({
             {copied ? "Copied" : "Copy prompt"}
           </Button>
         ) : null}
-        {canEdit ? (
-          <Button
-            variant="outline"
-            onClick={() => {
-              setIsEditing((editing) => !editing);
-            }}
-          >
-            {isEditing ? "Close edit" : "Edit"}
-          </Button>
-        ) : null}
+        <LibraryPlaybookWorkflowActions
+          capability={capability}
+          canManage={canManage}
+          isEditing={isEditing}
+          onToggleEdit={() => {
+            setIsEditing((editing) => !editing);
+          }}
+          onDeleted={() => {
+            onUpdated?.();
+          }}
+        />
       </div>
       {isEditing ? (
         <EditWorkflowForm

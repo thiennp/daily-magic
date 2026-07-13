@@ -44,6 +44,27 @@ export async function listPublishedCapabilitiesForOwner(
   return rows.map(mapPublishedCapabilityRow);
 }
 
+export async function ownerHasArchivedCapabilityNamed(
+  ownerUserId: string,
+  name: string,
+  type: string,
+): Promise<boolean> {
+  const sql = getSql();
+  const rows = asRowArray(
+    await sql`
+      SELECT id
+      FROM published_capabilities
+      WHERE owner_user_id = ${ownerUserId}
+        AND name = ${name}
+        AND type = ${type}
+        AND status = ${CapabilityStatus.ARCHIVED}
+      LIMIT 1
+    `,
+  );
+
+  return rows.length > 0;
+}
+
 export async function listPublishedSummariesForOwners(
   ownerUserIds: readonly string[],
   groupId: string | null,
