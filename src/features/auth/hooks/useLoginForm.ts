@@ -4,7 +4,6 @@ import { signIn } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 
-import type { LoginFormAppearance } from "@/features/auth/loginFormAppearance.constant";
 import {
   buildLoginFeedback,
   type LoginFeedback,
