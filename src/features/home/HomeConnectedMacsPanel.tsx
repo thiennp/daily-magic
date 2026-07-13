@@ -1,30 +1,10 @@
 "use client";
 
-import AppPanel from "@/components/surfaces/AppPanel";
 import HomeLocalMacWakePrompt from "@/features/home/HomeLocalMacWakePrompt";
 import useHomeConnectedMacs from "@/features/home/hooks/useHomeConnectedMacs";
 import useLocalMacBrowserContext from "@/features/home/hooks/useLocalMacBrowserContext";
-import { formatPairedDeviceTimestamp } from "@/features/harness/utils/pairedDevicesApi";
+import { buildMacDeviceLastSeenText } from "@/features/macDevices/utils/buildMacDeviceLastSeenText";
 import MacDeviceRow from "@/features/macDevices/MacDeviceRow";
-
-const buildMacDeviceDetailText = (device: {
-  readonly claimedAt: string;
-  readonly isOnline: boolean;
-  readonly lastHeartbeatAt: string | null;
-  readonly lastSeenAt: string | null;
-}): string => {
-  const paired = `Paired ${formatPairedDeviceTimestamp(device.claimedAt)}`;
-
-  if (device.isOnline && device.lastHeartbeatAt) {
-    return `${paired} · Heartbeat ${formatPairedDeviceTimestamp(device.lastHeartbeatAt)}`;
-  }
-
-  if (device.lastSeenAt) {
-    return `${paired} · Last seen ${formatPairedDeviceTimestamp(device.lastSeenAt)}`;
-  }
-
-  return paired;
-};
 
 export default function HomeConnectedMacsPanel() {
   const { devices, displayNameById, isLoading, renameDevice } =
@@ -33,7 +13,7 @@ export default function HomeConnectedMacsPanel() {
   const onlineCount = devices.filter((device) => device.isOnline).length;
 
   return (
-    <AppPanel padding="compact">
+    <section>
       <h2 className="text-sm font-semibold text-gray-900 dark:text-white/90">
         Your Macs
       </h2>
@@ -52,14 +32,14 @@ export default function HomeConnectedMacsPanel() {
           No paired Macs yet. Connect one from Your setup.
         </p>
       ) : (
-        <ul className="mt-4 space-y-3">
+        <ul className="mt-4 space-y-4">
           {devices.map((device) => (
             <MacDeviceRow
               key={device.id}
               deviceId={device.id}
               displayName={displayNameById.get(device.id) ?? "Your Mac"}
               isOnline={device.isOnline}
-              detailText={buildMacDeviceDetailText(device)}
+              detailText={buildMacDeviceLastSeenText(device) ?? undefined}
               onRenamed={renameDevice}
             />
           ))}
@@ -71,6 +51,6 @@ export default function HomeConnectedMacsPanel() {
         localHostname={localHostname}
         isWakeServerReachable={isWakeServerReachable}
       />
-    </AppPanel>
+    </section>
   );
 }

@@ -51,10 +51,10 @@ export default function MacDeviceRow({
       <button
         type="button"
         onClick={onSelect}
-        className={`flex w-full items-start gap-3 rounded-lg border px-3 py-2.5 text-left transition ${
+        className={`flex w-full items-start gap-3 rounded-lg px-1 py-1 text-left transition ${
           isSelected
-            ? "border-brand-300 bg-brand-50/60 dark:border-brand-500/40 dark:bg-brand-950/20"
-            : "border-gray-200 hover:border-gray-300 dark:border-gray-700 dark:hover:border-gray-600"
+            ? "bg-brand-50/60 dark:bg-brand-950/20"
+            : "hover:bg-gray-50 dark:hover:bg-white/[0.03]"
         }`}
       >
         {content}
@@ -62,9 +62,5 @@ export default function MacDeviceRow({
     );
   }
 
-  return (
-    <li className="flex items-start gap-3 rounded-lg border border-gray-200 px-3 py-2.5 dark:border-gray-700">
-      {content}
-    </li>
-  );
+  return <li className="flex items-start gap-3">{content}</li>;
 }
