@@ -46,8 +46,13 @@ export function useWsTestComposerWorkflowState(
   const playbookType =
     libraryPlaybook?.type ?? selectedCapability?.type ?? CapabilityType.AGENT;
   const isWorkflowTask = playbookType === CapabilityType.WORKFLOW;
-  const workflowFields =
-    libraryPlaybook?.workflowFields ?? selectedCapability?.workflowFields ?? [];
+  const workflowFields = useMemo(
+    () =>
+      libraryPlaybook?.workflowFields ??
+      selectedCapability?.workflowFields ??
+      [],
+    [libraryPlaybook?.workflowFields, selectedCapability?.workflowFields],
+  );
   const workflowValidationErrors = isWorkflowTask
     ? validateWorkflowFieldValues(workflowFields, workflowFieldValues)
     : [];

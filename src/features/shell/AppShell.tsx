@@ -7,14 +7,12 @@ import DispatchApprovalListener from "@/features/dispatch/DispatchApprovalListen
 interface AppShellProps {
   readonly children: React.ReactNode;
   readonly sidebar?: React.ReactNode;
-  readonly sectionTitle?: string;
   readonly contentClassName?: string;
 }
 
 export default function AppShell({
   children,
   sidebar,
-  sectionTitle,
   contentClassName,
 }: AppShellProps) {
   const mainClassName =
@@ -23,7 +21,7 @@ export default function AppShell({
 
   return (
     <div className="min-h-screen bg-gray-50 pb-16 md:pb-0 dark:bg-gray-900">
-      <AppShellHeader sectionTitle={sectionTitle} />
+      <AppShellHeader />
       <DispatchApprovalListener />
       {sidebar ? (
         <div className="mx-auto grid max-w-[1600px] gap-6 px-4 py-6 pb-24 lg:grid-cols-[240px_1fr] lg:px-6 md:pb-6">

@@ -1,40 +1,15 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 
 import AgentWitchLogo from "@/components/branding/AgentWitchLogo";
 import { ThemeToggleButton } from "@/components/common/ThemeToggleButton";
 import UserDropdown from "@/components/header/UserDropdown";
-import {
-  normalizeAppPathname,
-  useAppPath,
-} from "@/features/demo/DemoPreviewContext";
-import { COMPANY_RULES_NAV_LABEL } from "@/lib/admin/companyGroupCopy.constant";
+import { useAppPath } from "@/features/demo/DemoPreviewContext";
 import AppShellNav from "@/features/shell/AppShellNav";
 
-interface AppShellHeaderProps {
-  readonly sectionTitle?: string;
-}
-
-export default function AppShellHeader({ sectionTitle }: AppShellHeaderProps) {
-  const pathname = usePathname();
+export default function AppShellHeader() {
   const appPath = useAppPath();
-  const normalizedPath = normalizeAppPathname(pathname);
-  const resolvedTitle =
-    sectionTitle ??
-    (normalizedPath.startsWith("/admin")
-      ? COMPANY_RULES_NAV_LABEL
-      : normalizedPath.startsWith("/agent") ||
-          normalizedPath.startsWith("/ws-test")
-        ? "Send a task"
-        : normalizedPath.startsWith("/reports")
-          ? "Job history"
-          : normalizedPath.startsWith("/library")
-            ? "My library"
-            : normalizedPath.startsWith("/marketplace")
-              ? "Marketplace"
-              : "Home");
 
   return (
     <header className="sticky top-0 z-50 border-b border-gray-200 bg-white/95 backdrop-blur dark:border-gray-800 dark:bg-gray-900/95">
@@ -46,9 +21,6 @@ export default function AppShellHeader({ sectionTitle }: AppShellHeaderProps) {
               textClassName="text-sm font-bold tracking-tight text-zinc-900 dark:text-zinc-100"
             />
           </Link>
-          <h1 className="mt-2 truncate text-xl font-semibold text-gray-800 dark:text-white/90">
-            {resolvedTitle}
-          </h1>
         </div>
         <div className="flex items-center gap-3">
           <AppShellNav />

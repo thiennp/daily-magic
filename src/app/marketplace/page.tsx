@@ -5,7 +5,7 @@ export const dynamic = "force-dynamic";
 
 export default function MarketplacePage() {
   return (
-    <AppShell sectionTitle="Marketplace">
+    <AppShell>
       <MarketplacePageLayout />
     </AppShell>
   );

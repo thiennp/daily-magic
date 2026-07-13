@@ -5,7 +5,7 @@ export const dynamic = "force-dynamic";
 
 export default function LibraryPage() {
   return (
-    <AppShell sectionTitle="My library">
+    <AppShell>
       <LibraryPageLayout />
     </AppShell>
   );
