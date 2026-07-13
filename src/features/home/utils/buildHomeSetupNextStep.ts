@@ -32,7 +32,7 @@ const buildHomeSetupNextStep = (input: {
     activeStep: "ready",
     headline: "Your Mac is connected",
     detail:
-      "Send tasks from Agent or create workflows in Library. Browser pairing below is only needed for harness rules and sharing.",
+      "To add another Mac, run the install command in Your setup on that computer. Browser pairing below is only needed for harness rules and sharing.",
   };
 };
 

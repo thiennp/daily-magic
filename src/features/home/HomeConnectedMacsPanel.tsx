@@ -1,6 +1,8 @@
 "use client";
 
 import AppPanel from "@/components/surfaces/AppPanel";
+import { APP_SURFACE_CTA_SECONDARY_SM_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
+import ConnectAnotherMacLink from "@/features/home/ConnectAnotherMacLink";
 import useHomeConnectedMacs from "@/features/home/hooks/useHomeConnectedMacs";
 import useLocalMacBrowserContext from "@/features/home/hooks/useLocalMacBrowserContext";
 import MacDeviceRow from "@/features/macDevices/MacDeviceRow";
@@ -30,7 +32,8 @@ export default function HomeConnectedMacsPanel() {
         </p>
       ) : devices.length === 0 ? (
         <p className="mt-4 text-sm text-gray-500 dark:text-gray-400">
-          No paired Macs yet. Connect one from Your setup.
+          No paired Macs yet.{" "}
+          <ConnectAnotherMacLink className="font-medium text-brand-700 hover:underline dark:text-brand-300" />
         </p>
       ) : (
         <ul className="mt-4 space-y-4">
@@ -51,6 +54,12 @@ export default function HomeConnectedMacsPanel() {
           ))}
         </ul>
       )}
+
+      {!isLoading ? (
+        <div className="mt-4 border-t border-gray-200 pt-4 dark:border-gray-700">
+          <ConnectAnotherMacLink className={APP_SURFACE_CTA_SECONDARY_SM_CLASS} />
+        </div>
+      ) : null}
     </AppPanel>
   );
 }
