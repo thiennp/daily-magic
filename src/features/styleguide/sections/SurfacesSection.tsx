@@ -55,7 +55,8 @@ export default function SurfacesSection() {
           Connect your Mac
         </h3>
         <p className={`mt-2 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
-          Install and pairing flows use the brand hero variant.
+          Install and pairing flows use the plain hero on white — zinc accents,
+          not brand-tinted fills.
         </p>
       </AppHero>
 

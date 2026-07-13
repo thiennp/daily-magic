@@ -10,7 +10,7 @@ const CONNECT_INSTALL_CONNECTION_TONE_CLASS_NAME: Record<
   string
 > = {
   waiting: "text-gray-600 dark:text-gray-400",
-  connecting: "text-brand-600 dark:text-brand-400",
+  connecting: "text-zinc-700 dark:text-zinc-300",
   error: "text-error-600 dark:text-error-500",
 };
 

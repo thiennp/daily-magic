@@ -29,8 +29,8 @@ export default function AppShellNav() {
             aria-current={isActive ? "page" : undefined}
             className={`rounded-lg px-3 py-2 text-sm font-medium transition ${
               isActive
-                ? "bg-brand-50 text-brand-600 dark:bg-brand-500/10 dark:text-brand-400"
-                : "text-gray-600 hover:bg-gray-50 hover:text-brand-600 dark:text-gray-300 dark:hover:bg-white/5 dark:hover:text-brand-400"
+                ? "bg-zinc-100 text-zinc-900 dark:bg-white/10 dark:text-white"
+                : "text-gray-600 hover:bg-gray-50 hover:text-zinc-900 dark:text-gray-300 dark:hover:bg-white/5 dark:hover:text-white"
             }`}
           >
             {item.label}
@@ -47,8 +47,8 @@ export default function AppShellNav() {
             aria-current={isActive ? "page" : undefined}
             className={`rounded-lg px-3 py-2 text-sm transition ${
               isActive
-                ? "text-brand-600 dark:text-brand-400"
-                : "text-gray-500 hover:text-brand-600 dark:text-gray-400 dark:hover:text-brand-400"
+                ? "text-zinc-900 dark:text-white"
+                : "text-gray-500 hover:text-zinc-900 dark:text-gray-400 dark:hover:text-white"
             }`}
           >
             {item.label}

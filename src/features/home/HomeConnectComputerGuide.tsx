@@ -63,7 +63,7 @@ export default function HomeConnectComputerGuide({
   }, []);
 
   return (
-    <AppHero variant="brand">
+    <AppHero variant="plain">
       <p className={APP_SURFACE_EYEBROW_TEXT_CLASS}>Connect your computer</p>
       <h1 className="mt-3 text-balance text-3xl font-semibold tracking-tight text-gray-900 dark:text-white/90">
         Link this account to your Mac

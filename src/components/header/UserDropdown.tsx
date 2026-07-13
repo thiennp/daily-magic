@@ -58,7 +58,7 @@ export default function UserDropdown() {
         aria-label={`${displayName} account menu`}
         className="dropdown-toggle flex max-w-full items-center gap-2 text-gray-700 dark:text-gray-400"
       >
-        <span className="relative flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-full bg-brand-50 text-sm font-semibold text-brand-600 dark:bg-brand-500/10 dark:text-brand-400">
+        <span className="relative flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-full bg-zinc-100 text-sm font-semibold text-zinc-700 dark:bg-zinc-800 dark:text-zinc-200">
           {showImage ? (
             <Image
               width={44}

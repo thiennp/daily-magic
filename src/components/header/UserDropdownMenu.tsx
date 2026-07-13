@@ -35,7 +35,7 @@ export default function UserDropdownMenu({
         <span className="text-theme-xs mt-0.5 block text-gray-500 dark:text-gray-400">
           {session.user.email}
         </span>
-        <span className="text-theme-xs mt-1 block text-brand-600 dark:text-brand-400">
+        <span className="text-theme-xs mt-1 block text-zinc-600 dark:text-zinc-400">
           {formatGlobalRole(session.user.globalRole as GlobalRoleValue)}
         </span>
       </div>
