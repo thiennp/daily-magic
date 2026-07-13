@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
+import useStyleguideNavAccess from "@/features/auth/hooks/useStyleguideNavAccess";
 import {
   normalizeAppPathname,
   useAppPath,
@@ -13,6 +14,8 @@ export default function AppShellNav() {
   const pathname = usePathname();
   const appPath = useAppPath();
   const normalizedPath = normalizeAppPathname(pathname);
+  const showStyleguide = useStyleguideNavAccess();
+  const secondaryNav = showStyleguide ? SECONDARY_NAV : [];
 
   return (
     <nav aria-label="Primary" className="hidden items-center gap-1 md:flex">
@@ -34,7 +37,7 @@ export default function AppShellNav() {
           </Link>
         );
       })}
-      {SECONDARY_NAV.map((item) => {
+      {secondaryNav.map((item) => {
         const isActive = item.isActive(normalizedPath);
 
         return (

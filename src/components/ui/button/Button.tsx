@@ -29,10 +29,18 @@ const Button: React.FC<ButtonProps> = ({
 
   // Variant Classes
   const variantClasses = {
-    primary:
-      "bg-brand-500 text-white shadow-theme-xs hover:bg-brand-600 disabled:bg-brand-300",
-    outline:
-      "bg-white text-gray-700 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 dark:bg-gray-800 dark:text-gray-400 dark:ring-gray-700 dark:hover:bg-white/[0.03] dark:hover:text-gray-300",
+    primary: [
+      "bg-zinc-900 text-white shadow-sm",
+      "hover:bg-zinc-800",
+      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-900/40 focus-visible:ring-offset-2",
+      "disabled:cursor-not-allowed disabled:opacity-50",
+    ].join(" "),
+    outline: [
+      "bg-white text-zinc-900 ring-1 ring-inset ring-zinc-200 shadow-sm",
+      "hover:border-zinc-400 hover:bg-zinc-50",
+      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400/40 focus-visible:ring-offset-2",
+      "dark:bg-gray-800 dark:text-gray-200 dark:ring-gray-700 dark:hover:bg-white/[0.03]",
+    ].join(" "),
   };
 
   return (
