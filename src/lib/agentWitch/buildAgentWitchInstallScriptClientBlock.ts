@@ -18,6 +18,10 @@ cat > "\${INSTALL_DIR}/package.json" <<EOF
   "devDependencies": {
     "tsx": "^4.20.3",
     "typescript": "^5"
+  },
+  "allowScripts": {
+    "esbuild": true,
+    "fsevents": true
   }
 }
 EOF
@@ -26,6 +30,7 @@ echo "Installing Agent Witch dependencies in \${INSTALL_DIR}…"
 (
   cd "\${INSTALL_DIR}"
   npm install --no-fund --no-audit
+  npm approve-scripts --allow-scripts-pending 2>/dev/null || true
 )
 
 cat > "\${RUN_PATH}" <<EOF

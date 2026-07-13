@@ -68,6 +68,7 @@ export const renderInstallAgentWitchScript = (origin: string): string => {
   );
 
   return buildAgentWitchInstallBashScript({
+    appOrigin: origin,
     wsUrl,
     clientScriptUrl,
     resolveLayoutScriptUrl,
