@@ -4,7 +4,7 @@ import createDatabaseAuthSession from "@/lib/auth/createDatabaseAuthSession";
 import findOrCreateUserByEmail from "@/lib/auth/findOrCreateUserByEmail";
 import isDevSecretConfigured from "@/lib/auth/isDevSecretConfigured";
 import isValidDevSecret from "@/lib/auth/isValidDevSecret";
-import resolveAuthSessionCookieName from "@/lib/auth/resolveAuthSessionCookieName";
+import resolveAuthSessionCookieOptionsFromRequest from "@/lib/auth/resolveAuthSessionCookieOptionsFromRequest";
 
 interface SecretLoginBody {
   readonly email?: unknown;
@@ -27,6 +27,10 @@ const parseSecretLoginBody = (
   return { email, secret };
 };
 
+const isDatabaseConfigured = (): boolean =>
+  typeof process.env.DATABASE_URL === "string" &&
+  process.env.DATABASE_URL.trim().length > 0;
+
 export async function POST(request: Request): Promise<NextResponse> {
   if (!isDevSecretConfigured()) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
@@ -43,25 +47,41 @@ export async function POST(request: Request): Promise<NextResponse> {
     return NextResponse.json({ error: "Invalid secret" }, { status: 403 });
   }
 
-  const user = await findOrCreateUserByEmail(credentials.email);
+  if (!isDatabaseConfigured()) {
+    return NextResponse.json(
+      { error: "DATABASE_URL is not configured." },
+      { status: 503 },
+    );
+  }
+
+  const user = await findOrCreateUserByEmail(credentials.email).catch(
+    () => null,
+  );
 
   if (!user?.id) {
     return NextResponse.json({ error: "Could not sign in" }, { status: 500 });
   }
 
-  const { sessionToken, expires } = await createDatabaseAuthSession(user.id);
-  const authUrl = process.env.AUTH_URL ?? "";
-  const useSecureCookie = authUrl.startsWith("https://");
+  const session = await createDatabaseAuthSession(user.id).catch(() => null);
+
+  if (!session) {
+    return NextResponse.json(
+      { error: "Could not create session" },
+      { status: 500 },
+    );
+  }
+
+  const cookieOptions = resolveAuthSessionCookieOptionsFromRequest(request);
   const response = NextResponse.json({ ok: true });
 
   response.cookies.set({
-    name: resolveAuthSessionCookieName(),
-    value: sessionToken,
+    name: cookieOptions.name,
+    value: session.sessionToken,
     httpOnly: true,
     sameSite: "lax",
     path: "/",
-    secure: useSecureCookie,
-    expires,
+    secure: cookieOptions.secure,
+    expires: session.expires,
   });
 
   return response;

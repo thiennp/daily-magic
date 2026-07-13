@@ -5,7 +5,24 @@ interface SecretLoginParams {
 
 interface SecretLoginResult {
   readonly ok: boolean;
+  readonly error?: string;
 }
+
+const readSecretLoginError = async (
+  response: Response,
+): Promise<string | undefined> => {
+  try {
+    const body = (await response.json()) as { error?: unknown };
+
+    if (typeof body.error === "string" && body.error.trim().length > 0) {
+      return body.error;
+    }
+  } catch {
+    return undefined;
+  }
+
+  return undefined;
+};
 
 const secretLogin = async ({
   email,
@@ -17,7 +34,13 @@ const secretLogin = async ({
     body: JSON.stringify({ email, secret }),
   });
 
-  return { ok: response.ok };
+  if (response.ok) {
+    return { ok: true };
+  }
+
+  const error = await readSecretLoginError(response);
+
+  return { ok: false, error };
 };
 
 export default secretLogin;

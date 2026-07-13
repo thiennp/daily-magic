@@ -67,7 +67,8 @@ export default function LoginForm({
 
         setFeedback(
           buildLoginFeedback(
-            "Dev secret login failed. Check localStorage secret and SECRET env.",
+            result.error ??
+              "Dev secret login failed. Check localStorage secret and SECRET env.",
           ),
         );
         return;
