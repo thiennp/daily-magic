@@ -3,6 +3,7 @@ import type AgentWitchHubRuntime from "@/lib/agentWitch/types/AgentWitchHubRunti
 import type AgentWitchMessage from "@/lib/agentWitch/types/AgentWitchMessage.type";
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
 import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
+import { wrapPromptWithAgentRunInputGuardrails } from "@/lib/dispatch/agentRunInputGuardrails.constant";
 import { updateAgentRunStatus } from "@/lib/dispatch/agentRunQueries";
 
 export const dispatchClaudeRunToAgent = (
@@ -15,7 +16,7 @@ export const dispatchClaudeRunToAgent = (
   agentClient.send({
     type: AGENT_WITCH_MESSAGE_TYPES.COMMAND_CLAUDE_RUN,
     payload: {
-      prompt,
+      prompt: wrapPromptWithAgentRunInputGuardrails(prompt),
       agentRunId,
     },
     requestId,

@@ -8,6 +8,7 @@ import type { AuthActorFromCookies } from "@/lib/auth/resolveAuthActorFromCookie
 
 import { sendAgentWitchSocketMessage } from "@/server/agentWitch/sendAgentWitchSocketMessage";
 import { replayPendingDispatchApprovalsForUser } from "@/lib/dispatch/replayPendingDispatchApprovalsForUser";
+import { replayPendingAgentRunInputsForUser } from "@/lib/dispatch/replayPendingAgentRunInputsForUser";
 
 export interface AgentWitchConnectionState {
   registered: boolean;
@@ -92,6 +93,7 @@ export const processAgentWitchRegisterMessage = async (
       connectionState.userId !== undefined
     ) {
       void replayPendingDispatchApprovalsForUser(hub, connectionState.userId);
+      replayPendingAgentRunInputsForUser(hub, connectionState.userId);
     }
   }
 
