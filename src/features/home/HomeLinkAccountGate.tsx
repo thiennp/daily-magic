@@ -60,7 +60,7 @@ function HomeLinkAccountGateContent({
   }, [markPaired, refresh]);
   const { isLinking, linkError } = useLinkLocalAgentAccount({
     appOrigin,
-    autoLink: !isLoading && !hasPairedDevice,
+    autoLink: !isLoading,
     onLinked: handleLinked,
   });
 

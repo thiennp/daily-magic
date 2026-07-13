@@ -29,8 +29,9 @@ export default function ConnectAnotherMacModal({
       </h2>
       <p className={`mt-3 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
         On the Mac you want to add, open Terminal, paste this command, and press
-        Return. Then open Home in the browser on that Mac while signed in to
-        link it to your account.
+        Return. Install opens Home in your browser on that Mac — stay signed in
+        so Agent Witch can link this computer to your account. Wake alone does
+        not link; the browser on that Mac must reach Home at least once.
       </p>
 
       {!isWebSocketSupported ? (

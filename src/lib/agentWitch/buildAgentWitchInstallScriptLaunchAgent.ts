@@ -1,8 +1,9 @@
 import { AGENT_WITCH_LAUNCH_AGENT_PATH_VALUE } from "@/lib/agentWitch/buildAgentWitchInstallScriptWriterPath";
 
-export const buildAgentWitchInstallScriptLaunchAgent = (
-  wsUrl: string,
-): string => `
+export const buildAgentWitchInstallScriptLaunchAgent = (input: {
+  readonly wsUrl: string;
+  readonly appOrigin: string;
+}): string => `
 if [[ "\$(uname -s)" == "Darwin" ]]; then
   mkdir -p "\${HOME}/Library/LaunchAgents"
   cat > "\${PLIST_PATH}" <<EOF
@@ -59,7 +60,7 @@ EOF
   sleep 2
 
   if launchctl print "gui/\$(id -u)/\${LAUNCH_AGENT_LABEL}" | grep -q 'state = running'; then
-    echo "Agent Witch is running and will auto-reconnect to ${wsUrl}"
+    echo "Agent Witch is running and will auto-reconnect to ${input.wsUrl}"
   else
     echo "Agent Witch LaunchAgent installed. Check logs if it is not running yet." >&2
   fi
@@ -79,4 +80,12 @@ echo "Pairing token: \${PAIRING_TOKEN}"
 echo "Logs (macOS): \${INSTALL_DIR}/\${LOG_BASENAME}.log"
 echo "The client starts immediately and revives after crashes or disconnects."
 echo "Run another account on this computer with: AGENT_WITCH_PROFILE=other@example.com curl -fsSL <install-url> | bash"
+
+if [[ "\$(uname -s)" == "Darwin" ]]; then
+  echo "Open Home on this Mac while signed in to link it to your account:"
+  echo "  ${input.appOrigin}/"
+  if command -v open >/dev/null 2>&1; then
+    open "${input.appOrigin}/" 2>/dev/null || true
+  fi
+fi
 `;

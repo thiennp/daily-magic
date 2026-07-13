@@ -38,12 +38,16 @@ EOF
 EOF
   fi
 else
-  "\${NODE_BIN}" - "\${CONFIG_PATH}" "\${PROFILE_EMAIL}" <<'NODE'
+  "\${NODE_BIN}" - "\${CONFIG_PATH}" "\${PROFILE_EMAIL}" "${input.wsUrl}" <<'NODE'
 const fs = require("node:fs");
 const crypto = require("node:crypto");
 const configPath = process.argv[2];
 const profileEmail = process.argv[3] ?? "";
+const wsUrl = process.argv[4] ?? "";
 const config = JSON.parse(fs.readFileSync(configPath, "utf8"));
+if (wsUrl.length > 0) {
+  config.wsUrl = wsUrl;
+}
 const defaults = {
   claudeCommand: "claude",
   codexCommand: "codex",
