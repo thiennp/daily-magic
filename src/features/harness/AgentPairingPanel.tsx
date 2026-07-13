@@ -6,7 +6,6 @@ import AgentPairingTokenForm from "@/features/harness/AgentPairingTokenForm";
 import { useAgentPairingToken } from "@/features/harness/hooks/useAgentPairingToken";
 import type { UseAgentWitchHarnessSocketResult } from "@/features/harness/hooks/useAgentWitchHarnessSocket";
 import { useOptionalPairedDeviceContext } from "@/features/home/PairedDeviceContext";
-import buildHomeSetupNextStep from "@/features/home/utils/buildHomeSetupNextStep";
 import {
   ConnectionStatusBadge,
   PairingStatusBadge,
@@ -26,14 +25,13 @@ export default function AgentPairingPanel({
   const { connectionStatus, pairLocalAgent, pairingStatus } = harnessSocket;
   const isPairDisabled =
     connectionStatus !== "connected" || pairingToken.trim().length === 0;
-  const nextStep = buildHomeSetupNextStep({ hasPairedDevice, pairingStatus });
-  const showPairingForm = nextStep.activeStep === "pair-browser";
+  const isBrowserPaired = pairingStatus === "paired";
 
   return (
     <AppPanel as="section" padding="compact" className="text-left">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <h2 className="text-sm font-semibold text-gray-800 dark:text-white/90">
-          Pair this browser
+          Browser pairing (optional)
         </h2>
         <div className="flex flex-wrap items-center gap-2">
           <ConnectionStatusBadge status={connectionStatus} />
@@ -41,31 +39,18 @@ export default function AgentPairingPanel({
         </div>
       </div>
       <p className={`mt-2 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
-        Linking your Mac on Home registers the computer with your account.
-        Pairing this browser lets you edit rules, publish sharing snapshots, and
-        sync harness files. Look for{" "}
-        <code className="rounded bg-gray-100 px-1 py-0.5 text-xs dark:bg-gray-900">
-          pairingToken
-        </code>{" "}
-        in{" "}
-        <code className="rounded bg-gray-100 px-1 py-0.5 text-xs dark:bg-gray-900">
-          ~/.agent-witch/profiles/&lt;your-email&gt;/config.json
-        </code>{" "}
-        after account link, or in legacy{" "}
-        <code className="rounded bg-gray-100 px-1 py-0.5 text-xs dark:bg-gray-900">
-          ~/.agent-witch/config.json
-        </code>
-        .
+        Only needed to edit harness rules, publish sharing snapshots, and sync
+        files from this browser. Sending tasks from Agent works without this
+        step once your Mac is connected.
       </p>
 
       {!hasPairedDevice ? (
         <p className="mt-3 text-sm text-gray-500 dark:text-gray-400">
-          Finish Mac install and account link first — the pairing token appears
-          after that step.
+          Connect your Mac first — the pairing token appears after install.
         </p>
       ) : null}
 
-      {showPairingForm ? (
+      {hasPairedDevice && !isBrowserPaired ? (
         <AgentPairingTokenForm
           pairingToken={pairingToken}
           isPairDisabled={isPairDisabled}
@@ -76,11 +61,13 @@ export default function AgentPairingPanel({
             pairLocalAgent(pairingToken.trim());
           }}
         />
-      ) : (
+      ) : null}
+
+      {hasPairedDevice && isBrowserPaired ? (
         <p className="mt-3 text-sm text-success-700 dark:text-success-400">
-          Browser pairing is complete. You can update rules and sharing below.
+          This browser is paired. You can update rules and sharing below.
         </p>
-      )}
+      ) : null}
     </AppPanel>
   );
 }

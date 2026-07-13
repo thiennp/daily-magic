@@ -2,22 +2,15 @@
 
 import AppPanel from "@/components/surfaces/AppPanel";
 import { APP_SURFACE_BODY_TEXT_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
-import type { AgentPairingStatus } from "@/features/harness/hooks/types/HarnessRequestResult.type";
 import { useOptionalPairedDeviceContext } from "@/features/home/PairedDeviceContext";
 import buildHomeSetupNextStep, {
   HOME_SETUP_FLOW_STEPS,
 } from "@/features/home/utils/buildHomeSetupNextStep";
 
-interface HomeSetupNextStepsProps {
-  readonly pairingStatus: AgentPairingStatus;
-}
-
-export default function HomeSetupNextSteps({
-  pairingStatus,
-}: HomeSetupNextStepsProps) {
+export default function HomeSetupNextSteps() {
   const pairedDeviceContext = useOptionalPairedDeviceContext();
   const hasPairedDevice = pairedDeviceContext?.hasPairedDevice ?? false;
-  const nextStep = buildHomeSetupNextStep({ hasPairedDevice, pairingStatus });
+  const nextStep = buildHomeSetupNextStep({ hasPairedDevice });
   const activeStepIndex = HOME_SETUP_FLOW_STEPS.findIndex(
     (step) => step.id === nextStep.activeStep,
   );
