@@ -6,31 +6,42 @@ import {
   linkAgentWitchAccountFromWakeServer,
   wakeAgentWitchLaunchAgents,
 } from "./agentWitchWakeHandlers";
+import { buildWakeServerCorsHeaders } from "./agentWitchWakeAllowedOrigins";
 import { resolveAgentWitchWakePort } from "./agentWitchWakeConstants";
-
-const WAKE_SERVER_CORS_HEADERS = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type",
-  "Access-Control-Allow-Private-Network": "true",
-  "Content-Type": "application/json; charset=utf-8",
-} as const;
 
 const sendJson = (
   response: http.ServerResponse,
   statusCode: number,
   payload: unknown,
+  corsHeaders: Record<string, string>,
 ): void => {
-  response.writeHead(statusCode, WAKE_SERVER_CORS_HEADERS);
+  response.writeHead(statusCode, corsHeaders);
   response.end(JSON.stringify(payload));
+};
+
+const rejectOrigin = (response: http.ServerResponse): void => {
+  response.writeHead(403);
+  response.end();
 };
 
 const handleWakeRequest = async (
   request: http.IncomingMessage,
   response: http.ServerResponse,
 ): Promise<void> => {
+  const requestOrigin = request.headers.origin;
+  const cors = buildWakeServerCorsHeaders(requestOrigin);
+
+  if (
+    requestOrigin !== undefined &&
+    requestOrigin.length > 0 &&
+    !cors.allowed
+  ) {
+    rejectOrigin(response);
+    return;
+  }
+
   if (request.method === "OPTIONS") {
-    response.writeHead(204, WAKE_SERVER_CORS_HEADERS);
+    response.writeHead(204, cors.headers);
     response.end();
     return;
   }
@@ -38,18 +49,23 @@ const handleWakeRequest = async (
   const pathname = request.url?.split("?")[0] ?? "/";
 
   if (request.method === "GET" && pathname === "/health") {
-    sendJson(response, 200, buildAgentWitchWakeHealthResponse());
+    sendJson(response, 200, buildAgentWitchWakeHealthResponse(), cors.headers);
     return;
   }
 
   if (request.method === "GET" && pathname === "/identity") {
-    sendJson(response, 200, buildAgentWitchWakeIdentityResponse());
+    sendJson(
+      response,
+      200,
+      buildAgentWitchWakeIdentityResponse(),
+      cors.headers,
+    );
     return;
   }
 
   if (request.method === "POST" && pathname === "/wake") {
     const wakeResult = await wakeAgentWitchLaunchAgents();
-    sendJson(response, wakeResult.ok ? 200 : 503, wakeResult);
+    sendJson(response, wakeResult.ok ? 200 : 503, wakeResult, cors.headers);
     return;
   }
 
@@ -63,19 +79,29 @@ const handleWakeRequest = async (
     try {
       body = JSON.parse(Buffer.concat(chunks).toString("utf8"));
     } catch {
-      sendJson(response, 400, {
-        ok: false,
-        errorMessage: "Invalid JSON body.",
-      });
+      sendJson(
+        response,
+        400,
+        {
+          ok: false,
+          errorMessage: "Invalid JSON body.",
+        },
+        cors.headers,
+      );
       return;
     }
 
     const linkResult = await linkAgentWitchAccountFromWakeServer(body);
-    sendJson(response, linkResult.ok ? 200 : 400, linkResult);
+    sendJson(response, linkResult.ok ? 200 : 400, linkResult, cors.headers);
     return;
   }
 
-  sendJson(response, 404, { ok: false, errorMessage: "Not found." });
+  sendJson(
+    response,
+    404,
+    { ok: false, errorMessage: "Not found." },
+    cors.headers,
+  );
 };
 
 export const startAgentWitchWakeServer = (): http.Server => {

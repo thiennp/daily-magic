@@ -4,6 +4,7 @@ export const buildAgentWitchInstallScriptWakeServer = (input: {
   readonly wakeListTargetsScriptUrl: string;
   readonly wakeKickstartScriptUrl: string;
   readonly wakeHandlersScriptUrl: string;
+  readonly wakeAllowedOriginsScriptUrl: string;
   readonly wakeEnsureProfileScriptUrl: string;
   readonly wakeLinkAccountScriptUrl: string;
 }): string => `
@@ -12,6 +13,7 @@ WAKE_CONSTANTS_SCRIPT_URL="${input.wakeConstantsScriptUrl}"
 WAKE_LIST_TARGETS_SCRIPT_URL="${input.wakeListTargetsScriptUrl}"
 WAKE_KICKSTART_SCRIPT_URL="${input.wakeKickstartScriptUrl}"
 WAKE_HANDLERS_SCRIPT_URL="${input.wakeHandlersScriptUrl}"
+WAKE_ALLOWED_ORIGINS_SCRIPT_URL="${input.wakeAllowedOriginsScriptUrl}"
 WAKE_ENSURE_PROFILE_SCRIPT_URL="${input.wakeEnsureProfileScriptUrl}"
 WAKE_LINK_ACCOUNT_SCRIPT_URL="${input.wakeLinkAccountScriptUrl}"
 WAKE_LAUNCH_AGENT_LABEL="com.daily-magic.agent-witch-wake"
@@ -23,6 +25,7 @@ echo "Downloading Agent Witch wake server from \${WAKE_SERVER_SCRIPT_URL}…"
 "\${CURL_BIN}" -fsSL "\${WAKE_LIST_TARGETS_SCRIPT_URL}" -o "\${INSTALL_DIR}/listAgentWitchLaunchTargets.ts"
 "\${CURL_BIN}" -fsSL "\${WAKE_KICKSTART_SCRIPT_URL}" -o "\${INSTALL_DIR}/kickstartAgentWitchLaunchAgent.ts"
 "\${CURL_BIN}" -fsSL "\${WAKE_HANDLERS_SCRIPT_URL}" -o "\${INSTALL_DIR}/agentWitchWakeHandlers.ts"
+"\${CURL_BIN}" -fsSL "\${WAKE_ALLOWED_ORIGINS_SCRIPT_URL}" -o "\${INSTALL_DIR}/agentWitchWakeAllowedOrigins.ts"
 "\${CURL_BIN}" -fsSL "\${WAKE_ENSURE_PROFILE_SCRIPT_URL}" -o "\${INSTALL_DIR}/ensureAgentWitchProfile.ts"
 "\${CURL_BIN}" -fsSL "\${WAKE_LINK_ACCOUNT_SCRIPT_URL}" -o "\${INSTALL_DIR}/linkAgentWitchAccountLocally.ts"
 

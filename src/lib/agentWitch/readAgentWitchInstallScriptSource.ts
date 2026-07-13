@@ -18,6 +18,11 @@ const AGENT_WITCH_INSTALL_SCRIPT_ALLOWLIST = {
     "scripts",
     "agentWitchWakeHandlers.ts",
   ),
+  "agentWitchWakeAllowedOrigins.ts": path.join(
+    process.cwd(),
+    "scripts",
+    "agentWitchWakeAllowedOrigins.ts",
+  ),
   "kickstartAgentWitchLaunchAgent.ts": path.join(
     process.cwd(),
     "scripts",

@@ -1,5 +1,6 @@
 import os from "node:os";
 
+import { isAgentWitchWakeServerAllowedOrigin } from "./agentWitchWakeAllowedOrigins";
 import { resolveAgentWitchWakePort } from "./agentWitchWakeConstants";
 import { kickstartAgentWitchLaunchAgent } from "./kickstartAgentWitchLaunchAgent";
 import { listAgentWitchLaunchTargets } from "./listAgentWitchLaunchTargets";
@@ -64,6 +65,13 @@ export const linkAgentWitchAccountFromWakeServer = async (
     return {
       ok: false,
       errorMessage: "linkToken, appOrigin, and profileEmail are required.",
+    };
+  }
+
+  if (!isAgentWitchWakeServerAllowedOrigin(appOrigin)) {
+    return {
+      ok: false,
+      errorMessage: "appOrigin is not an allowed Agent Witch site.",
     };
   }
 
