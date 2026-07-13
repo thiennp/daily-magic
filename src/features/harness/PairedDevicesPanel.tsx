@@ -1,5 +1,7 @@
 "use client";
 
+import AppPanel from "@/components/surfaces/AppPanel";
+import { APP_SURFACE_BODY_TEXT_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
 import ConfirmDestructiveModal from "@/features/shell/ConfirmDestructiveModal";
 import PairedDevicesList from "@/features/harness/components/PairedDevicesList";
 import { usePairedDevices } from "@/features/harness/hooks/usePairedDevices";
@@ -9,11 +11,11 @@ export default function PairedDevicesPanel() {
 
   return (
     <>
-      <section className="rounded-xl border border-gray-200 bg-white p-5 text-left dark:border-gray-800 dark:bg-white/[0.03]">
+      <AppPanel as="section" padding="compact" className="text-left">
         <h3 className="text-sm font-semibold text-gray-800 dark:text-white/90">
           Paired devices
         </h3>
-        <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+        <p className={`mt-2 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
           Devices linked to your account. Revoke a device if the local agent
           should stop routing rules and Claude commands to that computer.
         </p>
@@ -28,11 +30,11 @@ export default function PairedDevicesPanel() {
         />
 
         {pairedDevices.message ? (
-          <p className="mt-4 text-sm text-gray-600 dark:text-gray-400">
+          <p className={`mt-4 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
             {pairedDevices.message}
           </p>
         ) : null}
-      </section>
+      </AppPanel>
 
       <ConfirmDestructiveModal
         isOpen={pairedDevices.pendingDeviceId !== null}

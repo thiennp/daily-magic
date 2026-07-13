@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 
+import LocalTerminalPre from "@/components/surfaces/LocalTerminalPre";
 import Button from "@/components/ui/button/Button";
 import { useAgentRunLiveTerminal } from "@/features/reports/hooks/useAgentRunLiveTerminal";
 
@@ -21,9 +22,9 @@ export default function AgentRunLiveTerminal({
       <h2 className="text-sm font-medium text-gray-800 dark:text-white/90">
         Live terminal
       </h2>
-      <pre className="mt-2 max-h-80 overflow-auto rounded-lg border border-gray-200 bg-gray-50 p-3 text-xs text-gray-800 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100">
+      <LocalTerminalPre className="mt-2 max-h-80">
         {output.length > 0 ? output : "Waiting for agent output…"}
-      </pre>
+      </LocalTerminalPre>
       {pendingInput !== null ? (
         <div className="mt-4 rounded-lg border border-amber-200 bg-amber-50 p-4 dark:border-amber-900/50 dark:bg-amber-950/30">
           <p className="text-sm font-medium text-gray-800 dark:text-white/90">

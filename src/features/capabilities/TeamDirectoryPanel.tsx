@@ -1,5 +1,6 @@
 "use client";
 
+import AppPanel from "@/components/surfaces/AppPanel";
 import { useDispatchTargets } from "@/features/dispatch/hooks/useDispatchTargets";
 import { COMPANY_DIRECTORY_TITLE } from "@/lib/admin/companyGroupCopy.constant";
 
@@ -8,11 +9,11 @@ export default function TeamDirectoryPanel() {
 
   if (isLoading) {
     return (
-      <section className="rounded-2xl border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-white/[0.03]">
+      <AppPanel>
         <p className="text-sm text-gray-500 dark:text-gray-400">
           Loading {COMPANY_DIRECTORY_TITLE.toLowerCase()}…
         </p>
-      </section>
+      </AppPanel>
     );
   }
 
@@ -21,7 +22,7 @@ export default function TeamDirectoryPanel() {
   }
 
   return (
-    <section className="rounded-2xl border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-white/[0.03]">
+    <AppPanel>
       <h2 className="text-lg font-semibold text-gray-800 dark:text-white/90">
         {COMPANY_DIRECTORY_TITLE}
       </h2>
@@ -70,6 +71,6 @@ export default function TeamDirectoryPanel() {
           </div>
         ))}
       </div>
-    </section>
+    </AppPanel>
   );
 }

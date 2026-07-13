@@ -2,6 +2,9 @@
 
 import { useState } from "react";
 
+import AppPanel from "@/components/surfaces/AppPanel";
+import { APP_SURFACE_BODY_TEXT_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
+
 import type CapabilityFeedbackRecord from "@/lib/feedback/types/CapabilityFeedbackRecord.type";
 
 interface AgentRunFeedbackFormProps {
@@ -52,11 +55,11 @@ export default function AgentRunFeedbackForm({
   };
 
   return (
-    <section className="mt-6 rounded-xl border border-gray-200 p-4 dark:border-gray-800">
+    <AppPanel as="section" padding="compact" className="mt-6">
       <h2 className="text-sm font-medium text-gray-800 dark:text-white/90">
         How did this job go?
       </h2>
-      <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+      <p className={`mt-1 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
         Your note goes to the assistant owner. It does not change their setup
         automatically.
       </p>
@@ -101,6 +104,6 @@ export default function AgentRunFeedbackForm({
       >
         Send feedback
       </button>
-    </section>
+    </AppPanel>
   );
 }

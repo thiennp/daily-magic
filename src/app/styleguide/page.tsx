@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import StyleguideShell from "@/features/styleguide/StyleguideShell";
 import { AGENT_WITCH_PRODUCT_NAME } from "@/lib/agentWitch/agentWitchProductName.constant";
+import SurfacesSection from "@/features/styleguide/sections/SurfacesSection";
 import BrandLogoSection from "@/features/styleguide/sections/BrandLogoSection";
 import AlertsSection from "@/features/styleguide/sections/AlertsSection";
 import AvatarsSection from "@/features/styleguide/sections/AvatarsSection";
@@ -23,6 +24,7 @@ export default function StyleguidePage() {
   return (
     <StyleguideShell>
       <BrandLogoSection />
+      <SurfacesSection />
       <ButtonsSection />
       <AlertsSection />
       <BadgesSection />

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 
 import Button from "@/components/ui/button/Button";
+import { APP_SURFACE_NESTED_CARD_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
 import { COMPANY_ENTITY_LABEL } from "@/lib/admin/companyGroupCopy.constant";
 import { useDemoPreview } from "@/features/demo/DemoPreviewContext";
 import {
@@ -78,7 +79,7 @@ export default function GroupDispatchPolicyControl({
   };
 
   return (
-    <div className="mt-4 rounded-xl border border-gray-200 p-4 dark:border-gray-800">
+    <div className={`mt-4 ${APP_SURFACE_NESTED_CARD_CLASS}`}>
       <h3 className="text-sm font-semibold text-gray-800 dark:text-white/90">
         {COMPANY_ENTITY_LABEL} dispatch policy
       </h3>

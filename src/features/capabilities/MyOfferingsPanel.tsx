@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 
+import AppPanel from "@/components/surfaces/AppPanel";
 import { useDemoPreview } from "@/features/demo/DemoPreviewContext";
 import { CapabilityStatus } from "@/lib/capabilities/CapabilityStatus.constant";
 import type PublishedCapabilityRecord from "@/lib/capabilities/types/PublishedCapabilityRecord.type";
@@ -50,7 +51,7 @@ export default function MyOfferingsPanel() {
   ).length;
 
   return (
-    <section className="rounded-2xl border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-white/[0.03]">
+    <AppPanel>
       <h2 className="text-lg font-semibold text-gray-800 dark:text-white/90">
         What teammates can request
       </h2>
@@ -92,6 +93,6 @@ export default function MyOfferingsPanel() {
           Publish at least one assistant so teammates can choose it.
         </p>
       ) : null}
-    </section>
+    </AppPanel>
   );
 }

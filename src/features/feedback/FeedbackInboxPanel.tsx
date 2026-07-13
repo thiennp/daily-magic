@@ -1,5 +1,6 @@
 "use client";
 
+import AppPanel from "@/components/surfaces/AppPanel";
 import { useFeedbackInbox } from "@/features/feedback/hooks/useFeedbackInbox";
 import FeedbackInboxItemRow from "@/features/feedback/FeedbackInboxItemRow";
 
@@ -11,7 +12,7 @@ export default function FeedbackInboxPanel() {
   }
 
   return (
-    <section className="rounded-2xl border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-white/[0.03]">
+    <AppPanel>
       <h2 className="text-lg font-semibold text-gray-800 dark:text-white/90">
         Feedback inbox
       </h2>
@@ -30,6 +31,6 @@ export default function FeedbackInboxPanel() {
           />
         ))}
       </ul>
-    </section>
+    </AppPanel>
   );
 }

@@ -1,5 +1,6 @@
 "use client";
 
+import AppPanel from "@/components/surfaces/AppPanel";
 import AgentWitchUnsupportedHostNotice from "@/features/home/AgentWitchUnsupportedHostNotice";
 import HarnessItemEditor from "@/features/harness/components/HarnessItemEditor";
 import HarnessLastRequestResult from "@/features/harness/components/HarnessLastRequestResult";
@@ -37,7 +38,7 @@ export default function HarnessManagerPanel({
   const canSubmitItems = isConnected && form.readyItems.length > 0;
 
   return (
-    <section className="rounded-xl border border-gray-200 bg-white p-5 text-left dark:border-gray-800 dark:bg-white/[0.03]">
+    <AppPanel as="section" padding="compact" className="text-left">
       <HarnessManagerHeader connectionStatus={connectionStatus} />
 
       {!isWebSocketSupported ? (
@@ -109,6 +110,6 @@ export default function HarnessManagerPanel({
         localManifest={localManifest}
         manifestHostname={manifestHostname}
       />
-    </section>
+    </AppPanel>
   );
 }

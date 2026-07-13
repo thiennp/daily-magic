@@ -1,5 +1,6 @@
 "use client";
 
+import AppPanel from "@/components/surfaces/AppPanel";
 import TeamDispatchFields from "@/features/dispatch/TeamDispatchFields";
 import WsTestComposerActions from "@/features/wsTest/WsTestComposerActions";
 import type { useWsTestTaskComposer } from "@/features/wsTest/hooks/useWsTestTaskComposer";
@@ -32,7 +33,7 @@ export default function WsTestPromptSection({
   return (
     <>
       {!composer.isLibraryPlaybook ? (
-        <section className="rounded-2xl border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-white/[0.03]">
+        <AppPanel>
           <h2 className="text-sm font-medium text-gray-800 dark:text-white/90">
             Who receives this task
           </h2>
@@ -46,7 +47,7 @@ export default function WsTestPromptSection({
               onCapabilityChange={composer.setSelectedCapabilityId}
             />
           </div>
-        </section>
+        </AppPanel>
       ) : (
         <section className="rounded-2xl border border-brand-200 bg-brand-50/40 p-4 dark:border-brand-900/40 dark:bg-brand-950/20">
           <p className="text-sm text-gray-700 dark:text-gray-300">
@@ -55,7 +56,7 @@ export default function WsTestPromptSection({
         </section>
       )}
 
-      <section className="rounded-2xl border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-white/[0.03]">
+      <AppPanel>
         <WsTestTaskInputsSection
           isWorkflowTask={composer.isWorkflowTask}
           useMobileStepper={
@@ -82,7 +83,7 @@ export default function WsTestPromptSection({
           onClear={onClear}
           onQueue={onQueue}
         />
-      </section>
+      </AppPanel>
     </>
   );
 }

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 
+import AppPanel from "@/components/surfaces/AppPanel";
 import { useDemoPreview } from "@/features/demo/DemoPreviewContext";
 import type { CapabilityImprovementInboxItem } from "@/lib/improvements/types/CapabilityImprovementRecord.type";
 
@@ -50,7 +51,7 @@ export default function ImprovementReviewPanel() {
   }
 
   return (
-    <section className="rounded-2xl border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-white/[0.03]">
+    <AppPanel>
       <h2 className="text-lg font-semibold text-gray-800 dark:text-white/90">
         Planned assistant updates
       </h2>
@@ -99,6 +100,6 @@ export default function ImprovementReviewPanel() {
           </li>
         ))}
       </ul>
-    </section>
+    </AppPanel>
   );
 }

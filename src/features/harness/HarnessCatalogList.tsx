@@ -1,6 +1,7 @@
 "use client";
 
 import Button from "@/components/ui/button/Button";
+import { APP_SURFACE_NESTED_CARD_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
 
 export interface HarnessCatalogItem {
   readonly ownerUserId: string;
@@ -47,7 +48,7 @@ export default function HarnessCatalogList({
       {entries.map((entry) => (
         <article
           key={entry.ownerUserId}
-          className="rounded-xl border border-gray-200 p-4 dark:border-gray-800"
+          className={APP_SURFACE_NESTED_CARD_CLASS}
         >
           <div className="flex flex-wrap items-center justify-between gap-2">
             <div>

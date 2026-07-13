@@ -2,6 +2,7 @@
 
 import AppShellBottomNav from "@/features/shell/AppShellBottomNav";
 import AppShellHeader from "@/features/shell/AppShellHeader";
+import { APP_SHELL_WIDE_CONTENT_CLASS } from "@/features/shell/appShellContentWidth.constant";
 import DispatchApprovalListener from "@/features/dispatch/DispatchApprovalListener";
 
 interface AppShellProps {
@@ -16,8 +17,7 @@ export default function AppShell({
   contentClassName,
 }: AppShellProps) {
   const mainClassName =
-    contentClassName ??
-    (sidebar ? undefined : "mx-auto max-w-4xl px-4 py-6 pb-24 sm:px-6 md:pb-6");
+    contentClassName ?? (sidebar ? undefined : APP_SHELL_WIDE_CONTENT_CLASS);
 
   return (
     <div className="min-h-screen bg-gray-50 pb-16 md:pb-0 dark:bg-gray-900">

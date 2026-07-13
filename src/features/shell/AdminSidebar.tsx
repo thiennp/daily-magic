@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
+import AppPanel from "@/components/surfaces/AppPanel";
 import { COMPANIES_ENTITY_LABEL } from "@/lib/admin/companyGroupCopy.constant";
 
 const ADMIN_NAV = [
@@ -14,7 +15,11 @@ export default function AdminSidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="h-fit rounded-2xl border border-gray-200 bg-white p-4 dark:border-gray-800 dark:bg-white/[0.03] lg:sticky lg:top-24">
+    <AppPanel
+      as="aside"
+      padding="compact"
+      className="h-fit lg:sticky lg:top-24"
+    >
       <p className="mb-3 text-sm font-medium text-gray-800 dark:text-white/90">
         Management
       </p>
@@ -41,6 +46,6 @@ export default function AdminSidebar() {
           );
         })}
       </nav>
-    </aside>
+    </AppPanel>
   );
 }

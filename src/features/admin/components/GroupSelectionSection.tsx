@@ -1,8 +1,9 @@
+import AppPanel from "@/components/surfaces/AppPanel";
+import Button from "@/components/ui/button/Button";
 import {
   COMPANIES_ENTITY_LABEL,
   COMPANY_ENTITY_LABEL,
 } from "@/lib/admin/companyGroupCopy.constant";
-import Button from "@/components/ui/button/Button";
 import GroupDeleteControls from "@/features/admin/components/GroupDeleteControls";
 import type { GroupItem } from "@/features/admin/types/groupManagement.types";
 
@@ -32,7 +33,7 @@ export default function GroupSelectionSection({
   onDeleteGroup,
 }: GroupSelectionSectionProps) {
   return (
-    <section className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03]">
+    <AppPanel padding="compact">
       <h2 className="text-lg font-semibold text-gray-800 dark:text-white/90">
         {COMPANIES_ENTITY_LABEL}
       </h2>
@@ -84,6 +85,6 @@ export default function GroupSelectionSection({
           onDeleteGroup={onDeleteGroup}
         />
       ) : null}
-    </section>
+    </AppPanel>
   );
 }

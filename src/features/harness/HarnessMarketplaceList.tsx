@@ -1,6 +1,7 @@
 "use client";
 
 import Button from "@/components/ui/button/Button";
+import { APP_SURFACE_NESTED_CARD_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
 import { CapabilityType } from "@/lib/capabilities/CapabilityType.constant";
 import type HarnessMarketplaceListing from "@/lib/harness/types/HarnessMarketplaceListing.type";
 
@@ -42,7 +43,7 @@ export default function HarnessMarketplaceList({
       {listings.map((listing) => (
         <article
           key={listing.capabilityId}
-          className="rounded-xl border border-gray-200 p-4 dark:border-gray-800"
+          className={APP_SURFACE_NESTED_CARD_CLASS}
         >
           <div className="flex flex-wrap items-start justify-between gap-3">
             <div className="min-w-0 flex-1">

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 
+import AppPanel from "@/components/surfaces/AppPanel";
 import GroupMemberInviteForm from "@/features/admin/components/GroupMemberInviteForm";
 import GroupMembersTable from "@/features/admin/components/GroupMembersTable";
 import {
@@ -41,7 +42,7 @@ export default function GroupMembersSection({
 
   return (
     <>
-      <section className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03]">
+      <AppPanel padding="compact">
         <h2 className="text-lg font-semibold text-gray-800 dark:text-white/90">
           {COMPANY_MEMBERS_LABEL}
         </h2>
@@ -61,7 +62,7 @@ export default function GroupMembersSection({
             setPendingMembershipId(membershipId);
           }}
         />
-      </section>
+      </AppPanel>
 
       <ConfirmDestructiveModal
         isOpen={pendingMembershipId !== null}

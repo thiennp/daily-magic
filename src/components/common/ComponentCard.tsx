@@ -1,4 +1,7 @@
 import React from "react";
+import { twMerge } from "tailwind-merge";
+
+import { APP_SURFACE_PANEL_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
 
 interface ComponentCardProps {
   title: string;
@@ -14,9 +17,7 @@ const ComponentCard: React.FC<ComponentCardProps> = ({
   desc = "",
 }) => {
   return (
-    <div
-      className={`rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03] ${className}`}
-    >
+    <div className={twMerge(APP_SURFACE_PANEL_CLASS, className)}>
       {/* Card Header */}
       <div className="px-6 py-5">
         <h3 className="text-base font-medium text-gray-800 dark:text-white/90">

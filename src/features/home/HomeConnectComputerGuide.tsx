@@ -2,6 +2,12 @@
 
 import { useCallback, useState, useSyncExternalStore } from "react";
 
+import AppHero from "@/components/surfaces/AppHero";
+import {
+  APP_SURFACE_BODY_TEXT_CLASS,
+  APP_SURFACE_EYEBROW_TEXT_CLASS,
+  APP_SURFACE_NESTED_CARD_CLASS,
+} from "@/components/surfaces/appSurfaceStyles.constant";
 import AgentWitchUnsupportedHostNotice from "@/features/home/AgentWitchUnsupportedHostNotice";
 import CopyableBashCommand from "@/features/home/CopyableBashCommand";
 import buildConnectComputerGuideSteps from "@/features/home/utils/buildConnectComputerGuideSteps";
@@ -48,14 +54,12 @@ export default function HomeConnectComputerGuide({
   }, []);
 
   return (
-    <section className="overflow-hidden rounded-3xl border border-brand-200/80 bg-gradient-to-br from-brand-50 via-white to-white p-8 shadow-theme-sm ring-1 ring-brand-100/80 dark:border-brand-900/40 dark:from-brand-950/30 dark:via-white/[0.02] dark:to-white/[0.02] dark:ring-brand-900/30">
-      <p className="text-sm font-medium uppercase tracking-wide text-brand-600">
-        Connect your computer
-      </p>
+    <AppHero variant="brand">
+      <p className={APP_SURFACE_EYEBROW_TEXT_CLASS}>Connect your computer</p>
       <h1 className="mt-3 text-3xl font-semibold tracking-tight text-gray-900 dark:text-white/90">
         Link this account to your Mac
       </h1>
-      <p className="mt-3 text-sm text-gray-600 dark:text-gray-400">
+      <p className={`mt-3 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
         Run install once on your Mac. This browser talks to the local Agent
         Witch API to link whichever account you are signed in with — no email in
         the install command, and no reinstall when you switch users.
@@ -71,7 +75,7 @@ export default function HomeConnectComputerGuide({
         {steps.map((step, index) => (
           <li
             key={step.title}
-            className="flex gap-4 rounded-xl border border-gray-200 bg-white/80 p-4 dark:border-gray-800 dark:bg-white/[0.03]"
+            className={`flex gap-4 ${APP_SURFACE_NESTED_CARD_CLASS}`}
           >
             <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand-500 text-sm font-semibold text-white">
               {index + 1}
@@ -80,7 +84,7 @@ export default function HomeConnectComputerGuide({
               <p className="text-sm font-semibold text-gray-900 dark:text-white/90">
                 {step.title}
               </p>
-              <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+              <p className={`mt-1 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
                 {step.description}
               </p>
             </div>
@@ -107,6 +111,6 @@ export default function HomeConnectComputerGuide({
           ) : null}
         </>
       ) : null}
-    </section>
+    </AppHero>
   );
 }

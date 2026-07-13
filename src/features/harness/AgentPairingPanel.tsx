@@ -1,5 +1,7 @@
 "use client";
 
+import AppPanel from "@/components/surfaces/AppPanel";
+import { APP_SURFACE_BODY_TEXT_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
 import { useAgentPairingToken } from "@/features/harness/hooks/useAgentPairingToken";
 import type { UseAgentWitchHarnessSocketResult } from "@/features/harness/hooks/useAgentWitchHarnessSocket";
 import {
@@ -21,7 +23,7 @@ export default function AgentPairingPanel({
     connectionStatus !== "connected" || pairingToken.trim().length === 0;
 
   return (
-    <section className="rounded-xl border border-gray-200 bg-white p-5 text-left dark:border-gray-800 dark:bg-white/[0.03]">
+    <AppPanel as="section" padding="compact" className="text-left">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <h2 className="text-sm font-semibold text-gray-800 dark:text-white/90">
           Connect this browser
@@ -31,7 +33,7 @@ export default function AgentPairingPanel({
           <PairingStatusBadge pairingStatus={pairingStatus} />
         </div>
       </div>
-      <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+      <p className={`mt-2 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
         After installing the local agent, copy the pairing token from{" "}
         <code className="rounded bg-gray-100 px-1 py-0.5 text-xs dark:bg-gray-900">
           ~/.agent-witch/config.json
@@ -81,6 +83,6 @@ export default function AgentPairingPanel({
             : "Paste your pairing token to continue."}
         </p>
       ) : null}
-    </section>
+    </AppPanel>
   );
 }

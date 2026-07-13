@@ -2,13 +2,14 @@
 
 import Link from "next/link";
 
+import AppPanel from "@/components/surfaces/AppPanel";
 import { useAppPath } from "@/features/demo/DemoPreviewContext";
 
 export default function MarketplaceHomePromo() {
   const appPath = useAppPath();
 
   return (
-    <section className="rounded-2xl border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-white/[0.03]">
+    <AppPanel>
       <h2 className="text-lg font-semibold text-gray-800 dark:text-white/90">
         Marketplace
       </h2>
@@ -22,6 +23,6 @@ export default function MarketplaceHomePromo() {
       >
         Open marketplace
       </Link>
-    </section>
+    </AppPanel>
   );
 }

@@ -3,6 +3,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import ConnectedClientsTable from "@/features/home/ConnectedClientsTable";
+import AppPanel from "@/components/surfaces/AppPanel";
+import { APP_SURFACE_BODY_TEXT_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
 import { useDemoPreview } from "@/features/demo/DemoPreviewContext";
 import type AgentWitchStatusResponse from "@/features/home/types/AgentWitchStatusResponse.type";
 import type ConnectedClient from "@/features/home/types/ConnectedClient.type";
@@ -86,7 +88,11 @@ export default function ConnectedClientsList({
   }
 
   return (
-    <section className="rounded-xl border border-gray-200 bg-gray-50 p-5 text-left dark:border-gray-700 dark:bg-gray-900/50">
+    <AppPanel
+      as="section"
+      padding="compact"
+      className="bg-gray-50 text-left dark:border-gray-700 dark:bg-gray-900/50"
+    >
       <div className="flex items-center justify-between gap-3">
         <h2 className="text-sm font-semibold text-gray-800 dark:text-white/90">
           Connected clients
@@ -101,15 +107,13 @@ export default function ConnectedClientsList({
           Refresh
         </button>
       </div>
-      <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+      <p className={`mt-2 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
         Live Agent Witch WebSocket connections on this server.
       </p>
       {message ? (
-        <p className="mt-4 text-sm text-gray-600 dark:text-gray-400">
-          {message}
-        </p>
+        <p className={`mt-4 ${APP_SURFACE_BODY_TEXT_CLASS}`}>{message}</p>
       ) : null}
       {body}
-    </section>
+    </AppPanel>
   );
 }

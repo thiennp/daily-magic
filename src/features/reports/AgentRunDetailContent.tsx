@@ -1,3 +1,4 @@
+import AppPanel from "@/components/surfaces/AppPanel";
 import AgentRunAgainButton from "@/features/reports/AgentRunAgainButton";
 import AgentRunLiveTerminal from "@/features/reports/AgentRunLiveTerminal";
 import AgentRunStatusBadge from "@/features/reports/AgentRunStatusBadge";
@@ -12,7 +13,7 @@ export default function AgentRunDetailContent({
   run,
 }: AgentRunDetailContentProps) {
   return (
-    <div className="rounded-2xl border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-white/[0.03]">
+    <AppPanel as="div">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <AgentRunStatusBadge status={run.status} />
         <p className="text-xs text-gray-500 dark:text-gray-400">
@@ -78,6 +79,6 @@ export default function AgentRunDetailContent({
           <AgentRunAgainButton prompt={run.prompt} />
         </div>
       ) : null}
-    </div>
+    </AppPanel>
   );
 }

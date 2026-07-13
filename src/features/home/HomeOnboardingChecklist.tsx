@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 
+import AppAccentPanel from "@/components/surfaces/AppAccentPanel";
+import { APP_SURFACE_SECTION_TITLE_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
 import { useDemoPreview } from "@/features/demo/DemoPreviewContext";
 import {
   loadOnboardingSteps,
@@ -35,8 +37,8 @@ export default function HomeOnboardingChecklist() {
   }
 
   return (
-    <section className="rounded-2xl border border-brand-200 bg-brand-50/50 p-6 dark:border-brand-900/40 dark:bg-brand-950/20">
-      <h2 className="text-lg font-semibold text-gray-800 dark:text-white/90">
+    <AppAccentPanel>
+      <h2 className={APP_SURFACE_SECTION_TITLE_CLASS}>
         Getting started ({completedCount}/{steps.length})
       </h2>
       <ul className="mt-4 space-y-3">
@@ -66,6 +68,6 @@ export default function HomeOnboardingChecklist() {
           </li>
         ))}
       </ul>
-    </section>
+    </AppAccentPanel>
   );
 }

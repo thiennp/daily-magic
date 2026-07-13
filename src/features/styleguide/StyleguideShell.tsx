@@ -1,10 +1,12 @@
 "use client";
 
+import AppPanel from "@/components/surfaces/AppPanel";
 import { ThemeToggleButton } from "@/components/common/ThemeToggleButton";
 import Link from "next/link";
 
 const STYLEGUIDE_SECTIONS = [
   { id: "brand-logo", label: "Brand logo" },
+  { id: "surfaces", label: "App surfaces" },
   { id: "buttons", label: "Buttons" },
   { id: "alerts", label: "Alerts" },
   { id: "badges", label: "Badges" },
@@ -47,7 +49,11 @@ export default function StyleguideShell({
       </header>
 
       <div className="mx-auto grid max-w-[1600px] gap-6 px-4 py-6 lg:grid-cols-[240px_1fr] lg:px-6">
-        <aside className="h-fit rounded-2xl border border-gray-200 bg-white p-4 dark:border-gray-800 dark:bg-white/[0.03] lg:sticky lg:top-24">
+        <AppPanel
+          as="aside"
+          padding="compact"
+          className="h-fit lg:sticky lg:top-24"
+        >
           <p className="mb-3 text-sm font-medium text-gray-800 dark:text-white/90">
             Sections
           </p>
@@ -62,7 +68,7 @@ export default function StyleguideShell({
               </a>
             ))}
           </nav>
-        </aside>
+        </AppPanel>
 
         <main className="space-y-10">{children}</main>
       </div>

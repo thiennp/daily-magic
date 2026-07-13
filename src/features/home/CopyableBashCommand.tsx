@@ -1,11 +1,10 @@
 "use client";
 
 import { useCallback, useRef, useState } from "react";
+import { twMerge } from "tailwind-merge";
 
-import {
-  LOCAL_TERMINAL_COPY_BUTTON_CLASS_NAME,
-  LOCAL_TERMINAL_PRE_CLASS_NAME,
-} from "@/features/home/localTerminalSurface.constant";
+import LocalTerminalPre from "@/components/surfaces/LocalTerminalPre";
+import { APP_SURFACE_TERMINAL_COPY_BUTTON_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
 import { CheckLineIcon, CopyIcon } from "@/icons";
 
 interface CopyableBashCommandProps {
@@ -60,8 +59,13 @@ export default function CopyableBashCommand({
         aria-label={copied ? "Copied" : "Copy install command"}
         className={
           iconOnly
-            ? `absolute right-3 top-3 ${LOCAL_TERMINAL_COPY_BUTTON_CLASS_NAME}`
-            : "absolute right-3 top-3 inline-flex items-center gap-1.5 rounded-md border border-gray-200 bg-gray-100 px-2.5 py-1.5 text-xs font-medium text-gray-600 shadow-sm transition hover:bg-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
+            ? twMerge(
+                "absolute right-3 top-3",
+                APP_SURFACE_TERMINAL_COPY_BUTTON_CLASS,
+              )
+            : twMerge(
+                "absolute right-3 top-3 inline-flex items-center gap-1.5 rounded-md border border-gray-200 bg-gray-100 px-2.5 py-1.5 text-xs font-medium text-gray-600 shadow-sm transition hover:bg-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700",
+              )
         }
       >
         {copied ? (
@@ -82,18 +86,14 @@ export default function CopyableBashCommand({
           </>
         )}
       </button>
-      <pre
+      <LocalTerminalPre
         ref={preRef}
         onMouseUp={handleSelectionEngage}
         onKeyUp={handleSelectionEngage}
-        className={
-          iconOnly
-            ? `${LOCAL_TERMINAL_PRE_CLASS_NAME} pr-14`
-            : `${LOCAL_TERMINAL_PRE_CLASS_NAME} pr-24`
-        }
+        className={iconOnly ? "pr-14" : "pr-24"}
       >
         <code>{command}</code>
-      </pre>
+      </LocalTerminalPre>
     </div>
   );
 }

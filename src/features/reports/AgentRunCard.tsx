@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 
+import AppPanel from "@/components/surfaces/AppPanel";
 import { useAppPath } from "@/features/demo/DemoPreviewContext";
 import AgentRunAgainButton from "@/features/reports/AgentRunAgainButton";
 import AgentRunStatusBadge from "@/features/reports/AgentRunStatusBadge";
@@ -17,7 +18,7 @@ export default function AgentRunCard({ run }: AgentRunCardProps) {
   const canRunAgain = run.status === AgentRunStatus.COMPLETED;
 
   return (
-    <article className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03]">
+    <AppPanel as="article" padding="compact">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <AgentRunStatusBadge status={run.status} />
         <p className="text-xs text-gray-500 dark:text-gray-400">
@@ -42,6 +43,6 @@ export default function AgentRunCard({ run }: AgentRunCardProps) {
         </Link>
         {canRunAgain ? <AgentRunAgainButton prompt={run.prompt} /> : null}
       </div>
-    </article>
+    </AppPanel>
   );
 }

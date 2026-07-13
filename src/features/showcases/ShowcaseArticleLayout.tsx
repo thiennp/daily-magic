@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import AppPanel from "@/components/surfaces/AppPanel";
 import ShowcaseArticleBody from "@/features/showcases/ShowcaseArticleBody";
 import ShowcaseWhatYouNeedBox from "@/features/showcases/ShowcaseWhatYouNeedBox";
 import type ShowcaseArticle from "@/features/showcases/types/ShowcaseArticle.type";
@@ -39,7 +40,11 @@ export default function ShowcaseArticleLayout({
       <div className="mt-10">
         <ShowcaseArticleBody sections={article.sections} />
       </div>
-      <footer className="mt-12 rounded-2xl border border-gray-200 bg-gray-50 p-6 dark:border-gray-800 dark:bg-white/[0.03]">
+      <AppPanel
+        as="footer"
+        padding="compact"
+        className="mt-12 bg-gray-50 dark:bg-white/[0.03]"
+      >
         <p className="text-sm font-medium text-gray-800 dark:text-white/90">
           Try this next
         </p>
@@ -49,7 +54,7 @@ export default function ShowcaseArticleLayout({
         >
           {article.tryNext.label}
         </Link>
-      </footer>
+      </AppPanel>
     </article>
   );
 }

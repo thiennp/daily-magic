@@ -2,6 +2,7 @@
 
 import { useCallback, type ReactNode } from "react";
 
+import AppHero from "@/components/surfaces/AppHero";
 import HomeConnectComputerGuide from "@/features/home/HomeConnectComputerGuide";
 import HomeOnboardingChecklist from "@/features/home/HomeOnboardingChecklist";
 import {
@@ -44,11 +45,11 @@ export default function HomeLinkAccountGate({
           <HomeOnboardingChecklist />
         </aside>
         <main className={HOME_MAIN_COLUMN_CLASS}>
-          <section className="rounded-3xl border border-gray-200 bg-white p-8 dark:border-gray-800 dark:bg-white/[0.03]">
+          <AppHero variant="plain">
             <p className="text-sm text-gray-500 dark:text-gray-400">
               Checking your computer connection…
             </p>
-          </section>
+          </AppHero>
         </main>
       </div>
     );

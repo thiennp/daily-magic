@@ -2,6 +2,8 @@ import { headers } from "next/headers";
 
 import CopyableBashCommand from "@/features/home/CopyableBashCommand";
 import AgentWitchUnsupportedHostNotice from "@/features/home/AgentWitchUnsupportedHostNotice";
+import AppPanel from "@/components/surfaces/AppPanel";
+import { APP_SURFACE_BODY_TEXT_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
 import { buildLocalAgentInstallCommandFromHeaders } from "@/lib/agentWitch/buildLocalAgentInstallCommand";
 import isAgentWitchWebSocketSupportedHost from "@/lib/agentWitch/isAgentWitchWebSocketSupportedHost";
 
@@ -14,7 +16,11 @@ export default async function LocalAgentSetupInstructions() {
   const isWebSocketSupported = isAgentWitchWebSocketSupportedHost(host);
 
   return (
-    <section className="rounded-xl border border-gray-200 bg-gray-50 p-5 text-left dark:border-gray-700 dark:bg-gray-900/50">
+    <AppPanel
+      as="section"
+      padding="compact"
+      className="bg-gray-50 text-left dark:border-gray-700 dark:bg-gray-900/50"
+    >
       <h2 className="text-sm font-semibold text-gray-800 dark:text-white/90">
         Connect your Mac
       </h2>
@@ -23,7 +29,7 @@ export default async function LocalAgentSetupInstructions() {
           <AgentWitchUnsupportedHostNotice host={host} />
         </div>
       ) : null}
-      <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+      <p className={`mt-2 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
         Run this install command on your Mac. It sets up Agent Witch so this
         website can send tasks to your computer. On macOS it also starts
         automatically when you sign in.
@@ -69,6 +75,6 @@ export default async function LocalAgentSetupInstructions() {
           .
         </p>
       </details>
-    </section>
+    </AppPanel>
   );
 }

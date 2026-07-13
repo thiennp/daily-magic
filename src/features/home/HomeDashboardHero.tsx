@@ -2,8 +2,13 @@
 
 import Link from "next/link";
 
-import { COMPANY_RULES_NAV_LABEL } from "@/lib/admin/companyGroupCopy.constant";
+import AppHero from "@/components/surfaces/AppHero";
+import {
+  APP_SURFACE_BODY_TEXT_CLASS,
+  APP_SURFACE_EYEBROW_TEXT_CLASS,
+} from "@/components/surfaces/appSurfaceStyles.constant";
 import { useAppPath } from "@/features/demo/DemoPreviewContext";
+import { COMPANY_RULES_NAV_LABEL } from "@/lib/admin/companyGroupCopy.constant";
 import formatGlobalRole from "@/lib/auth/formatGlobalRole";
 import type { GlobalRoleValue } from "@/lib/auth/roles";
 
@@ -20,14 +25,12 @@ export default function HomeDashboardHero({ user }: HomeDashboardHeroProps) {
   const appPath = useAppPath();
 
   return (
-    <section className="overflow-hidden rounded-3xl border border-gray-200/80 bg-gradient-to-br from-brand-50 via-white to-white p-8 shadow-theme-sm ring-1 ring-gray-200/50 dark:border-gray-800 dark:from-brand-950/30 dark:via-white/[0.02] dark:to-white/[0.02]">
-      <p className="text-sm font-medium uppercase tracking-wide text-brand-600">
-        Your home
-      </p>
+    <AppHero variant="neutral">
+      <p className={APP_SURFACE_EYEBROW_TEXT_CLASS}>Your home</p>
       <h1 className="mt-3 text-3xl font-semibold tracking-tight text-gray-900 dark:text-white/90">
         Welcome back, {displayName}
       </h1>
-      <p className="mt-3 text-sm text-gray-600 dark:text-gray-400">
+      <p className={`mt-3 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
         Send tasks from your browser, share setup files with teammates who are
         online, and read what happened in Reports. Signed in as {user.email} (
         {formatGlobalRole(user.globalRole)}).
@@ -60,6 +63,6 @@ export default function HomeDashboardHero({ user }: HomeDashboardHeroProps) {
           </Link>
         </div>
       </div>
-    </section>
+    </AppHero>
   );
 }

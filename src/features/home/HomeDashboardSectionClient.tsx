@@ -1,5 +1,6 @@
 "use client";
 
+import AppHero from "@/components/surfaces/AppHero";
 import HomeConnectComputerGuide from "@/features/home/HomeConnectComputerGuide";
 import HomeDashboardHero from "@/features/home/HomeDashboardHero";
 import { useHasPairedDevice } from "@/features/home/hooks/useHasPairedDevice";
@@ -26,11 +27,11 @@ export default function HomeDashboardSectionClient({
 
   if (isLoading) {
     return (
-      <section className="rounded-3xl border border-gray-200 bg-white p-8 dark:border-gray-800 dark:bg-white/[0.03]">
+      <AppHero variant="plain">
         <p className="text-sm text-gray-500 dark:text-gray-400">
           Checking your computer connection…
         </p>
-      </section>
+      </AppHero>
     );
   }
 

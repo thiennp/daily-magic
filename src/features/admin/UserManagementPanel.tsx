@@ -3,6 +3,7 @@
 import { useSession } from "next-auth/react";
 import { useState } from "react";
 
+import AppPanel from "@/components/surfaces/AppPanel";
 import UsersTable, {
   type UserItem,
 } from "@/features/admin/components/UsersTable";
@@ -68,7 +69,7 @@ export default function UserManagementPanel({
 
   return (
     <div className="space-y-4">
-      <section className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03]">
+      <AppPanel padding="compact">
         <h2 className="text-lg font-semibold text-gray-800 dark:text-white/90">
           Users
         </h2>
@@ -77,7 +78,7 @@ export default function UserManagementPanel({
           currentUserId={session?.user?.id}
           onRemoveRequest={setPendingUserId}
         />
-      </section>
+      </AppPanel>
 
       {message ? (
         <p className="text-sm text-gray-600 dark:text-gray-400">{message}</p>

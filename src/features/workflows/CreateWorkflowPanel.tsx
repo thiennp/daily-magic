@@ -3,6 +3,7 @@
 import { useState } from "react";
 
 import Button from "@/components/ui/button/Button";
+import AppPanel from "@/components/surfaces/AppPanel";
 import { useDemoPreview } from "@/features/demo/DemoPreviewContext";
 import CreateWorkflowForm from "@/features/workflows/CreateWorkflowForm";
 
@@ -21,7 +22,7 @@ export default function CreateWorkflowPanel({
   }
 
   return (
-    <section className="rounded-2xl border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-white/[0.03]">
+    <AppPanel>
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h2 className="text-lg font-semibold text-gray-800 dark:text-white/90">
@@ -48,6 +49,6 @@ export default function CreateWorkflowPanel({
           }}
         />
       ) : null}
-    </section>
+    </AppPanel>
   );
 }

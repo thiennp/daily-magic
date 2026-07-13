@@ -6,6 +6,7 @@ import { useState } from "react";
 import { useAppPath, useDemoPreview } from "@/features/demo/DemoPreviewContext";
 import LibraryPlaybookTypeBadge from "@/features/library/LibraryPlaybookTypeBadge";
 import EditWorkflowForm from "@/features/workflows/EditWorkflowForm";
+import AppPanel from "@/components/surfaces/AppPanel";
 import Button from "@/components/ui/button/Button";
 import { useCopyToClipboard } from "@/hooks/useCopyToClipboard";
 import { resolveLibraryCopyPrompt } from "@/lib/library/resolveLibraryCopyPrompt";
@@ -33,7 +34,7 @@ export default function LibraryPlaybookCard({
   const canEdit = !demoPreview && capability.type === CapabilityType.WORKFLOW;
 
   return (
-    <article className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03]">
+    <AppPanel as="article" padding="compact">
       <div className="flex flex-wrap items-center gap-2">
         <LibraryPlaybookTypeBadge type={capability.type} />
         <p className="text-sm font-medium text-gray-800 dark:text-white/90">
@@ -90,6 +91,6 @@ export default function LibraryPlaybookCard({
           }}
         />
       ) : null}
-    </article>
+    </AppPanel>
   );
 }
