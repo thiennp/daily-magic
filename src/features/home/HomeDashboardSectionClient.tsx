@@ -2,7 +2,7 @@
 
 import AppHero from "@/components/surfaces/AppHero";
 import HomeConnectComputerGuide from "@/features/home/HomeConnectComputerGuide";
-import HomeDashboardHero from "@/features/home/HomeDashboardHero";
+import HomeOnboardingMainPanel from "@/features/home/HomeOnboardingMainPanel";
 import { useHasPairedDevice } from "@/features/home/hooks/useHasPairedDevice";
 import type { GlobalRoleValue } from "@/lib/auth/roles";
 
@@ -36,7 +36,7 @@ export default function HomeDashboardSectionClient({
   }
 
   if (hasPairedDevice) {
-    return <HomeDashboardHero user={user} />;
+    return <HomeOnboardingMainPanel user={user} />;
   }
 
   return (
