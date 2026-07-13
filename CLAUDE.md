@@ -113,6 +113,7 @@ npm run agent-witch:install
 - Test UI: http://localhost:3000/ws-test
 - Status API: `GET /api/agent-witch/status`
 - Config: `~/.agent-witch/config.json`
+- Mid-run input: agent outputs `[[AWAITING_INPUT]]` + question; browser answers over WS; Mac stores pending sessions in `pending-run-inputs.json` (see `.cursor/rules/agent-run-input-protocol.mdc`)
 
 ---
 
