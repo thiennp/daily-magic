@@ -22,10 +22,12 @@ export default function AppShellHeader() {
             />
           </Link>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex min-w-0 items-center gap-2 sm:gap-3">
           <AppShellNav />
-          <ThemeToggleButton />
-          <UserDropdown />
+          <div className="flex shrink-0 items-center gap-2 sm:gap-3">
+            <ThemeToggleButton />
+            <UserDropdown />
+          </div>
         </div>
       </div>
     </header>

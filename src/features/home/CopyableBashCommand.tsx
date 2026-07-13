@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useRef, useState, type ReactNode } from "react";
 import { twMerge } from "tailwind-merge";
 
 import LocalTerminalPre from "@/components/surfaces/LocalTerminalPre";
@@ -32,6 +32,28 @@ const verifyClipboardAndEngage = async (
 
   onEngaged?.();
   return true;
+};
+
+const renderCopyIcon = (copied: boolean, iconOnly: boolean): ReactNode => {
+  if (copied) {
+    return iconOnly ? (
+      <CheckLineIcon className="h-5 w-5 shrink-0" />
+    ) : (
+      <>
+        <CheckLineIcon className="h-3.5 w-3.5" />
+        Copied
+      </>
+    );
+  }
+
+  return iconOnly ? (
+    <CopyIcon className="h-5 w-5 shrink-0" />
+  ) : (
+    <>
+      <CopyIcon className="h-3.5 w-3.5" />
+      Copy
+    </>
+  );
 };
 
 export default function CopyableBashCommand({
@@ -66,19 +88,41 @@ export default function CopyableBashCommand({
     }, 0);
   }, [reportVerifiedCopy]);
 
-  const terminalClassName =
-    variant === "bash"
-      ? APP_SURFACE_BASH_TERMINAL_PRE_CLASS
-      : undefined;
+  if (variant === "bash") {
+    return (
+      <div className="mt-4" onCopy={handleCopyEvent}>
+        <div
+          className={twMerge(
+            APP_SURFACE_BASH_TERMINAL_PRE_CLASS,
+            "flex items-stretch gap-0 overflow-hidden p-0",
+          )}
+        >
+          <pre
+            ref={preRef}
+            className="min-w-0 flex-1 overflow-x-auto p-3 font-mono text-xs text-white"
+          >
+            <code>{command}</code>
+          </pre>
+          <div className="flex shrink-0 items-center border-l border-zinc-700 px-2">
+            <button
+              type="button"
+              onClick={handleCopyClick}
+              aria-label={copied ? "Copied" : "Copy install command"}
+              className={APP_SURFACE_BASH_TERMINAL_COPY_BUTTON_CLASS}
+            >
+              {renderCopyIcon(copied, true)}
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
-  const copyButtonClassName =
-    variant === "bash"
-      ? APP_SURFACE_BASH_TERMINAL_COPY_BUTTON_CLASS
-      : iconOnly
-        ? APP_SURFACE_TERMINAL_COPY_BUTTON_CLASS
-        : twMerge(
-            "absolute right-3 top-3 inline-flex items-center gap-1.5 rounded-md border border-gray-200 bg-gray-100 px-2.5 py-1.5 text-xs font-medium text-gray-600 shadow-sm transition hover:bg-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700",
-          );
+  const copyButtonClassName = iconOnly
+    ? APP_SURFACE_TERMINAL_COPY_BUTTON_CLASS
+    : twMerge(
+        "absolute right-3 top-3 inline-flex items-center gap-1.5 rounded-md border border-gray-200 bg-gray-100 px-2.5 py-1.5 text-xs font-medium text-gray-600 shadow-sm transition hover:bg-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700",
+      );
 
   return (
     <div className="relative mt-4" onCopy={handleCopyEvent}>
@@ -88,27 +132,11 @@ export default function CopyableBashCommand({
         aria-label={copied ? "Copied" : "Copy install command"}
         className={twMerge("absolute right-3 top-3", copyButtonClassName)}
       >
-        {copied ? (
-          iconOnly || variant === "bash" ? (
-            <CheckLineIcon className="h-5 w-5 shrink-0" />
-          ) : (
-            <>
-              <CheckLineIcon className="h-3.5 w-3.5" />
-              Copied
-            </>
-          )
-        ) : iconOnly || variant === "bash" ? (
-          <CopyIcon className="h-5 w-5 shrink-0" />
-        ) : (
-          <>
-            <CopyIcon className="h-3.5 w-3.5" />
-            Copy
-          </>
-        )}
+        {renderCopyIcon(copied, iconOnly)}
       </button>
       <LocalTerminalPre
         ref={preRef}
-        className={twMerge(terminalClassName, iconOnly || variant === "bash" ? "pr-14" : "pr-24")}
+        className={iconOnly ? "pr-14" : "pr-24"}
       >
         <code>{command}</code>
       </LocalTerminalPre>

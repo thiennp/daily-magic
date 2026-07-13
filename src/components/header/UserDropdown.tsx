@@ -7,9 +7,22 @@ import { useState, type MouseEvent } from "react";
 
 import UserDropdownMenu from "@/components/header/UserDropdownMenu";
 
+const buildInitials = (displayName: string): string => {
+  const trimmed = displayName.trim();
+
+  if (trimmed.length === 0) {
+    return "?";
+  }
+
+  const [firstWord] = trimmed.split(/\s+/);
+
+  return (firstWord?.slice(0, 1) ?? "?").toUpperCase();
+};
+
 export default function UserDropdown() {
   const { data: session } = useSession();
   const [isOpen, setIsOpen] = useState(false);
+  const [imageError, setImageError] = useState(false);
 
   function toggleDropdown(event: MouseEvent<HTMLButtonElement>) {
     event.stopPropagation();
@@ -31,37 +44,43 @@ export default function UserDropdown() {
     );
   }
 
-  const displayName = session.user.name ?? session.user.email;
-  const initials = displayName.slice(0, 1).toUpperCase();
+  const displayName = session.user.name ?? session.user.email ?? "Account";
+  const initials = buildInitials(displayName);
+  const showImage = Boolean(session.user.image) && !imageError;
 
   return (
-    <div className="relative">
+    <div className="relative shrink-0">
       <button
         type="button"
         onClick={toggleDropdown}
         aria-expanded={isOpen}
         aria-haspopup="menu"
-        className="dropdown-toggle flex items-center text-gray-700 dark:text-gray-400"
+        aria-label={`${displayName} account menu`}
+        className="dropdown-toggle flex max-w-full items-center gap-2 text-gray-700 dark:text-gray-400"
       >
-        <span className="mr-3 flex h-11 w-11 items-center justify-center overflow-hidden rounded-full bg-brand-50 text-sm font-semibold text-brand-600 dark:bg-brand-500/10 dark:text-brand-400">
-          {session.user.image ? (
+        <span className="relative flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-full bg-brand-50 text-sm font-semibold text-brand-600 dark:bg-brand-500/10 dark:text-brand-400">
+          {showImage ? (
             <Image
               width={44}
               height={44}
-              src={session.user.image}
-              alt={displayName}
+              src={session.user.image ?? ""}
+              alt=""
+              className="h-full w-full object-cover"
+              onError={() => {
+                setImageError(true);
+              }}
             />
           ) : (
             initials
           )}
         </span>
 
-        <span className="text-theme-sm mr-1 block font-medium">
+        <span className="hidden max-w-[9rem] truncate text-theme-sm font-medium xl:block">
           {displayName}
         </span>
 
         <svg
-          className={`stroke-gray-500 transition-transform duration-200 dark:stroke-gray-400 ${
+          className={`hidden shrink-0 stroke-gray-500 transition-transform duration-200 dark:stroke-gray-400 xl:block ${
             isOpen ? "rotate-180" : ""
           }`}
           width="18"
@@ -69,6 +88,7 @@ export default function UserDropdown() {
           viewBox="0 0 18 20"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
+          aria-hidden="true"
         >
           <path
             d="M4.3125 8.65625L9 13.3437L13.6875 8.65625"
