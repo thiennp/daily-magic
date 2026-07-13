@@ -10,7 +10,6 @@ export type LoginFormAppearance = "default" | "marketing";
 export const LOGIN_FORM_APPEARANCE_CLASSES: Record<
   LoginFormAppearance,
   {
-    readonly description: string;
     readonly divider: string;
     readonly label: string;
     readonly input: string;
@@ -19,7 +18,6 @@ export const LOGIN_FORM_APPEARANCE_CLASSES: Record<
   }
 > = {
   default: {
-    description: "text-sm text-gray-600 dark:text-gray-400",
     divider:
       "relative py-2 text-center text-xs uppercase tracking-wide text-gray-400",
     label: "block text-sm font-medium text-gray-700 dark:text-gray-300",
@@ -29,7 +27,6 @@ export const LOGIN_FORM_APPEARANCE_CLASSES: Record<
     submitButton: "",
   },
   marketing: {
-    description: "text-sm text-zinc-600",
     divider:
       "relative py-2 text-center text-xs uppercase tracking-wide text-zinc-400",
     label: "block text-sm font-medium text-zinc-700",

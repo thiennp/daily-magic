@@ -26,9 +26,6 @@ export default function LoginPage() {
 
         <MarketingCard>
           <h2 className="text-xl font-semibold text-gray-900">Sign in</h2>
-          <p className="mt-2 text-sm text-gray-600">
-            Use your email link or Google account to continue.
-          </p>
           <div className="mt-6">
             <Suspense
               fallback={<div className="text-sm text-gray-500">Loading…</div>}

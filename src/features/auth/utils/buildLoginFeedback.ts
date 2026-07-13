@@ -17,14 +17,6 @@ export const buildLoginFeedback = (message: string): LoginFeedback => {
     };
   }
 
-  if (message.includes("Super admin")) {
-    return {
-      variant: "warning",
-      title: "Use Google sign-in",
-      message,
-    };
-  }
-
   return {
     variant: "error",
     title: "Sign-in failed",

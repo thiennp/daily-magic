@@ -14,8 +14,6 @@ import {
   type LoginFeedback,
 } from "@/features/auth/utils/buildLoginFeedback";
 import Alert from "@/components/ui/alert/Alert";
-import { SUPER_ADMIN_EMAIL } from "@/lib/auth/constants";
-import isSuperAdminEmail from "@/lib/auth/isSuperAdminEmail";
 
 interface LoginFormProps {
   readonly defaultCallbackUrl?: string;
@@ -42,11 +40,6 @@ export default function LoginForm({
       return;
     }
 
-    if (isSuperAdminEmail(trimmedEmail)) {
-      setFeedback(buildLoginFeedback("Super admin must sign in with Google."));
-      return;
-    }
-
     setIsSubmitting(true);
     setFeedback(null);
 
@@ -65,45 +58,38 @@ export default function LoginForm({
   };
 
   return (
-    <div className="space-y-6">
-      <p className={appearanceClasses.description}>
-        Use Google or a magic link sent to your email. Super admin (
-        {SUPER_ADMIN_EMAIL}) must use Google.
-      </p>
+    <div className="space-y-4">
+      <LoginFormGoogleButton
+        appearance={appearance}
+        onGoogleSignIn={() => {
+          void signIn("google", { callbackUrl });
+        }}
+      />
 
-      <div className="space-y-4">
-        <LoginFormGoogleButton
-          appearance={appearance}
-          onGoogleSignIn={() => {
-            void signIn("google", { callbackUrl });
-          }}
+      <div className={appearanceClasses.divider}>or email</div>
+
+      <LoginFormEmailField
+        appearance={appearance}
+        emailInputId={emailInputId}
+        email={email}
+        onEmailChange={setEmail}
+      />
+
+      <LoginFormEmailSubmitButton
+        appearance={appearance}
+        isSubmitting={isSubmitting}
+        onEmailSignIn={() => {
+          void handleEmailSignIn();
+        }}
+      />
+
+      {feedback ? (
+        <Alert
+          variant={feedback.variant}
+          title={feedback.title}
+          message={feedback.message}
         />
-
-        <div className={appearanceClasses.divider}>or email</div>
-
-        <LoginFormEmailField
-          appearance={appearance}
-          emailInputId={emailInputId}
-          email={email}
-          onEmailChange={setEmail}
-        />
-
-        <LoginFormEmailSubmitButton
-          appearance={appearance}
-          isSubmitting={isSubmitting}
-          onEmailSignIn={() => {
-            void handleEmailSignIn();
-          }}
-        />
-
-        {feedback ? (
-          <Alert
-            variant={feedback.variant}
-            title={feedback.title}
-            message={feedback.message}
-          />
-        ) : null}
-      </div>
+      ) : null}
     </div>
   );
 }
