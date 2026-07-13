@@ -88,7 +88,7 @@ export default function WsTestPromptSection({
           canQueue={canQueue}
           copyText={composer.resolvedPrompt}
           sendLabel={
-            composer.isTeamDispatch ? "Send to teammate" : "Send to my Mac"
+            composer.isTeamDispatch ? "Send to teammate" : "Send to your Mac"
           }
           isWorkflowTask={composer.isWorkflowTask}
           onSend={onSend}

@@ -35,7 +35,6 @@ export default function WsTestComposerActions({
   onQueue,
 }: WsTestComposerActionsProps) {
   const isOffline = connectionStatus !== "connected";
-  const showCopyPrimary = isOffline && canCopyPrompt;
   const { copied, copy } = useCopyToClipboard();
 
   const handleCopy = () => {
@@ -45,42 +44,30 @@ export default function WsTestComposerActions({
   return (
     <>
       <div className="mt-4 flex flex-wrap gap-3">
-        {showCopyPrimary ? (
-          <>
-            <button
-              type="button"
-              onClick={handleCopy}
-              className={`${primaryButtonClass} min-w-[10rem] flex-1 sm:flex-none`}
-            >
-              {copied ? "Copied" : "Copy prompt"}
-            </button>
-            {canQueue ? (
-              <button
-                type="button"
-                onClick={onQueue}
-                className={`${outlineButtonClass} flex-1 sm:flex-none`}
-              >
-                Queue for later
-              </button>
-            ) : null}
-          </>
-        ) : (
-          <button
-            type="button"
-            onClick={onSend}
-            disabled={isSendDisabled}
-            className={primaryButtonClass}
-          >
-            {sendLabel}
-          </button>
-        )}
-        {!showCopyPrimary && canCopyPrompt ? (
+        <button
+          type="button"
+          onClick={onSend}
+          disabled={isSendDisabled}
+          className={`${primaryButtonClass} min-w-[10rem] flex-1 sm:flex-none`}
+        >
+          {sendLabel}
+        </button>
+        {canCopyPrompt ? (
           <button
             type="button"
             onClick={handleCopy}
-            className={outlineButtonClass}
+            className={`${outlineButtonClass} flex-1 sm:flex-none`}
           >
-            {copied ? "Copied" : "Copy prompt"}
+            {copied ? "Copied" : "Copy for other AI"}
+          </button>
+        ) : null}
+        {isOffline && canQueue ? (
+          <button
+            type="button"
+            onClick={onQueue}
+            className={`${outlineButtonClass} flex-1 sm:flex-none`}
+          >
+            Queue for later
           </button>
         ) : null}
         <button type="button" onClick={onClear} className={outlineButtonClass}>
@@ -88,10 +75,10 @@ export default function WsTestComposerActions({
         </button>
       </div>
       <WsTestComposerHelperText
-        showCopyPrimary={showCopyPrimary}
         isSendDisabled={isSendDisabled}
         isWorkflowTask={isWorkflowTask}
         isOffline={isOffline}
+        canCopyPrompt={canCopyPrompt}
       />
     </>
   );
