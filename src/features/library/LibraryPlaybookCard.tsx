@@ -3,18 +3,20 @@
 import Link from "next/link";
 import { useState } from "react";
 
+import AppPanel from "@/components/surfaces/AppPanel";
+import Button from "@/components/ui/button/Button";
 import { useAppPath, useDemoPreview } from "@/features/demo/DemoPreviewContext";
 import LibraryPlaybookTypeBadge from "@/features/library/LibraryPlaybookTypeBadge";
 import LibraryPlaybookWorkflowActions from "@/features/library/LibraryPlaybookWorkflowActions";
 import LibrarySampleWorkflowBadge from "@/features/library/LibrarySampleWorkflowBadge";
+import LibrarySampleWorkflowPromptPreview from "@/features/library/LibrarySampleWorkflowPromptPreview";
 import EditWorkflowForm from "@/features/workflows/EditWorkflowForm";
-import AppPanel from "@/components/surfaces/AppPanel";
-import Button from "@/components/ui/button/Button";
 import { useCopyToClipboard } from "@/hooks/useCopyToClipboard";
-import { resolveLibraryCopyPrompt } from "@/lib/library/resolveLibraryCopyPrompt";
+import isSampleWorkflowCapability from "@/lib/capabilities/isSampleWorkflowCapability";
 import type PublishedCapabilityRecord from "@/lib/capabilities/types/PublishedCapabilityRecord.type";
-import buildAgentComposerHref from "@/lib/library/buildAgentComposerHref";
 import { CapabilityType } from "@/lib/capabilities/CapabilityType.constant";
+import buildAgentComposerHref from "@/lib/library/buildAgentComposerHref";
+import { resolveLibraryCopyPrompt } from "@/lib/library/resolveLibraryCopyPrompt";
 
 interface LibraryPlaybookCardProps {
   readonly capability: PublishedCapabilityRecord;
@@ -27,7 +29,8 @@ export default function LibraryPlaybookCard({
 }: LibraryPlaybookCardProps) {
   const appPath = useAppPath();
   const demoPreview = useDemoPreview();
-  const [isEditing, setIsEditing] = useState(false);
+  const isSample = isSampleWorkflowCapability(capability);
+  const [isEditing, setIsEditing] = useState(isSample);
   const { copied, copy } = useCopyToClipboard();
   const useHref = buildAgentComposerHref({
     libraryCapabilityId: capability.id,
@@ -58,6 +61,9 @@ export default function LibraryPlaybookCard({
           ? ` · ${capability.workflowFields.length} inputs`
           : ""}
       </p>
+      {isSample ? (
+        <LibrarySampleWorkflowPromptPreview capability={capability} />
+      ) : null}
       <div className="mt-4 flex flex-wrap gap-2">
         <Link href={appPath(useHref)}>
           <Button>Use playbook</Button>
