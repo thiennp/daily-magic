@@ -1,4 +1,5 @@
 import { headers } from "next/headers";
+import Link from "next/link";
 
 import CopyableBashCommand from "@/features/home/CopyableBashCommand";
 import AgentWitchUnsupportedHostNotice from "@/features/home/AgentWitchUnsupportedHostNotice";
@@ -30,9 +31,10 @@ export default async function LocalAgentSetupInstructions() {
         </div>
       ) : null}
       <p className={`mt-2 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
-        Run this install command on your Mac. It sets up Agent Witch so this
-        website can send tasks to your computer. On macOS it also starts
-        automatically when you sign in.
+        Step 1 for a new Mac: run this install command in Terminal on the
+        computer you want to use. It sets up Agent Witch so this website can
+        send tasks to your machine. On macOS it also starts automatically when
+        you sign in.
         {!isWebSocketSupported
           ? " This website host cannot keep a live connection open — use a supported deployment before connecting."
           : null}
@@ -41,12 +43,19 @@ export default async function LocalAgentSetupInstructions() {
         <CopyableBashCommand command={installCommand} />
       ) : null}
       <p className="mt-3 text-xs text-gray-500 dark:text-gray-400">
-        After install, use <strong>Link this Mac to my account</strong> on the
-        home page. The browser calls the local API at{" "}
+        Step 2: open{" "}
+        <Link
+          href="/"
+          className="font-medium text-brand-600 hover:underline dark:text-brand-400"
+        >
+          Home
+        </Link>{" "}
+        on this Mac after install. The browser calls{" "}
         <code className="rounded bg-white px-1 py-0.5 dark:bg-gray-800">
           http://127.0.0.1:47892/link-account
-        </code>
-        . Sign in as a different user and link again — no reinstall needed.
+        </code>{" "}
+        to link whichever account you are signed in with — no email in the
+        install command, and no reinstall when you switch users.
       </p>
       <details className="mt-3 text-xs text-gray-500 dark:text-gray-400">
         <summary className="cursor-pointer font-medium text-gray-600 dark:text-gray-300">

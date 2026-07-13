@@ -2,8 +2,11 @@
 
 import AppPanel from "@/components/surfaces/AppPanel";
 import { APP_SURFACE_BODY_TEXT_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
+import AgentPairingTokenForm from "@/features/harness/AgentPairingTokenForm";
 import { useAgentPairingToken } from "@/features/harness/hooks/useAgentPairingToken";
 import type { UseAgentWitchHarnessSocketResult } from "@/features/harness/hooks/useAgentWitchHarnessSocket";
+import { useOptionalPairedDeviceContext } from "@/features/home/PairedDeviceContext";
+import buildHomeSetupNextStep from "@/features/home/utils/buildHomeSetupNextStep";
 import {
   ConnectionStatusBadge,
   PairingStatusBadge,
@@ -18,15 +21,19 @@ export default function AgentPairingPanel({
 }: AgentPairingPanelProps) {
   const { pairingToken, setPairingToken, savePairingToken } =
     useAgentPairingToken();
+  const pairedDeviceContext = useOptionalPairedDeviceContext();
+  const hasPairedDevice = pairedDeviceContext?.hasPairedDevice ?? false;
   const { connectionStatus, pairLocalAgent, pairingStatus } = harnessSocket;
   const isPairDisabled =
     connectionStatus !== "connected" || pairingToken.trim().length === 0;
+  const nextStep = buildHomeSetupNextStep({ hasPairedDevice, pairingStatus });
+  const showPairingForm = nextStep.activeStep === "pair-browser";
 
   return (
     <AppPanel as="section" padding="compact" className="text-left">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <h2 className="text-sm font-semibold text-gray-800 dark:text-white/90">
-          Connect this browser
+          Pair this browser
         </h2>
         <div className="flex flex-wrap items-center gap-2">
           <ConnectionStatusBadge status={connectionStatus} />
@@ -34,55 +41,46 @@ export default function AgentPairingPanel({
         </div>
       </div>
       <p className={`mt-2 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
-        After installing the local agent, copy the pairing token from{" "}
+        Linking your Mac on Home registers the computer with your account.
+        Pairing this browser lets you edit rules, publish sharing snapshots, and
+        sync harness files. Look for{" "}
+        <code className="rounded bg-gray-100 px-1 py-0.5 text-xs dark:bg-gray-900">
+          pairingToken
+        </code>{" "}
+        in{" "}
+        <code className="rounded bg-gray-100 px-1 py-0.5 text-xs dark:bg-gray-900">
+          ~/.agent-witch/profiles/&lt;your-email&gt;/config.json
+        </code>{" "}
+        after account link, or in legacy{" "}
         <code className="rounded bg-gray-100 px-1 py-0.5 text-xs dark:bg-gray-900">
           ~/.agent-witch/config.json
-        </code>{" "}
-        and save it here once. Your browser will auto-pair on future logins.
+        </code>
+        .
       </p>
 
-      <label className="mt-4 block text-sm">
-        <span className="font-medium text-gray-800 dark:text-white/90">
-          Pairing token
-        </span>
-        <input
-          type="password"
-          value={pairingToken}
-          onChange={(event) => {
-            setPairingToken(event.target.value);
-          }}
-          placeholder="Paste pairing token from install output"
-          className="mt-2 w-full rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm text-gray-800 shadow-theme-xs outline-none transition focus:border-brand-300 focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90"
-        />
-      </label>
+      {!hasPairedDevice ? (
+        <p className="mt-3 text-sm text-gray-500 dark:text-gray-400">
+          Finish Mac install and account link first — the pairing token appears
+          after that step.
+        </p>
+      ) : null}
 
-      <div className="mt-4 flex flex-wrap gap-3">
-        <button
-          type="button"
-          onClick={() => {
+      {showPairingForm ? (
+        <AgentPairingTokenForm
+          pairingToken={pairingToken}
+          isPairDisabled={isPairDisabled}
+          connectionStatus={connectionStatus}
+          onPairingTokenChange={setPairingToken}
+          onSaveAndPair={() => {
             savePairingToken();
             pairLocalAgent(pairingToken.trim());
           }}
-          disabled={isPairDisabled}
-          aria-describedby={
-            isPairDisabled ? "agent-pairing-disabled-hint" : undefined
-          }
-          className="inline-flex h-10 items-center justify-center rounded-lg bg-brand-500 px-5 text-sm font-medium text-white transition hover:bg-brand-600 disabled:cursor-not-allowed disabled:opacity-50"
-        >
-          Save and pair
-        </button>
-      </div>
-
-      {isPairDisabled ? (
-        <p
-          id="agent-pairing-disabled-hint"
-          className="mt-3 text-sm text-gray-500 dark:text-gray-400"
-        >
-          {connectionStatus !== "connected"
-            ? "Waiting for server connection. If you just installed the client, wait a few seconds and refresh."
-            : "Paste your pairing token to continue."}
+        />
+      ) : (
+        <p className="mt-3 text-sm text-success-700 dark:text-success-400">
+          Browser pairing is complete. You can update rules and sharing below.
         </p>
-      ) : null}
+      )}
     </AppPanel>
   );
 }

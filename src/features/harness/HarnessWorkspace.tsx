@@ -1,17 +1,19 @@
 "use client";
 
-import AgentPairingPanel from "@/features/harness/AgentPairingPanel";
 import HarnessManagerPanel from "@/features/harness/HarnessManagerPanel";
 import HarnessSharingPanel from "@/features/harness/HarnessSharingPanel";
 import PairedDevicesPanel from "@/features/harness/PairedDevicesPanel";
-import { useAgentWitchHarnessSocket } from "@/features/harness/hooks/useAgentWitchHarnessSocket";
+import type { UseAgentWitchHarnessSocketResult } from "@/features/harness/hooks/useAgentWitchHarnessSocket";
 
-export default function HarnessWorkspace() {
-  const harnessSocket = useAgentWitchHarnessSocket();
+interface HarnessWorkspaceProps {
+  readonly harnessSocket: UseAgentWitchHarnessSocketResult;
+}
 
+export default function HarnessWorkspace({
+  harnessSocket,
+}: HarnessWorkspaceProps) {
   return (
     <>
-      <AgentPairingPanel harnessSocket={harnessSocket} />
       <PairedDevicesPanel key={harnessSocket.pairingStatus} />
       <HarnessSharingPanel />
       <HarnessManagerPanel harnessSocket={harnessSocket} />
