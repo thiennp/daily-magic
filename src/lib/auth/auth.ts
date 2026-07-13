@@ -7,7 +7,6 @@ import {
   createNeonAuthAdapter,
   ensureSuperAdminGlobalRole,
 } from "@/lib/auth/neonAdapter";
-import canSignInWithProvider from "@/lib/auth/canSignInWithProvider";
 import { GlobalRole, isGlobalRole } from "@/lib/auth/roles";
 import { getUserById } from "@/lib/auth/userRepository";
 import sendSignInVerificationEmail from "@/lib/email/sendSignInVerificationEmail";
@@ -20,6 +19,7 @@ function buildAuthProviders(): Provider[] {
       Google({
         clientId: process.env.AUTH_GOOGLE_ID,
         clientSecret: process.env.AUTH_GOOGLE_SECRET,
+        allowDangerousEmailAccountLinking: true,
       }),
     );
   }
@@ -55,15 +55,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     signIn: "/login",
   },
   callbacks: {
-    async signIn({ user, account }) {
-      if (user.email && account?.provider) {
-        if (!canSignInWithProvider(user.email, account.provider)) {
-          return false;
-        }
-      }
-
-      return true;
-    },
     async session({ session, user }) {
       if (session.user && user?.id) {
         const dbUser = await getUserById(user.id);

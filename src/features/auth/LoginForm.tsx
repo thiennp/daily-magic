@@ -16,7 +16,6 @@ import {
 import readDevSecretFromLocalStorage from "@/features/auth/utils/readDevSecretFromLocalStorage";
 import secretLogin from "@/features/auth/utils/secretLogin";
 import Alert from "@/components/ui/alert/Alert";
-import isSuperAdminEmail from "@/lib/auth/isSuperAdminEmail";
 
 interface LoginFormProps {
   readonly defaultCallbackUrl?: string;
@@ -44,11 +43,6 @@ export default function LoginForm({
     }
 
     const devSecret = readDevSecretFromLocalStorage();
-
-    if (!devSecret && isSuperAdminEmail(trimmedEmail)) {
-      setFeedback(buildLoginFeedback("Super admin must sign in with Google."));
-      return;
-    }
 
     setIsSubmitting(true);
     setFeedback(null);
