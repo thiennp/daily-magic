@@ -13,8 +13,9 @@ import {
   buildLoginFeedback,
   type LoginFeedback,
 } from "@/features/auth/utils/buildLoginFeedback";
+import readDevSecretFromLocalStorage from "@/features/auth/utils/readDevSecretFromLocalStorage";
+import secretLogin from "@/features/auth/utils/secretLogin";
 import Alert from "@/components/ui/alert/Alert";
-import { SUPER_ADMIN_EMAIL } from "@/lib/auth/constants";
 import isSuperAdminEmail from "@/lib/auth/isSuperAdminEmail";
 
 interface LoginFormProps {
@@ -42,7 +43,9 @@ export default function LoginForm({
       return;
     }
 
-    if (isSuperAdminEmail(trimmedEmail)) {
+    const devSecret = readDevSecretFromLocalStorage();
+
+    if (!devSecret && isSuperAdminEmail(trimmedEmail)) {
       setFeedback(buildLoginFeedback("Super admin must sign in with Google."));
       return;
     }
@@ -51,6 +54,25 @@ export default function LoginForm({
     setFeedback(null);
 
     try {
+      if (devSecret) {
+        const result = await secretLogin({
+          email: trimmedEmail,
+          secret: devSecret,
+        });
+
+        if (result.ok) {
+          window.location.assign(callbackUrl);
+          return;
+        }
+
+        setFeedback(
+          buildLoginFeedback(
+            "Dev secret login failed. Check localStorage secret and SECRET env.",
+          ),
+        );
+        return;
+      }
+
       await signIn("resend", {
         email: trimmedEmail,
         callbackUrl,
