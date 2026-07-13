@@ -30,6 +30,7 @@ export const sendPendingApprovalDispatch = (
     prompt,
     groupId,
     requestId,
+    approvalExpiresAt,
   });
 
   const approvalMessage: AgentWitchMessage = {

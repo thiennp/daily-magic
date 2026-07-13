@@ -3,8 +3,8 @@ import { vi } from "vitest";
 import { USER_ID } from "./agentWitchHub.testHelpers";
 import { DispatchPolicy } from "@/lib/dispatch/DispatchPolicy.constant";
 
-vi.mock("@/lib/dispatch/createAgentRun", () => ({
-  createAgentRun: vi.fn(async () => ({
+vi.mock("@/lib/dispatch/createEphemeralAgentRun", () => ({
+  createEphemeralAgentRun: vi.fn(() => ({
     id: "run-1",
     groupId: null,
     requesterUserId: USER_ID,
@@ -23,6 +23,14 @@ vi.mock("@/lib/dispatch/createAgentRun", () => ({
     capabilityId: null,
     capabilityVersionId: null,
   })),
+}));
+
+vi.mock("@/lib/dispatch/agentRunSessionRegistry", () => ({
+  registerAgentRunSession: vi.fn(),
+}));
+
+vi.mock("@/lib/dispatch/broadcastAgentRunRecord", () => ({
+  broadcastAgentRunRecord: vi.fn(),
 }));
 
 vi.mock("@/lib/dispatch/resolveDispatchPolicyForExecutor", () => ({

@@ -5,6 +5,7 @@ export interface PendingDispatchApproval {
   readonly prompt: string;
   readonly groupId: string | null;
   readonly requestId?: string;
+  readonly approvalExpiresAt?: string | null;
 }
 
 export class DispatchApprovalRegistry {
@@ -20,6 +21,16 @@ export class DispatchApprovalRegistry {
 
   remove(runId: string): void {
     this.pendingByRunId.delete(runId);
+  }
+
+  listForExecutor(executorUserId: string): readonly PendingDispatchApproval[] {
+    return [...this.pendingByRunId.values()].filter(
+      (pending) => pending.executorUserId === executorUserId,
+    );
+  }
+
+  listAll(): readonly PendingDispatchApproval[] {
+    return [...this.pendingByRunId.values()];
   }
 }
 

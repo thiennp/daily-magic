@@ -11,6 +11,11 @@ import {
   removePendingRunInputSession,
   savePendingRunInputSession,
 } from "./agentWitchPendingRunSessions";
+import { persistFinishedAgentRun } from "./agentWitchRunFinish";
+import {
+  clearTerminalStreamState,
+  isTerminalStreamAccepted,
+} from "./agentWitchTerminalStreamState";
 
 import type WebSocket from "ws";
 
@@ -92,8 +97,26 @@ const finishRun = (
   requestId: string | undefined,
   exitCode: number,
   output: string,
+  originalPrompt: string,
 ): void => {
   if (agentRunId !== undefined) {
+    if (isTerminalStreamAccepted(agentRunId)) {
+      sendMessage(socket, {
+        type: "terminal.stream.end",
+        payload: { runId: agentRunId },
+        requestId,
+      });
+      clearTerminalStreamState(agentRunId);
+    }
+
+    persistFinishedAgentRun(config.layout, {
+      agentRunId,
+      originalPrompt,
+      exitCode,
+      output,
+      layout: config.layout,
+    });
+
     runSessions.delete(agentRunId);
     activeChildren.delete(agentRunId);
     removePendingRunInputSession(config.layout, agentRunId);
@@ -158,11 +181,28 @@ const attachChildHandlers = (
       originalPrompt,
       accumulatedOutput: runSessions.get(agentRunId)?.accumulatedOutput ?? "",
     });
+    sendMessage(socket, {
+      type: "terminal.stream.start",
+      payload: { runId: agentRunId },
+      requestId,
+    });
   }
 
   child.stdout?.on("data", (chunk: Buffer) => {
     const text = chunk.toString("utf8");
     outputChunks.push(text);
+
+    if (
+      agentRunId !== undefined &&
+      isTerminalStreamAccepted(agentRunId) &&
+      text.length > 0
+    ) {
+      sendMessage(socket, {
+        type: "terminal.stream.chunk",
+        payload: { runId: agentRunId, chunk: text },
+        requestId,
+      });
+    }
 
     if (inputRequested || agentRunId === undefined) {
       return;
@@ -222,6 +262,7 @@ const attachChildHandlers = (
       requestId,
       exitCode ?? -1,
       mergedOutput,
+      originalPrompt,
     );
   });
 
@@ -230,7 +271,15 @@ const attachChildHandlers = (
       return;
     }
 
-    finishRun(config, socket, agentRunId, requestId, -1, error.message);
+    finishRun(
+      config,
+      socket,
+      agentRunId,
+      requestId,
+      -1,
+      error.message,
+      originalPrompt,
+    );
   });
 };
 

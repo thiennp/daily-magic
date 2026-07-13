@@ -1,0 +1,86 @@
+import type AgentWitchHubRuntime from "@/lib/agentWitch/types/AgentWitchHubRuntime.type";
+import type AgentWitchMessage from "@/lib/agentWitch/types/AgentWitchMessage.type";
+import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
+import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
+import { broadcastAgentRunRecord } from "@/lib/dispatch/broadcastAgentRunRecord";
+import { updateAgentRunStatus } from "@/lib/dispatch/agentRunQueries";
+import type { PendingDispatchApproval } from "@/lib/dispatch/dispatchApprovalRegistry";
+import {
+  dispatchClaudeRunToAgent,
+  markAgentRunRunning,
+  notifyDashboardUser,
+} from "@/lib/dispatch/dispatchClaudeRunToAgent";
+
+export const denyDispatchApproval = async (
+  runtime: AgentWitchHubRuntime,
+  pending: PendingDispatchApproval,
+  runId: string,
+  denialReason: string,
+  requestId?: string,
+): Promise<AgentWitchMessage> => {
+  const deniedRun = await updateAgentRunStatus(runId, AgentRunStatus.DENIED, {
+    denialReason,
+  });
+  if (deniedRun !== null) {
+    broadcastAgentRunRecord(runtime, deniedRun, requestId);
+  }
+
+  notifyDashboardUser(runtime, pending.requesterUserId, {
+    type: AGENT_WITCH_MESSAGE_TYPES.DISPATCH_APPROVAL_RESULT,
+    payload: {
+      runId,
+      status: AgentRunStatus.DENIED,
+      denialReason,
+    },
+    requestId,
+  });
+
+  return {
+    type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ACK,
+    payload: { runId, status: AgentRunStatus.DENIED },
+    requestId,
+  };
+};
+
+export const approveDispatchApproval = async (
+  runtime: AgentWitchHubRuntime,
+  pending: PendingDispatchApproval,
+  runId: string,
+  requestId?: string,
+): Promise<AgentWitchMessage> => {
+  const agentClient = runtime.findAgentClientForUser(pending.executorUserId);
+
+  if (agentClient === undefined) {
+    return {
+      type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR,
+      payload: {
+        errorMessage: "No paired local agent is connected to run this task.",
+      },
+      requestId,
+    };
+  }
+
+  dispatchClaudeRunToAgent(
+    runtime,
+    agentClient,
+    pending.prompt,
+    runId,
+    pending.requestId,
+  );
+  await markAgentRunRunning(runtime, runId);
+
+  notifyDashboardUser(runtime, pending.requesterUserId, {
+    type: AGENT_WITCH_MESSAGE_TYPES.DISPATCH_APPROVAL_RESULT,
+    payload: {
+      runId,
+      status: AgentRunStatus.RUNNING,
+    },
+    requestId,
+  });
+
+  return {
+    type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ACK,
+    payload: { runId, status: AgentRunStatus.RUNNING },
+    requestId,
+  };
+};

@@ -11,6 +11,9 @@ export interface CreateCapabilityFeedbackInput {
   readonly reviewerUserId: string;
   readonly rating?: number | null;
   readonly comment: string;
+  readonly runPrompt: string;
+  readonly runStatus: string;
+  readonly runExecutorUserId: string;
 }
 
 export async function createCapabilityFeedback(
@@ -27,7 +30,10 @@ export async function createCapabilityFeedback(
         reviewer_user_id,
         rating,
         comment,
-        status
+        status,
+        run_prompt,
+        run_status,
+        run_executor_user_id
       )
       VALUES (
         ${feedbackId},
@@ -36,7 +42,10 @@ export async function createCapabilityFeedback(
         ${input.reviewerUserId},
         ${input.rating ?? null},
         ${input.comment},
-        ${FeedbackStatus.SUBMITTED}
+        ${FeedbackStatus.SUBMITTED},
+        ${input.runPrompt},
+        ${input.runStatus},
+        ${input.runExecutorUserId}
       )
       RETURNING *
     `,

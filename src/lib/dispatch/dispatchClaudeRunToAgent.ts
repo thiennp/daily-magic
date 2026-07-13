@@ -5,6 +5,8 @@ import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMess
 import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
 import { wrapPromptWithAgentRunInputGuardrails } from "@/lib/dispatch/agentRunInputGuardrails.constant";
 import { updateAgentRunStatus } from "@/lib/dispatch/agentRunQueries";
+import { broadcastAgentRunRecord } from "@/lib/dispatch/broadcastAgentRunRecord";
+import type AgentRunRecord from "@/lib/dispatch/types/AgentRunRecord.type";
 
 export const dispatchClaudeRunToAgent = (
   runtime: AgentWitchHubRuntime,
@@ -23,16 +25,24 @@ export const dispatchClaudeRunToAgent = (
   });
 };
 
-export const markAgentRunRunning = async (runId: string): Promise<void> => {
-  await updateAgentRunStatus(runId, AgentRunStatus.RUNNING);
+export const markAgentRunRunning = async (
+  runtime: AgentWitchHubRuntime,
+  runId: string,
+): Promise<AgentRunRecord | null> => {
+  const run = await updateAgentRunStatus(runId, AgentRunStatus.RUNNING);
+  if (run !== null) {
+    broadcastAgentRunRecord(runtime, run);
+  }
+  return run;
 };
 
 export const markAgentRunCompleted = async (
+  runtime: AgentWitchHubRuntime,
   runId: string,
   exitCode: number,
   output: string,
-): Promise<void> => {
-  await updateAgentRunStatus(
+): Promise<AgentRunRecord | null> => {
+  const run = await updateAgentRunStatus(
     runId,
     exitCode === 0 ? AgentRunStatus.COMPLETED : AgentRunStatus.FAILED,
     {
@@ -40,6 +50,10 @@ export const markAgentRunCompleted = async (
       resultOutput: output,
     },
   );
+  if (run !== null) {
+    broadcastAgentRunRecord(runtime, run);
+  }
+  return run;
 };
 
 export const notifyDashboardUser = (

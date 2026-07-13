@@ -84,6 +84,9 @@ export async function POST(
     reviewerUserId: actor.id,
     rating: parsed.rating,
     comment: parsed.comment,
+    runPrompt: run.prompt,
+    runStatus: run.status,
+    runExecutorUserId: run.executorUserId,
   });
 
   return Response.json({ ok: true, feedback });

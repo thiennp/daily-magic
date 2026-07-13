@@ -1,10 +1,16 @@
 import { useCallback, useEffect, useState } from "react";
 
 import { useDemoPreview } from "@/features/demo/DemoPreviewContext";
+import {
+  getAgentRunLocalCache,
+  upsertAgentRunLocalCache,
+} from "@/features/reports/agentRunLocalCache";
 import { fetchAgentRunDetail } from "@/features/reports/fetchAgentRunDetail";
 import { POLL_INTERVAL_MS } from "@/features/reports/agentRunsPolling.constant";
+import { useAgentRunRecordSync } from "@/features/reports/hooks/useAgentRunRecordSync";
 import type CapabilityFeedbackRecord from "@/lib/feedback/types/CapabilityFeedbackRecord.type";
 import type EnrichedAgentRunRecord from "@/lib/dispatch/types/EnrichedAgentRunRecord.type";
+import type AgentRunRecord from "@/lib/dispatch/types/AgentRunRecord.type";
 
 const findDemoRun = (
   demoPreview: NonNullable<ReturnType<typeof useDemoPreview>>,
@@ -14,6 +20,14 @@ const findDemoRun = (
   demoPreview.agentRuns[0] ??
   null;
 
+const toEnrichedRun = (run: AgentRunRecord): EnrichedAgentRunRecord => ({
+  ...run,
+  requesterEmail: run.requesterUserId,
+  executorEmail: run.executorUserId,
+  requesterName: null,
+  executorName: null,
+});
+
 export function useAgentRunDetailState(runId: string): {
   readonly run: EnrichedAgentRunRecord | null;
   readonly feedback: CapabilityFeedbackRecord | null;
@@ -22,9 +36,14 @@ export function useAgentRunDetailState(runId: string): {
   readonly reloadRun: () => Promise<void>;
 } {
   const demoPreview = useDemoPreview();
-  const [run, setRun] = useState<EnrichedAgentRunRecord | null>(() =>
-    demoPreview ? findDemoRun(demoPreview, runId) : null,
-  );
+  const cachedRun = getAgentRunLocalCache(runId);
+  const [run, setRun] = useState<EnrichedAgentRunRecord | null>(() => {
+    if (demoPreview) {
+      return findDemoRun(demoPreview, runId);
+    }
+
+    return cachedRun ? toEnrichedRun(cachedRun) : null;
+  });
   const [feedback, setFeedback] = useState<CapabilityFeedbackRecord | null>(
     null,
   );
@@ -32,9 +51,18 @@ export function useAgentRunDetailState(runId: string): {
 
   const reloadRun = useCallback(async (): Promise<void> => {
     const nextRun = await fetchAgentRunDetail(runId);
-    setRun(nextRun);
+    if (nextRun !== null) {
+      upsertAgentRunLocalCache(nextRun);
+      setRun(nextRun);
+    }
     setIsLoading(false);
   }, [runId]);
+
+  useAgentRunRecordSync((updatedRun) => {
+    if (updatedRun.id === runId) {
+      setRun(toEnrichedRun(updatedRun));
+    }
+  });
 
   useEffect(() => {
     if (demoPreview) {
@@ -44,10 +72,15 @@ export function useAgentRunDetailState(runId: string): {
     const lifecycle = { active: true };
 
     void fetchAgentRunDetail(runId).then((nextRun) => {
-      if (lifecycle.active) {
-        setRun(nextRun);
-        setIsLoading(false);
+      if (!lifecycle.active) {
+        return;
       }
+
+      if (nextRun !== null) {
+        upsertAgentRunLocalCache(nextRun);
+        setRun(nextRun);
+      }
+      setIsLoading(false);
     });
 
     void fetch(`/api/agent-runs/${runId}/feedback`)
@@ -75,7 +108,7 @@ export function useAgentRunDetailState(runId: string): {
 
     const timer = setInterval(() => {
       void reloadRun();
-    }, POLL_INTERVAL_MS);
+    }, POLL_INTERVAL_MS * 6);
 
     return () => {
       lifecycle.active = false;

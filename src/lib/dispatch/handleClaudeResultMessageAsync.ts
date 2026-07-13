@@ -30,7 +30,7 @@ export const handleClaudeResultMessageAsync = async (
 
   if (agentRunId !== null) {
     dispatchAgentRunInputRegistry.remove(agentRunId);
-    await markAgentRunCompleted(agentRunId, exitCode, output);
+    await markAgentRunCompleted(runtime, agentRunId, exitCode, output);
   }
 
   return {

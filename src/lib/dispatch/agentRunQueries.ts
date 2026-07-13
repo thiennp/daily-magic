@@ -1,8 +1,10 @@
 import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
-import mapAgentRunRow from "@/lib/dispatch/mapAgentRunRow";
 import type { AgentRunStatusValue } from "@/lib/dispatch/AgentRunStatus.constant";
 import type AgentRunRecord from "@/lib/dispatch/types/AgentRunRecord.type";
-import { asRowArray, getSql } from "@/lib/db";
+import {
+  getAgentRunSession,
+  updateAgentRunSession,
+} from "@/lib/dispatch/agentRunSessionRegistry";
 
 export async function updateAgentRunStatus(
   runId: string,
@@ -13,55 +15,37 @@ export async function updateAgentRunStatus(
     readonly denialReason?: string | null;
   },
 ): Promise<AgentRunRecord | null> {
-  const sql = getSql();
-  const startedAt =
-    status === AgentRunStatus.RUNNING ? new Date().toISOString() : null;
+  const now = new Date().toISOString();
+  const startedAt = status === AgentRunStatus.RUNNING ? now : undefined;
   const completedAt =
     status === AgentRunStatus.COMPLETED ||
     status === AgentRunStatus.FAILED ||
     status === AgentRunStatus.DENIED ||
     status === AgentRunStatus.EXPIRED
-      ? new Date().toISOString()
-      : null;
+      ? now
+      : undefined;
 
-  const result = asRowArray(
-    await sql`
-      UPDATE agent_runs
-      SET
-        status = ${status},
-        result_output = COALESCE(${fields?.resultOutput ?? null}, result_output),
-        result_exit_code = COALESCE(${fields?.resultExitCode ?? null}, result_exit_code),
-        denial_reason = COALESCE(${fields?.denialReason ?? null}, denial_reason),
-        started_at = COALESCE(${startedAt}, started_at),
-        completed_at = COALESCE(${completedAt}, completed_at),
-        updated_at = NOW()
-      WHERE id = ${runId}
-      RETURNING *
-    `,
+  return (
+    updateAgentRunSession(runId, {
+      status,
+      ...(fields?.resultOutput !== undefined
+        ? { resultOutput: fields.resultOutput }
+        : {}),
+      ...(fields?.resultExitCode !== undefined
+        ? { resultExitCode: fields.resultExitCode }
+        : {}),
+      ...(fields?.denialReason !== undefined
+        ? { denialReason: fields.denialReason }
+        : {}),
+      ...(startedAt !== undefined ? { startedAt } : {}),
+      ...(completedAt !== undefined ? { completedAt } : {}),
+      updatedAt: now,
+    }) ?? null
   );
-
-  if (!result[0]) {
-    return null;
-  }
-
-  return mapAgentRunRow(result[0]);
 }
 
 export async function getAgentRunById(
   runId: string,
 ): Promise<AgentRunRecord | null> {
-  const sql = getSql();
-  const result = asRowArray(
-    await sql`
-      SELECT *
-      FROM agent_runs
-      WHERE id = ${runId}
-    `,
-  );
-
-  if (!result[0]) {
-    return null;
-  }
-
-  return mapAgentRunRow(result[0]);
+  return getAgentRunSession(runId) ?? null;
 }

@@ -8,7 +8,25 @@ import { handleClaudeInputRequiredMessageAsync } from "@/lib/dispatch/handleClau
 import { handleClaudeInputRespondMessageAsync } from "@/lib/dispatch/handleClaudeInputRespondMessageAsync";
 import { handleClaudeResultMessageAsync } from "@/lib/dispatch/handleClaudeResultMessageAsync";
 import { handleClaudeRunMessageAsync } from "@/lib/dispatch/handleClaudeRunMessageAsync";
+import {
+  handleAgentAgentRunRelayResultAsync,
+  handleDashboardAgentRunRelayAsync,
+} from "@/lib/dispatch/handleDashboardAgentRunRelayAsync";
 import { handleDispatchApprovalRespondAsync } from "@/lib/dispatch/handleDispatchApprovalRespond";
+import { handleTerminalStreamMessageAsync } from "@/lib/dispatch/handleTerminalStreamMessageAsync";
+
+const isTerminalStreamMessage = (type: string): boolean =>
+  type === AGENT_WITCH_MESSAGE_TYPES.TERMINAL_STREAM_START ||
+  type === AGENT_WITCH_MESSAGE_TYPES.TERMINAL_STREAM_CHUNK ||
+  type === AGENT_WITCH_MESSAGE_TYPES.TERMINAL_STREAM_END;
+
+const isDashboardAgentRunRequest = (type: string): boolean =>
+  type === AGENT_WITCH_MESSAGE_TYPES.DASHBOARD_AGENT_RUN_LIST ||
+  type === AGENT_WITCH_MESSAGE_TYPES.DASHBOARD_AGENT_RUN_GET;
+
+const isAgentAgentRunResult = (type: string): boolean =>
+  type === AGENT_WITCH_MESSAGE_TYPES.DASHBOARD_AGENT_RUN_LIST_RESULT ||
+  type === AGENT_WITCH_MESSAGE_TYPES.DASHBOARD_AGENT_RUN_GET_RESULT;
 
 export const routeAgentWitchMessageAsync = async (
   hub: AgentWitchHub,
@@ -40,6 +58,18 @@ export const routeAgentWitchMessageAsync = async (
 
   if (message.type === AGENT_WITCH_MESSAGE_TYPES.DISPATCH_APPROVAL_RESPOND) {
     return handleDispatchApprovalRespondAsync(hub, message, sender);
+  }
+
+  if (isTerminalStreamMessage(message.type)) {
+    return handleTerminalStreamMessageAsync(hub, message, sender);
+  }
+
+  if (isDashboardAgentRunRequest(message.type)) {
+    return handleDashboardAgentRunRelayAsync(hub, message, sender);
+  }
+
+  if (isAgentAgentRunResult(message.type)) {
+    return handleAgentAgentRunRelayResultAsync(hub, message, sender);
   }
 
   return handleAgentWitchSyncMessage(hub, senderId, message, sender);

@@ -23,6 +23,11 @@ import {
   replayPendingRunInputRequests,
   runClaudeTask,
 } from "./agentWitchRunSessions";
+import {
+  listAgentRunsLocal,
+  loadAgentRunLocal,
+} from "./agentWitchLocalRunStore";
+import { markTerminalStreamAccepted } from "./agentWitchTerminalStreamState";
 
 interface AgentWitchConfig {
   readonly email: string | null;
@@ -389,6 +394,41 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
 
         const requestId =
           typeof parsed.requestId === "string" ? parsed.requestId : undefined;
+
+        if (
+          parsed.type === "terminal.stream.accepted" &&
+          isRecord(parsed.payload)
+        ) {
+          const runId =
+            typeof parsed.payload.runId === "string"
+              ? parsed.payload.runId
+              : "";
+          if (runId.length > 0) {
+            markTerminalStreamAccepted(runId);
+          }
+        }
+
+        if (parsed.type === "agent.agentRun.list") {
+          sendMessage(socket, {
+            type: "dashboard.agentRun.list.result",
+            payload: { runs: listAgentRunsLocal(config.layout) },
+            requestId,
+          });
+        }
+
+        if (parsed.type === "agent.agentRun.get" && isRecord(parsed.payload)) {
+          const runId =
+            typeof parsed.payload.runId === "string"
+              ? parsed.payload.runId
+              : "";
+          const run =
+            runId.length > 0 ? loadAgentRunLocal(config.layout, runId) : null;
+          sendMessage(socket, {
+            type: "dashboard.agentRun.get.result",
+            payload: { run },
+            requestId,
+          });
+        }
 
         if (parsed.type === "command.claude.run" && isRecord(parsed.payload)) {
           const prompt = parsed.payload.prompt;

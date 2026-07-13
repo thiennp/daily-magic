@@ -3,14 +3,42 @@
 import { useEffect, useState } from "react";
 
 import { useDemoPreview } from "@/features/demo/DemoPreviewContext";
+import { listAgentRunsLocalCache } from "@/features/reports/agentRunLocalCache";
 import { POLL_INTERVAL_MS } from "@/features/reports/agentRunsPolling.constant";
 import { buildAgentRunsQueryString } from "@/features/reports/buildAgentRunsQueryString";
+import { useAgentRunRecordSync } from "@/features/reports/hooks/useAgentRunRecordSync";
 import type EnrichedAgentRunRecord from "@/lib/dispatch/types/EnrichedAgentRunRecord.type";
+import type AgentRunRecord from "@/lib/dispatch/types/AgentRunRecord.type";
 import {
   AgentRunScope,
   type AgentRunScopeValue,
 } from "@/lib/dispatch/AgentRunScope.constant";
 import type { AgentRunStatusValue } from "@/lib/dispatch/AgentRunStatus.constant";
+
+const toEnrichedRun = (run: AgentRunRecord): EnrichedAgentRunRecord => ({
+  ...run,
+  requesterEmail: run.requesterUserId,
+  executorEmail: run.executorUserId,
+  requesterName: null,
+  executorName: null,
+});
+
+const mergeRuns = (
+  apiRuns: readonly EnrichedAgentRunRecord[],
+  cachedRuns: readonly AgentRunRecord[],
+): readonly EnrichedAgentRunRecord[] => {
+  const merged = new Map<string, EnrichedAgentRunRecord>();
+  for (const run of cachedRuns.map(toEnrichedRun)) {
+    merged.set(run.id, run);
+  }
+  for (const run of apiRuns) {
+    merged.set(run.id, run);
+  }
+
+  return [...merged.values()].toSorted((left, right) =>
+    right.createdAt.localeCompare(left.createdAt),
+  );
+};
 
 export function useAgentRunsList(input: {
   readonly statusFilter: AgentRunStatusValue | "all";
@@ -22,9 +50,14 @@ export function useAgentRunsList(input: {
 } {
   const demoPreview = useDemoPreview();
   const [runs, setRuns] = useState<readonly EnrichedAgentRunRecord[]>(
-    () => demoPreview?.agentRuns ?? [],
+    () =>
+      demoPreview?.agentRuns ?? listAgentRunsLocalCache().map(toEnrichedRun),
   );
   const [isLoading, setIsLoading] = useState(() => !demoPreview);
+
+  useAgentRunRecordSync((run) => {
+    setRuns((current) => mergeRuns(current, [run]));
+  });
 
   useEffect(() => {
     if (demoPreview) {
@@ -41,7 +74,11 @@ export function useAgentRunsList(input: {
             : undefined,
       });
       const response = await fetch(`/api/agent-runs${query}`);
+      const cached = listAgentRunsLocalCache();
+
       if (!response.ok) {
+        setRuns(cached.map(toEnrichedRun));
+        setIsLoading(false);
         return;
       }
 
@@ -52,7 +89,8 @@ export function useAgentRunsList(input: {
         "runs" in data &&
         Array.isArray((data as { runs: unknown }).runs)
       ) {
-        setRuns((data as { runs: EnrichedAgentRunRecord[] }).runs);
+        const apiRuns = (data as { runs: EnrichedAgentRunRecord[] }).runs;
+        setRuns(mergeRuns(apiRuns, cached));
       }
       setIsLoading(false);
     };
@@ -60,7 +98,7 @@ export function useAgentRunsList(input: {
     void loadRuns();
     const timer = setInterval(() => {
       void loadRuns();
-    }, POLL_INTERVAL_MS);
+    }, POLL_INTERVAL_MS * 6);
 
     return () => {
       clearInterval(timer);

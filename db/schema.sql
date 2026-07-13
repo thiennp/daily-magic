@@ -85,39 +85,6 @@ CREATE TABLE IF NOT EXISTS agent_witch_devices (
   revoked_at TIMESTAMPTZ
 );
 
-CREATE TABLE IF NOT EXISTS agent_runs (
-  id TEXT PRIMARY KEY DEFAULT gen_random_uuid()::text,
-  group_id TEXT REFERENCES groups(id) ON DELETE SET NULL,
-  requester_user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-  executor_user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-  prompt TEXT NOT NULL,
-  status TEXT NOT NULL CHECK (
-    status IN (
-      'pending_approval',
-      'running',
-      'completed',
-      'failed',
-      'denied',
-      'expired'
-    )
-  ),
-  dispatch_policy TEXT NOT NULL CHECK (dispatch_policy IN ('open', 'approval')),
-  result_output TEXT,
-  result_exit_code INTEGER,
-  denial_reason TEXT,
-  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  started_at TIMESTAMPTZ,
-  completed_at TIMESTAMPTZ,
-  approval_expires_at TIMESTAMPTZ
-);
-
-CREATE INDEX IF NOT EXISTS agent_runs_requester_idx
-  ON agent_runs (requester_user_id, created_at DESC);
-
-CREATE INDEX IF NOT EXISTS agent_runs_executor_idx
-  ON agent_runs (executor_user_id, created_at DESC);
-
 CREATE TABLE IF NOT EXISTS harness_catalog_snapshots (
   owner_user_id TEXT PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
   visibility TEXT NOT NULL DEFAULT 'group'
@@ -218,26 +185,18 @@ ALTER TABLE published_capabilities
   FOREIGN KEY (current_version_id) REFERENCES capability_versions(id)
   ON DELETE SET NULL;
 
-ALTER TABLE agent_runs
-  ADD COLUMN IF NOT EXISTS capability_id TEXT
-    REFERENCES published_capabilities(id) ON DELETE SET NULL;
-
-ALTER TABLE agent_runs
-  ADD COLUMN IF NOT EXISTS capability_version_id TEXT
-    REFERENCES capability_versions(id) ON DELETE SET NULL;
-
-CREATE INDEX IF NOT EXISTS agent_runs_capability_idx
-  ON agent_runs (capability_id, created_at DESC);
-
 CREATE TABLE IF NOT EXISTS capability_feedback (
   id TEXT PRIMARY KEY DEFAULT gen_random_uuid()::text,
-  agent_run_id TEXT NOT NULL REFERENCES agent_runs(id) ON DELETE CASCADE,
+  agent_run_id TEXT NOT NULL,
   capability_id TEXT REFERENCES published_capabilities(id) ON DELETE SET NULL,
   reviewer_user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
   rating INTEGER CHECK (rating >= 1 AND rating <= 5),
   comment TEXT NOT NULL DEFAULT '',
   status TEXT NOT NULL DEFAULT 'submitted'
     CHECK (status IN ('submitted', 'acknowledged', 'dismissed')),
+  run_prompt TEXT,
+  run_status TEXT,
+  run_executor_user_id TEXT,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   UNIQUE (agent_run_id, reviewer_user_id)
@@ -264,16 +223,3 @@ CREATE TABLE IF NOT EXISTS capability_improvements (
 
 CREATE INDEX IF NOT EXISTS capability_improvements_owner_idx
   ON capability_improvements (owner_user_id, status, created_at DESC);
-
-CREATE TABLE IF NOT EXISTS agent_run_queue (
-  id TEXT PRIMARY KEY DEFAULT gen_random_uuid()::text,
-  requester_user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-  executor_user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-  group_id TEXT REFERENCES groups(id) ON DELETE SET NULL,
-  capability_id TEXT REFERENCES published_capabilities(id) ON DELETE SET NULL,
-  prompt TEXT NOT NULL,
-  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-);
-
-CREATE INDEX IF NOT EXISTS agent_run_queue_requester_idx
-  ON agent_run_queue (requester_user_id, created_at ASC);

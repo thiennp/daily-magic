@@ -1,27 +1,25 @@
 import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
+import { updateAgentRunSession } from "@/lib/dispatch/agentRunSessionRegistry";
 import { dispatchApprovalRegistry } from "@/lib/dispatch/dispatchApprovalRegistry";
-import { asRowArray, getSql } from "@/lib/db";
+
+const isExpiredApproval = (expiresAt: string | null | undefined): boolean =>
+  expiresAt !== undefined &&
+  expiresAt !== null &&
+  Date.parse(expiresAt) < Date.now();
 
 export async function expireStaleDispatchApprovals(): Promise<number> {
-  const sql = getSql();
-  const expiredRows = asRowArray(
-    await sql`
-      UPDATE agent_runs
-      SET
-        status = ${AgentRunStatus.EXPIRED},
-        denial_reason = 'Dispatch approval expired.',
-        completed_at = NOW(),
-        updated_at = NOW()
-      WHERE status = ${AgentRunStatus.PENDING_APPROVAL}
-        AND approval_expires_at IS NOT NULL
-        AND approval_expires_at < NOW()
-      RETURNING id, requester_user_id, executor_user_id, prompt, group_id
-    `,
-  );
+  const expired = dispatchApprovalRegistry
+    .listAll()
+    .filter((pending) => isExpiredApproval(pending.approvalExpiresAt));
 
-  for (const row of expiredRows) {
-    dispatchApprovalRegistry.remove(String(row.id));
+  for (const pending of expired) {
+    updateAgentRunSession(pending.runId, {
+      status: AgentRunStatus.EXPIRED,
+      denialReason: "Dispatch approval expired.",
+      completedAt: new Date().toISOString(),
+    });
+    dispatchApprovalRegistry.remove(pending.runId);
   }
 
-  return expiredRows.length;
+  return expired.length;
 }

@@ -4,8 +4,10 @@ import type AgentWitchHubRuntime from "@/lib/agentWitch/types/AgentWitchHubRunti
 import type AgentWitchMessage from "@/lib/agentWitch/types/AgentWitchMessage.type";
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
 import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
+import { registerAgentRunSession } from "@/lib/dispatch/agentRunSessionRegistry";
+import { broadcastAgentRunRecord } from "@/lib/dispatch/broadcastAgentRunRecord";
 import { buildDispatchError } from "@/lib/dispatch/buildDispatchError";
-import { createAgentRun } from "@/lib/dispatch/createAgentRun";
+import { createEphemeralAgentRun } from "@/lib/dispatch/createEphemeralAgentRun";
 import {
   dispatchClaudeRunToAgent,
   markAgentRunRunning,
@@ -81,7 +83,7 @@ export const handleClaudeRunMessageAsync = async (
       capabilityResolution.capability?.dispatchPolicyOverride ?? null,
   });
 
-  const run = await createAgentRun({
+  const run = createEphemeralAgentRun({
     groupId: target.groupId,
     requesterUserId: sender.userId,
     executorUserId: target.executorUserId,
@@ -94,6 +96,9 @@ export const handleClaudeRunMessageAsync = async (
     capabilityId: capabilityResolution.capability?.id ?? null,
     capabilityVersionId: capabilityResolution.capabilityVersionId,
   });
+
+  registerAgentRunSession(run);
+  broadcastAgentRunRecord(runtime, run, message.requestId);
 
   if (dispatchPolicy === DispatchPolicy.APPROVAL) {
     return sendPendingApprovalDispatch(
@@ -115,7 +120,7 @@ export const handleClaudeRunMessageAsync = async (
     run.id,
     message.requestId,
   );
-  await markAgentRunRunning(run.id);
+  await markAgentRunRunning(runtime, run.id);
 
   return {
     type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ACK,

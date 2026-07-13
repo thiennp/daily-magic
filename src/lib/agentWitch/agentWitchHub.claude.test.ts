@@ -36,7 +36,7 @@ describe("AgentWitchHub Claude commands", () => {
     expect(agent.messages[0]?.type).toBe(
       AGENT_WITCH_MESSAGE_TYPES.COMMAND_CLAUDE_RUN,
     );
-    expect(agent.messages[0]?.payload?.prompt).toBe("run lint");
+    expect(agent.messages[0]?.payload?.prompt).toContain("run lint");
   });
 
   it("rejects Claude commands from unauthenticated dashboard clients", async () => {

@@ -1,24 +1,18 @@
-import mapAgentRunRow from "@/lib/dispatch/mapAgentRunRow";
+import { getAgentRunSession } from "@/lib/dispatch/agentRunSessionRegistry";
 import type AgentRunRecord from "@/lib/dispatch/types/AgentRunRecord.type";
-import { asRowArray, getSql } from "@/lib/db";
 
 export async function getAgentRunForParticipant(
   runId: string,
   userId: string,
 ): Promise<AgentRunRecord | null> {
-  const sql = getSql();
-  const result = asRowArray(
-    await sql`
-      SELECT *
-      FROM agent_runs
-      WHERE id = ${runId}
-        AND (requester_user_id = ${userId} OR executor_user_id = ${userId})
-    `,
-  );
+  const run = getAgentRunSession(runId);
 
-  if (!result[0]) {
+  if (
+    run === undefined ||
+    (run.requesterUserId !== userId && run.executorUserId !== userId)
+  ) {
     return null;
   }
 
-  return mapAgentRunRow(result[0]);
+  return run;
 }

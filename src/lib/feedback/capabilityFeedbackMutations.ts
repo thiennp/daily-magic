@@ -13,10 +13,8 @@ export async function listCapabilityFeedbackInboxForOwner(
       SELECT
         f.*,
         c.name AS capability_name,
-        u.email AS reviewer_email,
-        r.prompt AS run_prompt
+        u.email AS reviewer_email
       FROM capability_feedback f
-      INNER JOIN agent_runs r ON r.id = f.agent_run_id
       LEFT JOIN published_capabilities c ON c.id = f.capability_id
       INNER JOIN users u ON u.id = f.reviewer_user_id
       WHERE f.status = ${FeedbackStatus.SUBMITTED}
@@ -24,7 +22,7 @@ export async function listCapabilityFeedbackInboxForOwner(
           c.owner_user_id = ${ownerUserId}
           OR (
             f.capability_id IS NULL
-            AND r.executor_user_id = ${ownerUserId}
+            AND f.run_executor_user_id = ${ownerUserId}
           )
         )
       ORDER BY f.created_at DESC
@@ -38,7 +36,7 @@ export async function listCapabilityFeedbackInboxForOwner(
       ...feedback,
       capabilityName: row.capability_name ? String(row.capability_name) : null,
       reviewerEmail: String(row.reviewer_email),
-      runPrompt: String(row.run_prompt),
+      runPrompt: String(row.run_prompt ?? ""),
     };
   });
 }
@@ -78,13 +76,12 @@ export async function getCapabilityFeedbackForOwner(
       SELECT f.*
       FROM capability_feedback f
       LEFT JOIN published_capabilities c ON c.id = f.capability_id
-      LEFT JOIN agent_runs r ON r.id = f.agent_run_id
       WHERE f.id = ${feedbackId}
         AND (
           c.owner_user_id = ${ownerUserId}
           OR (
             f.capability_id IS NULL
-            AND r.executor_user_id = ${ownerUserId}
+            AND f.run_executor_user_id = ${ownerUserId}
           )
         )
       LIMIT 1
