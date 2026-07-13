@@ -94,7 +94,7 @@ export default function CopyableBashCommand({
         <div
           className={twMerge(
             APP_SURFACE_BASH_TERMINAL_PRE_CLASS,
-            "flex items-stretch gap-0 overflow-hidden p-0",
+            "grid grid-cols-[minmax(0,1fr)_auto] overflow-hidden p-0",
           )}
         >
           <pre
