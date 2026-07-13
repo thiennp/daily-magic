@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import { useDemoPreview } from "@/features/demo/DemoPreviewContext";
+import { fetchAgentRunDetail } from "@/features/reports/fetchAgentRunDetail";
 import { POLL_INTERVAL_MS } from "@/features/reports/agentRunsPolling.constant";
 import type CapabilityFeedbackRecord from "@/lib/feedback/types/CapabilityFeedbackRecord.type";
 import type EnrichedAgentRunRecord from "@/lib/dispatch/types/EnrichedAgentRunRecord.type";
@@ -18,6 +19,7 @@ export function useAgentRunDetailState(runId: string): {
   readonly feedback: CapabilityFeedbackRecord | null;
   readonly isLoading: boolean;
   readonly setFeedback: (feedback: CapabilityFeedbackRecord) => void;
+  readonly reloadRun: () => Promise<void>;
 } {
   const demoPreview = useDemoPreview();
   const [run, setRun] = useState<EnrichedAgentRunRecord | null>(() =>
@@ -28,59 +30,58 @@ export function useAgentRunDetailState(runId: string): {
   );
   const [isLoading, setIsLoading] = useState(() => !demoPreview);
 
+  const reloadRun = useCallback(async (): Promise<void> => {
+    const nextRun = await fetchAgentRunDetail(runId);
+    setRun(nextRun);
+    setIsLoading(false);
+  }, [runId]);
+
   useEffect(() => {
     if (demoPreview) {
       return;
     }
 
-    const loadRun = async (): Promise<void> => {
-      const response = await fetch(`/api/agent-runs/${runId}`);
-      if (!response.ok) {
-        setRun(null);
+    const lifecycle = { active: true };
+
+    void fetchAgentRunDetail(runId).then((nextRun) => {
+      if (lifecycle.active) {
+        setRun(nextRun);
         setIsLoading(false);
-        return;
       }
+    });
 
-      const data: unknown = await response.json();
-      if (
-        typeof data === "object" &&
-        data !== null &&
-        "run" in data &&
-        typeof (data as { run: EnrichedAgentRunRecord }).run === "object"
-      ) {
-        setRun((data as { run: EnrichedAgentRunRecord }).run);
-      }
-      setIsLoading(false);
-    };
+    void fetch(`/api/agent-runs/${runId}/feedback`)
+      .then(async (response) => {
+        if (!response.ok || !lifecycle.active) {
+          return null;
+        }
 
-    const loadFeedback = async (): Promise<void> => {
-      const response = await fetch(`/api/agent-runs/${runId}/feedback`);
-      if (!response.ok) {
-        return;
-      }
+        return response.json() as Promise<unknown>;
+      })
+      .then((data) => {
+        if (
+          !lifecycle.active ||
+          typeof data !== "object" ||
+          data === null ||
+          !("feedback" in data) ||
+          (data as { feedback: CapabilityFeedbackRecord | null }).feedback ===
+            null
+        ) {
+          return;
+        }
 
-      const data: unknown = await response.json();
-      if (
-        typeof data === "object" &&
-        data !== null &&
-        "feedback" in data &&
-        (data as { feedback: CapabilityFeedbackRecord | null }).feedback !==
-          null
-      ) {
         setFeedback((data as { feedback: CapabilityFeedbackRecord }).feedback);
-      }
-    };
+      });
 
-    void loadRun();
-    void loadFeedback();
     const timer = setInterval(() => {
-      void loadRun();
+      void reloadRun();
     }, POLL_INTERVAL_MS);
 
     return () => {
+      lifecycle.active = false;
       clearInterval(timer);
     };
-  }, [demoPreview, runId]);
+  }, [demoPreview, runId, reloadRun]);
 
-  return { run, feedback, isLoading, setFeedback };
+  return { run, feedback, isLoading, setFeedback, reloadRun };
 }

@@ -5,12 +5,20 @@ import {
   sendAgentWitchPairingToken,
 } from "@/features/wsTest/utils/agentWitchSocketUtils";
 
+import {
+  parseDispatchApprovalSocketMessage,
+  type AgentRunInputRequest,
+} from "./agentRunInputSocket";
+
+export type { AgentRunInputRequest };
+
 export const connectDispatchApprovalSocket = (
   onApprovalRequired: (payload: {
     readonly runId: string;
     readonly requesterEmail: string;
     readonly prompt: string;
   }) => void,
+  onInputRequired?: (payload: AgentRunInputRequest) => void,
 ): { readonly disconnect: () => void; readonly socket: WebSocket | null } => {
   const wsUrl = buildAgentWitchWebSocketUrl();
   if (wsUrl.length === 0) {
@@ -33,26 +41,17 @@ export const connectDispatchApprovalSocket = (
     try {
       const parsed: unknown = JSON.parse(String(event.data));
       if (
-        typeof parsed === "object" &&
-        parsed !== null &&
-        "type" in parsed &&
-        parsed.type === AGENT_WITCH_MESSAGE_TYPES.DISPATCH_APPROVAL_REQUIRED &&
-        "payload" in parsed &&
-        typeof parsed.payload === "object" &&
-        parsed.payload !== null
+        typeof parsed !== "object" ||
+        parsed === null ||
+        !("type" in parsed)
       ) {
-        const payload = parsed.payload as Record<string, unknown>;
-        const runId = typeof payload.runId === "string" ? payload.runId : "";
-        const prompt = typeof payload.prompt === "string" ? payload.prompt : "";
-        const requesterEmail =
-          typeof payload.requesterEmail === "string"
-            ? payload.requesterEmail
-            : "Teammate";
-
-        if (runId.length > 0 && prompt.length > 0) {
-          onApprovalRequired({ runId, prompt, requesterEmail });
-        }
+        return;
       }
+
+      parseDispatchApprovalSocketMessage(parsed as Record<string, unknown>, {
+        onApprovalRequired,
+        onInputRequired,
+      });
     } catch {
       return;
     }
@@ -84,3 +83,5 @@ export const sendDispatchApprovalResponse = (
     }),
   );
 };
+
+export { sendAgentRunInputResponse } from "./agentRunInputSocket";

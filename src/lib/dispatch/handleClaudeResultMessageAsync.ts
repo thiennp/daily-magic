@@ -3,6 +3,7 @@ import type AgentWitchHubClient from "@/lib/agentWitch/types/AgentWitchHubClient
 import type AgentWitchHubRuntime from "@/lib/agentWitch/types/AgentWitchHubRuntime.type";
 import type AgentWitchMessage from "@/lib/agentWitch/types/AgentWitchMessage.type";
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
+import { dispatchAgentRunInputRegistry } from "@/lib/dispatch/dispatchAgentRunInputRegistry";
 import { markAgentRunCompleted } from "@/lib/dispatch/dispatchClaudeRunToAgent";
 
 export const handleClaudeResultMessageAsync = async (
@@ -28,6 +29,7 @@ export const handleClaudeResultMessageAsync = async (
     typeof message.payload?.output === "string" ? message.payload.output : "";
 
   if (agentRunId !== null) {
+    dispatchAgentRunInputRegistry.remove(agentRunId);
     await markAgentRunCompleted(agentRunId, exitCode, output);
   }
 
