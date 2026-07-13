@@ -1,4 +1,4 @@
-import { AGENT_WITCH_WAKE_BASE_URL } from "@/lib/agentWitch/requestAgentWitchWake";
+export const AGENT_WITCH_WAKE_SHELL_RELATIVE_PATH = ".agent-witch/wake.sh";
 
 export const buildAgentWitchWakeTerminalCommand = (): string =>
-  `curl -fsS -X POST ${AGENT_WITCH_WAKE_BASE_URL}/wake`;
+  `~/${AGENT_WITCH_WAKE_SHELL_RELATIVE_PATH}`;

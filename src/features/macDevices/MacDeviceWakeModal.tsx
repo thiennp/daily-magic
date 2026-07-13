@@ -27,14 +27,9 @@ export default function MacDeviceWakeModal({
         Reactivate Agent Witch
       </h2>
       <p className={`mt-3 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
-        If {displayName} is awake but shows offline, open Terminal on that Mac,
-        paste this command, and press Return:
+        Open Terminal on {displayName} and run:
       </p>
       <CopyableBashCommand command={wakeCommand} variant="bash" />
-      <p className={`mt-3 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
-        If this still returns an error, re-run the Agent Witch install from
-        Home → Your setup to refresh the local wake helper, then try again.
-      </p>
       {isWakeServerReachable ? (
         <button
           type="button"
