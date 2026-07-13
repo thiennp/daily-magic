@@ -58,6 +58,11 @@ const AGENT_WITCH_INSTALL_SCRIPT_ALLOWLIST = {
     "scripts",
     "spawnAgentWitchClient.ts",
   ),
+  "agent-witch-wake-cli.ts": path.join(
+    process.cwd(),
+    "scripts",
+    "agent-witch-wake-cli.ts",
+  ),
   "buildWriterCliInvocation.ts": path.join(
     process.cwd(),
     "scripts",

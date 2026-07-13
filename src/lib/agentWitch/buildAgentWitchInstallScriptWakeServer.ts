@@ -10,6 +10,7 @@ export const buildAgentWitchInstallScriptWakeServer = (input: {
   readonly wakeEnsureProfileScriptUrl: string;
   readonly wakeLinkAccountScriptUrl: string;
   readonly wakeSpawnClientScriptUrl: string;
+  readonly wakeCliScriptUrl: string;
 }): string => `
 WAKE_SERVER_SCRIPT_URL="${input.wakeServerScriptUrl}"
 WAKE_CONSTANTS_SCRIPT_URL="${input.wakeConstantsScriptUrl}"
@@ -20,6 +21,7 @@ WAKE_ALLOWED_ORIGINS_SCRIPT_URL="${input.wakeAllowedOriginsScriptUrl}"
 WAKE_ENSURE_PROFILE_SCRIPT_URL="${input.wakeEnsureProfileScriptUrl}"
 WAKE_LINK_ACCOUNT_SCRIPT_URL="${input.wakeLinkAccountScriptUrl}"
 WAKE_SPAWN_CLIENT_SCRIPT_URL="${input.wakeSpawnClientScriptUrl}"
+WAKE_CLI_SCRIPT_URL="${input.wakeCliScriptUrl}"
 WAKE_LAUNCH_AGENT_LABEL="com.daily-magic.agent-witch-wake"
 WAKE_PLIST_PATH="\${HOME}/Library/LaunchAgents/\${WAKE_LAUNCH_AGENT_LABEL}.plist"
 
@@ -33,6 +35,26 @@ echo "Downloading Agent Witch wake server from \${WAKE_SERVER_SCRIPT_URL}…"
 "\${CURL_BIN}" -fsSL "\${WAKE_ENSURE_PROFILE_SCRIPT_URL}" -o "\${INSTALL_DIR}/ensureAgentWitchProfile.ts"
 "\${CURL_BIN}" -fsSL "\${WAKE_LINK_ACCOUNT_SCRIPT_URL}" -o "\${INSTALL_DIR}/linkAgentWitchAccountLocally.ts"
 "\${CURL_BIN}" -fsSL "\${WAKE_SPAWN_CLIENT_SCRIPT_URL}" -o "\${INSTALL_DIR}/spawnAgentWitchClient.ts"
+"\${CURL_BIN}" -fsSL "\${WAKE_CLI_SCRIPT_URL}" -o "\${INSTALL_DIR}/agent-witch-wake-cli.ts"
+
+cat > "\${INSTALL_DIR}/wake.sh" <<'WAKE_EOF'
+#!/usr/bin/env bash
+set -euo pipefail
+INSTALL_DIR="\${HOME}/.agent-witch"
+NODE_BIN="\$(command -v node)"
+TSX_CLI="\${INSTALL_DIR}/node_modules/tsx/dist/cli.mjs"
+WAKE_CLI="\${INSTALL_DIR}/agent-witch-wake-cli.ts"
+
+if [[ -z "\${NODE_BIN}" || ! -f "\${TSX_CLI}" || ! -f "\${WAKE_CLI}" ]]; then
+  echo "Agent Witch is not installed. Run the install command from Home first." >&2
+  exit 1
+fi
+
+cd "\${INSTALL_DIR}"
+exec "\${NODE_BIN}" "\${TSX_CLI}" "\${WAKE_CLI}"
+WAKE_EOF
+chmod +x "\${INSTALL_DIR}/wake.sh"
+echo "Wake script: \${INSTALL_DIR}/wake.sh"
 
 if [[ "\$(uname -s)" == "Darwin" ]]; then
   cat > "\${WAKE_PLIST_PATH}" <<EOF

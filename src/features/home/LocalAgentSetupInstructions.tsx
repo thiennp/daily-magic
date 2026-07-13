@@ -6,6 +6,7 @@ import AgentWitchUnsupportedHostNotice from "@/features/home/AgentWitchUnsupport
 import AppPanel from "@/components/surfaces/AppPanel";
 import { APP_SURFACE_BODY_TEXT_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
 import { buildLocalAgentInstallCommandFromHeaders } from "@/lib/agentWitch/buildLocalAgentInstallCommand";
+import { buildAgentWitchWakeTerminalCommand } from "@/lib/agentWitch/buildAgentWitchWakeTerminalCommand";
 import isAgentWitchWebSocketSupportedHost from "@/lib/agentWitch/isAgentWitchWebSocketSupportedHost";
 
 export default async function LocalAgentSetupInstructions() {
@@ -77,9 +78,9 @@ export default async function LocalAgentSetupInstructions() {
           <code className="rounded bg-white px-1 py-0.5 dark:bg-gray-800">
             {wsUrl}
           </code>
-          . Wake helper (macOS):{" "}
+          . Wake script (macOS):{" "}
           <code className="rounded bg-white px-1 py-0.5 dark:bg-gray-800">
-            http://127.0.0.1:47892/wake
+            {buildAgentWitchWakeTerminalCommand()}
           </code>
           .
         </p>
