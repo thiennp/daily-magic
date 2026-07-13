@@ -3,7 +3,7 @@ import TeamDirectoryPanel from "@/features/capabilities/TeamDirectoryPanel";
 import FeedbackInboxPanel from "@/features/feedback/FeedbackInboxPanel";
 import ImprovementReviewPanel from "@/features/improvements/ImprovementReviewPanel";
 import MarketplaceHomePromo from "@/features/harness/MarketplaceHomePromo";
-import HomeDashboardHero from "@/features/home/HomeDashboardHero";
+import HomeOnboardingMainPanel from "@/features/home/HomeOnboardingMainPanel";
 import HomeLinkAccountGate from "@/features/home/HomeLinkAccountGate";
 import HomeOnboardingChecklist from "@/features/home/HomeOnboardingChecklist";
 import HomePresencePanel from "@/features/home/HomePresencePanel";
@@ -52,7 +52,7 @@ export default async function HomeAuthenticatedView({
         </aside>
 
         <main className={HOME_MAIN_COLUMN_CLASS}>
-          <HomeDashboardHero user={user} />
+          <HomeOnboardingMainPanel user={user} />
           <MyOfferingsPanel />
           <TeamDirectoryPanel />
         </main>
