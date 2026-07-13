@@ -1,18 +1,16 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect, useState } from "react";
 
-import { useAppPath, useDemoPreview } from "@/features/demo/DemoPreviewContext";
+import { useDemoPreview } from "@/features/demo/DemoPreviewContext";
 import {
   loadOnboardingSteps,
   type OnboardingStep,
 } from "@/features/home/loadOnboardingSteps";
-import { resolveOnboardingStepHref } from "@/features/home/resolveOnboardingStepHref";
+import buildOnboardingStepStatusLabel from "@/features/home/utils/buildOnboardingStepStatusLabel";
 
 export default function HomeOnboardingChecklist() {
   const demoPreview = useDemoPreview();
-  const appPath = useAppPath();
   const [steps, setSteps] = useState<readonly OnboardingStep[]>(
     demoPreview?.onboardingSteps ?? [],
   );
@@ -52,16 +50,15 @@ export default function HomeOnboardingChecklist() {
             >
               {step.label}
             </span>
-            {step.done ? (
-              <span className="text-xs font-medium text-success-600">Done</span>
-            ) : (
-              <Link
-                href={resolveOnboardingStepHref(step.href, appPath)}
-                className="text-sm font-medium text-brand-600 hover:text-brand-700 dark:text-brand-400"
-              >
-                Continue
-              </Link>
-            )}
+            <span
+              className={
+                step.done
+                  ? "text-xs font-medium text-success-600"
+                  : "text-xs font-medium text-gray-500 dark:text-gray-400"
+              }
+            >
+              {buildOnboardingStepStatusLabel(step)}
+            </span>
           </li>
         ))}
       </ul>

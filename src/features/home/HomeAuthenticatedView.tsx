@@ -3,7 +3,7 @@ import TeamDirectoryPanel from "@/features/capabilities/TeamDirectoryPanel";
 import FeedbackInboxPanel from "@/features/feedback/FeedbackInboxPanel";
 import ImprovementReviewPanel from "@/features/improvements/ImprovementReviewPanel";
 import MarketplaceHomePromo from "@/features/harness/MarketplaceHomePromo";
-import HomeDashboardHero from "@/features/home/HomeDashboardHero";
+import HomeDashboardSection from "@/features/home/HomeDashboardSection";
 import HomeOnboardingChecklist from "@/features/home/HomeOnboardingChecklist";
 import HomePresencePanel from "@/features/home/HomePresencePanel";
 import HomeSetupSection from "@/features/home/HomeSetupSection";
@@ -34,7 +34,7 @@ export default function HomeAuthenticatedView({
       </aside>
 
       <main className={HOME_MAIN_COLUMN_CLASS}>
-        <HomeDashboardHero user={user} />
+        <HomeDashboardSection user={user} />
         <MyOfferingsPanel />
         <TeamDirectoryPanel />
       </main>

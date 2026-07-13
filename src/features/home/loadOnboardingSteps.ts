@@ -22,12 +22,15 @@ export async function loadOnboardingSteps(): Promise<
     : null;
   const runsData: unknown = runsResponse.ok ? await runsResponse.json() : null;
 
-  const hasPairedDevice =
+  const devices =
     typeof devicesData === "object" &&
     devicesData !== null &&
     "devices" in devicesData &&
-    Array.isArray((devicesData as { devices: unknown[] }).devices) &&
-    (devicesData as { devices: unknown[] }).devices.length > 0;
+    Array.isArray((devicesData as { devices: unknown[] }).devices)
+      ? (devicesData as { devices: Array<{ isActive?: boolean }> }).devices
+      : [];
+
+  const hasPairedDevice = devices.some((device) => device.isActive !== false);
 
   const groupCount =
     typeof targetsData === "object" &&
