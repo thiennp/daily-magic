@@ -1,7 +1,4 @@
-import type { AgentPairingStatus } from "@/features/harness/hooks/types/HarnessRequestResult.type";
-
-export type HomeSetupFlowStep =
-  "install-mac" | "link-account" | "pair-browser" | "ready";
+export type HomeSetupFlowStep = "install-mac" | "ready";
 
 export interface HomeSetupFlowStepDefinition {
   readonly id: HomeSetupFlowStep;
@@ -10,8 +7,6 @@ export interface HomeSetupFlowStepDefinition {
 
 export const HOME_SETUP_FLOW_STEPS: readonly HomeSetupFlowStepDefinition[] = [
   { id: "install-mac", label: "Install on Mac" },
-  { id: "link-account", label: "Link to account" },
-  { id: "pair-browser", label: "Pair this browser" },
   { id: "ready", label: "Ready" },
 ];
 
@@ -21,12 +16,8 @@ export interface HomeSetupNextStep {
   readonly detail: string;
 }
 
-const isBrowserPaired = (pairingStatus: AgentPairingStatus): boolean =>
-  pairingStatus === "paired";
-
 const buildHomeSetupNextStep = (input: {
   readonly hasPairedDevice: boolean;
-  readonly pairingStatus: AgentPairingStatus;
 }): HomeSetupNextStep => {
   if (!input.hasPairedDevice) {
     return {
@@ -37,20 +28,11 @@ const buildHomeSetupNextStep = (input: {
     };
   }
 
-  if (!isBrowserPaired(input.pairingStatus)) {
-    return {
-      activeStep: "pair-browser",
-      headline: "Next: pair this browser for rules and sharing",
-      detail:
-        "Your Mac is linked to your account. Copy the pairing token from your Agent Witch config (see below), paste it here, and click Save and pair. Sending tasks from Agent does not need this step.",
-    };
-  }
-
   return {
     activeStep: "ready",
-    headline: "Your Mac and browser are connected",
+    headline: "Your Mac is connected",
     detail:
-      "Send tasks from Agent, edit rules below, or adjust sharing and who can dispatch to your Mac.",
+      "Send tasks from Agent or create workflows in Library. Browser pairing below is only needed for harness rules and sharing.",
   };
 };
 

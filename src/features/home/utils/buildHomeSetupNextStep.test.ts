@@ -3,11 +3,10 @@ import { describe, expect, it } from "vitest";
 import buildHomeSetupNextStep from "@/features/home/utils/buildHomeSetupNextStep";
 
 describe("buildHomeSetupNextStep", () => {
-  it("prompts install and account link when no paired device", () => {
+  it("prompts install when no paired device", () => {
     expect(
       buildHomeSetupNextStep({
         hasPairedDevice: false,
-        pairingStatus: "not_connected",
       }),
     ).toMatchObject({
       activeStep: "install-mac",
@@ -15,27 +14,14 @@ describe("buildHomeSetupNextStep", () => {
     });
   });
 
-  it("prompts browser pairing when the Mac is linked but the browser is not paired", () => {
+  it("shows ready state when a Mac is paired", () => {
     expect(
       buildHomeSetupNextStep({
         hasPairedDevice: true,
-        pairingStatus: "not_connected",
-      }),
-    ).toMatchObject({
-      activeStep: "pair-browser",
-      headline: "Next: pair this browser for rules and sharing",
-    });
-  });
-
-  it("shows ready state when the Mac and browser are paired", () => {
-    expect(
-      buildHomeSetupNextStep({
-        hasPairedDevice: true,
-        pairingStatus: "paired",
       }),
     ).toMatchObject({
       activeStep: "ready",
-      headline: "Your Mac and browser are connected",
+      headline: "Your Mac is connected",
     });
   });
 });

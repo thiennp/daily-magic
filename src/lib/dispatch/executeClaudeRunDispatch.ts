@@ -1,4 +1,3 @@
-import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
 import type AgentWitchHubClient from "@/lib/agentWitch/types/AgentWitchHubClient.type";
 import type AgentWitchHubRuntime from "@/lib/agentWitch/types/AgentWitchHubRuntime.type";
@@ -11,7 +10,7 @@ import {
   dispatchClaudeRunToAgent,
   markAgentRunRunning,
 } from "@/lib/dispatch/dispatchClaudeRunToAgent";
-import { DispatchPolicy } from "@/lib/dispatch/DispatchPolicy.constant";
+import { DispatchPolicy, type DispatchPolicyValue } from "@/lib/dispatch/DispatchPolicy.constant";
 import { resolveDelegatedWriterAgent } from "@/lib/dispatch/resolveDelegatedWriterAgent";
 import { sendPendingApprovalDispatch } from "@/lib/dispatch/sendPendingApprovalDispatch";
 
@@ -23,7 +22,7 @@ export const executeClaudeRunDispatch = async (input: {
   readonly payload: Readonly<Record<string, unknown>>;
   readonly executorUserId: string;
   readonly groupId: string | null;
-  readonly dispatchPolicy: DispatchPolicy;
+  readonly dispatchPolicy: DispatchPolicyValue;
   readonly capabilityId: string | null;
   readonly capabilityVersionId: string | null;
   readonly requestId?: string;

@@ -3,10 +3,10 @@ import TeamDirectoryPanel from "@/features/capabilities/TeamDirectoryPanel";
 import FeedbackInboxPanel from "@/features/feedback/FeedbackInboxPanel";
 import ImprovementReviewPanel from "@/features/improvements/ImprovementReviewPanel";
 import MarketplaceHomePromo from "@/features/harness/MarketplaceHomePromo";
+import HomeConnectedMacsPanel from "@/features/home/HomeConnectedMacsPanel";
 import HomeOnboardingMainPanel from "@/features/home/HomeOnboardingMainPanel";
 import HomeLinkAccountGate from "@/features/home/HomeLinkAccountGate";
 import HomeOnboardingChecklist from "@/features/home/HomeOnboardingChecklist";
-import HomePresencePanel from "@/features/home/HomePresencePanel";
 import HomeSetupSection from "@/features/home/HomeSetupSection";
 import {
   HOME_DASHBOARD_GRID_CLASS,
@@ -48,7 +48,7 @@ export default async function HomeAuthenticatedView({
       <div className={HOME_DASHBOARD_GRID_CLASS}>
         <aside className={HOME_LEFT_RAIL_CLASS}>
           <HomeOnboardingChecklist />
-          <HomePresencePanel />
+          <HomeConnectedMacsPanel />
         </aside>
 
         <main className={HOME_MAIN_COLUMN_CLASS}>

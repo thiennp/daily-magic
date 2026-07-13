@@ -22,7 +22,7 @@ export default function HomeSetupSectionContent({
 
   return (
     <div className="mt-6 space-y-6">
-      <HomeSetupNextSteps pairingStatus={harnessSocket.pairingStatus} />
+      <HomeSetupNextSteps />
       {!hasPairedDevice ? macInstallPanel : null}
       <AgentPairingPanel harnessSocket={harnessSocket} />
       <HarnessWorkspace harnessSocket={harnessSocket} />
