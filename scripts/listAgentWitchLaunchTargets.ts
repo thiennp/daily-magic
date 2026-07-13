@@ -1,9 +1,14 @@
 import fs from "node:fs";
+import os from "node:os";
 import path from "node:path";
 
-import { AGENT_WITCH_LEGACY_LAUNCH_AGENT_LABEL } from "./agentWitchWakeConstants";
+import {
+  AGENT_WITCH_LEGACY_LAUNCH_AGENT_LABEL,
+  AGENT_WITCH_WAKE_LAUNCH_AGENT_LABEL,
+} from "./agentWitchWakeConstants";
 import {
   AGENT_WITCH_PROFILES_DIR_NAME,
+  readActiveProfileEmailFromFile,
   resolveAgentWitchInstallDir,
   sanitizeProfileEmailForLaunchAgentLabel,
 } from "./resolveAgentWitchLocalLayout";
@@ -16,33 +21,83 @@ export interface AgentWitchLaunchTarget {
 const buildProfileLaunchAgentLabel = (profileEmail: string): string =>
   `${AGENT_WITCH_LEGACY_LAUNCH_AGENT_LABEL}.${sanitizeProfileEmailForLaunchAgentLabel(profileEmail)}`;
 
+const isAgentWitchClientLaunchAgent = (launchAgentLabel: string): boolean =>
+  launchAgentLabel !== AGENT_WITCH_WAKE_LAUNCH_AGENT_LABEL &&
+  (launchAgentLabel === AGENT_WITCH_LEGACY_LAUNCH_AGENT_LABEL ||
+    launchAgentLabel.startsWith(`${AGENT_WITCH_LEGACY_LAUNCH_AGENT_LABEL}.`));
+
+const dedupeLaunchTargets = (
+  targets: readonly AgentWitchLaunchTarget[],
+): readonly AgentWitchLaunchTarget[] => {
+  const seenLabels = new Set<string>();
+
+  return targets.filter((target) => {
+    if (seenLabels.has(target.launchAgentLabel)) {
+      return false;
+    }
+
+    seenLabels.add(target.launchAgentLabel);
+    return true;
+  });
+};
+
+const listProfileLaunchTargets = (
+  installDir: string,
+): readonly AgentWitchLaunchTarget[] => {
+  const profilesDir = path.join(installDir, AGENT_WITCH_PROFILES_DIR_NAME);
+  if (!fs.existsSync(profilesDir)) {
+    return [];
+  }
+
+  return fs
+    .readdirSync(profilesDir)
+    .filter((entry) => fs.statSync(path.join(profilesDir, entry)).isDirectory())
+    .map((profileEmail) => ({
+      profileEmail,
+      launchAgentLabel: buildProfileLaunchAgentLabel(profileEmail),
+    }));
+};
+
+const listPlistLaunchTargets = (): readonly AgentWitchLaunchTarget[] => {
+  const launchAgentsDir = path.join(os.homedir(), "Library", "LaunchAgents");
+  if (!fs.existsSync(launchAgentsDir)) {
+    return [];
+  }
+
+  return fs
+    .readdirSync(launchAgentsDir)
+    .filter((entry) => entry.endsWith(".plist"))
+    .map((entry) => entry.slice(0, -".plist".length))
+    .filter(isAgentWitchClientLaunchAgent)
+    .map((launchAgentLabel) => ({
+      profileEmail: null,
+      launchAgentLabel,
+    }));
+};
+
 export const listAgentWitchLaunchTargets = (
   installDir: string = resolveAgentWitchInstallDir(),
 ): readonly AgentWitchLaunchTarget[] => {
-  const targets: AgentWitchLaunchTarget[] = [];
-  const profilesDir = path.join(installDir, AGENT_WITCH_PROFILES_DIR_NAME);
+  const profileTargets = listProfileLaunchTargets(installDir);
+  const targets: AgentWitchLaunchTarget[] = [...profileTargets];
 
-  if (fs.existsSync(profilesDir)) {
-    for (const entry of fs.readdirSync(profilesDir)) {
-      const profileDir = path.join(profilesDir, entry);
-      if (!fs.statSync(profileDir).isDirectory()) {
-        continue;
-      }
-
-      targets.push({
-        profileEmail: entry,
-        launchAgentLabel: buildProfileLaunchAgentLabel(entry),
-      });
-    }
+  const activeProfileEmail = readActiveProfileEmailFromFile(installDir);
+  if (activeProfileEmail !== null) {
+    targets.push({
+      profileEmail: activeProfileEmail,
+      launchAgentLabel: buildProfileLaunchAgentLabel(activeProfileEmail),
+    });
   }
 
   const legacyConfigPath = path.join(installDir, "config.json");
-  if (fs.existsSync(legacyConfigPath) && targets.length === 0) {
+  if (fs.existsSync(legacyConfigPath) && profileTargets.length === 0) {
     targets.push({
       profileEmail: null,
       launchAgentLabel: AGENT_WITCH_LEGACY_LAUNCH_AGENT_LABEL,
     });
   }
 
-  return targets;
+  targets.push(...listPlistLaunchTargets());
+
+  return dedupeLaunchTargets(targets);
 };

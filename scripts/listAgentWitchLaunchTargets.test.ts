@@ -36,19 +36,34 @@ describe("listAgentWitchLaunchTargets", () => {
 
   it("returns profile launch agents from profiles directory", () => {
     const installDir = createTempInstallDir();
-    const profileDir = path.join(
-      installDir,
-      "profiles",
-      "nguyenphongthien@gmail.com",
-    );
+    const profileEmail = "user@example.com";
+    const profileDir = path.join(installDir, "profiles", profileEmail);
     fs.mkdirSync(profileDir, { recursive: true });
     fs.writeFileSync(path.join(profileDir, "config.json"), "{}");
 
     expect(listAgentWitchLaunchTargets(installDir)).toEqual([
       {
-        profileEmail: "nguyenphongthien@gmail.com",
-        launchAgentLabel:
-          "com.daily-magic.agent-witch.nguyenphongthien-at-gmail-com",
+        profileEmail,
+        launchAgentLabel: "com.daily-magic.agent-witch.user-at-example-com",
+      },
+    ]);
+  });
+
+  it("deduplicates active profile launch agents", () => {
+    const installDir = createTempInstallDir();
+    const profileEmail = "user@example.com";
+    const profileDir = path.join(installDir, "profiles", profileEmail);
+    fs.mkdirSync(profileDir, { recursive: true });
+    fs.writeFileSync(path.join(profileDir, "config.json"), "{}");
+    fs.writeFileSync(
+      path.join(installDir, "active-profile.json"),
+      JSON.stringify({ email: profileEmail }),
+    );
+
+    expect(listAgentWitchLaunchTargets(installDir)).toEqual([
+      {
+        profileEmail,
+        launchAgentLabel: "com.daily-magic.agent-witch.user-at-example-com",
       },
     ]);
   });
