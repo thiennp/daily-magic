@@ -1,0 +1,13 @@
+.git
+.github
+.cursor
+.agents
+.husky
+node_modules
+.next
+coverage
+*.md
+.env*
+!.env.example
+npm-debug.log*
+.DS_Store
