@@ -37,18 +37,23 @@ export default async function HomeAuthenticatedView({
     buildLocalAgentInstallCommandFromHeaders(requestHeaders);
   const host =
     requestHeaders.get("x-forwarded-host") ?? requestHeaders.get("host") ?? "";
+  const isWebSocketSupported = isAgentWitchWebSocketSupportedHost(host);
 
   return (
     <HomeLinkAccountGate
       appOrigin={appOrigin}
       installCommand={installCommand}
-      isWebSocketSupported={isAgentWitchWebSocketSupportedHost(host)}
+      isWebSocketSupported={isWebSocketSupported}
       host={host}
     >
       <div className={HOME_DASHBOARD_GRID_CLASS}>
         <aside className={HOME_LEFT_RAIL_CLASS}>
           <HomeOnboardingChecklist />
-          <HomeConnectedMacsPanel />
+          <HomeConnectedMacsPanel
+            installCommand={installCommand}
+            isWebSocketSupported={isWebSocketSupported}
+            host={host}
+          />
         </aside>
 
         <main className={HOME_MAIN_COLUMN_CLASS}>
