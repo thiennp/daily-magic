@@ -37,8 +37,8 @@ else
   "\${NODE_BIN}" - "\${CONFIG_PATH}" "\${PROFILE_EMAIL}" <<'NODE'
 const fs = require("node:fs");
 const crypto = require("node:crypto");
-const configPath = process.argv[1];
-const profileEmail = process.argv[2] ?? "";
+const configPath = process.argv[2];
+const profileEmail = process.argv[3] ?? "";
 const config = JSON.parse(fs.readFileSync(configPath, "utf8"));
 if (typeof config.pairingToken !== "string" || config.pairingToken.length === 0) {
   config.pairingToken = crypto.randomBytes(32).toString("hex");
