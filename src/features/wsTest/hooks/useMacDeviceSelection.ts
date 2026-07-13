@@ -13,13 +13,16 @@ const pickDefaultMacDeviceId = (
 
 const useMacDeviceSelection = (): {
   readonly devices: ReturnType<typeof useMyMacDevices>["devices"];
+  readonly displayNameById: ReturnType<typeof useMyMacDevices>["displayNameById"];
   readonly selectedDeviceId: string;
   readonly setSelectedDeviceId: (deviceId: string) => void;
   readonly isLoading: boolean;
   readonly hasOnlineMac: boolean;
   readonly onlineCount: number;
+  readonly renameDevice: ReturnType<typeof useMyMacDevices>["renameDevice"];
 } => {
-  const { devices, isLoading } = useMyMacDevices();
+  const { devices, displayNameById, isLoading, renameDevice } =
+    useMyMacDevices();
   const [preferredDeviceId, setPreferredDeviceId] = useState("");
 
   const selectedDeviceId = useMemo(() => {
@@ -40,11 +43,13 @@ const useMacDeviceSelection = (): {
 
   return {
     devices,
+    displayNameById,
     selectedDeviceId,
     setSelectedDeviceId: setPreferredDeviceId,
     isLoading,
     hasOnlineMac: onlineCount > 0,
     onlineCount,
+    renameDevice,
   };
 };
 

@@ -7,10 +7,12 @@ import {
   updateDeviceDispatchPolicy,
   type PairedDevice,
 } from "@/features/harness/utils/pairedDevicesApi";
+import MacDeviceIcon from "@/features/macDevices/MacDeviceIcon";
 import type { DispatchPolicyValue } from "@/lib/dispatch/DispatchPolicy.constant";
 
 interface PairedDeviceListItemProps {
   readonly device: PairedDevice;
+  readonly displayName: string;
   readonly draftPolicy: DispatchPolicyValue | "inherit";
   readonly onDraftPolicyChange: (value: DispatchPolicyValue | "inherit") => void;
   readonly onPolicySaved?: () => void;
@@ -19,6 +21,7 @@ interface PairedDeviceListItemProps {
 
 export default function PairedDeviceListItem({
   device,
+  displayName,
   draftPolicy,
   onDraftPolicyChange,
   onPolicySaved,
@@ -26,13 +29,17 @@ export default function PairedDeviceListItem({
 }: PairedDeviceListItemProps) {
   return (
     <li className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-gray-200 px-4 py-3 dark:border-gray-700">
-      <div className="min-w-0 flex-1">
-        <div className="flex flex-wrap items-center gap-2">
-          <p className="text-sm font-medium text-gray-800 dark:text-white/90">
-            {device.deviceLabel ?? "Local agent"}
-          </p>
-          <PairedDeviceOnlineBadge isOnline={device.isOnline === true} />
+      <div className="flex min-w-0 flex-1 items-start gap-3">
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-300">
+          <MacDeviceIcon className="h-5 w-5" />
         </div>
+        <div className="min-w-0 flex-1">
+          <div className="flex flex-wrap items-center gap-2">
+            <p className="text-sm font-medium text-gray-800 dark:text-white/90">
+              {displayName}
+            </p>
+            <PairedDeviceOnlineBadge isOnline={device.isOnline === true} />
+          </div>
         <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
           Paired {formatPairedDeviceTimestamp(device.claimedAt)}
           {device.lastSeenAt !== null
@@ -58,6 +65,7 @@ export default function PairedDeviceListItem({
               })();
             }}
           />
+        </div>
         </div>
       </div>
       <button

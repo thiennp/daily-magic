@@ -31,12 +31,16 @@ export function useWsTestTaskComposer(): {
   readonly resetComposer: () => void;
   readonly isPrefillLoading: boolean;
   readonly macDevices: ReturnType<typeof useMacDeviceSelection>["devices"];
+  readonly macDisplayNameById: ReturnType<
+    typeof useMacDeviceSelection
+  >["displayNameById"];
   readonly selectedDeviceId: string;
   readonly setSelectedDeviceId: (deviceId: string) => void;
   readonly isMacDevicesLoading: boolean;
   readonly hasOnlineMac: boolean;
   readonly onlineMacCount: number;
   readonly selectedDeviceIsOnline: boolean;
+  readonly renameMacDevice: ReturnType<typeof useMacDeviceSelection>["renameDevice"];
 } {
   const prefill = useAgentComposerPrefill();
   const selection = useTeamDispatchSelection();

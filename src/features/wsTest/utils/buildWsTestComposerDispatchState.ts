@@ -10,12 +10,16 @@ export const buildWsTestComposerDispatchState = (input: {
   readonly isTeamDispatch: boolean;
 }): {
   readonly macDevices: ReturnType<typeof useMacDeviceSelection>["devices"];
+  readonly macDisplayNameById: ReturnType<
+    typeof useMacDeviceSelection
+  >["displayNameById"];
   readonly selectedDeviceId: string;
   readonly setSelectedDeviceId: (deviceId: string) => void;
   readonly isMacDevicesLoading: boolean;
   readonly hasOnlineMac: boolean;
   readonly onlineMacCount: number;
   readonly selectedDeviceIsOnline: boolean;
+  readonly renameMacDevice: ReturnType<typeof useMacDeviceSelection>["renameDevice"];
   readonly isSendDisabled: (connectionStatus: string) => boolean;
 } => {
   const selectedDevice = input.macSelection.devices.find(
@@ -25,12 +29,14 @@ export const buildWsTestComposerDispatchState = (input: {
 
   return {
     macDevices: input.macSelection.devices,
+    macDisplayNameById: input.macSelection.displayNameById,
     selectedDeviceId: input.macSelection.selectedDeviceId,
     setSelectedDeviceId: input.macSelection.setSelectedDeviceId,
     isMacDevicesLoading: input.macSelection.isLoading,
     hasOnlineMac: input.macSelection.hasOnlineMac,
     onlineMacCount: input.macSelection.onlineCount,
     selectedDeviceIsOnline,
+    renameMacDevice: input.macSelection.renameDevice,
     isSendDisabled: (connectionStatus: string) =>
       buildWsTestSendDisabledState({
         connectionStatus,

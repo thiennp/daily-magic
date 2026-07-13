@@ -62,9 +62,11 @@ export default function WsTestPromptSection({
         <WsTestMacDispatchSection
           isLibraryPlaybook={composer.isLibraryPlaybook}
           macDevices={composer.macDevices}
+          macDisplayNameById={composer.macDisplayNameById}
           selectedDeviceId={composer.selectedDeviceId}
           isMacDevicesLoading={composer.isMacDevicesLoading}
           onDeviceChange={composer.setSelectedDeviceId}
+          onDeviceRenamed={composer.renameMacDevice}
         />
       ) : null}
 

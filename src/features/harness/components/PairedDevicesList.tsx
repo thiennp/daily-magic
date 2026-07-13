@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 import PairedDeviceListItem from "@/features/harness/components/PairedDeviceListItem";
 import {
   type PairedDevice,
 } from "@/features/harness/utils/pairedDevicesApi";
+import { buildMacDeviceDisplayNameById } from "@/lib/agentWitch/resolveMacDeviceDisplayName";
 import type { DispatchPolicyValue } from "@/lib/dispatch/DispatchPolicy.constant";
 
 interface PairedDevicesListProps {
@@ -28,6 +29,10 @@ export default function PairedDevicesList({
   const [policyDrafts, setPolicyDrafts] = useState<
     Record<string, DispatchPolicyValue | "inherit">
   >({});
+  const displayNameById = useMemo(
+    () => buildMacDeviceDisplayNameById(devices),
+    [devices],
+  );
 
   if (isLoading) {
     return (
@@ -51,6 +56,7 @@ export default function PairedDevicesList({
         <PairedDeviceListItem
           key={device.id}
           device={device}
+          displayName={displayNameById.get(device.id) ?? "Your Mac"}
           draftPolicy={
             policyDrafts[device.id] ?? toPolicySelection(device.dispatchPolicy)
           }
