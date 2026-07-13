@@ -1,3 +1,5 @@
+import { fetchAgentWitchLinkSession } from "@/lib/agentWitch/fetchAgentWitchLinkSession";
+
 export const AGENT_WITCH_WAKE_DEFAULT_PORT = 47892;
 
 export const AGENT_WITCH_WAKE_BASE_URL = `http://127.0.0.1:${AGENT_WITCH_WAKE_DEFAULT_PORT}`;
@@ -77,36 +79,23 @@ export const linkLocalAgentToSignedInAccount = async (
   readonly email?: string;
   readonly errorMessage?: string;
 }> => {
-  const sessionResponse = await fetch("/api/agent-witch/link-session", {
-    method: "POST",
-  });
+  const session = await fetchAgentWitchLinkSession();
 
-  if (!sessionResponse.ok) {
+  if (
+    !session.ok ||
+    session.linkToken === undefined ||
+    session.profileEmail === undefined
+  ) {
     return {
       ok: false,
-      errorMessage: "Could not start account linking session.",
+      errorMessage:
+        session.errorMessage ?? "Could not start account linking session.",
     };
   }
 
-  const sessionData: unknown = await sessionResponse.json();
-  const linkToken =
-    typeof sessionData === "object" &&
-    sessionData !== null &&
-    "linkToken" in sessionData &&
-    typeof (sessionData as { linkToken: unknown }).linkToken === "string"
-      ? (sessionData as { linkToken: string }).linkToken
-      : "";
-  const profileEmail =
-    typeof sessionData === "object" &&
-    sessionData !== null &&
-    "email" in sessionData &&
-    typeof (sessionData as { email: unknown }).email === "string"
-      ? (sessionData as { email: string }).email
-      : "";
-
-  if (linkToken.length === 0 || profileEmail.length === 0) {
-    return { ok: false, errorMessage: "Missing link session from server." };
-  }
-
-  return requestLocalAgentLinkAccount({ linkToken, appOrigin, profileEmail });
+  return requestLocalAgentLinkAccount({
+    linkToken: session.linkToken,
+    appOrigin,
+    profileEmail: session.profileEmail,
+  });
 };

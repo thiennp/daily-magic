@@ -35,8 +35,8 @@ export function useLinkLocalAgentAccount({
       const shouldReportError = options?.reportError ?? !silentFailures;
 
       linkingInFlightRef.current = true;
-      setIsLinking(true);
       if (shouldReportError) {
+        setIsLinking(true);
         setLinkError(null);
       }
 
@@ -48,7 +48,9 @@ export function useLinkLocalAgentAccount({
       }
 
       linkingInFlightRef.current = false;
-      setIsLinking(false);
+      if (shouldReportError) {
+        setIsLinking(false);
+      }
     },
     [appOrigin, onLinked, silentFailures],
   );

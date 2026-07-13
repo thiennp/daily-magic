@@ -49,20 +49,19 @@ if [[ "\$(uname -s)" == "Darwin" ]]; then
 </plist>
 EOF
 
-  if launchctl print "gui/\$(id -u)/\${LAUNCH_AGENT_LABEL}" >/dev/null 2>&1; then
-    launchctl bootout "gui/\$(id -u)/\${LAUNCH_AGENT_LABEL}" || true
-    sleep 1
-  fi
-
-  launchctl bootstrap "gui/\$(id -u)" "\${PLIST_PATH}"
-  launchctl enable "gui/\$(id -u)/\${LAUNCH_AGENT_LABEL}"
-  launchctl kickstart -k "gui/\$(id -u)/\${LAUNCH_AGENT_LABEL}"
+  register_agent_witch_launch_agent "\${LAUNCH_AGENT_LABEL}" "\${PLIST_PATH}" || true
   sleep 2
 
-  if launchctl print "gui/\$(id -u)/\${LAUNCH_AGENT_LABEL}" | grep -q 'state = running'; then
+  if launchctl print "gui/\$(id -u)/\${LAUNCH_AGENT_LABEL}" 2>/dev/null | grep -q 'state = running'; then
     echo "Agent Witch is running and will auto-reconnect to ${input.wsUrl}"
   else
     echo "Agent Witch LaunchAgent installed. Check logs if it is not running yet." >&2
+  fi
+
+  if ! launchctl print "gui/\$(id -u)/\${LAUNCH_AGENT_LABEL}" 2>/dev/null | grep -q 'state = running'; then
+    echo "Starting Agent Witch directly because launchctl is unavailable." >&2
+    nohup "\${RUN_PATH}" >> "\${INSTALL_DIR}/\${LOG_BASENAME}.log" 2>> "\${INSTALL_DIR}/\${LOG_BASENAME}.error.log" &
+    sleep 1
   fi
 else
   echo "Installed Agent Witch to \${INSTALL_DIR}."

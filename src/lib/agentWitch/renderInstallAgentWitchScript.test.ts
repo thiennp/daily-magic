@@ -8,6 +8,8 @@ describe("renderInstallAgentWitchScript", () => {
 
     expect(script).toContain('"allowScripts"');
     expect(script).toContain("npm approve-scripts --allow-scripts-pending");
+    expect(script).toContain("register_agent_witch_launch_agent");
+    expect(script).toContain('nohup "${RUN_PATH}"');
     expect(script).toContain("open \"https://www.agentwitch.com/\"");
     expect(script).toContain(
       "wss://www.agentwitch.com/api/agent-witch/ws",

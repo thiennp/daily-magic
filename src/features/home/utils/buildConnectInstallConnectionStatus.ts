@@ -27,7 +27,7 @@ export const buildConnectInstallConnectionStatus = (input: {
     return { message: input.linkError, tone: "error" };
   }
 
-  if (input.isLinking) {
+  if (input.installEngaged && input.isLinking) {
     return { message: "Connecting to your Mac…", tone: "connecting" };
   }
 

@@ -38,6 +38,7 @@ const postJson = async (
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
+      signal: AbortSignal.timeout(15_000),
     });
     let data: unknown = {};
 
@@ -111,23 +112,27 @@ const readProfilePairingToken = (
 const resolvePairingForProfile = (
   profileEmail: string,
 ): { readonly pairingToken: string; readonly wsUrl: string } => {
-  const existingProfile = readProfilePairingToken(profileEmail);
+  const normalizedEmail = profileEmail.trim().toLowerCase();
+  const existingProfile = readProfilePairingToken(normalizedEmail);
   if (existingProfile !== null) {
     return existingProfile;
   }
 
+  const installPairing = getOrCreateInstallPairingToken();
   const installDir = resolveAgentWitchInstallDir();
   const profilesDir = path.join(installDir, AGENT_WITCH_PROFILES_DIR_NAME);
-  const hasProfiles =
-    fs.existsSync(profilesDir) &&
-    fs
-      .readdirSync(profilesDir)
-      .some((entry) =>
-        fs.statSync(path.join(profilesDir, entry)).isDirectory(),
-      );
-  const installPairing = getOrCreateInstallPairingToken();
+  const otherProfiles =
+    fs.existsSync(profilesDir) === true
+      ? fs
+          .readdirSync(profilesDir)
+          .filter(
+            (entry) =>
+              entry !== normalizedEmail &&
+              fs.statSync(path.join(profilesDir, entry)).isDirectory(),
+          )
+      : [];
 
-  if (!hasProfiles) {
+  if (otherProfiles.length === 0) {
     return installPairing;
   }
 

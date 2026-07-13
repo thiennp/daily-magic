@@ -91,14 +91,7 @@ if [[ "\$(uname -s)" == "Darwin" ]]; then
 </plist>
 EOF
 
-  if launchctl print "gui/\$(id -u)/\${WAKE_LAUNCH_AGENT_LABEL}" >/dev/null 2>&1; then
-    launchctl bootout "gui/\$(id -u)/\${WAKE_LAUNCH_AGENT_LABEL}" || true
-    sleep 1
-  fi
-
-  launchctl bootstrap "gui/\$(id -u)" "\${WAKE_PLIST_PATH}"
-  launchctl enable "gui/\$(id -u)/\${WAKE_LAUNCH_AGENT_LABEL}"
-  launchctl kickstart -k "gui/\$(id -u)/\${WAKE_LAUNCH_AGENT_LABEL}"
+  register_agent_witch_launch_agent "\${WAKE_LAUNCH_AGENT_LABEL}" "\${WAKE_PLIST_PATH}" || true
   echo "Agent Witch local API: http://127.0.0.1:47892/link-account"
 fi
 `;

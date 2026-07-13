@@ -36,7 +36,15 @@ describe("buildConnectInstallConnectionStatus", () => {
     });
   });
 
-  it("prefers connecting and error states", () => {
+  it("prefers connecting and error states after install is engaged", () => {
+    expect(
+      buildConnectInstallConnectionStatus({
+        installEngaged: false,
+        isLinking: true,
+        linkError: null,
+      }),
+    ).toBeNull();
+
     expect(
       buildConnectInstallConnectionStatus({
         installEngaged: true,
