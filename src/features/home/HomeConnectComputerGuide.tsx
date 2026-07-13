@@ -9,8 +9,11 @@ import {
   APP_SURFACE_NESTED_CARD_CLASS,
 } from "@/components/surfaces/appSurfaceStyles.constant";
 import AgentWitchUnsupportedHostNotice from "@/features/home/AgentWitchUnsupportedHostNotice";
+import ConnectInstallPasteModal from "@/features/home/ConnectInstallPasteModal";
 import CopyableBashCommand from "@/features/home/CopyableBashCommand";
-import buildConnectComputerGuideSteps from "@/features/home/utils/buildConnectComputerGuideSteps";
+import buildConnectComputerGuideSteps, {
+  CONNECT_COMPUTER_COPY_STEP_TITLE,
+} from "@/features/home/utils/buildConnectComputerGuideSteps";
 import {
   buildConnectInstallConnectionStatus,
   buildConnectInstallConnectionStatusClassName,
@@ -37,6 +40,7 @@ export default function HomeConnectComputerGuide({
   linkError = null,
 }: HomeConnectComputerGuideProps) {
   const [installEngaged, setInstallEngaged] = useState(false);
+  const [isPasteModalOpen, setIsPasteModalOpen] = useState(false);
   const operatingSystem = useSyncExternalStore(
     subscribeToOperatingSystem,
     detectBrowserOperatingSystem,
@@ -51,6 +55,11 @@ export default function HomeConnectComputerGuide({
 
   const handleInstallEngaged = useCallback(() => {
     setInstallEngaged(true);
+    setIsPasteModalOpen(true);
+  }, []);
+
+  const handleClosePasteModal = useCallback(() => {
+    setIsPasteModalOpen(false);
   }, []);
 
   return (
@@ -80,37 +89,42 @@ export default function HomeConnectComputerGuide({
             <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-zinc-900 text-sm font-semibold text-white">
               {index + 1}
             </span>
-            <div>
+            <div className="min-w-0 flex-1">
               <p className="text-sm font-semibold text-gray-900 dark:text-white/90">
                 {step.title}
               </p>
               <p className={`mt-1 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
                 {step.description}
               </p>
+              {isWebSocketSupported &&
+              step.title === CONNECT_COMPUTER_COPY_STEP_TITLE ? (
+                <CopyableBashCommand
+                  command={installCommand}
+                  iconOnly
+                  variant="bash"
+                  onEngaged={handleInstallEngaged}
+                />
+              ) : null}
             </div>
           </li>
         ))}
       </ol>
 
-      {isWebSocketSupported ? (
-        <>
-          <CopyableBashCommand
-            command={installCommand}
-            iconOnly
-            onEngaged={handleInstallEngaged}
-          />
-          {connectionStatus !== null ? (
-            <p
-              className={buildConnectInstallConnectionStatusClassName(
-                connectionStatus.tone,
-              )}
-              role="status"
-            >
-              {connectionStatus.message}
-            </p>
-          ) : null}
-        </>
+      {isWebSocketSupported && connectionStatus !== null ? (
+        <p
+          className={buildConnectInstallConnectionStatusClassName(
+            connectionStatus.tone,
+          )}
+          role="status"
+        >
+          {connectionStatus.message}
+        </p>
       ) : null}
+
+      <ConnectInstallPasteModal
+        isOpen={isPasteModalOpen}
+        onClose={handleClosePasteModal}
+      />
     </AppHero>
   );
 }

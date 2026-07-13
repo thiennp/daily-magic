@@ -13,7 +13,7 @@ describe("buildConnectInstallConnectionStatus", () => {
     ).toBeNull();
   });
 
-  it("returns waiting after copy or selection", () => {
+  it("returns waiting after the install command is copied", () => {
     expect(
       buildConnectInstallConnectionStatus({
         installEngaged: true,

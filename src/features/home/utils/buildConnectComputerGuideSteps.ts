@@ -1,5 +1,7 @@
 import type { BrowserOperatingSystem } from "@/features/home/utils/detectBrowserOperatingSystem";
 
+export const CONNECT_COMPUTER_COPY_STEP_TITLE = "Copy the install command";
+
 export interface ConnectComputerGuideStep {
   readonly title: string;
   readonly description: string;
@@ -12,7 +14,7 @@ const MAC_TERMINAL_STEPS: readonly ConnectComputerGuideStep[] = [
       'Press Command (⌘) + Space to open Spotlight, type "Terminal", then press Return.',
   },
   {
-    title: "Copy the install command",
+    title: CONNECT_COMPUTER_COPY_STEP_TITLE,
     description:
       "The command is the same for every account on this Mac — it does not contain your email.",
   },
