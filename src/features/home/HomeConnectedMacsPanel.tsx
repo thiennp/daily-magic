@@ -1,10 +1,10 @@
 "use client";
 
-import HomeLocalMacWakePrompt from "@/features/home/HomeLocalMacWakePrompt";
 import useHomeConnectedMacs from "@/features/home/hooks/useHomeConnectedMacs";
 import useLocalMacBrowserContext from "@/features/home/hooks/useLocalMacBrowserContext";
-import { buildMacDeviceLastSeenText } from "@/features/macDevices/utils/buildMacDeviceLastSeenText";
 import MacDeviceRow from "@/features/macDevices/MacDeviceRow";
+import { buildMacDeviceLastSeenText } from "@/features/macDevices/utils/buildMacDeviceLastSeenText";
+import { canWakeMacDeviceFromBrowser } from "@/features/macDevices/utils/canWakeMacDeviceFromBrowser";
 
 export default function HomeConnectedMacsPanel() {
   const { devices, displayNameById, isLoading, renameDevice } =
@@ -40,17 +40,16 @@ export default function HomeConnectedMacsPanel() {
               displayName={displayNameById.get(device.id) ?? "Your Mac"}
               isOnline={device.isOnline}
               detailText={buildMacDeviceLastSeenText(device) ?? undefined}
+              isWakeServerReachable={canWakeMacDeviceFromBrowser({
+                deviceLabel: device.deviceLabel,
+                localHostname,
+                isWakeServerReachable,
+              })}
               onRenamed={renameDevice}
             />
           ))}
         </ul>
       )}
-
-      <HomeLocalMacWakePrompt
-        devices={devices}
-        localHostname={localHostname}
-        isWakeServerReachable={isWakeServerReachable}
-      />
     </section>
   );
 }

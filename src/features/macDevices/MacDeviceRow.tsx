@@ -3,6 +3,7 @@
 import PairedDeviceOnlineBadge from "@/features/harness/components/PairedDeviceOnlineBadge";
 import MacDeviceIcon from "@/features/macDevices/MacDeviceIcon";
 import MacDeviceNameEditor from "@/features/macDevices/MacDeviceNameEditor";
+import MacDeviceOfflineWakeHint from "@/features/macDevices/MacDeviceOfflineWakeHint";
 
 interface MacDeviceRowProps {
   readonly deviceId: string;
@@ -10,6 +11,7 @@ interface MacDeviceRowProps {
   readonly isOnline: boolean;
   readonly detailText?: string;
   readonly isSelected?: boolean;
+  readonly isWakeServerReachable?: boolean;
   readonly onSelect?: () => void;
   readonly onRenamed: (deviceId: string, deviceLabel: string) => void;
 }
@@ -20,6 +22,7 @@ export default function MacDeviceRow({
   isOnline,
   detailText,
   isSelected = false,
+  isWakeServerReachable = false,
   onSelect,
   onRenamed,
 }: MacDeviceRowProps) {
@@ -46,21 +49,50 @@ export default function MacDeviceRow({
     </>
   );
 
-  if (onSelect !== undefined) {
-    return (
-      <button
-        type="button"
-        onClick={onSelect}
-        className={`flex w-full items-start gap-3 rounded-lg px-1 py-1 text-left transition ${
+  const rowClassName =
+    onSelect !== undefined
+      ? `flex w-full items-start gap-3 rounded-lg px-1 py-1 text-left transition ${
           isSelected
             ? "bg-brand-50/60 dark:bg-brand-950/20"
             : "hover:bg-gray-50 dark:hover:bg-white/[0.03]"
-        }`}
+        }`
+      : "flex items-start gap-3";
+
+  const row =
+    onSelect !== undefined ? (
+      <div
+        role="button"
+        tabIndex={0}
+        onClick={onSelect}
+        onKeyDown={(event) => {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            onSelect();
+          }
+        }}
+        className={rowClassName}
       >
         {content}
-      </button>
+      </div>
+    ) : (
+      <div className={rowClassName}>{content}</div>
     );
+
+  const wrappedRow =
+    isOnline === false ? (
+      <MacDeviceOfflineWakeHint
+        displayName={displayName}
+        isWakeServerReachable={isWakeServerReachable}
+      >
+        {row}
+      </MacDeviceOfflineWakeHint>
+    ) : (
+      row
+    );
+
+  if (onSelect !== undefined) {
+    return wrappedRow;
   }
 
-  return <li className="flex items-start gap-3">{content}</li>;
+  return <li>{wrappedRow}</li>;
 }
