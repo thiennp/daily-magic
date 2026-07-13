@@ -4,6 +4,11 @@ import type { ReactNode } from "react";
 
 import HomeConnectComputerGuide from "@/features/home/HomeConnectComputerGuide";
 import HomeOnboardingChecklist from "@/features/home/HomeOnboardingChecklist";
+import {
+  HOME_DASHBOARD_GRID_CLASS,
+  HOME_LEFT_RAIL_CLASS,
+  HOME_MAIN_COLUMN_CLASS,
+} from "@/features/home/homeDashboardLayout.constant";
 import { useHasPairedDevice } from "@/features/home/hooks/useHasPairedDevice";
 import { useLinkLocalAgentAccount } from "@/features/home/hooks/useLinkLocalAgentAccount";
 
@@ -33,28 +38,39 @@ export default function HomeLinkAccountGate({
 
   if (isLoading) {
     return (
-      <section className="rounded-3xl border border-gray-200 bg-white p-8 dark:border-gray-800 dark:bg-white/[0.03]">
-        <p className="text-sm text-gray-500 dark:text-gray-400">
-          Checking your computer connection…
-        </p>
-      </section>
+      <div className={HOME_DASHBOARD_GRID_CLASS}>
+        <aside className={HOME_LEFT_RAIL_CLASS}>
+          <HomeOnboardingChecklist />
+        </aside>
+        <main className={HOME_MAIN_COLUMN_CLASS}>
+          <section className="rounded-3xl border border-gray-200 bg-white p-8 dark:border-gray-800 dark:bg-white/[0.03]">
+            <p className="text-sm text-gray-500 dark:text-gray-400">
+              Checking your computer connection…
+            </p>
+          </section>
+        </main>
+      </div>
     );
   }
 
   if (!hasPairedDevice) {
     return (
-      <div className="mx-auto grid max-w-3xl grid-cols-1 gap-6 text-left sm:gap-8">
-        <HomeOnboardingChecklist />
-        <HomeConnectComputerGuide
-          installCommand={installCommand}
-          isWebSocketSupported={isWebSocketSupported}
-          host={host}
-          isLinking={isLinking}
-          linkError={linkError}
-          onLinkNow={() => {
-            void linkNow();
-          }}
-        />
+      <div className={HOME_DASHBOARD_GRID_CLASS}>
+        <aside className={HOME_LEFT_RAIL_CLASS}>
+          <HomeOnboardingChecklist />
+        </aside>
+        <main className={HOME_MAIN_COLUMN_CLASS}>
+          <HomeConnectComputerGuide
+            installCommand={installCommand}
+            isWebSocketSupported={isWebSocketSupported}
+            host={host}
+            isLinking={isLinking}
+            linkError={linkError}
+            onLinkNow={() => {
+              void linkNow();
+            }}
+          />
+        </main>
       </div>
     );
   }
