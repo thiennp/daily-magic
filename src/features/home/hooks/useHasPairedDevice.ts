@@ -22,6 +22,8 @@ const isDemoComputerConnected = (
       (step.id === "pair" || step.id === "connect-mac") && step.done === true,
   );
 
+const PAIRED_DEVICE_POLL_INTERVAL_MS = 30_000;
+
 export function useHasPairedDevice(): UseHasPairedDeviceResult {
   const demoPreview = useDemoPreview();
   const isDemoMode = demoPreview !== null;
@@ -58,7 +60,7 @@ export function useHasPairedDevice(): UseHasPairedDeviceResult {
 
     const timer = setInterval(() => {
       void refresh();
-    }, 5000);
+    }, PAIRED_DEVICE_POLL_INTERVAL_MS);
 
     return () => {
       clearInterval(timer);

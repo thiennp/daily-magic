@@ -1,6 +1,6 @@
 "use client";
 
-import type { ReactNode } from "react";
+import { useCallback, type ReactNode } from "react";
 
 import HomeConnectComputerGuide from "@/features/home/HomeConnectComputerGuide";
 import HomeOnboardingChecklist from "@/features/home/HomeOnboardingChecklist";
@@ -28,12 +28,12 @@ export default function HomeLinkAccountGate({
   children,
 }: HomeLinkAccountGateProps) {
   const { hasPairedDevice, isLoading, refresh } = useHasPairedDevice();
+  const handleLinked = useCallback(() => {
+    void refresh();
+  }, [refresh]);
   const { isLinking, linkError, linkNow } = useLinkLocalAgentAccount({
     appOrigin,
-    enabled: !isLoading && !hasPairedDevice,
-    onLinked: () => {
-      refresh();
-    },
+    onLinked: handleLinked,
   });
 
   if (isLoading) {
