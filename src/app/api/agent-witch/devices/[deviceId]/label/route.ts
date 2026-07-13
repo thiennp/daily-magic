@@ -41,5 +41,5 @@ export async function PATCH(
     return Response.json({ error: "Device not found." }, { status: 404 });
   }
 
-  return Response.json({ ok: true, deviceLabel });
+  return Response.json({ ok: true, displayName: deviceLabel });
 }

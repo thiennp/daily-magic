@@ -10,6 +10,7 @@ const baseDevice = (
   id: "device-1",
   userId: "user-1",
   deviceLabel: "MacBook Pro",
+  displayName: null,
   claimedAt: "2026-01-01T00:00:00.000Z",
   lastSeenAt: "2026-01-02T00:00:00.000Z",
   revokedAt: null,
@@ -67,5 +68,22 @@ describe("buildAgentWitchDevicesWithOnlineStatus", () => {
     );
 
     expect(result[0]?.isOnline).toBe(true);
+  });
+
+  it("keeps saved display names while hostname updates from the live client", () => {
+    const result = buildAgentWitchDevicesWithOnlineStatus(
+      [
+        baseDevice({
+          displayName: "Work Mac",
+          deviceLabel: "Studio-MacBook",
+        }),
+      ],
+      [onlineClient({ deviceLabel: "Studio-MacBook.local" })],
+    );
+
+    expect(result[0]).toMatchObject({
+      deviceLabel: "Studio-MacBook.local",
+      displayName: "Work Mac",
+    });
   });
 });

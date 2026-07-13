@@ -14,6 +14,7 @@ export default function mapAgentWitchDeviceRow(
     id: String(row.id),
     userId: String(row.user_id),
     deviceLabel: row.device_label ? String(row.device_label) : null,
+    displayName: row.display_name ? String(row.display_name) : null,
     dispatchPolicy,
     claimedAt: String(row.claimed_at),
     lastSeenAt: row.last_seen_at ? String(row.last_seen_at) : null,

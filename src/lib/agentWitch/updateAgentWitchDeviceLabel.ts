@@ -9,7 +9,7 @@ export const updateAgentWitchDeviceLabel = async (
   const rows = asRowArray(
     await sql`
       UPDATE agent_witch_devices
-      SET device_label = ${deviceLabel}
+      SET display_name = ${deviceLabel}
       WHERE id = ${deviceId}
         AND user_id = ${userId}
         AND revoked_at IS NULL

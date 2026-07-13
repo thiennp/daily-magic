@@ -79,6 +79,7 @@ CREATE TABLE IF NOT EXISTS agent_witch_devices (
   user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
   token_hash TEXT NOT NULL UNIQUE,
   device_label TEXT,
+  display_name TEXT,
   dispatch_policy TEXT CHECK (dispatch_policy IN ('open', 'approval')),
   claimed_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   last_seen_at TIMESTAMPTZ,

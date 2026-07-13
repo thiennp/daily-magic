@@ -7,6 +7,7 @@ import { buildMacDeviceDisplayNameById } from "@/lib/agentWitch/resolveMacDevice
 export interface MyMacDevice {
   readonly id: string;
   readonly deviceLabel: string | null;
+  readonly displayName: string | null;
   readonly claimedAt: string;
   readonly lastSeenAt: string | null;
   readonly isOnline: boolean;
@@ -33,6 +34,8 @@ const parseMyMacDevices = (payload: unknown): readonly MyMacDevice[] => {
     .map((device) => ({
       id: device.id,
       deviceLabel: device.deviceLabel,
+      displayName:
+        typeof device.displayName === "string" ? device.displayName : null,
       claimedAt: device.claimedAt,
       lastSeenAt: device.lastSeenAt,
       isOnline: device.isOnline === true,
@@ -45,7 +48,7 @@ const useMyMacDevices = (): {
   readonly displayNameById: ReadonlyMap<string, string>;
   readonly isLoading: boolean;
   readonly refresh: () => Promise<void>;
-  readonly renameDevice: (deviceId: string, deviceLabel: string) => void;
+  readonly renameDevice: (deviceId: string, displayName: string) => void;
 } => {
   const [devices, setDevices] = useState<readonly MyMacDevice[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -92,10 +95,10 @@ const useMyMacDevices = (): {
     [devices],
   );
 
-  const renameDevice = useCallback((deviceId: string, deviceLabel: string) => {
+  const renameDevice = useCallback((deviceId: string, displayName: string) => {
     setDevices((current) =>
       current.map((device) =>
-        device.id === deviceId ? { ...device, deviceLabel } : device,
+        device.id === deviceId ? { ...device, displayName } : device,
       ),
     );
   }, []);

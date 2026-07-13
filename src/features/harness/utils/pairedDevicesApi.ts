@@ -3,6 +3,7 @@ import { type DispatchPolicyValue } from "@/lib/dispatch/DispatchPolicy.constant
 interface PairedDevice {
   readonly id: string;
   readonly deviceLabel: string | null;
+  readonly displayName?: string | null;
   readonly claimedAt: string;
   readonly lastSeenAt: string | null;
   readonly revokedAt: string | null;

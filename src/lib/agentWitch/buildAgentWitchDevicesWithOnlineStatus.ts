@@ -5,6 +5,7 @@ import type AgentWitchDeviceRecord from "@/lib/agentWitch/types/AgentWitchDevice
 export interface AgentWitchDeviceWithOnlineStatus {
   readonly id: string;
   readonly deviceLabel: string | null;
+  readonly displayName: string | null;
   readonly claimedAt: string;
   readonly lastSeenAt: string | null;
   readonly revokedAt: string | null;
@@ -35,6 +36,7 @@ const buildAgentWitchDevicesWithOnlineStatus = (
     return {
       id: device.id,
       deviceLabel: onlineClient?.deviceLabel ?? device.deviceLabel,
+      displayName: device.displayName,
       claimedAt: device.claimedAt,
       lastSeenAt: device.lastSeenAt,
       revokedAt: device.revokedAt,

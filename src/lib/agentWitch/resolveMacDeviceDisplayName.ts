@@ -34,10 +34,22 @@ export const resolveMacDeviceDisplayName = (input: {
   return "Your Mac";
 };
 
+const resolveSavedMacDeviceDisplayName = (input: {
+  readonly displayName?: string | null;
+}): string | null => {
+  if (input.displayName === undefined || input.displayName === null) {
+    return null;
+  }
+
+  const trimmedDisplayName = input.displayName.trim();
+  return trimmedDisplayName.length > 0 ? trimmedDisplayName : null;
+};
+
 export const buildMacDeviceDisplayNameById = (
   devices: ReadonlyArray<{
     readonly id: string;
     readonly deviceLabel: string | null;
+    readonly displayName?: string | null;
   }>,
 ): ReadonlyMap<string, string> => {
   const genericIndexById = new Map(
@@ -48,6 +60,11 @@ export const buildMacDeviceDisplayNameById = (
 
   return new Map(
     devices.map((device) => {
+      const savedDisplayName = resolveSavedMacDeviceDisplayName(device);
+      if (savedDisplayName !== null) {
+        return [device.id, savedDisplayName] as const;
+      }
+
       const displayName = isGenericMacDeviceLabel(device.deviceLabel)
         ? resolveMacDeviceDisplayName({
             deviceLabel: device.deviceLabel,
