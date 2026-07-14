@@ -22,43 +22,49 @@ const app = next({ dev, hostname, port });
 const handle = app.getRequestHandler();
 const hub = getAgentWitchHub();
 
-app.prepare().then(() => {
-  const server = createServer((request, response) => {
-    const parsedUrl = parse(request.url ?? "", true);
-    handle(request, response, parsedUrl);
+app
+  .prepare()
+  .then(() => {
+    const server = createServer((request, response) => {
+      const parsedUrl = parse(request.url ?? "", true);
+      handle(request, response, parsedUrl);
+    });
+
+    const webSocketServer = new WebSocketServer({ noServer: true });
+
+    server.on("upgrade", (request, socket, head) => {
+      const { pathname } = parse(request.url ?? "", true);
+
+      if (pathname !== wsPath) {
+        socket.destroy();
+        return;
+      }
+
+      if (!isSecureAgentWitchUpgrade(request)) {
+        socket.destroy();
+        return;
+      }
+
+      if (!isAllowedAgentWitchOrigin(request)) {
+        socket.destroy();
+        return;
+      }
+
+      void resolveAuthActorFromCookieHeader(request.headers.cookie ?? "").then(
+        (dashboardActor) => {
+          webSocketServer.handleUpgrade(request, socket, head, (ws) => {
+            attachAgentWitchWebSocket(hub, ws, { dashboardActor });
+          });
+        },
+      );
+    });
+
+    server.listen(port, host, () => {
+      console.log(`> Daily Magic ready on http://${hostname}:${port}`);
+      console.log(`> Agent Witch WebSocket: ws://${hostname}:${port}${wsPath}`);
+    });
+  })
+  .catch((error: unknown) => {
+    console.error("Failed to start Daily Magic server:", error);
+    process.exit(1);
   });
-
-  const webSocketServer = new WebSocketServer({ noServer: true });
-
-  server.on("upgrade", (request, socket, head) => {
-    const { pathname } = parse(request.url ?? "", true);
-
-    if (pathname !== wsPath) {
-      socket.destroy();
-      return;
-    }
-
-    if (!isSecureAgentWitchUpgrade(request)) {
-      socket.destroy();
-      return;
-    }
-
-    if (!isAllowedAgentWitchOrigin(request)) {
-      socket.destroy();
-      return;
-    }
-
-    void resolveAuthActorFromCookieHeader(request.headers.cookie ?? "").then(
-      (dashboardActor) => {
-        webSocketServer.handleUpgrade(request, socket, head, (ws) => {
-          attachAgentWitchWebSocket(hub, ws, { dashboardActor });
-        });
-      },
-    );
-  });
-
-  server.listen(port, host, () => {
-    console.log(`> Daily Magic ready on http://${hostname}:${port}`);
-    console.log(`> Agent Witch WebSocket: ws://${hostname}:${port}${wsPath}`);
-  });
-});
