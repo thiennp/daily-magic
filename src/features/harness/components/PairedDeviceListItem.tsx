@@ -7,7 +7,7 @@ import {
   updateDeviceDispatchPolicy,
   type PairedDevice,
 } from "@/features/agent-witch/utils/pairedDevicesApi";
-import MacDeviceIcon from "@/features/macDevices/MacDeviceIcon";
+import MacDeviceIcon from "@/features/agent-witch/macDevices/MacDeviceIcon";
 import type { DispatchPolicyValue } from "@/lib/dispatch/DispatchPolicy.constant";
 
 interface PairedDeviceListItemProps {

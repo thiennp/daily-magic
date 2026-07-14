@@ -1,8 +1,8 @@
 "use client";
 
 import Label from "@/components/form/Label";
-import MacDeviceRow from "@/features/macDevices/MacDeviceRow";
-import { canWakeMacDeviceFromBrowser } from "@/features/macDevices/utils/canWakeMacDeviceFromBrowser";
+import MacDeviceRow from "@/features/agent-witch/macDevices/MacDeviceRow";
+import { canWakeMacDeviceFromBrowser } from "@/features/agent-witch/macDevices/utils/canWakeMacDeviceFromBrowser";
 import type { MyMacDevice } from "@/features/agent/hooks/useMyMacDevices";
 
 interface MacDevicePickerProps {

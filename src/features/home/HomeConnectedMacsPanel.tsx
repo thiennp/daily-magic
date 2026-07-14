@@ -5,9 +5,9 @@ import { APP_SURFACE_CTA_SECONDARY_SM_CLASS } from "@/components/surfaces/appSur
 import ConnectAnotherMacButton from "@/features/home/ConnectAnotherMacButton";
 import useHomeConnectedMacs from "@/features/home/hooks/useHomeConnectedMacs";
 import useLocalMacBrowserContext from "@/features/home/hooks/useLocalMacBrowserContext";
-import MacDeviceRow from "@/features/macDevices/MacDeviceRow";
-import { buildMacDeviceLastSeenText } from "@/features/macDevices/utils/buildMacDeviceLastSeenText";
-import { canWakeMacDeviceFromBrowser } from "@/features/macDevices/utils/canWakeMacDeviceFromBrowser";
+import MacDeviceRow from "@/features/agent-witch/macDevices/MacDeviceRow";
+import { buildMacDeviceLastSeenText } from "@/features/agent-witch/macDevices/utils/buildMacDeviceLastSeenText";
+import { canWakeMacDeviceFromBrowser } from "@/features/agent-witch/macDevices/utils/canWakeMacDeviceFromBrowser";
 
 interface HomeConnectedMacsPanelProps {
   readonly installCommand: string;

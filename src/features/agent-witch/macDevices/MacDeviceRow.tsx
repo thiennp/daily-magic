@@ -1,9 +1,9 @@
 "use client";
 
 import PairedDeviceOnlineBadge from "@/features/harness/components/PairedDeviceOnlineBadge";
-import MacDeviceIcon from "@/features/macDevices/MacDeviceIcon";
-import MacDeviceNameEditor from "@/features/macDevices/MacDeviceNameEditor";
-import MacDeviceOfflineWakeHint from "@/features/macDevices/MacDeviceOfflineWakeHint";
+import MacDeviceIcon from "@/features/agent-witch/macDevices/MacDeviceIcon";
+import MacDeviceNameEditor from "@/features/agent-witch/macDevices/MacDeviceNameEditor";
+import MacDeviceOfflineWakeHint from "@/features/agent-witch/macDevices/MacDeviceOfflineWakeHint";
 
 interface MacDeviceRowProps {
   readonly deviceId: string;

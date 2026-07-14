@@ -8,14 +8,8 @@
       "libPath": null,
       "routePaths": ["/", "/demo/home"],
       "apiPaths": [],
-      "dependsOn": [
-        "agent-witch",
-        "capabilities",
-        "harness",
-        "dispatch",
-        "mac-devices"
-      ],
-      "migrationStatus": "in_progress"
+      "dependsOn": ["agent-witch", "capabilities", "harness", "dispatch"],
+      "migrationStatus": "migrated"
     },
     {
       "slug": "agent-witch",
@@ -26,7 +20,7 @@
       "routePaths": ["/install/agent-witch.sh"],
       "apiPaths": ["/api/agent-witch"],
       "dependsOn": ["auth", "dispatch"],
-      "migrationStatus": "in_progress"
+      "migrationStatus": "migrated"
     },
     {
       "slug": "agent",
@@ -164,12 +158,12 @@
       "slug": "mac-devices",
       "title": "Mac devices UI",
       "purpose": "Device row, rename, wake modal components.",
-      "featurePath": "src/features/macDevices",
+      "featurePath": "src/features/agent-witch/macDevices",
       "libPath": null,
       "routePaths": [],
       "apiPaths": [],
       "dependsOn": ["agent-witch"],
-      "migrationStatus": "planned"
+      "migrationStatus": "migrated"
     },
     {
       "slug": "shell",

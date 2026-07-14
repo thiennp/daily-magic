@@ -14,7 +14,7 @@ const repoRoot = path.resolve(
 
 const SLUG_TO_FOLDER: Readonly<Record<string, string>> = {
   agent: "agent",
-  "mac-devices": "macDevices",
+  "mac-devices": "agent-witch/macDevices",
   "agent-witch": "agent-witch",
   marketplace: "marketplace",
 };

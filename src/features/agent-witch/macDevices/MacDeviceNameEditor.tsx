@@ -3,7 +3,7 @@
 import { useState } from "react";
 
 import { PencilIcon } from "@/icons";
-import { updateMacDeviceLabel } from "@/features/macDevices/utils/macDevicesApi";
+import { updateMacDeviceLabel } from "@/features/agent-witch/macDevices/utils/macDevicesApi";
 
 interface MacDeviceNameEditorProps {
   readonly deviceId: string;
