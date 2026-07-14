@@ -10,6 +10,7 @@ import {
   type ReactNode,
 } from "react";
 
+import { pairedDevicesResource } from "@/features/agent-witch/pairedDevicesResource";
 import { useDemoPreview } from "@/features/demo/DemoPreviewContext";
 import { useOptionalPairedDeviceContext } from "@/features/home/PairedDeviceContext";
 import {
@@ -28,8 +29,6 @@ interface OnboardingStepsContextValue {
 
 const OnboardingStepsContext =
   createContext<OnboardingStepsContextValue | null>(null);
-
-const ONBOARDING_STEPS_POLL_INTERVAL_MS = 5_000;
 
 export function OnboardingStepsProvider({
   children,
@@ -70,13 +69,19 @@ export function OnboardingStepsProvider({
       return;
     }
 
-    const timer = setInterval(() => {
-      void loadOnboardingSteps().then(setSteps);
-    }, ONBOARDING_STEPS_POLL_INTERVAL_MS);
+    return pairedDevicesResource.subscribe(() => {
+      const snapshot = pairedDevicesResource.getSnapshot();
+      if (snapshot === null) {
+        return;
+      }
 
-    return () => {
-      clearInterval(timer);
-    };
+      const paired = snapshot.devices.length > 0;
+      setSteps((current) =>
+        current.map((step) =>
+          step.id === "pair" ? { ...step, done: paired } : step,
+        ),
+      );
+    });
   }, [demoPreview, isConnectStepDone]);
 
   const reloadSteps = useCallback(async (): Promise<void> => {

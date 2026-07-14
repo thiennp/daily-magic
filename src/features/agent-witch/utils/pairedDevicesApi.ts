@@ -1,6 +1,11 @@
 import { notifyMacDeviceRevoked } from "@/features/agent-witch/macDevices/macDeviceRevokedEvent";
 import { type DispatchPolicyValue } from "@/lib/dispatch/DispatchPolicy.constant";
 
+import {
+  getPairedDevicesSnapshot,
+  refreshPairedDevices,
+} from "@/features/agent-witch/pairedDevicesResource";
+
 interface PairedDevice {
   readonly id: string;
   readonly deviceLabel: string | null;
@@ -32,15 +37,18 @@ export const formatPairedDeviceTimestamp = (value: string | null): string => {
 export const fetchActivePairedDevices =
   async (): Promise<LoadedDevicesResult> => {
     try {
-      const response = await fetch("/api/agent-witch/devices");
-      const payload: unknown = await response.json();
+      const cached = getPairedDevicesSnapshot();
+      if (cached !== null) {
+        return {
+          devices: cached.devices as PairedDevice[],
+          errorMessage: cached.hadError
+            ? "Could not load paired devices."
+            : null,
+        };
+      }
 
-      if (
-        !response.ok ||
-        typeof payload !== "object" ||
-        payload === null ||
-        !Array.isArray((payload as { devices?: unknown }).devices)
-      ) {
+      const refreshed = await refreshPairedDevices();
+      if (refreshed === null) {
         return {
           devices: [],
           errorMessage: "Could not load paired devices.",
@@ -48,10 +56,10 @@ export const fetchActivePairedDevices =
       }
 
       return {
-        devices: (payload as { devices: PairedDevice[] }).devices.filter(
-          (device) => device.isActive !== false,
-        ),
-        errorMessage: null,
+        devices: refreshed.devices as PairedDevice[],
+        errorMessage: refreshed.hadError
+          ? "Could not load paired devices."
+          : null,
       };
     } catch {
       return {

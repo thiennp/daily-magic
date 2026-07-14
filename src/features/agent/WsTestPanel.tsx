@@ -20,6 +20,7 @@ export default function WsTestPanel() {
     lastResponse,
     liveTerminalOutput,
     liveTerminalStatus,
+    liveTerminalRunId,
     liveTerminalPendingInput,
     submitLiveTerminalInput,
     dismissLiveTerminalInput,
@@ -107,6 +108,7 @@ export default function WsTestPanel() {
       <AgentLiveTerminalSection
         output={liveTerminalOutput}
         status={liveTerminalStatus}
+        activeRunId={liveTerminalRunId}
         pendingInput={liveTerminalPendingInput}
         errorMessage={lastResponse.isError ? lastResponse.text : null}
         onSubmitInput={submitLiveTerminalInput}

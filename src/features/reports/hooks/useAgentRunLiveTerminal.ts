@@ -3,6 +3,11 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import {
+  appendAgentRunTerminalOutput,
+  loadAgentRunTerminalOutput,
+  setAgentRunTerminalOutput,
+} from "@/features/agent/utils/agentRunTerminalOutputStore";
+import {
   sendAgentRunInputResponse,
   type AgentRunInputRequest,
 } from "@/features/dispatch/utils/agentRunInputSocket";
@@ -24,7 +29,7 @@ export function useAgentRunLiveTerminal(
   readonly dismissInput: () => void;
 } {
   const socketRef = useRef<WebSocket | null>(null);
-  const [output, setOutput] = useState("");
+  const [output, setOutput] = useState(() => loadAgentRunTerminalOutput(runId));
   const [pendingInput, setPendingInput] = useState<AgentRunInputRequest | null>(
     null,
   );
@@ -60,7 +65,8 @@ export function useAgentRunLiveTerminal(
         const parsed: unknown = JSON.parse(String(event.data));
         handleAgentRunLiveTerminalSocketMessage(runId, parsed, {
           onOutputChunk: (chunk) => {
-            setOutput((current) => `${current}${chunk}`);
+            const nextOutput = appendAgentRunTerminalOutput(runId, chunk);
+            setOutput(nextOutput);
           },
           onStreamEnd: () => {
             socket.close();
@@ -101,8 +107,13 @@ export function useAgentRunLiveTerminal(
       }
 
       setPendingInput(null);
+      setOutput((current) => {
+        const nextOutput = `${current}${trimmedResponse}\n`;
+        setAgentRunTerminalOutput(runId, nextOutput);
+        return nextOutput;
+      });
     },
-    [pendingInput],
+    [pendingInput, runId],
   );
 
   const dismissInput = useCallback(() => {

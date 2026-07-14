@@ -1,7 +1,11 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
+import {
+  loadPersistedAgentLiveTerminalState,
+  persistAgentLiveTerminalState,
+} from "@/features/agent/utils/agentLiveTerminalLocalStore";
 import {
   sendAgentRunInputResponse,
   type AgentRunInputRequest,
@@ -20,15 +24,22 @@ export function useAgentWitchLiveTerminal(socketRef: {
 }): {
   readonly output: string;
   readonly status: AgentLiveTerminalStatus;
+  readonly activeRunId: string | null;
   readonly pendingInput: AgentRunInputRequest | null;
   readonly beginSession: (commandLine: string) => void;
   readonly applySocketMessage: (raw: string) => void;
   readonly submitInput: (response: string) => void;
   readonly dismissInput: () => void;
 } {
-  const [state, setState] = useState<AgentLiveTerminalState>(
-    initialAgentLiveTerminalState,
+  const [state, setState] = useState<AgentLiveTerminalState>(() =>
+    typeof window === "undefined"
+      ? initialAgentLiveTerminalState()
+      : loadPersistedAgentLiveTerminalState(),
   );
+
+  useEffect(() => {
+    persistAgentLiveTerminalState(state);
+  }, [state]);
 
   const beginSession = useCallback((commandLine: string) => {
     setState(beginAgentLiveTerminalSession(commandLine));
@@ -82,6 +93,7 @@ export function useAgentWitchLiveTerminal(socketRef: {
   return {
     output: state.output,
     status: state.status,
+    activeRunId: state.activeRunId,
     pendingInput: state.pendingInput,
     beginSession,
     applySocketMessage,

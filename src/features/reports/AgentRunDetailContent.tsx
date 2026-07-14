@@ -57,7 +57,7 @@ export default function AgentRunDetailContent({
         {run.prompt}
       </pre>
       {run.status === AgentRunStatus.RUNNING ? (
-        <AgentRunLiveTerminal runId={run.id} />
+        <AgentRunLiveTerminal key={run.id} runId={run.id} />
       ) : null}
       {run.resultOutput ? (
         <>

@@ -2,12 +2,12 @@
 
 import { useEffect } from "react";
 
-import { upsertAgentRunLocalCache } from "@/features/reports/agentRunLocalCache";
-import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
 import {
   buildAgentWitchWebSocketUrl,
   sendAgentWitchPairingToken,
 } from "@/features/agent/utils/agentWitchSocketUtils";
+import { syncAgentRunLocalCacheFromSocket } from "@/features/reports/utils/syncAgentRunLocalCacheFromSocket";
+import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
 import type AgentRunRecord from "@/lib/dispatch/types/AgentRunRecord.type";
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
@@ -45,23 +45,21 @@ export const useAgentRunRecordSync = (
     });
 
     socket.addEventListener("message", (event) => {
+      const raw = String(event.data);
+      if (!syncAgentRunLocalCacheFromSocket(raw)) {
+        return;
+      }
+
       try {
-        const parsed: unknown = JSON.parse(String(event.data));
-        if (
-          !isRecord(parsed) ||
-          parsed.type !== AGENT_WITCH_MESSAGE_TYPES.AGENT_RUN_RECORD ||
-          !isRecord(parsed.payload)
-        ) {
+        const parsed: unknown = JSON.parse(raw);
+        if (!isRecord(parsed) || !isRecord(parsed.payload)) {
           return;
         }
 
         const run = parseAgentRunRecord(parsed.payload.run);
-        if (run === null) {
-          return;
+        if (run !== null) {
+          onRunUpdated?.(run);
         }
-
-        upsertAgentRunLocalCache(run);
-        onRunUpdated?.(run);
       } catch {
         return;
       }

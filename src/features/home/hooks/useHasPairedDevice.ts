@@ -1,12 +1,15 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useSyncExternalStore } from "react";
 
 import { useDemoPreview } from "@/features/demo/DemoPreviewContext";
+import {
+  getPairedDevicesSnapshotOrEmpty,
+  pairedDevicesResource,
+  refreshPairedDevices,
+} from "@/features/agent-witch/pairedDevicesResource";
 import useSubscribeMacDeviceRevoked from "@/features/agent-witch/macDevices/hooks/useSubscribeMacDeviceRevoked";
-import { fetchActivePairedDevices } from "@/features/agent-witch/utils/pairedDevicesApi";
 import isConnectMacOnboardingStepDone from "@/features/home/utils/isConnectMacOnboardingStepDone";
-import { resolveHasPairedDeviceAfterFetch } from "@/features/home/utils/resolveHasPairedDeviceAfterFetch";
 
 interface UseHasPairedDeviceResult {
   readonly hasPairedDevice: boolean;
@@ -22,30 +25,28 @@ const isDemoComputerConnected = (
   }>,
 ): boolean => isConnectMacOnboardingStepDone(onboardingSteps);
 
-const PAIRED_DEVICE_POLL_INTERVAL_MS = 5_000;
-
 export function useHasPairedDevice(): UseHasPairedDeviceResult {
   const demoPreview = useDemoPreview();
   const isDemoMode = demoPreview !== null;
   const demoHasPairedDevice =
     isDemoMode && isDemoComputerConnected(demoPreview.onboardingSteps);
-  const [hasPairedDevice, setHasPairedDevice] = useState(demoHasPairedDevice);
-  const [isLoading, setIsLoading] = useState(!isDemoMode);
+  const snapshot = useSyncExternalStore(
+    pairedDevicesResource.subscribe,
+    () => pairedDevicesResource.getSnapshot(),
+    () => null,
+  );
+  const resolvedSnapshot = snapshot ?? getPairedDevicesSnapshotOrEmpty();
+  const hasPairedDevice = isDemoMode
+    ? demoHasPairedDevice
+    : resolvedSnapshot.devices.length > 0;
+  const isLoading = isDemoMode ? false : snapshot === null;
 
   const refresh = useCallback(async (): Promise<void> => {
     if (isDemoMode) {
       return;
     }
 
-    const result = await fetchActivePairedDevices();
-    setHasPairedDevice((current) =>
-      resolveHasPairedDeviceAfterFetch(
-        current,
-        result.devices.length,
-        result.errorMessage,
-      ),
-    );
-    setIsLoading(false);
+    await refreshPairedDevices();
   }, [isDemoMode]);
 
   const markPaired = useCallback((): void => {
@@ -54,31 +55,6 @@ export function useHasPairedDevice(): UseHasPairedDeviceResult {
     }
 
     void refresh();
-  }, [isDemoMode, refresh]);
-
-  useEffect(() => {
-    if (isDemoMode) {
-      return;
-    }
-
-    void fetchActivePairedDevices().then((result) => {
-      setHasPairedDevice(result.devices.length > 0);
-      setIsLoading(false);
-    });
-  }, [isDemoMode]);
-
-  useEffect(() => {
-    if (isDemoMode) {
-      return;
-    }
-
-    const timer = setInterval(() => {
-      void refresh();
-    }, PAIRED_DEVICE_POLL_INTERVAL_MS);
-
-    return () => {
-      clearInterval(timer);
-    };
   }, [isDemoMode, refresh]);
 
   useSubscribeMacDeviceRevoked(

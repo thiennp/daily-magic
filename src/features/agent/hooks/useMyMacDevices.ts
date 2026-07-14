@@ -1,12 +1,15 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState, useSyncExternalStore } from "react";
 
-import { useConnectionLab } from "@/features/agent-witch/connection-lab/ConnectionLabContext";
+import {
+  getPairedDevicesSnapshotOrEmpty,
+  pairedDevicesResource,
+  refreshPairedDevices,
+} from "@/features/agent-witch/pairedDevicesResource";
 import useSubscribeMacDeviceRevoked from "@/features/agent-witch/macDevices/hooks/useSubscribeMacDeviceRevoked";
 import { buildMacDeviceDisplayNameById } from "@/features/agent-witch/utils/resolveMacDeviceDisplayName";
-import { resolveMyMacDevicesAfterFetch } from "@/features/agent-witch/utils/resolveMyMacDevicesAfterFetch";
-import { loadMyMacDevicesSnapshot } from "@/features/agent/hooks/fetchMyMacDevicesFromApi";
+import { useConnectionLab } from "@/features/agent-witch/connection-lab/ConnectionLabContext";
 
 export interface MyMacDevice {
   readonly id: string;
@@ -18,7 +21,16 @@ export interface MyMacDevice {
   readonly lastHeartbeatAt: string | null;
 }
 
-const MY_MAC_DEVICES_POLL_INTERVAL_MS = 5_000;
+const applyDisplayNameOverrides = (
+  devices: readonly MyMacDevice[],
+  overrides: Readonly<Record<string, string>>,
+): readonly MyMacDevice[] =>
+  devices.map((device) => {
+    const override = overrides[device.id];
+    return override === undefined
+      ? device
+      : { ...device, displayName: override };
+  });
 
 const useMyMacDevices = (): {
   readonly devices: readonly MyMacDevice[];
@@ -29,91 +41,53 @@ const useMyMacDevices = (): {
   readonly renameDevice: (deviceId: string, displayName: string) => void;
 } => {
   const connectionLab = useConnectionLab();
-  const [devices, setDevices] = useState<readonly MyMacDevice[]>([]);
-  const [isLoading, setIsLoading] = useState(connectionLab === null);
-  const [devicesHadLoadError, setDevicesHadLoadError] = useState(false);
-  const resolvedDevices = connectionLab?.mockDevices ?? devices;
-  const resolvedIsLoading = connectionLab !== null ? false : isLoading;
-  const resolvedDevicesHadLoadError =
-    connectionLab?.devicesApiFails ?? devicesHadLoadError;
-
-  const loadDevices = useCallback(async (): Promise<void> => {
-    if (connectionLab !== null) {
-      return;
-    }
-
-    try {
-      const snapshot = await loadMyMacDevicesSnapshot();
-      setDevicesHadLoadError(snapshot.hadError);
-      setDevices((current) =>
-        resolveMyMacDevicesAfterFetch(
-          current,
-          snapshot.devices,
-          snapshot.hadError,
-        ),
-      );
-    } finally {
-      setIsLoading(false);
-    }
-  }, [connectionLab]);
-
-  useEffect(() => {
-    if (connectionLab !== null) {
-      return;
-    }
-
-    const abortController = new AbortController();
-
-    const pollDevices = async (): Promise<void> => {
-      if (abortController.signal.aborted) {
-        return;
-      }
-
-      await loadDevices();
-    };
-
-    void pollDevices();
-    const timer = window.setInterval(() => {
-      void pollDevices();
-    }, MY_MAC_DEVICES_POLL_INTERVAL_MS);
-
-    return () => {
-      abortController.abort();
-      window.clearInterval(timer);
-    };
-  }, [connectionLab, loadDevices]);
-
-  const handleDeviceRevoked = useCallback(
-    (deviceId: string) => {
-      setDevices((current) =>
-        current.filter((device) => device.id !== deviceId),
-      );
-      void loadDevices();
-    },
-    [loadDevices],
+  const [displayNameOverrides, setDisplayNameOverrides] = useState<
+    Record<string, string>
+  >({});
+  const snapshot = useSyncExternalStore(
+    pairedDevicesResource.subscribe,
+    () => pairedDevicesResource.getSnapshot(),
+    () => null,
+  );
+  const resolvedSnapshot = snapshot ?? getPairedDevicesSnapshotOrEmpty();
+  const baseDevices = connectionLab?.mockDevices ?? resolvedSnapshot.devices;
+  const devices = useMemo(
+    () => applyDisplayNameOverrides(baseDevices, displayNameOverrides),
+    [baseDevices, displayNameOverrides],
+  );
+  const displayNameById = useMemo(
+    () => buildMacDeviceDisplayNameById(devices),
+    [devices],
   );
 
-  useSubscribeMacDeviceRevoked(handleDeviceRevoked);
+  const refresh = useCallback(async (): Promise<void> => {
+    if (connectionLab !== null) {
+      return;
+    }
 
-  const displayNameById = useMemo(
-    () => buildMacDeviceDisplayNameById(resolvedDevices),
-    [resolvedDevices],
+    await refreshPairedDevices();
+  }, [connectionLab]);
+
+  useSubscribeMacDeviceRevoked(
+    useCallback(() => {
+      void refresh();
+    }, [refresh]),
   );
 
   const renameDevice = useCallback((deviceId: string, displayName: string) => {
-    setDevices((current) =>
-      current.map((device) =>
-        device.id === deviceId ? { ...device, displayName } : device,
-      ),
-    );
+    setDisplayNameOverrides((current) => ({
+      ...current,
+      [deviceId]: displayName,
+    }));
   }, []);
 
   return {
-    devices: resolvedDevices,
+    devices,
     displayNameById,
-    isLoading: resolvedIsLoading,
-    devicesHadLoadError: resolvedDevicesHadLoadError,
-    refresh: loadDevices,
+    isLoading: connectionLab !== null ? false : snapshot === null,
+    devicesHadLoadError:
+      connectionLab?.devicesApiFails ?? resolvedSnapshot.hadError,
+    refresh,
     renameDevice,
   };
 };

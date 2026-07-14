@@ -7,6 +7,7 @@ import { useDemoPreview } from "@/features/demo/DemoPreviewContext";
 import { useAgentWitchLiveTerminal } from "@/features/agent/hooks/useAgentWitchLiveTerminal";
 import { useAgentWitchPromptDispatch } from "@/features/agent/hooks/useAgentWitchPromptDispatch";
 import { subscribeAgentWitchDashboardSocket } from "@/features/agent/hooks/subscribeAgentWitchDashboardSocket";
+import { syncAgentRunLocalCacheFromSocket } from "@/features/reports/utils/syncAgentRunLocalCacheFromSocket";
 import { resolveInitialConnectionStatus } from "@/features/agent/utils/connectAgentWitchDashboardSocket";
 import parseAgentWitchSocketDisplay, {
   type AgentWitchSocketDisplay,
@@ -22,6 +23,7 @@ export interface UseAgentWitchSocketResult {
   readonly lastResponse: AgentWitchSocketDisplay;
   readonly liveTerminalOutput: string;
   readonly liveTerminalStatus: AgentLiveTerminalStatus;
+  readonly liveTerminalRunId: string | null;
   readonly liveTerminalPendingInput: AgentRunInputRequest | null;
   readonly submitLiveTerminalInput: (response: string) => void;
   readonly dismissLiveTerminalInput: () => void;
@@ -55,6 +57,7 @@ export function useAgentWitchSocket(): UseAgentWitchSocketResult {
   const {
     output: liveTerminalOutput,
     status: liveTerminalStatus,
+    activeRunId: liveTerminalRunId,
     pendingInput: liveTerminalPendingInput,
     beginSession,
     applySocketMessage,
@@ -73,6 +76,7 @@ export function useAgentWitchSocket(): UseAgentWitchSocketResult {
     return subscribeAgentWitchDashboardSocket({
       onStatusChange: setLiveConnectionStatus,
       onMessage: (raw) => {
+        syncAgentRunLocalCacheFromSocket(raw);
         applySocketMessage(raw);
         setLastResponse(parseAgentWitchSocketDisplay(raw));
       },
@@ -96,6 +100,7 @@ export function useAgentWitchSocket(): UseAgentWitchSocketResult {
     lastResponse,
     liveTerminalOutput,
     liveTerminalStatus,
+    liveTerminalRunId,
     liveTerminalPendingInput,
     submitLiveTerminalInput,
     dismissLiveTerminalInput,

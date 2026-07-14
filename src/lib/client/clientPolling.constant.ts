@@ -1,0 +1,3 @@
+export const CLIENT_POLL_INTERVAL_MS = 15_000;
+
+export const CLIENT_POLL_INTERVAL_HIDDEN_MS = 60_000;

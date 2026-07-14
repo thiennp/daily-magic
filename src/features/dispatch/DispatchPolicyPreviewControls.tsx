@@ -1,30 +1,40 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useMemo, useState, useSyncExternalStore } from "react";
 
 import DispatchPolicyPreview from "@/features/dispatch/DispatchPolicyPreview";
 import { COMPANY_ENTITY_LABEL } from "@/lib/admin/companyGroupCopy.constant";
-import type { PairedDevice } from "@/features/agent-witch/utils/pairedDevicesApi";
-import { fetchActivePairedDevices } from "@/features/agent-witch/utils/pairedDevicesApi";
+import type { MyMacDevice } from "@/features/agent/hooks/useMyMacDevices";
+import {
+  getPairedDevicesSnapshotOrEmpty,
+  pairedDevicesResource,
+} from "@/features/agent-witch/pairedDevicesResource";
 import { useDispatchTargets } from "@/features/dispatch/hooks/useDispatchTargets";
 
 export default function DispatchPolicyPreviewControls() {
   const { groups } = useDispatchTargets();
-  const [devices, setDevices] = useState<readonly PairedDevice[]>([]);
-  const [deviceId, setDeviceId] = useState("");
+  const snapshot = useSyncExternalStore(
+    pairedDevicesResource.subscribe,
+    () => pairedDevicesResource.getSnapshot(),
+    () => null,
+  );
+  const devices = (snapshot ?? getPairedDevicesSnapshotOrEmpty())
+    .devices as readonly MyMacDevice[];
+  const [preferredDeviceId, setPreferredDeviceId] = useState("");
   const [groupId, setGroupId] = useState("");
+  const deviceId = useMemo(() => {
+    if (devices.length === 0) {
+      return "";
+    }
+
+    const preferredExists = devices.some(
+      (device) => device.id === preferredDeviceId,
+    );
+
+    return preferredExists ? preferredDeviceId : (devices[0]?.id ?? "");
+  }, [devices, preferredDeviceId]);
   const resolvedGroupId =
     groupId.length > 0 ? groupId : (groups[0]?.groupId ?? "");
-
-  useEffect(() => {
-    void (async () => {
-      const result = await fetchActivePairedDevices();
-      setDevices(result.devices);
-      if (result.devices[0] !== undefined) {
-        setDeviceId(result.devices[0].id);
-      }
-    })();
-  }, []);
 
   return (
     <div className="mt-4 space-y-3">
@@ -37,7 +47,7 @@ export default function DispatchPolicyPreviewControls() {
           <select
             value={deviceId}
             onChange={(event) => {
-              setDeviceId(event.target.value);
+              setPreferredDeviceId(event.target.value);
             }}
             className="mt-1 w-full rounded-lg border border-gray-200 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-950"
           >
