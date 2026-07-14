@@ -1,4 +1,4 @@
-import { deviceLabelMatchesLocalHost } from "@/lib/agentWitch/deviceLabelMatchesLocalHost";
+import { deviceLabelMatchesLocalHost } from "@/features/agent-witch/utils/deviceLabelMatchesLocalHost";
 
 export const canWakeMacDeviceFromBrowser = (input: {
   readonly deviceLabel: string | null;

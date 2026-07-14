@@ -5,8 +5,8 @@ import { useEffect, useState } from "react";
 import {
   readAgentWitchLocalHostCookie,
   setAgentWitchLocalHostCookie,
-} from "@/lib/agentWitch/agentWitchLocalHostCookie";
-import { requestLocalAgentWitchIdentity } from "@/lib/agentWitch/requestLocalAgentWitchIdentity";
+} from "@/features/agent-witch/utils/agentWitchLocalHostCookie";
+import { requestLocalAgentWitchIdentity } from "@/features/agent-witch/utils/requestLocalAgentWitchIdentity";
 
 const useLocalMacBrowserContext = (): {
   readonly localHostname: string | null;

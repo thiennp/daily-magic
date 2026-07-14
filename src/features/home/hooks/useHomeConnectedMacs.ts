@@ -5,7 +5,7 @@ import { demoMacDevices } from "@/features/demo/mock/demoMacDevices";
 import useMyMacDevices, {
   type MyMacDevice,
 } from "@/features/agent/hooks/useMyMacDevices";
-import { buildMacDeviceDisplayNameById } from "@/lib/agentWitch/resolveMacDeviceDisplayName";
+import { buildMacDeviceDisplayNameById } from "@/features/agent-witch/utils/resolveMacDeviceDisplayName";
 import { useMemo } from "react";
 
 const useHomeConnectedMacs = (): {

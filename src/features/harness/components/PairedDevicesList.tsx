@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 
 import PairedDeviceListItem from "@/features/harness/components/PairedDeviceListItem";
 import { type PairedDevice } from "@/features/agent-witch/utils/pairedDevicesApi";
-import { buildMacDeviceDisplayNameById } from "@/lib/agentWitch/resolveMacDeviceDisplayName";
+import { buildMacDeviceDisplayNameById } from "@/features/agent-witch/utils/resolveMacDeviceDisplayName";
 import type { DispatchPolicyValue } from "@/lib/dispatch/DispatchPolicy.constant";
 
 interface PairedDevicesListProps {

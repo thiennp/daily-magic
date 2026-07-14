@@ -4,7 +4,7 @@ import {
   buildMacDeviceDisplayNameById,
   isGenericMacDeviceLabel,
   resolveMacDeviceDisplayName,
-} from "@/lib/agentWitch/resolveMacDeviceDisplayName";
+} from "@/features/agent-witch/utils/resolveMacDeviceDisplayName";
 
 describe("resolveMacDeviceDisplayName", () => {
   it("uses the hostname when it is specific", () => {

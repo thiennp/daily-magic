@@ -1,4 +1,4 @@
-import { AGENT_WITCH_WAKE_BASE_URL } from "@/lib/agentWitch/requestAgentWitchWake";
+import { AGENT_WITCH_WAKE_BASE_URL } from "@/features/agent-witch/utils/requestAgentWitchWake";
 
 export interface LocalAgentWitchIdentity {
   readonly hostname: string;

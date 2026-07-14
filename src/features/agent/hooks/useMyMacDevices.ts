@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 
-import { buildMacDeviceDisplayNameById } from "@/lib/agentWitch/resolveMacDeviceDisplayName";
+import { buildMacDeviceDisplayNameById } from "@/features/agent-witch/utils/resolveMacDeviceDisplayName";
 
 export interface MyMacDevice {
   readonly id: string;

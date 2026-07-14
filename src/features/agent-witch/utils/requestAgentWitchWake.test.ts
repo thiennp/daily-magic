@@ -4,7 +4,7 @@ import {
   AGENT_WITCH_WAKE_BASE_URL,
   canRequestAgentWitchWake,
   requestAgentWitchWake,
-} from "@/lib/agentWitch/requestAgentWitchWake";
+} from "@/features/agent-witch/utils/requestAgentWitchWake";
 
 describe("canRequestAgentWitchWake", () => {
   it("is available in the browser", () => {

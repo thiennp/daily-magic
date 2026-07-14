@@ -4,7 +4,7 @@ import {
   readAgentWitchLocalHostCookie,
   setAgentWitchLocalHostCookie,
   AGENT_WITCH_LOCAL_HOST_COOKIE,
-} from "@/lib/agentWitch/agentWitchLocalHostCookie";
+} from "@/features/agent-witch/utils/agentWitchLocalHostCookie";
 
 describe("agentWitchLocalHostCookie", () => {
   it("stores and reads the local hostname cookie", () => {

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { deviceLabelMatchesLocalHost } from "@/lib/agentWitch/deviceLabelMatchesLocalHost";
+import { deviceLabelMatchesLocalHost } from "@/features/agent-witch/utils/deviceLabelMatchesLocalHost";
 
 describe("deviceLabelMatchesLocalHost", () => {
   it("matches hostnames case-insensitively", () => {
