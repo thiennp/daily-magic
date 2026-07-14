@@ -19,6 +19,13 @@ const AGENT_WITCH_WAKE_INSTALL_SCRIPT_NAMES = [
   "linkAgentWitchAccountLocally.ts",
   "spawnAgentWitchClient.ts",
   "agent-witch-wake-cli.ts",
+  "agent-witch-watchdog.ts",
+  "reviveAgentWitchWebSocket.ts",
+  "agentWitchConnectionHealth.ts",
+  "agentWitchConnectionHealth.constants.ts",
+  "isAgentWitchLaunchAgentRunning.ts",
+  "agentWitchWatchdogLog.ts",
+  "buildAgentWitchWatchdogStatus.ts",
 ] as const;
 
 const buildInstallScriptAllowlist = (): Record<string, string> => {

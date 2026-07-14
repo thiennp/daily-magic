@@ -1,7 +1,6 @@
-import {
-  buildAgentWitchClientScriptUrl,
-  buildAgentWitchInstallAuxiliaryScriptUrl,
-} from "@/lib/agentWitch/buildAgentWitchInstallUrls";
+import { buildAgentWitchClientScriptUrl } from "@/lib/agentWitch/buildAgentWitchInstallUrls";
+import { buildAgentWitchWakeInstallScriptUrls } from "@/lib/agentWitch/buildAgentWitchWakeInstallScriptUrls";
+import { buildAgentWitchWatchdogInstallScriptUrls } from "@/lib/agentWitch/buildAgentWitchWatchdogInstallScriptUrls";
 import { buildAgentWitchInstallBashScript } from "@/lib/agentWitch/buildAgentWitchInstallBashScript";
 import { buildAgentWitchWebSocketSupportWarning } from "@/lib/agentWitch/buildAgentWitchWebSocketSupportWarning";
 import { resolveAgentWitchWsUrl } from "@/lib/agentWitch/resolveAgentWitchWsUrl";
@@ -9,46 +8,8 @@ import { resolveAgentWitchWsUrl } from "@/lib/agentWitch/resolveAgentWitchWsUrl"
 export const renderInstallAgentWitchScript = (origin: string): string => {
   const wsUrl = resolveAgentWitchWsUrl(origin);
   const clientScriptUrl = buildAgentWitchClientScriptUrl(origin);
-  const wakeServerScriptUrl = buildAgentWitchInstallAuxiliaryScriptUrl(
-    origin,
-    "agent-witch-wake-server.ts",
-  );
-  const wakeConstantsScriptUrl = buildAgentWitchInstallAuxiliaryScriptUrl(
-    origin,
-    "agentWitchWakeConstants.ts",
-  );
-  const wakeListTargetsScriptUrl = buildAgentWitchInstallAuxiliaryScriptUrl(
-    origin,
-    "listAgentWitchLaunchTargets.ts",
-  );
-  const wakeKickstartScriptUrl = buildAgentWitchInstallAuxiliaryScriptUrl(
-    origin,
-    "kickstartAgentWitchLaunchAgent.ts",
-  );
-  const wakeHandlersScriptUrl = buildAgentWitchInstallAuxiliaryScriptUrl(
-    origin,
-    "agentWitchWakeHandlers.ts",
-  );
-  const wakeAllowedOriginsScriptUrl = buildAgentWitchInstallAuxiliaryScriptUrl(
-    origin,
-    "agentWitchWakeAllowedOrigins.ts",
-  );
-  const wakeEnsureProfileScriptUrl = buildAgentWitchInstallAuxiliaryScriptUrl(
-    origin,
-    "ensureAgentWitchProfile.ts",
-  );
-  const wakeLinkAccountScriptUrl = buildAgentWitchInstallAuxiliaryScriptUrl(
-    origin,
-    "linkAgentWitchAccountLocally.ts",
-  );
-  const wakeSpawnClientScriptUrl = buildAgentWitchInstallAuxiliaryScriptUrl(
-    origin,
-    "spawnAgentWitchClient.ts",
-  );
-  const wakeCliScriptUrl = buildAgentWitchInstallAuxiliaryScriptUrl(
-    origin,
-    "agent-witch-wake-cli.ts",
-  );
+  const wakeUrls = buildAgentWitchWakeInstallScriptUrls(origin);
+  const watchdogUrls = buildAgentWitchWatchdogInstallScriptUrls(origin);
   const websocketSupportWarning = buildAgentWitchWebSocketSupportWarning(
     origin,
     wsUrl,
@@ -58,16 +19,8 @@ export const renderInstallAgentWitchScript = (origin: string): string => {
     appOrigin: origin,
     wsUrl,
     clientScriptUrl,
-    wakeServerScriptUrl,
-    wakeConstantsScriptUrl,
-    wakeListTargetsScriptUrl,
-    wakeKickstartScriptUrl,
-    wakeHandlersScriptUrl,
-    wakeAllowedOriginsScriptUrl,
-    wakeEnsureProfileScriptUrl,
-    wakeLinkAccountScriptUrl,
-    wakeSpawnClientScriptUrl,
-    wakeCliScriptUrl,
+    ...wakeUrls,
+    ...watchdogUrls,
     websocketSupportWarning,
   });
 };

@@ -1,4 +1,5 @@
-import { AGENT_WITCH_LAUNCH_AGENT_PATH_VALUE } from "@/lib/agentWitch/buildAgentWitchInstallScriptWriterPath";
+import { buildAgentWitchInstallScriptWakeServerDependencies } from "@/lib/agentWitch/buildAgentWitchInstallScriptWakeServerDependencies";
+import { buildAgentWitchInstallScriptWakeServerPlist } from "@/lib/agentWitch/buildAgentWitchInstallScriptWakeServerPlist";
 
 export const buildAgentWitchInstallScriptWakeServer = (input: {
   readonly wakeServerScriptUrl: string;
@@ -11,6 +12,13 @@ export const buildAgentWitchInstallScriptWakeServer = (input: {
   readonly wakeLinkAccountScriptUrl: string;
   readonly wakeSpawnClientScriptUrl: string;
   readonly wakeCliScriptUrl: string;
+  readonly reviveScriptUrl: string;
+  readonly connectionHealthScriptUrl: string;
+  readonly connectionHealthConstantsScriptUrl: string;
+  readonly launchAgentRunningScriptUrl: string;
+  readonly watchdogLogScriptUrl: string;
+  readonly watchdogStatusScriptUrl: string;
+  readonly localLayoutScriptUrl: string;
 }): string => `
 WAKE_SERVER_SCRIPT_URL="${input.wakeServerScriptUrl}"
 WAKE_CONSTANTS_SCRIPT_URL="${input.wakeConstantsScriptUrl}"
@@ -36,6 +44,15 @@ echo "Downloading Agent Witch wake server from \${WAKE_SERVER_SCRIPT_URL}…"
 "\${CURL_BIN}" -fsSL "\${WAKE_LINK_ACCOUNT_SCRIPT_URL}" -o "\${INSTALL_DIR}/linkAgentWitchAccountLocally.ts"
 "\${CURL_BIN}" -fsSL "\${WAKE_SPAWN_CLIENT_SCRIPT_URL}" -o "\${INSTALL_DIR}/spawnAgentWitchClient.ts"
 "\${CURL_BIN}" -fsSL "\${WAKE_CLI_SCRIPT_URL}" -o "\${INSTALL_DIR}/agent-witch-wake-cli.ts"
+${buildAgentWitchInstallScriptWakeServerDependencies({
+  reviveScriptUrl: input.reviveScriptUrl,
+  connectionHealthScriptUrl: input.connectionHealthScriptUrl,
+  connectionHealthConstantsScriptUrl: input.connectionHealthConstantsScriptUrl,
+  launchAgentRunningScriptUrl: input.launchAgentRunningScriptUrl,
+  watchdogLogScriptUrl: input.watchdogLogScriptUrl,
+  watchdogStatusScriptUrl: input.watchdogStatusScriptUrl,
+  localLayoutScriptUrl: input.localLayoutScriptUrl,
+})}
 
 cat > "\${INSTALL_DIR}/wake.sh" <<'WAKE_EOF'
 #!/usr/bin/env bash
@@ -55,43 +72,5 @@ exec "\${NODE_BIN}" "\${TSX_CLI}" "\${WAKE_CLI}"
 WAKE_EOF
 chmod +x "\${INSTALL_DIR}/wake.sh"
 echo "Wake script: \${INSTALL_DIR}/wake.sh"
-
-if [[ "\$(uname -s)" == "Darwin" ]]; then
-  cat > "\${WAKE_PLIST_PATH}" <<EOF
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-  <key>Label</key>
-  <string>\${WAKE_LAUNCH_AGENT_LABEL}</string>
-  <key>ProgramArguments</key>
-  <array>
-    <string>\${NODE_BIN}</string>
-    <string>\${TSX_CLI}</string>
-    <string>\${INSTALL_DIR}/agent-witch-wake-server.ts</string>
-  </array>
-  <key>WorkingDirectory</key>
-  <string>\${INSTALL_DIR}</string>
-  <key>EnvironmentVariables</key>
-  <dict>
-    <key>HOME</key>
-    <string>\${HOME}</string>
-    <key>PATH</key>
-    <string>${AGENT_WITCH_LAUNCH_AGENT_PATH_VALUE}</string>
-  </dict>
-  <key>RunAtLoad</key>
-  <true/>
-  <key>KeepAlive</key>
-  <true/>
-  <key>StandardOutPath</key>
-  <string>\${INSTALL_DIR}/agent-witch-wake.log</string>
-  <key>StandardErrorPath</key>
-  <string>\${INSTALL_DIR}/agent-witch-wake.error.log</string>
-</dict>
-</plist>
-EOF
-
-  register_agent_witch_launch_agent "\${WAKE_LAUNCH_AGENT_LABEL}" "\${WAKE_PLIST_PATH}" || true
-  echo "Agent Witch local API: http://127.0.0.1:47892/link-account"
-fi
+${buildAgentWitchInstallScriptWakeServerPlist()}
 `;

@@ -6,6 +6,16 @@ import { kickstartAgentWitchLaunchAgent } from "./kickstartAgentWitchLaunchAgent
 import { listAgentWitchLaunchTargets } from "./listAgentWitchLaunchTargets";
 import { linkAgentWitchAccountLocally } from "./linkAgentWitchAccountLocally";
 import { spawnAgentWitchClient } from "./spawnAgentWitchClient";
+import { buildAgentWitchWatchdogStatusResponse } from "./buildAgentWitchWatchdogStatus";
+import {
+  readAgentWitchWatchdogLogs,
+  type AgentWitchWatchdogLogEntry,
+} from "./agentWitchWatchdogLog";
+import {
+  reviveAgentWitchWebSocket,
+  type AgentWitchReviveResult,
+} from "./reviveAgentWitchWebSocket";
+import type { AgentWitchWatchdogStatusResponse } from "./buildAgentWitchWatchdogStatus";
 
 export interface AgentWitchWakeHealthResponse {
   readonly ok: true;
@@ -40,6 +50,12 @@ export interface AgentWitchLinkAccountWakeResponse {
   readonly email?: string;
   readonly errorMessage?: string;
 }
+
+export type {
+  AgentWitchWatchdogLogEntry,
+  AgentWitchWatchdogStatusResponse,
+  AgentWitchReviveResult,
+};
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === "object" && value !== null && !Array.isArray(value);
@@ -139,3 +155,13 @@ export const wakeAgentWitchLaunchAgents =
       kicked,
     };
   };
+
+export const readAgentWitchWatchdogLogEntries = (
+  limit: number = 20,
+): readonly AgentWitchWatchdogLogEntry[] => readAgentWitchWatchdogLogs(limit);
+
+export const buildAgentWitchWatchdogStatus =
+  buildAgentWitchWatchdogStatusResponse;
+
+export const reviveAgentWitchWebSocketFromWakeServer =
+  reviveAgentWitchWebSocket;

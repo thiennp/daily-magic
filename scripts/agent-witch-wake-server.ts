@@ -4,6 +4,9 @@ import {
   buildAgentWitchWakeHealthResponse,
   buildAgentWitchWakeIdentityResponse,
   linkAgentWitchAccountFromWakeServer,
+  readAgentWitchWatchdogLogEntries,
+  reviveAgentWitchWebSocketFromWakeServer,
+  buildAgentWitchWatchdogStatus,
   wakeAgentWitchLaunchAgents,
 } from "./agentWitchWakeHandlers";
 import { buildWakeServerCorsHeaders } from "./agentWitchWakeAllowedOrigins";
@@ -50,7 +53,12 @@ const handleWakeRequest = async (
     const pathname = request.url?.split("?")[0] ?? "/";
 
     if (request.method === "GET" && pathname === "/health") {
-      sendJson(response, 200, buildAgentWitchWakeHealthResponse(), cors.headers);
+      sendJson(
+        response,
+        200,
+        buildAgentWitchWakeHealthResponse(),
+        cors.headers,
+      );
       return;
     }
 
@@ -59,6 +67,47 @@ const handleWakeRequest = async (
         response,
         200,
         buildAgentWitchWakeIdentityResponse(),
+        cors.headers,
+      );
+      return;
+    }
+
+    if (request.method === "GET" && pathname === "/watchdog/status") {
+      const status = await buildAgentWitchWatchdogStatus();
+      sendJson(response, 200, status, cors.headers);
+      return;
+    }
+
+    if (request.method === "GET" && pathname === "/watchdog/logs") {
+      const requestUrl = new URL(
+        request.url ?? "/watchdog/logs",
+        "http://127.0.0.1",
+      );
+      const limit = Number.parseInt(
+        requestUrl.searchParams.get("limit") ?? "20",
+        10,
+      );
+      const safeLimit =
+        Number.isFinite(limit) && limit > 0 ? Math.min(limit, 200) : 20;
+
+      sendJson(
+        response,
+        200,
+        {
+          ok: true,
+          logs: readAgentWitchWatchdogLogEntries(safeLimit),
+        },
+        cors.headers,
+      );
+      return;
+    }
+
+    if (request.method === "POST" && pathname === "/watchdog/revive") {
+      const reviveResult = await reviveAgentWitchWebSocketFromWakeServer();
+      sendJson(
+        response,
+        reviveResult.ok ? 200 : 503,
+        reviveResult,
         cors.headers,
       );
       return;

@@ -1,6 +1,8 @@
 /** Auxiliary scripts required by ~/.agent-witch/agent-witch.ts (downloaded on every install). */
 export const AGENT_WITCH_CLIENT_INSTALL_SCRIPT_NAMES = [
   "resolveAgentWitchLocalLayout.ts",
+  "agentWitchConnectionHealth.ts",
+  "agentWitchConnectionHealth.constants.ts",
   "readHarnessExportSets.ts",
   "buildWriterCliInvocation.ts",
   "agentWitchRunSessions.ts",

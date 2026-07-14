@@ -113,6 +113,9 @@ npm run agent-witch:install
 - Test UI: http://localhost:3000/ws-test
 - Status API: `GET /api/agent-witch/status`
 - Config: `~/.agent-witch/config.json`
+- Watchdog (macOS): `com.daily-magic.agent-witch-watchdog` LaunchAgent runs every 60s and kickstarts stale WebSocket connections (`npm run agent-witch:watchdog` for a manual check)
+- Local watchdog API (wake server): `GET http://127.0.0.1:47892/watchdog/status`, `GET /watchdog/logs`, `POST /watchdog/revive`
+- Server proxy (same Mac as wake server): `GET /api/agent-witch/local-watchdog`, `POST /api/agent-witch/local-watchdog`
 - Mid-run input: agent outputs `[[AWAITING_INPUT]]` + question; browser answers over WS; Mac stores pending sessions in `pending-run-inputs.json` (see `.cursor/rules/agent-run-input-protocol.mdc`)
 
 ---

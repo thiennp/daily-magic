@@ -33,6 +33,7 @@ import {
   listAgentRunsLocal,
   loadAgentRunLocal,
 } from "./agentWitchLocalRunStore";
+import { writeAgentWitchConnectionHealth } from "./agentWitchConnectionHealth";
 import { markTerminalStreamAccepted } from "./agentWitchTerminalStreamState";
 
 interface AgentWitchConfig {
@@ -222,14 +223,7 @@ const dispatchWriterTask = async (
     return;
   }
 
-  runWriterTask(
-    config,
-    writerAgent,
-    prompt,
-    requestId,
-    socket,
-    agentRunId,
-  );
+  runWriterTask(config, writerAgent, prompt, requestId, socket, agentRunId);
 };
 
 const runWriterProcess = (
@@ -458,6 +452,7 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
       if (config.email !== null) {
         console.log(`[agent-witch] Profile: ${config.email}`);
       }
+      writeAgentWitchConnectionHealth(config.layout, { wsUrl: config.wsUrl });
       sendMessage(socket, {
         type: "agent.register",
         payload: {
@@ -482,6 +477,12 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
 
         const requestId =
           typeof parsed.requestId === "string" ? parsed.requestId : undefined;
+
+        if (parsed.type === "system.ack") {
+          writeAgentWitchConnectionHealth(config.layout, {
+            wsUrl: config.wsUrl,
+          });
+        }
 
         if (
           parsed.type === "terminal.stream.accepted" &&
