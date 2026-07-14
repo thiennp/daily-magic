@@ -13,7 +13,7 @@ export const CONNECTION_STATUS_DISPLAY: Record<
   StatusBadgeDisplay
 > = {
   idle: { label: "Idle", tone: "neutral" },
-  connecting: { label: "Connecting", tone: "warning" },
+  connecting: { label: "Reconnecting…", tone: "warning" },
   connected: { label: "Connected", tone: "success" },
   disconnected: { label: "Disconnected", tone: "neutral" },
   error: { label: "Connection error", tone: "error" },

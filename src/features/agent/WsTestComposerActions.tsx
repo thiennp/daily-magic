@@ -1,94 +1,88 @@
 "use client";
 
-import { useCopyToClipboard } from "@/hooks/useCopyToClipboard";
+import { useMemo } from "react";
+
+import ComposerBlockedActionButtons from "@/features/agent/ComposerBlockedActionButtons";
 import WsTestComposerHelperText from "@/features/agent/WsTestComposerHelperText";
 import type { WsTestConnectionStatus } from "@/features/agent/types/WsTestConnectionStatus.type";
+import { resolveComposerBlockedAction } from "@/features/agent/utils/resolveComposerBlockedAction";
+import { useAppPath } from "@/features/demo/DemoPreviewContext";
+import { useCopyToClipboard } from "@/hooks/useCopyToClipboard";
 
 interface WsTestComposerActionsProps {
   readonly connectionStatus: WsTestConnectionStatus;
   readonly isSendDisabled: boolean;
   readonly canCopyPrompt: boolean;
-  readonly canQueue: boolean;
   readonly copyText: string;
   readonly sendLabel: string;
   readonly isWorkflowTask: boolean;
   readonly isTeamDispatch: boolean;
   readonly hasOnlineMac: boolean;
   readonly selectedDeviceIsOnline: boolean;
+  readonly devices: readonly {
+    readonly id: string;
+    readonly isOnline: boolean;
+  }[];
+  readonly selectedDeviceId: string;
+  readonly devicesHadLoadError: boolean;
+  readonly selectedGroupId: string;
+  readonly selectedTargetUserId: string;
+  readonly selectedCapabilityId: string;
   readonly onSend: () => void;
   readonly onClear: () => void;
   readonly onQueue: () => void;
+  readonly onRetryDevices: () => void;
+  readonly onUseOnlineMac: (deviceId: string) => void;
 }
 
-const primaryButtonClass =
-  "inline-flex h-11 items-center justify-center rounded-lg bg-brand-500 px-5 text-sm font-medium text-white transition hover:bg-brand-600 disabled:cursor-not-allowed disabled:opacity-50";
-const outlineButtonClass =
-  "inline-flex h-11 items-center justify-center rounded-lg border border-gray-200 px-5 text-sm font-medium text-gray-700 transition hover:bg-gray-50 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-white/5";
-
-export default function WsTestComposerActions({
-  connectionStatus,
-  isSendDisabled,
-  canCopyPrompt,
-  canQueue,
-  copyText,
-  sendLabel,
-  isWorkflowTask,
-  isTeamDispatch,
-  hasOnlineMac,
-  selectedDeviceIsOnline,
-  onSend,
-  onClear,
-  onQueue,
-}: WsTestComposerActionsProps) {
-  const isBrowserOffline = connectionStatus !== "connected";
+export default function WsTestComposerActions(
+  props: WsTestComposerActionsProps,
+) {
+  const appPath = useAppPath();
   const { copied, copy } = useCopyToClipboard();
 
-  const handleCopy = () => {
-    void copy(copyText);
-  };
+  const blockedAction = useMemo(
+    () =>
+      resolveComposerBlockedAction({
+        connectionStatus: props.connectionStatus,
+        isTeamDispatch: props.isTeamDispatch,
+        isWorkflowTask: props.isWorkflowTask,
+        canCopyPrompt: props.canCopyPrompt,
+        hasOnlineMac: props.hasOnlineMac,
+        selectedDeviceIsOnline: props.selectedDeviceIsOnline,
+        devices: props.devices,
+        selectedDeviceId: props.selectedDeviceId,
+        devicesHadLoadError: props.devicesHadLoadError,
+        isSendDisabled: props.isSendDisabled,
+        selectedGroupId: props.selectedGroupId,
+        selectedTargetUserId: props.selectedTargetUserId,
+        selectedCapabilityId: props.selectedCapabilityId,
+        manageMacsHref: appPath("/#your-setup"),
+      }),
+    [appPath, props],
+  );
 
   return (
     <>
-      <div className="mt-4 flex flex-wrap gap-3">
-        <button
-          type="button"
-          onClick={onSend}
-          disabled={isSendDisabled}
-          className={`${primaryButtonClass} min-w-[10rem] flex-1 sm:flex-none`}
-        >
-          {sendLabel}
-        </button>
-        {canCopyPrompt ? (
-          <button
-            type="button"
-            onClick={handleCopy}
-            className={`${outlineButtonClass} flex-1 sm:flex-none`}
-          >
-            {copied ? "Copied" : "Copy for other AI"}
-          </button>
-        ) : null}
-        {isBrowserOffline && canQueue ? (
-          <button
-            type="button"
-            onClick={onQueue}
-            className={`${outlineButtonClass} flex-1 sm:flex-none`}
-          >
-            Queue for later
-          </button>
-        ) : null}
-        <button type="button" onClick={onClear} className={outlineButtonClass}>
-          Clear
-        </button>
-      </div>
-      <WsTestComposerHelperText
-        isSendDisabled={isSendDisabled}
-        isWorkflowTask={isWorkflowTask}
-        isBrowserOffline={isBrowserOffline}
-        canCopyPrompt={canCopyPrompt}
-        isTeamDispatch={isTeamDispatch}
-        hasOnlineMac={hasOnlineMac}
-        selectedDeviceIsOnline={selectedDeviceIsOnline}
+      <ComposerBlockedActionButtons
+        blockedAction={blockedAction}
+        isSendDisabled={props.isSendDisabled}
+        sendLabel={props.sendLabel}
+        copied={copied}
+        onSend={props.onSend}
+        onClear={props.onClear}
+        onCopy={() => {
+          void copy(props.copyText);
+        }}
+        onQueue={props.onQueue}
+        onUseOnlineMac={() => {
+          if (blockedAction.alternateOnlineDeviceId) {
+            props.onUseOnlineMac(blockedAction.alternateOnlineDeviceId);
+          }
+        }}
+        onRetryDevices={props.onRetryDevices}
       />
+      <WsTestComposerHelperText blockedAction={blockedAction} />
     </>
   );
 }

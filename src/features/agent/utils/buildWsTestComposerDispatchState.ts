@@ -19,7 +19,11 @@ export const buildWsTestComposerDispatchState = (input: {
   readonly hasOnlineMac: boolean;
   readonly onlineMacCount: number;
   readonly selectedDeviceIsOnline: boolean;
-  readonly renameMacDevice: ReturnType<typeof useMacDeviceSelection>["renameDevice"];
+  readonly devicesHadLoadError: boolean;
+  readonly refreshMacDevices: () => Promise<void>;
+  readonly renameMacDevice: ReturnType<
+    typeof useMacDeviceSelection
+  >["renameDevice"];
   readonly isSendDisabled: (connectionStatus: string) => boolean;
 } => {
   const selectedDevice = input.macSelection.devices.find(
@@ -36,6 +40,8 @@ export const buildWsTestComposerDispatchState = (input: {
     hasOnlineMac: input.macSelection.hasOnlineMac,
     onlineMacCount: input.macSelection.onlineCount,
     selectedDeviceIsOnline,
+    devicesHadLoadError: input.macSelection.devicesHadLoadError,
+    refreshMacDevices: input.macSelection.refreshDevices,
     renameMacDevice: input.macSelection.renameDevice,
     isSendDisabled: (connectionStatus: string) =>
       buildWsTestSendDisabledState({
@@ -49,7 +55,9 @@ export const buildWsTestComposerDispatchState = (input: {
         isTeamDispatch: input.isTeamDispatch,
         selectedCapabilityId: input.selection.selectedCapabilityId,
         isLibraryPlaybook: input.workflow.isLibraryPlaybook,
-        hasOnlineMac: input.isTeamDispatch ? true : input.macSelection.hasOnlineMac,
+        hasOnlineMac: input.isTeamDispatch
+          ? true
+          : input.macSelection.hasOnlineMac,
         selectedDeviceIsOnline: input.isTeamDispatch
           ? true
           : selectedDeviceIsOnline,

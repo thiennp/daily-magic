@@ -2,11 +2,9 @@
 
 import AppPanel from "@/components/surfaces/AppPanel";
 import TeamDispatchFields from "@/features/dispatch/TeamDispatchFields";
-import DelegatedWriterAgentField from "@/features/agent/DelegatedWriterAgentField";
-import WsTestComposerActions from "@/features/agent/WsTestComposerActions";
 import WsTestMacDispatchSection from "@/features/agent/WsTestMacDispatchSection";
+import WsTestPromptComposerPanel from "@/features/agent/WsTestPromptComposerPanel";
 import type { useWsTestTaskComposer } from "@/features/agent/hooks/useWsTestTaskComposer";
-import WsTestTaskInputsSection from "@/features/agent/WsTestTaskInputsSection";
 import type { WsTestConnectionStatus } from "@/features/agent/types/WsTestConnectionStatus.type";
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
 
@@ -16,7 +14,6 @@ interface WsTestPromptSectionProps {
   readonly onWriterAgentChange: (value: HarnessWriterAgent) => void;
   readonly connectionStatus: WsTestConnectionStatus;
   readonly isSendDisabled: boolean;
-  readonly canQueue: boolean;
   readonly onSend: () => void;
   readonly onClear: () => void;
   readonly onQueue: () => void;
@@ -28,14 +25,10 @@ export default function WsTestPromptSection({
   onWriterAgentChange,
   connectionStatus,
   isSendDisabled,
-  canQueue,
   onSend,
   onClear,
   onQueue,
 }: WsTestPromptSectionProps) {
-  const canCopyPrompt =
-    composer.resolvedPrompt.trim().length > 0 &&
-    composer.workflowValidationErrors.length === 0;
   const showMacPicker = !composer.isTeamDispatch;
 
   return (
@@ -70,43 +63,16 @@ export default function WsTestPromptSection({
         />
       ) : null}
 
-      <AppPanel>
-        <DelegatedWriterAgentField
-          writerAgent={writerAgent}
-          onWriterAgentChange={onWriterAgentChange}
-        />
-        <div className="mt-6">
-          <WsTestTaskInputsSection
-            isWorkflowTask={composer.isWorkflowTask}
-            useMobileStepper={
-              composer.isLibraryPlaybook && composer.isWorkflowTask
-            }
-            prompt={composer.prompt}
-            workflowFields={composer.workflowFields}
-            workflowFieldValues={composer.workflowFieldValues}
-            workflowValidationErrors={composer.workflowValidationErrors}
-            onPromptChange={composer.setPrompt}
-            onWorkflowFieldChange={composer.onWorkflowFieldChange}
-          />
-        </div>
-        <WsTestComposerActions
-          connectionStatus={connectionStatus}
-          isSendDisabled={isSendDisabled}
-          canCopyPrompt={canCopyPrompt}
-          canQueue={canQueue}
-          copyText={composer.resolvedPrompt}
-          sendLabel={
-            composer.isTeamDispatch ? "Send to teammate" : "Send to your Mac"
-          }
-          isWorkflowTask={composer.isWorkflowTask}
-          isTeamDispatch={composer.isTeamDispatch}
-          hasOnlineMac={composer.hasOnlineMac}
-          selectedDeviceIsOnline={composer.selectedDeviceIsOnline}
-          onSend={onSend}
-          onClear={onClear}
-          onQueue={onQueue}
-        />
-      </AppPanel>
+      <WsTestPromptComposerPanel
+        composer={composer}
+        writerAgent={writerAgent}
+        onWriterAgentChange={onWriterAgentChange}
+        connectionStatus={connectionStatus}
+        isSendDisabled={isSendDisabled}
+        onSend={onSend}
+        onClear={onClear}
+        onQueue={onQueue}
+      />
     </>
   );
 }

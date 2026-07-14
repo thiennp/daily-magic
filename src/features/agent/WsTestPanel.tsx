@@ -23,9 +23,6 @@ export default function WsTestPanel() {
   const flushedOnConnectRef = useRef(false);
   const host = typeof window !== "undefined" ? window.location.host : "";
   const isWebSocketSupported = isAgentWitchWebSocketSupportedHost(host);
-  const canCopyPrompt =
-    composer.resolvedPrompt.trim().length > 0 &&
-    composer.workflowValidationErrors.length === 0;
 
   useEffect(() => {
     void refreshCount();
@@ -75,7 +72,6 @@ export default function WsTestPanel() {
         onWriterAgentChange={setWriterAgent}
         connectionStatus={connectionStatus}
         isSendDisabled={composer.isSendDisabled(connectionStatus)}
-        canQueue={canCopyPrompt}
         onSend={() => {
           sendClaudePrompt(
             composer.resolvedPrompt,

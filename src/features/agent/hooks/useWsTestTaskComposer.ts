@@ -40,7 +40,11 @@ export function useWsTestTaskComposer(): {
   readonly hasOnlineMac: boolean;
   readonly onlineMacCount: number;
   readonly selectedDeviceIsOnline: boolean;
-  readonly renameMacDevice: ReturnType<typeof useMacDeviceSelection>["renameDevice"];
+  readonly devicesHadLoadError: boolean;
+  readonly refreshMacDevices: () => Promise<void>;
+  readonly renameMacDevice: ReturnType<
+    typeof useMacDeviceSelection
+  >["renameDevice"];
 } {
   const prefill = useAgentComposerPrefill();
   const selection = useTeamDispatchSelection();

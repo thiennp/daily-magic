@@ -23,14 +23,18 @@ const useMyMacDevices = (): {
   readonly devices: readonly MyMacDevice[];
   readonly displayNameById: ReadonlyMap<string, string>;
   readonly isLoading: boolean;
+  readonly devicesHadLoadError: boolean;
   readonly refresh: () => Promise<void>;
   readonly renameDevice: (deviceId: string, displayName: string) => void;
 } => {
   const connectionLab = useConnectionLab();
   const [devices, setDevices] = useState<readonly MyMacDevice[]>([]);
   const [isLoading, setIsLoading] = useState(connectionLab === null);
+  const [devicesHadLoadError, setDevicesHadLoadError] = useState(false);
   const resolvedDevices = connectionLab?.mockDevices ?? devices;
   const resolvedIsLoading = connectionLab !== null ? false : isLoading;
+  const resolvedDevicesHadLoadError =
+    connectionLab?.devicesApiFails ?? devicesHadLoadError;
 
   const loadDevices = useCallback(async (): Promise<void> => {
     if (connectionLab !== null) {
@@ -39,6 +43,7 @@ const useMyMacDevices = (): {
 
     try {
       const snapshot = await loadMyMacDevicesSnapshot();
+      setDevicesHadLoadError(snapshot.hadError);
       setDevices((current) =>
         resolveMyMacDevicesAfterFetch(
           current,
@@ -94,6 +99,7 @@ const useMyMacDevices = (): {
     devices: resolvedDevices,
     displayNameById,
     isLoading: resolvedIsLoading,
+    devicesHadLoadError: resolvedDevicesHadLoadError,
     refresh: loadDevices,
     renameDevice,
   };
