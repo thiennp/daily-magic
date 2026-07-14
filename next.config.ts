@@ -8,6 +8,16 @@ const svgrLoaderOptions = {
 };
 
 const nextConfig: NextConfig = {
+  async redirects() {
+    return [
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "agentwitch.com" }],
+        destination: "https://www.agentwitch.com/:path*",
+        permanent: true,
+      },
+    ];
+  },
   images: {
     remotePatterns: [
       {
