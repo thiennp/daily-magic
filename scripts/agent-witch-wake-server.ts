@@ -3,10 +3,13 @@ import http from "node:http";
 import {
   buildAgentWitchWakeHealthResponse,
   buildAgentWitchWakeIdentityResponse,
+  buildAgentWitchSelfUpdateStatusFromWakeServer,
   linkAgentWitchAccountFromWakeServer,
+  readAgentWitchSelfUpdateLogEntries,
   readAgentWitchWatchdogLogEntries,
   reviveAgentWitchWebSocketFromWakeServer,
   buildAgentWitchWatchdogStatus,
+  runAgentWitchSelfUpdateFromWakeServer,
   wakeAgentWitchLaunchAgents,
 } from "./agentWitchWakeHandlers";
 import { buildWakeServerCorsHeaders } from "./agentWitchWakeAllowedOrigins";
@@ -108,6 +111,55 @@ const handleWakeRequest = async (
         response,
         reviveResult.ok ? 200 : 503,
         reviveResult,
+        cors.headers,
+      );
+      return;
+    }
+
+    if (request.method === "GET" && pathname === "/update/status") {
+      const status = buildAgentWitchSelfUpdateStatusFromWakeServer();
+      sendJson(
+        response,
+        200,
+        {
+          ok: true,
+          ...status,
+        },
+        cors.headers,
+      );
+      return;
+    }
+
+    if (request.method === "GET" && pathname === "/update/logs") {
+      const requestUrl = new URL(
+        request.url ?? "/update/logs",
+        "http://127.0.0.1",
+      );
+      const limit = Number.parseInt(
+        requestUrl.searchParams.get("limit") ?? "20",
+        10,
+      );
+      const safeLimit =
+        Number.isFinite(limit) && limit > 0 ? Math.min(limit, 200) : 20;
+
+      sendJson(
+        response,
+        200,
+        {
+          ok: true,
+          logs: readAgentWitchSelfUpdateLogEntries(safeLimit),
+        },
+        cors.headers,
+      );
+      return;
+    }
+
+    if (request.method === "POST" && pathname === "/update/run") {
+      const updateResult = await runAgentWitchSelfUpdateFromWakeServer();
+      sendJson(
+        response,
+        updateResult.ok ? 200 : 503,
+        updateResult,
         cors.headers,
       );
       return;

@@ -10,6 +10,7 @@
     "agent-witch": "tsx scripts/agent-witch.ts",
     "agent-witch:wake-server": "tsx scripts/agent-witch-wake-server.ts",
     "agent-witch:watchdog": "tsx scripts/agent-witch-watchdog.ts",
+    "agent-witch:self-update": "tsx scripts/agent-witch-self-update.ts",
     "agent-witch:install": "bash scripts/install-agent-witch.sh",
     "test": "vitest run",
     "test:watch": "vitest",

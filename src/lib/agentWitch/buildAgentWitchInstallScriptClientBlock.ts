@@ -1,4 +1,5 @@
 import { AGENT_WITCH_CLIENT_INSTALL_SCRIPT_NAMES } from "@/lib/agentWitch/agentWitchClientInstallScripts.constant";
+import { AGENT_WITCH_INSTALL_PACKAGE_JSON } from "@/lib/agentWitch/agentWitchInstallPackageJson";
 import { buildAgentWitchInstallAuxiliaryScriptUrl } from "@/lib/agentWitch/buildAgentWitchInstallUrls";
 import { AGENT_WITCH_INSTALL_SCRIPT_PATH_EXPORT } from "@/lib/agentWitch/buildAgentWitchInstallScriptWriterPath";
 
@@ -23,23 +24,7 @@ echo "Downloading Agent Witch client from \${CLIENT_SCRIPT_URL}…"
 ${buildClientAuxiliaryDownloadLines(input.appOrigin)}
 
 cat > "\${INSTALL_DIR}/package.json" <<EOF
-{
-  "name": "agent-witch",
-  "private": true,
-  "type": "module",
-  "dependencies": {
-    "ws": "^8.18.3"
-  },
-  "devDependencies": {
-    "tsx": "^4.20.3",
-    "typescript": "^5"
-  },
-  "allowScripts": {
-    "esbuild": true,
-    "fsevents": true
-  }
-}
-EOF
+${AGENT_WITCH_INSTALL_PACKAGE_JSON}EOF
 
 echo "Installing Agent Witch dependencies in \${INSTALL_DIR}…"
 (

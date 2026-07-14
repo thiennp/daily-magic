@@ -7,15 +7,20 @@ import { listAgentWitchLaunchTargets } from "./listAgentWitchLaunchTargets";
 import { linkAgentWitchAccountLocally } from "./linkAgentWitchAccountLocally";
 import { spawnAgentWitchClient } from "./spawnAgentWitchClient";
 import { buildAgentWitchWatchdogStatusResponse } from "./buildAgentWitchWatchdogStatus";
+import type { AgentWitchWatchdogStatusResponse } from "./buildAgentWitchWatchdogStatus";
 import {
   readAgentWitchWatchdogLogs,
   type AgentWitchWatchdogLogEntry,
 } from "./agentWitchWatchdogLog";
 import {
+  buildAgentWitchSelfUpdateStatus,
+  runAgentWitchSelfUpdate,
+} from "./agentWitchSelfUpdate";
+import { readAgentWitchSelfUpdateLogs } from "./agentWitchSelfUpdateLog";
+import {
   reviveAgentWitchWebSocket,
   type AgentWitchReviveResult,
 } from "./reviveAgentWitchWebSocket";
-import type { AgentWitchWatchdogStatusResponse } from "./buildAgentWitchWatchdogStatus";
 
 export interface AgentWitchWakeHealthResponse {
   readonly ok: true;
@@ -165,3 +170,13 @@ export const buildAgentWitchWatchdogStatus =
 
 export const reviveAgentWitchWebSocketFromWakeServer =
   reviveAgentWitchWebSocket;
+
+export const buildAgentWitchSelfUpdateStatusFromWakeServer =
+  buildAgentWitchSelfUpdateStatus;
+
+export const readAgentWitchSelfUpdateLogEntries = (
+  limit: number = 20,
+): ReturnType<typeof readAgentWitchSelfUpdateLogs> =>
+  readAgentWitchSelfUpdateLogs(limit);
+
+export const runAgentWitchSelfUpdateFromWakeServer = runAgentWitchSelfUpdate;

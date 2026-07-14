@@ -1,5 +1,7 @@
 import { buildAgentWitchInstallScriptLaunchAgent } from "@/lib/agentWitch/buildAgentWitchInstallScriptLaunchAgent";
 import { buildAgentWitchInstallScriptSetup } from "@/lib/agentWitch/buildAgentWitchInstallScriptSetup";
+import { buildAgentWitchInstallScriptUpdater } from "@/lib/agentWitch/buildAgentWitchInstallScriptUpdater";
+import { buildAgentWitchInstallScriptVersionStamp } from "@/lib/agentWitch/buildAgentWitchInstallScriptVersionStamp";
 import { buildAgentWitchInstallScriptWatchdog } from "@/lib/agentWitch/buildAgentWitchInstallScriptWatchdog";
 import { buildAgentWitchInstallScriptWakeServer } from "@/lib/agentWitch/buildAgentWitchInstallScriptWakeServer";
 
@@ -25,6 +27,12 @@ export const buildAgentWitchInstallBashScript = (input: {
   readonly localLayoutScriptUrl: string;
   readonly watchdogLogScriptUrl: string;
   readonly watchdogStatusScriptUrl: string;
+  readonly selfUpdateScriptUrl: string;
+  readonly selfUpdateCoreScriptUrl: string;
+  readonly installVersionScriptUrl: string;
+  readonly resolveAppOriginScriptUrl: string;
+  readonly selfUpdateLogScriptUrl: string;
+  readonly launchAgentLabelsScriptUrl: string;
   readonly websocketSupportWarning: string;
 }): string =>
   `${buildAgentWitchInstallScriptSetup({
@@ -67,4 +75,14 @@ export const buildAgentWitchInstallBashScript = (input: {
     localLayoutScriptUrl: input.localLayoutScriptUrl,
     watchdogLogScriptUrl: input.watchdogLogScriptUrl,
     watchdogStatusScriptUrl: input.watchdogStatusScriptUrl,
-  })}`;
+  })}${buildAgentWitchInstallScriptUpdater({
+    selfUpdateScriptUrl: input.selfUpdateScriptUrl,
+    selfUpdateCoreScriptUrl: input.selfUpdateCoreScriptUrl,
+    installVersionScriptUrl: input.installVersionScriptUrl,
+    resolveAppOriginScriptUrl: input.resolveAppOriginScriptUrl,
+    selfUpdateLogScriptUrl: input.selfUpdateLogScriptUrl,
+    launchAgentLabelsScriptUrl: input.launchAgentLabelsScriptUrl,
+    listTargetsScriptUrl: input.wakeListTargetsScriptUrl,
+    kickstartScriptUrl: input.wakeKickstartScriptUrl,
+    localLayoutScriptUrl: input.localLayoutScriptUrl,
+  })}${buildAgentWitchInstallScriptVersionStamp(input.appOrigin)}`;

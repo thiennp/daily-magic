@@ -14,5 +14,8 @@ describe("renderInstallAgentWitchScript", () => {
     expect(script).toContain("wss://www.agentwitch.com/api/agent-witch/ws");
     expect(script).toContain("agentWitchRunSessions.ts");
     expect(script).toContain("agentWitchLocalRunStore.ts");
+    expect(script).toContain("com.agent-witch-updater");
+    expect(script).toContain("self-update.sh");
+    expect(script).toContain("install-version.json");
   });
 });

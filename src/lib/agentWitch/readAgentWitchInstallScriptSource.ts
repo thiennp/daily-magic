@@ -1,43 +1,17 @@
 import fs from "node:fs";
 import path from "node:path";
 
-import { AGENT_WITCH_CLIENT_INSTALL_SCRIPT_NAMES } from "@/lib/agentWitch/agentWitchClientInstallScripts.constant";
+import { listAgentWitchInstallScriptNames } from "@/lib/agentWitch/listAgentWitchInstallScriptNames";
 
 const scriptsDir = path.join(process.cwd(), "scripts");
 
 const resolveScriptPath = (relativePath: string): string =>
   path.join(scriptsDir, relativePath);
 
-const AGENT_WITCH_WAKE_INSTALL_SCRIPT_NAMES = [
-  "agent-witch-wake-server.ts",
-  "agentWitchWakeConstants.ts",
-  "agentWitchWakeHandlers.ts",
-  "agentWitchWakeAllowedOrigins.ts",
-  "kickstartAgentWitchLaunchAgent.ts",
-  "listAgentWitchLaunchTargets.ts",
-  "ensureAgentWitchProfile.ts",
-  "linkAgentWitchAccountLocally.ts",
-  "spawnAgentWitchClient.ts",
-  "agent-witch-wake-cli.ts",
-  "agent-witch-watchdog.ts",
-  "reviveAgentWitchWebSocket.ts",
-  "agentWitchConnectionHealth.ts",
-  "agentWitchConnectionHealth.constants.ts",
-  "isAgentWitchLaunchAgentRunning.ts",
-  "agentWitchWatchdogLog.ts",
-  "buildAgentWitchWatchdogStatus.ts",
-] as const;
-
 const buildInstallScriptAllowlist = (): Record<string, string> => {
-  const entries: Record<string, string> = {
-    "agent-witch.ts": resolveScriptPath("agent-witch.ts"),
-  };
+  const entries: Record<string, string> = {};
 
-  for (const scriptName of AGENT_WITCH_CLIENT_INSTALL_SCRIPT_NAMES) {
-    entries[scriptName] = resolveScriptPath(scriptName);
-  }
-
-  for (const scriptName of AGENT_WITCH_WAKE_INSTALL_SCRIPT_NAMES) {
+  for (const scriptName of listAgentWitchInstallScriptNames()) {
     entries[scriptName] = resolveScriptPath(scriptName);
   }
 
