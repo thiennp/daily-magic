@@ -1,20 +1,21 @@
+import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
+import { HARNESS_WRITER_AGENTS } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
+import { formatWriterCliDisplayCommand } from "@/lib/agentWitch/formatWriterCliDisplayCommand";
+
 export const AGENT_LIVE_BASH_PROMPT = "agent-witch@mac ~ % ";
 
-const truncateCommand = (value: string, maxLength: number = 120): string => {
-  const normalized = value.replace(/\s+/g, " ").trim();
-  if (normalized.length <= maxLength) {
-    return normalized;
-  }
-
-  return `${normalized.slice(0, maxLength - 1)}…`;
-};
+const isHarnessWriterAgent = (value: string): value is HarnessWriterAgent =>
+  (HARNESS_WRITER_AGENTS as readonly string[]).includes(value);
 
 export const formatAgentLiveTerminalCommandLine = (
   prompt: string,
   writerAgent: string = "claude-cli",
 ): string => {
-  const escaped = truncateCommand(prompt).replace(/"/g, '\\"');
-  return `${writerAgent} "${escaped}"`;
+  const resolvedWriter: HarnessWriterAgent = isHarnessWriterAgent(writerAgent)
+    ? writerAgent
+    : "claude-cli";
+
+  return formatWriterCliDisplayCommand(resolvedWriter, prompt);
 };
 
 export const buildAgentLiveTerminalCommandEntry = (

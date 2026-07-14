@@ -34,7 +34,7 @@ import {
   loadAgentRunLocal,
 } from "./agentWitchLocalRunStore";
 import { writeAgentWitchConnectionHealth } from "./agentWitchConnectionHealth";
-import { markTerminalStreamAccepted } from "./agentWitchTerminalStreamState";
+import { acceptTerminalStream } from "./agentWitchTerminalStreamState";
 
 interface AgentWitchConfig {
   readonly email: string | null;
@@ -493,7 +493,14 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
               ? parsed.payload.runId
               : "";
           if (runId.length > 0) {
-            markTerminalStreamAccepted(runId);
+            const pendingChunks = acceptTerminalStream(runId);
+            for (const chunk of pendingChunks) {
+              sendMessage(socket, {
+                type: "terminal.stream.chunk",
+                payload: { runId, chunk },
+                requestId,
+              });
+            }
           }
         }
 

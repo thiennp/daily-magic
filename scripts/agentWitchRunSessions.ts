@@ -20,6 +20,7 @@ import { persistFinishedAgentRun } from "./agentWitchRunFinish";
 import {
   clearTerminalStreamState,
   isTerminalStreamAccepted,
+  queueTerminalStreamChunk,
 } from "./agentWitchTerminalStreamState";
 
 import type WebSocket from "ws";
@@ -193,6 +194,23 @@ const attachChildHandlers = (
   const outputChunks: string[] = [];
   let inputRequested = false;
 
+  const emitTerminalStreamChunk = (text: string): void => {
+    if (agentRunId === undefined || text.length === 0) {
+      return;
+    }
+
+    if (isTerminalStreamAccepted(agentRunId)) {
+      sendMessage(socket, {
+        type: "terminal.stream.chunk",
+        payload: { runId: agentRunId, chunk: text },
+        requestId,
+      });
+      return;
+    }
+
+    queueTerminalStreamChunk(agentRunId, text);
+  };
+
   if (agentRunId !== undefined) {
     activeChildren.set(agentRunId, child);
     runSessions.set(agentRunId, {
@@ -210,18 +228,7 @@ const attachChildHandlers = (
   child.stdout?.on("data", (chunk: Buffer) => {
     const text = chunk.toString("utf8");
     outputChunks.push(text);
-
-    if (
-      agentRunId !== undefined &&
-      isTerminalStreamAccepted(agentRunId) &&
-      text.length > 0
-    ) {
-      sendMessage(socket, {
-        type: "terminal.stream.chunk",
-        payload: { runId: agentRunId, chunk: text },
-        requestId,
-      });
-    }
+    emitTerminalStreamChunk(text);
 
     if (inputRequested || agentRunId === undefined) {
       return;
@@ -258,7 +265,9 @@ const attachChildHandlers = (
   });
 
   child.stderr?.on("data", (chunk: Buffer) => {
-    outputChunks.push(chunk.toString("utf8"));
+    const text = chunk.toString("utf8");
+    outputChunks.push(text);
+    emitTerminalStreamChunk(text);
   });
 
   child.on("close", (exitCode) => {

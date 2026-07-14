@@ -72,4 +72,30 @@ describe("reduceAgentLiveTerminalMessage", () => {
 
     expect(streamed.output).toContain("hello");
   });
+
+  it("appends final result output after the rendered command line", () => {
+    const commandLine = formatAgentLiveTerminalCommandLine("run lint");
+    const dispatched = reduceAgentLiveTerminalMessage(
+      beginAgentLiveTerminalSession(commandLine),
+      {
+        type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ACK,
+        payload: {
+          dispatched: true,
+          agentRunId: "run-1",
+        },
+      },
+    );
+
+    const finished = reduceAgentLiveTerminalMessage(dispatched, {
+      type: AGENT_WITCH_MESSAGE_TYPES.COMMAND_CLAUDE_RESULT,
+      payload: {
+        agentRunId: "run-1",
+        exitCode: 127,
+        output: "zsh: command not found: claude\n",
+      },
+    });
+
+    expect(finished.output).toContain("command not found");
+    expect(finished.status).toBe("finished");
+  });
 });

@@ -2,7 +2,10 @@ import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMess
 
 import type { AgentLiveTerminalState } from "./agentLiveTerminalState.type";
 import { appendAgentLiveTerminalPrompt } from "./agentLiveTerminalPrompt.constant";
-import { matchesActiveRun } from "./agentLiveTerminalMessageUtils";
+import {
+  matchesActiveRun,
+  mergeTerminalResultOutput,
+} from "./agentLiveTerminalMessageUtils";
 
 export const reduceAgentLiveTerminalStreamMessage = (
   state: AgentLiveTerminalState,
@@ -27,14 +30,12 @@ export const reduceAgentLiveTerminalStreamMessage = (
   ) {
     const resultOutput =
       typeof payload.output === "string" ? payload.output : "";
-    const streamedOutput =
-      state.output.trim().length === 0 && resultOutput.length > 0
-        ? resultOutput
-        : state.output;
 
     return {
       ...state,
-      output: appendAgentLiveTerminalPrompt(streamedOutput),
+      output: appendAgentLiveTerminalPrompt(
+        mergeTerminalResultOutput(state.output, resultOutput),
+      ),
       status: "finished",
       pendingInput: null,
       pendingCommandLine: null,

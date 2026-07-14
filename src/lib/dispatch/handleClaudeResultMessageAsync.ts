@@ -4,6 +4,7 @@ import type AgentWitchHubRuntime from "@/lib/agentWitch/types/AgentWitchHubRunti
 import type AgentWitchMessage from "@/lib/agentWitch/types/AgentWitchMessage.type";
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
 import { dispatchAgentRunInputRegistry } from "@/lib/dispatch/dispatchAgentRunInputRegistry";
+import { getAgentRunSession } from "@/lib/dispatch/agentRunSessionRegistry";
 import { markAgentRunCompleted } from "@/lib/dispatch/dispatchClaudeRunToAgent";
 
 export const handleClaudeResultMessageAsync = async (
@@ -21,6 +22,18 @@ export const handleClaudeResultMessageAsync = async (
     typeof message.payload?.agentRunId === "string"
       ? message.payload.agentRunId
       : null;
+
+  if (agentRunId !== null) {
+    const run = getAgentRunSession(agentRunId);
+    if (
+      run !== undefined &&
+      run.requesterUserId.length > 0 &&
+      run.requesterUserId !== sender.userId
+    ) {
+      runtime.broadcastToDashboardUser(run.requesterUserId, message);
+    }
+  }
+
   const exitCode =
     typeof message.payload?.exitCode === "number"
       ? message.payload.exitCode
