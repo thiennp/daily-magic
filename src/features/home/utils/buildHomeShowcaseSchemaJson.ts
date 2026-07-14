@@ -10,7 +10,7 @@ export function buildHomeShowcaseSchemaJson(
     itemListElement: articles.map((article, index) => ({
       "@type": "ListItem",
       position: index + 1,
-      url: `https://agentwitch.com/showcases/${article.slug}`,
+      url: `https://www.agentwitch.com/showcases/${article.slug}`,
       name: article.title,
     })),
   });

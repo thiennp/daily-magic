@@ -70,7 +70,7 @@ describe("buildAgentWitchInstallUrls", () => {
     vi.stubEnv("VERCEL_URL", "");
 
     expect(buildAppOriginFromHeaders(new Headers())).toBe(
-      "https://agentwitch.com",
+      "https://www.agentwitch.com",
     );
   });
 });
