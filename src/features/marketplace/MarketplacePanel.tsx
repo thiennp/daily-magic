@@ -1,12 +1,12 @@
 "use client";
 
 import AppPanel from "@/components/surfaces/AppPanel";
-import BorrowHarnessImportActions from "@/features/harness/BorrowHarnessImportActions";
-import HarnessMarketplaceList from "@/features/harness/HarnessMarketplaceList";
-import HarnessMarketplaceListingPreview from "@/features/harness/HarnessMarketplaceListingPreview";
-import SaveCapabilityToLibraryActions from "@/features/harness/SaveCapabilityToLibraryActions";
+import BorrowHarnessImportActions from "@/features/marketplace/BorrowHarnessImportActions";
+import MarketplaceList from "@/features/marketplace/MarketplaceList";
+import MarketplaceListingPreview from "@/features/marketplace/MarketplaceListingPreview";
+import SaveCapabilityToLibraryActions from "@/features/marketplace/SaveCapabilityToLibraryActions";
+import { useMarketplaceState } from "@/features/marketplace/hooks/useMarketplaceState";
 import { useAgentWitchHarnessSocket } from "@/features/harness/hooks/useAgentWitchHarnessSocket";
-import { useHarnessMarketplaceState } from "@/features/harness/hooks/useHarnessMarketplaceState";
 
 type MarketplacePanelVariant = "embedded" | "page";
 
@@ -19,10 +19,10 @@ export default function MarketplacePanel({
 }: MarketplacePanelProps) {
   const harnessSocket = useAgentWitchHarnessSocket();
   const { listings, borrowed, isLoading, borrowListing } =
-    useHarnessMarketplaceState();
+    useMarketplaceState();
 
   const list = (
-    <HarnessMarketplaceList
+    <MarketplaceList
       listings={listings}
       isLoading={isLoading}
       onBorrow={(capabilityId) => {
@@ -34,7 +34,7 @@ export default function MarketplacePanel({
   const preview =
     borrowed !== null ? (
       <>
-        <HarnessMarketplaceListingPreview
+        <MarketplaceListingPreview
           type={borrowed.type}
           name={borrowed.name}
           description={borrowed.description}

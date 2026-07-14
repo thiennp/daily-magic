@@ -2,7 +2,7 @@ import MyOfferingsPanel from "@/features/capabilities/MyOfferingsPanel";
 import TeamDirectoryPanel from "@/features/capabilities/TeamDirectoryPanel";
 import FeedbackInboxPanel from "@/features/feedback/FeedbackInboxPanel";
 import ImprovementReviewPanel from "@/features/improvements/ImprovementReviewPanel";
-import MarketplaceHomePromo from "@/features/harness/MarketplaceHomePromo";
+import MarketplaceHomePromo from "@/features/marketplace/MarketplaceHomePromo";
 import HomeConnectedMacsPanel from "@/features/home/HomeConnectedMacsPanel";
 import HomeOnboardingMainPanel from "@/features/home/HomeOnboardingMainPanel";
 import HomeLinkAccountGate from "@/features/home/HomeLinkAccountGate";

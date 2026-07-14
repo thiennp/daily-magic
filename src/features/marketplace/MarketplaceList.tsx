@@ -10,17 +10,17 @@ const TYPE_LABEL_MAP: Record<HarnessMarketplaceListing["type"], string> = {
   [CapabilityType.WORKFLOW]: "Workflow",
 };
 
-interface HarnessMarketplaceListProps {
+interface MarketplaceListProps {
   readonly listings: readonly HarnessMarketplaceListing[];
   readonly isLoading: boolean;
   readonly onBorrow: (capabilityId: string) => void;
 }
 
-export default function HarnessMarketplaceList({
+export default function MarketplaceList({
   listings,
   isLoading,
   onBorrow,
-}: HarnessMarketplaceListProps) {
+}: MarketplaceListProps) {
   if (isLoading) {
     return (
       <p className="mt-4 text-sm text-gray-500 dark:text-gray-400">

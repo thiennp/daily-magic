@@ -2,7 +2,7 @@ import {
   demoHarnessMarketplaceBorrowManifest,
   demoHarnessMarketplaceListings,
 } from "@/features/demo/mock/demoHarnessMarketplace";
-import type { BorrowedMarketplaceListingState } from "@/features/harness/hooks/borrowedMarketplaceListingState.type";
+import type { BorrowedMarketplaceListingState } from "@/features/marketplace/hooks/borrowedMarketplaceListingState.type";
 import summarizeHarnessManifestSet from "@/lib/harness/summarizeHarnessManifestSet";
 
 export default function buildDemoBorrowedMarketplaceState(

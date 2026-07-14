@@ -4,12 +4,12 @@ import { useEffect, useState } from "react";
 
 import { useDemoPreview } from "@/features/demo/DemoPreviewContext";
 import { demoHarnessMarketplaceListings } from "@/features/demo/mock/demoHarnessMarketplace";
-import type { BorrowedMarketplaceListingState } from "@/features/harness/hooks/borrowedMarketplaceListingState.type";
-import buildDemoBorrowedMarketplaceState from "@/features/harness/hooks/buildDemoBorrowedMarketplaceState";
-import fetchBorrowedMarketplaceListing from "@/features/harness/hooks/fetchBorrowedMarketplaceListing";
+import type { BorrowedMarketplaceListingState } from "@/features/marketplace/hooks/borrowedMarketplaceListingState.type";
+import buildDemoBorrowedMarketplaceState from "@/features/marketplace/hooks/buildDemoBorrowedMarketplaceState";
+import fetchBorrowedMarketplaceListing from "@/features/marketplace/hooks/fetchBorrowedMarketplaceListing";
 import type HarnessMarketplaceListing from "@/lib/harness/types/HarnessMarketplaceListing.type";
 
-export function useHarnessMarketplaceState() {
+export function useMarketplaceState() {
   const demoPreview = useDemoPreview();
   const [remoteListings, setRemoteListings] = useState<
     readonly HarnessMarketplaceListing[]

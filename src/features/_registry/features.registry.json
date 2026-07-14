@@ -98,12 +98,12 @@
       "slug": "marketplace",
       "title": "Marketplace",
       "purpose": "Browse and borrow company-published agents.",
-      "featurePath": "src/features/harness",
+      "featurePath": "src/features/marketplace",
       "libPath": "src/lib/harness",
       "routePaths": ["/marketplace", "/demo/marketplace"],
       "apiPaths": ["/api/harness/marketplace"],
       "dependsOn": ["harness", "library", "capabilities"],
-      "migrationStatus": "planned"
+      "migrationStatus": "migrated"
     },
     {
       "slug": "reports",

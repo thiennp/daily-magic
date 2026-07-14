@@ -9,7 +9,7 @@ const TYPE_LABEL_MAP: Record<CapabilityTypeValue, string> = {
   [CapabilityType.WORKFLOW]: "Workflow",
 };
 
-interface HarnessMarketplaceListingPreviewProps {
+interface MarketplaceListingPreviewProps {
   readonly type: CapabilityTypeValue;
   readonly name: string;
   readonly description: string;
@@ -23,7 +23,7 @@ interface HarnessMarketplaceListingPreviewProps {
   readonly harnessItemPaths: readonly string[];
 }
 
-export default function HarnessMarketplaceListingPreview({
+export default function MarketplaceListingPreview({
   type,
   name,
   description,
@@ -35,7 +35,7 @@ export default function HarnessMarketplaceListingPreview({
   harnessSetSlug,
   harnessSetName,
   harnessItemPaths,
-}: HarnessMarketplaceListingPreviewProps) {
+}: MarketplaceListingPreviewProps) {
   return (
     <div className="mt-6 rounded-xl border border-brand-200 bg-brand-50/40 p-4 dark:border-brand-900/40 dark:bg-brand-950/20">
       <div className="flex flex-wrap items-center gap-2">

@@ -1,4 +1,4 @@
-import type { BorrowedMarketplaceListingState } from "@/features/harness/hooks/borrowedMarketplaceListingState.type";
+import type { BorrowedMarketplaceListingState } from "@/features/marketplace/hooks/borrowedMarketplaceListingState.type";
 
 export default async function fetchBorrowedMarketplaceListing(
   capabilityId: string,

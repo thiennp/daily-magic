@@ -1,4 +1,4 @@
-import MarketplacePanel from "@/features/harness/MarketplacePanel";
+import MarketplacePanel from "@/features/marketplace/MarketplacePanel";
 import { APP_PAGE_STACK_CLASS } from "@/features/shell/appPageLayout.constant";
 
 export default function MarketplacePageLayout() {
