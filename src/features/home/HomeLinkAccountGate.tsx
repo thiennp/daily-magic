@@ -4,12 +4,13 @@ import { useCallback, type ReactNode } from "react";
 
 import AppHero from "@/components/surfaces/AppHero";
 import HomeConnectComputerGuide from "@/features/home/HomeConnectComputerGuide";
-import HomeOnboardingChecklist from "@/features/home/HomeOnboardingChecklist";
+import HomeConnectedMacsPanel from "@/features/home/HomeConnectedMacsPanel";
 import {
   HOME_DASHBOARD_GRID_CLASS,
   HOME_LEFT_RAIL_CLASS,
   HOME_MAIN_COLUMN_CLASS,
 } from "@/features/home/homeDashboardLayout.constant";
+import useHomeConnectedMacs from "@/features/home/hooks/useHomeConnectedMacs";
 import {
   PairedDeviceProvider,
   usePairedDeviceContext,
@@ -52,13 +53,15 @@ function HomeLinkAccountGateContent({
   host,
   children,
 }: HomeLinkAccountGateProps) {
-  const { hasPairedDevice, isLoading, markPaired } = usePairedDeviceContext();
+  const { markPaired } = usePairedDeviceContext();
+  const { devices, isLoading } = useHomeConnectedMacs();
+  const hasConnectedMac = !isLoading && devices.length > 0;
   const handleLinked = useCallback(() => {
     markPaired();
   }, [markPaired]);
   useLinkLocalAgentAccount({
     appOrigin,
-    autoLink: !isLoading && hasPairedDevice,
+    autoLink: hasConnectedMac,
     silentFailures: true,
     onLinked: handleLinked,
   });
@@ -66,9 +69,6 @@ function HomeLinkAccountGateContent({
   if (isLoading) {
     return (
       <div className={HOME_DASHBOARD_GRID_CLASS}>
-        <aside className={HOME_LEFT_RAIL_CLASS}>
-          <HomeOnboardingChecklist />
-        </aside>
         <main className={HOME_MAIN_COLUMN_CLASS}>
           <AppHero variant="plain">
             <p className="text-sm text-gray-500 dark:text-gray-400">
@@ -80,11 +80,15 @@ function HomeLinkAccountGateContent({
     );
   }
 
-  if (!hasPairedDevice) {
+  if (!hasConnectedMac) {
     return (
       <div className={HOME_DASHBOARD_GRID_CLASS}>
         <aside className={HOME_LEFT_RAIL_CLASS}>
-          <HomeOnboardingChecklist />
+          <HomeConnectedMacsPanel
+            installCommand={installCommand}
+            isWebSocketSupported={isWebSocketSupported}
+            host={host}
+          />
         </aside>
         <main className={HOME_MAIN_COLUMN_CLASS}>
           <HomeConnectComputerGuide
