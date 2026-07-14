@@ -9,19 +9,6 @@ import { resolveAgentWitchWsUrl } from "@/lib/agentWitch/resolveAgentWitchWsUrl"
 export const renderInstallAgentWitchScript = (origin: string): string => {
   const wsUrl = resolveAgentWitchWsUrl(origin);
   const clientScriptUrl = buildAgentWitchClientScriptUrl(origin);
-  const resolveLayoutScriptUrl = buildAgentWitchInstallAuxiliaryScriptUrl(
-    origin,
-    "resolveAgentWitchLocalLayout.ts",
-  );
-  const readHarnessExportSetsScriptUrl =
-    buildAgentWitchInstallAuxiliaryScriptUrl(
-      origin,
-      "readHarnessExportSets.ts",
-    );
-  const buildWriterCliScriptUrl = buildAgentWitchInstallAuxiliaryScriptUrl(
-    origin,
-    "buildWriterCliInvocation.ts",
-  );
   const wakeServerScriptUrl = buildAgentWitchInstallAuxiliaryScriptUrl(
     origin,
     "agent-witch-wake-server.ts",
@@ -71,9 +58,6 @@ export const renderInstallAgentWitchScript = (origin: string): string => {
     appOrigin: origin,
     wsUrl,
     clientScriptUrl,
-    resolveLayoutScriptUrl,
-    readHarnessExportSetsScriptUrl,
-    buildWriterCliScriptUrl,
     wakeServerScriptUrl,
     wakeConstantsScriptUrl,
     wakeListTargetsScriptUrl,

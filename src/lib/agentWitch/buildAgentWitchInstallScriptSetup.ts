@@ -4,11 +4,9 @@ import { buildAgentWitchInstallScriptRegisterLaunchAgentFn } from "@/lib/agentWi
 import { buildAgentWitchInstallScriptWriterBootstrap } from "@/lib/agentWitch/buildAgentWitchInstallScriptWriterBootstrap";
 
 export const buildAgentWitchInstallScriptSetup = (input: {
+  readonly appOrigin: string;
   readonly wsUrl: string;
   readonly clientScriptUrl: string;
-  readonly resolveLayoutScriptUrl: string;
-  readonly readHarnessExportSetsScriptUrl: string;
-  readonly buildWriterCliScriptUrl: string;
   readonly websocketSupportWarning: string;
 }): string => `#!/usr/bin/env bash
 set -euo pipefail
@@ -16,9 +14,6 @@ ${input.websocketSupportWarning}
 
 INSTALL_DIR="\${HOME}/.agent-witch"
 CLIENT_SCRIPT_URL="${input.clientScriptUrl}"
-RESOLVE_LAYOUT_SCRIPT_URL="${input.resolveLayoutScriptUrl}"
-READ_HARNESS_EXPORT_SCRIPT_URL="${input.readHarnessExportSetsScriptUrl}"
-BUILD_WRITER_CLI_SCRIPT_URL="${input.buildWriterCliScriptUrl}"
 NODE_BIN="\$(command -v node)"
 CURL_BIN="\$(command -v curl)"
 
@@ -60,6 +55,19 @@ LAUNCH_AGENT_LABEL="com.daily-magic.agent-witch"
 
 mkdir -p "\${INSTALL_DIR}"
 
+if [[ -z "\${PROFILE_EMAIL}" && -f "\${INSTALL_DIR}/active-profile.json" ]]; then
+  PROFILE_EMAIL="\$( "\${NODE_BIN}" -e "
+const fs = require('node:fs');
+try {
+  const parsed = JSON.parse(fs.readFileSync(process.argv[1], 'utf8'));
+  if (typeof parsed.email === 'string' && parsed.email.trim().length > 0) {
+    process.stdout.write(parsed.email.trim().toLowerCase());
+  }
+} catch {}
+" "\${INSTALL_DIR}/active-profile.json" )"
+  PROFILE_EMAIL="\$(printf '%s' "\${PROFILE_EMAIL}" | tr '[:upper:]' '[:lower:]' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')"
+fi
+
 if [[ -n "\${PROFILE_EMAIL}" ]]; then
   PROFILE_DIR="\${INSTALL_DIR}/profiles/\${PROFILE_EMAIL}"
   CONFIG_PATH="\${PROFILE_DIR}/config.json"
@@ -72,5 +80,5 @@ else
 fi
 
 PLIST_PATH="\${HOME}/Library/LaunchAgents/\${LAUNCH_AGENT_LABEL}.plist"
-${buildAgentWitchInstallScriptConfigBlock(input)}${buildAgentWitchInstallScriptWriterBootstrap()}${buildAgentWitchInstallScriptClientBlock()}${buildAgentWitchInstallScriptRegisterLaunchAgentFn()}
+${buildAgentWitchInstallScriptConfigBlock(input)}${buildAgentWitchInstallScriptWriterBootstrap()}${buildAgentWitchInstallScriptClientBlock({ appOrigin: input.appOrigin, clientScriptUrl: input.clientScriptUrl })}${buildAgentWitchInstallScriptRegisterLaunchAgentFn()}
 `;

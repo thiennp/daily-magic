@@ -1,11 +1,20 @@
+import { AGENT_WITCH_CLIENT_INSTALL_SCRIPT_NAMES } from "@/lib/agentWitch/agentWitchClientInstallScripts.constant";
+import { buildAgentWitchInstallAuxiliaryScriptUrl } from "@/lib/agentWitch/buildAgentWitchInstallUrls";
 import { AGENT_WITCH_INSTALL_SCRIPT_PATH_EXPORT } from "@/lib/agentWitch/buildAgentWitchInstallScriptWriterPath";
 
-export const buildAgentWitchInstallScriptClientBlock = (): string => `
+const buildClientAuxiliaryDownloadLines = (appOrigin: string): string =>
+  AGENT_WITCH_CLIENT_INSTALL_SCRIPT_NAMES.map(
+    (scriptName) =>
+      `"\${CURL_BIN}" -fsSL "${buildAgentWitchInstallAuxiliaryScriptUrl(appOrigin, scriptName)}" -o "\${INSTALL_DIR}/${scriptName}"`,
+  ).join("\n");
+
+export const buildAgentWitchInstallScriptClientBlock = (input: {
+  readonly appOrigin: string;
+  readonly clientScriptUrl: string;
+}): string => `
 echo "Downloading Agent Witch client from \${CLIENT_SCRIPT_URL}…"
 "\${CURL_BIN}" -fsSL "\${CLIENT_SCRIPT_URL}" -o "\${INSTALL_DIR}/agent-witch.ts"
-"\${CURL_BIN}" -fsSL "\${RESOLVE_LAYOUT_SCRIPT_URL}" -o "\${INSTALL_DIR}/resolveAgentWitchLocalLayout.ts"
-"\${CURL_BIN}" -fsSL "\${READ_HARNESS_EXPORT_SCRIPT_URL}" -o "\${INSTALL_DIR}/readHarnessExportSets.ts"
-"\${CURL_BIN}" -fsSL "\${BUILD_WRITER_CLI_SCRIPT_URL}" -o "\${INSTALL_DIR}/buildWriterCliInvocation.ts"
+${buildClientAuxiliaryDownloadLines(input.appOrigin)}
 
 cat > "\${INSTALL_DIR}/package.json" <<EOF
 {

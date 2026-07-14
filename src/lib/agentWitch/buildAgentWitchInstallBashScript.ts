@@ -6,9 +6,6 @@ export const buildAgentWitchInstallBashScript = (input: {
   readonly appOrigin: string;
   readonly wsUrl: string;
   readonly clientScriptUrl: string;
-  readonly resolveLayoutScriptUrl: string;
-  readonly readHarnessExportSetsScriptUrl: string;
-  readonly buildWriterCliScriptUrl: string;
   readonly wakeServerScriptUrl: string;
   readonly wakeConstantsScriptUrl: string;
   readonly wakeListTargetsScriptUrl: string;
@@ -22,26 +19,22 @@ export const buildAgentWitchInstallBashScript = (input: {
   readonly websocketSupportWarning: string;
 }): string =>
   `${buildAgentWitchInstallScriptSetup({
+    appOrigin: input.appOrigin,
     wsUrl: input.wsUrl,
     clientScriptUrl: input.clientScriptUrl,
-    resolveLayoutScriptUrl: input.resolveLayoutScriptUrl,
-    readHarnessExportSetsScriptUrl: input.readHarnessExportSetsScriptUrl,
-    buildWriterCliScriptUrl: input.buildWriterCliScriptUrl,
     websocketSupportWarning: input.websocketSupportWarning,
   })}${buildAgentWitchInstallScriptLaunchAgent({
     wsUrl: input.wsUrl,
     appOrigin: input.appOrigin,
-  })}${buildAgentWitchInstallScriptWakeServer(
-    {
-      wakeServerScriptUrl: input.wakeServerScriptUrl,
-      wakeConstantsScriptUrl: input.wakeConstantsScriptUrl,
-      wakeListTargetsScriptUrl: input.wakeListTargetsScriptUrl,
-      wakeKickstartScriptUrl: input.wakeKickstartScriptUrl,
-      wakeHandlersScriptUrl: input.wakeHandlersScriptUrl,
-      wakeAllowedOriginsScriptUrl: input.wakeAllowedOriginsScriptUrl,
-      wakeEnsureProfileScriptUrl: input.wakeEnsureProfileScriptUrl,
-      wakeLinkAccountScriptUrl: input.wakeLinkAccountScriptUrl,
-      wakeSpawnClientScriptUrl: input.wakeSpawnClientScriptUrl,
-      wakeCliScriptUrl: input.wakeCliScriptUrl,
-    },
-  )}`;
+  })}${buildAgentWitchInstallScriptWakeServer({
+    wakeServerScriptUrl: input.wakeServerScriptUrl,
+    wakeConstantsScriptUrl: input.wakeConstantsScriptUrl,
+    wakeListTargetsScriptUrl: input.wakeListTargetsScriptUrl,
+    wakeKickstartScriptUrl: input.wakeKickstartScriptUrl,
+    wakeHandlersScriptUrl: input.wakeHandlersScriptUrl,
+    wakeAllowedOriginsScriptUrl: input.wakeAllowedOriginsScriptUrl,
+    wakeEnsureProfileScriptUrl: input.wakeEnsureProfileScriptUrl,
+    wakeLinkAccountScriptUrl: input.wakeLinkAccountScriptUrl,
+    wakeSpawnClientScriptUrl: input.wakeSpawnClientScriptUrl,
+    wakeCliScriptUrl: input.wakeCliScriptUrl,
+  })}`;

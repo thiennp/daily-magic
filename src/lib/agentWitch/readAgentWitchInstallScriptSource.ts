@@ -1,74 +1,43 @@
 import fs from "node:fs";
 import path from "node:path";
 
-const AGENT_WITCH_INSTALL_SCRIPT_ALLOWLIST = {
-  "agent-witch.ts": path.join(process.cwd(), "scripts", "agent-witch.ts"),
-  "agent-witch-wake-server.ts": path.join(
-    process.cwd(),
-    "scripts",
-    "agent-witch-wake-server.ts",
-  ),
-  "agentWitchWakeConstants.ts": path.join(
-    process.cwd(),
-    "scripts",
-    "agentWitchWakeConstants.ts",
-  ),
-  "agentWitchWakeHandlers.ts": path.join(
-    process.cwd(),
-    "scripts",
-    "agentWitchWakeHandlers.ts",
-  ),
-  "agentWitchWakeAllowedOrigins.ts": path.join(
-    process.cwd(),
-    "scripts",
-    "agentWitchWakeAllowedOrigins.ts",
-  ),
-  "kickstartAgentWitchLaunchAgent.ts": path.join(
-    process.cwd(),
-    "scripts",
-    "kickstartAgentWitchLaunchAgent.ts",
-  ),
-  "listAgentWitchLaunchTargets.ts": path.join(
-    process.cwd(),
-    "scripts",
-    "listAgentWitchLaunchTargets.ts",
-  ),
-  "readHarnessExportSets.ts": path.join(
-    process.cwd(),
-    "scripts",
-    "readHarnessExportSets.ts",
-  ),
-  "resolveAgentWitchLocalLayout.ts": path.join(
-    process.cwd(),
-    "scripts",
-    "resolveAgentWitchLocalLayout.ts",
-  ),
-  "ensureAgentWitchProfile.ts": path.join(
-    process.cwd(),
-    "scripts",
-    "ensureAgentWitchProfile.ts",
-  ),
-  "linkAgentWitchAccountLocally.ts": path.join(
-    process.cwd(),
-    "scripts",
-    "linkAgentWitchAccountLocally.ts",
-  ),
-  "spawnAgentWitchClient.ts": path.join(
-    process.cwd(),
-    "scripts",
-    "spawnAgentWitchClient.ts",
-  ),
-  "agent-witch-wake-cli.ts": path.join(
-    process.cwd(),
-    "scripts",
-    "agent-witch-wake-cli.ts",
-  ),
-  "buildWriterCliInvocation.ts": path.join(
-    process.cwd(),
-    "scripts",
-    "buildWriterCliInvocation.ts",
-  ),
-} as const;
+import { AGENT_WITCH_CLIENT_INSTALL_SCRIPT_NAMES } from "@/lib/agentWitch/agentWitchClientInstallScripts.constant";
+
+const scriptsDir = path.join(process.cwd(), "scripts");
+
+const resolveScriptPath = (fileName: string): string =>
+  path.join(scriptsDir, fileName);
+
+const AGENT_WITCH_WAKE_INSTALL_SCRIPT_NAMES = [
+  "agent-witch-wake-server.ts",
+  "agentWitchWakeConstants.ts",
+  "agentWitchWakeHandlers.ts",
+  "agentWitchWakeAllowedOrigins.ts",
+  "kickstartAgentWitchLaunchAgent.ts",
+  "listAgentWitchLaunchTargets.ts",
+  "ensureAgentWitchProfile.ts",
+  "linkAgentWitchAccountLocally.ts",
+  "spawnAgentWitchClient.ts",
+  "agent-witch-wake-cli.ts",
+] as const;
+
+const buildInstallScriptAllowlist = (): Record<string, string> => {
+  const entries: Record<string, string> = {
+    "agent-witch.ts": resolveScriptPath("agent-witch.ts"),
+  };
+
+  for (const scriptName of AGENT_WITCH_CLIENT_INSTALL_SCRIPT_NAMES) {
+    entries[scriptName] = resolveScriptPath(scriptName);
+  }
+
+  for (const scriptName of AGENT_WITCH_WAKE_INSTALL_SCRIPT_NAMES) {
+    entries[scriptName] = resolveScriptPath(scriptName);
+  }
+
+  return entries;
+};
+
+const AGENT_WITCH_INSTALL_SCRIPT_ALLOWLIST = buildInstallScriptAllowlist();
 
 export type AgentWitchInstallScriptName =
   keyof typeof AGENT_WITCH_INSTALL_SCRIPT_ALLOWLIST;
