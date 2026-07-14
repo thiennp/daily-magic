@@ -11,6 +11,7 @@ interface ConnectAnotherMacButtonProps {
   readonly installCommand: string;
   readonly isWebSocketSupported: boolean;
   readonly host: string;
+  readonly hasExistingDevices: boolean;
   readonly className?: string;
 }
 
@@ -18,6 +19,7 @@ export default function ConnectAnotherMacButton({
   installCommand,
   isWebSocketSupported,
   host,
+  hasExistingDevices,
   className,
 }: ConnectAnotherMacButtonProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -33,6 +35,10 @@ export default function ConnectAnotherMacButton({
     onClose: handleClosePasteModal,
   });
 
+  const actionLabel = hasExistingDevices
+    ? "Connect another Mac"
+    : "Connect a Mac";
+
   return (
     <>
       <button
@@ -42,13 +48,14 @@ export default function ConnectAnotherMacButton({
         }}
         className={className ?? APP_SURFACE_TEXT_LINK_CLASS}
       >
-        Connect another Mac
+        {actionLabel}
       </button>
       <ConnectAnotherMacModal
         isOpen={isModalOpen}
         installCommand={installCommand}
         isWebSocketSupported={isWebSocketSupported}
         host={host}
+        hasExistingDevices={hasExistingDevices}
         onClose={() => {
           setIsModalOpen(false);
         }}

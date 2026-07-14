@@ -24,7 +24,7 @@ const buildHomeSetupNextStep = (input: {
       activeStep: "install-mac",
       headline: "Next: connect a Mac",
       detail:
-        "Click Connect another Mac in Your Macs and run the install command on that computer. When install finishes, open Home — the browser links your account automatically while Agent Witch is running.",
+        "Click Connect a Mac in Your Macs and run the install command on that computer. When install finishes, open Home — the browser links your account automatically while Agent Witch is running.",
     };
   }
 

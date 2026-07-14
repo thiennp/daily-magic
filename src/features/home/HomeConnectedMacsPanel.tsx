@@ -24,6 +24,7 @@ export default function HomeConnectedMacsPanel({
     useHomeConnectedMacs();
   const { localHostname, isWakeServerReachable } = useLocalMacBrowserContext();
   const onlineCount = devices.filter((device) => device.isOnline).length;
+  const hasExistingDevices = devices.length > 0;
 
   return (
     <AppPanel padding="compact">
@@ -47,6 +48,7 @@ export default function HomeConnectedMacsPanel({
             installCommand={installCommand}
             isWebSocketSupported={isWebSocketSupported}
             host={host}
+            hasExistingDevices={hasExistingDevices}
             className="font-medium text-brand-700 hover:underline dark:text-brand-300"
           />
         </p>
@@ -70,12 +72,13 @@ export default function HomeConnectedMacsPanel({
         </ul>
       )}
 
-      {!isLoading ? (
+      {!isLoading && hasExistingDevices ? (
         <div className="mt-4 border-t border-gray-200 pt-4 dark:border-gray-700">
           <ConnectAnotherMacButton
             installCommand={installCommand}
             isWebSocketSupported={isWebSocketSupported}
             host={host}
+            hasExistingDevices={hasExistingDevices}
             className={APP_SURFACE_CTA_SECONDARY_SM_CLASS}
           />
         </div>

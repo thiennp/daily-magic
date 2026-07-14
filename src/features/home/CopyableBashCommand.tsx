@@ -10,7 +10,6 @@ import {
   APP_SURFACE_TERMINAL_COPY_BUTTON_CLASS,
 } from "@/components/surfaces/appSurfaceStyles.constant";
 import renderCopyableBashCommandCopyIcon from "@/features/home/utils/renderCopyableBashCommandCopyIcon";
-import verifyClipboardAndEngage from "@/features/home/utils/verifyClipboardAndEngage";
 
 interface CopyableBashCommandProps {
   readonly command: string;
@@ -28,32 +27,19 @@ export default function CopyableBashCommand({
   const preRef = useRef<HTMLPreElement>(null);
   const [copied, setCopied] = useState(false);
 
-  const reportVerifiedCopy = useCallback(() => {
-    void verifyClipboardAndEngage(command, onEngaged).then((verified) => {
-      if (verified) {
-        setCopied(true);
-        window.setTimeout(() => {
-          setCopied(false);
-        }, 2000);
-      }
+  const handleCopyClick = useCallback(() => {
+    void navigator.clipboard.writeText(command).then(() => {
+      setCopied(true);
+      onEngaged?.();
+      window.setTimeout(() => {
+        setCopied(false);
+      }, 2000);
     });
   }, [command, onEngaged]);
 
-  const handleCopyClick = useCallback(() => {
-    void navigator.clipboard.writeText(command).then(() => {
-      reportVerifiedCopy();
-    });
-  }, [command, reportVerifiedCopy]);
-
-  const handleCopyEvent = useCallback(() => {
-    window.setTimeout(() => {
-      reportVerifiedCopy();
-    }, 0);
-  }, [reportVerifiedCopy]);
-
   if (variant === "bash") {
     return (
-      <div className="mt-4" onCopy={handleCopyEvent}>
+      <div className="mt-4">
         <div
           className={twMerge(
             APP_SURFACE_BASH_TERMINAL_PRE_CLASS,
@@ -86,7 +72,7 @@ export default function CopyableBashCommand({
       );
 
   return (
-    <div className="relative mt-4" onCopy={handleCopyEvent}>
+    <div className="relative mt-4">
       <button
         type="button"
         onClick={handleCopyClick}
@@ -95,10 +81,7 @@ export default function CopyableBashCommand({
       >
         {renderCopyableBashCommandCopyIcon(copied, iconOnly)}
       </button>
-      <LocalTerminalPre
-        ref={preRef}
-        className={iconOnly ? "pr-14" : "pr-24"}
-      >
+      <LocalTerminalPre ref={preRef} className={iconOnly ? "pr-14" : "pr-24"}>
         <code>{command}</code>
       </LocalTerminalPre>
     </div>
