@@ -7,15 +7,18 @@ export const dynamic = "force-dynamic";
 
 export async function GET(
   _request: Request,
-  context: { readonly params: Promise<{ readonly scriptName: string }> },
+  context: {
+    readonly params: Promise<{ readonly scriptName: readonly string[] }>;
+  },
 ): Promise<Response> {
   const { scriptName } = await context.params;
+  const scriptPath = scriptName.join("/");
 
-  if (!isAgentWitchInstallScriptName(scriptName)) {
+  if (!isAgentWitchInstallScriptName(scriptPath)) {
     return new Response("Not found", { status: 404 });
   }
 
-  const source = readAgentWitchInstallScriptSource(scriptName);
+  const source = readAgentWitchInstallScriptSource(scriptPath);
 
   return new Response(source, {
     headers: {

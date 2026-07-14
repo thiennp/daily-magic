@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 
-import type AgentRunRecord from "@/lib/dispatch/types/AgentRunRecord.type";
+import type AgentRunRecord from "./dispatch/types/AgentRunRecord.type";
 import type { AgentWitchLocalLayout } from "./resolveAgentWitchLocalLayout";
 
 const RUNS_DIR_NAME = "runs";

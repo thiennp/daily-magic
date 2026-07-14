@@ -5,8 +5,8 @@ import { AGENT_WITCH_CLIENT_INSTALL_SCRIPT_NAMES } from "@/lib/agentWitch/agentW
 
 const scriptsDir = path.join(process.cwd(), "scripts");
 
-const resolveScriptPath = (fileName: string): string =>
-  path.join(scriptsDir, fileName);
+const resolveScriptPath = (relativePath: string): string =>
+  path.join(scriptsDir, relativePath);
 
 const AGENT_WITCH_WAKE_INSTALL_SCRIPT_NAMES = [
   "agent-witch-wake-server.ts",

@@ -3,7 +3,7 @@ import { spawn, type ChildProcess } from "node:child_process";
 import {
   AGENT_RUN_INPUT_GUARDRAILS,
   AGENT_RUN_INPUT_MARKER,
-} from "@/lib/dispatch/agentRunInputGuardrails.constant";
+} from "./dispatch/agentRunInputGuardrails.constant";
 
 import type { AgentWitchLocalLayout } from "./resolveAgentWitchLocalLayout";
 import {
@@ -353,14 +353,7 @@ export const runClaudeTask = (
   socket: WebSocket,
   agentRunId?: string,
 ): void => {
-  runWriterTask(
-    config,
-    "claude-cli",
-    prompt,
-    requestId,
-    socket,
-    agentRunId,
-  );
+  runWriterTask(config, "claude-cli", prompt, requestId, socket, agentRunId);
 };
 
 export const continueClaudeTaskAfterInput = (

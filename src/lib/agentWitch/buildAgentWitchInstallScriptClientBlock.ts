@@ -2,11 +2,17 @@ import { AGENT_WITCH_CLIENT_INSTALL_SCRIPT_NAMES } from "@/lib/agentWitch/agentW
 import { buildAgentWitchInstallAuxiliaryScriptUrl } from "@/lib/agentWitch/buildAgentWitchInstallUrls";
 import { AGENT_WITCH_INSTALL_SCRIPT_PATH_EXPORT } from "@/lib/agentWitch/buildAgentWitchInstallScriptWriterPath";
 
+const shellDirname = (relativePath: string): string => {
+  const slashIndex = relativePath.lastIndexOf("/");
+  return slashIndex === -1 ? "." : relativePath.slice(0, slashIndex);
+};
+
 const buildClientAuxiliaryDownloadLines = (appOrigin: string): string =>
-  AGENT_WITCH_CLIENT_INSTALL_SCRIPT_NAMES.map(
-    (scriptName) =>
-      `"\${CURL_BIN}" -fsSL "${buildAgentWitchInstallAuxiliaryScriptUrl(appOrigin, scriptName)}" -o "\${INSTALL_DIR}/${scriptName}"`,
-  ).join("\n");
+  AGENT_WITCH_CLIENT_INSTALL_SCRIPT_NAMES.map((scriptName) => {
+    const targetDir = shellDirname(scriptName);
+    return `mkdir -p "\${INSTALL_DIR}/${targetDir}"
+"\${CURL_BIN}" -fsSL "${buildAgentWitchInstallAuxiliaryScriptUrl(appOrigin, scriptName)}" -o "\${INSTALL_DIR}/${scriptName}"`;
+  }).join("\n");
 
 export const buildAgentWitchInstallScriptClientBlock = (input: {
   readonly appOrigin: string;

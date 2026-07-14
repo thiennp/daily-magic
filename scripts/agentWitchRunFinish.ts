@@ -1,6 +1,6 @@
-import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
-import { DispatchPolicy } from "@/lib/dispatch/DispatchPolicy.constant";
-import type AgentRunRecord from "@/lib/dispatch/types/AgentRunRecord.type";
+import { AgentRunStatus } from "./dispatch/AgentRunStatus.constant";
+import { DispatchPolicy } from "./dispatch/DispatchPolicy.constant";
+import type AgentRunRecord from "./dispatch/types/AgentRunRecord.type";
 
 import type { AgentWitchLocalLayout } from "./resolveAgentWitchLocalLayout";
 import { saveAgentRunLocal } from "./agentWitchLocalRunStore";

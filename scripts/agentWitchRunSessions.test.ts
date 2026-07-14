@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { AGENT_RUN_INPUT_MARKER } from "@/lib/dispatch/agentRunInputGuardrails.constant";
+import { AGENT_RUN_INPUT_MARKER } from "./dispatch/agentRunInputGuardrails.constant";
 
 import { parseAwaitingInputFromOutput } from "./agentWitchRunSessions";
 

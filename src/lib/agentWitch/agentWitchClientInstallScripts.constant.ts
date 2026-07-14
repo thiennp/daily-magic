@@ -9,6 +9,10 @@ export const AGENT_WITCH_CLIENT_INSTALL_SCRIPT_NAMES = [
   "ensureHarnessWriterCli.ts",
   "agentWitchLocalRunStore.ts",
   "agentWitchTerminalStreamState.ts",
+  "dispatch/agentRunInputGuardrails.constant.ts",
+  "dispatch/AgentRunStatus.constant.ts",
+  "dispatch/DispatchPolicy.constant.ts",
+  "dispatch/types/AgentRunRecord.type.ts",
 ] as const;
 
 export type AgentWitchClientInstallScriptName =
