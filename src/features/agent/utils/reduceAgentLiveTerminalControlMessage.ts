@@ -2,6 +2,7 @@ import type { AgentRunInputRequest } from "@/features/dispatch/utils/agentRunInp
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
 
 import type { AgentLiveTerminalState } from "./agentLiveTerminalState.type";
+import { buildAgentLiveTerminalCommandEntry } from "./agentLiveTerminalPrompt.constant";
 import { matchesActiveRun, readRunId } from "./agentLiveTerminalMessageUtils";
 import { reduceAgentLiveTerminalApprovalMessage } from "./reduceAgentLiveTerminalApprovalMessage";
 
@@ -17,20 +18,30 @@ export const reduceAgentLiveTerminalControlMessage = (
     }
 
     if (payload.pendingApproval === true) {
+      const commandLine = state.pendingCommandLine ?? "";
       return {
         activeRunId: runId,
-        output: "$ task queued — waiting for approval on your Mac…\n",
+        output:
+          commandLine.length > 0
+            ? buildAgentLiveTerminalCommandEntry(commandLine)
+            : state.output,
         status: "waiting_approval",
         pendingInput: null,
+        pendingCommandLine: null,
       };
     }
 
     if (payload.dispatched === true) {
+      const commandLine = state.pendingCommandLine ?? "";
       return {
         activeRunId: runId,
-        output: "$ task sent to your Mac\n",
+        output:
+          commandLine.length > 0
+            ? buildAgentLiveTerminalCommandEntry(commandLine)
+            : state.output,
         status: "streaming",
         pendingInput: null,
+        pendingCommandLine: null,
       };
     }
   }
@@ -55,6 +66,7 @@ export const reduceAgentLiveTerminalControlMessage = (
             ? payload.partialOutput
             : "",
       } satisfies AgentRunInputRequest,
+      pendingCommandLine: state.pendingCommandLine,
     };
   }
 

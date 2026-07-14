@@ -1,21 +1,58 @@
 import { describe, expect, it } from "vitest";
 
 import {
+  AGENT_LIVE_BASH_PROMPT,
+  formatAgentLiveTerminalCommandLine,
+} from "@/features/agent/utils/agentLiveTerminalPrompt.constant";
+import { buildAgentLiveTerminalDisplay } from "@/features/agent/utils/buildAgentLiveTerminalDisplay";
+import {
   beginAgentLiveTerminalSession,
   reduceAgentLiveTerminalMessage,
 } from "@/features/agent/utils/reduceAgentLiveTerminalMessage";
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
 
-describe("reduceAgentLiveTerminalMessage", () => {
-  it("enters starting state when a session begins", () => {
-    const next = beginAgentLiveTerminalSession();
-    expect(next.status).toBe("starting");
-    expect(next.output).toContain("waiting for your Mac");
+describe("buildAgentLiveTerminalDisplay", () => {
+  it("shows only the bash prompt when idle", () => {
+    expect(
+      buildAgentLiveTerminalDisplay({
+        output: "",
+        status: "idle",
+      }),
+    ).toBe(AGENT_LIVE_BASH_PROMPT);
   });
 
-  it("tracks dispatched runs and appends stream chunks", () => {
+  it("appends a fresh prompt after a finished run", () => {
+    expect(
+      buildAgentLiveTerminalDisplay({
+        output: "hello\n",
+        status: "finished",
+      }),
+    ).toBe(`hello\n${AGENT_LIVE_BASH_PROMPT}`);
+  });
+});
+
+describe("reduceAgentLiveTerminalMessage", () => {
+  it("renders a command line when a run is dispatched", () => {
+    const commandLine = formatAgentLiveTerminalCommandLine("run lint");
+    const next = reduceAgentLiveTerminalMessage(
+      beginAgentLiveTerminalSession(commandLine),
+      {
+        type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ACK,
+        payload: {
+          dispatched: true,
+          agentRunId: "run-1",
+        },
+      },
+    );
+
+    expect(next.output).toBe(`${AGENT_LIVE_BASH_PROMPT}${commandLine}\n`);
+    expect(next.status).toBe("streaming");
+  });
+
+  it("appends stream chunks for the active run", () => {
+    const commandLine = formatAgentLiveTerminalCommandLine("run lint");
     const dispatched = reduceAgentLiveTerminalMessage(
-      beginAgentLiveTerminalSession(),
+      beginAgentLiveTerminalSession(commandLine),
       {
         type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ACK,
         payload: {
@@ -33,31 +70,6 @@ describe("reduceAgentLiveTerminalMessage", () => {
       },
     });
 
-    expect(streamed.status).toBe("streaming");
     expect(streamed.output).toContain("hello");
-  });
-
-  it("finishes on claude result for the active run", () => {
-    const active = reduceAgentLiveTerminalMessage(
-      beginAgentLiveTerminalSession(),
-      {
-        type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ACK,
-        payload: {
-          dispatched: true,
-          agentRunId: "run-2",
-        },
-      },
-    );
-
-    const finished = reduceAgentLiveTerminalMessage(active, {
-      type: AGENT_WITCH_MESSAGE_TYPES.COMMAND_CLAUDE_RESULT,
-      payload: {
-        agentRunId: "run-2",
-        exitCode: 0,
-        output: "done",
-      },
-    });
-
-    expect(finished.status).toBe("finished");
   });
 });

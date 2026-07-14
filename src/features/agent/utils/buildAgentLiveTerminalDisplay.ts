@@ -1,0 +1,28 @@
+import type { AgentLiveTerminalStatus } from "@/features/agent/utils/agentLiveTerminalState.type";
+import {
+  AGENT_LIVE_BASH_PROMPT,
+  appendAgentLiveTerminalPrompt,
+  buildAgentLiveTerminalIdleLine,
+} from "@/features/agent/utils/agentLiveTerminalPrompt.constant";
+
+export const buildAgentLiveTerminalDisplay = (input: {
+  readonly output: string;
+  readonly status: AgentLiveTerminalStatus;
+}): string => {
+  if (input.output.length === 0) {
+    return buildAgentLiveTerminalIdleLine();
+  }
+
+  if (
+    input.status === "finished" &&
+    !input.output.endsWith(AGENT_LIVE_BASH_PROMPT)
+  ) {
+    return appendAgentLiveTerminalPrompt(input.output);
+  }
+
+  return input.output;
+};
+
+export const shouldShowAgentLiveTerminalCursor = (
+  status: AgentLiveTerminalStatus,
+): boolean => status === "idle" || status === "finished";

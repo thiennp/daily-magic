@@ -23,7 +23,6 @@ export const reduceAgentLiveTerminalApprovalMessage = (
       return {
         ...state,
         status: "streaming",
-        output: `${state.output}$ task running on your Mac\n`,
       };
     }
   }
@@ -40,8 +39,9 @@ export const reduceAgentLiveTerminalApprovalMessage = (
       return {
         ...state,
         status: "finished",
-        output: `${state.output}\n$ dispatch denied: ${denialReason}\n`,
+        output: `${state.output}${denialReason}\n`,
         pendingInput: null,
+        pendingCommandLine: null,
       };
     }
 
@@ -49,8 +49,8 @@ export const reduceAgentLiveTerminalApprovalMessage = (
       return {
         ...state,
         status: "streaming",
-        output: `${state.output}$ dispatch approved — running…\n`,
         pendingInput: null,
+        pendingCommandLine: null,
       };
     }
   }

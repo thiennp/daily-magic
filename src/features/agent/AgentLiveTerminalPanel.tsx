@@ -1,9 +1,13 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 
 import { APP_SURFACE_BASH_TERMINAL_PRE_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
-import Button from "@/components/ui/button/Button";
+import AgentLiveTerminalInputForm from "@/features/agent/AgentLiveTerminalInputForm";
+import {
+  buildAgentLiveTerminalDisplay,
+  shouldShowAgentLiveTerminalCursor,
+} from "@/features/agent/utils/buildAgentLiveTerminalDisplay";
 import type { AgentLiveTerminalStatus } from "@/features/agent/utils/agentLiveTerminalState.type";
 import type { AgentRunInputRequest } from "@/features/dispatch/utils/agentRunInputSocket";
 
@@ -31,17 +35,15 @@ export default function AgentLiveTerminalPanel({
   onDismissInput,
 }: AgentLiveTerminalPanelProps) {
   const outputRef = useRef<HTMLPreElement>(null);
-  const [response, setResponse] = useState("");
+  const displayOutput = buildAgentLiveTerminalDisplay({ output, status });
+  const showCursor = shouldShowAgentLiveTerminalCursor(status);
 
   useEffect(() => {
     const element = outputRef.current;
     if (element !== null) {
       element.scrollTop = element.scrollHeight;
     }
-  }, [output]);
-
-  const displayOutput =
-    output.length > 0 ? output : "$ send a task to stream output from your Mac";
+  }, [displayOutput, showCursor]);
 
   return (
     <section>
@@ -54,56 +56,30 @@ export default function AgentLiveTerminalPanel({
         </span>
       </div>
       <div className="mt-3 overflow-hidden rounded-lg border border-zinc-700 bg-zinc-950 shadow-sm">
-        <div className="border-b border-zinc-800 px-3 py-2 font-mono text-[11px] text-zinc-400">
-          agent-witch@mac — bash — live stream
+        <div className="flex items-center gap-2 border-b border-zinc-800 px-3 py-2">
+          <span className="size-2.5 rounded-full bg-[#ff5f57]" />
+          <span className="size-2.5 rounded-full bg-[#febc2e]" />
+          <span className="size-2.5 rounded-full bg-[#28c840]" />
+          <span className="ml-2 font-mono text-[11px] text-zinc-400">
+            agent-witch@mac — -zsh — 80×24
+          </span>
         </div>
         <pre
           ref={outputRef}
-          className={`${APP_SURFACE_BASH_TERMINAL_PRE_CLASS} max-h-96 min-h-48 border-0 rounded-none`}
+          className={`${APP_SURFACE_BASH_TERMINAL_PRE_CLASS} max-h-96 min-h-48 whitespace-pre-wrap break-words border-0 rounded-none`}
         >
           {displayOutput}
+          {showCursor ? (
+            <span className="animate-pulse text-emerald-400">▍</span>
+          ) : null}
         </pre>
       </div>
       {pendingInput !== null ? (
-        <div className="mt-4 rounded-lg border border-amber-200 bg-amber-50 p-4 dark:border-amber-900/50 dark:bg-amber-950/30">
-          <p className="text-sm font-medium text-gray-800 dark:text-white/90">
-            Your Mac agent needs input
-          </p>
-          <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
-            {pendingInput.question}
-          </p>
-          <label className="mt-3 block text-sm text-gray-700 dark:text-gray-300">
-            Your answer
-            <textarea
-              value={response}
-              onChange={(event) => {
-                setResponse(event.target.value);
-              }}
-              rows={3}
-              className="mt-2 w-full rounded-lg border border-gray-200 px-3 py-2 font-mono text-sm dark:border-gray-700 dark:bg-gray-900"
-            />
-          </label>
-          <div className="mt-3 flex flex-wrap justify-end gap-3">
-            <Button
-              variant="outline"
-              onClick={() => {
-                onDismissInput();
-                setResponse("");
-              }}
-            >
-              Later
-            </Button>
-            <Button
-              disabled={response.trim().length === 0}
-              onClick={() => {
-                onSubmitInput(response);
-                setResponse("");
-              }}
-            >
-              Send answer
-            </Button>
-          </div>
-        </div>
+        <AgentLiveTerminalInputForm
+          request={pendingInput}
+          onSubmitInput={onSubmitInput}
+          onDismissInput={onDismissInput}
+        />
       ) : null}
     </section>
   );

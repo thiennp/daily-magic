@@ -6,6 +6,7 @@ import {
   sendAgentRunInputResponse,
   type AgentRunInputRequest,
 } from "@/features/dispatch/utils/agentRunInputSocket";
+import { appendAgentLiveTerminalPrompt } from "@/features/agent/utils/agentLiveTerminalPrompt.constant";
 import {
   beginAgentLiveTerminalSession,
   initialAgentLiveTerminalState,
@@ -20,7 +21,7 @@ export function useAgentWitchLiveTerminal(socketRef: {
   readonly output: string;
   readonly status: AgentLiveTerminalStatus;
   readonly pendingInput: AgentRunInputRequest | null;
-  readonly beginSession: () => void;
+  readonly beginSession: (commandLine: string) => void;
   readonly applySocketMessage: (raw: string) => void;
   readonly submitInput: (response: string) => void;
   readonly dismissInput: () => void;
@@ -29,8 +30,8 @@ export function useAgentWitchLiveTerminal(socketRef: {
     initialAgentLiveTerminalState,
   );
 
-  const beginSession = useCallback(() => {
-    setState(beginAgentLiveTerminalSession());
+  const beginSession = useCallback((commandLine: string) => {
+    setState(beginAgentLiveTerminalSession(commandLine));
   }, []);
 
   const applySocketMessage = useCallback((raw: string) => {
@@ -61,8 +62,11 @@ export function useAgentWitchLiveTerminal(socketRef: {
       setState((current) => ({
         ...current,
         pendingInput: null,
-        output: `${current.output}\n$ answer sent — continuing…\n`,
+        output: appendAgentLiveTerminalPrompt(
+          `${current.output}${trimmedResponse}\n`,
+        ),
         status: "streaming",
+        pendingCommandLine: null,
       }));
     },
     [socketRef, state.pendingInput?.agentRunId],

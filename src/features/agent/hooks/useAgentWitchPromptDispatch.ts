@@ -8,6 +8,7 @@ import {
 } from "react";
 
 import { buildDemoClaudePromptAck } from "@/features/agent/utils/buildDemoClaudePromptAck";
+import { formatAgentLiveTerminalCommandLine } from "@/features/agent/utils/agentLiveTerminalPrompt.constant";
 import { sendClaudePromptOverSocket } from "@/features/agent/utils/sendClaudePromptOverSocket";
 import parseAgentWitchSocketDisplay, {
   type AgentWitchSocketDisplay,
@@ -18,7 +19,7 @@ export const useAgentWitchPromptDispatch = (input: {
   readonly socketRef: RefObject<WebSocket | null>;
   readonly demoPreview: unknown;
   readonly connectionLab: unknown;
-  readonly beginSession: () => void;
+  readonly beginSession: (commandLine: string) => void;
   readonly applySocketMessage: (raw: string) => void;
   readonly setLastResponse: Dispatch<SetStateAction<AgentWitchSocketDisplay>>;
 }): ((
@@ -38,7 +39,9 @@ export const useAgentWitchPromptDispatch = (input: {
         return;
       }
 
-      input.beginSession();
+      input.beginSession(
+        formatAgentLiveTerminalCommandLine(trimmedPrompt, options.writerAgent),
+      );
 
       if (input.demoPreview !== null || input.connectionLab !== null) {
         input.setLastResponse(

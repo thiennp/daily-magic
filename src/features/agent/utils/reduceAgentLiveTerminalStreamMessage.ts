@@ -1,10 +1,8 @@
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
 
 import type { AgentLiveTerminalState } from "./agentLiveTerminalState.type";
-import {
-  appendOutput,
-  matchesActiveRun,
-} from "./agentLiveTerminalMessageUtils";
+import { appendAgentLiveTerminalPrompt } from "./agentLiveTerminalPrompt.constant";
+import { matchesActiveRun } from "./agentLiveTerminalMessageUtils";
 
 export const reduceAgentLiveTerminalStreamMessage = (
   state: AgentLiveTerminalState,
@@ -19,7 +17,7 @@ export const reduceAgentLiveTerminalStreamMessage = (
     return {
       ...state,
       status: "streaming",
-      output: appendOutput(state.output, chunk),
+      output: `${state.output}${chunk}`,
     };
   }
 
@@ -29,16 +27,17 @@ export const reduceAgentLiveTerminalStreamMessage = (
   ) {
     const resultOutput =
       typeof payload.output === "string" ? payload.output : "";
-    const nextOutput =
+    const streamedOutput =
       state.output.trim().length === 0 && resultOutput.length > 0
-        ? appendOutput("$ task finished\n\n", resultOutput)
+        ? resultOutput
         : state.output;
 
     return {
       ...state,
-      output: nextOutput,
+      output: appendAgentLiveTerminalPrompt(streamedOutput),
       status: "finished",
       pendingInput: null,
+      pendingCommandLine: null,
     };
   }
 
@@ -49,7 +48,9 @@ export const reduceAgentLiveTerminalStreamMessage = (
   ) {
     return {
       ...state,
+      output: appendAgentLiveTerminalPrompt(state.output),
       status: "finished",
+      pendingCommandLine: null,
     };
   }
 

@@ -8,6 +8,7 @@ export interface AgentLiveTerminalState {
   readonly output: string;
   readonly status: AgentLiveTerminalStatus;
   readonly pendingInput: AgentRunInputRequest | null;
+  readonly pendingCommandLine: string | null;
 }
 
 export const initialAgentLiveTerminalState = (): AgentLiveTerminalState => ({
@@ -15,11 +16,15 @@ export const initialAgentLiveTerminalState = (): AgentLiveTerminalState => ({
   output: "",
   status: "idle",
   pendingInput: null,
+  pendingCommandLine: null,
 });
 
-export const beginAgentLiveTerminalSession = (): AgentLiveTerminalState => ({
+export const beginAgentLiveTerminalSession = (
+  commandLine: string,
+): AgentLiveTerminalState => ({
   activeRunId: null,
-  output: "$ waiting for your Mac…\n",
+  output: "",
   status: "starting",
   pendingInput: null,
+  pendingCommandLine: commandLine,
 });
