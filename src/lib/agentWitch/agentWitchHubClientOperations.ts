@@ -12,12 +12,17 @@ const sortAgentClientsByRecency = (
   return rightHeartbeat.localeCompare(leftHeartbeat);
 };
 
+export const listAgentWitchAgentClients = (
+  clients: Map<string, AgentWitchHubClient>,
+): readonly AgentWitchHubClient[] =>
+  [...clients.values()].filter((client) => client.role === "agent");
+
 export const listOnlineAgentClientsForUser = (
   clients: Map<string, AgentWitchHubClient>,
   userId: string,
 ): readonly AgentWitchHubClient[] =>
-  [...clients.values()]
-    .filter((client) => client.role === "agent" && client.userId === userId)
+  listAgentWitchAgentClients(clients)
+    .filter((client) => client.userId === userId)
     .sort(sortAgentClientsByRecency);
 
 export const findAgentClientForUser = (

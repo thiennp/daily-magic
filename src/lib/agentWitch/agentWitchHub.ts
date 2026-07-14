@@ -6,8 +6,13 @@ import {
   updateAgentWitchHubClient,
 } from "./agentWitchHubClientRegistry";
 import {
+  dispatchAgentWitchHubMessage,
+  dispatchAgentWitchHubMessageAsync,
+} from "./agentWitchHubMessageDispatch";
+import {
   broadcastToDashboardUser,
   findAgentClientForUser,
+  listAgentWitchAgentClients,
   listOnlineAgentClientsForUser,
 } from "./agentWitchHubClientOperations";
 import {
@@ -15,14 +20,11 @@ import {
   listConnectedAgentWitchClients,
   listSortedHarnessManifestReports,
 } from "./agentWitchHubQueries";
-import { handleAgentWitchSyncMessage } from "./handleAgentWitchSyncMessage";
-import { routeAgentWitchMessageAsync } from "./routeAgentWitchMessageAsync";
 import { resolveAgentUserIdForRegister } from "./resolveAgentUserIdForRegister";
 import type AgentWitchHubClient from "./types/AgentWitchHubClient.type";
 import type AgentWitchHubRuntime from "./types/AgentWitchHubRuntime.type";
 import type { AgentWitchHarnessManifestReport } from "./types/AgentWitchHubStatus.type";
 import type AgentWitchMessage from "./types/AgentWitchMessage.type";
-import { AGENT_WITCH_MESSAGE_TYPES } from "./types/AgentWitchMessageType.constant";
 
 export type {
   AgentWitchConnectedClient,
@@ -88,26 +90,17 @@ export class AgentWitchHub implements AgentWitchHubRuntime {
     senderId: string,
     message: AgentWitchMessage,
   ): AgentWitchMessage | null {
-    if (message.type === AGENT_WITCH_MESSAGE_TYPES.AGENT_PAIR) {
-      return null;
-    }
-
-    return handleAgentWitchSyncMessage(
-      this,
-      senderId,
-      message,
-      this.clients.get(senderId),
-    );
+    return dispatchAgentWitchHubMessage(this, this.clients, senderId, message);
   }
 
   async handleMessageAsync(
     senderId: string,
     message: AgentWitchMessage,
   ): Promise<AgentWitchMessage | null> {
-    return routeAgentWitchMessageAsync(
+    return dispatchAgentWitchHubMessageAsync(
       this,
+      this.clients,
       senderId,
-      this.clients.get(senderId),
       message,
     );
   }
@@ -125,8 +118,14 @@ export class AgentWitchHub implements AgentWitchHubRuntime {
     return findAgentClientForUser(this.clients, userId, deviceId);
   }
 
-  listOnlineAgentClientsForUser(userId: string): readonly AgentWitchHubClient[] {
+  listOnlineAgentClientsForUser(
+    userId: string,
+  ): readonly AgentWitchHubClient[] {
     return listOnlineAgentClientsForUser(this.clients, userId);
+  }
+
+  listAgentClients(): readonly AgentWitchHubClient[] {
+    return listAgentWitchAgentClients(this.clients);
   }
 
   broadcastToDashboardUser(
