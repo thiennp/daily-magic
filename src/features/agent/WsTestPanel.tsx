@@ -5,6 +5,7 @@ import { useEffect, useRef } from "react";
 import AppPanel from "@/components/surfaces/AppPanel";
 import AgentWitchUnsupportedHostNotice from "@/features/home/AgentWitchUnsupportedHostNotice";
 import { ConnectionStatusBadge } from "@/features/shell/ConnectionStatusBadge";
+import AgentLiveTerminalSection from "@/features/agent/AgentLiveTerminalSection";
 import { useAgentRunQueue } from "@/features/agent/hooks/useAgentRunQueue";
 import { useDelegatedWriterAgent } from "@/features/agent/hooks/useDelegatedWriterAgent";
 import { useWsTestTaskComposer } from "@/features/agent/hooks/useWsTestTaskComposer";
@@ -14,8 +15,16 @@ import isAgentWitchWebSocketSupportedHost from "@/lib/agentWitch/isAgentWitchWeb
 import { useAgentWitchSocket } from "./hooks/useAgentWitchSocket";
 
 export default function WsTestPanel() {
-  const { connectionStatus, lastResponse, sendClaudePrompt } =
-    useAgentWitchSocket();
+  const {
+    connectionStatus,
+    lastResponse,
+    liveTerminalOutput,
+    liveTerminalStatus,
+    liveTerminalPendingInput,
+    submitLiveTerminalInput,
+    dismissLiveTerminalInput,
+    sendClaudePrompt,
+  } = useAgentWitchSocket();
   const composer = useWsTestTaskComposer();
   const { writerAgent, setWriterAgent } = useDelegatedWriterAgent();
   const { queueCount, queueMessage, enqueueRun, flushQueue, refreshCount } =
@@ -95,22 +104,14 @@ export default function WsTestPanel() {
         onClear={composer.resetComposer}
       />
 
-      <AppPanel>
-        <h2 className="text-sm font-medium text-gray-800 dark:text-white/90">
-          Last response
-        </h2>
-        <pre
-          className={`mt-3 max-h-80 overflow-auto rounded-lg p-4 text-xs ${
-            lastResponse.isError
-              ? "bg-error-50 text-error-700 dark:bg-error-950/30 dark:text-error-300"
-              : "bg-gray-50 text-gray-700 dark:bg-gray-900 dark:text-gray-300"
-          }`}
-        >
-          {lastResponse.text.length > 0
-            ? lastResponse.text
-            : "No messages yet."}
-        </pre>
-      </AppPanel>
+      <AgentLiveTerminalSection
+        output={liveTerminalOutput}
+        status={liveTerminalStatus}
+        pendingInput={liveTerminalPendingInput}
+        errorMessage={lastResponse.isError ? lastResponse.text : null}
+        onSubmitInput={submitLiveTerminalInput}
+        onDismissInput={dismissLiveTerminalInput}
+      />
     </div>
   );
 }

@@ -1,0 +1,65 @@
+"use client";
+
+import {
+  useCallback,
+  type Dispatch,
+  type RefObject,
+  type SetStateAction,
+} from "react";
+
+import { buildDemoClaudePromptAck } from "@/features/agent/utils/buildDemoClaudePromptAck";
+import { sendClaudePromptOverSocket } from "@/features/agent/utils/sendClaudePromptOverSocket";
+import parseAgentWitchSocketDisplay, {
+  type AgentWitchSocketDisplay,
+} from "@/lib/agentWitch/parseAgentWitchSocketDisplay";
+import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
+
+export const useAgentWitchPromptDispatch = (input: {
+  readonly socketRef: RefObject<WebSocket | null>;
+  readonly demoPreview: unknown;
+  readonly connectionLab: unknown;
+  readonly beginSession: () => void;
+  readonly applySocketMessage: (raw: string) => void;
+  readonly setLastResponse: Dispatch<SetStateAction<AgentWitchSocketDisplay>>;
+}): ((
+  prompt: string,
+  options?: {
+    readonly writerAgent: HarnessWriterAgent;
+    readonly targetUserId?: string;
+    readonly groupId?: string;
+    readonly capabilityId?: string;
+    readonly targetDeviceId?: string;
+  },
+) => void) =>
+  useCallback(
+    (prompt, options) => {
+      const trimmedPrompt = prompt.trim();
+      if (trimmedPrompt.length === 0 || options === undefined) {
+        return;
+      }
+
+      input.beginSession();
+
+      if (input.demoPreview !== null || input.connectionLab !== null) {
+        input.setLastResponse(
+          parseAgentWitchSocketDisplay(buildDemoClaudePromptAck()),
+        );
+        return;
+      }
+
+      sendClaudePromptOverSocket({
+        socket: input.socketRef.current,
+        prompt: trimmedPrompt,
+        writerAgent: options.writerAgent,
+        targetUserId: options.targetUserId,
+        groupId: options.groupId,
+        capabilityId: options.capabilityId,
+        targetDeviceId: options.targetDeviceId,
+        onResponse: (raw) => {
+          input.applySocketMessage(raw);
+          input.setLastResponse(parseAgentWitchSocketDisplay(raw));
+        },
+      });
+    },
+    [input],
+  );

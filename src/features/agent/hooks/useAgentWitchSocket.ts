@@ -1,23 +1,30 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { useConnectionLab } from "@/features/agent-witch/connection-lab/ConnectionLabContext";
 import { useDemoPreview } from "@/features/demo/DemoPreviewContext";
+import { useAgentWitchLiveTerminal } from "@/features/agent/hooks/useAgentWitchLiveTerminal";
+import { useAgentWitchPromptDispatch } from "@/features/agent/hooks/useAgentWitchPromptDispatch";
 import { subscribeAgentWitchDashboardSocket } from "@/features/agent/hooks/subscribeAgentWitchDashboardSocket";
-import { buildDemoClaudePromptAck } from "@/features/agent/utils/buildDemoClaudePromptAck";
 import { resolveInitialConnectionStatus } from "@/features/agent/utils/connectAgentWitchDashboardSocket";
-import { sendClaudePromptOverSocket } from "@/features/agent/utils/sendClaudePromptOverSocket";
 import parseAgentWitchSocketDisplay, {
   type AgentWitchSocketDisplay,
 } from "@/lib/agentWitch/parseAgentWitchSocketDisplay";
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
+import type { AgentLiveTerminalStatus } from "@/features/agent/utils/agentLiveTerminalState.type";
+import type { AgentRunInputRequest } from "@/features/dispatch/utils/agentRunInputSocket";
 
 import type { WsTestConnectionStatus } from "../types/WsTestConnectionStatus.type";
 
 export interface UseAgentWitchSocketResult {
   readonly connectionStatus: WsTestConnectionStatus;
   readonly lastResponse: AgentWitchSocketDisplay;
+  readonly liveTerminalOutput: string;
+  readonly liveTerminalStatus: AgentLiveTerminalStatus;
+  readonly liveTerminalPendingInput: AgentRunInputRequest | null;
+  readonly submitLiveTerminalInput: (response: string) => void;
+  readonly dismissLiveTerminalInput: () => void;
   readonly sendClaudePrompt: (
     prompt: string,
     options?: {
@@ -45,6 +52,15 @@ export function useAgentWitchSocket(): UseAgentWitchSocketResult {
     text: "",
     isError: false,
   });
+  const {
+    output: liveTerminalOutput,
+    status: liveTerminalStatus,
+    pendingInput: liveTerminalPendingInput,
+    beginSession,
+    applySocketMessage,
+    submitInput: submitLiveTerminalInput,
+    dismissInput: dismissLiveTerminalInput,
+  } = useAgentWitchLiveTerminal(socketRef);
   const connectionStatus =
     connectionLab?.connectionStatus ??
     (demoPreview ? "connected" : liveConnectionStatus);
@@ -57,56 +73,32 @@ export function useAgentWitchSocket(): UseAgentWitchSocketResult {
     return subscribeAgentWitchDashboardSocket({
       onStatusChange: setLiveConnectionStatus,
       onMessage: (raw) => {
+        applySocketMessage(raw);
         setLastResponse(parseAgentWitchSocketDisplay(raw));
       },
       onSocketChange: (socket) => {
         socketRef.current = socket;
       },
     });
-  }, [connectionLab, demoPreview]);
+  }, [applySocketMessage, connectionLab, demoPreview]);
 
-  const sendClaudePrompt = useCallback(
-    (
-      prompt: string,
-      options?: {
-        readonly writerAgent: HarnessWriterAgent;
-        readonly targetUserId?: string;
-        readonly groupId?: string;
-        readonly capabilityId?: string;
-        readonly targetDeviceId?: string;
-      },
-    ) => {
-      const trimmedPrompt = prompt.trim();
-      if (trimmedPrompt.length === 0 || options === undefined) {
-        return;
-      }
-
-      if (demoPreview !== null || connectionLab !== null) {
-        setLastResponse(
-          parseAgentWitchSocketDisplay(buildDemoClaudePromptAck()),
-        );
-        return;
-      }
-
-      sendClaudePromptOverSocket({
-        socket: socketRef.current,
-        prompt: trimmedPrompt,
-        writerAgent: options.writerAgent,
-        targetUserId: options.targetUserId,
-        groupId: options.groupId,
-        capabilityId: options.capabilityId,
-        targetDeviceId: options.targetDeviceId,
-        onResponse: (raw) => {
-          setLastResponse(parseAgentWitchSocketDisplay(raw));
-        },
-      });
-    },
-    [connectionLab, demoPreview],
-  );
+  const sendClaudePrompt = useAgentWitchPromptDispatch({
+    socketRef,
+    demoPreview,
+    connectionLab,
+    beginSession,
+    applySocketMessage,
+    setLastResponse,
+  });
 
   return {
     connectionStatus,
     lastResponse,
+    liveTerminalOutput,
+    liveTerminalStatus,
+    liveTerminalPendingInput,
+    submitLiveTerminalInput,
+    dismissLiveTerminalInput,
     sendClaudePrompt,
   };
 }
