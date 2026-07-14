@@ -1,7 +1,7 @@
-import { buildWsTestSendDisabledState } from "@/features/wsTest/utils/buildWsTestSendDisabledState";
-import type useMacDeviceSelection from "@/features/wsTest/hooks/useMacDeviceSelection";
+import { buildWsTestSendDisabledState } from "@/features/agent/utils/buildWsTestSendDisabledState";
+import type useMacDeviceSelection from "@/features/agent/hooks/useMacDeviceSelection";
 import type { useTeamDispatchSelection } from "@/features/dispatch/hooks/useTeamDispatchSelection";
-import type { useWsTestComposerWorkflowState } from "@/features/wsTest/hooks/useWsTestComposerWorkflowState";
+import type { useWsTestComposerWorkflowState } from "@/features/agent/hooks/useWsTestComposerWorkflowState";
 
 export const buildWsTestComposerDispatchState = (input: {
   readonly selection: ReturnType<typeof useTeamDispatchSelection>;

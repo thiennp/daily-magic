@@ -5,8 +5,8 @@ Compose and send tasks to Mac via Agent Witch.
 ## Registry
 
 - **Slug:** `agent`
-- **Feature path:** `src/features/wsTest`
-- **Migration:** planned
+- **Feature path:** `src/features/agent`
+- **Migration:** migrated
 
 ## Routes
 

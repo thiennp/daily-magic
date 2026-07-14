@@ -1,4 +1,4 @@
-import type { WsTestConnectionStatus } from "@/features/wsTest/types/WsTestConnectionStatus.type";
+import type { WsTestConnectionStatus } from "@/features/agent/types/WsTestConnectionStatus.type";
 
 export const HARNESS_CONNECTION_LABELS: Record<WsTestConnectionStatus, string> =
   {

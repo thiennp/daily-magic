@@ -2,8 +2,8 @@
 
 import AppPanel from "@/components/surfaces/AppPanel";
 import useLocalMacBrowserContext from "@/features/home/hooks/useLocalMacBrowserContext";
-import MacDevicePicker from "@/features/wsTest/MacDevicePicker";
-import type { MyMacDevice } from "@/features/wsTest/hooks/useMyMacDevices";
+import MacDevicePicker from "@/features/agent/MacDevicePicker";
+import type { MyMacDevice } from "@/features/agent/hooks/useMyMacDevices";
 
 interface WsTestMacDispatchSectionProps {
   readonly isLibraryPlaybook: boolean;

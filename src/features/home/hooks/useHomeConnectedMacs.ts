@@ -4,7 +4,7 @@ import { useDemoPreview } from "@/features/demo/DemoPreviewContext";
 import { demoMacDevices } from "@/features/demo/mock/demoMacDevices";
 import useMyMacDevices, {
   type MyMacDevice,
-} from "@/features/wsTest/hooks/useMyMacDevices";
+} from "@/features/agent/hooks/useMyMacDevices";
 import { buildMacDeviceDisplayNameById } from "@/lib/agentWitch/resolveMacDeviceDisplayName";
 import { useMemo } from "react";
 

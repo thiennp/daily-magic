@@ -11,7 +11,7 @@ import { registerAgentRunLiveTerminal } from "@/features/reports/utils/registerA
 import {
   buildAgentWitchWebSocketUrl,
   sendAgentWitchPairingToken,
-} from "@/features/wsTest/utils/agentWitchSocketUtils";
+} from "@/features/agent/utils/agentWitchSocketUtils";
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
 
 export function useAgentRunLiveTerminal(

@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 
-import WsTestPanel from "@/features/wsTest/WsTestPanel";
+import WsTestPanel from "@/features/agent/WsTestPanel";
 
 export default function AgentPageLayout() {
   return (

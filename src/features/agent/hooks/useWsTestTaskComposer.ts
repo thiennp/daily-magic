@@ -2,11 +2,11 @@
 
 import { useSelectedDispatchCapability } from "@/features/dispatch/hooks/useSelectedDispatchCapability";
 import { useTeamDispatchSelection } from "@/features/dispatch/hooks/useTeamDispatchSelection";
-import { useAgentComposerPrefill } from "@/features/wsTest/hooks/useAgentComposerPrefill";
-import useMacDeviceSelection from "@/features/wsTest/hooks/useMacDeviceSelection";
-import { useWsTestComposerWorkflowState } from "@/features/wsTest/hooks/useWsTestComposerWorkflowState";
-import { buildWsTestComposerDispatchState } from "@/features/wsTest/utils/buildWsTestComposerDispatchState";
-import { createWsTestSelectionHandlers } from "@/features/wsTest/utils/createWsTestSelectionHandlers";
+import { useAgentComposerPrefill } from "@/features/agent/hooks/useAgentComposerPrefill";
+import useMacDeviceSelection from "@/features/agent/hooks/useMacDeviceSelection";
+import { useWsTestComposerWorkflowState } from "@/features/agent/hooks/useWsTestComposerWorkflowState";
+import { buildWsTestComposerDispatchState } from "@/features/agent/utils/buildWsTestComposerDispatchState";
+import { createWsTestSelectionHandlers } from "@/features/agent/utils/createWsTestSelectionHandlers";
 import type WorkflowFieldDefinition from "@/lib/workflows/types/WorkflowFieldDefinition.type";
 
 export function useWsTestTaskComposer(): {

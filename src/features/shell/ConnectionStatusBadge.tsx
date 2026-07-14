@@ -5,7 +5,7 @@ import {
   STATUS_BADGE_COLORS,
   type PairingStatusKey,
 } from "@/features/shell/connectionStatusMapping.constant";
-import type { WsTestConnectionStatus } from "@/features/wsTest/types/WsTestConnectionStatus.type";
+import type { WsTestConnectionStatus } from "@/features/agent/types/WsTestConnectionStatus.type";
 
 interface ConnectionStatusBadgeProps {
   readonly status: WsTestConnectionStatus;

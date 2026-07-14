@@ -1,4 +1,4 @@
-import type { WsTestConnectionStatus } from "@/features/wsTest/types/WsTestConnectionStatus.type";
+import type { WsTestConnectionStatus } from "@/features/agent/types/WsTestConnectionStatus.type";
 
 export type StatusBadgeTone =
   "success" | "warning" | "error" | "neutral" | "info";

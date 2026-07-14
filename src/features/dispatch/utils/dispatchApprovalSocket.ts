@@ -3,7 +3,7 @@ import {
   buildAgentWitchWebSocketUrl,
   createAgentWitchRequestId,
   sendAgentWitchPairingToken,
-} from "@/features/wsTest/utils/agentWitchSocketUtils";
+} from "@/features/agent/utils/agentWitchSocketUtils";
 
 import {
   parseDispatchApprovalSocketMessage,

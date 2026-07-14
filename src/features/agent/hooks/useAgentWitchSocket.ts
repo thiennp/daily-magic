@@ -6,9 +6,9 @@ import { useDemoPreview } from "@/features/demo/DemoPreviewContext";
 import {
   buildAgentWitchWebSocketUrl,
   sendAgentWitchPairingToken,
-} from "@/features/wsTest/utils/agentWitchSocketUtils";
-import { buildDemoClaudePromptAck } from "@/features/wsTest/utils/buildDemoClaudePromptAck";
-import { sendClaudePromptOverSocket } from "@/features/wsTest/utils/sendClaudePromptOverSocket";
+} from "@/features/agent/utils/agentWitchSocketUtils";
+import { buildDemoClaudePromptAck } from "@/features/agent/utils/buildDemoClaudePromptAck";
+import { sendClaudePromptOverSocket } from "@/features/agent/utils/sendClaudePromptOverSocket";
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
 

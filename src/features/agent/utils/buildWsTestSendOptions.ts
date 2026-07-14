@@ -1,5 +1,5 @@
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
-import type { useWsTestTaskComposer } from "@/features/wsTest/hooks/useWsTestTaskComposer";
+import type { useWsTestTaskComposer } from "@/features/agent/hooks/useWsTestTaskComposer";
 
 export const buildWsTestSendOptions = (
   composer: ReturnType<typeof useWsTestTaskComposer>,

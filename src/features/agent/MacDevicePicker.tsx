@@ -3,7 +3,7 @@
 import Label from "@/components/form/Label";
 import MacDeviceRow from "@/features/macDevices/MacDeviceRow";
 import { canWakeMacDeviceFromBrowser } from "@/features/macDevices/utils/canWakeMacDeviceFromBrowser";
-import type { MyMacDevice } from "@/features/wsTest/hooks/useMyMacDevices";
+import type { MyMacDevice } from "@/features/agent/hooks/useMyMacDevices";
 
 interface MacDevicePickerProps {
   readonly devices: readonly MyMacDevice[];

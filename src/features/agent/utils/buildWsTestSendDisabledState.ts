@@ -1,4 +1,4 @@
-import { isWsTestSendDisabled } from "@/features/wsTest/utils/isWsTestSendDisabled";
+import { isWsTestSendDisabled } from "@/features/agent/utils/isWsTestSendDisabled";
 
 export const buildWsTestSendDisabledState = (input: {
   readonly connectionStatus: string;

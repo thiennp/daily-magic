@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 
-import useMyMacDevices from "@/features/wsTest/hooks/useMyMacDevices";
+import useMyMacDevices from "@/features/agent/hooks/useMyMacDevices";
 
 const pickDefaultMacDeviceId = (
   devices: ReadonlyArray<{ readonly id: string; readonly isOnline: boolean }>,

@@ -1,5 +1,5 @@
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
-import { createAgentWitchRequestId } from "@/features/wsTest/utils/agentWitchSocketUtils";
+import { createAgentWitchRequestId } from "@/features/agent/utils/agentWitchSocketUtils";
 
 export interface AgentRunInputRequest {
   readonly agentRunId: string;

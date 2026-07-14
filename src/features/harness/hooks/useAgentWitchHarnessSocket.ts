@@ -13,7 +13,7 @@ import { createHarnessSocketActions } from "@/features/harness/hooks/utils/creat
 import type HarnessManifest from "@/lib/agentWitch/harness/types/HarnessManifest.type";
 import type HarnessItemWriteSpec from "@/lib/agentWitch/harness/types/HarnessItemWriteSpec.type";
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
-import type { WsTestConnectionStatus } from "@/features/wsTest/types/WsTestConnectionStatus.type";
+import type { WsTestConnectionStatus } from "@/features/agent/types/WsTestConnectionStatus.type";
 
 export type {
   AgentPairingStatus,

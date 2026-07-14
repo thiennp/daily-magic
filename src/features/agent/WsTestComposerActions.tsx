@@ -1,8 +1,8 @@
 "use client";
 
 import { useCopyToClipboard } from "@/hooks/useCopyToClipboard";
-import WsTestComposerHelperText from "@/features/wsTest/WsTestComposerHelperText";
-import type { WsTestConnectionStatus } from "@/features/wsTest/types/WsTestConnectionStatus.type";
+import WsTestComposerHelperText from "@/features/agent/WsTestComposerHelperText";
+import type { WsTestConnectionStatus } from "@/features/agent/types/WsTestConnectionStatus.type";
 
 interface WsTestComposerActionsProps {
   readonly connectionStatus: WsTestConnectionStatus;

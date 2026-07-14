@@ -13,7 +13,7 @@ const repoRoot = path.resolve(
 );
 
 const SLUG_TO_FOLDER: Readonly<Record<string, string>> = {
-  agent: "wsTest",
+  agent: "agent",
   "mac-devices": "macDevices",
   "agent-witch": "agent-witch",
 };

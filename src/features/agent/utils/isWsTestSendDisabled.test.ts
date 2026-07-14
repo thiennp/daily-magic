@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { isWsTestSendDisabled } from "@/features/wsTest/utils/isWsTestSendDisabled";
+import { isWsTestSendDisabled } from "@/features/agent/utils/isWsTestSendDisabled";
 
 const baseInput = {
   connectionStatus: "connected",

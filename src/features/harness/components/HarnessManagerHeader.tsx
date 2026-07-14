@@ -1,5 +1,5 @@
 import { ConnectionStatusBadge } from "@/features/shell/ConnectionStatusBadge";
-import type { WsTestConnectionStatus } from "@/features/wsTest/types/WsTestConnectionStatus.type";
+import type { WsTestConnectionStatus } from "@/features/agent/types/WsTestConnectionStatus.type";
 
 interface HarnessManagerHeaderProps {
   readonly connectionStatus: WsTestConnectionStatus;

@@ -5,11 +5,11 @@ import { useEffect, useRef } from "react";
 import AppPanel from "@/components/surfaces/AppPanel";
 import AgentWitchUnsupportedHostNotice from "@/features/home/AgentWitchUnsupportedHostNotice";
 import { ConnectionStatusBadge } from "@/features/shell/ConnectionStatusBadge";
-import { useAgentRunQueue } from "@/features/wsTest/hooks/useAgentRunQueue";
-import { useDelegatedWriterAgent } from "@/features/wsTest/hooks/useDelegatedWriterAgent";
-import { useWsTestTaskComposer } from "@/features/wsTest/hooks/useWsTestTaskComposer";
-import WsTestPromptSection from "@/features/wsTest/WsTestPromptSection";
-import { buildWsTestSendOptions } from "@/features/wsTest/utils/buildWsTestSendOptions";
+import { useAgentRunQueue } from "@/features/agent/hooks/useAgentRunQueue";
+import { useDelegatedWriterAgent } from "@/features/agent/hooks/useDelegatedWriterAgent";
+import { useWsTestTaskComposer } from "@/features/agent/hooks/useWsTestTaskComposer";
+import WsTestPromptSection from "@/features/agent/WsTestPromptSection";
+import { buildWsTestSendOptions } from "@/features/agent/utils/buildWsTestSendOptions";
 import isAgentWitchWebSocketSupportedHost from "@/lib/agentWitch/isAgentWitchWebSocketSupportedHost";
 import { useAgentWitchSocket } from "./hooks/useAgentWitchSocket";
 

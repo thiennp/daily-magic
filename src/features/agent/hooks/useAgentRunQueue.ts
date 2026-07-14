@@ -6,7 +6,7 @@ import {
   deleteQueuedAgentRunRequest,
   enqueueAgentRunRequest,
   fetchQueuedAgentRuns,
-} from "@/features/wsTest/utils/agentRunQueueClient";
+} from "@/features/agent/utils/agentRunQueueClient";
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
 
 export function useAgentRunQueue(): {

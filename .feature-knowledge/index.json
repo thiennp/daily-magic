@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "builtAt": "2026-07-14T18:22:04.670Z",
+  "builtAt": "2026-07-14T18:28:09.810Z",
   "idf": {
     "0": 4.857214768933151,
     "1": 2.864784604242945,
@@ -56,17 +56,30 @@
     "ids": 3.065455299705096,
     "like": 3.065455299705096,
     "admin-001": 5.2626798770413155,
+    "compose": 5.2626798770413155,
+    "and": 3.7586024802650413,
+    "send": 5.2626798770413155,
+    "tasks": 4.857214768933151,
+    "to": 4.34638914516716,
     "mac": 3.653241964607215,
+    "via": 4.56953269648137,
+    "agent": 4.009916908545947,
+    "witch": 5.2626798770413155,
+    "migrated": 5.2626798770413155,
+    "ws-test": 5.2626798770413155,
+    "agent-runs": 4.56953269648137,
+    "capabilities": 3.247776856499051,
+    "workflows": 3.8763855159214247,
+    "agent-witch": 3.55793178480289,
+    "agent-001": 5.2626798770413155,
     "pairing": 4.857214768933151,
     "install": 4.34638914516716,
     "script": 5.2626798770413155,
     "websocket": 4.857214768933151,
     "bridge": 5.2626798770413155,
-    "and": 3.7586024802650413,
     "paired-device": 5.2626798770413155,
     "client": 4.56953269648137,
     "area": 4.857214768933151,
-    "agent-witch": 3.55793178480289,
     "server": 4.857214768933151,
     "ws": 5.2626798770413155,
     "agentwitch": 4.56953269648137,
@@ -117,11 +130,9 @@
     "auth-001": 5.2626798770413155,
     "published": 5.2626798770413155,
     "agents": 5.2626798770413155,
-    "workflows": 3.8763855159214247,
     "team": 4.56953269648137,
     "directory": 5.2626798770413155,
     "picker": 5.2626798770413155,
-    "capabilities": 3.247776856499051,
     "none": 3.01138807843482,
     "wired": 3.7586024802650413,
     "capabilities-001": 5.2626798770413155,
@@ -135,7 +146,6 @@
     "approvals": 5.2626798770413155,
     "queue": 5.2626798770413155,
     "policies": 5.2626798770413155,
-    "agent-runs": 4.56953269648137,
     "dispatch-001": 5.2626798770413155,
     "feedback": 3.8763855159214247,
     "capability-owner": 5.2626798770413155,
@@ -163,7 +173,6 @@
     "page": 5.2626798770413155,
     "tsx": 5.2626798770413155,
     "related": 5.2626798770413155,
-    "via": 4.56953269648137,
     "command": 5.2626798770413155,
     "presence": 5.2626798770413155,
     "offerings": 5.2626798770413155,
@@ -191,7 +200,6 @@
     "homelinkaccountgate": 4.857214768933151,
     "after": 4.857214768933151,
     "children": 5.2626798770413155,
-    "tasks": 4.857214768933151,
     "marketplace": 4.857214768933151,
     "etc": 5.2626798770413155,
     "editing": 5.2626798770413155,
@@ -239,7 +247,6 @@
     "resolvehaspaireddeviceafterfetch": 4.857214768933151,
     "buildhomesetupnextstep": 5.2626798770413155,
     "resolveappbaseurl": 4.857214768933151,
-    "to": 4.34638914516716,
     "id": 4.857214768933151,
     "home-": 5.2626798770413155,
     "extend": 5.2626798770413155,
@@ -317,13 +324,12 @@
     "wake": 5.2626798770413155,
     "components": 5.2626798770413155,
     "mac-devices": 4.56953269648137,
-    "planned": 4.857214768933151,
+    "planned": 5.2626798770413155,
     "mac_devices-001": 5.2626798770413155,
     "sections": 5.2626798770413155,
     "public": 4.857214768933151,
     "ctas": 5.2626798770413155,
     "marketing-001": 5.2626798770413155,
-    "agent": 4.009916908545947,
     "history": 5.2626798770413155,
     "live": 5.2626798770413155,
     "terminal": 5.2626798770413155,
@@ -347,13 +353,7 @@
     "workflow": 5.2626798770413155,
     "dynamic": 5.2626798770413155,
     "fields": 5.2626798770413155,
-    "workflows-001": 5.2626798770413155,
-    "compose": 5.2626798770413155,
-    "send": 5.2626798770413155,
-    "witch": 5.2626798770413155,
-    "wstest": 5.2626798770413155,
-    "ws-test": 5.2626798770413155,
-    "agent-001": 5.2626798770413155
+    "workflows-001": 5.2626798770413155
   },
   "chunks": [
     {
@@ -487,6 +487,140 @@
       }
     },
     {
+      "id": "agent:README.md:0",
+      "featureSlug": "agent",
+      "sourcePath": "src/features/agent/README.md",
+      "section": "Task composer",
+      "text": "Compose and send tasks to Mac via Agent Witch.",
+      "vector": {
+        "compose": 5.2626798770413155,
+        "and": 3.7586024802650413,
+        "send": 5.2626798770413155,
+        "tasks": 4.857214768933151,
+        "to": 4.34638914516716,
+        "mac": 3.653241964607215,
+        "via": 4.56953269648137,
+        "agent": 4.009916908545947,
+        "witch": 5.2626798770413155
+      }
+    },
+    {
+      "id": "agent:README.md:1",
+      "featureSlug": "agent",
+      "sourcePath": "src/features/agent/README.md",
+      "section": "Registry",
+      "text": "- **Slug:** `agent`\n- **Feature path:** `src/features/agent`\n- **Migration:** migrated",
+      "vector": {
+        "slug": 1.50569403921741,
+        "agent": 4.009916908545947,
+        "feature": 0.8907198938528118,
+        "path": 1.4800473920236348,
+        "src": 1.4101664208360556,
+        "features": 1.4800473920236348,
+        "migration": 1.50569403921741,
+        "migrated": 2.6313399385206577
+      }
+    },
+    {
+      "id": "agent:README.md:2",
+      "featureSlug": "agent",
+      "sourcePath": "src/features/agent/README.md",
+      "section": "Routes",
+      "text": "- `/agent`\n- `/ws-test`\n- `/demo/agent`",
+      "vector": {
+        "agent": 4.009916908545947,
+        "ws-test": 2.6313399385206577,
+        "demo": 1.778965892401445
+      }
+    },
+    {
+      "id": "agent:README.md:3",
+      "featureSlug": "agent",
+      "sourcePath": "src/features/agent/README.md",
+      "section": "APIs",
+      "text": "- `/api/agent-runs`",
+      "vector": {
+        "api": 3.1226137135450447,
+        "agent-runs": 4.56953269648137
+      }
+    },
+    {
+      "id": "agent:README.md:4",
+      "featureSlug": "agent",
+      "sourcePath": "src/features/agent/README.md",
+      "section": "Dependencies",
+      "text": "- `dispatch`\n- `capabilities`\n- `workflows`\n- `agent-witch`\n\nQuery: `npm run feature-knowledge:query -- \"...\" --feature=agent`",
+      "vector": {
+        "dispatch": 1.695438850069862,
+        "capabilities": 1.6238884282495254,
+        "workflows": 1.9381927579607123,
+        "agent-witch": 1.778965892401445,
+        "query": 2.2922654114716146,
+        "npm": 1.1461327057358073,
+        "run": 1.097313470953849,
+        "feature-knowledge": 1.1461327057358073,
+        "feature": 0.8907198938528118,
+        "agent": 2.0049584542729737
+      }
+    },
+    {
+      "id": "agent:AGENTS.md:0",
+      "featureSlug": "agent",
+      "sourcePath": "src/features/agent/AGENTS.md",
+      "section": "Task composer — agent instructions",
+      "text": "1. Query feature knowledge: `npm run feature-knowledge:query -- \"symptom\" --feature=agent`\n2. Read `KNOWN_ISSUES.md` before changing behavior.\n3. Add a regression test for every bug fix; document it in `KNOWN_ISSUES.md`.\n4. Re-index: `npm run feature-knowledge:index`.",
+      "vector": {
+        "1": 1.4323923021214724,
+        "2": 1.4323923021214724,
+        "3": 1.4323923021214724,
+        "4": 1.532727649852548,
+        "query": 2.2922654114716146,
+        "feature": 1.7814397877056236,
+        "knowledge": 1.50569403921741,
+        "npm": 2.2922654114716146,
+        "run": 2.194626941907698,
+        "feature-knowledge": 2.2922654114716146,
+        "symptom": 1.36847561636653,
+        "agent": 2.0049584542729737,
+        "read": 1.50569403921741,
+        "known_issues": 2.911304619877838,
+        "md": 2.911304619877838,
+        "before": 1.455652309938919,
+        "changing": 1.532727649852548,
+        "behavior": 1.50569403921741,
+        "add": 1.4800473920236348,
+        "a": 1.4323923021214724,
+        "regression": 1.36847561636653,
+        "test": 1.3118112737130283,
+        "for": 1.455652309938919,
+        "every": 1.4800473920236348,
+        "bug": 1.4800473920236348,
+        "fix": 1.3888866136266576,
+        "document": 1.50569403921741,
+        "it": 1.532727649852548,
+        "in": 1.2147332664925496,
+        "re-index": 1.50569403921741,
+        "index": 1.4800473920236348
+      }
+    },
+    {
+      "id": "agent:KNOWN_ISSUES.md:0",
+      "featureSlug": "agent",
+      "sourcePath": "src/features/agent/KNOWN_ISSUES.md",
+      "section": "Task composer — known issues",
+      "text": "_No documented issues yet. Use IDs like `AGENT-001`._",
+      "vector": {
+        "no": 2.911304619877838,
+        "documented": 2.4294665329850993,
+        "issues": 3.01138807843482,
+        "yet": 3.01138807843482,
+        "use": 2.9600947840472696,
+        "ids": 3.065455299705096,
+        "like": 3.065455299705096,
+        "agent-001": 5.2626798770413155
+      }
+    },
+    {
       "id": "agent-witch:README.md:0",
       "featureSlug": "agent-witch",
       "sourcePath": "src/features/agent-witch/README.md",
@@ -510,7 +644,7 @@
       "featureSlug": "agent-witch",
       "sourcePath": "src/features/agent-witch/README.md",
       "section": "Scope",
-      "text": "| Area | Path |\n| --- | --- |\n| Feature client | `src/features/agent-witch/` |\n| Server / WS | `src/lib/agentWitch/` |\n| APIs | `/api/agent-witch/*` |",
+      "text": "| Area           | Path                        |\n| -------------- | --------------------------- |\n| Feature client | `src/features/agent-witch/` |\n| Server / WS    | `src/lib/agentWitch/`       |\n| APIs           | `/api/agent-witch/*`        |",
       "vector": {
         "area": 2.4286073844665754,
         "path": 1.4800473920236348,
@@ -1451,7 +1585,7 @@
       "featureSlug": "home",
       "sourcePath": "src/features/home/README.md",
       "section": "Scope",
-      "text": "| Area | Path |\n| --- | --- |\n| Feature UI | `src/features/home/` |\n| Routes | `src/app/(app)/page.tsx`, `src/app/demo/home/` |\n| Related APIs | `/api/agent-witch/devices` (via agent-witch) |",
+      "text": "| Area         | Path                                           |\n| ------------ | ---------------------------------------------- |\n| Feature UI   | `src/features/home/`                           |\n| Routes       | `src/app/(app)/page.tsx`, `src/app/demo/home/` |\n| Related APIs | `/api/agent-witch/devices` (via agent-witch)   |",
       "vector": {
         "area": 1.6190715896443835,
         "path": 0.9866982613490898,
@@ -1684,7 +1818,7 @@
       "featureSlug": "home",
       "sourcePath": "src/features/home/AGENTS.md",
       "section": "Tests to extend",
-      "text": "| Helper | Test file |\n| --- | --- |\n| `resolveHomeDashboardMode` | `resolveHomeDashboardMode.test.ts` |\n| `resolveConnectAnotherMacLabel` | `resolveConnectAnotherMacLabel.test.ts` |\n| `resolveHasPairedDeviceAfterFetch` | `resolveHasPairedDeviceAfterFetch.test.ts` |\n| `buildHomeSetupNextStep` | `buildHomeSetupNextStep.test.ts` |\n| `resolveAppBaseUrl` (auth) | `src/lib/app/resolveAppBaseUrl.test.ts` |",
+      "text": "| Helper                             | Test file                                  |\n| ---------------------------------- | ------------------------------------------ |\n| `resolveHomeDashboardMode`         | `resolveHomeDashboardMode.test.ts`         |\n| `resolveConnectAnotherMacLabel`    | `resolveConnectAnotherMacLabel.test.ts`    |\n| `resolveHasPairedDeviceAfterFetch` | `resolveHasPairedDeviceAfterFetch.test.ts` |\n| `buildHomeSetupNextStep`           | `buildHomeSetupNextStep.test.ts`           |\n| `resolveAppBaseUrl` (auth)         | `src/lib/app/resolveAppBaseUrl.test.ts`    |",
       "vector": {
         "helper": 0.8771133128402192,
         "test": 2.6236225474260566,
@@ -2274,7 +2408,7 @@
         "features": 2.9600947840472696,
         "macdevices": 4.857214768933151,
         "migration": 3.01138807843482,
-        "planned": 4.857214768933151
+        "planned": 5.2626798770413155
       }
     },
     {
@@ -3135,141 +3269,6 @@
         "ids": 3.065455299705096,
         "like": 3.065455299705096,
         "workflows-001": 5.2626798770413155
-      }
-    },
-    {
-      "id": "wsTest:README.md:0",
-      "featureSlug": "wsTest",
-      "sourcePath": "src/features/wsTest/README.md",
-      "section": "Task composer",
-      "text": "Compose and send tasks to Mac via Agent Witch.",
-      "vector": {
-        "compose": 5.2626798770413155,
-        "and": 3.7586024802650413,
-        "send": 5.2626798770413155,
-        "tasks": 4.857214768933151,
-        "to": 4.34638914516716,
-        "mac": 3.653241964607215,
-        "via": 4.56953269648137,
-        "agent": 4.009916908545947,
-        "witch": 5.2626798770413155
-      }
-    },
-    {
-      "id": "wsTest:README.md:1",
-      "featureSlug": "wsTest",
-      "sourcePath": "src/features/wsTest/README.md",
-      "section": "Registry",
-      "text": "- **Slug:** `agent`\n- **Feature path:** `src/features/wsTest`\n- **Migration:** planned",
-      "vector": {
-        "slug": 3.01138807843482,
-        "agent": 4.009916908545947,
-        "feature": 1.7814397877056236,
-        "path": 2.9600947840472696,
-        "src": 2.820332841672111,
-        "features": 2.9600947840472696,
-        "wstest": 5.2626798770413155,
-        "migration": 3.01138807843482,
-        "planned": 4.857214768933151
-      }
-    },
-    {
-      "id": "wsTest:README.md:2",
-      "featureSlug": "wsTest",
-      "sourcePath": "src/features/wsTest/README.md",
-      "section": "Routes",
-      "text": "- `/agent`\n- `/ws-test`\n- `/demo/agent`",
-      "vector": {
-        "agent": 4.009916908545947,
-        "ws-test": 2.6313399385206577,
-        "demo": 1.778965892401445
-      }
-    },
-    {
-      "id": "wsTest:README.md:3",
-      "featureSlug": "wsTest",
-      "sourcePath": "src/features/wsTest/README.md",
-      "section": "APIs",
-      "text": "- `/api/agent-runs`",
-      "vector": {
-        "api": 3.1226137135450447,
-        "agent-runs": 4.56953269648137
-      }
-    },
-    {
-      "id": "wsTest:README.md:4",
-      "featureSlug": "wsTest",
-      "sourcePath": "src/features/wsTest/README.md",
-      "section": "Dependencies",
-      "text": "- `dispatch`\n- `capabilities`\n- `workflows`\n- `agent-witch`\n\nQuery: `npm run feature-knowledge:query -- \"...\" --feature=agent`",
-      "vector": {
-        "dispatch": 1.695438850069862,
-        "capabilities": 1.6238884282495254,
-        "workflows": 1.9381927579607123,
-        "agent-witch": 1.778965892401445,
-        "query": 2.2922654114716146,
-        "npm": 1.1461327057358073,
-        "run": 1.097313470953849,
-        "feature-knowledge": 1.1461327057358073,
-        "feature": 0.8907198938528118,
-        "agent": 2.0049584542729737
-      }
-    },
-    {
-      "id": "wsTest:AGENTS.md:0",
-      "featureSlug": "wsTest",
-      "sourcePath": "src/features/wsTest/AGENTS.md",
-      "section": "Task composer — agent instructions",
-      "text": "1. Query feature knowledge: `npm run feature-knowledge:query -- \"symptom\" --feature=agent`\n2. Read `KNOWN_ISSUES.md` before changing behavior.\n3. Add a regression test for every bug fix; document it in `KNOWN_ISSUES.md`.\n4. Re-index: `npm run feature-knowledge:index`.",
-      "vector": {
-        "1": 1.4323923021214724,
-        "2": 1.4323923021214724,
-        "3": 1.4323923021214724,
-        "4": 1.532727649852548,
-        "query": 2.2922654114716146,
-        "feature": 1.7814397877056236,
-        "knowledge": 1.50569403921741,
-        "npm": 2.2922654114716146,
-        "run": 2.194626941907698,
-        "feature-knowledge": 2.2922654114716146,
-        "symptom": 1.36847561636653,
-        "agent": 2.0049584542729737,
-        "read": 1.50569403921741,
-        "known_issues": 2.911304619877838,
-        "md": 2.911304619877838,
-        "before": 1.455652309938919,
-        "changing": 1.532727649852548,
-        "behavior": 1.50569403921741,
-        "add": 1.4800473920236348,
-        "a": 1.4323923021214724,
-        "regression": 1.36847561636653,
-        "test": 1.3118112737130283,
-        "for": 1.455652309938919,
-        "every": 1.4800473920236348,
-        "bug": 1.4800473920236348,
-        "fix": 1.3888866136266576,
-        "document": 1.50569403921741,
-        "it": 1.532727649852548,
-        "in": 1.2147332664925496,
-        "re-index": 1.50569403921741,
-        "index": 1.4800473920236348
-      }
-    },
-    {
-      "id": "wsTest:KNOWN_ISSUES.md:0",
-      "featureSlug": "wsTest",
-      "sourcePath": "src/features/wsTest/KNOWN_ISSUES.md",
-      "section": "Task composer — known issues",
-      "text": "_No documented issues yet. Use IDs like `AGENT-001`._",
-      "vector": {
-        "no": 2.911304619877838,
-        "documented": 2.4294665329850993,
-        "issues": 3.01138807843482,
-        "yet": 3.01138807843482,
-        "use": 2.9600947840472696,
-        "ids": 3.065455299705096,
-        "like": 3.065455299705096,
-        "agent-001": 5.2626798770413155
       }
     }
   ]

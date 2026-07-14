@@ -7,7 +7,7 @@ import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMess
 import {
   buildAgentWitchWebSocketUrl,
   sendAgentWitchPairingToken,
-} from "@/features/wsTest/utils/agentWitchSocketUtils";
+} from "@/features/agent/utils/agentWitchSocketUtils";
 import type AgentRunRecord from "@/lib/dispatch/types/AgentRunRecord.type";
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
