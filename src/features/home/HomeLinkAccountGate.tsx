@@ -15,6 +15,7 @@ import {
   PairedDeviceProvider,
   usePairedDeviceContext,
 } from "@/features/home/PairedDeviceContext";
+import { OnboardingStepsProvider } from "@/features/home/hooks/useOnboardingSteps";
 import { useLinkLocalAgentAccount } from "@/features/home/hooks/useLinkLocalAgentAccount";
 import { resolveHomeDashboardMode } from "@/features/home/utils/resolveHomeDashboardMode";
 
@@ -35,14 +36,16 @@ export default function HomeLinkAccountGate({
 }: HomeLinkAccountGateProps) {
   return (
     <PairedDeviceProvider>
-      <HomeLinkAccountGateContent
-        appOrigin={appOrigin}
-        installCommand={installCommand}
-        isWebSocketSupported={isWebSocketSupported}
-        host={host}
-      >
-        {children}
-      </HomeLinkAccountGateContent>
+      <OnboardingStepsProvider>
+        <HomeLinkAccountGateContent
+          appOrigin={appOrigin}
+          installCommand={installCommand}
+          isWebSocketSupported={isWebSocketSupported}
+          host={host}
+        >
+          {children}
+        </HomeLinkAccountGateContent>
+      </OnboardingStepsProvider>
     </PairedDeviceProvider>
   );
 }

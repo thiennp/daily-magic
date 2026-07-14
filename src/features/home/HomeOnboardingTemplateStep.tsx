@@ -11,6 +11,8 @@ import {
 } from "@/components/surfaces/appSurfaceStyles.constant";
 import CapabilityTemplatePicker from "@/features/capabilities/CapabilityTemplatePicker";
 import { useAppPath } from "@/features/demo/DemoPreviewContext";
+import useOnboardingSteps from "@/features/home/hooks/useOnboardingSteps";
+import isWorkflowOnboardingStepDone from "@/features/home/utils/isWorkflowOnboardingStepDone";
 
 interface HomeOnboardingTemplateStepProps {
   readonly onSaved: () => void;
@@ -20,11 +22,19 @@ export default function HomeOnboardingTemplateStep({
   onSaved,
 }: HomeOnboardingTemplateStepProps) {
   const appPath = useAppPath();
+  const { steps } = useOnboardingSteps();
+  const workflowStepDone = isWorkflowOnboardingStepDone(steps);
 
   return (
     <AppHero variant="neutral">
       <p className={APP_SURFACE_EYEBROW_TEXT_CLASS}>Getting started</p>
-      <h1 className="mt-3 text-3xl font-semibold tracking-tight text-gray-900 dark:text-white/90">
+      <h1
+        className={`mt-3 text-3xl font-semibold tracking-tight text-gray-900 dark:text-white/90 ${
+          workflowStepDone
+            ? "text-gray-500 line-through dark:text-gray-400"
+            : ""
+        }`}
+      >
         Create your first workflow or agent
       </h1>
       <p className={`mt-3 ${APP_SURFACE_BODY_TEXT_CLASS}`}>

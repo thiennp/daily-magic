@@ -54,7 +54,7 @@ export default function HomeConnectedMacsPanel({
           />
         </p>
       ) : (
-        <ul className="mt-4 space-y-4">
+        <ul className="mt-4 list-none space-y-4 p-0">
           {devices.map((device) => (
             <MacDeviceRow
               key={device.id}

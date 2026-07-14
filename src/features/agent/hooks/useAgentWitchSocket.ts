@@ -8,13 +8,16 @@ import { subscribeAgentWitchDashboardSocket } from "@/features/agent/hooks/subsc
 import { buildDemoClaudePromptAck } from "@/features/agent/utils/buildDemoClaudePromptAck";
 import { resolveInitialConnectionStatus } from "@/features/agent/utils/connectAgentWitchDashboardSocket";
 import { sendClaudePromptOverSocket } from "@/features/agent/utils/sendClaudePromptOverSocket";
+import parseAgentWitchSocketDisplay, {
+  type AgentWitchSocketDisplay,
+} from "@/lib/agentWitch/parseAgentWitchSocketDisplay";
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
 
 import type { WsTestConnectionStatus } from "../types/WsTestConnectionStatus.type";
 
 export interface UseAgentWitchSocketResult {
   readonly connectionStatus: WsTestConnectionStatus;
-  readonly lastResponse: string;
+  readonly lastResponse: AgentWitchSocketDisplay;
   readonly sendClaudePrompt: (
     prompt: string,
     options?: {
@@ -38,7 +41,10 @@ export function useAgentWitchSocket(): UseAgentWitchSocketResult {
         demoPreview ? "connected" : connectionLab?.connectionStatus,
       ),
     );
-  const [lastResponse, setLastResponse] = useState("");
+  const [lastResponse, setLastResponse] = useState<AgentWitchSocketDisplay>({
+    text: "",
+    isError: false,
+  });
   const connectionStatus =
     connectionLab?.connectionStatus ??
     (demoPreview ? "connected" : liveConnectionStatus);
@@ -50,7 +56,9 @@ export function useAgentWitchSocket(): UseAgentWitchSocketResult {
 
     return subscribeAgentWitchDashboardSocket({
       onStatusChange: setLiveConnectionStatus,
-      onMessage: setLastResponse,
+      onMessage: (raw) => {
+        setLastResponse(parseAgentWitchSocketDisplay(raw));
+      },
       onSocketChange: (socket) => {
         socketRef.current = socket;
       },
@@ -74,7 +82,9 @@ export function useAgentWitchSocket(): UseAgentWitchSocketResult {
       }
 
       if (demoPreview !== null || connectionLab !== null) {
-        setLastResponse(buildDemoClaudePromptAck());
+        setLastResponse(
+          parseAgentWitchSocketDisplay(buildDemoClaudePromptAck()),
+        );
         return;
       }
 
@@ -86,7 +96,9 @@ export function useAgentWitchSocket(): UseAgentWitchSocketResult {
         groupId: options.groupId,
         capabilityId: options.capabilityId,
         targetDeviceId: options.targetDeviceId,
-        onResponse: setLastResponse,
+        onResponse: (raw) => {
+          setLastResponse(parseAgentWitchSocketDisplay(raw));
+        },
       });
     },
     [connectionLab, demoPreview],

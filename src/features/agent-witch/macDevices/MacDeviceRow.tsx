@@ -50,7 +50,7 @@ export default function MacDeviceRow({
 
   const rowInner = (
     <div
-      className={`group flex items-start gap-3 rounded-lg px-1 py-1 ${
+      className={`group flex w-full items-start gap-3 rounded-lg py-1 ${
         onSelect !== undefined ? selectableClassName : ""
       }`}
     >
@@ -58,7 +58,7 @@ export default function MacDeviceRow({
         <div
           role="button"
           tabIndex={0}
-          className="flex min-w-0 flex-1 items-start gap-3 text-left"
+          className="min-w-0 flex-1 text-left"
           onClick={onSelect}
           onKeyDown={(event) => {
             if (event.key === "Enter" || event.key === " ") {
@@ -70,9 +70,7 @@ export default function MacDeviceRow({
           {mainContent}
         </div>
       ) : (
-        <div className="flex min-w-0 flex-1 items-start gap-3">
-          {mainContent}
-        </div>
+        mainContent
       )}
       {isEditing ? null : (
         <MacDeviceRowMenu

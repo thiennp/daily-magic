@@ -99,8 +99,16 @@ export default function WsTestPanel() {
         <h2 className="text-sm font-medium text-gray-800 dark:text-white/90">
           Last response
         </h2>
-        <pre className="mt-3 max-h-80 overflow-auto rounded-lg bg-gray-50 p-4 text-xs text-gray-700 dark:bg-gray-900 dark:text-gray-300">
-          {lastResponse.length > 0 ? lastResponse : "No messages yet."}
+        <pre
+          className={`mt-3 max-h-80 overflow-auto rounded-lg p-4 text-xs ${
+            lastResponse.isError
+              ? "bg-error-50 text-error-700 dark:bg-error-950/30 dark:text-error-300"
+              : "bg-gray-50 text-gray-700 dark:bg-gray-900 dark:text-gray-300"
+          }`}
+        >
+          {lastResponse.text.length > 0
+            ? lastResponse.text
+            : "No messages yet."}
         </pre>
       </AppPanel>
     </div>

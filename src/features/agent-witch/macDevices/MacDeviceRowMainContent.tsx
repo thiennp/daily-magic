@@ -22,11 +22,11 @@ export default function MacDeviceRowMainContent({
   onRenamed,
 }: MacDeviceRowMainContentProps) {
   return (
-    <>
+    <div className="flex min-w-0 flex-1 items-start gap-3 text-left">
       <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-300">
         <MacDeviceIcon className="h-5 w-5" />
       </div>
-      <div className="min-w-0 flex-1">
+      <div className="flex min-w-0 flex-1 flex-col items-start gap-1 text-left">
         <MacDeviceNameEditor
           key={isEditing ? `${deviceId}:edit` : `${deviceId}:view`}
           deviceId={deviceId}
@@ -35,15 +35,13 @@ export default function MacDeviceRowMainContent({
           onEditingChange={onEditingChange}
           onRenamed={onRenamed}
         />
-        <div className="mt-1">
-          <PairedDeviceOnlineBadge isOnline={isOnline} />
-        </div>
+        <PairedDeviceOnlineBadge isOnline={isOnline} />
         {detailText ? (
-          <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+          <p className="text-left text-xs text-gray-500 dark:text-gray-400">
             {detailText}
           </p>
         ) : null}
       </div>
-    </>
+    </div>
   );
 }

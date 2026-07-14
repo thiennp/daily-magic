@@ -7,6 +7,7 @@ import HomeOnboardingMainStep from "@/features/home/HomeOnboardingMainStep";
 import HomeOnboardingTemplateStep from "@/features/home/HomeOnboardingTemplateStep";
 import useOnboardingSteps from "@/features/home/hooks/useOnboardingSteps";
 import findNextIncompleteOnboardingStep from "@/features/home/utils/findNextIncompleteOnboardingStep";
+import isWorkflowOnboardingStep from "@/features/home/utils/isWorkflowOnboardingStep";
 import type { GlobalRoleValue } from "@/lib/auth/roles";
 
 interface HomeOnboardingMainPanelProps {
@@ -20,14 +21,17 @@ interface HomeOnboardingMainPanelProps {
 const isMacConnectStep = (stepId: string): boolean =>
   stepId === "pair" || stepId === "connect-mac";
 
-const isWorkflowStep = (stepId: string): boolean =>
-  stepId === "workflow" || stepId === "create-workflow";
-
 export default function HomeOnboardingMainPanel({
   user,
 }: HomeOnboardingMainPanelProps) {
-  const { steps, isLoading, reloadSteps } = useOnboardingSteps();
+  const { steps, isLoading, reloadSteps, markWorkflowStepDone } =
+    useOnboardingSteps();
   const nextStep = findNextIncompleteOnboardingStep(steps);
+
+  const handleWorkflowSaved = (): void => {
+    markWorkflowStepDone();
+    void reloadSteps();
+  };
 
   if (isLoading) {
     return (
@@ -43,13 +47,13 @@ export default function HomeOnboardingMainPanel({
     nextStep === null ||
     isMacConnectStep(nextStep.id) ||
     (!(nextStep.id in HOME_ONBOARDING_MAIN_STEP_CONTENT) &&
-      !isWorkflowStep(nextStep.id))
+      !isWorkflowOnboardingStep(nextStep.id))
   ) {
     return <HomeDashboardHero user={user} />;
   }
 
-  if (isWorkflowStep(nextStep.id)) {
-    return <HomeOnboardingTemplateStep onSaved={reloadSteps} />;
+  if (isWorkflowOnboardingStep(nextStep.id)) {
+    return <HomeOnboardingTemplateStep onSaved={handleWorkflowSaved} />;
   }
 
   return (

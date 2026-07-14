@@ -54,7 +54,7 @@ export default function MacDeviceNameEditor({
   if (isEditing) {
     return (
       <div
-        className="flex min-w-0 flex-1 items-center gap-2"
+        className="flex w-full min-w-0 items-center gap-2"
         onClick={stopRowSelection}
       >
         <input
@@ -88,7 +88,7 @@ export default function MacDeviceNameEditor({
   }
 
   return (
-    <p className="min-w-0 flex-1 truncate text-sm font-medium text-gray-800 dark:text-white/90">
+    <p className="w-full truncate text-left text-sm font-medium text-gray-800 dark:text-white/90">
       {displayName}
     </p>
   );
