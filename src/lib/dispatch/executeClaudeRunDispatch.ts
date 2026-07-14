@@ -10,9 +10,13 @@ import {
   dispatchClaudeRunToAgent,
   markAgentRunRunning,
 } from "@/lib/dispatch/dispatchClaudeRunToAgent";
-import { DispatchPolicy, type DispatchPolicyValue } from "@/lib/dispatch/DispatchPolicy.constant";
+import {
+  DispatchPolicy,
+  type DispatchPolicyValue,
+} from "@/lib/dispatch/DispatchPolicy.constant";
 import { resolveDelegatedWriterAgent } from "@/lib/dispatch/resolveDelegatedWriterAgent";
 import { sendPendingApprovalDispatch } from "@/lib/dispatch/sendPendingApprovalDispatch";
+import { shouldRequireDispatchApproval } from "@/lib/dispatch/shouldRequireDispatchApproval";
 
 export const executeClaudeRunDispatch = async (input: {
   readonly runtime: AgentWitchHubRuntime;
@@ -27,15 +31,21 @@ export const executeClaudeRunDispatch = async (input: {
   readonly capabilityVersionId: string | null;
   readonly requestId?: string;
 }): Promise<AgentWitchMessage> => {
+  const requesterUserId = input.sender.userId ?? "";
+  const requiresApproval = shouldRequireDispatchApproval({
+    requesterUserId,
+    executorUserId: input.executorUserId,
+    dispatchPolicy: input.dispatchPolicy,
+  });
+
   const run = createEphemeralAgentRun({
     groupId: input.groupId,
-    requesterUserId: input.sender.userId ?? "",
+    requesterUserId,
     executorUserId: input.executorUserId,
     prompt: input.prompt,
-    status:
-      input.dispatchPolicy === DispatchPolicy.APPROVAL
-        ? AgentRunStatus.PENDING_APPROVAL
-        : AgentRunStatus.RUNNING,
+    status: requiresApproval
+      ? AgentRunStatus.PENDING_APPROVAL
+      : AgentRunStatus.RUNNING,
     dispatchPolicy: input.dispatchPolicy,
     capabilityId: input.capabilityId,
     capabilityVersionId: input.capabilityVersionId,
@@ -44,7 +54,7 @@ export const executeClaudeRunDispatch = async (input: {
   registerAgentRunSession(run);
   broadcastAgentRunRecord(input.runtime, run, input.requestId);
 
-  if (input.dispatchPolicy === DispatchPolicy.APPROVAL) {
+  if (requiresApproval) {
     return sendPendingApprovalDispatch(
       input.runtime,
       input.agentClient,

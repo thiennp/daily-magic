@@ -1,5 +1,6 @@
 import type { AgentWitchHub } from "@/lib/agentWitch/agentWitchHub";
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
+import { approveDispatchApproval } from "@/lib/dispatch/approveDispatchApproval";
 import { notifyDashboardUser } from "@/lib/dispatch/dispatchClaudeRunToAgent";
 import { dispatchApprovalRegistry } from "@/lib/dispatch/dispatchApprovalRegistry";
 import { listPendingDispatchApprovalsForExecutor } from "@/lib/dispatch/resolvePendingDispatchApproval";
@@ -13,6 +14,18 @@ export async function replayPendingDispatchApprovalsForUser(
     await listPendingDispatchApprovalsForExecutor(executorUserId);
 
   for (const pending of pendingApprovals) {
+    if (pending.requesterUserId === pending.executorUserId) {
+      dispatchApprovalRegistry.register(pending);
+      await approveDispatchApproval(
+        hub,
+        pending,
+        pending.runId,
+        pending.requestId,
+      );
+      dispatchApprovalRegistry.remove(pending.runId);
+      continue;
+    }
+
     dispatchApprovalRegistry.register(pending);
 
     const requester = await getUserById(pending.requesterUserId);
