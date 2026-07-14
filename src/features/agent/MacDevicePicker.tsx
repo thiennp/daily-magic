@@ -14,6 +14,7 @@ interface MacDevicePickerProps {
   readonly isWakeServerReachable: boolean;
   readonly onChange: (deviceId: string) => void;
   readonly onRenamed: (deviceId: string, deviceLabel: string) => void;
+  readonly onDelete?: (deviceId: string) => void | Promise<void>;
 }
 
 export default function MacDevicePicker({
@@ -25,6 +26,7 @@ export default function MacDevicePicker({
   isWakeServerReachable,
   onChange,
   onRenamed,
+  onDelete,
 }: MacDevicePickerProps) {
   if (isLoading) {
     return (
@@ -62,6 +64,7 @@ export default function MacDevicePicker({
               onChange(device.id);
             }}
             onRenamed={onRenamed}
+            onDelete={onDelete}
           />
         ))}
       </div>

@@ -35,6 +35,7 @@ import CalenderIcon from "./calender-line.svg";
 import EyeIcon from "./eye.svg";
 import EyeCloseIcon from "./eye-close.svg";
 import TimeIcon from "./time.svg";
+import HourglassIcon from "./hourglass.svg";
 import CopyIcon from "./copy.svg";
 import ChevronLeftIcon from "./chevron-left.svg";
 import UserCircleIcon from "./user-circle.svg";
@@ -91,6 +92,7 @@ export {
   EyeIcon,
   EyeCloseIcon,
   TimeIcon,
+  HourglassIcon,
   CopyIcon,
   ChevronLeftIcon,
   UserCircleIcon,

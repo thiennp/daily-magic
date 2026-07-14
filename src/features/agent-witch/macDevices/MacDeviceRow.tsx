@@ -1,9 +1,11 @@
 "use client";
 
-import PairedDeviceOnlineBadge from "@/features/harness/components/PairedDeviceOnlineBadge";
-import MacDeviceIcon from "@/features/agent-witch/macDevices/MacDeviceIcon";
-import MacDeviceNameEditor from "@/features/agent-witch/macDevices/MacDeviceNameEditor";
+import { useState } from "react";
+
 import MacDeviceOfflineWakeHint from "@/features/agent-witch/macDevices/MacDeviceOfflineWakeHint";
+import MacDeviceRowMainContent from "@/features/agent-witch/macDevices/MacDeviceRowMainContent";
+import MacDeviceRowMenu from "@/features/agent-witch/macDevices/MacDeviceRowMenu";
+import confirmMacDeviceRevoke from "@/features/agent-witch/macDevices/utils/confirmMacDeviceRevoke";
 
 interface MacDeviceRowProps {
   readonly deviceId: string;
@@ -14,6 +16,7 @@ interface MacDeviceRowProps {
   readonly isWakeServerReachable?: boolean;
   readonly onSelect?: () => void;
   readonly onRenamed: (deviceId: string, deviceLabel: string) => void;
+  readonly onDelete?: (deviceId: string) => void | Promise<void>;
 }
 
 export default function MacDeviceRow({
@@ -25,58 +28,68 @@ export default function MacDeviceRow({
   isWakeServerReachable = false,
   onSelect,
   onRenamed,
+  onDelete,
 }: MacDeviceRowProps) {
-  const content = (
-    <>
-      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-300">
-        <MacDeviceIcon className="h-5 w-5" />
-      </div>
-      <div className="min-w-0 flex-1">
-        <div className="flex flex-wrap items-center gap-2">
-          <MacDeviceNameEditor
-            deviceId={deviceId}
-            displayName={displayName}
-            onRenamed={onRenamed}
-          />
-          <PairedDeviceOnlineBadge isOnline={isOnline} />
-        </div>
-        {detailText ? (
-          <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
-            {detailText}
-          </p>
-        ) : null}
-      </div>
-    </>
+  const [isEditing, setIsEditing] = useState(false);
+
+  const mainContent = (
+    <MacDeviceRowMainContent
+      deviceId={deviceId}
+      displayName={displayName}
+      isOnline={isOnline}
+      detailText={detailText}
+      isEditing={isEditing}
+      onEditingChange={setIsEditing}
+      onRenamed={onRenamed}
+    />
   );
 
-  const rowClassName =
-    onSelect !== undefined
-      ? `flex w-full items-start gap-3 rounded-lg px-1 py-1 text-left transition ${
-          isSelected
-            ? "bg-brand-50/60 dark:bg-brand-950/20"
-            : "hover:bg-gray-50 dark:hover:bg-white/[0.03]"
-        }`
-      : "flex items-start gap-3";
+  const selectableClassName = isSelected
+    ? "bg-brand-50/60 dark:bg-brand-950/20"
+    : "hover:bg-gray-50 dark:hover:bg-white/[0.03]";
 
-  const row =
-    onSelect !== undefined ? (
-      <div
-        role="button"
-        tabIndex={0}
-        onClick={onSelect}
-        onKeyDown={(event) => {
-          if (event.key === "Enter" || event.key === " ") {
-            event.preventDefault();
-            onSelect();
+  const rowInner = (
+    <div
+      className={`group flex items-start gap-3 rounded-lg px-1 py-1 ${
+        onSelect !== undefined ? selectableClassName : ""
+      }`}
+    >
+      {onSelect !== undefined ? (
+        <div
+          role="button"
+          tabIndex={0}
+          className="flex min-w-0 flex-1 items-start gap-3 text-left"
+          onClick={onSelect}
+          onKeyDown={(event) => {
+            if (event.key === "Enter" || event.key === " ") {
+              event.preventDefault();
+              onSelect();
+            }
+          }}
+        >
+          {mainContent}
+        </div>
+      ) : (
+        <div className="flex min-w-0 flex-1 items-start gap-3">
+          {mainContent}
+        </div>
+      )}
+      {isEditing ? null : (
+        <MacDeviceRowMenu
+          onEdit={() => {
+            setIsEditing(true);
+          }}
+          onDelete={
+            onDelete
+              ? () => {
+                  confirmMacDeviceRevoke(displayName, deviceId, onDelete);
+                }
+              : undefined
           }
-        }}
-        className={rowClassName}
-      >
-        {content}
-      </div>
-    ) : (
-      <div className={rowClassName}>{content}</div>
-    );
+        />
+      )}
+    </div>
+  );
 
   const wrappedRow =
     isOnline === false ? (
@@ -84,10 +97,10 @@ export default function MacDeviceRow({
         displayName={displayName}
         isWakeServerReachable={isWakeServerReachable}
       >
-        {row}
+        {rowInner}
       </MacDeviceOfflineWakeHint>
     ) : (
-      row
+      rowInner
     );
 
   if (onSelect !== undefined) {

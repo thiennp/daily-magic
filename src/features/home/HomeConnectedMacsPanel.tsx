@@ -8,6 +8,7 @@ import useLocalMacBrowserContext from "@/features/home/hooks/useLocalMacBrowserC
 import MacDeviceRow from "@/features/agent-witch/macDevices/MacDeviceRow";
 import { buildMacDeviceLastSeenText } from "@/features/agent-witch/macDevices/utils/buildMacDeviceLastSeenText";
 import { canWakeMacDeviceFromBrowser } from "@/features/agent-witch/macDevices/utils/canWakeMacDeviceFromBrowser";
+import { revokePairedDevice } from "@/features/agent-witch/utils/pairedDevicesApi";
 
 interface HomeConnectedMacsPanelProps {
   readonly installCommand: string;
@@ -20,7 +21,7 @@ export default function HomeConnectedMacsPanel({
   isWebSocketSupported,
   host,
 }: HomeConnectedMacsPanelProps) {
-  const { devices, displayNameById, isLoading, renameDevice } =
+  const { devices, displayNameById, isLoading, renameDevice, refreshDevices } =
     useHomeConnectedMacs();
   const { localHostname, isWakeServerReachable } = useLocalMacBrowserContext();
   const onlineCount = devices.filter((device) => device.isOnline).length;
@@ -67,6 +68,12 @@ export default function HomeConnectedMacsPanel({
                 isWakeServerReachable,
               })}
               onRenamed={renameDevice}
+              onDelete={async (deviceId) => {
+                const didRevoke = await revokePairedDevice(deviceId);
+                if (didRevoke) {
+                  await refreshDevices();
+                }
+              }}
             />
           ))}
         </ul>

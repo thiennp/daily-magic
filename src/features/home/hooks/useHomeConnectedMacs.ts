@@ -14,9 +14,10 @@ const useHomeConnectedMacs = (): {
   readonly displayNameById: ReadonlyMap<string, string>;
   readonly isLoading: boolean;
   readonly renameDevice: (deviceId: string, deviceLabel: string) => void;
+  readonly refreshDevices: () => Promise<void>;
 } => {
   const demoPreview = useDemoPreview();
-  const { devices, displayNameById, isLoading, renameDevice } =
+  const { devices, displayNameById, isLoading, renameDevice, refresh } =
     useMyMacDevices();
   const demoDisplayNameById = useMemo(
     () => buildMacDeviceDisplayNameById(demoMacDevices),
@@ -29,10 +30,17 @@ const useHomeConnectedMacs = (): {
       displayNameById: demoDisplayNameById,
       isLoading: false,
       renameDevice: () => undefined,
+      refreshDevices: async () => undefined,
     };
   }
 
-  return { devices, displayNameById, isLoading, renameDevice };
+  return {
+    devices,
+    displayNameById,
+    isLoading,
+    renameDevice,
+    refreshDevices: refresh,
+  };
 };
 
 export default useHomeConnectedMacs;

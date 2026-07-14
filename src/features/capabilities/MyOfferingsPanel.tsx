@@ -10,6 +10,7 @@ import {
 } from "@/components/surfaces/appSurfaceStyles.constant";
 import { useDemoPreview } from "@/features/demo/DemoPreviewContext";
 import { CapabilityStatus } from "@/lib/capabilities/CapabilityStatus.constant";
+import isUserCreatedCapability from "@/lib/capabilities/isUserCreatedCapability";
 import type PublishedCapabilityRecord from "@/lib/capabilities/types/PublishedCapabilityRecord.type";
 
 export default function MyOfferingsPanel() {
@@ -51,7 +52,9 @@ export default function MyOfferingsPanel() {
     void loadOfferings();
   }, [demoPreview]);
 
-  const publishedCount = capabilities.filter(
+  const userCreatedCapabilities = capabilities.filter(isUserCreatedCapability);
+
+  const publishedCount = userCreatedCapabilities.filter(
     (capability) => capability.status === CapabilityStatus.PUBLISHED,
   ).length;
 
@@ -70,7 +73,7 @@ export default function MyOfferingsPanel() {
         </p>
       ) : (
         <ul className="mt-4 space-y-3">
-          {capabilities.map((capability) => (
+          {userCreatedCapabilities.map((capability) => (
             <li key={capability.id} className={APP_SURFACE_NESTED_CARD_CLASS}>
               <p className="font-medium text-gray-800 dark:text-white/90">
                 {capability.name}

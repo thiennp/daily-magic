@@ -2,21 +2,23 @@
 
 import { useState } from "react";
 
-import { PencilIcon } from "@/icons";
 import { updateMacDeviceLabel } from "@/features/agent-witch/macDevices/utils/macDevicesApi";
 
 interface MacDeviceNameEditorProps {
   readonly deviceId: string;
   readonly displayName: string;
+  readonly isEditing: boolean;
+  readonly onEditingChange: (isEditing: boolean) => void;
   readonly onRenamed: (deviceId: string, deviceLabel: string) => void;
 }
 
 export default function MacDeviceNameEditor({
   deviceId,
   displayName,
+  isEditing,
+  onEditingChange,
   onRenamed,
 }: MacDeviceNameEditorProps) {
-  const [isEditing, setIsEditing] = useState(false);
   const [draftName, setDraftName] = useState(displayName);
   const [isSaving, setIsSaving] = useState(false);
 
@@ -24,16 +26,10 @@ export default function MacDeviceNameEditor({
     event.stopPropagation();
   };
 
-  const startEditing = (event: { stopPropagation: () => void }) => {
-    stopRowSelection(event);
-    setDraftName(displayName);
-    setIsEditing(true);
-  };
-
   const cancelEditing = (event: { stopPropagation: () => void }) => {
     stopRowSelection(event);
     setDraftName(displayName);
-    setIsEditing(false);
+    onEditingChange(false);
   };
 
   const saveName = (event: { stopPropagation: () => void }) => {
@@ -51,7 +47,7 @@ export default function MacDeviceNameEditor({
       }
 
       onRenamed(deviceId, trimmedName);
-      setIsEditing(false);
+      onEditingChange(false);
     });
   };
 
@@ -92,18 +88,8 @@ export default function MacDeviceNameEditor({
   }
 
   return (
-    <div className="flex min-w-0 flex-1 items-center gap-2">
-      <p className="truncate text-sm font-medium text-gray-800 dark:text-white/90">
-        {displayName}
-      </p>
-      <button
-        type="button"
-        onClick={startEditing}
-        aria-label={`Rename ${displayName}`}
-        className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-gray-500 transition hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-200"
-      >
-        <PencilIcon className="h-3.5 w-3.5" />
-      </button>
-    </div>
+    <p className="min-w-0 flex-1 truncate text-sm font-medium text-gray-800 dark:text-white/90">
+      {displayName}
+    </p>
   );
 }

@@ -6,6 +6,7 @@ import WsTestMacDispatchSection from "@/features/agent/WsTestMacDispatchSection"
 import WsTestPromptComposerPanel from "@/features/agent/WsTestPromptComposerPanel";
 import type { useWsTestTaskComposer } from "@/features/agent/hooks/useWsTestTaskComposer";
 import type { WsTestConnectionStatus } from "@/features/agent/types/WsTestConnectionStatus.type";
+import { revokePairedDevice } from "@/features/agent-witch/utils/pairedDevicesApi";
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
 
 interface WsTestPromptSectionProps {
@@ -60,6 +61,12 @@ export default function WsTestPromptSection({
           isMacDevicesLoading={composer.isMacDevicesLoading}
           onDeviceChange={composer.setSelectedDeviceId}
           onDeviceRenamed={composer.renameMacDevice}
+          onDeviceDeleted={async (deviceId) => {
+            const didRevoke = await revokePairedDevice(deviceId);
+            if (didRevoke) {
+              await composer.refreshMacDevices();
+            }
+          }}
         />
       ) : null}
 

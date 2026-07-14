@@ -13,6 +13,7 @@ interface WsTestMacDispatchSectionProps {
   readonly isMacDevicesLoading: boolean;
   readonly onDeviceChange: (deviceId: string) => void;
   readonly onDeviceRenamed: (deviceId: string, deviceLabel: string) => void;
+  readonly onDeviceDeleted?: (deviceId: string) => void | Promise<void>;
 }
 
 export default function WsTestMacDispatchSection({
@@ -23,6 +24,7 @@ export default function WsTestMacDispatchSection({
   isMacDevicesLoading,
   onDeviceChange,
   onDeviceRenamed,
+  onDeviceDeleted,
 }: WsTestMacDispatchSectionProps) {
   const { localHostname, isWakeServerReachable } = useLocalMacBrowserContext();
   const picker = (
@@ -35,6 +37,7 @@ export default function WsTestMacDispatchSection({
       isWakeServerReachable={isWakeServerReachable}
       onChange={onDeviceChange}
       onRenamed={onDeviceRenamed}
+      onDelete={onDeviceDeleted}
     />
   );
 
