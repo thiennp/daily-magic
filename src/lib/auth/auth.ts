@@ -3,6 +3,7 @@ import Google from "next-auth/providers/google";
 import Resend from "next-auth/providers/resend";
 import type { Provider } from "next-auth/providers";
 
+import { resolveAppBaseUrl } from "@/lib/app/resolveAppBaseUrl";
 import {
   createNeonAuthAdapter,
   ensureSuperAdminGlobalRole,
@@ -55,6 +56,8 @@ function buildAuthProviders(): Provider[] {
 
   return providers;
 }
+
+process.env.AUTH_URL = resolveAppBaseUrl();
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: createNeonAuthAdapter(),

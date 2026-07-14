@@ -1,18 +1,6 @@
-import { AGENT_WITCH_DEFAULT_ORIGIN } from "@/lib/agentWitch/constants";
+import { resolveAppBaseUrl } from "@/lib/app/resolveAppBaseUrl";
 
 const normalizeOrigin = (origin: string): string => origin.replace(/\/$/, "");
-
-const resolveOriginFromEnvUrl = (value: string | undefined): string | null => {
-  if (value === undefined || value.length === 0) {
-    return null;
-  }
-
-  try {
-    return normalizeOrigin(new URL(value).origin);
-  } catch {
-    return normalizeOrigin(value);
-  }
-};
 
 const resolveProtocol = (
   host: string,
@@ -44,24 +32,12 @@ const resolveHost = (headerList: Headers): string | null => {
 };
 
 const resolveFallbackOrigin = (): string | null => {
-  const configuredOrigin = resolveOriginFromEnvUrl(
-    process.env.NEXT_PUBLIC_APP_URL,
-  );
-  if (configuredOrigin !== null) {
-    return configuredOrigin;
-  }
-
-  const authOrigin = resolveOriginFromEnvUrl(process.env.AUTH_URL);
-  if (authOrigin !== null) {
-    return authOrigin;
-  }
-
   const vercelUrl = process.env.VERCEL_URL;
   if (vercelUrl !== undefined && vercelUrl.length > 0) {
     return normalizeOrigin(`https://${vercelUrl}`);
   }
 
-  return AGENT_WITCH_DEFAULT_ORIGIN;
+  return normalizeOrigin(resolveAppBaseUrl());
 };
 
 export const buildAppOriginFromHeaders = (headerList: Headers): string => {

@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
 import {
   buildAgentWitchInstallScriptUrl,
@@ -8,6 +8,10 @@ import {
 } from "./buildAgentWitchInstallUrls";
 
 describe("buildAgentWitchInstallUrls", () => {
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
   it("builds origin from request url", () => {
     const request = new Request("https://abc.com/some-page");
 
@@ -52,21 +56,21 @@ describe("buildAgentWitchInstallUrls", () => {
     );
   });
 
-  it("prefers AUTH_URL over VERCEL_URL for fallback origin", () => {
-    const previousAuthUrl = process.env.AUTH_URL;
-    const previousVercelUrl = process.env.VERCEL_URL;
-    const previousPublicUrl = process.env.NEXT_PUBLIC_APP_URL;
+  it("prefers VERCEL_URL over hardcoded fallback origin", () => {
+    vi.stubEnv("NODE_ENV", "production");
+    vi.stubEnv("VERCEL_URL", "daily-magic-five.vercel.app");
 
-    process.env.NEXT_PUBLIC_APP_URL = "";
-    process.env.AUTH_URL = "https://agentwitch.com";
-    process.env.VERCEL_URL = "daily-magic-five.vercel.app";
+    expect(buildAppOriginFromHeaders(new Headers())).toBe(
+      "https://daily-magic-five.vercel.app",
+    );
+  });
+
+  it("falls back to hardcoded app origin when headers are missing", () => {
+    vi.stubEnv("NODE_ENV", "production");
+    vi.stubEnv("VERCEL_URL", "");
 
     expect(buildAppOriginFromHeaders(new Headers())).toBe(
       "https://agentwitch.com",
     );
-
-    process.env.AUTH_URL = previousAuthUrl;
-    process.env.VERCEL_URL = previousVercelUrl;
-    process.env.NEXT_PUBLIC_APP_URL = previousPublicUrl;
   });
 });
