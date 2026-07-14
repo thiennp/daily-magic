@@ -2,14 +2,14 @@
 
 import AppPanel from "@/components/surfaces/AppPanel";
 import { APP_SURFACE_BODY_TEXT_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
-import { useOptionalPairedDeviceContext } from "@/features/home/PairedDeviceContext";
+import useHomeConnectedMacs from "@/features/home/hooks/useHomeConnectedMacs";
 import buildHomeSetupNextStep, {
   HOME_SETUP_FLOW_STEPS,
 } from "@/features/home/utils/buildHomeSetupNextStep";
 
 export default function HomeSetupNextSteps() {
-  const pairedDeviceContext = useOptionalPairedDeviceContext();
-  const hasPairedDevice = pairedDeviceContext?.hasPairedDevice ?? false;
+  const { devices, isLoading } = useHomeConnectedMacs();
+  const hasPairedDevice = !isLoading && devices.length > 0;
   const nextStep = buildHomeSetupNextStep({ hasPairedDevice });
   const activeStepIndex = HOME_SETUP_FLOW_STEPS.findIndex(
     (step) => step.id === nextStep.activeStep,

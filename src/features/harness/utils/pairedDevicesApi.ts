@@ -48,7 +48,7 @@ export const fetchActivePairedDevices =
 
       return {
         devices: (payload as { devices: PairedDevice[] }).devices.filter(
-          (device) => device.isActive,
+          (device) => device.isActive !== false,
         ),
         errorMessage: null,
       };

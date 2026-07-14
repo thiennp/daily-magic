@@ -55,9 +55,8 @@ export function useHasPairedDevice(): UseHasPairedDeviceResult {
       return;
     }
 
-    setHasPairedDevice(true);
-    setIsLoading(false);
-  }, [isDemoMode]);
+    void refresh();
+  }, [isDemoMode, refresh]);
 
   useEffect(() => {
     if (isDemoMode) {
@@ -71,7 +70,7 @@ export function useHasPairedDevice(): UseHasPairedDeviceResult {
   }, [isDemoMode]);
 
   useEffect(() => {
-    if (isDemoMode || hasPairedDevice) {
+    if (isDemoMode) {
       return;
     }
 
@@ -82,7 +81,7 @@ export function useHasPairedDevice(): UseHasPairedDeviceResult {
     return () => {
       clearInterval(timer);
     };
-  }, [isDemoMode, hasPairedDevice, refresh]);
+  }, [isDemoMode, refresh]);
 
   if (isDemoMode) {
     return {
