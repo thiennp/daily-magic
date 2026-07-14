@@ -6,7 +6,7 @@ import {
   formatPairedDeviceTimestamp,
   updateDeviceDispatchPolicy,
   type PairedDevice,
-} from "@/features/harness/utils/pairedDevicesApi";
+} from "@/features/agent-witch/utils/pairedDevicesApi";
 import MacDeviceIcon from "@/features/macDevices/MacDeviceIcon";
 import type { DispatchPolicyValue } from "@/lib/dispatch/DispatchPolicy.constant";
 
@@ -14,7 +14,9 @@ interface PairedDeviceListItemProps {
   readonly device: PairedDevice;
   readonly displayName: string;
   readonly draftPolicy: DispatchPolicyValue | "inherit";
-  readonly onDraftPolicyChange: (value: DispatchPolicyValue | "inherit") => void;
+  readonly onDraftPolicyChange: (
+    value: DispatchPolicyValue | "inherit",
+  ) => void;
   readonly onPolicySaved?: () => void;
   readonly onRevokeRequest: (deviceId: string) => void;
 }
@@ -40,32 +42,32 @@ export default function PairedDeviceListItem({
             </p>
             <PairedDeviceOnlineBadge isOnline={device.isOnline === true} />
           </div>
-        <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
-          Paired {formatPairedDeviceTimestamp(device.claimedAt)}
-          {device.lastSeenAt !== null
-            ? ` · Last seen ${formatPairedDeviceTimestamp(device.lastSeenAt)}`
-            : null}
-          {device.isOnline === true && device.lastHeartbeatAt
-            ? ` · Heartbeat ${formatPairedDeviceTimestamp(device.lastHeartbeatAt)}`
-            : null}
-        </p>
-        <div className="mt-2">
-          <DeviceDispatchPolicySelect
-            value={draftPolicy}
-            onChange={onDraftPolicyChange}
-            onSave={() => {
-              void (async () => {
-                const didSave = await updateDeviceDispatchPolicy(
-                  device.id,
-                  draftPolicy,
-                );
-                if (didSave) {
-                  onPolicySaved?.();
-                }
-              })();
-            }}
-          />
-        </div>
+          <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+            Paired {formatPairedDeviceTimestamp(device.claimedAt)}
+            {device.lastSeenAt !== null
+              ? ` · Last seen ${formatPairedDeviceTimestamp(device.lastSeenAt)}`
+              : null}
+            {device.isOnline === true && device.lastHeartbeatAt
+              ? ` · Heartbeat ${formatPairedDeviceTimestamp(device.lastHeartbeatAt)}`
+              : null}
+          </p>
+          <div className="mt-2">
+            <DeviceDispatchPolicySelect
+              value={draftPolicy}
+              onChange={onDraftPolicyChange}
+              onSave={() => {
+                void (async () => {
+                  const didSave = await updateDeviceDispatchPolicy(
+                    device.id,
+                    draftPolicy,
+                  );
+                  if (didSave) {
+                    onPolicySaved?.();
+                  }
+                })();
+              }}
+            />
+          </div>
         </div>
       </div>
       <button

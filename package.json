@@ -22,7 +22,10 @@
     "validate:staged": "sh .agents/scripts/validate-structure-staged.sh",
     "validate:all": "find src db -type f \\( -name '*.ts' -o -name '*.tsx' -o -name '*.sql' \\) -print0 | xargs -0 npx structure-validation --files --verify-root --skip-error",
     "validate:fix": "structure-validation --scope staged --fix --verify-root",
-    "validate:preview": "structure-validation --scope staged --dry-run"
+    "validate:preview": "structure-validation --scope staged --dry-run",
+    "feature-knowledge:index": "tsx .agents/scripts/feature-knowledge-index.ts",
+    "feature-knowledge:query": "tsx .agents/scripts/feature-knowledge-query.ts",
+    "feature-knowledge:scaffold-docs": "tsx .agents/scripts/feature-knowledge-scaffold-docs.ts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

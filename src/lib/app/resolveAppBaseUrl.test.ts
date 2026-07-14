@@ -14,7 +14,7 @@ describe("resolveAppBaseUrl", () => {
     expect(resolveAppBaseUrl()).toBe("http://localhost:3000");
   });
 
-  it("returns agentwitch.com in production", () => {
+  it("returns www.agentwitch.com in production (HOME-001)", () => {
     vi.stubEnv("NODE_ENV", "production");
 
     expect(resolveAppBaseUrl()).toBe(AGENT_WITCH_DEFAULT_ORIGIN);

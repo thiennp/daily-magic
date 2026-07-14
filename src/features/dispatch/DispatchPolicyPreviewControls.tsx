@@ -4,8 +4,8 @@ import { useEffect, useState } from "react";
 
 import DispatchPolicyPreview from "@/features/dispatch/DispatchPolicyPreview";
 import { COMPANY_ENTITY_LABEL } from "@/lib/admin/companyGroupCopy.constant";
-import type { PairedDevice } from "@/features/harness/utils/pairedDevicesApi";
-import { fetchActivePairedDevices } from "@/features/harness/utils/pairedDevicesApi";
+import type { PairedDevice } from "@/features/agent-witch/utils/pairedDevicesApi";
+import { fetchActivePairedDevices } from "@/features/agent-witch/utils/pairedDevicesApi";
 import { useDispatchTargets } from "@/features/dispatch/hooks/useDispatchTargets";
 
 export default function DispatchPolicyPreviewControls() {

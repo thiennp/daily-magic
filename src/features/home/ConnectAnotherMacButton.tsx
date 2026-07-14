@@ -6,6 +6,7 @@ import { APP_SURFACE_TEXT_LINK_CLASS } from "@/components/surfaces/appSurfaceSty
 import ConnectAnotherMacModal from "@/features/home/ConnectAnotherMacModal";
 import ConnectInstallPasteModal from "@/features/home/ConnectInstallPasteModal";
 import useConnectInstallPasteModalDismissal from "@/features/home/hooks/useConnectInstallPasteModalDismissal";
+import { resolveConnectAnotherMacLabel } from "@/features/home/utils/resolveConnectAnotherMacLabel";
 
 interface ConnectAnotherMacButtonProps {
   readonly installCommand: string;
@@ -35,9 +36,7 @@ export default function ConnectAnotherMacButton({
     onClose: handleClosePasteModal,
   });
 
-  const actionLabel = hasExistingDevices
-    ? "Connect another Mac"
-    : "Connect a Mac";
+  const actionLabel = resolveConnectAnotherMacLabel(hasExistingDevices);
 
   return (
     <>

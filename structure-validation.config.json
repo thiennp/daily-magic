@@ -10,7 +10,8 @@
       "route.ts",
       "globals.css"
     ],
-    "src/features": ["*.tsx"],
+    "src/features": ["*.tsx", "README.md", "AGENTS.md", "KNOWN_ISSUES.md"],
+    "src/features/_registry": ["*.ts", "*.json", "README.md"],
     "src/hooks": ["use*.ts"],
     "src/lib": ["*.ts"],
     "src/server": ["*.ts"],

@@ -1,0 +1,22 @@
+---
+description: Query feature knowledge (RAG) before editing feature code
+globs: src/features/**
+---
+
+# Feature knowledge (query before edits)
+
+Before changing code under `src/features/`:
+
+1. **Query** related docs and known issues:
+   ```bash
+   npm run feature-knowledge:query -- "symptom or feature area" --feature=<slug>
+   ```
+   Or `POST /api/feature-knowledge/query` with `{ "query": "...", "featureSlug": "home" }`.
+
+2. **Read** the feature folder’s `README.md`, `AGENTS.md`, and `KNOWN_ISSUES.md`.
+
+3. **After fixing a bug:** add a row to `KNOWN_ISSUES.md`, add a regression test (reference the issue ID in the test name), run `npm run feature-knowledge:index`.
+
+4. **Registry:** feature slugs and paths live in `src/features/_registry/features.registry.json`.
+
+Index file: `.feature-knowledge/index.json` (TF-IDF over markdown chunks). Rebuild when docs change.

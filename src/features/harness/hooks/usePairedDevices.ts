@@ -4,7 +4,7 @@ import {
   fetchActivePairedDevices,
   revokePairedDevice,
   type PairedDevice,
-} from "@/features/harness/utils/pairedDevicesApi";
+} from "@/features/agent-witch/utils/pairedDevicesApi";
 
 interface UsePairedDevicesResult {
   readonly devices: readonly PairedDevice[];

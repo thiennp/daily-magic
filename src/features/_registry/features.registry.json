@@ -1,0 +1,230 @@
+{
+  "features": [
+    {
+      "slug": "home",
+      "title": "Home dashboard",
+      "purpose": "Authenticated hub, onboarding, Mac connect flow, guest landing.",
+      "featurePath": "src/features/home",
+      "libPath": null,
+      "routePaths": ["/", "/demo/home"],
+      "apiPaths": [],
+      "dependsOn": [
+        "agent-witch",
+        "capabilities",
+        "harness",
+        "dispatch",
+        "mac-devices"
+      ],
+      "migrationStatus": "in_progress"
+    },
+    {
+      "slug": "agent-witch",
+      "title": "Agent Witch bridge",
+      "purpose": "Mac pairing, install, WebSocket bridge, device registry.",
+      "featurePath": "src/features/agent-witch",
+      "libPath": "src/lib/agentWitch",
+      "routePaths": ["/install/agent-witch.sh"],
+      "apiPaths": ["/api/agent-witch"],
+      "dependsOn": ["auth", "dispatch"],
+      "migrationStatus": "in_progress"
+    },
+    {
+      "slug": "agent",
+      "title": "Task composer",
+      "purpose": "Compose and send tasks to Mac via Agent Witch.",
+      "featurePath": "src/features/wsTest",
+      "libPath": null,
+      "routePaths": ["/agent", "/ws-test", "/demo/agent"],
+      "apiPaths": ["/api/agent-runs"],
+      "dependsOn": ["dispatch", "capabilities", "workflows", "agent-witch"],
+      "migrationStatus": "planned"
+    },
+    {
+      "slug": "dispatch",
+      "title": "Dispatch & approvals",
+      "purpose": "Team dispatch targets, approvals, run queue, policies.",
+      "featurePath": "src/features/dispatch",
+      "libPath": "src/lib/dispatch",
+      "routePaths": [],
+      "apiPaths": ["/api/dispatch", "/api/agent-runs"],
+      "dependsOn": ["auth", "capabilities", "agent-witch"],
+      "migrationStatus": "documented"
+    },
+    {
+      "slug": "capabilities",
+      "title": "Capabilities & offerings",
+      "purpose": "Published agents/workflows, team directory, picker.",
+      "featurePath": "src/features/capabilities",
+      "libPath": "src/lib/capabilities",
+      "routePaths": [],
+      "apiPaths": ["/api/capabilities"],
+      "dependsOn": ["workflows"],
+      "migrationStatus": "documented"
+    },
+    {
+      "slug": "workflows",
+      "title": "Workflow builder",
+      "purpose": "Workflow capabilities with dynamic task fields.",
+      "featurePath": "src/features/workflows",
+      "libPath": "src/lib/workflows",
+      "routePaths": [],
+      "apiPaths": [],
+      "dependsOn": ["capabilities"],
+      "migrationStatus": "documented"
+    },
+    {
+      "slug": "library",
+      "title": "Library",
+      "purpose": "Saved playbooks; fork and run from library.",
+      "featurePath": "src/features/library",
+      "libPath": "src/lib/library",
+      "routePaths": ["/library", "/demo/library"],
+      "apiPaths": [],
+      "dependsOn": ["workflows", "capabilities", "harness"],
+      "migrationStatus": "documented"
+    },
+    {
+      "slug": "harness",
+      "title": "Harness catalog",
+      "purpose": "Rules/skills manifest, sharing, catalog publish.",
+      "featurePath": "src/features/harness",
+      "libPath": "src/lib/harness",
+      "routePaths": [],
+      "apiPaths": ["/api/harness", "/api/agent-witch/harness-catalog"],
+      "dependsOn": ["agent-witch", "library"],
+      "migrationStatus": "documented"
+    },
+    {
+      "slug": "marketplace",
+      "title": "Marketplace",
+      "purpose": "Browse and borrow company-published agents.",
+      "featurePath": "src/features/harness",
+      "libPath": "src/lib/harness",
+      "routePaths": ["/marketplace", "/demo/marketplace"],
+      "apiPaths": ["/api/harness/marketplace"],
+      "dependsOn": ["harness", "library", "capabilities"],
+      "migrationStatus": "planned"
+    },
+    {
+      "slug": "reports",
+      "title": "Reports",
+      "purpose": "Agent run history, live terminal, re-run.",
+      "featurePath": "src/features/reports",
+      "libPath": null,
+      "routePaths": ["/reports", "/reports/[runId]", "/demo/reports"],
+      "apiPaths": ["/api/agent-runs"],
+      "dependsOn": ["dispatch", "feedback"],
+      "migrationStatus": "documented"
+    },
+    {
+      "slug": "feedback",
+      "title": "Feedback",
+      "purpose": "Run feedback and capability-owner inbox.",
+      "featurePath": "src/features/feedback",
+      "libPath": "src/lib/feedback",
+      "routePaths": [],
+      "apiPaths": ["/api/capabilities/feedback"],
+      "dependsOn": ["improvements", "capabilities"],
+      "migrationStatus": "documented"
+    },
+    {
+      "slug": "improvements",
+      "title": "Improvements",
+      "purpose": "Review AI-suggested capability improvements.",
+      "featurePath": "src/features/improvements",
+      "libPath": "src/lib/improvements",
+      "routePaths": [],
+      "apiPaths": ["/api/capabilities/improvements"],
+      "dependsOn": ["feedback", "capabilities"],
+      "migrationStatus": "documented"
+    },
+    {
+      "slug": "admin",
+      "title": "Admin",
+      "purpose": "Users, groups, company dispatch rules.",
+      "featurePath": "src/features/admin",
+      "libPath": "src/lib/admin",
+      "routePaths": ["/admin/groups", "/admin/users", "/demo/admin/groups"],
+      "apiPaths": ["/api/admin"],
+      "dependsOn": ["auth", "dispatch"],
+      "migrationStatus": "documented"
+    },
+    {
+      "slug": "auth",
+      "title": "Authentication",
+      "purpose": "NextAuth, login UI, sessions, dev secret login.",
+      "featurePath": "src/features/auth",
+      "libPath": "src/lib/auth",
+      "routePaths": ["/login"],
+      "apiPaths": ["/api/auth"],
+      "dependsOn": ["marketing"],
+      "migrationStatus": "documented"
+    },
+    {
+      "slug": "mac-devices",
+      "title": "Mac devices UI",
+      "purpose": "Device row, rename, wake modal components.",
+      "featurePath": "src/features/macDevices",
+      "libPath": null,
+      "routePaths": [],
+      "apiPaths": [],
+      "dependsOn": ["agent-witch"],
+      "migrationStatus": "planned"
+    },
+    {
+      "slug": "shell",
+      "title": "App shell",
+      "purpose": "Header, nav, connection badge, approval listener mount.",
+      "featurePath": "src/features/shell",
+      "libPath": null,
+      "routePaths": [],
+      "apiPaths": [],
+      "dependsOn": ["auth", "dispatch", "demo"],
+      "migrationStatus": "documented"
+    },
+    {
+      "slug": "marketing",
+      "title": "Marketing",
+      "purpose": "Landing sections, marketing shell, public CTAs.",
+      "featurePath": "src/features/marketing",
+      "libPath": null,
+      "routePaths": ["/"],
+      "apiPaths": [],
+      "dependsOn": [],
+      "migrationStatus": "documented"
+    },
+    {
+      "slug": "showcases",
+      "title": "Showcases",
+      "purpose": "Public SEO articles.",
+      "featurePath": "src/features/showcases",
+      "libPath": null,
+      "routePaths": ["/showcases"],
+      "apiPaths": [],
+      "dependsOn": ["marketing"],
+      "migrationStatus": "documented"
+    },
+    {
+      "slug": "demo",
+      "title": "Demo mode",
+      "purpose": "UI preview without auth using mock fixtures.",
+      "featurePath": "src/features/demo",
+      "libPath": null,
+      "routePaths": ["/demo"],
+      "apiPaths": [],
+      "dependsOn": [],
+      "migrationStatus": "documented"
+    },
+    {
+      "slug": "styleguide",
+      "title": "Styleguide",
+      "purpose": "TailAdmin component catalog for development.",
+      "featurePath": "src/features/styleguide",
+      "libPath": null,
+      "routePaths": ["/styleguide"],
+      "apiPaths": [],
+      "dependsOn": ["auth"],
+      "migrationStatus": "documented"
+    }
+  ]
+}

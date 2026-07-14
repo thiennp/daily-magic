@@ -16,6 +16,7 @@ import {
   usePairedDeviceContext,
 } from "@/features/home/PairedDeviceContext";
 import { useLinkLocalAgentAccount } from "@/features/home/hooks/useLinkLocalAgentAccount";
+import { resolveHomeDashboardMode } from "@/features/home/utils/resolveHomeDashboardMode";
 
 interface HomeLinkAccountGateProps {
   readonly appOrigin: string;
@@ -55,18 +56,21 @@ function HomeLinkAccountGateContent({
 }: HomeLinkAccountGateProps) {
   const { markPaired } = usePairedDeviceContext();
   const { devices, isLoading } = useHomeConnectedMacs();
-  const hasConnectedMac = !isLoading && devices.length > 0;
+  const dashboardMode = resolveHomeDashboardMode({
+    isLoading,
+    deviceCount: devices.length,
+  });
   const handleLinked = useCallback(() => {
     markPaired();
   }, [markPaired]);
   useLinkLocalAgentAccount({
     appOrigin,
-    autoLink: hasConnectedMac,
+    autoLink: dashboardMode === "dashboard",
     silentFailures: true,
     onLinked: handleLinked,
   });
 
-  if (isLoading) {
+  if (dashboardMode === "loading") {
     return (
       <div className={HOME_DASHBOARD_GRID_CLASS}>
         <main className={HOME_MAIN_COLUMN_CLASS}>
@@ -80,7 +84,7 @@ function HomeLinkAccountGateContent({
     );
   }
 
-  if (!hasConnectedMac) {
+  if (dashboardMode === "connect") {
     return (
       <div className={HOME_DASHBOARD_GRID_CLASS}>
         <aside className={HOME_LEFT_RAIL_CLASS}>

@@ -1,3 +1,11 @@
 {
-  "skippedFiles": [".next/**", "node_modules/**", "public/images/**"]
+  "skippedFiles": [
+    ".next/**",
+    "node_modules/**",
+    "public/images/**",
+    ".agents/**",
+    ".cursor/**",
+    ".cursor.json",
+    ".feature-knowledge/**"
+  ]
 }

@@ -71,6 +71,12 @@
       "description": "Harness: route requests to matching orchestrator when one exists",
       "path": "rules-agent-request-routing.mdc",
       "glob": "**/*"
+    },
+    {
+      "name": "rules-feature-knowledge",
+      "description": "Query feature RAG and KNOWN_ISSUES before editing features",
+      "path": "rules-feature-knowledge.mdc",
+      "glob": "src/features/**"
     }
   ]
 }

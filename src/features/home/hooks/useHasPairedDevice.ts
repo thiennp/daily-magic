@@ -3,8 +3,9 @@
 import { useCallback, useEffect, useState } from "react";
 
 import { useDemoPreview } from "@/features/demo/DemoPreviewContext";
-import { fetchActivePairedDevices } from "@/features/harness/utils/pairedDevicesApi";
+import { fetchActivePairedDevices } from "@/features/agent-witch/utils/pairedDevicesApi";
 import isConnectMacOnboardingStepDone from "@/features/home/utils/isConnectMacOnboardingStepDone";
+import { resolveHasPairedDeviceAfterFetch } from "@/features/home/utils/resolveHasPairedDeviceAfterFetch";
 
 interface UseHasPairedDeviceResult {
   readonly hasPairedDevice: boolean;
@@ -36,17 +37,13 @@ export function useHasPairedDevice(): UseHasPairedDeviceResult {
     }
 
     const result = await fetchActivePairedDevices();
-    setHasPairedDevice((current) => {
-      if (result.devices.length > 0) {
-        return true;
-      }
-
-      if (result.errorMessage !== null) {
-        return current;
-      }
-
-      return false;
-    });
+    setHasPairedDevice((current) =>
+      resolveHasPairedDeviceAfterFetch(
+        current,
+        result.devices.length,
+        result.errorMessage,
+      ),
+    );
     setIsLoading(false);
   }, [isDemoMode]);
 
