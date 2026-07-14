@@ -16,3 +16,13 @@ export const createEmptyHarnessItemDraft = (): HarnessItemDraft => ({
   content: "",
   setSlugs: [],
 });
+
+export const createHarnessItemDraftForKind = (
+  kind: HarnessItemKind,
+): HarnessItemDraft => ({
+  id: createHarnessItemId(),
+  kind,
+  title: "",
+  content: "",
+  setSlugs: [],
+});

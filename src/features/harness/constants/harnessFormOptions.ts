@@ -15,6 +15,7 @@ export const HARNESS_KIND_LABELS: Record<HarnessItemKind, string> = {
   skill: "Skill",
   command: "Command",
   instruction: "Instruction",
+  agent: "Subagent",
 };
 
 export const HARNESS_WRITER_OPTIONS = HARNESS_WRITER_AGENTS.map((value) => ({

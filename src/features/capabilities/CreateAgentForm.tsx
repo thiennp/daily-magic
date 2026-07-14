@@ -3,56 +3,29 @@
 import Button from "@/components/ui/button/Button";
 import CapabilityHarnessItemsEditor from "@/features/capabilities/CapabilityHarnessItemsEditor";
 import PlaybookBasicsFields from "@/features/capabilities/PlaybookBasicsFields";
-import CreateWorkflowFieldsEditor from "@/features/workflows/CreateWorkflowFieldsEditor";
-import { useCreateWorkflowForm } from "@/features/workflows/hooks/useCreateWorkflowForm";
+import { useCreateAgentForm } from "@/features/capabilities/hooks/useCreateAgentForm";
 
-interface CreateWorkflowFormProps {
+interface CreateAgentFormProps {
   readonly onCreated: () => void;
   readonly onCancel: () => void;
 }
 
-export default function CreateWorkflowForm({
+export default function CreateAgentForm({
   onCreated,
   onCancel,
-}: CreateWorkflowFormProps) {
-  const form = useCreateWorkflowForm({ onCreated, onCancel });
+}: CreateAgentFormProps) {
+  const form = useCreateAgentForm({ onCreated, onCancel });
 
   return (
     <div className="mt-6 space-y-4">
       <PlaybookBasicsFields
-        playbookType="workflow"
+        playbookType="agent"
         name={form.name}
         description={form.description}
         exampleRequest={form.exampleRequest}
         onNameChange={form.setName}
         onDescriptionChange={form.setDescription}
         onExampleRequestChange={form.setExampleRequest}
-      />
-      <CreateWorkflowFieldsEditor
-        fields={form.fields}
-        onChange={(id, patch) => {
-          form.setFields((current) =>
-            current.map((field) =>
-              field.id === id ? { ...field, ...patch } : field,
-            ),
-          );
-        }}
-        onAdd={() => {
-          form.setFields((current) => [
-            ...current,
-            {
-              id: crypto.randomUUID(),
-              label: "",
-              type: "text",
-              required: true,
-            },
-          ]);
-        }}
-        onRemove={(id) => {
-          form.setFields((current) =>
-            current.filter((entry) => entry.id !== id),
-          );
-        }}
       />
       <CapabilityHarnessItemsEditor
         items={form.harness.items}
@@ -75,7 +48,7 @@ export default function CreateWorkflowForm({
           disabled={form.isSubmitting}
           onClick={() => void form.handleSubmit()}
         >
-          {form.isSubmitting ? "Publishing…" : "Publish workflow"}
+          {form.isSubmitting ? "Publishing…" : "Publish agent"}
         </Button>
         <Button variant="outline" onClick={onCancel}>
           Cancel

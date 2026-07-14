@@ -4,6 +4,8 @@ import {
   isCapabilityVisibility,
   type CapabilityVisibilityValue,
 } from "@/lib/capabilities/CapabilityVisibility.constant";
+import { parseCapabilityHarnessItems } from "@/lib/capabilities/parseCapabilityHarnessItems";
+import type { ParsedCapabilityHarnessItem } from "@/lib/capabilities/parseCapabilityHarnessItems";
 import { parseWorkflowFieldDefinitions } from "@/lib/workflows/parseWorkflowFieldDefinitions";
 import type WorkflowFieldDefinition from "@/lib/workflows/types/WorkflowFieldDefinition.type";
 
@@ -15,6 +17,7 @@ export interface ParsedCapabilityBody {
   readonly groupId?: string | null;
   readonly type: typeof CapabilityType.AGENT | typeof CapabilityType.WORKFLOW;
   readonly workflowFields: readonly WorkflowFieldDefinition[];
+  readonly harnessItems: readonly ParsedCapabilityHarnessItem[];
 }
 
 export function parseCreateCapabilityBody(
@@ -48,6 +51,8 @@ export function parseCreateCapabilityBody(
     return undefined;
   }
 
+  const harnessItems = parseCapabilityHarnessItems(record.harnessItems);
+
   return {
     name,
     description:
@@ -65,5 +70,6 @@ export function parseCreateCapabilityBody(
         : null,
     type,
     workflowFields,
+    harnessItems,
   };
 }

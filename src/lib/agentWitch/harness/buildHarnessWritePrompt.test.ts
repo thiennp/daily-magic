@@ -22,6 +22,9 @@ describe("resolveHarnessItemPath", () => {
     expect(resolveHarnessItemPath("command", "Commit")).toBe(
       "commands/commit.md",
     );
+    expect(resolveHarnessItemPath("agent", "Security Reviewer")).toBe(
+      "agents/security-reviewer.md",
+    );
   });
 });
 

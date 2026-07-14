@@ -15,6 +15,7 @@ const ONBOARDING_STEPS_POLL_INTERVAL_MS = 5_000;
 const useOnboardingSteps = (): {
   readonly steps: readonly OnboardingStep[];
   readonly isLoading: boolean;
+  readonly reloadSteps: () => Promise<void>;
 } => {
   const demoPreview = useDemoPreview();
   const pairedDeviceContext = useOptionalPairedDeviceContext();
@@ -59,7 +60,17 @@ const useOnboardingSteps = (): {
     };
   }, [demoPreview, isConnectStepDone]);
 
-  return { steps, isLoading };
+  const reloadSteps = async (): Promise<void> => {
+    if (demoPreview) {
+      return;
+    }
+
+    const loadedSteps = await loadOnboardingSteps();
+    setSteps(loadedSteps);
+    setIsLoading(false);
+  };
+
+  return { steps, isLoading, reloadSteps };
 };
 
 export default useOnboardingSteps;

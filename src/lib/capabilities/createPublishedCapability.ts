@@ -17,6 +17,7 @@ export interface CreatePublishedCapabilityInput {
   readonly groupId?: string | null;
   readonly type?: CapabilityTypeValue;
   readonly workflowFields?: readonly WorkflowFieldDefinition[];
+  readonly harnessSetSlug?: string | null;
 }
 
 export async function createPublishedCapability(
@@ -38,7 +39,8 @@ export async function createPublishedCapability(
         example_request,
         visibility,
         status,
-        workflow_fields
+        workflow_fields,
+        harness_set_slug
       )
       VALUES (
         ${capabilityId},
@@ -50,7 +52,8 @@ export async function createPublishedCapability(
         ${input.exampleRequest ?? ""},
         ${DEFAULT_CAPABILITY_VISIBILITY},
         ${CapabilityStatus.DRAFT},
-        ${workflowFieldsJson}::jsonb
+        ${workflowFieldsJson}::jsonb,
+        ${input.harnessSetSlug ?? null}
       )
       RETURNING *
     `,

@@ -1,7 +1,5 @@
-import { createPublishedCapability } from "@/lib/capabilities/createPublishedCapability";
-import { publishCapabilityVersion } from "@/lib/capabilities/publishCapabilityVersion";
-import ensureSampleWorkflowCapability from "@/lib/capabilities/ensureSampleWorkflowCapability";
 import { listPublishedCapabilitiesForOwner } from "@/lib/capabilities/capabilityQueries";
+import publishCapabilityWithHarness from "@/lib/capabilities/publishCapabilityWithHarness";
 import { parseCreateCapabilityBody } from "@/lib/capabilities/parseCapabilityBody";
 import { requireAuth } from "@/lib/auth/requireAuth";
 
@@ -14,7 +12,6 @@ export async function GET(): Promise<Response> {
     return error;
   }
 
-  await ensureSampleWorkflowCapability(actor.id);
   const capabilities = await listPublishedCapabilitiesForOwner(actor.id);
 
   return Response.json({ ok: true, capabilities });
@@ -37,23 +34,16 @@ export async function POST(request: Request): Promise<Response> {
     );
   }
 
-  const created = await createPublishedCapability({
-    ownerUserId: actor.id,
-    name: parsed.name,
-    description: parsed.description,
-    exampleRequest: parsed.exampleRequest,
-    groupId: parsed.groupId,
-    type: parsed.type,
-    workflowFields: parsed.workflowFields,
-  });
-  const published = await publishCapabilityVersion(
-    created.id,
+  const result = await publishCapabilityWithHarness(
     actor.id,
-    "Initial publish",
+    parsed,
+    parsed.harnessItems,
   );
 
   return Response.json({
     ok: true,
-    capability: published ?? created,
+    capability: result.capability,
+    harnessInstalled: result.harnessInstalled,
+    harnessInstallMessage: result.harnessInstallMessage,
   });
 }

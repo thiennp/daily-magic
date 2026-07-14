@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-import CreateWorkflowPanel from "@/features/workflows/CreateWorkflowPanel";
+import CreatePlaybookPanel from "@/features/capabilities/CreatePlaybookPanel";
 import LibraryPanel from "@/features/library/LibraryPanel";
 
 export default function LibraryPageClient() {
@@ -10,7 +10,7 @@ export default function LibraryPageClient() {
 
   return (
     <div className="space-y-6">
-      <CreateWorkflowPanel
+      <CreatePlaybookPanel
         onCreated={() => {
           setRefreshKey((key) => key + 1);
         }}
