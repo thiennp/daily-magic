@@ -15,6 +15,7 @@
     "lint": "eslint",
     "typecheck": "npm run lint && tsc --noEmit",
     "db:schema": "psql \"$DATABASE_URL\" -f db/schema.sql",
+    "db:migrate": "bash scripts/db-migrate.sh",
     "prepare": "npx is-ci || npx husky",
     "cursor:verify": "tsx .agents/scripts/verify-rules.ts",
     "cursor:architecture": "tsx .agents/scripts/architecture-check.ts",

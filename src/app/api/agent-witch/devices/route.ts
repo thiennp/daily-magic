@@ -1,4 +1,5 @@
 import buildAgentWitchDevicesWithOnlineStatus from "@/lib/agentWitch/buildAgentWitchDevicesWithOnlineStatus";
+import { ensureAgentWitchDeviceSchema } from "@/lib/agentWitch/ensureAgentWitchDeviceSchema";
 import { getAgentWitchHub } from "@/lib/agentWitch/getAgentWitchHub";
 import { listAgentWitchDevicesForUser } from "@/lib/agentWitch/listAgentWitchDevicesForUser";
 import { buildMockDevicesApiResponse } from "@/lib/agentWitch/mock/buildMockDevicesApiResponse";
@@ -24,16 +25,35 @@ export async function GET(): Promise<Response> {
     return error;
   }
 
-  const hub = getAgentWitchHub();
-  const devices = await listAgentWitchDevicesForUser(actor.id);
-  const onlineClients = hub.listOnlineAgentClientsForUser(actor.id);
-  const devicesWithStatus = buildAgentWitchDevicesWithOnlineStatus(
-    devices,
-    onlineClients,
-  );
+  try {
+    await ensureAgentWitchDeviceSchema();
+    const hub = getAgentWitchHub();
+    const devices = await listAgentWitchDevicesForUser(actor.id);
+    const onlineClients = hub.listOnlineAgentClientsForUser(actor.id);
+    const devicesWithStatus = buildAgentWitchDevicesWithOnlineStatus(
+      devices,
+      onlineClients,
+    );
 
-  return Response.json({
-    ok: true,
-    devices: devicesWithStatus,
-  });
+    return Response.json({
+      ok: true,
+      devices: devicesWithStatus,
+    });
+  } catch (loadError) {
+    const message =
+      loadError instanceof Error
+        ? loadError.message
+        : "Could not load paired devices.";
+
+    console.error("[api/agent-witch/devices]", loadError);
+
+    return Response.json(
+      {
+        ok: false,
+        error: "Could not load paired devices.",
+        detail: process.env.NODE_ENV === "production" ? undefined : message,
+      },
+      { status: 500 },
+    );
+  }
 }
