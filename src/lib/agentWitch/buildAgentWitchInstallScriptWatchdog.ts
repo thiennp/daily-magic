@@ -24,7 +24,7 @@ WATCHDOG_SPAWN_CLIENT_SCRIPT_URL="${input.spawnClientScriptUrl}"
 WATCHDOG_LOCAL_LAYOUT_SCRIPT_URL="${input.localLayoutScriptUrl}"
 WATCHDOG_LOG_SCRIPT_URL="${input.watchdogLogScriptUrl}"
 WATCHDOG_STATUS_SCRIPT_URL="${input.watchdogStatusScriptUrl}"
-WATCHDOG_LAUNCH_AGENT_LABEL="com.daily-magic.agent-witch-watchdog"
+WATCHDOG_LAUNCH_AGENT_LABEL="com.agent-witch-watchdog"
 WATCHDOG_PLIST_PATH="\${HOME}/Library/LaunchAgents/\${WATCHDOG_LAUNCH_AGENT_LABEL}.plist"
 
 echo "Downloading Agent Witch WebSocket watchdog…"

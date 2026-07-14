@@ -161,6 +161,6 @@ export const ensureAgentWitchProfile = (
     configPath,
     pairingToken,
     wsUrl,
-    launchAgentLabel: `com.daily-magic.agent-witch.${sanitizeProfileEmailForLaunchAgentLabel(normalizedEmail)}`,
+    launchAgentLabel: `com.agent-witch.${sanitizeProfileEmailForLaunchAgentLabel(normalizedEmail)}`,
   };
 };

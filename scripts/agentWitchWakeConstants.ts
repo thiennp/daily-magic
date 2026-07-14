@@ -1,10 +1,8 @@
 export const AGENT_WITCH_WAKE_DEFAULT_PORT = 47892;
 
-export const AGENT_WITCH_WAKE_LAUNCH_AGENT_LABEL =
-  "com.daily-magic.agent-witch-wake";
+export const AGENT_WITCH_WAKE_LAUNCH_AGENT_LABEL = "com.agent-witch-wake";
 
-export const AGENT_WITCH_LEGACY_LAUNCH_AGENT_LABEL =
-  "com.daily-magic.agent-witch";
+export const AGENT_WITCH_LEGACY_LAUNCH_AGENT_LABEL = "com.agent-witch";
 
 export const resolveAgentWitchWakePort = (): number => {
   const fromEnv = process.env.AGENT_WITCH_WAKE_PORT?.trim();

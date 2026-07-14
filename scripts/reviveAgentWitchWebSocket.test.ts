@@ -50,7 +50,7 @@ describe("reviveAgentWitchWebSocket", () => {
     vi.mocked(listAgentWitchLaunchTargets).mockReturnValue([
       {
         profileEmail: "user@example.com",
-        launchAgentLabel: "com.daily-magic.agent-witch.user-at-example-com",
+        launchAgentLabel: "com.agent-witch.user-at-example-com",
       },
     ]);
     vi.mocked(isAgentWitchLaunchAgentRunning).mockResolvedValue(true);
@@ -64,7 +64,7 @@ describe("reviveAgentWitchWebSocket", () => {
     const result = await reviveAgentWitchWebSocket({ skipLog: true });
 
     expect(kickstartAgentWitchLaunchAgent).toHaveBeenCalledWith(
-      "com.daily-magic.agent-witch.user-at-example-com",
+      "com.agent-witch.user-at-example-com",
     );
     expect(result.targets[0]).toMatchObject({
       revived: true,
@@ -76,7 +76,7 @@ describe("reviveAgentWitchWebSocket", () => {
     vi.mocked(listAgentWitchLaunchTargets).mockReturnValue([
       {
         profileEmail: "user@example.com",
-        launchAgentLabel: "com.daily-magic.agent-witch.user-at-example-com",
+        launchAgentLabel: "com.agent-witch.user-at-example-com",
       },
     ]);
     vi.mocked(isAgentWitchLaunchAgentRunning).mockResolvedValue(true);
@@ -99,7 +99,7 @@ describe("reviveAgentWitchWebSocket", () => {
     vi.mocked(listAgentWitchLaunchTargets).mockReturnValue([
       {
         profileEmail: null,
-        launchAgentLabel: "com.daily-magic.agent-witch",
+        launchAgentLabel: "com.agent-witch",
       },
     ]);
     vi.mocked(isAgentWitchLaunchAgentRunning).mockResolvedValue(false);

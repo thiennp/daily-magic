@@ -9,6 +9,6 @@ export interface AgentWitchConnectionHealth {
 export const AGENT_WITCH_CONNECTION_STALE_MS = 120_000;
 
 export const AGENT_WITCH_WATCHDOG_LAUNCH_AGENT_LABEL =
-  "com.daily-magic.agent-witch-watchdog";
+  "com.agent-witch-watchdog";
 
 export const AGENT_WITCH_WATCHDOG_INTERVAL_SEC = 60;

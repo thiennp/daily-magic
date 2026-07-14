@@ -38,10 +38,10 @@ describe("agentWitchWatchdogLog", () => {
       {
         event: "revive_triggered",
         ok: true,
-        message: "Revived com.daily-magic.agent-witch",
+        message: "Revived com.agent-witch",
         targets: [
           {
-            launchAgentLabel: "com.daily-magic.agent-witch",
+            launchAgentLabel: "com.agent-witch",
             profileEmail: null,
             revived: true,
             reason: "stale_connection",
@@ -55,7 +55,7 @@ describe("agentWitchWatchdogLog", () => {
     expect(logs).toHaveLength(2);
     expect(logs[1]).toMatchObject({
       event: "revive_triggered",
-      message: "Revived com.daily-magic.agent-witch",
+      message: "Revived com.agent-witch",
     });
     expect(resolveAgentWitchWatchdogLogPath(installDir)).toContain(
       "watchdog-log.ndjson",

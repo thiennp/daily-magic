@@ -51,7 +51,7 @@ NODE_DIR="\$(dirname "\${NODE_BIN}")"
 RUN_PATH="\${INSTALL_DIR}/run.sh"
 TSX_CLI="\${INSTALL_DIR}/node_modules/tsx/dist/cli.mjs"
 LOG_BASENAME="agent-witch"
-LAUNCH_AGENT_LABEL="com.daily-magic.agent-witch"
+LAUNCH_AGENT_LABEL="com.agent-witch"
 
 mkdir -p "\${INSTALL_DIR}"
 
@@ -73,7 +73,7 @@ if [[ -n "\${PROFILE_EMAIL}" ]]; then
   CONFIG_PATH="\${PROFILE_DIR}/config.json"
   mkdir -p "\${PROFILE_DIR}/harness/sets"
   LABEL_SUFFIX="\$(printf '%s' "\${PROFILE_EMAIL}" | sed 's/@/-at-/g' | sed 's/[^a-z0-9-]/-/g' | sed 's/^-*//;s/-*$//')"
-  LAUNCH_AGENT_LABEL="com.daily-magic.agent-witch.\${LABEL_SUFFIX}"
+  LAUNCH_AGENT_LABEL="com.agent-witch.\${LABEL_SUFFIX}"
   LOG_BASENAME="agent-witch-\${LABEL_SUFFIX}"
 else
   CONFIG_PATH="\${INSTALL_DIR}/config.json"

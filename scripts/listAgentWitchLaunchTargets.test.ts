@@ -29,7 +29,7 @@ describe("listAgentWitchLaunchTargets", () => {
     expect(listAgentWitchLaunchTargets(installDir)).toEqual([
       {
         profileEmail: null,
-        launchAgentLabel: "com.daily-magic.agent-witch",
+        launchAgentLabel: "com.agent-witch",
       },
     ]);
   });
@@ -44,7 +44,7 @@ describe("listAgentWitchLaunchTargets", () => {
     expect(listAgentWitchLaunchTargets(installDir)).toEqual([
       {
         profileEmail,
-        launchAgentLabel: "com.daily-magic.agent-witch.user-at-example-com",
+        launchAgentLabel: "com.agent-witch.user-at-example-com",
       },
     ]);
   });
@@ -63,7 +63,7 @@ describe("listAgentWitchLaunchTargets", () => {
     expect(listAgentWitchLaunchTargets(installDir)).toEqual([
       {
         profileEmail,
-        launchAgentLabel: "com.daily-magic.agent-witch.user-at-example-com",
+        launchAgentLabel: "com.agent-witch.user-at-example-com",
       },
     ]);
   });

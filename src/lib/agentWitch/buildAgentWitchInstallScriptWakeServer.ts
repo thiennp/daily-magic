@@ -30,7 +30,7 @@ WAKE_ENSURE_PROFILE_SCRIPT_URL="${input.wakeEnsureProfileScriptUrl}"
 WAKE_LINK_ACCOUNT_SCRIPT_URL="${input.wakeLinkAccountScriptUrl}"
 WAKE_SPAWN_CLIENT_SCRIPT_URL="${input.wakeSpawnClientScriptUrl}"
 WAKE_CLI_SCRIPT_URL="${input.wakeCliScriptUrl}"
-WAKE_LAUNCH_AGENT_LABEL="com.daily-magic.agent-witch-wake"
+WAKE_LAUNCH_AGENT_LABEL="com.agent-witch-wake"
 WAKE_PLIST_PATH="\${HOME}/Library/LaunchAgents/\${WAKE_LAUNCH_AGENT_LABEL}.plist"
 
 echo "Downloading Agent Witch wake server from \${WAKE_SERVER_SCRIPT_URL}…"
