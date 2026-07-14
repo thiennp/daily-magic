@@ -23,9 +23,7 @@ export default function CapabilityTemplateShowAllButton({
       onClick={onToggle}
       className="text-sm font-medium text-brand-700 hover:underline dark:text-brand-300"
     >
-      {showAll
-        ? `Show fewer ${tabLabel.toLowerCase()}`
-        : `Show all ${tabLabel.toLowerCase()} (${totalCount})`}
+      {showAll ? `Show fewer ${tabLabel.toLowerCase()}` : "Show more..."}
     </button>
   );
 }
