@@ -1,12 +1,13 @@
 "use client";
 
+import { useMemo } from "react";
+
 import { useDemoPreview } from "@/features/demo/DemoPreviewContext";
 import { demoMacDevices } from "@/features/demo/mock/demoMacDevices";
 import useMyMacDevices, {
   type MyMacDevice,
 } from "@/features/agent/hooks/useMyMacDevices";
 import { buildMacDeviceDisplayNameById } from "@/features/agent-witch/utils/resolveMacDeviceDisplayName";
-import { useMemo } from "react";
 
 const useHomeConnectedMacs = (): {
   readonly devices: readonly MyMacDevice[];

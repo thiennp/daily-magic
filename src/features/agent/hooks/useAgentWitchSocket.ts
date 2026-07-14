@@ -2,14 +2,12 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 
+import { useConnectionLab } from "@/features/agent-witch/connection-lab/ConnectionLabContext";
 import { useDemoPreview } from "@/features/demo/DemoPreviewContext";
-import {
-  buildAgentWitchWebSocketUrl,
-  sendAgentWitchPairingToken,
-} from "@/features/agent/utils/agentWitchSocketUtils";
+import { subscribeAgentWitchDashboardSocket } from "@/features/agent/hooks/subscribeAgentWitchDashboardSocket";
 import { buildDemoClaudePromptAck } from "@/features/agent/utils/buildDemoClaudePromptAck";
+import { resolveInitialConnectionStatus } from "@/features/agent/utils/connectAgentWitchDashboardSocket";
 import { sendClaudePromptOverSocket } from "@/features/agent/utils/sendClaudePromptOverSocket";
-import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
 
 import type { WsTestConnectionStatus } from "../types/WsTestConnectionStatus.type";
@@ -31,54 +29,33 @@ export interface UseAgentWitchSocketResult {
 
 export function useAgentWitchSocket(): UseAgentWitchSocketResult {
   const demoPreview = useDemoPreview();
+  const connectionLab = useConnectionLab();
   const socketRef = useRef<WebSocket | null>(null);
-  const [connectionStatus, setConnectionStatus] =
+  const [liveConnectionStatus, setLiveConnectionStatus] =
     useState<WsTestConnectionStatus>(() =>
-      demoPreview ? "connected" : "connecting",
+      resolveInitialConnectionStatus(
+        demoPreview !== null || connectionLab !== null,
+        demoPreview ? "connected" : connectionLab?.connectionStatus,
+      ),
     );
   const [lastResponse, setLastResponse] = useState("");
+  const connectionStatus =
+    connectionLab?.connectionStatus ??
+    (demoPreview ? "connected" : liveConnectionStatus);
 
   useEffect(() => {
-    if (demoPreview) {
+    if (connectionLab !== null || demoPreview) {
       return;
     }
 
-    const wsUrl = buildAgentWitchWebSocketUrl();
-    if (wsUrl.length === 0) {
-      return;
-    }
-
-    const socket = new WebSocket(wsUrl);
-    socketRef.current = socket;
-
-    socket.addEventListener("open", () => {
-      setConnectionStatus("connected");
-      socket.send(
-        JSON.stringify({
-          type: AGENT_WITCH_MESSAGE_TYPES.AGENT_REGISTER,
-          payload: { role: "dashboard" },
-        }),
-      );
-      sendAgentWitchPairingToken(socket);
+    return subscribeAgentWitchDashboardSocket({
+      onStatusChange: setLiveConnectionStatus,
+      onMessage: setLastResponse,
+      onSocketChange: (socket) => {
+        socketRef.current = socket;
+      },
     });
-
-    socket.addEventListener("message", (event) => {
-      setLastResponse(String(event.data));
-    });
-
-    socket.addEventListener("close", () => {
-      setConnectionStatus("disconnected");
-    });
-
-    socket.addEventListener("error", () => {
-      setConnectionStatus("error");
-    });
-
-    return () => {
-      socket.close();
-      socketRef.current = null;
-    };
-  }, [demoPreview]);
+  }, [connectionLab, demoPreview]);
 
   const sendClaudePrompt = useCallback(
     (
@@ -96,7 +73,7 @@ export function useAgentWitchSocket(): UseAgentWitchSocketResult {
         return;
       }
 
-      if (demoPreview) {
+      if (demoPreview !== null || connectionLab !== null) {
         setLastResponse(buildDemoClaudePromptAck());
         return;
       }
@@ -112,7 +89,7 @@ export function useAgentWitchSocket(): UseAgentWitchSocketResult {
         onResponse: setLastResponse,
       });
     },
-    [demoPreview],
+    [connectionLab, demoPreview],
   );
 
   return {

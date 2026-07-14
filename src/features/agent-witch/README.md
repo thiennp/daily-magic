@@ -23,3 +23,8 @@ Mac pairing, install script, WebSocket bridge, and paired-device API client.
 ```bash
 npm run feature-knowledge:query -- "paired devices api" --feature=agent-witch
 ```
+
+## Connection lab (local)
+
+- UI: http://localhost:3000/demo/connection-lab — switch mock device/WebSocket scenarios without DB
+- API mock: `AGENT_WITCH_MOCK_SCENARIO=mixed npm run dev` (see `.env.example` for scenario ids)
