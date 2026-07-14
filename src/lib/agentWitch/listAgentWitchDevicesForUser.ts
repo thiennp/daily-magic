@@ -11,6 +11,7 @@ export async function listAgentWitchDevicesForUser(
       SELECT id, user_id, device_label, display_name, dispatch_policy, claimed_at, last_seen_at, revoked_at
       FROM agent_witch_devices
       WHERE user_id = ${userId}
+        AND revoked_at IS NULL
       ORDER BY COALESCE(last_seen_at, claimed_at) DESC
     `,
   );

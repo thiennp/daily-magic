@@ -62,10 +62,7 @@ export default function WsTestPromptSection({
           onDeviceChange={composer.setSelectedDeviceId}
           onDeviceRenamed={composer.renameMacDevice}
           onDeviceDeleted={async (deviceId) => {
-            const didRevoke = await revokePairedDevice(deviceId);
-            if (didRevoke) {
-              await composer.refreshMacDevices();
-            }
+            await revokePairedDevice(deviceId);
           }}
         />
       ) : null}

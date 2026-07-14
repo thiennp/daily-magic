@@ -1,4 +1,5 @@
 import buildTemplateHarnessItemContents from "@/lib/capabilities/templates/buildTemplateHarnessItemContents";
+import getTemplateHarnessItems from "@/lib/capabilities/templates/harnessContent/getTemplateHarnessRegistry";
 import type { CapabilityTemplateHarness } from "@/lib/capabilities/templates/types/CapabilityTemplate.type";
 import type { CapabilityTypeValue } from "@/lib/capabilities/CapabilityType.constant";
 
@@ -13,10 +14,14 @@ interface BuildCapabilityTemplateHarnessInput {
 
 const buildCapabilityTemplateHarness = (
   input: BuildCapabilityTemplateHarnessInput,
-): CapabilityTemplateHarness => ({
-  slug: `template-${input.id}`,
-  name: `${input.name} harness`,
-  items: buildTemplateHarnessItemContents(input),
-});
+): CapabilityTemplateHarness => {
+  const customItems = getTemplateHarnessItems(input.id);
+
+  return {
+    slug: `template-${input.id}`,
+    name: `${input.name} harness`,
+    items: customItems ?? buildTemplateHarnessItemContents(input),
+  };
+};
 
 export default buildCapabilityTemplateHarness;

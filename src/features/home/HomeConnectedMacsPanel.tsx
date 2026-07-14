@@ -21,7 +21,7 @@ export default function HomeConnectedMacsPanel({
   isWebSocketSupported,
   host,
 }: HomeConnectedMacsPanelProps) {
-  const { devices, displayNameById, isLoading, renameDevice, refreshDevices } =
+  const { devices, displayNameById, isLoading, renameDevice } =
     useHomeConnectedMacs();
   const { localHostname, isWakeServerReachable } = useLocalMacBrowserContext();
   const onlineCount = devices.filter((device) => device.isOnline).length;
@@ -30,7 +30,7 @@ export default function HomeConnectedMacsPanel({
   return (
     <AppPanel padding="compact">
       <h2 className="text-sm font-semibold text-gray-900 dark:text-white/90">
-        Your Macs
+        Your Devices
       </h2>
       <p className="mt-1 text-xs text-gray-600 dark:text-gray-400">
         {onlineCount > 0
@@ -69,10 +69,7 @@ export default function HomeConnectedMacsPanel({
               })}
               onRenamed={renameDevice}
               onDelete={async (deviceId) => {
-                const didRevoke = await revokePairedDevice(deviceId);
-                if (didRevoke) {
-                  await refreshDevices();
-                }
+                await revokePairedDevice(deviceId);
               }}
             />
           ))}

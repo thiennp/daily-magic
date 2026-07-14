@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 
 import { useDemoPreview } from "@/features/demo/DemoPreviewContext";
+import useSubscribeMacDeviceRevoked from "@/features/agent-witch/macDevices/hooks/useSubscribeMacDeviceRevoked";
 import { fetchActivePairedDevices } from "@/features/agent-witch/utils/pairedDevicesApi";
 import isConnectMacOnboardingStepDone from "@/features/home/utils/isConnectMacOnboardingStepDone";
 import { resolveHasPairedDeviceAfterFetch } from "@/features/home/utils/resolveHasPairedDeviceAfterFetch";
@@ -79,6 +80,12 @@ export function useHasPairedDevice(): UseHasPairedDeviceResult {
       clearInterval(timer);
     };
   }, [isDemoMode, refresh]);
+
+  useSubscribeMacDeviceRevoked(
+    useCallback(() => {
+      void refresh();
+    }, [refresh]),
+  );
 
   if (isDemoMode) {
     return {

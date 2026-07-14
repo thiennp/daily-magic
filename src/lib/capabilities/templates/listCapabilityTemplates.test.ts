@@ -20,7 +20,7 @@ describe("capability templates catalog", () => {
     expect(allCapabilityTemplates).toHaveLength(40);
     expect(workflows).toHaveLength(20);
     expect(agents).toHaveLength(20);
-    expect(summaries.every((template) => template.harnessItemCount === 4)).toBe(
+    expect(summaries.every((template) => template.harnessItemCount === 5)).toBe(
       true,
     );
     expect(summaries.every((template) => template.outcomes.length >= 3)).toBe(
@@ -36,5 +36,18 @@ describe("capability templates catalog", () => {
       CapabilityType.AGENT,
     );
     expect(findCapabilityTemplateById("missing-template")).toBeUndefined();
+  });
+
+  it("uses enriched harness with subagent per preset", () => {
+    const weekly = findCapabilityTemplateById("weekly-team-status");
+    const subagent = weekly?.harness.items.find(
+      (item) => item.kind === "agent",
+    );
+
+    expect(subagent?.title).toContain("subagent");
+    expect(subagent?.content).toContain("weekly status subagent");
+    expect(
+      weekly?.harness.items.find((item) => item.kind === "rule")?.content,
+    ).toContain("shipped outcomes");
   });
 });

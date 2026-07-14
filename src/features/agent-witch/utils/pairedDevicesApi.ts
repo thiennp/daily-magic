@@ -1,3 +1,4 @@
+import { notifyMacDeviceRevoked } from "@/features/agent-witch/macDevices/macDeviceRevokedEvent";
 import { type DispatchPolicyValue } from "@/lib/dispatch/DispatchPolicy.constant";
 
 interface PairedDevice {
@@ -66,6 +67,10 @@ export const revokePairedDevice = async (
   const response = await fetch(`/api/agent-witch/devices/${deviceId}`, {
     method: "DELETE",
   });
+
+  if (response.ok) {
+    notifyMacDeviceRevoked(deviceId);
+  }
 
   return response.ok;
 };

@@ -27,15 +27,15 @@ export default function MacDeviceRowMainContent({
         <MacDeviceIcon className="h-5 w-5" />
       </div>
       <div className="min-w-0 flex-1">
-        <div className="flex flex-wrap items-center gap-2">
-          <MacDeviceNameEditor
-            key={isEditing ? `${deviceId}:edit` : `${deviceId}:view`}
-            deviceId={deviceId}
-            displayName={displayName}
-            isEditing={isEditing}
-            onEditingChange={onEditingChange}
-            onRenamed={onRenamed}
-          />
+        <MacDeviceNameEditor
+          key={isEditing ? `${deviceId}:edit` : `${deviceId}:view`}
+          deviceId={deviceId}
+          displayName={displayName}
+          isEditing={isEditing}
+          onEditingChange={onEditingChange}
+          onRenamed={onRenamed}
+        />
+        <div className="mt-1">
           <PairedDeviceOnlineBadge isOnline={isOnline} />
         </div>
         {detailText ? (

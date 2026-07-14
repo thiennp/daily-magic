@@ -33,14 +33,16 @@ const defaultOutcomes = (
   if (seed.type === CapabilityType.WORKFLOW) {
     return [
       "Workflow saved to Library with guided form fields",
-      "Harness bundle: rule, skill, command, and default instruction",
+      "Harness bundle: rule, skill, command, instruction, and specialist subagent",
+      "Subagent owns the deliverable when the main agent delegates this preset",
       "Run from Agent on your Mac when paired",
     ];
   }
 
   return [
     "Agent saved to Library with a tuned default prompt",
-    "Harness bundle: behavior rule, domain skill, and run command",
+    "Harness bundle: rule, skill, command, instruction, and specialist subagent",
+    "Subagent maximizes depth for this agent's domain on your Mac",
     "Run from Agent on your Mac when paired",
   ];
 };
@@ -49,7 +51,7 @@ const defaultDetail = (seed: CapabilityTemplateSeedInput): string =>
   [
     seed.description,
     "",
-    `This preset includes a full Agent Witch harness (${seed.category}): behavior rules, a reusable skill, a run command, and default instructions linked to the capability.`,
+    `This preset includes a full Agent Witch harness (${seed.category}): behavior rules, a domain skill, a run command, default instructions, and a specialist subagent that owns the core work when delegated.`,
     "Save it to your Library, then install the bundle to your Mac so tasks follow the same standards every time.",
   ].join(" ");
 

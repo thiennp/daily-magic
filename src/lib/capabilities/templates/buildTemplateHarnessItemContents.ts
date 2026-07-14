@@ -1,3 +1,5 @@
+import buildFallbackRuleHarnessItem from "@/lib/capabilities/templates/buildFallbackRuleHarnessItem";
+import buildFallbackSubagentHarnessItem from "@/lib/capabilities/templates/buildFallbackSubagentHarnessItem";
 import type { CapabilityTypeValue } from "@/lib/capabilities/CapabilityType.constant";
 import { CapabilityType } from "@/lib/capabilities/CapabilityType.constant";
 import type { CapabilityTemplateHarnessItem } from "@/lib/capabilities/templates/types/CapabilityTemplate.type";
@@ -18,29 +20,13 @@ const buildTemplateHarnessItemContents = (
   const slug = `template-${input.id}`;
 
   return [
-    {
-      id: `${input.id}-rule`,
-      kind: "rule",
-      title: `${input.name} behavior`,
-      path: `rules/${input.id}.mdc`,
-      content: [
-        `# ${input.name}`,
-        "",
-        `Category: ${input.category}`,
-        "",
-        isWorkflow
-          ? "When this workflow runs on the user's Mac:"
-          : "When this agent runs on the user's Mac:",
-        "- Follow the bundled skill and command for this preset.",
-        "- Use only facts from user inputs or files they reference.",
-        "- Prefer concise, scannable output ready to paste or send.",
-        `- Default intent: ${input.exampleRequest}`,
-        "",
-        "Safety:",
-        "- Do not exfiltrate secrets, tokens, or private credentials.",
-        "- Ask before destructive file operations outside the task scope.",
-      ].join("\n"),
-    },
+    buildFallbackRuleHarnessItem({
+      id: input.id,
+      name: input.name,
+      category: input.category,
+      exampleRequest: input.exampleRequest,
+      isWorkflow,
+    }),
     {
       id: `${input.id}-skill`,
       kind: "skill",
@@ -101,6 +87,7 @@ const buildTemplateHarnessItemContents = (
         "Remind the agent that this preset is meant to run on the owner's Mac via Agent Witch.",
       ].join("\n"),
     },
+    buildFallbackSubagentHarnessItem(input),
   ];
 };
 

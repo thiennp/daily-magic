@@ -1,3 +1,4 @@
+import Button from "@/components/ui/button/Button";
 import { CapabilityType } from "@/lib/capabilities/CapabilityType.constant";
 import CapabilityTemplateHarnessPreview from "@/features/capabilities/CapabilityTemplateHarnessPreview";
 import type { CapabilityTemplateSummary } from "@/lib/capabilities/templates/types/CapabilityTemplate.type";
@@ -80,20 +81,17 @@ export default function CapabilityTemplateCard({
           {harnessMessage}
         </p>
       ) : null}
-      <button
-        type="button"
+      <Button
+        size="sm"
+        variant="primary"
         disabled={isSaving || isSaved}
+        className="mt-4"
         onClick={() => {
           onSave(template.id);
         }}
-        className="mt-4 text-sm font-medium text-brand-700 hover:underline disabled:opacity-50 dark:text-brand-300"
       >
-        {isSaved
-          ? "Saved to Library"
-          : isSaving
-            ? "Saving…"
-            : "Save to Library + install harness"}
-      </button>
+        {isSaved ? "Saved" : isSaving ? "Saving…" : "Save"}
+      </Button>
     </article>
   );
 }

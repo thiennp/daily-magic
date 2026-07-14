@@ -8,6 +8,8 @@ import {
   APP_SURFACE_NESTED_CARD_CLASS,
   APP_SURFACE_SECTION_TITLE_CLASS,
 } from "@/components/surfaces/appSurfaceStyles.constant";
+import shouldShowMyOfferingsPanel from "@/features/capabilities/shouldShowMyOfferingsPanel";
+import { useDispatchTargets } from "@/features/dispatch/hooks/useDispatchTargets";
 import { useDemoPreview } from "@/features/demo/DemoPreviewContext";
 import { CapabilityStatus } from "@/lib/capabilities/CapabilityStatus.constant";
 import isUserCreatedCapability from "@/lib/capabilities/isUserCreatedCapability";
@@ -15,10 +17,13 @@ import type PublishedCapabilityRecord from "@/lib/capabilities/types/PublishedCa
 
 export default function MyOfferingsPanel() {
   const demoPreview = useDemoPreview();
+  const { groups, isLoading: isLoadingGroups } = useDispatchTargets();
   const [capabilities, setCapabilities] = useState<
     readonly PublishedCapabilityRecord[]
   >(() => demoPreview?.capabilities ?? []);
-  const [isLoading, setIsLoading] = useState(() => !demoPreview);
+  const [isLoadingCapabilities, setIsLoadingCapabilities] = useState(
+    () => !demoPreview,
+  );
 
   useEffect(() => {
     if (demoPreview) {
@@ -45,7 +50,7 @@ export default function MyOfferingsPanel() {
           );
         }
       } finally {
-        setIsLoading(false);
+        setIsLoadingCapabilities(false);
       }
     };
 
@@ -58,6 +63,15 @@ export default function MyOfferingsPanel() {
     (capability) => capability.status === CapabilityStatus.PUBLISHED,
   ).length;
 
+  const isLoading = isLoadingGroups || isLoadingCapabilities;
+
+  if (
+    isLoading ||
+    !shouldShowMyOfferingsPanel(groups.length, userCreatedCapabilities.length)
+  ) {
+    return null;
+  }
+
   return (
     <AppPanel>
       <h2 className={APP_SURFACE_SECTION_TITLE_CLASS}>
@@ -67,33 +81,27 @@ export default function MyOfferingsPanel() {
         Published assistants appear in your company directory when colleagues
         send you a task.
       </p>
-      {isLoading ? (
-        <p className="mt-4 text-sm text-gray-500 dark:text-gray-400">
-          Loading your offerings…
-        </p>
-      ) : (
-        <ul className="mt-4 space-y-3">
-          {userCreatedCapabilities.map((capability) => (
-            <li key={capability.id} className={APP_SURFACE_NESTED_CARD_CLASS}>
-              <p className="font-medium text-gray-800 dark:text-white/90">
-                {capability.name}
+      <ul className="mt-4 space-y-3">
+        {userCreatedCapabilities.map((capability) => (
+          <li key={capability.id} className={APP_SURFACE_NESTED_CARD_CLASS}>
+            <p className="font-medium text-gray-800 dark:text-white/90">
+              {capability.name}
+            </p>
+            {capability.description.length > 0 ? (
+              <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                {capability.description}
               </p>
-              {capability.description.length > 0 ? (
-                <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                  {capability.description}
-                </p>
-              ) : null}
-              <p className="mt-2 text-xs uppercase tracking-wide text-gray-500">
-                {capability.status}
-                {capability.forkedFromCapabilityId !== null
-                  ? " · saved from teammate"
-                  : ""}
-              </p>
-            </li>
-          ))}
-        </ul>
-      )}
-      {!isLoading && publishedCount === 0 ? (
+            ) : null}
+            <p className="mt-2 text-xs uppercase tracking-wide text-gray-500">
+              {capability.status}
+              {capability.forkedFromCapabilityId !== null
+                ? " · saved from teammate"
+                : ""}
+            </p>
+          </li>
+        ))}
+      </ul>
+      {publishedCount === 0 ? (
         <p className="mt-3 text-sm text-amber-700 dark:text-amber-300">
           Publish at least one assistant so teammates can choose it.
         </p>

@@ -24,7 +24,7 @@ const buildHomeSetupNextStep = (input: {
       activeStep: "install-mac",
       headline: "Next: connect a Mac",
       detail:
-        "Click Connect a Mac in Your Macs and run the install command on that computer. When install finishes, open Home — the browser links your account automatically while Agent Witch is running.",
+        "Click Connect a Mac in Your Devices and run the install command on that computer. When install finishes, open Home — the browser links your account automatically while Agent Witch is running.",
     };
   }
 
@@ -32,7 +32,7 @@ const buildHomeSetupNextStep = (input: {
     activeStep: "ready",
     headline: "Your Mac is connected",
     detail:
-      "To add another Mac, click Connect another Mac in Your Macs. Browser pairing below is only needed for harness rules and sharing.",
+      "To add another Mac, click Connect another Mac in Your Devices. Use Your setup below for harness rules and sharing.",
   };
 };
 

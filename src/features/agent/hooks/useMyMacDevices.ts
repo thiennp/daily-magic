@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { useConnectionLab } from "@/features/agent-witch/connection-lab/ConnectionLabContext";
+import useSubscribeMacDeviceRevoked from "@/features/agent-witch/macDevices/hooks/useSubscribeMacDeviceRevoked";
 import { buildMacDeviceDisplayNameById } from "@/features/agent-witch/utils/resolveMacDeviceDisplayName";
 import { resolveMyMacDevicesAfterFetch } from "@/features/agent-witch/utils/resolveMyMacDevicesAfterFetch";
 import { loadMyMacDevicesSnapshot } from "@/features/agent/hooks/fetchMyMacDevicesFromApi";
@@ -81,6 +82,18 @@ const useMyMacDevices = (): {
       window.clearInterval(timer);
     };
   }, [connectionLab, loadDevices]);
+
+  const handleDeviceRevoked = useCallback(
+    (deviceId: string) => {
+      setDevices((current) =>
+        current.filter((device) => device.id !== deviceId),
+      );
+      void loadDevices();
+    },
+    [loadDevices],
+  );
+
+  useSubscribeMacDeviceRevoked(handleDeviceRevoked);
 
   const displayNameById = useMemo(
     () => buildMacDeviceDisplayNameById(resolvedDevices),

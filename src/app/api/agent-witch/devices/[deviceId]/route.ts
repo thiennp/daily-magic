@@ -1,4 +1,8 @@
-import { getAgentWitchPairingStore } from "@/lib/agentWitch/getAgentWitchHub";
+import disconnectAgentClientsForDevice from "@/lib/agentWitch/disconnectAgentClientsForDevice";
+import {
+  getAgentWitchHub,
+  getAgentWitchPairingStore,
+} from "@/lib/agentWitch/getAgentWitchHub";
 import { revokeAgentWitchDevice } from "@/lib/agentWitch/revokeAgentWitchDevice";
 import { requireAuth } from "@/lib/auth/requireAuth";
 
@@ -30,7 +34,9 @@ export async function DELETE(
     return Response.json({ error: "Device not found." }, { status: 404 });
   }
 
+  const hub = getAgentWitchHub();
   getAgentWitchPairingStore().evictDeviceFromCache(deviceId);
+  disconnectAgentClientsForDevice(hub, actor.id, deviceId);
 
   return Response.json({ ok: true, revoked: true });
 }
