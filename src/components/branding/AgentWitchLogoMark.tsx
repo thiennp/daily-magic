@@ -1,10 +1,19 @@
+import {
+  resolveAgentWitchLogoSurfaceClasses,
+  type AgentWitchLogoSurface,
+} from "@/components/branding/resolveAgentWitchLogoSurfaceClasses";
+
 interface AgentWitchLogoMarkProps {
   readonly className?: string;
+  readonly surface?: AgentWitchLogoSurface;
 }
 
 export default function AgentWitchLogoMark({
-  className = "h-7 w-7 text-zinc-900 dark:text-zinc-100",
+  className,
+  surface = "adaptive",
 }: AgentWitchLogoMarkProps) {
+  const surfaceClasses = resolveAgentWitchLogoSurfaceClasses(surface);
+
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -14,22 +23,19 @@ export default function AgentWitchLogoMark({
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className={className}
+      className={className ?? surfaceClasses.root}
       aria-hidden
       focusable="false"
     >
-      <path
-        d="M12 2L2 12l10 10 10-10L12 2z"
-        className="fill-zinc-900/5 stroke-none dark:fill-zinc-100/10"
-      />
+      <path d="M12 2L2 12l10 10 10-10L12 2z" className={surfaceClasses.markFill} />
       <path
         d="M12 6v12m-6-6h12"
-        className="stroke-zinc-900 dark:stroke-zinc-100"
+        className={surfaceClasses.markCross}
         strokeWidth="2.5"
       />
       <path
         d="M15.5 8.5l-7 7"
-        className="stroke-zinc-400 dark:stroke-zinc-500"
+        className={surfaceClasses.markSlash}
         strokeWidth="1.5"
       />
     </svg>
