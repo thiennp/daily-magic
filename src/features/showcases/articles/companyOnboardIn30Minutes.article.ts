@@ -1,3 +1,5 @@
+import { buildShowcaseOnboardingArticleImage } from "@/features/showcases/buildShowcaseOnboardingArticleImage";
+import { ONBOARDING_SHOWCASE_SCREEN } from "@/features/showcases/onboardingShowcaseScreens.constant";
 import type ShowcaseArticle from "@/features/showcases/types/ShowcaseArticle.type";
 
 const companyOnboardIn30Minutes: ShowcaseArticle = {
@@ -20,7 +22,7 @@ const companyOnboardIn30Minutes: ShowcaseArticle = {
   sections: [
     {
       paragraphs: [
-        "Empty Marketplace kills trust. Roll out by seeding work people recognize — then invite. The sample UI below shows the shape of Companies & rules with dummy names; swap in live screenshots for your launch doc.",
+        "Empty Marketplace kills trust. Roll out by seeding work people recognize — then invite. Add PNG captures per public/showcases/onboarding/CAPTURE.md to replace the sample SVGs in this article.",
       ],
     },
     {
@@ -29,12 +31,14 @@ const companyOnboardIn30Minutes: ShowcaseArticle = {
         "Open Companies & rules (/admin/groups)",
         "What you should see: group name, members, dispatch policy",
       ],
-      image: {
-        src: "/showcases/onboarding/05-company-rules.svg",
-        alt: "Sample Companies and rules screen with approval policy and seeded playbooks",
-        caption:
-          "Sample UI: approval policy on, three seeded playbooks. Capture your real group before the company-wide invite.",
-      },
+      image: buildShowcaseOnboardingArticleImage(
+        ONBOARDING_SHOWCASE_SCREEN.COMPANY_RULES,
+        {
+          alt: "Sample Companies and rules screen with approval policy and seeded playbooks",
+          caption:
+            "Sample UI: approval policy on, three seeded playbooks. Capture your real group before the company-wide invite.",
+        },
+      ),
     },
     {
       heading: "2. Choose dispatch policy",
@@ -59,12 +63,14 @@ const companyOnboardIn30Minutes: ShowcaseArticle = {
         "Approver says yes — run starts only after approval",
         "Both open Job history in their browsers and confirm the prompt + result",
       ],
-      image: {
-        src: "/showcases/onboarding/04-job-history.svg",
-        alt: "Sample completed job history card after an approved run",
-        caption:
-          "Sample UI: completed run after approval. Each browser keeps its own local-first history today.",
-      },
+      image: buildShowcaseOnboardingArticleImage(
+        ONBOARDING_SHOWCASE_SCREEN.JOB_HISTORY,
+        {
+          alt: "Sample completed job history card after an approved run",
+          caption:
+            "Sample UI: completed run after approval. Each browser keeps its own local-first history today.",
+        },
+      ),
     },
     {
       heading: "5. Invite everyone else",

@@ -12,6 +12,10 @@ Public SEO articles.
 
 - `/showcases`
 
+## Onboarding screenshots
+
+Real PNG captures: `public/showcases/onboarding/CAPTURE.md` (drop files beside SVG samples; articles pick up PNG automatically).
+
 ## APIs
 
 _None._
