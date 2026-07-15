@@ -4,34 +4,21 @@ import { getAgentAutomationById } from "@/lib/automations/agentAutomationQueries
 import { readAutomationFieldValidationErrors } from "@/lib/automations/buildAutomationDispatchPrompt";
 import { completeWebhookAutomationDispatch } from "@/lib/automations/completeWebhookAutomationDispatch.util";
 import { failAgentAutomationDispatch } from "@/lib/automations/failAgentAutomationDispatch.util";
-import type AgentAutomationRecord from "@/lib/automations/types/AgentAutomationRecord.type";
 import type DispatchAgentAutomationResult from "@/lib/automations/types/DispatchAgentAutomationResult.type";
 import type AgentWitchHubRuntime from "@/lib/agentWitch/types/AgentWitchHubRuntime.type";
 import { getPublishedCapabilityById } from "@/lib/capabilities/capabilityQueries";
-
-export type DispatchAgentAutomationSource = "schedule" | "webhook" | "manual";
 
 export type { DispatchAgentAutomationResult };
 
 export const dispatchAgentAutomation = async (input: {
   readonly automationId: string;
   readonly runtime: AgentWitchHubRuntime;
-  readonly source: DispatchAgentAutomationSource;
   readonly fieldValueOverrides?: Readonly<Record<string, string>>;
 }): Promise<DispatchAgentAutomationResult> => {
   const automation = await getAgentAutomationById(input.automationId);
 
   if (automation === null) {
     throw new Error("Automation not found.");
-  }
-
-  if (
-    automation.triggerType === AGENT_AUTOMATION_TRIGGER_TYPES.SCHEDULE &&
-    input.source === "schedule"
-  ) {
-    throw new Error(
-      "Scheduled automations run on the Mac. Sync them to Agent Witch instead.",
-    );
   }
 
   if (automation.triggerType === AGENT_AUTOMATION_TRIGGER_TYPES.SCHEDULE) {

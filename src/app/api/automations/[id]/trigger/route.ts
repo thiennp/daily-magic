@@ -68,7 +68,6 @@ export async function POST(
   const result = await dispatchAgentAutomation({
     automationId: id,
     runtime: getAgentWitchHub(),
-    source: "webhook",
     fieldValueOverrides,
   });
 
