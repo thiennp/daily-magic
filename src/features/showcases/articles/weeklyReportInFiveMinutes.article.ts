@@ -24,6 +24,10 @@ const weeklyReportInFiveMinutes: ShowcaseArticle = {
       slug: "standup-from-local-branch",
       label: "Standup notes from your local branch",
     },
+    {
+      slug: "schedule-workflow-on-your-mac",
+      label: "Schedule the same workflow on your Mac",
+    },
   ],
   sections: [
     {

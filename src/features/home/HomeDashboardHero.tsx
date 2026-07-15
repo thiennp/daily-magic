@@ -45,8 +45,11 @@ export default function HomeDashboardHero({ user }: HomeDashboardHeroProps) {
           Send a task
         </Link>
         <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-sm">
-          <Link href="/marketplace" className={APP_SURFACE_TEXT_LINK_CLASS}>
-            Browse marketplace →
+          <Link href="/library" className={APP_SURFACE_TEXT_LINK_CLASS}>
+            Browse library →
+          </Link>
+          <Link href="/automations" className={APP_SURFACE_TEXT_LINK_CLASS}>
+            Automations →
           </Link>
           <Link href="/reports" className={APP_SURFACE_TEXT_LINK_MUTED_CLASS}>
             View job history →

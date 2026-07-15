@@ -1,13 +1,9 @@
 import { describe, expect, it } from "vitest";
 
-import type { OnboardingStep } from "@/features/home/loadOnboardingSteps";
+import type { OnboardingStep } from "@/features/home/utils/buildOnboardingSteps";
 import findNextIncompleteOnboardingStep from "@/features/home/utils/findNextIncompleteOnboardingStep";
 
-const buildStep = (
-  id: string,
-  done: boolean,
-  label = id,
-): OnboardingStep => ({
+const buildStep = (id: string, done: boolean, label = id): OnboardingStep => ({
   id,
   label,
   done,
@@ -30,6 +26,17 @@ describe("findNextIncompleteOnboardingStep", () => {
       buildStep("pair", true),
       buildStep("workflow", true),
       buildStep("task", true),
+    ];
+
+    expect(findNextIncompleteOnboardingStep(steps)).toBeNull();
+  });
+
+  it("skips optional steps when earlier required steps are done", () => {
+    const steps = [
+      buildStep("pair", true),
+      buildStep("workflow", true),
+      buildStep("task", true),
+      { ...buildStep("automate", false), optional: true },
     ];
 
     expect(findNextIncompleteOnboardingStep(steps)).toBeNull();

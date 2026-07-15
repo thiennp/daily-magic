@@ -6,6 +6,7 @@ import MarketplaceHomePromo from "@/features/marketplace/MarketplaceHomePromo";
 import HomeConnectedMacsPanel from "@/features/home/HomeConnectedMacsPanel";
 import HomeOnboardingMainPanel from "@/features/home/HomeOnboardingMainPanel";
 import HomeLinkAccountGate from "@/features/home/HomeLinkAccountGate";
+import HomeOnboardingAutomateNudge from "@/features/home/HomeOnboardingAutomateNudge";
 import HomeOnboardingChecklist from "@/features/home/HomeOnboardingChecklist";
 import HomeSetupSection from "@/features/home/HomeSetupSection";
 import {
@@ -49,6 +50,7 @@ export default async function HomeAuthenticatedView({
       <div className={HOME_DASHBOARD_GRID_CLASS}>
         <aside className={HOME_LEFT_RAIL_CLASS}>
           <HomeOnboardingChecklist />
+          <HomeOnboardingAutomateNudge />
           <HomeConnectedMacsPanel
             installCommand={installCommand}
             isWebSocketSupported={isWebSocketSupported}

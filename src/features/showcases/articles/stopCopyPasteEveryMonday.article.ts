@@ -24,6 +24,10 @@ const stopCopyPasteEveryMonday: ShowcaseArticle = {
       slug: "weekly-report-in-five-minutes",
       label: "Friday status from a form, not a blank chat box",
     },
+    {
+      slug: "schedule-workflow-on-your-mac",
+      label: "Schedule it on your Mac instead of sending manually",
+    },
   ],
   sections: [
     {
