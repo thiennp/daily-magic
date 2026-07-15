@@ -39,20 +39,20 @@ export default function MacDeviceRow({
       isOnline={isOnline}
       detailText={detailText}
       isEditing={isEditing}
+      isSelected={isSelected}
       onEditingChange={setIsEditing}
       onRenamed={onRenamed}
     />
   );
 
-  const selectableClassName = isSelected
-    ? "bg-brand-50/60 dark:bg-brand-950/20"
-    : "hover:bg-gray-50 dark:hover:bg-white/[0.03]";
+  const rowSurfaceClassName =
+    onSelect !== undefined && isSelected
+      ? "bg-brand-50/60 dark:bg-brand-950/20"
+      : "hover:bg-gray-50 dark:hover:bg-white/[0.03]";
 
   const rowInner = (
     <div
-      className={`group flex w-full items-start gap-3 rounded-lg py-1 ${
-        onSelect !== undefined ? selectableClassName : ""
-      }`}
+      className={`group flex w-full items-center gap-3 rounded-lg py-1 ${rowSurfaceClassName}`}
     >
       {onSelect !== undefined ? (
         <div

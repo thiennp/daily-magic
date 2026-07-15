@@ -8,9 +8,21 @@ interface MacDeviceRowMainContentProps {
   readonly isOnline: boolean;
   readonly detailText?: string;
   readonly isEditing: boolean;
+  readonly isSelected?: boolean;
   readonly onEditingChange: (isEditing: boolean) => void;
   readonly onRenamed: (deviceId: string, deviceLabel: string) => void;
 }
+
+const buildMacDeviceIconShellClassName = (isSelected: boolean): string => {
+  const baseClassName =
+    "flex h-10 w-10 shrink-0 items-center justify-center rounded-lg text-gray-600 dark:text-gray-300";
+
+  if (isSelected) {
+    return `${baseClassName} bg-transparent`;
+  }
+
+  return `${baseClassName} bg-gray-100 group-hover:bg-transparent group-focus-within:bg-transparent dark:bg-gray-800 dark:group-hover:bg-transparent`;
+};
 
 export default function MacDeviceRowMainContent({
   deviceId,
@@ -18,12 +30,13 @@ export default function MacDeviceRowMainContent({
   isOnline,
   detailText,
   isEditing,
+  isSelected = false,
   onEditingChange,
   onRenamed,
 }: MacDeviceRowMainContentProps) {
   return (
-    <div className="flex min-w-0 flex-1 items-start gap-3 text-left">
-      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-300">
+    <div className="flex min-w-0 flex-1 items-center gap-3 text-left">
+      <div className={buildMacDeviceIconShellClassName(isSelected)}>
         <MacDeviceIcon className="h-5 w-5" />
       </div>
       <div className="flex min-w-0 flex-1 flex-col items-start gap-1 text-left">

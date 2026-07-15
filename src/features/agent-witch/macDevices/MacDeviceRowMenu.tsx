@@ -37,7 +37,7 @@ export default function MacDeviceRowMenu({
 
   return (
     <div
-      className={`relative shrink-0 self-start transition-opacity ${
+      className={`relative shrink-0 self-center transition-opacity ${
         isOpen
           ? "opacity-100"
           : "opacity-0 group-hover:opacity-100 group-focus-within:opacity-100"
