@@ -21,6 +21,10 @@ const managerApprovesBeforeRun: ShowcaseArticle = {
       slug: "request-sensitive-work-with-approval",
       label: "Request sensitive work with approval first",
     },
+    {
+      slug: "human-checkpoints-before-mac-runs",
+      label: "Human checkpoints in the browser checklist",
+    },
   ],
   sections: [
     {

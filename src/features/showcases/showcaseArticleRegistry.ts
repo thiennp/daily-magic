@@ -4,6 +4,7 @@ import controlMacFromPhone from "@/features/showcases/articles/controlMacFromPho
 import findBestPromptInCompany from "@/features/showcases/articles/findBestPromptInCompany.article";
 import firstAgentTaskIn5Minutes from "@/features/showcases/articles/firstAgentTaskIn5Minutes.article";
 import fromMyPromptToOurWorkflow from "@/features/showcases/articles/fromMyPromptToOurWorkflow.article";
+import humanCheckpointsBeforeMacRuns from "@/features/showcases/articles/humanCheckpointsBeforeMacRuns.article";
 import manageCompanyAgents from "@/features/showcases/articles/manageCompanyAgents.article";
 import managerApprovesBeforeRun from "@/features/showcases/articles/managerApprovesBeforeRun.article";
 import newHiresCompanyPlaybooks from "@/features/showcases/articles/newHiresCompanyPlaybooks.article";
@@ -55,6 +56,7 @@ export const SHOWCASE_ARTICLES_PHASE_3: readonly ShowcaseArticle[] = [
   requestSensitiveWorkWithApproval,
   oneEmployeeOneAgent,
   companyWorkflowsSetupOnce,
+  humanCheckpointsBeforeMacRuns,
   manageCompanyAgents,
   managerApprovesBeforeRun,
   fromMyPromptToOurWorkflow,

@@ -30,6 +30,10 @@ const scheduleWorkflowOnYourMac: ShowcaseArticle = {
       slug: "when-executor-mac-is-offline",
       label: "What happens when your Mac is asleep",
     },
+    {
+      slug: "human-checkpoints-before-mac-runs",
+      label: "Human steps you complete in the browser",
+    },
   ],
   sections: [
     {

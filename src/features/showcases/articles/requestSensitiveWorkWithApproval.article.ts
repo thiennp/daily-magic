@@ -22,6 +22,10 @@ const requestSensitiveWorkWithApproval: ShowcaseArticle = {
       slug: "manager-approves-before-run",
       label: "How manager approval works in practice",
     },
+    {
+      slug: "human-checkpoints-before-mac-runs",
+      label: "Human steps you do before the Mac runs",
+    },
   ],
   sections: [
     {

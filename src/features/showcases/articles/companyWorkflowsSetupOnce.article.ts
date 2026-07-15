@@ -13,6 +13,16 @@ const companyWorkflowsSetupOnce: ShowcaseArticle = {
     "Teammates who save or use published playbooks from Marketplace or directory",
   ],
   tryNext: { label: "Open Library", href: "/library" },
+  relatedShowcases: [
+    {
+      slug: "human-checkpoints-before-mac-runs",
+      label: "Add human checkpoints to a company workflow",
+    },
+    {
+      slug: "new-hires-company-playbooks",
+      label: "Onboard new hires with shared playbooks",
+    },
+  ],
   sections: [
     {
       paragraphs: [
