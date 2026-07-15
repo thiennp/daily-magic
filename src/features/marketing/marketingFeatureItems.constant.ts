@@ -9,19 +9,19 @@ export default interface MarketingFeatureItem {
 
 export const MARKETING_FEATURE_ITEMS: readonly MarketingFeatureItem[] = [
   {
-    title: "Send tasks",
-    body: "Ask your Mac to do something from the browser — for yourself or a colleague in your company.",
+    title: "Run on your Mac",
+    body: "You click in the browser. The work runs on a real Mac—yours or a teammate's.",
     preview: "dispatch",
   },
   {
-    title: "Manager approvals",
-    body: "Company admins can require approval before someone else's computer is used — managers stay in control.",
+    title: "Approvals when needed",
+    body: "Your company can require a manager OK before someone else's Mac runs a sensitive job.",
     preview: "approve",
     emphasized: true,
   },
   {
-    title: "See what happened",
-    body: "Every job is saved with its status, who sent it, and what came back.",
+    title: "Clear history",
+    body: "Every run is saved: who sent it, whether it was approved, and what came back.",
     preview: "report",
   },
 ] as const;

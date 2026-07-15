@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import HomeMarketingPopularPresetsGrid from "@/features/home/components/HomeMarketingPopularPresetsGrid";
+import { HOME_MARKETING_POPULAR_PRESETS_COPY } from "@/features/home/constants/homeMarketingLandingCopy.constant";
 import resolveHomePopularPresets from "@/features/home/utils/resolveHomePopularPresets";
 import { MARKETING_TEXT_LINK_CLASSES } from "@/features/marketing/marketingInteractiveClasses.constant";
 import { MARKETING_TEXT_SECONDARY_CLASSES } from "@/features/marketing/marketingSurfaceClasses.constant";
@@ -9,13 +10,14 @@ import { mergeMarketingClasses } from "@/features/marketing/mergeMarketingClasse
 
 export default function HomeMarketingPopularPresets() {
   const presets = resolveHomePopularPresets();
+  const copy = HOME_MARKETING_POPULAR_PRESETS_COPY;
 
   return (
     <section className="mt-24" aria-labelledby="popular-presets-heading">
       <MarketingSectionHeader
-        eyebrow="Popular workflows"
-        title="Start from a playbook, automate it for you or your team"
-        description="Pick a free preset, sign in, and save it to your library—then schedule it on your Mac or share the workflow with your group."
+        eyebrow={copy.eyebrow}
+        title={copy.title}
+        description={copy.description}
         headingId="popular-presets-heading"
       />
       <HomeMarketingPopularPresetsGrid presets={presets} />
@@ -25,12 +27,12 @@ export default function HomeMarketingPopularPresets() {
           MARKETING_TEXT_SECONDARY_CLASSES,
         )}
       >
-        Browse all presets after you sign in on the{" "}
+        {copy.footerPrefix}{" "}
         <Link
           href="/login?callbackUrl=%2Fmarketplace"
           className={MARKETING_TEXT_LINK_CLASSES}
         >
-          marketplace
+          {copy.footerLink}
         </Link>
         .
       </p>

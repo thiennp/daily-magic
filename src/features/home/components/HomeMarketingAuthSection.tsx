@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 
 import LoginForm from "@/features/auth/LoginForm";
+import { HOME_MARKETING_AUTH_COPY } from "@/features/home/constants/homeMarketingLandingCopy.constant";
 import { MARKETING_FOCAL_CARD_CLASSES } from "@/features/marketing/marketingPalette.constant";
 import {
   MARKETING_TEXT_MUTED_CLASSES,
@@ -14,7 +15,10 @@ export default function HomeMarketingAuthSection() {
     <section
       id="get-started"
       aria-labelledby="get-started-heading"
-      className={mergeMarketingClasses(MARKETING_FOCAL_CARD_CLASSES, "p-6 sm:p-8")}
+      className={mergeMarketingClasses(
+        MARKETING_FOCAL_CARD_CLASSES,
+        "p-6 sm:p-8",
+      )}
     >
       <h2
         id="get-started-heading"
@@ -23,7 +27,7 @@ export default function HomeMarketingAuthSection() {
           MARKETING_TEXT_PRIMARY_CLASSES,
         )}
       >
-        Get started
+        {HOME_MARKETING_AUTH_COPY.title}
       </h2>
       <p
         className={mergeMarketingClasses(
@@ -31,13 +35,16 @@ export default function HomeMarketingAuthSection() {
           MARKETING_TEXT_SECONDARY_CLASSES,
         )}
       >
-        Sign in, connect your Mac, and send your first task in a few minutes.
+        {HOME_MARKETING_AUTH_COPY.description}
       </p>
       <div className="mt-6">
         <Suspense
           fallback={
             <p
-              className={mergeMarketingClasses("text-sm", MARKETING_TEXT_MUTED_CLASSES)}
+              className={mergeMarketingClasses(
+                "text-sm",
+                MARKETING_TEXT_MUTED_CLASSES,
+              )}
               role="status"
             >
               Loading sign-in form…

@@ -1,5 +1,8 @@
 import Link from "next/link";
 
+import HomeMarketingAuthSection from "./HomeMarketingAuthSection";
+import HomeMarketingHeroSteps from "./HomeMarketingHeroSteps";
+import { HOME_MARKETING_HERO_COPY } from "@/features/home/constants/homeMarketingLandingCopy.constant";
 import MarketingProductPreview from "@/features/marketing/MarketingProductPreview";
 import MarketingTrustStrip from "@/features/marketing/MarketingTrustStrip";
 import { MARKETING_CTA_GHOST_CLASSES } from "@/features/marketing/marketingInteractiveClasses.constant";
@@ -8,9 +11,6 @@ import {
   MARKETING_TEXT_SECONDARY_CLASSES,
 } from "@/features/marketing/marketingSurfaceClasses.constant";
 import { mergeMarketingClasses } from "@/features/marketing/mergeMarketingClasses";
-import { AGENT_WITCH_PRODUCT_NAME } from "@/lib/agentWitch/agentWitchProductName.constant";
-
-import HomeMarketingAuthSection from "./HomeMarketingAuthSection";
 
 export default function HomeMarketingHero() {
   return (
@@ -18,7 +18,7 @@ export default function HomeMarketingHero() {
       <div className="space-y-8 lg:pt-2">
         <div className="space-y-6">
           <p className="text-sm font-medium uppercase tracking-wider text-zinc-500">
-            Personal &amp; team automations
+            {HOME_MARKETING_HERO_COPY.eyebrow}
           </p>
           <h1
             className={mergeMarketingClasses(
@@ -26,7 +26,7 @@ export default function HomeMarketingHero() {
               MARKETING_TEXT_PRIMARY_CLASSES,
             )}
           >
-            Create automations that work for you—and your whole team.
+            {HOME_MARKETING_HERO_COPY.title}
           </h1>
           <p
             className={mergeMarketingClasses(
@@ -34,21 +34,18 @@ export default function HomeMarketingHero() {
               MARKETING_TEXT_SECONDARY_CLASSES,
             )}
           >
-            {AGENT_WITCH_PRODUCT_NAME} helps people and companies turn playbooks
-            into jobs that run on Macs: schedule recurring workflows, trigger
-            them with webhooks, and send work to yourself or a colleague. Your
-            group can require manager approval when it matters, and every run
-            stays in history.
+            {HOME_MARKETING_HERO_COPY.description}
           </p>
+          <HomeMarketingHeroSteps />
         </div>
 
         <nav aria-label="Jump to sign in">
           <Link
             href="#get-started"
             className={MARKETING_CTA_GHOST_CLASSES}
-            aria-label="Jump to the get started sign-in form"
+            aria-label="Jump to create a free account"
           >
-            Get started with your email or Google →
+            {HOME_MARKETING_HERO_COPY.cta}
           </Link>
         </nav>
 

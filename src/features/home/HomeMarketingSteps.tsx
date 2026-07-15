@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { APP_SURFACE_STEP_BADGE_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
+import { HOME_MARKETING_STEPS_COPY } from "@/features/home/constants/homeMarketingLandingCopy.constant";
 import MarketingCard from "@/features/marketing/MarketingCard";
 import { MARKETING_TEXT_LINK_CLASSES } from "@/features/marketing/marketingInteractiveClasses.constant";
 import {
@@ -9,42 +10,20 @@ import {
 } from "@/features/marketing/marketingSurfaceClasses.constant";
 import MarketingSectionHeader from "@/features/marketing/MarketingSectionHeader";
 import { mergeMarketingClasses } from "@/features/marketing/mergeMarketingClasses";
-import buildAgentComposerHref from "@/lib/library/buildAgentComposerHref";
-
-const MARKETING_STEPS = [
-  {
-    title: "Sign in",
-    body: "Create your account and open your home page.",
-    href: "#get-started",
-  },
-  {
-    title: "Install on your Mac",
-    body: "After sign-in, copy the install command from Your setup on the home page.",
-    href: "/login",
-  },
-  {
-    title: "Connect & invite",
-    body: "Link your Mac and invite colleagues from Companies.",
-    href: "/admin/groups",
-  },
-  {
-    title: "Send & review",
-    body: "Send a task from home and read what happened in Job history.",
-    href: buildAgentComposerHref(),
-  },
-] as const;
 
 export default function HomeMarketingSteps() {
+  const copy = HOME_MARKETING_STEPS_COPY;
+
   return (
     <section className="mt-24" aria-labelledby="steps-heading">
       <MarketingSectionHeader
-        eyebrow="How it works"
-        title="Four steps to your first task"
+        eyebrow={copy.eyebrow}
+        title={copy.title}
         headingId="steps-heading"
       />
       <MarketingCard as="section" className="mt-10" interactive>
         <ol className="grid gap-8 md:grid-cols-4">
-          {MARKETING_STEPS.map((step, index) => (
+          {copy.steps.map((step, index) => (
             <li
               key={step.title}
               className="group space-y-3 rounded-xl p-2 transition duration-200 hover:bg-slate-50/80"

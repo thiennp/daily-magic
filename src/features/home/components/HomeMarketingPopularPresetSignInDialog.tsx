@@ -3,6 +3,8 @@
 import Link from "next/link";
 
 import { Modal } from "@/components/ui/modal";
+import { HOME_MARKETING_POPULAR_PRESET_DIALOG_COPY } from "@/features/home/constants/homeMarketingLandingCopy.constant";
+import type { HomePopularPresetSummary } from "@/features/home/utils/resolveHomePopularPresets";
 import {
   MARKETING_CTA_GHOST_CLASSES,
   MARKETING_CTA_PRIMARY_CLASSES,
@@ -13,8 +15,6 @@ import {
   MARKETING_TEXT_SECONDARY_CLASSES,
 } from "@/features/marketing/marketingSurfaceClasses.constant";
 import { mergeMarketingClasses } from "@/features/marketing/mergeMarketingClasses";
-
-import type { HomePopularPresetSummary } from "@/features/home/utils/resolveHomePopularPresets";
 
 interface HomeMarketingPopularPresetSignInDialogProps {
   readonly preset: HomePopularPresetSummary | null;
@@ -29,6 +29,7 @@ export default function HomeMarketingPopularPresetSignInDialog({
     return null;
   }
 
+  const copy = HOME_MARKETING_POPULAR_PRESET_DIALOG_COPY;
   const loginHref = `/login?callbackUrl=${encodeURIComponent("/marketplace")}`;
 
   return (
@@ -40,7 +41,7 @@ export default function HomeMarketingPopularPresetSignInDialog({
           MARKETING_TEXT_PRIMARY_CLASSES,
         )}
       >
-        Sign in to use this workflow
+        {copy.title}
       </h2>
       <p
         className={mergeMarketingClasses(
@@ -56,16 +57,15 @@ export default function HomeMarketingPopularPresetSignInDialog({
           MARKETING_TEXT_SECONDARY_CLASSES,
         )}
       >
-        Create a free account or sign in to save{" "}
-        <span className="font-medium">{preset.name}</span> to your library and
-        run it on your Mac.
+        {copy.bodyPrefix} <span className="font-medium">{preset.name}</span>
+        {copy.bodySuffix}
       </p>
       <div className="mt-6 flex flex-col gap-3 sm:flex-row">
         <Link href={loginHref} className={MARKETING_CTA_PRIMARY_CLASSES}>
-          Sign in
+          {copy.signIn}
         </Link>
         <Link href="/#get-started" className={MARKETING_CTA_SECONDARY_CLASSES}>
-          Register on this page
+          {copy.register}
         </Link>
       </div>
       <button
@@ -73,7 +73,7 @@ export default function HomeMarketingPopularPresetSignInDialog({
         onClick={onClose}
         className={mergeMarketingClasses("mt-4", MARKETING_CTA_GHOST_CLASSES)}
       >
-        Not now
+        {copy.dismiss}
       </button>
     </Modal>
   );

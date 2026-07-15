@@ -2,10 +2,10 @@ import MarketingStatusBadge from "@/features/marketing/MarketingStatusBadge";
 import { MARKETING_MOCK_SHELL_CLASSES } from "@/features/marketing/marketingPalette.constant";
 
 const PREVIEW_FLOW_STEPS = [
-  { label: "Browser", detail: "You send a task" },
-  { label: "Approval", detail: "If your company requires it" },
-  { label: "Your Mac", detail: "The assistant runs" },
-  { label: "Report", detail: "Results are saved" },
+  { label: "You", detail: "Pick a workflow" },
+  { label: "Approve", detail: "If your team requires it" },
+  { label: "Mac", detail: "It runs the job" },
+  { label: "History", detail: "Results are saved" },
 ] as const;
 
 export default function MarketingProductPreview() {
