@@ -1,4 +1,7 @@
-import { isAgentWitchDeviceRecentlySeen } from "@/lib/agentWitch/agentWitchHeartbeat.constant";
+import {
+  AGENT_WITCH_ACTIVE_THRESHOLD_MS,
+  isAgentWitchDeviceRecentlySeen,
+} from "@/lib/agentWitch/agentWitchHeartbeat.constant";
 import type AgentWitchHubClient from "@/lib/agentWitch/types/AgentWitchHubClient.type";
 import type AgentWitchDeviceRecord from "@/lib/agentWitch/types/AgentWitchDeviceRecord.type";
 
@@ -28,9 +31,18 @@ const buildAgentWitchDevicesWithOnlineStatus = (
 
   return devices.map((device) => {
     const onlineClient = onlineByDeviceId.get(device.id);
-    const isConnected = onlineClient !== undefined;
+    const nowMs = Date.now();
+    const isHubConnected = onlineClient !== undefined;
+    const isActivelyCheckingIn =
+      !isHubConnected &&
+      isAgentWitchDeviceRecentlySeen(
+        device.lastSeenAt,
+        nowMs,
+        AGENT_WITCH_ACTIVE_THRESHOLD_MS,
+      );
+    const isConnected = isHubConnected || isActivelyCheckingIn;
     const isOnline =
-      isConnected || isAgentWitchDeviceRecentlySeen(device.lastSeenAt);
+      isConnected || isAgentWitchDeviceRecentlySeen(device.lastSeenAt, nowMs);
 
     return {
       id: device.id,
@@ -43,7 +55,9 @@ const buildAgentWitchDevicesWithOnlineStatus = (
       dispatchPolicy: device.dispatchPolicy,
       isConnected,
       isOnline,
-      lastHeartbeatAt: onlineClient?.lastHeartbeatAt ?? null,
+      lastHeartbeatAt:
+        onlineClient?.lastHeartbeatAt ??
+        (isActivelyCheckingIn ? device.lastSeenAt : null),
     };
   });
 };

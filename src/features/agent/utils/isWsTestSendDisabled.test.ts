@@ -13,8 +13,8 @@ const baseInput = {
   isTeamDispatch: false,
   selectedCapabilityId: "",
   isLibraryPlaybook: false,
-  hasOnlineMac: true,
-  selectedDeviceIsOnline: true,
+  hasDispatchReadyMac: true,
+  selectedDeviceCanDispatch: true,
 };
 
 describe("isWsTestSendDisabled", () => {
@@ -27,20 +27,20 @@ describe("isWsTestSendDisabled", () => {
     ).toBe(true);
   });
 
-  it("disables send when no Mac is online for self-dispatch", () => {
+  it("disables send when no Mac is dispatch-ready for self-dispatch", () => {
     expect(
       isWsTestSendDisabled({
         ...baseInput,
-        hasOnlineMac: false,
+        hasDispatchReadyMac: false,
       }),
     ).toBe(true);
   });
 
-  it("disables send when selected Mac is offline", () => {
+  it("disables send when selected Mac cannot dispatch", () => {
     expect(
       isWsTestSendDisabled({
         ...baseInput,
-        selectedDeviceIsOnline: false,
+        selectedDeviceCanDispatch: false,
       }),
     ).toBe(true);
   });
@@ -50,8 +50,8 @@ describe("isWsTestSendDisabled", () => {
       isWsTestSendDisabled({
         ...baseInput,
         isTeamDispatch: true,
-        hasOnlineMac: false,
-        selectedDeviceIsOnline: false,
+        hasDispatchReadyMac: false,
+        selectedDeviceCanDispatch: false,
         selectedGroupId: "group-1",
         selectedTargetUserId: "user-2",
         selectedCapabilityId: "cap-1",

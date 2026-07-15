@@ -6,6 +6,7 @@ import MacDeviceOfflineWakeHint from "@/features/agent-witch/macDevices/MacDevic
 import MacDeviceRowMainContent from "@/features/agent-witch/macDevices/MacDeviceRowMainContent";
 import MacDeviceRowMenu from "@/features/agent-witch/macDevices/MacDeviceRowMenu";
 import confirmMacDeviceRevoke from "@/features/agent-witch/macDevices/utils/confirmMacDeviceRevoke";
+import { resolveMacPresenceTier } from "@/features/agent-witch/utils/macDevicePresence";
 
 interface MacDeviceRowProps {
   readonly deviceId: string;
@@ -93,7 +94,8 @@ export default function MacDeviceRow({
   );
 
   const wrappedRow =
-    isOnline === false ? (
+    resolveMacPresenceTier({ isOnline, isConnected: isConnected ?? false }) ===
+    "offline" ? (
       <MacDeviceOfflineWakeHint
         displayName={displayName}
         isWakeServerReachable={isWakeServerReachable}

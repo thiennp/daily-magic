@@ -2,17 +2,11 @@
 
 import { useMemo, useState } from "react";
 
+import {
+  canDispatchToMac,
+  pickDefaultMacDeviceId,
+} from "@/features/agent-witch/utils/macDevicePresence";
 import useMyMacDevices from "@/features/agent/hooks/useMyMacDevices";
-
-const pickDefaultMacDeviceId = (
-  devices: ReadonlyArray<{
-    readonly id: string;
-    readonly isConnected: boolean;
-  }>,
-): string => {
-  const onlineDevice = devices.find((device) => device.isConnected);
-  return onlineDevice?.id ?? devices[0]?.id ?? "";
-};
 
 const useMacDeviceSelection = (): {
   readonly devices: ReturnType<typeof useMyMacDevices>["devices"];
@@ -22,8 +16,8 @@ const useMacDeviceSelection = (): {
   readonly selectedDeviceId: string;
   readonly setSelectedDeviceId: (deviceId: string) => void;
   readonly isLoading: boolean;
-  readonly hasOnlineMac: boolean;
-  readonly onlineCount: number;
+  readonly hasDispatchReadyMac: boolean;
+  readonly dispatchReadyMacCount: number;
   readonly devicesHadLoadError: boolean;
   readonly refreshDevices: () => Promise<void>;
   readonly renameDevice: ReturnType<typeof useMyMacDevices>["renameDevice"];
@@ -52,7 +46,9 @@ const useMacDeviceSelection = (): {
       : pickDefaultMacDeviceId(devices);
   }, [devices, preferredDeviceId]);
 
-  const onlineCount = devices.filter((device) => device.isConnected).length;
+  const dispatchReadyMacCount = devices.filter((device) =>
+    canDispatchToMac(device),
+  ).length;
 
   return {
     devices,
@@ -60,8 +56,8 @@ const useMacDeviceSelection = (): {
     selectedDeviceId,
     setSelectedDeviceId: setPreferredDeviceId,
     isLoading,
-    hasOnlineMac: onlineCount > 0,
-    onlineCount,
+    hasDispatchReadyMac: dispatchReadyMacCount > 0,
+    dispatchReadyMacCount,
     devicesHadLoadError,
     refreshDevices,
     renameDevice,

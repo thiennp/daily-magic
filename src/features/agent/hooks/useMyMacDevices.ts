@@ -10,6 +10,8 @@ import {
 import useSubscribeMacDeviceRevoked from "@/features/agent-witch/macDevices/hooks/useSubscribeMacDeviceRevoked";
 import { buildMacDeviceDisplayNameById } from "@/features/agent-witch/utils/resolveMacDeviceDisplayName";
 import { useConnectionLab } from "@/features/agent-witch/connection-lab/ConnectionLabContext";
+import { demoMacDevices } from "@/features/demo/mock/demoMacDevices";
+import { useDemoPreview } from "@/features/demo/DemoPreviewContext";
 
 export interface MyMacDevice {
   readonly id: string;
@@ -42,6 +44,7 @@ const useMyMacDevices = (): {
   readonly renameDevice: (deviceId: string, displayName: string) => void;
 } => {
   const connectionLab = useConnectionLab();
+  const demoPreview = useDemoPreview();
   const [displayNameOverrides, setDisplayNameOverrides] = useState<
     Record<string, string>
   >({});
@@ -51,7 +54,11 @@ const useMyMacDevices = (): {
     () => null,
   );
   const resolvedSnapshot = snapshot ?? getPairedDevicesSnapshotOrEmpty();
-  const baseDevices = connectionLab?.mockDevices ?? resolvedSnapshot.devices;
+  const baseDevices =
+    connectionLab?.mockDevices ??
+    (demoPreview !== null
+      ? demoMacDevices.map((device) => ({ ...device }))
+      : resolvedSnapshot.devices);
   const devices = useMemo(
     () => applyDisplayNameOverrides(baseDevices, displayNameOverrides),
     [baseDevices, displayNameOverrides],
@@ -62,12 +69,12 @@ const useMyMacDevices = (): {
   );
 
   const refresh = useCallback(async (): Promise<void> => {
-    if (connectionLab !== null) {
+    if (connectionLab !== null || demoPreview !== null) {
       return;
     }
 
     await refreshPairedDevices();
-  }, [connectionLab]);
+  }, [connectionLab, demoPreview]);
 
   useSubscribeMacDeviceRevoked(
     useCallback(() => {
@@ -85,7 +92,10 @@ const useMyMacDevices = (): {
   return {
     devices,
     displayNameById,
-    isLoading: connectionLab !== null ? false : snapshot === null,
+    isLoading:
+      connectionLab !== null || demoPreview !== null
+        ? false
+        : snapshot === null,
     devicesHadLoadError:
       connectionLab?.devicesApiFails ?? resolvedSnapshot.hadError,
     refresh,

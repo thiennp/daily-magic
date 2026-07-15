@@ -31,11 +31,12 @@ export interface ResolveComposerBlockedActionInput {
   readonly isTeamDispatch: boolean;
   readonly isWorkflowTask: boolean;
   readonly canCopyPrompt: boolean;
-  readonly hasOnlineMac: boolean;
-  readonly selectedDeviceIsOnline: boolean;
+  readonly hasDispatchReadyMac: boolean;
+  readonly selectedDeviceCanDispatch: boolean;
   readonly devices: readonly {
     readonly id: string;
     readonly isConnected: boolean;
+    readonly isOnline: boolean;
   }[];
   readonly selectedDeviceId: string;
   readonly devicesHadLoadError: boolean;

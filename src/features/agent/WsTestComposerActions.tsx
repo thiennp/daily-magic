@@ -17,11 +17,12 @@ interface WsTestComposerActionsProps {
   readonly sendLabel: string;
   readonly isWorkflowTask: boolean;
   readonly isTeamDispatch: boolean;
-  readonly hasOnlineMac: boolean;
-  readonly selectedDeviceIsOnline: boolean;
+  readonly hasDispatchReadyMac: boolean;
+  readonly selectedDeviceCanDispatch: boolean;
   readonly devices: readonly {
     readonly id: string;
     readonly isConnected: boolean;
+    readonly isOnline: boolean;
   }[];
   readonly selectedDeviceId: string;
   readonly devicesHadLoadError: boolean;
@@ -48,8 +49,8 @@ export default function WsTestComposerActions(
         isTeamDispatch: props.isTeamDispatch,
         isWorkflowTask: props.isWorkflowTask,
         canCopyPrompt: props.canCopyPrompt,
-        hasOnlineMac: props.hasOnlineMac,
-        selectedDeviceIsOnline: props.selectedDeviceIsOnline,
+        hasDispatchReadyMac: props.hasDispatchReadyMac,
+        selectedDeviceCanDispatch: props.selectedDeviceCanDispatch,
         devices: props.devices,
         selectedDeviceId: props.selectedDeviceId,
         devicesHadLoadError: props.devicesHadLoadError,

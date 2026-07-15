@@ -19,7 +19,7 @@ export const buildMacBlockedComposerAction = (
       {
         stateId,
         helperMessage:
-          "No Mac is online. Open Agent Witch on a connected Mac — it checks in about every 30 seconds.",
+          "No Mac is connected. Open Agent Witch on your Mac — it checks in about every 30 seconds.",
         helperLinkLabel: "Connect or manage Macs",
         helperLinkHref: input.manageMacsHref,
         primaryManualAction,
@@ -38,8 +38,8 @@ export const buildMacBlockedComposerAction = (
     {
       stateId,
       helperMessage: hasAlternate
-        ? "The selected Mac is offline. Switch to an online Mac or wait for it to reconnect."
-        : "The selected Mac is offline. Wait for it to reconnect.",
+        ? "The selected Mac is not connected. Switch to a connected Mac or wait for it to reconnect."
+        : "The selected Mac is not connected. Wait for it to reconnect.",
       helperLinkLabel: null,
       helperLinkHref: null,
       primaryManualAction: hasAlternate ? "use_online_mac" : null,

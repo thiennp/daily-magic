@@ -26,10 +26,6 @@ export default function WsTestComposerFooter({
   const canCopyPrompt =
     composer.resolvedPrompt.trim().length > 0 &&
     composer.workflowValidationErrors.length === 0;
-  const selectedDevice = composer.macDevices.find(
-    (device) => device.id === macDispatchDeviceId,
-  );
-
   return (
     <WsTestComposerActions
       connectionStatus={connectionStatus}
@@ -41,8 +37,8 @@ export default function WsTestComposerFooter({
       }
       isWorkflowTask={composer.isWorkflowTask}
       isTeamDispatch={composer.isTeamDispatch}
-      hasOnlineMac={composer.hasOnlineMac}
-      selectedDeviceIsOnline={selectedDevice?.isOnline ?? false}
+      hasDispatchReadyMac={composer.hasDispatchReadyMac}
+      selectedDeviceCanDispatch={composer.selectedDeviceCanDispatch}
       devices={composer.macDevices}
       selectedDeviceId={macDispatchDeviceId}
       devicesHadLoadError={composer.devicesHadLoadError}

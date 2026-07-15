@@ -7,11 +7,11 @@ const baseInput = {
   isTeamDispatch: false,
   isWorkflowTask: false,
   canCopyPrompt: true,
-  hasOnlineMac: true,
-  selectedDeviceIsOnline: true,
+  hasDispatchReadyMac: true,
+  selectedDeviceCanDispatch: true,
   devices: [
-    { id: "mac-a", isConnected: true },
-    { id: "mac-b", isConnected: false },
+    { id: "mac-a", isConnected: true, isOnline: true },
+    { id: "mac-b", isConnected: false, isOnline: true },
   ],
   selectedDeviceId: "mac-a",
   devicesHadLoadError: false,
@@ -56,9 +56,9 @@ describe("resolveComposerBlockedAction", () => {
   it("offers queue when all macs are offline and prompt can be copied", () => {
     const action = resolveComposerBlockedAction({
       ...baseInput,
-      hasOnlineMac: false,
-      selectedDeviceIsOnline: false,
-      devices: [{ id: "mac-a", isConnected: false }],
+      hasDispatchReadyMac: false,
+      selectedDeviceCanDispatch: false,
+      devices: [{ id: "mac-a", isConnected: false, isOnline: false }],
     });
 
     expect(action.stateId).toBe("no_macs_online");
@@ -67,11 +67,11 @@ describe("resolveComposerBlockedAction", () => {
     expect(action.helperLinkHref).toBe("/#your-setup");
   });
 
-  it("offers use-online-mac when another mac is online", () => {
+  it("offers use-online-mac when another mac is dispatch-ready", () => {
     const action = resolveComposerBlockedAction({
       ...baseInput,
       selectedDeviceId: "mac-b",
-      selectedDeviceIsOnline: false,
+      selectedDeviceCanDispatch: false,
     });
 
     expect(action.stateId).toBe("selected_mac_offline");

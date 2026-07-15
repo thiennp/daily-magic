@@ -30,9 +30,7 @@ const parseMyMacDevices = (payload: unknown): readonly MyMacDevice[] => {
         typeof device.displayName === "string" ? device.displayName : null,
       claimedAt: device.claimedAt,
       lastSeenAt: device.lastSeenAt,
-      isConnected:
-        device.isConnected === true ||
-        (device.isConnected === undefined && device.lastHeartbeatAt !== null),
+      isConnected: device.isConnected === true,
       isOnline: device.isOnline === true,
       lastHeartbeatAt: device.lastHeartbeatAt ?? null,
     }));

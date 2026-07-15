@@ -36,9 +36,9 @@ export interface UseWsTestTaskComposerResult {
   readonly selectedDeviceId: string;
   readonly setSelectedDeviceId: (deviceId: string) => void;
   readonly isMacDevicesLoading: boolean;
-  readonly hasOnlineMac: boolean;
-  readonly onlineMacCount: number;
-  readonly selectedDeviceIsOnline: boolean;
+  readonly hasDispatchReadyMac: boolean;
+  readonly dispatchReadyMacCount: number;
+  readonly selectedDeviceCanDispatch: boolean;
   readonly devicesHadLoadError: boolean;
   readonly refreshMacDevices: () => Promise<void>;
   readonly renameMacDevice: ReturnType<

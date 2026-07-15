@@ -9,8 +9,8 @@ export function isWsTestSendDisabled(input: {
   readonly isTeamDispatch: boolean;
   readonly selectedCapabilityId: string;
   readonly isLibraryPlaybook: boolean;
-  readonly hasOnlineMac: boolean;
-  readonly selectedDeviceIsOnline: boolean;
+  readonly hasDispatchReadyMac: boolean;
+  readonly selectedDeviceCanDispatch: boolean;
 }): boolean {
   const promptIsEmpty =
     input.isWorkflowTask || input.isLibraryPlaybook
@@ -21,11 +21,11 @@ export function isWsTestSendDisabled(input: {
     return true;
   }
 
-  if (!input.isTeamDispatch && !input.hasOnlineMac) {
+  if (!input.isTeamDispatch && !input.hasDispatchReadyMac) {
     return true;
   }
 
-  if (!input.isTeamDispatch && !input.selectedDeviceIsOnline) {
+  if (!input.isTeamDispatch && !input.selectedDeviceCanDispatch) {
     return true;
   }
 

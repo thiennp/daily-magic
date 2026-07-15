@@ -1,3 +1,4 @@
+import { canDispatchToMac } from "@/features/agent-witch/utils/macDevicePresence";
 import { buildWsTestSendDisabledState } from "@/features/agent/utils/buildWsTestSendDisabledState";
 import type useMacDeviceSelection from "@/features/agent/hooks/useMacDeviceSelection";
 import type { useTeamDispatchSelection } from "@/features/dispatch/hooks/useTeamDispatchSelection";
@@ -16,9 +17,9 @@ export const buildWsTestComposerDispatchState = (input: {
   readonly selectedDeviceId: string;
   readonly setSelectedDeviceId: (deviceId: string) => void;
   readonly isMacDevicesLoading: boolean;
-  readonly hasOnlineMac: boolean;
-  readonly onlineMacCount: number;
-  readonly selectedDeviceIsOnline: boolean;
+  readonly hasDispatchReadyMac: boolean;
+  readonly dispatchReadyMacCount: number;
+  readonly selectedDeviceCanDispatch: boolean;
   readonly devicesHadLoadError: boolean;
   readonly refreshMacDevices: () => Promise<void>;
   readonly renameMacDevice: ReturnType<
@@ -29,15 +30,17 @@ export const buildWsTestComposerDispatchState = (input: {
     deviceId?: string,
   ) => boolean;
 } => {
-  const resolveSelectedDeviceIsOnline = (deviceId: string): boolean => {
+  const resolveSelectedDeviceCanDispatch = (deviceId: string): boolean => {
     if (deviceId.length === 0) {
-      return input.macSelection.hasOnlineMac;
+      return input.macSelection.hasDispatchReadyMac;
     }
 
-    return (
-      input.macSelection.devices.find((device) => device.id === deviceId)
-        ?.isConnected ?? false
+    const selectedDevice = input.macSelection.devices.find(
+      (device) => device.id === deviceId,
     );
+    return selectedDevice === undefined
+      ? false
+      : canDispatchToMac(selectedDevice);
   };
 
   return {
@@ -46,9 +49,9 @@ export const buildWsTestComposerDispatchState = (input: {
     selectedDeviceId: input.macSelection.selectedDeviceId,
     setSelectedDeviceId: input.macSelection.setSelectedDeviceId,
     isMacDevicesLoading: input.macSelection.isLoading,
-    hasOnlineMac: input.macSelection.hasOnlineMac,
-    onlineMacCount: input.macSelection.onlineCount,
-    selectedDeviceIsOnline: resolveSelectedDeviceIsOnline(
+    hasDispatchReadyMac: input.macSelection.hasDispatchReadyMac,
+    dispatchReadyMacCount: input.macSelection.dispatchReadyMacCount,
+    selectedDeviceCanDispatch: resolveSelectedDeviceCanDispatch(
       input.macSelection.selectedDeviceId,
     ),
     devicesHadLoadError: input.macSelection.devicesHadLoadError,
@@ -66,12 +69,12 @@ export const buildWsTestComposerDispatchState = (input: {
         isTeamDispatch: input.isTeamDispatch,
         selectedCapabilityId: input.selection.selectedCapabilityId,
         isLibraryPlaybook: input.workflow.isLibraryPlaybook,
-        hasOnlineMac: input.isTeamDispatch
+        hasDispatchReadyMac: input.isTeamDispatch
           ? true
-          : input.macSelection.hasOnlineMac,
-        selectedDeviceIsOnline: input.isTeamDispatch
+          : input.macSelection.hasDispatchReadyMac,
+        selectedDeviceCanDispatch: input.isTeamDispatch
           ? true
-          : resolveSelectedDeviceIsOnline(
+          : resolveSelectedDeviceCanDispatch(
               deviceId ?? input.macSelection.selectedDeviceId,
             ),
       }),

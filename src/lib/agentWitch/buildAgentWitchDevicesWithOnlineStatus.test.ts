@@ -70,6 +70,19 @@ describe("buildAgentWitchDevicesWithOnlineStatus", () => {
     );
 
     expect(result[0]).toMatchObject({
+      isConnected: true,
+      isOnline: true,
+    });
+  });
+
+  it("marks devices as seen recently but not connected after the active window", () => {
+    const lastSeenAt = new Date(Date.now() - 60_000).toISOString();
+    const result = buildAgentWitchDevicesWithOnlineStatus(
+      [baseDevice({ lastSeenAt })],
+      [],
+    );
+
+    expect(result[0]).toMatchObject({
       isConnected: false,
       isOnline: true,
     });

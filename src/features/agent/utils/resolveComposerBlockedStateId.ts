@@ -1,3 +1,4 @@
+import { pickAlternateDispatchReadyDeviceId } from "@/features/agent-witch/utils/macDevicePresence";
 import type {
   ComposerBlockedStateId,
   ResolveComposerBlockedActionInput,
@@ -18,14 +19,14 @@ export const resolveComposerBlockedStateId = (
     return "ws_disconnected";
   }
 
-  if (!input.isTeamDispatch && !input.hasOnlineMac) {
+  if (!input.isTeamDispatch && !input.hasDispatchReadyMac) {
     return "no_macs_online";
   }
 
   if (
     !input.isTeamDispatch &&
-    input.hasOnlineMac &&
-    !input.selectedDeviceIsOnline
+    input.hasDispatchReadyMac &&
+    !input.selectedDeviceCanDispatch
   ) {
     return "selected_mac_offline";
   }
@@ -44,9 +45,5 @@ export const resolveComposerBlockedStateId = (
 export const pickAlternateOnlineDeviceId = (
   devices: ResolveComposerBlockedActionInput["devices"],
   selectedDeviceId: string,
-): string | null => {
-  const alternate = devices.find(
-    (device) => device.isConnected && device.id !== selectedDeviceId,
-  );
-  return alternate?.id ?? null;
-};
+): string | null =>
+  pickAlternateDispatchReadyDeviceId(devices, selectedDeviceId);
