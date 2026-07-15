@@ -10,6 +10,7 @@ export const dispatchHarnessBorrowExportAsync = async (input: {
   readonly borrowerUserId: string;
   readonly ownerUserId: string;
   readonly setSlugs: readonly string[];
+  readonly targetDeviceId?: string;
   readonly requestId?: string;
 }): Promise<void> => {
   const snapshot = await getHarnessCatalogSnapshot(input.ownerUserId);
@@ -47,7 +48,13 @@ export const dispatchHarnessBorrowExportAsync = async (input: {
 
   input.ownerAgent.send({
     type: AGENT_WITCH_MESSAGE_TYPES.HARNESS_EXPORT_REQUEST,
-    payload: { borrowerUserId: input.borrowerUserId, setSlugs: visibleSlugs },
+    payload: {
+      borrowerUserId: input.borrowerUserId,
+      setSlugs: visibleSlugs,
+      ...(input.targetDeviceId !== undefined
+        ? { targetDeviceId: input.targetDeviceId }
+        : {}),
+    },
     requestId: input.requestId,
   });
 };

@@ -1,3 +1,5 @@
+import { parseHarnessExportResultPayload } from "@/lib/harness/types/HarnessExportResult.type";
+import { applyHarnessExportSetsToDevice } from "@/lib/harness/applyHarnessExportSetsToDevice";
 import isNonEmptyString from "@/lib/agentWitch/isNonEmptyString";
 import type AgentWitchHubClient from "@/lib/agentWitch/types/AgentWitchHubClient.type";
 import type AgentWitchHubRuntime from "@/lib/agentWitch/types/AgentWitchHubRuntime.type";
@@ -32,6 +34,26 @@ export const handleHarnessExportResultMessage = (
       },
       requestId: message.requestId,
     };
+  }
+
+  const targetDeviceId =
+    typeof message.payload?.targetDeviceId === "string" &&
+    message.payload.targetDeviceId.length > 0
+      ? message.payload.targetDeviceId
+      : undefined;
+  const exportResult = parseHarnessExportResultPayload(message.payload);
+
+  if (
+    targetDeviceId !== undefined &&
+    exportResult?.success === true &&
+    exportResult.sets !== undefined
+  ) {
+    applyHarnessExportSetsToDevice(
+      runtime,
+      borrowerUserId,
+      targetDeviceId,
+      exportResult.sets,
+    );
   }
 
   runtime.broadcastToDashboardUser(borrowerUserId, message);

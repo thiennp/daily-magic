@@ -1,10 +1,12 @@
 "use client";
 
+import { useState } from "react";
+
 import AppPanel from "@/components/surfaces/AppPanel";
-import MarketplaceBorrowPreview from "@/features/marketplace/MarketplaceBorrowPreview";
+import MarketplaceInstallModal from "@/features/marketplace/MarketplaceInstallModal";
 import MarketplaceListingSections from "@/features/marketplace/MarketplaceListingSections";
 import { useMarketplaceState } from "@/features/marketplace/hooks/useMarketplaceState";
-import { useAgentWitchHarnessSocket } from "@/features/harness/hooks/useAgentWitchHarnessSocket";
+import type HarnessMarketplaceListing from "@/lib/harness/types/HarnessMarketplaceListing.type";
 
 type MarketplacePanelVariant = "embedded" | "page";
 
@@ -15,9 +17,9 @@ interface MarketplacePanelProps {
 export default function MarketplacePanel({
   variant = "embedded",
 }: MarketplacePanelProps) {
-  const harnessSocket = useAgentWitchHarnessSocket();
-  const { listings, borrowed, isLoading, borrowListing } =
-    useMarketplaceState();
+  const { listings, isLoading } = useMarketplaceState();
+  const [installListing, setInstallListing] =
+    useState<HarnessMarketplaceListing | null>(null);
 
   const officialListings = listings.filter(
     (listing) => listing.isOfficialPreset === true,
@@ -25,50 +27,31 @@ export default function MarketplacePanel({
   const teammateListings = listings.filter(
     (listing) => listing.isOfficialPreset !== true,
   );
-  const macConnected = harnessSocket.pairingStatus === "paired";
 
   const listingSections = (
     <MarketplaceListingSections
       officialListings={officialListings}
       teammateListings={teammateListings}
       isLoading={isLoading}
-      onBorrow={(capabilityId) => {
-        void borrowListing(capabilityId);
-      }}
+      onInstall={setInstallListing}
       variant={variant}
     />
   );
 
-  const preview =
-    borrowed !== null ? (
-      <MarketplaceBorrowPreview
-        borrowed={borrowed}
-        harnessSocket={harnessSocket}
-        macConnected={macConnected}
-      />
-    ) : null;
-
-  if (variant === "page") {
-    return (
-      <div className="space-y-8">
-        <div
-          className={
-            borrowed !== null
-              ? "grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] lg:items-start"
-              : undefined
-          }
-        >
-          <div className="space-y-8">{listingSections}</div>
-          {preview}
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <AppPanel>
-      {listingSections}
-      {preview}
-    </AppPanel>
+    <>
+      {variant === "page" ? (
+        <div className="space-y-8">{listingSections}</div>
+      ) : (
+        <AppPanel>{listingSections}</AppPanel>
+      )}
+      <MarketplaceInstallModal
+        key={installListing?.capabilityId ?? "closed"}
+        listing={installListing}
+        onClose={() => {
+          setInstallListing(null);
+        }}
+      />
+    </>
   );
 }

@@ -11,7 +11,7 @@ interface MarketplaceListingSectionsProps {
   readonly officialListings: readonly HarnessMarketplaceListing[];
   readonly teammateListings: readonly HarnessMarketplaceListing[];
   readonly isLoading: boolean;
-  readonly onBorrow: (capabilityId: string) => void;
+  readonly onInstall: (listing: HarnessMarketplaceListing) => void;
   readonly variant?: "embedded" | "page";
 }
 
@@ -19,7 +19,7 @@ export default function MarketplaceListingSections({
   officialListings,
   teammateListings,
   isLoading,
-  onBorrow,
+  onInstall,
   variant = "embedded",
 }: MarketplaceListingSectionsProps) {
   return (
@@ -32,7 +32,7 @@ export default function MarketplaceListingSections({
         <MarketplaceList
           listings={officialListings}
           isLoading={isLoading}
-          onBorrow={onBorrow}
+          onInstall={onInstall}
           emptyMessage="No free starters available."
         />
       </section>
@@ -44,7 +44,7 @@ export default function MarketplaceListingSections({
         <MarketplaceList
           listings={teammateListings}
           isLoading={isLoading}
-          onBorrow={onBorrow}
+          onInstall={onInstall}
           emptyMessage="No teammate listings yet."
         />
       </section>

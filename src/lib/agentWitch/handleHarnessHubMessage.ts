@@ -33,13 +33,25 @@ export const handleHarnessRequestMessage = (
     };
   }
 
-  const agentClient = runtime.findAgentClientForUser(sender.userId);
+  const targetDeviceId =
+    typeof message.payload?.targetDeviceId === "string" &&
+    message.payload.targetDeviceId.length > 0
+      ? message.payload.targetDeviceId
+      : undefined;
+
+  const agentClient = runtime.findAgentClientForUser(
+    sender.userId,
+    targetDeviceId,
+  );
 
   if (agentClient === undefined) {
     return {
       type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR,
       payload: {
-        errorMessage: "No Mac is connected for your account.",
+        errorMessage:
+          targetDeviceId !== undefined
+            ? "The selected Mac is not online right now."
+            : "No Mac is connected for your account.",
       },
       requestId: message.requestId,
     };

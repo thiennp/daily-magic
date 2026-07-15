@@ -639,6 +639,10 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
             typeof parsed.payload.borrowerUserId === "string"
               ? parsed.payload.borrowerUserId
               : "";
+          const targetDeviceId =
+            typeof parsed.payload.targetDeviceId === "string"
+              ? parsed.payload.targetDeviceId
+              : undefined;
           const setSlugs = Array.isArray(parsed.payload.setSlugs)
             ? parsed.payload.setSlugs.filter(
                 (slug): slug is string => typeof slug === "string",
@@ -655,6 +659,7 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
                 payload: {
                   success: sets.length > 0,
                   borrowerUserId,
+                  ...(targetDeviceId !== undefined ? { targetDeviceId } : {}),
                   sets,
                   errorMessage:
                     sets.length > 0
