@@ -26,7 +26,9 @@ describe("listAgentWitchLaunchTargets", () => {
     const installDir = createTempInstallDir();
     fs.writeFileSync(path.join(installDir, "config.json"), "{}");
 
-    expect(listAgentWitchLaunchTargets(installDir)).toEqual([
+    expect(
+      listAgentWitchLaunchTargets(installDir, { launchAgentsDir: installDir }),
+    ).toEqual([
       {
         profileEmail: null,
         launchAgentLabel: "com.agent-witch",
@@ -41,7 +43,9 @@ describe("listAgentWitchLaunchTargets", () => {
     fs.mkdirSync(profileDir, { recursive: true });
     fs.writeFileSync(path.join(profileDir, "config.json"), "{}");
 
-    expect(listAgentWitchLaunchTargets(installDir)).toEqual([
+    expect(
+      listAgentWitchLaunchTargets(installDir, { launchAgentsDir: installDir }),
+    ).toEqual([
       {
         profileEmail,
         launchAgentLabel: "com.agent-witch.user-at-example-com",
@@ -60,7 +64,9 @@ describe("listAgentWitchLaunchTargets", () => {
       JSON.stringify({ email: profileEmail }),
     );
 
-    expect(listAgentWitchLaunchTargets(installDir)).toEqual([
+    expect(
+      listAgentWitchLaunchTargets(installDir, { launchAgentsDir: installDir }),
+    ).toEqual([
       {
         profileEmail,
         launchAgentLabel: "com.agent-witch.user-at-example-com",

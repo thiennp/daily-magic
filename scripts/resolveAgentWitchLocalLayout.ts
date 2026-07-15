@@ -88,11 +88,17 @@ export const readActiveProfileEmailFromFile = (
 export const resolveActiveProfileEmail = (
   profileEmailOverride?: string | null,
 ): string | null => {
-  if (profileEmailOverride !== undefined && profileEmailOverride !== null) {
+  if (profileEmailOverride !== undefined) {
+    if (profileEmailOverride === null) {
+      return null;
+    }
+
     const trimmed = profileEmailOverride.trim();
     if (trimmed.length > 0) {
       return sanitizeProfileEmailForDir(trimmed);
     }
+
+    return null;
   }
 
   const fromEnv = resolveActiveProfileEmailFromEnv();

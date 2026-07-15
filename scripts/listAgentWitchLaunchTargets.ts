@@ -58,8 +58,9 @@ const listProfileLaunchTargets = (
     }));
 };
 
-const listPlistLaunchTargets = (): readonly AgentWitchLaunchTarget[] => {
-  const launchAgentsDir = path.join(os.homedir(), "Library", "LaunchAgents");
+const listPlistLaunchTargets = (
+  launchAgentsDir: string,
+): readonly AgentWitchLaunchTarget[] => {
   if (!fs.existsSync(launchAgentsDir)) {
     return [];
   }
@@ -75,8 +76,13 @@ const listPlistLaunchTargets = (): readonly AgentWitchLaunchTarget[] => {
     }));
 };
 
+export interface ListAgentWitchLaunchTargetsOptions {
+  readonly launchAgentsDir?: string;
+}
+
 export const listAgentWitchLaunchTargets = (
   installDir: string = resolveAgentWitchInstallDir(),
+  options?: ListAgentWitchLaunchTargetsOptions,
 ): readonly AgentWitchLaunchTarget[] => {
   const profileTargets = listProfileLaunchTargets(installDir);
   const targets: AgentWitchLaunchTarget[] = [...profileTargets];
@@ -97,7 +103,15 @@ export const listAgentWitchLaunchTargets = (
     });
   }
 
-  targets.push(...listPlistLaunchTargets());
+  if (options?.launchAgentsDir !== undefined) {
+    targets.push(...listPlistLaunchTargets(options.launchAgentsDir));
+  } else {
+    targets.push(
+      ...listPlistLaunchTargets(
+        path.join(os.homedir(), "Library", "LaunchAgents"),
+      ),
+    );
+  }
 
   return dedupeLaunchTargets(targets);
 };

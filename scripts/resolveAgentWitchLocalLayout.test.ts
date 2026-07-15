@@ -1,8 +1,9 @@
 import os from "node:os";
 import path from "node:path";
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
 import {
+  resolveActiveProfileEmail,
   resolveAgentWitchLocalLayout,
   sanitizeProfileEmailForDir,
   sanitizeProfileEmailForLaunchAgentLabel,
@@ -21,6 +22,18 @@ describe("sanitizeProfileEmailForLaunchAgentLabel", () => {
     expect(
       sanitizeProfileEmailForLaunchAgentLabel("nguyenphongthien@gmail.com"),
     ).toBe("nguyenphongthien-at-gmail-com");
+  });
+});
+
+describe("resolveActiveProfileEmail", () => {
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
+  it("ignores env and active profile when override is null", () => {
+    vi.stubEnv("AGENT_WITCH_EMAIL", "nguyenphongthien@gmail.com");
+
+    expect(resolveActiveProfileEmail(null)).toBe(null);
   });
 });
 

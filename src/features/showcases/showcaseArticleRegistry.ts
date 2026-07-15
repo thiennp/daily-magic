@@ -12,6 +12,7 @@ import notJustAnotherChatgpt from "@/features/showcases/articles/notJustAnotherC
 import onboardIn15Minutes from "@/features/showcases/articles/onboardIn15Minutes.article";
 import oneEmployeeOneAgent from "@/features/showcases/articles/oneEmployeeOneAgent.article";
 import phoneAsksCoworkerMacRuns from "@/features/showcases/articles/phoneAsksCoworkerMacRuns.article";
+import requestSensitiveWorkWithApproval from "@/features/showcases/articles/requestSensitiveWorkWithApproval.article";
 import runAgainWithoutRetyping from "@/features/showcases/articles/runAgainWithoutRetyping.article";
 import saveTeammateWorkflowOneTap from "@/features/showcases/articles/saveTeammateWorkflowOneTap.article";
 import seeWhatTheAgentDid from "@/features/showcases/articles/seeWhatTheAgentDid.article";
@@ -49,6 +50,7 @@ export const SHOWCASE_ARTICLES_PHASE_2: readonly ShowcaseArticle[] = [
 
 export const SHOWCASE_ARTICLES_PHASE_3: readonly ShowcaseArticle[] = [
   companyOnboardIn30Minutes,
+  requestSensitiveWorkWithApproval,
   oneEmployeeOneAgent,
   companyWorkflowsSetupOnce,
   manageCompanyAgents,
@@ -87,7 +89,7 @@ export const HOME_MORE_SHOWCASE_SLUGS: readonly string[] = [
 
 export const HOME_TEAMS_SHOWCASE_SLUGS: readonly string[] = [
   companyOnboardIn30Minutes.slug,
-  managerApprovesBeforeRun.slug,
+  requestSensitiveWorkWithApproval.slug,
   newHiresCompanyPlaybooks.slug,
 ] as const;
 
