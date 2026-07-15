@@ -28,3 +28,18 @@ export const beginAgentLiveTerminalSession = (
   pendingInput: null,
   pendingCommandLine: commandLine,
 });
+
+export const shouldContinueAgentLiveTerminalThread = (
+  state: AgentLiveTerminalState,
+): boolean => state.output.length > 0;
+
+export const continueAgentLiveTerminalSession = (
+  state: AgentLiveTerminalState,
+  commandLine: string,
+): AgentLiveTerminalState => ({
+  activeRunId: null,
+  output: state.output,
+  status: "starting",
+  pendingInput: null,
+  pendingCommandLine: commandLine,
+});

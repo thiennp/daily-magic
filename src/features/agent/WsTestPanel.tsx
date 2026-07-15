@@ -87,6 +87,7 @@ export default function WsTestPanel() {
             composer.resolvedPrompt,
             buildWsTestSendOptions(composer, writerAgent),
           );
+          composer.resetComposer();
         }}
         onQueue={() => {
           void enqueueRun({

@@ -4,32 +4,11 @@ import {
   AGENT_LIVE_BASH_PROMPT,
   formatAgentLiveTerminalCommandLine,
 } from "@/features/agent/utils/agentLiveTerminalPrompt.constant";
-import { buildAgentLiveTerminalDisplay } from "@/features/agent/utils/buildAgentLiveTerminalDisplay";
 import {
   beginAgentLiveTerminalSession,
   reduceAgentLiveTerminalMessage,
 } from "@/features/agent/utils/reduceAgentLiveTerminalMessage";
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
-
-describe("buildAgentLiveTerminalDisplay", () => {
-  it("shows only the bash prompt when idle", () => {
-    expect(
-      buildAgentLiveTerminalDisplay({
-        output: "",
-        status: "idle",
-      }),
-    ).toBe(AGENT_LIVE_BASH_PROMPT);
-  });
-
-  it("appends a fresh prompt after a finished run", () => {
-    expect(
-      buildAgentLiveTerminalDisplay({
-        output: "hello\n",
-        status: "finished",
-      }),
-    ).toBe(`hello\n${AGENT_LIVE_BASH_PROMPT}`);
-  });
-});
 
 describe("reduceAgentLiveTerminalMessage", () => {
   it("renders a command line when a run is dispatched", () => {

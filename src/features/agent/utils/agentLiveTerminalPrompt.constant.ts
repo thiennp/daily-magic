@@ -33,3 +33,19 @@ export const appendAgentLiveTerminalPrompt = (output: string): string => {
   const suffix = output.endsWith("\n") ? "" : "\n";
   return `${output}${suffix}${AGENT_LIVE_BASH_PROMPT}`;
 };
+
+export const appendAgentLiveTerminalCommand = (
+  output: string,
+  commandLine: string,
+): string => {
+  if (output.length === 0) {
+    return buildAgentLiveTerminalCommandEntry(commandLine);
+  }
+
+  if (output.endsWith(AGENT_LIVE_BASH_PROMPT)) {
+    return `${output}${commandLine}\n`;
+  }
+
+  const suffix = output.endsWith("\n") ? "" : "\n";
+  return `${output}${suffix}${buildAgentLiveTerminalCommandEntry(commandLine)}`;
+};

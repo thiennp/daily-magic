@@ -13,8 +13,10 @@ import {
 import { appendAgentLiveTerminalPrompt } from "@/features/agent/utils/agentLiveTerminalPrompt.constant";
 import {
   beginAgentLiveTerminalSession,
+  continueAgentLiveTerminalSession,
   initialAgentLiveTerminalState,
   reduceAgentLiveTerminalMessage,
+  shouldContinueAgentLiveTerminalThread,
   type AgentLiveTerminalState,
   type AgentLiveTerminalStatus,
 } from "@/features/agent/utils/reduceAgentLiveTerminalMessage";
@@ -42,7 +44,11 @@ export function useAgentWitchLiveTerminal(socketRef: {
   }, [state]);
 
   const beginSession = useCallback((commandLine: string) => {
-    setState(beginAgentLiveTerminalSession(commandLine));
+    setState((current) =>
+      shouldContinueAgentLiveTerminalThread(current)
+        ? continueAgentLiveTerminalSession(current, commandLine)
+        : beginAgentLiveTerminalSession(commandLine),
+    );
   }, []);
 
   const applySocketMessage = useCallback((raw: string) => {

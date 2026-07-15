@@ -5,7 +5,9 @@ import type { AgentLiveTerminalState } from "@/features/agent/utils/agentLiveTer
 
 export {
   beginAgentLiveTerminalSession,
+  continueAgentLiveTerminalSession,
   initialAgentLiveTerminalState,
+  shouldContinueAgentLiveTerminalThread,
   type AgentLiveTerminalState,
   type AgentLiveTerminalStatus,
 } from "@/features/agent/utils/agentLiveTerminalState.type";
