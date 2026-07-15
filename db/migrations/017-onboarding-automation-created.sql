@@ -1,0 +1,2 @@
+ALTER TABLE users
+  ADD COLUMN IF NOT EXISTS onboarding_automation_created BOOLEAN NOT NULL DEFAULT FALSE;

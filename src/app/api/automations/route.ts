@@ -2,6 +2,7 @@ import { createAgentAutomation } from "@/lib/automations/createAgentAutomation";
 import { listAgentAutomationsForOwner } from "@/lib/automations/agentAutomationQueries";
 import { parseCreateAgentAutomationBody } from "@/lib/automations/parseAgentAutomationBody";
 import { requireAuth } from "@/lib/auth/requireAuth";
+import { markUserOnboardingAutomationCreated } from "@/lib/onboarding/onboardingAutomationCreatedQueries";
 
 export const dynamic = "force-dynamic";
 
@@ -42,6 +43,8 @@ export async function POST(request: Request): Promise<Response> {
       { status: 404 },
     );
   }
+
+  await markUserOnboardingAutomationCreated(actor.id);
 
   return Response.json({
     ok: true,

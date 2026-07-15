@@ -1,5 +1,6 @@
 import type { CreateAgentAutomationInput } from "@/lib/automations/parseAgentAutomationBody";
 import type AgentAutomationRecord from "@/lib/automations/types/AgentAutomationRecord.type";
+import { markOnboardingAutomationCreated } from "@/features/home/utils/onboardingAutomationCreatedStore";
 
 export const submitCreateAutomation = async (
   payload: CreateAgentAutomationInput,
@@ -29,6 +30,8 @@ export const submitCreateAutomation = async (
       webhookSecret: string | null;
       webhookUrl: string | null;
     };
+
+    markOnboardingAutomationCreated();
 
     return {
       ok: true,

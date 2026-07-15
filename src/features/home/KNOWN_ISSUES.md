@@ -64,7 +64,7 @@ Document every production bug or UX regression here. Each entry must link to a t
 
 ## Adding issues
 
-Use the next ID (`HOME-008`, …). Include symptom, root cause, fix paths, and test file.
+Use the next ID (`HOME-009`, …). Include symptom, root cause, fix paths, and test file.
 
 ---
 
@@ -89,3 +89,15 @@ Use the next ID (`HOME-008`, …). Include symptom, root cause, fix paths, and t
 **Fix:** `vercel-build` runs `npm run db:migrate` (Neon `Pool`, pending files tracked in `schema_migrations`) before `next build`. README documents the flow. Existing DBs: `npm run db:migrate:bootstrap` records already-applied files without re-running SQL.
 
 **Regression test:** `scripts/db-migrate.util.test.ts`.
+
+---
+
+## HOME-008 — Optional automate step reset across browsers
+
+**Symptom:** “Schedule a workflow (optional)” stayed incomplete after creating an automation in another browser, or reverted when `/api/automations` was empty before sync.
+
+**Root cause:** Step completion only inferred from live `GET /api/automations` results; no per-user DB flag.
+
+**Fix:** Persist `users.onboarding_automation_created` via `GET`/`POST /api/onboarding/automation-created`. Client mirrors `daily-magic.onboarding.automation-created.v1` in localStorage; `loadOnboardingSteps` merges DB flag with automations list. Marking fires on successful automation create (client + API).
+
+**Regression test:** `onboardingAutomationCreatedQueries.test.ts`, `onboardingAutomationCreatedApi.test.ts`, `onboardingAutomationCreatedStore.test.ts`, `syncOnboardingAutomationCreatedFlag.test.ts`, `hasUserCreatedAutomation.test.ts`.

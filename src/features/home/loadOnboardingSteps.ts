@@ -1,9 +1,11 @@
 import { buildOnboardingSteps } from "@/features/home/utils/buildOnboardingSteps";
-import { hasScheduledAutomationFromResponse } from "@/features/home/utils/hasScheduledAutomationFromResponse";
+import { fetchOnboardingAutomationCreated } from "@/features/home/utils/onboardingAutomationCreatedApi";
+import hasUserCreatedAutomation from "@/features/home/utils/hasUserCreatedAutomation";
 import hasUserCreatedFirstWorkflowOrAgent from "@/features/home/utils/hasUserCreatedFirstWorkflowOrAgent";
 import hasUserSentFirstTask from "@/features/home/utils/hasUserSentFirstTask";
 import { fetchOnboardingFirstTaskSent } from "@/features/home/utils/onboardingFirstTaskSentApi";
 import readOnboardingHasPairedDevice from "@/features/home/utils/readOnboardingHasPairedDevice";
+import syncOnboardingAutomationCreatedFlag from "@/features/home/utils/syncOnboardingAutomationCreatedFlag";
 import syncOnboardingFirstTaskSentFlag from "@/features/home/utils/syncOnboardingFirstTaskSentFlag";
 import { listAgentRunsLocalCache } from "@/features/reports/agentRunLocalCache";
 
@@ -16,15 +18,18 @@ export async function loadOnboardingSteps() {
     runsResponse,
     dbFirstTaskSent,
     automationsResponse,
+    dbAutomationCreated,
   ] = await Promise.all([
     readOnboardingHasPairedDevice(),
     fetch("/api/capabilities/mine"),
     fetch("/api/agent-runs"),
     fetchOnboardingFirstTaskSent(),
     fetch("/api/automations"),
+    fetchOnboardingAutomationCreated(),
   ]);
 
   syncOnboardingFirstTaskSentFlag(dbFirstTaskSent);
+  syncOnboardingAutomationCreatedFlag(dbAutomationCreated);
 
   const capabilitiesData: unknown = capabilitiesResponse.ok
     ? await capabilitiesResponse.json()
@@ -62,6 +67,9 @@ export async function loadOnboardingSteps() {
       listAgentRunsLocalCache().length,
       dbFirstTaskSent,
     ),
-    hasScheduledAutomation: hasScheduledAutomationFromResponse(automationsData),
+    hasScheduledAutomation: hasUserCreatedAutomation(
+      automationsData,
+      dbAutomationCreated,
+    ),
   });
 }

@@ -75,7 +75,7 @@ curl http://localhost:3000/api/notes
 npm run db:migrate:bootstrap
 ```
 
-That records `002`–`016` as already applied without re-running SQL. The next deploy only applies new migration files.
+That records `002`–`016` as already applied without re-running SQL. The next deploy only applies new migration files (e.g. `017-onboarding-automation-created.sql`).
 
 ### Option B: Manual env var
 
