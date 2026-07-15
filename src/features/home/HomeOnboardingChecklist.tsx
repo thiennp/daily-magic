@@ -3,13 +3,16 @@
 import AppAccentPanel from "@/components/surfaces/AppAccentPanel";
 import { APP_SURFACE_SECTION_TITLE_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
 import useOnboardingSteps from "@/features/home/hooks/useOnboardingSteps";
+import useOnboardingSetupAcknowledged from "@/features/home/hooks/useOnboardingSetupAcknowledged";
 import OnboardingStepStatusIcon from "@/features/home/OnboardingStepStatusIcon";
 import { listRequiredOnboardingSteps } from "@/features/home/utils/listRequiredOnboardingSteps";
+import shouldShowOnboardingChecklist from "@/features/home/utils/shouldShowOnboardingChecklist";
 
 export default function HomeOnboardingChecklist() {
   const { steps } = useOnboardingSteps();
+  const { isSetupAcknowledged } = useOnboardingSetupAcknowledged();
 
-  if (steps.length === 0) {
+  if (!shouldShowOnboardingChecklist(steps, isSetupAcknowledged)) {
     return null;
   }
 
@@ -17,10 +20,6 @@ export default function HomeOnboardingChecklist() {
   const completedRequiredCount = requiredSteps.filter(
     (step) => step.done,
   ).length;
-
-  if (completedRequiredCount === requiredSteps.length) {
-    return null;
-  }
 
   return (
     <AppAccentPanel>

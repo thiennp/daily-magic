@@ -8,25 +8,14 @@ import {
   APP_SURFACE_TEXT_LINK_CLASS,
 } from "@/components/surfaces/appSurfaceStyles.constant";
 import useOnboardingSteps from "@/features/home/hooks/useOnboardingSteps";
-import isOnboardingAutomateStep from "@/features/home/utils/isOnboardingAutomateStep";
-import { listRequiredOnboardingSteps } from "@/features/home/utils/listRequiredOnboardingSteps";
+import useOnboardingSetupAcknowledged from "@/features/home/hooks/useOnboardingSetupAcknowledged";
+import shouldShowOnboardingAutomateNudge from "@/features/home/utils/shouldShowOnboardingAutomateNudge";
 
 export default function HomeOnboardingAutomateNudge() {
   const { steps } = useOnboardingSteps();
-  const requiredSteps = listRequiredOnboardingSteps(steps);
-  const automateStep = steps.find((step) => isOnboardingAutomateStep(step.id));
+  const { isSetupAcknowledged } = useOnboardingSetupAcknowledged();
 
-  if (
-    requiredSteps.length === 0 ||
-    automateStep === undefined ||
-    automateStep.done
-  ) {
-    return null;
-  }
-
-  const requiredComplete = requiredSteps.every((step) => step.done);
-
-  if (!requiredComplete) {
+  if (!shouldShowOnboardingAutomateNudge(steps, isSetupAcknowledged)) {
     return null;
   }
 

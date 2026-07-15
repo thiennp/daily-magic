@@ -64,7 +64,7 @@ Document every production bug or UX regression here. Each entry must link to a t
 
 ## Adding issues
 
-Use the next ID (`HOME-017`, …). Include symptom, root cause, fix paths, and test file.
+Use the next ID (`HOME-018`, …). Include symptom, root cause, fix paths, and test file.
 
 ---
 
@@ -197,3 +197,15 @@ Use the next ID (`HOME-017`, …). Include symptom, root cause, fix paths, and t
 **Fix:** Library and job-history links also call `onDismiss` on click.
 
 **Regression test:** Manual QA; all six `HomeOnboardingSetupCompletePanel` navigation targets wire `onClick={onDismiss}` (grep guard in review).
+
+---
+
+## HOME-017 — Onboarding sidebar hints linger after setup dismissed
+
+**Symptom:** After users dismissed the setup-complete panel, the left rail could still show the optional automate nudge even though onboarding UX was finished.
+
+**Root cause:** `HomeOnboardingAutomateNudge` only checked step completion, not `onboarding_setup_acknowledged`. Checklist logic was inline without a shared acknowledged gate.
+
+**Fix:** `shouldShowOnboardingChecklist` and `shouldShowOnboardingAutomateNudge` hide sidebar onboarding hints when setup is acknowledged; components use `useOnboardingSetupAcknowledged`.
+
+**Regression test:** `shouldShowOnboardingChecklist.test.ts`, `shouldShowOnboardingAutomateNudge.test.ts`.
