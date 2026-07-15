@@ -109,7 +109,11 @@ npx vercel env pull .env.local
 npm run validate:staged
 npm run cursor:architecture -- --staged
 npm run typecheck
+npm run test:e2e:install   # once per machine
+npm run test:e2e
 ```
+
+GitHub Actions (`.github/workflows/ci.yml`) runs `npm test`, `npm run ci:architecture`, `npm run typecheck`, and Playwright E2E on every push/PR to `main`.
 
 Agent docs: `CLAUDE.md`, `AGENTS.md`
 

@@ -20,4 +20,4 @@
 
 **Fix:** `onboardingShowcaseArticles.test.ts` (article images use `screenId`) and `e2e/showcases-onboarding.spec.ts` (Playwright checks `<picture>` PNG/SVG fallback on `/showcases/onboard-in-15-minutes` and `/showcases/company-onboard-in-30-minutes`).
 
-**Run:** `npm run test:e2e:install` once, then `npm run test:e2e`.
+**Run:** `npm run test:e2e:install` once, then `npm run test:e2e`. CI: `.github/workflows/ci.yml`.
