@@ -1,8 +1,10 @@
 import buildWorkflowTemplate from "@/lib/capabilities/templates/buildWorkflowTemplate";
 import type { WorkflowCapabilityTemplate } from "@/lib/capabilities/templates/types/CapabilityTemplate.type";
+import { WORKFLOW_CAPABILITY_TEMPLATES_A1_FEATURED } from "@/lib/capabilities/templates/workflowCapabilityTemplatesA1Featured.constant";
 
 export const WORKFLOW_CAPABILITY_TEMPLATES_A1: readonly WorkflowCapabilityTemplate[] =
   [
+    ...WORKFLOW_CAPABILITY_TEMPLATES_A1_FEATURED,
     buildWorkflowTemplate(
       "weekly-team-status",
       "Reporting",

@@ -1,4 +1,5 @@
 import type { PresetHarnessProfile } from "@/lib/capabilities/templates/harnessProfiles/PresetHarnessProfile.type";
+import type OperatorStepDefinition from "@/lib/workflows/types/OperatorStepDefinition.type";
 
 export interface PresetHarnessSeed {
   readonly id: string;
@@ -7,4 +8,5 @@ export interface PresetHarnessSeed {
   readonly description: string;
   readonly exampleRequest: string;
   readonly profile: PresetHarnessProfile;
+  readonly operatorSteps?: readonly OperatorStepDefinition[];
 }

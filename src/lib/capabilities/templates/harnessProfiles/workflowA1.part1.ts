@@ -1,6 +1,12 @@
 import type { PresetHarnessSeed } from "@/lib/capabilities/templates/harnessProfiles/PresetHarnessSeed.type";
+import { EMAIL_INBOX_REPLY_PRESET } from "@/lib/capabilities/templates/harnessProfiles/workflowA1.emailInboxReply";
+import { FACEBOOK_PAGE_POST_PRESET } from "@/lib/capabilities/templates/harnessProfiles/workflowA1.facebookPagePost";
+import { FINANCE_SHEET_QA_PRESET } from "@/lib/capabilities/templates/harnessProfiles/workflowA1.financeSheetQa";
 
 export const WORKFLOW_A1_PART1: readonly PresetHarnessSeed[] = [
+  FINANCE_SHEET_QA_PRESET,
+  EMAIL_INBOX_REPLY_PRESET,
+  FACEBOOK_PAGE_POST_PRESET,
   {
     id: "weekly-team-status",
     name: "Weekly team status",

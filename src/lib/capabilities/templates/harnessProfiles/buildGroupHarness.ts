@@ -15,6 +15,7 @@ const buildGroupHarness = (
         description: preset.description,
         exampleRequest: preset.exampleRequest,
         profile: preset.profile,
+        operatorSteps: preset.operatorSteps,
       }),
     ]),
   );

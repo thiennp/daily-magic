@@ -8,7 +8,7 @@ import {
 } from "@/lib/capabilities/templates/listCapabilityTemplates";
 
 describe("capability templates catalog", () => {
-  it("ships 20 workflow and 20 agent presets with harness bundles", () => {
+  it("ships 23 workflow and 20 agent presets with harness bundles", () => {
     const summaries = listCapabilityTemplateSummaries();
     const workflows = summaries.filter(
       (template) => template.type === CapabilityType.WORKFLOW,
@@ -17,10 +17,11 @@ describe("capability templates catalog", () => {
       (template) => template.type === CapabilityType.AGENT,
     );
 
-    expect(allCapabilityTemplates).toHaveLength(40);
-    expect(workflows).toHaveLength(20);
+    expect(allCapabilityTemplates).toHaveLength(43);
+    expect(workflows).toHaveLength(23);
     expect(agents).toHaveLength(20);
-    expect(summaries.every((template) => template.harnessItemCount === 5)).toBe(
+    expect(summaries[0]?.id).toBe("finance-sheet-qa");
+    expect(summaries.every((template) => template.harnessItemCount >= 5)).toBe(
       true,
     );
     expect(summaries.every((template) => template.outcomes.length >= 3)).toBe(
@@ -39,11 +40,23 @@ describe("capability templates catalog", () => {
   });
 
   it("uses enriched harness with subagent per preset", () => {
+    const facebook = findCapabilityTemplateById("facebook-page-post");
+    const email = findCapabilityTemplateById("email-inbox-reply");
+    const finance = findCapabilityTemplateById("finance-sheet-qa");
     const weekly = findCapabilityTemplateById("weekly-team-status");
     const subagent = weekly?.harness.items.find(
       (item) => item.kind === "agent",
     );
 
+    expect(
+      facebook?.harness.items.filter((item) => item.kind === "operator"),
+    ).toHaveLength(3);
+    expect(
+      email?.harness.items.filter((item) => item.kind === "operator"),
+    ).toHaveLength(3);
+    expect(
+      finance?.harness.items.filter((item) => item.kind === "operator"),
+    ).toHaveLength(3);
     expect(subagent?.title).toContain("subagent");
     expect(subagent?.content).toContain("weekly status subagent");
     expect(
