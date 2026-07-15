@@ -4,6 +4,7 @@ import {
   buildAgentWitchWakeHealthResponse,
   buildAgentWitchWakeIdentityResponse,
   buildAgentWitchSelfUpdateStatusFromWakeServer,
+  installHarnessFromWakeServer,
   linkAgentWitchAccountFromWakeServer,
   readAgentWitchSelfUpdateLogEntries,
   readAgentWitchWatchdogLogEntries,
@@ -168,6 +169,38 @@ const handleWakeRequest = async (
     if (request.method === "POST" && pathname === "/wake") {
       const wakeResult = await wakeAgentWitchLaunchAgents();
       sendJson(response, wakeResult.ok ? 200 : 503, wakeResult, cors.headers);
+      return;
+    }
+
+    if (request.method === "POST" && pathname === "/harness/install") {
+      const chunks: Buffer[] = [];
+      for await (const chunk of request) {
+        chunks.push(Buffer.from(chunk));
+      }
+
+      let body: unknown = {};
+      try {
+        body = JSON.parse(Buffer.concat(chunks).toString("utf8"));
+      } catch {
+        sendJson(
+          response,
+          400,
+          {
+            ok: false,
+            errorMessage: "Invalid JSON body.",
+          },
+          cors.headers,
+        );
+        return;
+      }
+
+      const installResult = installHarnessFromWakeServer(body);
+      sendJson(
+        response,
+        installResult.ok ? 200 : 400,
+        installResult,
+        cors.headers,
+      );
       return;
     }
 

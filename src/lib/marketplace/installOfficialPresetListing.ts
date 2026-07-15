@@ -1,11 +1,11 @@
 import createCapabilityFromTemplate from "@/lib/capabilities/createCapabilityFromTemplate";
 import findCapabilityTemplateById from "@/lib/capabilities/templates/findCapabilityTemplateById";
+import buildHarnessInstallBundleFromTemplateHarness from "@/lib/agentWitch/harness/buildHarnessInstallBundleFromTemplateHarness";
 import type { MarketplaceInstallResult } from "@/lib/marketplace/types/MarketplaceInstallResult.type";
 
 const installOfficialPresetListing = async (
   actorUserId: string,
   templateId: string,
-  deviceId: string,
 ): Promise<MarketplaceInstallResult> => {
   const template = findCapabilityTemplateById(templateId);
 
@@ -16,13 +16,15 @@ const installOfficialPresetListing = async (
       savedToLibrary: false,
       harnessInstalled: false,
       harnessInstallMessage: null,
+      localHarnessBundle: null,
     };
   }
 
   const result = await createCapabilityFromTemplate(
     actorUserId,
     templateId,
-    deviceId,
+    undefined,
+    { deferHarnessInstall: true },
   );
 
   if (result === null) {
@@ -32,6 +34,7 @@ const installOfficialPresetListing = async (
       savedToLibrary: false,
       harnessInstalled: false,
       harnessInstallMessage: null,
+      localHarnessBundle: null,
     };
   }
 
@@ -39,8 +42,11 @@ const installOfficialPresetListing = async (
     ok: true,
     errorMessage: null,
     savedToLibrary: true,
-    harnessInstalled: result.harnessInstalled,
-    harnessInstallMessage: result.harnessInstallMessage,
+    harnessInstalled: false,
+    harnessInstallMessage: null,
+    localHarnessBundle: buildHarnessInstallBundleFromTemplateHarness(
+      result.harness,
+    ),
   };
 };
 

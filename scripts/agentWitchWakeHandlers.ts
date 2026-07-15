@@ -4,6 +4,8 @@ import { isAgentWitchWakeServerAllowedOrigin } from "./agentWitchWakeAllowedOrig
 import { resolveAgentWitchWakePort } from "./agentWitchWakeConstants";
 import { kickstartAgentWitchLaunchAgent } from "./kickstartAgentWitchLaunchAgent";
 import { listAgentWitchLaunchTargets } from "./listAgentWitchLaunchTargets";
+import { parseHarnessInstallBundle } from "./parseHarnessInstallBundle";
+import { applyHarnessInstallLocally } from "./applyHarnessInstallLocally";
 import { linkAgentWitchAccountLocally } from "./linkAgentWitchAccountLocally";
 import { spawnAgentWitchClient } from "./spawnAgentWitchClient";
 import { buildAgentWitchWatchdogStatusResponse } from "./buildAgentWitchWatchdogStatus";
@@ -56,6 +58,12 @@ export interface AgentWitchLinkAccountWakeResponse {
   readonly errorMessage?: string;
 }
 
+export interface AgentWitchHarnessInstallWakeResponse {
+  readonly ok: boolean;
+  readonly writtenItemCount?: number;
+  readonly errorMessage?: string;
+}
+
 export type {
   AgentWitchWatchdogLogEntry,
   AgentWitchWatchdogStatusResponse,
@@ -98,6 +106,55 @@ export const linkAgentWitchAccountFromWakeServer = async (
   }
 
   return linkAgentWitchAccountLocally({ linkToken, appOrigin, profileEmail });
+};
+
+export const installHarnessFromWakeServer = (
+  body: unknown,
+): AgentWitchHarnessInstallWakeResponse => {
+  if (!isRecord(body)) {
+    return { ok: false, errorMessage: "Request body must be a JSON object." };
+  }
+
+  const appOrigin =
+    typeof body.appOrigin === "string" ? body.appOrigin.trim() : "";
+  const profileEmail =
+    typeof body.profileEmail === "string" ? body.profileEmail.trim() : "";
+  const bundle = parseHarnessInstallBundle(body.bundle);
+
+  if (appOrigin.length === 0) {
+    return { ok: false, errorMessage: "appOrigin is required." };
+  }
+
+  if (!isAgentWitchWakeServerAllowedOrigin(appOrigin)) {
+    return {
+      ok: false,
+      errorMessage: "appOrigin is not an allowed Agent Witch site.",
+    };
+  }
+
+  if (bundle === null) {
+    return {
+      ok: false,
+      errorMessage: "bundle.name, bundle.slug, and bundle.items are required.",
+    };
+  }
+
+  const result = applyHarnessInstallLocally({
+    bundle,
+    ...(profileEmail.length > 0 ? { profileEmail } : {}),
+  });
+
+  if (!result.ok) {
+    return {
+      ok: false,
+      errorMessage: result.errorMessage ?? "Harness install failed.",
+    };
+  }
+
+  return {
+    ok: true,
+    writtenItemCount: result.writtenItemCount,
+  };
 };
 
 export const buildAgentWitchWakeHealthResponse =

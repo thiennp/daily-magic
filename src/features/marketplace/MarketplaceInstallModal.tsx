@@ -8,11 +8,8 @@ import useMacDeviceSelection from "@/features/agent/hooks/useMacDeviceSelection"
 import { useDemoPreview } from "@/features/demo/DemoPreviewContext";
 import useLocalMacBrowserContext from "@/features/home/hooks/useLocalMacBrowserContext";
 import MarketplaceInstallMacPicker from "@/features/marketplace/MarketplaceInstallMacPicker";
+import { resolveMarketplaceInstallEligibility } from "@/features/marketplace/utils/resolveMarketplaceInstallEligibility";
 import { runMarketplaceInstall } from "@/features/marketplace/utils/runMarketplaceInstall";
-import {
-  canDispatchToMac,
-  resolveMacPresenceTier,
-} from "@/features/agent-witch/utils/macDevicePresence";
 import type HarnessMarketplaceListing from "@/lib/harness/types/HarnessMarketplaceListing.type";
 
 interface MarketplaceInstallModalProps {
@@ -43,15 +40,14 @@ export default function MarketplaceInstallModal({
   const selectedDevice = macSelection.devices.find(
     (device) => device.id === macSelection.selectedDeviceId,
   );
-  const canInstall =
-    listing !== null &&
-    demoPreview === null &&
-    selectedDevice !== undefined &&
-    canDispatchToMac(selectedDevice) &&
-    status !== "installing";
-  const needsLiveConnection =
-    selectedDevice !== undefined &&
-    resolveMacPresenceTier(selectedDevice) === "recent";
+  const { canInstall, needsLiveConnection } =
+    resolveMarketplaceInstallEligibility({
+      capabilityId: listing?.capabilityId ?? null,
+      selectedDevice,
+      isWakeServerReachable,
+      isDemoPreview: demoPreview !== null,
+      status,
+    });
 
   const handleInstall = async (): Promise<void> => {
     if (listing === null || !canInstall) {

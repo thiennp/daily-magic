@@ -6,6 +6,10 @@ import findCapabilityTemplateById from "@/lib/capabilities/templates/findCapabil
 import type { CapabilityTemplateHarness } from "@/lib/capabilities/templates/types/CapabilityTemplate.type";
 import type PublishedCapabilityRecord from "@/lib/capabilities/types/PublishedCapabilityRecord.type";
 
+export interface CreateCapabilityFromTemplateOptions {
+  readonly deferHarnessInstall?: boolean;
+}
+
 export interface CreateCapabilityFromTemplateResult {
   readonly capability: PublishedCapabilityRecord;
   readonly harness: CapabilityTemplateHarness;
@@ -17,6 +21,7 @@ const createCapabilityFromTemplate = async (
   ownerUserId: string,
   templateId: string,
   deviceId?: string,
+  options?: CreateCapabilityFromTemplateOptions,
 ): Promise<CreateCapabilityFromTemplateResult | null> => {
   const template = findCapabilityTemplateById(templateId);
 
@@ -39,11 +44,14 @@ const createCapabilityFromTemplate = async (
     ownerUserId,
     "Saved from template",
   );
-  const harnessInstall = await requestCapabilityTemplateHarnessInstall(
-    ownerUserId,
-    template.harness,
-    deviceId,
-  );
+  const harnessInstall =
+    options?.deferHarnessInstall === true
+      ? { installed: false, errorMessage: null }
+      : await requestCapabilityTemplateHarnessInstall(
+          ownerUserId,
+          template.harness,
+          deviceId,
+        );
 
   return {
     capability: published ?? created,

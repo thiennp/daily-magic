@@ -62,5 +62,6 @@ export async function POST(request: Request): Promise<Response> {
     savedToLibrary: result.savedToLibrary,
     harnessInstalled: result.harnessInstalled,
     harnessInstallMessage: result.harnessInstallMessage,
+    localHarnessBundle: result.localHarnessBundle,
   });
 }

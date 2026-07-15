@@ -1,9 +1,12 @@
+import type HarnessInstallBundle from "@/lib/agentWitch/harness/types/HarnessInstallBundle.type";
+
 export interface MarketplaceInstallApiResult {
   readonly ok: boolean;
   readonly errorMessage: string | null;
   readonly savedToLibrary: boolean;
   readonly harnessInstalled: boolean;
   readonly harnessInstallMessage: string | null;
+  readonly localHarnessBundle: HarnessInstallBundle | null;
 }
 
 export const postMarketplaceInstall = async (input: {
@@ -31,6 +34,7 @@ export const postMarketplaceInstall = async (input: {
       savedToLibrary: false,
       harnessInstalled: false,
       harnessInstallMessage: null,
+      localHarnessBundle: null,
     };
   }
 
@@ -38,6 +42,7 @@ export const postMarketplaceInstall = async (input: {
     savedToLibrary?: boolean;
     harnessInstalled?: boolean;
     harnessInstallMessage?: string | null;
+    localHarnessBundle?: HarnessInstallBundle | null;
   };
 
   return {
@@ -48,6 +53,11 @@ export const postMarketplaceInstall = async (input: {
     harnessInstallMessage:
       typeof record.harnessInstallMessage === "string"
         ? record.harnessInstallMessage
+        : null,
+    localHarnessBundle:
+      record.localHarnessBundle !== undefined &&
+      record.localHarnessBundle !== null
+        ? record.localHarnessBundle
         : null,
   };
 };

@@ -1,7 +1,8 @@
 import installOfficialPresetListing from "@/lib/marketplace/installOfficialPresetListing";
 import installTeammateListing from "@/lib/marketplace/installTeammateListing";
 import type { MarketplaceInstallResult } from "@/lib/marketplace/types/MarketplaceInstallResult.type";
-import { validateMarketplaceInstallTarget } from "@/lib/marketplace/validateMarketplaceInstallTarget";
+import { validateMarketplaceInstallDeviceOwnership } from "@/lib/marketplace/validateMarketplaceInstallTarget";
+import { validateMarketplaceInstallTarget } from "@/lib/marketplace/validateMarketplaceInstallTargetOnline";
 import { parsePresetMarketplaceTemplateId } from "@/lib/marketplace/presetMarketplaceCapabilityId";
 
 const installMarketplaceListing = async (input: {
@@ -9,6 +10,28 @@ const installMarketplaceListing = async (input: {
   readonly capabilityId: string;
   readonly deviceId: string;
 }): Promise<MarketplaceInstallResult> => {
+  const templateId = parsePresetMarketplaceTemplateId(input.capabilityId);
+
+  if (templateId !== null) {
+    const ownershipError = await validateMarketplaceInstallDeviceOwnership(
+      input.actorUserId,
+      input.deviceId,
+    );
+
+    if (ownershipError !== null) {
+      return {
+        ok: false,
+        errorMessage: ownershipError,
+        savedToLibrary: false,
+        harnessInstalled: false,
+        harnessInstallMessage: null,
+        localHarnessBundle: null,
+      };
+    }
+
+    return installOfficialPresetListing(input.actorUserId, templateId);
+  }
+
   const targetError = await validateMarketplaceInstallTarget(
     input.actorUserId,
     input.deviceId,
@@ -21,17 +44,8 @@ const installMarketplaceListing = async (input: {
       savedToLibrary: false,
       harnessInstalled: false,
       harnessInstallMessage: null,
+      localHarnessBundle: null,
     };
-  }
-
-  const templateId = parsePresetMarketplaceTemplateId(input.capabilityId);
-
-  if (templateId !== null) {
-    return installOfficialPresetListing(
-      input.actorUserId,
-      templateId,
-      input.deviceId,
-    );
   }
 
   return installTeammateListing(

@@ -20,6 +20,7 @@ const installTeammateListing = async (
       savedToLibrary: false,
       harnessInstalled: false,
       harnessInstallMessage: null,
+      localHarnessBundle: null,
     };
   }
 
@@ -37,6 +38,7 @@ const installTeammateListing = async (
       savedToLibrary: false,
       harnessInstalled: false,
       harnessInstallMessage: null,
+      localHarnessBundle: null,
     };
   }
 
@@ -54,6 +56,7 @@ const installTeammateListing = async (
       savedToLibrary: false,
       harnessInstalled: false,
       harnessInstallMessage: null,
+      localHarnessBundle: null,
     };
   }
 
@@ -68,6 +71,7 @@ const installTeammateListing = async (
       harnessInstalled: false,
       harnessInstallMessage:
         "Saved to your library. Owner must be online to install rules on your Mac.",
+      localHarnessBundle: null,
     };
   }
 
@@ -85,6 +89,7 @@ const installTeammateListing = async (
       harnessInstalled: false,
       harnessInstallMessage:
         "Saved to your library. Rules bundle is not available to install.",
+      localHarnessBundle: null,
     };
   }
 
@@ -103,6 +108,7 @@ const installTeammateListing = async (
     savedToLibrary: true,
     harnessInstalled: true,
     harnessInstallMessage: "Installing rules on your Mac.",
+    localHarnessBundle: null,
   };
 };
 

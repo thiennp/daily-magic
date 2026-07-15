@@ -1,4 +1,5 @@
 import { postMarketplaceInstall } from "@/features/marketplace/utils/postMarketplaceInstall";
+import { requestLocalHarnessInstall } from "@/lib/agentWitch/requestLocalHarnessInstall";
 
 export const runMarketplaceInstall = async (input: {
   readonly capabilityId: string;
@@ -13,6 +14,34 @@ export const runMarketplaceInstall = async (input: {
     return {
       status: "error",
       message: result.errorMessage ?? "Install failed.",
+    };
+  }
+
+  if (result.localHarnessBundle !== null) {
+    const localInstall = await requestLocalHarnessInstall({
+      bundle: result.localHarnessBundle,
+      appOrigin: window.location.origin,
+    });
+
+    if (localInstall.ok) {
+      return {
+        status: "done",
+        message: "Saved to your library and installed rules on this Mac.",
+      };
+    }
+
+    if (result.savedToLibrary) {
+      return {
+        status: "done",
+        message:
+          localInstall.errorMessage ??
+          "Saved to your library, but rules could not be installed on this Mac.",
+      };
+    }
+
+    return {
+      status: "error",
+      message: localInstall.errorMessage ?? "Harness install failed.",
     };
   }
 

@@ -1,4 +1,8 @@
 export const AGENT_WITCH_WAKE_INSTALL_SCRIPT_NAMES = [
+  "applyHarnessInstallLocally.ts",
+  "harnessInstallBundle.types.ts",
+  "parseHarnessInstallBundle.ts",
+  "planHarnessInstallBundle.ts",
   "agent-witch-wake-server.ts",
   "agentWitchWakeConstants.ts",
   "agentWitchWakeHandlers.ts",
