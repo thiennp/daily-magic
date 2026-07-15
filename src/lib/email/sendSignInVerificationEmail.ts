@@ -33,6 +33,8 @@ export default async function sendSignInVerificationEmail(
   });
 
   if (error) {
-    throw new Error(`Resend error: ${JSON.stringify(error)}`);
+    const detail =
+      typeof error.message === "string" ? error.message : JSON.stringify(error);
+    throw new Error(`Resend sign-in email failed: ${detail}`);
   }
 }

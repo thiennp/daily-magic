@@ -9,6 +9,7 @@ import {
   type LoginFeedback,
 } from "@/features/auth/utils/buildLoginFeedback";
 import buildLoginFeedbackFromAuthError from "@/features/auth/utils/buildLoginFeedbackFromAuthError";
+import parseEmailSignInFeedback from "@/features/auth/utils/parseEmailSignInFeedback";
 import readDevSecretFromLocalStorage from "@/features/auth/utils/readDevSecretFromLocalStorage";
 import secretLogin from "@/features/auth/utils/secretLogin";
 
@@ -65,12 +66,12 @@ export default function useLoginForm({
         return;
       }
 
-      await signIn("resend", {
+      const result = await signIn("resend", {
         email: trimmedEmail,
         callbackUrl,
         redirect: false,
       });
-      setFeedback(buildLoginFeedback("Check your inbox for the sign-in link."));
+      setFeedback(parseEmailSignInFeedback(result));
     } catch {
       setFeedback(buildLoginFeedback("Could not send the sign-in email."));
     } finally {

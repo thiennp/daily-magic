@@ -10,6 +10,8 @@ import {
 } from "@/lib/auth/neonAdapter";
 import { GlobalRole, isGlobalRole } from "@/lib/auth/roles";
 import { getUserById } from "@/lib/auth/userRepository";
+import resolveEmailFrom from "@/lib/email/resolveEmailFrom";
+import resolveResendApiKey from "@/lib/email/resolveResendApiKey";
 import sendSignInVerificationEmail from "@/lib/email/sendSignInVerificationEmail";
 
 function buildAuthProviders(): Provider[] {
@@ -33,11 +35,14 @@ function buildAuthProviders(): Provider[] {
     );
   }
 
-  if (process.env.AUTH_RESEND_KEY && process.env.EMAIL_FROM) {
+  const resendApiKey = resolveResendApiKey();
+  const emailFrom = resolveEmailFrom();
+
+  if (resendApiKey && emailFrom) {
     providers.push(
       Resend({
-        apiKey: process.env.AUTH_RESEND_KEY,
-        from: process.env.EMAIL_FROM,
+        apiKey: resendApiKey,
+        from: emailFrom,
         sendVerificationRequest(params) {
           const { identifier: to, provider, url, theme } = params;
           const { host } = new URL(url);
@@ -45,9 +50,14 @@ function buildAuthProviders(): Provider[] {
           return sendSignInVerificationEmail({
             to,
             url,
-            from: provider.from ?? process.env.EMAIL_FROM ?? "",
+            from: provider.from ?? emailFrom,
             host,
             theme,
+          }).catch((error: unknown) => {
+            const message =
+              error instanceof Error ? error.message : "Unknown email error";
+            console.error("[auth] Resend sign-in email failed:", message);
+            throw error;
           });
         },
       }),

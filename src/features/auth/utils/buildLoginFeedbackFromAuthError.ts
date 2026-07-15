@@ -9,9 +9,15 @@ const AUTH_ERROR_FEEDBACK_MAP: Record<string, LoginFeedback> = {
   },
   Configuration: {
     variant: "error",
-    title: "Sign-in interrupted",
+    title: "Email sign-in unavailable",
     message:
-      "Google sign-in could not finish. Use one browser tab, click Continue with Google once, and try again in a private window if it keeps failing.",
+      "We could not send a sign-in email. The server may be missing a verified Resend sender domain (EMAIL_FROM), or delivery is limited to approved addresses. Try Google sign-in, or ask an admin to verify the agentwitch.com sender in Resend.",
+  },
+  EmailSignin: {
+    variant: "error",
+    title: "Email sign-in failed",
+    message:
+      "We could not send a sign-in email to that address. Try Google sign-in, or use an inbox allowed by the current Resend configuration.",
   },
   AccessDenied: {
     variant: "error",
