@@ -40,10 +40,8 @@ export default function MacDeviceRow({
       deviceId={deviceId}
       displayName={displayName}
       isOnline={isOnline}
-      isConnected={isConnected}
       detailText={detailText}
       isEditing={isEditing}
-      isSelected={isSelected}
       onEditingChange={setIsEditing}
       onRenamed={onRenamed}
     />
