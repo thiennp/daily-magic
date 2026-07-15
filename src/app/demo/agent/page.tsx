@@ -1,5 +1,7 @@
-import AgentPageLayout from "@/features/pages/layouts/AgentPageLayout";
+import { redirect } from "next/navigation";
+
+import buildAgentComposerHref from "@/lib/library/buildAgentComposerHref";
 
 export default function DemoAgentPage() {
-  return <AgentPageLayout />;
+  redirect(`/demo/home${buildAgentComposerHref().slice(1)}`);
 }

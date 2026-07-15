@@ -8,8 +8,14 @@ import {
   publishHarnessCatalog,
   type HarnessCatalogStatus,
 } from "@/features/harness/fetchHarnessCatalogStatus";
+import { useHomeSetupEmbedded } from "@/features/home/HomeSetupEmbeddedContext";
+import resolveHomeSetupNestedBoxClass from "@/features/home/resolveHomeSetupNestedBoxClass";
+
+const CATALOG_PUBLISH_BOX_CLASS =
+  "mt-4 rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-900/40";
 
 export default function HarnessCatalogPublishPanel() {
+  const embedded = useHomeSetupEmbedded();
   const [status, setStatus] = useState<HarnessCatalogStatus | null>(null);
   const [message, setMessage] = useState<string | null>(null);
   const [isPublishing, setIsPublishing] = useState(false);
@@ -35,7 +41,13 @@ export default function HarnessCatalogPublishPanel() {
   };
 
   return (
-    <div className="mt-4 rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-900/40">
+    <div
+      className={resolveHomeSetupNestedBoxClass(
+        embedded,
+        CATALOG_PUBLISH_BOX_CLASS,
+        "mt-4",
+      )}
+    >
       <h3 className="text-sm font-semibold text-gray-800 dark:text-white/90">
         Catalog snapshot
       </h3>

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 
 import Button from "@/components/ui/button/Button";
 import AppPanel from "@/components/surfaces/AppPanel";
+import { useHomeSetupEmbedded } from "@/features/home/HomeSetupEmbeddedContext";
 import { COMPANY_ENTITY_LABEL } from "@/lib/admin/companyGroupCopy.constant";
 import DispatchPolicyPreviewControls from "@/features/dispatch/DispatchPolicyPreviewControls";
 import {
@@ -60,8 +61,10 @@ export default function AgentDispatchPolicyPanel() {
     );
   };
 
+  const embedded = useHomeSetupEmbedded();
+
   return (
-    <AppPanel>
+    <AppPanel embedded={embedded}>
       <h2 className="text-lg font-semibold text-gray-800 dark:text-white/90">
         Who can send tasks to your Mac
       </h2>

@@ -14,7 +14,7 @@ describe("reduceAgentLiveTerminalMessage", () => {
   it("renders a command line when a run is dispatched", () => {
     const commandLine = formatAgentLiveTerminalCommandLine("run lint");
     const next = reduceAgentLiveTerminalMessage(
-      beginAgentLiveTerminalSession(commandLine),
+      beginAgentLiveTerminalSession(commandLine, "claude-cli"),
       {
         type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ACK,
         payload: {
@@ -31,7 +31,7 @@ describe("reduceAgentLiveTerminalMessage", () => {
   it("appends stream chunks for the active run", () => {
     const commandLine = formatAgentLiveTerminalCommandLine("run lint");
     const dispatched = reduceAgentLiveTerminalMessage(
-      beginAgentLiveTerminalSession(commandLine),
+      beginAgentLiveTerminalSession(commandLine, "claude-cli"),
       {
         type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ACK,
         payload: {
@@ -55,7 +55,7 @@ describe("reduceAgentLiveTerminalMessage", () => {
   it("appends final result output after the rendered command line", () => {
     const commandLine = formatAgentLiveTerminalCommandLine("run lint");
     const dispatched = reduceAgentLiveTerminalMessage(
-      beginAgentLiveTerminalSession(commandLine),
+      beginAgentLiveTerminalSession(commandLine, "claude-cli"),
       {
         type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ACK,
         payload: {

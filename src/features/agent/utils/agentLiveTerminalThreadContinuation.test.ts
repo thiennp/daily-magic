@@ -11,7 +11,7 @@ describe("agentLiveTerminalThreadContinuation", () => {
   it("appends a follow-up command without clearing prior output", () => {
     const firstCommand = formatAgentLiveTerminalCommandLine("run lint");
     const firstFinished = reduceAgentLiveTerminalMessage(
-      beginAgentLiveTerminalSession(firstCommand),
+      beginAgentLiveTerminalSession(firstCommand, "claude-cli", "mac-a"),
       {
         type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ACK,
         payload: {
@@ -36,6 +36,8 @@ describe("agentLiveTerminalThreadContinuation", () => {
         activeRunId: null,
         status: "starting",
         pendingCommandLine: secondCommand,
+        sessionWriterAgent: "claude-cli",
+        sessionDeviceId: "mac-a",
       },
       {
         type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ACK,

@@ -4,6 +4,7 @@ import type { useWsTestTaskComposer } from "@/features/agent/hooks/useWsTestTask
 export const buildWsTestSendOptions = (
   composer: ReturnType<typeof useWsTestTaskComposer>,
   writerAgent: HarnessWriterAgent,
+  activeDeviceId?: string,
 ): {
   readonly writerAgent: HarnessWriterAgent;
   readonly targetUserId?: string;
@@ -19,10 +20,11 @@ export const buildWsTestSendOptions = (
         capabilityId: composer.selectedCapabilityId,
       }
     : {
-        ...(composer.selectedDeviceId.length > 0
-          ? { targetDeviceId: composer.selectedDeviceId }
+        ...(activeDeviceId !== undefined && activeDeviceId.length > 0
+          ? { targetDeviceId: activeDeviceId }
           : {}),
-        ...(composer.isLibraryPlaybook && composer.libraryCapabilityId.length > 0
+        ...(composer.isLibraryPlaybook &&
+        composer.libraryCapabilityId.length > 0
           ? { capabilityId: composer.libraryCapabilityId }
           : {}),
       }),

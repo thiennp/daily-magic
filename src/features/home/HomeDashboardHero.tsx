@@ -14,6 +14,7 @@ import { useAppPath } from "@/features/demo/DemoPreviewContext";
 import { COMPANY_RULES_NAV_LABEL } from "@/lib/admin/companyGroupCopy.constant";
 import formatGlobalRole from "@/lib/auth/formatGlobalRole";
 import type { GlobalRoleValue } from "@/lib/auth/roles";
+import buildAgentComposerHref from "@/lib/library/buildAgentComposerHref";
 
 interface HomeDashboardHeroProps {
   readonly user: {
@@ -40,7 +41,7 @@ export default function HomeDashboardHero({ user }: HomeDashboardHeroProps) {
       </p>
       <div className="mt-6">
         <Link
-          href={appPath("/agent")}
+          href={appPath(buildAgentComposerHref())}
           className={APP_SURFACE_CTA_PRIMARY_CLASS}
         >
           Send a task

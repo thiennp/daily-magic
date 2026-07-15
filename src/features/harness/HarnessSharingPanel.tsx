@@ -3,10 +3,13 @@
 import AppPanel from "@/components/surfaces/AppPanel";
 import HarnessCatalogPublishPanel from "@/features/harness/HarnessCatalogPublishPanel";
 import HarnessSetSharingPanel from "@/features/harness/HarnessSetSharingPanel";
+import { useHomeSetupEmbedded } from "@/features/home/HomeSetupEmbeddedContext";
 
 export default function HarnessSharingPanel() {
+  const embedded = useHomeSetupEmbedded();
+
   return (
-    <AppPanel>
+    <AppPanel embedded={embedded}>
       <h2 className="text-lg font-semibold text-gray-800 dark:text-white/90">
         Sharing
       </h2>

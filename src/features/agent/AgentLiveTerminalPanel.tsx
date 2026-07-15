@@ -6,8 +6,11 @@ import { APP_SURFACE_BASH_TERMINAL_PRE_CLASS } from "@/components/surfaces/appSu
 import AgentLiveTerminalInputForm from "@/features/agent/AgentLiveTerminalInputForm";
 import {
   buildAgentLiveTerminalDisplay,
+  buildAgentLiveTerminalLoadingLine,
   shouldShowAgentLiveTerminalCursor,
+  shouldShowAgentLiveTerminalLoadingIndicator,
 } from "@/features/agent/utils/buildAgentLiveTerminalDisplay";
+import { useAgentLiveTerminalLoadingDots } from "@/features/agent/hooks/useAgentLiveTerminalLoadingDots";
 import type { AgentLiveTerminalStatus } from "@/features/agent/utils/agentLiveTerminalState.type";
 import type { AgentRunInputRequest } from "@/features/dispatch/utils/agentRunInputSocket";
 
@@ -37,13 +40,16 @@ export default function AgentLiveTerminalPanel({
   const outputRef = useRef<HTMLPreElement>(null);
   const displayOutput = buildAgentLiveTerminalDisplay({ output, status });
   const showCursor = shouldShowAgentLiveTerminalCursor(status);
+  const showLoadingIndicator =
+    shouldShowAgentLiveTerminalLoadingIndicator(status);
+  const loadingDotCount = useAgentLiveTerminalLoadingDots(showLoadingIndicator);
 
   useEffect(() => {
     const element = outputRef.current;
     if (element !== null) {
       element.scrollTop = element.scrollHeight;
     }
-  }, [displayOutput, showCursor]);
+  }, [displayOutput, loadingDotCount, showCursor, showLoadingIndicator]);
 
   return (
     <section>
@@ -69,6 +75,14 @@ export default function AgentLiveTerminalPanel({
           className={`${APP_SURFACE_BASH_TERMINAL_PRE_CLASS} max-h-96 min-h-48 whitespace-pre-wrap break-words border-0 rounded-none`}
         >
           {displayOutput}
+          {showLoadingIndicator ? (
+            <>
+              {"\n"}
+              <span className="text-zinc-400">
+                {buildAgentLiveTerminalLoadingLine(loadingDotCount)}
+              </span>
+            </>
+          ) : null}
           {showCursor ? (
             <span className="animate-pulse text-emerald-400">▍</span>
           ) : null}

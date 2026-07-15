@@ -1,10 +1,27 @@
-import AgentPageLayout from "@/features/pages/layouts/AgentPageLayout";
-import AppShell from "@/features/shell/AppShell";
+import { redirect } from "next/navigation";
 
-export default function AgentPage() {
-  return (
-    <AppShell>
-      <AgentPageLayout />
-    </AppShell>
+import buildAgentComposerHref from "@/lib/library/buildAgentComposerHref";
+
+interface AgentPageSearchParams {
+  readonly libraryCapabilityId?: string | string[];
+  readonly prompt?: string | string[];
+}
+
+const readSearchParam = (
+  value: string | string[] | undefined,
+): string | undefined => (typeof value === "string" ? value : undefined);
+
+export default async function AgentPage({
+  searchParams,
+}: {
+  readonly searchParams: Promise<AgentPageSearchParams>;
+}) {
+  const params = await searchParams;
+
+  redirect(
+    buildAgentComposerHref({
+      libraryCapabilityId: readSearchParam(params.libraryCapabilityId),
+      prompt: readSearchParam(params.prompt),
+    }),
   );
 }

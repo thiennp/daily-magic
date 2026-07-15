@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import { COMPANIES_ENTITY_LABEL } from "@/lib/admin/companyGroupCopy.constant";
 import { AGENT_WITCH_PRODUCT_NAME } from "@/lib/agentWitch/agentWitchProductName.constant";
+import buildAgentComposerHref from "@/lib/library/buildAgentComposerHref";
 import { MARKETING_TEXT_LINK_CLASSES } from "@/features/marketing/marketingInteractiveClasses.constant";
 import {
   MARKETING_TEXT_PRIMARY_CLASSES,
@@ -12,7 +13,7 @@ import { mergeMarketingClasses } from "@/features/marketing/mergeMarketingClasse
 
 const FOOTER_PRODUCT_LINKS = [
   { label: "Real examples", href: "/showcases" },
-  { label: "Send a task", href: "/agent" },
+  { label: "Send a task", href: buildAgentComposerHref() },
   { label: "Reports", href: "/reports" },
   { label: "Styleguide", href: "/styleguide" },
 ] as const;
@@ -27,7 +28,12 @@ export default function MarketingFooter() {
     <footer className="border-t border-zinc-200 bg-white">
       <div className="mx-auto grid max-w-6xl gap-10 px-6 py-12 md:grid-cols-[1.2fr_1fr_1fr]">
         <div>
-          <p className={mergeMarketingClasses("text-sm font-semibold", MARKETING_TEXT_PRIMARY_CLASSES)}>
+          <p
+            className={mergeMarketingClasses(
+              "text-sm font-semibold",
+              MARKETING_TEXT_PRIMARY_CLASSES,
+            )}
+          >
             {AGENT_WITCH_PRODUCT_NAME}
           </p>
           <p
@@ -52,7 +58,13 @@ export default function MarketingFooter() {
           <ul className="mt-3 space-y-2">
             {FOOTER_PRODUCT_LINKS.map((link) => (
               <li key={link.href}>
-                <Link href={link.href} className={mergeMarketingClasses("text-sm", MARKETING_TEXT_LINK_CLASSES)}>
+                <Link
+                  href={link.href}
+                  className={mergeMarketingClasses(
+                    "text-sm",
+                    MARKETING_TEXT_LINK_CLASSES,
+                  )}
+                >
                   {link.label}
                 </Link>
               </li>
@@ -71,7 +83,13 @@ export default function MarketingFooter() {
           <ul className="mt-3 space-y-2">
             {FOOTER_ADMIN_LINKS.map((link) => (
               <li key={link.href}>
-                <Link href={link.href} className={mergeMarketingClasses("text-sm", MARKETING_TEXT_LINK_CLASSES)}>
+                <Link
+                  href={link.href}
+                  className={mergeMarketingClasses(
+                    "text-sm",
+                    MARKETING_TEXT_LINK_CLASSES,
+                  )}
+                >
                   {link.label}
                 </Link>
               </li>

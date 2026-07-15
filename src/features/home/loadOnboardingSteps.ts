@@ -2,6 +2,7 @@ import hasUserCreatedFirstWorkflowOrAgent from "@/features/home/utils/hasUserCre
 import hasUserSentFirstTask from "@/features/home/utils/hasUserSentFirstTask";
 import { getPairedDevicesSnapshot } from "@/features/agent-witch/pairedDevicesResource";
 import { listAgentRunsLocalCache } from "@/features/reports/agentRunLocalCache";
+import buildAgentComposerHref from "@/lib/library/buildAgentComposerHref";
 
 export interface OnboardingStep {
   readonly id: string;
@@ -91,7 +92,7 @@ export async function loadOnboardingSteps(): Promise<
       id: "task",
       label: "Send your first task",
       done: hasSentTask,
-      href: "/agent",
+      href: buildAgentComposerHref(),
     },
   ];
 }

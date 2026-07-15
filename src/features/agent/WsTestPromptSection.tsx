@@ -2,7 +2,6 @@
 
 import AppPanel from "@/components/surfaces/AppPanel";
 import TeamDispatchFields from "@/features/dispatch/TeamDispatchFields";
-import WsTestMacDispatchSection from "@/features/agent/WsTestMacDispatchSection";
 import WsTestPromptComposerPanel from "@/features/agent/WsTestPromptComposerPanel";
 import type { useWsTestTaskComposer } from "@/features/agent/hooks/useWsTestTaskComposer";
 import type { WsTestConnectionStatus } from "@/features/agent/types/WsTestConnectionStatus.type";
@@ -13,6 +12,9 @@ interface WsTestPromptSectionProps {
   readonly composer: ReturnType<typeof useWsTestTaskComposer>;
   readonly writerAgent: HarnessWriterAgent;
   readonly onWriterAgentChange: (value: HarnessWriterAgent) => void;
+  readonly isWriterAgentLocked: boolean;
+  readonly isMacDeviceLocked: boolean;
+  readonly macDispatchDeviceId: string;
   readonly connectionStatus: WsTestConnectionStatus;
   readonly isSendDisabled: boolean;
   readonly onSend: () => void;
@@ -24,14 +26,15 @@ export default function WsTestPromptSection({
   composer,
   writerAgent,
   onWriterAgentChange,
+  isWriterAgentLocked,
+  isMacDeviceLocked,
+  macDispatchDeviceId,
   connectionStatus,
   isSendDisabled,
   onSend,
   onClear,
   onQueue,
 }: WsTestPromptSectionProps) {
-  const showMacPicker = !composer.isTeamDispatch;
-
   return (
     <>
       {!composer.isLibraryPlaybook ? (
@@ -52,30 +55,22 @@ export default function WsTestPromptSection({
         </AppPanel>
       ) : null}
 
-      {showMacPicker ? (
-        <WsTestMacDispatchSection
-          isLibraryPlaybook={composer.isLibraryPlaybook}
-          macDevices={composer.macDevices}
-          macDisplayNameById={composer.macDisplayNameById}
-          selectedDeviceId={composer.selectedDeviceId}
-          isMacDevicesLoading={composer.isMacDevicesLoading}
-          onDeviceChange={composer.setSelectedDeviceId}
-          onDeviceRenamed={composer.renameMacDevice}
-          onDeviceDeleted={async (deviceId) => {
-            await revokePairedDevice(deviceId);
-          }}
-        />
-      ) : null}
-
       <WsTestPromptComposerPanel
         composer={composer}
         writerAgent={writerAgent}
         onWriterAgentChange={onWriterAgentChange}
+        isWriterAgentLocked={isWriterAgentLocked}
+        isMacDeviceLocked={isMacDeviceLocked}
+        macDispatchDeviceId={macDispatchDeviceId}
+        showMacPicker={!composer.isTeamDispatch}
         connectionStatus={connectionStatus}
         isSendDisabled={isSendDisabled}
         onSend={onSend}
         onClear={onClear}
         onQueue={onQueue}
+        onDeviceDeleted={async (deviceId) => {
+          await revokePairedDevice(deviceId);
+        }}
       />
     </>
   );

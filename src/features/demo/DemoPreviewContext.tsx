@@ -35,15 +35,17 @@ export function useAppPath(): (path: string) => string {
       return path;
     }
 
-    if (path === "/") {
-      return "/demo/home";
-    }
+    const [pathname, ...queryParts] = path.split("?");
+    const query = queryParts.length > 0 ? `?${queryParts.join("?")}` : "";
 
-    if (path === "/admin/groups") {
-      return "/demo/admin/groups";
-    }
+    const demoPath =
+      pathname === "/"
+        ? "/demo/home"
+        : pathname === "/admin/groups"
+          ? "/demo/admin/groups"
+          : `/demo${pathname}`;
 
-    return `/demo${path}`;
+    return `${demoPath}${query}`;
   };
 }
 

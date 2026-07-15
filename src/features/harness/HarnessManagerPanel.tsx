@@ -2,6 +2,7 @@
 
 import AppPanel from "@/components/surfaces/AppPanel";
 import AgentWitchUnsupportedHostNotice from "@/features/home/AgentWitchUnsupportedHostNotice";
+import { useHomeSetupEmbedded } from "@/features/home/HomeSetupEmbeddedContext";
 import HarnessItemEditor from "@/features/harness/components/HarnessItemEditor";
 import HarnessLastRequestResult from "@/features/harness/components/HarnessLastRequestResult";
 import HarnessLocalManifest from "@/features/harness/components/HarnessLocalManifest";
@@ -21,7 +22,6 @@ export default function HarnessManagerPanel({
     localManifest,
     manifestHostname,
     lastRequestResult,
-    sendCreateHarnessSet,
     sendWriteHarnessItems,
     pairingStatus,
   } = harnessSocket;
@@ -33,11 +33,16 @@ export default function HarnessManagerPanel({
   const isConnected =
     connectionStatus === "connected" && pairingStatus === "paired";
 
-  const canCreateSet = isConnected && form.newSetName.trim().length > 0;
   const canSubmitItems = isConnected && form.readyItems.length > 0;
+  const embedded = useHomeSetupEmbedded();
 
   return (
-    <AppPanel as="section" padding="compact" className="text-left">
+    <AppPanel
+      as="section"
+      padding="compact"
+      embedded={embedded}
+      className="text-left"
+    >
       {!isWebSocketSupported ? (
         <div className="mt-4">
           <AgentWitchUnsupportedHostNotice host={host} />
@@ -46,18 +51,8 @@ export default function HarnessManagerPanel({
 
       <HarnessSetManager
         localManifest={localManifest}
-        newSetName={form.newSetName}
         writerAgent={form.writerAgent}
-        canCreateSet={canCreateSet}
-        onNewSetNameChange={form.setNewSetName}
         onWriterAgentChange={form.setWriterAgent}
-        onCreateSet={() => {
-          sendCreateHarnessSet({
-            name: form.newSetName,
-            writerAgent: form.writerAgent,
-          });
-          form.setNewSetName("");
-        }}
       />
 
       <div className="mt-6 space-y-4">

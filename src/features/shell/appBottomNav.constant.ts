@@ -1,4 +1,7 @@
 import type { AppNavItem } from "@/features/shell/appNav.constant";
+import buildAgentComposerHref from "@/lib/library/buildAgentComposerHref";
+
+const SEND_TASK_NAV_HREF = buildAgentComposerHref();
 
 export const BOTTOM_NAV: readonly AppNavItem[] = [
   {
@@ -17,10 +20,9 @@ export const BOTTOM_NAV: readonly AppNavItem[] = [
     isActive: (pathname) => pathname.startsWith("/marketplace"),
   },
   {
-    href: "/agent",
+    href: SEND_TASK_NAV_HREF,
     label: "Send",
-    isActive: (pathname) =>
-      pathname === "/agent" || pathname.startsWith("/ws-test"),
+    isActive: () => false,
   },
   {
     href: "/reports",

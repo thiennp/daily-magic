@@ -13,6 +13,7 @@ interface AppPanelProps {
   readonly className?: string;
   readonly id?: string;
   readonly padding?: "default" | "compact" | "none";
+  readonly embedded?: boolean;
 }
 
 export default function AppPanel({
@@ -21,9 +22,11 @@ export default function AppPanel({
   className,
   id,
   padding = "default",
+  embedded = false,
 }: AppPanelProps) {
-  const paddingClassName =
-    padding === "compact"
+  const paddingClassName = embedded
+    ? ""
+    : padding === "compact"
       ? APP_SURFACE_PANEL_PADDING_COMPACT_CLASS
       : padding === "none"
         ? ""
@@ -32,7 +35,11 @@ export default function AppPanel({
   return (
     <Component
       id={id}
-      className={twMerge(APP_SURFACE_PANEL_CLASS, paddingClassName, className)}
+      className={twMerge(
+        embedded ? undefined : APP_SURFACE_PANEL_CLASS,
+        paddingClassName,
+        className,
+      )}
     >
       {children}
     </Component>

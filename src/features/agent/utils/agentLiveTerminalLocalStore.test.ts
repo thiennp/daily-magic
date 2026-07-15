@@ -19,7 +19,11 @@ describe("agentLiveTerminalLocalStore", () => {
 
   it("restores the latest terminal session after navigation", () => {
     persistAgentLiveTerminalState({
-      ...beginAgentLiveTerminalSession('claude -p "run lint"'),
+      ...beginAgentLiveTerminalSession(
+        'claude -p "run lint"',
+        "claude-cli",
+        "mac-a",
+      ),
       activeRunId: "run-1",
       output: 'agent-witch@mac ~ % claude -p "run lint"\nhello\n',
       status: "streaming",
@@ -29,6 +33,20 @@ describe("agentLiveTerminalLocalStore", () => {
     expect(restored.activeRunId).toBe("run-1");
     expect(restored.output).toContain("hello");
     expect(restored.status).toBe("streaming");
+    expect(restored.sessionWriterAgent).toBe("claude-cli");
+    expect(restored.sessionDeviceId).toBe("mac-a");
+  });
+
+  it("restores the locked writer agent for an open Mac session", () => {
+    persistAgentLiveTerminalState({
+      ...beginAgentLiveTerminalSession('cursor agent "fix lint"', "cursor"),
+      activeRunId: "run-3",
+      output: "working\n",
+      status: "finished",
+    });
+
+    const restored = loadPersistedAgentLiveTerminalState();
+    expect(restored.sessionWriterAgent).toBe("cursor");
   });
 
   it("stores terminal output by run id for report pages", () => {

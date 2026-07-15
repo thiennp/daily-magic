@@ -5,9 +5,15 @@ import { useEffect, useState } from "react";
 import HarnessSetSharingList, {
   type HarnessSetSharingRow,
 } from "@/features/harness/HarnessSetSharingList";
+import { useHomeSetupEmbedded } from "@/features/home/HomeSetupEmbeddedContext";
+import resolveHomeSetupNestedBoxClass from "@/features/home/resolveHomeSetupNestedBoxClass";
 import type { HarnessSetSharingVisibilityValue } from "@/lib/harness/harnessSetSharingQueries";
 
+const SHARING_SECTION_DIVIDER_CLASS =
+  "mt-6 border-t border-gray-200 pt-6 dark:border-gray-800";
+
 export default function HarnessSetSharingPanel() {
+  const embedded = useHomeSetupEmbedded();
   const [sets, setSets] = useState<readonly HarnessSetSharingRow[]>([]);
   const [message, setMessage] = useState<string | null>(null);
 
@@ -64,7 +70,13 @@ export default function HarnessSetSharingPanel() {
   };
 
   return (
-    <section className="mt-6 border-t border-gray-200 pt-6 dark:border-gray-800">
+    <section
+      className={resolveHomeSetupNestedBoxClass(
+        embedded,
+        SHARING_SECTION_DIVIDER_CLASS,
+        "mt-6",
+      )}
+    >
       <HarnessSetSharingList
         sets={sets}
         onVisibilityChange={updateVisibility}

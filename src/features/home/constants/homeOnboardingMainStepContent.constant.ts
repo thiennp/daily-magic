@@ -26,14 +26,14 @@ export const HOME_ONBOARDING_MAIN_STEP_CONTENT: Readonly<
     eyebrow: "Getting started",
     headline: "Send your first task",
     detail:
-      "Open Agent, choose a workflow or prompt, and run it on your Mac. The full log lands in Reports.",
-    ctaLabel: "Open Agent",
+      "Open the task composer from home, choose a workflow or prompt, and run it on your Mac. The full log lands in Job history.",
+    ctaLabel: "Send a task",
   },
   "send-task": {
     eyebrow: "Getting started",
     headline: "Send your first task",
     detail:
-      "Open Agent, choose a workflow or prompt, and run it on your Mac. The full log lands in Reports.",
-    ctaLabel: "Open Agent",
+      "Open the task composer from home, choose a workflow or prompt, and run it on your Mac. The full log lands in Job history.",
+    ctaLabel: "Send a task",
   },
 };

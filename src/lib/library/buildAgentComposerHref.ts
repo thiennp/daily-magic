@@ -3,10 +3,13 @@ interface BuildAgentComposerHrefInput {
   readonly prompt?: string;
 }
 
+const SEND_TASK_MODAL_QUERY_PARAM = "sendTask";
+
 export default function buildAgentComposerHref(
-  input: BuildAgentComposerHrefInput,
+  input: BuildAgentComposerHrefInput = {},
 ): string {
   const params = new URLSearchParams();
+  params.set(SEND_TASK_MODAL_QUERY_PARAM, "1");
 
   if (input.libraryCapabilityId) {
     params.set("libraryCapabilityId", input.libraryCapabilityId);
@@ -16,6 +19,5 @@ export default function buildAgentComposerHref(
     params.set("prompt", input.prompt);
   }
 
-  const query = params.toString();
-  return query.length > 0 ? `/agent?${query}` : "/agent";
+  return `/?${params.toString()}`;
 }

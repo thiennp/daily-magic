@@ -1,6 +1,13 @@
+"use client";
+
 import { COMPANY_MEMBERS_LABEL } from "@/lib/admin/companyGroupCopy.constant";
+import { useHomeSetupEmbedded } from "@/features/home/HomeSetupEmbeddedContext";
+import resolveHomeSetupNestedBoxClass from "@/features/home/resolveHomeSetupNestedBoxClass";
 import { HarnessSharingVisibility } from "@/lib/harness/HarnessSharingVisibility.constant";
 import type { HarnessSetSharingVisibilityValue } from "@/lib/harness/harnessSetSharingQueries";
+
+const SHARING_ROW_BOX_CLASS =
+  "flex flex-wrap items-center gap-3 rounded-lg border border-gray-200 p-3 dark:border-gray-700";
 
 interface HarnessSetSharingRow {
   readonly slug: string;
@@ -22,6 +29,8 @@ export default function HarnessSetSharingList({
   onVisibilityChange,
   onSave,
 }: HarnessSetSharingListProps) {
+  const embedded = useHomeSetupEmbedded();
+
   if (sets.length === 0) {
     return (
       <p className="mt-4 text-sm text-gray-500 dark:text-gray-400">
@@ -36,7 +45,11 @@ export default function HarnessSetSharingList({
       {sets.map((set) => (
         <li
           key={set.slug}
-          className="flex flex-wrap items-center gap-3 rounded-lg border border-gray-200 p-3 dark:border-gray-700"
+          className={resolveHomeSetupNestedBoxClass(
+            embedded,
+            SHARING_ROW_BOX_CLASS,
+            "flex flex-wrap items-center gap-3",
+          )}
         >
           <div className="min-w-0 flex-1">
             <p className="text-sm font-medium text-gray-800 dark:text-white/90">

@@ -1,119 +1,103 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 
-import AppPanel from "@/components/surfaces/AppPanel";
 import AgentWitchUnsupportedHostNotice from "@/features/home/AgentWitchUnsupportedHostNotice";
-import { ConnectionStatusBadge } from "@/features/shell/ConnectionStatusBadge";
 import AgentLiveTerminalSection from "@/features/agent/AgentLiveTerminalSection";
 import { useAgentRunQueue } from "@/features/agent/hooks/useAgentRunQueue";
 import { useDelegatedWriterAgent } from "@/features/agent/hooks/useDelegatedWriterAgent";
+import { useWsTestPanelQueueFlush } from "@/features/agent/hooks/useWsTestPanelQueueFlush";
+import { useWsTestPromptHandlers } from "@/features/agent/hooks/useWsTestPromptHandlers";
 import { useWsTestTaskComposer } from "@/features/agent/hooks/useWsTestTaskComposer";
+import WsTestPanelStatusSection from "@/features/agent/WsTestPanelStatusSection";
 import WsTestPromptSection from "@/features/agent/WsTestPromptSection";
-import { buildWsTestSendOptions } from "@/features/agent/utils/buildWsTestSendOptions";
+import { resolveAgentSessionTargets } from "@/features/agent/utils/resolveAgentSessionTargets";
 import isAgentWitchWebSocketSupportedHost from "@/lib/agentWitch/isAgentWitchWebSocketSupportedHost";
 import { useAgentWitchSocket } from "./hooks/useAgentWitchSocket";
 
-export default function WsTestPanel() {
-  const {
-    connectionStatus,
-    lastResponse,
-    liveTerminalOutput,
-    liveTerminalStatus,
-    liveTerminalRunId,
-    liveTerminalPendingInput,
-    submitLiveTerminalInput,
-    dismissLiveTerminalInput,
-    sendClaudePrompt,
-  } = useAgentWitchSocket();
+interface WsTestPanelProps {
+  readonly variant?: "page" | "modal";
+}
+
+export default function WsTestPanel({ variant = "page" }: WsTestPanelProps) {
+  const socket = useAgentWitchSocket();
   const composer = useWsTestTaskComposer();
   const { writerAgent, setWriterAgent } = useDelegatedWriterAgent();
+  const sessionTargets = resolveAgentSessionTargets({
+    sessionWriterAgent: socket.sessionWriterAgent,
+    writerAgent,
+    sessionDeviceId: socket.sessionDeviceId,
+    selectedDeviceId: composer.selectedDeviceId,
+  });
   const { queueCount, queueMessage, enqueueRun, flushQueue, refreshCount } =
     useAgentRunQueue();
-  const flushedOnConnectRef = useRef(false);
+  const promptHandlers = useWsTestPromptHandlers({
+    composer,
+    activeWriterAgent: sessionTargets.activeWriterAgent,
+    activeDeviceId: sessionTargets.activeDeviceId,
+    sendClaudePrompt: socket.sendClaudePrompt,
+    enqueueRun,
+  });
   const host = typeof window !== "undefined" ? window.location.host : "";
   const isWebSocketSupported = isAgentWitchWebSocketSupportedHost(host);
+  const sessionDeviceName =
+    sessionTargets.activeDeviceId.length > 0
+      ? (composer.macDisplayNameById.get(sessionTargets.activeDeviceId) ??
+        "Your Mac")
+      : null;
+  const isModal = variant === "modal";
 
   useEffect(() => {
     void refreshCount();
   }, [refreshCount]);
 
-  useEffect(() => {
-    if (connectionStatus === "connected") {
-      if (!flushedOnConnectRef.current) {
-        flushedOnConnectRef.current = true;
-        void flushQueue(sendClaudePrompt, writerAgent);
-      }
-      return;
-    }
-
-    flushedOnConnectRef.current = false;
-  }, [connectionStatus, flushQueue, sendClaudePrompt, writerAgent]);
+  useWsTestPanelQueueFlush({
+    connectionStatus: socket.connectionStatus,
+    flushQueue,
+    sendClaudePrompt: socket.sendClaudePrompt,
+    writerAgent,
+  });
 
   return (
-    <div className="flex w-full flex-col gap-6">
+    <div className={`flex w-full flex-col ${isModal ? "gap-4" : "gap-6"}`}>
       {!isWebSocketSupported ? (
         <AgentWitchUnsupportedHostNotice host={host} />
       ) : null}
-      <AppPanel>
-        <div className="flex flex-wrap items-start justify-between gap-3">
-          <p className="text-sm text-gray-600 dark:text-gray-400">
-            Send a task to your Mac or to a teammate on your team. Every job is
-            saved in Job history.
-          </p>
-          <ConnectionStatusBadge status={connectionStatus} />
-        </div>
-        {queueCount > 0 ? (
-          <p className="mt-3 text-sm text-brand-700 dark:text-brand-300">
-            {queueCount} task{queueCount === 1 ? "" : "s"} queued for when your
-            Mac connects.
-          </p>
-        ) : null}
-        {queueMessage ? (
-          <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-            {queueMessage}
-          </p>
-        ) : null}
-      </AppPanel>
-
+      <WsTestPanelStatusSection
+        isModal={isModal}
+        connectionStatus={socket.connectionStatus}
+        queueCount={queueCount}
+        queueMessage={queueMessage}
+      />
       <WsTestPromptSection
         composer={composer}
-        writerAgent={writerAgent}
+        writerAgent={sessionTargets.activeWriterAgent}
         onWriterAgentChange={setWriterAgent}
-        connectionStatus={connectionStatus}
-        isSendDisabled={composer.isSendDisabled(connectionStatus)}
-        onSend={() => {
-          sendClaudePrompt(
-            composer.resolvedPrompt,
-            buildWsTestSendOptions(composer, writerAgent),
-          );
-          composer.resetComposer();
-        }}
-        onQueue={() => {
-          void enqueueRun({
-            prompt: composer.resolvedPrompt,
-            ...(composer.isTeamDispatch
-              ? {
-                  executorUserId: composer.selectedTargetUserId,
-                  groupId: composer.selectedGroupId,
-                  capabilityId: composer.selectedCapabilityId,
-                }
-              : composer.libraryCapabilityId.length > 0
-                ? { capabilityId: composer.libraryCapabilityId }
-                : {}),
-          });
-        }}
-        onClear={composer.resetComposer}
+        isWriterAgentLocked={sessionTargets.isWriterAgentLocked}
+        isMacDeviceLocked={sessionTargets.isMacDeviceLocked}
+        macDispatchDeviceId={sessionTargets.activeDeviceId}
+        connectionStatus={socket.connectionStatus}
+        isSendDisabled={composer.isSendDisabled(
+          socket.connectionStatus,
+          sessionTargets.activeDeviceId,
+        )}
+        onSend={promptHandlers.onSend}
+        onQueue={promptHandlers.onQueue}
+        onClear={promptHandlers.onClear}
       />
-
       <AgentLiveTerminalSection
-        output={liveTerminalOutput}
-        status={liveTerminalStatus}
-        activeRunId={liveTerminalRunId}
-        pendingInput={liveTerminalPendingInput}
-        errorMessage={lastResponse.isError ? lastResponse.text : null}
-        onSubmitInput={submitLiveTerminalInput}
-        onDismissInput={dismissLiveTerminalInput}
+        output={socket.liveTerminalOutput}
+        status={socket.liveTerminalStatus}
+        activeRunId={socket.liveTerminalRunId}
+        sessionWriterAgent={socket.sessionWriterAgent}
+        sessionDeviceName={sessionDeviceName}
+        pendingInput={socket.liveTerminalPendingInput}
+        errorMessage={
+          socket.lastResponse.isError ? socket.lastResponse.text : null
+        }
+        onSubmitInput={socket.submitLiveTerminalInput}
+        onDismissInput={socket.dismissLiveTerminalInput}
+        onFinishSession={socket.finishLiveTerminalSession}
       />
     </div>
   );

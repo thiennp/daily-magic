@@ -3,7 +3,12 @@
 import { useEffect, useState } from "react";
 
 import { COMPANY_ENTITY_LABEL } from "@/lib/admin/companyGroupCopy.constant";
+import { useHomeSetupEmbedded } from "@/features/home/HomeSetupEmbeddedContext";
+import resolveHomeSetupNestedBoxClass from "@/features/home/resolveHomeSetupNestedBoxClass";
 import type { EffectiveDispatchPolicyBreakdown } from "@/lib/dispatch/buildEffectiveDispatchPolicyBreakdown";
+
+const POLICY_PREVIEW_BOX_CLASS =
+  "mt-4 rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-900/40";
 
 interface DispatchPolicyPreviewProps {
   readonly deviceId: string;
@@ -17,6 +22,7 @@ export default function DispatchPolicyPreview({
   deviceId,
   groupId,
 }: DispatchPolicyPreviewProps) {
+  const embedded = useHomeSetupEmbedded();
   const [breakdown, setBreakdown] =
     useState<EffectiveDispatchPolicyBreakdown | null>(null);
 
@@ -65,7 +71,13 @@ export default function DispatchPolicyPreview({
   ] as const;
 
   return (
-    <div className="mt-4 rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-900/40">
+    <div
+      className={resolveHomeSetupNestedBoxClass(
+        embedded,
+        POLICY_PREVIEW_BOX_CLASS,
+        "mt-4",
+      )}
+    >
       <p className="text-sm font-medium text-gray-800 dark:text-white/90">
         Effective policy:{" "}
         <span className="capitalize text-brand-600 dark:text-brand-400">

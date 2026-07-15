@@ -20,6 +20,7 @@ export const reduceAgentLiveTerminalControlMessage = (
     if (payload.pendingApproval === true) {
       const commandLine = state.pendingCommandLine ?? "";
       return {
+        ...state,
         activeRunId: runId,
         output:
           commandLine.length > 0
@@ -34,6 +35,7 @@ export const reduceAgentLiveTerminalControlMessage = (
     if (payload.dispatched === true) {
       const commandLine = state.pendingCommandLine ?? "";
       return {
+        ...state,
         activeRunId: runId,
         output:
           commandLine.length > 0

@@ -26,7 +26,10 @@ export function useWsTestTaskComposer(): {
   readonly workflowFields: readonly WorkflowFieldDefinition[];
   readonly workflowValidationErrors: readonly string[];
   readonly resolvedPrompt: string;
-  readonly isSendDisabled: (connectionStatus: string) => boolean;
+  readonly isSendDisabled: (
+    connectionStatus: string,
+    deviceId?: string,
+  ) => boolean;
   readonly onWorkflowFieldChange: (key: string, value: string) => void;
   readonly resetComposer: () => void;
   readonly isPrefillLoading: boolean;

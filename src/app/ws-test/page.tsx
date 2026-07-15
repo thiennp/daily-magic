@@ -1,5 +1,7 @@
 import { redirect } from "next/navigation";
 
+import buildAgentComposerHref from "@/lib/library/buildAgentComposerHref";
+
 export default function WsTestPage() {
-  redirect("/agent");
+  redirect(buildAgentComposerHref());
 }

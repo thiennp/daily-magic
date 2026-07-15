@@ -14,7 +14,7 @@ export default function HarnessItemSetSelector({
   if (availableSets.length === 0) {
     return (
       <p className="mt-3 text-xs text-gray-500 dark:text-gray-400">
-        Create a bundle above before attaching items.
+        Install a bundle from Library or Marketplace before attaching items.
       </p>
     );
   }

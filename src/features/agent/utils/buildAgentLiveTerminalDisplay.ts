@@ -26,3 +26,13 @@ export const buildAgentLiveTerminalDisplay = (input: {
 export const shouldShowAgentLiveTerminalCursor = (
   status: AgentLiveTerminalStatus,
 ): boolean => status === "idle" || status === "finished";
+
+export const shouldShowAgentLiveTerminalLoadingIndicator = (
+  status: AgentLiveTerminalStatus,
+): boolean =>
+  status === "starting" ||
+  status === "waiting_approval" ||
+  status === "streaming";
+
+export const buildAgentLiveTerminalLoadingLine = (dotCount: number): string =>
+  ".".repeat(Math.max(1, Math.min(dotCount, 3)));

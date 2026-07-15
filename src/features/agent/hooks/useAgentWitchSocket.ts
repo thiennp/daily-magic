@@ -25,6 +25,9 @@ export interface UseAgentWitchSocketResult {
   readonly liveTerminalStatus: AgentLiveTerminalStatus;
   readonly liveTerminalRunId: string | null;
   readonly liveTerminalPendingInput: AgentRunInputRequest | null;
+  readonly sessionWriterAgent: HarnessWriterAgent | null;
+  readonly sessionDeviceId: string | null;
+  readonly finishLiveTerminalSession: () => void;
   readonly submitLiveTerminalInput: (response: string) => void;
   readonly dismissLiveTerminalInput: () => void;
   readonly sendClaudePrompt: (
@@ -59,7 +62,10 @@ export function useAgentWitchSocket(): UseAgentWitchSocketResult {
     status: liveTerminalStatus,
     activeRunId: liveTerminalRunId,
     pendingInput: liveTerminalPendingInput,
+    sessionWriterAgent,
+    sessionDeviceId,
     beginSession,
+    finishSession,
     applySocketMessage,
     submitInput: submitLiveTerminalInput,
     dismissInput: dismissLiveTerminalInput,
@@ -102,6 +108,9 @@ export function useAgentWitchSocket(): UseAgentWitchSocketResult {
     liveTerminalStatus,
     liveTerminalRunId,
     liveTerminalPendingInput,
+    sessionWriterAgent,
+    sessionDeviceId,
+    finishLiveTerminalSession: finishSession,
     submitLiveTerminalInput,
     dismissLiveTerminalInput,
     sendClaudePrompt,

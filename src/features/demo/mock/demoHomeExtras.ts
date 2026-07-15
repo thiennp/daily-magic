@@ -1,4 +1,5 @@
 import { demoTimestamp } from "./demoTimestamp.constant";
+import buildAgentComposerHref from "@/lib/library/buildAgentComposerHref";
 
 export const demoOnboardingSteps = [
   {
@@ -23,7 +24,7 @@ export const demoOnboardingSteps = [
     id: "send-task",
     label: "Send your first task",
     done: false,
-    href: "/agent",
+    href: buildAgentComposerHref(),
   },
 ] as const;
 

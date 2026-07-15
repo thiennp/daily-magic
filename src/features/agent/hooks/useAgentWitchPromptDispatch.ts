@@ -9,6 +9,7 @@ import {
 
 import { buildDemoClaudePromptAck } from "@/features/agent/utils/buildDemoClaudePromptAck";
 import { formatAgentLiveTerminalCommandLine } from "@/features/agent/utils/agentLiveTerminalPrompt.constant";
+import { isMacTerminalDispatch } from "@/features/agent/utils/isMacTerminalDispatch";
 import { sendClaudePromptOverSocket } from "@/features/agent/utils/sendClaudePromptOverSocket";
 import parseAgentWitchSocketDisplay, {
   type AgentWitchSocketDisplay,
@@ -19,7 +20,11 @@ export const useAgentWitchPromptDispatch = (input: {
   readonly socketRef: RefObject<WebSocket | null>;
   readonly demoPreview: unknown;
   readonly connectionLab: unknown;
-  readonly beginSession: (commandLine: string) => void;
+  readonly beginSession: (
+    commandLine: string,
+    writerAgent: HarnessWriterAgent,
+    deviceId?: string,
+  ) => void;
   readonly applySocketMessage: (raw: string) => void;
   readonly setLastResponse: Dispatch<SetStateAction<AgentWitchSocketDisplay>>;
 }): ((
@@ -39,9 +44,16 @@ export const useAgentWitchPromptDispatch = (input: {
         return;
       }
 
-      input.beginSession(
-        formatAgentLiveTerminalCommandLine(trimmedPrompt, options.writerAgent),
-      );
+      if (isMacTerminalDispatch(options)) {
+        input.beginSession(
+          formatAgentLiveTerminalCommandLine(
+            trimmedPrompt,
+            options.writerAgent,
+          ),
+          options.writerAgent,
+          options.targetDeviceId,
+        );
+      }
 
       if (input.demoPreview !== null || input.connectionLab !== null) {
         input.setLastResponse(

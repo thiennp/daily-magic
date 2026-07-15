@@ -6,20 +6,19 @@ import {
   loadPersistedAgentLiveTerminalState,
   persistAgentLiveTerminalState,
 } from "@/features/agent/utils/agentLiveTerminalLocalStore";
-import {
-  sendAgentRunInputResponse,
-  type AgentRunInputRequest,
-} from "@/features/dispatch/utils/agentRunInputSocket";
-import { appendAgentLiveTerminalPrompt } from "@/features/agent/utils/agentLiveTerminalPrompt.constant";
+import { type AgentRunInputRequest } from "@/features/dispatch/utils/agentRunInputSocket";
+import { submitAgentLiveTerminalInput } from "@/features/agent/utils/submitAgentLiveTerminalInput";
 import {
   beginAgentLiveTerminalSession,
   continueAgentLiveTerminalSession,
+  finishAgentLiveTerminalSession,
   initialAgentLiveTerminalState,
   reduceAgentLiveTerminalMessage,
   shouldContinueAgentLiveTerminalThread,
   type AgentLiveTerminalState,
   type AgentLiveTerminalStatus,
 } from "@/features/agent/utils/reduceAgentLiveTerminalMessage";
+import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
 
 export function useAgentWitchLiveTerminal(socketRef: {
   readonly current: WebSocket | null;
@@ -28,7 +27,14 @@ export function useAgentWitchLiveTerminal(socketRef: {
   readonly status: AgentLiveTerminalStatus;
   readonly activeRunId: string | null;
   readonly pendingInput: AgentRunInputRequest | null;
-  readonly beginSession: (commandLine: string) => void;
+  readonly sessionWriterAgent: HarnessWriterAgent | null;
+  readonly sessionDeviceId: string | null;
+  readonly beginSession: (
+    commandLine: string,
+    writerAgent: HarnessWriterAgent,
+    deviceId?: string,
+  ) => void;
+  readonly finishSession: () => void;
   readonly applySocketMessage: (raw: string) => void;
   readonly submitInput: (response: string) => void;
   readonly dismissInput: () => void;
@@ -43,12 +49,27 @@ export function useAgentWitchLiveTerminal(socketRef: {
     persistAgentLiveTerminalState(state);
   }, [state]);
 
-  const beginSession = useCallback((commandLine: string) => {
-    setState((current) =>
-      shouldContinueAgentLiveTerminalThread(current)
-        ? continueAgentLiveTerminalSession(current, commandLine)
-        : beginAgentLiveTerminalSession(commandLine),
-    );
+  const beginSession = useCallback(
+    (
+      commandLine: string,
+      writerAgent: HarnessWriterAgent,
+      deviceId?: string,
+    ) => {
+      setState((current) =>
+        shouldContinueAgentLiveTerminalThread(current)
+          ? continueAgentLiveTerminalSession(current, commandLine)
+          : beginAgentLiveTerminalSession(
+              commandLine,
+              writerAgent,
+              deviceId && deviceId.length > 0 ? deviceId : null,
+            ),
+      );
+    },
+    [],
+  );
+
+  const finishSession = useCallback(() => {
+    setState(finishAgentLiveTerminalSession());
   }, []);
 
   const applySocketMessage = useCallback((raw: string) => {
@@ -62,31 +83,16 @@ export function useAgentWitchLiveTerminal(socketRef: {
 
   const submitInput = useCallback(
     (response: string) => {
-      const trimmedResponse = response.trim();
-      const socket = socketRef.current;
-      const agentRunId = state.pendingInput?.agentRunId;
-
-      if (
-        agentRunId === undefined ||
-        socket === null ||
-        trimmedResponse.length === 0 ||
-        socket.readyState !== WebSocket.OPEN
-      ) {
-        return;
-      }
-
-      sendAgentRunInputResponse(socket, agentRunId, trimmedResponse);
-      setState((current) => ({
-        ...current,
-        pendingInput: null,
-        output: appendAgentLiveTerminalPrompt(
-          `${current.output}${trimmedResponse}\n`,
-        ),
-        status: "streaming",
-        pendingCommandLine: null,
-      }));
+      setState((current) => {
+        const nextState = submitAgentLiveTerminalInput(
+          socketRef.current,
+          current,
+          response,
+        );
+        return nextState ?? current;
+      });
     },
-    [socketRef, state.pendingInput?.agentRunId],
+    [socketRef],
   );
 
   const dismissInput = useCallback(() => {
@@ -101,7 +107,10 @@ export function useAgentWitchLiveTerminal(socketRef: {
     status: state.status,
     activeRunId: state.activeRunId,
     pendingInput: state.pendingInput,
+    sessionWriterAgent: state.sessionWriterAgent,
+    sessionDeviceId: state.sessionDeviceId,
     beginSession,
+    finishSession,
     applySocketMessage,
     submitInput,
     dismissInput,

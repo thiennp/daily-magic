@@ -8,11 +8,9 @@ import type HarnessItemWriteSpec from "@/lib/agentWitch/harness/types/HarnessIte
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
 
 interface UseHarnessManagerFormResult {
-  readonly newSetName: string;
   readonly writerAgent: HarnessWriterAgent;
   readonly items: readonly HarnessItemDraft[];
   readonly readyItems: readonly HarnessItemWriteSpec[];
-  readonly setNewSetName: (value: string) => void;
   readonly setWriterAgent: (value: HarnessWriterAgent) => void;
   readonly addItem: () => void;
   readonly removeItem: (itemId: string) => void;
@@ -20,7 +18,6 @@ interface UseHarnessManagerFormResult {
 }
 
 export function useHarnessManagerForm(): UseHarnessManagerFormResult {
-  const [newSetName, setNewSetName] = useState("");
   const [writerAgent, setWriterAgent] =
     useState<HarnessWriterAgent>("claude-cli");
   const [items, setItems] = useState<readonly HarnessItemDraft[]>([
@@ -61,11 +58,9 @@ export function useHarnessManagerForm(): UseHarnessManagerFormResult {
   };
 
   return {
-    newSetName,
     writerAgent,
     items,
     readyItems,
-    setNewSetName,
     setWriterAgent,
     addItem,
     removeItem,

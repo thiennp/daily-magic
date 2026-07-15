@@ -8,6 +8,7 @@ import {
 } from "@/features/marketing/marketingSurfaceClasses.constant";
 import MarketingSectionHeader from "@/features/marketing/MarketingSectionHeader";
 import { mergeMarketingClasses } from "@/features/marketing/mergeMarketingClasses";
+import buildAgentComposerHref from "@/lib/library/buildAgentComposerHref";
 
 const MARKETING_STEPS = [
   {
@@ -27,8 +28,8 @@ const MARKETING_STEPS = [
   },
   {
     title: "Send & review",
-    body: "Send a task from Agent and read what happened in Reports.",
-    href: "/agent",
+    body: "Send a task from home and read what happened in Job history.",
+    href: buildAgentComposerHref(),
   },
 ] as const;
 

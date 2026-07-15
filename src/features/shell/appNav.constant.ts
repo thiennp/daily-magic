@@ -1,4 +1,7 @@
 import { COMPANY_RULES_NAV_LABEL } from "@/lib/admin/companyGroupCopy.constant";
+import buildAgentComposerHref from "@/lib/library/buildAgentComposerHref";
+
+const SEND_TASK_NAV_HREF = buildAgentComposerHref();
 
 export interface AppNavItem {
   readonly href: string;
@@ -23,10 +26,9 @@ export const PRIMARY_NAV: readonly AppNavItem[] = [
     isActive: (pathname) => pathname.startsWith("/library"),
   },
   {
-    href: "/agent",
+    href: SEND_TASK_NAV_HREF,
     label: "Send a task",
-    isActive: (pathname) =>
-      pathname === "/agent" || pathname.startsWith("/ws-test"),
+    isActive: () => false,
   },
   {
     href: "/reports",

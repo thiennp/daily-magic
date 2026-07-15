@@ -24,12 +24,21 @@ export const buildWsTestComposerDispatchState = (input: {
   readonly renameMacDevice: ReturnType<
     typeof useMacDeviceSelection
   >["renameDevice"];
-  readonly isSendDisabled: (connectionStatus: string) => boolean;
+  readonly isSendDisabled: (
+    connectionStatus: string,
+    deviceId?: string,
+  ) => boolean;
 } => {
-  const selectedDevice = input.macSelection.devices.find(
-    (device) => device.id === input.macSelection.selectedDeviceId,
-  );
-  const selectedDeviceIsOnline = selectedDevice?.isOnline ?? false;
+  const resolveSelectedDeviceIsOnline = (deviceId: string): boolean => {
+    if (deviceId.length === 0) {
+      return input.macSelection.hasOnlineMac;
+    }
+
+    return (
+      input.macSelection.devices.find((device) => device.id === deviceId)
+        ?.isOnline ?? false
+    );
+  };
 
   return {
     macDevices: input.macSelection.devices,
@@ -39,11 +48,13 @@ export const buildWsTestComposerDispatchState = (input: {
     isMacDevicesLoading: input.macSelection.isLoading,
     hasOnlineMac: input.macSelection.hasOnlineMac,
     onlineMacCount: input.macSelection.onlineCount,
-    selectedDeviceIsOnline,
+    selectedDeviceIsOnline: resolveSelectedDeviceIsOnline(
+      input.macSelection.selectedDeviceId,
+    ),
     devicesHadLoadError: input.macSelection.devicesHadLoadError,
     refreshMacDevices: input.macSelection.refreshDevices,
     renameMacDevice: input.macSelection.renameDevice,
-    isSendDisabled: (connectionStatus: string) =>
+    isSendDisabled: (connectionStatus: string, deviceId?: string) =>
       buildWsTestSendDisabledState({
         connectionStatus,
         isWorkflowTask: input.workflow.isWorkflowTask,
@@ -60,7 +71,9 @@ export const buildWsTestComposerDispatchState = (input: {
           : input.macSelection.hasOnlineMac,
         selectedDeviceIsOnline: input.isTeamDispatch
           ? true
-          : selectedDeviceIsOnline,
+          : resolveSelectedDeviceIsOnline(
+              deviceId ?? input.macSelection.selectedDeviceId,
+            ),
       }),
   };
 };

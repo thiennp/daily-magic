@@ -1,8 +1,16 @@
+"use client";
+
 import { HARNESS_KIND_OPTIONS } from "@/features/harness/constants/harnessFormOptions";
+import HarnessItemContentField from "@/features/harness/components/HarnessItemContentField";
 import HarnessItemSetSelector from "@/features/harness/components/HarnessItemSetSelector";
+import { useHomeSetupEmbedded } from "@/features/home/HomeSetupEmbeddedContext";
+import resolveHomeSetupNestedBoxClass from "@/features/home/resolveHomeSetupNestedBoxClass";
 import type { HarnessItemDraft } from "@/features/harness/types/HarnessItemDraft.type";
 import type { HarnessManifestSetSummary } from "@/lib/agentWitch/harness/listHarnessManifestSets";
 import type { HarnessItemKind } from "@/lib/agentWitch/harness/types/HarnessItemKind.constant";
+
+const ITEM_EDITOR_BOX_CLASS =
+  "rounded-lg border border-gray-200 p-4 dark:border-gray-700";
 
 interface HarnessItemEditorProps {
   readonly item: HarnessItemDraft;
@@ -21,8 +29,15 @@ export default function HarnessItemEditor({
   onRemove,
   onChange,
 }: HarnessItemEditorProps) {
+  const embedded = useHomeSetupEmbedded();
+
   return (
-    <div className="rounded-lg border border-gray-200 p-4 dark:border-gray-700">
+    <div
+      className={resolveHomeSetupNestedBoxClass(
+        embedded,
+        ITEM_EDITOR_BOX_CLASS,
+      )}
+    >
       <div className="mb-3 flex items-center justify-between gap-3">
         <p className="text-sm font-medium text-gray-800 dark:text-white/90">
           Item {index + 1}
@@ -84,21 +99,7 @@ export default function HarnessItemEditor({
           onChange({ ...item, setSlugs });
         }}
       />
-
-      <label className="mt-3 block text-sm">
-        <span className="font-medium text-gray-800 dark:text-white/90">
-          Content
-        </span>
-        <textarea
-          value={item.content}
-          onChange={(event) => {
-            onChange({ ...item, content: event.target.value });
-          }}
-          rows={6}
-          placeholder="Content for the selected writer to save locally…"
-          className="mt-2 w-full rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm text-gray-800 shadow-theme-xs outline-none transition focus:border-brand-300 focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90"
-        />
-      </label>
+      <HarnessItemContentField item={item} onChange={onChange} />
     </div>
   );
 }
