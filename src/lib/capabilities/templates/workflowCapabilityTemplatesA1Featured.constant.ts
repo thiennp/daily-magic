@@ -1,8 +1,10 @@
 import { DROPSHIP_PRODUCT_LISTING_WORKFLOW } from "@/lib/capabilities/templates/workflowCapabilityTemplatesA1Featured.dropshipProductListing.constant";
+import { WORKFLOW_CAPABILITY_TEMPLATES_A1_FEATURED_PERSONAS } from "@/lib/capabilities/templates/workflowCapabilityTemplatesA1Featured.personas.constant";
 import { TIKTOK_SERIES_EPISODE_WORKFLOW } from "@/lib/capabilities/templates/workflowCapabilityTemplatesA1Featured.tiktokSeries.constant";
 import { WORKFLOW_CAPABILITY_TEMPLATES_A1_FEATURED_SOCIAL } from "@/lib/capabilities/templates/workflowCapabilityTemplatesA1Featured.social.constant";
 
 export const WORKFLOW_CAPABILITY_TEMPLATES_A1_FEATURED = [
+  ...WORKFLOW_CAPABILITY_TEMPLATES_A1_FEATURED_PERSONAS,
   DROPSHIP_PRODUCT_LISTING_WORKFLOW,
   TIKTOK_SERIES_EPISODE_WORKFLOW,
   ...WORKFLOW_CAPABILITY_TEMPLATES_A1_FEATURED_SOCIAL,

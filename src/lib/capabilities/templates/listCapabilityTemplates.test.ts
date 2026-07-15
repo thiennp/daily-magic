@@ -8,7 +8,7 @@ import {
 } from "@/lib/capabilities/templates/listCapabilityTemplates";
 
 describe("capability templates catalog", () => {
-  it("ships 25 workflow and 20 agent presets with harness bundles", () => {
+  it("ships 31 workflow and 20 agent presets with harness bundles", () => {
     const summaries = listCapabilityTemplateSummaries();
     const workflows = summaries.filter(
       (template) => template.type === CapabilityType.WORKFLOW,
@@ -17,10 +17,10 @@ describe("capability templates catalog", () => {
       (template) => template.type === CapabilityType.AGENT,
     );
 
-    expect(allCapabilityTemplates).toHaveLength(45);
-    expect(workflows).toHaveLength(25);
+    expect(allCapabilityTemplates).toHaveLength(51);
+    expect(workflows).toHaveLength(31);
     expect(agents).toHaveLength(20);
-    expect(summaries[0]?.id).toBe("dropship-product-listing");
+    expect(summaries[0]?.id).toBe("job-application-pack");
     expect(summaries.every((template) => template.harnessItemCount >= 5)).toBe(
       true,
     );
@@ -40,6 +40,7 @@ describe("capability templates catalog", () => {
   });
 
   it("uses enriched harness with subagent per preset", () => {
+    const jobApplication = findCapabilityTemplateById("job-application-pack");
     const dropship = findCapabilityTemplateById("dropship-product-listing");
     const tiktok = findCapabilityTemplateById("tiktok-series-episode");
     const facebook = findCapabilityTemplateById("facebook-page-post");
@@ -50,6 +51,9 @@ describe("capability templates catalog", () => {
       (item) => item.kind === "agent",
     );
 
+    expect(
+      jobApplication?.harness.items.filter((item) => item.kind === "operator"),
+    ).toHaveLength(3);
     expect(
       dropship?.harness.items.filter((item) => item.kind === "operator"),
     ).toHaveLength(3);
