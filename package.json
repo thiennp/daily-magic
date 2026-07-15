@@ -18,6 +18,7 @@
     "typecheck": "npm run lint && tsc --noEmit",
     "db:schema": "psql \"$DATABASE_URL\" -f db/schema.sql",
     "db:migrate": "bash scripts/db-migrate.sh",
+    "db:migrate:onboarding-first-task": "psql \"$DATABASE_URL\" -v ON_ERROR_STOP=1 -f db/migrations/013-onboarding-first-task-sent.sql",
     "prepare": "npx is-ci || npx husky",
     "cursor:verify": "tsx .agents/scripts/verify-rules.ts",
     "cursor:architecture": "tsx .agents/scripts/architecture-check.ts",

@@ -7,6 +7,7 @@ import {
   SHOWCASE_ARTICLES_PHASE_3,
   SHOWCASE_ARTICLES_PHASE_4,
 } from "@/features/showcases/showcaseArticleRegistry";
+import { MARKETING_TEXT_LINK_CLASSES } from "@/features/marketing/marketingInteractiveClasses.constant";
 import MarketingShell from "@/features/marketing/MarketingShell";
 import MarketingSectionHeader from "@/features/marketing/MarketingSectionHeader";
 
@@ -64,7 +65,7 @@ export default function ShowcasesIndexPageLayout() {
       </div>
       <p className="mt-10 text-center text-sm text-gray-600">
         Ready to try it?{" "}
-        <Link href="/#get-started" className="font-medium text-brand-600">
+        <Link href="/#get-started" className={MARKETING_TEXT_LINK_CLASSES}>
           Get started free
         </Link>
       </p>

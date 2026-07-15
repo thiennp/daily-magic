@@ -15,6 +15,7 @@ import phoneAsksCoworkerMacRuns from "@/features/showcases/articles/phoneAsksCow
 import runAgainWithoutRetyping from "@/features/showcases/articles/runAgainWithoutRetyping.article";
 import saveTeammateWorkflowOneTap from "@/features/showcases/articles/saveTeammateWorkflowOneTap.article";
 import seeWhatTheAgentDid from "@/features/showcases/articles/seeWhatTheAgentDid.article";
+import standupFromLocalBranch from "@/features/showcases/articles/standupFromLocalBranch.article";
 import stopCopyPasteEveryMonday from "@/features/showcases/articles/stopCopyPasteEveryMonday.article";
 import stopMemorizingPrompts from "@/features/showcases/articles/stopMemorizingPrompts.article";
 import weeklyReportInFiveMinutes from "@/features/showcases/articles/weeklyReportInFiveMinutes.article";
@@ -37,6 +38,7 @@ export const SHOWCASE_ARTICLES_PHASE_1: readonly ShowcaseArticle[] = [
 ] as const;
 
 export const SHOWCASE_ARTICLES_PHASE_2: readonly ShowcaseArticle[] = [
+  standupFromLocalBranch,
   controlMacFromPhone,
   findBestPromptInCompany,
   saveTeammateWorkflowOneTap,
@@ -78,8 +80,8 @@ export const HOME_FEATURED_SHOWCASE_SLUGS: readonly string[] = [
 ] as const;
 
 export const HOME_MORE_SHOWCASE_SLUGS: readonly string[] = [
+  standupFromLocalBranch.slug,
   weeklyReportInFiveMinutes.slug,
-  stopMemorizingPrompts.slug,
   saveTeammateWorkflowOneTap.slug,
 ] as const;
 
