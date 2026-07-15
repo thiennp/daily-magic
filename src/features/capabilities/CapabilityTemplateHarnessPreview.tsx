@@ -13,7 +13,7 @@ export default function CapabilityTemplateHarnessPreview({
   return (
     <div className="rounded-lg border border-gray-200 bg-gray-50 p-3 dark:border-gray-800 dark:bg-gray-900/60">
       <p className="text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">
-        Harness bundle
+        Rules bundle
       </p>
       <p className="mt-1 text-sm font-medium text-gray-800 dark:text-white/90">
         {harnessName}

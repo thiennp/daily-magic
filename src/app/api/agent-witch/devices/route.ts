@@ -50,14 +50,14 @@ export async function GET(): Promise<Response> {
     const message =
       loadError instanceof Error
         ? loadError.message
-        : "Could not load paired devices.";
+        : "Could not load connected Macs.";
 
     console.error("[api/agent-witch/devices]", loadError);
 
     return Response.json(
       {
         ok: false,
-        error: "Could not load paired devices.",
+        error: "Could not load connected Macs.",
         detail: process.env.NODE_ENV === "production" ? undefined : message,
       },
       { status: 500 },

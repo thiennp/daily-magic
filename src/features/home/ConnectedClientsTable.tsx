@@ -26,7 +26,7 @@ export default function ConnectedClientsTable({
       <table className="min-w-full text-left text-sm">
         <thead>
           <tr className="border-b border-gray-200 dark:border-gray-700">
-            <th className="px-3 py-2">Client</th>
+            <th className="px-3 py-2">Connection</th>
             <th className="px-3 py-2">Role</th>
             <th className="px-3 py-2">Connected at</th>
           </tr>

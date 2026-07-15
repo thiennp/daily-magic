@@ -97,7 +97,7 @@ export default function HarnessManagerPanel({
           }}
           className="inline-flex h-10 items-center justify-center rounded-lg bg-brand-500 px-5 text-sm font-medium text-white transition hover:bg-brand-600 disabled:cursor-not-allowed disabled:opacity-50"
         >
-          Send items to local writer
+          Save to your Mac
         </button>
       </div>
 

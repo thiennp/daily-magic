@@ -53,6 +53,6 @@ export async function publishHarnessCatalog(): Promise<{
       "error" in data &&
       typeof (data as { error: string }).error === "string"
         ? (data as { error: string }).error
-        : "Could not publish catalog snapshot.",
+        : "Could not publish your shared setup.",
   };
 }

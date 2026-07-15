@@ -14,7 +14,7 @@ const relayToAgent = (
     return {
       type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR,
       payload: {
-        errorMessage: "No paired local agent is connected for this account.",
+        errorMessage: "No Mac is connected for this account.",
       },
       requestId: message.requestId,
     };

@@ -29,7 +29,7 @@ export default function DispatchApprovalModal({
       </h2>
       <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
         {request.requesterEmail} wants to run a task on your machine. You can
-        approve in the browser; your local agent also receives a notification.
+        approve in the browser; your Mac also gets a notification.
       </p>
       <pre className="mt-4 max-h-40 overflow-auto rounded-lg bg-gray-50 p-3 text-xs text-gray-700 dark:bg-gray-900 dark:text-gray-300">
         {request.prompt}

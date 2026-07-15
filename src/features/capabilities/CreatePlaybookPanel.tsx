@@ -33,8 +33,8 @@ export default function CreatePlaybookPanel({
             Create workflow or agent
           </h2>
           <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
-            Define prompts, questions, and optional harness items — rules,
-            skills, commands, instructions, and subagents install to your Mac.
+            Define prompts, questions, and optional rules — skills, shortcuts,
+            instructions, and specialists that install to your Mac.
           </p>
         </div>
         <Button

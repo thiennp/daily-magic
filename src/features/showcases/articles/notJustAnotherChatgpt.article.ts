@@ -8,7 +8,7 @@ const notJustAnotherChatgpt: ShowcaseArticle = {
   supportLevel: "full",
   readMinutes: 3,
   whatYouNeed: [
-    "A Mac paired as executor (yours or a teammate's)",
+    "A Mac connected to run jobs (yours or a teammate's)",
     "At least one saved capability in the library",
   ],
   tryNext: {
@@ -18,7 +18,7 @@ const notJustAnotherChatgpt: ShowcaseArticle = {
   sections: [
     {
       paragraphs: [
-        "Chat apps answer in a window. Agent Witch sends work to a machine — with harness rules, local context, and a record you can open next Monday. That difference matters when tasks repeat and teammates delegate.",
+        "Chat apps answer in a window. Agent Witch sends work to a machine — with your rules, local context, and a record you can open next Monday. That difference matters when tasks repeat and teammates delegate.",
       ],
     },
     {

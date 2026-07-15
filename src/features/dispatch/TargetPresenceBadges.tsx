@@ -20,11 +20,11 @@ export default function TargetPresenceBadges({
       ) : null}
       {isPaired ? (
         <Badge color="info" size="sm">
-          Paired
+          Connected
         </Badge>
       ) : (
         <Badge color="light" size="sm">
-          Not paired
+          Not connected
         </Badge>
       )}
     </span>

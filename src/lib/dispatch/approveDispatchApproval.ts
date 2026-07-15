@@ -56,7 +56,7 @@ export const approveDispatchApproval = async (
     return {
       type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR,
       payload: {
-        errorMessage: "No paired local agent is connected to run this task.",
+        errorMessage: "No Mac is connected to run this task.",
       },
       requestId,
     };

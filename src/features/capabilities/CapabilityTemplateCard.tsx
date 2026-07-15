@@ -58,7 +58,7 @@ export default function CapabilityTemplateCard({
         {template.type === CapabilityType.WORKFLOW
           ? `${template.fieldCount} inputs · `
           : ""}
-        {template.harnessItemCount} harness files
+        {template.harnessItemCount} rule files
       </p>
       {isSelected ? (
         <div className="mt-3 space-y-3">

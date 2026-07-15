@@ -20,9 +20,9 @@ export default function MarketplacePresetSection({
         Preset agents & workflows
       </h2>
       <p className={`mt-2 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
-        Official starters with harness bundles (rules, skills, commands,
-        instructions, and a specialist subagent). Save one to your library and
-        install the bundle on your Mac when Agent Witch is online.
+        Official starters with rules bundles (skills, shortcuts, instructions,
+        and a specialist assistant). Save one to your library and install on
+        your Mac when Agent Witch is online.
       </p>
       <CapabilityTemplatePicker />
     </>

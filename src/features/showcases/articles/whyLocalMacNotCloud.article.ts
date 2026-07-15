@@ -3,13 +3,13 @@ import type ShowcaseArticle from "@/features/showcases/types/ShowcaseArticle.typ
 const whyLocalMacNotCloud: ShowcaseArticle = {
   slug: "why-local-mac-not-cloud",
   title: "Why runs happen on a Mac, not mystery cloud VMs",
-  subtitle: "Local files, harness rules, and clearer ownership for companies.",
+  subtitle: "Local files, your rules, and clearer ownership for companies.",
   category: "Common questions",
   supportLevel: "full",
   readMinutes: 4,
   whatYouNeed: [
     "A Mac you control (or a teammate's, with policy)",
-    "Agent Witch client installed and paired",
+    "Agent Witch installed and Mac connected",
   ],
   tryNext: {
     label: "See one employee, one agent",
@@ -18,7 +18,7 @@ const whyLocalMacNotCloud: ShowcaseArticle = {
   sections: [
     {
       paragraphs: [
-        "Uploading client folders to a random SaaS sandbox makes security teams nervous — often for good reason. Agent Witch dispatches to a known machine: yours or a colleague's, with harness rules about what the agent can touch.",
+        "Uploading client folders to a random SaaS sandbox makes security teams nervous — often for good reason. Agent Witch dispatches to a known machine: yours or a colleague's, with rules about what the agent can touch.",
       ],
     },
     {
@@ -34,7 +34,7 @@ const whyLocalMacNotCloud: ShowcaseArticle = {
       heading: "Tradeoffs you accept",
       bullets: [
         "Executor must be online for send",
-        "Each person maintains their own paired Mac",
+        "Each person connects their own Mac",
         "Not a fit if you need 24/7 cloud runners with zero ops",
       ],
     },

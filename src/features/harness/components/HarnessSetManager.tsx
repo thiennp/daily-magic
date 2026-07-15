@@ -29,7 +29,7 @@ export default function HarnessSetManager({
     <div className="mt-5 space-y-4">
       <label className="block max-w-sm text-sm">
         <span className="font-medium text-gray-800 dark:text-white/90">
-          Writer agent
+          Which AI runs on your Mac?
         </span>
         <select
           value={writerAgent}

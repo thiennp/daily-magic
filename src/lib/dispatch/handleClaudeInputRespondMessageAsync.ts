@@ -74,7 +74,7 @@ export const handleClaudeInputRespondMessageAsync = async (
     return {
       type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR,
       payload: {
-        errorMessage: "No paired local agent is connected for this run.",
+        errorMessage: "No Mac is connected for this run.",
       },
       requestId: message.requestId,
     };

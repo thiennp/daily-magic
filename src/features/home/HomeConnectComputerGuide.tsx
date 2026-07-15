@@ -78,9 +78,9 @@ export default function HomeConnectComputerGuide({
         Link this account to your Mac
       </h1>
       <p className={`mt-3 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
-        Run install once on your Mac. This browser talks to the local Agent
-        Witch API to link whichever account you are signed in with — no email in
-        the install command, and no reinstall when you switch users.
+        Run install once on your Mac. This browser links to Agent Witch on that
+        Mac for whichever account you are signed in with — no email in the
+        install command, and no reinstall when you switch users.
       </p>
 
       {!isWebSocketSupported ? (

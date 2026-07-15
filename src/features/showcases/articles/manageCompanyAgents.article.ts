@@ -30,7 +30,7 @@ const manageCompanyAgents: ShowcaseArticle = {
     {
       heading: "What is not a full agent fleet console yet",
       paragraphs: [
-        "You cannot remotely install or reboot every Mac from one pane. Pairing stays per user. Management is about rules, visibility, and shared catalog — not MDM for AI.",
+        "You cannot remotely install or reboot every Mac from one pane. Each person connects their own Mac. Management is about rules, visibility, and shared catalog — not MDM for AI.",
       ],
     },
   ],

@@ -38,7 +38,7 @@ export const handleClaudeRunMessage = (
     return {
       type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR,
       payload: {
-        errorMessage: "No paired local agent is connected for your account.",
+        errorMessage: "No Mac is connected for your account.",
       },
       requestId: message.requestId,
     };

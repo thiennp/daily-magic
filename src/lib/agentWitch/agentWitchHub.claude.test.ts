@@ -70,7 +70,7 @@ describe("AgentWitchHub Claude commands", () => {
 
     expect(response?.type).toBe(AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR);
     expect(response?.payload?.errorMessage).toBe(
-      "No paired local agent is connected for your account.",
+      "No Mac is connected for your account.",
     );
   });
 

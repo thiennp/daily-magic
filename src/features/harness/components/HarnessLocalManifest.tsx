@@ -40,8 +40,8 @@ export default function HarnessLocalManifest({
         </>
       ) : (
         <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
-          No local setup reported yet. Connect your local agent and sync rules
-          from the browser.
+          Nothing synced from your Mac yet. Connect your Mac, then refresh from
+          here.
         </p>
       )}
     </div>

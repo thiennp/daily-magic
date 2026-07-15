@@ -7,7 +7,7 @@ export default function ReportsPageLayout() {
     <div className={APP_PAGE_STACK_CLASS}>
       <AppPageHeader
         title="Job history"
-        description="Every task sent through Agent Witch is listed here. Jobs are stored on this device in local storage, so history survives refresh and server restarts."
+        description="Every task you send is listed here. Jobs are stored on this device, so history survives refresh and restarts."
       />
       <AgentRunsList />
     </div>

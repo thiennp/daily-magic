@@ -8,8 +8,8 @@ const whenExecutorMacIsOffline: ShowcaseArticle = {
   supportLevel: "partial",
   readMinutes: 3,
   whatYouNeed: [
-    "An executor Mac paired with Agent Witch",
-    "Browser tab connected (WebSocket) to send a job",
+    "A Mac connected with Agent Witch",
+    "Browser tab connected to the app to send a job",
   ],
   tryNext: {
     label: "Read team dispatch story",
@@ -25,7 +25,7 @@ const whenExecutorMacIsOffline: ShowcaseArticle = {
       heading: "What you will see",
       bullets: [
         "Send disabled or blocked when your browser is not connected",
-        "Jobs need the target Mac's agent client running",
+        "Jobs need Agent Witch running on the target Mac",
         "Approval flows pause until an approver and executor are available",
       ],
     },
@@ -40,7 +40,7 @@ const whenExecutorMacIsOffline: ShowcaseArticle = {
     {
       heading: "What is not built yet",
       paragraphs: [
-        "There is no push notification when a run completes. If you need always-on automation, pair Agent Witch with tooling that keeps a machine awake or use scheduled jobs on a dedicated Mac.",
+        "There is no push notification when a run completes. If you need always-on automation, keep a Mac awake or use scheduled jobs on a dedicated machine.",
       ],
     },
     {

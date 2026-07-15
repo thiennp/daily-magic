@@ -12,7 +12,7 @@ export const requestHarnessManifestPublish = (
   if (agentClient === undefined) {
     return {
       ok: false,
-      errorMessage: "No paired local agent is connected to publish harness.",
+      errorMessage: "No Mac is connected to publish your rules.",
     };
   }
 

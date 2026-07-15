@@ -9,7 +9,7 @@ const whatPhoneCanDoAlone: ShowcaseArticle = {
   readMinutes: 4,
   whatYouNeed: [
     "Mobile browser on the Agent Witch app",
-    "For send: browser WebSocket connected + executor Mac online",
+    "To send: browser connected to the app + a Mac online to run the job",
     "For team dispatch: a teammate's Mac as executor",
   ],
   tryNext: { label: "Open library on mobile demo", href: "/demo/library" },
@@ -33,9 +33,9 @@ const whatPhoneCanDoAlone: ShowcaseArticle = {
     {
       heading: "Needs a Mac online somewhere",
       bullets: [
-        "Send to your own Mac — it must be paired and awake",
+        "Send to your own Mac — it must be connected and awake",
         "Tasks that read local folders or repos",
-        "Real-time run progress over WebSocket",
+        "Live progress while the job runs",
       ],
     },
     {

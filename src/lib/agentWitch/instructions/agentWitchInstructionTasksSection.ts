@@ -5,7 +5,7 @@ export const AGENT_WITCH_INSTRUCTION_TASKS_SECTION: AgentWitchInstructionSection
     id: "tasks",
     title: "Sending tasks",
     summary:
-      "Tasks are composed in the browser, dispatched over WebSocket, executed on a Mac, and recorded as agent runs.",
+      "Tasks are composed in the browser, sent to a Mac, executed there, and recorded in Job history.",
     topics: [
       {
         id: "open-composer",
@@ -14,19 +14,19 @@ export const AGENT_WITCH_INSTRUCTION_TASKS_SECTION: AgentWitchInstructionSection
       },
       {
         id: "writer-agents",
-        title: "Writer agents",
-        body: "Pick which local CLI should run the job: claude-cli, codex, cursor, or antigravity. During an active Mac session the writer choice stays locked until you finish the session.",
+        title: "Which AI runs the job",
+        body: "Pick which tool on your Mac should run the job: Claude, Codex, Cursor, or Antigravity. During an active session the choice stays locked until you finish.",
         bullets: [
-          "claude-cli — Anthropic Claude Code CLI",
-          "codex — OpenAI Codex CLI",
-          "cursor — Cursor agent CLI",
-          "antigravity — Antigravity CLI",
+          "Claude — Anthropic Claude in the terminal",
+          "Codex — OpenAI Codex",
+          "Cursor — Cursor agent",
+          "Antigravity — Antigravity",
         ],
       },
       {
         id: "mac-selection",
         title: "Choosing a Mac",
-        body: "If you have multiple paired Macs, pick the target in the composer. The selection locks for the current session so follow-up sends continue the same terminal thread on the same machine.",
+        body: "If you have multiple Macs, pick the target in the composer. The selection locks for the current session so follow-up sends stay on the same machine.",
       },
       {
         id: "self-vs-teammate",
@@ -36,17 +36,17 @@ export const AGENT_WITCH_INSTRUCTION_TASKS_SECTION: AgentWitchInstructionSection
       {
         id: "offline-queue",
         title: "Offline queue",
-        body: "When your Mac is not connected, tasks can be queued in the browser and flush automatically when the WebSocket bridge reconnects.",
+        body: "When your Mac is not connected, tasks can be queued in the browser and send automatically when the connection returns.",
       },
       {
         id: "mid-run-input",
         title: "Answering questions mid-run",
-        body: "If a writer needs input, the live terminal shows a prompt. Reply in the browser; the response is forwarded to the Mac and the run continues.",
+        body: "If the AI needs input, the live terminal shows a prompt. Reply in the browser; the response goes to your Mac and the run continues.",
       },
       {
         id: "job-history",
         title: "Job history",
-        body: "Every dispatch creates an agent run with status, timestamps, and output. Job history is available in Reports and is also cached locally in the browser for resilience.",
+        body: "Every task creates a record with status, timestamps, and output. Job history is available in Reports and is also cached locally in the browser.",
       },
     ],
   };

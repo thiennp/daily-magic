@@ -19,7 +19,9 @@ export function sendClaudePromptOverSocket(input: {
       input.onResponse(
         JSON.stringify({
           type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR,
-          payload: { errorMessage: "WebSocket is not connected." },
+          payload: {
+            errorMessage: "This page is not connected to the server.",
+          },
         }),
       );
       return;

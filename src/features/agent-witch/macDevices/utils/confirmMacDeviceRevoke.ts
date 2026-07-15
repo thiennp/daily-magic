@@ -4,7 +4,7 @@ const confirmMacDeviceRevoke = (
   onDelete: (deviceId: string) => void | Promise<void>,
 ): void => {
   const confirmed = window.confirm(
-    `Remove "${displayName}" from your account? You can pair this Mac again after reinstalling Agent Witch.`,
+    `Remove "${displayName}" from your account? You can connect this Mac again after reinstalling Agent Witch.`,
   );
 
   if (!confirmed) {

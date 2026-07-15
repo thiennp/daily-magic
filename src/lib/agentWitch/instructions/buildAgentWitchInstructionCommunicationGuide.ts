@@ -5,12 +5,12 @@ export const buildAgentWitchInstructionCommunicationGuide = (
   websocketPath: string,
 ): AgentWitchInstructionCommunicationGuide => ({
   summary:
-    "Browser and Mac communicate over a single WebSocket. JSON messages use a type field. The Mac agent registers, heartbeats, executes writer tasks, streams terminal output, and handles harness sync.",
+    "Browser and Mac stay connected while Agent Witch is running. The Mac registers on connect, checks in about every 30 seconds, runs tasks, streams output, and syncs rules.",
   websocketPath,
   pairing: [
-    "Install the Mac bridge and obtain a pairing token in local config.",
-    "While signed in on the same Mac, the browser claims the pairing token so dispatches map to your account and devices.",
-    "The Mac agent sends agent.register on connect and agent.heartbeat about every 30 seconds.",
+    "Install Agent Witch on your Mac and complete setup from Home.",
+    "While signed in on the same Mac, the browser links this computer to your account.",
+    "The Mac checks in about every 30 seconds while Agent Witch is running.",
   ],
   midRunInputMarker: "[[AWAITING_INPUT]]",
   messageTypes: AGENT_WITCH_INSTRUCTION_MESSAGE_TYPES,

@@ -39,7 +39,7 @@ export default function MacDevicePicker({
   if (devices.length === 0) {
     return (
       <p className="text-sm text-gray-500 dark:text-gray-400">
-        No paired Macs yet. Connect one from Home → Your Devices.
+        No Macs connected yet. Connect one from Home → Your Devices.
       </p>
     );
   }
@@ -69,7 +69,7 @@ export default function MacDevicePicker({
         ))}
       </div>
       <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
-        Macs send a heartbeat every 30 seconds while Agent Witch is running.
+        Macs check in about every 30 seconds while Agent Witch is running.
         Offline Macs stay listed but cannot receive tasks.
       </p>
     </div>

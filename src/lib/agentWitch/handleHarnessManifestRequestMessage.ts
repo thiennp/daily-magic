@@ -26,7 +26,7 @@ export const handleHarnessManifestRequestMessage = (
     return {
       type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR,
       payload: {
-        errorMessage: "No paired local agent is connected to publish harness.",
+        errorMessage: "No Mac is connected to publish your rules.",
       },
       requestId: message.requestId,
     };

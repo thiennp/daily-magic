@@ -1,7 +1,7 @@
 export const PLAYBOOK_HARNESS_SECTION = {
-  title: "Harness bundle (optional)",
+  title: "Extra rules for your Mac (optional)",
   description:
-    "Add rules, skills, commands, instructions, or subagents. They install to your Mac when Agent is online.",
+    "Add rules, skills, shortcuts, and instructions. They copy to your Mac when it is connected.",
 } as const;
 
 export const AGENT_BUILDER_ABOUT_SECTION = {

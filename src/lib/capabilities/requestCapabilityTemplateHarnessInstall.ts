@@ -21,7 +21,7 @@ const requestCapabilityTemplateHarnessInstall = (
     return {
       installed: false,
       errorMessage:
-        "Mac agent offline. Open Agent with Agent Witch running to install the harness bundle.",
+        "Mac offline. Open Agent with Agent Witch running to install the rules bundle.",
     };
   }
 

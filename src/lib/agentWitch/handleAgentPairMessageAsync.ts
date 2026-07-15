@@ -43,8 +43,7 @@ export const handleAgentPairMessageAsync = async (
     return {
       type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR,
       payload: {
-        errorMessage:
-          claimResult.errorMessage ?? "Could not pair this local agent token.",
+        errorMessage: claimResult.errorMessage ?? "Could not connect this Mac.",
       },
       requestId: message.requestId,
     };

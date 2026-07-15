@@ -29,7 +29,7 @@ export default function ConnectedClientsList({
     const payload = (await response.json()) as AgentWitchStatusResponse;
 
     if (!response.ok) {
-      setMessage(payload.error ?? "Could not load connected clients.");
+      setMessage(payload.error ?? "Could not load connections.");
       return;
     }
 
@@ -68,7 +68,7 @@ export default function ConnectedClientsList({
   const body =
     clients.length === 0 ? (
       <p className="mt-4 text-sm text-gray-500 dark:text-gray-400">
-        No clients connected yet.
+        Nothing connected yet.
       </p>
     ) : (
       <div className={compact ? "mt-2" : "mt-4"}>
@@ -95,7 +95,7 @@ export default function ConnectedClientsList({
     >
       <div className="flex items-center justify-between gap-3">
         <h2 className="text-sm font-semibold text-gray-800 dark:text-white/90">
-          Connected clients
+          Active connections
         </h2>
         <button
           type="button"
@@ -108,7 +108,7 @@ export default function ConnectedClientsList({
         </button>
       </div>
       <p className={`mt-2 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
-        Live Agent Witch WebSocket connections on this server.
+        Browsers and Macs currently connected to this server.
       </p>
       {message ? (
         <p className={`mt-4 ${APP_SURFACE_BODY_TEXT_CLASS}`}>{message}</p>

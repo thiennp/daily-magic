@@ -24,7 +24,7 @@ export const AGENT_WITCH_INSTRUCTION_LIBRARY_SECTION: AgentWitchInstructionSecti
       {
         id: "publish",
         title: "Publishing",
-        body: "Publish a capability to make it visible in your company directory and optionally Marketplace. Published items can include harness bundles teammates can install.",
+        body: "Publish a capability to make it visible in your company directory and optionally Marketplace. Published items can include rules bundles teammates can install.",
       },
       {
         id: "copy-prompt",

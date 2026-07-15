@@ -16,14 +16,14 @@ describe("resolveHasPairedDeviceAfterFetch", () => {
       resolveHasPairedDeviceAfterFetch(
         true,
         0,
-        "Could not load paired devices.",
+        "Could not load connected Macs.",
       ),
     ).toBe(true);
     expect(
       resolveHasPairedDeviceAfterFetch(
         false,
         0,
-        "Could not load paired devices.",
+        "Could not load connected Macs.",
       ),
     ).toBe(false);
   });

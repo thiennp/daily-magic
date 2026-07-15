@@ -19,7 +19,10 @@ export const resolveClaudeRunAgentClient = async (input: {
   readonly requestId?: string;
 }): Promise<
   | { readonly ok: true; readonly agentClient: AgentWitchHubClient }
-  | { readonly ok: false; readonly error: ReturnType<typeof buildDispatchError> }
+  | {
+      readonly ok: false;
+      readonly error: ReturnType<typeof buildDispatchError>;
+    }
 > => {
   if (
     input.targetDeviceId !== undefined &&
@@ -32,7 +35,7 @@ export const resolveClaudeRunAgentClient = async (input: {
     return {
       ok: false,
       error: buildDispatchError(
-        "The selected Mac is not paired to your account.",
+        "The selected Mac is not connected to your account.",
         input.requestId,
       ),
     };
@@ -50,8 +53,8 @@ export const resolveClaudeRunAgentClient = async (input: {
         input.executorUserId === input.senderUserId
           ? input.targetDeviceId !== undefined
             ? "The selected Mac is not online right now."
-            : "No paired local agent is connected for your account."
-          : "The target user has no paired local agent connected.",
+            : "No Mac is connected for your account."
+          : "That teammate has no Mac connected.",
         input.requestId,
       ),
     };

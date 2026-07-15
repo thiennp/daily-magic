@@ -19,7 +19,7 @@ export const buildMacBlockedComposerAction = (
       {
         stateId,
         helperMessage:
-          "No Mac is online right now. Start Agent Witch on a paired Mac — it sends a heartbeat every 30 seconds.",
+          "No Mac is online. Open Agent Witch on a connected Mac — it checks in about every 30 seconds.",
         helperLinkLabel: "Connect or manage Macs",
         helperLinkHref: input.manageMacsHref,
         primaryManualAction,

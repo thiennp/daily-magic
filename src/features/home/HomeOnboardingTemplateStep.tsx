@@ -39,9 +39,9 @@ export default function HomeOnboardingTemplateStep({
       </h1>
       <p className={`mt-3 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
         Build your own in Library — no template required. Or browse presets
-        below; each includes a harness bundle (rules, skills, commands,
-        instructions, and a specialist subagent) that installs to your Mac when
-        Agent Witch is online.
+        below; each includes a rules bundle (skills, shortcuts, instructions,
+        and a specialist assistant) that installs to your Mac when Agent Witch
+        is online.
       </p>
       <div className="mt-5 flex flex-wrap gap-3">
         <Link

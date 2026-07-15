@@ -10,7 +10,7 @@ const newHiresCompanyPlaybooks: ShowcaseArticle = {
   whatYouNeed: [
     "Marketplace or group listings with at least a few published playbooks",
     "Permission to save copies to your library",
-    "Your own Mac paired when you need to run locally",
+    "Your own Mac connected when you need to run locally",
   ],
   tryNext: {
     label: "Save a playbook from marketplace",

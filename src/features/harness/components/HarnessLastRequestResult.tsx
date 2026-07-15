@@ -1,6 +1,7 @@
 "use client";
 
 import type HarnessRequestResult from "@/features/harness/hooks/types/HarnessRequestResult.type";
+import { HARNESS_WRITER_LABELS } from "@/features/harness/constants/harnessFormOptions";
 import { useHomeSetupEmbedded } from "@/features/home/HomeSetupEmbeddedContext";
 import resolveHomeSetupNestedBoxClass from "@/features/home/resolveHomeSetupNestedBoxClass";
 
@@ -15,6 +16,12 @@ export default function HarnessLastRequestResult({
   result,
 }: HarnessLastRequestResultProps) {
   const embedded = useHomeSetupEmbedded();
+  const writerLabel =
+    result.writerAgent in HARNESS_WRITER_LABELS
+      ? HARNESS_WRITER_LABELS[
+          result.writerAgent as keyof typeof HARNESS_WRITER_LABELS
+        ]
+      : result.writerAgent;
 
   return (
     <div
@@ -25,8 +32,7 @@ export default function HarnessLastRequestResult({
       )}
     >
       <p className="font-medium text-gray-800 dark:text-white/90">
-        Last request: {result.success ? "success" : "failed"} (
-        {result.writerAgent})
+        Last request: {result.success ? "success" : "failed"} ({writerLabel})
       </p>
       {result.errorMessage ? (
         <p className="mt-2 text-gray-600 dark:text-gray-400">

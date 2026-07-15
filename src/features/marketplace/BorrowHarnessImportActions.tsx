@@ -34,7 +34,7 @@ export default function BorrowHarnessImportActions({
       </Button>
       {!isOnline ? (
         <p className="text-xs text-gray-500 dark:text-gray-400">
-          Owner must be online with a paired agent to export file contents.
+          Owner must be online with a connected Mac to export files.
         </p>
       ) : null}
       {importMessage ? (

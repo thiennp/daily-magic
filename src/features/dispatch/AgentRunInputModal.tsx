@@ -30,7 +30,7 @@ export default function AgentRunInputModal({
         Agent needs your input
       </h2>
       <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-        The local agent paused this job until you answer. The run stays{" "}
+        Your Mac paused this job until you answer. The run stays{" "}
         <span className="font-medium">running</span> in job history.
       </p>
       <p className="mt-4 text-sm font-medium text-gray-800 dark:text-white/90">

@@ -34,17 +34,17 @@ export default function HomeConnectedMacsPanel({
       </h2>
       <p className="mt-1 text-xs text-gray-600 dark:text-gray-400">
         {onlineCount > 0
-          ? `${onlineCount} online · heartbeat every 30 seconds`
-          : "Paired Macs appear here when Agent Witch is running."}
+          ? `${onlineCount} online · checks in every ~30s`
+          : "Connected Macs appear here when Agent Witch is running."}
       </p>
 
       {isLoading ? (
         <p className="mt-4 text-sm text-gray-500 dark:text-gray-400">
-          Checking paired Macs…
+          Checking connected Macs…
         </p>
       ) : devices.length === 0 ? (
         <p className="mt-4 text-sm text-gray-500 dark:text-gray-400">
-          No paired Macs yet.{" "}
+          No Macs connected yet.{" "}
           <ConnectAnotherMacButton
             installCommand={installCommand}
             isWebSocketSupported={isWebSocketSupported}

@@ -32,8 +32,8 @@ export default function MarketplaceList({
   if (listings.length === 0) {
     return (
       <p className="mt-4 text-sm text-gray-500 dark:text-gray-400">
-        No teammate listings yet. Try a preset above, or publish a capability
-        with a linked rules bundle for others to borrow.
+        No teammate listings yet. Try a preset above, or publish a workflow or
+        agent with rules for others to borrow.
       </p>
     );
   }
@@ -66,7 +66,7 @@ export default function MarketplaceList({
                 {listing.harnessItemCount !== null
                   ? ` · ${listing.harnessItemCount} items`
                   : ""}
-                {listing.isOnline ? " · owner online" : " · snapshot only"}
+                {listing.isOnline ? " · owner online" : " · saved copy only"}
               </p>
             </div>
             <Button

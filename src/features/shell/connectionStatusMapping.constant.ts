@@ -27,9 +27,9 @@ export const PAIRING_STATUS_DISPLAY: Record<
   StatusBadgeDisplay
 > = {
   not_connected: { label: "Not connected", tone: "neutral" },
-  ready_to_pair: { label: "Waiting for local agent", tone: "warning" },
-  paired: { label: "Paired", tone: "success" },
-  pairing_failed: { label: "Pairing failed", tone: "error" },
+  ready_to_pair: { label: "Waiting for your Mac", tone: "warning" },
+  paired: { label: "Connected", tone: "success" },
+  pairing_failed: { label: "Could not connect Mac", tone: "error" },
 };
 
 export const STATUS_BADGE_COLORS: Record<

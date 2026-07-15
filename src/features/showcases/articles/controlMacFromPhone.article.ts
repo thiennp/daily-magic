@@ -9,7 +9,7 @@ const controlMacFromPhone: ShowcaseArticle = {
   supportLevel: "partial",
   readMinutes: 4,
   whatYouNeed: [
-    "Mobile browser with a connection to the app (WebSocket-capable host)",
+    "Mobile browser with a connection to the app",
     "Your Mac agent online to actually send a job",
     "Or skip send and use Copy prompt for ChatGPT on your phone",
   ],
@@ -32,7 +32,7 @@ const controlMacFromPhone: ShowcaseArticle = {
     {
       heading: "What does not work yet",
       paragraphs: [
-        "Your phone cannot run Claude on your files by itself. Execution still happens on a paired Mac. Think phone = remote control and clipboard, Mac = engine.",
+        "Your phone cannot run Claude on your files by itself. Execution still happens on a connected Mac. Think phone = remote control and clipboard, Mac = engine.",
       ],
     },
   ],

@@ -10,7 +10,7 @@ export const AGENT_WITCH_INSTRUCTION_MARKETPLACE_SECTION: AgentWitchInstructionS
       {
         id: "what-is-listed",
         title: "What appears in Marketplace",
-        body: "Listings are capabilities teammates published for your company: workflow playbooks with form fields or custom agent playbooks. Many listings include a linked harness bundle (rules, skills, commands, instructions, subagents).",
+        body: "Listings are workflows and agents teammates published for your company. Many include a rules bundle (skills, shortcuts, instructions, and specialist assistants).",
       },
       {
         id: "browse-and-preview",
@@ -25,12 +25,12 @@ export const AGENT_WITCH_INSTRUCTION_MARKETPLACE_SECTION: AgentWitchInstructionS
       {
         id: "install-bundle",
         title: "Install the rules bundle",
-        body: "When a listing has a harness bundle and your Mac agent is online, install imports the bundle to your local writer environment so tasks follow the same standards as the publisher.",
+        body: "When a listing includes rules and your Mac is online, install copies them so tasks follow the same standards as the publisher.",
       },
       {
         id: "presets",
         title: "Starter presets",
-        body: "Official starter templates may appear with ready-made harness content. Use them to learn patterns before publishing company-specific playbooks.",
+        body: "Official starter templates may include ready-made rules. Use them to learn patterns before publishing company-specific playbooks.",
       },
     ],
   };

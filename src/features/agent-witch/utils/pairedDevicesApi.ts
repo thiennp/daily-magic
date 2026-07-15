@@ -42,7 +42,7 @@ export const fetchActivePairedDevices =
         return {
           devices: cached.devices as PairedDevice[],
           errorMessage: cached.hadError
-            ? "Could not load paired devices."
+            ? "Could not load connected Macs."
             : null,
         };
       }
@@ -51,20 +51,20 @@ export const fetchActivePairedDevices =
       if (refreshed === null) {
         return {
           devices: [],
-          errorMessage: "Could not load paired devices.",
+          errorMessage: "Could not load connected Macs.",
         };
       }
 
       return {
         devices: refreshed.devices as PairedDevice[],
         errorMessage: refreshed.hadError
-          ? "Could not load paired devices."
+          ? "Could not load connected Macs."
           : null,
       };
     } catch {
       return {
         devices: [],
-        errorMessage: "Could not load paired devices.",
+        errorMessage: "Could not load connected Macs.",
       };
     }
   };

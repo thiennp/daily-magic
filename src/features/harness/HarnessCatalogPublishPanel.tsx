@@ -32,11 +32,11 @@ export default function HarnessCatalogPublishPanel() {
     setIsPublishing(false);
 
     if (!result.ok) {
-      setMessage(result.errorMessage ?? "Could not publish catalog snapshot.");
+      setMessage(result.errorMessage ?? "Could not publish your shared setup.");
       return;
     }
 
-    setMessage("Publish requested. Your local agent will refresh the catalog.");
+    setMessage("Publish requested. Your Mac will update the shared list.");
     setStatus(await fetchHarnessCatalogStatus());
   };
 
@@ -49,7 +49,7 @@ export default function HarnessCatalogPublishPanel() {
       )}
     >
       <h3 className="text-sm font-semibold text-gray-800 dark:text-white/90">
-        Catalog snapshot
+        Shared setup
       </h3>
       {status?.catalog ? (
         <p className="mt-2 text-xs text-gray-600 dark:text-gray-400">
@@ -58,7 +58,7 @@ export default function HarnessCatalogPublishPanel() {
         </p>
       ) : (
         <p className="mt-2 text-xs text-gray-600 dark:text-gray-400">
-          No catalog snapshot yet. Publish while your agent is online.
+          Nothing shared yet. Publish while your Mac is online.
         </p>
       )}
       <div className="mt-3">
@@ -73,7 +73,7 @@ export default function HarnessCatalogPublishPanel() {
       </div>
       {!status?.isAgentOnline ? (
         <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
-          Pair and connect your local agent to publish.
+          Connect your Mac before publishing.
         </p>
       ) : null}
       {message ? (

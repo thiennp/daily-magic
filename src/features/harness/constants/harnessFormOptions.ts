@@ -4,7 +4,7 @@ import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessW
 import { HARNESS_WRITER_AGENTS } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
 
 export const HARNESS_WRITER_LABELS: Record<HarnessWriterAgent, string> = {
-  "claude-cli": "Claude CLI",
+  "claude-cli": "Claude (terminal)",
   codex: "Codex (ChatGPT)",
   cursor: "Cursor",
   antigravity: "Antigravity",
@@ -15,7 +15,7 @@ export const HARNESS_KIND_LABELS: Record<HarnessItemKind, string> = {
   skill: "Skill",
   command: "Command",
   instruction: "Instruction",
-  agent: "Subagent",
+  agent: "Specialist",
 };
 
 export const HARNESS_WRITER_OPTIONS = HARNESS_WRITER_AGENTS.map((value) => ({

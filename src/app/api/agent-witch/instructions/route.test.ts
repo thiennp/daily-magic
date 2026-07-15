@@ -30,7 +30,7 @@ describe("handleAgentWitchInstructionsGet", () => {
     expect(response.status).toBe(200);
     expect(response.headers.get("Content-Type")).toContain("text/markdown");
     expect(body).toContain("Sending tasks");
-    expect(body).toContain("Writer agents");
+    expect(body).toContain("Which AI runs the job");
   });
 
   it("returns 404 for unknown section", async () => {

@@ -3,34 +3,34 @@ import type { AgentWitchInstructionSection } from "@/lib/agentWitch/instructions
 export const AGENT_WITCH_INSTRUCTION_HARNESS_SECTION: AgentWitchInstructionSection =
   {
     id: "harness",
-    title: "Rules bundles (harness)",
+    title: "Rules bundles",
     summary:
-      "Harness bundles are portable sets of rules, skills, commands, instructions, and subagents that keep writer behavior consistent across people and machines.",
+      "Portable sets of rules, skills, shortcuts, and instructions that keep AI behavior consistent across people and Macs.",
     topics: [
       {
         id: "bundle-contents",
         title: "What a bundle contains",
-        body: "A bundle (harness set) groups writer items: rules, skills, commands, instructions, and specialist subagents. Items can belong to one or more bundles.",
+        body: "A bundle groups rules, skills, shortcuts, instructions, and specialist assistants. Items can belong to one or more bundles.",
       },
       {
         id: "local-manifest",
-        title: "Local manifest on the Mac",
-        body: "The Mac agent reports its local harness manifest to the server when connected. Your setup shows what is installed and which writer agent wrote it.",
+        title: "What your Mac reports",
+        body: "When connected, your Mac sends its installed rules to the app. Your setup shows what is installed and which AI tool wrote it.",
       },
       {
         id: "install-sources",
         title: "How bundles arrive on a Mac",
-        body: "Install bundles from Marketplace or Library when the Mac is online, import borrowed bundles from teammates, or receive harness write requests from the browser composer.",
+        body: "Install from Marketplace or Library when your Mac is online, borrow from teammates, or add items from Your setup in the browser.",
       },
       {
         id: "catalog-publish",
-        title: "Publishing a catalog snapshot",
-        body: "From Your setup, publish a catalog snapshot while the Mac agent is online so sharing controls and marketplace borrow flows know which bundles you expose.",
+        title: "Sharing your setup",
+        body: "From Your setup, publish while your Mac is online so teammates can borrow the bundles you choose to share.",
       },
       {
         id: "sharing-visibility",
-        title: "Bundle sharing visibility",
-        body: "Each published bundle can stay private, visible to company members only, or visible to any signed-in user.",
+        title: "Who can borrow",
+        body: "Each bundle can stay private, visible to company members only, or visible to any signed-in user.",
         bullets: [
           "private — only you",
           "group — company members only",
@@ -39,8 +39,8 @@ export const AGENT_WITCH_INSTRUCTION_HARNESS_SECTION: AgentWitchInstructionSecti
       },
       {
         id: "writer-sync",
-        title: "Sending items to the local writer",
-        body: "Your setup can compose harness items in the browser and send them to the paired Mac. The Mac agent forwards them to the selected writer CLI for local persistence.",
+        title: "Saving rules from the browser",
+        body: "Your setup can compose items in the browser and save them to your Mac. The Mac stores them for the AI tool you selected.",
       },
     ],
   };

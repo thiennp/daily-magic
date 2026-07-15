@@ -71,7 +71,7 @@ export function useCapabilityTemplatePicker({
   const handleSave = async (templateId: string): Promise<void> => {
     if (demoPreview) {
       setSavedTemplateId(templateId);
-      setHarnessMessage("Demo preview — harness install is simulated.");
+      setHarnessMessage("Demo preview — Mac install is simulated.");
       onSaved?.();
       return;
     }
@@ -90,9 +90,9 @@ export function useCapabilityTemplatePicker({
     setSavedTemplateId(templateId);
     setHarnessMessage(
       result.harnessInstalled
-        ? "Harness install requested on your Mac."
+        ? "Install requested on your Mac."
         : (result.harnessInstallMessage ??
-            "Saved to Library. Install the harness from Agent when your Mac is online."),
+            "Saved to Library. Open Agent when your Mac is online to finish install."),
     );
     onSaved?.();
   };

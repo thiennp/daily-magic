@@ -8,8 +8,8 @@ const firstAgentTaskIn5Minutes: ShowcaseArticle = {
   supportLevel: "partial",
   readMinutes: 3,
   whatYouNeed: [
-    "A Mac with the Agent Witch client installed and paired",
-    "The app running on a host that supports WebSockets (not plain serverless)",
+    "A Mac with Agent Witch installed and connected",
+    "The app on a server that can talk to your Mac live (not plain serverless)",
     "A short task description — one sentence is enough",
   ],
   tryNext: { label: "Try the demo task composer", href: "/demo/agent" },
@@ -22,7 +22,7 @@ const firstAgentTaskIn5Minutes: ShowcaseArticle = {
     {
       heading: "Step by step",
       bullets: [
-        "Sign in and open Home → Your setup to pair your Mac",
+        "Sign in and open Home → Your Devices to connect your Mac",
         "Go to Send a task and write what you want done",
         "Press send — your Mac runs Claude with your local context",
         "Open Job history to see status and output",
@@ -31,7 +31,7 @@ const firstAgentTaskIn5Minutes: ShowcaseArticle = {
     {
       heading: "If send is disabled",
       paragraphs: [
-        "The button stays off until your browser is connected to the app server and your Mac agent is online. That is intentional: we run on real machines, not a faceless cloud tab.",
+        "The button stays off until this page is connected to the app and your Mac is online. That is intentional: we run on real machines, not a faceless cloud tab.",
       ],
     },
   ],

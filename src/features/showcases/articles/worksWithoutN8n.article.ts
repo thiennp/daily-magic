@@ -9,7 +9,7 @@ const worksWithoutN8n: ShowcaseArticle = {
   supportLevel: "partial",
   readMinutes: 4,
   whatYouNeed: [
-    "A paired Mac with Agent Witch",
+    "A connected Mac with Agent Witch",
     "A published workflow capability (form fields + assembled prompt)",
     "No n8n account or webhook setup",
   ],

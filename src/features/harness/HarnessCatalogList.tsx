@@ -38,7 +38,7 @@ export default function HarnessCatalogList({
     return (
       <p className="mt-4 text-sm text-gray-500 dark:text-gray-400">
         No shared setups available yet. Teammates must set sharing to group or
-        public and have a paired agent online.
+        public and have a connected Mac online.
       </p>
     );
   }
@@ -57,7 +57,7 @@ export default function HarnessCatalogList({
               </p>
               <p className="text-xs text-gray-500 dark:text-gray-400">
                 {entry.hostname} · {entry.visibility}
-                {entry.isOnline ? " · online" : " · snapshot"}
+                {entry.isOnline ? " · online" : " · saved copy"}
               </p>
             </div>
             <Button

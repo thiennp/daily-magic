@@ -31,7 +31,7 @@ const saveTeammateWorkflowOneTap: ShowcaseArticle = {
     {
       heading: "What does not",
       paragraphs: [
-        "Their Mac, their harness rules bundle, and their private setup. You get the recipe; you run it on your machine or edit before publishing to your team.",
+        "Their Mac, their rules bundle, and their private setup. You get the recipe; you run it on your machine or edit before publishing to your team.",
       ],
     },
   ],

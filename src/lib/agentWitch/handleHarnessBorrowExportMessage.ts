@@ -46,7 +46,7 @@ export const handleHarnessBorrowExportMessage = (
     return {
       type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR,
       payload: {
-        errorMessage: "Owner has no paired local agent online for export.",
+        errorMessage: "Owner's Mac is not online to export files.",
       },
       requestId: message.requestId,
     };

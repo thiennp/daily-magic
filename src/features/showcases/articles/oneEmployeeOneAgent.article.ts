@@ -17,7 +17,7 @@ const oneEmployeeOneAgent: ShowcaseArticle = {
   sections: [
     {
       paragraphs: [
-        "There is no single company bot running in a mystery cloud. Each employee who pairs a Mac has an agent on that machine — with their files, tools, and harness rules. The company value is shared playbooks, dispatch, and history across people.",
+        "There is no single company bot running in a mystery cloud. Each employee who connects a Mac has an agent on that machine — with their files, tools, and rules. The company value is shared playbooks, dispatch, and history across people.",
       ],
     },
     {

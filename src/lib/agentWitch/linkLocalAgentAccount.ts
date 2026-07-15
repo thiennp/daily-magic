@@ -67,7 +67,7 @@ export const requestLocalAgentLinkAccount = async (input: {
     return {
       ok: false,
       errorMessage:
-        "Local Agent Witch API is not reachable. Run install on this Mac first.",
+        "Agent Witch on this Mac is not running. Run install first.",
     };
   }
 };

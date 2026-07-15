@@ -24,7 +24,7 @@ const findBestPromptInCompany: ShowcaseArticle = {
       bullets: [
         "Open Marketplace and preview a listing",
         "Save to my library — copies the workflow into your account",
-        "Install bundle (optional) — imports harness rules to your Mac",
+        "Install bundle (optional) — imports their rules to your Mac",
         "Use the saved copy from your library",
       ],
     },

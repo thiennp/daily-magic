@@ -16,9 +16,9 @@ export default function ConnectionLabPageLayout() {
             Connection lab
           </h1>
           <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-            Mock device and WebSocket states without a database or local Agent
-            Witch. Switch scenarios to verify send gating, Mac offline hints,
-            and home connect flow.
+            Mock Mac and connection states without a real Mac or database.
+            Switch scenarios to verify send gating, offline hints, and home
+            connect flow.
           </p>
           <div className="mt-4">
             <ConnectionLabScenarioPicker />

@@ -31,9 +31,9 @@ export const CONNECTION_SCENARIO_LABELS: Readonly<
   "all-online": "All Macs online",
   "all-offline": "All Macs offline",
   mixed: "One online, one offline",
-  "no-devices": "No paired Macs",
-  "api-error": "Devices API error",
-  "ws-disconnected": "Server WebSocket down",
+  "no-devices": "No Macs connected",
+  "api-error": "Could not load Mac list",
+  "ws-disconnected": "App not connected to server",
 };
 
 export const buildConnectionScenarioDevices = (
