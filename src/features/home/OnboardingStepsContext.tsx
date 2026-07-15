@@ -10,14 +10,16 @@ import {
   type ReactNode,
 } from "react";
 
-import { pairedDevicesResource } from "@/features/agent-witch/pairedDevicesResource";
 import { useDemoPreview } from "@/features/demo/DemoPreviewContext";
 import { useOptionalPairedDeviceContext } from "@/features/home/PairedDeviceContext";
+import useOnboardingPairStepSync from "@/features/home/hooks/useOnboardingPairStepSync";
+import useOnboardingTaskStepRefresh from "@/features/home/hooks/useOnboardingTaskStepRefresh";
 import {
   loadOnboardingSteps,
   type OnboardingStep,
 } from "@/features/home/loadOnboardingSteps";
 import isConnectMacOnboardingStepDone from "@/features/home/utils/isConnectMacOnboardingStepDone";
+import isTaskOnboardingStepDone from "@/features/home/utils/isTaskOnboardingStepDone";
 import isWorkflowOnboardingStep from "@/features/home/utils/isWorkflowOnboardingStep";
 
 interface OnboardingStepsContextValue {
@@ -62,28 +64,6 @@ export function OnboardingStepsProvider({
     void loadOnboardingSteps().then(setSteps);
   }, [demoPreview, hasPairedDevice]);
 
-  const isConnectStepDone = isConnectMacOnboardingStepDone(steps);
-
-  useEffect(() => {
-    if (demoPreview || isConnectStepDone) {
-      return;
-    }
-
-    return pairedDevicesResource.subscribe(() => {
-      const snapshot = pairedDevicesResource.getSnapshot();
-      if (snapshot === null) {
-        return;
-      }
-
-      const paired = snapshot.devices.length > 0;
-      setSteps((current) =>
-        current.map((step) =>
-          step.id === "pair" ? { ...step, done: paired } : step,
-        ),
-      );
-    });
-  }, [demoPreview, isConnectStepDone]);
-
   const reloadSteps = useCallback(async (): Promise<void> => {
     if (demoPreview) {
       return;
@@ -101,6 +81,17 @@ export function OnboardingStepsProvider({
       ),
     );
   }, []);
+
+  useOnboardingPairStepSync({
+    demoPreview,
+    isConnectStepDone: isConnectMacOnboardingStepDone(steps),
+    setSteps,
+  });
+  useOnboardingTaskStepRefresh({
+    demoPreview,
+    isTaskStepDone: isTaskOnboardingStepDone(steps),
+    reloadSteps,
+  });
 
   const value = useMemo(
     () => ({

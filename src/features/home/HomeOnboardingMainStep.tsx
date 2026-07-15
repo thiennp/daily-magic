@@ -9,6 +9,7 @@ import {
   APP_SURFACE_EYEBROW_TEXT_CLASS,
 } from "@/components/surfaces/appSurfaceStyles.constant";
 import type { HomeOnboardingMainStepContent } from "@/features/home/constants/homeOnboardingMainStepContent.constant";
+import HomeOnboardingPriorStepSection from "@/features/home/HomeOnboardingPriorStepSection";
 import type { OnboardingStep } from "@/features/home/loadOnboardingSteps";
 import { resolveOnboardingStepHref } from "@/features/home/resolveOnboardingStepHref";
 import { useAppPath } from "@/features/demo/DemoPreviewContext";
@@ -16,11 +17,13 @@ import { useAppPath } from "@/features/demo/DemoPreviewContext";
 interface HomeOnboardingMainStepProps {
   readonly step: OnboardingStep;
   readonly content: HomeOnboardingMainStepContent;
+  readonly priorStep?: OnboardingStep;
 }
 
 export default function HomeOnboardingMainStep({
   step,
   content,
+  priorStep,
 }: HomeOnboardingMainStepProps) {
   const appPath = useAppPath();
 
@@ -39,6 +42,7 @@ export default function HomeOnboardingMainStep({
           {content.ctaLabel}
         </Link>
       </div>
+      {priorStep ? <HomeOnboardingPriorStepSection step={priorStep} /> : null}
     </AppHero>
   );
 }

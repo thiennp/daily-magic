@@ -1,5 +1,7 @@
 import hasUserCreatedFirstWorkflowOrAgent from "@/features/home/utils/hasUserCreatedFirstWorkflowOrAgent";
+import hasUserSentFirstTask from "@/features/home/utils/hasUserSentFirstTask";
 import { getPairedDevicesSnapshot } from "@/features/agent-witch/pairedDevicesResource";
+import { listAgentRunsLocalCache } from "@/features/reports/agentRunLocalCache";
 
 export interface OnboardingStep {
   readonly id: string;
@@ -62,12 +64,15 @@ export async function loadOnboardingSteps(): Promise<
   const hasCreatedWorkflowOrAgent =
     hasUserCreatedFirstWorkflowOrAgent(capabilities);
 
-  const hasSentTask =
+  const hasSentTask = hasUserSentFirstTask(
     typeof runsData === "object" &&
-    runsData !== null &&
-    "runs" in runsData &&
-    Array.isArray((runsData as { runs: unknown[] }).runs) &&
-    (runsData as { runs: unknown[] }).runs.length > 0;
+      runsData !== null &&
+      "runs" in runsData &&
+      Array.isArray((runsData as { runs: unknown[] }).runs)
+      ? (runsData as { runs: unknown[] }).runs
+      : null,
+    listAgentRunsLocalCache().length,
+  );
 
   return [
     {

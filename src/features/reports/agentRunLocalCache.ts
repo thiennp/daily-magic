@@ -46,6 +46,7 @@ export const upsertAgentRunLocalCache = (run: AgentRunRecord): void => {
   const cache = readCache();
   cache[run.id] = run;
   writeCache(cache);
+  notifyAgentRunsLocalCacheUpdated();
 };
 
 export const getAgentRunLocalCache = (runId: string): AgentRunRecord | null =>
@@ -55,3 +56,14 @@ export const listAgentRunsLocalCache = (): readonly AgentRunRecord[] =>
   Object.values(readCache()).toSorted((left, right) =>
     right.createdAt.localeCompare(left.createdAt),
   );
+
+export const AGENT_RUNS_LOCAL_CACHE_UPDATED_EVENT =
+  "daily-magic:agent-runs-cache-updated";
+
+const notifyAgentRunsLocalCacheUpdated = (): void => {
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  window.dispatchEvent(new CustomEvent(AGENT_RUNS_LOCAL_CACHE_UPDATED_EVENT));
+};

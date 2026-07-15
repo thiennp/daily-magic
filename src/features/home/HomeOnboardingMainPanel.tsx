@@ -7,6 +7,7 @@ import HomeOnboardingMainStep from "@/features/home/HomeOnboardingMainStep";
 import HomeOnboardingTemplateStep from "@/features/home/HomeOnboardingTemplateStep";
 import useOnboardingSteps from "@/features/home/hooks/useOnboardingSteps";
 import findNextIncompleteOnboardingStep from "@/features/home/utils/findNextIncompleteOnboardingStep";
+import isTaskOnboardingStep from "@/features/home/utils/isTaskOnboardingStep";
 import isWorkflowOnboardingStep from "@/features/home/utils/isWorkflowOnboardingStep";
 import type { GlobalRoleValue } from "@/lib/auth/roles";
 
@@ -60,6 +61,11 @@ export default function HomeOnboardingMainPanel({
     <HomeOnboardingMainStep
       step={nextStep}
       content={HOME_ONBOARDING_MAIN_STEP_CONTENT[nextStep.id]}
+      priorStep={
+        isTaskOnboardingStep(nextStep.id)
+          ? steps.find((step) => isWorkflowOnboardingStep(step.id))
+          : undefined
+      }
     />
   );
 }
