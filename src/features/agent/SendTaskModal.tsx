@@ -1,5 +1,7 @@
 "use client";
 
+import { useSearchParams } from "next/navigation";
+
 import { Modal } from "@/components/ui/modal";
 import WsTestPanel from "@/features/agent/WsTestPanel";
 
@@ -9,6 +11,9 @@ interface SendTaskModalProps {
 }
 
 export default function SendTaskModal({ isOpen, onClose }: SendTaskModalProps) {
+  const searchParams = useSearchParams();
+  const libraryCapabilityId =
+    searchParams.get("libraryCapabilityId") ?? "custom";
   return (
     <Modal
       isOpen={isOpen}
@@ -20,11 +25,12 @@ export default function SendTaskModal({ isOpen, onClose }: SendTaskModalProps) {
           Send a task
         </h2>
         <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
-          Dispatch to your Mac or a teammate. Every job is saved in Job history.
+          Pick a saved workflow or agent, or write a custom task for your Mac or
+          a teammate.
         </p>
       </div>
       <div className="mt-6">
-        <WsTestPanel variant="modal" />
+        <WsTestPanel key={libraryCapabilityId} variant="modal" />
       </div>
     </Modal>
   );
