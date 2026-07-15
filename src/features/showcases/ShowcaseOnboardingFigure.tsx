@@ -20,7 +20,6 @@ export default function ShowcaseOnboardingFigure({
     <figure className="overflow-hidden rounded-xl border border-gray-200 bg-gray-50 dark:border-gray-800 dark:bg-white/[0.03]">
       <picture>
         <source srcSet={png} type="image/png" />
-        { }
         <img
           src={svg}
           alt={alt}

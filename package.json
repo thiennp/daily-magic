@@ -16,6 +16,8 @@
     "agent-witch:install": "bash scripts/install-agent-witch.sh",
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:e2e": "playwright test",
+    "test:e2e:install": "playwright install chromium",
     "lint": "eslint",
     "typecheck": "npm run lint && tsc --noEmit",
     "db:schema": "psql \"$DATABASE_URL\" -f db/schema.sql",
@@ -52,7 +54,7 @@
     "ws": "^8.18.3"
   },
   "devDependencies": {
-    "@svgr/webpack": "^8.1.0",
+    "@playwright/test": "^1.55.0",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
