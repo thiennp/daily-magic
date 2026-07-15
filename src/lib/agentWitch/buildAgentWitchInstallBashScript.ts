@@ -1,40 +1,15 @@
+import { buildAgentWitchInstallScriptAutomationScheduler } from "@/lib/agentWitch/buildAgentWitchInstallScriptAutomationScheduler";
 import { buildAgentWitchInstallScriptLaunchAgent } from "@/lib/agentWitch/buildAgentWitchInstallScriptLaunchAgent";
 import { buildAgentWitchInstallScriptSetup } from "@/lib/agentWitch/buildAgentWitchInstallScriptSetup";
 import { buildAgentWitchInstallScriptUpdater } from "@/lib/agentWitch/buildAgentWitchInstallScriptUpdater";
 import { buildAgentWitchInstallScriptVersionStamp } from "@/lib/agentWitch/buildAgentWitchInstallScriptVersionStamp";
 import { buildAgentWitchInstallScriptWatchdog } from "@/lib/agentWitch/buildAgentWitchInstallScriptWatchdog";
 import { buildAgentWitchInstallScriptWakeServer } from "@/lib/agentWitch/buildAgentWitchInstallScriptWakeServer";
+import type { AgentWitchInstallBashScriptInput } from "@/lib/agentWitch/AgentWitchInstallBashScriptInput.type";
 
-export const buildAgentWitchInstallBashScript = (input: {
-  readonly appOrigin: string;
-  readonly wsUrl: string;
-  readonly clientScriptUrl: string;
-  readonly wakeServerScriptUrl: string;
-  readonly wakeConstantsScriptUrl: string;
-  readonly wakeListTargetsScriptUrl: string;
-  readonly wakeKickstartScriptUrl: string;
-  readonly wakeHandlersScriptUrl: string;
-  readonly wakeAllowedOriginsScriptUrl: string;
-  readonly wakeEnsureProfileScriptUrl: string;
-  readonly wakeLinkAccountScriptUrl: string;
-  readonly wakeSpawnClientScriptUrl: string;
-  readonly wakeCliScriptUrl: string;
-  readonly watchdogScriptUrl: string;
-  readonly reviveScriptUrl: string;
-  readonly connectionHealthScriptUrl: string;
-  readonly connectionHealthConstantsScriptUrl: string;
-  readonly launchAgentRunningScriptUrl: string;
-  readonly localLayoutScriptUrl: string;
-  readonly watchdogLogScriptUrl: string;
-  readonly watchdogStatusScriptUrl: string;
-  readonly selfUpdateScriptUrl: string;
-  readonly selfUpdateCoreScriptUrl: string;
-  readonly installVersionScriptUrl: string;
-  readonly resolveAppOriginScriptUrl: string;
-  readonly selfUpdateLogScriptUrl: string;
-  readonly launchAgentLabelsScriptUrl: string;
-  readonly websocketSupportWarning: string;
-}): string =>
+export const buildAgentWitchInstallBashScript = (
+  input: AgentWitchInstallBashScriptInput,
+): string =>
   `${buildAgentWitchInstallScriptSetup({
     appOrigin: input.appOrigin,
     wsUrl: input.wsUrl,
@@ -85,4 +60,22 @@ export const buildAgentWitchInstallBashScript = (input: {
     listTargetsScriptUrl: input.wakeListTargetsScriptUrl,
     kickstartScriptUrl: input.wakeKickstartScriptUrl,
     localLayoutScriptUrl: input.localLayoutScriptUrl,
+  })}${buildAgentWitchInstallScriptAutomationScheduler({
+    automationSchedulerScriptUrl: input.automationSchedulerScriptUrl,
+    automationRunnerScriptUrl: input.automationRunnerScriptUrl,
+    automationHeadlessWriterScriptUrl: input.automationHeadlessWriterScriptUrl,
+    automationStoreScriptUrl: input.automationStoreScriptUrl,
+    automationTypesScriptUrl: input.automationTypesScriptUrl,
+    automationComputeNextScriptUrl: input.automationComputeNextScriptUrl,
+    automationReadConfigScriptUrl: input.automationReadConfigScriptUrl,
+    automationApplySyncScriptUrl: input.automationApplySyncScriptUrl,
+    automationLocalLayoutScriptUrl: input.automationLocalLayoutScriptUrl,
+    automationWriterCliScriptUrl: input.automationWriterCliScriptUrl,
+    automationCloudApiScriptUrl: input.automationCloudApiScriptUrl,
+    automationDeviceAuthScriptUrl: input.automationDeviceAuthScriptUrl,
+    automationResolveAppOriginScriptUrl:
+      input.automationResolveAppOriginScriptUrl,
+    launchAgentRunningScriptUrl: input.automationLaunchAgentRunningScriptUrl,
+    launchAgentLabelsScriptUrl: input.launchAgentLabelsScriptUrl,
+    kickstartScriptUrl: input.automationKickstartScriptUrl,
   })}${buildAgentWitchInstallScriptVersionStamp(input.appOrigin)}`;

@@ -8,6 +8,7 @@ import type AgentRunRecord from "@/lib/dispatch/types/AgentRunRecord.type";
 import { asRowArray, getSql } from "@/lib/db";
 
 export interface CreateAgentRunInput {
+  readonly id?: string;
   readonly groupId?: string | null;
   readonly requesterUserId: string;
   readonly executorUserId: string;
@@ -25,7 +26,7 @@ const createAgentRun = async (
   input: CreateAgentRunInput,
 ): Promise<AgentRunRecord> => {
   const sql = getSql();
-  const runId = randomUUID();
+  const runId = input.id ?? randomUUID();
   const writerAgent = input.writerAgent ?? "claude-cli";
   const result = asRowArray(
     await sql`

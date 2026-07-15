@@ -3,6 +3,7 @@ import http from "node:http";
 import {
   buildAgentWitchWakeHealthResponse,
   buildAgentWitchWakeIdentityResponse,
+  buildAgentWitchAutomationStatusFromWakeServer,
   buildAgentWitchSelfUpdateStatusFromWakeServer,
   installHarnessFromWakeServer,
   linkAgentWitchAccountFromWakeServer,
@@ -11,6 +12,8 @@ import {
   reviveAgentWitchWebSocketFromWakeServer,
   buildAgentWitchWatchdogStatus,
   runAgentWitchSelfUpdateFromWakeServer,
+  runAutomationFromWakeServer,
+  syncAutomationsFromWakeServer,
   wakeAgentWitchLaunchAgents,
 } from "./agentWitchWakeHandlers";
 import { buildWakeServerCorsHeaders } from "./agentWitchWakeAllowedOrigins";
@@ -260,6 +263,70 @@ const handleWakeRequest = async (
 
       const linkResult = await linkAgentWitchAccountFromWakeServer(body);
       sendJson(response, linkResult.ok ? 200 : 400, linkResult, cors.headers);
+      return;
+    }
+
+    if (request.method === "GET" && pathname === "/automations/status") {
+      sendJson(
+        response,
+        200,
+        buildAgentWitchAutomationStatusFromWakeServer(),
+        cors.headers,
+      );
+      return;
+    }
+
+    if (request.method === "POST" && pathname === "/automations/sync") {
+      const chunks: Buffer[] = [];
+      for await (const chunk of request) {
+        chunks.push(Buffer.from(chunk));
+      }
+
+      let body: unknown = {};
+      try {
+        body = JSON.parse(Buffer.concat(chunks).toString("utf8"));
+      } catch {
+        sendJson(
+          response,
+          400,
+          {
+            ok: false,
+            errorMessage: "Invalid JSON body.",
+          },
+          cors.headers,
+        );
+        return;
+      }
+
+      const syncResult = syncAutomationsFromWakeServer(body);
+      sendJson(response, syncResult.ok ? 200 : 400, syncResult, cors.headers);
+      return;
+    }
+
+    if (request.method === "POST" && pathname === "/automations/run") {
+      const chunks: Buffer[] = [];
+      for await (const chunk of request) {
+        chunks.push(Buffer.from(chunk));
+      }
+
+      let body: unknown = {};
+      try {
+        body = JSON.parse(Buffer.concat(chunks).toString("utf8"));
+      } catch {
+        sendJson(
+          response,
+          400,
+          {
+            ok: false,
+            errorMessage: "Invalid JSON body.",
+          },
+          cors.headers,
+        );
+        return;
+      }
+
+      const runResult = await runAutomationFromWakeServer(body);
+      sendJson(response, runResult.ok ? 200 : 503, runResult, cors.headers);
       return;
     }
 

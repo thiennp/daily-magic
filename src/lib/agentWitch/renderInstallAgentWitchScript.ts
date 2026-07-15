@@ -1,3 +1,4 @@
+import { buildAgentWitchAutomationSchedulerInstallScriptUrls } from "@/lib/agentWitch/buildAgentWitchAutomationSchedulerInstallScriptUrls";
 import { buildAgentWitchClientScriptUrl } from "@/lib/agentWitch/buildAgentWitchInstallUrls";
 import { buildAgentWitchWakeInstallScriptUrls } from "@/lib/agentWitch/buildAgentWitchWakeInstallScriptUrls";
 import { buildAgentWitchWatchdogInstallScriptUrls } from "@/lib/agentWitch/buildAgentWitchWatchdogInstallScriptUrls";
@@ -12,6 +13,8 @@ export const renderInstallAgentWitchScript = (origin: string): string => {
   const wakeUrls = buildAgentWitchWakeInstallScriptUrls(origin);
   const watchdogUrls = buildAgentWitchWatchdogInstallScriptUrls(origin);
   const updaterUrls = buildAgentWitchUpdaterInstallScriptUrls(origin);
+  const automationUrls =
+    buildAgentWitchAutomationSchedulerInstallScriptUrls(origin);
   const websocketSupportWarning = buildAgentWitchWebSocketSupportWarning(
     origin,
     wsUrl,
@@ -24,6 +27,26 @@ export const renderInstallAgentWitchScript = (origin: string): string => {
     ...wakeUrls,
     ...watchdogUrls,
     ...updaterUrls,
+    automationSchedulerScriptUrl: automationUrls.automationSchedulerScriptUrl,
+    automationRunnerScriptUrl: automationUrls.automationRunnerScriptUrl,
+    automationHeadlessWriterScriptUrl:
+      automationUrls.automationHeadlessWriterScriptUrl,
+    automationStoreScriptUrl: automationUrls.automationStoreScriptUrl,
+    automationTypesScriptUrl: automationUrls.automationTypesScriptUrl,
+    automationComputeNextScriptUrl:
+      automationUrls.automationComputeNextScriptUrl,
+    automationReadConfigScriptUrl: automationUrls.automationReadConfigScriptUrl,
+    automationApplySyncScriptUrl: automationUrls.automationApplySyncScriptUrl,
+    automationLocalLayoutScriptUrl:
+      automationUrls.automationLocalLayoutScriptUrl,
+    automationWriterCliScriptUrl: automationUrls.automationWriterCliScriptUrl,
+    automationCloudApiScriptUrl: automationUrls.automationCloudApiScriptUrl,
+    automationDeviceAuthScriptUrl: automationUrls.automationDeviceAuthScriptUrl,
+    automationResolveAppOriginScriptUrl:
+      automationUrls.automationResolveAppOriginScriptUrl,
+    automationLaunchAgentRunningScriptUrl:
+      automationUrls.launchAgentRunningScriptUrl,
+    automationKickstartScriptUrl: automationUrls.kickstartScriptUrl,
     websocketSupportWarning,
   });
 };

@@ -1,0 +1,40 @@
+import type { AgentWitchInstallScriptAutomationSchedulerInput } from "@/lib/agentWitch/AgentWitchInstallScriptAutomationSchedulerInput.type";
+
+export const buildAgentWitchInstallScriptAutomationSchedulerDownloads = (
+  input: AgentWitchInstallScriptAutomationSchedulerInput,
+): string => `
+AUTOMATION_SCHEDULER_SCRIPT_URL="${input.automationSchedulerScriptUrl}"
+AUTOMATION_RUNNER_SCRIPT_URL="${input.automationRunnerScriptUrl}"
+AUTOMATION_HEADLESS_WRITER_SCRIPT_URL="${input.automationHeadlessWriterScriptUrl}"
+AUTOMATION_STORE_SCRIPT_URL="${input.automationStoreScriptUrl}"
+AUTOMATION_TYPES_SCRIPT_URL="${input.automationTypesScriptUrl}"
+AUTOMATION_COMPUTE_NEXT_SCRIPT_URL="${input.automationComputeNextScriptUrl}"
+AUTOMATION_READ_CONFIG_SCRIPT_URL="${input.automationReadConfigScriptUrl}"
+AUTOMATION_APPLY_SYNC_SCRIPT_URL="${input.automationApplySyncScriptUrl}"
+AUTOMATION_LOCAL_LAYOUT_SCRIPT_URL="${input.automationLocalLayoutScriptUrl}"
+AUTOMATION_WRITER_CLI_SCRIPT_URL="${input.automationWriterCliScriptUrl}"
+AUTOMATION_CLOUD_API_SCRIPT_URL="${input.automationCloudApiScriptUrl}"
+AUTOMATION_DEVICE_AUTH_SCRIPT_URL="${input.automationDeviceAuthScriptUrl}"
+AUTOMATION_RESOLVE_APP_ORIGIN_SCRIPT_URL="${input.automationResolveAppOriginScriptUrl}"
+AUTOMATION_LAUNCH_AGENT_RUNNING_SCRIPT_URL="${input.launchAgentRunningScriptUrl}"
+AUTOMATION_LAUNCH_AGENT_LABELS_SCRIPT_URL="${input.launchAgentLabelsScriptUrl}"
+AUTOMATION_KICKSTART_SCRIPT_URL="${input.kickstartScriptUrl}"
+
+echo "Downloading Agent Witch automation scheduler…"
+"\${CURL_BIN}" -fsSL "\${AUTOMATION_SCHEDULER_SCRIPT_URL}" -o "\${INSTALL_DIR}/agent-witch-automation-scheduler.ts"
+"\${CURL_BIN}" -fsSL "\${AUTOMATION_RUNNER_SCRIPT_URL}" -o "\${INSTALL_DIR}/agentWitchLocalAutomationRunner.ts"
+"\${CURL_BIN}" -fsSL "\${AUTOMATION_HEADLESS_WRITER_SCRIPT_URL}" -o "\${INSTALL_DIR}/agentWitchHeadlessWriterRun.ts"
+"\${CURL_BIN}" -fsSL "\${AUTOMATION_STORE_SCRIPT_URL}" -o "\${INSTALL_DIR}/agentWitchLocalAutomationStore.ts"
+"\${CURL_BIN}" -fsSL "\${AUTOMATION_TYPES_SCRIPT_URL}" -o "\${INSTALL_DIR}/agentWitchLocalAutomation.types.ts"
+"\${CURL_BIN}" -fsSL "\${AUTOMATION_COMPUTE_NEXT_SCRIPT_URL}" -o "\${INSTALL_DIR}/agentWitchComputeNextScheduleRun.ts"
+"\${CURL_BIN}" -fsSL "\${AUTOMATION_READ_CONFIG_SCRIPT_URL}" -o "\${INSTALL_DIR}/readAgentWitchRunConfig.ts"
+"\${CURL_BIN}" -fsSL "\${AUTOMATION_APPLY_SYNC_SCRIPT_URL}" -o "\${INSTALL_DIR}/applyAutomationSyncLocally.ts"
+"\${CURL_BIN}" -fsSL "\${AUTOMATION_LOCAL_LAYOUT_SCRIPT_URL}" -o "\${INSTALL_DIR}/resolveAgentWitchLocalLayout.ts"
+"\${CURL_BIN}" -fsSL "\${AUTOMATION_WRITER_CLI_SCRIPT_URL}" -o "\${INSTALL_DIR}/buildWriterCliInvocation.ts"
+"\${CURL_BIN}" -fsSL "\${AUTOMATION_CLOUD_API_SCRIPT_URL}" -o "\${INSTALL_DIR}/agentWitchCloudApi.ts"
+"\${CURL_BIN}" -fsSL "\${AUTOMATION_DEVICE_AUTH_SCRIPT_URL}" -o "\${INSTALL_DIR}/agentWitchDeviceAuth.constant.ts"
+"\${CURL_BIN}" -fsSL "\${AUTOMATION_RESOLVE_APP_ORIGIN_SCRIPT_URL}" -o "\${INSTALL_DIR}/resolveAgentWitchAppOriginFromWsUrl.ts"
+"\${CURL_BIN}" -fsSL "\${AUTOMATION_LAUNCH_AGENT_RUNNING_SCRIPT_URL}" -o "\${INSTALL_DIR}/isAgentWitchLaunchAgentRunning.ts"
+"\${CURL_BIN}" -fsSL "\${AUTOMATION_LAUNCH_AGENT_LABELS_SCRIPT_URL}" -o "\${INSTALL_DIR}/agentWitchServiceLaunchAgentLabels.constants.ts"
+"\${CURL_BIN}" -fsSL "\${AUTOMATION_KICKSTART_SCRIPT_URL}" -o "\${INSTALL_DIR}/kickstartAgentWitchLaunchAgent.ts"
+`;

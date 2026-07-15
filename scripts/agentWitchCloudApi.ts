@@ -120,3 +120,30 @@ export const completeAgentRunOnCloud = async (
     return false;
   }
 };
+
+export const reportLocalAutomationRunToCloud = async (
+  config: AgentWitchCloudApiConfig,
+  automationId: string,
+  input: {
+    readonly agentRunId: string;
+    readonly exitCode: number;
+    readonly output: string;
+    readonly prompt: string;
+  },
+): Promise<boolean> => {
+  try {
+    const response = await fetch(
+      `${config.appOrigin}/api/automations/${encodeURIComponent(automationId)}/local-run`,
+      {
+        method: "POST",
+        headers: buildDeviceAuthHeaders(config.pairingToken),
+        body: JSON.stringify(input),
+        signal: AbortSignal.timeout(30_000),
+      },
+    );
+
+    return response.ok;
+  } catch {
+    return false;
+  }
+};

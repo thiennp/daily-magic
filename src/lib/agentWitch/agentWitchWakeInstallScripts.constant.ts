@@ -33,4 +33,13 @@ export const AGENT_WITCH_WAKE_INSTALL_SCRIPT_NAMES = [
   "agentWitchWatchdogReinstallState.ts",
   "verifyAgentWitchReviveAfterKickstart.ts",
   "agentWitchRevive.types.ts",
+  "agent-witch-automation-scheduler.ts",
+  "agentWitchLocalAutomationRunner.ts",
+  "agentWitchHeadlessWriterRun.ts",
+  "agentWitchLocalAutomationStore.ts",
+  "agentWitchLocalAutomation.types.ts",
+  "agentWitchComputeNextScheduleRun.ts",
+  "readAgentWitchRunConfig.ts",
+  "applyAutomationSyncLocally.ts",
+  "buildWriterCliInvocation.ts",
 ] as const;
