@@ -12,7 +12,6 @@ import {
   getHomeMoreShowcases,
   getHomeObjectionsShowcases,
   getHomeTeamsShowcases,
-  SHOWCASE_ARTICLES,
 } from "@/features/showcases/showcaseArticleRegistry";
 
 export default function HomeMarketingShowcases() {
@@ -67,7 +66,7 @@ export default function HomeMarketingShowcases() {
 
       <p className="mt-10 text-center">
         <Link href="/showcases" className={MARKETING_TEXT_LINK_CLASSES}>
-          See all {SHOWCASE_ARTICLES.length} examples →
+          See all
         </Link>
       </p>
 
