@@ -4,18 +4,6 @@ import type { WorkflowCapabilityTemplate } from "@/lib/capabilities/templates/ty
 export const WORKFLOW_CAPABILITY_TEMPLATES_B2: readonly WorkflowCapabilityTemplate[] =
   [
     buildWorkflowTemplate(
-      "customer-reply-draft",
-      "Sales & CS",
-      "Customer reply draft",
-      "Draft a support reply grounded in context and policy.",
-      "Draft a helpful customer reply. Be empathetic, accurate, and actionable.",
-      [
-        ["customerMessage", "Customer message", "textarea"],
-        ["policyContext", "Policy / context", "textarea", false],
-        ["tone", "Tone", "text", false],
-      ],
-    ),
-    buildWorkflowTemplate(
       "incident-postmortem",
       "Engineering",
       "Incident postmortem draft",
@@ -39,19 +27,6 @@ export const WORKFLOW_CAPABILITY_TEMPLATES_B2: readonly WorkflowCapabilityTempla
         ["role", "Role", "text"],
         ["strengths", "Strengths", "textarea"],
         ["concerns", "Concerns", "textarea", false],
-      ],
-    ),
-    buildWorkflowTemplate(
-      "proposal-outline",
-      "Consulting",
-      "Proposal / scope outline",
-      "Turn client goals into a scoped proposal outline.",
-      "Draft a proposal outline with goals, deliverables, assumptions, and timeline.",
-      [
-        ["client", "Client", "text"],
-        ["goal", "Goal", "textarea"],
-        ["constraints", "Constraints", "textarea", false],
-        ["deliverables", "Deliverables", "textarea"],
       ],
     ),
     buildWorkflowTemplate(

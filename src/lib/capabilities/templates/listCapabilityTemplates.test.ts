@@ -8,7 +8,7 @@ import {
 } from "@/lib/capabilities/templates/listCapabilityTemplates";
 
 describe("capability templates catalog", () => {
-  it("ships 31 workflow and 20 agent presets with harness bundles", () => {
+  it("ships 27 workflow and 20 agent presets with harness bundles", () => {
     const summaries = listCapabilityTemplateSummaries();
     const workflows = summaries.filter(
       (template) => template.type === CapabilityType.WORKFLOW,
@@ -17,8 +17,8 @@ describe("capability templates catalog", () => {
       (template) => template.type === CapabilityType.AGENT,
     );
 
-    expect(allCapabilityTemplates).toHaveLength(51);
-    expect(workflows).toHaveLength(31);
+    expect(allCapabilityTemplates).toHaveLength(47);
+    expect(workflows).toHaveLength(27);
     expect(agents).toHaveLength(20);
     expect(summaries[0]?.id).toBe("job-application-pack");
     expect(summaries.every((template) => template.harnessItemCount >= 5)).toBe(

@@ -13,7 +13,7 @@ export default function HomeMarketingFeatures() {
       <MarketingSectionHeader
         eyebrow="Why teams use it"
         title="Simple to follow, easy to trust"
-        description="Everyone can see who sent a task, whether it was approved, and what the computer returned."
+        description="Turn one-off tasks into personal or group automations—everyone can see who ran what, whether it was approved, and what came back."
         headingId="features-heading"
       />
       <div className="mt-10 grid gap-5 sm:grid-cols-3">
@@ -22,7 +22,10 @@ export default function HomeMarketingFeatures() {
         ))}
       </div>
       <p
-        className={mergeMarketingClasses("mt-8 text-sm", MARKETING_TEXT_SECONDARY_CLASSES)}
+        className={mergeMarketingClasses(
+          "mt-8 text-sm",
+          MARKETING_TEXT_SECONDARY_CLASSES,
+        )}
       >
         Ready to try it?{" "}
         <Link href="/#get-started" className={MARKETING_TEXT_LINK_CLASSES}>

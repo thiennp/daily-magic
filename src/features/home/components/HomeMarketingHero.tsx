@@ -18,7 +18,7 @@ export default function HomeMarketingHero() {
       <div className="space-y-8 lg:pt-2">
         <div className="space-y-6">
           <p className="text-sm font-medium uppercase tracking-wider text-zinc-500">
-            AI tasks for teams
+            Personal &amp; team automations
           </p>
           <h1
             className={mergeMarketingClasses(
@@ -26,8 +26,7 @@ export default function HomeMarketingHero() {
               MARKETING_TEXT_PRIMARY_CLASSES,
             )}
           >
-            Send work to your Mac from the browser — with your team&apos;s
-            approval when it matters.
+            Create automations that work for you—and your whole team.
           </h1>
           <p
             className={mergeMarketingClasses(
@@ -35,10 +34,11 @@ export default function HomeMarketingHero() {
               MARKETING_TEXT_SECONDARY_CLASSES,
             )}
           >
-            {AGENT_WITCH_PRODUCT_NAME} connects this website to computers on
-            your team. Ask your own Mac for help, send a task to a colleague,
-            have managers approve sensitive requests, and keep a record of every
-            job.
+            {AGENT_WITCH_PRODUCT_NAME} helps people and companies turn playbooks
+            into jobs that run on Macs: schedule recurring workflows, trigger
+            them with webhooks, and send work to yourself or a colleague. Your
+            group can require manager approval when it matters, and every run
+            stays in history.
           </p>
         </div>
 

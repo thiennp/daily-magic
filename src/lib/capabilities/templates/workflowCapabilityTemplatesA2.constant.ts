@@ -4,30 +4,6 @@ import type { WorkflowCapabilityTemplate } from "@/lib/capabilities/templates/ty
 export const WORKFLOW_CAPABILITY_TEMPLATES_A2: readonly WorkflowCapabilityTemplate[] =
   [
     buildWorkflowTemplate(
-      "email-reply-draft",
-      "Communication",
-      "Email reply draft",
-      "Draft a reply that matches the thread and your intent.",
-      "Draft a professional email reply. Keep it concise and clear.",
-      [
-        ["originalEmail", "Original email", "textarea"],
-        ["tone", "Tone", "text"],
-        ["keyPoints", "Key points to include", "textarea"],
-      ],
-    ),
-    buildWorkflowTemplate(
-      "email-from-bullets",
-      "Communication",
-      "Email from bullets",
-      "Turn bullet points into a send-ready email.",
-      "Turn the bullets into a polished email with greeting and sign-off.",
-      [
-        ["context", "Recipient / context", "text"],
-        ["bullets", "Bullet points", "textarea"],
-        ["tone", "Tone", "text", false],
-      ],
-    ),
-    buildWorkflowTemplate(
       "slack-thread-summary",
       "Communication",
       "Slack thread summary",

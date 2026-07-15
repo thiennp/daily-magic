@@ -40,4 +40,53 @@ export const WORKFLOW_A1_PART2: readonly PresetHarnessSeed[] = [
       outputFormat: "Three labeled sections: Yesterday / Today / Blockers.",
     },
   },
+  {
+    id: "weekly-team-status",
+    name: "Weekly team status",
+    category: "Reporting",
+    description: "Turn highlights and blockers into a polished team update.",
+    exampleRequest:
+      "Write a concise team status update with bullets. Lead with outcomes and call out blockers clearly.",
+    profile: {
+      ruleFocus: [
+        "Lead with shipped outcomes and measurable progress.",
+        "Separate highlights, risks, and asks.",
+        "Name owners on blockers; propose a next step or decision needed.",
+      ],
+      skillSections: [
+        {
+          heading: "Gather",
+          bullets: [
+            "Map weekOf to the reporting period.",
+            "Extract wins from highlights; quantify when possible.",
+            "Turn blockers into owner + impact + ask.",
+          ],
+        },
+        {
+          heading: "Draft",
+          bullets: [
+            "Open with one-line summary of the week.",
+            "Use bullets for highlights and blockers sections.",
+            "End with priorities for next week.",
+          ],
+        },
+      ],
+      commandSteps: [
+        "Confirm weekOf and highlights are present.",
+        "Draft status using the playbook sections.",
+        "Verify every blocker has an owner or explicit TBD.",
+      ],
+      instructionAddendum:
+        "Optimize for managers scanning in under 60 seconds.",
+      subagentMission:
+        "You are the weekly status subagent. Produce leadership-ready team updates from raw highlights and blockers.",
+      subagentExpertise: [
+        "Executive summaries",
+        "Blocker escalation framing",
+        "Outcome-first writing",
+      ],
+      outputFormat:
+        "Bullets grouped by theme; blockers with owner and ask; under 250 words unless user asks for more.",
+    },
+  },
 ];
