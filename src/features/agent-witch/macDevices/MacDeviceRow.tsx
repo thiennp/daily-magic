@@ -11,6 +11,7 @@ interface MacDeviceRowProps {
   readonly deviceId: string;
   readonly displayName: string;
   readonly isOnline: boolean;
+  readonly isConnected?: boolean;
   readonly detailText?: string;
   readonly isSelected?: boolean;
   readonly isWakeServerReachable?: boolean;
@@ -23,6 +24,7 @@ export default function MacDeviceRow({
   deviceId,
   displayName,
   isOnline,
+  isConnected,
   detailText,
   isSelected = false,
   isWakeServerReachable = false,
@@ -37,6 +39,7 @@ export default function MacDeviceRow({
       deviceId={deviceId}
       displayName={displayName}
       isOnline={isOnline}
+      isConnected={isConnected}
       detailText={detailText}
       isEditing={isEditing}
       isSelected={isSelected}

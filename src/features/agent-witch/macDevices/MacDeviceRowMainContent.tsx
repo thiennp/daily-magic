@@ -6,6 +6,7 @@ interface MacDeviceRowMainContentProps {
   readonly deviceId: string;
   readonly displayName: string;
   readonly isOnline: boolean;
+  readonly isConnected?: boolean;
   readonly detailText?: string;
   readonly isEditing: boolean;
   readonly isSelected?: boolean;
@@ -28,6 +29,7 @@ export default function MacDeviceRowMainContent({
   deviceId,
   displayName,
   isOnline,
+  isConnected,
   detailText,
   isEditing,
   isSelected = false,
@@ -48,7 +50,10 @@ export default function MacDeviceRowMainContent({
           onEditingChange={onEditingChange}
           onRenamed={onRenamed}
         />
-        <PairedDeviceOnlineBadge isOnline={isOnline} />
+        <PairedDeviceOnlineBadge
+          isOnline={isOnline}
+          isConnected={isConnected}
+        />
         {detailText ? (
           <p className="text-left text-xs text-gray-500 dark:text-gray-400">
             {detailText}

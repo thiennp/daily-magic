@@ -44,6 +44,8 @@ export default function MarketplaceInstallModal({
     demoPreview === null &&
     selectedDevice?.isConnected === true &&
     status !== "installing";
+  const needsLiveConnection =
+    selectedDevice?.isOnline === true && selectedDevice?.isConnected !== true;
 
   const handleInstall = async (): Promise<void> => {
     if (listing === null || !canInstall) {
@@ -76,6 +78,13 @@ export default function MarketplaceInstallModal({
         isWakeServerReachable={isWakeServerReachable}
         isDemoPreview={demoPreview !== null}
       />
+
+      {needsLiveConnection ? (
+        <p className="mt-4 text-sm text-amber-700 dark:text-amber-300">
+          This Mac checked in recently but does not have a live Agent Witch
+          connection. Open Agent Witch on that Mac, then try Install again.
+        </p>
+      ) : null}
 
       {message ? (
         <p

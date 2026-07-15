@@ -25,7 +25,15 @@ export default function HomeConnectedMacsPanel({
     useHomeConnectedMacs();
   const { localHostname, isWakeServerReachable } = useLocalMacBrowserContext();
   const onlineCount = devices.filter((device) => device.isOnline).length;
+  const connectedCount = devices.filter((device) => device.isConnected).length;
   const hasExistingDevices = devices.length > 0;
+
+  const statusLine =
+    connectedCount > 0
+      ? `${connectedCount} connected${onlineCount > connectedCount ? ` · ${onlineCount - connectedCount} seen recently` : ""} · checks in every ~30s`
+      : onlineCount > 0
+        ? `${onlineCount} seen recently · open Agent Witch for a live connection`
+        : "Connected Macs appear here when Agent Witch is running.";
 
   return (
     <AppPanel padding="compact">
@@ -33,9 +41,7 @@ export default function HomeConnectedMacsPanel({
         Your Devices
       </h2>
       <p className="mt-1 text-xs text-gray-600 dark:text-gray-400">
-        {onlineCount > 0
-          ? `${onlineCount} online · checks in every ~30s`
-          : "Connected Macs appear here when Agent Witch is running."}
+        {statusLine}
       </p>
 
       {isLoading ? (
@@ -61,6 +67,7 @@ export default function HomeConnectedMacsPanel({
               deviceId={device.id}
               displayName={displayNameById.get(device.id) ?? "Your Mac"}
               isOnline={device.isOnline}
+              isConnected={device.isConnected}
               detailText={buildMacDeviceLastSeenText(device) ?? undefined}
               isWakeServerReachable={canWakeMacDeviceFromBrowser({
                 deviceLabel: device.deviceLabel,
