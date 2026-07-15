@@ -33,12 +33,7 @@ if [[ "\$(uname -s)" == "Darwin" ]]; then
   <key>RunAtLoad</key>
   <true/>
   <key>KeepAlive</key>
-  <dict>
-    <key>SuccessfulExit</key>
-    <false/>
-    <key>Crashed</key>
-    <true/>
-  </dict>
+  <true/>
   <key>ThrottleInterval</key>
   <integer>10</integer>
   <key>StandardOutPath</key>
@@ -77,7 +72,7 @@ echo "Config: \${CONFIG_PATH}"
 echo "Local link API: http://127.0.0.1:47892/link-account"
 echo "Pairing token: \${PAIRING_TOKEN}"
 echo "Logs (macOS): \${INSTALL_DIR}/\${LOG_BASENAME}.log"
-echo "The client starts immediately and revives after crashes or disconnects."
+echo "The client starts immediately and relaunches if it stops while your Mac is awake."
 echo "Run another account on this computer with: AGENT_WITCH_PROFILE=other@example.com curl -fsSL <install-url> | bash"
 
 if [[ "\$(uname -s)" == "Darwin" && -z "\${AGENT_WITCH_SKIP_OPEN_HOME:-}" ]]; then
