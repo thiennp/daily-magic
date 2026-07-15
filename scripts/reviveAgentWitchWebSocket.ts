@@ -1,8 +1,15 @@
+import { attemptAgentWitchWatchdogReinstall } from "./attemptAgentWitchWatchdogReinstall";
 import { AGENT_WITCH_CONNECTION_STALE_MS } from "./agentWitchConnectionHealth.constants";
 import {
   isAgentWitchConnectionHealthStale,
   readAgentWitchConnectionHealth,
 } from "./agentWitchConnectionHealth";
+import type {
+  AgentWitchReviveReason,
+  AgentWitchReviveResult,
+  AgentWitchReviveTargetResult,
+  AgentWitchWatchdogTargetStatus,
+} from "./agentWitchRevive.types";
 import { isAgentWitchLaunchAgentRunning } from "./isAgentWitchLaunchAgentRunning";
 import { kickstartAgentWitchLaunchAgent } from "./kickstartAgentWitchLaunchAgent";
 import { listAgentWitchLaunchTargets } from "./listAgentWitchLaunchTargets";
@@ -11,36 +18,18 @@ import {
   resolveAgentWitchLocalLayout,
 } from "./resolveAgentWitchLocalLayout";
 import { spawnAgentWitchClient } from "./spawnAgentWitchClient";
+import { verifyAgentWitchReviveAfterKickstart } from "./verifyAgentWitchReviveAfterKickstart";
 import {
   appendAgentWitchWatchdogLog,
   type AgentWitchWatchdogLogEvent,
 } from "./agentWitchWatchdogLog";
 
-export type AgentWitchReviveReason =
-  "healthy" | "not_running" | "stale_connection";
-
-export interface AgentWitchReviveTargetResult {
-  readonly launchAgentLabel: string;
-  readonly profileEmail: string | null;
-  readonly revived: boolean;
-  readonly reason: AgentWitchReviveReason;
-  readonly errorMessage?: string;
-}
-
-export interface AgentWitchReviveResult {
-  readonly ok: boolean;
-  readonly targets: readonly AgentWitchReviveTargetResult[];
-}
-
-export interface AgentWitchWatchdogTargetStatus {
-  readonly launchAgentLabel: string;
-  readonly profileEmail: string | null;
-  readonly isLaunchAgentRunning: boolean;
-  readonly connectionHealth: ReturnType<typeof readAgentWitchConnectionHealth>;
-  readonly isConnectionStale: boolean;
-  readonly needsRevive: boolean;
-  readonly reason: AgentWitchReviveReason;
-}
+export type {
+  AgentWitchReviveReason,
+  AgentWitchReviveResult,
+  AgentWitchReviveTargetResult,
+  AgentWitchWatchdogTargetStatus,
+} from "./agentWitchRevive.types";
 
 const resolveProfileLayout = (profileEmail: string | null) =>
   profileEmail === null
@@ -104,10 +93,25 @@ export const inspectAgentWitchWebSocketTargets = async (input?: {
 
 const buildWatchdogLogMessage = (
   results: readonly AgentWitchReviveTargetResult[],
+  reinstall?: Pick<
+    AgentWitchReviveResult,
+    "reinstallAttempted" | "reinstallOk" | "reinstallErrorMessage"
+  >,
 ): string => {
   const revived = results.filter((entry) => entry.revived);
   if (revived.length > 0) {
     return `Revived ${revived.map((entry) => entry.launchAgentLabel).join(", ")}`;
+  }
+
+  if (reinstall?.reinstallAttempted === true) {
+    if (reinstall.reinstallOk === true) {
+      return "Reinstalled Agent Witch from install script and retried kickstart.";
+    }
+
+    return (
+      reinstall.reinstallErrorMessage ??
+      "Agent Witch reinstall from install script failed."
+    );
   }
 
   const failures = results.filter(
@@ -125,7 +129,17 @@ const buildWatchdogLogMessage = (
 const resolveWatchdogLogEvent = (
   results: readonly AgentWitchReviveTargetResult[],
   ok: boolean,
+  reinstall?: Pick<
+    AgentWitchReviveResult,
+    "reinstallAttempted" | "reinstallOk"
+  >,
 ): AgentWitchWatchdogLogEvent => {
+  if (reinstall?.reinstallAttempted === true) {
+    return reinstall.reinstallOk === true
+      ? "reinstall_triggered"
+      : "reinstall_failed";
+  }
+
   if (results.some((entry) => entry.revived)) {
     return "revive_triggered";
   }
@@ -135,6 +149,39 @@ const resolveWatchdogLogEvent = (
   }
 
   return "check_complete";
+};
+
+const reviveTarget = async (input: {
+  readonly launchAgentLabel: string;
+  readonly profileEmail: string | null;
+  readonly reason: AgentWitchReviveReason;
+  readonly staleAfterMs: number;
+}): Promise<AgentWitchReviveTargetResult> => {
+  const kickResult = await kickstartAgentWitchLaunchAgent(
+    input.launchAgentLabel,
+  );
+  let revived = kickResult.ok;
+  let errorMessage = kickResult.errorMessage;
+
+  if (revived) {
+    const verified = await verifyAgentWitchReviveAfterKickstart({
+      launchAgentLabel: input.launchAgentLabel,
+      profileEmail: input.profileEmail,
+      staleAfterMs: input.staleAfterMs,
+    });
+    revived = verified;
+    if (!verified) {
+      errorMessage = "Connection still stale after kickstart.";
+    }
+  }
+
+  return {
+    launchAgentLabel: input.launchAgentLabel,
+    profileEmail: input.profileEmail,
+    revived,
+    reason: input.reason,
+    ...(errorMessage !== undefined ? { errorMessage } : {}),
+  };
 };
 
 export const reviveAgentWitchWebSocket = async (input?: {
@@ -163,18 +210,14 @@ export const reviveAgentWitchWebSocket = async (input?: {
       continue;
     }
 
-    const kickResult = await kickstartAgentWitchLaunchAgent(
-      target.launchAgentLabel,
+    results.push(
+      await reviveTarget({
+        launchAgentLabel: target.launchAgentLabel,
+        profileEmail: target.profileEmail,
+        reason,
+        staleAfterMs,
+      }),
     );
-    results.push({
-      launchAgentLabel: target.launchAgentLabel,
-      profileEmail: target.profileEmail,
-      revived: kickResult.ok,
-      reason,
-      ...(kickResult.errorMessage !== undefined
-        ? { errorMessage: kickResult.errorMessage }
-        : {}),
-    });
   }
 
   if (results.length === 0) {
@@ -190,17 +233,48 @@ export const reviveAgentWitchWebSocket = async (input?: {
     });
   }
 
-  const result = {
-    ok: results.some((entry) => entry.revived || entry.reason === "healthy"),
-    targets: results,
+  let reinstallAttempted = false;
+  let reinstallOk = false;
+  let reinstallErrorMessage: string | undefined;
+  let finalTargets = results;
+
+  if (results.some((entry) => entry.reason !== "healthy" && !entry.revived)) {
+    const reinstall = await attemptAgentWitchWatchdogReinstall(results);
+    reinstallAttempted = reinstall.attempted;
+    reinstallOk = reinstall.ok;
+    reinstallErrorMessage = reinstall.errorMessage;
+    finalTargets = [...reinstall.targets];
+  }
+
+  const result: AgentWitchReviveResult = {
+    ok: finalTargets.some(
+      (entry) => entry.revived || entry.reason === "healthy",
+    ),
+    targets: finalTargets,
+    ...(reinstallAttempted
+      ? {
+          reinstallAttempted,
+          reinstallOk,
+          ...(reinstallErrorMessage !== undefined
+            ? { reinstallErrorMessage }
+            : {}),
+        }
+      : {}),
   };
 
   if (input?.skipLog !== true) {
     appendAgentWitchWatchdogLog({
-      event: resolveWatchdogLogEvent(results, result.ok),
+      event: resolveWatchdogLogEvent(finalTargets, result.ok, {
+        reinstallAttempted,
+        reinstallOk,
+      }),
       ok: result.ok,
-      message: buildWatchdogLogMessage(results),
-      targets: results,
+      message: buildWatchdogLogMessage(finalTargets, {
+        reinstallAttempted,
+        reinstallOk,
+        reinstallErrorMessage,
+      }),
+      targets: finalTargets,
     });
   }
 

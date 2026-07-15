@@ -22,4 +22,10 @@ export const AGENT_WITCH_WAKE_INSTALL_SCRIPT_NAMES = [
   "resolveAgentWitchAppOriginFromWsUrl.ts",
   "agentWitchSelfUpdateLog.ts",
   "agentWitchServiceLaunchAgentLabels.constants.ts",
+  "reinstallAgentWitchFromInstallScript.ts",
+  "attemptAgentWitchWatchdogReinstall.ts",
+  "agentWitchWatchdogReinstall.constants.ts",
+  "agentWitchWatchdogReinstallState.ts",
+  "verifyAgentWitchReviveAfterKickstart.ts",
+  "agentWitchRevive.types.ts",
 ] as const;

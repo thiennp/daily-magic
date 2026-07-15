@@ -80,7 +80,7 @@ echo "Logs (macOS): \${INSTALL_DIR}/\${LOG_BASENAME}.log"
 echo "The client starts immediately and revives after crashes or disconnects."
 echo "Run another account on this computer with: AGENT_WITCH_PROFILE=other@example.com curl -fsSL <install-url> | bash"
 
-if [[ "\$(uname -s)" == "Darwin" ]]; then
+if [[ "\$(uname -s)" == "Darwin" && -z "\${AGENT_WITCH_SKIP_OPEN_HOME:-}" ]]; then
   echo "Open Home on this Mac while signed in to link it to your account:"
   echo "  ${input.appOrigin}/"
   if command -v open >/dev/null 2>&1; then

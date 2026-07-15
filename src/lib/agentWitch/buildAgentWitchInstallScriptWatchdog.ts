@@ -91,7 +91,7 @@ if [[ "\$(uname -s)" == "Darwin" ]]; then
 EOF
 
   register_agent_witch_launch_agent "\${WATCHDOG_LAUNCH_AGENT_LABEL}" "\${WATCHDOG_PLIST_PATH}" || true
-  echo "Agent Witch watchdog: checks every 60s and revives stale WebSocket connections."
+  echo "Agent Witch watchdog: checks every 60s, revives stale WebSocket connections, and reinstalls from the install script when revive fails (15 min cooldown)."
   echo "Manual run: \${INSTALL_DIR}/watchdog.sh"
 else
   echo "Linux cron example (every minute):"

@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 vi.mock("./agentWitchWatchdogLog", async (importOriginal) => {
   const actual =
@@ -34,12 +34,31 @@ vi.mock("./spawnAgentWitchClient", () => ({
   spawnAgentWitchClient: vi.fn(),
 }));
 
+vi.mock("./attemptAgentWitchWatchdogReinstall", () => ({
+  attemptAgentWitchWatchdogReinstall: vi.fn(),
+}));
+
+vi.mock("./verifyAgentWitchReviveAfterKickstart", () => ({
+  verifyAgentWitchReviveAfterKickstart: vi.fn(),
+}));
+
 import { readAgentWitchConnectionHealth } from "./agentWitchConnectionHealth";
 import { isAgentWitchLaunchAgentRunning } from "./isAgentWitchLaunchAgentRunning";
 import { kickstartAgentWitchLaunchAgent } from "./kickstartAgentWitchLaunchAgent";
 import { listAgentWitchLaunchTargets } from "./listAgentWitchLaunchTargets";
+import { attemptAgentWitchWatchdogReinstall } from "./attemptAgentWitchWatchdogReinstall";
 import { reviveAgentWitchWebSocket } from "./reviveAgentWitchWebSocket";
 import { spawnAgentWitchClient } from "./spawnAgentWitchClient";
+import { verifyAgentWitchReviveAfterKickstart } from "./verifyAgentWitchReviveAfterKickstart";
+
+beforeEach(() => {
+  vi.mocked(verifyAgentWitchReviveAfterKickstart).mockResolvedValue(true);
+  vi.mocked(attemptAgentWitchWatchdogReinstall).mockResolvedValue({
+    attempted: false,
+    ok: false,
+    targets: [],
+  });
+});
 
 afterEach(() => {
   vi.clearAllMocks();
@@ -125,5 +144,38 @@ describe("reviveAgentWitchWebSocket", () => {
       launchAgentLabel: "direct-spawn",
       revived: true,
     });
+  });
+
+  it("reinstalls from the install script when kickstart cannot restore ws", async () => {
+    vi.mocked(listAgentWitchLaunchTargets).mockReturnValue([
+      {
+        profileEmail: "user@example.com",
+        launchAgentLabel: "com.agent-witch.user-at-example-com",
+      },
+    ]);
+    vi.mocked(isAgentWitchLaunchAgentRunning).mockResolvedValue(false);
+    vi.mocked(kickstartAgentWitchLaunchAgent).mockResolvedValue({
+      ok: false,
+      errorMessage: "kickstart failed",
+    });
+    vi.mocked(attemptAgentWitchWatchdogReinstall).mockResolvedValue({
+      attempted: true,
+      ok: true,
+      targets: [
+        {
+          launchAgentLabel: "com.agent-witch.user-at-example-com",
+          profileEmail: "user@example.com",
+          revived: true,
+          reason: "not_running",
+        },
+      ],
+    });
+
+    const result = await reviveAgentWitchWebSocket({ skipLog: true });
+
+    expect(attemptAgentWitchWatchdogReinstall).toHaveBeenCalled();
+    expect(result.reinstallAttempted).toBe(true);
+    expect(result.reinstallOk).toBe(true);
+    expect(result.targets[0]?.revived).toBe(true);
   });
 });

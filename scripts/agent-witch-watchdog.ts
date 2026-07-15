@@ -1,8 +1,19 @@
 import { reviveAgentWitchWebSocket } from "./reviveAgentWitchWebSocket";
 
 const formatReviveSummary = (
-  targets: Awaited<ReturnType<typeof reviveAgentWitchWebSocket>>["targets"],
+  result: Awaited<ReturnType<typeof reviveAgentWitchWebSocket>>,
 ): string => {
+  if (result.reinstallAttempted === true) {
+    if (result.reinstallOk === true) {
+      return "reinstalled from install script and retried kickstart";
+    }
+
+    return (
+      result.reinstallErrorMessage ?? "reinstall from install script failed"
+    );
+  }
+
+  const targets = result.targets;
   const revived = targets.filter((entry) => entry.revived);
   if (revived.length > 0) {
     return revived.map((entry) => entry.launchAgentLabel).join(", ");
@@ -25,13 +36,13 @@ const main = async (): Promise<void> => {
 
   if (result.ok) {
     process.stdout.write(
-      `[agent-witch-watchdog] ${formatReviveSummary(result.targets)}\n`,
+      `[agent-witch-watchdog] ${formatReviveSummary(result)}\n`,
     );
     return;
   }
 
   process.stderr.write(
-    `[agent-witch-watchdog] revive failed: ${formatReviveSummary(result.targets)}\n`,
+    `[agent-witch-watchdog] revive failed: ${formatReviveSummary(result)}\n`,
   );
   process.exit(1);
 };

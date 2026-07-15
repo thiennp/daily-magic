@@ -2,7 +2,7 @@ import { randomUUID } from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 
-import type { AgentWitchReviveTargetResult } from "./reviveAgentWitchWebSocket";
+import type { AgentWitchReviveTargetResult } from "./agentWitchRevive.types";
 import { resolveAgentWitchInstallDir } from "./resolveAgentWitchLocalLayout";
 
 export const AGENT_WITCH_WATCHDOG_LOG_FILE_NAME = "watchdog-log.ndjson";
@@ -10,7 +10,11 @@ export const AGENT_WITCH_WATCHDOG_LOG_FILE_NAME = "watchdog-log.ndjson";
 export const AGENT_WITCH_WATCHDOG_LOG_MAX_ENTRIES = 200;
 
 export type AgentWitchWatchdogLogEvent =
-  "check_complete" | "revive_triggered" | "revive_failed";
+  | "check_complete"
+  | "revive_triggered"
+  | "revive_failed"
+  | "reinstall_triggered"
+  | "reinstall_failed";
 
 export interface AgentWitchWatchdogLogEntry {
   readonly id: string;

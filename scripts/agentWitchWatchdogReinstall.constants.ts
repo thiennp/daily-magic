@@ -1,0 +1,6 @@
+export const AGENT_WITCH_WATCHDOG_REINSTALL_STATE_FILE_NAME =
+  "watchdog-reinstall-state.json";
+
+export const AGENT_WITCH_WATCHDOG_REINSTALL_COOLDOWN_MS = 15 * 60 * 1000;
+
+export const AGENT_WITCH_REVIVE_VERIFY_DELAY_MS = 3_000;
