@@ -40,11 +40,11 @@ export default function MarketplaceList({
   }
 
   return (
-    <div className="mt-4 space-y-3">
+    <div className="mt-4 grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
       {listings.map((listing) => (
         <article
           key={listing.capabilityId}
-          className={APP_SURFACE_NESTED_CARD_CLASS}
+          className={`flex flex-col ${APP_SURFACE_NESTED_CARD_CLASS}`}
         >
           <p className="text-sm font-medium text-gray-800 dark:text-white/90">
             {listing.name}
@@ -82,7 +82,7 @@ export default function MarketplaceList({
           </p>
           <Button
             variant="primary"
-            className="mt-4 w-full sm:w-auto"
+            className="mt-auto w-full pt-4 md:w-auto md:self-start"
             onClick={() => onInstall(listing)}
           >
             Install
