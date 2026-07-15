@@ -19,11 +19,11 @@ export default function DelegatedWriterAgentField({
       <span className="font-medium text-gray-800 dark:text-white/90">
         Delegate tasks to
       </span>
-      <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
-        {disabled
-          ? "Finish the current Mac session to switch AI."
-          : "Your Mac installs and signs in to this AI the first time you send a task."}
-      </p>
+      {disabled ? (
+        <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+          Finish the current Mac session to switch AI.
+        </p>
+      ) : null}
       <select
         value={writerAgent}
         disabled={disabled}

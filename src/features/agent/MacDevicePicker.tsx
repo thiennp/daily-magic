@@ -68,10 +68,6 @@ export default function MacDevicePicker({
           />
         ))}
       </div>
-      <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
-        Macs check in about every 30 seconds while Agent Witch is running.
-        Offline Macs stay listed but cannot receive tasks.
-      </p>
     </div>
   );
 }
