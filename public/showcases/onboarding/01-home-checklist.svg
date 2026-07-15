@@ -14,7 +14,7 @@
   <text x="76" y="156" font-family="ui-sans-serif, system-ui, sans-serif" font-size="15" font-weight="600" fill="#111827">Get set up</text>
   <g font-family="ui-sans-serif, system-ui, sans-serif" font-size="14" fill="#374151">
     <circle cx="84" cy="200" r="8" fill="#fff" stroke="#9ca3af" stroke-width="2"/>
-    <text x="104" y="205">Connect your Mac</text>
+    <text x="104" y="205">Add your Mac as a worker</text>
     <circle cx="84" cy="248" r="8" fill="#fff" stroke="#9ca3af" stroke-width="2"/>
     <text x="104" y="253">Create your first workflow or agent</text>
     <circle cx="84" cy="296" r="8" fill="#fff" stroke="#9ca3af" stroke-width="2"/>

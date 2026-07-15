@@ -1,4 +1,5 @@
 import MarketingStatusBadge from "@/features/marketing/MarketingStatusBadge";
+import { MAC_WORKER_BENEFIT_COPY } from "@/lib/copy/macWorkerBenefitCopy.constant";
 import { MARKETING_MOCK_SHELL_CLASSES } from "@/features/marketing/marketingPalette.constant";
 
 const PREVIEW_FLOW_STEPS = [
@@ -33,7 +34,7 @@ export default function MarketingProductPreview() {
           <div className="flex items-center justify-between gap-3">
             <p className="text-xs font-medium text-zinc-400">New task</p>
             <MarketingStatusBadge tone="success" onDark>
-              Mac connected
+              {MAC_WORKER_BENEFIT_COPY.macReadyBadge}
             </MarketingStatusBadge>
           </div>
 

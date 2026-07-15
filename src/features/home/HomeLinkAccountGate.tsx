@@ -4,6 +4,7 @@ import { useCallback, type ReactNode } from "react";
 
 import AppHero from "@/components/surfaces/AppHero";
 import HomeConnectComputerGuide from "@/features/home/HomeConnectComputerGuide";
+import { MAC_WORKER_BENEFIT_COPY } from "@/lib/copy/macWorkerBenefitCopy.constant";
 import HomeConnectedMacsPanel from "@/features/home/HomeConnectedMacsPanel";
 import {
   HOME_DASHBOARD_GRID_CLASS,
@@ -79,7 +80,7 @@ function HomeLinkAccountGateContent({
         <main className={HOME_MAIN_COLUMN_CLASS}>
           <AppHero variant="plain">
             <p className="text-sm text-gray-500 dark:text-gray-400">
-              Checking your computer connection…
+              {MAC_WORKER_BENEFIT_COPY.checkingMacReady}
             </p>
           </AppHero>
         </main>

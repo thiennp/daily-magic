@@ -1,3 +1,5 @@
+import { MAC_WORKER_BENEFIT_COPY } from "@/lib/copy/macWorkerBenefitCopy.constant";
+
 export type ConnectInstallConnectionTone = "waiting" | "connecting" | "error";
 
 export interface ConnectInstallConnectionStatus {
@@ -28,11 +30,11 @@ export const buildConnectInstallConnectionStatus = (input: {
   }
 
   if (input.installEngaged && input.isLinking) {
-    return { message: "Connecting to your Mac…", tone: "connecting" };
+    return { message: MAC_WORKER_BENEFIT_COPY.linkingMac, tone: "connecting" };
   }
 
   if (input.installEngaged) {
-    return { message: "Waiting for your Mac to connect…", tone: "waiting" };
+    return { message: MAC_WORKER_BENEFIT_COPY.waitingForMac, tone: "waiting" };
   }
 
   return null;

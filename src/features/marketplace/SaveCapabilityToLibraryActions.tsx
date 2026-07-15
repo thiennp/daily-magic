@@ -6,6 +6,7 @@ import { saveCapabilityTemplateToLibrary } from "@/features/capabilities/utils/c
 import forkCapabilityToLibrary from "@/features/harness/hooks/forkCapabilityToLibrary";
 import Button from "@/components/ui/button/Button";
 import { parsePresetMarketplaceTemplateId } from "@/lib/marketplace/presetMarketplaceCapabilityId";
+import { MAC_WORKER_BENEFIT_COPY } from "@/lib/copy/macWorkerBenefitCopy.constant";
 
 type SaveStatus = "idle" | "saving" | "saved" | "error";
 
@@ -49,9 +50,9 @@ export default function SaveCapabilityToLibraryActions({
       setSavedName(null);
       setMessage(
         result.harnessInstalled
-          ? "Saved to your library. Rules bundle install requested on your Mac."
+          ? MAC_WORKER_BENEFIT_COPY.savedInstallRequested
           : (result.harnessInstallMessage ??
-              "Saved to your library. Connect Agent Witch on your Mac to install the rules bundle."),
+              MAC_WORKER_BENEFIT_COPY.savedSetupMacForRules),
       );
       return;
     }
@@ -87,7 +88,7 @@ export default function SaveCapabilityToLibraryActions({
       </Button>
       <p className="text-xs text-gray-500 dark:text-gray-400">
         {isOfficialPreset
-          ? "Adds this starter to your library and installs rules on your Mac when connected."
+          ? MAC_WORKER_BENEFIT_COPY.officialPresetHelper
           : `Copies the prompt from ${sourceOwnerLabel}. Use Install for the rules bundle.`}
       </p>
       {savedName ? (

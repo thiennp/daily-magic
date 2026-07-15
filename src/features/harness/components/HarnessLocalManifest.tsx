@@ -1,6 +1,7 @@
 "use client";
 
 import type HarnessManifest from "@/lib/agentWitch/harness/types/HarnessManifest.type";
+import { MAC_WORKER_BENEFIT_COPY } from "@/lib/copy/macWorkerBenefitCopy.constant";
 import { useHomeSetupEmbedded } from "@/features/home/HomeSetupEmbeddedContext";
 import resolveHomeSetupNestedBoxClass from "@/features/home/resolveHomeSetupNestedBoxClass";
 
@@ -40,8 +41,7 @@ export default function HarnessLocalManifest({
         </>
       ) : (
         <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
-          Nothing synced from your Mac yet. Connect your Mac, then refresh from
-          here.
+          {MAC_WORKER_BENEFIT_COPY.setupMacToSeeLocalRules}
         </p>
       )}
     </div>

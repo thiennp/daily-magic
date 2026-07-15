@@ -2,6 +2,7 @@
 
 import Button from "@/components/ui/button/Button";
 import { APP_SURFACE_NESTED_CARD_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
+import { MAC_WORKER_BENEFIT_COPY } from "@/lib/copy/macWorkerBenefitCopy.constant";
 
 export interface HarnessCatalogItem {
   readonly ownerUserId: string;
@@ -37,8 +38,7 @@ export default function HarnessCatalogList({
   if (entries.length === 0) {
     return (
       <p className="mt-4 text-sm text-gray-500 dark:text-gray-400">
-        No shared setups available yet. Teammates must set sharing to group or
-        public and have a connected Mac online.
+        {MAC_WORKER_BENEFIT_COPY.sharedSetupsNeedMac}
       </p>
     );
   }

@@ -9,6 +9,7 @@ import {
   APP_SURFACE_CTA_SECONDARY_CLASS,
   APP_SURFACE_EYEBROW_TEXT_CLASS,
 } from "@/components/surfaces/appSurfaceStyles.constant";
+import { MAC_WORKER_BENEFIT_COPY } from "@/lib/copy/macWorkerBenefitCopy.constant";
 
 export default function SurfacesSection() {
   return (
@@ -52,7 +53,7 @@ export default function SurfacesSection() {
       <AppHero variant="brand">
         <p className={APP_SURFACE_EYEBROW_TEXT_CLASS}>AppHero brand</p>
         <h3 className="mt-2 text-2xl font-semibold text-gray-900 dark:text-white/90">
-          Connect your Mac
+          {MAC_WORKER_BENEFIT_COPY.setupTitle}
         </h3>
         <p className={`mt-2 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
           Install and pairing flows use the plain hero on white — zinc accents,

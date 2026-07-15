@@ -4,7 +4,7 @@ const onboardIn15Minutes: ShowcaseArticle = {
   slug: "onboard-in-15-minutes",
   title: "Onboard in 15 minutes — real screens, sample data",
   subtitle:
-    "Sign in, connect a Mac, run the seeded weekly status workflow, open Job history. No fake product tour.",
+    "Sign in, set up your Mac to run jobs, run the seeded weekly status workflow, open Job history. No fake product tour.",
   category: "Start here",
   supportLevel: "full",
   readMinutes: 5,
@@ -24,20 +24,20 @@ const onboardIn15Minutes: ShowcaseArticle = {
       heading: "1. Sign in",
       bullets: [
         "Open /login — use Google or email",
-        "What you should see: Home with an onboarding checklist (Connect Mac → Create workflow → Send first task)",
+        "What you should see: Home with an onboarding checklist (Add Mac as worker → Create workflow → Send first task)",
       ],
       image: {
         src: "/showcases/onboarding/01-home-checklist.svg",
         alt: "Sample Home onboarding checklist before a Mac is connected",
         caption:
-          "Sample UI: checklist with Connect your Mac still open. Capture your live Home after sign-in for the wiki.",
+          "Sample UI: checklist with Add your Mac as a worker still open. Capture your live Home after sign-in for the wiki.",
       },
     },
     {
-      heading: "2. Connect your Mac",
+      heading: "2. Set up your Mac to run workflows",
       bullets: [
         "Home → Your setup — copy the install command and run it on the Mac",
-        "What you should see: Your Devices lists the Mac as connected",
+        "What you should see: Your Devices lists the Mac as ready to run jobs",
         "If send stays disabled later, the Mac is offline or the browser is not connected — that is expected",
       ],
       image: {
@@ -86,7 +86,7 @@ const onboardIn15Minutes: ShowcaseArticle = {
     {
       heading: "Done when",
       paragraphs: [
-        "Checklist shows Connect Mac and Send first task complete, Library still has the sample (or your renamed copy), and Job history shows one completed run. That is enough trust proof before inviting teammates.",
+        "Checklist shows Mac worker setup and Send first task complete, Library still has the sample (or your renamed copy), and Job history shows one completed run. That is enough trust proof before inviting teammates.",
       ],
     },
   ],

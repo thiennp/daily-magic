@@ -2,6 +2,7 @@ import { Suspense } from "react";
 
 import AgentWitchLogo from "@/components/branding/AgentWitchLogo";
 import LoginForm from "@/features/auth/LoginForm";
+import { LOGIN_PAGE_COPY } from "@/features/auth/loginPageCopy.constant";
 import MarketingCard from "@/features/marketing/MarketingCard";
 import MarketingShell from "@/features/marketing/MarketingShell";
 import MarketingTrustStrip from "@/features/marketing/MarketingTrustStrip";
@@ -13,11 +14,10 @@ export default function LoginPage() {
         <div>
           <AgentWitchLogo />
           <h1 className="mt-3 text-3xl font-semibold tracking-tight text-gray-900 sm:text-4xl">
-            Sign in to connect your Mac
+            {LOGIN_PAGE_COPY.title}
           </h1>
           <p className="mt-4 text-base text-gray-600">
-            Use this website to send tasks to your computer, work with your
-            team, and read a clear history of every job.
+            {LOGIN_PAGE_COPY.description}
           </p>
           <div className="mt-8">
             <MarketingTrustStrip />

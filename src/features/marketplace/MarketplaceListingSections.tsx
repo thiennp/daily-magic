@@ -4,6 +4,7 @@ import {
   APP_SURFACE_BODY_TEXT_CLASS,
   APP_SURFACE_SECTION_TITLE_CLASS,
 } from "@/components/surfaces/appSurfaceStyles.constant";
+import { MAC_WORKER_BENEFIT_COPY } from "@/lib/copy/macWorkerBenefitCopy.constant";
 import MarketplaceList from "@/features/marketplace/MarketplaceList";
 import type HarnessMarketplaceListing from "@/lib/harness/types/HarnessMarketplaceListing.type";
 
@@ -27,7 +28,7 @@ export default function MarketplaceListingSections({
       <section>
         <h2 className={APP_SURFACE_SECTION_TITLE_CLASS}>Free starters</h2>
         <p className={`mt-2 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
-          Free agents and workflows you can install on your Mac.
+          {MAC_WORKER_BENEFIT_COPY.freeStartersDescription}
         </p>
         <MarketplaceList
           listings={officialListings}

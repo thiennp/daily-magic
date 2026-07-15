@@ -10,6 +10,7 @@ import {
 } from "@/features/harness/fetchHarnessCatalogStatus";
 import { useHomeSetupEmbedded } from "@/features/home/HomeSetupEmbeddedContext";
 import resolveHomeSetupNestedBoxClass from "@/features/home/resolveHomeSetupNestedBoxClass";
+import { MAC_WORKER_BENEFIT_COPY } from "@/lib/copy/macWorkerBenefitCopy.constant";
 
 const CATALOG_PUBLISH_BOX_CLASS =
   "mt-4 rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-white/[0.04]";
@@ -73,7 +74,7 @@ export default function HarnessCatalogPublishPanel() {
       </div>
       {!status?.isAgentOnline ? (
         <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
-          Connect your Mac before publishing.
+          {MAC_WORKER_BENEFIT_COPY.setupMacOnHomeBeforePublish}
         </p>
       ) : null}
       {message ? (

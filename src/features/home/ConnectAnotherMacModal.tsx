@@ -4,6 +4,8 @@ import { Modal } from "@/components/ui/modal";
 import { APP_SURFACE_BODY_TEXT_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
 import AgentWitchUnsupportedHostNotice from "@/features/home/AgentWitchUnsupportedHostNotice";
 import CopyableBashCommand from "@/features/home/CopyableBashCommand";
+import { resolveConnectAnotherMacLabel } from "@/features/home/utils/resolveConnectAnotherMacLabel";
+import { MAC_WORKER_BENEFIT_COPY } from "@/lib/copy/macWorkerBenefitCopy.constant";
 
 interface ConnectAnotherMacModalProps {
   readonly isOpen: boolean;
@@ -24,10 +26,10 @@ export default function ConnectAnotherMacModal({
   onClose,
   onInstallEngaged,
 }: ConnectAnotherMacModalProps) {
-  const title = hasExistingDevices ? "Connect another Mac" : "Connect a Mac";
+  const title = resolveConnectAnotherMacLabel(hasExistingDevices);
   const intro = hasExistingDevices
-    ? "On the Mac you want to add, open Terminal, paste this command, and press Return."
-    : "On the Mac you want to connect, open Terminal, paste this command, and press Return.";
+    ? MAC_WORKER_BENEFIT_COPY.setupAnotherModalIntro
+    : MAC_WORKER_BENEFIT_COPY.setupModalIntro;
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} className="max-w-lg p-6">

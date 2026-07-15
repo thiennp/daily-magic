@@ -1,6 +1,7 @@
 "use client";
 
 import Button from "@/components/ui/button/Button";
+import { MAC_WORKER_BENEFIT_COPY } from "@/lib/copy/macWorkerBenefitCopy.constant";
 
 interface BorrowHarnessImportActionsProps {
   readonly isOnline: boolean;
@@ -39,8 +40,8 @@ export default function BorrowHarnessImportActions({
       {!canInstall ? (
         <p className="text-xs text-gray-500 dark:text-gray-400">
           {isOfficialPreset
-            ? "Connect Agent Witch on your Mac to install this rules bundle."
-            : "Owner must be online with a connected Mac to export files."}
+            ? MAC_WORKER_BENEFIT_COPY.runAgentWitchToInstallBundle
+            : MAC_WORKER_BENEFIT_COPY.teammateNeedsMacOnline}
         </p>
       ) : null}
       {importMessage ? (

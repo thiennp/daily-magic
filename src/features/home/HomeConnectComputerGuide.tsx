@@ -16,6 +16,7 @@ import {
   buildConnectInstallConnectionStatus,
   buildConnectInstallConnectionStatusClassName,
 } from "@/features/home/utils/buildConnectInstallConnectionStatus";
+import { MAC_WORKER_BENEFIT_COPY } from "@/lib/copy/macWorkerBenefitCopy.constant";
 import detectBrowserOperatingSystem from "@/features/home/utils/detectBrowserOperatingSystem";
 
 interface HomeConnectComputerGuideProps {
@@ -73,14 +74,14 @@ export default function HomeConnectComputerGuide({
 
   return (
     <AppHero variant="plain">
-      <p className={APP_SURFACE_EYEBROW_TEXT_CLASS}>Connect your computer</p>
+      <p className={APP_SURFACE_EYEBROW_TEXT_CLASS}>
+        {MAC_WORKER_BENEFIT_COPY.setupEyebrow}
+      </p>
       <h1 className="mt-3 text-balance text-3xl font-semibold tracking-tight text-gray-900 dark:text-white/90">
-        Link this account to your Mac
+        {MAC_WORKER_BENEFIT_COPY.setupTitle}
       </h1>
       <p className={`mt-3 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
-        Run install once on your Mac. This browser links to Agent Witch on that
-        Mac for whichever account you are signed in with — no email in the
-        install command, and no reinstall when you switch users.
+        {MAC_WORKER_BENEFIT_COPY.setupDescription}
       </p>
 
       {!isWebSocketSupported ? (

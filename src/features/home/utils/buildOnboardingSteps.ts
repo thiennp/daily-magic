@@ -1,4 +1,5 @@
 import buildAgentComposerHref from "@/lib/library/buildAgentComposerHref";
+import { MAC_WORKER_BENEFIT_COPY } from "@/lib/copy/macWorkerBenefitCopy.constant";
 
 export type OnboardingStep = {
   readonly id: string;
@@ -20,7 +21,7 @@ export const buildOnboardingSteps = (
 ): readonly OnboardingStep[] => [
   {
     id: "pair",
-    label: "Connect your Mac",
+    label: MAC_WORKER_BENEFIT_COPY.onboardingChecklistLabel,
     done: input.hasPairedDevice,
     href: "/#your-setup",
   },

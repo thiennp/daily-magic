@@ -7,6 +7,7 @@ import {
   APP_SURFACE_PANEL_CLASS,
 } from "@/components/surfaces/appSurfaceStyles.constant";
 import { CapabilityType } from "@/lib/capabilities/CapabilityType.constant";
+import { MAC_WORKER_BENEFIT_COPY } from "@/lib/copy/macWorkerBenefitCopy.constant";
 import type HarnessMarketplaceListing from "@/lib/harness/types/HarnessMarketplaceListing.type";
 
 const TYPE_LABEL_MAP: Record<HarnessMarketplaceListing["type"], string> = {
@@ -33,7 +34,7 @@ const formatListingMetadata = (listing: HarnessMarketplaceListing): string => {
       listing.harnessItemCount !== null
         ? `${listing.harnessItemCount} rules · `
         : "";
-    return `${ruleCount}installs on your Mac`;
+    return `${ruleCount}rules · ${MAC_WORKER_BENEFIT_COPY.runsOnMacMeta}`;
   }
 
   const owner = listing.ownerName ?? listing.ownerEmail;

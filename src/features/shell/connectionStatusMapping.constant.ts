@@ -1,4 +1,5 @@
 import type { WsTestConnectionStatus } from "@/features/agent/types/WsTestConnectionStatus.type";
+import { MAC_WORKER_BENEFIT_COPY } from "@/lib/copy/macWorkerBenefitCopy.constant";
 
 export type StatusBadgeTone =
   "success" | "warning" | "error" | "neutral" | "info";
@@ -26,10 +27,10 @@ export const PAIRING_STATUS_DISPLAY: Record<
   PairingStatusKey,
   StatusBadgeDisplay
 > = {
-  not_connected: { label: "Not connected", tone: "neutral" },
+  not_connected: { label: "No Mac ready yet", tone: "neutral" },
   ready_to_pair: { label: "Waiting for your Mac", tone: "warning" },
-  paired: { label: "Connected", tone: "success" },
-  pairing_failed: { label: "Could not connect Mac", tone: "error" },
+  paired: { label: "Mac ready", tone: "success" },
+  pairing_failed: { label: MAC_WORKER_BENEFIT_COPY.setupFailed, tone: "error" },
 };
 
 export const STATUS_BADGE_COLORS: Record<

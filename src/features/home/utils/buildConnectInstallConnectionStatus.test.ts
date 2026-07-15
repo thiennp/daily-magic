@@ -31,7 +31,7 @@ describe("buildConnectInstallConnectionStatus", () => {
         linkError: null,
       }),
     ).toEqual({
-      message: "Waiting for your Mac to connect…",
+      message: "Waiting for your Mac to get ready…",
       tone: "waiting",
     });
   });

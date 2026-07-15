@@ -4,6 +4,7 @@ import { sendBorrowedHarnessExportRequest } from "@/features/harness/hooks/utils
 import { sendHarnessPayloadOverSocket } from "@/features/harness/hooks/utils/sendHarnessPayloadOverSocket";
 import type { AgentPairingStatus } from "@/features/harness/hooks/types/HarnessRequestResult.type";
 import type { BorrowImportStatus } from "@/features/harness/hooks/types/BorrowImportStatus.type";
+import { MAC_WORKER_BENEFIT_COPY } from "@/lib/copy/macWorkerBenefitCopy.constant";
 import buildHarnessCreateSetPrompt from "@/lib/agentWitch/harness/buildHarnessCreateSetPrompt";
 import buildHarnessWriteItemsPrompt from "@/lib/agentWitch/harness/buildHarnessWriteItemsPrompt";
 import sanitizeHarnessSlug from "@/lib/agentWitch/harness/sanitizeHarnessSlug";
@@ -92,7 +93,7 @@ export const createHarnessSocketActions = (input: {
     if (socket === null || socket.readyState !== WebSocket.OPEN) {
       input.setBorrowImportStatus("error");
       input.setBorrowImportMessage(
-        "Connect your Mac before installing bundles.",
+        MAC_WORKER_BENEFIT_COPY.setupMacOnHomeBeforeBundles,
       );
       return;
     }
