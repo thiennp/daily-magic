@@ -82,7 +82,7 @@ export default function MarketplaceList({
           </p>
           <Button
             variant="primary"
-            className="mt-4 w-full"
+            className="mt-4 w-full sm:w-auto"
             onClick={() => onInstall(listing)}
           >
             Install
