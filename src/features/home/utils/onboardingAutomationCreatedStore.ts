@@ -1,4 +1,5 @@
 import { persistOnboardingAutomationCreated } from "@/features/home/utils/onboardingAutomationCreatedApi";
+import { notifyOnboardingAutomationCreatedUpdated } from "@/features/home/utils/onboardingAutomationCreatedEvents";
 
 const STORAGE_KEY = "daily-magic.onboarding.automation-created.v1";
 
@@ -16,6 +17,7 @@ export const writeOnboardingAutomationCreatedLocal = (): void => {
   }
 
   window.localStorage.setItem(STORAGE_KEY, "true");
+  notifyOnboardingAutomationCreatedUpdated();
 };
 
 export const markOnboardingAutomationCreated = (): void => {

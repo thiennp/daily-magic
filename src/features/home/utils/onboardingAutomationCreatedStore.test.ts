@@ -5,6 +5,7 @@ import {
   readOnboardingAutomationCreated,
   writeOnboardingAutomationCreatedLocal,
 } from "@/features/home/utils/onboardingAutomationCreatedStore";
+import { ONBOARDING_AUTOMATION_CREATED_UPDATED_EVENT } from "@/features/home/utils/onboardingAutomationCreatedEvents";
 import { mockBrowserLocalStorage } from "@/test/mockBrowserLocalStorage";
 
 const persistMock = vi.hoisted(() => vi.fn());
@@ -30,9 +31,21 @@ describe("onboardingAutomationCreatedStore", () => {
   });
 
   it("writes local flag without posting when syncing from DB", () => {
+    const listener = vi.fn();
+    window.addEventListener(
+      ONBOARDING_AUTOMATION_CREATED_UPDATED_EVENT,
+      listener,
+    );
+
     writeOnboardingAutomationCreatedLocal();
 
     expect(readOnboardingAutomationCreated()).toBe(true);
     expect(persistMock).not.toHaveBeenCalled();
+    expect(listener).toHaveBeenCalledTimes(1);
+
+    window.removeEventListener(
+      ONBOARDING_AUTOMATION_CREATED_UPDATED_EVENT,
+      listener,
+    );
   });
 });

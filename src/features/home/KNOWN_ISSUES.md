@@ -64,7 +64,7 @@ Document every production bug or UX regression here. Each entry must link to a t
 
 ## Adding issues
 
-Use the next ID (`HOME-009`, …). Include symptom, root cause, fix paths, and test file.
+Use the next ID (`HOME-010`, …). Include symptom, root cause, fix paths, and test file.
 
 ---
 
@@ -101,3 +101,15 @@ Use the next ID (`HOME-009`, …). Include symptom, root cause, fix paths, and t
 **Fix:** Persist `users.onboarding_automation_created` via `GET`/`POST /api/onboarding/automation-created`. Client mirrors `daily-magic.onboarding.automation-created.v1` in localStorage; `loadOnboardingSteps` merges DB flag with automations list. Marking fires on successful automation create (client + API).
 
 **Regression test:** `onboardingAutomationCreatedQueries.test.ts`, `onboardingAutomationCreatedApi.test.ts`, `onboardingAutomationCreatedStore.test.ts`, `syncOnboardingAutomationCreatedFlag.test.ts`, `hasUserCreatedAutomation.test.ts`.
+
+---
+
+## HOME-009 — Automate onboarding step stale on home tab
+
+**Symptom:** Home checklist still showed “Schedule a workflow (optional)” incomplete after creating an automation in another tab or returning from `/automations`, until a full page reload.
+
+**Root cause:** `OnboardingStepsProvider` only loaded steps on mount; no focus/visibility/custom-event refresh for the optional automate step (unlike first-task step).
+
+**Fix:** `useOnboardingAutomateStepRefresh` reloads steps on window focus, tab visibility, and `ONBOARDING_AUTOMATION_CREATED_UPDATED_EVENT` (dispatched when the automation-created local flag is written).
+
+**Regression test:** `onboardingAutomationCreatedStore.test.ts`, `isAutomateOnboardingStepDone.test.ts`.

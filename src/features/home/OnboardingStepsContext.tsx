@@ -11,12 +11,14 @@ import {
 } from "react";
 
 import { useOptionalPairedDeviceContext } from "@/features/home/PairedDeviceContext";
+import useOnboardingAutomateStepRefresh from "@/features/home/hooks/useOnboardingAutomateStepRefresh";
 import useOnboardingPairStepSync from "@/features/home/hooks/useOnboardingPairStepSync";
 import useOnboardingTaskStepRefresh from "@/features/home/hooks/useOnboardingTaskStepRefresh";
 import {
   loadOnboardingSteps,
   type OnboardingStep,
 } from "@/features/home/loadOnboardingSteps";
+import isAutomateOnboardingStepDone from "@/features/home/utils/isAutomateOnboardingStepDone";
 import isConnectMacOnboardingStepDone from "@/features/home/utils/isConnectMacOnboardingStepDone";
 import isTaskOnboardingStepDone from "@/features/home/utils/isTaskOnboardingStepDone";
 import isWorkflowOnboardingStep from "@/features/home/utils/isWorkflowOnboardingStep";
@@ -76,6 +78,10 @@ export function OnboardingStepsProvider({
   });
   useOnboardingTaskStepRefresh({
     isTaskStepDone: isTaskOnboardingStepDone(steps),
+    reloadSteps,
+  });
+  useOnboardingAutomateStepRefresh({
+    isAutomateStepDone: isAutomateOnboardingStepDone(steps),
     reloadSteps,
   });
 
