@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import buildAgentWitchDevicesWithOnlineStatus from "@/lib/agentWitch/buildAgentWitchDevicesWithOnlineStatus";
+import { onlineClientsByDeviceId } from "@/lib/agentWitch/buildAgentWitchDevicesWithOnlineStatus.testHelper";
 import type AgentWitchDeviceRecord from "@/lib/agentWitch/types/AgentWitchDeviceRecord.type";
 import type AgentWitchHubClient from "@/lib/agentWitch/types/AgentWitchHubClient.type";
 
@@ -34,7 +35,7 @@ describe("buildAgentWitchDevicesWithOnlineStatus", () => {
   it("marks devices online when a matching agent client is connected", () => {
     const result = buildAgentWitchDevicesWithOnlineStatus(
       [baseDevice()],
-      [onlineClient()],
+      onlineClientsByDeviceId([onlineClient()]),
     );
 
     expect(result).toEqual([
@@ -51,7 +52,7 @@ describe("buildAgentWitchDevicesWithOnlineStatus", () => {
   it("marks devices offline when no hub client and last seen is stale", () => {
     const result = buildAgentWitchDevicesWithOnlineStatus(
       [baseDevice({ lastSeenAt: "2020-01-01T00:00:00.000Z" })],
-      [],
+      onlineClientsByDeviceId([]),
     );
 
     expect(result[0]).toMatchObject({
@@ -63,15 +64,17 @@ describe("buildAgentWitchDevicesWithOnlineStatus", () => {
     });
   });
 
-  it("marks devices online from a recent heartbeat in the database", () => {
+  it("marks devices as seen recently but not connected from a fresh heartbeat alone", () => {
+    const lastSeenAt = new Date().toISOString();
     const result = buildAgentWitchDevicesWithOnlineStatus(
-      [baseDevice({ lastSeenAt: new Date().toISOString() })],
-      [],
+      [baseDevice({ lastSeenAt })],
+      onlineClientsByDeviceId([]),
     );
 
     expect(result[0]).toMatchObject({
-      isConnected: true,
+      isConnected: false,
       isOnline: true,
+      lastHeartbeatAt: lastSeenAt,
     });
   });
 
@@ -79,7 +82,7 @@ describe("buildAgentWitchDevicesWithOnlineStatus", () => {
     const lastSeenAt = new Date(Date.now() - 60_000).toISOString();
     const result = buildAgentWitchDevicesWithOnlineStatus(
       [baseDevice({ lastSeenAt })],
-      [],
+      onlineClientsByDeviceId([]),
     );
 
     expect(result[0]).toMatchObject({
@@ -96,7 +99,9 @@ describe("buildAgentWitchDevicesWithOnlineStatus", () => {
           deviceLabel: "Studio-MacBook",
         }),
       ],
-      [onlineClient({ deviceLabel: "Studio-MacBook.local" })],
+      onlineClientsByDeviceId([
+        onlineClient({ deviceLabel: "Studio-MacBook.local" }),
+      ]),
     );
 
     expect(result[0]).toMatchObject({

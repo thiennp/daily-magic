@@ -21,16 +21,10 @@ export interface AgentWitchDeviceWithOnlineStatus {
 
 const buildAgentWitchDevicesWithOnlineStatus = (
   devices: readonly AgentWitchDeviceRecord[],
-  onlineClients: readonly AgentWitchHubClient[],
+  onlineClientByDeviceId: ReadonlyMap<string, AgentWitchHubClient>,
 ): readonly AgentWitchDeviceWithOnlineStatus[] => {
-  const onlineByDeviceId = new Map(
-    onlineClients.flatMap((client) =>
-      client.deviceId === undefined ? [] : [[client.deviceId, client] as const],
-    ),
-  );
-
   return devices.map((device) => {
-    const onlineClient = onlineByDeviceId.get(device.id);
+    const onlineClient = onlineClientByDeviceId.get(device.id);
     const nowMs = Date.now();
     const isHubConnected = onlineClient !== undefined;
     const isActivelyCheckingIn =
@@ -40,7 +34,7 @@ const buildAgentWitchDevicesWithOnlineStatus = (
         nowMs,
         AGENT_WITCH_ACTIVE_THRESHOLD_MS,
       );
-    const isConnected = isHubConnected || isActivelyCheckingIn;
+    const isConnected = isHubConnected;
     const isOnline =
       isConnected || isAgentWitchDeviceRecentlySeen(device.lastSeenAt, nowMs);
 

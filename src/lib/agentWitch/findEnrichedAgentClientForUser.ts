@@ -21,7 +21,7 @@ const resolveAgentClientByDeviceToken = async (
     toClientMap(clients),
     userId,
   )) {
-    if (client.deviceId !== undefined || client.pairingToken === undefined) {
+    if (client.pairingToken === undefined) {
       continue;
     }
 

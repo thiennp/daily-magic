@@ -5,6 +5,7 @@ import { getAgentWitchHub } from "@/lib/agentWitch/getAgentWitchHub";
 import { listAgentWitchDevicesForUser } from "@/lib/agentWitch/listAgentWitchDevicesForUser";
 import { buildMockDevicesApiResponse } from "@/lib/agentWitch/mock/buildMockDevicesApiResponse";
 import { readAgentWitchMockScenario } from "@/lib/agentWitch/mock/readAgentWitchMockScenario";
+import { resolveOnlineClientsByDeviceId } from "@/lib/agentWitch/resolveOnlineClientsByDeviceId";
 import { requireAuth } from "@/lib/auth/requireAuth";
 
 export const dynamic = "force-dynamic";
@@ -37,9 +38,11 @@ export async function GET(): Promise<Response> {
     const onlineClients = enrichedClients.filter(
       (client) => client.userId === actor.id,
     );
+    const onlineClientByDeviceId =
+      await resolveOnlineClientsByDeviceId(onlineClients);
     const devicesWithStatus = buildAgentWitchDevicesWithOnlineStatus(
       devices,
-      onlineClients,
+      onlineClientByDeviceId,
     );
 
     return Response.json({
