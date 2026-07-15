@@ -32,7 +32,9 @@ const Button: React.FC<ButtonProps> = ({
     primary: [
       "bg-zinc-900 text-white shadow-sm",
       "hover:bg-zinc-800",
+      "dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-100",
       "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-900/40 focus-visible:ring-offset-2",
+      "dark:focus-visible:ring-white/40 dark:focus-visible:ring-offset-gray-900",
       "disabled:cursor-not-allowed disabled:opacity-50",
     ].join(" "),
     outline: [

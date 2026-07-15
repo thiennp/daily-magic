@@ -64,7 +64,7 @@ export default function MacDeviceNameEditor({
             setDraftName(event.target.value);
           }}
           onClick={stopRowSelection}
-          className="h-8 min-w-0 flex-1 rounded-md border border-gray-300 bg-white px-2 text-sm text-gray-800 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90"
+          className="h-8 min-w-0 flex-1 rounded-md border border-gray-300 bg-white px-2 text-sm text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-white/90"
           maxLength={80}
           autoFocus
         />

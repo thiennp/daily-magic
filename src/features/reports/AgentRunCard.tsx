@@ -31,7 +31,7 @@ export default function AgentRunCard({ run }: AgentRunCardProps) {
       <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
         Policy: {run.dispatchPolicy}
       </p>
-      <pre className="mt-3 max-h-32 overflow-auto rounded-lg bg-gray-50 p-3 text-xs text-gray-700 dark:bg-gray-900 dark:text-gray-300">
+      <pre className="mt-3 max-h-32 overflow-auto rounded-lg bg-gray-50 p-3 text-xs text-gray-700 dark:bg-gray-800 dark:text-gray-300">
         {run.prompt}
       </pre>
       <div className="mt-4 flex flex-wrap items-center gap-3">

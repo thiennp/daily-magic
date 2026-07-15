@@ -13,7 +13,7 @@ export default function MultiSelectOptionsList({
 }: MultiSelectOptionsListProps) {
   return (
     <div
-      className="absolute left-0 z-40 w-full overflow-y-auto bg-white rounded-lg shadow-sm top-full max-h-select dark:bg-gray-900"
+      className="absolute left-0 z-40 w-full overflow-y-auto bg-white rounded-lg shadow-sm top-full max-h-select dark:bg-gray-800"
       onClick={(event) => event.stopPropagation()}
     >
       <div className="flex flex-col">

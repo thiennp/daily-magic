@@ -34,7 +34,7 @@ export default function AgentLiveTerminalInputForm({
             setResponse(event.target.value);
           }}
           rows={3}
-          className="mt-2 w-full rounded-lg border border-gray-200 px-3 py-2 font-mono text-sm dark:border-gray-700 dark:bg-gray-900"
+          className="mt-2 w-full rounded-lg border border-gray-200 px-3 py-2 font-mono text-sm dark:border-gray-700 dark:bg-gray-800"
         />
       </label>
       <div className="mt-3 flex flex-wrap justify-end gap-3">

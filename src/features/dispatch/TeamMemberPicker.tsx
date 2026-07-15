@@ -40,7 +40,7 @@ export default function TeamMemberPicker({
               className={`flex w-full items-center justify-between gap-2 rounded-lg px-3 py-2 text-left text-sm transition ${
                 isSelected
                   ? "bg-brand-50 text-brand-700 dark:bg-brand-950/30 dark:text-brand-300"
-                  : "hover:bg-gray-50 dark:hover:bg-gray-900"
+                  : "hover:bg-gray-50 dark:hover:bg-white/5"
               }`}
             >
               <span>{member.name ?? member.email}</span>

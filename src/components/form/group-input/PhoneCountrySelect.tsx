@@ -46,7 +46,7 @@ export default function PhoneCountrySelect({
           <option
             key={country.code}
             value={country.code}
-            className="text-gray-700 dark:bg-gray-900 dark:text-gray-400"
+            className="text-gray-700 dark:bg-gray-800 dark:text-gray-400"
           >
             {country.code}
           </option>

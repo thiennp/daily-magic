@@ -23,7 +23,7 @@ export default function ConnectInstallPasteModal({
         aria-hidden="true"
       />
       <div
-        className="relative w-full max-w-md rounded-3xl bg-white p-6 shadow-theme-sm dark:bg-gray-900"
+        className="relative w-full max-w-md rounded-3xl bg-white p-6 shadow-theme-sm dark:bg-gray-800"
         role="dialog"
         aria-modal="true"
         aria-labelledby="connect-install-paste-modal-title"

@@ -43,7 +43,7 @@ export default function FeedbackImprovementDraft({
           setSuggestion(event.target.value);
         }}
         rows={3}
-        className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-900"
+        className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-800"
       />
       <button
         type="button"

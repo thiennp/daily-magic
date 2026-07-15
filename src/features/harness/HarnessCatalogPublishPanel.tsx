@@ -12,7 +12,7 @@ import { useHomeSetupEmbedded } from "@/features/home/HomeSetupEmbeddedContext";
 import resolveHomeSetupNestedBoxClass from "@/features/home/resolveHomeSetupNestedBoxClass";
 
 const CATALOG_PUBLISH_BOX_CLASS =
-  "mt-4 rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-900/40";
+  "mt-4 rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-white/[0.04]";
 
 export default function HarnessCatalogPublishPanel() {
   const embedded = useHomeSetupEmbedded();

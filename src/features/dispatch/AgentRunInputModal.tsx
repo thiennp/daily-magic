@@ -37,7 +37,7 @@ export default function AgentRunInputModal({
         {request.question}
       </p>
       {request.partialOutput.length > 0 ? (
-        <pre className="mt-3 max-h-32 overflow-auto rounded-lg bg-gray-50 p-3 text-xs text-gray-700 dark:bg-gray-900 dark:text-gray-300">
+        <pre className="mt-3 max-h-32 overflow-auto rounded-lg bg-gray-50 p-3 text-xs text-gray-700 dark:bg-gray-800 dark:text-gray-300">
           {request.partialOutput}
         </pre>
       ) : null}
@@ -49,7 +49,7 @@ export default function AgentRunInputModal({
             setResponse(event.target.value);
           }}
           rows={4}
-          className="mt-2 w-full rounded-lg border border-gray-200 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-900"
+          className="mt-2 w-full rounded-lg border border-gray-200 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-800"
         />
       </label>
       <div className="mt-6 flex flex-wrap justify-end gap-3">

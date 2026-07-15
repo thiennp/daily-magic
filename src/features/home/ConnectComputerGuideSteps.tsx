@@ -3,6 +3,7 @@
 import {
   APP_SURFACE_BODY_TEXT_CLASS,
   APP_SURFACE_NESTED_CARD_CLASS,
+  APP_SURFACE_STEP_BADGE_CLASS,
 } from "@/components/surfaces/appSurfaceStyles.constant";
 import CopyableBashCommand from "@/features/home/CopyableBashCommand";
 import buildConnectComputerGuideSteps, {
@@ -32,7 +33,7 @@ export default function ConnectComputerGuideSteps({
           key={step.title}
           className={`flex gap-4 ${APP_SURFACE_NESTED_CARD_CLASS}`}
         >
-          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-zinc-900 text-sm font-semibold text-white">
+          <span className={`h-8 w-8 ${APP_SURFACE_STEP_BADGE_CLASS}`}>
             {index + 1}
           </span>
           <div className="min-w-0 flex-1">

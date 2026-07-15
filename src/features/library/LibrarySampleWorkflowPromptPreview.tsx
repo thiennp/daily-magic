@@ -26,7 +26,7 @@ const LibrarySampleWorkflowPromptPreview = ({
         Each question below becomes a line under Inputs. Use Run on your Mac to
         open Agent, or edit the questions here first.
       </p>
-      <pre className="mt-3 overflow-x-auto whitespace-pre-wrap rounded-lg border border-gray-200 bg-gray-50 p-3 font-mono text-xs text-gray-800 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100">
+      <pre className="mt-3 overflow-x-auto whitespace-pre-wrap rounded-lg border border-gray-200 bg-gray-50 p-3 font-mono text-xs text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100">
         {prompt}
       </pre>
     </div>

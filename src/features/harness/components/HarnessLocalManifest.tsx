@@ -5,7 +5,7 @@ import { useHomeSetupEmbedded } from "@/features/home/HomeSetupEmbeddedContext";
 import resolveHomeSetupNestedBoxClass from "@/features/home/resolveHomeSetupNestedBoxClass";
 
 const MANIFEST_PRE_BOX_CLASS =
-  "mt-3 max-h-80 overflow-auto rounded-lg bg-gray-50 p-4 text-xs text-gray-700 dark:bg-gray-900 dark:text-gray-300";
+  "mt-3 max-h-80 overflow-auto rounded-lg bg-gray-50 p-4 text-xs text-gray-700 dark:bg-gray-800 dark:text-gray-300";
 
 interface HarnessLocalManifestProps {
   readonly localManifest: HarnessManifest | null;

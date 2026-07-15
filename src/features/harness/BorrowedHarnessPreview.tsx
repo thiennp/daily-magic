@@ -14,7 +14,7 @@ export default function BorrowedHarnessPreview({
       <p className="text-sm font-medium text-gray-800 dark:text-white/90">
         Borrowed from {ownerEmail} ({hostname})
       </p>
-      <pre className="mt-3 max-h-64 overflow-auto rounded-lg bg-white p-3 text-xs text-gray-700 dark:bg-gray-900 dark:text-gray-300">
+      <pre className="mt-3 max-h-64 overflow-auto rounded-lg bg-white p-3 text-xs text-gray-700 dark:bg-gray-800 dark:text-gray-300">
         {JSON.stringify(manifest, null, 2)}
       </pre>
     </div>

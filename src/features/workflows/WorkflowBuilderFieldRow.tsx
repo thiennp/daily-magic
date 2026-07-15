@@ -24,7 +24,7 @@ interface WorkflowBuilderFieldRowProps {
 }
 
 const inputClass =
-  "h-11 w-full rounded-lg border border-gray-300 bg-transparent px-3 text-sm shadow-theme-xs focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900";
+  "h-11 w-full rounded-lg border border-gray-300 bg-transparent px-3 text-sm shadow-theme-xs focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-800";
 
 export default function WorkflowBuilderFieldRow({
   field,
@@ -34,7 +34,7 @@ export default function WorkflowBuilderFieldRow({
   onRemove,
 }: WorkflowBuilderFieldRowProps) {
   return (
-    <div className="rounded-xl border border-gray-200 bg-gray-50/80 p-4 dark:border-gray-700 dark:bg-gray-900/40">
+    <div className="rounded-xl border border-gray-200 bg-gray-50/80 p-4 dark:border-gray-700 dark:bg-white/[0.04]">
       <div className="flex items-center justify-between gap-2">
         <p className="text-sm font-medium text-gray-800 dark:text-white/90">
           {resolveWorkflowFieldRowTitle(field.label, index)}

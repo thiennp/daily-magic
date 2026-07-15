@@ -8,7 +8,7 @@ import resolveHomeSetupNestedBoxClass from "@/features/home/resolveHomeSetupNest
 import type { EffectiveDispatchPolicyBreakdown } from "@/lib/dispatch/buildEffectiveDispatchPolicyBreakdown";
 
 const POLICY_PREVIEW_BOX_CLASS =
-  "mt-4 rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-900/40";
+  "mt-4 rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-white/[0.04]";
 
 interface DispatchPolicyPreviewProps {
   readonly deviceId: string;

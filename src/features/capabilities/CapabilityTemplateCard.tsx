@@ -29,7 +29,7 @@ export default function CapabilityTemplateCard({
       className={`rounded-xl border p-4 ${
         isSelected
           ? "border-brand-300 bg-brand-50/40 dark:border-brand-800 dark:bg-brand-950/20"
-          : "border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900/40"
+          : "border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.04]"
       }`}
     >
       <div className="flex flex-wrap items-center gap-2">

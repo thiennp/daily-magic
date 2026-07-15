@@ -91,7 +91,7 @@ export default function ConnectedClientsList({
     <AppPanel
       as="section"
       padding="compact"
-      className="bg-gray-50 text-left dark:border-gray-700 dark:bg-gray-900/50"
+      className="bg-gray-50 text-left dark:border-gray-700 dark:bg-white/[0.05]"
     >
       <div className="flex items-center justify-between gap-3">
         <h2 className="text-sm font-semibold text-gray-800 dark:text-white/90">

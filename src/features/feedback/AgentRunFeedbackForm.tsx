@@ -71,7 +71,7 @@ export default function AgentRunFeedbackForm({
             const value = event.target.value;
             setRating(value.length > 0 ? Number(value) : null);
           }}
-          className="mt-2 w-full rounded-lg border border-gray-200 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-900"
+          className="mt-2 w-full rounded-lg border border-gray-200 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-800"
         >
           <option value="">No rating</option>
           {[5, 4, 3, 2, 1].map((value) => (
@@ -89,7 +89,7 @@ export default function AgentRunFeedbackForm({
             setComment(event.target.value);
           }}
           rows={4}
-          className="mt-2 w-full rounded-lg border border-gray-200 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-900"
+          className="mt-2 w-full rounded-lg border border-gray-200 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-800"
           placeholder="What worked well or should improve next time?"
         />
       </label>

@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { APP_SURFACE_STEP_BADGE_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
 import MarketingCard from "@/features/marketing/MarketingCard";
 import { MARKETING_TEXT_LINK_CLASSES } from "@/features/marketing/marketingInteractiveClasses.constant";
 import {
@@ -48,7 +49,9 @@ export default function HomeMarketingSteps() {
               key={step.title}
               className="group space-y-3 rounded-xl p-2 transition duration-200 hover:bg-slate-50/80"
             >
-              <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-zinc-900 text-sm font-semibold text-white shadow-sm transition duration-200 group-hover:scale-105">
+              <span
+                className={`h-9 w-9 shadow-sm transition duration-200 group-hover:scale-105 ${APP_SURFACE_STEP_BADGE_CLASS}`}
+              >
                 {index + 1}
               </span>
               <p

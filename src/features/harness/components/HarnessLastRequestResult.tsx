@@ -6,7 +6,7 @@ import { useHomeSetupEmbedded } from "@/features/home/HomeSetupEmbeddedContext";
 import resolveHomeSetupNestedBoxClass from "@/features/home/resolveHomeSetupNestedBoxClass";
 
 const LAST_REQUEST_BOX_CLASS =
-  "mt-6 rounded-lg bg-gray-50 p-4 text-sm dark:bg-gray-900/60";
+  "mt-6 rounded-lg bg-gray-50 p-4 text-sm dark:bg-white/[0.06]";
 
 interface HarnessLastRequestResultProps {
   readonly result: HarnessRequestResult;

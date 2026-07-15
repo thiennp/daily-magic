@@ -57,7 +57,7 @@ export default function TeamDispatchFields({
             onChange={(event) => {
               onGroupChange(event.target.value);
             }}
-            className="mt-2 w-full rounded-lg border border-gray-200 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-900"
+            className="mt-2 w-full rounded-lg border border-gray-200 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-800"
           >
             <option value="">My Mac (self)</option>
             {groups.map((group) => (

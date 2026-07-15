@@ -53,7 +53,7 @@ export default function AgentRunDetailContent({
       <h2 className="mt-6 text-sm font-medium text-gray-800 dark:text-white/90">
         Prompt
       </h2>
-      <pre className="mt-2 max-h-64 overflow-auto rounded-lg bg-gray-50 p-3 text-xs text-gray-700 dark:bg-gray-900 dark:text-gray-300">
+      <pre className="mt-2 max-h-64 overflow-auto rounded-lg bg-gray-50 p-3 text-xs text-gray-700 dark:bg-gray-800 dark:text-gray-300">
         {run.prompt}
       </pre>
       {run.status === AgentRunStatus.RUNNING ? (
@@ -64,7 +64,7 @@ export default function AgentRunDetailContent({
           <h2 className="mt-6 text-sm font-medium text-gray-800 dark:text-white/90">
             Result
           </h2>
-          <pre className="mt-2 max-h-96 overflow-auto rounded-lg bg-gray-50 p-3 text-xs text-gray-700 dark:bg-gray-900 dark:text-gray-300">
+          <pre className="mt-2 max-h-96 overflow-auto rounded-lg bg-gray-50 p-3 text-xs text-gray-700 dark:bg-gray-800 dark:text-gray-300">
             {run.resultOutput}
           </pre>
         </>

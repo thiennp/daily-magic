@@ -17,7 +17,7 @@ export default function AppShellBottomNav() {
   return (
     <nav
       aria-label="Mobile"
-      className="fixed inset-x-0 bottom-0 z-50 border-t border-gray-200 bg-white/95 backdrop-blur md:hidden dark:border-gray-800 dark:bg-gray-900/95"
+      className="fixed inset-x-0 bottom-0 z-50 border-t border-gray-200 bg-white/95 backdrop-blur md:hidden dark:border-gray-800 dark:bg-gray-800/95"
     >
       <ul className="mx-auto grid max-w-lg grid-cols-5">
         {BOTTOM_NAV.map((item) => {

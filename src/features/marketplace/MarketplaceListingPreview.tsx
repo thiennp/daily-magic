@@ -39,7 +39,7 @@ export default function MarketplaceListingPreview({
   return (
     <div className="mt-6 rounded-xl border border-brand-200 bg-brand-50/40 p-4 dark:border-brand-900/40 dark:bg-brand-950/20">
       <div className="flex flex-wrap items-center gap-2">
-        <span className="rounded-full bg-white px-2 py-0.5 text-xs font-medium text-brand-700 dark:bg-gray-900 dark:text-brand-300">
+        <span className="rounded-full bg-white px-2 py-0.5 text-xs font-medium text-brand-700 dark:bg-gray-800 dark:text-brand-300">
           {TYPE_LABEL_MAP[type]}
         </span>
         <p className="text-sm font-medium text-gray-800 dark:text-white/90">

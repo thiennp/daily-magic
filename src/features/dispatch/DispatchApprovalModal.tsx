@@ -31,7 +31,7 @@ export default function DispatchApprovalModal({
         {request.requesterEmail} wants to run a task on your machine. You can
         approve in the browser; your Mac also gets a notification.
       </p>
-      <pre className="mt-4 max-h-40 overflow-auto rounded-lg bg-gray-50 p-3 text-xs text-gray-700 dark:bg-gray-900 dark:text-gray-300">
+      <pre className="mt-4 max-h-40 overflow-auto rounded-lg bg-gray-50 p-3 text-xs text-gray-700 dark:bg-gray-800 dark:text-gray-300">
         {request.prompt}
       </pre>
       <div className="mt-6 flex flex-wrap justify-end gap-3">

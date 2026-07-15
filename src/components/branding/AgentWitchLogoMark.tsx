@@ -3,7 +3,7 @@ interface AgentWitchLogoMarkProps {
 }
 
 export default function AgentWitchLogoMark({
-  className = "h-7 w-7 text-zinc-900",
+  className = "h-7 w-7 text-zinc-900 dark:text-zinc-100",
 }: AgentWitchLogoMarkProps) {
   return (
     <svg

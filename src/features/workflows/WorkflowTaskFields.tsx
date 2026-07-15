@@ -33,7 +33,7 @@ export default function WorkflowTaskFields({
                 onChange(field.key, event.target.value);
               }}
               rows={4}
-              className="mt-2 w-full rounded-lg border border-gray-200 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-900"
+              className="mt-2 w-full rounded-lg border border-gray-200 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-800"
             />
           ) : (
             <input
@@ -42,7 +42,7 @@ export default function WorkflowTaskFields({
               onChange={(event) => {
                 onChange(field.key, event.target.value);
               }}
-              className="mt-2 w-full rounded-lg border border-gray-200 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-900"
+              className="mt-2 w-full rounded-lg border border-gray-200 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-800"
             />
           )}
         </label>

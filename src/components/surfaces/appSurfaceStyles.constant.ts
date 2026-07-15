@@ -21,7 +21,10 @@ export const APP_SURFACE_HERO_PLAIN_CLASS =
   "rounded-3xl border border-gray-200 bg-white p-8 dark:border-gray-800 dark:bg-white/[0.03]";
 
 export const APP_SURFACE_TERMINAL_PRE_CLASS =
-  "overflow-x-auto rounded-lg border border-gray-200 bg-gray-50 p-3 text-left font-mono text-xs text-gray-800 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100";
+  "overflow-x-auto rounded-lg border border-gray-200 bg-gray-50 p-3 text-left font-mono text-xs text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100";
+
+export const APP_SURFACE_STEP_BADGE_CLASS =
+  "flex shrink-0 items-center justify-center rounded-full bg-zinc-900 text-sm font-semibold text-white dark:bg-white dark:text-zinc-900";
 
 export const APP_SURFACE_BASH_TERMINAL_PRE_CLASS =
   "overflow-x-auto rounded-lg border border-zinc-700 bg-zinc-900 p-3 text-left font-mono text-xs text-white";
@@ -47,11 +50,21 @@ export const APP_SURFACE_SECTION_TITLE_CLASS =
 export const APP_SURFACE_BODY_TEXT_CLASS =
   "text-sm text-gray-600 dark:text-gray-400";
 
-export const APP_SURFACE_CTA_PRIMARY_CLASS =
-  "inline-flex h-11 items-center justify-center rounded-lg bg-zinc-900 px-5 text-sm font-medium text-white shadow-sm transition hover:bg-zinc-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-900/40 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50";
+const APP_SURFACE_CTA_PRIMARY_DARK_MODE_CLASS =
+  "dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-100 dark:focus-visible:ring-white/40 dark:focus-visible:ring-offset-gray-900";
 
-export const APP_SURFACE_CTA_PRIMARY_SM_CLASS =
-  "inline-flex items-center justify-center rounded-lg bg-zinc-900 px-3 py-1.5 text-xs font-medium text-white shadow-sm transition hover:bg-zinc-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-900/40 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50";
+export const APP_SURFACE_CTA_PRIMARY_CLASS = [
+  "inline-flex h-11 items-center justify-center rounded-lg bg-zinc-900 px-5 text-sm font-medium text-white shadow-sm transition hover:bg-zinc-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-900/40 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+  APP_SURFACE_CTA_PRIMARY_DARK_MODE_CLASS,
+].join(" ");
+
+export const APP_SURFACE_CTA_PRIMARY_SM_CLASS = [
+  "inline-flex items-center justify-center rounded-lg bg-zinc-900 px-3 py-1.5 text-xs font-medium text-white shadow-sm transition hover:bg-zinc-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-900/40 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+  APP_SURFACE_CTA_PRIMARY_DARK_MODE_CLASS,
+].join(" ");
+
+export const APP_SURFACE_FIELD_CLASS =
+  "w-full rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm text-gray-800 shadow-theme-xs outline-none transition focus:border-brand-300 focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-800 dark:text-white/90";
 
 export const APP_SURFACE_CTA_SECONDARY_CLASS =
   "inline-flex h-10 items-center justify-center rounded-lg bg-white px-4 text-sm font-medium text-zinc-900 shadow-sm ring-1 ring-inset ring-zinc-200 transition hover:bg-zinc-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400/40 focus-visible:ring-offset-2 dark:bg-gray-800 dark:text-gray-200 dark:ring-gray-700 dark:hover:bg-white/[0.03]";

@@ -58,7 +58,7 @@ export default function WsTestTaskInputsSection({
             onPromptChange(event.target.value);
           }}
           rows={4}
-          className="mt-2 w-full rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm dark:border-gray-700 dark:bg-gray-900"
+          className="mt-2 w-full rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm dark:border-gray-700 dark:bg-gray-800"
         />
         {workflowValidationErrors.length > 0 ? (
           <ul className="mt-3 space-y-1 text-sm text-rose-600 dark:text-rose-400">
@@ -87,7 +87,7 @@ export default function WsTestTaskInputsSection({
         }}
         rows={8}
         placeholder="Describe what you want done on the computer…"
-        className="w-full rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm text-gray-800 shadow-theme-xs outline-none transition focus:border-brand-300 focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90"
+        className="w-full rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm text-gray-800 shadow-theme-xs outline-none transition focus:border-brand-300 focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-800 dark:text-white/90"
       />
     </>
   );
