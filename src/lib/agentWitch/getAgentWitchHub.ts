@@ -1,28 +1,39 @@
 import { AgentWitchHub } from "./agentWitchHub";
 import { AgentWitchPairingStore } from "./agentWitchPairingStore";
 
-const pairingStoreHolder: { value?: AgentWitchPairingStore } = {};
-const hubHolder: { value?: AgentWitchHub } = {};
+/**
+ * Process-wide holders so `server.ts` (WebSocket upgrade) and Next.js API route
+ * bundles share one hub. Module-scoped vars are not enough: Next compiles routes
+ * into a separate graph that would otherwise create an empty second hub while
+ * Mac heartbeats still update `last_seen_at` → UI shows “Seen recently”.
+ */
+const agentWitchGlobal = globalThis as typeof globalThis & {
+  __dailyMagicAgentWitchPairingStore?: AgentWitchPairingStore;
+  __dailyMagicAgentWitchHub?: AgentWitchHub;
+};
 
 export const getAgentWitchPairingStore = (): AgentWitchPairingStore => {
-  if (pairingStoreHolder.value === undefined) {
-    pairingStoreHolder.value = new AgentWitchPairingStore({
-      persistToDatabase: process.env.NODE_ENV !== "test",
-    });
+  if (agentWitchGlobal.__dailyMagicAgentWitchPairingStore === undefined) {
+    agentWitchGlobal.__dailyMagicAgentWitchPairingStore =
+      new AgentWitchPairingStore({
+        persistToDatabase: process.env.NODE_ENV !== "test",
+      });
   }
 
-  return pairingStoreHolder.value;
+  return agentWitchGlobal.__dailyMagicAgentWitchPairingStore;
 };
 
 export const getAgentWitchHub = (): AgentWitchHub => {
-  if (hubHolder.value === undefined) {
-    hubHolder.value = new AgentWitchHub(getAgentWitchPairingStore());
+  if (agentWitchGlobal.__dailyMagicAgentWitchHub === undefined) {
+    agentWitchGlobal.__dailyMagicAgentWitchHub = new AgentWitchHub(
+      getAgentWitchPairingStore(),
+    );
   }
 
-  return hubHolder.value;
+  return agentWitchGlobal.__dailyMagicAgentWitchHub;
 };
 
 export const resetAgentWitchHubForTests = (): void => {
-  hubHolder.value = undefined;
-  pairingStoreHolder.value = undefined;
+  agentWitchGlobal.__dailyMagicAgentWitchHub = undefined;
+  agentWitchGlobal.__dailyMagicAgentWitchPairingStore = undefined;
 };

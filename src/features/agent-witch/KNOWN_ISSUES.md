@@ -21,3 +21,15 @@
 **Fix:** `isConnected` requires a hub socket (via `resolveOnlineClientsByDeviceId`). `findEnrichedAgentClientForUser` matches agents by pairing token even when hub metadata has a stale `deviceId`.
 
 **Regression tests:** `findEnrichedAgentClientForUser.test.ts`, `resolveOnlineClientsByDeviceId.test.ts`, `buildAgentWitchDevicesWithOnlineStatus.test.ts` (AGENT-002).
+
+---
+
+## AGENT-003 — Mac showed “Seen recently” while Agent Witch WebSocket was healthy
+
+**Symptom:** Home / Mac list showed amber “Seen recently” even though the local Agent Witch watchdog reported a healthy live WebSocket to the same host.
+
+**Root cause:** `getAgentWitchHub()` kept the hub in a module-scoped variable. `server.ts` (WebSocket upgrade) and Next.js API route bundles load separate module graphs, so each held a different hub instance. Heartbeats on the WS hub still updated `last_seen_at` in the database (→ `isOnline`), while `/api/agent-witch/devices` read an empty hub (→ `isConnected: false` → “Seen recently”).
+
+**Fix:** Store the pairing store and hub on `globalThis` in `getAgentWitchHub.ts` so one process shares one hub across the custom server and App Router handlers.
+
+**Regression tests:** `getAgentWitchHub.test.ts` (AGENT-003).
