@@ -8,7 +8,7 @@ import {
 } from "@/lib/capabilities/templates/listCapabilityTemplates";
 
 describe("capability templates catalog", () => {
-  it("ships 23 workflow and 20 agent presets with harness bundles", () => {
+  it("ships 25 workflow and 20 agent presets with harness bundles", () => {
     const summaries = listCapabilityTemplateSummaries();
     const workflows = summaries.filter(
       (template) => template.type === CapabilityType.WORKFLOW,
@@ -17,10 +17,10 @@ describe("capability templates catalog", () => {
       (template) => template.type === CapabilityType.AGENT,
     );
 
-    expect(allCapabilityTemplates).toHaveLength(43);
-    expect(workflows).toHaveLength(23);
+    expect(allCapabilityTemplates).toHaveLength(45);
+    expect(workflows).toHaveLength(25);
     expect(agents).toHaveLength(20);
-    expect(summaries[0]?.id).toBe("finance-sheet-qa");
+    expect(summaries[0]?.id).toBe("dropship-product-listing");
     expect(summaries.every((template) => template.harnessItemCount >= 5)).toBe(
       true,
     );
@@ -40,6 +40,8 @@ describe("capability templates catalog", () => {
   });
 
   it("uses enriched harness with subagent per preset", () => {
+    const dropship = findCapabilityTemplateById("dropship-product-listing");
+    const tiktok = findCapabilityTemplateById("tiktok-series-episode");
     const facebook = findCapabilityTemplateById("facebook-page-post");
     const email = findCapabilityTemplateById("email-inbox-reply");
     const finance = findCapabilityTemplateById("finance-sheet-qa");
@@ -48,6 +50,12 @@ describe("capability templates catalog", () => {
       (item) => item.kind === "agent",
     );
 
+    expect(
+      dropship?.harness.items.filter((item) => item.kind === "operator"),
+    ).toHaveLength(3);
+    expect(
+      tiktok?.harness.items.filter((item) => item.kind === "operator"),
+    ).toHaveLength(3);
     expect(
       facebook?.harness.items.filter((item) => item.kind === "operator"),
     ).toHaveLength(3);

@@ -2,8 +2,12 @@ import type { PresetHarnessSeed } from "@/lib/capabilities/templates/harnessProf
 import { EMAIL_INBOX_REPLY_PRESET } from "@/lib/capabilities/templates/harnessProfiles/workflowA1.emailInboxReply";
 import { FACEBOOK_PAGE_POST_PRESET } from "@/lib/capabilities/templates/harnessProfiles/workflowA1.facebookPagePost";
 import { FINANCE_SHEET_QA_PRESET } from "@/lib/capabilities/templates/harnessProfiles/workflowA1.financeSheetQa";
+import { DROPSHIP_PRODUCT_LISTING_PRESET } from "@/lib/capabilities/templates/harnessProfiles/workflowA1.dropshipProductListing";
+import { TIKTOK_SERIES_EPISODE_PRESET } from "@/lib/capabilities/templates/harnessProfiles/workflowA1.tiktokSeriesEpisode";
 
 export const WORKFLOW_A1_PART1: readonly PresetHarnessSeed[] = [
+  DROPSHIP_PRODUCT_LISTING_PRESET,
+  TIKTOK_SERIES_EPISODE_PRESET,
   FINANCE_SHEET_QA_PRESET,
   EMAIL_INBOX_REPLY_PRESET,
   FACEBOOK_PAGE_POST_PRESET,
