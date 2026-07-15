@@ -29,6 +29,10 @@ vi.mock("@/lib/dispatch/persistAgentRun", () => ({
   persistAgentRun: vi.fn(async () => mockAgentRun),
 }));
 
+vi.mock("@/lib/dispatch/agentRunQueries", () => ({
+  getAgentRunById: vi.fn(async () => mockAgentRun),
+}));
+
 vi.mock("@/lib/dispatch/agentRunSessionRegistry", () => ({
   registerAgentRunSession: vi.fn(),
 }));

@@ -10,8 +10,10 @@ export interface ClaudeDispatchPayload {
 }
 
 const isClaudeDispatchPayload = (
-  payload: Readonly<Record<string, unknown>> | undefined,
+  payload: unknown,
 ): payload is Readonly<Record<string, unknown>> & ClaudeDispatchPayload =>
-  payload !== undefined && isNonEmptyString(payload.prompt);
+  typeof payload === "object" &&
+  payload !== null &&
+  isNonEmptyString((payload as ClaudeDispatchPayload).prompt);
 
 export default isClaudeDispatchPayload;

@@ -10,7 +10,7 @@ import {
 import { buildDemoClaudePromptAck } from "@/features/agent/utils/buildDemoClaudePromptAck";
 import { formatAgentLiveTerminalCommandLine } from "@/features/agent/utils/agentLiveTerminalPrompt.constant";
 import { isMacTerminalDispatch } from "@/features/agent/utils/isMacTerminalDispatch";
-import { sendClaudePromptOverSocket } from "@/features/agent/utils/sendClaudePromptOverSocket";
+import { dispatchClaudePrompt } from "@/features/agent/utils/dispatchClaudePrompt";
 import parseAgentWitchSocketDisplay, {
   type AgentWitchSocketDisplay,
 } from "@/lib/agentWitch/parseAgentWitchSocketDisplay";
@@ -61,7 +61,7 @@ export const useAgentWitchPromptDispatch = (input: {
         return;
       }
 
-      sendClaudePromptOverSocket({
+      void dispatchClaudePrompt({
         socket: input.socketRef.current,
         prompt: trimmedPrompt,
         writerAgent: options.writerAgent,
