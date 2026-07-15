@@ -13,14 +13,14 @@ const TYPE_LABEL_MAP: Record<HarnessMarketplaceListing["type"], string> = {
 interface MarketplaceListProps {
   readonly listings: readonly HarnessMarketplaceListing[];
   readonly isLoading: boolean;
-  readonly onBorrow: (capabilityId: string) => void;
+  readonly onInstall: (listing: HarnessMarketplaceListing) => void;
   readonly emptyMessage?: string;
 }
 
 export default function MarketplaceList({
   listings,
   isLoading,
-  onBorrow,
+  onInstall,
   emptyMessage = "No listings yet.",
 }: MarketplaceListProps) {
   if (isLoading) {
@@ -83,7 +83,7 @@ export default function MarketplaceList({
           <Button
             variant="primary"
             className="mt-4 w-full"
-            onClick={() => onBorrow(listing.capabilityId)}
+            onClick={() => onInstall(listing)}
           >
             Install
           </Button>

@@ -16,6 +16,7 @@ export interface CreateCapabilityFromTemplateResult {
 const createCapabilityFromTemplate = async (
   ownerUserId: string,
   templateId: string,
+  deviceId?: string,
 ): Promise<CreateCapabilityFromTemplateResult | null> => {
   const template = findCapabilityTemplateById(templateId);
 
@@ -41,6 +42,7 @@ const createCapabilityFromTemplate = async (
   const harnessInstall = requestCapabilityTemplateHarnessInstall(
     ownerUserId,
     template.harness,
+    deviceId,
   );
 
   return {
