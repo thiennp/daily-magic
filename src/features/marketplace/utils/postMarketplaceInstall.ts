@@ -1,3 +1,4 @@
+import { markOnboardingWorkflowCreated } from "@/features/home/utils/onboardingWorkflowCreatedStore";
 import type HarnessInstallBundle from "@/lib/agentWitch/harness/types/HarnessInstallBundle.type";
 
 export interface MarketplaceInstallApiResult {
@@ -45,10 +46,16 @@ export const postMarketplaceInstall = async (input: {
     localHarnessBundle?: HarnessInstallBundle | null;
   };
 
+  const savedToLibrary = record.savedToLibrary === true;
+
+  if (savedToLibrary) {
+    markOnboardingWorkflowCreated();
+  }
+
   return {
     ok: true,
     errorMessage: null,
-    savedToLibrary: record.savedToLibrary === true,
+    savedToLibrary,
     harnessInstalled: record.harnessInstalled === true,
     harnessInstallMessage:
       typeof record.harnessInstallMessage === "string"

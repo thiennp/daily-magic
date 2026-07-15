@@ -64,7 +64,7 @@ Document every production bug or UX regression here. Each entry must link to a t
 
 ## Adding issues
 
-Use the next ID (`HOME-012`, …). Include symptom, root cause, fix paths, and test file.
+Use the next ID (`HOME-013`, …). Include symptom, root cause, fix paths, and test file.
 
 ---
 
@@ -137,3 +137,15 @@ Use the next ID (`HOME-012`, …). Include symptom, root cause, fix paths, and t
 **Fix:** `GET /api/onboarding/workflow-created` derives completion from `published_capabilities` (non-archived, non-seeded). `loadOnboardingSteps` merges DB flag with capabilities via `hasUserCreatedFirstWorkflowOrAgent`. Local optimistic flag + `useOnboardingWorkflowStepRefresh` keep the home checklist live after creates.
 
 **Regression test:** `onboardingWorkflowCreatedQueries.test.ts`, `onboardingWorkflowCreatedApi.test.ts`, `onboardingWorkflowCreatedStore.test.ts`, `syncOnboardingWorkflowCreatedFlag.test.ts`, `hasUserCreatedFirstWorkflowOrAgent.test.ts`.
+
+---
+
+## HOME-012 — Marketplace install skipped workflow onboarding mark
+
+**Symptom:** Home checklist still showed “Create your first workflow or agent” incomplete after installing a marketplace preset that saved to Library, until a full reload.
+
+**Root cause:** `postMarketplaceInstall` did not call `markOnboardingWorkflowCreated` when `savedToLibrary` was true (unlike template save, workflow create, and fork paths).
+
+**Fix:** Mark workflow onboarding when marketplace install returns `savedToLibrary: true`.
+
+**Regression test:** `postMarketplaceInstall.test.ts`.
