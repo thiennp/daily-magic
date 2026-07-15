@@ -1,8 +1,6 @@
 import { getUserById } from "@/lib/auth/userRepository";
-import { canViewHarnessCatalog } from "@/lib/harness/canViewHarnessCatalog";
 import { filterVisibleSetSlugs } from "@/lib/harness/filterBorrowableManifest";
 import mapHarnessCatalogRow from "@/lib/harness/mapHarnessCatalogRow";
-import { HarnessSharingVisibility } from "@/lib/harness/HarnessSharingVisibility.constant";
 import { asRowArray, getSql } from "@/lib/db";
 
 export interface HarnessCatalogListItem {
@@ -54,7 +52,6 @@ export async function listHarnessCatalogForViewer(
     await sql`
       SELECT owner_user_id, visibility, hostname, manifest_json, reported_at, updated_at
       FROM harness_catalog_snapshots
-      WHERE visibility != ${HarnessSharingVisibility.PRIVATE}
       ORDER BY reported_at DESC
     `,
   );
@@ -63,13 +60,8 @@ export async function listHarnessCatalogForViewer(
 
   for (const row of rows) {
     const entry = mapHarnessCatalogRow(row);
-    const canView = await canViewHarnessCatalog(
-      viewerUserId,
-      entry.ownerUserId,
-      entry.visibility,
-    );
 
-    if (!canView || entry.ownerUserId === viewerUserId) {
+    if (entry.ownerUserId === viewerUserId) {
       continue;
     }
 
@@ -79,8 +71,12 @@ export async function listHarnessCatalogForViewer(
       summary.activeSetSlugs,
       viewerUserId,
       entry.ownerUserId,
-      entry.visibility,
     );
+
+    if (visibleSlugs.length === 0) {
+      continue;
+    }
+
     const visibleSetNames = visibleSlugs
       .map((slug) => summary.setNamesBySlug[slug])
       .filter((name): name is string => typeof name === "string");

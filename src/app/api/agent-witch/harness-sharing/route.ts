@@ -1,6 +1,4 @@
 import { DEFAULT_HARNESS_SHARING_VISIBILITY } from "@/lib/harness/HarnessSharingVisibility.constant";
-import { HarnessSharingVisibility } from "@/lib/harness/HarnessSharingVisibility.constant";
-import { deleteHarnessCatalogSnapshot } from "@/lib/harness/harnessCatalogMutations";
 import {
   getUserHarnessSharingVisibility,
   updateUserHarnessSharingVisibility,
@@ -44,10 +42,6 @@ export async function PATCH(request: Request): Promise<Response> {
   }
 
   await updateUserHarnessSharingVisibility(actor.id, visibility);
-
-  if (visibility === HarnessSharingVisibility.PRIVATE) {
-    await deleteHarnessCatalogSnapshot(actor.id);
-  }
 
   return Response.json({ ok: true, visibility });
 }

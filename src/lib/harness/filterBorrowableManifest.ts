@@ -1,11 +1,9 @@
 import { canViewHarnessSet } from "@/lib/harness/harnessSetSharingQueries";
-import type { HarnessSharingVisibilityValue } from "@/lib/harness/HarnessSharingVisibility.constant";
 
 export const filterBorrowableManifest = async (
   manifestJson: Readonly<Record<string, unknown>>,
   viewerUserId: string,
   ownerUserId: string,
-  accountVisibility: HarnessSharingVisibilityValue,
 ): Promise<Record<string, unknown>> => {
   const activeSetSlugs = Array.isArray(manifestJson.activeSetSlugs)
     ? manifestJson.activeSetSlugs.filter(
@@ -23,12 +21,7 @@ export const filterBorrowableManifest = async (
   const visibleSets: Record<string, unknown> = {};
 
   for (const slug of activeSetSlugs) {
-    const canView = await canViewHarnessSet(
-      viewerUserId,
-      ownerUserId,
-      slug,
-      accountVisibility,
-    );
+    const canView = await canViewHarnessSet(viewerUserId, ownerUserId, slug);
     if (canView && sets[slug] !== undefined) {
       visibleActiveSlugs.push(slug);
       visibleSets[slug] = sets[slug];
@@ -46,17 +39,11 @@ export const filterVisibleSetSlugs = async (
   setSlugs: readonly string[],
   viewerUserId: string,
   ownerUserId: string,
-  accountVisibility: HarnessSharingVisibilityValue,
 ): Promise<readonly string[]> => {
   const visibleSlugs: string[] = [];
 
   for (const slug of setSlugs) {
-    const canView = await canViewHarnessSet(
-      viewerUserId,
-      ownerUserId,
-      slug,
-      accountVisibility,
-    );
+    const canView = await canViewHarnessSet(viewerUserId, ownerUserId, slug);
     if (canView) {
       visibleSlugs.push(slug);
     }
@@ -69,14 +56,12 @@ export const filterBorrowableManifestToSetSlugs = async (
   manifestJson: Readonly<Record<string, unknown>>,
   viewerUserId: string,
   ownerUserId: string,
-  accountVisibility: HarnessSharingVisibilityValue,
   requestedSetSlugs: readonly string[],
 ): Promise<Record<string, unknown>> => {
   const filtered = await filterBorrowableManifest(
     manifestJson,
     viewerUserId,
     ownerUserId,
-    accountVisibility,
   );
   const allowedSlugs = new Set(requestedSetSlugs);
   const activeSetSlugs = Array.isArray(filtered.activeSetSlugs)

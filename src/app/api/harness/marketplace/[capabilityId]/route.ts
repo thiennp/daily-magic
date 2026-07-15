@@ -2,7 +2,7 @@ import { getPublishedCapabilityById } from "@/lib/capabilities/capabilityQueries
 import { canViewPublishedCapability } from "@/lib/capabilities/canViewPublishedCapability";
 import { requireAuth } from "@/lib/auth/requireAuth";
 import { buildHarnessMarketplaceBorrowPayload } from "@/lib/harness/buildHarnessMarketplaceBorrowPayload";
-import { canViewHarnessCatalog } from "@/lib/harness/canViewHarnessCatalog";
+import { canViewHarnessSet } from "@/lib/harness/harnessSetSharingQueries";
 import {
   HARNESS_BORROW_RATE_LIMIT,
   isHarnessBorrowRateLimited,
@@ -65,13 +65,16 @@ export async function GET(
     );
   }
 
-  const canViewCatalog = await canViewHarnessCatalog(
-    actor.id,
-    capability.ownerUserId,
-    snapshot.visibility,
-  );
+  const canViewSet =
+    capability.harnessSetSlug === null
+      ? false
+      : await canViewHarnessSet(
+          actor.id,
+          capability.ownerUserId,
+          capability.harnessSetSlug,
+        );
 
-  if (!canViewCatalog) {
+  if (!canViewSet) {
     return Response.json({ error: "Forbidden." }, { status: 403 });
   }
 

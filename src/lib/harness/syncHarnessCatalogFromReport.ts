@@ -1,8 +1,4 @@
-import {
-  deleteHarnessCatalogSnapshot,
-  upsertHarnessCatalogSnapshot,
-} from "@/lib/harness/harnessCatalogMutations";
-import { getUserHarnessSharingVisibility } from "@/lib/harness/harnessSharingVisibilityQueries";
+import { upsertHarnessCatalogSnapshot } from "@/lib/harness/harnessCatalogMutations";
 import { HarnessSharingVisibility } from "@/lib/harness/HarnessSharingVisibility.constant";
 import type { AgentWitchHarnessManifestReport } from "@/lib/agentWitch/types/AgentWitchHubStatus.type";
 
@@ -13,16 +9,9 @@ export const syncHarnessCatalogFromReport = async (
     return;
   }
 
-  const visibility = await getUserHarnessSharingVisibility(report.userId);
-
-  if (visibility === HarnessSharingVisibility.PRIVATE) {
-    await deleteHarnessCatalogSnapshot(report.userId);
-    return;
-  }
-
   await upsertHarnessCatalogSnapshot({
     ownerUserId: report.userId,
-    visibility,
+    visibility: HarnessSharingVisibility.PRIVATE,
     hostname: report.hostname,
     manifestJson: report.manifest,
     reportedAt: report.reportedAt,

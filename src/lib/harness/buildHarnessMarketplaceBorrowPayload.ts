@@ -37,7 +37,6 @@ export async function buildHarnessMarketplaceBorrowPayload(
     snapshot.manifestJson,
     viewerUserId,
     capability.ownerUserId,
-    snapshot.visibility,
     [harnessSetSlug],
   );
   const setSummary = summarizeHarnessManifestSet(manifest, harnessSetSlug);

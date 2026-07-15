@@ -65,13 +65,6 @@ export default function HarnessSetSharingPanel() {
 
   return (
     <section className="mt-6 border-t border-gray-200 pt-6 dark:border-gray-800">
-      <h3 className="text-base font-semibold text-gray-800 dark:text-white/90">
-        Per-set visibility
-      </h3>
-      <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-        Override sharing for individual bundles. Inherit uses your account
-        default above.
-      </p>
       <HarnessSetSharingList
         sets={sets}
         onVisibilityChange={updateVisibility}

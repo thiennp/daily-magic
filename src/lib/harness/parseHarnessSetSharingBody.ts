@@ -2,7 +2,6 @@ import { HarnessSharingVisibility } from "@/lib/harness/HarnessSharingVisibility
 import type { HarnessSetSharingVisibilityValue } from "@/lib/harness/harnessSetSharingQueries";
 
 const SET_SHARING_VALUES: readonly HarnessSetSharingVisibilityValue[] = [
-  "inherit",
   HarnessSharingVisibility.PRIVATE,
   HarnessSharingVisibility.GROUP,
   HarnessSharingVisibility.PUBLIC,

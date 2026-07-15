@@ -1,10 +1,12 @@
-import { HarnessSharingVisibility } from "@/lib/harness/HarnessSharingVisibility.constant";
+import {
+  DEFAULT_HARNESS_SHARING_VISIBILITY,
+  HarnessSharingVisibility,
+} from "@/lib/harness/HarnessSharingVisibility.constant";
 import type { HarnessSharingVisibilityValue } from "@/lib/harness/HarnessSharingVisibility.constant";
 import { canViewHarnessCatalog } from "@/lib/harness/canViewHarnessCatalog";
 import { asRowArray, getSql } from "@/lib/db";
 
-export type HarnessSetSharingVisibilityValue =
-  "inherit" | HarnessSharingVisibilityValue;
+export type HarnessSetSharingVisibilityValue = HarnessSharingVisibilityValue;
 
 export interface HarnessSetSharingEntry {
   readonly setSlug: string;
@@ -47,7 +49,6 @@ export async function upsertHarnessSetSharing(input: {
 export async function getEffectiveSetVisibility(
   ownerUserId: string,
   setSlug: string,
-  accountVisibility: HarnessSharingVisibilityValue,
 ): Promise<HarnessSharingVisibilityValue> {
   const sql = getSql();
   const rows = asRowArray(
@@ -71,19 +72,17 @@ export async function getEffectiveSetVisibility(
     return HarnessSharingVisibility.PUBLIC;
   }
 
-  return accountVisibility;
+  return DEFAULT_HARNESS_SHARING_VISIBILITY;
 }
 
 export async function canViewHarnessSet(
   viewerUserId: string,
   ownerUserId: string,
   setSlug: string,
-  accountVisibility: HarnessSharingVisibilityValue,
 ): Promise<boolean> {
   const effectiveVisibility = await getEffectiveSetVisibility(
     ownerUserId,
     setSlug,
-    accountVisibility,
   );
 
   return canViewHarnessCatalog(viewerUserId, ownerUserId, effectiveVisibility);

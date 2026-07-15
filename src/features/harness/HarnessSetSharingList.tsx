@@ -1,3 +1,5 @@
+import { COMPANY_MEMBERS_LABEL } from "@/lib/admin/companyGroupCopy.constant";
+import { HarnessSharingVisibility } from "@/lib/harness/HarnessSharingVisibility.constant";
 import type { HarnessSetSharingVisibilityValue } from "@/lib/harness/harnessSetSharingQueries";
 
 interface HarnessSetSharingRow {
@@ -54,10 +56,13 @@ export default function HarnessSetSharingList({
             }}
             className="rounded-lg border border-gray-200 px-2 py-1 text-sm dark:border-gray-700 dark:bg-gray-950"
           >
-            <option value="inherit">Inherit account default</option>
-            <option value="private">Private</option>
-            <option value="group">Group</option>
-            <option value="public">Public</option>
+            <option value={HarnessSharingVisibility.PRIVATE}>Private</option>
+            <option value={HarnessSharingVisibility.GROUP}>
+              {COMPANY_MEMBERS_LABEL} only
+            </option>
+            <option value={HarnessSharingVisibility.PUBLIC}>
+              Public (signed-in users)
+            </option>
           </select>
           <button
             type="button"

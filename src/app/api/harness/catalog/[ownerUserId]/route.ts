@@ -1,4 +1,3 @@
-import { canViewHarnessCatalog } from "@/lib/harness/canViewHarnessCatalog";
 import { filterBorrowableManifest } from "@/lib/harness/filterBorrowableManifest";
 import {
   HARNESS_BORROW_RATE_LIMIT,
@@ -35,37 +34,37 @@ export async function GET(
     return Response.json({ error: "Catalog not found." }, { status: 404 });
   }
 
-  const canView = await canViewHarnessCatalog(
-    actor.id,
-    ownerUserId,
-    snapshot.visibility,
-  );
-
-  if (!canView) {
-    return Response.json({ error: "Forbidden." }, { status: 403 });
-  }
-
-  if (await isHarnessBorrowRateLimited(actor.id)) {
-    return Response.json(
-      {
-        error: `Borrow limit reached (${HARNESS_BORROW_RATE_LIMIT} per hour).`,
-      },
-      { status: 429 },
-    );
-  }
-
-  await recordHarnessBorrow({
-    borrowerUserId: actor.id,
-    ownerUserId,
-  });
-
-  const owner = await getUserById(ownerUserId);
   const manifest = await filterBorrowableManifest(
     snapshot.manifestJson,
     actor.id,
     ownerUserId,
-    snapshot.visibility,
   );
+
+  if (
+    actor.id !== ownerUserId &&
+    (!Array.isArray(manifest.activeSetSlugs) ||
+      manifest.activeSetSlugs.length === 0)
+  ) {
+    return Response.json({ error: "Forbidden." }, { status: 403 });
+  }
+
+  if (actor.id !== ownerUserId) {
+    if (await isHarnessBorrowRateLimited(actor.id)) {
+      return Response.json(
+        {
+          error: `Borrow limit reached (${HARNESS_BORROW_RATE_LIMIT} per hour).`,
+        },
+        { status: 429 },
+      );
+    }
+
+    await recordHarnessBorrow({
+      borrowerUserId: actor.id,
+      ownerUserId,
+    });
+  }
+
+  const owner = await getUserById(ownerUserId);
 
   return Response.json({
     ok: true,

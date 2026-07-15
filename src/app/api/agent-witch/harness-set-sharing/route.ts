@@ -3,8 +3,8 @@ import {
   listHarnessSetSharing,
   upsertHarnessSetSharing,
 } from "@/lib/harness/harnessSetSharingQueries";
+import { DEFAULT_HARNESS_SHARING_VISIBILITY } from "@/lib/harness/HarnessSharingVisibility.constant";
 import { parseHarnessSetSharingBody } from "@/lib/harness/parseHarnessSetSharingBody";
-import { getUserHarnessSharingVisibility } from "@/lib/harness/harnessSharingVisibilityQueries";
 import { requireAuth } from "@/lib/auth/requireAuth";
 
 export const dynamic = "force-dynamic";
@@ -32,8 +32,7 @@ export async function GET(): Promise<Response> {
     return error;
   }
 
-  const [accountVisibility, overrides, snapshot] = await Promise.all([
-    getUserHarnessSharingVisibility(actor.id),
+  const [overrides, snapshot] = await Promise.all([
     listHarnessSetSharing(actor.id),
     getHarnessCatalogSnapshot(actor.id),
   ]);
@@ -46,11 +45,12 @@ export async function GET(): Promise<Response> {
 
   return Response.json({
     ok: true,
-    accountVisibility,
+    defaultVisibility: DEFAULT_HARNESS_SHARING_VISIBILITY,
     sets: sets.map((set) => ({
       slug: set.slug,
       name: set.name,
-      visibility: overrideBySlug.get(set.slug) ?? "inherit",
+      visibility:
+        overrideBySlug.get(set.slug) ?? DEFAULT_HARNESS_SHARING_VISIBILITY,
     })),
   });
 }

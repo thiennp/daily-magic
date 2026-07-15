@@ -8,7 +8,7 @@ export type HarnessSharingVisibilityValue =
   (typeof HarnessSharingVisibility)[keyof typeof HarnessSharingVisibility];
 
 export const DEFAULT_HARNESS_SHARING_VISIBILITY =
-  HarnessSharingVisibility.GROUP;
+  HarnessSharingVisibility.PRIVATE;
 
 export const isHarnessSharingVisibility = (
   value: string,

@@ -3,7 +3,7 @@ import { canViewPublishedCapability } from "@/lib/capabilities/canViewPublishedC
 import { CapabilityStatus } from "@/lib/capabilities/CapabilityStatus.constant";
 import { CapabilityVisibility } from "@/lib/capabilities/CapabilityVisibility.constant";
 import mapPublishedCapabilityRow from "@/lib/capabilities/mapPublishedCapabilityRow";
-import { canViewHarnessCatalog } from "@/lib/harness/canViewHarnessCatalog";
+import { canViewHarnessSet } from "@/lib/harness/harnessSetSharingQueries";
 import { getHarnessCatalogSnapshot } from "@/lib/harness/harnessCatalogMutations";
 import summarizeHarnessManifestSet from "@/lib/harness/summarizeHarnessManifestSet";
 import type HarnessMarketplaceListing from "@/lib/harness/types/HarnessMarketplaceListing.type";
@@ -28,13 +28,13 @@ const enrichListingFromCatalog = async (
     };
   }
 
-  const canViewCatalog = await canViewHarnessCatalog(
+  const canViewSet = await canViewHarnessSet(
     viewerUserId,
     ownerUserId,
-    snapshot.visibility,
+    harnessSetSlug,
   );
 
-  if (!canViewCatalog) {
+  if (!canViewSet) {
     return {
       harnessSetName: null,
       harnessItemCount: null,

@@ -124,7 +124,7 @@ CREATE TABLE IF NOT EXISTS harness_set_sharing (
   owner_user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
   set_slug TEXT NOT NULL,
   visibility TEXT NOT NULL CHECK (
-    visibility IN ('inherit', 'private', 'group', 'public')
+    visibility IN ('private', 'group', 'public')
   ),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   PRIMARY KEY (owner_user_id, set_slug)
