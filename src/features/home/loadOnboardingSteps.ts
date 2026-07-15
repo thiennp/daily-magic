@@ -1,5 +1,7 @@
 import hasUserCreatedFirstWorkflowOrAgent from "@/features/home/utils/hasUserCreatedFirstWorkflowOrAgent";
 import hasUserSentFirstTask from "@/features/home/utils/hasUserSentFirstTask";
+import { fetchOnboardingFirstTaskSent } from "@/features/home/utils/onboardingFirstTaskSentApi";
+import syncOnboardingFirstTaskSentFlag from "@/features/home/utils/syncOnboardingFirstTaskSentFlag";
 import { getPairedDevicesSnapshot } from "@/features/agent-witch/pairedDevicesResource";
 import { listAgentRunsLocalCache } from "@/features/reports/agentRunLocalCache";
 import buildAgentComposerHref from "@/lib/library/buildAgentComposerHref";
@@ -36,12 +38,15 @@ const readHasPairedDevice = async (): Promise<boolean> => {
 export async function loadOnboardingSteps(): Promise<
   readonly OnboardingStep[]
 > {
-  const [hasPairedDevice, capabilitiesResponse, runsResponse] =
+  const [hasPairedDevice, capabilitiesResponse, runsResponse, dbFirstTaskSent] =
     await Promise.all([
       readHasPairedDevice(),
       fetch("/api/capabilities/mine"),
       fetch("/api/agent-runs"),
+      fetchOnboardingFirstTaskSent(),
     ]);
+
+  syncOnboardingFirstTaskSentFlag(dbFirstTaskSent);
 
   const capabilitiesData: unknown = capabilitiesResponse.ok
     ? await capabilitiesResponse.json()
@@ -73,6 +78,7 @@ export async function loadOnboardingSteps(): Promise<
       ? (runsData as { runs: unknown[] }).runs
       : null,
     listAgentRunsLocalCache().length,
+    dbFirstTaskSent,
   );
 
   return [

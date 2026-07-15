@@ -1,3 +1,5 @@
+import { persistOnboardingFirstTaskSent } from "@/features/home/utils/onboardingFirstTaskSentApi";
+
 const STORAGE_KEY = "daily-magic.onboarding.first-task-sent.v1";
 
 export const readOnboardingFirstTaskSent = (): boolean => {
@@ -8,10 +10,15 @@ export const readOnboardingFirstTaskSent = (): boolean => {
   return window.localStorage.getItem(STORAGE_KEY) === "true";
 };
 
-export const markOnboardingFirstTaskSent = (): void => {
+export const writeOnboardingFirstTaskSentLocal = (): void => {
   if (typeof window === "undefined") {
     return;
   }
 
   window.localStorage.setItem(STORAGE_KEY, "true");
+};
+
+export const markOnboardingFirstTaskSent = (): void => {
+  writeOnboardingFirstTaskSentLocal();
+  void persistOnboardingFirstTaskSent();
 };

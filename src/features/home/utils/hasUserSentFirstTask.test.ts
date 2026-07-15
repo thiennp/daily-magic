@@ -25,8 +25,13 @@ describe("hasUserSentFirstTask", () => {
     expect(hasUserSentFirstTask([], 0)).toBe(true);
   });
 
+  it("returns true when DB first-task flag is set (HOME-006)", () => {
+    expect(hasUserSentFirstTask([], 0, true)).toBe(true);
+  });
+
   it("returns false when no runs are recorded", () => {
     expect(hasUserSentFirstTask([], 0)).toBe(false);
     expect(hasUserSentFirstTask(null, 0)).toBe(false);
+    expect(hasUserSentFirstTask([], 0, false)).toBe(false);
   });
 });

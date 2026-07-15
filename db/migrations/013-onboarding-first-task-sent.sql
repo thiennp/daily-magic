@@ -1,0 +1,2 @@
+ALTER TABLE users
+  ADD COLUMN IF NOT EXISTS onboarding_first_task_sent BOOLEAN NOT NULL DEFAULT FALSE;

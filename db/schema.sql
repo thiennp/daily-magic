@@ -18,6 +18,7 @@ CREATE TABLE IF NOT EXISTS users (
   harness_sharing_visibility TEXT CHECK (
     harness_sharing_visibility IN ('private', 'group', 'public')
   ),
+  onboarding_first_task_sent BOOLEAN NOT NULL DEFAULT FALSE,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
