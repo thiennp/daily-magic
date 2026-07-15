@@ -1,6 +1,7 @@
 import type useMacDeviceSelection from "@/features/agent/hooks/useMacDeviceSelection";
 import type PublishedCapabilityRecord from "@/lib/capabilities/types/PublishedCapabilityRecord.type";
 import type WorkflowFieldDefinition from "@/lib/workflows/types/WorkflowFieldDefinition.type";
+import type OperatorStepDefinition from "@/lib/workflows/types/OperatorStepDefinition.type";
 
 export interface UseWsTestTaskComposerResult {
   readonly prompt: string;
@@ -18,6 +19,7 @@ export interface UseWsTestTaskComposerResult {
   readonly libraryCapabilityId: string;
   readonly workflowFields: readonly WorkflowFieldDefinition[];
   readonly workflowValidationErrors: readonly string[];
+  readonly operatorSteps: readonly OperatorStepDefinition[];
   readonly resolvedPrompt: string;
   readonly isSendDisabled: (
     connectionStatus: string,

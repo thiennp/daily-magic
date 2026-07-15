@@ -4,6 +4,7 @@ import AppPanel from "@/components/surfaces/AppPanel";
 import DelegatedWriterAgentField from "@/features/agent/DelegatedWriterAgentField";
 import WsTestComposerFooter from "@/features/agent/WsTestComposerFooter";
 import WsTestComposerMacSection from "@/features/agent/WsTestComposerMacSection";
+import WsTestOperatorStepsSection from "@/features/agent/WsTestOperatorStepsSection";
 import type { useWsTestTaskComposer } from "@/features/agent/hooks/useWsTestTaskComposer";
 import WsTestTaskInputsSection from "@/features/agent/WsTestTaskInputsSection";
 import type { WsTestConnectionStatus } from "@/features/agent/types/WsTestConnectionStatus.type";
@@ -61,6 +62,9 @@ export default function WsTestPromptComposerPanel({
           onWriterAgentChange={onWriterAgentChange}
           disabled={isWriterAgentLocked}
         />
+      </div>
+      <div className="mt-6">
+        <WsTestOperatorStepsSection operatorSteps={composer.operatorSteps} />
       </div>
       <div className="mt-6">
         <WsTestTaskInputsSection

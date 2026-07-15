@@ -3,6 +3,7 @@ import type { CapabilityTypeValue } from "@/lib/capabilities/CapabilityType.cons
 import type { CapabilityVisibilityValue } from "@/lib/capabilities/CapabilityVisibility.constant";
 import type { DispatchPolicyValue } from "@/lib/dispatch/DispatchPolicy.constant";
 import type WorkflowFieldDefinition from "@/lib/workflows/types/WorkflowFieldDefinition.type";
+import type OperatorStepDefinition from "@/lib/workflows/types/OperatorStepDefinition.type";
 
 export default interface PublishedCapabilityRecord {
   readonly id: string;
@@ -18,6 +19,7 @@ export default interface PublishedCapabilityRecord {
   readonly harnessSetSlug: string | null;
   readonly currentVersionId: string | null;
   readonly workflowFields: readonly WorkflowFieldDefinition[];
+  readonly operatorSteps: readonly OperatorStepDefinition[];
   readonly forkedFromCapabilityId: string | null;
   readonly createdAt: string;
   readonly updatedAt: string;
@@ -32,4 +34,5 @@ export interface PublishedCapabilitySummary {
   readonly exampleRequest: string;
   readonly visibility: CapabilityVisibilityValue;
   readonly workflowFields: readonly WorkflowFieldDefinition[];
+  readonly operatorSteps: readonly OperatorStepDefinition[];
 }

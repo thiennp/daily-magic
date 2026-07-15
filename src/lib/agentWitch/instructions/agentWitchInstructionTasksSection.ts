@@ -39,6 +39,11 @@ export const AGENT_WITCH_INSTRUCTION_TASKS_SECTION: AgentWitchInstructionSection
         body: "When your Mac is not connected, tasks can be queued in the browser and send automatically when the connection returns.",
       },
       {
+        id: "operator-steps",
+        title: "Human steps in the composer",
+        body: "Workflows and agents can include Human step harness items. The task composer shows them as Your steps for you, while the Mac agent receives only a short checkpoint summary in its prompt.",
+      },
+      {
         id: "mid-run-input",
         title: "Answering questions mid-run",
         body: "If the AI needs input, the live terminal shows a prompt. Reply in the browser; the response goes to your Mac and the run continues.",

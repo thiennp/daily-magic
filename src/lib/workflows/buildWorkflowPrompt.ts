@@ -1,3 +1,5 @@
+import { appendOperatorCheckpointsToPrompt } from "@/lib/workflows/buildOperatorCheckpointPromptSection";
+import type OperatorStepDefinition from "@/lib/workflows/types/OperatorStepDefinition.type";
 import type WorkflowFieldDefinition from "@/lib/workflows/types/WorkflowFieldDefinition.type";
 
 export function validateWorkflowFieldValues(
@@ -19,6 +21,7 @@ export function buildWorkflowPrompt(
   fields: readonly WorkflowFieldDefinition[],
   values: Readonly<Record<string, string>>,
   instructions: string,
+  operatorSteps: readonly OperatorStepDefinition[] = [],
 ): string {
   const fieldLines = fields.map((field) => {
     const value = values[field.key]?.trim() ?? "";
@@ -26,8 +29,7 @@ export function buildWorkflowPrompt(
   });
 
   const trimmedInstructions = instructions.trim();
-
-  return [
+  const workflowPrompt = [
     `Run workflow: ${capabilityName}`,
     "",
     "Inputs:",
@@ -36,4 +38,6 @@ export function buildWorkflowPrompt(
       ? ["", "Additional instructions:", trimmedInstructions]
       : []),
   ].join("\n");
+
+  return appendOperatorCheckpointsToPrompt(workflowPrompt, operatorSteps);
 }

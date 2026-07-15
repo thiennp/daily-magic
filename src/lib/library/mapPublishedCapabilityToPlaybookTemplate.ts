@@ -10,5 +10,6 @@ export default function mapPublishedCapabilityToPlaybookTemplate(
     type: capability.type,
     exampleRequest: capability.exampleRequest,
     workflowFields: capability.workflowFields,
+    operatorSteps: capability.operatorSteps,
   };
 }

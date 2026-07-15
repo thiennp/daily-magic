@@ -1,4 +1,5 @@
 import type { CapabilityTemplateHarness } from "@/lib/capabilities/templates/types/CapabilityTemplate.type";
+import { filterAgentHarnessItemsForInstall } from "@/lib/harness/partitionHarnessItemsByAudience";
 
 import type HarnessInstallBundle from "./types/HarnessInstallBundle.type";
 
@@ -7,7 +8,7 @@ const buildHarnessInstallBundleFromTemplateHarness = (
 ): HarnessInstallBundle => ({
   name: harness.name,
   slug: harness.slug,
-  items: harness.items.map((item) => ({
+  items: filterAgentHarnessItemsForInstall(harness.items).map((item) => ({
     id: item.id,
     kind: item.kind,
     title: item.title,

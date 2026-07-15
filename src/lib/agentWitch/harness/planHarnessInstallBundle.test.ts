@@ -4,6 +4,36 @@ import { planHarnessInstallBundle } from "./planHarnessInstallBundle";
 import type HarnessManifest from "./types/HarnessManifest.type";
 
 describe("planHarnessInstallBundle", () => {
+  it("skips operator harness items during install planning", () => {
+    const plan = planHarnessInstallBundle({
+      hostname: "test-mac",
+      existingManifest: null,
+      bundle: {
+        name: "Assistant bundle",
+        slug: "assistant",
+        items: [
+          {
+            id: "rule-1",
+            kind: "rule",
+            title: "Prefer Const",
+            content: "Prefer const.",
+            setSlugs: ["assistant"],
+          },
+          {
+            id: "op-1",
+            kind: "operator",
+            title: "Prepare browser",
+            content: "Open the page.",
+            setSlugs: ["assistant"],
+          },
+        ],
+      },
+    });
+
+    expect(plan.files).toHaveLength(1);
+    expect(plan.manifest.sets.assistant?.items).toHaveLength(1);
+  });
+
   it("creates a manifest, set entry, and shared item files for a new install", () => {
     const plan = planHarnessInstallBundle({
       hostname: "test-mac",

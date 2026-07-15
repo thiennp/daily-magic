@@ -4,6 +4,7 @@ import { getAgentWitchHub } from "@/lib/agentWitch/getAgentWitchHub";
 import type { CapabilityTemplateHarness } from "@/lib/capabilities/templates/types/CapabilityTemplate.type";
 import { sendHarnessInstallToAgentClient } from "@/lib/harness/sendHarnessInstallToAgentClient";
 import type HarnessItemWriteSpec from "@/lib/agentWitch/harness/types/HarnessItemWriteSpec.type";
+import { filterAgentHarnessItemsForInstall } from "@/lib/harness/partitionHarnessItemsByAudience";
 
 export interface TemplateHarnessInstallResult {
   readonly installed: boolean;
@@ -43,13 +44,14 @@ export const sendTemplateHarnessToAgent = (
   agentClient: AgentWitchHubClient,
   harness: CapabilityTemplateHarness,
 ): void => {
-  const items: readonly HarnessItemWriteSpec[] = harness.items.map((item) => ({
-    id: item.id,
-    kind: item.kind,
-    title: item.title,
-    content: item.content,
-    setSlugs: [harness.slug],
-  }));
+  const items: readonly HarnessItemWriteSpec[] =
+    filterAgentHarnessItemsForInstall(harness.items).map((item) => ({
+      id: item.id,
+      kind: item.kind,
+      title: item.title,
+      content: item.content,
+      setSlugs: [harness.slug],
+    }));
 
   sendHarnessInstallToAgentClient(agentClient, {
     name: harness.name,

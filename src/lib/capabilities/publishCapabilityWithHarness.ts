@@ -6,6 +6,7 @@ import type { ParsedCapabilityHarnessItem } from "@/lib/capabilities/parseCapabi
 import { publishCapabilityVersion } from "@/lib/capabilities/publishCapabilityVersion";
 import requestCapabilityTemplateHarnessInstall from "@/lib/capabilities/requestCapabilityTemplateHarnessInstall";
 import type PublishedCapabilityRecord from "@/lib/capabilities/types/PublishedCapabilityRecord.type";
+import { partitionHarnessItemsByAudience } from "@/lib/harness/partitionHarnessItemsByAudience";
 
 export interface PublishCapabilityWithHarnessResult {
   readonly capability: PublishedCapabilityRecord;
@@ -18,8 +19,10 @@ const publishCapabilityWithHarness = async (
   parsed: ParsedCapabilityBody,
   harnessItems: readonly ParsedCapabilityHarnessItem[],
 ): Promise<PublishCapabilityWithHarnessResult> => {
+  const { agentItems, operatorSteps } =
+    partitionHarnessItemsByAudience(harnessItems);
   const harnessSetSlug =
-    harnessItems.length > 0 ? buildPlaybookHarnessSetSlug(parsed.name) : null;
+    agentItems.length > 0 ? buildPlaybookHarnessSetSlug(parsed.name) : null;
 
   const created = await createPublishedCapability({
     ownerUserId,
@@ -29,6 +32,7 @@ const publishCapabilityWithHarness = async (
     groupId: parsed.groupId,
     type: parsed.type,
     workflowFields: parsed.workflowFields,
+    operatorSteps,
     harnessSetSlug,
   });
   const published = await publishCapabilityVersion(
@@ -38,7 +42,7 @@ const publishCapabilityWithHarness = async (
   );
   const capability = published ?? created;
 
-  if (harnessSetSlug === null || harnessItems.length === 0) {
+  if (harnessSetSlug === null || agentItems.length === 0) {
     return {
       capability,
       harnessInstalled: false,
@@ -49,7 +53,7 @@ const publishCapabilityWithHarness = async (
   const harness = mapHarnessItemsToTemplateHarness(
     parsed.name,
     harnessSetSlug,
-    harnessItems,
+    agentItems,
   );
   const harnessInstall = await requestCapabilityTemplateHarnessInstall(
     ownerUserId,

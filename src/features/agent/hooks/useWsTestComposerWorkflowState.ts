@@ -7,6 +7,8 @@ import {
   buildWorkflowPrompt,
   validateWorkflowFieldValues,
 } from "@/lib/workflows/buildWorkflowPrompt";
+import { appendOperatorCheckpointsToPrompt } from "@/lib/workflows/buildOperatorCheckpointPromptSection";
+import type OperatorStepDefinition from "@/lib/workflows/types/OperatorStepDefinition.type";
 import type LibraryPlaybookTemplate from "@/lib/library/types/LibraryPlaybookTemplate.type";
 import { CapabilityType } from "@/lib/capabilities/CapabilityType.constant";
 import type WorkflowFieldDefinition from "@/lib/workflows/types/WorkflowFieldDefinition.type";
@@ -25,6 +27,7 @@ export function useWsTestComposerWorkflowState(
   readonly isWorkflowTask: boolean;
   readonly workflowFields: readonly WorkflowFieldDefinition[];
   readonly workflowValidationErrors: readonly string[];
+  readonly operatorSteps: readonly OperatorStepDefinition[];
   readonly resolvedPrompt: string;
   readonly isLibraryPlaybook: boolean;
   readonly libraryCapabilityId: string;
@@ -44,8 +47,18 @@ export function useWsTestComposerWorkflowState(
   const playbookType =
     libraryPlaybook?.type ?? selectedCapability?.type ?? CapabilityType.AGENT;
   const isWorkflowTask = playbookType === CapabilityType.WORKFLOW;
-  const workflowFields =
-    libraryPlaybook?.workflowFields ?? selectedCapability?.workflowFields ?? [];
+  const workflowFields = useMemo(
+    () =>
+      libraryPlaybook?.workflowFields ??
+      selectedCapability?.workflowFields ??
+      [],
+    [libraryPlaybook?.workflowFields, selectedCapability?.workflowFields],
+  );
+  const operatorSteps = useMemo(
+    () =>
+      libraryPlaybook?.operatorSteps ?? selectedCapability?.operatorSteps ?? [],
+    [libraryPlaybook?.operatorSteps, selectedCapability?.operatorSteps],
+  );
   const workflowValidationErrors = isWorkflowTask
     ? validateWorkflowFieldValues(workflowFields, workflowFieldValues)
     : [];
@@ -57,9 +70,17 @@ export function useWsTestComposerWorkflowState(
             workflowFields,
             workflowFieldValues,
             prompt,
+            operatorSteps,
           )
-        : prompt,
-    [isWorkflowTask, playbookName, workflowFields, workflowFieldValues, prompt],
+        : appendOperatorCheckpointsToPrompt(prompt, operatorSteps),
+    [
+      isWorkflowTask,
+      playbookName,
+      workflowFields,
+      workflowFieldValues,
+      prompt,
+      operatorSteps,
+    ],
   );
 
   return {
@@ -70,6 +91,7 @@ export function useWsTestComposerWorkflowState(
     isWorkflowTask,
     workflowFields,
     workflowValidationErrors,
+    operatorSteps,
     resolvedPrompt,
     isLibraryPlaybook,
     libraryCapabilityId: libraryPlaybook?.id ?? "",

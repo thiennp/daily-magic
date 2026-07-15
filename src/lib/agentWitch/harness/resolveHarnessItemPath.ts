@@ -38,6 +38,10 @@ const resolveHarnessItemPath = (
     return `agents/${stem}.md`;
   }
 
+  if (kind === "operator") {
+    return `operator/${stem}.md`;
+  }
+
   return `instructions/${stem}.md`;
 };
 

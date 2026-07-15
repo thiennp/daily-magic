@@ -156,6 +156,7 @@ CREATE TABLE IF NOT EXISTS published_capabilities (
   harness_set_slug TEXT,
   current_version_id TEXT,
   workflow_fields JSONB NOT NULL DEFAULT '[]'::jsonb,
+  operator_steps JSONB NOT NULL DEFAULT '[]'::jsonb,
   forked_from_capability_id TEXT
     REFERENCES published_capabilities(id) ON DELETE SET NULL,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),

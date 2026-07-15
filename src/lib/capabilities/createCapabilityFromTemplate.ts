@@ -5,6 +5,7 @@ import requestCapabilityTemplateHarnessInstall from "@/lib/capabilities/requestC
 import findCapabilityTemplateById from "@/lib/capabilities/templates/findCapabilityTemplateById";
 import type { CapabilityTemplateHarness } from "@/lib/capabilities/templates/types/CapabilityTemplate.type";
 import type PublishedCapabilityRecord from "@/lib/capabilities/types/PublishedCapabilityRecord.type";
+import { mapHarnessItemsToOperatorSteps } from "@/lib/harness/partitionHarnessItemsByAudience";
 
 export interface CreateCapabilityFromTemplateOptions {
   readonly deferHarnessInstall?: boolean;
@@ -38,6 +39,7 @@ const createCapabilityFromTemplate = async (
     harnessSetSlug: template.harness.slug,
     workflowFields:
       template.type === CapabilityType.WORKFLOW ? template.workflowFields : [],
+    operatorSteps: mapHarnessItemsToOperatorSteps(template.harness.items),
   });
   const published = await publishCapabilityVersion(
     created.id,

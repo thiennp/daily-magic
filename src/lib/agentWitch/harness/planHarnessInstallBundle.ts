@@ -1,4 +1,5 @@
 import sanitizeHarnessSlug from "./sanitizeHarnessSlug";
+import { filterAgentHarnessItemsForInstall } from "@/lib/harness/partitionHarnessItemsByAudience";
 import {
   buildHarnessManifestItem,
   createEmptyHarnessManifest,
@@ -48,7 +49,8 @@ export const planHarnessInstallBundle = (input: {
     ...HARNESS_SET_SUBDIRS.map((subdir) => `sets/${slug}/${subdir}`),
     "shared/items",
   ];
-  const { files, nextItems } = input.bundle.items.reduce<{
+  const installItems = filterAgentHarnessItemsForInstall(input.bundle.items);
+  const { files, nextItems } = installItems.reduce<{
     readonly files: readonly HarnessInstallFileWrite[];
     readonly nextItems: HarnessManifestSet["items"];
   }>(

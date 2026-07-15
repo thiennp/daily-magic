@@ -1,4 +1,5 @@
 import type WorkflowFieldDefinition from "@/lib/workflows/types/WorkflowFieldDefinition.type";
+import type OperatorStepDefinition from "@/lib/workflows/types/OperatorStepDefinition.type";
 
 export interface DispatchTargetCapability {
   readonly id: string;
@@ -9,6 +10,7 @@ export interface DispatchTargetCapability {
   readonly exampleRequest: string;
   readonly visibility: string;
   readonly workflowFields: readonly WorkflowFieldDefinition[];
+  readonly operatorSteps: readonly OperatorStepDefinition[];
 }
 
 export interface DispatchTargetMember {

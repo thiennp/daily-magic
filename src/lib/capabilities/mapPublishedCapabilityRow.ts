@@ -4,6 +4,7 @@ import { isCapabilityVisibility } from "@/lib/capabilities/CapabilityVisibility.
 import type PublishedCapabilityRecord from "@/lib/capabilities/types/PublishedCapabilityRecord.type";
 import { isDispatchPolicy } from "@/lib/dispatch/DispatchPolicy.constant";
 import { parseWorkflowFieldDefinitions } from "@/lib/workflows/parseWorkflowFieldDefinitions";
+import { parseOperatorStepDefinitions } from "@/lib/workflows/parseOperatorStepDefinitions";
 
 export default function mapPublishedCapabilityRow(
   row: Record<string, unknown>,
@@ -34,6 +35,7 @@ export default function mapPublishedCapabilityRow(
       ? String(row.current_version_id)
       : null,
     workflowFields: parseWorkflowFieldDefinitions(row.workflow_fields),
+    operatorSteps: parseOperatorStepDefinitions(row.operator_steps),
     forkedFromCapabilityId: row.forked_from_capability_id
       ? String(row.forked_from_capability_id)
       : null,

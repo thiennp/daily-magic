@@ -1,5 +1,6 @@
 import buildFallbackRuleHarnessItem from "@/lib/capabilities/templates/buildFallbackRuleHarnessItem";
 import buildFallbackSubagentHarnessItem from "@/lib/capabilities/templates/buildFallbackSubagentHarnessItem";
+import buildDefaultOperatorHarnessItem from "@/lib/capabilities/templates/buildDefaultOperatorHarnessItem";
 import type { CapabilityTypeValue } from "@/lib/capabilities/CapabilityType.constant";
 import { CapabilityType } from "@/lib/capabilities/CapabilityType.constant";
 import type { CapabilityTemplateHarnessItem } from "@/lib/capabilities/templates/types/CapabilityTemplate.type";
@@ -87,6 +88,7 @@ const buildTemplateHarnessItemContents = (
         "Remind the agent that this preset is meant to run on the owner's Mac via Agent Witch.",
       ].join("\n"),
     },
+    buildDefaultOperatorHarnessItem(input),
     buildFallbackSubagentHarnessItem(input),
   ];
 };

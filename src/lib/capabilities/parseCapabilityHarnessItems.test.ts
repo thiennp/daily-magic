@@ -18,6 +18,12 @@ describe("parseCapabilityHarnessItems", () => {
         },
         {
           id: "item-2",
+          kind: "operator",
+          title: "Prepare browser",
+          content: "Open the page.",
+        },
+        {
+          id: "item-3",
           kind: "agent",
           title: "Reviewer",
           content: "Review security risks.",
@@ -38,6 +44,12 @@ describe("parseCapabilityHarnessItems", () => {
       },
       {
         id: "item-2",
+        kind: "operator",
+        title: "Prepare browser",
+        content: "Open the page.",
+      },
+      {
+        id: "item-3",
         kind: "agent",
         title: "Reviewer",
         content: "Review security risks.",
