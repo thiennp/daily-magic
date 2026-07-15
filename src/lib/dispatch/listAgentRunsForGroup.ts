@@ -1,12 +1,21 @@
-import { listAllAgentRunSessions } from "@/lib/dispatch/agentRunSessionRegistry";
+import mapAgentRunRow from "@/lib/dispatch/mapAgentRunRow";
 import type AgentRunRecord from "@/lib/dispatch/types/AgentRunRecord.type";
+import { asRowArray, getSql } from "@/lib/db";
 
 export async function listAgentRunsForGroup(
   groupId: string,
   limit = 25,
 ): Promise<readonly AgentRunRecord[]> {
-  return listAllAgentRunSessions()
-    .filter((run) => run.groupId === groupId)
-    .toSorted((left, right) => right.createdAt.localeCompare(left.createdAt))
-    .slice(0, limit);
+  const sql = getSql();
+  const rows = asRowArray(
+    await sql`
+      SELECT *
+      FROM agent_runs
+      WHERE group_id = ${groupId}
+      ORDER BY created_at DESC
+      LIMIT ${limit}
+    `,
+  );
+
+  return rows.map((row) => mapAgentRunRow(row));
 }

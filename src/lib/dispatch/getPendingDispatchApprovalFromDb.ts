@@ -1,3 +1,4 @@
+import isHarnessWriterAgent from "@/lib/agentWitch/harness/isHarnessWriterAgent";
 import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
 import type { PendingDispatchApproval } from "@/lib/dispatch/dispatchApprovalRegistry";
 import mapAgentRunRow from "@/lib/dispatch/mapAgentRunRow";
@@ -32,6 +33,8 @@ export async function getPendingDispatchApprovalFromDb(
     executorUserId: run.executorUserId,
     prompt: run.prompt,
     groupId: run.groupId,
-    writerAgent: DEFAULT_DELEGATED_WRITER_AGENT,
+    writerAgent: isHarnessWriterAgent(run.writerAgent)
+      ? run.writerAgent
+      : DEFAULT_DELEGATED_WRITER_AGENT,
   };
 }

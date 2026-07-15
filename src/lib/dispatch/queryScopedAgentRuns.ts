@@ -1,7 +1,7 @@
 import type { AgentRunStatusValue } from "@/lib/dispatch/AgentRunStatus.constant";
 import type { AgentRunScopeValue } from "@/lib/dispatch/AgentRunScope.constant";
-import { listAgentRunSessionsForUser } from "@/lib/dispatch/agentRunSessionRegistry";
 import { filterScopedAgentRunSessions } from "@/lib/dispatch/filterScopedAgentRunSessions";
+import { listAgentRunRowsForUser } from "@/lib/dispatch/agentRunQueries";
 import type AgentRunRecord from "@/lib/dispatch/types/AgentRunRecord.type";
 
 interface QueryScopedAgentRunsInput {
@@ -15,6 +15,6 @@ interface QueryScopedAgentRunsInput {
 export async function queryScopedAgentRuns(
   input: QueryScopedAgentRunsInput,
 ): Promise<readonly AgentRunRecord[]> {
-  const runs = listAgentRunSessionsForUser(input.userId);
+  const runs = await listAgentRunRowsForUser(input.userId, input.limit);
   return filterScopedAgentRunSessions({ ...input, runs });
 }

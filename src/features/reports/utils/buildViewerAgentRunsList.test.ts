@@ -25,6 +25,8 @@ const baseRun = (
   approvalExpiresAt: null,
   capabilityId: null,
   capabilityVersionId: null,
+  deviceId: null,
+  writerAgent: "claude-cli",
   ...overrides,
 });
 

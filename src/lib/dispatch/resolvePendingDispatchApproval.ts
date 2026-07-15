@@ -1,3 +1,4 @@
+import { getPendingDispatchApprovalFromDb } from "@/lib/dispatch/getPendingDispatchApprovalFromDb";
 import type { PendingDispatchApproval } from "@/lib/dispatch/dispatchApprovalRegistry";
 import { dispatchApprovalRegistry } from "@/lib/dispatch/dispatchApprovalRegistry";
 
@@ -11,7 +12,7 @@ export async function resolvePendingDispatchApproval(
     return cached;
   }
 
-  return null;
+  return getPendingDispatchApprovalFromDb(runId, executorUserId);
 }
 
 export async function listPendingDispatchApprovalsForExecutor(

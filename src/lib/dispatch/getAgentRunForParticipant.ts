@@ -1,14 +1,14 @@
-import { getAgentRunSession } from "@/lib/dispatch/agentRunSessionRegistry";
+import { getAgentRunById } from "@/lib/dispatch/agentRunQueries";
 import type AgentRunRecord from "@/lib/dispatch/types/AgentRunRecord.type";
 
 export async function getAgentRunForParticipant(
   runId: string,
   userId: string,
 ): Promise<AgentRunRecord | null> {
-  const run = getAgentRunSession(runId);
+  const run = await getAgentRunById(runId);
 
   if (
-    run === undefined ||
+    run === null ||
     (run.requesterUserId !== userId && run.executorUserId !== userId)
   ) {
     return null;

@@ -1,8 +1,9 @@
 import { randomUUID } from "node:crypto";
 
-import mapAgentRunRow from "@/lib/dispatch/mapAgentRunRow";
+import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
 import type { AgentRunStatusValue } from "@/lib/dispatch/AgentRunStatus.constant";
 import type { DispatchPolicyValue } from "@/lib/dispatch/DispatchPolicy.constant";
+import mapAgentRunRow from "@/lib/dispatch/mapAgentRunRow";
 import type AgentRunRecord from "@/lib/dispatch/types/AgentRunRecord.type";
 import { asRowArray, getSql } from "@/lib/db";
 
@@ -10,18 +11,22 @@ export interface CreateAgentRunInput {
   readonly groupId?: string | null;
   readonly requesterUserId: string;
   readonly executorUserId: string;
+  readonly deviceId?: string | null;
   readonly prompt: string;
   readonly status: AgentRunStatusValue;
   readonly dispatchPolicy: DispatchPolicyValue;
+  readonly writerAgent?: HarnessWriterAgent;
   readonly capabilityId?: string | null;
   readonly capabilityVersionId?: string | null;
+  readonly approvalExpiresAt?: string | null;
 }
 
-export async function createAgentRun(
+const createAgentRun = async (
   input: CreateAgentRunInput,
-): Promise<AgentRunRecord> {
+): Promise<AgentRunRecord> => {
   const sql = getSql();
   const runId = randomUUID();
+  const writerAgent = input.writerAgent ?? "claude-cli";
   const result = asRowArray(
     await sql`
       INSERT INTO agent_runs (
@@ -29,26 +34,34 @@ export async function createAgentRun(
         group_id,
         requester_user_id,
         executor_user_id,
+        device_id,
         prompt,
         status,
         dispatch_policy,
+        writer_agent,
         capability_id,
-        capability_version_id
+        capability_version_id,
+        approval_expires_at
       )
       VALUES (
         ${runId},
         ${input.groupId ?? null},
         ${input.requesterUserId},
         ${input.executorUserId},
+        ${input.deviceId ?? null},
         ${input.prompt},
         ${input.status},
         ${input.dispatchPolicy},
+        ${writerAgent},
         ${input.capabilityId ?? null},
-        ${input.capabilityVersionId ?? null}
+        ${input.capabilityVersionId ?? null},
+        ${input.approvalExpiresAt ?? null}
       )
       RETURNING *
     `,
   );
 
   return mapAgentRunRow(result[0]);
-}
+};
+
+export default createAgentRun;

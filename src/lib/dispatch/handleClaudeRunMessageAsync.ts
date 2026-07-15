@@ -81,6 +81,7 @@ export const handleClaudeRunMessageAsync = async (
   return executeClaudeRunDispatch({
     runtime,
     agentClient: agentResolution.agentClient,
+    deviceId: agentResolution.deviceId,
     sender,
     prompt: validatedPayload.payload.prompt,
     payload: validatedPayload.payload,

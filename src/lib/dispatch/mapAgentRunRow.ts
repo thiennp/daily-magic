@@ -33,5 +33,10 @@ export default function mapAgentRunRow(
     capabilityVersionId: row.capability_version_id
       ? String(row.capability_version_id)
       : null,
+    deviceId: row.device_id ? String(row.device_id) : null,
+    writerAgent:
+      typeof row.writer_agent === "string" && row.writer_agent.length > 0
+        ? row.writer_agent
+        : "claude-cli",
   };
 }

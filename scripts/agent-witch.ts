@@ -35,6 +35,11 @@ import {
 } from "./agentWitchLocalRunStore";
 import { writeAgentWitchConnectionHealth } from "./agentWitchConnectionHealth";
 import { acceptTerminalStream } from "./agentWitchTerminalStreamState";
+import {
+  postAgentWitchDeviceHeartbeat,
+  resolveAgentWitchCloudApiConfig,
+} from "./agentWitchCloudApi";
+import { pollAndExecuteCloudAgentRun } from "./agentWitchCloudJobPoll";
 
 interface AgentWitchConfig {
   readonly email: string | null;
@@ -54,6 +59,7 @@ const DEFAULT_CODEX_COMMAND = "codex";
 const DEFAULT_CURSOR_COMMAND = "cursor";
 const DEFAULT_ANTIGRAVITY_COMMAND = "agy";
 const HEARTBEAT_INTERVAL_MS = 30_000;
+const CLOUD_JOB_POLL_INTERVAL_MS = 3_000;
 const MAX_RECONNECT_DELAY_MS = 30_000;
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
@@ -369,15 +375,74 @@ const computeReconnectDelayMs = (attempt: number): number => {
 };
 
 const createAgentWitchClient = (config: AgentWitchConfig) => {
+  const cloudApi = resolveAgentWitchCloudApiConfig({
+    wsUrl: config.wsUrl,
+    pairingToken: config.pairingToken,
+  });
   const state: {
     socket?: WebSocket;
     heartbeatTimer?: NodeJS.Timeout;
+    httpHeartbeatTimer?: NodeJS.Timeout;
+    cloudJobPollTimer?: NodeJS.Timeout;
     reconnectTimer?: NodeJS.Timeout;
     reconnectAttempt: number;
     stopped: boolean;
   } = {
     reconnectAttempt: 0,
     stopped: false,
+  };
+
+  const clearHttpHeartbeat = (): void => {
+    if (state.httpHeartbeatTimer !== undefined) {
+      clearInterval(state.httpHeartbeatTimer);
+      state.httpHeartbeatTimer = undefined;
+    }
+  };
+
+  const clearCloudJobPoll = (): void => {
+    if (state.cloudJobPollTimer !== undefined) {
+      clearInterval(state.cloudJobPollTimer);
+      state.cloudJobPollTimer = undefined;
+    }
+  };
+
+  const startCloudJobPoll = (): void => {
+    if (cloudApi === null) {
+      return;
+    }
+
+    clearCloudJobPoll();
+    const pollCloudJobs = (): void => {
+      void pollAndExecuteCloudAgentRun({
+        cloudApi,
+        workspace: config.workspace,
+        claudeCommand: config.claudeCommand,
+        codexCommand: config.codexCommand,
+        cursorCommand: config.cursorCommand,
+        antigravityCommand: config.antigravityCommand,
+      });
+    };
+    pollCloudJobs();
+    state.cloudJobPollTimer = setInterval(
+      pollCloudJobs,
+      CLOUD_JOB_POLL_INTERVAL_MS,
+    );
+  };
+
+  const startHttpHeartbeat = (): void => {
+    if (cloudApi === null) {
+      return;
+    }
+
+    clearHttpHeartbeat();
+    const sendHttpHeartbeat = (): void => {
+      void postAgentWitchDeviceHeartbeat(cloudApi, os.hostname());
+    };
+    sendHttpHeartbeat();
+    state.httpHeartbeatTimer = setInterval(
+      sendHttpHeartbeat,
+      HEARTBEAT_INTERVAL_MS,
+    );
   };
 
   const clearHeartbeat = (): void => {
@@ -696,12 +761,16 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
   const stop = (): void => {
     state.stopped = true;
     clearHeartbeat();
+    clearHttpHeartbeat();
+    clearCloudJobPoll();
     clearReconnectTimer();
     closeSocket();
   };
 
   return {
     connect,
+    startHttpHeartbeat,
+    startCloudJobPoll,
     stop,
   };
 };
@@ -732,6 +801,8 @@ const waitForConfig = async (): Promise<AgentWitchConfig> => {
 const main = async (): Promise<void> => {
   const config = await waitForConfig();
   const client = createAgentWitchClient(config);
+  client.startHttpHeartbeat();
+  client.startCloudJobPoll();
   client.connect();
 
   const shutdown = (): void => {

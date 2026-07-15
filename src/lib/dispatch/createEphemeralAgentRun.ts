@@ -38,5 +38,7 @@ export const createEphemeralAgentRun = (
     approvalExpiresAt: input.approvalExpiresAt ?? null,
     capabilityId: input.capabilityId ?? null,
     capabilityVersionId: input.capabilityVersionId ?? null,
+    deviceId: null,
+    writerAgent: "claude-cli",
   };
 };

@@ -20,7 +20,7 @@ export const handleDispatchApprovalRespondAsync = async (
   message: AgentWitchMessage,
   sender: AgentWitchHubClient | undefined,
 ): Promise<AgentWitchMessage | null> => {
-  ensureDispatchApprovalsHydrated();
+  await ensureDispatchApprovalsHydrated();
   await expireStaleDispatchApprovals();
 
   if (sender?.role !== "dashboard" || !isNonEmptyString(sender.userId)) {

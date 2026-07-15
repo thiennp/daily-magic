@@ -22,7 +22,7 @@ export async function GET(
     return error;
   }
 
-  ensureDispatchApprovalsHydrated();
+  await ensureDispatchApprovalsHydrated();
   await expireStaleDispatchApprovals();
 
   const { runId } = await context.params;

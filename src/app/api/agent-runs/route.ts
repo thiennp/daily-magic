@@ -14,7 +14,7 @@ export async function GET(request: Request): Promise<Response> {
     return error;
   }
 
-  ensureDispatchApprovalsHydrated();
+  await ensureDispatchApprovalsHydrated();
   await expireStaleDispatchApprovals();
 
   const filters = await parseAgentRunListFilters(actor.id, request);

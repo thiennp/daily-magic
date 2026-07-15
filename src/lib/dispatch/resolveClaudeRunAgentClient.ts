@@ -1,4 +1,6 @@
 import isAgentWitchDeviceOwnedByUser from "@/lib/agentWitch/isAgentWitchDeviceOwnedByUser";
+import { isMacDeviceReachableViaHeartbeat } from "@/lib/agentWitch/resolveMacDeviceReachability";
+import { findAgentWitchDeviceById } from "@/lib/agentWitch/findAgentWitchDeviceById";
 import type AgentWitchHubClient from "@/lib/agentWitch/types/AgentWitchHubClient.type";
 import type AgentWitchHubRuntime from "@/lib/agentWitch/types/AgentWitchHubRuntime.type";
 import { buildDispatchError } from "@/lib/dispatch/buildDispatchError";
@@ -11,19 +13,24 @@ export const resolveTargetDeviceId = (
     ? payload.targetDeviceId
     : undefined;
 
+export type ClaudeRunAgentResolution =
+  | {
+      readonly ok: true;
+      readonly agentClient?: AgentWitchHubClient;
+      readonly deviceId: string | null;
+    }
+  | {
+      readonly ok: false;
+      readonly error: ReturnType<typeof buildDispatchError>;
+    };
+
 export const resolveClaudeRunAgentClient = async (input: {
   readonly runtime: AgentWitchHubRuntime;
   readonly senderUserId: string;
   readonly executorUserId: string;
   readonly targetDeviceId: string | undefined;
   readonly requestId?: string;
-}): Promise<
-  | { readonly ok: true; readonly agentClient: AgentWitchHubClient }
-  | {
-      readonly ok: false;
-      readonly error: ReturnType<typeof buildDispatchError>;
-    }
-> => {
+}): Promise<ClaudeRunAgentResolution> => {
   if (
     input.targetDeviceId !== undefined &&
     input.executorUserId === input.senderUserId &&
@@ -46,19 +53,44 @@ export const resolveClaudeRunAgentClient = async (input: {
     input.targetDeviceId,
   );
 
-  if (agentClient === undefined) {
+  if (agentClient !== undefined) {
+    const deviceId =
+      input.targetDeviceId ??
+      (agentClient.deviceId !== undefined ? agentClient.deviceId : null);
+    return { ok: true, agentClient, deviceId: deviceId ?? null };
+  }
+
+  if (input.targetDeviceId !== undefined) {
+    const device = await findAgentWitchDeviceById(input.targetDeviceId);
+
+    if (
+      device !== null &&
+      device.userId === input.executorUserId &&
+      device.revokedAt === null &&
+      isMacDeviceReachableViaHeartbeat({ lastSeenAt: device.lastSeenAt })
+    ) {
+      return {
+        ok: true,
+        deviceId: device.id,
+      };
+    }
+
     return {
       ok: false,
       error: buildDispatchError(
-        input.executorUserId === input.senderUserId
-          ? input.targetDeviceId !== undefined
-            ? "The selected Mac is not online right now."
-            : "No Mac is connected for your account."
-          : "That teammate has no Mac connected.",
+        "The selected Mac is not online right now.",
         input.requestId,
       ),
     };
   }
 
-  return { ok: true, agentClient };
+  return {
+    ok: false,
+    error: buildDispatchError(
+      input.executorUserId === input.senderUserId
+        ? "No Mac is connected for your account."
+        : "That teammate has no Mac connected.",
+      input.requestId,
+    ),
+  };
 };

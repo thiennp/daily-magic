@@ -19,4 +19,6 @@ export default interface AgentRunRecord {
   readonly approvalExpiresAt: string | null;
   readonly capabilityId: string | null;
   readonly capabilityVersionId: string | null;
+  readonly deviceId: string | null;
+  readonly writerAgent: string;
 }

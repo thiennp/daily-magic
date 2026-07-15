@@ -51,27 +51,21 @@ export const approveDispatchApproval = async (
   requestId?: string,
 ): Promise<AgentWitchMessage> => {
   const agentClient = runtime.findAgentClientForUser(pending.executorUserId);
+  const writerAgent = isHarnessWriterAgent(pending.writerAgent)
+    ? pending.writerAgent
+    : DEFAULT_DELEGATED_WRITER_AGENT;
 
-  if (agentClient === undefined) {
-    return {
-      type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR,
-      payload: {
-        errorMessage: "No Mac is connected to run this task.",
-      },
-      requestId,
-    };
+  if (agentClient !== undefined) {
+    dispatchClaudeRunToAgent(
+      runtime,
+      agentClient,
+      pending.prompt,
+      runId,
+      writerAgent,
+      pending.requestId,
+    );
   }
 
-  dispatchClaudeRunToAgent(
-    runtime,
-    agentClient,
-    pending.prompt,
-    runId,
-    isHarnessWriterAgent(pending.writerAgent)
-      ? pending.writerAgent
-      : DEFAULT_DELEGATED_WRITER_AGENT,
-    pending.requestId,
-  );
   await markAgentRunRunning(runtime, runId);
 
   notifyDashboardUser(runtime, pending.requesterUserId, {
@@ -85,7 +79,11 @@ export const approveDispatchApproval = async (
 
   return {
     type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ACK,
-    payload: { runId, status: AgentRunStatus.RUNNING },
+    payload: {
+      runId,
+      status: AgentRunStatus.RUNNING,
+      queuedForDevicePull: agentClient === undefined,
+    },
     requestId,
   };
 };
