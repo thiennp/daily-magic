@@ -11,7 +11,7 @@ const runAgainWithoutRetyping: ShowcaseArticle = {
     "At least one completed job in history",
     "Mac agent online if you want to send again (not just view)",
   ],
-  tryNext: { label: "Open job history demo", href: "/demo/reports" },
+  tryNext: { label: "Open job history demo", href: "/reports" },
   sections: [
     {
       paragraphs: [

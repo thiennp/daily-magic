@@ -12,7 +12,6 @@ Compose and send tasks to Mac via Agent Witch.
 
 - `/agent`
 - `/ws-test`
-- `/demo/agent`
 
 ## APIs
 

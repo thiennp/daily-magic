@@ -2,24 +2,18 @@
 
 import { useEffect, useState } from "react";
 
-import { useDemoPreview } from "@/features/demo/DemoPreviewContext";
 import type PublishedCapabilityRecord from "@/lib/capabilities/types/PublishedCapabilityRecord.type";
 
 export function useLibraryCapabilities(refreshKey = 0): {
   readonly capabilities: readonly PublishedCapabilityRecord[];
   readonly isLoading: boolean;
 } {
-  const demoPreview = useDemoPreview();
   const [capabilities, setCapabilities] = useState<
     readonly PublishedCapabilityRecord[]
-  >(() => demoPreview?.capabilities ?? []);
-  const [isLoading, setIsLoading] = useState(() => !demoPreview);
+  >([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    if (demoPreview) {
-      return;
-    }
-
     const loadLibrary = async (): Promise<void> => {
       setIsLoading(true);
       try {
@@ -46,7 +40,7 @@ export function useLibraryCapabilities(refreshKey = 0): {
     };
 
     void loadLibrary();
-  }, [demoPreview, refreshKey]);
+  }, [refreshKey]);
 
   return { capabilities, isLoading };
 }

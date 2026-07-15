@@ -14,7 +14,7 @@ const managerApprovesBeforeRun: ShowcaseArticle = {
   ],
   tryNext: {
     label: "See a pending job in demo history",
-    href: "/demo/reports",
+    href: "/reports",
   },
   sections: [
     {

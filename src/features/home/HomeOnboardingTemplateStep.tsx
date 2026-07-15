@@ -10,7 +10,6 @@ import {
   APP_SURFACE_EYEBROW_TEXT_CLASS,
 } from "@/components/surfaces/appSurfaceStyles.constant";
 import CapabilityTemplatePicker from "@/features/capabilities/CapabilityTemplatePicker";
-import { useAppPath } from "@/features/demo/DemoPreviewContext";
 import useOnboardingSteps from "@/features/home/hooks/useOnboardingSteps";
 import isWorkflowOnboardingStepDone from "@/features/home/utils/isWorkflowOnboardingStepDone";
 
@@ -21,7 +20,6 @@ interface HomeOnboardingTemplateStepProps {
 export default function HomeOnboardingTemplateStep({
   onSaved,
 }: HomeOnboardingTemplateStepProps) {
-  const appPath = useAppPath();
   const { steps } = useOnboardingSteps();
   const workflowStepDone = isWorkflowOnboardingStepDone(steps);
 
@@ -45,13 +43,13 @@ export default function HomeOnboardingTemplateStep({
       </p>
       <div className="mt-5 flex flex-wrap gap-3">
         <Link
-          href={appPath("/library")}
+          href="/library"
           className={APP_SURFACE_CTA_PRIMARY_SM_CLASS}
         >
           Create in Library
         </Link>
         <Link
-          href={appPath("/library")}
+          href="/library"
           className={APP_SURFACE_CTA_SECONDARY_SM_CLASS}
         >
           Open Library

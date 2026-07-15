@@ -12,7 +12,6 @@ Browse and borrow company-published agents.
 ## Routes
 
 - `/marketplace`
-- `/demo/marketplace`
 
 ## APIs
 

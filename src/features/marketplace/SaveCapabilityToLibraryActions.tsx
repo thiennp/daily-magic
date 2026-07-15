@@ -3,7 +3,6 @@
 import { useState } from "react";
 
 import { saveCapabilityTemplateToLibrary } from "@/features/capabilities/utils/capabilityTemplatesApi";
-import { useDemoPreview } from "@/features/demo/DemoPreviewContext";
 import forkCapabilityToLibrary from "@/features/harness/hooks/forkCapabilityToLibrary";
 import Button from "@/components/ui/button/Button";
 import { parsePresetMarketplaceTemplateId } from "@/lib/marketplace/presetMarketplaceCapabilityId";
@@ -21,18 +20,11 @@ export default function SaveCapabilityToLibraryActions({
   sourceOwnerLabel,
   isOfficialPreset = false,
 }: SaveCapabilityToLibraryActionsProps) {
-  const demoPreview = useDemoPreview();
   const [status, setStatus] = useState<SaveStatus>("idle");
   const [message, setMessage] = useState<string | null>(null);
   const [savedName, setSavedName] = useState<string | null>(null);
 
   const handleSave = async (): Promise<void> => {
-    if (demoPreview) {
-      setStatus("error");
-      setMessage("Demo preview does not save to your account.");
-      return;
-    }
-
     setStatus("saving");
     setMessage(null);
 

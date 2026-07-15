@@ -3,16 +3,10 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-import {
-  normalizeAppPathname,
-  useAppPath,
-} from "@/features/demo/DemoPreviewContext";
 import { BOTTOM_NAV } from "@/features/shell/appBottomNav.constant";
 
 export default function AppShellBottomNav() {
   const pathname = usePathname();
-  const appPath = useAppPath();
-  const normalizedPath = normalizeAppPathname(pathname);
 
   return (
     <nav
@@ -21,12 +15,12 @@ export default function AppShellBottomNav() {
     >
       <ul className="mx-auto grid max-w-lg grid-cols-5">
         {BOTTOM_NAV.map((item) => {
-          const isActive = item.isActive(normalizedPath);
+          const isActive = item.isActive(pathname);
 
           return (
             <li key={item.href}>
               <Link
-                href={appPath(item.href)}
+                href={item.href}
                 aria-current={isActive ? "page" : undefined}
                 className={`flex min-h-14 flex-col items-center justify-center px-1 py-2 text-[11px] font-medium transition ${
                   isActive

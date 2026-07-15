@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
 
-import { useDemoPreview } from "@/features/demo/DemoPreviewContext";
 import type { CapabilityFeedbackInboxItem } from "@/lib/feedback/types/CapabilityFeedbackRecord.type";
 
 export function useFeedbackInbox(): {
@@ -8,17 +7,12 @@ export function useFeedbackInbox(): {
   readonly isLoading: boolean;
   readonly reloadInbox: () => Promise<void>;
 } {
-  const demoPreview = useDemoPreview();
   const [items, setItems] = useState<readonly CapabilityFeedbackInboxItem[]>(
-    () => demoPreview?.feedbackItems ?? [],
+    [],
   );
-  const [isLoading, setIsLoading] = useState(() => !demoPreview);
+  const [isLoading, setIsLoading] = useState(true);
 
   const reloadInbox = useCallback(async (): Promise<void> => {
-    if (demoPreview) {
-      return;
-    }
-
     try {
       const response = await fetch("/api/capabilities/feedback/inbox");
       if (!response.ok) {
@@ -37,15 +31,11 @@ export function useFeedbackInbox(): {
     } finally {
       setIsLoading(false);
     }
-  }, [demoPreview]);
+  }, []);
 
   useEffect(() => {
-    if (demoPreview) {
-      return;
-    }
-
     void reloadInbox();
-  }, [demoPreview, reloadInbox]);
+  }, [reloadInbox]);
 
   return { items, isLoading, reloadInbox };
 }

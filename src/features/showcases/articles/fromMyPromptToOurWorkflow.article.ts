@@ -12,7 +12,7 @@ const fromMyPromptToOurWorkflow: ShowcaseArticle = {
     "Willingness to publish a capability for your group",
     "Workflow fields if the task has repeatable inputs",
   ],
-  tryNext: { label: "View what teammates can request", href: "/demo/home" },
+  tryNext: { label: "View what teammates can request", href: "/" },
   sections: [
     {
       paragraphs: [

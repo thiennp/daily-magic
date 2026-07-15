@@ -3,12 +3,11 @@ import { useEffect } from "react";
 import { AGENT_RUNS_LOCAL_CACHE_UPDATED_EVENT } from "@/features/reports/agentRunLocalCache";
 
 const useOnboardingTaskStepRefresh = (input: {
-  readonly demoPreview: unknown;
   readonly isTaskStepDone: boolean;
   readonly reloadSteps: () => Promise<void>;
 }): void => {
   useEffect(() => {
-    if (input.demoPreview || input.isTaskStepDone) {
+    if (input.isTaskStepDone) {
       return;
     }
 
@@ -37,7 +36,7 @@ const useOnboardingTaskStepRefresh = (input: {
         refreshTaskStep,
       );
     };
-  }, [input.demoPreview, input.isTaskStepDone, input.reloadSteps]);
+  }, [input.isTaskStepDone, input.reloadSteps]);
 };
 
 export default useOnboardingTaskStepRefresh;

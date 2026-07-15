@@ -12,7 +12,7 @@ const firstAgentTaskIn5Minutes: ShowcaseArticle = {
     "The app on a server that can talk to your Mac live (not plain serverless)",
     "A short task description — one sentence is enough",
   ],
-  tryNext: { label: "Try the demo task composer", href: "/demo/agent" },
+  tryNext: { label: "Try the demo task composer", href: "/agent" },
   sections: [
     {
       paragraphs: [

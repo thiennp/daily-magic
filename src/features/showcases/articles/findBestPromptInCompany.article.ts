@@ -12,7 +12,7 @@ const findBestPromptInCompany: ShowcaseArticle = {
     "Company visibility (group or public) on their listings",
     "Note: many listings today link a rules bundle — the catalog grows as teams publish",
   ],
-  tryNext: { label: "Browse the demo marketplace", href: "/demo/marketplace" },
+  tryNext: { label: "Browse the demo marketplace", href: "/marketplace" },
   sections: [
     {
       paragraphs: [

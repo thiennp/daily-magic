@@ -13,7 +13,7 @@ const oneEmployeeOneAgent: ShowcaseArticle = {
     "Published capabilities per person (assistants or workflows)",
     "Groups so colleagues can find who offers what",
   ],
-  tryNext: { label: "Explore demo home dashboard", href: "/demo/home" },
+  tryNext: { label: "Explore demo home dashboard", href: "/" },
   sections: [
     {
       paragraphs: [

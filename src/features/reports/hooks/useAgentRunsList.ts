@@ -3,7 +3,6 @@
 import { useSession } from "next-auth/react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
-import { useDemoPreview } from "@/features/demo/DemoPreviewContext";
 import {
   AGENT_RUNS_LOCAL_CACHE_UPDATED_EVENT,
   listAgentRunsLocalCache,
@@ -23,7 +22,6 @@ export function useAgentRunsList(input: {
   readonly runs: ReturnType<typeof buildViewerAgentRunsList>;
   readonly isLoading: boolean;
 } {
-  const demoPreview = useDemoPreview();
   const { data: session } = useSession();
   const userId =
     typeof session?.user?.id === "string" ? session.user.id : undefined;
@@ -32,7 +30,7 @@ export function useAgentRunsList(input: {
     setCacheVersion((current) => current + 1);
   }, []);
   const { apiRuns, isLoading, refresh } = useAgentRunsRemoteSync({
-    enabled: demoPreview === null,
+    enabled: true,
     statusFilter: input.statusFilter,
     scopeFilter: input.scopeFilter,
     groupFilter: input.groupFilter,
@@ -40,7 +38,7 @@ export function useAgentRunsList(input: {
   });
 
   useAgentRunsActiveSse({
-    enabled: demoPreview === null,
+    enabled: true,
     runs: apiRuns,
     onRunActivity: () => {
       refresh();
@@ -53,36 +51,29 @@ export function useAgentRunsList(input: {
     return listAgentRunsLocalCache();
   }, [cacheVersion]);
 
-  const runs = useMemo(() => {
-    if (demoPreview) {
-      return demoPreview.agentRuns;
-    }
-
-    return buildViewerAgentRunsList({
-      userId,
+  const runs = useMemo(
+    () =>
+      buildViewerAgentRunsList({
+        userId,
+        apiRuns,
+        cachedRuns,
+        statusFilter: input.statusFilter,
+        scopeFilter: input.scopeFilter,
+        groupFilter: input.groupFilter,
+      }),
+    [
       apiRuns,
       cachedRuns,
-      statusFilter: input.statusFilter,
-      scopeFilter: input.scopeFilter,
-      groupFilter: input.groupFilter,
-    });
-  }, [
-    apiRuns,
-    cachedRuns,
-    demoPreview,
-    input.groupFilter,
-    input.scopeFilter,
-    input.statusFilter,
-    userId,
-  ]);
+      input.groupFilter,
+      input.scopeFilter,
+      input.statusFilter,
+      userId,
+    ],
+  );
 
   useAgentRunRecordSync(bumpCache);
 
   useEffect(() => {
-    if (demoPreview) {
-      return;
-    }
-
     const handleCacheUpdated = (): void => {
       bumpCache();
     };
@@ -98,7 +89,7 @@ export function useAgentRunsList(input: {
         handleCacheUpdated,
       );
     };
-  }, [bumpCache, demoPreview]);
+  }, [bumpCache]);
 
-  return { runs, isLoading: demoPreview ? false : isLoading };
+  return { runs, isLoading };
 }

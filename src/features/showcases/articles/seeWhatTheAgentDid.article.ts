@@ -12,7 +12,7 @@ const seeWhatTheAgentDid: ShowcaseArticle = {
   ],
   tryNext: {
     label: "View a sample report",
-    href: "/demo/reports/run-demo-completed",
+    href: "/reports",
   },
   sections: [
     {

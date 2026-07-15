@@ -9,7 +9,6 @@ export const resolveMarketplaceInstallEligibility = (input: {
   readonly capabilityId: string | null;
   readonly selectedDevice: MyMacDevice | undefined;
   readonly isWakeServerReachable: boolean;
-  readonly isDemoPreview: boolean;
   readonly status: "idle" | "installing" | "done" | "error";
 }): {
   readonly canInstall: boolean;
@@ -25,7 +24,6 @@ export const resolveMarketplaceInstallEligibility = (input: {
     input.selectedDevice !== undefined;
   const canInstall =
     input.capabilityId !== null &&
-    !input.isDemoPreview &&
     input.selectedDevice !== undefined &&
     (canDispatchToMac(input.selectedDevice) ||
       canInstallHarnessLocally ||

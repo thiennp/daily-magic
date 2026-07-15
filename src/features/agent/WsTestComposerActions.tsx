@@ -6,7 +6,6 @@ import ComposerBlockedActionButtons from "@/features/agent/ComposerBlockedAction
 import WsTestComposerHelperText from "@/features/agent/WsTestComposerHelperText";
 import type { WsTestConnectionStatus } from "@/features/agent/types/WsTestConnectionStatus.type";
 import { resolveComposerBlockedAction } from "@/features/agent/utils/resolveComposerBlockedAction";
-import { useAppPath } from "@/features/demo/DemoPreviewContext";
 import { useCopyToClipboard } from "@/hooks/useCopyToClipboard";
 
 interface WsTestComposerActionsProps {
@@ -39,7 +38,6 @@ interface WsTestComposerActionsProps {
 export default function WsTestComposerActions(
   props: WsTestComposerActionsProps,
 ) {
-  const appPath = useAppPath();
   const { copied, copy } = useCopyToClipboard();
 
   const blockedAction = useMemo(
@@ -58,9 +56,9 @@ export default function WsTestComposerActions(
         selectedGroupId: props.selectedGroupId,
         selectedTargetUserId: props.selectedTargetUserId,
         selectedCapabilityId: props.selectedCapabilityId,
-        manageMacsHref: appPath("/#your-setup"),
+        manageMacsHref: "/#your-setup",
       }),
-    [appPath, props],
+    [props],
   );
 
   return (

@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 
 import { useConnectionLab } from "@/features/agent-witch/connection-lab/ConnectionLabContext";
-import { useDemoPreview } from "@/features/demo/DemoPreviewContext";
 import { useAgentWitchLiveTerminal } from "@/features/agent/hooks/useAgentWitchLiveTerminal";
 import { useAgentWitchPromptDispatch } from "@/features/agent/hooks/useAgentWitchPromptDispatch";
 import { subscribeAgentWitchDashboardSocket } from "@/features/agent/hooks/subscribeAgentWitchDashboardSocket";
@@ -44,14 +43,13 @@ export interface UseAgentWitchSocketResult {
 }
 
 export function useAgentWitchSocket(): UseAgentWitchSocketResult {
-  const demoPreview = useDemoPreview();
   const connectionLab = useConnectionLab();
   const socketRef = useRef<WebSocket | null>(null);
   const [liveConnectionStatus, setLiveConnectionStatus] =
     useState<WsTestConnectionStatus>(() =>
       resolveInitialConnectionStatus(
-        demoPreview !== null || connectionLab !== null,
-        demoPreview ? "connected" : connectionLab?.connectionStatus,
+        connectionLab !== null,
+        connectionLab?.connectionStatus,
       ),
     );
   const [lastResponse, setLastResponse] = useState<AgentWitchSocketDisplay>({
@@ -72,11 +70,10 @@ export function useAgentWitchSocket(): UseAgentWitchSocketResult {
     dismissInput: dismissLiveTerminalInput,
   } = useAgentWitchLiveTerminal(socketRef);
   const connectionStatus =
-    connectionLab?.connectionStatus ??
-    (demoPreview ? "connected" : liveConnectionStatus);
+    connectionLab?.connectionStatus ?? liveConnectionStatus;
 
   useEffect(() => {
-    if (connectionLab !== null || demoPreview) {
+    if (connectionLab !== null) {
       return;
     }
 
@@ -92,11 +89,10 @@ export function useAgentWitchSocket(): UseAgentWitchSocketResult {
         socketRef.current = socket;
       },
     });
-  }, [applySocketMessage, connectionLab, demoPreview]);
+  }, [applySocketMessage, connectionLab]);
 
   const sendClaudePrompt = useAgentWitchPromptDispatch({
     socketRef,
-    demoPreview,
     connectionLab,
     beginSession,
     applySocketMessage,

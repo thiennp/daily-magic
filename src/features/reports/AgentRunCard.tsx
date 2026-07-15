@@ -3,7 +3,6 @@
 import Link from "next/link";
 
 import AppPanel from "@/components/surfaces/AppPanel";
-import { useAppPath } from "@/features/demo/DemoPreviewContext";
 import AgentRunAgainButton from "@/features/reports/AgentRunAgainButton";
 import AgentRunStatusBadge from "@/features/reports/AgentRunStatusBadge";
 import type EnrichedAgentRunRecord from "@/lib/dispatch/types/EnrichedAgentRunRecord.type";
@@ -14,7 +13,6 @@ interface AgentRunCardProps {
 }
 
 export default function AgentRunCard({ run }: AgentRunCardProps) {
-  const appPath = useAppPath();
   const canRunAgain = run.status === AgentRunStatus.COMPLETED;
 
   return (
@@ -36,7 +34,7 @@ export default function AgentRunCard({ run }: AgentRunCardProps) {
       </pre>
       <div className="mt-4 flex flex-wrap items-center gap-3">
         <Link
-          href={appPath(`/reports/${run.id}`)}
+          href={`/reports/${run.id}`}
           className="text-sm font-medium text-brand-600 hover:text-brand-700 dark:text-brand-400"
         >
           View full report

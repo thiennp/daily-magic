@@ -1,10 +1,7 @@
-export function resolveOnboardingStepHref(
-  href: string,
-  appPath: (path: string) => string,
-): string {
+export function resolveOnboardingStepHref(href: string): string {
   if (href.includes("#your-setup")) {
-    return `${appPath("/")}#your-setup`;
+    return "/#your-setup";
   }
 
-  return appPath(href);
+  return href;
 }

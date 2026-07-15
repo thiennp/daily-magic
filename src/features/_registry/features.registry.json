@@ -6,7 +6,7 @@
       "purpose": "Authenticated hub, onboarding, Mac connect flow, guest landing.",
       "featurePath": "src/features/home",
       "libPath": null,
-      "routePaths": ["/", "/demo/home"],
+      "routePaths": ["/"],
       "apiPaths": [],
       "dependsOn": ["agent-witch", "capabilities", "harness", "dispatch"],
       "migrationStatus": "migrated"
@@ -17,7 +17,7 @@
       "purpose": "Mac pairing, install, WebSocket bridge, device registry.",
       "featurePath": "src/features/agent-witch",
       "libPath": "src/lib/agentWitch",
-      "routePaths": ["/install/agent-witch.sh"],
+      "routePaths": ["/install/agent-witch.sh", "/connection-lab"],
       "apiPaths": ["/api/agent-witch"],
       "dependsOn": ["auth", "dispatch"],
       "migrationStatus": "migrated"
@@ -28,7 +28,7 @@
       "purpose": "Compose and send tasks to Mac via Agent Witch.",
       "featurePath": "src/features/agent",
       "libPath": null,
-      "routePaths": ["/agent", "/ws-test", "/demo/agent"],
+      "routePaths": ["/agent", "/ws-test"],
       "apiPaths": ["/api/agent-runs"],
       "dependsOn": ["dispatch", "capabilities", "workflows", "agent-witch"],
       "migrationStatus": "migrated"
@@ -72,7 +72,7 @@
       "purpose": "Saved playbooks; fork and run from library.",
       "featurePath": "src/features/library",
       "libPath": "src/lib/library",
-      "routePaths": ["/library", "/demo/library"],
+      "routePaths": ["/library"],
       "apiPaths": [],
       "dependsOn": ["workflows", "capabilities", "harness"],
       "migrationStatus": "documented"
@@ -94,7 +94,7 @@
       "purpose": "Browse and borrow company-published agents.",
       "featurePath": "src/features/marketplace",
       "libPath": "src/lib/harness",
-      "routePaths": ["/marketplace", "/demo/marketplace"],
+      "routePaths": ["/marketplace"],
       "apiPaths": ["/api/harness/marketplace"],
       "dependsOn": ["harness", "library", "capabilities"],
       "migrationStatus": "migrated"
@@ -105,7 +105,7 @@
       "purpose": "Agent run history, live terminal, re-run.",
       "featurePath": "src/features/reports",
       "libPath": null,
-      "routePaths": ["/reports", "/reports/[runId]", "/demo/reports"],
+      "routePaths": ["/reports", "/reports/[runId]"],
       "apiPaths": ["/api/agent-runs"],
       "dependsOn": ["dispatch", "feedback"],
       "migrationStatus": "documented"
@@ -138,7 +138,7 @@
       "purpose": "Users, groups, company dispatch rules.",
       "featurePath": "src/features/admin",
       "libPath": "src/lib/admin",
-      "routePaths": ["/admin/groups", "/admin/users", "/demo/admin/groups"],
+      "routePaths": ["/admin/groups", "/admin/users"],
       "apiPaths": ["/api/admin"],
       "dependsOn": ["auth", "dispatch"],
       "migrationStatus": "documented"
@@ -173,7 +173,7 @@
       "libPath": null,
       "routePaths": [],
       "apiPaths": [],
-      "dependsOn": ["auth", "dispatch", "demo"],
+      "dependsOn": ["auth", "dispatch"],
       "migrationStatus": "documented"
     },
     {
@@ -196,17 +196,6 @@
       "routePaths": ["/showcases"],
       "apiPaths": [],
       "dependsOn": ["marketing"],
-      "migrationStatus": "documented"
-    },
-    {
-      "slug": "demo",
-      "title": "Demo mode",
-      "purpose": "UI preview without auth using mock fixtures.",
-      "featurePath": "src/features/demo",
-      "libPath": null,
-      "routePaths": ["/demo"],
-      "apiPaths": [],
-      "dependsOn": [],
       "migrationStatus": "documented"
     },
     {

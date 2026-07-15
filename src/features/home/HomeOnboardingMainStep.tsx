@@ -12,7 +12,6 @@ import type { HomeOnboardingMainStepContent } from "@/features/home/constants/ho
 import HomeOnboardingPriorStepSection from "@/features/home/HomeOnboardingPriorStepSection";
 import type { OnboardingStep } from "@/features/home/loadOnboardingSteps";
 import { resolveOnboardingStepHref } from "@/features/home/resolveOnboardingStepHref";
-import { useAppPath } from "@/features/demo/DemoPreviewContext";
 
 interface HomeOnboardingMainStepProps {
   readonly step: OnboardingStep;
@@ -25,8 +24,6 @@ export default function HomeOnboardingMainStep({
   content,
   priorStep,
 }: HomeOnboardingMainStepProps) {
-  const appPath = useAppPath();
-
   return (
     <AppHero variant="neutral">
       <p className={APP_SURFACE_EYEBROW_TEXT_CLASS}>{content.eyebrow}</p>
@@ -36,7 +33,7 @@ export default function HomeOnboardingMainStep({
       <p className={`mt-3 ${APP_SURFACE_BODY_TEXT_CLASS}`}>{content.detail}</p>
       <div className="mt-6">
         <Link
-          href={resolveOnboardingStepHref(step.href, appPath)}
+          href={resolveOnboardingStepHref(step.href)}
           className={APP_SURFACE_CTA_PRIMARY_CLASS}
         >
           {content.ctaLabel}

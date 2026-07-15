@@ -13,7 +13,7 @@ const worksWithoutN8n: ShowcaseArticle = {
     "A published workflow capability (form fields + assembled prompt)",
     "No n8n account or webhook setup",
   ],
-  tryNext: { label: "Try a workflow in demo", href: "/demo/library" },
+  tryNext: { label: "Try a workflow in demo", href: "/library" },
   sections: [
     {
       paragraphs: [

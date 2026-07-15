@@ -6,7 +6,6 @@ import type { TemplateTab } from "@/features/capabilities/CapabilityTemplateTabB
 import { CAPABILITY_TEMPLATE_PICKER_VISIBLE_COUNT } from "@/features/capabilities/constants/capabilityTemplatePicker.constant";
 import useCapabilityTemplates from "@/features/capabilities/hooks/useCapabilityTemplates";
 import { saveCapabilityTemplateToLibrary } from "@/features/capabilities/utils/capabilityTemplatesApi";
-import { useDemoPreview } from "@/features/demo/DemoPreviewContext";
 import { CapabilityType } from "@/lib/capabilities/CapabilityType.constant";
 import type { CapabilityTemplateSummary } from "@/lib/capabilities/templates/types/CapabilityTemplate.type";
 
@@ -17,7 +16,6 @@ interface UseCapabilityTemplatePickerOptions {
 export function useCapabilityTemplatePicker({
   onSaved,
 }: UseCapabilityTemplatePickerOptions) {
-  const demoPreview = useDemoPreview();
   const { templates, isLoading } = useCapabilityTemplates();
   const [activeTab, setActiveTab] = useState<TemplateTab>("workflow");
   const [selectedTemplateId, setSelectedTemplateId] = useState<string | null>(
@@ -69,13 +67,6 @@ export function useCapabilityTemplatePicker({
   };
 
   const handleSave = async (templateId: string): Promise<void> => {
-    if (demoPreview) {
-      setSavedTemplateId(templateId);
-      setHarnessMessage("Demo preview — Mac install is simulated.");
-      onSaved?.();
-      return;
-    }
-
     setErrorMessage(null);
     setHarnessMessage(null);
     setSavingTemplateId(templateId);

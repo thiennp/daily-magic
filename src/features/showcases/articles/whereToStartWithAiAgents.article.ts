@@ -13,7 +13,7 @@ const whereToStartWithAiAgents: ShowcaseArticle = {
     "A free account to explore the demo",
     "A Mac with Agent Witch when you're ready to run real jobs",
   ],
-  tryNext: { label: "Browse the demo library", href: "/demo/library" },
+  tryNext: { label: "Browse the demo library", href: "/library" },
   sections: [
     {
       paragraphs: [

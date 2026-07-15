@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import Button from "@/components/ui/button/Button";
 import { Modal } from "@/components/ui/modal";
 import useMacDeviceSelection from "@/features/agent/hooks/useMacDeviceSelection";
-import { useDemoPreview } from "@/features/demo/DemoPreviewContext";
 import useLocalMacBrowserContext from "@/features/home/hooks/useLocalMacBrowserContext";
 import MarketplaceInstallMacPicker from "@/features/marketplace/MarketplaceInstallMacPicker";
 import { resolveMarketplaceInstallEligibility } from "@/features/marketplace/utils/resolveMarketplaceInstallEligibility";
@@ -21,7 +20,6 @@ export default function MarketplaceInstallModal({
   listing,
   onClose,
 }: MarketplaceInstallModalProps) {
-  const demoPreview = useDemoPreview();
   const macSelection = useMacDeviceSelection();
   const { localHostname, isWakeServerReachable } = useLocalMacBrowserContext();
   const [status, setStatus] = useState<
@@ -45,7 +43,6 @@ export default function MarketplaceInstallModal({
       capabilityId: listing?.capabilityId ?? null,
       selectedDevice,
       isWakeServerReachable,
-      isDemoPreview: demoPreview !== null,
       status,
     });
 
@@ -78,7 +75,6 @@ export default function MarketplaceInstallModal({
         macSelection={macSelection}
         localHostname={localHostname}
         isWakeServerReachable={isWakeServerReachable}
-        isDemoPreview={demoPreview !== null}
       />
 
       {needsLiveConnection ? (

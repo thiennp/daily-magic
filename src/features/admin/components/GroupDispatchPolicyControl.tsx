@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import Button from "@/components/ui/button/Button";
 import { APP_SURFACE_NESTED_CARD_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
 import { COMPANY_ENTITY_LABEL } from "@/lib/admin/companyGroupCopy.constant";
-import { useDemoPreview } from "@/features/demo/DemoPreviewContext";
 import {
   DispatchPolicy,
   type DispatchPolicyValue,
@@ -18,18 +17,12 @@ interface GroupDispatchPolicyControlProps {
 export default function GroupDispatchPolicyControl({
   groupId,
 }: GroupDispatchPolicyControlProps) {
-  const demoPreview = useDemoPreview();
   const [policy, setPolicy] = useState<DispatchPolicyValue>(
-    () =>
-      demoPreview?.dispatchPolicyByGroupId[groupId] ?? DispatchPolicy.APPROVAL,
+    DispatchPolicy.APPROVAL,
   );
   const [message, setMessage] = useState<string | null>(null);
 
   useEffect(() => {
-    if (demoPreview) {
-      return;
-    }
-
     void (async () => {
       const response = await fetch(
         `/api/admin/groups/${groupId}/dispatch-policy`,
@@ -54,14 +47,9 @@ export default function GroupDispatchPolicyControl({
         }
       }
     })();
-  }, [demoPreview, groupId]);
+  }, [groupId]);
 
   const savePolicy = async (): Promise<void> => {
-    if (demoPreview) {
-      setMessage("Demo preview — policy changes are not saved.");
-      return;
-    }
-
     const response = await fetch(
       `/api/admin/groups/${groupId}/dispatch-policy`,
       {

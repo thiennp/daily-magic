@@ -13,7 +13,7 @@ const stopCopyPasteEveryMonday: ShowcaseArticle = {
   ],
   tryNext: {
     label: "See the weekly report workflow",
-    href: "/demo/agent?libraryCapabilityId=cap-demo-weekly-report",
+    href: "/agent",
   },
   sections: [
     {

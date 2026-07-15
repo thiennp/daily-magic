@@ -2,8 +2,6 @@
 
 import { useState } from "react";
 
-import { useDemoPreview } from "@/features/demo/DemoPreviewContext";
-
 export function useTeamDispatchSelection(): {
   readonly selectedGroupId: string;
   readonly selectedTargetUserId: string;
@@ -12,16 +10,9 @@ export function useTeamDispatchSelection(): {
   readonly setSelectedTargetUserId: (value: string) => void;
   readonly setSelectedCapabilityId: (value: string) => void;
 } {
-  const demoPreview = useDemoPreview();
-  const [selectedGroupId, setSelectedGroupId] = useState(
-    demoPreview?.agentComposer.groupId ?? "",
-  );
-  const [selectedTargetUserId, setSelectedTargetUserId] = useState(
-    demoPreview?.agentComposer.targetUserId ?? "",
-  );
-  const [selectedCapabilityId, setSelectedCapabilityId] = useState(
-    demoPreview?.agentComposer.capabilityId ?? "",
-  );
+  const [selectedGroupId, setSelectedGroupId] = useState("");
+  const [selectedTargetUserId, setSelectedTargetUserId] = useState("");
+  const [selectedCapabilityId, setSelectedCapabilityId] = useState("");
 
   return {
     selectedGroupId,
