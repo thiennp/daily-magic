@@ -64,7 +64,7 @@ Document every production bug or UX regression here. Each entry must link to a t
 
 ## Adding issues
 
-Use the next ID (`HOME-015`, …). Include symptom, root cause, fix paths, and test file.
+Use the next ID (`HOME-016`, …). Include symptom, root cause, fix paths, and test file.
 
 ---
 
@@ -173,3 +173,15 @@ Use the next ID (`HOME-015`, …). Include symptom, root cause, fix paths, and t
 **Fix:** Persist `users.onboarding_setup_acknowledged` via `GET`/`POST /api/onboarding/setup-acknowledged`. Client mirrors `daily-magic.onboarding.setup-acknowledged.v1`; “Continue to home” dismisses to `HomeDashboardHero`. `shouldShowOnboardingSetupCompletePanel` gates the success state.
 
 **Regression test:** `onboardingSetupAcknowledgedQueries.test.ts`, `onboardingSetupAcknowledgedApi.test.ts`, `onboardingSetupAcknowledgedStore.test.ts`, `shouldShowOnboardingSetupCompletePanel.test.ts`.
+
+---
+
+## HOME-015 — Setup-complete panel returned after navigation CTA
+
+**Symptom:** Users who clicked “Send another task”, “Schedule a workflow”, or “Browse showcases” on the setup-complete panel saw it again on the next home visit.
+
+**Root cause:** Only the explicit “Continue to home” button called `acknowledgeSetup`; navigation links did not persist dismissal.
+
+**Fix:** Primary and featured setup-complete links call `onDismiss` on click so action-oriented exits acknowledge setup once.
+
+**Regression test:** Manual QA; `HomeOnboardingSetupCompletePanel` action links wire `onClick={onDismiss}` (grep guard in review).

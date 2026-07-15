@@ -35,6 +35,7 @@ export default function HomeOnboardingSetupCompletePanel({
         <Link
           href={buildAgentComposerHref()}
           className={APP_SURFACE_CTA_PRIMARY_CLASS}
+          onClick={onDismiss}
         >
           Send another task
         </Link>
@@ -47,10 +48,18 @@ export default function HomeOnboardingSetupCompletePanel({
         </button>
       </div>
       <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-sm">
-        <Link href="/automations" className={APP_SURFACE_TEXT_LINK_CLASS}>
+        <Link
+          href="/automations"
+          className={APP_SURFACE_TEXT_LINK_CLASS}
+          onClick={onDismiss}
+        >
           Schedule a workflow →
         </Link>
-        <Link href="/showcases" className={APP_SURFACE_TEXT_LINK_CLASS}>
+        <Link
+          href="/showcases"
+          className={APP_SURFACE_TEXT_LINK_CLASS}
+          onClick={onDismiss}
+        >
           Browse showcases →
         </Link>
         <Link href="/library" className={APP_SURFACE_TEXT_LINK_MUTED_CLASS}>
