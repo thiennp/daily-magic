@@ -69,6 +69,14 @@ curl http://localhost:3000/api/notes
 4. Vercel injects `DATABASE_URL` automatically for Production and Preview.
 5. Deploy. **`vercel-build` runs pending SQL migrations** from `db/migrations/` (tracked in `schema_migrations`) before `next build`. Locally: `npm run db:migrate` (needs `DATABASE_URL`; uses Neon over the network — no `psql` required).
 
+**Existing databases** that were created with `db/schema.sql` or manual `psql` before `schema_migrations` existed: run once with `DATABASE_URL` set:
+
+```bash
+npm run db:migrate:bootstrap
+```
+
+That records `002`–`014` as already applied without re-running SQL. The next deploy only applies new files (e.g. `015-agent-automations.sql`).
+
 ### Option B: Manual env var
 
 1. Create a Neon project and copy the connection string.
