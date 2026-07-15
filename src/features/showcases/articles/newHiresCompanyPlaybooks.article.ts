@@ -13,8 +13,8 @@ const newHiresCompanyPlaybooks: ShowcaseArticle = {
     "Your own Mac connected when you need to run locally",
   ],
   tryNext: {
-    label: "Save a playbook from marketplace",
-    href: "/marketplace",
+    label: "Follow the 15-minute onboard",
+    href: "/showcases/onboard-in-15-minutes",
   },
   sections: [
     {
@@ -34,7 +34,7 @@ const newHiresCompanyPlaybooks: ShowcaseArticle = {
     {
       heading: "If the catalog is empty",
       paragraphs: [
-        "Someone senior publishes first. Even one weekly report and one research template is enough for onboarding to beat blank prompts.",
+        "Ask a champion to finish company-onboard-in-30-minutes first. Even one weekly status and one research template beats blank prompts — an empty Marketplace is worse than no AI tooling at all for trust.",
       ],
     },
   ],

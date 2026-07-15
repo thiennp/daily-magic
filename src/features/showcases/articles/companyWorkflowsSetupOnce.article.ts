@@ -8,11 +8,11 @@ const companyWorkflowsSetupOnce: ShowcaseArticle = {
   supportLevel: "partial",
   readMinutes: 4,
   whatYouNeed: [
-    "A champion who publishes capabilities (today often via API — visual builder coming)",
+    "A champion who can create a workflow in Library and publish it",
     "Workflow fields defined: labels, types, required flags",
     "Teammates who save or use published playbooks from Marketplace or directory",
   ],
-  tryNext: { label: "See a workflow in the demo", href: "/library" },
+  tryNext: { label: "Open Library", href: "/library" },
   sections: [
     {
       paragraphs: [
@@ -22,15 +22,15 @@ const companyWorkflowsSetupOnce: ShowcaseArticle = {
     {
       heading: "The company pattern",
       bullets: [
-        "Ops or lead publishes a workflow capability",
-        "Fields encode what must be collected every time",
+        "Ops or lead creates a workflow in Library (fields + prompt template)",
+        "Publish so the group can see it in Marketplace or the team directory",
         "Requesters fill the form; executor Mac runs the assembled prompt",
       ],
     },
     {
       heading: "Honest limit today",
       paragraphs: [
-        "Creating workflows without code is still limited — power users or admins may publish via API. Reading, forking, and running published workflows is fully supported in the app.",
+        "Creating and editing workflows in Library works for the common case. Complex publish and visibility settings may still need a careful first pass — start with one weekly status workflow, then grow the catalog.",
       ],
     },
   ],

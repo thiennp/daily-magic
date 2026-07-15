@@ -12,7 +12,7 @@ const whatPhoneCanDoAlone: ShowcaseArticle = {
     "To send: browser connected to the app + a Mac online to run the job",
     "For team dispatch: a teammate's Mac as executor",
   ],
-  tryNext: { label: "Open library on mobile demo", href: "/library" },
+  tryNext: { label: "Open Library", href: "/library" },
   sections: [
     {
       paragraphs: [

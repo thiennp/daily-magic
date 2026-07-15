@@ -12,8 +12,8 @@ const stopCopyPasteEveryMonday: ShowcaseArticle = {
     "Two minutes to save it as a playbook or fork from a teammate",
   ],
   tryNext: {
-    label: "See the weekly report workflow",
-    href: "/agent",
+    label: "Open Library",
+    href: "/library",
   },
   sections: [
     {

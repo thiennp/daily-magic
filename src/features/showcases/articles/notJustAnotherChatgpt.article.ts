@@ -3,7 +3,7 @@ import type ShowcaseArticle from "@/features/showcases/types/ShowcaseArticle.typ
 const notJustAnotherChatgpt: ShowcaseArticle = {
   slug: "not-just-another-chatgpt",
   title: "This is not just another ChatGPT tab",
-  subtitle: "Dispatch, local files, shared playbooks, and a paper trail.",
+  subtitle: "Dispatch, local files, shared playbooks, and a run log.",
   category: "Common questions",
   supportLevel: "full",
   readMinutes: 3,

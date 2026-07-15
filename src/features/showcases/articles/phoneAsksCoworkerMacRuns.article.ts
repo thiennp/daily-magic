@@ -12,7 +12,7 @@ const phoneAsksCoworkerMacRuns: ShowcaseArticle = {
     "Their Mac agent online — not yours",
     "Approval policy if your company requires it",
   ],
-  tryNext: { label: "Try team dispatch in demo", href: "/agent" },
+  tryNext: { label: "Open Send a task", href: "/?sendTask=1" },
   sections: [
     {
       paragraphs: [

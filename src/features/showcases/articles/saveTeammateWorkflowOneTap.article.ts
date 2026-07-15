@@ -12,7 +12,7 @@ const saveTeammateWorkflowOneTap: ShowcaseArticle = {
     "Access to a published listing you can view (group or public)",
     "Your own account — saved copy is private draft by default",
   ],
-  tryNext: { label: "Preview and save in demo", href: "/marketplace" },
+  tryNext: { label: "Open Marketplace", href: "/marketplace" },
   sections: [
     {
       paragraphs: [

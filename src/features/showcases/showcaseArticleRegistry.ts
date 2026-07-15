@@ -1,3 +1,4 @@
+import companyOnboardIn30Minutes from "@/features/showcases/articles/companyOnboardIn30Minutes.article";
 import companyWorkflowsSetupOnce from "@/features/showcases/articles/companyWorkflowsSetupOnce.article";
 import controlMacFromPhone from "@/features/showcases/articles/controlMacFromPhone.article";
 import findBestPromptInCompany from "@/features/showcases/articles/findBestPromptInCompany.article";
@@ -8,6 +9,7 @@ import managerApprovesBeforeRun from "@/features/showcases/articles/managerAppro
 import newHiresCompanyPlaybooks from "@/features/showcases/articles/newHiresCompanyPlaybooks.article";
 import notASlackReplacement from "@/features/showcases/articles/notASlackReplacement.article";
 import notJustAnotherChatgpt from "@/features/showcases/articles/notJustAnotherChatgpt.article";
+import onboardIn15Minutes from "@/features/showcases/articles/onboardIn15Minutes.article";
 import oneEmployeeOneAgent from "@/features/showcases/articles/oneEmployeeOneAgent.article";
 import phoneAsksCoworkerMacRuns from "@/features/showcases/articles/phoneAsksCoworkerMacRuns.article";
 import runAgainWithoutRetyping from "@/features/showcases/articles/runAgainWithoutRetyping.article";
@@ -25,6 +27,7 @@ import worksWithoutN8n from "@/features/showcases/articles/worksWithoutN8n.artic
 import type ShowcaseArticle from "@/features/showcases/types/ShowcaseArticle.type";
 
 export const SHOWCASE_ARTICLES_PHASE_1: readonly ShowcaseArticle[] = [
+  onboardIn15Minutes,
   whereToStartWithAiAgents,
   firstAgentTaskIn5Minutes,
   stopMemorizingPrompts,
@@ -43,6 +46,7 @@ export const SHOWCASE_ARTICLES_PHASE_2: readonly ShowcaseArticle[] = [
 ] as const;
 
 export const SHOWCASE_ARTICLES_PHASE_3: readonly ShowcaseArticle[] = [
+  companyOnboardIn30Minutes,
   oneEmployeeOneAgent,
   companyWorkflowsSetupOnce,
   manageCompanyAgents,
@@ -68,19 +72,19 @@ export const SHOWCASE_ARTICLES: readonly ShowcaseArticle[] = [
 ] as const;
 
 export const HOME_FEATURED_SHOWCASE_SLUGS: readonly string[] = [
-  whereToStartWithAiAgents.slug,
+  onboardIn15Minutes.slug,
   firstAgentTaskIn5Minutes.slug,
-  stopMemorizingPrompts.slug,
+  managerApprovesBeforeRun.slug,
 ] as const;
 
 export const HOME_MORE_SHOWCASE_SLUGS: readonly string[] = [
-  saveTeammateWorkflowOneTap.slug,
-  controlMacFromPhone.slug,
   weeklyReportInFiveMinutes.slug,
+  stopMemorizingPrompts.slug,
+  saveTeammateWorkflowOneTap.slug,
 ] as const;
 
 export const HOME_TEAMS_SHOWCASE_SLUGS: readonly string[] = [
-  oneEmployeeOneAgent.slug,
+  companyOnboardIn30Minutes.slug,
   managerApprovesBeforeRun.slug,
   newHiresCompanyPlaybooks.slug,
 ] as const;
@@ -88,7 +92,7 @@ export const HOME_TEAMS_SHOWCASE_SLUGS: readonly string[] = [
 export const HOME_OBJECTIONS_SHOWCASE_SLUGS: readonly string[] = [
   notASlackReplacement.slug,
   worksWithoutN8n.slug,
-  notJustAnotherChatgpt.slug,
+  whyLocalMacNotCloud.slug,
 ] as const;
 
 export function getShowcaseArticleBySlug(

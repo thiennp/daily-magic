@@ -5,21 +5,20 @@ const weeklyReportInFiveMinutes: ShowcaseArticle = {
   title: "Weekly report in five minutes: fill the form, send the job",
   subtitle: "A structured workflow beats a blank prompt box.",
   category: "Workflows",
-  supportLevel: "partial",
+  supportLevel: "full",
   readMinutes: 3,
   whatYouNeed: [
-    "A workflow playbook (demo: Weekly report workflow)",
-    "Mac agent online to send, or copy assembled prompt elsewhere",
-    "Publishing new workflows today is API-first — builder UI coming",
+    'Library playbook "Sample: Weekly status update" (seeded after sign-in)',
+    "Mac agent online to send, or copy the assembled prompt elsewhere",
   ],
   tryNext: {
-    label: "Try the weekly report demo",
-    href: "/agent",
+    label: "Open Library (sample workflow)",
+    href: "/library",
   },
   sections: [
     {
       paragraphs: [
-        "Instead of writing a novel each Friday, you fill Week of and Highlights. The app assembles the full instruction and sends it to a Mac — yours or a teammate's.",
+        'Instead of writing a novel each Friday, you fill "Week of" and "Highlights". The app assembles the full instruction and sends it to a Mac — yours or a teammate\'s.',
       ],
     },
     {
@@ -33,7 +32,7 @@ const weeklyReportInFiveMinutes: ShowcaseArticle = {
       bullets: [
         "Publish once with standard fields",
         "Everyone gets the same structure",
-        "Job history shows who ran which week",
+        "Job history in each person's browser shows their recent runs",
       ],
     },
   ],

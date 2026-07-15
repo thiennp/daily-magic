@@ -6,14 +6,17 @@ const whereToStartWithAiAgents: ShowcaseArticle = {
   subtitle:
     "A plain map from ChatGPT tabs to saved playbooks and real tasks on your Mac.",
   category: "Start here",
-  supportLevel: "partial",
+  supportLevel: "full",
   readMinutes: 4,
   whatYouNeed: [
     "Curiosity — no technical background required",
-    "A free account to explore the demo",
-    "A Mac with Agent Witch when you're ready to run real jobs",
+    "A free account when you are ready to try",
+    "A Mac with Agent Witch when you want to run real jobs",
   ],
-  tryNext: { label: "Browse the demo library", href: "/library" },
+  tryNext: {
+    label: "Follow the honest 15-minute onboard",
+    href: "/showcases/onboard-in-15-minutes",
+  },
   sections: [
     {
       paragraphs: [
@@ -40,7 +43,7 @@ const whereToStartWithAiAgents: ShowcaseArticle = {
       bullets: [
         "My library — store playbooks and tap Use instead of retyping",
         "Send a task — dispatch to your Mac or someone on your team",
-        "Job history — every run logged with who asked and what came back",
+        "Job history — a run log in this browser for who asked and what came back",
       ],
     },
   ],

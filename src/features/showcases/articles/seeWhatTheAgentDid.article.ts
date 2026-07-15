@@ -3,36 +3,38 @@ import type ShowcaseArticle from "@/features/showcases/types/ShowcaseArticle.typ
 const seeWhatTheAgentDid: ShowcaseArticle = {
   slug: "see-what-the-agent-did",
   title: "See what the agent did — not just a chat reply",
-  subtitle: "Who asked, who ran it, what came back, and when.",
+  subtitle:
+    "Who asked, who ran it, what came back, and when — in this browser.",
   category: "Job history",
-  supportLevel: "full",
+  supportLevel: "partial",
   readMinutes: 3,
   whatYouNeed: [
-    "Jobs sent through Agent Witch (demo history works without a Mac)",
+    "At least one job sent through Agent Witch",
+    "The same browser where you sent or watched the run",
   ],
   tryNext: {
-    label: "View a sample report",
+    label: "Open Job history",
     href: "/reports",
   },
   sections: [
     {
       paragraphs: [
-        "Chat scrolls away. Slack threads sink. Job history is an audit trail for AI delegation — especially when teammates run tasks on each other's Macs.",
+        "Chat scrolls away. Slack threads sink. Job history keeps a run log for work you dispatch — especially useful when a teammate runs a task on their Mac and you both need the same record of what was asked.",
       ],
     },
     {
       heading: "Each job records",
       bullets: [
-        "Requester and executor",
+        "Requester and executor when the run was dispatched",
         "Full prompt that was sent",
         "Status: pending approval, running, completed, failed",
         "Result output when the Mac finishes",
       ],
     },
     {
-      heading: "Why teams care",
+      heading: "Honest limit today",
       paragraphs: [
-        "Managers see what was asked before approving. Requesters see whether the job finished. Over time you learn which playbooks are worth saving to the library.",
+        "Job history is local-first in your browser (plus live session data). It is a practical ops log, not a company-wide compliance vault that every admin can search across devices yet. Use it to rerun work and review what happened on this machine's sessions.",
       ],
     },
   ],

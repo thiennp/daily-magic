@@ -12,7 +12,7 @@ const fromMyPromptToOurWorkflow: ShowcaseArticle = {
     "Willingness to publish a capability for your group",
     "Workflow fields if the task has repeatable inputs",
   ],
-  tryNext: { label: "View what teammates can request", href: "/" },
+  tryNext: { label: "Open Home", href: "/" },
   sections: [
     {
       paragraphs: [
@@ -22,7 +22,7 @@ const fromMyPromptToOurWorkflow: ShowcaseArticle = {
     {
       heading: "The champion path",
       bullets: [
-        "Start solo in library — prove the prompt on your Mac",
+        "Start solo in Library — prove the prompt on your Mac",
         "Add structure — workflow fields for dates, names, scope",
         "Publish with group visibility",
         "Teammates use or save a copy; you keep improving from feedback",
@@ -31,7 +31,7 @@ const fromMyPromptToOurWorkflow: ShowcaseArticle = {
     {
       heading: "Reality check",
       paragraphs: [
-        "Publishing UI for complex workflows is still maturing. Champions may need admin help for first publish — but consuming and forking is easy for everyone else.",
+        "Consuming and forking is easy for everyone. Publishing the first shared playbook may take one careful pass on visibility and naming — do that once with a champion, then others copy the pattern.",
       ],
     },
   ],

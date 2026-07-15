@@ -13,7 +13,7 @@ const managerApprovesBeforeRun: ShowcaseArticle = {
     "Requester sends through team dispatch — not ad-hoc chat",
   ],
   tryNext: {
-    label: "See a pending job in demo history",
+    label: "Open Job history",
     href: "/reports",
   },
   sections: [
@@ -28,13 +28,13 @@ const managerApprovesBeforeRun: ShowcaseArticle = {
         "Admin sets group policy to approval",
         "Requester sends task to teammate's capability",
         "Job sits in pending until approved or denied",
-        "Completed jobs stay in history for review",
+        "Completed jobs stay in Job history for review in the browsers that watched the run",
       ],
     },
     {
       heading: "Good fit when",
       paragraphs: [
-        "You trust your team with AI but want a paper trail before work hits someone else's machine. It is governance without blocking self-serve playbooks in the library.",
+        "You trust your team with AI but want a yes/no gate before work hits someone else's machine. It is governance without blocking self-serve playbooks in the library.",
       ],
     },
   ],
