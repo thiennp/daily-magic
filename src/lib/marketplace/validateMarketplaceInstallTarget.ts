@@ -1,3 +1,4 @@
+import { findEnrichedAgentClientForUser } from "@/lib/agentWitch/findEnrichedAgentClientForUser";
 import isAgentWitchDeviceOwnedByUser from "@/lib/agentWitch/isAgentWitchDeviceOwnedByUser";
 import { getAgentWitchHub } from "@/lib/agentWitch/getAgentWitchHub";
 
@@ -10,7 +11,13 @@ export const validateMarketplaceInstallTarget = async (
   }
 
   const hub = getAgentWitchHub();
-  if (hub.findAgentClientForUser(actorUserId, deviceId) === undefined) {
+  const agentClient = await findEnrichedAgentClientForUser(
+    hub,
+    actorUserId,
+    deviceId,
+  );
+
+  if (agentClient === undefined) {
     return "The selected Mac is not online right now.";
   }
 

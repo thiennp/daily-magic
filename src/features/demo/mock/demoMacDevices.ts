@@ -8,6 +8,7 @@ export const demoMacDevices = [
     claimedAt: demoTimestamp,
     lastSeenAt: demoTimestamp,
     isOnline: true,
+    isConnected: true,
     lastHeartbeatAt: demoTimestamp,
   },
   {
@@ -17,6 +18,7 @@ export const demoMacDevices = [
     claimedAt: demoTimestamp,
     lastSeenAt: demoTimestamp,
     isOnline: false,
+    isConnected: false,
     lastHeartbeatAt: null,
   },
 ] as const;

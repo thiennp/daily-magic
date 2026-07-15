@@ -42,7 +42,7 @@ export default function MarketplaceInstallModal({
   const canInstall =
     listing !== null &&
     demoPreview === null &&
-    selectedDevice?.isOnline === true &&
+    selectedDevice?.isConnected === true &&
     status !== "installing";
 
   const handleInstall = async (): Promise<void> => {

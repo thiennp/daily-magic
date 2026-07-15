@@ -17,6 +17,7 @@ export interface MyMacDevice {
   readonly displayName: string | null;
   readonly claimedAt: string;
   readonly lastSeenAt: string | null;
+  readonly isConnected: boolean;
   readonly isOnline: boolean;
   readonly lastHeartbeatAt: string | null;
 }

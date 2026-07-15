@@ -40,7 +40,7 @@ export const fetchActivePairedDevices =
       const cached = getPairedDevicesSnapshot();
       if (cached !== null) {
         return {
-          devices: cached.devices as PairedDevice[],
+          devices: cached.devices as unknown as PairedDevice[],
           errorMessage: cached.hadError
             ? "Could not load connected Macs."
             : null,
@@ -56,7 +56,7 @@ export const fetchActivePairedDevices =
       }
 
       return {
-        devices: refreshed.devices as PairedDevice[],
+        devices: refreshed.devices as unknown as PairedDevice[],
         errorMessage: refreshed.hadError
           ? "Could not load connected Macs."
           : null,

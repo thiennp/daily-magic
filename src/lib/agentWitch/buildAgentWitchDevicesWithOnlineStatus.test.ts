@@ -40,6 +40,7 @@ describe("buildAgentWitchDevicesWithOnlineStatus", () => {
     expect(result).toEqual([
       expect.objectContaining({
         id: "device-1",
+        isConnected: true,
         isOnline: true,
         deviceLabel: "Johns-MacBook",
         lastHeartbeatAt: "2026-01-03T12:00:00.000Z",
@@ -55,6 +56,7 @@ describe("buildAgentWitchDevicesWithOnlineStatus", () => {
 
     expect(result[0]).toMatchObject({
       id: "device-1",
+      isConnected: false,
       isOnline: false,
       deviceLabel: "MacBook Pro",
       lastHeartbeatAt: null,
@@ -67,7 +69,10 @@ describe("buildAgentWitchDevicesWithOnlineStatus", () => {
       [],
     );
 
-    expect(result[0]?.isOnline).toBe(true);
+    expect(result[0]).toMatchObject({
+      isConnected: false,
+      isOnline: true,
+    });
   });
 
   it("keeps saved display names while hostname updates from the live client", () => {

@@ -43,6 +43,7 @@ const toMyMacDevices = (
     displayName: null,
     claimedAt: device.claimedAt,
     lastSeenAt: device.lastSeenAt,
+    isConnected: device.isOnline,
     isOnline: device.isOnline,
     lastHeartbeatAt: device.lastHeartbeatAt,
   }));

@@ -1,6 +1,14 @@
 import type { MyMacDevice } from "@/features/agent/hooks/useMyMacDevices";
 
-interface ApiMacDevice extends MyMacDevice {
+interface ApiMacDevice {
+  readonly id: string;
+  readonly deviceLabel: string | null;
+  readonly displayName: string | null;
+  readonly claimedAt: string;
+  readonly lastSeenAt: string | null;
+  readonly isConnected?: boolean;
+  readonly isOnline?: boolean;
+  readonly lastHeartbeatAt: string | null;
   readonly isActive?: boolean;
 }
 
@@ -22,6 +30,9 @@ const parseMyMacDevices = (payload: unknown): readonly MyMacDevice[] => {
         typeof device.displayName === "string" ? device.displayName : null,
       claimedAt: device.claimedAt,
       lastSeenAt: device.lastSeenAt,
+      isConnected:
+        device.isConnected === true ||
+        (device.isConnected === undefined && device.lastHeartbeatAt !== null),
       isOnline: device.isOnline === true,
       lastHeartbeatAt: device.lastHeartbeatAt ?? null,
     }));

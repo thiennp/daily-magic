@@ -39,7 +39,7 @@ const createCapabilityFromTemplate = async (
     ownerUserId,
     "Saved from template",
   );
-  const harnessInstall = requestCapabilityTemplateHarnessInstall(
+  const harnessInstall = await requestCapabilityTemplateHarnessInstall(
     ownerUserId,
     template.harness,
     deviceId,

@@ -10,8 +10,8 @@ const baseInput = {
   hasOnlineMac: true,
   selectedDeviceIsOnline: true,
   devices: [
-    { id: "mac-a", isOnline: true },
-    { id: "mac-b", isOnline: false },
+    { id: "mac-a", isConnected: true },
+    { id: "mac-b", isConnected: false },
   ],
   selectedDeviceId: "mac-a",
   devicesHadLoadError: false,
@@ -58,7 +58,7 @@ describe("resolveComposerBlockedAction", () => {
       ...baseInput,
       hasOnlineMac: false,
       selectedDeviceIsOnline: false,
-      devices: [{ id: "mac-a", isOnline: false }],
+      devices: [{ id: "mac-a", isConnected: false }],
     });
 
     expect(action.stateId).toBe("no_macs_online");

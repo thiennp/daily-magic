@@ -46,7 +46,7 @@ export const pickAlternateOnlineDeviceId = (
   selectedDeviceId: string,
 ): string | null => {
   const alternate = devices.find(
-    (device) => device.isOnline && device.id !== selectedDeviceId,
+    (device) => device.isConnected && device.id !== selectedDeviceId,
   );
   return alternate?.id ?? null;
 };

@@ -1,3 +1,4 @@
+import { findEnrichedAgentClientForUser } from "@/lib/agentWitch/findEnrichedAgentClientForUser";
 import type AgentWitchHubClient from "@/lib/agentWitch/types/AgentWitchHubClient.type";
 import { getAgentWitchHub } from "@/lib/agentWitch/getAgentWitchHub";
 import type { CapabilityTemplateHarness } from "@/lib/capabilities/templates/types/CapabilityTemplate.type";
@@ -9,13 +10,17 @@ export interface TemplateHarnessInstallResult {
   readonly errorMessage: string | null;
 }
 
-const requestCapabilityTemplateHarnessInstall = (
+const requestCapabilityTemplateHarnessInstall = async (
   userId: string,
   harness: CapabilityTemplateHarness,
   deviceId?: string,
-): TemplateHarnessInstallResult => {
+): Promise<TemplateHarnessInstallResult> => {
   const hub = getAgentWitchHub();
-  const agentClient = hub.findAgentClientForUser(userId, deviceId);
+  const agentClient = await findEnrichedAgentClientForUser(
+    hub,
+    userId,
+    deviceId,
+  );
 
   if (agentClient === undefined) {
     return {

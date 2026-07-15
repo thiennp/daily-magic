@@ -11,6 +11,7 @@ export interface AgentWitchDeviceWithOnlineStatus {
   readonly revokedAt: string | null;
   readonly isActive: boolean;
   readonly dispatchPolicy: AgentWitchDeviceRecord["dispatchPolicy"];
+  readonly isConnected: boolean;
   readonly isOnline: boolean;
   readonly lastHeartbeatAt: string | null;
 }
@@ -21,17 +22,15 @@ const buildAgentWitchDevicesWithOnlineStatus = (
 ): readonly AgentWitchDeviceWithOnlineStatus[] => {
   const onlineByDeviceId = new Map(
     onlineClients.flatMap((client) =>
-      client.deviceId === undefined
-        ? []
-        : [[client.deviceId, client] as const],
+      client.deviceId === undefined ? [] : [[client.deviceId, client] as const],
     ),
   );
 
   return devices.map((device) => {
     const onlineClient = onlineByDeviceId.get(device.id);
+    const isConnected = onlineClient !== undefined;
     const isOnline =
-      onlineClient !== undefined ||
-      isAgentWitchDeviceRecentlySeen(device.lastSeenAt);
+      isConnected || isAgentWitchDeviceRecentlySeen(device.lastSeenAt);
 
     return {
       id: device.id,
@@ -42,6 +41,7 @@ const buildAgentWitchDevicesWithOnlineStatus = (
       revokedAt: device.revokedAt,
       isActive: device.revokedAt === null,
       dispatchPolicy: device.dispatchPolicy,
+      isConnected,
       isOnline,
       lastHeartbeatAt: onlineClient?.lastHeartbeatAt ?? null,
     };

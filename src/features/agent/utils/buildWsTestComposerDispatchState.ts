@@ -36,7 +36,7 @@ export const buildWsTestComposerDispatchState = (input: {
 
     return (
       input.macSelection.devices.find((device) => device.id === deviceId)
-        ?.isOnline ?? false
+        ?.isConnected ?? false
     );
   };
 

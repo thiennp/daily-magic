@@ -14,6 +14,7 @@ export default interface AgentWitchHubRuntime {
     deviceId?: string,
   ): AgentWitchHubClient | undefined;
   listOnlineAgentClientsForUser(userId: string): readonly AgentWitchHubClient[];
+  listAgentClients(): readonly AgentWitchHubClient[];
   updateClient(
     clientId: string,
     patch: Partial<

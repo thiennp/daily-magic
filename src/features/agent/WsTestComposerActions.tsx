@@ -21,7 +21,7 @@ interface WsTestComposerActionsProps {
   readonly selectedDeviceIsOnline: boolean;
   readonly devices: readonly {
     readonly id: string;
-    readonly isOnline: boolean;
+    readonly isConnected: boolean;
   }[];
   readonly selectedDeviceId: string;
   readonly devicesHadLoadError: boolean;

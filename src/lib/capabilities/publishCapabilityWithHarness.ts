@@ -51,7 +51,7 @@ const publishCapabilityWithHarness = async (
     harnessSetSlug,
     harnessItems,
   );
-  const harnessInstall = requestCapabilityTemplateHarnessInstall(
+  const harnessInstall = await requestCapabilityTemplateHarnessInstall(
     ownerUserId,
     harness,
   );

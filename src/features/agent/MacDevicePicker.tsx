@@ -53,7 +53,7 @@ export default function MacDevicePicker({
             key={device.id}
             deviceId={device.id}
             displayName={displayNameById.get(device.id) ?? "Your Mac"}
-            isOnline={device.isOnline}
+            isOnline={device.isConnected}
             isSelected={device.id === selectedDeviceId}
             isWakeServerReachable={canWakeMacDeviceFromBrowser({
               deviceLabel: device.deviceLabel,

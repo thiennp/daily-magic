@@ -8,6 +8,7 @@ const device = {
   displayName: null,
   claimedAt: "2026-01-01T00:00:00.000Z",
   lastSeenAt: null,
+  isConnected: true,
   isOnline: true,
   lastHeartbeatAt: null,
 };
@@ -22,7 +23,9 @@ describe("resolveMyMacDevicesAfterFetch", () => {
   });
 
   it("replaces devices when the API succeeds with new data", () => {
-    const next = [{ ...device, id: "device-2", isOnline: false }];
+    const next = [
+      { ...device, id: "device-2", isConnected: false, isOnline: false },
+    ];
     expect(resolveMyMacDevicesAfterFetch([device], next, false)).toEqual(next);
   });
 });

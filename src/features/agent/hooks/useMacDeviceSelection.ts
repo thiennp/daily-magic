@@ -5,9 +5,12 @@ import { useMemo, useState } from "react";
 import useMyMacDevices from "@/features/agent/hooks/useMyMacDevices";
 
 const pickDefaultMacDeviceId = (
-  devices: ReadonlyArray<{ readonly id: string; readonly isOnline: boolean }>,
+  devices: ReadonlyArray<{
+    readonly id: string;
+    readonly isConnected: boolean;
+  }>,
 ): string => {
-  const onlineDevice = devices.find((device) => device.isOnline);
+  const onlineDevice = devices.find((device) => device.isConnected);
   return onlineDevice?.id ?? devices[0]?.id ?? "";
 };
 
@@ -49,7 +52,7 @@ const useMacDeviceSelection = (): {
       : pickDefaultMacDeviceId(devices);
   }, [devices, preferredDeviceId]);
 
-  const onlineCount = devices.filter((device) => device.isOnline).length;
+  const onlineCount = devices.filter((device) => device.isConnected).length;
 
   return {
     devices,
