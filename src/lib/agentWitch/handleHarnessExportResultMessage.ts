@@ -1,5 +1,6 @@
 import { parseHarnessExportResultPayload } from "@/lib/harness/types/HarnessExportResult.type";
 import { applyHarnessExportSetsToDevice } from "@/lib/harness/applyHarnessExportSetsToDevice";
+import { completeHarnessExportRequest } from "@/lib/harness/harnessExportRequestRegistry";
 import isNonEmptyString from "@/lib/agentWitch/isNonEmptyString";
 import type AgentWitchHubClient from "@/lib/agentWitch/types/AgentWitchHubClient.type";
 import type AgentWitchHubRuntime from "@/lib/agentWitch/types/AgentWitchHubRuntime.type";
@@ -42,6 +43,8 @@ export const handleHarnessExportResultMessage = (
       ? message.payload.targetDeviceId
       : undefined;
   const exportResult = parseHarnessExportResultPayload(message.payload);
+
+  completeHarnessExportRequest(message.requestId, message.payload);
 
   if (
     targetDeviceId !== undefined &&

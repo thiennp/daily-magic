@@ -204,6 +204,38 @@ const handleWakeRequest = async (
       return;
     }
 
+    if (request.method === "POST" && pathname === "/harness/borrow") {
+      const chunks: Buffer[] = [];
+      for await (const chunk of request) {
+        chunks.push(Buffer.from(chunk));
+      }
+
+      let body: unknown = {};
+      try {
+        body = JSON.parse(Buffer.concat(chunks).toString("utf8"));
+      } catch {
+        sendJson(
+          response,
+          400,
+          {
+            ok: false,
+            errorMessage: "Invalid JSON body.",
+          },
+          cors.headers,
+        );
+        return;
+      }
+
+      const installResult = installHarnessFromWakeServer(body);
+      sendJson(
+        response,
+        installResult.ok ? 200 : 400,
+        installResult,
+        cors.headers,
+      );
+      return;
+    }
+
     if (request.method === "POST" && pathname === "/link-account") {
       const chunks: Buffer[] = [];
       for await (const chunk of request) {
