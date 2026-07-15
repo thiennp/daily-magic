@@ -62,10 +62,18 @@ export default function HomeOnboardingSetupCompletePanel({
         >
           Browse showcases →
         </Link>
-        <Link href="/library" className={APP_SURFACE_TEXT_LINK_MUTED_CLASS}>
+        <Link
+          href="/library"
+          className={APP_SURFACE_TEXT_LINK_MUTED_CLASS}
+          onClick={onDismiss}
+        >
           Open Library →
         </Link>
-        <Link href="/reports" className={APP_SURFACE_TEXT_LINK_MUTED_CLASS}>
+        <Link
+          href="/reports"
+          className={APP_SURFACE_TEXT_LINK_MUTED_CLASS}
+          onClick={onDismiss}
+        >
           View job history →
         </Link>
       </div>

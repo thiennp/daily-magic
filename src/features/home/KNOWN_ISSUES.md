@@ -64,7 +64,7 @@ Document every production bug or UX regression here. Each entry must link to a t
 
 ## Adding issues
 
-Use the next ID (`HOME-016`, …). Include symptom, root cause, fix paths, and test file.
+Use the next ID (`HOME-017`, …). Include symptom, root cause, fix paths, and test file.
 
 ---
 
@@ -185,3 +185,15 @@ Use the next ID (`HOME-016`, …). Include symptom, root cause, fix paths, and t
 **Fix:** Primary and featured setup-complete links call `onDismiss` on click so action-oriented exits acknowledge setup once.
 
 **Regression test:** Manual QA; `HomeOnboardingSetupCompletePanel` action links wire `onClick={onDismiss}` (grep guard in review).
+
+---
+
+## HOME-016 — Library and reports links skipped setup dismissal
+
+**Symptom:** Users who left the setup-complete panel via “Open Library” or “View job history” still saw the success panel on the next home visit.
+
+**Root cause:** HOME-015 only wired `onDismiss` on the primary and featured links, not the muted secondary links.
+
+**Fix:** Library and job-history links also call `onDismiss` on click.
+
+**Regression test:** Manual QA; all six `HomeOnboardingSetupCompletePanel` navigation targets wire `onClick={onDismiss}` (grep guard in review).
