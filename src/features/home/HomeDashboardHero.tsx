@@ -10,7 +10,6 @@ import {
   APP_SURFACE_TEXT_LINK_CLASS,
   APP_SURFACE_TEXT_LINK_MUTED_CLASS,
 } from "@/components/surfaces/appSurfaceStyles.constant";
-import { useAppPath } from "@/features/demo/DemoPreviewContext";
 import { COMPANY_RULES_NAV_LABEL } from "@/lib/admin/companyGroupCopy.constant";
 import formatGlobalRole from "@/lib/auth/formatGlobalRole";
 import type { GlobalRoleValue } from "@/lib/auth/roles";
@@ -26,7 +25,6 @@ interface HomeDashboardHeroProps {
 
 export default function HomeDashboardHero({ user }: HomeDashboardHeroProps) {
   const displayName = user.name ?? user.email;
-  const appPath = useAppPath();
 
   return (
     <AppHero variant="neutral">
@@ -41,26 +39,20 @@ export default function HomeDashboardHero({ user }: HomeDashboardHeroProps) {
       </p>
       <div className="mt-6">
         <Link
-          href={appPath(buildAgentComposerHref())}
+          href={buildAgentComposerHref()}
           className={APP_SURFACE_CTA_PRIMARY_CLASS}
         >
           Send a task
         </Link>
         <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-sm">
-          <Link
-            href={appPath("/marketplace")}
-            className={APP_SURFACE_TEXT_LINK_CLASS}
-          >
+          <Link href="/marketplace" className={APP_SURFACE_TEXT_LINK_CLASS}>
             Browse marketplace →
           </Link>
-          <Link
-            href={appPath("/reports")}
-            className={APP_SURFACE_TEXT_LINK_MUTED_CLASS}
-          >
+          <Link href="/reports" className={APP_SURFACE_TEXT_LINK_MUTED_CLASS}>
             View job history →
           </Link>
           <Link
-            href={appPath("/admin/groups")}
+            href="/admin/groups"
             className={APP_SURFACE_TEXT_LINK_MUTED_CLASS}
           >
             {COMPANY_RULES_NAV_LABEL}

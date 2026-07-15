@@ -5,7 +5,6 @@ import Link from "next/link";
 import AppPanel from "@/components/surfaces/AppPanel";
 import AgentLiveTerminalPanel from "@/features/agent/AgentLiveTerminalPanel";
 import AgentLiveTerminalSessionBar from "@/features/agent/AgentLiveTerminalSessionBar";
-import { useAppPath } from "@/features/demo/DemoPreviewContext";
 import type { AgentLiveTerminalStatus } from "@/features/agent/utils/agentLiveTerminalState.type";
 import type { AgentRunInputRequest } from "@/features/dispatch/utils/agentRunInputSocket";
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
@@ -35,8 +34,6 @@ export default function AgentLiveTerminalSection({
   onDismissInput,
   onFinishSession,
 }: AgentLiveTerminalSectionProps) {
-  const appPath = useAppPath();
-
   return (
     <AppPanel>
       {sessionWriterAgent !== null ? (
@@ -50,14 +47,14 @@ export default function AgentLiveTerminalSection({
         <p className="mb-3 text-sm text-gray-600 dark:text-gray-400">
           This job is saved locally in{" "}
           <Link
-            href={appPath("/reports")}
+            href="/reports"
             className="font-medium text-brand-600 hover:text-brand-700 dark:text-brand-400"
           >
             Job history
           </Link>
           .{" "}
           <Link
-            href={appPath(`/reports/${activeRunId}`)}
+            href={`/reports/${activeRunId}`}
             className="font-medium text-brand-600 hover:text-brand-700 dark:text-brand-400"
           >
             Open full report

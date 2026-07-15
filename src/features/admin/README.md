@@ -13,7 +13,6 @@ Users, groups, company dispatch rules.
 
 - `/admin/groups`
 - `/admin/users`
-- `/demo/admin/groups`
 
 ## APIs
 

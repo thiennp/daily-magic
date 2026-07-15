@@ -12,7 +12,6 @@ Agent run history, live terminal, re-run.
 
 - `/reports`
 - `/reports/[runId]`
-- `/demo/reports`
 
 ## APIs
 

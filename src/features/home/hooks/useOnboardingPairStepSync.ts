@@ -4,12 +4,11 @@ import { pairedDevicesResource } from "@/features/agent-witch/pairedDevicesResou
 import type { OnboardingStep } from "@/features/home/loadOnboardingSteps";
 
 const useOnboardingPairStepSync = (input: {
-  readonly demoPreview: unknown;
   readonly isConnectStepDone: boolean;
   readonly setSteps: Dispatch<SetStateAction<readonly OnboardingStep[]>>;
 }): void => {
   useEffect(() => {
-    if (input.demoPreview || input.isConnectStepDone) {
+    if (input.isConnectStepDone) {
       return;
     }
 
@@ -26,7 +25,7 @@ const useOnboardingPairStepSync = (input: {
         ),
       );
     });
-  }, [input.demoPreview, input.isConnectStepDone, input.setSteps]);
+  }, [input.isConnectStepDone, input.setSteps]);
 };
 
 export default useOnboardingPairStepSync;

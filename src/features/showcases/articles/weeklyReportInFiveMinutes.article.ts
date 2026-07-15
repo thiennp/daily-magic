@@ -14,7 +14,7 @@ const weeklyReportInFiveMinutes: ShowcaseArticle = {
   ],
   tryNext: {
     label: "Try the weekly report demo",
-    href: "/demo/agent?libraryCapabilityId=cap-demo-weekly-report",
+    href: "/agent",
   },
   sections: [
     {

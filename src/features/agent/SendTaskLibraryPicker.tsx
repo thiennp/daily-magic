@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 
-import { useAppPath } from "@/features/demo/DemoPreviewContext";
 import { CapabilityType } from "@/lib/capabilities/CapabilityType.constant";
 import type PublishedCapabilityRecord from "@/lib/capabilities/types/PublishedCapabilityRecord.type";
 
@@ -28,8 +27,6 @@ export default function SendTaskLibraryPicker({
   isLoading,
   onSelect,
 }: SendTaskLibraryPickerProps) {
-  const appPath = useAppPath();
-
   return (
     <div>
       <label className="text-sm font-medium text-gray-800 dark:text-white/90">
@@ -59,7 +56,7 @@ export default function SendTaskLibraryPicker({
         <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
           No saved items yet.{" "}
           <Link
-            href={appPath("/library")}
+            href="/library"
             className="text-brand-700 dark:text-brand-300"
           >
             Open Library

@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 
-import { useDemoPreview } from "@/features/demo/DemoPreviewContext";
 import { listAgentRunsLocalCache } from "@/features/reports/agentRunLocalCache";
 import { POLL_INTERVAL_MS } from "@/features/reports/agentRunsPolling.constant";
 import { buildAgentRunsQueryString } from "@/features/reports/buildAgentRunsQueryString";
@@ -48,22 +47,16 @@ export function useAgentRunsList(input: {
   readonly runs: readonly EnrichedAgentRunRecord[];
   readonly isLoading: boolean;
 } {
-  const demoPreview = useDemoPreview();
-  const [runs, setRuns] = useState<readonly EnrichedAgentRunRecord[]>(
-    () =>
-      demoPreview?.agentRuns ?? listAgentRunsLocalCache().map(toEnrichedRun),
+  const [runs, setRuns] = useState<readonly EnrichedAgentRunRecord[]>(() =>
+    listAgentRunsLocalCache().map(toEnrichedRun),
   );
-  const [isLoading, setIsLoading] = useState(() => !demoPreview);
+  const [isLoading, setIsLoading] = useState(true);
 
   useAgentRunRecordSync((run) => {
     setRuns((current) => mergeRuns(current, [run]));
   });
 
   useEffect(() => {
-    if (demoPreview) {
-      return;
-    }
-
     const loadRuns = async (): Promise<void> => {
       const query = buildAgentRunsQueryString({
         status: input.statusFilter === "all" ? undefined : input.statusFilter,
@@ -103,7 +96,7 @@ export function useAgentRunsList(input: {
     return () => {
       clearInterval(timer);
     };
-  }, [demoPreview, input.statusFilter, input.scopeFilter, input.groupFilter]);
+  }, [input.statusFilter, input.scopeFilter, input.groupFilter]);
 
   return { runs, isLoading };
 }

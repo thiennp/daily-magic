@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
 
-import { useDemoPreview } from "@/features/demo/DemoPreviewContext";
 import {
   getAgentRunLocalCache,
   upsertAgentRunLocalCache,
@@ -11,14 +10,6 @@ import { useAgentRunRecordSync } from "@/features/reports/hooks/useAgentRunRecor
 import type CapabilityFeedbackRecord from "@/lib/feedback/types/CapabilityFeedbackRecord.type";
 import type EnrichedAgentRunRecord from "@/lib/dispatch/types/EnrichedAgentRunRecord.type";
 import type AgentRunRecord from "@/lib/dispatch/types/AgentRunRecord.type";
-
-const findDemoRun = (
-  demoPreview: NonNullable<ReturnType<typeof useDemoPreview>>,
-  runId: string,
-): EnrichedAgentRunRecord | null =>
-  demoPreview.agentRuns.find((item) => item.id === runId) ??
-  demoPreview.agentRuns[0] ??
-  null;
 
 const toEnrichedRun = (run: AgentRunRecord): EnrichedAgentRunRecord => ({
   ...run,
@@ -35,19 +26,14 @@ export function useAgentRunDetailState(runId: string): {
   readonly setFeedback: (feedback: CapabilityFeedbackRecord) => void;
   readonly reloadRun: () => Promise<void>;
 } {
-  const demoPreview = useDemoPreview();
   const cachedRun = getAgentRunLocalCache(runId);
-  const [run, setRun] = useState<EnrichedAgentRunRecord | null>(() => {
-    if (demoPreview) {
-      return findDemoRun(demoPreview, runId);
-    }
-
-    return cachedRun ? toEnrichedRun(cachedRun) : null;
-  });
+  const [run, setRun] = useState<EnrichedAgentRunRecord | null>(() =>
+    cachedRun ? toEnrichedRun(cachedRun) : null,
+  );
   const [feedback, setFeedback] = useState<CapabilityFeedbackRecord | null>(
     null,
   );
-  const [isLoading, setIsLoading] = useState(() => !demoPreview);
+  const [isLoading, setIsLoading] = useState(true);
 
   const reloadRun = useCallback(async (): Promise<void> => {
     const nextRun = await fetchAgentRunDetail(runId);
@@ -65,10 +51,6 @@ export function useAgentRunDetailState(runId: string): {
   });
 
   useEffect(() => {
-    if (demoPreview) {
-      return;
-    }
-
     const lifecycle = { active: true };
 
     void fetchAgentRunDetail(runId).then((nextRun) => {
@@ -114,7 +96,7 @@ export function useAgentRunDetailState(runId: string): {
       lifecycle.active = false;
       clearInterval(timer);
     };
-  }, [demoPreview, runId, reloadRun]);
+  }, [runId, reloadRun]);
 
   return { run, feedback, isLoading, setFeedback, reloadRun };
 }

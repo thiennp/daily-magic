@@ -6,7 +6,6 @@ import { useSession } from "next-auth/react";
 import AgentRunDetailContent from "@/features/reports/AgentRunDetailContent";
 import AgentRunFeedbackForm from "@/features/feedback/AgentRunFeedbackForm";
 import FeedbackSubmittedNotice from "@/features/feedback/FeedbackSubmittedNotice";
-import { useAppPath, useDemoPreview } from "@/features/demo/DemoPreviewContext";
 import { useAgentRunDetailState } from "@/features/reports/hooks/useAgentRunDetailState";
 import { canSubmitFeedbackForRunStatus } from "@/lib/feedback/canSubmitFeedbackForRunStatus";
 
@@ -16,8 +15,6 @@ interface AgentRunDetailProps {
 
 export default function AgentRunDetail({ runId }: AgentRunDetailProps) {
   const { data: session } = useSession();
-  const demoPreview = useDemoPreview();
-  const appPath = useAppPath();
   const { run, feedback, isLoading, setFeedback } =
     useAgentRunDetailState(runId);
 
@@ -42,14 +39,12 @@ export default function AgentRunDetail({ runId }: AgentRunDetailProps) {
       : null;
   const showFeedbackForm =
     canSubmitFeedbackForRunStatus(run.status) &&
-    (demoPreview
-      ? run.status === "completed"
-      : viewerUserId === run.requesterUserId);
+    viewerUserId === run.requesterUserId;
 
   return (
     <div className="space-y-6">
       <Link
-        href={appPath("/reports")}
+        href="/reports"
         className="text-sm font-medium text-brand-600 hover:text-brand-700 dark:text-brand-400"
       >
         Back to job history

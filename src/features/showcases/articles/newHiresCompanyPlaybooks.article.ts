@@ -14,7 +14,7 @@ const newHiresCompanyPlaybooks: ShowcaseArticle = {
   ],
   tryNext: {
     label: "Save a playbook from marketplace",
-    href: "/demo/marketplace",
+    href: "/marketplace",
   },
   sections: [
     {

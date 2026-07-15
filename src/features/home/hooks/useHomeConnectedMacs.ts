@@ -1,13 +1,8 @@
 "use client";
 
-import { useMemo } from "react";
-
-import { useDemoPreview } from "@/features/demo/DemoPreviewContext";
-import { demoMacDevices } from "@/features/demo/mock/demoMacDevices";
 import useMyMacDevices, {
   type MyMacDevice,
 } from "@/features/agent/hooks/useMyMacDevices";
-import { buildMacDeviceDisplayNameById } from "@/features/agent-witch/utils/resolveMacDeviceDisplayName";
 
 const useHomeConnectedMacs = (): {
   readonly devices: readonly MyMacDevice[];
@@ -16,23 +11,8 @@ const useHomeConnectedMacs = (): {
   readonly renameDevice: (deviceId: string, deviceLabel: string) => void;
   readonly refreshDevices: () => Promise<void>;
 } => {
-  const demoPreview = useDemoPreview();
   const { devices, displayNameById, isLoading, renameDevice, refresh } =
     useMyMacDevices();
-  const demoDisplayNameById = useMemo(
-    () => buildMacDeviceDisplayNameById(demoMacDevices),
-    [],
-  );
-
-  if (demoPreview) {
-    return {
-      devices: demoMacDevices.map((device) => ({ ...device })),
-      displayNameById: demoDisplayNameById,
-      isLoading: false,
-      renameDevice: () => undefined,
-      refreshDevices: async () => undefined,
-    };
-  }
 
   return {
     devices,

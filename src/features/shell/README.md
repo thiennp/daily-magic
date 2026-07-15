@@ -20,6 +20,5 @@ _None._
 
 - `auth`
 - `dispatch`
-- `demo`
 
 Query: `npm run feature-knowledge:query -- "..." --feature=shell`

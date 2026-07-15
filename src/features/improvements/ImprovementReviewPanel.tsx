@@ -10,21 +10,15 @@ import {
   APP_SURFACE_NESTED_CARD_CLASS,
   APP_SURFACE_SECTION_TITLE_CLASS,
 } from "@/components/surfaces/appSurfaceStyles.constant";
-import { useDemoPreview } from "@/features/demo/DemoPreviewContext";
 import type { CapabilityImprovementInboxItem } from "@/lib/improvements/types/CapabilityImprovementRecord.type";
 
 export default function ImprovementReviewPanel() {
-  const demoPreview = useDemoPreview();
   const [items, setItems] = useState<readonly CapabilityImprovementInboxItem[]>(
-    demoPreview?.improvementItems ?? [],
+    [],
   );
-  const [isLoading, setIsLoading] = useState(() => !demoPreview);
+  const [isLoading, setIsLoading] = useState(true);
 
   const loadItems = useCallback(async (): Promise<void> => {
-    if (demoPreview) {
-      return;
-    }
-
     try {
       const response = await fetch("/api/capabilities/improvements/inbox");
       if (!response.ok) {
@@ -43,15 +37,11 @@ export default function ImprovementReviewPanel() {
     } finally {
       setIsLoading(false);
     }
-  }, [demoPreview]);
+  }, []);
 
   useEffect(() => {
-    if (demoPreview) {
-      return;
-    }
-
     void loadItems();
-  }, [demoPreview, loadItems]);
+  }, [loadItems]);
 
   if (isLoading || items.length === 0) {
     return null;

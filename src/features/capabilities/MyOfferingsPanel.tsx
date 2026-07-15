@@ -10,26 +10,18 @@ import {
 } from "@/components/surfaces/appSurfaceStyles.constant";
 import shouldShowMyOfferingsPanel from "@/features/capabilities/shouldShowMyOfferingsPanel";
 import { useDispatchTargets } from "@/features/dispatch/hooks/useDispatchTargets";
-import { useDemoPreview } from "@/features/demo/DemoPreviewContext";
 import { CapabilityStatus } from "@/lib/capabilities/CapabilityStatus.constant";
 import isUserCreatedCapability from "@/lib/capabilities/isUserCreatedCapability";
 import type PublishedCapabilityRecord from "@/lib/capabilities/types/PublishedCapabilityRecord.type";
 
 export default function MyOfferingsPanel() {
-  const demoPreview = useDemoPreview();
   const { groups, isLoading: isLoadingGroups } = useDispatchTargets();
   const [capabilities, setCapabilities] = useState<
     readonly PublishedCapabilityRecord[]
-  >(() => demoPreview?.capabilities ?? []);
-  const [isLoadingCapabilities, setIsLoadingCapabilities] = useState(
-    () => !demoPreview,
-  );
+  >([]);
+  const [isLoadingCapabilities, setIsLoadingCapabilities] = useState(true);
 
   useEffect(() => {
-    if (demoPreview) {
-      return;
-    }
-
     const loadOfferings = async (): Promise<void> => {
       try {
         const response = await fetch("/api/capabilities/mine");
@@ -55,7 +47,7 @@ export default function MyOfferingsPanel() {
     };
 
     void loadOfferings();
-  }, [demoPreview]);
+  }, []);
 
   const userCreatedCapabilities = capabilities.filter(isUserCreatedCapability);
 

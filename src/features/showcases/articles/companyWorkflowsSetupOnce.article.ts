@@ -12,7 +12,7 @@ const companyWorkflowsSetupOnce: ShowcaseArticle = {
     "Workflow fields defined: labels, types, required flags",
     "Teammates who save or use published playbooks from Marketplace or directory",
   ],
-  tryNext: { label: "See a workflow in the demo", href: "/demo/library" },
+  tryNext: { label: "See a workflow in the demo", href: "/library" },
   sections: [
     {
       paragraphs: [

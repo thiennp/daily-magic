@@ -4,28 +4,22 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import useStyleguideNavAccess from "@/features/auth/hooks/useStyleguideNavAccess";
-import {
-  normalizeAppPathname,
-  useAppPath,
-} from "@/features/demo/DemoPreviewContext";
 import { PRIMARY_NAV, SECONDARY_NAV } from "@/features/shell/appNav.constant";
 
 export default function AppShellNav() {
   const pathname = usePathname();
-  const appPath = useAppPath();
-  const normalizedPath = normalizeAppPathname(pathname);
   const showStyleguide = useStyleguideNavAccess();
   const secondaryNav = showStyleguide ? SECONDARY_NAV : [];
 
   return (
     <nav aria-label="Primary" className="hidden items-center gap-1 md:flex">
       {PRIMARY_NAV.map((item) => {
-        const isActive = item.isActive(normalizedPath);
+        const isActive = item.isActive(pathname);
 
         return (
           <Link
             key={item.href}
-            href={appPath(item.href)}
+            href={item.href}
             aria-current={isActive ? "page" : undefined}
             className={`rounded-lg px-3 py-2 text-sm font-medium transition ${
               isActive
@@ -38,12 +32,12 @@ export default function AppShellNav() {
         );
       })}
       {secondaryNav.map((item) => {
-        const isActive = item.isActive(normalizedPath);
+        const isActive = item.isActive(pathname);
 
         return (
           <Link
             key={item.href}
-            href={appPath(item.href)}
+            href={item.href}
             aria-current={isActive ? "page" : undefined}
             className={`rounded-lg px-3 py-2 text-sm transition ${
               isActive

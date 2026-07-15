@@ -11,7 +11,7 @@ const stopMemorizingPrompts: ShowcaseArticle = {
     "A signed-in account",
     "At least one saved playbook (or save one from Marketplace)",
   ],
-  tryNext: { label: "Open your library", href: "/demo/library" },
+  tryNext: { label: "Open your library", href: "/library" },
   sections: [
     {
       paragraphs: [

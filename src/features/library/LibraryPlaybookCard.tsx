@@ -5,7 +5,6 @@ import { useState } from "react";
 
 import AppPanel from "@/components/surfaces/AppPanel";
 import Button from "@/components/ui/button/Button";
-import { useAppPath, useDemoPreview } from "@/features/demo/DemoPreviewContext";
 import LibraryPlaybookTypeBadge from "@/features/library/LibraryPlaybookTypeBadge";
 import LibraryPlaybookWorkflowActions from "@/features/library/LibraryPlaybookWorkflowActions";
 import { LIBRARY_PLAYBOOK_CARD_COPY } from "@/features/library/libraryPlaybookCardCopy.constant";
@@ -28,8 +27,6 @@ export default function LibraryPlaybookCard({
   capability,
   onUpdated,
 }: LibraryPlaybookCardProps) {
-  const appPath = useAppPath();
-  const demoPreview = useDemoPreview();
   const isSample = isSampleWorkflowCapability(capability);
   const [isEditing, setIsEditing] = useState(isSample);
   const { copied, copy } = useCopyToClipboard();
@@ -37,7 +34,7 @@ export default function LibraryPlaybookCard({
     libraryCapabilityId: capability.id,
   });
   const copyPrompt = resolveLibraryCopyPrompt(capability);
-  const canManage = !demoPreview && capability.type === CapabilityType.WORKFLOW;
+  const canManage = capability.type === CapabilityType.WORKFLOW;
 
   return (
     <AppPanel as="article" padding="compact">
@@ -67,7 +64,7 @@ export default function LibraryPlaybookCard({
       ) : null}
       <div className="mt-4 space-y-2">
         <div className="flex flex-wrap gap-2">
-          <Link href={appPath(useHref)}>
+          <Link href={useHref}>
             <Button>{LIBRARY_PLAYBOOK_CARD_COPY.runOnMac}</Button>
           </Link>
           {copyPrompt.length > 0 ? (

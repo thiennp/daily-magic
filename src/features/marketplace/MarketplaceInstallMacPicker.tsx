@@ -9,23 +9,13 @@ interface MarketplaceInstallMacPickerProps {
   readonly macSelection: ReturnType<typeof useMacDeviceSelection>;
   readonly localHostname: string | null;
   readonly isWakeServerReachable: boolean;
-  readonly isDemoPreview: boolean;
 }
 
 export default function MarketplaceInstallMacPicker({
   macSelection,
   localHostname,
   isWakeServerReachable,
-  isDemoPreview,
 }: MarketplaceInstallMacPickerProps) {
-  if (isDemoPreview) {
-    return (
-      <p className="mt-4 text-sm text-amber-700 dark:text-amber-300">
-        Demo preview does not install to your account.
-      </p>
-    );
-  }
-
   return (
     <>
       <div className="mt-4">

@@ -2,7 +2,6 @@
 
 import { useMemo, useState, type Dispatch, type SetStateAction } from "react";
 
-import { useDemoPreview } from "@/features/demo/DemoPreviewContext";
 import type { DispatchTargetCapability } from "@/features/dispatch/hooks/useDispatchTargets";
 import {
   buildWorkflowPrompt,
@@ -30,13 +29,12 @@ export function useWsTestComposerWorkflowState(
   readonly isLibraryPlaybook: boolean;
   readonly libraryCapabilityId: string;
 } {
-  const demoPreview = useDemoPreview();
   const initialPrompt =
     rerunPrompt.length > 0
       ? rerunPrompt
       : libraryPlaybook?.type === CapabilityType.AGENT
         ? libraryPlaybook.exampleRequest
-        : (demoPreview?.agentComposer.prompt ?? "");
+        : "";
   const [prompt, setPrompt] = useState(initialPrompt);
   const [workflowFieldValues, setWorkflowFieldValues] = useState<
     Record<string, string>

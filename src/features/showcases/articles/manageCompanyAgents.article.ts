@@ -12,7 +12,7 @@ const manageCompanyAgents: ShowcaseArticle = {
     "Teammates who publish capabilities",
     "Patience — this is directory + policy, not remote desktop for every Mac",
   ],
-  tryNext: { label: "Open demo company rules", href: "/demo/admin/groups" },
+  tryNext: { label: "Open demo company rules", href: "/admin/groups" },
   sections: [
     {
       paragraphs: [

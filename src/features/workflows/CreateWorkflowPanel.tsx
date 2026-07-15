@@ -4,7 +4,6 @@ import { useState } from "react";
 
 import Button from "@/components/ui/button/Button";
 import AppPanel from "@/components/surfaces/AppPanel";
-import { useDemoPreview } from "@/features/demo/DemoPreviewContext";
 import CreateWorkflowForm from "@/features/workflows/CreateWorkflowForm";
 
 interface CreateWorkflowPanelProps {
@@ -14,12 +13,7 @@ interface CreateWorkflowPanelProps {
 export default function CreateWorkflowPanel({
   onCreated,
 }: CreateWorkflowPanelProps) {
-  const demoPreview = useDemoPreview();
   const [isOpen, setIsOpen] = useState(false);
-
-  if (demoPreview) {
-    return null;
-  }
 
   return (
     <AppPanel>

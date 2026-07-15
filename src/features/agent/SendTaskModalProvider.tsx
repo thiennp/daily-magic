@@ -17,10 +17,6 @@ import {
 } from "@/features/agent/constants/sendTaskModalQuery.constant";
 import buildAgentComposerHref from "@/lib/library/buildAgentComposerHref";
 import { stripSendTaskModalQuery } from "@/features/agent/utils/stripSendTaskModalQuery";
-import {
-  normalizeAppPathname,
-  useAppPath,
-} from "@/features/demo/DemoPreviewContext";
 
 interface SendTaskModalContextValue {
   readonly isOpen: boolean;
@@ -35,10 +31,7 @@ const SendTaskModalContext = createContext<SendTaskModalContextValue | null>(
   null,
 );
 
-const isHomePath = (pathname: string): boolean => {
-  const normalized = normalizeAppPathname(pathname);
-  return normalized === "/";
-};
+const isHomePath = (pathname: string): boolean => pathname === "/";
 
 function SendTaskModalController({
   children,
@@ -48,7 +41,6 @@ function SendTaskModalController({
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const appPath = useAppPath();
   const isOpen =
     searchParams.get(SEND_TASK_MODAL_QUERY_PARAM) ===
     SEND_TASK_MODAL_QUERY_VALUE;
@@ -67,9 +59,9 @@ function SendTaskModalController({
       readonly libraryCapabilityId?: string;
       readonly prompt?: string;
     }) => {
-      router.push(appPath(buildAgentComposerHref(input)), { scroll: false });
+      router.push(buildAgentComposerHref(input), { scroll: false });
     },
-    [appPath, router],
+    [router],
   );
 
   const value = useMemo(

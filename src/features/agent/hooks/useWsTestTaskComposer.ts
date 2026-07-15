@@ -12,11 +12,9 @@ import { buildLibraryCapabilitySelectionUpdate } from "@/features/agent/utils/bu
 import { buildWsTestComposerDispatchState } from "@/features/agent/utils/buildWsTestComposerDispatchState";
 import { buildWsTestTaskComposerResult } from "@/features/agent/utils/buildWsTestTaskComposerResult";
 import { createWsTestSelectionHandlers } from "@/features/agent/utils/createWsTestSelectionHandlers";
-import { useDemoPreview } from "@/features/demo/DemoPreviewContext";
 
 export function useWsTestTaskComposer(): UseWsTestTaskComposerResult {
   const searchParams = useSearchParams();
-  const demoPreview = useDemoPreview();
   const urlCapabilityId = searchParams.get("libraryCapabilityId") ?? "";
   const librarySelection = useLibraryPlaybookSelection();
   const selection = useTeamDispatchSelection();
@@ -62,7 +60,7 @@ export function useWsTestTaskComposer(): UseWsTestTaskComposerResult {
         libraryCapabilities: librarySelection.libraryCapabilities,
         rerunPrompt: librarySelection.rerunPrompt,
         urlCapabilityId,
-        fallbackPrompt: demoPreview?.agentComposer.prompt ?? "",
+        fallbackPrompt: "",
       });
       workflow.setPrompt(nextPrompt);
       clearWorkflowFields();

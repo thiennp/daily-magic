@@ -18,7 +18,6 @@ import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessW
 
 export const useAgentWitchPromptDispatch = (input: {
   readonly socketRef: RefObject<WebSocket | null>;
-  readonly demoPreview: unknown;
   readonly connectionLab: unknown;
   readonly beginSession: (
     commandLine: string,
@@ -55,7 +54,7 @@ export const useAgentWitchPromptDispatch = (input: {
         );
       }
 
-      if (input.demoPreview !== null || input.connectionLab !== null) {
+      if (input.connectionLab !== null) {
         input.setLastResponse(
           parseAgentWitchSocketDisplay(buildDemoClaudePromptAck()),
         );

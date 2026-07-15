@@ -10,7 +10,6 @@ import {
   type ReactNode,
 } from "react";
 
-import { useDemoPreview } from "@/features/demo/DemoPreviewContext";
 import { useOptionalPairedDeviceContext } from "@/features/home/PairedDeviceContext";
 import useOnboardingPairStepSync from "@/features/home/hooks/useOnboardingPairStepSync";
 import useOnboardingTaskStepRefresh from "@/features/home/hooks/useOnboardingTaskStepRefresh";
@@ -37,42 +36,31 @@ export function OnboardingStepsProvider({
 }: {
   readonly children: ReactNode;
 }) {
-  const demoPreview = useDemoPreview();
   const pairedDeviceContext = useOptionalPairedDeviceContext();
   const hasPairedDevice = pairedDeviceContext?.hasPairedDevice ?? false;
-  const [steps, setSteps] = useState<readonly OnboardingStep[]>(
-    demoPreview?.onboardingSteps ?? [],
-  );
-  const [isLoading, setIsLoading] = useState(() => !demoPreview);
+  const [steps, setSteps] = useState<readonly OnboardingStep[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    if (demoPreview) {
-      return;
-    }
-
     void loadOnboardingSteps().then((loadedSteps) => {
       setSteps(loadedSteps);
       setIsLoading(false);
     });
-  }, [demoPreview]);
+  }, []);
 
   useEffect(() => {
-    if (demoPreview || !hasPairedDevice) {
+    if (!hasPairedDevice) {
       return;
     }
 
     void loadOnboardingSteps().then(setSteps);
-  }, [demoPreview, hasPairedDevice]);
+  }, [hasPairedDevice]);
 
   const reloadSteps = useCallback(async (): Promise<void> => {
-    if (demoPreview) {
-      return;
-    }
-
     const loadedSteps = await loadOnboardingSteps();
     setSteps(loadedSteps);
     setIsLoading(false);
-  }, [demoPreview]);
+  }, []);
 
   const markWorkflowStepDone = useCallback((): void => {
     setSteps((current) =>
@@ -83,12 +71,10 @@ export function OnboardingStepsProvider({
   }, []);
 
   useOnboardingPairStepSync({
-    demoPreview,
     isConnectStepDone: isConnectMacOnboardingStepDone(steps),
     setSteps,
   });
   useOnboardingTaskStepRefresh({
-    demoPreview,
     isTaskStepDone: isTaskOnboardingStepDone(steps),
     reloadSteps,
   });

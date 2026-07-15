@@ -7,7 +7,7 @@ Authenticated hub, onboarding, Mac connect flow, and guest landing at `/`.
 | Area         | Path                                           |
 | ------------ | ---------------------------------------------- |
 | Feature UI   | `src/features/home/`                           |
-| Routes       | `src/app/(app)/page.tsx`, `src/app/demo/home/` |
+| Routes       | `src/app/(app)/page.tsx`                       |
 | Related APIs | `/api/agent-witch/devices` (via agent-witch)   |
 
 ## Dependencies

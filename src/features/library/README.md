@@ -12,7 +12,6 @@ Saved playbooks; fork and run from library.
 ## Routes
 
 - `/library`
-- `/demo/library`
 
 ## APIs
 

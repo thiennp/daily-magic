@@ -5,7 +5,6 @@ import { useState } from "react";
 import Button from "@/components/ui/button/Button";
 import AppPanel from "@/components/surfaces/AppPanel";
 import CreateAgentForm from "@/features/capabilities/CreateAgentForm";
-import { useDemoPreview } from "@/features/demo/DemoPreviewContext";
 import CreateWorkflowForm from "@/features/workflows/CreateWorkflowForm";
 
 type PlaybookTab = "workflow" | "agent";
@@ -17,13 +16,8 @@ interface CreatePlaybookPanelProps {
 export default function CreatePlaybookPanel({
   onCreated,
 }: CreatePlaybookPanelProps) {
-  const demoPreview = useDemoPreview();
   const [isOpen, setIsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<PlaybookTab>("workflow");
-
-  if (demoPreview) {
-    return null;
-  }
 
   return (
     <AppPanel>
