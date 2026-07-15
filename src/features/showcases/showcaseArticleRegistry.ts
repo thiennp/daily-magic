@@ -87,8 +87,8 @@ export const HOME_FEATURED_SHOWCASE_SLUGS: readonly string[] = [
 
 export const HOME_MORE_SHOWCASE_SLUGS: readonly string[] = [
   scheduleWorkflowOnYourMac.slug,
+  humanCheckpointsBeforeMacRuns.slug,
   standupFromLocalBranch.slug,
-  weeklyReportInFiveMinutes.slug,
 ] as const;
 
 export const HOME_TEAMS_SHOWCASE_SLUGS: readonly string[] = [

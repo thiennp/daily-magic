@@ -35,7 +35,7 @@ export default function HomeMarketingShowcases() {
 
       <HomeMarketingShowcaseSection
         title="More examples"
-        description="Mobile, marketplace, and team workflows."
+        description="Schedules, human checkpoints, standup from your Mac, and team workflows."
       >
         <div className="grid gap-6 md:grid-cols-3">
           {more.map((article) => (
