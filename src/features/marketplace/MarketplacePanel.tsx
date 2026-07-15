@@ -1,9 +1,14 @@
 "use client";
 
 import AppPanel from "@/components/surfaces/AppPanel";
+import {
+  APP_SURFACE_BODY_TEXT_CLASS,
+  APP_SURFACE_SECTION_TITLE_CLASS,
+} from "@/components/surfaces/appSurfaceStyles.constant";
 import BorrowHarnessImportActions from "@/features/marketplace/BorrowHarnessImportActions";
 import MarketplaceList from "@/features/marketplace/MarketplaceList";
 import MarketplaceListingPreview from "@/features/marketplace/MarketplaceListingPreview";
+import MarketplacePresetSection from "@/features/marketplace/MarketplacePresetSection";
 import SaveCapabilityToLibraryActions from "@/features/marketplace/SaveCapabilityToLibraryActions";
 import { useMarketplaceState } from "@/features/marketplace/hooks/useMarketplaceState";
 import { useAgentWitchHarnessSocket } from "@/features/harness/hooks/useAgentWitchHarnessSocket";
@@ -21,14 +26,22 @@ export default function MarketplacePanel({
   const { listings, borrowed, isLoading, borrowListing } =
     useMarketplaceState();
 
-  const list = (
-    <MarketplaceList
-      listings={listings}
-      isLoading={isLoading}
-      onBorrow={(capabilityId) => {
-        void borrowListing(capabilityId);
-      }}
-    />
+  const teammateListings = (
+    <>
+      <h2 className={APP_SURFACE_SECTION_TITLE_CLASS}>From teammates</h2>
+      <p className={`mt-2 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
+        Browse agents and workflows teammates published for your company.
+        Preview a listing, save a copy to your library, or install the linked
+        rules bundle on your Mac.
+      </p>
+      <MarketplaceList
+        listings={listings}
+        isLoading={isLoading}
+        onBorrow={(capabilityId) => {
+          void borrowListing(capabilityId);
+        }}
+      />
+    </>
   );
 
   const preview =
@@ -69,30 +82,29 @@ export default function MarketplacePanel({
 
   if (variant === "page") {
     return (
-      <div
-        className={
-          borrowed !== null
-            ? "grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] lg:items-start"
-            : undefined
-        }
-      >
-        <div>{list}</div>
-        {preview}
+      <div className="space-y-8">
+        <MarketplacePresetSection />
+        <div
+          className={
+            borrowed !== null
+              ? "grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] lg:items-start"
+              : undefined
+          }
+        >
+          <section>{teammateListings}</section>
+          {preview}
+        </div>
       </div>
     );
   }
 
   return (
-    <AppPanel>
-      <h2 className="text-lg font-semibold text-gray-800 dark:text-white/90">
-        Marketplace
-      </h2>
-      <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-        Browse agents and workflows shared by teammates. Save a copy to your
-        library or install the linked rules bundle on your Mac.
-      </p>
-      {list}
-      {preview}
-    </AppPanel>
+    <div className="space-y-6">
+      <MarketplacePresetSection variant="panel" />
+      <AppPanel>
+        {teammateListings}
+        {preview}
+      </AppPanel>
+    </div>
   );
 }

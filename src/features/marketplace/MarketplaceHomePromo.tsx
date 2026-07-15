@@ -17,8 +17,9 @@ export default function MarketplaceHomePromo() {
     <AppPanel>
       <h2 className={APP_SURFACE_SECTION_TITLE_CLASS}>Marketplace</h2>
       <p className={`mt-2 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
-        Browse agents and workflows teammates published for your company.
-        Preview a listing, then install its rules bundle on your Mac.
+        Start from preset agents and workflows, or browse listings teammates
+        published for your company. Preview a listing, then install its rules
+        bundle on your Mac.
       </p>
       <Link
         href={appPath("/marketplace")}
