@@ -1,6 +1,7 @@
 "use client";
 
 import AppPanel from "@/components/surfaces/AppPanel";
+import SendTaskLibraryPicker from "@/features/agent/SendTaskLibraryPicker";
 import TeamDispatchFields from "@/features/dispatch/TeamDispatchFields";
 import WsTestPromptComposerPanel from "@/features/agent/WsTestPromptComposerPanel";
 import type { useWsTestTaskComposer } from "@/features/agent/hooks/useWsTestTaskComposer";
@@ -37,6 +38,15 @@ export default function WsTestPromptSection({
 }: WsTestPromptSectionProps) {
   return (
     <>
+      <AppPanel>
+        <SendTaskLibraryPicker
+          capabilities={composer.libraryCapabilities}
+          selectedCapabilityId={composer.selectedLibraryCapabilityId}
+          isLoading={composer.isPrefillLoading}
+          onSelect={composer.setSelectedLibraryCapabilityId}
+        />
+      </AppPanel>
+
       {!composer.isLibraryPlaybook ? (
         <AppPanel>
           <h2 className="text-sm font-medium text-gray-800 dark:text-white/90">
