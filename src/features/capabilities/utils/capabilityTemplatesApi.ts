@@ -1,3 +1,4 @@
+import { markOnboardingWorkflowCreated } from "@/features/home/utils/onboardingWorkflowCreatedStore";
 import type {
   CapabilityTemplateDetail,
   CapabilityTemplateSummary,
@@ -77,6 +78,8 @@ export const saveCapabilityTemplateToLibrary = async (
     harnessInstalled?: boolean;
     harnessInstallMessage?: string | null;
   };
+
+  markOnboardingWorkflowCreated();
 
   return {
     ok: true,

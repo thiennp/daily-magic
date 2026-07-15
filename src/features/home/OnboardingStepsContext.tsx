@@ -15,6 +15,7 @@ import useOnboardingAutomateStepRefresh from "@/features/home/hooks/useOnboardin
 import useOnboardingPairStepRefresh from "@/features/home/hooks/useOnboardingPairStepRefresh";
 import useOnboardingPairStepSync from "@/features/home/hooks/useOnboardingPairStepSync";
 import useOnboardingTaskStepRefresh from "@/features/home/hooks/useOnboardingTaskStepRefresh";
+import useOnboardingWorkflowStepRefresh from "@/features/home/hooks/useOnboardingWorkflowStepRefresh";
 import {
   loadOnboardingSteps,
   type OnboardingStep,
@@ -23,6 +24,8 @@ import isAutomateOnboardingStepDone from "@/features/home/utils/isAutomateOnboar
 import isConnectMacOnboardingStepDone from "@/features/home/utils/isConnectMacOnboardingStepDone";
 import isTaskOnboardingStepDone from "@/features/home/utils/isTaskOnboardingStepDone";
 import isWorkflowOnboardingStep from "@/features/home/utils/isWorkflowOnboardingStep";
+import isWorkflowOnboardingStepDone from "@/features/home/utils/isWorkflowOnboardingStepDone";
+import { markOnboardingWorkflowCreated } from "@/features/home/utils/onboardingWorkflowCreatedStore";
 
 interface OnboardingStepsContextValue {
   readonly steps: readonly OnboardingStep[];
@@ -66,6 +69,7 @@ export function OnboardingStepsProvider({
   }, []);
 
   const markWorkflowStepDone = useCallback((): void => {
+    markOnboardingWorkflowCreated();
     setSteps((current) =>
       current.map((step) =>
         isWorkflowOnboardingStep(step.id) ? { ...step, done: true } : step,
@@ -83,6 +87,10 @@ export function OnboardingStepsProvider({
   });
   useOnboardingTaskStepRefresh({
     isTaskStepDone: isTaskOnboardingStepDone(steps),
+    reloadSteps,
+  });
+  useOnboardingWorkflowStepRefresh({
+    isWorkflowStepDone: isWorkflowOnboardingStepDone(steps),
     reloadSteps,
   });
   useOnboardingAutomateStepRefresh({

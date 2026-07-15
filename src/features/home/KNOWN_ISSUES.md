@@ -64,7 +64,7 @@ Document every production bug or UX regression here. Each entry must link to a t
 
 ## Adding issues
 
-Use the next ID (`HOME-011`, …). Include symptom, root cause, fix paths, and test file.
+Use the next ID (`HOME-012`, …). Include symptom, root cause, fix paths, and test file.
 
 ---
 
@@ -125,3 +125,15 @@ Use the next ID (`HOME-011`, …). Include symptom, root cause, fix paths, and t
 **Fix:** `GET /api/onboarding/mac-paired` derives completion from `agent_witch_devices` (`EXISTS` non-revoked row). `loadOnboardingSteps` merges that DB flag with the live device list via `hasUserPairedMac`. `useOnboardingPairStepRefresh` reloads steps on focus and tab visibility while the pair step is incomplete.
 
 **Regression test:** `onboardingMacPairedQueries.test.ts`, `onboardingMacPairedApi.test.ts`, `hasUserPairedMac.test.ts`.
+
+---
+
+## HOME-011 — Workflow onboarding step reset across browsers
+
+**Symptom:** “Create your first workflow or agent” stayed incomplete after saving a workflow in another browser or tab, or when `/api/capabilities/mine` returned only seeded defaults.
+
+**Root cause:** Step completion only parsed the live capabilities list; no DB-backed signal excluding auto-seeded sample workflow and default agent.
+
+**Fix:** `GET /api/onboarding/workflow-created` derives completion from `published_capabilities` (non-archived, non-seeded). `loadOnboardingSteps` merges DB flag with capabilities via `hasUserCreatedFirstWorkflowOrAgent`. Local optimistic flag + `useOnboardingWorkflowStepRefresh` keep the home checklist live after creates.
+
+**Regression test:** `onboardingWorkflowCreatedQueries.test.ts`, `onboardingWorkflowCreatedApi.test.ts`, `onboardingWorkflowCreatedStore.test.ts`, `syncOnboardingWorkflowCreatedFlag.test.ts`, `hasUserCreatedFirstWorkflowOrAgent.test.ts`.

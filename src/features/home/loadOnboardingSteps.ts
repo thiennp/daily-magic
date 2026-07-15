@@ -6,8 +6,10 @@ import hasUserPairedMac from "@/features/home/utils/hasUserPairedMac";
 import hasUserSentFirstTask from "@/features/home/utils/hasUserSentFirstTask";
 import { fetchOnboardingFirstTaskSent } from "@/features/home/utils/onboardingFirstTaskSentApi";
 import { fetchOnboardingMacPaired } from "@/features/home/utils/onboardingMacPairedApi";
+import { fetchOnboardingWorkflowCreated } from "@/features/home/utils/onboardingWorkflowCreatedApi";
 import syncOnboardingAutomationCreatedFlag from "@/features/home/utils/syncOnboardingAutomationCreatedFlag";
 import syncOnboardingFirstTaskSentFlag from "@/features/home/utils/syncOnboardingFirstTaskSentFlag";
+import syncOnboardingWorkflowCreatedFlag from "@/features/home/utils/syncOnboardingWorkflowCreatedFlag";
 import { listAgentRunsLocalCache } from "@/features/reports/agentRunLocalCache";
 
 export type { OnboardingStep } from "@/features/home/utils/buildOnboardingSteps";
@@ -33,6 +35,7 @@ export async function loadOnboardingSteps() {
     automationsResponse,
     dbAutomationCreated,
     dbMacPaired,
+    dbWorkflowCreated,
   ] = await Promise.all([
     fetch("/api/agent-witch/devices"),
     fetch("/api/capabilities/mine"),
@@ -41,10 +44,12 @@ export async function loadOnboardingSteps() {
     fetch("/api/automations"),
     fetchOnboardingAutomationCreated(),
     fetchOnboardingMacPaired(),
+    fetchOnboardingWorkflowCreated(),
   ]);
 
   syncOnboardingFirstTaskSentFlag(dbFirstTaskSent);
   syncOnboardingAutomationCreatedFlag(dbAutomationCreated);
+  syncOnboardingWorkflowCreatedFlag(dbWorkflowCreated);
 
   const devicesData: unknown = devicesResponse.ok
     ? await devicesResponse.json()
@@ -77,7 +82,10 @@ export async function loadOnboardingSteps() {
       parseActiveDeviceCount(devicesData) > 0,
       dbMacPaired,
     ),
-    hasCreatedWorkflowOrAgent: hasUserCreatedFirstWorkflowOrAgent(capabilities),
+    hasCreatedWorkflowOrAgent: hasUserCreatedFirstWorkflowOrAgent(
+      capabilities,
+      dbWorkflowCreated,
+    ),
     hasSentTask: hasUserSentFirstTask(
       typeof runsData === "object" &&
         runsData !== null &&

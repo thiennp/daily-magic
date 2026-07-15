@@ -1,3 +1,4 @@
+import { markOnboardingWorkflowCreated } from "@/features/home/utils/onboardingWorkflowCreatedStore";
 import { CapabilityType } from "@/lib/capabilities/CapabilityType.constant";
 import type WorkflowFieldDefinition from "@/lib/workflows/types/WorkflowFieldDefinition.type";
 
@@ -57,6 +58,8 @@ export async function submitCreateWorkflow(
       errorMessage: "Workflow created but response was invalid.",
     };
   }
+
+  markOnboardingWorkflowCreated();
 
   return { ok: true, capabilityId };
 }

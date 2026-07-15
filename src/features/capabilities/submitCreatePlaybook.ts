@@ -1,3 +1,4 @@
+import { markOnboardingWorkflowCreated } from "@/features/home/utils/onboardingWorkflowCreatedStore";
 import { CapabilityType } from "@/lib/capabilities/CapabilityType.constant";
 import type { HarnessItemKind } from "@/lib/agentWitch/harness/types/HarnessItemKind.constant";
 import type WorkflowFieldDefinition from "@/lib/workflows/types/WorkflowFieldDefinition.type";
@@ -82,6 +83,8 @@ export async function submitCreatePlaybook(
     typeof record.harnessInstallMessage === "string"
       ? record.harnessInstallMessage
       : null;
+
+  markOnboardingWorkflowCreated();
 
   return {
     ok: true,

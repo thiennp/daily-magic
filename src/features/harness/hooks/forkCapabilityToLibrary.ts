@@ -1,3 +1,4 @@
+import { markOnboardingWorkflowCreated } from "@/features/home/utils/onboardingWorkflowCreatedStore";
 import type PublishedCapabilityRecord from "@/lib/capabilities/types/PublishedCapabilityRecord.type";
 
 export type ForkCapabilityToLibraryResult =
@@ -32,6 +33,8 @@ export default async function forkCapabilityToLibrary(
     typeof (data as { capability: PublishedCapabilityRecord }).capability ===
       "object"
   ) {
+    markOnboardingWorkflowCreated();
+
     return {
       ok: true,
       capability: (data as { capability: PublishedCapabilityRecord })

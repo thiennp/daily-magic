@@ -1,4 +1,5 @@
 import isUserCreatedCapability from "@/lib/capabilities/isUserCreatedCapability";
+import { readOnboardingWorkflowCreated } from "@/features/home/utils/onboardingWorkflowCreatedStore";
 
 interface OnboardingCapabilityShape {
   readonly type: string;
@@ -7,6 +8,10 @@ interface OnboardingCapabilityShape {
 
 const hasUserCreatedFirstWorkflowOrAgent = (
   capabilities: ReadonlyArray<OnboardingCapabilityShape>,
-): boolean => capabilities.some(isUserCreatedCapability);
+  dbWorkflowCreated = false,
+): boolean =>
+  dbWorkflowCreated ||
+  readOnboardingWorkflowCreated() ||
+  capabilities.some(isUserCreatedCapability);
 
 export default hasUserCreatedFirstWorkflowOrAgent;
