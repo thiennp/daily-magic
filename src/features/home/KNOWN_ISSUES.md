@@ -64,7 +64,7 @@ Document every production bug or UX regression here. Each entry must link to a t
 
 ## Adding issues
 
-Use the next ID (`HOME-018`, …). Include symptom, root cause, fix paths, and test file.
+Use the next ID (`HOME-019`, …). Include symptom, root cause, fix paths, and test file.
 
 ---
 
@@ -209,3 +209,15 @@ Use the next ID (`HOME-018`, …). Include symptom, root cause, fix paths, and t
 **Fix:** `shouldShowOnboardingChecklist` and `shouldShowOnboardingAutomateNudge` hide sidebar onboarding hints when setup is acknowledged; components use `useOnboardingSetupAcknowledged`.
 
 **Regression test:** `shouldShowOnboardingChecklist.test.ts`, `shouldShowOnboardingAutomateNudge.test.ts`.
+
+---
+
+## HOME-018 — Duplicate setup-acknowledged API fetch on home
+
+**Symptom:** Home mounted three separate `useOnboardingSetupAcknowledged` hooks (main panel, checklist, automate nudge), each calling `GET /api/onboarding/setup-acknowledged`.
+
+**Root cause:** Setup acknowledgment state lived in a standalone hook instead of `OnboardingStepsProvider`.
+
+**Fix:** Fetch and store setup acknowledgment once in `OnboardingStepsContext`; `useOnboardingSetupAcknowledged` reads from context.
+
+**Regression test:** `OnboardingStepsContext` shares one fetch (grep guard: single `fetchOnboardingSetupAcknowledged` in provider).

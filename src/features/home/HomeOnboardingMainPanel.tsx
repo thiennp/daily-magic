@@ -7,7 +7,6 @@ import HomeOnboardingSetupCompletePanel from "@/features/home/HomeOnboardingSetu
 import HomeOnboardingMainStep from "@/features/home/HomeOnboardingMainStep";
 import HomeOnboardingTemplateStep from "@/features/home/HomeOnboardingTemplateStep";
 import useOnboardingSteps from "@/features/home/hooks/useOnboardingSteps";
-import useOnboardingSetupAcknowledged from "@/features/home/hooks/useOnboardingSetupAcknowledged";
 import findNextIncompleteOnboardingStep from "@/features/home/utils/findNextIncompleteOnboardingStep";
 import shouldShowOnboardingSetupCompletePanel from "@/features/home/utils/shouldShowOnboardingSetupCompletePanel";
 import isTaskOnboardingStep from "@/features/home/utils/isTaskOnboardingStep";
@@ -28,13 +27,15 @@ const isMacConnectStep = (stepId: string): boolean =>
 export default function HomeOnboardingMainPanel({
   user,
 }: HomeOnboardingMainPanelProps) {
-  const { steps, isLoading, reloadSteps, markWorkflowStepDone } =
-    useOnboardingSteps();
   const {
+    steps,
+    isLoading,
+    reloadSteps,
+    markWorkflowStepDone,
     isSetupAcknowledged,
-    isLoading: isLoadingSetupAcknowledged,
+    isLoadingSetupAcknowledged,
     acknowledgeSetup,
-  } = useOnboardingSetupAcknowledged();
+  } = useOnboardingSteps();
   const nextStep = findNextIncompleteOnboardingStep(steps);
 
   const handleWorkflowSaved = (): void => {
