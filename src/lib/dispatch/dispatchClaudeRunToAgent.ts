@@ -4,6 +4,7 @@ import type AgentWitchHubRuntime from "@/lib/agentWitch/types/AgentWitchHubRunti
 import type AgentWitchMessage from "@/lib/agentWitch/types/AgentWitchMessage.type";
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
 import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
+import { appendAgentRunEvent } from "@/lib/dispatch/agentRunEventQueries";
 import { wrapPromptWithAgentRunInputGuardrails } from "@/lib/dispatch/agentRunInputGuardrails.constant";
 import { updateAgentRunStatus } from "@/lib/dispatch/agentRunQueries";
 import { broadcastAgentRunRecord } from "@/lib/dispatch/broadcastAgentRunRecord";
@@ -34,6 +35,11 @@ export const markAgentRunRunning = async (
 ): Promise<AgentRunRecord | null> => {
   const run = await updateAgentRunStatus(runId, AgentRunStatus.RUNNING);
   if (run !== null) {
+    await appendAgentRunEvent({
+      agentRunId: runId,
+      kind: "status.running",
+      payload: { status: run.status },
+    });
     broadcastAgentRunRecord(runtime, run);
   }
   return run;
@@ -45,15 +51,23 @@ export const markAgentRunCompleted = async (
   exitCode: number,
   output: string,
 ): Promise<AgentRunRecord | null> => {
-  const run = await updateAgentRunStatus(
-    runId,
-    exitCode === 0 ? AgentRunStatus.COMPLETED : AgentRunStatus.FAILED,
-    {
-      resultExitCode: exitCode,
-      resultOutput: output,
-    },
-  );
+  const status =
+    exitCode === 0 ? AgentRunStatus.COMPLETED : AgentRunStatus.FAILED;
+  const run = await updateAgentRunStatus(runId, status, {
+    resultExitCode: exitCode,
+    resultOutput: output,
+  });
   if (run !== null) {
+    await appendAgentRunEvent({
+      agentRunId: runId,
+      kind: "terminal.end",
+      payload: { exitCode, output },
+    });
+    await appendAgentRunEvent({
+      agentRunId: runId,
+      kind: `status.${status}`,
+      payload: { status, exitCode },
+    });
     broadcastAgentRunRecord(runtime, run);
   }
   return run;

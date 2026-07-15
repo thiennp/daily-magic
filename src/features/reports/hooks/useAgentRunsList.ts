@@ -9,6 +9,7 @@ import {
   listAgentRunsLocalCache,
 } from "@/features/reports/agentRunLocalCache";
 import { useAgentRunRecordSync } from "@/features/reports/hooks/useAgentRunRecordSync";
+import { useAgentRunsActiveSse } from "@/features/reports/hooks/useAgentRunsActiveSse";
 import { useAgentRunsRemoteSync } from "@/features/reports/hooks/useAgentRunsRemoteSync";
 import { buildViewerAgentRunsList } from "@/features/reports/utils/buildViewerAgentRunsList";
 import type { AgentRunScopeValue } from "@/lib/dispatch/AgentRunScope.constant";
@@ -30,12 +31,21 @@ export function useAgentRunsList(input: {
   const bumpCache = useCallback(() => {
     setCacheVersion((current) => current + 1);
   }, []);
-  const { apiRuns, isLoading } = useAgentRunsRemoteSync({
+  const { apiRuns, isLoading, refresh } = useAgentRunsRemoteSync({
     enabled: demoPreview === null,
     statusFilter: input.statusFilter,
     scopeFilter: input.scopeFilter,
     groupFilter: input.groupFilter,
     onCacheUpdated: bumpCache,
+  });
+
+  useAgentRunsActiveSse({
+    enabled: demoPreview === null,
+    runs: apiRuns,
+    onRunActivity: () => {
+      refresh();
+      bumpCache();
+    },
   });
 
   const cachedRuns = useMemo(() => {

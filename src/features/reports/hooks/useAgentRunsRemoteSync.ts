@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { upsertAgentRunLocalCache } from "@/features/reports/agentRunLocalCache";
 import { POLL_INTERVAL_MS } from "@/features/reports/agentRunsPolling.constant";
@@ -21,11 +21,13 @@ export function useAgentRunsRemoteSync(input: {
 }): {
   readonly apiRuns: readonly EnrichedAgentRunRecord[];
   readonly isLoading: boolean;
+  readonly refresh: () => void;
 } {
   const { enabled, statusFilter, scopeFilter, groupFilter, onCacheUpdated } =
     input;
   const [apiRuns, setApiRuns] = useState<readonly EnrichedAgentRunRecord[]>([]);
   const [isLoading, setIsLoading] = useState(enabled);
+  const refreshRef = useRef<() => void>(() => {});
 
   useEffect(() => {
     if (!enabled) {
@@ -64,15 +66,25 @@ export function useAgentRunsRemoteSync(input: {
       setIsLoading(false);
     };
 
+    refreshRef.current = () => {
+      void loadRuns();
+    };
+
     void loadRuns();
     const timer = setInterval(() => {
       void loadRuns();
-    }, POLL_INTERVAL_MS * 6);
+    }, POLL_INTERVAL_MS * 12);
 
     return () => {
       clearInterval(timer);
     };
   }, [enabled, groupFilter, onCacheUpdated, scopeFilter, statusFilter]);
 
-  return { apiRuns, isLoading };
+  return {
+    apiRuns,
+    isLoading,
+    refresh: () => {
+      refreshRef.current();
+    },
+  };
 }

@@ -7,26 +7,16 @@ import {
 } from "@/features/reports/agentRunLocalCache";
 import { fetchAgentRunDetail } from "@/features/reports/fetchAgentRunDetail";
 import { POLL_INTERVAL_MS } from "@/features/reports/agentRunsPolling.constant";
+import { useAgentRunDetailFeedback } from "@/features/reports/hooks/useAgentRunDetailFeedback";
+import { useAgentRunEventsSse } from "@/features/reports/hooks/useAgentRunEventsSse";
 import { useAgentRunRecordSync } from "@/features/reports/hooks/useAgentRunRecordSync";
+import {
+  findDemoAgentRun,
+  toEnrichedAgentRun,
+} from "@/features/reports/utils/agentRunDetailState.helpers";
+import { isTerminalAgentRunStatus } from "@/lib/dispatch/isTerminalAgentRunStatus";
 import type CapabilityFeedbackRecord from "@/lib/feedback/types/CapabilityFeedbackRecord.type";
 import type EnrichedAgentRunRecord from "@/lib/dispatch/types/EnrichedAgentRunRecord.type";
-import type AgentRunRecord from "@/lib/dispatch/types/AgentRunRecord.type";
-
-const findDemoRun = (
-  demoPreview: NonNullable<ReturnType<typeof useDemoPreview>>,
-  runId: string,
-): EnrichedAgentRunRecord | null =>
-  demoPreview.agentRuns.find((item) => item.id === runId) ??
-  demoPreview.agentRuns[0] ??
-  null;
-
-const toEnrichedRun = (run: AgentRunRecord): EnrichedAgentRunRecord => ({
-  ...run,
-  requesterEmail: run.requesterUserId,
-  executorEmail: run.executorUserId,
-  requesterName: null,
-  executorName: null,
-});
 
 export function useAgentRunDetailState(runId: string): {
   readonly run: EnrichedAgentRunRecord | null;
@@ -39,15 +29,17 @@ export function useAgentRunDetailState(runId: string): {
   const cachedRun = getAgentRunLocalCache(runId);
   const [run, setRun] = useState<EnrichedAgentRunRecord | null>(() => {
     if (demoPreview) {
-      return findDemoRun(demoPreview, runId);
+      return findDemoAgentRun(demoPreview, runId);
     }
 
-    return cachedRun ? toEnrichedRun(cachedRun) : null;
+    return cachedRun ? toEnrichedAgentRun(cachedRun) : null;
   });
-  const [feedback, setFeedback] = useState<CapabilityFeedbackRecord | null>(
-    null,
-  );
   const [isLoading, setIsLoading] = useState(() => !demoPreview);
+  const [sseActive, setSseActive] = useState(false);
+  const { feedback, setFeedback } = useAgentRunDetailFeedback(
+    runId,
+    demoPreview === null,
+  );
 
   const reloadRun = useCallback(async (): Promise<void> => {
     const nextRun = await fetchAgentRunDetail(runId);
@@ -60,8 +52,22 @@ export function useAgentRunDetailState(runId: string): {
 
   useAgentRunRecordSync((updatedRun) => {
     if (updatedRun.id === runId) {
-      setRun(toEnrichedRun(updatedRun));
+      setRun(toEnrichedAgentRun(updatedRun));
     }
+  });
+
+  useAgentRunEventsSse({
+    runId,
+    enabled:
+      demoPreview === null &&
+      (run === null || !isTerminalAgentRunStatus(run.status)),
+    onEvent: () => {
+      setSseActive(true);
+      void reloadRun();
+    },
+    onTerminal: () => {
+      void reloadRun();
+    },
   });
 
   useEffect(() => {
@@ -83,38 +89,16 @@ export function useAgentRunDetailState(runId: string): {
       setIsLoading(false);
     });
 
-    void fetch(`/api/agent-runs/${runId}/feedback`)
-      .then(async (response) => {
-        if (!response.ok || !lifecycle.active) {
-          return null;
-        }
-
-        return response.json() as Promise<unknown>;
-      })
-      .then((data) => {
-        if (
-          !lifecycle.active ||
-          typeof data !== "object" ||
-          data === null ||
-          !("feedback" in data) ||
-          (data as { feedback: CapabilityFeedbackRecord | null }).feedback ===
-            null
-        ) {
-          return;
-        }
-
-        setFeedback((data as { feedback: CapabilityFeedbackRecord }).feedback);
-      });
-
+    const pollMs = sseActive ? POLL_INTERVAL_MS * 12 : POLL_INTERVAL_MS * 6;
     const timer = setInterval(() => {
       void reloadRun();
-    }, POLL_INTERVAL_MS * 6);
+    }, pollMs);
 
     return () => {
       lifecycle.active = false;
       clearInterval(timer);
     };
-  }, [demoPreview, runId, reloadRun]);
+  }, [demoPreview, reloadRun, runId, sseActive]);
 
   return { run, feedback, isLoading, setFeedback, reloadRun };
 }

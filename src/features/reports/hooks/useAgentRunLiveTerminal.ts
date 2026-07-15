@@ -1,9 +1,8 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useState } from "react";
 
 import {
-  appendAgentRunTerminalOutput,
   loadAgentRunTerminalOutput,
   setAgentRunTerminalOutput,
 } from "@/features/agent/utils/agentRunTerminalOutputStore";
@@ -11,13 +10,8 @@ import {
   sendAgentRunInputResponse,
   type AgentRunInputRequest,
 } from "@/features/dispatch/utils/agentRunInputSocket";
-import { handleAgentRunLiveTerminalSocketMessage } from "@/features/reports/utils/handleAgentRunLiveTerminalSocketMessage";
-import { registerAgentRunLiveTerminal } from "@/features/reports/utils/registerAgentRunLiveTerminal";
-import {
-  buildAgentWitchWebSocketUrl,
-  sendAgentWitchPairingToken,
-} from "@/features/agent/utils/agentWitchSocketUtils";
-import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
+import { useAgentRunLiveTerminalSocket } from "@/features/reports/hooks/useAgentRunLiveTerminalSocket";
+import { useAgentRunLiveTerminalSseOutput } from "@/features/reports/hooks/useAgentRunLiveTerminalSseOutput";
 
 export function useAgentRunLiveTerminal(
   runId: string,
@@ -28,62 +22,17 @@ export function useAgentRunLiveTerminal(
   readonly submitInput: (response: string) => void;
   readonly dismissInput: () => void;
 } {
-  const socketRef = useRef<WebSocket | null>(null);
   const [output, setOutput] = useState(() => loadAgentRunTerminalOutput(runId));
   const [pendingInput, setPendingInput] = useState<AgentRunInputRequest | null>(
     null,
   );
 
-  useEffect(() => {
-    if (!enabled) {
-      return;
-    }
-
-    const unregister = registerAgentRunLiveTerminal(runId);
-    const wsUrl = buildAgentWitchWebSocketUrl();
-
-    if (wsUrl.length === 0) {
-      unregister();
-      return;
-    }
-
-    const socket = new WebSocket(wsUrl);
-    socketRef.current = socket;
-
-    socket.addEventListener("open", () => {
-      socket.send(
-        JSON.stringify({
-          type: AGENT_WITCH_MESSAGE_TYPES.AGENT_REGISTER,
-          payload: { role: "dashboard" },
-        }),
-      );
-      sendAgentWitchPairingToken(socket);
-    });
-
-    socket.addEventListener("message", (event) => {
-      try {
-        const parsed: unknown = JSON.parse(String(event.data));
-        handleAgentRunLiveTerminalSocketMessage(runId, parsed, {
-          onOutputChunk: (chunk) => {
-            const nextOutput = appendAgentRunTerminalOutput(runId, chunk);
-            setOutput(nextOutput);
-          },
-          onStreamEnd: () => {
-            socket.close();
-          },
-          onInputRequired: setPendingInput,
-        });
-      } catch {
-        return;
-      }
-    });
-
-    return () => {
-      socket.close();
-      socketRef.current = null;
-      unregister();
-    };
-  }, [enabled, runId]);
+  const { socketRef } = useAgentRunLiveTerminalSocket({
+    runId,
+    enabled,
+    onOutput: setOutput,
+    onInputRequired: setPendingInput,
+  });
 
   const submitInput = useCallback(
     (response: string) => {
@@ -113,12 +62,18 @@ export function useAgentRunLiveTerminal(
         return nextOutput;
       });
     },
-    [pendingInput, runId],
+    [pendingInput, runId, socketRef],
   );
 
   const dismissInput = useCallback(() => {
     setPendingInput(null);
   }, []);
+
+  useAgentRunLiveTerminalSseOutput({
+    runId,
+    enabled,
+    onOutput: setOutput,
+  });
 
   return {
     output,
