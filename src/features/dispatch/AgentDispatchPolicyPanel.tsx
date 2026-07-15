@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import Button from "@/components/ui/button/Button";
 import AppPanel from "@/components/surfaces/AppPanel";
 import { useHomeSetupEmbedded } from "@/features/home/HomeSetupEmbeddedContext";
+import HomeSetupDivider from "@/features/home/HomeSetupDivider";
 import { COMPANY_ENTITY_LABEL } from "@/lib/admin/companyGroupCopy.constant";
 import DispatchPolicyPreviewControls from "@/features/dispatch/DispatchPolicyPreviewControls";
 import {
@@ -92,6 +93,7 @@ export default function AgentDispatchPolicyPanel() {
           {message}
         </p>
       ) : null}
+      <HomeSetupDivider />
       <DispatchPolicyPreviewControls />
     </AppPanel>
   );

@@ -19,7 +19,7 @@ export default function HarnessLocalManifest({
   const embedded = useHomeSetupEmbedded();
 
   return (
-    <div className="mt-6">
+    <div className={embedded ? undefined : "mt-6"}>
       <h3 className="text-sm font-medium text-gray-800 dark:text-white/90">
         Reported local setup
       </h3>

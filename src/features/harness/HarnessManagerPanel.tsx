@@ -1,8 +1,11 @@
 "use client";
 
+import { Fragment } from "react";
+
 import AppPanel from "@/components/surfaces/AppPanel";
 import AgentWitchUnsupportedHostNotice from "@/features/home/AgentWitchUnsupportedHostNotice";
 import { useHomeSetupEmbedded } from "@/features/home/HomeSetupEmbeddedContext";
+import HomeSetupDivider from "@/features/home/HomeSetupDivider";
 import HarnessItemEditor from "@/features/harness/components/HarnessItemEditor";
 import HarnessLastRequestResult from "@/features/harness/components/HarnessLastRequestResult";
 import HarnessLocalManifest from "@/features/harness/components/HarnessLocalManifest";
@@ -55,19 +58,23 @@ export default function HarnessManagerPanel({
         onWriterAgentChange={form.setWriterAgent}
       />
 
-      <div className="mt-6 space-y-4">
+      <HomeSetupDivider />
+
+      <div className={embedded ? "space-y-0" : "mt-6 space-y-4"}>
         {form.items.map((item, index) => (
-          <HarnessItemEditor
-            key={item.id}
-            item={item}
-            index={index}
-            availableSets={availableSets}
-            canRemove={form.items.length > 1}
-            onRemove={() => {
-              form.removeItem(item.id);
-            }}
-            onChange={form.updateItem}
-          />
+          <Fragment key={item.id}>
+            {index > 0 ? <HomeSetupDivider className="my-4" /> : null}
+            <HarnessItemEditor
+              item={item}
+              index={index}
+              availableSets={availableSets}
+              canRemove={form.items.length > 1}
+              onRemove={() => {
+                form.removeItem(item.id);
+              }}
+              onChange={form.updateItem}
+            />
+          </Fragment>
         ))}
       </div>
 
@@ -95,9 +102,13 @@ export default function HarnessManagerPanel({
       </div>
 
       {lastRequestResult ? (
-        <HarnessLastRequestResult result={lastRequestResult} />
+        <>
+          <HomeSetupDivider />
+          <HarnessLastRequestResult result={lastRequestResult} />
+        </>
       ) : null}
 
+      <HomeSetupDivider />
       <HarnessLocalManifest
         localManifest={localManifest}
         manifestHostname={manifestHostname}

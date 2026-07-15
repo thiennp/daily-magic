@@ -4,6 +4,7 @@ import AppPanel from "@/components/surfaces/AppPanel";
 import HarnessCatalogPublishPanel from "@/features/harness/HarnessCatalogPublishPanel";
 import HarnessSetSharingPanel from "@/features/harness/HarnessSetSharingPanel";
 import { useHomeSetupEmbedded } from "@/features/home/HomeSetupEmbeddedContext";
+import HomeSetupDivider from "@/features/home/HomeSetupDivider";
 
 export default function HarnessSharingPanel() {
   const embedded = useHomeSetupEmbedded();
@@ -18,6 +19,7 @@ export default function HarnessSharingPanel() {
         bundles stay private until you change them.
       </p>
       <HarnessCatalogPublishPanel />
+      <HomeSetupDivider />
       <HarnessSetSharingPanel />
     </AppPanel>
   );

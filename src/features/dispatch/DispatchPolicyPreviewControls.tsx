@@ -3,6 +3,7 @@
 import { useMemo, useState, useSyncExternalStore } from "react";
 
 import DispatchPolicyPreview from "@/features/dispatch/DispatchPolicyPreview";
+import HomeSetupDivider from "@/features/home/HomeSetupDivider";
 import { COMPANY_ENTITY_LABEL } from "@/lib/admin/companyGroupCopy.constant";
 import type { MyMacDevice } from "@/features/agent/hooks/useMyMacDevices";
 import {
@@ -77,6 +78,7 @@ export default function DispatchPolicyPreviewControls() {
           </select>
         </label>
       </div>
+      <HomeSetupDivider className="my-4" />
       <DispatchPolicyPreview deviceId={deviceId} groupId={resolvedGroupId} />
     </div>
   );

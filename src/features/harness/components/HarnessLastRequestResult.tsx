@@ -21,7 +21,7 @@ export default function HarnessLastRequestResult({
       className={resolveHomeSetupNestedBoxClass(
         embedded,
         LAST_REQUEST_BOX_CLASS,
-        "mt-6 text-sm",
+        "text-sm",
       )}
     >
       <p className="font-medium text-gray-800 dark:text-white/90">

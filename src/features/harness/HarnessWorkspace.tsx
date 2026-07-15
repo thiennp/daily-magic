@@ -1,5 +1,6 @@
 "use client";
 
+import HomeSetupDivider from "@/features/home/HomeSetupDivider";
 import HarnessManagerPanel from "@/features/harness/HarnessManagerPanel";
 import HarnessSharingPanel from "@/features/harness/HarnessSharingPanel";
 import type { UseAgentWitchHarnessSocketResult } from "@/features/harness/hooks/useAgentWitchHarnessSocket";
@@ -14,6 +15,7 @@ export default function HarnessWorkspace({
   return (
     <>
       <HarnessSharingPanel />
+      <HomeSetupDivider />
       <HarnessManagerPanel harnessSocket={harnessSocket} />
     </>
   );

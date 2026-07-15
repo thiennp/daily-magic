@@ -2,6 +2,7 @@
 
 import { HARNESS_WRITER_OPTIONS } from "@/features/harness/constants/harnessFormOptions";
 import { useHomeSetupEmbedded } from "@/features/home/HomeSetupEmbeddedContext";
+import HomeSetupDivider from "@/features/home/HomeSetupDivider";
 import resolveHomeSetupNestedBoxClass from "@/features/home/resolveHomeSetupNestedBoxClass";
 import listHarnessManifestSets from "@/lib/agentWitch/harness/listHarnessManifestSets";
 import type HarnessManifest from "@/lib/agentWitch/harness/types/HarnessManifest.type";
@@ -46,26 +47,29 @@ export default function HarnessSetManager({
       </label>
 
       {existingSets.length > 0 ? (
-        <div
-          className={resolveHomeSetupNestedBoxClass(
-            embedded,
-            BUNDLES_BOX_CLASS,
-          )}
-        >
-          <p className="text-sm font-medium text-gray-800 dark:text-white/90">
-            Your bundles
-          </p>
-          <ul className="mt-2 flex flex-wrap gap-2">
-            {existingSets.map((set) => (
-              <li
-                key={set.slug}
-                className="rounded-full border border-gray-200 bg-white px-3 py-1 text-xs font-medium text-gray-700 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300"
-              >
-                {set.name}
-              </li>
-            ))}
-          </ul>
-        </div>
+        <>
+          <HomeSetupDivider className="my-4" />
+          <div
+            className={resolveHomeSetupNestedBoxClass(
+              embedded,
+              BUNDLES_BOX_CLASS,
+            )}
+          >
+            <p className="text-sm font-medium text-gray-800 dark:text-white/90">
+              Your bundles
+            </p>
+            <ul className="mt-2 flex flex-wrap gap-2">
+              {existingSets.map((set) => (
+                <li
+                  key={set.slug}
+                  className="rounded-full border border-gray-200 bg-white px-3 py-1 text-xs font-medium text-gray-700 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300"
+                >
+                  {set.name}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </>
       ) : (
         <p className="text-sm text-gray-500 dark:text-gray-400">
           No bundles on this Mac yet. Install one from Library or Marketplace.
