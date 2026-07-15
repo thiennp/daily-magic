@@ -64,7 +64,7 @@ Document every production bug or UX regression here. Each entry must link to a t
 
 ## Adding issues
 
-Use the next ID (`HOME-013`, …). Include symptom, root cause, fix paths, and test file.
+Use the next ID (`HOME-014`, …). Include symptom, root cause, fix paths, and test file.
 
 ---
 
@@ -149,3 +149,15 @@ Use the next ID (`HOME-013`, …). Include symptom, root cause, fix paths, and t
 **Fix:** Mark workflow onboarding when marketplace install returns `savedToLibrary: true`.
 
 **Regression test:** `postMarketplaceInstall.test.ts`.
+
+---
+
+## HOME-013 — Generic hero after onboarding finished
+
+**Symptom:** After pair, workflow, and first-task steps were complete, home showed the generic “Welcome back” hero with no clear “what’s next” for new users.
+
+**Root cause:** `HomeOnboardingMainPanel` fell through to `HomeDashboardHero` whenever no required step remained.
+
+**Fix:** `HomeOnboardingSetupCompletePanel` renders when all required steps are done, with links to send another task, automations, showcases, library, and reports.
+
+**Regression test:** `areRequiredOnboardingStepsComplete.test.ts`.
