@@ -40,7 +40,7 @@ export async function loadOnboardingSteps(): Promise<
     await Promise.all([
       readHasPairedDevice(),
       fetch("/api/capabilities/mine"),
-      fetch("/api/agent-runs?scope=mine"),
+      fetch("/api/agent-runs"),
     ]);
 
   const capabilitiesData: unknown = capabilitiesResponse.ok

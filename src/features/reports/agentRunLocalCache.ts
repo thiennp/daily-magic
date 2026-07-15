@@ -1,3 +1,4 @@
+import { markOnboardingFirstTaskSent } from "@/features/home/utils/onboardingFirstTaskSentStore";
 import type AgentRunRecord from "@/lib/dispatch/types/AgentRunRecord.type";
 
 const STORAGE_KEY = "daily-magic.agent-runs.v1";
@@ -46,6 +47,7 @@ export const upsertAgentRunLocalCache = (run: AgentRunRecord): void => {
   const cache = readCache();
   cache[run.id] = run;
   writeCache(cache);
+  markOnboardingFirstTaskSent();
   notifyAgentRunsLocalCacheUpdated();
 };
 
@@ -61,7 +63,7 @@ export const AGENT_RUNS_LOCAL_CACHE_UPDATED_EVENT =
   "daily-magic:agent-runs-cache-updated";
 
 const notifyAgentRunsLocalCacheUpdated = (): void => {
-  if (typeof window === "undefined") {
+  if (typeof window === "undefined" || typeof CustomEvent === "undefined") {
     return;
   }
 

@@ -16,5 +16,17 @@ export const mockBrowserLocalStorage = (): void => {
     },
   };
 
-  vi.stubGlobal("window", { localStorage });
+  class MockCustomEvent {
+    readonly type: string;
+
+    constructor(type: string) {
+      this.type = type;
+    }
+  }
+
+  vi.stubGlobal("window", {
+    localStorage,
+    dispatchEvent: () => true,
+  });
+  vi.stubGlobal("CustomEvent", MockCustomEvent);
 };

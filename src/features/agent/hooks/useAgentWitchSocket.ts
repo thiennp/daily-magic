@@ -8,6 +8,7 @@ import { useAgentWitchLiveTerminal } from "@/features/agent/hooks/useAgentWitchL
 import { useAgentWitchPromptDispatch } from "@/features/agent/hooks/useAgentWitchPromptDispatch";
 import { subscribeAgentWitchDashboardSocket } from "@/features/agent/hooks/subscribeAgentWitchDashboardSocket";
 import { syncAgentRunLocalCacheFromSocket } from "@/features/reports/utils/syncAgentRunLocalCacheFromSocket";
+import trackOnboardingFromAgentWitchSocketMessage from "@/features/home/utils/trackOnboardingFromAgentWitchSocketMessage";
 import { resolveInitialConnectionStatus } from "@/features/agent/utils/connectAgentWitchDashboardSocket";
 import parseAgentWitchSocketDisplay, {
   type AgentWitchSocketDisplay,
@@ -82,6 +83,7 @@ export function useAgentWitchSocket(): UseAgentWitchSocketResult {
     return subscribeAgentWitchDashboardSocket({
       onStatusChange: setLiveConnectionStatus,
       onMessage: (raw) => {
+        trackOnboardingFromAgentWitchSocketMessage(raw);
         syncAgentRunLocalCacheFromSocket(raw);
         applySocketMessage(raw);
         setLastResponse(parseAgentWitchSocketDisplay(raw));

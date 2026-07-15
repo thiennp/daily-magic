@@ -2,8 +2,9 @@ import { describe, expect, it, beforeEach } from "vitest";
 
 import { listAgentRunsLocalCache } from "@/features/reports/agentRunLocalCache";
 import { syncAgentRunLocalCacheFromSocket } from "@/features/reports/utils/syncAgentRunLocalCacheFromSocket";
-import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
+import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
+import { DispatchPolicy } from "@/lib/dispatch/DispatchPolicy.constant";
 import { mockBrowserLocalStorage } from "@/test/mockBrowserLocalStorage";
 
 describe("syncAgentRunLocalCacheFromSocket", () => {
@@ -24,7 +25,7 @@ describe("syncAgentRunLocalCacheFromSocket", () => {
             executorUserId: "user-1",
             prompt: "run lint",
             status: AgentRunStatus.RUNNING,
-            dispatchPolicy: "auto",
+            dispatchPolicy: DispatchPolicy.OPEN,
             resultOutput: null,
             resultExitCode: null,
             denialReason: null,

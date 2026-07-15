@@ -1,109 +1,94 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { useDemoPreview } from "@/features/demo/DemoPreviewContext";
-import { listAgentRunsLocalCache } from "@/features/reports/agentRunLocalCache";
-import { POLL_INTERVAL_MS } from "@/features/reports/agentRunsPolling.constant";
-import { buildAgentRunsQueryString } from "@/features/reports/buildAgentRunsQueryString";
-import { useAgentRunRecordSync } from "@/features/reports/hooks/useAgentRunRecordSync";
-import type EnrichedAgentRunRecord from "@/lib/dispatch/types/EnrichedAgentRunRecord.type";
-import type AgentRunRecord from "@/lib/dispatch/types/AgentRunRecord.type";
 import {
-  AgentRunScope,
-  type AgentRunScopeValue,
-} from "@/lib/dispatch/AgentRunScope.constant";
+  AGENT_RUNS_LOCAL_CACHE_UPDATED_EVENT,
+  listAgentRunsLocalCache,
+} from "@/features/reports/agentRunLocalCache";
+import { useAgentRunRecordSync } from "@/features/reports/hooks/useAgentRunRecordSync";
+import { useAgentRunsRemoteSync } from "@/features/reports/hooks/useAgentRunsRemoteSync";
+import { buildViewerAgentRunsList } from "@/features/reports/utils/buildViewerAgentRunsList";
+import type { AgentRunScopeValue } from "@/lib/dispatch/AgentRunScope.constant";
 import type { AgentRunStatusValue } from "@/lib/dispatch/AgentRunStatus.constant";
-
-const toEnrichedRun = (run: AgentRunRecord): EnrichedAgentRunRecord => ({
-  ...run,
-  requesterEmail: run.requesterUserId,
-  executorEmail: run.executorUserId,
-  requesterName: null,
-  executorName: null,
-});
-
-const mergeRuns = (
-  apiRuns: readonly EnrichedAgentRunRecord[],
-  cachedRuns: readonly AgentRunRecord[],
-): readonly EnrichedAgentRunRecord[] => {
-  const merged = new Map<string, EnrichedAgentRunRecord>();
-  for (const run of cachedRuns.map(toEnrichedRun)) {
-    merged.set(run.id, run);
-  }
-  for (const run of apiRuns) {
-    merged.set(run.id, run);
-  }
-
-  return [...merged.values()].toSorted((left, right) =>
-    right.createdAt.localeCompare(left.createdAt),
-  );
-};
 
 export function useAgentRunsList(input: {
   readonly statusFilter: AgentRunStatusValue | "all";
   readonly scopeFilter: AgentRunScopeValue;
   readonly groupFilter: string;
 }): {
-  readonly runs: readonly EnrichedAgentRunRecord[];
+  readonly runs: ReturnType<typeof buildViewerAgentRunsList>;
   readonly isLoading: boolean;
 } {
   const demoPreview = useDemoPreview();
-  const [runs, setRuns] = useState<readonly EnrichedAgentRunRecord[]>(
-    () =>
-      demoPreview?.agentRuns ?? listAgentRunsLocalCache().map(toEnrichedRun),
-  );
-  const [isLoading, setIsLoading] = useState(() => !demoPreview);
-
-  useAgentRunRecordSync((run) => {
-    setRuns((current) => mergeRuns(current, [run]));
+  const { data: session } = useSession();
+  const userId =
+    typeof session?.user?.id === "string" ? session.user.id : undefined;
+  const [cacheVersion, setCacheVersion] = useState(0);
+  const bumpCache = useCallback(() => {
+    setCacheVersion((current) => current + 1);
+  }, []);
+  const { apiRuns, isLoading } = useAgentRunsRemoteSync({
+    enabled: demoPreview === null,
+    statusFilter: input.statusFilter,
+    scopeFilter: input.scopeFilter,
+    groupFilter: input.groupFilter,
+    onCacheUpdated: bumpCache,
   });
+
+  const cachedRuns = useMemo(() => {
+    void cacheVersion;
+    return listAgentRunsLocalCache();
+  }, [cacheVersion]);
+
+  const runs = useMemo(() => {
+    if (demoPreview) {
+      return demoPreview.agentRuns;
+    }
+
+    return buildViewerAgentRunsList({
+      userId,
+      apiRuns,
+      cachedRuns,
+      statusFilter: input.statusFilter,
+      scopeFilter: input.scopeFilter,
+      groupFilter: input.groupFilter,
+    });
+  }, [
+    apiRuns,
+    cachedRuns,
+    demoPreview,
+    input.groupFilter,
+    input.scopeFilter,
+    input.statusFilter,
+    userId,
+  ]);
+
+  useAgentRunRecordSync(bumpCache);
 
   useEffect(() => {
     if (demoPreview) {
       return;
     }
 
-    const loadRuns = async (): Promise<void> => {
-      const query = buildAgentRunsQueryString({
-        status: input.statusFilter === "all" ? undefined : input.statusFilter,
-        scope: input.scopeFilter,
-        groupId:
-          input.scopeFilter === AgentRunScope.GROUP
-            ? input.groupFilter
-            : undefined,
-      });
-      const response = await fetch(`/api/agent-runs${query}`);
-      const cached = listAgentRunsLocalCache();
-
-      if (!response.ok) {
-        setRuns(cached.map(toEnrichedRun));
-        setIsLoading(false);
-        return;
-      }
-
-      const data: unknown = await response.json();
-      if (
-        typeof data === "object" &&
-        data !== null &&
-        "runs" in data &&
-        Array.isArray((data as { runs: unknown }).runs)
-      ) {
-        const apiRuns = (data as { runs: EnrichedAgentRunRecord[] }).runs;
-        setRuns(mergeRuns(apiRuns, cached));
-      }
-      setIsLoading(false);
+    const handleCacheUpdated = (): void => {
+      bumpCache();
     };
 
-    void loadRuns();
-    const timer = setInterval(() => {
-      void loadRuns();
-    }, POLL_INTERVAL_MS * 6);
+    window.addEventListener(
+      AGENT_RUNS_LOCAL_CACHE_UPDATED_EVENT,
+      handleCacheUpdated,
+    );
 
     return () => {
-      clearInterval(timer);
+      window.removeEventListener(
+        AGENT_RUNS_LOCAL_CACHE_UPDATED_EVENT,
+        handleCacheUpdated,
+      );
     };
-  }, [demoPreview, input.statusFilter, input.scopeFilter, input.groupFilter]);
+  }, [bumpCache, demoPreview]);
 
-  return { runs, isLoading };
+  return { runs, isLoading: demoPreview ? false : isLoading };
 }

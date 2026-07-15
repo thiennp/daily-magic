@@ -65,3 +65,15 @@ Document every production bug or UX regression here. Each entry must link to a t
 ## Adding issues
 
 Use the next ID (`HOME-006`, …). Include symptom, root cause, fix paths, and test file.
+
+---
+
+## HOME-006 — “Send your first task” reset after refresh
+
+**Symptom:** Onboarding step 3 stayed incomplete or reverted after reload even after dispatching a task.
+
+**Root cause:** Step completion only inferred from ephemeral `/api/agent-runs?scope=mine` results and non-empty job-history cache; both could be empty after server restart or before cache sync.
+
+**Fix:** Persist `daily-magic.onboarding.first-task-sent.v1` in localStorage when a dispatch is acknowledged or a run is cached; onboarding loader reads that flag and uses unscoped agent-run listing.
+
+**Regression test:** `onboardingFirstTaskSentStore.test.ts`, `trackOnboardingFromAgentWitchSocketMessage.test.ts`, `hasUserSentFirstTask.test.ts`.

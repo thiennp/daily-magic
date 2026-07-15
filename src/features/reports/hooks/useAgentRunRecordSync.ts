@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 import {
   buildAgentWitchWebSocketUrl,
   sendAgentWitchPairingToken,
 } from "@/features/agent/utils/agentWitchSocketUtils";
+import trackOnboardingFromAgentWitchSocketMessage from "@/features/home/utils/trackOnboardingFromAgentWitchSocketMessage";
 import { syncAgentRunLocalCacheFromSocket } from "@/features/reports/utils/syncAgentRunLocalCacheFromSocket";
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
 import type AgentRunRecord from "@/lib/dispatch/types/AgentRunRecord.type";
@@ -26,6 +27,12 @@ const parseAgentRunRecord = (value: unknown): AgentRunRecord | null => {
 export const useAgentRunRecordSync = (
   onRunUpdated?: (run: AgentRunRecord) => void,
 ): void => {
+  const onRunUpdatedRef = useRef(onRunUpdated);
+
+  useEffect(() => {
+    onRunUpdatedRef.current = onRunUpdated;
+  }, [onRunUpdated]);
+
   useEffect(() => {
     const wsUrl = buildAgentWitchWebSocketUrl();
     if (wsUrl.length === 0) {
@@ -46,6 +53,7 @@ export const useAgentRunRecordSync = (
 
     socket.addEventListener("message", (event) => {
       const raw = String(event.data);
+      trackOnboardingFromAgentWitchSocketMessage(raw);
       if (!syncAgentRunLocalCacheFromSocket(raw)) {
         return;
       }
@@ -58,7 +66,7 @@ export const useAgentRunRecordSync = (
 
         const run = parseAgentRunRecord(parsed.payload.run);
         if (run !== null) {
-          onRunUpdated?.(run);
+          onRunUpdatedRef.current?.(run);
         }
       } catch {
         return;
@@ -68,5 +76,5 @@ export const useAgentRunRecordSync = (
     return () => {
       socket.close();
     };
-  }, [onRunUpdated]);
+  }, []);
 };
