@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="560" viewBox="0 0 960 560" role="img" aria-label="Companies & rules · approval policy">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f8fafc"/>
+      <stop offset="100%" stop-color="#eef2ff"/>
+    </linearGradient>
+  </defs>
+  <rect width="960" height="560" fill="url(#bg)"/>
+  <rect x="32" y="28" width="896" height="504" rx="16" fill="#ffffff" stroke="#e5e7eb"/>
+  <text x="56" y="68" font-family="ui-sans-serif, system-ui, sans-serif" font-size="18" font-weight="600" fill="#111827">Companies & rules · approval policy</text>
+  <text x="56" y="92" font-family="ui-sans-serif, system-ui, sans-serif" font-size="12" fill="#6b7280">Sample UI · dummy data for onboarding docs</text>
+  
+  <rect x="56" y="120" width="848" height="360" rx="12" fill="#fff" stroke="#e5e7eb"/>
+  <text x="76" y="160" font-family="ui-sans-serif, system-ui, sans-serif" font-size="16" font-weight="600" fill="#111827">Companies &amp; rules</text>
+  <text x="76" y="190" font-family="ui-sans-serif, system-ui, sans-serif" font-size="14" font-weight="600" fill="#111827">Acme Product</text>
+  <text x="76" y="214" font-family="ui-sans-serif, system-ui, sans-serif" font-size="12" fill="#6b7280">Members: you, Alex (champion), Sam (manager)</text>
+  <rect x="76" y="250" width="400" height="140" rx="10" fill="#fff7ed" stroke="#fed7aa"/>
+  <text x="96" y="286" font-family="ui-sans-serif, system-ui, sans-serif" font-size="14" font-weight="600" fill="#9a3412">Dispatch policy</text>
+  <text x="96" y="318" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" fill="#9a3412">Approval required</text>
+  <text x="96" y="346" font-family="ui-sans-serif, system-ui, sans-serif" font-size="12" fill="#c2410c">Sensitive runs pause until a manager says yes.</text>
+  <rect x="520" y="250" width="340" height="140" rx="10" fill="#f0fdf4" stroke="#bbf7d0"/>
+  <text x="540" y="286" font-family="ui-sans-serif, system-ui, sans-serif" font-size="14" font-weight="600" fill="#14532d">Seeded playbooks</text>
+  <text x="540" y="318" font-family="ui-sans-serif, system-ui, sans-serif" font-size="12" fill="#166534">1. Weekly status update</text>
+  <text x="540" y="342" font-family="ui-sans-serif, system-ui, sans-serif" font-size="12" fill="#166534">2. Research summary</text>
+  <text x="540" y="366" font-family="ui-sans-serif, system-ui, sans-serif" font-size="12" fill="#166534">3. Standup notes draft</text>
+
+</svg>

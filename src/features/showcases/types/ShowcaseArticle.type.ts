@@ -1,9 +1,16 @@
 export type ShowcaseSupportLevel = "full" | "partial";
 
+export interface ShowcaseArticleImage {
+  readonly src: string;
+  readonly alt: string;
+  readonly caption: string;
+}
+
 export interface ShowcaseArticleSection {
   readonly heading?: string;
   readonly paragraphs?: readonly string[];
   readonly bullets?: readonly string[];
+  readonly image?: ShowcaseArticleImage;
 }
 
 export interface ShowcaseTryNextLink {

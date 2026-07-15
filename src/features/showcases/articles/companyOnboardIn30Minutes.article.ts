@@ -20,7 +20,7 @@ const companyOnboardIn30Minutes: ShowcaseArticle = {
   sections: [
     {
       paragraphs: [
-        "Empty Marketplace kills trust. Roll out by seeding work people recognize — then invite. Screenshot each step below for your internal launch doc.",
+        "Empty Marketplace kills trust. Roll out by seeding work people recognize — then invite. The sample UI below shows the shape of Companies & rules with dummy names; swap in live screenshots for your launch doc.",
       ],
     },
     {
@@ -28,15 +28,19 @@ const companyOnboardIn30Minutes: ShowcaseArticle = {
       bullets: [
         "Open Companies & rules (/admin/groups)",
         "What you should see: group name, members, dispatch policy",
-        "Screenshot tip: group with you as admin and 1–2 champions added",
       ],
+      image: {
+        src: "/showcases/onboarding/05-company-rules.svg",
+        alt: "Sample Companies and rules screen with approval policy and seeded playbooks",
+        caption:
+          "Sample UI: approval policy on, three seeded playbooks. Capture your real group before the company-wide invite.",
+      },
     },
     {
       heading: "2. Choose dispatch policy",
       bullets: [
         "Open — teammates can run on each other's Macs without a pause",
         "Approval — request waits until a manager says yes (best for client or repo-sensitive work)",
-        "Screenshot tip: policy control set to Approval for the launch week",
       ],
     },
     {
@@ -46,7 +50,6 @@ const companyOnboardIn30Minutes: ShowcaseArticle = {
         "Add one research / summary playbook your team already uses in chat",
         "Add one low-risk internal task (standup notes, changelog draft)",
         "Publish with group visibility so Home → What teammates can request is not empty",
-        "Screenshot tip: Marketplace or directory showing 3 named listings",
       ],
     },
     {
@@ -55,8 +58,13 @@ const companyOnboardIn30Minutes: ShowcaseArticle = {
         "Champion A sends a sample task to Champion B's Mac",
         "Approver says yes — run starts only after approval",
         "Both open Job history in their browsers and confirm the prompt + result",
-        "Screenshot tip: pending approval, then completed run",
       ],
+      image: {
+        src: "/showcases/onboarding/04-job-history.svg",
+        alt: "Sample completed job history card after an approved run",
+        caption:
+          "Sample UI: completed run after approval. Each browser keeps its own local-first history today.",
+      },
     },
     {
       heading: "5. Invite everyone else",

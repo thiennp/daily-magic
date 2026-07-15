@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="560" viewBox="0 0 960 560" role="img" aria-label="Home · Onboarding checklist">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f8fafc"/>
+      <stop offset="100%" stop-color="#eef2ff"/>
+    </linearGradient>
+  </defs>
+  <rect width="960" height="560" fill="url(#bg)"/>
+  <rect x="32" y="28" width="896" height="504" rx="16" fill="#ffffff" stroke="#e5e7eb"/>
+  <text x="56" y="68" font-family="ui-sans-serif, system-ui, sans-serif" font-size="18" font-weight="600" fill="#111827">Home · Onboarding checklist</text>
+  <text x="56" y="92" font-family="ui-sans-serif, system-ui, sans-serif" font-size="12" fill="#6b7280">Sample UI · dummy data for onboarding docs</text>
+  
+  <rect x="56" y="120" width="420" height="360" rx="12" fill="#f9fafb" stroke="#e5e7eb"/>
+  <text x="76" y="156" font-family="ui-sans-serif, system-ui, sans-serif" font-size="15" font-weight="600" fill="#111827">Get set up</text>
+  <g font-family="ui-sans-serif, system-ui, sans-serif" font-size="14" fill="#374151">
+    <circle cx="84" cy="200" r="8" fill="#fff" stroke="#9ca3af" stroke-width="2"/>
+    <text x="104" y="205">Connect your Mac</text>
+    <circle cx="84" cy="248" r="8" fill="#fff" stroke="#9ca3af" stroke-width="2"/>
+    <text x="104" y="253">Create your first workflow or agent</text>
+    <circle cx="84" cy="296" r="8" fill="#fff" stroke="#9ca3af" stroke-width="2"/>
+    <text x="104" y="301">Send your first task</text>
+  </g>
+  <rect x="520" y="120" width="360" height="160" rx="12" fill="#fff" stroke="#e5e7eb"/>
+  <text x="540" y="156" font-family="ui-sans-serif, system-ui, sans-serif" font-size="14" font-weight="600" fill="#111827">Your Devices</text>
+  <text x="540" y="190" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" fill="#6b7280">No Mac connected yet</text>
+  <rect x="540" y="220" width="200" height="36" rx="8" fill="#465fff"/>
+  <text x="560" y="243" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="600" fill="#fff">Copy install command</text>
+
+</svg>
