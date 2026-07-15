@@ -64,7 +64,7 @@ Document every production bug or UX regression here. Each entry must link to a t
 
 ## Adding issues
 
-Use the next ID (`HOME-010`, …). Include symptom, root cause, fix paths, and test file.
+Use the next ID (`HOME-011`, …). Include symptom, root cause, fix paths, and test file.
 
 ---
 
@@ -113,3 +113,15 @@ Use the next ID (`HOME-010`, …). Include symptom, root cause, fix paths, and t
 **Fix:** `useOnboardingAutomateStepRefresh` reloads steps on window focus, tab visibility, and `ONBOARDING_AUTOMATION_CREATED_UPDATED_EVENT` (dispatched when the automation-created local flag is written).
 
 **Regression test:** `onboardingAutomationCreatedStore.test.ts`, `isAutomateOnboardingStepDone.test.ts`.
+
+---
+
+## HOME-010 — Pair-Mac onboarding step stale across browsers
+
+**Symptom:** Home checklist still showed “Add your Mac as a worker” incomplete after pairing on another browser or tab, until a hard reload.
+
+**Root cause:** Step completion trusted only the in-memory paired-devices cache or a live `/api/agent-witch/devices` fetch with no DB-backed onboarding signal; stale empty cache could win on the home tab.
+
+**Fix:** `GET /api/onboarding/mac-paired` derives completion from `agent_witch_devices` (`EXISTS` non-revoked row). `loadOnboardingSteps` merges that DB flag with the live device list via `hasUserPairedMac`. `useOnboardingPairStepRefresh` reloads steps on focus and tab visibility while the pair step is incomplete.
+
+**Regression test:** `onboardingMacPairedQueries.test.ts`, `onboardingMacPairedApi.test.ts`, `hasUserPairedMac.test.ts`.

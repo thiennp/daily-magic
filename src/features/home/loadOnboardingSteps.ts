@@ -2,35 +2,53 @@ import { buildOnboardingSteps } from "@/features/home/utils/buildOnboardingSteps
 import { fetchOnboardingAutomationCreated } from "@/features/home/utils/onboardingAutomationCreatedApi";
 import hasUserCreatedAutomation from "@/features/home/utils/hasUserCreatedAutomation";
 import hasUserCreatedFirstWorkflowOrAgent from "@/features/home/utils/hasUserCreatedFirstWorkflowOrAgent";
+import hasUserPairedMac from "@/features/home/utils/hasUserPairedMac";
 import hasUserSentFirstTask from "@/features/home/utils/hasUserSentFirstTask";
 import { fetchOnboardingFirstTaskSent } from "@/features/home/utils/onboardingFirstTaskSentApi";
-import readOnboardingHasPairedDevice from "@/features/home/utils/readOnboardingHasPairedDevice";
+import { fetchOnboardingMacPaired } from "@/features/home/utils/onboardingMacPairedApi";
 import syncOnboardingAutomationCreatedFlag from "@/features/home/utils/syncOnboardingAutomationCreatedFlag";
 import syncOnboardingFirstTaskSentFlag from "@/features/home/utils/syncOnboardingFirstTaskSentFlag";
 import { listAgentRunsLocalCache } from "@/features/reports/agentRunLocalCache";
 
 export type { OnboardingStep } from "@/features/home/utils/buildOnboardingSteps";
 
+const parseActiveDeviceCount = (devicesData: unknown): number => {
+  const devices =
+    typeof devicesData === "object" &&
+    devicesData !== null &&
+    "devices" in devicesData &&
+    Array.isArray((devicesData as { devices: unknown[] }).devices)
+      ? (devicesData as { devices: Array<{ isActive?: boolean }> }).devices
+      : [];
+
+  return devices.filter((device) => device.isActive !== false).length;
+};
+
 export async function loadOnboardingSteps() {
   const [
-    hasPairedDevice,
+    devicesResponse,
     capabilitiesResponse,
     runsResponse,
     dbFirstTaskSent,
     automationsResponse,
     dbAutomationCreated,
+    dbMacPaired,
   ] = await Promise.all([
-    readOnboardingHasPairedDevice(),
+    fetch("/api/agent-witch/devices"),
     fetch("/api/capabilities/mine"),
     fetch("/api/agent-runs"),
     fetchOnboardingFirstTaskSent(),
     fetch("/api/automations"),
     fetchOnboardingAutomationCreated(),
+    fetchOnboardingMacPaired(),
   ]);
 
   syncOnboardingFirstTaskSentFlag(dbFirstTaskSent);
   syncOnboardingAutomationCreatedFlag(dbAutomationCreated);
 
+  const devicesData: unknown = devicesResponse.ok
+    ? await devicesResponse.json()
+    : null;
   const capabilitiesData: unknown = capabilitiesResponse.ok
     ? await capabilitiesResponse.json()
     : null;
@@ -55,7 +73,10 @@ export async function loadOnboardingSteps() {
     : null;
 
   return buildOnboardingSteps({
-    hasPairedDevice,
+    hasPairedDevice: hasUserPairedMac(
+      parseActiveDeviceCount(devicesData) > 0,
+      dbMacPaired,
+    ),
     hasCreatedWorkflowOrAgent: hasUserCreatedFirstWorkflowOrAgent(capabilities),
     hasSentTask: hasUserSentFirstTask(
       typeof runsData === "object" &&

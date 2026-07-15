@@ -12,6 +12,7 @@ import {
 
 import { useOptionalPairedDeviceContext } from "@/features/home/PairedDeviceContext";
 import useOnboardingAutomateStepRefresh from "@/features/home/hooks/useOnboardingAutomateStepRefresh";
+import useOnboardingPairStepRefresh from "@/features/home/hooks/useOnboardingPairStepRefresh";
 import useOnboardingPairStepSync from "@/features/home/hooks/useOnboardingPairStepSync";
 import useOnboardingTaskStepRefresh from "@/features/home/hooks/useOnboardingTaskStepRefresh";
 import {
@@ -75,6 +76,10 @@ export function OnboardingStepsProvider({
   useOnboardingPairStepSync({
     isConnectStepDone: isConnectMacOnboardingStepDone(steps),
     setSteps,
+  });
+  useOnboardingPairStepRefresh({
+    isConnectStepDone: isConnectMacOnboardingStepDone(steps),
+    reloadSteps,
   });
   useOnboardingTaskStepRefresh({
     isTaskStepDone: isTaskOnboardingStepDone(steps),
