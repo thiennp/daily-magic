@@ -40,7 +40,7 @@ export default function ConnectedClientsTable({
               <td className="px-3 py-2 text-gray-700 dark:text-gray-300">
                 <span className="text-sm">{formatClientLabel(client)}</span>
                 {client.role === "agent" ? (
-                  <span className="ml-2 inline-flex items-center rounded-full bg-green-50 px-2 py-0.5 text-xs font-medium text-green-700 dark:bg-green-950/40 dark:text-green-300">
+                  <span className="ml-2 inline-flex items-center rounded-full bg-green-800 px-2 py-0.5 text-xs font-medium text-white">
                     Online
                   </span>
                 ) : null}

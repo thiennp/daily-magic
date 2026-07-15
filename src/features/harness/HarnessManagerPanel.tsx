@@ -5,7 +5,6 @@ import AgentWitchUnsupportedHostNotice from "@/features/home/AgentWitchUnsupport
 import HarnessItemEditor from "@/features/harness/components/HarnessItemEditor";
 import HarnessLastRequestResult from "@/features/harness/components/HarnessLastRequestResult";
 import HarnessLocalManifest from "@/features/harness/components/HarnessLocalManifest";
-import HarnessManagerHeader from "@/features/harness/components/HarnessManagerHeader";
 import HarnessSetManager from "@/features/harness/components/HarnessSetManager";
 import type { UseAgentWitchHarnessSocketResult } from "@/features/harness/hooks/useAgentWitchHarnessSocket";
 import { useHarnessManagerForm } from "@/features/harness/hooks/useHarnessManagerForm";
@@ -39,8 +38,6 @@ export default function HarnessManagerPanel({
 
   return (
     <AppPanel as="section" padding="compact" className="text-left">
-      <HarnessManagerHeader connectionStatus={connectionStatus} />
-
       {!isWebSocketSupported ? (
         <div className="mt-4">
           <AgentWitchUnsupportedHostNotice host={host} />
