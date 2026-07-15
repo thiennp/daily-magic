@@ -19,6 +19,7 @@ export interface UseAgentWitchHarnessSocketResult {
   readonly sendCreateHarnessSet: (input: {
     readonly name: string;
     readonly writerAgent: HarnessWriterAgent;
+    readonly slug?: string;
   }) => void;
   readonly sendWriteHarnessItems: (input: {
     readonly writerAgent: HarnessWriterAgent;
@@ -28,6 +29,7 @@ export interface UseAgentWitchHarnessSocketResult {
     ownerUserId: string,
     setSlugs: readonly string[],
   ) => void;
+  readonly installOfficialPresetHarness: (templateId: string) => Promise<void>;
 }
 
 export type { AgentPairingStatus, HarnessRequestResult };

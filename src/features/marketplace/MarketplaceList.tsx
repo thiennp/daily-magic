@@ -14,12 +14,14 @@ interface MarketplaceListProps {
   readonly listings: readonly HarnessMarketplaceListing[];
   readonly isLoading: boolean;
   readonly onBorrow: (capabilityId: string) => void;
+  readonly emptyMessage?: string;
 }
 
 export default function MarketplaceList({
   listings,
   isLoading,
   onBorrow,
+  emptyMessage = "No listings yet.",
 }: MarketplaceListProps) {
   if (isLoading) {
     return (
@@ -32,8 +34,7 @@ export default function MarketplaceList({
   if (listings.length === 0) {
     return (
       <p className="mt-4 text-sm text-gray-500 dark:text-gray-400">
-        No teammate listings yet. Try a preset above, or publish a workflow or
-        agent with rules for others to borrow.
+        {emptyMessage}
       </p>
     );
   }
@@ -51,6 +52,11 @@ export default function MarketplaceList({
                 <span className="rounded-full bg-brand-50 px-2 py-0.5 text-xs font-medium text-brand-700 dark:bg-brand-950/40 dark:text-brand-300">
                   {TYPE_LABEL_MAP[listing.type]}
                 </span>
+                {listing.isOfficialPreset ? (
+                  <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-xs font-medium text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300">
+                    Free
+                  </span>
+                ) : null}
                 <p className="text-sm font-medium text-gray-800 dark:text-white/90">
                   {listing.name}
                 </p>
@@ -66,7 +72,11 @@ export default function MarketplaceList({
                 {listing.harnessItemCount !== null
                   ? ` · ${listing.harnessItemCount} items`
                   : ""}
-                {listing.isOnline ? " · owner online" : " · saved copy only"}
+                {listing.isOfficialPreset
+                  ? " · install on your Mac"
+                  : listing.isOnline
+                    ? " · owner online"
+                    : " · saved copy only"}
               </p>
             </div>
             <Button

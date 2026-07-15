@@ -18,4 +18,5 @@ export default interface HarnessMarketplaceListing {
   readonly harnessItemCount: number | null;
   readonly isOnline: boolean;
   readonly hostname: string | null;
+  readonly isOfficialPreset?: boolean;
 }

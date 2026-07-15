@@ -1,7 +1,10 @@
 import { getPublishedCapabilityById } from "@/lib/capabilities/capabilityQueries";
 import { canViewPublishedCapability } from "@/lib/capabilities/canViewPublishedCapability";
+import findCapabilityTemplateById from "@/lib/capabilities/templates/findCapabilityTemplateById";
 import { requireAuth } from "@/lib/auth/requireAuth";
 import { buildHarnessMarketplaceBorrowPayload } from "@/lib/harness/buildHarnessMarketplaceBorrowPayload";
+import buildPresetMarketplaceBorrowPayload from "@/lib/marketplace/buildPresetMarketplaceBorrowPayload";
+import { parsePresetMarketplaceTemplateId } from "@/lib/marketplace/presetMarketplaceCapabilityId";
 import { canViewHarnessSet } from "@/lib/harness/harnessSetSharingQueries";
 import {
   HARNESS_BORROW_RATE_LIMIT,
@@ -30,6 +33,20 @@ export async function GET(
   }
 
   const { capabilityId } = await context.params;
+  const presetTemplateId = parsePresetMarketplaceTemplateId(capabilityId);
+
+  if (presetTemplateId !== null) {
+    const template = findCapabilityTemplateById(presetTemplateId);
+
+    if (template === undefined) {
+      return Response.json({ error: "Listing not found." }, { status: 404 });
+    }
+
+    const borrow = buildPresetMarketplaceBorrowPayload(template);
+
+    return Response.json({ ok: true, borrow });
+  }
+
   const capability = await getPublishedCapabilityById(capabilityId);
 
   if (capability === null || capability.harnessSetSlug === null) {

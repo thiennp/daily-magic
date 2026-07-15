@@ -8,6 +8,7 @@ import type { BorrowedMarketplaceListingState } from "@/features/marketplace/hoo
 import buildDemoBorrowedMarketplaceState from "@/features/marketplace/hooks/buildDemoBorrowedMarketplaceState";
 import fetchBorrowedMarketplaceListing from "@/features/marketplace/hooks/fetchBorrowedMarketplaceListing";
 import type HarnessMarketplaceListing from "@/lib/harness/types/HarnessMarketplaceListing.type";
+import listPresetMarketplaceListings from "@/lib/marketplace/listPresetMarketplaceListings";
 
 export function useMarketplaceState() {
   const demoPreview = useDemoPreview();
@@ -19,7 +20,7 @@ export function useMarketplaceState() {
   const [isLoadingRemote, setIsLoadingRemote] = useState(!demoPreview);
 
   const listings = demoPreview
-    ? demoHarnessMarketplaceListings
+    ? [...listPresetMarketplaceListings(), ...demoHarnessMarketplaceListings]
     : remoteListings;
   const isLoading = demoPreview ? false : isLoadingRemote;
 

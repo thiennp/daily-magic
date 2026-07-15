@@ -3,8 +3,9 @@
 import Button from "@/components/ui/button/Button";
 
 interface BorrowHarnessImportActionsProps {
-  readonly ownerUserId: string;
   readonly isOnline: boolean;
+  readonly isOfficialPreset?: boolean;
+  readonly macConnected?: boolean;
   readonly activeSetSlugs: readonly string[];
   readonly importStatus: "idle" | "exporting" | "importing" | "done" | "error";
   readonly importMessage: string | null;
@@ -13,17 +14,20 @@ interface BorrowHarnessImportActionsProps {
 
 export default function BorrowHarnessImportActions({
   isOnline,
+  isOfficialPreset = false,
+  macConnected = false,
   activeSetSlugs,
   importStatus,
   importMessage,
   onImport,
 }: BorrowHarnessImportActionsProps) {
+  const canInstall = isOfficialPreset ? macConnected : isOnline;
   const isBusy = importStatus === "exporting" || importStatus === "importing";
 
   return (
     <div className="mt-4 space-y-2">
       <Button
-        disabled={!isOnline || activeSetSlugs.length === 0 || isBusy}
+        disabled={!canInstall || activeSetSlugs.length === 0 || isBusy}
         onClick={onImport}
       >
         {importStatus === "importing"
@@ -32,9 +36,11 @@ export default function BorrowHarnessImportActions({
             ? "Requesting export…"
             : "Install bundle"}
       </Button>
-      {!isOnline ? (
+      {!canInstall ? (
         <p className="text-xs text-gray-500 dark:text-gray-400">
-          Owner must be online with a connected Mac to export files.
+          {isOfficialPreset
+            ? "Connect Agent Witch on your Mac to install this rules bundle."
+            : "Owner must be online with a connected Mac to export files."}
         </p>
       ) : null}
       {importMessage ? (

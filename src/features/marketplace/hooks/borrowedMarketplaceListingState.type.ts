@@ -17,4 +17,6 @@ export interface BorrowedMarketplaceListingState {
   readonly harnessItemPaths: readonly string[];
   readonly activeSetSlugs: readonly string[];
   readonly manifest: Readonly<Record<string, unknown>>;
+  readonly isOfficialPreset?: boolean;
+  readonly templateId?: string;
 }

@@ -3,11 +3,26 @@ import {
   demoHarnessMarketplaceListings,
 } from "@/features/demo/mock/demoHarnessMarketplace";
 import type { BorrowedMarketplaceListingState } from "@/features/marketplace/hooks/borrowedMarketplaceListingState.type";
+import findCapabilityTemplateById from "@/lib/capabilities/templates/findCapabilityTemplateById";
 import summarizeHarnessManifestSet from "@/lib/harness/summarizeHarnessManifestSet";
+import buildPresetMarketplaceBorrowPayload from "@/lib/marketplace/buildPresetMarketplaceBorrowPayload";
+import { parsePresetMarketplaceTemplateId } from "@/lib/marketplace/presetMarketplaceCapabilityId";
 
 export default function buildDemoBorrowedMarketplaceState(
   capabilityId: string,
 ): BorrowedMarketplaceListingState | null {
+  const presetTemplateId = parsePresetMarketplaceTemplateId(capabilityId);
+
+  if (presetTemplateId !== null) {
+    const template = findCapabilityTemplateById(presetTemplateId);
+
+    if (template === undefined) {
+      return null;
+    }
+
+    return buildPresetMarketplaceBorrowPayload(template);
+  }
+
   const listing = demoHarnessMarketplaceListings.find(
     (entry) => entry.capabilityId === capabilityId,
   );

@@ -19,9 +19,10 @@ export const createHarnessSocketActions = (input: {
   const sendCreateHarnessSet = (request: {
     readonly name: string;
     readonly writerAgent: HarnessWriterAgent;
+    readonly slug?: string;
   }) => {
     const trimmedName = request.name.trim();
-    const slug = sanitizeHarnessSlug(trimmedName);
+    const slug = request.slug?.trim() || sanitizeHarnessSlug(trimmedName);
     if (trimmedName.length === 0) {
       return;
     }

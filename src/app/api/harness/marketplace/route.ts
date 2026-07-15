@@ -1,5 +1,5 @@
-import { listHarnessMarketplaceForViewer } from "@/lib/harness/listHarnessMarketplaceForViewer";
 import { listOnlineHarnessOwnerIds } from "@/lib/harness/listOnlineHarnessOwnerIds";
+import { listMarketplaceForViewer } from "@/lib/marketplace/listMarketplaceForViewer";
 import { requireAuth } from "@/lib/auth/requireAuth";
 
 export const dynamic = "force-dynamic";
@@ -11,7 +11,7 @@ export async function GET(): Promise<Response> {
     return error;
   }
 
-  const listings = await listHarnessMarketplaceForViewer(
+  const listings = await listMarketplaceForViewer(
     actor.id,
     listOnlineHarnessOwnerIds(),
   );

@@ -10,6 +10,7 @@ import { createAgentWitchSocketStore } from "@/features/harness/hooks/utils/agen
 import { connectAgentWitchHarnessSocket } from "@/features/harness/hooks/utils/connectAgentWitchHarnessSocket";
 import { createHarnessExportResultHandler } from "@/features/harness/hooks/utils/createHarnessExportResultHandler";
 import { createHarnessSocketActions } from "@/features/harness/hooks/utils/createHarnessSocketActions";
+import { installOfficialPresetHarnessOnMac } from "@/features/marketplace/utils/installOfficialPresetHarnessOnMac";
 import type HarnessManifest from "@/lib/agentWitch/harness/types/HarnessManifest.type";
 import type HarnessItemWriteSpec from "@/lib/agentWitch/harness/types/HarnessItemWriteSpec.type";
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
@@ -97,5 +98,13 @@ export function useAgentWitchHarnessSocket(): UseAgentWitchHarnessSocketResult {
     borrowImportStatus,
     borrowImportMessage,
     requestBorrowedHarnessExport: actions.requestBorrowedHarnessExport,
+    installOfficialPresetHarness: (templateId: string) =>
+      installOfficialPresetHarnessOnMac({
+        templateId,
+        sendCreateHarnessSet: actions.sendCreateHarnessSet,
+        sendWriteHarnessItems: actions.sendWriteHarnessItems,
+        setBorrowImportStatus,
+        setBorrowImportMessage,
+      }),
   };
 }
