@@ -7,8 +7,9 @@ import HomeOnboardingSetupCompletePanel from "@/features/home/HomeOnboardingSetu
 import HomeOnboardingMainStep from "@/features/home/HomeOnboardingMainStep";
 import HomeOnboardingTemplateStep from "@/features/home/HomeOnboardingTemplateStep";
 import useOnboardingSteps from "@/features/home/hooks/useOnboardingSteps";
+import useOnboardingSetupAcknowledged from "@/features/home/hooks/useOnboardingSetupAcknowledged";
 import findNextIncompleteOnboardingStep from "@/features/home/utils/findNextIncompleteOnboardingStep";
-import areRequiredOnboardingStepsComplete from "@/features/home/utils/areRequiredOnboardingStepsComplete";
+import shouldShowOnboardingSetupCompletePanel from "@/features/home/utils/shouldShowOnboardingSetupCompletePanel";
 import isTaskOnboardingStep from "@/features/home/utils/isTaskOnboardingStep";
 import isWorkflowOnboardingStep from "@/features/home/utils/isWorkflowOnboardingStep";
 import type { GlobalRoleValue } from "@/lib/auth/roles";
@@ -29,6 +30,11 @@ export default function HomeOnboardingMainPanel({
 }: HomeOnboardingMainPanelProps) {
   const { steps, isLoading, reloadSteps, markWorkflowStepDone } =
     useOnboardingSteps();
+  const {
+    isSetupAcknowledged,
+    isLoading: isLoadingSetupAcknowledged,
+    acknowledgeSetup,
+  } = useOnboardingSetupAcknowledged();
   const nextStep = findNextIncompleteOnboardingStep(steps);
 
   const handleWorkflowSaved = (): void => {
@@ -36,7 +42,7 @@ export default function HomeOnboardingMainPanel({
     void reloadSteps();
   };
 
-  if (isLoading) {
+  if (isLoading || isLoadingSetupAcknowledged) {
     return (
       <AppHero variant="plain">
         <p className="text-sm text-gray-500 dark:text-gray-400">
@@ -46,8 +52,8 @@ export default function HomeOnboardingMainPanel({
     );
   }
 
-  if (areRequiredOnboardingStepsComplete(steps)) {
-    return <HomeOnboardingSetupCompletePanel />;
+  if (shouldShowOnboardingSetupCompletePanel(steps, isSetupAcknowledged)) {
+    return <HomeOnboardingSetupCompletePanel onDismiss={acknowledgeSetup} />;
   }
 
   if (

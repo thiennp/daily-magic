@@ -64,7 +64,7 @@ Document every production bug or UX regression here. Each entry must link to a t
 
 ## Adding issues
 
-Use the next ID (`HOME-014`, …). Include symptom, root cause, fix paths, and test file.
+Use the next ID (`HOME-015`, …). Include symptom, root cause, fix paths, and test file.
 
 ---
 
@@ -161,3 +161,15 @@ Use the next ID (`HOME-014`, …). Include symptom, root cause, fix paths, and t
 **Fix:** `HomeOnboardingSetupCompletePanel` renders when all required steps are done, with links to send another task, automations, showcases, library, and reports.
 
 **Regression test:** `areRequiredOnboardingStepsComplete.test.ts`.
+
+---
+
+## HOME-014 — Setup-complete panel shown on every visit
+
+**Symptom:** Returning users always saw “You’re set up” on home even after they had already moved on.
+
+**Root cause:** `HomeOnboardingSetupCompletePanel` had no dismiss or per-user persistence.
+
+**Fix:** Persist `users.onboarding_setup_acknowledged` via `GET`/`POST /api/onboarding/setup-acknowledged`. Client mirrors `daily-magic.onboarding.setup-acknowledged.v1`; “Continue to home” dismisses to `HomeDashboardHero`. `shouldShowOnboardingSetupCompletePanel` gates the success state.
+
+**Regression test:** `onboardingSetupAcknowledgedQueries.test.ts`, `onboardingSetupAcknowledgedApi.test.ts`, `onboardingSetupAcknowledgedStore.test.ts`, `shouldShowOnboardingSetupCompletePanel.test.ts`.

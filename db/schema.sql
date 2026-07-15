@@ -20,6 +20,7 @@ CREATE TABLE IF NOT EXISTS users (
   ),
   onboarding_first_task_sent BOOLEAN NOT NULL DEFAULT FALSE,
   onboarding_automation_created BOOLEAN NOT NULL DEFAULT FALSE,
+  onboarding_setup_acknowledged BOOLEAN NOT NULL DEFAULT FALSE,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
