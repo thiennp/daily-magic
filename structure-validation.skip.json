@@ -6,6 +6,7 @@
     ".agents/**",
     ".cursor/**",
     ".cursor.json",
-    ".feature-knowledge/**"
+    ".feature-knowledge/**",
+    ".github/**"
   ]
 }
