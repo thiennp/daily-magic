@@ -67,7 +67,7 @@ curl http://localhost:3000/api/notes
 2. In [Vercel](https://vercel.com/new), import the `daily-magic` repository.
 3. In the Vercel project, open **Storage** → **Create Database** → **Neon**.
 4. Vercel injects `DATABASE_URL` automatically for Production and Preview.
-5. Deploy.
+5. Deploy. **`vercel-build` runs pending SQL migrations** from `db/migrations/` (tracked in `schema_migrations`) before `next build`. Locally: `npm run db:migrate` (needs `DATABASE_URL`; uses Neon over the network — no `psql` required).
 
 ### Option B: Manual env var
 

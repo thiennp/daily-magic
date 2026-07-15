@@ -18,6 +18,11 @@ export interface ShowcaseTryNextLink {
   readonly href: string;
 }
 
+export interface ShowcaseRelatedLink {
+  readonly slug: string;
+  readonly label: string;
+}
+
 export default interface ShowcaseArticle {
   readonly slug: string;
   readonly title: string;
@@ -27,5 +32,6 @@ export default interface ShowcaseArticle {
   readonly readMinutes: number;
   readonly whatYouNeed: readonly string[];
   readonly tryNext: ShowcaseTryNextLink;
+  readonly relatedShowcases?: readonly ShowcaseRelatedLink[];
   readonly sections: readonly ShowcaseArticleSection[];
 }

@@ -12,6 +12,16 @@ const stopMemorizingPrompts: ShowcaseArticle = {
     "At least one saved playbook (or save one from Marketplace)",
   ],
   tryNext: { label: "Open your library", href: "/library" },
+  relatedShowcases: [
+    {
+      slug: "stop-copy-paste-every-monday",
+      label: "Why Monday reports still get copy-pasted from chat",
+    },
+    {
+      slug: "weekly-report-in-five-minutes",
+      label: "Weekly report from a saved workflow",
+    },
+  ],
   sections: [
     {
       paragraphs: [

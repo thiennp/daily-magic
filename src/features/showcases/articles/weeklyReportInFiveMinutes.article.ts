@@ -15,6 +15,16 @@ const weeklyReportInFiveMinutes: ShowcaseArticle = {
     label: "Open Library (sample workflow)",
     href: "/library",
   },
+  relatedShowcases: [
+    {
+      slug: "stop-copy-paste-every-monday",
+      label: "Stop copy-pasting the same Monday prompt",
+    },
+    {
+      slug: "standup-from-local-branch",
+      label: "Standup notes from your local branch",
+    },
+  ],
   sections: [
     {
       paragraphs: [

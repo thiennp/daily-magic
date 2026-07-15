@@ -13,6 +13,16 @@ const phoneAsksCoworkerMacRuns: ShowcaseArticle = {
     "Approval policy if your company requires it",
   ],
   tryNext: { label: "Open Send a task", href: "/?sendTask=1" },
+  relatedShowcases: [
+    {
+      slug: "control-mac-from-phone",
+      label: "Control AI on your Mac from your phone",
+    },
+    {
+      slug: "what-phone-can-do-alone",
+      label: "Honest limits when your Mac is away",
+    },
+  ],
   sections: [
     {
       paragraphs: [

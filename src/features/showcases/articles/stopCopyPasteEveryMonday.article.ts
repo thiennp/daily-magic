@@ -15,6 +15,16 @@ const stopCopyPasteEveryMonday: ShowcaseArticle = {
     label: "Open Library",
     href: "/library",
   },
+  relatedShowcases: [
+    {
+      slug: "stop-memorizing-prompts",
+      label: "Save prompts in the library instead of bookmarks",
+    },
+    {
+      slug: "weekly-report-in-five-minutes",
+      label: "Friday status from a form, not a blank chat box",
+    },
+  ],
   sections: [
     {
       paragraphs: [

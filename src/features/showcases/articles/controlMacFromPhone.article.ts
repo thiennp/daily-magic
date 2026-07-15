@@ -14,6 +14,16 @@ const controlMacFromPhone: ShowcaseArticle = {
     "Or skip send and use Copy prompt for ChatGPT on your phone",
   ],
   tryNext: { label: "Open Library", href: "/library" },
+  relatedShowcases: [
+    {
+      slug: "what-phone-can-do-alone",
+      label: "What your phone can do without your Mac",
+    },
+    {
+      slug: "phone-asks-coworker-mac-runs",
+      label: "Ask a teammate's Mac to run the job",
+    },
+  ],
   sections: [
     {
       paragraphs: [

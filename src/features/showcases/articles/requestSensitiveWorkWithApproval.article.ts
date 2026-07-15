@@ -17,6 +17,12 @@ const requestSensitiveWorkWithApproval: ShowcaseArticle = {
     label: "Open Companies & rules",
     href: "/admin/groups",
   },
+  relatedShowcases: [
+    {
+      slug: "manager-approves-before-run",
+      label: "How manager approval works in practice",
+    },
+  ],
   sections: [
     {
       paragraphs: [

@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import AppPanel from "@/components/surfaces/AppPanel";
 import ShowcaseArticleBody from "@/features/showcases/ShowcaseArticleBody";
+import ShowcaseRelatedShowcases from "@/features/showcases/ShowcaseRelatedShowcases";
 import ShowcaseWhatYouNeedBox from "@/features/showcases/ShowcaseWhatYouNeedBox";
 import type ShowcaseArticle from "@/features/showcases/types/ShowcaseArticle.type";
 
@@ -40,6 +41,9 @@ export default function ShowcaseArticleLayout({
       <div className="mt-10">
         <ShowcaseArticleBody sections={article.sections} />
       </div>
+      {article.relatedShowcases ? (
+        <ShowcaseRelatedShowcases relatedShowcases={article.relatedShowcases} />
+      ) : null}
       <AppPanel
         as="footer"
         padding="compact"

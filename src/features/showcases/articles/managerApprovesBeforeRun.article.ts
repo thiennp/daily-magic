@@ -16,6 +16,12 @@ const managerApprovesBeforeRun: ShowcaseArticle = {
     label: "Open Job history",
     href: "/reports",
   },
+  relatedShowcases: [
+    {
+      slug: "request-sensitive-work-with-approval",
+      label: "Request sensitive work with approval first",
+    },
+  ],
   sections: [
     {
       paragraphs: [

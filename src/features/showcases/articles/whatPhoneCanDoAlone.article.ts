@@ -13,6 +13,20 @@ const whatPhoneCanDoAlone: ShowcaseArticle = {
     "For team dispatch: a teammate's Mac as executor",
   ],
   tryNext: { label: "Open Library", href: "/library" },
+  relatedShowcases: [
+    {
+      slug: "control-mac-from-phone",
+      label: "Control your Mac from your phone",
+    },
+    {
+      slug: "phone-asks-coworker-mac-runs",
+      label: "When your Mac is offline — use a teammate's",
+    },
+    {
+      slug: "when-executor-mac-is-offline",
+      label: "What happens when the executor Mac is offline",
+    },
+  ],
   sections: [
     {
       paragraphs: [
