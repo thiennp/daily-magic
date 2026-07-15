@@ -27,8 +27,7 @@ export default function MarketplaceListingSections({
       <section>
         <h2 className={APP_SURFACE_SECTION_TITLE_CLASS}>Free starters</h2>
         <p className={`mt-2 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
-          Official preset agents and workflows with rules bundles. Preview one,
-          save it to your library, or install the bundle on your Mac.
+          Free agents and workflows you can install on your Mac.
         </p>
         <MarketplaceList
           listings={officialListings}
@@ -40,15 +39,13 @@ export default function MarketplaceListingSections({
       <section className={variant === "page" ? "mt-8" : "mt-6"}>
         <h2 className={APP_SURFACE_SECTION_TITLE_CLASS}>From teammates</h2>
         <p className={`mt-2 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
-          Browse agents and workflows teammates published for your company.
-          Preview a listing, save a copy to your library, or install the linked
-          rules bundle on your Mac.
+          Agents and workflows your teammates shared.
         </p>
         <MarketplaceList
           listings={teammateListings}
           isLoading={isLoading}
           onBorrow={onBorrow}
-          emptyMessage="No teammate listings yet. Publish a workflow or agent with rules for others to borrow."
+          emptyMessage="No teammate listings yet."
         />
       </section>
     </>

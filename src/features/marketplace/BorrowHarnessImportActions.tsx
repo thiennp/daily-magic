@@ -34,7 +34,7 @@ export default function BorrowHarnessImportActions({
           ? "Importing bundle…"
           : importStatus === "exporting"
             ? "Requesting export…"
-            : "Install bundle"}
+            : "Install"}
       </Button>
       {!canInstall ? (
         <p className="text-xs text-gray-500 dark:text-gray-400">

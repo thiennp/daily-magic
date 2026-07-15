@@ -5,9 +5,7 @@ export default function MarketplacePageLayout() {
   return (
     <div className={APP_PAGE_STACK_CLASS}>
       <p className="max-w-2xl text-sm text-gray-600 dark:text-gray-400">
-        Start from official preset agents and workflows, or discover listings
-        teammates published for your company. Preview each listing, save a copy
-        to your library, or install the linked rules bundle on your Mac.
+        Pick a free starter or a teammate listing, then install it on your Mac.
       </p>
       <MarketplacePanel variant="page" />
     </div>

@@ -46,46 +46,47 @@ export default function MarketplaceList({
           key={listing.capabilityId}
           className={APP_SURFACE_NESTED_CARD_CLASS}
         >
-          <div className="flex flex-wrap items-start justify-between gap-3">
-            <div className="min-w-0 flex-1">
-              <div className="flex flex-wrap items-center gap-2">
-                <span className="rounded-full bg-brand-50 px-2 py-0.5 text-xs font-medium text-brand-700 dark:bg-brand-950/40 dark:text-brand-300">
-                  {TYPE_LABEL_MAP[listing.type]}
-                </span>
-                {listing.isOfficialPreset ? (
-                  <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-xs font-medium text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300">
-                    Free
-                  </span>
-                ) : null}
-                <p className="text-sm font-medium text-gray-800 dark:text-white/90">
-                  {listing.name}
-                </p>
-              </div>
-              <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                {listing.description}
-              </p>
-              <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
-                {listing.ownerName ?? listing.ownerEmail}
-                {listing.harnessSetName
-                  ? ` · bundle: ${listing.harnessSetName}`
-                  : ` · bundle: ${listing.harnessSetSlug}`}
-                {listing.harnessItemCount !== null
-                  ? ` · ${listing.harnessItemCount} items`
-                  : ""}
-                {listing.isOfficialPreset
-                  ? " · install on your Mac"
-                  : listing.isOnline
-                    ? " · owner online"
-                    : " · saved copy only"}
-              </p>
-            </div>
-            <Button
-              variant="outline"
-              onClick={() => onBorrow(listing.capabilityId)}
-            >
-              Preview & borrow
-            </Button>
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="rounded-full bg-brand-50 px-2 py-0.5 text-xs font-medium text-brand-700 dark:bg-brand-950/40 dark:text-brand-300">
+              {TYPE_LABEL_MAP[listing.type]}
+            </span>
+            {listing.isOfficialPreset ? (
+              <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-xs font-medium text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300">
+                Free
+              </span>
+            ) : null}
+            <p className="text-sm font-medium text-gray-800 dark:text-white/90">
+              {listing.name}
+            </p>
           </div>
+          <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+            {listing.description}
+          </p>
+          <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
+            {listing.isOfficialPreset ? (
+              <>
+                {listing.harnessItemCount !== null
+                  ? `${listing.harnessItemCount} rules · `
+                  : ""}
+                installs on your Mac
+              </>
+            ) : (
+              <>
+                {listing.ownerName ?? listing.ownerEmail}
+                {listing.harnessItemCount !== null
+                  ? ` · ${listing.harnessItemCount} rules`
+                  : ""}
+                {listing.isOnline ? " · online" : ""}
+              </>
+            )}
+          </p>
+          <Button
+            variant="primary"
+            className="mt-4 w-full"
+            onClick={() => onBorrow(listing.capabilityId)}
+          >
+            Install
+          </Button>
         </article>
       ))}
     </div>

@@ -95,8 +95,8 @@ export default function SaveCapabilityToLibraryActions({
       </Button>
       <p className="text-xs text-gray-500 dark:text-gray-400">
         {isOfficialPreset
-          ? "Adds this free starter to your library and requests the rules bundle on your Mac when connected."
-          : `Copies the prompt and workflow from ${sourceOwnerLabel} into your account. Rules bundles are not copied — use Install bundle for that.`}
+          ? "Adds this starter to your library and installs rules on your Mac when connected."
+          : `Copies the prompt from ${sourceOwnerLabel}. Use Install for the rules bundle.`}
       </p>
       {savedName ? (
         <p className="text-xs font-medium text-brand-700 dark:text-brand-300">
