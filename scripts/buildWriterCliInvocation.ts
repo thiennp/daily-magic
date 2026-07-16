@@ -54,10 +54,17 @@ export const resolveWriterCliCommands = (
   };
 };
 
+export type WriterCliSessionTurn = "first" | "continue";
+
+export interface BuildWriterCliInvocationOptions {
+  readonly sessionTurn?: WriterCliSessionTurn;
+}
+
 export const buildWriterCliInvocation = (
   writerAgent: HarnessWriterAgentId,
   instruction: string,
   commands: WriterCliCommands,
+  options?: BuildWriterCliInvocationOptions,
 ): WriterCliInvocation | null => {
   const prompt = instruction.trim();
   if (!isNonEmptyString(prompt)) {
@@ -79,10 +86,14 @@ export const buildWriterCliInvocation = (
   }
 
   if (writerAgent === "cursor") {
+    const sessionArgs =
+      options?.sessionTurn === "continue" ? (["--continue"] as const) : [];
+
     return {
       command: commands.cursorCommand,
       args: [
         "agent",
+        ...sessionArgs,
         "-p",
         "--force",
         "--trust",

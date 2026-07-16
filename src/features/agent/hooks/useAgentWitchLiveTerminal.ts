@@ -8,6 +8,7 @@ import {
 } from "@/features/agent/utils/agentLiveTerminalLocalStore";
 import { type AgentRunInputRequest } from "@/features/dispatch/utils/agentRunInputSocket";
 import { submitAgentLiveTerminalInput } from "@/features/agent/utils/submitAgentLiveTerminalInput";
+import { sendWriterSessionEnd } from "@/features/agent/utils/sendWriterSessionEnd";
 import {
   beginAgentLiveTerminalSession,
   continueAgentLiveTerminalSession,
@@ -69,8 +70,14 @@ export function useAgentWitchLiveTerminal(socketRef: {
   );
 
   const finishSession = useCallback(() => {
-    setState(finishAgentLiveTerminalSession());
-  }, []);
+    setState((current) => {
+      if (current.sessionWriterAgent !== null) {
+        sendWriterSessionEnd(socketRef.current, current.sessionWriterAgent);
+      }
+
+      return finishAgentLiveTerminalSession();
+    });
+  }, [socketRef]);
 
   const applySocketMessage = useCallback((raw: string) => {
     try {

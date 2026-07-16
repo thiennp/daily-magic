@@ -86,6 +86,7 @@ export const executeClaudeRunDispatch = async (input: {
     executorUserId: input.executorUserId,
     groupId: input.groupId,
   });
+  const sessionContinuation = input.payload.sessionContinuation === true;
 
   if (input.agentClient !== undefined) {
     dispatchClaudeRunToAgent(
@@ -96,6 +97,7 @@ export const executeClaudeRunDispatch = async (input: {
       writerAgent,
       input.requestId,
       includeNextActions,
+      sessionContinuation,
     );
     await markAgentRunRunning(input.runtime, run.id);
   }

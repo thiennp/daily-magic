@@ -8,6 +8,7 @@ import {
 import type { AgentWitchLocalLayout } from "./resolveAgentWitchLocalLayout";
 import {
   buildWriterCliInvocation,
+  type BuildWriterCliInvocationOptions,
   type HarnessWriterAgentId,
   resolveWriterCliCommands,
 } from "./buildWriterCliInvocation";
@@ -318,11 +319,13 @@ export const runWriterTask = (
   requestId: string | undefined,
   socket: WebSocket,
   agentRunId?: string,
+  invocationOptions?: BuildWriterCliInvocationOptions,
 ): void => {
   const invocation = buildWriterCliInvocation(
     writerAgent,
     prompt,
     resolveWriterCommands(config),
+    invocationOptions,
   );
 
   if (invocation === null) {

@@ -1,6 +1,7 @@
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
 import { HARNESS_WRITER_AGENTS } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
 import { formatWriterCliDisplayCommand } from "@/lib/agentWitch/formatWriterCliDisplayCommand";
+import type { WriterCliSessionTurn } from "@/lib/agentWitch/writerCliSessionTurn.type";
 
 export const AGENT_LIVE_BASH_PROMPT = "agent-witch@mac ~ % ";
 
@@ -10,12 +11,13 @@ const isHarnessWriterAgent = (value: string): value is HarnessWriterAgent =>
 export const formatAgentLiveTerminalCommandLine = (
   prompt: string,
   writerAgent: string = "claude-cli",
+  sessionTurn: WriterCliSessionTurn = "first",
 ): string => {
   const resolvedWriter: HarnessWriterAgent = isHarnessWriterAgent(writerAgent)
     ? writerAgent
     : "claude-cli";
 
-  return formatWriterCliDisplayCommand(resolvedWriter, prompt);
+  return formatWriterCliDisplayCommand(resolvedWriter, prompt, sessionTurn);
 };
 
 export const buildAgentLiveTerminalCommandEntry = (

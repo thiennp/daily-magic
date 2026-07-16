@@ -11,6 +11,7 @@ export async function dispatchClaudePrompt(input: {
   readonly groupId?: string;
   readonly capabilityId?: string;
   readonly targetDeviceId?: string;
+  readonly sessionContinuation?: boolean;
   readonly onResponse: (response: string) => void;
 }): Promise<void> {
   await requestAgentWitchWake();
@@ -23,6 +24,7 @@ export async function dispatchClaudePrompt(input: {
       groupId: input.groupId,
       capabilityId: input.capabilityId,
       targetDeviceId: input.targetDeviceId,
+      sessionContinuation: input.sessionContinuation,
     });
     input.onResponse(raw);
     return;
@@ -35,6 +37,7 @@ export async function dispatchClaudePrompt(input: {
       groupId: input.groupId,
       capabilityId: input.capabilityId,
       targetDeviceId: input.targetDeviceId,
+      sessionContinuation: input.sessionContinuation,
       onResponse: input.onResponse,
     });
   }

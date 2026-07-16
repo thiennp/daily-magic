@@ -19,6 +19,7 @@ import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessW
 export const useAgentWitchPromptDispatch = (input: {
   readonly socketRef: RefObject<WebSocket | null>;
   readonly connectionLab: unknown;
+  readonly isSessionContinuation: () => boolean;
   readonly beginSession: (
     commandLine: string,
     writerAgent: HarnessWriterAgent,
@@ -43,11 +44,15 @@ export const useAgentWitchPromptDispatch = (input: {
         return;
       }
 
+      const sessionContinuation = input.isSessionContinuation();
+      const sessionTurn = sessionContinuation ? "continue" : "first";
+
       if (isMacTerminalDispatch(options)) {
         input.beginSession(
           formatAgentLiveTerminalCommandLine(
             trimmedPrompt,
             options.writerAgent,
+            sessionTurn,
           ),
           options.writerAgent,
           options.targetDeviceId,
@@ -69,6 +74,7 @@ export const useAgentWitchPromptDispatch = (input: {
         groupId: options.groupId,
         capabilityId: options.capabilityId,
         targetDeviceId: options.targetDeviceId,
+        sessionContinuation,
         onResponse: (raw) => {
           input.applySocketMessage(raw);
           input.setLastResponse(parseAgentWitchSocketDisplay(raw));

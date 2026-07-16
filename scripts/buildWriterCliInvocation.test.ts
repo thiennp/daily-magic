@@ -40,6 +40,26 @@ describe("buildWriterCliInvocation", () => {
     });
   });
 
+  it("builds cursor agent continuation turn", () => {
+    expect(
+      buildWriterCliInvocation("cursor", "follow up", commands, {
+        sessionTurn: "continue",
+      }),
+    ).toEqual({
+      command: "cursor",
+      args: [
+        "agent",
+        "--continue",
+        "-p",
+        "--force",
+        "--trust",
+        "--sandbox",
+        "disabled",
+        "follow up",
+      ],
+    });
+  });
+
   it("builds antigravity headless invocation", () => {
     expect(buildWriterCliInvocation("antigravity", "plan", commands)).toEqual({
       command: "agy",

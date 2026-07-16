@@ -1,4 +1,5 @@
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
+import type { WriterCliSessionTurn } from "@/lib/agentWitch/writerCliSessionTurn.type";
 
 const truncatePrompt = (value: string, maxLength: number = 120): string => {
   const normalized = value.replace(/\s+/g, " ").trim();
@@ -15,8 +16,10 @@ const escapeShellPrompt = (value: string): string =>
 export const formatWriterCliDisplayCommand = (
   writerAgent: HarnessWriterAgent,
   prompt: string,
+  sessionTurn: WriterCliSessionTurn = "first",
 ): string => {
   const escaped = escapeShellPrompt(prompt);
+  const cursorContinueFlag = sessionTurn === "continue" ? "--continue " : "";
 
   if (writerAgent === "claude-cli") {
     return `claude -p --dangerously-skip-permissions "${escaped}"`;
@@ -27,7 +30,7 @@ export const formatWriterCliDisplayCommand = (
   }
 
   if (writerAgent === "cursor") {
-    return `cursor agent -p --force --trust --sandbox disabled "${escaped}"`;
+    return `cursor agent ${cursorContinueFlag}-p --force --trust --sandbox disabled "${escaped}"`;
   }
 
   return `agy -p --dangerously-skip-permissions "${escaped}"`;

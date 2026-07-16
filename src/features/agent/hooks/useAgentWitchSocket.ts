@@ -94,6 +94,7 @@ export function useAgentWitchSocket(): UseAgentWitchSocketResult {
   const sendClaudePrompt = useAgentWitchPromptDispatch({
     socketRef,
     connectionLab,
+    isSessionContinuation: () => sessionWriterAgent !== null,
     beginSession,
     applySocketMessage,
     setLastResponse,

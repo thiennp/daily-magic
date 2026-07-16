@@ -9,6 +9,7 @@ export interface AgentRunDispatchBody {
   readonly groupId?: string | null;
   readonly capabilityId?: string | null;
   readonly targetDeviceId?: string;
+  readonly sessionContinuation?: boolean;
 }
 
 export const parseAgentRunDispatchBody = (
@@ -38,5 +39,6 @@ export const parseAgentRunDispatchBody = (
     body.targetDeviceId.length > 0
       ? { targetDeviceId: body.targetDeviceId }
       : {}),
+    ...(body.sessionContinuation === true ? { sessionContinuation: true } : {}),
   };
 };

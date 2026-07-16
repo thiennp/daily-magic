@@ -18,6 +18,7 @@ export const dispatchClaudeRunToAgent = (
   writerAgent: HarnessWriterAgent,
   requestId?: string,
   includeNextActions = false,
+  sessionContinuation = false,
 ): void => {
   agentClient.send({
     type: AGENT_WITCH_MESSAGE_TYPES.COMMAND_CLAUDE_RUN,
@@ -25,6 +26,7 @@ export const dispatchClaudeRunToAgent = (
       prompt: wrapPromptForAgentRun(prompt, { includeNextActions }),
       agentRunId,
       writerAgent,
+      ...(sessionContinuation ? { sessionContinuation: true } : {}),
     },
     requestId,
   });

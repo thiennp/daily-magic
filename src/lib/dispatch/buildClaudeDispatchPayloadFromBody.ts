@@ -17,4 +17,5 @@ export const buildClaudeDispatchPayloadFromBody = (
   ...(body.targetDeviceId !== undefined
     ? { targetDeviceId: body.targetDeviceId }
     : {}),
+  ...(body.sessionContinuation === true ? { sessionContinuation: true } : {}),
 });

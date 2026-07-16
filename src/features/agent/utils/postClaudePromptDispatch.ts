@@ -28,6 +28,7 @@ export async function postClaudePromptDispatch(input: {
   readonly groupId?: string;
   readonly capabilityId?: string;
   readonly targetDeviceId?: string;
+  readonly sessionContinuation?: boolean;
 }): Promise<string> {
   const response = await fetch("/api/agent-runs/dispatch", {
     method: "POST",
@@ -44,6 +45,9 @@ export async function postClaudePromptDispatch(input: {
         : {}),
       ...(input.targetDeviceId !== undefined
         ? { targetDeviceId: input.targetDeviceId }
+        : {}),
+      ...(input.sessionContinuation === true
+        ? { sessionContinuation: true }
         : {}),
     }),
   });

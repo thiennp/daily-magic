@@ -23,6 +23,16 @@ import {
   replayPendingRunInputRequests,
   runWriterTask,
 } from "./agentWitchRunSessions";
+import {
+  buildWriterSessionWarmupMessage,
+  clearWriterSession,
+  isWriterConversationStarted,
+  isWriterSessionWarmed,
+  markWriterConversationStarted,
+  markWriterSessionWarmed,
+  supportsWriterSessionContinuation,
+  supportsWriterSessionWarmup,
+} from "./agentWitchWriterSession";
 import { ensureHarnessWriterCli } from "./ensureHarnessWriterCli";
 import {
   buildWriterCliInvocation,
@@ -199,6 +209,7 @@ const dispatchWriterTask = async (
   requestId: string | undefined,
   socket: WebSocket,
   agentRunId?: string,
+  sessionContinuation = false,
 ): Promise<void> => {
   if (!isHarnessWriterAgentId(writerAgent)) {
     sendMessage(socket, {
@@ -213,23 +224,69 @@ const dispatchWriterTask = async (
     return;
   }
 
-  try {
-    await ensureHarnessWriterCli(config.layout.installDir, writerAgent);
-  } catch (error) {
-    const message = error instanceof Error ? error.message : String(error);
+  const needsWarmup =
+    supportsWriterSessionWarmup(writerAgent) &&
+    !isWriterSessionWarmed(writerAgent);
+
+  if (needsWarmup) {
+    try {
+      await ensureHarnessWriterCli(config.layout.installDir, writerAgent);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      sendMessage(socket, {
+        type: "command.claude.result",
+        payload: {
+          exitCode: -1,
+          output: `Failed to prepare ${writerAgent}: ${message}`,
+          ...(agentRunId !== undefined ? { agentRunId } : {}),
+        },
+        requestId,
+      });
+      return;
+    }
+
+    markWriterSessionWarmed(writerAgent);
+  } else if (!supportsWriterSessionWarmup(writerAgent)) {
+    try {
+      await ensureHarnessWriterCli(config.layout.installDir, writerAgent);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      sendMessage(socket, {
+        type: "command.claude.result",
+        payload: {
+          exitCode: -1,
+          output: `Failed to prepare ${writerAgent}: ${message}`,
+          ...(agentRunId !== undefined ? { agentRunId } : {}),
+        },
+        requestId,
+      });
+      return;
+    }
+  }
+
+  const sessionTurn =
+    sessionContinuation &&
+    supportsWriterSessionContinuation(writerAgent) &&
+    isWriterConversationStarted(writerAgent)
+      ? "continue"
+      : "first";
+
+  runWriterTask(config, writerAgent, prompt, requestId, socket, agentRunId, {
+    sessionTurn,
+  });
+
+  if (needsWarmup && agentRunId !== undefined) {
     sendMessage(socket, {
-      type: "command.claude.result",
+      type: "terminal.stream.chunk",
       payload: {
-        exitCode: -1,
-        output: `Failed to prepare ${writerAgent}: ${message}`,
-        ...(agentRunId !== undefined ? { agentRunId } : {}),
+        runId: agentRunId,
+        chunk: buildWriterSessionWarmupMessage(writerAgent),
       },
       requestId,
     });
-    return;
   }
 
-  runWriterTask(config, writerAgent, prompt, requestId, socket, agentRunId);
+  markWriterConversationStarted(writerAgent);
 };
 
 const runWriterProcess = (
@@ -602,6 +659,8 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
             typeof parsed.payload.agentRunId === "string"
               ? parsed.payload.agentRunId
               : undefined;
+          const sessionContinuation =
+            parsed.payload.sessionContinuation === true;
 
           if (typeof prompt === "string" && prompt.trim().length > 0) {
             console.log(`[agent-witch] Running ${writerAgent} task…`);
@@ -612,7 +671,21 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
               requestId,
               socket,
               agentRunId,
+              sessionContinuation,
             );
+          }
+        }
+
+        if (
+          parsed.type === "command.writer.session.end" &&
+          isRecord(parsed.payload)
+        ) {
+          const writerAgent = parsed.payload.writerAgent;
+          if (
+            typeof writerAgent === "string" &&
+            isHarnessWriterAgentId(writerAgent)
+          ) {
+            clearWriterSession(writerAgent);
           }
         }
 
