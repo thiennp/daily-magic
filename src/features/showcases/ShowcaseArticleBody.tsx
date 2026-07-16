@@ -1,6 +1,8 @@
 import type { ShowcaseArticleSection } from "@/features/showcases/types/ShowcaseArticle.type";
 import ShowcaseAutomationFigure from "@/features/showcases/ShowcaseAutomationFigure";
 import ShowcaseOnboardingFigure from "@/features/showcases/ShowcaseOnboardingFigure";
+import ShowcaseArticleFigure from "@/features/showcases/ShowcaseArticleFigure";
+import ShowcaseTopicFigure from "@/features/showcases/ShowcaseTopicFigure";
 
 interface ShowcaseArticleBodyProps {
   readonly sections: readonly ShowcaseArticleSection[];
@@ -54,20 +56,18 @@ export default function ShowcaseArticleBody({
                   alt={section.image.alt}
                   caption={section.image.caption}
                 />
+              ) : section.image.topicScreenId ? (
+                <ShowcaseTopicFigure
+                  screenId={section.image.topicScreenId}
+                  alt={section.image.alt}
+                  caption={section.image.caption}
+                />
               ) : (
-                <figure className="overflow-hidden rounded-xl border border-gray-200 bg-gray-50 dark:border-gray-800 dark:bg-white/[0.03]">
-                  {/* eslint-disable-next-line @next/next/no-img-element -- public SVG sample UI assets */}
-                  <img
-                    src={section.image.src}
-                    alt={section.image.alt}
-                    width={960}
-                    height={560}
-                    className="h-auto w-full"
-                  />
-                  <figcaption className="border-t border-gray-200 px-4 py-3 text-sm text-gray-600 dark:border-gray-800 dark:text-gray-400">
-                    {section.image.caption}
-                  </figcaption>
-                </figure>
+                <ShowcaseArticleFigure
+                  src={section.image.src}
+                  alt={section.image.alt}
+                  caption={section.image.caption}
+                />
               )
             ) : null}
           </div>

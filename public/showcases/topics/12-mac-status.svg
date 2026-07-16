@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="560" viewBox="0 0 960 560" role="img" aria-label="Mac worker status">
+  <defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#f8fafc"/><stop offset="100%" stop-color="#eef2ff"/></linearGradient></defs>
+  <rect width="960" height="560" fill="url(#bg)"/>
+  <rect x="32" y="28" width="896" height="504" rx="16" fill="#fff" stroke="#e5e7eb"/>
+  <text x="56" y="68" font-family="ui-sans-serif,system-ui,sans-serif" font-size="18" font-weight="600" fill="#111827">Your Mac worker</text>
+  <text x="56" y="92" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#6b7280">Sample UI  -  local execution, not cloud-only</text>
+  <rect x="56" y="140" width="400" height="160" rx="12" fill="#f0fdf4" stroke="#86efac"/>
+  <circle cx="92" cy="176" r="8" fill="#16a34a"/>
+  <text x="112" y="182" font-family="ui-sans-serif,system-ui,sans-serif" font-size="14" font-weight="600" fill="#166534">Online  -  MacBook Pro</text>
+  <text x="76" y="220" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#374151">Runs with your repos, keys, and files</text>
+  <text x="76" y="244" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#374151">Nothing leaves your machine unless you send it</text>
+  <rect x="480" y="140" width="400" height="160" rx="12" fill="#fef2f2" stroke="#fecaca"/>
+  <circle cx="516" cy="176" r="8" fill="#dc2626"/>
+  <text x="536" y="182" font-family="ui-sans-serif,system-ui,sans-serif" font-size="14" font-weight="600" fill="#991b1b">Offline  -  queue waits</text>
+  <text x="504" y="220" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#374151">Tasks resume when Mac wakes</text>
+</svg>

@@ -31,6 +31,7 @@ import whenExecutorMacIsOffline from "@/features/showcases/articles/whenExecutor
 import whereToStartWithAiAgents from "@/features/showcases/articles/whereToStartWithAiAgents.article";
 import whyLocalMacNotCloud from "@/features/showcases/articles/whyLocalMacNotCloud.article";
 import worksWithoutN8n from "@/features/showcases/articles/worksWithoutN8n.article";
+import { enrichShowcaseArticleWithImages } from "@/features/showcases/enrichShowcaseArticleWithImages";
 import type ShowcaseArticle from "@/features/showcases/types/ShowcaseArticle.type";
 
 export const SHOWCASE_ARTICLES_PHASE_1: readonly ShowcaseArticle[] = [
@@ -92,5 +93,11 @@ export const SHOWCASE_ARTICLES: readonly ShowcaseArticle[] = [
 export function getShowcaseArticleBySlug(
   slug: string,
 ): ShowcaseArticle | undefined {
-  return SHOWCASE_ARTICLES.find((article) => article.slug === slug);
+  const article = SHOWCASE_ARTICLES.find((entry) => entry.slug === slug);
+
+  if (!article) {
+    return undefined;
+  }
+
+  return enrichShowcaseArticleWithImages(article);
 }

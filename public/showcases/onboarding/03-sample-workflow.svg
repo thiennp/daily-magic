@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="960" height="560" viewBox="0 0 960 560" role="img" aria-label="Library · Sample: Weekly status update">
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="560" viewBox="0 0 960 560" role="img" aria-label="Library  -  Sample: Weekly status update">
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0%" stop-color="#f8fafc"/>
@@ -7,12 +7,12 @@
   </defs>
   <rect width="960" height="560" fill="url(#bg)"/>
   <rect x="32" y="28" width="896" height="504" rx="16" fill="#ffffff" stroke="#e5e7eb"/>
-  <text x="56" y="68" font-family="ui-sans-serif, system-ui, sans-serif" font-size="18" font-weight="600" fill="#111827">Library · Sample: Weekly status update</text>
-  <text x="56" y="92" font-family="ui-sans-serif, system-ui, sans-serif" font-size="12" fill="#6b7280">Sample UI · dummy data for onboarding docs</text>
+  <text x="56" y="68" font-family="ui-sans-serif, system-ui, sans-serif" font-size="18" font-weight="600" fill="#111827">Library  -  Sample: Weekly status update</text>
+  <text x="56" y="92" font-family="ui-sans-serif, system-ui, sans-serif" font-size="12" fill="#6b7280">Sample UI  -  dummy data for onboarding docs</text>
   
   <rect x="56" y="120" width="848" height="380" rx="12" fill="#fff" stroke="#e5e7eb"/>
   <text x="76" y="156" font-family="ui-sans-serif, system-ui, sans-serif" font-size="16" font-weight="600" fill="#111827">Sample: Weekly status update</text>
-  <text x="76" y="180" font-family="ui-sans-serif, system-ui, sans-serif" font-size="12" fill="#6b7280">Seeded starter workflow · edit or rename anytime</text>
+  <text x="76" y="180" font-family="ui-sans-serif, system-ui, sans-serif" font-size="12" fill="#6b7280">Seeded starter workflow  -  edit or rename anytime</text>
   <text x="76" y="220" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="600" fill="#374151">Week of</text>
   <rect x="76" y="230" width="360" height="40" rx="8" fill="#f9fafb" stroke="#d1d5db"/>
   <text x="90" y="255" font-family="ui-sans-serif, system-ui, sans-serif" font-size="14" fill="#111827">Jul 7</text>

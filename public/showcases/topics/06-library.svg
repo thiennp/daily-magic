@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="560" viewBox="0 0 960 560" role="img" aria-label="Company library">
+  <defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#f8fafc"/><stop offset="100%" stop-color="#eef2ff"/></linearGradient></defs>
+  <rect width="960" height="560" fill="url(#bg)"/>
+  <rect x="32" y="28" width="896" height="504" rx="16" fill="#fff" stroke="#e5e7eb"/>
+  <text x="56" y="68" font-family="ui-sans-serif,system-ui,sans-serif" font-size="18" font-weight="600" fill="#111827">Company library</text>
+  <text x="56" y="92" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#6b7280">Sample UI  -  shared team workflows</text>
+  <rect x="56" y="120" width="400" height="72" rx="10" fill="#fff" stroke="#e5e7eb"/>
+  <text x="76" y="152" font-family="ui-sans-serif,system-ui,sans-serif" font-size="14" font-weight="600" fill="#111827">Sales follow-up  -  by Alex</text>
+  <text x="76" y="172" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#4b5563">Used 24 times  -  company approved</text>
+  <rect x="56" y="208" width="400" height="72" rx="10" fill="#fff" stroke="#18181b" stroke-width="2"/>
+  <text x="76" y="240" font-family="ui-sans-serif,system-ui,sans-serif" font-size="14" font-weight="600" fill="#111827">Onboarding checklist  -  team</text>
+  <text x="76" y="260" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#4b5563">One tap to run on your Mac</text>
+  <rect x="480" y="120" width="424" height="280" rx="12" fill="#f9fafb" stroke="#e5e7eb"/>
+  <text x="500" y="156" font-family="ui-sans-serif,system-ui,sans-serif" font-size="13" font-weight="600" fill="#374151">Preview</text>
+  <text x="500" y="190" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#6b7280">Shared prompt + steps for new hires</text>
+</svg>

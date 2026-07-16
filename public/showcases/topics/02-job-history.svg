@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="560" viewBox="0 0 960 560" role="img" aria-label="Job history">
+  <defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#f8fafc"/><stop offset="100%" stop-color="#eef2ff"/></linearGradient></defs>
+  <rect width="960" height="560" fill="url(#bg)"/>
+  <rect x="32" y="28" width="896" height="504" rx="16" fill="#fff" stroke="#e5e7eb"/>
+  <text x="56" y="68" font-family="ui-sans-serif,system-ui,sans-serif" font-size="18" font-weight="600" fill="#111827">Job history</text>
+  <text x="56" y="92" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#6b7280">Sample UI  -  past runs with status and output</text>
+  <rect x="56" y="120" width="848" height="72" rx="10" fill="#f0fdf4" stroke="#bbf7d0"/>
+  <text x="76" y="152" font-family="ui-sans-serif,system-ui,sans-serif" font-size="14" font-weight="600" fill="#166534">Done  -  PR summary</text>
+  <text x="76" y="172" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#4b5563">Today 09:14  -  2 min  -  MacBook Pro</text>
+  <rect x="56" y="208" width="848" height="72" rx="10" fill="#fff" stroke="#e5e7eb"/>
+  <text x="76" y="240" font-family="ui-sans-serif,system-ui,sans-serif" font-size="14" font-weight="600" fill="#111827">Done  -  Weekly standup draft</text>
+  <text x="76" y="260" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#4b5563">Mon 08:00  -  scheduled automation</text>
+  <rect x="56" y="296" width="848" height="72" rx="10" fill="#fff" stroke="#e5e7eb"/>
+  <text x="76" y="328" font-family="ui-sans-serif,system-ui,sans-serif" font-size="14" font-weight="600" fill="#111827">Run again</text>
+  <text x="200" y="328" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#2563eb">Reuse same prompt</text>
+</svg>
