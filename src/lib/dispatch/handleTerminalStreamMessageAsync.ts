@@ -7,37 +7,22 @@ import type AgentWitchHubClient from "@/lib/agentWitch/types/AgentWitchHubClient
 import type AgentWitchHubRuntime from "@/lib/agentWitch/types/AgentWitchHubRuntime.type";
 import type AgentWitchMessage from "@/lib/agentWitch/types/AgentWitchMessage.type";
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
-import { unauthorizedAgentOnlyError } from "@/lib/agentWitch/agentWitchHubClientOperations";
-import { getAgentRunSession } from "@/lib/dispatch/agentRunSessionRegistry";
+import { broadcastTerminalStreamToRunParticipants } from "@/lib/dispatch/broadcastTerminalStreamToRunParticipants";
+import { requireTerminalStreamPublisher } from "@/lib/dispatch/requireTerminalStreamPublisher";
 
 const readRunId = (payload: Record<string, unknown> | undefined): string =>
   typeof payload?.runId === "string" ? payload.runId : "";
 
-const broadcastTerminalStream = (
-  runtime: AgentWitchHubRuntime,
-  runId: string,
-  message: AgentWitchMessage,
-): void => {
-  const run = getAgentRunSession(runId);
-  if (run === undefined) {
-    return;
-  }
-
-  runtime.broadcastToDashboardUser(run.requesterUserId, message);
-  if (run.executorUserId !== run.requesterUserId) {
-    runtime.broadcastToDashboardUser(run.executorUserId, message);
-  }
-};
+const systemAck = (requestId: string | undefined): AgentWitchMessage => ({
+  type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ACK,
+  requestId,
+});
 
 export const handleTerminalStreamMessageAsync = async (
   runtime: AgentWitchHubRuntime,
   message: AgentWitchMessage,
   sender: AgentWitchHubClient | undefined,
 ): Promise<AgentWitchMessage | null> => {
-  if (sender?.role !== "agent") {
-    return unauthorizedAgentOnlyError(message.requestId);
-  }
-
   const runId = readRunId(message.payload);
   if (!isNonEmptyString(runId)) {
     return {
@@ -48,13 +33,20 @@ export const handleTerminalStreamMessageAsync = async (
   }
 
   if (message.type === AGENT_WITCH_MESSAGE_TYPES.TERMINAL_STREAM_START) {
-    const slot = tryAcquireTerminalStreamSlot(runId);
-    const responseType = slot.accepted
-      ? AGENT_WITCH_MESSAGE_TYPES.TERMINAL_STREAM_ACCEPTED
-      : AGENT_WITCH_MESSAGE_TYPES.TERMINAL_STREAM_REJECTED;
+    const authorization = await requireTerminalStreamPublisher({
+      sender,
+      runId,
+      requestId: message.requestId,
+    });
+    if (!authorization.ok) {
+      return authorization.error;
+    }
 
+    const slot = tryAcquireTerminalStreamSlot(runId, authorization.publisher);
     return {
-      type: responseType,
+      type: slot.accepted
+        ? AGENT_WITCH_MESSAGE_TYPES.TERMINAL_STREAM_ACCEPTED
+        : AGENT_WITCH_MESSAGE_TYPES.TERMINAL_STREAM_REJECTED,
       payload: {
         runId,
         activeStreams: slot.activeStreams,
@@ -66,30 +58,47 @@ export const handleTerminalStreamMessageAsync = async (
   }
 
   if (message.type === AGENT_WITCH_MESSAGE_TYPES.TERMINAL_STREAM_CHUNK) {
+    const authorization = await requireTerminalStreamPublisher({
+      sender,
+      runId,
+      requestId: message.requestId,
+      requireActiveSlot: true,
+    });
+    if (!authorization.ok) {
+      return authorization.error;
+    }
+
     const chunk =
       typeof message.payload?.chunk === "string" ? message.payload.chunk : "";
-    broadcastTerminalStream(runtime, runId, {
-      type: AGENT_WITCH_MESSAGE_TYPES.TERMINAL_STREAM_CHUNK,
-      payload: { runId, chunk },
-      requestId: message.requestId,
-    });
-    return {
-      type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ACK,
-      requestId: message.requestId,
-    };
+    if (chunk.length > 0) {
+      broadcastTerminalStreamToRunParticipants(runtime, authorization.run, {
+        type: AGENT_WITCH_MESSAGE_TYPES.TERMINAL_STREAM_CHUNK,
+        payload: { runId, chunk },
+      });
+    }
+
+    return systemAck(message.requestId);
   }
 
   if (message.type === AGENT_WITCH_MESSAGE_TYPES.TERMINAL_STREAM_END) {
+    const authorization = await requireTerminalStreamPublisher({
+      sender,
+      runId,
+      requestId: message.requestId,
+      allowNonRunning: true,
+      requireActiveSlot: true,
+    });
+    if (!authorization.ok) {
+      return authorization.error;
+    }
+
     releaseTerminalStreamSlot(runId);
-    broadcastTerminalStream(runtime, runId, {
+    broadcastTerminalStreamToRunParticipants(runtime, authorization.run, {
       type: AGENT_WITCH_MESSAGE_TYPES.TERMINAL_STREAM_END,
       payload: { runId },
-      requestId: message.requestId,
     });
-    return {
-      type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ACK,
-      requestId: message.requestId,
-    };
+
+    return systemAck(message.requestId);
   }
 
   return null;
