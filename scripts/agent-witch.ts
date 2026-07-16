@@ -24,6 +24,7 @@ import {
   runWriterTask,
 } from "./agentWitchRunSessions";
 import {
+  buildWriterSessionReadyMessage,
   buildWriterSessionWarmupMessage,
   clearWriterSession,
   isWriterConversationStarted,
@@ -296,6 +297,7 @@ const startWriterSession = async (
   requestId: string | undefined,
   socket: WebSocket,
 ): Promise<void> => {
+  let streamedOutput = "";
   const result = await runWriterSessionStart({
     installDir: config.layout.installDir,
     workspace: config.workspace,
@@ -306,13 +308,33 @@ const startWriterSession = async (
       cursorCommand: config.cursorCommand,
       antigravityCommand: config.antigravityCommand,
     }),
+    onChunk: (chunk) => {
+      streamedOutput += chunk;
+      sendMessage(socket, {
+        type: "command.writer.session.chunk",
+        payload: {
+          writerAgent,
+          chunk,
+        },
+        requestId,
+      });
+    },
   });
+
+  const readyOutput =
+    result.exitCode !== 0
+      ? result.output
+      : streamedOutput.length > 0
+        ? buildWriterSessionReadyMessage(
+            isHarnessWriterAgentId(writerAgent) ? writerAgent : "claude-cli",
+          )
+        : result.output;
 
   sendMessage(socket, {
     type: "command.writer.session.ready",
     payload: {
       writerAgent,
-      output: result.output,
+      output: readyOutput,
       exitCode: result.exitCode,
     },
     requestId,

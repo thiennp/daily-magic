@@ -3,6 +3,7 @@
 import Link from "next/link";
 
 import AgentWitchLogo from "@/components/branding/AgentWitchLogo";
+import { APP_SURFACE_CTA_PRIMARY_ICON_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
 import { ThemeToggleButton } from "@/components/common/ThemeToggleButton";
 import UserDropdown from "@/components/header/UserDropdown";
 import SendTaskComposerPlayIcon from "@/features/agent/SendTaskComposerPlayIcon";
@@ -30,7 +31,7 @@ export default function AppShellHeader() {
             <Link
               href={buildAgentComposerHref()}
               aria-label="Send a task"
-              className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-brand-500 text-white shadow-theme-xs transition-colors hover:bg-brand-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500"
+              className={APP_SURFACE_CTA_PRIMARY_ICON_CLASS}
             >
               <SendTaskComposerPlayIcon className="h-5 w-5" />
             </Link>

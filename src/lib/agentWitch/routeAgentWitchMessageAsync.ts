@@ -15,6 +15,7 @@ import {
 } from "@/lib/dispatch/handleDashboardAgentRunRelayAsync";
 import { handleDispatchApprovalRespondAsync } from "@/lib/dispatch/handleDispatchApprovalRespond";
 import { handleTerminalStreamMessageAsync } from "@/lib/dispatch/handleTerminalStreamMessageAsync";
+import { handleWriterSessionChunkMessageAsync } from "@/lib/dispatch/handleWriterSessionChunkMessageAsync";
 import { handleWriterSessionEndMessageAsync } from "@/lib/dispatch/handleWriterSessionEndMessageAsync";
 import { handleWriterSessionReadyMessageAsync } from "@/lib/dispatch/handleWriterSessionReadyMessageAsync";
 import { handleWriterSessionStartMessageAsync } from "@/lib/dispatch/handleWriterSessionStartMessageAsync";
@@ -74,6 +75,10 @@ export const routeAgentWitchMessageAsync = async (
 
   if (message.type === AGENT_WITCH_MESSAGE_TYPES.COMMAND_WRITER_SESSION_READY) {
     return handleWriterSessionReadyMessageAsync(hub, message, sender);
+  }
+
+  if (message.type === AGENT_WITCH_MESSAGE_TYPES.COMMAND_WRITER_SESSION_CHUNK) {
+    return handleWriterSessionChunkMessageAsync(hub, message, sender);
   }
 
   if (message.type === AGENT_WITCH_MESSAGE_TYPES.DISPATCH_APPROVAL_RESPOND) {

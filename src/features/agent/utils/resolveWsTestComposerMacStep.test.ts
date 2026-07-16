@@ -6,14 +6,7 @@ import {
   shouldShowWsTestComposerSelectedMacBackLink,
   shouldSkipWsTestComposerMacSelectionStep,
 } from "@/features/agent/utils/resolveWsTestComposerMacStep";
-
-const baseInput = {
-  showMacPicker: true,
-  isOwnDeviceDispatch: false,
-  isMacDeviceLocked: false,
-  isMacDevicesLoading: false,
-  deviceCount: 2,
-};
+import { wsTestComposerMacStepBaseInput as baseInput } from "@/features/agent/utils/resolveWsTestComposerMacStep.testHelper";
 
 describe("shouldSkipWsTestComposerMacSelectionStep", () => {
   it("skips when mac picker is hidden", () => {

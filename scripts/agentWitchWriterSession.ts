@@ -94,6 +94,7 @@ const runWriterSessionStartInvocation = (
   workspace: string,
   writerAgent: HarnessWriterAgentId,
   commands: WriterCliCommands,
+  onChunk?: (chunk: string) => void,
 ): Promise<{ readonly exitCode: number; readonly output: string }> =>
   new Promise((resolve) => {
     const invocation = buildWriterSessionStartInvocation(writerAgent, commands);
@@ -104,13 +105,15 @@ const runWriterSessionStartInvocation = (
       env: process.env,
     });
 
-    child.stdout?.on("data", (chunk: Buffer) => {
-      outputChunks.push(chunk.toString("utf8"));
-    });
+    const emitChunk = (chunk: Buffer): void => {
+      const text = chunk.toString("utf8");
+      outputChunks.push(text);
+      onChunk?.(text);
+    };
 
-    child.stderr?.on("data", (chunk: Buffer) => {
-      outputChunks.push(chunk.toString("utf8"));
-    });
+    child.stdout?.on("data", emitChunk);
+
+    child.stderr?.on("data", emitChunk);
 
     child.on("close", (exitCode) => {
       resolve({
@@ -145,6 +148,7 @@ export const runWriterSessionStart = async (input: {
   readonly workspace: string;
   readonly writerAgent: string;
   readonly commands: WriterCliCommands;
+  readonly onChunk?: (chunk: string) => void;
 }): Promise<WriterSessionStartResult> => {
   if (!isHarnessWriterAgentId(input.writerAgent)) {
     return {
@@ -171,6 +175,7 @@ export const runWriterSessionStart = async (input: {
     input.workspace,
     input.writerAgent,
     input.commands,
+    input.onChunk,
   );
 
   if (cliResult.exitCode !== 0) {
@@ -184,6 +189,9 @@ export const runWriterSessionStart = async (input: {
 
   return {
     exitCode: 0,
-    output: appendReadyMessage(input.writerAgent, cliResult.output),
+    output:
+      cliResult.output.length > 0
+        ? appendReadyMessage(input.writerAgent, cliResult.output)
+        : buildWriterSessionReadyMessage(input.writerAgent),
   };
 };

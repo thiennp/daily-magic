@@ -8,6 +8,7 @@ import type { AgentLiveTerminalStatus } from "@/features/agent/utils/agentLiveTe
 interface WsTestPanelMacSessionSectionProps {
   readonly output: string;
   readonly status: AgentLiveTerminalStatus;
+  readonly pendingCommandLine: string | null;
   readonly activeRunId: string | null;
   readonly errorMessage: string | null;
   readonly feedbackVisible: boolean;
@@ -29,6 +30,7 @@ const WsTestPanelMacSessionSection = forwardRef<
       ref={ref}
       output={props.output}
       status={props.status}
+      pendingCommandLine={props.pendingCommandLine}
       activeRunId={props.activeRunId}
       feedbackVisible={props.feedbackVisible}
       feedbackPendingQuestion={props.feedbackPendingQuestion}

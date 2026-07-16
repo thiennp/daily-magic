@@ -43,6 +43,9 @@ export default function WsTestPanel({ variant = "page" }: WsTestPanelProps) {
         stepTrail={panel.stepTrail}
         liveTerminalOutput={panel.socket.liveTerminalOutput}
         liveTerminalStatus={panel.socket.liveTerminalStatus}
+        liveTerminalPendingCommandLine={
+          panel.socket.liveTerminalPendingCommandLine
+        }
         liveTerminalRunId={panel.socket.liveTerminalRunId}
         feedbackVisible={panel.terminalFeedback.visible}
         feedbackPendingQuestion={panel.terminalFeedback.pendingQuestion}

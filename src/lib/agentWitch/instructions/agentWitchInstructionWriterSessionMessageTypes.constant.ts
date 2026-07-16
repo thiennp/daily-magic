@@ -20,4 +20,10 @@ export const AGENT_WITCH_INSTRUCTION_WRITER_SESSION_MESSAGE_TYPES: readonly Agen
       direction: "mac_to_browser",
       purpose: "Mac agent reports that a writer CLI session is ready.",
     },
+    {
+      type: AGENT_WITCH_MESSAGE_TYPES.COMMAND_WRITER_SESSION_CHUNK,
+      direction: "mac_to_browser",
+      purpose:
+        "Mac agent streams writer session startup CLI output to the browser terminal mirror.",
+    },
   ];

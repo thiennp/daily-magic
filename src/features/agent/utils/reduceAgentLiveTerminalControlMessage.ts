@@ -6,6 +6,10 @@ import { appendAgentLiveTerminalCommand } from "./agentLiveTerminalPrompt.consta
 import { matchesActiveRun, readRunId } from "./agentLiveTerminalMessageUtils";
 import { reduceAgentLiveTerminalApprovalMessage } from "./reduceAgentLiveTerminalApprovalMessage";
 import {
+  isWriterSessionChunkMessage,
+  reduceAgentLiveTerminalWriterSessionChunk,
+} from "./reduceAgentLiveTerminalWriterSessionChunk";
+import {
   isWriterSessionReadyMessage,
   reduceAgentLiveTerminalWriterSessionReady,
 } from "./reduceAgentLiveTerminalWriterSessionReady";
@@ -17,6 +21,10 @@ export const reduceAgentLiveTerminalControlMessage = (
 ): AgentLiveTerminalState => {
   if (isWriterSessionReadyMessage(parsed)) {
     return reduceAgentLiveTerminalWriterSessionReady(state, payload);
+  }
+
+  if (isWriterSessionChunkMessage(parsed)) {
+    return reduceAgentLiveTerminalWriterSessionChunk(state, payload);
   }
 
   if (parsed.type === AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ACK) {

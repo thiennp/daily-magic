@@ -5,6 +5,7 @@ import { useState } from "react";
 import { resolveWsTestComposerPickerCompleted } from "@/features/agent/utils/resolveWsTestComposerPickerCompleted";
 import type { WsTestComposerMacStepInput } from "@/features/agent/utils/resolveWsTestComposerMacStep";
 import {
+  shouldAutoCompleteWsTestComposerMacSelectionStep,
   shouldShowWsTestComposerMacSection,
   shouldShowWsTestComposerMacSelectionStepOnly,
   shouldSkipWsTestComposerMacSelectionStep,
@@ -34,7 +35,8 @@ export function useWsTestComposerWizard({
   const shouldSkipMacSelectionStep =
     shouldSkipWsTestComposerMacSelectionStep(macStepInput);
   const hasCompletedMacSelectionStep =
-    hasConfirmedMacSelection || shouldSkipMacSelectionStep;
+    hasConfirmedMacSelection ||
+    shouldAutoCompleteWsTestComposerMacSelectionStep(macStepInput);
   const hasCompletedPickerStep = resolveWsTestComposerPickerCompleted({
     hasConfirmedPickerSelection,
     isSteppedComposer,

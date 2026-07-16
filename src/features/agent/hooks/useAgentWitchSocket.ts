@@ -20,6 +20,7 @@ export interface UseAgentWitchSocketResult {
   readonly lastResponse: AgentWitchSocketDisplay;
   readonly liveTerminalOutput: string;
   readonly liveTerminalStatus: AgentLiveTerminalStatus;
+  readonly liveTerminalPendingCommandLine: string | null;
   readonly liveTerminalRunId: string | null;
   readonly liveTerminalPendingInput: AgentRunInputRequest | null;
   readonly sessionWriterAgent: HarnessWriterAgent | null;
@@ -91,6 +92,7 @@ export function useAgentWitchSocket(): UseAgentWitchSocketResult {
     lastResponse,
     liveTerminalOutput: terminal.output,
     liveTerminalStatus: terminal.status,
+    liveTerminalPendingCommandLine: terminal.pendingCommandLine,
     liveTerminalRunId: terminal.activeRunId,
     liveTerminalPendingInput: terminal.pendingInput,
     sessionWriterAgent: terminal.sessionWriterAgent,

@@ -8,6 +8,7 @@ export const AGENT_WITCH_MESSAGE_TYPES = {
   COMMAND_WRITER_SESSION_END: "command.writer.session.end",
   COMMAND_WRITER_SESSION_START: "command.writer.session.start",
   COMMAND_WRITER_SESSION_READY: "command.writer.session.ready",
+  COMMAND_WRITER_SESSION_CHUNK: "command.writer.session.chunk",
   DISPATCH_APPROVAL_REQUIRED: "dispatch.approval.required",
   DISPATCH_APPROVAL_RESPOND: "dispatch.approval.respond",
   DISPATCH_APPROVAL_RESULT: "dispatch.approval.result",

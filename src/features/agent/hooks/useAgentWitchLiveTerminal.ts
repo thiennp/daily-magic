@@ -28,6 +28,7 @@ export function useAgentWitchLiveTerminal(socketRef: {
   readonly status: AgentLiveTerminalStatus;
   readonly activeRunId: string | null;
   readonly pendingInput: AgentRunInputRequest | null;
+  readonly pendingCommandLine: string | null;
   readonly sessionWriterAgent: HarnessWriterAgent | null;
   readonly sessionDeviceId: string | null;
   readonly beginSession: (
@@ -114,6 +115,7 @@ export function useAgentWitchLiveTerminal(socketRef: {
     status: state.status,
     activeRunId: state.activeRunId,
     pendingInput: state.pendingInput,
+    pendingCommandLine: state.pendingCommandLine,
     sessionWriterAgent: state.sessionWriterAgent,
     sessionDeviceId: state.sessionDeviceId,
     beginSession,

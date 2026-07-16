@@ -2,6 +2,7 @@ import type { AgentLiveTerminalStatus } from "@/features/agent/utils/agentLiveTe
 import {
   AGENT_LIVE_BASH_PROMPT,
   appendAgentLiveTerminalPrompt,
+  buildAgentLiveTerminalCommandEntry,
   buildAgentLiveTerminalIdleLine,
 } from "@/features/agent/utils/agentLiveTerminalPrompt.constant";
 import { stripNextActionsFromTerminalOutput } from "@/features/agent/utils/splitAgentLiveTerminalOutput";
@@ -9,10 +10,21 @@ import { stripNextActionsFromTerminalOutput } from "@/features/agent/utils/split
 export const buildAgentLiveTerminalDisplay = (input: {
   readonly output: string;
   readonly status: AgentLiveTerminalStatus;
+  readonly pendingCommandLine?: string | null;
 }): string => {
   const visibleOutput = stripNextActionsFromTerminalOutput(input.output);
 
   if (visibleOutput.length === 0) {
+    const pendingCommandLine = input.pendingCommandLine?.trim() ?? "";
+    if (
+      pendingCommandLine.length > 0 &&
+      (input.status === "starting" ||
+        input.status === "waiting_approval" ||
+        input.status === "streaming")
+    ) {
+      return buildAgentLiveTerminalCommandEntry(pendingCommandLine);
+    }
+
     return buildAgentLiveTerminalIdleLine();
   }
 

@@ -1,5 +1,9 @@
 import type { AgentRunInputRequest } from "@/features/dispatch/utils/agentRunInputSocket";
-import { buildAgentLiveTerminalCommandEntry } from "@/features/agent/utils/agentLiveTerminalPrompt.constant";
+import {
+  AGENT_LIVE_BASH_PROMPT,
+  appendAgentLiveTerminalCommand,
+  buildAgentLiveTerminalCommandEntry,
+} from "@/features/agent/utils/agentLiveTerminalPrompt.constant";
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
 
 export type AgentLiveTerminalStatus =
@@ -50,15 +54,29 @@ export const shouldContinueAgentLiveTerminalThread = (
 export const continueAgentLiveTerminalSession = (
   state: AgentLiveTerminalState,
   commandLine: string,
-): AgentLiveTerminalState => ({
-  activeRunId: null,
-  output: state.output,
-  status: "starting",
-  pendingInput: null,
-  pendingCommandLine: commandLine,
-  sessionWriterAgent: state.sessionWriterAgent,
-  sessionDeviceId: state.sessionDeviceId,
-});
+): AgentLiveTerminalState => {
+  const outputIncludesCommand =
+    commandLine.length > 0 &&
+    state.output.includes(`${AGENT_LIVE_BASH_PROMPT}${commandLine}`);
+  const nextOutput =
+    commandLine.length === 0
+      ? state.output
+      : outputIncludesCommand
+        ? state.output
+        : state.output.length === 0
+          ? buildAgentLiveTerminalCommandEntry(commandLine)
+          : appendAgentLiveTerminalCommand(state.output, commandLine);
+
+  return {
+    activeRunId: null,
+    output: nextOutput,
+    status: "starting",
+    pendingInput: null,
+    pendingCommandLine: commandLine,
+    sessionWriterAgent: state.sessionWriterAgent,
+    sessionDeviceId: state.sessionDeviceId,
+  };
+};
 
 export const finishAgentLiveTerminalSession = (): AgentLiveTerminalState =>
   initialAgentLiveTerminalState();

@@ -16,6 +16,7 @@ import { AGENT_LIVE_TERMINAL_STATUS_LABEL } from "@/features/agent/utils/agentLi
 interface AgentLiveTerminalPanelProps {
   readonly output: string;
   readonly status: AgentLiveTerminalStatus;
+  readonly pendingCommandLine?: string | null;
   readonly feedbackVisible: boolean;
   readonly feedbackPendingQuestion: string | null;
   readonly feedbackQueuedCount: number;
@@ -30,6 +31,7 @@ interface AgentLiveTerminalPanelProps {
 export default function AgentLiveTerminalPanel({
   output,
   status,
+  pendingCommandLine = null,
   feedbackVisible,
   feedbackPendingQuestion,
   feedbackQueuedCount,
@@ -40,7 +42,11 @@ export default function AgentLiveTerminalPanel({
   onSubmitFeedback,
   onFinishSession,
 }: AgentLiveTerminalPanelProps) {
-  const displayOutput = buildAgentLiveTerminalDisplay({ output, status });
+  const displayOutput = buildAgentLiveTerminalDisplay({
+    output,
+    status,
+    pendingCommandLine,
+  });
   const nextActions = parseLatestAgentLiveTerminalNextActions(output);
   const showNextActions =
     nextActions.length > 0 && feedbackPendingQuestion === null;

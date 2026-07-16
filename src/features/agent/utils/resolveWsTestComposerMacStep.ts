@@ -12,8 +12,15 @@ export const shouldSkipWsTestComposerMacSelectionStep = (
   !input.showMacPicker ||
   input.isOwnDeviceDispatch ||
   input.isMacDeviceLocked ||
-  input.isMacDevicesLoading ||
-  input.deviceCount <= 1;
+  (!input.isMacDevicesLoading && input.deviceCount <= 1);
+
+/** Skip mac selection only after devices are loaded and the paired count is known. */
+export const shouldAutoCompleteWsTestComposerMacSelectionStep = (
+  input: WsTestComposerMacStepInput,
+): boolean =>
+  !input.isMacDevicesLoading &&
+  shouldSkipWsTestComposerMacSelectionStep(input) &&
+  input.deviceCount > 0;
 
 export const shouldShowWsTestComposerMacSelectionStepOnly = (
   input: WsTestComposerMacStepInput & {

@@ -40,16 +40,16 @@ export const formatWriterSessionStartDisplayCommand = (
   writerAgent: HarnessWriterAgent,
 ): string => {
   if (writerAgent === "claude-cli") {
-    return "claude";
+    return "claude --version";
   }
 
   if (writerAgent === "codex") {
-    return "codex";
+    return "codex --version";
   }
 
   if (writerAgent === "cursor") {
-    return "cursor agent";
+    return "cursor agent status";
   }
 
-  return "agy";
+  return "agy --version";
 };

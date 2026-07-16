@@ -34,6 +34,16 @@ describe("buildAgentLiveTerminalDisplay", () => {
     expect(buildAgentLiveTerminalLoadingLine(4)).toBe("...");
   });
 
+  it("shows the pending command while a writer session is starting", () => {
+    expect(
+      buildAgentLiveTerminalDisplay({
+        output: "",
+        status: "starting",
+        pendingCommandLine: "cursor agent status",
+      }),
+    ).toBe(`${AGENT_LIVE_BASH_PROMPT}cursor agent status\n`);
+  });
+
   it("hides next-actions blocks from the terminal display", () => {
     expect(
       buildAgentLiveTerminalDisplay({

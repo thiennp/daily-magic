@@ -11,6 +11,7 @@ import type { AgentLiveTerminalStatus } from "@/features/agent/utils/agentLiveTe
 interface AgentLiveTerminalSectionProps {
   readonly output: string;
   readonly status: AgentLiveTerminalStatus;
+  readonly pendingCommandLine?: string | null;
   readonly activeRunId: string | null;
   readonly errorMessage: string | null;
   readonly feedbackVisible: boolean;
@@ -31,6 +32,7 @@ const AgentLiveTerminalSection = forwardRef<
   {
     output,
     status,
+    pendingCommandLine = null,
     activeRunId,
     errorMessage,
     feedbackVisible,
@@ -68,6 +70,7 @@ const AgentLiveTerminalSection = forwardRef<
       <AgentLiveTerminalPanel
         output={output}
         status={status}
+        pendingCommandLine={pendingCommandLine}
         feedbackVisible={feedbackVisible}
         feedbackPendingQuestion={feedbackPendingQuestion}
         feedbackQueuedCount={feedbackQueuedCount}

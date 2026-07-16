@@ -30,6 +30,7 @@ interface WsTestPanelComposerSectionProps {
   readonly stepTrail: readonly SendTaskComposerStepTrailViewItem[];
   readonly liveTerminalOutput: string;
   readonly liveTerminalStatus: AgentLiveTerminalStatus;
+  readonly liveTerminalPendingCommandLine: string | null;
   readonly liveTerminalRunId: string | null;
   readonly feedbackVisible: boolean;
   readonly feedbackPendingQuestion: string | null;
@@ -56,6 +57,7 @@ export default function WsTestPanelComposerSection({
   stepTrail,
   liveTerminalOutput,
   liveTerminalStatus,
+  liveTerminalPendingCommandLine,
   liveTerminalRunId,
   feedbackVisible,
   feedbackPendingQuestion,
@@ -78,6 +80,7 @@ export default function WsTestPanelComposerSection({
           ref={terminalSectionRef}
           output={liveTerminalOutput}
           status={liveTerminalStatus}
+          pendingCommandLine={liveTerminalPendingCommandLine}
           activeRunId={liveTerminalRunId}
           feedbackVisible={feedbackVisible}
           feedbackPendingQuestion={feedbackPendingQuestion}
