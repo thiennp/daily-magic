@@ -1,6 +1,7 @@
 "use client";
 
 import SendTaskComposerPickerStep from "@/features/agent/SendTaskComposerPickerStep";
+import SendTaskComposerSelectedMacLink from "@/features/agent/SendTaskComposerSelectedMacLink";
 import WsTestComposerFormStep from "@/features/agent/WsTestComposerFormStep";
 import WsTestComposerMacSection from "@/features/agent/WsTestComposerMacSection";
 import type { useWsTestComposerWizard } from "@/features/agent/hooks/useWsTestComposerWizard";
@@ -63,6 +64,15 @@ export default function WsTestComposerWizardSteps({
       ) : null}
       {wizard.showPickerStepOnly ? (
         <div className={wizard.showMacSection ? "mt-6" : undefined}>
+          {wizard.showSelectedMacBackLink ? (
+            <SendTaskComposerSelectedMacLink
+              deviceName={
+                composer.macDisplayNameById.get(macDispatchDeviceId) ??
+                "Your Mac"
+              }
+              onBack={wizard.resetMacSelectionStep}
+            />
+          ) : null}
           <SendTaskComposerPickerStep
             capabilities={composer.libraryCapabilities}
             isLoading={composer.isPrefillLoading}

@@ -32,3 +32,9 @@ export const shouldShowWsTestComposerMacSection = (
   (shouldShowWsTestComposerMacSelectionStepOnly(input) ||
     input.isOwnDeviceDispatch ||
     input.isMacDeviceLocked);
+
+export const shouldShowWsTestComposerSelectedMacBackLink = (
+  showPickerStepOnly: boolean,
+  macStepInput: WsTestComposerMacStepInput,
+): boolean =>
+  showPickerStepOnly && !shouldSkipWsTestComposerMacSelectionStep(macStepInput);

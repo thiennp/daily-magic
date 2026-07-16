@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import {
   shouldShowWsTestComposerMacSection,
   shouldShowWsTestComposerMacSelectionStepOnly,
+  shouldShowWsTestComposerSelectedMacBackLink,
   shouldSkipWsTestComposerMacSelectionStep,
 } from "@/features/agent/utils/resolveWsTestComposerMacStep";
 
@@ -83,5 +84,28 @@ describe("shouldShowWsTestComposerMacSection", () => {
         hasCompletedMacSelectionStep: true,
       }),
     ).toBe(true);
+  });
+});
+
+describe("shouldShowWsTestComposerSelectedMacBackLink", () => {
+  it("shows a back link on the picker step after multi-mac selection", () => {
+    expect(shouldShowWsTestComposerSelectedMacBackLink(true, baseInput)).toBe(
+      true,
+    );
+  });
+
+  it("hides the back link when mac selection was skipped", () => {
+    expect(
+      shouldShowWsTestComposerSelectedMacBackLink(true, {
+        ...baseInput,
+        deviceCount: 1,
+      }),
+    ).toBe(false);
+  });
+
+  it("hides the back link outside the picker step", () => {
+    expect(shouldShowWsTestComposerSelectedMacBackLink(false, baseInput)).toBe(
+      false,
+    );
   });
 });

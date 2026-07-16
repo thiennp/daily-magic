@@ -18,21 +18,22 @@ export default function WsTestPanelStatusSection({
   errorMessage = null,
 }: WsTestPanelStatusSectionProps) {
   if (isModal) {
+    if (queueCount === 0 && errorMessage === null) {
+      return null;
+    }
+
     return (
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <ConnectionStatusBadge status={connectionStatus} />
-        <div className="flex flex-col items-end gap-1">
-          {queueCount > 0 ? (
-            <p className="text-sm text-brand-700 dark:text-brand-300">
-              {queueCount} queued
-            </p>
-          ) : null}
-          {errorMessage !== null ? (
-            <p className="text-sm text-rose-600 dark:text-rose-400">
-              {errorMessage}
-            </p>
-          ) : null}
-        </div>
+      <div className="flex flex-wrap items-center justify-end gap-3">
+        {queueCount > 0 ? (
+          <p className="text-sm text-brand-700 dark:text-brand-300">
+            {queueCount} queued
+          </p>
+        ) : null}
+        {errorMessage !== null ? (
+          <p className="text-sm text-rose-600 dark:text-rose-400">
+            {errorMessage}
+          </p>
+        ) : null}
       </div>
     );
   }

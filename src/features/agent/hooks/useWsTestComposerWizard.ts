@@ -6,6 +6,7 @@ import type { WsTestComposerMacStepInput } from "@/features/agent/utils/resolveW
 import {
   shouldShowWsTestComposerMacSection,
   shouldShowWsTestComposerMacSelectionStepOnly,
+  shouldShowWsTestComposerSelectedMacBackLink,
   shouldSkipWsTestComposerMacSelectionStep,
 } from "@/features/agent/utils/resolveWsTestComposerMacStep";
 
@@ -47,17 +48,25 @@ export function useWsTestComposerWizard({
     hasCompletedMacSelectionStep &&
     !hasCompletedPickerStep;
   const showFormStep = !showMacSelectionStepOnly && !showPickerStepOnly;
+  const showSelectedMacBackLink = shouldShowWsTestComposerSelectedMacBackLink(
+    showPickerStepOnly,
+    macStepInput,
+  );
 
   return {
     showMacSection,
     showMacSelectionStepOnly,
     showPickerStepOnly,
     showFormStep,
+    showSelectedMacBackLink,
     completeMacSelectionStep: () => {
       setHasConfirmedMacSelection(true);
     },
     completePickerStep: () => {
       setHasConfirmedPickerSelection(true);
+    },
+    resetMacSelectionStep: () => {
+      setHasConfirmedMacSelection(false);
     },
     shouldSkipMacSelectionStep: () => shouldSkipMacSelectionStep,
     hasCompletedMacSelectionStep,

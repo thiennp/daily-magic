@@ -49,26 +49,30 @@ export default function WsTestPromptComposerPanel(
       onStartWriterAgent: props.onStartWriterAgent,
     });
 
-  return (
-    <AppPanel>
-      <WsTestComposerWizardSteps
-        composer={props.composer}
-        wizard={wizard}
-        writerAgent={props.writerAgent}
-        onWriterAgentChange={props.onWriterAgentChange}
-        isWriterAgentLocked={props.isWriterAgentLocked}
-        isMacDeviceLocked={props.isMacDeviceLocked}
-        macDispatchDeviceId={props.macDispatchDeviceId}
-        isSteppedComposer={props.isSteppedComposer}
-        connectionStatus={props.connectionStatus}
-        isSendDisabled={props.isSendDisabled}
-        onSend={props.onSend}
-        onClear={props.onClear}
-        onQueue={props.onQueue}
-        onDeviceChange={handleDeviceChange}
-        onPickerSelect={handlePickerSelect}
-        onDeviceDeleted={props.onDeviceDeleted}
-      />
-    </AppPanel>
+  const wizardSteps = (
+    <WsTestComposerWizardSteps
+      composer={props.composer}
+      wizard={wizard}
+      writerAgent={props.writerAgent}
+      onWriterAgentChange={props.onWriterAgentChange}
+      isWriterAgentLocked={props.isWriterAgentLocked}
+      isMacDeviceLocked={props.isMacDeviceLocked}
+      macDispatchDeviceId={props.macDispatchDeviceId}
+      isSteppedComposer={props.isSteppedComposer}
+      connectionStatus={props.connectionStatus}
+      isSendDisabled={props.isSendDisabled}
+      onSend={props.onSend}
+      onClear={props.onClear}
+      onQueue={props.onQueue}
+      onDeviceChange={handleDeviceChange}
+      onPickerSelect={handlePickerSelect}
+      onDeviceDeleted={props.onDeviceDeleted}
+    />
   );
+
+  if (props.isSteppedComposer) {
+    return wizardSteps;
+  }
+
+  return <AppPanel>{wizardSteps}</AppPanel>;
 }

@@ -4,6 +4,7 @@ import AppPanel from "@/components/surfaces/AppPanel";
 import SendTaskLibraryPicker from "@/features/agent/SendTaskLibraryPicker";
 import TeamDispatchFields from "@/features/dispatch/TeamDispatchFields";
 import WsTestPromptComposerPanel from "@/features/agent/WsTestPromptComposerPanel";
+import { useShouldShowTeamDispatchSection } from "@/features/agent/hooks/useShouldShowTeamDispatchSection";
 import type { useWsTestTaskComposer } from "@/features/agent/hooks/useWsTestTaskComposer";
 import type { WsTestConnectionStatus } from "@/features/agent/types/WsTestConnectionStatus.type";
 import { revokePairedDevice } from "@/features/agent-witch/utils/pairedDevicesApi";
@@ -40,6 +41,12 @@ export default function WsTestPromptSection({
   onQueue,
   onStartWriterAgent,
 }: WsTestPromptSectionProps) {
+  const shouldShowTeamDispatch = useShouldShowTeamDispatchSection({
+    isLibraryPlaybook: composer.isLibraryPlaybook,
+    isOwnDeviceDispatch: composer.isOwnDeviceDispatch,
+    isSteppedComposer,
+  });
+
   return (
     <>
       {!isSteppedComposer ? (
@@ -53,7 +60,7 @@ export default function WsTestPromptSection({
         </AppPanel>
       ) : null}
 
-      {!composer.isLibraryPlaybook && !composer.isOwnDeviceDispatch ? (
+      {shouldShowTeamDispatch ? (
         <AppPanel>
           <h2 className="text-sm font-medium text-gray-800 dark:text-white/90">
             Who receives this task
