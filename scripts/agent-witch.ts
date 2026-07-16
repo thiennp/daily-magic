@@ -24,6 +24,7 @@ import {
   runWriterTask,
 } from "./agentWitchRunSessions";
 import {
+  buildWriterSessionReadyMessage,
   buildWriterSessionWarmupMessage,
   clearWriterSession,
   isWriterConversationStarted,
@@ -287,6 +288,56 @@ const dispatchWriterTask = async (
   }
 
   markWriterConversationStarted(writerAgent);
+};
+
+const startWriterSession = async (
+  config: AgentWitchConfig,
+  writerAgent: string,
+  requestId: string | undefined,
+  socket: WebSocket,
+): Promise<void> => {
+  if (!isHarnessWriterAgentId(writerAgent)) {
+    sendMessage(socket, {
+      type: "command.writer.session.ready",
+      payload: {
+        writerAgent,
+        output: `Unsupported writer agent: ${writerAgent}\n`,
+        exitCode: -1,
+      },
+      requestId,
+    });
+    return;
+  }
+
+  try {
+    await ensureHarnessWriterCli(config.layout.installDir, writerAgent);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    sendMessage(socket, {
+      type: "command.writer.session.ready",
+      payload: {
+        writerAgent,
+        output: `Failed to prepare ${writerAgent}: ${message}\n`,
+        exitCode: -1,
+      },
+      requestId,
+    });
+    return;
+  }
+
+  if (supportsWriterSessionWarmup(writerAgent)) {
+    markWriterSessionWarmed(writerAgent);
+  }
+
+  sendMessage(socket, {
+    type: "command.writer.session.ready",
+    payload: {
+      writerAgent,
+      output: buildWriterSessionReadyMessage(writerAgent),
+      exitCode: 0,
+    },
+    requestId,
+  });
 };
 
 const runWriterProcess = (
@@ -686,6 +737,20 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
             isHarnessWriterAgentId(writerAgent)
           ) {
             clearWriterSession(writerAgent);
+          }
+        }
+
+        if (
+          parsed.type === "command.writer.session.start" &&
+          isRecord(parsed.payload)
+        ) {
+          const writerAgent = parsed.payload.writerAgent;
+          if (
+            typeof writerAgent === "string" &&
+            isHarnessWriterAgentId(writerAgent)
+          ) {
+            console.log(`[agent-witch] Starting ${writerAgent} session…`);
+            void startWriterSession(config, writerAgent, requestId, socket);
           }
         }
 

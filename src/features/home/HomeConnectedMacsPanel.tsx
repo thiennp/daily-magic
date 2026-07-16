@@ -1,5 +1,7 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+
 import AppPanel from "@/components/surfaces/AppPanel";
 import { APP_SURFACE_CTA_SECONDARY_SM_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
 import ConnectAnotherMacButton from "@/features/home/ConnectAnotherMacButton";
@@ -13,6 +15,7 @@ import {
 } from "@/features/agent-witch/utils/macDevicePresence";
 import { canWakeMacDeviceFromBrowser } from "@/features/agent-witch/macDevices/utils/canWakeMacDeviceFromBrowser";
 import { revokePairedDevice } from "@/features/agent-witch/utils/pairedDevicesApi";
+import buildAgentComposerHref from "@/lib/library/buildAgentComposerHref";
 
 interface HomeConnectedMacsPanelProps {
   readonly installCommand: string;
@@ -25,6 +28,7 @@ export default function HomeConnectedMacsPanel({
   isWebSocketSupported,
   host,
 }: HomeConnectedMacsPanelProps) {
+  const router = useRouter();
   const { devices, displayNameById, isLoading, renameDevice } =
     useHomeConnectedMacs();
   const { localHostname, isWakeServerReachable } = useLocalMacBrowserContext();
@@ -72,6 +76,11 @@ export default function HomeConnectedMacsPanel({
                 isWakeServerReachable,
               })}
               onRenamed={renameDevice}
+              onDelegateTask={(deviceId) => {
+                router.push(buildAgentComposerHref({ deviceId }), {
+                  scroll: false,
+                });
+              }}
               onDelete={async (deviceId) => {
                 await revokePairedDevice(deviceId);
               }}

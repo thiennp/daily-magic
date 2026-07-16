@@ -1,6 +1,5 @@
 import { Suspense } from "react";
 
-import AgentWitchLogo from "@/components/branding/AgentWitchLogo";
 import LoginForm from "@/features/auth/LoginForm";
 import { LOGIN_PAGE_COPY } from "@/features/auth/loginPageCopy.constant";
 import MarketingCard from "@/features/marketing/MarketingCard";
@@ -12,8 +11,7 @@ export default function LoginPage() {
     <MarketingShell showSignIn={false} showFooter={false}>
       <div className="mx-auto grid max-w-5xl gap-10 lg:grid-cols-2 lg:items-center">
         <div>
-          <AgentWitchLogo surface="light" />
-          <h1 className="mt-3 text-3xl font-semibold tracking-tight text-gray-900 sm:text-4xl">
+          <h1 className="text-3xl font-semibold tracking-tight text-gray-900 sm:text-4xl">
             {LOGIN_PAGE_COPY.title}
           </h1>
           <p className="mt-4 text-base text-gray-600">

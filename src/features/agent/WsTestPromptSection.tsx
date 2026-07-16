@@ -18,9 +18,11 @@ interface WsTestPromptSectionProps {
   readonly macDispatchDeviceId: string;
   readonly connectionStatus: WsTestConnectionStatus;
   readonly isSendDisabled: boolean;
+  readonly isSteppedComposer: boolean;
   readonly onSend: () => void;
   readonly onClear: () => void;
   readonly onQueue: () => void;
+  readonly onStartWriterAgent: (writerAgent: HarnessWriterAgent) => void;
 }
 
 export default function WsTestPromptSection({
@@ -32,22 +34,26 @@ export default function WsTestPromptSection({
   macDispatchDeviceId,
   connectionStatus,
   isSendDisabled,
+  isSteppedComposer,
   onSend,
   onClear,
   onQueue,
+  onStartWriterAgent,
 }: WsTestPromptSectionProps) {
   return (
     <>
-      <AppPanel>
-        <SendTaskLibraryPicker
-          capabilities={composer.libraryCapabilities}
-          selectedCapabilityId={composer.selectedLibraryCapabilityId}
-          isLoading={composer.isPrefillLoading}
-          onSelect={composer.setSelectedLibraryCapabilityId}
-        />
-      </AppPanel>
+      {!isSteppedComposer ? (
+        <AppPanel>
+          <SendTaskLibraryPicker
+            capabilities={composer.libraryCapabilities}
+            selectedCapabilityId={composer.selectedLibraryCapabilityId}
+            isLoading={composer.isPrefillLoading}
+            onSelect={composer.setSelectedLibraryCapabilityId}
+          />
+        </AppPanel>
+      ) : null}
 
-      {!composer.isLibraryPlaybook ? (
+      {!composer.isLibraryPlaybook && !composer.isOwnDeviceDispatch ? (
         <AppPanel>
           <h2 className="text-sm font-medium text-gray-800 dark:text-white/90">
             Who receives this task
@@ -73,11 +79,13 @@ export default function WsTestPromptSection({
         isMacDeviceLocked={isMacDeviceLocked}
         macDispatchDeviceId={macDispatchDeviceId}
         showMacPicker={!composer.isTeamDispatch}
+        isSteppedComposer={isSteppedComposer}
         connectionStatus={connectionStatus}
         isSendDisabled={isSendDisabled}
         onSend={onSend}
         onClear={onClear}
         onQueue={onQueue}
+        onStartWriterAgent={onStartWriterAgent}
         onDeviceDeleted={async (deviceId) => {
           await revokePairedDevice(deviceId);
         }}

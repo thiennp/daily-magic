@@ -1,5 +1,6 @@
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
 import type { AgentWitchInstructionMessageType } from "@/lib/agentWitch/instructions/agentWitchInstructionDocument.type";
+import { AGENT_WITCH_INSTRUCTION_WRITER_SESSION_MESSAGE_TYPES } from "@/lib/agentWitch/instructions/agentWitchInstructionWriterSessionMessageTypes.constant";
 
 export const AGENT_WITCH_INSTRUCTION_MESSAGE_TYPES: readonly AgentWitchInstructionMessageType[] =
   [
@@ -39,12 +40,7 @@ export const AGENT_WITCH_INSTRUCTION_MESSAGE_TYPES: readonly AgentWitchInstructi
       direction: "browser_to_mac",
       purpose: "Browser forwards the user's answer to the Mac agent.",
     },
-    {
-      type: AGENT_WITCH_MESSAGE_TYPES.COMMAND_WRITER_SESSION_END,
-      direction: "browser_to_mac",
-      purpose:
-        "Browser tells the Mac agent to clear a persisted writer CLI session.",
-    },
+    ...AGENT_WITCH_INSTRUCTION_WRITER_SESSION_MESSAGE_TYPES,
     {
       type: AGENT_WITCH_MESSAGE_TYPES.DISPATCH_APPROVAL_REQUIRED,
       direction: "mac_to_browser",

@@ -7,12 +7,15 @@ describe("buildAgentComposerHref", () => {
     expect(buildAgentComposerHref()).toBe("/?sendTask=1");
   });
 
-  it("preserves library and prompt prefill params", () => {
+  it("preserves library, prompt, and device prefill params", () => {
     expect(
       buildAgentComposerHref({
         libraryCapabilityId: "cap-1",
         prompt: "hello",
+        deviceId: "device-1",
       }),
-    ).toBe("/?sendTask=1&libraryCapabilityId=cap-1&prompt=hello");
+    ).toBe(
+      "/?sendTask=1&libraryCapabilityId=cap-1&prompt=hello&deviceId=device-1",
+    );
   });
 });

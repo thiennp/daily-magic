@@ -4,10 +4,11 @@ import { useState } from "react";
 
 import { Dropdown } from "@/components/ui/dropdown/Dropdown";
 import { DropdownItem } from "@/components/ui/dropdown/DropdownItem";
-import { MoreDotIcon, PencilIcon, TrashBinIcon } from "@/icons";
+import { MoreDotIcon, PaperPlaneIcon, PencilIcon, TrashBinIcon } from "@/icons";
 
 interface MacDeviceRowMenuProps {
   readonly onEdit: () => void;
+  readonly onDelegateTask?: () => void;
   readonly onDelete?: () => void;
 }
 
@@ -17,6 +18,7 @@ const stopRowSelection = (event: { stopPropagation: () => void }) => {
 
 export default function MacDeviceRowMenu({
   onEdit,
+  onDelegateTask,
   onDelete,
 }: MacDeviceRowMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
@@ -28,6 +30,11 @@ export default function MacDeviceRowMenu({
   const handleEdit = () => {
     closeMenu();
     onEdit();
+  };
+
+  const handleDelegateTask = () => {
+    closeMenu();
+    onDelegateTask?.();
   };
 
   const handleDelete = () => {
@@ -72,6 +79,17 @@ export default function MacDeviceRowMenu({
               <span>Edit</span>
             </DropdownItem>
           </li>
+          {onDelegateTask ? (
+            <li>
+              <DropdownItem
+                onClick={handleDelegateTask}
+                baseClassName="flex w-full items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-white/5"
+              >
+                <PaperPlaneIcon className="h-4 w-4 shrink-0" />
+                <span>Delegate task</span>
+              </DropdownItem>
+            </li>
+          ) : null}
           {onDelete ? (
             <li>
               <DropdownItem

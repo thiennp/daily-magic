@@ -1,12 +1,10 @@
 "use client";
 
 import AppPanel from "@/components/surfaces/AppPanel";
-import DelegatedWriterAgentField from "@/features/agent/DelegatedWriterAgentField";
-import WsTestComposerFooter from "@/features/agent/WsTestComposerFooter";
-import WsTestComposerMacSection from "@/features/agent/WsTestComposerMacSection";
-import WsTestOperatorStepsSection from "@/features/agent/WsTestOperatorStepsSection";
+import { useWsTestComposerPanelActions } from "@/features/agent/hooks/useWsTestComposerPanelActions";
+import { useWsTestComposerWizard } from "@/features/agent/hooks/useWsTestComposerWizard";
 import type { useWsTestTaskComposer } from "@/features/agent/hooks/useWsTestTaskComposer";
-import WsTestTaskInputsSection from "@/features/agent/WsTestTaskInputsSection";
+import WsTestComposerWizardSteps from "@/features/agent/WsTestComposerWizardSteps";
 import type { WsTestConnectionStatus } from "@/features/agent/types/WsTestConnectionStatus.type";
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
 
@@ -18,76 +16,58 @@ interface WsTestPromptComposerPanelProps {
   readonly isMacDeviceLocked: boolean;
   readonly macDispatchDeviceId: string;
   readonly showMacPicker: boolean;
+  readonly isSteppedComposer: boolean;
   readonly connectionStatus: WsTestConnectionStatus;
   readonly isSendDisabled: boolean;
   readonly onSend: () => void;
   readonly onClear: () => void;
   readonly onQueue: () => void;
+  readonly onStartWriterAgent: (writerAgent: HarnessWriterAgent) => void;
   readonly onDeviceDeleted?: (deviceId: string) => void | Promise<void>;
 }
 
-export default function WsTestPromptComposerPanel({
-  composer,
-  writerAgent,
-  onWriterAgentChange,
-  isWriterAgentLocked,
-  isMacDeviceLocked,
-  macDispatchDeviceId,
-  showMacPicker,
-  connectionStatus,
-  isSendDisabled,
-  onSend,
-  onClear,
-  onQueue,
-  onDeviceDeleted,
-}: WsTestPromptComposerPanelProps) {
+export default function WsTestPromptComposerPanel(
+  props: WsTestPromptComposerPanelProps,
+) {
+  const wizard = useWsTestComposerWizard({
+    isSteppedComposer: props.isSteppedComposer,
+    macStepInput: {
+      showMacPicker: props.showMacPicker,
+      isOwnDeviceDispatch: props.composer.isOwnDeviceDispatch,
+      isMacDeviceLocked: props.isMacDeviceLocked,
+      isMacDevicesLoading: props.composer.isMacDevicesLoading,
+      deviceCount: props.composer.macDevices.length,
+    },
+    hasPrefilledLibraryCapability:
+      props.composer.selectedLibraryCapabilityId.length > 0,
+  });
+  const { handleDeviceChange, handlePickerSelect } =
+    useWsTestComposerPanelActions({
+      composer: props.composer,
+      wizard,
+      onWriterAgentChange: props.onWriterAgentChange,
+      onStartWriterAgent: props.onStartWriterAgent,
+    });
+
   return (
     <AppPanel>
-      {showMacPicker ? (
-        <WsTestComposerMacSection
-          isLibraryPlaybook={composer.isLibraryPlaybook}
-          devices={composer.macDevices}
-          displayNameById={composer.macDisplayNameById}
-          selectedDeviceId={macDispatchDeviceId}
-          isLoading={composer.isMacDevicesLoading}
-          disabled={isMacDeviceLocked}
-          onDeviceChange={composer.setSelectedDeviceId}
-          onDeviceRenamed={composer.renameMacDevice}
-          onDeviceDeleted={onDeviceDeleted}
-        />
-      ) : null}
-      <div className={showMacPicker ? "mt-6" : undefined}>
-        <DelegatedWriterAgentField
-          writerAgent={writerAgent}
-          onWriterAgentChange={onWriterAgentChange}
-          disabled={isWriterAgentLocked}
-        />
-      </div>
-      <div className="mt-6">
-        <WsTestOperatorStepsSection operatorSteps={composer.operatorSteps} />
-      </div>
-      <div className="mt-6">
-        <WsTestTaskInputsSection
-          isWorkflowTask={composer.isWorkflowTask}
-          useMobileStepper={
-            composer.isLibraryPlaybook && composer.isWorkflowTask
-          }
-          prompt={composer.prompt}
-          workflowFields={composer.workflowFields}
-          workflowFieldValues={composer.workflowFieldValues}
-          workflowValidationErrors={composer.workflowValidationErrors}
-          onPromptChange={composer.setPrompt}
-          onWorkflowFieldChange={composer.onWorkflowFieldChange}
-        />
-      </div>
-      <WsTestComposerFooter
-        composer={composer}
-        macDispatchDeviceId={macDispatchDeviceId}
-        connectionStatus={connectionStatus}
-        isSendDisabled={isSendDisabled}
-        onSend={onSend}
-        onClear={onClear}
-        onQueue={onQueue}
+      <WsTestComposerWizardSteps
+        composer={props.composer}
+        wizard={wizard}
+        writerAgent={props.writerAgent}
+        onWriterAgentChange={props.onWriterAgentChange}
+        isWriterAgentLocked={props.isWriterAgentLocked}
+        isMacDeviceLocked={props.isMacDeviceLocked}
+        macDispatchDeviceId={props.macDispatchDeviceId}
+        isSteppedComposer={props.isSteppedComposer}
+        connectionStatus={props.connectionStatus}
+        isSendDisabled={props.isSendDisabled}
+        onSend={props.onSend}
+        onClear={props.onClear}
+        onQueue={props.onQueue}
+        onDeviceChange={handleDeviceChange}
+        onPickerSelect={handlePickerSelect}
+        onDeviceDeleted={props.onDeviceDeleted}
       />
     </AppPanel>
   );

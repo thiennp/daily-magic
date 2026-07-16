@@ -5,6 +5,7 @@ import buildAgentComposerHref from "@/lib/library/buildAgentComposerHref";
 interface AgentPageSearchParams {
   readonly libraryCapabilityId?: string | string[];
   readonly prompt?: string | string[];
+  readonly deviceId?: string | string[];
 }
 
 const readSearchParam = (
@@ -22,6 +23,7 @@ export default async function AgentPage({
     buildAgentComposerHref({
       libraryCapabilityId: readSearchParam(params.libraryCapabilityId),
       prompt: readSearchParam(params.prompt),
+      deviceId: readSearchParam(params.deviceId),
     }),
   );
 }

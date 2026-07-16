@@ -35,3 +35,21 @@ export const formatWriterCliDisplayCommand = (
 
   return `agy -p --dangerously-skip-permissions "${escaped}"`;
 };
+
+export const formatWriterSessionStartDisplayCommand = (
+  writerAgent: HarnessWriterAgent,
+): string => {
+  if (writerAgent === "claude-cli") {
+    return "claude";
+  }
+
+  if (writerAgent === "codex") {
+    return "codex";
+  }
+
+  if (writerAgent === "cursor") {
+    return "cursor agent";
+  }
+
+  return "agy";
+};

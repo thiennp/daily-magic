@@ -16,6 +16,8 @@ import {
 import { handleDispatchApprovalRespondAsync } from "@/lib/dispatch/handleDispatchApprovalRespond";
 import { handleTerminalStreamMessageAsync } from "@/lib/dispatch/handleTerminalStreamMessageAsync";
 import { handleWriterSessionEndMessageAsync } from "@/lib/dispatch/handleWriterSessionEndMessageAsync";
+import { handleWriterSessionReadyMessageAsync } from "@/lib/dispatch/handleWriterSessionReadyMessageAsync";
+import { handleWriterSessionStartMessageAsync } from "@/lib/dispatch/handleWriterSessionStartMessageAsync";
 
 const isTerminalStreamMessage = (type: string): boolean =>
   type === AGENT_WITCH_MESSAGE_TYPES.TERMINAL_STREAM_START ||
@@ -64,6 +66,14 @@ export const routeAgentWitchMessageAsync = async (
 
   if (message.type === AGENT_WITCH_MESSAGE_TYPES.COMMAND_WRITER_SESSION_END) {
     return handleWriterSessionEndMessageAsync(hub, message, sender);
+  }
+
+  if (message.type === AGENT_WITCH_MESSAGE_TYPES.COMMAND_WRITER_SESSION_START) {
+    return handleWriterSessionStartMessageAsync(hub, message, sender);
+  }
+
+  if (message.type === AGENT_WITCH_MESSAGE_TYPES.COMMAND_WRITER_SESSION_READY) {
+    return handleWriterSessionReadyMessageAsync(hub, message, sender);
   }
 
   if (message.type === AGENT_WITCH_MESSAGE_TYPES.DISPATCH_APPROVAL_RESPOND) {

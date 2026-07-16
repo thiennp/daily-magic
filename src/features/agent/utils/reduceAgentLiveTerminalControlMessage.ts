@@ -5,12 +5,20 @@ import type { AgentLiveTerminalState } from "./agentLiveTerminalState.type";
 import { appendAgentLiveTerminalCommand } from "./agentLiveTerminalPrompt.constant";
 import { matchesActiveRun, readRunId } from "./agentLiveTerminalMessageUtils";
 import { reduceAgentLiveTerminalApprovalMessage } from "./reduceAgentLiveTerminalApprovalMessage";
+import {
+  isWriterSessionReadyMessage,
+  reduceAgentLiveTerminalWriterSessionReady,
+} from "./reduceAgentLiveTerminalWriterSessionReady";
 
 export const reduceAgentLiveTerminalControlMessage = (
   state: AgentLiveTerminalState,
   parsed: Record<string, unknown>,
   payload: Record<string, unknown>,
 ): AgentLiveTerminalState => {
+  if (isWriterSessionReadyMessage(parsed)) {
+    return reduceAgentLiveTerminalWriterSessionReady(state, payload);
+  }
+
   if (parsed.type === AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ACK) {
     const runId = readRunId(payload);
     if (runId === null) {

@@ -25,8 +25,7 @@ export default function SendTaskModal({ isOpen, onClose }: SendTaskModalProps) {
           Send a task
         </h2>
         <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
-          Pick a saved workflow or agent, or write a custom task for your Mac or
-          a teammate.
+          Choose a Mac, pick a workflow or agent, then describe what should run.
         </p>
       </div>
       <div className="mt-6">

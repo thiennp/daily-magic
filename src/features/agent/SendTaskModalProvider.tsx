@@ -23,6 +23,7 @@ interface SendTaskModalContextValue {
   readonly openSendTaskModal: (input?: {
     readonly libraryCapabilityId?: string;
     readonly prompt?: string;
+    readonly deviceId?: string;
   }) => void;
   readonly closeSendTaskModal: () => void;
 }
@@ -58,6 +59,7 @@ function SendTaskModalController({
     (input?: {
       readonly libraryCapabilityId?: string;
       readonly prompt?: string;
+      readonly deviceId?: string;
     }) => {
       router.push(buildAgentComposerHref(input), { scroll: false });
     },

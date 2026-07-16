@@ -64,3 +64,15 @@ export const buildWriterSessionWarmupMessage = (
 
   return "";
 };
+
+const WRITER_SESSION_READY_LABELS: Record<HarnessWriterAgentId, string> = {
+  "claude-cli": "Claude",
+  codex: "Codex",
+  cursor: "Cursor",
+  antigravity: "Antigravity",
+};
+
+export const buildWriterSessionReadyMessage = (
+  writerAgent: HarnessWriterAgentId,
+): string =>
+  `${WRITER_SESSION_READY_LABELS[writerAgent]} is ready on your Mac.\nSend a task from the box below when you are ready.\n`;

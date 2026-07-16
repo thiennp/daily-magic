@@ -3,9 +3,7 @@
 import { useState } from "react";
 
 import MacDeviceOfflineWakeHint from "@/features/agent-witch/macDevices/MacDeviceOfflineWakeHint";
-import MacDeviceRowMainContent from "@/features/agent-witch/macDevices/MacDeviceRowMainContent";
-import MacDeviceRowMenu from "@/features/agent-witch/macDevices/MacDeviceRowMenu";
-import confirmMacDeviceRevoke from "@/features/agent-witch/macDevices/utils/confirmMacDeviceRevoke";
+import MacDeviceRowInner from "@/features/agent-witch/macDevices/MacDeviceRowInner";
 import { resolveMacPresenceTier } from "@/features/agent-witch/utils/macDevicePresence";
 
 interface MacDeviceRowProps {
@@ -18,6 +16,7 @@ interface MacDeviceRowProps {
   readonly isWakeServerReachable?: boolean;
   readonly onSelect?: () => void;
   readonly onRenamed: (deviceId: string, deviceLabel: string) => void;
+  readonly onDelegateTask?: (deviceId: string) => void;
   readonly onDelete?: (deviceId: string) => void | Promise<void>;
 }
 
@@ -31,64 +30,25 @@ export default function MacDeviceRow({
   isWakeServerReachable = false,
   onSelect,
   onRenamed,
+  onDelegateTask,
   onDelete,
 }: MacDeviceRowProps) {
   const [isEditing, setIsEditing] = useState(false);
 
-  const mainContent = (
-    <MacDeviceRowMainContent
+  const rowInner = (
+    <MacDeviceRowInner
       deviceId={deviceId}
       displayName={displayName}
       isOnline={isOnline}
       detailText={detailText}
+      isSelected={isSelected}
       isEditing={isEditing}
+      onSelect={onSelect}
       onEditingChange={setIsEditing}
       onRenamed={onRenamed}
+      onDelegateTask={onDelegateTask}
+      onDelete={onDelete}
     />
-  );
-
-  const rowSurfaceClassName =
-    onSelect !== undefined && isSelected
-      ? "bg-brand-50/60 dark:bg-brand-950/20"
-      : "hover:bg-gray-50 dark:hover:bg-white/[0.03]";
-
-  const rowInner = (
-    <div
-      className={`group flex w-full items-center gap-3 rounded-lg py-1 ${rowSurfaceClassName}`}
-    >
-      {onSelect !== undefined ? (
-        <div
-          role="button"
-          tabIndex={0}
-          className="min-w-0 flex-1 text-left"
-          onClick={onSelect}
-          onKeyDown={(event) => {
-            if (event.key === "Enter" || event.key === " ") {
-              event.preventDefault();
-              onSelect();
-            }
-          }}
-        >
-          {mainContent}
-        </div>
-      ) : (
-        mainContent
-      )}
-      {isEditing ? null : (
-        <MacDeviceRowMenu
-          onEdit={() => {
-            setIsEditing(true);
-          }}
-          onDelete={
-            onDelete
-              ? () => {
-                  confirmMacDeviceRevoke(displayName, deviceId, onDelete);
-                }
-              : undefined
-          }
-        />
-      )}
-    </div>
   );
 
   const wrappedRow =

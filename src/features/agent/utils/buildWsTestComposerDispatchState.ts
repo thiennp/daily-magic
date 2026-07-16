@@ -25,6 +25,7 @@ export const buildWsTestComposerDispatchState = (input: {
   readonly renameMacDevice: ReturnType<
     typeof useMacDeviceSelection
   >["renameDevice"];
+  readonly isOwnDeviceDispatch: boolean;
   readonly isSendDisabled: (
     connectionStatus: string,
     deviceId?: string,
@@ -57,6 +58,7 @@ export const buildWsTestComposerDispatchState = (input: {
     devicesHadLoadError: input.macSelection.devicesHadLoadError,
     refreshMacDevices: input.macSelection.refreshDevices,
     renameMacDevice: input.macSelection.renameDevice,
+    isOwnDeviceDispatch: input.macSelection.isOwnDeviceDispatch,
     isSendDisabled: (connectionStatus: string, deviceId?: string) =>
       buildWsTestSendDisabledState({
         connectionStatus,

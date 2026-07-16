@@ -16,6 +16,8 @@ interface WsTestPanelDelegationSectionProps {
   readonly writerAgent: HarnessWriterAgent;
   readonly onWriterAgentChange: (value: HarnessWriterAgent) => void;
   readonly promptHandlers: ReturnType<typeof useWsTestPromptHandlers>;
+  readonly isSteppedComposer: boolean;
+  readonly onStartWriterAgent: (writerAgent: HarnessWriterAgent) => void;
 }
 
 export default function WsTestPanelDelegationSection({
@@ -25,6 +27,8 @@ export default function WsTestPanelDelegationSection({
   writerAgent,
   onWriterAgentChange,
   promptHandlers,
+  isSteppedComposer,
+  onStartWriterAgent,
 }: WsTestPanelDelegationSectionProps) {
   return (
     <WsTestPromptSection
@@ -39,9 +43,11 @@ export default function WsTestPanelDelegationSection({
         connectionStatus,
         sessionTargets.activeDeviceId,
       )}
+      isSteppedComposer={isSteppedComposer}
       onSend={promptHandlers.onSend}
       onQueue={promptHandlers.onQueue}
       onClear={promptHandlers.onClear}
+      onStartWriterAgent={onStartWriterAgent}
     />
   );
 }

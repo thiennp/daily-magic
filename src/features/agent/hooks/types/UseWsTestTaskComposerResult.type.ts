@@ -14,6 +14,7 @@ export interface UseWsTestTaskComposerResult {
   readonly setSelectedTargetUserId: (value: string) => void;
   readonly setSelectedCapabilityId: (value: string) => void;
   readonly isTeamDispatch: boolean;
+  readonly isOwnDeviceDispatch: boolean;
   readonly isWorkflowTask: boolean;
   readonly isLibraryPlaybook: boolean;
   readonly libraryCapabilityId: string;

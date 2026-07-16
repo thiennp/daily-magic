@@ -33,9 +33,8 @@ export default function HomeDashboardHero({ user }: HomeDashboardHeroProps) {
         Welcome back, {displayName}
       </h1>
       <p className={`mt-3 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
-        Your workspace for agent work—start tasks here, review outcomes, and
-        pick up where you left off. Signed in as {user.email} (
-        {formatGlobalRole(user.globalRole)}).
+        Start agent tasks here and review results when they finish. Signed in as{" "}
+        {user.email} ({formatGlobalRole(user.globalRole)}).
       </p>
       <div className="mt-6">
         <Link

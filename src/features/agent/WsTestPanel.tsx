@@ -101,6 +101,14 @@ export default function WsTestPanel({ variant = "page" }: WsTestPanelProps) {
           writerAgent={sessionTargets.activeWriterAgent}
           onWriterAgentChange={setWriterAgent}
           promptHandlers={promptHandlers}
+          isSteppedComposer={variant === "modal"}
+          onStartWriterAgent={(writerAgent) => {
+            setWriterAgent(writerAgent);
+            socket.startWriterSession(
+              writerAgent,
+              sessionTargets.activeDeviceId,
+            );
+          }}
         />
       )}
     </div>

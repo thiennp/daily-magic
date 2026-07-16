@@ -1,6 +1,7 @@
 interface BuildAgentComposerHrefInput {
   readonly libraryCapabilityId?: string;
   readonly prompt?: string;
+  readonly deviceId?: string;
 }
 
 const SEND_TASK_MODAL_QUERY_PARAM = "sendTask";
@@ -17,6 +18,10 @@ export default function buildAgentComposerHref(
 
   if (input.prompt) {
     params.set("prompt", input.prompt);
+  }
+
+  if (input.deviceId) {
+    params.set("deviceId", input.deviceId);
   }
 
   return `/?${params.toString()}`;

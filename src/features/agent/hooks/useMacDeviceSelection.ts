@@ -1,11 +1,13 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
 
 import {
   canDispatchToMac,
   pickDefaultMacDeviceId,
 } from "@/features/agent-witch/utils/macDevicePresence";
+import { SEND_TASK_DEVICE_ID_QUERY_PARAM } from "@/features/agent/constants/sendTaskModalQuery.constant";
 import useMyMacDevices from "@/features/agent/hooks/useMyMacDevices";
 
 const useMacDeviceSelection = (): {
@@ -21,6 +23,7 @@ const useMacDeviceSelection = (): {
   readonly devicesHadLoadError: boolean;
   readonly refreshDevices: () => Promise<void>;
   readonly renameDevice: ReturnType<typeof useMyMacDevices>["renameDevice"];
+  readonly isOwnDeviceDispatch: boolean;
 } => {
   const {
     devices,
@@ -30,7 +33,11 @@ const useMacDeviceSelection = (): {
     refresh: refreshDevices,
     renameDevice,
   } = useMyMacDevices();
-  const [preferredDeviceId, setPreferredDeviceId] = useState("");
+  const searchParams = useSearchParams();
+  const deviceIdFromQuery =
+    searchParams.get(SEND_TASK_DEVICE_ID_QUERY_PARAM) ?? "";
+  const [manualDeviceId, setManualDeviceId] = useState<string | null>(null);
+  const preferredDeviceId = manualDeviceId ?? deviceIdFromQuery;
 
   const selectedDeviceId = useMemo(() => {
     if (devices.length === 0) {
@@ -54,13 +61,14 @@ const useMacDeviceSelection = (): {
     devices,
     displayNameById,
     selectedDeviceId,
-    setSelectedDeviceId: setPreferredDeviceId,
+    setSelectedDeviceId: setManualDeviceId,
     isLoading,
     hasDispatchReadyMac: dispatchReadyMacCount > 0,
     dispatchReadyMacCount,
     devicesHadLoadError,
     refreshDevices,
     renameDevice,
+    isOwnDeviceDispatch: deviceIdFromQuery.length > 0,
   };
 };
 
