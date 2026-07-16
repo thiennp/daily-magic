@@ -42,7 +42,10 @@ export async function replayPendingDispatchApprovalsForUser(
 
     notifyDashboardUser(hub, executorUserId, approvalMessage);
 
-    const agentClient = hub.findAgentClientForUser(executorUserId);
+    const agentClient = hub.findAgentClientForUser(
+      executorUserId,
+      pending.deviceId ?? undefined,
+    );
     if (agentClient !== undefined) {
       agentClient.send(approvalMessage);
     }

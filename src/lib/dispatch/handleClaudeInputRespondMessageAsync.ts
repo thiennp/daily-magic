@@ -68,20 +68,30 @@ export const handleClaudeInputRespondMessageAsync = async (
     };
   }
 
-  const agentClient = runtime.findAgentClientForUser(pending.executorUserId);
+  const run = await getAgentRunById(agentRunId);
+  const originalPrompt = run?.prompt ?? "";
+  const targetDeviceId =
+    run?.deviceId !== null && run?.deviceId !== undefined
+      ? run.deviceId
+      : undefined;
+
+  const agentClient = runtime.findAgentClientForUser(
+    pending.executorUserId,
+    targetDeviceId,
+  );
 
   if (agentClient === undefined) {
     return {
       type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR,
       payload: {
-        errorMessage: "No Mac is connected for this run.",
+        errorMessage:
+          targetDeviceId !== undefined
+            ? "The Mac for this run is not online right now."
+            : "No Mac is connected for this run.",
       },
       requestId: message.requestId,
     };
   }
-
-  const run = await getAgentRunById(agentRunId);
-  const originalPrompt = run?.prompt ?? "";
 
   dispatchAgentRunInputRegistry.remove(agentRunId);
 

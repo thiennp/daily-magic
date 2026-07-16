@@ -51,7 +51,10 @@ export const approveDispatchApproval = async (
   runId: string,
   requestId?: string,
 ): Promise<AgentWitchMessage> => {
-  const agentClient = runtime.findAgentClientForUser(pending.executorUserId);
+  const agentClient = runtime.findAgentClientForUser(
+    pending.executorUserId,
+    pending.deviceId ?? undefined,
+  );
   const writerAgent = isHarnessWriterAgent(pending.writerAgent)
     ? pending.writerAgent
     : DEFAULT_DELEGATED_WRITER_AGENT;

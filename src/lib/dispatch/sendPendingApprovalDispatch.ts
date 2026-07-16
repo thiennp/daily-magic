@@ -32,6 +32,7 @@ export const sendPendingApprovalDispatch = (
     prompt,
     groupId,
     writerAgent,
+    deviceId: run.deviceId,
     requestId,
     approvalExpiresAt,
   });

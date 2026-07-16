@@ -34,6 +34,7 @@ export const useWsTestMacSession = (input: {
     pendingInput: input.socket.liveTerminalPendingInput,
     sessionWriterAgent: input.socket.sessionWriterAgent,
     sessionDeviceId: input.socket.sessionDeviceId,
+    activeDeviceId: input.sessionTargets.activeDeviceId,
     activeWriterAgent: input.sessionTargets.activeWriterAgent,
     composer: input.composer,
     sendClaudePrompt: input.socket.sendClaudePrompt,

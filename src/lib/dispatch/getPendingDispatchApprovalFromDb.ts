@@ -36,5 +36,6 @@ export async function getPendingDispatchApprovalFromDb(
     writerAgent: isHarnessWriterAgent(run.writerAgent)
       ? run.writerAgent
       : DEFAULT_DELEGATED_WRITER_AGENT,
+    deviceId: run.deviceId,
   };
 }

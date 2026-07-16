@@ -5,6 +5,7 @@ export interface PendingDispatchApproval {
   readonly prompt: string;
   readonly groupId: string | null;
   readonly writerAgent: string;
+  readonly deviceId?: string | null;
   readonly requestId?: string;
   readonly approvalExpiresAt?: string | null;
 }

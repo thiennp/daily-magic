@@ -20,6 +20,7 @@ export const useAgentLiveTerminalFeedback = (input: {
   readonly pendingInput: AgentRunInputRequest | null;
   readonly sessionWriterAgent: HarnessWriterAgent | null;
   readonly sessionDeviceId: string | null;
+  readonly activeDeviceId: string;
   readonly activeWriterAgent: HarnessWriterAgent;
   readonly composer: ReturnType<typeof useWsTestTaskComposer>;
   readonly sendClaudePrompt: ReturnType<
@@ -45,15 +46,15 @@ export const useAgentLiveTerminalFeedback = (input: {
         buildWsTestSendOptions(
           input.composer,
           input.activeWriterAgent,
-          input.sessionDeviceId ?? undefined,
+          input.activeDeviceId,
         ),
       );
     },
     [
+      input.activeDeviceId,
       input.activeWriterAgent,
       input.composer,
       input.sendClaudePrompt,
-      input.sessionDeviceId,
     ],
   );
 
