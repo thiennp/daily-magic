@@ -1,3 +1,4 @@
+import automateRecurringWorkWithoutHeadcount from "@/features/showcases/articles/automateRecurringWorkWithoutHeadcount.article";
 import automateForYourselfOrYourTeam from "@/features/showcases/articles/automateForYourselfOrYourTeam.article";
 import companyOnboardIn30Minutes from "@/features/showcases/articles/companyOnboardIn30Minutes.article";
 import companyWorkflowsSetupOnce from "@/features/showcases/articles/companyWorkflowsSetupOnce.article";
@@ -19,6 +20,7 @@ import runAgainWithoutRetyping from "@/features/showcases/articles/runAgainWitho
 import saveTeammateWorkflowOneTap from "@/features/showcases/articles/saveTeammateWorkflowOneTap.article";
 import scheduleWorkflowOnYourMac from "@/features/showcases/articles/scheduleWorkflowOnYourMac.article";
 import seeWhatTheAgentDid from "@/features/showcases/articles/seeWhatTheAgentDid.article";
+import standardizeAiWorkAcrossTheTeam from "@/features/showcases/articles/standardizeAiWorkAcrossTheTeam.article";
 import standupFromLocalBranch from "@/features/showcases/articles/standupFromLocalBranch.article";
 import stopCopyPasteEveryMonday from "@/features/showcases/articles/stopCopyPasteEveryMonday.article";
 import stopMemorizingPrompts from "@/features/showcases/articles/stopMemorizingPrompts.article";
@@ -53,6 +55,11 @@ export const SHOWCASE_ARTICLES_PHASE_2: readonly ShowcaseArticle[] = [
   phoneAsksCoworkerMacRuns,
 ] as const;
 
+export const SHOWCASE_ARTICLES_PHASE_LEADERSHIP: readonly ShowcaseArticle[] = [
+  automateRecurringWorkWithoutHeadcount,
+  standardizeAiWorkAcrossTheTeam,
+] as const;
+
 export const SHOWCASE_ARTICLES_PHASE_3: readonly ShowcaseArticle[] = [
   companyOnboardIn30Minutes,
   requestSensitiveWorkWithApproval,
@@ -77,71 +84,13 @@ export const SHOWCASE_ARTICLES_PHASE_4: readonly ShowcaseArticle[] = [
 export const SHOWCASE_ARTICLES: readonly ShowcaseArticle[] = [
   ...SHOWCASE_ARTICLES_PHASE_1,
   ...SHOWCASE_ARTICLES_PHASE_2,
+  ...SHOWCASE_ARTICLES_PHASE_LEADERSHIP,
   ...SHOWCASE_ARTICLES_PHASE_3,
   ...SHOWCASE_ARTICLES_PHASE_4,
-] as const;
-
-export const HOME_FEATURED_SHOWCASE_SLUGS: readonly string[] = [
-  automateForYourselfOrYourTeam.slug,
-  onboardIn15Minutes.slug,
-  firstAgentTaskIn5Minutes.slug,
-] as const;
-
-export const HOME_MORE_SHOWCASE_SLUGS: readonly string[] = [
-  managerApprovesBeforeRun.slug,
-  scheduleWorkflowOnYourMac.slug,
-  humanCheckpointsBeforeMacRuns.slug,
-  standupFromLocalBranch.slug,
-] as const;
-
-export const HOME_TEAMS_SHOWCASE_SLUGS: readonly string[] = [
-  companyOnboardIn30Minutes.slug,
-  requestSensitiveWorkWithApproval.slug,
-  newHiresCompanyPlaybooks.slug,
-] as const;
-
-export const HOME_OBJECTIONS_SHOWCASE_SLUGS: readonly string[] = [
-  notASlackReplacement.slug,
-  worksWithoutN8n.slug,
-  whyLocalMacNotCloud.slug,
 ] as const;
 
 export function getShowcaseArticleBySlug(
   slug: string,
 ): ShowcaseArticle | undefined {
   return SHOWCASE_ARTICLES.find((article) => article.slug === slug);
-}
-
-function resolveShowcasesBySlugs(
-  slugs: readonly string[],
-): readonly ShowcaseArticle[] {
-  return slugs.flatMap((slug) => {
-    const article = getShowcaseArticleBySlug(slug);
-    return article ? [article] : [];
-  });
-}
-
-export function getHomeFeaturedShowcases(): readonly ShowcaseArticle[] {
-  return resolveShowcasesBySlugs(HOME_FEATURED_SHOWCASE_SLUGS);
-}
-
-export function getHomeMoreShowcases(): readonly ShowcaseArticle[] {
-  return resolveShowcasesBySlugs(HOME_MORE_SHOWCASE_SLUGS);
-}
-
-export function getHomeTeamsShowcases(): readonly ShowcaseArticle[] {
-  return resolveShowcasesBySlugs(HOME_TEAMS_SHOWCASE_SLUGS);
-}
-
-export function getHomeObjectionsShowcases(): readonly ShowcaseArticle[] {
-  return resolveShowcasesBySlugs(HOME_OBJECTIONS_SHOWCASE_SLUGS);
-}
-
-export function getHomeAllShowcaseSlugsForSeo(): readonly ShowcaseArticle[] {
-  return [
-    ...getHomeFeaturedShowcases(),
-    ...getHomeMoreShowcases(),
-    ...getHomeTeamsShowcases(),
-    ...getHomeObjectionsShowcases(),
-  ];
 }

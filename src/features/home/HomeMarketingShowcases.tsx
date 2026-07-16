@@ -12,7 +12,7 @@ import {
   getHomeMoreShowcases,
   getHomeObjectionsShowcases,
   getHomeTeamsShowcases,
-} from "@/features/showcases/showcaseArticleRegistry";
+} from "@/features/showcases/homeShowcaseRegistry";
 
 export default function HomeMarketingShowcases() {
   const featured = getHomeFeaturedShowcases();

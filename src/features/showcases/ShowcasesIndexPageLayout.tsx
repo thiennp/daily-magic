@@ -6,6 +6,7 @@ import {
   SHOWCASE_ARTICLES_PHASE_2,
   SHOWCASE_ARTICLES_PHASE_3,
   SHOWCASE_ARTICLES_PHASE_4,
+  SHOWCASE_ARTICLES_PHASE_LEADERSHIP,
 } from "@/features/showcases/showcaseArticleRegistry";
 import { MARKETING_TEXT_LINK_CLASSES } from "@/features/marketing/marketingInteractiveClasses.constant";
 import MarketingShell from "@/features/marketing/MarketingShell";
@@ -34,6 +35,18 @@ export default function ShowcasesIndexPageLayout() {
         </p>
         <div className="mt-6 grid gap-6 md:grid-cols-2">
           {SHOWCASE_ARTICLES_PHASE_2.map((article) => (
+            <ShowcaseCard key={article.slug} article={article} />
+          ))}
+        </div>
+      </div>
+      <div className="mt-14">
+        <h2 className="text-lg font-semibold text-gray-900">For leadership</h2>
+        <p className="mt-2 max-w-2xl text-sm text-gray-600">
+          Cost, automation, and governance—in language for CMOs and CEOs, not
+          install docs.
+        </p>
+        <div className="mt-6 grid gap-6 md:grid-cols-2">
+          {SHOWCASE_ARTICLES_PHASE_LEADERSHIP.map((article) => (
             <ShowcaseCard key={article.slug} article={article} />
           ))}
         </div>

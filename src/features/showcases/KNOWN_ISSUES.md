@@ -21,3 +21,15 @@
 **Fix:** `onboardingShowcaseArticles.test.ts` (article images use `screenId`) and `e2e/showcases-onboarding.spec.ts` (Playwright checks `<picture>` PNG/SVG fallback on `/showcases/onboard-in-15-minutes` and `/showcases/company-onboard-in-30-minutes`).
 
 **Run:** `npm run test:e2e:install` once, then `npm run test:e2e`. CI: `.github/workflows/ci.yml`.
+
+---
+
+## SHOWCASES-003 — No executive lane for CMO/CEO buyers
+
+**Symptom:** Showcases and home copy spoke to IT champions (Mac pairing, WebSocket) with no outcome-first path for leadership.
+
+**Root cause:** All articles targeted operators; team section led with rollout mechanics, not cost or governance ROI.
+
+**Fix:** `SHOWCASE_ARTICLES_PHASE_LEADERSHIP` with exec-focused articles, `/showcases` “For leadership” section, home leadership row, and setup-complete share link.
+
+**Regression test:** `leadershipShowcaseArticles.test.ts`.
