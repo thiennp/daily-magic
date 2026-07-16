@@ -1,4 +1,3 @@
-import { HARNESS_WRITER_OPTIONS } from "@/features/harness/constants/harnessFormOptions";
 import { CapabilityType } from "@/lib/capabilities/CapabilityType.constant";
 import type PublishedCapabilityRecord from "@/lib/capabilities/types/PublishedCapabilityRecord.type";
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
@@ -47,18 +46,8 @@ export const buildSendTaskComposerPickerItems = (
     }),
   );
 
-  const writerAgentItems = HARNESS_WRITER_OPTIONS.map(
-    (option): SendTaskComposerPickerItem => ({
-      kind: "writer-agent",
-      id: option.value,
-      label: option.label,
-      itemType: "writer-agent",
-    }),
-  );
-
   return [
     ...libraryItems,
-    ...writerAgentItems,
     {
       kind: "custom",
       id: "custom",

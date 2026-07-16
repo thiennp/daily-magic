@@ -7,7 +7,7 @@ const ITEM_TYPE_LABEL: Record<SendTaskComposerPickerItem["itemType"], string> =
   {
     workflow: "Workflow",
     agent: "Agent",
-    "writer-agent": "AI on Mac",
+    "writer-agent": "LLM CLI",
     custom: "Blank",
   };
 

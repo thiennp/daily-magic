@@ -1,9 +1,8 @@
 "use client";
 
-import SendTaskComposerPickerStep from "@/features/agent/SendTaskComposerPickerStep";
-import SendTaskComposerSelectedMacLink from "@/features/agent/SendTaskComposerSelectedMacLink";
-import WsTestComposerFormStep from "@/features/agent/WsTestComposerFormStep";
+import { useSendTaskComposerStepTrail } from "@/features/agent/hooks/useSendTaskComposerStepTrail";
 import WsTestComposerMacSection from "@/features/agent/WsTestComposerMacSection";
+import WsTestComposerWizardLaterSteps from "@/features/agent/WsTestComposerWizardLaterSteps";
 import type { useWsTestComposerWizard } from "@/features/agent/hooks/useWsTestComposerWizard";
 import type { useWsTestTaskComposer } from "@/features/agent/hooks/useWsTestTaskComposer";
 import type { WsTestConnectionStatus } from "@/features/agent/types/WsTestConnectionStatus.type";
@@ -18,6 +17,7 @@ interface WsTestComposerWizardStepsProps {
   readonly isWriterAgentLocked: boolean;
   readonly isMacDeviceLocked: boolean;
   readonly macDispatchDeviceId: string;
+  readonly showMacPicker: boolean;
   readonly isSteppedComposer: boolean;
   readonly connectionStatus: WsTestConnectionStatus;
   readonly isSendDisabled: boolean;
@@ -26,6 +26,10 @@ interface WsTestComposerWizardStepsProps {
   readonly onQueue: () => void;
   readonly onDeviceChange: (deviceId: string) => void;
   readonly onPickerSelect: (item: SendTaskComposerPickerItem) => void;
+  readonly onWriterAgentSelect: (writerAgent: HarnessWriterAgent) => void;
+  readonly onMacStepBack: () => void;
+  readonly onWorkflowStepBack: () => void;
+  readonly onWriterStepBack: () => void;
   readonly onDeviceDeleted?: (deviceId: string) => void | Promise<void>;
 }
 
@@ -37,6 +41,7 @@ export default function WsTestComposerWizardSteps({
   isWriterAgentLocked,
   isMacDeviceLocked,
   macDispatchDeviceId,
+  showMacPicker,
   isSteppedComposer,
   connectionStatus,
   isSendDisabled,
@@ -45,8 +50,30 @@ export default function WsTestComposerWizardSteps({
   onQueue,
   onDeviceChange,
   onPickerSelect,
+  onWriterAgentSelect,
+  onMacStepBack,
+  onWorkflowStepBack,
+  onWriterStepBack,
   onDeviceDeleted,
 }: WsTestComposerWizardStepsProps) {
+  const stepTrail = useSendTaskComposerStepTrail({
+    isSteppedComposer,
+    wizard,
+    composer,
+    macDispatchDeviceId,
+    macStepInput: {
+      showMacPicker,
+      isOwnDeviceDispatch: composer.isOwnDeviceDispatch,
+      isMacDeviceLocked,
+      isMacDevicesLoading: composer.isMacDevicesLoading,
+      deviceCount: composer.macDevices.length,
+    },
+    writerAgent,
+    onMacStepBack,
+    onWorkflowStepBack,
+    onWriterStepBack,
+  });
+
   return (
     <>
       {wizard.showMacSection ? (
@@ -62,46 +89,23 @@ export default function WsTestComposerWizardSteps({
           onDeviceDeleted={onDeviceDeleted}
         />
       ) : null}
-      {wizard.showPickerStepOnly ? (
-        <div className={wizard.showMacSection ? "mt-6" : undefined}>
-          {wizard.showSelectedMacBackLink ? (
-            <SendTaskComposerSelectedMacLink
-              deviceName={
-                composer.macDisplayNameById.get(macDispatchDeviceId) ??
-                "Your Mac"
-              }
-              onBack={wizard.resetMacSelectionStep}
-            />
-          ) : null}
-          <SendTaskComposerPickerStep
-            capabilities={composer.libraryCapabilities}
-            isLoading={composer.isPrefillLoading}
-            onSelect={onPickerSelect}
-          />
-        </div>
-      ) : null}
-      {wizard.showFormStep ? (
-        <div
-          className={
-            isSteppedComposer || wizard.showMacSection ? "mt-6" : undefined
-          }
-        >
-          <WsTestComposerFormStep
-            composer={composer}
-            writerAgent={writerAgent}
-            onWriterAgentChange={onWriterAgentChange}
-            isWriterAgentLocked={isWriterAgentLocked}
-            isSteppedComposer={isSteppedComposer}
-            macDispatchDeviceId={macDispatchDeviceId}
-            connectionStatus={connectionStatus}
-            isSendDisabled={isSendDisabled}
-            onSend={onSend}
-            onClear={onClear}
-            onQueue={onQueue}
-            showTopSpacing={wizard.showMacSection}
-          />
-        </div>
-      ) : null}
+      <WsTestComposerWizardLaterSteps
+        composer={composer}
+        wizard={wizard}
+        writerAgent={writerAgent}
+        onWriterAgentChange={onWriterAgentChange}
+        isWriterAgentLocked={isWriterAgentLocked}
+        isSteppedComposer={isSteppedComposer}
+        macDispatchDeviceId={macDispatchDeviceId}
+        connectionStatus={connectionStatus}
+        isSendDisabled={isSendDisabled}
+        onSend={onSend}
+        onClear={onClear}
+        onQueue={onQueue}
+        onPickerSelect={onPickerSelect}
+        onWriterAgentSelect={onWriterAgentSelect}
+        stepTrail={stepTrail}
+      />
     </>
   );
 }

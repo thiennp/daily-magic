@@ -9,6 +9,7 @@ interface WsTestComposerFooterProps {
   readonly macDispatchDeviceId: string;
   readonly connectionStatus: WsTestConnectionStatus;
   readonly isSendDisabled: boolean;
+  readonly sendLabel?: string;
   readonly onSend: () => void;
   readonly onClear: () => void;
   readonly onQueue: () => void;
@@ -19,6 +20,7 @@ export default function WsTestComposerFooter({
   macDispatchDeviceId,
   connectionStatus,
   isSendDisabled,
+  sendLabel,
   onSend,
   onClear,
   onQueue,
@@ -33,7 +35,8 @@ export default function WsTestComposerFooter({
       canCopyPrompt={canCopyPrompt}
       copyText={composer.resolvedPrompt}
       sendLabel={
-        composer.isTeamDispatch ? "Send to teammate" : "Send to your Mac"
+        sendLabel ??
+        (composer.isTeamDispatch ? "Send to teammate" : "Send to your Mac")
       }
       isWorkflowTask={composer.isWorkflowTask}
       isTeamDispatch={composer.isTeamDispatch}

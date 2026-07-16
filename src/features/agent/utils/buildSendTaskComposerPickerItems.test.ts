@@ -4,7 +4,7 @@ import { buildSendTaskComposerPickerItems } from "@/features/agent/utils/buildSe
 import { CapabilityType } from "@/lib/capabilities/CapabilityType.constant";
 
 describe("buildSendTaskComposerPickerItems", () => {
-  it("lists library workflows before agents, then writer agents, then custom task", () => {
+  it("lists library workflows before agents, then custom task", () => {
     const items = buildSendTaskComposerPickerItems([
       {
         id: "agent-b",
@@ -21,10 +21,6 @@ describe("buildSendTaskComposerPickerItems", () => {
     expect(items.map((item) => item.label)).toEqual([
       "Release notes",
       "Bug triage",
-      "Claude (terminal)",
-      "Codex (ChatGPT)",
-      "Cursor",
-      "Antigravity",
       "Custom task",
     ]);
   });

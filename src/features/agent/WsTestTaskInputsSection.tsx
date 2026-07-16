@@ -89,6 +89,13 @@ export default function WsTestTaskInputsSection({
         placeholder="Describe what you want done on the computer…"
         className="w-full rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm text-gray-800 shadow-theme-xs outline-none transition focus:border-brand-300 focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-800 dark:text-white/90"
       />
+      {workflowValidationErrors.length > 0 ? (
+        <ul className="mt-3 space-y-1 text-sm text-rose-600 dark:text-rose-400">
+          {workflowValidationErrors.map((message) => (
+            <li key={message}>{message}</li>
+          ))}
+        </ul>
+      ) : null}
     </>
   );
 }

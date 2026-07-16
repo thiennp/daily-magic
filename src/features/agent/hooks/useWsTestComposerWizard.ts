@@ -6,7 +6,6 @@ import type { WsTestComposerMacStepInput } from "@/features/agent/utils/resolveW
 import {
   shouldShowWsTestComposerMacSection,
   shouldShowWsTestComposerMacSelectionStepOnly,
-  shouldShowWsTestComposerSelectedMacBackLink,
   shouldSkipWsTestComposerMacSelectionStep,
 } from "@/features/agent/utils/resolveWsTestComposerMacStep";
 
@@ -25,6 +24,10 @@ export function useWsTestComposerWizard({
     useState(false);
   const [hasConfirmedPickerSelection, setHasConfirmedPickerSelection] =
     useState(false);
+  const [
+    hasConfirmedWriterAgentSelection,
+    setHasConfirmedWriterAgentSelection,
+  ] = useState(false);
 
   const shouldSkipMacSelectionStep =
     shouldSkipWsTestComposerMacSelectionStep(macStepInput);
@@ -34,6 +37,8 @@ export function useWsTestComposerWizard({
     hasConfirmedPickerSelection ||
     !isSteppedComposer ||
     hasPrefilledLibraryCapability;
+  const hasCompletedWriterAgentStep =
+    hasConfirmedWriterAgentSelection || !isSteppedComposer;
 
   const macStepState = {
     ...macStepInput,
@@ -47,28 +52,43 @@ export function useWsTestComposerWizard({
     isSteppedComposer &&
     hasCompletedMacSelectionStep &&
     !hasCompletedPickerStep;
-  const showFormStep = !showMacSelectionStepOnly && !showPickerStepOnly;
-  const showSelectedMacBackLink = shouldShowWsTestComposerSelectedMacBackLink(
-    showPickerStepOnly,
-    macStepInput,
-  );
+  const showWriterAgentStepOnly =
+    isSteppedComposer && hasCompletedPickerStep && !hasCompletedWriterAgentStep;
+  const showFormStep =
+    !showMacSelectionStepOnly &&
+    !showPickerStepOnly &&
+    !showWriterAgentStepOnly;
 
   return {
     showMacSection,
     showMacSelectionStepOnly,
     showPickerStepOnly,
+    showWriterAgentStepOnly,
     showFormStep,
-    showSelectedMacBackLink,
     completeMacSelectionStep: () => {
       setHasConfirmedMacSelection(true);
     },
     completePickerStep: () => {
       setHasConfirmedPickerSelection(true);
     },
+    completeWriterAgentStep: () => {
+      setHasConfirmedWriterAgentSelection(true);
+    },
     resetMacSelectionStep: () => {
       setHasConfirmedMacSelection(false);
+      setHasConfirmedPickerSelection(false);
+      setHasConfirmedWriterAgentSelection(false);
+    },
+    resetPickerStep: () => {
+      setHasConfirmedPickerSelection(false);
+      setHasConfirmedWriterAgentSelection(false);
+    },
+    resetWriterAgentStep: () => {
+      setHasConfirmedWriterAgentSelection(false);
     },
     shouldSkipMacSelectionStep: () => shouldSkipMacSelectionStep,
     hasCompletedMacSelectionStep,
+    hasCompletedPickerStep,
+    hasCompletedWriterAgentStep,
   };
 }

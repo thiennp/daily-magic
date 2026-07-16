@@ -13,6 +13,10 @@ export const useWsTestComposerPanelActions = (input: {
 }): {
   readonly handleDeviceChange: (deviceId: string) => void;
   readonly handlePickerSelect: (item: SendTaskComposerPickerItem) => void;
+  readonly handleWriterAgentSelect: (writerAgent: HarnessWriterAgent) => void;
+  readonly handleMacStepBack: () => void;
+  readonly handleWorkflowStepBack: () => void;
+  readonly handleWriterStepBack: () => void;
 } => {
   const handleDeviceChange = (deviceId: string) => {
     input.composer.setSelectedDeviceId(deviceId);
@@ -26,12 +30,6 @@ export const useWsTestComposerPanelActions = (input: {
   };
 
   const handlePickerSelect = (item: SendTaskComposerPickerItem) => {
-    if (item.kind === "writer-agent") {
-      input.onWriterAgentChange(item.id);
-      input.onStartWriterAgent(item.id);
-      return;
-    }
-
     if (item.kind === "library") {
       input.composer.setSelectedLibraryCapabilityId(item.id);
     } else {
@@ -41,5 +39,36 @@ export const useWsTestComposerPanelActions = (input: {
     input.wizard.completePickerStep();
   };
 
-  return { handleDeviceChange, handlePickerSelect };
+  const handleWriterAgentSelect = (writerAgent: HarnessWriterAgent) => {
+    input.onWriterAgentChange(writerAgent);
+
+    if (input.composer.selectedLibraryCapabilityId.length === 0) {
+      input.onStartWriterAgent(writerAgent);
+      return;
+    }
+
+    input.wizard.completeWriterAgentStep();
+  };
+
+  const handleMacStepBack = () => {
+    input.wizard.resetMacSelectionStep();
+  };
+
+  const handleWorkflowStepBack = () => {
+    input.composer.setSelectedLibraryCapabilityId("");
+    input.wizard.resetPickerStep();
+  };
+
+  const handleWriterStepBack = () => {
+    input.wizard.resetWriterAgentStep();
+  };
+
+  return {
+    handleDeviceChange,
+    handlePickerSelect,
+    handleWriterAgentSelect,
+    handleMacStepBack,
+    handleWorkflowStepBack,
+    handleWriterStepBack,
+  };
 };

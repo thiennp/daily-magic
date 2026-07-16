@@ -1,6 +1,7 @@
 "use client";
 
 import DelegatedWriterAgentField from "@/features/agent/DelegatedWriterAgentField";
+import { useWsTestComposerDeferredSubmit } from "@/features/agent/hooks/useWsTestComposerDeferredSubmit";
 import WsTestComposerFooter from "@/features/agent/WsTestComposerFooter";
 import WsTestOperatorStepsSection from "@/features/agent/WsTestOperatorStepsSection";
 import type { useWsTestTaskComposer } from "@/features/agent/hooks/useWsTestTaskComposer";
@@ -37,6 +38,13 @@ export default function WsTestComposerFormStep({
   onQueue,
   showTopSpacing,
 }: WsTestComposerFormStepProps) {
+  const deferredSubmit = useWsTestComposerDeferredSubmit({
+    composer,
+    enabled: isSteppedComposer,
+    onSend,
+    onClear,
+  });
+
   return (
     <>
       {!isSteppedComposer ? (
@@ -60,7 +68,7 @@ export default function WsTestComposerFormStep({
           prompt={composer.prompt}
           workflowFields={composer.workflowFields}
           workflowFieldValues={composer.workflowFieldValues}
-          workflowValidationErrors={composer.workflowValidationErrors}
+          workflowValidationErrors={deferredSubmit.visibleValidationErrors}
           onPromptChange={composer.setPrompt}
           onWorkflowFieldChange={composer.onWorkflowFieldChange}
         />
@@ -69,9 +77,12 @@ export default function WsTestComposerFormStep({
         composer={composer}
         macDispatchDeviceId={macDispatchDeviceId}
         connectionStatus={connectionStatus}
-        isSendDisabled={isSendDisabled}
-        onSend={onSend}
-        onClear={onClear}
+        isSendDisabled={
+          isSteppedComposer ? deferredSubmit.isSendDisabled : isSendDisabled
+        }
+        sendLabel={isSteppedComposer ? deferredSubmit.sendLabel : undefined}
+        onSend={isSteppedComposer ? deferredSubmit.handleSend : onSend}
+        onClear={isSteppedComposer ? deferredSubmit.handleClear : onClear}
         onQueue={onQueue}
       />
     </>

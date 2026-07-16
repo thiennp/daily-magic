@@ -41,13 +41,19 @@ export default function WsTestPromptComposerPanel(
     hasPrefilledLibraryCapability:
       props.composer.selectedLibraryCapabilityId.length > 0,
   });
-  const { handleDeviceChange, handlePickerSelect } =
-    useWsTestComposerPanelActions({
-      composer: props.composer,
-      wizard,
-      onWriterAgentChange: props.onWriterAgentChange,
-      onStartWriterAgent: props.onStartWriterAgent,
-    });
+  const {
+    handleDeviceChange,
+    handlePickerSelect,
+    handleWriterAgentSelect,
+    handleMacStepBack,
+    handleWorkflowStepBack,
+    handleWriterStepBack,
+  } = useWsTestComposerPanelActions({
+    composer: props.composer,
+    wizard,
+    onWriterAgentChange: props.onWriterAgentChange,
+    onStartWriterAgent: props.onStartWriterAgent,
+  });
 
   const wizardSteps = (
     <WsTestComposerWizardSteps
@@ -58,6 +64,7 @@ export default function WsTestPromptComposerPanel(
       isWriterAgentLocked={props.isWriterAgentLocked}
       isMacDeviceLocked={props.isMacDeviceLocked}
       macDispatchDeviceId={props.macDispatchDeviceId}
+      showMacPicker={props.showMacPicker}
       isSteppedComposer={props.isSteppedComposer}
       connectionStatus={props.connectionStatus}
       isSendDisabled={props.isSendDisabled}
@@ -66,6 +73,10 @@ export default function WsTestPromptComposerPanel(
       onQueue={props.onQueue}
       onDeviceChange={handleDeviceChange}
       onPickerSelect={handlePickerSelect}
+      onWriterAgentSelect={handleWriterAgentSelect}
+      onMacStepBack={handleMacStepBack}
+      onWorkflowStepBack={handleWorkflowStepBack}
+      onWriterStepBack={handleWriterStepBack}
       onDeviceDeleted={props.onDeviceDeleted}
     />
   );
