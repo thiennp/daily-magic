@@ -39,9 +39,9 @@ describe("buildAgentLiveTerminalDisplay", () => {
       buildAgentLiveTerminalDisplay({
         output: "",
         status: "starting",
-        pendingCommandLine: "cursor agent status",
+        pendingCommandLine: "cursor agent",
       }),
-    ).toBe(`${AGENT_LIVE_BASH_PROMPT}cursor agent status\n`);
+    ).toBe(`${AGENT_LIVE_BASH_PROMPT}cursor agent\n`);
   });
 
   it("hides next-actions blocks from the terminal display", () => {

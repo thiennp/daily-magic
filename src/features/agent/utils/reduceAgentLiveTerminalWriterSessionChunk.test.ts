@@ -6,7 +6,7 @@ import { reduceAgentLiveTerminalWriterSessionChunk } from "@/features/agent/util
 describe("reduceAgentLiveTerminalWriterSessionChunk", () => {
   it("appends streamed writer session output for the active writer", () => {
     const state = beginAgentLiveTerminalSession(
-      "cursor agent status",
+      "cursor agent",
       "cursor",
       "device-1",
     );
@@ -22,11 +22,7 @@ describe("reduceAgentLiveTerminalWriterSessionChunk", () => {
 
   it("ignores chunks for a different writer session", () => {
     const state = {
-      ...beginAgentLiveTerminalSession(
-        "cursor agent status",
-        "cursor",
-        "device-1",
-      ),
+      ...beginAgentLiveTerminalSession("cursor agent", "cursor", "device-1"),
       sessionWriterSessionId: "session-a",
     };
 

@@ -1,4 +1,5 @@
 import MacDeviceIcon from "@/features/agent-witch/macDevices/MacDeviceIcon";
+import { resolveMacDeviceIconClassName } from "@/features/agent-witch/macDevices/utils/resolveMacDeviceIconClassName";
 import MacDeviceNameEditor from "@/features/agent-witch/macDevices/MacDeviceNameEditor";
 
 interface MacDeviceRowMainContentProps {
@@ -20,9 +21,7 @@ export default function MacDeviceRowMainContent({
   onEditingChange,
   onRenamed,
 }: MacDeviceRowMainContentProps) {
-  const iconClassName = isOnline
-    ? "h-4 w-4 shrink-0 text-success-600 dark:text-success-500"
-    : "h-4 w-4 shrink-0 text-gray-500 dark:text-gray-400";
+  const iconClassName = resolveMacDeviceIconClassName(isOnline);
 
   return (
     <div className="flex min-w-0 flex-1 flex-col items-start gap-1 text-left">

@@ -73,7 +73,7 @@ export const buildWriterSessionStartInvocation = (
   }
 
   if (writerAgent === "cursor") {
-    return { command: commands.cursorCommand, args: ["agent", "status"] };
+    return { command: commands.cursorCommand, args: ["agent", "-v"] };
   }
 
   return { command: commands.antigravityCommand, args: ["--version"] };

@@ -7,18 +7,18 @@ import { AGENT_LIVE_BASH_PROMPT } from "@/features/agent/utils/agentLiveTerminal
 describe("reduceAgentLiveTerminalWriterSessionReady", () => {
   it("shows the command line immediately when the session begins", () => {
     const state = beginAgentLiveTerminalSession(
-      "cursor agent status",
+      "cursor agent",
       "cursor",
       "device-1",
     );
 
-    expect(state.output).toBe(`${AGENT_LIVE_BASH_PROMPT}cursor agent status\n`);
+    expect(state.output).toBe(`${AGENT_LIVE_BASH_PROMPT}cursor agent\n`);
     expect(state.status).toBe("starting");
   });
 
   it("appends the ready message for the active writer session", () => {
     const state = beginAgentLiveTerminalSession(
-      "cursor agent status",
+      "cursor agent",
       "cursor",
       "device-1",
     );
@@ -29,13 +29,13 @@ describe("reduceAgentLiveTerminalWriterSessionReady", () => {
     });
 
     expect(next.status).toBe("finished");
-    expect(next.output).toContain("cursor agent status");
+    expect(next.output).toContain("cursor agent");
     expect(next.output).toContain("Cursor is ready on your Mac.");
   });
 
   it("does not duplicate the command line when it was already shown", () => {
     const state = beginAgentLiveTerminalSession(
-      "cursor agent status",
+      "cursor agent",
       "cursor",
       "device-1",
     );
@@ -45,8 +45,7 @@ describe("reduceAgentLiveTerminalWriterSessionReady", () => {
       output: "Cursor is ready on your Mac.\n",
     });
 
-    const commandOccurrences =
-      next.output.split("cursor agent status").length - 1;
+    const commandOccurrences = next.output.split("cursor agent").length - 1;
     expect(commandOccurrences).toBe(1);
   });
 });

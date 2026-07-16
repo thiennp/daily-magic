@@ -12,9 +12,9 @@ describe("formatWriterCliDisplayCommand", () => {
     );
   });
 
-  it("shows the interactive session command without a prompt", () => {
+  it("shows the cursor agent session command without a prompt", () => {
     expect(formatWriterSessionStartDisplayCommand("cursor")).toBe(
-      "cursor agent status",
+      "cursor agent",
     );
   });
 });

@@ -89,7 +89,7 @@ describe("buildWriterCliInvocation", () => {
   it("builds cursor session start invocation", () => {
     expect(buildWriterSessionStartInvocation("cursor", commands)).toEqual({
       command: "cursor",
-      args: ["agent", "status"],
+      args: ["agent", "-v"],
     });
   });
 });

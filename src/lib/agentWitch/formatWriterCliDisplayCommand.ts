@@ -48,7 +48,7 @@ export const formatWriterSessionStartDisplayCommand = (
   }
 
   if (writerAgent === "cursor") {
-    return "cursor agent status";
+    return "cursor agent";
   }
 
   return "agy --version";
