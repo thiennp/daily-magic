@@ -19,6 +19,10 @@ const scheduleWorkflowOnYourMac: ShowcaseArticle = {
   },
   relatedShowcases: [
     {
+      slug: "automate-for-yourself-or-your-team",
+      label: "Full path: preset → save → automate for you or your team",
+    },
+    {
       slug: "weekly-report-in-five-minutes",
       label: "Friday status from a saved workflow form",
     },

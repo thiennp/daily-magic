@@ -27,7 +27,7 @@ export default function HomeMarketingShowcases() {
         className="mt-0"
         eyebrow="New to AI agents?"
         title="Start here"
-        description="You don't need another hype thread. Pick a short story, see what you need, then try it on your Mac."
+        description="Pick a short story with sample screenshots—presets, automations, Mac setup, and team workflows."
         headingId="showcases-heading"
       >
         <HomeMarketingFeaturedShowcases articles={featured} />

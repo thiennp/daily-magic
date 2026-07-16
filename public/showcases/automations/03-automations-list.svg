@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="560" viewBox="0 0 960 560" role="img" aria-label="Automations · Scheduled jobs">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f8fafc"/>
+      <stop offset="100%" stop-color="#eef2ff"/>
+    </linearGradient>
+  </defs>
+  <rect width="960" height="560" fill="url(#bg)"/>
+  <rect x="32" y="28" width="896" height="504" rx="16" fill="#ffffff" stroke="#e5e7eb"/>
+  <text x="56" y="68" font-family="ui-sans-serif, system-ui, sans-serif" font-size="18" font-weight="600" fill="#111827">Automations</text>
+  <text x="56" y="92" font-family="ui-sans-serif, system-ui, sans-serif" font-size="12" fill="#6b7280">Sample UI · Mac runs schedules locally</text>
+  <rect x="56" y="120" width="848" height="120" rx="12" fill="#fff" stroke="#e5e7eb"/>
+  <text x="76" y="156" font-family="ui-sans-serif, system-ui, sans-serif" font-size="15" font-weight="600" fill="#111827">Friday team status</text>
+  <text x="76" y="180" font-family="ui-sans-serif, system-ui, sans-serif" font-size="12" fill="#059669" font-weight="600">ENABLED</text>
+  <text x="76" y="204" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" fill="#4b5563">Weekdays at 09:00 · Weekly team status workflow</text>
+  <text x="76" y="224" font-family="ui-sans-serif, system-ui, sans-serif" font-size="12" fill="#6b7280">Next run: Fri 09:00 · Last run: ok</text>
+  <rect x="680" y="148" width="88" height="32" rx="8" fill="#18181b"/>
+  <text x="698" y="169" font-family="ui-sans-serif, system-ui, sans-serif" font-size="12" font-weight="500" fill="#ffffff">Run now</text>
+  <rect x="56" y="260" width="848" height="120" rx="12" fill="#fff" stroke="#e5e7eb"/>
+  <text x="76" y="296" font-family="ui-sans-serif, system-ui, sans-serif" font-size="15" font-weight="600" fill="#111827">Inbox triage webhook</text>
+  <text x="76" y="320" font-family="ui-sans-serif, system-ui, sans-serif" font-size="12" fill="#059669" font-weight="600">ENABLED</text>
+  <text x="76" y="344" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" fill="#4b5563">Webhook · Email inbox reply workflow</text>
+  <text x="76" y="364" font-family="ui-sans-serif, system-ui, sans-serif" font-size="12" fill="#6b7280">POST /api/automations/&/trigger when your Mac is online</text>
+  <rect x="56" y="400" width="848" height="88" rx="12" fill="#f0fdf4" stroke="#bbf7d0"/>
+  <text x="76" y="432" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="600" fill="#166534">For your team</text>
+  <text x="76" y="456" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" fill="#15803d">Publish the same workflow to Marketplace  teammates save their copy and automate on their Mac.</text>
+</svg>

@@ -1,3 +1,4 @@
+import automateForYourselfOrYourTeam from "@/features/showcases/articles/automateForYourselfOrYourTeam.article";
 import companyOnboardIn30Minutes from "@/features/showcases/articles/companyOnboardIn30Minutes.article";
 import companyWorkflowsSetupOnce from "@/features/showcases/articles/companyWorkflowsSetupOnce.article";
 import controlMacFromPhone from "@/features/showcases/articles/controlMacFromPhone.article";
@@ -31,6 +32,7 @@ import worksWithoutN8n from "@/features/showcases/articles/worksWithoutN8n.artic
 import type ShowcaseArticle from "@/features/showcases/types/ShowcaseArticle.type";
 
 export const SHOWCASE_ARTICLES_PHASE_1: readonly ShowcaseArticle[] = [
+  automateForYourselfOrYourTeam,
   onboardIn15Minutes,
   whereToStartWithAiAgents,
   firstAgentTaskIn5Minutes,
@@ -80,12 +82,13 @@ export const SHOWCASE_ARTICLES: readonly ShowcaseArticle[] = [
 ] as const;
 
 export const HOME_FEATURED_SHOWCASE_SLUGS: readonly string[] = [
+  automateForYourselfOrYourTeam.slug,
   onboardIn15Minutes.slug,
   firstAgentTaskIn5Minutes.slug,
-  managerApprovesBeforeRun.slug,
 ] as const;
 
 export const HOME_MORE_SHOWCASE_SLUGS: readonly string[] = [
+  managerApprovesBeforeRun.slug,
   scheduleWorkflowOnYourMac.slug,
   humanCheckpointsBeforeMacRuns.slug,
   standupFromLocalBranch.slug,

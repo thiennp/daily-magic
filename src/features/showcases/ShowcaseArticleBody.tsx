@@ -1,4 +1,5 @@
 import type { ShowcaseArticleSection } from "@/features/showcases/types/ShowcaseArticle.type";
+import ShowcaseAutomationFigure from "@/features/showcases/ShowcaseAutomationFigure";
 import ShowcaseOnboardingFigure from "@/features/showcases/ShowcaseOnboardingFigure";
 
 interface ShowcaseArticleBodyProps {
@@ -41,7 +42,13 @@ export default function ShowcaseArticleBody({
               </ul>
             ) : null}
             {section.image ? (
-              section.image.screenId ? (
+              section.image.automationScreenId ? (
+                <ShowcaseAutomationFigure
+                  screenId={section.image.automationScreenId}
+                  alt={section.image.alt}
+                  caption={section.image.caption}
+                />
+              ) : section.image.screenId ? (
                 <ShowcaseOnboardingFigure
                   screenId={section.image.screenId}
                   alt={section.image.alt}
