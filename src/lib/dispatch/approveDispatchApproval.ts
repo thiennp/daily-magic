@@ -11,6 +11,7 @@ import {
   markAgentRunRunning,
   notifyDashboardUser,
 } from "@/lib/dispatch/dispatchClaudeRunToAgent";
+import { isLocalMacAgentRunDispatch } from "@/lib/dispatch/isLocalMacAgentRunDispatch";
 import { DEFAULT_DELEGATED_WRITER_AGENT } from "@/lib/dispatch/resolveDelegatedWriterAgent";
 
 export const denyDispatchApproval = async (
@@ -55,6 +56,12 @@ export const approveDispatchApproval = async (
     ? pending.writerAgent
     : DEFAULT_DELEGATED_WRITER_AGENT;
 
+  const includeNextActions = isLocalMacAgentRunDispatch({
+    requesterUserId: pending.requesterUserId,
+    executorUserId: pending.executorUserId,
+    groupId: pending.groupId,
+  });
+
   if (agentClient !== undefined) {
     dispatchClaudeRunToAgent(
       runtime,
@@ -63,6 +70,7 @@ export const approveDispatchApproval = async (
       runId,
       writerAgent,
       pending.requestId,
+      includeNextActions,
     );
   }
 

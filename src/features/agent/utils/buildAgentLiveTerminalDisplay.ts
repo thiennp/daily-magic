@@ -4,23 +4,26 @@ import {
   appendAgentLiveTerminalPrompt,
   buildAgentLiveTerminalIdleLine,
 } from "@/features/agent/utils/agentLiveTerminalPrompt.constant";
+import { stripNextActionsFromTerminalOutput } from "@/features/agent/utils/splitAgentLiveTerminalOutput";
 
 export const buildAgentLiveTerminalDisplay = (input: {
   readonly output: string;
   readonly status: AgentLiveTerminalStatus;
 }): string => {
-  if (input.output.length === 0) {
+  const visibleOutput = stripNextActionsFromTerminalOutput(input.output);
+
+  if (visibleOutput.length === 0) {
     return buildAgentLiveTerminalIdleLine();
   }
 
   if (
     input.status === "finished" &&
-    !input.output.endsWith(AGENT_LIVE_BASH_PROMPT)
+    !visibleOutput.endsWith(AGENT_LIVE_BASH_PROMPT)
   ) {
-    return appendAgentLiveTerminalPrompt(input.output);
+    return appendAgentLiveTerminalPrompt(visibleOutput);
   }
 
-  return input.output;
+  return visibleOutput;
 };
 
 export const shouldShowAgentLiveTerminalCursor = (

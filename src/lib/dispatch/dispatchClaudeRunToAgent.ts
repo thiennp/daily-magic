@@ -5,7 +5,7 @@ import type AgentWitchMessage from "@/lib/agentWitch/types/AgentWitchMessage.typ
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
 import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
 import { appendAgentRunEvent } from "@/lib/dispatch/agentRunEventQueries";
-import { wrapPromptWithAgentRunInputGuardrails } from "@/lib/dispatch/agentRunInputGuardrails.constant";
+import { wrapPromptForAgentRun } from "@/lib/dispatch/wrapPromptForAgentRun";
 import { updateAgentRunStatus } from "@/lib/dispatch/agentRunQueries";
 import { broadcastAgentRunRecord } from "@/lib/dispatch/broadcastAgentRunRecord";
 import type AgentRunRecord from "@/lib/dispatch/types/AgentRunRecord.type";
@@ -17,11 +17,12 @@ export const dispatchClaudeRunToAgent = (
   agentRunId: string,
   writerAgent: HarnessWriterAgent,
   requestId?: string,
+  includeNextActions = false,
 ): void => {
   agentClient.send({
     type: AGENT_WITCH_MESSAGE_TYPES.COMMAND_CLAUDE_RUN,
     payload: {
-      prompt: wrapPromptWithAgentRunInputGuardrails(prompt),
+      prompt: wrapPromptForAgentRun(prompt, { includeNextActions }),
       agentRunId,
       writerAgent,
     },

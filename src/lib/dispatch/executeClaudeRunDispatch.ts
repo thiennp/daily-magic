@@ -12,6 +12,7 @@ import type { DispatchPolicyValue } from "@/lib/dispatch/DispatchPolicy.constant
 import { persistAgentRun } from "@/lib/dispatch/persistAgentRun";
 import { resolveDelegatedWriterAgent } from "@/lib/dispatch/resolveDelegatedWriterAgent";
 import { sendPendingApprovalDispatch } from "@/lib/dispatch/sendPendingApprovalDispatch";
+import { isLocalMacAgentRunDispatch } from "@/lib/dispatch/isLocalMacAgentRunDispatch";
 import { shouldRequireDispatchApproval } from "@/lib/dispatch/shouldRequireDispatchApproval";
 
 export const executeClaudeRunDispatch = async (input: {
@@ -80,6 +81,12 @@ export const executeClaudeRunDispatch = async (input: {
     );
   }
 
+  const includeNextActions = isLocalMacAgentRunDispatch({
+    requesterUserId,
+    executorUserId: input.executorUserId,
+    groupId: input.groupId,
+  });
+
   if (input.agentClient !== undefined) {
     dispatchClaudeRunToAgent(
       input.runtime,
@@ -88,6 +95,7 @@ export const executeClaudeRunDispatch = async (input: {
       run.id,
       writerAgent,
       input.requestId,
+      includeNextActions,
     );
     await markAgentRunRunning(input.runtime, run.id);
   }
