@@ -39,6 +39,10 @@ export default function GroupManagementPanel({
   const canDeleteTeam =
     Boolean(isGlobalAdmin) ||
     actorMembership?.role === GroupRole.GROUP_SUPER_ADMIN;
+  const canConfigureDispatchPolicy =
+    Boolean(isGlobalAdmin) ||
+    actorMembership?.role === GroupRole.GROUP_SUPER_ADMIN ||
+    actorMembership?.role === GroupRole.GROUP_ADMIN;
 
   return (
     <div className="space-y-6">
@@ -48,6 +52,7 @@ export default function GroupManagementPanel({
         newGroupName={groupManagement.newGroupName}
         deleteMembers={groupManagement.deleteMembers}
         canDeleteTeam={canDeleteTeam}
+        canConfigureDispatchPolicy={canConfigureDispatchPolicy}
         onNewGroupNameChange={groupManagement.setNewGroupName}
         onSelectGroup={groupManagement.handleSelectGroup}
         onDeleteMembersChange={groupManagement.setDeleteMembers}

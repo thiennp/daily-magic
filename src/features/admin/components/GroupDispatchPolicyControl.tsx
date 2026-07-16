@@ -12,10 +12,12 @@ import {
 
 interface GroupDispatchPolicyControlProps {
   readonly groupId: string;
+  readonly embedded?: boolean;
 }
 
 export default function GroupDispatchPolicyControl({
   groupId,
+  embedded = false,
 }: GroupDispatchPolicyControlProps) {
   const [policy, setPolicy] = useState<DispatchPolicyValue>(
     DispatchPolicy.APPROVAL,
@@ -66,8 +68,8 @@ export default function GroupDispatchPolicyControl({
     );
   };
 
-  return (
-    <AppPanel as="aside" padding="compact" className="h-fit">
+  const content = (
+    <>
       <h3 className="text-sm font-semibold text-gray-800 dark:text-white/90">
         {COMPANY_ENTITY_LABEL} dispatch policy
       </h3>
@@ -93,6 +95,20 @@ export default function GroupDispatchPolicyControl({
           {message}
         </p>
       ) : null}
+    </>
+  );
+
+  if (embedded) {
+    return (
+      <div className="mt-6 rounded-lg border border-gray-200 p-4 dark:border-gray-700">
+        {content}
+      </div>
+    );
+  }
+
+  return (
+    <AppPanel as="aside" padding="compact" className="h-fit">
+      {content}
     </AppPanel>
   );
 }
