@@ -49,6 +49,13 @@ export default function HomeOnboardingSetupCompletePanel({
       </div>
       <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-sm">
         <Link
+          href="/showcases/automate-recurring-work-without-headcount"
+          className={APP_SURFACE_TEXT_LINK_CLASS}
+          onClick={onDismiss}
+        >
+          Share with your manager →
+        </Link>
+        <Link
           href="/automations"
           className={APP_SURFACE_TEXT_LINK_CLASS}
           onClick={onDismiss}

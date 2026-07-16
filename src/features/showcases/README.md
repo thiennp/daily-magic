@@ -20,6 +20,8 @@ Real PNG captures: `public/showcases/onboarding/CAPTURE.md` (drop files beside S
 
 Onboarding guide render checks: `npm run test:e2e:install` then `npm run test:e2e`.
 
+Leadership lane: `e2e/showcases-leadership.spec.ts` (exec articles + index section).
+
 ## APIs
 
 _None._
