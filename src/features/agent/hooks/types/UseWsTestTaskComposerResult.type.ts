@@ -20,6 +20,7 @@ export interface UseWsTestTaskComposerResult {
   readonly libraryCapabilityId: string;
   readonly workflowFields: readonly WorkflowFieldDefinition[];
   readonly workflowValidationErrors: readonly string[];
+  readonly workflowFieldErrors: Readonly<Record<string, string>>;
   readonly operatorSteps: readonly OperatorStepDefinition[];
   readonly resolvedPrompt: string;
   readonly isSendDisabled: (

@@ -3,17 +3,20 @@
 import { useState, type ReactElement } from "react";
 
 import Button from "@/components/ui/button/Button";
+import { workflowFieldInputClassName } from "@/features/workflows/utils/workflowFieldInputClassName";
 import type WorkflowFieldDefinition from "@/lib/workflows/types/WorkflowFieldDefinition.type";
 
 interface MobileWorkflowStepperProps {
   readonly fields: readonly WorkflowFieldDefinition[];
   readonly values: Readonly<Record<string, string>>;
+  readonly fieldErrors?: Readonly<Record<string, string>>;
   readonly onChange: (key: string, value: string) => void;
 }
 
 export default function MobileWorkflowStepper({
   fields,
   values,
+  fieldErrors = {},
   onChange,
 }: MobileWorkflowStepperProps): ReactElement | null {
   const [stepIndex, setStepIndex] = useState(0);
@@ -24,6 +27,7 @@ export default function MobileWorkflowStepper({
 
   const field = fields[stepIndex];
   const isLastStep = stepIndex === fields.length - 1;
+  const errorMessage = fieldErrors[field.key];
 
   return (
     <div className="md:hidden">
@@ -40,7 +44,8 @@ export default function MobileWorkflowStepper({
               onChange(field.key, event.target.value);
             }}
             rows={4}
-            className="mt-2 w-full rounded-lg border border-gray-200 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-800"
+            aria-invalid={errorMessage !== undefined}
+            className={workflowFieldInputClassName(errorMessage !== undefined)}
           />
         ) : (
           <input
@@ -49,9 +54,15 @@ export default function MobileWorkflowStepper({
             onChange={(event) => {
               onChange(field.key, event.target.value);
             }}
-            className="mt-2 w-full rounded-lg border border-gray-200 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-800"
+            aria-invalid={errorMessage !== undefined}
+            className={workflowFieldInputClassName(errorMessage !== undefined)}
           />
         )}
+        {errorMessage !== undefined ? (
+          <span className="mt-1 block text-sm text-rose-600 dark:text-rose-400">
+            {errorMessage}
+          </span>
+        ) : null}
       </label>
       <div className="mt-4 flex gap-2">
         <Button

@@ -68,7 +68,14 @@ export default function WsTestComposerFormStep({
           prompt={composer.prompt}
           workflowFields={composer.workflowFields}
           workflowFieldValues={composer.workflowFieldValues}
-          workflowValidationErrors={deferredSubmit.visibleValidationErrors}
+          workflowFieldErrors={
+            isSteppedComposer
+              ? deferredSubmit.visibleWorkflowFieldErrors
+              : composer.workflowFieldErrors
+          }
+          promptValidationError={
+            isSteppedComposer ? deferredSubmit.promptValidationError : undefined
+          }
           onPromptChange={composer.setPrompt}
           onWorkflowFieldChange={composer.onWorkflowFieldChange}
         />

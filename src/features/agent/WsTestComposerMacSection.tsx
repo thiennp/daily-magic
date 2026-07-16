@@ -1,10 +1,12 @@
 "use client";
 
+import SendTaskComposerMacPickerStep from "@/features/agent/SendTaskComposerMacPickerStep";
 import WsTestDelegatedMacField from "@/features/agent/WsTestDelegatedMacField";
 import type { MyMacDevice } from "@/features/agent/hooks/useMyMacDevices";
 
 interface WsTestComposerMacSectionProps {
   readonly isLibraryPlaybook: boolean;
+  readonly useComposerButtonPicker: boolean;
   readonly devices: readonly MyMacDevice[];
   readonly displayNameById: ReadonlyMap<string, string>;
   readonly selectedDeviceId: string;
@@ -17,6 +19,7 @@ interface WsTestComposerMacSectionProps {
 
 export default function WsTestComposerMacSection({
   isLibraryPlaybook,
+  useComposerButtonPicker,
   devices,
   displayNameById,
   selectedDeviceId,
@@ -40,16 +43,25 @@ export default function WsTestComposerMacSection({
         </p>
       ) : null}
       <div className={isLibraryPlaybook ? "mt-4" : undefined}>
-        <WsTestDelegatedMacField
-          devices={devices}
-          displayNameById={displayNameById}
-          selectedDeviceId={selectedDeviceId}
-          isLoading={isLoading}
-          disabled={disabled}
-          onDeviceChange={onDeviceChange}
-          onDeviceRenamed={onDeviceRenamed}
-          onDeviceDeleted={onDeviceDeleted}
-        />
+        {useComposerButtonPicker ? (
+          <SendTaskComposerMacPickerStep
+            devices={devices}
+            displayNameById={displayNameById}
+            isLoading={isLoading}
+            onSelect={onDeviceChange}
+          />
+        ) : (
+          <WsTestDelegatedMacField
+            devices={devices}
+            displayNameById={displayNameById}
+            selectedDeviceId={selectedDeviceId}
+            isLoading={isLoading}
+            disabled={disabled}
+            onDeviceChange={onDeviceChange}
+            onDeviceRenamed={onDeviceRenamed}
+            onDeviceDeleted={onDeviceDeleted}
+          />
+        )}
       </div>
     </div>
   );

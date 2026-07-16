@@ -1,6 +1,6 @@
 "use client";
 
-import SendTaskComposerPickerRow from "@/features/agent/SendTaskComposerPickerRow";
+import SendTaskComposerWriterAgentPickerRow from "@/features/agent/SendTaskComposerWriterAgentPickerRow";
 import { HARNESS_WRITER_OPTIONS } from "@/features/harness/constants/harnessFormOptions";
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
 
@@ -19,14 +19,10 @@ export default function SendTaskComposerWriterAgentStep({
       <ul className="mt-3 space-y-2">
         {HARNESS_WRITER_OPTIONS.map((option) => (
           <li key={option.value}>
-            <SendTaskComposerPickerRow
-              item={{
-                kind: "writer-agent",
-                id: option.value,
-                label: option.label,
-                itemType: "writer-agent",
-              }}
-              onPlay={() => {
+            <SendTaskComposerWriterAgentPickerRow
+              label={option.label}
+              writerAgent={option.value}
+              onSelect={() => {
                 onSelect(option.value);
               }}
             />

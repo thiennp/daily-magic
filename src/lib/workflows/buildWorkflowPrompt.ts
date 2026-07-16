@@ -2,18 +2,26 @@ import { appendOperatorCheckpointsToPrompt } from "@/lib/workflows/buildOperator
 import type OperatorStepDefinition from "@/lib/workflows/types/OperatorStepDefinition.type";
 import type WorkflowFieldDefinition from "@/lib/workflows/types/WorkflowFieldDefinition.type";
 
+export const buildWorkflowFieldValidationErrors = (
+  fields: readonly WorkflowFieldDefinition[],
+  values: Readonly<Record<string, string>>,
+): Readonly<Record<string, string>> =>
+  Object.fromEntries(
+    fields.flatMap((field) => {
+      const value = values[field.key]?.trim() ?? "";
+      if (field.required && value.length === 0) {
+        return [[field.key, `${field.label} is required.`] as const];
+      }
+
+      return [];
+    }),
+  );
+
 export function validateWorkflowFieldValues(
   fields: readonly WorkflowFieldDefinition[],
   values: Readonly<Record<string, string>>,
 ): readonly string[] {
-  return fields.flatMap((field) => {
-    const value = values[field.key]?.trim() ?? "";
-    if (field.required && value.length === 0) {
-      return [`${field.label} is required.`];
-    }
-
-    return [];
-  });
+  return Object.values(buildWorkflowFieldValidationErrors(fields, values));
 }
 
 export function buildWorkflowPrompt(

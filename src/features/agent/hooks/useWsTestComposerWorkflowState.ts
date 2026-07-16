@@ -4,8 +4,8 @@ import { useMemo, useState, type Dispatch, type SetStateAction } from "react";
 
 import type { DispatchTargetCapability } from "@/features/dispatch/hooks/useDispatchTargets";
 import {
+  buildWorkflowFieldValidationErrors,
   buildWorkflowPrompt,
-  validateWorkflowFieldValues,
 } from "@/lib/workflows/buildWorkflowPrompt";
 import { appendOperatorCheckpointsToPrompt } from "@/lib/workflows/buildOperatorCheckpointPromptSection";
 import type OperatorStepDefinition from "@/lib/workflows/types/OperatorStepDefinition.type";
@@ -27,6 +27,7 @@ export function useWsTestComposerWorkflowState(
   readonly isWorkflowTask: boolean;
   readonly workflowFields: readonly WorkflowFieldDefinition[];
   readonly workflowValidationErrors: readonly string[];
+  readonly workflowFieldErrors: Readonly<Record<string, string>>;
   readonly operatorSteps: readonly OperatorStepDefinition[];
   readonly resolvedPrompt: string;
   readonly isLibraryPlaybook: boolean;
@@ -59,9 +60,10 @@ export function useWsTestComposerWorkflowState(
       libraryPlaybook?.operatorSteps ?? selectedCapability?.operatorSteps ?? [],
     [libraryPlaybook?.operatorSteps, selectedCapability?.operatorSteps],
   );
-  const workflowValidationErrors = isWorkflowTask
-    ? validateWorkflowFieldValues(workflowFields, workflowFieldValues)
-    : [];
+  const workflowFieldErrors = isWorkflowTask
+    ? buildWorkflowFieldValidationErrors(workflowFields, workflowFieldValues)
+    : {};
+  const workflowValidationErrors = Object.values(workflowFieldErrors);
   const resolvedPrompt = useMemo(
     () =>
       isWorkflowTask && playbookName.length > 0
@@ -91,6 +93,7 @@ export function useWsTestComposerWorkflowState(
     isWorkflowTask,
     workflowFields,
     workflowValidationErrors,
+    workflowFieldErrors,
     operatorSteps,
     resolvedPrompt,
     isLibraryPlaybook,

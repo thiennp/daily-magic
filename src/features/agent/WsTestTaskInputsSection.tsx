@@ -10,7 +10,8 @@ interface WsTestTaskInputsSectionProps {
   readonly prompt: string;
   readonly workflowFields: readonly WorkflowFieldDefinition[];
   readonly workflowFieldValues: Readonly<Record<string, string>>;
-  readonly workflowValidationErrors: readonly string[];
+  readonly workflowFieldErrors: Readonly<Record<string, string>>;
+  readonly promptValidationError?: string;
   readonly onPromptChange: (value: string) => void;
   readonly onWorkflowFieldChange: (key: string, value: string) => void;
 }
@@ -21,7 +22,8 @@ export default function WsTestTaskInputsSection({
   prompt,
   workflowFields,
   workflowFieldValues,
-  workflowValidationErrors,
+  workflowFieldErrors,
+  promptValidationError,
   onPromptChange,
   onWorkflowFieldChange,
 }: WsTestTaskInputsSectionProps) {
@@ -35,6 +37,7 @@ export default function WsTestTaskInputsSection({
           <MobileWorkflowStepper
             fields={workflowFields}
             values={workflowFieldValues}
+            fieldErrors={workflowFieldErrors}
             onChange={onWorkflowFieldChange}
           />
         ) : null}
@@ -42,6 +45,7 @@ export default function WsTestTaskInputsSection({
           <WorkflowTaskFields
             fields={workflowFields}
             values={workflowFieldValues}
+            fieldErrors={workflowFieldErrors}
             onChange={onWorkflowFieldChange}
           />
         </div>
@@ -60,16 +64,11 @@ export default function WsTestTaskInputsSection({
           rows={4}
           className="mt-2 w-full rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm dark:border-gray-700 dark:bg-gray-800"
         />
-        {workflowValidationErrors.length > 0 ? (
-          <ul className="mt-3 space-y-1 text-sm text-rose-600 dark:text-rose-400">
-            {workflowValidationErrors.map((message) => (
-              <li key={message}>{message}</li>
-            ))}
-          </ul>
-        ) : null}
       </>
     );
   }
+
+  const hasPromptError = promptValidationError !== undefined;
 
   return (
     <>
@@ -87,14 +86,17 @@ export default function WsTestTaskInputsSection({
         }}
         rows={8}
         placeholder="Describe what you want done on the computer…"
-        className="w-full rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm text-gray-800 shadow-theme-xs outline-none transition focus:border-brand-300 focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-800 dark:text-white/90"
+        aria-invalid={hasPromptError}
+        className={
+          hasPromptError
+            ? "w-full rounded-lg border border-rose-500 bg-white px-4 py-3 text-sm text-gray-800 shadow-theme-xs outline-none transition focus:border-rose-500 focus:ring-3 focus:ring-rose-500/10 dark:border-rose-500 dark:bg-gray-800 dark:text-white/90"
+            : "w-full rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm text-gray-800 shadow-theme-xs outline-none transition focus:border-brand-300 focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-800 dark:text-white/90"
+        }
       />
-      {workflowValidationErrors.length > 0 ? (
-        <ul className="mt-3 space-y-1 text-sm text-rose-600 dark:text-rose-400">
-          {workflowValidationErrors.map((message) => (
-            <li key={message}>{message}</li>
-          ))}
-        </ul>
+      {hasPromptError ? (
+        <span className="mt-1 block text-sm text-rose-600 dark:text-rose-400">
+          {promptValidationError}
+        </span>
       ) : null}
     </>
   );

@@ -35,9 +35,11 @@ export default function SendTaskComposerPickerRow({
         <span className="block truncate text-sm font-medium text-gray-800 dark:text-white/90">
           {item.label}
         </span>
-        <span className="mt-0.5 block text-xs text-gray-500 dark:text-gray-400">
-          {ITEM_TYPE_LABEL[item.itemType]}
-        </span>
+        {item.itemType === "writer-agent" ? null : (
+          <span className="mt-0.5 block text-xs text-gray-500 dark:text-gray-400">
+            {ITEM_TYPE_LABEL[item.itemType]}
+          </span>
+        )}
       </span>
     </button>
   );

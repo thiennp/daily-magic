@@ -11,7 +11,8 @@ export const useWsTestComposerDeferredSubmit = (input: {
   readonly onSend: () => void;
   readonly onClear: () => void;
 }): {
-  readonly visibleValidationErrors: readonly string[];
+  readonly visibleWorkflowFieldErrors: Readonly<Record<string, string>>;
+  readonly promptValidationError?: string;
   readonly isSendDisabled: boolean;
   readonly sendLabel: string;
   readonly handleSend: () => void;
@@ -31,11 +32,21 @@ export const useWsTestComposerDeferredSubmit = (input: {
       input.composer.resolvedPrompt,
     ],
   );
-  const visibleValidationErrors =
-    input.enabled && hasAttemptedSubmit ? submitValidationErrors : [];
+  const visibleWorkflowFieldErrors =
+    input.enabled && hasAttemptedSubmit && input.composer.isWorkflowTask
+      ? input.composer.workflowFieldErrors
+      : {};
+  const promptValidationError =
+    input.enabled &&
+    hasAttemptedSubmit &&
+    !input.composer.isWorkflowTask &&
+    submitValidationErrors.length > 0
+      ? submitValidationErrors[0]
+      : undefined;
 
   return {
-    visibleValidationErrors,
+    visibleWorkflowFieldErrors,
+    promptValidationError,
     isSendDisabled: false,
     sendLabel: "Start",
     handleSend: () => {
