@@ -13,6 +13,7 @@ interface AgentLiveTerminalFeedbackChatProps {
   readonly autoFocus?: boolean;
   readonly isSteppedComposer?: boolean;
   readonly onSubmit: (message: string) => void;
+  readonly onFinishSession: () => void;
 }
 
 export default function AgentLiveTerminalFeedbackChat({
@@ -20,15 +21,18 @@ export default function AgentLiveTerminalFeedbackChat({
   pendingQuestion,
   queuedCount,
   queueNotice,
+  isSubmitting,
   autoFocus = false,
   isSteppedComposer = false,
   onSubmit,
+  onFinishSession,
 }: AgentLiveTerminalFeedbackChatProps) {
   const deferredSubmit = useAgentLiveTerminalFeedbackDeferredSubmit({
     onSubmit,
   });
   if (!visible) return null;
   const isAnswerMode = pendingQuestion !== null;
+  const isSimplifiedFollowUp = isSteppedComposer && !isAnswerMode;
   const content = (
     <>
       {isAnswerMode ? (
@@ -40,7 +44,7 @@ export default function AgentLiveTerminalFeedbackChat({
             {pendingQuestion}
           </p>
         </>
-      ) : isSteppedComposer ? null : (
+      ) : isSimplifiedFollowUp ? null : (
         <p className="text-sm font-medium text-gray-800 dark:text-white/90">
           Follow up in the live terminal
         </p>
@@ -54,22 +58,33 @@ export default function AgentLiveTerminalFeedbackChat({
         autoFocus={autoFocus}
         onMessageChange={deferredSubmit.handleMessageChange}
       />
-      {queuedCount > 0 ? (
+      {!isSimplifiedFollowUp && queuedCount > 0 ? (
         <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
           {queuedCount} follow-up{queuedCount === 1 ? "" : "s"} queued while
           your Mac agent is working.
         </p>
       ) : null}
-      {queueNotice !== null ? (
+      {!isSimplifiedFollowUp && queueNotice !== null ? (
         <p className="mt-2 text-xs text-brand-600 dark:text-brand-400">
           {queueNotice}
         </p>
       ) : null}
-      <div className="mt-3 flex justify-end">
-        <Button onClick={deferredSubmit.handleSubmit}>
-          {isAnswerMode ? "Send answer" : "Send feedback"}
-        </Button>
-      </div>
+      {!isSimplifiedFollowUp ? (
+        <div className="mt-3 flex flex-wrap items-center justify-end gap-2">
+          <Button size="sm" variant="outline" onClick={onFinishSession}>
+            Finish session
+          </Button>
+          <Button disabled={isSubmitting} onClick={deferredSubmit.handleSubmit}>
+            {isAnswerMode ? "Send answer" : "Send feedback"}
+          </Button>
+        </div>
+      ) : (
+        <div className="mt-3 flex justify-end">
+          <Button disabled={isSubmitting} onClick={deferredSubmit.handleSubmit}>
+            {isAnswerMode ? "Send answer" : "Send feedback"}
+          </Button>
+        </div>
+      )}
     </>
   );
   return isSteppedComposer ? (
