@@ -17,4 +17,10 @@ describe("formatWriterCliDisplayCommand", () => {
       "cursor agent",
     );
   });
+
+  it("shows claude -v for claude-cli session start", () => {
+    expect(formatWriterSessionStartDisplayCommand("claude-cli")).toBe(
+      "claude -v",
+    );
+  });
 });

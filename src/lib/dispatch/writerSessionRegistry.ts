@@ -69,7 +69,8 @@ export const authorizeWriterSessionPublisher = (
 
   if (
     session.deviceId !== null &&
-    (sender.deviceId === undefined || sender.deviceId !== session.deviceId)
+    sender.deviceId !== undefined &&
+    sender.deviceId !== session.deviceId
   ) {
     return undefined;
   }

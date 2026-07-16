@@ -92,6 +92,13 @@ describe("buildWriterCliInvocation", () => {
       args: ["agent", "-v"],
     });
   });
+
+  it("builds claude-cli session start invocation", () => {
+    expect(buildWriterSessionStartInvocation("claude-cli", commands)).toEqual({
+      command: "claude",
+      args: ["-v"],
+    });
+  });
 });
 
 describe("isHarnessWriterAgentId", () => {

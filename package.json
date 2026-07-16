@@ -14,6 +14,7 @@
     "agent-witch:watchdog": "tsx scripts/agent-witch-watchdog.ts",
     "agent-witch:automation-scheduler": "tsx scripts/agent-witch-automation-scheduler.ts",
     "agent-witch:self-update": "tsx scripts/agent-witch-self-update.ts",
+    "agent-witch:test-writer-session-stream": "tsx scripts/testWriterSessionStreamLocal.ts",
     "agent-witch:install": "bash scripts/install-agent-witch.sh",
     "test": "vitest run",
     "test:watch": "vitest",

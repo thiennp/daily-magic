@@ -92,10 +92,15 @@ const readConfig = (): AgentWitchConfig | null => {
       throw new Error("Config must be a JSON object.");
     }
 
+    const envWsUrl = process.env.AGENT_WITCH_WS_URL?.trim() ?? "";
+    const configWsUrl =
+      typeof parsed.wsUrl === "string" ? parsed.wsUrl.trim() : "";
     const wsUrl =
-      typeof parsed.wsUrl === "string" && parsed.wsUrl.length > 0
-        ? parsed.wsUrl
-        : (process.env.AGENT_WITCH_WS_URL ?? DEFAULT_WS_URL);
+      envWsUrl.length > 0
+        ? envWsUrl
+        : configWsUrl.length > 0
+          ? configWsUrl
+          : DEFAULT_WS_URL;
     const workspace =
       typeof parsed.workspace === "string" && parsed.workspace.length > 0
         ? parsed.workspace
@@ -330,7 +335,7 @@ const startWriterSession = async (
     result.exitCode !== 0
       ? result.output
       : streamedOutput.length > 0
-        ? `${streamedOutput.trimEnd()}${streamedOutput.endsWith("\n") ? "" : "\n"}${buildWriterSessionReadyMessage(resolvedWriterAgent)}`
+        ? buildWriterSessionReadyMessage(resolvedWriterAgent)
         : result.output;
 
   sendMessage(socket, {

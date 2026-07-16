@@ -46,4 +46,49 @@ describe("writerSessionRegistry", () => {
       ),
     ).toBeUndefined();
   });
+
+  it("authorizes the executor when the session has a device but the agent omits deviceId", () => {
+    const session = createWriterSession({
+      ownerUserId: "owner-1",
+      executorUserId: "executor-1",
+      deviceId: "device-1",
+      writerAgent: "claude-cli",
+      dashboardClientId: "dash-1",
+    });
+
+    expect(
+      authorizeWriterSessionPublisher(
+        {
+          id: "agent-1",
+          role: "agent",
+          userId: "executor-1",
+          send: () => undefined,
+        },
+        session.writerSessionId,
+      )?.writerSessionId,
+    ).toBe(session.writerSessionId);
+  });
+
+  it("rejects a different device when both session and agent specify deviceId", () => {
+    const session = createWriterSession({
+      ownerUserId: "owner-1",
+      executorUserId: "executor-1",
+      deviceId: "device-1",
+      writerAgent: "claude-cli",
+      dashboardClientId: "dash-1",
+    });
+
+    expect(
+      authorizeWriterSessionPublisher(
+        {
+          id: "agent-1",
+          role: "agent",
+          userId: "executor-1",
+          deviceId: "device-2",
+          send: () => undefined,
+        },
+        session.writerSessionId,
+      ),
+    ).toBeUndefined();
+  });
 });

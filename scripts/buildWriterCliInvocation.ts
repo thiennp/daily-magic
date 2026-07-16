@@ -65,7 +65,7 @@ export const buildWriterSessionStartInvocation = (
   commands: WriterCliCommands,
 ): WriterCliInvocation => {
   if (writerAgent === "claude-cli") {
-    return { command: commands.claudeCommand, args: ["--version"] };
+    return { command: commands.claudeCommand, args: ["-v"] };
   }
 
   if (writerAgent === "codex") {
