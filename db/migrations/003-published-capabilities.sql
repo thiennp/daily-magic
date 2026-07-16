@@ -38,6 +38,9 @@ CREATE TABLE IF NOT EXISTS capability_versions (
 );
 
 ALTER TABLE published_capabilities
+  DROP CONSTRAINT IF EXISTS published_capabilities_current_version_fkey;
+
+ALTER TABLE published_capabilities
   ADD CONSTRAINT published_capabilities_current_version_fkey
   FOREIGN KEY (current_version_id) REFERENCES capability_versions(id)
   ON DELETE SET NULL;

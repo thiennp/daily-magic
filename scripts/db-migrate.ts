@@ -5,6 +5,7 @@ import { neonConfig, Pool } from "@neondatabase/serverless";
 import ws from "ws";
 
 import {
+  listLegacySchemaSqlMigrationFilenames,
   listPendingMigrationFilenames,
   sortMigrationFilenames,
 } from "./db-migrate.util";
@@ -52,6 +53,54 @@ const applyMigrationFile = async (
   }
 };
 
+const hasSchemaSqlSnapshot = async (pool: Pool): Promise<boolean> => {
+  const result = await pool.query<{ exists: boolean }>(`
+    SELECT EXISTS (
+      SELECT 1
+      FROM information_schema.columns
+      WHERE table_schema = 'public'
+        AND table_name = 'users'
+        AND column_name = 'onboarding_setup_acknowledged'
+    ) AS exists
+  `);
+
+  return result.rows[0]?.exists === true;
+};
+
+const recordLegacySchemaSqlMigrations = async (
+  pool: Pool,
+  filenames: readonly string[],
+  appliedFilenames: ReadonlySet<string>,
+): Promise<ReadonlySet<string>> => {
+  const hasSnapshot = await hasSchemaSqlSnapshot(pool);
+  const legacyFilenames = listLegacySchemaSqlMigrationFilenames(
+    filenames,
+    appliedFilenames,
+    hasSnapshot,
+  );
+
+  if (legacyFilenames.length === 0) {
+    return appliedFilenames;
+  }
+
+  console.log(
+    `db-migrate: schema.sql snapshot detected — recording ${legacyFilenames.length} legacy migration(s) without re-running.`,
+  );
+
+  const updatedAppliedFilenames = new Set(appliedFilenames);
+
+  for (const filename of legacyFilenames) {
+    await pool.query(
+      "INSERT INTO schema_migrations (filename) VALUES ($1) ON CONFLICT DO NOTHING",
+      [filename],
+    );
+    updatedAppliedFilenames.add(filename);
+    console.log(`db-migrate: recorded legacy ${filename}`);
+  }
+
+  return updatedAppliedFilenames;
+};
+
 export async function runPendingDbMigrations(): Promise<void> {
   const databaseUrl = process.env.DATABASE_URL?.trim();
 
@@ -67,9 +116,14 @@ export async function runPendingDbMigrations(): Promise<void> {
 
     const filenames = await readdir(MIGRATIONS_DIR);
     const appliedFilenames = await readAppliedMigrationFilenames(pool);
-    const pendingFilenames = listPendingMigrationFilenames(
+    const appliedAfterLegacy = await recordLegacySchemaSqlMigrations(
+      pool,
       filenames,
       appliedFilenames,
+    );
+    const pendingFilenames = listPendingMigrationFilenames(
+      filenames,
+      appliedAfterLegacy,
     );
 
     if (pendingFilenames.length === 0) {
