@@ -24,13 +24,13 @@ import {
   runWriterTask,
 } from "./agentWitchRunSessions";
 import {
-  buildWriterSessionReadyMessage,
   buildWriterSessionWarmupMessage,
   clearWriterSession,
   isWriterConversationStarted,
   isWriterSessionWarmed,
   markWriterConversationStarted,
   markWriterSessionWarmed,
+  runWriterSessionStart,
   supportsWriterSessionContinuation,
   supportsWriterSessionWarmup,
 } from "./agentWitchWriterSession";
@@ -296,45 +296,24 @@ const startWriterSession = async (
   requestId: string | undefined,
   socket: WebSocket,
 ): Promise<void> => {
-  if (!isHarnessWriterAgentId(writerAgent)) {
-    sendMessage(socket, {
-      type: "command.writer.session.ready",
-      payload: {
-        writerAgent,
-        output: `Unsupported writer agent: ${writerAgent}\n`,
-        exitCode: -1,
-      },
-      requestId,
-    });
-    return;
-  }
-
-  try {
-    await ensureHarnessWriterCli(config.layout.installDir, writerAgent);
-  } catch (error) {
-    const message = error instanceof Error ? error.message : String(error);
-    sendMessage(socket, {
-      type: "command.writer.session.ready",
-      payload: {
-        writerAgent,
-        output: `Failed to prepare ${writerAgent}: ${message}\n`,
-        exitCode: -1,
-      },
-      requestId,
-    });
-    return;
-  }
-
-  if (supportsWriterSessionWarmup(writerAgent)) {
-    markWriterSessionWarmed(writerAgent);
-  }
+  const result = await runWriterSessionStart({
+    installDir: config.layout.installDir,
+    workspace: config.workspace,
+    writerAgent,
+    commands: resolveWriterCliCommands({
+      claudeCommand: config.claudeCommand,
+      codexCommand: config.codexCommand,
+      cursorCommand: config.cursorCommand,
+      antigravityCommand: config.antigravityCommand,
+    }),
+  });
 
   sendMessage(socket, {
     type: "command.writer.session.ready",
     payload: {
       writerAgent,
-      output: buildWriterSessionReadyMessage(writerAgent),
-      exitCode: 0,
+      output: result.output,
+      exitCode: result.exitCode,
     },
     requestId,
   });

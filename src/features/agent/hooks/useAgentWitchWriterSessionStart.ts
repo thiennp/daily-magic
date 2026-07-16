@@ -7,13 +7,30 @@ import {
   type SetStateAction,
 } from "react";
 
-import { buildDemoClaudePromptAck } from "@/features/agent/utils/buildDemoClaudePromptAck";
 import { dispatchWriterSessionStart } from "@/features/agent/utils/dispatchWriterSessionStart";
+import { formatWriterSessionStartDisplayCommand } from "@/lib/agentWitch/formatWriterCliDisplayCommand";
+import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
 import parseAgentWitchSocketDisplay, {
   type AgentWitchSocketDisplay,
 } from "@/lib/agentWitch/parseAgentWitchSocketDisplay";
-import { formatWriterSessionStartDisplayCommand } from "@/lib/agentWitch/formatWriterCliDisplayCommand";
-import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
+import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
+
+const DEMO_WRITER_SESSION_READY_LABELS: Record<HarnessWriterAgent, string> = {
+  "claude-cli": "Claude",
+  codex: "Codex",
+  cursor: "Cursor",
+  antigravity: "Antigravity",
+};
+
+const buildDemoWriterSessionReady = (writerAgent: HarnessWriterAgent): string =>
+  JSON.stringify({
+    type: AGENT_WITCH_MESSAGE_TYPES.COMMAND_WRITER_SESSION_READY,
+    payload: {
+      writerAgent,
+      output: `${DEMO_WRITER_SESSION_READY_LABELS[writerAgent]} is ready on your Mac.\nSend a task from the box below when you are ready.\n`,
+      exitCode: 0,
+    },
+  });
 
 export const useAgentWitchWriterSessionStart = (input: {
   readonly socketRef: RefObject<WebSocket | null>;
@@ -37,9 +54,9 @@ export const useAgentWitchWriterSessionStart = (input: {
       );
 
       if (input.connectionLab !== null) {
-        input.setLastResponse(
-          parseAgentWitchSocketDisplay(buildDemoClaudePromptAck()),
-        );
+        const demoReady = buildDemoWriterSessionReady(writerAgent);
+        input.applySocketMessage(demoReady);
+        input.setLastResponse(parseAgentWitchSocketDisplay(demoReady));
         return;
       }
 

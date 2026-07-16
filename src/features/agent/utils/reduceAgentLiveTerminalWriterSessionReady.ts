@@ -1,7 +1,10 @@
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
 
 import type { AgentLiveTerminalState } from "./agentLiveTerminalState.type";
-import { appendAgentLiveTerminalCommand } from "./agentLiveTerminalPrompt.constant";
+import {
+  AGENT_LIVE_BASH_PROMPT,
+  appendAgentLiveTerminalCommand,
+} from "./agentLiveTerminalPrompt.constant";
 import isHarnessWriterAgent from "@/lib/agentWitch/harness/isHarnessWriterAgent";
 
 export const reduceAgentLiveTerminalWriterSessionReady = (
@@ -19,8 +22,12 @@ export const reduceAgentLiveTerminalWriterSessionReady = (
   const output =
     typeof payload.output === "string" ? payload.output : "Session ready.\n";
   const commandLine = state.pendingCommandLine ?? "";
-  const nextOutput =
-    commandLine.length > 0
+  const commandAlreadyShown =
+    commandLine.length > 0 &&
+    state.output.includes(`${AGENT_LIVE_BASH_PROMPT}${commandLine}`);
+  const nextOutput = commandAlreadyShown
+    ? `${state.output}${output}`
+    : commandLine.length > 0
       ? `${appendAgentLiveTerminalCommand(state.output, commandLine)}${output}`
       : `${state.output}${output}`;
 

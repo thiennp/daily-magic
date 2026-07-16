@@ -60,6 +60,25 @@ export interface BuildWriterCliInvocationOptions {
   readonly sessionTurn?: WriterCliSessionTurn;
 }
 
+export const buildWriterSessionStartInvocation = (
+  writerAgent: HarnessWriterAgentId,
+  commands: WriterCliCommands,
+): WriterCliInvocation => {
+  if (writerAgent === "claude-cli") {
+    return { command: commands.claudeCommand, args: ["--version"] };
+  }
+
+  if (writerAgent === "codex") {
+    return { command: commands.codexCommand, args: ["--version"] };
+  }
+
+  if (writerAgent === "cursor") {
+    return { command: commands.cursorCommand, args: ["agent", "status"] };
+  }
+
+  return { command: commands.antigravityCommand, args: ["--version"] };
+};
+
 export const buildWriterCliInvocation = (
   writerAgent: HarnessWriterAgentId,
   instruction: string,

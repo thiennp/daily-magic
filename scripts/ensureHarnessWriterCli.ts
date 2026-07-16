@@ -16,8 +16,11 @@ export const ensureHarnessWriterCli = (
 
   return new Promise((resolve, reject) => {
     const child = spawn("bash", [scriptPath, writerAgent], {
-      stdio: "inherit",
+      stdio: ["ignore", "pipe", "pipe"],
     });
+
+    child.stdout?.resume();
+    child.stderr?.resume();
 
     child.on("error", (error) => {
       reject(error);
@@ -30,7 +33,9 @@ export const ensureHarnessWriterCli = (
       }
 
       reject(
-        new Error(`ensure-writer.sh exited with code ${String(exitCode ?? -1)}`),
+        new Error(
+          `ensure-writer.sh exited with code ${String(exitCode ?? -1)}`,
+        ),
       );
     });
   });
