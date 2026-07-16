@@ -3,6 +3,7 @@
 import { useState } from "react";
 
 import Button from "@/components/ui/button/Button";
+import { useAutoGrowTextarea } from "@/hooks/useAutoGrowTextarea";
 
 interface AgentLiveTerminalFeedbackChatProps {
   readonly visible: boolean;
@@ -24,6 +25,7 @@ export default function AgentLiveTerminalFeedbackChat({
   onSubmit,
 }: AgentLiveTerminalFeedbackChatProps) {
   const [message, setMessage] = useState("");
+  const { textareaRef } = useAutoGrowTextarea(message);
 
   if (!visible) {
     return null;
@@ -51,18 +53,19 @@ export default function AgentLiveTerminalFeedbackChat({
       <label className="mt-3 block text-sm text-gray-700 dark:text-gray-300">
         {isAnswerMode ? "Your answer" : "Message"}
         <textarea
+          ref={textareaRef}
           value={message}
           autoFocus={autoFocus}
           onChange={(event) => {
             setMessage(event.target.value);
           }}
-          rows={3}
+          rows={1}
           placeholder={
             isAnswerMode
               ? "Reply to your Mac agent…"
               : "Ask a follow-up or add context for the next step…"
           }
-          className="mt-2 w-full rounded-lg border border-gray-200 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-800"
+          className="mt-2 w-full resize-none rounded-lg border border-gray-200 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-800"
         />
       </label>
       {queuedCount > 0 ? (
