@@ -1,11 +1,12 @@
 "use client";
 
+import { useEffect } from "react";
 import { useSession } from "next-auth/react";
 
-import GroupDispatchPolicyControl from "@/features/admin/components/GroupDispatchPolicyControl";
 import GroupMembersSection from "@/features/admin/components/GroupMembersSection";
 import GroupSelectionSection from "@/features/admin/components/GroupSelectionSection";
 import GroupTeamActivityPanel from "@/features/admin/components/GroupTeamActivityPanel";
+import { useAdminGroupsSidebar } from "@/features/admin/context/AdminGroupsSidebarContext";
 import { useGroupManagement } from "@/features/admin/hooks/useGroupManagement";
 import type { GroupItem } from "@/features/admin/types/groupManagement.types";
 import { GroupRole, isPrivilegedGlobalRole } from "@/lib/auth/roles";
@@ -18,7 +19,13 @@ export default function GroupManagementPanel({
   initialGroups,
 }: GroupManagementPanelProps) {
   const { data: session } = useSession();
+  const adminGroupsSidebar = useAdminGroupsSidebar();
   const groupManagement = useGroupManagement(initialGroups);
+
+  useEffect(() => {
+    adminGroupsSidebar?.setSelectedGroupId(groupManagement.selectedGroupId);
+  }, [adminGroupsSidebar, groupManagement.selectedGroupId]);
+
   const actorUserId =
     session?.user && "id" in session.user && typeof session.user.id === "string"
       ? session.user.id
@@ -50,9 +57,6 @@ export default function GroupManagementPanel({
 
       {groupManagement.selectedGroupId ? (
         <>
-          <GroupDispatchPolicyControl
-            groupId={groupManagement.selectedGroupId}
-          />
           <GroupMembersSection
             members={groupManagement.members}
             memberEmail={groupManagement.memberEmail}
