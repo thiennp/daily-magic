@@ -5,6 +5,7 @@ export interface MarketplaceInstallApiResult {
   readonly ok: boolean;
   readonly errorMessage: string | null;
   readonly savedToLibrary: boolean;
+  readonly libraryCapabilityId: string | null;
   readonly harnessInstalled: boolean;
   readonly harnessInstallMessage: string | null;
   readonly localHarnessBundle: HarnessInstallBundle | null;
@@ -33,6 +34,7 @@ export const postMarketplaceInstall = async (input: {
       ok: false,
       errorMessage,
       savedToLibrary: false,
+      libraryCapabilityId: null,
       harnessInstalled: false,
       harnessInstallMessage: null,
       localHarnessBundle: null,
@@ -41,6 +43,7 @@ export const postMarketplaceInstall = async (input: {
 
   const record = payload as {
     savedToLibrary?: boolean;
+    libraryCapabilityId?: string | null;
     harnessInstalled?: boolean;
     harnessInstallMessage?: string | null;
     localHarnessBundle?: HarnessInstallBundle | null;
@@ -56,6 +59,11 @@ export const postMarketplaceInstall = async (input: {
     ok: true,
     errorMessage: null,
     savedToLibrary,
+    libraryCapabilityId:
+      typeof record.libraryCapabilityId === "string" &&
+      record.libraryCapabilityId.trim().length > 0
+        ? record.libraryCapabilityId.trim()
+        : null,
     harnessInstalled: record.harnessInstalled === true,
     harnessInstallMessage:
       typeof record.harnessInstallMessage === "string"

@@ -9,6 +9,7 @@ const installFailure = (errorMessage: string): MarketplaceInstallResult => ({
   ok: false,
   errorMessage,
   savedToLibrary: false,
+  libraryCapabilityId: null,
   harnessInstalled: false,
   harnessInstallMessage: null,
   localHarnessBundle: null,
@@ -59,6 +60,7 @@ const installTeammateListing = async (
       ok: true,
       errorMessage: null,
       savedToLibrary: true,
+      libraryCapabilityId: forkResult.capability.id,
       harnessInstalled: false,
       harnessInstallMessage:
         "Saved to your library. Rules bundle is not available to install.",
@@ -76,6 +78,7 @@ const installTeammateListing = async (
     ok: true,
     errorMessage: null,
     savedToLibrary: true,
+    libraryCapabilityId: forkResult.capability.id,
     harnessInstalled: false,
     harnessInstallMessage: harness.harnessInstallMessage,
     localHarnessBundle: harness.localHarnessBundle,

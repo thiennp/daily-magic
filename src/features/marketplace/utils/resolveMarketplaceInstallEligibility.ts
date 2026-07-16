@@ -28,7 +28,8 @@ export const resolveMarketplaceInstallEligibility = (input: {
     (canDispatchToMac(input.selectedDevice) ||
       canInstallHarnessLocally ||
       isOfficialPreset) &&
-    input.status !== "installing";
+    input.status !== "installing" &&
+    input.status !== "done";
   const needsLiveConnection =
     !canInstallHarnessLocally &&
     input.selectedDevice !== undefined &&

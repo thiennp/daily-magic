@@ -60,6 +60,7 @@ export async function POST(request: Request): Promise<Response> {
   return Response.json({
     ok: true,
     savedToLibrary: result.savedToLibrary,
+    libraryCapabilityId: result.libraryCapabilityId,
     harnessInstalled: result.harnessInstalled,
     harnessInstallMessage: result.harnessInstallMessage,
     localHarnessBundle: result.localHarnessBundle,

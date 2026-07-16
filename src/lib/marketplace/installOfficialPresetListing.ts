@@ -14,6 +14,7 @@ const installOfficialPresetListing = async (
       ok: false,
       errorMessage: "Listing not found.",
       savedToLibrary: false,
+      libraryCapabilityId: null,
       harnessInstalled: false,
       harnessInstallMessage: null,
       localHarnessBundle: null,
@@ -32,6 +33,7 @@ const installOfficialPresetListing = async (
       ok: false,
       errorMessage: "Could not save this starter.",
       savedToLibrary: false,
+      libraryCapabilityId: null,
       harnessInstalled: false,
       harnessInstallMessage: null,
       localHarnessBundle: null,
@@ -42,6 +44,7 @@ const installOfficialPresetListing = async (
     ok: true,
     errorMessage: null,
     savedToLibrary: true,
+    libraryCapabilityId: result.capability.id,
     harnessInstalled: false,
     harnessInstallMessage: null,
     localHarnessBundle: buildHarnessInstallBundleFromTemplateHarness(
