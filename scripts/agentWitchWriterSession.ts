@@ -158,6 +158,7 @@ export const runWriterSessionStart = async (input: {
   }
 
   try {
+    input.onChunk?.(`Preparing ${input.writerAgent} CLI on your Mac…\n`);
     await ensureHarnessWriterCli(input.installDir, input.writerAgent);
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);

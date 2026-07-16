@@ -1,6 +1,9 @@
 import { describe, expect, it } from "vitest";
 
-import { beginAgentLiveTerminalSession } from "@/features/agent/utils/agentLiveTerminalState.type";
+import {
+  beginAgentLiveTerminalSession,
+  continueAgentLiveTerminalSession,
+} from "@/features/agent/utils/agentLiveTerminalState.type";
 import { reduceAgentLiveTerminalWriterSessionChunk } from "@/features/agent/utils/reduceAgentLiveTerminalWriterSessionChunk";
 
 describe("reduceAgentLiveTerminalWriterSessionChunk", () => {
@@ -33,5 +36,29 @@ describe("reduceAgentLiveTerminalWriterSessionChunk", () => {
     });
 
     expect(next).toBe(state);
+  });
+
+  it("accepts chunks for a restarted writer session before the new ack arrives", () => {
+    const finishedState = {
+      ...beginAgentLiveTerminalSession("cursor agent", "cursor", "device-1"),
+      sessionWriterSessionId: "session-a",
+      status: "finished" as const,
+    };
+
+    const state = continueAgentLiveTerminalSession(
+      finishedState,
+      "cursor agent",
+    );
+
+    expect(state.sessionWriterSessionId).toBeNull();
+
+    const next = reduceAgentLiveTerminalWriterSessionChunk(state, {
+      writerAgent: "cursor",
+      writerSessionId: "session-b",
+      chunk: "2.5.0\n",
+    });
+
+    expect(next.status).toBe("streaming");
+    expect(next.output).toContain("2.5.0");
   });
 });

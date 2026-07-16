@@ -78,7 +78,7 @@ export const continueAgentLiveTerminalSession = (
     pendingCommandLine: commandLine,
     sessionWriterAgent: state.sessionWriterAgent,
     sessionDeviceId: state.sessionDeviceId,
-    sessionWriterSessionId: state.sessionWriterSessionId,
+    sessionWriterSessionId: null,
   };
 };
 

@@ -323,13 +323,14 @@ const startWriterSession = async (
     },
   });
 
+  const resolvedWriterAgent = isHarnessWriterAgentId(writerAgent)
+    ? writerAgent
+    : "claude-cli";
   const readyOutput =
     result.exitCode !== 0
       ? result.output
       : streamedOutput.length > 0
-        ? buildWriterSessionReadyMessage(
-            isHarnessWriterAgentId(writerAgent) ? writerAgent : "claude-cli",
-          )
+        ? `${streamedOutput.trimEnd()}${streamedOutput.endsWith("\n") ? "" : "\n"}${buildWriterSessionReadyMessage(resolvedWriterAgent)}`
         : result.output;
 
   sendMessage(socket, {

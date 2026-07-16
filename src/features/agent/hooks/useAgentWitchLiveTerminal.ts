@@ -8,6 +8,7 @@ import {
 } from "@/features/agent/utils/agentLiveTerminalLocalStore";
 import { type AgentRunInputRequest } from "@/features/dispatch/utils/agentRunInputSocket";
 import { submitAgentLiveTerminalInput } from "@/features/agent/utils/submitAgentLiveTerminalInput";
+import { useAgentWitchLiveTerminalWriterSessionSubscribe } from "@/features/agent/hooks/useAgentWitchLiveTerminalWriterSessionSubscribe";
 import { finishAgentLiveTerminalWriterSession } from "@/features/agent/utils/sendWriterSessionEnd";
 import {
   beginAgentLiveTerminalSession,
@@ -50,6 +51,12 @@ export function useAgentWitchLiveTerminal(socketRef: {
   useEffect(() => {
     persistAgentLiveTerminalState(state);
   }, [state]);
+
+  useAgentWitchLiveTerminalWriterSessionSubscribe({
+    socketRef,
+    sessionWriterSessionId: state.sessionWriterSessionId,
+    status: state.status,
+  });
 
   const beginSession = useCallback(
     (
