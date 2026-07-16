@@ -44,4 +44,20 @@ describe("splitAgentLiveTerminalOutput", () => {
 
     expect(parseLatestAgentLiveTerminalNextActions(output)).toEqual([]);
   });
+
+  it("parses next actions after a finished run appends the idle bash prompt", () => {
+    const output = [
+      `${AGENT_LIVE_BASH_PROMPT}cursor agent -p "warm up"`,
+      "Done.",
+      AGENT_RUN_NEXT_ACTIONS_MARKER,
+      "1. Run tests",
+      "2. Open PR",
+      AGENT_LIVE_BASH_PROMPT,
+    ].join("\n");
+
+    expect(parseLatestAgentLiveTerminalNextActions(output)).toEqual([
+      "Run tests",
+      "Open PR",
+    ]);
+  });
 });

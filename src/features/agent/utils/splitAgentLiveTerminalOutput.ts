@@ -36,13 +36,26 @@ const stripAllNextActionsBlocks = (text: string): string => {
   return stripAllNextActionsBlocks(text.slice(0, markerIndex).trimEnd());
 };
 
-const extractLatestResponseSegment = (output: string): string => {
-  const lastPromptIndex = output.lastIndexOf(AGENT_LIVE_BASH_PROMPT);
-  if (lastPromptIndex < 0) {
+const stripTrailingBashPrompt = (output: string): string => {
+  if (!output.endsWith(AGENT_LIVE_BASH_PROMPT)) {
     return output;
   }
 
-  return output.slice(lastPromptIndex + AGENT_LIVE_BASH_PROMPT.length);
+  return output.slice(0, -AGENT_LIVE_BASH_PROMPT.length).trimEnd();
+};
+
+const extractLatestResponseSegment = (output: string): string => {
+  const withoutTrailingPrompt = stripTrailingBashPrompt(output);
+  const lastPromptIndex = withoutTrailingPrompt.lastIndexOf(
+    AGENT_LIVE_BASH_PROMPT,
+  );
+  if (lastPromptIndex < 0) {
+    return withoutTrailingPrompt;
+  }
+
+  return withoutTrailingPrompt.slice(
+    lastPromptIndex + AGENT_LIVE_BASH_PROMPT.length,
+  );
 };
 
 const parseNextActionsFromBlock = (block: string): readonly string[] => {

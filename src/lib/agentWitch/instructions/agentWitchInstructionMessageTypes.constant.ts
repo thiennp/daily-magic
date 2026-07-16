@@ -40,6 +40,12 @@ export const AGENT_WITCH_INSTRUCTION_MESSAGE_TYPES: readonly AgentWitchInstructi
       purpose: "Browser forwards the user's answer to the Mac agent.",
     },
     {
+      type: AGENT_WITCH_MESSAGE_TYPES.COMMAND_WRITER_SESSION_END,
+      direction: "browser_to_mac",
+      purpose:
+        "Browser tells the Mac agent to clear a persisted writer CLI session.",
+    },
+    {
       type: AGENT_WITCH_MESSAGE_TYPES.DISPATCH_APPROVAL_REQUIRED,
       direction: "mac_to_browser",
       purpose: "Notify that a teammate dispatch awaits Mac owner approval.",
