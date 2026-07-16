@@ -4,6 +4,7 @@ import SendTaskComposerPickerStep from "@/features/agent/SendTaskComposerPickerS
 import SendTaskComposerStepTrail from "@/features/agent/SendTaskComposerStepTrail";
 import SendTaskComposerWriterAgentStep from "@/features/agent/SendTaskComposerWriterAgentStep";
 import WsTestComposerFormStep from "@/features/agent/WsTestComposerFormStep";
+import type { SendTaskComposerStepTrailViewItem } from "@/features/agent/types/SendTaskComposerStepTrailViewItem.type";
 import type { useWsTestComposerWizard } from "@/features/agent/hooks/useWsTestComposerWizard";
 import type { useWsTestTaskComposer } from "@/features/agent/hooks/useWsTestTaskComposer";
 import type { WsTestConnectionStatus } from "@/features/agent/types/WsTestConnectionStatus.type";
@@ -25,12 +26,7 @@ interface WsTestComposerWizardLaterStepsProps {
   readonly onQueue: () => void;
   readonly onPickerSelect: (item: SendTaskComposerPickerItem) => void;
   readonly onWriterAgentSelect: (writerAgent: HarnessWriterAgent) => void;
-  readonly stepTrail: readonly {
-    readonly id: "mac" | "workflow" | "writer";
-    readonly caption: string;
-    readonly value: string;
-    readonly onBack: () => void;
-  }[];
+  readonly stepTrail: readonly SendTaskComposerStepTrailViewItem[];
 }
 
 export default function WsTestComposerWizardLaterSteps({

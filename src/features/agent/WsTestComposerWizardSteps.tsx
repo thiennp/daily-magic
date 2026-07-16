@@ -1,6 +1,5 @@
 "use client";
 
-import { useSendTaskComposerStepTrail } from "@/features/agent/hooks/useSendTaskComposerStepTrail";
 import type { WsTestComposerWizardStepsProps } from "@/features/agent/types/WsTestComposerWizardStepsProps.type";
 import WsTestComposerMacSection from "@/features/agent/WsTestComposerMacSection";
 import WsTestComposerWizardLaterSteps from "@/features/agent/WsTestComposerWizardLaterSteps";
@@ -13,7 +12,6 @@ export default function WsTestComposerWizardSteps({
   isWriterAgentLocked,
   isMacDeviceLocked,
   macDispatchDeviceId,
-  showMacPicker,
   isSteppedComposer,
   connectionStatus,
   isSendDisabled,
@@ -23,29 +21,9 @@ export default function WsTestComposerWizardSteps({
   onDeviceChange,
   onPickerSelect,
   onWriterAgentSelect,
-  onMacStepBack,
-  onWorkflowStepBack,
-  onWriterStepBack,
   onDeviceDeleted,
+  stepTrail,
 }: WsTestComposerWizardStepsProps) {
-  const stepTrail = useSendTaskComposerStepTrail({
-    isSteppedComposer,
-    wizard,
-    composer,
-    macDispatchDeviceId,
-    macStepInput: {
-      showMacPicker,
-      isOwnDeviceDispatch: composer.isOwnDeviceDispatch,
-      isMacDeviceLocked,
-      isMacDevicesLoading: composer.isMacDevicesLoading,
-      deviceCount: composer.macDevices.length,
-    },
-    writerAgent,
-    onMacStepBack,
-    onWorkflowStepBack,
-    onWriterStepBack,
-  });
-
   return (
     <>
       {wizard.showMacSection ? (

@@ -1,5 +1,6 @@
 import type { useWsTestComposerWizard } from "@/features/agent/hooks/useWsTestComposerWizard";
 import type { useWsTestTaskComposer } from "@/features/agent/hooks/useWsTestTaskComposer";
+import type { SendTaskComposerStepTrailViewItem } from "@/features/agent/types/SendTaskComposerStepTrailViewItem.type";
 import type { WsTestConnectionStatus } from "@/features/agent/types/WsTestConnectionStatus.type";
 import type { SendTaskComposerPickerItem } from "@/features/agent/utils/buildSendTaskComposerPickerItems";
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
@@ -12,7 +13,6 @@ export interface WsTestComposerWizardStepsProps {
   readonly isWriterAgentLocked: boolean;
   readonly isMacDeviceLocked: boolean;
   readonly macDispatchDeviceId: string;
-  readonly showMacPicker: boolean;
   readonly isSteppedComposer: boolean;
   readonly connectionStatus: WsTestConnectionStatus;
   readonly isSendDisabled: boolean;
@@ -22,8 +22,6 @@ export interface WsTestComposerWizardStepsProps {
   readonly onDeviceChange: (deviceId: string) => void;
   readonly onPickerSelect: (item: SendTaskComposerPickerItem) => void;
   readonly onWriterAgentSelect: (writerAgent: HarnessWriterAgent) => void;
-  readonly onMacStepBack: () => void;
-  readonly onWorkflowStepBack: () => void;
-  readonly onWriterStepBack: () => void;
+  readonly stepTrail: readonly SendTaskComposerStepTrailViewItem[];
   readonly onDeviceDeleted?: (deviceId: string) => void | Promise<void>;
 }

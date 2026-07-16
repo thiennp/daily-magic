@@ -25,6 +25,7 @@ interface AgentLiveTerminalSectionProps {
   readonly feedbackAutoFocus?: boolean;
   readonly onSubmitFeedback: (message: string) => void;
   readonly onFinishSession: () => void;
+  readonly isSteppedComposer?: boolean;
 }
 
 const AgentLiveTerminalSection = forwardRef<
@@ -46,54 +47,59 @@ const AgentLiveTerminalSection = forwardRef<
     feedbackAutoFocus = false,
     onSubmitFeedback,
     onFinishSession,
+    isSteppedComposer = false,
   },
   ref,
 ) {
+  const content = (
+    <>
+      {sessionWriterAgent !== null ? (
+        <AgentLiveTerminalSessionBar
+          sessionWriterAgent={sessionWriterAgent}
+          sessionDeviceName={sessionDeviceName}
+          onFinishSession={onFinishSession}
+        />
+      ) : null}
+      {activeRunId !== null ? (
+        <p className="mb-3 text-sm text-gray-600 dark:text-gray-400">
+          This job is saved locally in{" "}
+          <Link
+            href="/reports"
+            className="font-medium text-brand-600 hover:text-brand-700 dark:text-brand-400"
+          >
+            Job history
+          </Link>
+          .{" "}
+          <Link
+            href={`/reports/${activeRunId}`}
+            className="font-medium text-brand-600 hover:text-brand-700 dark:text-brand-400"
+          >
+            Open full report
+          </Link>
+        </p>
+      ) : null}
+      <AgentLiveTerminalPanel
+        output={output}
+        status={status}
+        feedbackVisible={feedbackVisible}
+        feedbackPendingQuestion={feedbackPendingQuestion}
+        feedbackQueuedCount={feedbackQueuedCount}
+        feedbackQueueNotice={feedbackQueueNotice}
+        isFeedbackSubmitting={isFeedbackSubmitting}
+        feedbackAutoFocus={feedbackAutoFocus}
+        onSubmitFeedback={onSubmitFeedback}
+      />
+      {errorMessage !== null ? (
+        <p className="mt-4 text-sm text-rose-600 dark:text-rose-400">
+          {errorMessage}
+        </p>
+      ) : null}
+    </>
+  );
+
   return (
     <section ref={ref} tabIndex={-1} className="outline-none">
-      <AppPanel>
-        {sessionWriterAgent !== null ? (
-          <AgentLiveTerminalSessionBar
-            sessionWriterAgent={sessionWriterAgent}
-            sessionDeviceName={sessionDeviceName}
-            onFinishSession={onFinishSession}
-          />
-        ) : null}
-        {activeRunId !== null ? (
-          <p className="mb-3 text-sm text-gray-600 dark:text-gray-400">
-            This job is saved locally in{" "}
-            <Link
-              href="/reports"
-              className="font-medium text-brand-600 hover:text-brand-700 dark:text-brand-400"
-            >
-              Job history
-            </Link>
-            .{" "}
-            <Link
-              href={`/reports/${activeRunId}`}
-              className="font-medium text-brand-600 hover:text-brand-700 dark:text-brand-400"
-            >
-              Open full report
-            </Link>
-          </p>
-        ) : null}
-        <AgentLiveTerminalPanel
-          output={output}
-          status={status}
-          feedbackVisible={feedbackVisible}
-          feedbackPendingQuestion={feedbackPendingQuestion}
-          feedbackQueuedCount={feedbackQueuedCount}
-          feedbackQueueNotice={feedbackQueueNotice}
-          isFeedbackSubmitting={isFeedbackSubmitting}
-          feedbackAutoFocus={feedbackAutoFocus}
-          onSubmitFeedback={onSubmitFeedback}
-        />
-        {errorMessage !== null ? (
-          <p className="mt-4 text-sm text-rose-600 dark:text-rose-400">
-            {errorMessage}
-          </p>
-        ) : null}
-      </AppPanel>
+      {isSteppedComposer ? content : <AppPanel>{content}</AppPanel>}
     </section>
   );
 });

@@ -62,4 +62,13 @@ describe("resolveSendTaskComposerStepTrailItems", () => {
       }).map((item) => item.id),
     ).toEqual(["mac", "workflow", "writer"]);
   });
+
+  it("shows all prior selections on the live session step", () => {
+    expect(
+      resolveSendTaskComposerStepTrailItems({
+        ...baseInput,
+        currentStep: "session",
+      }).map((item) => item.id),
+    ).toEqual(["mac", "workflow", "writer"]);
+  });
 });

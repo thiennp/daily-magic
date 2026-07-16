@@ -1,64 +1,20 @@
 "use client";
 
 import AgentWitchUnsupportedHostNotice from "@/features/home/AgentWitchUnsupportedHostNotice";
-import { useAgentRunQueue } from "@/features/agent/hooks/useAgentRunQueue";
-import { useDelegatedWriterAgent } from "@/features/agent/hooks/useDelegatedWriterAgent";
-import { useWsTestMacSession } from "@/features/agent/hooks/useWsTestMacSession";
-import { useWsTestPanelLifecycle } from "@/features/agent/hooks/useWsTestPanelLifecycle";
-import { useWsTestPromptHandlers } from "@/features/agent/hooks/useWsTestPromptHandlers";
-import { useWsTestTaskComposer } from "@/features/agent/hooks/useWsTestTaskComposer";
-import WsTestPanelDelegationSection from "@/features/agent/WsTestPanelDelegationSection";
-import WsTestPanelMacSessionSection from "@/features/agent/WsTestPanelMacSessionSection";
+import { useWsTestPanelController } from "@/features/agent/hooks/useWsTestPanelController";
+import WsTestPanelComposerSection from "@/features/agent/WsTestPanelComposerSection";
 import WsTestPanelStatusSection from "@/features/agent/WsTestPanelStatusSection";
-import { resolveAgentSessionTargets } from "@/features/agent/utils/resolveAgentSessionTargets";
 import isAgentWitchWebSocketSupportedHost from "@/lib/agentWitch/isAgentWitchWebSocketSupportedHost";
-import { useAgentWitchSocket } from "./hooks/useAgentWitchSocket";
 
 interface WsTestPanelProps {
   readonly variant?: "page" | "modal";
 }
 
 export default function WsTestPanel({ variant = "page" }: WsTestPanelProps) {
-  const socket = useAgentWitchSocket();
-  const composer = useWsTestTaskComposer();
-  const { writerAgent, setWriterAgent } = useDelegatedWriterAgent();
-  const sessionTargets = resolveAgentSessionTargets({
-    sessionWriterAgent: socket.sessionWriterAgent,
-    writerAgent,
-    sessionDeviceId: socket.sessionDeviceId,
-    selectedDeviceId: composer.selectedDeviceId,
-  });
-  const { queueCount, queueMessage, enqueueRun, flushQueue, refreshCount } =
-    useAgentRunQueue();
-  const {
-    terminalSectionRef,
-    isSessionActive,
-    sessionDeviceName,
-    sessionErrorMessage,
-    terminalFeedback,
-  } = useWsTestMacSession({
-    socket,
-    composer,
-    sessionTargets,
-    enqueueRun,
-  });
-  const promptHandlers = useWsTestPromptHandlers({
-    composer,
-    activeWriterAgent: sessionTargets.activeWriterAgent,
-    activeDeviceId: sessionTargets.activeDeviceId,
-    sendClaudePrompt: socket.sendClaudePrompt,
-    enqueueRun,
-  });
+  const isSteppedComposer = variant === "modal";
+  const panel = useWsTestPanelController({ isSteppedComposer });
   const host = typeof window !== "undefined" ? window.location.host : "";
   const isWebSocketSupported = isAgentWitchWebSocketSupportedHost(host);
-
-  useWsTestPanelLifecycle({
-    connectionStatus: socket.connectionStatus,
-    flushQueue,
-    refreshCount,
-    sendClaudePrompt: socket.sendClaudePrompt,
-    writerAgent,
-  });
 
   return (
     <div
@@ -69,48 +25,42 @@ export default function WsTestPanel({ variant = "page" }: WsTestPanelProps) {
       ) : null}
       <WsTestPanelStatusSection
         isModal={variant === "modal"}
-        connectionStatus={socket.connectionStatus}
-        queueCount={queueCount}
-        queueMessage={queueMessage}
-        errorMessage={sessionErrorMessage}
+        connectionStatus={panel.socket.connectionStatus}
+        queueCount={panel.queueCount}
+        queueMessage={panel.queueMessage}
+        errorMessage={panel.sessionErrorMessage}
       />
-      {isSessionActive ? (
-        <WsTestPanelMacSessionSection
-          ref={terminalSectionRef}
-          output={socket.liveTerminalOutput}
-          status={socket.liveTerminalStatus}
-          activeRunId={socket.liveTerminalRunId}
-          sessionWriterAgent={socket.sessionWriterAgent}
-          sessionDeviceName={sessionDeviceName}
-          feedbackVisible={terminalFeedback.visible}
-          feedbackPendingQuestion={terminalFeedback.pendingQuestion}
-          feedbackQueuedCount={terminalFeedback.queuedCount}
-          feedbackQueueNotice={terminalFeedback.queueNotice}
-          isFeedbackSubmitting={terminalFeedback.isSubmitting}
-          onSubmitFeedback={terminalFeedback.submitFeedback}
-          errorMessage={
-            socket.lastResponse.isError ? socket.lastResponse.text : null
-          }
-          onFinishSession={socket.finishLiveTerminalSession}
-        />
-      ) : (
-        <WsTestPanelDelegationSection
-          composer={composer}
-          sessionTargets={sessionTargets}
-          connectionStatus={socket.connectionStatus}
-          writerAgent={sessionTargets.activeWriterAgent}
-          onWriterAgentChange={setWriterAgent}
-          promptHandlers={promptHandlers}
-          isSteppedComposer={variant === "modal"}
-          onStartWriterAgent={(writerAgent) => {
-            setWriterAgent(writerAgent);
-            socket.startWriterSession(
-              writerAgent,
-              sessionTargets.activeDeviceId,
-            );
-          }}
-        />
-      )}
+      <WsTestPanelComposerSection
+        isSessionActive={panel.isSessionActive}
+        isSteppedComposer={isSteppedComposer}
+        terminalSectionRef={panel.terminalSectionRef}
+        composer={panel.composer}
+        sessionTargets={panel.sessionTargets}
+        connectionStatus={panel.socket.connectionStatus}
+        promptHandlers={panel.promptHandlers}
+        wizard={panel.wizard}
+        panelActions={panel.panelActions}
+        stepTrail={panel.stepTrail}
+        liveTerminalOutput={panel.socket.liveTerminalOutput}
+        liveTerminalStatus={panel.socket.liveTerminalStatus}
+        liveTerminalRunId={panel.socket.liveTerminalRunId}
+        sessionWriterAgent={panel.socket.sessionWriterAgent}
+        sessionDeviceName={panel.sessionDeviceName}
+        feedbackVisible={panel.terminalFeedback.visible}
+        feedbackPendingQuestion={panel.terminalFeedback.pendingQuestion}
+        feedbackQueuedCount={panel.terminalFeedback.queuedCount}
+        feedbackQueueNotice={panel.terminalFeedback.queueNotice}
+        isFeedbackSubmitting={panel.terminalFeedback.isSubmitting}
+        onSubmitFeedback={panel.terminalFeedback.submitFeedback}
+        sessionErrorMessage={
+          panel.socket.lastResponse.isError
+            ? panel.socket.lastResponse.text
+            : null
+        }
+        onWriterAgentChange={panel.setWriterAgent}
+        onStartWriterAgent={panel.startWriterSession}
+        onFinishSession={panel.socket.finishLiveTerminalSession}
+      />
     </div>
   );
 }

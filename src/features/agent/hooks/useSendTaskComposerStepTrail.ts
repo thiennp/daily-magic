@@ -4,6 +4,7 @@ import { useMemo } from "react";
 
 import type { useWsTestComposerWizard } from "@/features/agent/hooks/useWsTestComposerWizard";
 import type { useWsTestTaskComposer } from "@/features/agent/hooks/useWsTestTaskComposer";
+import type { SendTaskComposerStepTrailViewItem } from "@/features/agent/types/SendTaskComposerStepTrailViewItem.type";
 import {
   resolveSendTaskComposerStepTrailItems,
   resolveSendTaskComposerWorkflowSelectionLabel,
@@ -15,6 +16,7 @@ import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessW
 
 export const useSendTaskComposerStepTrail = (input: {
   readonly isSteppedComposer: boolean;
+  readonly isSessionActive?: boolean;
   readonly wizard: ReturnType<typeof useWsTestComposerWizard>;
   readonly composer: ReturnType<typeof useWsTestTaskComposer>;
   readonly macDispatchDeviceId: string;
@@ -23,15 +25,14 @@ export const useSendTaskComposerStepTrail = (input: {
   readonly onMacStepBack: () => void;
   readonly onWorkflowStepBack: () => void;
   readonly onWriterStepBack: () => void;
-}): readonly {
-  readonly id: "mac" | "workflow" | "writer";
-  readonly caption: string;
-  readonly value: string;
-  readonly onBack: () => void;
-}[] => {
+}): readonly SendTaskComposerStepTrailViewItem[] => {
   const currentStep = useMemo((): SendTaskComposerWizardStepId | null => {
     if (!input.isSteppedComposer) {
       return null;
+    }
+
+    if (input.isSessionActive) {
+      return "session";
     }
 
     if (input.wizard.showPickerStepOnly) {
@@ -48,6 +49,7 @@ export const useSendTaskComposerStepTrail = (input: {
 
     return null;
   }, [
+    input.isSessionActive,
     input.isSteppedComposer,
     input.wizard.showFormStep,
     input.wizard.showPickerStepOnly,
@@ -67,14 +69,20 @@ export const useSendTaskComposerStepTrail = (input: {
     const trailItems = resolveSendTaskComposerStepTrailItems({
       currentStep,
       showMacTrail:
-        !shouldSkipWsTestComposerMacSelectionStep(input.macStepInput) &&
-        input.wizard.hasCompletedMacSelectionStep,
+        currentStep === "session"
+          ? !shouldSkipWsTestComposerMacSelectionStep(input.macStepInput)
+          : !shouldSkipWsTestComposerMacSelectionStep(input.macStepInput) &&
+            input.wizard.hasCompletedMacSelectionStep,
       macDeviceName:
         input.composer.macDisplayNameById.get(input.macDispatchDeviceId) ??
         "Your Mac",
-      showWorkflowTrail: input.wizard.hasCompletedPickerStep,
+      showWorkflowTrail:
+        currentStep === "session" ? true : input.wizard.hasCompletedPickerStep,
       workflowSelectionLabel,
-      showWriterTrail: input.wizard.hasCompletedWriterAgentStep,
+      showWriterTrail:
+        currentStep === "session"
+          ? true
+          : input.wizard.hasCompletedWriterAgentStep,
       writerAgent: input.writerAgent,
     });
 

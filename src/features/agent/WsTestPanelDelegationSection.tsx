@@ -1,9 +1,12 @@
 "use client";
 
 import WsTestPromptSection from "@/features/agent/WsTestPromptSection";
+import type { useWsTestComposerPanelActions } from "@/features/agent/hooks/useWsTestComposerPanelActions";
+import type { useWsTestComposerWizard } from "@/features/agent/hooks/useWsTestComposerWizard";
 import type { useWsTestPromptHandlers } from "@/features/agent/hooks/useWsTestPromptHandlers";
 import type { useWsTestTaskComposer } from "@/features/agent/hooks/useWsTestTaskComposer";
 import type { useAgentWitchSocket } from "@/features/agent/hooks/useAgentWitchSocket";
+import type { SendTaskComposerStepTrailViewItem } from "@/features/agent/types/SendTaskComposerStepTrailViewItem.type";
 import type { resolveAgentSessionTargets } from "@/features/agent/utils/resolveAgentSessionTargets";
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
 
@@ -17,6 +20,9 @@ interface WsTestPanelDelegationSectionProps {
   readonly onWriterAgentChange: (value: HarnessWriterAgent) => void;
   readonly promptHandlers: ReturnType<typeof useWsTestPromptHandlers>;
   readonly isSteppedComposer: boolean;
+  readonly wizard: ReturnType<typeof useWsTestComposerWizard>;
+  readonly panelActions: ReturnType<typeof useWsTestComposerPanelActions>;
+  readonly stepTrail: readonly SendTaskComposerStepTrailViewItem[];
   readonly onStartWriterAgent: (writerAgent: HarnessWriterAgent) => void;
 }
 
@@ -28,6 +34,9 @@ export default function WsTestPanelDelegationSection({
   onWriterAgentChange,
   promptHandlers,
   isSteppedComposer,
+  wizard,
+  panelActions,
+  stepTrail,
   onStartWriterAgent,
 }: WsTestPanelDelegationSectionProps) {
   return (
@@ -44,6 +53,9 @@ export default function WsTestPanelDelegationSection({
         sessionTargets.activeDeviceId,
       )}
       isSteppedComposer={isSteppedComposer}
+      wizard={wizard}
+      panelActions={panelActions}
+      stepTrail={stepTrail}
       onSend={promptHandlers.onSend}
       onQueue={promptHandlers.onQueue}
       onClear={promptHandlers.onClear}

@@ -2,7 +2,8 @@ import type PublishedCapabilityRecord from "@/lib/capabilities/types/PublishedCa
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
 import { HARNESS_WRITER_LABELS } from "@/features/harness/constants/harnessFormOptions";
 
-export type SendTaskComposerWizardStepId = "picker" | "writer" | "form";
+export type SendTaskComposerWizardStepId =
+  "picker" | "writer" | "form" | "session";
 
 export type SendTaskComposerStepTrailItemId = "mac" | "workflow" | "writer";
 
@@ -54,7 +55,10 @@ export const resolveSendTaskComposerStepTrailItems = (input: {
     });
   }
 
-  if (input.showWriterTrail && input.currentStep === "form") {
+  if (
+    input.showWriterTrail &&
+    (input.currentStep === "form" || input.currentStep === "session")
+  ) {
     items.push({
       id: "writer",
       caption: "LLM CLI",

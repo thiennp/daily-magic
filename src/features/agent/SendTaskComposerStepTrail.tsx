@@ -1,12 +1,10 @@
 "use client";
 
 import SendTaskComposerStepTrailLink from "@/features/agent/SendTaskComposerStepTrailLink";
-import type { SendTaskComposerStepTrailItem } from "@/features/agent/utils/resolveSendTaskComposerStepTrail";
+import type { SendTaskComposerStepTrailViewItem } from "@/features/agent/types/SendTaskComposerStepTrailViewItem.type";
 
 interface SendTaskComposerStepTrailProps {
-  readonly items: readonly (SendTaskComposerStepTrailItem & {
-    readonly onBack: () => void;
-  })[];
+  readonly items: readonly SendTaskComposerStepTrailViewItem[];
 }
 
 export default function SendTaskComposerStepTrail({

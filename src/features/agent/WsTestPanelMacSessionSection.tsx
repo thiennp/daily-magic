@@ -20,6 +20,7 @@ interface WsTestPanelMacSessionSectionProps {
   readonly isFeedbackSubmitting: boolean;
   readonly onSubmitFeedback: (message: string) => void;
   readonly onFinishSession: () => void;
+  readonly isSteppedComposer?: boolean;
 }
 
 const WsTestPanelMacSessionSection = forwardRef<
@@ -43,6 +44,7 @@ const WsTestPanelMacSessionSection = forwardRef<
       onSubmitFeedback={props.onSubmitFeedback}
       errorMessage={props.errorMessage}
       onFinishSession={props.onFinishSession}
+      isSteppedComposer={props.isSteppedComposer}
     />
   );
 });

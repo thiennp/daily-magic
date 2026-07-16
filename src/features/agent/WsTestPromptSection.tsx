@@ -5,7 +5,10 @@ import SendTaskLibraryPicker from "@/features/agent/SendTaskLibraryPicker";
 import TeamDispatchFields from "@/features/dispatch/TeamDispatchFields";
 import WsTestPromptComposerPanel from "@/features/agent/WsTestPromptComposerPanel";
 import { useShouldShowTeamDispatchSection } from "@/features/agent/hooks/useShouldShowTeamDispatchSection";
+import type { useWsTestComposerPanelActions } from "@/features/agent/hooks/useWsTestComposerPanelActions";
+import type { useWsTestComposerWizard } from "@/features/agent/hooks/useWsTestComposerWizard";
 import type { useWsTestTaskComposer } from "@/features/agent/hooks/useWsTestTaskComposer";
+import type { SendTaskComposerStepTrailViewItem } from "@/features/agent/types/SendTaskComposerStepTrailViewItem.type";
 import type { WsTestConnectionStatus } from "@/features/agent/types/WsTestConnectionStatus.type";
 import { revokePairedDevice } from "@/features/agent-witch/utils/pairedDevicesApi";
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
@@ -20,6 +23,9 @@ interface WsTestPromptSectionProps {
   readonly connectionStatus: WsTestConnectionStatus;
   readonly isSendDisabled: boolean;
   readonly isSteppedComposer: boolean;
+  readonly wizard: ReturnType<typeof useWsTestComposerWizard>;
+  readonly panelActions: ReturnType<typeof useWsTestComposerPanelActions>;
+  readonly stepTrail: readonly SendTaskComposerStepTrailViewItem[];
   readonly onSend: () => void;
   readonly onClear: () => void;
   readonly onQueue: () => void;
@@ -36,6 +42,9 @@ export default function WsTestPromptSection({
   connectionStatus,
   isSendDisabled,
   isSteppedComposer,
+  wizard,
+  panelActions,
+  stepTrail,
   onSend,
   onClear,
   onQueue,
@@ -89,6 +98,9 @@ export default function WsTestPromptSection({
         isSteppedComposer={isSteppedComposer}
         connectionStatus={connectionStatus}
         isSendDisabled={isSendDisabled}
+        wizard={wizard}
+        panelActions={panelActions}
+        stepTrail={stepTrail}
         onSend={onSend}
         onClear={onClear}
         onQueue={onQueue}
