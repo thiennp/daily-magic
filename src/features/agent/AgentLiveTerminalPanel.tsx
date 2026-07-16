@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 
 import { APP_SURFACE_BASH_TERMINAL_PRE_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
-import AgentLiveTerminalInputForm from "@/features/agent/AgentLiveTerminalInputForm";
+import AgentLiveTerminalFeedbackChat from "@/features/agent/AgentLiveTerminalFeedbackChat";
 import {
   buildAgentLiveTerminalDisplay,
   buildAgentLiveTerminalLoadingLine,
@@ -12,7 +12,6 @@ import {
 } from "@/features/agent/utils/buildAgentLiveTerminalDisplay";
 import { useAgentLiveTerminalLoadingDots } from "@/features/agent/hooks/useAgentLiveTerminalLoadingDots";
 import type { AgentLiveTerminalStatus } from "@/features/agent/utils/agentLiveTerminalState.type";
-import type { AgentRunInputRequest } from "@/features/dispatch/utils/agentRunInputSocket";
 
 const statusLabel: Record<AgentLiveTerminalStatus, string> = {
   idle: "Idle",
@@ -25,17 +24,25 @@ const statusLabel: Record<AgentLiveTerminalStatus, string> = {
 interface AgentLiveTerminalPanelProps {
   readonly output: string;
   readonly status: AgentLiveTerminalStatus;
-  readonly pendingInput: AgentRunInputRequest | null;
-  readonly onSubmitInput: (response: string) => void;
-  readonly onDismissInput: () => void;
+  readonly feedbackVisible: boolean;
+  readonly feedbackPendingQuestion: string | null;
+  readonly feedbackQueuedCount: number;
+  readonly feedbackQueueNotice: string | null;
+  readonly isFeedbackSubmitting: boolean;
+  readonly feedbackAutoFocus?: boolean;
+  readonly onSubmitFeedback: (message: string) => void;
 }
 
 export default function AgentLiveTerminalPanel({
   output,
   status,
-  pendingInput,
-  onSubmitInput,
-  onDismissInput,
+  feedbackVisible,
+  feedbackPendingQuestion,
+  feedbackQueuedCount,
+  feedbackQueueNotice,
+  isFeedbackSubmitting,
+  feedbackAutoFocus = false,
+  onSubmitFeedback,
 }: AgentLiveTerminalPanelProps) {
   const outputRef = useRef<HTMLPreElement>(null);
   const displayOutput = buildAgentLiveTerminalDisplay({ output, status });
@@ -88,13 +95,15 @@ export default function AgentLiveTerminalPanel({
           ) : null}
         </pre>
       </div>
-      {pendingInput !== null ? (
-        <AgentLiveTerminalInputForm
-          request={pendingInput}
-          onSubmitInput={onSubmitInput}
-          onDismissInput={onDismissInput}
-        />
-      ) : null}
+      <AgentLiveTerminalFeedbackChat
+        visible={feedbackVisible}
+        pendingQuestion={feedbackPendingQuestion}
+        queuedCount={feedbackQueuedCount}
+        queueNotice={feedbackQueueNotice}
+        isSubmitting={isFeedbackSubmitting}
+        autoFocus={feedbackAutoFocus}
+        onSubmit={onSubmitFeedback}
+      />
     </section>
   );
 }

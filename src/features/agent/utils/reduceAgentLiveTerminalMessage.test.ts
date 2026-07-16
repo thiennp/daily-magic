@@ -77,4 +77,19 @@ describe("reduceAgentLiveTerminalMessage", () => {
     expect(finished.output).toContain("command not found");
     expect(finished.status).toBe("finished");
   });
+
+  it("ends the Mac session when dispatch fails", () => {
+    const next = reduceAgentLiveTerminalMessage(
+      beginAgentLiveTerminalSession("claude -p run lint", "claude-cli"),
+      {
+        type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR,
+        payload: {
+          errorMessage: "No Mac agent connected.",
+        },
+      },
+    );
+
+    expect(next.sessionWriterAgent).toBeNull();
+    expect(next.status).toBe("idle");
+  });
 });

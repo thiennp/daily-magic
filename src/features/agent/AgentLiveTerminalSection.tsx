@@ -1,12 +1,13 @@
 "use client";
 
+import { forwardRef } from "react";
+
 import Link from "next/link";
 
 import AppPanel from "@/components/surfaces/AppPanel";
 import AgentLiveTerminalPanel from "@/features/agent/AgentLiveTerminalPanel";
 import AgentLiveTerminalSessionBar from "@/features/agent/AgentLiveTerminalSessionBar";
 import type { AgentLiveTerminalStatus } from "@/features/agent/utils/agentLiveTerminalState.type";
-import type { AgentRunInputRequest } from "@/features/dispatch/utils/agentRunInputSocket";
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
 
 interface AgentLiveTerminalSectionProps {
@@ -15,64 +16,86 @@ interface AgentLiveTerminalSectionProps {
   readonly activeRunId: string | null;
   readonly sessionWriterAgent: HarnessWriterAgent | null;
   readonly sessionDeviceName: string | null;
-  readonly pendingInput: AgentRunInputRequest | null;
   readonly errorMessage: string | null;
-  readonly onSubmitInput: (response: string) => void;
-  readonly onDismissInput: () => void;
+  readonly feedbackVisible: boolean;
+  readonly feedbackPendingQuestion: string | null;
+  readonly feedbackQueuedCount: number;
+  readonly feedbackQueueNotice: string | null;
+  readonly isFeedbackSubmitting: boolean;
+  readonly feedbackAutoFocus?: boolean;
+  readonly onSubmitFeedback: (message: string) => void;
   readonly onFinishSession: () => void;
 }
 
-export default function AgentLiveTerminalSection({
-  output,
-  status,
-  activeRunId,
-  sessionWriterAgent,
-  sessionDeviceName,
-  pendingInput,
-  errorMessage,
-  onSubmitInput,
-  onDismissInput,
-  onFinishSession,
-}: AgentLiveTerminalSectionProps) {
+const AgentLiveTerminalSection = forwardRef<
+  HTMLElement,
+  AgentLiveTerminalSectionProps
+>(function AgentLiveTerminalSection(
+  {
+    output,
+    status,
+    activeRunId,
+    sessionWriterAgent,
+    sessionDeviceName,
+    errorMessage,
+    feedbackVisible,
+    feedbackPendingQuestion,
+    feedbackQueuedCount,
+    feedbackQueueNotice,
+    isFeedbackSubmitting,
+    feedbackAutoFocus = false,
+    onSubmitFeedback,
+    onFinishSession,
+  },
+  ref,
+) {
   return (
-    <AppPanel>
-      {sessionWriterAgent !== null ? (
-        <AgentLiveTerminalSessionBar
-          sessionWriterAgent={sessionWriterAgent}
-          sessionDeviceName={sessionDeviceName}
-          onFinishSession={onFinishSession}
+    <section ref={ref} tabIndex={-1} className="outline-none">
+      <AppPanel>
+        {sessionWriterAgent !== null ? (
+          <AgentLiveTerminalSessionBar
+            sessionWriterAgent={sessionWriterAgent}
+            sessionDeviceName={sessionDeviceName}
+            onFinishSession={onFinishSession}
+          />
+        ) : null}
+        {activeRunId !== null ? (
+          <p className="mb-3 text-sm text-gray-600 dark:text-gray-400">
+            This job is saved locally in{" "}
+            <Link
+              href="/reports"
+              className="font-medium text-brand-600 hover:text-brand-700 dark:text-brand-400"
+            >
+              Job history
+            </Link>
+            .{" "}
+            <Link
+              href={`/reports/${activeRunId}`}
+              className="font-medium text-brand-600 hover:text-brand-700 dark:text-brand-400"
+            >
+              Open full report
+            </Link>
+          </p>
+        ) : null}
+        <AgentLiveTerminalPanel
+          output={output}
+          status={status}
+          feedbackVisible={feedbackVisible}
+          feedbackPendingQuestion={feedbackPendingQuestion}
+          feedbackQueuedCount={feedbackQueuedCount}
+          feedbackQueueNotice={feedbackQueueNotice}
+          isFeedbackSubmitting={isFeedbackSubmitting}
+          feedbackAutoFocus={feedbackAutoFocus}
+          onSubmitFeedback={onSubmitFeedback}
         />
-      ) : null}
-      {activeRunId !== null ? (
-        <p className="mb-3 text-sm text-gray-600 dark:text-gray-400">
-          This job is saved locally in{" "}
-          <Link
-            href="/reports"
-            className="font-medium text-brand-600 hover:text-brand-700 dark:text-brand-400"
-          >
-            Job history
-          </Link>
-          .{" "}
-          <Link
-            href={`/reports/${activeRunId}`}
-            className="font-medium text-brand-600 hover:text-brand-700 dark:text-brand-400"
-          >
-            Open full report
-          </Link>
-        </p>
-      ) : null}
-      <AgentLiveTerminalPanel
-        output={output}
-        status={status}
-        pendingInput={pendingInput}
-        onSubmitInput={onSubmitInput}
-        onDismissInput={onDismissInput}
-      />
-      {errorMessage !== null ? (
-        <p className="mt-4 text-sm text-rose-600 dark:text-rose-400">
-          {errorMessage}
-        </p>
-      ) : null}
-    </AppPanel>
+        {errorMessage !== null ? (
+          <p className="mt-4 text-sm text-rose-600 dark:text-rose-400">
+            {errorMessage}
+          </p>
+        ) : null}
+      </AppPanel>
+    </section>
   );
-}
+});
+
+export default AgentLiveTerminalSection;

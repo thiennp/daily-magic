@@ -7,6 +7,7 @@ interface WsTestPanelStatusSectionProps {
   readonly connectionStatus: WsTestConnectionStatus;
   readonly queueCount: number;
   readonly queueMessage: string | null;
+  readonly errorMessage?: string | null;
 }
 
 export default function WsTestPanelStatusSection({
@@ -14,16 +15,24 @@ export default function WsTestPanelStatusSection({
   connectionStatus,
   queueCount,
   queueMessage,
+  errorMessage = null,
 }: WsTestPanelStatusSectionProps) {
   if (isModal) {
     return (
       <div className="flex flex-wrap items-center justify-between gap-3">
         <ConnectionStatusBadge status={connectionStatus} />
-        {queueCount > 0 ? (
-          <p className="text-sm text-brand-700 dark:text-brand-300">
-            {queueCount} queued
-          </p>
-        ) : null}
+        <div className="flex flex-col items-end gap-1">
+          {queueCount > 0 ? (
+            <p className="text-sm text-brand-700 dark:text-brand-300">
+              {queueCount} queued
+            </p>
+          ) : null}
+          {errorMessage !== null ? (
+            <p className="text-sm text-rose-600 dark:text-rose-400">
+              {errorMessage}
+            </p>
+          ) : null}
+        </div>
       </div>
     );
   }
@@ -46,6 +55,11 @@ export default function WsTestPanelStatusSection({
       {queueMessage ? (
         <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
           {queueMessage}
+        </p>
+      ) : null}
+      {errorMessage !== null ? (
+        <p className="mt-2 text-sm text-rose-600 dark:text-rose-400">
+          {errorMessage}
         </p>
       ) : null}
     </AppPanel>

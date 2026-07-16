@@ -24,7 +24,8 @@ export default function AgentLiveTerminalSessionBar({
         <span className="font-medium">
           {HARNESS_WRITER_LABELS[sessionWriterAgent]}
         </span>
-        . Send more tasks to continue, or finish when you are done.
+        . Use the follow-up box below to guide the agent, or finish when you are
+        done.
       </p>
       <Button size="sm" variant="outline" onClick={onFinishSession}>
         Finish session

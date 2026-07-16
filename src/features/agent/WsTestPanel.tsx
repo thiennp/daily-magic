@@ -1,16 +1,15 @@
 "use client";
 
-import { useEffect } from "react";
-
 import AgentWitchUnsupportedHostNotice from "@/features/home/AgentWitchUnsupportedHostNotice";
-import AgentLiveTerminalSection from "@/features/agent/AgentLiveTerminalSection";
 import { useAgentRunQueue } from "@/features/agent/hooks/useAgentRunQueue";
 import { useDelegatedWriterAgent } from "@/features/agent/hooks/useDelegatedWriterAgent";
-import { useWsTestPanelQueueFlush } from "@/features/agent/hooks/useWsTestPanelQueueFlush";
+import { useWsTestMacSession } from "@/features/agent/hooks/useWsTestMacSession";
+import { useWsTestPanelLifecycle } from "@/features/agent/hooks/useWsTestPanelLifecycle";
 import { useWsTestPromptHandlers } from "@/features/agent/hooks/useWsTestPromptHandlers";
 import { useWsTestTaskComposer } from "@/features/agent/hooks/useWsTestTaskComposer";
+import WsTestPanelDelegationSection from "@/features/agent/WsTestPanelDelegationSection";
+import WsTestPanelMacSessionSection from "@/features/agent/WsTestPanelMacSessionSection";
 import WsTestPanelStatusSection from "@/features/agent/WsTestPanelStatusSection";
-import WsTestPromptSection from "@/features/agent/WsTestPromptSection";
 import { resolveAgentSessionTargets } from "@/features/agent/utils/resolveAgentSessionTargets";
 import isAgentWitchWebSocketSupportedHost from "@/lib/agentWitch/isAgentWitchWebSocketSupportedHost";
 import { useAgentWitchSocket } from "./hooks/useAgentWitchSocket";
@@ -31,6 +30,18 @@ export default function WsTestPanel({ variant = "page" }: WsTestPanelProps) {
   });
   const { queueCount, queueMessage, enqueueRun, flushQueue, refreshCount } =
     useAgentRunQueue();
+  const {
+    terminalSectionRef,
+    isSessionActive,
+    sessionDeviceName,
+    sessionErrorMessage,
+    terminalFeedback,
+  } = useWsTestMacSession({
+    socket,
+    composer,
+    sessionTargets,
+    enqueueRun,
+  });
   const promptHandlers = useWsTestPromptHandlers({
     composer,
     activeWriterAgent: sessionTargets.activeWriterAgent,
@@ -40,65 +51,58 @@ export default function WsTestPanel({ variant = "page" }: WsTestPanelProps) {
   });
   const host = typeof window !== "undefined" ? window.location.host : "";
   const isWebSocketSupported = isAgentWitchWebSocketSupportedHost(host);
-  const sessionDeviceName =
-    sessionTargets.activeDeviceId.length > 0
-      ? (composer.macDisplayNameById.get(sessionTargets.activeDeviceId) ??
-        "Your Mac")
-      : null;
-  const isModal = variant === "modal";
 
-  useEffect(() => {
-    void refreshCount();
-  }, [refreshCount]);
-
-  useWsTestPanelQueueFlush({
+  useWsTestPanelLifecycle({
     connectionStatus: socket.connectionStatus,
     flushQueue,
+    refreshCount,
     sendClaudePrompt: socket.sendClaudePrompt,
     writerAgent,
   });
 
   return (
-    <div className={`flex w-full flex-col ${isModal ? "gap-4" : "gap-6"}`}>
+    <div
+      className={`flex w-full flex-col ${variant === "modal" ? "gap-4" : "gap-6"}`}
+    >
       {!isWebSocketSupported ? (
         <AgentWitchUnsupportedHostNotice host={host} />
       ) : null}
       <WsTestPanelStatusSection
-        isModal={isModal}
+        isModal={variant === "modal"}
         connectionStatus={socket.connectionStatus}
         queueCount={queueCount}
         queueMessage={queueMessage}
+        errorMessage={sessionErrorMessage}
       />
-      <WsTestPromptSection
-        composer={composer}
-        writerAgent={sessionTargets.activeWriterAgent}
-        onWriterAgentChange={setWriterAgent}
-        isWriterAgentLocked={sessionTargets.isWriterAgentLocked}
-        isMacDeviceLocked={sessionTargets.isMacDeviceLocked}
-        macDispatchDeviceId={sessionTargets.activeDeviceId}
-        connectionStatus={socket.connectionStatus}
-        isSendDisabled={composer.isSendDisabled(
-          socket.connectionStatus,
-          sessionTargets.activeDeviceId,
-        )}
-        onSend={promptHandlers.onSend}
-        onQueue={promptHandlers.onQueue}
-        onClear={promptHandlers.onClear}
-      />
-      <AgentLiveTerminalSection
-        output={socket.liveTerminalOutput}
-        status={socket.liveTerminalStatus}
-        activeRunId={socket.liveTerminalRunId}
-        sessionWriterAgent={socket.sessionWriterAgent}
-        sessionDeviceName={sessionDeviceName}
-        pendingInput={socket.liveTerminalPendingInput}
-        errorMessage={
-          socket.lastResponse.isError ? socket.lastResponse.text : null
-        }
-        onSubmitInput={socket.submitLiveTerminalInput}
-        onDismissInput={socket.dismissLiveTerminalInput}
-        onFinishSession={socket.finishLiveTerminalSession}
-      />
+      {isSessionActive ? (
+        <WsTestPanelMacSessionSection
+          ref={terminalSectionRef}
+          output={socket.liveTerminalOutput}
+          status={socket.liveTerminalStatus}
+          activeRunId={socket.liveTerminalRunId}
+          sessionWriterAgent={socket.sessionWriterAgent}
+          sessionDeviceName={sessionDeviceName}
+          feedbackVisible={terminalFeedback.visible}
+          feedbackPendingQuestion={terminalFeedback.pendingQuestion}
+          feedbackQueuedCount={terminalFeedback.queuedCount}
+          feedbackQueueNotice={terminalFeedback.queueNotice}
+          isFeedbackSubmitting={terminalFeedback.isSubmitting}
+          onSubmitFeedback={terminalFeedback.submitFeedback}
+          errorMessage={
+            socket.lastResponse.isError ? socket.lastResponse.text : null
+          }
+          onFinishSession={socket.finishLiveTerminalSession}
+        />
+      ) : (
+        <WsTestPanelDelegationSection
+          composer={composer}
+          sessionTargets={sessionTargets}
+          connectionStatus={socket.connectionStatus}
+          writerAgent={sessionTargets.activeWriterAgent}
+          onWriterAgentChange={setWriterAgent}
+          promptHandlers={promptHandlers}
+        />
+      )}
     </div>
   );
 }
