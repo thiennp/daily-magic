@@ -21,6 +21,7 @@ export default function AgentLiveTerminalFeedbackChat({
   pendingQuestion,
   queuedCount,
   queueNotice,
+  isSubmitting,
   autoFocus = false,
   isSteppedComposer = false,
   onSubmit,
@@ -31,6 +32,7 @@ export default function AgentLiveTerminalFeedbackChat({
   });
   if (!visible) return null;
   const isAnswerMode = pendingQuestion !== null;
+  const isSimplifiedFollowUp = isSteppedComposer && !isAnswerMode;
   const content = (
     <>
       {isAnswerMode ? (
@@ -42,7 +44,7 @@ export default function AgentLiveTerminalFeedbackChat({
             {pendingQuestion}
           </p>
         </>
-      ) : isSteppedComposer ? null : (
+      ) : isSimplifiedFollowUp ? null : (
         <p className="text-sm font-medium text-gray-800 dark:text-white/90">
           Follow up in the live terminal
         </p>
@@ -56,13 +58,13 @@ export default function AgentLiveTerminalFeedbackChat({
         autoFocus={autoFocus}
         onMessageChange={deferredSubmit.handleMessageChange}
       />
-      {queuedCount > 0 ? (
+      {!isSimplifiedFollowUp && queuedCount > 0 ? (
         <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
           {queuedCount} follow-up{queuedCount === 1 ? "" : "s"} queued while
           your Mac agent is working.
         </p>
       ) : null}
-      {queueNotice !== null ? (
+      {!isSimplifiedFollowUp && queueNotice !== null ? (
         <p className="mt-2 text-xs text-brand-600 dark:text-brand-400">
           {queueNotice}
         </p>
@@ -71,7 +73,7 @@ export default function AgentLiveTerminalFeedbackChat({
         <Button size="sm" variant="outline" onClick={onFinishSession}>
           Finish session
         </Button>
-        <Button onClick={deferredSubmit.handleSubmit}>
+        <Button disabled={isSubmitting} onClick={deferredSubmit.handleSubmit}>
           {isAnswerMode ? "Send answer" : "Send feedback"}
         </Button>
       </div>

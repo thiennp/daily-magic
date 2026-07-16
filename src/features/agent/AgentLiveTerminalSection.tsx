@@ -1,9 +1,7 @@
 "use client";
 
 import { forwardRef } from "react";
-
 import Link from "next/link";
-
 import AppPanel from "@/components/surfaces/AppPanel";
 import AgentLiveTerminalPanel from "@/features/agent/AgentLiveTerminalPanel";
 import type { AgentLiveTerminalStatus } from "@/features/agent/utils/agentLiveTerminalState.type";
@@ -85,12 +83,10 @@ const AgentLiveTerminalSection = forwardRef<
       ) : null}
     </>
   );
-
   return (
     <section ref={ref} tabIndex={-1} className="outline-none">
       {isSteppedComposer ? content : <AppPanel>{content}</AppPanel>}
     </section>
   );
 });
-
 export default AgentLiveTerminalSection;

@@ -1,7 +1,5 @@
 "use client";
-
 import { useRef, type RefObject } from "react";
-
 import { useAgentLiveTerminalFeedback } from "@/features/agent/hooks/useAgentLiveTerminalFeedback";
 import { useAgentLiveTerminalSessionChrome } from "@/features/agent/hooks/useAgentLiveTerminalSessionChrome";
 import type { useAgentRunQueue } from "@/features/agent/hooks/useAgentRunQueue";
@@ -44,7 +42,6 @@ export const useWsTestMacSession = (input: {
     !isSessionActive && input.socket.lastResponse.isError
       ? input.socket.lastResponse.text
       : null;
-
   return {
     terminalSectionRef,
     isSessionActive,

@@ -1,10 +1,7 @@
 "use client";
-
 import { forwardRef } from "react";
-
 import AgentLiveTerminalSection from "@/features/agent/AgentLiveTerminalSection";
 import type { AgentLiveTerminalStatus } from "@/features/agent/utils/agentLiveTerminalState.type";
-
 interface WsTestPanelMacSessionSectionProps {
   readonly output: string;
   readonly status: AgentLiveTerminalStatus;
@@ -19,7 +16,6 @@ interface WsTestPanelMacSessionSectionProps {
   readonly onFinishSession: () => void;
   readonly isSteppedComposer?: boolean;
 }
-
 const WsTestPanelMacSessionSection = forwardRef<
   HTMLElement,
   WsTestPanelMacSessionSectionProps
@@ -43,5 +39,4 @@ const WsTestPanelMacSessionSection = forwardRef<
     />
   );
 });
-
 export default WsTestPanelMacSessionSection;
