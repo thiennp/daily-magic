@@ -7,6 +7,12 @@ export const HOME_FEATURED_SHOWCASE_SLUGS: readonly string[] = [
   "first-agent-task-in-5-minutes",
 ] as const;
 
+export const HOME_LEADERSHIP_SHOWCASE_SLUGS: readonly string[] = [
+  "automate-recurring-work-without-headcount",
+  "standardize-ai-work-across-the-team",
+  "manager-approves-before-run",
+] as const;
+
 export const HOME_MORE_SHOWCASE_SLUGS: readonly string[] = [
   "manager-approves-before-run",
   "schedule-workflow-on-your-mac",
@@ -15,9 +21,9 @@ export const HOME_MORE_SHOWCASE_SLUGS: readonly string[] = [
 ] as const;
 
 export const HOME_TEAMS_SHOWCASE_SLUGS: readonly string[] = [
+  "automate-for-yourself-or-your-team",
   "company-onboard-in-30-minutes",
-  "request-sensitive-work-with-approval",
-  "new-hires-company-playbooks",
+  "stop-copy-paste-every-monday",
 ] as const;
 
 export const HOME_OBJECTIONS_SHOWCASE_SLUGS: readonly string[] = [
@@ -43,6 +49,10 @@ export function getHomeMoreShowcases(): readonly ShowcaseArticle[] {
   return resolveShowcasesBySlugs(HOME_MORE_SHOWCASE_SLUGS);
 }
 
+export function getHomeLeadershipShowcases(): readonly ShowcaseArticle[] {
+  return resolveShowcasesBySlugs(HOME_LEADERSHIP_SHOWCASE_SLUGS);
+}
+
 export function getHomeTeamsShowcases(): readonly ShowcaseArticle[] {
   return resolveShowcasesBySlugs(HOME_TEAMS_SHOWCASE_SLUGS);
 }
@@ -55,6 +65,7 @@ export function getHomeAllShowcaseSlugsForSeo(): readonly ShowcaseArticle[] {
   return [
     ...getHomeFeaturedShowcases(),
     ...getHomeMoreShowcases(),
+    ...getHomeLeadershipShowcases(),
     ...getHomeTeamsShowcases(),
     ...getHomeObjectionsShowcases(),
   ];

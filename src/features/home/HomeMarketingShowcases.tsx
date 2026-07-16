@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import HomeMarketingFeaturedShowcases from "@/features/home/components/HomeMarketingFeaturedShowcases";
+import HomeMarketingLeadershipShowcases from "@/features/home/components/HomeMarketingLeadershipShowcases";
 import HomeMarketingShowcaseSection from "@/features/home/components/HomeMarketingShowcaseSection";
 import HomeMarketingTeamsShowcases from "@/features/home/components/HomeMarketingTeamsShowcases";
 import { buildHomeShowcaseSchemaJson } from "@/features/home/utils/buildHomeShowcaseSchemaJson";
@@ -9,6 +10,7 @@ import ShowcaseCard from "@/features/showcases/ShowcaseCard";
 import {
   getHomeAllShowcaseSlugsForSeo,
   getHomeFeaturedShowcases,
+  getHomeLeadershipShowcases,
   getHomeMoreShowcases,
   getHomeObjectionsShowcases,
   getHomeTeamsShowcases,
@@ -17,6 +19,7 @@ import {
 export default function HomeMarketingShowcases() {
   const featured = getHomeFeaturedShowcases();
   const more = getHomeMoreShowcases();
+  const leadership = getHomeLeadershipShowcases();
   const teams = getHomeTeamsShowcases();
   const objections = getHomeObjectionsShowcases();
   const allForSchema = getHomeAllShowcaseSlugsForSeo();
@@ -45,9 +48,17 @@ export default function HomeMarketingShowcases() {
       </HomeMarketingShowcaseSection>
 
       <HomeMarketingShowcaseSection
+        eyebrow="For leadership"
+        title="Cost, automation, and control"
+        description="Outcome-first guides for CMOs and CEOs—recurring work, team standards, and approval gates."
+      >
+        <HomeMarketingLeadershipShowcases articles={leadership} />
+      </HomeMarketingShowcaseSection>
+
+      <HomeMarketingShowcaseSection
         eyebrow="For teams"
         title="Company & managers"
-        description="One agent per employee, shared playbooks, approval before run."
+        description="Automate repeat work, roll out playbooks, and cut Monday copy-paste."
       >
         <HomeMarketingTeamsShowcases articles={teams} />
       </HomeMarketingShowcaseSection>

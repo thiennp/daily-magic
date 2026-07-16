@@ -9,9 +9,10 @@ export default interface MarketingFeatureItem {
 
 export const MARKETING_FEATURE_ITEMS: readonly MarketingFeatureItem[] = [
   {
-    title: "Run on your Mac",
-    body: "You click in the browser. The work runs on a real Mac—yours or a teammate's.",
+    title: "Automate repeat work",
+    body: "Turn weekly reports and standups into scheduled playbooks on Macs you already own—less copy-paste, fewer chat threads.",
     preview: "dispatch",
+    emphasized: true,
   },
   {
     title: "Approvals when needed",
