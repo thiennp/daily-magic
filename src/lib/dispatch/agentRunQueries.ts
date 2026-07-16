@@ -3,12 +3,13 @@ import type { AgentRunStatusValue } from "@/lib/dispatch/AgentRunStatus.constant
 import {
   getAgentRunSession,
   registerAgentRunSession,
-  updateAgentRunSession,
 } from "@/lib/dispatch/agentRunSessionRegistry";
 import { getAgentRunRowById } from "@/lib/dispatch/agentRunEventQueries";
 import mapAgentRunRow from "@/lib/dispatch/mapAgentRunRow";
 import type AgentRunRecord from "@/lib/dispatch/types/AgentRunRecord.type";
+import { updateAgentRunSessionStatus } from "@/lib/dispatch/updateAgentRunSessionStatus";
 import { asRowArray, getSql } from "@/lib/db";
+import { isAgentWitchDevDashboardEnabled } from "@/lib/auth/resolveDevDashboardActor";
 
 const syncAgentRunCache = (run: AgentRunRecord): AgentRunRecord => {
   registerAgentRunSession(run);
@@ -25,6 +26,10 @@ export async function updateAgentRunStatus(
     readonly approvalExpiresAt?: string | null;
   },
 ): Promise<AgentRunRecord | null> {
+  if (isAgentWitchDevDashboardEnabled()) {
+    return updateAgentRunSessionStatus(runId, status, fields);
+  }
+
   const now = new Date().toISOString();
   const startedAt = status === AgentRunStatus.RUNNING ? now : undefined;
   const completedAt =
@@ -54,23 +59,7 @@ export async function updateAgentRunStatus(
   );
 
   if (!result[0]) {
-    return (
-      updateAgentRunSession(runId, {
-        status,
-        ...(fields?.resultOutput !== undefined
-          ? { resultOutput: fields.resultOutput }
-          : {}),
-        ...(fields?.resultExitCode !== undefined
-          ? { resultExitCode: fields.resultExitCode }
-          : {}),
-        ...(fields?.denialReason !== undefined
-          ? { denialReason: fields.denialReason }
-          : {}),
-        ...(startedAt !== undefined ? { startedAt } : {}),
-        ...(completedAt !== undefined ? { completedAt } : {}),
-        updatedAt: now,
-      }) ?? null
-    );
+    return updateAgentRunSessionStatus(runId, status, fields);
   }
 
   return syncAgentRunCache(mapAgentRunRow(result[0]));

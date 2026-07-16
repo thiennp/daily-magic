@@ -1,0 +1,356 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Agent Witch localhost chat</title>
+    <style>
+      :root {
+        color-scheme: light dark;
+        font-family:
+          ui-sans-serif,
+          system-ui,
+          -apple-system,
+          sans-serif;
+      }
+      body {
+        margin: 0;
+        padding: 1.5rem;
+        background: #111827;
+        color: #f9fafb;
+      }
+      main {
+        max-width: 48rem;
+        margin: 0 auto;
+        display: grid;
+        gap: 1rem;
+      }
+      button {
+        border: 0;
+        border-radius: 0.5rem;
+        padding: 0.625rem 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        background: #f9fafb;
+        color: #111827;
+      }
+      button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+      #status.connected {
+        color: #34d399;
+      }
+      #status.error {
+        color: #f87171;
+      }
+      #terminal {
+        margin: 0;
+        min-height: 18rem;
+        max-height: 28rem;
+        overflow: auto;
+        padding: 1rem;
+        border-radius: 0.75rem;
+        background: #030712;
+        border: 1px solid #374151;
+        white-space: pre-wrap;
+        word-break: break-word;
+        font:
+          13px/1.45 ui-monospace,
+          SFMono-Regular,
+          Menlo,
+          Monaco,
+          Consolas,
+          monospace;
+      }
+      .hint {
+        color: #9ca3af;
+        font-size: 0.875rem;
+      }
+      code {
+        background: #1f2937;
+        padding: 0.1rem 0.35rem;
+        border-radius: 0.25rem;
+      }
+      .composer {
+        display: grid;
+        gap: 0.75rem;
+      }
+      textarea {
+        width: 100%;
+        min-height: 4.5rem;
+        resize: vertical;
+        border-radius: 0.75rem;
+        border: 1px solid #374151;
+        background: #030712;
+        color: #f9fafb;
+        padding: 0.75rem 1rem;
+        font: inherit;
+        box-sizing: border-box;
+      }
+      .composer-actions {
+        display: flex;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+      .session-pill {
+        font-size: 0.75rem;
+        color: #9ca3af;
+      }
+      .session-pill.ready {
+        color: #34d399;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <div>
+        <h1>Talk to Agent Witch (localhost)</h1>
+        <p class="hint">
+          Dev chat page — delegates tasks to your Mac over WebSocket. Run
+          <code>AGENT_WITCH_DEV_DASHBOARD=1 npm run dev</code> and
+          <code
+            >AGENT_WITCH_WS_URL=ws://localhost:3000/api/agent-witch/ws npm run
+            agent-witch</code
+          >.
+        </p>
+        <p>Connection: <strong id="status">connecting</strong></p>
+      </div>
+      <pre id="terminal">agent-witch@mac ~ %</pre>
+      <div class="composer">
+        <textarea
+          id="prompt"
+          placeholder="Type a task for Claude on your Mac…"
+        >What is 17 + 25? Reply with only the number.</textarea>
+        <div class="composer-actions">
+          <button id="send" type="button" disabled>Send task</button>
+          <button id="warmup" type="button" disabled>Warm up Claude</button>
+          <span class="session-pill" id="session-pill">Claude: not ready</span>
+        </div>
+      </div>
+      <p id="error" class="hint" hidden></p>
+    </main>
+    <script>
+      const WS_URL = `${location.protocol === "https:" ? "wss" : "ws"}://${location.host}/api/agent-witch/ws`;
+      const statusEl = document.getElementById("status");
+      const terminalEl = document.getElementById("terminal");
+      const errorEl = document.getElementById("error");
+      const sendBtn = document.getElementById("send");
+      const warmupBtn = document.getElementById("warmup");
+      const promptEl = document.getElementById("prompt");
+      const sessionPillEl = document.getElementById("session-pill");
+      let socket = null;
+      let writerSessionId = null;
+      let writerReady = false;
+      let activeRunId = null;
+      let queuedPrompt = null;
+      let output = "agent-witch@mac ~ %";
+
+      const setStatus = (text, className) => {
+        statusEl.textContent = text;
+        statusEl.className = className ?? "";
+        const connected = text === "connected";
+        sendBtn.disabled = !connected;
+        warmupBtn.disabled = !connected || writerReady;
+      };
+
+      const setWriterReady = (ready) => {
+        writerReady = ready;
+        sessionPillEl.textContent = ready
+          ? "Claude: ready on your Mac"
+          : "Claude: not ready";
+        sessionPillEl.className = ready
+          ? "session-pill ready"
+          : "session-pill";
+        warmupBtn.disabled = !socket || socket.readyState !== WebSocket.OPEN || ready;
+      };
+
+      const appendOutput = (chunk) => {
+        output += chunk;
+        terminalEl.textContent = output;
+        terminalEl.scrollTop = terminalEl.scrollHeight;
+      };
+
+      const showError = (message) => {
+        errorEl.hidden = false;
+        errorEl.textContent = message;
+      };
+
+      const requestId = () =>
+        typeof crypto.randomUUID === "function"
+          ? crypto.randomUUID()
+          : `req-${Date.now()}`;
+
+      const sendSubscribeWriterSession = () => {
+        if (!socket || socket.readyState !== WebSocket.OPEN || !writerSessionId) {
+          return;
+        }
+        socket.send(
+          JSON.stringify({
+            type: "dashboard.terminal.subscribe",
+            payload: { writerSessionId },
+            requestId: requestId(),
+          }),
+        );
+      };
+
+      const sendSubscribeRun = () => {
+        if (!socket || socket.readyState !== WebSocket.OPEN || !activeRunId) {
+          return;
+        }
+        socket.send(
+          JSON.stringify({
+            type: "dashboard.terminal.subscribe",
+            payload: { runId: activeRunId },
+            requestId: requestId(),
+          }),
+        );
+      };
+
+      const sendWriterSessionStart = () => {
+        appendOutput("\nagent-witch@mac ~ % claude -v\n");
+        socket.send(
+          JSON.stringify({
+            type: "command.writer.session.start",
+            payload: { writerAgent: "claude-cli" },
+            requestId: requestId(),
+          }),
+        );
+      };
+
+      const sendTask = (prompt) => {
+        const trimmed = prompt.trim();
+        if (trimmed.length === 0) {
+          return;
+        }
+        errorEl.hidden = true;
+        appendOutput(`\n\n> ${trimmed}\n`);
+        socket.send(
+          JSON.stringify({
+            type: "command.claude.run",
+            payload: {
+              prompt: trimmed,
+              writerAgent: "claude-cli",
+              sessionContinuation: true,
+            },
+            requestId: requestId(),
+          }),
+        );
+      };
+
+      const maybeSendQueuedTask = () => {
+        if (!writerReady || queuedPrompt === null) {
+          return;
+        }
+        const prompt = queuedPrompt;
+        queuedPrompt = null;
+        sendTask(prompt);
+      };
+
+      const handleMessage = (raw) => {
+        let message;
+        try {
+          message = JSON.parse(raw);
+        } catch {
+          return;
+        }
+
+        const type = message.type;
+        const payload = message.payload ?? {};
+
+        if (type === "system.ack") {
+          if (payload.writerSessionId) {
+            writerSessionId = payload.writerSessionId;
+            sendSubscribeWriterSession();
+          }
+          if (payload.dispatched === true && payload.agentRunId) {
+            activeRunId = payload.agentRunId;
+            sendSubscribeRun();
+          }
+          return;
+        }
+
+        if (type === "command.writer.session.chunk" && payload.chunk) {
+          appendOutput(String(payload.chunk));
+          return;
+        }
+
+        if (type === "command.writer.session.ready") {
+          setWriterReady(true);
+          if (payload.output) {
+            appendOutput(`\n${String(payload.output)}`);
+          }
+          maybeSendQueuedTask();
+          return;
+        }
+
+        if (type === "terminal.stream.chunk" && payload.chunk) {
+          appendOutput(String(payload.chunk));
+          return;
+        }
+
+        if (type === "command.claude.result") {
+          if (payload.output) {
+            appendOutput(`\n${String(payload.output)}`);
+          }
+          appendOutput("\n");
+          activeRunId = null;
+          return;
+        }
+
+        if (type === "system.error" && payload.errorMessage) {
+          showError(String(payload.errorMessage));
+        }
+      };
+
+      const connect = () => {
+        setStatus("connecting");
+        socket = new WebSocket(WS_URL);
+
+        socket.addEventListener("open", () => {
+          setStatus("connected", "connected");
+          socket.send(
+            JSON.stringify({
+              type: "agent.register",
+              payload: { role: "dashboard" },
+              requestId: requestId(),
+            }),
+          );
+        });
+
+        socket.addEventListener("message", (event) => {
+          handleMessage(String(event.data));
+        });
+
+        socket.addEventListener("close", () => {
+          setWriterReady(false);
+          writerSessionId = null;
+          setStatus("disconnected");
+          setTimeout(connect, 1500);
+        });
+
+        socket.addEventListener("error", () => {
+          setStatus("error", "error");
+        });
+      };
+
+      warmupBtn.addEventListener("click", () => {
+        errorEl.hidden = true;
+        sendWriterSessionStart();
+      });
+
+      sendBtn.addEventListener("click", () => {
+        const prompt = promptEl.value;
+        if (!writerReady) {
+          queuedPrompt = prompt;
+          sendWriterSessionStart();
+          return;
+        }
+        sendTask(prompt);
+      });
+
+      connect();
+    </script>
+  </body>
+</html>

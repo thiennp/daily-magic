@@ -9,11 +9,12 @@ import type AgentWitchMessage from "@/lib/agentWitch/types/AgentWitchMessage.typ
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
 import type { AgentWitchRole } from "@/lib/agentWitch/types/AgentWitchRole.type";
 import type { AuthActorFromCookies } from "@/lib/auth/resolveAuthActorFromCookieHeader";
+import { resolveDevDashboardActor } from "@/lib/auth/resolveDevDashboardActor";
 
 import { sendAgentWitchSocketMessage } from "@/server/agentWitch/sendAgentWitchSocketMessage";
+import { resolveAgentWitchAgentRegisterConnection } from "@/server/agentWitch/resolveAgentWitchAgentRegisterConnection";
 import { replayPendingDispatchApprovalsForUser } from "@/lib/dispatch/replayPendingDispatchApprovalsForUser";
 import { replayPendingAgentRunInputsForUser } from "@/lib/dispatch/replayPendingAgentRunInputsForUser";
-import { findAgentWitchDeviceByToken } from "@/lib/agentWitch/findAgentWitchDeviceByToken";
 
 export interface AgentWitchConnectionState {
   registered: boolean;
@@ -45,7 +46,10 @@ export const processAgentWitchRegisterMessage = async (
   const resolvedRole = resolveRoleFromRegisterPayload(message.payload);
 
   if (resolvedRole === "dashboard") {
-    if (authContext.dashboardActor === null) {
+    const dashboardActor =
+      authContext.dashboardActor ?? resolveDevDashboardActor();
+
+    if (dashboardActor === null) {
       sendAgentWitchSocketMessage(socket, {
         type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR,
         payload: {
@@ -59,8 +63,8 @@ export const processAgentWitchRegisterMessage = async (
     }
 
     connectionState.role = "dashboard";
-    connectionState.userId = authContext.dashboardActor.id;
-    connectionState.email = authContext.dashboardActor.email;
+    connectionState.userId = dashboardActor.id;
+    connectionState.email = dashboardActor.email;
   }
 
   if (resolvedRole === "agent") {
@@ -81,22 +85,12 @@ export const processAgentWitchRegisterMessage = async (
       return false;
     }
 
-    connectionState.role = "agent";
-    connectionState.pairingToken = pairingToken;
-    const [claimedPairing, device] = await Promise.all([
-      hub.pairingStore.resolveClaimedPairing(pairingToken),
-      findAgentWitchDeviceByToken(pairingToken),
-    ]);
-    connectionState.userId = claimedPairing?.userId ?? device?.userId;
-
-    const hostname =
-      typeof message.payload?.hostname === "string"
-        ? message.payload.hostname.trim()
-        : "";
-    const activeDevice = device?.revokedAt === null ? device : null;
-    connectionState.deviceId = activeDevice?.id ?? claimedPairing?.deviceId;
-    connectionState.deviceLabel =
-      hostname.length > 0 ? hostname : (activeDevice?.deviceLabel ?? undefined);
+    await resolveAgentWitchAgentRegisterConnection(
+      hub,
+      connectionState,
+      message,
+      pairingToken,
+    );
   }
 
   if (resolvedRole !== null) {

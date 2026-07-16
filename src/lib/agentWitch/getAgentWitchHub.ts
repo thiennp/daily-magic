@@ -16,7 +16,9 @@ export const getAgentWitchPairingStore = (): AgentWitchPairingStore => {
   if (agentWitchGlobal.__dailyMagicAgentWitchPairingStore === undefined) {
     agentWitchGlobal.__dailyMagicAgentWitchPairingStore =
       new AgentWitchPairingStore({
-        persistToDatabase: process.env.NODE_ENV !== "test",
+        persistToDatabase:
+          process.env.NODE_ENV !== "test" &&
+          process.env.AGENT_WITCH_DEV_DASHBOARD !== "1",
       });
   }
 

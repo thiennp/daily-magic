@@ -10,6 +10,7 @@ import {
   isSecureAgentWitchUpgrade,
 } from "./src/lib/agentWitch/isAllowedAgentWitchUpgrade";
 import resolveAuthActorFromCookieHeader from "./src/lib/auth/resolveAuthActorFromCookieHeader";
+import { resolveDevDashboardActor } from "./src/lib/auth/resolveDevDashboardActor";
 import { attachAgentWitchWebSocket } from "./src/server/agentWitch/attachAgentWitchWebSocket";
 
 const dev = process.env.NODE_ENV !== "production";
@@ -71,7 +72,9 @@ server.on("upgrade", (request, socket, head) => {
   void resolveAuthActorFromCookieHeader(request.headers.cookie ?? "").then(
     (dashboardActor) => {
       webSocketServer.handleUpgrade(request, socket, head, (ws) => {
-        attachAgentWitchWebSocket(hub, ws, { dashboardActor });
+        attachAgentWitchWebSocket(hub, ws, {
+          dashboardActor: dashboardActor ?? resolveDevDashboardActor(),
+        });
       });
     },
   );

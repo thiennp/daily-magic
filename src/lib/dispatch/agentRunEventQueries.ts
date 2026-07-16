@@ -1,12 +1,17 @@
 import mapAgentRunRow from "@/lib/dispatch/mapAgentRunRow";
 import type AgentRunRecord from "@/lib/dispatch/types/AgentRunRecord.type";
 import { asRowArray, getSql } from "@/lib/db";
+import { isAgentWitchDevDashboardEnabled } from "@/lib/auth/resolveDevDashboardActor";
 
 export const appendAgentRunEvent = async (input: {
   readonly agentRunId: string;
   readonly kind: string;
   readonly payload: Readonly<Record<string, unknown>>;
 }): Promise<void> => {
+  if (isAgentWitchDevDashboardEnabled()) {
+    return;
+  }
+
   const sql = getSql();
   await sql`
     WITH next_seq AS (

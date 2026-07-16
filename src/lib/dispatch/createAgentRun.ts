@@ -6,6 +6,8 @@ import type { DispatchPolicyValue } from "@/lib/dispatch/DispatchPolicy.constant
 import mapAgentRunRow from "@/lib/dispatch/mapAgentRunRow";
 import type AgentRunRecord from "@/lib/dispatch/types/AgentRunRecord.type";
 import { asRowArray, getSql } from "@/lib/db";
+import { isAgentWitchDevDashboardEnabled } from "@/lib/auth/resolveDevDashboardActor";
+import { registerAgentRunSession } from "@/lib/dispatch/agentRunSessionRegistry";
 
 export interface CreateAgentRunInput {
   readonly id?: string;
@@ -25,9 +27,37 @@ export interface CreateAgentRunInput {
 const createAgentRun = async (
   input: CreateAgentRunInput,
 ): Promise<AgentRunRecord> => {
-  const sql = getSql();
   const runId = input.id ?? randomUUID();
   const writerAgent = input.writerAgent ?? "claude-cli";
+
+  if (isAgentWitchDevDashboardEnabled()) {
+    const now = new Date().toISOString();
+    const run: AgentRunRecord = {
+      id: runId,
+      groupId: input.groupId ?? null,
+      requesterUserId: input.requesterUserId,
+      executorUserId: input.executorUserId,
+      deviceId: input.deviceId ?? null,
+      prompt: input.prompt,
+      status: input.status,
+      dispatchPolicy: input.dispatchPolicy,
+      writerAgent,
+      capabilityId: input.capabilityId ?? null,
+      capabilityVersionId: input.capabilityVersionId ?? null,
+      approvalExpiresAt: input.approvalExpiresAt ?? null,
+      resultOutput: null,
+      resultExitCode: null,
+      denialReason: null,
+      createdAt: now,
+      updatedAt: now,
+      startedAt: null,
+      completedAt: null,
+    };
+    registerAgentRunSession(run);
+    return run;
+  }
+
+  const sql = getSql();
   const result = asRowArray(
     await sql`
       INSERT INTO agent_runs (

@@ -8,6 +8,8 @@ import {
   getUserAgentDispatchPolicy,
 } from "@/lib/dispatch/groupUserDispatchPolicyQueries";
 import type { DispatchPolicyValue } from "@/lib/dispatch/DispatchPolicy.constant";
+import { DispatchPolicy } from "@/lib/dispatch/DispatchPolicy.constant";
+import { isAgentWitchDevDashboardEnabled } from "@/lib/auth/resolveDevDashboardActor";
 
 export interface ResolveDispatchPolicyInput {
   readonly executorUserId: string;
@@ -18,6 +20,10 @@ export interface ResolveDispatchPolicyInput {
 export const resolveDispatchPolicyForExecutor = async (
   input: ResolveDispatchPolicyInput,
 ): Promise<DispatchPolicyValue> => {
+  if (isAgentWitchDevDashboardEnabled()) {
+    return DispatchPolicy.OPEN;
+  }
+
   if (input.capabilityPolicyOverride) {
     return input.capabilityPolicyOverride;
   }
