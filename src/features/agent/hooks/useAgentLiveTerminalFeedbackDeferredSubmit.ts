@@ -22,9 +22,7 @@ export const useAgentLiveTerminalFeedbackDeferredSubmit = (input: {
     hasMessageError: messageError !== null,
     handleMessageChange: (value: string) => {
       setMessage(value);
-      if (messageError !== null) {
-        setMessageError(null);
-      }
+      if (messageError !== null) setMessageError(null);
     },
     handleSubmit: () => {
       const trimmedMessage = message.trim();

@@ -46,11 +46,3 @@ export const PRIMARY_NAV: readonly AppNavItem[] = [
     isActive: (pathname) => pathname.startsWith("/admin"),
   },
 ];
-
-export const SECONDARY_NAV: readonly AppNavItem[] = [
-  {
-    href: "/styleguide",
-    label: "Styleguide",
-    isActive: (pathname) => pathname.startsWith("/styleguide"),
-  },
-];
