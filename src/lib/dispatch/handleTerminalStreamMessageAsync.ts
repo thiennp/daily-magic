@@ -8,6 +8,7 @@ import type AgentWitchHubRuntime from "@/lib/agentWitch/types/AgentWitchHubRunti
 import type AgentWitchMessage from "@/lib/agentWitch/types/AgentWitchMessage.type";
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
 import { broadcastTerminalStreamToRunParticipants } from "@/lib/dispatch/broadcastTerminalStreamToRunParticipants";
+import { handleTerminalStreamChunkMessageAsync } from "@/lib/dispatch/handleTerminalStreamChunkMessageAsync";
 import { requireTerminalStreamPublisher } from "@/lib/dispatch/requireTerminalStreamPublisher";
 
 const readRunId = (payload: Record<string, unknown> | undefined): string =>
@@ -68,16 +69,11 @@ export const handleTerminalStreamMessageAsync = async (
       return authorization.error;
     }
 
-    const chunk =
-      typeof message.payload?.chunk === "string" ? message.payload.chunk : "";
-    if (chunk.length > 0) {
-      broadcastTerminalStreamToRunParticipants(runtime, authorization.run, {
-        type: AGENT_WITCH_MESSAGE_TYPES.TERMINAL_STREAM_CHUNK,
-        payload: { runId, chunk },
-      });
-    }
-
-    return systemAck(message.requestId);
+    return handleTerminalStreamChunkMessageAsync(
+      runtime,
+      message,
+      authorization,
+    );
   }
 
   if (message.type === AGENT_WITCH_MESSAGE_TYPES.TERMINAL_STREAM_END) {
