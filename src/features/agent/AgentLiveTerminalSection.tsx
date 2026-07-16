@@ -47,7 +47,7 @@ const AgentLiveTerminalSection = forwardRef<
 ) {
   const content = (
     <>
-      {activeRunId !== null ? (
+      {!isSteppedComposer && activeRunId !== null ? (
         <p className="mb-3 text-sm text-gray-600 dark:text-gray-400">
           This job is saved locally in{" "}
           <Link
