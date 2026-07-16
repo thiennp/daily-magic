@@ -3,6 +3,7 @@
 import Link from "next/link";
 
 import AppHero from "@/components/surfaces/AppHero";
+import AppIcon from "@/components/ui/icon/AppIcon";
 import {
   APP_SURFACE_BODY_TEXT_CLASS,
   APP_SURFACE_CTA_PRIMARY_LG_CLASS,
@@ -14,6 +15,7 @@ import { COMPANY_RULES_NAV_LABEL } from "@/lib/admin/companyGroupCopy.constant";
 import formatGlobalRole from "@/lib/auth/formatGlobalRole";
 import type { GlobalRoleValue } from "@/lib/auth/roles";
 import buildAgentComposerHref from "@/lib/library/buildAgentComposerHref";
+import { BoltIcon } from "@/icons";
 
 interface HomeDashboardHeroProps {
   readonly user: {
@@ -39,8 +41,9 @@ export default function HomeDashboardHero({ user }: HomeDashboardHeroProps) {
       <div className="mt-6">
         <Link
           href={buildAgentComposerHref()}
-          className={APP_SURFACE_CTA_PRIMARY_LG_CLASS}
+          className={`${APP_SURFACE_CTA_PRIMARY_LG_CLASS} gap-2`}
         >
+          <AppIcon icon={BoltIcon} size="lg" />
           Start
         </Link>
         <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-sm">
