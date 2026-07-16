@@ -38,9 +38,7 @@ export default function AgentLiveTerminalFeedbackMessageField({
       rows={1}
       className={`resize-none ${isAnswerMode ? `mt-2 ${textareaClassName}` : textareaClassName}`}
       placeholder={
-        isAnswerMode
-          ? "Reply to your Mac agent…"
-          : "Ask a follow-up or add context for the next step…"
+        isAnswerMode ? "Reply to your Mac agent…" : "Type your message…"
       }
       aria-invalid={hasMessageError}
     />
