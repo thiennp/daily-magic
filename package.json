@@ -7,7 +7,7 @@
     "dev:next": "next dev",
     "build": "next build",
     "vercel-build": "npm run db:migrate && next build",
-    "start": "NODE_ENV=production tsx server.ts",
+    "start": "npm run db:migrate && NODE_ENV=production tsx server.ts",
     "agent-witch": "tsx scripts/agent-witch.ts",
     "agent-witch:wake-server": "tsx scripts/agent-witch-wake-server.ts",
     "agent-witch:watchdog": "tsx scripts/agent-witch-watchdog.ts",

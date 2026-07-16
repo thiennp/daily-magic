@@ -1,4 +1,5 @@
 import { upsertAgentRunLocalCache } from "@/features/reports/agentRunLocalCache";
+import { readDispatchHttpResponseError } from "@/features/agent/utils/readDispatchHttpResponseError";
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
 import type AgentRunRecord from "@/lib/dispatch/types/AgentRunRecord.type";
@@ -50,7 +51,9 @@ export async function postClaudePromptDispatch(input: {
   const data: unknown = await response.json().catch(() => null);
 
   if (!isRecord(data)) {
-    return buildDispatchErrorRaw("Dispatch response was invalid.");
+    return buildDispatchErrorRaw(
+      readDispatchHttpResponseError(data, response.status),
+    );
   }
 
   const run = parseAgentRunRecord(data.run);
@@ -62,10 +65,7 @@ export async function postClaudePromptDispatch(input: {
     return JSON.stringify(data.message);
   }
 
-  const errorMessage =
-    typeof data.errorMessage === "string" && data.errorMessage.length > 0
-      ? data.errorMessage
-      : "Dispatch failed.";
-
-  return buildDispatchErrorRaw(errorMessage);
+  return buildDispatchErrorRaw(
+    readDispatchHttpResponseError(data, response.status),
+  );
 }
