@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="560" viewBox="0 0 960 560" role="img" aria-label="Mac running task">
+  <defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#f8fafc"/><stop offset="100%" stop-color="#eef2ff"/></linearGradient></defs>
+  <rect width="960" height="560" fill="url(#bg)"/>
+  <rect x="32" y="28" width="896" height="504" rx="16" fill="#fff" stroke="#e5e7eb"/>
+  <text x="56" y="68" font-family="ui-sans-serif,system-ui,sans-serif" font-size="18" font-weight="600" fill="#111827">Local Mac terminal</text>
+  <text x="56" y="92" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#6b7280">Streaming from Alex Chen's Mac</text>
+  <rect x="56" y="112" width="848" height="360" rx="12" fill="#030712" stroke="#374151"/>
+  <text x="76" y="148" font-family="ui-monospace,Menlo,monospace" font-size="12" fill="#9ca3af">agent-witch@mac ~ % claude -v</text>
+  <text x="76" y="176" font-family="ui-monospace,Menlo,monospace" font-size="12" fill="#e5e7eb">2.1.161 (Claude Code)</text>
+  <text x="76" y="216" font-family="ui-monospace,Menlo,monospace" font-size="12" fill="#9ca3af">&gt; Summarize commits on feature/checkout...</text>
+  <text x="76" y="248" font-family="ui-monospace,Menlo,monospace" font-size="12" fill="#34d399">" Merged payment retry fix (#412)</text>
+  <text x="76" y="272" font-family="ui-monospace,Menlo,monospace" font-size="12" fill="#34d399">" Updated checkout copy for EU VAT</text>
+  <text x="76" y="296" font-family="ui-monospace,Menlo,monospace" font-size="12" fill="#34d399">" No blockers  QA sign-off pending</text>
+  <text x="56" y="500" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#16a34a">Status: streaming</text>
+</svg>

@@ -1,3 +1,4 @@
+import agentDelegatesInsideYourCompany from "@/features/showcases/articles/agentDelegatesInsideYourCompany.article";
 import automateRecurringWorkWithoutHeadcount from "@/features/showcases/articles/automateRecurringWorkWithoutHeadcount.article";
 import automateForYourselfOrYourTeam from "@/features/showcases/articles/automateForYourselfOrYourTeam.article";
 import companyOnboardIn30Minutes from "@/features/showcases/articles/companyOnboardIn30Minutes.article";
@@ -54,6 +55,7 @@ export const SHOWCASE_ARTICLES_PHASE_2: readonly ShowcaseArticle[] = [
   weeklyReportInFiveMinutes,
   scheduleWorkflowOnYourMac,
   phoneAsksCoworkerMacRuns,
+  agentDelegatesInsideYourCompany,
 ] as const;
 
 export const SHOWCASE_ARTICLES_PHASE_LEADERSHIP: readonly ShowcaseArticle[] = [

@@ -1,6 +1,7 @@
 import type { OnboardingShowcaseScreenId } from "@/features/showcases/onboardingShowcaseScreens.constant";
 import type { AutomationShowcaseScreenId } from "@/features/showcases/automationShowcaseScreens.constant";
 import type { ShowcaseTopicScreenId } from "@/features/showcases/showcaseTopicScreens.constant";
+import type { TeamDispatchShowcaseScreenId } from "@/features/showcases/teamDispatchShowcaseScreens.constant";
 
 export type ShowcaseSupportLevel = "full" | "partial";
 
@@ -8,6 +9,7 @@ export interface ShowcaseArticleImage {
   readonly screenId?: OnboardingShowcaseScreenId;
   readonly automationScreenId?: AutomationShowcaseScreenId;
   readonly topicScreenId?: ShowcaseTopicScreenId;
+  readonly teamDispatchScreenId?: TeamDispatchShowcaseScreenId;
   readonly src: string;
   readonly alt: string;
   readonly caption: string;

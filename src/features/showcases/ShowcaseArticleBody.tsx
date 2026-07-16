@@ -3,6 +3,7 @@ import ShowcaseAutomationFigure from "@/features/showcases/ShowcaseAutomationFig
 import ShowcaseOnboardingFigure from "@/features/showcases/ShowcaseOnboardingFigure";
 import ShowcaseArticleFigure from "@/features/showcases/ShowcaseArticleFigure";
 import ShowcaseTopicFigure from "@/features/showcases/ShowcaseTopicFigure";
+import ShowcaseTeamDispatchFigure from "@/features/showcases/ShowcaseTeamDispatchFigure";
 
 interface ShowcaseArticleBodyProps {
   readonly sections: readonly ShowcaseArticleSection[];
@@ -59,6 +60,12 @@ export default function ShowcaseArticleBody({
               ) : section.image.topicScreenId ? (
                 <ShowcaseTopicFigure
                   screenId={section.image.topicScreenId}
+                  alt={section.image.alt}
+                  caption={section.image.caption}
+                />
+              ) : section.image.teamDispatchScreenId ? (
+                <ShowcaseTeamDispatchFigure
+                  screenId={section.image.teamDispatchScreenId}
                   alt={section.image.alt}
                   caption={section.image.caption}
                 />

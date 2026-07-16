@@ -40,4 +40,16 @@ export const WORKFLOW_CAPABILITY_TEMPLATES_A2: readonly WorkflowCapabilityTempla
         ["sources", "Sources (optional)", "textarea", false],
       ],
     ),
+    buildWorkflowTemplate(
+      "team-repo-standup",
+      "Team dispatch",
+      "Repo branch standup (teammate Mac)",
+      "Ask a colleague's Mac to summarize git activity on a local repo branch — ideal for team delegation demos.",
+      "Summarize commits on the branch for a standup update. Use plain English bullets for someone who did not read the diffs.",
+      [
+        ["repoPath", "Repo path on their Mac", "text"],
+        ["branch", "Branch name", "text"],
+        ["since", "Since (optional)", "text", false],
+      ],
+    ),
   ];

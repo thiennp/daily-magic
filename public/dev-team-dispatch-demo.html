@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Team dispatch demo — Agent Witch</title>
+    <style>
+      :root {
+        font-family:
+          ui-sans-serif,
+          system-ui,
+          -apple-system,
+          sans-serif;
+        color: #111827;
+      }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background: linear-gradient(135deg, #f8fafc, #eef2ff);
+        padding: 2rem;
+      }
+      .frame {
+        max-width: 56rem;
+        margin: 0 auto;
+        background: #fff;
+        border: 1px solid #e5e7eb;
+        border-radius: 1rem;
+        padding: 1.5rem 1.75rem 2rem;
+        box-shadow: 0 10px 40px rgb(15 23 42 / 0.06);
+      }
+      h1 {
+        margin: 0 0 0.25rem;
+        font-size: 1.25rem;
+      }
+      .sub {
+        margin: 0 0 1.25rem;
+        color: #6b7280;
+        font-size: 0.875rem;
+      }
+      label {
+        display: block;
+        font-size: 0.8125rem;
+        font-weight: 600;
+        margin-bottom: 0.35rem;
+      }
+      select,
+      textarea {
+        width: 100%;
+        box-sizing: border-box;
+        border: 1px solid #d1d5db;
+        border-radius: 0.5rem;
+        padding: 0.55rem 0.75rem;
+        font: inherit;
+        background: #fff;
+      }
+      textarea {
+        min-height: 5rem;
+        resize: vertical;
+        background: #f9fafb;
+      }
+      .grid {
+        display: grid;
+        gap: 1rem;
+        grid-template-columns: 1fr 1fr;
+      }
+      .full {
+        grid-column: 1 / -1;
+      }
+      .send {
+        margin-top: 1rem;
+        border: 0;
+        border-radius: 0.5rem;
+        background: #111827;
+        color: #fff;
+        font-weight: 600;
+        padding: 0.65rem 1.25rem;
+        cursor: pointer;
+      }
+      .modal-backdrop {
+        position: fixed;
+        inset: 0;
+        background: rgb(17 24 39 / 0.45);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 1rem;
+      }
+      .modal-backdrop.active {
+        display: flex;
+      }
+      .modal {
+        width: min(100%, 32rem);
+        background: #fff;
+        border-radius: 1rem;
+        padding: 1.5rem;
+        border: 1px solid #e5e7eb;
+      }
+      .modal h2 {
+        margin: 0 0 1rem;
+        font-size: 1.125rem;
+      }
+      .alert {
+        background: #fffbeb;
+        border: 1px solid #fcd34d;
+        border-radius: 0.75rem;
+        padding: 1rem;
+        font-size: 0.875rem;
+        color: #78350f;
+      }
+      .alert strong {
+        display: block;
+        color: #92400e;
+        margin-bottom: 0.35rem;
+      }
+      .actions {
+        display: flex;
+        gap: 0.75rem;
+        margin-top: 1.25rem;
+      }
+      .approve {
+        background: #16a34a;
+        color: #fff;
+        border: 0;
+        border-radius: 0.5rem;
+        padding: 0.55rem 1rem;
+        font-weight: 600;
+      }
+      .decline {
+        background: #fff;
+        border: 1px solid #d1d5db;
+        border-radius: 0.5rem;
+        padding: 0.55rem 1rem;
+      }
+      .terminal {
+        margin-top: 0.5rem;
+        background: #030712;
+        color: #e5e7eb;
+        border: 1px solid #374151;
+        border-radius: 0.75rem;
+        padding: 1rem;
+        font:
+          13px/1.5 ui-monospace,
+          Menlo,
+          monospace;
+        min-height: 14rem;
+        white-space: pre-wrap;
+      }
+      .status {
+        margin-top: 0.75rem;
+        font-size: 0.8125rem;
+        color: #16a34a;
+        font-weight: 600;
+      }
+      .tabs {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+      }
+      .tab {
+        border: 1px solid #d1d5db;
+        background: #fff;
+        border-radius: 999px;
+        padding: 0.35rem 0.85rem;
+        font-size: 0.8125rem;
+        cursor: pointer;
+      }
+      .tab.active {
+        background: #111827;
+        color: #fff;
+        border-color: #111827;
+      }
+      .screen {
+        display: none;
+      }
+      .screen.active {
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="frame">
+      <div class="tabs">
+        <button class="tab active" type="button" data-screen="request">1. Request</button>
+        <button class="tab" type="button" data-screen="approval">2. Approval</button>
+        <button class="tab" type="button" data-screen="running">3. Mac running</button>
+      </div>
+
+      <section id="screen-request" class="screen active">
+        <h1>Send a task</h1>
+        <p class="sub">Mock data — Jamie delegates to Alex inside Acme Design Co</p>
+        <div class="grid">
+          <div>
+            <label for="company">Company</label>
+            <select id="company">
+              <option>Acme Design Co (approval)</option>
+            </select>
+          </div>
+          <div>
+            <label for="teammate">Teammate</label>
+            <select id="teammate">
+              <option>Alex Chen</option>
+            </select>
+          </div>
+          <div class="full">
+            <label for="workflow">Their workflow</label>
+            <select id="workflow">
+              <option>Repo branch standup (teammate Mac)</option>
+            </select>
+          </div>
+          <div class="full">
+            <label for="prompt">Prompt</label>
+            <textarea id="prompt">Summarize commits on feature/checkout since yesterday for standup. Repo path on Alex's Mac: ~/projects/acme-checkout</textarea>
+          </div>
+        </div>
+        <button class="send" type="button">Send</button>
+      </section>
+
+      <section id="screen-approval" class="screen">
+        <div class="modal" style="max-width: none; width: 100%">
+          <h2>Approve task on your Mac?</h2>
+          <div class="alert">
+            <strong>Repo branch standup — pending</strong>
+            From: Jamie Lee (Acme Design Co)<br />
+            Repo: ~/projects/acme-checkout · branch feature/checkout<br /><br />
+            Summarize commits since yesterday for standup.
+          </div>
+          <div class="actions">
+            <button class="approve" type="button">Approve</button>
+            <button class="decline" type="button">Decline</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="screen-running" class="screen">
+        <h1>Local Mac terminal</h1>
+        <p class="sub">Streaming from Alex Chen's Mac</p>
+        <pre class="terminal">agent-witch@mac ~ % claude -v
+2.1.161 (Claude Code)
+
+&gt; Summarize commits on feature/checkout since yesterday for standup.
+
+• Merged payment retry fix (#412)
+• Updated checkout copy for EU VAT note
+• No blockers — QA sign-off pending</pre>
+        <p class="status">Status: streaming</p>
+      </section>
+    </div>
+
+    <script>
+      document.querySelectorAll(".tab").forEach((tab) => {
+        tab.addEventListener("click", () => {
+          document.querySelectorAll(".tab").forEach((t) => t.classList.remove("active"));
+          document.querySelectorAll(".screen").forEach((s) => s.classList.remove("active"));
+          tab.classList.add("active");
+          document.getElementById(`screen-${tab.dataset.screen}`).classList.add("active");
+        });
+      });
+    </script>
+  </body>
+</html>
