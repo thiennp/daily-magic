@@ -9,6 +9,7 @@ interface MarketingSectionHeaderProps {
   readonly title: string;
   readonly description?: string;
   readonly align?: "left" | "center";
+  readonly width?: "default" | "full";
   readonly headingId?: string;
 }
 
@@ -17,10 +18,15 @@ export default function MarketingSectionHeader({
   title,
   description,
   align = "left",
+  width = "default",
   headingId,
 }: MarketingSectionHeaderProps) {
   const alignment =
-    align === "center" ? "mx-auto max-w-2xl text-center" : "max-w-2xl";
+    align === "center"
+      ? "mx-auto max-w-2xl text-center"
+      : width === "full"
+        ? "w-full"
+        : "max-w-2xl";
 
   return (
     <header className={alignment}>

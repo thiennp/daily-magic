@@ -9,6 +9,7 @@ interface HomeMarketingShowcaseSectionProps {
   readonly children: ReactNode;
   readonly className?: string;
   readonly headingId?: string;
+  readonly headerWidth?: "default" | "full";
 }
 
 function toHeadingId(title: string): string {
@@ -22,6 +23,7 @@ export default function HomeMarketingShowcaseSection({
   children,
   className = "mt-16",
   headingId,
+  headerWidth = "default",
 }: HomeMarketingShowcaseSectionProps) {
   const resolvedHeadingId = headingId ?? toHeadingId(title);
 
@@ -32,6 +34,7 @@ export default function HomeMarketingShowcaseSection({
         title={title}
         description={description}
         headingId={resolvedHeadingId}
+        width={headerWidth}
       />
       <div className="mt-10">{children}</div>
     </section>

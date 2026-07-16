@@ -46,20 +46,16 @@ export const MARKETING_MOCK_SHELL_CLASSES = [
   "ring-1 ring-zinc-800/80 shadow-inner",
 ].join(" ");
 
-export const MARKETING_TRUST_PILL_BASE_CLASSES = [
-  "inline-flex items-center gap-2",
-  "rounded-full px-3 py-1.5",
-  "text-xs font-medium",
-  "transition-all duration-200 ease-out",
+export const MARKETING_TRUST_CARD_CLASSES = [
+  "flex w-full items-center gap-3",
+  "rounded-xl border border-zinc-200/80 bg-white px-3.5 py-3",
+  "text-sm font-medium leading-snug text-zinc-700",
+  "shadow-sm ring-1 ring-zinc-200/40",
+  "transition-colors duration-200 hover:border-zinc-300 hover:bg-zinc-50/80",
   "motion-reduce:transition-none",
 ].join(" ");
 
-export const MARKETING_TRUST_PILL_DEFAULT_CLASSES = [
-  MARKETING_TRUST_PILL_BASE_CLASSES,
-  "bg-zinc-50 text-zinc-600 hover:bg-zinc-100",
-].join(" ");
-
-export const MARKETING_TRUST_PILL_EMPHASIZED_CLASSES = [
-  MARKETING_TRUST_PILL_BASE_CLASSES,
-  "bg-zinc-100 text-zinc-800 hover:bg-zinc-200/80",
+export const MARKETING_TRUST_ICON_SHELL_CLASSES = [
+  "flex h-9 w-9 shrink-0 items-center justify-center rounded-lg",
+  "bg-zinc-100 text-zinc-600",
 ].join(" ");

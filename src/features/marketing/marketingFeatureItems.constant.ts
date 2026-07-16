@@ -9,20 +9,20 @@ export default interface MarketingFeatureItem {
 
 export const MARKETING_FEATURE_ITEMS: readonly MarketingFeatureItem[] = [
   {
-    title: "Automate repeat work",
-    body: "Turn weekly reports and standups into scheduled playbooks on Macs you already own—less copy-paste, fewer chat threads.",
+    title: "Live in about 15 minutes",
+    body: "Create your free workspace, connect Mac agents, and share workflows—most organizations run their first jobs the same day.",
     preview: "dispatch",
     emphasized: true,
   },
   {
-    title: "Approvals when needed",
-    body: "Your company can require a manager OK before someone else's Mac runs a sensitive job.",
+    title: "Security your company controls",
+    body: "Set organization-wide rules and require manager approval before sensitive jobs run on a teammate's Mac.",
     preview: "approve",
     emphasized: true,
   },
   {
-    title: "Clear history",
-    body: "Every run is saved: who sent it, whether it was approved, and what came back.",
+    title: "Shared visibility across teams",
+    body: "Every run is recorded so managers and teammates see what was delegated, approved, and delivered.",
     preview: "report",
   },
 ] as const;

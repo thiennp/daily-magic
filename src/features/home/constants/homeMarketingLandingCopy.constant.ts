@@ -34,12 +34,12 @@ export const HOME_MARKETING_POPULAR_PRESET_DIALOG_COPY = {
 } as const;
 
 export const HOME_MARKETING_FEATURES_COPY = {
-  eyebrow: "Why it helps",
-  title: "Simple to set up, easy to trust",
+  eyebrow: "Built for organizations",
+  title: "Free company setup that is fast, governed, and effective",
   description:
-    "You always know what ran, who approved it, and what came back. Human-only steps stay in your browser checklist; your Mac runs the rest.",
-  footerPrefix: "Ready to try it?",
-  footerLink: "Create a free account and try a workflow",
+    "Start for free. Most teams connect their first Macs and start delegating agent work in about 15 minutes—with security rules, approvals, and shared visibility built in from day one.",
+  footerPrefix: "Ready to roll out?",
+  footerLink: "Create a free account and set up your organization",
 } as const;
 
 export const HOME_MARKETING_STEPS_COPY = {

@@ -10,11 +10,13 @@ import { LockIcon } from "@/icons";
 const DISPATCH_PREVIEW = (): ReactElement => (
   <div className="space-y-2 rounded-xl bg-zinc-50 p-3 ring-1 ring-zinc-200/40">
     <div className="flex items-center justify-between text-xs">
-      <span className="font-medium text-zinc-700">Who is online</span>
-      <MarketingStatusBadge tone="success">2 teammates</MarketingStatusBadge>
+      <span className="font-medium text-zinc-700">Organization setup</span>
+      <MarketingStatusBadge tone="success">
+        4 agents connected
+      </MarketingStatusBadge>
     </div>
     <div className="rounded-lg bg-white px-3 py-2 text-xs text-zinc-600 ring-1 ring-zinc-200/30">
-      Send to your Mac · ready
+      Team workflows · ready to deploy
     </div>
   </div>
 );
@@ -27,24 +29,21 @@ const APPROVE_PREVIEW = (): ReactElement => (
       "ring-emerald-500/10",
     )}
   >
-    <div className="flex items-center justify-between gap-2">
-      <span
-        className={mergeMarketingClasses(
-          "inline-flex items-center gap-1.5 text-xs font-semibold",
-          MARKETING_ACCENT_EMERALD_CLASSES.text,
-        )}
-      >
-        <AppIcon
-          icon={LockIcon}
-          size="xs"
-          className={MARKETING_ACCENT_EMERALD_CLASSES.icon}
-        />
-        Company rule
-      </span>
-      <MarketingStatusBadge tone="warning">Ask first</MarketingStatusBadge>
-    </div>
+    <span
+      className={mergeMarketingClasses(
+        "inline-flex items-center gap-1.5 text-xs font-semibold",
+        MARKETING_ACCENT_EMERALD_CLASSES.text,
+      )}
+    >
+      <AppIcon
+        icon={LockIcon}
+        size="xs"
+        className={MARKETING_ACCENT_EMERALD_CLASSES.icon}
+      />
+      Organization policy
+    </span>
     <p className="text-xs leading-relaxed text-zinc-600">
-      A manager approves before using someone else&apos;s Mac.
+      Managers approve before cross-Mac jobs run.
     </p>
   </div>
 );
@@ -52,10 +51,12 @@ const APPROVE_PREVIEW = (): ReactElement => (
 const REPORT_PREVIEW = (): ReactElement => (
   <div className="space-y-2 rounded-xl bg-zinc-50 p-3 ring-1 ring-zinc-200/40">
     <div className="flex items-center justify-between text-xs">
-      <span className="font-medium text-zinc-700">Job #1042</span>
+      <span className="font-medium text-zinc-700">Team workflow #1042</span>
       <MarketingStatusBadge tone="success">Finished</MarketingStatusBadge>
     </div>
-    <p className="truncate text-xs text-zinc-500">Saved with the full answer</p>
+    <p className="truncate text-xs text-zinc-500">
+      Visible to managers and teammates
+    </p>
   </div>
 );
 

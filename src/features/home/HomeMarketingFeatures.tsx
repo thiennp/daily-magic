@@ -18,6 +18,7 @@ export default function HomeMarketingFeatures() {
         title={copy.title}
         description={copy.description}
         headingId="features-heading"
+        width="full"
       />
       <div className="mt-10 grid gap-5 sm:grid-cols-3">
         {MARKETING_FEATURE_ITEMS.map((item) => (
