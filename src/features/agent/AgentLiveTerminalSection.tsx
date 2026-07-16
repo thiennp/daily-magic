@@ -57,7 +57,6 @@ const AgentLiveTerminalSection = forwardRef<
         <AgentLiveTerminalSessionBar
           sessionWriterAgent={sessionWriterAgent}
           sessionDeviceName={sessionDeviceName}
-          onFinishSession={onFinishSession}
         />
       ) : null}
       {activeRunId !== null ? (
@@ -87,7 +86,9 @@ const AgentLiveTerminalSection = forwardRef<
         feedbackQueueNotice={feedbackQueueNotice}
         isFeedbackSubmitting={isFeedbackSubmitting}
         feedbackAutoFocus={feedbackAutoFocus}
+        isSteppedComposer={isSteppedComposer}
         onSubmitFeedback={onSubmitFeedback}
+        onFinishSession={onFinishSession}
       />
       {errorMessage !== null ? (
         <p className="mt-4 text-sm text-rose-600 dark:text-rose-400">
