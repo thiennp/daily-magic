@@ -8,10 +8,10 @@ import {
   shouldShowAgentLiveTerminalCursor,
   shouldShowAgentLiveTerminalLoadingIndicator,
 } from "@/features/agent/utils/buildAgentLiveTerminalDisplay";
-import { AGENT_LIVE_TERMINAL_STATUS_LABEL } from "@/features/agent/utils/agentLiveTerminalStatusLabel.constant";
 import { parseLatestAgentLiveTerminalNextActions } from "@/features/agent/utils/splitAgentLiveTerminalOutput";
 import { useAgentLiveTerminalLoadingDots } from "@/features/agent/hooks/useAgentLiveTerminalLoadingDots";
 import type { AgentLiveTerminalStatus } from "@/features/agent/utils/agentLiveTerminalState.type";
+import { AGENT_LIVE_TERMINAL_STATUS_LABEL } from "@/features/agent/utils/agentLiveTerminalStatusLabel.constant";
 
 interface AgentLiveTerminalPanelProps {
   readonly output: string;
