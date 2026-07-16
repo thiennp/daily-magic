@@ -63,6 +63,11 @@ export const APP_SURFACE_CTA_PRIMARY_SM_CLASS = [
   APP_SURFACE_CTA_PRIMARY_DARK_MODE_CLASS,
 ].join(" ");
 
+export const APP_SURFACE_CTA_PRIMARY_LG_CLASS = [
+  "inline-flex h-[5.5rem] items-center justify-center rounded-2xl bg-zinc-900 px-10 text-xl font-semibold text-white shadow-md transition hover:bg-zinc-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-900/40 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+  APP_SURFACE_CTA_PRIMARY_DARK_MODE_CLASS,
+].join(" ");
+
 export const APP_SURFACE_FIELD_CLASS =
   "w-full rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm text-gray-800 shadow-theme-xs outline-none transition focus:border-brand-300 focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-800 dark:text-white/90";
 

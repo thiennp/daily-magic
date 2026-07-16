@@ -5,7 +5,7 @@ import Link from "next/link";
 import AppHero from "@/components/surfaces/AppHero";
 import {
   APP_SURFACE_BODY_TEXT_CLASS,
-  APP_SURFACE_CTA_PRIMARY_CLASS,
+  APP_SURFACE_CTA_PRIMARY_LG_CLASS,
   APP_SURFACE_EYEBROW_TEXT_CLASS,
   APP_SURFACE_TEXT_LINK_CLASS,
   APP_SURFACE_TEXT_LINK_MUTED_CLASS,
@@ -33,16 +33,16 @@ export default function HomeDashboardHero({ user }: HomeDashboardHeroProps) {
         Welcome back, {displayName}
       </h1>
       <p className={`mt-3 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
-        Send tasks from your browser, share setup files with teammates who are
-        online, and read what happened in Reports. Signed in as {user.email} (
+        Your workspace for agent work—start tasks here, review outcomes, and
+        pick up where you left off. Signed in as {user.email} (
         {formatGlobalRole(user.globalRole)}).
       </p>
       <div className="mt-6">
         <Link
           href={buildAgentComposerHref()}
-          className={APP_SURFACE_CTA_PRIMARY_CLASS}
+          className={APP_SURFACE_CTA_PRIMARY_LG_CLASS}
         >
-          Send a task
+          Start
         </Link>
         <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-sm">
           <Link href="/library" className={APP_SURFACE_TEXT_LINK_CLASS}>

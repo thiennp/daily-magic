@@ -6,7 +6,6 @@ import { MARKETING_FOCAL_CARD_CLASSES } from "@/features/marketing/marketingPale
 import {
   MARKETING_TEXT_MUTED_CLASSES,
   MARKETING_TEXT_PRIMARY_CLASSES,
-  MARKETING_TEXT_SECONDARY_CLASSES,
 } from "@/features/marketing/marketingSurfaceClasses.constant";
 import { mergeMarketingClasses } from "@/features/marketing/mergeMarketingClasses";
 
@@ -29,14 +28,6 @@ export default function HomeMarketingAuthSection() {
       >
         {HOME_MARKETING_AUTH_COPY.title}
       </h2>
-      <p
-        className={mergeMarketingClasses(
-          "mt-2 text-sm leading-relaxed",
-          MARKETING_TEXT_SECONDARY_CLASSES,
-        )}
-      >
-        {HOME_MARKETING_AUTH_COPY.description}
-      </p>
       <div className="mt-6">
         <Suspense
           fallback={

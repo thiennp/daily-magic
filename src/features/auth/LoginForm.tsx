@@ -31,9 +31,11 @@ export default function LoginForm({
 
   return (
     <div className="space-y-6">
-      <p className={appearanceClasses.description}>
-        Use Google or a magic link sent to your email.
-      </p>
+      {appearance !== "marketing" ? (
+        <p className={appearanceClasses.description}>
+          Use Google or a magic link sent to your email.
+        </p>
+      ) : null}
 
       <div className="space-y-4">
         <LoginFormGoogleButton
@@ -42,7 +44,7 @@ export default function LoginForm({
           onGoogleSignIn={handleGoogleSignIn}
         />
 
-        <div className={appearanceClasses.divider}>or email</div>
+        <div className={appearanceClasses.divider}>or</div>
 
         <LoginFormEmailField
           appearance={appearance}

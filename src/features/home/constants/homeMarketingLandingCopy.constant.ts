@@ -2,27 +2,23 @@ import { AGENT_WITCH_PRODUCT_NAME } from "@/lib/agentWitch/agentWitchProductName
 
 export const HOME_MARKETING_HERO_COPY = {
   eyebrow: "For you and your team",
-  title: "Set up once. Your Mac does the work.",
-  description: `${AGENT_WITCH_PRODUCT_NAME} is your control panel: pick a job, choose who it runs for, and when. Managers can approve sensitive runs. Everyone sees the results.`,
+  title: "An agent assistant for you and your organization.",
+  description: `${AGENT_WITCH_PRODUCT_NAME} helps you deploy agents across your organization in as little as 15 minutes. Delegate work to dedicated Mac agents, keep coordination in one workspace, and maintain manager approvals with full visibility into outcomes.`,
   cta: "Create a free account →",
   steps: [
     "Pick a ready-made workflow—or make your own",
     "Add your Mac as the worker—it runs the jobs you set up",
-    "Run it for yourself, your group, or on a schedule",
+    "Run your agents—or your whole company's—from your phone, from anywhere, with automation or a schedule",
   ],
 } as const;
 
 export const HOME_MARKETING_AUTH_COPY = {
   title: "Create your free account",
-  description:
-    "Sign in with Google or email. You can run your first workflow in a few minutes.",
 } as const;
 
 export const HOME_MARKETING_POPULAR_PRESETS_COPY = {
   eyebrow: "Examples you can try",
   title: "Pick a workflow to start",
-  description:
-    "Free templates for everyday jobs—email replies, lesson plans, shop support, and more. Sign in to save one and put it on autopilot.",
   footerPrefix: "Want more? After sign-in, browse the full",
   footerLink: "marketplace",
 } as const;

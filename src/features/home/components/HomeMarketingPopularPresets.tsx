@@ -17,7 +17,6 @@ export default function HomeMarketingPopularPresets() {
       <MarketingSectionHeader
         eyebrow={copy.eyebrow}
         title={copy.title}
-        description={copy.description}
         headingId="popular-presets-heading"
       />
       <HomeMarketingPopularPresetsGrid presets={presets} />

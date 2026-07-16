@@ -3,17 +3,10 @@ import type { ReactElement } from "react";
 import AppIcon from "@/components/ui/icon/AppIcon";
 import { MARKETING_ACCENT_EMERALD_CLASSES } from "@/features/marketing/marketingPalette.constant";
 import type { MarketingTrustIconKey } from "@/features/marketing/types/MarketingTrustItem.type";
-import {
-  CheckCircleIcon,
-  DocsIcon,
-  LockIcon,
-  PlugInIcon,
-} from "@/icons";
+import { BoltIcon, CheckCircleIcon, LockIcon, PlugInIcon } from "@/icons";
 
 const TRUST_ICON_MAP: Record<MarketingTrustIconKey, () => ReactElement> = {
-  mac: () => (
-    <AppIcon icon={PlugInIcon} size="sm" className="text-zinc-500" />
-  ),
+  mac: () => <AppIcon icon={PlugInIcon} size="sm" className="text-zinc-500" />,
   shield: () => (
     <AppIcon
       icon={LockIcon}
@@ -28,8 +21,8 @@ const TRUST_ICON_MAP: Record<MarketingTrustIconKey, () => ReactElement> = {
       className={MARKETING_ACCENT_EMERALD_CLASSES.icon}
     />
   ),
-  history: () => (
-    <AppIcon icon={DocsIcon} size="sm" className="text-zinc-500" />
+  connect: () => (
+    <AppIcon icon={BoltIcon} size="sm" className="text-zinc-500" />
   ),
 };
 
