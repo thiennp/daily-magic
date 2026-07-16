@@ -64,7 +64,7 @@ export const APP_SURFACE_CTA_PRIMARY_SM_CLASS = [
 ].join(" ");
 
 export const APP_SURFACE_CTA_PRIMARY_LG_CLASS = [
-  "inline-flex h-[5.5rem] w-[150px] items-center justify-center rounded-2xl bg-zinc-900 px-10 text-xl font-semibold text-white shadow-md transition hover:bg-zinc-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-900/40 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+  "inline-flex h-[5.5rem] w-[300px] items-center justify-center rounded-2xl bg-zinc-900 px-10 text-xl font-semibold text-white shadow-md transition hover:bg-zinc-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-900/40 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
   APP_SURFACE_CTA_PRIMARY_DARK_MODE_CLASS,
 ].join(" ");
 

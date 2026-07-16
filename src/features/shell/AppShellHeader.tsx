@@ -4,12 +4,13 @@ import Link from "next/link";
 
 import AgentWitchLogo from "@/components/branding/AgentWitchLogo";
 import { APP_SURFACE_CTA_PRIMARY_ICON_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
+import AppIcon from "@/components/ui/icon/AppIcon";
 import { ThemeToggleButton } from "@/components/common/ThemeToggleButton";
 import UserDropdown from "@/components/header/UserDropdown";
-import SendTaskComposerPlayIcon from "@/features/agent/SendTaskComposerPlayIcon";
 import useStyleguideNavAccess from "@/features/auth/hooks/useStyleguideNavAccess";
 import AppShellNav from "@/features/shell/AppShellNav";
 import buildAgentComposerHref from "@/lib/library/buildAgentComposerHref";
+import { BoltIcon } from "@/icons";
 
 export default function AppShellHeader() {
   const showStyleguide = useStyleguideNavAccess();
@@ -33,7 +34,7 @@ export default function AppShellHeader() {
               aria-label="Send a task"
               className={APP_SURFACE_CTA_PRIMARY_ICON_CLASS}
             >
-              <SendTaskComposerPlayIcon className="h-5 w-5" />
+              <AppIcon icon={BoltIcon} size="md" />
             </Link>
             <ThemeToggleButton />
             <UserDropdown showStyleguide={showStyleguide} />

@@ -11,10 +11,10 @@ import {
   APP_SURFACE_TEXT_LINK_CLASS,
   APP_SURFACE_TEXT_LINK_MUTED_CLASS,
 } from "@/components/surfaces/appSurfaceStyles.constant";
+import { useSendTaskModal } from "@/features/agent/SendTaskModalProvider";
 import { COMPANY_RULES_NAV_LABEL } from "@/lib/admin/companyGroupCopy.constant";
 import formatGlobalRole from "@/lib/auth/formatGlobalRole";
 import type { GlobalRoleValue } from "@/lib/auth/roles";
-import buildAgentComposerHref from "@/lib/library/buildAgentComposerHref";
 import { BoltIcon } from "@/icons";
 
 interface HomeDashboardHeroProps {
@@ -27,6 +27,7 @@ interface HomeDashboardHeroProps {
 
 export default function HomeDashboardHero({ user }: HomeDashboardHeroProps) {
   const displayName = user.name ?? user.email;
+  const { openSendTaskModal } = useSendTaskModal();
 
   return (
     <AppHero variant="neutral">
@@ -39,13 +40,16 @@ export default function HomeDashboardHero({ user }: HomeDashboardHeroProps) {
         {user.email} ({formatGlobalRole(user.globalRole)}).
       </p>
       <div className="mt-6">
-        <Link
-          href={buildAgentComposerHref()}
+        <button
+          type="button"
+          onClick={() => {
+            openSendTaskModal();
+          }}
           className={`${APP_SURFACE_CTA_PRIMARY_LG_CLASS} gap-2`}
         >
           <AppIcon icon={BoltIcon} size="lg" />
           Start
-        </Link>
+        </button>
         <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-sm">
           <Link href="/library" className={APP_SURFACE_TEXT_LINK_CLASS}>
             Browse library →
