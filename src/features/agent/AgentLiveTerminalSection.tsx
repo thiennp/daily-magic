@@ -87,6 +87,7 @@ const AgentLiveTerminalSection = forwardRef<
         feedbackQueueNotice={feedbackQueueNotice}
         isFeedbackSubmitting={isFeedbackSubmitting}
         feedbackAutoFocus={feedbackAutoFocus}
+        isSteppedComposer={isSteppedComposer}
         onSubmitFeedback={onSubmitFeedback}
       />
       {errorMessage !== null ? (

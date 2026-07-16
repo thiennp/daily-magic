@@ -22,6 +22,7 @@ interface AgentLiveTerminalPanelProps {
   readonly feedbackQueueNotice: string | null;
   readonly isFeedbackSubmitting: boolean;
   readonly feedbackAutoFocus?: boolean;
+  readonly isSteppedComposer?: boolean;
   readonly onSubmitFeedback: (message: string) => void;
 }
 
@@ -34,6 +35,7 @@ export default function AgentLiveTerminalPanel({
   feedbackQueueNotice,
   isFeedbackSubmitting,
   feedbackAutoFocus = false,
+  isSteppedComposer = false,
   onSubmitFeedback,
 }: AgentLiveTerminalPanelProps) {
   const displayOutput = buildAgentLiveTerminalDisplay({ output, status });
@@ -75,6 +77,7 @@ export default function AgentLiveTerminalPanel({
         queueNotice={feedbackQueueNotice}
         isSubmitting={isFeedbackSubmitting}
         autoFocus={feedbackAutoFocus}
+        isSteppedComposer={isSteppedComposer}
         onSubmit={onSubmitFeedback}
       />
     </section>
