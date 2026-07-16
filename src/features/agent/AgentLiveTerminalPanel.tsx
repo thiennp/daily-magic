@@ -23,7 +23,6 @@ interface AgentLiveTerminalPanelProps {
   readonly feedbackAutoFocus?: boolean;
   readonly isSteppedComposer?: boolean;
   readonly onSubmitFeedback: (message: string) => void;
-  readonly onFinishSession: () => void;
 }
 
 export default function AgentLiveTerminalPanel({
@@ -37,7 +36,6 @@ export default function AgentLiveTerminalPanel({
   feedbackAutoFocus = false,
   isSteppedComposer = false,
   onSubmitFeedback,
-  onFinishSession,
 }: AgentLiveTerminalPanelProps) {
   const displayOutput = buildAgentLiveTerminalDisplay({ output, status });
   const nextActions = parseLatestAgentLiveTerminalNextActions(output);
@@ -72,7 +70,6 @@ export default function AgentLiveTerminalPanel({
         autoFocus={feedbackAutoFocus}
         isSteppedComposer={isSteppedComposer}
         onSubmit={onSubmitFeedback}
-        onFinishSession={onFinishSession}
       />
     </section>
   );
