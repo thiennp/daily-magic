@@ -4,6 +4,7 @@ import Link from "next/link";
 
 import useStyleguideNavAccess from "@/features/auth/hooks/useStyleguideNavAccess";
 import { MARKETING_CTA_PRIMARY_CLASSES } from "@/features/marketing/marketingInteractiveClasses.constant";
+import { MARKETING_HEADER_LINK_CLASSES } from "@/features/marketing/marketingSurfaceClasses.constant";
 import { mergeMarketingClasses } from "@/features/marketing/mergeMarketingClasses";
 
 interface MarketingHeaderNavProps {
@@ -20,16 +21,13 @@ export default function MarketingHeaderNav({
       {showStyleguide ? (
         <Link
           href="/styleguide"
-          className="text-zinc-600 transition hover:text-zinc-900"
+          className={MARKETING_HEADER_LINK_CLASSES}
         >
           Styleguide
         </Link>
       ) : null}
       {showSignIn ? (
-        <Link
-          href="/login"
-          className="text-zinc-600 transition hover:text-zinc-900"
-        >
+        <Link href="/login" className={MARKETING_HEADER_LINK_CLASSES}>
           Sign in
         </Link>
       ) : null}

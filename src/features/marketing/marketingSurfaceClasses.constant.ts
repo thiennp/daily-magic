@@ -1,3 +1,5 @@
+export const MARKETING_LIGHT_SURFACE_CLASS = "marketing-light-surface";
+
 export const MARKETING_INPUT_BASE_CLASSES = [
   "mt-2 w-full",
   "rounded-lg border border-zinc-200 px-3 py-2.5",
@@ -19,3 +21,6 @@ export const MARKETING_TEXT_PRIMARY_CLASSES = "text-zinc-900";
 export const MARKETING_TEXT_SECONDARY_CLASSES = "text-zinc-600";
 
 export const MARKETING_TEXT_MUTED_CLASSES = "text-zinc-500";
+
+export const MARKETING_HEADER_LINK_CLASSES =
+  "text-zinc-700 transition hover:text-zinc-900";
