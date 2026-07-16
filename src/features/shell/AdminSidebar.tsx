@@ -15,11 +15,7 @@ export default function AdminSidebar() {
   const pathname = usePathname();
 
   return (
-    <AppPanel
-      as="aside"
-      padding="compact"
-      className="h-fit lg:sticky lg:top-24"
-    >
+    <AppPanel as="aside" padding="compact" className="h-fit">
       <p className="mb-3 text-sm font-medium text-gray-800 dark:text-white/90">
         Management
       </p>
