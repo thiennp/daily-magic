@@ -1,10 +1,10 @@
 import AppPanel from "@/components/surfaces/AppPanel";
 import Button from "@/components/ui/button/Button";
+import GroupCompanySettingsAccess from "@/features/admin/components/GroupCompanySettingsAccess";
 import {
   COMPANIES_ENTITY_LABEL,
   COMPANY_ENTITY_LABEL,
 } from "@/lib/admin/companyGroupCopy.constant";
-import GroupDeleteControls from "@/features/admin/components/GroupDeleteControls";
 import type { GroupItem } from "@/features/admin/types/groupManagement.types";
 
 interface GroupSelectionSectionProps {
@@ -13,6 +13,7 @@ interface GroupSelectionSectionProps {
   readonly newGroupName: string;
   readonly deleteMembers: boolean;
   readonly canDeleteTeam: boolean;
+  readonly canConfigureDispatchPolicy: boolean;
   readonly onNewGroupNameChange: (value: string) => void;
   readonly onSelectGroup: (groupId: string) => void;
   readonly onDeleteMembersChange: (value: boolean) => void;
@@ -26,13 +27,13 @@ export default function GroupSelectionSection({
   newGroupName,
   deleteMembers,
   canDeleteTeam,
+  canConfigureDispatchPolicy,
   onNewGroupNameChange,
   onSelectGroup,
   onDeleteMembersChange,
   onCreateGroup,
   onDeleteGroup,
 }: GroupSelectionSectionProps) {
-  const selectedGroup = groups.find((group) => group.id === selectedGroupId);
   const companyLabel = COMPANY_ENTITY_LABEL.toLowerCase();
   const hasTeam = groups.length > 0;
 
@@ -64,38 +65,15 @@ export default function GroupSelectionSection({
         </>
       ) : null}
 
-      {hasTeam && groups.length === 1 ? (
-        <p className="mt-4 text-sm font-medium text-gray-800 dark:text-white/90">
-          {selectedGroup?.name}
-        </p>
-      ) : null}
-
-      {hasTeam && groups.length > 1 ? (
-        <div className="mt-4">
-          <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-            Managing {companyLabel}
-            <select
-              value={selectedGroupId}
-              onChange={(event) => {
-                onSelectGroup(event.target.value);
-              }}
-              className="mt-2 w-full rounded-lg border border-gray-200 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-950"
-            >
-              {groups.map((group) => (
-                <option key={group.id} value={group.id}>
-                  {group.name}
-                </option>
-              ))}
-            </select>
-          </label>
-        </div>
-      ) : null}
-
-      {canDeleteTeam && selectedGroupId ? (
-        <GroupDeleteControls
+      {hasTeam ? (
+        <GroupCompanySettingsAccess
           groups={groups}
           selectedGroupId={selectedGroupId}
+          companyLabel={companyLabel}
+          canConfigureDispatchPolicy={canConfigureDispatchPolicy}
+          canDeleteTeam={canDeleteTeam}
           deleteMembers={deleteMembers}
+          onSelectGroup={onSelectGroup}
           onDeleteMembersChange={onDeleteMembersChange}
           onDeleteGroup={onDeleteGroup}
         />

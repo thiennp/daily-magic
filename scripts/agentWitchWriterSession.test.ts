@@ -7,6 +7,7 @@ import {
   markWriterConversationStarted,
   markWriterSessionWarmed,
   resetWriterSessionsForTests,
+  runWriterSessionStart,
   supportsWriterSessionContinuation,
   supportsWriterSessionWarmup,
 } from "./agentWitchWriterSession";
@@ -36,5 +37,24 @@ describe("agentWitchWriterSession", () => {
   it("does not treat claude-cli as a warmable session writer", () => {
     expect(supportsWriterSessionWarmup("claude-cli")).toBe(false);
     expect(supportsWriterSessionContinuation("claude-cli")).toBe(false);
+  });
+});
+
+describe("runWriterSessionStart", () => {
+  it("rejects unsupported writer agents", async () => {
+    const result = await runWriterSessionStart({
+      installDir: "/tmp/agent-witch",
+      workspace: "/tmp",
+      writerAgent: "gpt",
+      commands: {
+        claudeCommand: "claude",
+        codexCommand: "codex",
+        cursorCommand: "cursor",
+        antigravityCommand: "agy",
+      },
+    });
+
+    expect(result.exitCode).toBe(-1);
+    expect(result.output).toContain("Unsupported writer agent");
   });
 });

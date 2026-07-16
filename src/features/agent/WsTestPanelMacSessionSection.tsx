@@ -4,14 +4,11 @@ import { forwardRef } from "react";
 
 import AgentLiveTerminalSection from "@/features/agent/AgentLiveTerminalSection";
 import type { AgentLiveTerminalStatus } from "@/features/agent/utils/agentLiveTerminalState.type";
-import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
 
 interface WsTestPanelMacSessionSectionProps {
   readonly output: string;
   readonly status: AgentLiveTerminalStatus;
   readonly activeRunId: string | null;
-  readonly sessionWriterAgent: HarnessWriterAgent | null;
-  readonly sessionDeviceName: string | null;
   readonly errorMessage: string | null;
   readonly feedbackVisible: boolean;
   readonly feedbackPendingQuestion: string | null;
@@ -33,8 +30,6 @@ const WsTestPanelMacSessionSection = forwardRef<
       output={props.output}
       status={props.status}
       activeRunId={props.activeRunId}
-      sessionWriterAgent={props.sessionWriterAgent}
-      sessionDeviceName={props.sessionDeviceName}
       feedbackVisible={props.feedbackVisible}
       feedbackPendingQuestion={props.feedbackPendingQuestion}
       feedbackQueuedCount={props.feedbackQueuedCount}

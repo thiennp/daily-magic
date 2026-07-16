@@ -11,6 +11,7 @@ interface GroupDeleteControlsProps {
   readonly groups: readonly GroupItem[];
   readonly selectedGroupId: string;
   readonly deleteMembers: boolean;
+  readonly embedded?: boolean;
   readonly onDeleteMembersChange: (value: boolean) => void;
   readonly onDeleteGroup: () => void;
 }
@@ -19,6 +20,7 @@ export default function GroupDeleteControls({
   groups,
   selectedGroupId,
   deleteMembers,
+  embedded = false,
   onDeleteMembersChange,
   onDeleteGroup,
 }: GroupDeleteControlsProps) {
@@ -28,7 +30,13 @@ export default function GroupDeleteControls({
 
   return (
     <>
-      <div className="mt-4 flex flex-wrap items-center gap-3">
+      <div
+        className={
+          embedded
+            ? "mt-4 flex flex-wrap items-center gap-3"
+            : "mt-4 flex flex-wrap items-center gap-3"
+        }
+      >
         <label className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
           <input
             type="checkbox"

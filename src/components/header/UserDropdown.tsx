@@ -19,7 +19,11 @@ const buildInitials = (displayName: string): string => {
   return (firstWord?.slice(0, 1) ?? "?").toUpperCase();
 };
 
-export default function UserDropdown() {
+interface UserDropdownProps {
+  readonly showStyleguide?: boolean;
+}
+
+export default function UserDropdown({ showStyleguide = false }: UserDropdownProps) {
   const { data: session } = useSession();
   const [isOpen, setIsOpen] = useState(false);
   const [imageError, setImageError] = useState(false);
@@ -105,6 +109,7 @@ export default function UserDropdown() {
         session={session}
         displayName={displayName}
         onClose={closeDropdown}
+        showStyleguide={showStyleguide}
       />
     </div>
   );

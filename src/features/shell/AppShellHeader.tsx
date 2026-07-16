@@ -5,9 +5,12 @@ import Link from "next/link";
 import AgentWitchLogo from "@/components/branding/AgentWitchLogo";
 import { ThemeToggleButton } from "@/components/common/ThemeToggleButton";
 import UserDropdown from "@/components/header/UserDropdown";
+import useStyleguideNavAccess from "@/features/auth/hooks/useStyleguideNavAccess";
 import AppShellNav from "@/features/shell/AppShellNav";
 
 export default function AppShellHeader() {
+  const showStyleguide = useStyleguideNavAccess();
+
   return (
     <header className="sticky top-0 z-50 border-b border-gray-200 bg-white/95 backdrop-blur dark:border-gray-800 dark:bg-gray-800/95">
       <div className="mx-auto flex max-w-[1600px] items-center justify-between gap-4 px-4 py-4 sm:px-6">
@@ -23,7 +26,7 @@ export default function AppShellHeader() {
           <AppShellNav />
           <div className="flex shrink-0 items-center gap-2 sm:gap-3">
             <ThemeToggleButton />
-            <UserDropdown />
+            <UserDropdown showStyleguide={showStyleguide} />
           </div>
         </div>
       </div>

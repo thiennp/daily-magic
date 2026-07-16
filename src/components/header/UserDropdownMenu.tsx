@@ -14,6 +14,7 @@ interface UserDropdownMenuProps {
   readonly session: Session;
   readonly displayName: string;
   readonly onClose: () => void;
+  readonly showStyleguide: boolean;
 }
 
 export default function UserDropdownMenu({
@@ -21,6 +22,7 @@ export default function UserDropdownMenu({
   session,
   displayName,
   onClose,
+  showStyleguide,
 }: UserDropdownMenuProps) {
   return (
     <Dropdown
@@ -61,6 +63,18 @@ export default function UserDropdownMenu({
             User management
           </DropdownItem>
         </li>
+        {showStyleguide ? (
+          <li>
+            <DropdownItem
+              onItemClick={onClose}
+              tag="a"
+              href="/styleguide"
+              className="group flex items-center gap-3 rounded-lg px-3 py-2 text-theme-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
+            >
+              Styleguide
+            </DropdownItem>
+          </li>
+        ) : null}
       </ul>
 
       <button

@@ -1,4 +1,5 @@
 import type { AgentRunInputRequest } from "@/features/dispatch/utils/agentRunInputSocket";
+import { buildAgentLiveTerminalCommandEntry } from "@/features/agent/utils/agentLiveTerminalPrompt.constant";
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
 
 export type AgentLiveTerminalStatus =
@@ -30,7 +31,7 @@ export const beginAgentLiveTerminalSession = (
   sessionDeviceId: string | null = null,
 ): AgentLiveTerminalState => ({
   activeRunId: null,
-  output: "",
+  output: buildAgentLiveTerminalCommandEntry(commandLine),
   status: "starting",
   pendingInput: null,
   pendingCommandLine: commandLine,

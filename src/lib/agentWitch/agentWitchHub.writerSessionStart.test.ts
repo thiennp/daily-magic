@@ -37,4 +37,27 @@ describe("AgentWitchHub writer session start", () => {
     );
     expect(agent.messages[0]?.payload?.writerAgent).toBe("cursor");
   });
+
+  it("broadcasts writer session ready from agent to dashboard", async () => {
+    const agent = createCollector();
+    const dashboard = createCollector();
+    await registerPairedClients(hub, pairingStore, agent.send, dashboard.send);
+
+    const response = await hub.handleMessageAsync("agent-1", {
+      type: AGENT_WITCH_MESSAGE_TYPES.COMMAND_WRITER_SESSION_READY,
+      payload: {
+        writerAgent: "cursor",
+        output: "Cursor is ready on your Mac.\n",
+        exitCode: 0,
+      },
+      requestId: "req-writer-ready-1",
+    });
+
+    expect(response?.type).toBe(AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ACK);
+    expect(dashboard.messages).toHaveLength(1);
+    expect(dashboard.messages[0]?.type).toBe(
+      AGENT_WITCH_MESSAGE_TYPES.COMMAND_WRITER_SESSION_READY,
+    );
+    expect(dashboard.messages[0]?.payload?.writerAgent).toBe("cursor");
+  });
 });

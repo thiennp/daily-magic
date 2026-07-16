@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   buildWriterCliInvocation,
+  buildWriterSessionStartInvocation,
   isHarnessWriterAgentId,
   resolveWriterCliCommands,
 } from "./buildWriterCliInvocation";
@@ -83,6 +84,13 @@ describe("buildWriterCliInvocation", () => {
   it("returns null for empty prompts", () => {
     expect(buildWriterCliInvocation("codex", "", commands)).toBeNull();
     expect(buildWriterCliInvocation("codex", "   ", commands)).toBeNull();
+  });
+
+  it("builds cursor session start invocation", () => {
+    expect(buildWriterSessionStartInvocation("cursor", commands)).toEqual({
+      command: "cursor",
+      args: ["agent", "status"],
+    });
   });
 });
 
