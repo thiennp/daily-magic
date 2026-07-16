@@ -9,6 +9,7 @@ import {
   registerPairedClients,
 } from "./agentWitchHub.testHelpers";
 import { AGENT_WITCH_MESSAGE_TYPES } from "./types/AgentWitchMessageType.constant";
+import { clearWriterSessionsForTests } from "@/lib/dispatch/writerSessionRegistry";
 
 describe("AgentWitchHub writer session start", () => {
   let hub: AgentWitchHub;
@@ -18,6 +19,7 @@ describe("AgentWitchHub writer session start", () => {
     const fixture = createHubFixture();
     hub = fixture.hub;
     pairingStore = fixture.pairingStore;
+    clearWriterSessionsForTests();
   });
 
   it("relays writer session start from dashboard to paired agent", async () => {
@@ -31,11 +33,15 @@ describe("AgentWitchHub writer session start", () => {
     });
 
     expect(response?.type).toBe(AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ACK);
+    expect(typeof response?.payload?.writerSessionId).toBe("string");
     expect(agent.messages).toHaveLength(1);
     expect(agent.messages[0]?.type).toBe(
       AGENT_WITCH_MESSAGE_TYPES.COMMAND_WRITER_SESSION_START,
     );
     expect(agent.messages[0]?.payload?.writerAgent).toBe("cursor");
+    expect(agent.messages[0]?.payload?.writerSessionId).toBe(
+      response?.payload?.writerSessionId,
+    );
   });
 
   it("broadcasts writer session ready from agent to dashboard", async () => {
@@ -43,10 +49,19 @@ describe("AgentWitchHub writer session start", () => {
     const dashboard = createCollector();
     await registerPairedClients(hub, pairingStore, agent.send, dashboard.send);
 
+    const start = await hub.handleMessageAsync("dash-1", {
+      type: AGENT_WITCH_MESSAGE_TYPES.COMMAND_WRITER_SESSION_START,
+      payload: { writerAgent: "cursor" },
+      requestId: "req-writer-start-2",
+    });
+    const writerSessionId = start?.payload?.writerSessionId;
+    expect(typeof writerSessionId).toBe("string");
+
     const response = await hub.handleMessageAsync("agent-1", {
       type: AGENT_WITCH_MESSAGE_TYPES.COMMAND_WRITER_SESSION_READY,
       payload: {
         writerAgent: "cursor",
+        writerSessionId,
         output: "Cursor is ready on your Mac.\n",
         exitCode: 0,
       },
@@ -58,6 +73,8 @@ describe("AgentWitchHub writer session start", () => {
     expect(dashboard.messages[0]?.type).toBe(
       AGENT_WITCH_MESSAGE_TYPES.COMMAND_WRITER_SESSION_READY,
     );
-    expect(dashboard.messages[0]?.payload?.writerAgent).toBe("cursor");
+    expect(dashboard.messages[0]?.payload?.writerSessionId).toBe(
+      writerSessionId,
+    );
   });
 });

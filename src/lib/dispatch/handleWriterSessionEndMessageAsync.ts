@@ -5,6 +5,11 @@ import type AgentWitchHubRuntime from "@/lib/agentWitch/types/AgentWitchHubRunti
 import type AgentWitchMessage from "@/lib/agentWitch/types/AgentWitchMessage.type";
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
 import { buildDispatchError } from "@/lib/dispatch/buildDispatchError";
+import {
+  getWriterSession,
+  readWriterSessionId,
+  removeWriterSession,
+} from "@/lib/dispatch/writerSessionRegistry";
 
 export const handleWriterSessionEndMessageAsync = async (
   runtime: AgentWitchHubRuntime,
@@ -26,6 +31,23 @@ export const handleWriterSessionEndMessageAsync = async (
     );
   }
 
+  const writerSessionId = readWriterSessionId(message.payload);
+  if (writerSessionId.length > 0) {
+    const session = getWriterSession(writerSessionId);
+    if (
+      session === undefined ||
+      session.ownerUserId !== sender.userId ||
+      session.writerAgent !== writerAgent
+    ) {
+      return buildDispatchError(
+        "Writer session is not active for this dashboard client.",
+        message.requestId,
+      );
+    }
+
+    removeWriterSession(writerSessionId);
+  }
+
   const agentClient = runtime.findAgentClientForUser(sender.userId);
   if (agentClient === undefined) {
     return buildDispatchError(
@@ -36,13 +58,20 @@ export const handleWriterSessionEndMessageAsync = async (
 
   agentClient.send({
     type: AGENT_WITCH_MESSAGE_TYPES.COMMAND_WRITER_SESSION_END,
-    payload: { writerAgent },
+    payload: {
+      writerAgent,
+      ...(writerSessionId.length > 0 ? { writerSessionId } : {}),
+    },
     requestId: message.requestId,
   });
 
   return {
     type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ACK,
-    payload: { writerAgent, ended: true },
+    payload: {
+      writerAgent,
+      ...(writerSessionId.length > 0 ? { writerSessionId } : {}),
+      ended: true,
+    },
     requestId: message.requestId,
   };
 };

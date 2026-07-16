@@ -11,6 +11,7 @@ export interface PersistedTerminalSession {
   readonly pendingCommandLine: string | null;
   readonly sessionWriterAgent: AgentLiveTerminalState["sessionWriterAgent"];
   readonly sessionDeviceId: string | null;
+  readonly sessionWriterSessionId: string | null;
   readonly updatedAt: string;
 }
 
@@ -62,6 +63,10 @@ export const readTerminalStore = (): TerminalStore => {
         sessionDeviceId:
           typeof current.sessionDeviceId === "string"
             ? current.sessionDeviceId
+            : null,
+        sessionWriterSessionId:
+          typeof current.sessionWriterSessionId === "string"
+            ? current.sessionWriterSessionId
             : null,
         updatedAt: current.updatedAt,
       },

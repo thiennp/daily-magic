@@ -294,6 +294,7 @@ const dispatchWriterTask = async (
 const startWriterSession = async (
   config: AgentWitchConfig,
   writerAgent: string,
+  writerSessionId: string,
   requestId: string | undefined,
   socket: WebSocket,
 ): Promise<void> => {
@@ -314,6 +315,7 @@ const startWriterSession = async (
         type: "command.writer.session.chunk",
         payload: {
           writerAgent,
+          writerSessionId,
           chunk,
         },
         requestId,
@@ -334,6 +336,7 @@ const startWriterSession = async (
     type: "command.writer.session.ready",
     payload: {
       writerAgent,
+      writerSessionId,
       output: readyOutput,
       exitCode: result.exitCode,
     },
@@ -746,12 +749,23 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
           isRecord(parsed.payload)
         ) {
           const writerAgent = parsed.payload.writerAgent;
+          const writerSessionId =
+            typeof parsed.payload.writerSessionId === "string"
+              ? parsed.payload.writerSessionId
+              : "";
           if (
             typeof writerAgent === "string" &&
-            isHarnessWriterAgentId(writerAgent)
+            isHarnessWriterAgentId(writerAgent) &&
+            writerSessionId.length > 0
           ) {
             console.log(`[agent-witch] Starting ${writerAgent} session…`);
-            void startWriterSession(config, writerAgent, requestId, socket);
+            void startWriterSession(
+              config,
+              writerAgent,
+              writerSessionId,
+              requestId,
+              socket,
+            );
           }
         }
 

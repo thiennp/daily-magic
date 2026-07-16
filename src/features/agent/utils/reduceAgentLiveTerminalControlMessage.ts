@@ -28,6 +28,18 @@ export const reduceAgentLiveTerminalControlMessage = (
   }
 
   if (parsed.type === AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ACK) {
+    const writerSessionId =
+      typeof payload.writerSessionId === "string"
+        ? payload.writerSessionId
+        : null;
+
+    if (payload.started === true && writerSessionId !== null) {
+      return {
+        ...state,
+        sessionWriterSessionId: writerSessionId,
+      };
+    }
+
     const runId = readRunId(payload);
     if (runId === null) {
       return state;

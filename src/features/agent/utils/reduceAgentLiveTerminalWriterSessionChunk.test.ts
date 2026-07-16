@@ -21,14 +21,18 @@ describe("reduceAgentLiveTerminalWriterSessionChunk", () => {
   });
 
   it("ignores chunks for a different writer session", () => {
-    const state = beginAgentLiveTerminalSession(
-      "cursor agent status",
-      "cursor",
-      "device-1",
-    );
+    const state = {
+      ...beginAgentLiveTerminalSession(
+        "cursor agent status",
+        "cursor",
+        "device-1",
+      ),
+      sessionWriterSessionId: "session-a",
+    };
 
     const next = reduceAgentLiveTerminalWriterSessionChunk(state, {
-      writerAgent: "codex",
+      writerAgent: "cursor",
+      writerSessionId: "session-b",
       chunk: "ignored\n",
     });
 

@@ -1,6 +1,7 @@
 import type { AgentLiveTerminalState } from "./agentLiveTerminalState.type";
 import isHarnessWriterAgent from "@/lib/agentWitch/harness/isHarnessWriterAgent";
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
+import { matchesWriterSession } from "./matchesWriterSession";
 
 export const reduceAgentLiveTerminalWriterSessionChunk = (
   state: AgentLiveTerminalState,
@@ -13,6 +14,7 @@ export const reduceAgentLiveTerminalWriterSessionChunk = (
     chunk.length === 0 ||
     !isHarnessWriterAgent(writerAgent) ||
     writerAgent !== state.sessionWriterAgent ||
+    !matchesWriterSession(state, payload) ||
     (state.status !== "starting" && state.status !== "streaming")
   ) {
     return state;

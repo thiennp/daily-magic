@@ -17,6 +17,7 @@ export interface AgentLiveTerminalState {
   readonly pendingCommandLine: string | null;
   readonly sessionWriterAgent: HarnessWriterAgent | null;
   readonly sessionDeviceId: string | null;
+  readonly sessionWriterSessionId: string | null;
 }
 
 export const initialAgentLiveTerminalState = (): AgentLiveTerminalState => ({
@@ -27,6 +28,7 @@ export const initialAgentLiveTerminalState = (): AgentLiveTerminalState => ({
   pendingCommandLine: null,
   sessionWriterAgent: null,
   sessionDeviceId: null,
+  sessionWriterSessionId: null,
 });
 
 export const beginAgentLiveTerminalSession = (
@@ -41,6 +43,7 @@ export const beginAgentLiveTerminalSession = (
   pendingCommandLine: commandLine,
   sessionWriterAgent,
   sessionDeviceId,
+  sessionWriterSessionId: null,
 });
 
 export const isAgentLiveTerminalSessionOpen = (
@@ -75,6 +78,7 @@ export const continueAgentLiveTerminalSession = (
     pendingCommandLine: commandLine,
     sessionWriterAgent: state.sessionWriterAgent,
     sessionDeviceId: state.sessionDeviceId,
+    sessionWriterSessionId: state.sessionWriterSessionId,
   };
 };
 

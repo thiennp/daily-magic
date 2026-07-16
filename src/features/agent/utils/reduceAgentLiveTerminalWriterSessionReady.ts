@@ -6,6 +6,7 @@ import {
   appendAgentLiveTerminalCommand,
 } from "./agentLiveTerminalPrompt.constant";
 import isHarnessWriterAgent from "@/lib/agentWitch/harness/isHarnessWriterAgent";
+import { matchesWriterSession } from "./matchesWriterSession";
 
 export const reduceAgentLiveTerminalWriterSessionReady = (
   state: AgentLiveTerminalState,
@@ -14,7 +15,8 @@ export const reduceAgentLiveTerminalWriterSessionReady = (
   const writerAgent = payload.writerAgent;
   if (
     !isHarnessWriterAgent(writerAgent) ||
-    writerAgent !== state.sessionWriterAgent
+    writerAgent !== state.sessionWriterAgent ||
+    !matchesWriterSession(state, payload)
   ) {
     return state;
   }

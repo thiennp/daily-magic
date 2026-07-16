@@ -9,6 +9,7 @@ import {
   resolveClaudeRunAgentClient,
   resolveTargetDeviceId,
 } from "@/lib/dispatch/resolveClaudeRunAgentClient";
+import { createWriterSession } from "@/lib/dispatch/writerSessionRegistry";
 
 export const handleWriterSessionStartMessageAsync = async (
   runtime: AgentWitchHubRuntime,
@@ -50,10 +51,19 @@ export const handleWriterSessionStartMessageAsync = async (
     );
   }
 
+  const session = createWriterSession({
+    ownerUserId: sender.userId,
+    executorUserId: sender.userId,
+    deviceId: agentResolution.deviceId,
+    writerAgent,
+    dashboardClientId: sender.id,
+  });
+
   agentResolution.agentClient.send({
     type: AGENT_WITCH_MESSAGE_TYPES.COMMAND_WRITER_SESSION_START,
     payload: {
       writerAgent,
+      writerSessionId: session.writerSessionId,
       ...(agentResolution.deviceId !== null
         ? { targetDeviceId: agentResolution.deviceId }
         : {}),
@@ -63,7 +73,11 @@ export const handleWriterSessionStartMessageAsync = async (
 
   return {
     type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ACK,
-    payload: { writerAgent, started: true },
+    payload: {
+      writerAgent,
+      writerSessionId: session.writerSessionId,
+      started: true,
+    },
     requestId: message.requestId,
   };
 };

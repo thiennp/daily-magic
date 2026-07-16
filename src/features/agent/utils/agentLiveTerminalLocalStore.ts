@@ -25,6 +25,7 @@ export const loadPersistedAgentLiveTerminalState =
       pendingCommandLine: session.pendingCommandLine,
       sessionWriterAgent: session.sessionWriterAgent,
       sessionDeviceId: session.sessionDeviceId,
+      sessionWriterSessionId: session.sessionWriterSessionId ?? null,
     };
   };
 
@@ -44,6 +45,7 @@ export const persistAgentLiveTerminalState = (
       pendingCommandLine: state.pendingCommandLine,
       sessionWriterAgent: state.sessionWriterAgent,
       sessionDeviceId: state.sessionDeviceId,
+      sessionWriterSessionId: state.sessionWriterSessionId,
       updatedAt: new Date().toISOString(),
     },
   });
