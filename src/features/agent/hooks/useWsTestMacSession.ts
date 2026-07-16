@@ -17,7 +17,6 @@ export const useWsTestMacSession = (input: {
 }): {
   readonly terminalSectionRef: RefObject<HTMLElement | null>;
   readonly isSessionActive: boolean;
-  readonly sessionDeviceName: string | null;
   readonly sessionErrorMessage: string | null;
   readonly terminalFeedback: ReturnType<typeof useAgentLiveTerminalFeedback>;
 } => {
@@ -41,12 +40,6 @@ export const useWsTestMacSession = (input: {
     submitInput: input.socket.submitLiveTerminalInput,
     enqueueRun: input.enqueueRun,
   });
-  const sessionDeviceName =
-    input.sessionTargets.activeDeviceId.length > 0
-      ? (input.composer.macDisplayNameById.get(
-          input.sessionTargets.activeDeviceId,
-        ) ?? "Your Mac")
-      : null;
   const sessionErrorMessage =
     !isSessionActive && input.socket.lastResponse.isError
       ? input.socket.lastResponse.text
@@ -55,7 +48,6 @@ export const useWsTestMacSession = (input: {
   return {
     terminalSectionRef,
     isSessionActive,
-    sessionDeviceName,
     sessionErrorMessage,
     terminalFeedback,
   };

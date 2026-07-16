@@ -13,6 +13,7 @@ interface AgentLiveTerminalFeedbackChatProps {
   readonly autoFocus?: boolean;
   readonly isSteppedComposer?: boolean;
   readonly onSubmit: (message: string) => void;
+  readonly onFinishSession: () => void;
 }
 
 export default function AgentLiveTerminalFeedbackChat({
@@ -23,6 +24,7 @@ export default function AgentLiveTerminalFeedbackChat({
   autoFocus = false,
   isSteppedComposer = false,
   onSubmit,
+  onFinishSession,
 }: AgentLiveTerminalFeedbackChatProps) {
   const deferredSubmit = useAgentLiveTerminalFeedbackDeferredSubmit({
     onSubmit,
@@ -65,7 +67,10 @@ export default function AgentLiveTerminalFeedbackChat({
           {queueNotice}
         </p>
       ) : null}
-      <div className="mt-3 flex justify-end">
+      <div className="mt-3 flex flex-wrap items-center justify-end gap-2">
+        <Button size="sm" variant="outline" onClick={onFinishSession}>
+          Finish session
+        </Button>
         <Button onClick={deferredSubmit.handleSubmit}>
           {isAnswerMode ? "Send answer" : "Send feedback"}
         </Button>

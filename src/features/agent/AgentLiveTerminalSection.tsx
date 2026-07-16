@@ -6,16 +6,12 @@ import Link from "next/link";
 
 import AppPanel from "@/components/surfaces/AppPanel";
 import AgentLiveTerminalPanel from "@/features/agent/AgentLiveTerminalPanel";
-import AgentLiveTerminalSessionBar from "@/features/agent/AgentLiveTerminalSessionBar";
 import type { AgentLiveTerminalStatus } from "@/features/agent/utils/agentLiveTerminalState.type";
-import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
 
 interface AgentLiveTerminalSectionProps {
   readonly output: string;
   readonly status: AgentLiveTerminalStatus;
   readonly activeRunId: string | null;
-  readonly sessionWriterAgent: HarnessWriterAgent | null;
-  readonly sessionDeviceName: string | null;
   readonly errorMessage: string | null;
   readonly feedbackVisible: boolean;
   readonly feedbackPendingQuestion: string | null;
@@ -36,8 +32,6 @@ const AgentLiveTerminalSection = forwardRef<
     output,
     status,
     activeRunId,
-    sessionWriterAgent,
-    sessionDeviceName,
     errorMessage,
     feedbackVisible,
     feedbackPendingQuestion,
@@ -53,13 +47,6 @@ const AgentLiveTerminalSection = forwardRef<
 ) {
   const content = (
     <>
-      {sessionWriterAgent !== null ? (
-        <AgentLiveTerminalSessionBar
-          sessionWriterAgent={sessionWriterAgent}
-          sessionDeviceName={sessionDeviceName}
-          onFinishSession={onFinishSession}
-        />
-      ) : null}
       {activeRunId !== null ? (
         <p className="mb-3 text-sm text-gray-600 dark:text-gray-400">
           This job is saved locally in{" "}
@@ -89,6 +76,7 @@ const AgentLiveTerminalSection = forwardRef<
         feedbackAutoFocus={feedbackAutoFocus}
         isSteppedComposer={isSteppedComposer}
         onSubmitFeedback={onSubmitFeedback}
+        onFinishSession={onFinishSession}
       />
       {errorMessage !== null ? (
         <p className="mt-4 text-sm text-rose-600 dark:text-rose-400">

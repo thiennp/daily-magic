@@ -31,8 +31,6 @@ interface WsTestPanelComposerSectionProps {
   readonly liveTerminalOutput: string;
   readonly liveTerminalStatus: AgentLiveTerminalStatus;
   readonly liveTerminalRunId: string | null;
-  readonly sessionWriterAgent: HarnessWriterAgent | null;
-  readonly sessionDeviceName: string | null;
   readonly feedbackVisible: boolean;
   readonly feedbackPendingQuestion: string | null;
   readonly feedbackQueuedCount: number;
@@ -59,8 +57,6 @@ export default function WsTestPanelComposerSection({
   liveTerminalOutput,
   liveTerminalStatus,
   liveTerminalRunId,
-  sessionWriterAgent,
-  sessionDeviceName,
   feedbackVisible,
   feedbackPendingQuestion,
   feedbackQueuedCount,
@@ -83,8 +79,6 @@ export default function WsTestPanelComposerSection({
           output={liveTerminalOutput}
           status={liveTerminalStatus}
           activeRunId={liveTerminalRunId}
-          sessionWriterAgent={sessionWriterAgent}
-          sessionDeviceName={sessionDeviceName}
           feedbackVisible={feedbackVisible}
           feedbackPendingQuestion={feedbackPendingQuestion}
           feedbackQueuedCount={feedbackQueuedCount}
