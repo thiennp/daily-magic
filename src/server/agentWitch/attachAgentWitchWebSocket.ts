@@ -2,6 +2,7 @@ import { randomUUID } from "node:crypto";
 import type { WebSocket } from "ws";
 
 import { AgentWitchHub } from "@/lib/agentWitch/agentWitchHub";
+import { clearDashboardTerminalSubscriptions } from "@/lib/dispatch/dashboardTerminalSubscriptionRegistry";
 import type {
   AgentWitchConnectionState,
   AgentWitchWebSocketAuthContext,
@@ -39,6 +40,7 @@ export const attachAgentWitchWebSocket = (
   };
 
   const unregisterClient = (): void => {
+    clearDashboardTerminalSubscriptions(clientId);
     hub.unregisterClient(clientId);
   };
 
@@ -65,7 +67,7 @@ export const attachAgentWitchWebSocket = (
 
   socket.on("close", () => {
     if (connectionState.registered) {
-      hub.unregisterClient(clientId);
+      unregisterClient();
     }
   });
 };

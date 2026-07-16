@@ -4,6 +4,7 @@ import type AgentWitchHubRuntime from "@/lib/agentWitch/types/AgentWitchHubRunti
 import type AgentWitchMessage from "@/lib/agentWitch/types/AgentWitchMessage.type";
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
 import { buildDispatchError } from "@/lib/dispatch/buildDispatchError";
+import { buildWriterSessionTerminalSubscriptionKey } from "@/lib/dispatch/dashboardTerminalSubscriptionRegistry";
 import {
   authorizeWriterSessionPublisher,
   readWriterSessionId,
@@ -34,7 +35,11 @@ export const relayWriterSessionMessageAsync = async (
     );
   }
 
-  runtime.broadcastToDashboardUser(session.ownerUserId, message);
+  runtime.broadcastToSubscribedDashboardUser(
+    session.ownerUserId,
+    buildWriterSessionTerminalSubscriptionKey(writerSessionId),
+    message,
+  );
 
   return {
     type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ACK,

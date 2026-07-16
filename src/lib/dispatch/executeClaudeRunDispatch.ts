@@ -5,6 +5,10 @@ import type AgentWitchMessage from "@/lib/agentWitch/types/AgentWitchMessage.typ
 import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
 import { broadcastAgentRunRecord } from "@/lib/dispatch/broadcastAgentRunRecord";
 import {
+  buildRunTerminalSubscriptionKey,
+  subscribeDashboardTerminal,
+} from "@/lib/dispatch/dashboardTerminalSubscriptionRegistry";
+import {
   dispatchClaudeRunToAgent,
   markAgentRunRunning,
 } from "@/lib/dispatch/dispatchClaudeRunToAgent";
@@ -100,6 +104,10 @@ export const executeClaudeRunDispatch = async (input: {
       sessionContinuation,
     );
     await markAgentRunRunning(input.runtime, run.id);
+    subscribeDashboardTerminal(
+      input.sender.id,
+      buildRunTerminalSubscriptionKey(run.id),
+    );
   }
 
   return {

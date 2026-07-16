@@ -28,5 +28,10 @@ export default interface AgentWitchHubRuntime {
     userId: string | undefined,
     message: AgentWitchMessage,
   ): void;
+  broadcastToSubscribedDashboardUser(
+    userId: string | undefined,
+    subscriptionKey: string,
+    message: AgentWitchMessage,
+  ): void;
   bindAgentClientsToPairing(pairingToken: string): void;
 }

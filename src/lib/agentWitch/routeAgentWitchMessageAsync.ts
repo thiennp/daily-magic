@@ -1,7 +1,7 @@
 import type AgentWitchHubClient from "./types/AgentWitchHubClient.type";
+import type AgentWitchHubRuntime from "./types/AgentWitchHubRuntime.type";
 import type AgentWitchMessage from "./types/AgentWitchMessage.type";
 import { AGENT_WITCH_MESSAGE_TYPES } from "./types/AgentWitchMessageType.constant";
-import type { AgentWitchHub } from "./agentWitchHub";
 import { handleAgentHeartbeatMessageAsync } from "./handleAgentHeartbeatMessageAsync";
 import { handleAgentPairMessageAsync } from "./handleAgentPairMessageAsync";
 import { handleAgentWitchSyncMessage } from "./handleAgentWitchSyncMessage";
@@ -13,6 +13,7 @@ import {
   handleAgentAgentRunRelayResultAsync,
   handleDashboardAgentRunRelayAsync,
 } from "@/lib/dispatch/handleDashboardAgentRunRelayAsync";
+import { handleDashboardTerminalSubscribeMessageAsync } from "@/lib/dispatch/handleDashboardTerminalSubscribeMessageAsync";
 import { handleDispatchApprovalRespondAsync } from "@/lib/dispatch/handleDispatchApprovalRespond";
 import { handleTerminalStreamMessageAsync } from "@/lib/dispatch/handleTerminalStreamMessageAsync";
 import { handleWriterSessionChunkMessageAsync } from "@/lib/dispatch/handleWriterSessionChunkMessageAsync";
@@ -34,7 +35,7 @@ const isAgentAgentRunResult = (type: string): boolean =>
   type === AGENT_WITCH_MESSAGE_TYPES.DASHBOARD_AGENT_RUN_GET_RESULT;
 
 export const routeAgentWitchMessageAsync = async (
-  hub: AgentWitchHub,
+  hub: AgentWitchHubRuntime,
   senderId: string,
   sender: AgentWitchHubClient | undefined,
   message: AgentWitchMessage,
@@ -83,6 +84,10 @@ export const routeAgentWitchMessageAsync = async (
 
   if (message.type === AGENT_WITCH_MESSAGE_TYPES.DISPATCH_APPROVAL_RESPOND) {
     return handleDispatchApprovalRespondAsync(hub, message, sender);
+  }
+
+  if (message.type === AGENT_WITCH_MESSAGE_TYPES.DASHBOARD_TERMINAL_SUBSCRIBE) {
+    return handleDashboardTerminalSubscribeMessageAsync(hub, message, sender);
   }
 
   if (isTerminalStreamMessage(message.type)) {

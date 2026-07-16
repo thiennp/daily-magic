@@ -2,7 +2,6 @@ import { afterEach, describe, expect, it } from "vitest";
 
 import { clearTerminalStreamSlotsForTests } from "@/lib/agentWitch/agentWitchStreamSlotManager";
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
-import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
 import {
   registerAgentRunSession,
   removeAgentRunSession,
@@ -28,7 +27,9 @@ describe("handleTerminalStreamMessageAsync stream flow", () => {
         executorUserId: "executor-1",
       }),
     );
-    const { runtime, broadcasts } = createTerminalStreamTestRuntime();
+    const { runtime, broadcasts, subscribeRun } =
+      createTerminalStreamTestRuntime();
+    subscribeRun(TERMINAL_STREAM_TEST_RUN_ID);
     const sender = buildTerminalStreamExecutorAgent();
 
     const start = await handleTerminalStreamMessageAsync(
@@ -72,7 +73,9 @@ describe("handleTerminalStreamMessageAsync stream flow", () => {
 
   it("acks empty chunks without broadcasting", async () => {
     registerAgentRunSession(buildTerminalStreamTestRun());
-    const { runtime, broadcasts } = createTerminalStreamTestRuntime();
+    const { runtime, broadcasts, subscribeRun } =
+      createTerminalStreamTestRuntime();
+    subscribeRun(TERMINAL_STREAM_TEST_RUN_ID);
     const sender = buildTerminalStreamExecutorAgent();
 
     await handleTerminalStreamMessageAsync(

@@ -27,6 +27,7 @@ export const AGENT_WITCH_MESSAGE_TYPES = {
   TERMINAL_STREAM_REJECTED: "terminal.stream.rejected",
   TERMINAL_STREAM_CHUNK: "terminal.stream.chunk",
   TERMINAL_STREAM_END: "terminal.stream.end",
+  DASHBOARD_TERMINAL_SUBSCRIBE: "dashboard.terminal.subscribe",
   DASHBOARD_AGENT_RUN_LIST: "dashboard.agentRun.list",
   DASHBOARD_AGENT_RUN_LIST_RESULT: "dashboard.agentRun.list.result",
   DASHBOARD_AGENT_RUN_GET: "dashboard.agentRun.get",

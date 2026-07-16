@@ -1,6 +1,5 @@
 import { handleAgentWitchSyncMessage } from "./handleAgentWitchSyncMessage";
 import { routeAgentWitchMessageAsync } from "./routeAgentWitchMessageAsync";
-import type { AgentWitchHub } from "./agentWitchHub";
 import type AgentWitchHubClient from "./types/AgentWitchHubClient.type";
 import type AgentWitchHubRuntime from "./types/AgentWitchHubRuntime.type";
 import type AgentWitchMessage from "./types/AgentWitchMessage.type";
@@ -25,7 +24,7 @@ export const dispatchAgentWitchHubMessage = (
 };
 
 export const dispatchAgentWitchHubMessageAsync = (
-  hub: AgentWitchHub,
+  hub: AgentWitchHubRuntime,
   clients: Map<string, AgentWitchHubClient>,
   senderId: string,
   message: AgentWitchMessage,

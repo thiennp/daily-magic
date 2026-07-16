@@ -23,6 +23,7 @@ const createRuntime = (): AgentWitchHubRuntime => {
     listOnlineAgentClientsForUser: vi.fn(),
     listAgentClients: vi.fn().mockReturnValue([]),
     broadcastToDashboardUser: vi.fn(),
+    broadcastToSubscribedDashboardUser: vi.fn(),
     bindAgentClientsToPairing: vi.fn(),
     manifestByAgentClientId: new Map(),
   };

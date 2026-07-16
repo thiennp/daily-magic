@@ -1,6 +1,7 @@
 import type AgentWitchHubClient from "./types/AgentWitchHubClient.type";
 import type AgentWitchMessage from "./types/AgentWitchMessage.type";
 import { AGENT_WITCH_MESSAGE_TYPES } from "./types/AgentWitchMessageType.constant";
+import { isDashboardTerminalSubscribed } from "@/lib/dispatch/dashboardTerminalSubscriptionRegistry";
 
 const sortAgentClientsByRecency = (
   left: AgentWitchHubClient,
@@ -49,6 +50,24 @@ export const broadcastToDashboardUser = (
       (client) =>
         client.role === "dashboard" &&
         (userId === undefined || client.userId === userId),
+    )
+    .forEach((client) => {
+      client.send(message);
+    });
+};
+
+export const broadcastToSubscribedDashboardUser = (
+  clients: Map<string, AgentWitchHubClient>,
+  userId: string | undefined,
+  subscriptionKey: string,
+  message: AgentWitchMessage,
+): void => {
+  [...clients.values()]
+    .filter(
+      (client) =>
+        client.role === "dashboard" &&
+        (userId === undefined || client.userId === userId) &&
+        isDashboardTerminalSubscribed(client.id, subscriptionKey),
     )
     .forEach((client) => {
       client.send(message);

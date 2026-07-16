@@ -3,6 +3,7 @@ import type AgentWitchMessage from "@/lib/agentWitch/types/AgentWitchMessage.typ
 import type AgentWitchHubRuntime from "@/lib/agentWitch/types/AgentWitchHubRuntime.type";
 import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
 import { DispatchPolicy } from "@/lib/dispatch/DispatchPolicy.constant";
+import { buildRunTerminalSubscriptionKey } from "@/lib/dispatch/dashboardTerminalSubscriptionRegistry";
 import type AgentRunRecord from "@/lib/dispatch/types/AgentRunRecord.type";
 
 export const TERMINAL_STREAM_TEST_RUN_ID = "run-stream-1";
@@ -46,13 +47,28 @@ export const buildTerminalStreamExecutorAgent = (
 export const createTerminalStreamTestRuntime = (): {
   readonly runtime: AgentWitchHubRuntime;
   readonly broadcasts: AgentWitchMessage[];
+  readonly subscribeRun: (runId: string) => void;
 } => {
   const broadcasts: AgentWitchMessage[] = [];
+  const subscribedKeys = new Set<string>();
+
   return {
     broadcasts,
+    subscribeRun: (runId) => {
+      subscribedKeys.add(buildRunTerminalSubscriptionKey(runId));
+    },
     runtime: {
       broadcastToDashboardUser: (_userId, message) => {
         broadcasts.push(message);
+      },
+      broadcastToSubscribedDashboardUser: (
+        _userId,
+        subscriptionKey,
+        message,
+      ) => {
+        if (subscribedKeys.has(subscriptionKey)) {
+          broadcasts.push(message);
+        }
       },
     } as AgentWitchHubRuntime,
   };

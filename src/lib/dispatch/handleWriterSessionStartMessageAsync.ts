@@ -10,6 +10,10 @@ import {
   resolveTargetDeviceId,
 } from "@/lib/dispatch/resolveClaudeRunAgentClient";
 import { createWriterSession } from "@/lib/dispatch/writerSessionRegistry";
+import {
+  buildWriterSessionTerminalSubscriptionKey,
+  subscribeDashboardTerminal,
+} from "@/lib/dispatch/dashboardTerminalSubscriptionRegistry";
 
 export const handleWriterSessionStartMessageAsync = async (
   runtime: AgentWitchHubRuntime,
@@ -58,6 +62,10 @@ export const handleWriterSessionStartMessageAsync = async (
     writerAgent,
     dashboardClientId: sender.id,
   });
+  subscribeDashboardTerminal(
+    sender.id,
+    buildWriterSessionTerminalSubscriptionKey(session.writerSessionId),
+  );
 
   agentResolution.agentClient.send({
     type: AGENT_WITCH_MESSAGE_TYPES.COMMAND_WRITER_SESSION_START,

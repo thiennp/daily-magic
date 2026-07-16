@@ -6,6 +6,7 @@ import { appendAgentRunTerminalOutput } from "@/features/agent/utils/agentRunTer
 import type { AgentRunInputRequest } from "@/features/dispatch/utils/agentRunInputSocket";
 import { handleAgentRunLiveTerminalSocketMessage } from "@/features/reports/utils/handleAgentRunLiveTerminalSocketMessage";
 import { registerAgentRunLiveTerminal } from "@/features/reports/utils/registerAgentRunLiveTerminal";
+import { sendDashboardTerminalSubscribe } from "@/features/agent/utils/sendDashboardTerminalSubscribe";
 import {
   buildAgentWitchWebSocketUrl,
   sendAgentWitchPairingToken,
@@ -54,6 +55,7 @@ export function useAgentRunLiveTerminalSocket(input: {
         }),
       );
       sendAgentWitchPairingToken(socket);
+      sendDashboardTerminalSubscribe(socket, { runId: input.runId });
     });
 
     socket.addEventListener("message", (event) => {
