@@ -10,6 +10,10 @@ import {
   completeAgentRunOnCloud,
   type AgentWitchCloudApiConfig,
 } from "./agentWitchCloudApi";
+import {
+  isWriterConversationStarted,
+  markWriterConversationStarted,
+} from "./agentWitchWriterSession";
 
 export interface AgentWitchCloudJobConfig {
   readonly cloudApi: AgentWitchCloudApiConfig;
@@ -36,6 +40,10 @@ const runWriterForCloudJob = (
       return;
     }
 
+    const sessionTurn = isWriterConversationStarted(writerAgent)
+      ? "continue"
+      : "first";
+
     const invocation = buildWriterCliInvocation(
       writerAgent,
       prompt,
@@ -45,6 +53,7 @@ const runWriterForCloudJob = (
         cursorCommand: config.cursorCommand,
         antigravityCommand: config.antigravityCommand,
       }),
+      { sessionTurn },
     );
 
     if (invocation === null) {
@@ -70,6 +79,7 @@ const runWriterForCloudJob = (
     });
 
     child.on("close", (code) => {
+      markWriterConversationStarted(writerAgent);
       resolve({
         exitCode: code ?? -1,
         output: outputChunks.join(""),

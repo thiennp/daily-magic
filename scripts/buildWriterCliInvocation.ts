@@ -90,10 +90,13 @@ export const buildWriterCliInvocation = (
     return null;
   }
 
+  const continueArgs =
+    options?.sessionTurn === "continue" ? (["--continue"] as const) : [];
+
   if (writerAgent === "claude-cli") {
     return {
       command: commands.claudeCommand,
-      args: ["-p", "--dangerously-skip-permissions", prompt],
+      args: [...continueArgs, "-p", "--dangerously-skip-permissions", prompt],
     };
   }
 
@@ -105,14 +108,11 @@ export const buildWriterCliInvocation = (
   }
 
   if (writerAgent === "cursor") {
-    const sessionArgs =
-      options?.sessionTurn === "continue" ? (["--continue"] as const) : [];
-
     return {
       command: commands.cursorCommand,
       args: [
         "agent",
-        ...sessionArgs,
+        ...continueArgs,
         "-p",
         "--force",
         "--trust",
@@ -125,6 +125,6 @@ export const buildWriterCliInvocation = (
 
   return {
     command: commands.antigravityCommand,
-    args: ["-p", "--dangerously-skip-permissions", prompt],
+    args: [...continueArgs, "-p", "--dangerously-skip-permissions", prompt],
   };
 };

@@ -21,7 +21,10 @@ export const supportsWriterSessionWarmup = (
 
 export const supportsWriterSessionContinuation = (
   writerAgent: HarnessWriterAgentId,
-): boolean => writerAgent === "cursor";
+): boolean =>
+  writerAgent === "claude-cli" ||
+  writerAgent === "cursor" ||
+  writerAgent === "antigravity";
 
 export const isWriterSessionWarmed = (
   writerAgent: HarnessWriterAgentId,

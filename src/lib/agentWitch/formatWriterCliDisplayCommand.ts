@@ -19,10 +19,10 @@ export const formatWriterCliDisplayCommand = (
   sessionTurn: WriterCliSessionTurn = "first",
 ): string => {
   const escaped = escapeShellPrompt(prompt);
-  const cursorContinueFlag = sessionTurn === "continue" ? "--continue " : "";
+  const continueFlag = sessionTurn === "continue" ? "--continue " : "";
 
   if (writerAgent === "claude-cli") {
-    return `claude -p --dangerously-skip-permissions "${escaped}"`;
+    return `claude ${continueFlag}-p --dangerously-skip-permissions "${escaped}"`;
   }
 
   if (writerAgent === "codex") {
@@ -30,10 +30,10 @@ export const formatWriterCliDisplayCommand = (
   }
 
   if (writerAgent === "cursor") {
-    return `cursor agent ${cursorContinueFlag}-p --force --trust --sandbox disabled "${escaped}"`;
+    return `cursor agent ${continueFlag}-p --force --trust --sandbox disabled "${escaped}"`;
   }
 
-  return `agy -p --dangerously-skip-permissions "${escaped}"`;
+  return `agy ${continueFlag}-p --dangerously-skip-permissions "${escaped}"`;
 };
 
 export const formatWriterSessionStartDisplayCommand = (

@@ -29,7 +29,6 @@ import {
   clearWriterSession,
   isWriterConversationStarted,
   isWriterSessionWarmed,
-  markWriterConversationStarted,
   markWriterSessionWarmed,
   runWriterSessionStart,
   supportsWriterSessionContinuation,
@@ -293,7 +292,8 @@ const dispatchWriterTask = async (
     });
   }
 
-  markWriterConversationStarted(writerAgent);
+  // Conversation is marked started when the writer process finishes
+  // (see attachChildHandlers), so the first turn stays a fresh thread.
 };
 
 const startWriterSession = async (
@@ -724,7 +724,9 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
             parsed.payload.sessionContinuation === true;
 
           if (typeof prompt === "string" && prompt.trim().length > 0) {
-            console.log(`[agent-witch] Running ${writerAgent} task…`);
+            console.log(
+              `[agent-witch] Running ${writerAgent} task (${sessionContinuation ? "continue" : "first"})…`,
+            );
             void dispatchWriterTask(
               config,
               writerAgent,

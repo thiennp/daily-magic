@@ -19,6 +19,28 @@ describe("buildWriterCliInvocation", () => {
     });
   });
 
+  it("builds claude-cli continuation turn", () => {
+    expect(
+      buildWriterCliInvocation("claude-cli", "follow up", commands, {
+        sessionTurn: "continue",
+      }),
+    ).toEqual({
+      command: "claude",
+      args: ["--continue", "-p", "--dangerously-skip-permissions", "follow up"],
+    });
+  });
+
+  it("builds antigravity continuation turn", () => {
+    expect(
+      buildWriterCliInvocation("antigravity", "follow up", commands, {
+        sessionTurn: "continue",
+      }),
+    ).toEqual({
+      command: "agy",
+      args: ["--continue", "-p", "--dangerously-skip-permissions", "follow up"],
+    });
+  });
+
   it("builds codex exec with full filesystem access", () => {
     expect(buildWriterCliInvocation("codex", "sync rules", commands)).toEqual({
       command: "codex",

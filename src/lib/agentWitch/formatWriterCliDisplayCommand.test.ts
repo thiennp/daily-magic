@@ -12,6 +12,12 @@ describe("formatWriterCliDisplayCommand", () => {
     );
   });
 
+  it("shows --continue on claude follow-up turns", () => {
+    expect(
+      formatWriterCliDisplayCommand("claude-cli", "follow up", "continue"),
+    ).toBe('claude --continue -p --dangerously-skip-permissions "follow up"');
+  });
+
   it("shows the cursor agent session command without a prompt", () => {
     expect(formatWriterSessionStartDisplayCommand("cursor")).toBe(
       "cursor agent",

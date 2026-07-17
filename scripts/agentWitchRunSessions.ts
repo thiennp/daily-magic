@@ -23,6 +23,7 @@ import {
   isTerminalStreamAccepted,
   queueTerminalStreamChunk,
 } from "./agentWitchTerminalStreamState";
+import { markWriterConversationStarted } from "./agentWitchWriterSession";
 
 import type WebSocket from "ws";
 
@@ -275,6 +276,8 @@ const attachChildHandlers = (
     if (inputRequested) {
       return;
     }
+
+    markWriterConversationStarted(writerAgent);
 
     const session =
       agentRunId !== undefined ? runSessions.get(agentRunId) : undefined;

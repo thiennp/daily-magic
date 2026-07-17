@@ -7,6 +7,7 @@ import { useAgentWitchDashboardSocketConnection } from "@/features/agent/hooks/u
 import { useAgentWitchLiveTerminal } from "@/features/agent/hooks/useAgentWitchLiveTerminal";
 import { useAgentWitchPromptDispatch } from "@/features/agent/hooks/useAgentWitchPromptDispatch";
 import { useAgentWitchWriterSessionStart } from "@/features/agent/hooks/useAgentWitchWriterSessionStart";
+import { useWriterSessionPromptContinuation } from "@/features/agent/hooks/useWriterSessionPromptContinuation";
 import { resolveInitialConnectionStatus } from "@/features/agent/utils/connectAgentWitchDashboardSocket";
 import type { AgentWitchSocketDisplay } from "@/lib/agentWitch/parseAgentWitchSocketDisplay";
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
@@ -61,6 +62,10 @@ export function useAgentWitchSocket(): UseAgentWitchSocketResult {
   const terminal = useAgentWitchLiveTerminal(socketRef);
   const connectionStatus =
     connectionLab?.connectionStatus ?? liveConnectionStatus;
+  const promptContinuation = useWriterSessionPromptContinuation({
+    sessionWriterAgent: terminal.sessionWriterAgent,
+    finishSessionBase: terminal.finishSession,
+  });
 
   useAgentWitchDashboardSocketConnection({
     connectionLab,
@@ -70,16 +75,15 @@ export function useAgentWitchSocket(): UseAgentWitchSocketResult {
     socketRef,
   });
 
-  const sendClaudePrompt = useAgentWitchPromptDispatch({
+  const dispatchClaudePrompt = useAgentWitchPromptDispatch({
     socketRef,
     connectionLab,
-    isSessionContinuation: () => terminal.sessionWriterAgent !== null,
+    isSessionContinuation: promptContinuation.isSessionContinuation,
     beginSession: terminal.beginSession,
     applySocketMessage: terminal.applySocketMessage,
     setLastResponse,
   });
-
-  const startWriterSession = useAgentWitchWriterSessionStart({
+  const startWriterSessionBase = useAgentWitchWriterSessionStart({
     socketRef,
     connectionLab,
     beginSession: terminal.beginSession,
@@ -97,10 +101,13 @@ export function useAgentWitchSocket(): UseAgentWitchSocketResult {
     liveTerminalPendingInput: terminal.pendingInput,
     sessionWriterAgent: terminal.sessionWriterAgent,
     sessionDeviceId: terminal.sessionDeviceId,
-    finishLiveTerminalSession: terminal.finishSession,
+    finishLiveTerminalSession: promptContinuation.finishLiveTerminalSession,
     submitLiveTerminalInput: terminal.submitInput,
     dismissLiveTerminalInput: terminal.dismissInput,
-    sendClaudePrompt,
-    startWriterSession,
+    sendClaudePrompt:
+      promptContinuation.bindSendClaudePrompt(dispatchClaudePrompt),
+    startWriterSession: promptContinuation.bindStartWriterSession(
+      startWriterSessionBase,
+    ),
   };
 }

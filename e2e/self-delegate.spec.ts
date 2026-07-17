@@ -100,7 +100,7 @@ test.describe("Self-delegate on own Mac", () => {
       fullPage: false,
     });
 
-    const dispatchResponsePromise = page.waitForResponse(
+    const firstDispatch = page.waitForResponse(
       (response) =>
         response.url().includes("/api/agent-runs/dispatch") &&
         response.request().method() === "POST",
@@ -108,22 +108,22 @@ test.describe("Self-delegate on own Mac", () => {
     );
 
     await followUp.fill(
-      `Reply with exactly: ${TASK_MARKER}. Do not do anything else.`,
+      `Remember the codeword ${TASK_MARKER}. Reply with exactly: ack1.`,
     );
     await page.getByRole("button", { name: "Send feedback" }).click();
 
-    // Marker appears immediately from local terminal echo; wait for real dispatch.
-    const dispatchResponse = await dispatchResponsePromise;
-    expect(dispatchResponse.ok()).toBe(true);
-    const dispatchBody = (await dispatchResponse.json()) as {
+    const firstBody = (await (await firstDispatch).json()) as {
       ok?: boolean;
-      run?: { id?: string; prompt?: string };
+      run?: { prompt?: string };
     };
-    expect(dispatchBody.ok).toBe(true);
-    expect(dispatchBody.run?.prompt ?? "").toContain(TASK_MARKER);
+    expect(firstBody.ok).toBe(true);
+    expect(firstBody.run?.prompt ?? "").toContain(TASK_MARKER);
 
     await expect(page.getByText(TASK_MARKER).first()).toBeVisible({
       timeout: 15_000,
+    });
+    await expect(page.getByText(/ack1/i).first()).toBeVisible({
+      timeout: 120_000,
     });
 
     await page.screenshot({
@@ -131,13 +131,34 @@ test.describe("Self-delegate on own Mac", () => {
       fullPage: false,
     });
 
-    // Job history is local-first and also synced from the API.
+    const secondDispatch = page.waitForResponse(
+      (response) =>
+        response.url().includes("/api/agent-runs/dispatch") &&
+        response.request().method() === "POST",
+      { timeout: 60_000 },
+    );
+
+    await followUp.fill(
+      "What was the codeword? Reply with only that codeword.",
+    );
+    await page.getByRole("button", { name: "Send feedback" }).click();
+    expect((await secondDispatch).ok()).toBe(true);
+
+    await page.screenshot({
+      path: ".e2e/screenshots/self-delegate-live-terminal-continued.png",
+      fullPage: false,
+    });
+
     await page.goto("/reports");
     await page.waitForLoadState("networkidle");
     await expect(
       page.getByRole("heading", { name: "Job history" }),
     ).toBeVisible();
     await expect(page.getByText(TASK_MARKER).first()).toBeVisible({
+      timeout: 30_000,
+    });
+    // Second turn was dispatched as a continued Claude thread (see agent log: continue).
+    await expect(page.getByText(/What was the codeword/i).first()).toBeVisible({
       timeout: 30_000,
     });
 

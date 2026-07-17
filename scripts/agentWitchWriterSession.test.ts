@@ -34,9 +34,12 @@ describe("agentWitchWriterSession", () => {
     expect(isWriterConversationStarted("cursor")).toBe(false);
   });
 
-  it("does not treat claude-cli as a warmable session writer", () => {
+  it("continues claude-cli and antigravity conversations without warmup", () => {
     expect(supportsWriterSessionWarmup("claude-cli")).toBe(false);
-    expect(supportsWriterSessionContinuation("claude-cli")).toBe(false);
+    expect(supportsWriterSessionContinuation("claude-cli")).toBe(true);
+    expect(supportsWriterSessionWarmup("antigravity")).toBe(true);
+    expect(supportsWriterSessionContinuation("antigravity")).toBe(true);
+    expect(supportsWriterSessionContinuation("codex")).toBe(false);
   });
 });
 
