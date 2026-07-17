@@ -35,7 +35,18 @@ export const loadPersistedAgentLiveTerminalState =
 export const persistAgentLiveTerminalState = (
   state: AgentLiveTerminalState,
 ): void => {
-  if (state.status === "idle" && state.output.length === 0) {
+  if (
+    state.activeRunId !== null &&
+    state.output.length > 0 &&
+    shouldPersistAgentLiveTerminalOutput(state.status)
+  ) {
+    setAgentRunTerminalOutput(state.activeRunId, state.output);
+  }
+
+  if (
+    state.status === "finished" ||
+    (state.status === "idle" && state.output.length === 0)
+  ) {
     writeTerminalStore({ current: null });
     return;
   }
@@ -54,12 +65,4 @@ export const persistAgentLiveTerminalState = (
       updatedAt: new Date().toISOString(),
     },
   });
-
-  if (
-    state.activeRunId !== null &&
-    state.output.length > 0 &&
-    shouldPersistAgentLiveTerminalOutput(state.status)
-  ) {
-    setAgentRunTerminalOutput(state.activeRunId, state.output);
-  }
 };

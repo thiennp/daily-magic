@@ -6,7 +6,7 @@ import {
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
 
 export type AgentLiveTerminalStatus =
-  "idle" | "starting" | "waiting_approval" | "streaming" | "finished";
+  "idle" | "starting" | "waiting_approval" | "streaming" | "error" | "finished";
 
 export interface AgentLiveTerminalState {
   readonly activeRunId: string | null;
@@ -69,3 +69,19 @@ export const continueAgentLiveTerminalSession = (
 
 export const finishAgentLiveTerminalSession = (): AgentLiveTerminalState =>
   initialAgentLiveTerminalState();
+
+export const failAgentLiveTerminalSession = (
+  state: AgentLiveTerminalState,
+  errorMessage: string,
+): AgentLiveTerminalState => {
+  const trimmed = errorMessage.trim();
+  const message = trimmed.length > 0 ? trimmed : "Something went wrong.";
+  const separator =
+    state.output.length === 0 || state.output.endsWith("\n") ? "" : "\n";
+
+  return {
+    ...state,
+    status: "error",
+    output: `${state.output}${separator}${message}\n`,
+  };
+};

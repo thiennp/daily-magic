@@ -3,6 +3,7 @@
 import SendTaskComposerMacPickerStep from "@/features/agent/SendTaskComposerMacPickerStep";
 import WsTestDelegatedMacField from "@/features/agent/WsTestDelegatedMacField";
 import type { MyMacDevice } from "@/features/agent/hooks/useMyMacDevices";
+import useLocalMacBrowserContext from "@/features/home/hooks/useLocalMacBrowserContext";
 
 interface WsTestComposerMacSectionProps {
   readonly isLibraryPlaybook: boolean;
@@ -29,6 +30,8 @@ export default function WsTestComposerMacSection({
   onDeviceRenamed,
   onDeviceDeleted,
 }: WsTestComposerMacSectionProps) {
+  const { localHostname, isWakeServerReachable } = useLocalMacBrowserContext();
+
   return (
     <div
       className={
@@ -48,6 +51,8 @@ export default function WsTestComposerMacSection({
             devices={devices}
             displayNameById={displayNameById}
             isLoading={isLoading}
+            localHostname={localHostname}
+            isWakeServerReachable={isWakeServerReachable}
             onSelect={onDeviceChange}
           />
         ) : (

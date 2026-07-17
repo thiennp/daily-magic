@@ -40,7 +40,7 @@ export const buildAgentLiveTerminalDisplay = (input: {
 
 export const shouldShowAgentLiveTerminalCursor = (
   status: AgentLiveTerminalStatus,
-): boolean => status === "idle" || status === "finished";
+): boolean => status === "idle" || status === "finished" || status === "error";
 
 export const shouldShowAgentLiveTerminalLoadingIndicator = (
   status: AgentLiveTerminalStatus,

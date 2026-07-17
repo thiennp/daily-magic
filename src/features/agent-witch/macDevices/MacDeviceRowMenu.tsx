@@ -44,6 +44,7 @@ export default function MacDeviceRowMenu({
 
   return (
     <div
+      data-mac-device-row-actions
       className={`relative shrink-0 self-center transition-opacity ${
         isOpen
           ? "opacity-100"

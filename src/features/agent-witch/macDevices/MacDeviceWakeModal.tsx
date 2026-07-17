@@ -24,10 +24,10 @@ export default function MacDeviceWakeModal({
   return (
     <Modal isOpen={isOpen} onClose={onClose} className="max-w-md p-6">
       <h2 className="pr-10 text-lg font-semibold text-gray-900 dark:text-white/90">
-        Reactivate Agent Witch
+        Turn on this Mac
       </h2>
       <p className={`mt-3 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
-        Open Terminal on {displayName} and run:
+        {displayName} is offline. Power it on, then open Terminal and run:
       </p>
       <CopyableBashCommand command={wakeCommand} variant="bash" />
       {isWakeServerReachable ? (

@@ -7,6 +7,7 @@ import { useAgentLiveTerminalSessionChrome } from "@/features/agent/hooks/useAge
 import type { useAgentRunQueue } from "@/features/agent/hooks/useAgentRunQueue";
 import type { useAgentWitchSocket } from "@/features/agent/hooks/useAgentWitchSocket";
 import type { useWsTestTaskComposer } from "@/features/agent/hooks/useWsTestTaskComposer";
+import { resolveSessionErrorMessage } from "@/features/agent/utils/resolveSessionErrorMessage";
 import type { resolveAgentSessionTargets } from "@/features/agent/utils/resolveAgentSessionTargets";
 
 export const useWsTestMacSession = (input: {
@@ -24,8 +25,6 @@ export const useWsTestMacSession = (input: {
   const { isSessionActive } = useAgentLiveTerminalSessionChrome({
     terminalSectionRef,
     sessionWriterAgent: input.socket.sessionWriterAgent,
-    connectionStatus: input.socket.connectionStatus,
-    finishSession: input.socket.finishLiveTerminalSession,
   });
   const terminalFeedback = useAgentLiveTerminalFeedback({
     status: input.socket.liveTerminalStatus,
@@ -40,10 +39,11 @@ export const useWsTestMacSession = (input: {
     submitInput: input.socket.submitLiveTerminalInput,
     enqueueRun: input.enqueueRun,
   });
-  const sessionErrorMessage =
-    !isSessionActive && input.socket.lastResponse.isError
-      ? input.socket.lastResponse.text
-      : null;
+  const sessionErrorMessage = resolveSessionErrorMessage({
+    liveTerminalStatus: input.socket.liveTerminalStatus,
+    isSessionActive,
+    lastResponse: input.socket.lastResponse,
+  });
 
   return {
     terminalSectionRef,

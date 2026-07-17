@@ -1,20 +1,23 @@
 "use client";
 
+import MacDeviceOfflineWakeHint from "@/features/agent-witch/macDevices/MacDeviceOfflineWakeHint";
 import MacDeviceIcon from "@/features/agent-witch/macDevices/MacDeviceIcon";
 import { resolveMacDeviceIconClassName } from "@/features/agent-witch/macDevices/utils/resolveMacDeviceIconClassName";
 
 interface SendTaskComposerMacPickerRowProps {
   readonly displayName: string;
   readonly isOnline: boolean;
+  readonly isWakeServerReachable: boolean;
   readonly onSelect: () => void;
 }
 
 export default function SendTaskComposerMacPickerRow({
   displayName,
   isOnline,
+  isWakeServerReachable,
   onSelect,
 }: SendTaskComposerMacPickerRowProps) {
-  return (
+  const row = (
     <button
       type="button"
       onClick={onSelect}
@@ -37,5 +40,18 @@ export default function SendTaskComposerMacPickerRow({
         </span>
       </span>
     </button>
+  );
+
+  if (isOnline) {
+    return row;
+  }
+
+  return (
+    <MacDeviceOfflineWakeHint
+      displayName={displayName}
+      isWakeServerReachable={isWakeServerReachable}
+    >
+      {row}
+    </MacDeviceOfflineWakeHint>
   );
 }

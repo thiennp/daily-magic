@@ -3,11 +3,14 @@
 import SendTaskComposerConnectMacButton from "@/features/agent/SendTaskComposerConnectMacButton";
 import SendTaskComposerMacPickerRow from "@/features/agent/SendTaskComposerMacPickerRow";
 import type { MyMacDevice } from "@/features/agent/hooks/useMyMacDevices";
+import { canWakeMacDeviceFromBrowser } from "@/features/agent-witch/macDevices/utils/canWakeMacDeviceFromBrowser";
 
 interface SendTaskComposerMacPickerStepProps {
   readonly devices: readonly MyMacDevice[];
   readonly displayNameById: ReadonlyMap<string, string>;
   readonly isLoading: boolean;
+  readonly localHostname: string | null;
+  readonly isWakeServerReachable: boolean;
   readonly onSelect: (deviceId: string) => void;
 }
 
@@ -15,6 +18,8 @@ export default function SendTaskComposerMacPickerStep({
   devices,
   displayNameById,
   isLoading,
+  localHostname,
+  isWakeServerReachable,
   onSelect,
 }: SendTaskComposerMacPickerStepProps) {
   if (isLoading) {
@@ -52,6 +57,11 @@ export default function SendTaskComposerMacPickerStep({
             <SendTaskComposerMacPickerRow
               displayName={displayNameById.get(device.id) ?? "Your Mac"}
               isOnline={device.isOnline}
+              isWakeServerReachable={canWakeMacDeviceFromBrowser({
+                deviceLabel: device.deviceLabel,
+                localHostname,
+                isWakeServerReachable,
+              })}
               onSelect={() => {
                 onSelect(device.id);
               }}

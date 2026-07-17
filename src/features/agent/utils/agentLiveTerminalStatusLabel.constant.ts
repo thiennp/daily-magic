@@ -8,5 +8,6 @@ export const AGENT_LIVE_TERMINAL_STATUS_LABEL: Record<
   starting: "Starting…",
   waiting_approval: "Waiting for approval",
   streaming: "Live",
+  error: "Needs retry",
   finished: "Finished",
 };

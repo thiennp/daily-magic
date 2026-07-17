@@ -1,3 +1,5 @@
 # Mac devices UI — known issues
 
-_No documented issues yet. Use IDs like `MAC_DEVICES-001`._
+| ID              | Symptom                                                            | Fix                                                              |
+| --------------- | ------------------------------------------------------------------ | ---------------------------------------------------------------- |
+| MAC_DEVICES-001 | Clicking an offline Mac only showed a hover tip; no turn-on prompt | Offline row click opens `MacDeviceWakeModal` via capture handler |

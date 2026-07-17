@@ -8,7 +8,11 @@ import {
   loadPersistedAgentLiveTerminalState,
   persistAgentLiveTerminalState,
 } from "@/features/agent/utils/agentLiveTerminalLocalStore";
-import { beginAgentLiveTerminalSession } from "@/features/agent/utils/agentLiveTerminalState.type";
+import { readTerminalStore } from "@/features/agent/utils/agentLiveTerminalLocalStoreIO";
+import {
+  beginAgentLiveTerminalSession,
+  failAgentLiveTerminalSession,
+} from "@/features/agent/utils/agentLiveTerminalState.type";
 import { mockBrowserLocalStorage } from "@/test/mockBrowserLocalStorage";
 
 describe("agentLiveTerminalLocalStore", () => {
@@ -37,7 +41,30 @@ describe("agentLiveTerminalLocalStore", () => {
     expect(restored.sessionDeviceId).toBe("mac-a");
   });
 
-  it("restores finished terminal output after navigation", () => {
+  it("keeps error sessions in localStorage for resume (AGENT-011)", () => {
+    const failed = failAgentLiveTerminalSession(
+      {
+        ...beginAgentLiveTerminalSession(
+          'claude -p "run lint"',
+          "claude-cli",
+          "mac-a",
+        ),
+        activeRunId: "run-err",
+        status: "starting",
+      },
+      "No Mac agent connected.",
+    );
+    persistAgentLiveTerminalState(failed);
+
+    const restored = loadPersistedAgentLiveTerminalState();
+    expect(restored.status).toBe("error");
+    expect(restored.sessionWriterAgent).toBe("claude-cli");
+    expect(restored.sessionDeviceId).toBe("mac-a");
+    expect(restored.output).toContain("No Mac agent connected.");
+    expect(readTerminalStore().current).not.toBeNull();
+  });
+
+  it("clears localStorage when the task finishes (AGENT-011)", () => {
     persistAgentLiveTerminalState({
       ...beginAgentLiveTerminalSession('cursor agent "fix lint"', "cursor"),
       activeRunId: "run-3",
@@ -45,8 +72,9 @@ describe("agentLiveTerminalLocalStore", () => {
       status: "finished",
     });
 
-    const restored = loadPersistedAgentLiveTerminalState();
-    expect(restored.sessionWriterAgent).toBe("cursor");
+    expect(readTerminalStore().current).toBeNull();
+    expect(loadPersistedAgentLiveTerminalState().status).toBe("idle");
+    expect(loadAgentRunTerminalOutput("run-3")).toBe("working\n");
   });
 
   it("stores terminal output by run id for report pages", () => {
