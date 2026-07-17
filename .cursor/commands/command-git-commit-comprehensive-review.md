@@ -14,6 +14,7 @@ Pair with **`skill-post-change-verification`**.
 - [ ] `git status` and full `git diff`
 - [ ] Group changes: app routes, features, components, config, harness
 - [ ] Confirm no secrets or `.env` files staged
+- [ ] Stage `.feature-knowledge/index.json` when modified (never leave it out as unrelated)
 
 ## 2. Issue context (GitHub / Linear)
 

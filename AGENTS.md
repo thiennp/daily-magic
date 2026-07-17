@@ -20,6 +20,8 @@ npm run cursor:architecture -- --staged
 npm run typecheck
 ```
 
+Always stage and commit `.feature-knowledge/index.json` when it changed; do not exclude it as unrelated.
+
 ## Commit message format
 
 Conventional commits are preferred:

@@ -14,7 +14,7 @@ description: Quick commit with conventional message and local verification
 ## Workflow
 
 1. `git status` and `git diff` — understand what will be committed.
-2. Stage intended files only (never `.env` or secrets).
+2. Stage intended files only (never `.env` or secrets). **Always** include `.feature-knowledge/index.json` when it is modified.
 3. Draft message:
    - `feat: add styleguide navigation`
    - `fix(db): handle missing DATABASE_URL`

@@ -1,6 +1,7 @@
 ---
-description: Query feature knowledge (RAG) before editing feature code
+description: Query feature knowledge (RAG) before edits; always commit the index
 globs: src/features/**
+alwaysApply: true
 ---
 
 # Feature knowledge (query before edits)
@@ -20,3 +21,9 @@ Before changing code under `src/features/`:
 4. **Registry:** feature slugs and paths live in `src/features/_registry/features.registry.json`.
 
 Index file: `.feature-knowledge/index.json` (TF-IDF over markdown chunks). Rebuild when docs change.
+
+## Commits and push
+
+- **Always** stage and commit `.feature-knowledge/index.json` when it is modified (including alongside unrelated feature work).
+- Never leave it unstaged as “unrelated”; treat it as shared repo state that must ship with the branch.
+- When the user asks to push, include any committed index update on that push.

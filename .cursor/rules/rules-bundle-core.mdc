@@ -26,6 +26,7 @@ alwaysApply: true
 - Husky accepts **conventional commits**: `feat: …`, `fix(scope): …`, `chore: …`, etc.
 - Ticket-prefixed commits are also accepted: `LIN-123: (feat) …` or `00000: (chore) …`.
 - Do not bypass hooks (`--no-verify`) unless a human explicitly requests it.
+- Always stage and commit `.feature-knowledge/index.json` when it changed; do not exclude it as unrelated.
 
 ## Verification
 
