@@ -13,6 +13,7 @@ interface WsTestPanelMacSessionSectionProps {
   readonly errorMessage: string | null;
   readonly feedbackVisible: boolean;
   readonly feedbackPendingQuestion: string | null;
+  readonly feedbackPendingPartialOutput?: string | null;
   readonly feedbackQueuedCount: number;
   readonly feedbackQueueNotice: string | null;
   readonly isFeedbackSubmitting: boolean;
@@ -34,6 +35,7 @@ const WsTestPanelMacSessionSection = forwardRef<
       activeRunId={props.activeRunId}
       feedbackVisible={props.feedbackVisible}
       feedbackPendingQuestion={props.feedbackPendingQuestion}
+      feedbackPendingPartialOutput={props.feedbackPendingPartialOutput ?? null}
       feedbackQueuedCount={props.feedbackQueuedCount}
       feedbackQueueNotice={props.feedbackQueueNotice}
       isFeedbackSubmitting={props.isFeedbackSubmitting}

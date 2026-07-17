@@ -14,6 +14,7 @@ interface AgentLiveTerminalPanelProps {
   readonly pendingCommandLine?: string | null;
   readonly feedbackVisible: boolean;
   readonly feedbackPendingQuestion: string | null;
+  readonly feedbackPendingPartialOutput?: string | null;
   readonly feedbackQueuedCount: number;
   readonly feedbackQueueNotice: string | null;
   readonly isFeedbackSubmitting: boolean;
@@ -29,6 +30,7 @@ export default function AgentLiveTerminalPanel({
   pendingCommandLine = null,
   feedbackVisible,
   feedbackPendingQuestion,
+  feedbackPendingPartialOutput = null,
   feedbackQueuedCount,
   feedbackQueueNotice,
   isFeedbackSubmitting,
@@ -45,6 +47,7 @@ export default function AgentLiveTerminalPanel({
     output,
     pendingCommandLine,
     pendingQuestion: feedbackPendingQuestion,
+    partialOutput: feedbackPendingPartialOutput,
   });
   const isWorking =
     status === "starting" ||

@@ -16,6 +16,7 @@ interface AgentLiveTerminalSectionProps {
   readonly errorMessage: string | null;
   readonly feedbackVisible: boolean;
   readonly feedbackPendingQuestion: string | null;
+  readonly feedbackPendingPartialOutput?: string | null;
   readonly feedbackQueuedCount: number;
   readonly feedbackQueueNotice: string | null;
   readonly isFeedbackSubmitting: boolean;
@@ -37,6 +38,7 @@ const AgentLiveTerminalSection = forwardRef<
     errorMessage,
     feedbackVisible,
     feedbackPendingQuestion,
+    feedbackPendingPartialOutput = null,
     feedbackQueuedCount,
     feedbackQueueNotice,
     isFeedbackSubmitting,
@@ -73,6 +75,7 @@ const AgentLiveTerminalSection = forwardRef<
         pendingCommandLine={pendingCommandLine}
         feedbackVisible={feedbackVisible}
         feedbackPendingQuestion={feedbackPendingQuestion}
+        feedbackPendingPartialOutput={feedbackPendingPartialOutput}
         feedbackQueuedCount={feedbackQueuedCount}
         feedbackQueueNotice={feedbackQueueNotice}
         isFeedbackSubmitting={isFeedbackSubmitting}

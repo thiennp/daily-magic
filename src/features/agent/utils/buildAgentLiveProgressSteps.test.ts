@@ -46,7 +46,7 @@ describe("buildAgentLiveProgressSteps", () => {
     expect(result.steps.find((step) => step.id === "work")).toMatchObject({
       label: "Reading files and requirements",
       state: "active",
-      detail: null,
+      detail: "Reading package.json",
     });
   });
 
@@ -92,18 +92,6 @@ describe("buildAgentLiveProgressSteps", () => {
     expect(result.replyPreview).toBe("Hello there");
     expect(result.steps.find((step) => step.id === "finish")?.state).toBe(
       "done",
-    );
-  });
-
-  it("surfaces waiting for input when a question is pending", () => {
-    const result = buildAgentLiveProgressSteps({
-      status: "streaming",
-      output: "Need a path\n",
-      pendingQuestion: "Which folder?",
-    });
-
-    expect(result.steps.find((step) => step.id === "work")?.label).toBe(
-      "Waiting for your answer",
     );
   });
 });

@@ -9,12 +9,19 @@ export const AGENT_LIVE_PROGRESS_ACTIVITY_PATTERNS: readonly {
   {
     id: "reading",
     label: "Reading files and requirements",
-    pattern: /\b(read|reading|open(ed|ing)?|inspect)/i,
+    pattern:
+      /\b(read|reading|open(ed|ing)?|inspect|portfolio|brief|requirement)/i,
   },
   {
     id: "searching",
     label: "Searching your project",
     pattern: /\b(search|searching|grep|find|look(ing)? for)\b/i,
+  },
+  {
+    id: "drafting",
+    label: "Drafting the proposal",
+    pattern:
+      /\b(draft|drafting|proposal|pricing|timeline|scope|executive summary)\b/i,
   },
   {
     id: "writing",

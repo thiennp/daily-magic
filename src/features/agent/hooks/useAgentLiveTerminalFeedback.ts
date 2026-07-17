@@ -31,6 +31,7 @@ export const useAgentLiveTerminalFeedback = (input: {
 }): {
   readonly visible: boolean;
   readonly pendingQuestion: string | null;
+  readonly pendingPartialOutput: string | null;
   readonly queuedCount: number;
   readonly queueNotice: string | null;
   readonly isSubmitting: boolean;
@@ -90,6 +91,11 @@ export const useAgentLiveTerminalFeedback = (input: {
   return {
     visible: hasOpenSession,
     pendingQuestion: input.pendingInput?.question ?? null,
+    pendingPartialOutput:
+      input.pendingInput !== null &&
+      input.pendingInput.partialOutput.trim().length > 0
+        ? input.pendingInput.partialOutput
+        : null,
     queuedCount: feedbackQueue.queuedCount,
     queueNotice: feedbackQueue.queueNotice,
     isSubmitting,

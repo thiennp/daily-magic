@@ -49,6 +49,9 @@ export default function WsTestPanel({ variant = "page" }: WsTestPanelProps) {
         liveTerminalRunId={panel.socket.liveTerminalRunId}
         feedbackVisible={panel.terminalFeedback.visible}
         feedbackPendingQuestion={panel.terminalFeedback.pendingQuestion}
+        feedbackPendingPartialOutput={
+          panel.terminalFeedback.pendingPartialOutput
+        }
         feedbackQueuedCount={panel.terminalFeedback.queuedCount}
         feedbackQueueNotice={panel.terminalFeedback.queueNotice}
         isFeedbackSubmitting={panel.terminalFeedback.isSubmitting}

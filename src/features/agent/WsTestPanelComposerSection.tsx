@@ -34,6 +34,7 @@ interface WsTestPanelComposerSectionProps {
   readonly liveTerminalRunId: string | null;
   readonly feedbackVisible: boolean;
   readonly feedbackPendingQuestion: string | null;
+  readonly feedbackPendingPartialOutput: string | null;
   readonly feedbackQueuedCount: number;
   readonly feedbackQueueNotice: string | null;
   readonly isFeedbackSubmitting: boolean;
@@ -61,6 +62,7 @@ export default function WsTestPanelComposerSection({
   liveTerminalRunId,
   feedbackVisible,
   feedbackPendingQuestion,
+  feedbackPendingPartialOutput,
   feedbackQueuedCount,
   feedbackQueueNotice,
   isFeedbackSubmitting,
@@ -84,6 +86,7 @@ export default function WsTestPanelComposerSection({
           activeRunId={liveTerminalRunId}
           feedbackVisible={feedbackVisible}
           feedbackPendingQuestion={feedbackPendingQuestion}
+          feedbackPendingPartialOutput={feedbackPendingPartialOutput}
           feedbackQueuedCount={feedbackQueuedCount}
           feedbackQueueNotice={feedbackQueueNotice}
           isFeedbackSubmitting={isFeedbackSubmitting}

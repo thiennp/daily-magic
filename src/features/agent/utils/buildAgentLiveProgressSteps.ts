@@ -1,9 +1,11 @@
 import type { AgentLiveTerminalStatus } from "@/features/agent/utils/agentLiveTerminalState.type";
-import { parseAgentLiveProgressUpdates } from "@/features/agent/utils/parseAgentLiveProgressUpdates";
+import type { AgentLiveProgressStep } from "@/features/agent/utils/agentLiveProgressStep.type";
+import { hasAgentLiveProgressStartedUserTask } from "@/features/agent/utils/resolveAgentLiveProgressWorkLabel";
 import {
-  hasAgentLiveProgressStartedUserTask,
-  resolveAgentLiveProgressFallbackWorkLabel,
-} from "@/features/agent/utils/resolveAgentLiveProgressWorkLabel";
+  resolveAgentLiveProgressCleanedSource,
+  resolveAgentLiveProgressUpdatesFromSources,
+} from "@/features/agent/utils/resolveAgentLiveProgressUpdatesFromSources";
+import { resolveAgentLiveProgressWorkSteps } from "@/features/agent/utils/resolveAgentLiveProgressWorkSteps";
 import { resolveAgentProgressUpdateStates } from "@/features/agent/utils/resolveAgentProgressUpdateStates";
 import {
   resolveAgentLiveProgressStepStates,
@@ -12,25 +14,27 @@ import {
 import { stripAgentLiveProgressCliChrome } from "@/features/agent/utils/stripAgentLiveProgressCliChrome";
 
 export type { AgentLiveProgressStepState };
-
-export interface AgentLiveProgressStep {
-  readonly id: string;
-  readonly label: string;
-  readonly detail: string | null;
-  readonly state: AgentLiveProgressStepState;
-}
+export type { AgentLiveProgressStep } from "@/features/agent/utils/agentLiveProgressStep.type";
 
 export const buildAgentLiveProgressSteps = (input: {
   readonly status: AgentLiveTerminalStatus;
   readonly output: string;
   readonly pendingCommandLine?: string | null;
   readonly pendingQuestion?: string | null;
+  readonly partialOutput?: string | null;
 }): {
   readonly steps: readonly AgentLiveProgressStep[];
   readonly replyPreview: string | null;
 } => {
-  const cleaned = stripAgentLiveProgressCliChrome(input.output);
-  const updates = parseAgentLiveProgressUpdates(input.output);
+  const progressSource = resolveAgentLiveProgressCleanedSource(
+    input.output,
+    input.partialOutput,
+  );
+  const cleaned = stripAgentLiveProgressCliChrome(progressSource);
+  const updates = resolveAgentLiveProgressUpdatesFromSources(
+    input.output,
+    input.partialOutput,
+  );
   const started =
     hasAgentLiveProgressStartedUserTask({
       cleanedOutput: cleaned,
@@ -52,34 +56,22 @@ export const buildAgentLiveProgressSteps = (input: {
     isReadyBanner,
     status: input.status,
   });
-  const updateStates = resolveAgentProgressUpdateStates({
-    updateCount: updates.length,
-    isFinished,
-    isWorking,
+  const workSteps = resolveAgentLiveProgressWorkSteps({
+    updates,
+    updateStates: resolveAgentProgressUpdateStates({
+      updateCount: updates.length,
+      isFinished,
+      isWorking,
+      needsInput,
+    }),
     needsInput,
+    pendingQuestion: input.pendingQuestion,
+    status: input.status,
+    started,
+    isFinished,
+    cleaned,
+    workState: states.workState,
   });
-  const workSteps: AgentLiveProgressStep[] =
-    updates.length > 0
-      ? updates.map((update, index) => ({
-          id: `progress-${index}`,
-          label: update.title,
-          detail: update.detail.length > 0 ? update.detail : null,
-          state: updateStates[index] ?? "pending",
-        }))
-      : [
-          {
-            id: "work",
-            label: resolveAgentLiveProgressFallbackWorkLabel({
-              needsInput,
-              status: input.status,
-              started,
-              isFinished,
-              cleaned,
-            }),
-            detail: null,
-            state: states.workState,
-          },
-        ];
 
   return {
     steps: [
