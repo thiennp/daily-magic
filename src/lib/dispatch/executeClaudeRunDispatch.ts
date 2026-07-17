@@ -4,20 +4,13 @@ import type AgentWitchHubRuntime from "@/lib/agentWitch/types/AgentWitchHubRunti
 import type AgentWitchMessage from "@/lib/agentWitch/types/AgentWitchMessage.type";
 import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
 import { broadcastAgentRunRecord } from "@/lib/dispatch/broadcastAgentRunRecord";
-import {
-  buildRunTerminalSubscriptionKey,
-  subscribeDashboardTerminal,
-} from "@/lib/dispatch/dashboardTerminalSubscriptionRegistry";
-import {
-  dispatchClaudeRunToAgent,
-  markAgentRunRunning,
-} from "@/lib/dispatch/dispatchClaudeRunToAgent";
 import type { DispatchPolicyValue } from "@/lib/dispatch/DispatchPolicy.constant";
 import { persistAgentRun } from "@/lib/dispatch/persistAgentRun";
 import { resolveDelegatedWriterAgent } from "@/lib/dispatch/resolveDelegatedWriterAgent";
 import { sendPendingApprovalDispatch } from "@/lib/dispatch/sendPendingApprovalDispatch";
 import { isLocalMacAgentRunDispatch } from "@/lib/dispatch/isLocalMacAgentRunDispatch";
 import { shouldRequireDispatchApproval } from "@/lib/dispatch/shouldRequireDispatchApproval";
+import { startAgentRunWithShellSession } from "@/lib/dispatch/startAgentRunWithShellSession";
 
 export const executeClaudeRunDispatch = async (input: {
   readonly runtime: AgentWitchHubRuntime;
@@ -71,7 +64,6 @@ export const executeClaudeRunDispatch = async (input: {
         requestId: input.requestId,
       };
     }
-
     return sendPendingApprovalDispatch(
       input.runtime,
       input.agentClient,
@@ -85,30 +77,26 @@ export const executeClaudeRunDispatch = async (input: {
     );
   }
 
-  const includeNextActions = isLocalMacAgentRunDispatch({
-    requesterUserId,
-    executorUserId: input.executorUserId,
-    groupId: input.groupId,
-  });
-  const sessionContinuation = input.payload.sessionContinuation === true;
-
-  if (input.agentClient !== undefined) {
-    dispatchClaudeRunToAgent(
-      input.runtime,
-      input.agentClient,
-      input.prompt,
-      run.id,
-      writerAgent,
-      input.requestId,
-      includeNextActions,
-      sessionContinuation,
-    );
-    await markAgentRunRunning(input.runtime, run.id);
-    subscribeDashboardTerminal(
-      input.sender.id,
-      buildRunTerminalSubscriptionKey(run.id),
-    );
-  }
+  const shellSessionId =
+    input.agentClient === undefined
+      ? undefined
+      : await startAgentRunWithShellSession({
+          runtime: input.runtime,
+          agentClient: input.agentClient,
+          sender: input.sender,
+          prompt: input.prompt,
+          runId: run.id,
+          writerAgent,
+          executorUserId: input.executorUserId,
+          deviceId: input.deviceId,
+          includeNextActions: isLocalMacAgentRunDispatch({
+            requesterUserId,
+            executorUserId: input.executorUserId,
+            groupId: input.groupId,
+          }),
+          sessionContinuation: input.payload.sessionContinuation === true,
+          requestId: input.requestId,
+        });
 
   return {
     type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ACK,
@@ -116,7 +104,11 @@ export const executeClaudeRunDispatch = async (input: {
       dispatched: true,
       agentRunId: run.id,
       ...(input.agentClient !== undefined
-        ? { agentClientId: input.agentClient.id }
+        ? {
+            agentClientId: input.agentClient.id,
+            ...(shellSessionId !== undefined ? { shellSessionId } : {}),
+            shellCanWrite: requesterUserId === input.executorUserId,
+          }
         : {}),
       queuedForDevicePull: input.agentClient === undefined,
       dispatchPolicy: input.dispatchPolicy,

@@ -64,6 +64,14 @@ export default function WsTestPanel({ variant = "page" }: WsTestPanelProps) {
         onWriterAgentChange={panel.setWriterAgent}
         onStartWriterAgent={panel.startWriterSession}
         onFinishSession={panel.socket.finishLiveTerminalSession}
+        macShellStatus={panel.socket.macShell.status}
+        macShellCanWrite={panel.socket.macShell.canWrite}
+        macShellLatestChunk={panel.socket.macShell.latestChunk}
+        macShellChunkSeq={panel.socket.macShell.chunkSeq}
+        macShellClearToken={panel.socket.macShell.clearToken}
+        onMacShellInput={panel.socket.macShell.sendInput}
+        onMacShellResize={panel.socket.macShell.sendResize}
+        onMacShellClose={panel.socket.macShell.closeShell}
       />
     </div>
   );

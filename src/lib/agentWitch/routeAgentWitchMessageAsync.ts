@@ -15,6 +15,18 @@ import {
 } from "@/lib/dispatch/handleDashboardAgentRunRelayAsync";
 import { handleDashboardTerminalSubscribeMessageAsync } from "@/lib/dispatch/handleDashboardTerminalSubscribeMessageAsync";
 import { handleDispatchApprovalRespondAsync } from "@/lib/dispatch/handleDispatchApprovalRespond";
+import {
+  handleShellDataMessageAsync,
+  handleShellSessionClosedMessageAsync,
+  handleShellSessionOpenedMessageAsync,
+} from "@/lib/dispatch/handleShellAgentPublishMessageAsync";
+import {
+  handleShellInputMessageAsync,
+  handleShellResizeMessageAsync,
+} from "@/lib/dispatch/handleShellOwnerControlMessageAsync";
+import { handleShellSessionCloseMessageAsync } from "@/lib/dispatch/handleShellSessionCloseMessageAsync";
+import { handleShellSessionOpenMessageAsync } from "@/lib/dispatch/handleShellSessionOpenMessageAsync";
+import { handleShellSubscribeMessageAsync } from "@/lib/dispatch/handleShellSubscribeMessageAsync";
 import { handleTerminalStreamMessageAsync } from "@/lib/dispatch/handleTerminalStreamMessageAsync";
 import { handleWriterSessionChunkMessageAsync } from "@/lib/dispatch/handleWriterSessionChunkMessageAsync";
 import { handleWriterSessionEndMessageAsync } from "@/lib/dispatch/handleWriterSessionEndMessageAsync";
@@ -88,6 +100,38 @@ export const routeAgentWitchMessageAsync = async (
 
   if (message.type === AGENT_WITCH_MESSAGE_TYPES.DASHBOARD_TERMINAL_SUBSCRIBE) {
     return handleDashboardTerminalSubscribeMessageAsync(hub, message, sender);
+  }
+
+  if (message.type === AGENT_WITCH_MESSAGE_TYPES.SHELL_SESSION_OPEN) {
+    return handleShellSessionOpenMessageAsync(hub, message, sender);
+  }
+
+  if (message.type === AGENT_WITCH_MESSAGE_TYPES.SHELL_SESSION_CLOSE) {
+    return handleShellSessionCloseMessageAsync(hub, message, sender);
+  }
+
+  if (message.type === AGENT_WITCH_MESSAGE_TYPES.SHELL_SUBSCRIBE) {
+    return handleShellSubscribeMessageAsync(hub, message, sender);
+  }
+
+  if (message.type === AGENT_WITCH_MESSAGE_TYPES.SHELL_INPUT) {
+    return handleShellInputMessageAsync(hub, message, sender);
+  }
+
+  if (message.type === AGENT_WITCH_MESSAGE_TYPES.SHELL_RESIZE) {
+    return handleShellResizeMessageAsync(hub, message, sender);
+  }
+
+  if (message.type === AGENT_WITCH_MESSAGE_TYPES.SHELL_SESSION_OPENED) {
+    return handleShellSessionOpenedMessageAsync(hub, message, sender);
+  }
+
+  if (message.type === AGENT_WITCH_MESSAGE_TYPES.SHELL_SESSION_CLOSED) {
+    return handleShellSessionClosedMessageAsync(hub, message, sender);
+  }
+
+  if (message.type === AGENT_WITCH_MESSAGE_TYPES.SHELL_DATA) {
+    return handleShellDataMessageAsync(hub, message, sender);
   }
 
   if (isTerminalStreamMessage(message.type)) {

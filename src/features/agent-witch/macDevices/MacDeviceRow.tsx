@@ -17,6 +17,7 @@ interface MacDeviceRowProps {
   readonly onSelect?: () => void;
   readonly onRenamed: (deviceId: string, deviceLabel: string) => void;
   readonly onDelegateTask?: (deviceId: string) => void;
+  readonly onOpenShell?: (deviceId: string) => void;
   readonly onDelete?: (deviceId: string) => void | Promise<void>;
 }
 
@@ -31,6 +32,7 @@ export default function MacDeviceRow({
   onSelect,
   onRenamed,
   onDelegateTask,
+  onOpenShell,
   onDelete,
 }: MacDeviceRowProps) {
   const [isEditing, setIsEditing] = useState(false);
@@ -47,6 +49,13 @@ export default function MacDeviceRow({
       onEditingChange={setIsEditing}
       onRenamed={onRenamed}
       onDelegateTask={onDelegateTask}
+      onOpenShell={
+        onOpenShell
+          ? () => {
+              onOpenShell(deviceId);
+            }
+          : undefined
+      }
       onDelete={onDelete}
     />
   );

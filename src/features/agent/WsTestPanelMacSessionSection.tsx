@@ -3,9 +3,10 @@
 import { forwardRef } from "react";
 
 import AgentLiveTerminalSection from "@/features/agent/AgentLiveTerminalSection";
+import type { AgentMacShellPanelProps } from "@/features/agent/types/AgentMacShellPanelProps.type";
 import type { AgentLiveTerminalStatus } from "@/features/agent/utils/agentLiveTerminalState.type";
 
-interface WsTestPanelMacSessionSectionProps {
+interface WsTestPanelMacSessionSectionProps extends AgentMacShellPanelProps {
   readonly output: string;
   readonly status: AgentLiveTerminalStatus;
   readonly pendingCommandLine: string | null;
@@ -29,21 +30,9 @@ const WsTestPanelMacSessionSection = forwardRef<
   return (
     <AgentLiveTerminalSection
       ref={ref}
-      output={props.output}
-      status={props.status}
-      pendingCommandLine={props.pendingCommandLine}
-      activeRunId={props.activeRunId}
-      feedbackVisible={props.feedbackVisible}
-      feedbackPendingQuestion={props.feedbackPendingQuestion}
+      {...props}
       feedbackPendingPartialOutput={props.feedbackPendingPartialOutput ?? null}
-      feedbackQueuedCount={props.feedbackQueuedCount}
-      feedbackQueueNotice={props.feedbackQueueNotice}
-      isFeedbackSubmitting={props.isFeedbackSubmitting}
       feedbackAutoFocus
-      onSubmitFeedback={props.onSubmitFeedback}
-      errorMessage={props.errorMessage}
-      onFinishSession={props.onFinishSession}
-      isSteppedComposer={props.isSteppedComposer}
     />
   );
 });

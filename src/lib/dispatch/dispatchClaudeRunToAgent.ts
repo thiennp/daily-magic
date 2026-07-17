@@ -19,6 +19,7 @@ export const dispatchClaudeRunToAgent = (
   requestId?: string,
   includeNextActions = false,
   sessionContinuation = false,
+  shellSessionId?: string,
 ): void => {
   agentClient.send({
     type: AGENT_WITCH_MESSAGE_TYPES.COMMAND_CLAUDE_RUN,
@@ -27,6 +28,7 @@ export const dispatchClaudeRunToAgent = (
       agentRunId,
       writerAgent,
       ...(sessionContinuation ? { sessionContinuation: true } : {}),
+      ...(shellSessionId !== undefined ? { shellSessionId } : {}),
     },
     requestId,
   });

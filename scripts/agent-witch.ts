@@ -24,6 +24,12 @@ import {
   runWriterTask,
 } from "./agentWitchRunSessions";
 import {
+  closeShellPtySession,
+  openInteractiveShellPty,
+  resizeShellPty,
+  writeShellPtyInput,
+} from "./agentWitchShellSession";
+import {
   buildWriterSessionReadyMessage,
   buildWriterSessionWarmupMessage,
   clearWriterSession,
@@ -72,6 +78,7 @@ const DEFAULT_ANTIGRAVITY_COMMAND = "agy";
 const HEARTBEAT_INTERVAL_MS = 30_000;
 const CLOUD_JOB_POLL_INTERVAL_MS = 3_000;
 const MAX_RECONNECT_DELAY_MS = 30_000;
+const shellSessionIdByRunId = new Map<string, string>();
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === "object" && value !== null && !Array.isArray(value);
@@ -216,6 +223,7 @@ const dispatchWriterTask = async (
   socket: WebSocket,
   agentRunId?: string,
   sessionContinuation = false,
+  shellSessionId?: string,
 ): Promise<void> => {
   if (!isHarnessWriterAgentId(writerAgent)) {
     sendMessage(socket, {
@@ -277,9 +285,18 @@ const dispatchWriterTask = async (
       ? "continue"
       : "first";
 
-  runWriterTask(config, writerAgent, prompt, requestId, socket, agentRunId, {
-    sessionTurn,
-  });
+  runWriterTask(
+    config,
+    writerAgent,
+    prompt,
+    requestId,
+    socket,
+    agentRunId,
+    {
+      sessionTurn,
+    },
+    shellSessionId,
+  );
 
   if (needsWarmup && agentRunId !== undefined) {
     sendMessage(socket, {
@@ -722,11 +739,18 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
               : undefined;
           const sessionContinuation =
             parsed.payload.sessionContinuation === true;
+          const shellSessionId =
+            typeof parsed.payload.shellSessionId === "string"
+              ? parsed.payload.shellSessionId
+              : undefined;
 
           if (typeof prompt === "string" && prompt.trim().length > 0) {
             console.log(
               `[agent-witch] Running ${writerAgent} task (${sessionContinuation ? "continue" : "first"})…`,
             );
+            if (agentRunId !== undefined && shellSessionId !== undefined) {
+              shellSessionIdByRunId.set(agentRunId, shellSessionId);
+            }
             void dispatchWriterTask(
               config,
               writerAgent,
@@ -735,7 +759,74 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
               socket,
               agentRunId,
               sessionContinuation,
+              shellSessionId,
             );
+          }
+        }
+
+        if (parsed.type === "shell.session.open" && isRecord(parsed.payload)) {
+          const shellSessionId =
+            typeof parsed.payload.shellSessionId === "string"
+              ? parsed.payload.shellSessionId
+              : "";
+          const cols =
+            typeof parsed.payload.cols === "number" ? parsed.payload.cols : 120;
+          const rows =
+            typeof parsed.payload.rows === "number" ? parsed.payload.rows : 32;
+          if (shellSessionId.length > 0) {
+            console.log("[agent-witch] Opening interactive Mac shell…");
+            void openInteractiveShellPty({
+              shellSessionId,
+              cwd: config.workspace,
+              cols,
+              rows,
+              send: (message) => {
+                sendMessage(socket, message);
+              },
+              requestId,
+            });
+          }
+        }
+
+        if (parsed.type === "shell.session.close" && isRecord(parsed.payload)) {
+          const shellSessionId =
+            typeof parsed.payload.shellSessionId === "string"
+              ? parsed.payload.shellSessionId
+              : "";
+          if (shellSessionId.length > 0) {
+            closeShellPtySession(
+              shellSessionId,
+              (message) => {
+                sendMessage(socket, message);
+              },
+              requestId,
+            );
+          }
+        }
+
+        if (parsed.type === "shell.input" && isRecord(parsed.payload)) {
+          const shellSessionId =
+            typeof parsed.payload.shellSessionId === "string"
+              ? parsed.payload.shellSessionId
+              : "";
+          const data =
+            typeof parsed.payload.data === "string" ? parsed.payload.data : "";
+          if (shellSessionId.length > 0 && data.length > 0) {
+            writeShellPtyInput(shellSessionId, data);
+          }
+        }
+
+        if (parsed.type === "shell.resize" && isRecord(parsed.payload)) {
+          const shellSessionId =
+            typeof parsed.payload.shellSessionId === "string"
+              ? parsed.payload.shellSessionId
+              : "";
+          const cols =
+            typeof parsed.payload.cols === "number" ? parsed.payload.cols : 0;
+          const rows =
+            typeof parsed.payload.rows === "number" ? parsed.payload.rows : 0;
+          if (shellSessionId.length > 0 && cols > 0 && rows > 0) {
+            resizeShellPty(shellSessionId, cols, rows);
           }
         }
 
@@ -818,6 +909,7 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
                 partialOutput,
                 question,
                 response,
+                shellSessionId: shellSessionIdByRunId.get(agentRunId),
               },
               requestId,
               socket,

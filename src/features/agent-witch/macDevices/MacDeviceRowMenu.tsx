@@ -3,12 +3,13 @@
 import { useState } from "react";
 
 import { Dropdown } from "@/components/ui/dropdown/Dropdown";
-import { DropdownItem } from "@/components/ui/dropdown/DropdownItem";
-import { MoreDotIcon, PaperPlaneIcon, PencilIcon, TrashBinIcon } from "@/icons";
+import { MoreDotIcon } from "@/icons";
+import MacDeviceRowMenuItems from "@/features/agent-witch/macDevices/MacDeviceRowMenuItems";
 
 interface MacDeviceRowMenuProps {
   readonly onEdit: () => void;
   readonly onDelegateTask?: () => void;
+  readonly onOpenShell?: () => void;
   readonly onDelete?: () => void;
 }
 
@@ -19,27 +20,12 @@ const stopRowSelection = (event: { stopPropagation: () => void }) => {
 export default function MacDeviceRowMenu({
   onEdit,
   onDelegateTask,
+  onOpenShell,
   onDelete,
 }: MacDeviceRowMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
-
   const closeMenu = () => {
     setIsOpen(false);
-  };
-
-  const handleEdit = () => {
-    closeMenu();
-    onEdit();
-  };
-
-  const handleDelegateTask = () => {
-    closeMenu();
-    onDelegateTask?.();
-  };
-
-  const handleDelete = () => {
-    closeMenu();
-    onDelete?.();
   };
 
   return (
@@ -70,39 +56,13 @@ export default function MacDeviceRowMenu({
         onClose={closeMenu}
         className="w-44 py-1 dark:bg-gray-dark"
       >
-        <ul className="flex flex-col">
-          <li>
-            <DropdownItem
-              onClick={handleEdit}
-              baseClassName="flex w-full items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-white/5"
-            >
-              <PencilIcon className="h-4 w-4 shrink-0" />
-              <span>Edit</span>
-            </DropdownItem>
-          </li>
-          {onDelegateTask ? (
-            <li>
-              <DropdownItem
-                onClick={handleDelegateTask}
-                baseClassName="flex w-full items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-white/5"
-              >
-                <PaperPlaneIcon className="h-4 w-4 shrink-0" />
-                <span>Delegate task</span>
-              </DropdownItem>
-            </li>
-          ) : null}
-          {onDelete ? (
-            <li>
-              <DropdownItem
-                onClick={handleDelete}
-                baseClassName="flex w-full items-center gap-2 px-3 py-2 text-sm text-error-600 hover:bg-error-50 dark:text-error-400 dark:hover:bg-error-500/10"
-              >
-                <TrashBinIcon className="h-4 w-4 shrink-0" />
-                <span>Delete</span>
-              </DropdownItem>
-            </li>
-          ) : null}
-        </ul>
+        <MacDeviceRowMenuItems
+          closeMenu={closeMenu}
+          onEdit={onEdit}
+          onOpenShell={onOpenShell}
+          onDelegateTask={onDelegateTask}
+          onDelete={onDelete}
+        />
       </Dropdown>
     </div>
   );

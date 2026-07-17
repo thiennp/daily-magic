@@ -96,7 +96,7 @@ Set `DATABASE_URL` in `.env.local` (Neon connection string). Apply schema with `
 
 ## Agent Witch (local WebSocket bridge)
 
-Runs Claude CLI on your computer when the app sends a task over WebSocket.
+Runs Claude CLI on your computer when the app sends a task over WebSocket. Live Mac output uses a PTY shell session (`shell.*` messages; owner can type, requesters get a read-only view and answer `[[AWAITING_INPUT]]` checkpoints). Agent runs attach to that shell transport; pipe-based `terminal.stream.*` remains as a compatibility mirror.
 
 ```bash
 # Start app with WebSocket upgrade (required — not plain next dev)

@@ -1,10 +1,5 @@
 import { spawn, type ChildProcess } from "node:child_process";
 
-import {
-  AGENT_RUN_INPUT_GUARDRAILS,
-  AGENT_RUN_INPUT_MARKER,
-} from "./dispatch/agentRunInputGuardrails.constant";
-
 import type { AgentWitchLocalLayout } from "./resolveAgentWitchLocalLayout";
 import {
   buildWriterCliInvocation,
@@ -23,9 +18,17 @@ import {
   isTerminalStreamAccepted,
   queueTerminalStreamChunk,
 } from "./agentWitchTerminalStreamState";
+import { closeShellPtySession } from "./agentWitchShellSession";
+import {
+  buildContinuationPrompt,
+  parseAwaitingInputFromOutput,
+} from "./agentWitchRunSessionsAwaitingInput";
+import { tryRunWriterTaskInPty } from "./agentWitchRunSessionsPty";
 import { markWriterConversationStarted } from "./agentWitchWriterSession";
 
 import type WebSocket from "ws";
+
+export { parseAwaitingInputFromOutput } from "./agentWitchRunSessionsAwaitingInput";
 
 interface AgentWitchRunConfig {
   readonly claudeCommand: string;
@@ -61,54 +64,6 @@ const sendMessage = (
     socket.send(JSON.stringify(message));
   }
 };
-
-export const parseAwaitingInputFromOutput = (
-  output: string,
-): { readonly question: string; readonly partialOutput: string } | null => {
-  const markerIndex = output.indexOf(AGENT_RUN_INPUT_MARKER);
-
-  if (markerIndex < 0) {
-    return null;
-  }
-
-  const afterMarker = output
-    .slice(markerIndex + AGENT_RUN_INPUT_MARKER.length)
-    .trim();
-  const question = afterMarker.split("\n")[0]?.trim() ?? "";
-
-  if (question.length === 0) {
-    return null;
-  }
-
-  return {
-    question,
-    partialOutput: output.slice(0, markerIndex).trim(),
-  };
-};
-
-const buildContinuationPrompt = (input: {
-  readonly originalPrompt: string;
-  readonly partialOutput: string;
-  readonly question: string;
-  readonly response: string;
-}): string =>
-  [
-    "Continue the task using the user's answer.",
-    "",
-    "Original task:",
-    input.originalPrompt,
-    "",
-    "Output so far:",
-    input.partialOutput,
-    "",
-    "You asked:",
-    input.question,
-    "",
-    "User answer:",
-    input.response,
-    "",
-    AGENT_RUN_INPUT_GUARDRAILS,
-  ].join("\n");
 
 const finishRun = (
   config: AgentWitchRunConfig,
@@ -323,6 +278,7 @@ export const runWriterTask = (
   socket: WebSocket,
   agentRunId?: string,
   invocationOptions?: BuildWriterCliInvocationOptions,
+  shellSessionId?: string,
 ): void => {
   const invocation = buildWriterCliInvocation(
     writerAgent,
@@ -344,21 +300,97 @@ export const runWriterTask = (
     return;
   }
 
-  const child = spawn(invocation.command, [...invocation.args], {
-    cwd: config.workspace,
-    stdio: ["ignore", "pipe", "pipe"],
-    env: process.env,
+  const startPipeChild = (): void => {
+    const child = spawn(invocation.command, [...invocation.args], {
+      cwd: config.workspace,
+      stdio: ["ignore", "pipe", "pipe"],
+      env: process.env,
+    });
+    attachChildHandlers(
+      config,
+      child,
+      socket,
+      requestId,
+      agentRunId,
+      prompt,
+      writerAgent,
+    );
+  };
+
+  if (agentRunId === undefined) {
+    startPipeChild();
+    return;
+  }
+
+  runSessions.set(agentRunId, {
+    originalPrompt: prompt,
+    writerAgent,
+    accumulatedOutput: runSessions.get(agentRunId)?.accumulatedOutput ?? "",
   });
 
-  attachChildHandlers(
-    config,
-    child,
+  void tryRunWriterTaskInPty({
     socket,
+    sendMessage,
     requestId,
     agentRunId,
-    prompt,
+    shellSessionId,
+    command: invocation.command,
+    args: invocation.args,
+    cwd: config.workspace,
+    originalPrompt: prompt,
     writerAgent,
-  );
+    onInputRequired: (parsed) => {
+      if (shellSessionId !== undefined) {
+        closeShellPtySession(
+          shellSessionId,
+          (message) => {
+            sendMessage(socket, message);
+          },
+          requestId,
+        );
+      }
+      const session = runSessions.get(agentRunId);
+      const mergedOutput = [
+        session?.accumulatedOutput ?? "",
+        parsed.partialOutput,
+      ]
+        .filter((value) => value.length > 0)
+        .join("\n\n");
+      if (session !== undefined) {
+        session.accumulatedOutput = mergedOutput;
+      }
+      requestRunInput(
+        config,
+        socket,
+        agentRunId,
+        requestId,
+        parsed.question,
+        mergedOutput,
+        prompt,
+      );
+    },
+    onFinished: (exitCode, output) => {
+      markWriterConversationStarted(writerAgent);
+      const session = runSessions.get(agentRunId);
+      const mergedOutput =
+        session !== undefined && session.accumulatedOutput.length > 0
+          ? `${session.accumulatedOutput}\n\n${output}`.trim()
+          : output;
+      finishRun(
+        config,
+        socket,
+        agentRunId,
+        requestId,
+        exitCode,
+        mergedOutput,
+        prompt,
+      );
+    },
+  }).then((usedPty) => {
+    if (!usedPty) {
+      startPipeChild();
+    }
+  });
 };
 
 export const runClaudeTask = (
@@ -379,11 +411,22 @@ export const continueClaudeTaskAfterInput = (
     readonly partialOutput: string;
     readonly question: string;
     readonly response: string;
+    readonly shellSessionId?: string;
   },
   requestId: string | undefined,
   socket: WebSocket,
 ): void => {
   removePendingRunInputSession(config.layout, input.agentRunId);
+  if (input.shellSessionId !== undefined) {
+    sendMessage(socket, {
+      type: "shell.data",
+      payload: {
+        shellSessionId: input.shellSessionId,
+        chunk: `\r\n[checkpoint answer] ${input.response}\r\n`,
+      },
+      requestId,
+    });
+  }
   const continuationPrompt = buildContinuationPrompt(input);
   const writerAgent =
     runSessions.get(input.agentRunId)?.writerAgent ?? "claude-cli";
@@ -394,6 +437,8 @@ export const continueClaudeTaskAfterInput = (
     requestId,
     socket,
     input.agentRunId,
+    undefined,
+    input.shellSessionId,
   );
 };
 

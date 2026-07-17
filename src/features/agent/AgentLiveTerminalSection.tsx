@@ -6,9 +6,10 @@ import Link from "next/link";
 
 import AppPanel from "@/components/surfaces/AppPanel";
 import AgentLiveTerminalPanel from "@/features/agent/AgentLiveTerminalPanel";
+import type { AgentMacShellPanelProps } from "@/features/agent/types/AgentMacShellPanelProps.type";
 import type { AgentLiveTerminalStatus } from "@/features/agent/utils/agentLiveTerminalState.type";
 
-interface AgentLiveTerminalSectionProps {
+interface AgentLiveTerminalSectionProps extends AgentMacShellPanelProps {
   readonly output: string;
   readonly status: AgentLiveTerminalStatus;
   readonly pendingCommandLine?: string | null;
@@ -29,29 +30,10 @@ interface AgentLiveTerminalSectionProps {
 const AgentLiveTerminalSection = forwardRef<
   HTMLElement,
   AgentLiveTerminalSectionProps
->(function AgentLiveTerminalSection(
-  {
-    output,
-    status,
-    pendingCommandLine = null,
-    activeRunId,
-    errorMessage,
-    feedbackVisible,
-    feedbackPendingQuestion,
-    feedbackPendingPartialOutput = null,
-    feedbackQueuedCount,
-    feedbackQueueNotice,
-    isFeedbackSubmitting,
-    feedbackAutoFocus = false,
-    onSubmitFeedback,
-    onFinishSession,
-    isSteppedComposer = false,
-  },
-  ref,
-) {
+>(function AgentLiveTerminalSection(props, ref) {
   const content = (
     <>
-      {!isSteppedComposer && activeRunId !== null ? (
+      {!props.isSteppedComposer && props.activeRunId !== null ? (
         <p className="mb-3 text-sm text-gray-600 dark:text-gray-400">
           This job is saved locally in{" "}
           <Link
@@ -62,31 +44,17 @@ const AgentLiveTerminalSection = forwardRef<
           </Link>
           .{" "}
           <Link
-            href={`/reports/${activeRunId}`}
+            href={`/reports/${props.activeRunId}`}
             className="font-medium text-brand-600 hover:text-brand-700 dark:text-brand-400"
           >
             Open full report
           </Link>
         </p>
       ) : null}
-      <AgentLiveTerminalPanel
-        output={output}
-        status={status}
-        pendingCommandLine={pendingCommandLine}
-        feedbackVisible={feedbackVisible}
-        feedbackPendingQuestion={feedbackPendingQuestion}
-        feedbackPendingPartialOutput={feedbackPendingPartialOutput}
-        feedbackQueuedCount={feedbackQueuedCount}
-        feedbackQueueNotice={feedbackQueueNotice}
-        isFeedbackSubmitting={isFeedbackSubmitting}
-        feedbackAutoFocus={feedbackAutoFocus}
-        isSteppedComposer={isSteppedComposer}
-        onSubmitFeedback={onSubmitFeedback}
-        onFinishSession={onFinishSession}
-      />
-      {errorMessage !== null ? (
+      <AgentLiveTerminalPanel {...props} />
+      {props.errorMessage !== null ? (
         <p className="mt-4 text-sm text-rose-600 dark:text-rose-400">
-          {errorMessage}
+          {props.errorMessage}
         </p>
       ) : null}
     </>
@@ -94,7 +62,7 @@ const AgentLiveTerminalSection = forwardRef<
 
   return (
     <section ref={ref} tabIndex={-1} className="outline-none">
-      {isSteppedComposer ? content : <AppPanel>{content}</AppPanel>}
+      {props.isSteppedComposer ? content : <AppPanel>{content}</AppPanel>}
     </section>
   );
 });

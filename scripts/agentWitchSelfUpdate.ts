@@ -29,6 +29,7 @@ const AGENT_WITCH_INSTALL_PACKAGE_JSON = `{
   "private": true,
   "type": "module",
   "dependencies": {
+    "node-pty": "^1.1.0",
     "ws": "^8.18.3"
   },
   "devDependencies": {
@@ -37,7 +38,8 @@ const AGENT_WITCH_INSTALL_PACKAGE_JSON = `{
   },
   "allowScripts": {
     "esbuild": true,
-    "fsevents": true
+    "fsevents": true,
+    "node-pty": true
   }
 }
 `;

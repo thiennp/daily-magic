@@ -1,6 +1,7 @@
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
 import type { AgentWitchInstructionMessageType } from "@/lib/agentWitch/instructions/agentWitchInstructionDocument.type";
 import { AGENT_WITCH_INSTRUCTION_WRITER_SESSION_MESSAGE_TYPES } from "@/lib/agentWitch/instructions/agentWitchInstructionWriterSessionMessageTypes.constant";
+import { AGENT_WITCH_INSTRUCTION_SHELL_MESSAGE_TYPES } from "@/lib/agentWitch/instructions/agentWitchInstructionShellMessageTypes.constant";
 
 export const AGENT_WITCH_INSTRUCTION_MESSAGE_TYPES: readonly AgentWitchInstructionMessageType[] =
   [
@@ -61,6 +62,7 @@ export const AGENT_WITCH_INSTRUCTION_MESSAGE_TYPES: readonly AgentWitchInstructi
       direction: "mac_to_browser",
       purpose: "Terminal stream finished for the active run.",
     },
+    ...AGENT_WITCH_INSTRUCTION_SHELL_MESSAGE_TYPES,
     {
       type: AGENT_WITCH_MESSAGE_TYPES.HARNESS_REQUEST,
       direction: "browser_to_mac",

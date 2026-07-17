@@ -2,6 +2,7 @@
 
 import { useAgentRunQueue } from "@/features/agent/hooks/useAgentRunQueue";
 import { useDelegatedWriterAgent } from "@/features/agent/hooks/useDelegatedWriterAgent";
+import { useOpenMacShellFromQuery } from "@/features/agent/hooks/useOpenMacShellFromQuery";
 import { useWsTestMacSession } from "@/features/agent/hooks/useWsTestMacSession";
 import { useWsTestPanelLifecycle } from "@/features/agent/hooks/useWsTestPanelLifecycle";
 import { useWsTestPanelSteppedComposer } from "@/features/agent/hooks/useWsTestPanelSteppedComposer";
@@ -60,6 +61,10 @@ export const useWsTestPanelController = (input: {
     refreshCount,
     sendClaudePrompt: socket.sendClaudePrompt,
     writerAgent,
+  });
+  useOpenMacShellFromQuery({
+    connectionStatus: socket.connectionStatus,
+    openShell: socket.macShell.openShell,
   });
 
   return {

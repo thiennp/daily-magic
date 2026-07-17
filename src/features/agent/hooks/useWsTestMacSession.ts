@@ -22,10 +22,13 @@ export const useWsTestMacSession = (input: {
   readonly terminalFeedback: ReturnType<typeof useAgentLiveTerminalFeedback>;
 } => {
   const terminalSectionRef = useRef<HTMLElement>(null);
-  const { isSessionActive } = useAgentLiveTerminalSessionChrome({
-    terminalSectionRef,
-    sessionWriterAgent: input.socket.sessionWriterAgent,
-  });
+  const { isSessionActive: isWriterSessionActive } =
+    useAgentLiveTerminalSessionChrome({
+      terminalSectionRef,
+      sessionWriterAgent: input.socket.sessionWriterAgent,
+    });
+  const isSessionActive =
+    isWriterSessionActive || input.socket.macShell.status !== "idle";
   const terminalFeedback = useAgentLiveTerminalFeedback({
     status: input.socket.liveTerminalStatus,
     connectionStatus: input.socket.connectionStatus,

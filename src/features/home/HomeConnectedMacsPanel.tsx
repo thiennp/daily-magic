@@ -81,6 +81,12 @@ export default function HomeConnectedMacsPanel({
                   scroll: false,
                 });
               }}
+              onOpenShell={(deviceId) => {
+                router.push(
+                  buildAgentComposerHref({ deviceId, openShell: true }),
+                  { scroll: false },
+                );
+              }}
               onDelete={async (deviceId) => {
                 await revokePairedDevice(deviceId);
               }}
