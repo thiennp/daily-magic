@@ -6,7 +6,7 @@
   <rect x="212" y="148" width="536" height="180" rx="12" fill="#fffbeb" stroke="#fcd34d"/>
   <text x="232" y="184" font-family="ui-sans-serif,system-ui,sans-serif" font-size="14" font-weight="600" fill="#92400e">Repo branch standup  pending</text>
   <text x="232" y="214" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#78350f">From: Jamie Lee (Acme Design Co)</text>
-  <text x="232" y="240" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#78350f">Repo: ~/projects/acme-checkout · branch feature/checkout</text>
+  <text x="232" y="240" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#78350f">Repo: ~/projects/acme-checkout ï¿½ branch feature/checkout</text>
   <text x="232" y="280" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#78350f">Summarize commits since yesterday for standup.</text>
   <rect x="212" y="360" width="110" height="40" rx="8" fill="#16a34a"/>
   <text x="238" y="385" font-family="ui-sans-serif,system-ui,sans-serif" font-size="13" font-weight="600" fill="#fff">Approve</text>
