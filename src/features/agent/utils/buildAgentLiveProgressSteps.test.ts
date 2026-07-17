@@ -46,7 +46,40 @@ describe("buildAgentLiveProgressSteps", () => {
     expect(result.steps.find((step) => step.id === "work")).toMatchObject({
       label: "Reading files and requirements",
       state: "active",
+      detail: null,
     });
+  });
+
+  it("expands agent [[PROGRESS]] blocks into detailed steps", () => {
+    const result = buildAgentLiveProgressSteps({
+      status: "streaming",
+      output: [
+        "[[PROGRESS]]",
+        "Reading portfolio files",
+        "Opened brief.md and quotes.md",
+        "",
+        "[[PROGRESS]]",
+        "Drafting client proposal",
+        "Framing Nordlicht Outdoor scope at 5800 EUR",
+        "",
+        "Proposal draft coming next.",
+      ].join("\n"),
+      pendingCommandLine: 'claude -p "proposal"',
+    });
+
+    expect(
+      result.steps
+        .filter((step) => step.id.startsWith("progress-"))
+        .map((step) => [step.label, step.detail, step.state]),
+    ).toEqual([
+      ["Reading portfolio files", "Opened brief.md and quotes.md", "done"],
+      [
+        "Drafting client proposal",
+        "Framing Nordlicht Outdoor scope at 5800 EUR",
+        "active",
+      ],
+    ]);
+    expect(result.replyPreview).toBe("Proposal draft coming next.");
   });
 
   it("strips CLI chrome from the reply preview", () => {

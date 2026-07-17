@@ -1,5 +1,6 @@
 import { AGENT_RUN_NEXT_ACTIONS_INSTRUCTION } from "@/lib/dispatch/agentRunNextActions.constant";
 import { wrapPromptWithAgentRunInputGuardrails } from "@/lib/dispatch/agentRunInputGuardrails.constant";
+import { wrapPromptWithAgentRunProgressInstruction } from "@/lib/dispatch/agentRunProgress.constant";
 
 export const wrapPromptForAgentRun = (
   prompt: string,
@@ -10,5 +11,7 @@ export const wrapPromptForAgentRun = (
       ? `${prompt.trim()}\n\n---\n${AGENT_RUN_NEXT_ACTIONS_INSTRUCTION}`
       : prompt.trim();
 
-  return wrapPromptWithAgentRunInputGuardrails(withNextActions);
+  return wrapPromptWithAgentRunInputGuardrails(
+    wrapPromptWithAgentRunProgressInstruction(withNextActions),
+  );
 };

@@ -1,5 +1,10 @@
 import type { AgentLiveTerminalStatus } from "@/features/agent/utils/agentLiveTerminalState.type";
-import { AGENT_LIVE_PROGRESS_ACTIVITY_PATTERNS } from "@/features/agent/utils/agentLiveProgressPatterns.constant";
+import { parseAgentLiveProgressUpdates } from "@/features/agent/utils/parseAgentLiveProgressUpdates";
+import {
+  hasAgentLiveProgressStartedUserTask,
+  resolveAgentLiveProgressFallbackWorkLabel,
+} from "@/features/agent/utils/resolveAgentLiveProgressWorkLabel";
+import { resolveAgentProgressUpdateStates } from "@/features/agent/utils/resolveAgentProgressUpdateStates";
 import {
   resolveAgentLiveProgressStepStates,
   type AgentLiveProgressStepState,
@@ -11,35 +16,9 @@ export type { AgentLiveProgressStepState };
 export interface AgentLiveProgressStep {
   readonly id: string;
   readonly label: string;
+  readonly detail: string | null;
   readonly state: AgentLiveProgressStepState;
 }
-
-const resolveActivityLabel = (cleanedOutput: string): string => {
-  for (const activity of AGENT_LIVE_PROGRESS_ACTIVITY_PATTERNS) {
-    if (activity.pattern.test(cleanedOutput)) {
-      return activity.label;
-    }
-  }
-  return "Working on your request";
-};
-
-const hasStartedUserTask = (input: {
-  readonly cleanedOutput: string;
-  readonly pendingCommandLine?: string | null;
-  readonly status: AgentLiveTerminalStatus;
-}): boolean => {
-  if ((input.pendingCommandLine ?? "").trim().length > 0) {
-    return true;
-  }
-  if (
-    input.status === "streaming" ||
-    input.status === "waiting_approval" ||
-    input.status === "finished"
-  ) {
-    return true;
-  }
-  return input.cleanedOutput.length > 0;
-};
 
 export const buildAgentLiveProgressSteps = (input: {
   readonly status: AgentLiveTerminalStatus;
@@ -51,11 +30,13 @@ export const buildAgentLiveProgressSteps = (input: {
   readonly replyPreview: string | null;
 } => {
   const cleaned = stripAgentLiveProgressCliChrome(input.output);
-  const started = hasStartedUserTask({
-    cleanedOutput: cleaned,
-    pendingCommandLine: input.pendingCommandLine,
-    status: input.status,
-  });
+  const updates = parseAgentLiveProgressUpdates(input.output);
+  const started =
+    hasAgentLiveProgressStartedUserTask({
+      cleanedOutput: cleaned,
+      pendingCommandLine: input.pendingCommandLine,
+      status: input.status,
+    }) || updates.length > 0;
   const isWorking =
     input.status === "starting" ||
     input.status === "streaming" ||
@@ -71,20 +52,41 @@ export const buildAgentLiveProgressSteps = (input: {
     isReadyBanner,
     status: input.status,
   });
-
-  const workLabel = needsInput
-    ? "Waiting for your answer"
-    : input.status === "waiting_approval"
-      ? "Waiting for your approval"
-      : started && !isFinished
-        ? resolveActivityLabel(cleaned)
-        : "Working on your request";
+  const updateStates = resolveAgentProgressUpdateStates({
+    updateCount: updates.length,
+    isFinished,
+    isWorking,
+    needsInput,
+  });
+  const workSteps: AgentLiveProgressStep[] =
+    updates.length > 0
+      ? updates.map((update, index) => ({
+          id: `progress-${index}`,
+          label: update.title,
+          detail: update.detail.length > 0 ? update.detail : null,
+          state: updateStates[index] ?? "pending",
+        }))
+      : [
+          {
+            id: "work",
+            label: resolveAgentLiveProgressFallbackWorkLabel({
+              needsInput,
+              status: input.status,
+              started,
+              isFinished,
+              cleaned,
+            }),
+            detail: null,
+            state: states.workState,
+          },
+        ];
 
   return {
     steps: [
       {
         id: "prepare",
         label: "Preparing agent on your Mac",
+        detail: null,
         state: states.prepareState,
       },
       {
@@ -93,12 +95,14 @@ export const buildAgentLiveProgressSteps = (input: {
           !started && isReadyBanner
             ? "Ready for your message"
             : "Agent started",
+        detail: null,
         state: states.startState,
       },
-      { id: "work", label: workLabel, state: states.workState },
+      ...workSteps,
       {
         id: "finish",
         label: isFinished ? "Finished" : "Finishing up",
+        detail: null,
         state: states.finishState,
       },
     ],

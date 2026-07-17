@@ -44,16 +44,23 @@ export default function AgentLiveProgressFeed({
             >
               {step.state === "done" ? "✓" : step.state === "active" ? "●" : ""}
             </span>
-            <span
-              className={
-                step.state === "pending"
-                  ? "text-sm text-gray-400 dark:text-gray-500"
-                  : "text-sm text-gray-800 dark:text-white/90"
-              }
-            >
-              {step.label}
-              {step.state === "active" ? "…" : null}
-            </span>
+            <div className="min-w-0 flex-1">
+              <span
+                className={
+                  step.state === "pending"
+                    ? "text-sm text-gray-400 dark:text-gray-500"
+                    : "text-sm text-gray-800 dark:text-white/90"
+                }
+              >
+                {step.label}
+                {step.state === "active" ? "…" : null}
+              </span>
+              {step.detail !== null && step.state !== "pending" ? (
+                <p className="mt-1 text-xs whitespace-pre-wrap text-gray-600 dark:text-gray-300">
+                  {step.detail}
+                </p>
+              ) : null}
+            </div>
           </li>
         ))}
       </ol>
