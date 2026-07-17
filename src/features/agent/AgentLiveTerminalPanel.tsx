@@ -58,6 +58,9 @@ export default function AgentLiveTerminalPanel({
           steps={progress.steps}
           replyPreview={progress.replyPreview}
           isWorking={isWorking}
+          nextActions={showNextActions ? nextActions : []}
+          nextActionsDisabled={isFeedbackSubmitting}
+          onSelectNextAction={onSubmitFeedback}
         />
       ) : (
         <AgentLiveTerminalDeveloperMirror
@@ -66,7 +69,7 @@ export default function AgentLiveTerminalPanel({
           pendingCommandLine={pendingCommandLine}
         />
       )}
-      {showNextActions ? (
+      {!isSteppedComposer && showNextActions ? (
         <AgentLiveTerminalNextActions
           actions={nextActions}
           disabled={isFeedbackSubmitting}

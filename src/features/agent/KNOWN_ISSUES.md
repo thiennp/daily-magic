@@ -9,3 +9,4 @@
 | AGENT-005 | Claude/Antigravity follow-ups always ran as fresh `-p` one-shots; only Cursor passed `--continue`                 | Enable session continuation for claude-cli + antigravity; `buildWriterCliInvocation.test.ts`             |
 | AGENT-006 | Send-a-task showed raw Mac CLI mirror; users needed terminal literacy to follow progress                          | Plain-language progress feed for stepped composer; `buildAgentLiveProgressSteps.test.ts`                 |
 | AGENT-007 | Progress feed only showed generic labels like “Working on your request…” without agent-authored step detail       | Agents emit `[[PROGRESS]]` blocks; feed renders per-step title + detail; `parseAgentLiveProgressUpdates` |
+| AGENT-008 | Suggested next steps after finish sat outside the progress card and were easy to miss in Send-a-task screenshots  | Next-action chips render inside the stepped progress feed; `progress-detail.spec.ts`                     |

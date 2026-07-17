@@ -1,11 +1,15 @@
 "use client";
 
+import AgentLiveTerminalNextActions from "@/features/agent/AgentLiveTerminalNextActions";
 import type { AgentLiveProgressStep } from "@/features/agent/utils/buildAgentLiveProgressSteps";
 
 interface AgentLiveProgressFeedProps {
   readonly steps: readonly AgentLiveProgressStep[];
   readonly replyPreview: string | null;
   readonly isWorking: boolean;
+  readonly nextActions?: readonly string[];
+  readonly nextActionsDisabled?: boolean;
+  readonly onSelectNextAction?: (action: string) => void;
 }
 
 const stepIconClass = (state: AgentLiveProgressStep["state"]): string => {
@@ -22,6 +26,9 @@ export default function AgentLiveProgressFeed({
   steps,
   replyPreview,
   isWorking,
+  nextActions = [],
+  nextActionsDisabled = false,
+  onSelectNextAction,
 }: AgentLiveProgressFeedProps) {
   return (
     <div className="mt-3 rounded-xl border border-gray-200 bg-white p-4 dark:border-gray-800 dark:bg-white/[0.02]">
@@ -68,6 +75,13 @@ export default function AgentLiveProgressFeed({
         <div className="mt-4 rounded-lg bg-gray-50 p-3 text-sm whitespace-pre-wrap text-gray-700 dark:bg-gray-900/60 dark:text-gray-200">
           {replyPreview}
         </div>
+      ) : null}
+      {nextActions.length > 0 && onSelectNextAction !== undefined ? (
+        <AgentLiveTerminalNextActions
+          actions={nextActions}
+          disabled={nextActionsDisabled}
+          onSelect={onSelectNextAction}
+        />
       ) : null}
     </div>
   );
