@@ -7,8 +7,17 @@ describe("resolveSessionErrorMessage (AGENT-011)", () => {
     expect(
       resolveSessionErrorMessage({
         liveTerminalStatus: "error",
-        isSessionActive: true,
         lastResponse: { text: "No Mac agent connected.", isError: true },
+      }),
+    ).toBe("No Mac agent connected.");
+  });
+
+  it("uses the terminal output when status is error without a last error", () => {
+    expect(
+      resolveSessionErrorMessage({
+        liveTerminalStatus: "error",
+        liveTerminalOutput: "$ task\nNo Mac agent connected.\n",
+        lastResponse: { text: "Request accepted.", isError: false },
       }),
     ).toBe("No Mac agent connected.");
   });
@@ -17,27 +26,27 @@ describe("resolveSessionErrorMessage (AGENT-011)", () => {
     expect(
       resolveSessionErrorMessage({
         liveTerminalStatus: "error",
-        isSessionActive: true,
         lastResponse: { text: "ok", isError: false },
       }),
     ).toBe("Something went wrong. You can retry without starting over.");
   });
 
-  it("shows inactive-session errors from the last response", () => {
+  it("shows lastResponse errors even while a shell session is active", () => {
     expect(
       resolveSessionErrorMessage({
         liveTerminalStatus: "idle",
-        isSessionActive: false,
-        lastResponse: { text: "Unauthorized", isError: true },
+        lastResponse: {
+          text: "No Mac is connected for your account.",
+          isError: true,
+        },
       }),
-    ).toBe("Unauthorized");
+    ).toBe("No Mac is connected for your account.");
   });
 
   it("returns null when there is no error", () => {
     expect(
       resolveSessionErrorMessage({
         liveTerminalStatus: "streaming",
-        isSessionActive: true,
         lastResponse: { text: "Task sent", isError: false },
       }),
     ).toBeNull();

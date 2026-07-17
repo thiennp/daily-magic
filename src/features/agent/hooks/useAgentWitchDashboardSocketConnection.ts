@@ -8,6 +8,7 @@ import trackOnboardingFromAgentWitchSocketMessage from "@/features/home/utils/tr
 import parseAgentWitchSocketDisplay, {
   type AgentWitchSocketDisplay,
 } from "@/lib/agentWitch/parseAgentWitchSocketDisplay";
+import { shouldUpdateAgentWitchSocketDisplay } from "@/lib/agentWitch/shouldUpdateAgentWitchSocketDisplay";
 import type { WsTestConnectionStatus } from "@/features/agent/types/WsTestConnectionStatus.type";
 
 export const useAgentWitchDashboardSocketConnection = (input: {
@@ -36,7 +37,9 @@ export const useAgentWitchDashboardSocketConnection = (input: {
         trackOnboardingFromAgentWitchSocketMessage(raw);
         syncAgentRunLocalCacheFromSocket(raw);
         applySocketMessage(raw);
-        setLastResponse(parseAgentWitchSocketDisplay(raw));
+        if (shouldUpdateAgentWitchSocketDisplay(raw)) {
+          setLastResponse(parseAgentWitchSocketDisplay(raw));
+        }
       },
       onSocketChange: (socket) => {
         socketRef.current = socket;

@@ -44,7 +44,7 @@ export const useWsTestMacSession = (input: {
   });
   const sessionErrorMessage = resolveSessionErrorMessage({
     liveTerminalStatus: input.socket.liveTerminalStatus,
-    isSessionActive,
+    liveTerminalOutput: input.socket.liveTerminalOutput,
     lastResponse: input.socket.lastResponse,
   });
 
