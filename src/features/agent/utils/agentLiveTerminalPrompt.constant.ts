@@ -51,3 +51,18 @@ export const appendAgentLiveTerminalCommand = (
   const suffix = output.endsWith("\n") ? "" : "\n";
   return `${output}${suffix}${buildAgentLiveTerminalCommandEntry(commandLine)}`;
 };
+
+export const appendAgentLiveTerminalCommandIfMissing = (
+  output: string,
+  commandLine: string,
+): string => {
+  if (commandLine.length === 0) {
+    return output;
+  }
+
+  if (output.includes(`${AGENT_LIVE_BASH_PROMPT}${commandLine}`)) {
+    return output;
+  }
+
+  return appendAgentLiveTerminalCommand(output, commandLine);
+};

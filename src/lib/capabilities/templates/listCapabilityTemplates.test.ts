@@ -17,8 +17,8 @@ describe("capability templates catalog", () => {
       (template) => template.type === CapabilityType.AGENT,
     );
 
-    expect(allCapabilityTemplates).toHaveLength(47);
-    expect(workflows).toHaveLength(27);
+    expect(allCapabilityTemplates).toHaveLength(48);
+    expect(workflows).toHaveLength(28);
     expect(agents).toHaveLength(20);
     expect(summaries[0]?.id).toBe("job-application-pack");
     expect(summaries.every((template) => template.harnessItemCount >= 5)).toBe(

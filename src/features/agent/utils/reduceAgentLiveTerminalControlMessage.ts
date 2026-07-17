@@ -2,7 +2,7 @@ import type { AgentRunInputRequest } from "@/features/dispatch/utils/agentRunInp
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
 
 import type { AgentLiveTerminalState } from "./agentLiveTerminalState.type";
-import { appendAgentLiveTerminalCommand } from "./agentLiveTerminalPrompt.constant";
+import { appendAgentLiveTerminalCommandIfMissing } from "./agentLiveTerminalPrompt.constant";
 import { matchesActiveRun, readRunId } from "./agentLiveTerminalMessageUtils";
 import { reduceAgentLiveTerminalApprovalMessage } from "./reduceAgentLiveTerminalApprovalMessage";
 import {
@@ -50,10 +50,10 @@ export const reduceAgentLiveTerminalControlMessage = (
       return {
         ...state,
         activeRunId: runId,
-        output:
-          commandLine.length > 0
-            ? appendAgentLiveTerminalCommand(state.output, commandLine)
-            : state.output,
+        output: appendAgentLiveTerminalCommandIfMissing(
+          state.output,
+          commandLine,
+        ),
         status: "waiting_approval",
         pendingInput: null,
         pendingCommandLine: null,
@@ -65,10 +65,10 @@ export const reduceAgentLiveTerminalControlMessage = (
       return {
         ...state,
         activeRunId: runId,
-        output:
-          commandLine.length > 0
-            ? appendAgentLiveTerminalCommand(state.output, commandLine)
-            : state.output,
+        output: appendAgentLiveTerminalCommandIfMissing(
+          state.output,
+          commandLine,
+        ),
         status: "streaming",
         pendingInput: null,
         pendingCommandLine: null,

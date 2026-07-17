@@ -24,9 +24,9 @@ export const TEAM_DISPATCH_SHOWCASE_SCREEN_DIMENSIONS: Readonly<
     { readonly width: number; readonly height: number }
   >
 > = {
-  [TEAM_DISPATCH_SHOWCASE_SCREEN.REQUEST_TASK]: { width: 1003, height: 483 },
-  [TEAM_DISPATCH_SHOWCASE_SCREEN.APPROVAL]: { width: 1008, height: 325 },
-  [TEAM_DISPATCH_SHOWCASE_SCREEN.MAC_RUNNING]: { width: 1008, height: 460 },
+  [TEAM_DISPATCH_SHOWCASE_SCREEN.REQUEST_TASK]: { width: 1067, height: 547 },
+  [TEAM_DISPATCH_SHOWCASE_SCREEN.APPROVAL]: { width: 1072, height: 389 },
+  [TEAM_DISPATCH_SHOWCASE_SCREEN.MAC_RUNNING]: { width: 1072, height: 524 },
 };
 
 export const resolveTeamDispatchShowcaseScreenDimensions = (

@@ -4,9 +4,18 @@ import path from "node:path";
 import sharp from "sharp";
 
 const trimBackground = "#f8fafc";
-const trimThreshold = 32;
-const minPadPx = 56;
-const padRatio = 0.05;
+const trimThreshold = 28;
+const minPadPx = 88;
+const padRatio = 0.07;
+
+const folders = process.argv.slice(2);
+
+if (folders.length === 0) {
+  console.error(
+    "Usage: node .agents/scripts/trim-showcase-pngs.mjs public/showcases/onboarding ...",
+  );
+  process.exit(1);
+}
 
 const trimPng = async (input) => {
   const trimmed = await sharp(input)
@@ -31,15 +40,6 @@ const trimPng = async (input) => {
   await sharp(padded).toFile(input);
   return meta;
 };
-
-const folders = process.argv.slice(2);
-
-if (folders.length === 0) {
-  console.error(
-    "Usage: node .agents/scripts/trim-showcase-pngs.mjs public/showcases/onboarding ...",
-  );
-  process.exit(1);
-}
 
 for (const folder of folders) {
   const dir = path.resolve(folder);

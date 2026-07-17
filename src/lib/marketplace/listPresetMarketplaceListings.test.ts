@@ -11,10 +11,10 @@ import {
 } from "@/lib/marketplace/presetMarketplaceCapabilityId";
 
 describe("preset marketplace listings", () => {
-  it("maps all 47 official templates to free marketplace listings", () => {
+  it("maps all 48 official templates to free marketplace listings", () => {
     const listings = listPresetMarketplaceListings();
 
-    expect(listings).toHaveLength(47);
+    expect(listings).toHaveLength(48);
     expect(listings.every((listing) => listing.isOfficialPreset === true)).toBe(
       true,
     );

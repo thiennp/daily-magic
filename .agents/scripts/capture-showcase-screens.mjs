@@ -6,9 +6,10 @@ import sharp from "sharp";
 
 const baseUrl = process.env.SHOWCASE_CAPTURE_BASE_URL ?? "http://localhost:3000";
 const trimBackground = "#f8fafc";
-const trimThreshold = 32;
-const minPadPx = 56;
-const padRatio = 0.05;
+const framePadPx = 64;
+const trimThreshold = 28;
+const minPadPx = 88;
+const padRatio = 0.07;
 
 const groups = [
   {
@@ -110,11 +111,18 @@ for (const group of groups) {
     const box = await frame.boundingBox();
 
     if (!box) {
-      throw new Error(`No .frame for ${screen}`);
+      throw new Error(`No .frame for ${screenId}`);
     }
 
+    const clip = {
+      x: Math.max(0, box.x - framePadPx),
+      y: Math.max(0, box.y - framePadPx),
+      width: box.width + framePadPx * 2,
+      height: box.height + framePadPx * 2,
+    };
+
     const output = path.resolve(group.outputDir, `${screenId}.png`);
-    await page.screenshot({ path: output, clip: box });
+    await page.screenshot({ path: output, clip });
     const meta = await trimPng(output);
     dimensions[`${group.outputDir}/${screenId}`] = {
       width: meta.width,
