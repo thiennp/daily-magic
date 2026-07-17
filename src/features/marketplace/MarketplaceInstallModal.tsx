@@ -32,13 +32,15 @@ export default function MarketplaceInstallModal({
     null,
   );
 
+  const { refreshDevices } = macSelection;
+
   useEffect(() => {
     if (listing === null) {
       return;
     }
 
-    void macSelection.refreshDevices();
-  }, [listing?.capabilityId, macSelection.refreshDevices]);
+    void refreshDevices();
+  }, [listing, refreshDevices]);
 
   const selectedDevice = macSelection.devices.find(
     (device) => device.id === macSelection.selectedDeviceId,

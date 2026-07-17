@@ -39,24 +39,17 @@ export const useAgentLiveTerminalFeedback = (input: {
 } => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const hasOpenSession = input.sessionWriterAgent !== null;
+  const { activeDeviceId, activeWriterAgent, composer, sendClaudePrompt } =
+    input;
 
   const sendFollowUp = useCallback(
     (message: string) => {
-      input.sendClaudePrompt(
+      sendClaudePrompt(
         message,
-        buildWsTestSendOptions(
-          input.composer,
-          input.activeWriterAgent,
-          input.activeDeviceId,
-        ),
+        buildWsTestSendOptions(composer, activeWriterAgent, activeDeviceId),
       );
     },
-    [
-      input.activeDeviceId,
-      input.activeWriterAgent,
-      input.composer,
-      input.sendClaudePrompt,
-    ],
+    [activeDeviceId, activeWriterAgent, composer, sendClaudePrompt],
   );
 
   const feedbackQueue = useAgentLiveTerminalFeedbackQueue({

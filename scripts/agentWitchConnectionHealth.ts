@@ -5,10 +5,7 @@ import {
   AGENT_WITCH_CONNECTION_HEALTH_FILE_NAME,
   type AgentWitchConnectionHealth,
 } from "./agentWitchConnectionHealth.constants";
-import {
-  resolveAgentWitchInstallDir,
-  type AgentWitchLocalLayout,
-} from "./resolveAgentWitchLocalLayout";
+import type { AgentWitchLocalLayout } from "./resolveAgentWitchLocalLayout";
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === "object" && value !== null && !Array.isArray(value);

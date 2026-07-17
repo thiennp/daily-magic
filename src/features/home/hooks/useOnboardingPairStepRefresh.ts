@@ -4,13 +4,15 @@ const useOnboardingPairStepRefresh = (input: {
   readonly isConnectStepDone: boolean;
   readonly reloadSteps: () => Promise<void>;
 }): void => {
+  const { isConnectStepDone, reloadSteps } = input;
+
   useEffect(() => {
-    if (input.isConnectStepDone) {
+    if (isConnectStepDone) {
       return;
     }
 
     const refreshPairStep = (): void => {
-      void input.reloadSteps();
+      void reloadSteps();
     };
 
     const handleVisibilityChange = (): void => {
@@ -26,7 +28,7 @@ const useOnboardingPairStepRefresh = (input: {
       window.removeEventListener("focus", refreshPairStep);
       document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
-  }, [input.isConnectStepDone, input.reloadSteps]);
+  }, [isConnectStepDone, reloadSteps]);
 };
 
 export default useOnboardingPairStepRefresh;

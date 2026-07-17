@@ -6,13 +6,15 @@ const useOnboardingAutomateStepRefresh = (input: {
   readonly isAutomateStepDone: boolean;
   readonly reloadSteps: () => Promise<void>;
 }): void => {
+  const { isAutomateStepDone, reloadSteps } = input;
+
   useEffect(() => {
-    if (input.isAutomateStepDone) {
+    if (isAutomateStepDone) {
       return;
     }
 
     const refreshAutomateStep = (): void => {
-      void input.reloadSteps();
+      void reloadSteps();
     };
 
     const handleVisibilityChange = (): void => {
@@ -36,7 +38,7 @@ const useOnboardingAutomateStepRefresh = (input: {
         refreshAutomateStep,
       );
     };
-  }, [input.isAutomateStepDone, input.reloadSteps]);
+  }, [isAutomateStepDone, reloadSteps]);
 };
 
 export default useOnboardingAutomateStepRefresh;

@@ -6,13 +6,15 @@ const useOnboardingWorkflowStepRefresh = (input: {
   readonly isWorkflowStepDone: boolean;
   readonly reloadSteps: () => Promise<void>;
 }): void => {
+  const { isWorkflowStepDone, reloadSteps } = input;
+
   useEffect(() => {
-    if (input.isWorkflowStepDone) {
+    if (isWorkflowStepDone) {
       return;
     }
 
     const refreshWorkflowStep = (): void => {
-      void input.reloadSteps();
+      void reloadSteps();
     };
 
     const handleVisibilityChange = (): void => {
@@ -36,7 +38,7 @@ const useOnboardingWorkflowStepRefresh = (input: {
         refreshWorkflowStep,
       );
     };
-  }, [input.isWorkflowStepDone, input.reloadSteps]);
+  }, [isWorkflowStepDone, reloadSteps]);
 };
 
 export default useOnboardingWorkflowStepRefresh;

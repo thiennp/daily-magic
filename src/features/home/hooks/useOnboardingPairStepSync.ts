@@ -7,8 +7,10 @@ const useOnboardingPairStepSync = (input: {
   readonly isConnectStepDone: boolean;
   readonly setSteps: Dispatch<SetStateAction<readonly OnboardingStep[]>>;
 }): void => {
+  const { isConnectStepDone, setSteps } = input;
+
   useEffect(() => {
-    if (input.isConnectStepDone) {
+    if (isConnectStepDone) {
       return;
     }
 
@@ -19,13 +21,13 @@ const useOnboardingPairStepSync = (input: {
       }
 
       const paired = snapshot.devices.length > 0;
-      input.setSteps((current) =>
+      setSteps((current) =>
         current.map((step) =>
           step.id === "pair" ? { ...step, done: paired } : step,
         ),
       );
     });
-  }, [input.isConnectStepDone, input.setSteps]);
+  }, [isConnectStepDone, setSteps]);
 };
 
 export default useOnboardingPairStepSync;

@@ -6,13 +6,15 @@ const useOnboardingTaskStepRefresh = (input: {
   readonly isTaskStepDone: boolean;
   readonly reloadSteps: () => Promise<void>;
 }): void => {
+  const { isTaskStepDone, reloadSteps } = input;
+
   useEffect(() => {
-    if (input.isTaskStepDone) {
+    if (isTaskStepDone) {
       return;
     }
 
     const refreshTaskStep = (): void => {
-      void input.reloadSteps();
+      void reloadSteps();
     };
 
     const handleVisibilityChange = (): void => {
@@ -36,7 +38,7 @@ const useOnboardingTaskStepRefresh = (input: {
         refreshTaskStep,
       );
     };
-  }, [input.isTaskStepDone, input.reloadSteps]);
+  }, [isTaskStepDone, reloadSteps]);
 };
 
 export default useOnboardingTaskStepRefresh;
