@@ -61,6 +61,11 @@ describe("showcase article images", () => {
         const filePath = publicSrcToFilePath(image.src);
         expect(existsSync(filePath)).toBe(true);
 
+        // E2E verified articles use viewport PNGs without SVG picture fallbacks.
+        if (image.src.startsWith("/showcases/e2e/")) {
+          continue;
+        }
+
         const svgPath = publicSrcToFilePath(
           image.src.replace(/\.png$/, ".svg"),
         );
