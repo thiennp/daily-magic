@@ -65,13 +65,14 @@ export default function AgentLiveTerminalPanel({
           nextActionsDisabled={isFeedbackSubmitting}
           onSelectNextAction={onSubmitFeedback}
         />
-      ) : (
+      ) : null}
+      <div className={isSteppedComposer ? "mt-4" : undefined}>
         <AgentLiveTerminalDeveloperMirror
           output={output}
           status={status}
           pendingCommandLine={pendingCommandLine}
         />
-      )}
+      </div>
       {!isSteppedComposer && showNextActions ? (
         <AgentLiveTerminalNextActions
           actions={nextActions}
