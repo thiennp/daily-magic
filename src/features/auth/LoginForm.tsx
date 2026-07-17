@@ -46,20 +46,27 @@ export default function LoginForm({
 
         <div className={appearanceClasses.divider}>or</div>
 
-        <LoginFormEmailField
-          appearance={appearance}
-          emailInputId={emailInputId}
-          email={email}
-          onEmailChange={setEmail}
-        />
+        <div className="space-y-4">
+          <LoginFormEmailField
+            appearance={appearance}
+            emailInputId={emailInputId}
+            email={email}
+            onEmailChange={setEmail}
+          />
 
-        <LoginFormEmailSubmitButton
-          appearance={appearance}
-          isSubmitting={isSubmitting}
-          onEmailSignIn={() => {
-            void handleEmailSignIn();
-          }}
-        />
+          <LoginFormEmailSubmitButton
+            appearance={appearance}
+            isSubmitting={isSubmitting}
+            onEmailSignIn={() => {
+              const emailInput = document.getElementById(emailInputId);
+              const submittedEmail =
+                emailInput instanceof HTMLInputElement
+                  ? emailInput.value
+                  : undefined;
+              void handleEmailSignIn(submittedEmail);
+            }}
+          />
+        </div>
 
         {displayedFeedback ? (
           <Alert

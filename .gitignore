@@ -50,3 +50,7 @@ next-env.d.ts
 
 # structure-validation local cache (updated on every validate run)
 .structure-validation-cache/
+
+# e2e runtime artifacts (scenarios and docs in e2e/ are tracked)
+/.e2e/cleanup-log.ndjson
+/.e2e/screenshots/

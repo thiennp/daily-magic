@@ -12,6 +12,8 @@ import buildLoginFeedbackFromAuthError from "@/features/auth/utils/buildLoginFee
 import parseEmailSignInFeedback from "@/features/auth/utils/parseEmailSignInFeedback";
 import readDevSecretFromLocalStorage from "@/features/auth/utils/readDevSecretFromLocalStorage";
 import secretLogin from "@/features/auth/utils/secretLogin";
+import testAgentWitchLogin from "@/features/auth/utils/testAgentWitchLogin";
+import isTestAgentWitchEmail from "@/lib/auth/isTestAgentWitchEmail";
 
 interface UseLoginFormParams {
   readonly defaultCallbackUrl: string;
@@ -32,8 +34,8 @@ export default function useLoginForm({
     : null;
   const displayedFeedback = feedback ?? authErrorFeedback;
 
-  const handleEmailSignIn = async () => {
-    const trimmedEmail = email.trim();
+  const handleEmailSignIn = async (submittedEmail?: string) => {
+    const trimmedEmail = (submittedEmail ?? email).trim();
 
     if (!trimmedEmail) {
       setFeedback(buildLoginFeedback("Enter your email address."));
@@ -46,6 +48,23 @@ export default function useLoginForm({
     setFeedback(null);
 
     try {
+      if (isTestAgentWitchEmail(trimmedEmail)) {
+        const result = await testAgentWitchLogin({ email: trimmedEmail });
+
+        if (result.ok) {
+          window.location.assign(callbackUrl);
+          return;
+        }
+
+        setFeedback(
+          buildLoginFeedback(
+            result.error ??
+              "Test account login failed. Ensure SECRET is configured on the server.",
+          ),
+        );
+        return;
+      }
+
       if (devSecret) {
         const result = await secretLogin({
           email: trimmedEmail,

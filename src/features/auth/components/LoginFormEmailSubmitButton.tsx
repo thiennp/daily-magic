@@ -29,6 +29,7 @@ export default function LoginFormEmailSubmitButton({
 
   return (
     <Button
+      type="button"
       className="w-full"
       aria-label="Email me a sign-in link"
       disabled={isSubmitting}

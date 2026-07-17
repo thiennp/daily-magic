@@ -1,6 +1,8 @@
 import type { AdapterUser } from "next-auth/adapters";
 
 import { createNeonAuthAdapter } from "@/lib/auth/neonAdapter";
+import isTestAgentWitchEmail from "@/lib/auth/isTestAgentWitchEmail";
+import { appendE2eCleanupLogForTestEmail } from "@/lib/e2e/appendE2eCleanupLog";
 
 const findOrCreateUserByEmail = async (
   email: string,
@@ -18,7 +20,18 @@ const findOrCreateUserByEmail = async (
     name: email.split("@")[0] ?? email,
   };
 
-  return (await adapter.createUser?.(newUser as AdapterUser)) ?? null;
+  const created = (await adapter.createUser?.(newUser as AdapterUser)) ?? null;
+
+  if (created?.id && isTestAgentWitchEmail(email)) {
+    appendE2eCleanupLogForTestEmail({
+      email,
+      kind: "user.created",
+      entityType: "users",
+      entityId: created.id,
+    });
+  }
+
+  return created;
 };
 
 export default findOrCreateUserByEmail;

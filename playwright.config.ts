@@ -21,9 +21,9 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: `npm run build && npx next start -p ${port}`,
-    url: `${baseURL}/showcases`,
+    command: `set -a && . ./.env.local && set +a && npm run build && npx next start -p ${port}`,
+    url: `${baseURL}/api/db/health`,
     reuseExistingServer: !process.env.CI,
-    timeout: 180_000,
+    timeout: 300_000,
   },
 });

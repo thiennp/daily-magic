@@ -32,6 +32,7 @@ import whenExecutorMacIsOffline from "@/features/showcases/articles/whenExecutor
 import whereToStartWithAiAgents from "@/features/showcases/articles/whereToStartWithAiAgents.article";
 import whyLocalMacNotCloud from "@/features/showcases/articles/whyLocalMacNotCloud.article";
 import worksWithoutN8n from "@/features/showcases/articles/worksWithoutN8n.article";
+import { E2E_SHOWCASE_ARTICLES } from "@/features/showcases/e2eShowcaseArticleRegistry";
 import { enrichShowcaseArticleWithImages } from "@/features/showcases/enrichShowcaseArticleWithImages";
 import type ShowcaseArticle from "@/features/showcases/types/ShowcaseArticle.type";
 
@@ -90,6 +91,7 @@ export const SHOWCASE_ARTICLES: readonly ShowcaseArticle[] = [
   ...SHOWCASE_ARTICLES_PHASE_LEADERSHIP,
   ...SHOWCASE_ARTICLES_PHASE_3,
   ...SHOWCASE_ARTICLES_PHASE_4,
+  ...E2E_SHOWCASE_ARTICLES,
 ] as const;
 
 export function getShowcaseArticleBySlug(

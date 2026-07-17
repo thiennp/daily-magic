@@ -12,6 +12,8 @@ import {
   listGroups,
   listManageableGroupsForUser,
 } from "@/lib/auth/groupQueries";
+import isTestAgentWitchEmail from "@/lib/auth/isTestAgentWitchEmail";
+import { appendE2eCleanupLogForTestEmail } from "@/lib/e2e/appendE2eCleanupLog";
 
 export async function GET() {
   const { actor, error } = await requireAuth();
@@ -55,6 +57,16 @@ export async function POST(request: Request) {
   }
 
   const group = await createGroupForOwner(name, actor.id);
+
+  if (isTestAgentWitchEmail(actor.email)) {
+    appendE2eCleanupLogForTestEmail({
+      email: actor.email,
+      kind: "group.created",
+      entityType: "groups",
+      entityId: group.id,
+      note: group.name,
+    });
+  }
 
   return Response.json({ group }, { status: 201 });
 }
