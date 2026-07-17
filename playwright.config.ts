@@ -21,7 +21,9 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: `set -a && . ./.env.local && set +a && npm run build && npx next start -p ${port}`,
+    // Custom server.ts (npm run start) is required for Agent Witch WebSocket upgrades.
+    // Plain `next start` serves HTTP only and leaves agent-witch disconnected.
+    command: `set -a && . ./.env.local && set +a && npm run build && npm run start`,
     url: `${baseURL}/api/db/health`,
     reuseExistingServer: !process.env.CI,
     timeout: 300_000,
