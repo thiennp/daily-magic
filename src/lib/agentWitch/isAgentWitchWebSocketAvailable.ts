@@ -1,4 +1,3 @@
-import { buildAgentWitchWsUrl } from "@/lib/agentWitch/buildAgentWitchInstallUrls";
 import { isAgentWitchRuntimeSupported } from "@/lib/agentWitch/isAgentWitchRuntimeSupported";
 import isAgentWitchWebSocketSupportedHost from "@/lib/agentWitch/isAgentWitchWebSocketSupportedHost";
 

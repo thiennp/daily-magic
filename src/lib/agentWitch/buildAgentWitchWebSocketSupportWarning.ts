@@ -1,5 +1,4 @@
 import { isAgentWitchWebSocketAvailableForOrigin } from "@/lib/agentWitch/isAgentWitchWebSocketAvailable";
-import { resolveAgentWitchWsUrl } from "@/lib/agentWitch/resolveAgentWitchWsUrl";
 
 export const buildAgentWitchWebSocketSupportWarning = (
   origin: string,
