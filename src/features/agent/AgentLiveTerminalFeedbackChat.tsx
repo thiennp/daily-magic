@@ -46,7 +46,7 @@ export default function AgentLiveTerminalFeedbackChat({
         </>
       ) : isSimplifiedFollowUp ? null : (
         <p className="text-sm font-medium text-gray-800 dark:text-white/90">
-          Follow up in the live terminal
+          Follow up with your agent
         </p>
       )}
       <AgentLiveTerminalFeedbackMessageField
@@ -81,7 +81,7 @@ export default function AgentLiveTerminalFeedbackChat({
       ) : (
         <div className="mt-3 flex justify-end">
           <Button disabled={isSubmitting} onClick={deferredSubmit.handleSubmit}>
-            {isAnswerMode ? "Send answer" : "Send feedback"}
+            {isAnswerMode ? "Send answer" : "Send message"}
           </Button>
         </div>
       )}

@@ -32,7 +32,11 @@ export default function AgentLiveTerminalFeedbackMessageField({
       value={message}
       autoFocus={autoFocus}
       aria-label={
-        isAnswerMode ? undefined : "Follow-up message for the live terminal"
+        isAnswerMode
+          ? undefined
+          : isSteppedComposer
+            ? "Follow-up message for your agent"
+            : "Follow-up message for the live terminal"
       }
       onChange={(event) => onMessageChange(event.target.value)}
       rows={1}

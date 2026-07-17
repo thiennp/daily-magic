@@ -88,11 +88,14 @@ test.describe("Self-delegate on own Mac", () => {
     }
 
     const followUp = page.getByRole("textbox", {
-      name: /Follow-up message for the live terminal/i,
+      name: /Follow-up message for your agent/i,
     });
     await expect(followUp).toBeVisible({ timeout: 90_000 });
+    await expect(page.getByText("Progress on your Mac")).toBeVisible({
+      timeout: 90_000,
+    });
     await expect(
-      page.getByText(/Claude is ready|Send a task from the box below/i),
+      page.getByText(/Ready for your message|Preparing agent on your Mac/i),
     ).toBeVisible({ timeout: 90_000 });
 
     await page.screenshot({
@@ -110,7 +113,7 @@ test.describe("Self-delegate on own Mac", () => {
     await followUp.fill(
       `Remember the codeword ${TASK_MARKER}. Reply with exactly: ack1.`,
     );
-    await page.getByRole("button", { name: "Send feedback" }).click();
+    await page.getByRole("button", { name: "Send message" }).click();
 
     const firstBody = (await (await firstDispatch).json()) as {
       ok?: boolean;
@@ -119,11 +122,21 @@ test.describe("Self-delegate on own Mac", () => {
     expect(firstBody.ok).toBe(true);
     expect(firstBody.run?.prompt ?? "").toContain(TASK_MARKER);
 
-    await expect(page.getByText(TASK_MARKER).first()).toBeVisible({
-      timeout: 15_000,
+    await expect(page.getByText("In progress")).toBeVisible({
+      timeout: 30_000,
     });
+    await expect(page.getByText("Agent started")).toBeVisible();
+    await expect(page.getByText(/Working on your request/i)).toBeVisible();
+    await page.screenshot({
+      path: ".e2e/screenshots/self-delegate-progress-working.png",
+      fullPage: false,
+    });
+
     await expect(page.getByText(/ack1/i).first()).toBeVisible({
       timeout: 120_000,
+    });
+    await expect(page.getByText("Finished").first()).toBeVisible({
+      timeout: 30_000,
     });
 
     await page.screenshot({
@@ -141,7 +154,7 @@ test.describe("Self-delegate on own Mac", () => {
     await followUp.fill(
       "What was the codeword? Reply with only that codeword.",
     );
-    await page.getByRole("button", { name: "Send feedback" }).click();
+    await page.getByRole("button", { name: "Send message" }).click();
     expect((await secondDispatch).ok()).toBe(true);
 
     await page.screenshot({

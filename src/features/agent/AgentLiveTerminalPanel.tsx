@@ -1,17 +1,12 @@
 "use client";
 
-import AgentLiveTerminalBashWindow from "@/features/agent/AgentLiveTerminalBashWindow";
+import AgentLiveProgressFeed from "@/features/agent/AgentLiveProgressFeed";
+import AgentLiveTerminalDeveloperMirror from "@/features/agent/AgentLiveTerminalDeveloperMirror";
 import AgentLiveTerminalFeedbackChat from "@/features/agent/AgentLiveTerminalFeedbackChat";
 import AgentLiveTerminalNextActions from "@/features/agent/AgentLiveTerminalNextActions";
-import {
-  buildAgentLiveTerminalDisplay,
-  shouldShowAgentLiveTerminalCursor,
-  shouldShowAgentLiveTerminalLoadingIndicator,
-} from "@/features/agent/utils/buildAgentLiveTerminalDisplay";
+import { buildAgentLiveProgressSteps } from "@/features/agent/utils/buildAgentLiveProgressSteps";
 import { parseLatestAgentLiveTerminalNextActions } from "@/features/agent/utils/splitAgentLiveTerminalOutput";
-import { useAgentLiveTerminalLoadingDots } from "@/features/agent/hooks/useAgentLiveTerminalLoadingDots";
 import type { AgentLiveTerminalStatus } from "@/features/agent/utils/agentLiveTerminalState.type";
-import { AGENT_LIVE_TERMINAL_STATUS_LABEL } from "@/features/agent/utils/agentLiveTerminalStatusLabel.constant";
 
 interface AgentLiveTerminalPanelProps {
   readonly output: string;
@@ -42,37 +37,35 @@ export default function AgentLiveTerminalPanel({
   onSubmitFeedback,
   onFinishSession,
 }: AgentLiveTerminalPanelProps) {
-  const displayOutput = buildAgentLiveTerminalDisplay({
-    output,
-    status,
-    pendingCommandLine,
-  });
   const nextActions = parseLatestAgentLiveTerminalNextActions(output);
   const showNextActions =
     nextActions.length > 0 && feedbackPendingQuestion === null;
-  const showCursor = shouldShowAgentLiveTerminalCursor(status);
-  const showLoadingIndicator =
-    shouldShowAgentLiveTerminalLoadingIndicator(status);
-  const loadingDotCount = useAgentLiveTerminalLoadingDots(showLoadingIndicator);
+  const progress = buildAgentLiveProgressSteps({
+    status,
+    output,
+    pendingCommandLine,
+    pendingQuestion: feedbackPendingQuestion,
+  });
+  const isWorking =
+    status === "starting" ||
+    status === "streaming" ||
+    status === "waiting_approval";
 
   return (
     <section>
-      {!isSteppedComposer ? (
-        <div className="flex flex-wrap items-center justify-between gap-2">
-          <h2 className="text-sm font-medium text-gray-800 dark:text-white/90">
-            Local Mac terminal
-          </h2>
-          <span className="rounded-full bg-zinc-800 px-2.5 py-1 font-mono text-[11px] text-zinc-200">
-            {AGENT_LIVE_TERMINAL_STATUS_LABEL[status]}
-          </span>
-        </div>
-      ) : null}
-      <AgentLiveTerminalBashWindow
-        displayOutput={displayOutput}
-        showLoadingIndicator={showLoadingIndicator}
-        loadingDotCount={loadingDotCount}
-        showCursor={showCursor}
-      />
+      {isSteppedComposer ? (
+        <AgentLiveProgressFeed
+          steps={progress.steps}
+          replyPreview={progress.replyPreview}
+          isWorking={isWorking}
+        />
+      ) : (
+        <AgentLiveTerminalDeveloperMirror
+          output={output}
+          status={status}
+          pendingCommandLine={pendingCommandLine}
+        />
+      )}
       {showNextActions ? (
         <AgentLiveTerminalNextActions
           actions={nextActions}
