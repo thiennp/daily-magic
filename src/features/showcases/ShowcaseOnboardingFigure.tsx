@@ -1,6 +1,10 @@
-import { buildShowcaseOnboardingSvgPath } from "@/features/showcases/onboardingShowcaseScreens.constant";
-import ShowcaseArticleFigure from "@/features/showcases/ShowcaseArticleFigure";
-import type { OnboardingShowcaseScreenId } from "@/features/showcases/onboardingShowcaseScreens.constant";
+import ShowcasePngFigure from "@/features/showcases/ShowcasePngFigure";
+import {
+  buildShowcaseOnboardingPngPath,
+  buildShowcaseOnboardingSvgPath,
+  resolveShowcaseOnboardingScreenDimensions,
+  type OnboardingShowcaseScreenId,
+} from "@/features/showcases/onboardingShowcaseScreens.constant";
 
 interface ShowcaseOnboardingFigureProps {
   readonly screenId: OnboardingShowcaseScreenId;
@@ -13,9 +17,14 @@ export default function ShowcaseOnboardingFigure({
   alt,
   caption,
 }: ShowcaseOnboardingFigureProps) {
+  const { width, height } = resolveShowcaseOnboardingScreenDimensions(screenId);
+
   return (
-    <ShowcaseArticleFigure
-      src={buildShowcaseOnboardingSvgPath(screenId)}
+    <ShowcasePngFigure
+      pngSrc={buildShowcaseOnboardingPngPath(screenId)}
+      svgSrc={buildShowcaseOnboardingSvgPath(screenId)}
+      width={width}
+      height={height}
       alt={alt}
       caption={caption}
     />

@@ -22,7 +22,7 @@ const companyOnboardIn30Minutes: ShowcaseArticle = {
   sections: [
     {
       paragraphs: [
-        "Empty Marketplace kills trust. Roll out by seeding work people recognize — then invite. Add PNG captures per public/showcases/onboarding/CAPTURE.md to replace the sample SVGs in this article.",
+        "Empty Marketplace kills trust. Roll out by seeding work people recognize — then invite.",
       ],
     },
     {
@@ -36,7 +36,7 @@ const companyOnboardIn30Minutes: ShowcaseArticle = {
         {
           alt: "Sample Companies and rules screen with approval policy and seeded playbooks",
           caption:
-            "Sample UI: approval policy on, three seeded playbooks. Capture your real group before the company-wide invite.",
+            "Acme Product group with approval policy and three seeded playbooks.",
         },
       ),
     },
@@ -67,8 +67,7 @@ const companyOnboardIn30Minutes: ShowcaseArticle = {
         ONBOARDING_SHOWCASE_SCREEN.JOB_HISTORY,
         {
           alt: "Sample completed job history card after an approved run",
-          caption:
-            "Sample UI: completed run after approval. Each browser keeps its own local-first history today.",
+          caption: "Completed run after manager approval in Job history.",
         },
       ),
     },

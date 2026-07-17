@@ -1,6 +1,8 @@
+import ShowcasePngFigure from "@/features/showcases/ShowcasePngFigure";
 import {
   buildTeamDispatchShowcasePngPath,
   buildTeamDispatchShowcaseSvgPath,
+  resolveTeamDispatchShowcaseScreenDimensions,
   type TeamDispatchShowcaseScreenId,
 } from "@/features/showcases/teamDispatchShowcaseScreens.constant";
 
@@ -15,24 +17,17 @@ export default function ShowcaseTeamDispatchFigure({
   alt,
   caption,
 }: ShowcaseTeamDispatchFigureProps) {
+  const { width, height } =
+    resolveTeamDispatchShowcaseScreenDimensions(screenId);
+
   return (
-    <figure className="overflow-hidden rounded-xl border border-gray-200 bg-gray-50 dark:border-gray-800 dark:bg-white/[0.03]">
-      <picture>
-        <source
-          srcSet={buildTeamDispatchShowcasePngPath(screenId)}
-          type="image/png"
-        />
-        <img
-          src={buildTeamDispatchShowcaseSvgPath(screenId)}
-          alt={alt}
-          width={960}
-          height={560}
-          className="h-auto w-full"
-        />
-      </picture>
-      <figcaption className="border-t border-gray-200 px-4 py-3 text-sm text-gray-600 dark:border-gray-800 dark:text-gray-400">
-        {caption}
-      </figcaption>
-    </figure>
+    <ShowcasePngFigure
+      pngSrc={buildTeamDispatchShowcasePngPath(screenId)}
+      svgSrc={buildTeamDispatchShowcaseSvgPath(screenId)}
+      width={width}
+      height={height}
+      alt={alt}
+      caption={caption}
+    />
   );
 }

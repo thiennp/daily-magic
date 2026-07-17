@@ -1,6 +1,10 @@
-import { buildShowcaseAutomationSvgPath } from "@/features/showcases/automationShowcaseScreens.constant";
-import ShowcaseArticleFigure from "@/features/showcases/ShowcaseArticleFigure";
-import type { AutomationShowcaseScreenId } from "@/features/showcases/automationShowcaseScreens.constant";
+import ShowcasePngFigure from "@/features/showcases/ShowcasePngFigure";
+import {
+  buildShowcaseAutomationPngPath,
+  buildShowcaseAutomationSvgPath,
+  resolveShowcaseAutomationScreenDimensions,
+  type AutomationShowcaseScreenId,
+} from "@/features/showcases/automationShowcaseScreens.constant";
 
 interface ShowcaseAutomationFigureProps {
   readonly screenId: AutomationShowcaseScreenId;
@@ -13,9 +17,14 @@ export default function ShowcaseAutomationFigure({
   alt,
   caption,
 }: ShowcaseAutomationFigureProps) {
+  const { width, height } = resolveShowcaseAutomationScreenDimensions(screenId);
+
   return (
-    <ShowcaseArticleFigure
-      src={buildShowcaseAutomationSvgPath(screenId)}
+    <ShowcasePngFigure
+      pngSrc={buildShowcaseAutomationPngPath(screenId)}
+      svgSrc={buildShowcaseAutomationSvgPath(screenId)}
+      width={width}
+      height={height}
       alt={alt}
       caption={caption}
     />

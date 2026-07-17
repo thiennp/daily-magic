@@ -31,7 +31,7 @@ export const agentDelegatesInsideYourCompanySections: readonly ShowcaseArticleSe
         {
           alt: "Send a task form with company, teammate, and workflow selected",
           caption:
-            "Mock data: Acme Design Co, Alex Chen, Repo branch standup workflow. Screenshot captured from the team-dispatch demo UI.",
+            "Send a task to Alex Chen at Acme Design Co with the Repo branch standup workflow.",
         },
       ),
     },
@@ -47,8 +47,7 @@ export const agentDelegatesInsideYourCompanySections: readonly ShowcaseArticleSe
         TEAM_DISPATCH_SHOWCASE_SCREEN.APPROVAL,
         {
           alt: "Dispatch approval modal for a teammate task",
-          caption:
-            "Mock data: pending repo standup request from Jamie Lee. Screenshot from the team-dispatch demo UI.",
+          caption: "Pending repo standup request from Jamie Lee.",
         },
       ),
     },
@@ -64,8 +63,7 @@ export const agentDelegatesInsideYourCompanySections: readonly ShowcaseArticleSe
         TEAM_DISPATCH_SHOWCASE_SCREEN.MAC_RUNNING,
         {
           alt: "Live terminal showing Claude output on teammate Mac",
-          caption:
-            "Mock data: standup bullets streaming from Alex's Mac. Screenshot from the team-dispatch demo UI.",
+          caption: "Standup bullets streaming from Alex's Mac.",
         },
       ),
     },

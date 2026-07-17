@@ -57,14 +57,16 @@ describe("showcase article images", () => {
       const enriched = enrichShowcaseArticleWithImages(article);
 
       for (const image of listArticleImages(enriched)) {
-        expect(image.src).toMatch(/^\/showcases\/.+\.(svg|png)$/);
+        expect(image.src).toMatch(/^\/showcases\/.+\.png$/);
         const filePath = publicSrcToFilePath(image.src);
         expect(existsSync(filePath)).toBe(true);
 
-        if (image.src.endsWith(".svg")) {
-          const contents = readFileSync(filePath, "utf8");
-          expect(() => assertValidShowcaseSvg(contents)).not.toThrow();
-        }
+        const svgPath = publicSrcToFilePath(
+          image.src.replace(/\.png$/, ".svg"),
+        );
+        expect(existsSync(svgPath)).toBe(true);
+        const contents = readFileSync(svgPath, "utf8");
+        expect(() => assertValidShowcaseSvg(contents)).not.toThrow();
       }
     }
   });

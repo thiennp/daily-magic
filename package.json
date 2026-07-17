@@ -20,6 +20,7 @@
     "test:watch": "vitest",
     "test:e2e": "playwright test",
     "test:e2e:install": "playwright install chromium",
+    "showcase:capture": "node .agents/scripts/capture-showcase-screens.mjs",
     "lint": "eslint",
     "typecheck": "npm run lint && tsc --noEmit",
     "db:schema": "psql \"$DATABASE_URL\" -f db/schema.sql",

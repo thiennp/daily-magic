@@ -19,6 +19,12 @@
         background: linear-gradient(135deg, #f8fafc, #eef2ff);
         padding: 2rem;
       }
+      body.capture {
+        padding: 1rem;
+      }
+      body.capture .tabs {
+        display: none;
+      }
       .frame {
         max-width: 56rem;
         margin: 0 auto;
@@ -247,6 +253,25 @@
     </div>
 
     <script>
+      const params = new URLSearchParams(window.location.search);
+      const captureScreen = params.get("screen");
+
+      if (params.get("capture") === "1") {
+        document.body.classList.add("capture");
+      }
+
+      if (captureScreen) {
+        document.querySelectorAll(".tab").forEach((tab) => {
+          tab.classList.toggle("active", tab.dataset.screen === captureScreen);
+        });
+        document.querySelectorAll(".screen").forEach((section) => {
+          section.classList.toggle(
+            "active",
+            section.id === `screen-${captureScreen}`,
+          );
+        });
+      }
+
       document.querySelectorAll(".tab").forEach((tab) => {
         tab.addEventListener("click", () => {
           document.querySelectorAll(".tab").forEach((t) => t.classList.remove("active"));

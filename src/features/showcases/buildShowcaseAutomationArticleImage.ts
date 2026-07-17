@@ -1,5 +1,5 @@
 import {
-  buildShowcaseAutomationSvgPath,
+  buildShowcaseAutomationPngPath,
   type AutomationShowcaseScreenId,
 } from "@/features/showcases/automationShowcaseScreens.constant";
 import type { ShowcaseArticleImage } from "@/features/showcases/types/ShowcaseArticle.type";
@@ -12,7 +12,7 @@ export const buildShowcaseAutomationArticleImage = (
   },
 ): ShowcaseArticleImage => ({
   automationScreenId: screenId,
-  src: buildShowcaseAutomationSvgPath(screenId),
+  src: buildShowcaseAutomationPngPath(screenId),
   alt: input.alt,
   caption: input.caption,
 });

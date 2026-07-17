@@ -1,7 +1,5 @@
-import {
-  buildShowcaseOnboardingSvgPath,
-  type OnboardingShowcaseScreenId,
-} from "@/features/showcases/onboardingShowcaseScreens.constant";
+import { buildShowcaseOnboardingPngPath } from "@/features/showcases/onboardingShowcaseScreens.constant";
+import type { OnboardingShowcaseScreenId } from "@/features/showcases/onboardingShowcaseScreens.constant";
 import type { ShowcaseArticleImage } from "@/features/showcases/types/ShowcaseArticle.type";
 
 export const buildShowcaseOnboardingArticleImage = (
@@ -12,7 +10,7 @@ export const buildShowcaseOnboardingArticleImage = (
   },
 ): ShowcaseArticleImage => ({
   screenId,
-  src: buildShowcaseOnboardingSvgPath(screenId),
+  src: buildShowcaseOnboardingPngPath(screenId),
   alt: input.alt,
   caption: input.caption,
 });

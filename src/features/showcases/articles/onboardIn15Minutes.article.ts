@@ -19,7 +19,7 @@ const onboardIn15Minutes: ShowcaseArticle = {
   sections: [
     {
       paragraphs: [
-        "This is the path we use ourselves. Each step names the real screen and what you should see. Drop PNG captures in public/showcases/onboarding/ (see CAPTURE.md) to replace the sample SVGs automatically; until then the seeded SVG previews render.",
+        "This is the path we use ourselves. Each step names the real screen and what you should see.",
       ],
     },
     {
@@ -33,7 +33,7 @@ const onboardIn15Minutes: ShowcaseArticle = {
         {
           alt: "Sample Home onboarding checklist before a Mac is connected",
           caption:
-            "Sample UI: checklist with Add your Mac as a worker still open. Capture your live Home after sign-in for the wiki.",
+            "Onboarding checklist with Add your Mac as a worker still open.",
         },
       ),
     },
@@ -48,8 +48,7 @@ const onboardIn15Minutes: ShowcaseArticle = {
         ONBOARDING_SHOWCASE_SCREEN.MAC_CONNECTED,
         {
           alt: "Sample Your Devices panel with a connected Mac",
-          caption:
-            "Sample UI: connected device row. Prefer a screenshot of your real Mac name once paired.",
+          caption: "Jamie's MacBook Pro connected and ready to run jobs.",
         },
       ),
     },
@@ -64,7 +63,7 @@ const onboardIn15Minutes: ShowcaseArticle = {
         {
           alt: "Sample weekly status workflow form filled with dummy data",
           caption:
-            "Sample UI with pasteable dummy data: Week of Jul 7, highlights, and blockers from the seeded preview values.",
+            "Sample: Weekly status update with week of Jul 7, highlights, and blockers filled.",
         },
       ),
     },
@@ -88,8 +87,7 @@ const onboardIn15Minutes: ShowcaseArticle = {
         ONBOARDING_SHOWCASE_SCREEN.JOB_HISTORY,
         {
           alt: "Sample Job history card for a completed weekly status run",
-          caption:
-            "Sample UI: completed run card. Live history is stored local-first in this browser.",
+          caption: "Completed weekly status run in Job history.",
         },
       ),
     },

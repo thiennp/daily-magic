@@ -50,8 +50,7 @@ const automateForYourselfOrYourTeam: ShowcaseArticle = {
         AUTOMATION_SHOWCASE_SCREEN.HOME_POPULAR_PRESETS,
         {
           alt: "Sample home page with popular workflow presets",
-          caption:
-            "Sample UI: pick a preset on the home page, then sign in to save it. Replace with a live screenshot when you update internal docs.",
+          caption: "Popular workflow presets on the home page before sign-in.",
         },
       ),
     },
@@ -68,7 +67,7 @@ const automateForYourselfOrYourTeam: ShowcaseArticle = {
         {
           alt: "Sample new automation form with schedule trigger",
           caption:
-            "Sample UI: name, workflow, schedule, and field values in one form.",
+            "New automation form with workflow, weekday schedule, and field values.",
         },
       ),
     },
@@ -84,8 +83,7 @@ const automateForYourselfOrYourTeam: ShowcaseArticle = {
         AUTOMATION_SHOWCASE_SCREEN.AUTOMATIONS_LIST,
         {
           alt: "Sample automations list with a scheduled workflow enabled",
-          caption:
-            "Sample UI: Friday team status on weekdays with next run scheduled.",
+          caption: "Friday team status enabled with the next run scheduled.",
         },
       ),
     },

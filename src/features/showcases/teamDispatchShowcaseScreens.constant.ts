@@ -16,3 +16,20 @@ export const buildTeamDispatchShowcasePngPath = (
 export const buildTeamDispatchShowcaseSvgPath = (
   screenId: TeamDispatchShowcaseScreenId,
 ): string => `${TEAM_DISPATCH_SHOWCASE_SCREEN_BASE_PATH}/${screenId}.svg`;
+
+/** Intrinsic pixel size of trimmed PNG captures (keeps article layout tight). */
+export const TEAM_DISPATCH_SHOWCASE_SCREEN_DIMENSIONS: Readonly<
+  Record<
+    TeamDispatchShowcaseScreenId,
+    { readonly width: number; readonly height: number }
+  >
+> = {
+  [TEAM_DISPATCH_SHOWCASE_SCREEN.REQUEST_TASK]: { width: 1003, height: 483 },
+  [TEAM_DISPATCH_SHOWCASE_SCREEN.APPROVAL]: { width: 1008, height: 325 },
+  [TEAM_DISPATCH_SHOWCASE_SCREEN.MAC_RUNNING]: { width: 1008, height: 460 },
+};
+
+export const resolveTeamDispatchShowcaseScreenDimensions = (
+  screenId: TeamDispatchShowcaseScreenId,
+): { readonly width: number; readonly height: number } =>
+  TEAM_DISPATCH_SHOWCASE_SCREEN_DIMENSIONS[screenId];

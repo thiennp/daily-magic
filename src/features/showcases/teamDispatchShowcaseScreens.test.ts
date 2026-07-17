@@ -4,6 +4,7 @@ import { buildShowcaseTeamDispatchArticleImage } from "@/features/showcases/buil
 import agentDelegatesInsideYourCompany from "@/features/showcases/articles/agentDelegatesInsideYourCompany.article";
 import {
   TEAM_DISPATCH_SHOWCASE_SCREEN,
+  TEAM_DISPATCH_SHOWCASE_SCREEN_DIMENSIONS,
   buildTeamDispatchShowcasePngPath,
   buildTeamDispatchShowcaseSvgPath,
 } from "@/features/showcases/teamDispatchShowcaseScreens.constant";

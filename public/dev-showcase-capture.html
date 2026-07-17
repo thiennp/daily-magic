@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Showcase capture — Agent Witch</title>
+    <style>
+      :root {
+        font-family:
+          ui-sans-serif,
+          system-ui,
+          -apple-system,
+          sans-serif;
+      }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background: linear-gradient(135deg, #f8fafc, #eef2ff);
+        padding: 2rem;
+      }
+      body.capture {
+        padding: 1rem;
+      }
+      .frame {
+        max-width: 56rem;
+        margin: 0 auto;
+        background: #fff;
+        border: 1px solid #e5e7eb;
+        border-radius: 1rem;
+        overflow: hidden;
+        box-shadow: 0 10px 40px rgb(15 23 42 / 0.06);
+      }
+      .frame img {
+        display: block;
+        width: 100%;
+        height: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="frame">
+      <img id="shot" alt="" />
+    </div>
+    <script>
+      const params = new URLSearchParams(window.location.search);
+      const folder = params.get("folder");
+      const screen = params.get("screen");
+
+      if (!folder || !screen) {
+        document.body.innerHTML =
+          "<p style='padding:2rem'>Use ?folder=onboarding&amp;screen=01-home-checklist&amp;capture=1</p>";
+      } else {
+        document.getElementById("shot").src = `/showcases/${folder}/${screen}.svg`;
+      }
+
+      if (params.get("capture") === "1") {
+        document.body.classList.add("capture");
+      }
+    </script>
+  </body>
+</html>

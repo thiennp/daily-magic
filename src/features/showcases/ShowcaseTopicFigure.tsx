@@ -1,6 +1,10 @@
-import { buildShowcaseTopicSvgPath } from "@/features/showcases/showcaseTopicScreens.constant";
-import ShowcaseArticleFigure from "@/features/showcases/ShowcaseArticleFigure";
-import type { ShowcaseTopicScreenId } from "@/features/showcases/showcaseTopicScreens.constant";
+import ShowcasePngFigure from "@/features/showcases/ShowcasePngFigure";
+import {
+  buildShowcaseTopicPngPath,
+  buildShowcaseTopicSvgPath,
+  resolveShowcaseTopicScreenDimensions,
+  type ShowcaseTopicScreenId,
+} from "@/features/showcases/showcaseTopicScreens.constant";
 
 interface ShowcaseTopicFigureProps {
   readonly screenId: ShowcaseTopicScreenId;
@@ -13,9 +17,14 @@ export default function ShowcaseTopicFigure({
   alt,
   caption,
 }: ShowcaseTopicFigureProps) {
+  const { width, height } = resolveShowcaseTopicScreenDimensions(screenId);
+
   return (
-    <ShowcaseArticleFigure
-      src={buildShowcaseTopicSvgPath(screenId)}
+    <ShowcasePngFigure
+      pngSrc={buildShowcaseTopicPngPath(screenId)}
+      svgSrc={buildShowcaseTopicSvgPath(screenId)}
+      width={width}
+      height={height}
       alt={alt}
       caption={caption}
     />

@@ -1,5 +1,6 @@
 import { buildShowcaseTopicArticleImage } from "@/features/showcases/buildShowcaseTopicArticleImage";
 import { SHOWCASE_ARTICLE_TOPIC_SCREEN_BY_SLUG } from "@/features/showcases/showcaseArticleTopicScreenMap.constant";
+import { resolveShowcaseTopicScreenCaption } from "@/features/showcases/showcaseTopicScreenCaptions.constant";
 import type ShowcaseArticle from "@/features/showcases/types/ShowcaseArticle.type";
 
 const articleHasImage = (article: ShowcaseArticle): boolean =>
@@ -20,7 +21,7 @@ export const enrichShowcaseArticleWithImages = (
 
   const image = buildShowcaseTopicArticleImage(topicScreenId, {
     alt: `${article.title} — sample screen`,
-    caption: "Sample UI · representative screen for this guide",
+    caption: resolveShowcaseTopicScreenCaption(topicScreenId),
   });
 
   const [firstSection, ...restSections] = article.sections;

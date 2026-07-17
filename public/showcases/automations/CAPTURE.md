@@ -1,20 +1,24 @@
 # Automation showcase screenshots
 
-Drop **PNG** captures next to the existing **SVG** samples. Articles use `<picture>`: PNG when the file exists, SVG fallback otherwise.
+PNG captures live next to SVG fallbacks. Articles use `<picture>`: PNG when the file exists, SVG fallback otherwise.
+
+## Capture all showcase PNGs
+
+```bash
+npm run showcase:capture
+```
 
 ## File names
 
-| Screen ID                 | PNG path                      | When to capture                                   |
-| ------------------------- | ----------------------------- | ------------------------------------------------- |
-| `01-home-popular-presets` | `01-home-popular-presets.png` | Signed-out home → Popular workflows section       |
-| `02-new-automation`       | `02-new-automation.png`       | `/automations` → New automation form filled in    |
-| `03-automations-list`     | `03-automations-list.png`     | `/automations` with at least one enabled schedule |
+| Screen ID                 | PNG path                      |
+| ------------------------- | ----------------------------- |
+| `01-home-popular-presets` | `01-home-popular-presets.png` |
+| `02-new-automation`       | `02-new-automation.png`       |
+| `03-automations-list`     | `03-automations-list.png`     |
+
+Update `AUTOMATION_SHOWCASE_SCREEN_DIMENSIONS` in
+`src/features/showcases/automationShowcaseScreens.constant.ts` after re-capture.
 
 ## Article
 
 - `/showcases/automate-for-yourself-or-your-team`
-
-## Code
-
-- Screen IDs: `src/features/showcases/automationShowcaseScreens.constant.ts`
-- Article helper: `buildShowcaseAutomationArticleImage()`

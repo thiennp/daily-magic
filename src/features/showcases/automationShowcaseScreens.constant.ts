@@ -23,3 +23,22 @@ export const buildShowcaseAutomationImagePaths = (
   png: buildShowcaseAutomationPngPath(screenId),
   svg: buildShowcaseAutomationSvgPath(screenId),
 });
+
+export const AUTOMATION_SHOWCASE_SCREEN_DIMENSIONS: Readonly<
+  Record<
+    AutomationShowcaseScreenId,
+    { readonly width: number; readonly height: number }
+  >
+> = {
+  [AUTOMATION_SHOWCASE_SCREEN.HOME_POPULAR_PRESETS]: {
+    width: 824,
+    height: 470,
+  },
+  [AUTOMATION_SHOWCASE_SCREEN.NEW_AUTOMATION]: { width: 638, height: 533 },
+  [AUTOMATION_SHOWCASE_SCREEN.AUTOMATIONS_LIST]: { width: 776, height: 490 },
+};
+
+export const resolveShowcaseAutomationScreenDimensions = (
+  screenId: AutomationShowcaseScreenId,
+): { readonly width: number; readonly height: number } =>
+  AUTOMATION_SHOWCASE_SCREEN_DIMENSIONS[screenId];

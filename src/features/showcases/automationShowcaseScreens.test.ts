@@ -29,7 +29,7 @@ describe("automation showcase screens", () => {
       ),
     ).toEqual({
       automationScreenId: "03-automations-list",
-      src: "/showcases/automations/03-automations-list.svg",
+      src: "/showcases/automations/03-automations-list.png",
       alt: "Automations list",
       caption: "Scheduled jobs",
     });

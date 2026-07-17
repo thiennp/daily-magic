@@ -29,7 +29,7 @@ describe("onboarding showcase screens", () => {
       ),
     ).toEqual({
       screenId: "04-job-history",
-      src: "/showcases/onboarding/04-job-history.svg",
+      src: "/showcases/onboarding/04-job-history.png",
       alt: "Job history",
       caption: "Completed run",
     });
