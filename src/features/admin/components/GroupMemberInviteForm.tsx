@@ -24,6 +24,7 @@ export default function GroupMemberInviteForm({
           onMemberEmailChange(event.target.value);
         }}
         placeholder="user@example.com"
+        aria-label="Member email"
         className="flex-1 rounded-lg border border-gray-200 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-950"
       />
       <select

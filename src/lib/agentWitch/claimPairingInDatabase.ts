@@ -34,35 +34,46 @@ export async function claimPairingInDatabase(
     };
   }
 
-  const device = await claimAgentWitchDevice({
-    pairingToken,
-    userId,
-    deviceLabel: deviceLabel ?? existingDevice?.deviceLabel ?? null,
-  });
+  try {
+    const device = await claimAgentWitchDevice({
+      pairingToken,
+      userId,
+      deviceLabel: deviceLabel ?? existingDevice?.deviceLabel ?? null,
+    });
 
-  if (device.revokedAt !== null) {
-    return {
-      success: false,
-      errorMessage: "This device has been revoked.",
+    if (device.revokedAt !== null) {
+      return {
+        success: false,
+        errorMessage: "This device has been revoked.",
+      };
+    }
+
+    if (device.userId !== userId) {
+      return {
+        success: false,
+        errorMessage:
+          "This pairing token is already linked to another account.",
+      };
+    }
+
+    const claimedPairing: AgentWitchClaimedPairing = {
+      userId,
+      email,
+      claimedAt: device.claimedAt,
+      deviceId: device.id,
     };
-  }
 
-  if (device.userId !== userId) {
     return {
-      success: false,
-      errorMessage: "This pairing token is already linked to another account.",
+      success: true,
+      claimedPairing,
     };
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : "Could not claim pairing.";
+    if (message.includes("already linked to another account")) {
+      return { success: false, errorMessage: message };
+    }
+
+    return { success: false, errorMessage: message };
   }
-
-  const claimedPairing: AgentWitchClaimedPairing = {
-    userId,
-    email,
-    claimedAt: device.claimedAt,
-    deviceId: device.id,
-  };
-
-  return {
-    success: true,
-    claimedPairing,
-  };
 }

@@ -4,6 +4,18 @@ import mapAgentWitchDeviceRow from "@/lib/agentWitch/mapAgentWitchDeviceRow";
 import type AgentWitchDeviceRecord from "@/lib/agentWitch/types/AgentWitchDeviceRecord.type";
 import { asRowArray, getSql } from "@/lib/db";
 
+const isUniqueTokenHashViolation = (error: unknown): boolean => {
+  if (typeof error !== "object" || error === null) {
+    return false;
+  }
+
+  const record = error as { code?: unknown; constraint?: unknown };
+  return (
+    record.code === "23505" &&
+    record.constraint === "agent_witch_devices_token_hash_key"
+  );
+};
+
 export async function claimAgentWitchDevice(input: {
   readonly pairingToken: string;
   readonly userId: string;
@@ -60,16 +72,39 @@ export async function claimAgentWitchDevice(input: {
     }
   }
 
-  const insertResult = asRowArray(
-    await sql`
-      INSERT INTO agent_witch_devices (user_id, token_hash, device_label, last_seen_at)
-      VALUES (${input.userId}, ${tokenHash}, ${deviceLabel}, NOW())
-      RETURNING id, user_id, device_label, claimed_at, last_seen_at, revoked_at
-    `,
-  );
+  if (existing !== null && existing.userId !== input.userId) {
+    throw new Error("This pairing token is already linked to another account.");
+  }
 
-  if (insertResult[0]) {
-    return mapAgentWitchDeviceRow(insertResult[0]);
+  try {
+    const insertResult = asRowArray(
+      await sql`
+        INSERT INTO agent_witch_devices (user_id, token_hash, device_label, last_seen_at)
+        VALUES (${input.userId}, ${tokenHash}, ${deviceLabel}, NOW())
+        RETURNING id, user_id, device_label, claimed_at, last_seen_at, revoked_at
+      `,
+    );
+
+    if (insertResult[0]) {
+      return mapAgentWitchDeviceRow(insertResult[0]);
+    }
+  } catch (error) {
+    if (isUniqueTokenHashViolation(error)) {
+      const raced = await findAgentWitchDeviceByToken(input.pairingToken);
+      if (
+        raced !== null &&
+        raced.userId === input.userId &&
+        raced.revokedAt === null
+      ) {
+        return raced;
+      }
+
+      throw new Error(
+        "This pairing token is already linked to another account.",
+      );
+    }
+
+    throw error;
   }
 
   throw new Error("Failed to claim Agent Witch device.");

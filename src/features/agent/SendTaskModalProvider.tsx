@@ -32,6 +32,12 @@ const SendTaskModalContext = createContext<SendTaskModalContextValue | null>(
   null,
 );
 
+const SEND_TASK_MODAL_SUSPENSE_FALLBACK: SendTaskModalContextValue = {
+  isOpen: false,
+  openSendTaskModal: () => undefined,
+  closeSendTaskModal: () => undefined,
+};
+
 const isHomePath = (pathname: string): boolean => pathname === "/";
 
 function SendTaskModalController({
@@ -89,7 +95,15 @@ export function SendTaskModalProvider({
   readonly children: ReactNode;
 }) {
   return (
-    <Suspense fallback={children}>
+    <Suspense
+      fallback={
+        <SendTaskModalContext.Provider
+          value={SEND_TASK_MODAL_SUSPENSE_FALLBACK}
+        >
+          {children}
+        </SendTaskModalContext.Provider>
+      }
+    >
       <SendTaskModalController>{children}</SendTaskModalController>
     </Suspense>
   );

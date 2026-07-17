@@ -12,6 +12,19 @@ Human-readable end-to-end scenarios for real-user flows in Agent Witch. These sp
 | Cleanup log | `.e2e/cleanup-log.ndjson` — rows created by test accounts                                     |
 | Tags        | `@smoke`, `@requires-mac`, `@multi-user`, `@admin`                                            |
 
+## Same-Mac multi-account team
+
+You do **not** need multiple computers. Several `test*@agentwitch.com` accounts
+on this Mac form a team:
+
+1. Admin creates a company and invites executor + requester
+2. Run agent-witch as the **executor**:
+   `npm run e2e:agent-witch:setup -- test-team-executor-1@agentwitch.com --start`
+3. Sign in as the executor so Home pairs this Mac
+4. Requester dispatches to the executor (same machine, different user)
+
+Playwright coverage: `e2e/same-mac-team.spec.ts` (serial).
+
 ## Excluded (per product decision)
 
 - Google OAuth
