@@ -12,7 +12,10 @@ export default defineConfig({
   retries: 0,
   workers: 1,
   reporter: "list",
-  testMatch: ["**/capture-e2e-screenshots.spec.ts"],
+  testMatch: [
+    "**/capture-e2e-screenshots.spec.ts",
+    "**/capture-home-article-screenshots.spec.ts",
+  ],
   use: {
     baseURL,
     trace: "on-first-retry",
