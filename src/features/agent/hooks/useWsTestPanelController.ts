@@ -22,6 +22,7 @@ export const useWsTestPanelController = (input: {
     writerAgent,
     sessionDeviceId: socket.sessionDeviceId,
     selectedDeviceId: composer.selectedDeviceId,
+    availableDeviceIds: composer.macDevices.map((device) => device.id),
   });
   const { queueCount, queueMessage, enqueueRun, flushQueue, refreshCount } =
     useAgentRunQueue();
