@@ -3,6 +3,7 @@
 import type { useWsTestComposerWizard } from "@/features/agent/hooks/useWsTestComposerWizard";
 import type { useWsTestTaskComposer } from "@/features/agent/hooks/useWsTestTaskComposer";
 import type { SendTaskComposerPickerItem } from "@/features/agent/utils/buildSendTaskComposerPickerItems";
+import { shouldStartWriterAgentOnCliSelect } from "@/features/agent/utils/shouldStartWriterAgentOnCliSelect";
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
 
 export const useWsTestComposerPanelActions = (input: {
@@ -42,7 +43,11 @@ export const useWsTestComposerPanelActions = (input: {
   const handleWriterAgentSelect = (writerAgent: HarnessWriterAgent) => {
     input.onWriterAgentChange(writerAgent);
 
-    if (input.composer.selectedLibraryCapabilityId.length === 0) {
+    if (
+      shouldStartWriterAgentOnCliSelect(
+        input.composer.selectedLibraryCapabilityId,
+      )
+    ) {
       input.onStartWriterAgent(writerAgent);
       return;
     }
