@@ -31,11 +31,11 @@ export const AUTOMATION_SHOWCASE_SCREEN_DIMENSIONS: Readonly<
   >
 > = {
   [AUTOMATION_SHOWCASE_SCREEN.HOME_POPULAR_PRESETS]: {
-    width: 888,
-    height: 534,
+    width: 1440,
+    height: 900,
   },
-  [AUTOMATION_SHOWCASE_SCREEN.NEW_AUTOMATION]: { width: 702, height: 597 },
-  [AUTOMATION_SHOWCASE_SCREEN.AUTOMATIONS_LIST]: { width: 964, height: 579 },
+  [AUTOMATION_SHOWCASE_SCREEN.NEW_AUTOMATION]: { width: 1440, height: 900 },
+  [AUTOMATION_SHOWCASE_SCREEN.AUTOMATIONS_LIST]: { width: 1440, height: 900 },
 };
 
 export const resolveShowcaseAutomationScreenDimensions = (

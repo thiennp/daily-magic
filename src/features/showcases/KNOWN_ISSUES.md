@@ -71,3 +71,11 @@
 **Symptom:** Playwright `getByRole("button", { name: "Start" })` matched both the home hero Start and the Send-a-task modal Start (strict mode violation).
 
 **Fix:** Scope the click to `.modal` with `exact: true` in `marketplace-workflow-self-delegate.spec.ts`.
+
+---
+
+## SHOWCASES-008 — Agent Witch restart crashed on `__dirname` in ESM
+
+**Symptom:** Manual restart via `npx tsx agent-witch.ts` / `run.sh` after profile edits threw `ReferenceError: __dirname is not defined in ES module scope` from `resolveAgentWitchLocalLayout.ts`.
+
+**Fix:** Resolve the module directory with `fileURLToPath(import.meta.url)` instead of `__dirname`.

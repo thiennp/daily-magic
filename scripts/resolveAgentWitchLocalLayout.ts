@@ -1,6 +1,9 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
+
+const moduleDirname = path.dirname(fileURLToPath(import.meta.url));
 
 export const AGENT_WITCH_PROD_INSTALL_DIR_NAME = ".agent-witch";
 export const AGENT_WITCH_LOCAL_INSTALL_DIR_NAME = ".local-agent-witch";
@@ -51,7 +54,7 @@ export const resolveAgentWitchInstallDir = (): string => {
     return path.resolve(fromEnv);
   }
 
-  const candidate = path.resolve(__dirname);
+  const candidate = path.resolve(moduleDirname);
   const baseName = path.basename(candidate);
   if (
     baseName === AGENT_WITCH_PROD_INSTALL_DIR_NAME ||

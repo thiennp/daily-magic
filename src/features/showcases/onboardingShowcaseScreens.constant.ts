@@ -32,11 +32,11 @@ export const ONBOARDING_SHOWCASE_SCREEN_DIMENSIONS: Readonly<
     { readonly width: number; readonly height: number }
   >
 > = {
-  [ONBOARDING_SHOWCASE_SCREEN.HOME_CHECKLIST]: { width: 814, height: 411 },
-  [ONBOARDING_SHOWCASE_SCREEN.MAC_CONNECTED]: { width: 426, height: 418 },
-  [ONBOARDING_SHOWCASE_SCREEN.SAMPLE_WORKFLOW]: { width: 539, height: 535 },
-  [ONBOARDING_SHOWCASE_SCREEN.JOB_HISTORY]: { width: 576, height: 463 },
-  [ONBOARDING_SHOWCASE_SCREEN.COMPANY_RULES]: { width: 752, height: 491 },
+  [ONBOARDING_SHOWCASE_SCREEN.HOME_CHECKLIST]: { width: 1440, height: 1201 },
+  [ONBOARDING_SHOWCASE_SCREEN.MAC_CONNECTED]: { width: 1440, height: 1201 },
+  [ONBOARDING_SHOWCASE_SCREEN.SAMPLE_WORKFLOW]: { width: 1440, height: 900 },
+  [ONBOARDING_SHOWCASE_SCREEN.JOB_HISTORY]: { width: 1440, height: 900 },
+  [ONBOARDING_SHOWCASE_SCREEN.COMPANY_RULES]: { width: 1440, height: 900 },
 };
 
 export const resolveShowcaseOnboardingScreenDimensions = (
