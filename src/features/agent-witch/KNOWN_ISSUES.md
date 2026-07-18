@@ -1,18 +1,48 @@
-## AGENT-017 — Online detection and streaming no longer use WebSocket
+# Agent Witch bridge — known issues
 
-**Symptom:** “Selected Mac is not online” / flaky presence while Agent Witch was running on this Mac; hub WebSocket split across processes.
+## AGENT-017 — Mac↔cloud must use mutual WebSocket (not HTTP poll)
 
-**Root cause:** Live presence and command delivery depended on an in-memory WebSocket hub that did not match HTTP heartbeat / multi-instance reality.
+**Symptom:** Mac transport depended on HTTP heartbeat / command poll / messages; reconnects and device auth were weak; traffic lived only on a cloud debug page.
 
-**Fix:** Mac uses HTTP heartbeat + command long-poll + message POST; browser uses SSE + dashboard message POST; `isConnected` = last_seen within ~30s. Install bundle version bumped to 21.
+**Root cause:** HTTP poll was a temporary replacement for a split in-memory WebSocket hub and did not support mutual device auth or a local traffic/knowledge UI.
 
-**Regression tests:** `buildAgentWitchDevicesWithOnlineStatus.test.ts` (AGENT-017), `macDevicePresence.test.ts`, `agentWitchCloudApi.test.ts`.
+**Fix:** Restore `/api/agent-witch/ws` with Ed25519 device keypair + server attestation. Mac client serves local UI on `:43347` (status, traffic, knowledge). Mac HTTP `heartbeat` / `commands/poll` / `messages` return 410. Install bundle version **22**.
+
+**Regression tests:** `agentWitchEd25519.test.ts` (AGENT-017), `buildAgentWitchDevicesWithOnlineStatus.test.ts`.
+
+---
+
+## AGENT-018 — Online status ignored live WS hub clients
+
+**Symptom:** Device looked offline when `last_seen_at` was stale even though the Mac had a live WebSocket on the hub.
+
+**Root cause:** `buildAgentWitchDevicesWithOnlineStatus` only looked at heartbeat timestamps.
+
+**Fix:** Pass hub live device ids into the online-status builder; `isConnected` / `isOnline` true when the hub has that device **or** last seen is fresh.
+
+**Regression tests:** `buildAgentWitchDevicesWithOnlineStatus.test.ts` (AGENT-018).
+
+---
+
+## AGENT-019 — No post-install AI picker over the Mac bridge
+
+**Symptom:** After install, users had no cloud UI to install/sign in Cursor / Claude / Codex / Antigravity (product names, not “CLI”).
+
+**Fix:** `/setup/writer` on agentwitch.com sends WS `writer.ensure`; Mac replies `writer.status`. Login check runs on every Mac reconnect.
+
+---
+
+## AGENT-020 — Cloud tasks had no local knowledge injection
+
+**Symptom:** Finished local turns were not reused as context for later cloud-originated tasks.
+
+**Fix:** Local Ollama embeddings under `~/.agent-witch/rag/`; query + inject before tasks; browse/search on `http://127.0.0.1:43347/knowledge`.
 
 ---
 
 ## AGENT-006 — Reinstall/link created a second device for the same Mac
 
-**Symptom:** After a fresh local install + account link, Home showed both `L92KQX615Q` (connected, no display name) and the previous “Light Grey Mac” for the same hostname.
+**Symptom:** After a fresh local install + account link, Home showed both a new connected row and the previous named Mac for the same hostname.
 
 **Root cause:** Link claimed with a new pairing token and always `INSERT`ed a device row. The Mac hostname was not sent on link, so the server could not reclaim the existing row.
 
@@ -34,23 +64,27 @@
 
 ---
 
+## AGENT-004 — Localhost install stole production Agent Witch config
+
 **Symptom:** Installing from localhost flipped the Mac’s `wsUrl` / LaunchAgents away from agentwitch.com (or the reverse), so the Mac looked offline on the other origin.
 
 **Root cause:** Both origins shared `~/.agent-witch`, the same LaunchAgent labels, and wake port `47892`. Reinstall always rewrote the single profile config.
 
-**Fix:** Treat them as two apps. Localhost installs to `~/.local-agent-witch` with LaunchAgent prefix `com.local-agent-witch` and wake port `47893`. Production keeps `~/.agent-witch` / `com.agent-witch` / `47892`. Browser wake/link calls pick the port from the page hostname.
+**Fix:** Treat them as two apps. Localhost installs to `~/.local-agent-witch` with LaunchAgent prefix `com.local-agent-witch` and wake port `47893`. Production keeps `~/.agent-witch` / `com.agent-witch` / `47892`. Browser wake/link calls pick the port from the page hostname. Local UI is always `:43347`.
 
 **Regression tests:** `resolveAgentWitchAppHome.test.ts`, `renderInstallAgentWitchScript.test.ts` (AGENT-004), `requestAgentWitchWake.test.ts`.
 
 ---
 
-**Symptom:** Home device list looked online (or “seen recently”) but marketplace install and send-task modals treated the same Mac as offline.
+## AGENT-003 — Mac showed “Seen recently” while Agent Witch WebSocket was healthy
 
-**Root cause:** UI surfaces used different fields from `/api/agent-witch/devices` — Home counted `isOnline` (heartbeat within 90s) while install/send gated on `isConnected` (in-memory hub socket only). Demo home also used mock devices while modals fetched the real API. The agent composer footer passed `isOnline` into blocked-state logic while send gating used `isConnected`.
+**Symptom:** Home / Mac list showed amber “Seen recently” even though the local Agent Witch process had a healthy live WebSocket to the same host.
 
-**Fix:** `@/features/agent-witch/online-wake` is the single client resolver (`live` / `recent` / `offline`, `canDispatchToMac`). Server marks `isConnected` only when the hub has a live WebSocket for that device (or pairing-token match). Recent heartbeats surface as `isOnline` / “seen recently”, not dispatch-ready. Home, badges, install modal, and composer all use the same helpers.
+**Root cause:** `getAgentWitchHub()` kept the hub in a module-scoped variable. `server.ts` (WebSocket upgrade) and Next.js API route bundles load separate module graphs, so each held a different hub instance.
 
-**Regression tests:** `macDevicePresence.test.ts` (AGENT-001), `buildAgentWitchDevicesWithOnlineStatus.test.ts`.
+**Fix:** Store the pairing store and hub on `globalThis` in `getAgentWitchHub.ts` so one process shares one hub across the custom server and App Router handlers.
+
+**Regression tests:** `getAgentWitchHub.test.ts` (AGENT-003).
 
 ---
 
@@ -58,20 +92,20 @@
 
 **Symptom:** Install always returned “The selected Mac is not online right now.” even on the Mac running Agent Witch.
 
-**Root cause:** `/api/agent-witch/devices` treated a fresh `last_seen_at` heartbeat as `isConnected`, enabling Install in the UI, while `/api/marketplace/install` only accepted an in-memory hub WebSocket client matched by `deviceId`. Stale/missing hub `deviceId` values never fell back to pairing-token lookup.
+**Root cause:** UI treated a fresh `last_seen_at` as connected while marketplace install required a hub client matched by `deviceId`.
 
-**Fix:** `isConnected` requires a hub socket (via `resolveOnlineClientsByDeviceId`). `findEnrichedAgentClientForUser` matches agents by pairing token even when hub metadata has a stale `deviceId`.
+**Fix:** Dispatch-ready status uses hub live clients (plus recent-seen tiers for display). `findEnrichedAgentClientForUser` matches agents by pairing token when hub metadata has a stale `deviceId`.
 
 **Regression tests:** `findEnrichedAgentClientForUser.test.ts`, `resolveOnlineClientsByDeviceId.test.ts`, `buildAgentWitchDevicesWithOnlineStatus.test.ts` (AGENT-002).
 
 ---
 
-## AGENT-003 — Mac showed “Seen recently” while Agent Witch WebSocket was healthy
+## AGENT-001 — Presence labels disagreed across Home, install, and send-task
 
-**Symptom:** Home / Mac list showed amber “Seen recently” even though the local Agent Witch watchdog reported a healthy live WebSocket to the same host.
+**Symptom:** Home device list looked online (or “seen recently”) but marketplace install and send-task modals treated the same Mac as offline.
 
-**Root cause:** `getAgentWitchHub()` kept the hub in a module-scoped variable. `server.ts` (WebSocket upgrade) and Next.js API route bundles load separate module graphs, so each held a different hub instance. Heartbeats on the WS hub still updated `last_seen_at` in the database (→ `isOnline`), while `/api/agent-witch/devices` read an empty hub (→ `isConnected: false` → “Seen recently”).
+**Root cause:** Surfaces used different fields (`isOnline` vs `isConnected`) and sometimes mock vs real device APIs.
 
-**Fix:** Store the pairing store and hub on `globalThis` in `getAgentWitchHub.ts` so one process shares one hub across the custom server and App Router handlers.
+**Fix:** `@/features/agent-witch/online-wake` is the single client resolver (`live` / `recent` / `offline`, `canDispatchToMac`). Home, badges, install modal, and composer use the same helpers.
 
-**Regression tests:** `getAgentWitchHub.test.ts` (AGENT-003).
+**Regression tests:** `macDevicePresence.test.ts` (AGENT-001), `buildAgentWitchDevicesWithOnlineStatus.test.ts`.
