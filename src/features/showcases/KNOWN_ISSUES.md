@@ -63,3 +63,11 @@
 **Symptom:** Regenerating `self-delegate-live-terminal.png` / `self-delegate-job-history.png` via `e2e/self-delegate.spec.ts` fails when Agent Witch is connected as a different profile (Mac shows “Last seen …” for `test-self-1`, not “connected”).
 
 **Workaround:** Capture those two article images from a signed-in admin session on localhost when the dedicated test Mac profile is unavailable; re-run self-delegate when `test-self-1@agentwitch.com` has a live Agent Witch link.
+
+---
+
+## SHOWCASES-007 — Marketplace workflow E2E Start click hits Home CTA
+
+**Symptom:** Playwright `getByRole("button", { name: "Start" })` matched both the home hero Start and the Send-a-task modal Start (strict mode violation).
+
+**Fix:** Scope the click to `.modal` with `exact: true` in `marketplace-workflow-self-delegate.spec.ts`.

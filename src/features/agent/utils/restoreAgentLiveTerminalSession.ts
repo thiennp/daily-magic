@@ -7,7 +7,7 @@ import { shouldPersistAgentLiveTerminalOutput } from "@/features/agent/utils/sho
 export const restoreAgentLiveTerminalSession = (
   session: PersistedTerminalSession,
 ): AgentLiveTerminalState => {
-  const persistedOutput = shouldPersistAgentLiveTerminalOutput(session.status)
+  const persistedOutput = shouldPersistAgentLiveTerminalOutput()
     ? session.output
     : "";
   const cachedOutput =

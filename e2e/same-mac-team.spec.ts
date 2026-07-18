@@ -37,7 +37,11 @@ test.describe("Same-Mac multi-account team", () => {
 
     await page.screenshot({
       path: ".e2e/screenshots/same-mac-admin-company.png",
-      fullPage: false,
+      fullPage: true,
+    });
+    await page.screenshot({
+      path: "public/showcases/e2e/same-mac-admin-company.png",
+      fullPage: true,
     });
 
     for (const memberEmail of [EXECUTOR, REQUESTER]) {
@@ -50,7 +54,11 @@ test.describe("Same-Mac multi-account team", () => {
 
     await page.screenshot({
       path: ".e2e/screenshots/same-mac-admin-members.png",
-      fullPage: false,
+      fullPage: true,
+    });
+    await page.screenshot({
+      path: "public/showcases/e2e/same-mac-admin-members.png",
+      fullPage: true,
     });
   });
 
@@ -60,7 +68,11 @@ test.describe("Same-Mac multi-account team", () => {
     await page.waitForTimeout(3000);
     await page.screenshot({
       path: ".e2e/screenshots/same-mac-executor-home.png",
-      fullPage: false,
+      fullPage: true,
+    });
+    await page.screenshot({
+      path: "public/showcases/e2e/same-mac-executor-home.png",
+      fullPage: true,
     });
 
     // Either connect guide or dashboard is acceptable; crash is not.
@@ -104,7 +116,11 @@ test.describe("Same-Mac multi-account team", () => {
 
     await page.screenshot({
       path: ".e2e/screenshots/same-mac-executor-library.png",
-      fullPage: false,
+      fullPage: true,
+    });
+    await page.screenshot({
+      path: "public/showcases/e2e/same-mac-executor-library.png",
+      fullPage: true,
     });
   });
 
@@ -118,7 +134,11 @@ test.describe("Same-Mac multi-account team", () => {
 
     await page.screenshot({
       path: ".e2e/screenshots/same-mac-requester-send-task.png",
-      fullPage: false,
+      fullPage: true,
+    });
+    await page.screenshot({
+      path: "public/showcases/e2e/same-mac-requester-send-task.png",
+      fullPage: true,
     });
 
     // Provider crash would surface as Next.js error overlay / digest text
@@ -157,7 +177,11 @@ test.describe("Same-Mac multi-account team", () => {
 
     await page.screenshot({
       path: ".e2e/screenshots/same-mac-requester-team-fields.png",
-      fullPage: false,
+      fullPage: true,
+    });
+    await page.screenshot({
+      path: "public/showcases/e2e/same-mac-requester-team-fields.png",
+      fullPage: true,
     });
   });
 });

@@ -28,7 +28,7 @@ export const persistAgentLiveTerminalState = (
   if (
     state.activeRunId !== null &&
     state.output.length > 0 &&
-    shouldPersistAgentLiveTerminalOutput(state.status)
+    shouldPersistAgentLiveTerminalOutput()
   ) {
     setAgentRunTerminalOutput(state.activeRunId, state.output);
   }
@@ -41,9 +41,7 @@ export const persistAgentLiveTerminalState = (
   writeTerminalStore({
     current: {
       activeRunId: state.activeRunId,
-      output: shouldPersistAgentLiveTerminalOutput(state.status)
-        ? state.output
-        : "",
+      output: shouldPersistAgentLiveTerminalOutput() ? state.output : "",
       status: state.status,
       pendingCommandLine: state.pendingCommandLine,
       sessionWriterAgent: state.sessionWriterAgent,

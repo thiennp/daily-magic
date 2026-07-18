@@ -50,7 +50,11 @@ test.describe("Marketplace workflow self-delegate", () => {
 
     await page.screenshot({
       path: ".e2e/screenshots/marketplace-workflow-listing.png",
-      fullPage: false,
+      fullPage: true,
+    });
+    await page.screenshot({
+      path: "public/showcases/e2e/marketplace-workflow-listing.png",
+      fullPage: true,
     });
 
     const listingCard = page
@@ -95,7 +99,11 @@ test.describe("Marketplace workflow self-delegate", () => {
 
     await page.screenshot({
       path: ".e2e/screenshots/marketplace-workflow-installed.png",
-      fullPage: false,
+      fullPage: true,
+    });
+    await page.screenshot({
+      path: "public/showcases/e2e/marketplace-workflow-installed.png",
+      fullPage: true,
     });
 
     await page.getByRole("button", { name: "Start a task" }).click();
@@ -150,7 +158,11 @@ test.describe("Marketplace workflow self-delegate", () => {
 
     await page.screenshot({
       path: ".e2e/screenshots/marketplace-workflow-inputs.png",
-      fullPage: false,
+      fullPage: true,
+    });
+    await page.screenshot({
+      path: "public/showcases/e2e/marketplace-workflow-inputs.png",
+      fullPage: true,
     });
 
     const firstDispatch = page.waitForResponse(
@@ -160,7 +172,11 @@ test.describe("Marketplace workflow self-delegate", () => {
       { timeout: 60_000 },
     );
 
-    await page.getByRole("button", { name: "Start" }).click();
+    // Home also has a large Start CTA behind the Send-a-task modal.
+    await page
+      .locator(".modal")
+      .getByRole("button", { name: "Start", exact: true })
+      .click();
 
     const firstBody = (await (await firstDispatch).json()) as {
       ok?: boolean;
@@ -179,7 +195,11 @@ test.describe("Marketplace workflow self-delegate", () => {
 
     await page.screenshot({
       path: ".e2e/screenshots/marketplace-workflow-progress.png",
-      fullPage: false,
+      fullPage: true,
+    });
+    await page.screenshot({
+      path: "public/showcases/e2e/marketplace-workflow-progress.png",
+      fullPage: true,
     });
 
     // Proposal body or approval prompt — either proves the workflow ran.
@@ -205,7 +225,11 @@ test.describe("Marketplace workflow self-delegate", () => {
 
     await page.screenshot({
       path: ".e2e/screenshots/marketplace-workflow-result.png",
-      fullPage: false,
+      fullPage: true,
+    });
+    await page.screenshot({
+      path: "public/showcases/e2e/marketplace-workflow-result.png",
+      fullPage: true,
     });
 
     // Global blocked-run modal can cover Job history; capture it then dismiss.
@@ -215,7 +239,11 @@ test.describe("Marketplace workflow self-delegate", () => {
     if (await blockedModal.isVisible().catch(() => false)) {
       await page.screenshot({
         path: ".e2e/screenshots/marketplace-workflow-awaiting-input.png",
-        fullPage: false,
+        fullPage: true,
+      });
+      await page.screenshot({
+        path: "public/showcases/e2e/marketplace-workflow-awaiting-input.png",
+        fullPage: true,
       });
       await page.keyboard.press("Escape");
     }
@@ -239,7 +267,11 @@ test.describe("Marketplace workflow self-delegate", () => {
 
     await page.screenshot({
       path: ".e2e/screenshots/marketplace-workflow-job-history.png",
-      fullPage: false,
+      fullPage: true,
+    });
+    await page.screenshot({
+      path: "public/showcases/e2e/marketplace-workflow-job-history.png",
+      fullPage: true,
     });
   });
 });
