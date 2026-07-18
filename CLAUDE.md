@@ -16,7 +16,7 @@ Project guidance for Claude and other AI agents. Rules live in **`.cursor/rules/
 | ---------------- | ------------------------------ |
 | `/`              | Home                           |
 | `/styleguide`    | TailAdmin component styleguide |
-| `/ws-test`       | Agent Witch WebSocket test UI  |
+| `/ws-test`       | Agent Witch send-task test UI  |
 | `/api/db/health` | Neon connection health check   |
 | `/api/notes`     | Sample notes API               |
 
@@ -94,12 +94,12 @@ Set `DATABASE_URL` in `.env.local` (Neon connection string). Apply schema with `
 
 ---
 
-## Agent Witch (local WebSocket bridge)
+## Agent Witch (local HTTP bridge)
 
-Runs Claude CLI on your computer when the app sends a task over WebSocket. Live Mac output uses a PTY shell session (`shell.*` messages; owner can type, requesters get a read-only view and answer `[[AWAITING_INPUT]]` checkpoints). Agent runs attach to that shell transport; pipe-based `terminal.stream.*` remains as a compatibility mirror.
+Runs writer CLIs on your computer when the app dispatches a task. The Mac client heartbeats and long-polls over HTTP; the browser receives live updates over SSE. Live Mac output uses a PTY shell session (`shell.*` messages; owner can type, requesters get a read-only view and answer `[[AWAITING_INPUT]]` checkpoints).
 
 ```bash
-# Start app with WebSocket upgrade (required — not plain next dev)
+# Start app (custom server — not plain next dev)
 npm run dev
 
 # Local agent client (one terminal)
@@ -109,11 +109,11 @@ npm run agent-witch
 npm run agent-witch:install
 ```
 
-- WebSocket: `ws://localhost:3000/api/agent-witch/ws`
+- HTTP APIs: `/api/agent-witch/heartbeat`, `/commands/poll`, `/messages`, `/events` (SSE)
 - Test UI: http://localhost:3000/ws-test
 - Status API: `GET /api/agent-witch/status`
 - Config: `~/.agent-witch/config.json`
-- Watchdog (macOS): `com.agent-witch-watchdog` LaunchAgent runs every 60s and kickstarts stale WebSocket connections (`npm run agent-witch:watchdog` for a manual check)
+- Watchdog (macOS): `com.agent-witch-watchdog` LaunchAgent runs every 60s and kickstarts stale agent clients (`npm run agent-witch:watchdog` for a manual check)
 - Self-update (macOS): `com.agent-witch-updater` LaunchAgent checks hourly for install bundle updates (`npm run agent-witch:self-update` for a manual run)
 - Install bundle version API: `GET /install/agent-witch/version` — bump `AGENT_WITCH_INSTALL_BUNDLE_VERSION` in `src/lib/agentWitch/agentWitchInstallBundleVersion.ts` whenever any install script changes
 - Local version file: `~/.agent-witch/install-version.json`

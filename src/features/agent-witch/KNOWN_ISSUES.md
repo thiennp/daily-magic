@@ -1,3 +1,15 @@
+## AGENT-017 — Online detection and streaming no longer use WebSocket
+
+**Symptom:** “Selected Mac is not online” / flaky presence while Agent Witch was running on this Mac; hub WebSocket split across processes.
+
+**Root cause:** Live presence and command delivery depended on an in-memory WebSocket hub that did not match HTTP heartbeat / multi-instance reality.
+
+**Fix:** Mac uses HTTP heartbeat + command long-poll + message POST; browser uses SSE + dashboard message POST; `isConnected` = last_seen within ~30s. Install bundle version bumped to 21.
+
+**Regression tests:** `buildAgentWitchDevicesWithOnlineStatus.test.ts` (AGENT-017), `macDevicePresence.test.ts`, `agentWitchCloudApi.test.ts`.
+
+---
+
 ## AGENT-006 — Reinstall/link created a second device for the same Mac
 
 **Symptom:** After a fresh local install + account link, Home showed both `L92KQX615Q` (connected, no display name) and the previous “Light Grey Mac” for the same hostname.

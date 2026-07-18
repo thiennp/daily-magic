@@ -1,9 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import buildAgentWitchDevicesWithOnlineStatus from "@/lib/agentWitch/buildAgentWitchDevicesWithOnlineStatus";
-import { onlineClientsByDeviceId } from "@/lib/agentWitch/buildAgentWitchDevicesWithOnlineStatus.testHelper";
 import type AgentWitchDeviceRecord from "@/lib/agentWitch/types/AgentWitchDeviceRecord.type";
-import type AgentWitchHubClient from "@/lib/agentWitch/types/AgentWitchHubClient.type";
 
 const baseDevice = (
   overrides: Partial<AgentWitchDeviceRecord> = {},
@@ -19,41 +17,25 @@ const baseDevice = (
   ...overrides,
 });
 
-const onlineClient = (
-  overrides: Partial<AgentWitchHubClient> = {},
-): AgentWitchHubClient => ({
-  id: "agent-1",
-  role: "agent",
-  deviceId: "device-1",
-  deviceLabel: "Johns-MacBook",
-  lastHeartbeatAt: "2026-01-03T12:00:00.000Z",
-  send: () => undefined,
-  ...overrides,
-});
-
 describe("buildAgentWitchDevicesWithOnlineStatus", () => {
-  it("marks devices online when a matching agent client is connected", () => {
-    const result = buildAgentWitchDevicesWithOnlineStatus(
-      [baseDevice()],
-      onlineClientsByDeviceId([onlineClient()]),
-    );
-
-    expect(result).toEqual([
-      expect.objectContaining({
-        id: "device-1",
-        isConnected: true,
-        isOnline: true,
-        deviceLabel: "Johns-MacBook",
-        lastHeartbeatAt: "2026-01-03T12:00:00.000Z",
-      }),
+  it("marks devices connected from a fresh HTTP heartbeat (AGENT-017)", () => {
+    const lastSeenAt = new Date().toISOString();
+    const result = buildAgentWitchDevicesWithOnlineStatus([
+      baseDevice({ lastSeenAt }),
     ]);
+
+    expect(result[0]).toMatchObject({
+      id: "device-1",
+      isConnected: true,
+      isOnline: true,
+      lastHeartbeatAt: lastSeenAt,
+    });
   });
 
-  it("marks devices offline when no hub client and last seen is stale", () => {
-    const result = buildAgentWitchDevicesWithOnlineStatus(
-      [baseDevice({ lastSeenAt: "2020-01-01T00:00:00.000Z" })],
-      onlineClientsByDeviceId([]),
-    );
+  it("marks devices offline when last seen is stale", () => {
+    const result = buildAgentWitchDevicesWithOnlineStatus([
+      baseDevice({ lastSeenAt: "2020-01-01T00:00:00.000Z" }),
+    ]);
 
     expect(result[0]).toMatchObject({
       id: "device-1",
@@ -64,12 +46,11 @@ describe("buildAgentWitchDevicesWithOnlineStatus", () => {
     });
   });
 
-  it("marks devices as seen recently but not connected from a fresh heartbeat alone", () => {
-    const lastSeenAt = new Date().toISOString();
-    const result = buildAgentWitchDevicesWithOnlineStatus(
-      [baseDevice({ lastSeenAt })],
-      onlineClientsByDeviceId([]),
-    );
+  it("marks devices as seen recently but not connected after the active window", () => {
+    const lastSeenAt = new Date(Date.now() - 60_000).toISOString();
+    const result = buildAgentWitchDevicesWithOnlineStatus([
+      baseDevice({ lastSeenAt }),
+    ]);
 
     expect(result[0]).toMatchObject({
       isConnected: false,
@@ -78,34 +59,18 @@ describe("buildAgentWitchDevicesWithOnlineStatus", () => {
     });
   });
 
-  it("marks devices as seen recently but not connected after the active window", () => {
-    const lastSeenAt = new Date(Date.now() - 60_000).toISOString();
-    const result = buildAgentWitchDevicesWithOnlineStatus(
-      [baseDevice({ lastSeenAt })],
-      onlineClientsByDeviceId([]),
-    );
+  it("keeps saved display names from the device record", () => {
+    const lastSeenAt = new Date().toISOString();
+    const result = buildAgentWitchDevicesWithOnlineStatus([
+      baseDevice({
+        displayName: "Work Mac",
+        deviceLabel: "Studio-MacBook",
+        lastSeenAt,
+      }),
+    ]);
 
     expect(result[0]).toMatchObject({
-      isConnected: false,
-      isOnline: true,
-    });
-  });
-
-  it("keeps saved display names while hostname updates from the live client", () => {
-    const result = buildAgentWitchDevicesWithOnlineStatus(
-      [
-        baseDevice({
-          displayName: "Work Mac",
-          deviceLabel: "Studio-MacBook",
-        }),
-      ],
-      onlineClientsByDeviceId([
-        onlineClient({ deviceLabel: "Studio-MacBook.local" }),
-      ]),
-    );
-
-    expect(result[0]).toMatchObject({
-      deviceLabel: "Studio-MacBook.local",
+      deviceLabel: "Studio-MacBook",
       displayName: "Work Mac",
     });
   });

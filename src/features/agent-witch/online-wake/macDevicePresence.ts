@@ -39,7 +39,7 @@ export const formatMacPresenceStatusLabel = (
   return "Offline";
 };
 
-/** Mac can receive install/send tasks right now (live socket or active heartbeat). */
+/** Mac can receive install/send tasks when it is actively heartbeating. */
 export const canDispatchToMac = (device: MacDevicePresence): boolean =>
   resolveMacPresenceTier(device) === "live";
 
@@ -67,7 +67,7 @@ export const buildMacDevicesStatusLine = (
   }
 
   if (counts.recent > 0) {
-    return `${counts.recent} seen recently · open Agent Witch for a live connection`;
+    return `${counts.recent} seen recently · waiting for the next check-in`;
   }
 
   return "Connected Macs appear here when Agent Witch is running.";

@@ -3,15 +3,11 @@
 import { useEffect, useRef, type RefObject } from "react";
 
 import { appendAgentRunTerminalOutput } from "@/features/agent/utils/agentRunTerminalOutputStore";
+import { createHttpDashboardSocketShim } from "@/features/agent/utils/createHttpDashboardSocketShim";
+import { sendDashboardTerminalSubscribe } from "@/features/agent/utils/sendDashboardTerminalSubscribe";
 import type { AgentRunInputRequest } from "@/features/dispatch/utils/agentRunInputSocket";
 import { handleAgentRunLiveTerminalSocketMessage } from "@/features/reports/utils/handleAgentRunLiveTerminalSocketMessage";
 import { registerAgentRunLiveTerminal } from "@/features/reports/utils/registerAgentRunLiveTerminal";
-import { sendDashboardTerminalSubscribe } from "@/features/agent/utils/sendDashboardTerminalSubscribe";
-import {
-  buildAgentWitchWebSocketUrl,
-  sendAgentWitchPairingToken,
-} from "@/features/agent/utils/agentWitchSocketUtils";
-import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
 
 export function useAgentRunLiveTerminalSocket(input: {
   readonly runId: string;
@@ -32,33 +28,18 @@ export function useAgentRunLiveTerminalSocket(input: {
   }, [input.onInputRequired]);
 
   useEffect(() => {
-    if (!input.enabled) {
+    if (!input.enabled || typeof EventSource === "undefined") {
       return;
     }
 
     const unregister = registerAgentRunLiveTerminal(input.runId);
-    const wsUrl = buildAgentWitchWebSocketUrl();
+    const shim = createHttpDashboardSocketShim();
+    socketRef.current = shim;
+    sendDashboardTerminalSubscribe(shim, { runId: input.runId });
 
-    if (wsUrl.length === 0) {
-      unregister();
-      return;
-    }
+    const eventSource = new EventSource("/api/agent-witch/events");
 
-    const socket = new WebSocket(wsUrl);
-    socketRef.current = socket;
-
-    socket.addEventListener("open", () => {
-      socket.send(
-        JSON.stringify({
-          type: AGENT_WITCH_MESSAGE_TYPES.AGENT_REGISTER,
-          payload: { role: "dashboard" },
-        }),
-      );
-      sendAgentWitchPairingToken(socket);
-      sendDashboardTerminalSubscribe(socket, { runId: input.runId });
-    });
-
-    socket.addEventListener("message", (event) => {
+    eventSource.onmessage = (event) => {
       try {
         const parsed: unknown = JSON.parse(String(event.data));
         handleAgentRunLiveTerminalSocketMessage(input.runId, parsed, {
@@ -67,7 +48,7 @@ export function useAgentRunLiveTerminalSocket(input: {
             onOutputRef.current(nextOutput);
           },
           onStreamEnd: () => {
-            socket.close();
+            eventSource.close();
           },
           onInputRequired: (request) => {
             onInputRequiredRef.current(request);
@@ -76,10 +57,10 @@ export function useAgentRunLiveTerminalSocket(input: {
       } catch {
         return;
       }
-    });
+    };
 
     return () => {
-      socket.close();
+      eventSource.close();
       socketRef.current = null;
       unregister();
     };

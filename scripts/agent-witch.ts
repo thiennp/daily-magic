@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Agent Witch — local WebSocket client that runs writer agents from the app.
+ * Agent Witch — local HTTP poll client that runs writer agents from the app.
  *
  * Run: npx tsx scripts/agent-witch.ts
  * Config: ~/.agent-witch/config.json (legacy) or
@@ -12,7 +12,7 @@ import { spawn } from "node:child_process";
 import fs from "node:fs";
 import os from "node:os";
 
-import WebSocket from "ws";
+import type WebSocket from "ws";
 
 import {
   resolveAgentWitchLocalLayout,
@@ -58,8 +58,11 @@ import {
 import { AGENT_WITCH_CONNECTION_STALE_MS } from "./agentWitchConnectionHealth.constants";
 import { acceptTerminalStream } from "./agentWitchTerminalStreamState";
 import {
+  pollAgentWitchCommand,
   postAgentWitchDeviceHeartbeat,
+  postAgentWitchMessage,
   resolveAgentWitchCloudApiConfig,
+  type AgentWitchCloudApiConfig,
 } from "./agentWitchCloudApi";
 import { pollAndExecuteCloudAgentRun } from "./agentWitchCloudJobPoll";
 import { requestLocalAgentWitchRestart } from "./requestLocalAgentWitchRestart";
@@ -83,8 +86,15 @@ const DEFAULT_CURSOR_COMMAND = "cursor";
 const DEFAULT_ANTIGRAVITY_COMMAND = "agy";
 const HEARTBEAT_INTERVAL_MS = 30_000;
 const CLOUD_JOB_POLL_INTERVAL_MS = 3_000;
+const COMMAND_POLL_WAIT_MS = 25_000;
 const MAX_RECONNECT_DELAY_MS = 30_000;
+const OUTBOUND_SOCKET_OPEN = 1;
 const shellSessionIdByRunId = new Map<string, string>();
+
+interface AgentWitchOutboundSocket {
+  readonly readyState: number;
+  send(data: string): void;
+}
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === "object" && value !== null && !Array.isArray(value);
@@ -174,13 +184,39 @@ const readConfig = (): AgentWitchConfig | null => {
 };
 
 const sendMessage = (
-  socket: WebSocket,
+  socket: AgentWitchOutboundSocket,
   message: Record<string, unknown>,
 ): void => {
-  if (socket.readyState === WebSocket.OPEN) {
+  if (socket.readyState === OUTBOUND_SOCKET_OPEN) {
     socket.send(JSON.stringify(message));
   }
 };
+
+const createHttpOutboundSocket = (
+  cloudApi: AgentWitchCloudApiConfig,
+): AgentWitchOutboundSocket => ({
+  readyState: OUTBOUND_SOCKET_OPEN,
+  send: (data: string): void => {
+    void (async () => {
+      try {
+        const parsed: unknown = JSON.parse(data);
+        if (!isRecord(parsed)) {
+          return;
+        }
+
+        const posted = await postAgentWitchMessage(cloudApi, parsed);
+        if (!posted) {
+          console.error("[agent-witch] Failed to post outbound message.");
+        }
+      } catch {
+        console.error("[agent-witch] Failed to serialize outbound message.");
+      }
+    })();
+  },
+});
+
+const asLegacyWebSocket = (socket: AgentWitchOutboundSocket): WebSocket =>
+  socket as unknown as WebSocket;
 
 const readHarnessManifest = (
   layout: AgentWitchLocalLayout,
@@ -204,7 +240,7 @@ const readHarnessManifest = (
 };
 
 const reportHarnessManifest = (
-  socket: WebSocket,
+  socket: AgentWitchOutboundSocket,
   layout: AgentWitchLocalLayout,
 ): void => {
   const manifest = readHarnessManifest(layout);
@@ -226,7 +262,7 @@ const dispatchWriterTask = async (
   writerAgent: string,
   prompt: string,
   requestId: string | undefined,
-  socket: WebSocket,
+  socket: AgentWitchOutboundSocket,
   agentRunId?: string,
   sessionContinuation = false,
   shellSessionId?: string,
@@ -296,7 +332,7 @@ const dispatchWriterTask = async (
     writerAgent,
     prompt,
     requestId,
-    socket,
+    asLegacyWebSocket(socket),
     agentRunId,
     {
       sessionTurn,
@@ -324,7 +360,7 @@ const startWriterSession = async (
   writerAgent: string,
   writerSessionId: string,
   requestId: string | undefined,
-  socket: WebSocket,
+  socket: AgentWitchOutboundSocket,
 ): Promise<void> => {
   let streamedOutput = "";
   const result = await runWriterSessionStart({
@@ -440,7 +476,7 @@ const runHarnessRequest = async (
   config: AgentWitchConfig,
   payload: Readonly<Record<string, unknown>>,
   requestId: string | undefined,
-  socket: WebSocket,
+  socket: AgentWitchOutboundSocket,
 ): Promise<void> => {
   const writerAgent =
     typeof payload.writerAgent === "string" ? payload.writerAgent : "";
@@ -521,19 +557,22 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
     pairingToken: config.pairingToken,
   });
   const state: {
-    socket?: WebSocket;
-    heartbeatTimer?: NodeJS.Timeout;
+    outbound?: AgentWitchOutboundSocket;
     httpHeartbeatTimer?: NodeJS.Timeout;
     localHealthTimer?: NodeJS.Timeout;
     cloudJobPollTimer?: NodeJS.Timeout;
-    reconnectTimer?: NodeJS.Timeout;
+    pollBackoffTimer?: NodeJS.Timeout;
+    pollLoopActive: boolean;
     reconnectAttempt: number;
     stopped: boolean;
+    connected: boolean;
     restartInFlight: boolean;
     pendingRestartAck: boolean;
   } = {
     reconnectAttempt: 0,
     stopped: false,
+    connected: false,
+    pollLoopActive: false,
     restartInFlight: false,
     pendingRestartAck: false,
   };
@@ -661,59 +700,379 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
     );
   };
 
-  const clearHeartbeat = (): void => {
-    if (state.heartbeatTimer !== undefined) {
-      clearInterval(state.heartbeatTimer);
-      state.heartbeatTimer = undefined;
-    }
-  };
-
-  const clearReconnectTimer = (): void => {
-    if (state.reconnectTimer !== undefined) {
-      clearTimeout(state.reconnectTimer);
-      state.reconnectTimer = undefined;
-    }
-  };
-
-  const closeSocket = (): void => {
-    if (state.socket !== undefined) {
-      state.socket.removeAllListeners();
-      if (
-        state.socket.readyState === WebSocket.OPEN ||
-        state.socket.readyState === WebSocket.CONNECTING
-      ) {
-        state.socket.close();
-      }
-      state.socket = undefined;
-    }
-  };
-
-  const scheduleReconnect = (): void => {
-    if (state.stopped || state.reconnectTimer !== undefined) {
+  const scheduleConnectRetry = (): void => {
+    if (state.stopped || state.pollBackoffTimer !== undefined) {
       return;
     }
 
     const delayMs = computeReconnectDelayMs(state.reconnectAttempt);
-    console.log(`[agent-witch] Reconnecting in ${delayMs}ms…`);
+    console.log(`[agent-witch] Retrying HTTP client in ${delayMs}ms…`);
 
-    state.reconnectTimer = setTimeout(() => {
-      state.reconnectTimer = undefined;
+    state.pollBackoffTimer = setTimeout(() => {
+      state.pollBackoffTimer = undefined;
       connect();
     }, delayMs);
   };
 
-  const startHeartbeat = (socket: WebSocket): void => {
-    clearHeartbeat();
-    const sendHeartbeat = (): void => {
-      sendMessage(socket, {
-        type: "agent.heartbeat",
-        payload: {
-          hostname: os.hostname(),
-        },
+  const handleInboundRaw = (
+    parsed: Record<string, unknown>,
+    socket: AgentWitchOutboundSocket,
+  ): void => {
+    if (typeof parsed.type !== "string") {
+      return;
+    }
+
+    const requestId =
+      typeof parsed.requestId === "string" ? parsed.requestId : undefined;
+
+    if (parsed.type === "system.ack") {
+      writeAgentWitchConnectionHealth(config.layout, {
+        wsUrl: config.wsUrl,
       });
-    };
-    sendHeartbeat();
-    state.heartbeatTimer = setInterval(sendHeartbeat, HEARTBEAT_INTERVAL_MS);
+    }
+
+    if (
+      parsed.type === "terminal.stream.accepted" &&
+      isRecord(parsed.payload)
+    ) {
+      const runId =
+        typeof parsed.payload.runId === "string" ? parsed.payload.runId : "";
+      if (runId.length > 0) {
+        const pendingChunks = acceptTerminalStream(runId);
+        for (const chunk of pendingChunks) {
+          sendMessage(socket, {
+            type: "terminal.stream.chunk",
+            payload: { runId, chunk },
+            requestId,
+          });
+        }
+      }
+    }
+
+    if (parsed.type === "agent.agentRun.list") {
+      sendMessage(socket, {
+        type: "dashboard.agentRun.list.result",
+        payload: { runs: listAgentRunsLocal(config.layout) },
+        requestId,
+      });
+    }
+
+    if (parsed.type === "agent.agentRun.get" && isRecord(parsed.payload)) {
+      const runId =
+        typeof parsed.payload.runId === "string" ? parsed.payload.runId : "";
+      const run =
+        runId.length > 0 ? loadAgentRunLocal(config.layout, runId) : null;
+      sendMessage(socket, {
+        type: "dashboard.agentRun.get.result",
+        payload: { run },
+        requestId,
+      });
+    }
+
+    if (parsed.type === "command.claude.run" && isRecord(parsed.payload)) {
+      const prompt = parsed.payload.prompt;
+      const writerAgent =
+        typeof parsed.payload.writerAgent === "string" &&
+        isHarnessWriterAgentId(parsed.payload.writerAgent)
+          ? parsed.payload.writerAgent
+          : "claude-cli";
+      const agentRunId =
+        typeof parsed.payload.agentRunId === "string"
+          ? parsed.payload.agentRunId
+          : undefined;
+      const sessionContinuation = parsed.payload.sessionContinuation === true;
+      const shellSessionId =
+        typeof parsed.payload.shellSessionId === "string"
+          ? parsed.payload.shellSessionId
+          : undefined;
+
+      if (typeof prompt === "string" && prompt.trim().length > 0) {
+        console.log(
+          `[agent-witch] Running ${writerAgent} task (${sessionContinuation ? "continue" : "first"})…`,
+        );
+        if (agentRunId !== undefined && shellSessionId !== undefined) {
+          shellSessionIdByRunId.set(agentRunId, shellSessionId);
+        }
+        void dispatchWriterTask(
+          config,
+          writerAgent,
+          prompt.trim(),
+          requestId,
+          socket,
+          agentRunId,
+          sessionContinuation,
+          shellSessionId,
+        );
+      }
+    }
+
+    if (parsed.type === "shell.session.open" && isRecord(parsed.payload)) {
+      const shellSessionId =
+        typeof parsed.payload.shellSessionId === "string"
+          ? parsed.payload.shellSessionId
+          : "";
+      const cols =
+        typeof parsed.payload.cols === "number" ? parsed.payload.cols : 120;
+      const rows =
+        typeof parsed.payload.rows === "number" ? parsed.payload.rows : 32;
+      if (shellSessionId.length > 0) {
+        console.log("[agent-witch] Opening interactive Mac shell…");
+        void openInteractiveShellPty({
+          shellSessionId,
+          cwd: config.workspace,
+          cols,
+          rows,
+          send: (message) => {
+            sendMessage(socket, message);
+          },
+          requestId,
+        });
+      }
+    }
+
+    if (parsed.type === "shell.session.close" && isRecord(parsed.payload)) {
+      const shellSessionId =
+        typeof parsed.payload.shellSessionId === "string"
+          ? parsed.payload.shellSessionId
+          : "";
+      if (shellSessionId.length > 0) {
+        closeShellPtySession(
+          shellSessionId,
+          (message) => {
+            sendMessage(socket, message);
+          },
+          requestId,
+        );
+      }
+    }
+
+    if (parsed.type === "shell.input" && isRecord(parsed.payload)) {
+      const shellSessionId =
+        typeof parsed.payload.shellSessionId === "string"
+          ? parsed.payload.shellSessionId
+          : "";
+      const data =
+        typeof parsed.payload.data === "string" ? parsed.payload.data : "";
+      if (shellSessionId.length > 0 && data.length > 0) {
+        writeShellPtyInput(shellSessionId, data);
+      }
+    }
+
+    if (parsed.type === "shell.resize" && isRecord(parsed.payload)) {
+      const shellSessionId =
+        typeof parsed.payload.shellSessionId === "string"
+          ? parsed.payload.shellSessionId
+          : "";
+      const cols =
+        typeof parsed.payload.cols === "number" ? parsed.payload.cols : 0;
+      const rows =
+        typeof parsed.payload.rows === "number" ? parsed.payload.rows : 0;
+      if (shellSessionId.length > 0 && cols > 0 && rows > 0) {
+        resizeShellPty(shellSessionId, cols, rows);
+      }
+    }
+
+    if (
+      parsed.type === "command.writer.session.end" &&
+      isRecord(parsed.payload)
+    ) {
+      const writerAgent = parsed.payload.writerAgent;
+      if (
+        typeof writerAgent === "string" &&
+        isHarnessWriterAgentId(writerAgent)
+      ) {
+        clearWriterSession(writerAgent);
+      }
+    }
+
+    if (
+      parsed.type === "command.writer.session.start" &&
+      isRecord(parsed.payload)
+    ) {
+      const writerAgent = parsed.payload.writerAgent;
+      const writerSessionId =
+        typeof parsed.payload.writerSessionId === "string"
+          ? parsed.payload.writerSessionId
+          : "";
+      if (
+        typeof writerAgent === "string" &&
+        isHarnessWriterAgentId(writerAgent) &&
+        writerSessionId.length > 0
+      ) {
+        console.log(`[agent-witch] Starting ${writerAgent} session…`);
+        void startWriterSession(
+          config,
+          writerAgent,
+          writerSessionId,
+          requestId,
+          socket,
+        );
+      }
+    }
+
+    if (
+      parsed.type === "command.claude.input_respond" &&
+      isRecord(parsed.payload)
+    ) {
+      const agentRunId =
+        typeof parsed.payload.agentRunId === "string"
+          ? parsed.payload.agentRunId
+          : "";
+      const response =
+        typeof parsed.payload.response === "string"
+          ? parsed.payload.response.trim()
+          : "";
+      const originalPrompt =
+        typeof parsed.payload.originalPrompt === "string"
+          ? parsed.payload.originalPrompt
+          : "";
+      const partialOutput =
+        typeof parsed.payload.partialOutput === "string"
+          ? parsed.payload.partialOutput
+          : "";
+      const question =
+        typeof parsed.payload.question === "string"
+          ? parsed.payload.question
+          : "";
+
+      if (
+        agentRunId.length > 0 &&
+        response.length > 0 &&
+        originalPrompt.length > 0
+      ) {
+        console.log("[agent-witch] Continuing Claude task after user input…");
+        continueClaudeTaskAfterInput(
+          config,
+          {
+            agentRunId,
+            originalPrompt,
+            partialOutput,
+            question,
+            response,
+            shellSessionId: shellSessionIdByRunId.get(agentRunId),
+          },
+          requestId,
+          asLegacyWebSocket(socket),
+        );
+      }
+    }
+
+    if (
+      parsed.type === "dispatch.approval.required" &&
+      isRecord(parsed.payload)
+    ) {
+      const requesterEmail =
+        typeof parsed.payload.requesterEmail === "string"
+          ? parsed.payload.requesterEmail
+          : "A teammate";
+      const promptPreview =
+        typeof parsed.payload.prompt === "string"
+          ? parsed.payload.prompt.slice(0, 120)
+          : "agent task";
+      console.log(
+        `[agent-witch] Approval required from ${requesterEmail}: ${promptPreview}`,
+      );
+      if (process.platform === "darwin") {
+        spawn(
+          "osascript",
+          [
+            "-e",
+            `display notification "${promptPreview.replace(/"/g, '\\"')}" with title "Agent dispatch approval" subtitle "${requesterEmail.replace(/"/g, '\\"')}"`,
+          ],
+          { stdio: "ignore" },
+        );
+      }
+    }
+
+    if (parsed.type === "harness.request" && isRecord(parsed.payload)) {
+      console.log("[agent-witch] Dispatching harness request…");
+      void runHarnessRequest(config, parsed.payload, requestId, socket);
+    }
+
+    if (parsed.type === "harness.export.request" && isRecord(parsed.payload)) {
+      const borrowerUserId =
+        typeof parsed.payload.borrowerUserId === "string"
+          ? parsed.payload.borrowerUserId
+          : "";
+      const targetDeviceId =
+        typeof parsed.payload.targetDeviceId === "string"
+          ? parsed.payload.targetDeviceId
+          : undefined;
+      const setSlugs = Array.isArray(parsed.payload.setSlugs)
+        ? parsed.payload.setSlugs.filter(
+            (slug): slug is string => typeof slug === "string",
+          )
+        : [];
+
+      if (borrowerUserId.length > 0 && setSlugs.length > 0) {
+        void (async () => {
+          const { readHarnessExportSets } =
+            await import("./readHarnessExportSets");
+          const sets = readHarnessExportSets(setSlugs, config.email);
+          sendMessage(socket, {
+            type: "harness.export.result",
+            payload: {
+              success: sets.length > 0,
+              borrowerUserId,
+              ...(targetDeviceId !== undefined ? { targetDeviceId } : {}),
+              sets,
+              errorMessage:
+                sets.length > 0
+                  ? undefined
+                  : "No readable harness sets were found on this machine.",
+            },
+            requestId,
+          });
+        })();
+      }
+    }
+
+    if (parsed.type === "harness.manifest.request") {
+      reportHarnessManifest(socket, config.layout);
+    }
+  };
+
+  const runCommandPollLoop = async (): Promise<void> => {
+    if (state.stopped || state.pollLoopActive || cloudApi === null) {
+      return;
+    }
+
+    const outbound = state.outbound;
+    if (outbound === undefined) {
+      return;
+    }
+
+    state.pollLoopActive = true;
+
+    while (!state.stopped && cloudApi !== null) {
+      const activeOutbound = state.outbound;
+      if (activeOutbound === undefined) {
+        break;
+      }
+
+      try {
+        const commandMessage = await pollAgentWitchCommand(
+          cloudApi,
+          COMMAND_POLL_WAIT_MS,
+        );
+        state.reconnectAttempt = 0;
+        writeAgentWitchConnectionHealth(config.layout, { wsUrl: config.wsUrl });
+
+        if (commandMessage !== null) {
+          handleInboundRaw(commandMessage, activeOutbound);
+        }
+      } catch (error) {
+        state.reconnectAttempt += 1;
+        const message = error instanceof Error ? error.message : String(error);
+        console.error(`[agent-witch] Command poll failed: ${message}`);
+        const delayMs = computeReconnectDelayMs(state.reconnectAttempt);
+        await new Promise<void>((resolve) => {
+          setTimeout(resolve, delayMs);
+        });
+      }
+    }
+
+    state.pollLoopActive = false;
   };
 
   const connect = (): void => {
@@ -721,20 +1080,29 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
       return;
     }
 
-    clearReconnectTimer();
-    closeSocket();
+    if (cloudApi === null) {
+      console.error(
+        `[agent-witch] Cannot start HTTP client: invalid wsUrl ${config.wsUrl}`,
+      );
+      state.reconnectAttempt += 1;
+      scheduleConnectRetry();
+      return;
+    }
 
-    const socket = new WebSocket(config.wsUrl);
-    state.socket = socket;
+    const outbound = createHttpOutboundSocket(cloudApi);
+    state.outbound = outbound;
 
-    socket.on("open", () => {
+    if (!state.connected) {
+      state.connected = true;
       state.reconnectAttempt = 0;
-      console.log(`[agent-witch] Connected to ${config.wsUrl}`);
+      console.log(
+        `[agent-witch] Connected to ${cloudApi.appOrigin} (HTTP poll)`,
+      );
       if (config.email !== null) {
         console.log(`[agent-witch] Profile: ${config.email}`);
       }
       writeAgentWitchConnectionHealth(config.layout, { wsUrl: config.wsUrl });
-      sendMessage(socket, {
+      sendMessage(outbound, {
         type: "agent.register",
         payload: {
           role: "agent",
@@ -742,364 +1110,27 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
           pairingToken: config.pairingToken,
         },
       });
-      reportHarnessManifest(socket, config.layout);
-      replayPendingRunInputRequests(config, socket);
-      startHeartbeat(socket);
-    });
+      reportHarnessManifest(outbound, config.layout);
+      replayPendingRunInputRequests(config, asLegacyWebSocket(outbound));
+    }
 
-    socket.on("message", (data) => {
-      const raw = typeof data === "string" ? data : data.toString("utf8");
+    void runCommandPollLoop();
+  };
 
-      try {
-        const parsed: unknown = JSON.parse(raw);
-        if (!isRecord(parsed) || typeof parsed.type !== "string") {
-          return;
-        }
-
-        const requestId =
-          typeof parsed.requestId === "string" ? parsed.requestId : undefined;
-
-        if (parsed.type === "system.ack") {
-          writeAgentWitchConnectionHealth(config.layout, {
-            wsUrl: config.wsUrl,
-          });
-        }
-
-        if (
-          parsed.type === "terminal.stream.accepted" &&
-          isRecord(parsed.payload)
-        ) {
-          const runId =
-            typeof parsed.payload.runId === "string"
-              ? parsed.payload.runId
-              : "";
-          if (runId.length > 0) {
-            const pendingChunks = acceptTerminalStream(runId);
-            for (const chunk of pendingChunks) {
-              sendMessage(socket, {
-                type: "terminal.stream.chunk",
-                payload: { runId, chunk },
-                requestId,
-              });
-            }
-          }
-        }
-
-        if (parsed.type === "agent.agentRun.list") {
-          sendMessage(socket, {
-            type: "dashboard.agentRun.list.result",
-            payload: { runs: listAgentRunsLocal(config.layout) },
-            requestId,
-          });
-        }
-
-        if (parsed.type === "agent.agentRun.get" && isRecord(parsed.payload)) {
-          const runId =
-            typeof parsed.payload.runId === "string"
-              ? parsed.payload.runId
-              : "";
-          const run =
-            runId.length > 0 ? loadAgentRunLocal(config.layout, runId) : null;
-          sendMessage(socket, {
-            type: "dashboard.agentRun.get.result",
-            payload: { run },
-            requestId,
-          });
-        }
-
-        if (parsed.type === "command.claude.run" && isRecord(parsed.payload)) {
-          const prompt = parsed.payload.prompt;
-          const writerAgent =
-            typeof parsed.payload.writerAgent === "string" &&
-            isHarnessWriterAgentId(parsed.payload.writerAgent)
-              ? parsed.payload.writerAgent
-              : "claude-cli";
-          const agentRunId =
-            typeof parsed.payload.agentRunId === "string"
-              ? parsed.payload.agentRunId
-              : undefined;
-          const sessionContinuation =
-            parsed.payload.sessionContinuation === true;
-          const shellSessionId =
-            typeof parsed.payload.shellSessionId === "string"
-              ? parsed.payload.shellSessionId
-              : undefined;
-
-          if (typeof prompt === "string" && prompt.trim().length > 0) {
-            console.log(
-              `[agent-witch] Running ${writerAgent} task (${sessionContinuation ? "continue" : "first"})…`,
-            );
-            if (agentRunId !== undefined && shellSessionId !== undefined) {
-              shellSessionIdByRunId.set(agentRunId, shellSessionId);
-            }
-            void dispatchWriterTask(
-              config,
-              writerAgent,
-              prompt.trim(),
-              requestId,
-              socket,
-              agentRunId,
-              sessionContinuation,
-              shellSessionId,
-            );
-          }
-        }
-
-        if (parsed.type === "shell.session.open" && isRecord(parsed.payload)) {
-          const shellSessionId =
-            typeof parsed.payload.shellSessionId === "string"
-              ? parsed.payload.shellSessionId
-              : "";
-          const cols =
-            typeof parsed.payload.cols === "number" ? parsed.payload.cols : 120;
-          const rows =
-            typeof parsed.payload.rows === "number" ? parsed.payload.rows : 32;
-          if (shellSessionId.length > 0) {
-            console.log("[agent-witch] Opening interactive Mac shell…");
-            void openInteractiveShellPty({
-              shellSessionId,
-              cwd: config.workspace,
-              cols,
-              rows,
-              send: (message) => {
-                sendMessage(socket, message);
-              },
-              requestId,
-            });
-          }
-        }
-
-        if (parsed.type === "shell.session.close" && isRecord(parsed.payload)) {
-          const shellSessionId =
-            typeof parsed.payload.shellSessionId === "string"
-              ? parsed.payload.shellSessionId
-              : "";
-          if (shellSessionId.length > 0) {
-            closeShellPtySession(
-              shellSessionId,
-              (message) => {
-                sendMessage(socket, message);
-              },
-              requestId,
-            );
-          }
-        }
-
-        if (parsed.type === "shell.input" && isRecord(parsed.payload)) {
-          const shellSessionId =
-            typeof parsed.payload.shellSessionId === "string"
-              ? parsed.payload.shellSessionId
-              : "";
-          const data =
-            typeof parsed.payload.data === "string" ? parsed.payload.data : "";
-          if (shellSessionId.length > 0 && data.length > 0) {
-            writeShellPtyInput(shellSessionId, data);
-          }
-        }
-
-        if (parsed.type === "shell.resize" && isRecord(parsed.payload)) {
-          const shellSessionId =
-            typeof parsed.payload.shellSessionId === "string"
-              ? parsed.payload.shellSessionId
-              : "";
-          const cols =
-            typeof parsed.payload.cols === "number" ? parsed.payload.cols : 0;
-          const rows =
-            typeof parsed.payload.rows === "number" ? parsed.payload.rows : 0;
-          if (shellSessionId.length > 0 && cols > 0 && rows > 0) {
-            resizeShellPty(shellSessionId, cols, rows);
-          }
-        }
-
-        if (
-          parsed.type === "command.writer.session.end" &&
-          isRecord(parsed.payload)
-        ) {
-          const writerAgent = parsed.payload.writerAgent;
-          if (
-            typeof writerAgent === "string" &&
-            isHarnessWriterAgentId(writerAgent)
-          ) {
-            clearWriterSession(writerAgent);
-          }
-        }
-
-        if (
-          parsed.type === "command.writer.session.start" &&
-          isRecord(parsed.payload)
-        ) {
-          const writerAgent = parsed.payload.writerAgent;
-          const writerSessionId =
-            typeof parsed.payload.writerSessionId === "string"
-              ? parsed.payload.writerSessionId
-              : "";
-          if (
-            typeof writerAgent === "string" &&
-            isHarnessWriterAgentId(writerAgent) &&
-            writerSessionId.length > 0
-          ) {
-            console.log(`[agent-witch] Starting ${writerAgent} session…`);
-            void startWriterSession(
-              config,
-              writerAgent,
-              writerSessionId,
-              requestId,
-              socket,
-            );
-          }
-        }
-
-        if (
-          parsed.type === "command.claude.input_respond" &&
-          isRecord(parsed.payload)
-        ) {
-          const agentRunId =
-            typeof parsed.payload.agentRunId === "string"
-              ? parsed.payload.agentRunId
-              : "";
-          const response =
-            typeof parsed.payload.response === "string"
-              ? parsed.payload.response.trim()
-              : "";
-          const originalPrompt =
-            typeof parsed.payload.originalPrompt === "string"
-              ? parsed.payload.originalPrompt
-              : "";
-          const partialOutput =
-            typeof parsed.payload.partialOutput === "string"
-              ? parsed.payload.partialOutput
-              : "";
-          const question =
-            typeof parsed.payload.question === "string"
-              ? parsed.payload.question
-              : "";
-
-          if (
-            agentRunId.length > 0 &&
-            response.length > 0 &&
-            originalPrompt.length > 0
-          ) {
-            console.log(
-              "[agent-witch] Continuing Claude task after user input…",
-            );
-            continueClaudeTaskAfterInput(
-              config,
-              {
-                agentRunId,
-                originalPrompt,
-                partialOutput,
-                question,
-                response,
-                shellSessionId: shellSessionIdByRunId.get(agentRunId),
-              },
-              requestId,
-              socket,
-            );
-          }
-        }
-
-        if (
-          parsed.type === "dispatch.approval.required" &&
-          isRecord(parsed.payload)
-        ) {
-          const requesterEmail =
-            typeof parsed.payload.requesterEmail === "string"
-              ? parsed.payload.requesterEmail
-              : "A teammate";
-          const promptPreview =
-            typeof parsed.payload.prompt === "string"
-              ? parsed.payload.prompt.slice(0, 120)
-              : "agent task";
-          console.log(
-            `[agent-witch] Approval required from ${requesterEmail}: ${promptPreview}`,
-          );
-          if (process.platform === "darwin") {
-            spawn(
-              "osascript",
-              [
-                "-e",
-                `display notification "${promptPreview.replace(/"/g, '\\"')}" with title "Agent dispatch approval" subtitle "${requesterEmail.replace(/"/g, '\\"')}"`,
-              ],
-              { stdio: "ignore" },
-            );
-          }
-        }
-
-        if (parsed.type === "harness.request" && isRecord(parsed.payload)) {
-          console.log("[agent-witch] Dispatching harness request…");
-          void runHarnessRequest(config, parsed.payload, requestId, socket);
-        }
-
-        if (
-          parsed.type === "harness.export.request" &&
-          isRecord(parsed.payload)
-        ) {
-          const borrowerUserId =
-            typeof parsed.payload.borrowerUserId === "string"
-              ? parsed.payload.borrowerUserId
-              : "";
-          const targetDeviceId =
-            typeof parsed.payload.targetDeviceId === "string"
-              ? parsed.payload.targetDeviceId
-              : undefined;
-          const setSlugs = Array.isArray(parsed.payload.setSlugs)
-            ? parsed.payload.setSlugs.filter(
-                (slug): slug is string => typeof slug === "string",
-              )
-            : [];
-
-          if (borrowerUserId.length > 0 && setSlugs.length > 0) {
-            void (async () => {
-              const { readHarnessExportSets } =
-                await import("./readHarnessExportSets");
-              const sets = readHarnessExportSets(setSlugs, config.email);
-              sendMessage(socket, {
-                type: "harness.export.result",
-                payload: {
-                  success: sets.length > 0,
-                  borrowerUserId,
-                  ...(targetDeviceId !== undefined ? { targetDeviceId } : {}),
-                  sets,
-                  errorMessage:
-                    sets.length > 0
-                      ? undefined
-                      : "No readable harness sets were found on this machine.",
-                },
-                requestId,
-              });
-            })();
-          }
-        }
-
-        if (parsed.type === "harness.manifest.request") {
-          reportHarnessManifest(socket, config.layout);
-        }
-      } catch {
-        console.error("[agent-witch] Failed to parse inbound message.");
-      }
-    });
-
-    socket.on("close", () => {
-      clearHeartbeat();
-      state.socket = undefined;
-      state.reconnectAttempt += 1;
-      console.log("[agent-witch] Disconnected from server.");
-      scheduleReconnect();
-    });
-
-    socket.on("error", (error) => {
-      console.error(`[agent-witch] Socket error: ${error.message}`);
-    });
+  const clearPollBackoff = (): void => {
+    if (state.pollBackoffTimer !== undefined) {
+      clearTimeout(state.pollBackoffTimer);
+      state.pollBackoffTimer = undefined;
+    }
   };
 
   const stop = (): void => {
     state.stopped = true;
-    clearHeartbeat();
     clearHttpHeartbeat();
     clearLocalHealthCheck();
     clearCloudJobPoll();
-    clearReconnectTimer();
-    closeSocket();
+    clearPollBackoff();
+    state.outbound = undefined;
   };
 
   return {

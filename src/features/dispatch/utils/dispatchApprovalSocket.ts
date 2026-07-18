@@ -1,9 +1,6 @@
+import { createHttpDashboardSocketShim } from "@/features/agent/utils/createHttpDashboardSocketShim";
+import { createAgentWitchRequestId } from "@/features/agent/utils/agentWitchSocketUtils";
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
-import {
-  buildAgentWitchWebSocketUrl,
-  createAgentWitchRequestId,
-  sendAgentWitchPairingToken,
-} from "@/features/agent/utils/agentWitchSocketUtils";
 
 import {
   parseDispatchApprovalSocketMessage,
@@ -20,24 +17,22 @@ export const connectDispatchApprovalSocket = (
   }) => void,
   onInputRequired?: (payload: AgentRunInputRequest) => void,
 ): { readonly disconnect: () => void; readonly socket: WebSocket | null } => {
-  const wsUrl = buildAgentWitchWebSocketUrl();
-  if (wsUrl.length === 0) {
+  if (typeof EventSource === "undefined") {
     return { disconnect: () => undefined, socket: null };
   }
 
-  const socket = new WebSocket(wsUrl);
+  const socket = createHttpDashboardSocketShim();
+  socket.send(
+    JSON.stringify({
+      type: AGENT_WITCH_MESSAGE_TYPES.AGENT_REGISTER,
+      payload: { role: "dashboard" },
+      requestId: createAgentWitchRequestId(),
+    }),
+  );
 
-  socket.addEventListener("open", () => {
-    socket.send(
-      JSON.stringify({
-        type: AGENT_WITCH_MESSAGE_TYPES.AGENT_REGISTER,
-        payload: { role: "dashboard" },
-      }),
-    );
-    sendAgentWitchPairingToken(socket);
-  });
+  const eventSource = new EventSource("/api/agent-witch/events");
 
-  socket.addEventListener("message", (event) => {
+  eventSource.onmessage = (event) => {
     try {
       const parsed: unknown = JSON.parse(String(event.data));
       if (
@@ -55,11 +50,11 @@ export const connectDispatchApprovalSocket = (
     } catch {
       return;
     }
-  });
+  };
 
   return {
     disconnect: () => {
-      socket.close();
+      eventSource.close();
     },
     socket,
   };

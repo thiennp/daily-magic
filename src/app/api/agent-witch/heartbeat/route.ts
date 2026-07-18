@@ -3,8 +3,9 @@ import {
   isAgentWitchDeviceRestartRequested,
 } from "@/features/agent-witch/online-wake";
 import { ensureAgentWitchDeviceSchema } from "@/lib/agentWitch/ensureAgentWitchDeviceSchema";
-import { touchAgentWitchDeviceLastSeen } from "@/lib/agentWitch/touchAgentWitchDeviceLastSeen";
+import { registerHttpAgentWitchClient } from "@/lib/agentWitch/registerHttpAgentWitchClient";
 import { requireAgentWitchDeviceAuth } from "@/lib/agentWitch/requireAgentWitchDeviceAuth";
+import { touchAgentWitchDeviceLastSeen } from "@/lib/agentWitch/touchAgentWitchDeviceLastSeen";
 
 export const dynamic = "force-dynamic";
 
@@ -40,12 +41,20 @@ export async function POST(request: Request): Promise<Response> {
   await ensureAgentWitchDeviceSchema();
 
   const body = await request.json().catch(() => ({}));
+  const hostname = parseHostname(body);
 
   if (parseRestartAck(body)) {
     await acknowledgeAgentWitchDeviceRestart(auth.device.id);
   }
 
-  await touchAgentWitchDeviceLastSeen(auth.pairingToken, parseHostname(body));
+  await touchAgentWitchDeviceLastSeen(auth.pairingToken, hostname);
+
+  registerHttpAgentWitchClient({
+    deviceId: auth.device.id,
+    userId: auth.device.userId,
+    pairingToken: auth.pairingToken,
+    deviceLabel: hostname,
+  });
 
   const restartRequested = await isAgentWitchDeviceRestartRequested(
     auth.device.id,

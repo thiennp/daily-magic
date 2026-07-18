@@ -54,6 +54,95 @@ export const parseAgentWitchHeartbeatResponse = (
   };
 };
 
+export const parseAgentWitchPollResponse = (
+  body: unknown,
+): {
+  readonly ok: boolean;
+  readonly commandMessage: Record<string, unknown> | null;
+} => {
+  if (typeof body !== "object" || body === null) {
+    return { ok: false, commandMessage: null };
+  }
+
+  const record = body as { ok?: unknown; command?: unknown };
+  if (record.ok !== true) {
+    return { ok: false, commandMessage: null };
+  }
+
+  if (record.command === null || record.command === undefined) {
+    return { ok: true, commandMessage: null };
+  }
+
+  if (typeof record.command !== "object" || record.command === null) {
+    return { ok: true, commandMessage: null };
+  }
+
+  const command = record.command as { message?: unknown };
+  if (
+    typeof command.message !== "object" ||
+    command.message === null ||
+    Array.isArray(command.message)
+  ) {
+    return { ok: true, commandMessage: null };
+  }
+
+  const message = command.message as Record<string, unknown>;
+  if (typeof message.type !== "string") {
+    return { ok: true, commandMessage: null };
+  }
+
+  return { ok: true, commandMessage: message };
+};
+
+export const pollAgentWitchCommand = async (
+  config: AgentWitchCloudApiConfig,
+  waitMs: number = 25_000,
+): Promise<Record<string, unknown> | null> => {
+  const response = await fetch(
+    `${config.appOrigin}/api/agent-witch/commands/poll`,
+    {
+      method: "POST",
+      headers: buildDeviceAuthHeaders(config.pairingToken),
+      body: JSON.stringify({ waitMs }),
+      signal: AbortSignal.timeout(waitMs + 15_000),
+    },
+  );
+
+  if (!response.ok) {
+    throw new Error(`Agent Witch command poll failed (${response.status})`);
+  }
+
+  const body: unknown = await response.json();
+  const parsed = parseAgentWitchPollResponse(body);
+
+  if (!parsed.ok) {
+    throw new Error("Agent Witch command poll returned invalid payload");
+  }
+
+  return parsed.commandMessage;
+};
+
+export const postAgentWitchMessage = async (
+  config: AgentWitchCloudApiConfig,
+  message: Record<string, unknown>,
+): Promise<boolean> => {
+  try {
+    const response = await fetch(
+      `${config.appOrigin}/api/agent-witch/messages`,
+      {
+        method: "POST",
+        headers: buildDeviceAuthHeaders(config.pairingToken),
+        body: JSON.stringify(message),
+        signal: AbortSignal.timeout(30_000),
+      },
+    );
+
+    return response.ok;
+  } catch {
+    return false;
+  }
+};
+
 export const postAgentWitchDeviceHeartbeat = async (
   config: AgentWitchCloudApiConfig,
   input: {

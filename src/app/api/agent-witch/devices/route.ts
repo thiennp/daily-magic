@@ -1,11 +1,8 @@
 import buildAgentWitchDevicesWithOnlineStatus from "@/lib/agentWitch/buildAgentWitchDevicesWithOnlineStatus";
-import { enrichOnlineAgentClients } from "@/lib/agentWitch/enrichOnlineAgentClients";
 import { ensureAgentWitchDeviceSchema } from "@/lib/agentWitch/ensureAgentWitchDeviceSchema";
-import { getAgentWitchHub } from "@/lib/agentWitch/getAgentWitchHub";
 import { listAgentWitchDevicesForUser } from "@/lib/agentWitch/listAgentWitchDevicesForUser";
 import { buildMockDevicesApiResponse } from "@/lib/agentWitch/mock/buildMockDevicesApiResponse";
 import { readAgentWitchMockScenario } from "@/lib/agentWitch/mock/readAgentWitchMockScenario";
-import { resolveOnlineClientsByDeviceId } from "@/lib/agentWitch/resolveOnlineClientsByDeviceId";
 import { requireAuth } from "@/lib/auth/requireAuth";
 
 export const dynamic = "force-dynamic";
@@ -29,21 +26,8 @@ export async function GET(): Promise<Response> {
 
   try {
     await ensureAgentWitchDeviceSchema();
-    const hub = getAgentWitchHub();
     const devices = await listAgentWitchDevicesForUser(actor.id);
-    const enrichedClients = await enrichOnlineAgentClients(
-      hub.pairingStore,
-      hub.listAgentClients(),
-    );
-    const onlineClients = enrichedClients.filter(
-      (client) => client.userId === actor.id,
-    );
-    const onlineClientByDeviceId =
-      await resolveOnlineClientsByDeviceId(onlineClients);
-    const devicesWithStatus = buildAgentWitchDevicesWithOnlineStatus(
-      devices,
-      onlineClientByDeviceId,
-    );
+    const devicesWithStatus = buildAgentWitchDevicesWithOnlineStatus(devices);
 
     return Response.json({
       ok: true,

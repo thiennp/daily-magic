@@ -1,9 +1,8 @@
+import type AgentWitchDeviceRecord from "@/lib/agentWitch/types/AgentWitchDeviceRecord.type";
 import {
   AGENT_WITCH_ACTIVE_THRESHOLD_MS,
   isAgentWitchDeviceRecentlySeen,
 } from "@/lib/agentWitch/agentWitchHeartbeat.constant";
-import type AgentWitchHubClient from "@/lib/agentWitch/types/AgentWitchHubClient.type";
-import type AgentWitchDeviceRecord from "@/lib/agentWitch/types/AgentWitchDeviceRecord.type";
 
 export interface AgentWitchDeviceWithOnlineStatus {
   readonly id: string;
@@ -19,28 +18,27 @@ export interface AgentWitchDeviceWithOnlineStatus {
   readonly lastHeartbeatAt: string | null;
 }
 
+/**
+ * Online status from HTTP heartbeat only (no WebSocket hub).
+ * `isConnected` = checked in within one heartbeat interval (~30s).
+ * `isOnline` = checked in within the wider online window (~90s).
+ */
 const buildAgentWitchDevicesWithOnlineStatus = (
   devices: readonly AgentWitchDeviceRecord[],
-  onlineClientByDeviceId: ReadonlyMap<string, AgentWitchHubClient>,
 ): readonly AgentWitchDeviceWithOnlineStatus[] => {
+  const nowMs = Date.now();
+
   return devices.map((device) => {
-    const onlineClient = onlineClientByDeviceId.get(device.id);
-    const nowMs = Date.now();
-    const isHubConnected = onlineClient !== undefined;
-    const isActivelyCheckingIn =
-      !isHubConnected &&
-      isAgentWitchDeviceRecentlySeen(
-        device.lastSeenAt,
-        nowMs,
-        AGENT_WITCH_ACTIVE_THRESHOLD_MS,
-      );
-    const isConnected = isHubConnected;
-    const isOnline =
-      isConnected || isAgentWitchDeviceRecentlySeen(device.lastSeenAt, nowMs);
+    const isConnected = isAgentWitchDeviceRecentlySeen(
+      device.lastSeenAt,
+      nowMs,
+      AGENT_WITCH_ACTIVE_THRESHOLD_MS,
+    );
+    const isOnline = isAgentWitchDeviceRecentlySeen(device.lastSeenAt, nowMs);
 
     return {
       id: device.id,
-      deviceLabel: onlineClient?.deviceLabel ?? device.deviceLabel,
+      deviceLabel: device.deviceLabel,
       displayName: device.displayName,
       claimedAt: device.claimedAt,
       lastSeenAt: device.lastSeenAt,
@@ -49,9 +47,7 @@ const buildAgentWitchDevicesWithOnlineStatus = (
       dispatchPolicy: device.dispatchPolicy,
       isConnected,
       isOnline,
-      lastHeartbeatAt:
-        onlineClient?.lastHeartbeatAt ??
-        (isActivelyCheckingIn ? device.lastSeenAt : null),
+      lastHeartbeatAt: isOnline ? device.lastSeenAt : null,
     };
   });
 };

@@ -56,7 +56,7 @@ describe("macDevicePresence", () => {
       "1 connected · 1 seen recently · checks in every ~30s",
     );
     expect(buildMacDevicesStatusLine({ live: 0, recent: 2, offline: 0 })).toBe(
-      "2 seen recently · open Agent Witch for a live connection",
+      "2 seen recently · waiting for the next check-in",
     );
   });
 

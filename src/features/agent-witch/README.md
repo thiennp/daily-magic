@@ -1,14 +1,23 @@
 # Agent Witch bridge
 
-Mac pairing, install script, WebSocket bridge, and paired-device API client.
+Mac pairing, install script, HTTP poll + SSE bridge, and paired-device API client.
 
 ## Scope
 
 | Area           | Path                        |
 | -------------- | --------------------------- |
 | Feature client | `src/features/agent-witch/` |
-| Server / WS    | `src/lib/agentWitch/`       |
+| Server / hub   | `src/lib/agentWitch/`       |
 | APIs           | `/api/agent-witch/*`        |
+
+## Transport (no WebSocket)
+
+| Direction        | Mechanism                                                                                       |
+| ---------------- | ----------------------------------------------------------------------------------------------- |
+| Online           | Mac `POST /api/agent-witch/heartbeat` every ~30s; `isConnected` = last seen within 30s          |
+| Commands → Mac   | Mac long-polls `POST /api/agent-witch/commands/poll`                                            |
+| Mac → server     | `POST /api/agent-witch/messages` (event/message ingest)                                         |
+| Server → browser | SSE `GET /api/agent-witch/events`; browser sends via `POST /api/agent-witch/dashboard/messages` |
 
 ## Key modules
 

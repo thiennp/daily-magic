@@ -1,15 +1,14 @@
 import type { AgentPairingStatus } from "@/features/harness/hooks/types/HarnessRequestResult.type";
 import type HarnessRequestResult from "@/features/harness/hooks/types/HarnessRequestResult.type";
 import type { AgentWitchSocketStore } from "@/features/harness/hooks/utils/agentWitchSocketStore";
-import {
-  buildAgentWitchWebSocketUrl,
-  createAgentWitchRequestId,
-} from "@/features/harness/hooks/utils/agentWitchSocketUtils";
+import { createAgentWitchRequestId } from "@/features/harness/hooks/utils/agentWitchSocketUtils";
 import { handleAgentWitchSocketMessage } from "@/features/harness/hooks/utils/handleAgentWitchSocketMessage";
+import { createHttpDashboardSocketShim } from "@/features/agent/utils/createHttpDashboardSocketShim";
 import type { HarnessExportResultPayload } from "@/features/harness/types/HarnessExportResult.type";
 import { AGENT_WITCH_PAIRING_TOKEN_STORAGE_KEY } from "@/lib/agentWitch/constants/pairingTokenStorageKey.constant";
 import type HarnessManifest from "@/lib/agentWitch/harness/types/HarnessManifest.type";
 import type { WsTestConnectionStatus } from "@/features/agent/types/WsTestConnectionStatus.type";
+import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
 
 interface ConnectAgentWitchHarnessSocketOptions {
   readonly socketStore: AgentWitchSocketStore;
@@ -34,65 +33,56 @@ export const connectAgentWitchHarnessSocket = ({
   setLastMessage,
   onHarnessExportResult,
 }: ConnectAgentWitchHarnessSocketOptions): (() => void) => {
-  const wsUrl = buildAgentWitchWebSocketUrl();
-  if (wsUrl.length === 0) {
+  if (typeof EventSource === "undefined") {
     return () => undefined;
   }
 
-  const socket = new WebSocket(wsUrl);
-  socketStore.socket = socket;
+  setConnectionStatus("connecting");
+  const shim = createHttpDashboardSocketShim();
+  socketStore.socket = shim;
 
-  const messageHandlers = {
-    setLastMessage,
-    setPairingStatus,
-    setLocalManifest,
-    setManifestHostname,
-    setLastRequestResult,
-    onHarnessExportResult,
-  };
+  const eventSource = new EventSource("/api/agent-witch/events");
 
-  socket.addEventListener("open", () => {
+  eventSource.onopen = () => {
     setConnectionStatus("connected");
-    socket.send(
+    shim.send(
       JSON.stringify({
-        type: "agent.register",
+        type: AGENT_WITCH_MESSAGE_TYPES.AGENT_REGISTER,
         payload: { role: "dashboard" },
+        requestId: createAgentWitchRequestId(),
       }),
     );
-
-    const savedToken = window.localStorage.getItem(
+    const pairingToken = window.localStorage.getItem(
       AGENT_WITCH_PAIRING_TOKEN_STORAGE_KEY,
     );
-    if (savedToken !== null && savedToken.trim().length > 0) {
-      socket.send(
+    if (pairingToken !== null && pairingToken.length > 0) {
+      shim.send(
         JSON.stringify({
-          type: "agent.pair",
-          payload: { pairingToken: savedToken.trim() },
+          type: AGENT_WITCH_MESSAGE_TYPES.AGENT_PAIR,
+          payload: { pairingToken },
           requestId: createAgentWitchRequestId(),
         }),
       );
-      setPairingStatus("ready_to_pair");
     }
-  });
+  };
 
-  socket.addEventListener("message", (event) => {
-    handleAgentWitchSocketMessage(String(event.data), messageHandlers);
-  });
+  eventSource.onmessage = (event) => {
+    handleAgentWitchSocketMessage(String(event.data), {
+      setPairingStatus,
+      setLocalManifest,
+      setManifestHostname,
+      setLastRequestResult,
+      setLastMessage,
+      onHarnessExportResult,
+    });
+  };
 
-  socket.addEventListener("close", () => {
+  eventSource.onerror = () => {
     setConnectionStatus("disconnected");
-    setPairingStatus("not_connected");
-    setLocalManifest(null);
-    setManifestHostname(null);
-  });
-
-  socket.addEventListener("error", () => {
-    setConnectionStatus("error");
-    setPairingStatus("not_connected");
-  });
+  };
 
   return () => {
-    socket.close();
+    eventSource.close();
     socketStore.socket = null;
   };
 };

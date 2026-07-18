@@ -2,13 +2,8 @@
 
 import { useEffect, useRef } from "react";
 
-import {
-  buildAgentWitchWebSocketUrl,
-  sendAgentWitchPairingToken,
-} from "@/features/agent/utils/agentWitchSocketUtils";
 import trackOnboardingFromAgentWitchSocketMessage from "@/features/home/utils/trackOnboardingFromAgentWitchSocketMessage";
 import { syncAgentRunLocalCacheFromSocket } from "@/features/reports/utils/syncAgentRunLocalCacheFromSocket";
-import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
 import type AgentRunRecord from "@/lib/dispatch/types/AgentRunRecord.type";
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
@@ -34,24 +29,13 @@ export const useAgentRunRecordSync = (
   }, [onRunUpdated]);
 
   useEffect(() => {
-    const wsUrl = buildAgentWitchWebSocketUrl();
-    if (wsUrl.length === 0) {
+    if (typeof EventSource === "undefined") {
       return;
     }
 
-    const socket = new WebSocket(wsUrl);
+    const eventSource = new EventSource("/api/agent-witch/events");
 
-    socket.addEventListener("open", () => {
-      socket.send(
-        JSON.stringify({
-          type: AGENT_WITCH_MESSAGE_TYPES.AGENT_REGISTER,
-          payload: { role: "dashboard" },
-        }),
-      );
-      sendAgentWitchPairingToken(socket);
-    });
-
-    socket.addEventListener("message", (event) => {
+    eventSource.onmessage = (event) => {
       const raw = String(event.data);
       trackOnboardingFromAgentWitchSocketMessage(raw);
       if (!syncAgentRunLocalCacheFromSocket(raw)) {
@@ -71,10 +55,10 @@ export const useAgentRunRecordSync = (
       } catch {
         return;
       }
-    });
+    };
 
     return () => {
-      socket.close();
+      eventSource.close();
     };
   }, []);
 };
