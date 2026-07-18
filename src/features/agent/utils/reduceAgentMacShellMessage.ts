@@ -47,7 +47,8 @@ export const reduceAgentMacShellMessage = (
         ...state,
         status: "opening",
         shellSessionId: payload.shellSessionId,
-        canWrite: true,
+        canWrite:
+          typeof payload.canWrite === "boolean" ? payload.canWrite : true,
       };
     }
 

@@ -19,7 +19,13 @@ const forwardOwnerShellControl = (
       ? message.payload.shellSessionId
       : "";
   const session = getShellSession(shellSessionId);
-  if (session === undefined || session.ownerUserId !== sender.userId) {
+  if (session === undefined) {
+    return buildDispatchError(
+      "This shell session is no longer available. Reconnect or send the task again.",
+      message.requestId,
+    );
+  }
+  if (session.ownerUserId !== sender.userId) {
     return buildDispatchError(
       "Only the Mac owner can control this shell.",
       message.requestId,

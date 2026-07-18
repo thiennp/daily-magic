@@ -1,14 +1,26 @@
 import type { AgentRunStatusValue } from "@/lib/dispatch/AgentRunStatus.constant";
 import type AgentRunRecord from "@/lib/dispatch/types/AgentRunRecord.type";
 
-const sessions = new Map<string, AgentRunRecord>();
+/**
+ * Process-wide so Next.js API routes and WebSocket handlers share run state.
+ */
+const agentRunSessionGlobal = globalThis as typeof globalThis & {
+  __dailyMagicAgentRunSessions?: Map<string, AgentRunRecord>;
+};
+
+const sessions = (): Map<string, AgentRunRecord> => {
+  if (agentRunSessionGlobal.__dailyMagicAgentRunSessions === undefined) {
+    agentRunSessionGlobal.__dailyMagicAgentRunSessions = new Map();
+  }
+  return agentRunSessionGlobal.__dailyMagicAgentRunSessions;
+};
 
 export const registerAgentRunSession = (run: AgentRunRecord): void => {
-  sessions.set(run.id, run);
+  sessions().set(run.id, run);
 };
 
 export const getAgentRunSession = (runId: string): AgentRunRecord | undefined =>
-  sessions.get(runId);
+  sessions().get(runId);
 
 export const updateAgentRunSession = (
   runId: string,
@@ -26,7 +38,7 @@ export const updateAgentRunSession = (
     >
   >,
 ): AgentRunRecord | undefined => {
-  const existing = sessions.get(runId);
+  const existing = sessions().get(runId);
   if (existing === undefined) {
     return undefined;
   }
@@ -36,33 +48,37 @@ export const updateAgentRunSession = (
     ...patch,
     updatedAt: patch.updatedAt ?? new Date().toISOString(),
   };
-  sessions.set(runId, updated);
+  sessions().set(runId, updated);
   return updated;
 };
 
 export const removeAgentRunSession = (runId: string): void => {
-  sessions.delete(runId);
+  sessions().delete(runId);
 };
 
 export const listAgentRunSessionsForUser = (
   userId: string,
 ): readonly AgentRunRecord[] =>
-  [...sessions.values()].filter(
+  [...sessions().values()].filter(
     (run) => run.requesterUserId === userId || run.executorUserId === userId,
   );
 
 export const listAllAgentRunSessions = (): readonly AgentRunRecord[] => [
-  ...sessions.values(),
+  ...sessions().values(),
 ];
 
 export const isAgentRunSessionRunning = (
   runId: string,
   executorUserId: string,
 ): boolean => {
-  const run = sessions.get(runId);
+  const run = sessions().get(runId);
   return (
     run !== undefined &&
     run.executorUserId === executorUserId &&
     run.status === ("running" satisfies AgentRunStatusValue)
   );
+};
+
+export const clearAgentRunSessionsForTests = (): void => {
+  sessions().clear();
 };

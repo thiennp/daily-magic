@@ -55,5 +55,18 @@ export const reduceAgentLiveTerminalStreamMessage = (
     };
   }
 
+  if (
+    parsed.type === AGENT_WITCH_MESSAGE_TYPES.SHELL_DATA &&
+    typeof payload.chunk === "string" &&
+    payload.chunk.length > 0 &&
+    (state.activeRunId !== null || state.sessionWriterAgent !== null)
+  ) {
+    return {
+      ...state,
+      status: "streaming",
+      output: `${state.output}${payload.chunk}`,
+    };
+  }
+
   return state;
 };

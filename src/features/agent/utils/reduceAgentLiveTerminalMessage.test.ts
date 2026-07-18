@@ -52,6 +52,23 @@ describe("reduceAgentLiveTerminalMessage", () => {
     expect(streamed.output).toContain("hello");
   });
 
+  it("AGENT-014: mirrors shell.data into Local Mac terminal output", () => {
+    const started = beginAgentLiveTerminalSession(
+      formatAgentLiveTerminalCommandLine("run lint"),
+      "cursor",
+    );
+    const withShell = reduceAgentLiveTerminalMessage(started, {
+      type: AGENT_WITCH_MESSAGE_TYPES.SHELL_DATA,
+      payload: {
+        shellSessionId: "shell-1",
+        chunk: "live pty line\n",
+      },
+    });
+
+    expect(withShell.output).toContain("live pty line");
+    expect(withShell.status).toBe("streaming");
+  });
+
   it("appends final result output after the rendered command line", () => {
     const commandLine = formatAgentLiveTerminalCommandLine("run lint");
     const dispatched = reduceAgentLiveTerminalMessage(

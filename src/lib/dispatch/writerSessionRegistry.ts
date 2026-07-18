@@ -14,7 +14,19 @@ export interface WriterSessionRecord {
   readonly startedAt: number;
 }
 
-const sessions = new Map<string, WriterSessionRecord>();
+/**
+ * Process-wide so Next.js API routes and WebSocket handlers share sessions.
+ */
+const writerSessionGlobal = globalThis as typeof globalThis & {
+  __dailyMagicWriterSessions?: Map<string, WriterSessionRecord>;
+};
+
+const sessions = (): Map<string, WriterSessionRecord> => {
+  if (writerSessionGlobal.__dailyMagicWriterSessions === undefined) {
+    writerSessionGlobal.__dailyMagicWriterSessions = new Map();
+  }
+  return writerSessionGlobal.__dailyMagicWriterSessions;
+};
 
 export const createWriterSession = (input: {
   readonly ownerUserId: string;
@@ -33,16 +45,16 @@ export const createWriterSession = (input: {
     dashboardClientId: input.dashboardClientId,
     startedAt: Date.now(),
   };
-  sessions.set(writerSessionId, record);
+  sessions().set(writerSessionId, record);
   return record;
 };
 
 export const getWriterSession = (
   writerSessionId: string,
-): WriterSessionRecord | undefined => sessions.get(writerSessionId);
+): WriterSessionRecord | undefined => sessions().get(writerSessionId);
 
 export const removeWriterSession = (writerSessionId: string): void => {
-  sessions.delete(writerSessionId);
+  sessions().delete(writerSessionId);
 };
 
 export const readWriterSessionId = (
@@ -58,7 +70,7 @@ export const authorizeWriterSessionPublisher = (
     return undefined;
   }
 
-  const session = sessions.get(writerSessionId);
+  const session = sessions().get(writerSessionId);
   if (session === undefined) {
     return undefined;
   }
@@ -79,5 +91,5 @@ export const authorizeWriterSessionPublisher = (
 };
 
 export const clearWriterSessionsForTests = (): void => {
-  sessions.clear();
+  sessions().clear();
 };

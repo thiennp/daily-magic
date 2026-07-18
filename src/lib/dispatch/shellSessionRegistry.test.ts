@@ -48,4 +48,19 @@ describe("shellSessionRegistry", () => {
       getShellSessionByDevice("owner-1", null, "interactive"),
     ).toBeUndefined();
   });
+
+  it("AGENT-015: keeps sessions on globalThis across registry reloads", () => {
+    const session = createShellSession({
+      ownerUserId: "owner-shared",
+      deviceId: "device-shared",
+      mode: "agent",
+      activeRunId: "run-shared",
+    });
+    const fromGlobal = (
+      globalThis as typeof globalThis & {
+        __dailyMagicShellSessions?: Map<string, { shellSessionId: string }>;
+      }
+    ).__dailyMagicShellSessions?.get(session.shellSessionId);
+    expect(fromGlobal?.shellSessionId).toBe(session.shellSessionId);
+  });
 });

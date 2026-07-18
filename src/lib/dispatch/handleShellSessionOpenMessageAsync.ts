@@ -76,6 +76,7 @@ export const handleShellSessionOpenMessageAsync = async (
     payload: {
       shellSessionId: session.shellSessionId,
       opened: true,
+      canWrite: true,
     },
     requestId: message.requestId,
   };
