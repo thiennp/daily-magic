@@ -5,6 +5,7 @@ import type AgentWitchMessage from "./types/AgentWitchMessage.type";
 export const USER_ID = "user-1";
 export const USER_EMAIL = "user@example.com";
 export const PAIRING_TOKEN = "pair-token-1";
+export const DEVICE_ID = "device-1";
 
 export const createCollector = () => {
   const messages: AgentWitchMessage[] = [];
@@ -27,6 +28,7 @@ export const registerPairedClients = async (
     id: "agent-1",
     role: "agent",
     userId: USER_ID,
+    deviceId: DEVICE_ID,
     pairingToken: PAIRING_TOKEN,
     send: agentSend,
   });

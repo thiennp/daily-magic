@@ -17,10 +17,10 @@ describe("ensureAgentWitchDeviceSchema", () => {
     resetAgentWitchDeviceSchemaEnsureForTests();
   });
 
-  it("adds display_name only once per process", async () => {
+  it("adds display_name and restart_requested_at only once per process", async () => {
     await ensureAgentWitchDeviceSchema();
     await ensureAgentWitchDeviceSchema();
 
-    expect(sqlMock).toHaveBeenCalledTimes(1);
+    expect(sqlMock).toHaveBeenCalledTimes(2);
   });
 });

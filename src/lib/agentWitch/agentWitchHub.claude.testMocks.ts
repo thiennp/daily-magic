@@ -25,6 +25,10 @@ const mockAgentRun = {
   writerAgent: "claude-cli",
 };
 
+vi.mock("@/lib/agentWitch/findAgentWitchDeviceByToken", () => ({
+  findAgentWitchDeviceByToken: vi.fn(async () => null),
+}));
+
 vi.mock("@/lib/dispatch/persistAgentRun", () => ({
   persistAgentRun: vi.fn(async () => mockAgentRun),
 }));
