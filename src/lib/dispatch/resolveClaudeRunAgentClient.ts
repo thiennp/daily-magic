@@ -1,6 +1,7 @@
 import isAgentWitchDeviceOwnedByUser from "@/lib/agentWitch/isAgentWitchDeviceOwnedByUser";
 import { isMacDeviceReachableViaHeartbeat } from "@/lib/agentWitch/resolveMacDeviceReachability";
 import { findAgentWitchDeviceById } from "@/lib/agentWitch/findAgentWitchDeviceById";
+import { findEnrichedAgentClientForUser } from "@/lib/agentWitch/findEnrichedAgentClientForUser";
 import type AgentWitchHubClient from "@/lib/agentWitch/types/AgentWitchHubClient.type";
 import type AgentWitchHubRuntime from "@/lib/agentWitch/types/AgentWitchHubRuntime.type";
 import { buildDispatchError } from "@/lib/dispatch/buildDispatchError";
@@ -67,7 +68,8 @@ export const resolveClaudeRunAgentClient = async (input: {
     }
   }
 
-  const agentClient = input.runtime.findAgentClientForUser(
+  const agentClient = await findEnrichedAgentClientForUser(
+    input.runtime,
     input.executorUserId,
     input.targetDeviceId,
   );

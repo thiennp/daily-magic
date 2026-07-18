@@ -45,3 +45,11 @@ export const shouldShowWsTestComposerSelectedMacBackLink = (
   macStepInput: WsTestComposerMacStepInput,
 ): boolean =>
   showPickerStepOnly && !shouldSkipWsTestComposerMacSelectionStep(macStepInput);
+
+/** Session lock / single-device skip must not hide Mac change during an active run. */
+export const shouldShowMacTrailDuringActiveSession = (
+  input: Pick<
+    WsTestComposerMacStepInput,
+    "showMacPicker" | "isOwnDeviceDispatch"
+  >,
+): boolean => input.showMacPicker && !input.isOwnDeviceDispatch;
