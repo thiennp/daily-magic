@@ -1,12 +1,17 @@
 "use client";
 
-import { MacDeviceOfflineWakeHint } from "@/features/agent-witch/online-wake";
+import {
+  formatMacPresenceStatusLabel,
+  MacDeviceOfflineWakeHint,
+  resolveMacPresenceTier,
+} from "@/features/agent-witch/online-wake";
 import MacDeviceIcon from "@/features/agent-witch/macDevices/MacDeviceIcon";
 import { resolveMacDeviceIconClassName } from "@/features/agent-witch/macDevices/utils/resolveMacDeviceIconClassName";
 
 interface SendTaskComposerMacPickerRowProps {
   readonly displayName: string;
   readonly isOnline: boolean;
+  readonly isConnected: boolean;
   readonly isWakeServerReachable: boolean;
   readonly onSelect: () => void;
 }
@@ -14,9 +19,15 @@ interface SendTaskComposerMacPickerRowProps {
 export default function SendTaskComposerMacPickerRow({
   displayName,
   isOnline,
+  isConnected,
   isWakeServerReachable,
   onSelect,
 }: SendTaskComposerMacPickerRowProps) {
+  const presence = { isOnline, isConnected };
+  const tier = resolveMacPresenceTier(presence);
+  const statusLabel = formatMacPresenceStatusLabel(presence);
+  const iconLooksLive = tier === "live";
+
   const row = (
     <button
       type="button"
@@ -26,7 +37,7 @@ export default function SendTaskComposerMacPickerRow({
       <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-gray-200 bg-white shadow-theme-xs dark:border-gray-700 dark:bg-gray-800">
         <MacDeviceIcon
           className={resolveMacDeviceIconClassName(
-            isOnline,
+            iconLooksLive,
             "h-5 w-5 shrink-0",
           )}
         />
@@ -36,13 +47,13 @@ export default function SendTaskComposerMacPickerRow({
           {displayName}
         </span>
         <span className="mt-0.5 block text-xs text-gray-500 dark:text-gray-400">
-          {isOnline ? "Online" : "Offline"}
+          {statusLabel}
         </span>
       </span>
     </button>
   );
 
-  if (isOnline) {
+  if (tier !== "offline") {
     return row;
   }
 

@@ -57,6 +57,7 @@ export default function SendTaskComposerMacPickerStep({
             <SendTaskComposerMacPickerRow
               displayName={displayNameById.get(device.id) ?? "Your Mac"}
               isOnline={device.isOnline}
+              isConnected={device.isConnected}
               isWakeServerReachable={canWakeMacDeviceFromBrowser({
                 deviceLabel: device.deviceLabel,
                 localHostname,

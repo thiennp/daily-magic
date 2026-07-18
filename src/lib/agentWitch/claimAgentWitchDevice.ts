@@ -1,27 +1,27 @@
+import {
+  insertAgentWitchDeviceClaim,
+  isUniqueTokenHashViolation,
+  updateExistingClaimForUser,
+} from "@/lib/agentWitch/claimAgentWitchDeviceHelpers";
+import { consolidateAgentWitchDeviceByHostname } from "@/lib/agentWitch/consolidateAgentWitchDeviceByHostname";
 import { findAgentWitchDeviceByToken } from "@/lib/agentWitch/findAgentWitchDeviceByToken";
 import hashPairingToken from "@/lib/agentWitch/hashPairingToken";
-import mapAgentWitchDeviceRow from "@/lib/agentWitch/mapAgentWitchDeviceRow";
+import { reclaimAgentWitchDeviceByHostname } from "@/lib/agentWitch/reclaimAgentWitchDeviceByHostname";
 import type AgentWitchDeviceRecord from "@/lib/agentWitch/types/AgentWitchDeviceRecord.type";
-import { asRowArray, getSql } from "@/lib/db";
 
-const isUniqueTokenHashViolation = (error: unknown): boolean => {
-  if (typeof error !== "object" || error === null) {
-    return false;
-  }
-
-  const record = error as { code?: unknown; constraint?: unknown };
-  return (
-    record.code === "23505" &&
-    record.constraint === "agent_witch_devices_token_hash_key"
-  );
-};
+const finishClaim = async (input: {
+  readonly claimedDevice: AgentWitchDeviceRecord;
+  readonly userId: string;
+  readonly tokenHash: string;
+  readonly deviceLabel: string | null;
+}): Promise<AgentWitchDeviceRecord> =>
+  consolidateAgentWitchDeviceByHostname(input);
 
 export async function claimAgentWitchDevice(input: {
   readonly pairingToken: string;
   readonly userId: string;
   readonly deviceLabel?: string | null;
 }): Promise<AgentWitchDeviceRecord> {
-  const sql = getSql();
   const tokenHash = hashPairingToken(input.pairingToken);
   const deviceLabel = input.deviceLabel ?? null;
   const existing = await findAgentWitchDeviceByToken(input.pairingToken);
@@ -31,21 +31,19 @@ export async function claimAgentWitchDevice(input: {
     existing.revokedAt === null &&
     existing.userId === input.userId
   ) {
-    const result = asRowArray(
-      await sql`
-        UPDATE agent_witch_devices
-        SET
-          last_seen_at = NOW(),
-          device_label = COALESCE(${deviceLabel}, device_label)
-        WHERE token_hash = ${tokenHash}
-          AND user_id = ${input.userId}
-          AND revoked_at IS NULL
-        RETURNING id, user_id, device_label, claimed_at, last_seen_at, revoked_at
-      `,
-    );
-
-    if (result[0]) {
-      return mapAgentWitchDeviceRow(result[0]);
+    const updated = await updateExistingClaimForUser({
+      tokenHash,
+      userId: input.userId,
+      deviceLabel,
+      unrevoke: false,
+    });
+    if (updated !== null) {
+      return finishClaim({
+        claimedDevice: updated,
+        userId: input.userId,
+        tokenHash,
+        deviceLabel,
+      });
     }
   }
 
@@ -54,21 +52,19 @@ export async function claimAgentWitchDevice(input: {
     existing.revokedAt !== null &&
     existing.userId === input.userId
   ) {
-    const result = asRowArray(
-      await sql`
-        UPDATE agent_witch_devices
-        SET
-          revoked_at = NULL,
-          last_seen_at = NOW(),
-          device_label = COALESCE(${deviceLabel}, device_label)
-        WHERE token_hash = ${tokenHash}
-          AND user_id = ${input.userId}
-        RETURNING id, user_id, device_label, claimed_at, last_seen_at, revoked_at
-      `,
-    );
-
-    if (result[0]) {
-      return mapAgentWitchDeviceRow(result[0]);
+    const restored = await updateExistingClaimForUser({
+      tokenHash,
+      userId: input.userId,
+      deviceLabel,
+      unrevoke: true,
+    });
+    if (restored !== null) {
+      return finishClaim({
+        claimedDevice: restored,
+        userId: input.userId,
+        tokenHash,
+        deviceLabel,
+      });
     }
   }
 
@@ -76,18 +72,27 @@ export async function claimAgentWitchDevice(input: {
     throw new Error("This pairing token is already linked to another account.");
   }
 
-  try {
-    const insertResult = asRowArray(
-      await sql`
-        INSERT INTO agent_witch_devices (user_id, token_hash, device_label, last_seen_at)
-        VALUES (${input.userId}, ${tokenHash}, ${deviceLabel}, NOW())
-        RETURNING id, user_id, device_label, claimed_at, last_seen_at, revoked_at
-      `,
-    );
+  const reclaimed = await reclaimAgentWitchDeviceByHostname({
+    userId: input.userId,
+    tokenHash,
+    deviceLabel,
+  });
+  if (reclaimed !== null) {
+    return reclaimed;
+  }
 
-    if (insertResult[0]) {
-      return mapAgentWitchDeviceRow(insertResult[0]);
-    }
+  try {
+    const inserted = await insertAgentWitchDeviceClaim({
+      userId: input.userId,
+      tokenHash,
+      deviceLabel,
+    });
+    return finishClaim({
+      claimedDevice: inserted,
+      userId: input.userId,
+      tokenHash,
+      deviceLabel,
+    });
   } catch (error) {
     if (isUniqueTokenHashViolation(error)) {
       const raced = await findAgentWitchDeviceByToken(input.pairingToken);
@@ -96,7 +101,12 @@ export async function claimAgentWitchDevice(input: {
         raced.userId === input.userId &&
         raced.revokedAt === null
       ) {
-        return raced;
+        return finishClaim({
+          claimedDevice: raced,
+          userId: input.userId,
+          tokenHash,
+          deviceLabel,
+        });
       }
 
       throw new Error(
@@ -106,6 +116,4 @@ export async function claimAgentWitchDevice(input: {
 
     throw error;
   }
-
-  throw new Error("Failed to claim Agent Witch device.");
 }

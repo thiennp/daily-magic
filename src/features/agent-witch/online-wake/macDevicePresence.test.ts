@@ -4,6 +4,7 @@ import {
   buildMacDevicesStatusLine,
   canDispatchToMac,
   countMacPresenceTiers,
+  formatMacPresenceStatusLabel,
   pickAlternateDispatchReadyDeviceId,
   pickDefaultMacDeviceId,
   resolveMacPresenceTier,
@@ -26,6 +27,18 @@ describe("macDevicePresence", () => {
     expect(
       resolveMacPresenceTier({ isConnected: false, isOnline: false }),
     ).toBe("offline");
+  });
+
+  it("AGENT-013: labels recent Macs as seen recently, not Online", () => {
+    expect(
+      formatMacPresenceStatusLabel({ isConnected: true, isOnline: true }),
+    ).toBe("Online");
+    expect(
+      formatMacPresenceStatusLabel({ isConnected: false, isOnline: true }),
+    ).toBe("Seen recently");
+    expect(
+      formatMacPresenceStatusLabel({ isConnected: false, isOnline: false }),
+    ).toBe("Offline");
   });
 
   it("counts presence tiers for the home devices summary", () => {

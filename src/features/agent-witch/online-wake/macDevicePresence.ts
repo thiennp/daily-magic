@@ -25,6 +25,20 @@ export const resolveMacPresenceTier = (
   return "offline";
 };
 
+/** User-facing status for Mac picker rows (send-task, device lists). */
+export const formatMacPresenceStatusLabel = (
+  device: MacDevicePresence,
+): string => {
+  const tier = resolveMacPresenceTier(device);
+  if (tier === "live") {
+    return "Online";
+  }
+  if (tier === "recent") {
+    return "Seen recently";
+  }
+  return "Offline";
+};
+
 /** Mac can receive install/send tasks right now (live socket or active heartbeat). */
 export const canDispatchToMac = (device: MacDevicePresence): boolean =>
   resolveMacPresenceTier(device) === "live";

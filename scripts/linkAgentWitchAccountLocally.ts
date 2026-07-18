@@ -1,5 +1,6 @@
 import { randomBytes } from "node:crypto";
 import fs from "node:fs";
+import os from "node:os";
 import path from "node:path";
 
 import {
@@ -63,7 +64,9 @@ const postJson = async (
   }
 };
 
-const kickstartLinkedAgent = async (launchAgentLabel: string): Promise<void> => {
+const kickstartLinkedAgent = async (
+  launchAgentLabel: string,
+): Promise<void> => {
   const kickLegacy = await kickstartAgentWitchLaunchAgent(
     AGENT_WITCH_LEGACY_LAUNCH_AGENT_LABEL,
   );
@@ -152,6 +155,7 @@ export const linkAgentWitchAccountLocally = async (
     {
       pairingToken: pairing.pairingToken,
       linkToken: input.linkToken,
+      deviceLabel: os.hostname(),
     },
   );
 

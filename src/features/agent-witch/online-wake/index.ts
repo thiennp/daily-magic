@@ -5,6 +5,7 @@ export type {
 } from "./macDevicePresence";
 export {
   resolveMacPresenceTier,
+  formatMacPresenceStatusLabel,
   canDispatchToMac,
   countMacPresenceTiers,
   buildMacDevicesStatusLine,

@@ -1,4 +1,7 @@
-import { getAgentWitchHub, getAgentWitchPairingStore } from "@/lib/agentWitch/getAgentWitchHub";
+import {
+  getAgentWitchHub,
+  getAgentWitchPairingStore,
+} from "@/lib/agentWitch/getAgentWitchHub";
 import { verifyLinkAccountToken } from "@/lib/agentWitch/linkAccountToken";
 import { asRowArray, getSql } from "@/lib/db";
 
@@ -7,6 +10,7 @@ export const dynamic = "force-dynamic";
 interface LinkAccountBody {
   readonly pairingToken: string;
   readonly linkToken: string;
+  readonly deviceLabel: string | null;
 }
 
 const parseLinkAccountBody = (body: unknown): LinkAccountBody | null => {
@@ -19,12 +23,17 @@ const parseLinkAccountBody = (body: unknown): LinkAccountBody | null => {
     typeof record.pairingToken === "string" ? record.pairingToken.trim() : "";
   const linkToken =
     typeof record.linkToken === "string" ? record.linkToken.trim() : "";
+  const deviceLabel =
+    typeof record.deviceLabel === "string" &&
+    record.deviceLabel.trim().length > 0
+      ? record.deviceLabel.trim()
+      : null;
 
   if (pairingToken.length === 0 || linkToken.length === 0) {
     return null;
   }
 
-  return { pairingToken, linkToken };
+  return { pairingToken, linkToken, deviceLabel };
 };
 
 export async function POST(request: Request): Promise<Response> {
@@ -38,7 +47,7 @@ export async function POST(request: Request): Promise<Response> {
     );
   }
 
-  const { pairingToken, linkToken } = parsed;
+  const { pairingToken, linkToken, deviceLabel } = parsed;
   const verifiedLink = verifyLinkAccountToken(linkToken);
   if (verifiedLink === null) {
     return Response.json(
@@ -73,7 +82,7 @@ export async function POST(request: Request): Promise<Response> {
     pairingToken,
     userRow.id,
     userRow.email,
-    "Mac",
+    deviceLabel ?? "Mac",
   );
 
   if (!claimResult.success) {

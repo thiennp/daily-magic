@@ -1,3 +1,15 @@
+## AGENT-006 — Reinstall/link created a second device for the same Mac
+
+**Symptom:** After a fresh local install + account link, Home showed both `L92KQX615Q` (connected, no display name) and the previous “Light Grey Mac” for the same hostname.
+
+**Root cause:** Link claimed with a new pairing token and always `INSERT`ed a device row. The Mac hostname was not sent on link, so the server could not reclaim the existing row.
+
+**Fix:** Mac link posts `deviceLabel: os.hostname()`. `claimAgentWitchDevice` rotates `token_hash` onto the user’s active device with the same label (skipping generic `"Mac"`).
+
+**Regression tests:** `findActiveAgentWitchDeviceByUserAndLabel.test.ts` (AGENT-006).
+
+---
+
 ## AGENT-005 — Fresh local install crashed wake server before automation scripts landed
 
 **Symptom:** On a brand-new `~/.local-agent-witch` install, `com.local-agent-witch-wake` crash-looped with `Cannot find module '.../applyAutomationSyncLocally'`.
