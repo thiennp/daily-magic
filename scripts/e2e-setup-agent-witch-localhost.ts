@@ -2,16 +2,19 @@
 /**
  * Ensures a dedicated Agent Witch profile for localhost E2E test accounts.
  *
- * Production profiles may point at wss://www.agentwitch.com; E2E profiles live
- * under ~/.agent-witch/profiles/<email>/ with ws://localhost:3000.
+ * Localhost E2E uses the local app home ~/.local-agent-witch (separate from
+ * production ~/.agent-witch) with ws://localhost:3000.
  *
  * Usage:
  *   npm run e2e:agent-witch:setup -- test-admin-1@agentwitch.com
  *   AGENT_WITCH_PROFILE=test-member-a-1@agentwitch.com npm run agent-witch
  */
 import { spawn } from "node:child_process";
+import os from "node:os";
+import path from "node:path";
 
 import { ensureAgentWitchProfile } from "./ensureAgentWitchProfile";
+import { AGENT_WITCH_LOCAL_INSTALL_DIR_NAME } from "./resolveAgentWitchLocalLayout";
 
 const profileEmail = process.argv[2]?.trim();
 
@@ -21,6 +24,12 @@ if (!profileEmail) {
   );
   process.exit(1);
 }
+
+const localInstallDir = path.join(
+  os.homedir(),
+  AGENT_WITCH_LOCAL_INSTALL_DIR_NAME,
+);
+process.env.AGENT_WITCH_HOME = localInstallDir;
 
 const wsUrl =
   process.env.AGENT_WITCH_WS_URL?.trim() ||
@@ -35,6 +44,7 @@ console.log(
       configPath: profile.configPath,
       wsUrl: profile.wsUrl,
       launchAgentLabel: profile.launchAgentLabel,
+      installDir: localInstallDir,
     },
     null,
     2,
@@ -48,6 +58,7 @@ if (shouldStart) {
     cwd: process.cwd(),
     env: {
       ...process.env,
+      AGENT_WITCH_HOME: localInstallDir,
       AGENT_WITCH_PROFILE: profile.profileEmail,
       AGENT_WITCH_WS_URL: profile.wsUrl,
     },

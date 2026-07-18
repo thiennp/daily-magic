@@ -3,7 +3,18 @@ import { describe, expect, it } from "vitest";
 import { buildAgentWitchWakeTerminalCommand } from "./buildAgentWitchWakeTerminalCommand";
 
 describe("buildAgentWitchWakeTerminalCommand", () => {
-  it("points at the installed wake shell script", () => {
+  it("uses prod install dir outside the browser", () => {
     expect(buildAgentWitchWakeTerminalCommand()).toBe("~/.agent-witch/wake.sh");
+  });
+
+  it("uses local install dir on localhost", () => {
+    Object.defineProperty(global, "window", {
+      value: { location: { hostname: "localhost" } },
+      configurable: true,
+    });
+
+    expect(buildAgentWitchWakeTerminalCommand()).toBe(
+      "~/.local-agent-witch/wake.sh",
+    );
   });
 });

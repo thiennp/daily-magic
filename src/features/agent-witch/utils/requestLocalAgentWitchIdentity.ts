@@ -1,4 +1,4 @@
-import { AGENT_WITCH_WAKE_BASE_URL } from "@/features/agent-witch/online-wake";
+import { resolveAgentWitchWakeBaseUrlForPage } from "@/features/agent-witch/online-wake";
 
 export interface LocalAgentWitchIdentity {
   readonly hostname: string;
@@ -66,11 +66,14 @@ export const requestLocalAgentWitchIdentity =
     }
 
     try {
-      const response = await fetch(`${AGENT_WITCH_WAKE_BASE_URL}/identity`, {
-        method: "GET",
-        mode: "cors",
-        signal: AbortSignal.timeout(2_000),
-      });
+      const response = await fetch(
+        `${resolveAgentWitchWakeBaseUrlForPage()}/identity`,
+        {
+          method: "GET",
+          mode: "cors",
+          signal: AbortSignal.timeout(2_000),
+        },
+      );
 
       if (!response.ok) {
         return null;

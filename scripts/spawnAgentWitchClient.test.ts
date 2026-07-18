@@ -27,7 +27,7 @@ describe("spawnAgentWitchClient", () => {
 
     expect(spawnAgentWitchClient(installDir)).toEqual({
       ok: false,
-      errorMessage: "Agent Witch install not found at ~/.agent-witch.",
+      errorMessage: "Agent Witch install not found.",
     });
   });
 });

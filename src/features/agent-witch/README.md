@@ -18,6 +18,15 @@ Mac pairing, install script, WebSocket bridge, and paired-device API client.
 - `utils/agentWitchLocalHostCookie.ts` — local hostname cookie helpers
 - `macDevices/` — device row, rename, menus
 
+## Local vs production Mac installs
+
+| Origin         | Install dir            | Wake port | LaunchAgent prefix      |
+| -------------- | ---------------------- | --------- | ----------------------- |
+| localhost      | `~/.local-agent-witch` | `47893`   | `com.local-agent-witch` |
+| agentwitch.com | `~/.agent-witch`       | `47892`   | `com.agent-witch`       |
+
+Install from each origin separately so local and prod stay independent.
+
 ## Query
 
 ```bash

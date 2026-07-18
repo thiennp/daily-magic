@@ -2,6 +2,7 @@ import {
   fetchLocalAgentWitchWatchdog,
   requestLocalAgentWitchWatchdogRevive,
 } from "@/lib/agentWitch/fetchLocalAgentWitchWatchdog";
+import { resolveLocalAgentWitchWakeBaseUrl } from "@/lib/agentWitch/fetchLocalAgentWitchWakeJson";
 import { requireAuth } from "@/lib/auth/requireAuth";
 
 export const dynamic = "force-dynamic";
@@ -31,6 +32,8 @@ export async function GET(request: Request): Promise<Response> {
     logLimit,
   });
 
+  const wakeBaseUrl = resolveLocalAgentWitchWakeBaseUrl();
+
   return Response.json({
     ok: snapshot.reachable,
     reachable: snapshot.reachable,
@@ -38,10 +41,10 @@ export async function GET(request: Request): Promise<Response> {
     status: snapshot.status,
     logs: snapshot.logs,
     localApi: {
-      statusUrl: "http://127.0.0.1:47892/watchdog/status",
-      logsUrl: "http://127.0.0.1:47892/watchdog/logs",
-      reviveUrl: "http://127.0.0.1:47892/watchdog/revive",
-      restartUrl: "http://127.0.0.1:47892/restart",
+      statusUrl: `${wakeBaseUrl}/watchdog/status`,
+      logsUrl: `${wakeBaseUrl}/watchdog/logs`,
+      reviveUrl: `${wakeBaseUrl}/watchdog/revive`,
+      restartUrl: `${wakeBaseUrl}/restart`,
     },
   });
 }

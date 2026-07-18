@@ -2,7 +2,17 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 
-export const AGENT_WITCH_INSTALL_DIR_NAME = ".agent-witch";
+export const AGENT_WITCH_PROD_INSTALL_DIR_NAME = ".agent-witch";
+export const AGENT_WITCH_LOCAL_INSTALL_DIR_NAME = ".local-agent-witch";
+
+/** @deprecated Prefer AGENT_WITCH_PROD_INSTALL_DIR_NAME */
+export const AGENT_WITCH_INSTALL_DIR_NAME = AGENT_WITCH_PROD_INSTALL_DIR_NAME;
+
+export const AGENT_WITCH_PROD_WAKE_PORT = 47892;
+export const AGENT_WITCH_LOCAL_WAKE_PORT = 47893;
+
+export const AGENT_WITCH_PROD_LAUNCH_AGENT_PREFIX = "com.agent-witch";
+export const AGENT_WITCH_LOCAL_LAUNCH_AGENT_PREFIX = "com.local-agent-witch";
 
 export const AGENT_WITCH_PROFILES_DIR_NAME = "profiles";
 
@@ -35,8 +45,40 @@ export const sanitizeProfileEmailForLaunchAgentLabel = (
     .replace(/[^a-z0-9-]+/g, "-")
     .replace(/^-+|-+$/g, "");
 
-export const resolveAgentWitchInstallDir = (): string =>
-  path.join(os.homedir(), AGENT_WITCH_INSTALL_DIR_NAME);
+export const resolveAgentWitchInstallDir = (): string => {
+  const fromEnv = process.env.AGENT_WITCH_HOME?.trim();
+  if (fromEnv !== undefined && fromEnv.length > 0) {
+    return path.resolve(fromEnv);
+  }
+
+  const candidate = path.resolve(__dirname);
+  const baseName = path.basename(candidate);
+  if (
+    baseName === AGENT_WITCH_PROD_INSTALL_DIR_NAME ||
+    baseName === AGENT_WITCH_LOCAL_INSTALL_DIR_NAME
+  ) {
+    return candidate;
+  }
+
+  return path.join(os.homedir(), AGENT_WITCH_PROD_INSTALL_DIR_NAME);
+};
+
+export const isAgentWitchLocalInstallDir = (installDir: string): boolean =>
+  path.basename(installDir) === AGENT_WITCH_LOCAL_INSTALL_DIR_NAME;
+
+export const resolveAgentWitchLaunchAgentPrefix = (
+  installDir: string = resolveAgentWitchInstallDir(),
+): string =>
+  isAgentWitchLocalInstallDir(installDir)
+    ? AGENT_WITCH_LOCAL_LAUNCH_AGENT_PREFIX
+    : AGENT_WITCH_PROD_LAUNCH_AGENT_PREFIX;
+
+export const resolveAgentWitchDefaultWakePort = (
+  installDir: string = resolveAgentWitchInstallDir(),
+): number =>
+  isAgentWitchLocalInstallDir(installDir)
+    ? AGENT_WITCH_LOCAL_WAKE_PORT
+    : AGENT_WITCH_PROD_WAKE_PORT;
 
 export const resolveActiveProfileEmailFromEnv = (): string | null => {
   const fromProfile = process.env.AGENT_WITCH_PROFILE?.trim();

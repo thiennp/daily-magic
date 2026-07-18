@@ -1,6 +1,6 @@
 import {
-  AGENT_WITCH_WAKE_BASE_URL,
   canRequestLocalAgentWitchApi,
+  resolveAgentWitchWakeBaseUrlForPage,
 } from "@/lib/agentWitch/linkLocalAgentAccount";
 
 export const isLocalAgentWitchWakeServerReachable =
@@ -10,11 +10,14 @@ export const isLocalAgentWitchWakeServerReachable =
     }
 
     try {
-      const response = await fetch(`${AGENT_WITCH_WAKE_BASE_URL}/health`, {
-        method: "GET",
-        mode: "cors",
-        signal: AbortSignal.timeout(2_000),
-      });
+      const response = await fetch(
+        `${resolveAgentWitchWakeBaseUrlForPage()}/health`,
+        {
+          method: "GET",
+          mode: "cors",
+          signal: AbortSignal.timeout(2_000),
+        },
+      );
 
       return response.ok;
     } catch {

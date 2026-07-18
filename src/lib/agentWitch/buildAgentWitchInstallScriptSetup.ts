@@ -1,3 +1,5 @@
+import type { AgentWitchAppHome } from "@/lib/agentWitch/resolveAgentWitchAppHome";
+import { resolveAgentWitchAppHome } from "@/lib/agentWitch/resolveAgentWitchAppHome";
 import { buildAgentWitchInstallScriptClientBlock } from "@/lib/agentWitch/buildAgentWitchInstallScriptClientBlock";
 import { buildAgentWitchInstallScriptConfigBlock } from "@/lib/agentWitch/buildAgentWitchInstallScriptConfigBlock";
 import { buildAgentWitchInstallScriptRegisterLaunchAgentFn } from "@/lib/agentWitch/buildAgentWitchInstallScriptRegisterLaunchAgent";
@@ -8,11 +10,18 @@ export const buildAgentWitchInstallScriptSetup = (input: {
   readonly wsUrl: string;
   readonly clientScriptUrl: string;
   readonly websocketSupportWarning: string;
-}): string => `#!/usr/bin/env bash
+  readonly appHome?: AgentWitchAppHome;
+}): string => {
+  const appHome = input.appHome ?? resolveAgentWitchAppHome(input.appOrigin);
+
+  return `#!/usr/bin/env bash
 set -euo pipefail
 ${input.websocketSupportWarning}
 
-INSTALL_DIR="\${HOME}/.agent-witch"
+INSTALL_DIR="\${HOME}/${appHome.installDirName}"
+AGENT_WITCH_HOME="\${INSTALL_DIR}"
+AGENT_WITCH_WAKE_PORT="${appHome.wakePort}"
+LAUNCH_AGENT_PREFIX="${appHome.launchAgentPrefix}"
 CLIENT_SCRIPT_URL="${input.clientScriptUrl}"
 NODE_BIN="\$(command -v node)"
 CURL_BIN="\$(command -v curl)"
@@ -51,7 +60,7 @@ NODE_DIR="\$(dirname "\${NODE_BIN}")"
 RUN_PATH="\${INSTALL_DIR}/run.sh"
 TSX_CLI="\${INSTALL_DIR}/node_modules/tsx/dist/cli.mjs"
 LOG_BASENAME="agent-witch"
-LAUNCH_AGENT_LABEL="com.agent-witch"
+LAUNCH_AGENT_LABEL="\${LAUNCH_AGENT_PREFIX}"
 
 mkdir -p "\${INSTALL_DIR}"
 
@@ -73,12 +82,14 @@ if [[ -n "\${PROFILE_EMAIL}" ]]; then
   CONFIG_PATH="\${PROFILE_DIR}/config.json"
   mkdir -p "\${PROFILE_DIR}/harness/sets"
   LABEL_SUFFIX="\$(printf '%s' "\${PROFILE_EMAIL}" | sed 's/@/-at-/g' | sed 's/[^a-z0-9-]/-/g' | sed 's/^-*//;s/-*$//')"
-  LAUNCH_AGENT_LABEL="com.agent-witch.\${LABEL_SUFFIX}"
+  LAUNCH_AGENT_LABEL="\${LAUNCH_AGENT_PREFIX}.\${LABEL_SUFFIX}"
   LOG_BASENAME="agent-witch-\${LABEL_SUFFIX}"
 else
   CONFIG_PATH="\${INSTALL_DIR}/config.json"
 fi
 
 PLIST_PATH="\${HOME}/Library/LaunchAgents/\${LAUNCH_AGENT_LABEL}.plist"
+export AGENT_WITCH_HOME AGENT_WITCH_WAKE_PORT
 ${buildAgentWitchInstallScriptConfigBlock(input)}${buildAgentWitchInstallScriptWriterBootstrap()}${buildAgentWitchInstallScriptClientBlock({ appOrigin: input.appOrigin, clientScriptUrl: input.clientScriptUrl })}${buildAgentWitchInstallScriptRegisterLaunchAgentFn()}
 `;
+};

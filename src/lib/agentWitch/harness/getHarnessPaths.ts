@@ -9,8 +9,14 @@ import {
 const sanitizeProfileEmailForDir = (email: string): string =>
   email.trim().toLowerCase();
 
-export const getAgentWitchInstallDir = (): string =>
-  path.join(process.env.HOME ?? "", ".agent-witch");
+export const getAgentWitchInstallDir = (): string => {
+  const fromEnv = process.env.AGENT_WITCH_HOME?.trim();
+  if (fromEnv !== undefined && fromEnv.length > 0) {
+    return path.resolve(fromEnv);
+  }
+
+  return path.join(process.env.HOME ?? "", ".agent-witch");
+};
 
 export const getHarnessRootDir = (profileEmail?: string | null): string => {
   const installDir = getAgentWitchInstallDir();

@@ -1,4 +1,5 @@
 export interface AgentWitchInstallScriptAutomationSchedulerInput {
+  readonly installDirName: string;
   readonly automationSchedulerScriptUrl: string;
   readonly automationRunnerScriptUrl: string;
   readonly automationHeadlessWriterScriptUrl: string;

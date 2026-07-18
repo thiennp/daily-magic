@@ -7,6 +7,7 @@ import {
   AGENT_WITCH_PROFILES_DIR_NAME,
   readActiveProfileEmailFromFile,
   resolveAgentWitchInstallDir,
+  resolveAgentWitchLaunchAgentPrefix,
   sanitizeProfileEmailForLaunchAgentLabel,
 } from "./resolveAgentWitchLocalLayout";
 
@@ -161,6 +162,6 @@ export const ensureAgentWitchProfile = (
     configPath,
     pairingToken,
     wsUrl,
-    launchAgentLabel: `com.agent-witch.${sanitizeProfileEmailForLaunchAgentLabel(normalizedEmail)}`,
+    launchAgentLabel: `${resolveAgentWitchLaunchAgentPrefix(installDir)}.${sanitizeProfileEmailForLaunchAgentLabel(normalizedEmail)}`,
   };
 };

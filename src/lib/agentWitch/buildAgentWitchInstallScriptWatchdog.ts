@@ -1,6 +1,7 @@
 import { AGENT_WITCH_LAUNCH_AGENT_PATH_VALUE } from "@/lib/agentWitch/buildAgentWitchInstallScriptWriterPath";
 
 export const buildAgentWitchInstallScriptWatchdog = (input: {
+  readonly installDirName: string;
   readonly watchdogScriptUrl: string;
   readonly reviveScriptUrl: string;
   readonly connectionHealthScriptUrl: string;
@@ -24,7 +25,7 @@ WATCHDOG_SPAWN_CLIENT_SCRIPT_URL="${input.spawnClientScriptUrl}"
 WATCHDOG_LOCAL_LAYOUT_SCRIPT_URL="${input.localLayoutScriptUrl}"
 WATCHDOG_LOG_SCRIPT_URL="${input.watchdogLogScriptUrl}"
 WATCHDOG_STATUS_SCRIPT_URL="${input.watchdogStatusScriptUrl}"
-WATCHDOG_LAUNCH_AGENT_LABEL="com.agent-witch-watchdog"
+WATCHDOG_LAUNCH_AGENT_LABEL="\${LAUNCH_AGENT_PREFIX}-watchdog"
 WATCHDOG_PLIST_PATH="\${HOME}/Library/LaunchAgents/\${WATCHDOG_LAUNCH_AGENT_LABEL}.plist"
 
 echo "Downloading Agent Witch WebSocket watchdog…"
@@ -43,7 +44,7 @@ echo "Downloading Agent Witch WebSocket watchdog…"
 cat > "\${INSTALL_DIR}/watchdog.sh" <<'WATCHDOG_EOF'
 #!/usr/bin/env bash
 set -euo pipefail
-INSTALL_DIR="\${HOME}/.agent-witch"
+INSTALL_DIR="\${AGENT_WITCH_HOME:-\${HOME}/${input.installDirName}}"
 NODE_BIN="\$(command -v node)"
 TSX_CLI="\${INSTALL_DIR}/node_modules/tsx/dist/cli.mjs"
 WATCHDOG_CLI="\${INSTALL_DIR}/agent-witch-watchdog.ts"
@@ -53,6 +54,7 @@ if [[ -z "\${NODE_BIN}" || ! -f "\${TSX_CLI}" || ! -f "\${WATCHDOG_CLI}" ]]; the
 fi
 
 cd "\${INSTALL_DIR}"
+export AGENT_WITCH_HOME="\${INSTALL_DIR}"
 exec "\${NODE_BIN}" "\${TSX_CLI}" "\${WATCHDOG_CLI}"
 WATCHDOG_EOF
 chmod +x "\${INSTALL_DIR}/watchdog.sh"
@@ -77,6 +79,10 @@ if [[ "\$(uname -s)" == "Darwin" ]]; then
     <string>\${HOME}</string>
     <key>PATH</key>
     <string>${AGENT_WITCH_LAUNCH_AGENT_PATH_VALUE}</string>
+    <key>AGENT_WITCH_HOME</key>
+    <string>\${INSTALL_DIR}</string>
+    <key>AGENT_WITCH_WAKE_PORT</key>
+    <string>\${AGENT_WITCH_WAKE_PORT}</string>
   </dict>
   <key>StartInterval</key>
   <integer>60</integer>

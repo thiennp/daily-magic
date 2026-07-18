@@ -1,6 +1,6 @@
 import {
-  AGENT_WITCH_WAKE_BASE_URL,
   canRequestLocalAgentWitchApi,
+  resolveAgentWitchWakeBaseUrlForPage,
 } from "@/lib/agentWitch/linkLocalAgentAccount";
 
 export const requestLocalAutomationRun = async (input: {
@@ -13,7 +13,7 @@ export const requestLocalAutomationRun = async (input: {
 
   try {
     const response = await fetch(
-      `${AGENT_WITCH_WAKE_BASE_URL}/automations/run`,
+      `${resolveAgentWitchWakeBaseUrlForPage()}/automations/run`,
       {
         method: "POST",
         mode: "cors",

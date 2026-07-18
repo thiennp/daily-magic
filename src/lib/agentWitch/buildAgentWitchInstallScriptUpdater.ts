@@ -2,6 +2,7 @@ import { AGENT_WITCH_LAUNCH_AGENT_PATH_VALUE } from "@/lib/agentWitch/buildAgent
 import { AGENT_WITCH_UPDATER_INTERVAL_SEC } from "@/lib/agentWitch/agentWitchUpdater.constants";
 
 export const buildAgentWitchInstallScriptUpdater = (input: {
+  readonly installDirName: string;
   readonly selfUpdateScriptUrl: string;
   readonly selfUpdateCoreScriptUrl: string;
   readonly installVersionScriptUrl: string;
@@ -21,7 +22,7 @@ LAUNCH_AGENT_LABELS_SCRIPT_URL="${input.launchAgentLabelsScriptUrl}"
 UPDATER_LIST_TARGETS_SCRIPT_URL="${input.listTargetsScriptUrl}"
 UPDATER_KICKSTART_SCRIPT_URL="${input.kickstartScriptUrl}"
 UPDATER_LOCAL_LAYOUT_SCRIPT_URL="${input.localLayoutScriptUrl}"
-UPDATER_LAUNCH_AGENT_LABEL="com.agent-witch-updater"
+UPDATER_LAUNCH_AGENT_LABEL="\${LAUNCH_AGENT_PREFIX}-updater"
 UPDATER_PLIST_PATH="\${HOME}/Library/LaunchAgents/\${UPDATER_LAUNCH_AGENT_LABEL}.plist"
 
 echo "Downloading Agent Witch self-update scripts…"
@@ -38,7 +39,7 @@ echo "Downloading Agent Witch self-update scripts…"
 cat > "\${INSTALL_DIR}/self-update.sh" <<'UPDATER_EOF'
 #!/usr/bin/env bash
 set -euo pipefail
-INSTALL_DIR="\${HOME}/.agent-witch"
+INSTALL_DIR="\${AGENT_WITCH_HOME:-\${HOME}/${input.installDirName}}"
 NODE_BIN="\$(command -v node)"
 TSX_CLI="\${INSTALL_DIR}/node_modules/tsx/dist/cli.mjs"
 SELF_UPDATE_CLI="\${INSTALL_DIR}/agent-witch-self-update.ts"
@@ -48,6 +49,7 @@ if [[ -z "\${NODE_BIN}" || ! -f "\${TSX_CLI}" || ! -f "\${SELF_UPDATE_CLI}" ]]; 
 fi
 
 cd "\${INSTALL_DIR}"
+export AGENT_WITCH_HOME="\${INSTALL_DIR}"
 exec "\${NODE_BIN}" "\${TSX_CLI}" "\${SELF_UPDATE_CLI}"
 UPDATER_EOF
 chmod +x "\${INSTALL_DIR}/self-update.sh"
@@ -72,6 +74,10 @@ if [[ "\$(uname -s)" == "Darwin" ]]; then
     <string>\${HOME}</string>
     <key>PATH</key>
     <string>${AGENT_WITCH_LAUNCH_AGENT_PATH_VALUE}</string>
+    <key>AGENT_WITCH_HOME</key>
+    <string>\${INSTALL_DIR}</string>
+    <key>AGENT_WITCH_WAKE_PORT</key>
+    <string>\${AGENT_WITCH_WAKE_PORT}</string>
   </dict>
   <key>StartInterval</key>
   <integer>${AGENT_WITCH_UPDATER_INTERVAL_SEC}</integer>

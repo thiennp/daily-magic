@@ -1,6 +1,6 @@
 import {
-  AGENT_WITCH_WAKE_BASE_URL,
   canRequestLocalAgentWitchApi,
+  resolveAgentWitchWakeBaseUrlForPage,
 } from "@/lib/agentWitch/linkLocalAgentAccount";
 import type HarnessInstallBundle from "@/lib/agentWitch/harness/types/HarnessInstallBundle.type";
 
@@ -19,7 +19,7 @@ export const requestLocalHarnessInstall = async (input: {
 
   try {
     const response = await fetch(
-      `${AGENT_WITCH_WAKE_BASE_URL}/harness/install`,
+      `${resolveAgentWitchWakeBaseUrlForPage()}/harness/install`,
       {
         method: "POST",
         mode: "cors",

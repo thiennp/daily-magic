@@ -1,4 +1,7 @@
-import { AGENT_WITCH_WAKE_DEFAULT_PORT } from "@/lib/agentWitch/linkLocalAgentAccount";
+import {
+  AGENT_WITCH_LOCAL_WAKE_PORT,
+  AGENT_WITCH_PROD_WAKE_PORT,
+} from "@/lib/agentWitch/resolveAgentWitchAppHome";
 
 export const resolveLocalAgentWitchWakeBaseUrl = (): string => {
   const portFromEnv = process.env.AGENT_WITCH_WAKE_PORT?.trim();
@@ -9,7 +12,10 @@ export const resolveLocalAgentWitchWakeBaseUrl = (): string => {
     }
   }
 
-  return `http://127.0.0.1:${AGENT_WITCH_WAKE_DEFAULT_PORT}`;
+  const useLocalAppPort =
+    process.env.VERCEL !== "1" && process.env.NODE_ENV !== "production";
+
+  return `http://127.0.0.1:${useLocalAppPort ? AGENT_WITCH_LOCAL_WAKE_PORT : AGENT_WITCH_PROD_WAKE_PORT}`;
 };
 
 export const fetchLocalAgentWitchWakeJson = async (

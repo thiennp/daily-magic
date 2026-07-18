@@ -1,8 +1,14 @@
-export const AGENT_WITCH_WAKE_DEFAULT_PORT = 47892;
+import {
+  resolveAgentWitchDefaultWakePort,
+  resolveAgentWitchLaunchAgentPrefix,
+} from "./resolveAgentWitchLocalLayout";
 
-export const AGENT_WITCH_WAKE_LAUNCH_AGENT_LABEL = "com.agent-witch-wake";
+export const AGENT_WITCH_WAKE_DEFAULT_PORT = resolveAgentWitchDefaultWakePort();
 
-export const AGENT_WITCH_LEGACY_LAUNCH_AGENT_LABEL = "com.agent-witch";
+export const AGENT_WITCH_WAKE_LAUNCH_AGENT_LABEL = `${resolveAgentWitchLaunchAgentPrefix()}-wake`;
+
+export const AGENT_WITCH_LEGACY_LAUNCH_AGENT_LABEL =
+  resolveAgentWitchLaunchAgentPrefix();
 
 export const resolveAgentWitchWakePort = (): number => {
   const fromEnv = process.env.AGENT_WITCH_WAKE_PORT?.trim();
@@ -13,5 +19,5 @@ export const resolveAgentWitchWakePort = (): number => {
     }
   }
 
-  return AGENT_WITCH_WAKE_DEFAULT_PORT;
+  return resolveAgentWitchDefaultWakePort();
 };

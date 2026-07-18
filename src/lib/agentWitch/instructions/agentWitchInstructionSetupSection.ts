@@ -25,12 +25,12 @@ export const AGENT_WITCH_INSTRUCTION_SETUP_SECTION: AgentWitchInstructionSection
       {
         id: "multi-profile",
         title: "Multiple accounts on one computer",
-        body: "Use AGENT_WITCH_PROFILE=user@example.com when installing or running the bridge so each sign-in gets an isolated config under ~/.agent-witch/profiles/<email>/.",
+        body: "Use AGENT_WITCH_PROFILE=user@example.com when installing or running the bridge so each sign-in gets an isolated config under profiles/<email>/ in the app home for that origin.",
       },
       {
         id: "local-config",
         title: "Local files",
-        body: "Configuration, logs, rules, and paused job answers live under ~/.agent-witch/ on the Mac. The bridge reconnects automatically if the connection drops.",
+        body: "Production installs live under ~/.agent-witch/; localhost installs use ~/.local-agent-witch/ so the two never overwrite each other. Configuration, logs, rules, and paused job answers stay in that app home. The bridge reconnects automatically if the connection drops.",
       },
       {
         id: "watchdog",

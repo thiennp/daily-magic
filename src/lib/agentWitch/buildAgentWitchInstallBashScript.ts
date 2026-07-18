@@ -6,19 +6,24 @@ import { buildAgentWitchInstallScriptVersionStamp } from "@/lib/agentWitch/build
 import { buildAgentWitchInstallScriptWatchdog } from "@/lib/agentWitch/buildAgentWitchInstallScriptWatchdog";
 import { buildAgentWitchInstallScriptWakeServer } from "@/lib/agentWitch/buildAgentWitchInstallScriptWakeServer";
 import type { AgentWitchInstallBashScriptInput } from "@/lib/agentWitch/AgentWitchInstallBashScriptInput.type";
+import { resolveAgentWitchAppHome } from "@/lib/agentWitch/resolveAgentWitchAppHome";
 
 export const buildAgentWitchInstallBashScript = (
   input: AgentWitchInstallBashScriptInput,
-): string =>
-  `${buildAgentWitchInstallScriptSetup({
+): string => {
+  const appHome = resolveAgentWitchAppHome(input.appOrigin);
+
+  return `${buildAgentWitchInstallScriptSetup({
     appOrigin: input.appOrigin,
     wsUrl: input.wsUrl,
     clientScriptUrl: input.clientScriptUrl,
     websocketSupportWarning: input.websocketSupportWarning,
+    appHome,
   })}${buildAgentWitchInstallScriptLaunchAgent({
     wsUrl: input.wsUrl,
     appOrigin: input.appOrigin,
   })}${buildAgentWitchInstallScriptWakeServer({
+    installDirName: appHome.installDirName,
     wakeServerScriptUrl: input.wakeServerScriptUrl,
     wakeConstantsScriptUrl: input.wakeConstantsScriptUrl,
     wakeListTargetsScriptUrl: input.wakeListTargetsScriptUrl,
@@ -38,6 +43,7 @@ export const buildAgentWitchInstallBashScript = (
     watchdogStatusScriptUrl: input.watchdogStatusScriptUrl,
     localLayoutScriptUrl: input.localLayoutScriptUrl,
   })}${buildAgentWitchInstallScriptWatchdog({
+    installDirName: appHome.installDirName,
     watchdogScriptUrl: input.watchdogScriptUrl,
     reviveScriptUrl: input.reviveScriptUrl,
     connectionHealthScriptUrl: input.connectionHealthScriptUrl,
@@ -51,6 +57,7 @@ export const buildAgentWitchInstallBashScript = (
     watchdogLogScriptUrl: input.watchdogLogScriptUrl,
     watchdogStatusScriptUrl: input.watchdogStatusScriptUrl,
   })}${buildAgentWitchInstallScriptUpdater({
+    installDirName: appHome.installDirName,
     selfUpdateScriptUrl: input.selfUpdateScriptUrl,
     selfUpdateCoreScriptUrl: input.selfUpdateCoreScriptUrl,
     installVersionScriptUrl: input.installVersionScriptUrl,
@@ -61,6 +68,7 @@ export const buildAgentWitchInstallBashScript = (
     kickstartScriptUrl: input.wakeKickstartScriptUrl,
     localLayoutScriptUrl: input.localLayoutScriptUrl,
   })}${buildAgentWitchInstallScriptAutomationScheduler({
+    installDirName: appHome.installDirName,
     automationSchedulerScriptUrl: input.automationSchedulerScriptUrl,
     automationRunnerScriptUrl: input.automationRunnerScriptUrl,
     automationHeadlessWriterScriptUrl: input.automationHeadlessWriterScriptUrl,
@@ -79,3 +87,4 @@ export const buildAgentWitchInstallBashScript = (
     launchAgentLabelsScriptUrl: input.launchAgentLabelsScriptUrl,
     kickstartScriptUrl: input.automationKickstartScriptUrl,
   })}${buildAgentWitchInstallScriptVersionStamp(input.appOrigin)}`;
+};

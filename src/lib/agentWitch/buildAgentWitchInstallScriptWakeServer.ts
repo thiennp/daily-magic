@@ -2,6 +2,7 @@ import { buildAgentWitchInstallScriptWakeServerDependencies } from "@/lib/agentW
 import { buildAgentWitchInstallScriptWakeServerPlist } from "@/lib/agentWitch/buildAgentWitchInstallScriptWakeServerPlist";
 
 export const buildAgentWitchInstallScriptWakeServer = (input: {
+  readonly installDirName: string;
   readonly wakeServerScriptUrl: string;
   readonly wakeConstantsScriptUrl: string;
   readonly wakeListTargetsScriptUrl: string;
@@ -30,7 +31,7 @@ WAKE_ENSURE_PROFILE_SCRIPT_URL="${input.wakeEnsureProfileScriptUrl}"
 WAKE_LINK_ACCOUNT_SCRIPT_URL="${input.wakeLinkAccountScriptUrl}"
 WAKE_SPAWN_CLIENT_SCRIPT_URL="${input.wakeSpawnClientScriptUrl}"
 WAKE_CLI_SCRIPT_URL="${input.wakeCliScriptUrl}"
-WAKE_LAUNCH_AGENT_LABEL="com.agent-witch-wake"
+WAKE_LAUNCH_AGENT_LABEL="\${LAUNCH_AGENT_PREFIX}-wake"
 WAKE_PLIST_PATH="\${HOME}/Library/LaunchAgents/\${WAKE_LAUNCH_AGENT_LABEL}.plist"
 
 echo "Downloading Agent Witch wake server from \${WAKE_SERVER_SCRIPT_URL}…"
@@ -57,7 +58,7 @@ ${buildAgentWitchInstallScriptWakeServerDependencies({
 cat > "\${INSTALL_DIR}/wake.sh" <<'WAKE_EOF'
 #!/usr/bin/env bash
 set -euo pipefail
-INSTALL_DIR="\${HOME}/.agent-witch"
+INSTALL_DIR="\${AGENT_WITCH_HOME:-\${HOME}/${input.installDirName}}"
 NODE_BIN="\$(command -v node)"
 TSX_CLI="\${INSTALL_DIR}/node_modules/tsx/dist/cli.mjs"
 WAKE_CLI="\${INSTALL_DIR}/agent-witch-wake-cli.ts"
@@ -68,6 +69,7 @@ if [[ -z "\${NODE_BIN}" || ! -f "\${TSX_CLI}" || ! -f "\${WAKE_CLI}" ]]; then
 fi
 
 cd "\${INSTALL_DIR}"
+export AGENT_WITCH_HOME="\${INSTALL_DIR}"
 exec "\${NODE_BIN}" "\${TSX_CLI}" "\${WAKE_CLI}"
 WAKE_EOF
 chmod +x "\${INSTALL_DIR}/wake.sh"

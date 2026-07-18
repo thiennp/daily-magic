@@ -23,6 +23,10 @@ if [[ "\$(uname -s)" == "Darwin" ]]; then
     <string>\${HOME}</string>
     <key>PATH</key>
     <string>${AGENT_WITCH_LAUNCH_AGENT_PATH_VALUE}</string>
+    <key>AGENT_WITCH_HOME</key>
+    <string>\${INSTALL_DIR}</string>
+    <key>AGENT_WITCH_WAKE_PORT</key>
+    <string>\${AGENT_WITCH_WAKE_PORT}</string>
   </dict>
   <key>RunAtLoad</key>
   <true/>
@@ -37,9 +41,9 @@ if [[ "\$(uname -s)" == "Darwin" ]]; then
 EOF
 
   register_agent_witch_launch_agent "\${WAKE_LAUNCH_AGENT_LABEL}" "\${WAKE_PLIST_PATH}" || true
-  echo "Agent Witch local API: http://127.0.0.1:47892/link-account"
-  echo "Restart API: http://127.0.0.1:47892/restart"
-  echo "Watchdog status API: http://127.0.0.1:47892/watchdog/status"
-  echo "Watchdog logs API: http://127.0.0.1:47892/watchdog/logs"
+  echo "Agent Witch local API: http://127.0.0.1:\${AGENT_WITCH_WAKE_PORT}/link-account"
+  echo "Restart API: http://127.0.0.1:\${AGENT_WITCH_WAKE_PORT}/restart"
+  echo "Watchdog status API: http://127.0.0.1:\${AGENT_WITCH_WAKE_PORT}/watchdog/status"
+  echo "Watchdog logs API: http://127.0.0.1:\${AGENT_WITCH_WAKE_PORT}/watchdog/logs"
 fi
 `;

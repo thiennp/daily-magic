@@ -5,4 +5,4 @@ import { buildAgentWitchInstallScriptAutomationSchedulerLaunchAgent } from "@/li
 export const buildAgentWitchInstallScriptAutomationScheduler = (
   input: AgentWitchInstallScriptAutomationSchedulerInput,
 ): string =>
-  `${buildAgentWitchInstallScriptAutomationSchedulerDownloads(input)}${buildAgentWitchInstallScriptAutomationSchedulerLaunchAgent()}`;
+  `${buildAgentWitchInstallScriptAutomationSchedulerDownloads(input)}${buildAgentWitchInstallScriptAutomationSchedulerLaunchAgent({ installDirName: input.installDirName })}`;

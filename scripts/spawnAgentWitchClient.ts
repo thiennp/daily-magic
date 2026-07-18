@@ -16,12 +16,18 @@ export const spawnAgentWitchClient = (
   installDir: string = resolveAgentWitchInstallDir(),
 ): SpawnAgentWitchClientResult => {
   const scriptPath = path.join(installDir, "agent-witch.ts");
-  const tsxPath = path.join(installDir, "node_modules", "tsx", "dist", "cli.mjs");
+  const tsxPath = path.join(
+    installDir,
+    "node_modules",
+    "tsx",
+    "dist",
+    "cli.mjs",
+  );
 
   if (!fs.existsSync(scriptPath) || !fs.existsSync(tsxPath)) {
     return {
       ok: false,
-      errorMessage: "Agent Witch install not found at ~/.agent-witch.",
+      errorMessage: "Agent Witch install not found.",
     };
   }
 
