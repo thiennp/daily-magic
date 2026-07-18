@@ -3,6 +3,7 @@ import { buildAgentWitchInstallScriptWakeServerPlist } from "@/lib/agentWitch/bu
 
 export const buildAgentWitchInstallScriptWakeServer = (input: {
   readonly installDirName: string;
+  readonly appOrigin: string;
   readonly wakeServerScriptUrl: string;
   readonly wakeConstantsScriptUrl: string;
   readonly wakeListTargetsScriptUrl: string;
@@ -53,6 +54,7 @@ ${buildAgentWitchInstallScriptWakeServerDependencies({
   watchdogLogScriptUrl: input.watchdogLogScriptUrl,
   watchdogStatusScriptUrl: input.watchdogStatusScriptUrl,
   localLayoutScriptUrl: input.localLayoutScriptUrl,
+  appOrigin: input.appOrigin,
 })}
 
 cat > "\${INSTALL_DIR}/wake.sh" <<'WAKE_EOF'

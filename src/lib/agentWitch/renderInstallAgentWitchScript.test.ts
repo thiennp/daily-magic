@@ -31,4 +31,18 @@ describe("renderInstallAgentWitchScript", () => {
     expect(script).toContain('AGENT_WITCH_WAKE_PORT="47893"');
     expect(script).toContain("ws://localhost:3000/api/agent-witch/ws");
   });
+
+  it("AGENT-005 downloads automation before starting the wake server", () => {
+    const script = renderInstallAgentWitchScript("http://localhost:3000");
+    const automationIdx = script.indexOf(
+      "Downloading Agent Witch automation scheduler",
+    );
+    const wakeIdx = script.indexOf("Downloading Agent Witch wake server");
+    expect(automationIdx).toBeGreaterThan(-1);
+    expect(wakeIdx).toBeGreaterThan(-1);
+    expect(automationIdx).toBeLessThan(wakeIdx);
+    expect(script).toContain(
+      'echo "Local link API: http://127.0.0.1:${AGENT_WITCH_WAKE_PORT}/link-account"',
+    );
+  });
 });

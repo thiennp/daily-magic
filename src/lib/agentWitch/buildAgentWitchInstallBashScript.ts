@@ -13,6 +13,8 @@ export const buildAgentWitchInstallBashScript = (
 ): string => {
   const appHome = resolveAgentWitchAppHome(input.appOrigin);
 
+  // Updater + automation download modules the wake server imports at boot.
+  // Install them before registering the wake LaunchAgent (AGENT-005).
   return `${buildAgentWitchInstallScriptSetup({
     appOrigin: input.appOrigin,
     wsUrl: input.wsUrl,
@@ -22,8 +24,39 @@ export const buildAgentWitchInstallBashScript = (
   })}${buildAgentWitchInstallScriptLaunchAgent({
     wsUrl: input.wsUrl,
     appOrigin: input.appOrigin,
+  })}${buildAgentWitchInstallScriptUpdater({
+    installDirName: appHome.installDirName,
+    selfUpdateScriptUrl: input.selfUpdateScriptUrl,
+    selfUpdateCoreScriptUrl: input.selfUpdateCoreScriptUrl,
+    installVersionScriptUrl: input.installVersionScriptUrl,
+    resolveAppOriginScriptUrl: input.resolveAppOriginScriptUrl,
+    selfUpdateLogScriptUrl: input.selfUpdateLogScriptUrl,
+    launchAgentLabelsScriptUrl: input.launchAgentLabelsScriptUrl,
+    listTargetsScriptUrl: input.wakeListTargetsScriptUrl,
+    kickstartScriptUrl: input.wakeKickstartScriptUrl,
+    localLayoutScriptUrl: input.localLayoutScriptUrl,
+  })}${buildAgentWitchInstallScriptAutomationScheduler({
+    installDirName: appHome.installDirName,
+    automationSchedulerScriptUrl: input.automationSchedulerScriptUrl,
+    automationRunnerScriptUrl: input.automationRunnerScriptUrl,
+    automationHeadlessWriterScriptUrl: input.automationHeadlessWriterScriptUrl,
+    automationStoreScriptUrl: input.automationStoreScriptUrl,
+    automationTypesScriptUrl: input.automationTypesScriptUrl,
+    automationComputeNextScriptUrl: input.automationComputeNextScriptUrl,
+    automationReadConfigScriptUrl: input.automationReadConfigScriptUrl,
+    automationApplySyncScriptUrl: input.automationApplySyncScriptUrl,
+    automationLocalLayoutScriptUrl: input.automationLocalLayoutScriptUrl,
+    automationWriterCliScriptUrl: input.automationWriterCliScriptUrl,
+    automationCloudApiScriptUrl: input.automationCloudApiScriptUrl,
+    automationDeviceAuthScriptUrl: input.automationDeviceAuthScriptUrl,
+    automationResolveAppOriginScriptUrl:
+      input.automationResolveAppOriginScriptUrl,
+    launchAgentRunningScriptUrl: input.automationLaunchAgentRunningScriptUrl,
+    launchAgentLabelsScriptUrl: input.launchAgentLabelsScriptUrl,
+    kickstartScriptUrl: input.automationKickstartScriptUrl,
   })}${buildAgentWitchInstallScriptWakeServer({
     installDirName: appHome.installDirName,
+    appOrigin: input.appOrigin,
     wakeServerScriptUrl: input.wakeServerScriptUrl,
     wakeConstantsScriptUrl: input.wakeConstantsScriptUrl,
     wakeListTargetsScriptUrl: input.wakeListTargetsScriptUrl,
@@ -56,35 +89,5 @@ export const buildAgentWitchInstallBashScript = (
     localLayoutScriptUrl: input.localLayoutScriptUrl,
     watchdogLogScriptUrl: input.watchdogLogScriptUrl,
     watchdogStatusScriptUrl: input.watchdogStatusScriptUrl,
-  })}${buildAgentWitchInstallScriptUpdater({
-    installDirName: appHome.installDirName,
-    selfUpdateScriptUrl: input.selfUpdateScriptUrl,
-    selfUpdateCoreScriptUrl: input.selfUpdateCoreScriptUrl,
-    installVersionScriptUrl: input.installVersionScriptUrl,
-    resolveAppOriginScriptUrl: input.resolveAppOriginScriptUrl,
-    selfUpdateLogScriptUrl: input.selfUpdateLogScriptUrl,
-    launchAgentLabelsScriptUrl: input.launchAgentLabelsScriptUrl,
-    listTargetsScriptUrl: input.wakeListTargetsScriptUrl,
-    kickstartScriptUrl: input.wakeKickstartScriptUrl,
-    localLayoutScriptUrl: input.localLayoutScriptUrl,
-  })}${buildAgentWitchInstallScriptAutomationScheduler({
-    installDirName: appHome.installDirName,
-    automationSchedulerScriptUrl: input.automationSchedulerScriptUrl,
-    automationRunnerScriptUrl: input.automationRunnerScriptUrl,
-    automationHeadlessWriterScriptUrl: input.automationHeadlessWriterScriptUrl,
-    automationStoreScriptUrl: input.automationStoreScriptUrl,
-    automationTypesScriptUrl: input.automationTypesScriptUrl,
-    automationComputeNextScriptUrl: input.automationComputeNextScriptUrl,
-    automationReadConfigScriptUrl: input.automationReadConfigScriptUrl,
-    automationApplySyncScriptUrl: input.automationApplySyncScriptUrl,
-    automationLocalLayoutScriptUrl: input.automationLocalLayoutScriptUrl,
-    automationWriterCliScriptUrl: input.automationWriterCliScriptUrl,
-    automationCloudApiScriptUrl: input.automationCloudApiScriptUrl,
-    automationDeviceAuthScriptUrl: input.automationDeviceAuthScriptUrl,
-    automationResolveAppOriginScriptUrl:
-      input.automationResolveAppOriginScriptUrl,
-    launchAgentRunningScriptUrl: input.automationLaunchAgentRunningScriptUrl,
-    launchAgentLabelsScriptUrl: input.launchAgentLabelsScriptUrl,
-    kickstartScriptUrl: input.automationKickstartScriptUrl,
   })}${buildAgentWitchInstallScriptVersionStamp(input.appOrigin)}`;
 };

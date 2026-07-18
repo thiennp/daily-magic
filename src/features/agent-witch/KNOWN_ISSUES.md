@@ -1,4 +1,14 @@
-## AGENT-004 — Local and prod Agent Witch installs overwrote each other
+## AGENT-005 — Fresh local install crashed wake server before automation scripts landed
+
+**Symptom:** On a brand-new `~/.local-agent-witch` install, `com.local-agent-witch-wake` crash-looped with `Cannot find module '.../applyAutomationSyncLocally'`.
+
+**Root cause:** Install registered the wake LaunchAgent before the automation-scheduler step downloaded modules that `agentWitchWakeHandlers.ts` imports at load time.
+
+**Fix:** Download updater + automation scripts before registering the wake LaunchAgent. Echo the wake link API using `AGENT_WITCH_WAKE_PORT` (not a hardcoded `47892`).
+
+**Regression tests:** `renderInstallAgentWitchScript.test.ts` (AGENT-005 install order).
+
+---
 
 **Symptom:** Installing from localhost flipped the Mac’s `wsUrl` / LaunchAgents away from agentwitch.com (or the reverse), so the Mac looked offline on the other origin.
 

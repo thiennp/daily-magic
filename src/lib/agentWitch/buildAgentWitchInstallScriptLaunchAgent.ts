@@ -73,7 +73,7 @@ if [[ -n "\${PROFILE_EMAIL}" ]]; then
   echo "Harness directory: \${INSTALL_DIR}/profiles/\${PROFILE_EMAIL}/harness"
 fi
 echo "Config: \${CONFIG_PATH}"
-echo "Local link API: http://127.0.0.1:47892/link-account"
+echo "Local link API: http://127.0.0.1:\${AGENT_WITCH_WAKE_PORT}/link-account"
 echo "Pairing token: \${PAIRING_TOKEN}"
 echo "Logs (macOS): \${INSTALL_DIR}/\${LOG_BASENAME}.log"
 echo "The client starts immediately and relaunches if it stops while your Mac is awake."
