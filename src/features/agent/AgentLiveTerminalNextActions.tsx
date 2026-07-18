@@ -6,19 +6,22 @@ interface AgentLiveTerminalNextActionsProps {
   readonly actions: readonly string[];
   readonly disabled: boolean;
   readonly onSelect: (action: string) => void;
+  /** Skip the bordered card wrapper (parent supplies chrome). */
+  readonly bare?: boolean;
 }
 
 export default function AgentLiveTerminalNextActions({
   actions,
   disabled,
   onSelect,
+  bare = false,
 }: AgentLiveTerminalNextActionsProps) {
   if (actions.length === 0) {
     return null;
   }
 
-  return (
-    <div className="mt-3 rounded-lg border border-gray-200 bg-gray-50 p-3 dark:border-gray-800 dark:bg-gray-900/50">
+  const content = (
+    <>
       <p className="text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">
         Suggested next steps
       </p>
@@ -38,6 +41,16 @@ export default function AgentLiveTerminalNextActions({
           </Button>
         ))}
       </div>
+    </>
+  );
+
+  if (bare) {
+    return content;
+  }
+
+  return (
+    <div className="mt-3 rounded-lg border border-gray-200 bg-gray-50 p-3 dark:border-gray-800 dark:bg-gray-900/50">
+      {content}
     </div>
   );
 }

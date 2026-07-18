@@ -23,3 +23,11 @@
 **Cause:** Composer always treated the first prompt after navigation as a fresh turn; finished live sessions were cleared from localStorage.
 
 **Fix:** Persist finished sessions, honor `continueSession=1` (and restored finished threads) for `--continue`, and expose **Continue conversation** on the job detail page.
+
+## REPORTS-004 — Continue conversation only via chips / button
+
+**Symptom:** After a completed job, users could pick a suggested next step or open an empty continue session, but could not type a custom follow-up beside those suggestions.
+
+**Cause:** Job result UI only rendered next-action chips and a Continue conversation link — no freeform continue field.
+
+**Fix:** Add an auto-growing, non-resizable textarea under suggested next steps; Enter sends (Shift+Enter newline) into Send-a-task with `continueSession=1`. `shouldSubmitContinueMessageOnKeyDown.test.ts` (REPORTS-004).
