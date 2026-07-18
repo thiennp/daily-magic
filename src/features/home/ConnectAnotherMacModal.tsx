@@ -3,13 +3,13 @@
 import { Modal } from "@/components/ui/modal";
 import { APP_SURFACE_BODY_TEXT_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
 import AgentWitchUnsupportedHostNotice from "@/features/home/AgentWitchUnsupportedHostNotice";
-import CopyableBashCommand from "@/features/home/CopyableBashCommand";
+import DownloadAgentWitchAppButton from "@/features/home/DownloadAgentWitchAppButton";
 import { resolveConnectAnotherMacLabel } from "@/features/home/utils/resolveConnectAnotherMacLabel";
 import { MAC_WORKER_BENEFIT_COPY } from "@/lib/copy/macWorkerBenefitCopy.constant";
 
 interface ConnectAnotherMacModalProps {
   readonly isOpen: boolean;
-  readonly installCommand: string;
+  readonly dmgDownloadUrl: string;
   readonly isWebSocketSupported: boolean;
   readonly host: string;
   readonly hasExistingDevices: boolean;
@@ -19,7 +19,7 @@ interface ConnectAnotherMacModalProps {
 
 export default function ConnectAnotherMacModal({
   isOpen,
-  installCommand,
+  dmgDownloadUrl,
   isWebSocketSupported,
   host,
   hasExistingDevices,
@@ -37,9 +37,8 @@ export default function ConnectAnotherMacModal({
         {title}
       </h2>
       <p className={`mt-3 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
-        {intro} Install opens Home in your browser on that Mac — stay signed in
-        so Agent Witch can link this computer to your account. Wake alone does
-        not link; the browser on that Mac must reach Home at least once.
+        {intro} Wake alone does not link; the browser on that Mac must reach
+        Home at least once while you are signed in.
       </p>
 
       {!isWebSocketSupported ? (
@@ -47,9 +46,8 @@ export default function ConnectAnotherMacModal({
           <AgentWitchUnsupportedHostNotice host={host} />
         </div>
       ) : (
-        <CopyableBashCommand
-          command={installCommand}
-          variant="bash"
+        <DownloadAgentWitchAppButton
+          dmgDownloadUrl={dmgDownloadUrl}
           onEngaged={onInstallEngaged}
         />
       )}

@@ -16,7 +16,7 @@ import {
   HOME_RIGHT_RAIL_CLASS,
 } from "@/features/home/homeDashboardLayout.constant";
 import { buildAppOriginFromHeaders } from "@/lib/agentWitch/buildAgentWitchInstallUrls";
-import { buildLocalAgentInstallCommandFromHeaders } from "@/lib/agentWitch/buildLocalAgentInstallCommand";
+import { buildLocalAgentInstallUrlsFromHeaders } from "@/lib/agentWitch/buildLocalAgentInstallCommand";
 import { isAgentWitchWebSocketAvailableForHost } from "@/lib/agentWitch/isAgentWitchWebSocketAvailable";
 import type { GlobalRoleValue } from "@/lib/auth/roles";
 import { headers } from "next/headers";
@@ -34,8 +34,8 @@ export default async function HomeAuthenticatedView({
 }: HomeAuthenticatedViewProps) {
   const requestHeaders = await headers();
   const appOrigin = buildAppOriginFromHeaders(requestHeaders);
-  const { installCommand } =
-    buildLocalAgentInstallCommandFromHeaders(requestHeaders);
+  const { dmgDownloadUrl } =
+    buildLocalAgentInstallUrlsFromHeaders(requestHeaders);
   const host =
     requestHeaders.get("x-forwarded-host") ?? requestHeaders.get("host") ?? "";
   const isWebSocketSupported = isAgentWitchWebSocketAvailableForHost(host);
@@ -43,7 +43,7 @@ export default async function HomeAuthenticatedView({
   return (
     <HomeLinkAccountGate
       appOrigin={appOrigin}
-      installCommand={installCommand}
+      dmgDownloadUrl={dmgDownloadUrl}
       isWebSocketSupported={isWebSocketSupported}
       host={host}
     >
@@ -52,7 +52,7 @@ export default async function HomeAuthenticatedView({
           <HomeOnboardingChecklist />
           <HomeOnboardingAutomateNudge />
           <HomeConnectedMacsPanel
-            installCommand={installCommand}
+            dmgDownloadUrl={dmgDownloadUrl}
             isWebSocketSupported={isWebSocketSupported}
             host={host}
           />

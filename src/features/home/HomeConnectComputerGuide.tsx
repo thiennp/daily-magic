@@ -9,19 +9,19 @@ import {
 } from "@/components/surfaces/appSurfaceStyles.constant";
 import AgentWitchUnsupportedHostNotice from "@/features/home/AgentWitchUnsupportedHostNotice";
 import ConnectComputerGuideSteps from "@/features/home/ConnectComputerGuideSteps";
-import ConnectInstallPasteModal from "@/features/home/ConnectInstallPasteModal";
-import useConnectInstallPasteModalDismissal from "@/features/home/hooks/useConnectInstallPasteModalDismissal";
+import useLocalMacBrowserContext from "@/features/home/hooks/useLocalMacBrowserContext";
 import { useLinkLocalAgentAccount } from "@/features/home/hooks/useLinkLocalAgentAccount";
 import {
   buildConnectInstallConnectionStatus,
   buildConnectInstallConnectionStatusClassName,
 } from "@/features/home/utils/buildConnectInstallConnectionStatus";
+import { shouldShowAgentWitchAppDownloadCta } from "@/features/home/utils/shouldShowAgentWitchAppDownloadCta";
 import { MAC_WORKER_BENEFIT_COPY } from "@/lib/copy/macWorkerBenefitCopy.constant";
 import detectBrowserOperatingSystem from "@/features/home/utils/detectBrowserOperatingSystem";
 
 interface HomeConnectComputerGuideProps {
   readonly appOrigin: string;
-  readonly installCommand: string;
+  readonly dmgDownloadUrl: string;
   readonly isWebSocketSupported: boolean;
   readonly host: string;
   readonly onLinked: () => void;
@@ -33,17 +33,22 @@ const getServerOperatingSystemSnapshot = () => "other" as const;
 
 export default function HomeConnectComputerGuide({
   appOrigin,
-  installCommand,
+  dmgDownloadUrl,
   isWebSocketSupported,
   host,
   onLinked,
 }: HomeConnectComputerGuideProps) {
   const [installEngaged, setInstallEngaged] = useState(false);
-  const [isPasteModalOpen, setIsPasteModalOpen] = useState(false);
+  const { isCheckingLocalApp, isLocalAppInstalled } =
+    useLocalMacBrowserContext();
+  const showDownloadCta = shouldShowAgentWitchAppDownloadCta({
+    isCheckingLocalApp,
+    isLocalAppInstalled,
+  });
   const { isLinking, linkError } = useLinkLocalAgentAccount({
     appOrigin,
     autoLink: true,
-    silentFailures: !installEngaged,
+    silentFailures: !installEngaged && !isLocalAppInstalled,
     onLinked,
   });
   const operatingSystem = useSyncExternalStore(
@@ -52,25 +57,14 @@ export default function HomeConnectComputerGuide({
     getServerOperatingSystemSnapshot,
   );
   const connectionStatus = buildConnectInstallConnectionStatus({
-    installEngaged,
+    installEngaged: installEngaged || isLocalAppInstalled,
     isLinking,
     linkError,
   });
 
   const handleInstallEngaged = useCallback(() => {
     setInstallEngaged(true);
-    setIsPasteModalOpen(true);
   }, []);
-
-  const handleClosePasteModal = useCallback(() => {
-    setIsPasteModalOpen(false);
-  }, []);
-
-  useConnectInstallPasteModalDismissal({
-    isOpen: isPasteModalOpen,
-    isLinking,
-    onClose: handleClosePasteModal,
-  });
 
   return (
     <AppHero variant="plain">
@@ -78,10 +72,14 @@ export default function HomeConnectComputerGuide({
         {MAC_WORKER_BENEFIT_COPY.setupEyebrow}
       </p>
       <h1 className="mt-3 text-balance text-3xl font-semibold tracking-tight text-gray-900 dark:text-white/90">
-        {MAC_WORKER_BENEFIT_COPY.setupTitle}
+        {isLocalAppInstalled
+          ? MAC_WORKER_BENEFIT_COPY.setupTitleAppReady
+          : MAC_WORKER_BENEFIT_COPY.setupTitle}
       </h1>
       <p className={`mt-3 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
-        {MAC_WORKER_BENEFIT_COPY.setupDescription}
+        {isLocalAppInstalled
+          ? MAC_WORKER_BENEFIT_COPY.setupDescriptionAppReady
+          : MAC_WORKER_BENEFIT_COPY.setupDescription}
       </p>
 
       {!isWebSocketSupported ? (
@@ -90,12 +88,15 @@ export default function HomeConnectComputerGuide({
         </div>
       ) : null}
 
-      <ConnectComputerGuideSteps
-        operatingSystem={operatingSystem}
-        installCommand={installCommand}
-        isWebSocketSupported={isWebSocketSupported}
-        onInstallEngaged={handleInstallEngaged}
-      />
+      {isWebSocketSupported && showDownloadCta ? (
+        <ConnectComputerGuideSteps
+          operatingSystem={operatingSystem}
+          dmgDownloadUrl={dmgDownloadUrl}
+          isWebSocketSupported={isWebSocketSupported}
+          showDownloadCta={showDownloadCta}
+          onInstallEngaged={handleInstallEngaged}
+        />
+      ) : null}
 
       {isWebSocketSupported && connectionStatus !== null ? (
         <p
@@ -107,11 +108,6 @@ export default function HomeConnectComputerGuide({
           {connectionStatus.message}
         </p>
       ) : null}
-
-      <ConnectInstallPasteModal
-        isOpen={isPasteModalOpen}
-        onClose={handleClosePasteModal}
-      />
     </AppHero>
   );
 }

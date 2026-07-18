@@ -1,15 +1,15 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useState } from "react";
 
 import { APP_SURFACE_TEXT_LINK_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
 import ConnectAnotherMacModal from "@/features/home/ConnectAnotherMacModal";
-import ConnectInstallPasteModal from "@/features/home/ConnectInstallPasteModal";
-import useConnectInstallPasteModalDismissal from "@/features/home/hooks/useConnectInstallPasteModalDismissal";
+import useLocalMacBrowserContext from "@/features/home/hooks/useLocalMacBrowserContext";
 import { resolveConnectAnotherMacLabel } from "@/features/home/utils/resolveConnectAnotherMacLabel";
+import { shouldShowAgentWitchAppDownloadCta } from "@/features/home/utils/shouldShowAgentWitchAppDownloadCta";
 
 interface ConnectAnotherMacButtonProps {
-  readonly installCommand: string;
+  readonly dmgDownloadUrl: string;
   readonly isWebSocketSupported: boolean;
   readonly host: string;
   readonly hasExistingDevices: boolean;
@@ -17,24 +17,23 @@ interface ConnectAnotherMacButtonProps {
 }
 
 export default function ConnectAnotherMacButton({
-  installCommand,
+  dmgDownloadUrl,
   isWebSocketSupported,
   host,
   hasExistingDevices,
   className,
 }: ConnectAnotherMacButtonProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isPasteModalOpen, setIsPasteModalOpen] = useState(false);
-
-  const handleClosePasteModal = useCallback(() => {
-    setIsPasteModalOpen(false);
-  }, []);
-
-  useConnectInstallPasteModalDismissal({
-    isOpen: isPasteModalOpen,
-    isLinking: false,
-    onClose: handleClosePasteModal,
+  const { isCheckingLocalApp, isLocalAppInstalled } =
+    useLocalMacBrowserContext();
+  const showDownloadCta = shouldShowAgentWitchAppDownloadCta({
+    isCheckingLocalApp,
+    isLocalAppInstalled,
   });
+
+  if (!showDownloadCta) {
+    return null;
+  }
 
   const actionLabel = resolveConnectAnotherMacLabel(hasExistingDevices);
 
@@ -51,7 +50,7 @@ export default function ConnectAnotherMacButton({
       </button>
       <ConnectAnotherMacModal
         isOpen={isModalOpen}
-        installCommand={installCommand}
+        dmgDownloadUrl={dmgDownloadUrl}
         isWebSocketSupported={isWebSocketSupported}
         host={host}
         hasExistingDevices={hasExistingDevices}
@@ -59,12 +58,8 @@ export default function ConnectAnotherMacButton({
           setIsModalOpen(false);
         }}
         onInstallEngaged={() => {
-          setIsPasteModalOpen(true);
+          setIsModalOpen(false);
         }}
-      />
-      <ConnectInstallPasteModal
-        isOpen={isPasteModalOpen}
-        onClose={handleClosePasteModal}
       />
     </>
   );

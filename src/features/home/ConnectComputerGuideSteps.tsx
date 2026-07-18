@@ -5,23 +5,25 @@ import {
   APP_SURFACE_NESTED_CARD_CLASS,
   APP_SURFACE_STEP_BADGE_CLASS,
 } from "@/components/surfaces/appSurfaceStyles.constant";
-import CopyableBashCommand from "@/features/home/CopyableBashCommand";
+import DownloadAgentWitchAppButton from "@/features/home/DownloadAgentWitchAppButton";
 import buildConnectComputerGuideSteps, {
-  CONNECT_COMPUTER_COPY_STEP_TITLE,
+  CONNECT_COMPUTER_DOWNLOAD_STEP_TITLE,
 } from "@/features/home/utils/buildConnectComputerGuideSteps";
 import type detectBrowserOperatingSystem from "@/features/home/utils/detectBrowserOperatingSystem";
 
 interface ConnectComputerGuideStepsProps {
   readonly operatingSystem: ReturnType<typeof detectBrowserOperatingSystem>;
-  readonly installCommand: string;
+  readonly dmgDownloadUrl: string;
   readonly isWebSocketSupported: boolean;
+  readonly showDownloadCta: boolean;
   readonly onInstallEngaged: () => void;
 }
 
 export default function ConnectComputerGuideSteps({
   operatingSystem,
-  installCommand,
+  dmgDownloadUrl,
   isWebSocketSupported,
+  showDownloadCta,
   onInstallEngaged,
 }: ConnectComputerGuideStepsProps) {
   const steps = buildConnectComputerGuideSteps(operatingSystem);
@@ -44,11 +46,10 @@ export default function ConnectComputerGuideSteps({
               {step.description}
             </p>
             {isWebSocketSupported &&
-            step.title === CONNECT_COMPUTER_COPY_STEP_TITLE ? (
-              <CopyableBashCommand
-                command={installCommand}
-                iconOnly
-                variant="bash"
+            showDownloadCta &&
+            step.title === CONNECT_COMPUTER_DOWNLOAD_STEP_TITLE ? (
+              <DownloadAgentWitchAppButton
+                dmgDownloadUrl={dmgDownloadUrl}
                 onEngaged={onInstallEngaged}
               />
             ) : null}

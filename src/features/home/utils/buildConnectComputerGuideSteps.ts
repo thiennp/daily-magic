@@ -1,27 +1,27 @@
 import type { BrowserOperatingSystem } from "@/features/home/utils/detectBrowserOperatingSystem";
 
-export const CONNECT_COMPUTER_COPY_STEP_TITLE = "Copy the install command";
+export const CONNECT_COMPUTER_DOWNLOAD_STEP_TITLE = "Download Agent Witch";
 
 export interface ConnectComputerGuideStep {
   readonly title: string;
   readonly description: string;
 }
 
-const MAC_TERMINAL_STEPS: readonly ConnectComputerGuideStep[] = [
+const MAC_DOWNLOAD_STEPS: readonly ConnectComputerGuideStep[] = [
   {
-    title: "Open Terminal",
+    title: CONNECT_COMPUTER_DOWNLOAD_STEP_TITLE,
     description:
-      'Press Command (⌘) + Space to open Spotlight, type "Terminal", then press Return.',
+      "Download the Agent Witch installer for this Mac. Open the DMG and double-click Agent Witch Installer.",
   },
   {
-    title: CONNECT_COMPUTER_COPY_STEP_TITLE,
+    title: "Install or update",
     description:
-      "The command is the same for every account on this Mac — it does not contain your email.",
+      "Follow the installer prompts. Background helpers start at login so this Mac can run workflows.",
   },
   {
-    title: "Paste into Terminal and run it",
+    title: "Stay signed in here",
     description:
-      "Click inside Terminal, paste with Command (⌘) + V, then press Return.",
+      "Keep this page open while signed in so Agent Witch can link this Mac to your account.",
   },
 ];
 
@@ -33,23 +33,23 @@ const buildConnectComputerGuideSteps = (
       {
         title: "Use a Mac",
         description:
-          "Agent Witch installs on macOS. Switch to the Mac you want to connect, then follow the steps below on that computer.",
+          "Agent Witch installs on macOS. Switch to the Mac you want to connect, then download the app on that computer.",
       },
-      ...MAC_TERMINAL_STEPS,
+      ...MAC_DOWNLOAD_STEPS,
     ];
   }
 
   if (operatingSystem === "mac") {
-    return MAC_TERMINAL_STEPS;
+    return MAC_DOWNLOAD_STEPS;
   }
 
   return [
     {
       title: "Use a Mac",
       description:
-        "Agent Witch installs on macOS. On your Mac, open Terminal and follow the steps below.",
+        "Agent Witch installs on macOS. On your Mac, open this site and download the app.",
     },
-    ...MAC_TERMINAL_STEPS,
+    ...MAC_DOWNLOAD_STEPS,
   ];
 };
 

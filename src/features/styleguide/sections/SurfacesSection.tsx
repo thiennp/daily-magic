@@ -66,7 +66,7 @@ export default function SurfacesSection() {
           LocalTerminalPre
         </h3>
         <LocalTerminalPre className="mt-3">
-          curl -fsSL https://www.agentwitch.com/install/agent-witch.sh | bash
+          Download Agent Witch → open AgentWitch.dmg → Installer.app
         </LocalTerminalPre>
       </AppPanel>
 

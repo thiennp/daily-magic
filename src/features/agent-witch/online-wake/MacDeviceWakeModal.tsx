@@ -2,8 +2,6 @@
 
 import { Modal } from "@/components/ui/modal";
 import { APP_SURFACE_BODY_TEXT_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
-import CopyableBashCommand from "@/features/home/CopyableBashCommand";
-import { buildAgentWitchWakeTerminalCommand } from "./buildAgentWitchWakeTerminalCommand";
 import { requestAgentWitchWake } from "./requestAgentWitchWake";
 
 interface MacDeviceWakeModalProps {
@@ -19,17 +17,16 @@ export default function MacDeviceWakeModal({
   isWakeServerReachable,
   onClose,
 }: MacDeviceWakeModalProps) {
-  const wakeCommand = buildAgentWitchWakeTerminalCommand();
-
   return (
     <Modal isOpen={isOpen} onClose={onClose} className="max-w-md p-6">
       <h2 className="pr-10 text-lg font-semibold text-gray-900 dark:text-white/90">
         Turn on this Mac
       </h2>
       <p className={`mt-3 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
-        {displayName} is offline. Power it on, then open Terminal and run:
+        {displayName} is offline. Power it on and wait for Agent Witch to
+        reconnect at login. If the app is not installed yet, download it from
+        Home on that Mac.
       </p>
-      <CopyableBashCommand command={wakeCommand} variant="bash" />
       {isWakeServerReachable ? (
         <button
           type="button"

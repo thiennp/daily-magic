@@ -25,6 +25,10 @@
 /build
 /dist/
 
+# Agent Witch DMG published for /install/agent-witch.dmg (built locally)
+/public/install/*.dmg
+!/public/install/.gitkeep
+
 # misc
 .DS_Store
 *.pem

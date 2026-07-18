@@ -4,7 +4,7 @@ import { useMemo } from "react";
 
 import { APP_SURFACE_CTA_SECONDARY_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
 import ConnectAnotherMacButton from "@/features/home/ConnectAnotherMacButton";
-import { buildAgentWitchInstallScriptUrl } from "@/lib/agentWitch/buildAgentWitchInstallUrls";
+import { buildAgentWitchDmgDownloadUrl } from "@/lib/agentWitch/buildAgentWitchInstallUrls";
 import isAgentWitchWebSocketSupportedHost from "@/lib/agentWitch/isAgentWitchWebSocketSupportedHost";
 
 interface SendTaskComposerConnectMacButtonProps {
@@ -17,18 +17,17 @@ export default function SendTaskComposerConnectMacButton({
   const connectContext = useMemo(() => {
     if (typeof window === "undefined") {
       return {
-        installCommand: "",
+        dmgDownloadUrl: "",
         host: "",
         isWebSocketSupported: true,
       };
     }
 
     const origin = window.location.origin;
-    const installScriptUrl = buildAgentWitchInstallScriptUrl(origin);
     const host = window.location.host;
 
     return {
-      installCommand: `curl -fsSL ${installScriptUrl} | bash`,
+      dmgDownloadUrl: buildAgentWitchDmgDownloadUrl(origin),
       host,
       isWebSocketSupported: isAgentWitchWebSocketSupportedHost(host),
     };
@@ -36,7 +35,7 @@ export default function SendTaskComposerConnectMacButton({
 
   return (
     <ConnectAnotherMacButton
-      installCommand={connectContext.installCommand}
+      dmgDownloadUrl={connectContext.dmgDownloadUrl}
       isWebSocketSupported={connectContext.isWebSocketSupported}
       host={connectContext.host}
       hasExistingDevices={hasExistingDevices}

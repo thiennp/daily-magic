@@ -11,7 +11,7 @@
 - **Connected state** must come from the device list API, never optimistic `markPaired()` alone.
 - **Dashboard gating** uses `resolveHomeDashboardMode` — `connect` until `deviceCount > 0`.
 - **Connect copy** uses `resolveConnectAnotherMacLabel(hasExistingDevices)` — never "another" with zero devices.
-- **Install copy UX** — paste modal opens only from the Copy button (`CopyableBashCommand.onEngaged`), not clipboard listeners.
+- **Download CTA** — show DMG download only when local wake `/identity` is unreachable (`shouldShowAgentWitchAppDownloadCta`); never show bash install commands in Home UI.
 
 ## Tests to extend
 

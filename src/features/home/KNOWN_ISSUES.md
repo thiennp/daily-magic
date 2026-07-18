@@ -62,12 +62,6 @@ Document every production bug or UX regression here. Each entry must link to a t
 
 ---
 
-## Adding issues
-
-Use the next ID (`HOME-019`, …). Include symptom, root cause, fix paths, and test file.
-
----
-
 ## HOME-006 — “Send your first task” reset after refresh
 
 **Symptom:** Onboarding step 3 stayed incomplete or reverted after reload even after dispatching a task.
@@ -221,3 +215,21 @@ Use the next ID (`HOME-019`, …). Include symptom, root cause, fix paths, and t
 **Fix:** Fetch and store setup acknowledgment once in `OnboardingStepsContext`; `useOnboardingSetupAcknowledged` reads from context.
 
 **Regression test:** `OnboardingStepsContext` shares one fetch (grep guard: single `fetchOnboardingSetupAcknowledged` in provider).
+
+---
+
+## HOME-019 — Bash install shown when Mac already has Agent Witch
+
+**Symptom:** Home still showed “Add a Mac” / curl install steps on a Mac where Agent Witch was already running.
+
+**Root cause:** Connect CTAs always rendered the bash command and did not consult the local wake `/identity` API.
+
+**Fix:** Probe local wake identity; show **Download Agent Witch** (DMG) only when the app is missing; hide Add Mac / download when installed. `shouldShowAgentWitchAppDownloadCta.test.ts` (HOME-019).
+
+**Regression test:** `shouldShowAgentWitchAppDownloadCta.test.ts`, `buildConnectComputerGuideSteps.test.ts`.
+
+---
+
+## Adding issues
+
+Use the next ID (`HOME-020`, …). Include symptom, root cause, fix paths, and test file.

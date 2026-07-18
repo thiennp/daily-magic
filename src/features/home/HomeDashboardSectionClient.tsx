@@ -14,7 +14,7 @@ interface HomeDashboardSectionClientProps {
     readonly globalRole: GlobalRoleValue;
   };
   readonly appOrigin: string;
-  readonly installCommand: string;
+  readonly dmgDownloadUrl: string;
   readonly isWebSocketSupported: boolean;
   readonly host: string;
 }
@@ -22,7 +22,7 @@ interface HomeDashboardSectionClientProps {
 export default function HomeDashboardSectionClient({
   user,
   appOrigin,
-  installCommand,
+  dmgDownloadUrl,
   isWebSocketSupported,
   host,
 }: HomeDashboardSectionClientProps) {
@@ -45,7 +45,7 @@ export default function HomeDashboardSectionClient({
   return (
     <HomeConnectComputerGuide
       appOrigin={appOrigin}
-      installCommand={installCommand}
+      dmgDownloadUrl={dmgDownloadUrl}
       isWebSocketSupported={isWebSocketSupported}
       host={host}
       onLinked={() => {

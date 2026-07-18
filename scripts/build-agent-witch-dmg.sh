@@ -75,10 +75,17 @@ hdiutil create \
 # Keep the .app beside the DMG for local testing without mounting.
 cp -R "${STAGING_DIR}/${APP_NAME}" "${OUT_DIR}/${APP_NAME}"
 
+# Publish path used by GET /install/agent-witch.dmg
+PUBLIC_INSTALL_DIR="${ROOT_DIR}/public/install"
+mkdir -p "${PUBLIC_INSTALL_DIR}"
+cp "${DMG_PATH}" "${PUBLIC_INSTALL_DIR}/AgentWitch.dmg"
+
 echo
 echo "Done."
 echo "  DMG: ${DMG_PATH}"
 echo "  App: ${OUT_DIR}/${APP_NAME}"
+echo "  Web: ${PUBLIC_INSTALL_DIR}/AgentWitch.dmg"
 echo
 echo "Test: open \"${OUT_DIR}/${APP_NAME}\""
+echo "Download URL: ${ORIGIN}/install/agent-witch.dmg"
 echo "Sign/notarize before public distribution (Apple Developer ID)."

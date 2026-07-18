@@ -27,7 +27,7 @@ export default function ConnectionLabPageLayout() {
 
         <div className="grid gap-6 lg:grid-cols-[minmax(0,18rem)_minmax(0,1fr)]">
           <HomeConnectedMacsPanel
-            installCommand="curl -fsSL http://localhost:3000/install/agent-witch.sh | bash"
+            dmgDownloadUrl="http://localhost:3000/install/agent-witch.dmg"
             isWebSocketSupported
             host="localhost:3000"
           />
