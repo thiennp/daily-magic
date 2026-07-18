@@ -44,6 +44,25 @@ describe("shouldAutoCompleteWsTestComposerMacSelectionStep", () => {
       false,
     );
   });
+
+  it("auto-completes multi-mac when last session Mac is still paired (AGENT-027)", () => {
+    expect(
+      shouldAutoCompleteWsTestComposerMacSelectionStep({
+        ...baseInput,
+        hasRememberedMacSelection: true,
+      }),
+    ).toBe(true);
+  });
+
+  it("does not auto-complete remembered Mac after trail rewind (AGENT-027)", () => {
+    expect(
+      shouldAutoCompleteWsTestComposerMacSelectionStep({
+        ...baseInput,
+        hasRememberedMacSelection: true,
+        hasRewoundWizard: true,
+      }),
+    ).toBe(false);
+  });
 });
 
 describe("shouldShowWsTestComposerMacSelectionStepOnly loading", () => {

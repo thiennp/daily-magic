@@ -9,6 +9,10 @@ import {
 } from "@/features/agent-witch/online-wake";
 import { SEND_TASK_DEVICE_ID_QUERY_PARAM } from "@/features/agent/constants/sendTaskModalQuery.constant";
 import useMyMacDevices from "@/features/agent/hooks/useMyMacDevices";
+import {
+  readPreferredMacDeviceId,
+  writePreferredMacDeviceId,
+} from "@/features/agent/utils/preferredMacDeviceStorage";
 
 const useMacDeviceSelection = (): {
   readonly devices: ReturnType<typeof useMyMacDevices>["devices"];
@@ -24,6 +28,7 @@ const useMacDeviceSelection = (): {
   readonly refreshDevices: () => Promise<void>;
   readonly renameDevice: ReturnType<typeof useMyMacDevices>["renameDevice"];
   readonly isOwnDeviceDispatch: boolean;
+  readonly hasRememberedMacSelection: boolean;
 } => {
   const {
     devices,
@@ -37,7 +42,10 @@ const useMacDeviceSelection = (): {
   const deviceIdFromQuery =
     searchParams.get(SEND_TASK_DEVICE_ID_QUERY_PARAM) ?? "";
   const [manualDeviceId, setManualDeviceId] = useState<string | null>(null);
-  const preferredDeviceId = manualDeviceId ?? deviceIdFromQuery;
+  const [storedDeviceId] = useState(readPreferredMacDeviceId);
+  const preferredDeviceId =
+    manualDeviceId ??
+    (deviceIdFromQuery.length > 0 ? deviceIdFromQuery : storedDeviceId);
 
   const selectedDeviceId = useMemo(() => {
     if (devices.length === 0) {
@@ -61,7 +69,10 @@ const useMacDeviceSelection = (): {
     devices,
     displayNameById,
     selectedDeviceId,
-    setSelectedDeviceId: setManualDeviceId,
+    setSelectedDeviceId: (deviceId: string) => {
+      setManualDeviceId(deviceId);
+      writePreferredMacDeviceId(deviceId);
+    },
     isLoading,
     hasDispatchReadyMac: dispatchReadyMacCount > 0,
     dispatchReadyMacCount,
@@ -69,6 +80,10 @@ const useMacDeviceSelection = (): {
     refreshDevices,
     renameDevice,
     isOwnDeviceDispatch: deviceIdFromQuery.length > 0,
+    hasRememberedMacSelection:
+      !isLoading &&
+      storedDeviceId.length > 0 &&
+      devices.some((device) => device.id === storedDeviceId),
   };
 };
 

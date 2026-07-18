@@ -12,6 +12,7 @@ export const useWsTestPanelSteppedComposer = (input: {
   readonly isSessionActive: boolean;
   readonly composer: ReturnType<typeof useWsTestTaskComposer>;
   readonly writerAgent: HarnessWriterAgent;
+  readonly hasRememberedWriterAgentSelection: boolean;
   readonly activeDeviceId: string;
   readonly showMacPicker: boolean;
   readonly isMacDeviceLocked: boolean;
@@ -31,9 +32,11 @@ export const useWsTestPanelSteppedComposer = (input: {
       isMacDeviceLocked: input.isMacDeviceLocked,
       isMacDevicesLoading: input.composer.isMacDevicesLoading,
       deviceCount: input.composer.macDevices.length,
+      hasRememberedMacSelection: input.composer.hasRememberedMacSelection,
     },
     hasPrefilledLibraryCapability:
       input.composer.selectedLibraryCapabilityId.length > 0,
+    hasRememberedWriterAgentSelection: input.hasRememberedWriterAgentSelection,
   });
   const panelActions = useWsTestComposerPanelActions({
     composer: input.composer,
@@ -60,6 +63,7 @@ export const useWsTestPanelSteppedComposer = (input: {
       isMacDeviceLocked: input.isMacDeviceLocked,
       isMacDevicesLoading: input.composer.isMacDevicesLoading,
       deviceCount: input.composer.macDevices.length,
+      hasRememberedMacSelection: input.composer.hasRememberedMacSelection,
     },
     writerAgent: input.writerAgent,
     onMacStepBack: finishSessionAnd(panelActions.handleMacStepBack),

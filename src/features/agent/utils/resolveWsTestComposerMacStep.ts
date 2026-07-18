@@ -4,6 +4,8 @@ export type WsTestComposerMacStepInput = {
   readonly isMacDeviceLocked: boolean;
   readonly isMacDevicesLoading: boolean;
   readonly deviceCount: number;
+  readonly hasRememberedMacSelection?: boolean;
+  readonly hasRewoundWizard?: boolean;
 };
 
 export const shouldSkipWsTestComposerMacSelectionStep = (
@@ -14,13 +16,25 @@ export const shouldSkipWsTestComposerMacSelectionStep = (
   input.isMacDeviceLocked ||
   (!input.isMacDevicesLoading && input.deviceCount <= 1);
 
-/** Skip mac selection only after devices are loaded and the paired count is known. */
+/**
+ * Auto-complete after devices load for single-Mac / locked / own-device, or when
+ * last session’s Mac is still paired (unless the user rewound via the trail).
+ */
 export const shouldAutoCompleteWsTestComposerMacSelectionStep = (
   input: WsTestComposerMacStepInput,
-): boolean =>
-  !input.isMacDevicesLoading &&
-  shouldSkipWsTestComposerMacSelectionStep(input) &&
-  input.deviceCount > 0;
+): boolean => {
+  if (input.isMacDevicesLoading || input.deviceCount === 0) {
+    return false;
+  }
+
+  if (shouldSkipWsTestComposerMacSelectionStep(input)) {
+    return true;
+  }
+
+  return (
+    input.hasRememberedMacSelection === true && input.hasRewoundWizard !== true
+  );
+};
 
 export const shouldShowWsTestComposerMacSelectionStepOnly = (
   input: WsTestComposerMacStepInput & {

@@ -16,7 +16,8 @@ export const useWsTestPanelController = (input: {
 }) => {
   const socket = useAgentWitchSocket();
   const composer = useWsTestTaskComposer();
-  const { writerAgent, setWriterAgent } = useDelegatedWriterAgent();
+  const { writerAgent, setWriterAgent, hasRememberedWriterAgentSelection } =
+    useDelegatedWriterAgent();
   const sessionTargets = resolveAgentSessionTargets({
     sessionWriterAgent: socket.sessionWriterAgent,
     writerAgent,
@@ -48,6 +49,7 @@ export const useWsTestPanelController = (input: {
     isSessionActive: macSession.isSessionActive,
     composer,
     writerAgent: sessionTargets.activeWriterAgent,
+    hasRememberedWriterAgentSelection,
     activeDeviceId: sessionTargets.activeDeviceId,
     showMacPicker: !composer.isTeamDispatch,
     isMacDeviceLocked: sessionTargets.isMacDeviceLocked,

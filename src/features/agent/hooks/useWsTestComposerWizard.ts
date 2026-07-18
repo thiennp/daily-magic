@@ -3,6 +3,7 @@
 import { useState } from "react";
 
 import { resolveWsTestComposerPickerCompleted } from "@/features/agent/utils/resolveWsTestComposerPickerCompleted";
+import { resolveWsTestComposerWriterAgentCompleted } from "@/features/agent/utils/resolveWsTestComposerWriterAgentCompleted";
 import type { WsTestComposerMacStepInput } from "@/features/agent/utils/resolveWsTestComposerMacStep";
 import {
   shouldAutoCompleteWsTestComposerMacSelectionStep,
@@ -15,12 +16,14 @@ interface UseWsTestComposerWizardInput {
   readonly isSteppedComposer: boolean;
   readonly macStepInput: WsTestComposerMacStepInput;
   readonly hasPrefilledLibraryCapability: boolean;
+  readonly hasRememberedWriterAgentSelection: boolean;
 }
 
 export function useWsTestComposerWizard({
   isSteppedComposer,
   macStepInput,
   hasPrefilledLibraryCapability,
+  hasRememberedWriterAgentSelection,
 }: UseWsTestComposerWizardInput) {
   const [hasConfirmedMacSelection, setHasConfirmedMacSelection] =
     useState(false);
@@ -36,15 +39,24 @@ export function useWsTestComposerWizard({
     shouldSkipWsTestComposerMacSelectionStep(macStepInput);
   const hasCompletedMacSelectionStep =
     hasConfirmedMacSelection ||
-    shouldAutoCompleteWsTestComposerMacSelectionStep(macStepInput);
+    shouldAutoCompleteWsTestComposerMacSelectionStep({
+      ...macStepInput,
+      hasRewoundWizard,
+    });
   const hasCompletedPickerStep = resolveWsTestComposerPickerCompleted({
     hasConfirmedPickerSelection,
     isSteppedComposer,
     hasPrefilledLibraryCapability,
     hasRewoundWizard,
   });
-  const hasCompletedWriterAgentStep =
-    hasConfirmedWriterAgentSelection || !isSteppedComposer;
+  const hasCompletedWriterAgentStep = resolveWsTestComposerWriterAgentCompleted(
+    {
+      hasConfirmedWriterAgentSelection,
+      isSteppedComposer,
+      hasRememberedWriterAgentSelection,
+      hasRewoundWizard,
+    },
+  );
 
   const macStepState = {
     ...macStepInput,
