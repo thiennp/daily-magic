@@ -107,6 +107,9 @@ npm run agent-witch
 
 # Install to ~/.agent-witch with macOS login autostart
 npm run agent-witch:install
+
+# Build a double-click DMG installer (no Terminal copy-paste)
+npm run agent-witch:dmg
 ```
 
 - WebSocket: `ws://localhost:3000/api/agent-witch/ws`

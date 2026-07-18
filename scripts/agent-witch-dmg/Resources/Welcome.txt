@@ -1,0 +1,13 @@
+Agent Witch for Mac
+===================
+
+1. Double-click "Agent Witch Installer"
+2. Click Install when prompted
+3. Open https://www.agentwitch.com and link this Mac to your account
+
+You do not need to paste curl commands into Terminal.
+
+Background helpers (wake, watchdog, updater) start at login after install.
+
+Unsigned builds: if macOS blocks the app, right-click → Open, or run:
+  xattr -cr "/Volumes/Agent Witch/Agent Witch Installer.app"

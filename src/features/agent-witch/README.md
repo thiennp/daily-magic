@@ -27,6 +27,18 @@ Mac pairing, install script, WebSocket bridge, and paired-device API client.
 
 Install from each origin separately so local and prod stay independent.
 
+## macOS DMG (no Terminal copy-paste)
+
+```bash
+# Production installer DMG
+npm run agent-witch:dmg
+
+# Localhost installer DMG
+AGENT_WITCH_DMG_ORIGIN=http://localhost:3000 npm run agent-witch:dmg
+```
+
+Output: `dist/agent-witch-dmg/AgentWitch.dmg` plus a side-by-side `Agent Witch Installer.app`. Details: `scripts/agent-witch-dmg/README.md`.
+
 ## Query
 
 ```bash

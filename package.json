@@ -16,6 +16,7 @@
     "agent-witch:self-update": "tsx scripts/agent-witch-self-update.ts",
     "agent-witch:test-writer-session-stream": "tsx scripts/testWriterSessionStreamLocal.ts",
     "agent-witch:install": "bash scripts/install-agent-witch.sh",
+    "agent-witch:dmg": "bash scripts/build-agent-witch-dmg.sh",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "playwright test",

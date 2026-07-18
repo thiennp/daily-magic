@@ -1,0 +1,76 @@
+#!/bin/bash
+# Agent Witch Installer — double-click friendly wrapper around /install/agent-witch.sh
+set -euo pipefail
+
+ORIGIN="__AGENT_WITCH_ORIGIN__"
+INSTALL_URL="${ORIGIN%/}/install/agent-witch.sh"
+LOG_FILE="${TMPDIR:-/tmp}/agent-witch-installer.log"
+PRODUCT_NAME="Agent Witch"
+
+confirm_install() {
+  local result
+  result="$(
+    osascript <<EOF
+display dialog "Install ${PRODUCT_NAME} on this Mac?
+
+This downloads the install script from:
+${ORIGIN}
+
+Background helpers start at login so you can send tasks from the browser." \
+  with title "${PRODUCT_NAME} Installer" \
+  buttons {"Cancel", "Install"} \
+  default button "Install"
+EOF
+  )" || return 1
+  [[ "$result" == *"Install"* ]]
+}
+
+run_install() {
+  # Login shell so Homebrew / nvm / fnm Node are on PATH (GUI apps get a minimal PATH).
+  /bin/zsh -lc "curl -fsSL $(printf '%q' "$INSTALL_URL") | bash" >"$LOG_FILE" 2>&1
+}
+
+main() {
+  if ! confirm_install; then
+    exit 0
+  fi
+
+  osascript -e "display notification \"Installing ${PRODUCT_NAME}…\" with title \"${PRODUCT_NAME}\"" || true
+
+  if run_install; then
+    local next
+    next="$(
+      osascript <<EOF
+display dialog "${PRODUCT_NAME} is installed.
+
+Next: open ${ORIGIN} in your browser and link this Mac to your account.
+
+A log was saved to:
+${LOG_FILE}" \
+  with title "${PRODUCT_NAME} Installer" \
+  buttons {"Close", "Open ${PRODUCT_NAME}"} \
+  default button "Open ${PRODUCT_NAME}"
+EOF
+    )" || true
+    if [[ "${next:-}" == *"Open"* ]]; then
+      open "${ORIGIN%/}/"
+    fi
+    exit 0
+  fi
+
+  osascript <<EOF
+display dialog "${PRODUCT_NAME} install failed.
+
+Check the log:
+${LOG_FILE}
+
+You can also install from Terminal:
+curl -fsSL ${INSTALL_URL} | bash" \
+  with title "${PRODUCT_NAME} Installer" \
+  buttons {"OK"} \
+  default button "OK"
+EOF
+  exit 1
+}
+
+main "$@"
