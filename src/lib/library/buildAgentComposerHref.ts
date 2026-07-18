@@ -3,6 +3,8 @@ interface BuildAgentComposerHrefInput {
   readonly prompt?: string;
   readonly deviceId?: string;
   readonly openShell?: boolean;
+  /** Resume the Mac CLI conversation with --continue. */
+  readonly continueSession?: boolean;
 }
 
 const SEND_TASK_MODAL_QUERY_PARAM = "sendTask";
@@ -27,6 +29,10 @@ export default function buildAgentComposerHref(
 
   if (input.openShell === true) {
     params.set("openShell", "1");
+  }
+
+  if (input.continueSession === true) {
+    params.set("continueSession", "1");
   }
 
   return `/?${params.toString()}`;

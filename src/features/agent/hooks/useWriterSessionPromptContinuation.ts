@@ -1,7 +1,10 @@
 "use client";
 
+import { useSearchParams } from "next/navigation";
 import { useRef } from "react";
 
+import { SEND_TASK_CONTINUE_SESSION_QUERY_PARAM } from "@/features/agent/constants/sendTaskModalQuery.constant";
+import { resolveIsWriterSessionContinuation } from "@/features/agent/utils/resolveIsWriterSessionContinuation";
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
 
 type SendClaudePrompt = (
@@ -22,6 +25,7 @@ type StartWriterSession = (
 
 export const useWriterSessionPromptContinuation = (input: {
   readonly sessionWriterAgent: HarnessWriterAgent | null;
+  readonly threadAlreadyStarted: boolean;
   readonly finishSessionBase: () => void;
 }): {
   readonly isSessionContinuation: () => boolean;
@@ -33,12 +37,19 @@ export const useWriterSessionPromptContinuation = (input: {
   ) => StartWriterSession;
   readonly finishLiveTerminalSession: () => void;
 } => {
+  const searchParams = useSearchParams();
+  const continueFromQuery =
+    searchParams.get(SEND_TASK_CONTINUE_SESSION_QUERY_PARAM) === "1";
   const hasSentUserPromptInWriterSessionRef = useRef(false);
 
   return {
     isSessionContinuation: () =>
-      input.sessionWriterAgent !== null &&
-      hasSentUserPromptInWriterSessionRef.current,
+      resolveIsWriterSessionContinuation({
+        continueFromQuery,
+        sessionWriterAgent: input.sessionWriterAgent,
+        hasSentUserPrompt: hasSentUserPromptInWriterSessionRef.current,
+        threadAlreadyStarted: input.threadAlreadyStarted,
+      }),
     bindSendClaudePrompt: (dispatch) => (prompt, options) => {
       dispatch(prompt, options);
       if (input.sessionWriterAgent !== null || options !== undefined) {
@@ -46,7 +57,9 @@ export const useWriterSessionPromptContinuation = (input: {
       }
     },
     bindStartWriterSession: (startBase) => (writerAgent, targetDeviceId) => {
-      hasSentUserPromptInWriterSessionRef.current = false;
+      if (!continueFromQuery && !input.threadAlreadyStarted) {
+        hasSentUserPromptInWriterSessionRef.current = false;
+      }
       startBase(writerAgent, targetDeviceId);
     },
     finishLiveTerminalSession: () => {

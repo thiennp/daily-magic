@@ -33,10 +33,7 @@ export const persistAgentLiveTerminalState = (
     setAgentRunTerminalOutput(state.activeRunId, state.output);
   }
 
-  if (
-    state.status === "finished" ||
-    (state.status === "idle" && state.output.length === 0)
-  ) {
+  if (state.status === "idle" && state.output.length === 0) {
     writeTerminalStore({ current: null });
     return;
   }

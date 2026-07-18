@@ -1,5 +1,6 @@
 import AppPanel from "@/components/surfaces/AppPanel";
 import AgentRunAgainButton from "@/features/reports/AgentRunAgainButton";
+import AgentRunContinueButton from "@/features/reports/AgentRunContinueButton";
 import AgentRunLiveTerminal from "@/features/reports/AgentRunLiveTerminal";
 import AgentRunResultOutput from "@/features/reports/AgentRunResultOutput";
 import AgentRunStatusBadge from "@/features/reports/AgentRunStatusBadge";
@@ -69,7 +70,8 @@ export default function AgentRunDetailContent({
         </p>
       ) : null}
       {run.status === AgentRunStatus.COMPLETED ? (
-        <div className="mt-6">
+        <div className="mt-6 flex flex-wrap gap-2">
+          <AgentRunContinueButton />
           <AgentRunAgainButton prompt={run.prompt} />
         </div>
       ) : null}

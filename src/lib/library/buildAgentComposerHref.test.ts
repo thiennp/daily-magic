@@ -18,4 +18,13 @@ describe("buildAgentComposerHref", () => {
       "/?sendTask=1&libraryCapabilityId=cap-1&prompt=hello&deviceId=device-1",
     );
   });
+
+  it("AGENT-026 marks continueSession for Mac CLI --continue", () => {
+    expect(
+      buildAgentComposerHref({
+        prompt: "next step",
+        continueSession: true,
+      }),
+    ).toBe("/?sendTask=1&prompt=next+step&continueSession=1");
+  });
 });

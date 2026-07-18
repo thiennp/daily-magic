@@ -87,7 +87,7 @@ describe("agentLiveTerminalLocalStore", () => {
     expect(readTerminalStore().current).not.toBeNull();
   });
 
-  it("clears localStorage when the task finishes (AGENT-011)", () => {
+  it("AGENT-026 keeps finished sessions so follow-ups can continue", () => {
     persistAgentLiveTerminalState({
       ...beginAgentLiveTerminalSession('cursor agent "fix lint"', "cursor"),
       activeRunId: "run-3",
@@ -95,9 +95,24 @@ describe("agentLiveTerminalLocalStore", () => {
       status: "finished",
     });
 
+    const restored = loadPersistedAgentLiveTerminalState();
+    expect(readTerminalStore().current).not.toBeNull();
+    expect(restored.status).toBe("finished");
+    expect(restored.output).toContain("working");
+    expect(restored.sessionWriterAgent).toBe("cursor");
+    expect(loadAgentRunTerminalOutput("run-3")).toBe("working\n");
+  });
+
+  it("clears localStorage when the session returns to idle", () => {
+    persistAgentLiveTerminalState({
+      ...beginAgentLiveTerminalSession('cursor agent "fix lint"', "cursor"),
+      activeRunId: "run-idle",
+      output: "",
+      status: "idle",
+    });
+
     expect(readTerminalStore().current).toBeNull();
     expect(loadPersistedAgentLiveTerminalState().status).toBe("idle");
-    expect(loadAgentRunTerminalOutput("run-3")).toBe("working\n");
   });
 
   it("stores terminal output by run id for report pages", () => {

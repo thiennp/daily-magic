@@ -30,7 +30,12 @@ export default function AgentRunResultOutput({
         actions={nextActions}
         disabled={false}
         onSelect={(action) => {
-          router.push(buildAgentComposerHref({ prompt: action }));
+          router.push(
+            buildAgentComposerHref({
+              prompt: action,
+              continueSession: true,
+            }),
+          );
         }}
       />
     </>

@@ -38,6 +38,11 @@ export function useAgentWitchSocket(): UseAgentWitchSocketResult {
     connectionLab?.connectionStatus ?? liveConnectionStatus;
   const promptContinuation = useWriterSessionPromptContinuation({
     sessionWriterAgent: terminal.sessionWriterAgent,
+    threadAlreadyStarted:
+      terminal.status === "finished" ||
+      terminal.status === "streaming" ||
+      terminal.status === "error" ||
+      terminal.status === "waiting_approval",
     finishSessionBase: terminal.finishSession,
   });
 

@@ -15,3 +15,11 @@
 **Cause:** `AgentRunDetailContent` dumped `resultOutput` verbatim and never reused the live-terminal next-actions parser/UI.
 
 **Fix:** Split result text with `splitAgentRunResultForDisplay`, hide the marker block from the `<pre>`, and render `AgentLiveTerminalNextActions` buttons that open Send a task with the chosen prompt.
+
+## REPORTS-003 — Continue finished job with Mac CLI context
+
+**Symptom:** After a job finished, next-action / re-open links started a brand-new CLI thread instead of continuing the last Mac conversation.
+
+**Cause:** Composer always treated the first prompt after navigation as a fresh turn; finished live sessions were cleared from localStorage.
+
+**Fix:** Persist finished sessions, honor `continueSession=1` (and restored finished threads) for `--continue`, and expose **Continue conversation** on the job detail page.
