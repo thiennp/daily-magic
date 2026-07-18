@@ -18,7 +18,7 @@ const baseDevice = (
 });
 
 describe("buildAgentWitchDevicesWithOnlineStatus", () => {
-  it("marks devices connected from a fresh HTTP heartbeat (AGENT-017)", () => {
+  it("marks devices connected from a fresh WebSocket heartbeat (AGENT-017)", () => {
     const lastSeenAt = new Date().toISOString();
     const result = buildAgentWitchDevicesWithOnlineStatus([
       baseDevice({ lastSeenAt }),
@@ -29,6 +29,18 @@ describe("buildAgentWitchDevicesWithOnlineStatus", () => {
       isConnected: true,
       isOnline: true,
       lastHeartbeatAt: lastSeenAt,
+    });
+  });
+
+  it("marks live hub devices connected even when lastSeen is stale (AGENT-018)", () => {
+    const result = buildAgentWitchDevicesWithOnlineStatus(
+      [baseDevice({ lastSeenAt: "2020-01-01T00:00:00.000Z" })],
+      new Set(["device-1"]),
+    );
+
+    expect(result[0]).toMatchObject({
+      isConnected: true,
+      isOnline: true,
     });
   });
 

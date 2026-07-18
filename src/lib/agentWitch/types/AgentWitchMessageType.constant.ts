@@ -44,6 +44,10 @@ export const AGENT_WITCH_MESSAGE_TYPES = {
   AGENT_AGENT_RUN_GET: "agent.agentRun.get",
   SYSTEM_ACK: "system.ack",
   SYSTEM_ERROR: "system.error",
+  DEVICE_AUTH_ATTESTATION: "device.auth.attestation",
+  DEVICE_HEALTH_LOG: "device.health.log",
+  WRITER_ENSURE: "writer.ensure",
+  WRITER_STATUS: "writer.status",
 } as const;
 
 export type AgentWitchMessageType =

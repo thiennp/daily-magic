@@ -87,7 +87,13 @@ CREATE TABLE IF NOT EXISTS agent_witch_devices (
   claimed_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   last_seen_at TIMESTAMPTZ,
   restart_requested_at TIMESTAMPTZ,
-  revoked_at TIMESTAMPTZ
+  revoked_at TIMESTAMPTZ,
+  public_key TEXT,
+  last_handshake_at TIMESTAMPTZ,
+  preferred_writer TEXT,
+  last_wake_error TEXT,
+  last_wake_error_at TIMESTAMPTZ,
+  link_code TEXT
 );
 
 CREATE TABLE IF NOT EXISTS harness_catalog_snapshots (

@@ -6,6 +6,7 @@ import {
   readAgentWitchLocalHostCookie,
   setAgentWitchLocalHostCookie,
 } from "@/features/agent-witch/utils/agentWitchLocalHostCookie";
+import { requestLocalAgentWitchAppHealth } from "@/features/agent-witch/utils/requestLocalAgentWitchAppHealth";
 import { requestLocalAgentWitchIdentity } from "@/features/agent-witch/utils/requestLocalAgentWitchIdentity";
 
 const useLocalMacBrowserContext = (): {
@@ -23,22 +24,26 @@ const useLocalMacBrowserContext = (): {
   useEffect(() => {
     const abortController = new AbortController();
 
-    void requestLocalAgentWitchIdentity().then((identity) => {
+    void (async () => {
+      const [identity, localApp] = await Promise.all([
+        requestLocalAgentWitchIdentity(),
+        requestLocalAgentWitchAppHealth(),
+      ]);
+
       if (abortController.signal.aborted) {
         return;
       }
 
-      if (identity === null) {
-        setIsWakeServerReachable(false);
-        setIsCheckingLocalApp(false);
-        return;
+      const reachable = identity !== null || localApp !== null;
+      setIsWakeServerReachable(reachable);
+
+      if (identity !== null) {
+        setAgentWitchLocalHostCookie(identity.hostname);
+        setLocalHostname(identity.hostname);
       }
 
-      setAgentWitchLocalHostCookie(identity.hostname);
-      setLocalHostname(identity.hostname);
-      setIsWakeServerReachable(true);
       setIsCheckingLocalApp(false);
-    });
+    })();
 
     return () => {
       abortController.abort();

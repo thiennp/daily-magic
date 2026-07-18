@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Agent Witch — local HTTP poll client that runs writer agents from the app.
+ * Agent Witch — local WebSocket client + localhost:43347 app.
  *
  * Run: npx tsx scripts/agent-witch.ts
  * Config: ~/.agent-witch/config.json (legacy) or
@@ -12,7 +12,7 @@ import { spawn } from "node:child_process";
 import fs from "node:fs";
 import os from "node:os";
 
-import type WebSocket from "ws";
+import WebSocket from "ws";
 
 import {
   resolveAgentWitchLocalLayout,
@@ -57,15 +57,26 @@ import {
 } from "./agentWitchConnectionHealth";
 import { AGENT_WITCH_CONNECTION_STALE_MS } from "./agentWitchConnectionHealth.constants";
 import { acceptTerminalStream } from "./agentWitchTerminalStreamState";
-import {
-  pollAgentWitchCommand,
-  postAgentWitchDeviceHeartbeat,
-  postAgentWitchMessage,
-  resolveAgentWitchCloudApiConfig,
-  type AgentWitchCloudApiConfig,
-} from "./agentWitchCloudApi";
-import { pollAndExecuteCloudAgentRun } from "./agentWitchCloudJobPoll";
 import { requestLocalAgentWitchRestart } from "./requestLocalAgentWitchRestart";
+import {
+  buildDeviceAuthHelloFields,
+  verifyServerAttestationLocally,
+} from "./agentWitchDeviceKeypair";
+import { appendAgentWitchLocalTraffic } from "./agentWitchLocalTrafficLog";
+import {
+  resolveLocalAppPublicKey,
+  startAgentWitchLocalApp,
+} from "./agentWitchLocalApp";
+import {
+  formatRagContextForPrompt,
+  indexAgentWitchRagText,
+  queryAgentWitchRag,
+} from "./agentWitchLocalRag";
+import { resolveAgentWitchAppOriginFromWsUrl } from "./resolveAgentWitchAppOriginFromWsUrl";
+import {
+  listPreferredWritersForStatus,
+  runWriterEnsure,
+} from "./handleAgentWitchWriterEnsure";
 
 interface AgentWitchConfig {
   readonly email: string | null;
@@ -85,10 +96,7 @@ const DEFAULT_CODEX_COMMAND = "codex";
 const DEFAULT_CURSOR_COMMAND = "cursor";
 const DEFAULT_ANTIGRAVITY_COMMAND = "agy";
 const HEARTBEAT_INTERVAL_MS = 30_000;
-const CLOUD_JOB_POLL_INTERVAL_MS = 3_000;
-const COMMAND_POLL_WAIT_MS = 25_000;
 const MAX_RECONNECT_DELAY_MS = 30_000;
-const OUTBOUND_SOCKET_OPEN = 1;
 const shellSessionIdByRunId = new Map<string, string>();
 
 interface AgentWitchOutboundSocket {
@@ -186,34 +194,19 @@ const readConfig = (): AgentWitchConfig | null => {
 const sendMessage = (
   socket: AgentWitchOutboundSocket,
   message: Record<string, unknown>,
+  layout?: AgentWitchLocalLayout,
 ): void => {
-  if (socket.readyState === OUTBOUND_SOCKET_OPEN) {
+  if (socket.readyState === WebSocket.OPEN) {
     socket.send(JSON.stringify(message));
+    if (layout !== undefined) {
+      appendAgentWitchLocalTraffic(layout, {
+        direction: "out",
+        type: String(message.type ?? "unknown"),
+        summary: "outbound WS frame",
+      });
+    }
   }
 };
-
-const createHttpOutboundSocket = (
-  cloudApi: AgentWitchCloudApiConfig,
-): AgentWitchOutboundSocket => ({
-  readyState: OUTBOUND_SOCKET_OPEN,
-  send: (data: string): void => {
-    void (async () => {
-      try {
-        const parsed: unknown = JSON.parse(data);
-        if (!isRecord(parsed)) {
-          return;
-        }
-
-        const posted = await postAgentWitchMessage(cloudApi, parsed);
-        if (!posted) {
-          console.error("[agent-witch] Failed to post outbound message.");
-        }
-      } catch {
-        console.error("[agent-witch] Failed to serialize outbound message.");
-      }
-    })();
-  },
-});
 
 const asLegacyWebSocket = (socket: AgentWitchOutboundSocket): WebSocket =>
   socket as unknown as WebSocket;
@@ -327,10 +320,17 @@ const dispatchWriterTask = async (
       ? "continue"
       : "first";
 
+  const ragChunks = await queryAgentWitchRag({
+    layout: config.layout,
+    query: prompt,
+    limit: 5,
+  });
+  const promptWithRag = `${formatRagContextForPrompt(ragChunks)}${prompt}`;
+
   runWriterTask(
     config,
     writerAgent,
-    prompt,
+    promptWithRag,
     requestId,
     asLegacyWebSocket(socket),
     agentRunId,
@@ -552,29 +552,24 @@ const computeReconnectDelayMs = (attempt: number): number => {
 };
 
 const createAgentWitchClient = (config: AgentWitchConfig) => {
-  const cloudApi = resolveAgentWitchCloudApiConfig({
-    wsUrl: config.wsUrl,
-    pairingToken: config.pairingToken,
-  });
   const state: {
-    outbound?: AgentWitchOutboundSocket;
-    httpHeartbeatTimer?: NodeJS.Timeout;
+    socket?: WebSocket;
+    heartbeatTimer?: NodeJS.Timeout;
     localHealthTimer?: NodeJS.Timeout;
-    cloudJobPollTimer?: NodeJS.Timeout;
-    pollBackoffTimer?: NodeJS.Timeout;
-    pollLoopActive: boolean;
+    reconnectTimer?: NodeJS.Timeout;
     reconnectAttempt: number;
     stopped: boolean;
-    connected: boolean;
+    wsConnected: boolean;
+    lastHeartbeatAt: string | null;
+    wakeError: string | null;
     restartInFlight: boolean;
-    pendingRestartAck: boolean;
   } = {
     reconnectAttempt: 0,
     stopped: false,
-    connected: false,
-    pollLoopActive: false,
+    wsConnected: false,
+    lastHeartbeatAt: null,
+    wakeError: null,
     restartInFlight: false,
-    pendingRestartAck: false,
   };
 
   const runLocalRestart = (reason: string): void => {
@@ -584,22 +579,23 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
 
     state.restartInFlight = true;
     console.log(`[agent-witch] Local restart requested (${reason})…`);
+    state.wakeError = `restart:${reason}`;
 
     void requestLocalAgentWitchRestart()
       .then((result) => {
         if (result.ok) {
-          state.pendingRestartAck = true;
           console.log("[agent-witch] Local restart completed.");
           return;
         }
 
         if (!result.reachable) {
-          console.error(
-            "[agent-witch] Local restart API unreachable at 127.0.0.1 — is the wake server running?",
-          );
+          state.wakeError =
+            "Local restart API unreachable — is the wake server running?";
+          console.error(`[agent-witch] ${state.wakeError}`);
           return;
         }
 
+        state.wakeError = "Local restart failed";
         console.error("[agent-witch] Local restart failed.", result.payload);
       })
       .finally(() => {
@@ -616,10 +612,10 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
     }
   };
 
-  const clearHttpHeartbeat = (): void => {
-    if (state.httpHeartbeatTimer !== undefined) {
-      clearInterval(state.httpHeartbeatTimer);
-      state.httpHeartbeatTimer = undefined;
+  const clearHeartbeat = (): void => {
+    if (state.heartbeatTimer !== undefined) {
+      clearInterval(state.heartbeatTimer);
+      state.heartbeatTimer = undefined;
     }
   };
 
@@ -630,65 +626,26 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
     }
   };
 
-  const clearCloudJobPoll = (): void => {
-    if (state.cloudJobPollTimer !== undefined) {
-      clearInterval(state.cloudJobPollTimer);
-      state.cloudJobPollTimer = undefined;
+  const clearReconnectTimer = (): void => {
+    if (state.reconnectTimer !== undefined) {
+      clearTimeout(state.reconnectTimer);
+      state.reconnectTimer = undefined;
     }
   };
 
-  const startCloudJobPoll = (): void => {
-    if (cloudApi === null) {
+  const closeSocket = (): void => {
+    if (state.socket === undefined) {
       return;
     }
-
-    clearCloudJobPoll();
-    const pollCloudJobs = (): void => {
-      void pollAndExecuteCloudAgentRun({
-        cloudApi,
-        workspace: config.workspace,
-        claudeCommand: config.claudeCommand,
-        codexCommand: config.codexCommand,
-        cursorCommand: config.cursorCommand,
-        antigravityCommand: config.antigravityCommand,
-      });
-    };
-    pollCloudJobs();
-    state.cloudJobPollTimer = setInterval(
-      pollCloudJobs,
-      CLOUD_JOB_POLL_INTERVAL_MS,
-    );
-  };
-
-  const startHttpHeartbeat = (): void => {
-    if (cloudApi === null) {
-      return;
+    state.socket.removeAllListeners();
+    if (
+      state.socket.readyState === WebSocket.OPEN ||
+      state.socket.readyState === WebSocket.CONNECTING
+    ) {
+      state.socket.close();
     }
-
-    clearHttpHeartbeat();
-    const sendHttpHeartbeat = (): void => {
-      void postAgentWitchDeviceHeartbeat(cloudApi, {
-        hostname: os.hostname(),
-        ...(state.pendingRestartAck ? { restartAck: true } : {}),
-      }).then((response) => {
-        if (!response.ok) {
-          return;
-        }
-
-        if (state.pendingRestartAck && !response.restartRequested) {
-          state.pendingRestartAck = false;
-        }
-
-        if (response.restartRequested) {
-          runLocalRestart("cloud-heartbeat");
-        }
-      });
-    };
-    sendHttpHeartbeat();
-    state.httpHeartbeatTimer = setInterval(
-      sendHttpHeartbeat,
-      HEARTBEAT_INTERVAL_MS,
-    );
+    state.socket = undefined;
+    state.wsConnected = false;
   };
 
   const startLocalHealthCheck = (): void => {
@@ -700,18 +657,69 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
     );
   };
 
-  const scheduleConnectRetry = (): void => {
-    if (state.stopped || state.pollBackoffTimer !== undefined) {
+  const scheduleReconnect = (): void => {
+    if (state.stopped || state.reconnectTimer !== undefined) {
       return;
     }
 
     const delayMs = computeReconnectDelayMs(state.reconnectAttempt);
-    console.log(`[agent-witch] Retrying HTTP client in ${delayMs}ms…`);
+    console.log(`[agent-witch] Reconnecting in ${delayMs}ms…`);
 
-    state.pollBackoffTimer = setTimeout(() => {
-      state.pollBackoffTimer = undefined;
+    state.reconnectTimer = setTimeout(() => {
+      state.reconnectTimer = undefined;
       connect();
     }, delayMs);
+  };
+
+  const startHeartbeat = (socket: WebSocket): void => {
+    clearHeartbeat();
+    const sendHeartbeat = (): void => {
+      sendMessage(
+        socket,
+        {
+          type: "agent.heartbeat",
+          payload: {
+            hostname: os.hostname(),
+            wakeError: state.wakeError,
+          },
+        },
+        config.layout,
+      );
+      state.lastHeartbeatAt = new Date().toISOString();
+    };
+    sendHeartbeat();
+    state.heartbeatTimer = setInterval(sendHeartbeat, HEARTBEAT_INTERVAL_MS);
+  };
+
+  const runWriterLoginCheckOnConnect = (socket: WebSocket): void => {
+    const commands = {
+      claudeCommand: config.claudeCommand,
+      codexCommand: config.codexCommand,
+      cursorCommand: config.cursorCommand,
+      antigravityCommand: config.antigravityCommand,
+    };
+    for (const writerAgent of listPreferredWritersForStatus()) {
+      void runWriterEnsure({
+        layout: config.layout,
+        writerAgent,
+        commands,
+      }).then((status) => {
+        sendMessage(
+          socket,
+          {
+            type: "writer.status",
+            payload: status,
+          },
+          config.layout,
+        );
+        appendAgentWitchLocalTraffic(config.layout, {
+          direction: "local",
+          type: "writer.status",
+          summary: `${writerAgent} installed=${String(status.installed)} loggedIn=${String(status.loggedIn)}`,
+          action: "writer-login-check",
+        });
+      });
+    }
   };
 
   const handleInboundRaw = (
@@ -722,8 +730,88 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
       return;
     }
 
+    appendAgentWitchLocalTraffic(config.layout, {
+      direction: "in",
+      type: parsed.type,
+      summary: "inbound WS frame",
+    });
+
     const requestId =
       typeof parsed.requestId === "string" ? parsed.requestId : undefined;
+
+    if (parsed.type === "device.auth.attestation" && isRecord(parsed.payload)) {
+      const serverPublicKey =
+        typeof parsed.payload.serverPublicKey === "string"
+          ? parsed.payload.serverPublicKey
+          : "";
+      const origin =
+        typeof parsed.payload.origin === "string" ? parsed.payload.origin : "";
+      const devicePublicKey =
+        typeof parsed.payload.devicePublicKey === "string"
+          ? parsed.payload.devicePublicKey
+          : "";
+      const challenge =
+        typeof parsed.payload.challenge === "string"
+          ? parsed.payload.challenge
+          : "";
+      const serverAttestation =
+        typeof parsed.payload.serverAttestation === "string"
+          ? parsed.payload.serverAttestation
+          : "";
+      const ok = verifyServerAttestationLocally({
+        serverPublicKey,
+        origin,
+        devicePublicKey,
+        challenge,
+        serverAttestation,
+      });
+      if (!ok) {
+        state.wakeError = "Server attestation verification failed";
+        appendAgentWitchLocalTraffic(config.layout, {
+          direction: "local",
+          type: "device.auth.attestation",
+          summary: state.wakeError,
+          action: "auth-failed",
+        });
+        if (state.socket !== undefined) {
+          state.socket.close();
+        }
+        return;
+      }
+      state.wakeError = null;
+    }
+
+    if (parsed.type === "writer.ensure" && isRecord(parsed.payload)) {
+      const writerAgent =
+        typeof parsed.payload.writerAgent === "string"
+          ? parsed.payload.writerAgent
+          : "";
+      appendAgentWitchLocalTraffic(config.layout, {
+        direction: "local",
+        type: "writer.ensure",
+        summary: writerAgent,
+        action: "ensure-writer",
+      });
+      void runWriterEnsure({
+        layout: config.layout,
+        writerAgent,
+        commands: {
+          claudeCommand: config.claudeCommand,
+          codexCommand: config.codexCommand,
+          cursorCommand: config.cursorCommand,
+          antigravityCommand: config.antigravityCommand,
+        },
+      }).then((status) => {
+        sendMessage(
+          socket,
+          {
+            type: "writer.status",
+            payload: status,
+          },
+          config.layout,
+        );
+      });
+    }
 
     if (parsed.type === "system.ack") {
       writeAgentWitchConnectionHealth(config.layout, {
@@ -1030,49 +1118,22 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
     if (parsed.type === "harness.manifest.request") {
       reportHarnessManifest(socket, config.layout);
     }
-  };
 
-  const runCommandPollLoop = async (): Promise<void> => {
-    if (state.stopped || state.pollLoopActive || cloudApi === null) {
-      return;
+    if (
+      parsed.type === "command.claude.result" &&
+      isRecord(parsed.payload) &&
+      typeof parsed.payload.output === "string" &&
+      parsed.payload.output.trim().length > 0
+    ) {
+      void indexAgentWitchRagText({
+        layout: config.layout,
+        text: parsed.payload.output,
+        source:
+          typeof parsed.payload.agentRunId === "string"
+            ? parsed.payload.agentRunId
+            : "command.claude.result",
+      });
     }
-
-    const outbound = state.outbound;
-    if (outbound === undefined) {
-      return;
-    }
-
-    state.pollLoopActive = true;
-
-    while (!state.stopped && cloudApi !== null) {
-      const activeOutbound = state.outbound;
-      if (activeOutbound === undefined) {
-        break;
-      }
-
-      try {
-        const commandMessage = await pollAgentWitchCommand(
-          cloudApi,
-          COMMAND_POLL_WAIT_MS,
-        );
-        state.reconnectAttempt = 0;
-        writeAgentWitchConnectionHealth(config.layout, { wsUrl: config.wsUrl });
-
-        if (commandMessage !== null) {
-          handleInboundRaw(commandMessage, activeOutbound);
-        }
-      } catch (error) {
-        state.reconnectAttempt += 1;
-        const message = error instanceof Error ? error.message : String(error);
-        console.error(`[agent-witch] Command poll failed: ${message}`);
-        const delayMs = computeReconnectDelayMs(state.reconnectAttempt);
-        await new Promise<void>((resolve) => {
-          setTimeout(resolve, delayMs);
-        });
-      }
-    }
-
-    state.pollLoopActive = false;
   };
 
   const connect = (): void => {
@@ -1080,65 +1141,104 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
       return;
     }
 
-    if (cloudApi === null) {
-      console.error(
-        `[agent-witch] Cannot start HTTP client: invalid wsUrl ${config.wsUrl}`,
-      );
-      state.reconnectAttempt += 1;
-      scheduleConnectRetry();
-      return;
-    }
+    clearReconnectTimer();
+    closeSocket();
 
-    const outbound = createHttpOutboundSocket(cloudApi);
-    state.outbound = outbound;
+    const socket = new WebSocket(config.wsUrl);
+    state.socket = socket;
 
-    if (!state.connected) {
-      state.connected = true;
+    socket.on("open", () => {
       state.reconnectAttempt = 0;
-      console.log(
-        `[agent-witch] Connected to ${cloudApi.appOrigin} (HTTP poll)`,
-      );
+      state.wsConnected = true;
+      state.wakeError = null;
+      console.log(`[agent-witch] Connected to ${config.wsUrl}`);
       if (config.email !== null) {
         console.log(`[agent-witch] Profile: ${config.email}`);
       }
       writeAgentWitchConnectionHealth(config.layout, { wsUrl: config.wsUrl });
-      sendMessage(outbound, {
-        type: "agent.register",
-        payload: {
-          role: "agent",
-          hostname: os.hostname(),
-          pairingToken: config.pairingToken,
-        },
+
+      const origin =
+        resolveAgentWitchAppOriginFromWsUrl(config.wsUrl) ??
+        "http://localhost:3000";
+      const claimToken = process.env.AGENT_WITCH_CLAIM_TOKEN?.trim();
+      const auth = buildDeviceAuthHelloFields({
+        layout: config.layout,
+        origin,
+        ...(claimToken !== undefined && claimToken.length > 0
+          ? { claimToken }
+          : {}),
       });
-      reportHarnessManifest(outbound, config.layout);
-      replayPendingRunInputRequests(config, asLegacyWebSocket(outbound));
-    }
 
-    void runCommandPollLoop();
-  };
+      sendMessage(
+        socket,
+        {
+          type: "agent.register",
+          payload: {
+            role: "agent",
+            hostname: os.hostname(),
+            pairingToken: config.pairingToken,
+            ...auth,
+          },
+        },
+        config.layout,
+      );
+      reportHarnessManifest(socket, config.layout);
+      replayPendingRunInputRequests(config, socket);
+      startHeartbeat(socket);
+      runWriterLoginCheckOnConnect(socket);
+    });
 
-  const clearPollBackoff = (): void => {
-    if (state.pollBackoffTimer !== undefined) {
-      clearTimeout(state.pollBackoffTimer);
-      state.pollBackoffTimer = undefined;
-    }
+    socket.on("message", (data) => {
+      const raw = typeof data === "string" ? data : data.toString("utf8");
+      try {
+        const parsed: unknown = JSON.parse(raw);
+        if (!isRecord(parsed)) {
+          return;
+        }
+        handleInboundRaw(parsed, socket);
+      } catch {
+        console.error("[agent-witch] Failed to parse inbound message.");
+      }
+    });
+
+    socket.on("close", () => {
+      clearHeartbeat();
+      state.socket = undefined;
+      state.wsConnected = false;
+      state.reconnectAttempt += 1;
+      console.log("[agent-witch] Disconnected from server.");
+      scheduleReconnect();
+    });
+
+    socket.on("error", (error) => {
+      state.wakeError = error.message;
+      console.error(`[agent-witch] Socket error: ${error.message}`);
+    });
   };
 
   const stop = (): void => {
     state.stopped = true;
-    clearHttpHeartbeat();
+    clearHeartbeat();
     clearLocalHealthCheck();
-    clearCloudJobPoll();
-    clearPollBackoff();
-    state.outbound = undefined;
+    clearReconnectTimer();
+    closeSocket();
   };
 
   return {
     connect,
-    startHttpHeartbeat,
     startLocalHealthCheck,
-    startCloudJobPoll,
     stop,
+    getStatus: () => ({
+      wsConnected: state.wsConnected,
+      lastHeartbeatAt: state.lastHeartbeatAt,
+      wakeError: state.wakeError,
+      linkCode: null,
+      publicKeyRaw: resolveLocalAppPublicKey(config.layout),
+    }),
+    reviveWebSocket: (): void => {
+      state.reconnectAttempt = 0;
+      connect();
+    },
   };
 };
 
@@ -1168,9 +1268,16 @@ const waitForConfig = async (): Promise<AgentWitchConfig> => {
 const main = async (): Promise<void> => {
   const config = await waitForConfig();
   const client = createAgentWitchClient(config);
-  client.startHttpHeartbeat();
+
+  startAgentWitchLocalApp({
+    layout: config.layout,
+    controllers: {
+      getStatus: client.getStatus,
+      reviveWebSocket: client.reviveWebSocket,
+    },
+  });
+
   client.startLocalHealthCheck();
-  client.startCloudJobPoll();
   client.connect();
 
   const shutdown = (): void => {

@@ -2,6 +2,7 @@ import type AgentWitchHubClient from "@/lib/agentWitch/types/AgentWitchHubClient
 import type AgentWitchHubRuntime from "@/lib/agentWitch/types/AgentWitchHubRuntime.type";
 import type AgentWitchMessage from "@/lib/agentWitch/types/AgentWitchMessage.type";
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
+import { updateAgentWitchDeviceWakeError } from "@/lib/agentWitch/updateAgentWitchDeviceAuthFields";
 
 const resolveHeartbeatHostname = (
   payload: Readonly<Record<string, unknown>> | undefined,
@@ -46,6 +47,16 @@ export const handleAgentHeartbeatMessageAsync = async (
       ? { userId: claimedPairing.userId }
       : {}),
   });
+
+  const wakeErrorRaw = message.payload?.wakeError;
+  const wakeError =
+    typeof wakeErrorRaw === "string" && wakeErrorRaw.trim().length > 0
+      ? wakeErrorRaw.trim()
+      : null;
+  const deviceId = sender.deviceId ?? claimedPairing?.deviceId;
+  if (deviceId !== undefined) {
+    await updateAgentWitchDeviceWakeError({ deviceId, wakeError });
+  }
 
   return {
     type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ACK,

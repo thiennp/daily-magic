@@ -8,4 +8,8 @@ export default interface AgentWitchDeviceRecord {
   readonly claimedAt: string;
   readonly lastSeenAt: string | null;
   readonly revokedAt: string | null;
+  readonly publicKey?: string | null;
+  readonly preferredWriter?: string | null;
+  readonly lastWakeError?: string | null;
+  readonly lastWakeErrorAt?: string | null;
 }

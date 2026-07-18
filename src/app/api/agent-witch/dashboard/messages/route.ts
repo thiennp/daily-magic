@@ -1,11 +1,11 @@
 import isAgentWitchMessage from "@/lib/agentWitch/isAgentWitchMessage";
 import { getAgentWitchHub } from "@/lib/agentWitch/getAgentWitchHub";
+import { recordAgentWitchTraffic } from "@/lib/agentWitch/agentWitchTrafficLog";
 import { registerHttpDashboardWitchClient } from "@/lib/agentWitch/registerHttpDashboardWitchClient";
 import { requireAuth } from "@/lib/auth/requireAuth";
 
 export const dynamic = "force-dynamic";
 
-/** Browser → hub messages (replaces dashboard WebSocket sends). */
 export async function POST(request: Request): Promise<Response> {
   const { actor, error } = await requireAuth();
 
@@ -29,6 +29,15 @@ export async function POST(request: Request): Promise<Response> {
 
   const hub = getAgentWitchHub();
   const reply = await hub.handleMessageAsync(client.id, body);
+  const response = { ok: true, reply };
 
-  return Response.json({ ok: true, reply });
+  recordAgentWitchTraffic({
+    direction: "browser_to_server",
+    path: "/api/agent-witch/dashboard/messages",
+    summary: `${body.type} from dashboard`,
+    request: body,
+    response,
+  });
+
+  return Response.json(response);
 }

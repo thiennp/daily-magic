@@ -1,6 +1,6 @@
 # Agent Witch bridge
 
-Mac pairing, install script, HTTP poll + SSE bridge, and paired-device API client.
+Mac pairing, install script, mutual WebSocket bridge, local app (`:43347`), and paired-device API client.
 
 ## Scope
 
@@ -9,42 +9,43 @@ Mac pairing, install script, HTTP poll + SSE bridge, and paired-device API clien
 | Feature client | `src/features/agent-witch/` |
 | Server / hub   | `src/lib/agentWitch/`       |
 | APIs           | `/api/agent-witch/*`        |
+| Local Mac app  | `http://127.0.0.1:43347`    |
 
-## Transport (no WebSocket)
+## Transport
 
-| Direction        | Mechanism                                                                                       |
-| ---------------- | ----------------------------------------------------------------------------------------------- |
-| Online           | Mac `POST /api/agent-witch/heartbeat` every ~30s; `isConnected` = last seen within 30s          |
-| Commands → Mac   | Mac long-polls `POST /api/agent-witch/commands/poll`                                            |
-| Mac → server     | `POST /api/agent-witch/messages` (event/message ingest)                                         |
-| Server → browser | SSE `GET /api/agent-witch/events`; browser sends via `POST /api/agent-witch/dashboard/messages` |
+| Direction        | Mechanism                                                                                |
+| ---------------- | ---------------------------------------------------------------------------------------- |
+| Mac ↔ cloud      | Single mutually authenticated WebSocket (`/api/agent-witch/ws`) with Ed25519 device keys |
+| Online           | WS `agent.heartbeat`; hub live clients + `last_seen_at`                                  |
+| Commands → Mac   | Hub sends over the open WS (e.g. `writer.ensure`, `command.claude.run`)                  |
+| Mac → server     | WS frames (`agent.register`, `writer.status`, results, shell, harness)                   |
+| Server → browser | HTTPS APIs + optional SSE; dashboard may also use WS when authenticated                  |
+| Local debug      | Traffic log + knowledge + status on `:43347`                                             |
+
+Mac HTTP `heartbeat` / `commands/poll` / `messages` return **410 Gone** (retired).
+
+## Local RAG
+
+After agent turns, chunks are embedded with local Ollama (`nomic-embed-text` by default) into `~/.agent-witch/rag/`. Cloud-originated tasks query RAG first and inject hits into the writer prompt. Browse at `http://127.0.0.1:43347/knowledge`.
+
+## Writer setup
+
+Post-install AI picker: `/setup/writer` on agentwitch.com → WS `writer.ensure` / `writer.status`. Login check runs on every Mac reconnect.
 
 ## Key modules
 
-- `online-wake/` — presence tiers, browser wake, cloud restart queue, wake modal UI (import from barrel)
+- `online-wake/` — presence tiers, browser wake, cloud restart queue, wake modal UI
 - `utils/pairedDevicesApi.ts` — fetch/revoke devices, dispatch policy
-- `utils/resolveMacDeviceDisplayName.ts` — display labels for device rows
-- `utils/agentWitchLocalHostCookie.ts` — local hostname cookie helpers
+- `utils/requestLocalAgentWitchAppHealth.ts` — probe `:43347/health`
 - `macDevices/` — device row, rename, menus
 
 ## Local vs production Mac installs
 
-| Origin         | Install dir            | Wake port | LaunchAgent prefix      |
-| -------------- | ---------------------- | --------- | ----------------------- |
-| localhost      | `~/.local-agent-witch` | `47893`   | `com.local-agent-witch` |
-| agentwitch.com | `~/.agent-witch`       | `47892`   | `com.agent-witch`       |
+| Origin         | Install dir            | Wake port | Local UI | LaunchAgent prefix      |
+| -------------- | ---------------------- | --------- | -------- | ----------------------- |
+| localhost      | `~/.local-agent-witch` | `47893`   | `43347`  | `com.local-agent-witch` |
+| agentwitch.com | `~/.agent-witch`       | `47892`   | `43347`  | `com.agent-witch`       |
 
 Install from each origin separately so local and prod stay independent.
 
-Local wake `/identity` hides Add Mac / install CTAs when this computer already has the app (HOME-019).
-
-## Query
-
-```bash
-npm run feature-knowledge:query -- "paired devices api" --feature=agent-witch
-```
-
-## Connection lab (local)
-
-- UI: http://localhost:3000/connection-lab — switch mock device/WebSocket scenarios without DB
-- API mock: `AGENT_WITCH_MOCK_SCENARIO=mixed npm run dev` (see `.env.example` for scenario ids)
+Bundle version: bump `AGENT_WITCH_INSTALL_BUNDLE_VERSION` when install scripts change (currently **22**).

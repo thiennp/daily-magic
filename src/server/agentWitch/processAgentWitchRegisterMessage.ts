@@ -1,20 +1,16 @@
 import type { WebSocket } from "ws";
 
 import type { AgentWitchHub } from "@/lib/agentWitch/agentWitchHub";
-import {
-  resolvePairingTokenFromRegisterPayload,
-  resolveRoleFromRegisterPayload,
-} from "@/lib/agentWitch/resolveAgentWitchRegisterPayload";
+import { resolveRoleFromRegisterPayload } from "@/lib/agentWitch/resolveAgentWitchRegisterPayload";
 import type AgentWitchMessage from "@/lib/agentWitch/types/AgentWitchMessage.type";
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
 import type { AgentWitchRole } from "@/lib/agentWitch/types/AgentWitchRole.type";
 import type { AuthActorFromCookies } from "@/lib/auth/resolveAuthActorFromCookieHeader";
 import { resolveDevDashboardActor } from "@/lib/auth/resolveDevDashboardActor";
-
-import { sendAgentWitchSocketMessage } from "@/server/agentWitch/sendAgentWitchSocketMessage";
-import { resolveAgentWitchAgentRegisterConnection } from "@/server/agentWitch/resolveAgentWitchAgentRegisterConnection";
 import { replayPendingDispatchApprovalsForUser } from "@/lib/dispatch/replayPendingDispatchApprovalsForUser";
 import { replayPendingAgentRunInputsForUser } from "@/lib/dispatch/replayPendingAgentRunInputsForUser";
+import { processAgentWitchAgentRegisterRole } from "@/server/agentWitch/processAgentWitchAgentRegisterRole";
+import { sendAgentWitchSocketMessage } from "@/server/agentWitch/sendAgentWitchSocketMessage";
 
 export interface AgentWitchConnectionState {
   registered: boolean;
@@ -68,29 +64,15 @@ export const processAgentWitchRegisterMessage = async (
   }
 
   if (resolvedRole === "agent") {
-    const pairingToken = resolvePairingTokenFromRegisterPayload(
-      message.payload,
-    );
-
-    if (pairingToken === null) {
-      sendAgentWitchSocketMessage(socket, {
-        type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR,
-        payload: {
-          errorMessage:
-            "Agent connections require payload.pairingToken from ~/.agent-witch/config.json.",
-        },
-        requestId: message.requestId,
-      });
-      socket.close();
-      return false;
-    }
-
-    await resolveAgentWitchAgentRegisterConnection(
+    const agentOk = await processAgentWitchAgentRegisterRole(
       hub,
+      socket,
       connectionState,
       message,
-      pairingToken,
     );
+    if (!agentOk) {
+      return false;
+    }
   }
 
   if (resolvedRole !== null) {

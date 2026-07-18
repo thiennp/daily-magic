@@ -36,6 +36,11 @@ export default function ConnectInstallPasteModal({
         </h2>
         <p className={`mt-3 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
           Click inside Terminal, paste with Command (⌘) + V, then press Return.
+          After install, choose an AI at{" "}
+          <a href="/setup/writer" className="underline">
+            /setup/writer
+          </a>
+          .
         </p>
         <Button onClick={onClose} className="mt-6 w-full">
           OK

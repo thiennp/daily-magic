@@ -1,4 +1,5 @@
 import type AgentWitchMessage from "@/lib/agentWitch/types/AgentWitchMessage.type";
+import { recordAgentWitchTraffic } from "@/lib/agentWitch/agentWitchTrafficLog";
 
 interface QueuedCommand {
   readonly id: string;
@@ -48,6 +49,13 @@ export const enqueueAgentWitchDeviceCommand = (
     enqueuedAtMs: Date.now(),
     message,
   };
+
+  recordAgentWitchTraffic({
+    direction: "server_to_mac",
+    path: "/api/agent-witch/commands/poll",
+    summary: `queued ${message.type} for ${deviceId}`,
+    request: { deviceId, message },
+  });
 
   const waiter = queue.waiters.shift();
   if (waiter !== undefined) {

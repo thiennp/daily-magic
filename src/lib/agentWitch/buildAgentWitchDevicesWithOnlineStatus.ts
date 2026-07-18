@@ -16,25 +16,30 @@ export interface AgentWitchDeviceWithOnlineStatus {
   readonly isConnected: boolean;
   readonly isOnline: boolean;
   readonly lastHeartbeatAt: string | null;
+  readonly lastWakeError?: string | null;
 }
 
 /**
- * Online status from HTTP heartbeat only (no WebSocket hub).
+ * Online status from WebSocket heartbeats (`last_seen_at` / hub touch).
  * `isConnected` = checked in within one heartbeat interval (~30s).
  * `isOnline` = checked in within the wider online window (~90s).
  */
 const buildAgentWitchDevicesWithOnlineStatus = (
   devices: readonly AgentWitchDeviceRecord[],
+  liveDeviceIds: ReadonlySet<string> = new Set(),
 ): readonly AgentWitchDeviceWithOnlineStatus[] => {
   const nowMs = Date.now();
 
   return devices.map((device) => {
-    const isConnected = isAgentWitchDeviceRecentlySeen(
+    const recentlySeen = isAgentWitchDeviceRecentlySeen(
       device.lastSeenAt,
       nowMs,
       AGENT_WITCH_ACTIVE_THRESHOLD_MS,
     );
-    const isOnline = isAgentWitchDeviceRecentlySeen(device.lastSeenAt, nowMs);
+    const isConnected = liveDeviceIds.has(device.id) || recentlySeen;
+    const isOnline =
+      liveDeviceIds.has(device.id) ||
+      isAgentWitchDeviceRecentlySeen(device.lastSeenAt, nowMs);
 
     return {
       id: device.id,
@@ -48,6 +53,7 @@ const buildAgentWitchDevicesWithOnlineStatus = (
       isConnected,
       isOnline,
       lastHeartbeatAt: isOnline ? device.lastSeenAt : null,
+      lastWakeError: device.lastWakeError ?? null,
     };
   });
 };
