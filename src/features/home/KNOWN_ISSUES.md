@@ -254,6 +254,18 @@ Document every production bug or UX regression here. Each entry must link to a t
 
 ---
 
+## HOME-022 — Sample weekly status workflow never appeared in Library
+
+**Symptom:** New accounts (and test-screenshot-admin) saw “No playbooks yet” even though onboarding articles promise a seeded **Sample: Weekly status update**.
+
+**Root cause:** `ensureSampleWorkflowCapability` existed but was never called from any API or page load path.
+
+**Fix:** `GET /api/onboarding/bootstrap` seeds the sample playbook via `ensureSampleWorkflowCapability` before returning flags.
+
+**Regression test:** `ensureSampleWorkflowCapability.test.ts` (HOME-022).
+
+---
+
 ## Adding issues
 
-Use the next ID (`HOME-020`, …). Include symptom, root cause, fix paths, and test file.
+Use the next ID (`HOME-023`, …). Include symptom, root cause, fix paths, and test file.

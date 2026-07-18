@@ -1,3 +1,4 @@
+import ensureSampleWorkflowCapability from "@/lib/capabilities/ensureSampleWorkflowCapability";
 import { loadOnboardingBootstrapFlags } from "@/lib/onboarding/loadOnboardingBootstrapFlags";
 import { requireAuth } from "@/lib/auth/requireAuth";
 
@@ -9,6 +10,9 @@ export async function GET(): Promise<Response> {
   if (error || !actor) {
     return error;
   }
+
+  // Seed the Sample: Weekly status update playbook for empty libraries.
+  await ensureSampleWorkflowCapability(actor.id);
 
   const flags = await loadOnboardingBootstrapFlags(actor.id);
 
