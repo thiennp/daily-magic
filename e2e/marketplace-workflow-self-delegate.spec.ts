@@ -18,7 +18,7 @@ const signInAs = async (page: Page, email: string): Promise<void> => {
   await page.context().clearCookies();
   await signInTestAccount(page, email);
   await page.goto("/");
-  await page.waitForLoadState("networkidle");
+  await page.waitForLoadState("load");
 };
 
 const fillLabeledField = async (
@@ -41,7 +41,7 @@ test.describe("Marketplace workflow self-delegate", () => {
     await signInAs(page, SELF);
 
     await page.goto("/marketplace");
-    await page.waitForLoadState("networkidle");
+    await page.waitForLoadState("load");
     // Dismiss any leftover overlay from a prior navigation.
     await page.keyboard.press("Escape");
     await expect(
@@ -221,7 +221,7 @@ test.describe("Marketplace workflow self-delegate", () => {
     }
 
     await page.goto("/reports");
-    await page.waitForLoadState("networkidle");
+    await page.waitForLoadState("load");
     await expect(
       page.getByRole("heading", { name: "Job history" }),
     ).toBeVisible();

@@ -12,8 +12,8 @@ const TASK_MARKER = `E2E self-delegate ${Date.now()}`;
 const signInAs = async (page: Page, email: string): Promise<void> => {
   await page.context().clearCookies();
   await signInTestAccount(page, email);
-  await page.goto("/");
-  await page.waitForLoadState("networkidle");
+  await page.goto("/", { waitUntil: "domcontentloaded" });
+  await page.waitForLoadState("load");
 };
 
 test.describe("Self-delegate on own Mac", () => {
@@ -22,7 +22,7 @@ test.describe("Self-delegate on own Mac", () => {
   test("home auto-links Mac for self account", async ({ page }) => {
     await signInAs(page, SELF);
     await page.goto("/");
-    await page.waitForLoadState("networkidle");
+    await page.waitForLoadState("load");
 
     // Auto-link polls the local wake server; wait until Home shows a device.
     const devicesHeading = page.getByRole("heading", { name: "Your Devices" });
@@ -36,7 +36,7 @@ test.describe("Self-delegate on own Mac", () => {
       }
       await page.waitForTimeout(1500);
       await page.reload();
-      await page.waitForLoadState("networkidle");
+      await page.waitForLoadState("load");
     }
 
     await expect(devicesHeading).toBeVisible({ timeout: 5_000 });
@@ -44,7 +44,7 @@ test.describe("Self-delegate on own Mac", () => {
 
     await page.screenshot({
       path: ".e2e/screenshots/self-delegate-home-paired.png",
-      fullPage: false,
+      fullPage: true,
     });
   });
 
@@ -53,7 +53,7 @@ test.describe("Self-delegate on own Mac", () => {
   }) => {
     await signInAs(page, SELF);
     await page.goto("/?sendTask=1");
-    await page.waitForLoadState("networkidle");
+    await page.waitForLoadState("load");
     await expect(
       page.getByRole("heading", { name: "Send a task" }),
     ).toBeVisible({
@@ -100,7 +100,7 @@ test.describe("Self-delegate on own Mac", () => {
 
     await page.screenshot({
       path: ".e2e/screenshots/self-delegate-composer-ready.png",
-      fullPage: false,
+      fullPage: true,
     });
 
     const firstDispatch = page.waitForResponse(
@@ -129,7 +129,7 @@ test.describe("Self-delegate on own Mac", () => {
     await expect(page.getByText(/Working on your request/i)).toBeVisible();
     await page.screenshot({
       path: ".e2e/screenshots/self-delegate-progress-working.png",
-      fullPage: false,
+      fullPage: true,
     });
 
     await expect(page.getByText(/ack1/i).first()).toBeVisible({
@@ -141,7 +141,11 @@ test.describe("Self-delegate on own Mac", () => {
 
     await page.screenshot({
       path: ".e2e/screenshots/self-delegate-live-terminal.png",
-      fullPage: false,
+      fullPage: true,
+    });
+    await page.screenshot({
+      path: "public/showcases/e2e/self-delegate-live-terminal.png",
+      fullPage: true,
     });
 
     const secondDispatch = page.waitForResponse(
@@ -159,11 +163,11 @@ test.describe("Self-delegate on own Mac", () => {
 
     await page.screenshot({
       path: ".e2e/screenshots/self-delegate-live-terminal-continued.png",
-      fullPage: false,
+      fullPage: true,
     });
 
     await page.goto("/reports");
-    await page.waitForLoadState("networkidle");
+    await page.waitForLoadState("load");
     await expect(
       page.getByRole("heading", { name: "Job history" }),
     ).toBeVisible();
@@ -177,7 +181,11 @@ test.describe("Self-delegate on own Mac", () => {
 
     await page.screenshot({
       path: ".e2e/screenshots/self-delegate-job-history.png",
-      fullPage: false,
+      fullPage: true,
+    });
+    await page.screenshot({
+      path: "public/showcases/e2e/self-delegate-job-history.png",
+      fullPage: true,
     });
   });
 });

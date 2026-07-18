@@ -15,7 +15,7 @@ const signInAs = async (page: Page, email: string): Promise<void> => {
   await page.context().clearCookies();
   await signInTestAccount(page, email);
   await page.goto("/");
-  await page.waitForLoadState("networkidle");
+  await page.waitForLoadState("load");
 };
 
 test.describe("Same-Mac multi-account team", () => {
@@ -24,7 +24,7 @@ test.describe("Same-Mac multi-account team", () => {
   test("admin creates company and invites two members", async ({ page }) => {
     await signInAs(page, ADMIN);
     await page.goto("/admin/groups");
-    await page.waitForLoadState("networkidle");
+    await page.waitForLoadState("load");
 
     const createButton = page.getByRole("button", { name: /Create company/i });
     if ((await createButton.count()) > 0) {
@@ -73,7 +73,7 @@ test.describe("Same-Mac multi-account team", () => {
   test("executor creates a library playbook", async ({ page }) => {
     await signInAs(page, EXECUTOR);
     await page.goto("/library");
-    await page.waitForLoadState("networkidle");
+    await page.waitForLoadState("load");
 
     await page.getByRole("button", { name: "New playbook" }).click();
     await page.getByRole("button", { name: "Agent" }).click();
@@ -113,7 +113,7 @@ test.describe("Same-Mac multi-account team", () => {
   }) => {
     await signInAs(page, REQUESTER);
     await page.goto("/?sendTask=1");
-    await page.waitForLoadState("networkidle");
+    await page.waitForLoadState("load");
     await page.waitForTimeout(1500);
 
     await page.screenshot({
@@ -133,7 +133,7 @@ test.describe("Same-Mac multi-account team", () => {
   }) => {
     await signInAs(page, REQUESTER);
     await page.goto("/?sendTask=1");
-    await page.waitForLoadState("networkidle");
+    await page.waitForLoadState("load");
     await page.waitForTimeout(2000);
 
     const companySelect = page.locator("select").filter({

@@ -15,12 +15,12 @@ const signInAs = async (page: Page, email: string): Promise<void> => {
   await page.context().clearCookies();
   await signInTestAccount(page, email);
   await page.goto("/");
-  await page.waitForLoadState("networkidle");
+  await page.waitForLoadState("load");
 };
 
 const openCustomClaudeComposer = async (page: Page): Promise<void> => {
   await page.goto("/?sendTask=1");
-  await page.waitForLoadState("networkidle");
+  await page.waitForLoadState("load");
   await expect(page.getByRole("heading", { name: "Send a task" })).toBeVisible({
     timeout: 15_000,
   });
