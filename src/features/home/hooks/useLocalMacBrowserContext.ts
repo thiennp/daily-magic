@@ -1,13 +1,16 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 
-import { loadMyMacDevicesSnapshot } from "@/features/agent/hooks/fetchMyMacDevicesFromApi";
+import {
+  getPairedDevicesSnapshotOrEmpty,
+  pairedDevicesResource,
+} from "@/features/agent-witch/pairedDevicesResource";
 import { readAgentWitchLocalHostCookie } from "@/features/agent-witch/utils/agentWitchLocalHostCookie";
 
 /**
  * Browser context for this Mac.
- * Presence comes only from cloud devices / WS hub — never localhost.
+ * Presence comes only from the shared devices poll / WS hub — never localhost.
  */
 const useLocalMacBrowserContext = (): {
   readonly localHostname: string | null;
@@ -16,42 +19,21 @@ const useLocalMacBrowserContext = (): {
   readonly isLocalAppInstalled: boolean;
   readonly isBridgeConnected: boolean;
 } => {
-  const [localHostname] = useState<string | null>(() =>
-    readAgentWitchLocalHostCookie(),
+  const snapshot = useSyncExternalStore(
+    pairedDevicesResource.subscribe,
+    () => pairedDevicesResource.getSnapshot(),
+    () => null,
   );
-  const [isBridgeConnected, setIsBridgeConnected] = useState(false);
-  const [hasClaimedDevice, setHasClaimedDevice] = useState(false);
-  const [isCheckingLocalApp, setIsCheckingLocalApp] = useState(true);
-
-  useEffect(() => {
-    const abortController = new AbortController();
-
-    void (async () => {
-      const devicesSnapshot = await loadMyMacDevicesSnapshot().catch(() => ({
-        devices: [] as const,
-        hadError: true,
-      }));
-
-      if (abortController.signal.aborted) {
-        return;
-      }
-
-      setHasClaimedDevice(devicesSnapshot.devices.length > 0);
-      setIsBridgeConnected(
-        devicesSnapshot.devices.some((device) => device.isConnected),
-      );
-      setIsCheckingLocalApp(false);
-    })();
-
-    return () => {
-      abortController.abort();
-    };
-  }, []);
+  const resolved = snapshot ?? getPairedDevicesSnapshotOrEmpty();
+  const isBridgeConnected = resolved.devices.some(
+    (device) => device.isConnected,
+  );
+  const hasClaimedDevice = resolved.devices.length > 0;
 
   return {
-    localHostname,
+    localHostname: readAgentWitchLocalHostCookie(),
     isWakeServerReachable: true,
-    isCheckingLocalApp,
+    isCheckingLocalApp: snapshot === null,
     isLocalAppInstalled: hasClaimedDevice || isBridgeConnected,
     isBridgeConnected,
   };

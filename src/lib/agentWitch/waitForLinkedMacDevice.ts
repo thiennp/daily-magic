@@ -6,7 +6,7 @@ const sleep = (ms: number): Promise<void> =>
     window.setTimeout(resolve, ms);
   });
 
-const hasClaimedDevice = async (): Promise<boolean> => {
+export const hasClaimedMacDevice = async (): Promise<boolean> => {
   const response = await fetch("/api/agent-witch/devices");
   const payload: unknown = await response.json().catch(() => null);
   if (
@@ -22,7 +22,7 @@ const hasClaimedDevice = async (): Promise<boolean> => {
 };
 
 const pollForClaimedDevice = async (attempt: number): Promise<boolean> => {
-  if (await hasClaimedDevice()) {
+  if (await hasClaimedMacDevice()) {
     return true;
   }
 

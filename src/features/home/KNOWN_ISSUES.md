@@ -230,6 +230,18 @@ Document every production bug or UX regression here. Each entry must link to a t
 
 ---
 
+## HOME-020 — Home dashboard spammed link-session and devices APIs
+
+**Symptom:** With a Mac already connected, Home fired repeated `/api/agent-witch/link-session` and `/api/agent-witch/devices` requests.
+
+**Root cause:** After removing localhost wake probes, dashboard `autoLink` treated “has devices” as a signal to start a new link session every few seconds.
+
+**Fix:** Do not auto-link on the dashboard gate (only on the connect guide). Short-circuit `linkLocalAgentToSignedInAccount` when a device is already claimed. Reuse the shared devices poll in `useLocalMacBrowserContext`.
+
+**Regression test:** `linkLocalAgentAccount.test.ts` (HOME-020).
+
+---
+
 ## Adding issues
 
 Use the next ID (`HOME-020`, …). Include symptom, root cause, fix paths, and test file.

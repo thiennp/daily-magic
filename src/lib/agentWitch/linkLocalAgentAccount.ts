@@ -1,5 +1,8 @@
 import { fetchAgentWitchLinkSession } from "@/lib/agentWitch/fetchAgentWitchLinkSession";
-import { waitForLinkedMacDevice } from "@/lib/agentWitch/waitForLinkedMacDevice";
+import {
+  hasClaimedMacDevice,
+  waitForLinkedMacDevice,
+} from "@/lib/agentWitch/waitForLinkedMacDevice";
 
 export { resolveAgentWitchWakeBaseUrlForPage } from "@/lib/agentWitch/resolveAgentWitchWakeBaseUrl";
 
@@ -19,6 +22,11 @@ export const linkLocalAgentToSignedInAccount = async (
   readonly errorMessage?: string;
 }> => {
   void _appOrigin;
+
+  if (await hasClaimedMacDevice()) {
+    return { ok: true };
+  }
+
   const session = await fetchAgentWitchLinkSession();
 
   if (

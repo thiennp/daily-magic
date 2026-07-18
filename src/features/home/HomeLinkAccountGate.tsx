@@ -17,7 +17,6 @@ import {
   usePairedDeviceContext,
 } from "@/features/home/PairedDeviceContext";
 import { OnboardingStepsProvider } from "@/features/home/hooks/useOnboardingSteps";
-import { useLinkLocalAgentAccount } from "@/features/home/hooks/useLinkLocalAgentAccount";
 import { resolveHomeDashboardMode } from "@/features/home/utils/resolveHomeDashboardMode";
 
 interface HomeLinkAccountGateProps {
@@ -67,12 +66,6 @@ function HomeLinkAccountGateContent({
   const handleLinked = useCallback(() => {
     markPaired();
   }, [markPaired]);
-  useLinkLocalAgentAccount({
-    appOrigin,
-    autoLink: dashboardMode === "dashboard",
-    silentFailures: true,
-    onLinked: handleLinked,
-  });
 
   if (dashboardMode === "loading") {
     return (

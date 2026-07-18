@@ -2,12 +2,15 @@
 
 import { useEffect } from "react";
 
-import { loadMyMacDevicesSnapshot } from "@/features/agent/hooks/fetchMyMacDevicesFromApi";
 import {
   AUTO_LINK_LOCAL_AGENT_POLL_MS,
   MAX_REACHABLE_AUTO_LINK_ATTEMPTS,
 } from "@/features/home/utils/autoLinkLocalAgentAccount.util";
 
+/**
+ * Periodically starts a cloud link session while on the connect guide.
+ * Does not require devices to already exist (claim happens after the session).
+ */
 export const useAutoLinkLocalAgentAccount = (input: {
   readonly autoLink: boolean;
   readonly silentFailures: boolean;
@@ -42,14 +45,6 @@ export const useAutoLinkLocalAgentAccount = (input: {
         autoLinkStoppedRef.current ||
         linkingInFlightRef.current
       ) {
-        return;
-      }
-
-      const snapshot = await loadMyMacDevicesSnapshot().catch(() => ({
-        devices: [] as const,
-        hadError: true,
-      }));
-      if (!activeRef.current || snapshot.devices.length === 0) {
         return;
       }
 
