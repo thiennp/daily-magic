@@ -1,4 +1,4 @@
-import { resolveAgentWitchWakeBaseUrlForPage } from "@/features/agent-witch/online-wake";
+import { resolveAgentWitchWakeBaseUrlForPage } from "@/lib/agentWitch/resolveAgentWitchWakeBaseUrl";
 
 export interface LocalAgentWitchIdentity {
   readonly hostname: string;

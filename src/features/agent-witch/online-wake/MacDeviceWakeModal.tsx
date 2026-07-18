@@ -6,15 +6,17 @@ import { requestAgentWitchWake } from "./requestAgentWitchWake";
 
 interface MacDeviceWakeModalProps {
   readonly isOpen: boolean;
+  readonly deviceId: string;
   readonly displayName: string;
-  readonly isWakeServerReachable: boolean;
+  readonly canRequestRestart: boolean;
   readonly onClose: () => void;
 }
 
 export default function MacDeviceWakeModal({
   isOpen,
+  deviceId,
   displayName,
-  isWakeServerReachable,
+  canRequestRestart,
   onClose,
 }: MacDeviceWakeModalProps) {
   return (
@@ -27,15 +29,15 @@ export default function MacDeviceWakeModal({
         reconnect at login. If the app is not installed yet, download it from
         Home on that Mac.
       </p>
-      {isWakeServerReachable ? (
+      {canRequestRestart ? (
         <button
           type="button"
           onClick={() => {
-            void requestAgentWitchWake();
+            void requestAgentWitchWake(deviceId);
           }}
           className="mt-4 text-sm font-medium text-brand-700 hover:underline dark:text-brand-300"
         >
-          Try waking Agent Witch from this browser
+          Request restart when this Mac reconnects
         </button>
       ) : null}
     </Modal>

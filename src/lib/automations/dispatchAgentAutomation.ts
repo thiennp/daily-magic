@@ -4,6 +4,7 @@ import { getAgentAutomationById } from "@/lib/automations/agentAutomationQueries
 import { readAutomationFieldValidationErrors } from "@/lib/automations/buildAutomationDispatchPrompt";
 import { completeWebhookAutomationDispatch } from "@/lib/automations/completeWebhookAutomationDispatch.util";
 import { failAgentAutomationDispatch } from "@/lib/automations/failAgentAutomationDispatch.util";
+import { pushAutomationRunToUserMac } from "@/lib/automations/pushAutomationsToUserMac";
 import type DispatchAgentAutomationResult from "@/lib/automations/types/DispatchAgentAutomationResult.type";
 import type AgentWitchHubRuntime from "@/lib/agentWitch/types/AgentWitchHubRuntime.type";
 import { getPublishedCapabilityById } from "@/lib/capabilities/capabilityQueries";
@@ -22,12 +23,27 @@ export const dispatchAgentAutomation = async (input: {
   }
 
   if (automation.triggerType === AGENT_AUTOMATION_TRIGGER_TYPES.SCHEDULE) {
-    return failAgentAutomationDispatch({
-      automation,
-      status: AGENT_AUTOMATION_LAST_RUN_STATUSES.FAILED,
-      errorMessage:
-        "Scheduled automations run on this Mac. Open Automations and run locally.",
+    const pushed = await pushAutomationRunToUserMac({
+      userId: automation.executorUserId,
+      automationId: automation.id,
     });
+
+    if (!pushed.ok) {
+      return failAgentAutomationDispatch({
+        automation,
+        status: AGENT_AUTOMATION_LAST_RUN_STATUSES.FAILED,
+        errorMessage:
+          pushed.errorMessage ??
+          "Scheduled automation could not reach your Mac.",
+      });
+    }
+
+    return {
+      ok: true,
+      automation,
+      agentRunId: null,
+      errorMessage: null,
+    };
   }
 
   if (!automation.enabled) {

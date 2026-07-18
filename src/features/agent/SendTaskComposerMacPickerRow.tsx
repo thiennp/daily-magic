@@ -9,18 +9,20 @@ import MacDeviceIcon from "@/features/agent-witch/macDevices/MacDeviceIcon";
 import { resolveMacDeviceIconClassName } from "@/features/agent-witch/macDevices/utils/resolveMacDeviceIconClassName";
 
 interface SendTaskComposerMacPickerRowProps {
+  readonly deviceId: string;
   readonly displayName: string;
   readonly isOnline: boolean;
   readonly isConnected: boolean;
-  readonly isWakeServerReachable: boolean;
+  readonly canRequestRestart: boolean;
   readonly onSelect: () => void;
 }
 
 export default function SendTaskComposerMacPickerRow({
+  deviceId,
   displayName,
   isOnline,
   isConnected,
-  isWakeServerReachable,
+  canRequestRestart,
   onSelect,
 }: SendTaskComposerMacPickerRowProps) {
   const presence = { isOnline, isConnected };
@@ -59,8 +61,9 @@ export default function SendTaskComposerMacPickerRow({
 
   return (
     <MacDeviceOfflineWakeHint
+      deviceId={deviceId}
       displayName={displayName}
-      isWakeServerReachable={isWakeServerReachable}
+      canRequestRestart={canRequestRestart}
     >
       {row}
     </MacDeviceOfflineWakeHint>

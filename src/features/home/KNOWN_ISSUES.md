@@ -222,9 +222,9 @@ Document every production bug or UX regression here. Each entry must link to a t
 
 **Symptom:** Home still showed “Add a Mac” / install steps on a Mac where Agent Witch was already running.
 
-**Root cause:** Connect CTAs always rendered and did not consult the local wake `/identity` API.
+**Root cause:** Connect CTAs always rendered and did not consult device presence.
 
-**Fix:** Probe local wake identity; show bash install only when the app is missing; hide Add Mac / install when installed. `shouldShowAgentWitchAppDownloadCta.test.ts` (HOME-019).
+**Fix:** Derive install CTA from cloud devices / bridge connection (`useLocalMacBrowserContext`); never probe localhost. Show bash install only when no claimed/connected device. `shouldShowAgentWitchAppDownloadCta.test.ts` (HOME-019).
 
 **Regression test:** `shouldShowAgentWitchAppDownloadCta.test.ts`, `buildConnectComputerGuideSteps.test.ts`.
 

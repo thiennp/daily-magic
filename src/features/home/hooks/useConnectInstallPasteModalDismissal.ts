@@ -2,11 +2,11 @@
 
 import { useEffect } from "react";
 
+import { loadMyMacDevicesSnapshot } from "@/features/agent/hooks/fetchMyMacDevicesFromApi";
 import {
   CONNECT_INSTALL_PASTE_MODAL_AUTO_CLOSE_MS,
   CONNECT_INSTALL_PASTE_MODAL_WAKE_POLL_MS,
 } from "@/features/home/constants/connectInstallPasteModal.constant";
-import { isLocalAgentWitchWakeServerReachable } from "@/lib/agentWitch/isLocalAgentWitchWakeServerReachable";
 
 const useConnectInstallPasteModalDismissal = ({
   isOpen,
@@ -27,7 +27,7 @@ const useConnectInstallPasteModalDismissal = ({
     }, CONNECT_INSTALL_PASTE_MODAL_AUTO_CLOSE_MS);
 
     return () => {
-      window.clearTimeout(timer);
+      clearTimeout(timer);
     };
   }, [isOpen, onClose]);
 
@@ -44,26 +44,32 @@ const useConnectInstallPasteModalDismissal = ({
 
     const poll = { active: true };
 
-    const checkLocalConnection = async (): Promise<void> => {
+    const checkBridgeConnection = async (): Promise<void> => {
       if (!poll.active) {
         return;
       }
 
-      const isReachable = await isLocalAgentWitchWakeServerReachable();
-      if (poll.active && isReachable) {
+      const snapshot = await loadMyMacDevicesSnapshot().catch(() => ({
+        devices: [] as const,
+        hadError: true,
+      }));
+      const isConnected = snapshot.devices.some(
+        (device) => device.isConnected || device.isOnline,
+      );
+      if (poll.active && isConnected) {
         onClose();
       }
     };
 
     const interval = window.setInterval(() => {
-      void checkLocalConnection();
+      void checkBridgeConnection();
     }, CONNECT_INSTALL_PASTE_MODAL_WAKE_POLL_MS);
 
-    void checkLocalConnection();
+    void checkBridgeConnection();
 
     return () => {
       poll.active = false;
-      window.clearInterval(interval);
+      clearInterval(interval);
     };
   }, [isOpen, onClose]);
 };

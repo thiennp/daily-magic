@@ -66,8 +66,9 @@ export default function MacDeviceRow({
     resolveMacPresenceTier({ isOnline, isConnected: isConnected ?? false }) ===
     "offline" ? (
       <MacDeviceOfflineWakeHint
+        deviceId={deviceId}
         displayName={displayName}
-        isWakeServerReachable={isWakeServerReachable}
+        canRequestRestart={isWakeServerReachable}
       >
         {rowInner}
       </MacDeviceOfflineWakeHint>

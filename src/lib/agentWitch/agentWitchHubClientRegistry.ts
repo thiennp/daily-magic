@@ -7,7 +7,7 @@ export const updateAgentWitchHubClient = (
   patch: Partial<
     Pick<
       AgentWitchHubClient,
-      "deviceLabel" | "lastHeartbeatAt" | "deviceId" | "userId"
+      "deviceLabel" | "lastHeartbeatAt" | "deviceId" | "userId" | "email"
     >
   >,
 ): void => {

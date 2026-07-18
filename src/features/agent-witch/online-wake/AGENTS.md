@@ -1,6 +1,6 @@
 # Online wake — agent instructions
 
-Presence, browser wake, and cloud→local restart for Agent Witch Macs.
+Presence and cloud restart for Agent Witch Macs.
 
 ## Public API
 
@@ -19,12 +19,12 @@ import {
 
 ## Layout
 
-| Module                                            | Role                                            |
-| ------------------------------------------------- | ----------------------------------------------- |
-| `macDevicePresence`                               | live / recent / offline tiers + dispatch gating |
-| `requestAgentWitchWake`                           | browser → `127.0.0.1:47892/restart`             |
-| `agentWitchDeviceRestartRequest`                  | DB flag for HTTP-heartbeat restart pull         |
-| `requestLocalAgentWitchRestartFromWakeServer`     | server-side local wake `/restart` call          |
-| `MacDeviceWakeModal` / `MacDeviceOfflineWakeHint` | offline wake UI                                 |
+| Module                                            | Role                                                   |
+| ------------------------------------------------- | ------------------------------------------------------ |
+| `macDevicePresence`                               | live / recent / offline tiers + dispatch gating        |
+| `requestAgentWitchWake`                           | browser → `POST /api/agent-witch/devices/:id/restart`  |
+| `agentWitchDeviceRestartRequest`                  | DB flag; delivered over WS on heartbeat or immediately |
+| `requestLocalAgentWitchRestartFromWakeServer`     | Mac-local wake `/restart` (never called from the site) |
+| `MacDeviceWakeModal` / `MacDeviceOfflineWakeHint` | offline wake UI                                        |
 
-Install-script and watchdog LaunchAgent code stays in `src/lib/agentWitch/` and `scripts/`.
+The website must never call `127.0.0.1`. Install-script and wake LaunchAgent code stays in `src/lib/agentWitch/` and `scripts/`.

@@ -1,10 +1,9 @@
-import { deviceLabelMatchesLocalHost } from "./deviceLabelMatchesLocalHost";
-
+/** Cloud restart can be queued for any offline Mac via the devices API. */
 export const canWakeMacDeviceFromBrowser = (input: {
   readonly deviceLabel: string | null;
   readonly localHostname: string | null;
   readonly isWakeServerReachable: boolean;
-}): boolean =>
-  input.isWakeServerReachable &&
-  input.localHostname !== null &&
-  deviceLabelMatchesLocalHost(input.deviceLabel, input.localHostname);
+}): boolean => {
+  void input;
+  return true;
+};

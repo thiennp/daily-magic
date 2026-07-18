@@ -45,8 +45,15 @@ export const resolveAgentWitchAgentRegisterConnection = async (
     typeof message.payload?.hostname === "string"
       ? message.payload.hostname.trim()
       : "";
+  const profileEmail =
+    typeof message.payload?.email === "string"
+      ? message.payload.email.trim().toLowerCase()
+      : "";
   const activeDevice = device?.revokedAt === null ? device : null;
   connectionState.deviceId = activeDevice?.id ?? claimedPairing?.deviceId;
   connectionState.deviceLabel =
     hostname.length > 0 ? hostname : (activeDevice?.deviceLabel ?? undefined);
+  if (profileEmail.length > 0) {
+    connectionState.email = profileEmail;
+  }
 };

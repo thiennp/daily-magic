@@ -1,13 +1,9 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 
-import {
-  AUTO_LINK_LOCAL_AGENT_POLL_MS,
-  MAX_REACHABLE_AUTO_LINK_ATTEMPTS,
-  shouldStopAutoLinkAfterFailure,
-} from "@/features/home/utils/autoLinkLocalAgentAccount.util";
-import { isLocalAgentWitchWakeServerReachable } from "@/lib/agentWitch/isLocalAgentWitchWakeServerReachable";
+import { useAutoLinkLocalAgentAccount } from "@/features/home/hooks/useAutoLinkLocalAgentAccount";
+import { shouldStopAutoLinkAfterFailure } from "@/features/home/utils/autoLinkLocalAgentAccount.util";
 import { linkLocalAgentToSignedInAccount } from "@/lib/agentWitch/linkLocalAgentAccount";
 
 export function useLinkLocalAgentAccount({
@@ -42,7 +38,6 @@ export function useLinkLocalAgentAccount({
       }
 
       const shouldReportError = options?.reportError ?? !silentFailures;
-
       linkingInFlightRef.current = true;
       if (shouldReportError) {
         setIsLinking(true);
@@ -53,14 +48,13 @@ export function useLinkLocalAgentAccount({
       if (result.ok) {
         stopAutoLink();
         onLinked?.();
-      } else {
-        if (shouldStopAutoLinkAfterFailure(result.errorMessage)) {
-          stopAutoLink();
-        }
-
+      } else if (shouldStopAutoLinkAfterFailure(result.errorMessage)) {
+        stopAutoLink();
         if (shouldReportError) {
           setLinkError(result.errorMessage ?? "Could not link this Mac.");
         }
+      } else if (shouldReportError) {
+        setLinkError(result.errorMessage ?? "Could not link this Mac.");
       }
 
       linkingInFlightRef.current = false;
@@ -71,50 +65,15 @@ export function useLinkLocalAgentAccount({
     [appOrigin, onLinked, silentFailures, stopAutoLink],
   );
 
-  useEffect(() => {
-    if (!autoLink || autoLinkStoppedRef.current) {
-      return;
-    }
-
-    const activeRef = { current: true };
-
-    const tryAutoLink = async (): Promise<void> => {
-      if (
-        !activeRef.current ||
-        autoLinkStoppedRef.current ||
-        linkingInFlightRef.current
-      ) {
-        return;
-      }
-
-      const isReachable = await isLocalAgentWitchWakeServerReachable();
-      if (!activeRef.current || !isReachable) {
-        return;
-      }
-
-      reachableAttemptCountRef.current += 1;
-      if (reachableAttemptCountRef.current > MAX_REACHABLE_AUTO_LINK_ATTEMPTS) {
-        stopAutoLink();
-        return;
-      }
-
-      await linkNow({ reportError: !silentFailures });
-    };
-
-    const timer = setInterval(() => {
-      void tryAutoLink();
-    }, AUTO_LINK_LOCAL_AGENT_POLL_MS);
-
-    const initialTimer = setTimeout(() => {
-      void tryAutoLink();
-    }, 0);
-
-    return () => {
-      activeRef.current = false;
-      clearInterval(timer);
-      clearTimeout(initialTimer);
-    };
-  }, [autoLink, linkNow, silentFailures, stopAutoLink]);
+  useAutoLinkLocalAgentAccount({
+    autoLink,
+    silentFailures,
+    linkNow,
+    stopAutoLink,
+    linkingInFlightRef,
+    autoLinkStoppedRef,
+    reachableAttemptCountRef,
+  });
 
   return { isLinking, linkError, linkNow };
 }

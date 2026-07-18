@@ -1,11 +1,13 @@
 import createCapabilityFromTemplate from "@/lib/capabilities/createCapabilityFromTemplate";
 import findCapabilityTemplateById from "@/lib/capabilities/templates/findCapabilityTemplateById";
 import buildHarnessInstallBundleFromTemplateHarness from "@/lib/agentWitch/harness/buildHarnessInstallBundleFromTemplateHarness";
+import { pushHarnessInstallBundleToDevice } from "@/lib/marketplace/pushHarnessInstallBundleToDevice";
 import type { MarketplaceInstallResult } from "@/lib/marketplace/types/MarketplaceInstallResult.type";
 
 const installOfficialPresetListing = async (
   actorUserId: string,
   templateId: string,
+  deviceId: string,
 ): Promise<MarketplaceInstallResult> => {
   const template = findCapabilityTemplateById(templateId);
 
@@ -40,16 +42,24 @@ const installOfficialPresetListing = async (
     };
   }
 
+  const bundle = buildHarnessInstallBundleFromTemplateHarness(result.harness);
+  const push = await pushHarnessInstallBundleToDevice({
+    userId: actorUserId,
+    deviceId,
+    bundle,
+  });
+
   return {
     ok: true,
     errorMessage: null,
     savedToLibrary: true,
     libraryCapabilityId: result.capability.id,
-    harnessInstalled: false,
-    harnessInstallMessage: null,
-    localHarnessBundle: buildHarnessInstallBundleFromTemplateHarness(
-      result.harness,
-    ),
+    harnessInstalled: push.installed,
+    harnessInstallMessage: push.installed
+      ? null
+      : (push.errorMessage ??
+        "Saved to your library. Connect the Mac to install rules."),
+    localHarnessBundle: null,
   };
 };
 

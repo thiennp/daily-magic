@@ -1,44 +1,16 @@
+import { clearPendingAccountLinkForEmail } from "@/lib/agentWitch/pendingAccountLinkRegistry";
 import {
   getAgentWitchHub,
   getAgentWitchPairingStore,
 } from "@/lib/agentWitch/getAgentWitchHub";
 import { verifyLinkAccountToken } from "@/lib/agentWitch/linkAccountToken";
+import { parseLinkAccountBody } from "@/lib/agentWitch/parseLinkAccountBody";
 import { asRowArray, getSql } from "@/lib/db";
 
 export const dynamic = "force-dynamic";
 
-interface LinkAccountBody {
-  readonly pairingToken: string;
-  readonly linkToken: string;
-  readonly deviceLabel: string | null;
-}
-
-const parseLinkAccountBody = (body: unknown): LinkAccountBody | null => {
-  if (typeof body !== "object" || body === null) {
-    return null;
-  }
-
-  const record = body as Record<string, unknown>;
-  const pairingToken =
-    typeof record.pairingToken === "string" ? record.pairingToken.trim() : "";
-  const linkToken =
-    typeof record.linkToken === "string" ? record.linkToken.trim() : "";
-  const deviceLabel =
-    typeof record.deviceLabel === "string" &&
-    record.deviceLabel.trim().length > 0
-      ? record.deviceLabel.trim()
-      : null;
-
-  if (pairingToken.length === 0 || linkToken.length === 0) {
-    return null;
-  }
-
-  return { pairingToken, linkToken, deviceLabel };
-};
-
 export async function POST(request: Request): Promise<Response> {
-  const body: unknown = await request.json();
-  const parsed = parseLinkAccountBody(body);
+  const parsed = parseLinkAccountBody(await request.json());
 
   if (parsed === null) {
     return Response.json(
@@ -47,8 +19,7 @@ export async function POST(request: Request): Promise<Response> {
     );
   }
 
-  const { pairingToken, linkToken, deviceLabel } = parsed;
-  const verifiedLink = verifyLinkAccountToken(linkToken);
+  const verifiedLink = verifyLinkAccountToken(parsed.linkToken);
   if (verifiedLink === null) {
     return Response.json(
       { error: "Link token is invalid or expired." },
@@ -77,12 +48,11 @@ export async function POST(request: Request): Promise<Response> {
     );
   }
 
-  const pairingStore = getAgentWitchPairingStore();
-  const claimResult = await pairingStore.claimPairing(
-    pairingToken,
+  const claimResult = await getAgentWitchPairingStore().claimPairing(
+    parsed.pairingToken,
     userRow.id,
     userRow.email,
-    deviceLabel ?? "Mac",
+    parsed.deviceLabel ?? "Mac",
   );
 
   if (!claimResult.success) {
@@ -92,7 +62,8 @@ export async function POST(request: Request): Promise<Response> {
     );
   }
 
-  getAgentWitchHub().bindAgentClientsToPairing(pairingToken);
+  clearPendingAccountLinkForEmail(userRow.email);
+  getAgentWitchHub().bindAgentClientsToPairing(parsed.pairingToken);
 
   return Response.json({
     ok: true,

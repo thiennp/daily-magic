@@ -1,7 +1,4 @@
-import { AGENT_AUTOMATION_TRIGGER_TYPES } from "@/lib/automations/AgentAutomationTriggerType.constant";
 import type { AgentAutomationTriggerTypeValue } from "@/lib/automations/AgentAutomationTriggerType.constant";
-import { requestLocalAutomationRun } from "@/lib/agentWitch/requestLocalAutomationRun";
-import { requestLocalAutomationSync } from "@/lib/agentWitch/requestLocalAutomationSync";
 
 export const submitDeleteAutomation = async (
   automationId: string,
@@ -26,29 +23,14 @@ export const submitDeleteAutomation = async (
 
 export const submitRunAutomation = async (
   automationId: string,
-  triggerType: AgentAutomationTriggerTypeValue,
-  appOrigin: string,
+  _triggerType: AgentAutomationTriggerTypeValue,
+  _appOrigin: string,
 ): Promise<
   | { readonly ok: true; readonly agentRunId: string | null }
   | { readonly ok: false; readonly errorMessage: string }
 > => {
-  if (triggerType === AGENT_AUTOMATION_TRIGGER_TYPES.SCHEDULE) {
-    const localResult = await requestLocalAutomationRun({
-      automationId,
-      appOrigin,
-    });
-
-    if (!localResult.ok) {
-      return {
-        ok: false,
-        errorMessage:
-          localResult.errorMessage ??
-          "Scheduled automation run failed on this Mac.",
-      };
-    }
-
-    return { ok: true, agentRunId: null };
-  }
+  void _triggerType;
+  void _appOrigin;
 
   const response = await fetch(`/api/automations/${automationId}/run`, {
     method: "POST",
@@ -100,19 +82,30 @@ export const submitToggleAutomation = async (
 };
 
 export const syncAutomationsToLocalMac = async (
-  appOrigin: string,
+  _appOrigin: string,
 ): Promise<
   | { readonly ok: true; readonly writtenCount?: number }
   | { readonly ok: false; readonly errorMessage: string }
 > => {
-  const result = await requestLocalAutomationSync({ appOrigin });
-  return result.ok
-    ? { ok: true, writtenCount: result.writtenCount }
-    : {
-        ok: false,
-        errorMessage: result.errorMessage ?? AUTOMATIONS_SYNC_FALLBACK_ERROR,
-      };
-};
+  void _appOrigin;
+  const response = await fetch("/api/automations/sync", { method: "POST" });
+  const data: unknown = await response.json().catch(() => null);
 
-const AUTOMATIONS_SYNC_FALLBACK_ERROR =
-  "Could not sync automations to this Mac.";
+  if (
+    typeof data === "object" &&
+    data !== null &&
+    (data as { ok?: boolean }).ok === true
+  ) {
+    const writtenCount = (data as { writtenCount?: number }).writtenCount;
+    return { ok: true, writtenCount };
+  }
+
+  const errorMessage =
+    typeof data === "object" &&
+    data !== null &&
+    typeof (data as { errorMessage?: string }).errorMessage === "string"
+      ? (data as { errorMessage: string }).errorMessage
+      : "Could not sync automations to this Mac.";
+
+  return { ok: false, errorMessage };
+};

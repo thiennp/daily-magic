@@ -3,13 +3,12 @@ import { describe, expect, it, vi } from "vitest";
 import {
   canRequestAgentWitchWake,
   requestAgentWitchWake,
-  resolveAgentWitchWakeBaseUrlForPage,
 } from "./requestAgentWitchWake";
 
 describe("canRequestAgentWitchWake", () => {
   it("is available in the browser", () => {
     Object.defineProperty(global, "window", {
-      value: { location: { hostname: "agentwitch.com" } },
+      value: {},
       configurable: true,
     });
 
@@ -18,43 +17,31 @@ describe("canRequestAgentWitchWake", () => {
 });
 
 describe("requestAgentWitchWake", () => {
-  it("posts to the prod wake port on agentwitch.com", async () => {
+  it("AGENT-021: posts cloud device restart over HTTPS", async () => {
     Object.defineProperty(global, "window", {
-      value: { location: { hostname: "www.agentwitch.com" } },
+      value: {},
       configurable: true,
     });
 
     const fetchMock = vi.fn().mockResolvedValue({ ok: true });
     vi.stubGlobal("fetch", fetchMock);
 
-    await expect(requestAgentWitchWake()).resolves.toBe(true);
+    await expect(requestAgentWitchWake("device-1")).resolves.toBe(true);
     expect(fetchMock).toHaveBeenCalledWith(
-      `${resolveAgentWitchWakeBaseUrlForPage()}/restart`,
+      "/api/agent-witch/devices/device-1/restart",
       {
         method: "POST",
-        mode: "cors",
         signal: expect.any(AbortSignal),
       },
     );
-    expect(resolveAgentWitchWakeBaseUrlForPage()).toBe(
-      "http://127.0.0.1:47892",
-    );
   });
 
-  it("posts to the local wake port on localhost", async () => {
+  it("returns false without a device id", async () => {
     Object.defineProperty(global, "window", {
-      value: { location: { hostname: "localhost" } },
+      value: {},
       configurable: true,
     });
 
-    const fetchMock = vi.fn().mockResolvedValue({ ok: true });
-    vi.stubGlobal("fetch", fetchMock);
-
-    await expect(requestAgentWitchWake()).resolves.toBe(true);
-    expect(fetchMock).toHaveBeenCalledWith("http://127.0.0.1:47893/restart", {
-      method: "POST",
-      mode: "cors",
-      signal: expect.any(AbortSignal),
-    });
+    await expect(requestAgentWitchWake("")).resolves.toBe(false);
   });
 });

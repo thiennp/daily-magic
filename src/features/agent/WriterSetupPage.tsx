@@ -91,15 +91,9 @@ export default function WriterSetupPage() {
         ))}
       </ul>
       <p className="mt-6 text-sm text-gray-500">
-        Local traffic and knowledge:{" "}
-        <a
-          className="underline"
-          href="http://127.0.0.1:43347"
-          target="_blank"
-          rel="noreferrer"
-        >
-          http://127.0.0.1:43347
-        </a>
+        On the Mac, open the local Agent Witch UI for traffic and knowledge
+        (http://127.0.0.1:43347). Connection status here comes from the live
+        WebSocket bridge, not that local page.
       </p>
     </main>
   );

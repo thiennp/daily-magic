@@ -1,8 +1,7 @@
 import { forkPublishedCapability } from "@/lib/capabilities/forkPublishedCapability";
 import { getPublishedCapabilityById } from "@/lib/capabilities/capabilityQueries";
 import { canViewPublishedCapability } from "@/lib/capabilities/canViewPublishedCapability";
-import { canViewHarnessSet } from "@/lib/harness/harnessSetSharingQueries";
-import { resolveTeammateHarnessInstallBundle } from "@/lib/marketplace/resolveTeammateHarnessInstallBundle";
+import { finishTeammateHarnessInstall } from "@/lib/marketplace/finishTeammateHarnessInstall";
 import type { MarketplaceInstallResult } from "@/lib/marketplace/types/MarketplaceInstallResult.type";
 
 const installFailure = (errorMessage: string): MarketplaceInstallResult => ({
@@ -20,8 +19,6 @@ const installTeammateListing = async (
   capabilityId: string,
   deviceId: string,
 ): Promise<MarketplaceInstallResult> => {
-  void deviceId;
-
   const capability = await getPublishedCapabilityById(capabilityId);
 
   if (capability === null || capability.harnessSetSlug === null) {
@@ -49,40 +46,13 @@ const installTeammateListing = async (
     );
   }
 
-  const canViewSet = await canViewHarnessSet(
+  return finishTeammateHarnessInstall({
     actorUserId,
-    capability.ownerUserId,
-    capability.harnessSetSlug,
-  );
-
-  if (!canViewSet) {
-    return {
-      ok: true,
-      errorMessage: null,
-      savedToLibrary: true,
-      libraryCapabilityId: forkResult.capability.id,
-      harnessInstalled: false,
-      harnessInstallMessage:
-        "Saved to your library. Rules bundle is not available to install.",
-      localHarnessBundle: null,
-    };
-  }
-
-  const harness = await resolveTeammateHarnessInstallBundle({
-    actorUserId,
+    deviceId,
+    libraryCapabilityId: forkResult.capability.id,
     ownerUserId: capability.ownerUserId,
     harnessSetSlug: capability.harnessSetSlug,
   });
-
-  return {
-    ok: true,
-    errorMessage: null,
-    savedToLibrary: true,
-    libraryCapabilityId: forkResult.capability.id,
-    harnessInstalled: false,
-    harnessInstallMessage: harness.harnessInstallMessage,
-    localHarnessBundle: harness.localHarnessBundle,
-  };
 };
 
 export default installTeammateListing;

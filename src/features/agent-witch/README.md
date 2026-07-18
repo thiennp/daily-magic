@@ -36,8 +36,9 @@ Post-install AI picker: `/setup/writer` on agentwitch.com → WS `writer.ensure`
 
 - `online-wake/` — presence tiers, browser wake, cloud restart queue, wake modal UI
 - `utils/pairedDevicesApi.ts` — fetch/revoke devices, dispatch policy
-- `utils/requestLocalAgentWitchAppHealth.ts` — probe `:43347/health`
 - `macDevices/` — device row, rename, menus
+
+Browser presence uses `/api/agent-witch/devices` (WS hub). Local `:43347` is Mac-only UI; the site does not probe it.
 
 ## Local vs production Mac installs
 

@@ -1,6 +1,8 @@
 import { requestAgentWitchDeviceRestart } from "@/features/agent-witch/online-wake";
+import { sendAgentWitchDeviceRestartNow } from "@/lib/agentWitch/deliverAgentWitchDeviceRestart";
 import isAgentWitchDeviceOwnedByUser from "@/lib/agentWitch/isAgentWitchDeviceOwnedByUser";
 import { ensureAgentWitchDeviceSchema } from "@/lib/agentWitch/ensureAgentWitchDeviceSchema";
+import { getAgentWitchHub } from "@/lib/agentWitch/getAgentWitchHub";
 import { requireAuth } from "@/lib/auth/requireAuth";
 
 export const dynamic = "force-dynamic";
@@ -41,10 +43,15 @@ export async function POST(
     );
   }
 
+  const delivery = await sendAgentWitchDeviceRestartNow(getAgentWitchHub(), {
+    userId: actor.id,
+    deviceId,
+  });
+
   return Response.json({
     ok: true,
     deviceId,
     restartRequested: true,
-    delivery: "http-heartbeat",
+    delivery: delivery === "sent" ? "websocket" : "queued-until-reconnect",
   });
 }

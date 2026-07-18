@@ -1,3 +1,5 @@
+import { buildPendingAccountLinkAckPayload } from "@/lib/agentWitch/buildPendingAccountLinkAckPayload";
+import { deliverAgentWitchDeviceRestartIfRequested } from "@/lib/agentWitch/deliverAgentWitchDeviceRestart";
 import type AgentWitchHubClient from "@/lib/agentWitch/types/AgentWitchHubClient.type";
 import type AgentWitchHubRuntime from "@/lib/agentWitch/types/AgentWitchHubRuntime.type";
 import type AgentWitchMessage from "@/lib/agentWitch/types/AgentWitchMessage.type";
@@ -13,6 +15,21 @@ const resolveHeartbeatHostname = (
 
   const trimmedHostname = payload.hostname.trim();
   return trimmedHostname.length > 0 ? trimmedHostname : null;
+};
+
+const resolveHeartbeatEmail = (
+  payload: Readonly<Record<string, unknown>> | undefined,
+  senderEmail: string | undefined,
+): string | null => {
+  if (typeof payload?.email === "string" && payload.email.trim().length > 0) {
+    return payload.email.trim().toLowerCase();
+  }
+
+  if (senderEmail !== undefined && senderEmail.trim().length > 0) {
+    return senderEmail.trim().toLowerCase();
+  }
+
+  return null;
 };
 
 export const handleAgentHeartbeatMessageAsync = async (
@@ -32,6 +49,7 @@ export const handleAgentHeartbeatMessageAsync = async (
   }
 
   const hostname = resolveHeartbeatHostname(message.payload);
+  const email = resolveHeartbeatEmail(message.payload, sender.email);
   const claimedPairing = await runtime.pairingStore.resolveClaimedPairing(
     sender.pairingToken,
   );
@@ -40,6 +58,7 @@ export const handleAgentHeartbeatMessageAsync = async (
   runtime.updateClient(senderId, {
     lastHeartbeatAt: new Date().toISOString(),
     ...(hostname !== null ? { deviceLabel: hostname } : {}),
+    ...(email !== null ? { email } : {}),
     ...(sender.deviceId === undefined && claimedPairing?.deviceId !== undefined
       ? { deviceId: claimedPairing.deviceId }
       : {}),
@@ -54,12 +73,26 @@ export const handleAgentHeartbeatMessageAsync = async (
       ? wakeErrorRaw.trim()
       : null;
   const deviceId = sender.deviceId ?? claimedPairing?.deviceId;
+  const userId = sender.userId ?? claimedPairing?.userId;
   if (deviceId !== undefined) {
     await updateAgentWitchDeviceWakeError({ deviceId, wakeError });
   }
 
+  if (deviceId !== undefined && userId !== undefined) {
+    await deliverAgentWitchDeviceRestartIfRequested(runtime, {
+      userId,
+      deviceId,
+    });
+  }
+
+  const pendingAccountLink = buildPendingAccountLinkAckPayload(
+    email,
+    claimedPairing !== null,
+  );
+
   return {
     type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ACK,
     requestId: message.requestId,
+    ...(pendingAccountLink !== null ? { payload: { pendingAccountLink } } : {}),
   };
 };

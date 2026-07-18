@@ -6,6 +6,7 @@ import {
   handleHarnessAgentRelayMessage,
   handleHarnessRequestMessage,
 } from "./handleHarnessHubMessage";
+import { buildPendingAccountLinkAckPayload } from "./buildPendingAccountLinkAckPayload";
 import type AgentWitchHubClient from "./types/AgentWitchHubClient.type";
 import type AgentWitchHubRuntime from "./types/AgentWitchHubRuntime.type";
 import type AgentWitchMessage from "./types/AgentWitchMessage.type";
@@ -18,12 +19,18 @@ export const handleAgentWitchSyncMessage = (
   sender: AgentWitchHubClient | undefined,
 ): AgentWitchMessage | null => {
   if (message.type === AGENT_WITCH_MESSAGE_TYPES.AGENT_REGISTER) {
+    const pendingAccountLink = buildPendingAccountLinkAckPayload(
+      sender?.email,
+      sender?.userId !== undefined,
+    );
+
     return {
       type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ACK,
       payload: {
         clientId: senderId,
         role: sender?.role ?? "dashboard",
         userId: sender?.userId,
+        ...(pendingAccountLink !== null ? { pendingAccountLink } : {}),
       },
       requestId: message.requestId,
     };

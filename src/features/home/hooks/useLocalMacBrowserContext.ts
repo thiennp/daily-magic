@@ -2,46 +2,44 @@
 
 import { useEffect, useState } from "react";
 
-import {
-  readAgentWitchLocalHostCookie,
-  setAgentWitchLocalHostCookie,
-} from "@/features/agent-witch/utils/agentWitchLocalHostCookie";
-import { requestLocalAgentWitchAppHealth } from "@/features/agent-witch/utils/requestLocalAgentWitchAppHealth";
-import { requestLocalAgentWitchIdentity } from "@/features/agent-witch/utils/requestLocalAgentWitchIdentity";
+import { loadMyMacDevicesSnapshot } from "@/features/agent/hooks/fetchMyMacDevicesFromApi";
+import { readAgentWitchLocalHostCookie } from "@/features/agent-witch/utils/agentWitchLocalHostCookie";
 
+/**
+ * Browser context for this Mac.
+ * Presence comes only from cloud devices / WS hub — never localhost.
+ */
 const useLocalMacBrowserContext = (): {
   readonly localHostname: string | null;
   readonly isWakeServerReachable: boolean;
   readonly isCheckingLocalApp: boolean;
   readonly isLocalAppInstalled: boolean;
+  readonly isBridgeConnected: boolean;
 } => {
-  const [localHostname, setLocalHostname] = useState<string | null>(() =>
+  const [localHostname] = useState<string | null>(() =>
     readAgentWitchLocalHostCookie(),
   );
-  const [isWakeServerReachable, setIsWakeServerReachable] = useState(false);
+  const [isBridgeConnected, setIsBridgeConnected] = useState(false);
+  const [hasClaimedDevice, setHasClaimedDevice] = useState(false);
   const [isCheckingLocalApp, setIsCheckingLocalApp] = useState(true);
 
   useEffect(() => {
     const abortController = new AbortController();
 
     void (async () => {
-      const [identity, localApp] = await Promise.all([
-        requestLocalAgentWitchIdentity(),
-        requestLocalAgentWitchAppHealth(),
-      ]);
+      const devicesSnapshot = await loadMyMacDevicesSnapshot().catch(() => ({
+        devices: [] as const,
+        hadError: true,
+      }));
 
       if (abortController.signal.aborted) {
         return;
       }
 
-      const reachable = identity !== null || localApp !== null;
-      setIsWakeServerReachable(reachable);
-
-      if (identity !== null) {
-        setAgentWitchLocalHostCookie(identity.hostname);
-        setLocalHostname(identity.hostname);
-      }
-
+      setHasClaimedDevice(devicesSnapshot.devices.length > 0);
+      setIsBridgeConnected(
+        devicesSnapshot.devices.some((device) => device.isConnected),
+      );
       setIsCheckingLocalApp(false);
     })();
 
@@ -52,9 +50,10 @@ const useLocalMacBrowserContext = (): {
 
   return {
     localHostname,
-    isWakeServerReachable,
+    isWakeServerReachable: true,
     isCheckingLocalApp,
-    isLocalAppInstalled: isWakeServerReachable,
+    isLocalAppInstalled: hasClaimedDevice || isBridgeConnected,
+    isBridgeConnected,
   };
 };
 

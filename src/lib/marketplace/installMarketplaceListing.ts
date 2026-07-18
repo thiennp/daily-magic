@@ -30,7 +30,11 @@ const installMarketplaceListing = async (input: {
       };
     }
 
-    return installOfficialPresetListing(input.actorUserId, templateId);
+    return installOfficialPresetListing(
+      input.actorUserId,
+      templateId,
+      input.deviceId,
+    );
   }
 
   const targetError = await validateMarketplaceInstallTarget(

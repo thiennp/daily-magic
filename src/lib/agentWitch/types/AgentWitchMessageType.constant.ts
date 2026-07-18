@@ -46,6 +46,10 @@ export const AGENT_WITCH_MESSAGE_TYPES = {
   SYSTEM_ERROR: "system.error",
   DEVICE_AUTH_ATTESTATION: "device.auth.attestation",
   DEVICE_HEALTH_LOG: "device.health.log",
+  DEVICE_RESTART: "device.restart",
+  ACCOUNT_LINK: "account.link",
+  AUTOMATIONS_SYNC: "automations.sync",
+  AUTOMATIONS_RUN: "automations.run",
   WRITER_ENSURE: "writer.ensure",
   WRITER_STATUS: "writer.status",
 } as const;

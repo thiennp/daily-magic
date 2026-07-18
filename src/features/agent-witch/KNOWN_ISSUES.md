@@ -109,3 +109,15 @@
 **Fix:** `@/features/agent-witch/online-wake` is the single client resolver (`live` / `recent` / `offline`, `canDispatchToMac`). Home, badges, install modal, and composer use the same helpers.
 
 **Regression tests:** `macDevicePresence.test.ts` (AGENT-001), `buildAgentWitchDevicesWithOnlineStatus.test.ts`.
+
+---
+
+## AGENT-021 — Website must not call Mac localhost APIs
+
+**Symptom:** Browser fetched `127.0.0.1:47892` / `:43347` for health, identity, link, wake, harness, and automations, which fails off-LAN and breaks Private Network Access.
+
+**Root cause:** Early same-machine helpers talked to the wake server from the page.
+
+**Fix:** Browser uses only cloud HTTPS + hub WebSocket. Link sessions push `account.link` over WS; wake uses `POST /api/agent-witch/devices/:id/restart`; marketplace harness and automations sync/run push over WS. Local `:43347` remains Mac-only UI. Install bundle **24**.
+
+**Regression tests:** `requestAgentWitchWake.test.ts` (AGENT-021), `canWakeMacDeviceFromBrowser.test.ts`.

@@ -1,4 +1,3 @@
-import { requestAgentWitchWake } from "@/features/agent-witch/online-wake";
 import { postClaudePromptDispatch } from "@/features/agent/utils/postClaudePromptDispatch";
 import { sendClaudePromptOverSocket } from "@/features/agent/utils/sendClaudePromptOverSocket";
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
@@ -14,8 +13,6 @@ export async function dispatchClaudePrompt(input: {
   readonly sessionContinuation?: boolean;
   readonly onResponse: (response: string) => void;
 }): Promise<void> {
-  await requestAgentWitchWake();
-
   try {
     const raw = await postClaudePromptDispatch({
       prompt: input.prompt,

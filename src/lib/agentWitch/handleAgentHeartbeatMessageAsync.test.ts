@@ -4,6 +4,10 @@ vi.mock("@/lib/agentWitch/updateAgentWitchDeviceAuthFields", () => ({
   updateAgentWitchDeviceWakeError: vi.fn().mockResolvedValue(undefined),
 }));
 
+vi.mock("@/lib/agentWitch/deliverAgentWitchDeviceRestart", () => ({
+  deliverAgentWitchDeviceRestartIfRequested: vi.fn().mockResolvedValue(false),
+}));
+
 import { handleAgentHeartbeatMessageAsync } from "@/lib/agentWitch/handleAgentHeartbeatMessageAsync";
 import type AgentWitchHubClient from "@/lib/agentWitch/types/AgentWitchHubClient.type";
 import type AgentWitchHubRuntime from "@/lib/agentWitch/types/AgentWitchHubRuntime.type";

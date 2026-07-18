@@ -6,14 +6,16 @@ import MacDeviceWakeModal from "./MacDeviceWakeModal";
 import { isMacDeviceRowInteractiveTarget } from "@/features/agent-witch/macDevices/utils/isMacDeviceRowInteractiveTarget";
 
 interface MacDeviceOfflineWakeHintProps {
+  readonly deviceId: string;
   readonly displayName: string;
-  readonly isWakeServerReachable: boolean;
+  readonly canRequestRestart: boolean;
   readonly children: ReactNode;
 }
 
 export default function MacDeviceOfflineWakeHint({
+  deviceId,
   displayName,
-  isWakeServerReachable,
+  canRequestRestart,
   children,
 }: MacDeviceOfflineWakeHintProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -35,8 +37,9 @@ export default function MacDeviceOfflineWakeHint({
       </div>
       <MacDeviceWakeModal
         isOpen={isModalOpen}
+        deviceId={deviceId}
         displayName={displayName}
-        isWakeServerReachable={isWakeServerReachable}
+        canRequestRestart={canRequestRestart}
         onClose={() => {
           setIsModalOpen(false);
         }}

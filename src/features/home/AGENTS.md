@@ -11,7 +11,7 @@
 - **Connected state** must come from the device list API, never optimistic `markPaired()` alone.
 - **Dashboard gating** uses `resolveHomeDashboardMode` — `connect` until `deviceCount > 0`.
 - **Connect copy** uses `resolveConnectAnotherMacLabel(hasExistingDevices)` — never "another" with zero devices.
-- **Install CTA** — show bash install (`curl … | bash`) only when local wake `/identity` is unreachable (`shouldShowAgentWitchAppDownloadCta`); hide Add Mac / install when the app is already on this Mac.
+- **Install CTA** — show bash install (`curl … | bash`) only when cloud devices show no claimed/connected Mac (`shouldShowAgentWitchAppDownloadCta`); never probe localhost from the browser.
 
 ## Tests to extend
 

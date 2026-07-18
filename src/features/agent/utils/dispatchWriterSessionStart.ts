@@ -1,5 +1,4 @@
 import { createAgentWitchRequestId } from "@/features/agent/utils/agentWitchSocketUtils";
-import { requestAgentWitchWake } from "@/features/agent-witch/online-wake";
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
 
@@ -43,6 +42,5 @@ export const dispatchWriterSessionStart = async (input: {
   readonly targetDeviceId?: string;
   readonly onResponse: (response: string) => void;
 }): Promise<void> => {
-  await requestAgentWitchWake();
   sendWriterSessionStartOverSocket(input);
 };

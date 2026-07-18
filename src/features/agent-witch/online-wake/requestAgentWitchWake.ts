@@ -1,34 +1,19 @@
-import { AGENT_WITCH_PROD_WAKE_PORT } from "@/lib/agentWitch/resolveAgentWitchAppHome";
-import {
-  resolveAgentWitchWakeBaseUrlForPage,
-  resolveAgentWitchWakePortForPage,
-} from "@/lib/agentWitch/resolveAgentWitchWakeBaseUrl";
-
-export const AGENT_WITCH_WAKE_DEFAULT_PORT = AGENT_WITCH_PROD_WAKE_PORT;
-
-export {
-  resolveAgentWitchWakeBaseUrlForPage,
-  resolveAgentWitchWakePortForPage,
-};
-
-/** @deprecated Prefer resolveAgentWitchWakeBaseUrlForPage() */
-export const AGENT_WITCH_WAKE_BASE_URL = `http://127.0.0.1:${AGENT_WITCH_PROD_WAKE_PORT}`;
-
 export const canRequestAgentWitchWake = (): boolean =>
   typeof window !== "undefined";
 
-export const requestAgentWitchWake = async (): Promise<boolean> => {
-  if (!canRequestAgentWitchWake()) {
+export const requestAgentWitchWake = async (
+  deviceId: string,
+): Promise<boolean> => {
+  if (!canRequestAgentWitchWake() || deviceId.trim().length === 0) {
     return false;
   }
 
   try {
     const response = await fetch(
-      `${resolveAgentWitchWakeBaseUrlForPage()}/restart`,
+      `/api/agent-witch/devices/${encodeURIComponent(deviceId)}/restart`,
       {
         method: "POST",
-        mode: "cors",
-        signal: AbortSignal.timeout(120_000),
+        signal: AbortSignal.timeout(15_000),
       },
     );
     return response.ok;

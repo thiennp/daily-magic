@@ -59,6 +59,12 @@ import { AGENT_WITCH_CONNECTION_STALE_MS } from "./agentWitchConnectionHealth.co
 import { acceptTerminalStream } from "./agentWitchTerminalStreamState";
 import { requestLocalAgentWitchRestart } from "./requestLocalAgentWitchRestart";
 import {
+  applyAutomationsRunFromCloud,
+  applyAutomationsSyncFromCloud,
+  applyPendingAccountLinkFromCloud,
+  readPendingAccountLinkFromAck,
+} from "./handleAgentWitchCloudControlMessages";
+import {
   buildDeviceAuthHelloFields,
   verifyServerAttestationLocally,
 } from "./agentWitchDeviceKeypair";
@@ -681,6 +687,7 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
           payload: {
             hostname: os.hostname(),
             wakeError: state.wakeError,
+            ...(config.email !== null ? { email: config.email } : {}),
           },
         },
         config.layout,
@@ -817,6 +824,28 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
       writeAgentWitchConnectionHealth(config.layout, {
         wsUrl: config.wsUrl,
       });
+      const pendingLink = readPendingAccountLinkFromAck(
+        isRecord(parsed.payload) ? parsed.payload : null,
+      );
+      if (pendingLink !== null) {
+        void applyPendingAccountLinkFromCloud(pendingLink);
+      }
+    }
+
+    if (parsed.type === "account.link" && isRecord(parsed.payload)) {
+      void applyPendingAccountLinkFromCloud(parsed.payload);
+    }
+
+    if (parsed.type === "device.restart") {
+      runLocalRestart("cloud-device-restart");
+    }
+
+    if (parsed.type === "automations.sync" && isRecord(parsed.payload)) {
+      applyAutomationsSyncFromCloud(parsed.payload);
+    }
+
+    if (parsed.type === "automations.run" && isRecord(parsed.payload)) {
+      void applyAutomationsRunFromCloud(parsed.payload);
     }
 
     if (
@@ -1177,6 +1206,7 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
             role: "agent",
             hostname: os.hostname(),
             pairingToken: config.pairingToken,
+            ...(config.email !== null ? { email: config.email } : {}),
             ...auth,
           },
         },
