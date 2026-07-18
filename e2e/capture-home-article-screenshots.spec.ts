@@ -23,10 +23,29 @@ const shot = async (page: Page, relPath: string): Promise<void> => {
   });
 };
 
+const dismissBlockingModals = async (page: Page): Promise<void> => {
+  for (let i = 0; i < 3; i += 1) {
+    const modal = page.locator(".modal").first();
+    if (!(await modal.count()) || !(await modal.isVisible())) break;
+    await page.keyboard.press("Escape");
+    await page.waitForTimeout(300);
+  }
+};
+
 const gotoSettled = async (page: Page, path: string): Promise<void> => {
   await page.goto(path, { waitUntil: "domcontentloaded" });
   await page.waitForLoadState("load");
+  await dismissBlockingModals(page);
   await page.waitForTimeout(1500);
+  // Stabilize fullPage height (lazy sections / fonts).
+  await page.evaluate(async () => {
+    window.scrollTo(0, document.body.scrollHeight);
+    await new Promise((resolve) => {
+      window.setTimeout(resolve, 200);
+    });
+    window.scrollTo(0, 0);
+  });
+  await page.waitForTimeout(400);
 };
 
 const fillByNearbyLabel = async (
@@ -93,6 +112,13 @@ test.describe("Home article showcase screenshots", () => {
 
     await signInTestAccount(page, EMAIL);
     await gotoSettled(page, "/");
+    await expect(
+      page.getByText(/Getting started|Your Devices/i).first(),
+    ).toBeVisible({
+      timeout: 15_000,
+    });
+    await dismissBlockingModals(page);
+    await page.waitForTimeout(500);
     await shot(page, "onboarding/01-home-checklist");
     await shot(page, "onboarding/02-mac-connected");
     await shot(page, "topics/12-mac-status");
