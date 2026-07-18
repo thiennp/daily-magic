@@ -218,13 +218,13 @@ Document every production bug or UX regression here. Each entry must link to a t
 
 ---
 
-## HOME-019 — Bash install shown when Mac already has Agent Witch
+## HOME-019 — Install CTA shown when Mac already has Agent Witch
 
-**Symptom:** Home still showed “Add a Mac” / curl install steps on a Mac where Agent Witch was already running.
+**Symptom:** Home still showed “Add a Mac” / install steps on a Mac where Agent Witch was already running.
 
-**Root cause:** Connect CTAs always rendered the bash command and did not consult the local wake `/identity` API.
+**Root cause:** Connect CTAs always rendered and did not consult the local wake `/identity` API.
 
-**Fix:** Probe local wake identity; show **Download Agent Witch** (DMG) only when the app is missing; hide Add Mac / download when installed. `shouldShowAgentWitchAppDownloadCta.test.ts` (HOME-019).
+**Fix:** Probe local wake identity; show bash install only when the app is missing; hide Add Mac / install when installed. `shouldShowAgentWitchAppDownloadCta.test.ts` (HOME-019).
 
 **Regression test:** `shouldShowAgentWitchAppDownloadCta.test.ts`, `buildConnectComputerGuideSteps.test.ts`.
 

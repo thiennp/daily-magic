@@ -34,7 +34,7 @@ export default async function HomeAuthenticatedView({
 }: HomeAuthenticatedViewProps) {
   const requestHeaders = await headers();
   const appOrigin = buildAppOriginFromHeaders(requestHeaders);
-  const { dmgDownloadUrl } =
+  const { installCommand } =
     buildLocalAgentInstallUrlsFromHeaders(requestHeaders);
   const host =
     requestHeaders.get("x-forwarded-host") ?? requestHeaders.get("host") ?? "";
@@ -43,7 +43,7 @@ export default async function HomeAuthenticatedView({
   return (
     <HomeLinkAccountGate
       appOrigin={appOrigin}
-      dmgDownloadUrl={dmgDownloadUrl}
+      installCommand={installCommand}
       isWebSocketSupported={isWebSocketSupported}
       host={host}
     >
@@ -52,7 +52,7 @@ export default async function HomeAuthenticatedView({
           <HomeOnboardingChecklist />
           <HomeOnboardingAutomateNudge />
           <HomeConnectedMacsPanel
-            dmgDownloadUrl={dmgDownloadUrl}
+            installCommand={installCommand}
             isWebSocketSupported={isWebSocketSupported}
             host={host}
           />

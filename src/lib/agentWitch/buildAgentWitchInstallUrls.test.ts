@@ -1,7 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import {
-  buildAgentWitchDmgDownloadUrl,
   buildAgentWitchInstallScriptUrl,
   buildAgentWitchWsUrl,
   buildAppOrigin,
@@ -19,12 +18,6 @@ describe("buildAgentWitchInstallUrls", () => {
     expect(buildAppOrigin(request)).toBe("https://abc.com");
     expect(buildAgentWitchInstallScriptUrl("https://abc.com")).toBe(
       "https://abc.com/install/agent-witch.sh",
-    );
-    expect(buildAgentWitchDmgDownloadUrl("https://abc.com")).toBe(
-      "https://www.agentwitch.com/install/agent-witch.dmg",
-    );
-    expect(buildAgentWitchDmgDownloadUrl("http://localhost:3000")).toBe(
-      "http://localhost:3000/install/agent-witch.dmg",
     );
     expect(buildAgentWitchWsUrl("https://abc.com")).toBe(
       "wss://abc.com/api/agent-witch/ws",

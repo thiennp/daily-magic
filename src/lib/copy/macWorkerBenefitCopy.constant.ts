@@ -6,13 +6,13 @@ export const MAC_WORKER_BENEFIT_COPY = {
   setupTitle: "Set up your Mac to run workflows",
   setupTitleAppReady: "Linking this Mac to your account",
   setupDescription:
-    "Download Agent Witch once. It turns this Mac into the worker for your automations and works for whichever account is signed in here.",
+    "One install command turns your Mac into the worker for your automations. It works for whichever account is signed in here—no reinstall when you switch users.",
   setupDescriptionAppReady:
     "Agent Witch is already installed on this Mac. Stay signed in while we link it to your account.",
   setupModalIntro:
-    "On the Mac that will run your workflows, download Agent Witch, open the installer, then return here while signed in.",
+    "On the Mac that will run your workflows, open Terminal, paste this command, and press Return.",
   setupAnotherModalIntro:
-    "On the additional Mac, download Agent Witch, open the installer, then open Home while signed in so it can link.",
+    "On the additional Mac, open Terminal, paste this command, and press Return.",
   waitingForMac: "Waiting for your Mac to get ready…",
   linkingMac: "Getting your Mac ready…",
   checkingMacReady: "Checking whether your Mac is ready…",

@@ -25,9 +25,6 @@
 /build
 /dist/
 
-# Local-only DMG (localhost bake). Production AgentWitch.dmg is committed.
-/public/install/AgentWitch-local.dmg
-
 # misc
 .DS_Store
 *.pem

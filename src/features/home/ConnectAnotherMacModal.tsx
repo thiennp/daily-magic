@@ -3,13 +3,13 @@
 import { Modal } from "@/components/ui/modal";
 import { APP_SURFACE_BODY_TEXT_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
 import AgentWitchUnsupportedHostNotice from "@/features/home/AgentWitchUnsupportedHostNotice";
-import DownloadAgentWitchAppButton from "@/features/home/DownloadAgentWitchAppButton";
+import CopyableBashCommand from "@/features/home/CopyableBashCommand";
 import { resolveConnectAnotherMacLabel } from "@/features/home/utils/resolveConnectAnotherMacLabel";
 import { MAC_WORKER_BENEFIT_COPY } from "@/lib/copy/macWorkerBenefitCopy.constant";
 
 interface ConnectAnotherMacModalProps {
   readonly isOpen: boolean;
-  readonly dmgDownloadUrl: string;
+  readonly installCommand: string;
   readonly isWebSocketSupported: boolean;
   readonly host: string;
   readonly hasExistingDevices: boolean;
@@ -19,7 +19,7 @@ interface ConnectAnotherMacModalProps {
 
 export default function ConnectAnotherMacModal({
   isOpen,
-  dmgDownloadUrl,
+  installCommand,
   isWebSocketSupported,
   host,
   hasExistingDevices,
@@ -46,8 +46,9 @@ export default function ConnectAnotherMacModal({
           <AgentWitchUnsupportedHostNotice host={host} />
         </div>
       ) : (
-        <DownloadAgentWitchAppButton
-          dmgDownloadUrl={dmgDownloadUrl}
+        <CopyableBashCommand
+          command={installCommand}
+          variant="bash"
           onEngaged={onInstallEngaged}
         />
       )}

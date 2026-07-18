@@ -22,7 +22,7 @@ import { resolveHomeDashboardMode } from "@/features/home/utils/resolveHomeDashb
 
 interface HomeLinkAccountGateProps {
   readonly appOrigin: string;
-  readonly dmgDownloadUrl: string;
+  readonly installCommand: string;
   readonly isWebSocketSupported: boolean;
   readonly host: string;
   readonly children: ReactNode;
@@ -30,7 +30,7 @@ interface HomeLinkAccountGateProps {
 
 export default function HomeLinkAccountGate({
   appOrigin,
-  dmgDownloadUrl,
+  installCommand,
   isWebSocketSupported,
   host,
   children,
@@ -40,7 +40,7 @@ export default function HomeLinkAccountGate({
       <OnboardingStepsProvider>
         <HomeLinkAccountGateContent
           appOrigin={appOrigin}
-          dmgDownloadUrl={dmgDownloadUrl}
+          installCommand={installCommand}
           isWebSocketSupported={isWebSocketSupported}
           host={host}
         >
@@ -53,7 +53,7 @@ export default function HomeLinkAccountGate({
 
 function HomeLinkAccountGateContent({
   appOrigin,
-  dmgDownloadUrl,
+  installCommand,
   isWebSocketSupported,
   host,
   children,
@@ -93,7 +93,7 @@ function HomeLinkAccountGateContent({
       <div className={HOME_DASHBOARD_GRID_CLASS}>
         <aside className={HOME_LEFT_RAIL_CLASS}>
           <HomeConnectedMacsPanel
-            dmgDownloadUrl={dmgDownloadUrl}
+            installCommand={installCommand}
             isWebSocketSupported={isWebSocketSupported}
             host={host}
           />
@@ -101,7 +101,7 @@ function HomeLinkAccountGateContent({
         <main className={HOME_MAIN_COLUMN_CLASS}>
           <HomeConnectComputerGuide
             appOrigin={appOrigin}
-            dmgDownloadUrl={dmgDownloadUrl}
+            installCommand={installCommand}
             isWebSocketSupported={isWebSocketSupported}
             host={host}
             onLinked={handleLinked}

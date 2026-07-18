@@ -9,6 +9,8 @@ import {
 } from "@/components/surfaces/appSurfaceStyles.constant";
 import AgentWitchUnsupportedHostNotice from "@/features/home/AgentWitchUnsupportedHostNotice";
 import ConnectComputerGuideSteps from "@/features/home/ConnectComputerGuideSteps";
+import ConnectInstallPasteModal from "@/features/home/ConnectInstallPasteModal";
+import useConnectInstallPasteModalDismissal from "@/features/home/hooks/useConnectInstallPasteModalDismissal";
 import useLocalMacBrowserContext from "@/features/home/hooks/useLocalMacBrowserContext";
 import { useLinkLocalAgentAccount } from "@/features/home/hooks/useLinkLocalAgentAccount";
 import {
@@ -21,7 +23,7 @@ import detectBrowserOperatingSystem from "@/features/home/utils/detectBrowserOpe
 
 interface HomeConnectComputerGuideProps {
   readonly appOrigin: string;
-  readonly dmgDownloadUrl: string;
+  readonly installCommand: string;
   readonly isWebSocketSupported: boolean;
   readonly host: string;
   readonly onLinked: () => void;
@@ -33,15 +35,16 @@ const getServerOperatingSystemSnapshot = () => "other" as const;
 
 export default function HomeConnectComputerGuide({
   appOrigin,
-  dmgDownloadUrl,
+  installCommand,
   isWebSocketSupported,
   host,
   onLinked,
 }: HomeConnectComputerGuideProps) {
   const [installEngaged, setInstallEngaged] = useState(false);
+  const [isPasteModalOpen, setIsPasteModalOpen] = useState(false);
   const { isCheckingLocalApp, isLocalAppInstalled } =
     useLocalMacBrowserContext();
-  const showDownloadCta = shouldShowAgentWitchAppDownloadCta({
+  const showInstallCta = shouldShowAgentWitchAppDownloadCta({
     isCheckingLocalApp,
     isLocalAppInstalled,
   });
@@ -64,7 +67,18 @@ export default function HomeConnectComputerGuide({
 
   const handleInstallEngaged = useCallback(() => {
     setInstallEngaged(true);
+    setIsPasteModalOpen(true);
   }, []);
+
+  const handleClosePasteModal = useCallback(() => {
+    setIsPasteModalOpen(false);
+  }, []);
+
+  useConnectInstallPasteModalDismissal({
+    isOpen: isPasteModalOpen,
+    isLinking,
+    onClose: handleClosePasteModal,
+  });
 
   return (
     <AppHero variant="plain">
@@ -88,12 +102,12 @@ export default function HomeConnectComputerGuide({
         </div>
       ) : null}
 
-      {isWebSocketSupported && showDownloadCta ? (
+      {isWebSocketSupported && showInstallCta ? (
         <ConnectComputerGuideSteps
           operatingSystem={operatingSystem}
-          dmgDownloadUrl={dmgDownloadUrl}
+          installCommand={installCommand}
           isWebSocketSupported={isWebSocketSupported}
-          showDownloadCta={showDownloadCta}
+          showInstallCta={showInstallCta}
           onInstallEngaged={handleInstallEngaged}
         />
       ) : null}
@@ -108,6 +122,11 @@ export default function HomeConnectComputerGuide({
           {connectionStatus.message}
         </p>
       ) : null}
+
+      <ConnectInstallPasteModal
+        isOpen={isPasteModalOpen}
+        onClose={handleClosePasteModal}
+      />
     </AppHero>
   );
 }

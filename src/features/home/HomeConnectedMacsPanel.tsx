@@ -18,13 +18,13 @@ import { revokePairedDevice } from "@/features/agent-witch/utils/pairedDevicesAp
 import buildAgentComposerHref from "@/lib/library/buildAgentComposerHref";
 
 interface HomeConnectedMacsPanelProps {
-  readonly dmgDownloadUrl: string;
+  readonly installCommand: string;
   readonly isWebSocketSupported: boolean;
   readonly host: string;
 }
 
 export default function HomeConnectedMacsPanel({
-  dmgDownloadUrl,
+  installCommand,
   isWebSocketSupported,
   host,
 }: HomeConnectedMacsPanelProps) {
@@ -53,7 +53,7 @@ export default function HomeConnectedMacsPanel({
         <p className="mt-4 text-sm text-gray-500 dark:text-gray-400">
           No Macs connected yet.{" "}
           <ConnectAnotherMacButton
-            dmgDownloadUrl={dmgDownloadUrl}
+            installCommand={installCommand}
             isWebSocketSupported={isWebSocketSupported}
             host={host}
             hasExistingDevices={hasExistingDevices}
@@ -98,7 +98,7 @@ export default function HomeConnectedMacsPanel({
       {!isLoading && hasExistingDevices ? (
         <div className="mt-4 border-t border-gray-200 pt-4 dark:border-gray-700">
           <ConnectAnotherMacButton
-            dmgDownloadUrl={dmgDownloadUrl}
+            installCommand={installCommand}
             isWebSocketSupported={isWebSocketSupported}
             host={host}
             hasExistingDevices={hasExistingDevices}

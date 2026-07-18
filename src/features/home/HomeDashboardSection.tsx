@@ -19,7 +19,7 @@ export default async function HomeDashboardSection({
 }: HomeDashboardSectionProps) {
   const requestHeaders = await headers();
   const appOrigin = buildAppOriginFromHeaders(requestHeaders);
-  const { dmgDownloadUrl } =
+  const { installCommand } =
     buildLocalAgentInstallUrlsFromHeaders(requestHeaders);
   const host =
     requestHeaders.get("x-forwarded-host") ?? requestHeaders.get("host") ?? "";
@@ -28,7 +28,7 @@ export default async function HomeDashboardSection({
     <HomeDashboardSectionClient
       user={user}
       appOrigin={appOrigin}
-      dmgDownloadUrl={dmgDownloadUrl}
+      installCommand={installCommand}
       isWebSocketSupported={isAgentWitchWebSocketAvailableForHost(host)}
       host={host}
     />
