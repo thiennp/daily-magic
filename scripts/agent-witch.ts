@@ -368,51 +368,61 @@ const startWriterSession = async (
   requestId: string | undefined,
   socket: AgentWitchOutboundSocket,
 ): Promise<void> => {
-  let streamedOutput = "";
-  const result = await runWriterSessionStart({
-    installDir: config.layout.installDir,
-    workspace: config.workspace,
-    writerAgent,
-    commands: resolveWriterCliCommands({
-      claudeCommand: config.claudeCommand,
-      codexCommand: config.codexCommand,
-      cursorCommand: config.cursorCommand,
-      antigravityCommand: config.antigravityCommand,
-    }),
-    onChunk: (chunk) => {
-      streamedOutput += chunk;
-      sendMessage(socket, {
-        type: "command.writer.session.chunk",
-        payload: {
-          writerAgent,
-          writerSessionId,
-          chunk,
-        },
-        requestId,
-      });
-    },
-  });
+  const sendReady = (output: string, exitCode: number): void => {
+    sendMessage(socket, {
+      type: "command.writer.session.ready",
+      payload: {
+        writerAgent,
+        writerSessionId,
+        output,
+        exitCode,
+      },
+      requestId,
+    });
+  };
 
-  const resolvedWriterAgent = isHarnessWriterAgentId(writerAgent)
-    ? writerAgent
-    : "claude-cli";
-  const readyOutput =
-    result.exitCode !== 0
-      ? result.output
-      : streamedOutput.length > 0
-        ? buildWriterSessionReadyMessage(resolvedWriterAgent)
-        : result.output;
-
-  sendMessage(socket, {
-    type: "command.writer.session.ready",
-    payload: {
+  try {
+    let streamedOutput = "";
+    const result = await runWriterSessionStart({
+      installDir: config.layout.installDir,
+      workspace: config.workspace,
       writerAgent,
-      writerSessionId,
-      output: readyOutput,
-      exitCode: result.exitCode,
-    },
-    requestId,
-  });
+      commands: resolveWriterCliCommands({
+        claudeCommand: config.claudeCommand,
+        codexCommand: config.codexCommand,
+        cursorCommand: config.cursorCommand,
+        antigravityCommand: config.antigravityCommand,
+      }),
+      onChunk: (chunk) => {
+        streamedOutput += chunk;
+        sendMessage(socket, {
+          type: "command.writer.session.chunk",
+          payload: {
+            writerAgent,
+            writerSessionId,
+            chunk,
+          },
+          requestId,
+        });
+      },
+    });
+
+    const resolvedWriterAgent = isHarnessWriterAgentId(writerAgent)
+      ? writerAgent
+      : "claude-cli";
+    const readyOutput =
+      result.exitCode !== 0
+        ? result.output
+        : streamedOutput.length > 0
+          ? buildWriterSessionReadyMessage(resolvedWriterAgent)
+          : result.output;
+
+    sendReady(readyOutput, result.exitCode);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    console.error("[agent-witch] Writer session start failed:", message);
+    sendReady(`Failed to start ${writerAgent} session: ${message}\n`, -1);
+  }
 };
 
 const runWriterProcess = (

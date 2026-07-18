@@ -126,13 +126,27 @@ export const openInteractiveShellPty = async (input: {
   }
 
   const shellPath = process.env.SHELL?.trim() || "/bin/zsh";
-  const child = pty.spawn(shellPath, ["-l"], {
-    name: "xterm-256color",
-    cols: input.cols,
-    rows: input.rows,
-    cwd: input.cwd,
-    env: process.env as Record<string, string>,
-  });
+  let child: IPty;
+  try {
+    child = pty.spawn(shellPath, ["-l"], {
+      name: "xterm-256color",
+      cols: input.cols,
+      rows: input.rows,
+      cwd: input.cwd,
+      env: process.env as Record<string, string>,
+    });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    input.send({
+      type: "shell.data",
+      payload: {
+        shellSessionId: input.shellSessionId,
+        chunk: `Could not open a live Mac PTY (${message}).\r\n`,
+      },
+      requestId: input.requestId,
+    });
+    return false;
+  }
 
   sessions.set(input.shellSessionId, {
     shellSessionId: input.shellSessionId,
@@ -182,13 +196,23 @@ export const spawnAgentCommandInPty = async (input: {
     return { shellSessionId, usedPty: false };
   }
 
-  const child = pty.spawn(input.command, [...input.args], {
-    name: "xterm-256color",
-    cols: 120,
-    rows: 32,
-    cwd: input.cwd,
-    env: process.env as Record<string, string>,
-  });
+  let child: IPty;
+  try {
+    child = pty.spawn(input.command, [...input.args], {
+      name: "xterm-256color",
+      cols: 120,
+      rows: 32,
+      cwd: input.cwd,
+      env: process.env as Record<string, string>,
+    });
+  } catch (error) {
+    // node-pty can throw (e.g. posix_spawnp failed). Fall back to pipe spawn.
+    console.error(
+      "[agent-witch] PTY spawn failed; falling back to pipe:",
+      error instanceof Error ? error.message : error,
+    );
+    return { shellSessionId, usedPty: false };
+  }
 
   sessions.set(shellSessionId, {
     shellSessionId,

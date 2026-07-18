@@ -386,11 +386,19 @@ export const runWriterTask = (
         prompt,
       );
     },
-  }).then((usedPty) => {
-    if (!usedPty) {
+  })
+    .then((usedPty) => {
+      if (!usedPty) {
+        startPipeChild();
+      }
+    })
+    .catch((error: unknown) => {
+      console.error(
+        "[agent-witch] Writer PTY path failed; falling back to pipe:",
+        error instanceof Error ? error.message : error,
+      );
       startPipeChild();
-    }
-  });
+    });
 };
 
 export const runClaudeTask = (

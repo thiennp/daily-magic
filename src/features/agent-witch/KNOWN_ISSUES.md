@@ -126,6 +126,18 @@
 
 ---
 
+## AGENT-024 — PTY spawn crash left Send-a-task stuck with empty Local Mac terminal
+
+**Symptom:** After Start, progress stayed on “Working on your request… Waiting for the first update…”, Local Mac terminal was empty (Live), and `:43347/traffic` showed `command.claude.run` then `agent.register` reconnect with no `shell.data` / stream chunks.
+
+**Root cause:** `node-pty` threw `posix_spawnp failed` while spawning the writer CLI. The error was unhandled, Agent Witch exited and reconnected, so the browser never received output.
+
+**Fix:** Catch PTY spawn failures and fall back to pipe-based `child_process` spawn (already used when node-pty is missing). Install bundle **25**.
+
+**Regression:** local traffic should show `terminal.stream.chunk` (or pipe output) after `command.claude.run` without an immediate crash reconnect.
+
+---
+
 ## AGENT-021 — Website must not call Mac localhost APIs
 
 **Symptom:** Browser fetched `127.0.0.1:47892` / `:43347` for health, identity, link, wake, harness, and automations, which fails off-LAN and breaks Private Network Access.
