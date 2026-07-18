@@ -35,6 +35,14 @@ const escapeHtml = (value: string): string =>
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;");
 
+const LOCAL_APP_CORS_HEADERS: Record<string, string> = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "GET, POST, DELETE, OPTIONS",
+  "Access-Control-Allow-Headers":
+    "Content-Type, Access-Control-Request-Private-Network",
+  "Access-Control-Allow-Private-Network": "true",
+};
+
 const sendJson = (
   response: http.ServerResponse,
   statusCode: number,
@@ -42,8 +50,7 @@ const sendJson = (
 ): void => {
   response.writeHead(statusCode, {
     "Content-Type": "application/json",
-    "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Methods": "GET, POST, DELETE, OPTIONS",
+    ...LOCAL_APP_CORS_HEADERS,
   });
   response.end(JSON.stringify(payload));
 };
@@ -120,11 +127,7 @@ export const startAgentWitchLocalApp = (input: {
       const method = request.method ?? "GET";
 
       if (method === "OPTIONS") {
-        response.writeHead(204, {
-          "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Methods": "GET, POST, DELETE, OPTIONS",
-          "Access-Control-Allow-Headers": "Content-Type",
-        });
+        response.writeHead(204, LOCAL_APP_CORS_HEADERS);
         response.end();
         return;
       }
@@ -282,6 +285,16 @@ export const startAgentWitchLocalApp = (input: {
       response.writeHead(500);
       response.end("Internal error");
     });
+  });
+
+  server.on("error", (error: NodeJS.ErrnoException) => {
+    if (error.code === "EADDRINUSE") {
+      console.error(
+        `[agent-witch] Local app port ${AGENT_WITCH_LOCAL_APP_PORT} already in use — skipping bind.`,
+      );
+      return;
+    }
+    console.error("[agent-witch] Local app server error:", error);
   });
 
   server.listen(AGENT_WITCH_LOCAL_APP_PORT, "127.0.0.1", () => {
