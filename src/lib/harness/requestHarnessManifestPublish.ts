@@ -1,4 +1,5 @@
 import { getAgentWitchHub } from "@/lib/agentWitch/getAgentWitchHub";
+import { MAC_OFFLINE_FOR_ACCOUNT_ERROR } from "@/lib/agentWitch/macOfflineForAccountErrorMessage.constant";
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
 
 export const requestHarnessManifestPublish = (
@@ -12,7 +13,7 @@ export const requestHarnessManifestPublish = (
   if (agentClient === undefined) {
     return {
       ok: false,
-      errorMessage: "No Mac is connected to publish your rules.",
+      errorMessage: MAC_OFFLINE_FOR_ACCOUNT_ERROR,
     };
   }
 

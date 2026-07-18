@@ -1,5 +1,6 @@
 import isHarnessWriterAgent from "@/lib/agentWitch/harness/isHarnessWriterAgent";
 import isNonEmptyString from "@/lib/agentWitch/isNonEmptyString";
+import { MAC_OFFLINE_FOR_ACCOUNT_ERROR } from "@/lib/agentWitch/macOfflineForAccountErrorMessage.constant";
 import type AgentWitchHubClient from "@/lib/agentWitch/types/AgentWitchHubClient.type";
 import type AgentWitchHubRuntime from "@/lib/agentWitch/types/AgentWitchHubRuntime.type";
 import type AgentWitchMessage from "@/lib/agentWitch/types/AgentWitchMessage.type";
@@ -49,10 +50,7 @@ export const handleWriterSessionStartMessageAsync = async (
   }
 
   if (agentResolution.agentClient === undefined) {
-    return buildDispatchError(
-      "No Mac is connected for your account.",
-      message.requestId,
-    );
+    return buildDispatchError(MAC_OFFLINE_FOR_ACCOUNT_ERROR, message.requestId);
   }
 
   const session = createWriterSession({

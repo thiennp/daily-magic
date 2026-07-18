@@ -1,4 +1,8 @@
 import isAgentWitchDeviceOwnedByUser from "@/lib/agentWitch/isAgentWitchDeviceOwnedByUser";
+import {
+  MAC_OFFLINE_FOR_ACCOUNT_ERROR,
+  TEAMMATE_MAC_OFFLINE_ERROR,
+} from "@/lib/agentWitch/macOfflineForAccountErrorMessage.constant";
 import { isMacDeviceReachableViaHeartbeat } from "@/lib/agentWitch/resolveMacDeviceReachability";
 import { findAgentWitchDeviceById } from "@/lib/agentWitch/findAgentWitchDeviceById";
 import { findEnrichedAgentClientForUser } from "@/lib/agentWitch/findEnrichedAgentClientForUser";
@@ -109,8 +113,8 @@ export const resolveClaudeRunAgentClient = async (input: {
     ok: false,
     error: buildDispatchError(
       input.executorUserId === input.senderUserId
-        ? "No Mac is connected for your account."
-        : "That teammate has no Mac connected.",
+        ? MAC_OFFLINE_FOR_ACCOUNT_ERROR
+        : TEAMMATE_MAC_OFFLINE_ERROR,
       input.requestId,
     ),
   };

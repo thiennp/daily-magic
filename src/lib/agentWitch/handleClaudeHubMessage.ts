@@ -1,5 +1,6 @@
 import isClaudeRunPayload from "./isClaudeRunPayload";
 import isNonEmptyString from "./isNonEmptyString";
+import { MAC_OFFLINE_FOR_ACCOUNT_ERROR } from "./macOfflineForAccountErrorMessage.constant";
 import { unauthorizedAgentOnlyError } from "./agentWitchHubClientOperations";
 import type AgentWitchHubClient from "./types/AgentWitchHubClient.type";
 import type AgentWitchHubRuntime from "./types/AgentWitchHubRuntime.type";
@@ -38,7 +39,7 @@ export const handleClaudeRunMessage = (
     return {
       type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR,
       payload: {
-        errorMessage: "No Mac is connected for your account.",
+        errorMessage: MAC_OFFLINE_FOR_ACCOUNT_ERROR,
       },
       requestId: message.requestId,
     };

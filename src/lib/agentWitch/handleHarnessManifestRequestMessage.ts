@@ -1,4 +1,5 @@
 import isNonEmptyString from "@/lib/agentWitch/isNonEmptyString";
+import { MAC_OFFLINE_FOR_ACCOUNT_ERROR } from "@/lib/agentWitch/macOfflineForAccountErrorMessage.constant";
 import type AgentWitchHubClient from "@/lib/agentWitch/types/AgentWitchHubClient.type";
 import type AgentWitchHubRuntime from "@/lib/agentWitch/types/AgentWitchHubRuntime.type";
 import type AgentWitchMessage from "@/lib/agentWitch/types/AgentWitchMessage.type";
@@ -26,7 +27,7 @@ export const handleHarnessManifestRequestMessage = (
     return {
       type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR,
       payload: {
-        errorMessage: "No Mac is connected to publish your rules.",
+        errorMessage: MAC_OFFLINE_FOR_ACCOUNT_ERROR,
       },
       requestId: message.requestId,
     };

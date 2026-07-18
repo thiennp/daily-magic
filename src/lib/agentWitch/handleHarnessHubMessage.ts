@@ -1,5 +1,6 @@
 import isHarnessRequestPayload from "./harness/isHarnessRequestPayload";
 import isNonEmptyString from "./isNonEmptyString";
+import { MAC_OFFLINE_FOR_ACCOUNT_ERROR } from "./macOfflineForAccountErrorMessage.constant";
 import { unauthorizedAgentOnlyError } from "./agentWitchHubClientOperations";
 import type AgentWitchHubClient from "./types/AgentWitchHubClient.type";
 import type AgentWitchHubRuntime from "./types/AgentWitchHubRuntime.type";
@@ -51,7 +52,7 @@ export const handleHarnessRequestMessage = (
         errorMessage:
           targetDeviceId !== undefined
             ? "The selected Mac is not online right now."
-            : "No Mac is connected for your account.",
+            : MAC_OFFLINE_FOR_ACCOUNT_ERROR,
       },
       requestId: message.requestId,
     };

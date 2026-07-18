@@ -71,7 +71,7 @@ describe("AgentWitchHub writer session end", () => {
 
     expect(response?.type).toBe(AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR);
     expect(response?.payload?.errorMessage).toBe(
-      "No Mac is connected for your account.",
+      "Your Mac is offline. Open Agent Witch on your Mac — it checks in about every 30 seconds.",
     );
   });
 });

@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { resolveComposerBlockedAction } from "@/features/agent/utils/resolveComposerBlockedAction";
+import { MAC_OFFLINE_FOR_ACCOUNT_ERROR } from "@/lib/agentWitch/macOfflineForAccountErrorMessage.constant";
 
 const baseInput = {
   connectionStatus: "connected" as const,
@@ -53,7 +54,7 @@ describe("resolveComposerBlockedAction", () => {
     expect(action.primaryManualAction).toBe("queue");
   });
 
-  it("offers queue when all macs are offline and prompt can be copied", () => {
+  it("offers queue when all macs are offline and prompt can be copied (AGENT-016)", () => {
     const action = resolveComposerBlockedAction({
       ...baseInput,
       hasDispatchReadyMac: false,
@@ -62,6 +63,7 @@ describe("resolveComposerBlockedAction", () => {
     });
 
     expect(action.stateId).toBe("no_macs_online");
+    expect(action.helperMessage).toBe(MAC_OFFLINE_FOR_ACCOUNT_ERROR);
     expect(action.showQueue).toBe(true);
     expect(action.primaryManualAction).toBe("queue");
     expect(action.helperLinkHref).toBe("/#your-setup");

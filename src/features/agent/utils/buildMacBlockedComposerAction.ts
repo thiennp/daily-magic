@@ -4,6 +4,7 @@ import type {
   ResolveComposerBlockedActionInput,
 } from "@/features/agent/utils/composerBlockedAction.types";
 import { withComposerCopyFlag } from "@/features/agent/utils/withComposerCopyFlag";
+import { MAC_OFFLINE_FOR_ACCOUNT_ERROR } from "@/lib/agentWitch/macOfflineForAccountErrorMessage.constant";
 
 export const buildMacBlockedComposerAction = (
   stateId: "no_macs_online" | "selected_mac_offline",
@@ -18,8 +19,7 @@ export const buildMacBlockedComposerAction = (
     return withComposerCopyFlag(
       {
         stateId,
-        helperMessage:
-          "No Mac is connected. Open Agent Witch on your Mac — it checks in about every 30 seconds.",
+        helperMessage: MAC_OFFLINE_FOR_ACCOUNT_ERROR,
         helperLinkLabel: "Connect or manage Macs",
         helperLinkHref: input.manageMacsHref,
         primaryManualAction,

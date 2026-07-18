@@ -1,4 +1,5 @@
 import isNonEmptyString from "@/lib/agentWitch/isNonEmptyString";
+import { MAC_OFFLINE_FOR_ACCOUNT_ERROR } from "@/lib/agentWitch/macOfflineForAccountErrorMessage.constant";
 import type AgentWitchHubClient from "@/lib/agentWitch/types/AgentWitchHubClient.type";
 import type AgentWitchHubRuntime from "@/lib/agentWitch/types/AgentWitchHubRuntime.type";
 import type AgentWitchMessage from "@/lib/agentWitch/types/AgentWitchMessage.type";
@@ -87,7 +88,7 @@ export const handleClaudeInputRespondMessageAsync = async (
         errorMessage:
           targetDeviceId !== undefined
             ? "The Mac for this run is not online right now."
-            : "No Mac is connected for this run.",
+            : MAC_OFFLINE_FOR_ACCOUNT_ERROR,
       },
       requestId: message.requestId,
     };

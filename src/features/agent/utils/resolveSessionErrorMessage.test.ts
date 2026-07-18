@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { resolveSessionErrorMessage } from "@/features/agent/utils/resolveSessionErrorMessage";
+import { MAC_OFFLINE_FOR_ACCOUNT_ERROR } from "@/lib/agentWitch/macOfflineForAccountErrorMessage.constant";
 
 describe("resolveSessionErrorMessage (AGENT-011)", () => {
   it("prefers the last error response while status is error", () => {
@@ -31,16 +32,16 @@ describe("resolveSessionErrorMessage (AGENT-011)", () => {
     ).toBe("Something went wrong. You can retry without starting over.");
   });
 
-  it("shows lastResponse errors even while a shell session is active", () => {
+  it("shows lastResponse errors even while a shell session is active (AGENT-016)", () => {
     expect(
       resolveSessionErrorMessage({
         liveTerminalStatus: "idle",
         lastResponse: {
-          text: "No Mac is connected for your account.",
+          text: MAC_OFFLINE_FOR_ACCOUNT_ERROR,
           isError: true,
         },
       }),
-    ).toBe("No Mac is connected for your account.");
+    ).toBe(MAC_OFFLINE_FOR_ACCOUNT_ERROR);
   });
 
   it("returns null when there is no error", () => {
