@@ -4,5 +4,8 @@
  * was empty; Start on the form is the only begin path.
  */
 export const shouldStartWriterAgentOnCliSelect = (
-  _selectedLibraryCapabilityId: string,
-): boolean => false;
+  selectedLibraryCapabilityId: string,
+): boolean => {
+  void selectedLibraryCapabilityId;
+  return false;
+};
