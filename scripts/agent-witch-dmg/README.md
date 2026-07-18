@@ -22,15 +22,17 @@ Env overrides:
 | Variable                  | Default                      | Purpose                      |
 | ------------------------- | ---------------------------- | ---------------------------- |
 | `AGENT_WITCH_DMG_ORIGIN`  | `https://www.agentwitch.com` | Baked into the installer     |
-| `AGENT_WITCH_DMG_VERSION` | `1.0.0`                      | `CFBundleShortVersionString` |
+| `AGENT_WITCH_DMG_VERSION` | `1.1.0`                      | `CFBundleShortVersionString` |
 | `AGENT_WITCH_DMG_OUT_DIR` | `dist/agent-witch-dmg`       | Output folder                |
 | `AGENT_WITCH_DMG_NAME`    | `AgentWitch.dmg`             | DMG filename                 |
 
 ## What the installer does
 
-1. Confirms with a native dialog
-2. Runs `curl -fsSL <origin>/install/agent-witch.sh | bash` via a login `zsh` (so Homebrew/nvm Node is on `PATH`)
+1. If Agent Witch is not installed → **Install** (runs `/install/agent-witch.sh`)
+2. If already installed → choose **Update** (runs `~/.<home>/self-update.sh`) or **Install** (full refresh)
 3. On success, offers to open the origin in the browser so the user can link the Mac
+
+Background LaunchAgent updater still checks hourly; this app is the manual, no-Terminal path.
 
 It does **not** replace account linking in the browser.
 

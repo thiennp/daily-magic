@@ -11,7 +11,12 @@ describe("agent-witch-dmg templates", () => {
       "utf8",
     );
     expect(template).toContain('ORIGIN="__AGENT_WITCH_ORIGIN__"');
+    expect(template).toContain(
+      'INSTALL_DIR_NAME="__AGENT_WITCH_INSTALL_DIR_NAME__"',
+    );
     expect(template).toContain("/install/agent-witch.sh");
+    expect(template).toContain("self-update.sh");
+    expect(template).toContain('"Update"');
     expect(template).toContain("/bin/zsh -lc");
   });
 

@@ -9,9 +9,15 @@ STAGING_DIR="${OUT_DIR}/staging"
 APP_NAME="Agent Witch Installer.app"
 DMG_NAME="${AGENT_WITCH_DMG_NAME:-AgentWitch.dmg}"
 ORIGIN="${AGENT_WITCH_DMG_ORIGIN:-https://www.agentwitch.com}"
-BUNDLE_VERSION="${AGENT_WITCH_DMG_VERSION:-1.0.0}"
+BUNDLE_VERSION="${AGENT_WITCH_DMG_VERSION:-1.1.0}"
 
 ORIGIN="${ORIGIN%/}"
+
+# Match resolveAgentWitchAppHome(): localhost → .local-agent-witch, else .agent-witch
+INSTALL_DIR_NAME=".agent-witch"
+if [[ "${ORIGIN}" == *"localhost"* ]] || [[ "${ORIGIN}" == *"127.0.0.1"* ]]; then
+  INSTALL_DIR_NAME=".local-agent-witch"
+fi
 
 if [[ "$(uname -s)" != "Darwin" ]]; then
   echo "error: DMG packaging requires macOS (hdiutil)." >&2
@@ -20,6 +26,7 @@ fi
 
 echo "Building Agent Witch DMG"
 echo "  origin:  ${ORIGIN}"
+echo "  home:    ~/${INSTALL_DIR_NAME}"
 echo "  version: ${BUNDLE_VERSION}"
 echo "  out:     ${OUT_DIR}/${DMG_NAME}"
 
@@ -29,6 +36,7 @@ mkdir -p "${STAGING_DIR}/${APP_NAME}/Contents/Resources"
 
 sed \
   -e "s|__AGENT_WITCH_ORIGIN__|${ORIGIN}|g" \
+  -e "s|__AGENT_WITCH_INSTALL_DIR_NAME__|${INSTALL_DIR_NAME}|g" \
   "${TEMPLATE_DIR}/MacOS/install-agent-witch.template" \
   >"${STAGING_DIR}/${APP_NAME}/Contents/MacOS/install-agent-witch"
 chmod +x "${STAGING_DIR}/${APP_NAME}/Contents/MacOS/install-agent-witch"
@@ -45,7 +53,7 @@ Agent Witch for Mac (local)
 ===========================
 
 1. Double-click "Agent Witch Installer"
-2. Click Install when prompted
+2. Click Install (or Update if already installed)
 3. Open ${ORIGIN} and link this Mac to your account
 
 Installs to ~/.local-agent-witch (separate from production).

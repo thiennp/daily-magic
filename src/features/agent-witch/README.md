@@ -37,7 +37,11 @@ npm run agent-witch:dmg
 AGENT_WITCH_DMG_ORIGIN=http://localhost:3000 npm run agent-witch:dmg
 ```
 
-Output: `dist/agent-witch-dmg/AgentWitch.dmg` plus a side-by-side `Agent Witch Installer.app`. Details: `scripts/agent-witch-dmg/README.md`.
+Output: `dist/agent-witch-dmg/AgentWitch.dmg` plus a side-by-side `Agent Witch Installer.app`.
+
+The Installer supports **Install** and **Update** (runs `self-update.sh` when present). Details: `scripts/agent-witch-dmg/README.md`.
+
+Background self-update still runs via LaunchAgent; manual API: `POST /api/agent-witch/local-update` (proxies the Mac wake `/update/run`, port `47893` on localhost / `47892` in production).
 
 ## Query
 

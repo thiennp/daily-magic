@@ -2,6 +2,7 @@ import {
   fetchLocalAgentWitchSelfUpdate,
   requestLocalAgentWitchSelfUpdateRun,
 } from "@/lib/agentWitch/fetchLocalAgentWitchSelfUpdate";
+import { resolveLocalAgentWitchWakeBaseUrl } from "@/lib/agentWitch/fetchLocalAgentWitchWakeJson";
 import { requireAuth } from "@/lib/auth/requireAuth";
 
 export const dynamic = "force-dynamic";
@@ -30,6 +31,7 @@ export async function GET(request: Request): Promise<Response> {
     includeLogs,
     logLimit,
   });
+  const wakeBaseUrl = resolveLocalAgentWitchWakeBaseUrl();
 
   return Response.json({
     ok: snapshot.reachable,
@@ -38,9 +40,9 @@ export async function GET(request: Request): Promise<Response> {
     status: snapshot.status,
     logs: snapshot.logs,
     localApi: {
-      statusUrl: "http://127.0.0.1:47892/update/status",
-      logsUrl: "http://127.0.0.1:47892/update/logs",
-      runUrl: "http://127.0.0.1:47892/update/run",
+      statusUrl: `${wakeBaseUrl}/update/status`,
+      logsUrl: `${wakeBaseUrl}/update/logs`,
+      runUrl: `${wakeBaseUrl}/update/run`,
     },
   });
 }
