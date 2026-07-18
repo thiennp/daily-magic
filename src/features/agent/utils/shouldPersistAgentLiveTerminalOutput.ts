@@ -1,5 +1,6 @@
 import type { AgentLiveTerminalState } from "@/features/agent/utils/agentLiveTerminalState.type";
 
+/** Persist mirror text for every restorable status, including mid-stream. */
 export const shouldPersistAgentLiveTerminalOutput = (
-  status: AgentLiveTerminalState["status"],
-): boolean => status !== "starting" && status !== "streaming";
+  _status: AgentLiveTerminalState["status"],
+): boolean => true;

@@ -21,7 +21,7 @@ describe("agentLiveTerminalLocalStore", () => {
     window.localStorage.clear();
   });
 
-  it("restores streaming session metadata without persisted output", () => {
+  it("AGENT-025 restores streaming session output after remount", () => {
     persistAgentLiveTerminalState({
       ...beginAgentLiveTerminalSession(
         'claude -p "run lint"',
@@ -35,10 +35,33 @@ describe("agentLiveTerminalLocalStore", () => {
 
     const restored = loadPersistedAgentLiveTerminalState();
     expect(restored.activeRunId).toBe("run-1");
-    expect(restored.output).toBe("");
+    expect(restored.output).toContain("hello");
     expect(restored.status).toBe("streaming");
     expect(restored.sessionWriterAgent).toBe("claude-cli");
     expect(restored.sessionDeviceId).toBe("mac-a");
+  });
+
+  it("AGENT-025 hydrates empty session output from the run output store", () => {
+    appendAgentRunTerminalOutput("run-hydrate", "cached stream\n");
+    window.localStorage.setItem(
+      "daily-magic.agent-live-terminal.v1",
+      JSON.stringify({
+        current: {
+          activeRunId: "run-hydrate",
+          output: "",
+          status: "streaming",
+          pendingCommandLine: null,
+          sessionWriterAgent: "claude-cli",
+          sessionDeviceId: "mac-a",
+          sessionWriterSessionId: null,
+          updatedAt: new Date().toISOString(),
+        },
+      }),
+    );
+
+    expect(loadPersistedAgentLiveTerminalState().output).toBe(
+      "cached stream\n",
+    );
   });
 
   it("keeps error sessions in localStorage for resume (AGENT-011)", () => {

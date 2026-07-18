@@ -5,6 +5,7 @@ import {
   writeTerminalStore,
 } from "@/features/agent/utils/agentLiveTerminalLocalStoreIO";
 import { isRestorableAgentLiveTerminalStatus } from "@/features/agent/utils/isRestorableAgentLiveTerminalStatus";
+import { restoreAgentLiveTerminalSession } from "@/features/agent/utils/restoreAgentLiveTerminalSession";
 import { shouldPersistAgentLiveTerminalOutput } from "@/features/agent/utils/shouldPersistAgentLiveTerminalOutput";
 import { setAgentRunTerminalOutput } from "@/features/agent/utils/agentRunTerminalOutputStore";
 
@@ -18,18 +19,7 @@ export const loadPersistedAgentLiveTerminalState =
       return initialAgentLiveTerminalState();
     }
 
-    return {
-      activeRunId: session.activeRunId,
-      output: shouldPersistAgentLiveTerminalOutput(session.status)
-        ? session.output
-        : "",
-      status: session.status,
-      pendingInput: null,
-      pendingCommandLine: session.pendingCommandLine,
-      sessionWriterAgent: session.sessionWriterAgent,
-      sessionDeviceId: session.sessionDeviceId,
-      sessionWriterSessionId: session.sessionWriterSessionId ?? null,
-    };
+    return restoreAgentLiveTerminalSession(session);
   };
 
 export const persistAgentLiveTerminalState = (

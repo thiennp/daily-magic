@@ -12,6 +12,7 @@ import type { AgentLiveTerminalStatus } from "@/features/agent/utils/agentLiveTe
 import { AGENT_LIVE_TERMINAL_STATUS_LABEL } from "@/features/agent/utils/agentLiveTerminalStatusLabel.constant";
 import type { AgentMacShellStatus } from "@/features/agent/utils/reduceAgentMacShellMessage";
 import { shouldShowLiveMacShellInTerminal } from "@/features/agent/utils/shouldShowLiveMacShellInTerminal";
+import { resolvePreferStreamMirrorOverLiveShell } from "@/features/agent/utils/resolvePreferStreamMirrorOverLiveShell";
 
 interface AgentLiveTerminalDeveloperMirrorProps {
   readonly output: string;
@@ -38,7 +39,15 @@ export default function AgentLiveTerminalDeveloperMirror({
   onMacShellInput,
   onMacShellResize,
 }: AgentLiveTerminalDeveloperMirrorProps) {
-  const shellIsLive = shouldShowLiveMacShellInTerminal(macShellStatus);
+  const preferStreamMirror = resolvePreferStreamMirrorOverLiveShell({
+    output,
+    status,
+    macShellChunkSeq,
+    macShellLatestChunk,
+  });
+  const shellIsLive = shouldShowLiveMacShellInTerminal(macShellStatus, {
+    preferStreamMirror,
+  });
   const displayOutput = buildAgentLiveTerminalDisplay({
     output,
     status,

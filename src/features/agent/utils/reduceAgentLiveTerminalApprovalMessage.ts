@@ -3,7 +3,12 @@ import type AgentRunRecord from "@/lib/dispatch/types/AgentRunRecord.type";
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
 
 import type { AgentLiveTerminalState } from "./agentLiveTerminalState.type";
-import { isRecord, matchesActiveRun } from "./agentLiveTerminalMessageUtils";
+import {
+  isRecord,
+  matchesActiveRun,
+  mergeTerminalResultOutput,
+} from "./agentLiveTerminalMessageUtils";
+import { appendAgentLiveTerminalPrompt } from "./agentLiveTerminalPrompt.constant";
 
 export const reduceAgentLiveTerminalApprovalMessage = (
   state: AgentLiveTerminalState,
@@ -23,6 +28,26 @@ export const reduceAgentLiveTerminalApprovalMessage = (
       return {
         ...state,
         status: "streaming",
+      };
+    }
+
+    if (
+      run.id === state.activeRunId &&
+      (run.status === AgentRunStatus.COMPLETED ||
+        run.status === AgentRunStatus.FAILED) &&
+      state.status !== "finished" &&
+      state.status !== "idle"
+    ) {
+      const resultOutput =
+        typeof run.resultOutput === "string" ? run.resultOutput : "";
+      return {
+        ...state,
+        output: appendAgentLiveTerminalPrompt(
+          mergeTerminalResultOutput(state.output, resultOutput),
+        ),
+        status: "finished",
+        pendingInput: null,
+        pendingCommandLine: null,
       };
     }
   }
