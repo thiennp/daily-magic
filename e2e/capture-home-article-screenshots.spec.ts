@@ -32,10 +32,16 @@ const dismissBlockingModals = async (page: Page): Promise<void> => {
   }
 };
 
-const gotoSettled = async (page: Page, path: string): Promise<void> => {
+const gotoSettled = async (
+  page: Page,
+  path: string,
+  options?: { readonly keepModal?: boolean },
+): Promise<void> => {
   await page.goto(path, { waitUntil: "domcontentloaded" });
   await page.waitForLoadState("load");
-  await dismissBlockingModals(page);
+  if (!options?.keepModal) {
+    await dismissBlockingModals(page);
+  }
   await page.waitForTimeout(1500);
   // Stabilize fullPage height (lazy sections / fonts).
   await page.evaluate(async () => {
@@ -144,7 +150,7 @@ test.describe("Home article showcase screenshots", () => {
     }
 
     // Send a task modal — Sample weekly → Claude → filled form
-    await gotoSettled(page, "/?sendTask=1");
+    await gotoSettled(page, "/?sendTask=1", { keepModal: true });
     const modal = page.locator(".modal").first();
     await expect(modal).toBeVisible({ timeout: 15_000 });
     const sampleInModal = modal.getByText(/Sample:\s*Weekly status update/i);
