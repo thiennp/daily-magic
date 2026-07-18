@@ -16,7 +16,10 @@ Outputs:
 
 - `dist/agent-witch-dmg/AgentWitch.dmg`
 - `dist/agent-witch-dmg/Agent Witch Installer.app` (same app, for quick local tests)
+- `public/install/AgentWitch.dmg` (production bake — committed for `www.agentwitch.com`)
+- `public/install/AgentWitch-local.dmg` (localhost bake — gitignored; built with `AGENT_WITCH_DMG_ORIGIN=http://localhost:3000`)
 
+`GET /install/agent-witch.dmg` picks local vs production file from the request Host.
 Env overrides:
 
 | Variable                  | Default                      | Purpose                      |

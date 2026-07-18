@@ -78,13 +78,19 @@ cp -R "${STAGING_DIR}/${APP_NAME}" "${OUT_DIR}/${APP_NAME}"
 # Publish path used by GET /install/agent-witch.dmg
 PUBLIC_INSTALL_DIR="${ROOT_DIR}/public/install"
 mkdir -p "${PUBLIC_INSTALL_DIR}"
-cp "${DMG_PATH}" "${PUBLIC_INSTALL_DIR}/AgentWitch.dmg"
+if [[ "${INSTALL_DIR_NAME}" == ".local-agent-witch" ]]; then
+  cp "${DMG_PATH}" "${PUBLIC_INSTALL_DIR}/AgentWitch-local.dmg"
+  PUBLIC_DMG="${PUBLIC_INSTALL_DIR}/AgentWitch-local.dmg"
+else
+  cp "${DMG_PATH}" "${PUBLIC_INSTALL_DIR}/AgentWitch.dmg"
+  PUBLIC_DMG="${PUBLIC_INSTALL_DIR}/AgentWitch.dmg"
+fi
 
 echo
 echo "Done."
 echo "  DMG: ${DMG_PATH}"
 echo "  App: ${OUT_DIR}/${APP_NAME}"
-echo "  Web: ${PUBLIC_INSTALL_DIR}/AgentWitch.dmg"
+echo "  Web: ${PUBLIC_DMG}"
 echo
 echo "Test: open \"${OUT_DIR}/${APP_NAME}\""
 echo "Download URL: ${ORIGIN}/install/agent-witch.dmg"

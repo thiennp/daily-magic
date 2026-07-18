@@ -25,9 +25,8 @@
 /build
 /dist/
 
-# Agent Witch DMG published for /install/agent-witch.dmg (built locally)
-/public/install/*.dmg
-!/public/install/.gitkeep
+# Local-only DMG (localhost bake). Production AgentWitch.dmg is committed.
+/public/install/AgentWitch-local.dmg
 
 # misc
 .DS_Store

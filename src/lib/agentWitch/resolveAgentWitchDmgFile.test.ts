@@ -11,15 +11,32 @@ describe("resolveAgentWitchDmgAbsolutePath", () => {
     const emptyDir = path.join(os.tmpdir(), `aw-dmg-empty-${Date.now()}`);
     await mkdir(emptyDir, { recursive: true });
 
-    expect(await resolveAgentWitchDmgAbsolutePath(emptyDir)).toBeNull();
+    expect(
+      await resolveAgentWitchDmgAbsolutePath("production", emptyDir),
+    ).toBeNull();
+    expect(
+      await resolveAgentWitchDmgAbsolutePath("local", emptyDir),
+    ).toBeNull();
   });
 
-  it("prefers public/install/AgentWitch.dmg when present", async () => {
+  it("resolves production and local DMG paths separately", async () => {
     const root = path.join(os.tmpdir(), `aw-dmg-public-${Date.now()}`);
-    const dmgPath = path.join(root, "public", "install", "AgentWitch.dmg");
-    await mkdir(path.dirname(dmgPath), { recursive: true });
-    await writeFile(dmgPath, "fake-dmg");
+    const prodPath = path.join(root, "public", "install", "AgentWitch.dmg");
+    const localPath = path.join(
+      root,
+      "public",
+      "install",
+      "AgentWitch-local.dmg",
+    );
+    await mkdir(path.dirname(prodPath), { recursive: true });
+    await writeFile(prodPath, "prod-dmg");
+    await writeFile(localPath, "local-dmg");
 
-    expect(await resolveAgentWitchDmgAbsolutePath(root)).toBe(dmgPath);
+    expect(await resolveAgentWitchDmgAbsolutePath("production", root)).toBe(
+      prodPath,
+    );
+    expect(await resolveAgentWitchDmgAbsolutePath("local", root)).toBe(
+      localPath,
+    );
   });
 });
