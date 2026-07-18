@@ -1,6 +1,7 @@
 import AppPanel from "@/components/surfaces/AppPanel";
 import AgentRunAgainButton from "@/features/reports/AgentRunAgainButton";
 import AgentRunLiveTerminal from "@/features/reports/AgentRunLiveTerminal";
+import AgentRunResultOutput from "@/features/reports/AgentRunResultOutput";
 import AgentRunStatusBadge from "@/features/reports/AgentRunStatusBadge";
 import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
 import type EnrichedAgentRunRecord from "@/lib/dispatch/types/EnrichedAgentRunRecord.type";
@@ -60,14 +61,7 @@ export default function AgentRunDetailContent({
         <AgentRunLiveTerminal key={run.id} runId={run.id} />
       ) : null}
       {run.resultOutput ? (
-        <>
-          <h2 className="mt-6 text-sm font-medium text-gray-800 dark:text-white/90">
-            Result
-          </h2>
-          <pre className="mt-2 max-h-96 overflow-auto rounded-lg bg-gray-50 p-3 text-xs text-gray-700 dark:bg-gray-800 dark:text-gray-300">
-            {run.resultOutput}
-          </pre>
-        </>
+        <AgentRunResultOutput resultOutput={run.resultOutput} />
       ) : null}
       {run.denialReason ? (
         <p className="mt-4 text-sm text-rose-600 dark:text-rose-400">
