@@ -1,4 +1,4 @@
-import type { ElementType, ReactNode } from "react";
+import type { ComponentPropsWithoutRef, ElementType, ReactNode } from "react";
 import { twMerge } from "tailwind-merge";
 
 import {
@@ -7,14 +7,14 @@ import {
   APP_SURFACE_PANEL_PADDING_DEFAULT_CLASS,
 } from "@/components/surfaces/appSurfaceStyles.constant";
 
-interface AppPanelProps {
+type AppPanelProps = {
   readonly children: ReactNode;
   readonly as?: ElementType;
   readonly className?: string;
   readonly id?: string;
   readonly padding?: "default" | "compact" | "none";
   readonly embedded?: boolean;
-}
+} & Omit<ComponentPropsWithoutRef<"div">, "children" | "id" | "className">;
 
 export default function AppPanel({
   children,
@@ -23,6 +23,7 @@ export default function AppPanel({
   id,
   padding = "default",
   embedded = false,
+  ...rest
 }: AppPanelProps) {
   const paddingClassName = embedded
     ? ""
@@ -40,6 +41,7 @@ export default function AppPanel({
         paddingClassName,
         className,
       )}
+      {...rest}
     >
       {children}
     </Component>

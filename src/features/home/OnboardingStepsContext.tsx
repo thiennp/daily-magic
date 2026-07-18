@@ -11,12 +11,13 @@ import {
 } from "react";
 
 import { useOptionalPairedDeviceContext } from "@/features/home/PairedDeviceContext";
-import useOnboardingSetupAcknowledgedState from "@/features/home/hooks/useOnboardingSetupAcknowledgedState";
 import useOnboardingStepRefreshHooks from "@/features/home/hooks/useOnboardingStepRefreshHooks";
 import {
   loadOnboardingSteps,
   type OnboardingStep,
 } from "@/features/home/loadOnboardingSteps";
+import hasUserAcknowledgedOnboardingSetup from "@/features/home/utils/hasUserAcknowledgedOnboardingSetup";
+import { markOnboardingSetupAcknowledged } from "@/features/home/utils/onboardingSetupAcknowledgedStore";
 import isWorkflowOnboardingStep from "@/features/home/utils/isWorkflowOnboardingStep";
 import { markOnboardingWorkflowCreated } from "@/features/home/utils/onboardingWorkflowCreatedStore";
 
@@ -42,29 +43,38 @@ export function OnboardingStepsProvider({
   const hasPairedDevice = pairedDeviceContext?.hasPairedDevice ?? false;
   const [steps, setSteps] = useState<readonly OnboardingStep[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const { isSetupAcknowledged, isLoadingSetupAcknowledged, acknowledgeSetup } =
-    useOnboardingSetupAcknowledgedState();
+  const [dbSetupAcknowledged, setDbSetupAcknowledged] = useState(false);
+  const [isLoadingSetupAcknowledged, setIsLoadingSetupAcknowledged] =
+    useState(true);
+
+  const applyLoadedState = useCallback(
+    (loaded: Awaited<ReturnType<typeof loadOnboardingSteps>>): void => {
+      setSteps(loaded.steps);
+      setDbSetupAcknowledged(loaded.setupAcknowledged);
+      setIsLoadingSetupAcknowledged(false);
+      setIsLoading(false);
+    },
+    [],
+  );
 
   useEffect(() => {
-    void loadOnboardingSteps().then((loadedSteps) => {
-      setSteps(loadedSteps);
-      setIsLoading(false);
-    });
-  }, []);
+    void loadOnboardingSteps().then(applyLoadedState);
+  }, [applyLoadedState]);
 
   useEffect(() => {
     if (!hasPairedDevice) {
       return;
     }
 
-    void loadOnboardingSteps().then(setSteps);
+    void loadOnboardingSteps().then((loaded) => {
+      setSteps(loaded.steps);
+      setDbSetupAcknowledged(loaded.setupAcknowledged);
+    });
   }, [hasPairedDevice]);
 
   const reloadSteps = useCallback(async (): Promise<void> => {
-    const loadedSteps = await loadOnboardingSteps();
-    setSteps(loadedSteps);
-    setIsLoading(false);
-  }, []);
+    applyLoadedState(await loadOnboardingSteps());
+  }, [applyLoadedState]);
 
   const markWorkflowStepDone = useCallback((): void => {
     markOnboardingWorkflowCreated();
@@ -75,13 +85,19 @@ export function OnboardingStepsProvider({
     );
   }, []);
 
+  const acknowledgeSetup = useCallback((): void => {
+    markOnboardingSetupAcknowledged();
+    setDbSetupAcknowledged(true);
+  }, []);
+
   useOnboardingStepRefreshHooks({ steps, reloadSteps, setSteps });
 
   const value = useMemo(
     () => ({
       steps,
       isLoading,
-      isSetupAcknowledged,
+      isSetupAcknowledged:
+        hasUserAcknowledgedOnboardingSetup(dbSetupAcknowledged),
       isLoadingSetupAcknowledged,
       reloadSteps,
       markWorkflowStepDone,
@@ -90,7 +106,7 @@ export function OnboardingStepsProvider({
     [
       steps,
       isLoading,
-      isSetupAcknowledged,
+      dbSetupAcknowledged,
       isLoadingSetupAcknowledged,
       reloadSteps,
       markWorkflowStepDone,

@@ -1,59 +1,57 @@
 import { buildOnboardingSteps } from "@/features/home/utils/buildOnboardingSteps";
-import { fetchOnboardingAutomationCreated } from "@/features/home/utils/onboardingAutomationCreatedApi";
+import { fetchOnboardingBootstrap } from "@/features/home/utils/onboardingBootstrapApi";
 import hasUserCreatedAutomation from "@/features/home/utils/hasUserCreatedAutomation";
 import hasUserCreatedFirstWorkflowOrAgent from "@/features/home/utils/hasUserCreatedFirstWorkflowOrAgent";
 import hasUserPairedMac from "@/features/home/utils/hasUserPairedMac";
 import hasUserSentFirstTask from "@/features/home/utils/hasUserSentFirstTask";
-import { fetchOnboardingFirstTaskSent } from "@/features/home/utils/onboardingFirstTaskSentApi";
-import { fetchOnboardingMacPaired } from "@/features/home/utils/onboardingMacPairedApi";
-import { fetchOnboardingWorkflowCreated } from "@/features/home/utils/onboardingWorkflowCreatedApi";
 import syncOnboardingAutomationCreatedFlag from "@/features/home/utils/syncOnboardingAutomationCreatedFlag";
 import syncOnboardingFirstTaskSentFlag from "@/features/home/utils/syncOnboardingFirstTaskSentFlag";
+import syncOnboardingSetupAcknowledgedFlag from "@/features/home/utils/syncOnboardingSetupAcknowledgedFlag";
 import syncOnboardingWorkflowCreatedFlag from "@/features/home/utils/syncOnboardingWorkflowCreatedFlag";
+import {
+  getPairedDevicesSnapshot,
+  refreshPairedDevices,
+} from "@/features/agent-witch/pairedDevicesResource";
 import { listAgentRunsLocalCache } from "@/features/reports/agentRunLocalCache";
+import type { OnboardingStep } from "@/features/home/utils/buildOnboardingSteps";
 
 export type { OnboardingStep } from "@/features/home/utils/buildOnboardingSteps";
 
-const parseActiveDeviceCount = (devicesData: unknown): number => {
-  const devices =
-    typeof devicesData === "object" &&
-    devicesData !== null &&
-    "devices" in devicesData &&
-    Array.isArray((devicesData as { devices: unknown[] }).devices)
-      ? (devicesData as { devices: Array<{ isActive?: boolean }> }).devices
-      : [];
+export interface LoadedOnboardingState {
+  readonly steps: readonly OnboardingStep[];
+  readonly setupAcknowledged: boolean;
+}
 
-  return devices.filter((device) => device.isActive !== false).length;
+const resolvePairedDeviceCount = async (): Promise<number> => {
+  const existing = getPairedDevicesSnapshot();
+  if (existing !== null) {
+    return existing.devices.length;
+  }
+
+  const refreshed = await refreshPairedDevices();
+  return refreshed?.devices.length ?? 0;
 };
 
-export async function loadOnboardingSteps() {
+export async function loadOnboardingSteps(): Promise<LoadedOnboardingState> {
   const [
-    devicesResponse,
+    deviceCount,
     capabilitiesResponse,
     runsResponse,
-    dbFirstTaskSent,
+    bootstrap,
     automationsResponse,
-    dbAutomationCreated,
-    dbMacPaired,
-    dbWorkflowCreated,
   ] = await Promise.all([
-    fetch("/api/agent-witch/devices"),
+    resolvePairedDeviceCount(),
     fetch("/api/capabilities/mine"),
     fetch("/api/agent-runs"),
-    fetchOnboardingFirstTaskSent(),
+    fetchOnboardingBootstrap(),
     fetch("/api/automations"),
-    fetchOnboardingAutomationCreated(),
-    fetchOnboardingMacPaired(),
-    fetchOnboardingWorkflowCreated(),
   ]);
 
-  syncOnboardingFirstTaskSentFlag(dbFirstTaskSent);
-  syncOnboardingAutomationCreatedFlag(dbAutomationCreated);
-  syncOnboardingWorkflowCreatedFlag(dbWorkflowCreated);
+  syncOnboardingFirstTaskSentFlag(bootstrap.firstTaskSent);
+  syncOnboardingAutomationCreatedFlag(bootstrap.automationCreated);
+  syncOnboardingWorkflowCreatedFlag(bootstrap.workflowCreated);
+  syncOnboardingSetupAcknowledgedFlag(bootstrap.setupAcknowledged);
 
-  const devicesData: unknown = devicesResponse.ok
-    ? await devicesResponse.json()
-    : null;
   const capabilitiesData: unknown = capabilitiesResponse.ok
     ? await capabilitiesResponse.json()
     : null;
@@ -77,28 +75,28 @@ export async function loadOnboardingSteps() {
     ? await automationsResponse.json()
     : null;
 
-  return buildOnboardingSteps({
-    hasPairedDevice: hasUserPairedMac(
-      parseActiveDeviceCount(devicesData) > 0,
-      dbMacPaired,
-    ),
-    hasCreatedWorkflowOrAgent: hasUserCreatedFirstWorkflowOrAgent(
-      capabilities,
-      dbWorkflowCreated,
-    ),
-    hasSentTask: hasUserSentFirstTask(
-      typeof runsData === "object" &&
-        runsData !== null &&
-        "runs" in runsData &&
-        Array.isArray((runsData as { runs: unknown[] }).runs)
-        ? (runsData as { runs: unknown[] }).runs
-        : null,
-      listAgentRunsLocalCache().length,
-      dbFirstTaskSent,
-    ),
-    hasScheduledAutomation: hasUserCreatedAutomation(
-      automationsData,
-      dbAutomationCreated,
-    ),
-  });
+  return {
+    setupAcknowledged: bootstrap.setupAcknowledged,
+    steps: buildOnboardingSteps({
+      hasPairedDevice: hasUserPairedMac(deviceCount > 0, bootstrap.macPaired),
+      hasCreatedWorkflowOrAgent: hasUserCreatedFirstWorkflowOrAgent(
+        capabilities,
+        bootstrap.workflowCreated,
+      ),
+      hasSentTask: hasUserSentFirstTask(
+        typeof runsData === "object" &&
+          runsData !== null &&
+          "runs" in runsData &&
+          Array.isArray((runsData as { runs: unknown[] }).runs)
+          ? (runsData as { runs: unknown[] }).runs
+          : null,
+        listAgentRunsLocalCache().length,
+        bootstrap.firstTaskSent,
+      ),
+      hasScheduledAutomation: hasUserCreatedAutomation(
+        automationsData,
+        bootstrap.automationCreated,
+      ),
+    }),
+  };
 }

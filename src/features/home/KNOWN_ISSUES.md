@@ -242,6 +242,18 @@ Document every production bug or UX regression here. Each entry must link to a t
 
 ---
 
+## HOME-021 — Home logged-in page fired too many network requests
+
+**Symptom:** Network tab showed many duplicate `devices` / `targets` calls, separate onboarding flag GETs, and harness/policy traffic while “Your setup” stayed collapsed.
+
+**Root cause:** Onboarding loaded five flag endpoints plus a second devices fetch; collapsed setup still mounted harness + dispatch panels; setup-acknowledged was a sixth flag fetch.
+
+**Fix:** `GET /api/onboarding/bootstrap` returns all flags; `loadOnboardingSteps` reuses the shared devices poll; setup content mounts only after expand (`HomeSetupSectionShell`).
+
+**Regression test:** `onboardingBootstrapApi.test.ts`, `loadOnboardingBootstrapFlags.test.ts`, `shouldLazyMountHomeSetupContent.test.ts` (HOME-021).
+
+---
+
 ## Adding issues
 
 Use the next ID (`HOME-020`, …). Include symptom, root cause, fix paths, and test file.
