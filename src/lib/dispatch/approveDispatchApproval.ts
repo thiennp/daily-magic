@@ -75,6 +75,15 @@ export const approveDispatchApproval = async (
       pending.requestId,
       includeNextActions,
     );
+  } else {
+    return {
+      type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR,
+      payload: {
+        errorMessage: "The selected Mac is not online right now.",
+        runId,
+      },
+      requestId,
+    };
   }
 
   await markAgentRunRunning(runtime, runId);
@@ -93,7 +102,6 @@ export const approveDispatchApproval = async (
     payload: {
       runId,
       status: AgentRunStatus.RUNNING,
-      queuedForDevicePull: agentClient === undefined,
     },
     requestId,
   };

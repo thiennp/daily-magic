@@ -18,7 +18,7 @@
 
 **Root cause:** `buildAgentWitchDevicesWithOnlineStatus` only looked at heartbeat timestamps.
 
-**Fix:** Pass hub live device ids into the online-status builder; `isConnected` / `isOnline` true when the hub has that device **or** last seen is fresh.
+**Fix:** Pass hub live device ids into the online-status builder; live hub presence marks `isConnected` / `isOnline`. Fresh `last_seen_at` alone is recent (`isOnline`) but not connected — see AGENT-022.
 
 **Regression tests:** `buildAgentWitchDevicesWithOnlineStatus.test.ts` (AGENT-018).
 
@@ -109,6 +109,20 @@
 **Fix:** `@/features/agent-witch/online-wake` is the single client resolver (`live` / `recent` / `offline`, `canDispatchToMac`). Home, badges, install modal, and composer use the same helpers.
 
 **Regression tests:** `macDevicePresence.test.ts` (AGENT-001), `buildAgentWitchDevicesWithOnlineStatus.test.ts`.
+
+---
+
+## AGENT-022 — “Online” from DB heartbeat while dispatch had no live WS
+
+**Symptom:** Local `:43347` traffic showed healthy `agent.register` / `agent.heartbeat` / `writer.status`, and the website Mac picker said Online, but send-task / writer session returned “Your Mac is offline…” or “The selected Mac is not online right now.”
+
+**Root cause:** `isConnected` treated a fresh `last_seen_at` as dispatch-ready. Heartbeats can update Neon on any replica while the live Mac WebSocket lives only in that replica’s in-memory hub. Devices API also listed live ids without enriching pairing/`deviceId`, so the UI could disagree with `findEnrichedAgentClientForUser`. Dispatch still had a heartbeat-only “ok without agentClient” path left over from HTTP command pull.
+
+**Fix:** `isConnected` = live hub client only (`isOnline` keeps the ~90s recent window). Devices API collects live ids via enrichment + token resolve. Resolve/dispatch fail closed without a live WS (no `queuedForDevicePull`).
+
+**Ops note:** Keep a single Railway replica (or sticky WS) until the hub is shared across instances.
+
+**Regression tests:** `buildAgentWitchDevicesWithOnlineStatus.test.ts`, `collectLiveAgentWitchDeviceIdsForUser.test.ts`, `resolveClaudeRunAgentClient.test.ts` (AGENT-022).
 
 ---
 

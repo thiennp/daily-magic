@@ -1,4 +1,5 @@
 import buildAgentWitchDevicesWithOnlineStatus from "@/lib/agentWitch/buildAgentWitchDevicesWithOnlineStatus";
+import { collectLiveAgentWitchDeviceIdsForUser } from "@/lib/agentWitch/collectLiveAgentWitchDeviceIdsForUser";
 import { ensureAgentWitchDeviceSchema } from "@/lib/agentWitch/ensureAgentWitchDeviceSchema";
 import { getAgentWitchHub } from "@/lib/agentWitch/getAgentWitchHub";
 import { listAgentWitchDevicesForUser } from "@/lib/agentWitch/listAgentWitchDevicesForUser";
@@ -29,12 +30,9 @@ export async function GET(): Promise<Response> {
   try {
     await ensureAgentWitchDeviceSchema();
     const devices = await listAgentWitchDevicesForUser(actor.id);
-    const hub = getAgentWitchHub();
-    const liveDeviceIds = new Set(
-      hub
-        .listOnlineAgentClientsForUser(actor.id)
-        .map((client) => client.deviceId)
-        .filter((deviceId): deviceId is string => typeof deviceId === "string"),
+    const liveDeviceIds = await collectLiveAgentWitchDeviceIdsForUser(
+      getAgentWitchHub(),
+      actor.id,
     );
     const devicesWithStatus = buildAgentWitchDevicesWithOnlineStatus(
       devices,

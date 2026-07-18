@@ -3,8 +3,6 @@ import {
   MAC_OFFLINE_FOR_ACCOUNT_ERROR,
   TEAMMATE_MAC_OFFLINE_ERROR,
 } from "@/lib/agentWitch/macOfflineForAccountErrorMessage.constant";
-import { isMacDeviceReachableViaHeartbeat } from "@/lib/agentWitch/resolveMacDeviceReachability";
-import { findAgentWitchDeviceById } from "@/lib/agentWitch/findAgentWitchDeviceById";
 import { findEnrichedAgentClientForUser } from "@/lib/agentWitch/findEnrichedAgentClientForUser";
 import type AgentWitchHubClient from "@/lib/agentWitch/types/AgentWitchHubClient.type";
 import type AgentWitchHubRuntime from "@/lib/agentWitch/types/AgentWitchHubRuntime.type";
@@ -85,21 +83,9 @@ export const resolveClaudeRunAgentClient = async (input: {
     return { ok: true, agentClient, deviceId: deviceId ?? null };
   }
 
+  // HTTP command pull is retired — dispatch requires a live hub WebSocket.
+  // A fresh last_seen_at alone must not return ok without agentClient.
   if (input.targetDeviceId !== undefined) {
-    const device = await findAgentWitchDeviceById(input.targetDeviceId);
-
-    if (
-      device !== null &&
-      device.userId === input.executorUserId &&
-      device.revokedAt === null &&
-      isMacDeviceReachableViaHeartbeat({ lastSeenAt: device.lastSeenAt })
-    ) {
-      return {
-        ok: true,
-        deviceId: device.id,
-      };
-    }
-
     return {
       ok: false,
       error: buildDispatchError(

@@ -1,3 +1,4 @@
+import { MAC_OFFLINE_FOR_ACCOUNT_ERROR } from "@/lib/agentWitch/macOfflineForAccountErrorMessage.constant";
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
 import type AgentWitchHubClient from "@/lib/agentWitch/types/AgentWitchHubClient.type";
 import type AgentWitchHubRuntime from "@/lib/agentWitch/types/AgentWitchHubRuntime.type";
@@ -5,10 +6,10 @@ import type AgentWitchMessage from "@/lib/agentWitch/types/AgentWitchMessage.typ
 import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
 import { broadcastAgentRunRecord } from "@/lib/dispatch/broadcastAgentRunRecord";
 import type { DispatchPolicyValue } from "@/lib/dispatch/DispatchPolicy.constant";
+import { executeApprovalGatedClaudeRunDispatch } from "@/lib/dispatch/executeApprovalGatedClaudeRunDispatch";
+import { isLocalMacAgentRunDispatch } from "@/lib/dispatch/isLocalMacAgentRunDispatch";
 import { persistAgentRun } from "@/lib/dispatch/persistAgentRun";
 import { resolveDelegatedWriterAgent } from "@/lib/dispatch/resolveDelegatedWriterAgent";
-import { sendPendingApprovalDispatch } from "@/lib/dispatch/sendPendingApprovalDispatch";
-import { isLocalMacAgentRunDispatch } from "@/lib/dispatch/isLocalMacAgentRunDispatch";
 import { shouldRequireDispatchApproval } from "@/lib/dispatch/shouldRequireDispatchApproval";
 import { startAgentRunWithShellSession } from "@/lib/dispatch/startAgentRunWithShellSession";
 
@@ -52,65 +53,46 @@ export const executeClaudeRunDispatch = async (input: {
   broadcastAgentRunRecord(input.runtime, run, input.requestId);
 
   if (requiresApproval) {
-    if (input.agentClient === undefined) {
-      return {
-        type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ACK,
-        payload: {
-          dispatched: false,
-          pendingApproval: true,
-          agentRunId: run.id,
-          dispatchPolicy: input.dispatchPolicy,
-        },
-        requestId: input.requestId,
-      };
-    }
-    return sendPendingApprovalDispatch(
-      input.runtime,
-      input.agentClient,
-      input.sender,
-      run,
-      input.prompt,
-      input.groupId,
-      input.dispatchPolicy,
-      writerAgent,
-      input.requestId,
-    );
+    return executeApprovalGatedClaudeRunDispatch(input, run, writerAgent);
   }
 
-  const shellSessionId =
-    input.agentClient === undefined
-      ? undefined
-      : await startAgentRunWithShellSession({
-          runtime: input.runtime,
-          agentClient: input.agentClient,
-          sender: input.sender,
-          prompt: input.prompt,
-          runId: run.id,
-          writerAgent,
-          executorUserId: input.executorUserId,
-          deviceId: input.deviceId,
-          includeNextActions: isLocalMacAgentRunDispatch({
-            requesterUserId,
-            executorUserId: input.executorUserId,
-            groupId: input.groupId,
-          }),
-          sessionContinuation: input.payload.sessionContinuation === true,
-          requestId: input.requestId,
-        });
+  if (input.agentClient === undefined) {
+    return {
+      type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR,
+      payload: {
+        errorMessage: MAC_OFFLINE_FOR_ACCOUNT_ERROR,
+        agentRunId: run.id,
+      },
+      requestId: input.requestId,
+    };
+  }
+
+  const shellSessionId = await startAgentRunWithShellSession({
+    runtime: input.runtime,
+    agentClient: input.agentClient,
+    sender: input.sender,
+    prompt: input.prompt,
+    runId: run.id,
+    writerAgent,
+    executorUserId: input.executorUserId,
+    deviceId: input.deviceId,
+    includeNextActions: isLocalMacAgentRunDispatch({
+      requesterUserId,
+      executorUserId: input.executorUserId,
+      groupId: input.groupId,
+    }),
+    sessionContinuation: input.payload.sessionContinuation === true,
+    requestId: input.requestId,
+  });
 
   return {
     type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ACK,
     payload: {
       dispatched: true,
       agentRunId: run.id,
-      ...(input.agentClient !== undefined
-        ? {
-            agentClientId: input.agentClient.id,
-            ...(shellSessionId !== undefined ? { shellSessionId } : {}),
-            shellCanWrite: requesterUserId === input.executorUserId,
-          }
-        : {}),
-      queuedForDevicePull: input.agentClient === undefined,
+      agentClientId: input.agentClient.id,
+      ...(shellSessionId !== undefined ? { shellSessionId } : {}),
+      shellCanWrite: requesterUserId === input.executorUserId,
       dispatchPolicy: input.dispatchPolicy,
     },
     requestId: input.requestId,

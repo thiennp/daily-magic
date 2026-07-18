@@ -1,8 +1,5 @@
 import type AgentWitchDeviceRecord from "@/lib/agentWitch/types/AgentWitchDeviceRecord.type";
-import {
-  AGENT_WITCH_ACTIVE_THRESHOLD_MS,
-  isAgentWitchDeviceRecentlySeen,
-} from "@/lib/agentWitch/agentWitchHeartbeat.constant";
+import { isAgentWitchDeviceRecentlySeen } from "@/lib/agentWitch/agentWitchHeartbeat.constant";
 
 export interface AgentWitchDeviceWithOnlineStatus {
   readonly id: string;
@@ -20,9 +17,11 @@ export interface AgentWitchDeviceWithOnlineStatus {
 }
 
 /**
- * Online status from WebSocket heartbeats (`last_seen_at` / hub touch).
- * `isConnected` = checked in within one heartbeat interval (~30s).
- * `isOnline` = checked in within the wider online window (~90s).
+ * Presence tiers for the device list / Mac picker.
+ * `isConnected` = live agent WebSocket on this hub process (dispatch-ready).
+ * `isOnline` = live OR `last_seen_at` within the online window (~90s).
+ * Do not treat a fresh DB heartbeat alone as connected — that lied when the
+ * Mac’s WS lived on another replica (or pairing metadata was unbound).
  */
 const buildAgentWitchDevicesWithOnlineStatus = (
   devices: readonly AgentWitchDeviceRecord[],
@@ -31,15 +30,9 @@ const buildAgentWitchDevicesWithOnlineStatus = (
   const nowMs = Date.now();
 
   return devices.map((device) => {
-    const recentlySeen = isAgentWitchDeviceRecentlySeen(
-      device.lastSeenAt,
-      nowMs,
-      AGENT_WITCH_ACTIVE_THRESHOLD_MS,
-    );
-    const isConnected = liveDeviceIds.has(device.id) || recentlySeen;
+    const isConnected = liveDeviceIds.has(device.id);
     const isOnline =
-      liveDeviceIds.has(device.id) ||
-      isAgentWitchDeviceRecentlySeen(device.lastSeenAt, nowMs);
+      isConnected || isAgentWitchDeviceRecentlySeen(device.lastSeenAt, nowMs);
 
     return {
       id: device.id,

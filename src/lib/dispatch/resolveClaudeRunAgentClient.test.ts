@@ -55,4 +55,24 @@ describe("resolveClaudeRunAgentClient", () => {
       deviceId: "device-1",
     });
   });
+
+  it("does not treat a fresh last_seen alone as dispatch-ready (AGENT-022)", async () => {
+    const pairingStore = new AgentWitchPairingStore();
+    const hub = new AgentWitchHub(pairingStore);
+
+    const result = await resolveClaudeRunAgentClient({
+      runtime: hub,
+      senderUserId: "user-1",
+      executorUserId: "user-1",
+      targetDeviceId: "device-1",
+    });
+
+    expect(result.ok).toBe(false);
+    if (result.ok) {
+      return;
+    }
+    expect(result.error.payload?.errorMessage).toBe(
+      "The selected Mac is not online right now.",
+    );
+  });
 });

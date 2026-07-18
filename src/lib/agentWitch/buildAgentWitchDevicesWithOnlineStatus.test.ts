@@ -18,7 +18,7 @@ const baseDevice = (
 });
 
 describe("buildAgentWitchDevicesWithOnlineStatus", () => {
-  it("marks devices connected from a fresh WebSocket heartbeat (AGENT-017)", () => {
+  it("marks fresh last_seen without a live hub socket as recent only (AGENT-022)", () => {
     const lastSeenAt = new Date().toISOString();
     const result = buildAgentWitchDevicesWithOnlineStatus([
       baseDevice({ lastSeenAt }),
@@ -26,7 +26,7 @@ describe("buildAgentWitchDevicesWithOnlineStatus", () => {
 
     expect(result[0]).toMatchObject({
       id: "device-1",
-      isConnected: true,
+      isConnected: false,
       isOnline: true,
       lastHeartbeatAt: lastSeenAt,
     });
