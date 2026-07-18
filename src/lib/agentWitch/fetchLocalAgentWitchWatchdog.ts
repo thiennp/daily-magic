@@ -1,42 +1,4 @@
-import { AGENT_WITCH_WAKE_DEFAULT_PORT } from "@/lib/agentWitch/linkLocalAgentAccount";
-
-const resolveLocalWakeBaseUrl = (): string => {
-  const portFromEnv = process.env.AGENT_WITCH_WAKE_PORT?.trim();
-  if (portFromEnv !== undefined && portFromEnv.length > 0) {
-    const parsedPort = Number.parseInt(portFromEnv, 10);
-    if (Number.isFinite(parsedPort) && parsedPort > 0 && parsedPort <= 65535) {
-      return `http://127.0.0.1:${parsedPort}`;
-    }
-  }
-
-  return `http://127.0.0.1:${AGENT_WITCH_WAKE_DEFAULT_PORT}`;
-};
-
-const fetchLocalWakeJson = async (
-  path: string,
-  init?: RequestInit,
-): Promise<
-  | { readonly reachable: true; readonly payload: unknown }
-  | { readonly reachable: false }
-> => {
-  try {
-    const response = await fetch(`${resolveLocalWakeBaseUrl()}${path}`, {
-      ...init,
-      signal: AbortSignal.timeout(2_500),
-    });
-
-    if (!response.ok) {
-      return { reachable: false };
-    }
-
-    return {
-      reachable: true,
-      payload: await response.json(),
-    };
-  } catch {
-    return { reachable: false };
-  }
-};
+import { fetchLocalAgentWitchWakeJson } from "@/lib/agentWitch/fetchLocalAgentWitchWakeJson";
 
 export interface LocalAgentWitchWatchdogSnapshot {
   readonly reachable: boolean;
@@ -51,7 +13,7 @@ export const fetchLocalAgentWitchWatchdog = async (input?: {
   const logLimit = input?.logLimit ?? 20;
   const includeLogs = input?.includeLogs !== false;
 
-  const statusResult = await fetchLocalWakeJson("/watchdog/status");
+  const statusResult = await fetchLocalAgentWitchWakeJson("/watchdog/status");
   if (!statusResult.reachable) {
     return {
       reachable: false,
@@ -68,7 +30,7 @@ export const fetchLocalAgentWitchWatchdog = async (input?: {
     };
   }
 
-  const logsResult = await fetchLocalWakeJson(
+  const logsResult = await fetchLocalAgentWitchWakeJson(
     `/watchdog/logs?limit=${encodeURIComponent(String(logLimit))}`,
   );
 
@@ -91,7 +53,7 @@ export const requestLocalAgentWitchWatchdogRevive = async (): Promise<{
   readonly reachable: boolean;
   readonly result: unknown;
 }> => {
-  const reviveResult = await fetchLocalWakeJson("/watchdog/revive", {
+  const reviveResult = await fetchLocalAgentWitchWakeJson("/watchdog/revive", {
     method: "POST",
   });
 

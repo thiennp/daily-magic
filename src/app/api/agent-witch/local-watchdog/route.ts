@@ -41,6 +41,7 @@ export async function GET(request: Request): Promise<Response> {
       statusUrl: "http://127.0.0.1:47892/watchdog/status",
       logsUrl: "http://127.0.0.1:47892/watchdog/logs",
       reviveUrl: "http://127.0.0.1:47892/watchdog/revive",
+      restartUrl: "http://127.0.0.1:47892/restart",
     },
   });
 }

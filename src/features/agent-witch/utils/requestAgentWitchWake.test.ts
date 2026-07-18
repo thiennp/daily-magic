@@ -29,7 +29,7 @@ describe("requestAgentWitchWake", () => {
 
     await expect(requestAgentWitchWake()).resolves.toBe(true);
     expect(fetchMock).toHaveBeenCalledWith(
-      `${AGENT_WITCH_WAKE_BASE_URL}/wake`,
+      `${AGENT_WITCH_WAKE_BASE_URL}/restart`,
       {
         method: "POST",
         mode: "cors",

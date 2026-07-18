@@ -50,13 +50,19 @@ import {
   listAgentRunsLocal,
   loadAgentRunLocal,
 } from "./agentWitchLocalRunStore";
-import { writeAgentWitchConnectionHealth } from "./agentWitchConnectionHealth";
+import {
+  isAgentWitchConnectionHealthStale,
+  readAgentWitchConnectionHealth,
+  writeAgentWitchConnectionHealth,
+} from "./agentWitchConnectionHealth";
+import { AGENT_WITCH_CONNECTION_STALE_MS } from "./agentWitchConnectionHealth.constants";
 import { acceptTerminalStream } from "./agentWitchTerminalStreamState";
 import {
   postAgentWitchDeviceHeartbeat,
   resolveAgentWitchCloudApiConfig,
 } from "./agentWitchCloudApi";
 import { pollAndExecuteCloudAgentRun } from "./agentWitchCloudJobPoll";
+import { requestLocalAgentWitchRestart } from "./requestLocalAgentWitchRestart";
 
 interface AgentWitchConfig {
   readonly email: string | null;
@@ -518,19 +524,70 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
     socket?: WebSocket;
     heartbeatTimer?: NodeJS.Timeout;
     httpHeartbeatTimer?: NodeJS.Timeout;
+    localHealthTimer?: NodeJS.Timeout;
     cloudJobPollTimer?: NodeJS.Timeout;
     reconnectTimer?: NodeJS.Timeout;
     reconnectAttempt: number;
     stopped: boolean;
+    restartInFlight: boolean;
+    pendingRestartAck: boolean;
   } = {
     reconnectAttempt: 0,
     stopped: false,
+    restartInFlight: false,
+    pendingRestartAck: false,
+  };
+
+  const runLocalRestart = (reason: string): void => {
+    if (state.restartInFlight) {
+      return;
+    }
+
+    state.restartInFlight = true;
+    console.log(`[agent-witch] Local restart requested (${reason})…`);
+
+    void requestLocalAgentWitchRestart()
+      .then((result) => {
+        if (result.ok) {
+          state.pendingRestartAck = true;
+          console.log("[agent-witch] Local restart completed.");
+          return;
+        }
+
+        if (!result.reachable) {
+          console.error(
+            "[agent-witch] Local restart API unreachable at 127.0.0.1 — is the wake server running?",
+          );
+          return;
+        }
+
+        console.error("[agent-witch] Local restart failed.", result.payload);
+      })
+      .finally(() => {
+        state.restartInFlight = false;
+      });
+  };
+
+  const checkLocalConnectionHealth = (): void => {
+    const health = readAgentWitchConnectionHealth(config.layout);
+    if (
+      isAgentWitchConnectionHealthStale(health, AGENT_WITCH_CONNECTION_STALE_MS)
+    ) {
+      runLocalRestart("stale-connection-health");
+    }
   };
 
   const clearHttpHeartbeat = (): void => {
     if (state.httpHeartbeatTimer !== undefined) {
       clearInterval(state.httpHeartbeatTimer);
       state.httpHeartbeatTimer = undefined;
+    }
+  };
+
+  const clearLocalHealthCheck = (): void => {
+    if (state.localHealthTimer !== undefined) {
+      clearInterval(state.localHealthTimer);
+      state.localHealthTimer = undefined;
     }
   };
 
@@ -571,11 +628,35 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
 
     clearHttpHeartbeat();
     const sendHttpHeartbeat = (): void => {
-      void postAgentWitchDeviceHeartbeat(cloudApi, os.hostname());
+      void postAgentWitchDeviceHeartbeat(cloudApi, {
+        hostname: os.hostname(),
+        ...(state.pendingRestartAck ? { restartAck: true } : {}),
+      }).then((response) => {
+        if (!response.ok) {
+          return;
+        }
+
+        if (state.pendingRestartAck && !response.restartRequested) {
+          state.pendingRestartAck = false;
+        }
+
+        if (response.restartRequested) {
+          runLocalRestart("cloud-heartbeat");
+        }
+      });
     };
     sendHttpHeartbeat();
     state.httpHeartbeatTimer = setInterval(
       sendHttpHeartbeat,
+      HEARTBEAT_INTERVAL_MS,
+    );
+  };
+
+  const startLocalHealthCheck = (): void => {
+    clearLocalHealthCheck();
+    checkLocalConnectionHealth();
+    state.localHealthTimer = setInterval(
+      checkLocalConnectionHealth,
       HEARTBEAT_INTERVAL_MS,
     );
   };
@@ -1015,6 +1096,7 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
     state.stopped = true;
     clearHeartbeat();
     clearHttpHeartbeat();
+    clearLocalHealthCheck();
     clearCloudJobPoll();
     clearReconnectTimer();
     closeSocket();
@@ -1023,6 +1105,7 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
   return {
     connect,
     startHttpHeartbeat,
+    startLocalHealthCheck,
     startCloudJobPoll,
     stop,
   };
@@ -1055,6 +1138,7 @@ const main = async (): Promise<void> => {
   const config = await waitForConfig();
   const client = createAgentWitchClient(config);
   client.startHttpHeartbeat();
+  client.startLocalHealthCheck();
   client.startCloudJobPoll();
   client.connect();
 

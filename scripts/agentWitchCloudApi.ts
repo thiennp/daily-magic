@@ -35,24 +35,54 @@ const buildDeviceAuthHeaders = (
   "Content-Type": "application/json",
 });
 
+export interface AgentWitchHeartbeatResponse {
+  readonly ok: boolean;
+  readonly restartRequested: boolean;
+}
+
+export const parseAgentWitchHeartbeatResponse = (
+  body: unknown,
+): AgentWitchHeartbeatResponse => {
+  if (typeof body !== "object" || body === null) {
+    return { ok: false, restartRequested: false };
+  }
+
+  const record = body as { ok?: unknown; restartRequested?: unknown };
+  return {
+    ok: record.ok === true,
+    restartRequested: record.restartRequested === true,
+  };
+};
+
 export const postAgentWitchDeviceHeartbeat = async (
   config: AgentWitchCloudApiConfig,
-  hostname: string,
-): Promise<boolean> => {
+  input: {
+    readonly hostname: string;
+    readonly restartAck?: boolean;
+  },
+): Promise<AgentWitchHeartbeatResponse> => {
   try {
     const response = await fetch(
       `${config.appOrigin}/api/agent-witch/heartbeat`,
       {
         method: "POST",
         headers: buildDeviceAuthHeaders(config.pairingToken),
-        body: JSON.stringify({ hostname }),
+        body: JSON.stringify({
+          hostname: input.hostname,
+          ...(input.restartAck === true ? { restartAck: true } : {}),
+        }),
         signal: AbortSignal.timeout(10_000),
       },
     );
 
-    return response.ok;
+    if (!response.ok) {
+      return { ok: false, restartRequested: false };
+    }
+
+    const body: unknown = await response.json();
+    return parseAgentWitchHeartbeatResponse(body);
   } catch {
-    return false;
+    return { ok: false, restartRequested: false };
   }
 };
 

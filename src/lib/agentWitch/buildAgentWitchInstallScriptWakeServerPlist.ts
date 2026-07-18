@@ -38,6 +38,7 @@ EOF
 
   register_agent_witch_launch_agent "\${WAKE_LAUNCH_AGENT_LABEL}" "\${WAKE_PLIST_PATH}" || true
   echo "Agent Witch local API: http://127.0.0.1:47892/link-account"
+  echo "Restart API: http://127.0.0.1:47892/restart"
   echo "Watchdog status API: http://127.0.0.1:47892/watchdog/status"
   echo "Watchdog logs API: http://127.0.0.1:47892/watchdog/logs"
 fi

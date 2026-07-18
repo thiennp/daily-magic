@@ -10,6 +10,7 @@ import {
   readAgentWitchSelfUpdateLogEntries,
   readAgentWitchWatchdogLogEntries,
   reviveAgentWitchWebSocketFromWakeServer,
+  restartAgentWitchFromWakeServer,
   buildAgentWitchWatchdogStatus,
   runAgentWitchSelfUpdateFromWakeServer,
   runAutomationFromWakeServer,
@@ -115,6 +116,17 @@ const handleWakeRequest = async (
         response,
         reviveResult.ok ? 200 : 503,
         reviveResult,
+        cors.headers,
+      );
+      return;
+    }
+
+    if (request.method === "POST" && pathname === "/restart") {
+      const restartResult = await restartAgentWitchFromWakeServer();
+      sendJson(
+        response,
+        restartResult.ok ? 200 : 503,
+        restartResult,
         cors.headers,
       );
       return;

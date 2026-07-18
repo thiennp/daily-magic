@@ -86,6 +86,7 @@ CREATE TABLE IF NOT EXISTS agent_witch_devices (
   dispatch_policy TEXT CHECK (dispatch_policy IN ('open', 'approval')),
   claimed_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   last_seen_at TIMESTAMPTZ,
+  restart_requested_at TIMESTAMPTZ,
   revoked_at TIMESTAMPTZ
 );
 

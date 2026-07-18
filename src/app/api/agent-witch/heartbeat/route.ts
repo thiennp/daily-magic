@@ -1,3 +1,8 @@
+import {
+  acknowledgeAgentWitchDeviceRestart,
+  isAgentWitchDeviceRestartRequested,
+} from "@/lib/agentWitch/agentWitchDeviceRestartRequest";
+import { ensureAgentWitchDeviceSchema } from "@/lib/agentWitch/ensureAgentWitchDeviceSchema";
 import { touchAgentWitchDeviceLastSeen } from "@/lib/agentWitch/touchAgentWitchDeviceLastSeen";
 import { requireAgentWitchDeviceAuth } from "@/lib/agentWitch/requireAgentWitchDeviceAuth";
 
@@ -17,6 +22,14 @@ const parseHostname = (body: unknown): string | null => {
   return trimmed.length > 0 ? trimmed : null;
 };
 
+const parseRestartAck = (body: unknown): boolean => {
+  if (typeof body !== "object" || body === null) {
+    return false;
+  }
+
+  return (body as { restartAck?: unknown }).restartAck === true;
+};
+
 export async function POST(request: Request): Promise<Response> {
   const auth = await requireAgentWitchDeviceAuth(request);
 
@@ -24,12 +37,23 @@ export async function POST(request: Request): Promise<Response> {
     return auth;
   }
 
+  await ensureAgentWitchDeviceSchema();
+
   const body = await request.json().catch(() => ({}));
 
+  if (parseRestartAck(body)) {
+    await acknowledgeAgentWitchDeviceRestart(auth.device.id);
+  }
+
   await touchAgentWitchDeviceLastSeen(auth.pairingToken, parseHostname(body));
+
+  const restartRequested = await isAgentWitchDeviceRestartRequested(
+    auth.device.id,
+  );
 
   return Response.json({
     ok: true,
     deviceId: auth.device.id,
+    restartRequested,
   });
 }

@@ -338,6 +338,9 @@ export const buildAgentWitchWatchdogStatus =
 export const reviveAgentWitchWebSocketFromWakeServer =
   reviveAgentWitchWebSocket;
 
+/** Kickstart Agent Witch, verify WS health, and reinstall from install script when revive fails. */
+export const restartAgentWitchFromWakeServer = reviveAgentWitchWebSocket;
+
 export const buildAgentWitchSelfUpdateStatusFromWakeServer =
   buildAgentWitchSelfUpdateStatus;
 

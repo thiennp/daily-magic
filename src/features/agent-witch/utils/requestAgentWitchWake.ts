@@ -11,10 +11,10 @@ export const requestAgentWitchWake = async (): Promise<boolean> => {
   }
 
   try {
-    const response = await fetch(`${AGENT_WITCH_WAKE_BASE_URL}/wake`, {
+    const response = await fetch(`${AGENT_WITCH_WAKE_BASE_URL}/restart`, {
       method: "POST",
       mode: "cors",
-      signal: AbortSignal.timeout(2_000),
+      signal: AbortSignal.timeout(120_000),
     });
     return response.ok;
   } catch {
