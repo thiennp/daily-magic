@@ -1,5 +1,5 @@
 # Agent Witch — agent instructions
 
-1. Device list is the source of truth for “Mac connected” UI — see `pairedDevicesApi.ts` and `utils/macDevicePresence.ts` for presence tiers and dispatch gating.
+1. Device list is the source of truth for “Mac connected” UI — see `pairedDevicesApi.ts` and `online-wake/` (barrel) for presence tiers, wake, and restart.
 2. Query `npm run feature-knowledge:query -- "..." --feature=agent-witch` before API/client changes.
-3. Server logic stays in `src/lib/agentWitch/` until migration completes.
+3. Server logic stays in `src/lib/agentWitch/` until migration completes. Online wake/restart helpers live in `src/features/agent-witch/online-wake/`.

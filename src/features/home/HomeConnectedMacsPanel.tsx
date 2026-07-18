@@ -11,9 +11,9 @@ import MacDeviceRow from "@/features/agent-witch/macDevices/MacDeviceRow";
 import { buildMacDeviceLastSeenText } from "@/features/agent-witch/macDevices/utils/buildMacDeviceLastSeenText";
 import {
   buildMacDevicesStatusLine,
+  canWakeMacDeviceFromBrowser,
   countMacPresenceTiers,
-} from "@/features/agent-witch/utils/macDevicePresence";
-import { canWakeMacDeviceFromBrowser } from "@/features/agent-witch/macDevices/utils/canWakeMacDeviceFromBrowser";
+} from "@/features/agent-witch/online-wake";
 import { revokePairedDevice } from "@/features/agent-witch/utils/pairedDevicesApi";
 import buildAgentComposerHref from "@/lib/library/buildAgentComposerHref";
 

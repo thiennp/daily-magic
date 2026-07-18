@@ -1,4 +1,4 @@
-import { AGENT_WITCH_WAKE_BASE_URL } from "@/features/agent-witch/utils/requestAgentWitchWake";
+import { AGENT_WITCH_WAKE_BASE_URL } from "@/features/agent-witch/online-wake";
 
 export interface LocalAgentWitchIdentity {
   readonly hostname: string;
@@ -20,7 +20,10 @@ const parseLocalAgentWitchIdentity = (
     profiles?: unknown;
   };
 
-  if (typeof record.hostname !== "string" || record.hostname.trim().length === 0) {
+  if (
+    typeof record.hostname !== "string" ||
+    record.hostname.trim().length === 0
+  ) {
     return null;
   }
 
@@ -31,8 +34,8 @@ const parseLocalAgentWitchIdentity = (
         }
 
         const launchAgentLabel =
-          typeof (profile as { launchAgentLabel?: unknown }).launchAgentLabel ===
-          "string"
+          typeof (profile as { launchAgentLabel?: unknown })
+            .launchAgentLabel === "string"
             ? (profile as { launchAgentLabel: string }).launchAgentLabel
             : "";
 

@@ -12,11 +12,11 @@ Mac pairing, install script, WebSocket bridge, and paired-device API client.
 
 ## Key modules
 
+- `online-wake/` — presence tiers, browser wake, cloud restart queue, wake modal UI (import from barrel)
 - `utils/pairedDevicesApi.ts` — fetch/revoke devices, dispatch policy
 - `utils/resolveMacDeviceDisplayName.ts` — display labels for device rows
-- `utils/requestAgentWitchWake.ts` — browser wake to local Agent Witch
 - `utils/agentWitchLocalHostCookie.ts` — local hostname cookie helpers
-- `macDevices/` — device row, rename, wake modal UI
+- `macDevices/` — device row, rename, menus
 
 ## Query
 

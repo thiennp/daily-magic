@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { deviceLabelMatchesLocalHost } from "@/features/agent-witch/utils/deviceLabelMatchesLocalHost";
+import { deviceLabelMatchesLocalHost } from "./deviceLabelMatchesLocalHost";
 
 describe("deviceLabelMatchesLocalHost", () => {
   it("matches hostnames case-insensitively", () => {
@@ -8,9 +8,9 @@ describe("deviceLabelMatchesLocalHost", () => {
   });
 
   it("ignores a trailing .local suffix", () => {
-    expect(
-      deviceLabelMatchesLocalHost("Studio-Mac.local", "Studio-Mac"),
-    ).toBe(true);
+    expect(deviceLabelMatchesLocalHost("Studio-Mac.local", "Studio-Mac")).toBe(
+      true,
+    );
   });
 
   it("returns false for different machines", () => {

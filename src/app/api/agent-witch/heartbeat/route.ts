@@ -1,7 +1,7 @@
 import {
   acknowledgeAgentWitchDeviceRestart,
   isAgentWitchDeviceRestartRequested,
-} from "@/lib/agentWitch/agentWitchDeviceRestartRequest";
+} from "@/features/agent-witch/online-wake";
 import { ensureAgentWitchDeviceSchema } from "@/lib/agentWitch/ensureAgentWitchDeviceSchema";
 import { touchAgentWitchDeviceLastSeen } from "@/lib/agentWitch/touchAgentWitchDeviceLastSeen";
 import { requireAgentWitchDeviceAuth } from "@/lib/agentWitch/requireAgentWitchDeviceAuth";

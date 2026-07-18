@@ -3,7 +3,7 @@
 import SendTaskComposerConnectMacButton from "@/features/agent/SendTaskComposerConnectMacButton";
 import SendTaskComposerMacPickerRow from "@/features/agent/SendTaskComposerMacPickerRow";
 import type { MyMacDevice } from "@/features/agent/hooks/useMyMacDevices";
-import { canWakeMacDeviceFromBrowser } from "@/features/agent-witch/macDevices/utils/canWakeMacDeviceFromBrowser";
+import { canWakeMacDeviceFromBrowser } from "@/features/agent-witch/online-wake";
 
 interface SendTaskComposerMacPickerStepProps {
   readonly devices: readonly MyMacDevice[];

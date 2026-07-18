@@ -2,7 +2,7 @@
 
 import { useState, type ReactNode, type MouseEvent } from "react";
 
-import MacDeviceWakeModal from "@/features/agent-witch/macDevices/MacDeviceWakeModal";
+import MacDeviceWakeModal from "./MacDeviceWakeModal";
 import { isMacDeviceRowInteractiveTarget } from "@/features/agent-witch/macDevices/utils/isMacDeviceRowInteractiveTarget";
 
 interface MacDeviceOfflineWakeHintProps {

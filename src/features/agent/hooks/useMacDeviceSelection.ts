@@ -6,7 +6,7 @@ import { useSearchParams } from "next/navigation";
 import {
   canDispatchToMac,
   pickDefaultMacDeviceId,
-} from "@/features/agent-witch/utils/macDevicePresence";
+} from "@/features/agent-witch/online-wake";
 import { SEND_TASK_DEVICE_ID_QUERY_PARAM } from "@/features/agent/constants/sendTaskModalQuery.constant";
 import useMyMacDevices from "@/features/agent/hooks/useMyMacDevices";
 

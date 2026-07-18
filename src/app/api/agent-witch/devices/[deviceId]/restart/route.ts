@@ -1,4 +1,4 @@
-import { requestAgentWitchDeviceRestart } from "@/lib/agentWitch/agentWitchDeviceRestartRequest";
+import { requestAgentWitchDeviceRestart } from "@/features/agent-witch/online-wake";
 import isAgentWitchDeviceOwnedByUser from "@/lib/agentWitch/isAgentWitchDeviceOwnedByUser";
 import { ensureAgentWitchDeviceSchema } from "@/lib/agentWitch/ensureAgentWitchDeviceSchema";
 import { requireAuth } from "@/lib/auth/requireAuth";

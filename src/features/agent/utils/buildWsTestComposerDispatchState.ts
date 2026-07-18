@@ -1,4 +1,4 @@
-import { canDispatchToMac } from "@/features/agent-witch/utils/macDevicePresence";
+import { canDispatchToMac } from "@/features/agent-witch/online-wake";
 import { buildWsTestSendDisabledState } from "@/features/agent/utils/buildWsTestSendDisabledState";
 import type useMacDeviceSelection from "@/features/agent/hooks/useMacDeviceSelection";
 import type { useTeamDispatchSelection } from "@/features/dispatch/hooks/useTeamDispatchSelection";

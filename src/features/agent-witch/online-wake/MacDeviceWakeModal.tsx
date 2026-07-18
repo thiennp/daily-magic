@@ -3,8 +3,8 @@
 import { Modal } from "@/components/ui/modal";
 import { APP_SURFACE_BODY_TEXT_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
 import CopyableBashCommand from "@/features/home/CopyableBashCommand";
-import { buildAgentWitchWakeTerminalCommand } from "@/features/agent-witch/utils/buildAgentWitchWakeTerminalCommand";
-import { requestAgentWitchWake } from "@/features/agent-witch/utils/requestAgentWitchWake";
+import { buildAgentWitchWakeTerminalCommand } from "./buildAgentWitchWakeTerminalCommand";
+import { requestAgentWitchWake } from "./requestAgentWitchWake";
 
 interface MacDeviceWakeModalProps {
   readonly isOpen: boolean;

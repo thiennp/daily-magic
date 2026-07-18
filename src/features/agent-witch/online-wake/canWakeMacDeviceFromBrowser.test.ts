@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { canWakeMacDeviceFromBrowser } from "@/features/agent-witch/macDevices/utils/canWakeMacDeviceFromBrowser";
+import { canWakeMacDeviceFromBrowser } from "./canWakeMacDeviceFromBrowser";
 
 describe("canWakeMacDeviceFromBrowser", () => {
   it("allows browser wake only for the local offline Mac", () => {

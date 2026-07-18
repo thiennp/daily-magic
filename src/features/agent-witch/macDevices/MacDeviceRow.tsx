@@ -2,9 +2,11 @@
 
 import { useState } from "react";
 
-import MacDeviceOfflineWakeHint from "@/features/agent-witch/macDevices/MacDeviceOfflineWakeHint";
+import {
+  MacDeviceOfflineWakeHint,
+  resolveMacPresenceTier,
+} from "@/features/agent-witch/online-wake";
 import MacDeviceRowInner from "@/features/agent-witch/macDevices/MacDeviceRowInner";
-import { resolveMacPresenceTier } from "@/features/agent-witch/utils/macDevicePresence";
 
 interface MacDeviceRowProps {
   readonly deviceId: string;

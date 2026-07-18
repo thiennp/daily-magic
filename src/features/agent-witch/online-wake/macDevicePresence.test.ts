@@ -7,7 +7,7 @@ import {
   pickAlternateDispatchReadyDeviceId,
   pickDefaultMacDeviceId,
   resolveMacPresenceTier,
-} from "@/features/agent-witch/utils/macDevicePresence";
+} from "./macDevicePresence";
 
 describe("macDevicePresence", () => {
   it("AGENT-001: treats live and recent tiers consistently for dispatch", () => {

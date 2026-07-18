@@ -1,4 +1,4 @@
-import { resolveMacPresenceTier } from "@/features/agent-witch/utils/macDevicePresence";
+import { resolveMacPresenceTier } from "@/features/agent-witch/online-wake";
 
 interface PairedDeviceOnlineBadgeProps {
   readonly isOnline: boolean;

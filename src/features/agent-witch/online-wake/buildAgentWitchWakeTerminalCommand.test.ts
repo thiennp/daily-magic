@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { buildAgentWitchWakeTerminalCommand } from "@/features/agent-witch/utils/buildAgentWitchWakeTerminalCommand";
+import { buildAgentWitchWakeTerminalCommand } from "./buildAgentWitchWakeTerminalCommand";
 
 describe("buildAgentWitchWakeTerminalCommand", () => {
   it("points at the installed wake shell script", () => {

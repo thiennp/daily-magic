@@ -4,7 +4,7 @@ import {
   acknowledgeAgentWitchDeviceRestart,
   isAgentWitchDeviceRestartRequested,
   requestAgentWitchDeviceRestart,
-} from "@/lib/agentWitch/agentWitchDeviceRestartRequest";
+} from "./agentWitchDeviceRestartRequest";
 
 describe("agentWitchDeviceRestartRequest", () => {
   it("exports restart request helpers", () => {

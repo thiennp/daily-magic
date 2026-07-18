@@ -1,5 +1,5 @@
 import { createAgentWitchRequestId } from "@/features/agent/utils/agentWitchSocketUtils";
-import { requestAgentWitchWake } from "@/features/agent-witch/utils/requestAgentWitchWake";
+import { requestAgentWitchWake } from "@/features/agent-witch/online-wake";
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
 

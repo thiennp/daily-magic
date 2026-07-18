@@ -1,6 +1,6 @@
 "use client";
 
-import MacDeviceOfflineWakeHint from "@/features/agent-witch/macDevices/MacDeviceOfflineWakeHint";
+import { MacDeviceOfflineWakeHint } from "@/features/agent-witch/online-wake";
 import MacDeviceIcon from "@/features/agent-witch/macDevices/MacDeviceIcon";
 import { resolveMacDeviceIconClassName } from "@/features/agent-witch/macDevices/utils/resolveMacDeviceIconClassName";
 

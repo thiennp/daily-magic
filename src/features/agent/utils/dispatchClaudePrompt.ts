@@ -1,4 +1,4 @@
-import { requestAgentWitchWake } from "@/features/agent-witch/utils/requestAgentWitchWake";
+import { requestAgentWitchWake } from "@/features/agent-witch/online-wake";
 import { postClaudePromptDispatch } from "@/features/agent/utils/postClaudePromptDispatch";
 import { sendClaudePromptOverSocket } from "@/features/agent/utils/sendClaudePromptOverSocket";
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";

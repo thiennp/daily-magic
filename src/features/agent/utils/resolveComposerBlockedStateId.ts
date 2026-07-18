@@ -1,4 +1,4 @@
-import { pickAlternateDispatchReadyDeviceId } from "@/features/agent-witch/utils/macDevicePresence";
+import { pickAlternateDispatchReadyDeviceId } from "@/features/agent-witch/online-wake";
 import type {
   ComposerBlockedStateId,
   ResolveComposerBlockedActionInput,
