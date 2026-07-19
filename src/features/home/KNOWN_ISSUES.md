@@ -278,6 +278,18 @@ Document every production bug or UX regression here. Each entry must link to a t
 
 ---
 
+## HOME-024 — `first-task-sent` POST on every agent run cache write
+
+**Symptom:** Network tab showed repeated `POST /api/onboarding/first-task-sent` while job history or live tasks updated local cache.
+
+**Root cause:** `upsertAgentRunLocalCache` called `markOnboardingFirstTaskSent` on every upsert; `markOnboardingFirstTaskSent` always POSTed even when already marked locally.
+
+**Fix:** Idempotent `markOnboardingFirstTaskSent`; remove milestone POST from cache upsert (keep `SYSTEM_ACK` tracker); debounce onboarding reload on cache events.
+
+**Regression test:** `onboardingFirstTaskSentStore.test.ts` (HOME-024).
+
+---
+
 ## Adding issues
 
 Use the next ID (`HOME-024`, …). Include symptom, root cause, fix paths, and test file.

@@ -3,46 +3,49 @@
 import { useEffect, useRef } from "react";
 
 import { parseAgentRunSseEvent } from "@/features/reports/utils/parseAgentRunSseEvent";
-import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
-import type EnrichedAgentRunRecord from "@/lib/dispatch/types/EnrichedAgentRunRecord.type";
-
-const ACTIVE_STATUSES = new Set<string>([
-  AgentRunStatus.RUNNING,
-  AgentRunStatus.PENDING_APPROVAL,
-]);
+import {
+  buildAgentRunEventsSseUrl,
+  resolveNextAgentRunSseCursor,
+} from "@/features/reports/utils/shouldRefreshAgentRunsOnSseEvent";
 
 export function useAgentRunsActiveSse(input: {
   readonly enabled: boolean;
-  readonly runs: readonly EnrichedAgentRunRecord[];
+  readonly activeRunIdsKey: string;
   readonly onRunActivity: (runId: string) => void;
 }): void {
   const onRunActivityRef = useRef(input.onRunActivity);
+  const lastSeqByRunIdRef = useRef<Record<string, number>>({});
 
   useEffect(() => {
     onRunActivityRef.current = input.onRunActivity;
   }, [input.onRunActivity]);
 
   useEffect(() => {
-    if (!input.enabled) {
+    if (!input.enabled || input.activeRunIdsKey.length === 0) {
       return;
     }
 
-    const activeRunIds = input.runs
-      .filter((run) => ACTIVE_STATUSES.has(run.status))
-      .map((run) => run.id);
-
-    if (activeRunIds.length === 0) {
-      return;
-    }
+    const activeRunIds = input.activeRunIdsKey.split(",").filter(Boolean);
 
     const sources = activeRunIds.map((runId) => {
+      const afterSeq = lastSeqByRunIdRef.current[runId] ?? 0;
       const source = new EventSource(
-        `/api/agent-runs/${encodeURIComponent(runId)}/events`,
+        buildAgentRunEventsSseUrl(runId, afterSeq),
       );
 
       source.addEventListener("message", (event) => {
         const parsed = parseAgentRunSseEvent(String(event.data));
         if (parsed === null) {
+          return;
+        }
+
+        const cursor = resolveNextAgentRunSseCursor({
+          lastSeq: lastSeqByRunIdRef.current[runId] ?? 0,
+          event: parsed,
+        });
+        lastSeqByRunIdRef.current[runId] = cursor.nextSeq;
+
+        if (!cursor.shouldRefresh) {
           return;
         }
 
@@ -64,5 +67,5 @@ export function useAgentRunsActiveSse(input: {
         source.close();
       }
     };
-  }, [input.enabled, input.runs]);
+  }, [input.activeRunIdsKey, input.enabled]);
 }

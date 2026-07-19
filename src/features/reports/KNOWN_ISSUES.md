@@ -31,3 +31,11 @@
 **Cause:** Job result UI only rendered next-action chips and a Continue conversation link — no freeform continue field.
 
 **Fix:** Add an auto-growing, non-resizable textarea under suggested next steps; Enter sends (Shift+Enter newline) into Send-a-task with `continueSession=1`. `shouldSubmitContinueMessageOnKeyDown.test.ts` (REPORTS-004).
+
+## REPORTS-005 — Job history spammed `agent-runs?scope=all` while a run stayed RUNNING
+
+**Symptom:** Network tab showed hundreds of `agent-runs?scope=all` and `first-task-sent` POSTs while job status never changed.
+
+**Cause:** Per-run SSE replay re-fired refresh on every historical event; `useAgentRunsActiveSse` depended on the full `runs` array (reconnect on cache bump); `upsertAgentRunLocalCache` posted first-task-sent on every write.
+
+**Fix:** Stable `activeRunIdsKey` deps, `afterSeq` cursor + refresh only on `status.*` / `terminal.end`; idempotent `markOnboardingFirstTaskSent`; debounced onboarding reload. `shouldRefreshAgentRunsOnSseEvent.test.ts` (REPORTS-005).

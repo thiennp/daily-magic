@@ -1,12 +1,20 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
+import { debounceCallback } from "@/features/home/utils/debounceCallback";
 import { AGENT_RUNS_LOCAL_CACHE_UPDATED_EVENT } from "@/features/reports/agentRunLocalCache";
+
+const ONBOARDING_TASK_STEP_CACHE_DEBOUNCE_MS = 400;
 
 const useOnboardingTaskStepRefresh = (input: {
   readonly isTaskStepDone: boolean;
   readonly reloadSteps: () => Promise<void>;
 }): void => {
   const { isTaskStepDone, reloadSteps } = input;
+  const reloadStepsRef = useRef(reloadSteps);
+
+  useEffect(() => {
+    reloadStepsRef.current = reloadSteps;
+  }, [reloadSteps]);
 
   useEffect(() => {
     if (isTaskStepDone) {
@@ -14,8 +22,12 @@ const useOnboardingTaskStepRefresh = (input: {
     }
 
     const refreshTaskStep = (): void => {
-      void reloadSteps();
+      void reloadStepsRef.current();
     };
+    const debouncedRefreshFromCache = debounceCallback(
+      refreshTaskStep,
+      ONBOARDING_TASK_STEP_CACHE_DEBOUNCE_MS,
+    );
 
     const handleVisibilityChange = (): void => {
       if (document.visibilityState === "visible") {
@@ -27,7 +39,7 @@ const useOnboardingTaskStepRefresh = (input: {
     document.addEventListener("visibilitychange", handleVisibilityChange);
     window.addEventListener(
       AGENT_RUNS_LOCAL_CACHE_UPDATED_EVENT,
-      refreshTaskStep,
+      debouncedRefreshFromCache,
     );
 
     return () => {
@@ -35,10 +47,10 @@ const useOnboardingTaskStepRefresh = (input: {
       document.removeEventListener("visibilitychange", handleVisibilityChange);
       window.removeEventListener(
         AGENT_RUNS_LOCAL_CACHE_UPDATED_EVENT,
-        refreshTaskStep,
+        debouncedRefreshFromCache,
       );
     };
-  }, [isTaskStepDone, reloadSteps]);
+  }, [isTaskStepDone]);
 };
 
 export default useOnboardingTaskStepRefresh;

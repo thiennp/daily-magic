@@ -10,6 +10,7 @@ import {
 import { useAgentRunRecordSync } from "@/features/reports/hooks/useAgentRunRecordSync";
 import { useAgentRunsActiveSse } from "@/features/reports/hooks/useAgentRunsActiveSse";
 import { useAgentRunsRemoteSync } from "@/features/reports/hooks/useAgentRunsRemoteSync";
+import { resolveActiveAgentRunIdsKey } from "@/features/reports/utils/resolveActiveAgentRunIdsKey";
 import { buildViewerAgentRunsList } from "@/features/reports/utils/buildViewerAgentRunsList";
 import type { AgentRunScopeValue } from "@/lib/dispatch/AgentRunScope.constant";
 import type { AgentRunStatusValue } from "@/lib/dispatch/AgentRunStatus.constant";
@@ -38,9 +39,14 @@ export function useAgentRunsList(input: {
     onCacheUpdated: bumpCache,
   });
 
+  const activeRunIdsKey = useMemo(
+    () => resolveActiveAgentRunIdsKey(apiRuns),
+    [apiRuns],
+  );
+
   useAgentRunsActiveSse({
     enabled: true,
-    runs: apiRuns,
+    activeRunIdsKey,
     onRunActivity: () => {
       refresh();
       bumpCache();
