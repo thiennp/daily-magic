@@ -79,3 +79,15 @@
 **Symptom:** Manual restart via `npx tsx agent-witch.ts` / `run.sh` after profile edits threw `ReferenceError: __dirname is not defined in ES module scope` from `resolveAgentWitchLocalLayout.ts`.
 
 **Fix:** Resolve the module directory with `fileURLToPath(import.meta.url)` instead of `__dirname`.
+
+---
+
+## SHOWCASES-009 — Home / showcases cards hid article screenshots
+
+**Symptom:** “Start here” and “More examples” cards showed title and copy only — no sample screenshots despite article images existing under `public/showcases/`.
+
+**Root cause:** `ShowcaseCard` never rendered section images; `/showcases` index also skipped `enrichShowcaseArticleWithImages`.
+
+**Fix:** Cover image from first section via `resolveShowcaseArticleCoverImage`; enrich index articles before render.
+
+**Regression test:** `resolveShowcaseArticleCoverImage.test.ts`.

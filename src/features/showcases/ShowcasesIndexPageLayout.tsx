@@ -8,12 +8,26 @@ import {
   SHOWCASE_ARTICLES_PHASE_4,
   SHOWCASE_ARTICLES_PHASE_LEADERSHIP,
 } from "@/features/showcases/showcaseArticleRegistry";
+import { enrichShowcaseArticleWithImages } from "@/features/showcases/enrichShowcaseArticleWithImages";
 import { E2E_SHOWCASE_ARTICLES } from "@/features/showcases/e2eShowcaseArticleRegistry";
+import type ShowcaseArticle from "@/features/showcases/types/ShowcaseArticle.type";
 import { MARKETING_TEXT_LINK_CLASSES } from "@/features/marketing/marketingInteractiveClasses.constant";
 import MarketingShell from "@/features/marketing/MarketingShell";
 import MarketingSectionHeader from "@/features/marketing/MarketingSectionHeader";
 
+const phaseWithCovers = (
+  articles: readonly ShowcaseArticle[],
+): readonly ShowcaseArticle[] =>
+  articles.map((article) => enrichShowcaseArticleWithImages(article));
+
 export default function ShowcasesIndexPageLayout() {
+  const startHere = phaseWithCovers(SHOWCASE_ARTICLES_PHASE_1);
+  const moreExamples = phaseWithCovers(SHOWCASE_ARTICLES_PHASE_2);
+  const leadership = phaseWithCovers(SHOWCASE_ARTICLES_PHASE_LEADERSHIP);
+  const forTeams = phaseWithCovers(SHOWCASE_ARTICLES_PHASE_3);
+  const questions = phaseWithCovers(SHOWCASE_ARTICLES_PHASE_4);
+  const e2eVerified = phaseWithCovers(E2E_SHOWCASE_ARTICLES);
+
   return (
     <MarketingShell>
       <MarketingSectionHeader
@@ -24,7 +38,7 @@ export default function ShowcasesIndexPageLayout() {
       <div className="mt-12">
         <h2 className="text-lg font-semibold text-gray-900">Start here</h2>
         <div className="mt-6 grid gap-6 md:grid-cols-2">
-          {SHOWCASE_ARTICLES_PHASE_1.map((article) => (
+          {startHere.map((article) => (
             <ShowcaseCard key={article.slug} article={article} />
           ))}
         </div>
@@ -35,7 +49,7 @@ export default function ShowcasesIndexPageLayout() {
           Mobile, marketplace, workflows, and team dispatch.
         </p>
         <div className="mt-6 grid gap-6 md:grid-cols-2">
-          {SHOWCASE_ARTICLES_PHASE_2.map((article) => (
+          {moreExamples.map((article) => (
             <ShowcaseCard key={article.slug} article={article} />
           ))}
         </div>
@@ -47,7 +61,7 @@ export default function ShowcasesIndexPageLayout() {
           install docs.
         </p>
         <div className="mt-6 grid gap-6 md:grid-cols-2">
-          {SHOWCASE_ARTICLES_PHASE_LEADERSHIP.map((article) => (
+          {leadership.map((article) => (
             <ShowcaseCard key={article.slug} article={article} />
           ))}
         </div>
@@ -59,7 +73,7 @@ export default function ShowcasesIndexPageLayout() {
           and publishing tools today.
         </p>
         <div className="mt-6 grid gap-6 md:grid-cols-2">
-          {SHOWCASE_ARTICLES_PHASE_3.map((article) => (
+          {forTeams.map((article) => (
             <ShowcaseCard key={article.slug} article={article} />
           ))}
         </div>
@@ -72,7 +86,7 @@ export default function ShowcasesIndexPageLayout() {
           Slack, n8n, ChatGPT, mobile limits, offline Macs — straight answers.
         </p>
         <div className="mt-6 grid gap-6 md:grid-cols-2">
-          {SHOWCASE_ARTICLES_PHASE_4.map((article) => (
+          {questions.map((article) => (
             <ShowcaseCard key={article.slug} article={article} />
           ))}
         </div>
@@ -84,7 +98,7 @@ export default function ShowcasesIndexPageLayout() {
           accounts. See e2e/features/ for full Gherkin scenarios.
         </p>
         <div className="mt-6 grid gap-6 md:grid-cols-2">
-          {E2E_SHOWCASE_ARTICLES.map((article) => (
+          {e2eVerified.map((article) => (
             <ShowcaseCard key={article.slug} article={article} />
           ))}
         </div>
