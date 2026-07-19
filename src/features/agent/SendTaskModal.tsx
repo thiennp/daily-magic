@@ -70,7 +70,7 @@ export default function SendTaskModal({
       <div
         className={
           isExpanded
-            ? "relative z-10 max-h-[90vh] w-full max-w-4xl overflow-y-auto rounded-3xl bg-white p-6 dark:bg-gray-800"
+            ? "relative z-10 max-h-[calc(100dvh-200px)] w-full max-w-4xl overflow-y-auto rounded-3xl bg-white p-6 dark:bg-gray-800"
             : "pointer-events-auto relative max-h-72 w-full max-w-sm overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-xl dark:border-gray-700 dark:bg-gray-800"
         }
       >

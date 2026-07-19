@@ -8,6 +8,7 @@ import {
   listAgentRunsLocalCache,
   upsertAgentRunLocalCache,
 } from "@/features/reports/agentRunLocalCache";
+import { isAgentRunLocalCacheTombstoned } from "@/features/reports/agentRunLocalCacheTombstones";
 import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
 import { DispatchPolicy } from "@/lib/dispatch/DispatchPolicy.constant";
 import type AgentRunRecord from "@/lib/dispatch/types/AgentRunRecord.type";
@@ -35,37 +36,62 @@ const makeRun = (id: string): AgentRunRecord => ({
   completedAt: null,
 });
 
-describe("deleteAgentRunHistory (AGENT-033)", () => {
+describe("deleteAgentRunHistory (AGENT-033 / AGENT-034)", () => {
   beforeEach(() => {
     mockBrowserLocalStorage();
     window.localStorage.clear();
     vi.restoreAllMocks();
   });
 
-  it("deletes one run remotely then drops local cache", async () => {
+  it("drops local cache even when remote delete fails", async () => {
     upsertAgentRunLocalCache(makeRun("run-1"));
     vi.stubGlobal(
       "fetch",
-      vi.fn().mockResolvedValue({ ok: true, status: 200 }),
+      vi.fn().mockResolvedValue({ ok: false, status: 500 }),
     );
 
-    await expect(deleteAgentRunHistory("run-1")).resolves.toBe(true);
-    expect(fetch).toHaveBeenCalledWith("/api/agent-runs/run-1", {
-      method: "DELETE",
-    });
+    await expect(deleteAgentRunHistory("run-1")).resolves.toBe(false);
     expect(listAgentRunsLocalCache()).toEqual([]);
+    expect(isAgentRunLocalCacheTombstoned("run-1")).toBe(true);
   });
 
-  it("clears all local history after remote deletes", async () => {
+  it("AGENT-034: clear deletes server runs then empties local history", async () => {
+    upsertAgentRunLocalCache(makeRun("run-local"));
+    const fetchMock = vi.fn(async (input: RequestInfo | URL) => {
+      const url = String(input);
+      if (url === "/api/agent-runs") {
+        return {
+          ok: true,
+          status: 200,
+          json: async () => ({
+            ok: true,
+            runs: [{ id: "run-remote" }, { id: "run-local" }],
+          }),
+        };
+      }
+      return { ok: true, status: 200 };
+    });
+    vi.stubGlobal("fetch", fetchMock);
+
+    await clearAgentRunHistory();
+
+    expect(listAgentRunsLocalCache()).toEqual([]);
+    expect(isAgentRunLocalCacheTombstoned("run-local")).toBe(true);
+    expect(isAgentRunLocalCacheTombstoned("run-remote")).toBe(true);
+    expect(fetchMock).toHaveBeenCalledWith("/api/agent-runs");
+    expect(fetchMock).toHaveBeenCalledWith("/api/agent-runs/run-remote", {
+      method: "DELETE",
+    });
+    expect(fetchMock).toHaveBeenCalledWith("/api/agent-runs/run-local", {
+      method: "DELETE",
+    });
+  });
+
+  it("AGENT-034: clear still empties local when list/delete fetch throws", async () => {
     upsertAgentRunLocalCache(makeRun("run-1"));
-    upsertAgentRunLocalCache(makeRun("run-2"));
-    vi.stubGlobal(
-      "fetch",
-      vi.fn().mockResolvedValue({ ok: true, status: 200 }),
-    );
+    vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new Error("offline")));
 
     await clearAgentRunHistory();
     expect(listAgentRunsLocalCache()).toEqual([]);
-    expect(fetch).toHaveBeenCalledTimes(2);
   });
 });

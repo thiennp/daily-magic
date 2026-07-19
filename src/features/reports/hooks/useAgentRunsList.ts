@@ -21,6 +21,7 @@ export function useAgentRunsList(input: {
 }): {
   readonly runs: ReturnType<typeof buildViewerAgentRunsList>;
   readonly isLoading: boolean;
+  readonly refresh: () => void;
 } {
   const { data: session } = useSession();
   const userId =
@@ -91,5 +92,5 @@ export function useAgentRunsList(input: {
     };
   }, [bumpCache]);
 
-  return { runs, isLoading };
+  return { runs, isLoading, refresh };
 }
