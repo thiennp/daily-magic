@@ -5,6 +5,7 @@ import "flatpickr/dist/flatpickr.css";
 import AppGoogleAnalytics from "@/components/analytics/AppGoogleAnalytics";
 import GoogleAnalyticsPageView from "@/components/analytics/GoogleAnalyticsPageView";
 import { AGENT_WITCH_PRODUCT_NAME } from "@/lib/agentWitch/agentWitchProductName.constant";
+import { SendTaskModalProvider } from "@/features/agent/SendTaskModalProvider";
 import AuthSessionProvider from "@/features/auth/AuthSessionProvider";
 import { SidebarProvider } from "@/context/SidebarContext";
 import { ThemeProvider } from "@/context/ThemeContext";
@@ -30,7 +31,9 @@ export default function RootLayout({
       <body className={`${outfit.className} dark:bg-gray-900`}>
         <ThemeProvider>
           <AuthSessionProvider>
-            <SidebarProvider>{children}</SidebarProvider>
+            <SidebarProvider>
+              <SendTaskModalProvider>{children}</SendTaskModalProvider>
+            </SidebarProvider>
           </AuthSessionProvider>
         </ThemeProvider>
         <Suspense fallback={null}>

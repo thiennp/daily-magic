@@ -5,3 +5,5 @@ export const SEND_TASK_OPEN_SHELL_QUERY_PARAM = "openShell";
 export const SEND_TASK_OPEN_SHELL_QUERY_VALUE = "1";
 export const SEND_TASK_CONTINUE_SESSION_QUERY_PARAM = "continueSession";
 export const SEND_TASK_CONTINUE_SESSION_QUERY_VALUE = "1";
+export const SEND_TASK_CUSTOM_TASK_QUERY_PARAM = "customTask";
+export const SEND_TASK_CUSTOM_TASK_QUERY_VALUE = "1";

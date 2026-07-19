@@ -27,4 +27,16 @@ describe("buildAgentComposerHref", () => {
       }),
     ).toBe("/?sendTask=1&prompt=next+step&continueSession=1");
   });
+
+  it("AGENT-029 marks customTask so the picker can remount safely", () => {
+    expect(buildAgentComposerHref({ customTask: true })).toBe(
+      "/?sendTask=1&customTask=1",
+    );
+  });
+
+  it("AGENT-030 opens send-task on the current path for sticky expand", () => {
+    expect(buildAgentComposerHref({ pathname: "/library" })).toBe(
+      "/library?sendTask=1",
+    );
+  });
 });

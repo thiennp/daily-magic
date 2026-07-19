@@ -16,7 +16,12 @@ export type SendTaskComposerStepTrailItem = {
 export const resolveSendTaskComposerWorkflowSelectionLabel = (
   selectedLibraryCapabilityId: string,
   capabilities: readonly PublishedCapabilityRecord[],
+  isContinueSession = false,
 ): string => {
+  if (isContinueSession) {
+    return "Continue conversation";
+  }
+
   if (selectedLibraryCapabilityId.length === 0) {
     return "Custom task";
   }

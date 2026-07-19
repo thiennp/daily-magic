@@ -1,10 +1,16 @@
 "use client";
 
+import { useSearchParams } from "next/navigation";
+
 import { useSendTaskComposerStepTrail } from "@/features/agent/hooks/useSendTaskComposerStepTrail";
 import { useWsTestComposerPanelActions } from "@/features/agent/hooks/useWsTestComposerPanelActions";
 import { useWsTestComposerWizard } from "@/features/agent/hooks/useWsTestComposerWizard";
 import type { useWsTestTaskComposer } from "@/features/agent/hooks/useWsTestTaskComposer";
 import type { SendTaskComposerStepTrailViewItem } from "@/features/agent/types/SendTaskComposerStepTrailViewItem.type";
+import {
+  SEND_TASK_CONTINUE_SESSION_QUERY_PARAM,
+  SEND_TASK_CUSTOM_TASK_QUERY_PARAM,
+} from "@/features/agent/constants/sendTaskModalQuery.constant";
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
 
 export const useWsTestPanelSteppedComposer = (input: {
@@ -24,6 +30,11 @@ export const useWsTestPanelSteppedComposer = (input: {
   readonly panelActions: ReturnType<typeof useWsTestComposerPanelActions>;
   readonly stepTrail: readonly SendTaskComposerStepTrailViewItem[];
 } => {
+  const searchParams = useSearchParams();
+  const hasContinueSessionPrefill =
+    searchParams.get(SEND_TASK_CONTINUE_SESSION_QUERY_PARAM) === "1";
+  const hasCustomTaskPrefill =
+    searchParams.get(SEND_TASK_CUSTOM_TASK_QUERY_PARAM) === "1";
   const wizard = useWsTestComposerWizard({
     isSteppedComposer: input.isSteppedComposer,
     macStepInput: {
@@ -36,6 +47,8 @@ export const useWsTestPanelSteppedComposer = (input: {
     },
     hasPrefilledLibraryCapability:
       input.composer.selectedLibraryCapabilityId.length > 0,
+    hasContinueSessionPrefill,
+    hasCustomTaskPrefill,
     hasRememberedWriterAgentSelection: input.hasRememberedWriterAgentSelection,
   });
   const panelActions = useWsTestComposerPanelActions({
@@ -54,6 +67,7 @@ export const useWsTestPanelSteppedComposer = (input: {
   const stepTrail = useSendTaskComposerStepTrail({
     isSteppedComposer: input.isSteppedComposer,
     isSessionActive: input.isSessionActive,
+    isContinueSession: hasContinueSessionPrefill,
     wizard,
     composer: input.composer,
     macDispatchDeviceId: input.activeDeviceId,

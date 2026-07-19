@@ -13,6 +13,12 @@ describe("resolveSendTaskComposerWorkflowSelectionLabel", () => {
     );
   });
 
+  it("returns Continue conversation when resuming history", () => {
+    expect(resolveSendTaskComposerWorkflowSelectionLabel("", [], true)).toBe(
+      "Continue conversation",
+    );
+  });
+
   it("returns the selected capability name", () => {
     expect(
       resolveSendTaskComposerWorkflowSelectionLabel("workflow-1", [

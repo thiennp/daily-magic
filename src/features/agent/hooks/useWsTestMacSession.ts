@@ -7,6 +7,7 @@ import { useAgentLiveTerminalSessionChrome } from "@/features/agent/hooks/useAge
 import type { useAgentRunQueue } from "@/features/agent/hooks/useAgentRunQueue";
 import type { useAgentWitchSocket } from "@/features/agent/hooks/useAgentWitchSocket";
 import type { useWsTestTaskComposer } from "@/features/agent/hooks/useWsTestTaskComposer";
+import { resolveIsSendTaskSessionActive } from "@/features/agent/utils/resolveIsSendTaskSessionActive";
 import { resolveSessionErrorMessage } from "@/features/agent/utils/resolveSessionErrorMessage";
 import type { resolveAgentSessionTargets } from "@/features/agent/utils/resolveAgentSessionTargets";
 
@@ -27,8 +28,11 @@ export const useWsTestMacSession = (input: {
       terminalSectionRef,
       sessionWriterAgent: input.socket.sessionWriterAgent,
     });
-  const isSessionActive =
-    isWriterSessionActive || input.socket.macShell.status !== "idle";
+  const isSessionActive = resolveIsSendTaskSessionActive({
+    hasWriterSession: isWriterSessionActive,
+    liveTerminalStatus: input.socket.liveTerminalStatus,
+    macShellStatus: input.socket.macShell.status,
+  });
   const terminalFeedback = useAgentLiveTerminalFeedback({
     status: input.socket.liveTerminalStatus,
     connectionStatus: input.socket.connectionStatus,

@@ -1,3 +1,5 @@
 # App shell — known issues
 
-_No documented issues yet. Use IDs like `SHELL-001`._
+| ID        | Symptom                                                                                          | Fix / test                                              |
+| --------- | ------------------------------------------------------------------------------------------------ | ------------------------------------------------------- |
+| SHELL-001 | Send-a-task provider lived inside per-page `AppShell`, so route changes remounted the live panel | Provider moved to root layout; sticky dock in AGENT-030 |

@@ -20,6 +20,15 @@ export type SendTaskComposerPickerItem =
       readonly id: "custom";
       readonly label: string;
       readonly itemType: "custom";
+    }
+  | {
+      readonly kind: "history";
+      readonly id: string;
+      readonly label: string;
+      readonly itemType: "history";
+      readonly capabilityId: string | null;
+      readonly deviceId: string | null;
+      readonly writerAgent: HarnessWriterAgent | null;
     };
 
 const sortLibraryCapabilities = (

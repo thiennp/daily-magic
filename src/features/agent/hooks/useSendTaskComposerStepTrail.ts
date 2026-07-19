@@ -17,6 +17,7 @@ import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessW
 export const useSendTaskComposerStepTrail = (input: {
   readonly isSteppedComposer: boolean;
   readonly isSessionActive?: boolean;
+  readonly isContinueSession?: boolean;
   readonly wizard: ReturnType<typeof useWsTestComposerWizard>;
   readonly composer: ReturnType<typeof useWsTestTaskComposer>;
   readonly macDispatchDeviceId: string;
@@ -65,6 +66,7 @@ export const useSendTaskComposerStepTrail = (input: {
       resolveSendTaskComposerWorkflowSelectionLabel(
         input.composer.selectedLibraryCapabilityId,
         input.composer.libraryCapabilities,
+        input.isContinueSession === true,
       );
     const trailItems = resolveSendTaskComposerStepTrailItems({
       currentStep,
@@ -100,6 +102,7 @@ export const useSendTaskComposerStepTrail = (input: {
     input.composer.libraryCapabilities,
     input.composer.macDisplayNameById,
     input.composer.selectedLibraryCapabilityId,
+    input.isContinueSession,
     input.macDispatchDeviceId,
     input.macStepInput,
     input.onMacStepBack,

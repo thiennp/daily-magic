@@ -7,15 +7,16 @@ import { resolveWsTestComposerWriterAgentCompleted } from "@/features/agent/util
 import type { WsTestComposerMacStepInput } from "@/features/agent/utils/resolveWsTestComposerMacStep";
 import {
   shouldAutoCompleteWsTestComposerMacSelectionStep,
-  shouldShowWsTestComposerMacSection,
-  shouldShowWsTestComposerMacSelectionStepOnly,
   shouldSkipWsTestComposerMacSelectionStep,
 } from "@/features/agent/utils/resolveWsTestComposerMacStep";
+import { resolveWsTestComposerWizardStepFlags } from "@/features/agent/utils/resolveWsTestComposerWizardStepFlags";
 
 interface UseWsTestComposerWizardInput {
   readonly isSteppedComposer: boolean;
   readonly macStepInput: WsTestComposerMacStepInput;
   readonly hasPrefilledLibraryCapability: boolean;
+  readonly hasContinueSessionPrefill: boolean;
+  readonly hasCustomTaskPrefill: boolean;
   readonly hasRememberedWriterAgentSelection: boolean;
 }
 
@@ -23,6 +24,8 @@ export function useWsTestComposerWizard({
   isSteppedComposer,
   macStepInput,
   hasPrefilledLibraryCapability,
+  hasContinueSessionPrefill,
+  hasCustomTaskPrefill,
   hasRememberedWriterAgentSelection,
 }: UseWsTestComposerWizardInput) {
   const [hasConfirmedMacSelection, setHasConfirmedMacSelection] =
@@ -47,6 +50,8 @@ export function useWsTestComposerWizard({
     hasConfirmedPickerSelection,
     isSteppedComposer,
     hasPrefilledLibraryCapability,
+    hasContinueSessionPrefill,
+    hasCustomTaskPrefill,
     hasRewoundWizard,
   });
   const hasCompletedWriterAgentStep = resolveWsTestComposerWriterAgentCompleted(
@@ -57,32 +62,16 @@ export function useWsTestComposerWizard({
       hasRewoundWizard,
     },
   );
-
-  const macStepState = {
-    ...macStepInput,
+  const stepFlags = resolveWsTestComposerWizardStepFlags({
+    isSteppedComposer,
+    macStepInput,
     hasCompletedMacSelectionStep,
-  };
-  const showMacSection = shouldShowWsTestComposerMacSection(macStepState);
-  const showMacSelectionStepOnly =
-    isSteppedComposer &&
-    shouldShowWsTestComposerMacSelectionStepOnly(macStepState);
-  const showPickerStepOnly =
-    isSteppedComposer &&
-    hasCompletedMacSelectionStep &&
-    !hasCompletedPickerStep;
-  const showWriterAgentStepOnly =
-    isSteppedComposer && hasCompletedPickerStep && !hasCompletedWriterAgentStep;
-  const showFormStep =
-    !showMacSelectionStepOnly &&
-    !showPickerStepOnly &&
-    !showWriterAgentStepOnly;
+    hasCompletedPickerStep,
+    hasCompletedWriterAgentStep,
+  });
 
   return {
-    showMacSection,
-    showMacSelectionStepOnly,
-    showPickerStepOnly,
-    showWriterAgentStepOnly,
-    showFormStep,
+    ...stepFlags,
     completeMacSelectionStep: () => {
       setHasConfirmedMacSelection(true);
     },

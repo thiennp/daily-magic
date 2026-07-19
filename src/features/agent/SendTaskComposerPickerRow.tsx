@@ -9,6 +9,7 @@ const ITEM_TYPE_LABEL: Record<SendTaskComposerPickerItem["itemType"], string> =
     agent: "Agent",
     "writer-agent": "LLM CLI",
     custom: "Blank",
+    history: "Continue",
   };
 
 interface SendTaskComposerPickerRowProps {

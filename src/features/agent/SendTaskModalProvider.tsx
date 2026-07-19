@@ -1,22 +1,9 @@
 "use client";
 
-import {
-  createContext,
-  Suspense,
-  useCallback,
-  useContext,
-  useMemo,
-  type ReactNode,
-} from "react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { createContext, Suspense, useContext, type ReactNode } from "react";
 
 import SendTaskModal from "@/features/agent/SendTaskModal";
-import {
-  SEND_TASK_MODAL_QUERY_PARAM,
-  SEND_TASK_MODAL_QUERY_VALUE,
-} from "@/features/agent/constants/sendTaskModalQuery.constant";
-import buildAgentComposerHref from "@/lib/library/buildAgentComposerHref";
-import { stripSendTaskModalQuery } from "@/features/agent/utils/stripSendTaskModalQuery";
+import { useSendTaskModalController } from "@/features/agent/hooks/useSendTaskModalController";
 
 interface SendTaskModalContextValue {
   readonly isOpen: boolean;
@@ -38,53 +25,29 @@ const SEND_TASK_MODAL_SUSPENSE_FALLBACK: SendTaskModalContextValue = {
   closeSendTaskModal: () => undefined,
 };
 
-const isHomePath = (pathname: string): boolean => pathname === "/";
-
 function SendTaskModalController({
   children,
 }: {
   readonly children: ReactNode;
 }) {
-  const router = useRouter();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const isOpen =
-    searchParams.get(SEND_TASK_MODAL_QUERY_PARAM) ===
-    SEND_TASK_MODAL_QUERY_VALUE;
-
-  const closeSendTaskModal = useCallback(() => {
-    if (!isHomePath(pathname)) {
-      return;
-    }
-
-    const nextQuery = stripSendTaskModalQuery(searchParams);
-    router.replace(`${pathname}${nextQuery}`, { scroll: false });
-  }, [pathname, router, searchParams]);
-
-  const openSendTaskModal = useCallback(
-    (input?: {
-      readonly libraryCapabilityId?: string;
-      readonly prompt?: string;
-      readonly deviceId?: string;
-    }) => {
-      router.push(buildAgentComposerHref(input), { scroll: false });
-    },
-    [router],
-  );
-
-  const value = useMemo(
-    () => ({
-      isOpen,
-      openSendTaskModal,
-      closeSendTaskModal,
-    }),
-    [closeSendTaskModal, isOpen, openSendTaskModal],
-  );
+  const controller = useSendTaskModalController();
 
   return (
-    <SendTaskModalContext.Provider value={value}>
+    <SendTaskModalContext.Provider
+      value={{
+        isOpen: controller.isOpen,
+        openSendTaskModal: controller.openSendTaskModal,
+        closeSendTaskModal: controller.closeSendTaskModal,
+      }}
+    >
       {children}
-      <SendTaskModal isOpen={isOpen} onClose={closeSendTaskModal} />
+      <SendTaskModal
+        presentation={controller.presentation}
+        panelKey={controller.panelKey}
+        onClose={controller.closeSendTaskModal}
+        onExpand={controller.expandSendTaskModal}
+        onMinimize={controller.minimizeSendTaskModal}
+      />
     </SendTaskModalContext.Provider>
   );
 }

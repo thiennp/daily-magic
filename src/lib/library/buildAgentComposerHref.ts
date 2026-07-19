@@ -1,10 +1,13 @@
 interface BuildAgentComposerHrefInput {
+  readonly pathname?: string;
   readonly libraryCapabilityId?: string;
   readonly prompt?: string;
   readonly deviceId?: string;
   readonly openShell?: boolean;
   /** Resume the Mac CLI conversation with --continue. */
   readonly continueSession?: boolean;
+  /** Skip workflow picker with a blank custom task. */
+  readonly customTask?: boolean;
 }
 
 const SEND_TASK_MODAL_QUERY_PARAM = "sendTask";
@@ -35,5 +38,11 @@ export default function buildAgentComposerHref(
     params.set("continueSession", "1");
   }
 
-  return `/?${params.toString()}`;
+  if (input.customTask === true) {
+    params.set("customTask", "1");
+  }
+
+  const path =
+    input.pathname && input.pathname.length > 0 ? input.pathname : "/";
+  return `${path}?${params.toString()}`;
 }

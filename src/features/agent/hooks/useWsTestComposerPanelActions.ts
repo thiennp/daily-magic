@@ -1,10 +1,13 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+
 import type { useWsTestComposerWizard } from "@/features/agent/hooks/useWsTestComposerWizard";
 import type { useWsTestTaskComposer } from "@/features/agent/hooks/useWsTestTaskComposer";
 import type { SendTaskComposerPickerItem } from "@/features/agent/utils/buildSendTaskComposerPickerItems";
 import { shouldStartWriterAgentOnCliSelect } from "@/features/agent/utils/shouldStartWriterAgentOnCliSelect";
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
+import buildAgentComposerHref from "@/lib/library/buildAgentComposerHref";
 
 export const useWsTestComposerPanelActions = (input: {
   readonly composer: ReturnType<typeof useWsTestTaskComposer>;
@@ -19,6 +22,8 @@ export const useWsTestComposerPanelActions = (input: {
   readonly handleWorkflowStepBack: () => void;
   readonly handleWriterStepBack: () => void;
 } => {
+  const router = useRouter();
+
   const handleDeviceChange = (deviceId: string) => {
     input.composer.setSelectedDeviceId(deviceId);
 
@@ -31,10 +36,34 @@ export const useWsTestComposerPanelActions = (input: {
   };
 
   const handlePickerSelect = (item: SendTaskComposerPickerItem) => {
+    if (item.kind === "history") {
+      if (item.writerAgent !== null) {
+        input.onWriterAgentChange(item.writerAgent);
+      }
+
+      input.composer.setSelectedLibraryCapabilityId(item.capabilityId ?? "");
+      router.replace(
+        buildAgentComposerHref({
+          continueSession: true,
+          deviceId: item.deviceId ?? undefined,
+          libraryCapabilityId: item.capabilityId ?? undefined,
+        }),
+        { scroll: false },
+      );
+      input.wizard.completePickerStep();
+      return;
+    }
+
     if (item.kind === "library") {
       input.composer.setSelectedLibraryCapabilityId(item.id);
+      router.replace(buildAgentComposerHref({ libraryCapabilityId: item.id }), {
+        scroll: false,
+      });
     } else {
       input.composer.setSelectedLibraryCapabilityId("");
+      router.replace(buildAgentComposerHref({ customTask: true }), {
+        scroll: false,
+      });
     }
 
     input.wizard.completePickerStep();
@@ -55,25 +84,20 @@ export const useWsTestComposerPanelActions = (input: {
     input.wizard.completeWriterAgentStep();
   };
 
-  const handleMacStepBack = () => {
-    input.wizard.resetMacSelectionStep();
-  };
-
-  const handleWorkflowStepBack = () => {
-    input.composer.setSelectedLibraryCapabilityId("");
-    input.wizard.resetPickerStep();
-  };
-
-  const handleWriterStepBack = () => {
-    input.wizard.resetWriterAgentStep();
-  };
-
   return {
     handleDeviceChange,
     handlePickerSelect,
     handleWriterAgentSelect,
-    handleMacStepBack,
-    handleWorkflowStepBack,
-    handleWriterStepBack,
+    handleMacStepBack: () => {
+      input.wizard.resetMacSelectionStep();
+    },
+    handleWorkflowStepBack: () => {
+      input.composer.setSelectedLibraryCapabilityId("");
+      router.replace(buildAgentComposerHref({}), { scroll: false });
+      input.wizard.resetPickerStep();
+    },
+    handleWriterStepBack: () => {
+      input.wizard.resetWriterAgentStep();
+    },
   };
 };
