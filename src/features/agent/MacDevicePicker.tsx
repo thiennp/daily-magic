@@ -2,8 +2,10 @@
 
 import Label from "@/components/form/Label";
 import MacDeviceRow from "@/features/agent-witch/macDevices/MacDeviceRow";
+import { buildMacDeviceDetailText } from "@/features/agent-witch/macDevices/utils/buildMacDeviceDetailText";
 import { canWakeMacDeviceFromBrowser } from "@/features/agent-witch/online-wake";
 import type { MyMacDevice } from "@/features/agent/hooks/useMyMacDevices";
+import useMyMacDevices from "@/features/agent/hooks/useMyMacDevices";
 
 interface MacDevicePickerProps {
   readonly devices: readonly MyMacDevice[];
@@ -28,6 +30,8 @@ export default function MacDevicePicker({
   onRenamed,
   onDelete,
 }: MacDevicePickerProps) {
+  const { serverInstallBundleVersion } = useMyMacDevices();
+
   if (isLoading) {
     return (
       <p className="text-sm text-gray-500 dark:text-gray-400">
@@ -48,26 +52,35 @@ export default function MacDevicePicker({
     <div>
       <Label>Which Mac should run this?</Label>
       <div className="mt-3 space-y-2">
-        {devices.map((device) => (
-          <MacDeviceRow
-            key={device.id}
-            deviceId={device.id}
-            displayName={displayNameById.get(device.id) ?? "Your Mac"}
-            isOnline={device.isOnline}
-            isConnected={device.isConnected}
-            isSelected={device.id === selectedDeviceId}
-            isWakeServerReachable={canWakeMacDeviceFromBrowser({
-              deviceLabel: device.deviceLabel,
-              localHostname,
-              isWakeServerReachable,
-            })}
-            onSelect={() => {
-              onChange(device.id);
-            }}
-            onRenamed={onRenamed}
-            onDelete={onDelete}
-          />
-        ))}
+        {devices.map((device) => {
+          const detail = buildMacDeviceDetailText({
+            device,
+            serverInstallBundleVersion,
+          });
+
+          return (
+            <MacDeviceRow
+              key={device.id}
+              deviceId={device.id}
+              displayName={displayNameById.get(device.id) ?? "Your Mac"}
+              isOnline={device.isOnline}
+              isConnected={device.isConnected}
+              detailText={detail?.text}
+              detailWarning={detail?.isMismatch === true}
+              isSelected={device.id === selectedDeviceId}
+              isWakeServerReachable={canWakeMacDeviceFromBrowser({
+                deviceLabel: device.deviceLabel,
+                localHostname,
+                isWakeServerReachable,
+              })}
+              onSelect={() => {
+                onChange(device.id);
+              }}
+              onRenamed={onRenamed}
+              onDelete={onDelete}
+            />
+          );
+        })}
       </div>
     </div>
   );

@@ -22,7 +22,8 @@ describe("ensureAgentWitchDeviceSchema", () => {
     await ensureAgentWitchDeviceSchema();
 
     // display_name, restart_requested_at, public_key, last_handshake_at,
-    // preferred_writer, last_wake_error, last_wake_error_at, link_code
-    expect(sqlMock).toHaveBeenCalledTimes(8);
+    // preferred_writer, last_wake_error, last_wake_error_at, link_code,
+    // install_bundle_version
+    expect(sqlMock).toHaveBeenCalledTimes(9);
   });
 });

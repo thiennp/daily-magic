@@ -93,7 +93,8 @@ CREATE TABLE IF NOT EXISTS agent_witch_devices (
   preferred_writer TEXT,
   last_wake_error TEXT,
   last_wake_error_at TIMESTAMPTZ,
-  link_code TEXT
+  link_code TEXT,
+  install_bundle_version TEXT
 );
 
 CREATE TABLE IF NOT EXISTS harness_catalog_snapshots (

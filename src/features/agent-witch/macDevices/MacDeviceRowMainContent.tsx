@@ -7,6 +7,7 @@ interface MacDeviceRowMainContentProps {
   readonly displayName: string;
   readonly isOnline: boolean;
   readonly detailText?: string;
+  readonly detailWarning?: boolean;
   readonly isEditing: boolean;
   readonly onEditingChange: (isEditing: boolean) => void;
   readonly onRenamed: (deviceId: string, deviceLabel: string) => void;
@@ -17,6 +18,7 @@ export default function MacDeviceRowMainContent({
   displayName,
   isOnline,
   detailText,
+  detailWarning = false,
   isEditing,
   onEditingChange,
   onRenamed,
@@ -39,7 +41,13 @@ export default function MacDeviceRowMainContent({
         </div>
       </div>
       {detailText ? (
-        <p className="text-left text-xs text-gray-500 dark:text-gray-400">
+        <p
+          className={`text-left text-xs ${
+            detailWarning
+              ? "text-amber-700 dark:text-amber-300"
+              : "text-gray-500 dark:text-gray-400"
+          }`}
+        >
           {detailText}
         </p>
       ) : null}

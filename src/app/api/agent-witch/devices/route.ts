@@ -1,4 +1,5 @@
 import buildAgentWitchDevicesWithOnlineStatus from "@/lib/agentWitch/buildAgentWitchDevicesWithOnlineStatus";
+import { AGENT_WITCH_INSTALL_BUNDLE_VERSION } from "@/lib/agentWitch/agentWitchInstallBundleVersion";
 import { collectLiveAgentWitchDeviceIdsForUser } from "@/lib/agentWitch/collectLiveAgentWitchDeviceIdsForUser";
 import { ensureAgentWitchDeviceSchema } from "@/lib/agentWitch/ensureAgentWitchDeviceSchema";
 import { getAgentWitchHub } from "@/lib/agentWitch/getAgentWitchHub";
@@ -40,6 +41,7 @@ export async function GET(): Promise<Response> {
     );
     const response = {
       ok: true,
+      serverInstallBundleVersion: AGENT_WITCH_INSTALL_BUNDLE_VERSION,
       devices: devicesWithStatus,
     };
 
