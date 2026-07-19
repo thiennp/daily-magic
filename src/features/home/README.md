@@ -4,11 +4,11 @@ Authenticated hub, onboarding, Mac connect flow, and guest landing at `/`.
 
 ## Scope
 
-| Area         | Path                                           |
-| ------------ | ---------------------------------------------- |
-| Feature UI   | `src/features/home/`                           |
-| Routes       | `src/app/(app)/page.tsx`                       |
-| Related APIs | `/api/agent-witch/devices` (via agent-witch)   |
+| Area         | Path                                         |
+| ------------ | -------------------------------------------- |
+| Feature UI   | `src/features/home/`                         |
+| Routes       | `src/app/(app)/page.tsx`                     |
+| Related APIs | `/api/agent-witch/devices` (via agent-witch) |
 
 ## Dependencies
 
@@ -20,9 +20,9 @@ Authenticated hub, onboarding, Mac connect flow, and guest landing at `/`.
 
 ## Key flows
 
-1. **Guest** — marketing shell on `/` when logged out.
-2. **Connect Mac** — until `useHomeConnectedMacs()` returns at least one device, only the left rail + connect guide render (`HomeLinkAccountGate`).
-3. **Dashboard** — after a Mac is paired, children (tasks, marketplace, etc.) render.
+1. **Guest** — marketing shell on `/` when logged out (hero, presets, showcase articles).
+2. **Connect Mac** — until `useHomeConnectedMacs()` returns at least one device, only the left rail + connect guide render (`HomeLinkAccountGate`). Showcase articles still appear below.
+3. **Dashboard** — after a Mac is paired, children (tasks, marketplace, etc.) render, with the same showcase article sections as the guest landing.
 
 ## Query feature knowledge
 

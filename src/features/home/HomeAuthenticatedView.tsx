@@ -6,6 +6,7 @@ import MarketplaceHomePromo from "@/features/marketplace/MarketplaceHomePromo";
 import HomeConnectedMacsPanel from "@/features/home/HomeConnectedMacsPanel";
 import HomeOnboardingMainPanel from "@/features/home/HomeOnboardingMainPanel";
 import HomeLinkAccountGate from "@/features/home/HomeLinkAccountGate";
+import HomeMarketingShowcases from "@/features/home/HomeMarketingShowcases";
 import HomeOnboardingAutomateNudge from "@/features/home/HomeOnboardingAutomateNudge";
 import HomeOnboardingChecklist from "@/features/home/HomeOnboardingChecklist";
 import HomeSetupSection from "@/features/home/HomeSetupSection";
@@ -41,36 +42,39 @@ export default async function HomeAuthenticatedView({
   const isWebSocketSupported = isAgentWitchWebSocketAvailableForHost(host);
 
   return (
-    <HomeLinkAccountGate
-      appOrigin={appOrigin}
-      installCommand={installCommand}
-      isWebSocketSupported={isWebSocketSupported}
-      host={host}
-    >
-      <div className={HOME_DASHBOARD_GRID_CLASS}>
-        <aside className={HOME_LEFT_RAIL_CLASS}>
-          <HomeOnboardingChecklist />
-          <HomeOnboardingAutomateNudge />
-          <HomeConnectedMacsPanel
-            installCommand={installCommand}
-            isWebSocketSupported={isWebSocketSupported}
-            host={host}
-          />
-        </aside>
+    <>
+      <HomeLinkAccountGate
+        appOrigin={appOrigin}
+        installCommand={installCommand}
+        isWebSocketSupported={isWebSocketSupported}
+        host={host}
+      >
+        <div className={HOME_DASHBOARD_GRID_CLASS}>
+          <aside className={HOME_LEFT_RAIL_CLASS}>
+            <HomeOnboardingChecklist />
+            <HomeOnboardingAutomateNudge />
+            <HomeConnectedMacsPanel
+              installCommand={installCommand}
+              isWebSocketSupported={isWebSocketSupported}
+              host={host}
+            />
+          </aside>
 
-        <main className={HOME_MAIN_COLUMN_CLASS}>
-          <HomeOnboardingMainPanel user={user} />
-          <MyOfferingsPanel />
-          <TeamDirectoryPanel />
-        </main>
+          <main className={HOME_MAIN_COLUMN_CLASS}>
+            <HomeOnboardingMainPanel user={user} />
+            <MyOfferingsPanel />
+            <TeamDirectoryPanel />
+          </main>
 
-        <aside className={HOME_RIGHT_RAIL_CLASS}>
-          <FeedbackInboxPanel />
-          <ImprovementReviewPanel />
-          <MarketplaceHomePromo />
-          <HomeSetupSection />
-        </aside>
-      </div>
-    </HomeLinkAccountGate>
+          <aside className={HOME_RIGHT_RAIL_CLASS}>
+            <FeedbackInboxPanel />
+            <ImprovementReviewPanel />
+            <MarketplaceHomePromo />
+            <HomeSetupSection />
+          </aside>
+        </div>
+      </HomeLinkAccountGate>
+      <HomeMarketingShowcases />
+    </>
   );
 }
