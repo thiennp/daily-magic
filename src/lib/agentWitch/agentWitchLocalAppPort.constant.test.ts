@@ -7,7 +7,7 @@ import {
 } from "@/lib/agentWitch/agentWitchLocalAppPort.constant";
 
 describe("agentWitchLocalAppPort.constant", () => {
-  it("advertises the loopback domain origin (AGENT-028)", () => {
+  it("advertises local.agentwitch.com with explicit port (AGENT-028)", () => {
     expect(AGENT_WITCH_LOCAL_APP_HOST).toBe("local.agentwitch.com");
     expect(AGENT_WITCH_LOCAL_APP_PORT).toBe(43347);
     expect(AGENT_WITCH_LOCAL_APP_ORIGIN).toBe(

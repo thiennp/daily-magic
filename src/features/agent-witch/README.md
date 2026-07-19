@@ -28,7 +28,7 @@ Mac HTTP `heartbeat` / `commands/poll` / `messages` return **410 Gone** (retired
 
 After agent turns, chunks are embedded with local Ollama (`nomic-embed-text` by default) into `~/.agent-witch/rag/`. Cloud-originated tasks query RAG first and inject hits into the writer prompt. Browse at `http://local.agentwitch.com:43347/knowledge`.
 
-`local.agentwitch.com` is a public DNS loopback name (`A` → `127.0.0.1`, `AAAA` → `::1`). The UI still binds only to `127.0.0.1` (AGENT-021 — the website never fetches it).
+`local.agentwitch.com` is a public DNS loopback name (`A` → `127.0.0.1`, `AAAA` → `::1`). The UI binds only to `127.0.0.1:43347` (AGENT-021 — the website never fetches it). There is no privileged port-80 proxy, so other local servers can keep using `:80`.
 
 ## Writer setup
 
@@ -51,4 +51,4 @@ Browser presence uses `/api/agent-witch/devices` (WS hub). Local `:43347` is Mac
 
 Install from each origin separately so local and prod stay independent.
 
-Bundle version: bump `AGENT_WITCH_INSTALL_BUNDLE_VERSION` when install scripts change (currently **29**).
+Bundle version: bump `AGENT_WITCH_INSTALL_BUNDLE_VERSION` when install scripts change (currently **31**).

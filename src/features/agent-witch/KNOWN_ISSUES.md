@@ -1,10 +1,20 @@
 # Agent Witch bridge — known issues
 
+## AGENT-029 — Port-80 local.agentwitch.com proxy conflicted with other apps
+
+**Symptom:** Hiding `:43347` required a root LaunchDaemon on `127.0.0.1:80`, which blocks other local servers (Apache, nginx, MAMP, etc.) that need loopback port 80.
+
+**Fix:** Removed the privileged `:80` proxy. Advertise `http://local.agentwitch.com:43347` again (DNS loopback only; no root). Install bundle **31**.
+
+**Regression tests:** `agentWitchLocalAppPort.constant.test.ts` (AGENT-029).
+
+---
+
 ## AGENT-028 — Local UI only advertised as 127.0.0.1:43347
 
 **Symptom:** Mac debug UI was hard to remember as a raw loopback URL.
 
-**Fix:** Advertise `http://local.agentwitch.com:43347` (`AGENT_WITCH_LOCAL_APP_ORIGIN`). DNS `A`/`AAAA` for `local` → `127.0.0.1`/`::1` at the registrar; process still binds `127.0.0.1` only (AGENT-021). Install bundle **29**.
+**Fix:** Advertise `http://local.agentwitch.com:43347` (`AGENT_WITCH_LOCAL_APP_ORIGIN`). DNS `A`/`AAAA` for `local` → `127.0.0.1`/`::1` at the registrar; process still binds `127.0.0.1` only (AGENT-021). No privileged port-80 proxy (see AGENT-029).
 
 **Regression tests:** `agentWitchLocalAppPort.constant.test.ts` (AGENT-028).
 

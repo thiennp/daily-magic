@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Agent Witch — local WebSocket client + local.agentwitch.com:43347 app.
+ * Agent Witch — local WebSocket client + local.agentwitch.com:43347 UI.
  *
  * Run: npx tsx scripts/agent-witch.ts
  * Config: ~/.agent-witch/config.json (legacy) or
