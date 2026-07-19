@@ -52,8 +52,8 @@ export default function SendTaskModal({
     <div
       className={
         isExpanded
-          ? "fixed inset-0 z-99999 flex items-center justify-center overflow-y-auto modal"
-          : "pointer-events-none fixed inset-x-0 bottom-0 z-99999 flex justify-end p-3 pb-20 md:p-4 md:pb-4"
+          ? "fixed inset-0 z-40 flex items-center justify-center overflow-y-auto modal"
+          : "pointer-events-none fixed inset-x-0 bottom-0 z-40 flex justify-end p-3 pb-20 md:p-4 md:pb-4"
       }
       role={isExpanded ? "dialog" : undefined}
       aria-modal={isExpanded ? true : undefined}
@@ -62,7 +62,7 @@ export default function SendTaskModal({
       {isExpanded ? (
         <button
           type="button"
-          aria-label="Minimize send a task"
+          aria-label="Minimize send a task overlay"
           className="fixed inset-0 h-full w-full bg-gray-400/50 backdrop-blur-[32px]"
           onClick={onMinimize}
         />
