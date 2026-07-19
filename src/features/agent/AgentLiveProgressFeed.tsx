@@ -6,12 +6,14 @@ import AgentLiveProgressStepRow from "@/features/agent/AgentLiveProgressStepRow"
 import AgentLiveTerminalNextActions from "@/features/agent/AgentLiveTerminalNextActions";
 import { useAgentLiveTerminalLoadingDots } from "@/features/agent/hooks/useAgentLiveTerminalLoadingDots";
 import type { AgentLiveProgressStep } from "@/features/agent/utils/buildAgentLiveProgressSteps";
+import type { AgentLiveProgressStallState } from "@/features/agent/utils/resolveAgentLiveProgressStallState";
 import { buildAgentLiveTerminalLoadingLine } from "@/features/agent/utils/buildAgentLiveTerminalDisplay";
 
 interface AgentLiveProgressFeedProps {
   readonly steps: readonly AgentLiveProgressStep[];
   readonly replyPreview: string | null;
   readonly isWorking: boolean;
+  readonly stallState?: AgentLiveProgressStallState;
   readonly nextActions?: readonly string[];
   readonly nextActionsDisabled?: boolean;
   readonly onSelectNextAction?: (action: string) => void;
@@ -21,6 +23,7 @@ export default function AgentLiveProgressFeed({
   steps,
   replyPreview,
   isWorking,
+  stallState = "none",
   nextActions = [],
   nextActionsDisabled = false,
   onSelectNextAction,
@@ -48,6 +51,23 @@ export default function AgentLiveProgressFeed({
         ) : null}
       </div>
       {isWorking ? <AgentLiveProgressActivityBar /> : null}
+      {stallState === "stuck" ? (
+        <p
+          className="mt-3 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-900 dark:border-amber-900/60 dark:bg-amber-950/40 dark:text-amber-100"
+          role="status"
+        >
+          Your Mac has not sent updates for a while. Open Home to wake Agent
+          Witch or try sending the task again.
+        </p>
+      ) : null}
+      {stallState === "warning" ? (
+        <p
+          className="mt-3 text-sm text-gray-600 dark:text-gray-300"
+          role="status"
+        >
+          Still waiting for your Mac agent — this is taking longer than usual…
+        </p>
+      ) : null}
       <ol className="mt-4 space-y-3">
         {steps.map((step) => (
           <AgentLiveProgressStepRow
