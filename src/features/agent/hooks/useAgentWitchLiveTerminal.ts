@@ -1,55 +1,42 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
-import {
-  loadPersistedAgentLiveTerminalState,
-  persistAgentLiveTerminalState,
-} from "@/features/agent/utils/agentLiveTerminalLocalStore";
-import { type AgentRunInputRequest } from "@/features/dispatch/utils/agentRunInputSocket";
-import { submitAgentLiveTerminalInput } from "@/features/agent/utils/submitAgentLiveTerminalInput";
 import { useAgentWitchLiveTerminalWriterSessionSubscribe } from "@/features/agent/hooks/useAgentWitchLiveTerminalWriterSessionSubscribe";
+import { useShouldRestoreAgentLiveTerminalSession } from "@/features/agent/hooks/useShouldRestoreAgentLiveTerminalSession";
+import type { UseAgentWitchLiveTerminalResult } from "@/features/agent/types/UseAgentWitchLiveTerminalResult.type";
 import { finishAgentLiveTerminalWriterSession } from "@/features/agent/utils/sendWriterSessionEnd";
 import {
-  beginAgentLiveTerminalSession,
-  continueAgentLiveTerminalSession,
   finishAgentLiveTerminalSession,
-  initialAgentLiveTerminalState,
   reduceAgentLiveTerminalMessage,
-  shouldContinueAgentLiveTerminalThread,
   type AgentLiveTerminalState,
-  type AgentLiveTerminalStatus,
 } from "@/features/agent/utils/reduceAgentLiveTerminalMessage";
+import {
+  persistAgentLiveTerminalStateIfAllowed,
+  resolveInitialAgentLiveTerminalState,
+} from "@/features/agent/utils/resolveInitialAgentLiveTerminalState";
+import { resolveNextAgentLiveTerminalBeginState } from "@/features/agent/utils/resolveNextAgentLiveTerminalBeginState";
+import { submitAgentLiveTerminalInput } from "@/features/agent/utils/submitAgentLiveTerminalInput";
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
 
 export function useAgentWitchLiveTerminal(socketRef: {
   readonly current: WebSocket | null;
-}): {
-  readonly output: string;
-  readonly status: AgentLiveTerminalStatus;
-  readonly activeRunId: string | null;
-  readonly pendingInput: AgentRunInputRequest | null;
-  readonly pendingCommandLine: string | null;
-  readonly sessionWriterAgent: HarnessWriterAgent | null;
-  readonly sessionDeviceId: string | null;
-  readonly beginSession: (
-    commandLine: string,
-    writerAgent: HarnessWriterAgent,
-    deviceId?: string,
-  ) => void;
-  readonly finishSession: () => void;
-  readonly applySocketMessage: (raw: string) => void;
-  readonly submitInput: (response: string) => void;
-  readonly dismissInput: () => void;
-} {
+}): UseAgentWitchLiveTerminalResult {
+  const shouldRestore = useShouldRestoreAgentLiveTerminalSession();
+  const allowPersistRef = useRef(shouldRestore);
   const [state, setState] = useState<AgentLiveTerminalState>(() =>
-    typeof window === "undefined"
-      ? initialAgentLiveTerminalState()
-      : loadPersistedAgentLiveTerminalState(),
+    resolveInitialAgentLiveTerminalState(shouldRestore),
   );
 
   useEffect(() => {
-    persistAgentLiveTerminalState(state);
+    if (
+      persistAgentLiveTerminalStateIfAllowed({
+        allowPersist: allowPersistRef.current,
+        state,
+      })
+    ) {
+      allowPersistRef.current = true;
+    }
   }, [state]);
 
   useAgentWitchLiveTerminalWriterSessionSubscribe({
@@ -64,20 +51,21 @@ export function useAgentWitchLiveTerminal(socketRef: {
       writerAgent: HarnessWriterAgent,
       deviceId?: string,
     ) => {
+      allowPersistRef.current = true;
       setState((current) =>
-        shouldContinueAgentLiveTerminalThread(current)
-          ? continueAgentLiveTerminalSession(current, commandLine)
-          : beginAgentLiveTerminalSession(
-              commandLine,
-              writerAgent,
-              deviceId && deviceId.length > 0 ? deviceId : null,
-            ),
+        resolveNextAgentLiveTerminalBeginState(
+          current,
+          commandLine,
+          writerAgent,
+          deviceId,
+        ),
       );
     },
     [],
   );
 
   const finishSession = useCallback(() => {
+    allowPersistRef.current = true;
     setState((current) => {
       finishAgentLiveTerminalWriterSession(socketRef.current, current);
       return finishAgentLiveTerminalSession();
@@ -86,8 +74,9 @@ export function useAgentWitchLiveTerminal(socketRef: {
 
   const applySocketMessage = useCallback((raw: string) => {
     try {
-      const parsed: unknown = JSON.parse(raw);
-      setState((current) => reduceAgentLiveTerminalMessage(current, parsed));
+      setState((current) =>
+        reduceAgentLiveTerminalMessage(current, JSON.parse(raw) as unknown),
+      );
     } catch {
       return;
     }
@@ -95,23 +84,17 @@ export function useAgentWitchLiveTerminal(socketRef: {
 
   const submitInput = useCallback(
     (response: string) => {
-      setState((current) => {
-        const nextState = submitAgentLiveTerminalInput(
-          socketRef.current,
+      setState(
+        (current) =>
+          submitAgentLiveTerminalInput(socketRef.current, current, response) ??
           current,
-          response,
-        );
-        return nextState ?? current;
-      });
+      );
     },
     [socketRef],
   );
 
   const dismissInput = useCallback(() => {
-    setState((current) => ({
-      ...current,
-      pendingInput: null,
-    }));
+    setState((current) => ({ ...current, pendingInput: null }));
   }, []);
 
   return {

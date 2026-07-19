@@ -8,6 +8,8 @@ interface BuildAgentComposerHrefInput {
   readonly continueSession?: boolean;
   /** Skip workflow picker with a blank custom task. */
   readonly customTask?: boolean;
+  /** Expand a docked live panel (restore persisted terminal). */
+  readonly resumeLiveSession?: boolean;
 }
 
 const SEND_TASK_MODAL_QUERY_PARAM = "sendTask";
@@ -40,6 +42,10 @@ export default function buildAgentComposerHref(
 
   if (input.customTask === true) {
     params.set("customTask", "1");
+  }
+
+  if (input.resumeLiveSession === true) {
+    params.set("resumeLive", "1");
   }
 
   const path =

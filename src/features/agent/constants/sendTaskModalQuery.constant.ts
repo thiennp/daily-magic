@@ -7,3 +7,6 @@ export const SEND_TASK_CONTINUE_SESSION_QUERY_PARAM = "continueSession";
 export const SEND_TASK_CONTINUE_SESSION_QUERY_VALUE = "1";
 export const SEND_TASK_CUSTOM_TASK_QUERY_PARAM = "customTask";
 export const SEND_TASK_CUSTOM_TASK_QUERY_VALUE = "1";
+/** Expand the docked live panel without starting a fresh picker. */
+export const SEND_TASK_RESUME_LIVE_SESSION_QUERY_PARAM = "resumeLive";
+export const SEND_TASK_RESUME_LIVE_SESSION_QUERY_VALUE = "1";

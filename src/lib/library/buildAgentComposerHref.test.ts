@@ -39,4 +39,13 @@ describe("buildAgentComposerHref", () => {
       "/library?sendTask=1",
     );
   });
+
+  it("AGENT-032 marks resumeLive when expanding a docked live panel", () => {
+    expect(
+      buildAgentComposerHref({
+        pathname: "/library",
+        resumeLiveSession: true,
+      }),
+    ).toBe("/library?sendTask=1&resumeLive=1");
+  });
 });
