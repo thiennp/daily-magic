@@ -1,5 +1,15 @@
 # Agent Witch bridge — known issues
 
+## AGENT-040 — Multiple dashboard SSE connections per page
+
+**Symptom:** Network tab showed several parallel `/api/agent-witch/events` streams while Send-a-task, dispatch approval, and job history each opened their own `EventSource`.
+
+**Cause:** `AgentRunLocalCacheListener`, `connectDispatchApprovalSocket`, Send-a-task, and Reports hooks each subscribed independently.
+
+**Fix:** Root `AgentWitchDashboardProvider` owns one SSE + HTTP shim; inbound messages run onboarding + cache sync once, then fan out on a pub/sub bus. `agentWitchDashboardBus.test.ts`, `handleAgentWitchDashboardInboundMessage.test.ts` (AGENT-040).
+
+---
+
 ## AGENT-030 — Install bundle lagged until hourly self-update
 
 **Symptom:** Mac kept an old install bundle until the hourly LaunchAgent updater ran, even while connected and heartbeating.

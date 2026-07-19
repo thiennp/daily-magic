@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useRef, type RefObject } from "react";
+import { useCallback, useEffect, useRef, type RefObject } from "react";
 
+import { useAgentWitchDashboard } from "@/features/agent-witch/dashboard/AgentWitchDashboardContext";
+import { useAgentWitchDashboardSubscription } from "@/features/agent-witch/dashboard/useAgentWitchDashboardSubscription";
 import { appendAgentRunTerminalOutput } from "@/features/agent/utils/agentRunTerminalOutputStore";
-import { createHttpDashboardSocketShim } from "@/features/agent/utils/createHttpDashboardSocketShim";
 import { sendDashboardTerminalSubscribe } from "@/features/agent/utils/sendDashboardTerminalSubscribe";
 import type { AgentRunInputRequest } from "@/features/dispatch/utils/agentRunInputSocket";
 import { handleAgentRunLiveTerminalSocketMessage } from "@/features/reports/utils/handleAgentRunLiveTerminalSocketMessage";
@@ -15,9 +16,11 @@ export function useAgentRunLiveTerminalSocket(input: {
   readonly onOutput: (output: string) => void;
   readonly onInputRequired: (request: AgentRunInputRequest) => void;
 }): { readonly socketRef: RefObject<WebSocket | null> } {
+  const dashboard = useAgentWitchDashboard();
   const socketRef = useRef<WebSocket | null>(null);
   const onOutputRef = useRef(input.onOutput);
   const onInputRequiredRef = useRef(input.onInputRequired);
+  const unregisterRef = useRef<(() => void) | null>(null);
 
   useEffect(() => {
     onOutputRef.current = input.onOutput;
@@ -28,27 +31,36 @@ export function useAgentRunLiveTerminalSocket(input: {
   }, [input.onInputRequired]);
 
   useEffect(() => {
-    if (!input.enabled || typeof EventSource === "undefined") {
+    if (!input.enabled) {
       return;
     }
 
     const unregister = registerAgentRunLiveTerminal(input.runId);
-    const shim = createHttpDashboardSocketShim();
-    socketRef.current = shim;
-    sendDashboardTerminalSubscribe(shim, { runId: input.runId });
+    unregisterRef.current = unregister;
+    socketRef.current = dashboard.getSocket();
+    sendDashboardTerminalSubscribe(dashboard.getSocket(), {
+      runId: input.runId,
+    });
 
-    const eventSource = new EventSource("/api/agent-witch/events");
+    return () => {
+      unregister();
+      unregisterRef.current = null;
+      socketRef.current = null;
+    };
+  }, [dashboard, input.enabled, input.runId]);
 
-    eventSource.onmessage = (event) => {
+  const handleMessage = useCallback(
+    (raw: string) => {
       try {
-        const parsed: unknown = JSON.parse(String(event.data));
+        const parsed: unknown = JSON.parse(raw);
         handleAgentRunLiveTerminalSocketMessage(input.runId, parsed, {
           onOutputChunk: (chunk) => {
             const nextOutput = appendAgentRunTerminalOutput(input.runId, chunk);
             onOutputRef.current(nextOutput);
           },
           onStreamEnd: () => {
-            eventSource.close();
+            unregisterRef.current?.();
+            unregisterRef.current = null;
           },
           onInputRequired: (request) => {
             onInputRequiredRef.current(request);
@@ -57,14 +69,11 @@ export function useAgentRunLiveTerminalSocket(input: {
       } catch {
         return;
       }
-    };
+    },
+    [input.runId],
+  );
 
-    return () => {
-      eventSource.close();
-      socketRef.current = null;
-      unregister();
-    };
-  }, [input.enabled, input.runId]);
+  useAgentWitchDashboardSubscription(handleMessage, input.enabled);
 
   return { socketRef };
 }

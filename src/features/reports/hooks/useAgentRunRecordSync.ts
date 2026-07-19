@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useCallback } from "react";
 
-import trackOnboardingFromAgentWitchSocketMessage from "@/features/home/utils/trackOnboardingFromAgentWitchSocketMessage";
-import { syncAgentRunLocalCacheFromSocket } from "@/features/reports/utils/syncAgentRunLocalCacheFromSocket";
+import { useAgentWitchDashboardSubscription } from "@/features/agent-witch/dashboard/useAgentWitchDashboardSubscription";
+import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
 import type AgentRunRecord from "@/lib/dispatch/types/AgentRunRecord.type";
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
@@ -22,43 +22,28 @@ const parseAgentRunRecord = (value: unknown): AgentRunRecord | null => {
 export const useAgentRunRecordSync = (
   onRunUpdated?: (run: AgentRunRecord) => void,
 ): void => {
-  const onRunUpdatedRef = useRef(onRunUpdated);
-
-  useEffect(() => {
-    onRunUpdatedRef.current = onRunUpdated;
-  }, [onRunUpdated]);
-
-  useEffect(() => {
-    if (typeof EventSource === "undefined") {
-      return;
-    }
-
-    const eventSource = new EventSource("/api/agent-witch/events");
-
-    eventSource.onmessage = (event) => {
-      const raw = String(event.data);
-      trackOnboardingFromAgentWitchSocketMessage(raw);
-      if (!syncAgentRunLocalCacheFromSocket(raw)) {
-        return;
-      }
-
+  const handleMessage = useCallback(
+    (raw: string) => {
       try {
         const parsed: unknown = JSON.parse(raw);
-        if (!isRecord(parsed) || !isRecord(parsed.payload)) {
+        if (
+          !isRecord(parsed) ||
+          parsed.type !== AGENT_WITCH_MESSAGE_TYPES.AGENT_RUN_RECORD ||
+          !isRecord(parsed.payload)
+        ) {
           return;
         }
 
         const run = parseAgentRunRecord(parsed.payload.run);
         if (run !== null) {
-          onRunUpdatedRef.current?.(run);
+          onRunUpdated?.(run);
         }
       } catch {
         return;
       }
-    };
+    },
+    [onRunUpdated],
+  );
 
-    return () => {
-      eventSource.close();
-    };
-  }, []);
+  useAgentWitchDashboardSubscription(handleMessage);
 };

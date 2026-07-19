@@ -2,8 +2,10 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 
+import { useAgentWitchDashboard } from "@/features/agent-witch/dashboard/AgentWitchDashboardContext";
+import { useAgentWitchDashboardSubscription } from "@/features/agent-witch/dashboard/useAgentWitchDashboardSubscription";
 import {
-  connectDispatchApprovalSocket,
+  parseDispatchApprovalSocketMessage,
   sendAgentRunInputResponse,
   sendDispatchApprovalResponse,
   type AgentRunInputRequest,
@@ -27,6 +29,7 @@ export function useDispatchApprovalListener(): {
   readonly dismissApproval: () => void;
   readonly dismissInput: () => void;
 } {
+  const dashboard = useAgentWitchDashboard();
   const socketRef = useRef<WebSocket | null>(null);
   const [pendingApproval, setPendingApproval] =
     useState<DispatchApprovalRequest | null>(null);
@@ -35,21 +38,35 @@ export function useDispatchApprovalListener(): {
   );
 
   useEffect(() => {
-    const connection = connectDispatchApprovalSocket(
-      (request) => {
-        setPendingApproval(request);
-      },
-      (request) => {
-        if (isAgentRunLiveTerminalActive(request.agentRunId)) {
-          return;
-        }
-        setPendingInput(request);
-      },
-    );
-    socketRef.current = connection.socket;
+    socketRef.current = dashboard.getSocket();
+  }, [dashboard]);
 
-    return connection.disconnect;
+  const handleDashboardMessage = useCallback((raw: string) => {
+    try {
+      const parsed: unknown = JSON.parse(raw);
+      if (
+        typeof parsed !== "object" ||
+        parsed === null ||
+        !("type" in parsed)
+      ) {
+        return;
+      }
+
+      parseDispatchApprovalSocketMessage(parsed as Record<string, unknown>, {
+        onApprovalRequired: setPendingApproval,
+        onInputRequired: (request) => {
+          if (isAgentRunLiveTerminalActive(request.agentRunId)) {
+            return;
+          }
+          setPendingInput(request);
+        },
+      });
+    } catch {
+      return;
+    }
   }, []);
+
+  useAgentWitchDashboardSubscription(handleDashboardMessage);
 
   const respondToApproval = useCallback(
     (decision: "approve" | "deny", denialReason?: string) => {
