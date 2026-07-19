@@ -8,7 +8,7 @@ import {
 } from "@/lib/capabilities/templates/listCapabilityTemplates";
 
 describe("capability templates catalog", () => {
-  it("ships 27 workflow and 20 agent presets with harness bundles", () => {
+  it("ships 29 workflow and 20 agent presets with harness bundles", () => {
     const summaries = listCapabilityTemplateSummaries();
     const workflows = summaries.filter(
       (template) => template.type === CapabilityType.WORKFLOW,
@@ -17,10 +17,10 @@ describe("capability templates catalog", () => {
       (template) => template.type === CapabilityType.AGENT,
     );
 
-    expect(allCapabilityTemplates).toHaveLength(48);
-    expect(workflows).toHaveLength(28);
+    expect(allCapabilityTemplates).toHaveLength(49);
+    expect(workflows).toHaveLength(29);
     expect(agents).toHaveLength(20);
-    expect(summaries[0]?.id).toBe("job-application-pack");
+    expect(summaries[0]?.id).toBe("vibe-coding-app-feature");
     expect(summaries.every((template) => template.harnessItemCount >= 5)).toBe(
       true,
     );

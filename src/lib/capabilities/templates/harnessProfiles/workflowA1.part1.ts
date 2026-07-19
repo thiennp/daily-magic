@@ -10,8 +10,10 @@ import { SHOP_ORDER_SUPPORT_PRESET } from "@/lib/capabilities/templates/harnessP
 import { TEACHER_LESSON_PLAN_PRESET } from "@/lib/capabilities/templates/harnessProfiles/workflowA1.teacherLessonPlan";
 import { TENANT_SUPPORT_REPLY_PRESET } from "@/lib/capabilities/templates/harnessProfiles/workflowA1.tenantSupportReply";
 import { TIKTOK_SERIES_EPISODE_PRESET } from "@/lib/capabilities/templates/harnessProfiles/workflowA1.tiktokSeriesEpisode";
+import { VIBE_CODING_APP_FEATURE_PRESET } from "@/lib/capabilities/templates/harnessProfiles/workflowA1.vibeCodingAppFeature";
 
 export const WORKFLOW_A1_PART1: readonly PresetHarnessSeed[] = [
+  VIBE_CODING_APP_FEATURE_PRESET,
   JOB_APPLICATION_PACK_PRESET,
   SHOP_ORDER_SUPPORT_PRESET,
   FREELANCER_CLIENT_PROPOSAL_PRESET,

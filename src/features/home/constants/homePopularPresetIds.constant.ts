@@ -1,4 +1,5 @@
 export const HOME_POPULAR_PRESET_IDS = [
+  "vibe-coding-app-feature",
   "job-application-pack",
   "email-inbox-reply",
   "freelancer-client-proposal",
