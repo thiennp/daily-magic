@@ -91,3 +91,15 @@
 **Fix:** Cover image from first section via `resolveShowcaseArticleCoverImage`; enrich index articles before render.
 
 **Regression test:** `resolveShowcaseArticleCoverImage.test.ts`.
+
+---
+
+## SHOWCASES-010 — Article figures stretched to full-page capture height
+
+**Symptom:** Showcase article images (e.g. home popular presets) rendered thousands of pixels tall because `<picture>` preferred full-page PNGs over curated SVGs.
+
+**Root cause:** Capture PNGs used `fullPage: true`; figure used `h-auto w-full` with no crop.
+
+**Fix:** Padded 16:10 `object-cover object-top` frame on all article figures; prefer SVG when PNG aspect is taller than ~square.
+
+**Regression test:** `showcaseFigureCrop.constant.test.ts`.
