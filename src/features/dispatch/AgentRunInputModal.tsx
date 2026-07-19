@@ -4,6 +4,7 @@ import { useState } from "react";
 
 import Button from "@/components/ui/button/Button";
 import { Modal } from "@/components/ui/modal";
+import AgentRunPartialOutputPreview from "@/features/dispatch/AgentRunPartialOutputPreview";
 import type { AgentRunInputRequest } from "@/features/dispatch/utils/dispatchApprovalSocket";
 
 interface AgentRunInputModalProps {
@@ -37,9 +38,7 @@ export default function AgentRunInputModal({
         {request.question}
       </p>
       {request.partialOutput.length > 0 ? (
-        <pre className="mt-3 max-h-32 overflow-auto rounded-lg bg-gray-50 p-3 text-xs text-gray-700 dark:bg-gray-800 dark:text-gray-300">
-          {request.partialOutput}
-        </pre>
+        <AgentRunPartialOutputPreview partialOutput={request.partialOutput} />
       ) : null}
       <label className="mt-4 block text-sm text-gray-700 dark:text-gray-300">
         Your answer

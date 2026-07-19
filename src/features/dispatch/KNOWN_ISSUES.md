@@ -9,3 +9,11 @@
 **Fix:** Use two signed-in users in a shared company group for team-delegation QA. See `/showcases/agent-delegates-inside-your-company` and `public/dev-team-dispatch-demo.html` for mock UI screenshots.
 
 **Regression test:** `teamDispatchShowcaseScreens.test.ts` (article + screen paths).
+
+## DISPATCH-002 — Checkpoint modal showed raw `[[PROGRESS]]` partial output
+
+**Symptom:** When the Mac agent paused for operator input, the modal rendered `partialOutput` in a `<pre>` with literal `[[PROGRESS]]` markers instead of readable progress title/detail.
+
+**Fix:** Parse progress blocks with `formatAgentRunPartialOutputForDisplay` and render structured preview in `AgentRunPartialOutputPreview`.
+
+**Regression test:** `formatAgentRunPartialOutputForDisplay.test.ts` (DISPATCH-002).
