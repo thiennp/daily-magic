@@ -3,20 +3,28 @@ import {
   type AgentLiveProgressUpdate,
 } from "@/features/agent/utils/parseAgentLiveProgressUpdates";
 import { stripAgentRunProgressFromOutput } from "@/features/agent/utils/stripAgentRunProgressFromOutput";
+import {
+  parseAgentRunPartialOutputSections,
+  type AgentRunPartialOutputSection,
+} from "@/features/dispatch/utils/parseAgentRunPartialOutputSections";
 
 export type FormattedAgentRunPartialOutput = {
   readonly progressUpdates: readonly AgentLiveProgressUpdate[];
-  readonly remainingText: string;
+  readonly sections: readonly AgentRunPartialOutputSection[];
 };
 
 export const formatAgentRunPartialOutputForDisplay = (
   partialOutput: string,
-): FormattedAgentRunPartialOutput => ({
-  progressUpdates: parseAgentLiveProgressUpdates(partialOutput),
-  remainingText: stripAgentRunProgressFromOutput(partialOutput),
-});
+): FormattedAgentRunPartialOutput => {
+  const remainingText = stripAgentRunProgressFromOutput(partialOutput);
+
+  return {
+    progressUpdates: parseAgentLiveProgressUpdates(partialOutput),
+    sections: parseAgentRunPartialOutputSections(remainingText),
+  };
+};
 
 export const hasFormattedAgentRunPartialOutput = (
   formatted: FormattedAgentRunPartialOutput,
 ): boolean =>
-  formatted.progressUpdates.length > 0 || formatted.remainingText.length > 0;
+  formatted.progressUpdates.length > 0 || formatted.sections.length > 0;

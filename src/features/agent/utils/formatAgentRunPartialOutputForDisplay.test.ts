@@ -23,12 +23,12 @@ describe("formatAgentRunPartialOutputForDisplay (DISPATCH-002)", () => {
             "Found the app at ~/daily-magic. Now exploring the src directory",
         },
       ],
-      remainingText: "",
+      sections: [],
     });
     expect(hasFormattedAgentRunPartialOutput(formatted)).toBe(true);
   });
 
-  it("keeps non-progress reply text after stripping markers", () => {
+  it("parses non-progress reply text into structured sections", () => {
     const formatted = formatAgentRunPartialOutputForDisplay(
       [
         "[[PROGRESS]]",
@@ -36,6 +36,7 @@ describe("formatAgentRunPartialOutputForDisplay (DISPATCH-002)", () => {
         "Opened brief.md",
         "",
         "Here is the proposal body.",
+        "Branch is 5 commits behind origin/main.",
       ].join("\n"),
     );
 
@@ -45,6 +46,12 @@ describe("formatAgentRunPartialOutputForDisplay (DISPATCH-002)", () => {
         detail: "Opened brief.md",
       },
     ]);
-    expect(formatted.remainingText).toBe("Here is the proposal body.");
+    expect(formatted.sections).toEqual([
+      { kind: "paragraph", text: "Here is the proposal body." },
+      {
+        kind: "callout",
+        text: "Branch is 5 commits behind origin/main.",
+      },
+    ]);
   });
 });

@@ -17,3 +17,11 @@
 **Fix:** Parse progress blocks with `formatAgentRunPartialOutputForDisplay` and render structured preview in `AgentRunPartialOutputPreview`.
 
 **Regression test:** `formatAgentRunPartialOutputForDisplay.test.ts` (DISPATCH-002).
+
+## DISPATCH-003 — Checkpoint modal was decision-hostile (wall of text, one textarea)
+
+**Symptom:** Approval/git-strategy checkpoints showed markdown tables and branch status as raw text; compound questions used a single freeform field with no quick replies; “Later” was ambiguous.
+
+**Fix:** Split compound questions, render tables/callouts/collapsible context, add quick-reply chips (pull-first / commit-as-is / request changes), and rename Later to “Remind me later” with helper copy.
+
+**Regression tests:** `parseAgentRunPartialOutputSections.test.ts`, `resolveAgentRunInputQuickReplies.test.ts`, `splitAgentRunInputQuestion.test.ts` (DISPATCH-003).
