@@ -266,6 +266,18 @@ Document every production bug or UX regression here. Each entry must link to a t
 
 ---
 
+## HOME-023 — Showcases stretched full AppShell width
+
+**Symptom:** Logged-in home “Start here” / “More examples” (and related showcase sections) spanned the full `max-w-[1600px]` shell instead of the center main column.
+
+**Root cause:** `HomeMarketingShowcases` rendered as a sibling outside `HOME_DASHBOARD_GRID_CLASS`, so it ignored the three-column main alignment.
+
+**Fix:** Wrap showcases in the same dashboard grid + `HOME_MAIN_COLUMN_CLASS` so they align under the center column.
+
+**Regression test:** `HomeAuthenticatedView.test.ts` (HOME-023).
+
+---
+
 ## Adding issues
 
-Use the next ID (`HOME-023`, …). Include symptom, root cause, fix paths, and test file.
+Use the next ID (`HOME-024`, …). Include symptom, root cause, fix paths, and test file.

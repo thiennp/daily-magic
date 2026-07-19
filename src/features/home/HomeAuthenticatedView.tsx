@@ -74,7 +74,11 @@ export default async function HomeAuthenticatedView({
           </aside>
         </div>
       </HomeLinkAccountGate>
-      <HomeMarketingShowcases />
+      <div className={HOME_DASHBOARD_GRID_CLASS}>
+        <div className={HOME_MAIN_COLUMN_CLASS}>
+          <HomeMarketingShowcases />
+        </div>
+      </div>
     </>
   );
 }

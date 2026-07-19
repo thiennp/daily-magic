@@ -16,4 +16,20 @@ describe("HomeAuthenticatedView showcases", () => {
     expect(source).toContain('from "@/features/home/HomeMarketingShowcases"');
     expect(source).toContain("<HomeMarketingShowcases");
   });
+
+  it("HOME-023: keeps showcases in the main center column, not full shell width", () => {
+    const source = readFileSync(
+      join(
+        dirname(fileURLToPath(import.meta.url)),
+        "HomeAuthenticatedView.tsx",
+      ),
+      "utf8",
+    );
+
+    expect(source).toContain("HOME_DASHBOARD_GRID_CLASS");
+    expect(source).toContain("HOME_MAIN_COLUMN_CLASS");
+    expect(source).toMatch(
+      /HOME_DASHBOARD_GRID_CLASS[\s\S]*HOME_MAIN_COLUMN_CLASS[\s\S]*HomeMarketingShowcases/,
+    );
+  });
 });

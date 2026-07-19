@@ -32,7 +32,6 @@ export default function HomeMarketingShowcases() {
         title="Start here"
         description="Pick a short story with sample screenshots—presets, automations, Mac setup, and team workflows."
         headingId="showcases-heading"
-        headerWidth="full"
       >
         <HomeMarketingFeaturedShowcases articles={featured} />
       </HomeMarketingShowcaseSection>
