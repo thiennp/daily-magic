@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect } from "react";
+
 import AgentWitchUnsupportedHostNotice from "@/features/home/AgentWitchUnsupportedHostNotice";
 import { useWsTestPanelController } from "@/features/agent/hooks/useWsTestPanelController";
 import WsTestPanelComposerSection from "@/features/agent/WsTestPanelComposerSection";
@@ -8,11 +10,22 @@ import isAgentWitchWebSocketSupportedHost from "@/lib/agentWitch/isAgentWitchWeb
 
 interface WsTestPanelProps {
   readonly variant?: "page" | "modal";
+  readonly onSessionActiveChange?: (isSessionActive: boolean) => void;
 }
 
-export default function WsTestPanel({ variant = "page" }: WsTestPanelProps) {
+export default function WsTestPanel({
+  variant = "page",
+  onSessionActiveChange,
+}: WsTestPanelProps) {
   const isSteppedComposer = variant === "modal";
   const panel = useWsTestPanelController({ isSteppedComposer });
+
+  useEffect(() => {
+    onSessionActiveChange?.(panel.isSessionActive);
+    return () => {
+      onSessionActiveChange?.(false);
+    };
+  }, [onSessionActiveChange, panel.isSessionActive]);
   const host = typeof window !== "undefined" ? window.location.host : "";
   const isWebSocketSupported = isAgentWitchWebSocketSupportedHost(host);
 

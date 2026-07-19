@@ -47,6 +47,7 @@ function SendTaskModalController({
         onClose={controller.closeSendTaskModal}
         onExpand={controller.expandSendTaskModal}
         onMinimize={controller.minimizeSendTaskModal}
+        onSessionActiveChange={controller.onSessionActiveChange}
       />
     </SendTaskModalContext.Provider>
   );

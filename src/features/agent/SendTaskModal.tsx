@@ -12,6 +12,7 @@ interface SendTaskModalProps {
   readonly onClose: () => void;
   readonly onExpand: () => void;
   readonly onMinimize: () => void;
+  readonly onSessionActiveChange: (isSessionActive: boolean) => void;
 }
 
 export default function SendTaskModal({
@@ -20,6 +21,7 @@ export default function SendTaskModal({
   onClose,
   onExpand,
   onMinimize,
+  onSessionActiveChange,
 }: SendTaskModalProps) {
   const titleId = useId();
   const isExpanded = presentation === "expanded";
@@ -86,7 +88,11 @@ export default function SendTaskModal({
             isExpanded ? "mt-6" : "relative max-h-52 overflow-y-auto p-3"
           }
         >
-          <WsTestPanel key={panelKey} variant="modal" />
+          <WsTestPanel
+            key={panelKey}
+            variant="modal"
+            onSessionActiveChange={onSessionActiveChange}
+          />
           {isMinimized ? (
             <button
               type="button"

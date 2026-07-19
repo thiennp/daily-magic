@@ -21,3 +21,20 @@ export const shouldKeepSendTaskAliveOnNavigate = (input: {
   readonly wasUrlOpen: boolean;
   readonly keepAlive: boolean;
 }): boolean => input.wasUrlOpen || input.keepAlive;
+
+/** Closing the modal while a Mac run is live should dock, not unmount the panel. */
+export const resolveSendTaskCloseAction = (input: {
+  readonly isSessionActive: boolean;
+}): "minimize" | "dismiss" => (input.isSessionActive ? "minimize" : "dismiss");
+
+/** Leaving `?sendTask=1` should keep the socket mounted when a run is active. */
+export const resolveSendTaskKeepAliveOnUrlClose = (input: {
+  readonly wasUrlOpen: boolean;
+  readonly keepAlive: boolean;
+  readonly isSessionActive: boolean;
+}): boolean =>
+  input.isSessionActive ||
+  shouldKeepSendTaskAliveOnNavigate({
+    wasUrlOpen: input.wasUrlOpen,
+    keepAlive: input.keepAlive,
+  });
