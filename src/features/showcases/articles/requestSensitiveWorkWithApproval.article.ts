@@ -51,9 +51,9 @@ const requestSensitiveWorkWithApproval: ShowcaseArticle = {
       ],
     },
     {
-      heading: "Honest limits",
+      heading: "How approval feels in practice",
       paragraphs: [
-        "Approval needs an approver and an online executor Mac. Job history is local-first per browser today — not a company-wide compliance archive yet.",
+        "An approver reviews the request, then an online executor Mac runs the job. Both sides can open Job history in their browser to see the prompt and result.",
       ],
     },
   ],

@@ -36,7 +36,7 @@ export default function ShowcasePngFigure({
     >
       <div className={SHOWCASE_FIGURE_FRAME_CLASS}>
         {preferSvg ? (
-          // eslint-disable-next-line @next/next/no-img-element -- curated SVG sample
+          // eslint-disable-next-line @next/next/no-img-element -- curated SVG figure
           <img
             src={svgSrc}
             alt={alt}

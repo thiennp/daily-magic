@@ -103,3 +103,27 @@
 **Fix:** Padded 16:10 `object-cover object-top` frame on all article figures; prefer SVG when PNG aspect is taller than ~square.
 
 **Regression test:** `showcaseFigureCrop.constant.test.ts`.
+
+---
+
+## SHOWCASES-011 — Marketing articles used limit/demo/sample apology copy
+
+**Symptom:** Showcase guides framed product with headings like “Honest limits”, “sample data”, “demo prompt”, and “Supported with caveats”.
+
+**Root cause:** Early drafts optimized for engineer honesty over marketing tone on `/showcases` and home showcase rows.
+
+**Fix:** Rewrite article sections and index/home shells to benefit-first framing; support labels “Ready to use” / “Works with this setup”; ban apology/demo/sample phrases in article marketing strings.
+
+**Regression test:** `showcaseMarketingCopy.test.ts`.
+
+---
+
+## SHOWCASES-012 — Try-next CTAs broke for logged-out readers
+
+**Symptom:** “Open Send a task” (`/?sendTask=1`) and similar app CTAs from showcase articles opened the marketing home (or empty app shell) when the reader was not signed in. “Open Automations” via a hard-coded login URL also skipped signed-in users past the destination.
+
+**Root cause:** Home renders `HomeMarketingLanding` when anonymous, so `sendTask` is ignored. tryNext links pointed at app routes without an auth-aware wrap.
+
+**Fix:** `resolveShowcaseTryNextHref` + `ShowcaseTryNextLink` wrap auth-gated destinations with `/login?callbackUrl=…` for anonymous readers and unwrap login URLs when already signed in. Article data stores destination paths.
+
+**Regression test:** `resolveShowcaseTryNextHref.test.ts`, `showcaseArticleLinks.test.ts`.

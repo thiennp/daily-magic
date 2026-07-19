@@ -38,9 +38,9 @@ const companyWorkflowsSetupOnce: ShowcaseArticle = {
       ],
     },
     {
-      heading: "Honest limit today",
+      heading: "A strong first catalog",
       paragraphs: [
-        "Creating and editing workflows in Library works for the common case. Complex publish and visibility settings may still need a careful first pass — start with one weekly status workflow, then grow the catalog.",
+        "Start with one weekly status workflow in Library, publish it for the group, then grow the catalog as people ask for more playbooks.",
       ],
     },
   ],

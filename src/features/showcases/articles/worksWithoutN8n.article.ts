@@ -29,15 +29,15 @@ const worksWithoutN8n: ShowcaseArticle = {
       ],
     },
     {
-      heading: "What we do not do yet",
+      heading: "How Agent Witch stays simple",
       paragraphs: [
-        "There is no drag-and-drop canvas like n8n. The library page has a simple workflow form (fields → prompt). There is no n8n webhook runner. If you need Zapier-style glue between SaaS tools, n8n may still be the right tool alongside Agent Witch for Mac-side AI work.",
+        "Library workflows are a clear form: fields assemble into a prompt, then your Mac runs the job. Keep n8n or Zapier for SaaS glue when you need it—use Agent Witch for Mac-side AI work your team can request from the browser.",
       ],
     },
     {
       heading: "Good starting point",
       paragraphs: [
-        "Pick one recurring task, publish it as a workflow, save it to the library. You get structure without learning a node canvas. Add n8n later only if you need cross-service automation Agent Witch does not cover.",
+        "Pick one recurring task, publish it as a workflow, save it to the library. You get structure without learning a node canvas. Pair with n8n later only if you need cross-service automation beyond Mac-side AI work.",
       ],
     },
   ],

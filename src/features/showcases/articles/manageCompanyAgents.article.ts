@@ -3,14 +3,15 @@ import type ShowcaseArticle from "@/features/showcases/types/ShowcaseArticle.typ
 const manageCompanyAgents: ShowcaseArticle = {
   slug: "manage-company-agents",
   title: "Manage company agents in one place",
-  subtitle: "Groups, offerings, and visibility — light admin, not a full SOC.",
+  subtitle:
+    "Groups, offerings, and visibility—clear ownership without a heavy console.",
   category: "For teams",
   supportLevel: "partial",
   readMinutes: 3,
   whatYouNeed: [
     "Admin access to company groups and members",
     "Teammates who publish capabilities",
-    "Patience — this is directory + policy, not remote desktop for every Mac",
+    "Champions who connect their own Macs",
   ],
   tryNext: { label: "Open Companies & rules", href: "/admin/groups" },
   sections: [
@@ -20,7 +21,7 @@ const manageCompanyAgents: ShowcaseArticle = {
       ],
     },
     {
-      heading: "What admins can do today",
+      heading: "What admins can do",
       bullets: [
         "Company groups and membership",
         "Dispatch policy: open vs approval required",
@@ -28,9 +29,9 @@ const manageCompanyAgents: ShowcaseArticle = {
       ],
     },
     {
-      heading: "What is not a full agent fleet console yet",
+      heading: "How ownership works",
       paragraphs: [
-        "You cannot remotely install or reboot every Mac from one pane. Each person connects their own Mac. Management is about rules, visibility, and shared catalog — not MDM for AI.",
+        "Each person connects their own Mac. Admins set rules, visibility, and the shared catalog so everyone knows who can run what—and who owns the machine that does the work.",
       ],
     },
   ],

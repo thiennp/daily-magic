@@ -6,8 +6,8 @@ interface ShowcaseWhatYouNeedBoxProps {
 }
 
 const SUPPORT_LABEL_MAP: Record<ShowcaseSupportLevel, string> = {
-  full: "Fully supported today",
-  partial: "Supported with caveats",
+  full: "Ready to use",
+  partial: "Works with this setup",
 };
 
 export default function ShowcaseWhatYouNeedBox({

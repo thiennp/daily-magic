@@ -40,9 +40,9 @@ const standupFromLocalBranch: ShowcaseArticle = {
       ],
     },
     {
-      heading: "Honest limit",
+      heading: "Best results",
       paragraphs: [
-        "The Mac with the repo must be online. Job history is local-first in your browser — keep the same browser for weekly reruns.",
+        "Keep the Mac with the repo awake and connected. Job history stays in your browser so you can Run again from the same place next week.",
       ],
     },
   ],

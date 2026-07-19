@@ -8,11 +8,11 @@ const weeklyReportInFiveMinutes: ShowcaseArticle = {
   supportLevel: "full",
   readMinutes: 3,
   whatYouNeed: [
-    'Library playbook "Sample: Weekly status update" (seeded after sign-in)',
+    'Library playbook "Weekly status update" (seeded after sign-in)',
     "Mac agent online to send, or copy the assembled prompt elsewhere",
   ],
   tryNext: {
-    label: "Open Library (sample workflow)",
+    label: "Open Library (weekly status workflow)",
     href: "/library",
   },
   relatedShowcases: [

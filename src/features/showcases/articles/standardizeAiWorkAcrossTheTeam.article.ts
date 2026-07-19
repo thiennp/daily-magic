@@ -50,14 +50,14 @@ const standardizeAiWorkAcrossTheTeam: ShowcaseArticle = {
       heading: "Rollout order that builds trust",
       bullets: [
         "Seed three recognizable playbooks before the wide invite",
-        "Run one approved sample end-to-end with two champions",
-        "Share onboard in 15 minutes with everyone else—not a blank catalog",
+        "Run one approved job end-to-end with two champions",
+        "Share onboard in 15 minutes with everyone else—once the catalog has real playbooks",
       ],
     },
     {
-      heading: "Honest limits to say in the kickoff email",
+      heading: "What to say in the kickoff email",
       paragraphs: [
-        "There is no remote MDM to install agents on every laptop, and job history is not yet a cross-device compliance archive. What you get today is standardized work, visible offerings, and approval gates—enough for most SMEs to move faster without overselling a fleet console.",
+        "Lead with standardized playbooks, visible offerings, and approval gates. Champions pair their own Macs; everyone starts from the same Library catalog. That is enough for most SMEs to move faster with clear ownership.",
       ],
     },
   ],

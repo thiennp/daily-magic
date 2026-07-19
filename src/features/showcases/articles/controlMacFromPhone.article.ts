@@ -4,7 +4,7 @@ const controlMacFromPhone: ShowcaseArticle = {
   slug: "control-mac-from-phone",
   title: "Control AI on your Mac from your phone",
   subtitle:
-    "Your Mac does the work. Your phone is the remote — with honest limits.",
+    "Your Mac does the work. Your phone is the remote—browse, fill, copy, and send when you are ready.",
   category: "Mobile",
   supportLevel: "partial",
   readMinutes: 4,
@@ -31,7 +31,7 @@ const controlMacFromPhone: ShowcaseArticle = {
       ],
     },
     {
-      heading: "What works well on phone today",
+      heading: "What works well on phone",
       bullets: [
         "Browse My library and Marketplace",
         "Use a playbook — workflow stepper on small screens",
@@ -40,9 +40,9 @@ const controlMacFromPhone: ShowcaseArticle = {
       ],
     },
     {
-      heading: "What does not work yet",
+      heading: "Phone as remote, Mac as engine",
       paragraphs: [
-        "Your phone cannot run Claude on your files by itself. Execution still happens on a connected Mac. Think phone = remote control and clipboard, Mac = engine.",
+        "Your phone opens Library, fills the form, and sends the request. Claude still runs on a connected Mac with your files—think remote control and clipboard on the phone, engine on the Mac.",
       ],
     },
   ],

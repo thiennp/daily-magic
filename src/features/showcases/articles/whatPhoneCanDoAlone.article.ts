@@ -3,7 +3,8 @@ import type ShowcaseArticle from "@/features/showcases/types/ShowcaseArticle.typ
 const whatPhoneCanDoAlone: ShowcaseArticle = {
   slug: "what-phone-can-do-alone",
   title: "What your phone can do without your Mac",
-  subtitle: "Library, copy prompt, team dispatch — honest limits included.",
+  subtitle:
+    "Library, copy prompt, and team dispatch—right from a small screen.",
   category: "Common questions",
   supportLevel: "partial",
   readMinutes: 4,
@@ -53,9 +54,9 @@ const whatPhoneCanDoAlone: ShowcaseArticle = {
       ],
     },
     {
-      heading: "No push notifications yet",
+      heading: "Stay productive between connections",
       paragraphs: [
-        "Queued tasks send when your browser reconnects — not when your Mac wakes up in your pocket. Copy prompt or draft the form and come back, or use team dispatch when a colleague's Mac is available.",
+        "Queued tasks send when your browser reconnects. Copy prompt or draft the form and come back, or use team dispatch when a colleague's Mac is available.",
       ],
     },
   ],

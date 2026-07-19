@@ -62,11 +62,11 @@ const humanCheckpointsBeforeMacRuns: ShowcaseArticle = {
       ],
     },
     {
-      heading: "Honest limits",
+      heading: "How checkpoints feel day to day",
       bullets: [
-        "The browser checklist does not auto-tick steps; you follow them manually",
-        "Mid-run questions use the agent input protocol when the CLI supports it",
-        "Teammates see checkpoint titles in the prompt, not your private portal passwords",
+        "Follow the browser checklist as you go through each human step",
+        "Mid-run questions appear when the agent needs your answer",
+        "Teammates see checkpoint titles in the prompt—your private passwords stay with you",
       ],
     },
   ],

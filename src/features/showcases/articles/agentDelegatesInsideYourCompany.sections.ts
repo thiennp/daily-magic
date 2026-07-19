@@ -10,12 +10,12 @@ export const agentDelegatesInsideYourCompanySections: readonly ShowcaseArticleSe
       ],
     },
     {
-      heading: "Sample workflow: Repo branch standup",
+      heading: "Featured workflow: Repo branch standup",
       bullets: [
         "Template in Marketplace: Repo branch standup (teammate Mac)",
         "Fields: repo path on their Mac, branch name, optional since date",
         "Teammate publishes it to Library; you pick it under their assistant when sending",
-        "Good demo prompt: summarize commits on feature/checkout for yesterday's standup",
+        "Try this prompt: summarize commits on feature/checkout for yesterday's standup",
       ],
     },
     {
@@ -77,9 +77,9 @@ export const agentDelegatesInsideYourCompanySections: readonly ShowcaseArticleSe
       ],
     },
     {
-      heading: "Honest limits",
+      heading: "How team dispatch stays trustworthy",
       paragraphs: [
-        "Team dispatch needs real sign-in and database rows for groups, memberships, and published capabilities — the localhost dev dashboard mode only exercises self-dispatch. Job history is local-first per browser today, not a company-wide audit log.",
+        "Team dispatch uses your signed-in company group, memberships, and published capabilities. Each person opens Job history in their browser to review the prompts and results for their runs.",
       ],
     },
   ];

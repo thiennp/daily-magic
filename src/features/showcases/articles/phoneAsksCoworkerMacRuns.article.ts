@@ -20,7 +20,7 @@ const phoneAsksCoworkerMacRuns: ShowcaseArticle = {
     },
     {
       slug: "what-phone-can-do-alone",
-      label: "Honest limits when your Mac is away",
+      label: "What your phone can do when your Mac is away",
     },
   ],
   sections: [
@@ -38,9 +38,9 @@ const phoneAsksCoworkerMacRuns: ShowcaseArticle = {
       ],
     },
     {
-      heading: "Caveats",
+      heading: "What makes the send smooth",
       paragraphs: [
-        "Send still needs your browser connected to the app server. If their Mac is asleep, the job waits. Copy prompt remains an option when you only need text, not local files.",
+        "Keep your browser connected while you send. Their Mac should be awake to start the job. Prefer Copy prompt when you only need text, not local files on their machine.",
       ],
     },
   ],

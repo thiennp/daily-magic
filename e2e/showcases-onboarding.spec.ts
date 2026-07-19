@@ -3,7 +3,7 @@ import { expect, test } from "@playwright/test";
 const ONBOARDING_GUIDES = [
   {
     slug: "onboard-in-15-minutes",
-    title: "Onboard in 15 minutes — real screens, sample data",
+    title: "Onboard in 15 minutes — walk through with real screens",
     figureCount: 4,
   },
   {

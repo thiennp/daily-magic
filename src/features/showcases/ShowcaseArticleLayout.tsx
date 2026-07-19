@@ -3,6 +3,7 @@ import Link from "next/link";
 import AppPanel from "@/components/surfaces/AppPanel";
 import ShowcaseArticleBody from "@/features/showcases/ShowcaseArticleBody";
 import ShowcaseRelatedShowcases from "@/features/showcases/ShowcaseRelatedShowcases";
+import ShowcaseTryNextLink from "@/features/showcases/ShowcaseTryNextLink";
 import ShowcaseWhatYouNeedBox from "@/features/showcases/ShowcaseWhatYouNeedBox";
 import type ShowcaseArticle from "@/features/showcases/types/ShowcaseArticle.type";
 
@@ -52,12 +53,10 @@ export default function ShowcaseArticleLayout({
         <p className="text-sm font-medium text-gray-800 dark:text-white/90">
           Try this next
         </p>
-        <Link
+        <ShowcaseTryNextLink
           href={article.tryNext.href}
-          className="mt-2 inline-flex h-11 items-center rounded-lg bg-brand-500 px-5 text-sm font-medium text-white transition hover:bg-brand-600"
-        >
-          {article.tryNext.label}
-        </Link>
+          label={article.tryNext.label}
+        />
       </AppPanel>
     </article>
   );

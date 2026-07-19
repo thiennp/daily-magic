@@ -69,8 +69,8 @@ export default function ShowcasesIndexPageLayout() {
       <div className="mt-14">
         <h2 className="text-lg font-semibold text-gray-900">For teams</h2>
         <p className="mt-2 max-w-2xl text-sm text-gray-600">
-          Company workflows, approval, onboarding — with honest limits on admin
-          and publishing tools today.
+          Company workflows, approval, and onboarding—seed the catalog, then
+          invite the team.
         </p>
         <div className="mt-6 grid gap-6 md:grid-cols-2">
           {forTeams.map((article) => (
@@ -83,7 +83,7 @@ export default function ShowcasesIndexPageLayout() {
           Common questions
         </h2>
         <p className="mt-2 max-w-2xl text-sm text-gray-600">
-          Slack, n8n, ChatGPT, mobile limits, offline Macs — straight answers.
+          Slack, n8n, ChatGPT, mobile, and offline Macs — straight answers.
         </p>
         <div className="mt-6 grid gap-6 md:grid-cols-2">
           {questions.map((article) => (
@@ -94,8 +94,8 @@ export default function ShowcasesIndexPageLayout() {
       <div className="mt-14">
         <h2 className="text-lg font-semibold text-gray-900">E2E verified</h2>
         <p className="mt-2 max-w-2xl text-sm text-gray-600">
-          Screenshots from real browser runs against test*@agentwitch.com
-          accounts. See e2e/features/ for full Gherkin scenarios.
+          Screenshots from real product walks—so you can see the screens before
+          you sign in.
         </p>
         <div className="mt-6 grid gap-6 md:grid-cols-2">
           {e2eVerified.map((article) => (

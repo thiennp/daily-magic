@@ -17,7 +17,7 @@ const automateForYourselfOrYourTeam: ShowcaseArticle = {
   ],
   tryNext: {
     label: "Open Automations",
-    href: "/login?callbackUrl=%2Fautomations",
+    href: "/automations",
   },
   relatedShowcases: [
     {
@@ -49,7 +49,7 @@ const automateForYourselfOrYourTeam: ShowcaseArticle = {
       image: buildShowcaseAutomationArticleImage(
         AUTOMATION_SHOWCASE_SCREEN.HOME_POPULAR_PRESETS,
         {
-          alt: "Sample home page with popular workflow presets",
+          alt: "Home page with popular workflow presets",
           caption: "Popular workflow presets on the home page before sign-in.",
         },
       ),
@@ -65,7 +65,7 @@ const automateForYourselfOrYourTeam: ShowcaseArticle = {
       image: buildShowcaseAutomationArticleImage(
         AUTOMATION_SHOWCASE_SCREEN.NEW_AUTOMATION,
         {
-          alt: "Sample new automation form with schedule trigger",
+          alt: "New automation form with schedule trigger",
           caption:
             "New automation form with workflow, weekday schedule, and field values.",
         },
@@ -82,17 +82,17 @@ const automateForYourselfOrYourTeam: ShowcaseArticle = {
       image: buildShowcaseAutomationArticleImage(
         AUTOMATION_SHOWCASE_SCREEN.AUTOMATIONS_LIST,
         {
-          alt: "Sample automations list with a scheduled workflow enabled",
+          alt: "Automations list with a scheduled workflow enabled",
           caption: "Friday team status enabled with the next run scheduled.",
         },
       ),
     },
     {
-      heading: "Honest limits",
+      heading: "Built around your Mac",
       bullets: [
-        "Schedules run on your Mac—not in the cloud—so a sleeping Mac waits until it wakes",
-        "Webhook triggers hit the server, but execution still needs your Mac online",
-        "Re-open Automations after an Agent Witch update if sync to the Mac failed",
+        "Schedules run on your Mac so jobs use your local files and tools",
+        "Webhook triggers reach the server; your Mac runs the work when it is ready",
+        "After an Agent Witch update, open Automations once so the Mac stays in sync",
       ],
     },
   ],

@@ -3,7 +3,8 @@ import type ShowcaseArticle from "@/features/showcases/types/ShowcaseArticle.typ
 const whenExecutorMacIsOffline: ShowcaseArticle = {
   slug: "when-executor-mac-is-offline",
   title: "What happens when the Mac is asleep",
-  subtitle: "No magic cloud runner — and no notification when it wakes up yet.",
+  subtitle:
+    "Work runs on a real Mac you trust—here is how to keep jobs moving while it rests.",
   category: "Common questions",
   supportLevel: "partial",
   readMinutes: 3,
@@ -18,19 +19,19 @@ const whenExecutorMacIsOffline: ShowcaseArticle = {
   sections: [
     {
       paragraphs: [
-        "Agent Witch runs on a real Mac, not a shared server farm. That is a feature for local files and trust — and it means send fails or waits when the executor is offline, closed, or asleep.",
+        "Agent Witch runs on a real Mac, not a shared server farm. That keeps local files and trust close to you—and jobs start when the executor Mac is awake and connected.",
       ],
     },
     {
       heading: "What you will see",
       bullets: [
-        "Send disabled or blocked when your browser is not connected",
+        "Send waits until your browser is connected",
         "Jobs need Agent Witch running on the target Mac",
-        "Approval flows pause until an approver and executor are available",
+        "Approval flows continue once an approver and executor are available",
       ],
     },
     {
-      heading: "Workarounds today",
+      heading: "Keep work moving",
       bullets: [
         "Copy prompt from library — run later on any machine with Claude",
         "Pick another teammate as executor via team dispatch",
@@ -38,9 +39,9 @@ const whenExecutorMacIsOffline: ShowcaseArticle = {
       ],
     },
     {
-      heading: "What is not built yet",
+      heading: "Always-on setups",
       paragraphs: [
-        "There is no push notification when a run completes. If you need always-on automation, keep a Mac awake or use scheduled jobs on a dedicated machine.",
+        "For recurring jobs, keep a Mac awake or schedule automations on a dedicated machine. Check Job history when you want the finished output.",
       ],
     },
     {

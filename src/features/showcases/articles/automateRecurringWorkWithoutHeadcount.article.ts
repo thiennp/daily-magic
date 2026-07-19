@@ -11,7 +11,7 @@ const automateRecurringWorkWithoutHeadcount: ShowcaseArticle = {
   whatYouNeed: [
     "One repeating job your team already does in chat (status, triage, research)",
     "A champion who can save it as a playbook and optional schedule",
-    "Honest expectation: this augments people; it does not replace judgment calls",
+    "A clear goal: augment people and free judgment calls for higher-value work",
   ],
   tryNext: {
     label: "See how automations work",
@@ -55,7 +55,7 @@ const automateRecurringWorkWithoutHeadcount: ShowcaseArticle = {
     {
       heading: "What to tell your champion",
       bullets: [
-        "Start from onboard in 15 minutes—pair one Mac, run the sample workflow",
+        "Start from onboard in 15 minutes—pair one Mac, run the weekly status workflow",
         "Then open Automations and schedule the same playbook",
         "Share the automate guide with ops leads—not the WebSocket install doc",
       ],

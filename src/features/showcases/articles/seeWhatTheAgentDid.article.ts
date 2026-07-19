@@ -32,9 +32,9 @@ const seeWhatTheAgentDid: ShowcaseArticle = {
       ],
     },
     {
-      heading: "Honest limit today",
+      heading: "How Job history helps you",
       paragraphs: [
-        "Job history is local-first in your browser (plus live session data). It is a practical ops log, not a company-wide compliance vault that every admin can search across devices yet. Use it to rerun work and review what happened on this machine's sessions.",
+        "Job history lives in your browser with live session data—a practical ops log for this machine. Use it to rerun work and review what happened on your sessions.",
       ],
     },
   ],

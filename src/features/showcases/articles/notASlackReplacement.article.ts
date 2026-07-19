@@ -3,11 +3,11 @@ import type ShowcaseArticle from "@/features/showcases/types/ShowcaseArticle.typ
 const notASlackReplacement: ShowcaseArticle = {
   slug: "not-a-slack-replacement",
   title: "Agent Witch is not a Slack replacement",
-  subtitle: "It does not fix your chat problem — it fixes repeat AI work.",
+  subtitle: "Keep Slack for chat. Use Agent Witch for repeat AI work.",
   category: "Common questions",
   supportLevel: "full",
   readMinutes: 3,
-  whatYouNeed: ["Nothing — this clarifies what we are and are not"],
+  whatYouNeed: ["Nothing — this clarifies where Agent Witch fits"],
   tryNext: { label: "See what it does instead", href: "/showcases" },
   sections: [
     {

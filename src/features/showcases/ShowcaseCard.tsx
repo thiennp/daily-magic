@@ -55,7 +55,7 @@ export default function ShowcaseCard({
           href={href}
           className="-mx-6 -mt-6 mb-4 block overflow-hidden rounded-t-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400/50 focus-visible:ring-offset-2"
         >
-          {/* eslint-disable-next-line @next/next/no-img-element -- public showcase sample screens */}
+          {/* eslint-disable-next-line @next/next/no-img-element -- public showcase product screens */}
           <img
             src={cover.src}
             alt={cover.alt}

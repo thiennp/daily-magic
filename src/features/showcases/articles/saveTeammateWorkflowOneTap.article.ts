@@ -29,9 +29,9 @@ const saveTeammateWorkflowOneTap: ShowcaseArticle = {
       ],
     },
     {
-      heading: "What does not",
+      heading: "What you get vs what stays theirs",
       paragraphs: [
-        "Their Mac, their rules bundle, and their private setup. You get the recipe; you run it on your machine or edit before publishing to your team.",
+        "You get the recipe—title, fields, and example request text. Their Mac, rules bundle, and private setup stay with them. Run the playbook on your machine or edit it before publishing to your team.",
       ],
     },
   ],

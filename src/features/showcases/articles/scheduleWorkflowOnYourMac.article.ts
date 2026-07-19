@@ -61,11 +61,11 @@ const scheduleWorkflowOnYourMac: ShowcaseArticle = {
       ],
     },
     {
-      heading: "Honest limits",
+      heading: "Built around your Mac",
       bullets: [
-        "No server cron — if your Mac is off, scheduled runs wait until it wakes",
-        "No push notification when a run finishes; check Job history",
-        "Re-open Automations on your Mac if sync failed after an install update",
+        "Your Mac runs the schedule so jobs stay close to your local files",
+        "When a run finishes, open Job history to review the result",
+        "After an Agent Witch update, open Automations once so schedules stay in sync",
       ],
     },
   ],
