@@ -2,4 +2,8 @@
 export const resolveShouldRestoreAgentLiveTerminalSession = (input: {
   readonly continueSession: boolean;
   readonly resumeLiveSession: boolean;
-}): boolean => input.continueSession || input.resumeLiveSession;
+  readonly sourceRunId?: string;
+}): boolean =>
+  input.continueSession ||
+  input.resumeLiveSession ||
+  (input.sourceRunId?.length ?? 0) > 0;

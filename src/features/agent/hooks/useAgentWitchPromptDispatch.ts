@@ -6,6 +6,9 @@ import {
   type RefObject,
   type SetStateAction,
 } from "react";
+import { useSearchParams } from "next/navigation";
+
+import { SEND_TASK_SOURCE_RUN_ID_QUERY_PARAM } from "@/features/agent/constants/sendTaskModalQuery.constant";
 
 import { buildDemoClaudePromptAck } from "@/features/agent/utils/buildDemoClaudePromptAck";
 import { formatAgentLiveTerminalCommandLine } from "@/features/agent/utils/agentLiveTerminalPrompt.constant";
@@ -36,8 +39,12 @@ export const useAgentWitchPromptDispatch = (input: {
     readonly capabilityId?: string;
     readonly targetDeviceId?: string;
   },
-) => void) =>
-  useCallback(
+) => void) => {
+  const searchParams = useSearchParams();
+  const sourceRunId =
+    searchParams.get(SEND_TASK_SOURCE_RUN_ID_QUERY_PARAM) ?? "";
+
+  return useCallback(
     (prompt, options) => {
       const trimmedPrompt = prompt.trim();
       if (trimmedPrompt.length === 0 || options === undefined) {
@@ -75,11 +82,13 @@ export const useAgentWitchPromptDispatch = (input: {
         capabilityId: options.capabilityId,
         targetDeviceId: options.targetDeviceId,
         sessionContinuation,
+        ...(sourceRunId.length > 0 ? { sourceRunId } : {}),
         onResponse: (raw) => {
           input.applySocketMessage(raw);
           input.setLastResponse(parseAgentWitchSocketDisplay(raw));
         },
       });
     },
-    [input],
+    [input, sourceRunId],
   );
+};

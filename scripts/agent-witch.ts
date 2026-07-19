@@ -269,6 +269,7 @@ const dispatchWriterTask = async (
   agentRunId?: string,
   sessionContinuation = false,
   shellSessionId?: string,
+  sourceRunId?: string,
 ): Promise<void> => {
   if (!isHarnessWriterAgentId(writerAgent)) {
     sendMessage(socket, {
@@ -330,12 +331,31 @@ const dispatchWriterTask = async (
       ? "continue"
       : "first";
 
+  let resolvedPrompt = prompt;
+  if (
+    sessionContinuation &&
+    sessionTurn === "first" &&
+    typeof sourceRunId === "string" &&
+    sourceRunId.length > 0
+  ) {
+    const priorRun = loadAgentRunLocal(config.layout, sourceRunId);
+    if (priorRun !== null) {
+      const { buildContinuationPromptWithContext } =
+        await import("./buildContinuationPromptWithContext");
+      resolvedPrompt = buildContinuationPromptWithContext({
+        priorPrompt: priorRun.prompt,
+        priorOutput: priorRun.resultOutput ?? "",
+        userMessage: prompt,
+      });
+    }
+  }
+
   const ragChunks = await queryAgentWitchRag({
     layout: config.layout,
-    query: prompt,
+    query: resolvedPrompt,
     limit: 5,
   });
-  const promptWithRag = `${formatRagContextForPrompt(ragChunks)}${prompt}`;
+  const promptWithRag = `${formatRagContextForPrompt(ragChunks)}${resolvedPrompt}`;
 
   runWriterTask(
     config,
@@ -993,6 +1013,10 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
           ? parsed.payload.agentRunId
           : undefined;
       const sessionContinuation = parsed.payload.sessionContinuation === true;
+      const sourceRunId =
+        typeof parsed.payload.sourceRunId === "string"
+          ? parsed.payload.sourceRunId
+          : undefined;
       const shellSessionId =
         typeof parsed.payload.shellSessionId === "string"
           ? parsed.payload.shellSessionId
@@ -1014,6 +1038,7 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
           agentRunId,
           sessionContinuation,
           shellSessionId,
+          sourceRunId,
         );
       }
     }

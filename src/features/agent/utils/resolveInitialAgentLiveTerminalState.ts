@@ -2,16 +2,25 @@ import {
   loadPersistedAgentLiveTerminalState,
   persistAgentLiveTerminalState,
 } from "@/features/agent/utils/agentLiveTerminalLocalStore";
+import { restoreAgentLiveTerminalFromSourceRun } from "@/features/agent/utils/restoreAgentLiveTerminalFromSourceRun";
 import {
   initialAgentLiveTerminalState,
   type AgentLiveTerminalState,
 } from "@/features/agent/utils/agentLiveTerminalState.type";
 
-export const resolveInitialAgentLiveTerminalState = (
-  shouldRestore: boolean,
-): AgentLiveTerminalState => {
-  if (typeof window === "undefined" || !shouldRestore) {
+export const resolveInitialAgentLiveTerminalState = (input: {
+  readonly shouldRestore: boolean;
+  readonly sourceRunId?: string;
+}): AgentLiveTerminalState => {
+  if (typeof window === "undefined" || !input.shouldRestore) {
     return initialAgentLiveTerminalState();
+  }
+
+  if ((input.sourceRunId?.length ?? 0) > 0) {
+    const restored = restoreAgentLiveTerminalFromSourceRun(input.sourceRunId!);
+    if (restored !== null) {
+      return restored;
+    }
   }
 
   return loadPersistedAgentLiveTerminalState();

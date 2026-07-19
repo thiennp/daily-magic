@@ -26,4 +26,14 @@ describe("resolveShouldRestoreAgentLiveTerminalSession", () => {
       }),
     ).toBe(true);
   });
+
+  it("AGENT-038: sourceRunId alone restores the scoped job session", () => {
+    expect(
+      resolveShouldRestoreAgentLiveTerminalSession({
+        continueSession: false,
+        resumeLiveSession: false,
+        sourceRunId: "run-1",
+      }),
+    ).toBe(true);
+  });
 });

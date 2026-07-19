@@ -23,9 +23,12 @@ export function useAgentWitchLiveTerminal(socketRef: {
   readonly current: WebSocket | null;
 }): UseAgentWitchLiveTerminalResult {
   const shouldRestore = useShouldRestoreAgentLiveTerminalSession();
-  const allowPersistRef = useRef(shouldRestore);
+  const allowPersistRef = useRef(shouldRestore.shouldRestore);
   const [state, setState] = useState<AgentLiveTerminalState>(() =>
-    resolveInitialAgentLiveTerminalState(shouldRestore),
+    resolveInitialAgentLiveTerminalState({
+      shouldRestore: shouldRestore.shouldRestore,
+      sourceRunId: shouldRestore.sourceRunId,
+    }),
   );
 
   useEffect(() => {

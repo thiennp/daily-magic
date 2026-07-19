@@ -11,6 +11,7 @@ export async function dispatchClaudePrompt(input: {
   readonly capabilityId?: string;
   readonly targetDeviceId?: string;
   readonly sessionContinuation?: boolean;
+  readonly sourceRunId?: string;
   readonly onResponse: (response: string) => void;
 }): Promise<void> {
   try {
@@ -22,6 +23,7 @@ export async function dispatchClaudePrompt(input: {
       capabilityId: input.capabilityId,
       targetDeviceId: input.targetDeviceId,
       sessionContinuation: input.sessionContinuation,
+      sourceRunId: input.sourceRunId,
     });
     input.onResponse(raw);
     return;
@@ -35,6 +37,7 @@ export async function dispatchClaudePrompt(input: {
       capabilityId: input.capabilityId,
       targetDeviceId: input.targetDeviceId,
       sessionContinuation: input.sessionContinuation,
+      sourceRunId: input.sourceRunId,
       onResponse: input.onResponse,
     });
   }

@@ -3,11 +3,21 @@
 import Link from "next/link";
 
 import Button from "@/components/ui/button/Button";
-import buildAgentComposerHref from "@/lib/library/buildAgentComposerHref";
+import { buildAgentRunContinueHref } from "@/features/reports/utils/buildAgentRunContinueHref";
+import type AgentRunRecord from "@/lib/dispatch/types/AgentRunRecord.type";
 
-/** Opens Send-a-task and tells the Mac CLI to --continue the last conversation. */
-export default function AgentRunContinueButton() {
-  const href = buildAgentComposerHref({ continueSession: true });
+interface AgentRunContinueButtonProps {
+  readonly run: Pick<
+    AgentRunRecord,
+    "id" | "deviceId" | "writerAgent" | "capabilityId"
+  >;
+}
+
+/** Opens Send-a-task scoped to this job on the same Mac/browser. */
+export default function AgentRunContinueButton({
+  run,
+}: AgentRunContinueButtonProps) {
+  const href = buildAgentRunContinueHref({ run });
 
   return (
     <Link href={href} className="inline-flex">

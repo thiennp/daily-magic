@@ -19,6 +19,7 @@ export const dispatchClaudeRunToAgent = (
   requestId?: string,
   includeNextActions = false,
   sessionContinuation = false,
+  sourceRunId?: string,
   shellSessionId?: string,
 ): void => {
   agentClient.send({
@@ -28,6 +29,7 @@ export const dispatchClaudeRunToAgent = (
       agentRunId,
       writerAgent,
       ...(sessionContinuation ? { sessionContinuation: true } : {}),
+      ...(sourceRunId !== undefined ? { sourceRunId } : {}),
       ...(shellSessionId !== undefined ? { shellSessionId } : {}),
     },
     requestId,
