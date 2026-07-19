@@ -39,7 +39,10 @@ const initialStallClockState = (): StallClockState => ({
 export const useAgentLiveProgressStallState = (input: {
   readonly isWorking: boolean;
   readonly activityFingerprint: string;
-}): AgentLiveProgressStallState => {
+}): {
+  readonly stallState: AgentLiveProgressStallState;
+  readonly msSinceLastActivity: number | null;
+} => {
   const [clock, dispatch] = useReducer(
     stallClockReducer,
     undefined,
@@ -74,8 +77,11 @@ export const useAgentLiveProgressStallState = (input: {
       ? clock.nowMs - clock.lastActivityAt
       : null;
 
-  return resolveAgentLiveProgressStallState({
-    isWorking: input.isWorking,
+  return {
+    stallState: resolveAgentLiveProgressStallState({
+      isWorking: input.isWorking,
+      msSinceLastActivity,
+    }),
     msSinceLastActivity,
-  });
+  };
 };

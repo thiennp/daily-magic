@@ -4,6 +4,7 @@ import AgentLiveProgressFeed from "@/features/agent/AgentLiveProgressFeed";
 import AgentLiveTerminalFeedbackChat from "@/features/agent/AgentLiveTerminalFeedbackChat";
 import AgentLiveTerminalNextActions from "@/features/agent/AgentLiveTerminalNextActions";
 import { useAgentLiveProgressStallState } from "@/features/agent/hooks/useAgentLiveProgressStallState";
+import { useOptionalAgentWitchDashboard } from "@/features/agent-witch/dashboard/AgentWitchDashboardContext";
 import type { AgentMacShellPanelProps } from "@/features/agent/types/AgentMacShellPanelProps.type";
 import { buildAgentLiveProgressSteps } from "@/features/agent/utils/buildAgentLiveProgressSteps";
 import { renderAgentLiveTerminalBody } from "@/features/agent/utils/renderAgentLiveTerminalBody";
@@ -38,7 +39,9 @@ export default function AgentLiveTerminalPanel(
     props.status === "starting" ||
     props.status === "streaming" ||
     props.status === "waiting_approval";
-  const stallState = useAgentLiveProgressStallState({
+  const dashboard = useOptionalAgentWitchDashboard();
+  const connectionStatus = dashboard?.connectionStatus ?? "disconnected";
+  const { stallState, msSinceLastActivity } = useAgentLiveProgressStallState({
     isWorking,
     activityFingerprint: [
       props.output,
@@ -64,6 +67,8 @@ export default function AgentLiveTerminalPanel(
           replyPreview={progress.replyPreview}
           isWorking={isWorking}
           stallState={stallState}
+          connectionStatus={connectionStatus}
+          msSinceLastActivity={msSinceLastActivity}
           nextActions={showNextActions ? nextActions : []}
           nextActionsDisabled={props.isFeedbackSubmitting}
           onSelectNextAction={props.onSubmitFeedback}
