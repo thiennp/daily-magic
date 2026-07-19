@@ -62,7 +62,10 @@ export default function WsTestComposerWizardLaterSteps({
       {wizard.showWriterAgentStepOnly ? (
         <div>
           <SendTaskComposerStepTrail items={stepTrail} />
-          <SendTaskComposerWriterAgentStep onSelect={onWriterAgentSelect} />
+          <SendTaskComposerWriterAgentStep
+            selectedWriterAgent={writerAgent}
+            onSelect={onWriterAgentSelect}
+          />
         </div>
       ) : null}
       {wizard.showFormStep ? (
