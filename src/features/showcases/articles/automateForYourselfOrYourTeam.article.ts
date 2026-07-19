@@ -49,8 +49,9 @@ const automateForYourselfOrYourTeam: ShowcaseArticle = {
       image: buildShowcaseAutomationArticleImage(
         AUTOMATION_SHOWCASE_SCREEN.HOME_POPULAR_PRESETS,
         {
-          alt: "Home page with popular workflow presets",
-          caption: "Popular workflow presets on the home page before sign-in.",
+          alt: "Popular workflow preset cards on the home page",
+          caption:
+            "Popular workflows — pick a preset card to save and automate.",
         },
       ),
     },

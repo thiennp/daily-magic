@@ -27,6 +27,7 @@ export default function ShowcaseTopicFigure({
       height={height}
       alt={alt}
       caption={caption}
+      preferSvg
     />
   );
 }

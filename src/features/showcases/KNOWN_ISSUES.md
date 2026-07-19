@@ -127,3 +127,27 @@
 **Fix:** `resolveShowcaseTryNextHref` + `ShowcaseTryNextLink` wrap auth-gated destinations with `/login?callbackUrl=…` for anonymous readers and unwrap login URLs when already signed in. Article data stores destination paths.
 
 **Regression test:** `resolveShowcaseTryNextHref.test.ts`, `showcaseArticleLinks.test.ts`.
+
+---
+
+## SHOWCASES-013 — Home card cover showed marketing hero, not presets
+
+**Symptom:** Featured “Automate for yourself” card used `01-home-popular-presets.png` but the crop showed the home hero/sign-up UI, not popular workflow cards.
+
+**Root cause:** Capture used `fullPage: true` (tall PNG); card `object-top` framed the top of the page. Cover resolver always used the PNG `src`.
+
+**Fix:** Capture clips `#popular-presets-heading` section; card covers use the curated presets SVG via `resolveShowcaseCoverSrc` (tall PNGs still fall back to SVG elsewhere).
+
+**Regression test:** `resolveShowcaseCoverSrc.test.ts`, `resolveShowcaseArticleCoverImage.test.ts`.
+
+---
+
+## SHOWCASES-014 — Card and article images illegible / wrong content
+
+**Symptom:** Home and /showcases card covers used full-page PNGs (`object-cover object-top`) so text was unreadable at ~300px wide; some topic PNGs (e.g. approvals) were identical admin captures that did not match the story.
+
+**Root cause:** Capture reused `/admin/groups` for approvals/leadership; cover resolver preferred PNG; crop mode hid illustration labels.
+
+**Fix:** Covers and marketing figures prefer curated SVGs; cards/figures use `object-contain` with larger min-heights; topic alts use screen captions.
+
+**Regression test:** `resolveShowcaseCoverSrc.test.ts`, `resolveShowcaseArticleCoverImage.test.ts`.

@@ -1,3 +1,4 @@
+import { resolveShowcaseCoverSrc } from "@/features/showcases/resolveShowcaseCoverSrc";
 import type ShowcaseArticle from "@/features/showcases/types/ShowcaseArticle.type";
 import type { ShowcaseArticleImage } from "@/features/showcases/types/ShowcaseArticle.type";
 
@@ -7,7 +8,11 @@ export const resolveShowcaseArticleCoverImage = (
 ): ShowcaseArticleImage | null => {
   for (const section of article.sections) {
     if (section.image !== undefined) {
-      return section.image;
+      const image = section.image;
+      return {
+        ...image,
+        src: resolveShowcaseCoverSrc(image),
+      };
     }
   }
 

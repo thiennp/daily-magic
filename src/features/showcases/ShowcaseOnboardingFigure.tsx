@@ -27,6 +27,7 @@ export default function ShowcaseOnboardingFigure({
       height={height}
       alt={alt}
       caption={caption}
+      preferSvg
     />
   );
 }

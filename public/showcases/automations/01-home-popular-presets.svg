@@ -8,7 +8,7 @@
   <rect width="960" height="560" fill="url(#bg)"/>
   <rect x="32" y="28" width="896" height="504" rx="16" fill="#ffffff" stroke="#e5e7eb"/>
   <text x="56" y="68" font-family="ui-sans-serif, system-ui, sans-serif" font-size="18" font-weight="600" fill="#111827">Home  -  Popular workflows</text>
-  <text x="56" y="92" font-family="ui-sans-serif, system-ui, sans-serif" font-size="12" fill="#6b7280">Sample UI  -  sign in to save a preset</text>
+  <text x="56" y="92" font-family="ui-sans-serif, system-ui, sans-serif" font-size="12" fill="#6b7280">Pick a workflow — sign in to save it to your Library</text>
   <rect x="56" y="120" width="260" height="150" rx="12" fill="#fff" stroke="#d1d5db"/>
   <text x="72" y="152" font-family="ui-sans-serif, system-ui, sans-serif" font-size="11" font-weight="600" fill="#6b7280">COMMUNICATION</text>
   <text x="72" y="176" font-family="ui-sans-serif, system-ui, sans-serif" font-size="14" font-weight="600" fill="#111827">Email inbox reply</text>

@@ -20,7 +20,7 @@ export const enrichShowcaseArticleWithImages = (
   }
 
   const image = buildShowcaseTopicArticleImage(topicScreenId, {
-    alt: `${article.title} — product screen`,
+    alt: resolveShowcaseTopicScreenCaption(topicScreenId),
     caption: resolveShowcaseTopicScreenCaption(topicScreenId),
   });
 

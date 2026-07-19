@@ -3,7 +3,7 @@
   <rect width="960" height="560" fill="url(#bg)"/>
   <rect x="32" y="28" width="896" height="504" rx="16" fill="#fff" stroke="#e5e7eb"/>
   <text x="56" y="68" font-family="ui-sans-serif,system-ui,sans-serif" font-size="18" font-weight="600" fill="#111827">Send a task</text>
-  <text x="56" y="92" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#6b7280">Sample UI  team dispatch</text>
+  <text x="56" y="92" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#6b7280">Product UI  team dispatch</text>
   <text x="56" y="132" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" font-weight="600" fill="#374151">Company</text>
   <rect x="56" y="142" width="400" height="36" rx="8" fill="#fff" stroke="#d1d5db"/>
   <text x="68" y="165" font-family="ui-sans-serif,system-ui,sans-serif" font-size="13" fill="#111827">Acme Design Co (approval)</text>

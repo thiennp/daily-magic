@@ -13,6 +13,8 @@ interface ShowcasePngFigureProps {
   readonly height: number;
   readonly alt: string;
   readonly caption: string;
+  /** Force the curated SVG (topic/marketing illustrations). */
+  readonly preferSvg?: boolean;
 }
 
 export default function ShowcasePngFigure({
@@ -22,8 +24,10 @@ export default function ShowcasePngFigure({
   height,
   alt,
   caption,
+  preferSvg: preferSvgProp,
 }: ShowcasePngFigureProps) {
-  const preferSvg = shouldPreferShowcaseSvgFallback(width, height);
+  const preferSvg =
+    preferSvgProp === true || shouldPreferShowcaseSvgFallback(width, height);
   const displayWidth = 960;
   const displayHeight = 600;
 

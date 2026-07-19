@@ -28,6 +28,7 @@ export default function ShowcaseTeamDispatchFigure({
       height={height}
       alt={alt}
       caption={caption}
+      preferSvg
     />
   );
 }

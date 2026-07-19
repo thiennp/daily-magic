@@ -111,10 +111,20 @@ test.describe("Home article showcase screenshots", () => {
     bugs.length = 0;
     await page.setViewportSize(VIEWPORT);
 
-    // Marketing home (popular presets) — signed out
+    // Marketing home (popular presets section only) — signed out
     await context.clearCookies();
     await gotoSettled(page, "/");
-    await shot(page, "automations/01-home-popular-presets");
+    const popularPresets = page.locator("#popular-presets-heading").first();
+    await expect(popularPresets).toBeVisible({ timeout: 15_000 });
+    await popularPresets.scrollIntoViewIfNeeded();
+    await page.waitForTimeout(400);
+    const presetsSection = page
+      .locator("section")
+      .filter({ has: page.locator("#popular-presets-heading") })
+      .first();
+    await presetsSection.screenshot({
+      path: "public/showcases/automations/01-home-popular-presets.png",
+    });
 
     await signInTestAccount(page, EMAIL);
     await gotoSettled(page, "/");

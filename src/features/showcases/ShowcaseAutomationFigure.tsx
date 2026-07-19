@@ -27,6 +27,7 @@ export default function ShowcaseAutomationFigure({
       height={height}
       alt={alt}
       caption={caption}
+      preferSvg
     />
   );
 }

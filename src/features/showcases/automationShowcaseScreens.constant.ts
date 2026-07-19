@@ -31,8 +31,8 @@ export const AUTOMATION_SHOWCASE_SCREEN_DIMENSIONS: Readonly<
   >
 > = {
   [AUTOMATION_SHOWCASE_SCREEN.HOME_POPULAR_PRESETS]: {
-    width: 1440,
-    height: 6169,
+    width: 1424,
+    height: 1022,
   },
   [AUTOMATION_SHOWCASE_SCREEN.NEW_AUTOMATION]: { width: 1440, height: 900 },
   [AUTOMATION_SHOWCASE_SCREEN.AUTOMATIONS_LIST]: { width: 1440, height: 900 },

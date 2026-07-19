@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { resolveShowcaseArticleCoverImage } from "@/features/showcases/resolveShowcaseArticleCoverImage";
+import { SHOWCASE_CARD_COVER_IMAGE_BASE_CLASS } from "@/features/showcases/showcaseFigureCrop.constant";
 import type ShowcaseArticle from "@/features/showcases/types/ShowcaseArticle.type";
 import {
   MARKETING_SHOWCASE_CARD_BASE_CLASSES,
@@ -28,9 +29,9 @@ const VARIANT_CLASSES: Record<ShowcaseCardVariant, string> = {
 };
 
 const COVER_ASPECT_CLASSES: Record<ShowcaseCardVariant, string> = {
-  default: "aspect-[16/10]",
-  featured: "aspect-[16/11] lg:min-h-[14rem]",
-  spotlight: "aspect-[21/9]",
+  default: "aspect-[16/10] min-h-[11rem]",
+  featured: "aspect-[16/11] min-h-[16rem] lg:min-h-[20rem]",
+  spotlight: "aspect-[21/9] min-h-[12rem]",
 };
 
 export default function ShowcaseCard({
@@ -55,14 +56,14 @@ export default function ShowcaseCard({
           href={href}
           className="-mx-6 -mt-6 mb-4 block overflow-hidden rounded-t-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400/50 focus-visible:ring-offset-2"
         >
-          {/* eslint-disable-next-line @next/next/no-img-element -- public showcase product screens */}
+          {/* eslint-disable-next-line @next/next/no-img-element -- curated showcase covers */}
           <img
             src={cover.src}
             alt={cover.alt}
             width={960}
             height={560}
             className={mergeMarketingClasses(
-              "w-full object-cover object-top",
+              SHOWCASE_CARD_COVER_IMAGE_BASE_CLASS,
               COVER_ASPECT_CLASSES[variant],
             )}
           />
