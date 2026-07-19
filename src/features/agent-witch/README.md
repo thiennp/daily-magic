@@ -4,12 +4,12 @@ Mac pairing, install script, mutual WebSocket bridge, local app (`:43347`), and 
 
 ## Scope
 
-| Area           | Path                        |
-| -------------- | --------------------------- |
-| Feature client | `src/features/agent-witch/` |
-| Server / hub   | `src/lib/agentWitch/`       |
-| APIs           | `/api/agent-witch/*`        |
-| Local Mac app  | `http://127.0.0.1:43347`    |
+| Area           | Path                                |
+| -------------- | ----------------------------------- |
+| Feature client | `src/features/agent-witch/`         |
+| Server / hub   | `src/lib/agentWitch/`               |
+| APIs           | `/api/agent-witch/*`                |
+| Local Mac app  | `http://local.agentwitch.com:43347` |
 
 ## Transport
 
@@ -26,7 +26,9 @@ Mac HTTP `heartbeat` / `commands/poll` / `messages` return **410 Gone** (retired
 
 ## Local RAG
 
-After agent turns, chunks are embedded with local Ollama (`nomic-embed-text` by default) into `~/.agent-witch/rag/`. Cloud-originated tasks query RAG first and inject hits into the writer prompt. Browse at `http://127.0.0.1:43347/knowledge`.
+After agent turns, chunks are embedded with local Ollama (`nomic-embed-text` by default) into `~/.agent-witch/rag/`. Cloud-originated tasks query RAG first and inject hits into the writer prompt. Browse at `http://local.agentwitch.com:43347/knowledge`.
+
+`local.agentwitch.com` is a public DNS loopback name (`A` → `127.0.0.1`, `AAAA` → `::1`). The UI still binds only to `127.0.0.1` (AGENT-021 — the website never fetches it).
 
 ## Writer setup
 
@@ -49,4 +51,4 @@ Browser presence uses `/api/agent-witch/devices` (WS hub). Local `:43347` is Mac
 
 Install from each origin separately so local and prod stay independent.
 
-Bundle version: bump `AGENT_WITCH_INSTALL_BUNDLE_VERSION` when install scripts change (currently **25**).
+Bundle version: bump `AGENT_WITCH_INSTALL_BUNDLE_VERSION` when install scripts change (currently **29**).

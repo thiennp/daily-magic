@@ -3,7 +3,10 @@ import { spawn } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 
-import { AGENT_WITCH_LOCAL_APP_PORT } from "./agentWitchLocalApp.constants";
+import {
+  AGENT_WITCH_LOCAL_APP_ORIGIN,
+  AGENT_WITCH_LOCAL_APP_PORT,
+} from "./agentWitchLocalApp.constants";
 import {
   clearAgentWitchLocalTraffic,
   readAgentWitchLocalTraffic,
@@ -17,8 +20,14 @@ import {
   isAgentWitchConnectionHealthStale,
 } from "./agentWitchConnectionHealth";
 import { AGENT_WITCH_CONNECTION_STALE_MS } from "./agentWitchConnectionHealth.constants";
+import { formatAgentWitchRelativeTimeAgo } from "./formatAgentWitchRelativeTimeAgo";
+import { buildAgentWitchLocalAppShell } from "./buildAgentWitchLocalAppShell";
+import { shouldShowAgentWitchLocalReviveButton } from "./shouldShowAgentWitchLocalReviveButton";
 import type { AgentWitchLocalLayout } from "./resolveAgentWitchLocalLayout";
 import { loadOrCreateAgentWitchDeviceKeypair } from "./agentWitchDeviceKeypair";
+
+const formatLocalAppTimestamp = (value: string | null): string =>
+  formatAgentWitchRelativeTimeAgo(value) ?? "never";
 
 type LocalAppStatus = {
   readonly wsConnected: boolean;
@@ -68,39 +77,45 @@ const readBody = async (request: http.IncomingMessage): Promise<string> => {
   return Buffer.concat(chunks).toString("utf8");
 };
 
-const buildShellPage = (input: {
-  readonly title: string;
-  readonly body: string;
-}): string => `<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>${escapeHtml(input.title)} · Agent Witch Local</title>
-  <style>
-    :root { color-scheme: light; font-family: ui-sans-serif, system-ui, sans-serif; }
-    body { margin: 0; background: #f4f6f8; color: #15202b; }
-    header { background: #0f172a; color: #f8fafc; padding: 1rem 1.25rem; }
-    header a { color: #cbd5e1; margin-right: 1rem; text-decoration: none; }
-    main { max-width: 960px; margin: 0 auto; padding: 1.25rem; }
-    .card { background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 1rem; margin-bottom: 1rem; }
-    pre { white-space: pre-wrap; word-break: break-word; font-size: 12px; }
-    .muted { color: #64748b; }
-    input, button { font: inherit; padding: 0.4rem 0.6rem; }
-  </style>
-</head>
-<body>
-  <header>
-    <strong>Agent Witch Local</strong>
-    <nav style="margin-top:0.5rem">
-      <a href="/">Status</a>
-      <a href="/traffic">Traffic</a>
-      <a href="/knowledge">Knowledge</a>
-    </nav>
-  </header>
-  <main>${input.body}</main>
-</body>
-</html>`;
+const buildStatusBody = (input: {
+  readonly status: LocalAppStatus;
+  readonly stale: boolean;
+  readonly linkCode: string;
+}): string => {
+  const connectedBadge = input.status.wsConnected
+    ? `<span class="badge badge-online">Connected</span>`
+    : `<span class="badge badge-offline">Disconnected</span>`;
+  const healthBadge = input.stale
+    ? `<span class="badge badge-warn">Stale</span>`
+    : `<span class="badge badge-online">Fresh</span>`;
+  const wakeError = input.status.wakeError
+    ? `<div class="alert-error">${escapeHtml(input.status.wakeError)}</div>`
+    : "";
+  const reviveActions = shouldShowAgentWitchLocalReviveButton(
+    input.status.wsConnected,
+  )
+    ? `<div class="actions">
+        <form method="POST" action="/api/revive" onsubmit="fetch('/api/revive',{method:'POST'});return false;">
+          <button class="btn btn-primary" type="submit">Revive WebSocket</button>
+        </form>
+      </div>`
+    : "";
+
+  return `<section class="card">
+      <p class="eyebrow">Local bridge</p>
+      <h1>Status</h1>
+      <p class="lede">Mac-side Agent Witch bridge at <a href="${AGENT_WITCH_LOCAL_APP_ORIGIN}"><code>${AGENT_WITCH_LOCAL_APP_ORIGIN}</code></a>.</p>
+      <div class="meta-grid">
+        <div class="meta-item"><span class="meta-label">WebSocket</span><span class="meta-value">${connectedBadge}</span></div>
+        <div class="meta-item"><span class="meta-label">Last heartbeat</span><span class="meta-value">${escapeHtml(formatLocalAppTimestamp(input.status.lastHeartbeatAt))}</span></div>
+        <div class="meta-item"><span class="meta-label">Health file</span><span class="meta-value">${healthBadge}</span></div>
+        <div class="meta-item"><span class="meta-label">Link code</span><span class="meta-value"><code>${escapeHtml(input.linkCode)}</code></span></div>
+        <div class="meta-item"><span class="meta-label">Public key</span><span class="meta-value muted mono">${escapeHtml(input.status.publicKeyRaw.slice(0, 24))}…</span></div>
+      </div>
+      ${wakeError}
+      ${reviveActions}
+    </section>`;
+};
 
 export type AgentWitchLocalAppControllers = {
   readonly getStatus: () => LocalAppStatus;
@@ -195,21 +210,14 @@ export const startAgentWitchLocalApp = (input: {
         );
         sendHtml(
           response,
-          buildShellPage({
+          buildAgentWitchLocalAppShell({
             title: "Status",
-            body: `<div class="card">
-              <h1>Local bridge</h1>
-              <p>Port <code>${AGENT_WITCH_LOCAL_APP_PORT}</code></p>
-              <p>WS connected: <strong>${status.wsConnected ? "yes" : "no"}</strong></p>
-              <p>Last heartbeat: ${escapeHtml(status.lastHeartbeatAt ?? "never")}</p>
-              <p>Health file stale: ${stale ? "yes" : "no"}</p>
-              <p>Link code: <code>${escapeHtml(ensureLinkCode())}</code></p>
-              <p class="muted">Public key: ${escapeHtml(status.publicKeyRaw.slice(0, 24))}…</p>
-              ${status.wakeError ? `<p>Wake error: ${escapeHtml(status.wakeError)}</p>` : ""}
-              <form method="POST" action="/api/revive" onsubmit="fetch('/api/revive',{method:'POST'});return false;">
-                <button type="submit">Revive WebSocket</button>
-              </form>
-            </div>`,
+            activePath: "/",
+            body: buildStatusBody({
+              status,
+              stale,
+              linkCode: ensureLinkCode(),
+            }),
           }),
         );
         return;
@@ -220,18 +228,24 @@ export const startAgentWitchLocalApp = (input: {
         const rows = entries
           .map(
             (entry) =>
-              `<tr><td>${escapeHtml(entry.at)}</td><td>${escapeHtml(entry.direction)}</td><td>${escapeHtml(entry.type)}</td><td>${escapeHtml(entry.summary)}</td><td>${escapeHtml(entry.action ?? "")}</td></tr>`,
+              `<tr><td title="${escapeHtml(entry.at)}">${escapeHtml(formatLocalAppTimestamp(entry.at))}</td><td>${escapeHtml(entry.direction)}</td><td><code>${escapeHtml(entry.type)}</code></td><td>${escapeHtml(entry.summary)}</td><td>${escapeHtml(entry.action ?? "")}</td></tr>`,
           )
           .join("");
+        const table =
+          entries.length > 0
+            ? `<div class="table-wrap"><table><thead><tr><th>At</th><th>Dir</th><th>Type</th><th>Summary</th><th>Action</th></tr></thead><tbody>${rows}</tbody></table></div>`
+            : `<p class="empty">No traffic yet. Frames appear here when the bridge is active.</p>`;
         sendHtml(
           response,
-          buildShellPage({
+          buildAgentWitchLocalAppShell({
             title: "Traffic",
-            body: `<div class="card">
+            activePath: "/traffic",
+            body: `<section class="card">
+              <p class="eyebrow">Diagnostics</p>
               <h1>WS traffic log</h1>
-              <p class="muted">Frames sent/received and local actions.</p>
-              <table width="100%" cellpadding="6"><thead><tr><th>At</th><th>Dir</th><th>Type</th><th>Summary</th><th>Action</th></tr></thead><tbody>${rows}</tbody></table>
-            </div>`,
+              <p class="lede">Frames sent and received, plus local bridge actions.</p>
+              ${table}
+            </section>`,
           }),
         );
         return;
@@ -254,26 +268,28 @@ export const startAgentWitchLocalApp = (input: {
         const list = chunks
           .map(
             (chunk) =>
-              `<div class="card"><div class="muted">${escapeHtml(chunk.createdAt)}${chunk.source ? ` · ${escapeHtml(chunk.source)}` : ""}</div><pre>${escapeHtml(chunk.text)}</pre></div>`,
+              `<article class="card"><div class="muted" title="${escapeHtml(chunk.createdAt)}">${escapeHtml(formatLocalAppTimestamp(chunk.createdAt))}${chunk.source ? ` · ${escapeHtml(chunk.source)}` : ""}</div><pre>${escapeHtml(chunk.text)}</pre></article>`,
           )
           .join("");
         sendHtml(
           response,
-          buildShellPage({
+          buildAgentWitchLocalAppShell({
             title: "Knowledge",
-            body: `<div class="card">
-              <h1>Local knowledge</h1>
-              <form method="GET" action="/knowledge">
-                <input name="q" value="${escapeHtml(q)}" placeholder="Search local RAG" style="width:70%" />
-                <button type="submit">Search</button>
+            activePath: "/knowledge",
+            body: `<section class="card">
+              <p class="eyebrow">Local RAG</p>
+              <h1>Knowledge</h1>
+              <p class="lede">Indexed chunks from finished agent turns on this Mac.</p>
+              <form class="search-row" method="GET" action="/knowledge">
+                <input class="input" name="q" value="${escapeHtml(q)}" placeholder="Search local knowledge" aria-label="Search local knowledge" />
+                <button class="btn btn-primary" type="submit">Search</button>
               </form>
-            </div>${list || '<p class="muted">No chunks yet. Finish an agent turn to index.</p>'}`,
+            </section>${list || '<p class="empty">No chunks yet. Finish an agent turn to index.</p>'}`,
           }),
         );
         return;
       }
 
-      // unused body reader keeps API extensible
       if (method === "POST") {
         await readBody(request);
       }
@@ -298,9 +314,7 @@ export const startAgentWitchLocalApp = (input: {
   });
 
   server.listen(AGENT_WITCH_LOCAL_APP_PORT, "127.0.0.1", () => {
-    console.log(
-      `[agent-witch] Local app http://127.0.0.1:${AGENT_WITCH_LOCAL_APP_PORT}`,
-    );
+    console.log(`[agent-witch] Local app ${AGENT_WITCH_LOCAL_APP_ORIGIN}`);
   });
 
   return server;

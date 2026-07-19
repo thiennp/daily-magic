@@ -5,6 +5,7 @@ import { useCallback, useState } from "react";
 import HarnessWriterAgentMark from "@/features/agent/icons/HarnessWriterAgentMark";
 import { WRITER_SETUP_OPTIONS } from "@/features/agent/writerSetupOptions.constant";
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
+import { AGENT_WITCH_LOCAL_APP_ORIGIN } from "@/lib/agentWitch/agentWitchLocalAppPort.constant";
 
 const ensureWriterOnMac = async (
   writerAgent: HarnessWriterAgent,
@@ -91,9 +92,15 @@ export default function WriterSetupPage() {
         ))}
       </ul>
       <p className="mt-6 text-sm text-gray-500">
-        On the Mac, open the local Agent Witch UI for traffic and knowledge
-        (http://127.0.0.1:43347). Connection status here comes from the live
-        WebSocket bridge, not that local page.
+        On the Mac, open the local Agent Witch UI for traffic and knowledge (
+        <a
+          href={AGENT_WITCH_LOCAL_APP_ORIGIN}
+          className="font-medium text-zinc-700 underline-offset-4 hover:text-zinc-900 hover:underline"
+        >
+          {AGENT_WITCH_LOCAL_APP_ORIGIN}
+        </a>
+        ). Connection status here comes from the live WebSocket bridge, not that
+        local page.
       </p>
     </main>
   );

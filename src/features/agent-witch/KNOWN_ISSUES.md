@@ -1,5 +1,45 @@
 # Agent Witch bridge — known issues
 
+## AGENT-028 — Local UI only advertised as 127.0.0.1:43347
+
+**Symptom:** Mac debug UI was hard to remember as a raw loopback URL.
+
+**Fix:** Advertise `http://local.agentwitch.com:43347` (`AGENT_WITCH_LOCAL_APP_ORIGIN`). DNS `A`/`AAAA` for `local` → `127.0.0.1`/`::1` at the registrar; process still binds `127.0.0.1` only (AGENT-021). Install bundle **29**.
+
+**Regression tests:** `agentWitchLocalAppPort.constant.test.ts` (AGENT-028).
+
+---
+
+## AGENT-027 — Revive WebSocket showed while the bridge was healthy
+
+**Symptom:** Local status always offered **Revive WebSocket**, even when the Mac bridge WebSocket was already connected.
+
+**Fix:** Render the revive control only when `wsConnected` is false. Install bundle **28**.
+
+**Regression tests:** `shouldShowAgentWitchLocalReviveButton.test.ts` (AGENT-027).
+
+---
+
+## AGENT-026 — Local UI did not match Agent Witch styleguide
+
+**Symptom:** `http://127.0.0.1:43347` used a dark slate system-font shell unlike the site’s Outfit + zinc marketing surfaces.
+
+**Fix:** Local status/traffic/knowledge pages reuse the marketing shell patterns (sticky blur header, logo mark, zinc cards/buttons, status badges). Install bundle **27**.
+
+**Regression tests:** `buildAgentWitchLocalAppShell.test.ts` (AGENT-026).
+
+---
+
+## AGENT-025 — Local UI showed absolute ISO timestamps
+
+**Symptom:** `http://127.0.0.1:43347` status/traffic/knowledge showed raw ISO strings (e.g. `2026-07-19T08:00:31.073Z`) instead of how long ago an event happened.
+
+**Fix:** Format timestamps as relative ages (`just now`, `N mins ago`, `Nh … ago`, `N days ago`, …). Absolute ISO remains on hover via `title`. Install bundle **26**.
+
+**Regression tests:** `formatAgentWitchRelativeTimeAgo.test.ts` (AGENT-025).
+
+---
+
 ## AGENT-017 — Mac↔cloud must use mutual WebSocket (not HTTP poll)
 
 **Symptom:** Mac transport depended on HTTP heartbeat / command poll / messages; reconnects and device auth were weak; traffic lived only on a cloud debug page.
