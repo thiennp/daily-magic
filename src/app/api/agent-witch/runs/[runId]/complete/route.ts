@@ -1,8 +1,7 @@
 import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
-import { appendAgentRunEvent } from "@/lib/dispatch/agentRunEventQueries";
 import { getAgentRunRowById } from "@/lib/dispatch/agentRunEventQueries";
-import { updateAgentRunStatus } from "@/lib/dispatch/agentRunQueries";
-import { registerAgentRunSession } from "@/lib/dispatch/agentRunSessionRegistry";
+import { markAgentRunCompleted } from "@/lib/dispatch/dispatchClaudeRunToAgent";
+import { getAgentWitchHub } from "@/lib/agentWitch/getAgentWitchHub";
 import { requireAgentWitchDeviceAuth } from "@/lib/agentWitch/requireAgentWitchDeviceAuth";
 
 export const dynamic = "force-dynamic";
@@ -37,15 +36,17 @@ export async function POST(
   const { runId } = await context.params;
   const existing = await getAgentRunRowById(runId);
 
-  if (
-    existing === null ||
-    existing.deviceId !== auth.device.id ||
-    existing.status !== AgentRunStatus.RUNNING
-  ) {
+  if (existing === null || existing.deviceId !== auth.device.id) {
     return Response.json(
       { ok: false, error: "Run not found." },
       { status: 404 },
     );
+  }
+
+  const existingRun = existing;
+
+  if (existingRun.status !== AgentRunStatus.RUNNING) {
+    return Response.json({ ok: true, run: existingRun });
   }
 
   const body = await request.json().catch(() => ({}));
@@ -59,24 +60,12 @@ export async function POST(
     );
   }
 
-  await appendAgentRunEvent({
-    agentRunId: runId,
-    kind: "terminal.end",
-    payload: { exitCode: parsed.exitCode, output: parsed.output },
-  });
-
-  const completed = await updateAgentRunStatus(
+  const completed = await markAgentRunCompleted(
+    getAgentWitchHub(),
     runId,
-    parsed.exitCode === 0 ? AgentRunStatus.COMPLETED : AgentRunStatus.FAILED,
-    {
-      resultExitCode: parsed.exitCode,
-      resultOutput: parsed.output,
-    },
+    parsed.exitCode,
+    parsed.output,
   );
-
-  if (completed !== null) {
-    registerAgentRunSession(completed);
-  }
 
   return Response.json({ ok: true, run: completed });
 }

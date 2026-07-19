@@ -38,5 +38,8 @@ export default function mapAgentRunRow(
       typeof row.writer_agent === "string" && row.writer_agent.length > 0
         ? row.writer_agent
         : "claude-cli",
+    lastRunHeartbeatAt: row.last_run_heartbeat_at
+      ? String(row.last_run_heartbeat_at)
+      : null,
   };
 }

@@ -27,6 +27,7 @@ const baseRun = (
   capabilityVersionId: null,
   deviceId: null,
   writerAgent: "claude-cli",
+  lastRunHeartbeatAt: null,
   ...overrides,
 });
 

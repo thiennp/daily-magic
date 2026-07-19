@@ -51,7 +51,7 @@ const AgentLiveTerminalSection = forwardRef<
           </Link>
         </p>
       ) : null}
-      <AgentLiveTerminalPanel {...props} />
+      <AgentLiveTerminalPanel {...props} activeRunId={props.activeRunId} />
       {props.errorMessage !== null ? (
         <p className="mt-4 text-sm text-rose-600 dark:text-rose-400">
           {props.errorMessage}

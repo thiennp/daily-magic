@@ -1,5 +1,17 @@
 # Agent Witch bridge — known issues
 
+## AGENT-039 — Cloud could not tell if a Mac run was still alive or finished
+
+**Symptom:** Send-a-task progress could show "Working on your request" indefinitely when the Mac WebSocket dropped after the CLI finished, or when the Mac worker died without sending `command.claude.result`.
+
+**Cause:** Liveness was inferred from terminal stream chunks and device heartbeats, not from the active CLI child. Completion relied on a single in-flight WS message with no retry.
+
+**Fix:** Mac emits `run.heartbeat` every 15s while a CLI child is alive. Cloud stores `last_run_heartbeat_at`, rebroadcasts lightweight `run.heartbeat` to the dashboard (stall clock reset), and reconciles `RUNNING` runs with no heartbeat for 3 minutes to `failed`. Mac persists a completion outbox and retries `POST /api/agent-witch/runs/:id/complete` on reconnect. Install bundle **33**.
+
+**Regression tests:** `reconcileStaleAgentRuns.test.ts`, `agentWitchRunCompletionOutbox.test.ts` (AGENT-039).
+
+---
+
 ## AGENT-040 — Multiple dashboard SSE connections per page
 
 **Symptom:** Network tab showed several parallel `/api/agent-witch/events` streams while Send-a-task, dispatch approval, and job history each opened their own `EventSource`.

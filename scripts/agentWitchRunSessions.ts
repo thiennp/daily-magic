@@ -14,6 +14,12 @@ import {
 } from "./agentWitchPendingRunSessions";
 import { persistFinishedAgentRun } from "./agentWitchRunFinish";
 import {
+  enqueueAgentRunCompletionOutbox,
+  flushAgentRunCompletionOutbox,
+} from "./agentWitchRunCompletionOutbox";
+import { AGENT_RUN_HEARTBEAT_INTERVAL_MS } from "./agentWitchRunHeartbeat.constant";
+import type { AgentWitchCloudApiConfig } from "./agentWitchCloudApi";
+import {
   clearTerminalStreamState,
   isTerminalStreamAccepted,
   queueTerminalStreamChunk,
@@ -47,6 +53,49 @@ interface ActiveRunSession {
 
 const activeChildren = new Map<string, ChildProcess>();
 const runSessions = new Map<string, ActiveRunSession>();
+const runHeartbeatTimers = new Map<string, NodeJS.Timeout>();
+
+let cloudApiConfig: AgentWitchCloudApiConfig | null = null;
+
+export const configureAgentWitchRunCloudApi = (
+  config: AgentWitchCloudApiConfig | null,
+): void => {
+  cloudApiConfig = config;
+};
+
+export const flushPendingAgentRunCompletions = async (
+  layout: AgentWitchLocalLayout,
+): Promise<void> => {
+  await flushAgentRunCompletionOutbox({
+    layout,
+    cloudApi: cloudApiConfig,
+  });
+};
+
+const stopRunHeartbeat = (agentRunId: string): void => {
+  const timer = runHeartbeatTimers.get(agentRunId);
+  if (timer !== undefined) {
+    clearInterval(timer);
+    runHeartbeatTimers.delete(agentRunId);
+  }
+};
+
+const startRunHeartbeat = (socket: WebSocket, agentRunId: string): void => {
+  stopRunHeartbeat(agentRunId);
+
+  const sendHeartbeat = (): void => {
+    sendMessage(socket, {
+      type: "run.heartbeat",
+      payload: { agentRunId },
+    });
+  };
+
+  sendHeartbeat();
+  runHeartbeatTimers.set(
+    agentRunId,
+    setInterval(sendHeartbeat, AGENT_RUN_HEARTBEAT_INTERVAL_MS),
+  );
+};
 
 const resolveWriterCommands = (config: AgentWitchRunConfig) =>
   resolveWriterCliCommands({
@@ -75,6 +124,8 @@ const finishRun = (
   originalPrompt: string,
 ): void => {
   if (agentRunId !== undefined) {
+    stopRunHeartbeat(agentRunId);
+
     if (isTerminalStreamAccepted(agentRunId)) {
       sendMessage(socket, {
         type: "terminal.stream.end",
@@ -90,6 +141,17 @@ const finishRun = (
       exitCode,
       output,
       layout: config.layout,
+    });
+
+    enqueueAgentRunCompletionOutbox(config.layout, {
+      runId: agentRunId,
+      exitCode,
+      output,
+      createdAt: new Date().toISOString(),
+    });
+    void flushAgentRunCompletionOutbox({
+      layout: config.layout,
+      cloudApi: cloudApiConfig,
     });
 
     runSessions.delete(agentRunId);
@@ -127,6 +189,8 @@ const requestRunInput = (
     question,
     accumulatedOutput,
   });
+
+  stopRunHeartbeat(agentRunId);
 
   sendMessage(socket, {
     type: "command.claude.input_required",
@@ -180,6 +244,7 @@ const attachChildHandlers = (
       payload: { runId: agentRunId },
       requestId,
     });
+    startRunHeartbeat(socket, agentRunId);
   }
 
   child.stdout?.on("data", (chunk: Buffer) => {

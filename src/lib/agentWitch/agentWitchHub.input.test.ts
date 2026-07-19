@@ -31,6 +31,7 @@ vi.mock("@/lib/dispatch/agentRunQueries", () => ({
     approvalExpiresAt: null,
     capabilityId: null,
     capabilityVersionId: null,
+    lastRunHeartbeatAt: null,
   })),
 }));
 

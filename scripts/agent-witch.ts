@@ -20,9 +20,12 @@ import {
 } from "./resolveAgentWitchLocalLayout";
 import {
   continueClaudeTaskAfterInput,
+  configureAgentWitchRunCloudApi,
+  flushPendingAgentRunCompletions,
   replayPendingRunInputRequests,
   runWriterTask,
 } from "./agentWitchRunSessions";
+import { resolveAgentWitchCloudApiConfig } from "./agentWitchCloudApi";
 import {
   closeShellPtySession,
   openInteractiveShellPty,
@@ -1280,6 +1283,13 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
         console.log(`[agent-witch] Profile: ${config.email}`);
       }
       writeAgentWitchConnectionHealth(config.layout, { wsUrl: config.wsUrl });
+      configureAgentWitchRunCloudApi(
+        resolveAgentWitchCloudApiConfig({
+          wsUrl: config.wsUrl,
+          pairingToken: config.pairingToken,
+        }),
+      );
+      void flushPendingAgentRunCompletions(config.layout);
 
       const origin =
         resolveAgentWitchAppOriginFromWsUrl(config.wsUrl) ??

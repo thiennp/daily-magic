@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useReducer } from "react";
+import { useCallback, useEffect, useReducer, useState } from "react";
 
 import type { AgentLiveProgressStallState } from "@/features/agent/utils/resolveAgentLiveProgressStallState";
 import { resolveAgentLiveProgressStallState } from "@/features/agent/utils/resolveAgentLiveProgressStallState";
@@ -42,12 +42,17 @@ export const useAgentLiveProgressStallState = (input: {
 }): {
   readonly stallState: AgentLiveProgressStallState;
   readonly msSinceLastActivity: number | null;
+  readonly noteRunHeartbeat: () => void;
 } => {
   const [clock, dispatch] = useReducer(
     stallClockReducer,
     undefined,
     initialStallClockState,
   );
+  const [runHeartbeatRevision, setRunHeartbeatRevision] = useState(0);
+  const noteRunHeartbeat = useCallback(() => {
+    setRunHeartbeatRevision((revision) => revision + 1);
+  }, []);
 
   useEffect(() => {
     if (!input.isWorking) {
@@ -56,7 +61,7 @@ export const useAgentLiveProgressStallState = (input: {
     }
 
     dispatch({ type: "activity", at: Date.now() });
-  }, [input.activityFingerprint, input.isWorking]);
+  }, [input.activityFingerprint, input.isWorking, runHeartbeatRevision]);
 
   useEffect(() => {
     if (!input.isWorking) {
@@ -83,5 +88,6 @@ export const useAgentLiveProgressStallState = (input: {
       msSinceLastActivity,
     }),
     msSinceLastActivity,
+    noteRunHeartbeat,
   };
 };

@@ -33,6 +33,7 @@ const makeRun = (id: string, prompt = "hello"): AgentRunRecord => ({
   updatedAt: "2026-07-19T10:00:00.000Z",
   startedAt: "2026-07-19T10:00:00.000Z",
   completedAt: "2026-07-19T10:01:00.000Z",
+  lastRunHeartbeatAt: null,
 });
 
 describe("agentRunLocalCache delete (AGENT-033)", () => {

@@ -52,6 +52,7 @@ const createAgentRun = async (
       updatedAt: now,
       startedAt: null,
       completedAt: null,
+      lastRunHeartbeatAt: null,
     };
     registerAgentRunSession(run);
     return run;

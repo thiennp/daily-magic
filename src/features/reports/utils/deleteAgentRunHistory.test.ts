@@ -34,6 +34,7 @@ const makeRun = (id: string): AgentRunRecord => ({
   updatedAt: "2026-07-19T10:00:00.000Z",
   startedAt: null,
   completedAt: null,
+  lastRunHeartbeatAt: null,
 });
 
 describe("deleteAgentRunHistory (AGENT-033 / AGENT-034)", () => {

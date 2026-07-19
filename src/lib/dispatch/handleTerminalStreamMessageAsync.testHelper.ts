@@ -30,6 +30,7 @@ export const buildTerminalStreamTestRun = (
   capabilityVersionId: null,
   deviceId: null,
   writerAgent: "claude-cli",
+  lastRunHeartbeatAt: null,
   ...overrides,
 });
 

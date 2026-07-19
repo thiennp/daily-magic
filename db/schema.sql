@@ -275,7 +275,8 @@ CREATE TABLE IF NOT EXISTS agent_runs (
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   started_at TIMESTAMPTZ,
-  completed_at TIMESTAMPTZ
+  completed_at TIMESTAMPTZ,
+  last_run_heartbeat_at TIMESTAMPTZ
 );
 
 CREATE INDEX IF NOT EXISTS agent_runs_requester_idx
@@ -294,6 +295,10 @@ CREATE INDEX IF NOT EXISTS agent_runs_automation_idx
 CREATE INDEX IF NOT EXISTS agent_runs_device_claim_idx
   ON agent_runs (device_id, status, created_at ASC)
   WHERE status = 'running';
+
+CREATE INDEX IF NOT EXISTS agent_runs_stale_running_idx
+  ON agent_runs (status, last_run_heartbeat_at)
+  WHERE status = 'running' AND last_run_heartbeat_at IS NOT NULL;
 
 CREATE TABLE IF NOT EXISTS agent_run_events (
   id TEXT PRIMARY KEY DEFAULT gen_random_uuid()::text,
