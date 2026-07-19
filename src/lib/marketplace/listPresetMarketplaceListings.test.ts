@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import findCapabilityTemplateById from "@/lib/capabilities/templates/findCapabilityTemplateById";
+import allCapabilityTemplates from "@/lib/capabilities/templates/listCapabilityTemplates";
 import buildPresetMarketplaceBorrowPayload from "@/lib/marketplace/buildPresetMarketplaceBorrowPayload";
 import buildPresetMarketplaceListing from "@/lib/marketplace/buildPresetMarketplaceListing";
 import listPresetMarketplaceListings from "@/lib/marketplace/listPresetMarketplaceListings";
@@ -11,10 +12,10 @@ import {
 } from "@/lib/marketplace/presetMarketplaceCapabilityId";
 
 describe("preset marketplace listings", () => {
-  it("maps all 48 official templates to free marketplace listings", () => {
+  it("maps all official templates to free marketplace listings", () => {
     const listings = listPresetMarketplaceListings();
 
-    expect(listings).toHaveLength(48);
+    expect(listings).toHaveLength(allCapabilityTemplates.length);
     expect(listings.every((listing) => listing.isOfficialPreset === true)).toBe(
       true,
     );
