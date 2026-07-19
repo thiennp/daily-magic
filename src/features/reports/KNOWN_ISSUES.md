@@ -39,3 +39,11 @@
 **Cause:** Per-run SSE replay re-fired refresh on every historical event; `useAgentRunsActiveSse` depended on the full `runs` array (reconnect on cache bump); `upsertAgentRunLocalCache` posted first-task-sent on every write.
 
 **Fix:** Stable `activeRunIdsKey` deps, `afterSeq` cursor + refresh only on `status.*` / `terminal.end`; idempotent `markOnboardingFirstTaskSent`; debounced onboarding reload. `shouldRefreshAgentRunsOnSseEvent.test.ts` (REPORTS-005).
+
+## REPORTS-006 — Job list refetched on every active-run SSE tick
+
+**Symptom:** `/reports` still hammered `agent-runs?scope=all` whenever a running job emitted per-run SSE events, even though `agent.run.record` already updated localStorage.
+
+**Cause:** `useAgentRunsActiveSse` called full `refresh()` on status transitions; list merged API + cache but treated SSE as the primary update path.
+
+**Fix:** Drive the list from dashboard-bus cache patches (`AGENT_RUNS_LOCAL_CACHE_UPDATED_EVENT`); keep `useAgentRunsRemoteSync` slow poll (~60s) as a safety net only. `useAgentRunsList.test.ts` (REPORTS-006).

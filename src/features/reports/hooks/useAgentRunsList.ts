@@ -7,10 +7,7 @@ import {
   AGENT_RUNS_LOCAL_CACHE_UPDATED_EVENT,
   listAgentRunsLocalCache,
 } from "@/features/reports/agentRunLocalCache";
-import { useAgentRunRecordSync } from "@/features/reports/hooks/useAgentRunRecordSync";
-import { useAgentRunsActiveSse } from "@/features/reports/hooks/useAgentRunsActiveSse";
 import { useAgentRunsRemoteSync } from "@/features/reports/hooks/useAgentRunsRemoteSync";
-import { resolveActiveAgentRunIdsKey } from "@/features/reports/utils/resolveActiveAgentRunIdsKey";
 import { buildViewerAgentRunsList } from "@/features/reports/utils/buildViewerAgentRunsList";
 import type { AgentRunScopeValue } from "@/lib/dispatch/AgentRunScope.constant";
 import type { AgentRunStatusValue } from "@/lib/dispatch/AgentRunStatus.constant";
@@ -39,20 +36,6 @@ export function useAgentRunsList(input: {
     onCacheUpdated: bumpCache,
   });
 
-  const activeRunIdsKey = useMemo(
-    () => resolveActiveAgentRunIdsKey(apiRuns),
-    [apiRuns],
-  );
-
-  useAgentRunsActiveSse({
-    enabled: true,
-    activeRunIdsKey,
-    onRunActivity: () => {
-      refresh();
-      bumpCache();
-    },
-  });
-
   const cachedRuns = useMemo(() => {
     void cacheVersion;
     return listAgentRunsLocalCache();
@@ -77,8 +60,6 @@ export function useAgentRunsList(input: {
       userId,
     ],
   );
-
-  useAgentRunRecordSync(bumpCache);
 
   useEffect(() => {
     const handleCacheUpdated = (): void => {
