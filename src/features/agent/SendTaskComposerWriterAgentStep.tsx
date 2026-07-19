@@ -5,10 +5,12 @@ import { HARNESS_WRITER_OPTIONS } from "@/features/harness/constants/harnessForm
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
 
 interface SendTaskComposerWriterAgentStepProps {
+  readonly selectedWriterAgent: HarnessWriterAgent;
   readonly onSelect: (writerAgent: HarnessWriterAgent) => void;
 }
 
 export default function SendTaskComposerWriterAgentStep({
+  selectedWriterAgent,
   onSelect,
 }: SendTaskComposerWriterAgentStepProps) {
   return (
@@ -22,6 +24,7 @@ export default function SendTaskComposerWriterAgentStep({
             <SendTaskComposerWriterAgentPickerRow
               label={option.label}
               writerAgent={option.value}
+              isSelected={option.value === selectedWriterAgent}
               onSelect={() => {
                 onSelect(option.value);
               }}
