@@ -55,6 +55,7 @@ export default function WsTestComposerWizardLaterSteps({
             capabilities={composer.libraryCapabilities}
             isLoading={composer.isPrefillLoading}
             onSelect={onPickerSelect}
+            removeLibraryCapability={composer.removeLibraryCapability}
           />
         </div>
       ) : null}

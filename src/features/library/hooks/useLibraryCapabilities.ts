@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import type PublishedCapabilityRecord from "@/lib/capabilities/types/PublishedCapabilityRecord.type";
 
 export function useLibraryCapabilities(refreshKey = 0): {
   readonly capabilities: readonly PublishedCapabilityRecord[];
   readonly isLoading: boolean;
+  readonly removeCapability: (capabilityId: string) => void;
 } {
   const [capabilities, setCapabilities] = useState<
     readonly PublishedCapabilityRecord[]
@@ -42,5 +43,11 @@ export function useLibraryCapabilities(refreshKey = 0): {
     void loadLibrary();
   }, [refreshKey]);
 
-  return { capabilities, isLoading };
+  const removeCapability = useCallback((capabilityId: string): void => {
+    setCapabilities((current) =>
+      current.filter((capability) => capability.id !== capabilityId),
+    );
+  }, []);
+
+  return { capabilities, isLoading, removeCapability };
 }

@@ -5,6 +5,7 @@ import Link from "next/link";
 import SendTaskComposerPickerRow from "@/features/agent/SendTaskComposerPickerRow";
 import { useSendTaskComposerHistoryDelete } from "@/features/agent/hooks/useSendTaskComposerHistoryDelete";
 import { useSendTaskComposerHistoryRuns } from "@/features/agent/hooks/useSendTaskComposerHistoryRuns";
+import { useSendTaskComposerLibraryDelete } from "@/features/agent/hooks/useSendTaskComposerLibraryDelete";
 import { buildSendTaskComposerHistoryPickerItems } from "@/features/agent/utils/buildSendTaskComposerHistoryPickerItems";
 import {
   buildSendTaskComposerPickerItems,
@@ -16,18 +17,23 @@ interface SendTaskComposerPickerStepProps {
   readonly capabilities: readonly PublishedCapabilityRecord[];
   readonly isLoading: boolean;
   readonly onSelect: (item: SendTaskComposerPickerItem) => void;
+  readonly removeLibraryCapability: (capabilityId: string) => void;
 }
 
 export default function SendTaskComposerPickerStep({
   capabilities,
   isLoading,
   onSelect,
+  removeLibraryCapability,
 }: SendTaskComposerPickerStepProps) {
   const historyRuns = useSendTaskComposerHistoryRuns();
   const historyItems = buildSendTaskComposerHistoryPickerItems(historyRuns);
   const libraryItems = buildSendTaskComposerPickerItems(capabilities);
-  const { isDeleting, deleteHistoryItem, clearHistory } =
-    useSendTaskComposerHistoryDelete();
+  const historyDelete = useSendTaskComposerHistoryDelete();
+  const libraryDelete = useSendTaskComposerLibraryDelete(
+    removeLibraryCapability,
+  );
+  const isBusy = historyDelete.isDeleting || libraryDelete.isDeleting;
 
   return (
     <div>
@@ -42,9 +48,9 @@ export default function SendTaskComposerPickerStep({
             </h3>
             <button
               type="button"
-              disabled={isDeleting}
+              disabled={isBusy}
               onClick={() => {
-                void clearHistory();
+                void historyDelete.clearHistory();
               }}
               className="text-xs font-medium text-gray-500 transition hover:text-error-600 disabled:opacity-50 dark:text-gray-400 dark:hover:text-error-400"
             >
@@ -58,7 +64,7 @@ export default function SendTaskComposerPickerStep({
                   item={item}
                   onPlay={onSelect}
                   onDelete={(historyItem) => {
-                    void deleteHistoryItem(historyItem);
+                    void historyDelete.deleteHistoryItem(historyItem);
                   }}
                 />
               </li>
@@ -78,7 +84,17 @@ export default function SendTaskComposerPickerStep({
           <ul className="mt-2 space-y-2">
             {libraryItems.map((item) => (
               <li key={`${item.itemType}-${item.id}`}>
-                <SendTaskComposerPickerRow item={item} onPlay={onSelect} />
+                <SendTaskComposerPickerRow
+                  item={item}
+                  onPlay={onSelect}
+                  onDelete={
+                    item.kind === "library"
+                      ? (libraryItem) => {
+                          void libraryDelete.deleteLibraryItem(libraryItem);
+                        }
+                      : undefined
+                  }
+                />
               </li>
             ))}
           </ul>

@@ -14,13 +14,15 @@ export function useLibraryPlaybookSelection(): {
   readonly selectedLibraryCapabilityId: string;
   readonly setSelectedLibraryCapabilityId: (capabilityId: string) => void;
   readonly libraryCapabilities: readonly PublishedCapabilityRecord[];
+  readonly removeLibraryCapability: (capabilityId: string) => void;
   readonly rerunPrompt: string;
   readonly isLoading: boolean;
 } {
   const searchParams = useSearchParams();
   const urlCapabilityId = searchParams.get("libraryCapabilityId") ?? "";
   const rerunPrompt = searchParams.get("prompt") ?? "";
-  const { capabilities, isLoading } = useLibraryCapabilities();
+  const { capabilities, isLoading, removeCapability } =
+    useLibraryCapabilities();
   const [manualId, setManualId] = useState<string | null>(null);
   const selectedId = manualId ?? urlCapabilityId;
 
@@ -49,6 +51,7 @@ export function useLibraryPlaybookSelection(): {
     selectedLibraryCapabilityId: selectedId,
     setSelectedLibraryCapabilityId: setManualId,
     libraryCapabilities,
+    removeLibraryCapability: removeCapability,
     rerunPrompt,
     isLoading,
   };

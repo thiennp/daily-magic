@@ -33,6 +33,7 @@ export const buildWsTestTaskComposerResult = (input: {
   resolvedPrompt: input.workflow.resolvedPrompt,
   isPrefillLoading: input.librarySelection.isLoading,
   libraryCapabilities: input.librarySelection.libraryCapabilities,
+  removeLibraryCapability: input.librarySelection.removeLibraryCapability,
   selectedLibraryCapabilityId:
     input.librarySelection.selectedLibraryCapabilityId,
   setSelectedLibraryCapabilityId: input.selectLibraryCapability,

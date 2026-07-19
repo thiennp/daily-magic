@@ -32,6 +32,7 @@ export interface UseWsTestTaskComposerResult {
   readonly resetComposer: () => void;
   readonly isPrefillLoading: boolean;
   readonly libraryCapabilities: readonly PublishedCapabilityRecord[];
+  readonly removeLibraryCapability: (capabilityId: string) => void;
   readonly selectedLibraryCapabilityId: string;
   readonly setSelectedLibraryCapabilityId: (capabilityId: string) => void;
   readonly macDevices: ReturnType<typeof useMacDeviceSelection>["devices"];
