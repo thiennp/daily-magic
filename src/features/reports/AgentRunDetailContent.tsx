@@ -62,7 +62,10 @@ export default function AgentRunDetailContent({
         <AgentRunLiveTerminal key={run.id} runId={run.id} />
       ) : null}
       {run.resultOutput ? (
-        <AgentRunResultOutput resultOutput={run.resultOutput} />
+        <AgentRunResultOutput
+          resultOutput={run.resultOutput}
+          deviceId={run.deviceId}
+        />
       ) : null}
       {run.denialReason ? (
         <p className="mt-4 text-sm text-rose-600 dark:text-rose-400">
@@ -71,7 +74,7 @@ export default function AgentRunDetailContent({
       ) : null}
       {run.status === AgentRunStatus.COMPLETED ? (
         <div className="mt-6 flex flex-wrap gap-2">
-          <AgentRunContinueButton />
+          <AgentRunContinueButton deviceId={run.deviceId} />
           <AgentRunAgainButton prompt={run.prompt} />
         </div>
       ) : null}
