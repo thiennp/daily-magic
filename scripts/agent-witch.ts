@@ -58,6 +58,10 @@ import {
 import { AGENT_WITCH_CONNECTION_STALE_MS } from "./agentWitchConnectionHealth.constants";
 import { acceptTerminalStream } from "./agentWitchTerminalStreamState";
 import { requestLocalAgentWitchRestart } from "./requestLocalAgentWitchRestart";
+import { requestLocalAgentWitchSelfUpdate } from "./requestLocalAgentWitchSelfUpdate";
+import { readAgentWitchInstallVersion } from "./agentWitchInstallVersion";
+import { readInstallBundleVersionFromHeartbeatAck } from "./readInstallBundleVersionFromHeartbeatAck";
+import { shouldTriggerAgentWitchHeartbeatSelfUpdate } from "./shouldTriggerAgentWitchHeartbeatSelfUpdate";
 import {
   applyAutomationsRunFromCloud,
   applyAutomationsSyncFromCloud,
@@ -579,6 +583,7 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
     lastHeartbeatAt: string | null;
     wakeError: string | null;
     restartInFlight: boolean;
+    selfUpdateInFlight: boolean;
   } = {
     reconnectAttempt: 0,
     stopped: false,
@@ -586,6 +591,7 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
     lastHeartbeatAt: null,
     wakeError: null,
     restartInFlight: false,
+    selfUpdateInFlight: false,
   };
 
   const runLocalRestart = (reason: string): void => {
@@ -616,6 +622,81 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
       })
       .finally(() => {
         state.restartInFlight = false;
+      });
+  };
+
+  const runLocalSelfUpdateFromHeartbeat = (
+    remoteBundleVersion: string,
+  ): void => {
+    if (state.selfUpdateInFlight) {
+      return;
+    }
+
+    const localBundleVersion =
+      readAgentWitchInstallVersion(config.layout.installDir)?.bundleVersion ??
+      null;
+
+    if (
+      !shouldTriggerAgentWitchHeartbeatSelfUpdate({
+        localBundleVersion,
+        remoteBundleVersion,
+      })
+    ) {
+      return;
+    }
+
+    state.selfUpdateInFlight = true;
+    const message = `Install bundle mismatch (local=${localBundleVersion ?? "none"} remote=${remoteBundleVersion}); auto-updating…`;
+    console.log(`[agent-witch] ${message}`);
+    appendAgentWitchLocalTraffic(config.layout, {
+      direction: "local",
+      type: "system.ack",
+      summary: message,
+      action: "heartbeat-self-update",
+    });
+
+    void requestLocalAgentWitchSelfUpdate({ force: true })
+      .then((result) => {
+        if (result.ok) {
+          console.log(
+            `[agent-witch] Heartbeat self-update finished (remote ${remoteBundleVersion}).`,
+            result.payload,
+          );
+          appendAgentWitchLocalTraffic(config.layout, {
+            direction: "local",
+            type: "system.ack",
+            summary: `Heartbeat self-update ok → ${remoteBundleVersion}`,
+            action: "heartbeat-self-update-ok",
+          });
+          return;
+        }
+
+        if (!result.reachable) {
+          console.error(
+            "[agent-witch] Heartbeat self-update failed: wake update API unreachable.",
+          );
+          appendAgentWitchLocalTraffic(config.layout, {
+            direction: "local",
+            type: "system.ack",
+            summary: "Heartbeat self-update unreachable",
+            action: "heartbeat-self-update-error",
+          });
+          return;
+        }
+
+        console.error(
+          "[agent-witch] Heartbeat self-update failed.",
+          result.payload,
+        );
+        appendAgentWitchLocalTraffic(config.layout, {
+          direction: "local",
+          type: "system.ack",
+          summary: "Heartbeat self-update failed",
+          action: "heartbeat-self-update-error",
+        });
+      })
+      .finally(() => {
+        state.selfUpdateInFlight = false;
       });
   };
 
@@ -834,11 +915,15 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
       writeAgentWitchConnectionHealth(config.layout, {
         wsUrl: config.wsUrl,
       });
-      const pendingLink = readPendingAccountLinkFromAck(
-        isRecord(parsed.payload) ? parsed.payload : null,
-      );
+      const ackPayload = isRecord(parsed.payload) ? parsed.payload : null;
+      const pendingLink = readPendingAccountLinkFromAck(ackPayload);
       if (pendingLink !== null) {
         void applyPendingAccountLinkFromCloud(pendingLink);
+      }
+      const remoteBundleVersion =
+        readInstallBundleVersionFromHeartbeatAck(ackPayload);
+      if (remoteBundleVersion !== null) {
+        runLocalSelfUpdateFromHeartbeat(remoteBundleVersion);
       }
     }
 

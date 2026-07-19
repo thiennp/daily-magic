@@ -69,10 +69,13 @@ describe("handleAgentHeartbeatMessageAsync", () => {
         lastHeartbeatAt: expect.stringMatching(/^\d{4}-\d{2}-\d{2}T/),
       }),
     );
-    expect(response).toEqual({
-      type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ACK,
-      requestId: "req-1",
-    });
+    expect(response?.type).toBe(AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ACK);
+    expect(response?.requestId).toBe("req-1");
+    expect(response?.payload).toEqual(
+      expect.objectContaining({
+        installBundleVersion: expect.any(String),
+      }),
+    );
   });
 
   it("rejects heartbeats from non-agent clients", async () => {

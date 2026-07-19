@@ -1,3 +1,5 @@
+import { AGENT_WITCH_INSTALL_BUNDLE_VERSION } from "@/lib/agentWitch/agentWitchInstallBundleVersion";
+import { buildAgentWitchHeartbeatAckPayload } from "@/lib/agentWitch/buildAgentWitchHeartbeatAckPayload";
 import { buildPendingAccountLinkAckPayload } from "@/lib/agentWitch/buildPendingAccountLinkAckPayload";
 import { deliverAgentWitchDeviceRestartIfRequested } from "@/lib/agentWitch/deliverAgentWitchDeviceRestart";
 import type AgentWitchHubClient from "@/lib/agentWitch/types/AgentWitchHubClient.type";
@@ -93,6 +95,9 @@ export const handleAgentHeartbeatMessageAsync = async (
   return {
     type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ACK,
     requestId: message.requestId,
-    ...(pendingAccountLink !== null ? { payload: { pendingAccountLink } } : {}),
+    payload: buildAgentWitchHeartbeatAckPayload({
+      installBundleVersion: AGENT_WITCH_INSTALL_BUNDLE_VERSION,
+      pendingAccountLink,
+    }),
   };
 };

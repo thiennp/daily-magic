@@ -51,4 +51,4 @@ Browser presence uses `/api/agent-witch/devices` (WS hub). Local `:43347` is Mac
 
 Install from each origin separately so local and prod stay independent.
 
-Bundle version: bump `AGENT_WITCH_INSTALL_BUNDLE_VERSION` when install scripts change (currently **31**).
+Bundle version: bump `AGENT_WITCH_INSTALL_BUNDLE_VERSION` when install scripts change (currently **32**). Heartbeat `system.ack` advertises that version so connected Macs auto-update when local `install-version.json` differs.

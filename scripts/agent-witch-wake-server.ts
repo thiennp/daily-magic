@@ -19,6 +19,26 @@ import {
 } from "./agentWitchWakeHandlers";
 import { buildWakeServerCorsHeaders } from "./agentWitchWakeAllowedOrigins";
 import { resolveAgentWitchWakePort } from "./agentWitchWakeConstants";
+import { parseAgentWitchSelfUpdateRunBody } from "./parseAgentWitchSelfUpdateRunBody";
+
+const readJsonBody = async (
+  request: http.IncomingMessage,
+): Promise<unknown> => {
+  const chunks: Buffer[] = [];
+  for await (const chunk of request) {
+    chunks.push(Buffer.from(chunk));
+  }
+
+  if (chunks.length === 0) {
+    return {};
+  }
+
+  try {
+    return JSON.parse(Buffer.concat(chunks).toString("utf8")) as unknown;
+  } catch {
+    return {};
+  }
+};
 
 const sendJson = (
   response: http.ServerResponse,
@@ -171,7 +191,11 @@ const handleWakeRequest = async (
     }
 
     if (request.method === "POST" && pathname === "/update/run") {
-      const updateResult = await runAgentWitchSelfUpdateFromWakeServer();
+      const body = await readJsonBody(request);
+      const { force } = parseAgentWitchSelfUpdateRunBody(body);
+      const updateResult = await runAgentWitchSelfUpdateFromWakeServer({
+        force,
+      });
       sendJson(
         response,
         updateResult.ok ? 200 : 503,

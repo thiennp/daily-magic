@@ -1,5 +1,15 @@
 # Agent Witch bridge — known issues
 
+## AGENT-030 — Install bundle lagged until hourly self-update
+
+**Symptom:** Mac kept an old install bundle until the hourly LaunchAgent updater ran, even while connected and heartbeating.
+
+**Fix:** Every `agent.heartbeat` `system.ack` includes `installBundleVersion`. The Mac compares `~/.agent-witch/install-version.json` and auto-runs wake `POST /update/run` with `force` when they differ; logs to console + local traffic. Install bundle **32**.
+
+**Regression tests:** `buildAgentWitchHeartbeatAckPayload.test.ts`, `shouldTriggerAgentWitchHeartbeatSelfUpdate.test.ts`, `readInstallBundleVersionFromHeartbeatAck.test.ts`, `handleAgentHeartbeatMessageAsync.test.ts` (AGENT-030).
+
+---
+
 ## AGENT-029 — Port-80 local.agentwitch.com proxy conflicted with other apps
 
 **Symptom:** Hiding `:43347` required a root LaunchDaemon on `127.0.0.1:80`, which blocks other local servers (Apache, nginx, MAMP, etc.) that need loopback port 80.

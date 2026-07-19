@@ -24,6 +24,7 @@ export const AGENT_WITCH_WAKE_INSTALL_SCRIPT_NAMES = [
   "agent-witch-self-update.ts",
   "agentWitchSelfUpdate.ts",
   "agentWitchInstallVersion.ts",
+  "parseAgentWitchSelfUpdateRunBody.ts",
   "resolveAgentWitchAppOriginFromWsUrl.ts",
   "agentWitchSelfUpdateLog.ts",
   "agentWitchServiceLaunchAgentLabels.constants.ts",

@@ -349,4 +349,7 @@ export const readAgentWitchSelfUpdateLogEntries = (
 ): ReturnType<typeof readAgentWitchSelfUpdateLogs> =>
   readAgentWitchSelfUpdateLogs(limit);
 
-export const runAgentWitchSelfUpdateFromWakeServer = runAgentWitchSelfUpdate;
+export const runAgentWitchSelfUpdateFromWakeServer = (input?: {
+  readonly force?: boolean;
+}): ReturnType<typeof runAgentWitchSelfUpdate> =>
+  runAgentWitchSelfUpdate(input);
