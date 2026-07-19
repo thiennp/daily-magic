@@ -1,3 +1,4 @@
+import { filterAgentRunsNotDeletedLocally } from "@/features/reports/agentRunLocalCacheTombstones";
 import type { AgentRunScopeValue } from "@/lib/dispatch/AgentRunScope.constant";
 import { AgentRunScope } from "@/lib/dispatch/AgentRunScope.constant";
 import type { AgentRunStatusValue } from "@/lib/dispatch/AgentRunStatus.constant";
@@ -40,7 +41,9 @@ export const buildViewerAgentRunsList = (input: {
   readonly groupFilter: string;
   readonly limit?: number;
 }): readonly EnrichedAgentRunRecord[] => {
-  const merged = mergeRuns(input.apiRuns, input.cachedRuns);
+  const merged = filterAgentRunsNotDeletedLocally(
+    mergeRuns(input.apiRuns, input.cachedRuns),
+  );
   const status = input.statusFilter === "all" ? undefined : input.statusFilter;
   const groupId =
     input.scopeFilter === AgentRunScope.GROUP &&

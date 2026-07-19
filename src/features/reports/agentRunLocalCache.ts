@@ -1,4 +1,8 @@
 import { markOnboardingFirstTaskSent } from "@/features/home/utils/onboardingFirstTaskSentStore";
+import {
+  addAgentRunLocalCacheTombstone,
+  isAgentRunLocalCacheTombstoned,
+} from "@/features/reports/agentRunLocalCacheTombstones";
 import type AgentRunRecord from "@/lib/dispatch/types/AgentRunRecord.type";
 
 const STORAGE_KEY = "daily-magic.agent-runs.v1";
@@ -43,7 +47,22 @@ const writeCache = (cache: Record<string, AgentRunRecord>): void => {
   window.localStorage.setItem(STORAGE_KEY, JSON.stringify(cache));
 };
 
+export const AGENT_RUNS_LOCAL_CACHE_UPDATED_EVENT =
+  "daily-magic:agent-runs-cache-updated";
+
+const notifyAgentRunsLocalCacheUpdated = (): void => {
+  if (typeof window === "undefined" || typeof CustomEvent === "undefined") {
+    return;
+  }
+
+  window.dispatchEvent(new CustomEvent(AGENT_RUNS_LOCAL_CACHE_UPDATED_EVENT));
+};
+
 export const upsertAgentRunLocalCache = (run: AgentRunRecord): void => {
+  if (isAgentRunLocalCacheTombstoned(run.id)) {
+    return;
+  }
+
   const cache = readCache();
   cache[run.id] = run;
   writeCache(cache);
@@ -55,17 +74,23 @@ export const getAgentRunLocalCache = (runId: string): AgentRunRecord | null =>
   readCache()[runId] ?? null;
 
 export const listAgentRunsLocalCache = (): readonly AgentRunRecord[] =>
-  Object.values(readCache()).toSorted((left, right) =>
-    right.createdAt.localeCompare(left.createdAt),
-  );
+  Object.values(readCache())
+    .filter((run) => !isAgentRunLocalCacheTombstoned(run.id))
+    .toSorted((left, right) => right.createdAt.localeCompare(left.createdAt));
 
-export const AGENT_RUNS_LOCAL_CACHE_UPDATED_EVENT =
-  "daily-magic:agent-runs-cache-updated";
+export const removeAgentRunLocalCache = (runId: string): void => {
+  const cache = readCache();
+  delete cache[runId];
+  writeCache(cache);
+  addAgentRunLocalCacheTombstone(runId);
+  notifyAgentRunsLocalCacheUpdated();
+};
 
-const notifyAgentRunsLocalCacheUpdated = (): void => {
-  if (typeof window === "undefined" || typeof CustomEvent === "undefined") {
-    return;
+export const clearAgentRunsLocalCache = (): void => {
+  const ids = Object.keys(readCache());
+  writeCache({});
+  for (const id of ids) {
+    addAgentRunLocalCacheTombstone(id);
   }
-
-  window.dispatchEvent(new CustomEvent(AGENT_RUNS_LOCAL_CACHE_UPDATED_EVENT));
+  notifyAgentRunsLocalCacheUpdated();
 };

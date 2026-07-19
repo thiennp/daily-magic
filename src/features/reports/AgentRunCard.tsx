@@ -1,10 +1,12 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
 
 import AppPanel from "@/components/surfaces/AppPanel";
 import AgentRunAgainButton from "@/features/reports/AgentRunAgainButton";
 import AgentRunStatusBadge from "@/features/reports/AgentRunStatusBadge";
+import { deleteAgentRunHistory } from "@/features/reports/utils/deleteAgentRunHistory";
 import type EnrichedAgentRunRecord from "@/lib/dispatch/types/EnrichedAgentRunRecord.type";
 import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
 
@@ -14,6 +16,19 @@ interface AgentRunCardProps {
 
 export default function AgentRunCard({ run }: AgentRunCardProps) {
   const canRunAgain = run.status === AgentRunStatus.COMPLETED;
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const handleDelete = async (): Promise<void> => {
+    if (isDeleting) {
+      return;
+    }
+    setIsDeleting(true);
+    try {
+      await deleteAgentRunHistory(run.id);
+    } finally {
+      setIsDeleting(false);
+    }
+  };
 
   return (
     <AppPanel as="article" padding="compact">
@@ -40,6 +55,16 @@ export default function AgentRunCard({ run }: AgentRunCardProps) {
           View full report
         </Link>
         {canRunAgain ? <AgentRunAgainButton prompt={run.prompt} /> : null}
+        <button
+          type="button"
+          disabled={isDeleting}
+          onClick={() => {
+            void handleDelete();
+          }}
+          className="text-sm font-medium text-gray-500 transition hover:text-error-600 disabled:opacity-50 dark:text-gray-400 dark:hover:text-error-400"
+        >
+          {isDeleting ? "Deleting…" : "Delete"}
+        </button>
       </div>
     </AppPanel>
   );

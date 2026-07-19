@@ -3,6 +3,7 @@
 import Link from "next/link";
 
 import SendTaskComposerPickerRow from "@/features/agent/SendTaskComposerPickerRow";
+import { useSendTaskComposerHistoryDelete } from "@/features/agent/hooks/useSendTaskComposerHistoryDelete";
 import { useSendTaskComposerHistoryRuns } from "@/features/agent/hooks/useSendTaskComposerHistoryRuns";
 import { buildSendTaskComposerHistoryPickerItems } from "@/features/agent/utils/buildSendTaskComposerHistoryPickerItems";
 import {
@@ -25,6 +26,8 @@ export default function SendTaskComposerPickerStep({
   const historyRuns = useSendTaskComposerHistoryRuns();
   const historyItems = buildSendTaskComposerHistoryPickerItems(historyRuns);
   const libraryItems = buildSendTaskComposerPickerItems(capabilities);
+  const { isDeleting, deleteHistoryItem, clearHistory } =
+    useSendTaskComposerHistoryDelete();
 
   return (
     <div>
@@ -33,13 +36,31 @@ export default function SendTaskComposerPickerStep({
       </h2>
       {historyItems.length > 0 ? (
         <div className="mt-4">
-          <h3 className="text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">
-            Continue from history
-          </h3>
+          <div className="flex items-center justify-between gap-2">
+            <h3 className="text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">
+              Continue from history
+            </h3>
+            <button
+              type="button"
+              disabled={isDeleting}
+              onClick={() => {
+                void clearHistory();
+              }}
+              className="text-xs font-medium text-gray-500 transition hover:text-error-600 disabled:opacity-50 dark:text-gray-400 dark:hover:text-error-400"
+            >
+              Clear history
+            </button>
+          </div>
           <ul className="mt-2 space-y-2">
             {historyItems.map((item) => (
               <li key={`history-${item.id}`}>
-                <SendTaskComposerPickerRow item={item} onPlay={onSelect} />
+                <SendTaskComposerPickerRow
+                  item={item}
+                  onPlay={onSelect}
+                  onDelete={(historyItem) => {
+                    void deleteHistoryItem(historyItem);
+                  }}
+                />
               </li>
             ))}
           </ul>
