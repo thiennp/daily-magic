@@ -33,7 +33,7 @@ export default function MacDeviceRowMainContent({
       <div className="flex min-w-0 items-center gap-2">
         <MacDeviceIcon className={iconClassName} />
         <div className="min-w-0 flex-1">
-          <div className="flex min-w-0 flex-wrap items-center gap-2">
+          <div className="flex min-w-0 flex-wrap items-center gap-1.5">
             <MacDeviceNameEditor
               key={isEditing ? `${deviceId}:edit` : `${deviceId}:view`}
               deviceId={deviceId}

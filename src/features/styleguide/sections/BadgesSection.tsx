@@ -1,8 +1,8 @@
 import Badge from "@/components/ui/badge/Badge";
-import AppIcon from "@/components/ui/icon/AppIcon";
-import { PlusIcon } from "@/icons";
+import { THIS_MAC_DEVICE_BADGE_LABEL } from "@/components/ui/badge/thisMacDeviceBadgeLabel.constant";
 
 import BadgeGroup from "@/features/styleguide/sections/BadgeGroup";
+import BadgesSectionIconGroups from "@/features/styleguide/sections/BadgesSectionIconGroups";
 
 export default function BadgesSection() {
   return (
@@ -42,6 +42,9 @@ export default function BadgesSection() {
           <Badge variant="solid" color="success">
             Success
           </Badge>
+          <Badge variant="solid" color="successDark">
+            Success dark
+          </Badge>
           <Badge variant="solid" color="error">
             Error
           </Badge>
@@ -59,29 +62,13 @@ export default function BadgesSection() {
           </Badge>
         </BadgeGroup>
 
-        <BadgeGroup title="Light Background with Left Icon">
-          <Badge variant="light" color="primary" startIcon={<AppIcon icon={PlusIcon} size="sm" />}>
-            Primary
-          </Badge>
-          <Badge variant="light" color="success" startIcon={<AppIcon icon={PlusIcon} size="sm" />}>
-            Success
-          </Badge>
-          <Badge variant="light" color="error" startIcon={<AppIcon icon={PlusIcon} size="sm" />}>
-            Error
+        <BadgeGroup title="Device context">
+          <Badge variant="solid" color="successDark" size="sm">
+            {THIS_MAC_DEVICE_BADGE_LABEL}
           </Badge>
         </BadgeGroup>
 
-        <BadgeGroup title="Solid Background with Right Icon">
-          <Badge variant="solid" color="primary" endIcon={<AppIcon icon={PlusIcon} size="sm" />}>
-            Primary
-          </Badge>
-          <Badge variant="solid" color="success" endIcon={<AppIcon icon={PlusIcon} size="sm" />}>
-            Success
-          </Badge>
-          <Badge variant="solid" color="error" endIcon={<AppIcon icon={PlusIcon} size="sm" />}>
-            Error
-          </Badge>
-        </BadgeGroup>
+        <BadgesSectionIconGroups />
       </div>
     </section>
   );
