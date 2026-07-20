@@ -30,6 +30,7 @@ const sampleRun = (
   capabilityVersionId: null,
   deviceId: "mac-1",
   writerAgent: "cursor",
+  lastRunHeartbeatAt: null,
   ...overrides,
 });
 
@@ -39,7 +40,7 @@ describe("restoreAgentLiveTerminalFromSourceRun", () => {
     window.localStorage.clear();
   });
 
-  it("AGENT-038 restores writer, device, and output for a cached run", () => {
+  it("AGENT-044 restores writer, device, and output for a cached run", () => {
     upsertAgentRunLocalCache(sampleRun());
     setAgentRunTerminalOutput("run-1", "terminal mirror");
 
