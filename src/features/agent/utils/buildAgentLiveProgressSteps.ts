@@ -61,6 +61,7 @@ export const buildAgentLiveProgressSteps = (input: {
     status: input.status,
   });
   const workSteps = resolveAgentLiveProgressWorkSteps({
+    source: progressSource,
     updates,
     updateStates: resolveAgentProgressUpdateStates({
       updateCount: updates.length,
