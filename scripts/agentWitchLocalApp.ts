@@ -22,6 +22,8 @@ import {
 import { AGENT_WITCH_CONNECTION_STALE_MS } from "./agentWitchConnectionHealth.constants";
 import { formatAgentWitchRelativeTimeAgo } from "./formatAgentWitchRelativeTimeAgo";
 import { buildAgentWitchLocalAppShell } from "./buildAgentWitchLocalAppShell";
+import { formatAgentWitchInstallBundleVersionLabel } from "./formatAgentWitchInstallBundleVersionLabel";
+import { readAgentWitchInstallVersion } from "./agentWitchInstallVersion";
 import { shouldShowAgentWitchLocalReviveButton } from "./shouldShowAgentWitchLocalReviveButton";
 import type { AgentWitchLocalLayout } from "./resolveAgentWitchLocalLayout";
 import { loadOrCreateAgentWitchDeviceKeypair } from "./agentWitchDeviceKeypair";
@@ -81,6 +83,8 @@ const buildStatusBody = (input: {
   readonly status: LocalAppStatus;
   readonly stale: boolean;
   readonly linkCode: string;
+  readonly installBundleVersion: string;
+  readonly installBundleUpdatedAt: string | null;
 }): string => {
   const connectedBadge = input.status.wsConnected
     ? `<span class="badge badge-online">Connected</span>`
@@ -110,6 +114,7 @@ const buildStatusBody = (input: {
         <div class="meta-item"><span class="meta-label">Last heartbeat</span><span class="meta-value">${escapeHtml(formatLocalAppTimestamp(input.status.lastHeartbeatAt))}</span></div>
         <div class="meta-item"><span class="meta-label">Health file</span><span class="meta-value">${healthBadge}</span></div>
         <div class="meta-item"><span class="meta-label">Link code</span><span class="meta-value"><code>${escapeHtml(input.linkCode)}</code></span></div>
+        <div class="meta-item"><span class="meta-label">Install bundle</span><span class="meta-value"><code>${escapeHtml(input.installBundleVersion)}</code>${input.installBundleUpdatedAt !== null ? ` <span class="muted">· ${escapeHtml(formatLocalAppTimestamp(input.installBundleUpdatedAt))}</span>` : ""}</span></div>
         <div class="meta-item"><span class="meta-label">Public key</span><span class="meta-value muted mono">${escapeHtml(input.status.publicKeyRaw.slice(0, 24))}…</span></div>
       </div>
       ${wakeError}
@@ -127,6 +132,17 @@ export const startAgentWitchLocalApp = (input: {
   readonly controllers: AgentWitchLocalAppControllers;
 }): http.Server => {
   const linkCodePath = path.join(input.layout.installDir, "link-code.txt");
+  const readInstallVersion = () =>
+    readAgentWitchInstallVersion(input.layout.installDir);
+  const buildInstallBundleStatus = () => {
+    const installVersion = readInstallVersion();
+    return {
+      installBundleVersion:
+        formatAgentWitchInstallBundleVersionLabel(installVersion),
+      installBundleUpdatedAt: installVersion?.updatedAt ?? null,
+      installVersion,
+    };
+  };
   const ensureLinkCode = (): string => {
     if (fs.existsSync(linkCodePath)) {
       return fs.readFileSync(linkCodePath, "utf8").trim();
@@ -149,14 +165,23 @@ export const startAgentWitchLocalApp = (input: {
 
       if (method === "GET" && pathname === "/health") {
         const status = input.controllers.getStatus();
-        sendJson(response, 200, { ok: true, ...status });
+        const installBundle = buildInstallBundleStatus();
+        sendJson(response, 200, {
+          ok: true,
+          ...status,
+          installBundleVersion: installBundle.installBundleVersion,
+          installBundleUpdatedAt: installBundle.installBundleUpdatedAt,
+        });
         return;
       }
 
       if (method === "GET" && pathname === "/api/status") {
+        const installBundle = buildInstallBundleStatus();
         sendJson(response, 200, {
           ...input.controllers.getStatus(),
           linkCode: ensureLinkCode(),
+          installBundleVersion: installBundle.installBundleVersion,
+          installBundleUpdatedAt: installBundle.installBundleUpdatedAt,
         });
         return;
       }
@@ -208,15 +233,19 @@ export const startAgentWitchLocalApp = (input: {
           health,
           AGENT_WITCH_CONNECTION_STALE_MS,
         );
+        const installBundle = buildInstallBundleStatus();
         sendHtml(
           response,
           buildAgentWitchLocalAppShell({
             title: "Status",
             activePath: "/",
+            installVersion: installBundle.installVersion,
             body: buildStatusBody({
               status,
               stale,
               linkCode: ensureLinkCode(),
+              installBundleVersion: installBundle.installBundleVersion,
+              installBundleUpdatedAt: installBundle.installBundleUpdatedAt,
             }),
           }),
         );
@@ -225,6 +254,7 @@ export const startAgentWitchLocalApp = (input: {
 
       if (method === "GET" && pathname === "/traffic") {
         const entries = readAgentWitchLocalTraffic(input.layout);
+        const installBundle = buildInstallBundleStatus();
         const rows = entries
           .map(
             (entry) =>
@@ -240,6 +270,7 @@ export const startAgentWitchLocalApp = (input: {
           buildAgentWitchLocalAppShell({
             title: "Traffic",
             activePath: "/traffic",
+            installVersion: installBundle.installVersion,
             body: `<section class="card">
               <p class="eyebrow">Diagnostics</p>
               <h1>WS traffic log</h1>
@@ -257,6 +288,7 @@ export const startAgentWitchLocalApp = (input: {
           `http://127.0.0.1:${AGENT_WITCH_LOCAL_APP_PORT}`,
         );
         const q = url.searchParams.get("q")?.trim() ?? "";
+        const installBundle = buildInstallBundleStatus();
         const chunks =
           q.length > 0
             ? await queryAgentWitchRag({
@@ -276,6 +308,7 @@ export const startAgentWitchLocalApp = (input: {
           buildAgentWitchLocalAppShell({
             title: "Knowledge",
             activePath: "/knowledge",
+            installVersion: installBundle.installVersion,
             body: `<section class="card">
               <p class="eyebrow">Local RAG</p>
               <h1>Knowledge</h1>

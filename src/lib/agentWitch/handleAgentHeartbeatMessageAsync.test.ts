@@ -4,42 +4,24 @@ vi.mock("@/lib/agentWitch/updateAgentWitchDeviceAuthFields", () => ({
   updateAgentWitchDeviceWakeError: vi.fn().mockResolvedValue(undefined),
 }));
 
+vi.mock("@/lib/agentWitch/updateAgentWitchDeviceInstallBundleVersion", () => ({
+  updateAgentWitchDeviceInstallBundleVersion: vi
+    .fn()
+    .mockResolvedValue(undefined),
+}));
+
 vi.mock("@/lib/agentWitch/deliverAgentWitchDeviceRestart", () => ({
   deliverAgentWitchDeviceRestartIfRequested: vi.fn().mockResolvedValue(false),
 }));
 
 import { handleAgentHeartbeatMessageAsync } from "@/lib/agentWitch/handleAgentHeartbeatMessageAsync";
+import { createAgentHeartbeatTestRuntime } from "@/lib/agentWitch/handleAgentHeartbeatMessageAsync.testHelper";
 import type AgentWitchHubClient from "@/lib/agentWitch/types/AgentWitchHubClient.type";
-import type AgentWitchHubRuntime from "@/lib/agentWitch/types/AgentWitchHubRuntime.type";
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
-
-const createRuntime = (): AgentWitchHubRuntime => {
-  const pairingStore = {
-    touchLastSeen: vi.fn().mockResolvedValue(undefined),
-    resolveClaimedPairing: vi.fn().mockResolvedValue({
-      userId: "user-1",
-      email: "user@example.com",
-      claimedAt: "2026-01-01T00:00:00.000Z",
-      deviceId: "device-1",
-    }),
-  };
-
-  return {
-    pairingStore: pairingStore as never,
-    updateClient: vi.fn(),
-    findAgentClientForUser: vi.fn(),
-    listOnlineAgentClientsForUser: vi.fn(),
-    listAgentClients: vi.fn().mockReturnValue([]),
-    broadcastToDashboardUser: vi.fn(),
-    broadcastToSubscribedDashboardUser: vi.fn(),
-    bindAgentClientsToPairing: vi.fn(),
-    manifestByAgentClientId: new Map(),
-  };
-};
 
 describe("handleAgentHeartbeatMessageAsync", () => {
   it("updates last seen and client heartbeat for paired agents", async () => {
-    const runtime = createRuntime();
+    const runtime = createAgentHeartbeatTestRuntime();
     const sender: AgentWitchHubClient = {
       id: "agent-1",
       role: "agent",
@@ -79,7 +61,7 @@ describe("handleAgentHeartbeatMessageAsync", () => {
   });
 
   it("rejects heartbeats from non-agent clients", async () => {
-    const runtime = createRuntime();
+    const runtime = createAgentHeartbeatTestRuntime();
 
     const response = await handleAgentHeartbeatMessageAsync(
       runtime,

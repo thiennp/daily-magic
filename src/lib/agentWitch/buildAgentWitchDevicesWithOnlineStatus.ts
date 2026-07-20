@@ -14,6 +14,7 @@ export interface AgentWitchDeviceWithOnlineStatus {
   readonly isOnline: boolean;
   readonly lastHeartbeatAt: string | null;
   readonly lastWakeError?: string | null;
+  readonly installBundleVersion: string | null;
 }
 
 /**
@@ -47,6 +48,7 @@ const buildAgentWitchDevicesWithOnlineStatus = (
       isOnline,
       lastHeartbeatAt: isOnline ? device.lastSeenAt : null,
       lastWakeError: device.lastWakeError ?? null,
+      installBundleVersion: device.installBundleVersion ?? null,
     };
   });
 };

@@ -9,6 +9,7 @@ import {
 
 import type { WsTestConnectionStatus } from "@/features/agent/types/WsTestConnectionStatus.type";
 import type { MyMacDevice } from "@/features/agent/hooks/useMyMacDevices";
+import { AGENT_WITCH_INSTALL_BUNDLE_VERSION } from "@/lib/agentWitch/agentWitchInstallBundleVersion";
 import {
   buildConnectionScenarioDevices,
   CONNECTION_SCENARIO_LABELS,
@@ -22,6 +23,7 @@ interface ConnectionLabContextValue {
   readonly scenarioLabels: typeof CONNECTION_SCENARIO_LABELS;
   readonly mockDevices: readonly MyMacDevice[];
   readonly devicesApiFails: boolean;
+  readonly serverInstallBundleVersion: string;
   readonly connectionStatus: WsTestConnectionStatus;
 }
 
@@ -46,6 +48,7 @@ const toMyMacDevices = (
     isConnected: device.isOnline,
     isOnline: device.isOnline,
     lastHeartbeatAt: device.lastHeartbeatAt,
+    installBundleVersion: null,
   }));
 };
 
@@ -75,6 +78,7 @@ export function ConnectionLabProvider({
       scenarioLabels: CONNECTION_SCENARIO_LABELS,
       mockDevices,
       devicesApiFails: shouldMockDevicesApiFail(scenarioId),
+      serverInstallBundleVersion: AGENT_WITCH_INSTALL_BUNDLE_VERSION,
       connectionStatus: resolveLabConnectionStatus(scenarioId),
     }),
     [mockDevices, scenarioId],

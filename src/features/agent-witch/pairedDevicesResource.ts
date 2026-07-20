@@ -5,11 +5,13 @@ import { createSharedPolledResource } from "@/lib/client/createSharedPolledResou
 export interface PairedDevicesSnapshot {
   readonly devices: readonly MyMacDevice[];
   readonly hadError: boolean;
+  readonly serverInstallBundleVersion: string | null;
 }
 
 const EMPTY_SNAPSHOT: PairedDevicesSnapshot = {
   devices: [],
   hadError: false,
+  serverInstallBundleVersion: null,
 };
 
 export const pairedDevicesResource =

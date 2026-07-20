@@ -25,6 +25,7 @@ const useMacDeviceSelection = (): {
   readonly hasDispatchReadyMac: boolean;
   readonly dispatchReadyMacCount: number;
   readonly devicesHadLoadError: boolean;
+  readonly serverInstallBundleVersion: string | null;
   readonly refreshDevices: () => Promise<void>;
   readonly renameDevice: ReturnType<typeof useMyMacDevices>["renameDevice"];
   readonly isOwnDeviceDispatch: boolean;
@@ -35,6 +36,7 @@ const useMacDeviceSelection = (): {
     displayNameById,
     isLoading,
     devicesHadLoadError,
+    serverInstallBundleVersion,
     refresh: refreshDevices,
     renameDevice,
   } = useMyMacDevices();
@@ -77,6 +79,7 @@ const useMacDeviceSelection = (): {
     hasDispatchReadyMac: dispatchReadyMacCount > 0,
     dispatchReadyMacCount,
     devicesHadLoadError,
+    serverInstallBundleVersion,
     refreshDevices,
     renameDevice,
     isOwnDeviceDispatch: deviceIdFromQuery.length > 0,

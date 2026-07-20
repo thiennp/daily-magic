@@ -6,9 +6,9 @@
 
 **Cause:** Liveness was inferred from terminal stream chunks and device heartbeats, not from the active CLI child. Completion relied on a single in-flight WS message with no retry.
 
-**Fix:** Mac emits `run.heartbeat` every 15s while a CLI child is alive. Cloud stores `last_run_heartbeat_at`, rebroadcasts lightweight `run.heartbeat` to the dashboard (stall clock reset), and reconciles `RUNNING` runs with no heartbeat for 3 minutes to `failed`. Mac persists a completion outbox and retries `POST /api/agent-witch/runs/:id/complete` on reconnect. Install bundle **33**.
+**Fix:** Mac emits `run.heartbeat` every 15s while a CLI child is alive. Cloud stores `last_run_heartbeat_at`, rebroadcasts lightweight `run.heartbeat` to the dashboard (stall clock reset), and reconciles `RUNNING` runs with no heartbeat for 3 minutes to `failed`. Mac persists a completion outbox and retries `POST /api/agent-witch/runs/:id/complete` on reconnect. Mac reports `installBundleVersion` on `agent.heartbeat`; agentwitch.com Home + Mac pickers show per-device bundle vs cloud bundle with mismatch highlighting. Local server header shows bundle version. Install bundle **35**.
 
-**Regression tests:** `reconcileStaleAgentRuns.test.ts`, `agentWitchRunCompletionOutbox.test.ts` (AGENT-039).
+**Regression tests:** `reconcileStaleAgentRuns.test.ts`, `agentWitchRunCompletionOutbox.test.ts`, `buildMacDeviceDetailText.test.ts`, `isAgentWitchInstallBundleVersionBehind.test.ts` (AGENT-039 / AGENT-041).
 
 ---
 

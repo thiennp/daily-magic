@@ -8,7 +8,7 @@ export async function listAgentWitchDevicesForUser(
   const sql = getSql();
   const result = asRowArray(
     await sql`
-      SELECT id, user_id, device_label, display_name, dispatch_policy, claimed_at, last_seen_at, revoked_at
+      SELECT id, user_id, device_label, display_name, dispatch_policy, claimed_at, last_seen_at, revoked_at, install_bundle_version
       FROM agent_witch_devices
       WHERE user_id = ${userId}
         AND revoked_at IS NULL

@@ -7,6 +7,7 @@ import type AgentWitchHubRuntime from "@/lib/agentWitch/types/AgentWitchHubRunti
 import type AgentWitchMessage from "@/lib/agentWitch/types/AgentWitchMessage.type";
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
 import { updateAgentWitchDeviceWakeError } from "@/lib/agentWitch/updateAgentWitchDeviceAuthFields";
+import { updateAgentWitchDeviceInstallBundleVersion } from "@/lib/agentWitch/updateAgentWitchDeviceInstallBundleVersion";
 
 const resolveHeartbeatHostname = (
   payload: Readonly<Record<string, unknown>> | undefined,
@@ -34,6 +35,17 @@ const resolveHeartbeatEmail = (
   return null;
 };
 
+const resolveHeartbeatInstallBundleVersion = (
+  payload: Readonly<Record<string, unknown>> | undefined,
+): string | null => {
+  if (typeof payload?.installBundleVersion !== "string") {
+    return null;
+  }
+
+  const trimmedVersion = payload.installBundleVersion.trim();
+  return trimmedVersion.length > 0 ? trimmedVersion : null;
+};
+
 export const handleAgentHeartbeatMessageAsync = async (
   runtime: AgentWitchHubRuntime,
   senderId: string,
@@ -52,6 +64,9 @@ export const handleAgentHeartbeatMessageAsync = async (
 
   const hostname = resolveHeartbeatHostname(message.payload);
   const email = resolveHeartbeatEmail(message.payload, sender.email);
+  const installBundleVersion = resolveHeartbeatInstallBundleVersion(
+    message.payload,
+  );
   const claimedPairing = await runtime.pairingStore.resolveClaimedPairing(
     sender.pairingToken,
   );
@@ -78,6 +93,12 @@ export const handleAgentHeartbeatMessageAsync = async (
   const userId = sender.userId ?? claimedPairing?.userId;
   if (deviceId !== undefined) {
     await updateAgentWitchDeviceWakeError({ deviceId, wakeError });
+    if (installBundleVersion !== null) {
+      await updateAgentWitchDeviceInstallBundleVersion({
+        deviceId,
+        installBundleVersion,
+      });
+    }
   }
 
   if (deviceId !== undefined && userId !== undefined) {

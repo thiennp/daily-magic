@@ -12,4 +12,5 @@ export default interface AgentWitchDeviceRecord {
   readonly preferredWriter?: string | null;
   readonly lastWakeError?: string | null;
   readonly lastWakeErrorAt?: string | null;
+  readonly installBundleVersion?: string | null;
 }

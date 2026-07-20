@@ -87,6 +87,20 @@ a { color: inherit; text-decoration: none; }
   text-transform: uppercase;
 }
 
+.brand-version {
+  margin-left: 0.5rem;
+  padding: 0.125rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--aw-zinc-700);
+  background: var(--aw-zinc-100);
+  border: 1px solid var(--aw-zinc-200);
+  text-transform: none;
+  vertical-align: middle;
+}
+
 .site-nav {
   display: flex;
   align-items: center;

@@ -1,4 +1,6 @@
 import { AGENT_WITCH_LOCAL_APP_STYLES } from "./agentWitchLocalAppStyles";
+import { formatAgentWitchInstallBundleVersionLabel } from "./formatAgentWitchInstallBundleVersionLabel";
+import type { AgentWitchInstallVersionRecord } from "./agentWitchInstallVersion";
 
 export type AgentWitchLocalAppNavPath = "/" | "/traffic" | "/knowledge";
 
@@ -29,7 +31,15 @@ export const buildAgentWitchLocalAppShell = (input: {
   readonly title: string;
   readonly activePath: AgentWitchLocalAppNavPath;
   readonly body: string;
+  readonly installVersion?: AgentWitchInstallVersionRecord | null;
 }): string => {
+  const bundleVersionLabel = formatAgentWitchInstallBundleVersionLabel(
+    input.installVersion ?? null,
+  );
+  const bundleUpdatedTitle =
+    input.installVersion?.updatedAt !== undefined
+      ? ` title="Updated ${escapeHtml(input.installVersion.updatedAt)}"`
+      : "";
   const nav = NAV_ITEMS.map((item) => {
     const isActive = item.href === input.activePath;
     return `<a class="nav-link${isActive ? " is-active" : ""}" href="${item.href}"${isActive ? ' aria-current="page"' : ""}>${item.label}</a>`;
@@ -48,7 +58,7 @@ export const buildAgentWitchLocalAppShell = (input: {
     <div class="site-header-inner">
       <a class="brand" href="/" aria-label="Agent Witch Local home">
         ${LOGO_MARK_SVG}
-        <span class="brand-text">Agent Witch<span class="brand-sub">Local</span></span>
+        <span class="brand-text">Agent Witch<span class="brand-sub">Local</span><span class="brand-version"${bundleUpdatedTitle}>bundle ${escapeHtml(bundleVersionLabel)}</span></span>
       </a>
       <nav class="site-nav" aria-label="Local bridge">${nav}</nav>
     </div>

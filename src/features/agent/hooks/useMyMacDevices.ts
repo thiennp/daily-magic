@@ -20,6 +20,7 @@ export interface MyMacDevice {
   readonly isConnected: boolean;
   readonly isOnline: boolean;
   readonly lastHeartbeatAt: string | null;
+  readonly installBundleVersion: string | null;
 }
 
 const applyDisplayNameOverrides = (
@@ -38,6 +39,7 @@ const useMyMacDevices = (): {
   readonly displayNameById: ReadonlyMap<string, string>;
   readonly isLoading: boolean;
   readonly devicesHadLoadError: boolean;
+  readonly serverInstallBundleVersion: string | null;
   readonly refresh: () => Promise<void>;
   readonly renameDevice: (deviceId: string, displayName: string) => void;
 } => {
@@ -51,8 +53,7 @@ const useMyMacDevices = (): {
     () => null,
   );
   const resolvedSnapshot = snapshot ?? getPairedDevicesSnapshotOrEmpty();
-  const baseDevices =
-    connectionLab?.mockDevices ?? resolvedSnapshot.devices;
+  const baseDevices = connectionLab?.mockDevices ?? resolvedSnapshot.devices;
   const devices = useMemo(
     () => applyDisplayNameOverrides(baseDevices, displayNameOverrides),
     [baseDevices, displayNameOverrides],
@@ -89,6 +90,9 @@ const useMyMacDevices = (): {
     isLoading: connectionLab !== null ? false : snapshot === null,
     devicesHadLoadError:
       connectionLab?.devicesApiFails ?? resolvedSnapshot.hadError,
+    serverInstallBundleVersion:
+      connectionLab?.serverInstallBundleVersion ??
+      resolvedSnapshot.serverInstallBundleVersion,
     refresh,
     renameDevice,
   };
