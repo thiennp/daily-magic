@@ -130,7 +130,7 @@
 
 **Symptom:** Every Agent Witch WebSocket reconnect ran `ensure-writer.sh` for Cursor, Claude, Codex, and Antigravity, which could open Claude login even when the user planned to use Cursor.
 
-**Fix:** Remove the connect-time writer login sweep. Keep `writer.ensure` for explicit `/setup/writer` picks and task dispatch for the selected writer only.
+**Fix:** Remove the connect-time writer login sweep. Keep `writer.ensure` for explicit `/setup/writer` picks and task dispatch for the selected writer only. Install bundle **37**.
 
 **Regression test:** `agent-witch.writerLoginCheck.test.ts` (AGENT-042).
 
