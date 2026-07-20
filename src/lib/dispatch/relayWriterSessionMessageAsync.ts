@@ -1,4 +1,6 @@
 import { unauthorizedAgentOnlyError } from "@/lib/agentWitch/agentWitchHubClientOperations";
+import { deliverAgentWitchCursorLoginIfAuthenticationRequired } from "@/lib/agentWitch/deliverAgentWitchCursorLoginIfAuthenticationRequired";
+import { readAgentOutputTextFromMessagePayload } from "@/lib/agentWitch/readAgentOutputTextFromMessagePayload";
 import type AgentWitchHubClient from "@/lib/agentWitch/types/AgentWitchHubClient.type";
 import type AgentWitchHubRuntime from "@/lib/agentWitch/types/AgentWitchHubRuntime.type";
 import type AgentWitchMessage from "@/lib/agentWitch/types/AgentWitchMessage.type";
@@ -34,6 +36,11 @@ export const relayWriterSessionMessageAsync = async (
       message.requestId,
     );
   }
+
+  deliverAgentWitchCursorLoginIfAuthenticationRequired(
+    sender,
+    readAgentOutputTextFromMessagePayload(message.payload),
+  );
 
   runtime.broadcastToSubscribedDashboardUser(
     session.ownerUserId,

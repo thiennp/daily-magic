@@ -1,3 +1,4 @@
+import { deliverAgentWitchCursorLoginIfAuthenticationRequired } from "@/lib/agentWitch/deliverAgentWitchCursorLoginIfAuthenticationRequired";
 import isNonEmptyString from "@/lib/agentWitch/isNonEmptyString";
 import {
   releaseTerminalStreamSlot,
@@ -68,6 +69,10 @@ export const handleTerminalStreamMessageAsync = async (
     if (!authorization.ok) {
       return authorization.error;
     }
+
+    const chunk =
+      typeof message.payload?.chunk === "string" ? message.payload.chunk : "";
+    deliverAgentWitchCursorLoginIfAuthenticationRequired(sender, chunk);
 
     return handleTerminalStreamChunkMessageAsync(
       runtime,

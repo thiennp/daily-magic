@@ -146,6 +146,16 @@
 
 ---
 
+## AGENT-044 — Cursor auth error did not trigger login over WebSocket
+
+**Symptom:** Live terminal feedback showed `Error: Authentication required. Please run 'cursor agent login' first, or set CURSOR_API_KEY environment variable.` but the Mac did not open Cursor login automatically.
+
+**Fix:** When agent output (writer session chunks, terminal stream chunks, or `command.claude.result`) contains that Cursor auth error, the cloud server sends `writer.ensure` with `writerAgent: "cursor"` over the live WebSocket (throttled per device). No install bundle bump — reuses existing Mac `writer.ensure` handling.
+
+**Regression tests:** `isCursorAuthenticationRequiredError.test.ts`, `deliverAgentWitchCursorLoginIfAuthenticationRequired.test.ts`, `agentWitchHub.cursorAuthLoginPush.test.ts` (AGENT-044).
+
+---
+
 ## AGENT-020 — Cloud tasks had no local knowledge injection
 
 **Symptom:** Finished local turns were not reused as context for later cloud-originated tasks.
