@@ -324,4 +324,16 @@ Document every production bug or UX regression here. Each entry must link to a t
 
 ---
 
-Use the next ID (`HOME-026`, …). Include symptom, root cause, fix paths, and test file.
+## HOME-027 — Connect this Mac monitor icon blew up on mobile
+
+**Symptom:** On the Home **Connect this Mac** row, the monitor SVG rendered at full flex width on narrow viewports, pushing copy off-screen and breaking the card layout.
+
+**Cause:** `MacDeviceIcon` is a dimensionless SVG; `ConnectThisMacRow` passed color classes but no `h-*` / `w-*` size utilities (other call sites use `resolveMacDeviceIconClassName`).
+
+**Fix:** Size the row icon via `resolveMacDeviceIconClassName`; default `MacDeviceIcon` to `h-4 w-4 shrink-0` when no `className` is passed.
+
+**Regression test:** `MacDeviceIcon.test.tsx` (HOME-027).
+
+---
+
+Use the next ID (`HOME-027`, …). Include symptom, root cause, fix paths, and test file.

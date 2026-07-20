@@ -3,6 +3,7 @@
 import { useSyncExternalStore } from "react";
 
 import MacDeviceIcon from "@/features/agent-witch/macDevices/MacDeviceIcon";
+import { resolveMacDeviceIconClassName } from "@/features/agent-witch/macDevices/utils/resolveMacDeviceIconClassName";
 import { APP_SURFACE_CTA_SECONDARY_SM_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
 import ConnectInstallPasteModal from "@/features/home/ConnectInstallPasteModal";
 import ConnectThisMacModal from "@/features/home/ConnectThisMacModal";
@@ -49,7 +50,12 @@ export default function ConnectThisMacRow({
       <div className="rounded-lg border border-dashed border-gray-200 bg-gray-50/80 px-3 py-3 dark:border-gray-700 dark:bg-white/[0.02]">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
           <div className="flex min-w-0 flex-1 items-start gap-3">
-            <MacDeviceIcon className="mt-0.5 shrink-0 text-gray-400 dark:text-gray-500" />
+            <MacDeviceIcon
+              className={resolveMacDeviceIconClassName(
+                false,
+                "mt-0.5 h-4 w-4 shrink-0",
+              )}
+            />
             <div className="min-w-0 flex-1">
               <p className="text-sm font-medium text-gray-900 dark:text-white/90">
                 This computer
