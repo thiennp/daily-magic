@@ -13,5 +13,6 @@ describe("agent-witch writer login on connect", () => {
     expect(source).not.toContain("runWriterLoginCheckOnConnect");
     expect(source).not.toContain("listPreferredWritersForStatus");
     expect(source).toContain('parsed.type === "writer.ensure"');
+    expect(source).toContain('parsed.type === "install.bundle.update"');
   });
 });

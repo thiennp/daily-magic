@@ -136,6 +136,16 @@
 
 ---
 
+## AGENT-043 — Cloud did not actively push install bundle updates
+
+**Symptom:** Home showed `Bundle 36 · update available (cloud 37)` for an hour while the Mac stayed on bundle 36. Users expected the cloud to tell the Mac to update immediately, not wait for passive heartbeat logic or the hourly updater.
+
+**Fix:** On every agent heartbeat with a behind bundle, cloud now sends `install.bundle.update` over the live WebSocket. The Mac runs install bundle update from that message (and still from `system.ack` as backup). If the wake-server update API is unreachable, the Mac falls back to direct `runAgentWitchSelfUpdate`. Install bundle **38**.
+
+**Regression tests:** `deliverAgentWitchInstallBundleUpdateIfBehind.test.ts`, `handleAgentHeartbeatInstallBundlePush.test.ts`, `runLocalInstallBundleUpdate.test.ts` (AGENT-043).
+
+---
+
 ## AGENT-020 — Cloud tasks had no local knowledge injection
 
 **Symptom:** Finished local turns were not reused as context for later cloud-originated tasks.

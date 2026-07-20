@@ -32,7 +32,7 @@ After agent turns, chunks are embedded with local Ollama (`nomic-embed-text` by 
 
 ## Writer setup
 
-Post-install AI picker: `/setup/writer` on agentwitch.com → WS `writer.ensure` / `writer.status`. Install/login runs only for the writer the user selects (not on every Mac reconnect).
+Post-install AI picker: `/setup/writer` on agentwitch.com → WS `writer.ensure` / `writer.status`. When a Mac bundle is behind cloud, the server also pushes `install.bundle.update` on heartbeat so the Mac updates immediately (with direct self-update fallback if wake API is down).
 
 ## Key modules
 

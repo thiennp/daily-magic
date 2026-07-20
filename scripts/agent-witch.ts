@@ -61,10 +61,9 @@ import {
 import { AGENT_WITCH_CONNECTION_STALE_MS } from "./agentWitchConnectionHealth.constants";
 import { acceptTerminalStream } from "./agentWitchTerminalStreamState";
 import { requestLocalAgentWitchRestart } from "./requestLocalAgentWitchRestart";
-import { requestLocalAgentWitchSelfUpdate } from "./requestLocalAgentWitchSelfUpdate";
+import { runLocalInstallBundleUpdate } from "./runLocalInstallBundleUpdate";
 import { readAgentWitchInstallVersion } from "./agentWitchInstallVersion";
 import { readInstallBundleVersionFromHeartbeatAck } from "./readInstallBundleVersionFromHeartbeatAck";
-import { shouldTriggerAgentWitchHeartbeatSelfUpdate } from "./shouldTriggerAgentWitchHeartbeatSelfUpdate";
 import {
   applyAutomationsRunFromCloud,
   applyAutomationsSyncFromCloud,
@@ -649,77 +648,20 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
 
   const runLocalSelfUpdateFromHeartbeat = (
     remoteBundleVersion: string,
+    trigger: "system.ack" | "install.bundle.update" = "system.ack",
   ): void => {
     if (state.selfUpdateInFlight) {
       return;
     }
 
-    const localBundleVersion =
-      readAgentWitchInstallVersion(config.layout.installDir)?.bundleVersion ??
-      null;
-
-    if (
-      !shouldTriggerAgentWitchHeartbeatSelfUpdate({
-        localBundleVersion,
-        remoteBundleVersion,
-      })
-    ) {
-      return;
-    }
-
     state.selfUpdateInFlight = true;
-    const message = `Install bundle mismatch (local=${localBundleVersion ?? "none"} remote=${remoteBundleVersion}); auto-updating…`;
-    console.log(`[agent-witch] ${message}`);
-    appendAgentWitchLocalTraffic(config.layout, {
-      direction: "local",
-      type: "system.ack",
-      summary: message,
-      action: "heartbeat-self-update",
+    void runLocalInstallBundleUpdate({
+      layout: config.layout,
+      remoteBundleVersion,
+      trigger,
+    }).finally(() => {
+      state.selfUpdateInFlight = false;
     });
-
-    void requestLocalAgentWitchSelfUpdate({ force: true })
-      .then((result) => {
-        if (result.ok) {
-          console.log(
-            `[agent-witch] Heartbeat self-update finished (remote ${remoteBundleVersion}).`,
-            result.payload,
-          );
-          appendAgentWitchLocalTraffic(config.layout, {
-            direction: "local",
-            type: "system.ack",
-            summary: `Heartbeat self-update ok → ${remoteBundleVersion}`,
-            action: "heartbeat-self-update-ok",
-          });
-          return;
-        }
-
-        if (!result.reachable) {
-          console.error(
-            "[agent-witch] Heartbeat self-update failed: wake update API unreachable.",
-          );
-          appendAgentWitchLocalTraffic(config.layout, {
-            direction: "local",
-            type: "system.ack",
-            summary: "Heartbeat self-update unreachable",
-            action: "heartbeat-self-update-error",
-          });
-          return;
-        }
-
-        console.error(
-          "[agent-witch] Heartbeat self-update failed.",
-          result.payload,
-        );
-        appendAgentWitchLocalTraffic(config.layout, {
-          direction: "local",
-          type: "system.ack",
-          summary: "Heartbeat self-update failed",
-          action: "heartbeat-self-update-error",
-        });
-      })
-      .finally(() => {
-        state.selfUpdateInFlight = false;
-      });
   };
 
   const checkLocalConnectionHealth = (): void => {
@@ -904,6 +846,19 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
           config.layout,
         );
       });
+    }
+
+    if (parsed.type === "install.bundle.update" && isRecord(parsed.payload)) {
+      const remoteBundleVersion =
+        typeof parsed.payload.bundleVersion === "string"
+          ? parsed.payload.bundleVersion.trim()
+          : "";
+      if (remoteBundleVersion.length > 0) {
+        runLocalSelfUpdateFromHeartbeat(
+          remoteBundleVersion,
+          "install.bundle.update",
+        );
+      }
     }
 
     if (parsed.type === "system.ack") {

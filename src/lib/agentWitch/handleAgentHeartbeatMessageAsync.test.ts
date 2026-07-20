@@ -14,6 +14,10 @@ vi.mock("@/lib/agentWitch/deliverAgentWitchDeviceRestart", () => ({
   deliverAgentWitchDeviceRestartIfRequested: vi.fn().mockResolvedValue(false),
 }));
 
+vi.mock("@/lib/agentWitch/deliverAgentWitchInstallBundleUpdateIfBehind", () => ({
+  deliverAgentWitchInstallBundleUpdateIfBehind: vi.fn().mockReturnValue(false),
+}));
+
 import { handleAgentHeartbeatMessageAsync } from "@/lib/agentWitch/handleAgentHeartbeatMessageAsync";
 import { createAgentHeartbeatTestRuntime } from "@/lib/agentWitch/handleAgentHeartbeatMessageAsync.testHelper";
 import type AgentWitchHubClient from "@/lib/agentWitch/types/AgentWitchHubClient.type";
