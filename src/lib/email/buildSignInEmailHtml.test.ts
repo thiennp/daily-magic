@@ -1,7 +1,10 @@
 import { describe, expect, it } from "vitest";
 
 import { AGENT_WITCH_PRODUCT_NAME } from "@/lib/agentWitch/agentWitchProductName.constant";
-import { SIGN_IN_EMAIL_BRAND_COLOR } from "./signInEmailBrand.constant";
+import {
+  SIGN_IN_EMAIL_BRAND_COLOR,
+  SIGN_IN_EMAIL_LOGO_PATH,
+} from "./signInEmailBrand.constant";
 import {
   SIGN_IN_EMAIL_DISCLAIMER,
   SIGN_IN_EMAIL_LINK_EXPIRY_NOTE,
@@ -11,13 +14,14 @@ import buildSignInEmailHtml from "./buildSignInEmailHtml";
 describe("buildSignInEmailHtml", () => {
   const signInUrl =
     "https://www.agentwitch.com/api/auth/callback/resend?token=abc";
+  const logoUrl = `https://www.agentwitch.com${SIGN_IN_EMAIL_LOGO_PATH}`;
 
-  it("includes branding, CTA, fallback link, and safety copy", () => {
+  it("includes Agent Witch branding, CTA, fallback link, and safety copy", () => {
     const html = buildSignInEmailHtml({
       url: signInUrl,
       host: "www.agentwitch.com",
       productName: AGENT_WITCH_PRODUCT_NAME,
-      logoUrl: "https://www.agentwitch.com/images/logo/logo.svg",
+      logoUrl,
     });
 
     expect(html).toContain("<!DOCTYPE html>");
@@ -28,8 +32,12 @@ describe("buildSignInEmailHtml", () => {
     expect(html).toContain("Or copy this link:");
     expect(html).toContain(SIGN_IN_EMAIL_LINK_EXPIRY_NOTE);
     expect(html).toContain(SIGN_IN_EMAIL_DISCLAIMER);
-    expect(html).toContain("https://www.agentwitch.com/images/logo/logo.svg");
+    expect(html).toContain(logoUrl);
     expect(html).toContain(SIGN_IN_EMAIL_BRAND_COLOR);
+    expect(html).toContain("Outfit");
+    expect(html).not.toContain("TailAdmin");
+    expect(html).not.toContain("/images/logo/logo.svg");
+    expect(html).not.toContain("#465fff");
   });
 
   it("escapes malicious host markup", () => {
@@ -37,7 +45,7 @@ describe("buildSignInEmailHtml", () => {
       url: signInUrl,
       host: '<img src=x onerror="alert(1)">',
       productName: AGENT_WITCH_PRODUCT_NAME,
-      logoUrl: "https://www.agentwitch.com/images/logo/logo.svg",
+      logoUrl,
     });
 
     expect(html).not.toContain('<img src=x onerror="alert(1)">');
@@ -50,7 +58,7 @@ describe("buildSignInEmailHtml", () => {
       url: maliciousUrl,
       host: "www.agentwitch.com",
       productName: AGENT_WITCH_PRODUCT_NAME,
-      logoUrl: "https://www.agentwitch.com/images/logo/logo.svg",
+      logoUrl,
     });
 
     expect(html).not.toContain('onclick="alert(1)"');
@@ -62,7 +70,7 @@ describe("buildSignInEmailHtml", () => {
       url: signInUrl,
       host: "www.agentwitch.com",
       productName: AGENT_WITCH_PRODUCT_NAME,
-      logoUrl: "https://www.agentwitch.com/images/logo/logo.svg",
+      logoUrl,
     });
 
     expect(html).toContain("www&#8203;.agentwitch&#8203;.com");
@@ -74,10 +82,11 @@ describe("buildSignInEmailHtml", () => {
       host: "www.agentwitch.com",
       theme: { brandColor: "#112233" },
       productName: AGENT_WITCH_PRODUCT_NAME,
-      logoUrl: "https://www.agentwitch.com/images/logo/logo.svg",
+      logoUrl,
     });
 
-    expect(html).toContain("#112233");
-    expect(html).not.toContain(SIGN_IN_EMAIL_BRAND_COLOR);
+    expect(html).toContain('bgcolor="#112233"');
+    expect(html).toContain("border: 1px solid #112233");
+    expect(html).toContain('style="color: #112233; word-break: break-all;"');
   });
 });
