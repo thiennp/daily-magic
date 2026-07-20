@@ -4,6 +4,7 @@ import { getAgentAutomationById } from "@/lib/automations/agentAutomationQueries
 import { readAutomationFieldValidationErrors } from "@/lib/automations/buildAutomationDispatchPrompt";
 import { completeWebhookAutomationDispatch } from "@/lib/automations/completeWebhookAutomationDispatch.util";
 import { failAgentAutomationDispatch } from "@/lib/automations/failAgentAutomationDispatch.util";
+import { prepareAutomationFieldValues } from "@/lib/automations/prepareAutomationFieldValues";
 import { pushAutomationRunToUserMac } from "@/lib/automations/pushAutomationsToUserMac";
 import type DispatchAgentAutomationResult from "@/lib/automations/types/DispatchAgentAutomationResult.type";
 import type AgentWitchHubRuntime from "@/lib/agentWitch/types/AgentWitchHubRuntime.type";
@@ -64,13 +65,27 @@ export const dispatchAgentAutomation = async (input: {
     });
   }
 
-  const fieldValues = {
-    ...automation.fieldValues,
-    ...input.fieldValueOverrides,
-  };
+  const prepared = await prepareAutomationFieldValues({
+    ownerUserId: automation.ownerUserId,
+    capability,
+    fieldValues: {
+      ...automation.fieldValues,
+      ...input.fieldValueOverrides,
+    },
+    projectId: automation.projectId,
+  });
+
+  if (!prepared.ok) {
+    return failAgentAutomationDispatch({
+      automation,
+      status: AGENT_AUTOMATION_LAST_RUN_STATUSES.FAILED,
+      errorMessage: prepared.errorMessage,
+    });
+  }
+
   const validationErrors = readAutomationFieldValidationErrors(
     capability,
-    fieldValues,
+    prepared.fieldValues,
   );
 
   if (validationErrors.length > 0) {
@@ -85,6 +100,6 @@ export const dispatchAgentAutomation = async (input: {
     automation,
     capability,
     runtime: input.runtime,
-    fieldValues,
+    fieldValues: prepared.fieldValues,
   });
 };

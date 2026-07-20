@@ -1,10 +1,12 @@
 import { useState } from "react";
 
+import { useAutomationProjectSelection } from "@/features/automations/hooks/useAutomationProjectSelection";
 import { submitCreateAutomation } from "@/features/automations/submitCreateAutomation";
 import { AGENT_AUTOMATION_SCHEDULE_PRESETS } from "@/lib/automations/AgentAutomationSchedulePreset.constant";
 import type { AgentAutomationSchedulePresetValue } from "@/lib/automations/AgentAutomationSchedulePreset.constant";
 import { AGENT_AUTOMATION_TRIGGER_TYPES } from "@/lib/automations/AgentAutomationTriggerType.constant";
 import type PublishedCapabilityRecord from "@/lib/capabilities/types/PublishedCapabilityRecord.type";
+import { filterNonProjectWorkflowFields } from "@/lib/workflows/workflowProjectFields";
 
 export const useCreateAutomationForm = (
   capabilities: readonly PublishedCapabilityRecord[],
@@ -30,9 +32,17 @@ export const useCreateAutomationForm = (
 
   const capability =
     capabilities.find((item) => item.id === capabilityId) ?? null;
+  const projectSelection = useAutomationProjectSelection(
+    capability?.workflowFields ?? [],
+  );
+  const workflowFields = filterNonProjectWorkflowFields(
+    capability?.workflowFields ?? [],
+  );
 
   const handleCapabilityChange = (nextCapabilityId: string): void => {
     setCapabilityId(nextCapabilityId);
+    projectSelection.clearSelectedProject();
+    setFieldValues({});
     const selected =
       capabilities.find((item) => item.id === nextCapabilityId) ?? null;
 
@@ -47,6 +57,14 @@ export const useCreateAutomationForm = (
       return;
     }
 
+    if (
+      projectSelection.requiresProjectSelection &&
+      projectSelection.selectedProjectId.length === 0
+    ) {
+      setError("Choose a project folder.");
+      return;
+    }
+
     setError(null);
     setIsSubmitting(true);
     const result = await submitCreateAutomation({
@@ -57,6 +75,9 @@ export const useCreateAutomationForm = (
         ? { schedulePreset: preset, scheduleHour, scheduleTimezone }
         : {}),
       fieldValues,
+      ...(projectSelection.selectedProjectId.length > 0
+        ? { projectId: projectSelection.selectedProjectId }
+        : {}),
     });
     setIsSubmitting(false);
 
@@ -72,6 +93,7 @@ export const useCreateAutomationForm = (
 
   return {
     capability,
+    workflowFields,
     capabilityId,
     name,
     triggerType,
@@ -83,6 +105,7 @@ export const useCreateAutomationForm = (
     webhookSecret,
     webhookUrl,
     isSubmitting,
+    projectSelection,
     setFieldValues,
     handleCapabilityChange,
     handleSubmit,

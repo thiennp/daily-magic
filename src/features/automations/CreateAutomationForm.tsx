@@ -5,6 +5,7 @@ import Link from "next/link";
 import AppPanel from "@/components/surfaces/AppPanel";
 import Button from "@/components/ui/button/Button";
 import CreateAutomationBaseFields from "@/features/automations/CreateAutomationBaseFields";
+import CreateAutomationProjectFields from "@/features/automations/CreateAutomationProjectFields";
 import CreateAutomationWebhookReveal from "@/features/automations/CreateAutomationWebhookReveal";
 import { AUTOMATIONS_PAGE_COPY } from "@/features/automations/automationsPageCopy.constant";
 import { useCreateAutomationForm } from "@/features/automations/hooks/useCreateAutomationForm";
@@ -49,9 +50,27 @@ export default function CreateAutomationForm({
           onScheduleHourChange={form.setScheduleHour}
           onScheduleTimezoneChange={form.setScheduleTimezone}
         />
+        {form.capability !== null &&
+        form.projectSelection.requiresProjectSelection ? (
+          <CreateAutomationProjectFields
+            projects={form.projectSelection.projects}
+            isLoading={form.projectSelection.isProjectsLoading}
+            onSelect={(project) => {
+              form.projectSelection.setSelectedProjectId(project.id);
+            }}
+            onProjectCreated={form.projectSelection.addProject}
+            onProjectDeleted={(projectId) => {
+              form.projectSelection.removeProject(projectId);
+
+              if (form.projectSelection.selectedProjectId === projectId) {
+                form.projectSelection.clearSelectedProject();
+              }
+            }}
+          />
+        ) : null}
         {form.capability !== null ? (
           <WorkflowTaskFields
-            fields={form.capability.workflowFields}
+            fields={form.workflowFields}
             values={form.fieldValues}
             onChange={(key, value) => {
               form.setFieldValues((current) => ({ ...current, [key]: value }));

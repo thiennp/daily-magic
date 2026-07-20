@@ -26,7 +26,7 @@ export const listLocalScheduledAutomationSyncPayloads = async (
         return null;
       }
 
-      const prompt = resolveAutomationLocalPrompt(automation, capability);
+      const prompt = await resolveAutomationLocalPrompt(automation, capability);
 
       return buildLocalScheduledAutomationPayload(
         automation,
