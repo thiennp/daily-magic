@@ -5,6 +5,8 @@ import {
   resolveAgentLiveProgressFallbackWorkDetail,
   resolveAgentLiveProgressFallbackWorkLabel,
 } from "@/features/agent/utils/resolveAgentLiveProgressWorkLabel";
+import { resolveAgentLiveProgressStallDetail } from "@/features/agent/utils/resolveAgentLiveProgressStallDetail";
+import type { AgentLiveProgressStallState } from "@/features/agent/utils/resolveAgentLiveProgressStallState";
 import type { AgentLiveTerminalStatus } from "@/features/agent/utils/agentLiveTerminalState.type";
 
 export const resolveAgentLiveProgressWorkSteps = (input: {
@@ -17,6 +19,7 @@ export const resolveAgentLiveProgressWorkSteps = (input: {
   readonly isFinished: boolean;
   readonly cleaned: string;
   readonly workState: AgentLiveProgressStepState;
+  readonly stallState?: AgentLiveProgressStallState;
 }): readonly AgentLiveProgressStep[] => {
   if (input.updates.length > 0) {
     const progressSteps: AgentLiveProgressStep[] = input.updates.map(
@@ -56,11 +59,14 @@ export const resolveAgentLiveProgressWorkSteps = (input: {
         isFinished: input.isFinished,
         cleaned: input.cleaned,
       }),
-      detail: resolveAgentLiveProgressFallbackWorkDetail({
-        cleaned: input.cleaned,
-        needsInput: input.needsInput,
-        isFinished: input.isFinished,
-        pendingQuestion: input.pendingQuestion,
+      detail: resolveAgentLiveProgressStallDetail({
+        stallState: input.stallState ?? "none",
+        fallbackDetail: resolveAgentLiveProgressFallbackWorkDetail({
+          cleaned: input.cleaned,
+          needsInput: input.needsInput,
+          isFinished: input.isFinished,
+          pendingQuestion: input.pendingQuestion,
+        }),
       }),
       state: input.workState,
     },

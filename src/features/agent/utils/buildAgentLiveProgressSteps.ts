@@ -12,6 +12,9 @@ import {
   type AgentLiveProgressStepState,
 } from "@/features/agent/utils/resolveAgentLiveProgressStepStates";
 import { stripAgentLiveProgressCliChrome } from "@/features/agent/utils/stripAgentLiveProgressCliChrome";
+import type { AgentLiveProgressStallState } from "@/features/agent/utils/resolveAgentLiveProgressStallState";
+
+export type { AgentLiveProgressStallState };
 
 export type { AgentLiveProgressStepState };
 export type { AgentLiveProgressStep } from "@/features/agent/utils/agentLiveProgressStep.type";
@@ -22,6 +25,7 @@ export const buildAgentLiveProgressSteps = (input: {
   readonly pendingCommandLine?: string | null;
   readonly pendingQuestion?: string | null;
   readonly partialOutput?: string | null;
+  readonly stallState?: AgentLiveProgressStallState;
 }): {
   readonly steps: readonly AgentLiveProgressStep[];
   readonly replyPreview: string | null;
@@ -71,6 +75,7 @@ export const buildAgentLiveProgressSteps = (input: {
     isFinished,
     cleaned,
     workState: states.workState,
+    stallState: input.stallState,
   });
 
   return {

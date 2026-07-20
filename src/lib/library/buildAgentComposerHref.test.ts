@@ -28,6 +28,15 @@ describe("buildAgentComposerHref", () => {
     ).toBe("/?sendTask=1&prompt=next+step&continueSession=1");
   });
 
+  it("AGENT-043 pins continueSession to the original Mac", () => {
+    expect(
+      buildAgentComposerHref({
+        continueSession: true,
+        deviceId: "mac-1",
+      }),
+    ).toBe("/?sendTask=1&deviceId=mac-1&continueSession=1");
+  });
+
   it("AGENT-029 marks customTask so the picker can remount safely", () => {
     expect(buildAgentComposerHref({ customTask: true })).toBe(
       "/?sendTask=1&customTask=1",

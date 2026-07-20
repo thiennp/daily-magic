@@ -1,4 +1,3 @@
-import { markOnboardingFirstTaskSent } from "@/features/home/utils/onboardingFirstTaskSentStore";
 import {
   addAgentRunLocalCacheTombstone,
   isAgentRunLocalCacheTombstoned,
@@ -66,7 +65,6 @@ export const upsertAgentRunLocalCache = (run: AgentRunRecord): void => {
   const cache = readCache();
   cache[run.id] = run;
   writeCache(cache);
-  markOnboardingFirstTaskSent();
   notifyAgentRunsLocalCacheUpdated();
 };
 

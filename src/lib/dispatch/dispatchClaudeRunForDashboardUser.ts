@@ -13,6 +13,7 @@ import {
   resolveTargetDeviceId,
 } from "@/lib/dispatch/resolveClaudeRunAgentClient";
 import { resolveClaudeDispatchTarget } from "@/lib/dispatch/resolveClaudeDispatchTarget";
+import { validateSessionContinuationRequiresTargetDevice } from "@/lib/dispatch/validateSessionContinuationRequiresTargetDevice";
 import type AgentRunRecord from "@/lib/dispatch/types/AgentRunRecord.type";
 import type AgentWitchMessage from "@/lib/agentWitch/types/AgentWitchMessage.type";
 
@@ -39,6 +40,14 @@ export const dispatchClaudeRunForDashboardUser = async (input: {
     input.requesterUserId,
     input.requesterEmail,
   );
+  const continuationError = validateSessionContinuationRequiresTargetDevice({
+    body: input.body,
+    requestId,
+  });
+  if (continuationError !== null) {
+    return { ok: false, message: continuationError };
+  }
+
   const payload = buildClaudeDispatchPayloadFromBody(input.body);
 
   const target = await resolveClaudeDispatchTarget(sender, payload);

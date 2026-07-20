@@ -19,6 +19,10 @@ export const writeOnboardingFirstTaskSentLocal = (): void => {
 };
 
 export const markOnboardingFirstTaskSent = (): void => {
+  if (readOnboardingFirstTaskSent()) {
+    return;
+  }
+
   writeOnboardingFirstTaskSentLocal();
   void persistOnboardingFirstTaskSent();
 };

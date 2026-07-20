@@ -1,6 +1,7 @@
 export const AGENT_WITCH_MESSAGE_TYPES = {
   AGENT_REGISTER: "agent.register",
   AGENT_HEARTBEAT: "agent.heartbeat",
+  RUN_HEARTBEAT: "run.heartbeat",
   COMMAND_CLAUDE_RUN: "command.claude.run",
   COMMAND_CLAUDE_RESULT: "command.claude.result",
   COMMAND_CLAUDE_INPUT_REQUIRED: "command.claude.input_required",

@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import { buildAgentRunContinueHref } from "@/features/reports/utils/buildAgentRunContinueHref";
 
 describe("buildAgentRunContinueHref", () => {
-  it("AGENT-038 scopes continue to the source run, Mac, and writer", () => {
+  it("AGENT-044 scopes continue to the source run, Mac, and writer", () => {
     expect(
       buildAgentRunContinueHref({
         run: {

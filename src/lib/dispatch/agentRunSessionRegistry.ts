@@ -35,6 +35,7 @@ export const updateAgentRunSession = (
       | "completedAt"
       | "updatedAt"
       | "approvalExpiresAt"
+      | "lastRunHeartbeatAt"
     >
   >,
 ): AgentRunRecord | undefined => {

@@ -40,5 +40,6 @@ export const createEphemeralAgentRun = (
     capabilityVersionId: input.capabilityVersionId ?? null,
     deviceId: null,
     writerAgent: "claude-cli",
+    lastRunHeartbeatAt: null,
   };
 };

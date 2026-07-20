@@ -6,7 +6,7 @@
 
 **Cause:** Job history is local-first (`localStorage`) plus in-memory server sessions. The list page did not refresh when the browser cache updated, and `useAgentRunRecordSync` reopened its WebSocket on every render.
 
-**Fix:** Keep a global cache listener in `AppShell`, stabilize the record-sync hook, merge API + cached runs with client-side filters, and refresh the list when the cache changes.
+**Fix:** Keep a global dashboard provider in the root layout (inbound cache sync + fan-out bus), stabilize the record-sync hook, merge API + cached runs with client-side filters, and refresh the list when the cache changes.
 
 ## REPORTS-002 — Job result showed `[[NEXT_ACTIONS]]` as raw text
 
@@ -31,3 +31,19 @@
 **Cause:** Job result UI only rendered next-action chips and a Continue conversation link — no freeform continue field.
 
 **Fix:** Add an auto-growing, non-resizable textarea under suggested next steps; Enter sends (Shift+Enter newline) into Send-a-task with `continueSession=1`. `shouldSubmitContinueMessageOnKeyDown.test.ts` (REPORTS-004).
+
+## REPORTS-005 — Job history spammed `agent-runs?scope=all` while a run stayed RUNNING
+
+**Symptom:** Network tab showed hundreds of `agent-runs?scope=all` and `first-task-sent` POSTs while job status never changed.
+
+**Cause:** Per-run SSE replay re-fired refresh on every historical event; `useAgentRunsActiveSse` depended on the full `runs` array (reconnect on cache bump); `upsertAgentRunLocalCache` posted first-task-sent on every write.
+
+**Fix:** Stable `activeRunIdsKey` deps, `afterSeq` cursor + refresh only on `status.*` / `terminal.end`; idempotent `markOnboardingFirstTaskSent`; debounced onboarding reload. `shouldRefreshAgentRunsOnSseEvent.test.ts` (REPORTS-005).
+
+## REPORTS-006 — Job list refetched on every active-run SSE tick
+
+**Symptom:** `/reports` still hammered `agent-runs?scope=all` whenever a running job emitted per-run SSE events, even though `agent.run.record` already updated localStorage.
+
+**Cause:** `useAgentRunsActiveSse` called full `refresh()` on status transitions; list merged API + cache but treated SSE as the primary update path.
+
+**Fix:** Drive the list from dashboard-bus cache patches (`AGENT_RUNS_LOCAL_CACHE_UPDATED_EVENT`); keep `useAgentRunsRemoteSync` slow poll (~60s) as a safety net only. `useAgentRunsList.test.ts` (REPORTS-006).

@@ -2,14 +2,13 @@
 
 import { useEffect, type RefObject } from "react";
 
-import { subscribeAgentWitchDashboardSocket } from "@/features/agent/hooks/subscribeAgentWitchDashboardSocket";
-import { syncAgentRunLocalCacheFromSocket } from "@/features/reports/utils/syncAgentRunLocalCacheFromSocket";
-import trackOnboardingFromAgentWitchSocketMessage from "@/features/home/utils/trackOnboardingFromAgentWitchSocketMessage";
+import { useAgentWitchDashboard } from "@/features/agent-witch/dashboard/AgentWitchDashboardContext";
+import { useAgentWitchDashboardSubscription } from "@/features/agent-witch/dashboard/useAgentWitchDashboardSubscription";
+import type { WsTestConnectionStatus } from "@/features/agent/types/WsTestConnectionStatus.type";
 import parseAgentWitchSocketDisplay, {
   type AgentWitchSocketDisplay,
 } from "@/lib/agentWitch/parseAgentWitchSocketDisplay";
 import { shouldUpdateAgentWitchSocketDisplay } from "@/lib/agentWitch/shouldUpdateAgentWitchSocketDisplay";
-import type { WsTestConnectionStatus } from "@/features/agent/types/WsTestConnectionStatus.type";
 
 export const useAgentWitchDashboardSocketConnection = (input: {
   readonly connectionLab: unknown;
@@ -18,6 +17,7 @@ export const useAgentWitchDashboardSocketConnection = (input: {
   readonly setLiveConnectionStatus: (status: WsTestConnectionStatus) => void;
   readonly socketRef: RefObject<WebSocket | null>;
 }): void => {
+  const dashboard = useAgentWitchDashboard();
   const {
     connectionLab,
     applySocketMessage,
@@ -25,31 +25,28 @@ export const useAgentWitchDashboardSocketConnection = (input: {
     setLiveConnectionStatus,
     socketRef,
   } = input;
+  const enabled = connectionLab === null;
 
   useEffect(() => {
-    if (connectionLab !== null) {
+    if (!enabled) {
       return;
     }
 
-    return subscribeAgentWitchDashboardSocket({
-      onStatusChange: setLiveConnectionStatus,
-      onMessage: (raw) => {
-        trackOnboardingFromAgentWitchSocketMessage(raw);
-        syncAgentRunLocalCacheFromSocket(raw);
-        applySocketMessage(raw);
-        if (shouldUpdateAgentWitchSocketDisplay(raw)) {
-          setLastResponse(parseAgentWitchSocketDisplay(raw));
-        }
-      },
-      onSocketChange: (socket) => {
-        socketRef.current = socket;
-      },
-    });
-  }, [
-    applySocketMessage,
-    connectionLab,
-    setLastResponse,
-    setLiveConnectionStatus,
-    socketRef,
-  ]);
+    setLiveConnectionStatus(dashboard.connectionStatus);
+  }, [dashboard.connectionStatus, enabled, setLiveConnectionStatus]);
+
+  useEffect(() => {
+    if (!enabled) {
+      return;
+    }
+
+    socketRef.current = dashboard.getSocket();
+  }, [dashboard, enabled, socketRef]);
+
+  useAgentWitchDashboardSubscription((raw) => {
+    applySocketMessage(raw);
+    if (shouldUpdateAgentWitchSocketDisplay(raw)) {
+      setLastResponse(parseAgentWitchSocketDisplay(raw));
+    }
+  }, enabled);
 };

@@ -1,0 +1,1 @@
+export const AGENT_RUN_HEARTBEAT_INTERVAL_MS = 15_000;

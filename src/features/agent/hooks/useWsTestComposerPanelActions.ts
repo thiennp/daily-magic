@@ -8,6 +8,7 @@ import type { SendTaskComposerPickerItem } from "@/features/agent/utils/buildSen
 import { shouldStartWriterAgentOnCliSelect } from "@/features/agent/utils/shouldStartWriterAgentOnCliSelect";
 import { getAgentRunLocalCache } from "@/features/reports/agentRunLocalCache";
 import { buildAgentRunContinueHref } from "@/features/reports/utils/buildAgentRunContinueHref";
+import { canContinueAgentRunOnStoredMac } from "@/features/reports/utils/canContinueAgentRunOnStoredMac";
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
 import buildAgentComposerHref from "@/lib/library/buildAgentComposerHref";
 
@@ -39,6 +40,10 @@ export const useWsTestComposerPanelActions = (input: {
 
   const handlePickerSelect = (item: SendTaskComposerPickerItem) => {
     if (item.kind === "history") {
+      if (!canContinueAgentRunOnStoredMac(item.deviceId)) {
+        return;
+      }
+
       if (item.writerAgent !== null) {
         input.onWriterAgentChange(item.writerAgent);
       }

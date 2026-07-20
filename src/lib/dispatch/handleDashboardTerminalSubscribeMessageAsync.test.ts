@@ -48,6 +48,7 @@ describe("handleDashboardTerminalSubscribeMessageAsync", () => {
       capabilityVersionId: null,
       deviceId: null,
       writerAgent: "claude-cli",
+      lastRunHeartbeatAt: null,
     });
 
     const response = await handleDashboardTerminalSubscribeMessageAsync(

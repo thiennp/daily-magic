@@ -35,4 +35,12 @@ describe("onboardingFirstTaskSentStore", () => {
     expect(readOnboardingFirstTaskSent()).toBe(true);
     expect(persistMock).not.toHaveBeenCalled();
   });
+
+  it("HOME-024: posts only once when mark is called repeatedly", () => {
+    markOnboardingFirstTaskSent();
+    markOnboardingFirstTaskSent();
+    markOnboardingFirstTaskSent();
+
+    expect(persistMock).toHaveBeenCalledTimes(1);
+  });
 });
