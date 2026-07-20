@@ -1,4 +1,5 @@
 import MacDeviceIcon from "@/features/agent-witch/macDevices/MacDeviceIcon";
+import MacDeviceThisMacBadge from "@/features/agent-witch/macDevices/MacDeviceThisMacBadge";
 import { resolveMacDeviceIconClassName } from "@/features/agent-witch/macDevices/utils/resolveMacDeviceIconClassName";
 import MacDeviceNameEditor from "@/features/agent-witch/macDevices/MacDeviceNameEditor";
 
@@ -8,6 +9,7 @@ interface MacDeviceRowMainContentProps {
   readonly isOnline: boolean;
   readonly detailText?: string;
   readonly detailWarning?: boolean;
+  readonly isThisMac?: boolean;
   readonly isEditing: boolean;
   readonly onEditingChange: (isEditing: boolean) => void;
   readonly onRenamed: (deviceId: string, deviceLabel: string) => void;
@@ -19,6 +21,7 @@ export default function MacDeviceRowMainContent({
   isOnline,
   detailText,
   detailWarning = false,
+  isThisMac = false,
   isEditing,
   onEditingChange,
   onRenamed,
@@ -30,14 +33,17 @@ export default function MacDeviceRowMainContent({
       <div className="flex min-w-0 items-center gap-2">
         <MacDeviceIcon className={iconClassName} />
         <div className="min-w-0 flex-1">
-          <MacDeviceNameEditor
-            key={isEditing ? `${deviceId}:edit` : `${deviceId}:view`}
-            deviceId={deviceId}
-            displayName={displayName}
-            isEditing={isEditing}
-            onEditingChange={onEditingChange}
-            onRenamed={onRenamed}
-          />
+          <div className="flex min-w-0 flex-wrap items-center gap-2">
+            <MacDeviceNameEditor
+              key={isEditing ? `${deviceId}:edit` : `${deviceId}:view`}
+              deviceId={deviceId}
+              displayName={displayName}
+              isEditing={isEditing}
+              onEditingChange={onEditingChange}
+              onRenamed={onRenamed}
+            />
+            {isThisMac ? <MacDeviceThisMacBadge /> : null}
+          </div>
         </div>
       </div>
       {detailText ? (

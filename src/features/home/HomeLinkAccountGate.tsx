@@ -86,6 +86,7 @@ function HomeLinkAccountGateContent({
       <div className={HOME_DASHBOARD_GRID_CLASS}>
         <aside className={HOME_LEFT_RAIL_CLASS}>
           <HomeConnectedMacsPanel
+            appOrigin={appOrigin}
             installCommand={installCommand}
             isWebSocketSupported={isWebSocketSupported}
             host={host}

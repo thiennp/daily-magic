@@ -2,7 +2,10 @@
 
 import MacDeviceRow from "@/features/agent-witch/macDevices/MacDeviceRow";
 import { buildMacDeviceDetailText } from "@/features/agent-witch/macDevices/utils/buildMacDeviceDetailText";
-import { canWakeMacDeviceFromBrowser } from "@/features/agent-witch/online-wake";
+import {
+  canWakeMacDeviceFromBrowser,
+  deviceLabelMatchesLocalHost,
+} from "@/features/agent-witch/online-wake";
 import type { MyMacDevice } from "@/features/agent/hooks/useMyMacDevices";
 
 interface HomeConnectedMacDeviceRowProps {
@@ -24,6 +27,9 @@ export default function HomeConnectedMacDeviceRow(
     device: props.device,
     serverInstallBundleVersion: props.serverInstallBundleVersion,
   });
+  const isThisMac =
+    props.localHostname !== null &&
+    deviceLabelMatchesLocalHost(props.device.deviceLabel, props.localHostname);
 
   return (
     <MacDeviceRow
@@ -33,6 +39,7 @@ export default function HomeConnectedMacDeviceRow(
       isConnected={props.device.isConnected}
       detailText={detail?.text}
       detailWarning={detail?.isMismatch === true}
+      isThisMac={isThisMac}
       isWakeServerReachable={canWakeMacDeviceFromBrowser({
         deviceLabel: props.device.deviceLabel,
         localHostname: props.localHostname,

@@ -6,19 +6,21 @@ import {
   getPairedDevicesSnapshotOrEmpty,
   pairedDevicesResource,
 } from "@/features/agent-witch/pairedDevicesResource";
-import { readAgentWitchLocalHostCookie } from "@/features/agent-witch/utils/agentWitchLocalHostCookie";
+import useLocalMacHostname from "@/features/home/hooks/useLocalMacHostname";
 
 /**
  * Browser context for this Mac.
- * Presence comes only from the shared devices poll / WS hub — never localhost.
+ * Hostname comes from the wake-server identity endpoint on macOS only.
  */
 const useLocalMacBrowserContext = (): {
   readonly localHostname: string | null;
+  readonly isCheckingLocalHostname: boolean;
   readonly isWakeServerReachable: boolean;
   readonly isCheckingLocalApp: boolean;
   readonly isLocalAppInstalled: boolean;
   readonly isBridgeConnected: boolean;
 } => {
+  const { localHostname, isCheckingLocalHostname } = useLocalMacHostname();
   const snapshot = useSyncExternalStore(
     pairedDevicesResource.subscribe,
     () => pairedDevicesResource.getSnapshot(),
@@ -31,9 +33,10 @@ const useLocalMacBrowserContext = (): {
   const hasClaimedDevice = resolved.devices.length > 0;
 
   return {
-    localHostname: readAgentWitchLocalHostCookie(),
-    isWakeServerReachable: true,
-    isCheckingLocalApp: snapshot === null,
+    localHostname,
+    isCheckingLocalHostname,
+    isWakeServerReachable: localHostname !== null,
+    isCheckingLocalApp: snapshot === null || isCheckingLocalHostname,
     isLocalAppInstalled: hasClaimedDevice || isBridgeConnected,
     isBridgeConnected,
   };

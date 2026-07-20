@@ -2,6 +2,7 @@
 
 import MacDeviceRowMainContent from "@/features/agent-witch/macDevices/MacDeviceRowMainContent";
 import MacDeviceRowMenu from "@/features/agent-witch/macDevices/MacDeviceRowMenu";
+import MacDeviceRowSelectTarget from "@/features/agent-witch/macDevices/MacDeviceRowSelectTarget";
 import confirmMacDeviceRevoke from "@/features/agent-witch/macDevices/utils/confirmMacDeviceRevoke";
 
 interface MacDeviceRowInnerProps {
@@ -10,6 +11,7 @@ interface MacDeviceRowInnerProps {
   readonly isOnline: boolean;
   readonly detailText?: string;
   readonly detailWarning?: boolean;
+  readonly isThisMac?: boolean;
   readonly isSelected: boolean;
   readonly isEditing: boolean;
   readonly onSelect?: () => void;
@@ -26,6 +28,7 @@ export default function MacDeviceRowInner({
   isOnline,
   detailText,
   detailWarning = false,
+  isThisMac = false,
   isSelected,
   isEditing,
   onSelect,
@@ -42,6 +45,7 @@ export default function MacDeviceRowInner({
       isOnline={isOnline}
       detailText={detailText}
       detailWarning={detailWarning}
+      isThisMac={isThisMac}
       isEditing={isEditing}
       onEditingChange={onEditingChange}
       onRenamed={onRenamed}
@@ -57,24 +61,9 @@ export default function MacDeviceRowInner({
     <div
       className={`group flex w-full items-center gap-3 rounded-lg py-1 ${rowSurfaceClassName}`}
     >
-      {onSelect !== undefined ? (
-        <div
-          role="button"
-          tabIndex={0}
-          className="min-w-0 flex-1 text-left"
-          onClick={onSelect}
-          onKeyDown={(event) => {
-            if (event.key === "Enter" || event.key === " ") {
-              event.preventDefault();
-              onSelect();
-            }
-          }}
-        >
-          {mainContent}
-        </div>
-      ) : (
-        mainContent
-      )}
+      <MacDeviceRowSelectTarget onSelect={onSelect}>
+        {mainContent}
+      </MacDeviceRowSelectTarget>
       {isEditing ? null : (
         <MacDeviceRowMenu
           onEdit={() => {

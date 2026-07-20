@@ -1,43 +1,65 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useSyncExternalStore } from "react";
 
 import AppPanel from "@/components/surfaces/AppPanel";
 import { APP_SURFACE_CTA_SECONDARY_SM_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
 import ConnectAnotherMacButton from "@/features/home/ConnectAnotherMacButton";
-import HomeConnectedMacDeviceRow from "@/features/home/HomeConnectedMacDeviceRow";
+import HomeConnectedMacsDeviceList from "@/features/home/HomeConnectedMacsDeviceList";
+import HomeConnectedMacsEmptyState from "@/features/home/HomeConnectedMacsEmptyState";
+import useHomeConnectedMacDeviceActions from "@/features/home/hooks/useHomeConnectedMacDeviceActions";
 import useHomeConnectedMacs from "@/features/home/hooks/useHomeConnectedMacs";
 import useLocalMacBrowserContext from "@/features/home/hooks/useLocalMacBrowserContext";
+import detectBrowserOperatingSystem from "@/features/home/utils/detectBrowserOperatingSystem";
+import { resolveShouldShowConnectThisMac } from "@/features/home/utils/resolveShouldShowConnectThisMac";
 import {
   buildMacDevicesStatusLine,
   countMacPresenceTiers,
 } from "@/features/agent-witch/online-wake";
-import { revokePairedDevice } from "@/features/agent-witch/utils/pairedDevicesApi";
-import buildAgentComposerHref from "@/lib/library/buildAgentComposerHref";
 
 interface HomeConnectedMacsPanelProps {
+  readonly appOrigin: string;
   readonly installCommand: string;
   readonly isWebSocketSupported: boolean;
   readonly host: string;
 }
 
+const subscribeToOperatingSystem = () => () => undefined;
+
+const getServerOperatingSystemSnapshot = () => "other" as const;
+
 export default function HomeConnectedMacsPanel({
+  appOrigin,
   installCommand,
   isWebSocketSupported,
   host,
 }: HomeConnectedMacsPanelProps) {
-  const router = useRouter();
+  const { onDelegateTask, onOpenShell, onDelete } =
+    useHomeConnectedMacDeviceActions();
   const {
     devices,
     displayNameById,
     isLoading,
     serverInstallBundleVersion,
     renameDevice,
+    refreshDevices,
   } = useHomeConnectedMacs();
-  const { localHostname, isWakeServerReachable } = useLocalMacBrowserContext();
+  const { localHostname, isCheckingLocalHostname } =
+    useLocalMacBrowserContext();
+  const operatingSystem = useSyncExternalStore(
+    subscribeToOperatingSystem,
+    detectBrowserOperatingSystem,
+    getServerOperatingSystemSnapshot,
+  );
   const presenceCounts = countMacPresenceTiers(devices);
   const statusLine = buildMacDevicesStatusLine(presenceCounts);
   const hasExistingDevices = devices.length > 0;
+  const shouldShowConnectThisMac = resolveShouldShowConnectThisMac({
+    operatingSystem,
+    localHostname,
+    isCheckingLocalHostname,
+    devices,
+  });
 
   return (
     <AppPanel padding="compact">
@@ -56,44 +78,27 @@ export default function HomeConnectedMacsPanel({
           Checking connected Macs…
         </p>
       ) : devices.length === 0 ? (
-        <p className="mt-4 text-sm text-gray-500 dark:text-gray-400">
-          No Macs connected yet.{" "}
-          <ConnectAnotherMacButton
-            installCommand={installCommand}
-            isWebSocketSupported={isWebSocketSupported}
-            host={host}
-            hasExistingDevices={hasExistingDevices}
-            className="font-medium text-brand-700 hover:underline dark:text-brand-300"
-          />
-        </p>
+        <HomeConnectedMacsEmptyState
+          installCommand={installCommand}
+          isWebSocketSupported={isWebSocketSupported}
+          host={host}
+        />
       ) : (
-        <ul className="mt-4 list-none space-y-4 p-0">
-          {devices.map((device) => (
-            <HomeConnectedMacDeviceRow
-              key={device.id}
-              device={device}
-              displayName={displayNameById.get(device.id) ?? "Your Mac"}
-              serverInstallBundleVersion={serverInstallBundleVersion}
-              localHostname={localHostname}
-              isWakeServerReachable={isWakeServerReachable}
-              onRenamed={renameDevice}
-              onDelegateTask={(deviceId) => {
-                router.push(buildAgentComposerHref({ deviceId }), {
-                  scroll: false,
-                });
-              }}
-              onOpenShell={(deviceId) => {
-                router.push(
-                  buildAgentComposerHref({ deviceId, openShell: true }),
-                  { scroll: false },
-                );
-              }}
-              onDelete={async (deviceId) => {
-                await revokePairedDevice(deviceId);
-              }}
-            />
-          ))}
-        </ul>
+        <HomeConnectedMacsDeviceList
+          appOrigin={appOrigin}
+          devices={devices}
+          displayNameById={displayNameById}
+          serverInstallBundleVersion={serverInstallBundleVersion}
+          localHostname={localHostname}
+          shouldShowConnectThisMac={shouldShowConnectThisMac}
+          onRenamed={renameDevice}
+          onLinked={() => {
+            void refreshDevices();
+          }}
+          onDelegateTask={onDelegateTask}
+          onOpenShell={onOpenShell}
+          onDelete={onDelete}
+        />
       )}
 
       {!isLoading && hasExistingDevices ? (
