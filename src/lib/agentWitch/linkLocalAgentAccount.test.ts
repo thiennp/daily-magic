@@ -5,21 +5,21 @@ vi.mock("@/lib/agentWitch/fetchAgentWitchLinkSession", () => ({
 }));
 
 vi.mock("@/lib/agentWitch/waitForLinkedMacDevice", () => ({
-  hasClaimedMacDevice: vi.fn(),
+  hasConnectedMacDevice: vi.fn(),
   waitForLinkedMacDevice: vi.fn(),
 }));
 
 import { fetchAgentWitchLinkSession } from "@/lib/agentWitch/fetchAgentWitchLinkSession";
 import { linkLocalAgentToSignedInAccount } from "@/lib/agentWitch/linkLocalAgentAccount";
-import { hasClaimedMacDevice } from "@/lib/agentWitch/waitForLinkedMacDevice";
+import { hasConnectedMacDevice } from "@/lib/agentWitch/waitForLinkedMacDevice";
 
 describe("linkLocalAgentToSignedInAccount", () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  it("HOME-020: skips link-session when a Mac is already claimed", async () => {
-    vi.mocked(hasClaimedMacDevice).mockResolvedValue(true);
+  it("HOME-020: skips link-session when a Mac is already connected", async () => {
+    vi.mocked(hasConnectedMacDevice).mockResolvedValue(true);
 
     await expect(
       linkLocalAgentToSignedInAccount("https://www.agentwitch.com"),

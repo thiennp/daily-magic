@@ -290,6 +290,18 @@ Document every production bug or UX regression here. Each entry must link to a t
 
 ---
 
+## HOME-025 — Install finished before Mac WebSocket connected
+
+**Symptom:** After running the install command, Home advanced or showed success while the Mac was only claimed in the database (or recently seen) without a live agent WebSocket, so the device did not appear as connected on agentwitch.com.
+
+**Root cause:** `waitForLinkedMacDevice` polled `/api/agent-witch/devices` for any claimed row (`devices.length > 0`) instead of requiring `isConnected` from the hub.
+
+**Fix:** Add `GET /api/agent-witch/install-connection` (`finished` when a live Mac WebSocket exists). Poll that endpoint from the connect guide, paste modal, and `waitForLinkedMacDevice`.
+
+**Regression test:** `resolveAgentWitchInstallConnectionStatus.test.ts`, `waitForLinkedMacDevice.test.ts`, `buildConnectInstallConnectionStatus.test.ts` (HOME-025).
+
+---
+
 ## Adding issues
 
 Use the next ID (`HOME-024`, …). Include symptom, root cause, fix paths, and test file.

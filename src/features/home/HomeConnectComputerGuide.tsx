@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState, useSyncExternalStore } from "react";
+import { useSyncExternalStore } from "react";
 
 import AppHero from "@/components/surfaces/AppHero";
 import {
@@ -10,16 +10,12 @@ import {
 import AgentWitchUnsupportedHostNotice from "@/features/home/AgentWitchUnsupportedHostNotice";
 import ConnectComputerGuideSteps from "@/features/home/ConnectComputerGuideSteps";
 import ConnectInstallPasteModal from "@/features/home/ConnectInstallPasteModal";
-import useConnectInstallPasteModalDismissal from "@/features/home/hooks/useConnectInstallPasteModalDismissal";
+import useHomeConnectComputerGuideFlow from "@/features/home/hooks/useHomeConnectComputerGuideFlow";
 import useLocalMacBrowserContext from "@/features/home/hooks/useLocalMacBrowserContext";
-import { useLinkLocalAgentAccount } from "@/features/home/hooks/useLinkLocalAgentAccount";
-import {
-  buildConnectInstallConnectionStatus,
-  buildConnectInstallConnectionStatusClassName,
-} from "@/features/home/utils/buildConnectInstallConnectionStatus";
+import { buildConnectInstallConnectionStatusClassName } from "@/features/home/utils/buildConnectInstallConnectionStatus";
 import { shouldShowAgentWitchAppDownloadCta } from "@/features/home/utils/shouldShowAgentWitchAppDownloadCta";
-import { MAC_WORKER_BENEFIT_COPY } from "@/lib/copy/macWorkerBenefitCopy.constant";
 import detectBrowserOperatingSystem from "@/features/home/utils/detectBrowserOperatingSystem";
+import { MAC_WORKER_BENEFIT_COPY } from "@/lib/copy/macWorkerBenefitCopy.constant";
 
 interface HomeConnectComputerGuideProps {
   readonly appOrigin: string;
@@ -40,18 +36,20 @@ export default function HomeConnectComputerGuide({
   host,
   onLinked,
 }: HomeConnectComputerGuideProps) {
-  const [installEngaged, setInstallEngaged] = useState(false);
-  const [isPasteModalOpen, setIsPasteModalOpen] = useState(false);
   const { isCheckingLocalApp, isLocalAppInstalled } =
     useLocalMacBrowserContext();
   const showInstallCta = shouldShowAgentWitchAppDownloadCta({
     isCheckingLocalApp,
     isLocalAppInstalled,
   });
-  const { isLinking, linkError } = useLinkLocalAgentAccount({
+  const {
+    connectionStatus,
+    handleClosePasteModal,
+    handleInstallEngaged,
+    isPasteModalOpen,
+  } = useHomeConnectComputerGuideFlow({
     appOrigin,
-    autoLink: true,
-    silentFailures: !installEngaged && !isLocalAppInstalled,
+    isLocalAppInstalled,
     onLinked,
   });
   const operatingSystem = useSyncExternalStore(
@@ -59,26 +57,6 @@ export default function HomeConnectComputerGuide({
     detectBrowserOperatingSystem,
     getServerOperatingSystemSnapshot,
   );
-  const connectionStatus = buildConnectInstallConnectionStatus({
-    installEngaged: installEngaged || isLocalAppInstalled,
-    isLinking,
-    linkError,
-  });
-
-  const handleInstallEngaged = useCallback(() => {
-    setInstallEngaged(true);
-    setIsPasteModalOpen(true);
-  }, []);
-
-  const handleClosePasteModal = useCallback(() => {
-    setIsPasteModalOpen(false);
-  }, []);
-
-  useConnectInstallPasteModalDismissal({
-    isOpen: isPasteModalOpen,
-    isLinking,
-    onClose: handleClosePasteModal,
-  });
 
   return (
     <AppHero variant="plain">

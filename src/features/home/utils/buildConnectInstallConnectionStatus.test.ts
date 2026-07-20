@@ -8,6 +8,7 @@ describe("buildConnectInstallConnectionStatus", () => {
       buildConnectInstallConnectionStatus({
         installEngaged: false,
         isLinking: false,
+        isInstallConnectionFinished: false,
         linkError: null,
       }),
     ).toBeNull();
@@ -18,6 +19,7 @@ describe("buildConnectInstallConnectionStatus", () => {
       buildConnectInstallConnectionStatus({
         installEngaged: false,
         isLinking: false,
+        isInstallConnectionFinished: false,
         linkError: "Local API unreachable.",
       }),
     ).toBeNull();
@@ -28,11 +30,26 @@ describe("buildConnectInstallConnectionStatus", () => {
       buildConnectInstallConnectionStatus({
         installEngaged: true,
         isLinking: false,
+        isInstallConnectionFinished: false,
         linkError: null,
       }),
     ).toEqual({
-      message: "Waiting for your Mac to get ready…",
+      message: "Waiting for your Mac to connect…",
       tone: "waiting",
+    });
+  });
+
+  it("HOME-025: returns success when the Mac WebSocket is live", () => {
+    expect(
+      buildConnectInstallConnectionStatus({
+        installEngaged: true,
+        isLinking: false,
+        isInstallConnectionFinished: true,
+        linkError: null,
+      }),
+    ).toEqual({
+      message: "Your Mac is connected.",
+      tone: "success",
     });
   });
 
@@ -41,6 +58,7 @@ describe("buildConnectInstallConnectionStatus", () => {
       buildConnectInstallConnectionStatus({
         installEngaged: false,
         isLinking: true,
+        isInstallConnectionFinished: false,
         linkError: null,
       }),
     ).toBeNull();
@@ -49,6 +67,7 @@ describe("buildConnectInstallConnectionStatus", () => {
       buildConnectInstallConnectionStatus({
         installEngaged: true,
         isLinking: true,
+        isInstallConnectionFinished: false,
         linkError: null,
       })?.tone,
     ).toBe("connecting");
@@ -57,6 +76,7 @@ describe("buildConnectInstallConnectionStatus", () => {
       buildConnectInstallConnectionStatus({
         installEngaged: true,
         isLinking: true,
+        isInstallConnectionFinished: false,
         linkError: "Local API unreachable.",
       })?.tone,
     ).toBe("error");

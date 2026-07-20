@@ -1,6 +1,6 @@
 import { fetchAgentWitchLinkSession } from "@/lib/agentWitch/fetchAgentWitchLinkSession";
 import {
-  hasClaimedMacDevice,
+  hasConnectedMacDevice,
   waitForLinkedMacDevice,
 } from "@/lib/agentWitch/waitForLinkedMacDevice";
 
@@ -23,7 +23,7 @@ export const linkLocalAgentToSignedInAccount = async (
 }> => {
   void _appOrigin;
 
-  if (await hasClaimedMacDevice()) {
+  if (await hasConnectedMacDevice()) {
     return { ok: true };
   }
 

@@ -2,11 +2,11 @@
 
 import { useEffect } from "react";
 
-import { loadMyMacDevicesSnapshot } from "@/features/agent/hooks/fetchMyMacDevicesFromApi";
 import {
   CONNECT_INSTALL_PASTE_MODAL_AUTO_CLOSE_MS,
   CONNECT_INSTALL_PASTE_MODAL_WAKE_POLL_MS,
 } from "@/features/home/constants/connectInstallPasteModal.constant";
+import { fetchAgentWitchInstallConnection } from "@/lib/agentWitch/fetchAgentWitchInstallConnection";
 
 const useConnectInstallPasteModalDismissal = ({
   isOpen,
@@ -49,14 +49,12 @@ const useConnectInstallPasteModalDismissal = ({
         return;
       }
 
-      const snapshot = await loadMyMacDevicesSnapshot().catch(() => ({
-        devices: [] as const,
-        hadError: true,
+      const status = await fetchAgentWitchInstallConnection().catch(() => ({
+        ok: false as const,
+        error: "Could not verify Mac connection.",
       }));
-      const isConnected = snapshot.devices.some(
-        (device) => device.isConnected || device.isOnline,
-      );
-      if (poll.active && isConnected) {
+
+      if (poll.active && status.ok && status.finished === true) {
         onClose();
       }
     };

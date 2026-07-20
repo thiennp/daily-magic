@@ -13,8 +13,9 @@ export const MAC_WORKER_BENEFIT_COPY = {
     "On the Mac that will run your workflows, open Terminal, paste this command, and press Return.",
   setupAnotherModalIntro:
     "On the additional Mac, open Terminal, paste this command, and press Return.",
-  waitingForMac: "Waiting for your Mac to get ready…",
+  waitingForMac: "Waiting for your Mac to connect…",
   linkingMac: "Getting your Mac ready…",
+  macConnected: "Your Mac is connected.",
   checkingMacReady: "Checking whether your Mac is ready…",
   setupFailed: "Mac setup did not finish",
   setupMacOnHomeBeforeInstall: "Set up a Mac on Home before installing.",
