@@ -35,7 +35,7 @@ WAKE_CLI_SCRIPT_URL="${input.wakeCliScriptUrl}"
 WAKE_LAUNCH_AGENT_LABEL="\${LAUNCH_AGENT_PREFIX}-wake"
 WAKE_PLIST_PATH="\${HOME}/Library/LaunchAgents/\${WAKE_LAUNCH_AGENT_LABEL}.plist"
 
-echo "Downloading Agent Witch wake server from \${WAKE_SERVER_SCRIPT_URL}…"
+agent_witch_install_step
 "\${CURL_BIN}" -fsSL "\${WAKE_SERVER_SCRIPT_URL}" -o "\${INSTALL_DIR}/agent-witch-wake-server.ts"
 "\${CURL_BIN}" -fsSL "\${WAKE_CONSTANTS_SCRIPT_URL}" -o "\${INSTALL_DIR}/agentWitchWakeConstants.ts"
 "\${CURL_BIN}" -fsSL "\${WAKE_LIST_TARGETS_SCRIPT_URL}" -o "\${INSTALL_DIR}/listAgentWitchLaunchTargets.ts"
@@ -75,6 +75,5 @@ export AGENT_WITCH_HOME="\${INSTALL_DIR}"
 exec "\${NODE_BIN}" "\${TSX_CLI}" "\${WAKE_CLI}"
 WAKE_EOF
 chmod +x "\${INSTALL_DIR}/wake.sh"
-echo "Wake script: \${INSTALL_DIR}/wake.sh"
 ${buildAgentWitchInstallScriptWakeServerPlist()}
 `;

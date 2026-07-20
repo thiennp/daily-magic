@@ -2,6 +2,7 @@ import type { AgentWitchAppHome } from "@/lib/agentWitch/resolveAgentWitchAppHom
 import { resolveAgentWitchAppHome } from "@/lib/agentWitch/resolveAgentWitchAppHome";
 import { buildAgentWitchInstallScriptClientBlock } from "@/lib/agentWitch/buildAgentWitchInstallScriptClientBlock";
 import { buildAgentWitchInstallScriptConfigBlock } from "@/lib/agentWitch/buildAgentWitchInstallScriptConfigBlock";
+import { buildAgentWitchInstallScriptProgress } from "@/lib/agentWitch/buildAgentWitchInstallScriptProgress";
 import { buildAgentWitchInstallScriptRegisterLaunchAgentFn } from "@/lib/agentWitch/buildAgentWitchInstallScriptRegisterLaunchAgent";
 import { buildAgentWitchInstallScriptWriterBootstrap } from "@/lib/agentWitch/buildAgentWitchInstallScriptWriterBootstrap";
 
@@ -90,6 +91,10 @@ fi
 
 PLIST_PATH="\${HOME}/Library/LaunchAgents/\${LAUNCH_AGENT_LABEL}.plist"
 export AGENT_WITCH_HOME AGENT_WITCH_WAKE_PORT
+${buildAgentWitchInstallScriptProgress()}
+agent_witch_install_begin
+
+agent_witch_install_step
 ${buildAgentWitchInstallScriptConfigBlock(input)}${buildAgentWitchInstallScriptWriterBootstrap()}${buildAgentWitchInstallScriptClientBlock({ appOrigin: input.appOrigin, clientScriptUrl: input.clientScriptUrl })}${buildAgentWitchInstallScriptRegisterLaunchAgentFn()}
 `;
 };

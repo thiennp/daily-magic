@@ -41,9 +41,5 @@ if [[ "\$(uname -s)" == "Darwin" ]]; then
 EOF
 
   register_agent_witch_launch_agent "\${WAKE_LAUNCH_AGENT_LABEL}" "\${WAKE_PLIST_PATH}" || true
-  echo "Agent Witch local API: http://127.0.0.1:\${AGENT_WITCH_WAKE_PORT}/link-account"
-  echo "Restart API: http://127.0.0.1:\${AGENT_WITCH_WAKE_PORT}/restart"
-  echo "Watchdog status API: http://127.0.0.1:\${AGENT_WITCH_WAKE_PORT}/watchdog/status"
-  echo "Watchdog logs API: http://127.0.0.1:\${AGENT_WITCH_WAKE_PORT}/watchdog/logs"
 fi
 `;

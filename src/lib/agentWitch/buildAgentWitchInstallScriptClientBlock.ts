@@ -19,14 +19,14 @@ export const buildAgentWitchInstallScriptClientBlock = (input: {
   readonly appOrigin: string;
   readonly clientScriptUrl: string;
 }): string => `
-echo "Downloading Agent Witch client from \${CLIENT_SCRIPT_URL}…"
+agent_witch_install_step
 "\${CURL_BIN}" -fsSL "\${CLIENT_SCRIPT_URL}" -o "\${INSTALL_DIR}/agent-witch.ts"
 ${buildClientAuxiliaryDownloadLines(input.appOrigin)}
 
 cat > "\${INSTALL_DIR}/package.json" <<EOF
 ${AGENT_WITCH_INSTALL_PACKAGE_JSON}EOF
 
-echo "Installing Agent Witch dependencies in \${INSTALL_DIR}…"
+agent_witch_install_step
 (
   cd "\${INSTALL_DIR}"
   npm install --no-fund --no-audit >/dev/null

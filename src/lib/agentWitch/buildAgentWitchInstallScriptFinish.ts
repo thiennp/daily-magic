@@ -1,0 +1,12 @@
+export const buildAgentWitchInstallScriptFinish = (input: {
+  readonly appOrigin: string;
+}): string => `
+agent_witch_install_finish_progress
+echo "Agent Witch is ready."
+
+if [[ "\$(uname -s)" == "Darwin" && -z "\${AGENT_WITCH_SKIP_OPEN_HOME:-}" ]]; then
+  if command -v open >/dev/null 2>&1; then
+    open "${input.appOrigin}/" 2>/dev/null || true
+  fi
+fi
+`;

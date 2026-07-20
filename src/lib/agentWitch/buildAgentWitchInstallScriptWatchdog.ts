@@ -28,7 +28,7 @@ WATCHDOG_STATUS_SCRIPT_URL="${input.watchdogStatusScriptUrl}"
 WATCHDOG_LAUNCH_AGENT_LABEL="\${LAUNCH_AGENT_PREFIX}-watchdog"
 WATCHDOG_PLIST_PATH="\${HOME}/Library/LaunchAgents/\${WATCHDOG_LAUNCH_AGENT_LABEL}.plist"
 
-echo "Downloading Agent Witch WebSocket watchdog…"
+agent_witch_install_step
 "\${CURL_BIN}" -fsSL "\${WATCHDOG_SCRIPT_URL}" -o "\${INSTALL_DIR}/agent-witch-watchdog.ts"
 "\${CURL_BIN}" -fsSL "\${REVIVE_SCRIPT_URL}" -o "\${INSTALL_DIR}/reviveAgentWitchWebSocket.ts"
 "\${CURL_BIN}" -fsSL "\${CONNECTION_HEALTH_SCRIPT_URL}" -o "\${INSTALL_DIR}/agentWitchConnectionHealth.ts"
@@ -97,10 +97,7 @@ if [[ "\$(uname -s)" == "Darwin" ]]; then
 EOF
 
   register_agent_witch_launch_agent "\${WATCHDOG_LAUNCH_AGENT_LABEL}" "\${WATCHDOG_PLIST_PATH}" || true
-  echo "Agent Witch watchdog: checks every 60s, revives stale WebSocket connections, and reinstalls from the install script when revive fails (15 min cooldown)."
-  echo "Manual run: \${INSTALL_DIR}/watchdog.sh"
 else
-  echo "Linux cron example (every minute):"
-  echo "  * * * * * \${INSTALL_DIR}/watchdog.sh >> \${INSTALL_DIR}/agent-witch-watchdog.log 2>&1"
+  :
 fi
 `;

@@ -20,7 +20,7 @@ AUTOMATION_LAUNCH_AGENT_RUNNING_SCRIPT_URL="${input.launchAgentRunningScriptUrl}
 AUTOMATION_LAUNCH_AGENT_LABELS_SCRIPT_URL="${input.launchAgentLabelsScriptUrl}"
 AUTOMATION_KICKSTART_SCRIPT_URL="${input.kickstartScriptUrl}"
 
-echo "Downloading Agent Witch automation scheduler…"
+agent_witch_install_step
 "\${CURL_BIN}" -fsSL "\${AUTOMATION_SCHEDULER_SCRIPT_URL}" -o "\${INSTALL_DIR}/agent-witch-automation-scheduler.ts"
 "\${CURL_BIN}" -fsSL "\${AUTOMATION_RUNNER_SCRIPT_URL}" -o "\${INSTALL_DIR}/agentWitchLocalAutomationRunner.ts"
 "\${CURL_BIN}" -fsSL "\${AUTOMATION_HEADLESS_WRITER_SCRIPT_URL}" -o "\${INSTALL_DIR}/agentWitchHeadlessWriterRun.ts"

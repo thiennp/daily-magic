@@ -61,10 +61,7 @@ if [[ "\$(uname -s)" == "Darwin" ]]; then
 EOF
 
   register_agent_witch_launch_agent "\${AUTOMATION_SCHEDULER_LAUNCH_AGENT_LABEL}" "\${AUTOMATION_SCHEDULER_PLIST_PATH}" || true
-  echo "Agent Witch automation scheduler: checks every 60s and runs due scheduled automations on this Mac."
-  echo "Manual run: \${INSTALL_DIR}/automation-scheduler.sh"
 else
-  echo "Linux cron example (every minute):"
-  echo "  * * * * * \${INSTALL_DIR}/automation-scheduler.sh >> \${INSTALL_DIR}/agent-witch-automation-scheduler.log 2>&1"
+  :
 fi
 `;

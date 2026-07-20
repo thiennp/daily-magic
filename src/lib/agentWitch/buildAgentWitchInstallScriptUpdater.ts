@@ -13,6 +13,7 @@ export const buildAgentWitchInstallScriptUpdater = (input: {
   readonly kickstartScriptUrl: string;
   readonly localLayoutScriptUrl: string;
 }): string => `
+agent_witch_install_step
 UPDATER_SCRIPT_URL="${input.selfUpdateScriptUrl}"
 SELF_UPDATE_CORE_SCRIPT_URL="${input.selfUpdateCoreScriptUrl}"
 INSTALL_VERSION_SCRIPT_URL="${input.installVersionScriptUrl}"
@@ -25,7 +26,7 @@ UPDATER_LOCAL_LAYOUT_SCRIPT_URL="${input.localLayoutScriptUrl}"
 UPDATER_LAUNCH_AGENT_LABEL="\${LAUNCH_AGENT_PREFIX}-updater"
 UPDATER_PLIST_PATH="\${HOME}/Library/LaunchAgents/\${UPDATER_LAUNCH_AGENT_LABEL}.plist"
 
-echo "Downloading Agent Witch self-update scripts…"
+agent_witch_install_step
 "\${CURL_BIN}" -fsSL "\${UPDATER_SCRIPT_URL}" -o "\${INSTALL_DIR}/agent-witch-self-update.ts"
 "\${CURL_BIN}" -fsSL "\${SELF_UPDATE_CORE_SCRIPT_URL}" -o "\${INSTALL_DIR}/agentWitchSelfUpdate.ts"
 "\${CURL_BIN}" -fsSL "\${INSTALL_VERSION_SCRIPT_URL}" -o "\${INSTALL_DIR}/agentWitchInstallVersion.ts"
@@ -92,10 +93,7 @@ if [[ "\$(uname -s)" == "Darwin" ]]; then
 EOF
 
   register_agent_witch_launch_agent "\${UPDATER_LAUNCH_AGENT_LABEL}" "\${UPDATER_PLIST_PATH}" || true
-  echo "Agent Witch updater: checks every ${AGENT_WITCH_UPDATER_INTERVAL_SEC}s for install bundle updates."
-  echo "Manual run: \${INSTALL_DIR}/self-update.sh"
 else
-  echo "Linux cron example (hourly):"
-  echo "  0 * * * * \${INSTALL_DIR}/self-update.sh >> \${INSTALL_DIR}/agent-witch-self-update.log 2>&1"
+  :
 fi
 `;

@@ -10,7 +10,12 @@ describe("renderInstallAgentWitchScript", () => {
     expect(script).toContain("npm approve-scripts --allow-scripts-pending");
     expect(script).toContain("register_agent_witch_launch_agent");
     expect(script).toContain('nohup "${RUN_PATH}"');
+    expect(script).toContain('echo "Installing Agent Witch…"');
+    expect(script).toContain("printf '\\rInstalling… %d%%'");
+    expect(script).toContain('echo "Agent Witch is ready."');
     expect(script).toContain('open "https://www.agentwitch.com/"');
+    expect(script).not.toContain("Pairing token:");
+    expect(script).not.toContain("Downloading Agent Witch wake server");
     expect(script).toContain("wss://www.agentwitch.com/api/agent-witch/ws");
     expect(script).toContain("agentWitchRunSessions.ts");
     expect(script).toContain("agentWitchLocalRunStore.ts");
@@ -34,15 +39,10 @@ describe("renderInstallAgentWitchScript", () => {
 
   it("AGENT-005 downloads automation before starting the wake server", () => {
     const script = renderInstallAgentWitchScript("http://localhost:3000");
-    const automationIdx = script.indexOf(
-      "Downloading Agent Witch automation scheduler",
-    );
-    const wakeIdx = script.indexOf("Downloading Agent Witch wake server");
+    const automationIdx = script.indexOf("agent-witch-automation-scheduler.ts");
+    const wakeIdx = script.indexOf("agent-witch-wake-server.ts");
     expect(automationIdx).toBeGreaterThan(-1);
     expect(wakeIdx).toBeGreaterThan(-1);
     expect(automationIdx).toBeLessThan(wakeIdx);
-    expect(script).toContain(
-      'echo "Local link API: http://127.0.0.1:${AGENT_WITCH_WAKE_PORT}/link-account"',
-    );
   });
 });

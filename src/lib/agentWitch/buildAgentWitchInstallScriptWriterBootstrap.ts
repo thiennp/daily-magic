@@ -1,7 +1,6 @@
 import { AGENT_WITCH_INSTALL_ENSURE_WRITER_CODEX } from "@/lib/agentWitch/buildAgentWitchInstallScriptEnsureWriterCodex.constant";
 
 export const buildAgentWitchInstallScriptWriterBootstrap = (): string => `
-echo "Writer CLIs install on your first task — choose which AI to use in the browser."
 cat > "\${INSTALL_DIR}/ensure-writer.sh" <<'ENSURE_WRITER_EOF'
 #!/usr/bin/env bash
 set -euo pipefail

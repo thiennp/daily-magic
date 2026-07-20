@@ -3,6 +3,7 @@ import { AGENT_WITCH_INSTALL_BUNDLE_VERSION } from "@/lib/agentWitch/agentWitchI
 export const buildAgentWitchInstallScriptVersionStamp = (
   appOrigin: string,
 ): string => `
+agent_witch_install_step
 cat > "\${INSTALL_DIR}/install-version.json" <<EOF
 {
   "bundleVersion": "${AGENT_WITCH_INSTALL_BUNDLE_VERSION}",
@@ -10,5 +11,4 @@ cat > "\${INSTALL_DIR}/install-version.json" <<EOF
   "updatedAt": "\$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 }
 EOF
-echo "Agent Witch bundle version: ${AGENT_WITCH_INSTALL_BUNDLE_VERSION}"
 `;
