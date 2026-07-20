@@ -5,7 +5,8 @@ const isWorkflowFieldInputType = (
   value: string,
 ): value is WorkflowFieldDefinition["type"] =>
   value === WorkflowFieldInputType.TEXT ||
-  value === WorkflowFieldInputType.TEXTAREA;
+  value === WorkflowFieldInputType.TEXTAREA ||
+  value === WorkflowFieldInputType.PROJECT;
 
 export function parseWorkflowFieldDefinitions(
   value: unknown,

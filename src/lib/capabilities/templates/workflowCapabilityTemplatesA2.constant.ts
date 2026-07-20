@@ -47,7 +47,7 @@ export const WORKFLOW_CAPABILITY_TEMPLATES_A2: readonly WorkflowCapabilityTempla
       "Ask a colleague's Mac to summarize git activity on a local repo branch — ideal for team delegation demos.",
       "Summarize commits on the branch for a standup update. Use plain English bullets for someone who did not read the diffs.",
       [
-        ["repoPath", "Repo path on their Mac", "text"],
+        ["repoPath", "Project folder on their Mac", "project"],
         ["branch", "Branch name", "text"],
         ["since", "Since (optional)", "text", false],
       ],

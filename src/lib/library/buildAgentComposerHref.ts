@@ -10,6 +10,8 @@ interface BuildAgentComposerHrefInput {
   readonly continueSession?: boolean;
   /** Skip workflow picker with a blank custom task. */
   readonly customTask?: boolean;
+  /** Saved Mac project folder for workflows with project fields. */
+  readonly projectId?: string;
   /** Expand a docked live panel (restore persisted terminal). */
   readonly resumeLiveSession?: boolean;
 }
@@ -52,6 +54,10 @@ export default function buildAgentComposerHref(
 
   if (input.customTask === true) {
     params.set("customTask", "1");
+  }
+
+  if (input.projectId) {
+    params.set("projectId", input.projectId);
   }
 
   if (input.resumeLiveSession === true) {

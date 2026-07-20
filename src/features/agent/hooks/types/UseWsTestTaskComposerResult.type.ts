@@ -1,4 +1,5 @@
 import type useMacDeviceSelection from "@/features/agent/hooks/useMacDeviceSelection";
+import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
 import type PublishedCapabilityRecord from "@/lib/capabilities/types/PublishedCapabilityRecord.type";
 import type WorkflowFieldDefinition from "@/lib/workflows/types/WorkflowFieldDefinition.type";
 import type OperatorStepDefinition from "@/lib/workflows/types/OperatorStepDefinition.type";
@@ -20,6 +21,7 @@ export interface UseWsTestTaskComposerResult {
   readonly isLibraryPlaybook: boolean;
   readonly libraryCapabilityId: string;
   readonly workflowFields: readonly WorkflowFieldDefinition[];
+  readonly composerWorkflowFields: readonly WorkflowFieldDefinition[];
   readonly workflowValidationErrors: readonly string[];
   readonly workflowFieldErrors: Readonly<Record<string, string>>;
   readonly operatorSteps: readonly OperatorStepDefinition[];
@@ -35,6 +37,15 @@ export interface UseWsTestTaskComposerResult {
   readonly removeLibraryCapability: (capabilityId: string) => void;
   readonly selectedLibraryCapabilityId: string;
   readonly setSelectedLibraryCapabilityId: (capabilityId: string) => void;
+  readonly requiresProjectSelection: boolean;
+  readonly projects: readonly UserProjectRecord[];
+  readonly isProjectsLoading: boolean;
+  readonly selectedProjectId: string;
+  readonly selectedProject: UserProjectRecord | null;
+  readonly setSelectedProjectId: (projectId: string) => void;
+  readonly clearSelectedProject: () => void;
+  readonly addSavedProject: (project: UserProjectRecord) => void;
+  readonly removeSavedProject: (projectId: string) => void;
   readonly macDevices: ReturnType<typeof useMacDeviceSelection>["devices"];
   readonly macDisplayNameById: ReturnType<
     typeof useMacDeviceSelection

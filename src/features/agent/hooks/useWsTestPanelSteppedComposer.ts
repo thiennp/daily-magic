@@ -35,6 +35,7 @@ export const useWsTestPanelSteppedComposer = (input: {
     searchParams.get(SEND_TASK_CONTINUE_SESSION_QUERY_PARAM) === "1";
   const hasCustomTaskPrefill =
     searchParams.get(SEND_TASK_CUSTOM_TASK_QUERY_PARAM) === "1";
+  const urlProjectId = searchParams.get("projectId") ?? "";
   const wizard = useWsTestComposerWizard({
     isSteppedComposer: input.isSteppedComposer,
     macStepInput: {
@@ -50,6 +51,9 @@ export const useWsTestPanelSteppedComposer = (input: {
     hasContinueSessionPrefill,
     hasCustomTaskPrefill,
     hasRememberedWriterAgentSelection: input.hasRememberedWriterAgentSelection,
+    requiresProjectStep: input.composer.requiresProjectSelection,
+    urlProjectId,
+    selectedProjectId: input.composer.selectedProjectId,
   });
   const panelActions = useWsTestComposerPanelActions({
     composer: input.composer,
@@ -82,6 +86,7 @@ export const useWsTestPanelSteppedComposer = (input: {
     writerAgent: input.writerAgent,
     onMacStepBack: finishSessionAnd(panelActions.handleMacStepBack),
     onWorkflowStepBack: finishSessionAnd(panelActions.handleWorkflowStepBack),
+    onProjectStepBack: finishSessionAnd(panelActions.handleProjectStepBack),
     onWriterStepBack: finishSessionAnd(panelActions.handleWriterStepBack),
   });
 

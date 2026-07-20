@@ -5,10 +5,11 @@ import { useMemo } from "react";
 import type { useWsTestComposerWizard } from "@/features/agent/hooks/useWsTestComposerWizard";
 import type { useWsTestTaskComposer } from "@/features/agent/hooks/useWsTestTaskComposer";
 import type { SendTaskComposerStepTrailViewItem } from "@/features/agent/types/SendTaskComposerStepTrailViewItem.type";
+import { attachSendTaskComposerStepTrailBackHandlers } from "@/features/agent/utils/attachSendTaskComposerStepTrailBackHandlers";
+import { resolveSendTaskComposerCurrentWizardStep } from "@/features/agent/utils/resolveSendTaskComposerCurrentWizardStep";
 import {
   resolveSendTaskComposerStepTrailItems,
   resolveSendTaskComposerWorkflowSelectionLabel,
-  type SendTaskComposerWizardStepId,
 } from "@/features/agent/utils/resolveSendTaskComposerStepTrail";
 import type { WsTestComposerMacStepInput } from "@/features/agent/utils/resolveWsTestComposerMacStep";
 import { shouldSkipWsTestComposerMacSelectionStep } from "@/features/agent/utils/resolveWsTestComposerMacStep";
@@ -25,49 +26,34 @@ export const useSendTaskComposerStepTrail = (input: {
   readonly writerAgent: HarnessWriterAgent;
   readonly onMacStepBack: () => void;
   readonly onWorkflowStepBack: () => void;
+  readonly onProjectStepBack: () => void;
   readonly onWriterStepBack: () => void;
 }): readonly SendTaskComposerStepTrailViewItem[] => {
-  const currentStep = useMemo((): SendTaskComposerWizardStepId | null => {
-    if (!input.isSteppedComposer) {
-      return null;
-    }
-
-    if (input.isSessionActive) {
-      return "session";
-    }
-
-    if (input.wizard.showPickerStepOnly) {
-      return "picker";
-    }
-
-    if (input.wizard.showWriterAgentStepOnly) {
-      return "writer";
-    }
-
-    if (input.wizard.showFormStep) {
-      return "form";
-    }
-
-    return null;
-  }, [
-    input.isSessionActive,
-    input.isSteppedComposer,
-    input.wizard.showFormStep,
-    input.wizard.showPickerStepOnly,
-    input.wizard.showWriterAgentStepOnly,
-  ]);
+  const currentStep = useMemo(
+    () =>
+      resolveSendTaskComposerCurrentWizardStep({
+        isSteppedComposer: input.isSteppedComposer,
+        isSessionActive: input.isSessionActive,
+        showPickerStepOnly: input.wizard.showPickerStepOnly,
+        showProjectStepOnly: input.wizard.showProjectStepOnly,
+        showWriterAgentStepOnly: input.wizard.showWriterAgentStepOnly,
+        showFormStep: input.wizard.showFormStep,
+      }),
+    [
+      input.isSessionActive,
+      input.isSteppedComposer,
+      input.wizard.showFormStep,
+      input.wizard.showPickerStepOnly,
+      input.wizard.showProjectStepOnly,
+      input.wizard.showWriterAgentStepOnly,
+    ],
+  );
 
   return useMemo(() => {
     if (currentStep === null) {
       return [];
     }
 
-    const workflowSelectionLabel =
-      resolveSendTaskComposerWorkflowSelectionLabel(
-        input.composer.selectedLibraryCapabilityId,
-        input.composer.libraryCapabilities,
-        input.isContinueSession === true,
-      );
     const trailItems = resolveSendTaskComposerStepTrailItems({
       currentStep,
       showMacTrail:
@@ -80,7 +66,18 @@ export const useSendTaskComposerStepTrail = (input: {
         "Your Mac",
       showWorkflowTrail:
         currentStep === "session" ? true : input.wizard.hasCompletedPickerStep,
-      workflowSelectionLabel,
+      workflowSelectionLabel: resolveSendTaskComposerWorkflowSelectionLabel(
+        input.composer.selectedLibraryCapabilityId,
+        input.composer.libraryCapabilities,
+        input.isContinueSession === true,
+      ),
+      showProjectTrail:
+        currentStep === "session"
+          ? input.composer.requiresProjectSelection
+          : input.composer.requiresProjectSelection &&
+            input.wizard.hasCompletedProjectStep,
+      projectSelectionLabel:
+        input.composer.selectedProject?.name ?? "Choose project",
       showWriterTrail:
         currentStep === "session"
           ? true
@@ -88,29 +85,6 @@ export const useSendTaskComposerStepTrail = (input: {
       writerAgent: input.writerAgent,
     });
 
-    return trailItems.map((item) => ({
-      ...item,
-      onBack:
-        item.id === "mac"
-          ? input.onMacStepBack
-          : item.id === "workflow"
-            ? input.onWorkflowStepBack
-            : input.onWriterStepBack,
-    }));
-  }, [
-    currentStep,
-    input.composer.libraryCapabilities,
-    input.composer.macDisplayNameById,
-    input.composer.selectedLibraryCapabilityId,
-    input.isContinueSession,
-    input.macDispatchDeviceId,
-    input.macStepInput,
-    input.onMacStepBack,
-    input.onWorkflowStepBack,
-    input.onWriterStepBack,
-    input.writerAgent,
-    input.wizard.hasCompletedMacSelectionStep,
-    input.wizard.hasCompletedPickerStep,
-    input.wizard.hasCompletedWriterAgentStep,
-  ]);
+    return attachSendTaskComposerStepTrailBackHandlers(trailItems, input);
+  }, [currentStep, input]);
 };

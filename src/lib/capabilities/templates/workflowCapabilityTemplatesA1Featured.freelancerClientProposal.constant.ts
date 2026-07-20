@@ -14,7 +14,7 @@ export const FREELANCER_CLIENT_PROPOSAL_WORKFLOW: WorkflowCapabilityTemplate =
       [
         "portfolioFolderPath",
         "Portfolio folder on your Mac (case studies, samples)",
-        "text",
+        "project",
       ],
       ["budgetRange", "Budget range or rate target", "text"],
       [

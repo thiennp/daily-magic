@@ -20,6 +20,7 @@ export default function WsTestComposerWizardSteps({
   onQueue,
   onDeviceChange,
   onPickerSelect,
+  onProjectSelect,
   onWriterAgentSelect,
   onDeviceDeleted,
   stepTrail,
@@ -56,6 +57,7 @@ export default function WsTestComposerWizardSteps({
         onClear={onClear}
         onQueue={onQueue}
         onPickerSelect={onPickerSelect}
+        onProjectSelect={onProjectSelect}
         onWriterAgentSelect={onWriterAgentSelect}
         stepTrail={stepTrail}
       />

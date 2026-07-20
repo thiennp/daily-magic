@@ -50,6 +50,7 @@ export default function WsTestPromptComposerPanel(
       onQueue={props.onQueue}
       onDeviceChange={props.panelActions.handleDeviceChange}
       onPickerSelect={props.panelActions.handlePickerSelect}
+      onProjectSelect={props.panelActions.handleProjectSelect}
       onWriterAgentSelect={props.panelActions.handleWriterAgentSelect}
       stepTrail={props.stepTrail}
       onDeviceDeleted={props.onDeviceDeleted}

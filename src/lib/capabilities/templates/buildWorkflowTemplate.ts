@@ -6,7 +6,7 @@ import { WorkflowFieldInputType } from "@/lib/workflows/types/WorkflowFieldDefin
 type WorkflowFieldSpec = readonly [
   string,
   string,
-  "text" | "textarea",
+  "text" | "textarea" | "project",
   boolean?,
 ];
 
@@ -31,7 +31,9 @@ const buildWorkflowTemplate = (
       type:
         type === "textarea"
           ? WorkflowFieldInputType.TEXTAREA
-          : WorkflowFieldInputType.TEXT,
+          : type === "project"
+            ? WorkflowFieldInputType.PROJECT
+            : WorkflowFieldInputType.TEXT,
       required: required !== false,
     })),
   }) as WorkflowCapabilityTemplate;

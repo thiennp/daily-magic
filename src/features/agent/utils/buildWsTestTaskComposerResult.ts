@@ -1,12 +1,14 @@
 import type { UseWsTestTaskComposerResult } from "@/features/agent/hooks/types/UseWsTestTaskComposerResult.type";
 import type { buildWsTestComposerDispatchState } from "@/features/agent/utils/buildWsTestComposerDispatchState";
 import type { createWsTestSelectionHandlers } from "@/features/agent/utils/createWsTestSelectionHandlers";
+import type { useComposerProjectSelection } from "@/features/agent/hooks/useComposerProjectSelection";
 import type { useLibraryPlaybookSelection } from "@/features/agent/hooks/useLibraryPlaybookSelection";
 import type { useTeamDispatchSelection } from "@/features/dispatch/hooks/useTeamDispatchSelection";
 import type { useWsTestComposerWorkflowState } from "@/features/agent/hooks/useWsTestComposerWorkflowState";
 
 export const buildWsTestTaskComposerResult = (input: {
   readonly workflow: ReturnType<typeof useWsTestComposerWorkflowState>;
+  readonly projectSelection: ReturnType<typeof useComposerProjectSelection>;
   readonly selection: ReturnType<typeof useTeamDispatchSelection>;
   readonly selectionHandlers: ReturnType<typeof createWsTestSelectionHandlers>;
   readonly librarySelection: ReturnType<typeof useLibraryPlaybookSelection>;
@@ -27,6 +29,7 @@ export const buildWsTestTaskComposerResult = (input: {
   isLibraryPlaybook: input.workflow.isLibraryPlaybook,
   libraryCapabilityId: input.workflow.libraryCapabilityId,
   workflowFields: input.workflow.workflowFields,
+  composerWorkflowFields: input.workflow.composerWorkflowFields,
   workflowValidationErrors: input.workflow.workflowValidationErrors,
   workflowFieldErrors: input.workflow.workflowFieldErrors,
   operatorSteps: input.workflow.operatorSteps,
@@ -37,6 +40,15 @@ export const buildWsTestTaskComposerResult = (input: {
   selectedLibraryCapabilityId:
     input.librarySelection.selectedLibraryCapabilityId,
   setSelectedLibraryCapabilityId: input.selectLibraryCapability,
+  requiresProjectSelection: input.projectSelection.requiresProjectSelection,
+  projects: input.projectSelection.projects,
+  isProjectsLoading: input.projectSelection.isProjectsLoading,
+  selectedProjectId: input.projectSelection.selectedProjectId,
+  selectedProject: input.projectSelection.selectedProject,
+  setSelectedProjectId: input.projectSelection.setSelectedProjectId,
+  clearSelectedProject: input.projectSelection.clearSelectedProject,
+  addSavedProject: input.projectSelection.addProject,
+  removeSavedProject: input.projectSelection.removeProject,
   ...input.dispatchState,
   onWorkflowFieldChange: (key: string, value: string) => {
     input.workflow.setWorkflowFieldValues((current) => ({

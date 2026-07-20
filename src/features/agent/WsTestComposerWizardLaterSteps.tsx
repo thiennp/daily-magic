@@ -1,6 +1,7 @@
 "use client";
 
 import SendTaskComposerPickerStep from "@/features/agent/SendTaskComposerPickerStep";
+import SendTaskComposerProjectPickerStep from "@/features/agent/SendTaskComposerProjectPickerStep";
 import SendTaskComposerStepTrail from "@/features/agent/SendTaskComposerStepTrail";
 import SendTaskComposerWriterAgentStep from "@/features/agent/SendTaskComposerWriterAgentStep";
 import WsTestComposerFormStep from "@/features/agent/WsTestComposerFormStep";
@@ -9,6 +10,7 @@ import type { useWsTestComposerWizard } from "@/features/agent/hooks/useWsTestCo
 import type { useWsTestTaskComposer } from "@/features/agent/hooks/useWsTestTaskComposer";
 import type { WsTestConnectionStatus } from "@/features/agent/types/WsTestConnectionStatus.type";
 import type { SendTaskComposerPickerItem } from "@/features/agent/utils/buildSendTaskComposerPickerItems";
+import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
 
 interface WsTestComposerWizardLaterStepsProps {
@@ -25,6 +27,7 @@ interface WsTestComposerWizardLaterStepsProps {
   readonly onClear: () => void;
   readonly onQueue: () => void;
   readonly onPickerSelect: (item: SendTaskComposerPickerItem) => void;
+  readonly onProjectSelect: (project: UserProjectRecord) => void;
   readonly onWriterAgentSelect: (writerAgent: HarnessWriterAgent) => void;
   readonly stepTrail: readonly SendTaskComposerStepTrailViewItem[];
 }
@@ -43,6 +46,7 @@ export default function WsTestComposerWizardLaterSteps({
   onClear,
   onQueue,
   onPickerSelect,
+  onProjectSelect,
   onWriterAgentSelect,
   stepTrail,
 }: WsTestComposerWizardLaterStepsProps) {
@@ -56,6 +60,19 @@ export default function WsTestComposerWizardLaterSteps({
             isLoading={composer.isPrefillLoading}
             onSelect={onPickerSelect}
             removeLibraryCapability={composer.removeLibraryCapability}
+          />
+        </div>
+      ) : null}
+      {wizard.showProjectStepOnly ? (
+        <div className={wizard.showMacSection ? "mt-6" : undefined}>
+          <SendTaskComposerStepTrail items={stepTrail} />
+          <SendTaskComposerProjectPickerStep
+            projects={composer.projects}
+            isLoading={composer.isProjectsLoading}
+            deviceId={macDispatchDeviceId}
+            onSelect={onProjectSelect}
+            onProjectCreated={composer.addSavedProject}
+            onProjectDeleted={composer.removeSavedProject}
           />
         </div>
       ) : null}

@@ -2,6 +2,7 @@
 
 import { workflowFieldInputClassName } from "@/features/workflows/utils/workflowFieldInputClassName";
 import type WorkflowFieldDefinition from "@/lib/workflows/types/WorkflowFieldDefinition.type";
+import { WorkflowFieldInputType } from "@/lib/workflows/types/WorkflowFieldDefinition.type";
 
 interface WorkflowTaskFieldsProps {
   readonly fields: readonly WorkflowFieldDefinition[];
@@ -23,6 +24,10 @@ export default function WorkflowTaskFields({
   return (
     <div className="mt-4 space-y-4">
       {fields.map((field) => {
+        if (field.type === WorkflowFieldInputType.PROJECT) {
+          return null;
+        }
+
         const errorMessage = fieldErrors[field.key];
 
         return (

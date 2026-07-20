@@ -4,6 +4,7 @@ import { useSearchParams } from "next/navigation";
 
 import type { UseWsTestTaskComposerResult } from "@/features/agent/hooks/types/UseWsTestTaskComposerResult.type";
 import { useLibraryPlaybookSelection } from "@/features/agent/hooks/useLibraryPlaybookSelection";
+import { useComposerProjectSelection } from "@/features/agent/hooks/useComposerProjectSelection";
 import { useSelectedDispatchCapability } from "@/features/dispatch/hooks/useSelectedDispatchCapability";
 import { useTeamDispatchSelection } from "@/features/dispatch/hooks/useTeamDispatchSelection";
 import useMacDeviceSelection from "@/features/agent/hooks/useMacDeviceSelection";
@@ -24,10 +25,19 @@ export function useWsTestTaskComposer(): UseWsTestTaskComposerResult {
     selection.selectedTargetUserId,
     selection.selectedCapabilityId,
   );
+  const composerWorkflowFields =
+    librarySelection.libraryPlaybook?.workflowFields ??
+    selectedCapability?.workflowFields ??
+    [];
+  const projectSelection = useComposerProjectSelection({
+    workflowFields: composerWorkflowFields,
+    deviceId: macSelection.selectedDeviceId,
+  });
   const workflow = useWsTestComposerWorkflowState(
     selectedCapability,
     librarySelection.libraryPlaybook,
     librarySelection.rerunPrompt,
+    projectSelection.selectedProject?.folderPath ?? null,
   );
   const isTeamDispatch =
     !workflow.isLibraryPlaybook &&
@@ -39,6 +49,7 @@ export function useWsTestTaskComposer(): UseWsTestTaskComposerResult {
 
   return buildWsTestTaskComposerResult({
     workflow,
+    projectSelection,
     selection,
     selectionHandlers: createWsTestSelectionHandlers(
       selection,
@@ -55,6 +66,7 @@ export function useWsTestTaskComposer(): UseWsTestTaskComposerResult {
     clearWorkflowFields,
     selectLibraryCapability: (capabilityId: string) => {
       librarySelection.setSelectedLibraryCapabilityId(capabilityId);
+      projectSelection.clearSelectedProject();
       const { nextPrompt } = buildLibraryCapabilitySelectionUpdate({
         capabilityId,
         libraryCapabilities: librarySelection.libraryCapabilities,

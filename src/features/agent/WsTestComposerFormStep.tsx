@@ -66,7 +66,7 @@ export default function WsTestComposerFormStep({
             composer.isLibraryPlaybook && composer.isWorkflowTask
           }
           prompt={composer.prompt}
-          workflowFields={composer.workflowFields}
+          workflowFields={composer.composerWorkflowFields}
           workflowFieldValues={composer.workflowFieldValues}
           workflowFieldErrors={
             isSteppedComposer

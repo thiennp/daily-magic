@@ -3,9 +3,10 @@ import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessW
 import { HARNESS_WRITER_LABELS } from "@/features/harness/constants/harnessFormOptions";
 
 export type SendTaskComposerWizardStepId =
-  "picker" | "writer" | "form" | "session";
+  "picker" | "project" | "writer" | "form" | "session";
 
-export type SendTaskComposerStepTrailItemId = "mac" | "workflow" | "writer";
+export type SendTaskComposerStepTrailItemId =
+  "mac" | "workflow" | "project" | "writer";
 
 export type SendTaskComposerStepTrailItem = {
   readonly id: SendTaskComposerStepTrailItemId;
@@ -39,6 +40,8 @@ export const resolveSendTaskComposerStepTrailItems = (input: {
   readonly macDeviceName: string;
   readonly showWorkflowTrail: boolean;
   readonly workflowSelectionLabel: string;
+  readonly showProjectTrail: boolean;
+  readonly projectSelectionLabel: string;
   readonly showWriterTrail: boolean;
   readonly writerAgent: HarnessWriterAgent;
 }): readonly SendTaskComposerStepTrailItem[] => {
@@ -57,6 +60,18 @@ export const resolveSendTaskComposerStepTrailItems = (input: {
       id: "workflow",
       caption: "Workflow or agent",
       value: input.workflowSelectionLabel,
+    });
+  }
+
+  if (
+    input.showProjectTrail &&
+    input.currentStep !== "picker" &&
+    input.currentStep !== "project"
+  ) {
+    items.push({
+      id: "project",
+      caption: "Project",
+      value: input.projectSelectionLabel,
     });
   }
 

@@ -18,6 +18,8 @@ describe("resolveWsTestComposerWizardStepFlags", () => {
       macStepInput,
       hasCompletedMacSelectionStep: true,
       hasCompletedPickerStep: false,
+      hasCompletedProjectStep: false,
+      requiresProjectStep: false,
       hasCompletedWriterAgentStep: false,
     });
 
@@ -31,10 +33,27 @@ describe("resolveWsTestComposerWizardStepFlags", () => {
       macStepInput,
       hasCompletedMacSelectionStep: true,
       hasCompletedPickerStep: true,
+      hasCompletedProjectStep: true,
+      requiresProjectStep: false,
       hasCompletedWriterAgentStep: true,
     });
 
     expect(flags.showFormStep).toBe(true);
     expect(flags.showPickerStepOnly).toBe(false);
+  });
+
+  it("shows the project step when workflow requires a saved folder", () => {
+    const flags = resolveWsTestComposerWizardStepFlags({
+      isSteppedComposer: true,
+      macStepInput,
+      hasCompletedMacSelectionStep: true,
+      hasCompletedPickerStep: true,
+      hasCompletedProjectStep: false,
+      requiresProjectStep: true,
+      hasCompletedWriterAgentStep: false,
+    });
+
+    expect(flags.showProjectStepOnly).toBe(true);
+    expect(flags.showWriterAgentStepOnly).toBe(false);
   });
 });

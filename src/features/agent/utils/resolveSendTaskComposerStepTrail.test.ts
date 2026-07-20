@@ -38,6 +38,8 @@ describe("resolveSendTaskComposerStepTrailItems", () => {
     macDeviceName: "Office Mac",
     showWorkflowTrail: true,
     workflowSelectionLabel: "Research brief",
+    showProjectTrail: false,
+    projectSelectionLabel: "daily-magic",
     showWriterTrail: true,
     writerAgent: "cursor" as const,
   };
@@ -76,5 +78,15 @@ describe("resolveSendTaskComposerStepTrailItems", () => {
         currentStep: "session",
       }).map((item) => item.id),
     ).toEqual(["mac", "workflow", "writer"]);
+  });
+
+  it("includes project in the form trail when enabled", () => {
+    expect(
+      resolveSendTaskComposerStepTrailItems({
+        ...baseInput,
+        showProjectTrail: true,
+        currentStep: "form",
+      }).map((item) => item.id),
+    ).toEqual(["mac", "workflow", "project", "writer"]);
   });
 });

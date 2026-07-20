@@ -3,20 +3,20 @@
 import { useMemo, useState, type Dispatch, type SetStateAction } from "react";
 
 import type { DispatchTargetCapability } from "@/features/dispatch/hooks/useDispatchTargets";
-import {
-  buildWorkflowFieldValidationErrors,
-  buildWorkflowPrompt,
-} from "@/lib/workflows/buildWorkflowPrompt";
-import { appendOperatorCheckpointsToPrompt } from "@/lib/workflows/buildOperatorCheckpointPromptSection";
+import { useComposerResolvedPrompt } from "@/features/agent/hooks/useComposerResolvedPrompt";
+import { useEffectiveWorkflowFieldValues } from "@/features/agent/hooks/useEffectiveWorkflowFieldValues";
+import { resolveComposerPlaybookContext } from "@/features/agent/utils/resolveComposerPlaybookContext";
 import type OperatorStepDefinition from "@/lib/workflows/types/OperatorStepDefinition.type";
 import type LibraryPlaybookTemplate from "@/lib/library/types/LibraryPlaybookTemplate.type";
 import { CapabilityType } from "@/lib/capabilities/CapabilityType.constant";
 import type WorkflowFieldDefinition from "@/lib/workflows/types/WorkflowFieldDefinition.type";
+import { filterNonProjectWorkflowFields } from "@/lib/workflows/workflowProjectFields";
 
 export function useWsTestComposerWorkflowState(
   selectedCapability: DispatchTargetCapability | null,
   libraryPlaybook: LibraryPlaybookTemplate | null,
   rerunPrompt: string,
+  projectFolderPath: string | null = null,
 ): {
   readonly prompt: string;
   readonly setPrompt: (value: string) => void;
@@ -26,6 +26,7 @@ export function useWsTestComposerWorkflowState(
   >;
   readonly isWorkflowTask: boolean;
   readonly workflowFields: readonly WorkflowFieldDefinition[];
+  readonly composerWorkflowFields: readonly WorkflowFieldDefinition[];
   readonly workflowValidationErrors: readonly string[];
   readonly workflowFieldErrors: Readonly<Record<string, string>>;
   readonly operatorSteps: readonly OperatorStepDefinition[];
@@ -44,10 +45,10 @@ export function useWsTestComposerWorkflowState(
     Record<string, string>
   >({});
   const isLibraryPlaybook = libraryPlaybook !== null;
-  const playbookName = libraryPlaybook?.name ?? selectedCapability?.name ?? "";
-  const playbookType =
-    libraryPlaybook?.type ?? selectedCapability?.type ?? CapabilityType.AGENT;
-  const isWorkflowTask = playbookType === CapabilityType.WORKFLOW;
+  const { playbookName, isWorkflowTask } = resolveComposerPlaybookContext(
+    selectedCapability,
+    libraryPlaybook,
+  );
   const workflowFields = useMemo(
     () =>
       libraryPlaybook?.workflowFields ??
@@ -55,35 +56,29 @@ export function useWsTestComposerWorkflowState(
       [],
     [libraryPlaybook?.workflowFields, selectedCapability?.workflowFields],
   );
+  const composerWorkflowFields = useMemo(
+    () => filterNonProjectWorkflowFields(workflowFields),
+    [workflowFields],
+  );
+  const effectiveWorkflowFieldValues = useEffectiveWorkflowFieldValues(
+    workflowFields,
+    workflowFieldValues,
+    projectFolderPath,
+  );
   const operatorSteps = useMemo(
     () =>
       libraryPlaybook?.operatorSteps ?? selectedCapability?.operatorSteps ?? [],
     [libraryPlaybook?.operatorSteps, selectedCapability?.operatorSteps],
   );
-  const workflowFieldErrors = isWorkflowTask
-    ? buildWorkflowFieldValidationErrors(workflowFields, workflowFieldValues)
-    : {};
-  const workflowValidationErrors = Object.values(workflowFieldErrors);
-  const resolvedPrompt = useMemo(
-    () =>
-      isWorkflowTask && playbookName.length > 0
-        ? buildWorkflowPrompt(
-            playbookName,
-            workflowFields,
-            workflowFieldValues,
-            prompt,
-            operatorSteps,
-          )
-        : appendOperatorCheckpointsToPrompt(prompt, operatorSteps),
-    [
+  const { workflowFieldErrors, workflowValidationErrors, resolvedPrompt } =
+    useComposerResolvedPrompt({
       isWorkflowTask,
       playbookName,
       workflowFields,
-      workflowFieldValues,
+      effectiveWorkflowFieldValues,
       prompt,
       operatorSteps,
-    ],
-  );
+    });
 
   return {
     prompt,
@@ -92,6 +87,7 @@ export function useWsTestComposerWorkflowState(
     setWorkflowFieldValues,
     isWorkflowTask,
     workflowFields,
+    composerWorkflowFields,
     workflowValidationErrors,
     workflowFieldErrors,
     operatorSteps,

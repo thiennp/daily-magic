@@ -70,4 +70,13 @@ describe("buildAgentComposerHref", () => {
       "/?sendTask=1&deviceId=mac-1&writerAgent=cursor&sourceRunId=run-1&continueSession=1",
     );
   });
+
+  it("carries projectId for saved Mac project folders", () => {
+    expect(
+      buildAgentComposerHref({
+        libraryCapabilityId: "cap-1",
+        projectId: "project-1",
+      }),
+    ).toBe("/?sendTask=1&libraryCapabilityId=cap-1&projectId=project-1");
+  });
 });

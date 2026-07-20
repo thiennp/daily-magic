@@ -31,7 +31,7 @@ export const WORKFLOW_CAPABILITY_TEMPLATES_A1_FEATURED_SOCIAL: readonly Workflow
         [
           "knowledgeFolderPath",
           "Knowledge folder on your Mac (FAQs, policies, notes)",
-          "text",
+          "project",
         ],
         [
           "inboxFocus",

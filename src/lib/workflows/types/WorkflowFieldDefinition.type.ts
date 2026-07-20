@@ -1,6 +1,7 @@
 export const WorkflowFieldInputType = {
   TEXT: "text",
   TEXTAREA: "textarea",
+  PROJECT: "project",
 } as const;
 
 export type WorkflowFieldInputTypeValue =
