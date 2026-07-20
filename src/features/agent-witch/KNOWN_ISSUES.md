@@ -1,5 +1,17 @@
 # Agent Witch bridge — known issues
 
+## AGENT-041 — Mac client crash-looped after bundle 33 (missing install scripts)
+
+**Symptom:** Dashboard showed no Mac connected; `~/.agent-witch/agent-witch.error.log` repeated `ERR_MODULE_NOT_FOUND` for `agentWitchRunCompletionOutbox` (and would also miss `agentWitchRunHeartbeat.constant`).
+
+**Cause:** Bundle **33** added run-heartbeat/outbox logic in `agentWitchRunSessions.ts` but omitted the new dependency files from `AGENT_WITCH_CLIENT_INSTALL_SCRIPT_NAMES`, so fresh installs and self-updates downloaded a broken client.
+
+**Fix:** Add `agentWitchRunCompletionOutbox.ts`, `agentWitchRunHeartbeat.constant.ts`, and `formatAgentWitchInstallBundleVersionLabel.ts` to the install allowlist. Install bundle **36**.
+
+**Regression tests:** `agentWitchInstallSelfRepair.test.ts`, `agentWitchRunCompletionOutbox.test.ts` (AGENT-041).
+
+---
+
 ## AGENT-039 — Cloud could not tell if a Mac run was still alive or finished
 
 **Symptom:** Send-a-task progress could show "Working on your request" indefinitely when the Mac WebSocket dropped after the CLI finished, or when the Mac worker died without sending `command.claude.result`.
