@@ -336,4 +336,14 @@ Document every production bug or UX regression here. Each entry must link to a t
 
 ---
 
-Use the next ID (`HOME-027`, …). Include symptom, root cause, fix paths, and test file.
+## HOME-028 — Connect this Mac shown on phone Home
+
+**Symptom:** Mobile browsers saw a **Connect this Mac** row in Your Devices even though the phone is not the Mac being linked.
+
+**Fix:** Detect mobile user agents (`isMobileBrowser`) and hide the Connect this Mac row via `resolveShouldShowConnectThisMac`.
+
+**Regression tests:** `isMobileBrowser.test.ts`, `resolveShouldShowConnectThisMac.test.ts` (HOME-028).
+
+---
+
+Use the next ID (`HOME-028`, …). Include symptom, root cause, fix paths, and test file.

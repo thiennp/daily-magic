@@ -5,9 +5,10 @@ export const resolveShouldShowConnectThisMac = (input: {
   readonly operatingSystem: BrowserOperatingSystem;
   readonly localHostname: string | null;
   readonly isCheckingLocalHostname: boolean;
+  readonly isMobileBrowser: boolean;
   readonly devices: readonly { readonly deviceLabel: string | null }[];
 }): boolean => {
-  if (input.isCheckingLocalHostname) {
+  if (input.isCheckingLocalHostname || input.isMobileBrowser) {
     return false;
   }
 

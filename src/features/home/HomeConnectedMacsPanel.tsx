@@ -11,6 +11,7 @@ import useHomeConnectedMacDeviceActions from "@/features/home/hooks/useHomeConne
 import useHomeConnectedMacs from "@/features/home/hooks/useHomeConnectedMacs";
 import useLocalMacBrowserContext from "@/features/home/hooks/useLocalMacBrowserContext";
 import detectBrowserOperatingSystem from "@/features/home/utils/detectBrowserOperatingSystem";
+import isMobileBrowser from "@/features/home/utils/isMobileBrowser";
 import { resolveShouldShowConnectThisMac } from "@/features/home/utils/resolveShouldShowConnectThisMac";
 import {
   buildMacDevicesStatusLine,
@@ -27,6 +28,8 @@ interface HomeConnectedMacsPanelProps {
 const subscribeToOperatingSystem = () => () => undefined;
 
 const getServerOperatingSystemSnapshot = () => "other" as const;
+
+const getServerMobileBrowserSnapshot = () => false;
 
 export default function HomeConnectedMacsPanel({
   appOrigin,
@@ -51,6 +54,11 @@ export default function HomeConnectedMacsPanel({
     detectBrowserOperatingSystem,
     getServerOperatingSystemSnapshot,
   );
+  const mobileBrowser = useSyncExternalStore(
+    subscribeToOperatingSystem,
+    isMobileBrowser,
+    getServerMobileBrowserSnapshot,
+  );
   const presenceCounts = countMacPresenceTiers(devices);
   const statusLine = buildMacDevicesStatusLine(presenceCounts);
   const hasExistingDevices = devices.length > 0;
@@ -58,6 +66,7 @@ export default function HomeConnectedMacsPanel({
     operatingSystem,
     localHostname,
     isCheckingLocalHostname,
+    isMobileBrowser: mobileBrowser,
     devices,
   });
 
