@@ -35,14 +35,23 @@ export async function POST(request: Request): Promise<Response> {
     );
   }
 
-  const result = await createAgentAutomation(actor.id, parsed);
+  const outcome = await createAgentAutomation(actor.id, parsed);
 
-  if (result === null) {
+  if (outcome.kind === "not_found") {
     return Response.json(
       { ok: false, errorMessage: "Workflow not found in your library." },
       { status: 404 },
     );
   }
+
+  if (outcome.kind === "validation_error") {
+    return Response.json(
+      { ok: false, errorMessage: outcome.errorMessage },
+      { status: 400 },
+    );
+  }
+
+  const result = outcome.result;
 
   await markUserOnboardingAutomationCreated(actor.id);
 

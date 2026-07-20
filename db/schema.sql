@@ -197,6 +197,7 @@ CREATE TABLE IF NOT EXISTS agent_automations (
   webhook_secret_hash TEXT,
   webhook_secret_prefix TEXT,
   field_values JSONB NOT NULL DEFAULT '{}'::jsonb,
+  project_id TEXT REFERENCES user_projects(id) ON DELETE SET NULL,
   local_prompt TEXT,
   enabled BOOLEAN NOT NULL DEFAULT true,
   last_run_at TIMESTAMPTZ,

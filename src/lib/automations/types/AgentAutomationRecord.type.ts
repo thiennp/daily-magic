@@ -15,6 +15,7 @@ export default interface AgentAutomationRecord {
   readonly scheduleTimezone: string;
   readonly webhookSecretPrefix: string | null;
   readonly fieldValues: Readonly<Record<string, string>>;
+  readonly projectId: string | null;
   readonly localPrompt: string | null;
   readonly enabled: boolean;
   readonly lastRunAt: string | null;

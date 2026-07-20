@@ -65,16 +65,23 @@ export async function PATCH(
     );
   }
 
-  const automation = await updateAgentAutomation(id, actor.id, parsed);
+  const outcome = await updateAgentAutomation(id, actor.id, parsed);
 
-  if (automation === null) {
+  if (outcome.kind === "not_found") {
     return Response.json(
       { ok: false, errorMessage: "Not found." },
       { status: 404 },
     );
   }
 
-  return Response.json({ ok: true, automation });
+  if (outcome.kind === "validation_error") {
+    return Response.json(
+      { ok: false, errorMessage: outcome.errorMessage },
+      { status: 400 },
+    );
+  }
+
+  return Response.json({ ok: true, automation: outcome.automation });
 }
 
 export async function DELETE(

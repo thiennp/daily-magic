@@ -3,15 +3,21 @@ import { computeNextScheduleRun } from "@/lib/automations/computeNextScheduleRun
 import { buildAutomationDispatchPrompt } from "@/lib/automations/buildAutomationDispatchPrompt";
 import mapAgentAutomationRow from "@/lib/automations/mapAgentAutomationRow";
 import type { UpdateAgentAutomationInput } from "@/lib/automations/parseAgentAutomationBody";
+import { prepareAutomationFieldValues } from "@/lib/automations/prepareAutomationFieldValues";
 import type AgentAutomationRecord from "@/lib/automations/types/AgentAutomationRecord.type";
 import { getPublishedCapabilityById } from "@/lib/capabilities/capabilityQueries";
 import { asRowArray, getSql } from "@/lib/db";
+
+export type UpdateAgentAutomationOutcome =
+  | { readonly kind: "updated"; readonly automation: AgentAutomationRecord }
+  | { readonly kind: "not_found" }
+  | { readonly kind: "validation_error"; readonly errorMessage: string };
 
 export const updateAgentAutomation = async (
   automationId: string,
   ownerUserId: string,
   input: UpdateAgentAutomationInput,
-): Promise<AgentAutomationRecord | null> => {
+): Promise<UpdateAgentAutomationOutcome> => {
   const sql = getSql();
   const existingRows = asRowArray(
     await sql`
@@ -24,7 +30,7 @@ export const updateAgentAutomation = async (
   );
 
   if (existingRows.length === 0) {
-    return null;
+    return { kind: "not_found" };
   }
 
   const existing = mapAgentAutomationRow(existingRows[0]);
@@ -35,12 +41,30 @@ export const updateAgentAutomation = async (
   const scheduleHour = input.scheduleHour ?? existing.scheduleHour;
   const scheduleTimezone = input.scheduleTimezone ?? existing.scheduleTimezone;
   const fieldValues = input.fieldValues ?? existing.fieldValues;
+  const projectId =
+    input.projectId !== undefined ? input.projectId : existing.projectId;
   const enabled = input.enabled ?? existing.enabled;
   const capability = await getPublishedCapabilityById(existing.capabilityId);
-  const localPrompt =
-    capability !== null
-      ? buildAutomationDispatchPrompt(capability, fieldValues)
-      : existing.localPrompt;
+
+  if (capability === null) {
+    return { kind: "not_found" };
+  }
+
+  const prepared = await prepareAutomationFieldValues({
+    ownerUserId,
+    capability,
+    fieldValues,
+    projectId,
+  });
+
+  if (!prepared.ok) {
+    return { kind: "validation_error", errorMessage: prepared.errorMessage };
+  }
+
+  const localPrompt = buildAutomationDispatchPrompt(
+    capability,
+    prepared.fieldValues,
+  );
   const nextRunAt =
     existing.triggerType === AGENT_AUTOMATION_TRIGGER_TYPES.SCHEDULE &&
     schedulePreset !== null
@@ -60,7 +84,8 @@ export const updateAgentAutomation = async (
         schedule_preset = ${schedulePreset},
         schedule_hour = ${scheduleHour},
         schedule_timezone = ${scheduleTimezone},
-        field_values = ${JSON.stringify(fieldValues)}::jsonb,
+        field_values = ${JSON.stringify(prepared.fieldValues)}::jsonb,
+        project_id = ${prepared.projectId},
         local_prompt = ${localPrompt},
         enabled = ${enabled},
         next_run_at = ${nextRunAt},
@@ -71,7 +96,9 @@ export const updateAgentAutomation = async (
     `,
   );
 
-  return rows.length > 0 ? mapAgentAutomationRow(rows[0]) : null;
+  return rows.length > 0
+    ? { kind: "updated", automation: mapAgentAutomationRow(rows[0]) }
+    : { kind: "not_found" };
 };
 
 export const deleteAgentAutomation = async (

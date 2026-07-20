@@ -15,6 +15,7 @@ export interface CreateAgentAutomationInput {
   readonly scheduleHour?: number;
   readonly scheduleTimezone?: string;
   readonly fieldValues?: Readonly<Record<string, string>>;
+  readonly projectId?: string | null;
   readonly enabled?: boolean;
 }
 
@@ -28,5 +29,6 @@ export interface UpdateAgentAutomationInput {
   readonly scheduleHour?: number;
   readonly scheduleTimezone?: string;
   readonly fieldValues?: Readonly<Record<string, string>>;
+  readonly projectId?: string | null;
   readonly enabled?: boolean;
 }

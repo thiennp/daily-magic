@@ -53,6 +53,7 @@ export default function mapAgentAutomationRow(
       ? String(row.webhook_secret_prefix)
       : null,
     fieldValues: parseFieldValues(row.field_values),
+    projectId: row.project_id ? String(row.project_id) : null,
     localPrompt:
       typeof row.local_prompt === "string" && row.local_prompt.length > 0
         ? row.local_prompt

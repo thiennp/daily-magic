@@ -47,6 +47,10 @@ export const parseCreateAgentAutomationBody = (
   const scheduleHour = readScheduleHour(record.scheduleHour);
   const scheduleTimezone = readNonEmptyString(record.scheduleTimezone);
   const fieldValues = parseFieldValues(record.fieldValues);
+  const projectId =
+    record.projectId === null
+      ? null
+      : (readNonEmptyString(record.projectId) ?? undefined);
 
   return {
     name,
@@ -57,6 +61,7 @@ export const parseCreateAgentAutomationBody = (
     ...(scheduleHour !== undefined ? { scheduleHour } : {}),
     ...(scheduleTimezone !== null ? { scheduleTimezone } : {}),
     ...(fieldValues !== undefined ? { fieldValues } : {}),
+    ...(projectId !== undefined ? { projectId } : {}),
     ...(typeof record.enabled === "boolean" ? { enabled: record.enabled } : {}),
   };
 };
@@ -75,6 +80,10 @@ export const parseUpdateAgentAutomationBody = (
   const scheduleHour = readScheduleHour(record.scheduleHour);
   const scheduleTimezone = readNonEmptyString(record.scheduleTimezone);
   const fieldValues = parseFieldValues(record.fieldValues);
+  const projectId =
+    record.projectId === null
+      ? null
+      : (readNonEmptyString(record.projectId) ?? undefined);
 
   return {
     ...(name !== null ? { name } : {}),
@@ -87,6 +96,7 @@ export const parseUpdateAgentAutomationBody = (
     ...(scheduleHour !== undefined ? { scheduleHour } : {}),
     ...(scheduleTimezone !== null ? { scheduleTimezone } : {}),
     ...(fieldValues !== undefined ? { fieldValues } : {}),
+    ...(projectId !== undefined ? { projectId } : {}),
     ...(typeof record.enabled === "boolean" ? { enabled: record.enabled } : {}),
   };
 };

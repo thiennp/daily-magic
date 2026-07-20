@@ -1,5 +1,6 @@
 import { AGENT_AUTOMATION_TRIGGER_TYPES } from "@/lib/automations/AgentAutomationTriggerType.constant";
 import { buildAutomationDispatchPrompt } from "@/lib/automations/buildAutomationDispatchPrompt";
+import { prepareAutomationFieldValues } from "@/lib/automations/prepareAutomationFieldValues";
 import type LocalScheduledAutomationPayload from "@/lib/automations/types/LocalScheduledAutomationPayload.type";
 import type AgentAutomationRecord from "@/lib/automations/types/AgentAutomationRecord.type";
 import type PublishedCapabilityRecord from "@/lib/capabilities/types/PublishedCapabilityRecord.type";
@@ -29,10 +30,19 @@ export const buildLocalScheduledAutomationPayload = (
   };
 };
 
-export const resolveAutomationLocalPrompt = (
+export const resolveAutomationLocalPrompt = async (
   automation: AgentAutomationRecord,
   capability: PublishedCapabilityRecord,
-): string =>
-  automation.localPrompt?.trim().length
-    ? automation.localPrompt.trim()
-    : buildAutomationDispatchPrompt(capability, automation.fieldValues);
+): Promise<string> => {
+  const prepared = await prepareAutomationFieldValues({
+    ownerUserId: automation.ownerUserId,
+    capability,
+    fieldValues: automation.fieldValues,
+    projectId: automation.projectId,
+  });
+  const fieldValues = prepared.ok
+    ? prepared.fieldValues
+    : automation.fieldValues;
+
+  return buildAutomationDispatchPrompt(capability, fieldValues);
+};
