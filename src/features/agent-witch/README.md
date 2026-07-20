@@ -32,7 +32,7 @@ After agent turns, chunks are embedded with local Ollama (`nomic-embed-text` by 
 
 ## Writer setup
 
-Post-install AI picker: `/setup/writer` on agentwitch.com → WS `writer.ensure` / `writer.status`. Login check runs on every Mac reconnect.
+Post-install AI picker: `/setup/writer` on agentwitch.com → WS `writer.ensure` / `writer.status`. Install/login runs only for the writer the user selects (not on every Mac reconnect).
 
 ## Key modules
 

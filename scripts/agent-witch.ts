@@ -87,7 +87,6 @@ import {
 } from "./agentWitchLocalRag";
 import { resolveAgentWitchAppOriginFromWsUrl } from "./resolveAgentWitchAppOriginFromWsUrl";
 import {
-  listPreferredWritersForStatus,
   runWriterEnsure,
 } from "./handleAgentWitchWriterEnsure";
 
@@ -816,37 +815,6 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
     state.heartbeatTimer = setInterval(sendHeartbeat, HEARTBEAT_INTERVAL_MS);
   };
 
-  const runWriterLoginCheckOnConnect = (socket: WebSocket): void => {
-    const commands = {
-      claudeCommand: config.claudeCommand,
-      codexCommand: config.codexCommand,
-      cursorCommand: config.cursorCommand,
-      antigravityCommand: config.antigravityCommand,
-    };
-    for (const writerAgent of listPreferredWritersForStatus()) {
-      void runWriterEnsure({
-        layout: config.layout,
-        writerAgent,
-        commands,
-      }).then((status) => {
-        sendMessage(
-          socket,
-          {
-            type: "writer.status",
-            payload: status,
-          },
-          config.layout,
-        );
-        appendAgentWitchLocalTraffic(config.layout, {
-          direction: "local",
-          type: "writer.status",
-          summary: `${writerAgent} installed=${String(status.installed)} loggedIn=${String(status.loggedIn)}`,
-          action: "writer-login-check",
-        });
-      });
-    }
-  };
-
   const handleInboundRaw = (
     parsed: Record<string, unknown>,
     socket: AgentWitchOutboundSocket,
@@ -1349,7 +1317,6 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
       reportHarnessManifest(socket, config.layout);
       replayPendingRunInputRequests(config, socket);
       startHeartbeat(socket);
-      runWriterLoginCheckOnConnect(socket);
     });
 
     socket.on("message", (data) => {

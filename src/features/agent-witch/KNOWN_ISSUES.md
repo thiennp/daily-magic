@@ -122,7 +122,17 @@
 
 **Symptom:** After install, users had no cloud UI to install/sign in Cursor / Claude / Codex / Antigravity (product names, not “CLI”).
 
-**Fix:** `/setup/writer` on agentwitch.com sends WS `writer.ensure`; Mac replies `writer.status`. Login check runs on every Mac reconnect.
+**Fix:** `/setup/writer` on agentwitch.com sends WS `writer.ensure`; Mac replies `writer.status`. Writer install/login runs only for the CLI the user picks there (not on every reconnect).
+
+---
+
+## AGENT-042 — Mac reconnect auto-opened Claude login
+
+**Symptom:** Every Agent Witch WebSocket reconnect ran `ensure-writer.sh` for Cursor, Claude, Codex, and Antigravity, which could open Claude login even when the user planned to use Cursor.
+
+**Fix:** Remove the connect-time writer login sweep. Keep `writer.ensure` for explicit `/setup/writer` picks and task dispatch for the selected writer only.
+
+**Regression test:** `agent-witch.writerLoginCheck.test.ts` (AGENT-042).
 
 ---
 

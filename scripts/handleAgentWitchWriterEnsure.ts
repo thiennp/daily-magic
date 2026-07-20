@@ -91,11 +91,4 @@ export const runWriterEnsure = async (input: {
   };
 };
 
-export const listPreferredWritersForStatus = (): HarnessWriterAgentId[] => [
-  "cursor",
-  "claude-cli",
-  "codex",
-  "antigravity",
-];
-
 export const resolveWriterCommandMap = resolveWriterCliCommands;
