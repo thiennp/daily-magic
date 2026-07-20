@@ -1,10 +1,13 @@
 import { AGENT_LIVE_BASH_PROMPT } from "@/features/agent/utils/agentLiveTerminalPrompt.constant";
 import { AGENT_LIVE_PROGRESS_CLI_COMMAND_LINE_PATTERN } from "@/features/agent/utils/agentLiveProgressPatterns.constant";
+import { stripAgentLiveProgressCheckpointFromOutput } from "@/features/agent/utils/stripAgentLiveProgressCheckpointFromOutput";
 import { stripAgentRunProgressFromOutput } from "@/features/agent/utils/stripAgentRunProgressFromOutput";
 import { stripNextActionsFromTerminalOutput } from "@/features/agent/utils/splitAgentLiveTerminalOutput";
 
 export const stripAgentLiveProgressCliChrome = (output: string): string =>
-  stripAgentRunProgressFromOutput(stripNextActionsFromTerminalOutput(output))
+  stripAgentLiveProgressCheckpointFromOutput(
+    stripAgentRunProgressFromOutput(stripNextActionsFromTerminalOutput(output)),
+  )
     .split(/\r?\n/)
     .filter((line) => {
       const trimmed = line.trim();

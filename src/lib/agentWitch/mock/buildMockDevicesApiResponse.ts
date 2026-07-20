@@ -1,3 +1,4 @@
+import { AGENT_WITCH_INSTALL_BUNDLE_VERSION } from "@/lib/agentWitch/agentWitchInstallBundleVersion";
 import {
   buildConnectionScenarioDevices,
   shouldMockDevicesApiFail,
@@ -6,7 +7,13 @@ import type { ConnectionScenarioId } from "@/lib/agentWitch/mock/connectionScena
 
 export const buildMockDevicesApiResponse = (
   scenarioId: ConnectionScenarioId,
-): Response | { readonly ok: true; readonly devices: unknown } => {
+):
+  | Response
+  | {
+      readonly ok: true;
+      readonly serverInstallBundleVersion: string;
+      readonly devices: unknown;
+    } => {
   if (shouldMockDevicesApiFail(scenarioId)) {
     return new Response(
       JSON.stringify({ error: "Mock devices API failure." }),
@@ -21,11 +28,13 @@ export const buildMockDevicesApiResponse = (
 
   return {
     ok: true,
+    serverInstallBundleVersion: AGENT_WITCH_INSTALL_BUNDLE_VERSION,
     devices: devices.map((device) => ({
       ...device,
       displayName: null,
       revokedAt: null,
       dispatchPolicy: null,
+      installBundleVersion: null,
     })),
   };
 };

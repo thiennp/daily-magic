@@ -5,13 +5,11 @@ import { useRouter } from "next/navigation";
 import AppPanel from "@/components/surfaces/AppPanel";
 import { APP_SURFACE_CTA_SECONDARY_SM_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
 import ConnectAnotherMacButton from "@/features/home/ConnectAnotherMacButton";
+import HomeConnectedMacDeviceRow from "@/features/home/HomeConnectedMacDeviceRow";
 import useHomeConnectedMacs from "@/features/home/hooks/useHomeConnectedMacs";
 import useLocalMacBrowserContext from "@/features/home/hooks/useLocalMacBrowserContext";
-import MacDeviceRow from "@/features/agent-witch/macDevices/MacDeviceRow";
-import { buildMacDeviceLastSeenText } from "@/features/agent-witch/macDevices/utils/buildMacDeviceLastSeenText";
 import {
   buildMacDevicesStatusLine,
-  canWakeMacDeviceFromBrowser,
   countMacPresenceTiers,
 } from "@/features/agent-witch/online-wake";
 import { revokePairedDevice } from "@/features/agent-witch/utils/pairedDevicesApi";
@@ -29,8 +27,13 @@ export default function HomeConnectedMacsPanel({
   host,
 }: HomeConnectedMacsPanelProps) {
   const router = useRouter();
-  const { devices, displayNameById, isLoading, renameDevice } =
-    useHomeConnectedMacs();
+  const {
+    devices,
+    displayNameById,
+    isLoading,
+    serverInstallBundleVersion,
+    renameDevice,
+  } = useHomeConnectedMacs();
   const { localHostname, isWakeServerReachable } = useLocalMacBrowserContext();
   const presenceCounts = countMacPresenceTiers(devices);
   const statusLine = buildMacDevicesStatusLine(presenceCounts);
@@ -43,6 +46,9 @@ export default function HomeConnectedMacsPanel({
       </h2>
       <p className="mt-1 text-xs text-gray-600 dark:text-gray-400">
         {statusLine}
+        {serverInstallBundleVersion !== null
+          ? ` · Cloud bundle ${serverInstallBundleVersion}`
+          : ""}
       </p>
 
       {isLoading ? (
@@ -63,18 +69,13 @@ export default function HomeConnectedMacsPanel({
       ) : (
         <ul className="mt-4 list-none space-y-4 p-0">
           {devices.map((device) => (
-            <MacDeviceRow
+            <HomeConnectedMacDeviceRow
               key={device.id}
-              deviceId={device.id}
+              device={device}
               displayName={displayNameById.get(device.id) ?? "Your Mac"}
-              isOnline={device.isOnline}
-              isConnected={device.isConnected}
-              detailText={buildMacDeviceLastSeenText(device) ?? undefined}
-              isWakeServerReachable={canWakeMacDeviceFromBrowser({
-                deviceLabel: device.deviceLabel,
-                localHostname,
-                isWakeServerReachable,
-              })}
+              serverInstallBundleVersion={serverInstallBundleVersion}
+              localHostname={localHostname}
+              isWakeServerReachable={isWakeServerReachable}
               onRenamed={renameDevice}
               onDelegateTask={(deviceId) => {
                 router.push(buildAgentComposerHref({ deviceId }), {

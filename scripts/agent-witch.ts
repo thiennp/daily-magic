@@ -794,6 +794,9 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
   const startHeartbeat = (socket: WebSocket): void => {
     clearHeartbeat();
     const sendHeartbeat = (): void => {
+      const installBundleVersion =
+        readAgentWitchInstallVersion(config.layout.installDir)?.bundleVersion ??
+        null;
       sendMessage(
         socket,
         {
@@ -802,6 +805,7 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
             hostname: os.hostname(),
             wakeError: state.wakeError,
             ...(config.email !== null ? { email: config.email } : {}),
+            ...(installBundleVersion !== null ? { installBundleVersion } : {}),
           },
         },
         config.layout,

@@ -9,6 +9,7 @@ interface MacDeviceRowInnerProps {
   readonly displayName: string;
   readonly isOnline: boolean;
   readonly detailText?: string;
+  readonly detailWarning?: boolean;
   readonly isSelected: boolean;
   readonly isEditing: boolean;
   readonly onSelect?: () => void;
@@ -24,6 +25,7 @@ export default function MacDeviceRowInner({
   displayName,
   isOnline,
   detailText,
+  detailWarning = false,
   isSelected,
   isEditing,
   onSelect,
@@ -39,6 +41,7 @@ export default function MacDeviceRowInner({
       displayName={displayName}
       isOnline={isOnline}
       detailText={detailText}
+      detailWarning={detailWarning}
       isEditing={isEditing}
       onEditingChange={onEditingChange}
       onRenamed={onRenamed}

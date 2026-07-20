@@ -11,6 +11,7 @@ const device = {
   isConnected: true,
   isOnline: true,
   lastHeartbeatAt: null,
+  installBundleVersion: null,
 };
 
 describe("resolveMyMacDevicesAfterFetch", () => {

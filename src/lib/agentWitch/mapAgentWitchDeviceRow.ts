@@ -25,5 +25,8 @@ export default function mapAgentWitchDeviceRow(
     lastWakeErrorAt: row.last_wake_error_at
       ? String(row.last_wake_error_at)
       : null,
+    installBundleVersion: row.install_bundle_version
+      ? String(row.install_bundle_version)
+      : null,
   };
 }

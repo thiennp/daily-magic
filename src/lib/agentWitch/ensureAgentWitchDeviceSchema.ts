@@ -51,6 +51,10 @@ export const ensureAgentWitchDeviceSchema = async (): Promise<void> => {
       ALTER TABLE agent_witch_devices
       ADD COLUMN IF NOT EXISTS link_code TEXT
     `;
+    await sql`
+      ALTER TABLE agent_witch_devices
+      ADD COLUMN IF NOT EXISTS install_bundle_version TEXT
+    `;
     schemaEnsureState.ensured = true;
   })();
 
