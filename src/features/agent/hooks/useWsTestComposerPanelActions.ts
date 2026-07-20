@@ -6,6 +6,7 @@ import type { useWsTestComposerWizard } from "@/features/agent/hooks/useWsTestCo
 import type { useWsTestTaskComposer } from "@/features/agent/hooks/useWsTestTaskComposer";
 import type { SendTaskComposerPickerItem } from "@/features/agent/utils/buildSendTaskComposerPickerItems";
 import { shouldStartWriterAgentOnCliSelect } from "@/features/agent/utils/shouldStartWriterAgentOnCliSelect";
+import { canContinueAgentRunOnStoredMac } from "@/features/reports/utils/canContinueAgentRunOnStoredMac";
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
 import buildAgentComposerHref from "@/lib/library/buildAgentComposerHref";
 
@@ -37,6 +38,10 @@ export const useWsTestComposerPanelActions = (input: {
 
   const handlePickerSelect = (item: SendTaskComposerPickerItem) => {
     if (item.kind === "history") {
+      if (!canContinueAgentRunOnStoredMac(item.deviceId)) {
+        return;
+      }
+
       if (item.writerAgent !== null) {
         input.onWriterAgentChange(item.writerAgent);
       }
@@ -45,7 +50,7 @@ export const useWsTestComposerPanelActions = (input: {
       router.replace(
         buildAgentComposerHref({
           continueSession: true,
-          deviceId: item.deviceId ?? undefined,
+          deviceId: item.deviceId,
           libraryCapabilityId: item.capabilityId ?? undefined,
         }),
         { scroll: false },
