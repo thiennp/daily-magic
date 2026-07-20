@@ -11,6 +11,15 @@ export const MAC_WORKER_BENEFIT_COPY = {
     "Agent Witch is already installed on this Mac. Stay signed in while we link it to your account.",
   setupModalIntro:
     "On the Mac that will run your workflows, open Terminal, paste this command, and press Return.",
+  connectThisMacModalIntro:
+    "On this Mac, open Terminal, paste this command, and press Return.",
+  connectThisMacMobileModalIntro:
+    "Agent Witch installs on macOS. Use your MacBook to finish connecting this computer.",
+  connectThisMacMobileSteps: [
+    "Open your MacBook.",
+    "Sign in to Agent Witch in the browser on that Mac.",
+    "On Home, choose Connect this Mac and follow the Terminal steps there.",
+  ],
   setupAnotherModalIntro:
     "On the additional Mac, open Terminal, paste this command, and press Return.",
   waitingForMac: "Waiting for your Mac to connect…",

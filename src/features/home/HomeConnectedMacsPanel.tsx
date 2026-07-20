@@ -86,6 +86,9 @@ export default function HomeConnectedMacsPanel({
       ) : (
         <HomeConnectedMacsDeviceList
           appOrigin={appOrigin}
+          installCommand={installCommand}
+          isWebSocketSupported={isWebSocketSupported}
+          host={host}
           devices={devices}
           displayNameById={displayNameById}
           serverInstallBundleVersion={serverInstallBundleVersion}

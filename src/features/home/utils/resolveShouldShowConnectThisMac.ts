@@ -7,8 +7,12 @@ export const resolveShouldShowConnectThisMac = (input: {
   readonly isCheckingLocalHostname: boolean;
   readonly devices: readonly { readonly deviceLabel: string | null }[];
 }): boolean => {
-  if (input.operatingSystem !== "mac" || input.isCheckingLocalHostname) {
+  if (input.isCheckingLocalHostname) {
     return false;
+  }
+
+  if (input.operatingSystem !== "mac") {
+    return input.devices.length > 0;
   }
 
   if (input.localHostname === null) {

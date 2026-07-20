@@ -314,4 +314,14 @@ Document every production bug or UX regression here. Each entry must link to a t
 
 ---
 
+## HOME-026 — Connect this Mac row skipped install modal
+
+**Symptom:** Clicking **Connect this Mac** in Your Devices tried to link immediately instead of opening the install modal with the bash command and Terminal paste flow. On mobile, the row was hidden or offered no MacBook guidance.
+
+**Fix:** Open `ConnectThisMacModal` from the row (bash + paste modal on macOS; MacBook steps on mobile/non-Mac). Show the row on non-Mac browsers when devices already exist.
+
+**Regression tests:** `resolveShouldShowConnectThisMac.test.ts` (HOME-026).
+
+---
+
 Use the next ID (`HOME-026`, …). Include symptom, root cause, fix paths, and test file.
