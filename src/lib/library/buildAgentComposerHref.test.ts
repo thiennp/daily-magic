@@ -57,4 +57,17 @@ describe("buildAgentComposerHref", () => {
       }),
     ).toBe("/library?sendTask=1&resumeLive=1");
   });
+
+  it("AGENT-038 carries sourceRunId and writerAgent for job-history continue", () => {
+    expect(
+      buildAgentComposerHref({
+        continueSession: true,
+        sourceRunId: "run-1",
+        writerAgent: "cursor",
+        deviceId: "mac-1",
+      }),
+    ).toBe(
+      "/?sendTask=1&deviceId=mac-1&writerAgent=cursor&sourceRunId=run-1&continueSession=1",
+    );
+  });
 });

@@ -1,6 +1,7 @@
 "use client";
 
 import { useAgentRunQueue } from "@/features/agent/hooks/useAgentRunQueue";
+import { useContinueFromSourceRunPrefill } from "@/features/agent/hooks/useContinueFromSourceRunPrefill";
 import { useDelegatedWriterAgent } from "@/features/agent/hooks/useDelegatedWriterAgent";
 import { useOpenMacShellFromQuery } from "@/features/agent/hooks/useOpenMacShellFromQuery";
 import { useWsTestMacSession } from "@/features/agent/hooks/useWsTestMacSession";
@@ -18,6 +19,7 @@ export const useWsTestPanelController = (input: {
   const composer = useWsTestTaskComposer();
   const { writerAgent, setWriterAgent, hasRememberedWriterAgentSelection } =
     useDelegatedWriterAgent();
+  useContinueFromSourceRunPrefill({ setWriterAgent });
   const sessionTargets = resolveAgentSessionTargets({
     sessionWriterAgent: socket.sessionWriterAgent,
     writerAgent,

@@ -15,14 +15,19 @@ export const useSendTaskModalState = (): {
   readonly setPanelKey: (value: string) => void;
   readonly urlWantsOpen: boolean;
 } => {
-  const { urlWantsOpen, shouldRestoreLiveSession, capabilityFromUrl } =
-    useSendTaskModalUrlFlags();
+  const {
+    urlWantsOpen,
+    shouldRestoreLiveSession,
+    capabilityFromUrl,
+    sourceRunId,
+  } = useSendTaskModalUrlFlags();
   const [keepAlive, setKeepAlive] = useState(urlWantsOpen);
   const [isSessionActive, setIsSessionActive] = useState(false);
   const [panelKey, setPanelKey] = useState(() =>
     resolveSendTaskModalPanelKey({
       shouldRestoreLiveSession,
       capabilityFromUrl,
+      sourceRunId,
     }),
   );
   const [wasUrlOpen, setWasUrlOpen] = useState(urlWantsOpen);
@@ -36,6 +41,7 @@ export const useSendTaskModalState = (): {
         resolveSendTaskModalPanelKey({
           shouldRestoreLiveSession,
           capabilityFromUrl,
+          sourceRunId,
         }),
       );
     } else if (

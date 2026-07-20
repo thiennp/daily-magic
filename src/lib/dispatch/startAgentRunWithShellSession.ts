@@ -23,6 +23,7 @@ export const startAgentRunWithShellSession = async (input: {
   readonly deviceId: string | null;
   readonly includeNextActions: boolean;
   readonly sessionContinuation: boolean;
+  readonly sourceRunId?: string;
   readonly requestId?: string;
 }): Promise<string> => {
   const shellSession = createShellSession({
@@ -40,6 +41,7 @@ export const startAgentRunWithShellSession = async (input: {
     input.requestId,
     input.includeNextActions,
     input.sessionContinuation,
+    input.sourceRunId,
     shellSession.shellSessionId,
   );
   await markAgentRunRunning(input.runtime, input.runId);

@@ -11,6 +11,7 @@ export function sendClaudePromptOverSocket(input: {
   readonly capabilityId?: string;
   readonly targetDeviceId?: string;
   readonly sessionContinuation?: boolean;
+  readonly sourceRunId?: string;
   readonly onResponse: (response: string) => void;
 }): void {
   const socket = input.socket;
@@ -40,6 +41,9 @@ export function sendClaudePromptOverSocket(input: {
           : {}),
         ...(input.sessionContinuation === true
           ? { sessionContinuation: true }
+          : {}),
+        ...(input.sourceRunId !== undefined
+          ? { sourceRunId: input.sourceRunId }
           : {}),
       },
       requestId: createAgentWitchRequestId(),

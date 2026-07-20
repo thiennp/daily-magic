@@ -6,6 +6,8 @@ import type { useWsTestComposerWizard } from "@/features/agent/hooks/useWsTestCo
 import type { useWsTestTaskComposer } from "@/features/agent/hooks/useWsTestTaskComposer";
 import type { SendTaskComposerPickerItem } from "@/features/agent/utils/buildSendTaskComposerPickerItems";
 import { shouldStartWriterAgentOnCliSelect } from "@/features/agent/utils/shouldStartWriterAgentOnCliSelect";
+import { getAgentRunLocalCache } from "@/features/reports/agentRunLocalCache";
+import { buildAgentRunContinueHref } from "@/features/reports/utils/buildAgentRunContinueHref";
 import { canContinueAgentRunOnStoredMac } from "@/features/reports/utils/canContinueAgentRunOnStoredMac";
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
 import buildAgentComposerHref from "@/lib/library/buildAgentComposerHref";
@@ -47,11 +49,15 @@ export const useWsTestComposerPanelActions = (input: {
       }
 
       input.composer.setSelectedLibraryCapabilityId(item.capabilityId ?? "");
+      const cachedRun = getAgentRunLocalCache(item.id);
       router.replace(
-        buildAgentComposerHref({
-          continueSession: true,
-          deviceId: item.deviceId,
-          libraryCapabilityId: item.capabilityId ?? undefined,
+        buildAgentRunContinueHref({
+          run: cachedRun ?? {
+            id: item.id,
+            deviceId: item.deviceId,
+            writerAgent: item.writerAgent ?? "cursor",
+            capabilityId: item.capabilityId,
+          },
         }),
         { scroll: false },
       );

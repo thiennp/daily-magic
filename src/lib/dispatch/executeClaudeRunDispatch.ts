@@ -82,6 +82,10 @@ export const executeClaudeRunDispatch = async (input: {
       groupId: input.groupId,
     }),
     sessionContinuation: input.payload.sessionContinuation === true,
+    sourceRunId:
+      typeof input.payload.sourceRunId === "string"
+        ? input.payload.sourceRunId
+        : undefined,
     requestId: input.requestId,
   });
 

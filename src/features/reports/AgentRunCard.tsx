@@ -5,6 +5,7 @@ import { useState } from "react";
 
 import AppPanel from "@/components/surfaces/AppPanel";
 import AgentRunAgainButton from "@/features/reports/AgentRunAgainButton";
+import { buildAgentRunContinueHref } from "@/features/reports/utils/buildAgentRunContinueHref";
 import AgentRunStatusBadge from "@/features/reports/AgentRunStatusBadge";
 import { deleteAgentRunHistory } from "@/features/reports/utils/deleteAgentRunHistory";
 import type EnrichedAgentRunRecord from "@/lib/dispatch/types/EnrichedAgentRunRecord.type";
@@ -54,7 +55,17 @@ export default function AgentRunCard({ run }: AgentRunCardProps) {
         >
           View full report
         </Link>
-        {canRunAgain ? <AgentRunAgainButton prompt={run.prompt} /> : null}
+        {canRunAgain ? (
+          <>
+            <Link
+              href={buildAgentRunContinueHref({ run })}
+              className="text-sm font-medium text-brand-600 hover:text-brand-700 dark:text-brand-400"
+            >
+              Continue
+            </Link>
+            <AgentRunAgainButton prompt={run.prompt} />
+          </>
+        ) : null}
         <button
           type="button"
           disabled={isDeleting}

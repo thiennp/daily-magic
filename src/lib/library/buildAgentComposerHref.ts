@@ -3,6 +3,8 @@ interface BuildAgentComposerHrefInput {
   readonly libraryCapabilityId?: string;
   readonly prompt?: string;
   readonly deviceId?: string;
+  readonly writerAgent?: string;
+  readonly sourceRunId?: string;
   readonly openShell?: boolean;
   /** Resume the Mac CLI conversation with --continue. */
   readonly continueSession?: boolean;
@@ -30,6 +32,14 @@ export default function buildAgentComposerHref(
 
   if (input.deviceId) {
     params.set("deviceId", input.deviceId);
+  }
+
+  if (input.writerAgent) {
+    params.set("writerAgent", input.writerAgent);
+  }
+
+  if (input.sourceRunId) {
+    params.set("sourceRunId", input.sourceRunId);
   }
 
   if (input.openShell === true) {

@@ -4,35 +4,33 @@ import { useRouter } from "next/navigation";
 
 import AgentLiveTerminalNextActions from "@/features/agent/AgentLiveTerminalNextActions";
 import AgentRunContinueMessageField from "@/features/reports/AgentRunContinueMessageField";
+import { buildAgentRunContinueHref } from "@/features/reports/utils/buildAgentRunContinueHref";
 import { canContinueAgentRunOnStoredMac } from "@/features/reports/utils/canContinueAgentRunOnStoredMac";
 import { splitAgentRunResultForDisplay } from "@/features/reports/utils/splitAgentRunResultForDisplay";
-import buildAgentComposerHref from "@/lib/library/buildAgentComposerHref";
+import type AgentRunRecord from "@/lib/dispatch/types/AgentRunRecord.type";
 
 interface AgentRunResultOutputProps {
+  readonly run: Pick<
+    AgentRunRecord,
+    "id" | "deviceId" | "writerAgent" | "capabilityId"
+  >;
   readonly resultOutput: string;
-  readonly deviceId: string | null;
 }
 
 export default function AgentRunResultOutput({
+  run,
   resultOutput,
-  deviceId,
 }: AgentRunResultOutputProps) {
   const router = useRouter();
   const { body, nextActions } = splitAgentRunResultForDisplay(resultOutput);
-  const canContinue = canContinueAgentRunOnStoredMac(deviceId);
+  const canContinue = canContinueAgentRunOnStoredMac(run.deviceId);
 
   const continueWithPrompt = (prompt: string) => {
-    if (!canContinueAgentRunOnStoredMac(deviceId)) {
+    if (!canContinueAgentRunOnStoredMac(run.deviceId)) {
       return;
     }
 
-    router.push(
-      buildAgentComposerHref({
-        prompt,
-        continueSession: true,
-        deviceId,
-      }),
-    );
+    router.push(buildAgentRunContinueHref({ run, prompt }));
   };
 
   return (
