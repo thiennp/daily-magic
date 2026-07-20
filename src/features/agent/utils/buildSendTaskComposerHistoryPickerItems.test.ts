@@ -68,4 +68,13 @@ describe("buildSendTaskComposerHistoryPickerItems", () => {
       expect(item.writerAgent).toBeNull();
     }
   });
+
+  it("AGENT-043: omits history rows without a saved Mac id", () => {
+    const items = buildSendTaskComposerHistoryPickerItems([
+      buildRun({ id: "run-no-mac", prompt: "Legacy", deviceId: null }),
+      buildRun({ id: "run-mac", prompt: "With Mac", deviceId: "mac-2" }),
+    ]);
+
+    expect(items.map((item) => item.id)).toEqual(["run-mac"]);
+  });
 });
