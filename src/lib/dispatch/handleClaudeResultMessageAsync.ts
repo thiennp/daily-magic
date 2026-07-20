@@ -1,4 +1,5 @@
 import { unauthorizedAgentOnlyError } from "@/lib/agentWitch/agentWitchHubClientOperations";
+import { deliverAgentWitchCursorLoginIfAuthenticationRequired } from "@/lib/agentWitch/deliverAgentWitchCursorLoginIfAuthenticationRequired";
 import type AgentWitchHubClient from "@/lib/agentWitch/types/AgentWitchHubClient.type";
 import type AgentWitchHubRuntime from "@/lib/agentWitch/types/AgentWitchHubRuntime.type";
 import type AgentWitchMessage from "@/lib/agentWitch/types/AgentWitchMessage.type";
@@ -40,6 +41,8 @@ export const handleClaudeResultMessageAsync = async (
       : -1;
   const output =
     typeof message.payload?.output === "string" ? message.payload.output : "";
+
+  deliverAgentWitchCursorLoginIfAuthenticationRequired(sender, output);
 
   if (agentRunId !== null) {
     dispatchAgentRunInputRegistry.remove(agentRunId);
