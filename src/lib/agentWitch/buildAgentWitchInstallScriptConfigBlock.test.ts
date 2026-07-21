@@ -14,10 +14,10 @@ describe("buildAgentWitchInstallScriptConfigBlock", () => {
     expect(block).toContain("config.wsUrl = wsUrl");
   });
 
-  it("AGENT-047: allows repair without preset pairing token under nounset", () => {
+  it("AGENT-047: allows update without preset pairing token under nounset", () => {
     const block = buildAgentWitchInstallScriptConfigBlock({
       wsUrl: "wss://www.agentwitch.com/api/agent-witch/ws",
-      repairExistingInstall: true,
+      updateExistingInstall: true,
     });
 
     expect(block).toContain('PAIRING_TOKEN="${PRESET_PAIRING_TOKEN:-}"');

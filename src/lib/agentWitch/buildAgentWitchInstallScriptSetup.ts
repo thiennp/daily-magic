@@ -20,13 +20,13 @@ export const buildAgentWitchInstallScriptSetup = (
   } & AgentWitchInstallScriptPreset,
 ): string => {
   const appHome = input.appHome ?? resolveAgentWitchAppHome(input.appOrigin);
-  const repairExistingInstall = input.repairExistingInstall === true;
+  const updateExistingInstall = input.updateExistingInstall === true;
 
   return `#!/usr/bin/env bash
 set -euo pipefail
 ${input.websocketSupportWarning}
 ${buildAgentWitchInstallScriptPresetBlock(input)}
-${repairExistingInstall ? "AGENT_WITCH_SKIP_OPEN_HOME=1\n" : ""}
+${updateExistingInstall ? "AGENT_WITCH_SKIP_OPEN_HOME=1\n" : ""}
 INSTALL_DIR="\${HOME}/${appHome.installDirName}"
 AGENT_WITCH_HOME="\${INSTALL_DIR}"
 AGENT_WITCH_WAKE_PORT="${appHome.wakePort}"
@@ -105,13 +105,13 @@ PLIST_PATH="\${HOME}/Library/LaunchAgents/\${LAUNCH_AGENT_LABEL}.plist"
 export AGENT_WITCH_HOME AGENT_WITCH_WAKE_PORT
 ${buildAgentWitchInstallScriptMacOsConsoleUserGuard()}
 ${buildAgentWitchInstallScriptRetireAuxiliaryLaunchAgents()}
-${buildAgentWitchInstallScriptProgress()}
+${buildAgentWitchInstallScriptProgress({ updateExistingInstall })}
 agent_witch_install_begin
 
 agent_witch_install_step
 ${buildAgentWitchInstallScriptConfigBlock({
   wsUrl: input.wsUrl,
-  repairExistingInstall: input.repairExistingInstall,
+  updateExistingInstall: input.updateExistingInstall,
 })}${buildAgentWitchInstallScriptWriterBootstrap()}${buildAgentWitchInstallScriptClientBlock({ appOrigin: input.appOrigin, clientScriptUrl: input.clientScriptUrl })}${buildAgentWitchInstallScriptRegisterLaunchAgentFn()}
 `;
 };

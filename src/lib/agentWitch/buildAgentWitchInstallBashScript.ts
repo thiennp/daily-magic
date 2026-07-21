@@ -25,7 +25,7 @@ export const buildAgentWitchInstallBashScript = (
     appHome,
     presetPairingToken: input.presetPairingToken,
     presetProfileEmail: input.presetProfileEmail,
-    repairExistingInstall: input.repairExistingInstall,
+    updateExistingInstall: input.updateExistingInstall,
   })}${buildAgentWitchInstallScriptLaunchAgent()}${buildAgentWitchInstallScriptUpdater(
     {
       installDirName: appHome.installDirName,

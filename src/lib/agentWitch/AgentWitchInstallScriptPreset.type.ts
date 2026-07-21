@@ -1,5 +1,5 @@
 export interface AgentWitchInstallScriptPreset {
   readonly presetPairingToken?: string;
   readonly presetProfileEmail?: string;
-  readonly repairExistingInstall?: boolean;
+  readonly updateExistingInstall?: boolean;
 }

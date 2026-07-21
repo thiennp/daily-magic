@@ -22,9 +22,9 @@ export default function UpdateLocalMacModal({
       </h2>
       <p className={`mt-3 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
         On this Mac, open Terminal, paste this command, and press Return. It
-        downloads the latest install bundle from Agent Witch and repairs your
-        existing Mac link without creating a new device—you can close this page
-        after copying.
+        stops the running background services, replaces your local install files
+        with the latest version, and restarts Agent Witch with the same Mac
+        link—no new device row. You can close this page after copying.
       </p>
       <CopyableBashCommand command={updateCommand} variant="bash" />
     </Modal>

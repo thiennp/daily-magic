@@ -15,4 +15,14 @@ describe("buildAgentWitchInstallScriptProgress", () => {
     expect(block).toContain('echo "Installing Agent Witch…"');
     expect(block).toContain("printf '\\rInstalling… %d%%'");
   });
+
+  it("AGENT-050: uses update wording when replacing an existing install", () => {
+    const block = buildAgentWitchInstallScriptProgress({
+      updateExistingInstall: true,
+    });
+
+    expect(block).toContain('echo "Updating Agent Witch…"');
+    expect(block).toContain("printf '\\rUpdating… %d%%'");
+    expect(block).not.toContain("Installing");
+  });
 });

@@ -3,7 +3,7 @@
 import { useCallback, useMemo, useState } from "react";
 
 import confirmMacDeviceDeleteLocalInstall from "@/features/agent-witch/macDevices/utils/confirmMacDeviceDeleteLocalInstall";
-import { buildAgentWitchRepairInstallCommand } from "@/lib/agentWitch/buildAgentWitchRepairInstallCommand";
+import { buildAgentWitchUpdateInstallCommand } from "@/lib/agentWitch/buildAgentWitchUpdateInstallCommand";
 
 const useThisMacLocalInstallActions = (): {
   readonly onUpdateLocal: () => void;
@@ -18,7 +18,7 @@ const useThisMacLocalInstallActions = (): {
       return "";
     }
 
-    return buildAgentWitchRepairInstallCommand(window.location.origin);
+    return buildAgentWitchUpdateInstallCommand(window.location.origin);
   }, []);
 
   const onUpdateLocal = useCallback(() => {
