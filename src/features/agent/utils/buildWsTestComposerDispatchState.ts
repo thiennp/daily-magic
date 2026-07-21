@@ -1,5 +1,6 @@
 import { canDispatchToMac } from "@/features/agent-witch/online-wake";
 import { buildWsTestSendDisabledState } from "@/features/agent/utils/buildWsTestSendDisabledState";
+import { isCursorCloudExecutorDeviceId } from "@/lib/cursorCloud/cursorCloudExecutorDeviceId.constant";
 import type useMacDeviceSelection from "@/features/agent/hooks/useMacDeviceSelection";
 import type { useTeamDispatchSelection } from "@/features/dispatch/hooks/useTeamDispatchSelection";
 import type { useWsTestComposerWorkflowState } from "@/features/agent/hooks/useWsTestComposerWorkflowState";
@@ -9,6 +10,7 @@ export const buildWsTestComposerDispatchState = (input: {
   readonly macSelection: ReturnType<typeof useMacDeviceSelection>;
   readonly workflow: ReturnType<typeof useWsTestComposerWorkflowState>;
   readonly isTeamDispatch: boolean;
+  readonly hasCursorCloudConnection?: boolean;
 }): {
   readonly macDevices: ReturnType<typeof useMacDeviceSelection>["devices"];
   readonly macDisplayNameById: ReturnType<
@@ -33,8 +35,18 @@ export const buildWsTestComposerDispatchState = (input: {
   ) => boolean;
 } => {
   const resolveSelectedDeviceCanDispatch = (deviceId: string): boolean => {
+    if (
+      isCursorCloudExecutorDeviceId(deviceId) &&
+      input.hasCursorCloudConnection === true
+    ) {
+      return true;
+    }
+
     if (deviceId.length === 0) {
-      return input.macSelection.hasDispatchReadyMac;
+      return (
+        input.macSelection.hasDispatchReadyMac ||
+        input.hasCursorCloudConnection === true
+      );
     }
 
     const selectedDevice = input.macSelection.devices.find(
@@ -51,7 +63,9 @@ export const buildWsTestComposerDispatchState = (input: {
     selectedDeviceId: input.macSelection.selectedDeviceId,
     setSelectedDeviceId: input.macSelection.setSelectedDeviceId,
     isMacDevicesLoading: input.macSelection.isLoading,
-    hasDispatchReadyMac: input.macSelection.hasDispatchReadyMac,
+    hasDispatchReadyMac:
+      input.macSelection.hasDispatchReadyMac ||
+      input.hasCursorCloudConnection === true,
     dispatchReadyMacCount: input.macSelection.dispatchReadyMacCount,
     selectedDeviceCanDispatch: resolveSelectedDeviceCanDispatch(
       input.macSelection.selectedDeviceId,
@@ -75,7 +89,8 @@ export const buildWsTestComposerDispatchState = (input: {
         isLibraryPlaybook: input.workflow.isLibraryPlaybook,
         hasDispatchReadyMac: input.isTeamDispatch
           ? true
-          : input.macSelection.hasDispatchReadyMac,
+          : input.macSelection.hasDispatchReadyMac ||
+            input.hasCursorCloudConnection === true,
         selectedDeviceCanDispatch: input.isTeamDispatch
           ? true
           : resolveSelectedDeviceCanDispatch(

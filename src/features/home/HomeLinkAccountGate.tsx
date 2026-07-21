@@ -12,6 +12,7 @@ import {
   HOME_MAIN_COLUMN_CLASS,
 } from "@/features/home/homeDashboardLayout.constant";
 import useHomeConnectedMacs from "@/features/home/hooks/useHomeConnectedMacs";
+import useCursorCloudConnection from "@/features/home/hooks/useCursorCloudConnection";
 import {
   PairedDeviceProvider,
   usePairedDeviceContext,
@@ -59,9 +60,12 @@ function HomeLinkAccountGateContent({
 }: HomeLinkAccountGateProps) {
   const { markPaired } = usePairedDeviceContext();
   const { devices, isLoading } = useHomeConnectedMacs();
+  const { summary: cursorCloudSummary, isLoading: isCursorCloudLoading } =
+    useCursorCloudConnection();
   const dashboardMode = resolveHomeDashboardMode({
-    isLoading,
+    isLoading: isLoading || isCursorCloudLoading,
     deviceCount: devices.length,
+    hasCursorCloudConnection: cursorCloudSummary.connected,
   });
   const handleLinked = useCallback(() => {
     markPaired();

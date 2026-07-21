@@ -371,6 +371,16 @@ CREATE INDEX IF NOT EXISTS user_projects_owner_idx
 CREATE UNIQUE INDEX IF NOT EXISTS user_projects_owner_name_idx
   ON user_projects (owner_user_id, lower(name));
 
+CREATE TABLE IF NOT EXISTS cursor_cloud_connections (
+  user_id TEXT PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+  api_key_ciphertext TEXT NOT NULL,
+  api_key_iv TEXT NOT NULL,
+  api_key_name TEXT,
+  cursor_user_email TEXT,
+  connected_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
 CREATE TABLE IF NOT EXISTS schema_migrations (
   filename TEXT PRIMARY KEY,
   applied_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
