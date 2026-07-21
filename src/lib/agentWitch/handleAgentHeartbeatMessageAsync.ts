@@ -1,13 +1,11 @@
 import { AGENT_WITCH_INSTALL_BUNDLE_VERSION } from "@/lib/agentWitch/agentWitchInstallBundleVersion";
 import { buildAgentWitchHeartbeatAckPayload } from "@/lib/agentWitch/buildAgentWitchHeartbeatAckPayload";
-import { deliverAgentWitchDeviceRestartIfRequested } from "@/lib/agentWitch/deliverAgentWitchDeviceRestart";
 import { deliverAgentWitchInstallBundleUpdateIfBehind } from "@/lib/agentWitch/deliverAgentWitchInstallBundleUpdateIfBehind";
+import { runAgentWitchHeartbeatDeviceMaintenance } from "@/lib/agentWitch/runAgentWitchHeartbeatDeviceMaintenance";
 import type AgentWitchHubClient from "@/lib/agentWitch/types/AgentWitchHubClient.type";
 import type AgentWitchHubRuntime from "@/lib/agentWitch/types/AgentWitchHubRuntime.type";
 import type AgentWitchMessage from "@/lib/agentWitch/types/AgentWitchMessage.type";
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
-import { updateAgentWitchDeviceWakeError } from "@/lib/agentWitch/updateAgentWitchDeviceAuthFields";
-import { updateAgentWitchDeviceInstallBundleVersion } from "@/lib/agentWitch/updateAgentWitchDeviceInstallBundleVersion";
 
 const resolveHeartbeatHostname = (
   payload: Readonly<Record<string, unknown>> | undefined,
@@ -91,20 +89,14 @@ export const handleAgentHeartbeatMessageAsync = async (
       : null;
   const deviceId = sender.deviceId ?? claimedPairing?.deviceId;
   const userId = sender.userId ?? claimedPairing?.userId;
-  if (deviceId !== undefined) {
-    await updateAgentWitchDeviceWakeError({ deviceId, wakeError });
-    if (installBundleVersion !== null) {
-      await updateAgentWitchDeviceInstallBundleVersion({
-        deviceId,
-        installBundleVersion,
-      });
-    }
-  }
-
   if (deviceId !== undefined && userId !== undefined) {
-    await deliverAgentWitchDeviceRestartIfRequested(runtime, {
+    await runAgentWitchHeartbeatDeviceMaintenance({
+      runtime,
       userId,
       deviceId,
+      hostname,
+      installBundleVersion,
+      wakeError,
     });
   }
 

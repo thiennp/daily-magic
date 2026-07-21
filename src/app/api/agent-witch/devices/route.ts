@@ -1,6 +1,7 @@
 import buildAgentWitchDevicesWithOnlineStatus from "@/lib/agentWitch/buildAgentWitchDevicesWithOnlineStatus";
 import { AGENT_WITCH_INSTALL_BUNDLE_VERSION } from "@/lib/agentWitch/agentWitchInstallBundleVersion";
 import { collectLiveAgentWitchDeviceIdsForUser } from "@/lib/agentWitch/collectLiveAgentWitchDeviceIdsForUser";
+import { consolidateDuplicateAgentWitchDevicesForUser } from "@/lib/agentWitch/consolidateDuplicateAgentWitchDevicesForUser";
 import { ensureAgentWitchDeviceSchema } from "@/lib/agentWitch/ensureAgentWitchDeviceSchema";
 import { getAgentWitchHub } from "@/lib/agentWitch/getAgentWitchHub";
 import { listAgentWitchDevicesForUser } from "@/lib/agentWitch/listAgentWitchDevicesForUser";
@@ -30,11 +31,15 @@ export async function GET(): Promise<Response> {
 
   try {
     await ensureAgentWitchDeviceSchema();
-    const devices = await listAgentWitchDevicesForUser(actor.id);
     const liveDeviceIds = await collectLiveAgentWitchDeviceIdsForUser(
       getAgentWitchHub(),
       actor.id,
     );
+    await consolidateDuplicateAgentWitchDevicesForUser({
+      userId: actor.id,
+      preferDeviceIds: liveDeviceIds,
+    });
+    const devices = await listAgentWitchDevicesForUser(actor.id);
     const devicesWithStatus = buildAgentWitchDevicesWithOnlineStatus(
       devices,
       liveDeviceIds,

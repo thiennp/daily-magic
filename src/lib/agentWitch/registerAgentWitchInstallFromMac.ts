@@ -1,3 +1,4 @@
+import { consolidateActiveAgentWitchDeviceByLabel } from "@/lib/agentWitch/consolidateActiveAgentWitchDeviceByLabel";
 import { findAgentWitchDeviceByToken } from "@/lib/agentWitch/findAgentWitchDeviceByToken";
 import { getAgentWitchPairingStore } from "@/lib/agentWitch/getAgentWitchHub";
 import { touchAgentWitchDeviceLastSeen } from "@/lib/agentWitch/touchAgentWitchDeviceLastSeen";
@@ -16,6 +17,11 @@ export const registerAgentWitchInstallFromMac = async (input: {
     input.pairingToken,
     input.deviceLabel,
   );
+  await consolidateActiveAgentWitchDeviceByLabel({
+    userId: device.userId,
+    keepDeviceId: device.id,
+    deviceLabel: input.deviceLabel,
+  });
 
   return { ok: true, deviceId: device.id };
 };

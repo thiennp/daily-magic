@@ -1,5 +1,17 @@
 # Agent Witch bridge — known issues
 
+## AGENT-046 — Duplicate Mac rows lingered after mistaken Update local
+
+**Symptom:** Home showed two `this Mac` rows with the same hostname after Update local minted a second pairing token before the repair script shipped.
+
+**Cause:** Consolidation only ran during fresh install claims, not when repair/register-install or heartbeats reused an existing token.
+
+**Fix:** Revoke sibling `agent_witch_devices` rows with the same hostname on repair register, agent heartbeat, and devices list load (preferring the connected / bundled row). No manual DB edit required.
+
+**Regression tests:** `pickPreferredAgentWitchDevice.test.ts` (AGENT-046).
+
+---
+
 ## AGENT-045 — Update local created a duplicate Mac device
 
 **Symptom:** Running **Update local** added a second Mac row because the modal reused the Connect install command, which minted a new pairing token and claimed a new device.

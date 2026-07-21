@@ -14,8 +14,15 @@ vi.mock("@/lib/agentWitch/deliverAgentWitchDeviceRestart", () => ({
   deliverAgentWitchDeviceRestartIfRequested: vi.fn().mockResolvedValue(false),
 }));
 
-vi.mock("@/lib/agentWitch/deliverAgentWitchInstallBundleUpdateIfBehind", () => ({
-  deliverAgentWitchInstallBundleUpdateIfBehind: vi.fn(),
+vi.mock(
+  "@/lib/agentWitch/deliverAgentWitchInstallBundleUpdateIfBehind",
+  () => ({
+    deliverAgentWitchInstallBundleUpdateIfBehind: vi.fn(),
+  }),
+);
+
+vi.mock("@/lib/agentWitch/runAgentWitchHeartbeatDeviceMaintenance", () => ({
+  runAgentWitchHeartbeatDeviceMaintenance: vi.fn().mockResolvedValue(undefined),
 }));
 
 import { deliverAgentWitchInstallBundleUpdateIfBehind } from "@/lib/agentWitch/deliverAgentWitchInstallBundleUpdateIfBehind";
