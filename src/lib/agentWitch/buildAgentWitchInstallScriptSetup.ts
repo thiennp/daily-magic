@@ -1,23 +1,28 @@
 import type { AgentWitchAppHome } from "@/lib/agentWitch/resolveAgentWitchAppHome";
 import { resolveAgentWitchAppHome } from "@/lib/agentWitch/resolveAgentWitchAppHome";
+import type { AgentWitchInstallScriptPreset } from "@/lib/agentWitch/AgentWitchInstallScriptPreset.type";
 import { buildAgentWitchInstallScriptClientBlock } from "@/lib/agentWitch/buildAgentWitchInstallScriptClientBlock";
 import { buildAgentWitchInstallScriptConfigBlock } from "@/lib/agentWitch/buildAgentWitchInstallScriptConfigBlock";
+import { buildAgentWitchInstallScriptPresetBlock } from "@/lib/agentWitch/buildAgentWitchInstallScriptPresetBlock";
 import { buildAgentWitchInstallScriptProgress } from "@/lib/agentWitch/buildAgentWitchInstallScriptProgress";
 import { buildAgentWitchInstallScriptRegisterLaunchAgentFn } from "@/lib/agentWitch/buildAgentWitchInstallScriptRegisterLaunchAgent";
 import { buildAgentWitchInstallScriptWriterBootstrap } from "@/lib/agentWitch/buildAgentWitchInstallScriptWriterBootstrap";
 
-export const buildAgentWitchInstallScriptSetup = (input: {
-  readonly appOrigin: string;
-  readonly wsUrl: string;
-  readonly clientScriptUrl: string;
-  readonly websocketSupportWarning: string;
-  readonly appHome?: AgentWitchAppHome;
-}): string => {
+export const buildAgentWitchInstallScriptSetup = (
+  input: {
+    readonly appOrigin: string;
+    readonly wsUrl: string;
+    readonly clientScriptUrl: string;
+    readonly websocketSupportWarning: string;
+    readonly appHome?: AgentWitchAppHome;
+  } & AgentWitchInstallScriptPreset,
+): string => {
   const appHome = input.appHome ?? resolveAgentWitchAppHome(input.appOrigin);
 
   return `#!/usr/bin/env bash
 set -euo pipefail
 ${input.websocketSupportWarning}
+${buildAgentWitchInstallScriptPresetBlock(input)}
 
 INSTALL_DIR="\${HOME}/${appHome.installDirName}"
 AGENT_WITCH_HOME="\${INSTALL_DIR}"
@@ -56,6 +61,10 @@ done
 
 PROFILE_EMAIL="\${PROFILE_EMAIL:-\${AGENT_WITCH_PROFILE:-\${AGENT_WITCH_EMAIL:-}}}"
 PROFILE_EMAIL="\$(printf '%s' "\${PROFILE_EMAIL}" | tr '[:upper:]' '[:lower:]' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')"
+
+if [[ -z "\${PROFILE_EMAIL}" && -n "\${PRESET_PROFILE_EMAIL:-}" ]]; then
+  PROFILE_EMAIL="\${PRESET_PROFILE_EMAIL}"
+fi
 
 NODE_DIR="\$(dirname "\${NODE_BIN}")"
 RUN_PATH="\${INSTALL_DIR}/run.sh"

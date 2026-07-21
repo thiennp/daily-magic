@@ -1,12 +1,11 @@
-import { handleHarnessManifestReportMessage } from "./handleHarnessManifestReportMessage";
 import { handleHarnessBorrowExportMessage } from "./handleHarnessBorrowExportMessage";
 import { handleHarnessExportResultMessage } from "./handleHarnessExportResultMessage";
 import { handleHarnessManifestRequestMessage } from "./handleHarnessManifestRequestMessage";
+import { handleHarnessManifestReportMessage } from "./handleHarnessManifestReportMessage";
 import {
   handleHarnessAgentRelayMessage,
   handleHarnessRequestMessage,
 } from "./handleHarnessHubMessage";
-import { buildPendingAccountLinkAckPayload } from "./buildPendingAccountLinkAckPayload";
 import type AgentWitchHubClient from "./types/AgentWitchHubClient.type";
 import type AgentWitchHubRuntime from "./types/AgentWitchHubRuntime.type";
 import type AgentWitchMessage from "./types/AgentWitchMessage.type";
@@ -19,18 +18,12 @@ export const handleAgentWitchSyncMessage = (
   sender: AgentWitchHubClient | undefined,
 ): AgentWitchMessage | null => {
   if (message.type === AGENT_WITCH_MESSAGE_TYPES.AGENT_REGISTER) {
-    const pendingAccountLink = buildPendingAccountLinkAckPayload(
-      sender?.email,
-      sender?.userId !== undefined,
-    );
-
     return {
       type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ACK,
       payload: {
         clientId: senderId,
         role: sender?.role ?? "dashboard",
         userId: sender?.userId,
-        ...(pendingAccountLink !== null ? { pendingAccountLink } : {}),
       },
       requestId: message.requestId,
     };
@@ -44,7 +37,8 @@ export const handleAgentWitchSyncMessage = (
     return {
       type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR,
       payload: {
-        errorMessage: "agent.pair must be handled asynchronously.",
+        errorMessage:
+          "Mac pairing is only available through the Home install command.",
       },
       requestId: message.requestId,
     };

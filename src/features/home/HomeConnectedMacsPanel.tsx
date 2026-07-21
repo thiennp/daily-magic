@@ -19,7 +19,6 @@ import {
 } from "@/features/agent-witch/online-wake";
 
 interface HomeConnectedMacsPanelProps {
-  readonly appOrigin: string;
   readonly installCommand: string;
   readonly isWebSocketSupported: boolean;
   readonly host: string;
@@ -32,7 +31,6 @@ const getServerOperatingSystemSnapshot = () => "other" as const;
 const getServerMobileBrowserSnapshot = () => false;
 
 export default function HomeConnectedMacsPanel({
-  appOrigin,
   installCommand,
   isWebSocketSupported,
   host,
@@ -45,7 +43,6 @@ export default function HomeConnectedMacsPanel({
     isLoading,
     serverInstallBundleVersion,
     renameDevice,
-    refreshDevices,
   } = useHomeConnectedMacs();
   const { localHostname, isCheckingLocalHostname } =
     useLocalMacBrowserContext();
@@ -94,7 +91,6 @@ export default function HomeConnectedMacsPanel({
         />
       ) : (
         <HomeConnectedMacsDeviceList
-          appOrigin={appOrigin}
           installCommand={installCommand}
           isWebSocketSupported={isWebSocketSupported}
           host={host}
@@ -104,9 +100,6 @@ export default function HomeConnectedMacsPanel({
           localHostname={localHostname}
           shouldShowConnectThisMac={shouldShowConnectThisMac}
           onRenamed={renameDevice}
-          onLinked={() => {
-            void refreshDevices();
-          }}
           onDelegateTask={onDelegateTask}
           onOpenShell={onOpenShell}
           onDelete={onDelete}

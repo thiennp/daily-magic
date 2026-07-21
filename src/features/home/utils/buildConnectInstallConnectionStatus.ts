@@ -20,24 +20,10 @@ const CONNECT_INSTALL_CONNECTION_TONE_CLASS_NAME: Record<
 
 export const buildConnectInstallConnectionStatus = (input: {
   readonly installEngaged: boolean;
-  readonly isLinking: boolean;
   readonly isInstallConnectionFinished: boolean;
-  readonly linkError: string | null;
 }): ConnectInstallConnectionStatus | null => {
-  if (
-    input.installEngaged &&
-    input.linkError !== null &&
-    input.linkError.length > 0
-  ) {
-    return { message: input.linkError, tone: "error" };
-  }
-
   if (input.installEngaged && input.isInstallConnectionFinished) {
     return { message: MAC_WORKER_BENEFIT_COPY.macConnected, tone: "success" };
-  }
-
-  if (input.installEngaged && input.isLinking) {
-    return { message: MAC_WORKER_BENEFIT_COPY.linkingMac, tone: "connecting" };
   }
 
   if (input.installEngaged) {

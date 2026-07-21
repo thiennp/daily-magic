@@ -6,8 +6,12 @@ import { buildAgentWitchUpdaterInstallScriptUrls } from "@/lib/agentWitch/buildA
 import { buildAgentWitchInstallBashScript } from "@/lib/agentWitch/buildAgentWitchInstallBashScript";
 import { buildAgentWitchWebSocketSupportWarning } from "@/lib/agentWitch/buildAgentWitchWebSocketSupportWarning";
 import { resolveAgentWitchWsUrl } from "@/lib/agentWitch/resolveAgentWitchWsUrl";
+import type { AgentWitchInstallScriptPreset } from "@/lib/agentWitch/AgentWitchInstallScriptPreset.type";
 
-export const renderInstallAgentWitchScript = (origin: string): string => {
+export const renderInstallAgentWitchScript = (
+  origin: string,
+  preset: AgentWitchInstallScriptPreset = {},
+): string => {
   const wsUrl = resolveAgentWitchWsUrl(origin);
   const clientScriptUrl = buildAgentWitchClientScriptUrl(origin);
   const wakeUrls = buildAgentWitchWakeInstallScriptUrls(origin);
@@ -24,6 +28,7 @@ export const renderInstallAgentWitchScript = (origin: string): string => {
     appOrigin: origin,
     wsUrl,
     clientScriptUrl,
+    ...preset,
     ...wakeUrls,
     ...watchdogUrls,
     ...updaterUrls,

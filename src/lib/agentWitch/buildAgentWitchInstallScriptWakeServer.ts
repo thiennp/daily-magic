@@ -11,7 +11,6 @@ export const buildAgentWitchInstallScriptWakeServer = (input: {
   readonly wakeHandlersScriptUrl: string;
   readonly wakeAllowedOriginsScriptUrl: string;
   readonly wakeEnsureProfileScriptUrl: string;
-  readonly wakeLinkAccountScriptUrl: string;
   readonly wakeSpawnClientScriptUrl: string;
   readonly wakeCliScriptUrl: string;
   readonly reviveScriptUrl: string;
@@ -29,7 +28,6 @@ WAKE_KICKSTART_SCRIPT_URL="${input.wakeKickstartScriptUrl}"
 WAKE_HANDLERS_SCRIPT_URL="${input.wakeHandlersScriptUrl}"
 WAKE_ALLOWED_ORIGINS_SCRIPT_URL="${input.wakeAllowedOriginsScriptUrl}"
 WAKE_ENSURE_PROFILE_SCRIPT_URL="${input.wakeEnsureProfileScriptUrl}"
-WAKE_LINK_ACCOUNT_SCRIPT_URL="${input.wakeLinkAccountScriptUrl}"
 WAKE_SPAWN_CLIENT_SCRIPT_URL="${input.wakeSpawnClientScriptUrl}"
 WAKE_CLI_SCRIPT_URL="${input.wakeCliScriptUrl}"
 WAKE_LAUNCH_AGENT_LABEL="\${LAUNCH_AGENT_PREFIX}-wake"
@@ -43,7 +41,6 @@ agent_witch_install_step
 "\${CURL_BIN}" -fsSL "\${WAKE_HANDLERS_SCRIPT_URL}" -o "\${INSTALL_DIR}/agentWitchWakeHandlers.ts"
 "\${CURL_BIN}" -fsSL "\${WAKE_ALLOWED_ORIGINS_SCRIPT_URL}" -o "\${INSTALL_DIR}/agentWitchWakeAllowedOrigins.ts"
 "\${CURL_BIN}" -fsSL "\${WAKE_ENSURE_PROFILE_SCRIPT_URL}" -o "\${INSTALL_DIR}/ensureAgentWitchProfile.ts"
-"\${CURL_BIN}" -fsSL "\${WAKE_LINK_ACCOUNT_SCRIPT_URL}" -o "\${INSTALL_DIR}/linkAgentWitchAccountLocally.ts"
 "\${CURL_BIN}" -fsSL "\${WAKE_SPAWN_CLIENT_SCRIPT_URL}" -o "\${INSTALL_DIR}/spawnAgentWitchClient.ts"
 "\${CURL_BIN}" -fsSL "\${WAKE_CLI_SCRIPT_URL}" -o "\${INSTALL_DIR}/agent-witch-wake-cli.ts"
 ${buildAgentWitchInstallScriptWakeServerDependencies({

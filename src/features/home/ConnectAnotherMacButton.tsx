@@ -7,6 +7,7 @@ import ConnectAnotherMacModal from "@/features/home/ConnectAnotherMacModal";
 import ConnectInstallPasteModal from "@/features/home/ConnectInstallPasteModal";
 import useConnectInstallPasteModalDismissal from "@/features/home/hooks/useConnectInstallPasteModalDismissal";
 import useLocalMacBrowserContext from "@/features/home/hooks/useLocalMacBrowserContext";
+import usePersonalizedAgentWitchInstallCommand from "@/features/home/hooks/usePersonalizedAgentWitchInstallCommand";
 import { resolveConnectAnotherMacLabel } from "@/features/home/utils/resolveConnectAnotherMacLabel";
 import { shouldShowAgentWitchAppDownloadCta } from "@/features/home/utils/shouldShowAgentWitchAppDownloadCta";
 
@@ -27,6 +28,14 @@ export default function ConnectAnotherMacButton({
 }: ConnectAnotherMacButtonProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isPasteModalOpen, setIsPasteModalOpen] = useState(false);
+  const {
+    installCommand: personalizedInstallCommand,
+    isLoading: isInstallCommandLoading,
+    error: installCommandError,
+  } = usePersonalizedAgentWitchInstallCommand({
+    enabled: isModalOpen,
+    fallbackInstallCommand: installCommand,
+  });
   const { isCheckingLocalApp, isLocalAppInstalled } =
     useLocalMacBrowserContext();
   const showInstallCta = shouldShowAgentWitchAppDownloadCta({
@@ -63,7 +72,9 @@ export default function ConnectAnotherMacButton({
       </button>
       <ConnectAnotherMacModal
         isOpen={isModalOpen}
-        installCommand={installCommand}
+        installCommand={personalizedInstallCommand}
+        isInstallCommandLoading={isInstallCommandLoading}
+        installCommandError={installCommandError}
         isWebSocketSupported={isWebSocketSupported}
         host={host}
         hasExistingDevices={hasExistingDevices}

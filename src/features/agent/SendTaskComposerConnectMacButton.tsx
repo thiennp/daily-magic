@@ -4,7 +4,6 @@ import { useMemo } from "react";
 
 import { APP_SURFACE_CTA_SECONDARY_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
 import ConnectAnotherMacButton from "@/features/home/ConnectAnotherMacButton";
-import { buildAgentWitchInstallScriptUrl } from "@/lib/agentWitch/buildAgentWitchInstallUrls";
 import isAgentWitchWebSocketSupportedHost from "@/lib/agentWitch/isAgentWitchWebSocketSupportedHost";
 
 interface SendTaskComposerConnectMacButtonProps {
@@ -23,11 +22,10 @@ export default function SendTaskComposerConnectMacButton({
       };
     }
 
-    const origin = window.location.origin;
     const host = window.location.host;
 
     return {
-      installCommand: `curl -fsSL ${buildAgentWitchInstallScriptUrl(origin)} | bash`,
+      installCommand: "",
       host,
       isWebSocketSupported: isAgentWitchWebSocketSupportedHost(host),
     };

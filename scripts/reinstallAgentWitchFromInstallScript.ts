@@ -22,7 +22,13 @@ export interface ReinstallAgentWitchFromInstallScriptResult {
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === "object" && value !== null && !Array.isArray(value);
 
-const readConfigWsUrl = (installDir: string): string | null => {
+const readConfigIdentity = (
+  installDir: string,
+): {
+  readonly wsUrl: string;
+  readonly pairingToken: string;
+  readonly email?: string;
+} | null => {
   const profileEmail = readActiveProfileEmailFromFile(installDir);
   const layout =
     profileEmail === null
@@ -37,15 +43,30 @@ const readConfigWsUrl = (installDir: string): string | null => {
     const parsed: unknown = JSON.parse(
       fs.readFileSync(layout.configPath, "utf8"),
     );
-    if (!isRecord(parsed) || typeof parsed.wsUrl !== "string") {
+    if (
+      !isRecord(parsed) ||
+      typeof parsed.wsUrl !== "string" ||
+      typeof parsed.pairingToken !== "string" ||
+      parsed.pairingToken.trim().length === 0
+    ) {
       return null;
     }
 
-    return parsed.wsUrl;
+    return {
+      wsUrl: parsed.wsUrl,
+      pairingToken: parsed.pairingToken.trim(),
+      email:
+        typeof parsed.email === "string" && parsed.email.trim().length > 0
+          ? parsed.email.trim().toLowerCase()
+          : (profileEmail ?? undefined),
+    };
   } catch {
     return null;
   }
 };
+
+const readConfigWsUrl = (installDir: string): string | null =>
+  readConfigIdentity(installDir)?.wsUrl ?? null;
 
 const resolveInstallAppOrigin = (installDir: string): string | null => {
   const wsUrl = readConfigWsUrl(installDir);
@@ -61,18 +82,26 @@ export const reinstallAgentWitchFromInstallScript = async (input?: {
   readonly profileEmail?: string | null;
 }): Promise<ReinstallAgentWitchFromInstallScriptResult> => {
   const installDir = input?.installDir ?? resolveAgentWitchInstallDir();
-  const appOrigin = resolveInstallAppOrigin(installDir);
+  const configIdentity = readConfigIdentity(installDir);
+  const appOrigin =
+    configIdentity !== null
+      ? resolveAgentWitchAppOriginFromWsUrl(configIdentity.wsUrl)
+      : resolveInstallAppOrigin(installDir);
 
-  if (appOrigin === null) {
+  if (appOrigin === null || configIdentity === null) {
     return {
       ok: false,
       errorMessage:
-        "Could not resolve the Agent Witch app origin for reinstall.",
+        "Could not resolve the linked Mac identity for reinstall. Run the install command from Home first.",
     };
   }
 
-  const installScriptUrl = `${appOrigin}/install/agent-witch.sh`;
-  const response = await fetch(installScriptUrl, {
+  const installScriptUrl = new URL(`${appOrigin}/install/agent-witch.sh`);
+  installScriptUrl.searchParams.set("token", configIdentity.pairingToken);
+  if (configIdentity.email !== undefined) {
+    installScriptUrl.searchParams.set("email", configIdentity.email);
+  }
+  const response = await fetch(installScriptUrl.toString(), {
     signal: AbortSignal.timeout(30_000),
   });
 

@@ -1,7 +1,7 @@
 import {
   canRequestLocalAgentWitchApi,
   resolveAgentWitchWakeBaseUrlForPage,
-} from "@/lib/agentWitch/linkLocalAgentAccount";
+} from "@/lib/agentWitch/agentWitchWakePageClient";
 import type LocalScheduledAutomationPayload from "@/lib/automations/types/LocalScheduledAutomationPayload.type";
 
 export const requestLocalAutomationSync = async (input: {

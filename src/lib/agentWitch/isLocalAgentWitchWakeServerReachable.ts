@@ -1,7 +1,7 @@
 import {
   canRequestLocalAgentWitchApi,
   resolveAgentWitchWakeBaseUrlForPage,
-} from "@/lib/agentWitch/linkLocalAgentAccount";
+} from "@/lib/agentWitch/agentWitchWakePageClient";
 
 export const isLocalAgentWitchWakeServerReachable =
   async (): Promise<boolean> => {

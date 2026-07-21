@@ -8,14 +8,13 @@ import { APP_SURFACE_CTA_SECONDARY_SM_CLASS } from "@/components/surfaces/appSur
 import ConnectInstallPasteModal from "@/features/home/ConnectInstallPasteModal";
 import ConnectThisMacModal from "@/features/home/ConnectThisMacModal";
 import useConnectThisMacRowFlow from "@/features/home/hooks/useConnectThisMacRowFlow";
+import usePersonalizedAgentWitchInstallCommand from "@/features/home/hooks/usePersonalizedAgentWitchInstallCommand";
 import detectBrowserOperatingSystem from "@/features/home/utils/detectBrowserOperatingSystem";
 
 interface ConnectThisMacRowProps {
-  readonly appOrigin: string;
   readonly installCommand: string;
   readonly isWebSocketSupported: boolean;
   readonly host: string;
-  readonly onLinked: () => void;
 }
 
 const subscribeToOperatingSystem = () => () => undefined;
@@ -23,11 +22,9 @@ const subscribeToOperatingSystem = () => () => undefined;
 const getServerOperatingSystemSnapshot = () => "other" as const;
 
 export default function ConnectThisMacRow({
-  appOrigin,
   installCommand,
   isWebSocketSupported,
   host,
-  onLinked,
 }: ConnectThisMacRowProps) {
   const operatingSystem = useSyncExternalStore(
     subscribeToOperatingSystem,
@@ -39,11 +36,17 @@ export default function ConnectThisMacRow({
     handleClosePasteModal,
     handleInstallEngaged,
     handleOpenModal,
-    isLinking,
     isModalOpen,
     isPasteModalOpen,
-    linkError,
-  } = useConnectThisMacRowFlow({ appOrigin, onLinked, operatingSystem });
+  } = useConnectThisMacRowFlow({ operatingSystem });
+  const {
+    installCommand: personalizedInstallCommand,
+    isLoading: isInstallCommandLoading,
+    error: installCommandError,
+  } = usePersonalizedAgentWitchInstallCommand({
+    enabled: isModalOpen,
+    fallbackInstallCommand: installCommand,
+  });
 
   return (
     <li>
@@ -63,9 +66,9 @@ export default function ConnectThisMacRow({
               <p className="mt-0.5 text-xs text-gray-500 dark:text-gray-400">
                 Link the Mac you are using now to your account.
               </p>
-              {linkError !== null ? (
+              {installCommandError !== null ? (
                 <p className="mt-2 text-xs text-red-600 dark:text-red-400">
-                  {linkError}
+                  {installCommandError}
                 </p>
               ) : null}
             </div>
@@ -73,10 +76,10 @@ export default function ConnectThisMacRow({
           <button
             type="button"
             className={`w-full shrink-0 sm:w-auto ${APP_SURFACE_CTA_SECONDARY_SM_CLASS}`}
-            disabled={isLinking}
+            disabled={isInstallCommandLoading}
             onClick={handleOpenModal}
           >
-            {isLinking ? "Connecting…" : "Connect this Mac"}
+            {isInstallCommandLoading ? "Preparing…" : "Connect this Mac"}
           </button>
         </div>
       </div>
@@ -84,7 +87,8 @@ export default function ConnectThisMacRow({
       <ConnectThisMacModal
         isOpen={isModalOpen}
         operatingSystem={operatingSystem}
-        installCommand={installCommand}
+        installCommand={personalizedInstallCommand}
+        isInstallCommandLoading={isInstallCommandLoading}
         isWebSocketSupported={isWebSocketSupported}
         host={host}
         onClose={handleCloseModal}

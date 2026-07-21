@@ -2,9 +2,17 @@ import { describe, expect, it } from "vitest";
 
 import { renderInstallAgentWitchScript } from "@/lib/agentWitch/renderInstallAgentWitchScript";
 
+const TEST_PAIRING_TOKEN = "e".repeat(64);
+
+const renderTestInstallScript = (origin: string): string =>
+  renderInstallAgentWitchScript(origin, {
+    presetPairingToken: TEST_PAIRING_TOKEN,
+    presetProfileEmail: "owner@example.com",
+  });
+
 describe("renderInstallAgentWitchScript", () => {
   it("approves npm install scripts and opens Home after install on macOS", () => {
-    const script = renderInstallAgentWitchScript("https://www.agentwitch.com");
+    const script = renderTestInstallScript("https://www.agentwitch.com");
 
     expect(script).toContain('"allowScripts"');
     expect(script).toContain("npm approve-scripts --allow-scripts-pending");
@@ -14,7 +22,7 @@ describe("renderInstallAgentWitchScript", () => {
     expect(script).toContain("printf '\\rInstalling… %d%%'");
     expect(script).toContain('echo "Agent Witch is ready."');
     expect(script).toContain('open "https://www.agentwitch.com/"');
-    expect(script).not.toContain("Pairing token:");
+    expect(script).toContain(`PRESET_PAIRING_TOKEN="${TEST_PAIRING_TOKEN}"`);
     expect(script).not.toContain("Downloading Agent Witch wake server");
     expect(script).toContain("wss://www.agentwitch.com/api/agent-witch/ws");
     expect(script).toContain("agentWitchRunSessions.ts");
@@ -29,7 +37,7 @@ describe("renderInstallAgentWitchScript", () => {
   });
 
   it("AGENT-004 installs the local app under ~/.local-agent-witch", () => {
-    const script = renderInstallAgentWitchScript("http://localhost:3000");
+    const script = renderTestInstallScript("http://localhost:3000");
 
     expect(script).toContain('INSTALL_DIR="${HOME}/.local-agent-witch"');
     expect(script).toContain('LAUNCH_AGENT_PREFIX="com.local-agent-witch"');
@@ -38,7 +46,7 @@ describe("renderInstallAgentWitchScript", () => {
   });
 
   it("AGENT-005 downloads automation before starting the wake server", () => {
-    const script = renderInstallAgentWitchScript("http://localhost:3000");
+    const script = renderTestInstallScript("http://localhost:3000");
     const automationIdx = script.indexOf("agent-witch-automation-scheduler.ts");
     const wakeIdx = script.indexOf("agent-witch-wake-server.ts");
     expect(automationIdx).toBeGreaterThan(-1);

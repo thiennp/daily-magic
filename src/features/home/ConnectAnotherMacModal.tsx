@@ -10,6 +10,8 @@ import { MAC_WORKER_BENEFIT_COPY } from "@/lib/copy/macWorkerBenefitCopy.constan
 interface ConnectAnotherMacModalProps {
   readonly isOpen: boolean;
   readonly installCommand: string;
+  readonly isInstallCommandLoading: boolean;
+  readonly installCommandError: string | null;
   readonly isWebSocketSupported: boolean;
   readonly host: string;
   readonly hasExistingDevices: boolean;
@@ -20,6 +22,8 @@ interface ConnectAnotherMacModalProps {
 export default function ConnectAnotherMacModal({
   isOpen,
   installCommand,
+  isInstallCommandLoading,
+  installCommandError,
   isWebSocketSupported,
   host,
   hasExistingDevices,
@@ -37,14 +41,24 @@ export default function ConnectAnotherMacModal({
         {title}
       </h2>
       <p className={`mt-3 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
-        {intro} Wake alone does not link; the browser on that Mac must reach
-        Home at least once while you are signed in.
+        {intro} You can close this page after copying—the command links that Mac
+        to your account when you run it in Terminal.
       </p>
+
+      {installCommandError !== null ? (
+        <p className="mt-3 text-sm text-red-600 dark:text-red-400">
+          {installCommandError}
+        </p>
+      ) : null}
 
       {!isWebSocketSupported ? (
         <div className="mt-4">
           <AgentWitchUnsupportedHostNotice host={host} />
         </div>
+      ) : isInstallCommandLoading ? (
+        <p className="mt-4 text-sm text-gray-500 dark:text-gray-400">
+          Preparing your install command…
+        </p>
       ) : (
         <CopyableBashCommand
           command={installCommand}

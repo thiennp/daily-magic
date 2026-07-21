@@ -12,6 +12,7 @@ import ConnectComputerGuideSteps from "@/features/home/ConnectComputerGuideSteps
 import ConnectInstallPasteModal from "@/features/home/ConnectInstallPasteModal";
 import useHomeConnectComputerGuideFlow from "@/features/home/hooks/useHomeConnectComputerGuideFlow";
 import useLocalMacBrowserContext from "@/features/home/hooks/useLocalMacBrowserContext";
+import usePersonalizedAgentWitchInstallCommand from "@/features/home/hooks/usePersonalizedAgentWitchInstallCommand";
 import { buildConnectInstallConnectionStatusClassName } from "@/features/home/utils/buildConnectInstallConnectionStatus";
 import { shouldShowAgentWitchAppDownloadCta } from "@/features/home/utils/shouldShowAgentWitchAppDownloadCta";
 import detectBrowserOperatingSystem from "@/features/home/utils/detectBrowserOperatingSystem";
@@ -30,7 +31,6 @@ const subscribeToOperatingSystem = () => () => undefined;
 const getServerOperatingSystemSnapshot = () => "other" as const;
 
 export default function HomeConnectComputerGuide({
-  appOrigin,
   installCommand,
   isWebSocketSupported,
   host,
@@ -43,13 +43,19 @@ export default function HomeConnectComputerGuide({
     isLocalAppInstalled,
   });
   const {
+    installCommand: personalizedInstallCommand,
+    isLoading: isInstallCommandLoading,
+    error: installCommandError,
+  } = usePersonalizedAgentWitchInstallCommand({
+    enabled: showInstallCta,
+    fallbackInstallCommand: installCommand,
+  });
+  const {
     connectionStatus,
     handleClosePasteModal,
     handleInstallEngaged,
     isPasteModalOpen,
   } = useHomeConnectComputerGuideFlow({
-    appOrigin,
-    isLocalAppInstalled,
     onLinked,
   });
   const operatingSystem = useSyncExternalStore(
@@ -83,7 +89,9 @@ export default function HomeConnectComputerGuide({
       {isWebSocketSupported && showInstallCta ? (
         <ConnectComputerGuideSteps
           operatingSystem={operatingSystem}
-          installCommand={installCommand}
+          installCommand={personalizedInstallCommand}
+          isInstallCommandLoading={isInstallCommandLoading}
+          installCommandError={installCommandError}
           isWebSocketSupported={isWebSocketSupported}
           showInstallCta={showInstallCta}
           onInstallEngaged={handleInstallEngaged}

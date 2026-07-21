@@ -1,5 +1,4 @@
 import {
-  buildAgentWitchInstallScriptUrl,
   buildAgentWitchWsUrl,
   buildAppOriginFromHeaders,
 } from "@/lib/agentWitch/buildAgentWitchInstallUrls";
@@ -9,14 +8,14 @@ export interface LocalAgentInstallUrls {
   readonly wsUrl: string;
 }
 
+/** Generic install URLs are no longer valid; use `/api/agent-witch/install-token`. */
 export const buildLocalAgentInstallUrlsFromHeaders = (
   headerList: Headers,
 ): LocalAgentInstallUrls => {
   const origin = buildAppOriginFromHeaders(headerList);
-  const installScriptUrl = buildAgentWitchInstallScriptUrl(origin);
 
   return {
-    installCommand: `curl -fsSL ${installScriptUrl} | bash`,
+    installCommand: "",
     wsUrl: buildAgentWitchWsUrl(origin),
   };
 };

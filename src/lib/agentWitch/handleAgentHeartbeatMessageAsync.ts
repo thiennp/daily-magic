@@ -1,6 +1,5 @@
 import { AGENT_WITCH_INSTALL_BUNDLE_VERSION } from "@/lib/agentWitch/agentWitchInstallBundleVersion";
 import { buildAgentWitchHeartbeatAckPayload } from "@/lib/agentWitch/buildAgentWitchHeartbeatAckPayload";
-import { buildPendingAccountLinkAckPayload } from "@/lib/agentWitch/buildPendingAccountLinkAckPayload";
 import { deliverAgentWitchDeviceRestartIfRequested } from "@/lib/agentWitch/deliverAgentWitchDeviceRestart";
 import { deliverAgentWitchInstallBundleUpdateIfBehind } from "@/lib/agentWitch/deliverAgentWitchInstallBundleUpdateIfBehind";
 import type AgentWitchHubClient from "@/lib/agentWitch/types/AgentWitchHubClient.type";
@@ -109,22 +108,13 @@ export const handleAgentHeartbeatMessageAsync = async (
     });
   }
 
-  deliverAgentWitchInstallBundleUpdateIfBehind(
-    sender,
-    installBundleVersion,
-  );
-
-  const pendingAccountLink = buildPendingAccountLinkAckPayload(
-    email,
-    claimedPairing !== null,
-  );
+  deliverAgentWitchInstallBundleUpdateIfBehind(sender, installBundleVersion);
 
   return {
     type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ACK,
     requestId: message.requestId,
     payload: buildAgentWitchHeartbeatAckPayload({
       installBundleVersion: AGENT_WITCH_INSTALL_BUNDLE_VERSION,
-      pendingAccountLink,
     }),
   };
 };

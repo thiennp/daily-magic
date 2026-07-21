@@ -17,6 +17,22 @@ export const buildAgentWitchWsUrl = (origin: string): string => {
 export const buildAgentWitchInstallScriptUrl = (origin: string): string =>
   `${normalizeOrigin(origin)}/install/agent-witch.sh`;
 
+export const buildAgentWitchInstallScriptUrlWithToken = (
+  origin: string,
+  input: {
+    readonly pairingToken: string;
+    readonly profileEmail?: string;
+  },
+): string => {
+  const url = new URL(buildAgentWitchInstallScriptUrl(origin));
+  url.searchParams.set("token", input.pairingToken);
+  const profileEmail = input.profileEmail?.trim().toLowerCase();
+  if (profileEmail !== undefined && profileEmail.length > 0) {
+    url.searchParams.set("email", profileEmail);
+  }
+  return url.toString();
+};
+
 export const buildAgentWitchInstallAuxiliaryScriptUrl = (
   origin: string,
   scriptName: string,

@@ -14,6 +14,8 @@ import type detectBrowserOperatingSystem from "@/features/home/utils/detectBrows
 interface ConnectComputerGuideStepsProps {
   readonly operatingSystem: ReturnType<typeof detectBrowserOperatingSystem>;
   readonly installCommand: string;
+  readonly isInstallCommandLoading: boolean;
+  readonly installCommandError: string | null;
   readonly isWebSocketSupported: boolean;
   readonly showInstallCta: boolean;
   readonly onInstallEngaged: () => void;
@@ -22,6 +24,8 @@ interface ConnectComputerGuideStepsProps {
 export default function ConnectComputerGuideSteps({
   operatingSystem,
   installCommand,
+  isInstallCommandLoading,
+  installCommandError,
   isWebSocketSupported,
   showInstallCta,
   onInstallEngaged,
@@ -48,12 +52,25 @@ export default function ConnectComputerGuideSteps({
             {isWebSocketSupported &&
             showInstallCta &&
             step.title === CONNECT_COMPUTER_COPY_STEP_TITLE ? (
-              <CopyableBashCommand
-                command={installCommand}
-                iconOnly
-                variant="bash"
-                onEngaged={onInstallEngaged}
-              />
+              <>
+                {installCommandError !== null ? (
+                  <p className="mt-3 text-sm text-red-600 dark:text-red-400">
+                    {installCommandError}
+                  </p>
+                ) : null}
+                {isInstallCommandLoading ? (
+                  <p className="mt-3 text-sm text-gray-500 dark:text-gray-400">
+                    Preparing your install command…
+                  </p>
+                ) : (
+                  <CopyableBashCommand
+                    command={installCommand}
+                    iconOnly
+                    variant="bash"
+                    onEngaged={onInstallEngaged}
+                  />
+                )}
+              </>
             ) : null}
           </div>
         </li>

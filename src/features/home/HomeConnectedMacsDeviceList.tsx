@@ -5,7 +5,6 @@ import HomeConnectedMacDeviceRow from "@/features/home/HomeConnectedMacDeviceRow
 import type { MyMacDevice } from "@/features/agent/hooks/useMyMacDevices";
 
 interface HomeConnectedMacsDeviceListProps {
-  readonly appOrigin: string;
   readonly installCommand: string;
   readonly isWebSocketSupported: boolean;
   readonly host: string;
@@ -15,14 +14,12 @@ interface HomeConnectedMacsDeviceListProps {
   readonly localHostname: string | null;
   readonly shouldShowConnectThisMac: boolean;
   readonly onRenamed: (deviceId: string, deviceLabel: string) => void;
-  readonly onLinked: () => void;
   readonly onDelegateTask: (deviceId: string) => void;
   readonly onOpenShell: (deviceId: string) => void;
   readonly onDelete: (deviceId: string) => Promise<void>;
 }
 
 export default function HomeConnectedMacsDeviceList({
-  appOrigin,
   installCommand,
   isWebSocketSupported,
   host,
@@ -32,7 +29,6 @@ export default function HomeConnectedMacsDeviceList({
   localHostname,
   shouldShowConnectThisMac,
   onRenamed,
-  onLinked,
   onDelegateTask,
   onOpenShell,
   onDelete,
@@ -55,11 +51,9 @@ export default function HomeConnectedMacsDeviceList({
       ))}
       {shouldShowConnectThisMac ? (
         <ConnectThisMacRow
-          appOrigin={appOrigin}
           installCommand={installCommand}
           isWebSocketSupported={isWebSocketSupported}
           host={host}
-          onLinked={onLinked}
         />
       ) : null}
     </ul>

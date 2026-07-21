@@ -67,8 +67,6 @@ import { readInstallBundleVersionFromHeartbeatAck } from "./readInstallBundleVer
 import {
   applyAutomationsRunFromCloud,
   applyAutomationsSyncFromCloud,
-  applyPendingAccountLinkFromCloud,
-  readPendingAccountLinkFromAck,
 } from "./handleAgentWitchCloudControlMessages";
 import {
   buildDeviceAuthHelloFields,
@@ -85,9 +83,7 @@ import {
   queryAgentWitchRag,
 } from "./agentWitchLocalRag";
 import { resolveAgentWitchAppOriginFromWsUrl } from "./resolveAgentWitchAppOriginFromWsUrl";
-import {
-  runWriterEnsure,
-} from "./handleAgentWitchWriterEnsure";
+import { runWriterEnsure } from "./handleAgentWitchWriterEnsure";
 
 interface AgentWitchConfig {
   readonly email: string | null;
@@ -866,19 +862,11 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
         wsUrl: config.wsUrl,
       });
       const ackPayload = isRecord(parsed.payload) ? parsed.payload : null;
-      const pendingLink = readPendingAccountLinkFromAck(ackPayload);
-      if (pendingLink !== null) {
-        void applyPendingAccountLinkFromCloud(pendingLink);
-      }
       const remoteBundleVersion =
         readInstallBundleVersionFromHeartbeatAck(ackPayload);
       if (remoteBundleVersion !== null) {
         runLocalSelfUpdateFromHeartbeat(remoteBundleVersion);
       }
-    }
-
-    if (parsed.type === "account.link" && isRecord(parsed.payload)) {
-      void applyPendingAccountLinkFromCloud(parsed.payload);
     }
 
     if (parsed.type === "device.restart") {

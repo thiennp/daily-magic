@@ -10,7 +10,6 @@ import { kickstartAgentWitchLaunchAgent } from "./kickstartAgentWitchLaunchAgent
 import { listAgentWitchLaunchTargets } from "./listAgentWitchLaunchTargets";
 import { parseHarnessInstallBundle } from "./parseHarnessInstallBundle";
 import { applyHarnessInstallLocally } from "./applyHarnessInstallLocally";
-import { linkAgentWitchAccountLocally } from "./linkAgentWitchAccountLocally";
 import { spawnAgentWitchClient } from "./spawnAgentWitchClient";
 import { buildAgentWitchWatchdogStatusResponse } from "./buildAgentWitchWatchdogStatus";
 import type { AgentWitchWatchdogStatusResponse } from "./buildAgentWitchWatchdogStatus";
@@ -57,12 +56,6 @@ export interface AgentWitchWakeResponse {
   readonly kicked: readonly AgentWitchWakeKickResult[];
 }
 
-export interface AgentWitchLinkAccountWakeResponse {
-  readonly ok: boolean;
-  readonly email?: string;
-  readonly errorMessage?: string;
-}
-
 export interface AgentWitchHarnessInstallWakeResponse {
   readonly ok: boolean;
   readonly writtenItemCount?: number;
@@ -95,41 +88,6 @@ export type {
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === "object" && value !== null && !Array.isArray(value);
-
-export const linkAgentWitchAccountFromWakeServer = async (
-  body: unknown,
-): Promise<AgentWitchLinkAccountWakeResponse> => {
-  if (!isRecord(body)) {
-    return { ok: false, errorMessage: "Request body must be a JSON object." };
-  }
-
-  const linkToken =
-    typeof body.linkToken === "string" ? body.linkToken.trim() : "";
-  const appOrigin =
-    typeof body.appOrigin === "string" ? body.appOrigin.trim() : "";
-  const profileEmail =
-    typeof body.profileEmail === "string" ? body.profileEmail.trim() : "";
-
-  if (
-    linkToken.length === 0 ||
-    appOrigin.length === 0 ||
-    profileEmail.length === 0
-  ) {
-    return {
-      ok: false,
-      errorMessage: "linkToken, appOrigin, and profileEmail are required.",
-    };
-  }
-
-  if (!isAgentWitchWakeServerAllowedOrigin(appOrigin)) {
-    return {
-      ok: false,
-      errorMessage: "appOrigin is not an allowed Agent Witch site.",
-    };
-  }
-
-  return linkAgentWitchAccountLocally({ linkToken, appOrigin, profileEmail });
-};
 
 export const installHarnessFromWakeServer = (
   body: unknown,

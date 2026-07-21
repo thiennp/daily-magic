@@ -1,6 +1,9 @@
+import { buildAgentWitchInstallScriptRegisterInstall } from "@/lib/agentWitch/buildAgentWitchInstallScriptRegisterInstall";
+
 export const buildAgentWitchInstallScriptFinish = (input: {
   readonly appOrigin: string;
 }): string => `
+${buildAgentWitchInstallScriptRegisterInstall(input)}
 agent_witch_install_finish_progress
 echo "Agent Witch is ready."
 

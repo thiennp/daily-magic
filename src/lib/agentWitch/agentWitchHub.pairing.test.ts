@@ -20,7 +20,7 @@ describe("AgentWitchHub pairing", () => {
     pairingStore = fixture.pairingStore;
   });
 
-  it("claims pairing tokens for authenticated dashboard clients", async () => {
+  it("rejects dashboard agent.pair because Macs link through install tokens", async () => {
     hub.registerClient({
       id: "dash-1",
       role: "dashboard",
@@ -35,31 +35,19 @@ describe("AgentWitchHub pairing", () => {
       requestId: "pair-1",
     });
 
-    expect(response?.type).toBe(AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ACK);
-    expect(pairingStore.getClaimedPairing(PAIRING_TOKEN)?.userId).toBe(USER_ID);
+    expect(response?.type).toBe(AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR);
+    expect(response?.payload?.errorMessage).toContain("Home install command");
+    expect(pairingStore.getClaimedPairing(PAIRING_TOKEN)).toBeNull();
   });
 
-  it("rejects pairing tokens already claimed by another account", async () => {
+  it("keeps install-token claims available for agent registration", async () => {
     await pairingStore.claimPairing(
       PAIRING_TOKEN,
-      "other-user",
-      "other@example.com",
+      USER_ID,
+      USER_EMAIL,
+      "MacBook-Pro",
     );
-    hub.registerClient({
-      id: "dash-1",
-      role: "dashboard",
-      userId: USER_ID,
-      email: USER_EMAIL,
-      send: () => undefined,
-    });
 
-    const response = await hub.handleMessageAsync("dash-1", {
-      type: AGENT_WITCH_MESSAGE_TYPES.AGENT_PAIR,
-      payload: { pairingToken: PAIRING_TOKEN },
-      requestId: "pair-2",
-    });
-
-    expect(response?.type).toBe(AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR);
-    expect(response?.payload?.errorMessage).toContain("another account");
+    expect(pairingStore.getClaimedPairing(PAIRING_TOKEN)?.userId).toBe(USER_ID);
   });
 });

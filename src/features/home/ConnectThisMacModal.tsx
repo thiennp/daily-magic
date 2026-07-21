@@ -11,6 +11,7 @@ interface ConnectThisMacModalProps {
   readonly isOpen: boolean;
   readonly operatingSystem: BrowserOperatingSystem;
   readonly installCommand: string;
+  readonly isInstallCommandLoading: boolean;
   readonly isWebSocketSupported: boolean;
   readonly host: string;
   readonly onClose: () => void;
@@ -21,6 +22,7 @@ export default function ConnectThisMacModal({
   isOpen,
   operatingSystem,
   installCommand,
+  isInstallCommandLoading,
   isWebSocketSupported,
   host,
   onClose,
@@ -41,15 +43,21 @@ export default function ConnectThisMacModal({
       ) : isMacBrowser ? (
         <>
           <p className={`mt-3 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
-            {MAC_WORKER_BENEFIT_COPY.connectThisMacModalIntro} Wake alone does
-            not link; the browser on that Mac must reach Home at least once
-            while you are signed in.
+            {MAC_WORKER_BENEFIT_COPY.connectThisMacModalIntro} You can close
+            this page after copying—the command links this Mac to your account
+            when you run it in Terminal.
           </p>
-          <CopyableBashCommand
-            command={installCommand}
-            variant="bash"
-            onEngaged={onInstallEngaged}
-          />
+          {isInstallCommandLoading ? (
+            <p className="mt-4 text-sm text-gray-500 dark:text-gray-400">
+              Preparing your install command…
+            </p>
+          ) : (
+            <CopyableBashCommand
+              command={installCommand}
+              variant="bash"
+              onEngaged={onInstallEngaged}
+            />
+          )}
         </>
       ) : (
         <div className={`mt-3 space-y-4 ${APP_SURFACE_BODY_TEXT_CLASS}`}>

@@ -1,4 +1,3 @@
-import { randomBytes } from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 
@@ -19,8 +18,6 @@ interface AgentWitchConfigShape {
   readonly codexCommand?: string;
   readonly pairingToken: string;
 }
-
-const DEFAULT_WS_URL = "ws://localhost:3000/api/agent-witch/ws";
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === "object" && value !== null && !Array.isArray(value);
@@ -100,17 +97,9 @@ export const getOrCreateInstallPairingToken = (): {
     }
   }
 
-  const pairingToken = randomBytes(32).toString("hex");
-  const wsUrl = DEFAULT_WS_URL;
-  writeConfigShape(legacyPath, {
-    wsUrl,
-    workspace: process.env.HOME,
-    claudeCommand: "claude",
-    codexCommand: "codex",
-    pairingToken,
-  });
-
-  return { pairingToken, wsUrl };
+  throw new Error(
+    "Agent Witch is not linked. Run the install command from Home while signed in.",
+  );
 };
 
 export const ensureAgentWitchProfile = (
@@ -140,7 +129,13 @@ export const ensureAgentWitchProfile = (
   const pairingToken =
     options?.pairingToken ??
     existing?.pairingToken ??
-    randomBytes(32).toString("hex");
+    installDefaults.pairingToken;
+
+  if (pairingToken.trim().length === 0) {
+    throw new Error(
+      "Agent Witch is not linked. Run the install command from Home while signed in.",
+    );
+  }
 
   writeConfigShape(configPath, {
     email: normalizedEmail,

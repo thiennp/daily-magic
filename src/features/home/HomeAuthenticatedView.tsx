@@ -54,7 +54,6 @@ export default async function HomeAuthenticatedView({
             <HomeOnboardingChecklist />
             <HomeOnboardingAutomateNudge />
             <HomeConnectedMacsPanel
-              appOrigin={appOrigin}
               installCommand={installCommand}
               isWebSocketSupported={isWebSocketSupported}
               host={host}

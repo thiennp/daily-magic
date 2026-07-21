@@ -9,7 +9,6 @@ export interface AgentWitchInstallBashScriptInput {
   readonly wakeHandlersScriptUrl: string;
   readonly wakeAllowedOriginsScriptUrl: string;
   readonly wakeEnsureProfileScriptUrl: string;
-  readonly wakeLinkAccountScriptUrl: string;
   readonly wakeSpawnClientScriptUrl: string;
   readonly wakeCliScriptUrl: string;
   readonly watchdogScriptUrl: string;

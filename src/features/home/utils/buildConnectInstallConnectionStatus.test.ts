@@ -7,20 +7,7 @@ describe("buildConnectInstallConnectionStatus", () => {
     expect(
       buildConnectInstallConnectionStatus({
         installEngaged: false,
-        isLinking: false,
         isInstallConnectionFinished: false,
-        linkError: null,
-      }),
-    ).toBeNull();
-  });
-
-  it("hides link errors until the install command is engaged", () => {
-    expect(
-      buildConnectInstallConnectionStatus({
-        installEngaged: false,
-        isLinking: false,
-        isInstallConnectionFinished: false,
-        linkError: "Local API unreachable.",
       }),
     ).toBeNull();
   });
@@ -29,9 +16,7 @@ describe("buildConnectInstallConnectionStatus", () => {
     expect(
       buildConnectInstallConnectionStatus({
         installEngaged: true,
-        isLinking: false,
         isInstallConnectionFinished: false,
-        linkError: null,
       }),
     ).toEqual({
       message: "Waiting for your Mac to connect…",
@@ -43,42 +28,11 @@ describe("buildConnectInstallConnectionStatus", () => {
     expect(
       buildConnectInstallConnectionStatus({
         installEngaged: true,
-        isLinking: false,
         isInstallConnectionFinished: true,
-        linkError: null,
       }),
     ).toEqual({
       message: "Your Mac is connected.",
       tone: "success",
     });
-  });
-
-  it("prefers connecting and error states after install is engaged", () => {
-    expect(
-      buildConnectInstallConnectionStatus({
-        installEngaged: false,
-        isLinking: true,
-        isInstallConnectionFinished: false,
-        linkError: null,
-      }),
-    ).toBeNull();
-
-    expect(
-      buildConnectInstallConnectionStatus({
-        installEngaged: true,
-        isLinking: true,
-        isInstallConnectionFinished: false,
-        linkError: null,
-      })?.tone,
-    ).toBe("connecting");
-
-    expect(
-      buildConnectInstallConnectionStatus({
-        installEngaged: true,
-        isLinking: true,
-        isInstallConnectionFinished: false,
-        linkError: "Local API unreachable.",
-      })?.tone,
-    ).toBe("error");
   });
 });

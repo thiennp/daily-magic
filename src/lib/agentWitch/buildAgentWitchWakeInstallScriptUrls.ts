@@ -8,7 +8,6 @@ export interface AgentWitchWakeInstallScriptUrls {
   readonly wakeHandlersScriptUrl: string;
   readonly wakeAllowedOriginsScriptUrl: string;
   readonly wakeEnsureProfileScriptUrl: string;
-  readonly wakeLinkAccountScriptUrl: string;
   readonly wakeSpawnClientScriptUrl: string;
   readonly wakeCliScriptUrl: string;
 }
@@ -43,10 +42,6 @@ export const buildAgentWitchWakeInstallScriptUrls = (
   wakeEnsureProfileScriptUrl: buildAgentWitchInstallAuxiliaryScriptUrl(
     origin,
     "ensureAgentWitchProfile.ts",
-  ),
-  wakeLinkAccountScriptUrl: buildAgentWitchInstallAuxiliaryScriptUrl(
-    origin,
-    "linkAgentWitchAccountLocally.ts",
   ),
   wakeSpawnClientScriptUrl: buildAgentWitchInstallAuxiliaryScriptUrl(
     origin,

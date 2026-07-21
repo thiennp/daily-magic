@@ -1,7 +1,7 @@
 import {
   canRequestLocalAgentWitchApi,
   resolveAgentWitchWakeBaseUrlForPage,
-} from "@/lib/agentWitch/linkLocalAgentAccount";
+} from "@/lib/agentWitch/agentWitchWakePageClient";
 
 export const requestLocalAutomationRun = async (input: {
   readonly appOrigin: string;

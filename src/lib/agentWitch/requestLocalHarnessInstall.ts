@@ -1,7 +1,7 @@
 import {
   canRequestLocalAgentWitchApi,
   resolveAgentWitchWakeBaseUrlForPage,
-} from "@/lib/agentWitch/linkLocalAgentAccount";
+} from "@/lib/agentWitch/agentWitchWakePageClient";
 import type HarnessInstallBundle from "@/lib/agentWitch/harness/types/HarnessInstallBundle.type";
 
 export const requestLocalHarnessInstall = async (input: {

@@ -8,7 +8,7 @@ export const MAC_WORKER_BENEFIT_COPY = {
   setupDescription:
     "One install command turns your Mac into the worker for your automations. It works for whichever account is signed in here—no reinstall when you switch users.",
   setupDescriptionAppReady:
-    "Agent Witch is already installed on this Mac. Stay signed in while we link it to your account.",
+    "Agent Witch is already installed on this Mac. Copy a fresh install command from Home if you need to replace its identity.",
   setupModalIntro:
     "On the Mac that will run your workflows, open Terminal, paste this command, and press Return.",
   connectThisMacModalIntro:

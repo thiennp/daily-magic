@@ -11,7 +11,6 @@ export const AGENT_WITCH_WAKE_INSTALL_SCRIPT_NAMES = [
   "kickstartAgentWitchLaunchAgent.ts",
   "listAgentWitchLaunchTargets.ts",
   "ensureAgentWitchProfile.ts",
-  "linkAgentWitchAccountLocally.ts",
   "spawnAgentWitchClient.ts",
   "agent-witch-wake-cli.ts",
   "agent-witch-watchdog.ts",
