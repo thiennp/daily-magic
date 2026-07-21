@@ -11,7 +11,9 @@ import {
 const readRelativeInstallImports = (source: string): readonly string[] => {
   const imports = new Set<string>();
 
-  for (const match of source.matchAll(/from\s+["']\.\/([^"']+)["']/g)) {
+  for (const match of source.matchAll(
+    /(?:from\s+|import\s*\(\s*)["']\.\/([^"']+)["']/g,
+  )) {
     const importPath = match[1];
     if (importPath === undefined) {
       continue;
@@ -44,10 +46,10 @@ describe("agent witch install self-repair", () => {
     }
   });
 
-  it("AGENT-044: ships every relative import required by client install scripts", () => {
+  it("AGENT-044/AGENT-049: ships every relative import required by install scripts", () => {
     const installScriptNames = new Set(listAgentWitchInstallScriptNames());
 
-    for (const scriptName of AGENT_WITCH_CLIENT_INSTALL_SCRIPT_NAMES) {
+    for (const scriptName of installScriptNames) {
       const source = readAgentWitchInstallScriptSource(scriptName);
 
       for (const dependencyName of readRelativeInstallImports(source)) {

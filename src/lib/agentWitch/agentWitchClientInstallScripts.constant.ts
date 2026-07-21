@@ -5,6 +5,7 @@ export const AGENT_WITCH_CLIENT_INSTALL_SCRIPT_NAMES = [
   "agentWitchConnectionHealth.constants.ts",
   "readHarnessExportSets.ts",
   "buildWriterCliInvocation.ts",
+  "buildContinuationPromptWithContext.ts",
   "agentWitchRunSessions.ts",
   "agentWitchRunCompletionOutbox.ts",
   "agentWitchRunHeartbeat.constant.ts",

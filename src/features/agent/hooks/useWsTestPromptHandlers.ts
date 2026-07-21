@@ -26,7 +26,8 @@ export const useWsTestPromptHandlers = (input: {
         input.activeDeviceId,
       ),
     );
-    input.composer.resetComposer();
+    // Keep prompt/workflow fields after Start so a failed dispatch or
+    // validation/offline error does not wipe the form (AGENT-046).
   },
   onQueue: () => {
     void input.enqueueRun({

@@ -1,6 +1,6 @@
 import { isActiveMacOsConsoleUser } from "./isActiveMacOsConsoleUser";
-import { attemptAgentWitchWatchdogReinstall } from "./attemptAgentWitchWatchdogReinstall";
 import { AGENT_WITCH_CONNECTION_STALE_MS } from "./agentWitchConnectionHealth.constants";
+
 import {
   isAgentWitchConnectionHealthStale,
   readAgentWitchConnectionHealth,
@@ -244,11 +244,24 @@ export const reviveAgentWitchWebSocket = async (input?: {
   let finalTargets = results;
 
   if (results.some((entry) => entry.reason !== "healthy" && !entry.revived)) {
-    const reinstall = await attemptAgentWitchWatchdogReinstall(results);
-    reinstallAttempted = reinstall.attempted;
-    reinstallOk = reinstall.ok;
-    reinstallErrorMessage = reinstall.errorMessage;
-    finalTargets = [...reinstall.targets];
+    // Dynamic import so a partial self-update (missing reinstall helper) cannot
+    // crash-loop the whole Agent Witch process on module load (AGENT-049).
+    try {
+      const { attemptAgentWitchWatchdogReinstall } =
+        await import("./attemptAgentWitchWatchdogReinstall");
+      const reinstall = await attemptAgentWitchWatchdogReinstall(results);
+      reinstallAttempted = reinstall.attempted;
+      reinstallOk = reinstall.ok;
+      reinstallErrorMessage = reinstall.errorMessage;
+      finalTargets = [...reinstall.targets];
+    } catch (error) {
+      reinstallAttempted = true;
+      reinstallOk = false;
+      reinstallErrorMessage =
+        error instanceof Error
+          ? error.message
+          : "Watchdog reinstall helper is unavailable.";
+    }
   }
 
   const result: AgentWitchReviveResult = {

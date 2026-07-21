@@ -1,5 +1,17 @@
 # Agent Witch bridge — known issues
 
+## AGENT-049 — Send-a-task said Mac offline while Agent Witch crash-looped
+
+**Symptom:** Send-a-task showed “The selected Mac is not online right now.” even though this Mac should be connected. Local ports `:43347` / `:47892` were down.
+
+**Cause:** Bundle **49** self-update left `~/.agent-witch` without wake helpers that `reviveAgentWitchWebSocket.ts` imported statically (`attemptAgentWitchWatchdogReinstall.ts` and related). In-process revive load crashed the client (`ERR_MODULE_NOT_FOUND`), so no live hub WebSocket. The install self-repair test only checked **client** script imports, not wake scripts.
+
+**Fix:** Restore missing scripts + reload LaunchAgent. Dynamic-import the reinstall helper so a partial update cannot crash module load. Extend install self-repair to every install script’s relative/`import()` deps. Install bundle **50**.
+
+**Regression tests:** `agentWitchInstallSelfRepair.test.ts`, `reviveAgentWitchWebSocket.test.ts` (AGENT-049).
+
+---
+
 ## AGENT-048 — Same Mac, two macOS users collapsed to one device
 
 **Symptom:** On one MacBook with Fast User Switching, Agent Witch account User A connected as macOS User A (renamed Mac Light C). After logout and Connect as macOS User B (same web account), Mac Light C disappeared and was replaced by a new Mac (Mac Light S).

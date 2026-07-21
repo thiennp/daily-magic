@@ -1,5 +1,7 @@
 "use client";
 
+import type { KeyboardEvent as ReactKeyboardEvent } from "react";
+
 import DelegatedWriterAgentField from "@/features/agent/DelegatedWriterAgentField";
 import { useWsTestComposerDeferredSubmit } from "@/features/agent/hooks/useWsTestComposerDeferredSubmit";
 import WsTestComposerFooter from "@/features/agent/WsTestComposerFooter";
@@ -7,6 +9,7 @@ import WsTestOperatorStepsSection from "@/features/agent/WsTestOperatorStepsSect
 import type { useWsTestTaskComposer } from "@/features/agent/hooks/useWsTestTaskComposer";
 import WsTestTaskInputsSection from "@/features/agent/WsTestTaskInputsSection";
 import type { WsTestConnectionStatus } from "@/features/agent/types/WsTestConnectionStatus.type";
+import { isComposerStartHotkey } from "@/features/agent/utils/isComposerStartHotkey";
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
 
 interface WsTestComposerFormStepProps {
@@ -44,9 +47,23 @@ export default function WsTestComposerFormStep({
     onSend,
     onClear,
   });
+  const handleSend = isSteppedComposer ? deferredSubmit.handleSend : onSend;
+  const handleClear = isSteppedComposer ? deferredSubmit.handleClear : onClear;
+  const effectiveSendDisabled = isSteppedComposer
+    ? deferredSubmit.isSendDisabled
+    : isSendDisabled;
+
+  const handleFormKeyDown = (event: ReactKeyboardEvent<HTMLDivElement>) => {
+    if (!isComposerStartHotkey(event) || effectiveSendDisabled) {
+      return;
+    }
+
+    event.preventDefault();
+    handleSend();
+  };
 
   return (
-    <>
+    <div onKeyDown={handleFormKeyDown}>
       {!isSteppedComposer ? (
         <div className={showTopSpacing ? "mt-6" : undefined}>
           <DelegatedWriterAgentField
@@ -84,14 +101,12 @@ export default function WsTestComposerFormStep({
         composer={composer}
         macDispatchDeviceId={macDispatchDeviceId}
         connectionStatus={connectionStatus}
-        isSendDisabled={
-          isSteppedComposer ? deferredSubmit.isSendDisabled : isSendDisabled
-        }
+        isSendDisabled={effectiveSendDisabled}
         sendLabel={isSteppedComposer ? deferredSubmit.sendLabel : undefined}
-        onSend={isSteppedComposer ? deferredSubmit.handleSend : onSend}
-        onClear={isSteppedComposer ? deferredSubmit.handleClear : onClear}
+        onSend={handleSend}
+        onClear={handleClear}
         onQueue={onQueue}
       />
-    </>
+    </div>
   );
 }

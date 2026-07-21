@@ -23,6 +23,7 @@ Authenticated hub, onboarding, Mac connect flow, and guest landing at `/`.
 1. **Guest** — marketing shell on `/` when logged out (hero, presets, showcase articles).
 2. **Connect Mac** — until `useHomeConnectedMacs()` returns at least one device, only the left rail + connect guide render (`HomeLinkAccountGate`). Showcase articles still appear below.
 3. **Dashboard** — after a Mac is paired, children (tasks, marketplace, etc.) render, with the same showcase article sections as the guest landing.
+4. **Cursor Cloud** — Your Devices shows a **Connect Cursor Cloud** button (not the API-key form). The form and steps open in `ConnectCursorCloudModal` (HOME-033).
 
 ## Query feature knowledge
 

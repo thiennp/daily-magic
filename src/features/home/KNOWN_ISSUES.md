@@ -394,4 +394,16 @@ Document every production bug or UX regression here. Each entry must link to a t
 
 ---
 
-Use the next ID (`HOME-033`, …). Include symptom, root cause, fix paths, and test file.
+## HOME-033 — Connect Cursor Cloud form always visible in Your Devices
+
+**Symptom:** The full Connect Cursor Cloud API-key form (instructions, input, submit) rendered inline under Your Devices by default, crowding the rail.
+
+**Root cause:** `ConnectCursorCloudCard` always rendered the nested form when disconnected instead of a compact entry point.
+
+**Fix:** Show a **Connect Cursor Cloud** button by default; open `ConnectCursorCloudModal` with numbered steps and the API-key form. Connected state stays inline with disconnect.
+
+**Regression tests:** Manual — open Home → Your Devices → button only when disconnected; modal shows steps + form (`ConnectCursorCloudCard.tsx`, `ConnectCursorCloudModal.tsx`).
+
+---
+
+Use the next ID (`HOME-034`, …). Include symptom, root cause, fix paths, and test file.
