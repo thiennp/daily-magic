@@ -26,7 +26,7 @@ export const buildAgentWitchInstallBashScript = (
     presetPairingToken: input.presetPairingToken,
     presetProfileEmail: input.presetProfileEmail,
     updateExistingInstall: input.updateExistingInstall,
-  })}${buildAgentWitchInstallScriptLaunchAgent()}${buildAgentWitchInstallScriptUpdater(
+  })}${buildAgentWitchInstallScriptVersionStamp(input.appOrigin)}${buildAgentWitchInstallScriptLaunchAgent()}${buildAgentWitchInstallScriptUpdater(
     {
       installDirName: appHome.installDirName,
       selfUpdateScriptUrl: input.selfUpdateScriptUrl,
@@ -92,5 +92,5 @@ export const buildAgentWitchInstallBashScript = (
     localLayoutScriptUrl: input.localLayoutScriptUrl,
     watchdogLogScriptUrl: input.watchdogLogScriptUrl,
     watchdogStatusScriptUrl: input.watchdogStatusScriptUrl,
-  })}${buildAgentWitchInstallScriptVersionStamp(input.appOrigin)}${buildAgentWitchInstallScriptFinish({ appOrigin: input.appOrigin })}`;
+  })}${buildAgentWitchInstallScriptFinish({ appOrigin: input.appOrigin })}`;
 };

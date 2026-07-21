@@ -3,6 +3,7 @@ import { isValidAgentWitchPairingToken } from "@/lib/agentWitch/generateAgentWit
 export interface RegisterInstallBody {
   readonly pairingToken: string;
   readonly deviceLabel: string;
+  readonly installBundleVersion?: string;
 }
 
 export const parseRegisterInstallBody = (
@@ -30,5 +31,14 @@ export const parseRegisterInstallBody = (
     return null;
   }
 
-  return { pairingToken, deviceLabel };
+  const installBundleVersionRaw =
+    "installBundleVersion" in body &&
+    typeof (body as { installBundleVersion: unknown }).installBundleVersion ===
+      "string"
+      ? (body as { installBundleVersion: string }).installBundleVersion.trim()
+      : "";
+  const installBundleVersion =
+    installBundleVersionRaw.length > 0 ? installBundleVersionRaw : undefined;
+
+  return { pairingToken, deviceLabel, installBundleVersion };
 };

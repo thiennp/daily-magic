@@ -47,6 +47,20 @@ describe("renderInstallAgentWitchScript", () => {
     expect(script).toContain("ws://localhost:3000/api/agent-witch/ws");
   });
 
+  it("AGENT-051: writes install-version.json before starting the launch agent", () => {
+    const script = renderTestInstallScript("https://www.agentwitch.com");
+    const versionStampIdx = script.indexOf(
+      'cat > "${INSTALL_DIR}/install-version.json"',
+    );
+    const launchAgentIdx = script.indexOf(
+      'register_agent_witch_launch_agent "${LAUNCH_AGENT_LABEL}"',
+    );
+
+    expect(versionStampIdx).toBeGreaterThan(-1);
+    expect(launchAgentIdx).toBeGreaterThan(-1);
+    expect(versionStampIdx).toBeLessThan(launchAgentIdx);
+  });
+
   it("AGENT-005 downloads automation scheduler before wake server scripts", () => {
     const script = renderTestInstallScript("http://localhost:3000");
     const automationDownloadIdx = script.indexOf(

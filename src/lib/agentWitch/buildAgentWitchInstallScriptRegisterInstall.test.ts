@@ -13,5 +13,7 @@ describe("buildAgentWitchInstallScriptRegisterInstall", () => {
       'DEVICE_LABEL="${DEVICE_HOSTNAME}#${MACOS_USERNAME}"',
     );
     expect(script).toContain("/api/agent-witch/register-install");
+    expect(script).toContain("installBundleVersion");
+    expect(script).toContain("install-version.json");
   });
 });
