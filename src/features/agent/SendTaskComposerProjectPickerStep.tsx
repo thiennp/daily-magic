@@ -12,6 +12,7 @@ interface SendTaskComposerProjectPickerStepProps {
   readonly onSelect: (project: UserProjectRecord) => void;
   readonly onProjectCreated: (project: UserProjectRecord) => void;
   readonly onProjectDeleted: (projectId: string) => void;
+  readonly showHeader?: boolean;
 }
 
 export default function SendTaskComposerProjectPickerStep({
@@ -21,15 +22,20 @@ export default function SendTaskComposerProjectPickerStep({
   onSelect,
   onProjectCreated,
   onProjectDeleted,
+  showHeader = true,
 }: SendTaskComposerProjectPickerStepProps) {
   return (
     <div>
-      <h2 className="text-sm font-medium text-gray-800 dark:text-white/90">
-        Choose a project folder
-      </h2>
-      <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
-        Saved under {AGENT_WITCH_PROJECTS_HOME_PATH} on your Mac.
-      </p>
+      {showHeader ? (
+        <>
+          <h2 className="text-sm font-medium text-gray-800 dark:text-white/90">
+            Choose a project folder
+          </h2>
+          <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+            Saved under {AGENT_WITCH_PROJECTS_HOME_PATH} on your Mac.
+          </p>
+        </>
+      ) : null}
       {isLoading ? (
         <p className="mt-3 text-sm text-gray-500 dark:text-gray-400">
           Loading projects…

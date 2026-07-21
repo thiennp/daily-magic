@@ -5,6 +5,7 @@ import ImprovementReviewPanel from "@/features/improvements/ImprovementReviewPan
 import MarketplaceHomePromo from "@/features/marketplace/MarketplaceHomePromo";
 import HomeConnectedMacsPanel from "@/features/home/HomeConnectedMacsPanel";
 import HomeOnboardingMainPanel from "@/features/home/HomeOnboardingMainPanel";
+import HomeProjectsPanel from "@/features/home/HomeProjectsPanel";
 import HomeLinkAccountGate from "@/features/home/HomeLinkAccountGate";
 import HomeMarketingShowcases from "@/features/home/HomeMarketingShowcases";
 import HomeOnboardingAutomateNudge from "@/features/home/HomeOnboardingAutomateNudge";
@@ -62,6 +63,7 @@ export default async function HomeAuthenticatedView({
 
           <main className={HOME_MAIN_COLUMN_CLASS}>
             <HomeOnboardingMainPanel user={user} />
+            <HomeProjectsPanel />
             <MyOfferingsPanel />
             <TeamDirectoryPanel />
           </main>

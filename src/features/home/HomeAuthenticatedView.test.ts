@@ -17,6 +17,19 @@ describe("HomeAuthenticatedView showcases", () => {
     expect(source).toContain("<HomeMarketingShowcases");
   });
 
+  it("HOME-048: shows projects panel in the dashboard main column", () => {
+    const source = readFileSync(
+      join(
+        dirname(fileURLToPath(import.meta.url)),
+        "HomeAuthenticatedView.tsx",
+      ),
+      "utf8",
+    );
+
+    expect(source).toContain('from "@/features/home/HomeProjectsPanel"');
+    expect(source).toMatch(/HOME_MAIN_COLUMN_CLASS[\s\S]*<HomeProjectsPanel/);
+  });
+
   it("HOME-023: keeps showcases in the main center column, not full shell width", () => {
     const source = readFileSync(
       join(
