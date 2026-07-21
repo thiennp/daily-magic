@@ -84,13 +84,13 @@ describe("resolveShouldShowConnectThisMac (HOME-025/028)", () => {
     ).toBe(true);
   });
 
-  it("hides connect when identity is unknown but devices already exist", () => {
+  it("HOME-030: shows connect when no local token even if other devices exist", () => {
     expect(
       resolveShouldShowConnectThisMac({
         ...baseInput,
         operatingSystem: "mac",
         devices: [{ tokenHash: "abc" }],
       }),
-    ).toBe(false);
+    ).toBe(true);
   });
 });

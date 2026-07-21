@@ -38,4 +38,16 @@ describe("resolveShouldShowConnectThisMac token identity (HOME-029)", () => {
       }),
     ).toBe(true);
   });
+
+  it("HOME-030: shows connect when local token is missing and devices exist", () => {
+    expect(
+      resolveShouldShowConnectThisMac({
+        operatingSystem: "mac",
+        localTokenHash: null,
+        isCheckingLocalHostname: false,
+        isMobileBrowser: false,
+        devices: [{ tokenHash: "token-other" }],
+      }),
+    ).toBe(true);
+  });
 });

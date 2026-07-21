@@ -358,4 +358,16 @@ Document every production bug or UX regression here. Each entry must link to a t
 
 ---
 
-Use the next ID (`HOME-030`, …). Include symptom, root cause, fix paths, and test file.
+## HOME-030 — Connect this Mac missing after uninstall with other devices listed
+
+**Symptom:** After Agent Witch was uninstalled (no local token identity), Your Devices no longer showed **this Mac**, but also hid **Connect this Mac** whenever other cloud devices already existed.
+
+**Root cause:** `resolveShouldShowConnectThisMac` treated `localTokenHash === null` like “identity unknown → hide Connect when `devices.length > 0`”, which was carried over from hostname matching.
+
+**Fix:** On macOS, a missing local token hash means this machine is not linked yet, so always show **Connect this Mac**. Hide it only when a listed device matches the local token hash.
+
+**Regression tests:** `resolveShouldShowConnectThisMac.test.ts`, `resolveShouldShowConnectThisMac.tokenIdentity.test.ts` (HOME-030).
+
+---
+
+Use the next ID (`HOME-031`, …). Include symptom, root cause, fix paths, and test file.

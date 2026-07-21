@@ -16,8 +16,9 @@ export const resolveShouldShowConnectThisMac = (input: {
     return input.devices.length > 0;
   }
 
+  // No local install token means this browser Mac is not linked yet.
   if (input.localTokenHash === null) {
-    return input.devices.length === 0;
+    return true;
   }
 
   return !input.devices.some((device) =>
