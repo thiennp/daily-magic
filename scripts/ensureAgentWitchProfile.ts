@@ -107,6 +107,8 @@ export const ensureAgentWitchProfile = (
   options?: {
     readonly pairingToken?: string;
     readonly wsUrl?: string;
+    /** When true, force active-profile to this email. Default: only if unset. */
+    readonly setActive?: boolean;
   },
 ): {
   readonly profileEmail: string;
@@ -124,14 +126,30 @@ export const ensureAgentWitchProfile = (
   );
   const configPath = path.join(profileDir, "config.json");
   const existing = readConfigShape(configPath);
-  const installDefaults = getOrCreateInstallPairingToken();
-  const wsUrl = options?.wsUrl ?? existing?.wsUrl ?? installDefaults.wsUrl;
+  const explicitToken = options?.pairingToken?.trim() ?? "";
   const pairingToken =
-    options?.pairingToken ??
-    existing?.pairingToken ??
-    installDefaults.pairingToken;
+    explicitToken.length > 0
+      ? explicitToken
+      : (existing?.pairingToken.trim() ?? "");
 
-  if (pairingToken.trim().length === 0) {
+  if (pairingToken.length === 0) {
+    throw new Error(
+      "Agent Witch is not linked for this account. Run Connect this Mac from Home while signed in — do not reuse another account's token.",
+    );
+  }
+
+  const wsUrl =
+    options?.wsUrl?.trim() ||
+    existing?.wsUrl ||
+    (() => {
+      try {
+        return getOrCreateInstallPairingToken().wsUrl;
+      } catch {
+        return "";
+      }
+    })();
+
+  if (wsUrl.trim().length === 0) {
     throw new Error(
       "Agent Witch is not linked. Run the install command from Home while signed in.",
     );
@@ -147,10 +165,23 @@ export const ensureAgentWitchProfile = (
   });
 
   fs.mkdirSync(path.join(profileDir, "harness", "sets"), { recursive: true });
-  fs.writeFileSync(
-    path.join(installDir, AGENT_WITCH_ACTIVE_PROFILE_FILE_NAME),
-    `${JSON.stringify({ email: normalizedEmail }, null, 2)}\n`,
+
+  const activePath = path.join(
+    installDir,
+    AGENT_WITCH_ACTIVE_PROFILE_FILE_NAME,
   );
+  const activeEmail = readActiveProfileEmailFromFile(installDir);
+  const shouldSetActive =
+    options?.setActive === true ||
+    activeEmail === null ||
+    activeEmail === normalizedEmail;
+
+  if (shouldSetActive) {
+    fs.writeFileSync(
+      activePath,
+      `${JSON.stringify({ email: normalizedEmail }, null, 2)}\n`,
+    );
+  }
 
   return {
     profileEmail: normalizedEmail,

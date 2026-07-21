@@ -16,7 +16,7 @@ const MAC_TERMINAL_STEPS: readonly ConnectComputerGuideStep[] = [
   {
     title: CONNECT_COMPUTER_COPY_STEP_TITLE,
     description:
-      "The command is the same for every account on this Mac — it does not contain your email.",
+      "The command is tied to the account you are signed in with. On a shared Mac it adds your profile beside any others — it does not replace them.",
   },
   {
     title: "Paste into Terminal and run it",

@@ -9,6 +9,7 @@ import { isAgentWitchWakeServerAllowedOrigin } from "./agentWitchWakeAllowedOrig
 import { resolveAgentWitchWakePort } from "./agentWitchWakeConstants";
 import { kickstartAgentWitchLaunchAgent } from "./kickstartAgentWitchLaunchAgent";
 import { listAgentWitchLaunchTargets } from "./listAgentWitchLaunchTargets";
+import { listAgentWitchLocalTokenHashes } from "./listAgentWitchLocalTokenHashes";
 import { parseHarnessInstallBundle } from "./parseHarnessInstallBundle";
 import { applyHarnessInstallLocally } from "./applyHarnessInstallLocally";
 import { spawnAgentWitchClient } from "./spawnAgentWitchClient";
@@ -41,6 +42,8 @@ export interface AgentWitchWakeIdentityResponse {
   readonly port: number;
   /** sha256 of the active profile pairing token; never the raw token. */
   readonly tokenHash: string | null;
+  /** sha256 hashes for every local profile + legacy config on this Mac. */
+  readonly tokenHashes: readonly string[];
   readonly profiles: readonly {
     readonly email: string | null;
     readonly launchAgentLabel: string;
@@ -244,11 +247,19 @@ export const buildAgentWitchWakeIdentityResponse =
   (): AgentWitchWakeIdentityResponse => {
     const targets = listAgentWitchLaunchTargets();
     const pairingToken = readAgentWitchRunConfig()?.pairingToken.trim() ?? "";
+    const tokenHash =
+      pairingToken.length > 0 ? hashPairingToken(pairingToken) : null;
+    const tokenHashes = listAgentWitchLocalTokenHashes();
     return {
       hostname: os.hostname(),
       port: resolveAgentWitchWakePort(),
-      tokenHash:
-        pairingToken.length > 0 ? hashPairingToken(pairingToken) : null,
+      tokenHash,
+      tokenHashes:
+        tokenHashes.length > 0
+          ? tokenHashes
+          : tokenHash !== null
+            ? [tokenHash]
+            : [],
       profiles: targets.map((target) => ({
         email: target.profileEmail,
         launchAgentLabel: target.launchAgentLabel,

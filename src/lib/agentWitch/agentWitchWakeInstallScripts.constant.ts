@@ -23,6 +23,7 @@ export const AGENT_WITCH_WAKE_INSTALL_SCRIPT_NAMES = [
   "agentWitchInProcessServices.constants.ts",
   "isAgentWitchScriptEntryPoint.ts",
   "listAgentWitchLaunchTargets.ts",
+  "listAgentWitchLocalTokenHashes.ts",
   "ensureAgentWitchProfile.ts",
   "spawnAgentWitchClient.ts",
   "agent-witch-wake-cli.ts",

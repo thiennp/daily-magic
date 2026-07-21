@@ -13,6 +13,7 @@ import {
   setLocalMacTokenHash,
   subscribeLocalMacTokenHash,
 } from "@/features/home/utils/localMacTokenHashStore";
+import { resolveLocalMacTokenHashFromWakeIdentity } from "@/features/home/utils/resolveLocalMacTokenHashFromWakeIdentity";
 import detectBrowserOperatingSystem from "@/features/home/utils/detectBrowserOperatingSystem";
 
 const useLocalMacHostname = (): {
@@ -58,8 +59,13 @@ const useLocalMacHostname = (): {
         setAgentWitchLocalHostCookie(identity.hostname);
         setLocalHostname(identity.hostname);
 
-        if (identity.tokenHash !== null) {
-          setLocalMacTokenHash(identity.tokenHash);
+        const nextTokenHash = resolveLocalMacTokenHashFromWakeIdentity({
+          currentTokenHash: getLocalMacTokenHashSnapshot(),
+          activeTokenHash: identity.tokenHash,
+          localTokenHashes: identity.tokenHashes,
+        });
+        if (nextTokenHash !== null) {
+          setLocalMacTokenHash(nextTokenHash);
         }
       }
 

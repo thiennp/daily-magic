@@ -21,4 +21,12 @@ describe("buildConnectComputerGuideSteps", () => {
     expect(steps[1]?.title).toBe("Open Terminal");
     expect(steps).toHaveLength(4);
   });
+
+  it("HOME-032: describes account-scoped install command", () => {
+    const steps = buildConnectComputerGuideSteps("mac");
+    expect(steps[1]?.description).toContain(
+      "adds your profile beside any others",
+    );
+    expect(steps[1]?.description).not.toContain("does not contain your email");
+  });
 });

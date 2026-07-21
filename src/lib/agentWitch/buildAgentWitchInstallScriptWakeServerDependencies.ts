@@ -30,6 +30,8 @@ export const buildAgentWitchInstallScriptWakeServerDependencies = (input: {
 "\${CURL_BIN}" -fsSL "${input.watchdogLogScriptUrl}" -o "\${INSTALL_DIR}/agentWitchWatchdogLog.ts"
 "\${CURL_BIN}" -fsSL "${input.watchdogStatusScriptUrl}" -o "\${INSTALL_DIR}/buildAgentWitchWatchdogStatus.ts"
 "\${CURL_BIN}" -fsSL "${input.localLayoutScriptUrl}" -o "\${INSTALL_DIR}/resolveAgentWitchLocalLayout.ts"
+"\${CURL_BIN}" -fsSL "${input.appOrigin}/install/agent-witch/scripts/listAgentWitchLocalTokenHashes.ts" -o "\${INSTALL_DIR}/listAgentWitchLocalTokenHashes.ts"
+"\${CURL_BIN}" -fsSL "${input.appOrigin}/install/agent-witch/scripts/hashPairingToken.ts" -o "\${INSTALL_DIR}/hashPairingToken.ts"
 ${harnessDownloads}
 `;
 };

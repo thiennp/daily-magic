@@ -1,71 +1,8 @@
+import { parseLocalAgentWitchIdentity } from "@/features/agent-witch/utils/parseLocalAgentWitchIdentity";
+import type { LocalAgentWitchIdentity } from "@/features/agent-witch/utils/parseLocalAgentWitchIdentity";
 import { resolveAgentWitchWakeBaseUrlForPage } from "@/lib/agentWitch/resolveAgentWitchWakeBaseUrl";
 
-export interface LocalAgentWitchIdentity {
-  readonly hostname: string;
-  readonly tokenHash: string | null;
-  readonly profiles: readonly {
-    readonly email: string | null;
-    readonly launchAgentLabel: string;
-  }[];
-}
-
-const parseLocalAgentWitchIdentity = (
-  payload: unknown,
-): LocalAgentWitchIdentity | null => {
-  if (typeof payload !== "object" || payload === null) {
-    return null;
-  }
-
-  const record = payload as {
-    hostname?: unknown;
-    tokenHash?: unknown;
-    profiles?: unknown;
-  };
-
-  if (
-    typeof record.hostname !== "string" ||
-    record.hostname.trim().length === 0
-  ) {
-    return null;
-  }
-
-  const tokenHash =
-    typeof record.tokenHash === "string" && record.tokenHash.trim().length > 0
-      ? record.tokenHash.trim()
-      : null;
-
-  const profiles = Array.isArray(record.profiles)
-    ? record.profiles.flatMap((profile) => {
-        if (typeof profile !== "object" || profile === null) {
-          return [];
-        }
-
-        const launchAgentLabel =
-          typeof (profile as { launchAgentLabel?: unknown })
-            .launchAgentLabel === "string"
-            ? (profile as { launchAgentLabel: string }).launchAgentLabel
-            : "";
-
-        if (launchAgentLabel.length === 0) {
-          return [];
-        }
-
-        const emailValue = (profile as { email?: unknown }).email;
-        return [
-          {
-            email: typeof emailValue === "string" ? emailValue : null,
-            launchAgentLabel,
-          },
-        ];
-      })
-    : [];
-
-  return {
-    hostname: record.hostname.trim(),
-    tokenHash,
-    profiles,
-  };
-};
+export type { LocalAgentWitchIdentity };
 
 export const requestLocalAgentWitchIdentity =
   async (): Promise<LocalAgentWitchIdentity | null> => {

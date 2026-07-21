@@ -9,6 +9,7 @@
  *   npm run e2e:agent-witch:setup -- test-admin-1@agentwitch.com
  *   AGENT_WITCH_PROFILE=test-member-a-1@agentwitch.com npm run agent-witch
  */
+import { randomBytes } from "node:crypto";
 import { spawn } from "node:child_process";
 import os from "node:os";
 import path from "node:path";
@@ -35,7 +36,15 @@ const wsUrl =
   process.env.AGENT_WITCH_WS_URL?.trim() ||
   "ws://localhost:3000/api/agent-witch/ws";
 
-const profile = ensureAgentWitchProfile(profileEmail, { wsUrl });
+const pairingToken =
+  process.env.AGENT_WITCH_PAIRING_TOKEN?.trim() ||
+  `e2e-${randomBytes(16).toString("hex")}`;
+
+const profile = ensureAgentWitchProfile(profileEmail, {
+  wsUrl,
+  pairingToken,
+  setActive: true,
+});
 
 console.log(
   JSON.stringify(

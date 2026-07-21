@@ -382,4 +382,16 @@ Document every production bug or UX regression here. Each entry must link to a t
 
 ---
 
-Use the next ID (`HOME-032`, …). Include symptom, root cause, fix paths, and test file.
+## HOME-032 — Connect this Mac replaced another account on the same Mac
+
+**Symptom:** On a shared Mac, Your Devices correctly hid **this Mac** for a different Agent Witch account, but **Connect this Mac** looked like it would take over the other account’s local install. Wake `/identity` could also overwrite the browser’s token hash with the active profile’s hash.
+
+**Root cause:** Install/profile helpers could inherit another account’s pairing token or flip `active-profile.json`, and the browser always adopted wake’s single `tokenHash`.
+
+**Fix:** Profile-scoped install never overwrites another email’s token or steals `active-profile`; wake returns all local `tokenHashes`; browser keeps an existing account hash when multiple profiles exist. Install bundle **48**.
+
+**Regression tests:** `resolveLocalMacTokenHashFromWakeIdentity.test.ts`, `buildConnectComputerGuideSteps.test.ts`, `ensureAgentWitchProfile.test.ts`, `buildAgentWitchInstallScriptConfigBlock.test.ts` (HOME-032 / AGENT-047).
+
+---
+
+Use the next ID (`HOME-033`, …). Include symptom, root cause, fix paths, and test file.

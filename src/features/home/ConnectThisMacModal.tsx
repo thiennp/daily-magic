@@ -44,8 +44,9 @@ export default function ConnectThisMacModal({
         <>
           <p className={`mt-3 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
             {MAC_WORKER_BENEFIT_COPY.connectThisMacModalIntro} You can close
-            this page after copying—the command links this Mac to your account
-            when you run it in Terminal.
+            this page after copying—the command adds your account on this Mac
+            when you run it in Terminal, without replacing another account’s
+            profile.
           </p>
           {isInstallCommandLoading ? (
             <p className="mt-4 text-sm text-gray-500 dark:text-gray-400">

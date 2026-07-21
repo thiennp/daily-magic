@@ -1,5 +1,17 @@
 # Agent Witch bridge — known issues
 
+## AGENT-047 — Connect this Mac replaced another account on the same Mac
+
+**Symptom:** Connecting a second Agent Witch account on the same macOS home could overwrite another profile’s pairing token, flip `active-profile.json`, or have the browser adopt the wrong wake `tokenHash`.
+
+**Cause:** `ensureAgentWitchProfile` reused the active/legacy token and always wrote active-profile; Home always set `localTokenHash` from wake’s single active hash; product copy described one shared Mac identity.
+
+**Fix:** Require profile email for Connect presets; refuse cross-email config overwrites; leave active-profile alone when another account is already active; wake exposes all local token hashes; browser resolves hash without guessing across accounts. Install bundle **48**.
+
+**Regression tests:** `ensureAgentWitchProfile.test.ts`, `listAgentWitchLocalTokenHashes.test.ts`, `buildAgentWitchInstallScriptConfigBlock.test.ts`, `resolveLocalMacTokenHashFromWakeIdentity.test.ts` (AGENT-047 / HOME-032).
+
+---
+
 ## AGENT-046 — Duplicate Mac rows lingered after mistaken Update local
 
 **Symptom:** Home showed two `this Mac` rows with the same hostname after Update local minted a second pairing token before the repair script shipped.
