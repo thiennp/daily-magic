@@ -7,6 +7,7 @@ import {
   deviceLabelMatchesLocalHost,
 } from "@/features/agent-witch/online-wake";
 import type { MyMacDevice } from "@/features/agent/hooks/useMyMacDevices";
+import useThisMacLocalInstallActions from "@/features/home/hooks/useThisMacLocalInstallActions";
 
 interface HomeConnectedMacDeviceRowProps {
   readonly device: MyMacDevice;
@@ -23,6 +24,8 @@ interface HomeConnectedMacDeviceRowProps {
 export default function HomeConnectedMacDeviceRow(
   props: HomeConnectedMacDeviceRowProps,
 ) {
+  const { onUpdateLocal, onDeleteLocalScript } =
+    useThisMacLocalInstallActions();
   const detail = buildMacDeviceDetailText({
     device: props.device,
     serverInstallBundleVersion: props.serverInstallBundleVersion,
@@ -46,6 +49,8 @@ export default function HomeConnectedMacDeviceRow(
         isWakeServerReachable: props.isWakeServerReachable,
       })}
       onRenamed={props.onRenamed}
+      onUpdateLocal={isThisMac ? onUpdateLocal : undefined}
+      onDeleteLocalScript={isThisMac ? onDeleteLocalScript : undefined}
       onDelegateTask={props.onDelegateTask}
       onOpenShell={props.onOpenShell}
       onDelete={props.onDelete}

@@ -17,6 +17,8 @@ interface MacDeviceRowInnerProps {
   readonly onSelect?: () => void;
   readonly onEditingChange: (isEditing: boolean) => void;
   readonly onRenamed: (deviceId: string, deviceLabel: string) => void;
+  readonly onUpdateLocal?: () => void;
+  readonly onDeleteLocalScript?: () => void;
   readonly onDelegateTask?: (deviceId: string) => void;
   readonly onOpenShell?: () => void;
   readonly onDelete?: (deviceId: string) => void | Promise<void>;
@@ -34,6 +36,8 @@ export default function MacDeviceRowInner({
   onSelect,
   onEditingChange,
   onRenamed,
+  onUpdateLocal,
+  onDeleteLocalScript,
   onDelegateTask,
   onOpenShell,
   onDelete,
@@ -69,6 +73,8 @@ export default function MacDeviceRowInner({
           onEdit={() => {
             onEditingChange(true);
           }}
+          onUpdateLocal={onUpdateLocal}
+          onDeleteLocalScript={onDeleteLocalScript}
           onOpenShell={
             onOpenShell
               ? () => {

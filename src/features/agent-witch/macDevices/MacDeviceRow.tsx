@@ -20,6 +20,8 @@ interface MacDeviceRowProps {
   readonly isWakeServerReachable?: boolean;
   readonly onSelect?: () => void;
   readonly onRenamed: (deviceId: string, deviceLabel: string) => void;
+  readonly onUpdateLocal?: () => void;
+  readonly onDeleteLocalScript?: () => void;
   readonly onDelegateTask?: (deviceId: string) => void;
   readonly onOpenShell?: (deviceId: string) => void;
   readonly onDelete?: (deviceId: string) => void | Promise<void>;
@@ -37,6 +39,8 @@ export default function MacDeviceRow({
   isWakeServerReachable = false,
   onSelect,
   onRenamed,
+  onUpdateLocal,
+  onDeleteLocalScript,
   onDelegateTask,
   onOpenShell,
   onDelete,
@@ -56,6 +60,8 @@ export default function MacDeviceRow({
       onSelect={onSelect}
       onEditingChange={setIsEditing}
       onRenamed={onRenamed}
+      onUpdateLocal={onUpdateLocal}
+      onDeleteLocalScript={onDeleteLocalScript}
       onDelegateTask={onDelegateTask}
       onOpenShell={
         onOpenShell

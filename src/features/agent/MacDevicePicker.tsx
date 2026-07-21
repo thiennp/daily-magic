@@ -3,9 +3,13 @@
 import Label from "@/components/form/Label";
 import MacDeviceRow from "@/features/agent-witch/macDevices/MacDeviceRow";
 import { buildMacDeviceDetailText } from "@/features/agent-witch/macDevices/utils/buildMacDeviceDetailText";
-import { canWakeMacDeviceFromBrowser } from "@/features/agent-witch/online-wake";
+import {
+  canWakeMacDeviceFromBrowser,
+  deviceLabelMatchesLocalHost,
+} from "@/features/agent-witch/online-wake";
 import type { MyMacDevice } from "@/features/agent/hooks/useMyMacDevices";
 import useMyMacDevices from "@/features/agent/hooks/useMyMacDevices";
+import useThisMacLocalInstallActions from "@/features/home/hooks/useThisMacLocalInstallActions";
 
 interface MacDevicePickerProps {
   readonly devices: readonly MyMacDevice[];
@@ -31,6 +35,8 @@ export default function MacDevicePicker({
   onDelete,
 }: MacDevicePickerProps) {
   const { serverInstallBundleVersion } = useMyMacDevices();
+  const { onUpdateLocal, onDeleteLocalScript } =
+    useThisMacLocalInstallActions();
 
   if (isLoading) {
     return (
@@ -57,6 +63,9 @@ export default function MacDevicePicker({
             device,
             serverInstallBundleVersion,
           });
+          const isThisMac =
+            localHostname !== null &&
+            deviceLabelMatchesLocalHost(device.deviceLabel, localHostname);
 
           return (
             <MacDeviceRow
@@ -67,6 +76,7 @@ export default function MacDevicePicker({
               isConnected={device.isConnected}
               detailText={detail?.text}
               detailWarning={detail?.isMismatch === true}
+              isThisMac={isThisMac}
               isSelected={device.id === selectedDeviceId}
               isWakeServerReachable={canWakeMacDeviceFromBrowser({
                 deviceLabel: device.deviceLabel,
@@ -77,6 +87,8 @@ export default function MacDevicePicker({
                 onChange(device.id);
               }}
               onRenamed={onRenamed}
+              onUpdateLocal={isThisMac ? onUpdateLocal : undefined}
+              onDeleteLocalScript={isThisMac ? onDeleteLocalScript : undefined}
               onDelete={onDelete}
             />
           );

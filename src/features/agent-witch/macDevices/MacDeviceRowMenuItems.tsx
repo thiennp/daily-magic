@@ -1,62 +1,62 @@
 "use client";
 
-import type { ReactElement } from "react";
-
-import { DropdownItem } from "@/components/ui/dropdown/DropdownItem";
-import { PaperPlaneIcon, PencilIcon, TrashBinIcon } from "@/icons";
+import { ArrowUpIcon, PaperPlaneIcon, PencilIcon, TrashBinIcon } from "@/icons";
+import { renderMacDeviceRowMenuItem } from "@/features/agent-witch/macDevices/utils/renderMacDeviceRowMenuItem";
 
 interface MacDeviceRowMenuItemsProps {
   readonly closeMenu: () => void;
   readonly onEdit: () => void;
+  readonly onUpdateLocal?: () => void;
+  readonly onDeleteLocalScript?: () => void;
   readonly onDelegateTask?: () => void;
   readonly onOpenShell?: () => void;
   readonly onDelete?: () => void;
 }
 
-const renderMenuItem = (
-  onClick: () => void,
-  icon: ReactElement,
-  label: string,
-  danger = false,
-): ReactElement => (
-  <li>
-    <DropdownItem
-      onClick={onClick}
-      baseClassName={
-        danger
-          ? "flex w-full items-center gap-2 px-3 py-2 text-sm text-error-600 hover:bg-error-50 dark:text-error-400 dark:hover:bg-error-500/10"
-          : "flex w-full items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-white/5"
-      }
-    >
-      {icon}
-      <span>{label}</span>
-    </DropdownItem>
-  </li>
-);
+const runMenuAction = (
+  closeMenu: () => void,
+  action: () => void,
+): (() => void) => {
+  return () => {
+    closeMenu();
+    action();
+  };
+};
 
 export default function MacDeviceRowMenuItems({
   closeMenu,
   onEdit,
+  onUpdateLocal,
+  onDeleteLocalScript,
   onDelegateTask,
   onOpenShell,
   onDelete,
 }: MacDeviceRowMenuItemsProps) {
   return (
     <ul className="flex flex-col">
-      {renderMenuItem(
-        () => {
-          closeMenu();
-          onEdit();
-        },
+      {renderMacDeviceRowMenuItem(
+        runMenuAction(closeMenu, onEdit),
         <PencilIcon className="h-4 w-4 shrink-0" />,
         "Edit",
       )}
+      {onUpdateLocal
+        ? renderMacDeviceRowMenuItem(
+            runMenuAction(closeMenu, onUpdateLocal),
+            <ArrowUpIcon className="h-4 w-4 shrink-0" />,
+            "Update local",
+          )
+        : null}
+      {onDeleteLocalScript
+        ? renderMacDeviceRowMenuItem(
+            runMenuAction(closeMenu, onDeleteLocalScript),
+            <TrashBinIcon className="h-4 w-4 shrink-0" />,
+            "Delete local script",
+            true,
+          )
+        : null}
       {onOpenShell
-        ? renderMenuItem(
-            () => {
-              closeMenu();
-              onOpenShell();
-            },
+        ? renderMacDeviceRowMenuItem(
+            runMenuAction(closeMenu, onOpenShell),
             <span className="inline-flex h-4 w-4 shrink-0 items-center justify-center text-[10px] font-semibold">
               &gt;_
             </span>,
@@ -64,21 +64,15 @@ export default function MacDeviceRowMenuItems({
           )
         : null}
       {onDelegateTask
-        ? renderMenuItem(
-            () => {
-              closeMenu();
-              onDelegateTask();
-            },
+        ? renderMacDeviceRowMenuItem(
+            runMenuAction(closeMenu, onDelegateTask),
             <PaperPlaneIcon className="h-4 w-4 shrink-0" />,
             "Delegate task",
           )
         : null}
       {onDelete
-        ? renderMenuItem(
-            () => {
-              closeMenu();
-              onDelete();
-            },
+        ? renderMacDeviceRowMenuItem(
+            runMenuAction(closeMenu, onDelete),
             <TrashBinIcon className="h-4 w-4 shrink-0" />,
             "Delete",
             true,

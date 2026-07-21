@@ -13,6 +13,7 @@ import {
   restartAgentWitchFromWakeServer,
   buildAgentWitchWatchdogStatus,
   runAgentWitchSelfUpdateFromWakeServer,
+  runAgentWitchUninstallLocalFromWakeServer,
   runAutomationFromWakeServer,
   syncAutomationsFromWakeServer,
   wakeAgentWitchLaunchAgents,
@@ -200,6 +201,17 @@ const handleWakeRequest = async (
         response,
         updateResult.ok ? 200 : 503,
         updateResult,
+        cors.headers,
+      );
+      return;
+    }
+
+    if (request.method === "POST" && pathname === "/install/delete") {
+      const uninstallResult = await runAgentWitchUninstallLocalFromWakeServer();
+      sendJson(
+        response,
+        uninstallResult.ok ? 200 : 503,
+        uninstallResult,
         cors.headers,
       );
       return;

@@ -22,6 +22,7 @@ import {
   buildAgentWitchSelfUpdateStatus,
   runAgentWitchSelfUpdate,
 } from "./agentWitchSelfUpdate";
+import { runAgentWitchUninstallLocal } from "./agentWitchUninstallLocal";
 import { readAgentWitchSelfUpdateLogs } from "./agentWitchSelfUpdateLog";
 import {
   reviveAgentWitchWebSocket,
@@ -353,3 +354,7 @@ export const runAgentWitchSelfUpdateFromWakeServer = (input?: {
   readonly force?: boolean;
 }): ReturnType<typeof runAgentWitchSelfUpdate> =>
   runAgentWitchSelfUpdate(input);
+
+export const runAgentWitchUninstallLocalFromWakeServer = (): ReturnType<
+  typeof runAgentWitchUninstallLocal
+> => runAgentWitchUninstallLocal();
