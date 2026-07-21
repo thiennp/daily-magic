@@ -20,12 +20,13 @@ export const buildAgentWitchInstallScriptSetup = (
   } & AgentWitchInstallScriptPreset,
 ): string => {
   const appHome = input.appHome ?? resolveAgentWitchAppHome(input.appOrigin);
+  const repairExistingInstall = input.repairExistingInstall === true;
 
   return `#!/usr/bin/env bash
 set -euo pipefail
 ${input.websocketSupportWarning}
 ${buildAgentWitchInstallScriptPresetBlock(input)}
-
+${repairExistingInstall ? "AGENT_WITCH_SKIP_OPEN_HOME=1\n" : ""}
 INSTALL_DIR="\${HOME}/${appHome.installDirName}"
 AGENT_WITCH_HOME="\${INSTALL_DIR}"
 AGENT_WITCH_WAKE_PORT="${appHome.wakePort}"
@@ -108,6 +109,9 @@ ${buildAgentWitchInstallScriptProgress()}
 agent_witch_install_begin
 
 agent_witch_install_step
-${buildAgentWitchInstallScriptConfigBlock(input)}${buildAgentWitchInstallScriptWriterBootstrap()}${buildAgentWitchInstallScriptClientBlock({ appOrigin: input.appOrigin, clientScriptUrl: input.clientScriptUrl })}${buildAgentWitchInstallScriptRegisterLaunchAgentFn()}
+${buildAgentWitchInstallScriptConfigBlock({
+  wsUrl: input.wsUrl,
+  repairExistingInstall: input.repairExistingInstall,
+})}${buildAgentWitchInstallScriptWriterBootstrap()}${buildAgentWitchInstallScriptClientBlock({ appOrigin: input.appOrigin, clientScriptUrl: input.clientScriptUrl })}${buildAgentWitchInstallScriptRegisterLaunchAgentFn()}
 `;
 };
