@@ -4,6 +4,7 @@ import SendTaskComposerMacPickerStep from "@/features/agent/SendTaskComposerMacP
 import WsTestDelegatedMacField from "@/features/agent/WsTestDelegatedMacField";
 import type { MyMacDevice } from "@/features/agent/hooks/useMyMacDevices";
 import useLocalMacBrowserContext from "@/features/home/hooks/useLocalMacBrowserContext";
+import useCursorCloudConnection from "@/features/home/hooks/useCursorCloudConnection";
 
 interface WsTestComposerMacSectionProps {
   readonly isLibraryPlaybook: boolean;
@@ -31,6 +32,7 @@ export default function WsTestComposerMacSection({
   onDeviceDeleted,
 }: WsTestComposerMacSectionProps) {
   const { localHostname, isWakeServerReachable } = useLocalMacBrowserContext();
+  const { summary: cursorCloudSummary } = useCursorCloudConnection();
 
   return (
     <div
@@ -53,6 +55,7 @@ export default function WsTestComposerMacSection({
             isLoading={isLoading}
             localHostname={localHostname}
             isWakeServerReachable={isWakeServerReachable}
+            hasCursorCloudConnection={cursorCloudSummary.connected}
             onSelect={onDeviceChange}
           />
         ) : (

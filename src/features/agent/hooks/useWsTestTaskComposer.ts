@@ -8,6 +8,7 @@ import { useComposerProjectSelection } from "@/features/agent/hooks/useComposerP
 import { useSelectedDispatchCapability } from "@/features/dispatch/hooks/useSelectedDispatchCapability";
 import { useTeamDispatchSelection } from "@/features/dispatch/hooks/useTeamDispatchSelection";
 import useMacDeviceSelection from "@/features/agent/hooks/useMacDeviceSelection";
+import useCursorCloudConnection from "@/features/home/hooks/useCursorCloudConnection";
 import { useWsTestComposerWorkflowState } from "@/features/agent/hooks/useWsTestComposerWorkflowState";
 import { buildLibraryCapabilitySelectionUpdate } from "@/features/agent/utils/buildLibraryCapabilitySelectionUpdate";
 import { buildWsTestComposerDispatchState } from "@/features/agent/utils/buildWsTestComposerDispatchState";
@@ -20,6 +21,7 @@ export function useWsTestTaskComposer(): UseWsTestTaskComposerResult {
   const librarySelection = useLibraryPlaybookSelection();
   const selection = useTeamDispatchSelection();
   const macSelection = useMacDeviceSelection();
+  const { summary: cursorCloudSummary } = useCursorCloudConnection();
   const selectedCapability = useSelectedDispatchCapability(
     selection.selectedGroupId,
     selection.selectedTargetUserId,
@@ -61,6 +63,7 @@ export function useWsTestTaskComposer(): UseWsTestTaskComposerResult {
       macSelection,
       workflow,
       isTeamDispatch,
+      hasCursorCloudConnection: cursorCloudSummary.connected,
     }),
     isTeamDispatch,
     clearWorkflowFields,

@@ -7,6 +7,7 @@ export const HARNESS_WRITER_LABELS: Record<HarnessWriterAgent, string> = {
   "claude-cli": "Claude (terminal)",
   codex: "Codex (ChatGPT)",
   cursor: "Cursor",
+  "cursor-cloud": "Cursor Cloud",
   antigravity: "Antigravity",
 };
 

@@ -1,9 +1,11 @@
 import { randomUUID } from "node:crypto";
 
 import type AgentWitchHubRuntime from "@/lib/agentWitch/types/AgentWitchHubRuntime.type";
+import { isCursorCloudExecutorDeviceId } from "@/lib/cursorCloud/cursorCloudExecutorDeviceId.constant";
 import { resolveCapabilityForDispatch } from "@/lib/capabilities/resolveCapabilityForDispatch";
 import { buildClaudeDispatchPayloadFromBody } from "@/lib/dispatch/buildClaudeDispatchPayloadFromBody";
 import { buildDashboardHttpSender } from "@/lib/dispatch/buildDashboardHttpSender";
+import { dispatchCursorCloudRunForDashboardUser } from "@/lib/dispatch/dispatchCursorCloudRunForDashboardUser";
 import { executeClaudeRunDispatch } from "@/lib/dispatch/executeClaudeRunDispatch";
 import { finalizeDashboardDispatchResult } from "@/lib/dispatch/finalizeDashboardDispatchResult";
 import type { AgentRunDispatchBody } from "@/lib/dispatch/parseAgentRunDispatchBody";
@@ -49,6 +51,20 @@ export const dispatchClaudeRunForDashboardUser = async (input: {
   }
 
   const payload = buildClaudeDispatchPayloadFromBody(input.body);
+  const targetDeviceId = resolveTargetDeviceId(payload);
+
+  if (
+    targetDeviceId !== undefined &&
+    isCursorCloudExecutorDeviceId(targetDeviceId)
+  ) {
+    return dispatchCursorCloudRunForDashboardUser({
+      runtime: input.runtime,
+      requesterUserId: input.requesterUserId,
+      prompt: input.body.prompt,
+      capabilityId: input.body.capabilityId ?? null,
+      requestId,
+    });
+  }
 
   const target = await resolveClaudeDispatchTarget(sender, payload);
   if (!target.ok) {
@@ -71,7 +87,7 @@ export const dispatchClaudeRunForDashboardUser = async (input: {
     runtime: input.runtime,
     senderUserId: input.requesterUserId,
     executorUserId: target.executorUserId,
-    targetDeviceId: resolveTargetDeviceId(payload),
+    targetDeviceId,
     requestId,
   });
 

@@ -9,6 +9,7 @@ import {
 } from "@/components/surfaces/appSurfaceStyles.constant";
 import AgentWitchUnsupportedHostNotice from "@/features/home/AgentWitchUnsupportedHostNotice";
 import ConnectComputerGuideSteps from "@/features/home/ConnectComputerGuideSteps";
+import ConnectCursorCloudCard from "@/features/home/ConnectCursorCloudCard";
 import ConnectInstallPasteModal from "@/features/home/ConnectInstallPasteModal";
 import useHomeConnectComputerGuideFlow from "@/features/home/hooks/useHomeConnectComputerGuideFlow";
 import useLocalMacBrowserContext from "@/features/home/hooks/useLocalMacBrowserContext";
@@ -113,6 +114,8 @@ export default function HomeConnectComputerGuide({
         isOpen={isPasteModalOpen}
         onClose={handleClosePasteModal}
       />
+
+      <ConnectCursorCloudCard />
     </AppHero>
   );
 }

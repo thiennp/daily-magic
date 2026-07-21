@@ -15,6 +15,16 @@ describe("resolveHomeDashboardMode", () => {
     );
   });
 
+  it("shows dashboard when Cursor Cloud is connected without a Mac", () => {
+    expect(
+      resolveHomeDashboardMode({
+        isLoading: false,
+        deviceCount: 0,
+        hasCursorCloudConnection: true,
+      }),
+    ).toBe("dashboard");
+  });
+
   it("shows full dashboard when at least one Mac is paired (HOME-003)", () => {
     expect(resolveHomeDashboardMode({ isLoading: false, deviceCount: 1 })).toBe(
       "dashboard",

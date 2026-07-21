@@ -19,6 +19,7 @@ const DEMO_WRITER_SESSION_READY_LABELS: Record<HarnessWriterAgent, string> = {
   "claude-cli": "Claude",
   codex: "Codex",
   cursor: "Cursor",
+  "cursor-cloud": "Cursor Cloud",
   antigravity: "Antigravity",
 };
 

@@ -1,7 +1,9 @@
 "use client";
 
 import SendTaskComposerConnectMacButton from "@/features/agent/SendTaskComposerConnectMacButton";
+import SendTaskComposerCursorCloudPickerRow from "@/features/agent/SendTaskComposerCursorCloudPickerRow";
 import SendTaskComposerMacPickerRow from "@/features/agent/SendTaskComposerMacPickerRow";
+import { CURSOR_CLOUD_EXECUTOR_DEVICE_ID } from "@/lib/cursorCloud/cursorCloudExecutorDeviceId.constant";
 import type { MyMacDevice } from "@/features/agent/hooks/useMyMacDevices";
 import { canWakeMacDeviceFromBrowser } from "@/features/agent-witch/online-wake";
 
@@ -11,6 +13,7 @@ interface SendTaskComposerMacPickerStepProps {
   readonly isLoading: boolean;
   readonly localHostname: string | null;
   readonly isWakeServerReachable: boolean;
+  readonly hasCursorCloudConnection: boolean;
   readonly onSelect: (deviceId: string) => void;
 }
 
@@ -20,6 +23,7 @@ export default function SendTaskComposerMacPickerStep({
   isLoading,
   localHostname,
   isWakeServerReachable,
+  hasCursorCloudConnection,
   onSelect,
 }: SendTaskComposerMacPickerStepProps) {
   if (isLoading) {
@@ -34,14 +38,28 @@ export default function SendTaskComposerMacPickerStep({
     return (
       <div>
         <h2 className="text-sm font-medium text-gray-800 dark:text-white/90">
-          Which Mac should run this?
+          Where should this run?
         </h2>
-        <p className="mt-3 text-sm text-gray-500 dark:text-gray-400">
-          No Macs connected yet.
-        </p>
-        <div className="mt-3">
-          <SendTaskComposerConnectMacButton hasExistingDevices={false} />
-        </div>
+        {hasCursorCloudConnection ? (
+          <ul className="mt-3 space-y-2">
+            <li>
+              <SendTaskComposerCursorCloudPickerRow
+                onSelect={() => {
+                  onSelect(CURSOR_CLOUD_EXECUTOR_DEVICE_ID);
+                }}
+              />
+            </li>
+          </ul>
+        ) : (
+          <>
+            <p className="mt-3 text-sm text-gray-500 dark:text-gray-400">
+              No Macs connected yet.
+            </p>
+            <div className="mt-3">
+              <SendTaskComposerConnectMacButton hasExistingDevices={false} />
+            </div>
+          </>
+        )}
       </div>
     );
   }
@@ -49,9 +67,18 @@ export default function SendTaskComposerMacPickerStep({
   return (
     <div>
       <h2 className="text-sm font-medium text-gray-800 dark:text-white/90">
-        Which Mac should run this?
+        Where should this run?
       </h2>
       <ul className="mt-3 space-y-2">
+        {hasCursorCloudConnection ? (
+          <li>
+            <SendTaskComposerCursorCloudPickerRow
+              onSelect={() => {
+                onSelect(CURSOR_CLOUD_EXECUTOR_DEVICE_ID);
+              }}
+            />
+          </li>
+        ) : null}
         {devices.map((device) => (
           <li key={device.id}>
             <SendTaskComposerMacPickerRow

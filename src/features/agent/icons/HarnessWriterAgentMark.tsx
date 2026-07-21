@@ -8,6 +8,7 @@ const WRITER_AGENT_MARK_CLASS: Record<HarnessWriterAgent, string> = {
   "claude-cli": "h-6 w-6 text-[#D97757]",
   codex: "h-6 w-6 text-gray-900 dark:text-white",
   cursor: "h-6 w-6 text-gray-900 dark:text-white",
+  "cursor-cloud": "h-6 w-6 text-gray-900 dark:text-white",
   antigravity: "h-6 w-6 text-[#3186FF] dark:text-[#5AA1FF]",
 };
 
@@ -26,6 +27,7 @@ export default function HarnessWriterAgentMark({
     case "codex":
       return <CodexWriterAgentMark className={className} />;
     case "cursor":
+    case "cursor-cloud":
       return <CursorWriterAgentMark className={className} />;
     case "antigravity":
       return <AntigravityWriterAgentMark className={className} />;
