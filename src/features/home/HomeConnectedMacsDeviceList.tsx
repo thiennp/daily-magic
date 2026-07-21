@@ -38,6 +38,7 @@ export default function HomeConnectedMacsDeviceList({
       {devices.map((device) => (
         <HomeConnectedMacDeviceRow
           key={device.id}
+          installCommand={installCommand}
           device={device}
           displayName={displayNameById.get(device.id) ?? "Your Mac"}
           serverInstallBundleVersion={serverInstallBundleVersion}

@@ -11,6 +11,7 @@ import useThisMacLocalInstallActions from "@/features/home/hooks/useThisMacLocal
 import UpdateLocalMacModal from "@/features/home/UpdateLocalMacModal";
 
 interface HomeConnectedMacDeviceRowProps {
+  readonly installCommand: string;
   readonly device: MyMacDevice;
   readonly displayName: string;
   readonly serverInstallBundleVersion: string | null;
@@ -30,8 +31,12 @@ export default function HomeConnectedMacDeviceRow(
     onDeleteLocalScript,
     isUpdateLocalModalOpen,
     updateLocalCommand,
+    isUpdateLocalCommandLoading,
+    updateLocalCommandError,
     closeUpdateLocalModal,
-  } = useThisMacLocalInstallActions();
+  } = useThisMacLocalInstallActions({
+    fallbackInstallCommand: props.installCommand,
+  });
   const detail = buildMacDeviceDetailText({
     device: props.device,
     serverInstallBundleVersion: props.serverInstallBundleVersion,
@@ -65,6 +70,8 @@ export default function HomeConnectedMacDeviceRow(
       <UpdateLocalMacModal
         isOpen={isUpdateLocalModalOpen}
         updateCommand={updateLocalCommand}
+        isUpdateCommandLoading={isUpdateLocalCommandLoading}
+        updateCommandError={updateLocalCommandError}
         onClose={closeUpdateLocalModal}
       />
     </>
