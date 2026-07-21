@@ -2,11 +2,16 @@ import { AGENT_LIVE_BASH_PROMPT } from "@/features/agent/utils/agentLiveTerminal
 import { AGENT_LIVE_PROGRESS_CLI_COMMAND_LINE_PATTERN } from "@/features/agent/utils/agentLiveProgressPatterns.constant";
 import { stripAgentLiveProgressCheckpointFromOutput } from "@/features/agent/utils/stripAgentLiveProgressCheckpointFromOutput";
 import { stripAgentRunProgressFromOutput } from "@/features/agent/utils/stripAgentRunProgressFromOutput";
+import { stripAgentRunWorkingEstimateFromOutput } from "@/features/agent/utils/stripAgentRunWorkingEstimateFromOutput";
 import { stripNextActionsFromTerminalOutput } from "@/features/agent/utils/splitAgentLiveTerminalOutput";
 
 export const stripAgentLiveProgressCliChrome = (output: string): string =>
   stripAgentLiveProgressCheckpointFromOutput(
-    stripAgentRunProgressFromOutput(stripNextActionsFromTerminalOutput(output)),
+    stripAgentRunWorkingEstimateFromOutput(
+      stripAgentRunProgressFromOutput(
+        stripNextActionsFromTerminalOutput(output),
+      ),
+    ),
   )
     .split(/\r?\n/)
     .filter((line) => {

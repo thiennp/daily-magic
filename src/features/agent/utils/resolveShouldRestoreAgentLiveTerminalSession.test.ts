@@ -8,6 +8,7 @@ describe("resolveShouldRestoreAgentLiveTerminalSession", () => {
       resolveShouldRestoreAgentLiveTerminalSession({
         continueSession: false,
         resumeLiveSession: false,
+        hasPersistedInProgressSession: false,
       }),
     ).toBe(false);
   });
@@ -33,6 +34,16 @@ describe("resolveShouldRestoreAgentLiveTerminalSession", () => {
         continueSession: false,
         resumeLiveSession: false,
         sourceRunId: "run-1",
+      }),
+    ).toBe(true);
+  });
+
+  it("AGENT-048: in-progress localStorage session restores after refresh", () => {
+    expect(
+      resolveShouldRestoreAgentLiveTerminalSession({
+        continueSession: false,
+        resumeLiveSession: false,
+        hasPersistedInProgressSession: true,
       }),
     ).toBe(true);
   });

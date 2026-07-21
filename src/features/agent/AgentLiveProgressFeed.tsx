@@ -8,6 +8,7 @@ import type { WsTestConnectionStatus } from "@/features/agent/types/WsTestConnec
 import type { AgentLiveProgressStep } from "@/features/agent/utils/buildAgentLiveProgressSteps";
 import { buildAgentLiveTerminalLoadingLine } from "@/features/agent/utils/buildAgentLiveTerminalDisplay";
 import type { AgentLiveProgressStallState } from "@/features/agent/utils/resolveAgentLiveProgressStallState";
+import type { AgentLiveWorkingEstimateProgress } from "@/features/agent/utils/resolveAgentLiveWorkingEstimateProgress";
 
 interface AgentLiveProgressFeedProps {
   readonly steps: readonly AgentLiveProgressStep[];
@@ -16,6 +17,8 @@ interface AgentLiveProgressFeedProps {
   readonly stallState?: AgentLiveProgressStallState;
   readonly connectionStatus?: WsTestConnectionStatus;
   readonly msSinceLastActivity?: number | null;
+  readonly estimateProgress?: AgentLiveWorkingEstimateProgress | null;
+  readonly sessionDeviceId?: string | null;
   readonly nextActions?: readonly string[];
   readonly nextActionsDisabled?: boolean;
   readonly onSelectNextAction?: (action: string) => void;
@@ -28,6 +31,8 @@ export default function AgentLiveProgressFeed({
   stallState = "none",
   connectionStatus = "idle",
   msSinceLastActivity = null,
+  estimateProgress = null,
+  sessionDeviceId = null,
   nextActions = [],
   nextActionsDisabled = false,
   onSelectNextAction,
@@ -46,6 +51,8 @@ export default function AgentLiveProgressFeed({
         connectionStatus={connectionStatus}
         msSinceLastActivity={msSinceLastActivity}
         stallState={stallState}
+        estimateProgress={estimateProgress}
+        sessionDeviceId={sessionDeviceId}
       />
       <ol className="mt-4 space-y-3">
         {steps.map((step) => (

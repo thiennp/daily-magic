@@ -39,6 +39,29 @@ describe("resolveAgentLiveTerminalFeedbackAction", () => {
     ).toEqual({ kind: "queue-while-working" });
   });
 
+  it("AGENT-050: steers immediately when preferred while working", () => {
+    expect(
+      resolveAgentLiveTerminalFeedbackAction({
+        message: "focus on the API",
+        status: "streaming",
+        connectionStatus: "connected",
+        hasPendingInput: false,
+        hasOpenSession: true,
+        preferredMode: "steer",
+      }),
+    ).toEqual({ kind: "send-follow-up" });
+    expect(
+      resolveAgentLiveTerminalFeedbackAction({
+        message: "also check Q3",
+        status: "streaming",
+        connectionStatus: "connected",
+        hasPendingInput: false,
+        hasOpenSession: true,
+        preferredMode: "queue",
+      }),
+    ).toEqual({ kind: "queue-while-working" });
+  });
+
   it("sends follow-up when the session is ready", () => {
     expect(
       resolveAgentLiveTerminalFeedbackAction({

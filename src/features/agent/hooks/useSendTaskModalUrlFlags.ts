@@ -9,6 +9,7 @@ import {
   SEND_TASK_RESUME_LIVE_SESSION_QUERY_PARAM,
   SEND_TASK_SOURCE_RUN_ID_QUERY_PARAM,
 } from "@/features/agent/constants/sendTaskModalQuery.constant";
+import { hasPersistedInProgressAgentLiveTerminalSession } from "@/features/agent/utils/hasPersistedInProgressAgentLiveTerminalSession";
 import { resolveShouldRestoreAgentLiveTerminalSession } from "@/features/agent/utils/resolveShouldRestoreAgentLiveTerminalSession";
 
 export const useSendTaskModalUrlFlags = (): {
@@ -20,6 +21,8 @@ export const useSendTaskModalUrlFlags = (): {
   const searchParams = useSearchParams();
   const sourceRunId =
     searchParams.get(SEND_TASK_SOURCE_RUN_ID_QUERY_PARAM) ?? "";
+  const hasPersistedInProgressSession =
+    hasPersistedInProgressAgentLiveTerminalSession();
   return {
     urlWantsOpen:
       searchParams.get(SEND_TASK_MODAL_QUERY_PARAM) ===
@@ -30,6 +33,7 @@ export const useSendTaskModalUrlFlags = (): {
       resumeLiveSession:
         searchParams.get(SEND_TASK_RESUME_LIVE_SESSION_QUERY_PARAM) === "1",
       sourceRunId,
+      hasPersistedInProgressSession,
     }),
     capabilityFromUrl: searchParams.get("libraryCapabilityId") ?? "custom",
     sourceRunId,

@@ -18,6 +18,7 @@ interface AgentLiveTerminalDeveloperMirrorProps {
   readonly output: string;
   readonly status: AgentLiveTerminalStatus;
   readonly pendingCommandLine?: string | null;
+  readonly awaitingUserAnswer?: boolean;
   readonly macShellStatus?: AgentMacShellStatus;
   readonly macShellCanWrite?: boolean;
   readonly macShellLatestChunk?: string | null;
@@ -31,6 +32,7 @@ export default function AgentLiveTerminalDeveloperMirror({
   output,
   status,
   pendingCommandLine = null,
+  awaitingUserAnswer = false,
   macShellStatus,
   macShellCanWrite = false,
   macShellLatestChunk = null,
@@ -55,7 +57,9 @@ export default function AgentLiveTerminalDeveloperMirror({
   });
   const showCursor = !shellIsLive && shouldShowAgentLiveTerminalCursor(status);
   const showLoadingIndicator =
-    !shellIsLive && shouldShowAgentLiveTerminalLoadingIndicator(status);
+    !shellIsLive &&
+    !awaitingUserAnswer &&
+    shouldShowAgentLiveTerminalLoadingIndicator(status);
   const loadingDotCount = useAgentLiveTerminalLoadingDots(showLoadingIndicator);
   const statusLabel = shellIsLive
     ? macShellStatus === "opening"
@@ -99,6 +103,7 @@ export default function AgentLiveTerminalDeveloperMirror({
           displayOutput={displayOutput}
           showLoadingIndicator={showLoadingIndicator}
           loadingDotCount={loadingDotCount}
+          awaitingUserAnswer={awaitingUserAnswer}
           showCursor={showCursor}
         />
       )}

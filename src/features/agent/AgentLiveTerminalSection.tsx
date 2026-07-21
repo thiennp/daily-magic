@@ -8,12 +8,14 @@ import AppPanel from "@/components/surfaces/AppPanel";
 import AgentLiveTerminalPanel from "@/features/agent/AgentLiveTerminalPanel";
 import type { AgentMacShellPanelProps } from "@/features/agent/types/AgentMacShellPanelProps.type";
 import type { AgentLiveTerminalStatus } from "@/features/agent/utils/agentLiveTerminalState.type";
+import type { AgentLiveTerminalFeedbackPreferredMode } from "@/features/agent/utils/resolveAgentLiveTerminalFeedbackAction";
 
 interface AgentLiveTerminalSectionProps extends AgentMacShellPanelProps {
   readonly output: string;
   readonly status: AgentLiveTerminalStatus;
   readonly pendingCommandLine?: string | null;
   readonly activeRunId: string | null;
+  readonly sessionDeviceId?: string | null;
   readonly errorMessage: string | null;
   readonly feedbackVisible: boolean;
   readonly feedbackPendingQuestion: string | null;
@@ -22,7 +24,10 @@ interface AgentLiveTerminalSectionProps extends AgentMacShellPanelProps {
   readonly feedbackQueueNotice: string | null;
   readonly isFeedbackSubmitting: boolean;
   readonly feedbackAutoFocus?: boolean;
-  readonly onSubmitFeedback: (message: string) => void;
+  readonly onSubmitFeedback: (
+    message: string,
+    preferredMode?: AgentLiveTerminalFeedbackPreferredMode,
+  ) => void;
   readonly onFinishSession: () => void;
   readonly isSteppedComposer?: boolean;
 }

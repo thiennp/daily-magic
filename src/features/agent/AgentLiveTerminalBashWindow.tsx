@@ -3,12 +3,13 @@
 import { useEffect, useRef } from "react";
 
 import { APP_SURFACE_BASH_TERMINAL_PRE_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
-import { buildAgentLiveTerminalLoadingLine } from "@/features/agent/utils/buildAgentLiveTerminalDisplay";
+import { buildAgentLiveTerminalActivityLine } from "@/features/agent/utils/buildAgentLiveTerminalDisplay";
 
 interface AgentLiveTerminalBashWindowProps {
   readonly displayOutput: string;
   readonly showLoadingIndicator: boolean;
   readonly loadingDotCount: number;
+  readonly awaitingUserAnswer?: boolean;
   readonly showCursor: boolean;
 }
 
@@ -16,16 +17,24 @@ export default function AgentLiveTerminalBashWindow({
   displayOutput,
   showLoadingIndicator,
   loadingDotCount,
+  awaitingUserAnswer = false,
   showCursor,
 }: AgentLiveTerminalBashWindowProps) {
   const outputRef = useRef<HTMLPreElement>(null);
+  const showActivityLine = showLoadingIndicator || awaitingUserAnswer;
 
   useEffect(() => {
     const element = outputRef.current;
     if (element !== null) {
       element.scrollTop = element.scrollHeight;
     }
-  }, [displayOutput, loadingDotCount, showCursor, showLoadingIndicator]);
+  }, [
+    displayOutput,
+    loadingDotCount,
+    showCursor,
+    showActivityLine,
+    awaitingUserAnswer,
+  ]);
 
   return (
     <div className="mt-3 overflow-hidden rounded-lg border border-zinc-700 bg-zinc-950 shadow-sm">
@@ -42,11 +51,18 @@ export default function AgentLiveTerminalBashWindow({
         className={`${APP_SURFACE_BASH_TERMINAL_PRE_CLASS} max-h-96 min-h-48 whitespace-pre-wrap break-words border-0 rounded-none`}
       >
         {displayOutput}
-        {showLoadingIndicator ? (
+        {showActivityLine ? (
           <>
             {"\n"}
-            <span className="text-zinc-400">
-              {buildAgentLiveTerminalLoadingLine(loadingDotCount)}
+            <span
+              className={
+                awaitingUserAnswer ? "text-amber-300" : "text-zinc-400"
+              }
+            >
+              {buildAgentLiveTerminalActivityLine({
+                awaitingUserAnswer,
+                loadingDotCount,
+              })}
             </span>
           </>
         ) : null}

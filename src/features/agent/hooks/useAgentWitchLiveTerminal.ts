@@ -45,6 +45,7 @@ export function useAgentWitchLiveTerminal(socketRef: {
   useAgentWitchLiveTerminalWriterSessionSubscribe({
     socketRef,
     sessionWriterSessionId: state.sessionWriterSessionId,
+    activeRunId: state.activeRunId,
     status: state.status,
   });
 

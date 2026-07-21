@@ -3,11 +3,37 @@ import { initialAgentLiveTerminalState } from "@/features/agent/utils/agentLiveT
 import {
   readTerminalStore,
   writeTerminalStore,
+  type PersistedTerminalSession,
+  type TerminalStore,
 } from "@/features/agent/utils/agentLiveTerminalLocalStoreIO";
 import { isRestorableAgentLiveTerminalStatus } from "@/features/agent/utils/isRestorableAgentLiveTerminalStatus";
 import { restoreAgentLiveTerminalSession } from "@/features/agent/utils/restoreAgentLiveTerminalSession";
 import { shouldPersistAgentLiveTerminalOutput } from "@/features/agent/utils/shouldPersistAgentLiveTerminalOutput";
 import { setAgentRunTerminalOutput } from "@/features/agent/utils/agentRunTerminalOutputStore";
+
+const toPersistedSession = (
+  state: AgentLiveTerminalState,
+): PersistedTerminalSession => ({
+  activeRunId: state.activeRunId,
+  output: shouldPersistAgentLiveTerminalOutput() ? state.output : "",
+  status: state.status,
+  pendingCommandLine: state.pendingCommandLine,
+  sessionWriterAgent: state.sessionWriterAgent,
+  sessionDeviceId: state.sessionDeviceId,
+  sessionWriterSessionId: state.sessionWriterSessionId,
+  updatedAt: new Date().toISOString(),
+});
+
+const withArchivedCurrent = (
+  store: TerminalStore,
+  session: PersistedTerminalSession | null,
+): Readonly<Record<string, PersistedTerminalSession>> => {
+  if (session?.activeRunId === null || session?.activeRunId === undefined) {
+    return store.byRunId;
+  }
+
+  return { ...store.byRunId, [session.activeRunId]: session };
+};
 
 export const loadPersistedAgentLiveTerminalState =
   (): AgentLiveTerminalState => {
@@ -22,6 +48,15 @@ export const loadPersistedAgentLiveTerminalState =
     return restoreAgentLiveTerminalSession(session);
   };
 
+/** Archive the focused session, then clear focus so Start can open a new task. */
+export const clearPersistedAgentLiveTerminalState = (): void => {
+  const store = readTerminalStore();
+  writeTerminalStore({
+    current: null,
+    byRunId: withArchivedCurrent(store, store.current),
+  });
+};
+
 export const persistAgentLiveTerminalState = (
   state: AgentLiveTerminalState,
 ): void => {
@@ -33,21 +68,18 @@ export const persistAgentLiveTerminalState = (
     setAgentRunTerminalOutput(state.activeRunId, state.output);
   }
 
+  const store = readTerminalStore();
   if (state.status === "idle" && state.output.length === 0) {
-    writeTerminalStore({ current: null });
+    writeTerminalStore({
+      current: null,
+      byRunId: store.byRunId,
+    });
     return;
   }
 
+  const session = toPersistedSession(state);
   writeTerminalStore({
-    current: {
-      activeRunId: state.activeRunId,
-      output: shouldPersistAgentLiveTerminalOutput() ? state.output : "",
-      status: state.status,
-      pendingCommandLine: state.pendingCommandLine,
-      sessionWriterAgent: state.sessionWriterAgent,
-      sessionDeviceId: state.sessionDeviceId,
-      sessionWriterSessionId: state.sessionWriterSessionId,
-      updatedAt: new Date().toISOString(),
-    },
+    current: session,
+    byRunId: withArchivedCurrent(store, session),
   });
 };

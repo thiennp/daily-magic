@@ -5,6 +5,8 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 import { resolveSendTaskCloseAction } from "@/features/agent/utils/resolveSendTaskPresentation";
 import { resolveSendTaskModalPanelKey } from "@/features/agent/utils/resolveSendTaskModalPanelKey";
+import { clearPersistedAgentLiveTerminalState } from "@/features/agent/utils/agentLiveTerminalLocalStore";
+import { expandRunningSendTaskModal } from "@/features/agent/utils/expandRunningSendTaskModal";
 import buildAgentComposerHref from "@/lib/library/buildAgentComposerHref";
 import { stripSendTaskModalQuery } from "@/features/agent/utils/stripSendTaskModalQuery";
 
@@ -18,6 +20,7 @@ export const useSendTaskModalActions = (input: {
     readonly prompt?: string;
     readonly deviceId?: string;
   }) => void;
+  readonly expandRunningSendTask: (runId: string) => void;
   readonly closeSendTaskModal: () => void;
   readonly expandSendTaskModal: () => void;
   readonly minimizeSendTaskModal: () => void;
@@ -60,6 +63,7 @@ export const useSendTaskModalActions = (input: {
       readonly deviceId?: string;
     }) => {
       setKeepAlive(true);
+      clearPersistedAgentLiveTerminalState();
       setPanelKey(
         resolveSendTaskModalPanelKey({
           shouldRestoreLiveSession: false,
@@ -68,6 +72,19 @@ export const useSendTaskModalActions = (input: {
       );
       router.push(buildAgentComposerHref({ ...options, pathname }), {
         scroll: false,
+      });
+    },
+    [pathname, router, setKeepAlive, setPanelKey],
+  );
+
+  const expandRunningSendTask = useCallback(
+    (runId: string) => {
+      expandRunningSendTaskModal({
+        runId,
+        pathname,
+        router,
+        setKeepAlive,
+        setPanelKey,
       });
     },
     [pathname, router, setKeepAlive, setPanelKey],
@@ -82,6 +99,7 @@ export const useSendTaskModalActions = (input: {
 
   return {
     openSendTaskModal,
+    expandRunningSendTask,
     closeSendTaskModal,
     expandSendTaskModal,
     minimizeSendTaskModal,

@@ -1,6 +1,10 @@
+import { AGENT_RUN_WORKING_ESTIMATE_INSTRUCTION } from "@/lib/dispatch/agentRunWorkingEstimate.constant";
+
 export const AGENT_RUN_PROGRESS_MARKER = "[[PROGRESS]]";
 
 export const AGENT_RUN_PROGRESS_INSTRUCTION = [
+  AGENT_RUN_WORKING_ESTIMATE_INSTRUCTION,
+  "",
   "While working, report user-visible progress with this exact format (plain language, not developer jargon):",
   "1. Put the marker on its own line:",
   AGENT_RUN_PROGRESS_MARKER,

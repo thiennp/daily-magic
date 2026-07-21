@@ -50,12 +50,15 @@ export const MARKETING_TRUST_CARD_CLASSES = [
   "flex w-full items-center gap-3",
   "rounded-xl border border-zinc-200/80 bg-white px-3.5 py-3",
   "text-sm font-medium leading-snug text-zinc-700",
-  "shadow-sm ring-1 ring-zinc-200/40",
+  "dark:border-gray-700 dark:bg-white/[0.02] dark:text-gray-200",
+  "shadow-sm ring-1 ring-zinc-200/40 dark:ring-gray-800",
   "transition-colors duration-200 hover:border-zinc-300 hover:bg-zinc-50/80",
+  "dark:hover:border-gray-600 dark:hover:bg-white/[0.04]",
   "motion-reduce:transition-none",
 ].join(" ");
 
 export const MARKETING_TRUST_ICON_SHELL_CLASSES = [
   "flex h-9 w-9 shrink-0 items-center justify-center rounded-lg",
   "bg-zinc-100 text-zinc-600",
+  "dark:bg-white/10 dark:text-gray-300",
 ].join(" ");

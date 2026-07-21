@@ -56,6 +56,26 @@ describe("restoreAgentLiveTerminalFromSourceRun", () => {
     });
   });
 
+  it("AGENT-053 restores a running job as streaming", () => {
+    upsertAgentRunLocalCache(
+      sampleRun({
+        id: "run-live",
+        status: AgentRunStatus.RUNNING,
+        resultOutput: null,
+        resultExitCode: null,
+        completedAt: null,
+      }),
+    );
+    setAgentRunTerminalOutput("run-live", "still working\n");
+
+    expect(restoreAgentLiveTerminalFromSourceRun("run-live")).toMatchObject({
+      activeRunId: "run-live",
+      output: "still working\n",
+      status: "streaming",
+      sessionDeviceId: "mac-1",
+    });
+  });
+
   it("returns null when the run is not in local cache", () => {
     expect(restoreAgentLiveTerminalFromSourceRun("missing")).toBeNull();
   });

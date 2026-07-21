@@ -7,6 +7,7 @@ import type { AgentMacShellPanelProps } from "@/features/agent/types/AgentMacShe
 import type { SendTaskComposerStepTrailViewItem } from "@/features/agent/types/SendTaskComposerStepTrailViewItem.type";
 import WsTestPanelMacSessionSection from "@/features/agent/WsTestPanelMacSessionSection";
 import type { AgentLiveTerminalStatus } from "@/features/agent/utils/agentLiveTerminalState.type";
+import type { AgentLiveTerminalFeedbackPreferredMode } from "@/features/agent/utils/resolveAgentLiveTerminalFeedbackAction";
 
 export interface WsTestPanelComposerActiveSessionProps extends AgentMacShellPanelProps {
   readonly isSteppedComposer: boolean;
@@ -16,13 +17,17 @@ export interface WsTestPanelComposerActiveSessionProps extends AgentMacShellPane
   readonly liveTerminalStatus: AgentLiveTerminalStatus;
   readonly liveTerminalPendingCommandLine: string | null;
   readonly liveTerminalRunId: string | null;
+  readonly sessionDeviceId?: string | null;
   readonly feedbackVisible: boolean;
   readonly feedbackPendingQuestion: string | null;
   readonly feedbackPendingPartialOutput: string | null;
   readonly feedbackQueuedCount: number;
   readonly feedbackQueueNotice: string | null;
   readonly isFeedbackSubmitting: boolean;
-  readonly onSubmitFeedback: (message: string) => void;
+  readonly onSubmitFeedback: (
+    message: string,
+    preferredMode?: AgentLiveTerminalFeedbackPreferredMode,
+  ) => void;
   readonly sessionErrorMessage: string | null;
   readonly onFinishSession: () => void;
 }
@@ -35,6 +40,7 @@ export default function WsTestPanelComposerActiveSession({
   liveTerminalStatus,
   liveTerminalPendingCommandLine,
   liveTerminalRunId,
+  sessionDeviceId = null,
   feedbackVisible,
   feedbackPendingQuestion,
   feedbackPendingPartialOutput,
@@ -64,6 +70,7 @@ export default function WsTestPanelComposerActiveSession({
         status={liveTerminalStatus}
         pendingCommandLine={liveTerminalPendingCommandLine}
         activeRunId={liveTerminalRunId}
+        sessionDeviceId={sessionDeviceId}
         feedbackVisible={feedbackVisible}
         feedbackPendingQuestion={feedbackPendingQuestion}
         feedbackPendingPartialOutput={feedbackPendingPartialOutput}

@@ -114,11 +114,4 @@ describe("agentLiveTerminalLocalStore", () => {
     expect(readTerminalStore().current).toBeNull();
     expect(loadPersistedAgentLiveTerminalState().status).toBe("idle");
   });
-
-  it("stores terminal output by run id for report pages", () => {
-    appendAgentRunTerminalOutput("run-2", "chunk-1\n");
-    appendAgentRunTerminalOutput("run-2", "chunk-2\n");
-
-    expect(loadAgentRunTerminalOutput("run-2")).toBe("chunk-1\nchunk-2\n");
-  });
 });

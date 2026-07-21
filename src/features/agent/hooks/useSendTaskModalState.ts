@@ -3,6 +3,7 @@
 import { useState } from "react";
 
 import { useSendTaskModalUrlFlags } from "@/features/agent/hooks/useSendTaskModalUrlFlags";
+import { hasPersistedInProgressAgentLiveTerminalSession } from "@/features/agent/utils/hasPersistedInProgressAgentLiveTerminalSession";
 import { resolveSendTaskKeepAliveOnUrlClose } from "@/features/agent/utils/resolveSendTaskPresentation";
 import { resolveSendTaskModalPanelKey } from "@/features/agent/utils/resolveSendTaskModalPanelKey";
 
@@ -21,7 +22,9 @@ export const useSendTaskModalState = (): {
     capabilityFromUrl,
     sourceRunId,
   } = useSendTaskModalUrlFlags();
-  const [keepAlive, setKeepAlive] = useState(urlWantsOpen);
+  const [keepAlive, setKeepAlive] = useState(
+    () => urlWantsOpen || hasPersistedInProgressAgentLiveTerminalSession(),
+  );
   const [isSessionActive, setIsSessionActive] = useState(false);
   const [panelKey, setPanelKey] = useState(() =>
     resolveSendTaskModalPanelKey({

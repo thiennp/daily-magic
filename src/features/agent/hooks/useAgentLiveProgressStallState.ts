@@ -7,6 +7,7 @@ import { resolveAgentLiveProgressStallState } from "@/features/agent/utils/resol
 
 interface StallClockState {
   readonly lastActivityAt: number | null;
+  readonly workingStartedAt: number | null;
   readonly nowMs: number;
 }
 
@@ -21,9 +22,13 @@ const stallClockReducer = (
 ): StallClockState => {
   switch (action.type) {
     case "reset":
-      return { lastActivityAt: null, nowMs: action.at };
+      return { lastActivityAt: null, workingStartedAt: null, nowMs: action.at };
     case "activity":
-      return { lastActivityAt: action.at, nowMs: action.at };
+      return {
+        lastActivityAt: action.at,
+        workingStartedAt: state.workingStartedAt ?? action.at,
+        nowMs: action.at,
+      };
     case "tick":
       return { ...state, nowMs: action.at };
     default:
@@ -33,15 +38,18 @@ const stallClockReducer = (
 
 const initialStallClockState = (): StallClockState => ({
   lastActivityAt: null,
+  workingStartedAt: null,
   nowMs: 0,
 });
 
 export const useAgentLiveProgressStallState = (input: {
   readonly isWorking: boolean;
   readonly activityFingerprint: string;
+  readonly estimateSeconds?: number | null;
 }): {
   readonly stallState: AgentLiveProgressStallState;
   readonly msSinceLastActivity: number | null;
+  readonly workedMs: number | null;
   readonly noteRunHeartbeat: () => void;
 } => {
   const [clock, dispatch] = useReducer(
@@ -81,13 +89,20 @@ export const useAgentLiveProgressStallState = (input: {
     input.isWorking && clock.lastActivityAt !== null
       ? clock.nowMs - clock.lastActivityAt
       : null;
+  const workedMs =
+    input.isWorking && clock.workingStartedAt !== null
+      ? clock.nowMs - clock.workingStartedAt
+      : null;
 
   return {
     stallState: resolveAgentLiveProgressStallState({
       isWorking: input.isWorking,
       msSinceLastActivity,
+      workedMs,
+      estimateSeconds: input.estimateSeconds ?? null,
     }),
     msSinceLastActivity,
+    workedMs,
     noteRunHeartbeat,
   };
 };

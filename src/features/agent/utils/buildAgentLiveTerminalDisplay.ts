@@ -51,3 +51,14 @@ export const shouldShowAgentLiveTerminalLoadingIndicator = (
 
 export const buildAgentLiveTerminalLoadingLine = (dotCount: number): string =>
   ".".repeat(Math.max(1, Math.min(dotCount, 3)));
+
+/** Shown in the Mac terminal mirror while the agent waits for a reply (AGENT-049). */
+export const AGENT_LIVE_TERMINAL_PLEASE_ANSWER_LINE = "please answer";
+
+export const buildAgentLiveTerminalActivityLine = (input: {
+  readonly awaitingUserAnswer: boolean;
+  readonly loadingDotCount: number;
+}): string =>
+  input.awaitingUserAnswer
+    ? AGENT_LIVE_TERMINAL_PLEASE_ANSWER_LINE
+    : buildAgentLiveTerminalLoadingLine(input.loadingDotCount);

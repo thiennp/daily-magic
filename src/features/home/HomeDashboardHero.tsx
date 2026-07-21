@@ -12,6 +12,7 @@ import {
   APP_SURFACE_TEXT_LINK_MUTED_CLASS,
 } from "@/components/surfaces/appSurfaceStyles.constant";
 import { useSendTaskModal } from "@/features/agent/SendTaskModalProvider";
+import HomeRunningJobsPanel from "@/features/home/HomeRunningJobsPanel";
 import { COMPANY_RULES_NAV_LABEL } from "@/lib/admin/companyGroupCopy.constant";
 import formatGlobalRole from "@/lib/auth/formatGlobalRole";
 import type { GlobalRoleValue } from "@/lib/auth/roles";
@@ -50,6 +51,7 @@ export default function HomeDashboardHero({ user }: HomeDashboardHeroProps) {
           <AppIcon icon={BoltIcon} size="lg" />
           Start
         </button>
+        <HomeRunningJobsPanel />
         <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-sm">
           <Link href="/library" className={APP_SURFACE_TEXT_LINK_CLASS}>
             Browse library →

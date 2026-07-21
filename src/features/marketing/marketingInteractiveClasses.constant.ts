@@ -50,7 +50,9 @@ export const MARKETING_TEXT_LINK_CLASSES = [
 export const MARKETING_SHOWCASE_CARD_BASE_CLASSES = [
   "group rounded-2xl p-6",
   "bg-white shadow-sm ring-1 ring-zinc-200/50",
+  "dark:bg-white/[0.02] dark:ring-gray-800",
   "transition-all duration-300 ease-out hover:-translate-y-0.5 hover:shadow-md",
   "focus-within:ring-2 focus-within:ring-zinc-300/60 focus-within:ring-offset-2",
+  "dark:focus-within:ring-white/20 dark:focus-within:ring-offset-gray-900",
   "motion-reduce:transition-none motion-reduce:hover:translate-y-0",
 ].join(" ");

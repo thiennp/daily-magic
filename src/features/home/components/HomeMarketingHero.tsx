@@ -7,6 +7,7 @@ import MarketingProductPreview from "@/features/marketing/MarketingProductPrevie
 import MarketingTrustStrip from "@/features/marketing/MarketingTrustStrip";
 import { MARKETING_CTA_GHOST_CLASSES } from "@/features/marketing/marketingInteractiveClasses.constant";
 import {
+  MARKETING_TEXT_MUTED_CLASSES,
   MARKETING_TEXT_PRIMARY_CLASSES,
   MARKETING_TEXT_SECONDARY_CLASSES,
 } from "@/features/marketing/marketingSurfaceClasses.constant";
@@ -17,7 +18,12 @@ export default function HomeMarketingHero() {
     <header className="grid gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:items-start lg:gap-20 xl:gap-24">
       <div className="space-y-8 lg:pt-2">
         <div className="space-y-6">
-          <p className="text-sm font-medium uppercase tracking-wider text-zinc-500">
+          <p
+            className={mergeMarketingClasses(
+              "text-sm font-medium uppercase tracking-wider",
+              MARKETING_TEXT_MUTED_CLASSES,
+            )}
+          >
             {HOME_MARKETING_HERO_COPY.eyebrow}
           </p>
           <h1

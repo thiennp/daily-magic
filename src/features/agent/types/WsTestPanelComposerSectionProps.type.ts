@@ -8,6 +8,7 @@ import type { useAgentWitchSocket } from "@/features/agent/hooks/useAgentWitchSo
 import type { AgentMacShellPanelProps } from "@/features/agent/types/AgentMacShellPanelProps.type";
 import type { SendTaskComposerStepTrailViewItem } from "@/features/agent/types/SendTaskComposerStepTrailViewItem.type";
 import type { AgentLiveTerminalStatus } from "@/features/agent/utils/agentLiveTerminalState.type";
+import type { AgentLiveTerminalFeedbackPreferredMode } from "@/features/agent/utils/resolveAgentLiveTerminalFeedbackAction";
 import type { resolveAgentSessionTargets } from "@/features/agent/utils/resolveAgentSessionTargets";
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
 
@@ -34,7 +35,10 @@ export interface WsTestPanelComposerSectionProps extends AgentMacShellPanelProps
   readonly feedbackQueuedCount: number;
   readonly feedbackQueueNotice: string | null;
   readonly isFeedbackSubmitting: boolean;
-  readonly onSubmitFeedback: (message: string) => void;
+  readonly onSubmitFeedback: (
+    message: string,
+    preferredMode?: AgentLiveTerminalFeedbackPreferredMode,
+  ) => void;
   readonly sessionErrorMessage: string | null;
   readonly onWriterAgentChange: (value: HarnessWriterAgent) => void;
   readonly onStartWriterAgent: (writerAgent: HarnessWriterAgent) => void;

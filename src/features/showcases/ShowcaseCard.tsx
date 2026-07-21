@@ -24,8 +24,10 @@ interface ShowcaseCardProps {
 
 const VARIANT_CLASSES: Record<ShowcaseCardVariant, string> = {
   default: "",
-  featured: "bg-gradient-to-b from-zinc-50 to-white",
-  spotlight: "bg-gradient-to-b from-zinc-50 to-white md:col-span-2",
+  featured:
+    "bg-gradient-to-b from-zinc-50 to-white dark:from-white/[0.04] dark:to-white/[0.02]",
+  spotlight:
+    "bg-gradient-to-b from-zinc-50 to-white dark:from-white/[0.04] dark:to-white/[0.02] md:col-span-2",
 };
 
 const COVER_ASPECT_CLASSES: Record<ShowcaseCardVariant, string> = {
@@ -86,7 +88,7 @@ export default function ShowcaseCard({
       >
         <Link
           href={href}
-          className="rounded-sm transition hover:text-zinc-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400/50 focus-visible:ring-offset-2"
+          className="rounded-sm transition hover:text-zinc-700 dark:hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400/50 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-gray-900"
         >
           {article.title}
         </Link>

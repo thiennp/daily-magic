@@ -1,4 +1,5 @@
 import {
+  MARKETING_TEXT_MUTED_CLASSES,
   MARKETING_TEXT_PRIMARY_CLASSES,
   MARKETING_TEXT_SECONDARY_CLASSES,
 } from "@/features/marketing/marketingSurfaceClasses.constant";
@@ -31,7 +32,12 @@ export default function MarketingSectionHeader({
   return (
     <header className={alignment}>
       {eyebrow !== undefined && eyebrow.length > 0 ? (
-        <p className="text-sm font-medium uppercase tracking-wider text-zinc-500">
+        <p
+          className={mergeMarketingClasses(
+            "text-sm font-medium uppercase tracking-wider",
+            MARKETING_TEXT_MUTED_CLASSES,
+          )}
+        >
           {eyebrow}
         </p>
       ) : null}

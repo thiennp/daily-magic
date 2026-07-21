@@ -1,13 +1,29 @@
-import { loadAgentRunTerminalOutput } from "@/features/agent/utils/agentRunTerminalOutputStore";
 import type { AgentLiveTerminalState } from "@/features/agent/utils/agentLiveTerminalState.type";
 import { initialAgentLiveTerminalState } from "@/features/agent/utils/agentLiveTerminalState.type";
+import { loadAgentRunTerminalOutput } from "@/features/agent/utils/agentRunTerminalOutputStore";
+import { mapAgentRunStatusToLiveTerminalStatus } from "@/features/agent/utils/mapAgentRunStatusToLiveTerminalStatus";
+import { readTerminalStore } from "@/features/agent/utils/agentLiveTerminalLocalStoreIO";
+import { restoreAgentLiveTerminalSession } from "@/features/agent/utils/restoreAgentLiveTerminalSession";
+import { isRestorableAgentLiveTerminalStatus } from "@/features/agent/utils/isRestorableAgentLiveTerminalStatus";
 import { getAgentRunLocalCache } from "@/features/reports/agentRunLocalCache";
 import isHarnessWriterAgent from "@/lib/agentWitch/harness/isHarnessWriterAgent";
 
-/** Hydrate the live panel from a specific finished job on this browser. */
+/** Prefer archived live-session chrome, then job-history cache. */
 export const restoreAgentLiveTerminalFromSourceRun = (
   sourceRunId: string,
 ): AgentLiveTerminalState | null => {
+  const store = readTerminalStore();
+  const archived =
+    store.byRunId[sourceRunId] ??
+    (store.current?.activeRunId === sourceRunId ? store.current : null);
+  if (
+    archived !== null &&
+    archived !== undefined &&
+    isRestorableAgentLiveTerminalStatus(archived.status)
+  ) {
+    return restoreAgentLiveTerminalSession(archived);
+  }
+
   const run = getAgentRunLocalCache(sourceRunId);
   if (run === null) {
     return null;
@@ -25,7 +41,7 @@ export const restoreAgentLiveTerminalFromSourceRun = (
     ...initialAgentLiveTerminalState(),
     activeRunId: sourceRunId,
     output,
-    status: "finished",
+    status: mapAgentRunStatusToLiveTerminalStatus(run.status),
     sessionWriterAgent: isHarnessWriterAgent(run.writerAgent)
       ? run.writerAgent
       : null,

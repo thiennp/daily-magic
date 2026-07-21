@@ -2,6 +2,8 @@ import { isAgentLiveTerminalWorking } from "@/features/agent/utils/isAgentLiveTe
 import type { AgentLiveTerminalStatus } from "@/features/agent/utils/agentLiveTerminalState.type";
 import type { WsTestConnectionStatus } from "@/features/agent/types/WsTestConnectionStatus.type";
 
+export type AgentLiveTerminalFeedbackPreferredMode = "queue" | "steer";
+
 export type AgentLiveTerminalFeedbackAction =
   | { readonly kind: "answer-input" }
   | { readonly kind: "queue-while-working" }
@@ -15,6 +17,7 @@ export const resolveAgentLiveTerminalFeedbackAction = (input: {
   readonly connectionStatus: WsTestConnectionStatus;
   readonly hasPendingInput: boolean;
   readonly hasOpenSession: boolean;
+  readonly preferredMode?: AgentLiveTerminalFeedbackPreferredMode;
 }): AgentLiveTerminalFeedbackAction => {
   if (input.message.trim().length === 0) {
     return { kind: "noop" };
@@ -25,6 +28,10 @@ export const resolveAgentLiveTerminalFeedbackAction = (input: {
   }
 
   if (isAgentLiveTerminalWorking(input.status)) {
+    if (input.preferredMode === "steer") {
+      return { kind: "send-follow-up" };
+    }
+
     return { kind: "queue-while-working" };
   }
 

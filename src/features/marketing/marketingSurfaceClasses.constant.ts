@@ -3,24 +3,28 @@ export const MARKETING_LIGHT_SURFACE_CLASS = "marketing-light-surface";
 export const MARKETING_INPUT_BASE_CLASSES = [
   "mt-2 w-full",
   "rounded-lg border border-zinc-200 px-3 py-2.5",
-  "text-sm text-zinc-900",
+  "text-sm text-zinc-900 dark:text-white/90",
   "bg-white shadow-sm placeholder:text-zinc-400",
+  "dark:border-gray-700 dark:bg-gray-800 dark:placeholder:text-white/40",
 ].join(" ");
 
 export const MARKETING_INPUT_FOCUS_CLASSES = [
   "outline-none",
   "transition-all duration-200 ease-out",
   "focus:border-zinc-900 focus:outline-none focus:ring-2 focus:ring-zinc-900",
+  "dark:focus:border-white/50 dark:focus:ring-white/30",
 ].join(" ");
 
 export const MARKETING_SURFACE_BASE_CLASSES =
-  "rounded-2xl bg-white shadow-sm ring-1 ring-zinc-200/50";
+  "rounded-2xl bg-white shadow-sm ring-1 ring-zinc-200/50 dark:bg-white/[0.02] dark:ring-gray-800";
 
-export const MARKETING_TEXT_PRIMARY_CLASSES = "text-zinc-900";
+export const MARKETING_TEXT_PRIMARY_CLASSES =
+  "text-zinc-900 dark:text-white/90";
 
-export const MARKETING_TEXT_SECONDARY_CLASSES = "text-zinc-600";
+export const MARKETING_TEXT_SECONDARY_CLASSES =
+  "text-zinc-600 dark:text-gray-300";
 
-export const MARKETING_TEXT_MUTED_CLASSES = "text-zinc-500";
+export const MARKETING_TEXT_MUTED_CLASSES = "text-zinc-500 dark:text-gray-400";
 
 export const MARKETING_HEADER_LINK_CLASSES =
-  "text-zinc-700 transition hover:text-zinc-900";
+  "text-zinc-700 transition hover:text-zinc-900 dark:text-gray-300 dark:hover:text-white";

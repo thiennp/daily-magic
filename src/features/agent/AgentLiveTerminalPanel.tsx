@@ -1,21 +1,23 @@
 "use client";
 
+import { useState } from "react";
+
 import AgentLiveProgressFeed from "@/features/agent/AgentLiveProgressFeed";
 import AgentLiveTerminalFeedbackChat from "@/features/agent/AgentLiveTerminalFeedbackChat";
+import AgentLiveTerminalMirrorToggle from "@/features/agent/AgentLiveTerminalMirrorToggle";
 import AgentLiveTerminalNextActions from "@/features/agent/AgentLiveTerminalNextActions";
-import { useAgentLiveProgressStallState } from "@/features/agent/hooks/useAgentLiveProgressStallState";
-import { useAgentRunHeartbeatStallReset } from "@/features/agent/hooks/useAgentRunHeartbeatStallReset";
-import { useAgentWitchDashboard } from "@/features/agent-witch/dashboard/AgentWitchDashboardContext";
+import { useAgentLiveTerminalPanelProgress } from "@/features/agent/hooks/useAgentLiveTerminalPanelProgress";
 import type { AgentMacShellPanelProps } from "@/features/agent/types/AgentMacShellPanelProps.type";
 import type { AgentLiveTerminalStatus } from "@/features/agent/utils/agentLiveTerminalState.type";
-import { buildAgentLiveProgressSteps } from "@/features/agent/utils/buildAgentLiveProgressSteps";
-import { renderAgentLiveTerminalBody } from "@/features/agent/utils/renderAgentLiveTerminalBody";
+import { buildAgentLiveTerminalPanelMirror } from "@/features/agent/utils/buildAgentLiveTerminalPanelMirror";
+import type { AgentLiveTerminalFeedbackPreferredMode } from "@/features/agent/utils/resolveAgentLiveTerminalFeedbackAction";
 import { parseLatestAgentLiveTerminalNextActions } from "@/features/agent/utils/splitAgentLiveTerminalOutput";
 
 interface AgentLiveTerminalPanelProps extends AgentMacShellPanelProps {
   readonly output: string;
   readonly status: AgentLiveTerminalStatus;
   readonly activeRunId?: string | null;
+  readonly sessionDeviceId?: string | null;
   readonly pendingCommandLine?: string | null;
   readonly feedbackVisible: boolean;
   readonly feedbackPendingQuestion: string | null;
@@ -25,7 +27,10 @@ interface AgentLiveTerminalPanelProps extends AgentMacShellPanelProps {
   readonly isFeedbackSubmitting: boolean;
   readonly feedbackAutoFocus?: boolean;
   readonly isSteppedComposer?: boolean;
-  readonly onSubmitFeedback: (message: string) => void;
+  readonly onSubmitFeedback: (
+    message: string,
+    preferredMode?: AgentLiveTerminalFeedbackPreferredMode,
+  ) => void;
   readonly onFinishSession: () => void;
 }
 
@@ -34,64 +39,45 @@ export default function AgentLiveTerminalPanel(
 ) {
   const pendingCommandLine = props.pendingCommandLine ?? null;
   const isSteppedComposer = props.isSteppedComposer === true;
+  const [isTerminalOpen, setIsTerminalOpen] = useState(false);
   const nextActions = parseLatestAgentLiveTerminalNextActions(props.output);
   const showNextActions =
     nextActions.length > 0 && props.feedbackPendingQuestion === null;
-  const isWorking =
-    props.status === "starting" ||
-    props.status === "streaming" ||
-    props.status === "waiting_approval";
-  const dashboard = useAgentWitchDashboard();
-  const connectionStatus = dashboard?.connectionStatus ?? "disconnected";
-  const { stallState, msSinceLastActivity, noteRunHeartbeat } =
-    useAgentLiveProgressStallState({
-      isWorking,
-      activityFingerprint: [
-        props.output,
-        props.feedbackPendingPartialOutput ?? "",
-        props.status,
-        pendingCommandLine ?? "",
-      ].join("\u0000"),
-    });
-  const activeRunId = props.activeRunId ?? null;
-
-  useAgentRunHeartbeatStallReset({
-    activeRunId,
-    isWorking,
-    noteRunHeartbeat,
-  });
-
-  const progress = buildAgentLiveProgressSteps({
-    status: props.status,
+  const panelProgress = useAgentLiveTerminalPanelProgress({
     output: props.output,
+    status: props.status,
+    activeRunId: props.activeRunId,
     pendingCommandLine,
-    pendingQuestion: props.feedbackPendingQuestion,
-    partialOutput: props.feedbackPendingPartialOutput ?? null,
-    stallState,
+    feedbackPendingQuestion: props.feedbackPendingQuestion,
+    feedbackPendingPartialOutput: props.feedbackPendingPartialOutput,
+  });
+  const terminalBody = buildAgentLiveTerminalPanelMirror({
+    show: !isSteppedComposer || isTerminalOpen,
+    output: props.output,
+    status: props.status,
+    pendingCommandLine,
+    feedbackPendingQuestion: props.feedbackPendingQuestion,
+    isSteppedComposer,
+    macShell: props,
   });
 
   return (
     <section>
       {isSteppedComposer ? (
         <AgentLiveProgressFeed
-          steps={progress.steps}
-          replyPreview={progress.replyPreview}
-          isWorking={isWorking}
-          stallState={stallState}
-          connectionStatus={connectionStatus}
-          msSinceLastActivity={msSinceLastActivity}
+          steps={panelProgress.progress.steps}
+          replyPreview={panelProgress.progress.replyPreview}
+          isWorking={panelProgress.isWorking}
+          stallState={panelProgress.stallState}
+          connectionStatus={panelProgress.connectionStatus}
+          msSinceLastActivity={panelProgress.msSinceLastActivity}
+          estimateProgress={panelProgress.estimateProgress}
+          sessionDeviceId={props.sessionDeviceId}
           nextActions={showNextActions ? nextActions : []}
           nextActionsDisabled={props.isFeedbackSubmitting}
           onSelectNextAction={props.onSubmitFeedback}
         />
       ) : null}
-      {renderAgentLiveTerminalBody({
-        output: props.output,
-        status: props.status,
-        pendingCommandLine,
-        isSteppedComposer,
-        macShell: props,
-      })}
       {!isSteppedComposer && showNextActions ? (
         <AgentLiveTerminalNextActions
           actions={nextActions}
@@ -99,17 +85,28 @@ export default function AgentLiveTerminalPanel(
           onSelect={props.onSubmitFeedback}
         />
       ) : null}
+      {!isSteppedComposer ? terminalBody : null}
       <AgentLiveTerminalFeedbackChat
         visible={props.feedbackVisible}
         pendingQuestion={props.feedbackPendingQuestion}
         queuedCount={props.feedbackQueuedCount}
         queueNotice={props.feedbackQueueNotice}
         isSubmitting={props.isFeedbackSubmitting}
+        isWorking={panelProgress.isWorking}
         autoFocus={props.feedbackAutoFocus === true}
         isSteppedComposer={isSteppedComposer}
         onSubmit={props.onSubmitFeedback}
         onFinishSession={props.onFinishSession}
       />
+      {isSteppedComposer ? (
+        <>
+          <AgentLiveTerminalMirrorToggle
+            isOpen={isTerminalOpen}
+            onToggle={() => setIsTerminalOpen((open) => !open)}
+          />
+          {terminalBody}
+        </>
+      ) : null}
     </section>
   );
 }

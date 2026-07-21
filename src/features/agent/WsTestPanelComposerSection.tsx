@@ -66,6 +66,7 @@ export default function WsTestPanelComposerSection({
       liveTerminalStatus={liveTerminalStatus}
       liveTerminalPendingCommandLine={liveTerminalPendingCommandLine}
       liveTerminalRunId={liveTerminalRunId}
+      sessionDeviceId={sessionTargets.activeDeviceId}
       feedbackVisible={feedbackVisible}
       feedbackPendingQuestion={feedbackPendingQuestion}
       feedbackPendingPartialOutput={feedbackPendingPartialOutput}

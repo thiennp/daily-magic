@@ -5,6 +5,7 @@ import { useCallback, useState } from "react";
 import MarketingCard from "@/features/marketing/MarketingCard";
 import { MARKETING_CARD_INTERACTIVE_CLASSES } from "@/features/marketing/marketingInteractiveClasses.constant";
 import {
+  MARKETING_TEXT_MUTED_CLASSES,
   MARKETING_TEXT_PRIMARY_CLASSES,
   MARKETING_TEXT_SECONDARY_CLASSES,
 } from "@/features/marketing/marketingSurfaceClasses.constant";
@@ -46,7 +47,12 @@ export default function HomeMarketingPopularPresetsGrid({
                   MARKETING_CARD_INTERACTIVE_CLASSES,
                 )}
               >
-                <p className="text-xs font-medium uppercase tracking-wider text-zinc-500">
+                <p
+                  className={mergeMarketingClasses(
+                    "text-xs font-medium uppercase tracking-wider",
+                    MARKETING_TEXT_MUTED_CLASSES,
+                  )}
+                >
                   {preset.category}
                 </p>
                 <h3

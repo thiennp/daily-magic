@@ -13,6 +13,9 @@ export const useSendTaskModalController = (): {
   readonly openSendTaskModal: ReturnType<
     typeof useSendTaskModalActions
   >["openSendTaskModal"];
+  readonly expandRunningSendTask: ReturnType<
+    typeof useSendTaskModalActions
+  >["expandRunningSendTask"];
   readonly closeSendTaskModal: ReturnType<
     typeof useSendTaskModalActions
   >["closeSendTaskModal"];

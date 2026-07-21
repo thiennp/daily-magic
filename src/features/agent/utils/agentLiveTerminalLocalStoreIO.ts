@@ -1,78 +1,52 @@
-import type { AgentLiveTerminalState } from "@/features/agent/utils/agentLiveTerminalState.type";
-import isHarnessWriterAgent from "@/lib/agentWitch/harness/isHarnessWriterAgent";
+import type { PersistedTerminalSession } from "@/features/agent/utils/parsePersistedTerminalSession";
+import {
+  isTerminalStoreRecord,
+  parsePersistedTerminalSession,
+  parsePersistedTerminalSessionsByRunId,
+} from "@/features/agent/utils/parsePersistedTerminalSession";
 
 export const AGENT_LIVE_TERMINAL_STORE_KEY =
   "daily-magic.agent-live-terminal.v1";
 
-export interface PersistedTerminalSession {
-  readonly activeRunId: string | null;
-  readonly output: string;
-  readonly status: AgentLiveTerminalState["status"];
-  readonly pendingCommandLine: string | null;
-  readonly sessionWriterAgent: AgentLiveTerminalState["sessionWriterAgent"];
-  readonly sessionDeviceId: string | null;
-  readonly sessionWriterSessionId: string | null;
-  readonly updatedAt: string;
-}
+export type { PersistedTerminalSession };
 
 export interface TerminalStore {
   readonly current: PersistedTerminalSession | null;
+  readonly byRunId: Readonly<Record<string, PersistedTerminalSession>>;
 }
-
-const isRecord = (value: unknown): value is Record<string, unknown> =>
-  typeof value === "object" && value !== null && !Array.isArray(value);
 
 export const readTerminalStore = (): TerminalStore => {
   if (typeof window === "undefined") {
-    return { current: null };
+    return { current: null, byRunId: {} };
   }
 
   const raw = window.localStorage.getItem(AGENT_LIVE_TERMINAL_STORE_KEY);
   if (raw === null) {
-    return { current: null };
+    return { current: null, byRunId: {} };
   }
 
   try {
     const parsed: unknown = JSON.parse(raw);
-    if (!isRecord(parsed) || !isRecord(parsed.current)) {
-      return { current: null };
+    if (!isTerminalStoreRecord(parsed)) {
+      return { current: null, byRunId: {} };
     }
 
-    const current = parsed.current;
-    if (
-      typeof current.output !== "string" ||
-      typeof current.status !== "string" ||
-      typeof current.updatedAt !== "string"
-    ) {
-      return { current: null };
-    }
+    const current = isTerminalStoreRecord(parsed.current)
+      ? parsePersistedTerminalSession(parsed.current)
+      : null;
+    const byRunId = parsePersistedTerminalSessionsByRunId(parsed.byRunId);
 
     return {
-      current: {
-        activeRunId:
-          typeof current.activeRunId === "string" ? current.activeRunId : null,
-        output: current.output,
-        status: current.status as AgentLiveTerminalState["status"],
-        pendingCommandLine:
-          typeof current.pendingCommandLine === "string"
-            ? current.pendingCommandLine
-            : null,
-        sessionWriterAgent: isHarnessWriterAgent(current.sessionWriterAgent)
-          ? current.sessionWriterAgent
-          : null,
-        sessionDeviceId:
-          typeof current.sessionDeviceId === "string"
-            ? current.sessionDeviceId
-            : null,
-        sessionWriterSessionId:
-          typeof current.sessionWriterSessionId === "string"
-            ? current.sessionWriterSessionId
-            : null,
-        updatedAt: current.updatedAt,
-      },
+      current,
+      byRunId:
+        current?.activeRunId !== null &&
+        current?.activeRunId !== undefined &&
+        byRunId[current.activeRunId] === undefined
+          ? { ...byRunId, [current.activeRunId]: current }
+          : byRunId,
     };
   } catch {
-    return { current: null };
+    return { current: null, byRunId: {} };
   }
 };
 

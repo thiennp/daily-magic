@@ -8,7 +8,10 @@ import type { useAgentWitchSocket } from "@/features/agent/hooks/useAgentWitchSo
 import type { useWsTestTaskComposer } from "@/features/agent/hooks/useWsTestTaskComposer";
 import { applyAgentLiveTerminalFeedbackAction } from "@/features/agent/utils/applyAgentLiveTerminalFeedbackAction";
 import { buildWsTestSendOptions } from "@/features/agent/utils/buildWsTestSendOptions";
-import { resolveAgentLiveTerminalFeedbackAction } from "@/features/agent/utils/resolveAgentLiveTerminalFeedbackAction";
+import {
+  resolveAgentLiveTerminalFeedbackAction,
+  type AgentLiveTerminalFeedbackPreferredMode,
+} from "@/features/agent/utils/resolveAgentLiveTerminalFeedbackAction";
 import type { WsTestConnectionStatus } from "@/features/agent/types/WsTestConnectionStatus.type";
 import type { AgentLiveTerminalStatus } from "@/features/agent/utils/agentLiveTerminalState.type";
 import type { AgentRunInputRequest } from "@/features/dispatch/utils/agentRunInputSocket";
@@ -35,7 +38,10 @@ export const useAgentLiveTerminalFeedback = (input: {
   readonly queuedCount: number;
   readonly queueNotice: string | null;
   readonly isSubmitting: boolean;
-  readonly submitFeedback: (message: string) => void;
+  readonly submitFeedback: (
+    message: string,
+    preferredMode?: AgentLiveTerminalFeedbackPreferredMode,
+  ) => void;
 } => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const hasOpenSession = input.sessionWriterAgent !== null;
@@ -59,7 +65,10 @@ export const useAgentLiveTerminalFeedback = (input: {
   });
 
   const submitFeedback = useCallback(
-    (message: string) => {
+    (
+      message: string,
+      preferredMode?: AgentLiveTerminalFeedbackPreferredMode,
+    ) => {
       applyAgentLiveTerminalFeedbackAction({
         action: resolveAgentLiveTerminalFeedbackAction({
           message,
@@ -67,6 +76,7 @@ export const useAgentLiveTerminalFeedback = (input: {
           connectionStatus: input.connectionStatus,
           hasPendingInput: input.pendingInput !== null,
           hasOpenSession,
+          preferredMode,
         }),
         message,
         composer: input.composer,

@@ -2,10 +2,14 @@
 
 import AgentLiveProgressActivityBar from "@/features/agent/AgentLiveProgressActivityBar";
 import AgentLiveProgressActivityDot from "@/features/agent/AgentLiveProgressActivityDot";
+import AgentLiveProgressEstimateBar from "@/features/agent/AgentLiveProgressEstimateBar";
+import AgentLiveProgressStuckBanner from "@/features/agent/AgentLiveProgressStuckBanner";
+import { useIsAgentLiveSessionThisMac } from "@/features/agent/hooks/useIsAgentLiveSessionThisMac";
 import type { WsTestConnectionStatus } from "@/features/agent/types/WsTestConnectionStatus.type";
 import { formatAgentLiveProgressLastMacUpdate } from "@/features/agent/utils/formatAgentLiveProgressLastMacUpdate";
 import { resolveAgentLiveProgressConnectionHint } from "@/features/agent/utils/resolveAgentLiveProgressConnectionHint";
 import type { AgentLiveProgressStallState } from "@/features/agent/utils/resolveAgentLiveProgressStallState";
+import type { AgentLiveWorkingEstimateProgress } from "@/features/agent/utils/resolveAgentLiveWorkingEstimateProgress";
 import { ConnectionStatusBadge } from "@/features/shell/ConnectionStatusBadge";
 
 interface AgentLiveProgressFeedStatusProps {
@@ -14,6 +18,8 @@ interface AgentLiveProgressFeedStatusProps {
   readonly connectionStatus: WsTestConnectionStatus;
   readonly msSinceLastActivity: number | null;
   readonly stallState: AgentLiveProgressStallState;
+  readonly estimateProgress: AgentLiveWorkingEstimateProgress | null;
+  readonly sessionDeviceId?: string | null;
 }
 
 export default function AgentLiveProgressFeedStatus({
@@ -22,7 +28,10 @@ export default function AgentLiveProgressFeedStatus({
   connectionStatus,
   msSinceLastActivity,
   stallState,
+  estimateProgress,
+  sessionDeviceId = null,
 }: AgentLiveProgressFeedStatusProps) {
+  const isThisMac = useIsAgentLiveSessionThisMac(sessionDeviceId);
   const connectionHint = resolveAgentLiveProgressConnectionHint({
     connectionStatus,
     lastMacUpdateLabel:
@@ -32,6 +41,8 @@ export default function AgentLiveProgressFeedStatus({
     connectionStatus === "connected"
       ? "text-gray-600 dark:text-gray-300"
       : "text-amber-800 dark:text-amber-200";
+  const showEstimateProgress =
+    isWorking && estimateProgress !== null && stallState !== "stuck";
 
   return (
     <>
@@ -55,17 +66,27 @@ export default function AgentLiveProgressFeedStatus({
           {connectionHint}
         </p>
       ) : null}
-      {isWorking ? <AgentLiveProgressActivityBar /> : null}
-      {stallState === "stuck" ? (
+      {isWorking && estimateProgress === null && stallState !== "stuck" ? (
         <p
-          className="mt-3 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-900 dark:border-amber-900/60 dark:bg-amber-950/40 dark:text-amber-100"
+          className="mt-3 text-sm text-gray-600 dark:text-gray-300"
           role="status"
         >
-          Your Mac has not sent updates for a while. Open Home to wake Agent
-          Witch or try sending the task again.
+          Waiting for your agent’s estimated working time…
         </p>
       ) : null}
-      {stallState === "warning" ? (
+      {showEstimateProgress && estimateProgress !== null ? (
+        <AgentLiveProgressEstimateBar
+          estimateSeconds={estimateProgress.estimateSeconds}
+          percent={estimateProgress.percent}
+        />
+      ) : null}
+      {isWorking && !showEstimateProgress && stallState !== "stuck" ? (
+        <AgentLiveProgressActivityBar />
+      ) : null}
+      {stallState === "stuck" ? (
+        <AgentLiveProgressStuckBanner isThisMac={isThisMac} />
+      ) : null}
+      {stallState === "warning" && !showEstimateProgress ? (
         <p
           className="mt-3 text-sm text-gray-600 dark:text-gray-300"
           role="status"

@@ -2,6 +2,8 @@ import { describe, expect, it } from "vitest";
 
 import { AGENT_LIVE_BASH_PROMPT } from "@/features/agent/utils/agentLiveTerminalPrompt.constant";
 import {
+  AGENT_LIVE_TERMINAL_PLEASE_ANSWER_LINE,
+  buildAgentLiveTerminalActivityLine,
   buildAgentLiveTerminalDisplay,
   buildAgentLiveTerminalLoadingLine,
   shouldShowAgentLiveTerminalLoadingIndicator,
@@ -32,6 +34,21 @@ describe("buildAgentLiveTerminalDisplay", () => {
     expect(shouldShowAgentLiveTerminalLoadingIndicator("finished")).toBe(false);
     expect(buildAgentLiveTerminalLoadingLine(2)).toBe("..");
     expect(buildAgentLiveTerminalLoadingLine(4)).toBe("...");
+  });
+
+  it("AGENT-049: shows please answer instead of dots while awaiting input", () => {
+    expect(
+      buildAgentLiveTerminalActivityLine({
+        awaitingUserAnswer: true,
+        loadingDotCount: 2,
+      }),
+    ).toBe(AGENT_LIVE_TERMINAL_PLEASE_ANSWER_LINE);
+    expect(
+      buildAgentLiveTerminalActivityLine({
+        awaitingUserAnswer: false,
+        loadingDotCount: 2,
+      }),
+    ).toBe("..");
   });
 
   it("shows the pending command while a writer session is starting", () => {

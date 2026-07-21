@@ -1,8 +1,9 @@
 "use client";
 
-import Button from "@/components/ui/button/Button";
+import AgentLiveTerminalFeedbackActionButtons from "@/features/agent/AgentLiveTerminalFeedbackActionButtons";
 import AgentLiveTerminalFeedbackMessageField from "@/features/agent/AgentLiveTerminalFeedbackMessageField";
 import { useAgentLiveTerminalFeedbackDeferredSubmit } from "@/features/agent/hooks/useAgentLiveTerminalFeedbackDeferredSubmit";
+import type { AgentLiveTerminalFeedbackPreferredMode } from "@/features/agent/utils/resolveAgentLiveTerminalFeedbackAction";
 
 interface AgentLiveTerminalFeedbackChatProps {
   readonly visible: boolean;
@@ -10,9 +11,13 @@ interface AgentLiveTerminalFeedbackChatProps {
   readonly queuedCount: number;
   readonly queueNotice: string | null;
   readonly isSubmitting: boolean;
+  readonly isWorking?: boolean;
   readonly autoFocus?: boolean;
   readonly isSteppedComposer?: boolean;
-  readonly onSubmit: (message: string) => void;
+  readonly onSubmit: (
+    message: string,
+    preferredMode?: AgentLiveTerminalFeedbackPreferredMode,
+  ) => void;
   readonly onFinishSession: () => void;
 }
 
@@ -22,6 +27,7 @@ export default function AgentLiveTerminalFeedbackChat({
   queuedCount,
   queueNotice,
   isSubmitting,
+  isWorking = false,
   autoFocus = false,
   isSteppedComposer = false,
   onSubmit,
@@ -69,22 +75,19 @@ export default function AgentLiveTerminalFeedbackChat({
           {queueNotice}
         </p>
       ) : null}
-      {!isSimplifiedFollowUp ? (
-        <div className="mt-3 flex flex-wrap items-center justify-end gap-2">
-          <Button size="sm" variant="outline" onClick={onFinishSession}>
-            Finish session
-          </Button>
-          <Button disabled={isSubmitting} onClick={deferredSubmit.handleSubmit}>
-            {isAnswerMode ? "Send answer" : "Send feedback"}
-          </Button>
-        </div>
-      ) : (
-        <div className="mt-3 flex justify-end">
-          <Button disabled={isSubmitting} onClick={deferredSubmit.handleSubmit}>
-            {isAnswerMode ? "Send answer" : "Send message"}
-          </Button>
-        </div>
-      )}
+      {isSimplifiedFollowUp && queuedCount > 0 ? (
+        <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
+          {queuedCount} queued — will send when ready.
+        </p>
+      ) : null}
+      <AgentLiveTerminalFeedbackActionButtons
+        isAnswerMode={isAnswerMode}
+        isWorking={isWorking && !isAnswerMode}
+        isSubmitting={isSubmitting}
+        showFinishSession={!isSimplifiedFollowUp}
+        onFinishSession={onFinishSession}
+        onSubmit={deferredSubmit.handleSubmit}
+      />
     </>
   );
   return isSteppedComposer ? (

@@ -12,6 +12,7 @@ interface SendTaskModalContextValue {
     readonly prompt?: string;
     readonly deviceId?: string;
   }) => void;
+  readonly expandRunningSendTask: (runId: string) => void;
   readonly closeSendTaskModal: () => void;
 }
 
@@ -22,6 +23,7 @@ const SendTaskModalContext = createContext<SendTaskModalContextValue | null>(
 const SEND_TASK_MODAL_SUSPENSE_FALLBACK: SendTaskModalContextValue = {
   isOpen: false,
   openSendTaskModal: () => undefined,
+  expandRunningSendTask: () => undefined,
   closeSendTaskModal: () => undefined,
 };
 
@@ -37,6 +39,7 @@ function SendTaskModalController({
       value={{
         isOpen: controller.isOpen,
         openSendTaskModal: controller.openSendTaskModal,
+        expandRunningSendTask: controller.expandRunningSendTask,
         closeSendTaskModal: controller.closeSendTaskModal,
       }}
     >

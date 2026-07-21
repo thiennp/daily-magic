@@ -406,4 +406,16 @@ Document every production bug or UX regression here. Each entry must link to a t
 
 ---
 
-Use the next ID (`HOME-034`, …). Include symptom, root cause, fix paths, and test file.
+## HOME-034 — No Home list of in-flight Send-a-task runs
+
+**Symptom:** Users could dock Send-a-task and start another job, but Home did not show running processes or let them expand a chosen run.
+
+**Root cause:** Live terminal localStorage was a single slot; Home only linked to full job history.
+
+**Fix:** Archive live sessions by `runId` when starting fresh; Home **Running on your Mac** lists `RUNNING` / `PENDING_APPROVAL` from the agent-runs cache; click expands Send-a-task with `sourceRunId` + `resumeLive`.
+
+**Regression tests:** `listRunningAgentRunsLocalCache.test.ts`, `formatHomeRunningJobTitle.test.ts`, `restoreAgentLiveTerminalFromSourceRun.test.ts` (AGENT-053 / HOME-034).
+
+---
+
+Use the next ID (`HOME-035`, …). Include symptom, root cause, fix paths, and test file.
