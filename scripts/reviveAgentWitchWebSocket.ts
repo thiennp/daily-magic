@@ -1,3 +1,4 @@
+import { isActiveMacOsConsoleUser } from "./isActiveMacOsConsoleUser";
 import { attemptAgentWitchWatchdogReinstall } from "./attemptAgentWitchWatchdogReinstall";
 import { AGENT_WITCH_CONNECTION_STALE_MS } from "./agentWitchConnectionHealth.constants";
 import {
@@ -188,6 +189,10 @@ export const reviveAgentWitchWebSocket = async (input?: {
   readonly staleAfterMs?: number;
   readonly skipLog?: boolean;
 }): Promise<AgentWitchReviveResult> => {
+  if (!isActiveMacOsConsoleUser()) {
+    return { ok: true, targets: [] };
+  }
+
   const staleAfterMs = input?.staleAfterMs ?? AGENT_WITCH_CONNECTION_STALE_MS;
   const installDir = resolveAgentWitchInstallDir();
   const targets = listAgentWitchLaunchTargets(installDir);

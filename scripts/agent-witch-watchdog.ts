@@ -1,4 +1,7 @@
+import { exitUnlessActiveMacOsConsoleUser } from "./guardMacOsConsoleUser";
 import { reviveAgentWitchWebSocket } from "./reviveAgentWitchWebSocket";
+
+exitUnlessActiveMacOsConsoleUser("agent-witch-watchdog");
 
 const formatReviveSummary = (
   result: Awaited<ReturnType<typeof reviveAgentWitchWebSocket>>,

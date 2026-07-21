@@ -55,6 +55,7 @@ fi
 
 cd "\${INSTALL_DIR}"
 export AGENT_WITCH_HOME="\${INSTALL_DIR}"
+agent_witch_skip_unless_active_console_user
 exec "\${NODE_BIN}" "\${TSX_CLI}" "\${WATCHDOG_CLI}"
 WATCHDOG_EOF
 chmod +x "\${INSTALL_DIR}/watchdog.sh"

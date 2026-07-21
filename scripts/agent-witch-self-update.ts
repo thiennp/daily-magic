@@ -1,4 +1,7 @@
+import { exitUnlessActiveMacOsConsoleUser } from "./guardMacOsConsoleUser";
 import { runAgentWitchSelfUpdate } from "./agentWitchSelfUpdate";
+
+exitUnlessActiveMacOsConsoleUser("agent-witch-self-update");
 
 const main = async (): Promise<void> => {
   const result = await runAgentWitchSelfUpdate();

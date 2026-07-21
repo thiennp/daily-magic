@@ -19,6 +19,7 @@ fi
 
 cd "\${INSTALL_DIR}"
 export AGENT_WITCH_HOME="\${INSTALL_DIR}"
+agent_witch_skip_unless_active_console_user
 exec "\${NODE_BIN}" "\${TSX_CLI}" "\${SCHEDULER_CLI}"
 AUTOMATION_SCHEDULER_EOF
 chmod +x "\${INSTALL_DIR}/automation-scheduler.sh"

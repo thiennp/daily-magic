@@ -15,6 +15,10 @@ import os from "node:os";
 import WebSocket from "ws";
 
 import {
+  exitUnlessActiveMacOsConsoleUser,
+  startActiveMacOsConsoleUserGuard,
+} from "./guardMacOsConsoleUser";
+import {
   resolveAgentWitchLocalLayout,
   type AgentWitchLocalLayout,
 } from "./resolveAgentWitchLocalLayout";
@@ -1340,6 +1344,8 @@ const waitForConfig = async (): Promise<AgentWitchConfig> => {
 };
 
 const main = async (): Promise<void> => {
+  exitUnlessActiveMacOsConsoleUser("agent-witch");
+
   const config = await waitForConfig();
   const client = createAgentWitchClient(config);
 
@@ -1355,10 +1361,18 @@ const main = async (): Promise<void> => {
   client.connect();
 
   const shutdown = (): void => {
+    stopConsoleUserGuard();
     console.log("[agent-witch] Shutting down.");
     client.stop();
     process.exit(0);
   };
+
+  const stopConsoleUserGuard = startActiveMacOsConsoleUserGuard(() => {
+    console.log(
+      "[agent-witch] Active macOS console user changed — shutting down.",
+    );
+    shutdown();
+  });
 
   process.on("SIGINT", shutdown);
   process.on("SIGTERM", shutdown);

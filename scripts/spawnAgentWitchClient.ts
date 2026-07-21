@@ -2,6 +2,7 @@ import { spawn } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 
+import { isActiveMacOsConsoleUser } from "./isActiveMacOsConsoleUser";
 import {
   readActiveProfileEmailFromFile,
   resolveAgentWitchInstallDir,
@@ -28,6 +29,14 @@ export const spawnAgentWitchClient = (
     return {
       ok: false,
       errorMessage: "Agent Witch install not found.",
+    };
+  }
+
+  if (!isActiveMacOsConsoleUser()) {
+    return {
+      ok: false,
+      errorMessage:
+        "Skipping spawn — this macOS account is not the active console user.",
     };
   }
 

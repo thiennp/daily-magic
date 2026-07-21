@@ -1,6 +1,9 @@
+import { exitUnlessActiveMacOsConsoleUser } from "./guardMacOsConsoleUser";
 import { readLocalAutomationStore } from "./agentWitchLocalAutomationStore";
 import { runLocalScheduledAutomationById } from "./agentWitchLocalAutomationRunner";
 import { readAgentWitchRunConfig } from "./readAgentWitchRunConfig";
+
+exitUnlessActiveMacOsConsoleUser("agent-witch-automation-scheduler");
 
 const tickScheduledAutomations = async (): Promise<void> => {
   const config = readAgentWitchRunConfig();
