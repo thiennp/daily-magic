@@ -1,5 +1,17 @@
 # Agent Witch bridge — known issues
 
+## AGENT-044 — Mac client crash-looped after bundle 43 (missing uninstall helper)
+
+**Symptom:** `~/.agent-witch/agent-witch.error.log` repeated `ERR_MODULE_NOT_FOUND` for `agentWitchUninstallLocal` when `guardMacOsConsoleUser` booted LaunchAgents on startup.
+
+**Cause:** Bundle **43** added `bootoutAgentWitchLaunchAgentsForCurrentUser.ts` to `AGENT_WITCH_CLIENT_INSTALL_SCRIPT_NAMES` but omitted its dependency `agentWitchUninstallLocal.ts`, so self-updates downloaded a broken client.
+
+**Fix:** Add `agentWitchUninstallLocal.ts` to the client install allowlist. Install bundle **44**.
+
+**Regression tests:** `agentWitchInstallSelfRepair.test.ts` (AGENT-044).
+
+---
+
 ## AGENT-043 — Multiple LaunchAgents hurt performance on shared Macs
 
 **Symptom:** Each install registered wake, watchdog, scheduler, and updater LaunchAgents in addition to the main client, spawning multiple Node processes (and respawn loops for background macOS users).
