@@ -41,6 +41,8 @@ export default function MacDevicePicker({
     onDeleteLocalScript,
     isUpdateLocalModalOpen,
     updateLocalCommand,
+    isUpdateLocalCommandLoading,
+    updateLocalCommandError,
     closeUpdateLocalModal,
   } = useThisMacLocalInstallActions();
 
@@ -103,6 +105,8 @@ export default function MacDevicePicker({
       <UpdateLocalMacModal
         isOpen={isUpdateLocalModalOpen}
         updateCommand={updateLocalCommand}
+        isUpdateCommandLoading={isUpdateLocalCommandLoading}
+        updateCommandError={updateLocalCommandError}
         onClose={closeUpdateLocalModal}
       />
     </div>
