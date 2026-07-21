@@ -1,4 +1,5 @@
 import { MACOS_CONSOLE_USER_GUARD_INTERVAL_MS } from "./macOsConsoleUser.constants";
+import { bootoutAgentWitchLaunchAgentsForCurrentUser } from "./bootoutAgentWitchLaunchAgentsForCurrentUser";
 import { isActiveMacOsConsoleUser } from "./isActiveMacOsConsoleUser";
 
 export const exitUnlessActiveMacOsConsoleUser = (scriptLabel: string): void => {
@@ -6,6 +7,7 @@ export const exitUnlessActiveMacOsConsoleUser = (scriptLabel: string): void => {
     return;
   }
 
+  bootoutAgentWitchLaunchAgentsForCurrentUser();
   process.stdout.write(
     `[${scriptLabel}] Skipping — this macOS account is not the active console user.\n`,
   );

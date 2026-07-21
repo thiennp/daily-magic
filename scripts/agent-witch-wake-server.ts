@@ -24,6 +24,7 @@ import {
   exitUnlessActiveMacOsConsoleUser,
   startActiveMacOsConsoleUserGuard,
 } from "./guardMacOsConsoleUser";
+import { isAgentWitchScriptEntryPoint } from "./isAgentWitchScriptEntryPoint";
 
 const readJsonBody = async (
   request: http.IncomingMessage,
@@ -385,25 +386,27 @@ export const startAgentWitchWakeServer = (): http.Server => {
   return server;
 };
 
-exitUnlessActiveMacOsConsoleUser("agent-witch-wake-server");
+if (isAgentWitchScriptEntryPoint(import.meta.url)) {
+  exitUnlessActiveMacOsConsoleUser("agent-witch-wake-server");
 
-const server = startAgentWitchWakeServer();
+  const server = startAgentWitchWakeServer();
 
-const stopConsoleUserGuard = startActiveMacOsConsoleUserGuard(() => {
-  process.stdout.write(
-    "[agent-witch-wake-server] Active macOS console user changed — shutting down.\n",
-  );
-  server.close(() => {
-    process.exit(0);
+  const stopConsoleUserGuard = startActiveMacOsConsoleUserGuard(() => {
+    process.stdout.write(
+      "[agent-witch-wake-server] Active macOS console user changed — shutting down.\n",
+    );
+    server.close(() => {
+      process.exit(0);
+    });
   });
-});
 
-const shutdown = (): void => {
-  stopConsoleUserGuard();
-  server.close(() => {
-    process.exit(0);
-  });
-};
+  const shutdown = (): void => {
+    stopConsoleUserGuard();
+    server.close(() => {
+      process.exit(0);
+    });
+  };
 
-process.on("SIGINT", shutdown);
-process.on("SIGTERM", shutdown);
+  process.on("SIGINT", shutdown);
+  process.on("SIGTERM", shutdown);
+}

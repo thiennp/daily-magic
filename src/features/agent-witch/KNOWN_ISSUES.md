@@ -1,5 +1,15 @@
 # Agent Witch bridge — known issues
 
+## AGENT-043 — Multiple LaunchAgents hurt performance on shared Macs
+
+**Symptom:** Each install registered wake, watchdog, scheduler, and updater LaunchAgents in addition to the main client, spawning multiple Node processes (and respawn loops for background macOS users).
+
+**Fix:** Run wake server, automation scheduler, and watchdog inside the single `agent-witch.ts` process. Retire auxiliary LaunchAgents on install/self-update/start. Claim a machine lease so only one macOS user's agent runs. Install bundle **43**.
+
+**Regression tests:** `claimAgentWitchMachineLease.test.ts`, `bootoutAgentWitchAuxiliaryLaunchAgents.test.ts` (AGENT-043).
+
+---
+
 ## AGENT-042 — Background macOS users ran Agent Witch automations after fast user switching
 
 **Symptom:** With two macOS accounts on one Mac, automations/watchdog/revive from the background user could still run after fast user switching.

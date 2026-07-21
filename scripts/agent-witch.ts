@@ -18,6 +18,13 @@ import {
   exitUnlessActiveMacOsConsoleUser,
   startActiveMacOsConsoleUserGuard,
 } from "./guardMacOsConsoleUser";
+import { bootoutAgentWitchAuxiliaryLaunchAgents } from "./bootoutAgentWitchAuxiliaryLaunchAgents";
+import { bootoutAgentWitchLaunchAgentsForCurrentUser } from "./bootoutAgentWitchLaunchAgentsForCurrentUser";
+import {
+  claimAgentWitchMachineLease,
+  releaseAgentWitchMachineLease,
+} from "./claimAgentWitchMachineLease";
+import { startAgentWitchInProcessServices } from "./startAgentWitchInProcessServices";
 import {
   resolveAgentWitchLocalLayout,
   type AgentWitchLocalLayout,
@@ -1346,8 +1353,19 @@ const waitForConfig = async (): Promise<AgentWitchConfig> => {
 const main = async (): Promise<void> => {
   exitUnlessActiveMacOsConsoleUser("agent-witch");
 
+  const machineLease = claimAgentWitchMachineLease();
+  if (!machineLease.ok) {
+    process.stdout.write(
+      "[agent-witch] Another macOS account already owns the machine lease — exiting.\n",
+    );
+    process.exit(0);
+  }
+
+  bootoutAgentWitchAuxiliaryLaunchAgents();
+
   const config = await waitForConfig();
   const client = createAgentWitchClient(config);
+  const inProcessServices = startAgentWitchInProcessServices();
 
   startAgentWitchLocalApp({
     layout: config.layout,
@@ -1362,6 +1380,9 @@ const main = async (): Promise<void> => {
 
   const shutdown = (): void => {
     stopConsoleUserGuard();
+    inProcessServices.stop();
+    releaseAgentWitchMachineLease();
+    bootoutAgentWitchLaunchAgentsForCurrentUser();
     console.log("[agent-witch] Shutting down.");
     client.stop();
     process.exit(0);

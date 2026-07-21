@@ -1,6 +1,3 @@
-import { AGENT_WITCH_LAUNCH_AGENT_PATH_VALUE } from "@/lib/agentWitch/buildAgentWitchInstallScriptWriterPath";
-import { AGENT_WITCH_UPDATER_INTERVAL_SEC } from "@/lib/agentWitch/agentWitchUpdater.constants";
-
 export const buildAgentWitchInstallScriptUpdater = (input: {
   readonly installDirName: string;
   readonly selfUpdateScriptUrl: string;
@@ -55,45 +52,5 @@ exec "\${NODE_BIN}" "\${TSX_CLI}" "\${SELF_UPDATE_CLI}"
 UPDATER_EOF
 chmod +x "\${INSTALL_DIR}/self-update.sh"
 
-if [[ "\$(uname -s)" == "Darwin" ]]; then
-  cat > "\${UPDATER_PLIST_PATH}" <<EOF
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-  <key>Label</key>
-  <string>\${UPDATER_LAUNCH_AGENT_LABEL}</string>
-  <key>ProgramArguments</key>
-  <array>
-    <string>\${INSTALL_DIR}/self-update.sh</string>
-  </array>
-  <key>WorkingDirectory</key>
-  <string>\${INSTALL_DIR}</string>
-  <key>EnvironmentVariables</key>
-  <dict>
-    <key>HOME</key>
-    <string>\${HOME}</string>
-    <key>PATH</key>
-    <string>${AGENT_WITCH_LAUNCH_AGENT_PATH_VALUE}</string>
-    <key>AGENT_WITCH_HOME</key>
-    <string>\${INSTALL_DIR}</string>
-    <key>AGENT_WITCH_WAKE_PORT</key>
-    <string>\${AGENT_WITCH_WAKE_PORT}</string>
-  </dict>
-  <key>StartInterval</key>
-  <integer>${AGENT_WITCH_UPDATER_INTERVAL_SEC}</integer>
-  <key>RunAtLoad</key>
-  <true/>
-  <key>StandardOutPath</key>
-  <string>\${INSTALL_DIR}/agent-witch-self-update.log</string>
-  <key>StandardErrorPath</key>
-  <string>\${INSTALL_DIR}/agent-witch-self-update.error.log</string>
-</dict>
-</plist>
-EOF
-
-  register_agent_witch_launch_agent "\${UPDATER_LAUNCH_AGENT_LABEL}" "\${UPDATER_PLIST_PATH}" || true
-else
-  :
-fi
+agent_witch_retire_auxiliary_launch_agents
 `;
