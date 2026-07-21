@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
+import { dispatchAgentRunInputRegistry } from "@/lib/dispatch/dispatchAgentRunInputRegistry";
 import { reconcileStaleAgentRuns } from "@/lib/dispatch/reconcileStaleAgentRuns";
 
 const sqlMock = vi.fn();
@@ -20,10 +21,13 @@ vi.mock("@/lib/auth/resolveDevDashboardActor", () => ({
   isAgentWitchDevDashboardEnabled: () => false,
 }));
 
-describe("reconcileStaleAgentRuns (AGENT-039)", () => {
+describe("reconcileStaleAgentRuns (AGENT-039 / AGENT-056)", () => {
   beforeEach(() => {
     sqlMock.mockReset();
     broadcastAgentRunRecord.mockReset();
+    for (const id of dispatchAgentRunInputRegistry.listAgentRunIds()) {
+      dispatchAgentRunInputRegistry.remove(id);
+    }
   });
 
   it("marks stale running jobs failed and broadcasts updated records", async () => {
@@ -62,6 +66,30 @@ describe("reconcileStaleAgentRuns (AGENT-039)", () => {
     expect(broadcastAgentRunRecord).toHaveBeenCalledWith(
       runtime,
       reconciled[0],
+    );
+  });
+
+  it("excludes runs awaiting operator input from stale fail (AGENT-056)", async () => {
+    dispatchAgentRunInputRegistry.register({
+      agentRunId: "run-waiting",
+      requesterUserId: "user-1",
+      executorUserId: "user-1",
+      question: "Which week?",
+      partialOutput: "",
+    });
+    sqlMock.mockResolvedValue([]);
+
+    await reconcileStaleAgentRuns({} as never);
+
+    expect(sqlMock).toHaveBeenCalled();
+    const call = sqlMock.mock.calls[0];
+    const strings = call?.[0] as TemplateStringsArray | undefined;
+    const sqlText = strings?.join("") ?? "";
+    expect(sqlText).toContain("NOT (id = ANY(");
+    expect(call?.includes("run-waiting") || call?.[1] !== undefined).toBe(true);
+    const params = call?.slice(1) ?? [];
+    expect(params).toEqual(
+      expect.arrayContaining([expect.arrayContaining(["run-waiting"])]),
     );
   });
 

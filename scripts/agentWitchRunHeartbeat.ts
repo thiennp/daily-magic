@@ -4,6 +4,10 @@ import { AGENT_RUN_HEARTBEAT_INTERVAL_MS } from "./agentWitchRunHeartbeat.consta
 
 const runHeartbeatTimers = new Map<string, NodeJS.Timeout>();
 
+export interface StartRunHeartbeatOptions {
+  readonly awaitingInput?: boolean;
+}
+
 export const stopRunHeartbeat = (agentRunId: string): void => {
   const timer = runHeartbeatTimers.get(agentRunId);
   if (timer !== undefined) {
@@ -15,6 +19,7 @@ export const stopRunHeartbeat = (agentRunId: string): void => {
 const sendRunHeartbeatMessage = (
   socket: WebSocket,
   agentRunId: string,
+  awaitingInput: boolean,
 ): void => {
   if (socket.readyState !== 1) {
     return;
@@ -22,28 +27,33 @@ const sendRunHeartbeatMessage = (
   socket.send(
     JSON.stringify({
       type: "run.heartbeat",
-      payload: { agentRunId },
+      payload: {
+        agentRunId,
+        ...(awaitingInput ? { awaitingInput: true } : {}),
+      },
     }),
   );
 };
 
 /**
  * Emit run.heartbeat while isAlive() stays true.
- * Stops the timer when the process is gone; callers still finish via onExit.
+ * Stops the timer when the process/session is gone; callers still finish via onExit.
  */
 export const startRunHeartbeat = (
   socket: WebSocket,
   agentRunId: string,
   isAlive: () => boolean,
+  options: StartRunHeartbeatOptions = {},
 ): void => {
   stopRunHeartbeat(agentRunId);
+  const awaitingInput = options.awaitingInput === true;
 
   const tick = (): void => {
     if (!isAlive()) {
       stopRunHeartbeat(agentRunId);
       return;
     }
-    sendRunHeartbeatMessage(socket, agentRunId);
+    sendRunHeartbeatMessage(socket, agentRunId, awaitingInput);
   };
 
   tick();

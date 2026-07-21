@@ -18,6 +18,14 @@ export class DispatchAgentRunInputRegistry {
     return this.pendingByRunId.get(agentRunId);
   }
 
+  has(agentRunId: string): boolean {
+    return this.pendingByRunId.has(agentRunId);
+  }
+
+  listAgentRunIds(): readonly string[] {
+    return [...this.pendingByRunId.keys()];
+  }
+
   listForParticipant(userId: string): readonly PendingAgentRunInput[] {
     return [...this.pendingByRunId.values()].filter(
       (pending) =>

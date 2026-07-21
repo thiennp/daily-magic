@@ -1,6 +1,7 @@
 import { AGENT_RUN_STALE_HEARTBEAT_MS } from "@/lib/dispatch/agentRunHeartbeat.constant";
 import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
 import { broadcastAgentRunRecord } from "@/lib/dispatch/broadcastAgentRunRecord";
+import { dispatchAgentRunInputRegistry } from "@/lib/dispatch/dispatchAgentRunInputRegistry";
 import mapAgentRunRow from "@/lib/dispatch/mapAgentRunRow";
 import type AgentWitchHubRuntime from "@/lib/agentWitch/types/AgentWitchHubRuntime.type";
 import type AgentRunRecord from "@/lib/dispatch/types/AgentRunRecord.type";
@@ -20,20 +21,35 @@ export const reconcileStaleAgentRuns = async (
   const sql = getSql();
   const staleThresholdMs = Date.now() - AGENT_RUN_STALE_HEARTBEAT_MS;
   const staleThreshold = new Date(staleThresholdMs).toISOString();
+  const awaitingInputRunIds = dispatchAgentRunInputRegistry.listAgentRunIds();
 
   const rows = asRowArray(
-    await sql`
-      UPDATE agent_runs
-      SET
-        status = ${AgentRunStatus.FAILED},
-        denial_reason = ${STALE_RUN_DENIAL_REASON},
-        completed_at = NOW(),
-        updated_at = NOW()
-      WHERE status = ${AgentRunStatus.RUNNING}
-        AND last_run_heartbeat_at IS NOT NULL
-        AND last_run_heartbeat_at < ${staleThreshold}::timestamptz
-      RETURNING *
-    `,
+    awaitingInputRunIds.length === 0
+      ? await sql`
+          UPDATE agent_runs
+          SET
+            status = ${AgentRunStatus.FAILED},
+            denial_reason = ${STALE_RUN_DENIAL_REASON},
+            completed_at = NOW(),
+            updated_at = NOW()
+          WHERE status = ${AgentRunStatus.RUNNING}
+            AND last_run_heartbeat_at IS NOT NULL
+            AND last_run_heartbeat_at < ${staleThreshold}::timestamptz
+          RETURNING *
+        `
+      : await sql`
+          UPDATE agent_runs
+          SET
+            status = ${AgentRunStatus.FAILED},
+            denial_reason = ${STALE_RUN_DENIAL_REASON},
+            completed_at = NOW(),
+            updated_at = NOW()
+          WHERE status = ${AgentRunStatus.RUNNING}
+            AND last_run_heartbeat_at IS NOT NULL
+            AND last_run_heartbeat_at < ${staleThreshold}::timestamptz
+            AND NOT (id = ANY(${awaitingInputRunIds}::text[]))
+          RETURNING *
+        `,
   );
 
   const reconciled = rows.map((row) => mapAgentRunRow(row));

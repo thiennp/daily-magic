@@ -8,6 +8,7 @@ import {
   resolveWriterCliCommands,
 } from "./buildWriterCliInvocation";
 import {
+  hasPendingRunInputSession,
   listPendingRunInputSessions,
   removePendingRunInputSession,
   savePendingRunInputSession,
@@ -179,7 +180,13 @@ const requestRunInput = (
     accumulatedOutput,
   });
 
-  stopRunHeartbeat(agentRunId);
+  // Keep run.heartbeat alive while waiting so cloud does not stale-fail the job.
+  startRunHeartbeat(
+    socket,
+    agentRunId,
+    () => hasPendingRunInputSession(config.layout, agentRunId),
+    { awaitingInput: true },
+  );
 
   sendMessage(socket, {
     type: "command.claude.input_required",
@@ -518,6 +525,12 @@ export const replayPendingRunInputRequests = (
       writerAgent: "claude-cli",
       accumulatedOutput: session.accumulatedOutput,
     });
+    startRunHeartbeat(
+      socket,
+      session.agentRunId,
+      () => hasPendingRunInputSession(config.layout, session.agentRunId),
+      { awaitingInput: true },
+    );
     sendMessage(socket, {
       type: "command.claude.input_required",
       payload: {

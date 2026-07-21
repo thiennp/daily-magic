@@ -67,6 +67,8 @@ export const handleAgentRunHeartbeatMessageAsync = async (
     };
   }
 
+  const awaitingInput = message.payload?.awaitingInput === true;
+
   await touchAgentRunHeartbeatAt(runtime, agentRunId);
 
   const heartbeatMessage: AgentWitchMessage = {
@@ -74,6 +76,7 @@ export const handleAgentRunHeartbeatMessageAsync = async (
     payload: {
       agentRunId,
       at: new Date().toISOString(),
+      ...(awaitingInput ? { awaitingInput: true } : {}),
     },
     requestId: message.requestId,
   };
@@ -87,7 +90,11 @@ export const handleAgentRunHeartbeatMessageAsync = async (
 
   return {
     type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ACK,
-    payload: { agentRunId, heartbeat: true },
+    payload: {
+      agentRunId,
+      heartbeat: true,
+      ...(awaitingInput ? { awaitingInput: true } : {}),
+    },
     requestId: message.requestId,
   };
 };

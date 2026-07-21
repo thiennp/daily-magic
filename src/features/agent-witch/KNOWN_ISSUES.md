@@ -1,5 +1,17 @@
 # Agent Witch bridge — known issues
 
+## AGENT-056 — Awaiting-input stopped run.heartbeat and stale-failed waiting jobs
+
+**Symptom:** After `[[AWAITING_INPUT]]`, Send-a-task could be marked failed with “No run heartbeat from your Mac” while the operator was still answering, because Mac stopped `run.heartbeat` when the CLI paused for input.
+
+**Cause:** `requestRunInput` called `stopRunHeartbeat`. Cloud stale reconcile treats missing heartbeats for ~3 minutes as a dead worker, with no exemption for checkpoint waits.
+
+**Fix:** While a pending run-input session exists, Mac keeps sending process-/session-gated `run.heartbeat` with `awaitingInput: true` (including after reconnect replay). Cloud forwards that flag and excludes runs registered in `dispatchAgentRunInputRegistry` from stale fail. Install bundle **52**.
+
+**Regression tests:** `agentWitchRunHeartbeat.test.ts`, `reconcileStaleAgentRuns.test.ts` (AGENT-056).
+
+---
+
 ## AGENT-055 — PTY writer runs never sent run.heartbeat
 
 **Symptom:** Quiet-but-alive Send-a-task jobs on the primary PTY path looked stuck or could not refresh server `last_run_heartbeat_at`, so the cloud could not tell a still-running CLI from a crashed one. Pipe fallback heartbeats worked; PTY did not.
