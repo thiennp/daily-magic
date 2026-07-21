@@ -2,6 +2,8 @@ import { randomUUID } from "node:crypto";
 
 import type { IPty } from "node-pty";
 
+import { isProcessAlive } from "./isProcessAlive";
+
 type SendMessage = (message: Record<string, unknown>) => void;
 
 export interface AgentWitchPtySession {
@@ -97,6 +99,17 @@ export const resizeShellPty = (
 export const getShellPtySession = (
   shellSessionId: string,
 ): AgentWitchPtySession | undefined => sessions.get(shellSessionId);
+
+/** True when an agent-mode PTY for this runId is still registered and its pid lives. */
+export const isAgentPtyRunAlive = (runId: string): boolean => {
+  for (const session of sessions.values()) {
+    if (session.mode !== "agent" || session.runId !== runId) {
+      continue;
+    }
+    return isProcessAlive(session.pty.pid);
+  }
+  return false;
+};
 
 export const openInteractiveShellPty = async (input: {
   readonly shellSessionId: string;

@@ -9,6 +9,8 @@ export const AGENT_WITCH_CLIENT_INSTALL_SCRIPT_NAMES = [
   "agentWitchRunSessions.ts",
   "agentWitchRunCompletionOutbox.ts",
   "agentWitchRunHeartbeat.constant.ts",
+  "agentWitchRunHeartbeat.ts",
+  "isProcessAlive.ts",
   "agentWitchWriterSession.ts",
   "agentWitchPendingRunSessions.ts",
   "agentWitchRunFinish.ts",

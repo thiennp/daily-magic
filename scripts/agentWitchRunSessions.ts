@@ -17,14 +17,18 @@ import {
   enqueueAgentRunCompletionOutbox,
   flushAgentRunCompletionOutbox,
 } from "./agentWitchRunCompletionOutbox";
-import { AGENT_RUN_HEARTBEAT_INTERVAL_MS } from "./agentWitchRunHeartbeat.constant";
+import { startRunHeartbeat, stopRunHeartbeat } from "./agentWitchRunHeartbeat";
+import { isProcessAlive } from "./isProcessAlive";
 import type { AgentWitchCloudApiConfig } from "./agentWitchCloudApi";
 import {
   clearTerminalStreamState,
   isTerminalStreamAccepted,
   queueTerminalStreamChunk,
 } from "./agentWitchTerminalStreamState";
-import { closeShellPtySession } from "./agentWitchShellSession";
+import {
+  closeShellPtySession,
+  isAgentPtyRunAlive,
+} from "./agentWitchShellSession";
 import {
   buildContinuationPrompt,
   parseAwaitingInputFromOutput,
@@ -53,7 +57,6 @@ interface ActiveRunSession {
 
 const activeChildren = new Map<string, ChildProcess>();
 const runSessions = new Map<string, ActiveRunSession>();
-const runHeartbeatTimers = new Map<string, NodeJS.Timeout>();
 
 let cloudApiConfig: AgentWitchCloudApiConfig | null = null;
 
@@ -72,29 +75,15 @@ export const flushPendingAgentRunCompletions = async (
   });
 };
 
-const stopRunHeartbeat = (agentRunId: string): void => {
-  const timer = runHeartbeatTimers.get(agentRunId);
-  if (timer !== undefined) {
-    clearInterval(timer);
-    runHeartbeatTimers.delete(agentRunId);
+const isPipeChildAlive = (agentRunId: string): boolean => {
+  const child = activeChildren.get(agentRunId);
+  if (child === undefined || child.killed || child.exitCode !== null) {
+    return false;
   }
-};
-
-const startRunHeartbeat = (socket: WebSocket, agentRunId: string): void => {
-  stopRunHeartbeat(agentRunId);
-
-  const sendHeartbeat = (): void => {
-    sendMessage(socket, {
-      type: "run.heartbeat",
-      payload: { agentRunId },
-    });
-  };
-
-  sendHeartbeat();
-  runHeartbeatTimers.set(
-    agentRunId,
-    setInterval(sendHeartbeat, AGENT_RUN_HEARTBEAT_INTERVAL_MS),
-  );
+  if (typeof child.pid !== "number") {
+    return false;
+  }
+  return isProcessAlive(child.pid);
 };
 
 const resolveWriterCommands = (config: AgentWitchRunConfig) =>
@@ -244,7 +233,7 @@ const attachChildHandlers = (
       payload: { runId: agentRunId },
       requestId,
     });
-    startRunHeartbeat(socket, agentRunId);
+    startRunHeartbeat(socket, agentRunId, () => isPipeChildAlive(agentRunId));
   }
 
   child.stdout?.on("data", (chunk: Buffer) => {
@@ -455,7 +444,11 @@ export const runWriterTask = (
     .then((usedPty) => {
       if (!usedPty) {
         startPipeChild();
+        return;
       }
+      startRunHeartbeat(socket, agentRunId, () =>
+        isAgentPtyRunAlive(agentRunId),
+      );
     })
     .catch((error: unknown) => {
       console.error(

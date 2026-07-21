@@ -3,6 +3,7 @@ import os from "node:os";
 import path from "node:path";
 
 import { AGENT_WITCH_MACHINE_LEASE_TTL_MS } from "./agentWitchInProcessServices.constants";
+import { isProcessAlive } from "./isProcessAlive";
 
 export interface AgentWitchMachineLease {
   readonly hostname: string;
@@ -21,19 +22,6 @@ export const resolveAgentWitchMachineLeasePath = (
     os.tmpdir(),
     `com.agent-witch.${hostname.trim().toLowerCase()}.lease.json`,
   );
-
-const isProcessAlive = (pid: number): boolean => {
-  if (!Number.isInteger(pid) || pid <= 0) {
-    return false;
-  }
-
-  try {
-    process.kill(pid, 0);
-    return true;
-  } catch {
-    return false;
-  }
-};
 
 const readMachineLease = (leasePath: string): AgentWitchMachineLease | null => {
   if (!fs.existsSync(leasePath)) {

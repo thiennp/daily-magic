@@ -1,5 +1,17 @@
 # Agent Witch bridge — known issues
 
+## AGENT-055 — PTY writer runs never sent run.heartbeat
+
+**Symptom:** Quiet-but-alive Send-a-task jobs on the primary PTY path looked stuck or could not refresh server `last_run_heartbeat_at`, so the cloud could not tell a still-running CLI from a crashed one. Pipe fallback heartbeats worked; PTY did not.
+
+**Cause:** `run.heartbeat` was started only in pipe `attachChildHandlers`. `tryRunWriterTaskInPty` never started the timer after a successful PTY spawn.
+
+**Fix:** After PTY spawn succeeds, start process-gated `run.heartbeat` (alive = agent PTY session for `runId` + `pty.pid`). Pipe path gates on the child pid the same way. Shared helpers: `agentWitchRunHeartbeat.ts`, `isProcessAlive.ts`. Install bundle **51**.
+
+**Regression tests:** `agentWitchRunHeartbeat.test.ts`, `isProcessAlive.test.ts`, `isAgentPtyRunAlive.test.ts` (AGENT-055).
+
+---
+
 ## AGENT-049 — Send-a-task said Mac offline while Agent Witch crash-looped
 
 **Symptom:** Send-a-task showed “The selected Mac is not online right now.” even though this Mac should be connected. Local ports `:43347` / `:47892` were down.
