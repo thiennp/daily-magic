@@ -5,6 +5,7 @@ import type { MyMacDevice } from "@/features/agent/hooks/useMyMacDevices";
 
 const onlineDevice: MyMacDevice = {
   id: "device-1",
+  tokenHash: null,
   deviceLabel: "mac.local",
   displayName: "Mac",
   claimedAt: "2026-01-01T00:00:00.000Z",

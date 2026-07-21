@@ -3,6 +3,7 @@ import { isAgentWitchDeviceRecentlySeen } from "@/lib/agentWitch/agentWitchHeart
 
 export interface AgentWitchDeviceWithOnlineStatus {
   readonly id: string;
+  readonly tokenHash: string | null;
   readonly deviceLabel: string | null;
   readonly displayName: string | null;
   readonly claimedAt: string;
@@ -37,6 +38,7 @@ const buildAgentWitchDevicesWithOnlineStatus = (
 
     return {
       id: device.id,
+      tokenHash: device.tokenHash ?? null,
       deviceLabel: device.deviceLabel,
       displayName: device.displayName,
       claimedAt: device.claimedAt,

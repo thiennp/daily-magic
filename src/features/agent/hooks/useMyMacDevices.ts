@@ -13,6 +13,7 @@ import { useConnectionLab } from "@/features/agent-witch/connection-lab/Connecti
 
 export interface MyMacDevice {
   readonly id: string;
+  readonly tokenHash: string | null;
   readonly deviceLabel: string | null;
   readonly displayName: string | null;
   readonly claimedAt: string;

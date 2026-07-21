@@ -8,6 +8,7 @@ interface MarketplaceInstallFormPanelProps {
   readonly listingName: string;
   readonly macSelection: ReturnType<typeof useMacDeviceSelection>;
   readonly localHostname: string | null;
+  readonly localTokenHash: string | null;
   readonly isWakeServerReachable: boolean;
   readonly needsLiveConnection: boolean;
   readonly status: "idle" | "installing" | "error";
@@ -21,6 +22,7 @@ export default function MarketplaceInstallFormPanel({
   listingName,
   macSelection,
   localHostname,
+  localTokenHash,
   isWakeServerReachable,
   needsLiveConnection,
   status,
@@ -41,6 +43,7 @@ export default function MarketplaceInstallFormPanel({
       <MarketplaceInstallMacPicker
         macSelection={macSelection}
         localHostname={localHostname}
+        localTokenHash={localTokenHash}
         isWakeServerReachable={isWakeServerReachable}
       />
 

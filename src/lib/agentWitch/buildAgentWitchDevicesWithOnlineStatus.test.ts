@@ -71,6 +71,17 @@ describe("buildAgentWitchDevicesWithOnlineStatus", () => {
     });
   });
 
+  it("includes tokenHash from the device record (HOME-029)", () => {
+    const lastSeenAt = new Date().toISOString();
+    const result = buildAgentWitchDevicesWithOnlineStatus([
+      baseDevice({ tokenHash: "abc123", lastSeenAt }),
+    ]);
+
+    expect(result[0]).toMatchObject({
+      tokenHash: "abc123",
+    });
+  });
+
   it("keeps saved display names from the device record", () => {
     const lastSeenAt = new Date().toISOString();
     const result = buildAgentWitchDevicesWithOnlineStatus([

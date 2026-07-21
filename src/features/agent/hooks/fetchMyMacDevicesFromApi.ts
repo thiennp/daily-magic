@@ -2,6 +2,7 @@ import type { MyMacDevice } from "@/features/agent/hooks/useMyMacDevices";
 
 interface ApiMacDevice {
   readonly id: string;
+  readonly tokenHash?: string | null;
   readonly deviceLabel: string | null;
   readonly displayName: string | null;
   readonly claimedAt: string;
@@ -49,6 +50,11 @@ const parseMyMacDevices = (
       .filter((device) => device.isActive !== false)
       .map((device) => ({
         id: device.id,
+        tokenHash:
+          typeof device.tokenHash === "string" &&
+          device.tokenHash.trim().length > 0
+            ? device.tokenHash.trim()
+            : null,
         deviceLabel: device.deviceLabel,
         displayName:
           typeof device.displayName === "string" ? device.displayName : null,

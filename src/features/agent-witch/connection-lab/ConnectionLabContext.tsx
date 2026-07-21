@@ -41,6 +41,7 @@ const toMyMacDevices = (
 
   return records.map((device) => ({
     id: device.id,
+    tokenHash: null,
     deviceLabel: device.deviceLabel,
     displayName: null,
     claimedAt: device.claimedAt,

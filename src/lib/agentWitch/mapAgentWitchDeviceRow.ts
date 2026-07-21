@@ -13,6 +13,7 @@ export default function mapAgentWitchDeviceRow(
   return {
     id: String(row.id),
     userId: String(row.user_id),
+    tokenHash: row.token_hash ? String(row.token_hash) : null,
     deviceLabel: row.device_label ? String(row.device_label) : null,
     displayName: row.display_name ? String(row.display_name) : null,
     dispatchPolicy,

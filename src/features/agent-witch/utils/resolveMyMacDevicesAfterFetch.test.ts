@@ -4,6 +4,7 @@ import { resolveMyMacDevicesAfterFetch } from "@/features/agent-witch/utils/reso
 
 const device = {
   id: "device-1",
+  tokenHash: null,
   deviceLabel: "Mac",
   displayName: null,
   claimedAt: "2026-01-01T00:00:00.000Z",

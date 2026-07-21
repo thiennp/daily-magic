@@ -23,6 +23,8 @@ export { buildAgentWitchSelfUpdateTerminalCommand } from "./buildAgentWitchSelfU
 
 export { deviceLabelMatchesLocalHost } from "./deviceLabelMatchesLocalHost";
 
+export { deviceMatchesLocalTokenHash } from "./deviceMatchesLocalTokenHash";
+
 export { canWakeMacDeviceFromBrowser } from "./canWakeMacDeviceFromBrowser";
 
 export { default as MacDeviceWakeModal } from "./MacDeviceWakeModal";

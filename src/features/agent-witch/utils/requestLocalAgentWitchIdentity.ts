@@ -2,6 +2,7 @@ import { resolveAgentWitchWakeBaseUrlForPage } from "@/lib/agentWitch/resolveAge
 
 export interface LocalAgentWitchIdentity {
   readonly hostname: string;
+  readonly tokenHash: string | null;
   readonly profiles: readonly {
     readonly email: string | null;
     readonly launchAgentLabel: string;
@@ -17,6 +18,7 @@ const parseLocalAgentWitchIdentity = (
 
   const record = payload as {
     hostname?: unknown;
+    tokenHash?: unknown;
     profiles?: unknown;
   };
 
@@ -26,6 +28,11 @@ const parseLocalAgentWitchIdentity = (
   ) {
     return null;
   }
+
+  const tokenHash =
+    typeof record.tokenHash === "string" && record.tokenHash.trim().length > 0
+      ? record.tokenHash.trim()
+      : null;
 
   const profiles = Array.isArray(record.profiles)
     ? record.profiles.flatMap((profile) => {
@@ -55,6 +62,7 @@ const parseLocalAgentWitchIdentity = (
 
   return {
     hostname: record.hostname.trim(),
+    tokenHash,
     profiles,
   };
 };

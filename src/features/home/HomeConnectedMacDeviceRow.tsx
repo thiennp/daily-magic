@@ -4,7 +4,7 @@ import MacDeviceRow from "@/features/agent-witch/macDevices/MacDeviceRow";
 import { buildMacDeviceDetailText } from "@/features/agent-witch/macDevices/utils/buildMacDeviceDetailText";
 import {
   canWakeMacDeviceFromBrowser,
-  deviceLabelMatchesLocalHost,
+  deviceMatchesLocalTokenHash,
 } from "@/features/agent-witch/online-wake";
 import type { MyMacDevice } from "@/features/agent/hooks/useMyMacDevices";
 import useThisMacLocalInstallActions from "@/features/home/hooks/useThisMacLocalInstallActions";
@@ -15,6 +15,7 @@ interface HomeConnectedMacDeviceRowProps {
   readonly displayName: string;
   readonly serverInstallBundleVersion: string | null;
   readonly localHostname: string | null;
+  readonly localTokenHash: string | null;
   readonly isWakeServerReachable: boolean;
   readonly onRenamed: (deviceId: string, deviceLabel: string) => void;
   readonly onDelegateTask: (deviceId: string) => void;
@@ -37,8 +38,8 @@ export default function HomeConnectedMacDeviceRow(
     serverInstallBundleVersion: props.serverInstallBundleVersion,
   });
   const isThisMac =
-    props.localHostname !== null &&
-    deviceLabelMatchesLocalHost(props.device.deviceLabel, props.localHostname);
+    props.localTokenHash !== null &&
+    deviceMatchesLocalTokenHash(props.device.tokenHash, props.localTokenHash);
 
   return (
     <>

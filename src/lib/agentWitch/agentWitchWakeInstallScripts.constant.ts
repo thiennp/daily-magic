@@ -7,6 +7,7 @@ export const AGENT_WITCH_WAKE_INSTALL_SCRIPT_NAMES = [
   "agent-witch-wake-server.ts",
   "agentWitchWakeConstants.ts",
   "agentWitchWakeHandlers.ts",
+  "hashPairingToken.ts",
   "agentWitchWakeAllowedOrigins.ts",
   "kickstartAgentWitchLaunchAgent.ts",
   "macOsConsoleUser.constants.ts",

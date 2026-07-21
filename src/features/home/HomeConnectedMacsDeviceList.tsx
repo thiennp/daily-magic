@@ -12,6 +12,7 @@ interface HomeConnectedMacsDeviceListProps {
   readonly displayNameById: ReadonlyMap<string, string>;
   readonly serverInstallBundleVersion: string | null;
   readonly localHostname: string | null;
+  readonly localTokenHash: string | null;
   readonly shouldShowConnectThisMac: boolean;
   readonly onRenamed: (deviceId: string, deviceLabel: string) => void;
   readonly onDelegateTask: (deviceId: string) => void;
@@ -27,6 +28,7 @@ export default function HomeConnectedMacsDeviceList({
   displayNameById,
   serverInstallBundleVersion,
   localHostname,
+  localTokenHash,
   shouldShowConnectThisMac,
   onRenamed,
   onDelegateTask,
@@ -42,6 +44,7 @@ export default function HomeConnectedMacsDeviceList({
           displayName={displayNameById.get(device.id) ?? "Your Mac"}
           serverInstallBundleVersion={serverInstallBundleVersion}
           localHostname={localHostname}
+          localTokenHash={localTokenHash}
           isWakeServerReachable={localHostname !== null}
           onRenamed={onRenamed}
           onDelegateTask={onDelegateTask}

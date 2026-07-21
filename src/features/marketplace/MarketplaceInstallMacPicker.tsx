@@ -9,12 +9,14 @@ import { MAC_WORKER_BENEFIT_COPY } from "@/lib/copy/macWorkerBenefitCopy.constan
 interface MarketplaceInstallMacPickerProps {
   readonly macSelection: ReturnType<typeof useMacDeviceSelection>;
   readonly localHostname: string | null;
+  readonly localTokenHash: string | null;
   readonly isWakeServerReachable: boolean;
 }
 
 export default function MarketplaceInstallMacPicker({
   macSelection,
   localHostname,
+  localTokenHash,
   isWakeServerReachable,
 }: MarketplaceInstallMacPickerProps) {
   return (
@@ -26,6 +28,7 @@ export default function MarketplaceInstallMacPicker({
           selectedDeviceId={macSelection.selectedDeviceId}
           isLoading={macSelection.isLoading}
           localHostname={localHostname}
+          localTokenHash={localTokenHash}
           isWakeServerReachable={isWakeServerReachable}
           onChange={macSelection.setSelectedDeviceId}
           onRenamed={macSelection.renameDevice}

@@ -26,7 +26,8 @@ export default function WsTestMacDispatchSection({
   onDeviceRenamed,
   onDeviceDeleted,
 }: WsTestMacDispatchSectionProps) {
-  const { localHostname, isWakeServerReachable } = useLocalMacBrowserContext();
+  const { localHostname, localTokenHash, isWakeServerReachable } =
+    useLocalMacBrowserContext();
   const picker = (
     <MacDevicePicker
       devices={macDevices}
@@ -34,6 +35,7 @@ export default function WsTestMacDispatchSection({
       selectedDeviceId={selectedDeviceId}
       isLoading={isMacDevicesLoading}
       localHostname={localHostname}
+      localTokenHash={localTokenHash}
       isWakeServerReachable={isWakeServerReachable}
       onChange={onDeviceChange}
       onRenamed={onDeviceRenamed}

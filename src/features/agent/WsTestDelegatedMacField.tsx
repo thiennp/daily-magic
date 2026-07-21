@@ -25,7 +25,8 @@ export default function WsTestDelegatedMacField({
   onDeviceRenamed,
   onDeviceDeleted,
 }: WsTestDelegatedMacFieldProps) {
-  const { localHostname, isWakeServerReachable } = useLocalMacBrowserContext();
+  const { localHostname, localTokenHash, isWakeServerReachable } =
+    useLocalMacBrowserContext();
 
   return (
     <div className={disabled ? "pointer-events-none opacity-70" : undefined}>
@@ -35,6 +36,7 @@ export default function WsTestDelegatedMacField({
         selectedDeviceId={selectedDeviceId}
         isLoading={isLoading}
         localHostname={localHostname}
+        localTokenHash={localTokenHash}
         isWakeServerReachable={isWakeServerReachable}
         onChange={onDeviceChange}
         onRenamed={onDeviceRenamed}

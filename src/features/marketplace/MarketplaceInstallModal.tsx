@@ -23,7 +23,8 @@ export default function MarketplaceInstallModal({
 }: MarketplaceInstallModalProps) {
   const { openSendTaskModal } = useSendTaskModal();
   const macSelection = useMacDeviceSelection();
-  const { localHostname, isWakeServerReachable } = useLocalMacBrowserContext();
+  const { localHostname, localTokenHash, isWakeServerReachable } =
+    useLocalMacBrowserContext();
   const [status, setStatus] = useState<
     "idle" | "installing" | "done" | "error"
   >("idle");
@@ -98,6 +99,7 @@ export default function MarketplaceInstallModal({
           listingName={listing?.name ?? "listing"}
           macSelection={macSelection}
           localHostname={localHostname}
+          localTokenHash={localTokenHash}
           isWakeServerReachable={isWakeServerReachable}
           needsLiveConnection={needsLiveConnection}
           status={status === "done" ? "idle" : status}

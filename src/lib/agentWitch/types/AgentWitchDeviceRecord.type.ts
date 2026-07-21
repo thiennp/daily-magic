@@ -1,6 +1,7 @@
 export default interface AgentWitchDeviceRecord {
   readonly id: string;
   readonly userId: string;
+  readonly tokenHash?: string | null;
   readonly deviceLabel: string | null;
   readonly displayName: string | null;
   readonly dispatchPolicy:

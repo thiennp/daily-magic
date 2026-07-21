@@ -3,19 +3,19 @@ import { describe, expect, it } from "vitest";
 import { resolveShouldShowConnectThisMac } from "@/features/home/utils/resolveShouldShowConnectThisMac";
 
 const baseInput = {
-  localHostname: null as string | null,
+  localTokenHash: null as string | null,
   isCheckingLocalHostname: false,
   isMobileBrowser: false,
-  devices: [] as readonly { readonly deviceLabel: string | null }[],
+  devices: [] as readonly { readonly tokenHash?: string | null }[],
 };
 
-describe("resolveShouldShowConnectThisMac (HOME-025)", () => {
+describe("resolveShouldShowConnectThisMac (HOME-025/028)", () => {
   it("hides connect on non-Mac browsers without listed devices", () => {
     expect(
       resolveShouldShowConnectThisMac({
         ...baseInput,
         operatingSystem: "windows",
-        localHostname: "Studio-Mac",
+        localTokenHash: "abc",
         devices: [],
       }),
     ).toBe(false);
@@ -26,7 +26,7 @@ describe("resolveShouldShowConnectThisMac (HOME-025)", () => {
       resolveShouldShowConnectThisMac({
         ...baseInput,
         operatingSystem: "windows",
-        devices: [{ deviceLabel: "Studio-Mac" }],
+        devices: [{ tokenHash: "abc" }],
       }),
     ).toBe(true);
   });
@@ -37,7 +37,7 @@ describe("resolveShouldShowConnectThisMac (HOME-025)", () => {
         ...baseInput,
         operatingSystem: "other",
         isMobileBrowser: true,
-        devices: [{ deviceLabel: "Office-iMac" }],
+        devices: [{ tokenHash: "abc" }],
       }),
     ).toBe(false);
   });
@@ -47,7 +47,7 @@ describe("resolveShouldShowConnectThisMac (HOME-025)", () => {
       resolveShouldShowConnectThisMac({
         ...baseInput,
         operatingSystem: "other",
-        devices: [{ deviceLabel: "Office-iMac" }],
+        devices: [{ tokenHash: "abc" }],
       }),
     ).toBe(true);
   });
@@ -63,13 +63,13 @@ describe("resolveShouldShowConnectThisMac (HOME-025)", () => {
     ).toBe(false);
   });
 
-  it("shows connect while hostname is still loading", () => {
+  it("hides connect while identity is still loading", () => {
     expect(
       resolveShouldShowConnectThisMac({
         ...baseInput,
         operatingSystem: "mac",
         isCheckingLocalHostname: true,
-        devices: [{ deviceLabel: "Studio-Mac" }],
+        devices: [{ tokenHash: "abc" }],
       }),
     ).toBe(false);
   });
@@ -89,29 +89,7 @@ describe("resolveShouldShowConnectThisMac (HOME-025)", () => {
       resolveShouldShowConnectThisMac({
         ...baseInput,
         operatingSystem: "mac",
-        devices: [{ deviceLabel: "L92KQX615Q" }],
-      }),
-    ).toBe(false);
-  });
-
-  it("shows connect when this Mac is not in the device list", () => {
-    expect(
-      resolveShouldShowConnectThisMac({
-        ...baseInput,
-        operatingSystem: "mac",
-        localHostname: "L92KQX615Q",
-        devices: [{ deviceLabel: "Office-iMac" }],
-      }),
-    ).toBe(true);
-  });
-
-  it("hides connect when a listed device matches this Mac", () => {
-    expect(
-      resolveShouldShowConnectThisMac({
-        ...baseInput,
-        operatingSystem: "mac",
-        localHostname: "L92KQX615Q",
-        devices: [{ deviceLabel: "L92KQX615Q" }],
+        devices: [{ tokenHash: "abc" }],
       }),
     ).toBe(false);
   });

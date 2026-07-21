@@ -1,12 +1,12 @@
-import { deviceLabelMatchesLocalHost } from "@/features/agent-witch/online-wake";
+import { deviceMatchesLocalTokenHash } from "@/features/agent-witch/online-wake";
 import type { BrowserOperatingSystem } from "@/features/home/utils/detectBrowserOperatingSystem";
 
 export const resolveShouldShowConnectThisMac = (input: {
   readonly operatingSystem: BrowserOperatingSystem;
-  readonly localHostname: string | null;
+  readonly localTokenHash: string | null;
   readonly isCheckingLocalHostname: boolean;
   readonly isMobileBrowser: boolean;
-  readonly devices: readonly { readonly deviceLabel: string | null }[];
+  readonly devices: readonly { readonly tokenHash?: string | null }[];
 }): boolean => {
   if (input.isCheckingLocalHostname || input.isMobileBrowser) {
     return false;
@@ -16,11 +16,11 @@ export const resolveShouldShowConnectThisMac = (input: {
     return input.devices.length > 0;
   }
 
-  if (input.localHostname === null) {
+  if (input.localTokenHash === null) {
     return input.devices.length === 0;
   }
 
   return !input.devices.some((device) =>
-    deviceLabelMatchesLocalHost(device.deviceLabel, input.localHostname ?? ""),
+    deviceMatchesLocalTokenHash(device.tokenHash, input.localTokenHash ?? ""),
   );
 };

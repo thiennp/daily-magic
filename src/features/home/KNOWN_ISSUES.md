@@ -346,4 +346,16 @@ Document every production bug or UX regression here. Each entry must link to a t
 
 ---
 
-Use the next ID (`HOME-028`, …). Include symptom, root cause, fix paths, and test file.
+## HOME-029 — “this Mac” badge used hostname instead of install token
+
+**Symptom:** A device row from another account/user on the same physical Mac showed the **this Mac** badge, even when the browser was not signed into that install’s identity.
+
+**Root cause:** `isThisMac` matched `deviceLabel` to the machine hostname from wake `/identity`, so any cloud row sharing that hostname looked local.
+
+**Fix:** Match **this Mac** on pairing-token identity: wake `/identity` returns `tokenHash` (sha256 of local `pairingToken`), devices API includes `tokenHash`, and UI compares those hashes. Hostname is no longer used for the badge or Connect-this-Mac gating.
+
+**Regression tests:** `deviceMatchesLocalTokenHash.test.ts`, `resolveShouldShowConnectThisMac.test.ts` (HOME-029).
+
+---
+
+Use the next ID (`HOME-030`, …). Include symptom, root cause, fix paths, and test file.

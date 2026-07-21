@@ -1,6 +1,7 @@
 import { applyAutomationSyncLocally } from "./applyAutomationSyncLocally";
 import { runLocalScheduledAutomationById } from "./agentWitchLocalAutomationRunner";
 import { readLocalAutomationStore } from "./agentWitchLocalAutomationStore";
+import hashPairingToken from "./hashPairingToken";
 import { readAgentWitchRunConfig } from "./readAgentWitchRunConfig";
 import os from "node:os";
 
@@ -38,6 +39,8 @@ export interface AgentWitchWakeHealthResponse {
 export interface AgentWitchWakeIdentityResponse {
   readonly hostname: string;
   readonly port: number;
+  /** sha256 of the active profile pairing token; never the raw token. */
+  readonly tokenHash: string | null;
   readonly profiles: readonly {
     readonly email: string | null;
     readonly launchAgentLabel: string;
@@ -240,9 +243,12 @@ export const buildAgentWitchWakeHealthResponse =
 export const buildAgentWitchWakeIdentityResponse =
   (): AgentWitchWakeIdentityResponse => {
     const targets = listAgentWitchLaunchTargets();
+    const pairingToken = readAgentWitchRunConfig()?.pairingToken.trim() ?? "";
     return {
       hostname: os.hostname(),
       port: resolveAgentWitchWakePort(),
+      tokenHash:
+        pairingToken.length > 0 ? hashPairingToken(pairingToken) : null,
       profiles: targets.map((target) => ({
         email: target.profileEmail,
         launchAgentLabel: target.launchAgentLabel,

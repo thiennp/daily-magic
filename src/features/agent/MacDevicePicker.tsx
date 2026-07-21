@@ -5,7 +5,7 @@ import MacDeviceRow from "@/features/agent-witch/macDevices/MacDeviceRow";
 import { buildMacDeviceDetailText } from "@/features/agent-witch/macDevices/utils/buildMacDeviceDetailText";
 import {
   canWakeMacDeviceFromBrowser,
-  deviceLabelMatchesLocalHost,
+  deviceMatchesLocalTokenHash,
 } from "@/features/agent-witch/online-wake";
 import type { MyMacDevice } from "@/features/agent/hooks/useMyMacDevices";
 import useMyMacDevices from "@/features/agent/hooks/useMyMacDevices";
@@ -18,6 +18,7 @@ interface MacDevicePickerProps {
   readonly selectedDeviceId: string;
   readonly isLoading: boolean;
   readonly localHostname: string | null;
+  readonly localTokenHash: string | null;
   readonly isWakeServerReachable: boolean;
   readonly onChange: (deviceId: string) => void;
   readonly onRenamed: (deviceId: string, deviceLabel: string) => void;
@@ -30,6 +31,7 @@ export default function MacDevicePicker({
   selectedDeviceId,
   isLoading,
   localHostname,
+  localTokenHash,
   isWakeServerReachable,
   onChange,
   onRenamed,
@@ -70,8 +72,8 @@ export default function MacDevicePicker({
             serverInstallBundleVersion,
           });
           const isThisMac =
-            localHostname !== null &&
-            deviceLabelMatchesLocalHost(device.deviceLabel, localHostname);
+            localTokenHash !== null &&
+            deviceMatchesLocalTokenHash(device.tokenHash, localTokenHash);
 
           return (
             <MacDeviceRow

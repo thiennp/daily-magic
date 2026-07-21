@@ -45,7 +45,7 @@ export default function HomeConnectedMacsPanel({
     serverInstallBundleVersion,
     renameDevice,
   } = useHomeConnectedMacs();
-  const { localHostname, isCheckingLocalHostname } =
+  const { localHostname, localTokenHash, isCheckingLocalHostname } =
     useLocalMacBrowserContext();
   const operatingSystem = useSyncExternalStore(
     subscribeToOperatingSystem,
@@ -62,7 +62,7 @@ export default function HomeConnectedMacsPanel({
   const hasExistingDevices = devices.length > 0;
   const shouldShowConnectThisMac = resolveShouldShowConnectThisMac({
     operatingSystem,
-    localHostname,
+    localTokenHash,
     isCheckingLocalHostname,
     isMobileBrowser: mobileBrowser,
     devices,
@@ -99,6 +99,7 @@ export default function HomeConnectedMacsPanel({
           displayNameById={displayNameById}
           serverInstallBundleVersion={serverInstallBundleVersion}
           localHostname={localHostname}
+          localTokenHash={localTokenHash}
           shouldShowConnectThisMac={shouldShowConnectThisMac}
           onRenamed={renameDevice}
           onDelegateTask={onDelegateTask}
