@@ -18,7 +18,7 @@ export default function ConnectCursorCloudCard() {
 
   if (isLoading) {
     return (
-      <p className="mt-6 text-sm text-gray-500 dark:text-gray-400">
+      <p className="text-sm text-gray-500 dark:text-gray-400">
         Checking Cursor Cloud…
       </p>
     );
@@ -26,7 +26,7 @@ export default function ConnectCursorCloudCard() {
 
   if (summary.connected) {
     return (
-      <div className={`mt-6 ${APP_SURFACE_NESTED_CARD_CLASS}`}>
+      <div className={APP_SURFACE_NESTED_CARD_CLASS}>
         <p className="text-sm font-semibold text-gray-900 dark:text-white/90">
           Cursor Cloud connected
         </p>
@@ -48,9 +48,9 @@ export default function ConnectCursorCloudCard() {
   }
 
   return (
-    <div className={`mt-6 ${APP_SURFACE_NESTED_CARD_CLASS}`}>
+    <div className={APP_SURFACE_NESTED_CARD_CLASS}>
       <p className="text-sm font-semibold text-gray-900 dark:text-white/90">
-        Or connect Cursor Cloud
+        Connect Cursor Cloud
       </p>
       <p className={`mt-1 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
         Paste a Cursor Cloud API key from{" "}
