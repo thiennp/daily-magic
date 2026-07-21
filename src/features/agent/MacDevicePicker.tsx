@@ -10,6 +10,7 @@ import {
 import type { MyMacDevice } from "@/features/agent/hooks/useMyMacDevices";
 import useMyMacDevices from "@/features/agent/hooks/useMyMacDevices";
 import useThisMacLocalInstallActions from "@/features/home/hooks/useThisMacLocalInstallActions";
+import UpdateLocalMacModal from "@/features/home/UpdateLocalMacModal";
 
 interface MacDevicePickerProps {
   readonly devices: readonly MyMacDevice[];
@@ -35,8 +36,13 @@ export default function MacDevicePicker({
   onDelete,
 }: MacDevicePickerProps) {
   const { serverInstallBundleVersion } = useMyMacDevices();
-  const { onUpdateLocal, onDeleteLocalScript } =
-    useThisMacLocalInstallActions();
+  const {
+    onUpdateLocal,
+    onDeleteLocalScript,
+    isUpdateLocalModalOpen,
+    updateLocalCommand,
+    closeUpdateLocalModal,
+  } = useThisMacLocalInstallActions();
 
   if (isLoading) {
     return (
@@ -94,6 +100,11 @@ export default function MacDevicePicker({
           );
         })}
       </div>
+      <UpdateLocalMacModal
+        isOpen={isUpdateLocalModalOpen}
+        updateCommand={updateLocalCommand}
+        onClose={closeUpdateLocalModal}
+      />
     </div>
   );
 }
