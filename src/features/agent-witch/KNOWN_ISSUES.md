@@ -1,5 +1,17 @@
 # Agent Witch bridge — known issues
 
+## AGENT-045 — Update local created a duplicate Mac device
+
+**Symptom:** Running **Update local** added a second Mac row because the modal reused the Connect install command, which minted a new pairing token and claimed a new device.
+
+**Cause:** Update reused `/api/agent-witch/install-token`, which always generates a fresh pairing token.
+
+**Fix:** Serve `/install/agent-witch-repair.sh`, which reads the existing `pairingToken` from the local config and re-downloads the install bundle without creating a new cloud device. Install bundle **45**.
+
+**Regression tests:** `buildAgentWitchRepairInstallCommand.test.ts`, `renderRepairAgentWitchScript.test.ts` (AGENT-045).
+
+---
+
 ## AGENT-044 — Mac client crash-looped after bundle 43 (missing uninstall helper)
 
 **Symptom:** `~/.agent-witch/agent-witch.error.log` repeated `ERR_MODULE_NOT_FOUND` for `agentWitchUninstallLocal` when `guardMacOsConsoleUser` booted LaunchAgents on startup.

@@ -1,30 +1,25 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 
 import confirmMacDeviceDeleteLocalInstall from "@/features/agent-witch/macDevices/utils/confirmMacDeviceDeleteLocalInstall";
-import usePersonalizedAgentWitchInstallCommand from "@/features/home/hooks/usePersonalizedAgentWitchInstallCommand";
+import { buildAgentWitchRepairInstallCommand } from "@/lib/agentWitch/buildAgentWitchRepairInstallCommand";
 
-const useThisMacLocalInstallActions = (input?: {
-  readonly fallbackInstallCommand?: string;
-}): {
+const useThisMacLocalInstallActions = (): {
   readonly onUpdateLocal: () => void;
   readonly onDeleteLocalScript: () => void;
   readonly isUpdateLocalModalOpen: boolean;
   readonly updateLocalCommand: string;
-  readonly isUpdateLocalCommandLoading: boolean;
-  readonly updateLocalCommandError: string | null;
   readonly closeUpdateLocalModal: () => void;
 } => {
   const [isUpdateLocalModalOpen, setIsUpdateLocalModalOpen] = useState(false);
-  const {
-    installCommand: updateLocalCommand,
-    isLoading: isUpdateLocalCommandLoading,
-    error: updateLocalCommandError,
-  } = usePersonalizedAgentWitchInstallCommand({
-    enabled: isUpdateLocalModalOpen,
-    fallbackInstallCommand: input?.fallbackInstallCommand ?? "",
-  });
+  const updateLocalCommand = useMemo(() => {
+    if (typeof window === "undefined") {
+      return "";
+    }
+
+    return buildAgentWitchRepairInstallCommand(window.location.origin);
+  }, []);
 
   const onUpdateLocal = useCallback(() => {
     setIsUpdateLocalModalOpen(true);
@@ -43,8 +38,6 @@ const useThisMacLocalInstallActions = (input?: {
     onDeleteLocalScript,
     isUpdateLocalModalOpen,
     updateLocalCommand,
-    isUpdateLocalCommandLoading,
-    updateLocalCommandError,
     closeUpdateLocalModal,
   };
 };
