@@ -7,6 +7,7 @@ describe("renderRepairAgentWitchScript", () => {
     const script = renderRepairAgentWitchScript("https://www.agentwitch.com");
 
     expect(script).not.toContain("PRESET_PAIRING_TOKEN=");
+    expect(script).toContain('PAIRING_TOKEN="${PRESET_PAIRING_TOKEN:-}"');
     expect(script).toContain("AGENT_WITCH_SKIP_OPEN_HOME=1");
     expect(script).toContain("typeof parsed.pairingToken === 'string'");
     expect(script).toContain(

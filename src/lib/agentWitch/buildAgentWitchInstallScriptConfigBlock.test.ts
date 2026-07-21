@@ -14,6 +14,16 @@ describe("buildAgentWitchInstallScriptConfigBlock", () => {
     expect(block).toContain("config.wsUrl = wsUrl");
   });
 
+  it("AGENT-047: allows repair without preset pairing token under nounset", () => {
+    const block = buildAgentWitchInstallScriptConfigBlock({
+      wsUrl: "wss://www.agentwitch.com/api/agent-witch/ws",
+      repairExistingInstall: true,
+    });
+
+    expect(block).toContain('PAIRING_TOKEN="${PRESET_PAIRING_TOKEN:-}"');
+    expect(block).not.toContain('PAIRING_TOKEN="${PRESET_PAIRING_TOKEN}"');
+  });
+
   it("AGENT-047: refuses Connect without profile email and skips stealing active-profile", () => {
     const block = buildAgentWitchInstallScriptConfigBlock({
       wsUrl: "wss://www.agentwitch.com/api/agent-witch/ws",

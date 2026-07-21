@@ -6,7 +6,7 @@ export const buildAgentWitchInstallScriptConfigBlock = (input: {
   readonly wsUrl: string;
   readonly repairExistingInstall?: boolean;
 }): string => `
-PAIRING_TOKEN="\${PRESET_PAIRING_TOKEN}"
+PAIRING_TOKEN="\${PRESET_PAIRING_TOKEN:-}"
 
 if [[ -n "\${PRESET_PAIRING_TOKEN:-}" && -z "\${PROFILE_EMAIL}" ]]; then
   echo "Connect this Mac requires your Agent Witch account email in the install command." >&2
