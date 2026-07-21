@@ -8,6 +8,7 @@ import {
   writeAgentWitchInstallVersion,
 } from "./agentWitchInstallVersion";
 import { kickstartAgentWitchLaunchAgent } from "./kickstartAgentWitchLaunchAgent";
+import { bootoutAgentWitchAuxiliaryLaunchAgents } from "./bootoutAgentWitchAuxiliaryLaunchAgents";
 import { listAgentWitchLaunchTargets } from "./listAgentWitchLaunchTargets";
 import { resolveAgentWitchAppOriginFromWsUrl } from "./resolveAgentWitchAppOriginFromWsUrl";
 import {
@@ -19,10 +20,6 @@ import {
   appendAgentWitchSelfUpdateLog,
   readAgentWitchSelfUpdateLogs,
 } from "./agentWitchSelfUpdateLog";
-import {
-  AGENT_WITCH_WATCHDOG_LAUNCH_AGENT_LABEL,
-  AGENT_WITCH_WAKE_LAUNCH_AGENT_LABEL,
-} from "./agentWitchServiceLaunchAgentLabels.constants";
 
 const AGENT_WITCH_INSTALL_PACKAGE_JSON = `{
   "name": "agent-witch",
@@ -171,13 +168,11 @@ const ensureInstallDependencies = (installDir: string): void => {
 };
 
 const kickstartServicesAfterUpdate = async (): Promise<void> => {
+  bootoutAgentWitchAuxiliaryLaunchAgents();
   const targets = listAgentWitchLaunchTargets();
   for (const target of targets) {
     await kickstartAgentWitchLaunchAgent(target.launchAgentLabel);
   }
-
-  await kickstartAgentWitchLaunchAgent(AGENT_WITCH_WAKE_LAUNCH_AGENT_LABEL);
-  await kickstartAgentWitchLaunchAgent(AGENT_WITCH_WATCHDOG_LAUNCH_AGENT_LABEL);
 };
 
 const buildSelfUpdateResult = (

@@ -1,0 +1,123 @@
+import fs from "node:fs";
+import os from "node:os";
+import path from "node:path";
+
+import { AGENT_WITCH_MACHINE_LEASE_TTL_MS } from "./agentWitchInProcessServices.constants";
+
+export interface AgentWitchMachineLease {
+  readonly hostname: string;
+  readonly macOsUsername: string;
+  readonly pid: number;
+  readonly claimedAt: string;
+}
+
+const isRecord = (value: unknown): value is Record<string, unknown> =>
+  typeof value === "object" && value !== null && !Array.isArray(value);
+
+export const resolveAgentWitchMachineLeasePath = (
+  hostname: string = os.hostname(),
+): string =>
+  path.join(
+    os.tmpdir(),
+    `com.agent-witch.${hostname.trim().toLowerCase()}.lease.json`,
+  );
+
+const isProcessAlive = (pid: number): boolean => {
+  if (!Number.isInteger(pid) || pid <= 0) {
+    return false;
+  }
+
+  try {
+    process.kill(pid, 0);
+    return true;
+  } catch {
+    return false;
+  }
+};
+
+const readMachineLease = (leasePath: string): AgentWitchMachineLease | null => {
+  if (!fs.existsSync(leasePath)) {
+    return null;
+  }
+
+  try {
+    const parsed: unknown = JSON.parse(fs.readFileSync(leasePath, "utf8"));
+    if (
+      !isRecord(parsed) ||
+      typeof parsed.hostname !== "string" ||
+      typeof parsed.macOsUsername !== "string" ||
+      typeof parsed.pid !== "number" ||
+      typeof parsed.claimedAt !== "string"
+    ) {
+      return null;
+    }
+
+    return {
+      hostname: parsed.hostname,
+      macOsUsername: parsed.macOsUsername,
+      pid: parsed.pid,
+      claimedAt: parsed.claimedAt,
+    };
+  } catch {
+    return null;
+  }
+};
+
+const isLeaseFresh = (lease: AgentWitchMachineLease): boolean => {
+  const claimedAtMs = Date.parse(lease.claimedAt);
+  if (Number.isNaN(claimedAtMs)) {
+    return false;
+  }
+
+  return Date.now() - claimedAtMs <= AGENT_WITCH_MACHINE_LEASE_TTL_MS;
+};
+
+export const claimAgentWitchMachineLease = (input?: {
+  readonly leasePath?: string;
+  readonly platform?: NodeJS.Platform;
+}): { readonly ok: boolean } => {
+  const platform = input?.platform ?? process.platform;
+  if (platform !== "darwin") {
+    return { ok: true };
+  }
+
+  const leasePath = input?.leasePath ?? resolveAgentWitchMachineLeasePath();
+  const existing = readMachineLease(leasePath);
+  const currentUsername = os.userInfo().username;
+
+  if (
+    existing !== null &&
+    existing.pid !== process.pid &&
+    isProcessAlive(existing.pid) &&
+    isLeaseFresh(existing) &&
+    existing.macOsUsername.toLowerCase() !== currentUsername.toLowerCase()
+  ) {
+    return { ok: false };
+  }
+
+  const lease: AgentWitchMachineLease = {
+    hostname: os.hostname(),
+    macOsUsername: currentUsername,
+    pid: process.pid,
+    claimedAt: new Date().toISOString(),
+  };
+
+  fs.writeFileSync(leasePath, `${JSON.stringify(lease)}\n`, "utf8");
+  return { ok: true };
+};
+
+export const releaseAgentWitchMachineLease = (input?: {
+  readonly leasePath?: string;
+  readonly platform?: NodeJS.Platform;
+}): void => {
+  const platform = input?.platform ?? process.platform;
+  if (platform !== "darwin") {
+    return;
+  }
+
+  const leasePath = input?.leasePath ?? resolveAgentWitchMachineLeasePath();
+  const existing = readMachineLease(leasePath);
+  if (existing?.pid === process.pid && fs.existsSync(leasePath)) {
+    fs.unlinkSync(leasePath);
+  }
+};

@@ -47,6 +47,7 @@ if [[ "\$(uname -s)" == "Darwin" ]]; then
 EOF
 
   register_agent_witch_launch_agent "\${LAUNCH_AGENT_LABEL}" "\${PLIST_PATH}" || true
+  agent_witch_retire_auxiliary_launch_agents
   sleep 2
 
   if ! launchctl print "gui/\$(id -u)/\${LAUNCH_AGENT_LABEL}" 2>/dev/null | grep -q 'state = running'; then

@@ -1,5 +1,27 @@
 # Agent Witch bridge — known issues
 
+## AGENT-043 — Multiple LaunchAgents hurt performance on shared Macs
+
+**Symptom:** Each install registered wake, watchdog, scheduler, and updater LaunchAgents in addition to the main client, spawning multiple Node processes (and respawn loops for background macOS users).
+
+**Fix:** Run wake server, automation scheduler, and watchdog inside the single `agent-witch.ts` process. Retire auxiliary LaunchAgents on install/self-update/start. Claim a machine lease so only one macOS user's agent runs. Install bundle **43**.
+
+**Regression tests:** `claimAgentWitchMachineLease.test.ts`, `bootoutAgentWitchAuxiliaryLaunchAgents.test.ts` (AGENT-043).
+
+---
+
+## AGENT-042 — Background macOS users ran Agent Witch automations after fast user switching
+
+**Symptom:** With two macOS accounts on one Mac, automations/watchdog/revive from the background user could still run after fast user switching.
+
+**Cause:** LaunchAgents live per macOS user home (`~/Library/LaunchAgents`), but nothing compared the process user to `/dev/console` before starting scripts.
+
+**Fix:** Guard all Mac entry points (`agent-witch.ts`, wake server, automation scheduler, watchdog, self-update, kickstart/spawn/revive) with `stat -f '%Su' /dev/console` vs `id -un`. Long-running processes poll every 30s and exit when the console user changes. Install bundle **42**.
+
+**Regression tests:** `isActiveMacOsConsoleUser.test.ts` (AGENT-042).
+
+---
+
 ## AGENT-041 — Mac client crash-looped after bundle 33 (missing install scripts)
 
 **Symptom:** Dashboard showed no Mac connected; `~/.agent-witch/agent-witch.error.log` repeated `ERR_MODULE_NOT_FOUND` for `agentWitchRunCompletionOutbox` (and would also miss `agentWitchRunHeartbeat.constant`).

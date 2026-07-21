@@ -3,6 +3,8 @@ import { resolveAgentWitchAppHome } from "@/lib/agentWitch/resolveAgentWitchAppH
 import type { AgentWitchInstallScriptPreset } from "@/lib/agentWitch/AgentWitchInstallScriptPreset.type";
 import { buildAgentWitchInstallScriptClientBlock } from "@/lib/agentWitch/buildAgentWitchInstallScriptClientBlock";
 import { buildAgentWitchInstallScriptConfigBlock } from "@/lib/agentWitch/buildAgentWitchInstallScriptConfigBlock";
+import { buildAgentWitchInstallScriptMacOsConsoleUserGuard } from "@/lib/agentWitch/buildAgentWitchInstallScriptMacOsConsoleUserGuard";
+import { buildAgentWitchInstallScriptRetireAuxiliaryLaunchAgents } from "@/lib/agentWitch/buildAgentWitchInstallScriptRetireAuxiliaryLaunchAgents";
 import { buildAgentWitchInstallScriptPresetBlock } from "@/lib/agentWitch/buildAgentWitchInstallScriptPresetBlock";
 import { buildAgentWitchInstallScriptProgress } from "@/lib/agentWitch/buildAgentWitchInstallScriptProgress";
 import { buildAgentWitchInstallScriptRegisterLaunchAgentFn } from "@/lib/agentWitch/buildAgentWitchInstallScriptRegisterLaunchAgent";
@@ -100,6 +102,8 @@ fi
 
 PLIST_PATH="\${HOME}/Library/LaunchAgents/\${LAUNCH_AGENT_LABEL}.plist"
 export AGENT_WITCH_HOME AGENT_WITCH_WAKE_PORT
+${buildAgentWitchInstallScriptMacOsConsoleUserGuard()}
+${buildAgentWitchInstallScriptRetireAuxiliaryLaunchAgents()}
 ${buildAgentWitchInstallScriptProgress()}
 agent_witch_install_begin
 

@@ -4,6 +4,8 @@ import os from "node:os";
 import path from "node:path";
 import { promisify } from "node:util";
 
+import { isActiveMacOsConsoleUser } from "./isActiveMacOsConsoleUser";
+
 const execFileAsync = promisify(execFile);
 
 export interface KickstartLaunchAgentResult {
@@ -12,7 +14,12 @@ export interface KickstartLaunchAgentResult {
 }
 
 const resolveLaunchAgentPlistPath = (launchAgentLabel: string): string =>
-  path.join(os.homedir(), "Library", "LaunchAgents", `${launchAgentLabel}.plist`);
+  path.join(
+    os.homedir(),
+    "Library",
+    "LaunchAgents",
+    `${launchAgentLabel}.plist`,
+  );
 
 const isLaunchAgentLoaded = async (serviceTarget: string): Promise<boolean> => {
   try {
@@ -29,7 +36,9 @@ const bootstrapLaunchAgent = async (
   plistPath: string,
 ): Promise<void> => {
   if (await isLaunchAgentLoaded(serviceTarget)) {
-    await execFileAsync("launchctl", ["bootout", serviceTarget]).catch(() => undefined);
+    await execFileAsync("launchctl", ["bootout", serviceTarget]).catch(
+      () => undefined,
+    );
   }
 
   await execFileAsync("launchctl", ["bootstrap", domain, plistPath]);
@@ -54,6 +63,14 @@ export const kickstartAgentWitchLaunchAgent = async (
     return {
       ok: false,
       errorMessage: "launchctl kickstart is only supported on macOS.",
+    };
+  }
+
+  if (!isActiveMacOsConsoleUser()) {
+    return {
+      ok: false,
+      errorMessage:
+        "Skipping kickstart — this macOS account is not the active console user.",
     };
   }
 

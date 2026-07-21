@@ -1,5 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
+vi.mock("./isActiveMacOsConsoleUser", () => ({
+  isActiveMacOsConsoleUser: vi.fn(() => true),
+}));
+
 vi.mock("./agentWitchWatchdogLog", async (importOriginal) => {
   const actual =
     await importOriginal<typeof import("./agentWitchWatchdogLog")>();
@@ -42,6 +46,7 @@ vi.mock("./verifyAgentWitchReviveAfterKickstart", () => ({
   verifyAgentWitchReviveAfterKickstart: vi.fn(),
 }));
 
+import { isActiveMacOsConsoleUser } from "./isActiveMacOsConsoleUser";
 import { readAgentWitchConnectionHealth } from "./agentWitchConnectionHealth";
 import { isAgentWitchLaunchAgentRunning } from "./isAgentWitchLaunchAgentRunning";
 import { kickstartAgentWitchLaunchAgent } from "./kickstartAgentWitchLaunchAgent";
@@ -52,6 +57,7 @@ import { spawnAgentWitchClient } from "./spawnAgentWitchClient";
 import { verifyAgentWitchReviveAfterKickstart } from "./verifyAgentWitchReviveAfterKickstart";
 
 beforeEach(() => {
+  vi.mocked(isActiveMacOsConsoleUser).mockReturnValue(true);
   vi.mocked(verifyAgentWitchReviveAfterKickstart).mockResolvedValue(true);
   vi.mocked(attemptAgentWitchWatchdogReinstall).mockResolvedValue({
     attempted: false,
@@ -65,6 +71,15 @@ afterEach(() => {
 });
 
 describe("reviveAgentWitchWebSocket", () => {
+  it("AGENT-042: skips revive when this macOS account is not the console user", async () => {
+    vi.mocked(isActiveMacOsConsoleUser).mockReturnValue(false);
+
+    const result = await reviveAgentWitchWebSocket({ skipLog: true });
+
+    expect(listAgentWitchLaunchTargets).not.toHaveBeenCalled();
+    expect(result).toEqual({ ok: true, targets: [] });
+  });
+
   it("kickstarts launch agents with stale connection health", async () => {
     vi.mocked(listAgentWitchLaunchTargets).mockReturnValue([
       {

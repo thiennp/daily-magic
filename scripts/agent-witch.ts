@@ -15,6 +15,17 @@ import os from "node:os";
 import WebSocket from "ws";
 
 import {
+  exitUnlessActiveMacOsConsoleUser,
+  startActiveMacOsConsoleUserGuard,
+} from "./guardMacOsConsoleUser";
+import { bootoutAgentWitchAuxiliaryLaunchAgents } from "./bootoutAgentWitchAuxiliaryLaunchAgents";
+import { bootoutAgentWitchLaunchAgentsForCurrentUser } from "./bootoutAgentWitchLaunchAgentsForCurrentUser";
+import {
+  claimAgentWitchMachineLease,
+  releaseAgentWitchMachineLease,
+} from "./claimAgentWitchMachineLease";
+import { startAgentWitchInProcessServices } from "./startAgentWitchInProcessServices";
+import {
   resolveAgentWitchLocalLayout,
   type AgentWitchLocalLayout,
 } from "./resolveAgentWitchLocalLayout";
@@ -1340,8 +1351,21 @@ const waitForConfig = async (): Promise<AgentWitchConfig> => {
 };
 
 const main = async (): Promise<void> => {
+  exitUnlessActiveMacOsConsoleUser("agent-witch");
+
+  const machineLease = claimAgentWitchMachineLease();
+  if (!machineLease.ok) {
+    process.stdout.write(
+      "[agent-witch] Another macOS account already owns the machine lease — exiting.\n",
+    );
+    process.exit(0);
+  }
+
+  bootoutAgentWitchAuxiliaryLaunchAgents();
+
   const config = await waitForConfig();
   const client = createAgentWitchClient(config);
+  const inProcessServices = startAgentWitchInProcessServices();
 
   startAgentWitchLocalApp({
     layout: config.layout,
@@ -1355,10 +1379,21 @@ const main = async (): Promise<void> => {
   client.connect();
 
   const shutdown = (): void => {
+    stopConsoleUserGuard();
+    inProcessServices.stop();
+    releaseAgentWitchMachineLease();
+    bootoutAgentWitchLaunchAgentsForCurrentUser();
     console.log("[agent-witch] Shutting down.");
     client.stop();
     process.exit(0);
   };
+
+  const stopConsoleUserGuard = startActiveMacOsConsoleUserGuard(() => {
+    console.log(
+      "[agent-witch] Active macOS console user changed — shutting down.",
+    );
+    shutdown();
+  });
 
   process.on("SIGINT", shutdown);
   process.on("SIGTERM", shutdown);
