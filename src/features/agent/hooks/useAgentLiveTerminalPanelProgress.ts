@@ -1,5 +1,3 @@
-"use client";
-
 import { useAgentLiveProgressStallState } from "@/features/agent/hooks/useAgentLiveProgressStallState";
 import { useAgentRunHeartbeatStallReset } from "@/features/agent/hooks/useAgentRunHeartbeatStallReset";
 import { useAgentWitchDashboard } from "@/features/agent-witch/dashboard/AgentWitchDashboardContext";
@@ -7,6 +5,7 @@ import type { AgentLiveTerminalStatus } from "@/features/agent/utils/agentLiveTe
 import { buildAgentLiveProgressSteps } from "@/features/agent/utils/buildAgentLiveProgressSteps";
 import { isAgentLiveTerminalWorking } from "@/features/agent/utils/isAgentLiveTerminalWorking";
 import { parseAgentLiveWorkingEstimateSeconds } from "@/features/agent/utils/parseAgentLiveWorkingEstimateSeconds";
+import { resolveAgentLiveWavePlanView } from "@/features/agent/utils/resolveAgentLiveWavePlanView";
 import { resolveAgentLiveWorkingEstimateProgress } from "@/features/agent/utils/resolveAgentLiveWorkingEstimateProgress";
 
 export function useAgentLiveTerminalPanelProgress(input: {
@@ -20,9 +19,12 @@ export function useAgentLiveTerminalPanelProgress(input: {
   const isWorking = isAgentLiveTerminalWorking(input.status);
   const dashboard = useAgentWitchDashboard();
   const connectionStatus = dashboard?.connectionStatus ?? "disconnected";
-  const estimateSeconds = parseAgentLiveWorkingEstimateSeconds(
-    [input.output, input.feedbackPendingPartialOutput ?? ""].join("\n"),
-  );
+  const progressSource = [
+    input.output,
+    input.feedbackPendingPartialOutput ?? "",
+  ].join("\n");
+  const estimateSeconds = parseAgentLiveWorkingEstimateSeconds(progressSource);
+  const wavePlanItems = resolveAgentLiveWavePlanView(progressSource);
   const { stallState, msSinceLastActivity, workedMs, noteRunHeartbeat } =
     useAgentLiveProgressStallState({
       isWorking,
@@ -63,6 +65,7 @@ export function useAgentLiveTerminalPanelProgress(input: {
     stallState,
     msSinceLastActivity,
     estimateProgress,
+    wavePlanItems,
     progress,
   };
 }

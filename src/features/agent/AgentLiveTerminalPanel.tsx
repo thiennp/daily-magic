@@ -72,6 +72,7 @@ export default function AgentLiveTerminalPanel(
           connectionStatus={panelProgress.connectionStatus}
           msSinceLastActivity={panelProgress.msSinceLastActivity}
           estimateProgress={panelProgress.estimateProgress}
+          wavePlanItems={panelProgress.wavePlanItems}
           sessionDeviceId={props.sessionDeviceId}
           nextActions={showNextActions ? nextActions : []}
           nextActionsDisabled={props.isFeedbackSubmitting}

@@ -2,6 +2,7 @@
 
 import AgentLiveProgressFeedStatus from "@/features/agent/AgentLiveProgressFeedStatus";
 import AgentLiveProgressStepRow from "@/features/agent/AgentLiveProgressStepRow";
+import AgentLiveProgressWavesPanel from "@/features/agent/AgentLiveProgressWavesPanel";
 import AgentLiveTerminalNextActions from "@/features/agent/AgentLiveTerminalNextActions";
 import { useAgentLiveTerminalLoadingDots } from "@/features/agent/hooks/useAgentLiveTerminalLoadingDots";
 import type { WsTestConnectionStatus } from "@/features/agent/types/WsTestConnectionStatus.type";
@@ -9,6 +10,7 @@ import type { AgentLiveProgressStep } from "@/features/agent/utils/buildAgentLiv
 import { buildAgentLiveTerminalLoadingLine } from "@/features/agent/utils/buildAgentLiveTerminalDisplay";
 import type { AgentLiveProgressStallState } from "@/features/agent/utils/resolveAgentLiveProgressStallState";
 import type { AgentLiveWorkingEstimateProgress } from "@/features/agent/utils/resolveAgentLiveWorkingEstimateProgress";
+import type { AgentLiveWavePlanViewItem } from "@/features/agent/utils/agentLiveWavePlan.type";
 
 interface AgentLiveProgressFeedProps {
   readonly steps: readonly AgentLiveProgressStep[];
@@ -18,6 +20,7 @@ interface AgentLiveProgressFeedProps {
   readonly connectionStatus?: WsTestConnectionStatus;
   readonly msSinceLastActivity?: number | null;
   readonly estimateProgress?: AgentLiveWorkingEstimateProgress | null;
+  readonly wavePlanItems?: readonly AgentLiveWavePlanViewItem[];
   readonly sessionDeviceId?: string | null;
   readonly nextActions?: readonly string[];
   readonly nextActionsDisabled?: boolean;
@@ -32,6 +35,7 @@ export default function AgentLiveProgressFeed({
   connectionStatus = "idle",
   msSinceLastActivity = null,
   estimateProgress = null,
+  wavePlanItems = [],
   sessionDeviceId = null,
   nextActions = [],
   nextActionsDisabled = false,
@@ -54,6 +58,7 @@ export default function AgentLiveProgressFeed({
         estimateProgress={estimateProgress}
         sessionDeviceId={sessionDeviceId}
       />
+      <AgentLiveProgressWavesPanel items={wavePlanItems} />
       <ol className="mt-4 space-y-3">
         {steps.map((step) => (
           <AgentLiveProgressStepRow
