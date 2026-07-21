@@ -1,5 +1,17 @@
 # Agent Witch bridge — known issues
 
+## AGENT-057 — RUNNING jobs with no first heartbeat never became stale
+
+**Symptom:** If the Mac died or hung before the first `run.heartbeat`, `last_run_heartbeat_at` stayed null and cloud stale reconcile never failed the job, so Home could show a forever-running orphan.
+
+**Cause:** Reconcile only targeted rows with a non-null heartbeat older than 180s. Heartbeats also started only after PTY/pipe spawn attached.
+
+**Fix:** Fail RUNNING with null heartbeat after 10 minutes from `COALESCE(started_at, created_at)` (same denial reason; still exempt awaiting-input). Mac starts a session-gated heartbeat as soon as the run session is registered, then switches to process-gated after spawn. Install bundle **53**.
+
+**Regression tests:** `reconcileStaleAgentRuns.test.ts` (AGENT-057).
+
+---
+
 ## AGENT-056 — Awaiting-input stopped run.heartbeat and stale-failed waiting jobs
 
 **Symptom:** After `[[AWAITING_INPUT]]`, Send-a-task could be marked failed with “No run heartbeat from your Mac” while the operator was still answering, because Mac stopped `run.heartbeat` when the CLI paused for input.

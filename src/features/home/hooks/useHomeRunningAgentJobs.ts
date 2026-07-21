@@ -15,7 +15,12 @@ const runningJobsCache: {
 };
 
 const runningJobsCacheKey = (jobs: readonly AgentRunRecord[]): string =>
-  jobs.map((run) => `${run.id}:${run.status}:${run.updatedAt}`).join("|");
+  jobs
+    .map(
+      (run) =>
+        `${run.id}:${run.status}:${run.updatedAt}:${run.lastRunHeartbeatAt ?? ""}`,
+    )
+    .join("|");
 
 const subscribe = (onStoreChange: () => void): (() => void) => {
   window.addEventListener(AGENT_RUNS_LOCAL_CACHE_UPDATED_EVENT, onStoreChange);

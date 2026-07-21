@@ -6,10 +6,10 @@ export const resolveAgentLiveProgressConnectionHint = (input: {
 }): string => {
   if (input.connectionStatus === "connected") {
     if (input.lastMacUpdateLabel === null) {
-      return "Dashboard connected · waiting for the first Mac update…";
+      return "Dashboard connected · waiting for the first alive signal…";
     }
 
-    return `Dashboard connected · last Mac update ${input.lastMacUpdateLabel}`;
+    return `Dashboard connected · last seen alive ${input.lastMacUpdateLabel}`;
   }
 
   if (input.connectionStatus === "connecting") {

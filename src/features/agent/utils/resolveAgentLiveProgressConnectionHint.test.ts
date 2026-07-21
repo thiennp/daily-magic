@@ -9,7 +9,7 @@ describe("resolveAgentLiveProgressConnectionHint (AGENT-038)", () => {
         connectionStatus: "connected",
         lastMacUpdateLabel: "12s ago",
       }),
-    ).toBe("Dashboard connected · last Mac update 12s ago");
+    ).toBe("Dashboard connected · last seen alive 12s ago");
   });
 
   it("warns when the dashboard stream is down", () => {

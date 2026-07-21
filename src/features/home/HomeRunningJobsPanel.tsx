@@ -1,13 +1,29 @@
 "use client";
 
+import { useEffect, useState } from "react";
+
 import AgentRunStatusBadge from "@/features/reports/AgentRunStatusBadge";
 import { useSendTaskModal } from "@/features/agent/SendTaskModalProvider";
 import { useHomeRunningAgentJobs } from "@/features/home/hooks/useHomeRunningAgentJobs";
+import { formatHomeRunningJobAliveLabel } from "@/features/home/utils/formatHomeRunningJobAliveLabel";
 import { formatHomeRunningJobTitle } from "@/features/home/utils/formatHomeRunningJobTitle";
 
 export default function HomeRunningJobsPanel() {
   const runningJobs = useHomeRunningAgentJobs();
   const { expandRunningSendTask } = useSendTaskModal();
+  const [nowMs, setNowMs] = useState(() => Date.now());
+
+  useEffect(() => {
+    if (runningJobs.length === 0) {
+      return;
+    }
+    const timer = window.setInterval(() => {
+      setNowMs(Date.now());
+    }, 5_000);
+    return () => {
+      window.clearInterval(timer);
+    };
+  }, [runningJobs.length]);
 
   if (runningJobs.length === 0) {
     return null;
@@ -33,7 +49,13 @@ export default function HomeRunningJobsPanel() {
                   {formatHomeRunningJobTitle(run.prompt)}
                 </span>
                 <span className="mt-0.5 block text-xs text-gray-500 dark:text-gray-400">
-                  Click to expand
+                  {formatHomeRunningJobAliveLabel({
+                    lastRunHeartbeatAt: run.lastRunHeartbeatAt,
+                    startedAt: run.startedAt,
+                    createdAt: run.createdAt,
+                    nowMs,
+                  })}
+                  {" · Click to expand"}
                 </span>
               </span>
               <AgentRunStatusBadge status={run.status} />

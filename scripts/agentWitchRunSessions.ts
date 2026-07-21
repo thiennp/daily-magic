@@ -389,6 +389,9 @@ export const runWriterTask = (
     accumulatedOutput: runSessions.get(agentRunId)?.accumulatedOutput ?? "",
   });
 
+  // Cover the pre-spawn / hung-spawn window before PTY or pipe attaches.
+  startRunHeartbeat(socket, agentRunId, () => runSessions.has(agentRunId));
+
   void tryRunWriterTaskInPty({
     socket,
     sendMessage,

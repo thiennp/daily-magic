@@ -418,4 +418,16 @@ Document every production bug or UX regression here. Each entry must link to a t
 
 ---
 
-Use the next ID (`HOME-035`, …). Include symptom, root cause, fix paths, and test file.
+## HOME-035 — Running list did not show Mac still alive
+
+**Symptom:** Home **Running on your Mac** only said “Click to expand”, so quiet jobs looked possibly crashed even when `run.heartbeat` was arriving.
+
+**Root cause:** Heartbeats did not patch `lastRunHeartbeatAt` in the local agent-runs cache, and the list never rendered that field.
+
+**Fix:** Dashboard inbound handler patches cache on `run.heartbeat`; Home shows “Last seen alive …” (or waiting for first heartbeat).
+
+**Regression tests:** `formatHomeRunningJobAliveLabel.test.ts`, `syncAgentRunHeartbeatLocalCacheFromSocket.test.ts` (AGENT-058 / HOME-035).
+
+---
+
+Use the next ID (`HOME-036`, …). Include symptom, root cause, fix paths, and test file.
