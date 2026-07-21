@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { AGENT_WITCH_CLIENT_INSTALL_SCRIPT_NAMES } from "@/lib/agentWitch/agentWitchClientInstallScripts.constant";
+import { AGENT_WITCH_WAKE_INSTALL_SCRIPT_NAMES } from "@/lib/agentWitch/agentWitchWakeInstallScripts.constant";
 import { listAgentWitchInstallScriptNames } from "@/lib/agentWitch/listAgentWitchInstallScriptNames";
 import { renderInstallAgentWitchScript } from "@/lib/agentWitch/renderInstallAgentWitchScript";
 import {
@@ -39,6 +40,17 @@ describe("agent witch install self-repair", () => {
     const script = renderInstallAgentWitchScript("https://www.agentwitch.com");
 
     for (const scriptName of AGENT_WITCH_CLIENT_INSTALL_SCRIPT_NAMES) {
+      expect(script).toContain(
+        `https://www.agentwitch.com/install/agent-witch/scripts/${scriptName}`,
+      );
+      expect(script).toContain(`-o "\${INSTALL_DIR}/${scriptName}"`);
+    }
+  });
+
+  it("AGENT-058: downloads every wake dependency when install is re-run", () => {
+    const script = renderInstallAgentWitchScript("https://www.agentwitch.com");
+
+    for (const scriptName of AGENT_WITCH_WAKE_INSTALL_SCRIPT_NAMES) {
       expect(script).toContain(
         `https://www.agentwitch.com/install/agent-witch/scripts/${scriptName}`,
       );

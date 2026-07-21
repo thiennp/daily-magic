@@ -1,5 +1,17 @@
 # Agent Witch bridge — known issues
 
+## AGENT-058 — Watchdog revive crashed on missing verify helper
+
+**Symptom:** `~/.agent-witch/*.error.log` showed `ERR_MODULE_NOT_FOUND` for `verifyAgentWitchReviveAfterKickstart` imported from `reviveAgentWitchWebSocket.ts`. Watchdog/wake revive failed, so the Mac looked offline despite recent heartbeats.
+
+**Cause:** Bundle **55** install/update downloaded only a subset of wake scripts. `verifyAgentWitchReviveAfterKickstart.ts` was on the serve allowlist but never curled into `~/.agent-witch`, while `reviveAgentWitchWebSocket.ts` still imported it statically at module load.
+
+**Fix:** Bulk-download every `AGENT_WITCH_WAKE_INSTALL_SCRIPT_NAMES` entry during install/update. Dynamic-import the verify helper so a partial update cannot crash revive on load. Install bundle **56**.
+
+**Regression tests:** `agentWitchInstallSelfRepair.test.ts`, `reviveAgentWitchWebSocket.test.ts` (AGENT-058).
+
+---
+
 ## AGENT-057 — RUNNING jobs with no first heartbeat never became stale
 
 **Symptom:** If the Mac died or hung before the first `run.heartbeat`, `last_run_heartbeat_at` stayed null and cloud stale reconcile never failed the job, so Home could show a forever-running orphan.

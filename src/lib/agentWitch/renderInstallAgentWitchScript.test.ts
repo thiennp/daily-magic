@@ -67,7 +67,7 @@ describe("renderInstallAgentWitchScript", () => {
       'AUTOMATION_SCHEDULER_SCRIPT_URL}" -o "${INSTALL_DIR}/agent-witch-automation-scheduler.ts',
     );
     const wakeDownloadIdx = script.indexOf(
-      'WAKE_SERVER_SCRIPT_URL}" -o "${INSTALL_DIR}/agent-witch-wake-server.ts',
+      "http://localhost:3000/install/agent-witch/scripts/verifyAgentWitchReviveAfterKickstart.ts",
     );
     expect(automationDownloadIdx).toBeGreaterThan(-1);
     expect(wakeDownloadIdx).toBeGreaterThan(-1);

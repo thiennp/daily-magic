@@ -161,6 +161,27 @@ describe("reviveAgentWitchWebSocket", () => {
     });
   });
 
+  it("AGENT-058: keeps kickstart success when verify helper is unavailable", async () => {
+    vi.mocked(listAgentWitchLaunchTargets).mockReturnValue([
+      {
+        profileEmail: null,
+        launchAgentLabel: "com.agent-witch",
+      },
+    ]);
+    vi.mocked(isAgentWitchLaunchAgentRunning).mockResolvedValue(false);
+    vi.mocked(kickstartAgentWitchLaunchAgent).mockResolvedValue({ ok: true });
+    vi.mocked(verifyAgentWitchReviveAfterKickstart).mockRejectedValue(
+      new Error("ERR_MODULE_NOT_FOUND"),
+    );
+
+    const result = await reviveAgentWitchWebSocket({ skipLog: true });
+
+    expect(result.targets[0]).toMatchObject({
+      revived: true,
+      reason: "not_running",
+    });
+  });
+
   it("reinstalls from the install script when kickstart cannot restore ws", async () => {
     vi.mocked(listAgentWitchLaunchTargets).mockReturnValue([
       {

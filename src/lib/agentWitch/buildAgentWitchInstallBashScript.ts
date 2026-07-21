@@ -61,36 +61,8 @@ export const buildAgentWitchInstallBashScript = (
   })}${buildAgentWitchInstallScriptWakeServer({
     installDirName: appHome.installDirName,
     appOrigin: input.appOrigin,
-    wakeServerScriptUrl: input.wakeServerScriptUrl,
-    wakeConstantsScriptUrl: input.wakeConstantsScriptUrl,
-    wakeListTargetsScriptUrl: input.wakeListTargetsScriptUrl,
-    wakeKickstartScriptUrl: input.wakeKickstartScriptUrl,
-    wakeHandlersScriptUrl: input.wakeHandlersScriptUrl,
-    wakeAllowedOriginsScriptUrl: input.wakeAllowedOriginsScriptUrl,
-    wakeEnsureProfileScriptUrl: input.wakeEnsureProfileScriptUrl,
-    wakeSpawnClientScriptUrl: input.wakeSpawnClientScriptUrl,
-    wakeCliScriptUrl: input.wakeCliScriptUrl,
-    reviveScriptUrl: input.reviveScriptUrl,
-    connectionHealthScriptUrl: input.connectionHealthScriptUrl,
-    connectionHealthConstantsScriptUrl:
-      input.connectionHealthConstantsScriptUrl,
-    launchAgentRunningScriptUrl: input.launchAgentRunningScriptUrl,
-    watchdogLogScriptUrl: input.watchdogLogScriptUrl,
-    watchdogStatusScriptUrl: input.watchdogStatusScriptUrl,
-    localLayoutScriptUrl: input.localLayoutScriptUrl,
   })}${buildAgentWitchInstallScriptWatchdog({
     installDirName: appHome.installDirName,
     watchdogScriptUrl: input.watchdogScriptUrl,
-    reviveScriptUrl: input.reviveScriptUrl,
-    connectionHealthScriptUrl: input.connectionHealthScriptUrl,
-    connectionHealthConstantsScriptUrl:
-      input.connectionHealthConstantsScriptUrl,
-    launchAgentRunningScriptUrl: input.launchAgentRunningScriptUrl,
-    listTargetsScriptUrl: input.wakeListTargetsScriptUrl,
-    kickstartScriptUrl: input.wakeKickstartScriptUrl,
-    spawnClientScriptUrl: input.wakeSpawnClientScriptUrl,
-    localLayoutScriptUrl: input.localLayoutScriptUrl,
-    watchdogLogScriptUrl: input.watchdogLogScriptUrl,
-    watchdogStatusScriptUrl: input.watchdogStatusScriptUrl,
   })}${buildAgentWitchInstallScriptFinish({ appOrigin: input.appOrigin })}`;
 };
