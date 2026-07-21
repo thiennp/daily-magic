@@ -2,6 +2,7 @@ interface InstallTokenResult {
   readonly ok: boolean;
   readonly installCommand?: string;
   readonly pairingToken?: string;
+  readonly tokenHash?: string;
   readonly profileEmail?: string;
   readonly errorMessage?: string;
 }
@@ -21,6 +22,13 @@ const parseInstallTokenPayload = (payload: unknown): InstallTokenResult => {
     typeof (payload as { pairingToken: unknown }).pairingToken === "string"
       ? (payload as { pairingToken: string }).pairingToken
       : "";
+  const tokenHash =
+    typeof payload === "object" &&
+    payload !== null &&
+    "tokenHash" in payload &&
+    typeof (payload as { tokenHash: unknown }).tokenHash === "string"
+      ? (payload as { tokenHash: string }).tokenHash.trim()
+      : "";
   const profileEmail =
     typeof payload === "object" &&
     payload !== null &&
@@ -33,7 +41,13 @@ const parseInstallTokenPayload = (payload: unknown): InstallTokenResult => {
     return { ok: false, errorMessage: "Missing install command from server." };
   }
 
-  return { ok: true, installCommand, pairingToken, profileEmail };
+  return {
+    ok: true,
+    installCommand,
+    pairingToken,
+    tokenHash: tokenHash.length > 0 ? tokenHash : undefined,
+    profileEmail,
+  };
 };
 
 export const fetchAgentWitchInstallToken =

@@ -10,6 +10,8 @@ describe("buildAgentWitchInstallScriptFinish", () => {
 
     expect(block).toContain("agent_witch_install_finish_progress");
     expect(block).toContain('echo "Agent Witch is ready."');
-    expect(block).toContain('open "https://www.agentwitch.com/"');
+    expect(block).toContain(
+      'open "https://www.agentwitch.com/?awLocalTokenHash=${LOCAL_TOKEN_HASH}"',
+    );
   });
 });

@@ -370,4 +370,16 @@ Document every production bug or UX regression here. Each entry must link to a t
 
 ---
 
-Use the next ID (`HOME-031`, …). Include symptom, root cause, fix paths, and test file.
+## HOME-031 — this Mac badge missing after Connect without wake identity
+
+**Symptom:** After linking a Mac, Your Devices showed the connected device (e.g. Mac Light C) but never the **this Mac** badge. Connect this Mac could still appear.
+
+**Root cause:** `localTokenHash` was only set from wake `/identity` (localhost). The install-token response returned `pairingToken` but the browser discarded it, so when wake was down or incomplete there was no token identity to match `device.tokenHash`.
+
+**Fix:** Install-token API returns `tokenHash`; Connect this Mac / install command hooks persist it via `localMacTokenHashStore` (cookie + live subscribers). Install finish opens Home with `?awLocalTokenHash=…` so the badge works even when wake `/identity` is unreachable. Wake still refreshes the hash when available.
+
+**Regression tests:** `localMacTokenHashStore.test.ts`, `buildAgentWitchInstallScriptFinish.test.ts` (HOME-031).
+
+---
+
+Use the next ID (`HOME-032`, …). Include symptom, root cause, fix paths, and test file.

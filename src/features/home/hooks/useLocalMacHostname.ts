@@ -1,17 +1,18 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 
 import { requestLocalAgentWitchIdentity } from "@/features/agent-witch/utils/requestLocalAgentWitchIdentity";
 import {
   readAgentWitchLocalHostCookie,
   setAgentWitchLocalHostCookie,
 } from "@/features/agent-witch/utils/agentWitchLocalHostCookie";
+import { consumeLocalTokenHashQueryParam } from "@/features/home/utils/consumeLocalTokenHashQueryParam";
 import {
-  clearAgentWitchLocalTokenHashCookie,
-  readAgentWitchLocalTokenHashCookie,
-  setAgentWitchLocalTokenHashCookie,
-} from "@/features/agent-witch/utils/agentWitchLocalTokenHashCookie";
+  getLocalMacTokenHashSnapshot,
+  setLocalMacTokenHash,
+  subscribeLocalMacTokenHash,
+} from "@/features/home/utils/localMacTokenHashStore";
 import detectBrowserOperatingSystem from "@/features/home/utils/detectBrowserOperatingSystem";
 
 const useLocalMacHostname = (): {
@@ -22,12 +23,24 @@ const useLocalMacHostname = (): {
   const [localHostname, setLocalHostname] = useState<string | null>(() =>
     readAgentWitchLocalHostCookie(),
   );
-  const [localTokenHash, setLocalTokenHash] = useState<string | null>(() =>
-    readAgentWitchLocalTokenHashCookie(),
+  const localTokenHash = useSyncExternalStore(
+    subscribeLocalMacTokenHash,
+    getLocalMacTokenHashSnapshot,
+    () => null,
   );
   const [isCheckingLocalHostname, setIsCheckingLocalHostname] = useState(
     () => detectBrowserOperatingSystem() === "mac",
   );
+
+  useEffect(() => {
+    consumeLocalTokenHashQueryParam({
+      href: window.location.href,
+      setTokenHash: setLocalMacTokenHash,
+      replaceUrl: (nextUrl) => {
+        window.history.replaceState({}, "", nextUrl);
+      },
+    });
+  }, []);
 
   useEffect(() => {
     if (detectBrowserOperatingSystem() !== "mac") {
@@ -46,11 +59,7 @@ const useLocalMacHostname = (): {
         setLocalHostname(identity.hostname);
 
         if (identity.tokenHash !== null) {
-          setAgentWitchLocalTokenHashCookie(identity.tokenHash);
-          setLocalTokenHash(identity.tokenHash);
-        } else {
-          clearAgentWitchLocalTokenHashCookie();
-          setLocalTokenHash(null);
+          setLocalMacTokenHash(identity.tokenHash);
         }
       }
 

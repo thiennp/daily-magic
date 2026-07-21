@@ -29,6 +29,7 @@ export async function POST(request: Request): Promise<Response> {
   return Response.json({
     ok: true,
     pairingToken: installToken.pairingToken,
+    tokenHash: installToken.tokenHash,
     installCommand: installToken.installCommand,
     email,
   });
