@@ -45,12 +45,16 @@ describe("renderInstallAgentWitchScript", () => {
     expect(script).toContain("ws://localhost:3000/api/agent-witch/ws");
   });
 
-  it("AGENT-005 downloads automation before starting the wake server", () => {
+  it("AGENT-005 downloads automation scheduler before wake server scripts", () => {
     const script = renderTestInstallScript("http://localhost:3000");
-    const automationIdx = script.indexOf("agent-witch-automation-scheduler.ts");
-    const wakeIdx = script.indexOf("agent-witch-wake-server.ts");
-    expect(automationIdx).toBeGreaterThan(-1);
-    expect(wakeIdx).toBeGreaterThan(-1);
-    expect(automationIdx).toBeLessThan(wakeIdx);
+    const automationDownloadIdx = script.indexOf(
+      'AUTOMATION_SCHEDULER_SCRIPT_URL}" -o "${INSTALL_DIR}/agent-witch-automation-scheduler.ts',
+    );
+    const wakeDownloadIdx = script.indexOf(
+      'WAKE_SERVER_SCRIPT_URL}" -o "${INSTALL_DIR}/agent-witch-wake-server.ts',
+    );
+    expect(automationDownloadIdx).toBeGreaterThan(-1);
+    expect(wakeDownloadIdx).toBeGreaterThan(-1);
+    expect(automationDownloadIdx).toBeLessThan(wakeDownloadIdx);
   });
 });
