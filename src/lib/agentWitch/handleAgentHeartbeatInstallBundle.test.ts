@@ -14,11 +14,19 @@ vi.mock("@/lib/agentWitch/deliverAgentWitchDeviceRestart", () => ({
   deliverAgentWitchDeviceRestartIfRequested: vi.fn().mockResolvedValue(false),
 }));
 
-vi.mock("@/lib/agentWitch/deliverAgentWitchInstallBundleUpdateIfBehind", () => ({
-  deliverAgentWitchInstallBundleUpdateIfBehind: vi.fn(),
+vi.mock(
+  "@/lib/agentWitch/deliverAgentWitchInstallBundleUpdateIfBehind",
+  () => ({
+    deliverAgentWitchInstallBundleUpdateIfBehind: vi.fn(),
+  }),
+);
+
+vi.mock("@/lib/agentWitch/runAgentWitchHeartbeatDeviceMaintenance", () => ({
+  runAgentWitchHeartbeatDeviceMaintenance: vi.fn().mockResolvedValue(undefined),
 }));
 
 import { handleAgentHeartbeatMessageAsync } from "@/lib/agentWitch/handleAgentHeartbeatMessageAsync";
+import { runAgentWitchHeartbeatDeviceMaintenance } from "@/lib/agentWitch/runAgentWitchHeartbeatDeviceMaintenance";
 import { createAgentHeartbeatTestRuntime } from "@/lib/agentWitch/handleAgentHeartbeatMessageAsync.testHelper";
 import type AgentWitchHubClient from "@/lib/agentWitch/types/AgentWitchHubClient.type";
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
@@ -26,8 +34,6 @@ import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMess
 describe("handleAgentHeartbeatMessageAsync install bundle (AGENT-041)", () => {
   it("stores install bundle version reported by the Mac", async () => {
     const runtime = createAgentHeartbeatTestRuntime();
-    const { updateAgentWitchDeviceInstallBundleVersion } =
-      await import("@/lib/agentWitch/updateAgentWitchDeviceInstallBundleVersion");
     const sender: AgentWitchHubClient = {
       id: "agent-1",
       role: "agent",
@@ -42,9 +48,12 @@ describe("handleAgentHeartbeatMessageAsync install bundle (AGENT-041)", () => {
       requestId: "req-2",
     });
 
-    expect(updateAgentWitchDeviceInstallBundleVersion).toHaveBeenCalledWith({
-      deviceId: "device-1",
-      installBundleVersion: "34",
-    });
+    expect(runAgentWitchHeartbeatDeviceMaintenance).toHaveBeenCalledWith(
+      expect.objectContaining({
+        deviceId: "device-1",
+        hostname: "Studio-Mac",
+        installBundleVersion: "34",
+      }),
+    );
   });
 });
