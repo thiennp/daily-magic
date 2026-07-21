@@ -51,7 +51,7 @@ export default function MacDeviceRow({
     <MacDeviceRowInner
       deviceId={deviceId}
       displayName={displayName}
-      isOnline={isOnline}
+      isConnected={isConnected ?? false}
       detailText={detailText}
       detailWarning={detailWarning}
       isThisMac={isThisMac}
@@ -81,6 +81,7 @@ export default function MacDeviceRow({
         deviceId={deviceId}
         displayName={displayName}
         canRequestRestart={isWakeServerReachable}
+        isThisMac={isThisMac}
       >
         {rowInner}
       </MacDeviceOfflineWakeHint>

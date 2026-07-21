@@ -8,7 +8,7 @@ import confirmMacDeviceRevoke from "@/features/agent-witch/macDevices/utils/conf
 interface MacDeviceRowInnerProps {
   readonly deviceId: string;
   readonly displayName: string;
-  readonly isOnline: boolean;
+  readonly isConnected: boolean;
   readonly detailText?: string;
   readonly detailWarning?: boolean;
   readonly isThisMac?: boolean;
@@ -27,7 +27,7 @@ interface MacDeviceRowInnerProps {
 export default function MacDeviceRowInner({
   deviceId,
   displayName,
-  isOnline,
+  isConnected,
   detailText,
   detailWarning = false,
   isThisMac = false,
@@ -46,7 +46,7 @@ export default function MacDeviceRowInner({
     <MacDeviceRowMainContent
       deviceId={deviceId}
       displayName={displayName}
-      isOnline={isOnline}
+      isConnected={isConnected}
       detailText={detailText}
       detailWarning={detailWarning}
       isThisMac={isThisMac}

@@ -11,6 +11,9 @@ echo "Agent Witch is ready."
 
 if [[ "\$(uname -s)" == "Darwin" ]]; then
   launchctl kickstart -k "gui/\$(id -u)/\${LAUNCH_AGENT_LABEL}" 2>/dev/null || true
+  if [[ -n "\${AGENT_WITCH_SKIP_OPEN_HOME:-}" ]]; then
+    "\${CURL_BIN}" -fsS -X POST "http://127.0.0.1:\${AGENT_WITCH_WAKE_PORT}/restart" >/dev/null 2>&1 || true
+  fi
 fi
 
 if [[ "\$(uname -s)" == "Darwin" && -z "\${AGENT_WITCH_SKIP_OPEN_HOME:-}" ]]; then

@@ -14,6 +14,9 @@ describe("buildAgentWitchInstallScriptFinish", () => {
       'launchctl kickstart -k "gui/$(id -u)/${LAUNCH_AGENT_LABEL}"',
     );
     expect(block).toContain(
+      'POST "http://127.0.0.1:${AGENT_WITCH_WAKE_PORT}/restart"',
+    );
+    expect(block).toContain(
       'open "https://www.agentwitch.com/?awLocalTokenHash=${LOCAL_TOKEN_HASH}"',
     );
   });

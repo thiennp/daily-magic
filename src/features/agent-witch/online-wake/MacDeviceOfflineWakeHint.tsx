@@ -9,6 +9,7 @@ interface MacDeviceOfflineWakeHintProps {
   readonly deviceId: string;
   readonly displayName: string;
   readonly canRequestRestart: boolean;
+  readonly isThisMac?: boolean;
   readonly children: ReactNode;
 }
 
@@ -16,6 +17,7 @@ export default function MacDeviceOfflineWakeHint({
   deviceId,
   displayName,
   canRequestRestart,
+  isThisMac = false,
   children,
 }: MacDeviceOfflineWakeHintProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -40,6 +42,7 @@ export default function MacDeviceOfflineWakeHint({
         deviceId={deviceId}
         displayName={displayName}
         canRequestRestart={canRequestRestart}
+        isThisMac={isThisMac}
         onClose={() => {
           setIsModalOpen(false);
         }}

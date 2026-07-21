@@ -6,7 +6,7 @@ import MacDeviceNameEditor from "@/features/agent-witch/macDevices/MacDeviceName
 interface MacDeviceRowMainContentProps {
   readonly deviceId: string;
   readonly displayName: string;
-  readonly isOnline: boolean;
+  readonly isConnected: boolean;
   readonly detailText?: string;
   readonly detailWarning?: boolean;
   readonly isThisMac?: boolean;
@@ -18,7 +18,7 @@ interface MacDeviceRowMainContentProps {
 export default function MacDeviceRowMainContent({
   deviceId,
   displayName,
-  isOnline,
+  isConnected,
   detailText,
   detailWarning = false,
   isThisMac = false,
@@ -26,7 +26,7 @@ export default function MacDeviceRowMainContent({
   onEditingChange,
   onRenamed,
 }: MacDeviceRowMainContentProps) {
-  const iconClassName = resolveMacDeviceIconClassName(isOnline);
+  const iconClassName = resolveMacDeviceIconClassName(isConnected);
   const detailClassName = `text-left text-xs ${
     detailWarning
       ? "text-amber-700 dark:text-amber-300"
