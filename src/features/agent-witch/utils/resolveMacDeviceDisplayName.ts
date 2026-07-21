@@ -19,8 +19,16 @@ export const resolveMacDeviceDisplayName = (input: {
   readonly fallbackIndex?: number;
   readonly deviceCount?: number;
 }): string => {
-  if (!isGenericMacDeviceLabel(input.deviceLabel) && input.deviceLabel !== null) {
-    return input.deviceLabel.trim();
+  if (
+    !isGenericMacDeviceLabel(input.deviceLabel) &&
+    input.deviceLabel !== null
+  ) {
+    const trimmed = input.deviceLabel.trim();
+    const separatorIndex = trimmed.lastIndexOf("#");
+    if (separatorIndex > 0 && separatorIndex < trimmed.length - 1) {
+      return trimmed.slice(0, separatorIndex);
+    }
+    return trimmed;
   }
 
   if (input.deviceCount === 1 || input.fallbackIndex === 0) {

@@ -1,22 +1,12 @@
 import { AGENT_WITCH_INSTALL_BUNDLE_VERSION } from "@/lib/agentWitch/agentWitchInstallBundleVersion";
 import { buildAgentWitchHeartbeatAckPayload } from "@/lib/agentWitch/buildAgentWitchHeartbeatAckPayload";
 import { deliverAgentWitchInstallBundleUpdateIfBehind } from "@/lib/agentWitch/deliverAgentWitchInstallBundleUpdateIfBehind";
+import { resolveAgentWitchInstallDeviceLabelFromPayload } from "@/lib/agentWitch/resolveAgentWitchInstallDeviceLabelFromPayload";
 import { runAgentWitchHeartbeatDeviceMaintenance } from "@/lib/agentWitch/runAgentWitchHeartbeatDeviceMaintenance";
 import type AgentWitchHubClient from "@/lib/agentWitch/types/AgentWitchHubClient.type";
 import type AgentWitchHubRuntime from "@/lib/agentWitch/types/AgentWitchHubRuntime.type";
 import type AgentWitchMessage from "@/lib/agentWitch/types/AgentWitchMessage.type";
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
-
-const resolveHeartbeatHostname = (
-  payload: Readonly<Record<string, unknown>> | undefined,
-): string | null => {
-  if (typeof payload?.hostname !== "string") {
-    return null;
-  }
-
-  const trimmedHostname = payload.hostname.trim();
-  return trimmedHostname.length > 0 ? trimmedHostname : null;
-};
 
 const resolveHeartbeatEmail = (
   payload: Readonly<Record<string, unknown>> | undefined,
@@ -60,7 +50,8 @@ export const handleAgentHeartbeatMessageAsync = async (
     };
   }
 
-  const hostname = resolveHeartbeatHostname(message.payload);
+  const { hostname, installDeviceLabel } =
+    resolveAgentWitchInstallDeviceLabelFromPayload(message.payload);
   const email = resolveHeartbeatEmail(message.payload, sender.email);
   const installBundleVersion = resolveHeartbeatInstallBundleVersion(
     message.payload,
@@ -69,10 +60,13 @@ export const handleAgentHeartbeatMessageAsync = async (
     sender.pairingToken,
   );
 
-  await runtime.pairingStore.touchLastSeen(sender.pairingToken, hostname);
+  await runtime.pairingStore.touchLastSeen(
+    sender.pairingToken,
+    installDeviceLabel,
+  );
   runtime.updateClient(senderId, {
     lastHeartbeatAt: new Date().toISOString(),
-    ...(hostname !== null ? { deviceLabel: hostname } : {}),
+    ...(installDeviceLabel !== null ? { deviceLabel: installDeviceLabel } : {}),
     ...(email !== null ? { email } : {}),
     ...(sender.deviceId === undefined && claimedPairing?.deviceId !== undefined
       ? { deviceId: claimedPairing.deviceId }
@@ -95,6 +89,7 @@ export const handleAgentHeartbeatMessageAsync = async (
       userId,
       deviceId,
       hostname,
+      installDeviceLabel,
       installBundleVersion,
       wakeError,
     });

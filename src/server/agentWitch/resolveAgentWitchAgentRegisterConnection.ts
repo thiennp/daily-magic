@@ -1,5 +1,6 @@
 import type { AgentWitchHub } from "@/lib/agentWitch/agentWitchHub";
 import { findAgentWitchDeviceByToken } from "@/lib/agentWitch/findAgentWitchDeviceByToken";
+import { resolveAgentWitchInstallDeviceLabelFromPayload } from "@/lib/agentWitch/resolveAgentWitchInstallDeviceLabelFromPayload";
 import type AgentWitchMessage from "@/lib/agentWitch/types/AgentWitchMessage.type";
 import {
   DEV_DASHBOARD_EMAIL,
@@ -41,10 +42,9 @@ export const resolveAgentWitchAgentRegisterConnection = async (
     (await hub.pairingStore.resolveClaimedPairing(pairingToken));
   connectionState.userId = resolvedPairing?.userId ?? device?.userId;
 
-  const hostname =
-    typeof message.payload?.hostname === "string"
-      ? message.payload.hostname.trim()
-      : "";
+  const { installDeviceLabel } = resolveAgentWitchInstallDeviceLabelFromPayload(
+    message.payload,
+  );
   const profileEmail =
     typeof message.payload?.email === "string"
       ? message.payload.email.trim().toLowerCase()
@@ -52,7 +52,7 @@ export const resolveAgentWitchAgentRegisterConnection = async (
   const activeDevice = device?.revokedAt === null ? device : null;
   connectionState.deviceId = activeDevice?.id ?? claimedPairing?.deviceId;
   connectionState.deviceLabel =
-    hostname.length > 0 ? hostname : (activeDevice?.deviceLabel ?? undefined);
+    installDeviceLabel ?? activeDevice?.deviceLabel ?? undefined;
   if (profileEmail.length > 0) {
     connectionState.email = profileEmail;
   }

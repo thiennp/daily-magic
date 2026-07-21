@@ -1,5 +1,17 @@
 # Agent Witch bridge — known issues
 
+## AGENT-048 — Same Mac, two macOS users collapsed to one device
+
+**Symptom:** On one MacBook with Fast User Switching, Agent Witch account User A connected as macOS User A (renamed Mac Light C). After logout and Connect as macOS User B (same web account), Mac Light C disappeared and was replaced by a new Mac (Mac Light S).
+
+**Cause:** Reclaim/consolidate keyed devices on `(userId, device_label)` where `device_label` was bare hostname only (`AGENT-006`). Both macOS users shared the same hostname, so Connect rotated/revoked the first row.
+
+**Fix:** Install identity is `hostname#macosUsername`. Register-install, agent.register, and heartbeats send macOS username; sibling revoke only matches the exact composite label. Legacy bare-hostname rows upgrade on heartbeat for that paired device. Install bundle **49**.
+
+**Regression tests:** `buildAgentWitchInstallDeviceLabel.test.ts`, `resolveAgentWitchInstallDeviceLabel.test.ts`, `buildAgentWitchInstallScriptRegisterInstall.test.ts`, `handleAgentHeartbeatMessageAsync.test.ts`, `findActiveAgentWitchDeviceByUserAndLabel.test.ts` (AGENT-048).
+
+---
+
 ## AGENT-047 — Connect this Mac replaced another account on the same Mac
 
 **Symptom:** Connecting a second Agent Witch account on the same macOS home could overwrite another profile’s pairing token, flip `active-profile.json`, or have the browser adopt the wrong wake `tokenHash`.
@@ -240,9 +252,9 @@
 
 **Root cause:** Link claimed with a new pairing token and always `INSERT`ed a device row. The Mac hostname was not sent on link, so the server could not reclaim the existing row.
 
-**Fix:** Mac link posts `deviceLabel: os.hostname()`. `claimAgentWitchDevice` rotates `token_hash` onto the user’s active device with the same label (skipping generic `"Mac"`).
+**Fix:** Mac link posts an install `deviceLabel`. `claimAgentWitchDevice` rotates `token_hash` onto the user’s active device with the same label (skipping generic `"Mac"`). As of AGENT-048 the label is `hostname#macosUsername` so reclaim applies to the **same macOS user** only—not a second Fast User Switching login on the same machine.
 
-**Regression tests:** `findActiveAgentWitchDeviceByUserAndLabel.test.ts` (AGENT-006).
+**Regression tests:** `findActiveAgentWitchDeviceByUserAndLabel.test.ts` (AGENT-006), `resolveAgentWitchInstallDeviceLabel.test.ts` (AGENT-048).
 
 ---
 

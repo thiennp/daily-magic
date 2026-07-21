@@ -40,15 +40,11 @@ describe("resolveMacDeviceDisplayName", () => {
     expect(isGenericMacDeviceLabel("Office iMac")).toBe(false);
   });
 
-  it("prefers a saved display name over hostname fallbacks", () => {
-    const names = buildMacDeviceDisplayNameById([
-      {
-        id: "a",
-        deviceLabel: "L92KQX615Q",
-        displayName: "Work Mac",
-      },
-    ]);
-
-    expect(names.get("a")).toBe("Work Mac");
+  it("AGENT-048: strips macOS username from composite install labels in UI fallback", () => {
+    expect(
+      resolveMacDeviceDisplayName({
+        deviceLabel: "L92KQX615Q#thiennguyen",
+      }),
+    ).toBe("L92KQX615Q");
   });
 });

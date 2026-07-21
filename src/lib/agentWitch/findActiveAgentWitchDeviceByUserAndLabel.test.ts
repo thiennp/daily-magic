@@ -15,4 +15,9 @@ describe("isReusableDeviceLabel", () => {
     expect(isReusableDeviceLabel("L92KQX615Q")).toBe(true);
     expect(isReusableDeviceLabel("Thiens-MacBook-Pro.local")).toBe(true);
   });
+
+  it("AGENT-048: accepts hostname#macosUsername install labels", () => {
+    expect(isReusableDeviceLabel("L92KQX615Q#thiennguyen")).toBe(true);
+    expect(isReusableDeviceLabel("L92KQX615Q#otheruser")).toBe(true);
+  });
 });

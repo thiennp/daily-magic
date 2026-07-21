@@ -3,12 +3,14 @@ import { deliverAgentWitchDeviceRestartIfRequested } from "@/lib/agentWitch/deli
 import type AgentWitchHubRuntime from "@/lib/agentWitch/types/AgentWitchHubRuntime.type";
 import { updateAgentWitchDeviceInstallBundleVersion } from "@/lib/agentWitch/updateAgentWitchDeviceInstallBundleVersion";
 import { updateAgentWitchDeviceWakeError } from "@/lib/agentWitch/updateAgentWitchDeviceAuthFields";
+import { upgradeAgentWitchDeviceLabelFromLegacyHostname } from "@/lib/agentWitch/upgradeAgentWitchDeviceLabelFromLegacyHostname";
 
 export const runAgentWitchHeartbeatDeviceMaintenance = async (input: {
   readonly runtime: AgentWitchHubRuntime;
   readonly userId: string;
   readonly deviceId: string;
   readonly hostname: string | null;
+  readonly installDeviceLabel: string | null;
   readonly installBundleVersion: string | null;
   readonly wakeError: string | null;
 }): Promise<void> => {
@@ -29,11 +31,16 @@ export const runAgentWitchHeartbeatDeviceMaintenance = async (input: {
     deviceId: input.deviceId,
   });
 
-  if (input.hostname !== null) {
+  if (input.installDeviceLabel !== null) {
+    await upgradeAgentWitchDeviceLabelFromLegacyHostname({
+      deviceId: input.deviceId,
+      userId: input.userId,
+      installDeviceLabel: input.installDeviceLabel,
+    });
     await consolidateActiveAgentWitchDeviceByLabel({
       userId: input.userId,
       keepDeviceId: input.deviceId,
-      deviceLabel: input.hostname,
+      deviceLabel: input.installDeviceLabel,
     });
   }
 };

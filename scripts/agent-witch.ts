@@ -751,6 +751,7 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
           type: "agent.heartbeat",
           payload: {
             hostname: os.hostname(),
+            macOsUsername: os.userInfo().username,
             wakeError: state.wakeError,
             ...(config.email !== null ? { email: config.email } : {}),
             ...(installBundleVersion !== null ? { installBundleVersion } : {}),
@@ -1261,6 +1262,7 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
           payload: {
             role: "agent",
             hostname: os.hostname(),
+            macOsUsername: os.userInfo().username,
             pairingToken: config.pairingToken,
             ...(config.email !== null ? { email: config.email } : {}),
             ...auth,
