@@ -8,6 +8,7 @@ import {
 } from "@/features/agent-witch/online-wake";
 import type { MyMacDevice } from "@/features/agent/hooks/useMyMacDevices";
 import useThisMacLocalInstallActions from "@/features/home/hooks/useThisMacLocalInstallActions";
+import UpdateLocalMacModal from "@/features/home/UpdateLocalMacModal";
 
 interface HomeConnectedMacDeviceRowProps {
   readonly device: MyMacDevice;
@@ -24,8 +25,13 @@ interface HomeConnectedMacDeviceRowProps {
 export default function HomeConnectedMacDeviceRow(
   props: HomeConnectedMacDeviceRowProps,
 ) {
-  const { onUpdateLocal, onDeleteLocalScript } =
-    useThisMacLocalInstallActions();
+  const {
+    onUpdateLocal,
+    onDeleteLocalScript,
+    isUpdateLocalModalOpen,
+    updateLocalCommand,
+    closeUpdateLocalModal,
+  } = useThisMacLocalInstallActions();
   const detail = buildMacDeviceDetailText({
     device: props.device,
     serverInstallBundleVersion: props.serverInstallBundleVersion,
@@ -35,25 +41,32 @@ export default function HomeConnectedMacDeviceRow(
     deviceLabelMatchesLocalHost(props.device.deviceLabel, props.localHostname);
 
   return (
-    <MacDeviceRow
-      deviceId={props.device.id}
-      displayName={props.displayName}
-      isOnline={props.device.isOnline}
-      isConnected={props.device.isConnected}
-      detailText={detail?.text}
-      detailWarning={detail?.isMismatch === true}
-      isThisMac={isThisMac}
-      isWakeServerReachable={canWakeMacDeviceFromBrowser({
-        deviceLabel: props.device.deviceLabel,
-        localHostname: props.localHostname,
-        isWakeServerReachable: props.isWakeServerReachable,
-      })}
-      onRenamed={props.onRenamed}
-      onUpdateLocal={isThisMac ? onUpdateLocal : undefined}
-      onDeleteLocalScript={isThisMac ? onDeleteLocalScript : undefined}
-      onDelegateTask={props.onDelegateTask}
-      onOpenShell={props.onOpenShell}
-      onDelete={props.onDelete}
-    />
+    <>
+      <MacDeviceRow
+        deviceId={props.device.id}
+        displayName={props.displayName}
+        isOnline={props.device.isOnline}
+        isConnected={props.device.isConnected}
+        detailText={detail?.text}
+        detailWarning={detail?.isMismatch === true}
+        isThisMac={isThisMac}
+        isWakeServerReachable={canWakeMacDeviceFromBrowser({
+          deviceLabel: props.device.deviceLabel,
+          localHostname: props.localHostname,
+          isWakeServerReachable: props.isWakeServerReachable,
+        })}
+        onRenamed={props.onRenamed}
+        onUpdateLocal={isThisMac ? onUpdateLocal : undefined}
+        onDeleteLocalScript={isThisMac ? onDeleteLocalScript : undefined}
+        onDelegateTask={props.onDelegateTask}
+        onOpenShell={props.onOpenShell}
+        onDelete={props.onDelete}
+      />
+      <UpdateLocalMacModal
+        isOpen={isUpdateLocalModalOpen}
+        updateCommand={updateLocalCommand}
+        onClose={closeUpdateLocalModal}
+      />
+    </>
   );
 }

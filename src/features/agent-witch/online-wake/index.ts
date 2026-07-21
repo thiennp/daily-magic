@@ -19,6 +19,7 @@ export {
 } from "./requestAgentWitchWake";
 
 export { buildAgentWitchWakeTerminalCommand } from "./buildAgentWitchWakeTerminalCommand";
+export { buildAgentWitchSelfUpdateTerminalCommand } from "./buildAgentWitchSelfUpdateTerminalCommand";
 
 export { deviceLabelMatchesLocalHost } from "./deviceLabelMatchesLocalHost";
 
