@@ -52,7 +52,8 @@ export default function SendTaskModalChrome({
           Send a task
         </h2>
         <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
-          Choose a Mac, pick a workflow or agent, then describe what should run.
+          Choose a Mac, choose a project, pick a workflow or agent, then
+          describe what should run.
         </p>
       </div>
       <div className="absolute right-3 top-3 z-20 flex items-center gap-1 sm:right-6 sm:top-6">

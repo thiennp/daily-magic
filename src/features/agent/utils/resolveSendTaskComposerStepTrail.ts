@@ -55,23 +55,24 @@ export const resolveSendTaskComposerStepTrailItems = (input: {
     });
   }
 
-  if (input.showWorkflowTrail && input.currentStep !== "picker") {
-    items.push({
-      id: "workflow",
-      caption: "Workflow or agent",
-      value: input.workflowSelectionLabel,
-    });
-  }
-
-  if (
-    input.showProjectTrail &&
-    input.currentStep !== "picker" &&
-    input.currentStep !== "project"
-  ) {
+  // AGENT-045: Project comes before workflow in the trail.
+  if (input.showProjectTrail && input.currentStep !== "project") {
     items.push({
       id: "project",
       caption: "Project",
       value: input.projectSelectionLabel,
+    });
+  }
+
+  if (
+    input.showWorkflowTrail &&
+    input.currentStep !== "picker" &&
+    input.currentStep !== "project"
+  ) {
+    items.push({
+      id: "workflow",
+      caption: "Workflow or agent",
+      value: input.workflowSelectionLabel,
     });
   }
 

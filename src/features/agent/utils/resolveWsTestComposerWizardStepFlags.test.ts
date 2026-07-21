@@ -12,48 +12,51 @@ const macStepInput = {
 };
 
 describe("resolveWsTestComposerWizardStepFlags", () => {
-  it("shows the picker after Mac is complete and before workflow selection", () => {
+  it("AGENT-045: shows project after Mac before workflow selection", () => {
     const flags = resolveWsTestComposerWizardStepFlags({
       isSteppedComposer: true,
       macStepInput,
       hasCompletedMacSelectionStep: true,
       hasCompletedPickerStep: false,
       hasCompletedProjectStep: false,
-      requiresProjectStep: false,
+      requiresProjectStep: true,
+      hasCompletedWriterAgentStep: false,
+    });
+
+    expect(flags.showProjectStepOnly).toBe(true);
+    expect(flags.showPickerStepOnly).toBe(false);
+    expect(flags.showFormStep).toBe(false);
+  });
+
+  it("AGENT-045: shows the picker after Mac and project are complete", () => {
+    const flags = resolveWsTestComposerWizardStepFlags({
+      isSteppedComposer: true,
+      macStepInput,
+      hasCompletedMacSelectionStep: true,
+      hasCompletedPickerStep: false,
+      hasCompletedProjectStep: true,
+      requiresProjectStep: true,
       hasCompletedWriterAgentStep: false,
     });
 
     expect(flags.showPickerStepOnly).toBe(true);
+    expect(flags.showProjectStepOnly).toBe(false);
     expect(flags.showFormStep).toBe(false);
   });
 
-  it("shows the form once Mac, picker, and writer steps are complete", () => {
+  it("shows the form once Mac, project, picker, and writer steps are complete", () => {
     const flags = resolveWsTestComposerWizardStepFlags({
       isSteppedComposer: true,
       macStepInput,
       hasCompletedMacSelectionStep: true,
       hasCompletedPickerStep: true,
       hasCompletedProjectStep: true,
-      requiresProjectStep: false,
+      requiresProjectStep: true,
       hasCompletedWriterAgentStep: true,
     });
 
     expect(flags.showFormStep).toBe(true);
     expect(flags.showPickerStepOnly).toBe(false);
-  });
-
-  it("shows the project step when workflow requires a saved folder", () => {
-    const flags = resolveWsTestComposerWizardStepFlags({
-      isSteppedComposer: true,
-      macStepInput,
-      hasCompletedMacSelectionStep: true,
-      hasCompletedPickerStep: true,
-      hasCompletedProjectStep: false,
-      requiresProjectStep: true,
-      hasCompletedWriterAgentStep: false,
-    });
-
-    expect(flags.showProjectStepOnly).toBe(true);
-    expect(flags.showWriterAgentStepOnly).toBe(false);
+    expect(flags.showProjectStepOnly).toBe(false);
   });
 });

@@ -38,37 +38,46 @@ describe("resolveSendTaskComposerStepTrailItems", () => {
     macDeviceName: "Office Mac",
     showWorkflowTrail: true,
     workflowSelectionLabel: "Research brief",
-    showProjectTrail: false,
+    showProjectTrail: true,
     projectSelectionLabel: "daily-magic",
     showWriterTrail: true,
     writerAgent: "cursor" as const,
   };
 
-  it("shows only the mac on the picker step", () => {
+  it("AGENT-045: shows mac and project on the picker step", () => {
     expect(
       resolveSendTaskComposerStepTrailItems({
         ...baseInput,
         currentStep: "picker",
       }).map((item) => item.id),
+    ).toEqual(["mac", "project"]);
+  });
+
+  it("AGENT-045: shows only mac on the project step", () => {
+    expect(
+      resolveSendTaskComposerStepTrailItems({
+        ...baseInput,
+        currentStep: "project",
+      }).map((item) => item.id),
     ).toEqual(["mac"]);
   });
 
-  it("shows mac and workflow on the writer step", () => {
+  it("AGENT-045: orders project before workflow on the writer step", () => {
     expect(
       resolveSendTaskComposerStepTrailItems({
         ...baseInput,
         currentStep: "writer",
       }).map((item) => item.id),
-    ).toEqual(["mac", "workflow"]);
+    ).toEqual(["mac", "project", "workflow"]);
   });
 
-  it("shows all prior selections on the form step", () => {
+  it("AGENT-045: orders project before workflow on the form step", () => {
     expect(
       resolveSendTaskComposerStepTrailItems({
         ...baseInput,
         currentStep: "form",
       }).map((item) => item.id),
-    ).toEqual(["mac", "workflow", "writer"]);
+    ).toEqual(["mac", "project", "workflow", "writer"]);
   });
 
   it("shows all prior selections on the live session step", () => {
@@ -77,16 +86,6 @@ describe("resolveSendTaskComposerStepTrailItems", () => {
         ...baseInput,
         currentStep: "session",
       }).map((item) => item.id),
-    ).toEqual(["mac", "workflow", "writer"]);
-  });
-
-  it("includes project in the form trail when enabled", () => {
-    expect(
-      resolveSendTaskComposerStepTrailItems({
-        ...baseInput,
-        showProjectTrail: true,
-        currentStep: "form",
-      }).map((item) => item.id),
-    ).toEqual(["mac", "workflow", "project", "writer"]);
+    ).toEqual(["mac", "project", "workflow", "writer"]);
   });
 });

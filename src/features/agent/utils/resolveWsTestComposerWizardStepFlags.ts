@@ -27,15 +27,17 @@ export const resolveWsTestComposerWizardStepFlags = (input: {
   const showMacSelectionStepOnly =
     input.isSteppedComposer &&
     shouldShowWsTestComposerMacSelectionStepOnly(macStepState);
+  // AGENT-045: Mac → Project → Workflow → Writer → Form
+  const showProjectStepOnly =
+    input.isSteppedComposer &&
+    input.hasCompletedMacSelectionStep &&
+    input.requiresProjectStep &&
+    !input.hasCompletedProjectStep;
   const showPickerStepOnly =
     input.isSteppedComposer &&
     input.hasCompletedMacSelectionStep &&
+    input.hasCompletedProjectStep &&
     !input.hasCompletedPickerStep;
-  const showProjectStepOnly =
-    input.isSteppedComposer &&
-    input.hasCompletedPickerStep &&
-    input.requiresProjectStep &&
-    !input.hasCompletedProjectStep;
   const showWriterAgentStepOnly =
     input.isSteppedComposer &&
     input.hasCompletedPickerStep &&

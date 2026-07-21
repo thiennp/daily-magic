@@ -52,17 +52,6 @@ export default function WsTestComposerWizardLaterSteps({
 }: WsTestComposerWizardLaterStepsProps) {
   return (
     <>
-      {wizard.showPickerStepOnly ? (
-        <div className={wizard.showMacSection ? "mt-6" : undefined}>
-          <SendTaskComposerStepTrail items={stepTrail} />
-          <SendTaskComposerPickerStep
-            capabilities={composer.libraryCapabilities}
-            isLoading={composer.isPrefillLoading}
-            onSelect={onPickerSelect}
-            removeLibraryCapability={composer.removeLibraryCapability}
-          />
-        </div>
-      ) : null}
       {wizard.showProjectStepOnly ? (
         <div className={wizard.showMacSection ? "mt-6" : undefined}>
           <SendTaskComposerStepTrail items={stepTrail} />
@@ -73,6 +62,17 @@ export default function WsTestComposerWizardLaterSteps({
             onSelect={onProjectSelect}
             onProjectCreated={composer.addSavedProject}
             onProjectDeleted={composer.removeSavedProject}
+          />
+        </div>
+      ) : null}
+      {wizard.showPickerStepOnly ? (
+        <div className={wizard.showMacSection ? "mt-6" : undefined}>
+          <SendTaskComposerStepTrail items={stepTrail} />
+          <SendTaskComposerPickerStep
+            capabilities={composer.libraryCapabilities}
+            isLoading={composer.isPrefillLoading}
+            onSelect={onPickerSelect}
+            removeLibraryCapability={composer.removeLibraryCapability}
           />
         </div>
       ) : null}

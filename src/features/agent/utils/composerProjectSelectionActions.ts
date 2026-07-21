@@ -32,7 +32,11 @@ export const clearComposerProjectSelection = (input: {
   input.composer.clearSelectedProject();
   input.replaceHref(
     buildAgentComposerHref({
-      libraryCapabilityId: input.libraryCapabilityId,
+      deviceId:
+        input.composer.selectedDeviceId.length > 0
+          ? input.composer.selectedDeviceId
+          : undefined,
+      // AGENT-045: project is before workflow; clearing project does not keep a workflow.
     }),
   );
   input.wizard.resetProjectStep();

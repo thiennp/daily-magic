@@ -51,7 +51,7 @@ export const useWsTestPanelSteppedComposer = (input: {
     hasContinueSessionPrefill,
     hasCustomTaskPrefill,
     hasRememberedWriterAgentSelection: input.hasRememberedWriterAgentSelection,
-    requiresProjectStep: input.composer.requiresProjectSelection,
+    requiresProjectStep: input.isSteppedComposer,
     urlProjectId,
     selectedProjectId: input.composer.selectedProjectId,
   });

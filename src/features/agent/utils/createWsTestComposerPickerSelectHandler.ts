@@ -14,6 +14,15 @@ export const createWsTestComposerPickerSelectHandler = (input: {
   readonly replaceHref: (href: string) => void;
 }) => {
   return (item: SendTaskComposerPickerItem) => {
+    const selectedProjectId =
+      input.composer.selectedProjectId.trim().length > 0
+        ? input.composer.selectedProjectId.trim()
+        : undefined;
+    const selectedDeviceId =
+      input.composer.selectedDeviceId.length > 0
+        ? input.composer.selectedDeviceId
+        : undefined;
+
     if (item.kind === "history") {
       if (!canContinueAgentRunOnStoredMac(item.deviceId)) {
         return;
@@ -39,16 +48,25 @@ export const createWsTestComposerPickerSelectHandler = (input: {
       return;
     }
 
-    input.composer.clearSelectedProject();
-
+    // AGENT-045: keep the project chosen before workflow selection.
     if (item.kind === "library") {
       input.composer.setSelectedLibraryCapabilityId(item.id);
       input.replaceHref(
-        buildAgentComposerHref({ libraryCapabilityId: item.id }),
+        buildAgentComposerHref({
+          libraryCapabilityId: item.id,
+          projectId: selectedProjectId,
+          deviceId: selectedDeviceId,
+        }),
       );
     } else {
       input.composer.setSelectedLibraryCapabilityId("");
-      input.replaceHref(buildAgentComposerHref({ customTask: true }));
+      input.replaceHref(
+        buildAgentComposerHref({
+          customTask: true,
+          projectId: selectedProjectId,
+          deviceId: selectedDeviceId,
+        }),
+      );
     }
 
     input.wizard.completePickerStep();

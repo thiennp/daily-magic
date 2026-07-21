@@ -37,12 +37,12 @@ export function useComposerProjectSelection(input: {
   );
   const selectedProjectId = manualProjectId ?? urlProjectId;
   const selectedProject = useMemo(() => {
-    if (!requiresProjectSelection || selectedProjectId.length === 0) {
+    if (selectedProjectId.length === 0) {
       return null;
     }
 
     return projects.find((project) => project.id === selectedProjectId) ?? null;
-  }, [projects, requiresProjectSelection, selectedProjectId]);
+  }, [projects, selectedProjectId]);
 
   const mergeProjectIntoFieldValues = (
     values: Readonly<Record<string, string>>,

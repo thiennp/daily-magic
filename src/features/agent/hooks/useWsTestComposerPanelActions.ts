@@ -71,16 +71,24 @@ export const useWsTestComposerPanelActions = (input: {
       input.wizard.resetMacSelectionStep();
     },
     handleWorkflowStepBack: () => {
-      input.composer.clearSelectedProject();
       input.composer.setSelectedLibraryCapabilityId("");
-      replaceHref(buildAgentComposerHref({}));
+      replaceHref(
+        buildAgentComposerHref({
+          projectId:
+            input.composer.selectedProjectId.trim().length > 0
+              ? input.composer.selectedProjectId.trim()
+              : undefined,
+          deviceId:
+            input.composer.selectedDeviceId.length > 0
+              ? input.composer.selectedDeviceId
+              : undefined,
+        }),
+      );
       input.wizard.resetPickerStep();
     },
     handleProjectStepBack: () => {
       clearComposerProjectSelection({
         ...input,
-        libraryCapabilityId:
-          input.composer.selectedLibraryCapabilityId || undefined,
         replaceHref,
       });
     },
