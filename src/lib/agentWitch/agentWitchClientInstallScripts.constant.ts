@@ -30,6 +30,7 @@ export const AGENT_WITCH_CLIENT_INSTALL_SCRIPT_NAMES = [
   "bootoutAgentWitchLaunchAgent.ts",
   "bootoutAgentWitchAuxiliaryLaunchAgents.ts",
   "bootoutAgentWitchLaunchAgentsForCurrentUser.ts",
+  "agentWitchUninstallLocal.ts",
   "claimAgentWitchMachineLease.ts",
   "startAgentWitchInProcessServices.ts",
   "tickAgentWitchScheduledAutomations.ts",
