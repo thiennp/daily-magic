@@ -5,6 +5,7 @@ import { useSyncExternalStore } from "react";
 import AppPanel from "@/components/surfaces/AppPanel";
 import { APP_SURFACE_CTA_SECONDARY_SM_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
 import ConnectAnotherMacButton from "@/features/home/ConnectAnotherMacButton";
+import ConnectCursorCloudCard from "@/features/home/ConnectCursorCloudCard";
 import HomeConnectedMacsDeviceList from "@/features/home/HomeConnectedMacsDeviceList";
 import HomeConnectedMacsEmptyState from "@/features/home/HomeConnectedMacsEmptyState";
 import useHomeConnectedMacDeviceActions from "@/features/home/hooks/useHomeConnectedMacDeviceActions";
@@ -117,6 +118,10 @@ export default function HomeConnectedMacsPanel({
           />
         </div>
       ) : null}
+
+      <div className="mt-4 border-t border-gray-200 pt-4 dark:border-gray-700">
+        <ConnectCursorCloudCard />
+      </div>
     </AppPanel>
   );
 }
