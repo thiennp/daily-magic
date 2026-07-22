@@ -23,12 +23,19 @@ REGISTER_PAYLOAD="\$( "\${NODE_BIN}" -e "
 const label = process.argv[1] ?? '';
 const token = process.argv[2] ?? '';
 const bundleVersion = process.argv[3] ?? '';
+const wakePortRaw = process.argv[4] ?? '';
 const payload = { pairingToken: token, deviceLabel: label };
 if (bundleVersion.length > 0) {
   payload.installBundleVersion = bundleVersion;
 }
+if (wakePortRaw.length > 0) {
+  const wakePort = Number.parseInt(wakePortRaw, 10);
+  if (Number.isFinite(wakePort) && wakePort > 0 && wakePort <= 65535) {
+    payload.wakePort = wakePort;
+  }
+}
 process.stdout.write(JSON.stringify(payload));
-" "\${DEVICE_LABEL}" "\${PAIRING_TOKEN}" "\${INSTALL_BUNDLE_VERSION}" )"
+" "\${DEVICE_LABEL}" "\${PAIRING_TOKEN}" "\${INSTALL_BUNDLE_VERSION}" "\${AGENT_WITCH_WAKE_PORT}" )"
 "\${CURL_BIN}" -fsS -X POST "${input.appOrigin}/api/agent-witch/register-install" \\
   -H "Content-Type: application/json" \\
   -d "\${REGISTER_PAYLOAD}" >/dev/null 2>&1 || true

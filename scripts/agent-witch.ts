@@ -25,6 +25,7 @@ import {
   releaseAgentWitchMachineLease,
 } from "./claimAgentWitchMachineLease";
 import { startAgentWitchInProcessServices } from "./startAgentWitchInProcessServices";
+import { resolveAgentWitchWakePort } from "./agentWitchWakeConstants";
 import {
   resolveAgentWitchLocalLayout,
   type AgentWitchLocalLayout,
@@ -745,6 +746,7 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
       const installBundleVersion =
         readAgentWitchInstallVersion(config.layout.installDir)?.bundleVersion ??
         null;
+      const wakePort = resolveAgentWitchWakePort();
       sendMessage(
         socket,
         {
@@ -753,6 +755,7 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
             hostname: os.hostname(),
             macOsUsername: os.userInfo().username,
             wakeError: state.wakeError,
+            wakePort,
             ...(config.email !== null ? { email: config.email } : {}),
             ...(installBundleVersion !== null ? { installBundleVersion } : {}),
           },
@@ -1367,7 +1370,7 @@ const main = async (): Promise<void> => {
 
   const config = await waitForConfig();
   const client = createAgentWitchClient(config);
-  const inProcessServices = startAgentWitchInProcessServices();
+  const inProcessServices = await startAgentWitchInProcessServices();
 
   startAgentWitchLocalApp({
     layout: config.layout,

@@ -2,6 +2,7 @@ import { consolidateActiveAgentWitchDeviceByLabel } from "@/lib/agentWitch/conso
 import { deliverAgentWitchDeviceRestartIfRequested } from "@/lib/agentWitch/deliverAgentWitchDeviceRestart";
 import type AgentWitchHubRuntime from "@/lib/agentWitch/types/AgentWitchHubRuntime.type";
 import { updateAgentWitchDeviceInstallBundleVersion } from "@/lib/agentWitch/updateAgentWitchDeviceInstallBundleVersion";
+import { updateAgentWitchDeviceWakePort } from "@/lib/agentWitch/updateAgentWitchDeviceWakePort";
 import { updateAgentWitchDeviceWakeError } from "@/lib/agentWitch/updateAgentWitchDeviceAuthFields";
 import { upgradeAgentWitchDeviceLabelFromLegacyHostname } from "@/lib/agentWitch/upgradeAgentWitchDeviceLabelFromLegacyHostname";
 
@@ -12,6 +13,7 @@ export const runAgentWitchHeartbeatDeviceMaintenance = async (input: {
   readonly hostname: string | null;
   readonly installDeviceLabel: string | null;
   readonly installBundleVersion: string | null;
+  readonly wakePort: number | null;
   readonly wakeError: string | null;
 }): Promise<void> => {
   await updateAgentWitchDeviceWakeError({
@@ -23,6 +25,13 @@ export const runAgentWitchHeartbeatDeviceMaintenance = async (input: {
     await updateAgentWitchDeviceInstallBundleVersion({
       deviceId: input.deviceId,
       installBundleVersion: input.installBundleVersion,
+    });
+  }
+
+  if (input.wakePort !== null) {
+    await updateAgentWitchDeviceWakePort({
+      deviceId: input.deviceId,
+      wakePort: input.wakePort,
     });
   }
 

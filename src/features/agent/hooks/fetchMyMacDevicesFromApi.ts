@@ -12,6 +12,7 @@ interface ApiMacDevice {
   readonly lastHeartbeatAt: string | null;
   readonly isActive?: boolean;
   readonly installBundleVersion?: string | null;
+  readonly wakePort?: number | null;
 }
 
 const parseServerInstallBundleVersion = (payload: unknown): string | null => {
@@ -66,6 +67,12 @@ const parseMyMacDevices = (
         installBundleVersion:
           typeof device.installBundleVersion === "string"
             ? device.installBundleVersion
+            : null,
+        wakePort:
+          typeof device.wakePort === "number" &&
+          Number.isInteger(device.wakePort) &&
+          device.wakePort > 0
+            ? device.wakePort
             : null,
       })),
   };

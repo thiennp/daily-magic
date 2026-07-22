@@ -1,6 +1,10 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+import { useCallback } from "react";
+
 import MacDeviceRow from "@/features/agent-witch/macDevices/MacDeviceRow";
+import buildAgentWitchLocalLogHref from "@/features/agent-witch/macDevices/utils/buildAgentWitchLocalLogHref";
 import { buildMacDeviceDetailText } from "@/features/agent-witch/macDevices/utils/buildMacDeviceDetailText";
 import {
   canWakeMacDeviceFromBrowser,
@@ -40,6 +44,20 @@ export default function HomeConnectedMacDeviceRow(
   const isThisMac =
     props.localTokenHash !== null &&
     deviceMatchesLocalTokenHash(props.device.tokenHash, props.localTokenHash);
+  const router = useRouter();
+  const onSeeLocalLog = useCallback(() => {
+    const wakePort = props.device.wakePort;
+    if (wakePort === null || wakePort === undefined) {
+      return;
+    }
+
+    router.push(
+      buildAgentWitchLocalLogHref({
+        wakePort,
+        displayName: props.displayName,
+      }),
+    );
+  }, [props.device.wakePort, props.displayName, router]);
 
   return (
     <>
@@ -57,6 +75,11 @@ export default function HomeConnectedMacDeviceRow(
           isWakeServerReachable: props.isWakeServerReachable,
         })}
         onRenamed={props.onRenamed}
+        onSeeLocalLog={
+          isThisMac && props.device.wakePort !== null
+            ? onSeeLocalLog
+            : undefined
+        }
         onUpdateLocal={isThisMac ? onUpdateLocal : undefined}
         onDeleteLocalScript={isThisMac ? onDeleteLocalScript : undefined}
         onDelegateTask={props.onDelegateTask}

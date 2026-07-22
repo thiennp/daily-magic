@@ -16,6 +16,7 @@ export interface AgentWitchDeviceWithOnlineStatus {
   readonly lastHeartbeatAt: string | null;
   readonly lastWakeError?: string | null;
   readonly installBundleVersion: string | null;
+  readonly wakePort: number | null;
 }
 
 /**
@@ -51,6 +52,7 @@ const buildAgentWitchDevicesWithOnlineStatus = (
       lastHeartbeatAt: isOnline ? device.lastSeenAt : null,
       lastWakeError: device.lastWakeError ?? null,
       installBundleVersion: device.installBundleVersion ?? null,
+      wakePort: device.wakePort ?? null,
     };
   });
 };

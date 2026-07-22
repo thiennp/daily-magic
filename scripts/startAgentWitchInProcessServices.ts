@@ -14,8 +14,8 @@ export interface AgentWitchInProcessServicesHandle {
 }
 
 export const startAgentWitchInProcessServices =
-  (): AgentWitchInProcessServicesHandle => {
-    const wakeServer = startAgentWitchWakeServer();
+  async (): Promise<AgentWitchInProcessServicesHandle> => {
+    const wakeServer = await startAgentWitchWakeServer();
 
     void tickAgentWitchScheduledAutomations();
     void reviveAgentWitchWebSocket({ skipLog: true });

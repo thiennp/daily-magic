@@ -14,4 +14,5 @@ export default interface AgentWitchDeviceRecord {
   readonly lastWakeError?: string | null;
   readonly lastWakeErrorAt?: string | null;
   readonly installBundleVersion?: string | null;
+  readonly wakePort?: number | null;
 }

@@ -13,6 +13,7 @@ const device = {
   isOnline: true,
   lastHeartbeatAt: null,
   installBundleVersion: null,
+  wakePort: null,
 };
 
 describe("resolveMyMacDevicesAfterFetch", () => {
