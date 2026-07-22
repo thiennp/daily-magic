@@ -22,6 +22,7 @@ export interface MyMacDevice {
   readonly isOnline: boolean;
   readonly lastHeartbeatAt: string | null;
   readonly installBundleVersion: string | null;
+  readonly wakePort: number | null;
 }
 
 const applyDisplayNameOverrides = (

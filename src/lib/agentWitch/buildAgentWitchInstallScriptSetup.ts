@@ -8,6 +8,7 @@ import { buildAgentWitchInstallScriptRetireAuxiliaryLaunchAgents } from "@/lib/a
 import { buildAgentWitchInstallScriptPresetBlock } from "@/lib/agentWitch/buildAgentWitchInstallScriptPresetBlock";
 import { buildAgentWitchInstallScriptProgress } from "@/lib/agentWitch/buildAgentWitchInstallScriptProgress";
 import { buildAgentWitchInstallScriptRegisterLaunchAgentFn } from "@/lib/agentWitch/buildAgentWitchInstallScriptRegisterLaunchAgent";
+import { buildAgentWitchInstallScriptWakePortAllocation } from "@/lib/agentWitch/buildAgentWitchInstallScriptWakePortAllocation";
 import { buildAgentWitchInstallScriptWriterBootstrap } from "@/lib/agentWitch/buildAgentWitchInstallScriptWriterBootstrap";
 
 export const buildAgentWitchInstallScriptSetup = (
@@ -29,7 +30,6 @@ ${buildAgentWitchInstallScriptPresetBlock(input)}
 ${updateExistingInstall ? "AGENT_WITCH_SKIP_OPEN_HOME=1\n" : ""}
 INSTALL_DIR="\${HOME}/${appHome.installDirName}"
 AGENT_WITCH_HOME="\${INSTALL_DIR}"
-AGENT_WITCH_WAKE_PORT="${appHome.wakePort}"
 LAUNCH_AGENT_PREFIX="${appHome.launchAgentPrefix}"
 CLIENT_SCRIPT_URL="${input.clientScriptUrl}"
 NODE_BIN="\$(command -v node)"
@@ -76,6 +76,8 @@ LOG_BASENAME="agent-witch"
 LAUNCH_AGENT_LABEL="\${LAUNCH_AGENT_PREFIX}"
 
 mkdir -p "\${INSTALL_DIR}"
+${buildAgentWitchInstallScriptWakePortAllocation()}
+export AGENT_WITCH_WAKE_PORT
 
 if [[ -z "\${PROFILE_EMAIL}" && -f "\${INSTALL_DIR}/active-profile.json" ]]; then
   PROFILE_EMAIL="\$( "\${NODE_BIN}" -e "

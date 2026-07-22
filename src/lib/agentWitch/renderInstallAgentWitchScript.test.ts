@@ -43,7 +43,7 @@ describe("renderInstallAgentWitchScript", () => {
 
     expect(script).toContain('INSTALL_DIR="${HOME}/.local-agent-witch"');
     expect(script).toContain('LAUNCH_AGENT_PREFIX="com.local-agent-witch"');
-    expect(script).toContain('AGENT_WITCH_WAKE_PORT="47893"');
+    expect(script).toContain("wake-port.json");
     expect(script).toContain("ws://localhost:3000/api/agent-witch/ws");
   });
 

@@ -50,6 +50,7 @@ const toMyMacDevices = (
     isOnline: device.isOnline,
     lastHeartbeatAt: device.lastHeartbeatAt,
     installBundleVersion: null,
+    wakePort: null,
   }));
 };
 

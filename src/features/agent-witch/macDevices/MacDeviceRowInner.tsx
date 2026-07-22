@@ -19,6 +19,7 @@ interface MacDeviceRowInnerProps {
   readonly onRenamed: (deviceId: string, deviceLabel: string) => void;
   readonly onUpdateLocal?: () => void;
   readonly onDeleteLocalScript?: () => void;
+  readonly onSeeLocalLog?: () => void;
   readonly onDelegateTask?: (deviceId: string) => void;
   readonly onOpenShell?: () => void;
   readonly onDelete?: (deviceId: string) => void | Promise<void>;
@@ -38,6 +39,7 @@ export default function MacDeviceRowInner({
   onRenamed,
   onUpdateLocal,
   onDeleteLocalScript,
+  onSeeLocalLog,
   onDelegateTask,
   onOpenShell,
   onDelete,
@@ -75,6 +77,7 @@ export default function MacDeviceRowInner({
           }}
           onUpdateLocal={onUpdateLocal}
           onDeleteLocalScript={onDeleteLocalScript}
+          onSeeLocalLog={onSeeLocalLog}
           onOpenShell={
             onOpenShell
               ? () => {

@@ -34,6 +34,17 @@ const resolveHeartbeatInstallBundleVersion = (
   return trimmedVersion.length > 0 ? trimmedVersion : null;
 };
 
+const resolveHeartbeatWakePort = (
+  payload: Readonly<Record<string, unknown>> | undefined,
+): number | null => {
+  const wakePortRaw = payload?.wakePort;
+  if (typeof wakePortRaw !== "number" || !Number.isInteger(wakePortRaw)) {
+    return null;
+  }
+
+  return wakePortRaw > 0 && wakePortRaw <= 65535 ? wakePortRaw : null;
+};
+
 export const handleAgentHeartbeatMessageAsync = async (
   runtime: AgentWitchHubRuntime,
   senderId: string,
@@ -56,6 +67,7 @@ export const handleAgentHeartbeatMessageAsync = async (
   const installBundleVersion = resolveHeartbeatInstallBundleVersion(
     message.payload,
   );
+  const wakePort = resolveHeartbeatWakePort(message.payload);
   const claimedPairing = await runtime.pairingStore.resolveClaimedPairing(
     sender.pairingToken,
   );
@@ -91,6 +103,7 @@ export const handleAgentHeartbeatMessageAsync = async (
       hostname,
       installDeviceLabel,
       installBundleVersion,
+      wakePort,
       wakeError,
     });
   }

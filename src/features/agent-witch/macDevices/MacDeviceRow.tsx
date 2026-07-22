@@ -22,6 +22,7 @@ interface MacDeviceRowProps {
   readonly onRenamed: (deviceId: string, deviceLabel: string) => void;
   readonly onUpdateLocal?: () => void;
   readonly onDeleteLocalScript?: () => void;
+  readonly onSeeLocalLog?: () => void;
   readonly onDelegateTask?: (deviceId: string) => void;
   readonly onOpenShell?: (deviceId: string) => void;
   readonly onDelete?: (deviceId: string) => void | Promise<void>;
@@ -41,6 +42,7 @@ export default function MacDeviceRow({
   onRenamed,
   onUpdateLocal,
   onDeleteLocalScript,
+  onSeeLocalLog,
   onDelegateTask,
   onOpenShell,
   onDelete,
@@ -62,6 +64,7 @@ export default function MacDeviceRow({
       onRenamed={onRenamed}
       onUpdateLocal={onUpdateLocal}
       onDeleteLocalScript={onDeleteLocalScript}
+      onSeeLocalLog={onSeeLocalLog}
       onDelegateTask={onDelegateTask}
       onOpenShell={
         onOpenShell

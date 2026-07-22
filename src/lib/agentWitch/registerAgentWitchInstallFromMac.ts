@@ -3,11 +3,13 @@ import { findAgentWitchDeviceByToken } from "@/lib/agentWitch/findAgentWitchDevi
 import { getAgentWitchPairingStore } from "@/lib/agentWitch/getAgentWitchHub";
 import { touchAgentWitchDeviceLastSeen } from "@/lib/agentWitch/touchAgentWitchDeviceLastSeen";
 import { updateAgentWitchDeviceInstallBundleVersion } from "@/lib/agentWitch/updateAgentWitchDeviceInstallBundleVersion";
+import { updateAgentWitchDeviceWakePort } from "@/lib/agentWitch/updateAgentWitchDeviceWakePort";
 
 export const registerAgentWitchInstallFromMac = async (input: {
   readonly pairingToken: string;
   readonly deviceLabel: string;
   readonly installBundleVersion?: string;
+  readonly wakePort?: number;
 }): Promise<{ readonly ok: true; readonly deviceId: string } | null> => {
   const device = await findAgentWitchDeviceByToken(input.pairingToken);
   if (device === null || device.revokedAt !== null) {
@@ -30,6 +32,13 @@ export const registerAgentWitchInstallFromMac = async (input: {
     await updateAgentWitchDeviceInstallBundleVersion({
       deviceId: device.id,
       installBundleVersion,
+    });
+  }
+
+  if (input.wakePort !== undefined) {
+    await updateAgentWitchDeviceWakePort({
+      deviceId: device.id,
+      wakePort: input.wakePort,
     });
   }
 

@@ -35,6 +35,7 @@ export const buildMockDevicesApiResponse = (
       revokedAt: null,
       dispatchPolicy: null,
       installBundleVersion: null,
+      wakePort: null,
     })),
   };
 };

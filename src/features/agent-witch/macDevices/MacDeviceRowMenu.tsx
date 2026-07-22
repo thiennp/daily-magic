@@ -10,6 +10,7 @@ interface MacDeviceRowMenuProps {
   readonly onEdit: () => void;
   readonly onUpdateLocal?: () => void;
   readonly onDeleteLocalScript?: () => void;
+  readonly onSeeLocalLog?: () => void;
   readonly onDelegateTask?: () => void;
   readonly onOpenShell?: () => void;
   readonly onDelete?: () => void;
@@ -23,6 +24,7 @@ export default function MacDeviceRowMenu({
   onEdit,
   onUpdateLocal,
   onDeleteLocalScript,
+  onSeeLocalLog,
   onDelegateTask,
   onOpenShell,
   onDelete,
@@ -65,6 +67,7 @@ export default function MacDeviceRowMenu({
           onEdit={onEdit}
           onUpdateLocal={onUpdateLocal}
           onDeleteLocalScript={onDeleteLocalScript}
+          onSeeLocalLog={onSeeLocalLog}
           onOpenShell={onOpenShell}
           onDelegateTask={onDelegateTask}
           onDelete={onDelete}

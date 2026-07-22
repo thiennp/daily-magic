@@ -18,7 +18,11 @@ import {
   wakeAgentWitchLaunchAgents,
 } from "./agentWitchWakeHandlers";
 import { buildWakeServerCorsHeaders } from "./agentWitchWakeAllowedOrigins";
-import { resolveAgentWitchWakePort } from "./agentWitchWakeConstants";
+import {
+  buildAgentWitchWakeLocalLogHtml,
+  buildAgentWitchWakeLocalPageHeaders,
+} from "./buildAgentWitchWakeLocalLogHtml";
+import { resolveAgentWitchWakeListenPort } from "./resolveAgentWitchWakeListenPort";
 import { parseAgentWitchSelfUpdateRunBody } from "./parseAgentWitchSelfUpdateRunBody";
 import {
   exitUnlessActiveMacOsConsoleUser,
@@ -63,6 +67,7 @@ const rejectOrigin = (response: http.ServerResponse): void => {
 const handleWakeRequest = async (
   request: http.IncomingMessage,
   response: http.ServerResponse,
+  wakePort: number,
 ): Promise<void> => {
   const requestOrigin = request.headers.origin;
   const cors = buildWakeServerCorsHeaders(requestOrigin);
@@ -101,6 +106,21 @@ const handleWakeRequest = async (
         200,
         buildAgentWitchWakeIdentityResponse(),
         cors.headers,
+      );
+      return;
+    }
+
+    if (request.method === "GET" && pathname === "/local") {
+      const watchdogLogs = readAgentWitchWatchdogLogEntries(50);
+      const updateLogs = readAgentWitchSelfUpdateLogEntries(50);
+
+      response.writeHead(200, buildAgentWitchWakeLocalPageHeaders());
+      response.end(
+        buildAgentWitchWakeLocalLogHtml({
+          port: wakePort,
+          watchdogLogs,
+          updateLogs,
+        }),
       );
       return;
     }
@@ -371,42 +391,49 @@ const handleWakeRequest = async (
   }
 };
 
-export const startAgentWitchWakeServer = (): http.Server => {
-  const port = resolveAgentWitchWakePort();
+export const startAgentWitchWakeServer = async (): Promise<http.Server> => {
+  const port = await resolveAgentWitchWakeListenPort();
   const server = http.createServer((request, response) => {
-    void handleWakeRequest(request, response);
+    void handleWakeRequest(request, response, port);
   });
 
-  server.listen(port, "127.0.0.1", () => {
-    process.stdout.write(
-      `Agent Witch wake server listening on http://127.0.0.1:${port}\n`,
-    );
+  await new Promise<void>((resolve, reject) => {
+    server.once("error", reject);
+    server.listen(port, "127.0.0.1", () => {
+      resolve();
+    });
   });
+
+  process.stdout.write(
+    `Agent Witch wake server listening on http://127.0.0.1:${port}\n`,
+  );
 
   return server;
 };
 
 if (isAgentWitchScriptEntryPoint(import.meta.url)) {
-  exitUnlessActiveMacOsConsoleUser("agent-witch-wake-server");
+  void (async () => {
+    exitUnlessActiveMacOsConsoleUser("agent-witch-wake-server");
 
-  const server = startAgentWitchWakeServer();
+    const server = await startAgentWitchWakeServer();
 
-  const stopConsoleUserGuard = startActiveMacOsConsoleUserGuard(() => {
-    process.stdout.write(
-      "[agent-witch-wake-server] Active macOS console user changed — shutting down.\n",
-    );
-    server.close(() => {
-      process.exit(0);
+    const stopConsoleUserGuard = startActiveMacOsConsoleUserGuard(() => {
+      process.stdout.write(
+        "[agent-witch-wake-server] Active macOS console user changed — shutting down.\n",
+      );
+      server.close(() => {
+        process.exit(0);
+      });
     });
-  });
 
-  const shutdown = (): void => {
-    stopConsoleUserGuard();
-    server.close(() => {
-      process.exit(0);
-    });
-  };
+    const shutdown = (): void => {
+      stopConsoleUserGuard();
+      server.close(() => {
+        process.exit(0);
+      });
+    };
 
-  process.on("SIGINT", shutdown);
-  process.on("SIGTERM", shutdown);
+    process.on("SIGINT", shutdown);
+    process.on("SIGTERM", shutdown);
+  })();
 }

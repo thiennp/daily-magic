@@ -29,5 +29,11 @@ export default function mapAgentWitchDeviceRow(
     installBundleVersion: row.install_bundle_version
       ? String(row.install_bundle_version)
       : null,
+    wakePort:
+      typeof row.wake_port === "number" &&
+      Number.isInteger(row.wake_port) &&
+      row.wake_port > 0
+        ? row.wake_port
+        : null,
   };
 }

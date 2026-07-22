@@ -4,6 +4,7 @@ export interface RegisterInstallBody {
   readonly pairingToken: string;
   readonly deviceLabel: string;
   readonly installBundleVersion?: string;
+  readonly wakePort?: number;
 }
 
 export const parseRegisterInstallBody = (
@@ -40,5 +41,18 @@ export const parseRegisterInstallBody = (
   const installBundleVersion =
     installBundleVersionRaw.length > 0 ? installBundleVersionRaw : undefined;
 
-  return { pairingToken, deviceLabel, installBundleVersion };
+  const wakePortRaw =
+    "wakePort" in body &&
+    typeof (body as { wakePort: unknown }).wakePort === "number"
+      ? (body as { wakePort: number }).wakePort
+      : null;
+  const wakePort =
+    wakePortRaw !== null &&
+    Number.isInteger(wakePortRaw) &&
+    wakePortRaw > 0 &&
+    wakePortRaw <= 65535
+      ? wakePortRaw
+      : undefined;
+
+  return { pairingToken, deviceLabel, installBundleVersion, wakePort };
 };

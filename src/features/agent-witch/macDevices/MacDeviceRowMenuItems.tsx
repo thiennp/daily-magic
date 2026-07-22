@@ -8,6 +8,7 @@ interface MacDeviceRowMenuItemsProps {
   readonly onEdit: () => void;
   readonly onUpdateLocal?: () => void;
   readonly onDeleteLocalScript?: () => void;
+  readonly onSeeLocalLog?: () => void;
   readonly onDelegateTask?: () => void;
   readonly onOpenShell?: () => void;
   readonly onDelete?: () => void;
@@ -28,6 +29,7 @@ export default function MacDeviceRowMenuItems({
   onEdit,
   onUpdateLocal,
   onDeleteLocalScript,
+  onSeeLocalLog,
   onDelegateTask,
   onOpenShell,
   onDelete,
@@ -39,6 +41,15 @@ export default function MacDeviceRowMenuItems({
         <PencilIcon className="h-4 w-4 shrink-0" />,
         "Edit",
       )}
+      {onSeeLocalLog
+        ? renderMacDeviceRowMenuItem(
+            runMenuAction(closeMenu, onSeeLocalLog),
+            <span className="inline-flex h-4 w-4 shrink-0 items-center justify-center text-[10px] font-semibold">
+              []
+            </span>,
+            "See local log",
+          )
+        : null}
       {onUpdateLocal
         ? renderMacDeviceRowMenuItem(
             runMenuAction(closeMenu, onUpdateLocal),

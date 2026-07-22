@@ -16,6 +16,24 @@ describe("parseRegisterInstallBody", () => {
       pairingToken: token,
       deviceLabel: "Mac-Light-S#owner",
       installBundleVersion: "54",
+      wakePort: undefined,
+    });
+  });
+
+  it("accepts wakePort from register-install", () => {
+    const token = "a".repeat(64);
+
+    expect(
+      parseRegisterInstallBody({
+        pairingToken: token,
+        deviceLabel: "Mac-Light-S#owner",
+        wakePort: 51234,
+      }),
+    ).toEqual({
+      pairingToken: token,
+      deviceLabel: "Mac-Light-S#owner",
+      installBundleVersion: undefined,
+      wakePort: 51234,
     });
   });
 });
