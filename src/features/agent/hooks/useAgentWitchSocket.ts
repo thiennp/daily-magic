@@ -32,6 +32,9 @@ export function useAgentWitchSocket(): UseAgentWitchSocketResult {
     text: "",
     isError: false,
   });
+  const clearLastResponse = useCallback(() => {
+    setLastResponse({ text: "", isError: false });
+  }, []);
   const terminal = useAgentWitchLiveTerminal(socketRef);
   const macShell = useAgentMacShell(socketRef);
   const connectionStatus =
@@ -89,6 +92,7 @@ export function useAgentWitchSocket(): UseAgentWitchSocketResult {
   return {
     connectionStatus,
     lastResponse,
+    clearLastResponse,
     liveTerminalOutput: terminal.output,
     liveTerminalStatus: terminal.status,
     liveTerminalPendingCommandLine: terminal.pendingCommandLine,

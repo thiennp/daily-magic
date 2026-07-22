@@ -8,6 +8,7 @@ import type { AgentRunInputRequest } from "@/features/dispatch/utils/agentRunInp
 export interface UseAgentWitchSocketResult {
   readonly connectionStatus: WsTestConnectionStatus;
   readonly lastResponse: AgentWitchSocketDisplay;
+  readonly clearLastResponse: () => void;
   readonly liveTerminalOutput: string;
   readonly liveTerminalStatus: AgentLiveTerminalStatus;
   readonly liveTerminalPendingCommandLine: string | null;

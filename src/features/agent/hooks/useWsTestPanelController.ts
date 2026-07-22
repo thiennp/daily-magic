@@ -4,6 +4,8 @@ import { useAgentRunQueue } from "@/features/agent/hooks/useAgentRunQueue";
 import { useContinueFromSourceRunPrefill } from "@/features/agent/hooks/useContinueFromSourceRunPrefill";
 import { useDelegatedWriterAgent } from "@/features/agent/hooks/useDelegatedWriterAgent";
 import { useOpenMacShellFromQuery } from "@/features/agent/hooks/useOpenMacShellFromQuery";
+import { useClearStaleMacDispatchError } from "@/features/agent/hooks/useClearStaleMacDispatchError";
+import { useRefreshMacDevicesOnDispatchOfflineError } from "@/features/agent/hooks/useRefreshMacDevicesOnDispatchOfflineError";
 import { useWsTestMacSession } from "@/features/agent/hooks/useWsTestMacSession";
 import { useWsTestPanelLifecycle } from "@/features/agent/hooks/useWsTestPanelLifecycle";
 import { useWsTestPanelSteppedComposer } from "@/features/agent/hooks/useWsTestPanelSteppedComposer";
@@ -70,6 +72,16 @@ export const useWsTestPanelController = (input: {
   useOpenMacShellFromQuery({
     connectionStatus: socket.connectionStatus,
     openShell: socket.macShell.openShell,
+  });
+  useRefreshMacDevicesOnDispatchOfflineError({
+    lastResponse: socket.lastResponse,
+    refreshMacDevices: composer.refreshMacDevices,
+  });
+  useClearStaleMacDispatchError({
+    lastResponse: socket.lastResponse,
+    clearLastResponse: socket.clearLastResponse,
+    selectedDeviceCanDispatch: composer.selectedDeviceCanDispatch,
+    isTeamDispatch: composer.isTeamDispatch,
   });
 
   return {
