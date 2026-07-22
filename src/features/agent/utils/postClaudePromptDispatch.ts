@@ -30,6 +30,7 @@ export async function postClaudePromptDispatch(input: {
   readonly targetDeviceId?: string;
   readonly sessionContinuation?: boolean;
   readonly sourceRunId?: string;
+  readonly projectFolderPath?: string;
 }): Promise<string> {
   const response = await fetch("/api/agent-runs/dispatch", {
     method: "POST",
@@ -52,6 +53,9 @@ export async function postClaudePromptDispatch(input: {
         : {}),
       ...(input.sourceRunId !== undefined
         ? { sourceRunId: input.sourceRunId }
+        : {}),
+      ...(input.projectFolderPath !== undefined
+        ? { projectFolderPath: input.projectFolderPath }
         : {}),
     }),
   });

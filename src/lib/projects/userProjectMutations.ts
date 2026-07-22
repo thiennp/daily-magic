@@ -47,7 +47,6 @@ export const updateUserProject = async (
   projectId: string,
   input: {
     readonly name?: string;
-    readonly folderPath?: string;
     readonly deviceId?: string | null;
   },
 ): Promise<UserProjectRecord | null> => {
@@ -63,7 +62,6 @@ export const updateUserProject = async (
       UPDATE user_projects
       SET
         name = ${input.name ?? existing.name},
-        folder_path = ${input.folderPath ?? existing.folderPath},
         device_id = ${
           input.deviceId !== undefined ? input.deviceId : existing.deviceId
         },

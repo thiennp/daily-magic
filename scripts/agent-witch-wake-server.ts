@@ -28,6 +28,7 @@ import {
   exitUnlessActiveMacOsConsoleUser,
   startActiveMacOsConsoleUserGuard,
 } from "./guardMacOsConsoleUser";
+import { ensureAgentWitchProjectFolderFromWakeServer } from "./ensureAgentWitchProjectFolderFromWakeServer";
 import { isAgentWitchScriptEntryPoint } from "./isAgentWitchScriptEntryPoint";
 
 const readJsonBody = async (
@@ -274,6 +275,18 @@ const handleWakeRequest = async (
         response,
         installResult.ok ? 200 : 400,
         installResult,
+        cors.headers,
+      );
+      return;
+    }
+
+    if (request.method === "POST" && pathname === "/projects/ensure") {
+      const body = await readJsonBody(request);
+      const ensureResult = ensureAgentWitchProjectFolderFromWakeServer(body);
+      sendJson(
+        response,
+        ensureResult.ok ? 200 : 400,
+        ensureResult,
         cors.headers,
       );
       return;

@@ -12,6 +12,7 @@ export function sendClaudePromptOverSocket(input: {
   readonly targetDeviceId?: string;
   readonly sessionContinuation?: boolean;
   readonly sourceRunId?: string;
+  readonly projectFolderPath?: string;
   readonly onResponse: (response: string) => void;
 }): void {
   const socket = input.socket;
@@ -44,6 +45,9 @@ export function sendClaudePromptOverSocket(input: {
           : {}),
         ...(input.sourceRunId !== undefined
           ? { sourceRunId: input.sourceRunId }
+          : {}),
+        ...(input.projectFolderPath !== undefined
+          ? { projectFolderPath: input.projectFolderPath }
           : {}),
       },
       requestId: createAgentWitchRequestId(),

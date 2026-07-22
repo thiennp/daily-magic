@@ -1,4 +1,5 @@
 import buildDefaultProjectFolderPath from "@/lib/projects/buildDefaultProjectFolderPath";
+import type { ParseUpdateUserProjectBodyResult } from "@/lib/projects/parseUpdateUserProjectBodyResult.type";
 import { normalizeValidatedProjectFolderPath } from "@/lib/projects/validateProjectFolderPath";
 
 export interface CreateUserProjectInput {
@@ -9,7 +10,6 @@ export interface CreateUserProjectInput {
 
 export interface UpdateUserProjectInput {
   readonly name?: string;
-  readonly folderPath?: string;
   readonly deviceId?: string | null;
 }
 
@@ -83,36 +83,34 @@ export const parseCreateUserProjectBody = (
 
 export const parseUpdateUserProjectBody = (
   body: unknown,
-): UpdateUserProjectInput | null => {
+): ParseUpdateUserProjectBodyResult => {
   if (typeof body !== "object" || body === null) {
-    return null;
+    return { kind: "invalid" };
   }
 
   const record = body as Record<string, unknown>;
-  const name =
-    record.name === undefined ? undefined : parseProjectName(record.name);
-  const folderPath =
-    record.folderPath === undefined
-      ? undefined
-      : typeof record.folderPath === "string"
-        ? normalizeValidatedProjectFolderPath(record.folderPath)
-        : null;
 
-  if (name === null || folderPath === null) {
-    return null;
+  if (record.folderPath !== undefined) {
+    return { kind: "folder_immutable" };
   }
 
-  if (name === undefined && folderPath === undefined) {
-    const deviceId = parseOptionalDeviceId(record.deviceId);
+  const name =
+    record.name === undefined ? undefined : parseProjectName(record.name);
+  const deviceId = parseOptionalDeviceId(record.deviceId);
 
-    return deviceId === undefined ? null : { deviceId };
+  if (name === null) {
+    return { kind: "invalid" };
+  }
+
+  if (name === undefined && deviceId === undefined) {
+    return { kind: "invalid" };
   }
 
   return {
-    ...(name !== undefined ? { name } : {}),
-    ...(folderPath !== undefined ? { folderPath } : {}),
-    ...(parseOptionalDeviceId(record.deviceId) !== undefined
-      ? { deviceId: parseOptionalDeviceId(record.deviceId) }
-      : {}),
+    kind: "ok",
+    input: {
+      ...(name !== undefined ? { name } : {}),
+      ...(deviceId !== undefined ? { deviceId } : {}),
+    },
   };
 };

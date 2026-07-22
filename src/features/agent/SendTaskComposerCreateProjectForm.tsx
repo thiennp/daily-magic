@@ -3,10 +3,7 @@
 import { useState } from "react";
 
 import Button from "@/components/ui/button/Button";
-import {
-  readCreatedProject,
-  readProjectErrorMessage,
-} from "@/features/agent/utils/readProjectApiResponse";
+import { createUserProjectFromComposer } from "@/features/agent/utils/createUserProjectFromComposer";
 import buildDefaultProjectFolderPath from "@/lib/projects/buildDefaultProjectFolderPath";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
 
@@ -27,9 +24,7 @@ export default function SendTaskComposerCreateProjectForm({
   const [isSaving, setIsSaving] = useState(false);
 
   const handleCreateProject = async (): Promise<void> => {
-    const trimmedName = name.trim();
-
-    if (trimmedName.length === 0) {
+    if (name.trim().length === 0) {
       setErrorMessage("Enter a project name.");
       return;
     }
@@ -38,31 +33,19 @@ export default function SendTaskComposerCreateProjectForm({
     setErrorMessage(null);
 
     try {
-      const response = await fetch("/api/projects", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: trimmedName,
-          folderPath:
-            folderPath.trim().length > 0
-              ? folderPath.trim()
-              : buildDefaultProjectFolderPath(trimmedName),
-          deviceId: deviceId.length > 0 ? deviceId : null,
-        }),
+      const result = await createUserProjectFromComposer({
+        name,
+        folderPath,
+        deviceId,
       });
-      const data: unknown = await response.json();
 
-      if (!response.ok) {
-        setErrorMessage(readProjectErrorMessage(data));
+      if (!result.ok) {
+        setErrorMessage(result.errorMessage);
         return;
       }
 
-      const project = readCreatedProject(data);
-
-      if (project !== null) {
-        onProjectCreated(project);
-        onSelect(project);
-      }
+      onProjectCreated(result.project);
+      onSelect(result.project);
     } finally {
       setIsSaving(false);
     }
@@ -85,7 +68,7 @@ export default function SendTaskComposerCreateProjectForm({
         />
       </label>
       <label className="mt-3 block text-sm font-medium text-gray-800 dark:text-white/90">
-        Folder path (optional)
+        Folder path (optional, cannot be changed later)
         <input
           type="text"
           value={folderPath}
@@ -96,6 +79,10 @@ export default function SendTaskComposerCreateProjectForm({
           className="mt-2 w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-800"
         />
       </label>
+      <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
+        RAG and memory for this project are stored under{" "}
+        <code className="text-[11px]">.agent-witch/</code> inside the folder.
+      </p>
       {errorMessage !== null ? (
         <p className="mt-2 text-sm text-error-600 dark:text-error-400">
           {errorMessage}

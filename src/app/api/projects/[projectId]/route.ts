@@ -45,7 +45,17 @@ export async function PATCH(
   const body: unknown = await request.json().catch(() => null);
   const parsed = parseUpdateUserProjectBody(body);
 
-  if (parsed === null) {
+  if (parsed.kind === "folder_immutable") {
+    return Response.json(
+      {
+        ok: false,
+        errorMessage: "Project folder cannot be changed after it is saved.",
+      },
+      { status: 400 },
+    );
+  }
+
+  if (parsed.kind === "invalid") {
     return Response.json(
       { ok: false, errorMessage: "Invalid project payload." },
       { status: 400 },
@@ -53,7 +63,7 @@ export async function PATCH(
   }
 
   try {
-    const project = await updateUserProject(actor.id, projectId, parsed);
+    const project = await updateUserProject(actor.id, projectId, parsed.input);
 
     if (project === null) {
       return Response.json(

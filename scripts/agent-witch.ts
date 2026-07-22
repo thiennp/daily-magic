@@ -95,6 +95,7 @@ import {
   queryAgentWitchRag,
 } from "./agentWitchLocalRag";
 import { resolveAgentWitchAppOriginFromWsUrl } from "./resolveAgentWitchAppOriginFromWsUrl";
+import { ensureAgentWitchProjectFolder } from "./ensureAgentWitchProjectFolder";
 import { runWriterEnsure } from "./handleAgentWitchWriterEnsure";
 
 interface AgentWitchConfig {
@@ -117,6 +118,7 @@ const DEFAULT_ANTIGRAVITY_COMMAND = "agy";
 const HEARTBEAT_INTERVAL_MS = 30_000;
 const MAX_RECONNECT_DELAY_MS = 30_000;
 const shellSessionIdByRunId = new Map<string, string>();
+const projectFolderPathByRunId = new Map<string, string>();
 
 interface AgentWitchOutboundSocket {
   readonly readyState: number;
@@ -279,6 +281,7 @@ const dispatchWriterTask = async (
   sessionContinuation = false,
   shellSessionId?: string,
   sourceRunId?: string,
+  projectFolderPath?: string,
 ): Promise<void> => {
   if (!isHarnessWriterAgentId(writerAgent)) {
     sendMessage(socket, {
@@ -363,6 +366,7 @@ const dispatchWriterTask = async (
     layout: config.layout,
     query: resolvedPrompt,
     limit: 5,
+    ...(projectFolderPath !== undefined ? { projectFolderPath } : {}),
   });
   const promptWithRag = `${formatRagContextForPrompt(ragChunks)}${resolvedPrompt}`;
 
@@ -954,6 +958,11 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
         typeof parsed.payload.shellSessionId === "string"
           ? parsed.payload.shellSessionId
           : undefined;
+      const projectFolderPath =
+        typeof parsed.payload.projectFolderPath === "string" &&
+        parsed.payload.projectFolderPath.trim().length > 0
+          ? parsed.payload.projectFolderPath.trim()
+          : undefined;
 
       if (typeof prompt === "string" && prompt.trim().length > 0) {
         console.log(
@@ -961,6 +970,10 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
         );
         if (agentRunId !== undefined && shellSessionId !== undefined) {
           shellSessionIdByRunId.set(agentRunId, shellSessionId);
+        }
+        if (agentRunId !== undefined && projectFolderPath !== undefined) {
+          projectFolderPathByRunId.set(agentRunId, projectFolderPath);
+          ensureAgentWitchProjectFolder({ projectFolderPath });
         }
         void dispatchWriterTask(
           config,
@@ -972,6 +985,7 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
           sessionContinuation,
           shellSessionId,
           sourceRunId,
+          projectFolderPath,
         );
       }
     }
@@ -1207,13 +1221,20 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
       typeof parsed.payload.output === "string" &&
       parsed.payload.output.trim().length > 0
     ) {
+      const agentRunId =
+        typeof parsed.payload.agentRunId === "string"
+          ? parsed.payload.agentRunId
+          : undefined;
+      const projectFolderPath =
+        agentRunId !== undefined
+          ? projectFolderPathByRunId.get(agentRunId)
+          : undefined;
+
       void indexAgentWitchRagText({
         layout: config.layout,
         text: parsed.payload.output,
-        source:
-          typeof parsed.payload.agentRunId === "string"
-            ? parsed.payload.agentRunId
-            : "command.claude.result",
+        source: agentRunId ?? "command.claude.result",
+        ...(projectFolderPath !== undefined ? { projectFolderPath } : {}),
       });
     }
   };

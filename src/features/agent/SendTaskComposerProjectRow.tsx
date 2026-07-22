@@ -32,6 +32,9 @@ export default function SendTaskComposerProjectRow({
           </span>
           <span className="mt-0.5 block truncate text-xs text-gray-500 dark:text-gray-400">
             {project.folderPath}
+            <span className="ml-1 text-[10px] uppercase tracking-wide text-gray-400 dark:text-gray-500">
+              · locked
+            </span>
           </span>
         </span>
       </button>

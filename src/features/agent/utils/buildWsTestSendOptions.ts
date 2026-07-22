@@ -11,6 +11,7 @@ export const buildWsTestSendOptions = (
   readonly groupId?: string;
   readonly capabilityId?: string;
   readonly targetDeviceId?: string;
+  readonly projectFolderPath?: string;
 } => ({
   writerAgent,
   ...(composer.isTeamDispatch
@@ -26,6 +27,10 @@ export const buildWsTestSendOptions = (
         ...(composer.isLibraryPlaybook &&
         composer.libraryCapabilityId.length > 0
           ? { capabilityId: composer.libraryCapabilityId }
+          : {}),
+        ...(composer.selectedProject?.folderPath !== undefined &&
+        composer.selectedProject.folderPath.length > 0
+          ? { projectFolderPath: composer.selectedProject.folderPath }
           : {}),
       }),
 });

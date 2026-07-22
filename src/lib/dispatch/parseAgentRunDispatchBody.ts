@@ -11,6 +11,7 @@ export interface AgentRunDispatchBody {
   readonly targetDeviceId?: string;
   readonly sessionContinuation?: boolean;
   readonly sourceRunId?: string;
+  readonly projectFolderPath?: string;
 }
 
 export const parseAgentRunDispatchBody = (
@@ -43,6 +44,10 @@ export const parseAgentRunDispatchBody = (
     ...(body.sessionContinuation === true ? { sessionContinuation: true } : {}),
     ...(typeof body.sourceRunId === "string" && body.sourceRunId.length > 0
       ? { sourceRunId: body.sourceRunId }
+      : {}),
+    ...(typeof body.projectFolderPath === "string" &&
+    body.projectFolderPath.length > 0
+      ? { projectFolderPath: body.projectFolderPath }
       : {}),
   };
 };
