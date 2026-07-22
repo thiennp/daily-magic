@@ -20,6 +20,8 @@
     "test:watch": "vitest",
     "test:e2e": "playwright test",
     "test:e2e:install": "playwright install chromium",
+    "test:e2e:shipped-install": "playwright test --config=playwright.shipped-install.config.ts",
+    "test:shipped-install-blackbox": "tsx scripts/runShippedInstallBlackbox.ts",
     "showcase:capture": "node .agents/scripts/capture-showcase-screens.mjs",
     "e2e:capture-screenshots": "playwright test --config=playwright.capture.config.ts",
     "e2e:agent-witch:setup": "tsx scripts/e2e-setup-agent-witch-localhost.ts",
