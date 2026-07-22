@@ -4,6 +4,7 @@ import {
 } from "@/lib/projects/userProjectMutations";
 import { getUserProjectById } from "@/lib/projects/userProjectQueries";
 import { parseUpdateUserProjectBody } from "@/lib/projects/parseUserProjectBody";
+import isDefaultUserProject from "@/lib/projects/isDefaultUserProject";
 import { requireAuth } from "@/lib/auth/requireAuth";
 
 export const dynamic = "force-dynamic";
@@ -92,6 +93,22 @@ export async function DELETE(
   }
 
   const { projectId } = await context.params;
+  const project = await getUserProjectById(projectId);
+
+  if (project === null || project.ownerUserId !== actor.id) {
+    return Response.json(
+      { ok: false, errorMessage: "Project not found." },
+      { status: 404 },
+    );
+  }
+
+  if (isDefaultUserProject(project)) {
+    return Response.json(
+      { ok: false, errorMessage: "The Default project cannot be deleted." },
+      { status: 400 },
+    );
+  }
+
   const deleted = await deleteUserProject(actor.id, projectId);
 
   if (!deleted) {

@@ -13,10 +13,6 @@ export const shouldSkipWsTestComposerProjectStep = (input: {
   input.isCustomTask || !workflowRequiresProjectSelection(input.workflowFields);
 
 export const shouldAutoCompleteWsTestComposerProjectStep = (input: {
-  readonly urlProjectId: string;
   readonly selectedProjectId: string;
   readonly hasRewoundWizard: boolean;
-}): boolean =>
-  !input.hasRewoundWizard &&
-  input.urlProjectId.length > 0 &&
-  input.selectedProjectId.length > 0;
+}): boolean => !input.hasRewoundWizard && input.selectedProjectId.length > 0;

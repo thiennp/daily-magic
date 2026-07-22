@@ -1,6 +1,7 @@
 "use client";
 
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
+import isDefaultUserProject from "@/lib/projects/isDefaultUserProject";
 import { FolderIcon, TrashBinIcon } from "@/icons";
 
 interface SendTaskComposerProjectRowProps {
@@ -14,6 +15,8 @@ export default function SendTaskComposerProjectRow({
   onSelect,
   onDelete,
 }: SendTaskComposerProjectRowProps) {
+  const canDelete = !isDefaultUserProject(project);
+
   return (
     <div className="flex items-stretch gap-2">
       <button
@@ -38,16 +41,18 @@ export default function SendTaskComposerProjectRow({
           </span>
         </span>
       </button>
-      <button
-        type="button"
-        aria-label={`Delete ${project.name}`}
-        onClick={() => {
-          void onDelete(project.id);
-        }}
-        className="inline-flex shrink-0 items-center justify-center rounded-xl border border-gray-200 bg-white px-3 text-gray-500 transition hover:border-error-200 hover:bg-error-50 hover:text-error-600 dark:border-gray-800 dark:bg-white/[0.02] dark:hover:border-error-900/40 dark:hover:bg-error-950/20 dark:hover:text-error-400"
-      >
-        <TrashBinIcon className="h-4 w-4" />
-      </button>
+      {canDelete ? (
+        <button
+          type="button"
+          aria-label={`Delete ${project.name}`}
+          onClick={() => {
+            void onDelete(project.id);
+          }}
+          className="inline-flex shrink-0 items-center justify-center rounded-xl border border-gray-200 bg-white px-3 text-gray-500 transition hover:border-error-200 hover:bg-error-50 hover:text-error-600 dark:border-gray-800 dark:bg-white/[0.02] dark:hover:border-error-900/40 dark:hover:bg-error-950/20 dark:hover:text-error-400"
+        >
+          <TrashBinIcon className="h-4 w-4" />
+        </button>
+      ) : null}
     </div>
   );
 }

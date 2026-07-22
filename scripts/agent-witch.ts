@@ -94,7 +94,13 @@ import {
   indexAgentWitchRagText,
   queryAgentWitchRag,
 } from "./agentWitchLocalRag";
+import {
+  appendAgentWitchMemoryEntry,
+  formatMemoryContextForPrompt,
+  readAgentWitchMemoryEntries,
+} from "./agentWitchLocalMemory";
 import { resolveAgentWitchAppOriginFromWsUrl } from "./resolveAgentWitchAppOriginFromWsUrl";
+import { buildDefaultUserProjectFolderPath } from "../src/lib/projects/defaultUserProject.constants";
 import { ensureAgentWitchProjectFolder } from "./ensureAgentWitchProjectFolder";
 import { runWriterEnsure } from "./handleAgentWitchWriterEnsure";
 
@@ -119,6 +125,13 @@ const HEARTBEAT_INTERVAL_MS = 30_000;
 const MAX_RECONNECT_DELAY_MS = 30_000;
 const shellSessionIdByRunId = new Map<string, string>();
 const projectFolderPathByRunId = new Map<string, string>();
+const promptByRunId = new Map<string, string>();
+
+const resolveRunProjectFolderPath = (projectFolderPath?: string): string => {
+  const trimmed = projectFolderPath?.trim() ?? "";
+
+  return trimmed.length > 0 ? trimmed : buildDefaultUserProjectFolderPath();
+};
 
 interface AgentWitchOutboundSocket {
   readonly readyState: number;
@@ -362,18 +375,28 @@ const dispatchWriterTask = async (
     }
   }
 
+  const resolvedProjectFolderPath =
+    resolveRunProjectFolderPath(projectFolderPath);
+  ensureAgentWitchProjectFolder({
+    projectFolderPath: resolvedProjectFolderPath,
+  });
+
   const ragChunks = await queryAgentWitchRag({
     layout: config.layout,
     query: resolvedPrompt,
     limit: 5,
-    ...(projectFolderPath !== undefined ? { projectFolderPath } : {}),
+    projectFolderPath: resolvedProjectFolderPath,
   });
-  const promptWithRag = `${formatRagContextForPrompt(ragChunks)}${resolvedPrompt}`;
+  const memoryEntries = readAgentWitchMemoryEntries(
+    config.layout,
+    resolvedProjectFolderPath,
+  );
+  const promptWithProjectContext = `${formatMemoryContextForPrompt(memoryEntries)}${formatRagContextForPrompt(ragChunks)}${resolvedPrompt}`;
 
   runWriterTask(
     config,
     writerAgent,
-    promptWithRag,
+    promptWithProjectContext,
     requestId,
     asLegacyWebSocket(socket),
     agentRunId,
@@ -958,11 +981,11 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
         typeof parsed.payload.shellSessionId === "string"
           ? parsed.payload.shellSessionId
           : undefined;
-      const projectFolderPath =
-        typeof parsed.payload.projectFolderPath === "string" &&
-        parsed.payload.projectFolderPath.trim().length > 0
-          ? parsed.payload.projectFolderPath.trim()
-          : undefined;
+      const projectFolderPath = resolveRunProjectFolderPath(
+        typeof parsed.payload.projectFolderPath === "string"
+          ? parsed.payload.projectFolderPath
+          : undefined,
+      );
 
       if (typeof prompt === "string" && prompt.trim().length > 0) {
         console.log(
@@ -971,8 +994,9 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
         if (agentRunId !== undefined && shellSessionId !== undefined) {
           shellSessionIdByRunId.set(agentRunId, shellSessionId);
         }
-        if (agentRunId !== undefined && projectFolderPath !== undefined) {
+        if (agentRunId !== undefined) {
           projectFolderPathByRunId.set(agentRunId, projectFolderPath);
+          promptByRunId.set(agentRunId, prompt.trim());
           ensureAgentWitchProjectFolder({ projectFolderPath });
         }
         void dispatchWriterTask(
@@ -1225,17 +1249,34 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
         typeof parsed.payload.agentRunId === "string"
           ? parsed.payload.agentRunId
           : undefined;
-      const projectFolderPath =
+      const projectFolderPath = resolveRunProjectFolderPath(
         agentRunId !== undefined
           ? projectFolderPathByRunId.get(agentRunId)
-          : undefined;
+          : undefined,
+      );
+      const prompt =
+        agentRunId !== undefined ? (promptByRunId.get(agentRunId) ?? "") : "";
 
       void indexAgentWitchRagText({
         layout: config.layout,
         text: parsed.payload.output,
         source: agentRunId ?? "command.claude.result",
-        ...(projectFolderPath !== undefined ? { projectFolderPath } : {}),
+        projectFolderPath,
       });
+
+      if (prompt.trim().length > 0) {
+        appendAgentWitchMemoryEntry({
+          layout: config.layout,
+          projectFolderPath,
+          entry: {
+            id: `${Date.now()}-${agentRunId ?? "run"}`,
+            ...(agentRunId !== undefined ? { agentRunId } : {}),
+            prompt,
+            output: parsed.payload.output,
+            createdAt: new Date().toISOString(),
+          },
+        });
+      }
     }
   };
 
