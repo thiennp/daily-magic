@@ -1,3 +1,4 @@
+import { resolveAgentWitchWakeBaseUrlForPort } from "@/lib/agentWitch/resolveAgentWitchWakeBaseUrlForPort";
 import { resolveAgentWitchWakeBaseUrlForPage } from "@/lib/agentWitch/resolveAgentWitchWakeBaseUrl";
 
 export interface LocalAgentWitchDeleteInstallWakeResult {
@@ -23,37 +24,42 @@ const readWakeResultMessage = (payload: unknown): string => {
   return "Local install removal finished.";
 };
 
-export const requestLocalAgentWitchDeleteInstallFromWakeServer =
-  async (): Promise<LocalAgentWitchDeleteInstallWakeResult> => {
-    if (typeof window === "undefined") {
-      return {
-        ok: false,
-        message: "Local uninstall is only available in the browser.",
-      };
-    }
+export const requestLocalAgentWitchDeleteInstallFromWakeServer = async (
+  wakePort?: number | null,
+): Promise<LocalAgentWitchDeleteInstallWakeResult> => {
+  if (typeof window === "undefined") {
+    return {
+      ok: false,
+      message: "Local uninstall is only available in the browser.",
+    };
+  }
 
-    try {
-      const response = await fetch(
-        `${resolveAgentWitchWakeBaseUrlForPage()}/install/delete`,
-        {
-          method: "POST",
-          mode: "cors",
-          signal: AbortSignal.timeout(15_000),
-        },
-      );
+  const wakeBaseUrl =
+    wakePort !== null &&
+    wakePort !== undefined &&
+    Number.isInteger(wakePort) &&
+    wakePort > 0
+      ? resolveAgentWitchWakeBaseUrlForPort(wakePort)
+      : resolveAgentWitchWakeBaseUrlForPage();
 
-      const payload: unknown = await response.json().catch(() => null);
-      const message = readWakeResultMessage(payload);
+  try {
+    const response = await fetch(`${wakeBaseUrl}/install/delete`, {
+      method: "POST",
+      mode: "cors",
+      signal: AbortSignal.timeout(15_000),
+    });
 
-      return {
-        ok: response.ok,
-        message,
-      };
-    } catch {
-      return {
-        ok: false,
-        message:
-          "Could not reach the local Agent Witch wake server on this Mac.",
-      };
-    }
-  };
+    const payload: unknown = await response.json().catch(() => null);
+    const message = readWakeResultMessage(payload);
+
+    return {
+      ok: response.ok,
+      message,
+    };
+  } catch {
+    return {
+      ok: false,
+      message: "Could not reach the local Agent Witch wake server on this Mac.",
+    };
+  }
+};

@@ -1,16 +1,12 @@
 "use client";
 
 import Label from "@/components/form/Label";
-import MacDeviceRow from "@/features/agent-witch/macDevices/MacDeviceRow";
-import { buildMacDeviceDetailText } from "@/features/agent-witch/macDevices/utils/buildMacDeviceDetailText";
-import {
-  canWakeMacDeviceFromBrowser,
-  deviceMatchesLocalTokenHash,
-} from "@/features/agent-witch/online-wake";
+import MacDevicePickerLocalInstallModals from "@/features/agent/MacDevicePickerLocalInstallModals";
+import MacDevicePickerRows from "@/features/agent/MacDevicePickerRows";
+import { deviceMatchesLocalTokenHash } from "@/features/agent-witch/online-wake";
 import type { MyMacDevice } from "@/features/agent/hooks/useMyMacDevices";
 import useMyMacDevices from "@/features/agent/hooks/useMyMacDevices";
 import useThisMacLocalInstallActions from "@/features/home/hooks/useThisMacLocalInstallActions";
-import UpdateLocalMacModal from "@/features/home/UpdateLocalMacModal";
 
 interface MacDevicePickerProps {
   readonly devices: readonly MyMacDevice[];
@@ -38,13 +34,14 @@ export default function MacDevicePicker({
   onDelete,
 }: MacDevicePickerProps) {
   const { serverInstallBundleVersion } = useMyMacDevices();
-  const {
-    onUpdateLocal,
-    onDeleteLocalScript,
-    isUpdateLocalModalOpen,
-    updateLocalCommand,
-    closeUpdateLocalModal,
-  } = useThisMacLocalInstallActions();
+  const thisMacDevice = devices.find(
+    (device) =>
+      localTokenHash !== null &&
+      deviceMatchesLocalTokenHash(device.tokenHash, localTokenHash),
+  );
+  const localInstallActions = useThisMacLocalInstallActions({
+    wakePort: thisMacDevice?.wakePort ?? null,
+  });
 
   if (isLoading) {
     return (
@@ -66,46 +63,29 @@ export default function MacDevicePicker({
     <div>
       <Label>Which Mac should run this?</Label>
       <div className="mt-3 space-y-2">
-        {devices.map((device) => {
-          const detail = buildMacDeviceDetailText({
-            device,
-            serverInstallBundleVersion,
-          });
-          const isThisMac =
-            localTokenHash !== null &&
-            deviceMatchesLocalTokenHash(device.tokenHash, localTokenHash);
-
-          return (
-            <MacDeviceRow
-              key={device.id}
-              deviceId={device.id}
-              displayName={displayNameById.get(device.id) ?? "Your Mac"}
-              isOnline={device.isOnline}
-              isConnected={device.isConnected}
-              detailText={detail?.text}
-              detailWarning={detail?.isMismatch === true}
-              isThisMac={isThisMac}
-              isSelected={device.id === selectedDeviceId}
-              isWakeServerReachable={canWakeMacDeviceFromBrowser({
-                deviceLabel: device.deviceLabel,
-                localHostname,
-                isWakeServerReachable,
-              })}
-              onSelect={() => {
-                onChange(device.id);
-              }}
-              onRenamed={onRenamed}
-              onUpdateLocal={isThisMac ? onUpdateLocal : undefined}
-              onDeleteLocalScript={isThisMac ? onDeleteLocalScript : undefined}
-              onDelete={onDelete}
-            />
-          );
-        })}
+        <MacDevicePickerRows
+          devices={devices}
+          displayNameById={displayNameById}
+          selectedDeviceId={selectedDeviceId}
+          serverInstallBundleVersion={serverInstallBundleVersion}
+          localHostname={localHostname}
+          localTokenHash={localTokenHash}
+          isWakeServerReachable={isWakeServerReachable}
+          onChange={onChange}
+          onRenamed={onRenamed}
+          onUpdateLocal={localInstallActions.onUpdateLocal}
+          onDeleteLocalScript={localInstallActions.onDeleteLocalScript}
+          onDelete={onDelete}
+        />
       </div>
-      <UpdateLocalMacModal
-        isOpen={isUpdateLocalModalOpen}
-        updateCommand={updateLocalCommand}
-        onClose={closeUpdateLocalModal}
+      <MacDevicePickerLocalInstallModals
+        isUpdateLocalModalOpen={localInstallActions.isUpdateLocalModalOpen}
+        isDeleteLocalModalOpen={localInstallActions.isDeleteLocalModalOpen}
+        updateLocalCommand={localInstallActions.updateLocalCommand}
+        deleteLocalCommand={localInstallActions.deleteLocalCommand}
+        wakePort={localInstallActions.wakePort}
+        closeUpdateLocalModal={localInstallActions.closeUpdateLocalModal}
+        closeDeleteLocalModal={localInstallActions.closeDeleteLocalModal}
       />
     </div>
   );
