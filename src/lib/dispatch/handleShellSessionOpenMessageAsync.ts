@@ -12,7 +12,7 @@ import {
 import {
   resolveClaudeRunAgentClient,
   resolveTargetDeviceId,
-} from "@/lib/dispatch/resolveClaudeRunAgentClient";
+} from "@/lib/dispatch/resolveWriterRunAgentClient";
 import { subscribeDashboardTerminal } from "@/lib/dispatch/dashboardTerminalSubscriptionRegistry";
 
 export const handleShellSessionOpenMessageAsync = async (

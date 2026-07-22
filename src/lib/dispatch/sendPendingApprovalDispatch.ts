@@ -6,7 +6,7 @@ import type AgentRunRecord from "@/lib/dispatch/types/AgentRunRecord.type";
 import { buildDispatchApprovalExpiresAt } from "@/lib/dispatch/dispatchApprovalTtl.constant";
 import { setAgentRunApprovalExpiry } from "@/lib/dispatch/setAgentRunApprovalExpiry";
 import { dispatchApprovalRegistry } from "@/lib/dispatch/dispatchApprovalRegistry";
-import { notifyDashboardUser } from "@/lib/dispatch/dispatchClaudeRunToAgent";
+import { notifyDashboardUser } from "@/lib/dispatch/dispatchWriterRunToAgent";
 import type { DispatchPolicyValue } from "@/lib/dispatch/DispatchPolicy.constant";
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
 

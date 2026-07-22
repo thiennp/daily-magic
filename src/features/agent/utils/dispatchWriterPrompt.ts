@@ -1,5 +1,5 @@
-import { postClaudePromptDispatch } from "@/features/agent/utils/postClaudePromptDispatch";
-import { sendClaudePromptOverSocket } from "@/features/agent/utils/sendClaudePromptOverSocket";
+import { postClaudePromptDispatch } from "@/features/agent/utils/postWriterPromptDispatch";
+import { sendClaudePromptOverSocket } from "@/features/agent/utils/sendWriterPromptOverSocket";
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
 
 export async function dispatchClaudePrompt(input: {

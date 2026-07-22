@@ -3,12 +3,12 @@ import type AgentWitchHubClient from "@/lib/agentWitch/types/AgentWitchHubClient
 import type AgentWitchHubRuntime from "@/lib/agentWitch/types/AgentWitchHubRuntime.type";
 import type AgentWitchMessage from "@/lib/agentWitch/types/AgentWitchMessage.type";
 import { buildDispatchError } from "@/lib/dispatch/buildDispatchError";
-import { dispatchClaudeRunForDashboardUser } from "@/lib/dispatch/dispatchClaudeRunForDashboardUser";
+import { dispatchClaudeRunForDashboardUser } from "@/lib/dispatch/dispatchWriterRunForDashboardUser";
 import { parseAgentRunDispatchBody } from "@/lib/dispatch/parseAgentRunDispatchBody";
 import {
   resolveClaudeDispatchTarget,
   validateClaudeDispatchPayload,
-} from "@/lib/dispatch/resolveClaudeDispatchTarget";
+} from "@/lib/dispatch/resolveWriterDispatchTarget";
 
 export const handleClaudeRunMessageAsync = async (
   runtime: AgentWitchHubRuntime,

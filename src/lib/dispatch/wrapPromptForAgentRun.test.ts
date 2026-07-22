@@ -34,4 +34,15 @@ describe("wrapPromptForAgentRun", () => {
     expect(wrapped).toContain(AGENT_RUN_PROGRESS_MARKER);
     expect(wrapped).toContain(AGENT_RUN_INPUT_MARKER);
   });
+
+  it("adds report-file instructions when agentRunId and project folder are provided", () => {
+    const wrapped = wrapPromptForAgentRun("run tests", {
+      agentRunId: "run-abc",
+      projectFolderPath: "/tmp/project",
+    });
+
+    expect(wrapped).toContain("run-abc");
+    expect(wrapped).toContain("/tmp/project/.agent-witch/reports/run-abc.json");
+    expect(wrapped).toContain("userSummary");
+  });
 });

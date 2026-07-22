@@ -1,4 +1,4 @@
-import isClaudeRunPayload from "./isClaudeRunPayload";
+import isClaudeRunPayload from "./isWriterRunPayload";
 import isNonEmptyString from "./isNonEmptyString";
 import { MAC_OFFLINE_FOR_ACCOUNT_ERROR } from "./macOfflineForAccountErrorMessage.constant";
 import { unauthorizedAgentOnlyError } from "./agentWitchHubClientOperations";

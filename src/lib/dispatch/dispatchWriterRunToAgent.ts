@@ -26,7 +26,11 @@ export const dispatchClaudeRunToAgent = (
   agentClient.send({
     type: AGENT_WITCH_MESSAGE_TYPES.COMMAND_CLAUDE_RUN,
     payload: {
-      prompt: wrapPromptForAgentRun(prompt, { includeNextActions }),
+      prompt: wrapPromptForAgentRun(prompt, {
+        includeNextActions,
+        agentRunId,
+        projectFolderPath,
+      }),
       agentRunId,
       writerAgent,
       ...(sessionContinuation ? { sessionContinuation: true } : {}),

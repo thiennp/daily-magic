@@ -49,10 +49,10 @@ vi.mock("@/lib/dispatch/resolveDispatchPolicyForExecutor", () => ({
   resolveDispatchPolicyForExecutor: vi.fn(async () => DispatchPolicy.OPEN),
 }));
 
-vi.mock("@/lib/dispatch/dispatchClaudeRunToAgent", async () => {
+vi.mock("@/lib/dispatch/dispatchWriterRunToAgent", async () => {
   const actual = await vi.importActual<
-    typeof import("@/lib/dispatch/dispatchClaudeRunToAgent")
-  >("@/lib/dispatch/dispatchClaudeRunToAgent");
+    typeof import("@/lib/dispatch/dispatchWriterRunToAgent")
+  >("@/lib/dispatch/dispatchWriterRunToAgent");
 
   return {
     ...actual,

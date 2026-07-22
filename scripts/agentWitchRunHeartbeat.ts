@@ -6,6 +6,7 @@ const runHeartbeatTimers = new Map<string, NodeJS.Timeout>();
 
 export interface StartRunHeartbeatOptions {
   readonly awaitingInput?: boolean;
+  readonly onTick?: () => Record<string, unknown>;
 }
 
 export const stopRunHeartbeat = (agentRunId: string): void => {
@@ -20,6 +21,7 @@ const sendRunHeartbeatMessage = (
   socket: WebSocket,
   agentRunId: string,
   awaitingInput: boolean,
+  extraPayload: Record<string, unknown> = {},
 ): void => {
   if (socket.readyState !== 1) {
     return;
@@ -30,6 +32,7 @@ const sendRunHeartbeatMessage = (
       payload: {
         agentRunId,
         ...(awaitingInput ? { awaitingInput: true } : {}),
+        ...extraPayload,
       },
     }),
   );
@@ -53,7 +56,8 @@ export const startRunHeartbeat = (
       stopRunHeartbeat(agentRunId);
       return;
     }
-    sendRunHeartbeatMessage(socket, agentRunId, awaitingInput);
+    const extraPayload = options.onTick?.() ?? {};
+    sendRunHeartbeatMessage(socket, agentRunId, awaitingInput, extraPayload);
   };
 
   tick();

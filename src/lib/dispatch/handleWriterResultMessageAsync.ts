@@ -6,7 +6,7 @@ import type AgentWitchMessage from "@/lib/agentWitch/types/AgentWitchMessage.typ
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
 import { dispatchAgentRunInputRegistry } from "@/lib/dispatch/dispatchAgentRunInputRegistry";
 import { getAgentRunSession } from "@/lib/dispatch/agentRunSessionRegistry";
-import { markAgentRunCompleted } from "@/lib/dispatch/dispatchClaudeRunToAgent";
+import { markAgentRunCompleted } from "@/lib/dispatch/dispatchWriterRunToAgent";
 
 export const handleClaudeResultMessageAsync = async (
   runtime: AgentWitchHubRuntime,

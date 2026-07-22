@@ -6,7 +6,7 @@ import type AgentWitchMessage from "@/lib/agentWitch/types/AgentWitchMessage.typ
 import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
 import { broadcastAgentRunRecord } from "@/lib/dispatch/broadcastAgentRunRecord";
 import type { DispatchPolicyValue } from "@/lib/dispatch/DispatchPolicy.constant";
-import { executeApprovalGatedClaudeRunDispatch } from "@/lib/dispatch/executeApprovalGatedClaudeRunDispatch";
+import { executeApprovalGatedClaudeRunDispatch } from "@/lib/dispatch/executeApprovalGatedWriterRunDispatch";
 import { isLocalMacAgentRunDispatch } from "@/lib/dispatch/isLocalMacAgentRunDispatch";
 import { persistAgentRun } from "@/lib/dispatch/persistAgentRun";
 import { resolveDelegatedWriterAgent } from "@/lib/dispatch/resolveDelegatedWriterAgent";

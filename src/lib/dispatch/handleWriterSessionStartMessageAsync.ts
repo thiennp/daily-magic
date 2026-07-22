@@ -9,7 +9,7 @@ import { buildDispatchError } from "@/lib/dispatch/buildDispatchError";
 import {
   resolveClaudeRunAgentClient,
   resolveTargetDeviceId,
-} from "@/lib/dispatch/resolveClaudeRunAgentClient";
+} from "@/lib/dispatch/resolveWriterRunAgentClient";
 import { createWriterSession } from "@/lib/dispatch/writerSessionRegistry";
 import {
   buildWriterSessionTerminalSubscriptionKey,

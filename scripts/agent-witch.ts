@@ -411,6 +411,7 @@ const dispatchWriterTask = async (
       sessionTurn,
     },
     shellSessionId,
+    resolvedProjectFolderPath,
   );
 
   if (needsWarmup && agentRunId !== undefined) {

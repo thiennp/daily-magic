@@ -1,7 +1,7 @@
 import type { AgentWitchHub } from "@/lib/agentWitch/agentWitchHub";
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
 import { approveDispatchApproval } from "@/lib/dispatch/approveDispatchApproval";
-import { notifyDashboardUser } from "@/lib/dispatch/dispatchClaudeRunToAgent";
+import { notifyDashboardUser } from "@/lib/dispatch/dispatchWriterRunToAgent";
 import { dispatchApprovalRegistry } from "@/lib/dispatch/dispatchApprovalRegistry";
 import { listPendingDispatchApprovalsForExecutor } from "@/lib/dispatch/resolvePendingDispatchApproval";
 import { getUserById } from "@/lib/auth/userRepository";

@@ -5,8 +5,8 @@ import {
   buildRunTerminalSubscriptionKey,
   subscribeDashboardTerminal,
 } from "@/lib/dispatch/dashboardTerminalSubscriptionRegistry";
-import { dispatchClaudeRunToAgent } from "@/lib/dispatch/dispatchClaudeRunToAgent";
-import { markAgentRunRunning } from "@/lib/dispatch/dispatchClaudeRunToAgent";
+import { dispatchClaudeRunToAgent } from "@/lib/dispatch/dispatchWriterRunToAgent";
+import { markAgentRunRunning } from "@/lib/dispatch/dispatchWriterRunToAgent";
 import {
   buildShellSubscriptionKey,
   createShellSession,

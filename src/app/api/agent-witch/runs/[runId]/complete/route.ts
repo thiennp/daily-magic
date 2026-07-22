@@ -1,6 +1,6 @@
 import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
 import { getAgentRunRowById } from "@/lib/dispatch/agentRunEventQueries";
-import { markAgentRunCompleted } from "@/lib/dispatch/dispatchClaudeRunToAgent";
+import { markAgentRunCompleted } from "@/lib/dispatch/dispatchWriterRunToAgent";
 import { getAgentWitchHub } from "@/lib/agentWitch/getAgentWitchHub";
 import { requireAgentWitchDeviceAuth } from "@/lib/agentWitch/requireAgentWitchDeviceAuth";
 

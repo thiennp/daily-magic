@@ -5,7 +5,7 @@ import type AgentWitchMessage from "@/lib/agentWitch/types/AgentWitchMessage.typ
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
 import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
 import { getAgentRunById } from "@/lib/dispatch/agentRunQueries";
-import { notifyDashboardUser } from "@/lib/dispatch/dispatchClaudeRunToAgent";
+import { notifyDashboardUser } from "@/lib/dispatch/dispatchWriterRunToAgent";
 import { reconcileStaleAgentRuns } from "@/lib/dispatch/reconcileStaleAgentRuns";
 import { touchAgentRunHeartbeatAt } from "@/lib/dispatch/touchAgentRunHeartbeatAt";
 
@@ -77,6 +77,12 @@ export const handleAgentRunHeartbeatMessageAsync = async (
       agentRunId,
       at: new Date().toISOString(),
       ...(awaitingInput ? { awaitingInput: true } : {}),
+      ...(typeof message.payload?.reportStatus === "string"
+        ? { reportStatus: message.payload.reportStatus }
+        : {}),
+      ...(typeof message.payload?.reportSummary === "string"
+        ? { reportSummary: message.payload.reportSummary }
+        : {}),
     },
     requestId: message.requestId,
   };

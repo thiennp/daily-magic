@@ -1,5 +1,5 @@
 import isHarnessWriterAgent from "@/lib/agentWitch/harness/isHarnessWriterAgent";
-import isClaudeDispatchPayload from "@/lib/agentWitch/isClaudeDispatchPayload";
+import isClaudeDispatchPayload from "@/lib/agentWitch/isWriterDispatchPayload";
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
 
 export interface AgentRunDispatchBody {

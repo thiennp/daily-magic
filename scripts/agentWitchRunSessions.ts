@@ -37,6 +37,13 @@ import {
 } from "./agentWitchRunSessionsAwaitingInput";
 import { tryRunWriterTaskInPty } from "./agentWitchRunSessionsPty";
 import { markWriterConversationStarted } from "./agentWitchWriterSession";
+import {
+  buildAgentRunReportHeartbeatPayload,
+  readAgentRunReportFile,
+  resolveAgentRunCompletionFromReport,
+  seedAgentRunReportFile,
+} from "./agentWitchRunReport";
+import type { StartRunHeartbeatOptions } from "./agentWitchRunHeartbeat";
 
 import type WebSocket from "ws";
 
@@ -54,6 +61,7 @@ interface AgentWitchRunConfig {
 interface ActiveRunSession {
   readonly originalPrompt: string;
   readonly writerAgent: HarnessWriterAgentId;
+  readonly projectFolderPath?: string;
   accumulatedOutput: string;
 }
 
@@ -108,6 +116,46 @@ const sendMessage = (
     socket.send(JSON.stringify(message));
   }
 };
+
+const buildRunReportHeartbeatOptions = (
+  config: AgentWitchRunConfig,
+  socket: WebSocket,
+  agentRunId: string,
+  requestId: string | undefined,
+  projectFolderPath: string | undefined,
+  awaitingInput = false,
+): StartRunHeartbeatOptions => ({
+  awaitingInput,
+  onTick: () => {
+    if (
+      projectFolderPath === undefined ||
+      projectFolderPath.trim().length === 0
+    ) {
+      return {};
+    }
+
+    const report = readAgentRunReportFile(projectFolderPath, agentRunId);
+    const session = runSessions.get(agentRunId);
+    if (report !== null && session !== undefined) {
+      const completion = resolveAgentRunCompletionFromReport(report);
+      const childAlive =
+        isPipeChildAlive(agentRunId) || isAgentPtyRunAlive(agentRunId);
+      if (completion !== null && !childAlive) {
+        finishRun(
+          config,
+          socket,
+          agentRunId,
+          requestId,
+          completion.exitCode,
+          completion.output,
+          session.originalPrompt,
+        );
+      }
+    }
+
+    return buildAgentRunReportHeartbeatPayload(report);
+  },
+});
 
 const finishRun = (
   config: AgentWitchRunConfig,
@@ -203,7 +251,14 @@ const requestRunInput = (
     socket,
     agentRunId,
     () => hasPendingRunInputSession(config.layout, agentRunId),
-    { awaitingInput: true },
+    buildRunReportHeartbeatOptions(
+      config,
+      socket,
+      agentRunId,
+      requestId,
+      session?.projectFolderPath,
+      true,
+    ),
   );
 
   sendMessage(socket, {
@@ -247,18 +302,31 @@ const attachChildHandlers = (
   };
 
   if (agentRunId !== undefined) {
+    const existingSession = runSessions.get(agentRunId);
     activeChildren.set(agentRunId, child);
     runSessions.set(agentRunId, {
       originalPrompt,
       writerAgent,
-      accumulatedOutput: runSessions.get(agentRunId)?.accumulatedOutput ?? "",
+      projectFolderPath: existingSession?.projectFolderPath,
+      accumulatedOutput: existingSession?.accumulatedOutput ?? "",
     });
     sendMessage(socket, {
       type: "terminal.stream.start",
       payload: { runId: agentRunId },
       requestId,
     });
-    startRunHeartbeat(socket, agentRunId, () => isPipeChildAlive(agentRunId));
+    startRunHeartbeat(
+      socket,
+      agentRunId,
+      () => isPipeChildAlive(agentRunId),
+      buildRunReportHeartbeatOptions(
+        config,
+        socket,
+        agentRunId,
+        requestId,
+        existingSession?.projectFolderPath,
+      ),
+    );
   }
 
   child.stdout?.on("data", (chunk: Buffer) => {
@@ -358,6 +426,7 @@ export const runWriterTask = (
   agentRunId?: string,
   invocationOptions?: BuildWriterCliInvocationOptions,
   shellSessionId?: string,
+  projectFolderPath?: string,
 ): void => {
   const invocation = buildWriterCliInvocation(
     writerAgent,
@@ -404,11 +473,31 @@ export const runWriterTask = (
   runSessions.set(agentRunId, {
     originalPrompt: prompt,
     writerAgent,
+    projectFolderPath,
     accumulatedOutput: runSessions.get(agentRunId)?.accumulatedOutput ?? "",
   });
 
+  if (projectFolderPath !== undefined && projectFolderPath.trim().length > 0) {
+    seedAgentRunReportFile({
+      projectFolderPath,
+      agentRunId,
+      userSummary: "Task started on your Mac.",
+    });
+  }
+
   // Cover the pre-spawn / hung-spawn window before PTY or pipe attaches.
-  startRunHeartbeat(socket, agentRunId, () => runSessions.has(agentRunId));
+  startRunHeartbeat(
+    socket,
+    agentRunId,
+    () => runSessions.has(agentRunId),
+    buildRunReportHeartbeatOptions(
+      config,
+      socket,
+      agentRunId,
+      requestId,
+      projectFolderPath,
+    ),
+  );
 
   void tryRunWriterTaskInPty({
     socket,
@@ -474,8 +563,17 @@ export const runWriterTask = (
         startPipeChild();
         return;
       }
-      startRunHeartbeat(socket, agentRunId, () =>
-        isAgentPtyRunAlive(agentRunId),
+      startRunHeartbeat(
+        socket,
+        agentRunId,
+        () => isAgentPtyRunAlive(agentRunId),
+        buildRunReportHeartbeatOptions(
+          config,
+          socket,
+          agentRunId,
+          requestId,
+          projectFolderPath,
+        ),
       );
     })
     .catch((error: unknown) => {
@@ -524,6 +622,9 @@ export const continueClaudeTaskAfterInput = (
   const continuationPrompt = buildContinuationPrompt(input);
   const writerAgent =
     runSessions.get(input.agentRunId)?.writerAgent ?? "claude-cli";
+  const projectFolderPath = runSessions.get(
+    input.agentRunId,
+  )?.projectFolderPath;
   runWriterTask(
     config,
     writerAgent,
@@ -533,6 +634,7 @@ export const continueClaudeTaskAfterInput = (
     input.agentRunId,
     undefined,
     input.shellSessionId,
+    projectFolderPath,
   );
 };
 

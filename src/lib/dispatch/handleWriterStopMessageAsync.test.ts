@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
 import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
 import { getAgentRunById } from "@/lib/dispatch/agentRunQueries";
-import { handleClaudeStopMessageAsync } from "@/lib/dispatch/handleClaudeStopMessageAsync";
+import { handleWriterStopMessageAsync } from "@/lib/dispatch/handleWriterStopMessageAsync";
 
 vi.mock("@/lib/dispatch/agentRunQueries", () => ({
   getAgentRunById: vi.fn(),
@@ -31,13 +31,13 @@ const createRun = (status: string) => ({
   deviceId: "device-1",
 });
 
-describe("handleClaudeStopMessageAsync", () => {
+describe("handleWriterStopMessageAsync", () => {
   beforeEach(() => {
     vi.mocked(getAgentRunById).mockReset();
   });
 
   it("rejects non-dashboard clients", async () => {
-    const response = await handleClaudeStopMessageAsync(
+    const response = await handleWriterStopMessageAsync(
       { findAgentClientForUser: () => undefined } as never,
       {
         type: AGENT_WITCH_MESSAGE_TYPES.COMMAND_CLAUDE_STOP,
@@ -55,7 +55,7 @@ describe("handleClaudeStopMessageAsync", () => {
     );
 
     const agentMessages: Array<{ type: string; payload?: unknown }> = [];
-    const response = await handleClaudeStopMessageAsync(
+    const response = await handleWriterStopMessageAsync(
       {
         findAgentClientForUser: () => ({
           send: (message: { type: string; payload?: unknown }) => {
@@ -89,7 +89,7 @@ describe("handleClaudeStopMessageAsync", () => {
       createRun(AgentRunStatus.COMPLETED) as never,
     );
 
-    const response = await handleClaudeStopMessageAsync(
+    const response = await handleWriterStopMessageAsync(
       {
         findAgentClientForUser: () => ({
           send: () => undefined,

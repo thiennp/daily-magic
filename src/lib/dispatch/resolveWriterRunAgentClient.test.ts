@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from "vitest";
 
 import { AgentWitchHub } from "@/lib/agentWitch/agentWitchHub";
 import { AgentWitchPairingStore } from "@/lib/agentWitch/agentWitchPairingStore";
-import { resolveClaudeRunAgentClient } from "@/lib/dispatch/resolveClaudeRunAgentClient";
+import { resolveClaudeRunAgentClient } from "@/lib/dispatch/resolveWriterRunAgentClient";
 
 vi.mock("@/lib/agentWitch/isAgentWitchDeviceOwnedByUser", () => ({
   default: vi.fn(async () => true),

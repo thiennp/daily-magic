@@ -22,4 +22,6 @@ export default interface AgentRunRecord {
   readonly deviceId: string | null;
   readonly writerAgent: string;
   readonly lastRunHeartbeatAt: string | null;
+  readonly reportStatus?: string | null;
+  readonly reportSummary?: string | null;
 }

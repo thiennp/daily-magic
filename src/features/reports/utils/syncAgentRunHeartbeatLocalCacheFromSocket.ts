@@ -40,7 +40,20 @@ export const syncAgentRunHeartbeatLocalCacheFromSocket = (
         ? parsed.payload.at
         : new Date().toISOString();
 
-    if (existing.lastRunHeartbeatAt === at) {
+    const reportStatus =
+      typeof parsed.payload.reportStatus === "string"
+        ? parsed.payload.reportStatus
+        : (existing.reportStatus ?? null);
+    const reportSummary =
+      typeof parsed.payload.reportSummary === "string"
+        ? parsed.payload.reportSummary
+        : (existing.reportSummary ?? null);
+
+    if (
+      existing.lastRunHeartbeatAt === at &&
+      existing.reportStatus === reportStatus &&
+      existing.reportSummary === reportSummary
+    ) {
       return false;
     }
 
@@ -48,6 +61,8 @@ export const syncAgentRunHeartbeatLocalCacheFromSocket = (
       ...existing,
       lastRunHeartbeatAt: at,
       updatedAt: at,
+      reportStatus,
+      reportSummary,
     });
     return true;
   } catch {

@@ -8,7 +8,7 @@ import type AgentAutomationRecord from "@/lib/automations/types/AgentAutomationR
 import type DispatchAgentAutomationResult from "@/lib/automations/types/DispatchAgentAutomationResult.type";
 import type PublishedCapabilityRecord from "@/lib/capabilities/types/PublishedCapabilityRecord.type";
 import type AgentWitchHubRuntime from "@/lib/agentWitch/types/AgentWitchHubRuntime.type";
-import { dispatchClaudeRunForDashboardUser } from "@/lib/dispatch/dispatchClaudeRunForDashboardUser";
+import { dispatchClaudeRunForDashboardUser } from "@/lib/dispatch/dispatchWriterRunForDashboardUser";
 
 const readDispatchErrorMessage = (
   payload: Readonly<Record<string, unknown>> | undefined,
