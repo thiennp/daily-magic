@@ -8,6 +8,7 @@ const svgrLoaderOptions = {
 };
 
 const nextConfig: NextConfig = {
+  serverExternalPackages: ["esbuild"],
   async redirects() {
     return [
       {

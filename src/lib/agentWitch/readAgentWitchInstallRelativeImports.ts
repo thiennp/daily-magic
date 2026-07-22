@@ -4,7 +4,7 @@ export const readAgentWitchInstallRelativeImports = (
   const imports = new Set<string>();
 
   for (const match of source.matchAll(
-    /(?:from\s+|import\s*\(\s*)["']\.\/([^"']+)["']/g,
+    /(?:from\s*|import\s*\(\s*)["']\.\/([^"']+)["']/g,
   )) {
     const importPath = match[1];
     if (importPath === undefined) {
