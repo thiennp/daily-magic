@@ -21,14 +21,12 @@ afterEach(() => {
   }
 });
 
-describe("listAgentWitchLaunchTargets", () => {
-  it("returns legacy launch agent when only root config exists", () => {
+describe("listAgentWitchLaunchTargets (AGENT-059)", () => {
+  it("returns a single canonical launch agent for an install home", () => {
     const installDir = createTempInstallDir();
     fs.writeFileSync(path.join(installDir, "config.json"), "{}");
 
-    expect(
-      listAgentWitchLaunchTargets(installDir, { launchAgentsDir: installDir }),
-    ).toEqual([
+    expect(listAgentWitchLaunchTargets(installDir)).toEqual([
       {
         profileEmail: null,
         launchAgentLabel: "com.agent-witch",
@@ -36,40 +34,18 @@ describe("listAgentWitchLaunchTargets", () => {
     ]);
   });
 
-  it("returns profile launch agents from profiles directory", () => {
+  it("still returns one launch agent when multiple profiles exist", () => {
     const installDir = createTempInstallDir();
-    const profileEmail = "user@example.com";
-    const profileDir = path.join(installDir, "profiles", profileEmail);
-    fs.mkdirSync(profileDir, { recursive: true });
-    fs.writeFileSync(path.join(profileDir, "config.json"), "{}");
+    for (const profileEmail of ["a@example.com", "b@example.com"]) {
+      const profileDir = path.join(installDir, "profiles", profileEmail);
+      fs.mkdirSync(profileDir, { recursive: true });
+      fs.writeFileSync(path.join(profileDir, "config.json"), "{}");
+    }
 
-    expect(
-      listAgentWitchLaunchTargets(installDir, { launchAgentsDir: installDir }),
-    ).toEqual([
+    expect(listAgentWitchLaunchTargets(installDir)).toEqual([
       {
-        profileEmail,
-        launchAgentLabel: "com.agent-witch.user-at-example-com",
-      },
-    ]);
-  });
-
-  it("deduplicates active profile launch agents", () => {
-    const installDir = createTempInstallDir();
-    const profileEmail = "user@example.com";
-    const profileDir = path.join(installDir, "profiles", profileEmail);
-    fs.mkdirSync(profileDir, { recursive: true });
-    fs.writeFileSync(path.join(profileDir, "config.json"), "{}");
-    fs.writeFileSync(
-      path.join(installDir, "active-profile.json"),
-      JSON.stringify({ email: profileEmail }),
-    );
-
-    expect(
-      listAgentWitchLaunchTargets(installDir, { launchAgentsDir: installDir }),
-    ).toEqual([
-      {
-        profileEmail,
-        launchAgentLabel: "com.agent-witch.user-at-example-com",
+        profileEmail: "a@example.com",
+        launchAgentLabel: "com.agent-witch",
       },
     ]);
   });

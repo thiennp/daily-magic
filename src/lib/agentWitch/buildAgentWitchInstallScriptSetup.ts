@@ -96,9 +96,9 @@ if [[ -n "\${PROFILE_EMAIL}" ]]; then
   PROFILE_DIR="\${INSTALL_DIR}/profiles/\${PROFILE_EMAIL}"
   CONFIG_PATH="\${PROFILE_DIR}/config.json"
   mkdir -p "\${PROFILE_DIR}/harness/sets"
-  LABEL_SUFFIX="\$(printf '%s' "\${PROFILE_EMAIL}" | sed 's/@/-at-/g' | sed 's/[^a-z0-9-]/-/g' | sed 's/^-*//;s/-*$//')"
-  LAUNCH_AGENT_LABEL="\${LAUNCH_AGENT_PREFIX}.\${LABEL_SUFFIX}"
-  LOG_BASENAME="agent-witch-\${LABEL_SUFFIX}"
+  # One LaunchAgent per install home; multi-account shares this process.
+  LAUNCH_AGENT_LABEL="\${LAUNCH_AGENT_PREFIX}"
+  LOG_BASENAME="agent-witch"
 else
   CONFIG_PATH="\${INSTALL_DIR}/config.json"
 fi

@@ -24,9 +24,13 @@ import {
   claimAgentWitchMachineLease,
   releaseAgentWitchMachineLease,
 } from "./claimAgentWitchMachineLease";
+import { listAgentWitchProfileEmails } from "./listAgentWitchLaunchTargets";
+import { terminateOtherAgentWitchClientProcesses } from "./terminateOtherAgentWitchClientProcesses";
+
 import { startAgentWitchInProcessServices } from "./startAgentWitchInProcessServices";
 import { resolveAgentWitchWakePort } from "./agentWitchWakeConstants";
 import {
+  resolveAgentWitchInstallDir,
   resolveAgentWitchLocalLayout,
   type AgentWitchLocalLayout,
 } from "./resolveAgentWitchLocalLayout";
@@ -101,7 +105,7 @@ import {
   readAgentWitchMemoryEntries,
 } from "./agentWitchLocalMemory";
 import { resolveAgentWitchAppOriginFromWsUrl } from "./resolveAgentWitchAppOriginFromWsUrl";
-import { buildDefaultUserProjectFolderPath } from "../src/lib/projects/defaultUserProject.constants";
+import { buildDefaultUserProjectFolderPath } from "./buildDefaultUserProjectFolderPath";
 import { ensureAgentWitchProjectFolder } from "./ensureAgentWitchProjectFolder";
 import { runWriterEnsure } from "./handleAgentWitchWriterEnsure";
 
@@ -142,8 +146,10 @@ interface AgentWitchOutboundSocket {
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === "object" && value !== null && !Array.isArray(value);
 
-const readConfig = (): AgentWitchConfig | null => {
-  const layout = resolveAgentWitchLocalLayout();
+const readConfig = (
+  profileEmailOverride?: string | null,
+): AgentWitchConfig | null => {
+  const layout = resolveAgentWitchLocalLayout(profileEmailOverride);
 
   if (!fs.existsSync(layout.configPath)) {
     return null;
@@ -702,11 +708,26 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
 
   const checkLocalConnectionHealth = (): void => {
     const health = readAgentWitchConnectionHealth(config.layout);
-    if (
-      isAgentWitchConnectionHealthStale(health, AGENT_WITCH_CONNECTION_STALE_MS)
-    ) {
-      runLocalRestart("stale-connection-health");
+    // Null = never acked this session; wait for connect() rather than restart.
+    if (health === null) {
+      return;
     }
+    if (
+      !isAgentWitchConnectionHealthStale(
+        health,
+        AGENT_WITCH_CONNECTION_STALE_MS,
+      )
+    ) {
+      return;
+    }
+    // AGENT-059: recover in-process — process restart spawned duplicate clients.
+    console.log(
+      "[agent-witch] Connection health stale — reconnecting WebSocket…",
+    );
+    state.reconnectAttempt = 0;
+    clearReconnectTimer();
+    closeSocket();
+    connect();
   };
 
   const clearHeartbeat = (): void => {
@@ -747,7 +768,7 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
 
   const startLocalHealthCheck = (): void => {
     clearLocalHealthCheck();
-    checkLocalConnectionHealth();
+    // Defer first check so initial connect() can write a fresh ack.
     state.localHealthTimer = setInterval(
       checkLocalConnectionHealth,
       HEARTBEAT_INTERVAL_MS,
@@ -1407,19 +1428,32 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
   };
 };
 
-const waitForConfig = async (): Promise<AgentWitchConfig> => {
-  const existingConfig = readConfig();
-  if (existingConfig !== null) {
-    return existingConfig;
+const waitForConfigs = async (): Promise<readonly AgentWitchConfig[]> => {
+  const loadConfigs = (): readonly AgentWitchConfig[] => {
+    const profileEmails = listAgentWitchProfileEmails();
+    if (profileEmails.length === 0) {
+      const legacy = readConfig(null);
+      return legacy === null ? [] : [legacy];
+    }
+
+    return profileEmails.flatMap((profileEmail) => {
+      const config = readConfig(profileEmail);
+      return config === null ? [] : [config];
+    });
+  };
+
+  const existing = loadConfigs();
+  if (existing.length > 0) {
+    return existing;
   }
 
   console.error("[agent-witch] Waiting for valid config…");
 
   return new Promise((resolve) => {
     const retry = (): void => {
-      const config = readConfig();
-      if (config !== null) {
-        resolve(config);
+      const configs = loadConfigs();
+      if (configs.length > 0) {
+        resolve(configs);
         return;
       }
 
@@ -1436,47 +1470,93 @@ const main = async (): Promise<void> => {
   const machineLease = claimAgentWitchMachineLease();
   if (!machineLease.ok) {
     process.stdout.write(
-      "[agent-witch] Another macOS account already owns the machine lease — exiting.\n",
+      "[agent-witch] Another Agent Witch process already owns this Mac user lease — exiting.\n",
     );
     process.exit(0);
   }
 
+  const installDir = resolveAgentWitchInstallDir();
+  const terminated = terminateOtherAgentWitchClientProcesses({ installDir });
+  if (terminated.length > 0) {
+    console.log(
+      `[agent-witch] Stopped ${terminated.length} sibling process(es): ${terminated.join(", ")}`,
+    );
+  }
+
   bootoutAgentWitchAuxiliaryLaunchAgents();
 
-  const config = await waitForConfig();
-  const client = createAgentWitchClient(config);
-  const inProcessServices = await startAgentWitchInProcessServices();
+  const configs = await waitForConfigs();
+  const clients = configs.map((config) => createAgentWitchClient(config));
+  const primaryClient = clients[0];
+  if (primaryClient === undefined) {
+    process.stdout.write("[agent-witch] No profile configs found — exiting.\n");
+    releaseAgentWitchMachineLease();
+    process.exit(0);
+  }
 
-  startAgentWitchLocalApp({
-    layout: config.layout,
-    controllers: {
-      getStatus: client.getStatus,
-      reviveWebSocket: client.reviveWebSocket,
+  const reconnectWebSockets = (): void => {
+    for (const client of clients) {
+      client.reviveWebSocket();
+    }
+  };
+
+  let shutdown = (): void => {
+    // replaced after services start
+  };
+
+  const inProcessServices = await startAgentWitchInProcessServices({
+    reconnectWebSockets,
+    onLostMachineLease: () => {
+      console.log(
+        "[agent-witch] Lost machine lease to another process — shutting down.",
+      );
+      shutdown();
     },
   });
 
-  client.startLocalHealthCheck();
-  client.connect();
+  startAgentWitchLocalApp({
+    layout: configs[0]!.layout,
+    controllers: {
+      getStatus: primaryClient.getStatus,
+      reviveWebSocket: reconnectWebSockets,
+    },
+  });
 
-  const shutdown = (): void => {
-    stopConsoleUserGuard();
-    inProcessServices.stop();
-    releaseAgentWitchMachineLease();
-    bootoutAgentWitchLaunchAgentsForCurrentUser();
-    console.log("[agent-witch] Shutting down.");
-    client.stop();
-    process.exit(0);
-  };
+  for (const client of clients) {
+    client.startLocalHealthCheck();
+    client.connect();
+  }
+
+  console.log(
+    `[agent-witch] Bridging ${clients.length} account profile(s) in one process.`,
+  );
 
   const stopConsoleUserGuard = startActiveMacOsConsoleUserGuard(() => {
     console.log(
       "[agent-witch] Active macOS console user changed — shutting down.",
     );
+    // Drop LaunchAgents so KeepAlive does not respawn for a logged-out user.
+    bootoutAgentWitchLaunchAgentsForCurrentUser();
     shutdown();
   });
 
-  process.on("SIGINT", shutdown);
-  process.on("SIGTERM", shutdown);
+  shutdown = (): void => {
+    stopConsoleUserGuard();
+    inProcessServices.stop();
+    releaseAgentWitchMachineLease();
+    console.log("[agent-witch] Shutting down.");
+    for (const client of clients) {
+      client.stop();
+    }
+    process.exit(0);
+  };
+
+  process.on("SIGINT", () => {
+    shutdown();
+  });
+  process.on("SIGTERM", () => {
+    shutdown();
+  });
 };
 
 void main();

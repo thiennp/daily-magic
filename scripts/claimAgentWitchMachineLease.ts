@@ -60,7 +60,48 @@ const isLeaseFresh = (lease: AgentWitchMachineLease): boolean => {
   return Date.now() - claimedAtMs <= AGENT_WITCH_MACHINE_LEASE_TTL_MS;
 };
 
+const writeLease = (leasePath: string, lease: AgentWitchMachineLease): void => {
+  fs.writeFileSync(leasePath, `${JSON.stringify(lease)}\n`, "utf8");
+};
+
+/**
+ * One Agent Witch bridge process per macOS user on this host.
+ * Rejects another live PID whether that owner is the same user or another.
+ */
 export const claimAgentWitchMachineLease = (input?: {
+  readonly leasePath?: string;
+  readonly platform?: NodeJS.Platform;
+}): { readonly ok: boolean; readonly reason?: "held_by_other_process" } => {
+  const platform = input?.platform ?? process.platform;
+  if (platform !== "darwin") {
+    return { ok: true };
+  }
+
+  const leasePath = input?.leasePath ?? resolveAgentWitchMachineLeasePath();
+  const existing = readMachineLease(leasePath);
+
+  if (
+    existing !== null &&
+    existing.pid !== process.pid &&
+    isProcessAlive(existing.pid) &&
+    isLeaseFresh(existing)
+  ) {
+    return { ok: false, reason: "held_by_other_process" };
+  }
+
+  const lease: AgentWitchMachineLease = {
+    hostname: os.hostname(),
+    macOsUsername: os.userInfo().username,
+    pid: process.pid,
+    claimedAt: new Date().toISOString(),
+  };
+
+  writeLease(leasePath, lease);
+  return { ok: true };
+};
+
+/** Refresh claimedAt while we own the lease; exit callers if ownership is lost. */
+export const renewAgentWitchMachineLease = (input?: {
   readonly leasePath?: string;
   readonly platform?: NodeJS.Platform;
 }): { readonly ok: boolean } => {
@@ -71,26 +112,22 @@ export const claimAgentWitchMachineLease = (input?: {
 
   const leasePath = input?.leasePath ?? resolveAgentWitchMachineLeasePath();
   const existing = readMachineLease(leasePath);
-  const currentUsername = os.userInfo().username;
 
   if (
     existing !== null &&
     existing.pid !== process.pid &&
     isProcessAlive(existing.pid) &&
-    isLeaseFresh(existing) &&
-    existing.macOsUsername.toLowerCase() !== currentUsername.toLowerCase()
+    isLeaseFresh(existing)
   ) {
     return { ok: false };
   }
 
-  const lease: AgentWitchMachineLease = {
+  writeLease(leasePath, {
     hostname: os.hostname(),
-    macOsUsername: currentUsername,
+    macOsUsername: os.userInfo().username,
     pid: process.pid,
     claimedAt: new Date().toISOString(),
-  };
-
-  fs.writeFileSync(leasePath, `${JSON.stringify(lease)}\n`, "utf8");
+  });
   return { ok: true };
 };
 

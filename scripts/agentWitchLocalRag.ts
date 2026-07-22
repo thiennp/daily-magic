@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 
-import { AGENT_WITCH_PROJECT_RAG_CHUNKS_FILE_NAME } from "../src/lib/projects/agentWitchProjectStorage.constants";
+import { AGENT_WITCH_PROJECT_RAG_CHUNKS_FILE_NAME } from "./agentWitchProjectStorage.constants";
 import { resolveAgentWitchProjectStorageLayout } from "./resolveAgentWitchProjectStorageLayout";
 import type { AgentWitchLocalLayout } from "./resolveAgentWitchLocalLayout";
 

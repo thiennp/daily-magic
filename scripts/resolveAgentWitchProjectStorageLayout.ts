@@ -6,7 +6,7 @@ import {
   AGENT_WITCH_PROJECT_META_FILE_NAME,
   AGENT_WITCH_PROJECT_RAG_CHUNKS_FILE_NAME,
   AGENT_WITCH_PROJECT_RAG_DIR_NAME,
-} from "../src/lib/projects/agentWitchProjectStorage.constants";
+} from "./agentWitchProjectStorage.constants";
 import expandAgentWitchProjectFolderPath from "./expandAgentWitchProjectFolderPath";
 
 export type AgentWitchProjectStorageLayout = {

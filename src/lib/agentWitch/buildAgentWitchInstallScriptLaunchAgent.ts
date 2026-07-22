@@ -25,8 +25,6 @@ if [[ "\$(uname -s)" == "Darwin" ]]; then
     <string>\${HOME}</string>
     <key>PATH</key>
     <string>${AGENT_WITCH_LAUNCH_AGENT_PATH_VALUE}</string>
-    <key>AGENT_WITCH_PROFILE</key>
-    <string>\${PROFILE_EMAIL}</string>
     <key>AGENT_WITCH_HOME</key>
     <string>\${INSTALL_DIR}</string>
     <key>AGENT_WITCH_WAKE_PORT</key>

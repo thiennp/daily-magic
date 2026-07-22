@@ -1,5 +1,17 @@
 # Agent Witch bridge — known issues
 
+## AGENT-059 — Multiple agent-witch processes on the same macOS user
+
+**Symptom:** One Mac user could run several `agent-witch.ts` processes (connect/disconnect flaps, “Seen recently” instead of Online). Multi-account was implemented as one LaunchAgent/process per email.
+
+**Cause:** Machine lease only blocked _other_ macOS users. In-process watchdog called `launchctl kickstart -k`, which respawned clients while orphans kept running. Install also registered `com.agent-witch.<email>` labels. Project-storage scripts also imported `../src/lib/...`, which broke module load under `~/.agent-witch`.
+
+**Fix:** Lease rejects any other live PID for this host. Startup terminates sibling `agent-witch.ts` processes for the install home (node/tsx argv only — not shells whose `-c` text mentions the path). Watchdog renews the lease and reconnects WebSockets in-process (no kickstart loop). Stale connection-health reconnects in-process instead of `/restart`. SIGTERM no longer boots out the LaunchAgent (KeepAlive can respawn). One LaunchAgent `com.agent-witch` bridges all `profiles/<email>` accounts in that process. Install ships `agentWitchProjectStorage.constants.ts` beside the client (no `../src` imports). Install bundle **62**.
+
+**Regression tests:** `claimAgentWitchMachineLease.test.ts`, `listAgentWitchLaunchTargets.test.ts`, `terminateOtherAgentWitchClientProcesses.test.ts` (AGENT-059).
+
+---
+
 ## AGENT-058 — Watchdog revive crashed on missing verify helper
 
 **Symptom:** `~/.agent-witch/*.error.log` showed `ERR_MODULE_NOT_FOUND` for `verifyAgentWitchReviveAfterKickstart` imported from `reviveAgentWitchWebSocket.ts`. Watchdog/wake revive failed, so the Mac looked offline despite recent heartbeats.

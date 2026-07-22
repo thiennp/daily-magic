@@ -61,7 +61,7 @@ describe("claimAgentWitchMachineLease", () => {
       platform: "darwin",
     });
 
-    expect(result).toEqual({ ok: false });
+    expect(result.ok).toBe(false);
   });
 
   it("AGENT-043: allows reclaim after release", () => {
@@ -79,5 +79,39 @@ describe("claimAgentWitchMachineLease", () => {
       claimAgentWitchMachineLease({ leasePath, platform: "darwin" }),
     ).toEqual({ ok: true });
     releaseAgentWitchMachineLease({ leasePath, platform: "darwin" });
+  });
+
+  it("AGENT-059: rejects a fresh lease held by another process for the same user", () => {
+    const child = spawn(
+      process.execPath,
+      ["-e", "setInterval(() => {}, 1_000)"],
+      { detached: true, stdio: "ignore" },
+    );
+    child.unref();
+    childProcesses.push(child);
+
+    const leasePath = path.join(
+      os.tmpdir(),
+      `agent-witch-lease-same-user-${process.pid}.json`,
+    );
+    tempLeasePaths.push(leasePath);
+
+    fs.writeFileSync(
+      leasePath,
+      `${JSON.stringify({
+        hostname: "Studio-Mac",
+        macOsUsername: os.userInfo().username,
+        pid: child.pid,
+        claimedAt: new Date().toISOString(),
+      })}\n`,
+      "utf8",
+    );
+
+    const result = claimAgentWitchMachineLease({
+      leasePath,
+      platform: "darwin",
+    });
+
+    expect(result.ok).toBe(false);
   });
 });
