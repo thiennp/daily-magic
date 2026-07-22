@@ -14,6 +14,7 @@ const onlineDevice: MyMacDevice = {
   isOnline: true,
   lastHeartbeatAt: "2026-01-01T00:00:00.000Z",
   installBundleVersion: "35",
+  wakePort: 47892,
 };
 
 describe("resolveMarketplaceInstallEligibility", () => {
