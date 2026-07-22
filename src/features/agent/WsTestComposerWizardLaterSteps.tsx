@@ -4,7 +4,7 @@ import SendTaskComposerPickerStep from "@/features/agent/SendTaskComposerPickerS
 import SendTaskComposerProjectPickerStep from "@/features/agent/SendTaskComposerProjectPickerStep";
 import SendTaskComposerStepTrail from "@/features/agent/SendTaskComposerStepTrail";
 import SendTaskComposerWriterAgentStep from "@/features/agent/SendTaskComposerWriterAgentStep";
-import WsTestComposerFormStep from "@/features/agent/WsTestComposerFormStep";
+import WsTestComposerFormStepSection from "@/features/agent/WsTestComposerFormStepSection";
 import type { SendTaskComposerStepTrailViewItem } from "@/features/agent/types/SendTaskComposerStepTrailViewItem.type";
 import type { useWsTestComposerWizard } from "@/features/agent/hooks/useWsTestComposerWizard";
 import type { useWsTestTaskComposer } from "@/features/agent/hooks/useWsTestTaskComposer";
@@ -86,29 +86,21 @@ export default function WsTestComposerWizardLaterSteps({
         </div>
       ) : null}
       {wizard.showFormStep ? (
-        <div
-          className={
-            isSteppedComposer || wizard.showMacSection ? "mt-6" : undefined
-          }
-        >
-          {isSteppedComposer ? (
-            <SendTaskComposerStepTrail items={stepTrail} />
-          ) : null}
-          <WsTestComposerFormStep
-            composer={composer}
-            writerAgent={writerAgent}
-            onWriterAgentChange={onWriterAgentChange}
-            isWriterAgentLocked={isWriterAgentLocked}
-            isSteppedComposer={isSteppedComposer}
-            macDispatchDeviceId={macDispatchDeviceId}
-            connectionStatus={connectionStatus}
-            isSendDisabled={isSendDisabled}
-            onSend={onSend}
-            onClear={onClear}
-            onQueue={onQueue}
-            showTopSpacing={wizard.showMacSection}
-          />
-        </div>
+        <WsTestComposerFormStepSection
+          composer={composer}
+          writerAgent={writerAgent}
+          onWriterAgentChange={onWriterAgentChange}
+          isWriterAgentLocked={isWriterAgentLocked}
+          isSteppedComposer={isSteppedComposer}
+          macDispatchDeviceId={macDispatchDeviceId}
+          connectionStatus={connectionStatus}
+          isSendDisabled={isSendDisabled}
+          onSend={onSend}
+          onClear={onClear}
+          onQueue={onQueue}
+          showTopSpacing={wizard.showMacSection}
+          stepTrail={stepTrail}
+        />
       ) : null}
     </>
   );

@@ -4,6 +4,7 @@ import {
 } from "@/lib/projects/userProjectMutations";
 import { getUserProjectById } from "@/lib/projects/userProjectQueries";
 import { parseUpdateUserProjectBody } from "@/lib/projects/parseUserProjectBody";
+import isDefaultUserProject from "@/lib/projects/isDefaultUserProject";
 import { requireAuth } from "@/lib/auth/requireAuth";
 
 export const dynamic = "force-dynamic";
@@ -45,7 +46,17 @@ export async function PATCH(
   const body: unknown = await request.json().catch(() => null);
   const parsed = parseUpdateUserProjectBody(body);
 
-  if (parsed === null) {
+  if (parsed.kind === "folder_immutable") {
+    return Response.json(
+      {
+        ok: false,
+        errorMessage: "Project folder cannot be changed after it is saved.",
+      },
+      { status: 400 },
+    );
+  }
+
+  if (parsed.kind === "invalid") {
     return Response.json(
       { ok: false, errorMessage: "Invalid project payload." },
       { status: 400 },
@@ -53,7 +64,7 @@ export async function PATCH(
   }
 
   try {
-    const project = await updateUserProject(actor.id, projectId, parsed);
+    const project = await updateUserProject(actor.id, projectId, parsed.input);
 
     if (project === null) {
       return Response.json(
@@ -82,6 +93,22 @@ export async function DELETE(
   }
 
   const { projectId } = await context.params;
+  const project = await getUserProjectById(projectId);
+
+  if (project === null || project.ownerUserId !== actor.id) {
+    return Response.json(
+      { ok: false, errorMessage: "Project not found." },
+      { status: 404 },
+    );
+  }
+
+  if (isDefaultUserProject(project)) {
+    return Response.json(
+      { ok: false, errorMessage: "The Default project cannot be deleted." },
+      { status: 400 },
+    );
+  }
+
   const deleted = await deleteUserProject(actor.id, projectId);
 
   if (!deleted) {

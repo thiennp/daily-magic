@@ -17,6 +17,7 @@ import {
 } from "@/features/agent/utils/resolveInitialAgentLiveTerminalState";
 import { resolveNextAgentLiveTerminalBeginState } from "@/features/agent/utils/resolveNextAgentLiveTerminalBeginState";
 import { submitAgentLiveTerminalInput } from "@/features/agent/utils/submitAgentLiveTerminalInput";
+import { sendAgentRunStop } from "@/features/dispatch/utils/sendAgentRunStop";
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
 
 export function useAgentWitchLiveTerminal(socketRef: {
@@ -101,6 +102,15 @@ export function useAgentWitchLiveTerminal(socketRef: {
     setState((current) => ({ ...current, pendingInput: null }));
   }, []);
 
+  const stopRun = useCallback(() => {
+    const runId = state.activeRunId;
+    if (runId === null || runId.length === 0) {
+      return;
+    }
+
+    void sendAgentRunStop(socketRef.current, runId);
+  }, [socketRef, state.activeRunId]);
+
   return {
     output: state.output,
     status: state.status,
@@ -111,6 +121,7 @@ export function useAgentWitchLiveTerminal(socketRef: {
     sessionDeviceId: state.sessionDeviceId,
     beginSession,
     finishSession,
+    stopRun,
     applySocketMessage,
     submitInput,
     dismissInput,

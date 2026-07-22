@@ -21,4 +21,8 @@ export const buildClaudeDispatchPayloadFromBody = (
   ...(typeof body.sourceRunId === "string" && body.sourceRunId.length > 0
     ? { sourceRunId: body.sourceRunId }
     : {}),
+  ...(typeof body.projectFolderPath === "string" &&
+  body.projectFolderPath.length > 0
+    ? { projectFolderPath: body.projectFolderPath }
+    : {}),
 });

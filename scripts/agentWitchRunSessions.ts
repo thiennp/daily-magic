@@ -29,6 +29,7 @@ import {
 import {
   closeShellPtySession,
   isAgentPtyRunAlive,
+  killAgentPtyByRunId,
 } from "./agentWitchShellSession";
 import {
   buildContinuationPrompt,
@@ -58,6 +59,10 @@ interface ActiveRunSession {
 
 const activeChildren = new Map<string, ChildProcess>();
 const runSessions = new Map<string, ActiveRunSession>();
+const runsStoppedByUser = new Set<string>();
+
+const STOPPED_EXIT_CODE = 130;
+const STOPPED_OUTPUT_SUFFIX = "\n\nStopped by user.";
 
 let cloudApiConfig: AgentWitchCloudApiConfig | null = null;
 
@@ -113,6 +118,19 @@ const finishRun = (
   output: string,
   originalPrompt: string,
 ): void => {
+  let resolvedExitCode = exitCode;
+  let resolvedOutput = output;
+
+  if (agentRunId !== undefined && runsStoppedByUser.has(agentRunId)) {
+    runsStoppedByUser.delete(agentRunId);
+    resolvedExitCode = STOPPED_EXIT_CODE;
+    resolvedOutput =
+      resolvedOutput.trim().length > 0 &&
+      !resolvedOutput.includes("Stopped by user.")
+        ? `${resolvedOutput.trim()}${STOPPED_OUTPUT_SUFFIX}`
+        : "Stopped by user.";
+  }
+
   if (agentRunId !== undefined) {
     stopRunHeartbeat(agentRunId);
 
@@ -128,15 +146,15 @@ const finishRun = (
     persistFinishedAgentRun(config.layout, {
       agentRunId,
       originalPrompt,
-      exitCode,
-      output,
+      exitCode: resolvedExitCode,
+      output: resolvedOutput,
       layout: config.layout,
     });
 
     enqueueAgentRunCompletionOutbox(config.layout, {
       runId: agentRunId,
-      exitCode,
-      output,
+      exitCode: resolvedExitCode,
+      output: resolvedOutput,
       createdAt: new Date().toISOString(),
     });
     void flushAgentRunCompletionOutbox({
@@ -152,8 +170,8 @@ const finishRun = (
   sendMessage(socket, {
     type: "command.claude.result",
     payload: {
-      exitCode,
-      output,
+      exitCode: resolvedExitCode,
+      output: resolvedOutput,
       ...(agentRunId !== undefined ? { agentRunId } : {}),
     },
     requestId,
@@ -543,4 +561,47 @@ export const replayPendingRunInputRequests = (
       },
     });
   }
+};
+
+export const stopAgentRun = (
+  config: AgentWitchRunConfig,
+  socket: WebSocket,
+  agentRunId: string,
+  requestId?: string,
+): boolean => {
+  const session = runSessions.get(agentRunId);
+  if (session === undefined) {
+    return false;
+  }
+
+  runsStoppedByUser.add(agentRunId);
+  stopRunHeartbeat(agentRunId);
+
+  const child = activeChildren.get(agentRunId);
+  if (child !== undefined) {
+    child.kill("SIGTERM");
+    return true;
+  }
+
+  if (killAgentPtyByRunId(agentRunId)) {
+    return true;
+  }
+
+  removePendingRunInputSession(config.layout, agentRunId);
+  const output =
+    session.accumulatedOutput.trim().length > 0
+      ? `${session.accumulatedOutput.trim()}${STOPPED_OUTPUT_SUFFIX}`
+      : "Stopped by user.";
+
+  finishRun(
+    config,
+    socket,
+    agentRunId,
+    requestId,
+    STOPPED_EXIT_CODE,
+    output,
+    session.originalPrompt,
+  );
+
+  return true;
 };

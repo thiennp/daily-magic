@@ -102,6 +102,7 @@ export function useAgentWitchSocket(): UseAgentWitchSocketResult {
     sessionDeviceId: terminal.sessionDeviceId,
     macShell,
     finishLiveTerminalSession: promptContinuation.finishLiveTerminalSession,
+    stopLiveTerminalRun: terminal.stopRun,
     submitLiveTerminalInput: terminal.submitInput,
     dismissLiveTerminalInput: terminal.dismissInput,
     sendClaudePrompt:

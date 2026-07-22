@@ -18,6 +18,7 @@ export interface UseAgentWitchSocketResult {
   readonly sessionDeviceId: string | null;
   readonly macShell: ReturnType<typeof useAgentMacShell>;
   readonly finishLiveTerminalSession: () => void;
+  readonly stopLiveTerminalRun: () => void;
   readonly submitLiveTerminalInput: (response: string) => void;
   readonly dismissLiveTerminalInput: () => void;
   readonly sendClaudePrompt: (

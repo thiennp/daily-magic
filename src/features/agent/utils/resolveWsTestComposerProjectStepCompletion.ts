@@ -10,7 +10,6 @@ export const resolveWsTestComposerProjectStepCompletion = (input: {
   input.hasConfirmedProjectSelection ||
   !input.requiresProjectStep ||
   shouldAutoCompleteWsTestComposerProjectStep({
-    urlProjectId: input.urlProjectId,
     selectedProjectId: input.selectedProjectId,
     hasRewoundWizard: input.hasRewoundWizard,
   });

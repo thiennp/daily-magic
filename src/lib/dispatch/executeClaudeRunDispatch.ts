@@ -86,6 +86,10 @@ export const executeClaudeRunDispatch = async (input: {
       typeof input.payload.sourceRunId === "string"
         ? input.payload.sourceRunId
         : undefined,
+    projectFolderPath:
+      typeof input.payload.projectFolderPath === "string"
+        ? input.payload.projectFolderPath
+        : undefined,
     requestId: input.requestId,
   });
 

@@ -1,5 +1,11 @@
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
 import type { useWsTestTaskComposer } from "@/features/agent/hooks/useWsTestTaskComposer";
+import { buildDefaultUserProjectFolderPath } from "@/lib/projects/defaultUserProject.constants";
+
+const resolveComposerProjectFolderPath = (
+  composer: ReturnType<typeof useWsTestTaskComposer>,
+): string =>
+  composer.selectedProject?.folderPath ?? buildDefaultUserProjectFolderPath();
 
 export const buildWsTestSendOptions = (
   composer: ReturnType<typeof useWsTestTaskComposer>,
@@ -11,8 +17,10 @@ export const buildWsTestSendOptions = (
   readonly groupId?: string;
   readonly capabilityId?: string;
   readonly targetDeviceId?: string;
+  readonly projectFolderPath: string;
 } => ({
   writerAgent,
+  projectFolderPath: resolveComposerProjectFolderPath(composer),
   ...(composer.isTeamDispatch
     ? {
         targetUserId: composer.selectedTargetUserId,

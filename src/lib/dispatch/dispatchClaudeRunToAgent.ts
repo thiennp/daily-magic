@@ -21,6 +21,7 @@ export const dispatchClaudeRunToAgent = (
   sessionContinuation = false,
   sourceRunId?: string,
   shellSessionId?: string,
+  projectFolderPath?: string,
 ): void => {
   agentClient.send({
     type: AGENT_WITCH_MESSAGE_TYPES.COMMAND_CLAUDE_RUN,
@@ -31,6 +32,7 @@ export const dispatchClaudeRunToAgent = (
       ...(sessionContinuation ? { sessionContinuation: true } : {}),
       ...(sourceRunId !== undefined ? { sourceRunId } : {}),
       ...(shellSessionId !== undefined ? { shellSessionId } : {}),
+      ...(projectFolderPath !== undefined ? { projectFolderPath } : {}),
     },
     requestId,
   });
