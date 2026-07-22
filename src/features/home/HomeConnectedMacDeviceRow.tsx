@@ -12,6 +12,7 @@ import {
 } from "@/features/agent-witch/online-wake";
 import type { MyMacDevice } from "@/features/agent/hooks/useMyMacDevices";
 import useThisMacLocalInstallActions from "@/features/home/hooks/useThisMacLocalInstallActions";
+import DeleteLocalMacModal from "@/features/home/DeleteLocalMacModal";
 import UpdateLocalMacModal from "@/features/home/UpdateLocalMacModal";
 
 interface HomeConnectedMacDeviceRowProps {
@@ -34,9 +35,13 @@ export default function HomeConnectedMacDeviceRow(
     onUpdateLocal,
     onDeleteLocalScript,
     isUpdateLocalModalOpen,
+    isDeleteLocalModalOpen,
     updateLocalCommand,
+    deleteLocalCommand,
+    wakePort,
     closeUpdateLocalModal,
-  } = useThisMacLocalInstallActions();
+    closeDeleteLocalModal,
+  } = useThisMacLocalInstallActions({ wakePort: props.device.wakePort });
   const detail = buildMacDeviceDetailText({
     device: props.device,
     serverInstallBundleVersion: props.serverInstallBundleVersion,
@@ -90,6 +95,12 @@ export default function HomeConnectedMacDeviceRow(
         isOpen={isUpdateLocalModalOpen}
         updateCommand={updateLocalCommand}
         onClose={closeUpdateLocalModal}
+      />
+      <DeleteLocalMacModal
+        isOpen={isDeleteLocalModalOpen}
+        deleteCommand={deleteLocalCommand}
+        wakePort={wakePort}
+        onClose={closeDeleteLocalModal}
       />
     </>
   );
