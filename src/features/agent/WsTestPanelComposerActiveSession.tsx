@@ -30,6 +30,7 @@ export interface WsTestPanelComposerActiveSessionProps extends AgentMacShellPane
   ) => void;
   readonly sessionErrorMessage: string | null;
   readonly onFinishSession: () => void;
+  readonly onStopRun: () => void;
 }
 
 export default function WsTestPanelComposerActiveSession({
@@ -50,6 +51,7 @@ export default function WsTestPanelComposerActiveSession({
   onSubmitFeedback,
   sessionErrorMessage,
   onFinishSession,
+  onStopRun,
   macShellStatus,
   macShellCanWrite,
   macShellLatestChunk,
@@ -80,6 +82,7 @@ export default function WsTestPanelComposerActiveSession({
         onSubmitFeedback={onSubmitFeedback}
         errorMessage={sessionErrorMessage}
         onFinishSession={onFinishSession}
+        onStopRun={onStopRun}
         isSteppedComposer={isSteppedComposer}
         macShellStatus={macShellStatus}
         macShellCanWrite={macShellCanWrite}

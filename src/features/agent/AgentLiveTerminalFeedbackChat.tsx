@@ -19,6 +19,7 @@ interface AgentLiveTerminalFeedbackChatProps {
     preferredMode?: AgentLiveTerminalFeedbackPreferredMode,
   ) => void;
   readonly onFinishSession: () => void;
+  readonly onStopRun?: () => void;
 }
 
 export default function AgentLiveTerminalFeedbackChat({
@@ -32,6 +33,7 @@ export default function AgentLiveTerminalFeedbackChat({
   isSteppedComposer = false,
   onSubmit,
   onFinishSession,
+  onStopRun,
 }: AgentLiveTerminalFeedbackChatProps) {
   const deferredSubmit = useAgentLiveTerminalFeedbackDeferredSubmit({
     onSubmit,
@@ -86,6 +88,7 @@ export default function AgentLiveTerminalFeedbackChat({
         isSubmitting={isSubmitting}
         showFinishSession={!isSimplifiedFollowUp}
         onFinishSession={onFinishSession}
+        onStopRun={onStopRun}
         onSubmit={deferredSubmit.handleSubmit}
       />
     </>

@@ -1,5 +1,6 @@
 "use client";
 
+import Button from "@/components/ui/button/Button";
 import AgentLiveProgressActivityBar from "@/features/agent/AgentLiveProgressActivityBar";
 import AgentLiveProgressActivityDot from "@/features/agent/AgentLiveProgressActivityDot";
 import AgentLiveProgressEstimateBar from "@/features/agent/AgentLiveProgressEstimateBar";
@@ -20,6 +21,7 @@ interface AgentLiveProgressFeedStatusProps {
   readonly stallState: AgentLiveProgressStallState;
   readonly estimateProgress: AgentLiveWorkingEstimateProgress | null;
   readonly sessionDeviceId?: string | null;
+  readonly onStopRun?: () => void;
 }
 
 export default function AgentLiveProgressFeedStatus({
@@ -30,6 +32,7 @@ export default function AgentLiveProgressFeedStatus({
   stallState,
   estimateProgress,
   sessionDeviceId = null,
+  onStopRun,
 }: AgentLiveProgressFeedStatusProps) {
   const isThisMac = useIsAgentLiveSessionThisMac(sessionDeviceId);
   const connectionHint = resolveAgentLiveProgressConnectionHint({
@@ -51,13 +54,20 @@ export default function AgentLiveProgressFeedStatus({
           Progress on your Mac
         </h3>
         {isWorking ? (
-          <span
-            className="inline-flex items-center gap-1.5 text-xs text-brand-700 dark:text-brand-300"
-            aria-live="polite"
-          >
-            <ConnectionStatusBadge status={connectionStatus} />
-            <AgentLiveProgressActivityDot />
-            In progress{workingEllipsis}
+          <span className="inline-flex items-center gap-2">
+            <span
+              className="inline-flex items-center gap-1.5 text-xs text-brand-700 dark:text-brand-300"
+              aria-live="polite"
+            >
+              <ConnectionStatusBadge status={connectionStatus} />
+              <AgentLiveProgressActivityDot />
+              In progress{workingEllipsis}
+            </span>
+            {onStopRun !== undefined ? (
+              <Button size="sm" variant="outline" onClick={onStopRun}>
+                Stop
+              </Button>
+            ) : null}
           </span>
         ) : null}
       </div>

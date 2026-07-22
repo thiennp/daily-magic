@@ -36,6 +36,7 @@ import {
   flushPendingAgentRunCompletions,
   replayPendingRunInputRequests,
   runWriterTask,
+  stopAgentRun,
 } from "./agentWitchRunSessions";
 import { resolveAgentWitchCloudApiConfig } from "./agentWitchCloudApi";
 import {
@@ -1115,6 +1116,18 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
           requestId,
           socket,
         );
+      }
+    }
+
+    if (parsed.type === "command.claude.stop" && isRecord(parsed.payload)) {
+      const agentRunId =
+        typeof parsed.payload.agentRunId === "string"
+          ? parsed.payload.agentRunId
+          : "";
+
+      if (agentRunId.length > 0) {
+        console.log(`[agent-witch] Stopping run ${agentRunId}…`);
+        stopAgentRun(config, asLegacyWebSocket(socket), agentRunId, requestId);
       }
     }
 

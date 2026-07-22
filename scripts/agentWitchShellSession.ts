@@ -111,6 +111,25 @@ export const isAgentPtyRunAlive = (runId: string): boolean => {
   return false;
 };
 
+export const killAgentPtyByRunId = (runId: string): boolean => {
+  for (const [shellSessionId, session] of sessions.entries()) {
+    if (session.mode !== "agent" || session.runId !== runId) {
+      continue;
+    }
+
+    sessions.delete(shellSessionId);
+    try {
+      session.pty.kill();
+    } catch {
+      // already exited
+    }
+
+    return true;
+  }
+
+  return false;
+};
+
 export const openInteractiveShellPty = async (input: {
   readonly shellSessionId: string;
   readonly cwd: string;

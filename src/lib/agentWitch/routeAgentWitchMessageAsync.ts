@@ -8,6 +8,7 @@ import { handleWriterStatusMessageAsync } from "./handleWriterStatusMessageAsync
 import { handleAgentRunHeartbeatMessageAsync } from "@/lib/dispatch/handleAgentRunHeartbeatMessageAsync";
 import { handleClaudeInputRequiredMessageAsync } from "@/lib/dispatch/handleClaudeInputRequiredMessageAsync";
 import { handleClaudeInputRespondMessageAsync } from "@/lib/dispatch/handleClaudeInputRespondMessageAsync";
+import { handleClaudeStopMessageAsync } from "@/lib/dispatch/handleClaudeStopMessageAsync";
 import { handleClaudeResultMessageAsync } from "@/lib/dispatch/handleClaudeResultMessageAsync";
 import { handleClaudeRunMessageAsync } from "@/lib/dispatch/handleClaudeRunMessageAsync";
 import {
@@ -81,6 +82,10 @@ export const routeAgentWitchMessageAsync = async (
 
   if (message.type === AGENT_WITCH_MESSAGE_TYPES.COMMAND_CLAUDE_INPUT_RESPOND) {
     return handleClaudeInputRespondMessageAsync(hub, message, sender);
+  }
+
+  if (message.type === AGENT_WITCH_MESSAGE_TYPES.COMMAND_CLAUDE_STOP) {
+    return handleClaudeStopMessageAsync(hub, message, sender);
   }
 
   if (message.type === AGENT_WITCH_MESSAGE_TYPES.COMMAND_WRITER_SESSION_END) {

@@ -9,6 +9,7 @@ interface AgentLiveTerminalFeedbackActionButtonsProps {
   readonly isSubmitting: boolean;
   readonly showFinishSession: boolean;
   readonly onFinishSession: () => void;
+  readonly onStopRun?: () => void;
   readonly onSubmit: (
     preferredMode?: AgentLiveTerminalFeedbackPreferredMode,
   ) => void;
@@ -20,6 +21,7 @@ export default function AgentLiveTerminalFeedbackActionButtons({
   isSubmitting,
   showFinishSession,
   onFinishSession,
+  onStopRun,
   onSubmit,
 }: AgentLiveTerminalFeedbackActionButtonsProps) {
   if (isAnswerMode) {
@@ -43,6 +45,11 @@ export default function AgentLiveTerminalFeedbackActionButtons({
         {showFinishSession ? (
           <Button size="sm" variant="outline" onClick={onFinishSession}>
             Finish session
+          </Button>
+        ) : null}
+        {onStopRun !== undefined ? (
+          <Button size="sm" variant="outline" onClick={onStopRun}>
+            Stop
           </Button>
         ) : null}
         <Button

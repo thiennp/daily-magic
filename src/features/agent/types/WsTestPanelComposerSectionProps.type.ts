@@ -43,4 +43,5 @@ export interface WsTestPanelComposerSectionProps extends AgentMacShellPanelProps
   readonly onWriterAgentChange: (value: HarnessWriterAgent) => void;
   readonly onStartWriterAgent: (writerAgent: HarnessWriterAgent) => void;
   readonly onFinishSession: () => void;
+  readonly onStopRun: () => void;
 }

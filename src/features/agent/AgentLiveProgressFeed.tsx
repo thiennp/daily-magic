@@ -25,6 +25,7 @@ interface AgentLiveProgressFeedProps {
   readonly nextActions?: readonly string[];
   readonly nextActionsDisabled?: boolean;
   readonly onSelectNextAction?: (action: string) => void;
+  readonly onStopRun?: () => void;
 }
 
 export default function AgentLiveProgressFeed({
@@ -40,6 +41,7 @@ export default function AgentLiveProgressFeed({
   nextActions = [],
   nextActionsDisabled = false,
   onSelectNextAction,
+  onStopRun,
 }: AgentLiveProgressFeedProps) {
   const loadingDotCount = useAgentLiveTerminalLoadingDots(isWorking);
   const workingEllipsis = buildAgentLiveTerminalLoadingLine(loadingDotCount);
@@ -57,6 +59,7 @@ export default function AgentLiveProgressFeed({
         stallState={stallState}
         estimateProgress={estimateProgress}
         sessionDeviceId={sessionDeviceId}
+        onStopRun={onStopRun}
       />
       <AgentLiveProgressWavesPanel items={wavePlanItems} />
       <ol className="mt-4 space-y-3">

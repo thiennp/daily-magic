@@ -32,6 +32,7 @@ interface AgentLiveTerminalPanelProps extends AgentMacShellPanelProps {
     preferredMode?: AgentLiveTerminalFeedbackPreferredMode,
   ) => void;
   readonly onFinishSession: () => void;
+  readonly onStopRun: () => void;
 }
 
 export default function AgentLiveTerminalPanel(
@@ -77,6 +78,7 @@ export default function AgentLiveTerminalPanel(
           nextActions={showNextActions ? nextActions : []}
           nextActionsDisabled={props.isFeedbackSubmitting}
           onSelectNextAction={props.onSubmitFeedback}
+          onStopRun={props.onStopRun}
         />
       ) : null}
       {!isSteppedComposer && showNextActions ? (
@@ -98,6 +100,7 @@ export default function AgentLiveTerminalPanel(
         isSteppedComposer={isSteppedComposer}
         onSubmit={props.onSubmitFeedback}
         onFinishSession={props.onFinishSession}
+        onStopRun={props.onStopRun}
       />
       {isSteppedComposer ? (
         <>

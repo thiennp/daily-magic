@@ -6,6 +6,7 @@ export const AGENT_WITCH_MESSAGE_TYPES = {
   COMMAND_CLAUDE_RESULT: "command.claude.result",
   COMMAND_CLAUDE_INPUT_REQUIRED: "command.claude.input_required",
   COMMAND_CLAUDE_INPUT_RESPOND: "command.claude.input_respond",
+  COMMAND_CLAUDE_STOP: "command.claude.stop",
   COMMAND_WRITER_SESSION_END: "command.writer.session.end",
   COMMAND_WRITER_SESSION_START: "command.writer.session.start",
   COMMAND_WRITER_SESSION_READY: "command.writer.session.ready",

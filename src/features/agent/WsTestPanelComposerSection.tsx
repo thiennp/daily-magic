@@ -30,6 +30,7 @@ export default function WsTestPanelComposerSection({
   onWriterAgentChange,
   onStartWriterAgent,
   onFinishSession,
+  onStopRun,
   macShellStatus,
   macShellCanWrite,
   macShellLatestChunk,
@@ -76,6 +77,7 @@ export default function WsTestPanelComposerSection({
       onSubmitFeedback={onSubmitFeedback}
       sessionErrorMessage={sessionErrorMessage}
       onFinishSession={onFinishSession}
+      onStopRun={onStopRun}
       macShellStatus={macShellStatus}
       macShellCanWrite={macShellCanWrite}
       macShellLatestChunk={macShellLatestChunk}
