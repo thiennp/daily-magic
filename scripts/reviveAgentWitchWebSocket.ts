@@ -19,7 +19,6 @@ import {
   resolveAgentWitchLocalLayout,
 } from "./resolveAgentWitchLocalLayout";
 import { spawnAgentWitchClient } from "./spawnAgentWitchClient";
-import { verifyAgentWitchReviveAfterKickstart } from "./verifyAgentWitchReviveAfterKickstart";
 import {
   appendAgentWitchWatchdogLog,
   type AgentWitchWatchdogLogEvent,
@@ -165,14 +164,22 @@ const reviveTarget = async (input: {
   let errorMessage = kickResult.errorMessage;
 
   if (revived) {
-    const verified = await verifyAgentWitchReviveAfterKickstart({
-      launchAgentLabel: input.launchAgentLabel,
-      profileEmail: input.profileEmail,
-      staleAfterMs: input.staleAfterMs,
-    });
-    revived = verified;
-    if (!verified) {
-      errorMessage = "Connection still stale after kickstart.";
+    // Dynamic import so a partial self-update (missing verify helper) cannot
+    // crash-loop revive on module load (AGENT-058).
+    try {
+      const { verifyAgentWitchReviveAfterKickstart } =
+        await import("./verifyAgentWitchReviveAfterKickstart");
+      const verified = await verifyAgentWitchReviveAfterKickstart({
+        launchAgentLabel: input.launchAgentLabel,
+        profileEmail: input.profileEmail,
+        staleAfterMs: input.staleAfterMs,
+      });
+      revived = verified;
+      if (!verified) {
+        errorMessage = "Connection still stale after kickstart.";
+      }
+    } catch {
+      // Verification helper unavailable; keep kickstart success.
     }
   }
 
