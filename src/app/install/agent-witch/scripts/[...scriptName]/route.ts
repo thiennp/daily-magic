@@ -1,3 +1,4 @@
+import { prepareAgentWitchInstallScriptForShipping } from "@/lib/agentWitch/prepareAgentWitchInstallScriptForShipping";
 import {
   isAgentWitchInstallScriptName,
   readAgentWitchInstallScriptSource,
@@ -19,8 +20,12 @@ export async function GET(
   }
 
   const source = readAgentWitchInstallScriptSource(scriptPath);
+  const shipped = await prepareAgentWitchInstallScriptForShipping({
+    scriptName: scriptPath,
+    source,
+  });
 
-  return new Response(source, {
+  return new Response(shipped, {
     headers: {
       "Content-Type": "text/plain; charset=utf-8",
       "Cache-Control": "no-store",

@@ -3,28 +3,12 @@ import { describe, expect, it } from "vitest";
 import { AGENT_WITCH_CLIENT_INSTALL_SCRIPT_NAMES } from "@/lib/agentWitch/agentWitchClientInstallScripts.constant";
 import { AGENT_WITCH_WAKE_INSTALL_SCRIPT_NAMES } from "@/lib/agentWitch/agentWitchWakeInstallScripts.constant";
 import { listAgentWitchInstallScriptNames } from "@/lib/agentWitch/listAgentWitchInstallScriptNames";
+import { readAgentWitchInstallRelativeImports } from "@/lib/agentWitch/readAgentWitchInstallRelativeImports";
 import { renderInstallAgentWitchScript } from "@/lib/agentWitch/renderInstallAgentWitchScript";
 import {
   isAgentWitchInstallScriptName,
   readAgentWitchInstallScriptSource,
 } from "@/lib/agentWitch/readAgentWitchInstallScriptSource";
-
-const readRelativeInstallImports = (source: string): readonly string[] => {
-  const imports = new Set<string>();
-
-  for (const match of source.matchAll(
-    /(?:from\s+|import\s*\(\s*)["']\.\/([^"']+)["']/g,
-  )) {
-    const importPath = match[1];
-    if (importPath === undefined) {
-      continue;
-    }
-
-    imports.add(importPath.endsWith(".ts") ? importPath : `${importPath}.ts`);
-  }
-
-  return [...imports];
-};
 
 describe("agent witch install self-repair", () => {
   it("serves every client dependency from the install script allowlist", () => {
@@ -64,7 +48,9 @@ describe("agent witch install self-repair", () => {
     for (const scriptName of installScriptNames) {
       const source = readAgentWitchInstallScriptSource(scriptName);
 
-      for (const dependencyName of readRelativeInstallImports(source)) {
+      for (const dependencyName of readAgentWitchInstallRelativeImports(
+        source,
+      )) {
         expect(
           installScriptNames,
           `${scriptName} imports missing ${dependencyName}`,

@@ -8,7 +8,7 @@
 
 **Fix:** Bulk-download every `AGENT_WITCH_WAKE_INSTALL_SCRIPT_NAMES` entry during install/update. Dynamic-import the verify helper so a partial update cannot crash revive on load. Install bundle **56**.
 
-**Regression tests:** `agentWitchInstallSelfRepair.test.ts`, `reviveAgentWitchWebSocket.test.ts` (AGENT-058).
+**Regression tests:** `agentWitchInstallSelfRepair.test.ts`, `reviveAgentWitchWebSocket.test.ts`, `verifyAgentWitchMockInstallLayout.test.ts`, `runShippedAgentWitchInstallBlackbox.test.ts`, `e2e/agent-witch-shipped-install.spec.ts` (AGENT-058).
 
 ---
 
