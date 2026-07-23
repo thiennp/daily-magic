@@ -6,5 +6,6 @@ export const isRestorableAgentLiveTerminalStatus = (
   status === "starting" ||
   status === "waiting_approval" ||
   status === "streaming" ||
+  status === "stopping" ||
   status === "error" ||
   status === "finished";

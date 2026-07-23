@@ -45,7 +45,7 @@ export const reduceAgentLiveTerminalStreamMessage = (
   if (
     parsed.type === AGENT_WITCH_MESSAGE_TYPES.TERMINAL_STREAM_END &&
     matchesActiveRun(state.activeRunId, payload) &&
-    state.status === "streaming"
+    (state.status === "streaming" || state.status === "stopping")
   ) {
     return {
       ...state,

@@ -80,6 +80,7 @@ export function useAgentWitchSocket(): UseAgentWitchSocketResult {
     beginSession: terminal.beginSession,
     applySocketMessage,
     setLastResponse,
+    bindDispatchedRunId: terminal.bindDispatchedRunId,
   });
   const startWriterSessionBase = useAgentWitchWriterSessionStart({
     socketRef,

@@ -31,6 +31,7 @@ export async function postClaudePromptDispatch(input: {
   readonly sessionContinuation?: boolean;
   readonly sourceRunId?: string;
   readonly projectFolderPath?: string;
+  readonly onDispatchedRunId?: (runId: string) => void;
 }): Promise<string> {
   const response = await fetch("/api/agent-runs/dispatch", {
     method: "POST",
@@ -71,6 +72,7 @@ export async function postClaudePromptDispatch(input: {
   const run = parseAgentRunRecord(data.run);
   if (run !== null) {
     upsertAgentRunLocalCache(run);
+    input.onDispatchedRunId?.(run.id);
   }
 
   if (isRecord(data.message)) {

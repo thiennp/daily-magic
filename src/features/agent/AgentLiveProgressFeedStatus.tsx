@@ -1,8 +1,7 @@
 "use client";
 
-import Button from "@/components/ui/button/Button";
 import AgentLiveProgressActivityBar from "@/features/agent/AgentLiveProgressActivityBar";
-import AgentLiveProgressActivityDot from "@/features/agent/AgentLiveProgressActivityDot";
+import AgentLiveProgressFeedStopControl from "@/features/agent/AgentLiveProgressFeedStopControl";
 import AgentLiveProgressEstimateBar from "@/features/agent/AgentLiveProgressEstimateBar";
 import AgentLiveProgressStuckBanner from "@/features/agent/AgentLiveProgressStuckBanner";
 import { useIsAgentLiveSessionThisMac } from "@/features/agent/hooks/useIsAgentLiveSessionThisMac";
@@ -11,10 +10,10 @@ import { formatAgentLiveProgressLastMacUpdate } from "@/features/agent/utils/for
 import { resolveAgentLiveProgressConnectionHint } from "@/features/agent/utils/resolveAgentLiveProgressConnectionHint";
 import type { AgentLiveProgressStallState } from "@/features/agent/utils/resolveAgentLiveProgressStallState";
 import type { AgentLiveWorkingEstimateProgress } from "@/features/agent/utils/resolveAgentLiveWorkingEstimateProgress";
-import { ConnectionStatusBadge } from "@/features/shell/ConnectionStatusBadge";
 
 interface AgentLiveProgressFeedStatusProps {
   readonly isWorking: boolean;
+  readonly isStopping?: boolean;
   readonly workingEllipsis: string;
   readonly connectionStatus: WsTestConnectionStatus;
   readonly msSinceLastActivity: number | null;
@@ -26,6 +25,7 @@ interface AgentLiveProgressFeedStatusProps {
 
 export default function AgentLiveProgressFeedStatus({
   isWorking,
+  isStopping = false,
   workingEllipsis,
   connectionStatus,
   msSinceLastActivity,
@@ -53,30 +53,23 @@ export default function AgentLiveProgressFeedStatus({
         <h3 className="text-sm font-medium text-gray-900 dark:text-white/90">
           Progress on your Mac
         </h3>
-        {isWorking ? (
-          <span className="inline-flex items-center gap-2">
-            <span
-              className="inline-flex items-center gap-1.5 text-xs text-brand-700 dark:text-brand-300"
-              aria-live="polite"
-            >
-              <ConnectionStatusBadge status={connectionStatus} />
-              <AgentLiveProgressActivityDot />
-              In progress{workingEllipsis}
-            </span>
-            {onStopRun !== undefined ? (
-              <Button size="sm" variant="outline" onClick={onStopRun}>
-                Stop
-              </Button>
-            ) : null}
-          </span>
-        ) : null}
+        <AgentLiveProgressFeedStopControl
+          isWorking={isWorking}
+          isStopping={isStopping}
+          workingEllipsis={workingEllipsis}
+          connectionStatus={connectionStatus}
+          onStopRun={onStopRun}
+        />
       </div>
-      {isWorking ? (
+      {isWorking || isStopping ? (
         <p className={`mt-2 text-xs ${connectionHintTone}`} role="status">
           {connectionHint}
         </p>
       ) : null}
-      {isWorking && estimateProgress === null && stallState !== "stuck" ? (
+      {isWorking &&
+      !isStopping &&
+      estimateProgress === null &&
+      stallState !== "stuck" ? (
         <p
           className="mt-3 text-sm text-gray-600 dark:text-gray-300"
           role="status"
@@ -90,7 +83,10 @@ export default function AgentLiveProgressFeedStatus({
           percent={estimateProgress.percent}
         />
       ) : null}
-      {isWorking && !showEstimateProgress && stallState !== "stuck" ? (
+      {isWorking &&
+      !isStopping &&
+      !showEstimateProgress &&
+      stallState !== "stuck" ? (
         <AgentLiveProgressActivityBar />
       ) : null}
       {stallState === "stuck" ? (
