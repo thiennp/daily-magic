@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from "vitest";
 
-import "./agentWitchHub.claude.testMocks";
+import "./agentWitchHub.writerRun.testMocks";
 import { AgentWitchHub } from "./agentWitchHub";
 import { AgentWitchPairingStore } from "./agentWitchPairingStore";
 import {

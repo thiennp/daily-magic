@@ -1,4 +1,4 @@
-import "./agentWitchHub.claude.testMocks";
+import "./agentWitchHub.writerRun.testMocks";
 import { describe, expect, it, beforeEach, vi } from "vitest";
 
 import { AgentWitchHub } from "./agentWitchHub";

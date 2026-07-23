@@ -51,8 +51,14 @@ describe("prepareAgentWitchInstallScriptForShipping", () => {
       scriptName: "reviveAgentWitchWebSocket.ts",
       source,
     });
-    const sourceImports = readAgentWitchInstallRelativeImports(source);
-    const shippedImports = readAgentWitchInstallRelativeImports(shipped);
+    const sourceImports = readAgentWitchInstallRelativeImports(
+      source,
+      "reviveAgentWitchWebSocket.ts",
+    );
+    const shippedImports = readAgentWitchInstallRelativeImports(
+      shipped,
+      "reviveAgentWitchWebSocket.ts",
+    );
 
     expect(shippedImports.length).toBeGreaterThan(0);
     expect(

@@ -110,8 +110,8 @@ import { ensureAgentWitchProjectFolder } from "./ensureAgentWitchProjectFolder";
 import { runWriterEnsure } from "./handleAgentWitchWriterEnsure";
 import { runAgentWitchReportCli } from "./agentWitchReportCli";
 import { isAgentWitchScriptEntryPoint } from "./isAgentWitchScriptEntryPoint";
-import { wrapPromptWithAgentRunReportInstruction } from "../src/lib/dispatch/agentRunReport.constant";
-import { generateAgentRunReportKey } from "../src/lib/dispatch/generateAgentRunReportKey";
+import { wrapPromptWithAgentRunReportInstruction } from "./dispatch/agentRunReport.constant";
+import { generateAgentRunReportKey } from "./dispatch/generateAgentRunReportKey";
 
 interface AgentWitchConfig {
   readonly email: string | null;

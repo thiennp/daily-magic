@@ -4,7 +4,7 @@ import path from "node:path";
 
 import { afterEach, describe, expect, it } from "vitest";
 
-import { AGENT_RUN_REPORT_STATUSES } from "../src/lib/dispatch/agentRunReport.constant";
+import { AGENT_RUN_REPORT_STATUSES } from "./dispatch/agentRunReport.constant";
 import {
   buildAgentRunReportHeartbeatPayload,
   readAgentRunReportFile,
