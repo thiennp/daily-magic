@@ -16,6 +16,7 @@ interface AgentLiveProgressFeedProps {
   readonly steps: readonly AgentLiveProgressStep[];
   readonly replyPreview: string | null;
   readonly isWorking: boolean;
+  readonly isStopping?: boolean;
   readonly stallState?: AgentLiveProgressStallState;
   readonly connectionStatus?: WsTestConnectionStatus;
   readonly msSinceLastActivity?: number | null;
@@ -32,6 +33,7 @@ export default function AgentLiveProgressFeed({
   steps,
   replyPreview,
   isWorking,
+  isStopping = false,
   stallState = "none",
   connectionStatus = "idle",
   msSinceLastActivity = null,
@@ -49,10 +51,11 @@ export default function AgentLiveProgressFeed({
   return (
     <div
       className="mt-3 rounded-xl border border-gray-200 bg-white p-4 dark:border-gray-800 dark:bg-white/[0.02]"
-      aria-busy={isWorking}
+      aria-busy={isWorking || isStopping}
     >
       <AgentLiveProgressFeedStatus
         isWorking={isWorking}
+        isStopping={isStopping}
         workingEllipsis={workingEllipsis}
         connectionStatus={connectionStatus}
         msSinceLastActivity={msSinceLastActivity}

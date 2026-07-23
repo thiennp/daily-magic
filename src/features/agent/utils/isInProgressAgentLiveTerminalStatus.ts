@@ -7,4 +7,5 @@ export const isInProgressAgentLiveTerminalStatus = (
   status === "starting" ||
   status === "waiting_approval" ||
   status === "streaming" ||
+  status === "stopping" ||
   status === "error";

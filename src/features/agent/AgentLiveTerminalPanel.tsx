@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-import AgentLiveProgressFeed from "@/features/agent/AgentLiveProgressFeed";
+import AgentLiveTerminalPanelProgressFeed from "@/features/agent/AgentLiveTerminalPanelProgressFeed";
 import AgentLiveTerminalFeedbackChat from "@/features/agent/AgentLiveTerminalFeedbackChat";
 import AgentLiveTerminalMirrorToggle from "@/features/agent/AgentLiveTerminalMirrorToggle";
 import AgentLiveTerminalNextActions from "@/features/agent/AgentLiveTerminalNextActions";
@@ -65,15 +65,8 @@ export default function AgentLiveTerminalPanel(
   return (
     <section>
       {isSteppedComposer ? (
-        <AgentLiveProgressFeed
-          steps={panelProgress.progress.steps}
-          replyPreview={panelProgress.progress.replyPreview}
-          isWorking={panelProgress.isWorking}
-          stallState={panelProgress.stallState}
-          connectionStatus={panelProgress.connectionStatus}
-          msSinceLastActivity={panelProgress.msSinceLastActivity}
-          estimateProgress={panelProgress.estimateProgress}
-          wavePlanItems={panelProgress.wavePlanItems}
+        <AgentLiveTerminalPanelProgressFeed
+          panelProgress={panelProgress}
           sessionDeviceId={props.sessionDeviceId}
           nextActions={showNextActions ? nextActions : []}
           nextActionsDisabled={props.isFeedbackSubmitting}
@@ -95,7 +88,7 @@ export default function AgentLiveTerminalPanel(
         queuedCount={props.feedbackQueuedCount}
         queueNotice={props.feedbackQueueNotice}
         isSubmitting={props.isFeedbackSubmitting}
-        isWorking={panelProgress.isWorking}
+        isWorking={panelProgress.isWorking && !panelProgress.isStopping}
         autoFocus={props.feedbackAutoFocus === true}
         isSteppedComposer={isSteppedComposer}
         onSubmit={props.onSubmitFeedback}
