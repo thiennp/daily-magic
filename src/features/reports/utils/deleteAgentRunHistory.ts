@@ -60,7 +60,7 @@ export const deleteAgentRunHistory = async (
 
   const cachedRun = getAgentRunLocalCache(trimmedRunId);
   if (cachedRun !== null && shouldStopBeforeDelete(cachedRun.status)) {
-    void sendAgentRunStop(null, trimmedRunId);
+    void sendAgentRunStop(trimmedRunId);
   }
 
   removeAgentRunLocalCache(trimmedRunId);

@@ -1,7 +1,7 @@
 "use client";
 
 import AgentLiveProgressActivityBar from "@/features/agent/AgentLiveProgressActivityBar";
-import AgentLiveProgressFeedHeaderActions from "@/features/agent/AgentLiveProgressFeedHeaderActions";
+import AgentLiveProgressFeedStopControl from "@/features/agent/AgentLiveProgressFeedStopControl";
 import AgentLiveProgressEstimateBar from "@/features/agent/AgentLiveProgressEstimateBar";
 import AgentLiveProgressStuckBanner from "@/features/agent/AgentLiveProgressStuckBanner";
 import { useIsAgentLiveSessionThisMac } from "@/features/agent/hooks/useIsAgentLiveSessionThisMac";
@@ -13,6 +13,7 @@ import type { AgentLiveWorkingEstimateProgress } from "@/features/agent/utils/re
 
 interface AgentLiveProgressFeedStatusProps {
   readonly isWorking: boolean;
+  readonly isStopping?: boolean;
   readonly workingEllipsis: string;
   readonly connectionStatus: WsTestConnectionStatus;
   readonly msSinceLastActivity: number | null;
@@ -25,6 +26,7 @@ interface AgentLiveProgressFeedStatusProps {
 
 export default function AgentLiveProgressFeedStatus({
   isWorking,
+  isStopping = false,
   workingEllipsis,
   connectionStatus,
   msSinceLastActivity,
@@ -53,20 +55,24 @@ export default function AgentLiveProgressFeedStatus({
         <h3 className="text-sm font-medium text-gray-900 dark:text-white/90">
           Progress on your Mac
         </h3>
-        <AgentLiveProgressFeedHeaderActions
+        <AgentLiveProgressFeedStopControl
           isWorking={isWorking}
+          isStopping={isStopping}
           workingEllipsis={workingEllipsis}
           connectionStatus={connectionStatus}
           onStopRun={onStopRun}
           onDeleteRun={onDeleteRun}
         />
       </div>
-      {isWorking ? (
+      {isWorking || isStopping ? (
         <p className={`mt-2 text-xs ${connectionHintTone}`} role="status">
           {connectionHint}
         </p>
       ) : null}
-      {isWorking && estimateProgress === null && stallState !== "stuck" ? (
+      {isWorking &&
+      !isStopping &&
+      estimateProgress === null &&
+      stallState !== "stuck" ? (
         <p
           className="mt-3 text-sm text-gray-600 dark:text-gray-300"
           role="status"
@@ -80,7 +86,10 @@ export default function AgentLiveProgressFeedStatus({
           percent={estimateProgress.percent}
         />
       ) : null}
-      {isWorking && !showEstimateProgress && stallState !== "stuck" ? (
+      {isWorking &&
+      !isStopping &&
+      !showEstimateProgress &&
+      stallState !== "stuck" ? (
         <AgentLiveProgressActivityBar />
       ) : null}
       {stallState === "stuck" ? (

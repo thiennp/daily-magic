@@ -6,7 +6,13 @@ import {
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
 
 export type AgentLiveTerminalStatus =
-  "idle" | "starting" | "waiting_approval" | "streaming" | "error" | "finished";
+  | "idle"
+  | "starting"
+  | "waiting_approval"
+  | "streaming"
+  | "stopping"
+  | "error"
+  | "finished";
 
 export interface AgentLiveTerminalState {
   readonly activeRunId: string | null;

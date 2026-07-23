@@ -26,6 +26,7 @@ export const hasAgentLiveProgressStartedUserTask = (input: {
   if (
     input.status === "streaming" ||
     input.status === "waiting_approval" ||
+    input.status === "stopping" ||
     input.status === "finished"
   ) {
     return true;

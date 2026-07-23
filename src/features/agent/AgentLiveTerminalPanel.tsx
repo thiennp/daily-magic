@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-import AgentLiveTerminalPanelSteppedFeed from "@/features/agent/AgentLiveTerminalPanelSteppedFeed";
+import AgentLiveTerminalPanelProgressFeed from "@/features/agent/AgentLiveTerminalPanelProgressFeed";
 import AgentLiveTerminalFeedbackChat from "@/features/agent/AgentLiveTerminalFeedbackChat";
 import AgentLiveTerminalMirrorToggle from "@/features/agent/AgentLiveTerminalMirrorToggle";
 import AgentLiveTerminalNextActions from "@/features/agent/AgentLiveTerminalNextActions";
@@ -62,22 +62,22 @@ export default function AgentLiveTerminalPanel(
     isSteppedComposer,
     macShell: props,
   });
+  const onDeleteRun =
+    props.activeRunId !== null && props.activeRunId !== undefined
+      ? props.onDeleteRun
+      : undefined;
 
   return (
     <section>
       {isSteppedComposer ? (
-        <AgentLiveTerminalPanelSteppedFeed
+        <AgentLiveTerminalPanelProgressFeed
           panelProgress={panelProgress}
           sessionDeviceId={props.sessionDeviceId}
           nextActions={showNextActions ? nextActions : []}
           nextActionsDisabled={props.isFeedbackSubmitting}
           onSelectNextAction={props.onSubmitFeedback}
           onStopRun={props.onStopRun}
-          onDeleteRun={
-            props.activeRunId !== null && props.activeRunId !== undefined
-              ? props.onDeleteRun
-              : undefined
-          }
+          onDeleteRun={onDeleteRun}
         />
       ) : null}
       {!isSteppedComposer && showNextActions ? (
@@ -94,7 +94,7 @@ export default function AgentLiveTerminalPanel(
         queuedCount={props.feedbackQueuedCount}
         queueNotice={props.feedbackQueueNotice}
         isSubmitting={props.isFeedbackSubmitting}
-        isWorking={panelProgress.isWorking}
+        isWorking={panelProgress.isWorking && !panelProgress.isStopping}
         autoFocus={props.feedbackAutoFocus === true}
         isSteppedComposer={isSteppedComposer}
         onSubmit={props.onSubmitFeedback}

@@ -2,22 +2,18 @@
 
 import AgentLiveProgressFeed from "@/features/agent/AgentLiveProgressFeed";
 import { useAgentLiveTerminalPanelProgress } from "@/features/agent/hooks/useAgentLiveTerminalPanelProgress";
-import type { AgentLiveTerminalFeedbackPreferredMode } from "@/features/agent/utils/resolveAgentLiveTerminalFeedbackAction";
 
-interface AgentLiveTerminalPanelSteppedFeedProps {
+interface AgentLiveTerminalPanelProgressFeedProps {
   readonly panelProgress: ReturnType<typeof useAgentLiveTerminalPanelProgress>;
   readonly sessionDeviceId?: string | null;
   readonly nextActions: readonly string[];
   readonly nextActionsDisabled: boolean;
-  readonly onSelectNextAction: (
-    message: string,
-    preferredMode?: AgentLiveTerminalFeedbackPreferredMode,
-  ) => void;
+  readonly onSelectNextAction: (action: string) => void;
   readonly onStopRun: () => void;
   readonly onDeleteRun?: () => void;
 }
 
-export default function AgentLiveTerminalPanelSteppedFeed({
+export default function AgentLiveTerminalPanelProgressFeed({
   panelProgress,
   sessionDeviceId,
   nextActions,
@@ -25,12 +21,13 @@ export default function AgentLiveTerminalPanelSteppedFeed({
   onSelectNextAction,
   onStopRun,
   onDeleteRun,
-}: AgentLiveTerminalPanelSteppedFeedProps) {
+}: AgentLiveTerminalPanelProgressFeedProps) {
   return (
     <AgentLiveProgressFeed
       steps={panelProgress.progress.steps}
       replyPreview={panelProgress.progress.replyPreview}
       isWorking={panelProgress.isWorking}
+      isStopping={panelProgress.isStopping}
       stallState={panelProgress.stallState}
       connectionStatus={panelProgress.connectionStatus}
       msSinceLastActivity={panelProgress.msSinceLastActivity}

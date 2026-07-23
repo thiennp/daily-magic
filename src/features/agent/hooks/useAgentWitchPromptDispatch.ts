@@ -30,6 +30,7 @@ export const useAgentWitchPromptDispatch = (input: {
   ) => void;
   readonly applySocketMessage: (raw: string) => void;
   readonly setLastResponse: Dispatch<SetStateAction<AgentWitchSocketDisplay>>;
+  readonly bindDispatchedRunId: (runId: string) => void;
 }): ((
   prompt: string,
   options?: {
@@ -91,6 +92,7 @@ export const useAgentWitchPromptDispatch = (input: {
           input.applySocketMessage(raw);
           input.setLastResponse(parseAgentWitchSocketDisplay(raw));
         },
+        onDispatchedRunId: input.bindDispatchedRunId,
       });
     },
     [input, sourceRunId],

@@ -17,6 +17,7 @@ export function useAgentLiveTerminalPanelProgress(input: {
   readonly feedbackPendingQuestion: string | null;
   readonly feedbackPendingPartialOutput?: string | null;
 }) {
+  const isStopping = input.status === "stopping";
   const isWorking = isAgentLiveTerminalWorking(input.status);
   const dashboard = useAgentWitchDashboard();
   const connectionStatus = dashboard?.connectionStatus ?? "disconnected";
@@ -76,6 +77,7 @@ export function useAgentLiveTerminalPanelProgress(input: {
 
   return {
     isWorking,
+    isStopping,
     connectionStatus,
     stallState,
     msSinceLastActivity,
