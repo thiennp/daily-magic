@@ -4,33 +4,48 @@ import path from "node:path";
 import {
   AGENT_RUN_REPORT_STATUSES,
   isTerminalAgentRunReportStatus,
+  type AgentRunReportFile,
   type AgentRunReportStatus,
 } from "../src/lib/dispatch/agentRunReport.constant";
+import type { AgentRunReportHistoryEntry } from "../src/lib/dispatch/agentRunReportHistory.type";
 import { buildAgentRunReportFilePath } from "../src/lib/dispatch/buildAgentRunReportFilePath";
 import expandAgentWitchProjectFolderPath from "./expandAgentWitchProjectFolderPath";
 
-export type AgentRunReportFile = {
-  readonly agentRunId: string;
-  readonly status: AgentRunReportStatus;
-  readonly updatedAt: string;
-  readonly userSummary: string;
-  readonly details?: string;
-};
+export type { AgentRunReportFile, AgentRunReportStatus };
+export { AGENT_RUN_REPORT_STATUSES, isTerminalAgentRunReportStatus };
+
+const MAX_REPORT_HISTORY_ENTRIES = 50;
 
 const resolveReportFilePath = (
   projectFolderPath: string,
-  agentRunId: string,
+  reportKey: string,
 ): string =>
   buildAgentRunReportFilePath(
     expandAgentWitchProjectFolderPath(projectFolderPath),
-    agentRunId,
+    reportKey,
   );
+
+const isValidReportFile = (parsed: unknown): parsed is AgentRunReportFile => {
+  if (typeof parsed !== "object" || parsed === null) {
+    return false;
+  }
+
+  const candidate = parsed as AgentRunReportFile;
+  return (
+    typeof candidate.reportKey === "string" &&
+    typeof candidate.agentRunId === "string" &&
+    typeof candidate.status === "string" &&
+    typeof candidate.updatedAt === "string" &&
+    typeof candidate.userSummary === "string" &&
+    Array.isArray(candidate.history)
+  );
+};
 
 export const readAgentRunReportFile = (
   projectFolderPath: string,
-  agentRunId: string,
+  reportKey: string,
 ): AgentRunReportFile | null => {
-  const filePath = resolveReportFilePath(projectFolderPath, agentRunId);
+  const filePath = resolveReportFilePath(projectFolderPath, reportKey);
 
   if (!fs.existsSync(filePath)) {
     return null;
@@ -38,49 +53,88 @@ export const readAgentRunReportFile = (
 
   try {
     const parsed: unknown = JSON.parse(fs.readFileSync(filePath, "utf8"));
-    if (
-      typeof parsed !== "object" ||
-      parsed === null ||
-      typeof (parsed as AgentRunReportFile).agentRunId !== "string" ||
-      typeof (parsed as AgentRunReportFile).status !== "string" ||
-      typeof (parsed as AgentRunReportFile).updatedAt !== "string" ||
-      typeof (parsed as AgentRunReportFile).userSummary !== "string"
-    ) {
+    if (!isValidReportFile(parsed)) {
       return null;
     }
 
-    return parsed as AgentRunReportFile;
+    return parsed;
   } catch {
     return null;
   }
+};
+
+const appendHistoryEntry = (
+  existing: readonly AgentRunReportHistoryEntry[],
+  entry: AgentRunReportHistoryEntry,
+): readonly AgentRunReportHistoryEntry[] => {
+  const next = [...existing, entry];
+  return next.length > MAX_REPORT_HISTORY_ENTRIES
+    ? next.slice(next.length - MAX_REPORT_HISTORY_ENTRIES)
+    : next;
 };
 
 export const writeAgentRunReportFile = (
   projectFolderPath: string,
   report: AgentRunReportFile,
 ): void => {
-  const filePath = resolveReportFilePath(projectFolderPath, report.agentRunId);
+  const filePath = resolveReportFilePath(projectFolderPath, report.reportKey);
   fs.mkdirSync(path.dirname(filePath), { recursive: true });
   fs.writeFileSync(filePath, `${JSON.stringify(report, null, 2)}\n`, "utf8");
 };
 
-export const seedAgentRunReportFile = (input: {
+export const upsertAgentRunReportFile = (input: {
   readonly projectFolderPath: string;
+  readonly reportKey: string;
   readonly agentRunId: string;
-  readonly userSummary?: string;
-}): void => {
+  readonly status: AgentRunReportStatus;
+  readonly userSummary: string;
+  readonly details?: string;
+}): AgentRunReportFile => {
   const existing = readAgentRunReportFile(
     input.projectFolderPath,
-    input.agentRunId,
+    input.reportKey,
+  );
+  const updatedAt = new Date().toISOString();
+  const historyEntry: AgentRunReportHistoryEntry = {
+    at: updatedAt,
+    status: input.status,
+    summary: input.userSummary.trim(),
+  };
+  const report: AgentRunReportFile = {
+    reportKey: input.reportKey,
+    agentRunId: input.agentRunId,
+    status: input.status,
+    updatedAt,
+    userSummary: input.userSummary.trim(),
+    ...(input.details !== undefined && input.details.trim().length > 0
+      ? { details: input.details.trim() }
+      : {}),
+    history: appendHistoryEntry(existing?.history ?? [], historyEntry),
+  };
+
+  writeAgentRunReportFile(input.projectFolderPath, report);
+  return report;
+};
+
+export const seedAgentRunReportFile = (input: {
+  readonly projectFolderPath: string;
+  readonly reportKey: string;
+  readonly agentRunId: string;
+  readonly userSummary?: string;
+}): AgentRunReportFile => {
+  const existing = readAgentRunReportFile(
+    input.projectFolderPath,
+    input.reportKey,
   );
   if (existing !== null) {
-    return;
+    return existing;
   }
 
-  writeAgentRunReportFile(input.projectFolderPath, {
+  return upsertAgentRunReportFile({
+    projectFolderPath: input.projectFolderPath,
+    reportKey: input.reportKey,
     agentRunId: input.agentRunId,
     status: AGENT_RUN_REPORT_STATUSES.IN_PROGRESS,
-    updatedAt: new Date().toISOString(),
     userSummary:
       input.userSummary?.trim() ?? "Task started; waiting for the agent.",
   });
@@ -91,6 +145,7 @@ export const buildAgentRunReportHeartbeatPayload = (
 ): {
   readonly reportStatus?: string;
   readonly reportSummary?: string;
+  readonly reportHistory?: readonly AgentRunReportHistoryEntry[];
 } => {
   if (report === null) {
     return {};
@@ -100,6 +155,7 @@ export const buildAgentRunReportHeartbeatPayload = (
   return {
     reportStatus: report.status,
     ...(reportSummary.length > 0 ? { reportSummary } : {}),
+    ...(report.history.length > 0 ? { reportHistory: report.history } : {}),
   };
 };
 

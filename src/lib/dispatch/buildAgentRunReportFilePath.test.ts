@@ -5,7 +5,7 @@ import { buildAgentRunReportFilePath } from "@/lib/dispatch/buildAgentRunReportF
 describe("buildAgentRunReportFilePath", () => {
   it("places the report JSON under the project .agent-witch/reports folder", () => {
     expect(
-      buildAgentRunReportFilePath("/Users/me/projects/demo", "run-abc-123"),
-    ).toBe("/Users/me/projects/demo/.agent-witch/reports/run-abc-123.json");
+      buildAgentRunReportFilePath("/Users/me/projects/demo", "report-key-abc"),
+    ).toBe("/Users/me/projects/demo/.agent-witch/reports/report-key-abc.json");
   });
 });

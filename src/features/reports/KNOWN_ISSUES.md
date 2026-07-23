@@ -46,7 +46,7 @@
 
 **Cause:** Completion depended on live terminal output and `command.claude.result`; there was no durable per-run report file for the agent to maintain.
 
-**Fix:** Every dispatched Mac run now includes instructions to maintain `{project}/.agent-witch/reports/{runId}.json`. Mac seeds `in_progress` at start, forwards `reportSummary` on `run.heartbeat`, and can finish the run from a terminal report when the CLI exits without a hub result. Install bundle **63**.
+**Fix:** Hub generates a unique `reportKey` before dispatch. Mac seeds `{project}/.agent-witch/reports/{reportKey}.json`, injects a `report write` CLI command into the agent prompt, forwards `reportSummary` and `reportHistory` on `run.heartbeat`, and can finish the run from a terminal report when the CLI exits without a hub result. Install bundle **64**.
 
 **Regression tests:** `agentWitchRunReport.test.ts`, `wrapPromptForAgentRun.test.ts`, `syncAgentRunHeartbeatLocalCacheFromSocket.test.ts` (REPORTS-007).
 

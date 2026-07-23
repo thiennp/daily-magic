@@ -62,6 +62,7 @@ interface ActiveRunSession {
   readonly originalPrompt: string;
   readonly writerAgent: HarnessWriterAgentId;
   readonly projectFolderPath?: string;
+  readonly reportKey?: string;
   accumulatedOutput: string;
 }
 
@@ -123,18 +124,21 @@ const buildRunReportHeartbeatOptions = (
   agentRunId: string,
   requestId: string | undefined,
   projectFolderPath: string | undefined,
+  reportKey: string | undefined,
   awaitingInput = false,
 ): StartRunHeartbeatOptions => ({
   awaitingInput,
   onTick: () => {
     if (
       projectFolderPath === undefined ||
-      projectFolderPath.trim().length === 0
+      projectFolderPath.trim().length === 0 ||
+      reportKey === undefined ||
+      reportKey.trim().length === 0
     ) {
       return {};
     }
 
-    const report = readAgentRunReportFile(projectFolderPath, agentRunId);
+    const report = readAgentRunReportFile(projectFolderPath, reportKey);
     const session = runSessions.get(agentRunId);
     if (report !== null && session !== undefined) {
       const completion = resolveAgentRunCompletionFromReport(report);
@@ -257,6 +261,7 @@ const requestRunInput = (
       agentRunId,
       requestId,
       session?.projectFolderPath,
+      session?.reportKey,
       true,
     ),
   );
@@ -308,6 +313,7 @@ const attachChildHandlers = (
       originalPrompt,
       writerAgent,
       projectFolderPath: existingSession?.projectFolderPath,
+      reportKey: existingSession?.reportKey,
       accumulatedOutput: existingSession?.accumulatedOutput ?? "",
     });
     sendMessage(socket, {
@@ -325,6 +331,7 @@ const attachChildHandlers = (
         agentRunId,
         requestId,
         existingSession?.projectFolderPath,
+        existingSession?.reportKey,
       ),
     );
   }
@@ -427,6 +434,7 @@ export const runWriterTask = (
   invocationOptions?: BuildWriterCliInvocationOptions,
   shellSessionId?: string,
   projectFolderPath?: string,
+  reportKey?: string,
 ): void => {
   const invocation = buildWriterCliInvocation(
     writerAgent,
@@ -474,12 +482,19 @@ export const runWriterTask = (
     originalPrompt: prompt,
     writerAgent,
     projectFolderPath,
+    reportKey,
     accumulatedOutput: runSessions.get(agentRunId)?.accumulatedOutput ?? "",
   });
 
-  if (projectFolderPath !== undefined && projectFolderPath.trim().length > 0) {
+  if (
+    projectFolderPath !== undefined &&
+    projectFolderPath.trim().length > 0 &&
+    reportKey !== undefined &&
+    reportKey.trim().length > 0
+  ) {
     seedAgentRunReportFile({
       projectFolderPath,
+      reportKey,
       agentRunId,
       userSummary: "Task started on your Mac.",
     });
@@ -496,6 +511,7 @@ export const runWriterTask = (
       agentRunId,
       requestId,
       projectFolderPath,
+      reportKey,
     ),
   );
 
@@ -573,6 +589,7 @@ export const runWriterTask = (
           agentRunId,
           requestId,
           projectFolderPath,
+          reportKey,
         ),
       );
     })
@@ -620,11 +637,10 @@ export const continueClaudeTaskAfterInput = (
     });
   }
   const continuationPrompt = buildContinuationPrompt(input);
-  const writerAgent =
-    runSessions.get(input.agentRunId)?.writerAgent ?? "claude-cli";
-  const projectFolderPath = runSessions.get(
-    input.agentRunId,
-  )?.projectFolderPath;
+  const session = runSessions.get(input.agentRunId);
+  const writerAgent = session?.writerAgent ?? "claude-cli";
+  const projectFolderPath = session?.projectFolderPath;
+  const reportKey = session?.reportKey;
   runWriterTask(
     config,
     writerAgent,
@@ -635,6 +651,7 @@ export const continueClaudeTaskAfterInput = (
     undefined,
     input.shellSessionId,
     projectFolderPath,
+    reportKey,
   );
 };
 

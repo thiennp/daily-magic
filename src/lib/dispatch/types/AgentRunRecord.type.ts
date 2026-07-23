@@ -1,4 +1,5 @@
 import type { AgentRunStatusValue } from "@/lib/dispatch/AgentRunStatus.constant";
+import type { AgentRunReportHistoryEntry } from "@/lib/dispatch/agentRunReportHistory.type";
 import type { DispatchPolicyValue } from "@/lib/dispatch/DispatchPolicy.constant";
 
 export default interface AgentRunRecord {
@@ -24,4 +25,5 @@ export default interface AgentRunRecord {
   readonly lastRunHeartbeatAt: string | null;
   readonly reportStatus?: string | null;
   readonly reportSummary?: string | null;
+  readonly reportHistory?: readonly AgentRunReportHistoryEntry[] | null;
 }

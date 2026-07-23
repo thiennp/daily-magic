@@ -64,6 +64,7 @@ export const AGENT_WITCH_CLIENT_INSTALL_SCRIPT_NAMES = [
   "ensureAgentWitchProjectFolder.ts",
   "ensureAgentWitchProjectFolderFromWakeServer.ts",
   "agentWitchRunReport.ts",
+  "agentWitchReportCli.ts",
   "agentWitchLocalApp.ts",
   "handleAgentWitchWriterEnsure.ts",
   "runLocalInstallBundleUpdate.ts",

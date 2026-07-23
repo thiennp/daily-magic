@@ -57,7 +57,7 @@ describe("syncAgentRunHeartbeatLocalCacheFromSocket (AGENT-058)", () => {
     );
   });
 
-  it("patches report summary fields for a cached RUNNING run", () => {
+  it("patches report summary and history fields for a cached RUNNING run", () => {
     upsertAgentRunLocalCache(makeRun("run-1"));
     const synced = syncAgentRunHeartbeatLocalCacheFromSocket(
       JSON.stringify({
@@ -67,6 +67,13 @@ describe("syncAgentRunHeartbeatLocalCacheFromSocket (AGENT-058)", () => {
           at: "2026-07-21T10:01:00.000Z",
           reportStatus: "in_progress",
           reportSummary: "Reading project files.",
+          reportHistory: [
+            {
+              at: "2026-07-21T10:01:00.000Z",
+              status: "in_progress",
+              summary: "Reading project files.",
+            },
+          ],
         },
       }),
     );
@@ -76,6 +83,13 @@ describe("syncAgentRunHeartbeatLocalCacheFromSocket (AGENT-058)", () => {
       lastRunHeartbeatAt: "2026-07-21T10:01:00.000Z",
       reportStatus: "in_progress",
       reportSummary: "Reading project files.",
+      reportHistory: [
+        {
+          at: "2026-07-21T10:01:00.000Z",
+          status: "in_progress",
+          summary: "Reading project files.",
+        },
+      ],
     });
   });
 

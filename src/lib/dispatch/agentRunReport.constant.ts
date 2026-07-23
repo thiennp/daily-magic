@@ -1,4 +1,6 @@
 import { buildAgentRunReportFilePath } from "@/lib/dispatch/buildAgentRunReportFilePath";
+import { buildAgentRunReportWriteCommand } from "@/lib/dispatch/buildAgentRunReportWriteCommand";
+import type { AgentRunReportHistoryEntry } from "@/lib/dispatch/agentRunReportHistory.type";
 
 export const AGENT_RUN_REPORT_STATUSES = {
   IN_PROGRESS: "in_progress",
@@ -10,6 +12,16 @@ export const AGENT_RUN_REPORT_STATUSES = {
 export type AgentRunReportStatus =
   (typeof AGENT_RUN_REPORT_STATUSES)[keyof typeof AGENT_RUN_REPORT_STATUSES];
 
+export type AgentRunReportFile = {
+  readonly reportKey: string;
+  readonly agentRunId: string;
+  readonly status: AgentRunReportStatus;
+  readonly updatedAt: string;
+  readonly userSummary: string;
+  readonly details?: string;
+  readonly history: readonly AgentRunReportHistoryEntry[];
+};
+
 export const isTerminalAgentRunReportStatus = (
   status: string,
 ): status is
@@ -20,39 +32,50 @@ export const isTerminalAgentRunReportStatus = (
 
 export const buildAgentRunReportInstruction = (input: {
   readonly agentRunId: string;
+  readonly reportKey: string;
   readonly reportFilePath: string;
+  readonly reportWriteCommand: string;
 }): string =>
   [
-    "Maintain a machine-readable job report file for this run so the user can check status later:",
-    `Report file (create immediately, then keep updated): ${input.reportFilePath}`,
-    "Use JSON with these fields:",
-    `- agentRunId: "${input.agentRunId}"`,
-    '- status: "in_progress" | "completed" | "failed" | "blocked"',
-    "- updatedAt: ISO-8601 timestamp",
-    "- userSummary: plain-language status for the user (1-3 sentences)",
-    "- details: optional longer notes",
-    "Rules:",
-    "1. Create the file at task start with status in_progress and a short userSummary.",
-    "2. Update the file after each meaningful step (refresh updatedAt and userSummary).",
-    "3. On finish, set status completed or failed with a final userSummary the user can read without opening logs.",
-    "4. If blocked on a human decision, set status blocked and explain what is needed in userSummary.",
-    "5. Do not delete the file; overwrite it in place.",
+    "Maintain a machine-readable job report so the user can check status later.",
+    `Report key: ${input.reportKey}`,
+    `Report file: ${input.reportFilePath}`,
+    "",
+    "After every meaningful step and on finish, run this exact shell command (update --status and --summary each time):",
+    input.reportWriteCommand,
+    "",
+    "Valid --status values: in_progress, completed, failed, blocked.",
+    "Use plain-language --summary text the user can read without opening logs.",
+    "Optional --details for longer notes.",
+    `Always include agentRunId ${input.agentRunId} via --agent-run-id (already in the command above).`,
   ].join("\n");
 
 export const wrapPromptWithAgentRunReportInstruction = (
   prompt: string,
   input: {
     readonly agentRunId: string;
+    readonly reportKey: string;
     readonly projectFolderPath: string;
+    readonly installDir: string;
   },
 ): string => {
   const reportFilePath = buildAgentRunReportFilePath(
     input.projectFolderPath,
-    input.agentRunId,
+    input.reportKey,
   );
+  const reportWriteCommand = buildAgentRunReportWriteCommand({
+    installDir: input.installDir,
+    projectFolderPath: input.projectFolderPath,
+    reportKey: input.reportKey,
+    agentRunId: input.agentRunId,
+    status: AGENT_RUN_REPORT_STATUSES.IN_PROGRESS,
+    summary: "Task started on your Mac.",
+  });
 
   return `${prompt.trim()}\n\n---\n${buildAgentRunReportInstruction({
     agentRunId: input.agentRunId,
+    reportKey: input.reportKey,
     reportFilePath,
+    reportWriteCommand,
   })}`;
 };

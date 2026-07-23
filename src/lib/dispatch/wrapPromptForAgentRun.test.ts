@@ -35,14 +35,12 @@ describe("wrapPromptForAgentRun", () => {
     expect(wrapped).toContain(AGENT_RUN_INPUT_MARKER);
   });
 
-  it("adds report-file instructions when agentRunId and project folder are provided", () => {
+  it("does not add report-file instructions on the hub prompt", () => {
     const wrapped = wrapPromptForAgentRun("run tests", {
-      agentRunId: "run-abc",
-      projectFolderPath: "/tmp/project",
+      includeNextActions: true,
     });
 
-    expect(wrapped).toContain("run-abc");
-    expect(wrapped).toContain("/tmp/project/.agent-witch/reports/run-abc.json");
-    expect(wrapped).toContain("userSummary");
+    expect(wrapped).not.toContain(".agent-witch/reports/");
+    expect(wrapped).not.toContain("report write");
   });
 });
