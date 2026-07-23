@@ -1,7 +1,7 @@
 import {
   AGENT_RUN_REPORT_STATUSES,
   type AgentRunReportStatus,
-} from "../src/lib/dispatch/agentRunReport.constant";
+} from "./dispatch/agentRunReport.constant";
 import { upsertAgentRunReportFile } from "./agentWitchRunReport";
 
 const REPORT_STATUSES = new Set<string>(
