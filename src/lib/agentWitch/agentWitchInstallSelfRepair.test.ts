@@ -50,6 +50,7 @@ describe("agent witch install self-repair", () => {
 
       for (const dependencyName of readAgentWitchInstallRelativeImports(
         source,
+        scriptName,
       )) {
         expect(
           installScriptNames,

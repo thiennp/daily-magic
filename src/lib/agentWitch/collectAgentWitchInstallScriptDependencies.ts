@@ -16,7 +16,10 @@ export const collectAgentWitchInstallScriptDependencies = (
     }
 
     const source = readSource(current);
-    for (const dependencyName of readAgentWitchInstallRelativeImports(source)) {
+    for (const dependencyName of readAgentWitchInstallRelativeImports(
+      source,
+      current,
+    )) {
       if (!isAgentWitchInstallScriptName(dependencyName)) {
         continue;
       }

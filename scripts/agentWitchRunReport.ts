@@ -6,9 +6,9 @@ import {
   isTerminalAgentRunReportStatus,
   type AgentRunReportFile,
   type AgentRunReportStatus,
-} from "../src/lib/dispatch/agentRunReport.constant";
-import type { AgentRunReportHistoryEntry } from "../src/lib/dispatch/agentRunReportHistory.type";
-import { buildAgentRunReportFilePath } from "../src/lib/dispatch/buildAgentRunReportFilePath";
+} from "./dispatch/agentRunReport.constant";
+import type { AgentRunReportHistoryEntry } from "./dispatch/agentRunReportHistory.type";
+import { buildAgentRunReportFilePath } from "./dispatch/buildAgentRunReportFilePath";
 import expandAgentWitchProjectFolderPath from "./expandAgentWitchProjectFolderPath";
 
 export type { AgentRunReportFile, AgentRunReportStatus };
