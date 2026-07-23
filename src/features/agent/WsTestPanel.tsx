@@ -78,6 +78,7 @@ export default function WsTestPanel({
         onStartWriterAgent={panel.startWriterSession}
         onFinishSession={panel.socket.finishLiveTerminalSession}
         onStopRun={panel.socket.stopLiveTerminalRun}
+        onDeleteRun={panel.socket.deleteLiveTerminalRun}
         macShellStatus={panel.socket.macShell.status}
         macShellCanWrite={panel.socket.macShell.canWrite}
         macShellLatestChunk={panel.socket.macShell.latestChunk}

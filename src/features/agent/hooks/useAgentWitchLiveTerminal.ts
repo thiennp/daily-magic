@@ -2,6 +2,8 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 
+import { useAgentLiveTerminalDeleteRun } from "@/features/agent/hooks/useAgentLiveTerminalDeleteRun";
+import { useAgentLiveTerminalStopRun } from "@/features/agent/hooks/useAgentLiveTerminalStopRun";
 import { useAgentWitchLiveTerminalWriterSessionSubscribe } from "@/features/agent/hooks/useAgentWitchLiveTerminalWriterSessionSubscribe";
 import { useShouldRestoreAgentLiveTerminalSession } from "@/features/agent/hooks/useShouldRestoreAgentLiveTerminalSession";
 import type { UseAgentWitchLiveTerminalResult } from "@/features/agent/types/UseAgentWitchLiveTerminalResult.type";
@@ -17,7 +19,6 @@ import {
 } from "@/features/agent/utils/resolveInitialAgentLiveTerminalState";
 import { resolveNextAgentLiveTerminalBeginState } from "@/features/agent/utils/resolveNextAgentLiveTerminalBeginState";
 import { submitAgentLiveTerminalInput } from "@/features/agent/utils/submitAgentLiveTerminalInput";
-import { sendAgentRunStop } from "@/features/dispatch/utils/sendAgentRunStop";
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
 
 export function useAgentWitchLiveTerminal(socketRef: {
@@ -102,14 +103,12 @@ export function useAgentWitchLiveTerminal(socketRef: {
     setState((current) => ({ ...current, pendingInput: null }));
   }, []);
 
-  const stopRun = useCallback(() => {
-    const runId = state.activeRunId;
-    if (runId === null || runId.length === 0) {
-      return;
-    }
-
-    void sendAgentRunStop(socketRef.current, runId);
-  }, [socketRef, state.activeRunId]);
+  const { stopRun } = useAgentLiveTerminalStopRun(socketRef, state);
+  const { deleteRun } = useAgentLiveTerminalDeleteRun(
+    socketRef,
+    state,
+    setState,
+  );
 
   return {
     output: state.output,
@@ -122,6 +121,7 @@ export function useAgentWitchLiveTerminal(socketRef: {
     beginSession,
     finishSession,
     stopRun,
+    deleteRun,
     applySocketMessage,
     submitInput,
     dismissInput,

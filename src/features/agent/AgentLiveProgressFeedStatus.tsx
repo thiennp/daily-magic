@@ -1,8 +1,7 @@
 "use client";
 
-import Button from "@/components/ui/button/Button";
 import AgentLiveProgressActivityBar from "@/features/agent/AgentLiveProgressActivityBar";
-import AgentLiveProgressActivityDot from "@/features/agent/AgentLiveProgressActivityDot";
+import AgentLiveProgressFeedHeaderActions from "@/features/agent/AgentLiveProgressFeedHeaderActions";
 import AgentLiveProgressEstimateBar from "@/features/agent/AgentLiveProgressEstimateBar";
 import AgentLiveProgressStuckBanner from "@/features/agent/AgentLiveProgressStuckBanner";
 import { useIsAgentLiveSessionThisMac } from "@/features/agent/hooks/useIsAgentLiveSessionThisMac";
@@ -11,7 +10,6 @@ import { formatAgentLiveProgressLastMacUpdate } from "@/features/agent/utils/for
 import { resolveAgentLiveProgressConnectionHint } from "@/features/agent/utils/resolveAgentLiveProgressConnectionHint";
 import type { AgentLiveProgressStallState } from "@/features/agent/utils/resolveAgentLiveProgressStallState";
 import type { AgentLiveWorkingEstimateProgress } from "@/features/agent/utils/resolveAgentLiveWorkingEstimateProgress";
-import { ConnectionStatusBadge } from "@/features/shell/ConnectionStatusBadge";
 
 interface AgentLiveProgressFeedStatusProps {
   readonly isWorking: boolean;
@@ -22,6 +20,7 @@ interface AgentLiveProgressFeedStatusProps {
   readonly estimateProgress: AgentLiveWorkingEstimateProgress | null;
   readonly sessionDeviceId?: string | null;
   readonly onStopRun?: () => void;
+  readonly onDeleteRun?: () => void;
 }
 
 export default function AgentLiveProgressFeedStatus({
@@ -33,6 +32,7 @@ export default function AgentLiveProgressFeedStatus({
   estimateProgress,
   sessionDeviceId = null,
   onStopRun,
+  onDeleteRun,
 }: AgentLiveProgressFeedStatusProps) {
   const isThisMac = useIsAgentLiveSessionThisMac(sessionDeviceId);
   const connectionHint = resolveAgentLiveProgressConnectionHint({
@@ -53,23 +53,13 @@ export default function AgentLiveProgressFeedStatus({
         <h3 className="text-sm font-medium text-gray-900 dark:text-white/90">
           Progress on your Mac
         </h3>
-        {isWorking ? (
-          <span className="inline-flex items-center gap-2">
-            <span
-              className="inline-flex items-center gap-1.5 text-xs text-brand-700 dark:text-brand-300"
-              aria-live="polite"
-            >
-              <ConnectionStatusBadge status={connectionStatus} />
-              <AgentLiveProgressActivityDot />
-              In progress{workingEllipsis}
-            </span>
-            {onStopRun !== undefined ? (
-              <Button size="sm" variant="outline" onClick={onStopRun}>
-                Stop
-              </Button>
-            ) : null}
-          </span>
-        ) : null}
+        <AgentLiveProgressFeedHeaderActions
+          isWorking={isWorking}
+          workingEllipsis={workingEllipsis}
+          connectionStatus={connectionStatus}
+          onStopRun={onStopRun}
+          onDeleteRun={onDeleteRun}
+        />
       </div>
       {isWorking ? (
         <p className={`mt-2 text-xs ${connectionHintTone}`} role="status">

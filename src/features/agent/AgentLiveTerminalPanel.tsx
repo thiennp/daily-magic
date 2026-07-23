@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-import AgentLiveProgressFeed from "@/features/agent/AgentLiveProgressFeed";
+import AgentLiveTerminalPanelSteppedFeed from "@/features/agent/AgentLiveTerminalPanelSteppedFeed";
 import AgentLiveTerminalFeedbackChat from "@/features/agent/AgentLiveTerminalFeedbackChat";
 import AgentLiveTerminalMirrorToggle from "@/features/agent/AgentLiveTerminalMirrorToggle";
 import AgentLiveTerminalNextActions from "@/features/agent/AgentLiveTerminalNextActions";
@@ -33,6 +33,7 @@ interface AgentLiveTerminalPanelProps extends AgentMacShellPanelProps {
   ) => void;
   readonly onFinishSession: () => void;
   readonly onStopRun: () => void;
+  readonly onDeleteRun: () => void;
 }
 
 export default function AgentLiveTerminalPanel(
@@ -65,20 +66,18 @@ export default function AgentLiveTerminalPanel(
   return (
     <section>
       {isSteppedComposer ? (
-        <AgentLiveProgressFeed
-          steps={panelProgress.progress.steps}
-          replyPreview={panelProgress.progress.replyPreview}
-          isWorking={panelProgress.isWorking}
-          stallState={panelProgress.stallState}
-          connectionStatus={panelProgress.connectionStatus}
-          msSinceLastActivity={panelProgress.msSinceLastActivity}
-          estimateProgress={panelProgress.estimateProgress}
-          wavePlanItems={panelProgress.wavePlanItems}
+        <AgentLiveTerminalPanelSteppedFeed
+          panelProgress={panelProgress}
           sessionDeviceId={props.sessionDeviceId}
           nextActions={showNextActions ? nextActions : []}
           nextActionsDisabled={props.isFeedbackSubmitting}
           onSelectNextAction={props.onSubmitFeedback}
           onStopRun={props.onStopRun}
+          onDeleteRun={
+            props.activeRunId !== null && props.activeRunId !== undefined
+              ? props.onDeleteRun
+              : undefined
+          }
         />
       ) : null}
       {!isSteppedComposer && showNextActions ? (

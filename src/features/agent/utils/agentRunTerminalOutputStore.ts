@@ -63,3 +63,19 @@ export const setAgentRunTerminalOutput = (
   outputs[runId] = output;
   writeOutputStore(outputs);
 };
+
+export const removeAgentRunTerminalOutput = (runId: string): void => {
+  const trimmedRunId = runId.trim();
+  if (trimmedRunId.length === 0) {
+    return;
+  }
+
+  const outputs = readOutputStore();
+  if (!(trimmedRunId in outputs)) {
+    return;
+  }
+
+  const remainingOutputs = { ...outputs };
+  delete remainingOutputs[trimmedRunId];
+  writeOutputStore(remainingOutputs);
+};

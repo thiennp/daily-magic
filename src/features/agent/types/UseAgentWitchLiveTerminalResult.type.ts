@@ -17,6 +17,7 @@ export interface UseAgentWitchLiveTerminalResult {
   ) => void;
   readonly finishSession: () => void;
   readonly stopRun: () => void;
+  readonly deleteRun: () => void;
   readonly applySocketMessage: (raw: string) => void;
   readonly submitInput: (response: string) => void;
   readonly dismissInput: () => void;
