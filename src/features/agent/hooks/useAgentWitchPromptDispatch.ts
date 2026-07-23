@@ -10,10 +10,10 @@ import { useSearchParams } from "next/navigation";
 
 import { SEND_TASK_SOURCE_RUN_ID_QUERY_PARAM } from "@/features/agent/constants/sendTaskModalQuery.constant";
 
-import { buildDemoClaudePromptAck } from "@/features/agent/utils/buildDemoClaudePromptAck";
+import { buildDemoWriterPromptAck } from "@/features/agent/utils/buildDemoWriterPromptAck";
 import { formatAgentLiveTerminalCommandLine } from "@/features/agent/utils/agentLiveTerminalPrompt.constant";
 import { isMacTerminalDispatch } from "@/features/agent/utils/isMacTerminalDispatch";
-import { dispatchClaudePrompt } from "@/features/agent/utils/dispatchClaudePrompt";
+import { dispatchClaudePrompt } from "@/features/agent/utils/dispatchWriterPrompt";
 import parseAgentWitchSocketDisplay, {
   type AgentWitchSocketDisplay,
 } from "@/lib/agentWitch/parseAgentWitchSocketDisplay";
@@ -69,7 +69,7 @@ export const useAgentWitchPromptDispatch = (input: {
 
       if (input.connectionLab !== null) {
         input.setLastResponse(
-          parseAgentWitchSocketDisplay(buildDemoClaudePromptAck()),
+          parseAgentWitchSocketDisplay(buildDemoWriterPromptAck()),
         );
         return;
       }

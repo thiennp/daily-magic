@@ -34,4 +34,13 @@ describe("wrapPromptForAgentRun", () => {
     expect(wrapped).toContain(AGENT_RUN_PROGRESS_MARKER);
     expect(wrapped).toContain(AGENT_RUN_INPUT_MARKER);
   });
+
+  it("does not add report-file instructions on the hub prompt", () => {
+    const wrapped = wrapPromptForAgentRun("run tests", {
+      includeNextActions: true,
+    });
+
+    expect(wrapped).not.toContain(".agent-witch/reports/");
+    expect(wrapped).not.toContain("report write");
+  });
 });

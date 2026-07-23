@@ -40,6 +40,16 @@
 
 **Fix:** Stable `activeRunIdsKey` deps, `afterSeq` cursor + refresh only on `status.*` / `terminal.end`; idempotent `markOnboardingFirstTaskSent`; debounced onboarding reload. `shouldRefreshAgentRunsOnSseEvent.test.ts` (REPORTS-005).
 
+## REPORTS-007 — Running jobs stuck in progress with no user-visible status
+
+**Symptom:** After navigating away, a job could stay `running` in Home / Send a task with no plain-language summary of what finished or what blocked.
+
+**Cause:** Completion depended on live terminal output and `command.claude.result`; there was no durable per-run report file for the agent to maintain.
+
+**Fix:** Hub generates a unique `reportKey` before dispatch. Mac seeds `{project}/.agent-witch/reports/{reportKey}.json`, injects a `report write` CLI command into the agent prompt, forwards `reportSummary` and `reportHistory` on `run.heartbeat`, and can finish the run from a terminal report when the CLI exits without a hub result. Install bundle **64**.
+
+**Regression tests:** `agentWitchRunReport.test.ts`, `wrapPromptForAgentRun.test.ts`, `syncAgentRunHeartbeatLocalCacheFromSocket.test.ts` (REPORTS-007).
+
 ## REPORTS-006 — Job list refetched on every active-run SSE tick
 
 **Symptom:** `/reports` still hammered `agent-runs?scope=all` whenever a running job emitted per-run SSE events, even though `agent.run.record` already updated localStorage.

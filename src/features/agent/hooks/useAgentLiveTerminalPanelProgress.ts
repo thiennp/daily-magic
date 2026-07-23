@@ -1,3 +1,4 @@
+import { getAgentRunLocalCache } from "@/features/reports/agentRunLocalCache";
 import { useAgentLiveProgressStallState } from "@/features/agent/hooks/useAgentLiveProgressStallState";
 import { useAgentRunHeartbeatStallReset } from "@/features/agent/hooks/useAgentRunHeartbeatStallReset";
 import { useAgentWitchDashboard } from "@/features/agent-witch/dashboard/AgentWitchDashboardContext";
@@ -51,6 +52,20 @@ export function useAgentLiveTerminalPanelProgress(input: {
     partialOutput: input.feedbackPendingPartialOutput ?? null,
     stallState,
   });
+  const cachedReportSummary =
+    input.activeRunId !== null &&
+    input.activeRunId !== undefined &&
+    input.activeRunId.length > 0
+      ? (getAgentRunLocalCache(input.activeRunId)?.reportSummary ?? null)
+      : null;
+  const progressWithReport = {
+    ...progress,
+    replyPreview:
+      progress.replyPreview ??
+      (cachedReportSummary !== null && cachedReportSummary.trim().length > 0
+        ? cachedReportSummary.trim()
+        : null),
+  };
   const estimateProgress =
     estimateSeconds !== null && workedMs !== null
       ? resolveAgentLiveWorkingEstimateProgress({
@@ -66,6 +81,6 @@ export function useAgentLiveTerminalPanelProgress(input: {
     msSinceLastActivity,
     estimateProgress,
     wavePlanItems,
-    progress,
+    progress: progressWithReport,
   };
 }

@@ -6,6 +6,7 @@ import {
   AGENT_WITCH_PROJECT_META_FILE_NAME,
   AGENT_WITCH_PROJECT_RAG_CHUNKS_FILE_NAME,
   AGENT_WITCH_PROJECT_RAG_DIR_NAME,
+  AGENT_WITCH_PROJECT_REPORTS_DIR_NAME,
 } from "./agentWitchProjectStorage.constants";
 import expandAgentWitchProjectFolderPath from "./expandAgentWitchProjectFolderPath";
 
@@ -15,6 +16,7 @@ export type AgentWitchProjectStorageLayout = {
   readonly metaDirPath: string;
   readonly ragDirPath: string;
   readonly memoryDirPath: string;
+  readonly reportsDirPath: string;
   readonly metaFilePath: string;
   readonly ragChunksFilePath: string;
 };
@@ -35,6 +37,10 @@ export const resolveAgentWitchProjectStorageLayout = (
     metaDirPath,
     ragDirPath: path.join(metaDirPath, AGENT_WITCH_PROJECT_RAG_DIR_NAME),
     memoryDirPath: path.join(metaDirPath, AGENT_WITCH_PROJECT_MEMORY_DIR_NAME),
+    reportsDirPath: path.join(
+      metaDirPath,
+      AGENT_WITCH_PROJECT_REPORTS_DIR_NAME,
+    ),
     metaFilePath: path.join(metaDirPath, AGENT_WITCH_PROJECT_META_FILE_NAME),
     ragChunksFilePath: path.join(
       metaDirPath,

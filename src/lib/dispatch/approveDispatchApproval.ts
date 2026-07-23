@@ -10,7 +10,7 @@ import {
   dispatchClaudeRunToAgent,
   markAgentRunRunning,
   notifyDashboardUser,
-} from "@/lib/dispatch/dispatchClaudeRunToAgent";
+} from "@/lib/dispatch/dispatchWriterRunToAgent";
 import { isLocalMacAgentRunDispatch } from "@/lib/dispatch/isLocalMacAgentRunDispatch";
 import { DEFAULT_DELEGATED_WRITER_AGENT } from "@/lib/dispatch/resolveDelegatedWriterAgent";
 

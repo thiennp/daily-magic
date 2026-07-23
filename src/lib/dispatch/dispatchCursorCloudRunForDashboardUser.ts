@@ -2,7 +2,7 @@ import type AgentWitchHubRuntime from "@/lib/agentWitch/types/AgentWitchHubRunti
 import { dispatchCursorCloudRun } from "@/lib/dispatch/dispatchCursorCloudRun";
 import { finalizeDashboardDispatchResult } from "@/lib/dispatch/finalizeDashboardDispatchResult";
 import { resolveDispatchPolicyForExecutor } from "@/lib/dispatch/resolveDispatchPolicyForExecutor";
-import type { DispatchClaudeRunForDashboardResult } from "@/lib/dispatch/dispatchClaudeRunForDashboardUser";
+import type { DispatchClaudeRunForDashboardResult } from "@/lib/dispatch/dispatchWriterRunForDashboardUser";
 
 export const dispatchCursorCloudRunForDashboardUser = async (input: {
   readonly runtime: AgentWitchHubRuntime;

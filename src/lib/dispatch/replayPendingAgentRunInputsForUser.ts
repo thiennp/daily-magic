@@ -1,7 +1,7 @@
 import type { AgentWitchHub } from "@/lib/agentWitch/agentWitchHub";
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
 import { dispatchAgentRunInputRegistry } from "@/lib/dispatch/dispatchAgentRunInputRegistry";
-import { notifyDashboardUser } from "@/lib/dispatch/dispatchClaudeRunToAgent";
+import { notifyDashboardUser } from "@/lib/dispatch/dispatchWriterRunToAgent";
 
 export function replayPendingAgentRunInputsForUser(
   hub: AgentWitchHub,

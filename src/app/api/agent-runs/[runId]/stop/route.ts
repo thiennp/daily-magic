@@ -1,7 +1,7 @@
 import { getAgentWitchHub } from "@/lib/agentWitch/getAgentWitchHub";
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
 import { buildDashboardHttpSender } from "@/lib/dispatch/buildDashboardHttpSender";
-import { handleClaudeStopMessageAsync } from "@/lib/dispatch/handleClaudeStopMessageAsync";
+import { handleWriterStopMessageAsync } from "@/lib/dispatch/handleWriterStopMessageAsync";
 import { requireAuth } from "@/lib/auth/requireAuth";
 
 export const dynamic = "force-dynamic";
@@ -17,7 +17,7 @@ export async function POST(
   }
 
   const { runId } = await context.params;
-  const result = await handleClaudeStopMessageAsync(
+  const result = await handleWriterStopMessageAsync(
     getAgentWitchHub(),
     {
       type: AGENT_WITCH_MESSAGE_TYPES.COMMAND_CLAUDE_STOP,

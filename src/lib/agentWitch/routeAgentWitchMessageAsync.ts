@@ -6,11 +6,11 @@ import { handleAgentHeartbeatMessageAsync } from "./handleAgentHeartbeatMessageA
 import { handleAgentWitchSyncMessage } from "./handleAgentWitchSyncMessage";
 import { handleWriterStatusMessageAsync } from "./handleWriterStatusMessageAsync";
 import { handleAgentRunHeartbeatMessageAsync } from "@/lib/dispatch/handleAgentRunHeartbeatMessageAsync";
-import { handleClaudeInputRequiredMessageAsync } from "@/lib/dispatch/handleClaudeInputRequiredMessageAsync";
-import { handleClaudeInputRespondMessageAsync } from "@/lib/dispatch/handleClaudeInputRespondMessageAsync";
-import { handleClaudeStopMessageAsync } from "@/lib/dispatch/handleClaudeStopMessageAsync";
-import { handleClaudeResultMessageAsync } from "@/lib/dispatch/handleClaudeResultMessageAsync";
-import { handleClaudeRunMessageAsync } from "@/lib/dispatch/handleClaudeRunMessageAsync";
+import { handleClaudeInputRequiredMessageAsync } from "@/lib/dispatch/handleWriterInputRequiredMessageAsync";
+import { handleClaudeInputRespondMessageAsync } from "@/lib/dispatch/handleWriterInputRespondMessageAsync";
+import { handleWriterStopMessageAsync } from "@/lib/dispatch/handleWriterStopMessageAsync";
+import { handleClaudeResultMessageAsync } from "@/lib/dispatch/handleWriterResultMessageAsync";
+import { handleClaudeRunMessageAsync } from "@/lib/dispatch/handleWriterRunMessageAsync";
 import {
   handleAgentAgentRunRelayResultAsync,
   handleDashboardAgentRunRelayAsync,
@@ -85,7 +85,7 @@ export const routeAgentWitchMessageAsync = async (
   }
 
   if (message.type === AGENT_WITCH_MESSAGE_TYPES.COMMAND_CLAUDE_STOP) {
-    return handleClaudeStopMessageAsync(hub, message, sender);
+    return handleWriterStopMessageAsync(hub, message, sender);
   }
 
   if (message.type === AGENT_WITCH_MESSAGE_TYPES.COMMAND_WRITER_SESSION_END) {

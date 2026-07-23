@@ -2,7 +2,7 @@ import type AgentWitchMessage from "@/lib/agentWitch/types/AgentWitchMessage.typ
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
 import { getAgentRunById } from "@/lib/dispatch/agentRunQueries";
 import { buildDispatchError } from "@/lib/dispatch/buildDispatchError";
-import type { DispatchClaudeRunForDashboardResult } from "@/lib/dispatch/dispatchClaudeRunForDashboardUser";
+import type { DispatchClaudeRunForDashboardResult } from "@/lib/dispatch/dispatchWriterRunForDashboardUser";
 
 const readAgentRunId = (message: AgentWitchMessage): string | null => {
   const agentRunId = message.payload?.agentRunId;

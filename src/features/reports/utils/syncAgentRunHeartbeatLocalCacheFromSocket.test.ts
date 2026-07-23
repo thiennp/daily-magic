@@ -57,6 +57,42 @@ describe("syncAgentRunHeartbeatLocalCacheFromSocket (AGENT-058)", () => {
     );
   });
 
+  it("patches report summary and history fields for a cached RUNNING run", () => {
+    upsertAgentRunLocalCache(makeRun("run-1"));
+    const synced = syncAgentRunHeartbeatLocalCacheFromSocket(
+      JSON.stringify({
+        type: "run.heartbeat",
+        payload: {
+          agentRunId: "run-1",
+          at: "2026-07-21T10:01:00.000Z",
+          reportStatus: "in_progress",
+          reportSummary: "Reading project files.",
+          reportHistory: [
+            {
+              at: "2026-07-21T10:01:00.000Z",
+              status: "in_progress",
+              summary: "Reading project files.",
+            },
+          ],
+        },
+      }),
+    );
+
+    expect(synced).toBe(true);
+    expect(getAgentRunLocalCache("run-1")).toMatchObject({
+      lastRunHeartbeatAt: "2026-07-21T10:01:00.000Z",
+      reportStatus: "in_progress",
+      reportSummary: "Reading project files.",
+      reportHistory: [
+        {
+          at: "2026-07-21T10:01:00.000Z",
+          status: "in_progress",
+          summary: "Reading project files.",
+        },
+      ],
+    });
+  });
+
   it("ignores non-heartbeat messages", () => {
     expect(
       syncAgentRunHeartbeatLocalCacheFromSocket(

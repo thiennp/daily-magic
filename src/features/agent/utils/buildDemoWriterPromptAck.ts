@@ -1,6 +1,6 @@
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
 
-export function buildDemoClaudePromptAck(): string {
+export function buildDemoWriterPromptAck(): string {
   return JSON.stringify(
     {
       type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ACK,

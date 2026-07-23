@@ -5,7 +5,8 @@ import type AgentWitchMessage from "@/lib/agentWitch/types/AgentWitchMessage.typ
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
 import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
 import { getAgentRunById } from "@/lib/dispatch/agentRunQueries";
-import { notifyDashboardUser } from "@/lib/dispatch/dispatchClaudeRunToAgent";
+import type { AgentRunReportHistoryEntry } from "@/lib/dispatch/agentRunReportHistory.type";
+import { notifyDashboardUser } from "@/lib/dispatch/dispatchWriterRunToAgent";
 import { reconcileStaleAgentRuns } from "@/lib/dispatch/reconcileStaleAgentRuns";
 import { touchAgentRunHeartbeatAt } from "@/lib/dispatch/touchAgentRunHeartbeatAt";
 
@@ -71,12 +72,32 @@ export const handleAgentRunHeartbeatMessageAsync = async (
 
   await touchAgentRunHeartbeatAt(runtime, agentRunId);
 
+  const reportHistory = Array.isArray(message.payload?.reportHistory)
+    ? message.payload.reportHistory.filter(
+        (entry): entry is AgentRunReportHistoryEntry =>
+          typeof entry === "object" &&
+          entry !== null &&
+          typeof (entry as AgentRunReportHistoryEntry).at === "string" &&
+          typeof (entry as AgentRunReportHistoryEntry).status === "string" &&
+          typeof (entry as AgentRunReportHistoryEntry).summary === "string",
+      )
+    : undefined;
+
   const heartbeatMessage: AgentWitchMessage = {
     type: AGENT_WITCH_MESSAGE_TYPES.RUN_HEARTBEAT,
     payload: {
       agentRunId,
       at: new Date().toISOString(),
       ...(awaitingInput ? { awaitingInput: true } : {}),
+      ...(typeof message.payload?.reportStatus === "string"
+        ? { reportStatus: message.payload.reportStatus }
+        : {}),
+      ...(typeof message.payload?.reportSummary === "string"
+        ? { reportSummary: message.payload.reportSummary }
+        : {}),
+      ...(reportHistory !== undefined && reportHistory.length > 0
+        ? { reportHistory }
+        : {}),
     },
     requestId: message.requestId,
   };

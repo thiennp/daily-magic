@@ -1,5 +1,5 @@
 import isNonEmptyString from "@/lib/agentWitch/isNonEmptyString";
-import isClaudeDispatchPayload from "@/lib/agentWitch/isClaudeDispatchPayload";
+import isClaudeDispatchPayload from "@/lib/agentWitch/isWriterDispatchPayload";
 import type AgentWitchHubClient from "@/lib/agentWitch/types/AgentWitchHubClient.type";
 import { buildDispatchError } from "@/lib/dispatch/buildDispatchError";
 import { usersShareGroup } from "@/lib/dispatch/usersShareGroup";

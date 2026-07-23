@@ -4,14 +4,17 @@ import { wrapPromptWithAgentRunProgressInstruction } from "@/lib/dispatch/agentR
 
 export const wrapPromptForAgentRun = (
   prompt: string,
-  options?: { readonly includeNextActions?: boolean },
+  options?: {
+    readonly includeNextActions?: boolean;
+  },
 ): string => {
   const withNextActions =
     options?.includeNextActions === true
       ? `${prompt.trim()}\n\n---\n${AGENT_RUN_NEXT_ACTIONS_INSTRUCTION}`
       : prompt.trim();
 
-  return wrapPromptWithAgentRunInputGuardrails(
-    wrapPromptWithAgentRunProgressInstruction(withNextActions),
-  );
+  const withProgress =
+    wrapPromptWithAgentRunProgressInstruction(withNextActions);
+
+  return wrapPromptWithAgentRunInputGuardrails(withProgress);
 };

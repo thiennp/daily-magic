@@ -108,6 +108,10 @@ import { resolveAgentWitchAppOriginFromWsUrl } from "./resolveAgentWitchAppOrigi
 import { buildDefaultUserProjectFolderPath } from "./buildDefaultUserProjectFolderPath";
 import { ensureAgentWitchProjectFolder } from "./ensureAgentWitchProjectFolder";
 import { runWriterEnsure } from "./handleAgentWitchWriterEnsure";
+import { runAgentWitchReportCli } from "./agentWitchReportCli";
+import { isAgentWitchScriptEntryPoint } from "./isAgentWitchScriptEntryPoint";
+import { wrapPromptWithAgentRunReportInstruction } from "../src/lib/dispatch/agentRunReport.constant";
+import { generateAgentRunReportKey } from "../src/lib/dispatch/generateAgentRunReportKey";
 
 interface AgentWitchConfig {
   readonly email: string | null;
@@ -302,6 +306,7 @@ const dispatchWriterTask = async (
   shellSessionId?: string,
   sourceRunId?: string,
   projectFolderPath?: string,
+  reportKey?: string,
 ): Promise<void> => {
   if (!isHarnessWriterAgentId(writerAgent)) {
     sendMessage(socket, {
@@ -398,7 +403,30 @@ const dispatchWriterTask = async (
     config.layout,
     resolvedProjectFolderPath,
   );
-  const promptWithProjectContext = `${formatMemoryContextForPrompt(memoryEntries)}${formatRagContextForPrompt(ragChunks)}${resolvedPrompt}`;
+  let promptWithProjectContext = `${formatMemoryContextForPrompt(memoryEntries)}${formatRagContextForPrompt(ragChunks)}${resolvedPrompt}`;
+
+  const resolvedReportKey =
+    reportKey?.trim() ??
+    (agentRunId !== undefined && resolvedProjectFolderPath.trim().length > 0
+      ? generateAgentRunReportKey()
+      : undefined);
+
+  if (
+    agentRunId !== undefined &&
+    resolvedReportKey !== undefined &&
+    resolvedReportKey.length > 0 &&
+    resolvedProjectFolderPath.trim().length > 0
+  ) {
+    promptWithProjectContext = wrapPromptWithAgentRunReportInstruction(
+      promptWithProjectContext,
+      {
+        agentRunId,
+        reportKey: resolvedReportKey,
+        projectFolderPath: resolvedProjectFolderPath,
+        installDir: config.layout.installDir,
+      },
+    );
+  }
 
   runWriterTask(
     config,
@@ -411,6 +439,8 @@ const dispatchWriterTask = async (
       sessionTurn,
     },
     shellSessionId,
+    resolvedProjectFolderPath,
+    resolvedReportKey,
   );
 
   if (needsWarmup && agentRunId !== undefined) {
@@ -1008,6 +1038,10 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
           ? parsed.payload.projectFolderPath
           : undefined,
       );
+      const reportKey =
+        typeof parsed.payload.reportKey === "string"
+          ? parsed.payload.reportKey
+          : undefined;
 
       if (typeof prompt === "string" && prompt.trim().length > 0) {
         console.log(
@@ -1032,6 +1066,7 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
           shellSessionId,
           sourceRunId,
           projectFolderPath,
+          reportKey,
         );
       }
     }
@@ -1558,5 +1593,12 @@ const main = async (): Promise<void> => {
     shutdown();
   });
 };
+
+if (isAgentWitchScriptEntryPoint(import.meta.url)) {
+  const reportArgvIndex = process.argv.indexOf("report");
+  if (reportArgvIndex >= 0) {
+    process.exit(runAgentWitchReportCli(process.argv.slice(reportArgvIndex)));
+  }
+}
 
 void main();

@@ -1,6 +1,6 @@
 import { getAgentWitchHub } from "@/lib/agentWitch/getAgentWitchHub";
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
-import { dispatchClaudeRunForDashboardUser } from "@/lib/dispatch/dispatchClaudeRunForDashboardUser";
+import { dispatchClaudeRunForDashboardUser } from "@/lib/dispatch/dispatchWriterRunForDashboardUser";
 import { parseAgentRunDispatchBody } from "@/lib/dispatch/parseAgentRunDispatchBody";
 import { requireAuth } from "@/lib/auth/requireAuth";
 

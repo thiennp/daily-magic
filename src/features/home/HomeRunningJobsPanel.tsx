@@ -49,6 +49,11 @@ export default function HomeRunningJobsPanel() {
                   {formatHomeRunningJobTitle(run.prompt)}
                 </span>
                 <span className="mt-0.5 block text-xs text-gray-500 dark:text-gray-400">
+                  {run.reportSummary !== null &&
+                  run.reportSummary !== undefined &&
+                  run.reportSummary.trim().length > 0
+                    ? `${run.reportSummary.trim()} · `
+                    : ""}
                   {formatHomeRunningJobAliveLabel({
                     lastRunHeartbeatAt: run.lastRunHeartbeatAt,
                     startedAt: run.startedAt,

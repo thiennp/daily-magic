@@ -7,7 +7,7 @@ import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMess
 import { getAgentRunById } from "@/lib/dispatch/agentRunQueries";
 import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
 
-export const handleClaudeStopMessageAsync = async (
+export const handleWriterStopMessageAsync = async (
   runtime: AgentWitchHubRuntime,
   message: AgentWitchMessage,
   sender: AgentWitchHubClient | undefined,

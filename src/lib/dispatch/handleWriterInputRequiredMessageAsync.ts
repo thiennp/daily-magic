@@ -6,7 +6,7 @@ import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMess
 import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
 import { dispatchAgentRunInputRegistry } from "@/lib/dispatch/dispatchAgentRunInputRegistry";
 import { getAgentRunById } from "@/lib/dispatch/agentRunQueries";
-import { notifyDashboardUser } from "@/lib/dispatch/dispatchClaudeRunToAgent";
+import { notifyDashboardUser } from "@/lib/dispatch/dispatchWriterRunToAgent";
 
 const notifyRunParticipants = (
   runtime: AgentWitchHubRuntime,

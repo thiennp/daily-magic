@@ -3,18 +3,18 @@ import { randomUUID } from "node:crypto";
 import type AgentWitchHubRuntime from "@/lib/agentWitch/types/AgentWitchHubRuntime.type";
 import { isCursorCloudExecutorDeviceId } from "@/lib/cursorCloud/cursorCloudExecutorDeviceId.constant";
 import { resolveCapabilityForDispatch } from "@/lib/capabilities/resolveCapabilityForDispatch";
-import { buildClaudeDispatchPayloadFromBody } from "@/lib/dispatch/buildClaudeDispatchPayloadFromBody";
+import { buildClaudeDispatchPayloadFromBody } from "@/lib/dispatch/buildWriterDispatchPayloadFromBody";
 import { buildDashboardHttpSender } from "@/lib/dispatch/buildDashboardHttpSender";
 import { dispatchCursorCloudRunForDashboardUser } from "@/lib/dispatch/dispatchCursorCloudRunForDashboardUser";
-import { executeClaudeRunDispatch } from "@/lib/dispatch/executeClaudeRunDispatch";
+import { executeClaudeRunDispatch } from "@/lib/dispatch/executeWriterRunDispatch";
 import { finalizeDashboardDispatchResult } from "@/lib/dispatch/finalizeDashboardDispatchResult";
 import type { AgentRunDispatchBody } from "@/lib/dispatch/parseAgentRunDispatchBody";
 import { resolveDispatchPolicyForExecutor } from "@/lib/dispatch/resolveDispatchPolicyForExecutor";
 import {
   resolveClaudeRunAgentClient,
   resolveTargetDeviceId,
-} from "@/lib/dispatch/resolveClaudeRunAgentClient";
-import { resolveClaudeDispatchTarget } from "@/lib/dispatch/resolveClaudeDispatchTarget";
+} from "@/lib/dispatch/resolveWriterRunAgentClient";
+import { resolveClaudeDispatchTarget } from "@/lib/dispatch/resolveWriterDispatchTarget";
 import { validateSessionContinuationRequiresTargetDevice } from "@/lib/dispatch/validateSessionContinuationRequiresTargetDevice";
 import type AgentRunRecord from "@/lib/dispatch/types/AgentRunRecord.type";
 import type AgentWitchMessage from "@/lib/agentWitch/types/AgentWitchMessage.type";
