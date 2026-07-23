@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useSession } from "next-auth/react";
 
 import AgentRunDetailContent from "@/features/reports/AgentRunDetailContent";
+import AgentRunDetailDeleteButton from "@/features/reports/AgentRunDetailDeleteButton";
 import AgentRunFeedbackForm from "@/features/feedback/AgentRunFeedbackForm";
 import FeedbackSubmittedNotice from "@/features/feedback/FeedbackSubmittedNotice";
 import { useAgentRunDetailState } from "@/features/reports/hooks/useAgentRunDetailState";
@@ -43,12 +44,15 @@ export default function AgentRunDetail({ runId }: AgentRunDetailProps) {
 
   return (
     <div className="space-y-6">
-      <Link
-        href="/reports"
-        className="text-sm font-medium text-brand-600 hover:text-brand-700 dark:text-brand-400"
-      >
-        Back to job history
-      </Link>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <Link
+          href="/reports"
+          className="text-sm font-medium text-brand-600 hover:text-brand-700 dark:text-brand-400"
+        >
+          Back to job history
+        </Link>
+        <AgentRunDetailDeleteButton runId={runId} />
+      </div>
       <AgentRunDetailContent run={run} />
       {showFeedbackForm && feedback !== null ? (
         <FeedbackSubmittedNotice feedback={feedback} />

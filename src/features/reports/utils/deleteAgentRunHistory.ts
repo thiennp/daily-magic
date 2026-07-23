@@ -1,9 +1,14 @@
+import { removeAgentRunTerminalOutput } from "@/features/agent/utils/agentRunTerminalOutputStore";
+import { removePersistedAgentLiveTerminalSessionByRunId } from "@/features/agent/utils/removePersistedAgentLiveTerminalSessionByRunId";
+import { sendAgentRunStop } from "@/features/dispatch/utils/sendAgentRunStop";
 import {
   clearAgentRunsLocalCache,
+  getAgentRunLocalCache,
   listAgentRunsLocalCache,
   removeAgentRunLocalCache,
 } from "@/features/reports/agentRunLocalCache";
 import { addAgentRunLocalCacheTombstone } from "@/features/reports/agentRunLocalCacheTombstones";
+import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
 
 const deleteRemoteAgentRun = async (runId: string): Promise<boolean> => {
   try {
@@ -40,12 +45,28 @@ const readRemoteAgentRunIds = async (): Promise<readonly string[]> => {
   }
 };
 
+const shouldStopBeforeDelete = (status: string): boolean =>
+  status === AgentRunStatus.RUNNING ||
+  status === AgentRunStatus.PENDING_APPROVAL;
+
 /** Removes one job from history (local immediately; server best-effort). */
 export const deleteAgentRunHistory = async (
   runId: string,
 ): Promise<boolean> => {
-  removeAgentRunLocalCache(runId);
-  return deleteRemoteAgentRun(runId);
+  const trimmedRunId = runId.trim();
+  if (trimmedRunId.length === 0) {
+    return false;
+  }
+
+  const cachedRun = getAgentRunLocalCache(trimmedRunId);
+  if (cachedRun !== null && shouldStopBeforeDelete(cachedRun.status)) {
+    void sendAgentRunStop(trimmedRunId);
+  }
+
+  removeAgentRunLocalCache(trimmedRunId);
+  removePersistedAgentLiveTerminalSessionByRunId(trimmedRunId);
+  removeAgentRunTerminalOutput(trimmedRunId);
+  return deleteRemoteAgentRun(trimmedRunId);
 };
 
 /**

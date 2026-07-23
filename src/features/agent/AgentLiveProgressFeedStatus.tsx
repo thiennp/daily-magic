@@ -21,6 +21,7 @@ interface AgentLiveProgressFeedStatusProps {
   readonly estimateProgress: AgentLiveWorkingEstimateProgress | null;
   readonly sessionDeviceId?: string | null;
   readonly onStopRun?: () => void;
+  readonly onDeleteRun?: () => void;
 }
 
 export default function AgentLiveProgressFeedStatus({
@@ -33,6 +34,7 @@ export default function AgentLiveProgressFeedStatus({
   estimateProgress,
   sessionDeviceId = null,
   onStopRun,
+  onDeleteRun,
 }: AgentLiveProgressFeedStatusProps) {
   const isThisMac = useIsAgentLiveSessionThisMac(sessionDeviceId);
   const connectionHint = resolveAgentLiveProgressConnectionHint({
@@ -59,6 +61,7 @@ export default function AgentLiveProgressFeedStatus({
           workingEllipsis={workingEllipsis}
           connectionStatus={connectionStatus}
           onStopRun={onStopRun}
+          onDeleteRun={onDeleteRun}
         />
       </div>
       {isWorking || isStopping ? (

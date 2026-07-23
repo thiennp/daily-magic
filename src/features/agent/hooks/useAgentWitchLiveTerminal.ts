@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 
-import { useAgentLiveTerminalStopRun } from "@/features/agent/hooks/useAgentLiveTerminalStopRun";
+import { useAgentLiveTerminalRunControls } from "@/features/agent/hooks/useAgentLiveTerminalRunControls";
 import { useAgentWitchLiveTerminalWriterSessionSubscribe } from "@/features/agent/hooks/useAgentWitchLiveTerminalWriterSessionSubscribe";
 import { useShouldRestoreAgentLiveTerminalSession } from "@/features/agent/hooks/useShouldRestoreAgentLiveTerminalSession";
 import type { UseAgentWitchLiveTerminalResult } from "@/features/agent/types/UseAgentWitchLiveTerminalResult.type";
@@ -102,10 +102,8 @@ export function useAgentWitchLiveTerminal(socketRef: {
     setState((current) => ({ ...current, pendingInput: null }));
   }, []);
 
-  const { bindDispatchedRunId, stopRun } = useAgentLiveTerminalStopRun(
-    state,
-    setState,
-  );
+  const { bindDispatchedRunId, stopRun, deleteRun } =
+    useAgentLiveTerminalRunControls(socketRef, state, setState);
 
   return {
     output: state.output,
@@ -119,6 +117,7 @@ export function useAgentWitchLiveTerminal(socketRef: {
     finishSession,
     bindDispatchedRunId,
     stopRun,
+    deleteRun,
     applySocketMessage,
     submitInput,
     dismissInput,

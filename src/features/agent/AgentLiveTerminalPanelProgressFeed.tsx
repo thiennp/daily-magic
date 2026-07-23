@@ -10,6 +10,7 @@ interface AgentLiveTerminalPanelProgressFeedProps {
   readonly nextActionsDisabled: boolean;
   readonly onSelectNextAction: (action: string) => void;
   readonly onStopRun: () => void;
+  readonly onDeleteRun?: () => void;
 }
 
 export default function AgentLiveTerminalPanelProgressFeed({
@@ -19,6 +20,7 @@ export default function AgentLiveTerminalPanelProgressFeed({
   nextActionsDisabled,
   onSelectNextAction,
   onStopRun,
+  onDeleteRun,
 }: AgentLiveTerminalPanelProgressFeedProps) {
   return (
     <AgentLiveProgressFeed
@@ -36,6 +38,7 @@ export default function AgentLiveTerminalPanelProgressFeed({
       nextActionsDisabled={nextActionsDisabled}
       onSelectNextAction={onSelectNextAction}
       onStopRun={onStopRun}
+      onDeleteRun={onDeleteRun}
     />
   );
 }

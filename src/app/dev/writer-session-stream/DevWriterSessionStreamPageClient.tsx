@@ -101,6 +101,7 @@ export default function DevWriterSessionStreamPageClient() {
         onSubmitFeedback={() => undefined}
         onFinishSession={terminal.finishSession}
         onStopRun={() => undefined}
+        onDeleteRun={() => undefined}
       />
       {lastResponse.isError ? (
         <p className="text-sm text-rose-600 dark:text-rose-400">
