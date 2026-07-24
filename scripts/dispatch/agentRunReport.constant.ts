@@ -18,6 +18,7 @@ export type AgentRunReportFile = {
   readonly status: AgentRunReportStatus;
   readonly updatedAt: string;
   readonly userSummary: string;
+  readonly estimateSeconds?: number;
   readonly details?: string;
   readonly history: readonly AgentRunReportHistoryEntry[];
 };
@@ -38,6 +39,7 @@ export const buildAgentRunReportInstruction = (input: {
 }): string =>
   [
     "Maintain a machine-readable job report so the user can check status later.",
+    "Agent Witch records the initial time estimate in this report before the main task starts.",
     `Report key: ${input.reportKey}`,
     `Report file: ${input.reportFilePath}`,
     "",

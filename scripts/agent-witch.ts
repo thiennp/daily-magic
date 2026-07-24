@@ -76,7 +76,11 @@ import {
   writeAgentWitchConnectionHealth,
 } from "./agentWitchConnectionHealth";
 import { AGENT_WITCH_CONNECTION_STALE_MS } from "./agentWitchConnectionHealth.constants";
-import { acceptTerminalStream } from "./agentWitchTerminalStreamState";
+import {
+  acceptTerminalStream,
+  isTerminalStreamAccepted,
+  queueTerminalStreamChunk,
+} from "./agentWitchTerminalStreamState";
 import { requestLocalAgentWitchRestart } from "./requestLocalAgentWitchRestart";
 import { runLocalInstallBundleUpdate } from "./runLocalInstallBundleUpdate";
 import { readAgentWitchInstallVersion } from "./agentWitchInstallVersion";
@@ -111,7 +115,11 @@ import { runWriterEnsure } from "./handleAgentWitchWriterEnsure";
 import { runAgentWitchReportCli } from "./agentWitchReportCli";
 import { isAgentWitchScriptEntryPoint } from "./isAgentWitchScriptEntryPoint";
 import { wrapPromptWithAgentRunReportInstruction } from "./dispatch/agentRunReport.constant";
+import { wrapPromptWithPrerecordedAgentRunEstimate } from "./dispatch/wrapPromptWithPrerecordedAgentRunEstimate";
 import { generateAgentRunReportKey } from "./dispatch/generateAgentRunReportKey";
+import { AGENT_RUN_WORKING_ESTIMATE_MARKER } from "./dispatch/agentRunWorkingEstimate.constant";
+import { seedAgentRunReportFile } from "./agentWitchRunReport";
+import { runAgentRunPreEstimate } from "./runAgentRunPreEstimate";
 
 interface AgentWitchConfig {
   readonly email: string | null;
@@ -417,6 +425,49 @@ const dispatchWriterTask = async (
     resolvedReportKey.length > 0 &&
     resolvedProjectFolderPath.trim().length > 0
   ) {
+    seedAgentRunReportFile({
+      projectFolderPath: resolvedProjectFolderPath,
+      reportKey: resolvedReportKey,
+      agentRunId,
+      userSummary: "Estimating how long this will take…",
+    });
+
+    const preEstimate = await runAgentRunPreEstimate({
+      config: {
+        workspace: config.workspace,
+        claudeCommand: config.claudeCommand,
+        codexCommand: config.codexCommand,
+        cursorCommand: config.cursorCommand,
+        antigravityCommand: config.antigravityCommand,
+      },
+      writerAgent,
+      wrappedPrompt: promptWithProjectContext,
+      projectFolderPath: resolvedProjectFolderPath,
+      reportKey: resolvedReportKey,
+      agentRunId,
+    });
+
+    if (preEstimate.estimateSeconds !== null) {
+      const estimateChunk = `${AGENT_RUN_WORKING_ESTIMATE_MARKER}\n${preEstimate.estimateSeconds}\n`;
+      if (isTerminalStreamAccepted(agentRunId)) {
+        sendMessage(socket, {
+          type: "terminal.stream.chunk",
+          payload: {
+            runId: agentRunId,
+            chunk: estimateChunk,
+          },
+          requestId,
+        });
+      } else {
+        queueTerminalStreamChunk(agentRunId, estimateChunk);
+      }
+    }
+
+    promptWithProjectContext = wrapPromptWithPrerecordedAgentRunEstimate(
+      promptWithProjectContext,
+      preEstimate,
+    );
+
     promptWithProjectContext = wrapPromptWithAgentRunReportInstruction(
       promptWithProjectContext,
       {

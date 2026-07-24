@@ -7,6 +7,7 @@ export const AGENT_RUN_INPUT_GUARDRAILS = [
   "2. Put your single clear question on the next line.",
   "3. Do not invent answers. Wait for the browser response before continuing.",
   "4. Ask only one question per pause.",
+  "5. Never ask the operator to confirm a time estimate — estimates are recorded automatically and work should continue immediately.",
 ].join("\n");
 
 export const wrapPromptWithAgentRunInputGuardrails = (prompt: string): string =>
