@@ -1,5 +1,6 @@
 import type { AgentWitchAppHome } from "@/lib/agentWitch/resolveAgentWitchAppHome";
 import { resolveAgentWitchAppHome } from "@/lib/agentWitch/resolveAgentWitchAppHome";
+import { AGENT_WITCH_COMMAND_DIR_NAME } from "@/lib/agentWitch/agentWitchInstallApp.constant";
 import type { AgentWitchInstallScriptPreset } from "@/lib/agentWitch/AgentWitchInstallScriptPreset.type";
 import { buildAgentWitchInstallScriptClientBlock } from "@/lib/agentWitch/buildAgentWitchInstallScriptClientBlock";
 import { buildAgentWitchInstallScriptConfigBlock } from "@/lib/agentWitch/buildAgentWitchInstallScriptConfigBlock";
@@ -69,11 +70,12 @@ fi
 
 NODE_DIR="\$(dirname "\${NODE_BIN}")"
 APP_DIR="\${INSTALL_DIR}/app"
-RUN_PATH="\${INSTALL_DIR}/run.sh"
+COMMAND_DIR="\${INSTALL_DIR}/${AGENT_WITCH_COMMAND_DIR_NAME}"
+RUN_PATH="\${COMMAND_DIR}/run.sh"
 LOG_BASENAME="agent-witch"
 LAUNCH_AGENT_LABEL="\${LAUNCH_AGENT_PREFIX}"
 
-mkdir -p "\${INSTALL_DIR}"
+mkdir -p "\${INSTALL_DIR}" "\${COMMAND_DIR}"
 ${buildAgentWitchInstallScriptWakePortAllocation()}
 export AGENT_WITCH_WAKE_PORT
 

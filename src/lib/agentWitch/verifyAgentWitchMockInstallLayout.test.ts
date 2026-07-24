@@ -47,7 +47,7 @@ describe("verifyAgentWitchMockInstallLayout", () => {
 
   it("flags a missing bundled client download", () => {
     const issues = findAgentWitchMockInstallLayoutIssues({
-      installBashScript: '-o "${INSTALL_DIR}/run.sh"',
+      installBashScript: '-o "${INSTALL_DIR}/command/run.sh"',
     });
 
     expect(issues).toContainEqual({

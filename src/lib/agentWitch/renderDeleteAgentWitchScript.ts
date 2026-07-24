@@ -1,3 +1,4 @@
+import { AGENT_WITCH_COMMAND_DIR_NAME } from "@/lib/agentWitch/agentWitchInstallApp.constant";
 import { resolveAgentWitchAppHome } from "@/lib/agentWitch/resolveAgentWitchAppHome";
 
 export const renderDeleteAgentWitchScript = (origin: string): string => {
@@ -19,8 +20,11 @@ fi
 echo "Stopping Agent Witch processes…"
 pkill -f "\${INSTALL_DIR}/app/agent-witch.js" 2>/dev/null || true
 pkill -f "\${INSTALL_DIR}/agent-witch.ts" 2>/dev/null || true
+pkill -f "\${INSTALL_DIR}/${AGENT_WITCH_COMMAND_DIR_NAME}/run.sh" 2>/dev/null || true
 pkill -f "\${INSTALL_DIR}/run.sh" 2>/dev/null || true
+pkill -f "\${INSTALL_DIR}/${AGENT_WITCH_COMMAND_DIR_NAME}/wake.sh" 2>/dev/null || true
 pkill -f "\${INSTALL_DIR}/wake.sh" 2>/dev/null || true
+pkill -f "\${INSTALL_DIR}/${AGENT_WITCH_COMMAND_DIR_NAME}/watchdog.sh" 2>/dev/null || true
 pkill -f "\${INSTALL_DIR}/watchdog.sh" 2>/dev/null || true
 
 echo "Removing LaunchAgents…"
