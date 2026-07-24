@@ -57,17 +57,16 @@ export const wrapPromptWithAgentRunReportInstruction = (
   input: {
     readonly agentRunId: string;
     readonly reportKey: string;
-    readonly projectFolderPath: string;
+    readonly reportsDir: string;
     readonly installDir: string;
   },
 ): string => {
   const reportFilePath = buildAgentRunReportFilePath(
-    input.projectFolderPath,
+    input.reportsDir,
     input.reportKey,
   );
   const reportWriteCommand = buildAgentRunReportWriteCommand({
     installDir: input.installDir,
-    projectFolderPath: input.projectFolderPath,
     reportKey: input.reportKey,
     agentRunId: input.agentRunId,
     status: AGENT_RUN_REPORT_STATUSES.IN_PROGRESS,

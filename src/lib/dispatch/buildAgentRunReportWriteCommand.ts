@@ -9,7 +9,6 @@ const shellQuote = (value: string): string =>
 
 export const buildAgentRunReportWriteCommand = (input: {
   readonly installDir: string;
-  readonly projectFolderPath: string;
   readonly reportKey: string;
   readonly agentRunId: string;
   readonly status: AgentRunReportStatus;
@@ -22,8 +21,6 @@ export const buildAgentRunReportWriteCommand = (input: {
     shellQuote(appBundlePath),
     "report",
     "write",
-    "--project-folder",
-    shellQuote(input.projectFolderPath.trim()),
     "--key",
     shellQuote(input.reportKey.trim()),
     "--agent-run-id",

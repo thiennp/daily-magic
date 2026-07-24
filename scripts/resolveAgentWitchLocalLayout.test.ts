@@ -78,6 +78,15 @@ describe("resolveAgentWitchLocalLayout", () => {
         "logs",
       ),
     );
+    expect(layout.reportsDir).toBe(
+      path.join(
+        os.homedir(),
+        ".agent-witch",
+        "profiles",
+        layout.profileEmail!,
+        "reports",
+      ),
+    );
   });
 
   it("falls back to legacy root paths without a profile email", () => {
@@ -95,6 +104,9 @@ describe("resolveAgentWitchLocalLayout", () => {
     );
     expect(layout.logsDir).toBe(
       path.join(os.homedir(), ".agent-witch", "logs"),
+    );
+    expect(layout.reportsDir).toBe(
+      path.join(os.homedir(), ".agent-witch", "reports"),
     );
   });
 });

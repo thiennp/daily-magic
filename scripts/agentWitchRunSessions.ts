@@ -138,7 +138,7 @@ const buildRunReportHeartbeatOptions = (
       return {};
     }
 
-    const report = readAgentRunReportFile(projectFolderPath, reportKey);
+    const report = readAgentRunReportFile(reportKey);
     const session = runSessions.get(agentRunId);
     if (report !== null && session !== undefined) {
       const completion = resolveAgentRunCompletionFromReport(report);
@@ -493,7 +493,6 @@ export const runWriterTask = (
     reportKey.trim().length > 0
   ) {
     seedAgentRunReportFile({
-      projectFolderPath,
       reportKey,
       agentRunId,
       userSummary: "Task started on your Mac.",

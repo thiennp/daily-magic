@@ -427,7 +427,6 @@ const dispatchWriterTask = async (
     resolvedProjectFolderPath.trim().length > 0
   ) {
     seedAgentRunReportFile({
-      projectFolderPath: resolvedProjectFolderPath,
       reportKey: resolvedReportKey,
       agentRunId,
       userSummary: "Estimating how long this will take…",
@@ -443,7 +442,6 @@ const dispatchWriterTask = async (
       },
       writerAgent,
       wrappedPrompt: promptWithProjectContext,
-      projectFolderPath: resolvedProjectFolderPath,
       reportKey: resolvedReportKey,
       agentRunId,
     });
@@ -474,7 +472,7 @@ const dispatchWriterTask = async (
       {
         agentRunId,
         reportKey: resolvedReportKey,
-        projectFolderPath: resolvedProjectFolderPath,
+        reportsDir: config.layout.reportsDir,
         installDir: config.layout.installDir,
       },
     );

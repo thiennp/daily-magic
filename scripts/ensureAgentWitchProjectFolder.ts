@@ -61,7 +61,6 @@ export const ensureAgentWitchProjectFolder = (
   fs.mkdirSync(layout.resolvedProjectFolderPath, { recursive: true });
   fs.mkdirSync(layout.ragDirPath, { recursive: true });
   fs.mkdirSync(layout.memoryDirPath, { recursive: true });
-  fs.mkdirSync(layout.reportsDirPath, { recursive: true });
   writeProjectMetaIfMissing(layout, input);
   touchProjectStorageFiles(layout);
 

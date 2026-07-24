@@ -7,7 +7,6 @@ describe("buildAgentRunReportWriteCommand", () => {
   it("builds a node app bundle report write command", () => {
     const command = buildAgentRunReportWriteCommand({
       installDir: "/Users/me/.agent-witch",
-      projectFolderPath: "/Users/me/projects/demo",
       reportKey: "report-key-1",
       agentRunId: "run-1",
       status: AGENT_RUN_REPORT_STATUSES.IN_PROGRESS,

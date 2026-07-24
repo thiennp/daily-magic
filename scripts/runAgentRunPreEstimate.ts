@@ -22,7 +22,6 @@ export const runAgentRunPreEstimate = async (input: {
   readonly config: AgentWitchHeadlessWriterConfig;
   readonly writerAgent: HarnessWriterAgentId;
   readonly wrappedPrompt: string;
-  readonly projectFolderPath: string;
   readonly reportKey: string;
   readonly agentRunId: string;
 }): Promise<AgentRunPreEstimateResult> => {
@@ -39,7 +38,6 @@ export const runAgentRunPreEstimate = async (input: {
   const estimateSummary = formatAgentRunEstimateSummary(estimateSeconds);
 
   upsertAgentRunReportFile({
-    projectFolderPath: input.projectFolderPath,
     reportKey: input.reportKey,
     agentRunId: input.agentRunId,
     status: AGENT_RUN_REPORT_STATUSES.IN_PROGRESS,
