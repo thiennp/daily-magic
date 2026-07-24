@@ -30,7 +30,6 @@ const printUsage = (): void => {
   process.stdout.write(
     [
       "Usage: agent-witch report write \\",
-      "  --project-folder <path> \\",
       "  --key <report-key> \\",
       "  --agent-run-id <run-id> \\",
       "  --status in_progress|completed|failed|blocked \\",
@@ -49,7 +48,6 @@ export const runAgentWitchReportCli = (args: readonly string[]): number => {
     return 1;
   }
 
-  const projectFolderPath = readFlagValue(args, "--project-folder");
   const reportKey = readFlagValue(args, "--key");
   const agentRunId = readFlagValue(args, "--agent-run-id");
   const statusValue = readFlagValue(args, "--status");
@@ -57,7 +55,6 @@ export const runAgentWitchReportCli = (args: readonly string[]): number => {
   const details = readFlagValue(args, "--details");
 
   if (
-    projectFolderPath === undefined ||
     reportKey === undefined ||
     agentRunId === undefined ||
     statusValue === undefined ||
@@ -69,7 +66,6 @@ export const runAgentWitchReportCli = (args: readonly string[]): number => {
   }
 
   upsertAgentRunReportFile({
-    projectFolderPath,
     reportKey,
     agentRunId,
     status: statusValue,

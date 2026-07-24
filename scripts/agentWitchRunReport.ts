@@ -9,21 +9,19 @@ import {
 } from "./dispatch/agentRunReport.constant";
 import type { AgentRunReportHistoryEntry } from "./dispatch/agentRunReportHistory.type";
 import { buildAgentRunReportFilePath } from "./dispatch/buildAgentRunReportFilePath";
-import expandAgentWitchProjectFolderPath from "./expandAgentWitchProjectFolderPath";
+import { resolveAgentWitchLocalLayout } from "./resolveAgentWitchLocalLayout";
 
 export type { AgentRunReportFile, AgentRunReportStatus };
 export { AGENT_RUN_REPORT_STATUSES, isTerminalAgentRunReportStatus };
 
 const MAX_REPORT_HISTORY_ENTRIES = 50;
 
-const resolveReportFilePath = (
-  projectFolderPath: string,
-  reportKey: string,
-): string =>
-  buildAgentRunReportFilePath(
-    expandAgentWitchProjectFolderPath(projectFolderPath),
-    reportKey,
-  );
+const resolveReportFilePath = (reportKey: string): string => {
+  const layout = resolveAgentWitchLocalLayout();
+  const filePath = buildAgentRunReportFilePath(layout.reportsDir, reportKey);
+  fs.mkdirSync(path.dirname(filePath), { recursive: true });
+  return filePath;
+};
 
 const isValidReportFile = (parsed: unknown): parsed is AgentRunReportFile => {
   if (typeof parsed !== "object" || parsed === null) {
@@ -42,10 +40,9 @@ const isValidReportFile = (parsed: unknown): parsed is AgentRunReportFile => {
 };
 
 export const readAgentRunReportFile = (
-  projectFolderPath: string,
   reportKey: string,
 ): AgentRunReportFile | null => {
-  const filePath = resolveReportFilePath(projectFolderPath, reportKey);
+  const filePath = resolveReportFilePath(reportKey);
 
   if (!fs.existsSync(filePath)) {
     return null;
@@ -73,17 +70,12 @@ const appendHistoryEntry = (
     : next;
 };
 
-export const writeAgentRunReportFile = (
-  projectFolderPath: string,
-  report: AgentRunReportFile,
-): void => {
-  const filePath = resolveReportFilePath(projectFolderPath, report.reportKey);
-  fs.mkdirSync(path.dirname(filePath), { recursive: true });
+export const writeAgentRunReportFile = (report: AgentRunReportFile): void => {
+  const filePath = resolveReportFilePath(report.reportKey);
   fs.writeFileSync(filePath, `${JSON.stringify(report, null, 2)}\n`, "utf8");
 };
 
 export const upsertAgentRunReportFile = (input: {
-  readonly projectFolderPath: string;
   readonly reportKey: string;
   readonly agentRunId: string;
   readonly status: AgentRunReportStatus;
@@ -91,10 +83,7 @@ export const upsertAgentRunReportFile = (input: {
   readonly estimateSeconds?: number;
   readonly details?: string;
 }): AgentRunReportFile => {
-  const existing = readAgentRunReportFile(
-    input.projectFolderPath,
-    input.reportKey,
-  );
+  const existing = readAgentRunReportFile(input.reportKey);
   const updatedAt = new Date().toISOString();
   const historyEntry: AgentRunReportHistoryEntry = {
     at: updatedAt,
@@ -116,26 +105,21 @@ export const upsertAgentRunReportFile = (input: {
     history: appendHistoryEntry(existing?.history ?? [], historyEntry),
   };
 
-  writeAgentRunReportFile(input.projectFolderPath, report);
+  writeAgentRunReportFile(report);
   return report;
 };
 
 export const seedAgentRunReportFile = (input: {
-  readonly projectFolderPath: string;
   readonly reportKey: string;
   readonly agentRunId: string;
   readonly userSummary?: string;
 }): AgentRunReportFile => {
-  const existing = readAgentRunReportFile(
-    input.projectFolderPath,
-    input.reportKey,
-  );
+  const existing = readAgentRunReportFile(input.reportKey);
   if (existing !== null) {
     return existing;
   }
 
   return upsertAgentRunReportFile({
-    projectFolderPath: input.projectFolderPath,
     reportKey: input.reportKey,
     agentRunId: input.agentRunId,
     status: AGENT_RUN_REPORT_STATUSES.IN_PROGRESS,

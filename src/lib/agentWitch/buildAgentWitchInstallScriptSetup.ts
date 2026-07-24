@@ -4,6 +4,7 @@ import { AGENT_WITCH_COMMAND_DIR_NAME } from "@/lib/agentWitch/agentWitchInstall
 import {
   AGENT_WITCH_LOGS_DIR_NAME,
   AGENT_WITCH_PROJECTS_DIR_NAME,
+  AGENT_WITCH_REPORTS_DIR_NAME,
 } from "@/lib/projects/constants";
 import type { AgentWitchInstallScriptPreset } from "@/lib/agentWitch/AgentWitchInstallScriptPreset.type";
 import { buildAgentWitchInstallScriptClientBlock } from "@/lib/agentWitch/buildAgentWitchInstallScriptClientBlock";
@@ -100,14 +101,14 @@ if [[ -n "\${PROFILE_EMAIL}" ]]; then
   PROFILE_DIR="\${INSTALL_DIR}/profiles/\${PROFILE_EMAIL}"
   CONFIG_PATH="\${PROFILE_DIR}/config.json"
   LOG_DIR="\${PROFILE_DIR}/${AGENT_WITCH_LOGS_DIR_NAME}"
-  mkdir -p "\${PROFILE_DIR}/harness/sets" "\${PROFILE_DIR}/${AGENT_WITCH_PROJECTS_DIR_NAME}" "\${LOG_DIR}"
+  mkdir -p "\${PROFILE_DIR}/harness/sets" "\${PROFILE_DIR}/${AGENT_WITCH_PROJECTS_DIR_NAME}" "\${PROFILE_DIR}/${AGENT_WITCH_REPORTS_DIR_NAME}" "\${LOG_DIR}"
   # One LaunchAgent per install home; multi-account shares this process.
   LAUNCH_AGENT_LABEL="\${LAUNCH_AGENT_PREFIX}"
   LOG_BASENAME="agent-witch"
 else
   CONFIG_PATH="\${INSTALL_DIR}/config.json"
   LOG_DIR="\${INSTALL_DIR}/${AGENT_WITCH_LOGS_DIR_NAME}"
-  mkdir -p "\${LOG_DIR}"
+  mkdir -p "\${LOG_DIR}" "\${INSTALL_DIR}/${AGENT_WITCH_REPORTS_DIR_NAME}"
 fi
 
 PLIST_PATH="\${HOME}/Library/LaunchAgents/\${LAUNCH_AGENT_LABEL}.plist"
