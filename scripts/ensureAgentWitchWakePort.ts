@@ -4,6 +4,7 @@ import {
   writeAgentWitchWakePortFile,
 } from "./agentWitchWakePortFile";
 import { isAgentWitchScriptEntryPoint } from "./isAgentWitchScriptEntryPoint";
+import { isAgentWitchBundled } from "./agentWitchBundled.constant";
 import { resolveAgentWitchInstallDir } from "./resolveAgentWitchLocalLayout";
 
 export const ensureAgentWitchWakePort = async (
@@ -19,7 +20,7 @@ export const ensureAgentWitchWakePort = async (
   return allocatedPort;
 };
 
-if (isAgentWitchScriptEntryPoint(import.meta.url)) {
+if (!isAgentWitchBundled() && isAgentWitchScriptEntryPoint(import.meta.url)) {
   ensureAgentWitchWakePort()
     .then((port) => {
       process.stdout.write(String(port));

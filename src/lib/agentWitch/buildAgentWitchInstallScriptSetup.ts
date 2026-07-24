@@ -15,7 +15,6 @@ export const buildAgentWitchInstallScriptSetup = (
   input: {
     readonly appOrigin: string;
     readonly wsUrl: string;
-    readonly clientScriptUrl: string;
     readonly websocketSupportWarning: string;
     readonly appHome?: AgentWitchAppHome;
   } & AgentWitchInstallScriptPreset,
@@ -31,7 +30,6 @@ ${updateExistingInstall ? "AGENT_WITCH_SKIP_OPEN_HOME=1\n" : ""}
 INSTALL_DIR="\${HOME}/${appHome.installDirName}"
 AGENT_WITCH_HOME="\${INSTALL_DIR}"
 LAUNCH_AGENT_PREFIX="${appHome.launchAgentPrefix}"
-CLIENT_SCRIPT_URL="${input.clientScriptUrl}"
 NODE_BIN="\$(command -v node)"
 CURL_BIN="\$(command -v curl)"
 
@@ -70,8 +68,8 @@ if [[ -z "\${PROFILE_EMAIL}" && -n "\${PRESET_PROFILE_EMAIL:-}" ]]; then
 fi
 
 NODE_DIR="\$(dirname "\${NODE_BIN}")"
+APP_DIR="\${INSTALL_DIR}/app"
 RUN_PATH="\${INSTALL_DIR}/run.sh"
-TSX_CLI="\${INSTALL_DIR}/node_modules/tsx/dist/cli.mjs"
 LOG_BASENAME="agent-witch"
 LAUNCH_AGENT_LABEL="\${LAUNCH_AGENT_PREFIX}"
 
@@ -114,6 +112,6 @@ agent_witch_install_step
 ${buildAgentWitchInstallScriptConfigBlock({
   wsUrl: input.wsUrl,
   updateExistingInstall: input.updateExistingInstall,
-})}${buildAgentWitchInstallScriptWriterBootstrap()}${buildAgentWitchInstallScriptClientBlock({ appOrigin: input.appOrigin, clientScriptUrl: input.clientScriptUrl })}${buildAgentWitchInstallScriptRegisterLaunchAgentFn()}
+})}${buildAgentWitchInstallScriptWriterBootstrap()}${buildAgentWitchInstallScriptClientBlock({ appOrigin: input.appOrigin })}${buildAgentWitchInstallScriptRegisterLaunchAgentFn()}
 `;
 };

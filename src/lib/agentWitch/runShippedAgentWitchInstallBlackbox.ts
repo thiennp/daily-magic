@@ -81,8 +81,6 @@ export const runShippedAgentWitchInstallBlackbox = async (
     const onDiskIssues = verifyAgentWitchMockInstallOnDisk({
       installDir,
       entryPoints: [...AGENT_WITCH_LOCAL_INSTALL_ENTRY_POINTS],
-      readSource: (scriptName) =>
-        readShippedAgentWitchInstallScript(shippedScripts, scriptName),
     });
     if (onDiskIssues.length > 0) {
       throw new Error(
@@ -92,11 +90,6 @@ export const runShippedAgentWitchInstallBlackbox = async (
 
     verifyShippedAgentWitchInstallModuleLoads({
       installDir,
-      scriptName: "verifyAgentWitchReviveAfterKickstart.ts",
-    });
-    verifyShippedAgentWitchInstallModuleLoads({
-      installDir,
-      scriptName: "reviveAgentWitchWebSocket.ts",
     });
 
     return {

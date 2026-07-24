@@ -6,12 +6,7 @@ export const AGENT_WITCH_INSTALL_PACKAGE_JSON = `{
     "node-pty": "^1.1.0",
     "ws": "^8.18.3"
   },
-  "devDependencies": {
-    "tsx": "^4.20.3",
-    "typescript": "^5"
-  },
   "allowScripts": {
-    "esbuild": true,
     "fsevents": true,
     "node-pty": true
   }

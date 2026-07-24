@@ -1,8 +1,6 @@
-import { AGENT_WITCH_CLIENT_INSTALL_SCRIPT_NAMES } from "@/lib/agentWitch/agentWitchClientInstallScripts.constant";
-import { AGENT_WITCH_WAKE_INSTALL_SCRIPT_NAMES } from "@/lib/agentWitch/agentWitchWakeInstallScripts.constant";
+import { AGENT_WITCH_INSTALL_BUNDLE_ARTIFACT } from "@/lib/agentWitch/listAgentWitchInstallBundleArtifacts";
 
+/** @deprecated Install ships a single bundled JS file under app/. */
 export const listAgentWitchInstallScriptNames = (): readonly string[] => [
-  "agent-witch.ts",
-  ...AGENT_WITCH_CLIENT_INSTALL_SCRIPT_NAMES,
-  ...AGENT_WITCH_WAKE_INSTALL_SCRIPT_NAMES,
+  AGENT_WITCH_INSTALL_BUNDLE_ARTIFACT.relativePath,
 ];

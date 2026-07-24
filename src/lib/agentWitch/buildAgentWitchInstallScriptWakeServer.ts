@@ -1,32 +1,29 @@
 import { buildAgentWitchInstallScriptWakeServerPlist } from "@/lib/agentWitch/buildAgentWitchInstallScriptWakeServerPlist";
-import { buildAgentWitchWakeInstallScriptDownloadLines } from "@/lib/agentWitch/buildAgentWitchWakeInstallScriptDownloadLines";
+import { AGENT_WITCH_INSTALL_BUNDLE_ARTIFACT } from "@/lib/agentWitch/listAgentWitchInstallBundleArtifacts";
 
 export const buildAgentWitchInstallScriptWakeServer = (input: {
   readonly installDirName: string;
-  readonly appOrigin: string;
 }): string => `
 WAKE_LAUNCH_AGENT_LABEL="\${LAUNCH_AGENT_PREFIX}-wake"
 WAKE_PLIST_PATH="\${HOME}/Library/LaunchAgents/\${WAKE_LAUNCH_AGENT_LABEL}.plist"
 
 agent_witch_install_step
-${buildAgentWitchWakeInstallScriptDownloadLines(input.appOrigin)}
-
 cat > "\${INSTALL_DIR}/wake.sh" <<'WAKE_EOF'
 #!/usr/bin/env bash
 set -euo pipefail
 INSTALL_DIR="\${AGENT_WITCH_HOME:-\${HOME}/${input.installDirName}}"
+APP_DIR="\${INSTALL_DIR}/${AGENT_WITCH_INSTALL_BUNDLE_ARTIFACT.appDirName}"
 NODE_BIN="\$(command -v node)"
-TSX_CLI="\${INSTALL_DIR}/node_modules/tsx/dist/cli.mjs"
-WAKE_CLI="\${INSTALL_DIR}/agent-witch-wake-cli.ts"
+APP_BUNDLE="\${APP_DIR}/${AGENT_WITCH_INSTALL_BUNDLE_ARTIFACT.fileName}"
 
-if [[ -z "\${NODE_BIN}" || ! -f "\${TSX_CLI}" || ! -f "\${WAKE_CLI}" ]]; then
+if [[ -z "\${NODE_BIN}" || ! -f "\${APP_BUNDLE}" ]]; then
   echo "Agent Witch is not installed. Run the install command from Home first." >&2
   exit 1
 fi
 
 cd "\${INSTALL_DIR}"
 export AGENT_WITCH_HOME="\${INSTALL_DIR}"
-exec "\${NODE_BIN}" "\${TSX_CLI}" "\${WAKE_CLI}"
+exec "\${NODE_BIN}" "\${APP_BUNDLE}" wake
 WAKE_EOF
 chmod +x "\${INSTALL_DIR}/wake.sh"
 ${buildAgentWitchInstallScriptWakeServerPlist()}

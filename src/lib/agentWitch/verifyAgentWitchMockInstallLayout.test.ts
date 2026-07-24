@@ -4,6 +4,7 @@ import path from "node:path";
 
 import { afterEach, describe, expect, it } from "vitest";
 
+import { AGENT_WITCH_INSTALL_BUNDLE_ARTIFACT } from "@/lib/agentWitch/listAgentWitchInstallBundleArtifacts";
 import { renderInstallAgentWitchScript } from "@/lib/agentWitch/renderInstallAgentWitchScript";
 import { renderUpdateAgentWitchScript } from "@/lib/agentWitch/renderUpdateAgentWitchScript";
 import { extractAgentWitchInstallDownloadTargets } from "@/lib/agentWitch/extractAgentWitchInstallDownloadTargets";
@@ -36,40 +37,26 @@ describe("verifyAgentWitchMockInstallLayout", () => {
       renderInstallAgentWitchScript("https://www.agentwitch.com"),
     ],
     ["local update", renderUpdateAgentWitchScript("http://localhost:3000")],
-  ])(
-    "AGENT-058: %s script downloads every dependency required by local entry points",
-    (_label, installScript) => {
-      const issues = findAgentWitchMockInstallLayoutIssues({
-        installBashScript: installScript,
-      });
-
-      expect(issues).toEqual([]);
-    },
-  );
-
-  it("AGENT-058: flags missing wake helpers that would crash revive on a real Mac", () => {
-    const installScript = renderInstallAgentWitchScript(
-      "https://www.agentwitch.com",
-    );
-    const downloadedScripts =
-      extractAgentWitchInstallDownloadTargets(installScript);
-    const incompleteDownloads = [...downloadedScripts].filter(
-      (scriptName) => scriptName !== "verifyAgentWitchReviveAfterKickstart.ts",
-    );
-
+  ])("%s script downloads the bundled Mac client", (_label, installScript) => {
     const issues = findAgentWitchMockInstallLayoutIssues({
-      installBashScript: incompleteDownloads
-        .map((scriptName) => `-o "\${INSTALL_DIR}/${scriptName}"`)
-        .join("\n"),
+      installBashScript: installScript,
+    });
+
+    expect(issues).toEqual([]);
+  });
+
+  it("flags a missing bundled client download", () => {
+    const issues = findAgentWitchMockInstallLayoutIssues({
+      installBashScript: '-o "${INSTALL_DIR}/run.sh"',
     });
 
     expect(issues).toContainEqual({
-      entryPoint: "agent-witch-watchdog.ts",
-      missingDependency: "verifyAgentWitchReviveAfterKickstart.ts",
+      entryPoint: AGENT_WITCH_INSTALL_BUNDLE_ARTIFACT.relativePath,
+      missingDependency: AGENT_WITCH_INSTALL_BUNDLE_ARTIFACT.relativePath,
     });
   });
 
-  it("materializes a mock ~/.agent-witch layout on disk before shipping", () => {
+  it("materializes a mock ~/.agent-witch/app layout on disk before shipping", () => {
     const installScript = renderInstallAgentWitchScript(
       "https://www.agentwitch.com",
     );
@@ -84,15 +71,13 @@ describe("verifyAgentWitchMockInstallLayout", () => {
 
     const onDiskIssues = verifyAgentWitchMockInstallOnDisk({
       installDir,
-      entryPoints: ["agent-witch-watchdog.ts", "agent-witch-wake-cli.ts"],
-      readSource: (scriptName) =>
-        fs.readFileSync(path.join(installDir, scriptName), "utf8"),
+      entryPoints: [AGENT_WITCH_INSTALL_BUNDLE_ARTIFACT.relativePath],
     });
 
     expect(onDiskIssues).toEqual([]);
     expect(
       fs.existsSync(
-        path.join(installDir, "verifyAgentWitchReviveAfterKickstart.ts"),
+        path.join(installDir, AGENT_WITCH_INSTALL_BUNDLE_ARTIFACT.relativePath),
       ),
     ).toBe(true);
   });

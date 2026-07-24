@@ -1,4 +1,5 @@
 import { AGENT_WITCH_LAUNCH_AGENT_PATH_VALUE } from "@/lib/agentWitch/buildAgentWitchInstallScriptWriterPath";
+import { AGENT_WITCH_INSTALL_BUNDLE_ARTIFACT } from "@/lib/agentWitch/listAgentWitchInstallBundleArtifacts";
 
 export const buildAgentWitchInstallScriptLaunchAgent = (): string => `
 agent_witch_install_step
@@ -14,8 +15,7 @@ if [[ "\$(uname -s)" == "Darwin" ]]; then
   <key>ProgramArguments</key>
   <array>
     <string>\${NODE_BIN}</string>
-    <string>\${TSX_CLI}</string>
-    <string>\${INSTALL_DIR}/agent-witch.ts</string>
+    <string>\${APP_DIR}/${AGENT_WITCH_INSTALL_BUNDLE_ARTIFACT.fileName}</string>
   </array>
   <key>WorkingDirectory</key>
   <string>\${INSTALL_DIR}</string>

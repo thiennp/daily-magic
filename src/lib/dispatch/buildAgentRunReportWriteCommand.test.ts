@@ -4,7 +4,7 @@ import { AGENT_RUN_REPORT_STATUSES } from "@/lib/dispatch/agentRunReport.constan
 import { buildAgentRunReportWriteCommand } from "@/lib/dispatch/buildAgentRunReportWriteCommand";
 
 describe("buildAgentRunReportWriteCommand", () => {
-  it("builds a tsx agent-witch report write command", () => {
+  it("builds a node app bundle report write command", () => {
     const command = buildAgentRunReportWriteCommand({
       installDir: "/Users/me/.agent-witch",
       projectFolderPath: "/Users/me/projects/demo",
@@ -14,7 +14,7 @@ describe("buildAgentRunReportWriteCommand", () => {
       summary: "Reading files",
     });
 
-    expect(command).toContain("/Users/me/.agent-witch/agent-witch.ts");
+    expect(command).toContain("/Users/me/.agent-witch/app/agent-witch.js");
     expect(command).toContain("report write");
     expect(command).toContain("--key 'report-key-1'");
     expect(command).toContain("--status 'in_progress'");
