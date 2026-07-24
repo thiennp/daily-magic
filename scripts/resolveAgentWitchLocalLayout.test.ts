@@ -87,6 +87,15 @@ describe("resolveAgentWitchLocalLayout", () => {
         "reports",
       ),
     );
+    expect(layout.deviceKeypairPath).toBe(
+      path.join(
+        os.homedir(),
+        ".agent-witch",
+        "profiles",
+        layout.profileEmail!,
+        "device-keypair.json",
+      ),
+    );
   });
 
   it("falls back to legacy root paths without a profile email", () => {
@@ -107,6 +116,9 @@ describe("resolveAgentWitchLocalLayout", () => {
     );
     expect(layout.reportsDir).toBe(
       path.join(os.homedir(), ".agent-witch", "reports"),
+    );
+    expect(layout.deviceKeypairPath).toBe(
+      path.join(os.homedir(), ".agent-witch", "device-keypair.json"),
     );
   });
 });

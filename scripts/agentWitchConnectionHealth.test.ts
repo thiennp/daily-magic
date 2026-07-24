@@ -46,6 +46,12 @@ const createLayout = (rootDir: string): AgentWitchLocalLayout => ({
   projectsDir: path.join(rootDir, "profiles", "user@example.com", "projects"),
   logsDir: path.join(rootDir, "profiles", "user@example.com", "logs"),
   reportsDir: path.join(rootDir, "profiles", "user@example.com", "reports"),
+  deviceKeypairPath: path.join(
+    rootDir,
+    "profiles",
+    "user@example.com",
+    "device-keypair.json",
+  ),
 });
 
 afterEach(() => {

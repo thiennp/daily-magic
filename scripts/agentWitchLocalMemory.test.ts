@@ -43,6 +43,7 @@ describe("agentWitchLocalMemory", () => {
       projectsDir: path.join(installDir, "projects"),
       logsDir: path.join(installDir, "logs"),
       reportsDir: path.join(installDir, "reports"),
+      deviceKeypairPath: path.join(installDir, "device-keypair.json"),
     };
     const projectFolderPath = path.join(tempDir, "project");
 
