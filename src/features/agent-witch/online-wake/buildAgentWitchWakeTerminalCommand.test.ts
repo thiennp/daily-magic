@@ -5,7 +5,7 @@ import { buildAgentWitchWakeTerminalCommand } from "./buildAgentWitchWakeTermina
 describe("buildAgentWitchWakeTerminalCommand", () => {
   it("uses prod install dir outside the browser", () => {
     expect(buildAgentWitchWakeTerminalCommand()).toBe(
-      "~/.agent-witch/command/wake.sh",
+      "~/.agent-witch/app/command/wake.sh",
     );
   });
 
@@ -16,7 +16,7 @@ describe("buildAgentWitchWakeTerminalCommand", () => {
     });
 
     expect(buildAgentWitchWakeTerminalCommand()).toBe(
-      "~/.local-agent-witch/command/wake.sh",
+      "~/.local-agent-witch/app/command/wake.sh",
     );
   });
 });

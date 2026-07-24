@@ -8,5 +8,8 @@ export const AGENT_WITCH_DEPS_ARCHIVE_FILE_NAME = "deps.tar.gz";
 
 export const AGENT_WITCH_BUNDLED_DEPS_DIR_NAME = "deps";
 
-/** Shell wrappers live under ~/.agent-witch/command/ */
+/** Shell wrappers live under ~/.agent-witch/app/command/ */
 export const AGENT_WITCH_COMMAND_DIR_NAME = "command";
+
+export const buildAgentWitchInstallCommandRelativePath = (): string =>
+  `${AGENT_WITCH_APP_DIR_NAME}/${AGENT_WITCH_COMMAND_DIR_NAME}`;

@@ -4,7 +4,10 @@ import path from "node:path";
 
 import type { HarnessWriterAgentId } from "./buildWriterCliInvocation";
 
-import { AGENT_WITCH_COMMAND_DIR_NAME } from "./agentWitchInstallApp.constants";
+import {
+  AGENT_WITCH_APP_DIR_NAME,
+  AGENT_WITCH_COMMAND_DIR_NAME,
+} from "./agentWitchInstallApp.constants";
 
 export const ensureHarnessWriterCli = (
   installDir: string,
@@ -12,6 +15,7 @@ export const ensureHarnessWriterCli = (
 ): Promise<void> => {
   const scriptPath = path.join(
     installDir,
+    AGENT_WITCH_APP_DIR_NAME,
     AGENT_WITCH_COMMAND_DIR_NAME,
     "ensure-writer.sh",
   );

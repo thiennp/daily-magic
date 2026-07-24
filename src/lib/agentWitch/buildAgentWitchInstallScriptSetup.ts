@@ -74,11 +74,11 @@ fi
 
 NODE_DIR="\$(dirname "\${NODE_BIN}")"
 APP_DIR="\${INSTALL_DIR}/app"
-COMMAND_DIR="\${INSTALL_DIR}/${AGENT_WITCH_COMMAND_DIR_NAME}"
+COMMAND_DIR="\${APP_DIR}/${AGENT_WITCH_COMMAND_DIR_NAME}"
 RUN_PATH="\${COMMAND_DIR}/run.sh"
 LAUNCH_AGENT_LABEL="\${LAUNCH_AGENT_PREFIX}"
 
-mkdir -p "\${INSTALL_DIR}" "\${COMMAND_DIR}"
+mkdir -p "\${INSTALL_DIR}" "\${APP_DIR}" "\${COMMAND_DIR}"
 ${buildAgentWitchInstallScriptResolveProfilePathsBlock()}${buildAgentWitchInstallScriptEnsureProfileDirectoriesBlock()}
 ${buildAgentWitchInstallScriptWakePortAllocation()}
 export AGENT_WITCH_HOME AGENT_WITCH_WAKE_PORT

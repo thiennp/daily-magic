@@ -33,10 +33,10 @@ describe("renderInstallAgentWitchScript", () => {
       `install/agent-witch/${AGENT_WITCH_INSTALL_BUNDLE_ARTIFACT.relativePath}`,
     );
     expect(script).toContain('APP_DIR="${INSTALL_DIR}/app"');
-    expect(script).toContain('COMMAND_DIR="${INSTALL_DIR}/command"');
+    expect(script).toContain('COMMAND_DIR="${APP_DIR}/command"');
     expect(script).toContain('INSTALL_DIR="${HOME}/.agent-witch"');
     expect(script).toContain('LAUNCH_AGENT_PREFIX="com.agent-witch"');
-    expect(script).toContain("command/self-update.sh");
+    expect(script).toContain("${APP_DIR}/command/self-update.sh");
     expect(script).toContain('PROFILE_DIR}/projects"');
     expect(script).toContain('PROFILE_DIR}/logs"');
     expect(script).toContain("resolve_agent_witch_profile_paths");
