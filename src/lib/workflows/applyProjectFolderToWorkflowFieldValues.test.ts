@@ -21,12 +21,13 @@ describe("applyProjectFolderToWorkflowFieldValues", () => {
             required: true,
           },
         ],
-        "~/.agent-witch/projects/daily-magic",
+        "~/.agent-witch/profiles/owner@example.com/projects/daily-magic",
         { branch: "main" },
       ),
     ).toEqual({
       branch: "main",
-      repoPath: "~/.agent-witch/projects/daily-magic",
+      repoPath:
+        "~/.agent-witch/profiles/owner@example.com/projects/daily-magic",
     });
   });
 });

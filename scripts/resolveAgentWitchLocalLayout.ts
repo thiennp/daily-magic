@@ -32,11 +32,17 @@ export const AGENT_WITCH_HARNESS_SETS_DIR_NAME = "sets";
 
 export const AGENT_WITCH_MANIFEST_FILE_NAME = "manifest.json";
 
+export const AGENT_WITCH_PROJECTS_DIR_NAME = "projects";
+
+export const AGENT_WITCH_LOGS_DIR_NAME = "logs";
+
 export interface AgentWitchLocalLayout {
   readonly profileEmail: string | null;
   readonly installDir: string;
   readonly appDir: string;
   readonly appBundlePath: string;
+  readonly projectsDir: string;
+  readonly logsDir: string;
   readonly configPath: string;
   readonly harnessRootDir: string;
   readonly harnessManifestPath: string;
@@ -93,6 +99,41 @@ export const resolveAgentWitchAppBundlePath = (
   path.join(
     resolveAgentWitchAppDir(installDir),
     AGENT_WITCH_APP_BUNDLE_FILE_NAME,
+  );
+
+const resolveProfileScopedDir = (
+  installDir: string,
+  profileEmail: string | null,
+  dirName: string,
+): string => {
+  if (profileEmail !== null) {
+    return path.join(
+      installDir,
+      AGENT_WITCH_PROFILES_DIR_NAME,
+      profileEmail,
+      dirName,
+    );
+  }
+
+  return path.join(installDir, dirName);
+};
+
+export const resolveAgentWitchProjectsDir = (
+  layout: Pick<AgentWitchLocalLayout, "installDir" | "profileEmail">,
+): string =>
+  resolveProfileScopedDir(
+    layout.installDir,
+    layout.profileEmail,
+    AGENT_WITCH_PROJECTS_DIR_NAME,
+  );
+
+export const resolveAgentWitchLogsDir = (
+  layout: Pick<AgentWitchLocalLayout, "installDir" | "profileEmail">,
+): string =>
+  resolveProfileScopedDir(
+    layout.installDir,
+    layout.profileEmail,
+    AGENT_WITCH_LOGS_DIR_NAME,
   );
 
 export const isAgentWitchLocalInstallDir = (installDir: string): boolean =>
@@ -198,12 +239,16 @@ export const resolveAgentWitchLocalLayout = (
       profileEmail,
     );
     const harnessRootDir = path.join(profileDir, AGENT_WITCH_HARNESS_DIR_NAME);
+    const projectsDir = path.join(profileDir, AGENT_WITCH_PROJECTS_DIR_NAME);
+    const logsDir = path.join(profileDir, AGENT_WITCH_LOGS_DIR_NAME);
 
     return {
       profileEmail,
       installDir,
       appDir,
       appBundlePath,
+      projectsDir,
+      logsDir,
       configPath: path.join(profileDir, "config.json"),
       harnessRootDir,
       harnessManifestPath: path.join(
@@ -218,12 +263,16 @@ export const resolveAgentWitchLocalLayout = (
   }
 
   const harnessRootDir = path.join(installDir, AGENT_WITCH_HARNESS_DIR_NAME);
+  const projectsDir = path.join(installDir, AGENT_WITCH_PROJECTS_DIR_NAME);
+  const logsDir = path.join(installDir, AGENT_WITCH_LOGS_DIR_NAME);
 
   return {
     profileEmail: null,
     installDir,
     appDir,
     appBundlePath,
+    projectsDir,
+    logsDir,
     configPath: path.join(installDir, "config.json"),
     harnessRootDir,
     harnessManifestPath: path.join(

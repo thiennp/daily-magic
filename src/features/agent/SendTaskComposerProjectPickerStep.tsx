@@ -1,8 +1,10 @@
 "use client";
 
+import { useSession } from "next-auth/react";
+
 import SendTaskComposerCreateProjectForm from "@/features/agent/SendTaskComposerCreateProjectForm";
 import SendTaskComposerProjectRow from "@/features/agent/SendTaskComposerProjectRow";
-import { AGENT_WITCH_PROJECTS_HOME_PATH } from "@/lib/projects/constants";
+import { buildAgentWitchProjectsHomePath } from "@/lib/projects/buildAgentWitchProjectsHomePath";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
 
 interface SendTaskComposerProjectPickerStepProps {
@@ -24,6 +26,12 @@ export default function SendTaskComposerProjectPickerStep({
   onProjectDeleted,
   showHeader = true,
 }: SendTaskComposerProjectPickerStepProps) {
+  const { data: session } = useSession();
+  const projectsHomePath =
+    session?.user?.email !== undefined
+      ? buildAgentWitchProjectsHomePath(session.user.email)
+      : "~/.agent-witch/profiles/<account>/projects";
+
   return (
     <div>
       {showHeader ? (
@@ -32,7 +40,7 @@ export default function SendTaskComposerProjectPickerStep({
             Choose a project folder
           </h2>
           <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
-            Saved under {AGENT_WITCH_PROJECTS_HOME_PATH} on your Mac.
+            Saved under {projectsHomePath} on your Mac.
           </p>
         </>
       ) : null}

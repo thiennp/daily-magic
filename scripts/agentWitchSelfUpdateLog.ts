@@ -2,7 +2,12 @@ import { randomUUID } from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 
-import { resolveAgentWitchInstallDir } from "./resolveAgentWitchLocalLayout";
+import {
+  AGENT_WITCH_LOGS_DIR_NAME,
+  resolveAgentWitchInstallDir,
+  resolveAgentWitchLocalLayout,
+  resolveAgentWitchLogsDir,
+} from "./resolveAgentWitchLocalLayout";
 
 export const AGENT_WITCH_SELF_UPDATE_LOG_FILE_NAME = "self-update-log.ndjson";
 
@@ -23,7 +28,24 @@ export interface AgentWitchSelfUpdateLogEntry {
 
 export const resolveAgentWitchSelfUpdateLogPath = (
   installDir: string = resolveAgentWitchInstallDir(),
-): string => path.join(installDir, AGENT_WITCH_SELF_UPDATE_LOG_FILE_NAME);
+): string => {
+  const layout = resolveAgentWitchLocalLayout();
+  const logsDir =
+    layout.installDir === installDir
+      ? resolveAgentWitchLogsDir(layout)
+      : path.join(
+          installDir,
+          layout.profileEmail !== null
+            ? path.join(
+                "profiles",
+                layout.profileEmail,
+                AGENT_WITCH_LOGS_DIR_NAME,
+              )
+            : AGENT_WITCH_LOGS_DIR_NAME,
+        );
+
+  return path.join(logsDir, AGENT_WITCH_SELF_UPDATE_LOG_FILE_NAME);
+};
 
 export const appendAgentWitchSelfUpdateLog = (
   input: Omit<AgentWitchSelfUpdateLogEntry, "id" | "recordedAt"> & {

@@ -1,7 +1,12 @@
 /** Install-safe default project path (no repo `../src` imports). */
-export const DEFAULT_USER_PROJECT_NAME = "Default";
+import os from "node:os";
 
-const AGENT_WITCH_PROJECTS_HOME_PATH = "~/.agent-witch/projects";
+import {
+  resolveAgentWitchLocalLayout,
+  resolveAgentWitchProjectsDir,
+} from "./resolveAgentWitchLocalLayout";
+
+export const DEFAULT_USER_PROJECT_NAME = "Default";
 
 const slugifyProjectName = (projectName: string): string =>
   projectName
@@ -11,8 +16,17 @@ const slugifyProjectName = (projectName: string): string =>
     .replace(/^-+|-+$/g, "")
     .slice(0, 64);
 
+const toTildePath = (absolutePath: string): string => {
+  const homeDir = os.homedir();
+  return absolutePath.startsWith(homeDir)
+    ? `~${absolutePath.slice(homeDir.length)}`
+    : absolutePath;
+};
+
 export const buildDefaultUserProjectFolderPath = (): string => {
+  const layout = resolveAgentWitchLocalLayout();
+  const projectsDir = resolveAgentWitchProjectsDir(layout);
   const slug = slugifyProjectName(DEFAULT_USER_PROJECT_NAME);
 
-  return `${AGENT_WITCH_PROJECTS_HOME_PATH}/${slug.length > 0 ? slug : "project"}`;
+  return `${toTildePath(projectsDir)}/${slug.length > 0 ? slug : "project"}`;
 };

@@ -1,5 +1,6 @@
 "use client";
 
+import { useSession } from "next-auth/react";
 import { useState } from "react";
 
 import Button from "@/components/ui/button/Button";
@@ -18,10 +19,16 @@ export default function SendTaskComposerCreateProjectForm({
   onProjectCreated,
   onSelect,
 }: SendTaskComposerCreateProjectFormProps) {
+  const { data: session } = useSession();
   const [name, setName] = useState("");
   const [folderPath, setFolderPath] = useState("");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
+
+  const defaultFolderPlaceholder =
+    session?.user?.email !== undefined
+      ? buildDefaultProjectFolderPath(name || "my-project", session.user.email)
+      : "~/.agent-witch/profiles/<account>/projects/my-project";
 
   const handleCreateProject = async (): Promise<void> => {
     if (name.trim().length === 0) {
@@ -72,7 +79,7 @@ export default function SendTaskComposerCreateProjectForm({
         <input
           type="text"
           value={folderPath}
-          placeholder={buildDefaultProjectFolderPath(name || "my-project")}
+          placeholder={defaultFolderPlaceholder}
           onChange={(event) => {
             setFolderPath(event.target.value);
           }}

@@ -2,5 +2,12 @@ import buildDefaultProjectFolderPath from "@/lib/projects/buildDefaultProjectFol
 
 export const DEFAULT_USER_PROJECT_NAME = "Default";
 
-export const buildDefaultUserProjectFolderPath = (): string =>
-  buildDefaultProjectFolderPath(DEFAULT_USER_PROJECT_NAME);
+export const buildDefaultUserProjectFolderPath = (
+  profileEmail: string,
+  installDirName?: string,
+): string =>
+  buildDefaultProjectFolderPath(
+    DEFAULT_USER_PROJECT_NAME,
+    profileEmail,
+    installDirName,
+  );

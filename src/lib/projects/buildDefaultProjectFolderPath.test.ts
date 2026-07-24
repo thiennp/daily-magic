@@ -1,12 +1,14 @@
 import { describe, expect, it } from "vitest";
 
 import buildDefaultProjectFolderPath from "@/lib/projects/buildDefaultProjectFolderPath";
-import { AGENT_WITCH_PROJECTS_HOME_PATH } from "@/lib/projects/constants";
+import { buildAgentWitchProjectsHomePath } from "@/lib/projects/buildAgentWitchProjectsHomePath";
 
 describe("buildDefaultProjectFolderPath", () => {
-  it("places new projects under the Agent Witch projects directory", () => {
-    expect(buildDefaultProjectFolderPath("Daily Magic")).toBe(
-      `${AGENT_WITCH_PROJECTS_HOME_PATH}/daily-magic`,
+  it("builds a profile-scoped default folder path", () => {
+    expect(
+      buildDefaultProjectFolderPath("Daily Magic", "owner@example.com"),
+    ).toBe(
+      `${buildAgentWitchProjectsHomePath("owner@example.com")}/daily-magic`,
     );
   });
 });

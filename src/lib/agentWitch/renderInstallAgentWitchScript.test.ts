@@ -36,6 +36,8 @@ describe("renderInstallAgentWitchScript", () => {
     expect(script).toContain('INSTALL_DIR="${HOME}/.agent-witch"');
     expect(script).toContain('LAUNCH_AGENT_PREFIX="com.agent-witch"');
     expect(script).toContain("command/self-update.sh");
+    expect(script).toContain('PROFILE_DIR}/projects"');
+    expect(script).toContain('PROFILE_DIR}/logs"');
     expect(script).toContain("install-version.json");
   });
 

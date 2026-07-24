@@ -60,6 +60,8 @@ const layout: AgentWitchLocalLayout = {
     "harness",
     "sets",
   ),
+  projectsDir: path.join(tempRoot, "profiles", "test@example.com", "projects"),
+  logsDir: path.join(tempRoot, "profiles", "test@example.com", "logs"),
 };
 
 const cloudApi = {

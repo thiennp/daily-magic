@@ -37,9 +37,9 @@ if [[ "\$(uname -s)" == "Darwin" ]]; then
   <key>ThrottleInterval</key>
   <integer>10</integer>
   <key>StandardOutPath</key>
-  <string>\${INSTALL_DIR}/\${LOG_BASENAME}.log</string>
+  <string>\${LOG_DIR}/\${LOG_BASENAME}.log</string>
   <key>StandardErrorPath</key>
-  <string>\${INSTALL_DIR}/\${LOG_BASENAME}.error.log</string>
+  <string>\${LOG_DIR}/\${LOG_BASENAME}.error.log</string>
 </dict>
 </plist>
 EOF
@@ -49,7 +49,7 @@ EOF
   sleep 2
 
   if ! launchctl print "gui/\$(id -u)/\${LAUNCH_AGENT_LABEL}" 2>/dev/null | grep -q 'state = running'; then
-    nohup "\${RUN_PATH}" >> "\${INSTALL_DIR}/\${LOG_BASENAME}.log" 2>> "\${INSTALL_DIR}/\${LOG_BASENAME}.error.log" &
+    nohup "\${RUN_PATH}" >> "\${LOG_DIR}/\${LOG_BASENAME}.log" 2>> "\${LOG_DIR}/\${LOG_BASENAME}.error.log" &
     sleep 1
   fi
 else

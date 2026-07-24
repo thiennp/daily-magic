@@ -2,6 +2,8 @@
 
 import { usePathname, useRouter } from "next/navigation";
 
+import { useSession } from "next-auth/react";
+
 import AppPanel from "@/components/surfaces/AppPanel";
 import {
   APP_SURFACE_BODY_TEXT_CLASS,
@@ -10,14 +12,19 @@ import {
 import SendTaskComposerProjectPickerStep from "@/features/agent/SendTaskComposerProjectPickerStep";
 import { useUserProjects } from "@/features/agent/hooks/useUserProjects";
 import buildAgentComposerHref from "@/lib/library/buildAgentComposerHref";
-import { AGENT_WITCH_PROJECTS_HOME_PATH } from "@/lib/projects/constants";
+import { buildAgentWitchProjectsHomePath } from "@/lib/projects/buildAgentWitchProjectsHomePath";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
 
 export default function HomeProjectsPanel() {
   const router = useRouter();
   const pathname = usePathname();
+  const { data: session } = useSession();
   const { projects, isLoading, addProject, removeProject } =
     useUserProjects("");
+  const projectsHomePath =
+    session?.user?.email !== undefined
+      ? buildAgentWitchProjectsHomePath(session.user.email)
+      : "~/.agent-witch/profiles/<account>/projects";
 
   const openProjectInComposer = (project: UserProjectRecord): void => {
     router.push(
@@ -34,8 +41,8 @@ export default function HomeProjectsPanel() {
     <AppPanel padding="compact">
       <h2 className={APP_SURFACE_SECTION_TITLE_CLASS}>Projects</h2>
       <p className={`mt-1 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
-        Saved folders on your Mac under {AGENT_WITCH_PROJECTS_HOME_PATH}. Pick
-        one to send a task, or save a new project below.
+        Saved folders on your Mac under {projectsHomePath}. Pick one to send a
+        task, or save a new project below.
       </p>
       <div className="mt-4">
         <SendTaskComposerProjectPickerStep

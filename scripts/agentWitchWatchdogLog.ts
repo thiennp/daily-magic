@@ -3,7 +3,12 @@ import fs from "node:fs";
 import path from "node:path";
 
 import type { AgentWitchReviveTargetResult } from "./agentWitchRevive.types";
-import { resolveAgentWitchInstallDir } from "./resolveAgentWitchLocalLayout";
+import {
+  AGENT_WITCH_LOGS_DIR_NAME,
+  resolveAgentWitchInstallDir,
+  resolveAgentWitchLocalLayout,
+  resolveAgentWitchLogsDir,
+} from "./resolveAgentWitchLocalLayout";
 
 export const AGENT_WITCH_WATCHDOG_LOG_FILE_NAME = "watchdog-log.ndjson";
 
@@ -30,7 +35,24 @@ const isRecord = (value: unknown): value is Record<string, unknown> =>
 
 export const resolveAgentWitchWatchdogLogPath = (
   installDir: string = resolveAgentWitchInstallDir(),
-): string => path.join(installDir, AGENT_WITCH_WATCHDOG_LOG_FILE_NAME);
+): string => {
+  const layout = resolveAgentWitchLocalLayout();
+  const logsDir =
+    layout.installDir === installDir
+      ? resolveAgentWitchLogsDir(layout)
+      : path.join(
+          installDir,
+          layout.profileEmail !== null
+            ? path.join(
+                "profiles",
+                layout.profileEmail,
+                AGENT_WITCH_LOGS_DIR_NAME,
+              )
+            : AGENT_WITCH_LOGS_DIR_NAME,
+        );
+
+  return path.join(logsDir, AGENT_WITCH_WATCHDOG_LOG_FILE_NAME);
+};
 
 const parseWatchdogLogLine = (
   line: string,

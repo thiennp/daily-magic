@@ -12,7 +12,9 @@ const project = (
   ownerUserId: "user-1",
   deviceId: null,
   name: overrides.name ?? DEFAULT_USER_PROJECT_NAME,
-  folderPath: overrides.folderPath ?? "~/.agent-witch/projects/default",
+  folderPath:
+    overrides.folderPath ??
+    "~/.agent-witch/profiles/owner@example.com/projects/default",
   lastUsedAt: null,
   createdAt: "2026-01-01T00:00:00.000Z",
   updatedAt: "2026-01-01T00:00:00.000Z",

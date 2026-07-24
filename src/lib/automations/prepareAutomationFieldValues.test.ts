@@ -47,7 +47,8 @@ describe("prepareAutomationFieldValues", () => {
       ownerUserId: "user-1",
       deviceId: null,
       name: "Daily Magic",
-      folderPath: "~/.agent-witch/projects/daily-magic",
+      folderPath:
+        "~/.agent-witch/profiles/owner@example.com/projects/daily-magic",
       lastUsedAt: null,
       createdAt: "2026-01-01T00:00:00.000Z",
       updatedAt: "2026-01-01T00:00:00.000Z",
@@ -63,7 +64,10 @@ describe("prepareAutomationFieldValues", () => {
     expect(result).toEqual({
       ok: true,
       projectId: "project-1",
-      fieldValues: { repoPath: "~/.agent-witch/projects/daily-magic" },
+      fieldValues: {
+        repoPath:
+          "~/.agent-witch/profiles/owner@example.com/projects/daily-magic",
+      },
     });
     expect(touchUserProjectLastUsed).toHaveBeenCalledWith(
       "project-1",

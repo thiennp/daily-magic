@@ -40,6 +40,8 @@ describe("agentWitchLocalMemory", () => {
       harnessRootDir: path.join(installDir, "harness"),
       harnessManifestPath: path.join(installDir, "harness", "manifest.json"),
       harnessSetsDir: path.join(installDir, "harness", "sets"),
+      projectsDir: path.join(installDir, "projects"),
+      logsDir: path.join(installDir, "logs"),
     };
     const projectFolderPath = path.join(tempDir, "project");
 

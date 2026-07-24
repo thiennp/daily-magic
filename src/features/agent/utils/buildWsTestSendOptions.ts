@@ -4,13 +4,18 @@ import { buildDefaultUserProjectFolderPath } from "@/lib/projects/defaultUserPro
 
 const resolveComposerProjectFolderPath = (
   composer: ReturnType<typeof useWsTestTaskComposer>,
+  profileEmail?: string,
 ): string =>
-  composer.selectedProject?.folderPath ?? buildDefaultUserProjectFolderPath();
+  composer.selectedProject?.folderPath ??
+  (profileEmail !== undefined
+    ? buildDefaultUserProjectFolderPath(profileEmail)
+    : "~/.agent-witch/profiles/<account>/projects/default");
 
 export const buildWsTestSendOptions = (
   composer: ReturnType<typeof useWsTestTaskComposer>,
   writerAgent: HarnessWriterAgent,
   activeDeviceId?: string,
+  profileEmail?: string,
 ): {
   readonly writerAgent: HarnessWriterAgent;
   readonly targetUserId?: string;
@@ -20,7 +25,7 @@ export const buildWsTestSendOptions = (
   readonly projectFolderPath: string;
 } => ({
   writerAgent,
-  projectFolderPath: resolveComposerProjectFolderPath(composer),
+  projectFolderPath: resolveComposerProjectFolderPath(composer, profileEmail),
   ...(composer.isTeamDispatch
     ? {
         targetUserId: composer.selectedTargetUserId,

@@ -9,6 +9,7 @@ import mapUserProjectRow from "@/lib/projects/mapUserProjectRow";
 
 export const ensureDefaultUserProject = async (
   ownerUserId: string,
+  profileEmail: string,
   deviceId?: string | null,
 ): Promise<UserProjectRecord> => {
   const sql = getSql();
@@ -28,7 +29,7 @@ export const ensureDefaultUserProject = async (
 
   const created = await createUserProject(ownerUserId, {
     name: DEFAULT_USER_PROJECT_NAME,
-    folderPath: buildDefaultUserProjectFolderPath(),
+    folderPath: buildDefaultUserProjectFolderPath(profileEmail),
     deviceId: deviceId ?? null,
   });
 

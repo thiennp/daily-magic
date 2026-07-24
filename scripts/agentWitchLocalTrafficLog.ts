@@ -15,7 +15,7 @@ export type AgentWitchLocalTrafficEntry = {
 };
 
 const resolveTrafficLogPath = (layout: AgentWitchLocalLayout): string =>
-  path.join(layout.installDir, TRAFFIC_LOG_FILE_NAME);
+  path.join(layout.logsDir, TRAFFIC_LOG_FILE_NAME);
 
 export const appendAgentWitchLocalTraffic = (
   layout: AgentWitchLocalLayout,
