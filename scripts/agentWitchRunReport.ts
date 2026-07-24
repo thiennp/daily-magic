@@ -88,6 +88,7 @@ export const upsertAgentRunReportFile = (input: {
   readonly agentRunId: string;
   readonly status: AgentRunReportStatus;
   readonly userSummary: string;
+  readonly estimateSeconds?: number;
   readonly details?: string;
 }): AgentRunReportFile => {
   const existing = readAgentRunReportFile(
@@ -106,6 +107,9 @@ export const upsertAgentRunReportFile = (input: {
     status: input.status,
     updatedAt,
     userSummary: input.userSummary.trim(),
+    ...(input.estimateSeconds !== undefined
+      ? { estimateSeconds: input.estimateSeconds }
+      : {}),
     ...(input.details !== undefined && input.details.trim().length > 0
       ? { details: input.details.trim() }
       : {}),
