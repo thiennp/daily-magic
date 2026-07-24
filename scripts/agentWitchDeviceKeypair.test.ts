@@ -44,6 +44,8 @@ const createLayout = (input: {
     logsDir: path.join(profileDir, "logs"),
     reportsDir: path.join(profileDir, "reports"),
     deviceKeypairPath: path.join(profileDir, "device-keypair.json"),
+    mainLogPath: path.join(profileDir, "logs", "agent-witch.log"),
+    errorLogPath: path.join(profileDir, "logs", "agent-witch.error.log"),
   };
 };
 

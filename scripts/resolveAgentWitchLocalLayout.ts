@@ -36,6 +36,10 @@ export const AGENT_WITCH_PROJECTS_DIR_NAME = "projects";
 
 export const AGENT_WITCH_LOGS_DIR_NAME = "logs";
 
+export const AGENT_WITCH_MAIN_LOG_FILE_NAME = "agent-witch.log";
+
+export const AGENT_WITCH_ERROR_LOG_FILE_NAME = "agent-witch.error.log";
+
 export const AGENT_WITCH_REPORTS_DIR_NAME = "reports";
 
 export const AGENT_WITCH_DEVICE_KEYPAIR_FILE_NAME = "device-keypair.json";
@@ -47,6 +51,8 @@ export interface AgentWitchLocalLayout {
   readonly appBundlePath: string;
   readonly projectsDir: string;
   readonly logsDir: string;
+  readonly mainLogPath: string;
+  readonly errorLogPath: string;
   readonly reportsDir: string;
   readonly deviceKeypairPath: string;
   readonly configPath: string;
@@ -141,6 +147,14 @@ export const resolveAgentWitchLogsDir = (
     layout.profileEmail,
     AGENT_WITCH_LOGS_DIR_NAME,
   );
+
+export const resolveAgentWitchMainLogPath = (
+  layout: Pick<AgentWitchLocalLayout, "logsDir">,
+): string => path.join(layout.logsDir, AGENT_WITCH_MAIN_LOG_FILE_NAME);
+
+export const resolveAgentWitchErrorLogPath = (
+  layout: Pick<AgentWitchLocalLayout, "logsDir">,
+): string => path.join(layout.logsDir, AGENT_WITCH_ERROR_LOG_FILE_NAME);
 
 export const resolveAgentWitchReportsDir = (
   layout: Pick<AgentWitchLocalLayout, "installDir" | "profileEmail">,
@@ -276,6 +290,16 @@ export const resolveAgentWitchLocalLayout = (
       profileDir,
       AGENT_WITCH_DEVICE_KEYPAIR_FILE_NAME,
     );
+    const mainLogPath = path.join(
+      profileDir,
+      AGENT_WITCH_LOGS_DIR_NAME,
+      AGENT_WITCH_MAIN_LOG_FILE_NAME,
+    );
+    const errorLogPath = path.join(
+      profileDir,
+      AGENT_WITCH_LOGS_DIR_NAME,
+      AGENT_WITCH_ERROR_LOG_FILE_NAME,
+    );
 
     return {
       profileEmail,
@@ -284,6 +308,8 @@ export const resolveAgentWitchLocalLayout = (
       appBundlePath,
       projectsDir,
       logsDir,
+      mainLogPath,
+      errorLogPath,
       reportsDir,
       deviceKeypairPath,
       configPath: path.join(profileDir, "config.json"),
@@ -307,6 +333,16 @@ export const resolveAgentWitchLocalLayout = (
     installDir,
     AGENT_WITCH_DEVICE_KEYPAIR_FILE_NAME,
   );
+  const mainLogPath = path.join(
+    installDir,
+    AGENT_WITCH_LOGS_DIR_NAME,
+    AGENT_WITCH_MAIN_LOG_FILE_NAME,
+  );
+  const errorLogPath = path.join(
+    installDir,
+    AGENT_WITCH_LOGS_DIR_NAME,
+    AGENT_WITCH_ERROR_LOG_FILE_NAME,
+  );
 
   return {
     profileEmail: null,
@@ -315,6 +351,8 @@ export const resolveAgentWitchLocalLayout = (
     appBundlePath,
     projectsDir,
     logsDir,
+    mainLogPath,
+    errorLogPath,
     reportsDir,
     deviceKeypairPath,
     configPath: path.join(installDir, "config.json"),

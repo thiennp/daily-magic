@@ -2,6 +2,10 @@ import {
   buildAgentWitchInstallBundleUrl,
   buildAgentWitchInstallDepsArchiveUrl,
 } from "@/lib/agentWitch/buildAgentWitchInstallBundleUrl";
+import {
+  buildAgentWitchInstallScriptEnsureProfileDirectoriesBlock,
+  buildAgentWitchInstallScriptResolveProfilePathsBlock,
+} from "@/lib/agentWitch/buildAgentWitchInstallScriptResolveProfilePaths";
 import { AGENT_WITCH_INSTALL_SCRIPT_PATH_EXPORT } from "@/lib/agentWitch/buildAgentWitchInstallScriptWriterPath";
 import {
   AGENT_WITCH_INSTALL_BUNDLE_ARTIFACT,
@@ -23,8 +27,17 @@ rm -rf "\${INSTALL_DIR}/node_modules" "\${INSTALL_DIR}/package.json" "\${INSTALL
 cat > "\${RUN_PATH}" <<EOF
 #!/usr/bin/env bash
 set -euo pipefail
+INSTALL_DIR="\${AGENT_WITCH_HOME:-\${HOME}/.agent-witch}"
+AGENT_WITCH_HOME="\${INSTALL_DIR}"
+NODE_BIN="\$(command -v node)"
+APP_DIR="\${INSTALL_DIR}/${AGENT_WITCH_INSTALL_BUNDLE_ARTIFACT.appDirName}"
 ${AGENT_WITCH_INSTALL_SCRIPT_PATH_EXPORT}
+${buildAgentWitchInstallScriptResolveProfilePathsBlock()}${buildAgentWitchInstallScriptEnsureProfileDirectoriesBlock()}
+resolve_agent_witch_profile_paths
+ensure_agent_witch_profile_directories
+mkdir -p "\${LOG_DIR}"
 cd "\${INSTALL_DIR}"
+exec >>"\${MAIN_LOG_PATH}" 2>>"\${ERROR_LOG_PATH}"
 exec "\${NODE_BIN}" "\${APP_DIR}/${AGENT_WITCH_INSTALL_BUNDLE_ARTIFACT.fileName}"
 EOF
 chmod +x "\${RUN_PATH}"

@@ -69,6 +69,20 @@ const layout: AgentWitchLocalLayout = {
     "test@example.com",
     "device-keypair.json",
   ),
+  mainLogPath: path.join(
+    tempRoot,
+    "profiles",
+    "test@example.com",
+    "logs",
+    "agent-witch.log",
+  ),
+  errorLogPath: path.join(
+    tempRoot,
+    "profiles",
+    "test@example.com",
+    "logs",
+    "agent-witch.error.log",
+  ),
 };
 
 const cloudApi = {

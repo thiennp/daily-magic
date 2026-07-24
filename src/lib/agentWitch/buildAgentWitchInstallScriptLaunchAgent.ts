@@ -1,5 +1,4 @@
 import { AGENT_WITCH_LAUNCH_AGENT_PATH_VALUE } from "@/lib/agentWitch/buildAgentWitchInstallScriptWriterPath";
-import { AGENT_WITCH_INSTALL_BUNDLE_ARTIFACT } from "@/lib/agentWitch/listAgentWitchInstallBundleArtifacts";
 
 export const buildAgentWitchInstallScriptLaunchAgent = (): string => `
 agent_witch_install_step
@@ -14,8 +13,7 @@ if [[ "\$(uname -s)" == "Darwin" ]]; then
   <string>\${LAUNCH_AGENT_LABEL}</string>
   <key>ProgramArguments</key>
   <array>
-    <string>\${NODE_BIN}</string>
-    <string>\${APP_DIR}/${AGENT_WITCH_INSTALL_BUNDLE_ARTIFACT.fileName}</string>
+    <string>\${RUN_PATH}</string>
   </array>
   <key>WorkingDirectory</key>
   <string>\${INSTALL_DIR}</string>
@@ -36,10 +34,6 @@ if [[ "\$(uname -s)" == "Darwin" ]]; then
   <true/>
   <key>ThrottleInterval</key>
   <integer>10</integer>
-  <key>StandardOutPath</key>
-  <string>\${LOG_DIR}/\${LOG_BASENAME}.log</string>
-  <key>StandardErrorPath</key>
-  <string>\${LOG_DIR}/\${LOG_BASENAME}.error.log</string>
 </dict>
 </plist>
 EOF
@@ -49,7 +43,7 @@ EOF
   sleep 2
 
   if ! launchctl print "gui/\$(id -u)/\${LAUNCH_AGENT_LABEL}" 2>/dev/null | grep -q 'state = running'; then
-    nohup "\${RUN_PATH}" >> "\${LOG_DIR}/\${LOG_BASENAME}.log" 2>> "\${LOG_DIR}/\${LOG_BASENAME}.error.log" &
+    nohup "\${RUN_PATH}" >/dev/null 2>&1 &
     sleep 1
   fi
 else
