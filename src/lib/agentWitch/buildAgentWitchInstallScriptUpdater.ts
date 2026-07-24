@@ -1,10 +1,11 @@
+import { AGENT_WITCH_COMMAND_DIR_NAME } from "@/lib/agentWitch/agentWitchInstallApp.constant";
 import { AGENT_WITCH_INSTALL_BUNDLE_ARTIFACT } from "@/lib/agentWitch/listAgentWitchInstallBundleArtifacts";
 
 export const buildAgentWitchInstallScriptUpdater = (input: {
   readonly installDirName: string;
 }): string => `
 agent_witch_install_step
-cat > "\${INSTALL_DIR}/self-update.sh" <<'UPDATER_EOF'
+cat > "\${INSTALL_DIR}/${AGENT_WITCH_COMMAND_DIR_NAME}/self-update.sh" <<'UPDATER_EOF'
 #!/usr/bin/env bash
 set -euo pipefail
 INSTALL_DIR="\${AGENT_WITCH_HOME:-\${HOME}/${input.installDirName}}"
@@ -20,7 +21,7 @@ cd "\${INSTALL_DIR}"
 export AGENT_WITCH_HOME="\${INSTALL_DIR}"
 exec "\${NODE_BIN}" "\${APP_BUNDLE}" self-update
 UPDATER_EOF
-chmod +x "\${INSTALL_DIR}/self-update.sh"
+chmod +x "\${INSTALL_DIR}/${AGENT_WITCH_COMMAND_DIR_NAME}/self-update.sh"
 
 agent_witch_retire_auxiliary_launch_agents
 `;
