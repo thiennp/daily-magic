@@ -52,6 +52,7 @@ export function useAgentLiveTerminalPanelProgress(input: {
     pendingQuestion: input.feedbackPendingQuestion,
     partialOutput: input.feedbackPendingPartialOutput ?? null,
     stallState,
+    estimateSeconds,
   });
   const cachedReportSummary =
     input.activeRunId !== null &&

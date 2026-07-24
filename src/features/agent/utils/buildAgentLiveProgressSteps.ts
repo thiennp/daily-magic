@@ -1,5 +1,7 @@
 import type { AgentLiveTerminalStatus } from "@/features/agent/utils/agentLiveTerminalState.type";
 import type { AgentLiveProgressStep } from "@/features/agent/utils/agentLiveProgressStep.type";
+import { buildAgentLiveProgressEstimateStep } from "@/features/agent/utils/buildAgentLiveProgressEstimateStep";
+import { buildAgentLiveProgressShellSteps } from "@/features/agent/utils/buildAgentLiveProgressShellSteps";
 import { hasAgentLiveProgressStartedUserTask } from "@/features/agent/utils/resolveAgentLiveProgressWorkLabel";
 import {
   resolveAgentLiveProgressCleanedSource,
@@ -26,6 +28,7 @@ export const buildAgentLiveProgressSteps = (input: {
   readonly pendingQuestion?: string | null;
   readonly partialOutput?: string | null;
   readonly stallState?: AgentLiveProgressStallState;
+  readonly estimateSeconds?: number | null;
 }): {
   readonly steps: readonly AgentLiveProgressStep[];
   readonly replyPreview: string | null;
@@ -52,6 +55,10 @@ export const buildAgentLiveProgressSteps = (input: {
   const isFinished = input.status === "finished";
   const needsInput = (input.pendingQuestion ?? "").trim().length > 0;
   const isReadyBanner = /is ready on your Mac/i.test(input.output);
+  const hasEstimate =
+    input.estimateSeconds !== null &&
+    input.estimateSeconds !== undefined &&
+    input.estimateSeconds > 0;
   const states = resolveAgentLiveProgressStepStates({
     started,
     isFinished,
@@ -59,6 +66,8 @@ export const buildAgentLiveProgressSteps = (input: {
     needsInput,
     isReadyBanner,
     status: input.status,
+    hasEstimate,
+    hasProgressUpdates: updates.length > 0,
   });
   const workSteps = resolveAgentLiveProgressWorkSteps({
     source: progressSource,
@@ -79,30 +88,25 @@ export const buildAgentLiveProgressSteps = (input: {
     stallState: input.stallState,
   });
 
+  const shell = buildAgentLiveProgressShellSteps({
+    started,
+    isReadyBanner,
+    isFinished,
+    prepareState: states.prepareState,
+    startState: states.startState,
+    finishState: states.finishState,
+  });
+
   return {
     steps: [
-      {
-        id: "prepare",
-        label: "Preparing agent on your Mac",
-        detail: null,
-        state: states.prepareState,
-      },
-      {
-        id: "start",
-        label:
-          !started && isReadyBanner
-            ? "Ready for your message"
-            : "Agent started",
-        detail: null,
-        state: states.startState,
-      },
+      ...shell.leading,
+      buildAgentLiveProgressEstimateStep({
+        estimateState: states.estimateState,
+        estimateSeconds: input.estimateSeconds,
+        hasEstimate,
+      }),
       ...workSteps,
-      {
-        id: "finish",
-        label: isFinished ? "Finished" : "Finishing up",
-        detail: null,
-        state: states.finishState,
-      },
+      shell.finish,
     ],
     replyPreview: cleaned.length > 0 ? cleaned : null,
   };

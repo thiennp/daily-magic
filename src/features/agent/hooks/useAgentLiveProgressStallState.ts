@@ -2,45 +2,14 @@
 
 import { useCallback, useEffect, useReducer, useState } from "react";
 
+import {
+  agentLiveProgressStallClockReducer,
+  initialAgentLiveProgressStallClockState,
+  resolveAgentLiveProgressMsSinceLastActivity,
+  resolveAgentLiveProgressWorkedMs,
+} from "@/features/agent/utils/agentLiveProgressStallClock.reducer";
 import type { AgentLiveProgressStallState } from "@/features/agent/utils/resolveAgentLiveProgressStallState";
 import { resolveAgentLiveProgressStallState } from "@/features/agent/utils/resolveAgentLiveProgressStallState";
-
-interface StallClockState {
-  readonly lastActivityAt: number | null;
-  readonly workingStartedAt: number | null;
-  readonly nowMs: number;
-}
-
-type StallClockAction =
-  | { readonly type: "reset"; readonly at: number }
-  | { readonly type: "activity"; readonly at: number }
-  | { readonly type: "tick"; readonly at: number };
-
-const stallClockReducer = (
-  state: StallClockState,
-  action: StallClockAction,
-): StallClockState => {
-  switch (action.type) {
-    case "reset":
-      return { lastActivityAt: null, workingStartedAt: null, nowMs: action.at };
-    case "activity":
-      return {
-        lastActivityAt: action.at,
-        workingStartedAt: state.workingStartedAt ?? action.at,
-        nowMs: action.at,
-      };
-    case "tick":
-      return { ...state, nowMs: action.at };
-    default:
-      return state;
-  }
-};
-
-const initialStallClockState = (): StallClockState => ({
-  lastActivityAt: null,
-  workingStartedAt: null,
-  nowMs: 0,
-});
 
 export const useAgentLiveProgressStallState = (input: {
   readonly isWorking: boolean;
@@ -53,9 +22,9 @@ export const useAgentLiveProgressStallState = (input: {
   readonly noteRunHeartbeat: () => void;
 } => {
   const [clock, dispatch] = useReducer(
-    stallClockReducer,
+    agentLiveProgressStallClockReducer,
     undefined,
-    initialStallClockState,
+    initialAgentLiveProgressStallClockState,
   );
   const [runHeartbeatRevision, setRunHeartbeatRevision] = useState(0);
   const noteRunHeartbeat = useCallback(() => {
@@ -72,6 +41,16 @@ export const useAgentLiveProgressStallState = (input: {
   }, [input.activityFingerprint, input.isWorking, runHeartbeatRevision]);
 
   useEffect(() => {
+    if (
+      input.estimateSeconds !== null &&
+      input.estimateSeconds !== undefined &&
+      input.estimateSeconds > 0
+    ) {
+      dispatch({ type: "estimate", at: Date.now() });
+    }
+  }, [input.estimateSeconds]);
+
+  useEffect(() => {
     if (!input.isWorking) {
       return;
     }
@@ -85,14 +64,14 @@ export const useAgentLiveProgressStallState = (input: {
     };
   }, [input.isWorking]);
 
-  const msSinceLastActivity =
-    input.isWorking && clock.lastActivityAt !== null
-      ? clock.nowMs - clock.lastActivityAt
-      : null;
-  const workedMs =
-    input.isWorking && clock.workingStartedAt !== null
-      ? clock.nowMs - clock.workingStartedAt
-      : null;
+  const msSinceLastActivity = resolveAgentLiveProgressMsSinceLastActivity({
+    isWorking: input.isWorking,
+    clock,
+  });
+  const workedMs = resolveAgentLiveProgressWorkedMs({
+    isWorking: input.isWorking,
+    clock,
+  });
 
   return {
     stallState: resolveAgentLiveProgressStallState({
