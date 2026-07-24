@@ -9,9 +9,12 @@ export const resolveAgentLiveProgressStepStates = (input: {
   readonly needsInput: boolean;
   readonly isReadyBanner: boolean;
   readonly status: AgentLiveTerminalStatus;
+  readonly hasEstimate: boolean;
+  readonly hasProgressUpdates: boolean;
 }): {
   readonly prepareState: AgentLiveProgressStepState;
   readonly startState: AgentLiveProgressStepState;
+  readonly estimateState: AgentLiveProgressStepState;
   readonly workState: AgentLiveProgressStepState;
   readonly finishState: AgentLiveProgressStepState;
 } => {
@@ -20,6 +23,7 @@ export const resolveAgentLiveProgressStepStates = (input: {
     return {
       prepareState: "done",
       startState: "pending",
+      estimateState: "pending",
       workState: "pending",
       finishState: "pending",
     };
@@ -37,19 +41,30 @@ export const resolveAgentLiveProgressStepStates = (input: {
       ? "active"
       : "pending"
     : "done";
+  const estimateState: AgentLiveProgressStepState = !input.started
+    ? "pending"
+    : input.hasEstimate || input.hasProgressUpdates || input.isFinished
+      ? "done"
+      : input.isWorking
+        ? "active"
+        : "pending";
+  const workUnlocked = input.hasEstimate || input.hasProgressUpdates;
   const workState: AgentLiveProgressStepState = !input.started
     ? "pending"
-    : input.needsInput || input.status === "waiting_approval"
-      ? "active"
-      : input.isFinished
-        ? "done"
-        : input.isWorking
-          ? "active"
-          : "pending";
+    : !workUnlocked
+      ? "pending"
+      : input.needsInput || input.status === "waiting_approval"
+        ? "active"
+        : input.isFinished
+          ? "done"
+          : input.isWorking
+            ? "active"
+            : "pending";
 
   return {
     prepareState,
     startState,
+    estimateState,
     workState,
     finishState: input.isFinished ? "done" : "pending",
   };

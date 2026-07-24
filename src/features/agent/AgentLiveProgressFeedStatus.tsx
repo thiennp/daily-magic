@@ -73,24 +73,13 @@ export default function AgentLiveProgressFeedStatus({
       !isStopping &&
       estimateProgress === null &&
       stallState !== "stuck" ? (
-        <p
-          className="mt-3 text-sm text-gray-600 dark:text-gray-300"
-          role="status"
-        >
-          Waiting for your agent’s estimated working time…
-        </p>
+        <AgentLiveProgressActivityBar />
       ) : null}
       {showEstimateProgress && estimateProgress !== null ? (
         <AgentLiveProgressEstimateBar
           estimateSeconds={estimateProgress.estimateSeconds}
           percent={estimateProgress.percent}
         />
-      ) : null}
-      {isWorking &&
-      !isStopping &&
-      !showEstimateProgress &&
-      stallState !== "stuck" ? (
-        <AgentLiveProgressActivityBar />
       ) : null}
       {stallState === "stuck" ? (
         <AgentLiveProgressStuckBanner isThisMac={isThisMac} />

@@ -14,6 +14,7 @@ describe("buildAgentLiveProgressSteps", () => {
       "pending",
       "pending",
       "pending",
+      "pending",
     ]);
     expect(result.replyPreview).toBeNull();
   });
@@ -27,6 +28,7 @@ describe("buildAgentLiveProgressSteps", () => {
     expect(result.steps.map((step) => [step.label, step.state])).toEqual([
       ["Preparing agent on your Mac", "done"],
       ["Ready for your message", "active"],
+      ["Analyzing requirements and estimating", "pending"],
       ["Working on your request", "pending"],
       ["Finishing up", "pending"],
     ]);
@@ -38,11 +40,17 @@ describe("buildAgentLiveProgressSteps", () => {
       status: "streaming",
       output: "Reading package.json\n",
       pendingCommandLine: 'claude -p "do work"',
+      estimateSeconds: 120,
     });
 
     expect(result.steps.find((step) => step.id === "start")?.state).toBe(
       "done",
     );
+    expect(result.steps.find((step) => step.id === "estimate")).toMatchObject({
+      label: "Analyzing requirements and estimating",
+      state: "done",
+      detail: "Est. ~2 min planned",
+    });
     expect(result.steps.find((step) => step.id === "work")).toMatchObject({
       label: "Reading files and requirements",
       state: "active",

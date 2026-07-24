@@ -3,7 +3,24 @@ import { describe, expect, it } from "vitest";
 import { buildAgentLiveProgressSteps } from "@/features/agent/utils/buildAgentLiveProgressSteps";
 
 describe("buildAgentLiveProgressSteps fallback work detail", () => {
-  it("shows live output under the work step before [[PROGRESS]] arrives", () => {
+  it("shows estimate step before work while waiting for [[WORKING_ESTIMATE]]", () => {
+    const result = buildAgentLiveProgressSteps({
+      status: "streaming",
+      output: "",
+      pendingCommandLine: 'claude -p "proposal"',
+    });
+
+    expect(result.steps.find((step) => step.id === "estimate")).toMatchObject({
+      label: "Analyzing requirements and estimating",
+      state: "active",
+      detail: "Reviewing your request on your Mac…",
+    });
+    expect(result.steps.find((step) => step.id === "work")?.state).toBe(
+      "pending",
+    );
+  });
+
+  it("shows live output under the work step after the estimate arrives", () => {
     const result = buildAgentLiveProgressSteps({
       status: "streaming",
       output: [
@@ -11,8 +28,12 @@ describe("buildAgentLiveProgressSteps fallback work detail", () => {
         "Opening Alpine Outfitters case study next.",
       ].join("\n"),
       pendingCommandLine: 'claude -p "proposal"',
+      estimateSeconds: 180,
     });
 
+    expect(result.steps.find((step) => step.id === "estimate")?.state).toBe(
+      "done",
+    );
     expect(result.steps.find((step) => step.id === "work")).toMatchObject({
       label: "Reading files and requirements",
       detail:
@@ -21,23 +42,12 @@ describe("buildAgentLiveProgressSteps fallback work detail", () => {
     });
   });
 
-  it("shows a waiting hint when streaming has no agent text yet", () => {
-    const result = buildAgentLiveProgressSteps({
-      status: "streaming",
-      output: "",
-      pendingCommandLine: 'claude -p "proposal"',
-    });
-
-    expect(result.steps.find((step) => step.id === "work")?.detail).toBe(
-      "Waiting for the first update from your Mac agent…",
-    );
-  });
-
   it("surfaces waiting for input when a question is pending", () => {
     const result = buildAgentLiveProgressSteps({
       status: "streaming",
       output: "Need a path\n",
       pendingQuestion: "Which folder?",
+      estimateSeconds: 90,
     });
 
     expect(result.steps.find((step) => step.id === "work")?.label).toBe(

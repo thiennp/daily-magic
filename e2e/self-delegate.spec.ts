@@ -126,7 +126,9 @@ test.describe("Self-delegate on own Mac", () => {
       timeout: 30_000,
     });
     await expect(page.getByText("Agent started")).toBeVisible();
-    await expect(page.getByText(/Working on your request/i)).toBeVisible();
+    await expect(
+      page.getByText(/Analyzing requirements and estimating/i),
+    ).toBeVisible();
     await page.screenshot({
       path: ".e2e/screenshots/self-delegate-progress-working.png",
       fullPage: true,
