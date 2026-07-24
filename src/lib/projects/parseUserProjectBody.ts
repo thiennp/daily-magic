@@ -40,10 +40,11 @@ const parseProjectName = (value: unknown): string | null => {
 const parseFolderPath = (
   value: unknown,
   projectName: string,
+  profileEmail: string,
 ): string | null => {
   if (value === undefined || value === null) {
     return normalizeValidatedProjectFolderPath(
-      buildDefaultProjectFolderPath(projectName),
+      buildDefaultProjectFolderPath(projectName, profileEmail),
     );
   }
 
@@ -56,6 +57,7 @@ const parseFolderPath = (
 
 export const parseCreateUserProjectBody = (
   body: unknown,
+  profileEmail: string,
 ): CreateUserProjectInput | null => {
   if (typeof body !== "object" || body === null) {
     return null;
@@ -68,7 +70,7 @@ export const parseCreateUserProjectBody = (
     return null;
   }
 
-  const folderPath = parseFolderPath(record.folderPath, name);
+  const folderPath = parseFolderPath(record.folderPath, name, profileEmail);
 
   if (folderPath === null) {
     return null;

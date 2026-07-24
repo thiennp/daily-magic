@@ -8,10 +8,13 @@ import {
 describe("parseUserProjectBody", () => {
   it("accepts create payloads with optional folder path", () => {
     expect(
-      parseCreateUserProjectBody({
-        name: "Daily Magic",
-        folderPath: "~/Projects/daily-magic",
-      }),
+      parseCreateUserProjectBody(
+        {
+          name: "Daily Magic",
+          folderPath: "~/Projects/daily-magic",
+        },
+        "owner@example.com",
+      ),
     ).toEqual({
       name: "Daily Magic",
       folderPath: "~/Projects/daily-magic",

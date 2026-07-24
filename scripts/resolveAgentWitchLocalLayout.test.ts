@@ -60,6 +60,24 @@ describe("resolveAgentWitchLocalLayout", () => {
         "harness",
       ),
     );
+    expect(layout.projectsDir).toBe(
+      path.join(
+        os.homedir(),
+        ".agent-witch",
+        "profiles",
+        layout.profileEmail!,
+        "projects",
+      ),
+    );
+    expect(layout.logsDir).toBe(
+      path.join(
+        os.homedir(),
+        ".agent-witch",
+        "profiles",
+        layout.profileEmail!,
+        "logs",
+      ),
+    );
   });
 
   it("falls back to legacy root paths without a profile email", () => {
@@ -71,6 +89,12 @@ describe("resolveAgentWitchLocalLayout", () => {
     );
     expect(layout.harnessRootDir).toBe(
       path.join(os.homedir(), ".agent-witch", "harness"),
+    );
+    expect(layout.projectsDir).toBe(
+      path.join(os.homedir(), ".agent-witch", "projects"),
+    );
+    expect(layout.logsDir).toBe(
+      path.join(os.homedir(), ".agent-witch", "logs"),
     );
   });
 });

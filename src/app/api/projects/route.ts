@@ -17,6 +17,7 @@ export async function GET(request: Request): Promise<Response> {
   const deviceId = url.searchParams.get("deviceId");
   await ensureDefaultUserProject(
     actor.id,
+    actor.email,
     deviceId && deviceId.length > 0 ? deviceId : null,
   );
   const projects = await listUserProjectsForOwner(
@@ -35,7 +36,7 @@ export async function POST(request: Request): Promise<Response> {
   }
 
   const body: unknown = await request.json().catch(() => null);
-  const parsed = parseCreateUserProjectBody(body);
+  const parsed = parseCreateUserProjectBody(body, actor.email);
 
   if (parsed === null) {
     return Response.json(
