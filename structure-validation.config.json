@@ -28,6 +28,7 @@
       "structure-validation.config.json",
       "structure-validation.skip.json",
       "eslint.config.mjs",
+      ".prettierignore",
       "postcss.config.mjs",
       "vercel.json",
       ".env.example",

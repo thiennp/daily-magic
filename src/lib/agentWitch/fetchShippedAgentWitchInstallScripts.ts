@@ -25,11 +25,16 @@ export const fetchShippedAgentWitchInstallScripts = async (input: {
     }
 
     const shipped = await response.text();
-    assertShippedAgentWitchInstallScriptIsMinified({
-      scriptName,
-      shipped,
-      source: readAgentWitchInstallScriptSource(scriptName),
-    });
+    if (!scriptName.endsWith(".js")) {
+      assertShippedAgentWitchInstallScriptIsMinified({
+        scriptName,
+        shipped,
+        source: readAgentWitchInstallScriptSource(scriptName),
+      });
+    } else if (shipped.trim().length === 0) {
+      throw new Error(`${scriptName} shipped empty bundle`);
+    }
+
     shippedScripts.set(scriptName, shipped);
   }
 

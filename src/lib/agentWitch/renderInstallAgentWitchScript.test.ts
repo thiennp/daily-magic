@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 
+import { AGENT_WITCH_INSTALL_BUNDLE_ARTIFACT } from "@/lib/agentWitch/listAgentWitchInstallBundleArtifacts";
 import { renderInstallAgentWitchScript } from "@/lib/agentWitch/renderInstallAgentWitchScript";
 
 const TEST_PAIRING_TOKEN = "e".repeat(64);
@@ -27,13 +28,12 @@ describe("renderInstallAgentWitchScript", () => {
     expect(script).toContain(`PRESET_PAIRING_TOKEN="${TEST_PAIRING_TOKEN}"`);
     expect(script).not.toContain("Downloading Agent Witch wake server");
     expect(script).toContain("wss://www.agentwitch.com/api/agent-witch/ws");
-    expect(script).toContain("agentWitchRunSessions.ts");
-    expect(script).toContain("agentWitchLocalRunStore.ts");
+    expect(script).toContain(
+      `install/agent-witch/${AGENT_WITCH_INSTALL_BUNDLE_ARTIFACT.relativePath}`,
+    );
+    expect(script).toContain('APP_DIR="${INSTALL_DIR}/app"');
     expect(script).toContain('INSTALL_DIR="${HOME}/.agent-witch"');
     expect(script).toContain('LAUNCH_AGENT_PREFIX="com.agent-witch"');
-    expect(script).toContain(
-      'UPDATER_LAUNCH_AGENT_LABEL="${LAUNCH_AGENT_PREFIX}-updater"',
-    );
     expect(script).toContain("self-update.sh");
     expect(script).toContain("install-version.json");
   });
@@ -61,16 +61,17 @@ describe("renderInstallAgentWitchScript", () => {
     expect(versionStampIdx).toBeLessThan(launchAgentIdx);
   });
 
-  it("AGENT-005 downloads automation scheduler before wake server scripts", () => {
+  it("ships the bundled client before launch agent registration", () => {
     const script = renderTestInstallScript("http://localhost:3000");
-    const automationDownloadIdx = script.indexOf(
-      'AUTOMATION_SCHEDULER_SCRIPT_URL}" -o "${INSTALL_DIR}/agent-witch-automation-scheduler.ts',
+    const bundleDownloadIdx = script.indexOf(
+      `http://localhost:3000/install/agent-witch/${AGENT_WITCH_INSTALL_BUNDLE_ARTIFACT.relativePath}`,
     );
-    const wakeDownloadIdx = script.indexOf(
-      "http://localhost:3000/install/agent-witch/scripts/verifyAgentWitchReviveAfterKickstart.ts",
+    const launchAgentIdx = script.indexOf(
+      'register_agent_witch_launch_agent "${LAUNCH_AGENT_LABEL}"',
     );
-    expect(automationDownloadIdx).toBeGreaterThan(-1);
-    expect(wakeDownloadIdx).toBeGreaterThan(-1);
-    expect(automationDownloadIdx).toBeLessThan(wakeDownloadIdx);
+
+    expect(bundleDownloadIdx).toBeGreaterThan(-1);
+    expect(launchAgentIdx).toBeGreaterThan(-1);
+    expect(bundleDownloadIdx).toBeLessThan(launchAgentIdx);
   });
 });

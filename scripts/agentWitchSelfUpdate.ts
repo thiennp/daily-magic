@@ -16,6 +16,7 @@ import {
   resolveAgentWitchInstallDir,
   resolveAgentWitchLocalLayout,
 } from "./resolveAgentWitchLocalLayout";
+import { AGENT_WITCH_APP_BUNDLE_FILE_NAME } from "./agentWitchInstallApp.constants";
 import {
   appendAgentWitchSelfUpdateLog,
   readAgentWitchSelfUpdateLogs,
@@ -29,12 +30,7 @@ const AGENT_WITCH_INSTALL_PACKAGE_JSON = `{
     "node-pty": "^1.1.0",
     "ws": "^8.18.3"
   },
-  "devDependencies": {
-    "tsx": "^4.20.3",
-    "typescript": "^5"
-  },
   "allowScripts": {
-    "esbuild": true,
     "fsevents": true,
     "node-pty": true
   }
@@ -112,23 +108,26 @@ const fetchRemoteBundleManifest = async (
   };
 };
 
-const downloadInstallScript = async (
+const downloadInstallBundle = async (
   appOrigin: string,
   installDir: string,
-  scriptName: string,
+  relativePath: string,
 ): Promise<void> => {
   const response = await fetch(
-    `${appOrigin}/install/agent-witch/scripts/${scriptName}`,
-    { signal: AbortSignal.timeout(30_000) },
+    `${appOrigin}/install/agent-witch/${relativePath}`,
+    { signal: AbortSignal.timeout(60_000) },
   );
 
   if (!response.ok) {
-    throw new Error(`Failed to download ${scriptName}.`);
+    throw new Error(`Failed to download ${relativePath}.`);
   }
 
-  const targetPath = path.join(installDir, scriptName);
+  const targetPath = path.join(installDir, relativePath);
   fs.mkdirSync(path.dirname(targetPath), { recursive: true });
   fs.writeFileSync(targetPath, await response.text(), "utf8");
+  if (relativePath.endsWith(".js")) {
+    fs.chmodSync(targetPath, 0o755);
+  }
 };
 
 const ensureInstallDependencies = (installDir: string): void => {
@@ -142,14 +141,8 @@ const ensureInstallDependencies = (installDir: string): void => {
     fs.writeFileSync(packageJsonPath, AGENT_WITCH_INSTALL_PACKAGE_JSON, "utf8");
   }
 
-  const tsxPath = path.join(
-    installDir,
-    "node_modules",
-    "tsx",
-    "dist",
-    "cli.mjs",
-  );
-  if (!packageJsonChanged && fs.existsSync(tsxPath)) {
+  const wsPath = path.join(installDir, "node_modules", "ws", "package.json");
+  if (!packageJsonChanged && fs.existsSync(wsPath)) {
     return;
   }
 
@@ -266,8 +259,16 @@ export const runAgentWitchSelfUpdate = async (input?: {
   }
 
   try {
-    for (const scriptName of manifest.scripts) {
-      await downloadInstallScript(appOrigin, installDir, scriptName);
+    for (const artifactPath of manifest.scripts) {
+      await downloadInstallBundle(appOrigin, installDir, artifactPath);
+    }
+
+    const legacyBundlePath = path.join(
+      installDir,
+      AGENT_WITCH_APP_BUNDLE_FILE_NAME,
+    );
+    if (fs.existsSync(legacyBundlePath)) {
+      fs.rmSync(legacyBundlePath, { force: true });
     }
 
     ensureInstallDependencies(installDir);

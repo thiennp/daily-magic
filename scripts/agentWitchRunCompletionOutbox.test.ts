@@ -8,6 +8,10 @@ import {
   flushAgentRunCompletionOutbox,
 } from "./agentWitchRunCompletionOutbox";
 import type { AgentWitchLocalLayout } from "./resolveAgentWitchLocalLayout";
+import {
+  AGENT_WITCH_APP_BUNDLE_FILE_NAME,
+  AGENT_WITCH_APP_DIR_NAME,
+} from "./agentWitchInstallApp.constants";
 
 const completeAgentRunOnCloud = vi.fn();
 
@@ -24,6 +28,12 @@ const tempRoot = path.join(
 const layout: AgentWitchLocalLayout = {
   profileEmail: "test@example.com",
   installDir: tempRoot,
+  appDir: path.join(tempRoot, AGENT_WITCH_APP_DIR_NAME),
+  appBundlePath: path.join(
+    tempRoot,
+    AGENT_WITCH_APP_DIR_NAME,
+    AGENT_WITCH_APP_BUNDLE_FILE_NAME,
+  ),
   configPath: path.join(
     tempRoot,
     "profiles",

@@ -30,6 +30,7 @@ import {
 } from "./guardMacOsConsoleUser";
 import { ensureAgentWitchProjectFolderFromWakeServer } from "./ensureAgentWitchProjectFolderFromWakeServer";
 import { isAgentWitchScriptEntryPoint } from "./isAgentWitchScriptEntryPoint";
+import { isAgentWitchBundled } from "./agentWitchBundled.constant";
 
 const readJsonBody = async (
   request: http.IncomingMessage,
@@ -424,7 +425,7 @@ export const startAgentWitchWakeServer = async (): Promise<http.Server> => {
   return server;
 };
 
-if (isAgentWitchScriptEntryPoint(import.meta.url)) {
+if (!isAgentWitchBundled() && isAgentWitchScriptEntryPoint(import.meta.url)) {
   void (async () => {
     exitUnlessActiveMacOsConsoleUser("agent-witch-wake-server");
 

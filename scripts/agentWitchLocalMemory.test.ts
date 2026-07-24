@@ -9,6 +9,10 @@ import {
   readAgentWitchMemoryEntries,
 } from "./agentWitchLocalMemory";
 import type { AgentWitchLocalLayout } from "./resolveAgentWitchLocalLayout";
+import {
+  AGENT_WITCH_APP_BUNDLE_FILE_NAME,
+  AGENT_WITCH_APP_DIR_NAME,
+} from "./agentWitchInstallApp.constants";
 
 const tempDirs: string[] = [];
 
@@ -25,6 +29,12 @@ describe("agentWitchLocalMemory", () => {
     const installDir = tempDir;
     const layout: AgentWitchLocalLayout = {
       installDir,
+      appDir: path.join(installDir, AGENT_WITCH_APP_DIR_NAME),
+      appBundlePath: path.join(
+        installDir,
+        AGENT_WITCH_APP_DIR_NAME,
+        AGENT_WITCH_APP_BUNDLE_FILE_NAME,
+      ),
       profileEmail: null,
       configPath: path.join(installDir, "config.json"),
       harnessRootDir: path.join(installDir, "harness"),

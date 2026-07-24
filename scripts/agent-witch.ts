@@ -114,6 +114,7 @@ import { ensureAgentWitchProjectFolder } from "./ensureAgentWitchProjectFolder";
 import { runWriterEnsure } from "./handleAgentWitchWriterEnsure";
 import { runAgentWitchReportCli } from "./agentWitchReportCli";
 import { isAgentWitchScriptEntryPoint } from "./isAgentWitchScriptEntryPoint";
+import { isAgentWitchBundled } from "./agentWitchBundled.constant";
 import { wrapPromptWithAgentRunReportInstruction } from "./dispatch/agentRunReport.constant";
 import { wrapPromptWithPrerecordedAgentRunEstimate } from "./dispatch/wrapPromptWithPrerecordedAgentRunEstimate";
 import { generateAgentRunReportKey } from "./dispatch/generateAgentRunReportKey";
@@ -1645,11 +1646,12 @@ const main = async (): Promise<void> => {
   });
 };
 
-if (isAgentWitchScriptEntryPoint(import.meta.url)) {
+export const startAgentWitchClient = main;
+
+if (isAgentWitchScriptEntryPoint(import.meta.url) && !isAgentWitchBundled()) {
   const reportArgvIndex = process.argv.indexOf("report");
   if (reportArgvIndex >= 0) {
     process.exit(runAgentWitchReportCli(process.argv.slice(reportArgvIndex)));
   }
+  void main();
 }
-
-void main();

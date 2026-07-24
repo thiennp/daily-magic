@@ -1,4 +1,8 @@
 import type { AgentRunReportStatus } from "@/lib/dispatch/agentRunReport.constant";
+import {
+  AGENT_WITCH_APP_BUNDLE_FILE_NAME,
+  AGENT_WITCH_APP_DIR_NAME,
+} from "@/lib/agentWitch/agentWitchInstallApp.constant";
 
 const shellQuote = (value: string): string =>
   `'${value.replace(/'/g, `'\\''`)}'`;
@@ -12,11 +16,10 @@ export const buildAgentRunReportWriteCommand = (input: {
   readonly summary: string;
   readonly details?: string;
 }): string => {
-  const tsxCli = `${input.installDir.trim()}/node_modules/tsx/dist/cli.mjs`;
-  const scriptPath = `${input.installDir.trim()}/agent-witch.ts`;
+  const appBundlePath = `${input.installDir.trim()}/${AGENT_WITCH_APP_DIR_NAME}/${AGENT_WITCH_APP_BUNDLE_FILE_NAME}`;
   const parts = [
-    shellQuote(tsxCli),
-    shellQuote(scriptPath),
+    shellQuote("node"),
+    shellQuote(appBundlePath),
     "report",
     "write",
     "--project-folder",

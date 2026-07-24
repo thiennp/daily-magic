@@ -7,12 +7,13 @@ import {
 
 describe("terminateOtherAgentWitchClientProcesses (AGENT-059)", () => {
   const installDir = "/Users/me/.agent-witch";
+  const bundlePath = `${installDir}/app/agent-witch.js`;
 
-  it("finds sibling agent-witch.ts pids for the same install dir", () => {
+  it("finds sibling bundled client pids for the same install dir", () => {
     const psOutput = [
-      ` 111 /usr/bin/node ${installDir}/node_modules/tsx/dist/cli.mjs ${installDir}/agent-witch.ts`,
-      ` 222 /usr/bin/node ${installDir}/node_modules/tsx/dist/cli.mjs ${installDir}/agent-witch.ts`,
-      ` 333 /usr/bin/node /other/.agent-witch/agent-witch.ts`,
+      ` 111 /usr/bin/node ${bundlePath}`,
+      ` 222 /usr/bin/node ${bundlePath}`,
+      ` 333 /usr/bin/node /other/.agent-witch/app/agent-witch.js`,
       ` 444 /bin/zsh`,
     ].join("\n");
 
@@ -21,14 +22,14 @@ describe("terminateOtherAgentWitchClientProcesses (AGENT-059)", () => {
     ).toEqual([222]);
   });
 
-  it("does not treat shells that mention agent-witch.ts as clients", () => {
-    const shellCommand = `/bin/zsh -c snap=$(command cat); ... ${installDir}/agent-witch.ts ... pgrep`;
+  it("does not treat shells that mention agent-witch.js as clients", () => {
+    const shellCommand = `/bin/zsh -c snap=$(command cat); ... ${bundlePath} ... pgrep`;
     expect(isAgentWitchClientProcessCommand(shellCommand, installDir)).toBe(
       false,
     );
 
     const psOutput = [
-      ` 111 /usr/bin/node ${installDir}/node_modules/tsx/dist/cli.mjs ${installDir}/agent-witch.ts`,
+      ` 111 /usr/bin/node ${bundlePath}`,
       ` 500 ${shellCommand}`,
     ].join("\n");
 

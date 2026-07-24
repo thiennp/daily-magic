@@ -1,10 +1,10 @@
 import { spawn } from "node:child_process";
 import fs from "node:fs";
-import path from "node:path";
 
 import { isActiveMacOsConsoleUser } from "./isActiveMacOsConsoleUser";
 import {
   readActiveProfileEmailFromFile,
+  resolveAgentWitchAppBundlePath,
   resolveAgentWitchInstallDir,
 } from "./resolveAgentWitchLocalLayout";
 
@@ -16,16 +16,9 @@ export interface SpawnAgentWitchClientResult {
 export const spawnAgentWitchClient = (
   installDir: string = resolveAgentWitchInstallDir(),
 ): SpawnAgentWitchClientResult => {
-  const scriptPath = path.join(installDir, "agent-witch.ts");
-  const tsxPath = path.join(
-    installDir,
-    "node_modules",
-    "tsx",
-    "dist",
-    "cli.mjs",
-  );
+  const bundlePath = resolveAgentWitchAppBundlePath(installDir);
 
-  if (!fs.existsSync(scriptPath) || !fs.existsSync(tsxPath)) {
+  if (!fs.existsSync(bundlePath)) {
     return {
       ok: false,
       errorMessage: "Agent Witch install not found.",
@@ -46,7 +39,7 @@ export const spawnAgentWitchClient = (
     env.AGENT_WITCH_PROFILE = activeProfileEmail;
   }
 
-  const child = spawn(process.execPath, [tsxPath, scriptPath], {
+  const child = spawn(process.execPath, [bundlePath], {
     cwd: installDir,
     detached: true,
     stdio: "ignore",

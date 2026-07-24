@@ -5,6 +5,11 @@ import { fileURLToPath } from "node:url";
 
 const moduleDirname = path.dirname(fileURLToPath(import.meta.url));
 
+import {
+  AGENT_WITCH_APP_BUNDLE_FILE_NAME,
+  AGENT_WITCH_APP_DIR_NAME,
+} from "./agentWitchInstallApp.constants";
+
 export const AGENT_WITCH_PROD_INSTALL_DIR_NAME = ".agent-witch";
 export const AGENT_WITCH_LOCAL_INSTALL_DIR_NAME = ".local-agent-witch";
 
@@ -30,6 +35,8 @@ export const AGENT_WITCH_MANIFEST_FILE_NAME = "manifest.json";
 export interface AgentWitchLocalLayout {
   readonly profileEmail: string | null;
   readonly installDir: string;
+  readonly appDir: string;
+  readonly appBundlePath: string;
   readonly configPath: string;
   readonly harnessRootDir: string;
   readonly harnessManifestPath: string;
@@ -56,6 +63,16 @@ export const resolveAgentWitchInstallDir = (): string => {
 
   const candidate = path.resolve(moduleDirname);
   const baseName = path.basename(candidate);
+  const parentName = path.basename(path.dirname(candidate));
+
+  if (
+    baseName === AGENT_WITCH_APP_DIR_NAME &&
+    (parentName === AGENT_WITCH_PROD_INSTALL_DIR_NAME ||
+      parentName === AGENT_WITCH_LOCAL_INSTALL_DIR_NAME)
+  ) {
+    return path.dirname(candidate);
+  }
+
   if (
     baseName === AGENT_WITCH_PROD_INSTALL_DIR_NAME ||
     baseName === AGENT_WITCH_LOCAL_INSTALL_DIR_NAME
@@ -65,6 +82,18 @@ export const resolveAgentWitchInstallDir = (): string => {
 
   return path.join(os.homedir(), AGENT_WITCH_PROD_INSTALL_DIR_NAME);
 };
+
+export const resolveAgentWitchAppDir = (
+  installDir: string = resolveAgentWitchInstallDir(),
+): string => path.join(installDir, AGENT_WITCH_APP_DIR_NAME);
+
+export const resolveAgentWitchAppBundlePath = (
+  installDir: string = resolveAgentWitchInstallDir(),
+): string =>
+  path.join(
+    resolveAgentWitchAppDir(installDir),
+    AGENT_WITCH_APP_BUNDLE_FILE_NAME,
+  );
 
 export const isAgentWitchLocalInstallDir = (installDir: string): boolean =>
   path.basename(installDir) === AGENT_WITCH_LOCAL_INSTALL_DIR_NAME;
@@ -158,6 +187,8 @@ export const resolveAgentWitchLocalLayout = (
   profileEmailOverride?: string | null,
 ): AgentWitchLocalLayout => {
   const installDir = resolveAgentWitchInstallDir();
+  const appDir = resolveAgentWitchAppDir(installDir);
+  const appBundlePath = resolveAgentWitchAppBundlePath(installDir);
   const profileEmail = resolveActiveProfileEmail(profileEmailOverride);
 
   if (profileEmail !== null) {
@@ -171,6 +202,8 @@ export const resolveAgentWitchLocalLayout = (
     return {
       profileEmail,
       installDir,
+      appDir,
+      appBundlePath,
       configPath: path.join(profileDir, "config.json"),
       harnessRootDir,
       harnessManifestPath: path.join(
@@ -189,6 +222,8 @@ export const resolveAgentWitchLocalLayout = (
   return {
     profileEmail: null,
     installDir,
+    appDir,
+    appBundlePath,
     configPath: path.join(installDir, "config.json"),
     harnessRootDir,
     harnessManifestPath: path.join(

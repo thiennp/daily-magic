@@ -17,10 +17,8 @@ if [[ "\$(uname -s)" != "Darwin" ]]; then
 fi
 
 echo "Stopping Agent Witch processes…"
+pkill -f "\${INSTALL_DIR}/app/agent-witch.js" 2>/dev/null || true
 pkill -f "\${INSTALL_DIR}/agent-witch.ts" 2>/dev/null || true
-pkill -f "\${INSTALL_DIR}/agent-witch-wake-cli.ts" 2>/dev/null || true
-pkill -f "\${INSTALL_DIR}/agent-witch-watchdog.ts" 2>/dev/null || true
-pkill -f "\${INSTALL_DIR}/agent-witch-automation-scheduler.ts" 2>/dev/null || true
 pkill -f "\${INSTALL_DIR}/run.sh" 2>/dev/null || true
 pkill -f "\${INSTALL_DIR}/wake.sh" 2>/dev/null || true
 pkill -f "\${INSTALL_DIR}/watchdog.sh" 2>/dev/null || true

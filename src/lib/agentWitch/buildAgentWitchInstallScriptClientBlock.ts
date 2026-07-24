@@ -1,27 +1,15 @@
-import { AGENT_WITCH_CLIENT_INSTALL_SCRIPT_NAMES } from "@/lib/agentWitch/agentWitchClientInstallScripts.constant";
 import { AGENT_WITCH_INSTALL_PACKAGE_JSON } from "@/lib/agentWitch/agentWitchInstallPackageJson";
-import { buildAgentWitchInstallAuxiliaryScriptUrl } from "@/lib/agentWitch/buildAgentWitchInstallUrls";
+import { buildAgentWitchInstallBundleUrl } from "@/lib/agentWitch/buildAgentWitchInstallBundleUrl";
 import { AGENT_WITCH_INSTALL_SCRIPT_PATH_EXPORT } from "@/lib/agentWitch/buildAgentWitchInstallScriptWriterPath";
-
-const shellDirname = (relativePath: string): string => {
-  const slashIndex = relativePath.lastIndexOf("/");
-  return slashIndex === -1 ? "." : relativePath.slice(0, slashIndex);
-};
-
-const buildClientAuxiliaryDownloadLines = (appOrigin: string): string =>
-  AGENT_WITCH_CLIENT_INSTALL_SCRIPT_NAMES.map((scriptName) => {
-    const targetDir = shellDirname(scriptName);
-    return `mkdir -p "\${INSTALL_DIR}/${targetDir}"
-"\${CURL_BIN}" -fsSL "${buildAgentWitchInstallAuxiliaryScriptUrl(appOrigin, scriptName)}" -o "\${INSTALL_DIR}/${scriptName}"`;
-  }).join("\n");
+import { AGENT_WITCH_INSTALL_BUNDLE_ARTIFACT } from "@/lib/agentWitch/listAgentWitchInstallBundleArtifacts";
 
 export const buildAgentWitchInstallScriptClientBlock = (input: {
   readonly appOrigin: string;
-  readonly clientScriptUrl: string;
 }): string => `
 agent_witch_install_step
-"\${CURL_BIN}" -fsSL "\${CLIENT_SCRIPT_URL}" -o "\${INSTALL_DIR}/agent-witch.ts"
-${buildClientAuxiliaryDownloadLines(input.appOrigin)}
+APP_DIR="\${INSTALL_DIR}/${AGENT_WITCH_INSTALL_BUNDLE_ARTIFACT.appDirName}"
+mkdir -p "\${APP_DIR}"
+"\${CURL_BIN}" -fsSL "${buildAgentWitchInstallBundleUrl(input.appOrigin)}" -o "\${APP_DIR}/${AGENT_WITCH_INSTALL_BUNDLE_ARTIFACT.fileName}"
 
 cat > "\${INSTALL_DIR}/package.json" <<EOF
 ${AGENT_WITCH_INSTALL_PACKAGE_JSON}EOF
@@ -38,7 +26,7 @@ cat > "\${RUN_PATH}" <<EOF
 set -euo pipefail
 ${AGENT_WITCH_INSTALL_SCRIPT_PATH_EXPORT}
 cd "\${INSTALL_DIR}"
-exec "\${NODE_BIN}" "\${TSX_CLI}" "\${INSTALL_DIR}/agent-witch.ts"
+exec "\${NODE_BIN}" "\${APP_DIR}/${AGENT_WITCH_INSTALL_BUNDLE_ARTIFACT.fileName}"
 EOF
 chmod +x "\${RUN_PATH}"
 `;

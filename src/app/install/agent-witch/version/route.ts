@@ -1,5 +1,5 @@
 import { AGENT_WITCH_INSTALL_BUNDLE_VERSION } from "@/lib/agentWitch/agentWitchInstallBundleVersion";
-import { listAgentWitchInstallScriptNames } from "@/lib/agentWitch/listAgentWitchInstallScriptNames";
+import { listAgentWitchInstallBundleArtifacts } from "@/lib/agentWitch/listAgentWitchInstallBundleArtifacts";
 
 export const dynamic = "force-dynamic";
 
@@ -8,7 +8,8 @@ export async function GET(): Promise<Response> {
     {
       ok: true,
       bundleVersion: AGENT_WITCH_INSTALL_BUNDLE_VERSION,
-      scripts: listAgentWitchInstallScriptNames(),
+      bundleUrl: listAgentWitchInstallBundleArtifacts()[0],
+      scripts: listAgentWitchInstallBundleArtifacts(),
     },
     {
       headers: {

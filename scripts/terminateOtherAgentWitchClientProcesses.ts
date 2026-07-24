@@ -2,12 +2,16 @@ import { execFileSync } from "node:child_process";
 import path from "node:path";
 
 import { isProcessAlive } from "./isProcessAlive";
+import {
+  AGENT_WITCH_APP_BUNDLE_FILE_NAME,
+  AGENT_WITCH_APP_DIR_NAME,
+} from "./agentWitchInstallApp.constants";
 
 const isShellCommand = (command: string): boolean =>
   /(^|\s)(zsh|bash|sh|fish|dash)(\s|$)/.test(command);
 
 /**
- * True when argv looks like node/tsx running agent-witch.ts for this install.
+ * True when argv looks like node running the bundled Agent Witch app.
  * Rejects shells whose -c script merely mentions the path (AGENT-059).
  */
 export const isAgentWitchClientProcessCommand = (
@@ -17,23 +21,31 @@ export const isAgentWitchClientProcessCommand = (
   if (isShellCommand(command)) {
     return false;
   }
-  if (!/\b(node|tsx)\b/.test(command)) {
+  if (!/\bnode\b/.test(command)) {
     return false;
   }
 
   const normalizedInstallDir = path.resolve(installDir);
-  const expectedScript = path.join(normalizedInstallDir, "agent-witch.ts");
+  const expectedScript = path.join(
+    normalizedInstallDir,
+    AGENT_WITCH_APP_DIR_NAME,
+    AGENT_WITCH_APP_BUNDLE_FILE_NAME,
+  );
+  const legacyScript = path.join(normalizedInstallDir, "agent-witch.ts");
   const tokens = command.split(/\s+/).filter((token) => token.length > 0);
 
   return tokens.some((token) => {
-    if (token === "agent-witch.ts") {
-      // Relative argv only counts when cwd is the install (command also has installDir).
+    if (
+      token === AGENT_WITCH_APP_BUNDLE_FILE_NAME ||
+      token === "agent-witch.ts"
+    ) {
       return command.includes(normalizedInstallDir);
     }
     try {
-      return path.resolve(token) === expectedScript;
+      const resolved = path.resolve(token);
+      return resolved === expectedScript || resolved === legacyScript;
     } catch {
-      return token === expectedScript;
+      return token === expectedScript || token === legacyScript;
     }
   });
 };
@@ -97,7 +109,7 @@ const parseAgentWitchClientPids = (
 };
 
 /**
- * Kill other agent-witch.ts processes for this install home.
+ * Kill other Agent Witch client processes for this install home.
  * One macOS user / install dir should run a single bridge process.
  */
 export const terminateOtherAgentWitchClientProcesses = (input: {
