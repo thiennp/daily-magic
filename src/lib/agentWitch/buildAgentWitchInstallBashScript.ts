@@ -27,11 +27,11 @@ export const buildAgentWitchInstallBashScript = (
     {
       installDirName: appHome.installDirName,
     },
-  )}${buildAgentWitchInstallScriptAutomationScheduler({
-    installDirName: appHome.installDirName,
-  })}${buildAgentWitchInstallScriptWakeServer({
-    installDirName: appHome.installDirName,
-  })}${buildAgentWitchInstallScriptWatchdog({
+  )}${buildAgentWitchInstallScriptAutomationScheduler()}${buildAgentWitchInstallScriptWakeServer(
+    {
+      installDirName: appHome.installDirName,
+    },
+  )}${buildAgentWitchInstallScriptWatchdog({
     installDirName: appHome.installDirName,
   })}${buildAgentWitchInstallScriptFinish({ appOrigin: input.appOrigin })}`;
 };

@@ -1,8 +1,12 @@
 import { randomUUID } from "node:crypto";
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath, pathToFileURL } from "node:url";
 
 import type { IPty } from "node-pty";
 
 import { isProcessAlive } from "./isProcessAlive";
+import { isAgentWitchBundled } from "./agentWitchBundled.constant";
 
 type SendMessage = (message: Record<string, unknown>) => void;
 
@@ -22,6 +26,22 @@ const loadPty = async (): Promise<typeof import("node-pty") | null> => {
     return ptyModule;
   }
   try {
+    if (isAgentWitchBundled()) {
+      const bundleDir = path.dirname(fileURLToPath(import.meta.url));
+      const bundledEntry = path.join(
+        bundleDir,
+        "deps",
+        "node-pty",
+        "lib",
+        "index.js",
+      );
+      if (fs.existsSync(bundledEntry)) {
+        const loaded = await import(pathToFileURL(bundledEntry).href);
+        ptyModule = loaded;
+        return loaded;
+      }
+    }
+
     ptyModule = await import("node-pty");
     return ptyModule;
   } catch {

@@ -12,11 +12,12 @@ const renderTestInstallScript = (origin: string): string =>
   });
 
 describe("renderInstallAgentWitchScript", () => {
-  it("approves npm install scripts and opens Home after install on macOS", () => {
+  it("downloads the bundled Mac client and native deps on macOS", () => {
     const script = renderTestInstallScript("https://www.agentwitch.com");
 
-    expect(script).toContain('"allowScripts"');
-    expect(script).toContain("npm approve-scripts --allow-scripts-pending");
+    expect(script).not.toContain("npm install");
+    expect(script).not.toContain('cat > "${INSTALL_DIR}/package.json"');
+    expect(script).toContain("deps.tar.gz");
     expect(script).toContain("register_agent_witch_launch_agent");
     expect(script).toContain('nohup "${RUN_PATH}"');
     expect(script).toContain('echo "Installing Agent Witch…"');

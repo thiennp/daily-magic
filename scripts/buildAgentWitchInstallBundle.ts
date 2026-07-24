@@ -5,6 +5,7 @@ import { fileURLToPath } from "node:url";
 import esbuild from "esbuild";
 
 import { AGENT_WITCH_APP_BUNDLE_FILE_NAME } from "../src/lib/agentWitch/agentWitchInstallApp.constant";
+import { buildAgentWitchBundledDepsArchive } from "./buildAgentWitchBundledDepsArchive";
 
 const workspaceRoot = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
@@ -35,11 +36,18 @@ const buildAgentWitchInstallBundle = async (): Promise<void> => {
     define: {
       "process.env.AGENT_WITCH_BUNDLED": '"1"',
     },
-    external: ["node-pty", "ws"],
+    external: ["node-pty"],
   });
 
   fs.chmodSync(outfile, 0o755);
+  const depsArchiveRelativePath = buildAgentWitchBundledDepsArchive({
+    workspaceRoot,
+    appDir: outDir,
+  });
   process.stdout.write(`Built Agent Witch bundle -> ${outfile}\n`);
+  process.stdout.write(
+    `Built Agent Witch deps archive -> ${path.join(outDir, path.basename(depsArchiveRelativePath))}\n`,
+  );
 };
 
 void buildAgentWitchInstallBundle().catch((error: unknown) => {

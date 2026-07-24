@@ -42,7 +42,7 @@ describe("runShippedAgentWitchInstallBlackbox", () => {
         process.env.AGENT_WITCH_SHIPPED_INSTALL_BASE_URL as string,
       );
 
-      expect(result.downloadedScriptCount).toBe(1);
+      expect(result.downloadedScriptCount).toBe(2);
       expect(result.materializedScriptCount).toBe(1);
     },
     120_000,
