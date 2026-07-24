@@ -1,4 +1,3 @@
-import { execFileSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 
@@ -21,21 +20,10 @@ import {
   appendAgentWitchSelfUpdateLog,
   readAgentWitchSelfUpdateLogs,
 } from "./agentWitchSelfUpdateLog";
-
-const AGENT_WITCH_INSTALL_PACKAGE_JSON = `{
-  "name": "agent-witch",
-  "private": true,
-  "type": "module",
-  "dependencies": {
-    "node-pty": "^1.1.0",
-    "ws": "^8.18.3"
-  },
-  "allowScripts": {
-    "fsevents": true,
-    "node-pty": true
-  }
-}
-`;
+import {
+  extractAgentWitchBundledDepsArchive,
+  removeLegacyAgentWitchNpmInstallArtifacts,
+} from "./extractAgentWitchBundledDepsArchive";
 
 interface RemoteBundleManifest {
   readonly bundleVersion: string;
@@ -124,39 +112,10 @@ const downloadInstallBundle = async (
 
   const targetPath = path.join(installDir, relativePath);
   fs.mkdirSync(path.dirname(targetPath), { recursive: true });
-  fs.writeFileSync(targetPath, await response.text(), "utf8");
+  const payload = Buffer.from(await response.arrayBuffer());
+  fs.writeFileSync(targetPath, payload);
   if (relativePath.endsWith(".js")) {
     fs.chmodSync(targetPath, 0o755);
-  }
-};
-
-const ensureInstallDependencies = (installDir: string): void => {
-  const packageJsonPath = path.join(installDir, "package.json");
-  const existingPackageJson = fs.existsSync(packageJsonPath)
-    ? fs.readFileSync(packageJsonPath, "utf8")
-    : "";
-  const packageJsonChanged =
-    existingPackageJson !== AGENT_WITCH_INSTALL_PACKAGE_JSON;
-  if (packageJsonChanged) {
-    fs.writeFileSync(packageJsonPath, AGENT_WITCH_INSTALL_PACKAGE_JSON, "utf8");
-  }
-
-  const wsPath = path.join(installDir, "node_modules", "ws", "package.json");
-  if (!packageJsonChanged && fs.existsSync(wsPath)) {
-    return;
-  }
-
-  execFileSync("npm", ["install", "--no-fund", "--no-audit"], {
-    cwd: installDir,
-    stdio: "pipe",
-  });
-  try {
-    execFileSync("npm", ["approve-scripts", "--allow-scripts-pending"], {
-      cwd: installDir,
-      stdio: "pipe",
-    });
-  } catch {
-    // approve-scripts is optional on older npm versions
   }
 };
 
@@ -271,7 +230,8 @@ export const runAgentWitchSelfUpdate = async (input?: {
       fs.rmSync(legacyBundlePath, { force: true });
     }
 
-    ensureInstallDependencies(installDir);
+    extractAgentWitchBundledDepsArchive(installDir);
+    removeLegacyAgentWitchNpmInstallArtifacts(installDir);
     writeAgentWitchInstallVersion({
       bundleVersion: manifest.bundleVersion,
       appOrigin,

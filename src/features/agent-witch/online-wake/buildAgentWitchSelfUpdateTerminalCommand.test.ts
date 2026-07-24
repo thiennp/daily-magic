@@ -5,7 +5,7 @@ import { buildAgentWitchSelfUpdateTerminalCommand } from "./buildAgentWitchSelfU
 describe("buildAgentWitchSelfUpdateTerminalCommand", () => {
   it("uses prod install dir outside the browser", () => {
     expect(buildAgentWitchSelfUpdateTerminalCommand()).toBe(
-      "~/.agent-witch/command/self-update.sh",
+      "~/.agent-witch/app/command/self-update.sh",
     );
   });
 
@@ -16,7 +16,7 @@ describe("buildAgentWitchSelfUpdateTerminalCommand", () => {
     });
 
     expect(buildAgentWitchSelfUpdateTerminalCommand()).toBe(
-      "~/.local-agent-witch/command/self-update.sh",
+      "~/.local-agent-witch/app/command/self-update.sh",
     );
   });
 });

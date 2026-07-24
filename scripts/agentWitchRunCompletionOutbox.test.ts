@@ -63,6 +63,26 @@ const layout: AgentWitchLocalLayout = {
   projectsDir: path.join(tempRoot, "profiles", "test@example.com", "projects"),
   logsDir: path.join(tempRoot, "profiles", "test@example.com", "logs"),
   reportsDir: path.join(tempRoot, "profiles", "test@example.com", "reports"),
+  deviceKeypairPath: path.join(
+    tempRoot,
+    "profiles",
+    "test@example.com",
+    "device-keypair.json",
+  ),
+  mainLogPath: path.join(
+    tempRoot,
+    "profiles",
+    "test@example.com",
+    "logs",
+    "agent-witch.log",
+  ),
+  errorLogPath: path.join(
+    tempRoot,
+    "profiles",
+    "test@example.com",
+    "logs",
+    "agent-witch.error.log",
+  ),
 };
 
 const cloudApi = {

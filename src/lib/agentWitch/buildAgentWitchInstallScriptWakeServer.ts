@@ -9,7 +9,7 @@ WAKE_LAUNCH_AGENT_LABEL="\${LAUNCH_AGENT_PREFIX}-wake"
 WAKE_PLIST_PATH="\${HOME}/Library/LaunchAgents/\${WAKE_LAUNCH_AGENT_LABEL}.plist"
 
 agent_witch_install_step
-cat > "\${INSTALL_DIR}/${AGENT_WITCH_COMMAND_DIR_NAME}/wake.sh" <<'WAKE_EOF'
+cat > "\${APP_DIR}/${AGENT_WITCH_COMMAND_DIR_NAME}/wake.sh" <<'WAKE_EOF'
 #!/usr/bin/env bash
 set -euo pipefail
 INSTALL_DIR="\${AGENT_WITCH_HOME:-\${HOME}/${input.installDirName}}"
@@ -26,6 +26,6 @@ cd "\${INSTALL_DIR}"
 export AGENT_WITCH_HOME="\${INSTALL_DIR}"
 exec "\${NODE_BIN}" "\${APP_BUNDLE}" wake
 WAKE_EOF
-chmod +x "\${INSTALL_DIR}/${AGENT_WITCH_COMMAND_DIR_NAME}/wake.sh"
+chmod +x "\${APP_DIR}/${AGENT_WITCH_COMMAND_DIR_NAME}/wake.sh"
 ${buildAgentWitchInstallScriptWakeServerPlist()}
 `;

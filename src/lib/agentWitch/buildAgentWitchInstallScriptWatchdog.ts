@@ -8,7 +8,7 @@ WATCHDOG_LAUNCH_AGENT_LABEL="\${LAUNCH_AGENT_PREFIX}-watchdog"
 WATCHDOG_PLIST_PATH="\${HOME}/Library/LaunchAgents/\${WATCHDOG_LAUNCH_AGENT_LABEL}.plist"
 
 agent_witch_install_step
-cat > "\${INSTALL_DIR}/${AGENT_WITCH_COMMAND_DIR_NAME}/watchdog.sh" <<'WATCHDOG_EOF'
+cat > "\${APP_DIR}/${AGENT_WITCH_COMMAND_DIR_NAME}/watchdog.sh" <<'WATCHDOG_EOF'
 #!/usr/bin/env bash
 set -euo pipefail
 INSTALL_DIR="\${AGENT_WITCH_HOME:-\${HOME}/${input.installDirName}}"
@@ -25,7 +25,7 @@ export AGENT_WITCH_HOME="\${INSTALL_DIR}"
 agent_witch_skip_unless_active_console_user
 exec "\${NODE_BIN}" "\${APP_BUNDLE}"
 WATCHDOG_EOF
-chmod +x "\${INSTALL_DIR}/${AGENT_WITCH_COMMAND_DIR_NAME}/watchdog.sh"
+chmod +x "\${APP_DIR}/${AGENT_WITCH_COMMAND_DIR_NAME}/watchdog.sh"
 
 agent_witch_retire_auxiliary_launch_agents
 `;

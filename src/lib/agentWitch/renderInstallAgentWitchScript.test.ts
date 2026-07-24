@@ -12,11 +12,12 @@ const renderTestInstallScript = (origin: string): string =>
   });
 
 describe("renderInstallAgentWitchScript", () => {
-  it("approves npm install scripts and opens Home after install on macOS", () => {
+  it("downloads the bundled Mac client and native deps on macOS", () => {
     const script = renderTestInstallScript("https://www.agentwitch.com");
 
-    expect(script).toContain('"allowScripts"');
-    expect(script).toContain("npm approve-scripts --allow-scripts-pending");
+    expect(script).not.toContain("npm install");
+    expect(script).not.toContain('cat > "${INSTALL_DIR}/package.json"');
+    expect(script).toContain("deps.tar.gz");
     expect(script).toContain("register_agent_witch_launch_agent");
     expect(script).toContain('nohup "${RUN_PATH}"');
     expect(script).toContain('echo "Installing Agent Witch…"');
@@ -32,12 +33,15 @@ describe("renderInstallAgentWitchScript", () => {
       `install/agent-witch/${AGENT_WITCH_INSTALL_BUNDLE_ARTIFACT.relativePath}`,
     );
     expect(script).toContain('APP_DIR="${INSTALL_DIR}/app"');
-    expect(script).toContain('COMMAND_DIR="${INSTALL_DIR}/command"');
+    expect(script).toContain('COMMAND_DIR="${APP_DIR}/command"');
     expect(script).toContain('INSTALL_DIR="${HOME}/.agent-witch"');
     expect(script).toContain('LAUNCH_AGENT_PREFIX="com.agent-witch"');
-    expect(script).toContain("command/self-update.sh");
+    expect(script).toContain("${APP_DIR}/command/self-update.sh");
     expect(script).toContain('PROFILE_DIR}/projects"');
     expect(script).toContain('PROFILE_DIR}/logs"');
+    expect(script).toContain("resolve_agent_witch_profile_paths");
+    expect(script).toContain("MAIN_LOG_PATH");
+    expect(script).toContain("ERROR_LOG_PATH");
     expect(script).toContain('PROFILE_DIR}/reports"');
     expect(script).toContain("install-version.json");
   });

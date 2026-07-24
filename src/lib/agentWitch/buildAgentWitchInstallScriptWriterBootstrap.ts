@@ -3,7 +3,7 @@ import { AGENT_WITCH_INSTALL_ENSURE_WRITER_CODEX } from "@/lib/agentWitch/buildA
 import { AGENT_WITCH_COMMAND_DIR_NAME } from "@/lib/agentWitch/agentWitchInstallApp.constant";
 
 export const buildAgentWitchInstallScriptWriterBootstrap = (): string => `
-cat > "\${INSTALL_DIR}/${AGENT_WITCH_COMMAND_DIR_NAME}/ensure-writer.sh" <<'ENSURE_WRITER_EOF'
+cat > "\${APP_DIR}/${AGENT_WITCH_COMMAND_DIR_NAME}/ensure-writer.sh" <<'ENSURE_WRITER_EOF'
 #!/usr/bin/env bash
 set -euo pipefail
 NODE_BIN="$(command -v node)"
@@ -84,5 +84,5 @@ case "\${1:-}" in
     ;;
 esac
 ENSURE_WRITER_EOF
-chmod +x "\${INSTALL_DIR}/${AGENT_WITCH_COMMAND_DIR_NAME}/ensure-writer.sh"
+chmod +x "\${APP_DIR}/${AGENT_WITCH_COMMAND_DIR_NAME}/ensure-writer.sh"
 `;

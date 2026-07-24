@@ -87,6 +87,35 @@ describe("resolveAgentWitchLocalLayout", () => {
         "reports",
       ),
     );
+    expect(layout.deviceKeypairPath).toBe(
+      path.join(
+        os.homedir(),
+        ".agent-witch",
+        "profiles",
+        layout.profileEmail!,
+        "device-keypair.json",
+      ),
+    );
+    expect(layout.mainLogPath).toBe(
+      path.join(
+        os.homedir(),
+        ".agent-witch",
+        "profiles",
+        layout.profileEmail!,
+        "logs",
+        "agent-witch.log",
+      ),
+    );
+    expect(layout.errorLogPath).toBe(
+      path.join(
+        os.homedir(),
+        ".agent-witch",
+        "profiles",
+        layout.profileEmail!,
+        "logs",
+        "agent-witch.error.log",
+      ),
+    );
   });
 
   it("falls back to legacy root paths without a profile email", () => {
@@ -107,6 +136,15 @@ describe("resolveAgentWitchLocalLayout", () => {
     );
     expect(layout.reportsDir).toBe(
       path.join(os.homedir(), ".agent-witch", "reports"),
+    );
+    expect(layout.deviceKeypairPath).toBe(
+      path.join(os.homedir(), ".agent-witch", "device-keypair.json"),
+    );
+    expect(layout.mainLogPath).toBe(
+      path.join(os.homedir(), ".agent-witch", "logs", "agent-witch.log"),
+    );
+    expect(layout.errorLogPath).toBe(
+      path.join(os.homedir(), ".agent-witch", "logs", "agent-witch.error.log"),
     );
   });
 });

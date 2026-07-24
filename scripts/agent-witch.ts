@@ -27,6 +27,7 @@ import {
 import { listAgentWitchProfileEmails } from "./listAgentWitchLaunchTargets";
 import { terminateOtherAgentWitchClientProcesses } from "./terminateOtherAgentWitchClientProcesses";
 
+import { migrateLegacyAgentWitchInstallLogsForActiveProfiles } from "./migrateLegacyAgentWitchInstallLogs";
 import { startAgentWitchInProcessServices } from "./startAgentWitchInProcessServices";
 import { resolveAgentWitchWakePort } from "./agentWitchWakeConstants";
 import {
@@ -1561,6 +1562,7 @@ const main = async (): Promise<void> => {
   }
 
   const installDir = resolveAgentWitchInstallDir();
+  migrateLegacyAgentWitchInstallLogsForActiveProfiles(installDir);
   const terminated = terminateOtherAgentWitchClientProcesses({ installDir });
   if (terminated.length > 0) {
     console.log(

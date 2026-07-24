@@ -3,7 +3,6 @@ import fs from "node:fs";
 import path from "node:path";
 
 import {
-  AGENT_WITCH_LOGS_DIR_NAME,
   resolveAgentWitchInstallDir,
   resolveAgentWitchLocalLayout,
   resolveAgentWitchLogsDir,
@@ -32,17 +31,11 @@ export const resolveAgentWitchSelfUpdateLogPath = (
   const layout = resolveAgentWitchLocalLayout();
   const logsDir =
     layout.installDir === installDir
-      ? resolveAgentWitchLogsDir(layout)
-      : path.join(
+      ? layout.logsDir
+      : resolveAgentWitchLogsDir({
           installDir,
-          layout.profileEmail !== null
-            ? path.join(
-                "profiles",
-                layout.profileEmail,
-                AGENT_WITCH_LOGS_DIR_NAME,
-              )
-            : AGENT_WITCH_LOGS_DIR_NAME,
-        );
+          profileEmail: layout.profileEmail,
+        });
 
   return path.join(logsDir, AGENT_WITCH_SELF_UPDATE_LOG_FILE_NAME);
 };

@@ -9,23 +9,53 @@ import {
   signAgentWitchChallenge,
   verifyAgentWitchChallenge,
 } from "./agentWitchEd25519";
-import type { AgentWitchLocalLayout } from "./resolveAgentWitchLocalLayout";
-
-const DEVICE_KEYPAIR_FILE_NAME = "device-keypair.json";
+import {
+  AGENT_WITCH_DEVICE_KEYPAIR_FILE_NAME,
+  resolveAgentWitchDeviceKeypairPath,
+  type AgentWitchLocalLayout,
+} from "./resolveAgentWitchLocalLayout";
 
 export type AgentWitchDeviceKeypair = {
   readonly publicKeyRaw: string;
   readonly privateKeyPem: string;
 };
 
-const resolveKeypairPath = (layout: AgentWitchLocalLayout): string =>
-  path.join(layout.installDir, DEVICE_KEYPAIR_FILE_NAME);
-
-export const loadOrCreateAgentWitchDeviceKeypair = (
+const resolveLegacyInstallRootKeypairPath = (
   layout: AgentWitchLocalLayout,
-): AgentWitchDeviceKeypair => {
-  const keypairPath = resolveKeypairPath(layout);
+): string => path.join(layout.installDir, AGENT_WITCH_DEVICE_KEYPAIR_FILE_NAME);
+
+const migrateLegacyInstallRootKeypairIfNeeded = (
+  layout: AgentWitchLocalLayout,
+  keypairPath: string,
+): void => {
+  if (
+    layout.profileEmail === null ||
+    keypairPath === resolveLegacyInstallRootKeypairPath(layout)
+  ) {
+    return;
+  }
+
   if (fs.existsSync(keypairPath)) {
+    return;
+  }
+
+  const legacyPath = resolveLegacyInstallRootKeypairPath(layout);
+  if (!fs.existsSync(legacyPath)) {
+    return;
+  }
+
+  fs.mkdirSync(path.dirname(keypairPath), { recursive: true });
+  fs.renameSync(legacyPath, keypairPath);
+};
+
+const readKeypairFile = (
+  keypairPath: string,
+): AgentWitchDeviceKeypair | null => {
+  if (!fs.existsSync(keypairPath)) {
+    return null;
+  }
+
+  try {
     const raw = fs.readFileSync(keypairPath, "utf8");
     const parsed: unknown = JSON.parse(raw);
     if (
@@ -38,6 +68,22 @@ export const loadOrCreateAgentWitchDeviceKeypair = (
     ) {
       return parsed as AgentWitchDeviceKeypair;
     }
+  } catch {
+    return null;
+  }
+
+  return null;
+};
+
+export const loadOrCreateAgentWitchDeviceKeypair = (
+  layout: AgentWitchLocalLayout,
+): AgentWitchDeviceKeypair => {
+  const keypairPath = resolveAgentWitchDeviceKeypairPath(layout);
+  migrateLegacyInstallRootKeypairIfNeeded(layout, keypairPath);
+
+  const existing = readKeypairFile(keypairPath);
+  if (existing !== null) {
+    return existing;
   }
 
   const generated = generateAgentWitchEd25519KeyPair();

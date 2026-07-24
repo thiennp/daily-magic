@@ -36,7 +36,13 @@ export const AGENT_WITCH_PROJECTS_DIR_NAME = "projects";
 
 export const AGENT_WITCH_LOGS_DIR_NAME = "logs";
 
+export const AGENT_WITCH_MAIN_LOG_FILE_NAME = "agent-witch.log";
+
+export const AGENT_WITCH_ERROR_LOG_FILE_NAME = "agent-witch.error.log";
+
 export const AGENT_WITCH_REPORTS_DIR_NAME = "reports";
+
+export const AGENT_WITCH_DEVICE_KEYPAIR_FILE_NAME = "device-keypair.json";
 
 export interface AgentWitchLocalLayout {
   readonly profileEmail: string | null;
@@ -45,7 +51,10 @@ export interface AgentWitchLocalLayout {
   readonly appBundlePath: string;
   readonly projectsDir: string;
   readonly logsDir: string;
+  readonly mainLogPath: string;
+  readonly errorLogPath: string;
   readonly reportsDir: string;
+  readonly deviceKeypairPath: string;
   readonly configPath: string;
   readonly harnessRootDir: string;
   readonly harnessManifestPath: string;
@@ -139,6 +148,14 @@ export const resolveAgentWitchLogsDir = (
     AGENT_WITCH_LOGS_DIR_NAME,
   );
 
+export const resolveAgentWitchMainLogPath = (
+  layout: Pick<AgentWitchLocalLayout, "logsDir">,
+): string => path.join(layout.logsDir, AGENT_WITCH_MAIN_LOG_FILE_NAME);
+
+export const resolveAgentWitchErrorLogPath = (
+  layout: Pick<AgentWitchLocalLayout, "logsDir">,
+): string => path.join(layout.logsDir, AGENT_WITCH_ERROR_LOG_FILE_NAME);
+
 export const resolveAgentWitchReportsDir = (
   layout: Pick<AgentWitchLocalLayout, "installDir" | "profileEmail">,
 ): string =>
@@ -147,6 +164,21 @@ export const resolveAgentWitchReportsDir = (
     layout.profileEmail,
     AGENT_WITCH_REPORTS_DIR_NAME,
   );
+
+export const resolveAgentWitchDeviceKeypairPath = (
+  layout: Pick<AgentWitchLocalLayout, "installDir" | "profileEmail">,
+): string => {
+  if (layout.profileEmail !== null) {
+    return path.join(
+      layout.installDir,
+      AGENT_WITCH_PROFILES_DIR_NAME,
+      layout.profileEmail,
+      AGENT_WITCH_DEVICE_KEYPAIR_FILE_NAME,
+    );
+  }
+
+  return path.join(layout.installDir, AGENT_WITCH_DEVICE_KEYPAIR_FILE_NAME);
+};
 
 export const isAgentWitchLocalInstallDir = (installDir: string): boolean =>
   path.basename(installDir) === AGENT_WITCH_LOCAL_INSTALL_DIR_NAME;
@@ -254,6 +286,20 @@ export const resolveAgentWitchLocalLayout = (
     const projectsDir = path.join(profileDir, AGENT_WITCH_PROJECTS_DIR_NAME);
     const logsDir = path.join(profileDir, AGENT_WITCH_LOGS_DIR_NAME);
     const reportsDir = path.join(profileDir, AGENT_WITCH_REPORTS_DIR_NAME);
+    const deviceKeypairPath = path.join(
+      profileDir,
+      AGENT_WITCH_DEVICE_KEYPAIR_FILE_NAME,
+    );
+    const mainLogPath = path.join(
+      profileDir,
+      AGENT_WITCH_LOGS_DIR_NAME,
+      AGENT_WITCH_MAIN_LOG_FILE_NAME,
+    );
+    const errorLogPath = path.join(
+      profileDir,
+      AGENT_WITCH_LOGS_DIR_NAME,
+      AGENT_WITCH_ERROR_LOG_FILE_NAME,
+    );
 
     return {
       profileEmail,
@@ -262,7 +308,10 @@ export const resolveAgentWitchLocalLayout = (
       appBundlePath,
       projectsDir,
       logsDir,
+      mainLogPath,
+      errorLogPath,
       reportsDir,
+      deviceKeypairPath,
       configPath: path.join(profileDir, "config.json"),
       harnessRootDir,
       harnessManifestPath: path.join(
@@ -280,6 +329,20 @@ export const resolveAgentWitchLocalLayout = (
   const projectsDir = path.join(installDir, AGENT_WITCH_PROJECTS_DIR_NAME);
   const logsDir = path.join(installDir, AGENT_WITCH_LOGS_DIR_NAME);
   const reportsDir = path.join(installDir, AGENT_WITCH_REPORTS_DIR_NAME);
+  const deviceKeypairPath = path.join(
+    installDir,
+    AGENT_WITCH_DEVICE_KEYPAIR_FILE_NAME,
+  );
+  const mainLogPath = path.join(
+    installDir,
+    AGENT_WITCH_LOGS_DIR_NAME,
+    AGENT_WITCH_MAIN_LOG_FILE_NAME,
+  );
+  const errorLogPath = path.join(
+    installDir,
+    AGENT_WITCH_LOGS_DIR_NAME,
+    AGENT_WITCH_ERROR_LOG_FILE_NAME,
+  );
 
   return {
     profileEmail: null,
@@ -288,7 +351,10 @@ export const resolveAgentWitchLocalLayout = (
     appBundlePath,
     projectsDir,
     logsDir,
+    mainLogPath,
+    errorLogPath,
     reportsDir,
+    deviceKeypairPath,
     configPath: path.join(installDir, "config.json"),
     harnessRootDir,
     harnessManifestPath: path.join(

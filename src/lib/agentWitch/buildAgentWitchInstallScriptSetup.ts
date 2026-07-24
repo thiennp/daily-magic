@@ -1,11 +1,6 @@
 import type { AgentWitchAppHome } from "@/lib/agentWitch/resolveAgentWitchAppHome";
 import { resolveAgentWitchAppHome } from "@/lib/agentWitch/resolveAgentWitchAppHome";
 import { AGENT_WITCH_COMMAND_DIR_NAME } from "@/lib/agentWitch/agentWitchInstallApp.constant";
-import {
-  AGENT_WITCH_LOGS_DIR_NAME,
-  AGENT_WITCH_PROJECTS_DIR_NAME,
-  AGENT_WITCH_REPORTS_DIR_NAME,
-} from "@/lib/projects/constants";
 import type { AgentWitchInstallScriptPreset } from "@/lib/agentWitch/AgentWitchInstallScriptPreset.type";
 import { buildAgentWitchInstallScriptClientBlock } from "@/lib/agentWitch/buildAgentWitchInstallScriptClientBlock";
 import { buildAgentWitchInstallScriptConfigBlock } from "@/lib/agentWitch/buildAgentWitchInstallScriptConfigBlock";
@@ -13,6 +8,10 @@ import { buildAgentWitchInstallScriptMacOsConsoleUserGuard } from "@/lib/agentWi
 import { buildAgentWitchInstallScriptRetireAuxiliaryLaunchAgents } from "@/lib/agentWitch/buildAgentWitchInstallScriptRetireAuxiliaryLaunchAgents";
 import { buildAgentWitchInstallScriptPresetBlock } from "@/lib/agentWitch/buildAgentWitchInstallScriptPresetBlock";
 import { buildAgentWitchInstallScriptProgress } from "@/lib/agentWitch/buildAgentWitchInstallScriptProgress";
+import {
+  buildAgentWitchInstallScriptEnsureProfileDirectoriesBlock,
+  buildAgentWitchInstallScriptResolveProfilePathsBlock,
+} from "@/lib/agentWitch/buildAgentWitchInstallScriptResolveProfilePaths";
 import { buildAgentWitchInstallScriptRegisterLaunchAgentFn } from "@/lib/agentWitch/buildAgentWitchInstallScriptRegisterLaunchAgent";
 import { buildAgentWitchInstallScriptWakePortAllocation } from "@/lib/agentWitch/buildAgentWitchInstallScriptWakePortAllocation";
 import { buildAgentWitchInstallScriptWriterBootstrap } from "@/lib/agentWitch/buildAgentWitchInstallScriptWriterBootstrap";
@@ -75,44 +74,24 @@ fi
 
 NODE_DIR="\$(dirname "\${NODE_BIN}")"
 APP_DIR="\${INSTALL_DIR}/app"
-COMMAND_DIR="\${INSTALL_DIR}/${AGENT_WITCH_COMMAND_DIR_NAME}"
+COMMAND_DIR="\${APP_DIR}/${AGENT_WITCH_COMMAND_DIR_NAME}"
 RUN_PATH="\${COMMAND_DIR}/run.sh"
-LOG_BASENAME="agent-witch"
 LAUNCH_AGENT_LABEL="\${LAUNCH_AGENT_PREFIX}"
 
-mkdir -p "\${INSTALL_DIR}" "\${COMMAND_DIR}"
+mkdir -p "\${INSTALL_DIR}" "\${APP_DIR}" "\${COMMAND_DIR}"
+${buildAgentWitchInstallScriptResolveProfilePathsBlock()}${buildAgentWitchInstallScriptEnsureProfileDirectoriesBlock()}
 ${buildAgentWitchInstallScriptWakePortAllocation()}
-export AGENT_WITCH_WAKE_PORT
+export AGENT_WITCH_HOME AGENT_WITCH_WAKE_PORT
 
-if [[ -z "\${PROFILE_EMAIL}" && -f "\${INSTALL_DIR}/active-profile.json" ]]; then
-  PROFILE_EMAIL="\$( "\${NODE_BIN}" -e "
-const fs = require('node:fs');
-try {
-  const parsed = JSON.parse(fs.readFileSync(process.argv[1], 'utf8'));
-  if (typeof parsed.email === 'string' && parsed.email.trim().length > 0) {
-    process.stdout.write(parsed.email.trim().toLowerCase());
-  }
-} catch {}
-" "\${INSTALL_DIR}/active-profile.json" )"
-  PROFILE_EMAIL="\$(printf '%s' "\${PROFILE_EMAIL}" | tr '[:upper:]' '[:lower:]' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')"
-fi
+resolve_agent_witch_profile_paths
+ensure_agent_witch_profile_directories
 
 if [[ -n "\${PROFILE_EMAIL}" ]]; then
-  PROFILE_DIR="\${INSTALL_DIR}/profiles/\${PROFILE_EMAIL}"
-  CONFIG_PATH="\${PROFILE_DIR}/config.json"
-  LOG_DIR="\${PROFILE_DIR}/${AGENT_WITCH_LOGS_DIR_NAME}"
-  mkdir -p "\${PROFILE_DIR}/harness/sets" "\${PROFILE_DIR}/${AGENT_WITCH_PROJECTS_DIR_NAME}" "\${PROFILE_DIR}/${AGENT_WITCH_REPORTS_DIR_NAME}" "\${LOG_DIR}"
   # One LaunchAgent per install home; multi-account shares this process.
   LAUNCH_AGENT_LABEL="\${LAUNCH_AGENT_PREFIX}"
-  LOG_BASENAME="agent-witch"
-else
-  CONFIG_PATH="\${INSTALL_DIR}/config.json"
-  LOG_DIR="\${INSTALL_DIR}/${AGENT_WITCH_LOGS_DIR_NAME}"
-  mkdir -p "\${LOG_DIR}" "\${INSTALL_DIR}/${AGENT_WITCH_REPORTS_DIR_NAME}"
 fi
 
 PLIST_PATH="\${HOME}/Library/LaunchAgents/\${LAUNCH_AGENT_LABEL}.plist"
-export AGENT_WITCH_HOME AGENT_WITCH_WAKE_PORT
 ${buildAgentWitchInstallScriptMacOsConsoleUserGuard()}
 ${buildAgentWitchInstallScriptRetireAuxiliaryLaunchAgents()}
 ${buildAgentWitchInstallScriptProgress({ updateExistingInstall })}

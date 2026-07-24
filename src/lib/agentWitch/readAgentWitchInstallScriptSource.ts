@@ -1,29 +1,28 @@
 import fs from "node:fs";
 import path from "node:path";
 
-import {
-  AGENT_WITCH_APP_BUNDLE_FILE_NAME,
-  AGENT_WITCH_APP_DIR_NAME,
-} from "@/lib/agentWitch/agentWitchInstallApp.constant";
 import { listAgentWitchInstallBundleArtifacts } from "@/lib/agentWitch/listAgentWitchInstallBundleArtifacts";
 
-const bundleRelativePath = listAgentWitchInstallBundleArtifacts()[0] ?? "";
-const bundleAbsolutePath = path.join(
+import { AGENT_WITCH_APP_DIR_NAME } from "@/lib/agentWitch/agentWitchInstallApp.constant";
+
+const shippedArtifactsRoot = path.join(
   process.cwd(),
   "public/install/agent-witch",
   AGENT_WITCH_APP_DIR_NAME,
-  AGENT_WITCH_APP_BUNDLE_FILE_NAME,
 );
 
 const buildInstallScriptAllowlist = (): Record<string, string> => {
   const entries: Record<string, string> = {};
 
   for (const artifactPath of listAgentWitchInstallBundleArtifacts()) {
-    entries[artifactPath] = bundleAbsolutePath;
+    const fileName = path.basename(artifactPath);
+    entries[artifactPath] = path.join(shippedArtifactsRoot, fileName);
   }
 
   return entries;
 };
+
+const bundleRelativePath = listAgentWitchInstallBundleArtifacts()[0] ?? "";
 
 const AGENT_WITCH_INSTALL_SCRIPT_ALLOWLIST = buildInstallScriptAllowlist();
 
