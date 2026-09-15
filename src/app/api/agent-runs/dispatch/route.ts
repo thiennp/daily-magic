@@ -1,7 +1,9 @@
 import { getAgentWitchHub } from "@/lib/agentWitch/getAgentWitchHub";
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
 import { dispatchClaudeRunForDashboardUser } from "@/lib/dispatch/dispatchWriterRunForDashboardUser";
+import { isAllowedAppHttpOrigin } from "@/lib/app/isAllowedAppHttpOrigin";
 import { parseAgentRunDispatchBody } from "@/lib/dispatch/parseAgentRunDispatchBody";
+import { isCursorCloudDispatchBody } from "@/lib/dispatch/isCursorCloudDispatchBody";
 import { requireAuth } from "@/lib/auth/requireAuth";
 
 export const dynamic = "force-dynamic";
@@ -42,6 +44,13 @@ export async function POST(request: Request): Promise<Response> {
 
     if (parsed === null) {
       return buildDispatchFailureResponse("prompt is required.", 400);
+    }
+
+    if (isCursorCloudDispatchBody(parsed) && !isAllowedAppHttpOrigin(request)) {
+      return buildDispatchFailureResponse(
+        "Cursor Cloud dispatch must be requested from this app origin.",
+        403,
+      );
     }
 
     const result = await dispatchClaudeRunForDashboardUser({
