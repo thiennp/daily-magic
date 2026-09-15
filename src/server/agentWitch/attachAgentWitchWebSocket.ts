@@ -2,6 +2,7 @@ import { randomUUID } from "node:crypto";
 import type { WebSocket } from "ws";
 
 import { AgentWitchHub } from "@/lib/agentWitch/agentWitchHub";
+import { drainAgentWitchDispatchOutboxForHub } from "@/lib/agentWitch/drainAgentWitchDispatchOutboxForHub";
 import {
   removeAgentWitchConnectionRegistry,
   syncAgentWitchConnectionRegistry,
@@ -46,9 +47,11 @@ export const attachAgentWitchWebSocket = (
       role: connectionState.role,
       userId: connectionState.userId,
       deviceId: connectionState.deviceId,
-    }).catch((error: unknown) => {
-      console.error("[agent-witch/registry] register sync failed", error);
-    });
+    })
+      .then(() => drainAgentWitchDispatchOutboxForHub(hub))
+      .catch((error: unknown) => {
+        console.error("[agent-witch/registry] register sync failed", error);
+      });
   };
 
   const unregisterClient = (): void => {

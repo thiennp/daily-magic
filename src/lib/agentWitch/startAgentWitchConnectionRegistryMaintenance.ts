@@ -3,6 +3,8 @@ import {
   deleteAgentWitchConnectionsForInstance,
   sweepStaleAgentWitchConnections,
 } from "@/lib/agentWitch/agentWitchConnectionRegistry";
+import { drainAgentWitchDispatchOutboxForHub } from "@/lib/agentWitch/drainAgentWitchDispatchOutboxForHub";
+import { getAgentWitchHub } from "@/lib/agentWitch/getAgentWitchHub";
 import { getAgentWitchHubInstanceId } from "@/lib/agentWitch/getAgentWitchHubInstanceId";
 
 const maintenanceGlobalKey =
@@ -34,5 +36,10 @@ export const startAgentWitchConnectionRegistryMaintenance = (): void => {
     void sweepStaleAgentWitchConnections().catch((error: unknown) => {
       console.error("[agent-witch/registry] sweeper failed", error);
     });
+    void drainAgentWitchDispatchOutboxForHub(getAgentWitchHub()).catch(
+      (error: unknown) => {
+        console.error("[agent-witch/outbox] drain poll failed", error);
+      },
+    );
   }, sweepIntervalMs);
 };
