@@ -398,9 +398,23 @@
 
 **Fix:** `isConnected` = live hub client only (`isOnline` keeps the ~90s recent window). Devices API collects live ids via enrichment + token resolve. Resolve/dispatch fail closed without a live WS (no `queuedForDevicePull`).
 
-**Ops note:** Keep a single Railway replica (or sticky WS) until the hub is shared across instances.
+**Ops note:** Superseded for multi-replica by **AGENT-025** (shared registry + outbox). Single-replica Railway remains the simplest ops path.
 
 **Regression tests:** `buildAgentWitchDevicesWithOnlineStatus.test.ts`, `collectLiveAgentWitchDeviceIdsForUser.test.ts`, `resolveClaudeRunAgentClient.test.ts` (AGENT-022).
+
+---
+
+## AGENT-025 — Shared Mac presence registry and durable dispatch outbox
+
+**Symptom:** “The selected Mac is not online right now.” while heartbeats were fresh, especially when the browser and Mac WebSocket did not land on the same Node process.
+
+**Root cause:** Dispatch-ready state lived only in the in-memory hub (`globalThis` per process). Class A (wrong replica) and Class B (real reconnect) shared one user-facing string.
+
+**Fix:** `agent_witch_connections` rows track live sockets per `instance_id`. Devices API adds `presenceTier` (`live`, `live_other_instance`, `recent`, `offline`). Queueable work (harness install, automations) uses `agent_witch_dispatch_outbox` and drains on Mac `agent.register` plus periodic hub poll. Writer/shell paths return `errorCode` `mac_reconnecting` vs `mac_offline` instead of a single offline message.
+
+**ADR:** `docs/adr/0005-shared-mac-presence-and-dispatch-outbox.md`.
+
+**Regression tests:** `agentWitchConnectionRegistry.test.ts`, `resolveAgentWitchDevicePresenceTier.test.ts`, `deliverOrQueueAgentWitchDispatchMessage.test.ts`, `macDevicePresence.test.ts`.
 
 ---
 
