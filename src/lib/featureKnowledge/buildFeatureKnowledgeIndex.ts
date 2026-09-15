@@ -11,6 +11,7 @@ import {
   FEATURE_KNOWLEDGE_DOC_FILENAMES,
   FEATURE_KNOWLEDGE_FEATURES_ROOT,
 } from "@/lib/featureKnowledge/featureKnowledgePaths.constant";
+import { readDocsKnowledge } from "@/lib/featureKnowledge/readDocsKnowledge";
 import type { FeatureKnowledgeIndex } from "@/lib/featureKnowledge/featureKnowledge.types";
 
 const listFeatureSlugs = (repoRoot: string): readonly string[] => {
@@ -68,9 +69,10 @@ export const buildFeatureKnowledgeIndex = (
   repoRoot: string,
 ): FeatureKnowledgeIndex => {
   const featureSlugs = listFeatureSlugs(repoRoot);
-  const rawChunks = featureSlugs.flatMap((slug) =>
-    readFeatureDocs(repoRoot, slug),
-  );
+  const rawChunks = [
+    ...featureSlugs.flatMap((slug) => readFeatureDocs(repoRoot, slug)),
+    ...readDocsKnowledge(repoRoot),
+  ];
   const idf = computeIdf(rawChunks);
 
   const chunks = rawChunks.map((chunk) => ({

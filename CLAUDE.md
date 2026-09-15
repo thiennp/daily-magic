@@ -6,7 +6,9 @@ Project guidance for Claude and other AI agents. Rules live in **`.cursor/rules/
 
 ## Project Overview
 
-**daily-magic** is a Next.js 16 App Router application (React 19, TypeScript, Tailwind CSS 4) with Neon PostgreSQL and a TailAdmin-based UI styleguide.
+**daily-magic** is a web control plane for Mac-bound AI agents (Agent Witch), team dispatch, and shared capabilities. Product overview: root **`README.md`**. Technical setup, ADRs, and glossary: **`docs/`** (indexed via `npm run feature-knowledge:query`).
+
+Stack: Next.js 16 App Router, React 19, TypeScript, Tailwind CSS 4, Neon PostgreSQL, Vercel.
 
 **Stack:** Next.js · React 19 · TypeScript · Tailwind CSS 4 · Neon (`@neondatabase/serverless`) · Vercel
 

@@ -1,140 +1,59 @@
 # Daily Magic
 
-Next.js app connected to [Neon](https://neon.tech) PostgreSQL and deployable on [Vercel](https://vercel.com).
+Daily Magic is a web control plane for **running AI coding agents on your Mac** (and optional **Cursor Cloud**), with team dispatch, run history, and shared agent capabilities.
 
-## Stack
+## What you can do
 
-- Next.js 16 (App Router)
-- Neon serverless Postgres (`@neondatabase/serverless`)
-- Vercel deployment
+- **Connect a Mac** with the Agent Witch client, then send tasks from the browser and watch live terminal output.
+- **Compose and dispatch** work from Home and the task composer (`/agent`), including approvals and team policies.
+- **Publish and share** capabilities, harness bundles (rules/skills), and marketplace offerings inside your company.
+- **Review runs** in Reports, give feedback, and iterate on improvements.
 
-## 1. Local setup
+Guests see a marketing landing page; signed-in users get the full app shell, onboarding, and device management.
 
-```bash
-npm install
-cp .env.example .env.local
-```
+## Who it is for
 
-Add your Neon connection string to `.env.local`:
+Teams and individuals who want a **single place** to trigger trusted agent runs on real hardware—not only inside the IDE—with audit trail, policies, and shared playbooks.
 
-```bash
-DATABASE_URL="postgresql://USER:PASSWORD@HOST/DB?sslmode=require"
-```
+## Get started
 
-Create the starter schema in Neon (SQL Editor or `psql`):
+Human contributors: see **[docs/README.md](docs/README.md)** for setup, deployment, architecture ADRs, and product concepts.
+
+AI agents: query indexed docs before large edits:
 
 ```bash
-psql "$DATABASE_URL" -f db/schema.sql
+npm run feature-knowledge:query -- "your question"
+npm run feature-knowledge:query -- "topic" --feature=home
 ```
 
-Run the dev server:
+Rebuild the index after doc changes: `npm run feature-knowledge:index`.
+
+## Main routes
+
+| Path           | Purpose                                   |
+| -------------- | ----------------------------------------- |
+| `/`            | Home — connect Mac, dashboard, onboarding |
+| `/agent`       | Task composer                             |
+| `/reports`     | Run history and live output               |
+| `/library`     | Saved playbooks                           |
+| `/marketplace` | Company-published agents                  |
+| `/login`       | Sign in                                   |
+
+## Agent Witch on your Mac
+
+Install the local bridge (production or your deployed origin):
 
 ```bash
-npm run dev
+curl -fsSL https://www.agentwitch.com/install/agent-witch.sh | bash
 ```
 
-Open [http://localhost:3000](http://localhost:3000).
+Local development uses the custom dev server (`npm run dev`) so WebSocket upgrades work. Details: [docs/agent-witch/local-bridge.md](docs/agent-witch/local-bridge.md).
 
-## 2. Verify Neon connection
+## Repository map (product)
 
-Health check:
+- `src/features/` — product UI and feature docs (`README.md`, `KNOWN_ISSUES.md`)
+- `src/app/` — Next.js routes and API handlers
+- `docs/` — technical guides and ADRs (indexed for RAG)
+- `.cursor/` — agent harness (rules, commands, skills)
 
-```bash
-curl http://localhost:3000/api/db/health
-```
-
-Expected response:
-
-```json
-{ "connected": true, "connectedAt": "..." }
-```
-
-Sample notes API:
-
-```bash
-curl -X POST http://localhost:3000/api/notes \
-  -H "Content-Type: application/json" \
-  -d '{"title":"Hello Neon","body":"First note"}'
-
-curl http://localhost:3000/api/notes
-```
-
-## 3. Deploy to Vercel
-
-### Option A: Vercel + Neon integration (recommended)
-
-1. Push this repo to GitHub.
-2. In [Vercel](https://vercel.com/new), import the `daily-magic` repository.
-3. In the Vercel project, open **Storage** → **Create Database** → **Neon**.
-4. Vercel injects `DATABASE_URL` automatically for Production and Preview.
-5. Deploy. **`vercel-build` runs pending SQL migrations** from `db/migrations/` (tracked in `schema_migrations`) before `next build`. Locally: `npm run db:migrate` (needs `DATABASE_URL`; uses Neon over the network — no `psql` required).
-
-**Existing databases** that were created with `db/schema.sql` or manual `psql` before `schema_migrations` existed: run once with `DATABASE_URL` set:
-
-```bash
-npm run db:migrate:bootstrap
-```
-
-That records `002`–`017` as already applied without re-running SQL. The next deploy only applies new migration files (e.g. `018-onboarding-setup-acknowledged.sql`).
-
-### Option B: Manual env var
-
-1. Create a Neon project and copy the connection string.
-2. In Vercel → **Project Settings** → **Environment Variables**, add:
-   - `DATABASE_URL` = your Neon connection string
-3. Redeploy.
-
-### Link from CLI
-
-```bash
-npx vercel link
-npx vercel env pull .env.local
-```
-
-## Project layout
-
-- `src/lib/db.ts` — Neon SQL client
-- `src/app/api/db/health/route.ts` — connection health check
-- `src/app/api/notes/route.ts` — sample CRUD endpoint
-- `db/schema.sql` — starter Postgres schema
-
-## AI harness & quality gates
-
-- `.cursor/` — AI rules, commands, skills (GitHub / Linear friendly)
-- `.agents/scripts/` — architecture checks for `src/`
-- `.husky/` — pre-commit hooks
-- `structure-validation.config.json` — folder layout rules
-
-```bash
-npm run validate:staged
-npm run cursor:architecture -- --staged
-npm run typecheck
-npm run test:e2e:install   # once per machine
-npm run test:e2e
-```
-
-GitHub Actions (`.github/workflows/ci.yml`) runs `npm test`, `npm run ci:architecture`, `npm run typecheck`, and Playwright E2E on every push/PR to `main`.
-
-Agent docs: `CLAUDE.md`, `AGENTS.md`
-
-## Agent Witch (local Claude bridge)
-
-Use the custom server so WebSocket upgrades work (`npm run dev`).
-
-```bash
-curl -fsSL https://your-domain.com/install/agent-witch.sh | bash
-```
-
-Or locally:
-
-```bash
-npm run agent-witch:install  # fetches from http://localhost:3000/install/agent-witch.sh
-```
-
-Open http://localhost:3000/ws-test, type a task, and send it to the local agent.
-
-## Useful links
-
-- [Neon + Vercel guide](https://neon.tech/docs/guides/vercel)
-- [Neon serverless driver](https://neon.tech/docs/serverless/serverless-driver)
-- [Next.js deployment on Vercel](https://nextjs.org/docs/app/building-your-application/deploying)
+Agent entrypoints: `CLAUDE.md`, `AGENTS.md` (pointers only; deep technical content lives under `docs/`).

@@ -7,3 +7,7 @@ export const FEATURE_KNOWLEDGE_DOC_FILENAMES = [
 ] as const;
 
 export const FEATURE_KNOWLEDGE_FEATURES_ROOT = "src/features";
+
+export const FEATURE_KNOWLEDGE_DOCS_ROOT = "docs";
+
+export const FEATURE_KNOWLEDGE_DOCS_SLUG = "docs";
