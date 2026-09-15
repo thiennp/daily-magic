@@ -1,8 +1,4 @@
-import {
-  AGENT_WITCH_LOCAL_APP_LOOPBACK_ORIGIN,
-  AGENT_WITCH_LOCAL_APP_ORIGIN,
-} from "./agentWitchLocalApp.constants";
-import { formatAgentWitchRelativeTimeAgo } from "./formatAgentWitchRelativeTimeAgo";
+import { buildAgentWitchLocalHeartbeatElapsedMarkup } from "./buildAgentWitchLocalHeartbeatElapsedMarkup";
 
 const escapeHtml = (value: string): string =>
   value
@@ -14,7 +10,6 @@ const escapeHtml = (value: string): string =>
 export const buildAgentWitchLocalHomePageBody = (input: {
   readonly wsConnected: boolean;
   readonly lastHeartbeatAt: string | null;
-  readonly installBundleVersion: string;
   readonly harnessSetCount: number;
   readonly knowledgeChunkCount: number;
   readonly trafficEntryCount: number;
@@ -51,19 +46,17 @@ export const buildAgentWitchLocalHomePageBody = (input: {
     ? `<div class="alert-error">${escapeHtml(input.wakeError)}</div>`
     : "";
 
-  const heartbeatLabel =
-    formatAgentWitchRelativeTimeAgo(input.lastHeartbeatAt) ?? "never";
-
-  const dnsLocalOriginNote = ` · also <code>${escapeHtml(AGENT_WITCH_LOCAL_APP_ORIGIN)}</code> when DNS resolves`;
+  const heartbeatElapsed = buildAgentWitchLocalHeartbeatElapsedMarkup(
+    input.lastHeartbeatAt,
+  );
 
   return `${wakeError}<section class="card home-hero">
       <p class="eyebrow">This Mac</p>
       <h1>Agent Witch local</h1>
-      <p class="lede">Your on-machine control panel: bridge health, harness, run memory, and traffic — only on this computer (<code>127.0.0.1</code>).</p>
+      <p class="lede">Your on-machine control panel: bridge health, harness, run memory, and traffic — only on this Mac.</p>
       <div class="home-hero-badges">
         ${connectionBadge}
-        <span class="muted">Last heartbeat · ${escapeHtml(heartbeatLabel)}</span>
-        <span class="muted">Bundle · <code>${escapeHtml(input.installBundleVersion)}</code></span>
+        <span class="muted">Last heartbeat · ${heartbeatElapsed}</span>
       </div>
     </section>
     <div class="home-grid">
@@ -97,8 +90,5 @@ export const buildAgentWitchLocalHomePageBody = (input: {
         <p class="home-card-lede">WebSocket, link code, install bundle, and revive actions.</p>
         <p class="home-card-meta">${input.wsConnected ? "Bridge is up" : "Check connection details"}</p>
       </a>
-    </div>
-    <section class="card home-footnote">
-      <p class="muted">Listening at <a href="${AGENT_WITCH_LOCAL_APP_LOOPBACK_ORIGIN}"><code>${AGENT_WITCH_LOCAL_APP_LOOPBACK_ORIGIN}</code></a>${dnsLocalOriginNote}.</p>
-    </section>`;
+    </div>`;
 };

@@ -1,6 +1,5 @@
 import { AGENT_WITCH_LOCAL_APP_STYLES } from "./agentWitchLocalAppStyles";
-import { formatAgentWitchInstallBundleVersionLabel } from "./formatAgentWitchInstallBundleVersionLabel";
-import type { AgentWitchInstallVersionRecord } from "./agentWitchInstallVersion";
+import { AGENT_WITCH_LOCAL_HEARTBEAT_ELAPSED_LIVE_SCRIPT } from "./buildAgentWitchLocalHeartbeatElapsedMarkup";
 
 export type AgentWitchLocalAppNavPath =
   "/" | "/status" | "/errors" | "/traffic" | "/knowledge" | "/harness";
@@ -35,18 +34,10 @@ export const buildAgentWitchLocalAppShell = (input: {
   readonly title: string;
   readonly activePath: AgentWitchLocalAppNavPath;
   readonly body: string;
-  readonly installVersion?: AgentWitchInstallVersionRecord | null;
   readonly cloudAppOrigin: string;
   readonly prependBody?: string;
   readonly headerUpdateButtonHtml?: string;
 }): string => {
-  const bundleVersionLabel = formatAgentWitchInstallBundleVersionLabel(
-    input.installVersion ?? null,
-  );
-  const bundleUpdatedTitle =
-    input.installVersion?.updatedAt !== undefined
-      ? ` title="Updated ${escapeHtml(input.installVersion.updatedAt)}"`
-      : "";
   const nav = NAV_ITEMS.map((item) => {
     const isActive = item.href === input.activePath;
     return `<a class="nav-link${isActive ? " is-active" : ""}" href="${item.href}"${isActive ? ' aria-current="page"' : ""}>${item.label}</a>`;
@@ -68,7 +59,7 @@ export const buildAgentWitchLocalAppShell = (input: {
     <div class="site-header-inner">
       <a class="brand" href="/" aria-label="Agent Witch Local home">
         ${LOGO_MARK_SVG}
-        <span class="brand-text">Agent Witch<span class="brand-sub">Local</span><span class="brand-version"${bundleUpdatedTitle}>bundle ${escapeHtml(bundleVersionLabel)}</span></span>
+        <span class="brand-text">Agent Witch<span class="brand-sub">Local</span></span>
       </a>
       <div class="site-header-actions">
         <nav class="site-nav" aria-label="Local bridge">${nav}</nav>
@@ -78,6 +69,7 @@ export const buildAgentWitchLocalAppShell = (input: {
     </div>
   </header>
   <main class="site-main">${input.prependBody ?? ""}${input.body}</main>
+  <script>${AGENT_WITCH_LOCAL_HEARTBEAT_ELAPSED_LIVE_SCRIPT}</script>
 </body>
 </html>`;
 };

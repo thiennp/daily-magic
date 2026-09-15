@@ -514,6 +514,12 @@ input.input[type="text"] {
 .reveal-live-group { border: 1px solid var(--aw-zinc-200); border-radius: 0.375rem; padding: 0.35rem 0.5rem; background: var(--aw-zinc-50); }
 .reveal-group-summary { cursor: pointer; font-weight: 600; }
 .reveal-live-tree { list-style: none; margin: 0.35rem 0 0; padding-left: 0.75rem; display: flex; flex-direction: column; gap: 0.2rem; }
+.harness-group-name-field { margin-bottom: 0.75rem; }
+.harness-group-title-input {
+  font-size: 1.125rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
 .harness-group-title { font-size: 1.125rem; margin: 0 0 0.75rem; }
 .harness-set-block + .harness-set-block { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--aw-zinc-200); }
 .harness-set-include { margin-bottom: 0.5rem; }

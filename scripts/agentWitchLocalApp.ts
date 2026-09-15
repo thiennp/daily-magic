@@ -4,7 +4,6 @@ import fs from "node:fs";
 import path from "node:path";
 
 import {
-  AGENT_WITCH_LOCAL_APP_LOOPBACK_ORIGIN,
   AGENT_WITCH_LOCAL_APP_ORIGIN,
   AGENT_WITCH_LOCAL_APP_PORT,
 } from "./agentWitchLocalApp.constants";
@@ -21,6 +20,7 @@ import {
   isAgentWitchConnectionHealthStale,
 } from "./agentWitchConnectionHealth";
 import { AGENT_WITCH_CONNECTION_STALE_MS } from "./agentWitchConnectionHealth.constants";
+import { buildAgentWitchLocalHeartbeatElapsedMarkup } from "./buildAgentWitchLocalHeartbeatElapsedMarkup";
 import { formatAgentWitchRelativeTimeAgo } from "./formatAgentWitchRelativeTimeAgo";
 import { buildAgentWitchLocalErrorLogPageBody } from "./buildAgentWitchLocalErrorLogPage";
 import {
@@ -136,10 +136,10 @@ const buildStatusBody = (input: {
   return `<section class="card">
       <p class="eyebrow">Local bridge</p>
       <h1>Status</h1>
-      <p class="lede">Mac-side Agent Witch bridge at <a href="${AGENT_WITCH_LOCAL_APP_LOOPBACK_ORIGIN}"><code>${AGENT_WITCH_LOCAL_APP_LOOPBACK_ORIGIN}</code></a>.</p>
+      <p class="lede">Connection and pairing details for Agent Witch on this Mac.</p>
       <div class="meta-grid">
         <div class="meta-item"><span class="meta-label">WebSocket</span><span class="meta-value">${connectedBadge}</span></div>
-        <div class="meta-item"><span class="meta-label">Last heartbeat</span><span class="meta-value">${escapeHtml(formatLocalAppTimestamp(input.status.lastHeartbeatAt))}</span></div>
+        <div class="meta-item"><span class="meta-label">Last heartbeat</span><span class="meta-value">${buildAgentWitchLocalHeartbeatElapsedMarkup(input.status.lastHeartbeatAt)}</span></div>
         <div class="meta-item"><span class="meta-label">Health file</span><span class="meta-value">${healthBadge}</span></div>
         <div class="meta-item"><span class="meta-label">Link code</span><span class="meta-value"><code>${escapeHtml(input.linkCode)}</code></span></div>
         <div class="meta-item"><span class="meta-label">Install bundle</span><span class="meta-value"><code>${escapeHtml(input.installBundleVersion)}</code>${input.installBundleUpdatedAt !== null ? ` <span class="muted">· ${escapeHtml(formatLocalAppTimestamp(input.installBundleUpdatedAt))}</span>` : ""}</span></div>
@@ -208,8 +208,9 @@ export const startAgentWitchLocalApp = (input: {
       shell.updateFlash ?? null,
     );
     return buildAgentWitchLocalAppShell({
-      ...shell,
-      installVersion,
+      title: shell.title,
+      activePath: shell.activePath,
+      body: shell.body,
       cloudAppOrigin: resolveAgentWitchLocalCloudAppOrigin(installVersion),
       prependBody: `${updateFlashHtml}${updatePromptHtml}`,
       headerUpdateButtonHtml:
@@ -355,7 +356,6 @@ export const startAgentWitchLocalApp = (input: {
             body: buildAgentWitchLocalHomePageBody({
               wsConnected: status.wsConnected,
               lastHeartbeatAt: status.lastHeartbeatAt,
-              installBundleVersion: installBundle.installBundleVersion,
               harnessSetCount: reveal?.sets.length ?? 0,
               knowledgeChunkCount: readAgentWitchRagChunks(input.layout).length,
               trafficEntryCount: readAgentWitchLocalTraffic(input.layout)

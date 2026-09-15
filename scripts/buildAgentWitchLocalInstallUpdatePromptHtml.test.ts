@@ -25,7 +25,7 @@ describe("buildAgentWitchLocalInstallUpdatePromptHtml", () => {
 
     expect(html).toContain("Update available");
     expect(html).toContain('action="/api/update"');
-    expect(html).toContain("<code>91</code>");
+    expect(html).toContain("A newer Agent Witch is ready");
 
     expect(
       buildAgentWitchLocalInstallUpdateHeaderButtonHtml({

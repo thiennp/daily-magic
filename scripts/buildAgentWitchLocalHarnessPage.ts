@@ -290,7 +290,7 @@ const buildRevealForm = (reveal: LocalHarnessRevealResult): string => {
 
   const groupBlocks = [...groupedSets.entries()]
     .toSorted(([left], [right]) => left.localeCompare(right))
-    .map(([groupName, group]) => {
+    .map(([groupName, group], groupIndex) => {
       const setSections = group.sets
         .map(({ set, setIndex }) => {
           const tree = buildLocalHarnessRevealTreeFromItems(
@@ -314,7 +314,7 @@ const buildRevealForm = (reveal: LocalHarnessRevealResult): string => {
                 Include in submit
               </label>
               <input type="hidden" name="setSlug-${setIndex}" value="${escapeHtml(set.proposedSlug)}" />
-              <input type="hidden" name="setName-${setIndex}" value="${escapeHtml(set.proposedName)}" />
+              <input type="hidden" name="setGroupIndex-${setIndex}" value="${groupIndex}" />
               <p class="muted mono">${escapeHtml(set.sourceRoot)}</p>
               <details class="harness-tree-root">
                 <summary class="harness-tree-root-summary">${fileCount} file(s)</summary>
@@ -325,7 +325,10 @@ const buildRevealForm = (reveal: LocalHarnessRevealResult): string => {
         .join("");
 
       return `<section class="card harness-group">
-          <h2 class="harness-group-title">${escapeHtml(groupName)}</h2>
+          <label class="field harness-group-name-field">
+            <span class="field-label">Name before upload</span>
+            <input class="input harness-group-title-input" type="text" name="groupLabel-${groupIndex}" value="${escapeHtml(groupName)}" autocomplete="off" />
+          </label>
           ${setSections}
         </section>`;
     })
@@ -357,12 +360,32 @@ export const parseHarnessSubmitFormBody = (
   );
   const setCount = Number.parseInt(body.get("setCount") ?? "0", 10);
 
+  const groupLabels = new Map<number, string>();
+  for (const [key, value] of body.entries()) {
+    const match = /^groupLabel-(\d+)$/.exec(key);
+    if (match === null) {
+      continue;
+    }
+    const groupIndex = Number.parseInt(match[1] ?? "", 10);
+    const label = value.trim();
+    if (Number.isFinite(groupIndex) && label.length > 0) {
+      groupLabels.set(groupIndex, label);
+    }
+  }
+
   const sets: LocalHarnessSubmitSet[] = [];
 
   for (let setIndex = 0; setIndex < setCount; setIndex += 1) {
     const slugFromForm = body.get(`setSlug-${setIndex}`)?.trim() ?? "";
+    const groupIndexRaw = body.get(`setGroupIndex-${setIndex}`);
+    const groupIndex =
+      groupIndexRaw === null ? null : Number.parseInt(groupIndexRaw, 10);
+    const nameFromGroup =
+      groupIndex !== null && Number.isFinite(groupIndex)
+        ? groupLabels.get(groupIndex)
+        : undefined;
     const nameFromForm =
-      body.get(`setName-${setIndex}`)?.trim() ?? slugFromForm;
+      body.get(`setName-${setIndex}`)?.trim() ?? nameFromGroup ?? slugFromForm;
     const revealSet = reveal.sets[setIndex];
     if (revealSet === undefined) {
       continue;
