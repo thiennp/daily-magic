@@ -297,6 +297,7 @@ const buildRevealForm = (reveal: LocalHarnessRevealResult): string => {
             set.items.map((item) => ({
               ...item,
               relativePath:
+                typeof item.relativePath === "string" &&
                 item.relativePath.length > 0
                   ? item.relativePath
                   : path

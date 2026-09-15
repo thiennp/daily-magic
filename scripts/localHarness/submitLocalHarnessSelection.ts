@@ -6,6 +6,7 @@ import type { HarnessInstallBundle } from "../harnessInstallBundle.types";
 import { planHarnessInstallBundle } from "../planHarnessInstallBundle";
 import type { AgentWitchLocalLayout } from "../resolveAgentWitchLocalLayout";
 import { assertReadableFileUnderHome } from "./pathSafety";
+import { normalizeLocalHarnessRevealResult } from "./normalizeLocalHarnessRevealResult";
 import type { LocalHarnessRevealResult } from "./revealLocalHarnessCandidates";
 
 export interface LocalHarnessSubmitItem {
@@ -189,7 +190,9 @@ export const readLocalHarnessRevealCache = (
       "sets" in parsed &&
       Array.isArray((parsed as { sets: unknown }).sets)
     ) {
-      return parsed as LocalHarnessRevealResult;
+      return normalizeLocalHarnessRevealResult(
+        parsed as LocalHarnessRevealResult,
+      );
     }
   } catch {
     return null;
