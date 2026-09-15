@@ -2,7 +2,8 @@ import { AGENT_WITCH_LOCAL_APP_STYLES } from "./agentWitchLocalAppStyles";
 import { formatAgentWitchInstallBundleVersionLabel } from "./formatAgentWitchInstallBundleVersionLabel";
 import type { AgentWitchInstallVersionRecord } from "./agentWitchInstallVersion";
 
-export type AgentWitchLocalAppNavPath = "/" | "/traffic" | "/knowledge";
+export type AgentWitchLocalAppNavPath =
+  "/" | "/traffic" | "/knowledge" | "/harness";
 
 const LOGO_MARK_SVG = `<svg class="brand-mark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
   <path class="brand-mark-outline" d="M12 2L2 12l10 10 10-10L12 2z" />
@@ -18,6 +19,7 @@ const NAV_ITEMS: ReadonlyArray<{
   { href: "/", label: "Status" },
   { href: "/traffic", label: "Traffic" },
   { href: "/knowledge", label: "Knowledge" },
+  { href: "/harness", label: "Harness" },
 ];
 
 const escapeHtml = (value: string): string =>

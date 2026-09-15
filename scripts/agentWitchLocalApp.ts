@@ -22,6 +22,18 @@ import {
 import { AGENT_WITCH_CONNECTION_STALE_MS } from "./agentWitchConnectionHealth.constants";
 import { formatAgentWitchRelativeTimeAgo } from "./formatAgentWitchRelativeTimeAgo";
 import { buildAgentWitchLocalAppShell } from "./buildAgentWitchLocalAppShell";
+import {
+  buildAgentWitchLocalHarnessPageBody,
+  parseHarnessRevealScanRoots,
+  parseHarnessSubmitFormBody,
+} from "./buildAgentWitchLocalHarnessPage";
+import { buildDefaultLocalHarnessScanRoots } from "./localHarness/defaultLocalHarnessScanRoots";
+import { revealLocalHarnessCandidates } from "./localHarness/revealLocalHarnessCandidates";
+import {
+  readLocalHarnessRevealCache,
+  submitLocalHarnessSelection,
+  writeLocalHarnessRevealCache,
+} from "./localHarness/submitLocalHarnessSelection";
 import { formatAgentWitchInstallBundleVersionLabel } from "./formatAgentWitchInstallBundleVersionLabel";
 import { readAgentWitchInstallVersion } from "./agentWitchInstallVersion";
 import { shouldShowAgentWitchLocalReviveButton } from "./shouldShowAgentWitchLocalReviveButton";
@@ -279,6 +291,106 @@ export const startAgentWitchLocalApp = (input: {
             </section>`,
           }),
         );
+        return;
+      }
+
+      if (method === "GET" && pathname === "/harness") {
+        const url = new URL(
+          request.url ?? "/",
+          `http://127.0.0.1:${AGENT_WITCH_LOCAL_APP_PORT}`,
+        );
+        const installBundle = buildInstallBundleStatus();
+        const reveal = readLocalHarnessRevealCache(input.layout);
+        const flashMessage =
+          url.searchParams.get("submitted") === "1"
+            ? "Local harness updated from your selection."
+            : url.searchParams.get("revealed") === "1"
+              ? `Reveal found ${reveal?.sets.length ?? 0} set(s).`
+              : null;
+        sendHtml(
+          response,
+          buildAgentWitchLocalAppShell({
+            title: "Harness",
+            activePath: "/harness",
+            installVersion: installBundle.installVersion,
+            body: buildAgentWitchLocalHarnessPageBody({
+              scanRoots:
+                reveal?.scanRoots ?? buildDefaultLocalHarnessScanRoots(),
+              reveal,
+              flashMessage,
+            }),
+          }),
+        );
+        return;
+      }
+
+      if (method === "POST" && pathname === "/harness/reveal") {
+        const rawBody = await readBody(request);
+        const form = new URLSearchParams(rawBody);
+        const scanRoots = parseHarnessRevealScanRoots(
+          form.get("scanRoots") ?? "",
+        );
+        const roots =
+          scanRoots.length > 0
+            ? scanRoots
+            : buildDefaultLocalHarnessScanRoots();
+        const reveal = revealLocalHarnessCandidates({ scanRoots: roots });
+        writeLocalHarnessRevealCache(input.layout, reveal);
+        response.writeHead(303, { Location: "/harness?revealed=1" });
+        response.end();
+        return;
+      }
+
+      if (method === "POST" && pathname === "/harness/submit") {
+        const reveal = readLocalHarnessRevealCache(input.layout);
+        if (reveal === null) {
+          const installBundle = buildInstallBundleStatus();
+          sendHtml(
+            response,
+            buildAgentWitchLocalAppShell({
+              title: "Harness",
+              activePath: "/harness",
+              installVersion: installBundle.installVersion,
+              body: buildAgentWitchLocalHarnessPageBody({
+                scanRoots: buildDefaultLocalHarnessScanRoots(),
+                reveal: null,
+                flashError: "Run reveal before submit.",
+              }),
+            }),
+          );
+          return;
+        }
+
+        const rawBody = await readBody(request);
+        const form = new URLSearchParams(rawBody);
+        const sets = parseHarnessSubmitFormBody(form, reveal);
+        const result = submitLocalHarnessSelection({
+          layout: input.layout,
+          sets,
+        });
+
+        if (!result.ok) {
+          const installBundle = buildInstallBundleStatus();
+          sendHtml(
+            response,
+            buildAgentWitchLocalAppShell({
+              title: "Harness",
+              activePath: "/harness",
+              installVersion: installBundle.installVersion,
+              body: buildAgentWitchLocalHarnessPageBody({
+                scanRoots: reveal.scanRoots,
+                reveal,
+                flashError: result.errorMessage ?? "Submit failed.",
+              }),
+            }),
+          );
+          return;
+        }
+
+        response.writeHead(303, {
+          Location: `/harness?submitted=1&count=${result.writtenItemCount ?? 0}`,
+        });
+        response.end();
         return;
       }
 

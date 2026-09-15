@@ -350,4 +350,29 @@ pre {
   color: var(--aw-red-700);
   font-size: 0.875rem;
 }
+
+.alert-success {
+  margin-top: 1rem;
+  padding: 0.75rem 1rem;
+  border-radius: var(--aw-radius-lg);
+  background: #ecfdf5;
+  color: #047857;
+  font-size: 0.875rem;
+}
+
+.stack { display: flex; flex-direction: column; gap: 0.75rem; }
+
+.field { display: flex; flex-direction: column; gap: 0.35rem; }
+
+.field-label { font-size: 0.8125rem; color: var(--aw-zinc-600); }
+
+.textarea { min-height: 6rem; resize: vertical; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 0.8125rem; }
+
+.check-list { list-style: none; margin: 0.75rem 0 0; padding: 0; display: flex; flex-direction: column; gap: 0.5rem; }
+
+.check-row label { display: flex; flex-direction: column; gap: 0.25rem; font-size: 0.875rem; }
+
+.check-row input { margin-right: 0.35rem; }
+
+.harness-set { margin-top: 1rem; }
 `.trim();

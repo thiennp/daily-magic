@@ -18,6 +18,7 @@ describe("buildAgentWitchLocalAppShell", () => {
     expect(html).toContain('href="/"');
     expect(html).toContain('href="/traffic"');
     expect(html).toContain('href="/knowledge"');
+    expect(html).toContain('href="/harness"');
   });
 
   it("marks the active nav path (AGENT-026)", () => {
