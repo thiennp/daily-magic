@@ -11,6 +11,7 @@ import {
 } from "./src/lib/agentWitch/isAllowedAgentWitchUpgrade";
 import resolveAuthActorFromCookieHeader from "./src/lib/auth/resolveAuthActorFromCookieHeader";
 import { resolveDevDashboardActor } from "./src/lib/auth/resolveDevDashboardActor";
+import { startAgentWitchConnectionRegistryMaintenance } from "./src/lib/agentWitch/startAgentWitchConnectionRegistryMaintenance";
 import { attachAgentWitchWebSocket } from "./src/server/agentWitch/attachAgentWitchWebSocket";
 
 const dev = process.env.NODE_ENV !== "production";
@@ -23,6 +24,7 @@ const healthPath = "/api/health";
 const app = next({ dev, hostname, port });
 const handle = app.getRequestHandler();
 const hub = getAgentWitchHub();
+startAgentWitchConnectionRegistryMaintenance();
 
 let nextReady = false;
 

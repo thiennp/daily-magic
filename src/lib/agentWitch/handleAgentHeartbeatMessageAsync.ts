@@ -1,49 +1,18 @@
 import { AGENT_WITCH_INSTALL_BUNDLE_VERSION } from "@/lib/agentWitch/agentWitchInstallBundleVersion";
 import { buildAgentWitchHeartbeatAckPayload } from "@/lib/agentWitch/buildAgentWitchHeartbeatAckPayload";
 import { deliverAgentWitchInstallBundleUpdateIfBehind } from "@/lib/agentWitch/deliverAgentWitchInstallBundleUpdateIfBehind";
+import {
+  resolveHeartbeatEmail,
+  resolveHeartbeatInstallBundleVersion,
+  resolveHeartbeatWakePort,
+} from "@/lib/agentWitch/resolveAgentWitchHeartbeatPayload";
 import { resolveAgentWitchInstallDeviceLabelFromPayload } from "@/lib/agentWitch/resolveAgentWitchInstallDeviceLabelFromPayload";
 import { runAgentWitchHeartbeatDeviceMaintenance } from "@/lib/agentWitch/runAgentWitchHeartbeatDeviceMaintenance";
+import { runAgentWitchHeartbeatRegistrySync } from "@/lib/agentWitch/runAgentWitchHeartbeatRegistrySync";
 import type AgentWitchHubClient from "@/lib/agentWitch/types/AgentWitchHubClient.type";
 import type AgentWitchHubRuntime from "@/lib/agentWitch/types/AgentWitchHubRuntime.type";
 import type AgentWitchMessage from "@/lib/agentWitch/types/AgentWitchMessage.type";
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
-
-const resolveHeartbeatEmail = (
-  payload: Readonly<Record<string, unknown>> | undefined,
-  senderEmail: string | undefined,
-): string | null => {
-  if (typeof payload?.email === "string" && payload.email.trim().length > 0) {
-    return payload.email.trim().toLowerCase();
-  }
-
-  if (senderEmail !== undefined && senderEmail.trim().length > 0) {
-    return senderEmail.trim().toLowerCase();
-  }
-
-  return null;
-};
-
-const resolveHeartbeatInstallBundleVersion = (
-  payload: Readonly<Record<string, unknown>> | undefined,
-): string | null => {
-  if (typeof payload?.installBundleVersion !== "string") {
-    return null;
-  }
-
-  const trimmedVersion = payload.installBundleVersion.trim();
-  return trimmedVersion.length > 0 ? trimmedVersion : null;
-};
-
-const resolveHeartbeatWakePort = (
-  payload: Readonly<Record<string, unknown>> | undefined,
-): number | null => {
-  const wakePortRaw = payload?.wakePort;
-  if (typeof wakePortRaw !== "number" || !Number.isInteger(wakePortRaw)) {
-    return null;
-  }
-
-  return wakePortRaw > 0 && wakePortRaw <= 65535 ? wakePortRaw : null;
-};
 
 export const handleAgentHeartbeatMessageAsync = async (
   runtime: AgentWitchHubRuntime,
@@ -107,6 +76,14 @@ export const handleAgentHeartbeatMessageAsync = async (
       wakeError,
     });
   }
+
+  void runAgentWitchHeartbeatRegistrySync({
+    senderId,
+    userId,
+    deviceId,
+  }).catch((error: unknown) => {
+    console.error("[agent-witch/registry] heartbeat sync failed", error);
+  });
 
   deliverAgentWitchInstallBundleUpdateIfBehind(sender, installBundleVersion);
 

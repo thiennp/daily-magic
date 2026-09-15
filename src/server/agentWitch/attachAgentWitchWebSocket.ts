@@ -2,6 +2,10 @@ import { randomUUID } from "node:crypto";
 import type { WebSocket } from "ws";
 
 import { AgentWitchHub } from "@/lib/agentWitch/agentWitchHub";
+import {
+  removeAgentWitchConnectionRegistry,
+  syncAgentWitchConnectionRegistry,
+} from "@/lib/agentWitch/syncAgentWitchConnectionRegistry";
 import { clearDashboardTerminalSubscriptions } from "@/lib/dispatch/dashboardTerminalSubscriptionRegistry";
 import type {
   AgentWitchConnectionState,
@@ -37,11 +41,27 @@ export const attachAgentWitchWebSocket = (
       },
     });
     connectionState.registered = true;
+    void syncAgentWitchConnectionRegistry({
+      clientId,
+      role: connectionState.role,
+      userId: connectionState.userId,
+      deviceId: connectionState.deviceId,
+    }).catch((error: unknown) => {
+      console.error("[agent-witch/registry] register sync failed", error);
+    });
   };
 
   const unregisterClient = (): void => {
     clearDashboardTerminalSubscriptions(clientId);
     hub.unregisterClient(clientId);
+    void removeAgentWitchConnectionRegistry(clientId).catch(
+      (error: unknown) => {
+        console.error(
+          "[agent-witch/registry] unregister cleanup failed",
+          error,
+        );
+      },
+    );
   };
 
   const messageQueue = { chain: Promise.resolve() };
