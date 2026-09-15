@@ -7,7 +7,11 @@ Rules/skills manifest, sharing, catalog publish.
 - **Slug:** `harness`
 - **Feature path:** `src/features/harness`
 - **Lib path:** `src/lib/harness`
-- **Migration:** documented
+- **Migration:** migrated
+
+## Product concepts
+
+Harness (rules/skills bundles) vs Library vs Marketplace: [docs/product/concepts.md](../../../docs/product/concepts.md).
 
 ## Routes
 

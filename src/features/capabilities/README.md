@@ -7,7 +7,11 @@ Published agents/workflows, team directory, picker.
 - **Slug:** `capabilities`
 - **Feature path:** `src/features/capabilities`
 - **Lib path:** `src/lib/capabilities`
-- **Migration:** documented
+- **Migration:** migrated
+
+## Product concepts
+
+Published agent offerings vs workflows and harness: [docs/product/concepts.md](../../../docs/product/concepts.md).
 
 ## Routes
 

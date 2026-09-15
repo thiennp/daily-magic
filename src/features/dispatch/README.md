@@ -7,7 +7,11 @@ Team dispatch targets, approvals, run queue, policies.
 - **Slug:** `dispatch`
 - **Feature path:** `src/features/dispatch`
 - **Lib path:** `src/lib/dispatch`
-- **Migration:** documented
+- **Migration:** migrated
+
+## Product concepts
+
+Mac vs Cursor Cloud dispatch: [docs/product/concepts.md](../../../docs/product/concepts.md). API routes live under `src/app/api/` (see [MODULE_LAYOUT](../_registry/MODULE_LAYOUT.md)).
 
 ## Routes
 

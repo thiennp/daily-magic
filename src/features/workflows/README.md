@@ -7,7 +7,11 @@ Workflow capabilities with dynamic task fields.
 - **Slug:** `workflows`
 - **Feature path:** `src/features/workflows`
 - **Lib path:** `src/lib/workflows`
-- **Migration:** documented
+- **Migration:** migrated
+
+## Product concepts
+
+Workflow = capability with dynamic task fields: [docs/product/concepts.md](../../../docs/product/concepts.md).
 
 ## Routes
 

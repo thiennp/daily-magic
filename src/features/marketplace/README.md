@@ -9,6 +9,10 @@ Browse and borrow company-published agents.
 - **Lib path:** `src/lib/harness`
 - **Migration:** migrated
 
+## Product concepts
+
+Company-published listings on top of harness + capabilities: [docs/product/concepts.md](../../../docs/product/concepts.md).
+
 ## Routes
 
 - `/marketplace`

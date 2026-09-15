@@ -7,7 +7,11 @@ Saved playbooks; fork and run from library.
 - **Slug:** `library`
 - **Feature path:** `src/features/library`
 - **Lib path:** `src/lib/library`
-- **Migration:** documented
+- **Migration:** migrated
+
+## Product concepts
+
+Saved playbooks—not a separate runtime: [docs/product/concepts.md](../../../docs/product/concepts.md).
 
 ## Routes
 
