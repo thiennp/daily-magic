@@ -597,7 +597,6 @@ input.input[type="text"] {
 .harness-tree-root[open] > .harness-tree-root-summary::before { transform: rotate(90deg); }
 .reveal-folder-row { font-size: 0.8125rem; }
 .reveal-progress { margin-top: 0.25rem; }
-.sync-cloud-row { margin-top: 1rem; }
 
 .check-row label { display: flex; flex-direction: column; gap: 0.25rem; font-size: 0.875rem; }
 

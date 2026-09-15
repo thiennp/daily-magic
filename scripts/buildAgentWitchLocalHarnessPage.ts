@@ -350,11 +350,7 @@ const buildRevealForm = (reveal: LocalHarnessRevealResult): string => {
   return `<form method="POST" action="/harness/submit">
       <input type="hidden" name="setCount" value="${reveal.sets.length}" />
       ${groupBlocks}
-      <p class="muted">Click a file path to expand its contents (view only). Toggle sets with <strong>Include in submit</strong>.</p>
-      <label class="check-row sync-cloud-row">
-        <input type="checkbox" name="syncToCloud" value="on" />
-        Report manifest to cloud after submit (requires WS connected on Status)
-      </label>
+      <p class="muted">Click a file path to expand its contents (view only). Toggle sets with <strong>Include in submit</strong>. After submit, your manifest is reported to cloud when the bridge is connected.</p>
       <div class="actions">
         <button class="btn btn-primary" type="submit">Submit</button>
       </div>

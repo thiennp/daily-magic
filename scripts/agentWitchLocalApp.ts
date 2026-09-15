@@ -751,13 +751,10 @@ export const startAgentWitchLocalApp = (input: {
           return;
         }
 
-        const syncToCloud = form.get("syncToCloud") === "on";
-        let syncQuery = "";
-        if (syncToCloud) {
-          const syncResult =
-            input.controllers.reportHarnessManifestIfConnected?.();
-          syncQuery = syncResult?.ok === true ? "&synced=1" : "&syncFailed=1";
-        }
+        const syncResult =
+          input.controllers.reportHarnessManifestIfConnected?.();
+        const syncQuery =
+          syncResult?.ok === true ? "&synced=1" : "&syncFailed=1";
 
         response.writeHead(303, {
           Location: `/harness?submitted=1&count=${result.writtenItemCount ?? 0}${syncQuery}`,
