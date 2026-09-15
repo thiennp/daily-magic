@@ -6,7 +6,7 @@ Landing sections, marketing shell, public CTAs.
 
 - **Slug:** `marketing`
 - **Feature path:** `src/features/marketing`
-- **Migration:** documented
+- **Migration:** migrated
 
 ## Routes
 

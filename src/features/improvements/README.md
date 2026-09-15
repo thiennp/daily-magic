@@ -7,7 +7,7 @@ Review AI-suggested capability improvements.
 - **Slug:** `improvements`
 - **Feature path:** `src/features/improvements`
 - **Lib path:** `src/lib/improvements`
-- **Migration:** documented
+- **Migration:** migrated
 
 ## Routes
 

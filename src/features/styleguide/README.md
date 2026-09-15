@@ -6,7 +6,7 @@ TailAdmin component catalog for development.
 
 - **Slug:** `styleguide`
 - **Feature path:** `src/features/styleguide`
-- **Migration:** documented
+- **Migration:** migrated
 
 ## Routes
 

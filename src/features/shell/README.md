@@ -6,7 +6,7 @@ Header, nav, connection badge, approval listener mount.
 
 - **Slug:** `shell`
 - **Feature path:** `src/features/shell`
-- **Migration:** documented
+- **Migration:** migrated
 
 ## Routes
 

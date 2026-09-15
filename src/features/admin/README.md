@@ -7,7 +7,7 @@ Users, groups, company dispatch rules.
 - **Slug:** `admin`
 - **Feature path:** `src/features/admin`
 - **Lib path:** `src/lib/admin`
-- **Migration:** documented
+- **Migration:** migrated
 
 ## Routes
 

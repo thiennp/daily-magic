@@ -7,7 +7,7 @@ NextAuth, login UI, sessions, dev secret login.
 - **Slug:** `auth`
 - **Feature path:** `src/features/auth`
 - **Lib path:** `src/lib/auth`
-- **Migration:** documented
+- **Migration:** migrated
 
 ## Routes
 

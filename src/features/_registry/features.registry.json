@@ -42,7 +42,7 @@
       "routePaths": [],
       "apiPaths": ["/api/dispatch", "/api/agent-runs"],
       "dependsOn": ["auth", "capabilities", "agent-witch"],
-      "migrationStatus": "documented"
+      "migrationStatus": "migrated"
     },
     {
       "slug": "capabilities",
@@ -53,7 +53,7 @@
       "routePaths": [],
       "apiPaths": ["/api/capabilities"],
       "dependsOn": ["workflows"],
-      "migrationStatus": "documented"
+      "migrationStatus": "migrated"
     },
     {
       "slug": "workflows",
@@ -64,7 +64,7 @@
       "routePaths": [],
       "apiPaths": [],
       "dependsOn": ["capabilities"],
-      "migrationStatus": "documented"
+      "migrationStatus": "migrated"
     },
     {
       "slug": "library",
@@ -75,7 +75,7 @@
       "routePaths": ["/library"],
       "apiPaths": [],
       "dependsOn": ["workflows", "capabilities", "harness"],
-      "migrationStatus": "documented"
+      "migrationStatus": "migrated"
     },
     {
       "slug": "harness",
@@ -86,7 +86,7 @@
       "routePaths": [],
       "apiPaths": ["/api/harness", "/api/agent-witch/harness-catalog"],
       "dependsOn": ["agent-witch", "library"],
-      "migrationStatus": "documented"
+      "migrationStatus": "migrated"
     },
     {
       "slug": "marketplace",
@@ -108,7 +108,7 @@
       "routePaths": ["/reports", "/reports/[runId]"],
       "apiPaths": ["/api/agent-runs"],
       "dependsOn": ["dispatch", "feedback"],
-      "migrationStatus": "documented"
+      "migrationStatus": "migrated"
     },
     {
       "slug": "feedback",
@@ -119,7 +119,7 @@
       "routePaths": [],
       "apiPaths": ["/api/capabilities/feedback"],
       "dependsOn": ["improvements", "capabilities"],
-      "migrationStatus": "documented"
+      "migrationStatus": "migrated"
     },
     {
       "slug": "improvements",
@@ -130,7 +130,7 @@
       "routePaths": [],
       "apiPaths": ["/api/capabilities/improvements"],
       "dependsOn": ["feedback", "capabilities"],
-      "migrationStatus": "documented"
+      "migrationStatus": "migrated"
     },
     {
       "slug": "admin",
@@ -141,7 +141,7 @@
       "routePaths": ["/admin/groups", "/admin/users"],
       "apiPaths": ["/api/admin"],
       "dependsOn": ["auth", "dispatch"],
-      "migrationStatus": "documented"
+      "migrationStatus": "migrated"
     },
     {
       "slug": "auth",
@@ -152,7 +152,7 @@
       "routePaths": ["/login"],
       "apiPaths": ["/api/auth"],
       "dependsOn": ["marketing"],
-      "migrationStatus": "documented"
+      "migrationStatus": "migrated"
     },
     {
       "slug": "mac-devices",
@@ -174,7 +174,7 @@
       "routePaths": [],
       "apiPaths": [],
       "dependsOn": ["auth", "dispatch"],
-      "migrationStatus": "documented"
+      "migrationStatus": "migrated"
     },
     {
       "slug": "marketing",
@@ -185,7 +185,7 @@
       "routePaths": ["/"],
       "apiPaths": [],
       "dependsOn": [],
-      "migrationStatus": "documented"
+      "migrationStatus": "migrated"
     },
     {
       "slug": "showcases",
@@ -196,7 +196,7 @@
       "routePaths": ["/showcases"],
       "apiPaths": [],
       "dependsOn": ["marketing"],
-      "migrationStatus": "documented"
+      "migrationStatus": "migrated"
     },
     {
       "slug": "styleguide",
@@ -207,7 +207,7 @@
       "routePaths": ["/styleguide"],
       "apiPaths": [],
       "dependsOn": ["auth"],
-      "migrationStatus": "documented"
+      "migrationStatus": "migrated"
     }
   ]
 }

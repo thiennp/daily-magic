@@ -6,7 +6,7 @@ Public SEO articles.
 
 - **Slug:** `showcases`
 - **Feature path:** `src/features/showcases`
-- **Migration:** documented
+- **Migration:** migrated
 
 ## Routes
 

@@ -7,7 +7,7 @@ Run feedback and capability-owner inbox.
 - **Slug:** `feedback`
 - **Feature path:** `src/features/feedback`
 - **Lib path:** `src/lib/feedback`
-- **Migration:** documented
+- **Migration:** migrated
 
 ## Routes
 

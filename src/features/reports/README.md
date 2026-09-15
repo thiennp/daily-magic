@@ -6,7 +6,7 @@ Agent run history, live terminal, re-run.
 
 - **Slug:** `reports`
 - **Feature path:** `src/features/reports`
-- **Migration:** documented
+- **Migration:** migrated
 
 ## Routes
 
