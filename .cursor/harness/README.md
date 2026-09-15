@@ -1,11 +1,21 @@
-# `.cursor/harness/` — agent request routing
+# `.cursor/harness/` — agent routing and git hooks
 
-Lightweight **intent → agent → command** registry for Cursor. Not runtime code — agents read this at session start via **`rules-agent-request-routing.mdc`**.
+| File                                | Role                                                     |
+| ----------------------------------- | -------------------------------------------------------- |
+| **`agent-bootstrap.manifest.json`** | **Source of truth** — routing, workflows, git-hook steps |
+| **`agent-request-routing.md`**      | Human mirror of manifest routing                         |
+| **`git-hooks.md`**                  | Generated from manifest — `npm run harness:sync`         |
 
-| File                           | Role                                                            |
-| ------------------------------ | --------------------------------------------------------------- |
-| **`agent-request-routing.md`** | Authoritative routing table; update when agents/commands change |
+| npm script                                           | Role                                                          |
+| ---------------------------------------------------- | ------------------------------------------------------------- |
+| **`npm run harness:bootstrap`**                      | Compact routing + workflow summary                            |
+| **`npm run harness:bootstrap -- --workflow=verify`** | Script list for verify (replaces duplicating checks in rules) |
+| **`npm run harness:sync`**                           | Regenerate **`git-hooks.md`**                                 |
 
-**Flow:** User request → match signals → attach **`.cursor/agents/`** + **`.cursor/commands/`** → if no match, handle normally.
+**Bootstrap (always-on):** **`rules-harness-bootstrap.mdc`** — read routing table; attach at most one **`commands/`** playbook.
 
-See **`.cursor/README.md`** for the full rules / agents / commands layout.
+**Invariants (always-on):** **`rules-bundle-core.mdc`**.
+
+**Flow:** User message → bootstrap → match routing table → optional single command + optional **`git-hooks.md`** → path-scoped rules from **`.cursor.json`**.
+
+Subagents (optional): **`.cursor/subagents/`**. See **`.cursor/README.md`** for rules / commands / skills layout.

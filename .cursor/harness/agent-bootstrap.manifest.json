@@ -1,0 +1,140 @@
+{
+  "version": 1,
+  "skip": {
+    "description": "Do not attach a command playbook",
+    "signals": [
+      "explain only",
+      "architecture overview",
+      "code review without implementation",
+      "what does",
+      "status",
+      "meta chat"
+    ]
+  },
+  "routing": [
+    {
+      "priority": 1,
+      "signals": ["comprehensive commit", "full review before commit"],
+      "command": "command-git-commit-comprehensive-review.md",
+      "workflow": "commit"
+    },
+    {
+      "priority": 2,
+      "signals": ["commit", "quick commit", "stage and commit"],
+      "command": "command-git-commit-quick.md",
+      "workflow": "commit"
+    },
+    {
+      "priority": 3,
+      "signals": ["pull request", "open pr", "gh pr"],
+      "command": "command-github-pull-request.md",
+      "workflow": "pr"
+    },
+    {
+      "priority": 4,
+      "signals": ["extract utility", "dedupe logic", "extract to util"],
+      "command": "command-refactor-extract-utility.md",
+      "workflow": null
+    },
+    {
+      "priority": 5,
+      "signals": ["unit test", "coverage", "raise test coverage"],
+      "command": "command-test-raise-unit-coverage.md",
+      "workflow": null
+    },
+    {
+      "priority": 6,
+      "signals": ["snapshot codemod", "bulk snapshot tests"],
+      "command": "command-test-snapshot-codemod-bulk.md",
+      "workflow": null
+    },
+    {
+      "priority": 7,
+      "signals": ["pnpm install", "npm audit", "dependencies"],
+      "command": "command-npm-install-and-audit.md",
+      "workflow": null
+    },
+    {
+      "priority": 8,
+      "signals": ["verify", "lint", "typecheck", "post-change", "ci check"],
+      "command": "command-verify-post-change-lint-typecheck-tests.md",
+      "workflow": "verify"
+    },
+    {
+      "priority": 9,
+      "signals": ["structure", "folder layout", "validate staged"],
+      "command": null,
+      "workflow": "structure"
+    }
+  ],
+  "workflows": {
+    "verify": {
+      "description": "After substantive code changes (see verify command for full steps)",
+      "scripts": [
+        "npm run cursor:verify",
+        "npm run lint",
+        "npm run typecheck",
+        "npx vitest run --config vite.test.config.ts --changed"
+      ],
+      "command": "command-verify-post-change-lint-typecheck-tests.md"
+    },
+    "commit": {
+      "description": "Before git commit",
+      "scripts": ["npm run validate:staged"],
+      "command": null,
+      "includesGitHooks": true
+    },
+    "pr": {
+      "description": "Before opening a pull request",
+      "scripts": [
+        "npm run validate:staged",
+        "npm run cursor:architecture -- --staged",
+        "npm run typecheck"
+      ],
+      "command": "command-github-pull-request.md"
+    },
+    "structure": {
+      "description": "Folder and structure validation only",
+      "scripts": ["npm run validate:staged"],
+      "command": null
+    }
+  },
+  "gitHooks": {
+    "sources": [".husky/pre-commit", ".husky/commit-msg"],
+    "preCommit": [
+      {
+        "step": "Prettier",
+        "when": "*.{js,jsx,ts,tsx,json,css,md}",
+        "run": "prettier --write (staged) + re-stage"
+      },
+      {
+        "step": "ESLint fix",
+        "when": "src/**/*.{ts,tsx,js,jsx}",
+        "run": "eslint --fix (staged) + re-stage"
+      },
+      {
+        "step": "Structure",
+        "when": "src/, db/, public/",
+        "run": "npm run validate:staged"
+      },
+      {
+        "step": "Architecture",
+        "when": "src/**/*.{ts,tsx}",
+        "run": "npm run cursor:architecture -- --staged"
+      },
+      {
+        "step": "Typecheck",
+        "when": "src JS/TS or toolchain configs",
+        "run": "npm run typecheck"
+      }
+    ],
+    "commitMsg": {
+      "conventional": ["feat:", "fix(scope):", "chore:"],
+      "ticketPrefix": ["LIN-123: (feat)", "GH-42: (fix)"]
+    },
+    "policies": [
+      "Do not bypass hooks (--no-verify) unless a human explicitly requests it",
+      "Stage .feature-knowledge/index.json whenever it changed"
+    ]
+  }
+}

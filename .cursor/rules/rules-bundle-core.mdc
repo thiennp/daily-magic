@@ -1,6 +1,6 @@
 ---
 description: >-
-  Project invariants: commits, hooks, scaffolding, TypeScript hygiene.
+  Project invariants: layout, types, commits policy, styling, trackers. Verification and Husky details live in harness git-hooks + verify command.
 globs:
   - "**/*"
 alwaysApply: true
@@ -21,31 +21,28 @@ alwaysApply: true
 - Shared UI lives under `src/components/` (TailAdmin vendored components).
 - Framework utilities live under `src/lib/`.
 
-## Commits and Git hooks
+## Commits
 
-- Husky accepts **conventional commits**: `feat: …`, `fix(scope): …`, `chore: …`, etc.
-- Ticket-prefixed commits are also accepted: `LIN-123: (feat) …` or `00000: (chore) …`.
-- Do not bypass hooks (`--no-verify`) unless a human explicitly requests it.
-- Always stage and commit `.feature-knowledge/index.json` when it changed; do not exclude it as unrelated.
+- Husky enforces message format — see **`.cursor/harness/git-hooks.md`**.
+- Always stage and commit `.feature-knowledge/index.json` when it changed.
+- Do not bypass git hooks unless a human explicitly requests it.
 
-## Verification
+## Verification (when to run, not how)
 
-After substantive changes:
-
-```bash
-npm run lint
-npm run typecheck
-npm run validate:staged
-npm run cursor:architecture -- --staged
-npm run build
-```
+- Scripts and routing: **`npm run harness:bootstrap -- --workflow=verify`** (manifest: **`.cursor/harness/agent-bootstrap.manifest.json`**).
+- After substantive code changes: attach **`@.cursor/commands/command-verify-post-change-lint-typecheck-tests.md`** when routing matches.
+- Before commit: **`npm run harness:bootstrap -- --workflow=commit`** or Husky (see **`npm run harness:sync`** output).
 
 ## Styling
 
 This repo uses **Tailwind CSS 4**, not SCSS modules or `enrg-frontend-styleguide`.
 
-## Hosting & trackers
+## Hosting and trackers
 
 - **GitHub** for git remote, issues, and pull requests.
 - **Linear** (or similar) for issue keys in branch names when useful.
 - No Bitbucket, Jira CLI scripts, or Sentry harness automation in this repository.
+
+## Scaffolding
+
+Prefer **`pnpm scaffold`** (see **`.agents/scaffold/README.md`**) for new components, hooks, utilities, and tests instead of empty hand-written files.

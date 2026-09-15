@@ -13,26 +13,22 @@ description: Quick commit with conventional message and local verification
 
 ## Workflow
 
-1. `git status` and `git diff` — understand what will be committed.
-2. Stage intended files only (never `.env` or secrets). **Always** include `.feature-knowledge/index.json` when it is modified.
-3. Draft message:
+1. Run **`npm run harness:bootstrap -- --workflow=commit`** — scripts + Husky steps (manifest-backed).
+2. `git status` and `git diff` — understand what will be committed.
+3. Stage intended files only (never `.env` or secrets). **Always** include `.feature-knowledge/index.json` when it is modified.
+4. Draft message:
    - `feat: add styleguide navigation`
    - `fix(db): handle missing DATABASE_URL`
    - Optional tracker prefix: `LIN-42: (feat) …` or `GH-15: (fix) …`
-4. Run before commit:
+5. Optional before commit (when touching `src/`, `db/`, or `public/`): `npm run validate:staged`. Husky runs lint/typecheck/architecture per the manifest.
 
-```bash
-npm run lint
-npm run typecheck
-```
-
-5. Commit:
+6. Commit:
 
 ```bash
 git commit -m "feat: short description"
 ```
 
-6. `git status` to confirm success.
+7. `git status` to confirm success.
 
 ## Branch naming (optional)
 

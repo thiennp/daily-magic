@@ -67,9 +67,9 @@
       "glob": "**/*.test.{ts,tsx}"
     },
     {
-      "name": "rules-agent-request-routing",
-      "description": "Harness: route requests to matching orchestrator when one exists",
-      "path": "rules-agent-request-routing.mdc",
+      "name": "rules-harness-bootstrap",
+      "description": "Harness bootstrap: match intent to one command playbook",
+      "path": "rules-harness-bootstrap.mdc",
       "glob": "**/*"
     },
     {

@@ -34,4 +34,6 @@ opening a PR—unless the user scoped an exception.
 
 ## Authority
 
-Repo rules **`.cursor/rules/rules-typescript-clean-code.mdc`** (implementation standards) and the verification expectations spelled out there point to this command for the concrete shell sequence.
+- Script list (canonical): **`npm run harness:bootstrap -- --workflow=verify`**
+- Implementation standards: **`.cursor/rules/rules-typescript-clean-code.mdc`**
+- Manifest: **`.cursor/harness/agent-bootstrap.manifest.json`**

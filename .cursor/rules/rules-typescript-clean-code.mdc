@@ -292,8 +292,9 @@ See the complete refactoring example in [useWireframeData.ts](mdc:app/wireframe/
 - Prefer the scaffold workflow documented in **`.agents/scaffold/README.md`** (summarized in **rules-bundle-core.mdc**) instead of hand-written empty files.
 
 ## Post-change verification
-- After substantive edits, follow **`.cursor/commands/command-verify-post-change-lint-typecheck-tests.md`** before treating a task as finished.
-- Use **`.cursor/commands/command-verify-full-ci-test.md`** for the Jenkins-equivalent gate ahead of merge.
+- Script list: **`npm run harness:bootstrap -- --workflow=verify`** (manifest-backed).
+- Procedure: **`.cursor/commands/command-verify-post-change-lint-typecheck-tests.md`** when routing matches.
+- Full CI gate: **`.cursor/commands/command-verify-full-ci-test.md`** before merge.
 
 
 # Practical Functional Programming and Clean Code

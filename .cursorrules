@@ -1,19 +1,7 @@
 # Agent harness — daily-magic
 
-Use **`.cursor/harness/agent-request-routing.md`** for orchestration when a matching command exists.
+Bootstrap: **`rules-harness-bootstrap.mdc`** + **`npm run harness:bootstrap`** (manifest: **`.cursor/harness/agent-bootstrap.manifest.json`**).
 
-# Structure validation
+Invariants: **`rules-bundle-core.mdc`**. Git hooks: **`npm run harness:bootstrap -- --workflow=commit`**.
 
-Run **`npm run validate:staged`** before commits. Config: **`structure-validation.config.json`**.
-
-# Architecture checks
-
-Run **`npm run cursor:architecture`** for layer imports, barrel allowlist, and TypeScript hygiene on changed **`src/`** files.
-
-# Styling
-
-This repo uses **Tailwind CSS 4**, not SCSS modules. Do not apply EnergyCenter SCSS scoping rules (`enrg-tariff-details`, `:global(body.desktop)`, etc.).
-
-# Removed EnergyCenter-only integrations
-
-Do not use Jira, Bitbucket, Sentry, hybrid RAG, or React Router patterns from **enrg-web-frontend** in this repo unless explicitly reintroduced.
+Tailwind CSS 4 — not SCSS modules. No EnergyCenter Jira/Bitbucket/Sentry/React Router patterns unless reintroduced.

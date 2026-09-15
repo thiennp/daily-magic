@@ -1,21 +1,43 @@
 # Agent request routing (daily-magic)
 
-Match user intent to a command playbook when one exists.
+**Authoritative source:** **`.cursor/harness/agent-bootstrap.manifest.json`**
 
-## Routing table
+Human-readable mirror — when this file disagrees with the manifest, the manifest wins. Regenerate **`.cursor/harness/git-hooks.md`** with **`npm run harness:sync`**.
 
-| Signals                              | Command                                              |
-| ------------------------------------ | ---------------------------------------------------- |
-| verify, lint, typecheck, post-change | `command-verify-post-change-lint-typecheck-tests.md` |
-| commit, quick commit                 | `command-git-commit-quick.md`                        |
-| comprehensive commit, full review    | `command-git-commit-comprehensive-review.md`         |
-| pull request, open PR, gh pr         | `command-github-pull-request.md`                     |
-| extract utility, dedupe logic        | `command-refactor-extract-utility.md`                |
-| unit test, coverage                  | `command-test-raise-unit-coverage.md`                |
-| structure, folder layout             | `npm run validate:staged`                            |
+## Agent usage
 
-## Trackers & hosting
+```bash
+npm run harness:bootstrap
+npm run harness:bootstrap -- --match="quick commit"
+npm run harness:bootstrap -- --workflow=verify
+```
 
-- **GitHub** — issues, PRs, Actions (`gh` CLI)
-- **Linear** — issues via Linear MCP/API when configured
-- Do **not** use removed EnergyCenter flows (Bitbucket PR scripts, Jira ticket fetchers, Sentry triage commands)
+Bootstrap rule: **`rules-harness-bootstrap.mdc`**.
+
+## Skip (no command attachment)
+
+See manifest `skip.signals` — explanation-only, review-only, status, meta chat.
+
+## Priority (first match wins)
+
+See manifest `routing` (sorted by `priority`). Examples:
+
+| Priority | Signals (subset)           | Command                                              |
+| -------- | -------------------------- | ---------------------------------------------------- |
+| 1        | comprehensive commit       | `command-git-commit-comprehensive-review.md`         |
+| 2        | commit, quick commit       | `command-git-commit-quick.md`                        |
+| 8        | verify, lint, typecheck    | `command-verify-post-change-lint-typecheck-tests.md` |
+| 9        | structure, validate staged | workflow `structure` only                            |
+
+## Workflows (scripts — do not duplicate in rules)
+
+| Workflow    | Scripts                                                        |
+| ----------- | -------------------------------------------------------------- |
+| `verify`    | `cursor:verify`, `lint`, `typecheck`, Vitest `--changed`       |
+| `commit`    | `validate:staged` + Husky manifest                             |
+| `pr`        | `validate:staged`, `cursor:architecture --staged`, `typecheck` |
+| `structure` | `validate:staged`                                              |
+
+## Trackers
+
+GitHub (`gh`), Linear branch keys — no Bitbucket / Jira CLI / Sentry harness in this repo.

@@ -6,19 +6,20 @@ Read **`CLAUDE.md`** for project overview, stack, and verification commands.
 
 ## Harness locations
 
+- **Bootstrap:** `npm run harness:bootstrap` — manifest `.cursor/harness/agent-bootstrap.manifest.json`
+- **Rule:** `.cursor/rules/rules-harness-bootstrap.mdc`
+- **Invariants:** `.cursor/rules/rules-bundle-core.mdc`
+- **Git hooks:** `npm run harness:bootstrap -- --workflow=commit` (doc: `npm run harness:sync`)
 - **Rules:** `.cursor/rules/` (registered in `.cursor.json`)
 - **Commands:** `.cursor/commands/`
 - **Skills:** `.cursor/skills/`
 - **Scripts:** `.agents/scripts/`
 - **Husky:** `.husky/pre-commit`, `.husky/commit-msg`
 
-## Required checks before commit
+## Verification and commit
 
-```bash
-npm run validate:staged
-npm run cursor:architecture -- --staged
-npm run typecheck
-```
+- Post-change: `@.cursor/commands/command-verify-post-change-lint-typecheck-tests.md`
+- Commit: `@.cursor/commands/command-git-commit-quick.md` + `.cursor/harness/git-hooks.md`
 
 Always stage and commit `.feature-knowledge/index.json` when it changed; do not exclude it as unrelated.
 

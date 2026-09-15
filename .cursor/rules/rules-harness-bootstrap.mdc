@@ -1,0 +1,33 @@
+---
+description: >-
+  Harness bootstrap: resolve intent via manifest; attach one command playbook when matched.
+globs:
+  - "**/*"
+alwaysApply: true
+---
+
+# Harness bootstrap (agent hook)
+
+Authoritative machine config: **`.cursor/harness/agent-bootstrap.manifest.json`**.
+
+## Every request
+
+1. Resolve intent with **`npm run harness:bootstrap -- --match="<user message excerpt>"`** (or read the manifest routing table).
+2. If matched: attach **only** that **`@.cursor/commands/<file>.md`** when `command` is set.
+3. If `workflow` is set, run **`npm run harness:bootstrap -- --workflow=<name>`** for scripts (do not duplicate script lists from rules).
+4. If no match, or skip signals in the manifest: no command playbooks.
+5. Path-scoped **rules** from **`.cursor.json`** only.
+
+## Git hooks (Husky)
+
+Not every turn — only for **commit** / **pr** workflows: **`npm run harness:bootstrap -- --workflow=commit`** or **`.cursor/harness/git-hooks.md`** (synced from manifest).
+
+## Out of scope
+
+No EnergyCenter harness (Bitbucket, Jira CLI, Sentry triage). Stack: Next.js, Neon, Tailwind 4.
+
+## Index
+
+- **`npm run harness:bootstrap`** — summary
+- **`.cursor/commands/command-README.md`**
+- **`rules-bundle-core.mdc`** — invariants

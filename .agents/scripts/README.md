@@ -2,6 +2,15 @@
 
 Run from repo root. Hygiene and verification only — **no Jira/Bitbucket/Sentry scripts**.
 
+## Harness
+
+| Script                | npm script                  |
+| --------------------- | --------------------------- |
+| `harnessBootstrap.ts` | `npm run harness:bootstrap` |
+| (same)                | `npm run harness:sync`      |
+
+Agent routing/workflows/git-hooks: **`.cursor/harness/agent-bootstrap.manifest.json`**.
+
 ## Verification
 
 | Script                         | npm script                    |

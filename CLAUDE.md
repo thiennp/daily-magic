@@ -59,16 +59,9 @@ Stack: Next.js 16 App Router, React 19, TypeScript, Tailwind CSS 4, Neon Postgre
 
 ## Verification (after code changes)
 
-```bash
-npm run lint
-npm run typecheck
-npm run test
-npm run validate:all
-npm run cursor:architecture -- --all
-npm run build
-```
+Use **`.cursor/commands/command-verify-post-change-lint-typecheck-tests.md`** for the full agent workflow.
 
-Pre-commit runs Prettier, ESLint, `structure-validation`, architecture checks (including **max 100 effective lines** per `src/` file, excluding blank lines and imports), and typecheck on staged `src/` files.
+Husky **pre-commit** steps are listed in **`.cursor/harness/git-hooks.md`** (Prettier, ESLint, structure-validation, staged architecture checks, typecheck).
 
 ---
 

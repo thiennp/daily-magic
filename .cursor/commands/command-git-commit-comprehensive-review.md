@@ -11,6 +11,7 @@ Pair with **`skill-post-change-verification`**.
 
 ## 1. Scope review
 
+- [ ] Run **`npm run harness:bootstrap -- --workflow=commit`** (Husky + staged checks)
 - [ ] `git status` and full `git diff`
 - [ ] Group changes: app routes, features, components, config, harness
 - [ ] Confirm no secrets or `.env` files staged

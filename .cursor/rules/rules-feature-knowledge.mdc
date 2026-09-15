@@ -1,7 +1,7 @@
 ---
 description: Query feature knowledge (RAG) before edits; always commit the index
 globs: src/features/**
-alwaysApply: true
+alwaysApply: false
 ---
 
 # Feature knowledge (query before edits)
