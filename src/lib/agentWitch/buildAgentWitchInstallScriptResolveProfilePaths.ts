@@ -13,7 +13,7 @@ resolve_agent_witch_profile_paths() {
   PROFILE_EMAIL="\$(printf '%s' "\${PROFILE_EMAIL}" | tr '[:upper:]' '[:lower:]' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')"
 
   if [[ -z "\${PROFILE_EMAIL}" && -n "\${PRESET_PROFILE_EMAIL:-}" ]]; then
-    PROFILE_EMAIL="\${PRESET_PROFILE_EMAIL}"
+    PROFILE_EMAIL="\${PRESET_PROFILE_EMAIL:-}"
   fi
 
   if [[ -z "\${PROFILE_EMAIL}" && -f "\${INSTALL_DIR}/active-profile.json" ]]; then

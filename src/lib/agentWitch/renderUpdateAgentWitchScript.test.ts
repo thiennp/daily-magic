@@ -23,4 +23,19 @@ describe("renderUpdateAgentWitchScript", () => {
     expect(script).toContain("printf '\\rUpdating… %d%%'");
     expect(script).not.toContain('echo "Installing Agent Witch…"');
   });
+
+  it("AGENT-064: shows current and target bundle version in the terminal", () => {
+    const script = renderUpdateAgentWitchScript("https://www.agentwitch.com");
+
+    expect(script).toContain("agent_witch_print_update_version_summary");
+    expect(script).toContain('echo "Current version: ${current_version}"');
+    expect(script).toContain('echo "Updating to: ${target_version}"');
+  });
+
+  it("AGENT-063: run.sh heredoc tolerates unset PRESET_PROFILE_EMAIL under set -u", () => {
+    const script = renderUpdateAgentWitchScript("https://www.agentwitch.com");
+
+    expect(script).not.toMatch(/PROFILE_EMAIL="\$\{PRESET_PROFILE_EMAIL\}"/);
+    expect(script).toContain('PROFILE_EMAIL="${PRESET_PROFILE_EMAIL:-}"');
+  });
 });

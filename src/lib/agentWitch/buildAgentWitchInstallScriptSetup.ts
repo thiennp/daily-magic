@@ -14,6 +14,7 @@ import {
 } from "@/lib/agentWitch/buildAgentWitchInstallScriptResolveProfilePaths";
 import { buildAgentWitchInstallScriptRegisterLaunchAgentFn } from "@/lib/agentWitch/buildAgentWitchInstallScriptRegisterLaunchAgent";
 import { buildAgentWitchInstallScriptWakePortAllocation } from "@/lib/agentWitch/buildAgentWitchInstallScriptWakePortAllocation";
+import { buildAgentWitchInstallScriptUpdateVersionSummary } from "@/lib/agentWitch/buildAgentWitchInstallScriptUpdateVersionSummary";
 import { buildAgentWitchInstallScriptWriterBootstrap } from "@/lib/agentWitch/buildAgentWitchInstallScriptWriterBootstrap";
 
 export const buildAgentWitchInstallScriptSetup = (
@@ -69,7 +70,7 @@ PROFILE_EMAIL="\${PROFILE_EMAIL:-\${AGENT_WITCH_PROFILE:-\${AGENT_WITCH_EMAIL:-}
 PROFILE_EMAIL="\$(printf '%s' "\${PROFILE_EMAIL}" | tr '[:upper:]' '[:lower:]' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')"
 
 if [[ -z "\${PROFILE_EMAIL}" && -n "\${PRESET_PROFILE_EMAIL:-}" ]]; then
-  PROFILE_EMAIL="\${PRESET_PROFILE_EMAIL}"
+  PROFILE_EMAIL="\${PRESET_PROFILE_EMAIL:-}"
 fi
 
 NODE_DIR="\$(dirname "\${NODE_BIN}")"
@@ -95,7 +96,7 @@ PLIST_PATH="\${HOME}/Library/LaunchAgents/\${LAUNCH_AGENT_LABEL}.plist"
 ${buildAgentWitchInstallScriptMacOsConsoleUserGuard()}
 ${buildAgentWitchInstallScriptRetireAuxiliaryLaunchAgents()}
 ${buildAgentWitchInstallScriptProgress({ updateExistingInstall })}
-agent_witch_install_begin
+${updateExistingInstall ? buildAgentWitchInstallScriptUpdateVersionSummary(input.appOrigin) : ""}${updateExistingInstall ? "agent_witch_print_update_version_summary\n" : ""}agent_witch_install_begin
 
 agent_witch_install_step
 ${buildAgentWitchInstallScriptConfigBlock({

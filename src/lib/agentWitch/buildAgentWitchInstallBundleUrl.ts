@@ -14,3 +14,6 @@ export const buildAgentWitchInstallDepsArchiveUrl = (origin: string): string =>
 
 export const buildAgentWitchInstallBundleRelativePath = (): string =>
   `${AGENT_WITCH_APP_DIR_NAME}/${AGENT_WITCH_APP_BUNDLE_FILE_NAME}`;
+
+export const buildAgentWitchInstallVersionUrl = (origin: string): string =>
+  `${normalizeOrigin(origin)}/install/agent-witch/version`;
