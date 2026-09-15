@@ -111,7 +111,7 @@ export const buildLocalHarnessRevealClientScript = (): string => `(() => {
       if (!(group instanceof HTMLDetailsElement)) {
         group = document.createElement("details");
         group.className = "reveal-live-group";
-        group.open = true;
+        group.open = false;
         group.dataset.groupName = data.groupName;
         group.innerHTML =
           '<summary class="reveal-group-summary">' +
@@ -131,7 +131,7 @@ export const buildLocalHarnessRevealClientScript = (): string => `(() => {
       if (!(group instanceof HTMLDetailsElement)) {
         group = document.createElement("details");
         group.className = "reveal-live-group";
-        group.open = true;
+        group.open = false;
         group.dataset.groupName = data.groupName;
         group.innerHTML =
           '<summary class="reveal-group-summary">' +
@@ -306,6 +306,7 @@ const buildRevealForm = (reveal: LocalHarnessRevealResult): string => {
             })),
           );
           const treeHtml = buildLocalHarnessRevealTreeHtml(tree, escapeHtml);
+          const fileCount = set.items.length;
 
           return `<div class="harness-set-block">
               <label class="check-row harness-set-include">
@@ -315,7 +316,10 @@ const buildRevealForm = (reveal: LocalHarnessRevealResult): string => {
               <input type="hidden" name="setSlug-${setIndex}" value="${escapeHtml(set.proposedSlug)}" />
               <input type="hidden" name="setName-${setIndex}" value="${escapeHtml(set.proposedName)}" />
               <p class="muted mono">${escapeHtml(set.sourceRoot)}</p>
-              <ul class="harness-tree">${treeHtml}</ul>
+              <details class="harness-tree-root">
+                <summary class="harness-tree-root-summary">${fileCount} file(s)</summary>
+                <ul class="harness-tree harness-tree-root-list">${treeHtml}</ul>
+              </details>
             </div>`;
         })
         .join("");
