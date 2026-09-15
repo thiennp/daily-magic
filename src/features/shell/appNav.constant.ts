@@ -29,7 +29,7 @@ export const PRIMARY_NAV: readonly AppNavItem[] = [
   },
   {
     href: "/marketplace",
-    label: "Team playbooks",
+    label: "Marketplace",
     isActive: (pathname) => pathname.startsWith("/marketplace"),
   },
   {

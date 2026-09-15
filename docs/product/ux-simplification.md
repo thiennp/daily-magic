@@ -178,7 +178,7 @@ Use for Home / first-run design reviews. **Default path = solo.** “Team” var
 
 ### Persona gates (engineering)
 
-- [x] `teamNavEnabled` from `GET /api/me/shell-context` (group membership): hide Team playbooks + Automations in nav
+- [x] `teamNavEnabled` from `GET /api/me/shell-context` (group membership): hide **Automations** in nav (Marketplace stays for solo harness browse/install)
 - [x] `showAdminNav` when privileged global role or team membership
 - [ ] Hide marketplace/library routes from nav when solo; deep links still work for power users
 - [x] Onboarding API steps mapped to UI steps 1–2 only in default checklist

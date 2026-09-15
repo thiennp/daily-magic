@@ -17,16 +17,16 @@ describe("filterAppNavForShellContext", () => {
     navItem("/admin/groups", "Admin"),
   ];
 
-  it("hides team and admin items for solo users", () => {
+  it("hides team-only and admin items for solo users but keeps marketplace", () => {
     const filtered = filterAppNavForShellContext(items, {
       teamNavEnabled: false,
       showAdminNav: false,
     });
 
-    expect(filtered.map((item) => item.href)).toEqual(["/"]);
+    expect(filtered.map((item) => item.href)).toEqual(["/", "/marketplace"]);
   });
 
-  it("shows team items when the user has group membership", () => {
+  it("shows automations when the user has group membership", () => {
     const filtered = filterAppNavForShellContext(items, {
       teamNavEnabled: true,
       showAdminNav: false,

@@ -15,6 +15,11 @@ export const BOTTOM_NAV: readonly AppNavItem[] = [
     isActive: (pathname) => pathname.startsWith("/library"),
   },
   {
+    href: "/marketplace",
+    label: "Market",
+    isActive: (pathname) => pathname.startsWith("/marketplace"),
+  },
+  {
     href: SEND_TASK_NAV_HREF,
     label: "Send",
     isActive: () => false,
