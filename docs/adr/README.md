@@ -8,6 +8,7 @@ ADRs capture **why** the system is shaped the way it is. They are indexed by fea
 | [0002](0002-custom-server-for-agent-witch-websocket.md) | Custom Node server for Agent Witch WebSocket |
 | [0003](0003-feature-ui-with-server-lib.md)              | Feature UI with server lib co-location       |
 | [0004](0004-cursor-cloud-dispatch-origin.md)            | Cursor Cloud dispatch origin policy          |
+| [0005](0005-shared-mac-presence-and-dispatch-outbox.md) | Shared Mac presence and dispatch outbox      |
 
 New ADRs: add the next numbered file and a row in this table, then `npm run feature-knowledge:index`.
 
