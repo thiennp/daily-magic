@@ -343,7 +343,7 @@ const buildRevealForm = (reveal: LocalHarnessRevealResult): string => {
         Report manifest to cloud after submit (requires WS connected on Status)
       </label>
       <div class="actions">
-        <button class="btn btn-primary" type="submit">Submit selected to local harness</button>
+        <button class="btn btn-primary" type="submit">Submit</button>
       </div>
     </form>`;
 };
