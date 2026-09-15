@@ -1511,6 +1511,22 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
       state.reconnectAttempt = 0;
       connect();
     },
+    reportHarnessManifestIfConnected: (): {
+      readonly ok: boolean;
+      readonly errorMessage?: string;
+    } => {
+      const socket = state.socket;
+      if (!state.wsConnected || socket === undefined) {
+        return {
+          ok: false,
+          errorMessage:
+            "Not connected to Agent Witch — manifest saved locally only.",
+        };
+      }
+
+      reportHarnessManifest(socket, config.layout);
+      return { ok: true };
+    },
   };
 };
 
@@ -1606,6 +1622,8 @@ const main = async (): Promise<void> => {
     controllers: {
       getStatus: primaryClient.getStatus,
       reviveWebSocket: reconnectWebSockets,
+      reportHarnessManifestIfConnected:
+        primaryClient.reportHarnessManifestIfConnected,
     },
   });
 

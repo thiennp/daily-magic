@@ -264,8 +264,11 @@ code, .mono {
   margin-top: 1.25rem;
 }
 
-.input {
+.search-row .input {
   flex: 1 1 16rem;
+}
+
+.input {
   min-width: 0;
   height: 2.75rem;
   padding: 0 0.75rem;
@@ -362,17 +365,50 @@ pre {
 
 .stack { display: flex; flex-direction: column; gap: 0.75rem; }
 
-.field { display: flex; flex-direction: column; gap: 0.35rem; }
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  flex: 0 0 auto;
+  align-self: stretch;
+}
+
+.field > .input,
+input.input[type="text"] {
+  flex: none;
+  box-sizing: border-box;
+  width: 100%;
+  height: 2.75rem;
+  min-height: 2.75rem;
+  max-height: 2.75rem;
+}
+
+.search-row input.input[type="text"] {
+  flex: 1 1 16rem;
+  width: auto;
+}
 
 .field-label { font-size: 0.8125rem; color: var(--aw-zinc-600); }
 
 .textarea { min-height: 6rem; resize: vertical; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 0.8125rem; }
 
 .check-list { list-style: none; margin: 0.75rem 0 0; padding: 0; display: flex; flex-direction: column; gap: 0.5rem; }
-.reveal-live-list { list-style: none; margin: 0.5rem 0 0; padding: 0; display: flex; flex-direction: column; gap: 0.35rem; max-height: 16rem; overflow-y: auto; }
-.reveal-folder-row { font-size: 0.875rem; padding: 0.35rem 0.5rem; border-radius: 0.375rem; background: var(--aw-zinc-50); border: 1px solid var(--aw-zinc-200); }
-.reveal-set-badge { margin-left: 0.5rem; font-size: 0.75rem; color: var(--aw-emerald-700); }
+.reveal-live-list { display: flex; flex-direction: column; gap: 0.5rem; max-height: 16rem; overflow-y: auto; margin-top: 0.5rem; }
+.reveal-live-group { border: 1px solid var(--aw-zinc-200); border-radius: 0.375rem; padding: 0.35rem 0.5rem; background: var(--aw-zinc-50); }
+.reveal-group-summary { cursor: pointer; font-weight: 600; }
+.reveal-live-tree { list-style: none; margin: 0.35rem 0 0; padding-left: 0.75rem; display: flex; flex-direction: column; gap: 0.2rem; }
+.harness-group-title { font-size: 1.125rem; margin: 0 0 0.75rem; }
+.harness-set-block + .harness-set-block { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--aw-zinc-200); }
+.harness-set-include { margin-bottom: 0.5rem; }
+.harness-tree { list-style: none; margin: 0; padding-left: 0.75rem; display: flex; flex-direction: column; gap: 0.25rem; }
+.harness-tree-folder > details > summary { cursor: pointer; list-style: none; }
+.harness-tree-folder-name { font-weight: 600; }
+.harness-tree-preview { background: none; border: none; padding: 0.15rem 0; text-align: left; cursor: pointer; color: inherit; font: inherit; width: 100%; }
+.harness-tree-preview:hover { color: var(--aw-emerald-700); }
+.harness-tree-preview-body { margin: 0.35rem 0 0.75rem; padding: 0.75rem; max-height: 14rem; overflow: auto; background: var(--aw-zinc-900); color: var(--aw-zinc-50); border-radius: 0.375rem; font-size: 0.75rem; white-space: pre-wrap; }
+.reveal-folder-row { font-size: 0.8125rem; }
 .reveal-progress { margin-top: 0.25rem; }
+.sync-cloud-row { margin-top: 1rem; }
 
 .check-row label { display: flex; flex-direction: column; gap: 0.25rem; font-size: 0.875rem; }
 

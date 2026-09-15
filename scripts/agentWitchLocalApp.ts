@@ -28,6 +28,8 @@ import {
 } from "./buildAgentWitchLocalHarnessPage";
 import { buildDefaultLocalHarnessScanFolder } from "./localHarness/defaultLocalHarnessScanRoots";
 import { pickMacOsFolderDialog } from "./pickMacOsFolderDialog";
+import { mergeLocalHarnessRevealWithCursorDir } from "./localHarness/mergeLocalHarnessRevealWithCursorDir";
+import { assertReadableFileUnderHome } from "./localHarness/pathSafety";
 import { streamLocalHarnessReveal } from "./localHarness/streamLocalHarnessReveal";
 import {
   readLocalHarnessRevealCache,
@@ -42,6 +44,8 @@ import { loadOrCreateAgentWitchDeviceKeypair } from "./agentWitchDeviceKeypair";
 
 const formatLocalAppTimestamp = (value: string | null): string =>
   formatAgentWitchRelativeTimeAgo(value) ?? "never";
+
+const LOCAL_HARNESS_FILE_PREVIEW_MAX_CHARS = 48_000;
 
 type LocalAppStatus = {
   readonly wsConnected: boolean;
@@ -137,6 +141,10 @@ const buildStatusBody = (input: {
 export type AgentWitchLocalAppControllers = {
   readonly getStatus: () => LocalAppStatus;
   readonly reviveWebSocket: () => void;
+  readonly reportHarnessManifestIfConnected?: () => {
+    readonly ok: boolean;
+    readonly errorMessage?: string;
+  };
 };
 
 export const startAgentWitchLocalApp = (input: {
@@ -303,12 +311,18 @@ export const startAgentWitchLocalApp = (input: {
         const reveal = readLocalHarnessRevealCache(input.layout);
         const flashMessage =
           url.searchParams.get("submitted") === "1"
-            ? "Local harness updated from your selection."
-            : url.searchParams.get("stopped") === "1"
-              ? `Reveal stopped. ${reveal?.sets.length ?? 0} set(s) saved — you can submit or scan again.`
-              : url.searchParams.get("revealed") === "1"
-                ? `Reveal found ${reveal?.sets.length ?? 0} set(s).`
-                : null;
+            ? url.searchParams.get("syncFailed") === "1"
+              ? `Local harness updated (${url.searchParams.get("count") ?? "0"} items). Cloud sync failed — check WS connection on Status.`
+              : url.searchParams.get("synced") === "1"
+                ? `Local harness updated and manifest reported to cloud (${url.searchParams.get("count") ?? "0"} items).`
+                : "Local harness updated from your selection."
+            : url.searchParams.get("added") === "1"
+              ? "Project added to reveal list."
+              : url.searchParams.get("stopped") === "1"
+                ? `Reveal stopped. ${reveal?.sets.length ?? 0} set(s) saved — you can submit or scan again.`
+                : url.searchParams.get("revealed") === "1"
+                  ? `Reveal found ${reveal?.sets.length ?? 0} set(s).`
+                  : null;
         const scanFolder =
           reveal?.scanRoots[0] ?? buildDefaultLocalHarnessScanFolder();
         sendHtml(
@@ -334,6 +348,88 @@ export const startAgentWitchLocalApp = (input: {
           return;
         }
         sendJson(response, 200, { path: chosen });
+        return;
+      }
+
+      if (method === "GET" && pathname === "/api/harness/file-content") {
+        const url = new URL(
+          request.url ?? "/",
+          `http://127.0.0.1:${AGENT_WITCH_LOCAL_APP_PORT}`,
+        );
+        const filePath = url.searchParams.get("path")?.trim() ?? "";
+        const safePath = assertReadableFileUnderHome(filePath);
+        if (safePath === null) {
+          sendJson(response, 404, {
+            errorMessage:
+              "File not found or not readable under your home folder.",
+          });
+          return;
+        }
+
+        try {
+          const rawContent = fs.readFileSync(safePath, "utf8");
+          const content =
+            rawContent.length > LOCAL_HARNESS_FILE_PREVIEW_MAX_CHARS
+              ? `${rawContent.slice(0, LOCAL_HARNESS_FILE_PREVIEW_MAX_CHARS)}\n… (truncated)`
+              : rawContent;
+          sendJson(response, 200, { content });
+        } catch {
+          sendJson(response, 500, { errorMessage: "Could not read file." });
+        }
+        return;
+      }
+
+      if (method === "POST" && pathname === "/api/harness/reveal/add-project") {
+        const rawBody = await readBody(request);
+        let projectPath = "";
+        try {
+          const parsed: unknown = JSON.parse(rawBody);
+          if (
+            typeof parsed === "object" &&
+            parsed !== null &&
+            typeof (parsed as { projectPath?: unknown }).projectPath ===
+              "string"
+          ) {
+            projectPath = (
+              parsed as { projectPath: string }
+            ).projectPath.trim();
+          }
+        } catch {
+          sendJson(response, 400, {
+            ok: false,
+            errorMessage: "Invalid JSON body.",
+          });
+          return;
+        }
+
+        if (projectPath.length === 0) {
+          sendJson(response, 400, {
+            ok: false,
+            errorMessage: "projectPath is required.",
+          });
+          return;
+        }
+
+        const existing = readLocalHarnessRevealCache(input.layout);
+        const merged = mergeLocalHarnessRevealWithCursorDir({
+          reveal: existing,
+          projectPath,
+        });
+
+        if (merged === null || merged.sets.length === 0) {
+          sendJson(response, 400, {
+            ok: false,
+            errorMessage:
+              "No .cursor folder with harness files found under that path.",
+          });
+          return;
+        }
+
+        writeLocalHarnessRevealCache(input.layout, merged);
+        sendJson(response, 200, {
+          ok: true,
+          setCount: merged.sets.length,
+        });
         return;
       }
 
@@ -424,8 +520,16 @@ export const startAgentWitchLocalApp = (input: {
           return;
         }
 
+        const syncToCloud = form.get("syncToCloud") === "on";
+        let syncQuery = "";
+        if (syncToCloud) {
+          const syncResult =
+            input.controllers.reportHarnessManifestIfConnected?.();
+          syncQuery = syncResult?.ok === true ? "&synced=1" : "&syncFailed=1";
+        }
+
         response.writeHead(303, {
-          Location: `/harness?submitted=1&count=${result.writtenItemCount ?? 0}`,
+          Location: `/harness?submitted=1&count=${result.writtenItemCount ?? 0}${syncQuery}`,
         });
         response.end();
         return;

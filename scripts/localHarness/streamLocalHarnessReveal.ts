@@ -1,13 +1,13 @@
-import fs from "node:fs";
 import path from "node:path";
 
 import type { ServerResponse } from "node:http";
 
-import { resolveSafePathUnderHome } from "./pathSafety";
 import {
   buildLocalHarnessCandidateSetFromCursorDir,
   iterateCursorDirectoriesUnderRoot,
 } from "./buildLocalHarnessCandidateSet";
+import { resolveSafePathUnderHome } from "./pathSafety";
+import { resolveLocalHarnessGroupNameFromCursorDir } from "./resolveLocalHarnessGroupNameFromCursorDir";
 import type { LocalHarnessRevealResult } from "./revealLocalHarnessCandidates.types";
 
 export const LOCAL_HARNESS_REVEAL_MAX_DEPTH = 5;
@@ -52,10 +52,12 @@ export const streamLocalHarnessReveal = (input: {
       continue;
     }
 
+    const groupName = resolveLocalHarnessGroupNameFromCursorDir(safeCursor);
+
     writeSseEvent(input.response, "folder", {
       cursorDir: safeCursor,
+      groupName,
       repoPath: path.dirname(safeCursor),
-      repoName: path.basename(path.dirname(safeCursor)),
     });
 
     const set = buildLocalHarnessCandidateSetFromCursorDir(safeCursor);
@@ -64,8 +66,10 @@ export const streamLocalHarnessReveal = (input: {
       writeSseEvent(input.response, "set", {
         proposedSlug: set.proposedSlug,
         proposedName: set.proposedName,
+        groupName,
         itemCount: set.items.length,
         sourceRoot: set.sourceRoot,
+        tree: set.items.map((item) => item.relativePath),
       });
     }
   }

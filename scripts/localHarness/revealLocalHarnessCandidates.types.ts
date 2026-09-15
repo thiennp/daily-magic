@@ -5,6 +5,7 @@ export interface LocalHarnessCandidateItem {
   readonly kind: HarnessInstallItemKind;
   readonly title: string;
   readonly sourcePath: string;
+  readonly relativePath: string;
   readonly selected: boolean;
 }
 

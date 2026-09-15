@@ -1,5 +1,8 @@
 import type { LocalHarnessRevealResult } from "./localHarness/revealLocalHarnessCandidates.types";
 import type { LocalHarnessSubmitSet } from "./localHarness/submitLocalHarnessSelection";
+import path from "node:path";
+import { buildLocalHarnessRevealTreeFromItems } from "./localHarness/buildLocalHarnessRevealTree";
+import { buildLocalHarnessRevealTreeHtml } from "./localHarness/buildLocalHarnessRevealTreeHtml";
 
 const escapeHtml = (value: string): string =>
   value
@@ -16,17 +19,52 @@ export const buildLocalHarnessRevealClientScript = (): string => `(() => {
   const progress = document.getElementById("revealProgress");
   let source = null;
 
+  const readLastRevealScanFolder = () => {
+    if (!(scanInput instanceof HTMLInputElement)) {
+      return "";
+    }
+    return scanInput.dataset.lastRevealScan ?? "";
+  };
+
+  const normalizeScanFolder = (value) => value.trim();
+
+  const syncRevealButtonVisibility = () => {
+    if (!(scanInput instanceof HTMLInputElement)) {
+      return;
+    }
+    if (!(revealBtn instanceof HTMLButtonElement)) {
+      return;
+    }
+    const lastRevealScanFolder = readLastRevealScanFolder();
+    if (lastRevealScanFolder.length === 0) {
+      revealBtn.hidden = false;
+      return;
+    }
+    const matchesLastReveal =
+      normalizeScanFolder(scanInput.value) ===
+      normalizeScanFolder(lastRevealScanFolder);
+    revealBtn.hidden = matchesLastReveal;
+  };
+
   const setRevealRunning = (running) => {
     if (revealBtn instanceof HTMLButtonElement) {
-      revealBtn.disabled = running;
+      if (running) {
+        revealBtn.hidden = true;
+      } else {
+        syncRevealButtonVisibility();
+      }
     }
     if (stopBtn instanceof HTMLButtonElement) {
-      stopBtn.disabled = !running;
+      stopBtn.hidden = !running;
     }
     if (progress instanceof HTMLElement) {
       progress.hidden = !running;
     }
   };
+
+  syncRevealButtonVisibility();
+  scanInput?.addEventListener("input", syncRevealButtonVisibility);
+  scanInput?.addEventListener("change", syncRevealButtonVisibility);
 
   const finishReveal = (query) => {
     if (source) {
@@ -42,6 +80,7 @@ export const buildLocalHarnessRevealClientScript = (): string => `(() => {
     const payload = await response.json();
     if (scanInput instanceof HTMLInputElement && typeof payload.path === "string") {
       scanInput.value = payload.path;
+      syncRevealButtonVisibility();
     }
   });
 
@@ -66,20 +105,50 @@ export const buildLocalHarnessRevealClientScript = (): string => `(() => {
       if (!(folderList instanceof HTMLElement)) {
         return;
       }
-      const row = document.createElement("li");
-      row.className = "reveal-folder-row";
-      row.textContent = data.repoName + " — " + data.repoPath;
-      folderList.appendChild(row);
+      let group = folderList.querySelector(
+        '[data-group-name="' + CSS.escape(data.groupName) + '"]',
+      );
+      if (!(group instanceof HTMLDetailsElement)) {
+        group = document.createElement("details");
+        group.className = "reveal-live-group";
+        group.open = true;
+        group.dataset.groupName = data.groupName;
+        group.innerHTML =
+          '<summary class="reveal-group-summary">' +
+          data.groupName +
+          '</summary><ul class="reveal-live-tree"></ul>';
+        folderList.appendChild(group);
+      }
     });
     source.addEventListener("set", (event) => {
       const data = JSON.parse(event.data);
-      if (!(folderList instanceof HTMLElement) || folderList.lastElementChild === null) {
+      if (!(folderList instanceof HTMLElement)) {
         return;
       }
-      const badge = document.createElement("span");
-      badge.className = "reveal-set-badge";
-      badge.textContent = data.itemCount + " item(s)";
-      folderList.lastElementChild.appendChild(badge);
+      let group = folderList.querySelector(
+        '[data-group-name="' + CSS.escape(data.groupName) + '"]',
+      );
+      if (!(group instanceof HTMLDetailsElement)) {
+        group = document.createElement("details");
+        group.className = "reveal-live-group";
+        group.open = true;
+        group.dataset.groupName = data.groupName;
+        group.innerHTML =
+          '<summary class="reveal-group-summary">' +
+          data.groupName +
+          '</summary><ul class="reveal-live-tree"></ul>';
+        folderList.appendChild(group);
+      }
+      const list = group.querySelector(".reveal-live-tree");
+      if (!(list instanceof HTMLUListElement)) {
+        return;
+      }
+      for (const relativePath of data.tree ?? []) {
+        const row = document.createElement("li");
+        row.className = "reveal-folder-row mono";
+        row.textContent = relativePath;
+        list.appendChild(row);
+      }
     });
     source.addEventListener("done", () => {
       finishReveal("revealed=1");
@@ -96,6 +165,59 @@ export const buildLocalHarnessRevealClientScript = (): string => `(() => {
 
   stopBtn?.addEventListener("click", () => {
     finishReveal("revealed=1&stopped=1");
+  });
+
+  document.getElementById("addProject")?.addEventListener("click", async () => {
+    const pickResponse = await fetch("/api/harness/pick-folder", {
+      method: "POST",
+    });
+    const picked = await pickResponse.json();
+    if (typeof picked.path !== "string") {
+      return;
+    }
+    const addResponse = await fetch("/api/harness/reveal/add-project", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ projectPath: picked.path }),
+    });
+    const result = await addResponse.json();
+    if (result.ok !== true) {
+      window.alert(
+        typeof result.errorMessage === "string"
+          ? result.errorMessage
+          : "Could not add project.",
+      );
+      return;
+    }
+    window.location.href = "/harness?added=1";
+  });
+})();`;
+
+export const buildLocalHarnessTreePreviewClientScript = (): string => `(() => {
+  document.querySelectorAll(".harness-tree-preview").forEach((button) => {
+    button.addEventListener("click", async () => {
+      const preview = button.nextElementSibling;
+      if (!(preview instanceof HTMLPreElement)) {
+        return;
+      }
+      if (!preview.hidden) {
+        preview.hidden = true;
+        return;
+      }
+      if (preview.dataset.loaded !== "1") {
+        const sourcePath = button.getAttribute("data-source-path") ?? "";
+        const response = await fetch(
+          "/api/harness/file-content?path=" + encodeURIComponent(sourcePath),
+        );
+        const payload = await response.json();
+        preview.textContent =
+          typeof payload.content === "string"
+            ? payload.content
+            : payload.errorMessage ?? "Could not load file.";
+        preview.dataset.loaded = "1";
+      }
+      preview.hidden = false;
+    });
   });
 })();`;
 
@@ -116,63 +238,102 @@ export const buildAgentWitchLocalHarnessPageBody = (input: {
       ? `<p class="empty">No harness candidates yet. Choose a folder and run reveal to scan for <code>.cursor</code> rules, commands, skills, and agents.</p>`
       : buildRevealForm(input.reveal);
 
+  const lastRevealScanFolder = input.reveal?.scanRoots[0]?.trim() ?? "";
+  const hideRevealInitially =
+    lastRevealScanFolder.length > 0 &&
+    input.scanFolder.trim() === lastRevealScanFolder;
+
   return `${flash}<section class="card">
       <p class="eyebrow">Local harness</p>
       <h1>Reveal &amp; submit</h1>
-      <p class="lede">Pick one folder under your home directory, scan for projects with <code>.cursor</code>, then submit your selection to the local harness.</p>
+      <p class="lede">Pick one folder under your home directory, scan for projects with <code>.cursor</code>, then submit your selection to the local harness. Scanning <code>~</code> can take a while — prefer a project folder or use <strong>Stop</strong>.</p>
       <div class="stack">
         <label class="field">
           <span class="field-label">Scan folder (required)</span>
-          <input class="input" id="scanFolder" name="scanFolder" type="text" value="${escapeHtml(input.scanFolder)}" placeholder="~" autocomplete="off" />
+          <input class="input" id="scanFolder" name="scanFolder" type="text" value="${escapeHtml(input.scanFolder)}" placeholder="~" autocomplete="off" data-last-reveal-scan="${escapeHtml(lastRevealScanFolder)}" />
         </label>
         <div class="actions">
           <button class="btn btn-secondary" type="button" id="pickFolder">Choose folder…</button>
-          <button class="btn btn-primary" type="button" id="revealStart">Reveal</button>
-          <button class="btn btn-secondary" type="button" id="revealStop" disabled>Stop</button>
+          <button class="btn btn-secondary" type="button" id="addProject">Add project…</button>
+          <button class="btn btn-primary" type="button" id="revealStart"${hideRevealInitially ? " hidden" : ""}>Reveal</button>
+          <button class="btn btn-secondary" type="button" id="revealStop" hidden>Stop</button>
         </div>
         <div class="reveal-progress" id="revealProgress" hidden>
           <p class="muted">Scanning… folders with <code>.cursor</code> appear below.</p>
-          <ul class="reveal-live-list" id="revealFolderList"></ul>
+          <div class="reveal-live-list" id="revealFolderList"></div>
         </div>
       </div>
     </section>
     ${revealSection}
-    <script>${buildLocalHarnessRevealClientScript()}</script>`;
+    <script>${buildLocalHarnessRevealClientScript()}</script>
+    <script>${buildLocalHarnessTreePreviewClientScript()}</script>`;
 };
 
 const buildRevealForm = (reveal: LocalHarnessRevealResult): string => {
-  const setBlocks = reveal.sets
-    .map((set, setIndex) => {
-      const itemRows = set.items
-        .map((item, itemIndex) => {
-          const fieldId = `item-${setIndex}-${itemIndex}`;
-          const includeValue = `${set.proposedSlug}|${item.id}`;
-          return `<li class="check-row">
-              <label for="${fieldId}">
-                <input id="${fieldId}" type="checkbox" name="include" value="${escapeHtml(includeValue)}" checked />
-                <code>${escapeHtml(item.kind)}</code>
-                ${escapeHtml(item.title)}
-                <span class="muted mono">${escapeHtml(item.sourcePath)}</span>
+  const groupedSets = new Map<
+    string,
+    {
+      readonly sets: {
+        readonly set: (typeof reveal.sets)[number];
+        readonly setIndex: number;
+      }[];
+    }
+  >();
+
+  reveal.sets.forEach((set, setIndex) => {
+    const groupKey = set.proposedName;
+    const existing = groupedSets.get(groupKey) ?? { sets: [] };
+    groupedSets.set(groupKey, {
+      sets: [...existing.sets, { set, setIndex }],
+    });
+  });
+
+  const groupBlocks = [...groupedSets.entries()]
+    .toSorted(([left], [right]) => left.localeCompare(right))
+    .map(([groupName, group]) => {
+      const setSections = group.sets
+        .map(({ set, setIndex }) => {
+          const tree = buildLocalHarnessRevealTreeFromItems(
+            set.items.map((item) => ({
+              ...item,
+              relativePath:
+                item.relativePath.length > 0
+                  ? item.relativePath
+                  : path
+                      .relative(set.sourceRoot, item.sourcePath)
+                      .replaceAll("\\", "/"),
+            })),
+          );
+          const treeHtml = buildLocalHarnessRevealTreeHtml(tree, escapeHtml);
+
+          return `<div class="harness-set-block">
+              <label class="check-row harness-set-include">
+                <input type="checkbox" name="includeSet" value="${setIndex}" checked />
+                Include in submit
               </label>
-            </li>`;
+              <input type="hidden" name="setSlug-${setIndex}" value="${escapeHtml(set.proposedSlug)}" />
+              <input type="hidden" name="setName-${setIndex}" value="${escapeHtml(set.proposedName)}" />
+              <p class="muted mono">${escapeHtml(set.sourceRoot)}</p>
+              <ul class="harness-tree">${treeHtml}</ul>
+            </div>`;
         })
         .join("");
 
-      return `<section class="card harness-set">
-          <label class="field">
-            <span class="field-label">Set name</span>
-            <input class="input" name="setName-${setIndex}" value="${escapeHtml(set.proposedName)}" />
-          </label>
-          <input type="hidden" name="setSlug-${setIndex}" value="${escapeHtml(set.proposedSlug)}" />
-          <p class="muted">Source: <code>${escapeHtml(set.sourceRoot)}</code></p>
-          <ul class="check-list">${itemRows}</ul>
+      return `<section class="card harness-group">
+          <h2 class="harness-group-title">${escapeHtml(groupName)}</h2>
+          ${setSections}
         </section>`;
     })
     .join("");
 
   return `<form method="POST" action="/harness/submit">
       <input type="hidden" name="setCount" value="${reveal.sets.length}" />
-      ${setBlocks}
+      ${groupBlocks}
+      <p class="muted">Click a file path to expand its contents (view only). Toggle sets with <strong>Include in submit</strong>.</p>
+      <label class="check-row sync-cloud-row">
+        <input type="checkbox" name="syncToCloud" value="on" />
+        Report manifest to cloud after submit (requires WS connected on Status)
+      </label>
       <div class="actions">
         <button class="btn btn-primary" type="submit">Submit selected to local harness</button>
       </div>
@@ -183,7 +344,12 @@ export const parseHarnessSubmitFormBody = (
   body: URLSearchParams,
   reveal: LocalHarnessRevealResult,
 ): readonly LocalHarnessSubmitSet[] => {
-  const includedKeys = new Set(body.getAll("include").map(String));
+  const includedSetIndices = new Set(
+    body
+      .getAll("includeSet")
+      .map((value) => Number.parseInt(String(value), 10))
+      .filter((value) => Number.isFinite(value)),
+  );
   const setCount = Number.parseInt(body.get("setCount") ?? "0", 10);
 
   const sets: LocalHarnessSubmitSet[] = [];
@@ -202,12 +368,15 @@ export const parseHarnessSubmitFormBody = (
     const name =
       nameFromForm.length > 0 ? nameFromForm : revealSet.proposedName;
 
+    const includeSet =
+      includedSetIndices.size === 0 || includedSetIndices.has(setIndex);
+
     const items = revealSet.items.map((item) => ({
       id: item.id,
       kind: item.kind,
       title: item.title,
       sourcePath: item.sourcePath,
-      include: includedKeys.has(`${slug}|${item.id}`),
+      include: includeSet,
     }));
 
     sets.push({ slug, name, items });

@@ -4,10 +4,11 @@ import path from "node:path";
 import type { HarnessInstallItemKind } from "../harnessInstallBundle.types";
 import { buildLocalHarnessItemId } from "./buildLocalHarnessItemId";
 import { inferHarnessItemKindFromRelativePath } from "./inferHarnessItemKind";
+import { resolveLocalHarnessGroupNameFromCursorDir } from "./resolveLocalHarnessGroupNameFromCursorDir";
 import type {
   LocalHarnessCandidateItem,
   LocalHarnessCandidateSet,
-} from "./revealLocalHarnessCandidates";
+} from "./revealLocalHarnessCandidates.types";
 
 const SKIP_DIR_NAMES = new Set([
   "node_modules",
@@ -121,7 +122,7 @@ export const buildLocalHarnessCandidateSetFromCursorDir = (
   }
 
   const repoPath = path.dirname(cursorDir);
-  const proposedName = path.basename(repoPath);
+  const proposedName = resolveLocalHarnessGroupNameFromCursorDir(cursorDir);
   const proposedSlug = sanitizeLocalHarnessSetSlug(proposedName);
 
   const items: LocalHarnessCandidateItem[] = files.map((file) => {
@@ -137,6 +138,7 @@ export const buildLocalHarnessCandidateSetFromCursorDir = (
       kind,
       title: titleFromRelativePath(kind, file.relativePath),
       sourcePath: file.absolutePath,
+      relativePath: file.relativePath.replaceAll("\\", "/"),
       selected: true,
     };
   });
