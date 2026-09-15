@@ -378,7 +378,6 @@ export const startAgentWitchLocalApp = (input: {
       if (method === "GET" && pathname === "/") {
         const status = input.controllers.getStatus();
         const installBundle = buildInstallBundleStatus();
-        const reveal = readLocalHarnessRevealCache(input.layout);
         const installed = readInstalledLocalHarnessSnapshot(input.layout);
         const errorLog = readAgentWitchErrorLogTail(input.layout.errorLogPath);
         sendHtml(
