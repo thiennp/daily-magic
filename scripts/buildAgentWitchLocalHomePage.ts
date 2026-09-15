@@ -23,7 +23,7 @@ export const buildAgentWitchLocalHomePageBody = (input: {
 
   const harnessMeta =
     input.harnessSetCount > 0
-      ? `${input.harnessSetCount} project set(s) ready to submit`
+      ? `${input.harnessSetCount} set(s) installed — apply to a project or import more`
       : "Scan local .cursor folders and install rules on this Mac";
 
   const knowledgeMeta =
@@ -63,7 +63,7 @@ export const buildAgentWitchLocalHomePageBody = (input: {
       <a class="home-card" href="/harness">
         <p class="home-card-eyebrow">Setup</p>
         <h2 class="home-card-title">Harness</h2>
-        <p class="home-card-lede">Reveal rules, commands, skills, and agents from your repos. Submit to <code>~/.agent-witch</code>.</p>
+        <p class="home-card-lede">View installed sets, apply them to a project <code>.cursor</code>, or import from repos.</p>
         <p class="home-card-meta">${escapeHtml(harnessMeta)}</p>
       </a>
       <a class="home-card" href="/knowledge">

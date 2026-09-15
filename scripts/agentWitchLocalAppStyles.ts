@@ -604,4 +604,8 @@ input.input[type="text"] {
 .check-row input { margin-right: 0.35rem; }
 
 .harness-set { margin-top: 1rem; }
+.harness-installed + .card { margin-top: 1rem; }
+.harness-installed-set-list { list-style: none; margin: 0.5rem 0 0; padding: 0; display: flex; flex-direction: column; gap: 0.75rem; }
+.harness-installed-set { padding: 0.65rem 0.75rem; border: 1px solid var(--aw-zinc-200); border-radius: 0.5rem; }
+.harness-apply-form { margin-top: 1rem; }
 `.trim();

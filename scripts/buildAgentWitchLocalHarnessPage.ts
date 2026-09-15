@@ -1,8 +1,10 @@
 import type { LocalHarnessRevealResult } from "./localHarness/revealLocalHarnessCandidates.types";
 import type { LocalHarnessSubmitSet } from "./localHarness/submitLocalHarnessSelection";
 import path from "node:path";
+import { buildAgentWitchLocalHarnessInstalledSection } from "./buildAgentWitchLocalHarnessInstalledSection";
 import { buildLocalHarnessRevealTreeFromItems } from "./localHarness/buildLocalHarnessRevealTree";
 import { buildLocalHarnessRevealTreeHtml } from "./localHarness/buildLocalHarnessRevealTreeHtml";
+import type { InstalledLocalHarnessSnapshot } from "./readInstalledLocalHarnessSnapshot";
 
 const escapeHtml = (value: string): string =>
   value
@@ -224,9 +226,20 @@ export const buildLocalHarnessTreePreviewClientScript = (): string => `(() => {
 export const buildAgentWitchLocalHarnessPageBody = (input: {
   readonly scanFolder: string;
   readonly reveal: LocalHarnessRevealResult | null;
+  readonly installed: InstalledLocalHarnessSnapshot;
+  readonly defaultProjectFolder: string;
   readonly flashMessage?: string | null;
   readonly flashError?: string | null;
+  readonly applyFlashMessage?: string | null;
+  readonly applyFlashError?: string | null;
 }): string => {
+  const installedSection = buildAgentWitchLocalHarnessInstalledSection({
+    installed: input.installed,
+    defaultProjectFolder: input.defaultProjectFolder,
+    applyFlashMessage: input.applyFlashMessage,
+    applyFlashError: input.applyFlashError,
+  });
+
   const flash = input.flashError
     ? `<div class="alert-error">${escapeHtml(input.flashError)}</div>`
     : input.flashMessage
@@ -243,8 +256,8 @@ export const buildAgentWitchLocalHarnessPageBody = (input: {
     lastRevealScanFolder.length > 0 &&
     input.scanFolder.trim() === lastRevealScanFolder;
 
-  return `${flash}<section class="card">
-      <p class="eyebrow">Local harness</p>
+  return `${installedSection}${flash}<section class="card">
+      <p class="eyebrow">Import</p>
       <h1>Reveal &amp; submit</h1>
       <p class="lede">Pick one folder under your home directory, scan for projects with <code>.cursor</code>, then submit your selection to the local harness. Scanning <code>~</code> can take a while — prefer a project folder or use <strong>Stop</strong>.</p>
       <div class="stack">

@@ -34,6 +34,8 @@ import {
   buildAgentWitchLocalHarnessPageBody,
   parseHarnessSubmitFormBody,
 } from "./buildAgentWitchLocalHarnessPage";
+import { applyInstalledHarnessSetsToProjectCursor } from "./applyInstalledHarnessSetsToProjectCursor";
+import { readInstalledLocalHarnessSnapshot } from "./readInstalledLocalHarnessSnapshot";
 import { buildDefaultLocalHarnessScanFolder } from "./localHarness/defaultLocalHarnessScanRoots";
 import { pickMacOsFolderDialog } from "./pickMacOsFolderDialog";
 import { mergeLocalHarnessRevealWithCursorDir } from "./localHarness/mergeLocalHarnessRevealWithCursorDir";
@@ -53,11 +55,43 @@ import { shouldShowAgentWitchLocalReviveButton } from "./shouldShowAgentWitchLoc
 import { triggerAgentWitchLocalInstallBundleUpdate } from "./triggerAgentWitchLocalInstallBundleUpdate";
 import type { AgentWitchLocalLayout } from "./resolveAgentWitchLocalLayout";
 import { loadOrCreateAgentWitchDeviceKeypair } from "./agentWitchDeviceKeypair";
+import type { LocalHarnessRevealResult } from "./localHarness/revealLocalHarnessCandidates.types";
 
 const formatLocalAppTimestamp = (value: string | null): string =>
   formatAgentWitchRelativeTimeAgo(value) ?? "never";
 
 const LOCAL_HARNESS_FILE_PREVIEW_MAX_CHARS = 48_000;
+
+const resolveDefaultHarnessProjectFolder = (
+  reveal: LocalHarnessRevealResult | null,
+): string => {
+  const repoPath = reveal?.sets.find(
+    (set) => set.repoPath.trim().length > 0,
+  )?.repoPath;
+  return repoPath?.trim() ?? "";
+};
+
+const buildHarnessPageBodyInput = (input: {
+  readonly layout: AgentWitchLocalLayout;
+  readonly reveal: LocalHarnessRevealResult | null;
+  readonly scanFolder?: string;
+  readonly flashMessage?: string | null;
+  readonly flashError?: string | null;
+  readonly applyFlashMessage?: string | null;
+  readonly applyFlashError?: string | null;
+}) => ({
+  scanFolder:
+    input.scanFolder ??
+    input.reveal?.scanRoots[0] ??
+    buildDefaultLocalHarnessScanFolder(),
+  reveal: input.reveal,
+  installed: readInstalledLocalHarnessSnapshot(input.layout),
+  defaultProjectFolder: resolveDefaultHarnessProjectFolder(input.reveal),
+  flashMessage: input.flashMessage,
+  flashError: input.flashError,
+  applyFlashMessage: input.applyFlashMessage,
+  applyFlashError: input.applyFlashError,
+});
 
 type LocalAppStatus = {
   readonly wsConnected: boolean;
@@ -345,6 +379,7 @@ export const startAgentWitchLocalApp = (input: {
         const status = input.controllers.getStatus();
         const installBundle = buildInstallBundleStatus();
         const reveal = readLocalHarnessRevealCache(input.layout);
+        const installed = readInstalledLocalHarnessSnapshot(input.layout);
         const errorLog = readAgentWitchErrorLogTail(input.layout.errorLogPath);
         sendHtml(
           response,
@@ -356,7 +391,7 @@ export const startAgentWitchLocalApp = (input: {
             body: buildAgentWitchLocalHomePageBody({
               wsConnected: status.wsConnected,
               lastHeartbeatAt: status.lastHeartbeatAt,
-              harnessSetCount: reveal?.sets.length ?? 0,
+              harnessSetCount: installed.sets.length,
               knowledgeChunkCount: readAgentWitchRagChunks(input.layout).length,
               trafficEntryCount: readAgentWitchLocalTraffic(input.layout)
                 .length,
@@ -453,6 +488,7 @@ export const startAgentWitchLocalApp = (input: {
         );
         const installBundle = buildInstallBundleStatus();
         const reveal = readLocalHarnessRevealCache(input.layout);
+        const appliedFiles = url.searchParams.get("files");
         const flashMessage =
           url.searchParams.get("submitted") === "1"
             ? url.searchParams.get("syncFailed") === "1"
@@ -467,6 +503,10 @@ export const startAgentWitchLocalApp = (input: {
                 : url.searchParams.get("revealed") === "1"
                   ? `Reveal found ${reveal?.sets.length ?? 0} set(s).`
                   : null;
+        const applyFlashMessage =
+          url.searchParams.get("applied") === "1"
+            ? `Applied harness to project (${appliedFiles ?? "0"} file(s)). Link saved in project metadata.`
+            : null;
         const scanFolder =
           reveal?.scanRoots[0] ?? buildDefaultLocalHarnessScanFolder();
         sendHtml(
@@ -475,11 +515,15 @@ export const startAgentWitchLocalApp = (input: {
             title: "Harness",
             activePath: "/harness",
             installVersion: installBundle.installVersion,
-            body: buildAgentWitchLocalHarnessPageBody({
-              scanFolder,
-              reveal,
-              flashMessage,
-            }),
+            body: buildAgentWitchLocalHarnessPageBody(
+              buildHarnessPageBodyInput({
+                layout: input.layout,
+                reveal,
+                scanFolder,
+                flashMessage,
+                applyFlashMessage,
+              }),
+            ),
           }),
         );
         return;
@@ -618,6 +662,46 @@ export const startAgentWitchLocalApp = (input: {
         return;
       }
 
+      if (method === "POST" && pathname === "/harness/apply-to-project") {
+        const reveal = readLocalHarnessRevealCache(input.layout);
+        const rawBody = await readBody(request);
+        const form = new URLSearchParams(rawBody);
+        const projectFolder = form.get("projectFolder")?.trim() ?? "";
+        const setSlugs = form.getAll("applySet").map((value) => String(value));
+
+        const applyResult = applyInstalledHarnessSetsToProjectCursor({
+          layout: input.layout,
+          projectFolderPath: projectFolder,
+          setSlugs,
+        });
+
+        if (!applyResult.ok) {
+          const installBundle = buildInstallBundleStatus();
+          sendHtml(
+            response,
+            await buildLocalAppShell({
+              title: "Harness",
+              activePath: "/harness",
+              installVersion: installBundle.installVersion,
+              body: buildAgentWitchLocalHarnessPageBody(
+                buildHarnessPageBodyInput({
+                  layout: input.layout,
+                  reveal,
+                  applyFlashError: applyResult.errorMessage,
+                }),
+              ),
+            }),
+          );
+          return;
+        }
+
+        response.writeHead(303, {
+          Location: `/harness?applied=1&files=${applyResult.writtenFileCount}`,
+        });
+        response.end();
+        return;
+      }
+
       if (method === "POST" && pathname === "/harness/submit") {
         const reveal = readLocalHarnessRevealCache(input.layout);
         if (reveal === null) {
@@ -628,11 +712,13 @@ export const startAgentWitchLocalApp = (input: {
               title: "Harness",
               activePath: "/harness",
               installVersion: installBundle.installVersion,
-              body: buildAgentWitchLocalHarnessPageBody({
-                scanFolder: buildDefaultLocalHarnessScanFolder(),
-                reveal: null,
-                flashError: "Run reveal before submit.",
-              }),
+              body: buildAgentWitchLocalHarnessPageBody(
+                buildHarnessPageBodyInput({
+                  layout: input.layout,
+                  reveal: null,
+                  flashError: "Run reveal before submit.",
+                }),
+              ),
             }),
           );
           return;
@@ -654,11 +740,13 @@ export const startAgentWitchLocalApp = (input: {
               title: "Harness",
               activePath: "/harness",
               installVersion: installBundle.installVersion,
-              body: buildAgentWitchLocalHarnessPageBody({
-                scanFolder: reveal.scanRoots[0] ?? "",
-                reveal,
-                flashError: result.errorMessage ?? "Submit failed.",
-              }),
+              body: buildAgentWitchLocalHarnessPageBody(
+                buildHarnessPageBodyInput({
+                  layout: input.layout,
+                  reveal,
+                  flashError: result.errorMessage ?? "Submit failed.",
+                }),
+              ),
             }),
           );
           return;
