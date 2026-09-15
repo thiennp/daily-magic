@@ -3,7 +3,7 @@ import { formatAgentWitchInstallBundleVersionLabel } from "./formatAgentWitchIns
 import type { AgentWitchInstallVersionRecord } from "./agentWitchInstallVersion";
 
 export type AgentWitchLocalAppNavPath =
-  "/" | "/traffic" | "/knowledge" | "/harness";
+  "/" | "/status" | "/errors" | "/traffic" | "/knowledge" | "/harness";
 
 const LOGO_MARK_SVG = `<svg class="brand-mark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
   <path class="brand-mark-outline" d="M12 2L2 12l10 10 10-10L12 2z" />
@@ -16,7 +16,9 @@ const NAV_ITEMS: ReadonlyArray<{
   readonly href: AgentWitchLocalAppNavPath;
   readonly label: string;
 }> = [
-  { href: "/", label: "Status" },
+  { href: "/", label: "Home" },
+  { href: "/status", label: "Status" },
+  { href: "/errors", label: "Errors" },
   { href: "/traffic", label: "Traffic" },
   { href: "/knowledge", label: "Knowledge" },
   { href: "/harness", label: "Harness" },
@@ -34,6 +36,7 @@ export const buildAgentWitchLocalAppShell = (input: {
   readonly activePath: AgentWitchLocalAppNavPath;
   readonly body: string;
   readonly installVersion?: AgentWitchInstallVersionRecord | null;
+  readonly cloudAppOrigin: string;
 }): string => {
   const bundleVersionLabel = formatAgentWitchInstallBundleVersionLabel(
     input.installVersion ?? null,
@@ -46,6 +49,8 @@ export const buildAgentWitchLocalAppShell = (input: {
     const isActive = item.href === input.activePath;
     return `<a class="nav-link${isActive ? " is-active" : ""}" href="${item.href}"${isActive ? ' aria-current="page"' : ""}>${item.label}</a>`;
   }).join("");
+
+  const cloudOrigin = escapeHtml(input.cloudAppOrigin);
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -62,7 +67,10 @@ export const buildAgentWitchLocalAppShell = (input: {
         ${LOGO_MARK_SVG}
         <span class="brand-text">Agent Witch<span class="brand-sub">Local</span><span class="brand-version"${bundleUpdatedTitle}>bundle ${escapeHtml(bundleVersionLabel)}</span></span>
       </a>
-      <nav class="site-nav" aria-label="Local bridge">${nav}</nav>
+      <div class="site-header-actions">
+        <nav class="site-nav" aria-label="Local bridge">${nav}</nav>
+        <a class="btn btn-primary cloud-open-link" href="${cloudOrigin}" target="_blank" rel="noopener noreferrer" aria-label="Open Agent Witch cloud at ${cloudOrigin}">Open cloud ↗</a>
+      </div>
     </div>
   </header>
   <main class="site-main">${input.body}</main>

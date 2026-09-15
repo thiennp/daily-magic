@@ -4,6 +4,7 @@ import MacDeviceRowMainContent from "@/features/agent-witch/macDevices/MacDevice
 import MacDeviceRowMenu from "@/features/agent-witch/macDevices/MacDeviceRowMenu";
 import MacDeviceRowSelectTarget from "@/features/agent-witch/macDevices/MacDeviceRowSelectTarget";
 import confirmMacDeviceRevoke from "@/features/agent-witch/macDevices/utils/confirmMacDeviceRevoke";
+import HomeOpenLocalConsoleLink from "@/features/home/HomeOpenLocalConsoleLink";
 
 interface MacDeviceRowInnerProps {
   readonly deviceId: string;
@@ -70,6 +71,9 @@ export default function MacDeviceRowInner({
       <MacDeviceRowSelectTarget onSelect={onSelect}>
         {mainContent}
       </MacDeviceRowSelectTarget>
+      {isThisMac && isConnected ? (
+        <HomeOpenLocalConsoleLink className="hidden shrink-0 sm:inline-flex" />
+      ) : null}
       {isEditing ? null : (
         <MacDeviceRowMenu
           onEdit={() => {

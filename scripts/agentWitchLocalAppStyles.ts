@@ -101,11 +101,24 @@ a { color: inherit; text-decoration: none; }
   vertical-align: middle;
 }
 
+.site-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
 .site-nav {
   display: flex;
   align-items: center;
   gap: 0.25rem;
   flex-wrap: wrap;
+}
+
+.cloud-open-link {
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 
 .nav-link {
@@ -361,6 +374,85 @@ pre {
   background: #ecfdf5;
   color: #047857;
   font-size: 0.875rem;
+}
+
+.home-footnote { margin-top: 0.5rem; }
+.home-hero-badges {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+.home-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  margin-top: 1rem;
+}
+.home-card {
+  background: #fff;
+  border: 1px solid var(--aw-zinc-200);
+  border-radius: var(--aw-radius-xl);
+  box-shadow: var(--aw-shadow-sm);
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 1.25rem;
+  text-decoration: none;
+  transition: border-color 0.12s ease, box-shadow 0.12s ease;
+}
+.home-card:hover {
+  border-color: var(--aw-zinc-400);
+  box-shadow: 0 4px 14px rgb(24 24 27 / 0.08);
+}
+.home-card-eyebrow {
+  color: var(--aw-zinc-500);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  margin: 0;
+  text-transform: uppercase;
+}
+.home-card-title {
+  font-size: 1.125rem;
+  margin: 0;
+}
+.home-card-lede {
+  color: var(--aw-zinc-600);
+  font-size: 0.875rem;
+  line-height: 1.45;
+  margin: 0;
+}
+.home-card-meta {
+  color: var(--aw-emerald-800);
+  font-size: 0.8125rem;
+  margin: 0.35rem 0 0;
+}
+
+.alert-warn {
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  border-radius: var(--aw-radius-lg);
+  color: #92400e;
+  font-size: 0.875rem;
+  margin: 0.75rem 0 0;
+  padding: 0.65rem 0.85rem;
+}
+.error-log-view {
+  background: var(--aw-zinc-900);
+  border-radius: var(--aw-radius-lg);
+  color: var(--aw-zinc-50);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.75rem;
+  line-height: 1.45;
+  margin-top: 0.75rem;
+  max-height: 28rem;
+  overflow: auto;
+  padding: 0.85rem;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
 .stack { display: flex; flex-direction: column; gap: 0.75rem; }

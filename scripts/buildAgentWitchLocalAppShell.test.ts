@@ -7,6 +7,7 @@ describe("buildAgentWitchLocalAppShell", () => {
     const html = buildAgentWitchLocalAppShell({
       title: "Status",
       activePath: "/",
+      cloudAppOrigin: "https://www.agentwitch.com",
       body: '<div class="card">ok</div>',
     });
 
@@ -16,15 +17,19 @@ describe("buildAgentWitchLocalAppShell", () => {
     expect(html).toContain('aria-current="page"');
     expect(html).toContain("Agent Witch");
     expect(html).toContain('href="/"');
+    expect(html).toContain('href="/status"');
     expect(html).toContain('href="/traffic"');
     expect(html).toContain('href="/knowledge"');
     expect(html).toContain('href="/harness"');
+    expect(html).toContain('href="https://www.agentwitch.com"');
+    expect(html).toContain("Open cloud");
   });
 
   it("marks the active nav path (AGENT-026)", () => {
     const html = buildAgentWitchLocalAppShell({
       title: "Traffic",
       activePath: "/traffic",
+      cloudAppOrigin: "https://www.agentwitch.com",
       body: "",
     });
 
@@ -36,6 +41,7 @@ describe("buildAgentWitchLocalAppShell", () => {
     const html = buildAgentWitchLocalAppShell({
       title: "Status",
       activePath: "/",
+      cloudAppOrigin: "https://www.agentwitch.com",
       body: '<div class="card">ok</div>',
       installVersion: {
         bundleVersion: "34",
@@ -53,6 +59,7 @@ describe("buildAgentWitchLocalAppShell", () => {
     const html = buildAgentWitchLocalAppShell({
       title: "Status",
       activePath: "/",
+      cloudAppOrigin: "https://www.agentwitch.com",
       body: "",
     });
 

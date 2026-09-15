@@ -4,6 +4,7 @@ import fs from "node:fs";
 import path from "node:path";
 
 import {
+  AGENT_WITCH_LOCAL_APP_LOOPBACK_ORIGIN,
   AGENT_WITCH_LOCAL_APP_ORIGIN,
   AGENT_WITCH_LOCAL_APP_PORT,
 } from "./agentWitchLocalApp.constants";
@@ -21,6 +22,8 @@ import {
 } from "./agentWitchConnectionHealth";
 import { AGENT_WITCH_CONNECTION_STALE_MS } from "./agentWitchConnectionHealth.constants";
 import { formatAgentWitchRelativeTimeAgo } from "./formatAgentWitchRelativeTimeAgo";
+import { buildAgentWitchLocalErrorLogPageBody } from "./buildAgentWitchLocalErrorLogPage";
+import { buildAgentWitchLocalHomePageBody } from "./buildAgentWitchLocalHomePage";
 import { buildAgentWitchLocalAppShell } from "./buildAgentWitchLocalAppShell";
 import {
   buildAgentWitchLocalHarnessPageBody,
@@ -37,7 +40,9 @@ import {
   writeLocalHarnessRevealCache,
 } from "./localHarness/submitLocalHarnessSelection";
 import { formatAgentWitchInstallBundleVersionLabel } from "./formatAgentWitchInstallBundleVersionLabel";
+import { readAgentWitchErrorLogTail } from "./readAgentWitchErrorLogTail";
 import { readAgentWitchInstallVersion } from "./agentWitchInstallVersion";
+import { resolveAgentWitchLocalCloudAppOrigin } from "./resolveAgentWitchLocalCloudAppOrigin";
 import { shouldShowAgentWitchLocalReviveButton } from "./shouldShowAgentWitchLocalReviveButton";
 import type { AgentWitchLocalLayout } from "./resolveAgentWitchLocalLayout";
 import { loadOrCreateAgentWitchDeviceKeypair } from "./agentWitchDeviceKeypair";
@@ -124,7 +129,7 @@ const buildStatusBody = (input: {
   return `<section class="card">
       <p class="eyebrow">Local bridge</p>
       <h1>Status</h1>
-      <p class="lede">Mac-side Agent Witch bridge at <a href="${AGENT_WITCH_LOCAL_APP_ORIGIN}"><code>${AGENT_WITCH_LOCAL_APP_ORIGIN}</code></a>.</p>
+      <p class="lede">Mac-side Agent Witch bridge at <a href="${AGENT_WITCH_LOCAL_APP_LOOPBACK_ORIGIN}"><code>${AGENT_WITCH_LOCAL_APP_LOOPBACK_ORIGIN}</code></a>.</p>
       <div class="meta-grid">
         <div class="meta-item"><span class="meta-label">WebSocket</span><span class="meta-value">${connectedBadge}</span></div>
         <div class="meta-item"><span class="meta-label">Last heartbeat</span><span class="meta-value">${escapeHtml(formatLocalAppTimestamp(input.status.lastHeartbeatAt))}</span></div>
@@ -162,6 +167,21 @@ export const startAgentWitchLocalApp = (input: {
       installBundleUpdatedAt: installVersion?.updatedAt ?? null,
       installVersion,
     };
+  };
+  const buildLocalAppShell = (shell: {
+    readonly title: string;
+    readonly activePath: Parameters<
+      typeof buildAgentWitchLocalAppShell
+    >[0]["activePath"];
+    readonly body: string;
+    readonly installVersion?: ReturnType<typeof readInstallVersion> | null;
+  }): string => {
+    const installVersion = shell.installVersion ?? readInstallVersion();
+    return buildAgentWitchLocalAppShell({
+      ...shell,
+      installVersion,
+      cloudAppOrigin: resolveAgentWitchLocalCloudAppOrigin(installVersion),
+    });
   };
   const ensureLinkCode = (): string => {
     if (fs.existsSync(linkCodePath)) {
@@ -248,6 +268,55 @@ export const startAgentWitchLocalApp = (input: {
 
       if (method === "GET" && pathname === "/") {
         const status = input.controllers.getStatus();
+        const installBundle = buildInstallBundleStatus();
+        const reveal = readLocalHarnessRevealCache(input.layout);
+        const errorLog = readAgentWitchErrorLogTail(input.layout.errorLogPath);
+        sendHtml(
+          response,
+          buildLocalAppShell({
+            title: "Home",
+            activePath: "/",
+            installVersion: installBundle.installVersion,
+            body: buildAgentWitchLocalHomePageBody({
+              wsConnected: status.wsConnected,
+              lastHeartbeatAt: status.lastHeartbeatAt,
+              installBundleVersion: installBundle.installBundleVersion,
+              harnessSetCount: reveal?.sets.length ?? 0,
+              knowledgeChunkCount: readAgentWitchRagChunks(input.layout).length,
+              trafficEntryCount: readAgentWitchLocalTraffic(input.layout)
+                .length,
+              wakeError: status.wakeError,
+              errorLogByteSize: errorLog.byteSize,
+              errorLogExists: errorLog.exists,
+            }),
+          }),
+        );
+        return;
+      }
+
+      if (method === "GET" && pathname === "/errors") {
+        const installBundle = buildInstallBundleStatus();
+        const errorLog = readAgentWitchErrorLogTail(input.layout.errorLogPath);
+        sendHtml(
+          response,
+          buildLocalAppShell({
+            title: "Errors",
+            activePath: "/errors",
+            installVersion: installBundle.installVersion,
+            body: buildAgentWitchLocalErrorLogPageBody({
+              errorLogPath: input.layout.errorLogPath,
+              content: errorLog.content,
+              exists: errorLog.exists,
+              truncated: errorLog.truncated,
+              byteSize: errorLog.byteSize,
+            }),
+          }),
+        );
+        return;
+      }
+
+      if (method === "GET" && pathname === "/status") {
+        const status = input.controllers.getStatus();
         const health = readAgentWitchConnectionHealth(input.layout);
         const stale = isAgentWitchConnectionHealthStale(
           health,
@@ -256,9 +325,9 @@ export const startAgentWitchLocalApp = (input: {
         const installBundle = buildInstallBundleStatus();
         sendHtml(
           response,
-          buildAgentWitchLocalAppShell({
+          buildLocalAppShell({
             title: "Status",
-            activePath: "/",
+            activePath: "/status",
             installVersion: installBundle.installVersion,
             body: buildStatusBody({
               status,
@@ -287,7 +356,7 @@ export const startAgentWitchLocalApp = (input: {
             : `<p class="empty">No traffic yet. Frames appear here when the bridge is active.</p>`;
         sendHtml(
           response,
-          buildAgentWitchLocalAppShell({
+          buildLocalAppShell({
             title: "Traffic",
             activePath: "/traffic",
             installVersion: installBundle.installVersion,
@@ -327,7 +396,7 @@ export const startAgentWitchLocalApp = (input: {
           reveal?.scanRoots[0] ?? buildDefaultLocalHarnessScanFolder();
         sendHtml(
           response,
-          buildAgentWitchLocalAppShell({
+          buildLocalAppShell({
             title: "Harness",
             activePath: "/harness",
             installVersion: installBundle.installVersion,
@@ -480,7 +549,7 @@ export const startAgentWitchLocalApp = (input: {
           const installBundle = buildInstallBundleStatus();
           sendHtml(
             response,
-            buildAgentWitchLocalAppShell({
+            buildLocalAppShell({
               title: "Harness",
               activePath: "/harness",
               installVersion: installBundle.installVersion,
@@ -506,7 +575,7 @@ export const startAgentWitchLocalApp = (input: {
           const installBundle = buildInstallBundleStatus();
           sendHtml(
             response,
-            buildAgentWitchLocalAppShell({
+            buildLocalAppShell({
               title: "Harness",
               activePath: "/harness",
               installVersion: installBundle.installVersion,
@@ -558,7 +627,7 @@ export const startAgentWitchLocalApp = (input: {
           .join("");
         sendHtml(
           response,
-          buildAgentWitchLocalAppShell({
+          buildLocalAppShell({
             title: "Knowledge",
             activePath: "/knowledge",
             installVersion: installBundle.installVersion,

@@ -6,3 +6,5 @@ export const AGENT_WITCH_LOCAL_APP_HOST = "local.agentwitch.com";
 
 /** User-facing Mac-only origin (port required; no privileged :80 proxy). */
 export const AGENT_WITCH_LOCAL_APP_ORIGIN = `http://${AGENT_WITCH_LOCAL_APP_HOST}:${AGENT_WITCH_LOCAL_APP_PORT}`;
+
+export const AGENT_WITCH_LOCAL_APP_LOOPBACK_ORIGIN = `http://127.0.0.1:${AGENT_WITCH_LOCAL_APP_PORT}`;
