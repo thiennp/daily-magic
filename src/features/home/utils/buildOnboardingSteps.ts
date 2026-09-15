@@ -1,5 +1,4 @@
 import buildAgentComposerHref from "@/lib/library/buildAgentComposerHref";
-import { MAC_WORKER_BENEFIT_COPY } from "@/lib/copy/macWorkerBenefitCopy.constant";
 
 export type OnboardingStep = {
   readonly id: string;
@@ -21,21 +20,22 @@ export const buildOnboardingSteps = (
 ): readonly OnboardingStep[] => [
   {
     id: "pair",
-    label: MAC_WORKER_BENEFIT_COPY.onboardingChecklistLabel,
+    label: "Connect your Mac",
     done: input.hasPairedDevice,
     href: "/#your-setup",
-  },
-  {
-    id: "workflow",
-    label: "Create your first workflow or agent",
-    done: input.hasCreatedWorkflowOrAgent,
-    href: "/library",
   },
   {
     id: "task",
     label: "Send your first task",
     done: input.hasSentTask,
-    href: buildAgentComposerHref(),
+    href: buildAgentComposerHref({ customTask: true }),
+  },
+  {
+    id: "workflow",
+    label: "Save a playbook (optional)",
+    done: input.hasCreatedWorkflowOrAgent,
+    href: "/library",
+    optional: true,
   },
   {
     id: "automate",

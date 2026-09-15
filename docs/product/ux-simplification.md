@@ -2,7 +2,7 @@
 
 Product and UX direction for Daily Magic. **Audience:** PM, design, and engineering when changing nav, copy, or onboarding. Technical storage (harness paths, RAG files) stays in [Agent Witch local layout](../../src/features/agent-witch/LOCAL_INSTALL_LAYOUT.md) and [product concepts](concepts.md).
 
-**Status:** Proposed (2026). Implementation is incremental; this doc is the north star, not a shipped checklist.
+**Status:** In progress (2026). Nav labels, onboarding required steps, and copy aligned in app shell + Home; team nav gating and Playbooks merge UI still open.
 
 ---
 

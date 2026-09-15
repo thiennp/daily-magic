@@ -10,30 +10,30 @@ export const HOME_ONBOARDING_MAIN_STEP_CONTENT: Readonly<
 > = {
   workflow: {
     eyebrow: "Getting started",
-    headline: "Create your first workflow or agent",
+    headline: "Save a playbook",
     detail:
-      "Publish a workflow with form fields or a custom agent in Library. Teammates can request it once it is in your directory.",
-    ctaLabel: "Open Library",
+      "Publish a workflow or custom agent in Playbooks so you and teammates can reuse how work gets done.",
+    ctaLabel: "Open Playbooks",
   },
   "create-workflow": {
     eyebrow: "Getting started",
-    headline: "Create your first workflow or agent",
+    headline: "Save a playbook",
     detail:
-      "Publish a workflow with form fields or a custom agent in Library. Teammates can request it once it is in your directory.",
-    ctaLabel: "Open Library",
+      "Publish a workflow or custom agent in Playbooks so you and teammates can reuse how work gets done.",
+    ctaLabel: "Open Playbooks",
   },
   task: {
     eyebrow: "Getting started",
     headline: "Send your first task",
     detail:
-      "Open the task composer, pick a workflow, and your Mac runs the job. The full log lands in Job history.",
-    ctaLabel: "Send a task",
+      "Describe what you want done and your Mac runs the job. Watch live output and find the full log in Runs.",
+    ctaLabel: "New task",
   },
   "send-task": {
     eyebrow: "Getting started",
     headline: "Send your first task",
     detail:
-      "Open the task composer, pick a workflow, and your Mac runs the job. The full log lands in Job history.",
-    ctaLabel: "Send a task",
+      "Describe what you want done and your Mac runs the job. Watch live output and find the full log in Runs.",
+    ctaLabel: "New task",
   },
 };

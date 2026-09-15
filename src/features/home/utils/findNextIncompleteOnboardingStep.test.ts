@@ -11,14 +11,14 @@ const buildStep = (id: string, done: boolean, label = id): OnboardingStep => ({
 });
 
 describe("findNextIncompleteOnboardingStep", () => {
-  it("returns the first incomplete step in order", () => {
+  it("returns the first incomplete required step in order", () => {
     const steps = [
       buildStep("pair", true),
-      buildStep("workflow", false, "Create your first workflow or agent"),
       buildStep("task", false, "Send your first task"),
+      { ...buildStep("workflow", false), optional: true },
     ];
 
-    expect(findNextIncompleteOnboardingStep(steps)?.id).toBe("workflow");
+    expect(findNextIncompleteOnboardingStep(steps)?.id).toBe("task");
   });
 
   it("returns null when every step is complete", () => {

@@ -6,7 +6,7 @@ export default function ReportsPageLayout() {
   return (
     <div className={APP_PAGE_STACK_CLASS}>
       <AppPageHeader
-        title="Job history"
+        title="Runs"
         description="Every task you send is listed here. Jobs are stored on this device, so history survives refresh and restarts."
       />
       <AgentRunsList />

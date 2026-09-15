@@ -47,7 +47,7 @@ const AgentLiveTerminalSection = forwardRef<
             href="/reports"
             className="font-medium text-brand-600 hover:text-brand-700 dark:text-brand-400"
           >
-            Job history
+            Runs
           </Link>
           .{" "}
           <Link

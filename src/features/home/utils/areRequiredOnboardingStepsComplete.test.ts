@@ -31,10 +31,20 @@ describe("areRequiredOnboardingStepsComplete", () => {
     expect(
       areRequiredOnboardingStepsComplete([
         buildStep("pair", true),
-        buildStep("workflow", false),
         buildStep("task", false),
+        buildStep("workflow", false, true),
       ]),
     ).toBe(false);
+  });
+
+  it("returns true when only optional steps remain incomplete", () => {
+    expect(
+      areRequiredOnboardingStepsComplete([
+        buildStep("pair", true),
+        buildStep("task", true),
+        buildStep("workflow", false, true),
+      ]),
+    ).toBe(true);
   });
 
   it("returns false when there are no steps", () => {
