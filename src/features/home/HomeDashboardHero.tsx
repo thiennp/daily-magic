@@ -14,6 +14,7 @@ import {
 import { useSendTaskModal } from "@/features/agent/SendTaskModalProvider";
 import HomeMacSettingsLink from "@/features/home/HomeMacSettingsLink";
 import HomeMacStatusBanner from "@/features/home/HomeMacStatusBanner";
+import HomeOpenLocalConsoleWhenOnline from "@/features/home/HomeOpenLocalConsoleWhenOnline";
 import HomeRunningJobsPanel from "@/features/home/HomeRunningJobsPanel";
 import useShellNavContext from "@/features/shell/hooks/useShellNavContext";
 import { COMPANY_RULES_NAV_LABEL } from "@/lib/admin/companyGroupCopy.constant";
@@ -57,6 +58,7 @@ export default function HomeDashboardHero({ user }: HomeDashboardHeroProps) {
           <AppIcon icon={BoltIcon} size="lg" />
           New task
         </button>
+        <HomeOpenLocalConsoleWhenOnline />
         <HomeRunningJobsPanel />
         <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm">
           <Link

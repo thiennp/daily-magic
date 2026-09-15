@@ -13,7 +13,7 @@ export default function HomeOpenLocalConsoleWhenOnline() {
   return (
     <HomeOpenLocalConsoleLink
       className="mt-3 inline-flex"
-      label="Open Mac console (127.0.0.1:43347)"
+      label="Open local app"
     />
   );
 }
