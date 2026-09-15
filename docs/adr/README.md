@@ -10,3 +10,5 @@ ADRs capture **why** the system is shaped the way it is. They are indexed by fea
 | [0004](0004-cursor-cloud-dispatch-origin.md)            | Cursor Cloud dispatch origin policy          |
 
 New ADRs: add the next numbered file and a row in this table, then `npm run feature-knowledge:index`.
+
+Security scenarios and trust boundaries: [threat model](../security/threat-model.md).

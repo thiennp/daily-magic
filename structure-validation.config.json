@@ -24,6 +24,7 @@
     "docs/development": ["*.md"],
     "docs/agent-witch": ["*.md"],
     "docs/product": ["*.md"],
+    "docs/security": ["*.md"],
     "{a}": ["{a}.ts", "{a}.tsx", "{a}.module.css", "{a}.*.ts", "{a}.*.tsx"],
     ".feature-knowledge": ["index.json"],
     "{root}": [

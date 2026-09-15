@@ -16,6 +16,10 @@ Product overview lives in the [root README](../README.md). This tree holds **tec
 
 - [Capabilities, harness, library, marketplace](product/concepts.md)
 
+## Security
+
+- [Threat model](security/threat-model.md)
+
 ## Architecture decision records (ADRs)
 
 - [ADR index](adr/README.md)
