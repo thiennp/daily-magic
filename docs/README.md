@@ -15,6 +15,7 @@ Product overview lives in the [root README](../README.md). This tree holds **tec
 ## Product concepts
 
 - [Capabilities, harness, library, marketplace](product/concepts.md)
+- [UX simplification — personas, language, onboarding checklist](product/ux-simplification.md)
 
 ## Security
 

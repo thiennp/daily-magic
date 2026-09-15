@@ -2,6 +2,8 @@
 
 Use this glossary to avoid overlapping names in UI and docs.
 
+For **user-facing language, nav, and onboarding**, see [UX simplification](ux-simplification.md). This file stays the engineer-oriented glossary.
+
 ## Capability
 
 A **published agent offering** your team can dispatch to—metadata, version, and policy live in the capabilities system. Think “what agent profile can run this task.”
