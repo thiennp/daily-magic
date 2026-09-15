@@ -1,4 +1,9 @@
+import {
+  isAgentWitchDeviceDispatchReadyTier,
+  resolveAgentWitchDevicePresenceTier,
+} from "@/lib/agentWitch/resolveAgentWitchDevicePresenceTier";
 import type AgentWitchDeviceRecord from "@/lib/agentWitch/types/AgentWitchDeviceRecord.type";
+import type AgentWitchPresenceTier from "@/lib/agentWitch/types/AgentWitchPresenceTier.type";
 import { isAgentWitchDeviceRecentlySeen } from "@/lib/agentWitch/agentWitchHeartbeat.constant";
 
 export interface AgentWitchDeviceWithOnlineStatus {
@@ -13,6 +18,8 @@ export interface AgentWitchDeviceWithOnlineStatus {
   readonly dispatchPolicy: AgentWitchDeviceRecord["dispatchPolicy"];
   readonly isConnected: boolean;
   readonly isOnline: boolean;
+  readonly presenceTier: AgentWitchPresenceTier;
+  readonly isDispatchReady: boolean;
   readonly lastHeartbeatAt: string | null;
   readonly lastWakeError?: string | null;
   readonly installBundleVersion: string | null;
@@ -28,14 +35,25 @@ export interface AgentWitchDeviceWithOnlineStatus {
  */
 const buildAgentWitchDevicesWithOnlineStatus = (
   devices: readonly AgentWitchDeviceRecord[],
-  liveDeviceIds: ReadonlySet<string> = new Set(),
+  localLiveDeviceIds: ReadonlySet<string> = new Set(),
+  remoteLiveDeviceIds: ReadonlySet<string> = new Set(),
 ): readonly AgentWitchDeviceWithOnlineStatus[] => {
   const nowMs = Date.now();
 
   return devices.map((device) => {
-    const isConnected = liveDeviceIds.has(device.id);
+    const presenceTier = resolveAgentWitchDevicePresenceTier({
+      deviceId: device.id,
+      lastSeenAt: device.lastSeenAt,
+      localLiveDeviceIds,
+      remoteLiveDeviceIds,
+      nowMs,
+    });
+    const isConnected = presenceTier === "live";
     const isOnline =
-      isConnected || isAgentWitchDeviceRecentlySeen(device.lastSeenAt, nowMs);
+      isConnected ||
+      presenceTier === "live_other_instance" ||
+      isAgentWitchDeviceRecentlySeen(device.lastSeenAt, nowMs);
+    const isDispatchReady = isAgentWitchDeviceDispatchReadyTier(presenceTier);
 
     return {
       id: device.id,
@@ -49,6 +67,8 @@ const buildAgentWitchDevicesWithOnlineStatus = (
       dispatchPolicy: device.dispatchPolicy,
       isConnected,
       isOnline,
+      presenceTier,
+      isDispatchReady,
       lastHeartbeatAt: isOnline ? device.lastSeenAt : null,
       lastWakeError: device.lastWakeError ?? null,
       installBundleVersion: device.installBundleVersion ?? null,

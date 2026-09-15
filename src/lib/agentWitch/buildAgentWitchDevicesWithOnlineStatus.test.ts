@@ -28,6 +28,8 @@ describe("buildAgentWitchDevicesWithOnlineStatus", () => {
       id: "device-1",
       isConnected: false,
       isOnline: true,
+      presenceTier: "recent",
+      isDispatchReady: false,
       lastHeartbeatAt: lastSeenAt,
     });
   });
@@ -41,6 +43,23 @@ describe("buildAgentWitchDevicesWithOnlineStatus", () => {
     expect(result[0]).toMatchObject({
       isConnected: true,
       isOnline: true,
+      presenceTier: "live",
+      isDispatchReady: true,
+    });
+  });
+
+  it("marks registry-only devices as live on another instance", () => {
+    const result = buildAgentWitchDevicesWithOnlineStatus(
+      [baseDevice({ lastSeenAt: null })],
+      new Set(),
+      new Set(["device-1"]),
+    );
+
+    expect(result[0]).toMatchObject({
+      isConnected: false,
+      isOnline: true,
+      presenceTier: "live_other_instance",
+      isDispatchReady: true,
     });
   });
 

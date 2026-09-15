@@ -1,17 +1,22 @@
-export type MacPresenceTier = "live" | "recent" | "offline";
+import type AgentWitchPresenceTier from "@/lib/agentWitch/types/AgentWitchPresenceTier.type";
+
+export type MacPresenceTier = AgentWitchPresenceTier;
 
 export interface MacDevicePresence {
   readonly isConnected: boolean;
   readonly isOnline: boolean;
+  readonly presenceTier?: MacPresenceTier;
+  readonly isDispatchReady?: boolean;
 }
 
 export interface MacDevicePresenceCounts {
   readonly live: number;
+  readonly liveOtherInstance: number;
   readonly recent: number;
   readonly offline: number;
 }
 
-export const resolveMacPresenceTier = (
+const resolveTierFromLegacyFlags = (
   device: MacDevicePresence,
 ): MacPresenceTier => {
   if (device.isConnected) {
@@ -25,6 +30,10 @@ export const resolveMacPresenceTier = (
   return "offline";
 };
 
+export const resolveMacPresenceTier = (
+  device: MacDevicePresence,
+): MacPresenceTier => device.presenceTier ?? resolveTierFromLegacyFlags(device);
+
 /** User-facing status for Mac picker rows (send-task, device lists). */
 export const formatMacPresenceStatusLabel = (
   device: MacDevicePresence,
@@ -33,15 +42,24 @@ export const formatMacPresenceStatusLabel = (
   if (tier === "live") {
     return "Online";
   }
+  if (tier === "live_other_instance") {
+    return "Online (another server)";
+  }
   if (tier === "recent") {
     return "Seen recently";
   }
   return "Offline";
 };
 
-/** Mac can receive install/send tasks when it is actively heartbeating. */
-export const canDispatchToMac = (device: MacDevicePresence): boolean =>
-  resolveMacPresenceTier(device) === "live";
+/** Mac can receive queued install/send tasks when live locally or on another instance. */
+export const canDispatchToMac = (device: MacDevicePresence): boolean => {
+  if (device.isDispatchReady !== undefined) {
+    return device.isDispatchReady;
+  }
+
+  const tier = resolveMacPresenceTier(device);
+  return tier === "live" || tier === "live_other_instance";
+};
 
 export const countMacPresenceTiers = (
   devices: readonly MacDevicePresence[],
@@ -49,29 +67,19 @@ export const countMacPresenceTiers = (
   devices.reduce<MacDevicePresenceCounts>(
     (counts, device) => {
       const tier = resolveMacPresenceTier(device);
-      return {
-        ...counts,
-        [tier]: counts[tier] + 1,
-      };
+      if (tier === "live") {
+        return { ...counts, live: counts.live + 1 };
+      }
+      if (tier === "live_other_instance") {
+        return { ...counts, liveOtherInstance: counts.liveOtherInstance + 1 };
+      }
+      if (tier === "recent") {
+        return { ...counts, recent: counts.recent + 1 };
+      }
+      return { ...counts, offline: counts.offline + 1 };
     },
-    { live: 0, recent: 0, offline: 0 },
+    { live: 0, liveOtherInstance: 0, recent: 0, offline: 0 },
   );
-
-export const buildMacDevicesStatusLine = (
-  counts: MacDevicePresenceCounts,
-): string => {
-  if (counts.live > 0) {
-    const recentSuffix =
-      counts.recent > 0 ? ` · ${counts.recent} seen recently` : "";
-    return `${counts.live} connected${recentSuffix} · checks in every ~30s`;
-  }
-
-  if (counts.recent > 0) {
-    return `${counts.recent} seen recently · waiting for the next check-in`;
-  }
-
-  return "Connected Macs appear here when Agent Witch is running.";
-};
 
 export const pickDefaultMacDeviceId = (
   devices: readonly ({ readonly id: string } & MacDevicePresence)[],
@@ -91,3 +99,5 @@ export const pickAlternateDispatchReadyDeviceId = (
   );
   return alternate?.id ?? null;
 };
+
+export { default as buildMacDevicesStatusLine } from "./buildMacDevicesStatusLine";

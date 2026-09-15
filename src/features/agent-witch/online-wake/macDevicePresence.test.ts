@@ -45,19 +45,35 @@ describe("macDevicePresence", () => {
     expect(
       countMacPresenceTiers([
         { isConnected: true, isOnline: true },
+        {
+          isConnected: false,
+          isOnline: true,
+          presenceTier: "live_other_instance",
+          isDispatchReady: true,
+        },
         { isConnected: false, isOnline: true },
         { isConnected: false, isOnline: false },
       ]),
-    ).toEqual({ live: 1, recent: 1, offline: 1 });
+    ).toEqual({ live: 1, liveOtherInstance: 1, recent: 1, offline: 1 });
   });
 
   it("builds connected-first status copy", () => {
-    expect(buildMacDevicesStatusLine({ live: 1, recent: 1, offline: 0 })).toBe(
-      "1 connected · 1 seen recently · checks in every ~30s",
-    );
-    expect(buildMacDevicesStatusLine({ live: 0, recent: 2, offline: 0 })).toBe(
-      "2 seen recently · waiting for the next check-in",
-    );
+    expect(
+      buildMacDevicesStatusLine({
+        live: 1,
+        liveOtherInstance: 0,
+        recent: 1,
+        offline: 0,
+      }),
+    ).toBe("1 connected · 1 seen recently · checks in every ~30s");
+    expect(
+      buildMacDevicesStatusLine({
+        live: 0,
+        liveOtherInstance: 0,
+        recent: 2,
+        offline: 0,
+      }),
+    ).toBe("2 seen recently · waiting for the next check-in");
   });
 
   it("prefers dispatch-ready macs when picking defaults and alternates", () => {

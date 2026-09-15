@@ -1,4 +1,5 @@
 import type { MyMacDevice } from "@/features/agent/hooks/useMyMacDevices";
+import type { MacPresenceTier } from "@/features/agent-witch/online-wake";
 
 interface ApiMacDevice {
   readonly id: string;
@@ -9,6 +10,8 @@ interface ApiMacDevice {
   readonly lastSeenAt: string | null;
   readonly isConnected?: boolean;
   readonly isOnline?: boolean;
+  readonly presenceTier?: MacPresenceTier;
+  readonly isDispatchReady?: boolean;
   readonly lastHeartbeatAt: string | null;
   readonly isActive?: boolean;
   readonly installBundleVersion?: string | null;
@@ -63,6 +66,8 @@ const parseMyMacDevices = (
         lastSeenAt: device.lastSeenAt,
         isConnected: device.isConnected === true,
         isOnline: device.isOnline === true,
+        presenceTier: device.presenceTier,
+        isDispatchReady: device.isDispatchReady === true,
         lastHeartbeatAt: device.lastHeartbeatAt ?? null,
         installBundleVersion:
           typeof device.installBundleVersion === "string"

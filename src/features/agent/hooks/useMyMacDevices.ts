@@ -7,6 +7,7 @@ import {
   pairedDevicesResource,
   refreshPairedDevices,
 } from "@/features/agent-witch/pairedDevicesResource";
+import type { MacPresenceTier } from "@/features/agent-witch/online-wake";
 import useSubscribeMacDeviceRevoked from "@/features/agent-witch/macDevices/hooks/useSubscribeMacDeviceRevoked";
 import { buildMacDeviceDisplayNameById } from "@/features/agent-witch/utils/resolveMacDeviceDisplayName";
 import { useConnectionLab } from "@/features/agent-witch/connection-lab/ConnectionLabContext";
@@ -20,6 +21,8 @@ export interface MyMacDevice {
   readonly lastSeenAt: string | null;
   readonly isConnected: boolean;
   readonly isOnline: boolean;
+  readonly presenceTier?: MacPresenceTier;
+  readonly isDispatchReady?: boolean;
   readonly lastHeartbeatAt: string | null;
   readonly installBundleVersion: string | null;
   readonly wakePort: number | null;
