@@ -15,6 +15,7 @@ describe("buildAgentWitchLocalHomePageBody", () => {
       wakeError: null,
     });
 
+    expect(html).toContain('href="/task"');
     expect(html).toContain('href="/harness"');
     expect(html).toContain('href="/knowledge"');
     expect(html).toContain('href="/traffic"');

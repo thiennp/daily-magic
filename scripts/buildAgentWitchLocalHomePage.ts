@@ -60,6 +60,12 @@ export const buildAgentWitchLocalHomePageBody = (input: {
       </div>
     </section>
     <div class="home-grid">
+      <a class="home-card" href="/task">
+        <p class="home-card-eyebrow">Delegate</p>
+        <h2 class="home-card-title">Task</h2>
+        <p class="home-card-lede">Run a writer on this Mac and report status to cloud when done.</p>
+        <p class="home-card-meta">${input.wsConnected ? "Bridge connected — ready to delegate" : "Connect bridge on Status first"}</p>
+      </a>
       <a class="home-card" href="/harness">
         <p class="home-card-eyebrow">Setup</p>
         <h2 class="home-card-title">Harness</h2>

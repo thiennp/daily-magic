@@ -29,6 +29,7 @@ import {
   buildAgentWitchLocalInstallUpdatePromptHtml,
 } from "./buildAgentWitchLocalInstallUpdatePromptHtml";
 import { buildAgentWitchLocalHomePageBody } from "./buildAgentWitchLocalHomePage";
+import { buildAgentWitchLocalTaskPageBody } from "./buildAgentWitchLocalTaskPage";
 import { buildAgentWitchLocalAppShell } from "./buildAgentWitchLocalAppShell";
 import {
   buildAgentWitchLocalHarnessPageBody,
@@ -49,6 +50,8 @@ import {
 import { formatAgentWitchInstallBundleVersionLabel } from "./formatAgentWitchInstallBundleVersionLabel";
 import { readAgentWitchErrorLogTail } from "./readAgentWitchErrorLogTail";
 import { readAgentWitchInstallVersion } from "./agentWitchInstallVersion";
+import { runLocalSelfDelegatedTask } from "./runLocalSelfDelegatedTask";
+import { readAgentWitchRunConfig } from "./readAgentWitchRunConfig";
 import { resolveAgentWitchLocalCloudAppOrigin } from "./resolveAgentWitchLocalCloudAppOrigin";
 import { resolveAgentWitchLocalInstallUpdateOffer } from "./resolveAgentWitchLocalInstallUpdateOffer";
 import { shouldShowAgentWitchLocalReviveButton } from "./shouldShowAgentWitchLocalReviveButton";
@@ -400,6 +403,71 @@ export const startAgentWitchLocalApp = (input: {
             }),
           }),
         );
+        return;
+      }
+
+      if (method === "GET" && pathname === "/task") {
+        const status = input.controllers.getStatus();
+        const installBundle = buildInstallBundleStatus();
+        const runConfig = readAgentWitchRunConfig();
+        const url = new URL(
+          request.url ?? "/",
+          `http://127.0.0.1:${AGENT_WITCH_LOCAL_APP_PORT}`,
+        );
+        const flashMessage =
+          url.searchParams.get("ok") === "1"
+            ? "Task finished — status reported to cloud."
+            : null;
+        const flashError =
+          url.searchParams.get("failed") === "1"
+            ? (url.searchParams.get("error")?.trim() ?? "Task failed.")
+            : null;
+        const lastRunId = url.searchParams.get("runId");
+        sendHtml(
+          response,
+          await buildLocalAppShell({
+            title: "Task",
+            activePath: "/task",
+            installVersion: installBundle.installVersion,
+            body: buildAgentWitchLocalTaskPageBody({
+              defaultWorkspace: runConfig?.workspace ?? "",
+              wsConnected: status.wsConnected,
+              flashMessage,
+              flashError,
+              lastRunId,
+            }),
+          }),
+        );
+        return;
+      }
+
+      if (method === "POST" && pathname === "/task/dispatch") {
+        const rawBody = await readBody(request);
+        const form = new URLSearchParams(rawBody);
+        const prompt = form.get("prompt")?.trim() ?? "";
+        const writerAgent = form.get("writerAgent")?.trim() ?? "claude-cli";
+        const projectFolder = form.get("projectFolder")?.trim() ?? "";
+        const result = await runLocalSelfDelegatedTask({
+          prompt,
+          writerAgent,
+          ...(projectFolder.length > 0
+            ? { projectFolderPath: projectFolder }
+            : {}),
+        });
+        const query = new URLSearchParams();
+        if (result.ok) {
+          query.set("ok", "1");
+        } else {
+          query.set("failed", "1");
+          if (result.errorMessage !== undefined) {
+            query.set("error", result.errorMessage.slice(0, 240));
+          }
+        }
+        if (result.agentRunId !== undefined) {
+          query.set("runId", result.agentRunId);
+        }
+        response.writeHead(303, { Location: `/task?${query.toString()}` });
+        response.end();
         return;
       }
 

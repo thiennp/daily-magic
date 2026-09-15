@@ -19,6 +19,7 @@ describe("buildAgentWitchLocalAppShell", () => {
     expect(html).toContain('aria-current="page"');
     expect(html).toContain("Agent Witch");
     expect(html).toContain('href="/"');
+    expect(html).toContain('href="/task"');
     expect(html).toContain('href="/status"');
     expect(html).toContain('href="/traffic"');
     expect(html).toContain('href="/knowledge"');

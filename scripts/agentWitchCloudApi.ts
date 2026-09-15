@@ -217,6 +217,57 @@ export const claimAgentRunFromCloud = async (
   }
 };
 
+export const startLocalSelfDispatchOnCloud = async (
+  config: AgentWitchCloudApiConfig,
+  input: {
+    readonly agentRunId: string;
+    readonly prompt: string;
+    readonly writerAgent: string;
+  },
+): Promise<ClaimedCloudAgentRun | null> => {
+  try {
+    const response = await fetch(
+      `${config.appOrigin}/api/agent-witch/runs/local-self-dispatch`,
+      {
+        method: "POST",
+        headers: buildDeviceAuthHeaders(config.pairingToken),
+        body: JSON.stringify(input),
+        signal: AbortSignal.timeout(30_000),
+      },
+    );
+
+    if (!response.ok) {
+      return null;
+    }
+
+    const body: unknown = await response.json();
+    if (typeof body !== "object" || body === null) {
+      return null;
+    }
+
+    const run = (body as { run?: unknown }).run;
+    if (typeof run !== "object" || run === null) {
+      return null;
+    }
+
+    const record = run as Record<string, unknown>;
+    const id = typeof record.id === "string" ? record.id : "";
+    const prompt = typeof record.prompt === "string" ? record.prompt : "";
+    const writerAgent =
+      typeof record.writerAgent === "string"
+        ? record.writerAgent
+        : "claude-cli";
+
+    if (id.length === 0 || prompt.length === 0) {
+      return null;
+    }
+
+    return { id, prompt, writerAgent };
+  } catch {
+    return null;
+  }
+};
+
 export const completeAgentRunOnCloud = async (
   config: AgentWitchCloudApiConfig,
   runId: string,

@@ -2,7 +2,13 @@ import { AGENT_WITCH_LOCAL_APP_STYLES } from "./agentWitchLocalAppStyles";
 import { AGENT_WITCH_LOCAL_HEARTBEAT_ELAPSED_LIVE_SCRIPT } from "./buildAgentWitchLocalHeartbeatElapsedMarkup";
 
 export type AgentWitchLocalAppNavPath =
-  "/" | "/status" | "/errors" | "/traffic" | "/knowledge" | "/harness";
+  | "/"
+  | "/task"
+  | "/status"
+  | "/errors"
+  | "/traffic"
+  | "/knowledge"
+  | "/harness";
 
 const LOGO_MARK_SVG = `<svg class="brand-mark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
   <path class="brand-mark-outline" d="M12 2L2 12l10 10 10-10L12 2z" />
@@ -16,6 +22,7 @@ const NAV_ITEMS: ReadonlyArray<{
   readonly label: string;
 }> = [
   { href: "/", label: "Home" },
+  { href: "/task", label: "Task" },
   { href: "/status", label: "Status" },
   { href: "/errors", label: "Errors" },
   { href: "/traffic", label: "Traffic" },
