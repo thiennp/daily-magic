@@ -66,6 +66,12 @@ export const buildAgentWitchLocalHomePageBody = (input: {
         <p class="home-card-lede">Run a writer on this Mac and report status to cloud when done.</p>
         <p class="home-card-meta">${input.wsConnected ? "Bridge connected — ready to delegate" : "Connect bridge on Status first"}</p>
       </a>
+      <a class="home-card" href="/status">
+        <p class="home-card-eyebrow">Health</p>
+        <h2 class="home-card-title">Bridge status</h2>
+        <p class="home-card-lede">WebSocket, link code, install bundle, and revive actions.</p>
+        <p class="home-card-meta">${input.wsConnected ? "Bridge is up" : "Check connection details"}</p>
+      </a>
       <a class="home-card" href="/harness">
         <p class="home-card-eyebrow">Setup</p>
         <h2 class="home-card-title">Harness</h2>
@@ -78,23 +84,17 @@ export const buildAgentWitchLocalHomePageBody = (input: {
         <p class="home-card-lede">Browse and search local RAG chunks written after agent runs on this Mac.</p>
         <p class="home-card-meta">${escapeHtml(knowledgeMeta)}</p>
       </a>
-      <a class="home-card" href="/traffic">
-        <p class="home-card-eyebrow">Debug</p>
-        <h2 class="home-card-title">Traffic</h2>
-        <p class="home-card-lede">See frames sent and received between this Mac and the cloud bridge.</p>
-        <p class="home-card-meta">${escapeHtml(trafficMeta)}</p>
-      </a>
       <a class="home-card" href="/errors">
         <p class="home-card-eyebrow">Diagnostics</p>
         <h2 class="home-card-title">Error log</h2>
         <p class="home-card-lede">Tail of client stderr — crashes, module errors, and bridge failures on this Mac.</p>
         <p class="home-card-meta">${escapeHtml(errorLogMeta)}</p>
       </a>
-      <a class="home-card" href="/status">
-        <p class="home-card-eyebrow">Health</p>
-        <h2 class="home-card-title">Bridge status</h2>
-        <p class="home-card-lede">WebSocket, link code, install bundle, and revive actions.</p>
-        <p class="home-card-meta">${input.wsConnected ? "Bridge is up" : "Check connection details"}</p>
+      <a class="home-card" href="/traffic">
+        <p class="home-card-eyebrow">Debug</p>
+        <h2 class="home-card-title">Traffic</h2>
+        <p class="home-card-lede">See frames sent and received between this Mac and the cloud bridge.</p>
+        <p class="home-card-meta">${escapeHtml(trafficMeta)}</p>
       </a>
     </div>`;
 };

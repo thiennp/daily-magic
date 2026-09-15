@@ -24,10 +24,10 @@ const NAV_ITEMS: ReadonlyArray<{
   { href: "/", label: "Home" },
   { href: "/task", label: "Task" },
   { href: "/status", label: "Status" },
+  { href: "/harness", label: "Harness" },
+  { href: "/knowledge", label: "Knowledge" },
   { href: "/errors", label: "Errors" },
   { href: "/traffic", label: "Traffic" },
-  { href: "/knowledge", label: "Knowledge" },
-  { href: "/harness", label: "Harness" },
 ];
 
 const escapeHtml = (value: string): string =>

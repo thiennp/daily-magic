@@ -28,6 +28,26 @@ describe("buildAgentWitchLocalAppShell", () => {
     expect(html).toContain("Open cloud");
   });
 
+  it("orders nav by importance: task and status before diagnostics", () => {
+    const html = buildAgentWitchLocalAppShell({
+      title: "Home",
+      activePath: "/",
+      cloudAppOrigin: "https://www.agentwitch.com",
+      body: "",
+    });
+
+    const taskIndex = html.indexOf('href="/task"');
+    const statusIndex = html.indexOf('href="/status"');
+    const harnessIndex = html.indexOf('href="/harness"');
+    const errorsIndex = html.indexOf('href="/errors"');
+    const trafficIndex = html.indexOf('href="/traffic"');
+
+    expect(taskIndex).toBeLessThan(statusIndex);
+    expect(statusIndex).toBeLessThan(harnessIndex);
+    expect(harnessIndex).toBeLessThan(errorsIndex);
+    expect(errorsIndex).toBeLessThan(trafficIndex);
+  });
+
   it("marks the active nav path (AGENT-026)", () => {
     const html = buildAgentWitchLocalAppShell({
       title: "Traffic",
