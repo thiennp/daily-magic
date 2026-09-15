@@ -3,14 +3,18 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
+import useShellNavContext from "@/features/shell/hooks/useShellNavContext";
 import { PRIMARY_NAV } from "@/features/shell/appNav.constant";
+import { filterAppNavForShellContext } from "@/lib/shell/filterAppNavForShellContext";
 
 export default function AppShellNav() {
   const pathname = usePathname();
+  const shellNav = useShellNavContext();
+  const navItems = filterAppNavForShellContext(PRIMARY_NAV, shellNav);
 
   return (
     <nav aria-label="Primary" className="hidden items-center gap-1 md:flex">
-      {PRIMARY_NAV.map((item) => {
+      {navItems.map((item) => {
         const isActive = item.isActive(pathname);
 
         return (

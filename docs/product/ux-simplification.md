@@ -2,7 +2,7 @@
 
 Product and UX direction for Daily Magic. **Audience:** PM, design, and engineering when changing nav, copy, or onboarding. Technical storage (harness paths, RAG files) stays in [Agent Witch local layout](../../src/features/agent-witch/LOCAL_INSTALL_LAYOUT.md) and [product concepts](concepts.md).
 
-**Status:** In progress (2026). Nav labels, onboarding required steps, and copy aligned in app shell + Home; team nav gating and Playbooks merge UI still open.
+**Status:** In progress (2026). Nav labels, onboarding, Home Mac status + Mac settings link, solo team-nav gating shipped; Playbooks merge UI and composer progressive disclosure still open.
 
 ---
 
@@ -144,9 +144,9 @@ Use for Home / first-run design reviews. **Default path = solo.** “Team” var
 
 ### Home (wireframe)
 
-- [ ] Hero: Mac status pill (Online / Sleeping / Offline) + single primary **New task**
-- [ ] Secondary: **Runs** (last run snippet)
-- [ ] Tertiary link: **Mac settings** (opens local helper), **Having trouble?**
+- [x] Hero: Mac status banner (Online / Sleeping / Offline / none) + primary **New task**
+- [ ] Secondary: **Runs** (last run snippet) — panel exists via `HomeRunningJobsPanel`; tighten copy later
+- [x] Tertiary link: **Mac settings** (local helper or `#your-setup`), **Having trouble?** hint
 - [ ] Onboarding checklist: max 3 steps; collapsible after complete
 - [ ] No parallel checklist items for workflow/marketplace unless user expands **Advanced**
 
@@ -178,9 +178,10 @@ Use for Home / first-run design reviews. **Default path = solo.** “Team” var
 
 ### Persona gates (engineering)
 
-- [ ] `teamFeaturesEnabled` (org size or flag): show Playbooks nav + team tab
+- [x] `teamNavEnabled` from `GET /api/me/shell-context` (group membership): hide Team playbooks + Automations in nav
+- [x] `showAdminNav` when privileged global role or team membership
 - [ ] Hide marketplace/library routes from nav when solo; deep links still work for power users
-- [ ] Onboarding API steps mapped to UI steps 1–2 only in default checklist
+- [x] Onboarding API steps mapped to UI steps 1–2 only in default checklist
 
 ---
 

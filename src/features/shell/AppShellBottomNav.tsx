@@ -3,18 +3,27 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
+import useShellNavContext from "@/features/shell/hooks/useShellNavContext";
 import { BOTTOM_NAV } from "@/features/shell/appBottomNav.constant";
+import { filterAppNavForShellContext } from "@/lib/shell/filterAppNavForShellContext";
 
 export default function AppShellBottomNav() {
   const pathname = usePathname();
+  const shellNav = useShellNavContext();
+  const navItems = filterAppNavForShellContext(BOTTOM_NAV, shellNav);
 
   return (
     <nav
       aria-label="Mobile"
       className="fixed inset-x-0 bottom-0 z-50 border-t border-gray-200 bg-white/95 backdrop-blur md:hidden dark:border-gray-800 dark:bg-gray-800/95"
     >
-      <ul className="mx-auto grid max-w-lg grid-cols-5">
-        {BOTTOM_NAV.map((item) => {
+      <ul
+        className="mx-auto grid max-w-lg"
+        style={{
+          gridTemplateColumns: `repeat(${navItems.length}, minmax(0, 1fr))`,
+        }}
+      >
+        {navItems.map((item) => {
           const isActive = item.isActive(pathname);
 
           return (

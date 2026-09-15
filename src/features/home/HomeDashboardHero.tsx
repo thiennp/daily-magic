@@ -12,9 +12,12 @@ import {
   APP_SURFACE_TEXT_LINK_MUTED_CLASS,
 } from "@/components/surfaces/appSurfaceStyles.constant";
 import { useSendTaskModal } from "@/features/agent/SendTaskModalProvider";
-import HomeOpenLocalConsoleWhenOnline from "@/features/home/HomeOpenLocalConsoleWhenOnline";
+import HomeMacSettingsLink from "@/features/home/HomeMacSettingsLink";
+import HomeMacStatusBanner from "@/features/home/HomeMacStatusBanner";
 import HomeRunningJobsPanel from "@/features/home/HomeRunningJobsPanel";
+import useShellNavContext from "@/features/shell/hooks/useShellNavContext";
 import { COMPANY_RULES_NAV_LABEL } from "@/lib/admin/companyGroupCopy.constant";
+import buildAgentComposerHref from "@/lib/library/buildAgentComposerHref";
 import formatGlobalRole from "@/lib/auth/formatGlobalRole";
 import type { GlobalRoleValue } from "@/lib/auth/roles";
 import { BoltIcon } from "@/icons";
@@ -30,6 +33,7 @@ interface HomeDashboardHeroProps {
 export default function HomeDashboardHero({ user }: HomeDashboardHeroProps) {
   const displayName = user.name ?? user.email;
   const { openSendTaskModal } = useSendTaskModal();
+  const { teamNavEnabled, showAdminNav } = useShellNavContext();
 
   return (
     <AppHero variant="neutral">
@@ -38,9 +42,10 @@ export default function HomeDashboardHero({ user }: HomeDashboardHeroProps) {
         Welcome back, {displayName}
       </h1>
       <p className={`mt-3 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
-        Start agent tasks here and review results when they finish. Signed in as{" "}
-        {user.email} ({formatGlobalRole(user.globalRole)}).
+        Run agents on your Mac from here. Signed in as {user.email} (
+        {formatGlobalRole(user.globalRole)}).
       </p>
+      <HomeMacStatusBanner />
       <div className="mt-6">
         <button
           type="button"
@@ -50,27 +55,44 @@ export default function HomeDashboardHero({ user }: HomeDashboardHeroProps) {
           className={`${APP_SURFACE_CTA_PRIMARY_LG_CLASS} gap-2`}
         >
           <AppIcon icon={BoltIcon} size="lg" />
-          Start
+          New task
         </button>
-        <HomeOpenLocalConsoleWhenOnline />
         <HomeRunningJobsPanel />
-        <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-sm">
-          <Link href="/library" className={APP_SURFACE_TEXT_LINK_CLASS}>
-            Browse library →
+        <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm">
+          <Link
+            href={buildAgentComposerHref({ customTask: true })}
+            className={APP_SURFACE_TEXT_LINK_CLASS}
+          >
+            Open task composer →
           </Link>
-          <Link href="/automations" className={APP_SURFACE_TEXT_LINK_CLASS}>
-            Automations →
+          <Link href="/library" className={APP_SURFACE_TEXT_LINK_CLASS}>
+            Playbooks →
           </Link>
           <Link href="/reports" className={APP_SURFACE_TEXT_LINK_MUTED_CLASS}>
-            View job history →
+            Runs →
           </Link>
-          <Link
-            href="/admin/groups"
-            className={APP_SURFACE_TEXT_LINK_MUTED_CLASS}
-          >
-            {COMPANY_RULES_NAV_LABEL}
-          </Link>
+          <HomeMacSettingsLink />
+          {teamNavEnabled ? (
+            <Link
+              href="/automations"
+              className={APP_SURFACE_TEXT_LINK_MUTED_CLASS}
+            >
+              Automations →
+            </Link>
+          ) : null}
+          {showAdminNav ? (
+            <Link
+              href="/admin/groups"
+              className={APP_SURFACE_TEXT_LINK_MUTED_CLASS}
+            >
+              {COMPANY_RULES_NAV_LABEL} →
+            </Link>
+          ) : null}
         </div>
+        <p className="mt-3 text-xs text-gray-500 dark:text-gray-400">
+          Having trouble? Expand <strong>Your setup</strong> below or open Mac
+          settings.
+        </p>
       </div>
     </AppHero>
   );

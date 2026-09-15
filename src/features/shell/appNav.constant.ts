@@ -1,11 +1,8 @@
 import { COMPANY_RULES_NAV_LABEL } from "@/lib/admin/companyGroupCopy.constant";
 import buildAgentComposerHref from "@/lib/library/buildAgentComposerHref";
+import type AppNavItem from "@/lib/shell/AppNavItem.type";
 
-export interface AppNavItem {
-  readonly href: string;
-  readonly label: string;
-  readonly isActive: (pathname: string) => boolean;
-}
+export type { default as AppNavItem } from "@/lib/shell/AppNavItem.type";
 
 const NEW_TASK_HREF = buildAgentComposerHref({ customTask: true });
 
