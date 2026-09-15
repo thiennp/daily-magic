@@ -5,6 +5,8 @@ import {
 
 const MAC_DISPATCH_OFFLINE_ERROR_MESSAGES = [
   "The selected Mac is not online right now.",
+  "The selected Mac is reconnecting. Try again in a few seconds.",
+  "The selected Mac is reconnecting. Your task will send when it checks in.",
   MAC_OFFLINE_FOR_ACCOUNT_ERROR,
   TEAMMATE_MAC_OFFLINE_ERROR,
 ] as const;

@@ -4,8 +4,12 @@ import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMess
 export const buildDispatchError = (
   errorMessage: string,
   requestId?: string,
+  errorCode?: string,
 ): AgentWitchMessage => ({
   type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR,
-  payload: { errorMessage },
+  payload: {
+    errorMessage,
+    ...(errorCode !== undefined ? { errorCode } : {}),
+  },
   requestId,
 });

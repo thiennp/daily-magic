@@ -2,6 +2,7 @@ import buildHarnessCreateSetPrompt from "@/lib/agentWitch/harness/buildHarnessCr
 import buildHarnessWriteItemsPrompt from "@/lib/agentWitch/harness/buildHarnessWriteItemsPrompt";
 import type HarnessItemWriteSpec from "@/lib/agentWitch/harness/types/HarnessItemWriteSpec.type";
 import type AgentWitchHubClient from "@/lib/agentWitch/types/AgentWitchHubClient.type";
+import type AgentWitchMessage from "@/lib/agentWitch/types/AgentWitchMessage.type";
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
 
 interface HarnessInstallSetInput {
@@ -10,30 +11,50 @@ interface HarnessInstallSetInput {
   readonly items: readonly HarnessItemWriteSpec[];
 }
 
-export const sendHarnessInstallToAgentClient = (
-  agentClient: AgentWitchHubClient,
+export const buildHarnessInstallDispatchMessages = (
   harness: HarnessInstallSetInput,
-): void => {
+): readonly AgentWitchMessage[] => {
   const createSpec = {
     mode: "create-set" as const,
     name: harness.name,
     slug: harness.slug,
   };
 
-  agentClient.send({
-    type: AGENT_WITCH_MESSAGE_TYPES.HARNESS_REQUEST,
-    payload: {
-      writerAgent: "claude-cli",
-      spec: createSpec,
-      instruction: buildHarnessCreateSetPrompt(createSpec),
+  const messages: AgentWitchMessage[] = [
+    {
+      type: AGENT_WITCH_MESSAGE_TYPES.HARNESS_REQUEST,
+      payload: {
+        writerAgent: "claude-cli",
+        spec: createSpec,
+        instruction: buildHarnessCreateSetPrompt(createSpec),
+      },
     },
-  });
+  ];
 
-  if (harness.items.length === 0) {
-    return;
+  if (harness.items.length > 0) {
+    messages.push({
+      type: AGENT_WITCH_MESSAGE_TYPES.HARNESS_REQUEST,
+      payload: {
+        writerAgent: "claude-cli",
+        spec: {
+          mode: "write-items",
+          items: harness.items,
+        },
+        instruction: buildHarnessWriteItemsPrompt(harness.items),
+      },
+    });
   }
 
-  sendHarnessWriteItemsToAgentClient(agentClient, harness.items);
+  return messages;
+};
+
+export const sendHarnessInstallToAgentClient = (
+  agentClient: AgentWitchHubClient,
+  harness: HarnessInstallSetInput,
+): void => {
+  buildHarnessInstallDispatchMessages(harness).forEach((message) => {
+    agentClient.send(message);
+  });
 };
 
 export const sendHarnessWriteItemsToAgentClient = (

@@ -6,6 +6,7 @@ import {
 import { findEnrichedAgentClientForUser } from "@/lib/agentWitch/findEnrichedAgentClientForUser";
 import type AgentWitchHubClient from "@/lib/agentWitch/types/AgentWitchHubClient.type";
 import type AgentWitchHubRuntime from "@/lib/agentWitch/types/AgentWitchHubRuntime.type";
+import { buildTargetMacOfflineDispatchError } from "@/lib/dispatch/buildTargetMacOfflineDispatchError";
 import { buildDispatchError } from "@/lib/dispatch/buildDispatchError";
 
 export const resolveTargetDeviceId = (
@@ -88,8 +89,8 @@ export const resolveClaudeRunAgentClient = async (input: {
   if (input.targetDeviceId !== undefined) {
     return {
       ok: false,
-      error: buildDispatchError(
-        "The selected Mac is not online right now.",
+      error: await buildTargetMacOfflineDispatchError(
+        input.targetDeviceId,
         input.requestId,
       ),
     };
