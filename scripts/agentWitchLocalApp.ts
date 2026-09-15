@@ -35,7 +35,15 @@ import {
   buildAgentWitchLocalHarnessPageBody,
   parseHarnessSubmitFormBody,
 } from "./buildAgentWitchLocalHarnessPage";
+import {
+  addAgentWitchLocalProjectToRegistry,
+  findAgentWitchLocalProjectById,
+  readAgentWitchLocalProjectsRegistry,
+} from "./agentWitchLocalProjectsRegistry";
 import { applyInstalledHarnessSetsToProjectCursor } from "./applyInstalledHarnessSetsToProjectCursor";
+import { buildAgentWitchLocalProjectDetailPageBody } from "./buildAgentWitchLocalProjectDetailPage";
+import { buildAgentWitchLocalProjectsPageBody } from "./buildAgentWitchLocalProjectsPage";
+import { readAgentWitchProjectHarnessSetSlugs } from "./readAgentWitchProjectHarnessLink";
 import { readInstalledLocalHarnessSnapshot } from "./readInstalledLocalHarnessSnapshot";
 import { buildDefaultLocalHarnessScanFolder } from "./localHarness/defaultLocalHarnessScanRoots";
 import { pickMacOsFolderDialog } from "./pickMacOsFolderDialog";
@@ -44,9 +52,11 @@ import { assertReadableFileUnderHome } from "./localHarness/pathSafety";
 import { streamLocalHarnessReveal } from "./localHarness/streamLocalHarnessReveal";
 import {
   readLocalHarnessRevealCache,
+  clearLocalHarnessRevealCache,
   submitLocalHarnessSelection,
   writeLocalHarnessRevealCache,
 } from "./localHarness/submitLocalHarnessSelection";
+import { ensureAgentWitchProjectFolder } from "./ensureAgentWitchProjectFolder";
 import { formatAgentWitchInstallBundleVersionLabel } from "./formatAgentWitchInstallBundleVersionLabel";
 import { readAgentWitchErrorLogTail } from "./readAgentWitchErrorLogTail";
 import { readAgentWitchInstallVersion } from "./agentWitchInstallVersion";
@@ -65,35 +75,48 @@ const formatLocalAppTimestamp = (value: string | null): string =>
 
 const LOCAL_HARNESS_FILE_PREVIEW_MAX_CHARS = 48_000;
 
-const resolveDefaultHarnessProjectFolder = (
-  reveal: LocalHarnessRevealResult | null,
-): string => {
-  const repoPath = reveal?.sets.find(
-    (set) => set.repoPath.trim().length > 0,
-  )?.repoPath;
-  return repoPath?.trim() ?? "";
+const resolveHarnessImportSectionExpanded = (
+  layout: AgentWitchLocalLayout,
+  input: {
+    readonly reveal: LocalHarnessRevealResult | null;
+    readonly importQuery: boolean;
+    readonly justSubmitted: boolean;
+  },
+): boolean => {
+  if (input.importQuery) {
+    return true;
+  }
+
+  if (input.justSubmitted) {
+    return false;
+  }
+
+  if (input.reveal !== null && input.reveal.sets.length > 0) {
+    return true;
+  }
+
+  return readInstalledLocalHarnessSnapshot(layout).sets.length === 0;
 };
 
-const buildHarnessPageBodyInput = (input: {
-  readonly layout: AgentWitchLocalLayout;
-  readonly reveal: LocalHarnessRevealResult | null;
-  readonly scanFolder?: string;
-  readonly flashMessage?: string | null;
-  readonly flashError?: string | null;
-  readonly applyFlashMessage?: string | null;
-  readonly applyFlashError?: string | null;
-}) => ({
+const buildHarnessPageBodyInput = (
+  layout: AgentWitchLocalLayout,
+  input: {
+    readonly reveal: LocalHarnessRevealResult | null;
+    readonly scanFolder?: string;
+    readonly flashMessage?: string | null;
+    readonly flashError?: string | null;
+    readonly importSectionExpanded: boolean;
+  },
+) => ({
   scanFolder:
     input.scanFolder ??
     input.reveal?.scanRoots[0] ??
     buildDefaultLocalHarnessScanFolder(),
   reveal: input.reveal,
-  installed: readInstalledLocalHarnessSnapshot(input.layout),
-  defaultProjectFolder: resolveDefaultHarnessProjectFolder(input.reveal),
+  installed: readInstalledLocalHarnessSnapshot(layout),
   flashMessage: input.flashMessage,
   flashError: input.flashError,
-  applyFlashMessage: input.applyFlashMessage,
-  applyFlashError: input.applyFlashError,
+  importSectionExpanded: input.importSectionExpanded,
 });
 
 type LocalAppStatus = {
@@ -548,6 +571,129 @@ export const startAgentWitchLocalApp = (input: {
         return;
       }
 
+      if (method === "GET" && pathname === "/projects") {
+        const url = new URL(
+          request.url ?? "/",
+          `http://127.0.0.1:${AGENT_WITCH_LOCAL_APP_PORT}`,
+        );
+        const installBundle = buildInstallBundleStatus();
+        const flashMessage =
+          url.searchParams.get("added") === "1" ? "Project added." : null;
+        sendHtml(
+          response,
+          await buildLocalAppShell({
+            title: "Projects",
+            activePath: "/projects",
+            installVersion: installBundle.installVersion,
+            body: buildAgentWitchLocalProjectsPageBody({
+              projects: readAgentWitchLocalProjectsRegistry(input.layout),
+              flashMessage,
+            }),
+          }),
+        );
+        return;
+      }
+
+      if (method === "GET" && pathname === "/project") {
+        const url = new URL(
+          request.url ?? "/",
+          `http://127.0.0.1:${AGENT_WITCH_LOCAL_APP_PORT}`,
+        );
+        const projectId = url.searchParams.get("id")?.trim() ?? "";
+        const project = findAgentWitchLocalProjectById(input.layout, projectId);
+        if (project === null) {
+          response.writeHead(404);
+          response.end("Project not found");
+          return;
+        }
+
+        const installBundle = buildInstallBundleStatus();
+        const linkedFlash =
+          url.searchParams.get("linked") === "1"
+            ? `Harness linked (${url.searchParams.get("files") ?? "0"} file(s) written).`
+            : null;
+        sendHtml(
+          response,
+          await buildLocalAppShell({
+            title: project.name,
+            activePath: "/projects",
+            installVersion: installBundle.installVersion,
+            body: buildAgentWitchLocalProjectDetailPageBody({
+              project,
+              installed: readInstalledLocalHarnessSnapshot(input.layout),
+              linkedSetSlugs: readAgentWitchProjectHarnessSetSlugs(
+                project.projectFolderPath,
+              ),
+              flashMessage: linkedFlash,
+            }),
+          }),
+        );
+        return;
+      }
+
+      if (method === "POST" && pathname === "/projects/add") {
+        const chosen = pickMacOsFolderDialog();
+        if (chosen === null) {
+          response.writeHead(303, { Location: "/projects" });
+          response.end();
+          return;
+        }
+
+        ensureAgentWitchProjectFolder({ projectFolderPath: chosen });
+        addAgentWitchLocalProjectToRegistry(input.layout, {
+          projectFolderPath: chosen,
+        });
+        response.writeHead(303, { Location: "/projects?added=1" });
+        response.end();
+        return;
+      }
+
+      if (method === "POST" && pathname === "/projects/link-harness") {
+        const rawBody = await readBody(request);
+        const form = new URLSearchParams(rawBody);
+        const projectId = form.get("projectId")?.trim() ?? "";
+        const project = findAgentWitchLocalProjectById(input.layout, projectId);
+        if (project === null) {
+          response.writeHead(404);
+          response.end("Project not found");
+          return;
+        }
+
+        const setSlugs = form.getAll("applySet").map((value) => String(value));
+        const applyResult = applyInstalledHarnessSetsToProjectCursor({
+          layout: input.layout,
+          projectFolderPath: project.projectFolderPath,
+          setSlugs,
+        });
+
+        if (!applyResult.ok) {
+          const installBundle = buildInstallBundleStatus();
+          sendHtml(
+            response,
+            await buildLocalAppShell({
+              title: project.name,
+              activePath: "/projects",
+              installVersion: installBundle.installVersion,
+              body: buildAgentWitchLocalProjectDetailPageBody({
+                project,
+                installed: readInstalledLocalHarnessSnapshot(input.layout),
+                linkedSetSlugs: readAgentWitchProjectHarnessSetSlugs(
+                  project.projectFolderPath,
+                ),
+                flashError: applyResult.errorMessage,
+              }),
+            }),
+          );
+          return;
+        }
+
+        response.writeHead(303, {
+          Location: `/project?id=${encodeURIComponent(project.id)}&linked=1&files=${applyResult.writtenFileCount}`,
+        });
+        response.end();
+        return;
+      }
+
       if (method === "GET" && pathname === "/harness") {
         const url = new URL(
           request.url ?? "/",
@@ -555,27 +701,28 @@ export const startAgentWitchLocalApp = (input: {
         );
         const installBundle = buildInstallBundleStatus();
         const reveal = readLocalHarnessRevealCache(input.layout);
-        const appliedFiles = url.searchParams.get("files");
-        const flashMessage =
-          url.searchParams.get("submitted") === "1"
-            ? url.searchParams.get("syncFailed") === "1"
-              ? `Local harness updated (${url.searchParams.get("count") ?? "0"} items). Cloud sync failed — check WS connection on Status.`
-              : url.searchParams.get("synced") === "1"
-                ? `Local harness updated and manifest reported to cloud (${url.searchParams.get("count") ?? "0"} items).`
-                : "Local harness updated from your selection."
-            : url.searchParams.get("added") === "1"
-              ? "Project added to reveal list."
-              : url.searchParams.get("stopped") === "1"
-                ? `Reveal stopped. ${reveal?.sets.length ?? 0} set(s) saved — you can submit or scan again.`
-                : url.searchParams.get("revealed") === "1"
-                  ? `Reveal found ${reveal?.sets.length ?? 0} set(s).`
-                  : null;
-        const applyFlashMessage =
-          url.searchParams.get("applied") === "1"
-            ? `Applied harness to project (${appliedFiles ?? "0"} file(s)). Link saved in project metadata.`
-            : null;
+        const justSubmitted = url.searchParams.get("submitted") === "1";
+        const flashMessage = justSubmitted
+          ? url.searchParams.get("syncFailed") === "1"
+            ? `Local harness updated (${url.searchParams.get("count") ?? "0"} items). Cloud sync failed — check WS connection on Status.`
+            : url.searchParams.get("synced") === "1"
+              ? `Local harness updated and manifest reported to cloud (${url.searchParams.get("count") ?? "0"} items).`
+              : "Local harness updated from your selection."
+          : url.searchParams.get("stopped") === "1"
+            ? `Reveal stopped. ${reveal?.sets.length ?? 0} set(s) saved — you can submit or scan again.`
+            : url.searchParams.get("revealed") === "1"
+              ? `Reveal found ${reveal?.sets.length ?? 0} set(s).`
+              : null;
         const scanFolder =
           reveal?.scanRoots[0] ?? buildDefaultLocalHarnessScanFolder();
+        const importSectionExpanded = resolveHarnessImportSectionExpanded(
+          input.layout,
+          {
+            reveal,
+            importQuery: url.searchParams.get("import") === "1",
+            justSubmitted,
+          },
+        );
         sendHtml(
           response,
           await buildLocalAppShell({
@@ -583,12 +730,11 @@ export const startAgentWitchLocalApp = (input: {
             activePath: "/harness",
             installVersion: installBundle.installVersion,
             body: buildAgentWitchLocalHarnessPageBody(
-              buildHarnessPageBodyInput({
-                layout: input.layout,
+              buildHarnessPageBodyInput(input.layout, {
                 reveal,
                 scanFolder,
                 flashMessage,
-                applyFlashMessage,
+                importSectionExpanded,
               }),
             ),
           }),
@@ -729,46 +875,6 @@ export const startAgentWitchLocalApp = (input: {
         return;
       }
 
-      if (method === "POST" && pathname === "/harness/apply-to-project") {
-        const reveal = readLocalHarnessRevealCache(input.layout);
-        const rawBody = await readBody(request);
-        const form = new URLSearchParams(rawBody);
-        const projectFolder = form.get("projectFolder")?.trim() ?? "";
-        const setSlugs = form.getAll("applySet").map((value) => String(value));
-
-        const applyResult = applyInstalledHarnessSetsToProjectCursor({
-          layout: input.layout,
-          projectFolderPath: projectFolder,
-          setSlugs,
-        });
-
-        if (!applyResult.ok) {
-          const installBundle = buildInstallBundleStatus();
-          sendHtml(
-            response,
-            await buildLocalAppShell({
-              title: "Harness",
-              activePath: "/harness",
-              installVersion: installBundle.installVersion,
-              body: buildAgentWitchLocalHarnessPageBody(
-                buildHarnessPageBodyInput({
-                  layout: input.layout,
-                  reveal,
-                  applyFlashError: applyResult.errorMessage,
-                }),
-              ),
-            }),
-          );
-          return;
-        }
-
-        response.writeHead(303, {
-          Location: `/harness?applied=1&files=${applyResult.writtenFileCount}`,
-        });
-        response.end();
-        return;
-      }
-
       if (method === "POST" && pathname === "/harness/submit") {
         const reveal = readLocalHarnessRevealCache(input.layout);
         if (reveal === null) {
@@ -780,10 +886,10 @@ export const startAgentWitchLocalApp = (input: {
               activePath: "/harness",
               installVersion: installBundle.installVersion,
               body: buildAgentWitchLocalHarnessPageBody(
-                buildHarnessPageBodyInput({
-                  layout: input.layout,
+                buildHarnessPageBodyInput(input.layout, {
                   reveal: null,
                   flashError: "Run reveal before submit.",
+                  importSectionExpanded: true,
                 }),
               ),
             }),
@@ -808,16 +914,18 @@ export const startAgentWitchLocalApp = (input: {
               activePath: "/harness",
               installVersion: installBundle.installVersion,
               body: buildAgentWitchLocalHarnessPageBody(
-                buildHarnessPageBodyInput({
-                  layout: input.layout,
+                buildHarnessPageBodyInput(input.layout, {
                   reveal,
                   flashError: result.errorMessage ?? "Submit failed.",
+                  importSectionExpanded: true,
                 }),
               ),
             }),
           );
           return;
         }
+
+        clearLocalHarnessRevealCache(input.layout);
 
         const syncResult =
           input.controllers.reportHarnessManifestIfConnected?.();

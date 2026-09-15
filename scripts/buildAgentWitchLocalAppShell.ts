@@ -5,6 +5,8 @@ export type AgentWitchLocalAppNavPath =
   | "/"
   | "/task"
   | "/status"
+  | "/projects"
+  | "/project"
   | "/errors"
   | "/traffic"
   | "/knowledge"
@@ -24,6 +26,7 @@ const NAV_ITEMS: ReadonlyArray<{
   { href: "/", label: "Home" },
   { href: "/task", label: "Task" },
   { href: "/status", label: "Status" },
+  { href: "/projects", label: "Projects" },
   { href: "/harness", label: "Harness" },
   { href: "/knowledge", label: "Knowledge" },
   { href: "/errors", label: "Errors" },

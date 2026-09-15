@@ -23,6 +23,7 @@ describe("buildAgentWitchLocalAppShell", () => {
     expect(html).toContain('href="/status"');
     expect(html).toContain('href="/traffic"');
     expect(html).toContain('href="/knowledge"');
+    expect(html).toContain('href="/projects"');
     expect(html).toContain('href="/harness"');
     expect(html).toContain('href="https://www.agentwitch.com"');
     expect(html).toContain("Open cloud");
@@ -38,12 +39,14 @@ describe("buildAgentWitchLocalAppShell", () => {
 
     const taskIndex = html.indexOf('href="/task"');
     const statusIndex = html.indexOf('href="/status"');
+    const projectsIndex = html.indexOf('href="/projects"');
     const harnessIndex = html.indexOf('href="/harness"');
     const errorsIndex = html.indexOf('href="/errors"');
     const trafficIndex = html.indexOf('href="/traffic"');
 
     expect(taskIndex).toBeLessThan(statusIndex);
-    expect(statusIndex).toBeLessThan(harnessIndex);
+    expect(statusIndex).toBeLessThan(projectsIndex);
+    expect(projectsIndex).toBeLessThan(harnessIndex);
     expect(harnessIndex).toBeLessThan(errorsIndex);
     expect(errorsIndex).toBeLessThan(trafficIndex);
   });

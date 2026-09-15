@@ -169,30 +169,6 @@ export const buildLocalHarnessRevealClientScript = (): string => `(() => {
     finishReveal("revealed=1&stopped=1");
   });
 
-  document.getElementById("addProject")?.addEventListener("click", async () => {
-    const pickResponse = await fetch("/api/harness/pick-folder", {
-      method: "POST",
-    });
-    const picked = await pickResponse.json();
-    if (typeof picked.path !== "string") {
-      return;
-    }
-    const addResponse = await fetch("/api/harness/reveal/add-project", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ projectPath: picked.path }),
-    });
-    const result = await addResponse.json();
-    if (result.ok !== true) {
-      window.alert(
-        typeof result.errorMessage === "string"
-          ? result.errorMessage
-          : "Could not add project.",
-      );
-      return;
-    }
-    window.location.href = "/harness?added=1";
-  });
 })();`;
 
 export const buildLocalHarnessTreePreviewClientScript = (): string => `(() => {
@@ -227,17 +203,12 @@ export const buildAgentWitchLocalHarnessPageBody = (input: {
   readonly scanFolder: string;
   readonly reveal: LocalHarnessRevealResult | null;
   readonly installed: InstalledLocalHarnessSnapshot;
-  readonly defaultProjectFolder: string;
   readonly flashMessage?: string | null;
   readonly flashError?: string | null;
-  readonly applyFlashMessage?: string | null;
-  readonly applyFlashError?: string | null;
+  readonly importSectionExpanded: boolean;
 }): string => {
   const installedSection = buildAgentWitchLocalHarnessInstalledSection({
     installed: input.installed,
-    defaultProjectFolder: input.defaultProjectFolder,
-    applyFlashMessage: input.applyFlashMessage,
-    applyFlashError: input.applyFlashError,
   });
 
   const flash = input.flashError
@@ -256,7 +227,19 @@ export const buildAgentWitchLocalHarnessPageBody = (input: {
     lastRevealScanFolder.length > 0 &&
     input.scanFolder.trim() === lastRevealScanFolder;
 
-  return `${installedSection}${flash}<section class="card">
+  const importCollapsed = !input.importSectionExpanded;
+  const importToggle = importCollapsed
+    ? `<section class="card">
+        <p class="muted">Import is hidden after a successful submit. Scan another folder when you need more harness files.</p>
+        <div class="actions">
+          <a class="btn btn-secondary" href="/harness?import=1">Import from folder…</a>
+        </div>
+      </section>`
+    : "";
+
+  const importSection = importCollapsed
+    ? ""
+    : `<section class="card">
       <p class="eyebrow">Import</p>
       <h1>Reveal &amp; submit</h1>
       <p class="lede">Pick one folder under your home directory, scan for projects with <code>.cursor</code>, then submit your selection to the local harness. Scanning <code>~</code> can take a while — prefer a project folder or use <strong>Stop</strong>.</p>
@@ -267,7 +250,6 @@ export const buildAgentWitchLocalHarnessPageBody = (input: {
         </label>
         <div class="actions">
           <button class="btn btn-secondary" type="button" id="pickFolder">Choose folder…</button>
-          <button class="btn btn-secondary" type="button" id="addProject">Add project…</button>
           <button class="btn btn-primary" type="button" id="revealStart"${hideRevealInitially ? " hidden" : ""}>Reveal</button>
           <button class="btn btn-secondary" type="button" id="revealStop" hidden>Stop</button>
         </div>
@@ -280,6 +262,8 @@ export const buildAgentWitchLocalHarnessPageBody = (input: {
     ${revealSection}
     <script>${buildLocalHarnessRevealClientScript()}</script>
     <script>${buildLocalHarnessTreePreviewClientScript()}</script>`;
+
+  return `${installedSection}${flash}${importToggle}${importSection}`;
 };
 
 const buildRevealForm = (reveal: LocalHarnessRevealResult): string => {

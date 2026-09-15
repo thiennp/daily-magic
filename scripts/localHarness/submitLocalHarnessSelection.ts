@@ -174,6 +174,15 @@ export const writeLocalHarnessRevealCache = (
   );
 };
 
+export const clearLocalHarnessRevealCache = (
+  layout: AgentWitchLocalLayout,
+): void => {
+  const cachePath = `${layout.harnessRootDir}/${LOCAL_HARNESS_REVEAL_CACHE_FILE}`;
+  if (fs.existsSync(cachePath)) {
+    fs.unlinkSync(cachePath);
+  }
+};
+
 export const readLocalHarnessRevealCache = (
   layout: AgentWitchLocalLayout,
 ): LocalHarnessRevealResult | null => {
