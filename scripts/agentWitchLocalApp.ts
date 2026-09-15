@@ -24,11 +24,11 @@ import { formatAgentWitchRelativeTimeAgo } from "./formatAgentWitchRelativeTimeA
 import { buildAgentWitchLocalAppShell } from "./buildAgentWitchLocalAppShell";
 import {
   buildAgentWitchLocalHarnessPageBody,
-  parseHarnessRevealScanRoots,
   parseHarnessSubmitFormBody,
 } from "./buildAgentWitchLocalHarnessPage";
-import { buildDefaultLocalHarnessScanRoots } from "./localHarness/defaultLocalHarnessScanRoots";
-import { revealLocalHarnessCandidates } from "./localHarness/revealLocalHarnessCandidates";
+import { buildDefaultLocalHarnessScanFolder } from "./localHarness/defaultLocalHarnessScanRoots";
+import { pickMacOsFolderDialog } from "./pickMacOsFolderDialog";
+import { streamLocalHarnessReveal } from "./localHarness/streamLocalHarnessReveal";
 import {
   readLocalHarnessRevealCache,
   submitLocalHarnessSelection,
@@ -304,9 +304,13 @@ export const startAgentWitchLocalApp = (input: {
         const flashMessage =
           url.searchParams.get("submitted") === "1"
             ? "Local harness updated from your selection."
-            : url.searchParams.get("revealed") === "1"
-              ? `Reveal found ${reveal?.sets.length ?? 0} set(s).`
-              : null;
+            : url.searchParams.get("stopped") === "1"
+              ? `Reveal stopped. ${reveal?.sets.length ?? 0} set(s) saved — you can submit or scan again.`
+              : url.searchParams.get("revealed") === "1"
+                ? `Reveal found ${reveal?.sets.length ?? 0} set(s).`
+                : null;
+        const scanFolder =
+          reveal?.scanRoots[0] ?? buildDefaultLocalHarnessScanFolder();
         sendHtml(
           response,
           buildAgentWitchLocalAppShell({
@@ -314,8 +318,7 @@ export const startAgentWitchLocalApp = (input: {
             activePath: "/harness",
             installVersion: installBundle.installVersion,
             body: buildAgentWitchLocalHarnessPageBody({
-              scanRoots:
-                reveal?.scanRoots ?? buildDefaultLocalHarnessScanRoots(),
+              scanFolder,
               reveal,
               flashMessage,
             }),
@@ -324,20 +327,54 @@ export const startAgentWitchLocalApp = (input: {
         return;
       }
 
-      if (method === "POST" && pathname === "/harness/reveal") {
-        const rawBody = await readBody(request);
-        const form = new URLSearchParams(rawBody);
-        const scanRoots = parseHarnessRevealScanRoots(
-          form.get("scanRoots") ?? "",
+      if (method === "POST" && pathname === "/api/harness/pick-folder") {
+        const chosen = pickMacOsFolderDialog();
+        if (chosen === null) {
+          sendJson(response, 200, { cancelled: true });
+          return;
+        }
+        sendJson(response, 200, { path: chosen });
+        return;
+      }
+
+      if (method === "GET" && pathname === "/api/harness/reveal/stream") {
+        const url = new URL(
+          request.url ?? "/",
+          `http://127.0.0.1:${AGENT_WITCH_LOCAL_APP_PORT}`,
         );
-        const roots =
-          scanRoots.length > 0
-            ? scanRoots
-            : buildDefaultLocalHarnessScanRoots();
-        const reveal = revealLocalHarnessCandidates({ scanRoots: roots });
+        const scanRoot = url.searchParams.get("scanRoot")?.trim() ?? "";
+        if (scanRoot.length === 0) {
+          sendJson(response, 400, {
+            errorMessage: "Choose a folder to scan first.",
+          });
+          return;
+        }
+
+        let aborted = false;
+        request.on("close", () => {
+          aborted = true;
+        });
+
+        response.writeHead(200, {
+          "Content-Type": "text/event-stream",
+          "Cache-Control": "no-cache",
+          Connection: "keep-alive",
+          ...LOCAL_APP_CORS_HEADERS,
+        });
+
+        const reveal = streamLocalHarnessReveal({
+          scanRoot,
+          response,
+          shouldAbort: () => aborted,
+        });
         writeLocalHarnessRevealCache(input.layout, reveal);
-        response.writeHead(303, { Location: "/harness?revealed=1" });
         response.end();
+        return;
+      }
+
+      if (method === "POST" && pathname === "/harness/reveal") {
+        response.writeHead(410, { "Content-Type": "text/plain" });
+        response.end("Use GET /api/harness/reveal/stream with a scan folder.");
         return;
       }
 
@@ -352,7 +389,7 @@ export const startAgentWitchLocalApp = (input: {
               activePath: "/harness",
               installVersion: installBundle.installVersion,
               body: buildAgentWitchLocalHarnessPageBody({
-                scanRoots: buildDefaultLocalHarnessScanRoots(),
+                scanFolder: buildDefaultLocalHarnessScanFolder(),
                 reveal: null,
                 flashError: "Run reveal before submit.",
               }),
@@ -378,7 +415,7 @@ export const startAgentWitchLocalApp = (input: {
               activePath: "/harness",
               installVersion: installBundle.installVersion,
               body: buildAgentWitchLocalHarnessPageBody({
-                scanRoots: reveal.scanRoots,
+                scanFolder: reveal.scanRoots[0] ?? "",
                 reveal,
                 flashError: result.errorMessage ?? "Submit failed.",
               }),

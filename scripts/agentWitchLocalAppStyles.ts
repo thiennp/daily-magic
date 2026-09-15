@@ -369,6 +369,10 @@ pre {
 .textarea { min-height: 6rem; resize: vertical; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 0.8125rem; }
 
 .check-list { list-style: none; margin: 0.75rem 0 0; padding: 0; display: flex; flex-direction: column; gap: 0.5rem; }
+.reveal-live-list { list-style: none; margin: 0.5rem 0 0; padding: 0; display: flex; flex-direction: column; gap: 0.35rem; max-height: 16rem; overflow-y: auto; }
+.reveal-folder-row { font-size: 0.875rem; padding: 0.35rem 0.5rem; border-radius: 0.375rem; background: var(--aw-zinc-50); border: 1px solid var(--aw-zinc-200); }
+.reveal-set-badge { margin-left: 0.5rem; font-size: 0.75rem; color: var(--aw-emerald-700); }
+.reveal-progress { margin-top: 0.25rem; }
 
 .check-row label { display: flex; flex-direction: column; gap: 0.25rem; font-size: 0.875rem; }
 
