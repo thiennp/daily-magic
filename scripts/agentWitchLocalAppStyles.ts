@@ -270,6 +270,31 @@ code, .mono {
 }
 .btn-secondary:hover { background: var(--aw-zinc-50); border-color: var(--aw-zinc-400); }
 
+.btn-compact {
+  height: 2.25rem;
+  padding: 0 0.85rem;
+  font-size: 0.8125rem;
+}
+
+.header-update-form { margin: 0; }
+
+.update-banner {
+  background: #fffbeb;
+  border-color: #fde68a;
+  margin-bottom: 1rem;
+}
+
+.update-banner-title {
+  font-size: 1.125rem;
+  margin: 0.35rem 0 0;
+}
+
+.site-main > .alert-success:first-child,
+.site-main > .alert-error:first-child {
+  margin-bottom: 1rem;
+  margin-top: 0;
+}
+
 .search-row {
   display: flex;
   flex-wrap: wrap;

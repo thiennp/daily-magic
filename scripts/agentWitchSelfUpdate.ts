@@ -96,6 +96,13 @@ const fetchRemoteBundleManifest = async (
   };
 };
 
+export const fetchAgentWitchRemoteInstallBundleVersion = async (
+  appOrigin: string,
+): Promise<string | null> => {
+  const manifest = await fetchRemoteBundleManifest(appOrigin);
+  return manifest?.bundleVersion ?? null;
+};
+
 const downloadInstallBundle = async (
   appOrigin: string,
   installDir: string,

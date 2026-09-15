@@ -8,6 +8,8 @@ describe("buildAgentWitchLocalAppShell", () => {
       title: "Status",
       activePath: "/",
       cloudAppOrigin: "https://www.agentwitch.com",
+      headerUpdateButtonHtml:
+        '<form class="header-update-form" method="POST" action="/api/update"><button class="btn btn-primary btn-compact" type="submit">Update</button></form>',
       body: '<div class="card">ok</div>',
     });
 

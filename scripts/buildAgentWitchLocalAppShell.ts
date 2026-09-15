@@ -37,6 +37,8 @@ export const buildAgentWitchLocalAppShell = (input: {
   readonly body: string;
   readonly installVersion?: AgentWitchInstallVersionRecord | null;
   readonly cloudAppOrigin: string;
+  readonly prependBody?: string;
+  readonly headerUpdateButtonHtml?: string;
 }): string => {
   const bundleVersionLabel = formatAgentWitchInstallBundleVersionLabel(
     input.installVersion ?? null,
@@ -51,6 +53,7 @@ export const buildAgentWitchLocalAppShell = (input: {
   }).join("");
 
   const cloudOrigin = escapeHtml(input.cloudAppOrigin);
+  const headerUpdateButtonHtml = input.headerUpdateButtonHtml ?? "";
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -69,11 +72,12 @@ export const buildAgentWitchLocalAppShell = (input: {
       </a>
       <div class="site-header-actions">
         <nav class="site-nav" aria-label="Local bridge">${nav}</nav>
-        <a class="btn btn-primary cloud-open-link" href="${cloudOrigin}" target="_blank" rel="noopener noreferrer" aria-label="Open Agent Witch cloud at ${cloudOrigin}">Open cloud ↗</a>
+        ${headerUpdateButtonHtml}
+        <a class="btn btn-secondary cloud-open-link" href="${cloudOrigin}" target="_blank" rel="noopener noreferrer" aria-label="Open Agent Witch cloud at ${cloudOrigin}">Open cloud ↗</a>
       </div>
     </div>
   </header>
-  <main class="site-main">${input.body}</main>
+  <main class="site-main">${input.prependBody ?? ""}${input.body}</main>
 </body>
 </html>`;
 };

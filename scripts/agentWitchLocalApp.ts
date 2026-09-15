@@ -23,6 +23,11 @@ import {
 import { AGENT_WITCH_CONNECTION_STALE_MS } from "./agentWitchConnectionHealth.constants";
 import { formatAgentWitchRelativeTimeAgo } from "./formatAgentWitchRelativeTimeAgo";
 import { buildAgentWitchLocalErrorLogPageBody } from "./buildAgentWitchLocalErrorLogPage";
+import {
+  buildAgentWitchLocalInstallUpdateFlashHtml,
+  buildAgentWitchLocalInstallUpdateHeaderButtonHtml,
+  buildAgentWitchLocalInstallUpdatePromptHtml,
+} from "./buildAgentWitchLocalInstallUpdatePromptHtml";
 import { buildAgentWitchLocalHomePageBody } from "./buildAgentWitchLocalHomePage";
 import { buildAgentWitchLocalAppShell } from "./buildAgentWitchLocalAppShell";
 import {
@@ -43,7 +48,9 @@ import { formatAgentWitchInstallBundleVersionLabel } from "./formatAgentWitchIns
 import { readAgentWitchErrorLogTail } from "./readAgentWitchErrorLogTail";
 import { readAgentWitchInstallVersion } from "./agentWitchInstallVersion";
 import { resolveAgentWitchLocalCloudAppOrigin } from "./resolveAgentWitchLocalCloudAppOrigin";
+import { resolveAgentWitchLocalInstallUpdateOffer } from "./resolveAgentWitchLocalInstallUpdateOffer";
 import { shouldShowAgentWitchLocalReviveButton } from "./shouldShowAgentWitchLocalReviveButton";
+import { triggerAgentWitchLocalInstallBundleUpdate } from "./triggerAgentWitchLocalInstallBundleUpdate";
 import type { AgentWitchLocalLayout } from "./resolveAgentWitchLocalLayout";
 import { loadOrCreateAgentWitchDeviceKeypair } from "./agentWitchDeviceKeypair";
 
@@ -143,6 +150,23 @@ const buildStatusBody = (input: {
     </section>`;
 };
 
+const readLocalAppUpdateFlash = (
+  requestUrl: string | undefined,
+): "ok" | "failed" | null => {
+  const url = new URL(
+    requestUrl ?? "/",
+    `http://127.0.0.1:${AGENT_WITCH_LOCAL_APP_PORT}`,
+  );
+  const value = url.searchParams.get("update");
+  if (value === "ok") {
+    return "ok";
+  }
+  if (value === "failed") {
+    return "failed";
+  }
+  return null;
+};
+
 export type AgentWitchLocalAppControllers = {
   readonly getStatus: () => LocalAppStatus;
   readonly reviveWebSocket: () => void;
@@ -168,20 +192,53 @@ export const startAgentWitchLocalApp = (input: {
       installVersion,
     };
   };
-  const buildLocalAppShell = (shell: {
+  const buildLocalAppShell = async (shell: {
     readonly title: string;
     readonly activePath: Parameters<
       typeof buildAgentWitchLocalAppShell
     >[0]["activePath"];
     readonly body: string;
     readonly installVersion?: ReturnType<typeof readInstallVersion> | null;
-  }): string => {
+    readonly updateFlash?: "ok" | "failed" | null;
+  }): Promise<string> => {
     const installVersion = shell.installVersion ?? readInstallVersion();
+    const offer = await getInstallUpdateOffer();
+    const updatePromptHtml = buildAgentWitchLocalInstallUpdatePromptHtml(offer);
+    const updateFlashHtml = buildAgentWitchLocalInstallUpdateFlashHtml(
+      shell.updateFlash ?? null,
+    );
     return buildAgentWitchLocalAppShell({
       ...shell,
       installVersion,
       cloudAppOrigin: resolveAgentWitchLocalCloudAppOrigin(installVersion),
+      prependBody: `${updateFlashHtml}${updatePromptHtml}`,
+      headerUpdateButtonHtml:
+        buildAgentWitchLocalInstallUpdateHeaderButtonHtml(offer),
     });
+  };
+  let installUpdateOfferCache: {
+    readonly cachedAtMs: number;
+    readonly offer: Awaited<
+      ReturnType<typeof resolveAgentWitchLocalInstallUpdateOffer>
+    >;
+  } | null = null;
+  const getInstallUpdateOffer = async (): Promise<
+    Awaited<ReturnType<typeof resolveAgentWitchLocalInstallUpdateOffer>>
+  > => {
+    const nowMs = Date.now();
+    if (
+      installUpdateOfferCache !== null &&
+      nowMs - installUpdateOfferCache.cachedAtMs < 60_000
+    ) {
+      return installUpdateOfferCache.offer;
+    }
+
+    const offer = await resolveAgentWitchLocalInstallUpdateOffer(input.layout);
+    installUpdateOfferCache = { cachedAtMs: nowMs, offer };
+    return offer;
+  };
+  const clearInstallUpdateOfferCache = (): void => {
+    installUpdateOfferCache = null;
   };
   const ensureLinkCode = (): string => {
     if (fs.existsSync(linkCodePath)) {
@@ -266,6 +323,23 @@ export const startAgentWitchLocalApp = (input: {
         return;
       }
 
+      if (method === "GET" && pathname === "/api/update-status") {
+        const offer = await getInstallUpdateOffer();
+        sendJson(response, 200, { ok: true, ...offer });
+        return;
+      }
+
+      if (method === "POST" && pathname === "/api/update") {
+        clearInstallUpdateOfferCache();
+        const updateResult = await triggerAgentWitchLocalInstallBundleUpdate();
+        clearInstallUpdateOfferCache();
+        response.writeHead(303, {
+          Location: updateResult.ok ? "/?update=ok" : "/?update=failed",
+        });
+        response.end();
+        return;
+      }
+
       if (method === "GET" && pathname === "/") {
         const status = input.controllers.getStatus();
         const installBundle = buildInstallBundleStatus();
@@ -273,10 +347,11 @@ export const startAgentWitchLocalApp = (input: {
         const errorLog = readAgentWitchErrorLogTail(input.layout.errorLogPath);
         sendHtml(
           response,
-          buildLocalAppShell({
+          await buildLocalAppShell({
             title: "Home",
             activePath: "/",
             installVersion: installBundle.installVersion,
+            updateFlash: readLocalAppUpdateFlash(request.url ?? undefined),
             body: buildAgentWitchLocalHomePageBody({
               wsConnected: status.wsConnected,
               lastHeartbeatAt: status.lastHeartbeatAt,
@@ -299,7 +374,7 @@ export const startAgentWitchLocalApp = (input: {
         const errorLog = readAgentWitchErrorLogTail(input.layout.errorLogPath);
         sendHtml(
           response,
-          buildLocalAppShell({
+          await buildLocalAppShell({
             title: "Errors",
             activePath: "/errors",
             installVersion: installBundle.installVersion,
@@ -325,7 +400,7 @@ export const startAgentWitchLocalApp = (input: {
         const installBundle = buildInstallBundleStatus();
         sendHtml(
           response,
-          buildLocalAppShell({
+          await buildLocalAppShell({
             title: "Status",
             activePath: "/status",
             installVersion: installBundle.installVersion,
@@ -356,7 +431,7 @@ export const startAgentWitchLocalApp = (input: {
             : `<p class="empty">No traffic yet. Frames appear here when the bridge is active.</p>`;
         sendHtml(
           response,
-          buildLocalAppShell({
+          await buildLocalAppShell({
             title: "Traffic",
             activePath: "/traffic",
             installVersion: installBundle.installVersion,
@@ -396,7 +471,7 @@ export const startAgentWitchLocalApp = (input: {
           reveal?.scanRoots[0] ?? buildDefaultLocalHarnessScanFolder();
         sendHtml(
           response,
-          buildLocalAppShell({
+          await buildLocalAppShell({
             title: "Harness",
             activePath: "/harness",
             installVersion: installBundle.installVersion,
@@ -549,7 +624,7 @@ export const startAgentWitchLocalApp = (input: {
           const installBundle = buildInstallBundleStatus();
           sendHtml(
             response,
-            buildLocalAppShell({
+            await buildLocalAppShell({
               title: "Harness",
               activePath: "/harness",
               installVersion: installBundle.installVersion,
@@ -575,7 +650,7 @@ export const startAgentWitchLocalApp = (input: {
           const installBundle = buildInstallBundleStatus();
           sendHtml(
             response,
-            buildLocalAppShell({
+            await buildLocalAppShell({
               title: "Harness",
               activePath: "/harness",
               installVersion: installBundle.installVersion,
@@ -627,7 +702,7 @@ export const startAgentWitchLocalApp = (input: {
           .join("");
         sendHtml(
           response,
-          buildLocalAppShell({
+          await buildLocalAppShell({
             title: "Knowledge",
             activePath: "/knowledge",
             installVersion: installBundle.installVersion,
