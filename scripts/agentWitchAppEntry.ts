@@ -1,6 +1,7 @@
 import { exitUnlessActiveMacOsConsoleUser } from "./guardMacOsConsoleUser";
 import { runAgentWitchReportCli } from "./agentWitchReportCli";
 import { isAgentWitchScriptEntryPoint } from "./isAgentWitchScriptEntryPoint";
+import { assertAgentWitchNodeRuntimeVersion } from "./assertAgentWitchNodeRuntimeVersion";
 
 const runSelfUpdateCli = async (): Promise<void> => {
   exitUnlessActiveMacOsConsoleUser("agent-witch-self-update");
@@ -46,6 +47,8 @@ const run = async (): Promise<void> => {
   if (!isAgentWitchScriptEntryPoint(import.meta.url)) {
     return;
   }
+
+  assertAgentWitchNodeRuntimeVersion();
 
   const reportArgvIndex = process.argv.indexOf("report");
   if (reportArgvIndex >= 0) {

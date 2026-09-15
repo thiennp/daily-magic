@@ -24,7 +24,7 @@ const buildAgentWitchInstallBundle = async (): Promise<void> => {
     outfile,
     bundle: true,
     platform: "node",
-    format: "esm",
+    format: "cjs",
     target: "node18",
     sourcemap: false,
     minify: true,

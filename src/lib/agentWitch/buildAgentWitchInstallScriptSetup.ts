@@ -14,6 +14,7 @@ import {
 } from "@/lib/agentWitch/buildAgentWitchInstallScriptResolveProfilePaths";
 import { buildAgentWitchInstallScriptRegisterLaunchAgentFn } from "@/lib/agentWitch/buildAgentWitchInstallScriptRegisterLaunchAgent";
 import { buildAgentWitchInstallScriptWakePortAllocation } from "@/lib/agentWitch/buildAgentWitchInstallScriptWakePortAllocation";
+import { buildAgentWitchInstallScriptNodeRuntime } from "@/lib/agentWitch/buildAgentWitchInstallScriptNodeRuntime";
 import { buildAgentWitchInstallScriptUpdateVersionSummary } from "@/lib/agentWitch/buildAgentWitchInstallScriptUpdateVersionSummary";
 import { buildAgentWitchInstallScriptWriterBootstrap } from "@/lib/agentWitch/buildAgentWitchInstallScriptWriterBootstrap";
 
@@ -36,18 +37,14 @@ ${updateExistingInstall ? "AGENT_WITCH_SKIP_OPEN_HOME=1\n" : ""}
 INSTALL_DIR="\${HOME}/${appHome.installDirName}"
 AGENT_WITCH_HOME="\${INSTALL_DIR}"
 LAUNCH_AGENT_PREFIX="${appHome.launchAgentPrefix}"
-NODE_BIN="\$(command -v node)"
 CURL_BIN="\$(command -v curl)"
-
-if [[ -z "\${NODE_BIN}" ]]; then
-  echo "Node.js is required." >&2
-  exit 1
-fi
 
 if [[ -z "\${CURL_BIN}" ]]; then
   echo "curl is required." >&2
   exit 1
 fi
+
+${buildAgentWitchInstallScriptNodeRuntime()}
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
