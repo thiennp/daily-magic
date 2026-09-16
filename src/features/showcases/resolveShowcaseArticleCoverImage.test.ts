@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 
+import agentDelegatesInsideYourCompany from "@/features/showcases/articles/agentDelegatesInsideYourCompany.article";
 import automateForYourselfOrYourTeam from "@/features/showcases/articles/automateForYourselfOrYourTeam.article";
 import { enrichShowcaseArticleWithImages } from "@/features/showcases/enrichShowcaseArticleWithImages";
 import { resolveShowcaseArticleCoverImage } from "@/features/showcases/resolveShowcaseArticleCoverImage";
@@ -36,6 +37,15 @@ describe("resolveShowcaseArticleCoverImage (SHOWCASES-009)", () => {
       "/showcases/automations/01-home-popular-presets.svg",
     );
     expect(cover?.alt.toLowerCase()).toContain("preset");
+  });
+
+  it("BUG-006: agent-delegates card uses team-dispatch request SVG", () => {
+    const cover = resolveShowcaseArticleCoverImage(
+      agentDelegatesInsideYourCompany,
+    );
+
+    expect(cover?.src).toBe("/showcases/team-dispatch/01-request-task.svg");
+    expect(cover?.alt.toLowerCase()).toMatch(/send a task/);
   });
 
   it("SHOWCASES-014: manager-approval card uses approvals SVG, not admin PNG", () => {
