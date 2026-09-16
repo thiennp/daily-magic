@@ -1,42 +1,58 @@
 "use client";
 
-import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
+import { useEffect, useMemo, useSyncExternalStore } from "react";
 
+import {
+  ensureLocalAgentWitchIdentityLoaded,
+  getLocalAgentWitchIdentitySnapshot,
+  subscribeLocalAgentWitchIdentity,
+} from "@/features/agent-witch/localAgentWitchIdentityResource";
 import { collectUniqueWakePorts } from "@/features/agent-witch/utils/collectUniqueWakePorts";
 import {
   getPairedDevicesSnapshotOrEmpty,
   pairedDevicesResource,
 } from "@/features/agent-witch/pairedDevicesResource";
-import { requestLocalAgentWitchIdentity } from "@/features/agent-witch/utils/requestLocalAgentWitchIdentity";
 import {
   readAgentWitchLocalHostCookie,
   setAgentWitchLocalHostCookie,
 } from "@/features/agent-witch/utils/agentWitchLocalHostCookie";
 import { consumeLocalTokenHashQueryParam } from "@/features/home/utils/consumeLocalTokenHashQueryParam";
+import detectBrowserOperatingSystem from "@/features/home/utils/detectBrowserOperatingSystem";
 import {
   getLocalMacTokenHashSnapshot,
   setLocalMacTokenHash,
   subscribeLocalMacTokenHash,
 } from "@/features/home/utils/localMacTokenHashStore";
 import { resolveLocalMacTokenHashFromWakeIdentity } from "@/features/home/utils/resolveLocalMacTokenHashFromWakeIdentity";
-import detectBrowserOperatingSystem from "@/features/home/utils/detectBrowserOperatingSystem";
 
 const useLocalMacHostname = (): {
   readonly localHostname: string | null;
   readonly localTokenHash: string | null;
   readonly isCheckingLocalHostname: boolean;
+  readonly isWakeServerReachable: boolean;
 } => {
-  const [localHostname, setLocalHostname] = useState<string | null>(() =>
-    readAgentWitchLocalHostCookie(),
-  );
   const localTokenHash = useSyncExternalStore(
     subscribeLocalMacTokenHash,
     getLocalMacTokenHashSnapshot,
     () => null,
   );
-  const [isCheckingLocalHostname, setIsCheckingLocalHostname] = useState(
-    () => detectBrowserOperatingSystem() === "mac",
+  const identitySnapshot = useSyncExternalStore(
+    subscribeLocalAgentWitchIdentity,
+    getLocalAgentWitchIdentitySnapshot,
+    () => getLocalAgentWitchIdentitySnapshot(),
   );
+  const localHostname = useMemo((): string | null => {
+    const fromWake = identitySnapshot.identity?.hostname ?? null;
+    if (fromWake !== null) {
+      return fromWake;
+    }
+    return readAgentWitchLocalHostCookie();
+  }, [identitySnapshot.identity]);
+  const isMacBrowser = detectBrowserOperatingSystem() === "mac";
+  const isCheckingLocalHostname =
+    isMacBrowser &&
+    (identitySnapshot.status === "idle" ||
+      identitySnapshot.status === "loading");
   const pairedDevicesSnapshot = useSyncExternalStore(
     pairedDevicesResource.subscribe,
     () => pairedDevicesResource.getSnapshot(),
@@ -63,40 +79,37 @@ const useLocalMacHostname = (): {
   }, []);
 
   useEffect(() => {
-    if (detectBrowserOperatingSystem() !== "mac") {
+    if (!isMacBrowser) {
       return;
     }
 
-    const abortController = new AbortController();
+    void ensureLocalAgentWitchIdentityLoaded(extraWakePorts);
+  }, [extraWakePorts, isMacBrowser]);
 
-    void requestLocalAgentWitchIdentity({ extraWakePorts }).then((identity) => {
-      if (abortController.signal.aborted) {
-        return;
-      }
+  useEffect(() => {
+    const identity = identitySnapshot.identity;
+    if (identity === null) {
+      return;
+    }
 
-      if (identity !== null) {
-        setAgentWitchLocalHostCookie(identity.hostname);
-        setLocalHostname(identity.hostname);
+    setAgentWitchLocalHostCookie(identity.hostname);
 
-        const nextTokenHash = resolveLocalMacTokenHashFromWakeIdentity({
-          currentTokenHash: getLocalMacTokenHashSnapshot(),
-          activeTokenHash: identity.tokenHash,
-          localTokenHashes: identity.tokenHashes,
-        });
-        if (nextTokenHash !== null) {
-          setLocalMacTokenHash(nextTokenHash);
-        }
-      }
-
-      setIsCheckingLocalHostname(false);
+    const nextTokenHash = resolveLocalMacTokenHashFromWakeIdentity({
+      currentTokenHash: getLocalMacTokenHashSnapshot(),
+      activeTokenHash: identity.tokenHash,
+      localTokenHashes: identity.tokenHashes,
     });
+    if (nextTokenHash !== null) {
+      setLocalMacTokenHash(nextTokenHash);
+    }
+  }, [identitySnapshot.identity]);
 
-    return () => {
-      abortController.abort();
-    };
-  }, [extraWakePorts]);
-
-  return { localHostname, localTokenHash, isCheckingLocalHostname };
+  return {
+    localHostname,
+    localTokenHash,
+    isCheckingLocalHostname,
+    isWakeServerReachable: identitySnapshot.wakeReachable,
+  };
 };
 
 export default useLocalMacHostname;

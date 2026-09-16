@@ -2,12 +2,14 @@
 
 import { useCallback, useEffect, useState } from "react";
 
+import { refreshLocalAgentWitchIdentity } from "@/features/agent-witch/localAgentWitchIdentityResource";
 import { setLocalMacTokenHash } from "@/features/home/utils/localMacTokenHashStore";
 import { fetchAgentWitchInstallToken } from "@/lib/agentWitch/fetchAgentWitchInstallToken";
 
 const rememberInstallTokenHash = (tokenHash: string | undefined): void => {
   if (tokenHash !== undefined && tokenHash.length > 0) {
     setLocalMacTokenHash(tokenHash);
+    void refreshLocalAgentWitchIdentity();
   }
 };
 

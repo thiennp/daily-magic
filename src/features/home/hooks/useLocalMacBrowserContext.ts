@@ -21,8 +21,12 @@ const useLocalMacBrowserContext = (): {
   readonly isLocalAppInstalled: boolean;
   readonly isBridgeConnected: boolean;
 } => {
-  const { localHostname, localTokenHash, isCheckingLocalHostname } =
-    useLocalMacHostname();
+  const {
+    localHostname,
+    localTokenHash,
+    isCheckingLocalHostname,
+    isWakeServerReachable,
+  } = useLocalMacHostname();
   const snapshot = useSyncExternalStore(
     pairedDevicesResource.subscribe,
     () => pairedDevicesResource.getSnapshot(),
@@ -38,7 +42,7 @@ const useLocalMacBrowserContext = (): {
     localHostname,
     localTokenHash,
     isCheckingLocalHostname,
-    isWakeServerReachable: localHostname !== null,
+    isWakeServerReachable,
     isCheckingLocalApp: snapshot === null || isCheckingLocalHostname,
     isLocalAppInstalled: hasClaimedDevice || isBridgeConnected,
     isBridgeConnected,
