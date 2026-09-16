@@ -12,7 +12,7 @@ export default function HomeMarketingFeatures() {
   const copy = HOME_MARKETING_FEATURES_COPY;
 
   return (
-    <section className="mt-24" aria-labelledby="features-heading">
+    <section className="mt-16" aria-labelledby="features-heading">
       <MarketingSectionHeader
         eyebrow={copy.eyebrow}
         title={copy.title}
@@ -20,14 +20,14 @@ export default function HomeMarketingFeatures() {
         headingId="features-heading"
         width="full"
       />
-      <div className="mt-10 grid gap-5 sm:grid-cols-3">
+      <div className="mt-8 grid gap-4 sm:grid-cols-3">
         {MARKETING_FEATURE_ITEMS.map((item) => (
           <MarketingFeatureCard key={item.title} item={item} />
         ))}
       </div>
       <p
         className={mergeMarketingClasses(
-          "mt-8 text-sm",
+          "mt-6 text-sm",
           MARKETING_TEXT_SECONDARY_CLASSES,
         )}
       >

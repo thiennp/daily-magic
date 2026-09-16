@@ -26,5 +26,9 @@ export const MARKETING_TEXT_SECONDARY_CLASSES =
 
 export const MARKETING_TEXT_MUTED_CLASSES = "text-zinc-500 dark:text-gray-400";
 
+/** Uppercase section eyebrows on white — ~4.5:1 (UX-P1d). */
+export const MARKETING_EYEBROW_TEXT_CLASSES =
+  "text-zinc-600 dark:text-gray-400";
+
 export const MARKETING_HEADER_LINK_CLASSES =
   "text-zinc-700 transition hover:text-zinc-900 dark:text-gray-300 dark:hover:text-white";

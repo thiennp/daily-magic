@@ -40,7 +40,11 @@ export default function ComposerBlockedActionButtons({
         type="button"
         onClick={onSend}
         disabled={isSendDisabled}
-        title={isSendDisabled ? (sendDisabledReason ?? undefined) : undefined}
+        title={
+          isSendDisabled
+            ? (sendDisabledReason ?? "New task is disabled")
+            : undefined
+        }
         aria-label={
           isSendDisabled &&
           sendDisabledReason !== null &&

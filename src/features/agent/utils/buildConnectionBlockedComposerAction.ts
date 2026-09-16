@@ -14,7 +14,7 @@ export const buildConnectionBlockedComposerAction = (
       {
         stateId,
         helperMessage:
-          "Connecting this page to Agent Witch in your browser. Send will unlock when the dashboard connection is ready (this is not your Mac’s presence status).",
+          "Connecting this page to Agent Witch in your browser. New task will unlock when the dashboard connection is ready (this is not your Mac’s presence status).",
         helperLinkLabel: null,
         helperLinkHref: null,
         primaryManualAction: null,

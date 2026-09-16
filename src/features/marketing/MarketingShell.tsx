@@ -22,7 +22,7 @@ export default function MarketingShell({
     >
       <GridShape />
       <MarketingHeader showSignIn={showSignIn} />
-      <main className="relative mx-auto max-w-6xl px-6 py-12 sm:py-16">
+      <main className="relative mx-auto max-w-6xl px-6 py-10 sm:py-14">
         {children}
       </main>
       {showFooter ? <MarketingFooter /> : null}

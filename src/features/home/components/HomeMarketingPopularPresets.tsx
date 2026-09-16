@@ -13,7 +13,7 @@ export default function HomeMarketingPopularPresets() {
   const copy = HOME_MARKETING_POPULAR_PRESETS_COPY;
 
   return (
-    <section className="mt-24" aria-labelledby="popular-presets-heading">
+    <section className="mt-16" aria-labelledby="popular-presets-heading">
       <MarketingSectionHeader
         eyebrow={copy.eyebrow}
         title={copy.title}
@@ -22,7 +22,7 @@ export default function HomeMarketingPopularPresets() {
       <HomeMarketingPopularPresetsGrid presets={presets} />
       <p
         className={mergeMarketingClasses(
-          "mt-8 text-sm",
+          "mt-6 text-sm",
           MARKETING_TEXT_SECONDARY_CLASSES,
         )}
       >

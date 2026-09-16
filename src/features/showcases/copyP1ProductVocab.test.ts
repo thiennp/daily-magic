@@ -42,6 +42,9 @@ describe("COPY-P1 product vocab", () => {
 
     expect(source).toContain('cta: "Create free account"');
     expect(source).toContain('register: "Create free account"');
+    expect(source).toContain('title: "Create free account"');
+    expect(source).not.toContain("Create your free account");
+    expect(source).not.toContain("Create a free account");
   });
 
   it("mobile bottom nav uses New task label", () => {

@@ -49,7 +49,7 @@ export default function WsTestComposerHelperText({
       {blockedAction.stateId === "ws_disconnected" ? (
         <>
           <span className="font-medium text-gray-700 dark:text-gray-300">
-            Send to your Mac
+            New task
           </span>{" "}
           {blockedAction.helperMessage}
         </>

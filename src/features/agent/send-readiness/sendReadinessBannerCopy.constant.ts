@@ -54,7 +54,7 @@ export const SEND_READINESS_BANNER_COPY: Record<
     secondaryCta: null,
   },
   live_other_instance_failed: {
-    title: "Can’t send yet",
+    title: "New task isn’t ready",
     body: "Couldn’t finish connecting to your Mac. Try again.",
     severity: "warning",
     blocksSend: true,
@@ -62,7 +62,7 @@ export const SEND_READINESS_BANNER_COPY: Record<
     secondaryCta: null,
   },
   not_dispatch_ready: {
-    title: "Can’t send yet",
+    title: "New task isn’t ready",
     body: "Finish setup so your Mac can take this job.",
     severity: "warning",
     blocksSend: true,
