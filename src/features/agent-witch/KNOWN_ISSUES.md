@@ -16,9 +16,9 @@ Architecture for multi-instance presence and the dispatch outbox: `docs/adr/0005
 
 ---
 
-## OPEN-002 — Writer send-a-task across multi-instance replicas
+## OPEN-002 — Writer New task dispatch across multi-instance replicas
 
-**Symptom:** After deploy or with multiple Railway replicas, the Mac picker could show **Online (another server)** (`live_other_instance`); send-a-task failed or briefly showed `mac_reconnecting` even though the Mac process was healthy.
+**Symptom:** After deploy or with multiple Railway replicas, the Mac picker could show **Online (another server)** (`live_other_instance`); **New task** dispatch failed or briefly showed `mac_reconnecting` even though the Mac process was healthy.
 
 **Cause:** Writer dispatch needs the Mac’s live hub WebSocket on the Node that executes `POST /api/agent-runs/dispatch`. Round-robin HTTP routing landed dispatch on a replica without that socket.
 
@@ -31,7 +31,7 @@ Architecture for multi-instance presence and the dispatch outbox: `docs/adr/0005
 
 **Residual risk:** During deploy handoff, registry rows can lag for a few seconds; relay wait timeout or sticky cookie mismatch can still surface `mac_reconnecting` until the Mac reconnects and devices refresh.
 
-**What to do:** Refresh devices / retry send-a-task; ensure install bundle **103+**; for multi-replica production, enable sticky routing on `aw_hub_instance` or accept brief handoff windows.
+**What to do:** Refresh devices / retry **New task**; ensure install bundle **103+**; for multi-replica production, enable sticky routing on `aw_hub_instance` or accept brief handoff windows.
 
 ---
 
