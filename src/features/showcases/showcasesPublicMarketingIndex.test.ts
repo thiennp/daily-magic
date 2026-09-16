@@ -20,8 +20,18 @@ describe("showcases public marketing index (COPY-P0c)", () => {
     expect(layoutSource.includes("E2E verified")).toBe(false);
   });
 
-  it("keeps E2E articles available in the registry for direct routes", () => {
+  it("keeps E2E articles in the registry for staff-only direct routes", () => {
     const slugs = E2E_SHOWCASE_ARTICLES.map((article) => article.slug);
     expect(slugs).toContain("e2e-test-account-sign-in");
+  });
+
+  it("gates E2E showcase article pages behind staff access", () => {
+    const pageSource = readFileSync(
+      join(process.cwd(), "src/app/showcases/[slug]/page.tsx"),
+      "utf8",
+    );
+
+    expect(pageSource.includes("isE2eShowcaseSlug")).toBe(true);
+    expect(pageSource.includes("requireStaffPageAccess")).toBe(true);
   });
 });
