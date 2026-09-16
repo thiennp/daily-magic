@@ -22,6 +22,6 @@ Historical docs described “Vercel + Neon” only. The shipped production path 
 
 ## Consequences
 
-- Operators must scale or route **writer traffic** to instances that can hold Mac sockets, or accept `live_other_instance` / `mac_reconnecting` during handoff (OPEN-002 in `src/features/agent-witch/KNOWN_ISSUES.md`).
+- Operators scaling horizontally should enable sticky routing on **`aw_hub_instance`** or rely on hub dispatch relay; brief `mac_reconnecting` during deploy handoff remains possible (OPEN-002 in `src/features/agent-witch/KNOWN_ISSUES.md`).
 - Preview deployments on serverless-only platforms will not match Mac `wsUrl` unless deliberately configured; use Railway or local `npm run dev` for bridge testing.
 - Deployment runbooks live in `docs/development/deployment.md` (Neon + migration) and this ADR (Railway + custom server).

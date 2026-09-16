@@ -16,15 +16,22 @@ Architecture for multi-instance presence and the dispatch outbox: `docs/adr/0005
 
 ---
 
-## OPEN-002 — Writer send-a-task needs `live` on the dispatch Node (multi-instance)
+## OPEN-002 — Writer send-a-task across multi-instance replicas
 
-**Symptom:** After deploy, picker may show **Online (another server)** (`live_other_instance`); Send-a-task disabled, `mac_reconnecting`, or “not online” for a short window even though the Mac process is healthy.
+**Symptom:** After deploy or with multiple Railway replicas, the Mac picker could show **Online (another server)** (`live_other_instance`); send-a-task failed or briefly showed `mac_reconnecting` even though the Mac process was healthy.
 
-**Cause:** Interactive writer/shell dispatch requires a **live hub WebSocket on the same Node process** that handles `POST /api/agent-runs/dispatch`. Registry and heartbeats can show the Mac on another instance during handoff. Queueable work (harness install, automations) uses the outbox; writer runs do not.
+**Cause:** Writer dispatch needs the Mac’s live hub WebSocket on the Node that executes `POST /api/agent-runs/dispatch`. Round-robin HTTP routing landed dispatch on a replica without that socket.
 
-**Mitigations (shipped):** `presenceTier` on devices API; `mac_reconnecting` vs `mac_offline`; auto-pick a `live` Mac when stored preference is stale; composer copy for `live_other_instance`; client retry on `errorCode: mac_reconnecting` only (runs are created only after hub client resolution succeeds).
+**Mitigations (shipped):**
 
-**What to do:** Wait for handoff or refresh devices; ensure bundle **103+** on the Mac; pick a Mac that shows **Online** (not “another server”) for send-a-task.
+- **Hub dispatch relay:** when the registry shows the Mac live on another `instance_id`, the dispatch API enqueues a short-lived relay row for that owner instance, waits for the owner to run writer dispatch locally, and returns the result — without queueing writer runs as `running` (AGENT-022).
+- **Dispatch affinity cookie:** `GET /api/agent-witch/devices` sets `aw_hub_instance` so operators can enable load-balancer sticky sessions to the socket-owning replica when desired.
+- **Fail closed:** if neither local hub nor relay succeeds, dispatch returns structured `mac_reconnecting` / `mac_offline` (client retry on `mac_reconnecting` only); runs are created only after hub client resolution on the executing Node.
+- Existing: `presenceTier`, auto-pick a `live` Mac when preference is stale, composer copy for `live_other_instance`.
+
+**Residual risk:** During deploy handoff, registry rows can lag for a few seconds; relay wait timeout or sticky cookie mismatch can still surface `mac_reconnecting` until the Mac reconnects and devices refresh.
+
+**What to do:** Refresh devices / retry send-a-task; ensure install bundle **103+**; for multi-replica production, enable sticky routing on `aw_hub_instance` or accept brief handoff windows.
 
 ---
 

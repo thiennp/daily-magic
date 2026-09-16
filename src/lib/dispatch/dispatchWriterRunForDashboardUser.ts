@@ -15,20 +15,11 @@ import {
   resolveTargetDeviceId,
 } from "@/lib/dispatch/resolveWriterRunAgentClient";
 import { resolveClaudeDispatchTarget } from "@/lib/dispatch/resolveWriterDispatchTarget";
+import { resolveWriterDispatchWithoutLiveHubClient } from "@/lib/dispatch/resolveWriterDispatchWithoutLiveHubClient";
 import { validateSessionContinuationRequiresTargetDevice } from "@/lib/dispatch/validateSessionContinuationRequiresTargetDevice";
-import type AgentRunRecord from "@/lib/dispatch/types/AgentRunRecord.type";
-import type AgentWitchMessage from "@/lib/agentWitch/types/AgentWitchMessage.type";
+import type { DispatchClaudeRunForDashboardResult } from "@/lib/dispatch/types/DispatchClaudeRunForDashboardResult.type";
 
-export type DispatchClaudeRunForDashboardResult =
-  | {
-      readonly ok: true;
-      readonly message: AgentWitchMessage;
-      readonly run: AgentRunRecord;
-    }
-  | {
-      readonly ok: false;
-      readonly message: AgentWitchMessage;
-    };
+export type { DispatchClaudeRunForDashboardResult };
 
 export const dispatchClaudeRunForDashboardUser = async (input: {
   readonly runtime: AgentWitchHubRuntime;
@@ -36,6 +27,7 @@ export const dispatchClaudeRunForDashboardUser = async (input: {
   readonly requesterEmail?: string | null;
   readonly body: AgentRunDispatchBody;
   readonly requestId?: string;
+  readonly allowHubRelay?: boolean;
 }): Promise<DispatchClaudeRunForDashboardResult> => {
   const requestId = input.requestId ?? randomUUID();
   const sender = buildDashboardHttpSender(
@@ -93,6 +85,18 @@ export const dispatchClaudeRunForDashboardUser = async (input: {
 
   if (!agentResolution.ok) {
     return { ok: false, message: agentResolution.error };
+  }
+
+  if (agentResolution.agentClient === undefined) {
+    return resolveWriterDispatchWithoutLiveHubClient({
+      allowHubRelay: input.allowHubRelay !== false,
+      agentResolution,
+      executorUserId: target.executorUserId,
+      requesterUserId: input.requesterUserId,
+      requestId,
+      body: input.body,
+      fallbackDeviceId: targetDeviceId,
+    });
   }
 
   const dispatchPolicy = await resolveDispatchPolicyForExecutor({

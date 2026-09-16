@@ -9,6 +9,10 @@ import { listAgentWitchDevicesForUser } from "@/lib/agentWitch/listAgentWitchDev
 import { buildMockDevicesApiResponse } from "@/lib/agentWitch/mock/buildMockDevicesApiResponse";
 import { readAgentWitchMockScenario } from "@/lib/agentWitch/mock/readAgentWitchMockScenario";
 import { recordAgentWitchTraffic } from "@/lib/agentWitch/agentWitchTrafficLog";
+import {
+  buildHubDispatchAffinitySetCookie,
+  resolveHubDispatchAffinityInstanceId,
+} from "@/lib/agentWitch/buildHubDispatchAffinityCookie";
 import { requireAuth } from "@/lib/auth/requireAuth";
 
 export const dynamic = "force-dynamic";
@@ -68,7 +72,22 @@ export async function GET(): Promise<Response> {
       },
     });
 
-    return Response.json(response);
+    const affinityInstanceId = await resolveHubDispatchAffinityInstanceId({
+      userId: actor.id,
+      devices: devicesWithStatus,
+    });
+
+    const headers =
+      affinityInstanceId !== null
+        ? {
+            "Set-Cookie": buildHubDispatchAffinitySetCookie(affinityInstanceId),
+          }
+        : undefined;
+
+    return Response.json(
+      response,
+      headers !== undefined ? { headers } : undefined,
+    );
   } catch (loadError) {
     const message =
       loadError instanceof Error
