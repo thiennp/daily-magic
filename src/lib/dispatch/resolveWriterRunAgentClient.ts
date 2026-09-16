@@ -1,5 +1,6 @@
 import type AgentWitchHubClient from "@/lib/agentWitch/types/AgentWitchHubClient.type";
 import type AgentWitchHubRuntime from "@/lib/agentWitch/types/AgentWitchHubRuntime.type";
+import { buildWriterDispatchTargetMacOfflineError } from "@/lib/dispatch/buildWriterDispatchTargetMacOfflineError";
 import { buildDispatchError } from "@/lib/dispatch/buildDispatchError";
 import { resolveLiveWriterAgentForRun } from "@/lib/dispatch/resolveLiveWriterAgentForRun";
 import { resolveWriterDispatchDeviceId } from "@/lib/dispatch/resolveWriterDispatchDeviceId";
@@ -61,8 +62,14 @@ export const resolveClaudeRunAgentClient = async (input: {
     return deviceResolution;
   }
 
-  return {
-    ok: true,
+  const offlineError = await buildWriterDispatchTargetMacOfflineError({
+    executorUserId: input.executorUserId,
     deviceId: deviceResolution.deviceId,
+    requestId: input.requestId,
+  });
+
+  return {
+    ok: false,
+    error: offlineError,
   };
 };

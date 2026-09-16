@@ -83,7 +83,7 @@ describe("resolveClaudeRunAgentClient", () => {
     });
   });
 
-  it("queues when the Mac is not on the hub (AGENT-022)", async () => {
+  it("fails closed without queuing when the Mac is not on this hub (AGENT-022)", async () => {
     const hub = new AgentWitchHub(new AgentWitchPairingStore());
 
     const result = await resolveClaudeRunAgentClient({
@@ -93,9 +93,31 @@ describe("resolveClaudeRunAgentClient", () => {
       targetDeviceId: "device-1",
     });
 
-    expect(result).toEqual({
-      ok: true,
-      deviceId: "device-1",
+    expect(result.ok).toBe(false);
+    if (result.ok) {
+      return;
+    }
+    expect(result.error.payload?.errorCode).toBe("mac_offline");
+  });
+
+  it("returns mac_reconnecting when the registry shows the Mac on another instance", async () => {
+    const { isDeviceLiveOnAnotherInstance } =
+      await import("@/lib/agentWitch/agentWitchConnectionRegistry");
+    vi.mocked(isDeviceLiveOnAnotherInstance).mockResolvedValueOnce(true);
+
+    const hub = new AgentWitchHub(new AgentWitchPairingStore());
+
+    const result = await resolveClaudeRunAgentClient({
+      runtime: hub,
+      senderUserId: "user-1",
+      executorUserId: "user-1",
+      targetDeviceId: "device-1",
     });
+
+    expect(result.ok).toBe(false);
+    if (result.ok) {
+      return;
+    }
+    expect(result.error.payload?.errorCode).toBe("mac_reconnecting");
   });
 });

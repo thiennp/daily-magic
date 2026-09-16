@@ -16,6 +16,20 @@ vi.mock("@/lib/agentWitch/agentWitchConnectionRegistryQueries", () => ({
   isDeviceLiveOnAnotherInstance: vi.fn(async () => false),
 }));
 
+vi.mock(
+  "@/lib/agentWitch/agentWitchConnectionRegistry",
+  async (importOriginal) => {
+    const original =
+      await importOriginal<
+        typeof import("@/lib/agentWitch/agentWitchConnectionRegistry")
+      >();
+    return {
+      ...original,
+      isDeviceLiveOnAnotherInstance: vi.fn(async () => false),
+    };
+  },
+);
+
 vi.mock("@/lib/agentWitch/resolveCurrentAgentWitchDeviceId", () => ({
   resolveCurrentAgentWitchDeviceId: async (id: string) => id,
 }));

@@ -99,6 +99,8 @@ Devices API and writer dispatch must use the **same** hub matching rules:
 - `findEnrichedAgentClientForUser` — `map.get(deviceId)` for targeted dispatch.
 - `retargetWriterRunToSoleLiveMac` — when the requested `targetDeviceId` is stale but exactly one live agent exists on this hub, retarget to the canonical device id (token-resolved id preferred over stale hub `deviceId`).
 - `resolveDispatchTargetAgentClient` — the single entry point every dispatch caller uses. It applies, in order: exact live match, forward supersession resolution, sole-live-Mac retarget, and returns the live client plus the **resolved** device id. `resolveLiveWriterAgentForRun` delegates to it.
+- `buildWriterDispatchTargetMacOfflineError` — when writer dispatch has no live hub client on **this** process, return `mac_reconnecting` (registry shows another `instance_id` or recent heartbeat) or `mac_offline` / `mac_replaced` without creating an `agent_runs` row or enqueueing `command.claude.run` (AGENT-022).
+- `GET /api/agent-witch/devices` sets `aw_hub_instance` to the `instance_id` that should own writer traffic (local live socket, else registry owner of a remote live Mac) for load-balancer cookie affinity.
 
 Do not resolve live Macs via `findAgentClientForUser` + raw `client.deviceId` alone; that diverged from the devices API and caused “online in UI, offline on dispatch”.
 
@@ -117,7 +119,7 @@ Structured `errorCode` on dispatch failures:
 - `mac_replaced` — the targeted row was revoked by a re-pair and no successor is live; the user must reselect the Mac.
 - `mac_queued` — outbox accepted queueable work.
 
-`buildTargetMacOfflineDispatchError` and `deliverOrQueueAgentWitchDispatchMessage` implement the split. New code branches on `errorCode`, not string equality on `errorMessage`.
+`buildWriterDispatchTargetMacOfflineError` and `deliverOrQueueAgentWitchDispatchMessage` implement the split. New code branches on `errorCode`, not string equality on `errorMessage`.
 
 ### Rollout
 
@@ -125,7 +127,7 @@ Shipped in stages with tests: registry + migration; lifecycle wiring; presence t
 
 ## Consequences
 
-- **Class A** is **classified**, not eliminated for writer dispatch: the UI can show `live_other_instance` or “Mac reconnecting” while `POST /api/agent-runs/dispatch` on another instance still cannot run the writer until the Mac’s socket is on that process (OPEN-002).
+- **Class A** is **classified** and writer dispatch **fails closed** with `mac_reconnecting` plus client retry and optional `aw_hub_instance` cookie affinity; it is not fully eliminated while multiple replicas exist without sticky routing (OPEN-002).
 - **Class B** becomes a visible wait (`mac_reconnecting`, queued outbox) rather than a generic offline string for queueable types.
 - Interactive shell and writer messages still fail during reconnect windows by design; they gain clearer causes and limited client retry instead of silent queuing.
 - Presence fallback adds database reads; the local-hub map path is unchanged for the common `live` case.
@@ -135,7 +137,7 @@ Shipped in stages with tests: registry + migration; lifecycle wiring; presence t
 ## References
 
 - `src/lib/agentWitch/resolveLiveAgentClientsByDeviceIdForUser.ts`
-- `src/lib/dispatch/resolveLiveWriterAgentForRun.ts`, `retargetWriterRunToSoleLiveMac.ts`
-- `src/lib/agentWitch/resolveDispatchTargetAgentClient.ts`, `resolveCurrentAgentWitchDeviceId.ts`
+- `src/lib/dispatch/resolveLiveWriterAgentForRun.ts`, `retargetWriterRunToSoleLiveMac.ts`, `buildWriterDispatchTargetMacOfflineError.ts`
+- `src/lib/agentWitch/resolveDispatchTargetAgentClient.ts`, `resolveAgentWitchDispatchAffinityInstanceId.ts`, `resolveCurrentAgentWitchDeviceId.ts`
 - `src/features/agent-witch/KNOWN_ISSUES.md` (OPEN-001–003)
 - ADR 0002 (WebSocket server), ADR 0006 (production hosting)

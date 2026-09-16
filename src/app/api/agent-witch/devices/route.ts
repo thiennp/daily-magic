@@ -1,6 +1,8 @@
 import buildAgentWitchDevicesWithOnlineStatus from "@/lib/agentWitch/buildAgentWitchDevicesWithOnlineStatus";
 import { AGENT_WITCH_INSTALL_BUNDLE_VERSION } from "@/lib/agentWitch/agentWitchInstallBundleVersion";
+import { buildAgentWitchDispatchAffinitySetCookie } from "@/lib/agentWitch/agentWitchDispatchAffinity.constant";
 import { listFreshRegistryDeviceIdsOnOtherInstances } from "@/lib/agentWitch/agentWitchConnectionRegistry";
+import { resolveAgentWitchDispatchAffinityInstanceId } from "@/lib/agentWitch/resolveAgentWitchDispatchAffinityInstanceId";
 import { collectLiveAgentWitchDeviceIdsForUser } from "@/lib/agentWitch/collectLiveAgentWitchDeviceIdsForUser";
 import { consolidateDuplicateAgentWitchDevicesForUser } from "@/lib/agentWitch/consolidateDuplicateAgentWitchDevicesForUser";
 import { ensureAgentWitchDeviceSchema } from "@/lib/agentWitch/ensureAgentWitchDeviceSchema";
@@ -68,7 +70,23 @@ export async function GET(): Promise<Response> {
       },
     });
 
-    return Response.json(response);
+    const affinityInstanceId =
+      await resolveAgentWitchDispatchAffinityInstanceId({
+        userId: actor.id,
+        localLiveDeviceIds,
+        remoteLiveDeviceIds,
+      });
+
+    if (affinityInstanceId === null) {
+      return Response.json(response);
+    }
+
+    return Response.json(response, {
+      headers: {
+        "Set-Cookie":
+          buildAgentWitchDispatchAffinitySetCookie(affinityInstanceId),
+      },
+    });
   } catch (loadError) {
     const message =
       loadError instanceof Error

@@ -54,6 +54,33 @@ export const listFreshRegistryDeviceIdsOnOtherInstances = async (
   return readDeviceIdsFromRows(rows);
 };
 
+export const findFreshHubInstanceIdForDevice = async (
+  userId: string,
+  deviceId: string,
+  staleAfterMs: number = AGENT_WITCH_ONLINE_THRESHOLD_MS,
+): Promise<string | null> => {
+  await ensureAgentWitchPresenceSchema();
+  const sql = getSql();
+  const cutoff = new Date(Date.now() - staleAfterMs).toISOString();
+
+  const rows = asRowArray(
+    await sql`
+      SELECT instance_id
+      FROM agent_witch_connections
+      WHERE user_id = ${userId}
+        AND device_id = ${deviceId}
+        AND last_ack_at >= ${cutoff}::timestamptz
+      ORDER BY last_ack_at DESC
+      LIMIT 1
+    `,
+  );
+
+  const instanceId = rows[0]?.instance_id;
+  return typeof instanceId === "string" && instanceId.length > 0
+    ? instanceId
+    : null;
+};
+
 export const isDeviceLiveOnAnotherInstance = async (
   userId: string,
   deviceId: string,

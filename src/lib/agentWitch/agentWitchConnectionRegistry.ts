@@ -4,6 +4,7 @@ import { getAgentWitchHubInstanceId } from "@/lib/agentWitch/getAgentWitchHubIns
 import { asRowArray, getSql } from "@/lib/db";
 
 export {
+  findFreshHubInstanceIdForDevice,
   isDeviceLiveOnAnotherInstance,
   listFreshRegistryDeviceIdsForUser,
   listFreshRegistryDeviceIdsOnOtherInstances,

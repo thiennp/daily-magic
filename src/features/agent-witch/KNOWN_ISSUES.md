@@ -18,13 +18,15 @@ Architecture for multi-instance presence and the dispatch outbox: `docs/adr/0005
 
 ## OPEN-002 — Writer send-a-task needs `live` on the dispatch Node (multi-instance)
 
-**Symptom:** After deploy, picker may show **Online (another server)** (`live_other_instance`); Send-a-task disabled, `mac_reconnecting`, or “not online” for a short window even though the Mac process is healthy.
+**Symptom:** After deploy or with multiple Railway replicas, the Mac picker may show **Online (another server)** (`live_other_instance`); send-a-task may return **Mac reconnecting** briefly even though the Mac process is healthy.
 
-**Cause:** Interactive writer/shell dispatch requires a **live hub WebSocket on the same Node process** that handles `POST /api/agent-runs/dispatch`. Registry and heartbeats can show the Mac on another instance during handoff. Queueable work (harness install, automations) uses the outbox; writer runs do not.
+**Cause:** Interactive writer/shell dispatch still requires a **live hub WebSocket on the same Node process** that handles `POST /api/agent-runs/dispatch`. The shared registry classifies cross-replica presence; it cannot move an in-memory socket between processes.
 
-**Mitigations (shipped):** `presenceTier` on devices API; `mac_reconnecting` vs `mac_offline`; auto-pick a `live` Mac when stored preference is stale; composer copy for `live_other_instance`; client retry on `errorCode: mac_reconnecting` only (runs are created only after hub client resolution succeeds).
+**Mitigations (shipped):** `presenceTier` on devices API; writer dispatch **fails closed** with `errorCode: mac_reconnecting` or `mac_offline` (no “running” run + outbox queue — AGENT-022); `buildWriterDispatchTargetMacOfflineError`; auto-pick / retarget a `live` Mac when the stored device id is stale; composer copy for `live_other_instance`; browser retry on `mac_reconnecting` (`retryPostClaudePromptDispatch`); `aw_hub_instance` affinity cookie set by `GET /api/agent-witch/devices` so load balancers that honor cookie stickiness route dispatch toward the socket-owning instance.
 
-**What to do:** Wait for handoff or refresh devices; ensure bundle **103+** on the Mac; pick a Mac that shows **Online** (not “another server”) for send-a-task.
+**Residual risk:** If the edge does not honor `aw_hub_instance`, dispatch may land on a replica without the socket until client retry succeeds or the Mac reconnects to that replica after deploy handoff. Single-replica deploys avoid Class A entirely.
+
+**What to do:** Wait for retry/handoff or refresh devices; ensure bundle **103+** on the Mac; prefer a Mac that shows **Online** (not “another server”) for send-a-task; configure sticky sessions on the load balancer when running multiple replicas.
 
 ---
 
