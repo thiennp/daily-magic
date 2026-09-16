@@ -57,6 +57,7 @@ export interface UseWsTestTaskComposerResult {
   readonly dispatchReadyMacCount: number;
   readonly selectedDeviceCanDispatch: boolean;
   readonly devicesHadLoadError: boolean;
+  readonly serverInstallBundleVersion: string | null;
   readonly refreshMacDevices: () => Promise<void>;
   readonly renameMacDevice: ReturnType<
     typeof useMacDeviceSelection

@@ -5,6 +5,7 @@ import type { ComposerBlockedAction } from "@/features/agent/utils/composerBlock
 interface ComposerBlockedActionButtonsProps {
   readonly blockedAction: ComposerBlockedAction;
   readonly isSendDisabled: boolean;
+  readonly sendDisabledReason?: string | null;
   readonly sendLabel: string;
   readonly copied: boolean;
   readonly onSend: () => void;
@@ -23,6 +24,7 @@ const outlineButtonClass =
 export default function ComposerBlockedActionButtons({
   blockedAction,
   isSendDisabled,
+  sendDisabledReason,
   sendLabel,
   copied,
   onSend,
@@ -38,6 +40,14 @@ export default function ComposerBlockedActionButtons({
         type="button"
         onClick={onSend}
         disabled={isSendDisabled}
+        title={isSendDisabled ? (sendDisabledReason ?? undefined) : undefined}
+        aria-label={
+          isSendDisabled &&
+          sendDisabledReason !== null &&
+          sendDisabledReason !== undefined
+            ? `${sendLabel}. ${sendDisabledReason}`
+            : sendLabel
+        }
         className={`${primaryButtonClass} min-w-[10rem] flex-1 sm:flex-none`}
       >
         {sendLabel}

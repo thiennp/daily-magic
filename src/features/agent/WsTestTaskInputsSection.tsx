@@ -57,6 +57,7 @@ export default function WsTestTaskInputsSection({
         </label>
         <textarea
           id="agent-witch-workflow-notes"
+          data-send-task-prompt=""
           value={prompt}
           onChange={(event) => {
             onPromptChange(event.target.value);
@@ -80,6 +81,7 @@ export default function WsTestTaskInputsSection({
       </label>
       <textarea
         id="agent-witch-prompt"
+        data-send-task-prompt=""
         value={prompt}
         onChange={(event) => {
           onPromptChange(event.target.value);
