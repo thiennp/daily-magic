@@ -17,16 +17,21 @@ Teams and individuals who want a **single place** to trigger trusted agent runs 
 
 ## Get started
 
-Human contributors: see **[docs/README.md](docs/README.md)** for setup, deployment, architecture ADRs, and product concepts.
+|                        |                                                                                               |
+| ---------------------- | --------------------------------------------------------------------------------------------- |
+| **New contributor**    | [docs/overview.md](docs/overview.md) → [docs/development/setup.md](docs/development/setup.md) |
+| **Full docs index**    | [docs/README.md](docs/README.md) (architecture, conventions, ADRs, product)                   |
+| **AI / coding agents** | [AGENTS.md](AGENTS.md) → [docs/conventions/load-context.md](docs/conventions/load-context.md) |
 
-AI agents: query indexed docs before large edits:
+Query indexed docs before large feature edits:
 
 ```bash
 npm run feature-knowledge:query -- "your question"
 npm run feature-knowledge:query -- "topic" --feature=home
+npm run feature-knowledge:query -- "deployment" --feature=docs
 ```
 
-Rebuild the index after doc changes: `npm run feature-knowledge:index`.
+Rebuild the index after doc changes: `npm run feature-knowledge:index` (commit `.feature-knowledge/index.json`).
 
 ## Main routes
 
@@ -51,9 +56,10 @@ Local development uses the custom dev server (`npm run dev`) so WebSocket upgrad
 
 ## Repository map (product)
 
-- `src/features/` — product UI and feature docs (`README.md`, `KNOWN_ISSUES.md`)
+- `docs/` — **system map** (overview, architecture, conventions, how-to, ADRs)
+- `src/features/` — product UI + per-feature `README.md` / `KNOWN_ISSUES.md`
 - `src/app/` — Next.js routes and API handlers
-- `docs/` — technical guides and ADRs (indexed for RAG)
-- `.cursor/` — agent harness (rules, commands, skills)
+- `src/features/_registry/features.registry.json` — canonical feature list and API/route paths
+- `.cursor/` + `.agents/` — agent harness and verification scripts
 
-Agent entrypoints: `CLAUDE.md`, `AGENTS.md` (pointers only; deep technical content lives under `docs/`).
+Deep technical content lives under **`docs/`** and feature folders; `CLAUDE.md` and `AGENTS.md` stay thin pointers.
