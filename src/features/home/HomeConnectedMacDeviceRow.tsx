@@ -71,6 +71,7 @@ export default function HomeConnectedMacDeviceRow(
         displayName={props.displayName}
         isOnline={props.device.isOnline}
         isConnected={props.device.isConnected}
+        presenceTier={props.device.presenceTier}
         detailText={detail?.text}
         detailWarning={detail?.isMismatch === true}
         isThisMac={isThisMac}

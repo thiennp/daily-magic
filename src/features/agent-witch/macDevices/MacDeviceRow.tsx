@@ -2,9 +2,10 @@
 
 import { useState } from "react";
 
+import type { MacPresenceTier } from "@/features/agent-witch/online-wake";
 import {
   MacDeviceOfflineWakeHint,
-  resolveMacPresenceTier,
+  shouldOfferMacOfflineWakeHint,
 } from "@/features/agent-witch/online-wake";
 import MacDeviceRowInner from "@/features/agent-witch/macDevices/MacDeviceRowInner";
 
@@ -13,6 +14,7 @@ interface MacDeviceRowProps {
   readonly displayName: string;
   readonly isOnline: boolean;
   readonly isConnected?: boolean;
+  readonly presenceTier?: MacPresenceTier;
   readonly detailText?: string;
   readonly detailWarning?: boolean;
   readonly isThisMac?: boolean;
@@ -33,6 +35,7 @@ export default function MacDeviceRow({
   displayName,
   isOnline,
   isConnected,
+  presenceTier,
   detailText,
   detailWarning = false,
   isThisMac = false,
@@ -77,20 +80,22 @@ export default function MacDeviceRow({
     />
   );
 
-  const wrappedRow =
-    resolveMacPresenceTier({ isOnline, isConnected: isConnected ?? false }) ===
-    "offline" ? (
-      <MacDeviceOfflineWakeHint
-        deviceId={deviceId}
-        displayName={displayName}
-        canRequestRestart={isWakeServerReachable}
-        isThisMac={isThisMac}
-      >
-        {rowInner}
-      </MacDeviceOfflineWakeHint>
-    ) : (
-      rowInner
-    );
+  const wrappedRow = shouldOfferMacOfflineWakeHint({
+    isOnline,
+    isConnected: isConnected ?? false,
+    presenceTier,
+  }) ? (
+    <MacDeviceOfflineWakeHint
+      deviceId={deviceId}
+      displayName={displayName}
+      canRequestRestart={isWakeServerReachable}
+      isThisMac={isThisMac}
+    >
+      {rowInner}
+    </MacDeviceOfflineWakeHint>
+  ) : (
+    rowInner
+  );
 
   if (onSelect !== undefined) {
     return wrappedRow;

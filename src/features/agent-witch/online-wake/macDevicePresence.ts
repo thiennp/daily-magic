@@ -43,12 +43,26 @@ export const formatMacPresenceStatusLabel = (
     return "Online";
   }
   if (tier === "live_other_instance") {
-    return "Online (another server)";
+    return "Reconnecting (another server)";
   }
   if (tier === "recent") {
     return "Seen recently";
   }
   return "Offline";
+};
+
+export const isMacPresenceTierHardOffline = (tier: MacPresenceTier): boolean =>
+  tier === "offline";
+
+export const shouldOfferMacOfflineWakeHint = (
+  device: MacDevicePresence,
+): boolean => isMacPresenceTierHardOffline(resolveMacPresenceTier(device));
+
+export const shouldShowMacPresenceLastSeen = (
+  device: MacDevicePresence,
+): boolean => {
+  const tier = resolveMacPresenceTier(device);
+  return tier === "offline" || tier === "recent";
 };
 
 /** Live on this server — preferred default Mac for writer dispatch. */
@@ -60,6 +74,18 @@ export const canDispatchToMac = (device: MacDevicePresence): boolean => {
   const tier = resolveMacPresenceTier(device);
   return tier === "live" || tier === "live_other_instance";
 };
+
+export const countDispatchReadyMacs = (
+  devices: readonly MacDevicePresence[],
+): number =>
+  devices.reduce(
+    (count, device) => (canDispatchToMac(device) ? count + 1 : count),
+    0,
+  );
+
+export const hasAnyDispatchReadyMac = (
+  devices: readonly MacDevicePresence[],
+): boolean => countDispatchReadyMacs(devices) > 0;
 
 export const countMacPresenceTiers = (
   devices: readonly MacDevicePresence[],

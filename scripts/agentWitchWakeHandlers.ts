@@ -7,6 +7,7 @@ import os from "node:os";
 
 import { isAgentWitchWakeServerAllowedOrigin } from "./agentWitchWakeAllowedOrigins";
 import { resolveAgentWitchWakePort } from "./agentWitchWakeConstants";
+import { ensureAgentWitchCoupledWakeClientHealth } from "./ensureAgentWitchCoupledWakeClientHealth";
 import { kickstartAgentWitchLaunchAgent } from "./kickstartAgentWitchLaunchAgent";
 import { listAgentWitchLaunchTargets } from "./listAgentWitchLaunchTargets";
 import { listAgentWitchLocalTokenHashes } from "./listAgentWitchLocalTokenHashes";
@@ -269,6 +270,7 @@ export const buildAgentWitchWakeIdentityResponse =
 
 export const wakeAgentWitchLaunchAgents =
   async (): Promise<AgentWitchWakeResponse> => {
+    await ensureAgentWitchCoupledWakeClientHealth();
     const targets = listAgentWitchLaunchTargets();
     const kicked: AgentWitchWakeKickResult[] = [];
 

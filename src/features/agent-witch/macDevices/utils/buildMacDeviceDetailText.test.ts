@@ -36,6 +36,24 @@ describe("buildMacDeviceDetailText", () => {
     ).toMatch(/^Offline · Last seen .* · Bundle 54$/);
   });
 
+  it("OPEN-002: shows reconnecting for live_other_instance instead of Offline", () => {
+    expect(
+      buildMacDeviceDetailText({
+        device: {
+          isConnected: false,
+          isOnline: false,
+          presenceTier: "live_other_instance",
+          lastSeenAt: new Date().toISOString(),
+          installBundleVersion: "34",
+        },
+        serverInstallBundleVersion: "34",
+      }),
+    ).toEqual({
+      text: "Reconnecting (another server) · Bundle 34",
+      isMismatch: false,
+    });
+  });
+
   it("flags a bundle mismatch with the cloud version", () => {
     expect(
       buildMacDeviceDetailText({
