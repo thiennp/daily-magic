@@ -7,6 +7,11 @@ import {
   type WriterCliCommands,
 } from "./buildWriterCliInvocation";
 import { ensureHarnessWriterCli } from "./ensureHarnessWriterCli";
+import type { AgentWitchRunConfig } from "./readAgentWitchRunConfig";
+import { resolveWriterApiProvider } from "./writerApi/resolveWriterApiProvider";
+import { readWriterApiProviderSecret } from "./writerApi/readWriterApiSecrets";
+import { resolveAgentWitchProfileDirFromConfigPath } from "./writerApi/shouldUseWriterApi";
+import { resolveWriterExecutionBackend } from "./writerApi/resolveWriterExecutionBackend";
 
 interface WriterSessionState {
   readonly warmed: boolean;
@@ -152,11 +157,43 @@ export const runWriterSessionStart = async (input: {
   readonly writerAgent: string;
   readonly commands: WriterCliCommands;
   readonly onChunk?: (chunk: string) => void;
+  readonly runConfig?: AgentWitchRunConfig;
 }): Promise<WriterSessionStartResult> => {
   if (!isHarnessWriterAgentId(input.writerAgent)) {
     return {
       exitCode: -1,
       output: `Unsupported writer agent: ${input.writerAgent}\n`,
+    };
+  }
+
+  if (
+    input.runConfig !== undefined &&
+    resolveWriterExecutionBackend(input.runConfig.writerExecutionBackend) ===
+      "api"
+  ) {
+    const provider = resolveWriterApiProvider(input.writerAgent);
+    if (provider === null) {
+      return {
+        exitCode: -1,
+        output:
+          "API-key mode is not available for Cursor. Switch to CLI mode or use Cursor Cloud from the website.\n",
+      };
+    }
+    const profileDir = resolveAgentWitchProfileDirFromConfigPath(
+      input.runConfig.layout.configPath,
+    );
+    const secret = readWriterApiProviderSecret(profileDir, provider);
+    if (secret === null) {
+      return {
+        exitCode: -1,
+        output: `Add a ${provider} API key in Agent Witch Local → Writer API.\n`,
+      };
+    }
+    input.onChunk?.(`Using ${provider} API on this Mac (no local CLI).\n`);
+    markWriterSessionWarmed(input.writerAgent);
+    return {
+      exitCode: 0,
+      output: buildWriterSessionReadyMessage(input.writerAgent),
     };
   }
 

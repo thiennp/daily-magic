@@ -36,6 +36,7 @@ import {
 } from "./buildAgentWitchLocalInstallUpdatePromptHtml";
 import { buildAgentWitchLocalHomePageBody } from "./buildAgentWitchLocalHomePage";
 import { buildAgentWitchLocalTaskPageBody } from "./buildAgentWitchLocalTaskPage";
+import { buildAgentWitchLocalWriterApiPageBody } from "./buildAgentWitchLocalWriterApiPage";
 import { buildAgentWitchLocalAppShell } from "./buildAgentWitchLocalAppShell";
 import {
   buildAgentWitchLocalHarnessPageBody,
@@ -71,6 +72,13 @@ import {
 import { readAgentWitchInstallVersion } from "./agentWitchInstallVersion";
 import { runLocalSelfDelegatedTask } from "./runLocalSelfDelegatedTask";
 import { readAgentWitchRunConfig } from "./readAgentWitchRunConfig";
+import { applyWriterApiSettings } from "./writerApi/applyWriterApiSettings";
+import { readWriterApiSecretsFile } from "./writerApi/readWriterApiSecrets";
+import {
+  resolveWriterExecutionBackend,
+  type WriterExecutionBackend,
+} from "./writerApi/resolveWriterExecutionBackend";
+import { resolveAgentWitchProfileDirFromConfigPath } from "./writerApi/shouldUseWriterApi";
 import { resolveAgentWitchLocalCloudAppOrigin } from "./resolveAgentWitchLocalCloudAppOrigin";
 import { resolveAgentWitchLocalInstallUpdateOffer } from "./resolveAgentWitchLocalInstallUpdateOffer";
 import { shouldShowAgentWitchLocalReviveButton } from "./shouldShowAgentWitchLocalReviveButton";
@@ -1008,6 +1016,59 @@ export const startAgentWitchLocalApp = (input: {
         response.writeHead(303, {
           Location: `/harness?submitted=1&count=${result.writtenItemCount ?? 0}${syncQuery}`,
         });
+        response.end();
+        return;
+      }
+
+      if (method === "GET" && pathname === "/writer-api") {
+        const url = new URL(
+          request.url ?? "/",
+          `http://127.0.0.1:${AGENT_WITCH_LOCAL_APP_PORT}`,
+        );
+        const runConfig = readAgentWitchRunConfig();
+        const writerExecutionBackend: WriterExecutionBackend =
+          runConfig?.writerExecutionBackend ??
+          resolveWriterExecutionBackend(undefined);
+        const profileDir = resolveAgentWitchProfileDirFromConfigPath(
+          input.layout.configPath,
+        );
+        const secrets = readWriterApiSecretsFile(profileDir);
+        const flashMessage =
+          url.searchParams.get("saved") === "1"
+            ? "Writer API settings saved on this Mac."
+            : null;
+        const installBundle = buildInstallBundleStatus();
+        sendHtml(
+          response,
+          await buildLocalAppShell({
+            title: "Writer API",
+            activePath: "/writer-api",
+            installVersion: installBundle.installVersion,
+            body: buildAgentWitchLocalWriterApiPageBody({
+              writerExecutionBackend,
+              secrets,
+              flashMessage,
+            }),
+          }),
+        );
+        return;
+      }
+
+      if (method === "POST" && pathname === "/writer-api") {
+        const rawBody = await readBody(request);
+        const form = new URLSearchParams(rawBody);
+        const backendRaw = form.get("writerExecutionBackend")?.trim() ?? "cli";
+        applyWriterApiSettings({
+          configPath: input.layout.configPath,
+          writerExecutionBackend: resolveWriterExecutionBackend(backendRaw),
+          anthropicApiKey: form.get("anthropicApiKey") ?? undefined,
+          anthropicModel: form.get("anthropicModel") ?? undefined,
+          openaiApiKey: form.get("openaiApiKey") ?? undefined,
+          openaiModel: form.get("openaiModel") ?? undefined,
+          googleApiKey: form.get("googleApiKey") ?? undefined,
+          googleModel: form.get("googleModel") ?? undefined,
+        });
+        response.writeHead(303, { Location: "/writer-api?saved=1" });
         response.end();
         return;
       }

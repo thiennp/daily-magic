@@ -82,13 +82,7 @@ export const runLocalSelfDelegatedTask = async (input: {
     }
 
     const result = await runHeadlessWriter(
-      {
-        workspace,
-        claudeCommand: config.claudeCommand,
-        codexCommand: config.codexCommand,
-        cursorCommand: config.cursorCommand,
-        antigravityCommand: config.antigravityCommand,
-      },
+      { ...config, workspace },
       input.writerAgent,
       prompt,
     );

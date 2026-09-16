@@ -37,6 +37,8 @@ import {
 } from "./agentWitchRunSessionsAwaitingInput";
 import { tryRunWriterTaskInPty } from "./agentWitchRunSessionsPty";
 import { markWriterConversationStarted } from "./agentWitchWriterSession";
+import { runWriterApiPrompt } from "./writerApi/runWriterApiPrompt";
+import { shouldUseWriterApi } from "./writerApi/shouldUseWriterApi";
 import {
   buildAgentRunReportHeartbeatPayload,
   readAgentRunReportFile,
@@ -44,19 +46,11 @@ import {
   seedAgentRunReportFile,
 } from "./agentWitchRunReport";
 import type { StartRunHeartbeatOptions } from "./agentWitchRunHeartbeat";
+import type { AgentWitchRunConfig } from "./readAgentWitchRunConfig";
 
 import type WebSocket from "ws";
 
 export { parseAwaitingInputFromOutput } from "./agentWitchRunSessionsAwaitingInput";
-
-interface AgentWitchRunConfig {
-  readonly claudeCommand: string;
-  readonly codexCommand: string;
-  readonly cursorCommand: string;
-  readonly antigravityCommand: string;
-  readonly workspace: string;
-  readonly layout: AgentWitchLocalLayout;
-}
 
 interface ActiveRunSession {
   readonly originalPrompt: string;
@@ -424,6 +418,78 @@ const attachChildHandlers = (
   });
 };
 
+const runWriterApiTask = (
+  config: AgentWitchRunConfig,
+  writerAgent: HarnessWriterAgentId,
+  prompt: string,
+  requestId: string | undefined,
+  socket: WebSocket,
+  agentRunId?: string,
+  projectFolderPath?: string,
+  reportKey?: string,
+): void => {
+  if (agentRunId !== undefined) {
+    runSessions.set(agentRunId, {
+      originalPrompt: prompt,
+      writerAgent,
+      projectFolderPath,
+      reportKey,
+      accumulatedOutput: "",
+    });
+    sendMessage(socket, {
+      type: "terminal.stream.start",
+      payload: { runId: agentRunId },
+      requestId,
+    });
+    startRunHeartbeat(
+      socket,
+      agentRunId,
+      () => runSessions.has(agentRunId),
+      buildRunReportHeartbeatOptions(
+        config,
+        socket,
+        agentRunId,
+        requestId,
+        projectFolderPath,
+        reportKey,
+      ),
+    );
+  }
+
+  const emitTerminalStreamChunk = (text: string): void => {
+    if (agentRunId === undefined || text.length === 0) {
+      return;
+    }
+    if (isTerminalStreamAccepted(agentRunId)) {
+      sendMessage(socket, {
+        type: "terminal.stream.chunk",
+        payload: { runId: agentRunId, chunk: text },
+        requestId,
+      });
+      return;
+    }
+    queueTerminalStreamChunk(agentRunId, text);
+  };
+
+  void runWriterApiPrompt(config, writerAgent, prompt, emitTerminalStreamChunk)
+    .then((result) => {
+      markWriterConversationStarted(writerAgent);
+      finishRun(
+        config,
+        socket,
+        agentRunId,
+        requestId,
+        result.exitCode,
+        result.output,
+        prompt,
+      );
+    })
+    .catch((error) => {
+      const message = error instanceof Error ? error.message : String(error);
+      finishRun(config, socket, agentRunId, requestId, -1, message, prompt);
+    });
+};
+
 export const runWriterTask = (
   config: AgentWitchRunConfig,
   writerAgent: HarnessWriterAgentId,
@@ -436,6 +502,20 @@ export const runWriterTask = (
   projectFolderPath?: string,
   reportKey?: string,
 ): void => {
+  if (shouldUseWriterApi(config, writerAgent)) {
+    runWriterApiTask(
+      config,
+      writerAgent,
+      prompt,
+      requestId,
+      socket,
+      agentRunId,
+      projectFolderPath,
+      reportKey,
+    );
+    return;
+  }
+
   const invocation = buildWriterCliInvocation(
     writerAgent,
     prompt,

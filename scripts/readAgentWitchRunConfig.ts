@@ -6,6 +6,10 @@ import {
   resolveAgentWitchLocalLayout,
   type AgentWitchLocalLayout,
 } from "./resolveAgentWitchLocalLayout";
+import {
+  resolveWriterExecutionBackend,
+  type WriterExecutionBackend,
+} from "./writerApi/resolveWriterExecutionBackend";
 
 export interface AgentWitchRunConfig {
   readonly email: string | null;
@@ -16,6 +20,7 @@ export interface AgentWitchRunConfig {
   readonly cursorCommand: string;
   readonly antigravityCommand: string;
   readonly pairingToken: string;
+  readonly writerExecutionBackend: WriterExecutionBackend;
   readonly layout: AgentWitchLocalLayout;
 }
 
@@ -60,6 +65,9 @@ export const readAgentWitchRunConfig = (): AgentWitchRunConfig | null => {
       email: layout.profileEmail,
       wsUrl,
       workspace,
+      writerExecutionBackend: resolveWriterExecutionBackend(
+        parsed.writerExecutionBackend,
+      ),
       claudeCommand:
         typeof parsed.claudeCommand === "string" &&
         parsed.claudeCommand.length > 0

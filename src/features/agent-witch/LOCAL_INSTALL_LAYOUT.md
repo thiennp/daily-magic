@@ -44,7 +44,8 @@ When installed with `--email user@example.com` (or `AGENT_WITCH_PROFILE` / `acti
 │
 └── profiles/
     └── user@example.com/            # Sanitized lowercase email
-        ├── config.json              # wsUrl, pairingToken, device label, writer prefs, …
+        ├── config.json              # wsUrl, pairingToken, device label, writerExecutionBackend (cli|api), …
+        ├── writer-api-secrets.json  # Optional provider API keys (mode 600); not synced to cloud
         ├── device-keypair.json      # Ed25519 device credentials (per profile)
         ├── connection-health.json   # Last hub ack / WS connection snapshot
         ├── automations.json         # Locally scheduled automations

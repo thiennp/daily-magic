@@ -1,0 +1,203 @@
+import type { WriterApiProvider } from "./WriterApiProvider.constant";
+import { DEFAULT_WRITER_API_MODELS } from "./WriterApiProvider.constant";
+import type { WriterApiProviderSecret } from "./WriterApiSecrets.type";
+
+export interface CallWriterApiInput {
+  readonly provider: WriterApiProvider;
+  readonly secret: WriterApiProviderSecret;
+  readonly prompt: string;
+  readonly onChunk?: (chunk: string) => void;
+}
+
+export interface CallWriterApiResult {
+  readonly exitCode: number;
+  readonly output: string;
+}
+
+const extractAnthropicText = (body: unknown): string => {
+  if (typeof body !== "object" || body === null) {
+    return "";
+  }
+  const content = (body as { content?: unknown }).content;
+  if (!Array.isArray(content)) {
+    return "";
+  }
+  return content
+    .map((block) => {
+      if (typeof block !== "object" || block === null) {
+        return "";
+      }
+      const typed = block as { type?: unknown; text?: unknown };
+      return typed.type === "text" && typeof typed.text === "string"
+        ? typed.text
+        : "";
+    })
+    .join("");
+};
+
+const callAnthropicApi = async (
+  input: CallWriterApiInput,
+): Promise<CallWriterApiResult> => {
+  const model = input.secret.model ?? DEFAULT_WRITER_API_MODELS.anthropic;
+  const response = await fetch("https://api.anthropic.com/v1/messages", {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+      "x-api-key": input.secret.apiKey,
+      "anthropic-version": "2023-06-01",
+    },
+    body: JSON.stringify({
+      model,
+      max_tokens: 8192,
+      messages: [{ role: "user", content: input.prompt }],
+    }),
+  });
+
+  const body: unknown = await response.json().catch(() => null);
+  if (!response.ok) {
+    const message =
+      typeof body === "object" &&
+      body !== null &&
+      "error" in body &&
+      typeof (body as { error?: { message?: string } }).error?.message ===
+        "string"
+        ? (body as { error: { message: string } }).error.message
+        : `Anthropic API error (${String(response.status)})`;
+    return { exitCode: 1, output: message };
+  }
+
+  const text = extractAnthropicText(body);
+  if (text.length > 0) {
+    input.onChunk?.(text);
+  }
+  return { exitCode: 0, output: text };
+};
+
+const extractOpenAiText = (body: unknown): string => {
+  if (typeof body !== "object" || body === null) {
+    return "";
+  }
+  const choices = (body as { choices?: unknown }).choices;
+  if (!Array.isArray(choices) || choices.length === 0) {
+    return "";
+  }
+  const first = choices[0];
+  if (typeof first !== "object" || first === null) {
+    return "";
+  }
+  const message = (first as { message?: { content?: unknown } }).message;
+  return typeof message?.content === "string" ? message.content : "";
+};
+
+const callOpenAiApi = async (
+  input: CallWriterApiInput,
+): Promise<CallWriterApiResult> => {
+  const model = input.secret.model ?? DEFAULT_WRITER_API_MODELS.openai;
+  const response = await fetch("https://api.openai.com/v1/chat/completions", {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+      authorization: `Bearer ${input.secret.apiKey}`,
+    },
+    body: JSON.stringify({
+      model,
+      messages: [{ role: "user", content: input.prompt }],
+    }),
+  });
+
+  const body: unknown = await response.json().catch(() => null);
+  if (!response.ok) {
+    const message =
+      typeof body === "object" &&
+      body !== null &&
+      "error" in body &&
+      typeof (body as { error?: { message?: string } }).error?.message ===
+        "string"
+        ? (body as { error: { message: string } }).error.message
+        : `OpenAI API error (${String(response.status)})`;
+    return { exitCode: 1, output: message };
+  }
+
+  const text = extractOpenAiText(body);
+  if (text.length > 0) {
+    input.onChunk?.(text);
+  }
+  return { exitCode: 0, output: text };
+};
+
+const extractGoogleText = (body: unknown): string => {
+  if (typeof body !== "object" || body === null) {
+    return "";
+  }
+  const candidates = (body as { candidates?: unknown }).candidates;
+  if (!Array.isArray(candidates) || candidates.length === 0) {
+    return "";
+  }
+  const first = candidates[0];
+  if (typeof first !== "object" || first === null) {
+    return "";
+  }
+  const parts = (first as { content?: { parts?: unknown } }).content?.parts;
+  if (!Array.isArray(parts)) {
+    return "";
+  }
+  return parts
+    .map((part) => {
+      if (typeof part !== "object" || part === null) {
+        return "";
+      }
+      const text = (part as { text?: unknown }).text;
+      return typeof text === "string" ? text : "";
+    })
+    .join("");
+};
+
+const callGoogleApi = async (
+  input: CallWriterApiInput,
+): Promise<CallWriterApiResult> => {
+  const model = input.secret.model ?? DEFAULT_WRITER_API_MODELS.google;
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(input.secret.apiKey)}`;
+  const response = await fetch(url, {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({
+      contents: [{ role: "user", parts: [{ text: input.prompt }] }],
+    }),
+  });
+
+  const body: unknown = await response.json().catch(() => null);
+  if (!response.ok) {
+    const message =
+      typeof body === "object" &&
+      body !== null &&
+      "error" in body &&
+      typeof (body as { error?: { message?: string } }).error?.message ===
+        "string"
+        ? (body as { error: { message: string } }).error.message
+        : `Google API error (${String(response.status)})`;
+    return { exitCode: 1, output: message };
+  }
+
+  const text = extractGoogleText(body);
+  if (text.length > 0) {
+    input.onChunk?.(text);
+  }
+  return { exitCode: 0, output: text };
+};
+
+export const callWriterApi = async (
+  input: CallWriterApiInput,
+): Promise<CallWriterApiResult> => {
+  try {
+    if (input.provider === "anthropic") {
+      return await callAnthropicApi(input);
+    }
+    if (input.provider === "openai") {
+      return await callOpenAiApi(input);
+    }
+    return await callGoogleApi(input);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    return { exitCode: -1, output: message };
+  }
+};

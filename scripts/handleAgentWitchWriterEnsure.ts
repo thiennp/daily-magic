@@ -7,6 +7,11 @@ import {
   type HarnessWriterAgentId,
 } from "./buildWriterCliInvocation";
 import type { AgentWitchLocalLayout } from "./resolveAgentWitchLocalLayout";
+import type { AgentWitchRunConfig } from "./readAgentWitchRunConfig";
+import { resolveWriterApiProvider } from "./writerApi/resolveWriterApiProvider";
+import { readWriterApiProviderSecret } from "./writerApi/readWriterApiSecrets";
+import { resolveAgentWitchProfileDirFromConfigPath } from "./writerApi/shouldUseWriterApi";
+import { resolveWriterExecutionBackend } from "./writerApi/resolveWriterExecutionBackend";
 
 export type WriterEnsureStatus = {
   readonly writerAgent: string;
@@ -55,6 +60,7 @@ export const runWriterEnsure = async (input: {
     readonly cursorCommand: string;
     readonly antigravityCommand: string;
   };
+  readonly runConfig?: AgentWitchRunConfig;
 }): Promise<WriterEnsureStatus> => {
   if (!isHarnessWriterAgentId(input.writerAgent)) {
     return {
@@ -62,6 +68,38 @@ export const runWriterEnsure = async (input: {
       installed: false,
       loggedIn: false,
       errorMessage: `Unsupported writer: ${input.writerAgent}`,
+    };
+  }
+
+  if (
+    input.runConfig !== undefined &&
+    resolveWriterExecutionBackend(input.runConfig.writerExecutionBackend) ===
+      "api"
+  ) {
+    const provider = resolveWriterApiProvider(input.writerAgent);
+    if (provider === null) {
+      return {
+        writerAgent: input.writerAgent,
+        installed: false,
+        loggedIn: false,
+        errorMessage:
+          "API-key mode is not available for Cursor. Use CLI login or Cursor Cloud from the website.",
+      };
+    }
+    const profileDir = resolveAgentWitchProfileDirFromConfigPath(
+      input.layout.configPath,
+    );
+    const secret = readWriterApiProviderSecret(profileDir, provider);
+    const loggedIn = secret !== null && secret.apiKey.length > 0;
+    return {
+      writerAgent: input.writerAgent,
+      installed: true,
+      loggedIn,
+      ...(loggedIn
+        ? {}
+        : {
+            errorMessage: `Add a ${provider} API key in Agent Witch Local → Writer API.`,
+          }),
     };
   }
 

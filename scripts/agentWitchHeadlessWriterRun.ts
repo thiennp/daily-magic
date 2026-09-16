@@ -6,17 +6,14 @@ import {
   resolveWriterCliCommands,
   type HarnessWriterAgentId,
 } from "./buildWriterCliInvocation";
+import { runWriterApiPrompt } from "./writerApi/runWriterApiPrompt";
+import { shouldUseWriterApi } from "./writerApi/shouldUseWriterApi";
+import type { AgentWitchRunConfig } from "./readAgentWitchRunConfig";
 
-export interface AgentWitchHeadlessWriterConfig {
-  readonly workspace: string;
-  readonly claudeCommand: string;
-  readonly codexCommand: string;
-  readonly cursorCommand: string;
-  readonly antigravityCommand: string;
-}
+export type AgentWitchHeadlessWriterConfig = AgentWitchRunConfig;
 
 export const runHeadlessWriter = (
-  config: AgentWitchHeadlessWriterConfig,
+  config: AgentWitchRunConfig,
   writerAgent: HarnessWriterAgentId,
   prompt: string,
 ): Promise<{ readonly exitCode: number; readonly output: string }> =>
@@ -26,6 +23,11 @@ export const runHeadlessWriter = (
         exitCode: -1,
         output: `Unsupported writer agent: ${writerAgent}`,
       });
+      return;
+    }
+
+    if (shouldUseWriterApi(config, writerAgent)) {
+      void runWriterApiPrompt(config, writerAgent, prompt).then(resolve);
       return;
     }
 

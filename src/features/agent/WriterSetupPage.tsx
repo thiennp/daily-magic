@@ -92,15 +92,19 @@ export default function WriterSetupPage() {
         ))}
       </ul>
       <p className="mt-6 text-sm text-gray-500">
-        On the Mac, open the local Agent Witch UI for traffic and knowledge (
+        Prefer API keys instead of installing CLIs? On the Mac, open{" "}
         <a
-          href={AGENT_WITCH_LOCAL_APP_ORIGIN}
+          href={`${AGENT_WITCH_LOCAL_APP_ORIGIN}/writer-api`}
           className="font-medium text-zinc-700 underline-offset-4 hover:text-zinc-900 hover:underline"
         >
-          {AGENT_WITCH_LOCAL_APP_ORIGIN}
-        </a>
-        ). Connection status here comes from the live WebSocket bridge, not that
-        local page.
+          Writer API
+        </a>{" "}
+        in the local Agent Witch UI ({AGENT_WITCH_LOCAL_APP_ORIGIN}). Keys stay
+        on that machine only.
+      </p>
+      <p className="mt-3 text-sm text-gray-500">
+        For traffic and knowledge, use the same local UI. Connection status here
+        comes from the live WebSocket bridge, not that page.
       </p>
     </main>
   );

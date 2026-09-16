@@ -128,18 +128,10 @@ import { AGENT_RUN_WORKING_ESTIMATE_MARKER } from "./dispatch/agentRunWorkingEst
 import { seedAgentRunReportFile } from "./agentWitchRunReport";
 import { runAgentRunPreEstimate } from "./runAgentRunPreEstimate";
 import { resolveAgentWitchClientWsUrl } from "@/lib/agentWitch/resolveAgentWitchClientWsUrl";
+import type { AgentWitchRunConfig } from "./readAgentWitchRunConfig";
+import { resolveWriterExecutionBackend } from "./writerApi/resolveWriterExecutionBackend";
 
-interface AgentWitchConfig {
-  readonly email: string | null;
-  readonly wsUrl: string;
-  readonly workspace: string;
-  readonly claudeCommand: string;
-  readonly codexCommand: string;
-  readonly cursorCommand: string;
-  readonly antigravityCommand: string;
-  readonly pairingToken: string;
-  readonly layout: AgentWitchLocalLayout;
-}
+type AgentWitchConfig = AgentWitchRunConfig;
 
 const DEFAULT_CLAUDE_COMMAND = "claude";
 const DEFAULT_CODEX_COMMAND = "codex";
@@ -236,6 +228,9 @@ const readConfig = (
       cursorCommand,
       antigravityCommand,
       pairingToken,
+      writerExecutionBackend: resolveWriterExecutionBackend(
+        parsed.writerExecutionBackend,
+      ),
       layout,
     };
   } catch (error) {
@@ -437,13 +432,7 @@ const dispatchWriterTask = async (
     });
 
     const preEstimate = await runAgentRunPreEstimate({
-      config: {
-        workspace: config.workspace,
-        claudeCommand: config.claudeCommand,
-        codexCommand: config.codexCommand,
-        cursorCommand: config.cursorCommand,
-        antigravityCommand: config.antigravityCommand,
-      },
+      config,
       writerAgent,
       wrappedPrompt: promptWithProjectContext,
       reportKey: resolvedReportKey,
@@ -538,6 +527,7 @@ const startWriterSession = async (
       installDir: config.layout.installDir,
       workspace: config.workspace,
       writerAgent,
+      runConfig: config,
       commands: resolveWriterCliCommands({
         claudeCommand: config.claudeCommand,
         codexCommand: config.codexCommand,
@@ -981,6 +971,7 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
       void runWriterEnsure({
         layout: config.layout,
         writerAgent,
+        runConfig: config,
         commands: {
           claudeCommand: config.claudeCommand,
           codexCommand: config.codexCommand,
