@@ -25,7 +25,7 @@ export default function HomeMarketingShowcases() {
   const allForSchema = getHomeAllShowcaseSlugsForSeo();
 
   return (
-    <section className="mt-24" aria-labelledby="showcases-heading">
+    <section className="mt-16" aria-labelledby="showcases-heading">
       <HomeMarketingShowcaseSection
         className="mt-0"
         eyebrow="New to AI agents?"
@@ -58,7 +58,7 @@ export default function HomeMarketingShowcases() {
       <HomeMarketingShowcaseSection
         eyebrow="For teams"
         title="Company & managers"
-        description="Automate repeat work, roll out playbooks, and cut Monday copy-paste."
+        description="Automate repeat work from Library and cut Monday copy-paste."
       >
         <HomeMarketingTeamsShowcases articles={teams} />
       </HomeMarketingShowcaseSection>
@@ -75,7 +75,7 @@ export default function HomeMarketingShowcases() {
         </div>
       </HomeMarketingShowcaseSection>
 
-      <p className="mt-10 text-center">
+      <p className="mt-8 text-center">
         <Link href="/showcases" className={MARKETING_TEXT_LINK_CLASSES}>
           See all
         </Link>

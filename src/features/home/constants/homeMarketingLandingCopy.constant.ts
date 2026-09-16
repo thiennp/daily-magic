@@ -13,7 +13,7 @@ export const HOME_MARKETING_HERO_COPY = {
 } as const;
 
 export const HOME_MARKETING_AUTH_COPY = {
-  title: "Create your free account",
+  title: "Create free account",
 } as const;
 
 export const HOME_MARKETING_POPULAR_PRESETS_COPY = {
@@ -27,7 +27,7 @@ export const HOME_MARKETING_POPULAR_PRESET_DIALOG_COPY = {
   title: "Sign in first",
   bodyPrefix: "To use",
   bodySuffix:
-    ", create a free account or sign in. You will be ready to run it in minutes.",
+    ". Create free account or sign in — you will be ready to run it in minutes.",
   signIn: "Sign in",
   register: "Create free account",
   dismiss: "Not now",
@@ -37,9 +37,9 @@ export const HOME_MARKETING_FEATURES_COPY = {
   eyebrow: "Built for organizations",
   title: "Free company setup that is fast, governed, and effective",
   description:
-    "Start for free. Most teams connect their first Macs and start delegating agent work in about 15 minutes—with security rules, approvals, and shared visibility built in from day one.",
+    "Most teams connect their first Macs and delegate agent work in about 15 minutes—with security rules, approvals, and shared visibility built in.",
   footerPrefix: "Ready to roll out?",
-  footerLink: "Create a free account and set up your organization",
+  footerLink: "Create free account and set up your organization",
 } as const;
 
 export const HOME_MARKETING_STEPS_COPY = {

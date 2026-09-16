@@ -10,7 +10,7 @@ export default interface MarketingFeatureItem {
 export const MARKETING_FEATURE_ITEMS: readonly MarketingFeatureItem[] = [
   {
     title: "Live in about 15 minutes",
-    body: "Create your free workspace, connect Mac agents, and share workflows—most organizations run their first jobs the same day.",
+    body: "Create free workspace, connect Mac agents, and share workflows—most organizations run their first jobs the same day.",
     preview: "dispatch",
     emphasized: true,
   },

@@ -21,7 +21,7 @@ export default function HomeMarketingShowcaseSection({
   title,
   description,
   children,
-  className = "mt-16",
+  className = "mt-12",
   headingId,
   headerWidth = "default",
 }: HomeMarketingShowcaseSectionProps) {
@@ -36,7 +36,7 @@ export default function HomeMarketingShowcaseSection({
         headingId={resolvedHeadingId}
         width={headerWidth}
       />
-      <div className="mt-10">{children}</div>
+      <div className="mt-8">{children}</div>
     </section>
   );
 }

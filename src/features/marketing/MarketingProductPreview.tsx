@@ -12,7 +12,7 @@ const PREVIEW_FLOW_STEPS = [
 export default function MarketingProductPreview() {
   return (
     <figure className="opacity-80">
-      <figcaption className="mb-2 text-[11px] font-medium uppercase tracking-wider text-zinc-400">
+      <figcaption className="mb-2 text-[11px] font-medium uppercase tracking-wider text-zinc-600">
         Product preview
       </figcaption>
 
@@ -49,7 +49,7 @@ export default function MarketingProductPreview() {
           </blockquote>
 
           <p
-            className="flex h-8 w-full items-center justify-center rounded-md border border-dashed border-zinc-600 bg-zinc-800/50 text-[11px] font-medium text-zinc-400"
+            className="flex h-8 w-full items-center justify-center rounded-md bg-zinc-100 text-[11px] font-medium text-zinc-900"
             aria-hidden
           >
             New task

@@ -29,7 +29,7 @@ const firstAgentTaskIn5Minutes: ShowcaseArticle = {
       ],
     },
     {
-      heading: "If send is disabled",
+      heading: "If New task is disabled",
       paragraphs: [
         "The button stays off until this page is connected and your Mac is online. That is intentional: we run on real machines, not a faceless cloud tab.",
       ],
