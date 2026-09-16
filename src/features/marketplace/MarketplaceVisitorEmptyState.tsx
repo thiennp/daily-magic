@@ -1,5 +1,12 @@
 "use client";
 
+import { useSearchParams } from "next/navigation";
+import { useMemo } from "react";
+
+import {
+  buildMarketingGetStartedHref,
+  buildSignInHrefFromSearchParams,
+} from "@/features/empty-states/buildGuestAuthHrefs";
 import HomeMarketingPopularPresetsGrid from "@/features/home/components/HomeMarketingPopularPresetsGrid";
 import resolveHomePopularPresets from "@/features/home/utils/resolveHomePopularPresets";
 import MarketingCtaLink from "@/features/marketing/MarketingCtaLink";
@@ -9,6 +16,15 @@ import {
 } from "@/components/surfaces/appSurfaceStyles.constant";
 
 export default function MarketplaceVisitorEmptyState() {
+  const searchParams = useSearchParams();
+  const createAccountHref = useMemo(
+    () => buildMarketingGetStartedHref(searchParams),
+    [searchParams],
+  );
+  const signInHref = useMemo(
+    () => buildSignInHrefFromSearchParams(searchParams),
+    [searchParams],
+  );
   const presets = resolveHomePopularPresets();
 
   return (
@@ -27,13 +43,10 @@ export default function MarketplaceVisitorEmptyState() {
       </div>
       <HomeMarketingPopularPresetsGrid presets={presets} />
       <div className="flex flex-wrap items-center gap-3 pt-2">
-        <MarketingCtaLink href="/#get-started">
+        <MarketingCtaLink href={createAccountHref}>
           Create free account
         </MarketingCtaLink>
-        <MarketingCtaLink
-          href="/login?callbackUrl=%2Fmarketplace"
-          variant="secondary"
-        >
+        <MarketingCtaLink href={signInHref} variant="secondary">
           Sign in
         </MarketingCtaLink>
       </div>

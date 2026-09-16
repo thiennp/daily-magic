@@ -1,4 +1,8 @@
 import { AGENT_WITCH_PRODUCT_NAME } from "@/lib/agentWitch/agentWitchProductName.constant";
+import {
+  homeMarketingSignInCallbackAutomationsHref,
+  homeMarketingSignInCallbackHomeHref,
+} from "@/features/home/constants/homeMarketingAuthCallbackHrefs.constant";
 
 export const HOME_MARKETING_HERO_COPY = {
   eyebrow: "For you and your team",
@@ -54,7 +58,7 @@ export const HOME_MARKETING_STEPS_COPY = {
     {
       title: "Add your Mac",
       body: "One install command—then your computer runs the jobs.",
-      href: "/login",
+      href: homeMarketingSignInCallbackHomeHref,
     },
     {
       title: "Pick a workflow",
@@ -64,7 +68,7 @@ export const HOME_MARKETING_STEPS_COPY = {
     {
       title: "Run or automate",
       body: "Run once, on a schedule, or share with your team.",
-      href: "/login?callbackUrl=%2Fautomations",
+      href: homeMarketingSignInCallbackAutomationsHref,
     },
   ],
 } as const;

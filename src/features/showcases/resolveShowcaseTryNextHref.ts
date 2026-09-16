@@ -1,3 +1,5 @@
+import { buildSignInHref } from "@/features/empty-states/buildGuestAuthHrefs";
+
 const AUTH_REQUIRED_PATH_PREFIXES = [
   "/admin",
   "/automations",
@@ -9,8 +11,7 @@ const AUTH_REQUIRED_PATH_PREFIXES = [
 
 const EXAMPLE_ORIGIN = "https://example.local";
 
-export const buildShowcaseSignInHref = (callbackPath: string): string =>
-  `/login?callbackUrl=${encodeURIComponent(callbackPath)}`;
+export const buildShowcaseSignInHref = buildSignInHref;
 
 export const isShowcaseTryNextAuthRequired = (href: string): boolean => {
   const url = new URL(href, EXAMPLE_ORIGIN);
@@ -46,5 +47,5 @@ export const resolveShowcaseTryNextHref = (
     return href;
   }
 
-  return buildShowcaseSignInHref(href);
+  return buildSignInHref(href);
 };

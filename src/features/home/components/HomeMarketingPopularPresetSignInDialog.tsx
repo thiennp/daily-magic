@@ -65,7 +65,7 @@ export default function HomeMarketingPopularPresetSignInDialog({
         <Link href={loginHref} className={MARKETING_CTA_PRIMARY_CLASSES}>
           {copy.signIn}
         </Link>
-        <Link href="/#get-started" className={MARKETING_CTA_SECONDARY_CLASSES}>
+        <Link href={loginHref} className={MARKETING_CTA_SECONDARY_CLASSES}>
           {copy.register}
         </Link>
       </div>

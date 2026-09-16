@@ -1,5 +1,6 @@
 "use client";
 
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useState } from "react";
 
 import MarketingCard from "@/features/marketing/MarketingCard";
@@ -13,6 +14,11 @@ import { mergeMarketingClasses } from "@/features/marketing/mergeMarketingClasse
 
 import HomeMarketingPopularPresetSignInDialog from "./HomeMarketingPopularPresetSignInDialog";
 import type { HomePopularPresetSummary } from "@/features/home/utils/resolveHomePopularPresets";
+import {
+  applyPresetCapabilityIdToSearchParams,
+  buildPathWithSearchParams,
+  removePresetCapabilityIdFromSearchParams,
+} from "@/features/home/utils/syncHomeMarketingPresetCapabilityQuery";
 
 interface HomeMarketingPopularPresetsGridProps {
   readonly presets: readonly HomePopularPresetSummary[];
@@ -21,11 +27,39 @@ interface HomeMarketingPopularPresetsGridProps {
 export default function HomeMarketingPopularPresetsGrid({
   presets,
 }: HomeMarketingPopularPresetsGridProps) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
   const [selectedPreset, setSelectedPreset] =
     useState<HomePopularPresetSummary | null>(null);
   const closeDialog = useCallback(() => {
-    setSelectedPreset(null);
-  }, []);
+    setSelectedPreset((current) => {
+      if (current !== null) {
+        const nextParams = removePresetCapabilityIdFromSearchParams(
+          current.id,
+          searchParams,
+        );
+        router.replace(buildPathWithSearchParams(pathname, nextParams), {
+          scroll: false,
+        });
+      }
+
+      return null;
+    });
+  }, [pathname, router, searchParams]);
+  const openPresetDialog = useCallback(
+    (preset: HomePopularPresetSummary) => {
+      setSelectedPreset(preset);
+      const nextParams = applyPresetCapabilityIdToSearchParams(
+        preset.id,
+        searchParams,
+      );
+      router.replace(buildPathWithSearchParams(pathname, nextParams), {
+        scroll: false,
+      });
+    },
+    [pathname, router, searchParams],
+  );
 
   return (
     <>
@@ -36,7 +70,7 @@ export default function HomeMarketingPopularPresetsGrid({
               type="button"
               className="block h-full w-full text-left"
               onClick={() => {
-                setSelectedPreset(preset);
+                openPresetDialog(preset);
               }}
             >
               <MarketingCard
