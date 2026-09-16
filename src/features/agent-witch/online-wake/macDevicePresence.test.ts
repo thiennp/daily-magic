@@ -6,6 +6,7 @@ import {
   countMacPresenceTiers,
   formatMacPresenceStatusLabel,
   pickAlternateDispatchReadyDeviceId,
+  pickAlternateWriterReadyDeviceId,
   pickDefaultMacDeviceId,
   resolveMacPresenceTier,
 } from "./macDevicePresence";
@@ -48,7 +49,7 @@ describe("macDevicePresence", () => {
         {
           isConnected: false,
           isOnline: true,
-          presenceTier: "live_other_instance",
+          presenceTier: "live_other_instance" as const,
           isDispatchReady: true,
         },
         { isConnected: false, isOnline: true },
@@ -86,6 +87,27 @@ describe("macDevicePresence", () => {
     expect(pickDefaultMacDeviceId(devices)).toBe("live-mac");
     expect(pickAlternateDispatchReadyDeviceId(devices, "recent-mac")).toBe(
       "live-mac",
+    );
+  });
+
+  it("prefers live hub Mac over live_other_instance for defaults and alternates", () => {
+    const devices = [
+      {
+        id: "other-instance-mac",
+        isConnected: false,
+        isOnline: true,
+        presenceTier: "live_other_instance" as const,
+        isDispatchReady: true,
+      },
+      { id: "local-live-mac", isConnected: true, isOnline: true },
+    ];
+
+    expect(pickDefaultMacDeviceId(devices)).toBe("local-live-mac");
+    expect(
+      pickAlternateWriterReadyDeviceId(devices, "other-instance-mac"),
+    ).toBe("local-live-mac");
+    expect(pickAlternateDispatchReadyDeviceId(devices, "local-live-mac")).toBe(
+      "other-instance-mac",
     );
   });
 });

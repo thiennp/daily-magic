@@ -1,3 +1,4 @@
+import type { MacPresenceTier } from "@/features/agent-witch/online-wake";
 import type { WsTestConnectionStatus } from "@/features/agent/types/WsTestConnectionStatus.type";
 
 export type ComposerBlockedStateId =
@@ -37,6 +38,8 @@ export interface ResolveComposerBlockedActionInput {
     readonly id: string;
     readonly isConnected: boolean;
     readonly isOnline: boolean;
+    readonly presenceTier?: MacPresenceTier;
+    readonly isDispatchReady?: boolean;
   }[];
   readonly selectedDeviceId: string;
   readonly devicesHadLoadError: boolean;

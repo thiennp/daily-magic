@@ -1,3 +1,4 @@
+import { resolveMacPresenceTier } from "@/features/agent-witch/online-wake";
 import type {
   ComposerBlockedAction,
   ComposerManualActionId,
@@ -33,13 +34,22 @@ export const buildMacBlockedComposerAction = (
   }
 
   const hasAlternate = alternateOnlineDeviceId !== null;
+  const selectedDevice = input.devices.find(
+    (device) => device.id === input.selectedDeviceId,
+  );
+  const selectedOnOtherInstance =
+    selectedDevice !== undefined &&
+    resolveMacPresenceTier(selectedDevice) === "live_other_instance";
+  const helperMessage = selectedOnOtherInstance
+    ? "This Mac is connected on another server (common right after deploy). Wait a few seconds and try again."
+    : hasAlternate
+      ? "The selected Mac is not connected. Switch to a connected Mac or wait for it to reconnect."
+      : "The selected Mac is not connected. Wait for it to reconnect.";
 
   return withComposerCopyFlag(
     {
       stateId,
-      helperMessage: hasAlternate
-        ? "The selected Mac is not connected. Switch to a connected Mac or wait for it to reconnect."
-        : "The selected Mac is not connected. Wait for it to reconnect.",
+      helperMessage,
       helperLinkLabel: null,
       helperLinkHref: null,
       primaryManualAction: hasAlternate ? "use_online_mac" : null,

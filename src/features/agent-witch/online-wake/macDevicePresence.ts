@@ -51,6 +51,10 @@ export const formatMacPresenceStatusLabel = (
   return "Offline";
 };
 
+/** Writer / shell / send-task need a live agent socket on this server process. */
+export const canRunWriterDispatchToMac = (device: MacDevicePresence): boolean =>
+  resolveMacPresenceTier(device) === "live";
+
 /** Mac can receive queued install/send tasks when live locally or on another instance. */
 export const canDispatchToMac = (device: MacDevicePresence): boolean => {
   if (device.isDispatchReady !== undefined) {
@@ -81,23 +85,10 @@ export const countMacPresenceTiers = (
     { live: 0, liveOtherInstance: 0, recent: 0, offline: 0 },
   );
 
-export const pickDefaultMacDeviceId = (
-  devices: readonly ({ readonly id: string } & MacDevicePresence)[],
-): string => {
-  const dispatchReadyDevice = devices.find((device) =>
-    canDispatchToMac(device),
-  );
-  return dispatchReadyDevice?.id ?? devices[0]?.id ?? "";
-};
-
-export const pickAlternateDispatchReadyDeviceId = (
-  devices: readonly ({ readonly id: string } & MacDevicePresence)[],
-  selectedDeviceId: string,
-): string | null => {
-  const alternate = devices.find(
-    (device) => canDispatchToMac(device) && device.id !== selectedDeviceId,
-  );
-  return alternate?.id ?? null;
-};
+export {
+  pickAlternateDispatchReadyDeviceId,
+  pickAlternateWriterReadyDeviceId,
+  pickDefaultMacDeviceId,
+} from "./pickMacDeviceIdForPresence";
 
 export { default as buildMacDevicesStatusLine } from "./buildMacDevicesStatusLine";

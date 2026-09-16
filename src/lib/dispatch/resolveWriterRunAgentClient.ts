@@ -91,6 +91,7 @@ export const resolveClaudeRunAgentClient = async (input: {
       ok: false,
       error: await buildTargetMacOfflineDispatchError(
         input.targetDeviceId,
+        input.executorUserId,
         input.requestId,
       ),
     };

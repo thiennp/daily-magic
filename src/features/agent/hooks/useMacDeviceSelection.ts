@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 
 import {
   canDispatchToMac,
+  canRunWriterDispatchToMac,
   pickDefaultMacDeviceId,
 } from "@/features/agent-witch/online-wake";
 import { SEND_TASK_DEVICE_ID_QUERY_PARAM } from "@/features/agent/constants/sendTaskModalQuery.constant";
@@ -54,14 +55,23 @@ const useMacDeviceSelection = (): {
       return "";
     }
 
-    const preferredStillExists = devices.some(
+    const preferredDevice = devices.find(
       (device) => device.id === preferredDeviceId,
     );
 
-    return preferredStillExists
-      ? preferredDeviceId
-      : pickDefaultMacDeviceId(devices);
-  }, [devices, preferredDeviceId]);
+    if (deviceIdFromQuery.length > 0 && preferredDevice !== undefined) {
+      return preferredDeviceId;
+    }
+
+    if (
+      preferredDevice !== undefined &&
+      canRunWriterDispatchToMac(preferredDevice)
+    ) {
+      return preferredDeviceId;
+    }
+
+    return pickDefaultMacDeviceId(devices);
+  }, [deviceIdFromQuery, devices, preferredDeviceId]);
 
   const dispatchReadyMacCount = devices.filter((device) =>
     canDispatchToMac(device),

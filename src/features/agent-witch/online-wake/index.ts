@@ -7,10 +7,12 @@ export {
   resolveMacPresenceTier,
   formatMacPresenceStatusLabel,
   canDispatchToMac,
+  canRunWriterDispatchToMac,
   countMacPresenceTiers,
   buildMacDevicesStatusLine,
   pickDefaultMacDeviceId,
   pickAlternateDispatchReadyDeviceId,
+  pickAlternateWriterReadyDeviceId,
 } from "./macDevicePresence";
 
 export {

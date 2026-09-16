@@ -16,6 +16,10 @@ vi.mock("@/lib/agentWitch/findAgentWitchDeviceById", () => ({
   findAgentWitchDeviceById: vi.fn(async () => null),
 }));
 
+vi.mock("@/lib/agentWitch/agentWitchConnectionRegistryQueries", () => ({
+  isDeviceLiveOnAnotherInstance: vi.fn(async () => false),
+}));
+
 import { findAgentWitchDeviceByToken } from "@/lib/agentWitch/findAgentWitchDeviceByToken";
 
 describe("resolveClaudeRunAgentClient", () => {

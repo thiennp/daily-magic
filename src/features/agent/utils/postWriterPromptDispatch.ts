@@ -1,5 +1,6 @@
-import { upsertAgentRunLocalCache } from "@/features/reports/agentRunLocalCache";
+import { retryPostClaudePromptDispatch } from "@/features/agent/utils/retryPostClaudePromptDispatch";
 import { readDispatchHttpResponseError } from "@/features/agent/utils/readDispatchHttpResponseError";
+import { upsertAgentRunLocalCache } from "@/features/reports/agentRunLocalCache";
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
 import type AgentRunRecord from "@/lib/dispatch/types/AgentRunRecord.type";
@@ -21,7 +22,7 @@ const buildDispatchErrorRaw = (errorMessage: string): string =>
     payload: { errorMessage },
   });
 
-export async function postClaudePromptDispatch(input: {
+const postClaudePromptDispatchOnce = async (input: {
   readonly prompt: string;
   readonly writerAgent: HarnessWriterAgent;
   readonly targetUserId?: string;
@@ -32,7 +33,7 @@ export async function postClaudePromptDispatch(input: {
   readonly sourceRunId?: string;
   readonly projectFolderPath?: string;
   readonly onDispatchedRunId?: (runId: string) => void;
-}): Promise<string> {
+}): Promise<string> => {
   const response = await fetch("/api/agent-runs/dispatch", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -81,5 +82,22 @@ export async function postClaudePromptDispatch(input: {
 
   return buildDispatchErrorRaw(
     readDispatchHttpResponseError(data, response.status),
+  );
+};
+
+export async function postClaudePromptDispatch(input: {
+  readonly prompt: string;
+  readonly writerAgent: HarnessWriterAgent;
+  readonly targetUserId?: string;
+  readonly groupId?: string;
+  readonly capabilityId?: string;
+  readonly targetDeviceId?: string;
+  readonly sessionContinuation?: boolean;
+  readonly sourceRunId?: string;
+  readonly projectFolderPath?: string;
+  readonly onDispatchedRunId?: (runId: string) => void;
+}): Promise<string> {
+  return retryPostClaudePromptDispatch(() =>
+    postClaudePromptDispatchOnce(input),
   );
 }

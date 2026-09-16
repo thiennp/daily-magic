@@ -1,4 +1,4 @@
-import { pickAlternateDispatchReadyDeviceId } from "@/features/agent-witch/online-wake";
+import { pickAlternateWriterReadyDeviceId } from "@/features/agent-witch/online-wake";
 import type {
   ComposerBlockedStateId,
   ResolveComposerBlockedActionInput,
@@ -45,5 +45,4 @@ export const resolveComposerBlockedStateId = (
 export const pickAlternateOnlineDeviceId = (
   devices: ResolveComposerBlockedActionInput["devices"],
   selectedDeviceId: string,
-): string | null =>
-  pickAlternateDispatchReadyDeviceId(devices, selectedDeviceId);
+): string | null => pickAlternateWriterReadyDeviceId(devices, selectedDeviceId);
