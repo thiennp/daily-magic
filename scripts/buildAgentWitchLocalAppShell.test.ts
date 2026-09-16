@@ -63,15 +63,27 @@ describe("buildAgentWitchLocalAppShell", () => {
     expect(html).not.toMatch(/href="\/"[^>]*aria-current/);
   });
 
-  it("does not show install bundle version in the header", () => {
+  it("shows install bundle version after LOCAL in the header brand", () => {
     const html = buildAgentWitchLocalAppShell({
       title: "Status",
       activePath: "/",
       cloudAppOrigin: "https://www.agentwitch.com",
+      installBundleVersionLabel: "111",
       body: '<div class="card">ok</div>',
     });
 
-    expect(html).not.toMatch(/class="brand-version"/);
-    expect(html).not.toContain("bundle unknown");
+    expect(html).toContain('class="brand-sub">Local(111)</span>');
+    expect(html).toContain("install bundle 111");
+  });
+
+  it("falls back to unknown when install bundle version is missing", () => {
+    const html = buildAgentWitchLocalAppShell({
+      title: "Status",
+      activePath: "/",
+      cloudAppOrigin: "https://www.agentwitch.com",
+      body: "",
+    });
+
+    expect(html).toContain('class="brand-sub">Local(unknown)</span>');
   });
 });

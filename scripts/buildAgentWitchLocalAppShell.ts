@@ -47,6 +47,7 @@ export const buildAgentWitchLocalAppShell = (input: {
   readonly activePath: AgentWitchLocalAppNavPath;
   readonly body: string;
   readonly cloudAppOrigin: string;
+  readonly installBundleVersionLabel?: string;
   readonly prependBody?: string;
   readonly headerUpdateButtonHtml?: string;
 }): string => {
@@ -57,6 +58,9 @@ export const buildAgentWitchLocalAppShell = (input: {
 
   const cloudOrigin = escapeHtml(input.cloudAppOrigin);
   const headerUpdateButtonHtml = input.headerUpdateButtonHtml ?? "";
+  const installBundleVersionLabel = escapeHtml(
+    input.installBundleVersionLabel?.trim() ?? "unknown",
+  );
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -69,9 +73,9 @@ export const buildAgentWitchLocalAppShell = (input: {
 <body>
   <header class="site-header">
     <div class="site-header-inner">
-      <a class="brand" href="/" aria-label="Agent Witch Local home">
+      <a class="brand" href="/" aria-label="Agent Witch Local home, install bundle ${installBundleVersionLabel}">
         ${LOGO_MARK_SVG}
-        <span class="brand-text">Agent Witch<span class="brand-sub">Local</span></span>
+        <span class="brand-text">Agent Witch<span class="brand-sub">Local(${installBundleVersionLabel})</span></span>
       </a>
       <div class="site-header-actions">
         <nav class="site-nav" aria-label="Local bridge">${nav}</nav>

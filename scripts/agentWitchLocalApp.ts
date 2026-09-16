@@ -292,6 +292,8 @@ export const startAgentWitchLocalApp = (input: {
       activePath: shell.activePath,
       body: shell.body,
       cloudAppOrigin: resolveAgentWitchLocalCloudAppOrigin(installVersion),
+      installBundleVersionLabel:
+        formatAgentWitchInstallBundleVersionLabel(installVersion),
       prependBody: `${updateFlashHtml}${updatePromptHtml}`,
       headerUpdateButtonHtml:
         buildAgentWitchLocalInstallUpdateHeaderButtonHtml(offer),
