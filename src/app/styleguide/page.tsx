@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
+
 import StyleguideShell from "@/features/styleguide/StyleguideShell";
+import { requireStaffPageAccess } from "@/lib/auth/requireStaffPageAccess";
 import { AGENT_WITCH_PRODUCT_NAME } from "@/lib/agentWitch/agentWitchProductName.constant";
 import SurfacesSection from "@/features/styleguide/sections/SurfacesSection";
 import BrandLogoSection from "@/features/styleguide/sections/BrandLogoSection";
@@ -15,12 +17,14 @@ import TablesSection from "@/features/styleguide/sections/TablesSection";
 import VideosSection from "@/features/styleguide/sections/VideosSection";
 
 export const metadata: Metadata = {
-  title: `Styleguide | ${AGENT_WITCH_PRODUCT_NAME}`,
+  title: `Design system | ${AGENT_WITCH_PRODUCT_NAME}`,
   description:
-    "Agent Witch brand logo and TailAdmin component styleguide with buttons, alerts, forms, tables, charts, and more.",
+    "Agent Witch design system reference for staff — brand, surfaces, buttons, alerts, forms, tables, and charts.",
 };
 
-export default function StyleguidePage() {
+export default async function StyleguidePage() {
+  await requireStaffPageAccess();
+
   return (
     <StyleguideShell>
       <BrandLogoSection />

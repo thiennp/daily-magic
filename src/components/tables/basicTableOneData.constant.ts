@@ -5,8 +5,8 @@ export const BASIC_TABLE_ONE_DATA: readonly BasicTableOrder[] = [
     id: 1,
     user: {
       image: "/images/user/user-17.jpg",
-      name: "Lindsey Curtis",
-      role: "Web Designer",
+      name: "Alex Morgan",
+      role: "Operations lead",
     },
     projectName: "Agency Website",
     team: {

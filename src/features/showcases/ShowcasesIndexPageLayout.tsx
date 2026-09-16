@@ -9,7 +9,6 @@ import {
   SHOWCASE_ARTICLES_PHASE_LEADERSHIP,
 } from "@/features/showcases/showcaseArticleRegistry";
 import { enrichShowcaseArticleWithImages } from "@/features/showcases/enrichShowcaseArticleWithImages";
-import { E2E_SHOWCASE_ARTICLES } from "@/features/showcases/e2eShowcaseArticleRegistry";
 import type ShowcaseArticle from "@/features/showcases/types/ShowcaseArticle.type";
 import { MARKETING_TEXT_LINK_CLASSES } from "@/features/marketing/marketingInteractiveClasses.constant";
 import MarketingShell from "@/features/marketing/MarketingShell";
@@ -26,8 +25,6 @@ export default function ShowcasesIndexPageLayout() {
   const leadership = phaseWithCovers(SHOWCASE_ARTICLES_PHASE_LEADERSHIP);
   const forTeams = phaseWithCovers(SHOWCASE_ARTICLES_PHASE_3);
   const questions = phaseWithCovers(SHOWCASE_ARTICLES_PHASE_4);
-  const e2eVerified = phaseWithCovers(E2E_SHOWCASE_ARTICLES);
-
   return (
     <MarketingShell>
       <MarketingSectionHeader
@@ -87,18 +84,6 @@ export default function ShowcasesIndexPageLayout() {
         </p>
         <div className="mt-6 grid gap-6 md:grid-cols-2">
           {questions.map((article) => (
-            <ShowcaseCard key={article.slug} article={article} />
-          ))}
-        </div>
-      </div>
-      <div className="mt-14">
-        <h2 className="text-lg font-semibold text-gray-900">E2E verified</h2>
-        <p className="mt-2 max-w-2xl text-sm text-gray-600">
-          Screenshots from real product walks—so you can see the screens before
-          you sign in.
-        </p>
-        <div className="mt-6 grid gap-6 md:grid-cols-2">
-          {e2eVerified.map((article) => (
             <ShowcaseCard key={article.slug} article={article} />
           ))}
         </div>

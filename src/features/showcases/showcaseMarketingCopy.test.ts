@@ -11,6 +11,7 @@ const BANNED_MARKETING_PHRASE_PATTERNS: readonly RegExp[] = [
   /\bcaveat/i,
   /\bworkaround/i,
   /\bdummy\b/i,
+  /\bdaily magic\b/i,
   /\bfake\b/i,
   /\bnot yet\b/i,
   /\bdoes not work yet\b/i,

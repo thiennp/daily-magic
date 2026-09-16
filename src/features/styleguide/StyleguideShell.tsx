@@ -30,10 +30,10 @@ export default function StyleguideShell({
         <div className="mx-auto flex max-w-[1600px] items-center justify-between gap-4 px-4 py-4 sm:px-6">
           <div>
             <p className="text-xs font-medium uppercase tracking-wide text-brand-500">
-              TailAdmin MIT
+              Agent Witch
             </p>
             <h1 className="text-xl font-semibold text-gray-800 dark:text-white/90">
-              Component Styleguide
+              Design system
             </h1>
           </div>
           <div className="flex items-center gap-3">
