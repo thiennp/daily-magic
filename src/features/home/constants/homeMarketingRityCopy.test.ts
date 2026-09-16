@@ -26,9 +26,10 @@ describe("home marketing Rity copy locks", () => {
     );
   });
 
-  it("in-app instructions prefill from Library not Playbooks", () => {
+  it("in-app instructions prefill from Library only (Magi lock)", () => {
     const source = readFileSync(INSTRUCTION_TASKS_PATH, "utf8");
-    expect(source).toContain("Library or Reports");
+    expect(source).toContain("optional prefill from Library");
     expect(source).not.toContain("Playbooks or Reports");
+    expect(source).not.toContain("Library or Reports");
   });
 });
