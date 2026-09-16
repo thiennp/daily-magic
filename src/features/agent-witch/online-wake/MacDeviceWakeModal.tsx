@@ -6,6 +6,7 @@ import Button from "@/components/ui/button/Button";
 import { Modal } from "@/components/ui/modal";
 import { APP_SURFACE_BODY_TEXT_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
 import { refreshPairedDevices } from "@/features/agent-witch/pairedDevicesResource";
+import MacDeviceWakeShellCommandBlock from "@/features/agent-witch/online-wake/MacDeviceWakeShellCommandBlock";
 import {
   requestAgentWitchWake,
   requestLocalAgentWitchRestartFromWakeServer,
@@ -32,16 +33,24 @@ export default function MacDeviceWakeModal({
   const [localRestartMessage, setLocalRestartMessage] = useState<string | null>(
     null,
   );
+  const [
+    showWakeCommandAfterFailedRestart,
+    setShowWakeCommandAfterFailedRestart,
+  ] = useState(false);
+  const shouldShowWakeShellCommand =
+    isThisMac && (!canRequestRestart || showWakeCommandAfterFailedRestart);
 
   const restartOnThisMac = async (): Promise<void> => {
     setIsRestartingLocally(true);
     setLocalRestartMessage(null);
+    setShowWakeCommandAfterFailedRestart(false);
 
     try {
       const result = await requestLocalAgentWitchRestartFromWakeServer();
       if (!result.reachable) {
+        setShowWakeCommandAfterFailedRestart(true);
         setLocalRestartMessage(
-          "Could not reach the local wake server. Run Update local from the menu on this Mac.",
+          "The local wake server is not running (the Mac client process may have stopped). Run wake.sh in Terminal on this Mac.",
         );
         return;
       }
@@ -58,14 +67,15 @@ export default function MacDeviceWakeModal({
   return (
     <Modal isOpen={isOpen} onClose={onClose} className="max-w-md p-6">
       <h2 className="pr-10 text-lg font-semibold text-gray-900 dark:text-white/90">
-        {isThisMac ? "Reconnect this Mac" : "Turn on this Mac"}
+        {isThisMac ? "Start Agent Witch on this Mac" : "Turn on this Mac"}
       </h2>
       <p className={`mt-3 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
         {isThisMac
-          ? `${displayName} is offline in Agent Witch. The background agent may have stopped after an update. Restart it on this Mac, or wait for the next check-in.`
+          ? `${displayName} is offline. Wake HTTP and the Mac client run in one process — when nothing is listening locally, run wake.sh in Terminal (or Restart below when the wake server responds).`
           : `${displayName} is offline. Power it on and wait for Agent Witch to reconnect at login. If the app is not installed yet, download it from Home on that Mac.`}
       </p>
-      {isThisMac ? (
+      {shouldShowWakeShellCommand ? <MacDeviceWakeShellCommandBlock /> : null}
+      {isThisMac && canRequestRestart ? (
         <div className="mt-4">
           <Button
             disabled={isRestartingLocally}

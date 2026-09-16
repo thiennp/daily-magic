@@ -48,9 +48,9 @@ export const resolveHomeMacStatusSummary = (
   if (counts.recent > 0) {
     return {
       tone: "sleeping",
-      label: "Mac sleeping",
+      label: "Mac reconnecting",
       detail:
-        "Agent Witch was seen recently. Open it on your Mac or use wake from a task to reconnect.",
+        "Agent Witch was seen recently and may reconnect on the next check-in. Start it on your Mac with wake.sh if it stays offline.",
     };
   }
 

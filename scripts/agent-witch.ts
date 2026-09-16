@@ -84,7 +84,13 @@ import {
 } from "./agentWitchTerminalStreamState";
 import { requestLocalAgentWitchRestart } from "./requestLocalAgentWitchRestart";
 import { runLocalInstallBundleUpdate } from "./runLocalInstallBundleUpdate";
-import { readAgentWitchInstallVersion } from "./agentWitchInstallVersion";
+import { AGENT_WITCH_DEFAULT_ORIGIN } from "@/lib/agentWitch/constants";
+
+import {
+  ensureAgentWitchInstallVersionRecorded,
+  resolveAgentWitchHeartbeatInstallBundleVersion,
+} from "./agentWitchInstallVersion";
+import { resolveAgentWitchAppOriginFromWsUrl } from "./resolveAgentWitchAppOriginFromWsUrl";
 import { readInstallBundleVersionFromHeartbeatAck } from "./readInstallBundleVersionFromHeartbeatAck";
 import {
   applyAutomationsRunFromCloud,
@@ -114,7 +120,6 @@ import {
   formatMemoryContextForPrompt,
   readAgentWitchMemoryEntries,
 } from "./agentWitchLocalMemory";
-import { resolveAgentWitchAppOriginFromWsUrl } from "./resolveAgentWitchAppOriginFromWsUrl";
 import { buildDefaultUserProjectFolderPath } from "./buildDefaultUserProjectFolderPath";
 import { ensureAgentWitchProjectFolder } from "./ensureAgentWitchProjectFolder";
 import { runWriterEnsure } from "./handleAgentWitchWriterEnsure";
@@ -873,8 +878,9 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
     clearHeartbeat();
     const sendHeartbeat = (): void => {
       const installBundleVersion =
-        readAgentWitchInstallVersion(config.layout.installDir)?.bundleVersion ??
-        null;
+        resolveAgentWitchHeartbeatInstallBundleVersion(
+          config.layout.installDir,
+        );
       const wakePort = resolveAgentWitchWakePort();
       sendMessage(
         socket,
@@ -886,7 +892,7 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
             wakeError: state.wakeError,
             wakePort,
             ...(config.email !== null ? { email: config.email } : {}),
-            ...(installBundleVersion !== null ? { installBundleVersion } : {}),
+            installBundleVersion,
           },
         },
         config.layout,
@@ -1583,15 +1589,18 @@ const waitForConfigs = async (): Promise<readonly AgentWitchConfig[]> => {
 const main = async (): Promise<void> => {
   exitUnlessActiveMacOsConsoleUser("agent-witch");
 
+  const installDir = resolveAgentWitchInstallDir();
+
   const machineLease = claimAgentWitchMachineLease();
   if (!machineLease.ok) {
+    const { kickstartAgentWitchClientLaunchAgents } =
+      await import("./kickstartAgentWitchClientLaunchAgents");
+    await kickstartAgentWitchClientLaunchAgents(installDir);
     process.stdout.write(
-      "[agent-witch] Another Agent Witch process already owns this Mac user lease — exiting.\n",
+      "[agent-witch] Another Agent Witch process already owns this Mac user lease — kickstarted LaunchAgent and exiting.\n",
     );
     process.exit(0);
   }
-
-  const installDir = resolveAgentWitchInstallDir();
   migrateLegacyAgentWitchInstallLogsForActiveProfiles(installDir);
   const terminated = terminateOtherAgentWitchClientProcesses({ installDir });
   if (terminated.length > 0) {
@@ -1606,6 +1615,12 @@ const main = async (): Promise<void> => {
   const primaryConfig = configs[0];
   if (primaryConfig !== undefined) {
     registerAgentWitchProcessTraceHandlers(primaryConfig.layout);
+  }
+  for (const config of configs) {
+    const appOrigin =
+      resolveAgentWitchAppOriginFromWsUrl(config.wsUrl) ??
+      AGENT_WITCH_DEFAULT_ORIGIN;
+    ensureAgentWitchInstallVersionRecorded(config.layout.installDir, appOrigin);
   }
   const clients = configs.map((config) => createAgentWitchClient(config));
   const primaryClient = clients[0];

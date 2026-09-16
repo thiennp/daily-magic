@@ -3,7 +3,11 @@
 import { useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 
-import { pickDefaultMacDeviceId } from "@/features/agent-witch/online-wake";
+import {
+  countDispatchReadyMacs,
+  hasAnyDispatchReadyMac,
+  pickDefaultMacDeviceId,
+} from "@/features/agent-witch/online-wake";
 import { SEND_TASK_DEVICE_ID_QUERY_PARAM } from "@/features/agent/constants/sendTaskModalQuery.constant";
 import useMyMacDevices from "@/features/agent/hooks/useMyMacDevices";
 import {
@@ -68,7 +72,7 @@ const useMacDeviceSelection = (): {
     return pickDefaultMacDeviceId(devices);
   }, [deviceIdFromQuery, devices, preferredDeviceId]);
 
-  const dispatchReadyMacCount = devices.length;
+  const dispatchReadyMacCount = countDispatchReadyMacs(devices);
 
   return {
     devices,
@@ -79,7 +83,7 @@ const useMacDeviceSelection = (): {
       writePreferredMacDeviceId(deviceId);
     },
     isLoading,
-    hasDispatchReadyMac: devices.length > 0,
+    hasDispatchReadyMac: hasAnyDispatchReadyMac(devices),
     dispatchReadyMacCount,
     devicesHadLoadError,
     serverInstallBundleVersion,
