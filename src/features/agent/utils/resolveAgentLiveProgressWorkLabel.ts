@@ -40,12 +40,14 @@ export const resolveAgentLiveProgressFallbackWorkLabel = (input: {
   readonly started: boolean;
   readonly isFinished: boolean;
   readonly cleaned: string;
+  readonly approvalWaitingLabel?: string | null;
 }): string => {
   if (input.needsInput) {
     return "Waiting for your answer";
   }
   if (input.status === "waiting_approval") {
-    return "Waiting for your approval";
+    const label = (input.approvalWaitingLabel ?? "").trim();
+    return label.length > 0 ? label : "Approval needed — you";
   }
   if (input.started && !input.isFinished) {
     return resolveAgentLiveProgressActivityLabel(input.cleaned);

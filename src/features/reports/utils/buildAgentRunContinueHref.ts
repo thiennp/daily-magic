@@ -2,7 +2,7 @@ import isHarnessWriterAgent from "@/lib/agentWitch/harness/isHarnessWriterAgent"
 import buildAgentComposerHref from "@/lib/library/buildAgentComposerHref";
 import type AgentRunRecord from "@/lib/dispatch/types/AgentRunRecord.type";
 
-/** Open Send-a-task scoped to a finished job on this Mac/browser. */
+/** Open New task scoped to a finished job on this Mac/browser. */
 export const buildAgentRunContinueHref = (input: {
   readonly run: Pick<
     AgentRunRecord,

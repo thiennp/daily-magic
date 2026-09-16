@@ -2,6 +2,7 @@
 
 import AgentLiveProgressFeed from "@/features/agent/AgentLiveProgressFeed";
 import { useAgentLiveTerminalPanelProgress } from "@/features/agent/hooks/useAgentLiveTerminalPanelProgress";
+import SendReadinessApprovalWaitingChip from "@/features/agent/send-readiness/SendReadinessApprovalWaitingChip";
 
 interface AgentLiveTerminalPanelProgressFeedProps {
   readonly panelProgress: ReturnType<typeof useAgentLiveTerminalPanelProgress>;
@@ -22,23 +23,30 @@ export default function AgentLiveTerminalPanelProgressFeed({
   onStopRun,
   onDeleteRun,
 }: AgentLiveTerminalPanelProgressFeedProps) {
+  const approvalWaitingLabel = panelProgress.approvalWaitingLabel;
+
   return (
-    <AgentLiveProgressFeed
-      steps={panelProgress.progress.steps}
-      replyPreview={panelProgress.progress.replyPreview}
-      isWorking={panelProgress.isWorking}
-      isStopping={panelProgress.isStopping}
-      stallState={panelProgress.stallState}
-      connectionStatus={panelProgress.connectionStatus}
-      msSinceLastActivity={panelProgress.msSinceLastActivity}
-      estimateProgress={panelProgress.estimateProgress}
-      wavePlanItems={panelProgress.wavePlanItems}
-      sessionDeviceId={sessionDeviceId}
-      nextActions={nextActions}
-      nextActionsDisabled={nextActionsDisabled}
-      onSelectNextAction={onSelectNextAction}
-      onStopRun={onStopRun}
-      onDeleteRun={onDeleteRun}
-    />
+    <>
+      {approvalWaitingLabel !== null ? (
+        <SendReadinessApprovalWaitingChip label={approvalWaitingLabel} />
+      ) : null}
+      <AgentLiveProgressFeed
+        steps={panelProgress.progress.steps}
+        replyPreview={panelProgress.progress.replyPreview}
+        isWorking={panelProgress.isWorking}
+        isStopping={panelProgress.isStopping}
+        stallState={panelProgress.stallState}
+        connectionStatus={panelProgress.connectionStatus}
+        msSinceLastActivity={panelProgress.msSinceLastActivity}
+        estimateProgress={panelProgress.estimateProgress}
+        wavePlanItems={panelProgress.wavePlanItems}
+        sessionDeviceId={sessionDeviceId}
+        nextActions={nextActions}
+        nextActionsDisabled={nextActionsDisabled}
+        onSelectNextAction={onSelectNextAction}
+        onStopRun={onStopRun}
+        onDeleteRun={onDeleteRun}
+      />
+    </>
   );
 }

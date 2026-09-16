@@ -32,3 +32,18 @@ export const resolveComposerApprovalHelper = (
   input.teamNavEnabled
     ? "A named approver must approve sensitive jobs before they run."
     : "You'll be asked to approve when the job needs it.";
+
+export interface ComposerApprovalWaitingLabelInput extends SoloTeamCopyInput {
+  readonly approverName?: string | null;
+}
+
+/** COPY-P1 — waiting chip/text while a job is pending dispatch approval. */
+export const resolveComposerApprovalWaitingLabel = (
+  input: ComposerApprovalWaitingLabelInput,
+): string => {
+  if (input.teamNavEnabled) {
+    const name = (input.approverName ?? "").trim();
+    return name.length > 0 ? `Waiting on ${name}` : "Waiting on approver";
+  }
+  return "Approval needed — you";
+};

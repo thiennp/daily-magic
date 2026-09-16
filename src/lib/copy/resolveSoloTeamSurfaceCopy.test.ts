@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   resolveComposerApprovalHelper,
+  resolveComposerApprovalWaitingLabel,
   resolveLibraryPageSubtitle,
   resolveLibrarySignedInEmptyBody,
   resolveReportsPageSubtitle,
@@ -45,6 +46,21 @@ describe("resolveSoloTeamSurfaceCopy", () => {
     );
     expect(resolveComposerApprovalHelper({ teamNavEnabled: true })).toContain(
       "named approver",
+    );
+  });
+
+  it("uses solo vs team approval waiting chip copy", () => {
+    expect(resolveComposerApprovalWaitingLabel({ teamNavEnabled: false })).toBe(
+      "Approval needed — you",
+    );
+    expect(
+      resolveComposerApprovalWaitingLabel({
+        teamNavEnabled: true,
+        approverName: "Alex Chen",
+      }),
+    ).toBe("Waiting on Alex Chen");
+    expect(resolveComposerApprovalWaitingLabel({ teamNavEnabled: true })).toBe(
+      "Waiting on approver",
     );
   });
 });
