@@ -17,7 +17,6 @@ import type { HomePopularPresetSummary } from "@/features/home/utils/resolveHome
 import {
   applyPresetCapabilityIdToSearchParams,
   buildPathWithSearchParams,
-  removePresetCapabilityIdFromSearchParams,
 } from "@/features/home/utils/syncHomeMarketingPresetCapabilityQuery";
 
 interface HomeMarketingPopularPresetsGridProps {
@@ -33,20 +32,8 @@ export default function HomeMarketingPopularPresetsGrid({
   const [selectedPreset, setSelectedPreset] =
     useState<HomePopularPresetSummary | null>(null);
   const closeDialog = useCallback(() => {
-    setSelectedPreset((current) => {
-      if (current !== null) {
-        const nextParams = removePresetCapabilityIdFromSearchParams(
-          current.id,
-          searchParams,
-        );
-        router.replace(buildPathWithSearchParams(pathname, nextParams), {
-          scroll: false,
-        });
-      }
-
-      return null;
-    });
-  }, [pathname, router, searchParams]);
+    setSelectedPreset(null);
+  }, []);
   const openPresetDialog = useCallback(
     (preset: HomePopularPresetSummary) => {
       setSelectedPreset(preset);
