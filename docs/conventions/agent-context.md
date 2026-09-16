@@ -42,14 +42,15 @@ Canonical grouped index (what each command reveals, observe-by-task table, macOS
 
 ## Harness files (static context)
 
-| Path                                            | Role                                            |
-| ----------------------------------------------- | ----------------------------------------------- |
-| `.cursor/harness/agent-bootstrap.manifest.json` | Command + workflow routing                      |
-| `.cursor/rules/*.mdc`                           | Always-on or path-scoped invariants             |
-| `.cursor/commands/`                             | Step-by-step playbooks (verify, commit, PR)     |
-| `.cursor/skills/`                               | Optional SOPs referenced by rules               |
-| `.agents/scripts/`                              | Implementations for architecture/verify/harness |
-| `.agents/diagrams/`                             | Supplementary architecture notes                |
+| Path                                            | Role                                                                                                         |
+| ----------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| `.cursor/harness/agent-bootstrap.manifest.json` | Command + workflow routing                                                                                   |
+| `.cursor/rules/*.mdc`                           | Always-on or path-scoped invariants                                                                          |
+| `.cursor/commands/`                             | Step-by-step playbooks (verify, commit, PR)                                                                  |
+| `.cursor/skills/`                               | Optional SOPs referenced by rules                                                                            |
+| `.agents/scripts/`                              | Harness, verify, feature-knowledge, structure (see [.agents/README.md](../../.agents/README.md) → `npm run`) |
+| `.agents/diagrams/`                             | Supplementary architecture notes                                                                             |
+| [AGENTS.md](../../AGENTS.md)                    | Canonical entry; harness paths + context-loading summary                                                     |
 
 ## Anti-patterns
 

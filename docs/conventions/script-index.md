@@ -2,7 +2,7 @@
 
 **Load this page** when you need to know which **npm run** command exposes which part of the repo — without pasting logs into docs. Full task paths: [load-context.md](load-context.md).
 
-There is **no Makefile** in this repo. Primary surface: **`package.json` scripts** + **`scripts/`** (Agent Witch CLIs) + **`.agents/scripts/`** (harness/verify).
+There is **no Makefile** in this repo. Primary surface: **`package.json` scripts** + **`scripts/`** (Agent Witch CLIs) + **`.agents/scripts/`** (harness/verify — map in [.agents/README.md](../../.agents/README.md)).
 
 ## Learn by running (after L1 docs)
 

@@ -4,7 +4,7 @@ Canonical agent instructions for Codex, Cursor, Claude, and compatible tools.
 
 Read **`CLAUDE.md`** for project overview, stack, and verification commands.
 
-**Docs-first map:** [docs/README.md](docs/README.md) · **Task paths:** [docs/conventions/load-context.md](docs/conventions/load-context.md) · **Domains (L1):** [docs/domains/README.md](docs/domains/README.md) · **Script index (observe system):** [docs/conventions/script-index.md](docs/conventions/script-index.md) · **When behavior changes:** [docs/conventions/docs-first.md](docs/conventions/docs-first.md)
+**Docs-first map:** [docs/README.md](docs/README.md) · **Task paths:** [docs/conventions/load-context.md](docs/conventions/load-context.md) · **Reveal order (L0–L4):** [docs/conventions/agent-context.md](docs/conventions/agent-context.md) · **Domains (L1):** [docs/domains/README.md](docs/domains/README.md) · **Script index:** [docs/conventions/script-index.md](docs/conventions/script-index.md) · **When behavior changes:** [docs/conventions/docs-first.md](docs/conventions/docs-first.md)
 
 ## Product vs repository name (read first)
 
@@ -23,8 +23,10 @@ Details: **`docs/product/repo-name-and-hosting.md`** · rule **`rules-product-ho
 - **Rules:** `.cursor/rules/` (registered in `.cursor.json`)
 - **Commands:** `.cursor/commands/`
 - **Skills:** `.cursor/skills/`
-- **Scripts:** `.agents/scripts/`
+- **Scripts:** `.agents/scripts/` (implementations; see [docs/conventions/script-index.md](docs/conventions/script-index.md) for `npm run` wrappers)
 - **Husky:** `.husky/pre-commit`, `.husky/commit-msg`
+
+**Context loading:** read this file → [load-context](docs/conventions/load-context.md) or one [domain](docs/domains/README.md) → optional [script-index](docs/conventions/script-index.md) observe step → `npm run feature-knowledge:query` → feature `README.md` / `KNOWN_ISSUES.md`. Details: [agent-context](docs/conventions/agent-context.md).
 
 ## Verification and commit
 
