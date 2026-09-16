@@ -7,6 +7,7 @@ describe("buildAgentWitchLocalHomePageBody", () => {
     const html = buildAgentWitchLocalHomePageBody({
       wsConnected: true,
       lastHeartbeatAt: new Date().toISOString(),
+      installBundleVersion: "105",
       harnessSetCount: 2,
       knowledgeChunkCount: 10,
       trafficEntryCount: 3,
@@ -21,6 +22,7 @@ describe("buildAgentWitchLocalHomePageBody", () => {
     expect(html).toContain('href="/traffic"');
     expect(html).toContain('href="/errors"');
     expect(html).toContain('href="/status"');
+    expect(html).toContain("<code>105</code>");
     expect(html).toContain("data-heartbeat-at");
     expect(html).toContain("js-heartbeat-elapsed");
     expect(html).not.toContain("local.agentwitch.com");

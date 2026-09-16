@@ -10,6 +10,7 @@ const escapeHtml = (value: string): string =>
 export const buildAgentWitchLocalHomePageBody = (input: {
   readonly wsConnected: boolean;
   readonly lastHeartbeatAt: string | null;
+  readonly installBundleVersion: string;
   readonly harnessSetCount: number;
   readonly knowledgeChunkCount: number;
   readonly trafficEntryCount: number;
@@ -56,6 +57,7 @@ export const buildAgentWitchLocalHomePageBody = (input: {
       <p class="lede">Your on-machine control panel: bridge health, harness, run memory, and traffic — only on this Mac.</p>
       <div class="home-hero-badges">
         ${connectionBadge}
+        <span class="muted">Install bundle <code>${escapeHtml(input.installBundleVersion)}</code></span>
         <span class="muted">Last heartbeat · ${heartbeatElapsed}</span>
       </div>
     </section>

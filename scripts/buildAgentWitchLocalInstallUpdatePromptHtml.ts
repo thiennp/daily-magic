@@ -31,11 +31,18 @@ export const buildAgentWitchLocalInstallUpdatePromptHtml = (
     </section>`;
 };
 
+export type AgentWitchLocalInstallUpdateFlash =
+  "ok" | "failed" | "started" | null;
+
 export const buildAgentWitchLocalInstallUpdateFlashHtml = (
-  flash: "ok" | "failed" | null,
+  flash: AgentWitchLocalInstallUpdateFlash,
 ): string => {
   if (flash === "ok") {
     return `<div class="alert-success">Update finished. This Mac may restart the Agent Witch client.</div>`;
+  }
+
+  if (flash === "started") {
+    return `<div class="alert-success">Install bundle update started. This page may disconnect briefly while the Mac client restarts.</div>`;
   }
 
   if (flash === "failed") {

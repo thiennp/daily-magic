@@ -29,6 +29,7 @@ import { buildAgentWitchLocalHeartbeatElapsedMarkup } from "./buildAgentWitchLoc
 import { formatAgentWitchRelativeTimeAgo } from "./formatAgentWitchRelativeTimeAgo";
 import { buildAgentWitchLocalErrorLogPageBody } from "./buildAgentWitchLocalErrorLogPage";
 import {
+  type AgentWitchLocalInstallUpdateFlash,
   buildAgentWitchLocalInstallUpdateFlashHtml,
   buildAgentWitchLocalInstallUpdateHeaderButtonHtml,
   buildAgentWitchLocalInstallUpdatePromptHtml,
@@ -220,7 +221,7 @@ const buildStatusBody = (input: {
 
 const readLocalAppUpdateFlash = (
   requestUrl: string | undefined,
-): "ok" | "failed" | null => {
+): AgentWitchLocalInstallUpdateFlash => {
   const url = new URL(
     requestUrl ?? "/",
     `http://127.0.0.1:${AGENT_WITCH_LOCAL_APP_PORT}`,
@@ -231,6 +232,9 @@ const readLocalAppUpdateFlash = (
   }
   if (value === "failed") {
     return "failed";
+  }
+  if (value === "started") {
+    return "started";
   }
   return null;
 };
@@ -267,7 +271,7 @@ export const startAgentWitchLocalApp = (input: {
     >[0]["activePath"];
     readonly body: string;
     readonly installVersion?: ReturnType<typeof readInstallVersion> | null;
-    readonly updateFlash?: "ok" | "failed" | null;
+    readonly updateFlash?: AgentWitchLocalInstallUpdateFlash;
   }): Promise<string> => {
     const installVersion = shell.installVersion ?? readInstallVersion();
     const offer = await getInstallUpdateOffer();
@@ -308,6 +312,39 @@ export const startAgentWitchLocalApp = (input: {
   };
   const clearInstallUpdateOfferCache = (): void => {
     installUpdateOfferCache = null;
+  };
+  let localInstallBundleUpdateInFlight = false;
+  const runLocalInstallBundleUpdateInBackground = (): void => {
+    if (localInstallBundleUpdateInFlight) {
+      return;
+    }
+    localInstallBundleUpdateInFlight = true;
+    void triggerAgentWitchLocalInstallBundleUpdate()
+      .catch((error: unknown) => {
+        console.error(
+          "[agent-witch-local-app] install bundle update failed:",
+          error,
+        );
+      })
+      .finally(() => {
+        localInstallBundleUpdateInFlight = false;
+        clearInstallUpdateOfferCache();
+      });
+  };
+  const handleLocalInstallBundleUpdateRequest = async (
+    response: http.ServerResponse,
+  ): Promise<void> => {
+    clearInstallUpdateOfferCache();
+    const offer = await getInstallUpdateOffer();
+    if (!offer.updateAvailable) {
+      response.writeHead(303, { Location: "/?update=ok" });
+      response.end();
+      return;
+    }
+
+    response.writeHead(303, { Location: "/?update=started" });
+    response.end();
+    runLocalInstallBundleUpdateInBackground();
   };
   const ensureLinkCode = (): string => {
     if (fs.existsSync(linkCodePath)) {
@@ -426,14 +463,11 @@ export const startAgentWitchLocalApp = (input: {
         return;
       }
 
-      if (method === "POST" && pathname === "/api/update") {
-        clearInstallUpdateOfferCache();
-        const updateResult = await triggerAgentWitchLocalInstallBundleUpdate();
-        clearInstallUpdateOfferCache();
-        response.writeHead(303, {
-          Location: updateResult.ok ? "/?update=ok" : "/?update=failed",
-        });
-        response.end();
+      if (
+        (method === "GET" || method === "POST") &&
+        pathname === "/api/update"
+      ) {
+        await handleLocalInstallBundleUpdateRequest(response);
         return;
       }
 
@@ -452,6 +486,7 @@ export const startAgentWitchLocalApp = (input: {
             body: buildAgentWitchLocalHomePageBody({
               wsConnected: status.wsConnected,
               lastHeartbeatAt: status.lastHeartbeatAt,
+              installBundleVersion: installBundle.installBundleVersion,
               harnessSetCount: installed.sets.length,
               knowledgeChunkCount: readAgentWitchRagChunks(input.layout).length,
               trafficEntryCount: readAgentWitchLocalTraffic(input.layout)
