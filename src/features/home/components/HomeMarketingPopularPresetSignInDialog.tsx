@@ -4,6 +4,7 @@ import Link from "next/link";
 
 import { Modal } from "@/components/ui/modal";
 import { HOME_MARKETING_POPULAR_PRESET_DIALOG_COPY } from "@/features/home/constants/homeMarketingLandingCopy.constant";
+import { buildHomePopularPresetSignInHref } from "@/features/home/utils/buildHomePopularPresetSignInHref";
 import type { HomePopularPresetSummary } from "@/features/home/utils/resolveHomePopularPresets";
 import {
   MARKETING_CTA_GHOST_CLASSES,
@@ -30,7 +31,7 @@ export default function HomeMarketingPopularPresetSignInDialog({
   }
 
   const copy = HOME_MARKETING_POPULAR_PRESET_DIALOG_COPY;
-  const loginHref = `/login?callbackUrl=${encodeURIComponent("/marketplace")}`;
+  const loginHref = buildHomePopularPresetSignInHref(preset.id);
 
   return (
     <Modal isOpen onClose={onClose} className="max-w-md p-6 sm:p-8">

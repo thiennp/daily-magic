@@ -428,6 +428,18 @@ Document every production bug or UX regression here. Each entry must link to a t
 
 ---
 
+## HOME-037 — Homepage preset lost on sign-in (BUG-005)
+
+**Symptom:** Choosing a popular preset on `/` then **Sign in** sent users to `/login?callbackUrl=%2Fmarketplace` with no preset/workflow context (e.g. “Add vibe coding app feature”).
+
+**Root cause:** `HomeMarketingPopularPresetSignInDialog` hard-coded `callbackUrl=/marketplace` instead of the selected template’s marketplace listing.
+
+**Fix:** `buildHomePopularPresetSignInHref` / `buildHomePopularPresetMarketplaceCallbackPath` encode `capabilityId=preset:<templateId>`; `useMarketplaceInstallFromCapabilityIdQuery` opens the install modal after auth.
+
+**Regression test:** `buildHomePopularPresetSignInHref.test.ts`, `findMarketplaceListingByCapabilityId.test.ts`.
+
+---
+
 ## Adding issues
 
-Use the next ID (`HOME-037`, …). Include symptom, root cause, fix paths, and test file.
+Use the next ID (`HOME-038`, …). Include symptom, root cause, fix paths, and test file.
