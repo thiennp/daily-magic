@@ -1,4 +1,4 @@
-import { MAC_OFFLINE_ERROR } from "@/lib/agentWitch/agentWitchDispatchErrorCode.constant";
+import { MAC_RECONNECTING_QUEUED_ERROR } from "@/lib/agentWitch/agentWitchDispatchErrorCode.constant";
 import { resolveDispatchTargetAgentClient } from "@/lib/agentWitch/resolveDispatchTargetAgentClient";
 import type { BorrowedHarnessExportSet } from "@/lib/harness/types/HarnessExportResult.type";
 import type HarnessItemWriteSpec from "@/lib/agentWitch/harness/types/HarnessItemWriteSpec.type";
@@ -52,7 +52,7 @@ export const applyHarnessExportSetsToDevice = async (
   if (resolved === undefined) {
     return {
       installed: false,
-      errorMessage: MAC_OFFLINE_ERROR,
+      errorMessage: MAC_RECONNECTING_QUEUED_ERROR,
     };
   }
 

@@ -1,4 +1,5 @@
 import { notifyMacDeviceRevoked } from "@/features/agent-witch/macDevices/macDeviceRevokedEvent";
+import { purgeLocalAgentTasksForRevokedDevice } from "@/features/reports/utils/purgeLocalAgentTasksForRevokedDevice";
 import { type DispatchPolicyValue } from "@/lib/dispatch/DispatchPolicy.constant";
 
 import {
@@ -77,6 +78,7 @@ export const revokePairedDevice = async (
   });
 
   if (response.ok) {
+    purgeLocalAgentTasksForRevokedDevice(deviceId);
     notifyMacDeviceRevoked(deviceId);
   }
 

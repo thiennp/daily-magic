@@ -82,9 +82,7 @@ const useMacDeviceSelection = (): {
     return pickDefaultMacDeviceId(devices);
   }, [deviceIdFromQuery, devices, preferredDeviceId]);
 
-  const dispatchReadyMacCount = devices.filter((device) =>
-    canRunWriterDispatchToMac(device),
-  ).length;
+  const dispatchReadyMacCount = devices.length;
 
   return {
     devices,
@@ -95,7 +93,7 @@ const useMacDeviceSelection = (): {
       writePreferredMacDeviceId(deviceId);
     },
     isLoading,
-    hasDispatchReadyMac: dispatchReadyMacCount > 0,
+    hasDispatchReadyMac: devices.length > 0,
     dispatchReadyMacCount,
     devicesHadLoadError,
     serverInstallBundleVersion,

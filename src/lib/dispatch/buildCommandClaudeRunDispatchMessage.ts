@@ -1,0 +1,50 @@
+import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
+import type AgentWitchMessage from "@/lib/agentWitch/types/AgentWitchMessage.type";
+import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
+import { generateAgentRunReportKey } from "@/lib/dispatch/generateAgentRunReportKey";
+import { wrapPromptForAgentRun } from "@/lib/dispatch/wrapPromptForAgentRun";
+
+export const buildCommandClaudeRunDispatchMessage = (input: {
+  readonly prompt: string;
+  readonly agentRunId: string;
+  readonly writerAgent: HarnessWriterAgent;
+  readonly requestId?: string;
+  readonly includeNextActions?: boolean;
+  readonly sessionContinuation?: boolean;
+  readonly sourceRunId?: string;
+  readonly shellSessionId?: string;
+  readonly projectFolderPath?: string;
+}): AgentWitchMessage => {
+  const trimmedProjectFolderPath = input.projectFolderPath?.trim();
+  const reportKey =
+    trimmedProjectFolderPath !== undefined &&
+    trimmedProjectFolderPath.length > 0
+      ? generateAgentRunReportKey()
+      : undefined;
+
+  return {
+    type: AGENT_WITCH_MESSAGE_TYPES.COMMAND_CLAUDE_RUN,
+    payload: {
+      prompt: wrapPromptForAgentRun(input.prompt, {
+        includeNextActions: input.includeNextActions === true,
+      }),
+      agentRunId: input.agentRunId,
+      writerAgent: input.writerAgent,
+      ...(input.sessionContinuation === true
+        ? { sessionContinuation: true }
+        : {}),
+      ...(input.sourceRunId !== undefined
+        ? { sourceRunId: input.sourceRunId }
+        : {}),
+      ...(input.shellSessionId !== undefined
+        ? { shellSessionId: input.shellSessionId }
+        : {}),
+      ...(trimmedProjectFolderPath !== undefined &&
+      trimmedProjectFolderPath.length > 0
+        ? { projectFolderPath: trimmedProjectFolderPath }
+        : {}),
+      ...(reportKey !== undefined ? { reportKey } : {}),
+    },
+    requestId: input.requestId,
+  };
+};

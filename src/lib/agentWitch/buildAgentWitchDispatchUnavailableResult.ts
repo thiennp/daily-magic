@@ -1,6 +1,6 @@
 import {
   AGENT_WITCH_DISPATCH_ERROR_CODES,
-  MAC_OFFLINE_ERROR,
+  MAC_RECONNECTING_QUEUED_ERROR,
   MAC_REPLACED_ERROR,
 } from "@/lib/agentWitch/agentWitchDispatchErrorCode.constant";
 import { classifyAgentWitchDispatchUnavailability } from "@/lib/agentWitch/classifyAgentWitchDispatchUnavailability";
@@ -15,7 +15,7 @@ export type AgentWitchDispatchUnavailableResult =
       readonly kind: "offline";
       readonly errorMessage: string;
       readonly errorCode:
-        | typeof AGENT_WITCH_DISPATCH_ERROR_CODES.MAC_OFFLINE
+        | typeof AGENT_WITCH_DISPATCH_ERROR_CODES.MAC_QUEUED
         | typeof AGENT_WITCH_DISPATCH_ERROR_CODES.MAC_REPLACED;
     };
 
@@ -45,7 +45,7 @@ export const buildAgentWitchDispatchUnavailableResult = async (input: {
 
   return {
     kind: "offline",
-    errorMessage: MAC_OFFLINE_ERROR,
-    errorCode: AGENT_WITCH_DISPATCH_ERROR_CODES.MAC_OFFLINE,
+    errorMessage: MAC_RECONNECTING_QUEUED_ERROR,
+    errorCode: AGENT_WITCH_DISPATCH_ERROR_CODES.MAC_QUEUED,
   };
 };

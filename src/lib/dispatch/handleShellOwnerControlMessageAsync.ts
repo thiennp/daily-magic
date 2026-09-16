@@ -38,7 +38,7 @@ const forwardOwnerShellControl = (
   );
   if (agentClient === undefined) {
     return buildDispatchError(
-      "The Mac for this shell is not online right now.",
+      "The Mac for this shell is reconnecting. Try again in a few seconds.",
       message.requestId,
     );
   }

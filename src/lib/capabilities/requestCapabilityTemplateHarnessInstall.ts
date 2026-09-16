@@ -1,5 +1,5 @@
 import {
-  MAC_OFFLINE_ERROR,
+  MAC_RECONNECTING_QUEUED_ERROR,
   MAC_REPLACED_ERROR,
 } from "@/lib/agentWitch/agentWitchDispatchErrorCode.constant";
 import { classifyAgentWitchDispatchUnavailability } from "@/lib/agentWitch/classifyAgentWitchDispatchUnavailability";
@@ -21,7 +21,7 @@ const buildTemplateHarnessInstallOfflineMessage = async (
 ): Promise<string> =>
   (await classifyAgentWitchDispatchUnavailability(deviceId)) === "replaced"
     ? MAC_REPLACED_ERROR
-    : MAC_OFFLINE_ERROR;
+    : MAC_RECONNECTING_QUEUED_ERROR;
 
 const requestCapabilityTemplateHarnessInstall = async (
   userId: string,

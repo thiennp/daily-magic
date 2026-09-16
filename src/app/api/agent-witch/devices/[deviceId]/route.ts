@@ -1,9 +1,11 @@
+import { cancelQueuedAgentWitchDispatchOutboxForDevice } from "@/lib/agentWitch/cancelQueuedAgentWitchDispatchOutboxForDevice";
 import disconnectAgentClientsForDevice from "@/lib/agentWitch/disconnectAgentClientsForDevice";
 import {
   getAgentWitchHub,
   getAgentWitchPairingStore,
 } from "@/lib/agentWitch/getAgentWitchHub";
 import { revokeAgentWitchDevice } from "@/lib/agentWitch/revokeAgentWitchDevice";
+import { deleteActiveAgentRunsForRevokedDevice } from "@/lib/dispatch/deleteActiveAgentRunsForRevokedDevice";
 import { requireAuth } from "@/lib/auth/requireAuth";
 
 export const dynamic = "force-dynamic";
@@ -38,5 +40,16 @@ export async function DELETE(
   getAgentWitchPairingStore().evictDeviceFromCache(deviceId);
   disconnectAgentClientsForDevice(hub, actor.id, deviceId);
 
-  return Response.json({ ok: true, revoked: true });
+  const [deletedRunIds] = await Promise.all([
+    deleteActiveAgentRunsForRevokedDevice({
+      deviceId,
+      userId: actor.id,
+    }),
+    cancelQueuedAgentWitchDispatchOutboxForDevice({
+      deviceId,
+      userId: actor.id,
+    }),
+  ]);
+
+  return Response.json({ ok: true, revoked: true, deletedRunIds });
 }

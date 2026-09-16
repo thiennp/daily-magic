@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import {
   AGENT_WITCH_DISPATCH_ERROR_CODES,
-  MAC_OFFLINE_ERROR,
+  MAC_RECONNECTING_QUEUED_ERROR,
   MAC_REPLACED_ERROR,
 } from "@/lib/agentWitch/agentWitchDispatchErrorCode.constant";
 import { buildAgentWitchDispatchUnavailableResult } from "@/lib/agentWitch/buildAgentWitchDispatchUnavailableResult";
@@ -50,7 +50,7 @@ describe("buildAgentWitchDispatchUnavailableResult", () => {
     });
   });
 
-  it("reports offline when the row is active but stale", async () => {
+  it("reports queued when the row is active but stale", async () => {
     vi.mocked(findAgentWitchDeviceById).mockResolvedValue(
       buildDeviceRecord({
         lastSeenAt: "2020-01-01T00:00:00.000Z",
@@ -65,8 +65,8 @@ describe("buildAgentWitchDispatchUnavailableResult", () => {
       }),
     ).resolves.toEqual({
       kind: "offline",
-      errorMessage: MAC_OFFLINE_ERROR,
-      errorCode: AGENT_WITCH_DISPATCH_ERROR_CODES.MAC_OFFLINE,
+      errorMessage: MAC_RECONNECTING_QUEUED_ERROR,
+      errorCode: AGENT_WITCH_DISPATCH_ERROR_CODES.MAC_QUEUED,
     });
   });
 

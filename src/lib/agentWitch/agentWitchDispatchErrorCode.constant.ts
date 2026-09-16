@@ -9,8 +9,6 @@ export const AGENT_WITCH_DISPATCH_ERROR_CODES = {
 export const MAC_REPLACED_ERROR =
   "This Mac was re-paired. Reselect it and try again.";
 
-export const MAC_OFFLINE_ERROR = "The selected Mac is not online right now.";
-
 /** Interactive work cannot wait, so the caller is asked to retry shortly. */
 export const MAC_RECONNECTING_RETRY_ERROR =
   "The selected Mac is reconnecting. Try again in a few seconds.";

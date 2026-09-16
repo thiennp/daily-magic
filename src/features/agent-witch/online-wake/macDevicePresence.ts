@@ -51,9 +51,13 @@ export const formatMacPresenceStatusLabel = (
   return "Offline";
 };
 
-/** Writer / shell / send-task need a live agent socket on this server process. */
-export const canRunWriterDispatchToMac = (device: MacDevicePresence): boolean =>
-  resolveMacPresenceTier(device) === "live";
+/** Send-a-task can run live or queue until the Mac checks in again. */
+export const canRunWriterDispatchToMac = (
+  device: MacDevicePresence,
+): boolean => {
+  void device;
+  return true;
+};
 
 /** Mac can receive queued work when live locally or on another server instance. */
 export const canDispatchToMac = (device: MacDevicePresence): boolean => {

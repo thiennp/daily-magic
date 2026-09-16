@@ -1,4 +1,3 @@
-import { MAC_OFFLINE_ERROR } from "@/lib/agentWitch/agentWitchDispatchErrorCode.constant";
 import { resolveDispatchTargetAgentClient } from "@/lib/agentWitch/resolveDispatchTargetAgentClient";
 import type AgentWitchHubRuntime from "@/lib/agentWitch/types/AgentWitchHubRuntime.type";
 import type AgentWitchMessage from "@/lib/agentWitch/types/AgentWitchMessage.type";
@@ -9,11 +8,16 @@ import { broadcastAgentRunRecord } from "@/lib/dispatch/broadcastAgentRunRecord"
 import { updateAgentRunStatus } from "@/lib/dispatch/agentRunQueries";
 import type { PendingDispatchApproval } from "@/lib/dispatch/dispatchApprovalRegistry";
 import {
+  approveDispatchWhenMacOffline,
+  buildNoMacForApprovalError,
+} from "@/lib/dispatch/approveDispatchWhenMacOffline";
+import {
   dispatchClaudeRunToAgent,
   markAgentRunRunning,
   notifyDashboardUser,
 } from "@/lib/dispatch/dispatchWriterRunToAgent";
 import { isLocalMacAgentRunDispatch } from "@/lib/dispatch/isLocalMacAgentRunDispatch";
+import { notifyDispatchApprovalRunning } from "@/lib/dispatch/notifyDispatchApprovalRunning";
 import { DEFAULT_DELEGATED_WRITER_AGENT } from "@/lib/dispatch/resolveDelegatedWriterAgent";
 
 export const denyDispatchApproval = async (
@@ -69,14 +73,23 @@ export const approveDispatchApproval = async (
   });
 
   if (resolved === undefined) {
-    return {
-      type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR,
-      payload: {
-        errorMessage: MAC_OFFLINE_ERROR,
-        runId,
-      },
+    const deviceId = pending.deviceId;
+    if (deviceId === undefined || deviceId === null || deviceId.length === 0) {
+      return buildNoMacForApprovalError(runId, requestId);
+    }
+
+    return approveDispatchWhenMacOffline({
+      runtime,
+      executorUserId: pending.executorUserId,
+      requesterUserId: pending.requesterUserId,
+      deviceId,
+      runId,
+      prompt: pending.prompt,
+      writerAgent,
       requestId,
-    };
+      pendingRequestId: pending.requestId,
+      includeNextActions,
+    });
   }
 
   dispatchClaudeRunToAgent(
@@ -90,15 +103,12 @@ export const approveDispatchApproval = async (
   );
 
   await markAgentRunRunning(runtime, runId);
-
-  notifyDashboardUser(runtime, pending.requesterUserId, {
-    type: AGENT_WITCH_MESSAGE_TYPES.DISPATCH_APPROVAL_RESULT,
-    payload: {
-      runId,
-      status: AgentRunStatus.RUNNING,
-    },
+  notifyDispatchApprovalRunning(
+    runtime,
+    pending.requesterUserId,
+    runId,
     requestId,
-  });
+  );
 
   return {
     type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ACK,

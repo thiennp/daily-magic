@@ -2,17 +2,17 @@ import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessW
 import type AgentWitchHubClient from "@/lib/agentWitch/types/AgentWitchHubClient.type";
 import type AgentWitchHubRuntime from "@/lib/agentWitch/types/AgentWitchHubRuntime.type";
 import type AgentWitchMessage from "@/lib/agentWitch/types/AgentWitchMessage.type";
-import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
 import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
 import { appendAgentRunEvent } from "@/lib/dispatch/agentRunEventQueries";
-import { generateAgentRunReportKey } from "@/lib/dispatch/generateAgentRunReportKey";
-import { wrapPromptForAgentRun } from "@/lib/dispatch/wrapPromptForAgentRun";
 import { updateAgentRunStatus } from "@/lib/dispatch/agentRunQueries";
 import { broadcastAgentRunRecord } from "@/lib/dispatch/broadcastAgentRunRecord";
+import { buildCommandClaudeRunDispatchMessage } from "@/lib/dispatch/buildCommandClaudeRunDispatchMessage";
 import type AgentRunRecord from "@/lib/dispatch/types/AgentRunRecord.type";
 
+export { buildCommandClaudeRunDispatchMessage } from "@/lib/dispatch/buildCommandClaudeRunDispatchMessage";
+
 export const dispatchClaudeRunToAgent = (
-  runtime: AgentWitchHubRuntime,
+  _runtime: AgentWitchHubRuntime,
   agentClient: AgentWitchHubClient,
   prompt: string,
   agentRunId: string,
@@ -24,31 +24,20 @@ export const dispatchClaudeRunToAgent = (
   shellSessionId?: string,
   projectFolderPath?: string,
 ): void => {
-  const trimmedProjectFolderPath = projectFolderPath?.trim();
-  const reportKey =
-    trimmedProjectFolderPath !== undefined &&
-    trimmedProjectFolderPath.length > 0
-      ? generateAgentRunReportKey()
-      : undefined;
-
-  agentClient.send({
-    type: AGENT_WITCH_MESSAGE_TYPES.COMMAND_CLAUDE_RUN,
-    payload: {
-      prompt: wrapPromptForAgentRun(prompt, {
-        includeNextActions,
-      }),
+  void _runtime;
+  agentClient.send(
+    buildCommandClaudeRunDispatchMessage({
+      prompt,
       agentRunId,
       writerAgent,
-      ...(sessionContinuation ? { sessionContinuation: true } : {}),
-      ...(sourceRunId !== undefined ? { sourceRunId } : {}),
-      ...(shellSessionId !== undefined ? { shellSessionId } : {}),
-      ...(trimmedProjectFolderPath !== undefined
-        ? { projectFolderPath: trimmedProjectFolderPath }
-        : {}),
-      ...(reportKey !== undefined ? { reportKey } : {}),
-    },
-    requestId,
-  });
+      requestId,
+      includeNextActions,
+      sessionContinuation,
+      sourceRunId,
+      shellSessionId,
+      projectFolderPath,
+    }),
+  );
 };
 
 export const markAgentRunRunning = async (

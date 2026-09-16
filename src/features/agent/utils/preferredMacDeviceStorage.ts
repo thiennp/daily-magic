@@ -16,6 +16,16 @@ export const writePreferredMacDeviceId = (deviceId: string): void => {
   window.localStorage.setItem(PREFERRED_MAC_DEVICE_STORAGE_KEY, deviceId);
 };
 
+export const clearPreferredMacDeviceIdIfMatches = (deviceId: string): void => {
+  if (typeof window === "undefined" || deviceId.length === 0) {
+    return;
+  }
+
+  if (readPreferredMacDeviceId() === deviceId) {
+    window.localStorage.removeItem(PREFERRED_MAC_DEVICE_STORAGE_KEY);
+  }
+};
+
 export const hasRememberedMacDeviceInList = (
   deviceIds: readonly string[],
 ): boolean => {

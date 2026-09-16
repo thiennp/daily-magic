@@ -1,15 +1,16 @@
 import { describe, expect, it } from "vitest";
 
+import { MAC_RECONNECTING_QUEUED_ERROR } from "@/lib/agentWitch/agentWitchDispatchErrorCode.constant";
 import { readDispatchHttpResponseError } from "@/features/agent/utils/readDispatchHttpResponseError";
 
 describe("readDispatchHttpResponseError", () => {
   it("returns errorMessage when present", () => {
     expect(
       readDispatchHttpResponseError(
-        { errorMessage: "The selected Mac is not online right now." },
+        { errorMessage: MAC_RECONNECTING_QUEUED_ERROR },
         400,
       ),
-    ).toBe("The selected Mac is not online right now.");
+    ).toBe(MAC_RECONNECTING_QUEUED_ERROR);
   });
 
   it("maps unauthorized API errors to a sign-in prompt", () => {

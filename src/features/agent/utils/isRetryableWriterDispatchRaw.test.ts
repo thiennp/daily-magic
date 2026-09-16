@@ -13,15 +13,15 @@ describe("isRetryableWriterDispatchRaw", () => {
         errorMessage: "reconnecting",
       },
     });
-    const offline = JSON.stringify({
+    const queued = JSON.stringify({
       type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR,
       payload: {
-        errorCode: AGENT_WITCH_DISPATCH_ERROR_CODES.MAC_OFFLINE,
-        errorMessage: "The selected Mac is not online right now.",
+        errorCode: AGENT_WITCH_DISPATCH_ERROR_CODES.MAC_QUEUED,
+        errorMessage: "queued",
       },
     });
 
     expect(isRetryableWriterDispatchRaw(reconnecting)).toBe(true);
-    expect(isRetryableWriterDispatchRaw(offline)).toBe(false);
+    expect(isRetryableWriterDispatchRaw(queued)).toBe(false);
   });
 });

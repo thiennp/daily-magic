@@ -27,24 +27,5 @@ export const validateWriterRunDeviceSelection = async (input: {
     };
   }
 
-  if (input.targetDeviceId === undefined) {
-    const onlineAgents = input.runtime.listOnlineAgentClientsForUser(
-      input.executorUserId,
-    );
-
-    if (
-      input.executorUserId === input.senderUserId &&
-      onlineAgents.length > 1
-    ) {
-      return {
-        ok: false,
-        error: buildDispatchError(
-          "Select which Mac should run this task.",
-          input.requestId,
-        ),
-      };
-    }
-  }
-
   return undefined;
 };

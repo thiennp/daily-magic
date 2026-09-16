@@ -1,28 +1,10 @@
+import "./resolveWriterRunAgentClient.test.mocks";
+
 import { describe, expect, it, vi } from "vitest";
 
 import { AgentWitchHub } from "@/lib/agentWitch/agentWitchHub";
 import { AgentWitchPairingStore } from "@/lib/agentWitch/agentWitchPairingStore";
 import { resolveClaudeRunAgentClient } from "@/lib/dispatch/resolveWriterRunAgentClient";
-
-vi.mock("@/lib/agentWitch/isAgentWitchDeviceOwnedByUser", () => ({
-  default: vi.fn(async () => true),
-}));
-
-vi.mock("@/lib/agentWitch/findAgentWitchDeviceByToken", () => ({
-  findAgentWitchDeviceByToken: vi.fn(),
-}));
-
-vi.mock("@/lib/agentWitch/findAgentWitchDeviceById", () => ({
-  findAgentWitchDeviceById: vi.fn(async () => null),
-}));
-
-vi.mock("@/lib/agentWitch/agentWitchConnectionRegistryQueries", () => ({
-  isDeviceLiveOnAnotherInstance: vi.fn(async () => false),
-}));
-
-vi.mock("@/lib/agentWitch/resolveCurrentAgentWitchDeviceId", () => ({
-  resolveCurrentAgentWitchDeviceId: async (id: string) => id,
-}));
 
 import { findAgentWitchDeviceByToken } from "@/lib/agentWitch/findAgentWitchDeviceByToken";
 
@@ -101,9 +83,8 @@ describe("resolveClaudeRunAgentClient", () => {
     });
   });
 
-  it("does not treat a fresh last_seen alone as dispatch-ready (AGENT-022)", async () => {
-    const pairingStore = new AgentWitchPairingStore();
-    const hub = new AgentWitchHub(pairingStore);
+  it("queues when the Mac is not on the hub (AGENT-022)", async () => {
+    const hub = new AgentWitchHub(new AgentWitchPairingStore());
 
     const result = await resolveClaudeRunAgentClient({
       runtime: hub,
@@ -112,12 +93,9 @@ describe("resolveClaudeRunAgentClient", () => {
       targetDeviceId: "device-1",
     });
 
-    expect(result.ok).toBe(false);
-    if (result.ok) {
-      return;
-    }
-    expect(result.error.payload?.errorMessage).toBe(
-      "The selected Mac is not online right now.",
-    );
+    expect(result).toEqual({
+      ok: true,
+      deviceId: "device-1",
+    });
   });
 });

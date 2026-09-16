@@ -1,4 +1,5 @@
 import isNonEmptyString from "@/lib/agentWitch/isNonEmptyString";
+import { MAC_RECONNECTING_RETRY_ERROR } from "@/lib/agentWitch/agentWitchDispatchErrorCode.constant";
 import { MAC_OFFLINE_FOR_ACCOUNT_ERROR } from "@/lib/agentWitch/macOfflineForAccountErrorMessage.constant";
 import type AgentWitchHubClient from "@/lib/agentWitch/types/AgentWitchHubClient.type";
 import type AgentWitchHubRuntime from "@/lib/agentWitch/types/AgentWitchHubRuntime.type";
@@ -91,7 +92,7 @@ export const handleWriterStopMessageAsync = async (
       payload: {
         errorMessage:
           targetDeviceId !== undefined
-            ? "The Mac for this run is not online right now."
+            ? MAC_RECONNECTING_RETRY_ERROR
             : MAC_OFFLINE_FOR_ACCOUNT_ERROR,
       },
       requestId: message.requestId,

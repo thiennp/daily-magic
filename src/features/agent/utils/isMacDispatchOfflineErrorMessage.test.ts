@@ -1,15 +1,16 @@
 import { describe, expect, it } from "vitest";
 
 import { isMacDispatchOfflineErrorMessage } from "@/features/agent/utils/isMacDispatchOfflineErrorMessage";
-import { MAC_REPLACED_ERROR } from "@/lib/agentWitch/agentWitchDispatchErrorCode.constant";
+import {
+  MAC_RECONNECTING_QUEUED_ERROR,
+  MAC_REPLACED_ERROR,
+} from "@/lib/agentWitch/agentWitchDispatchErrorCode.constant";
 import { MAC_OFFLINE_FOR_ACCOUNT_ERROR } from "@/lib/agentWitch/macOfflineForAccountErrorMessage.constant";
 
 describe("isMacDispatchOfflineErrorMessage", () => {
   it("matches known Mac offline dispatch errors", () => {
     expect(
-      isMacDispatchOfflineErrorMessage(
-        "The selected Mac is not online right now.",
-      ),
+      isMacDispatchOfflineErrorMessage(MAC_RECONNECTING_QUEUED_ERROR),
     ).toBe(true);
     expect(
       isMacDispatchOfflineErrorMessage(MAC_OFFLINE_FOR_ACCOUNT_ERROR),

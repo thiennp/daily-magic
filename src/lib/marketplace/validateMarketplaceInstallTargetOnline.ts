@@ -1,7 +1,4 @@
-import {
-  MAC_OFFLINE_ERROR,
-  MAC_REPLACED_ERROR,
-} from "@/lib/agentWitch/agentWitchDispatchErrorCode.constant";
+import { MAC_REPLACED_ERROR } from "@/lib/agentWitch/agentWitchDispatchErrorCode.constant";
 import { classifyAgentWitchDispatchUnavailability } from "@/lib/agentWitch/classifyAgentWitchDispatchUnavailability";
 import { getAgentWitchHub } from "@/lib/agentWitch/getAgentWitchHub";
 import { isAgentWitchDeviceOrSuccessorOwnedByUser } from "@/lib/agentWitch/isAgentWitchDeviceOrSuccessorOwnedByUser";
@@ -32,5 +29,5 @@ export const validateMarketplaceInstallTarget = async (
       : await validateMarketplaceInstallDeviceOwnership(actorUserId, deviceId);
   }
 
-  return MAC_OFFLINE_ERROR;
+  return null;
 };

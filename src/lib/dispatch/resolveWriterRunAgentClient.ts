@@ -1,12 +1,8 @@
-import {
-  MAC_OFFLINE_FOR_ACCOUNT_ERROR,
-  TEAMMATE_MAC_OFFLINE_ERROR,
-} from "@/lib/agentWitch/macOfflineForAccountErrorMessage.constant";
 import type AgentWitchHubClient from "@/lib/agentWitch/types/AgentWitchHubClient.type";
 import type AgentWitchHubRuntime from "@/lib/agentWitch/types/AgentWitchHubRuntime.type";
-import { buildTargetMacOfflineDispatchError } from "@/lib/dispatch/buildTargetMacOfflineDispatchError";
 import { buildDispatchError } from "@/lib/dispatch/buildDispatchError";
 import { resolveLiveWriterAgentForRun } from "@/lib/dispatch/resolveLiveWriterAgentForRun";
+import { resolveWriterDispatchDeviceId } from "@/lib/dispatch/resolveWriterDispatchDeviceId";
 import { validateWriterRunDeviceSelection } from "@/lib/dispatch/validateWriterRunDeviceSelection";
 
 export const resolveTargetDeviceId = (
@@ -54,24 +50,19 @@ export const resolveClaudeRunAgentClient = async (input: {
     };
   }
 
-  if (input.targetDeviceId !== undefined) {
-    return {
-      ok: false,
-      error: await buildTargetMacOfflineDispatchError(
-        input.targetDeviceId,
-        input.executorUserId,
-        input.requestId,
-      ),
-    };
+  const deviceResolution = await resolveWriterDispatchDeviceId({
+    executorUserId: input.executorUserId,
+    senderUserId: input.senderUserId,
+    targetDeviceId: input.targetDeviceId,
+    requestId: input.requestId,
+  });
+
+  if (!deviceResolution.ok) {
+    return deviceResolution;
   }
 
   return {
-    ok: false,
-    error: buildDispatchError(
-      input.executorUserId === input.senderUserId
-        ? MAC_OFFLINE_FOR_ACCOUNT_ERROR
-        : TEAMMATE_MAC_OFFLINE_ERROR,
-      input.requestId,
-    ),
+    ok: true,
+    deviceId: deviceResolution.deviceId,
   };
 };
