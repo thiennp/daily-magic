@@ -17,11 +17,11 @@ Teams and individuals who want a **single place** to trigger trusted agent runs 
 
 ## Get started
 
-|                        |                                                                                                 |
-| ---------------------- | ----------------------------------------------------------------------------------------------- |
-| **New contributor**    | [docs/overview.md](docs/overview.md) → [docs/development/setup.md](docs/development/setup.md)   |
-| **Full docs index**    | [docs/README.md](docs/README.md) (architecture, conventions, ADRs, product)                     |
-| **AI / coding agents** | [AGENTS.md](AGENTS.md) → [docs/conventions/agent-context.md](docs/conventions/agent-context.md) |
+|                        |                                                                                               |
+| ---------------------- | --------------------------------------------------------------------------------------------- |
+| **New contributor**    | [docs/overview.md](docs/overview.md) → [docs/development/setup.md](docs/development/setup.md) |
+| **Full docs index**    | [docs/README.md](docs/README.md) (architecture, conventions, ADRs, product)                   |
+| **AI / coding agents** | [AGENTS.md](AGENTS.md) → [docs/conventions/load-context.md](docs/conventions/load-context.md) |
 
 Query indexed docs before large feature edits:
 

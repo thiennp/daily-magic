@@ -2,7 +2,16 @@
 
 **[Overview](overview.md)** — what the product is and where to go next.
 
-This tree is the **primary map** of the system; `src/` is the implementation. Markdown here and under `src/features/*/README.md` is indexed for agents via `npm run feature-knowledge:query`.
+**[Load context](conventions/load-context.md)** — pick a minimal path (bugfix, feature, refactor, deploy, architecture). **Do not** read this entire tree for one task.
+
+| Layer        | Doc                                                |
+| ------------ | -------------------------------------------------- |
+| L0 Index     | This file + [domains/README.md](domains/README.md) |
+| L1 Domain    | [domains/*.md](domains/README.md) (~1 min each)    |
+| L2 Module    | `src/features/<slug>/README.md`                    |
+| L3 Deep dive | development/, adr/, agent-witch/, etc.             |
+
+Model: [conventions/progressive-disclosure.md](conventions/progressive-disclosure.md). Markdown here and under `src/features/*/README.md` is indexed via `npm run feature-knowledge:query`.
 
 ## Architecture
 
@@ -17,10 +26,16 @@ This tree is the **primary map** of the system; `src/` is the implementation. Ma
 - [Deploy to production + Neon](development/deployment.md)
 - [Quality gates and CI](development/quality-gates.md)
 
+## Domains (L1)
+
+- [Domain map](domains/README.md) — one entry per product area, “read next if…” only
+
 ## Conventions
 
-- [Docs-first maintenance](conventions/docs-first.md) — what to update when code changes
-- [Agent context & script map](conventions/agent-context.md) — how AI agents load context efficiently
+- [Load context — task paths](conventions/load-context.md)
+- [Progressive disclosure](conventions/progressive-disclosure.md)
+- [Docs-first maintenance](conventions/docs-first.md)
+- [Agent context & script map](conventions/agent-context.md)
 
 ## Agent Witch (Mac bridge)
 

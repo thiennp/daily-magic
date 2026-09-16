@@ -19,14 +19,16 @@ One codebase: the repo folder name is not a separate product from Agent Witch. D
 
 ## Where to read next
 
-| Audience              | Start here                                                                                                                                  |
-| --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
-| New human contributor | [development/setup.md](development/setup.md) → [architecture/codebase-map.md](architecture/codebase-map.md)                                 |
-| Changing behavior     | [conventions/docs-first.md](conventions/docs-first.md)                                                                                      |
-| AI / coding agents    | [conventions/agent-context.md](conventions/agent-context.md) and root [AGENTS.md](../AGENTS.md)                                             |
-| Mac bridge / install  | [agent-witch/local-bridge.md](agent-witch/local-bridge.md)                                                                                  |
-| Production deploy     | [development/deployment.md](development/deployment.md) + [adr/0006-production-hosting-and-neon.md](adr/0006-production-hosting-and-neon.md) |
+| Audience                | Start here                                                                                                   |
+| ----------------------- | ------------------------------------------------------------------------------------------------------------ |
+| Any task (minimal path) | [conventions/load-context.md](conventions/load-context.md)                                                   |
+| One product area only   | [domains/README.md](domains/README.md)                                                                       |
+| New human contributor   | [development/setup.md](development/setup.md) → one [domain entry](domains/README.md)                         |
+| Changing behavior       | [conventions/docs-first.md](conventions/docs-first.md)                                                       |
+| AI / coding agents      | [AGENTS.md](../AGENTS.md) → [load-context.md](conventions/load-context.md)                                   |
+| Mac bridge / install    | [agent-witch/local-bridge.md](agent-witch/local-bridge.md)                                                   |
+| Production deploy       | [development/deployment.md](development/deployment.md) + [adr/0006](adr/0006-production-hosting-and-neon.md) |
 
 ## Documentation map
 
-The [docs README](README.md) is the table of contents for this tree. Feature-level detail lives under `src/features/<slug>/` (`README.md`, `AGENTS.md`, `KNOWN_ISSUES.md`) and is indexed for search — see [conventions/agent-context.md](conventions/agent-context.md).
+The [docs README](README.md) is the L0 index; [domains](domains/README.md) are L1. Feature detail is L2 under `src/features/<slug>/`. Layers: [progressive-disclosure.md](conventions/progressive-disclosure.md).

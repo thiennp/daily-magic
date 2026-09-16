@@ -1,21 +1,21 @@
 # Agent context and script map
 
-How coding agents (Cursor, Claude, Codex, etc.) should **reveal** system knowledge without loading the whole repo. This repo already wires context through **entry files → harness → feature knowledge → module docs**.
+How coding agents (Cursor, Claude, Codex, etc.) should **reveal** system knowledge without loading the whole repo.
+
+**Start here for task paths:** [load-context.md](load-context.md) (bugfix, feature, refactor, deploy, architecture). **Layers L0–L4:** [progressive-disclosure.md](progressive-disclosure.md). **Domain pick list:** [domains/README.md](../domains/README.md).
 
 ## Recommended reveal order (token-efficient)
 
 Use the **smallest** source that answers the question; stop when you have enough to edit safely.
 
-| Step | Source                                                                      | When                                                                                                 |
-| ---- | --------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
-| 1    | [AGENTS.md](../../AGENTS.md)                                                | Every task — product name, harness paths, Cloud VM DB caveats                                        |
-| 2    | [CLAUDE.md](../../CLAUDE.md)                                                | Stack, main routes, Agent Witch local commands                                                       |
-| 3    | `npm run harness:bootstrap -- --match="<user intent excerpt>"`              | Attach the matched `.cursor/commands/*.md` playbook and/or run a workflow (`verify`, `commit`, `pr`) |
-| 4    | `npm run feature-knowledge:query -- "<symptom or area>" [--feature=<slug>]` | Before substantive edits under `src/features/`                                                       |
-| 5    | `src/features/<slug>/README.md`, `KNOWN_ISSUES.md`, `AGENTS.md`             | Feature-specific behavior and landmines                                                              |
-| 6    | `docs/` topic page                                                          | Architecture, deploy, product glossary                                                               |
-| 7    | ADR under `docs/adr/`                                                       | **Why** a constraint exists (WebSocket server, hosting, dispatch outbox)                             |
-| 8    | Source code                                                                 | Implementation detail after the above                                                                |
+| Step | Layer | Source                                                                            | When                                                           |
+| ---- | ----- | --------------------------------------------------------------------------------- | -------------------------------------------------------------- |
+| 1    | —     | [AGENTS.md](../../AGENTS.md)                                                      | Every task — product name, harness paths, Cloud VM DB caveats  |
+| 2    | L0/L1 | [load-context.md](load-context.md) or one [domain entry](../domains/README.md)    | Match task type; do not read all domains                       |
+| 3    | —     | `npm run harness:bootstrap -- --match="…"`                                        | Matched command playbook / workflow (`verify`, `commit`, `pr`) |
+| 4    | L2    | `feature-knowledge:query` then `src/features/<slug>/README.md`, `KNOWN_ISSUES.md` | Before substantive feature edits                               |
+| 5    | L3    | Linked deep dive or ADR from domain “read next if…”                               | Only when L1/L2 point here                                     |
+| 6    | L4    | Source under `src/app`, `src/lib`, `server.ts`                                    | Implementation after orientation                               |
 
 **Slug** for cross-cutting docs in feature-knowledge is `docs` (all markdown under `docs/` is indexed). Example:
 

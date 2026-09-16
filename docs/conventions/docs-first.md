@@ -14,7 +14,8 @@ Treat markdown under `docs/` and feature folders as the **canonical map**. Code 
 
 | Change                                     | Update                                                                                                                                                               |
 | ------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| New or renamed route/API                   | Registry JSON + feature `README.md`; architecture map if user-facing route table changes                                                                             |
+| Scope of a product area (multiple slugs)   | Matching `docs/domains/<area>.md` (L1)                                                                                                                               |
+| New or renamed route/API                   | Registry JSON + feature `README.md` (L2); architecture map if user-facing route table changes                                                                        |
 | Agent Witch bridge, WS, presence, dispatch | ADR or `KNOWN_ISSUES.md`; [agent-witch/local-bridge.md](../agent-witch/local-bridge.md) for install/runtime                                                          |
 | Deploy / hosting / env                     | [development/deployment.md](../development/deployment.md), ADR 0006                                                                                                  |
 | Security boundary                          | [security/threat-model.md](../security/threat-model.md)                                                                                                              |

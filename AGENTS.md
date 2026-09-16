@@ -4,7 +4,7 @@ Canonical agent instructions for Codex, Cursor, Claude, and compatible tools.
 
 Read **`CLAUDE.md`** for project overview, stack, and verification commands.
 
-**Docs-first map:** [docs/README.md](docs/README.md) · **Agent reveal order & script map:** [docs/conventions/agent-context.md](docs/conventions/agent-context.md) · **What to update when behavior changes:** [docs/conventions/docs-first.md](docs/conventions/docs-first.md)
+**Docs-first map:** [docs/README.md](docs/README.md) · **Task paths (minimal docs):** [docs/conventions/load-context.md](docs/conventions/load-context.md) · **Domain entries (L1):** [docs/domains/README.md](docs/domains/README.md) · **Scripts:** [docs/conventions/agent-context.md](docs/conventions/agent-context.md) · **When behavior changes:** [docs/conventions/docs-first.md](docs/conventions/docs-first.md)
 
 ## Product vs repository name (read first)
 
