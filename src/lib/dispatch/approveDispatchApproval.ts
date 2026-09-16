@@ -1,3 +1,5 @@
+import { MAC_OFFLINE_ERROR } from "@/lib/agentWitch/agentWitchDispatchErrorCode.constant";
+import { resolveDispatchTargetAgentClient } from "@/lib/agentWitch/resolveDispatchTargetAgentClient";
 import type AgentWitchHubRuntime from "@/lib/agentWitch/types/AgentWitchHubRuntime.type";
 import type AgentWitchMessage from "@/lib/agentWitch/types/AgentWitchMessage.type";
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
@@ -51,10 +53,11 @@ export const approveDispatchApproval = async (
   runId: string,
   requestId?: string,
 ): Promise<AgentWitchMessage> => {
-  const agentClient = runtime.findAgentClientForUser(
-    pending.executorUserId,
-    pending.deviceId ?? undefined,
-  );
+  const resolved = await resolveDispatchTargetAgentClient({
+    runtime,
+    userId: pending.executorUserId,
+    deviceId: pending.deviceId ?? undefined,
+  });
   const writerAgent = isHarnessWriterAgent(pending.writerAgent)
     ? pending.writerAgent
     : DEFAULT_DELEGATED_WRITER_AGENT;
@@ -65,26 +68,26 @@ export const approveDispatchApproval = async (
     groupId: pending.groupId,
   });
 
-  if (agentClient !== undefined) {
-    dispatchClaudeRunToAgent(
-      runtime,
-      agentClient,
-      pending.prompt,
-      runId,
-      writerAgent,
-      pending.requestId,
-      includeNextActions,
-    );
-  } else {
+  if (resolved === undefined) {
     return {
       type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR,
       payload: {
-        errorMessage: "The selected Mac is not online right now.",
+        errorMessage: MAC_OFFLINE_ERROR,
         runId,
       },
       requestId,
     };
   }
+
+  dispatchClaudeRunToAgent(
+    runtime,
+    resolved.agentClient,
+    pending.prompt,
+    runId,
+    writerAgent,
+    pending.requestId,
+    includeNextActions,
+  );
 
   await markAgentRunRunning(runtime, runId);
 

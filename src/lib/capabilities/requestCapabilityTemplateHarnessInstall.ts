@@ -1,4 +1,9 @@
-import { findEnrichedAgentClientForUser } from "@/lib/agentWitch/findEnrichedAgentClientForUser";
+import {
+  MAC_OFFLINE_ERROR,
+  MAC_REPLACED_ERROR,
+} from "@/lib/agentWitch/agentWitchDispatchErrorCode.constant";
+import { classifyAgentWitchDispatchUnavailability } from "@/lib/agentWitch/classifyAgentWitchDispatchUnavailability";
+import { resolveDispatchTargetAgentClient } from "@/lib/agentWitch/resolveDispatchTargetAgentClient";
 import type AgentWitchHubClient from "@/lib/agentWitch/types/AgentWitchHubClient.type";
 import { getAgentWitchHub } from "@/lib/agentWitch/getAgentWitchHub";
 import type { CapabilityTemplateHarness } from "@/lib/capabilities/templates/types/CapabilityTemplate.type";
@@ -11,28 +16,34 @@ export interface TemplateHarnessInstallResult {
   readonly errorMessage: string | null;
 }
 
+const buildTemplateHarnessInstallOfflineMessage = async (
+  deviceId: string,
+): Promise<string> =>
+  (await classifyAgentWitchDispatchUnavailability(deviceId)) === "replaced"
+    ? MAC_REPLACED_ERROR
+    : MAC_OFFLINE_ERROR;
+
 const requestCapabilityTemplateHarnessInstall = async (
   userId: string,
   harness: CapabilityTemplateHarness,
   deviceId?: string,
 ): Promise<TemplateHarnessInstallResult> => {
-  const hub = getAgentWitchHub();
-  const agentClient = await findEnrichedAgentClientForUser(
-    hub,
+  const resolved = await resolveDispatchTargetAgentClient({
+    runtime: getAgentWitchHub(),
     userId,
     deviceId,
-  );
+  });
 
-  if (agentClient === undefined) {
+  if (resolved === undefined) {
     return {
       installed: false,
       errorMessage: deviceId
-        ? "The selected Mac is not online right now."
+        ? await buildTemplateHarnessInstallOfflineMessage(deviceId)
         : "Mac offline. Open Agent with Agent Witch running to install the rules bundle.",
     };
   }
 
-  sendTemplateHarnessToAgent(agentClient, harness);
+  sendTemplateHarnessToAgent(resolved.agentClient, harness);
 
   return {
     installed: true,

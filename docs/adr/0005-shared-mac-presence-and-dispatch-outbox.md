@@ -98,15 +98,23 @@ Devices API and writer dispatch must use the **same** hub matching rules:
 - `collectLiveAgentWitchDeviceIdsForUser` — keys of that map (`live` tier).
 - `findEnrichedAgentClientForUser` — `map.get(deviceId)` for targeted dispatch.
 - `retargetWriterRunToSoleLiveMac` — when the requested `targetDeviceId` is stale but exactly one live agent exists on this hub, retarget to the canonical device id (token-resolved id preferred over stale hub `deviceId`).
+- `resolveDispatchTargetAgentClient` — the single entry point every dispatch caller uses. It applies, in order: exact live match, forward supersession resolution, sole-live-Mac retarget, and returns the live client plus the **resolved** device id. `resolveLiveWriterAgentForRun` delegates to it.
 
 Do not resolve live Macs via `findAgentClientForUser` + raw `client.deviceId` alone; that diverged from the devices API and caused “online in UI, offline on dispatch”.
+
+### Device supersession
+
+`agent_witch_devices.superseded_by_device_id` (nullable self-referencing FK) records which row replaced a revoked one. Sibling revocation during heartbeat consolidation sets it, so a device id held by a browser query param, a stored selection, or an old `agent_runs` row stays resolvable forward via `resolveCurrentAgentWitchDeviceId` (bounded hop count, cycle-safe).
+
+Freshness is never derived from a revoked row: `last_seen_at` stops advancing once `revoked_at` is set, so a revoked row is classified as replaced rather than stale.
 
 ### Response contract
 
 Structured `errorCode` on dispatch failures:
 
 - `mac_reconnecting` — registry or recent heartbeat suggests handoff / reconnect (client may retry writer dispatch).
-- `mac_offline` — no live socket and not recently seen.
+- `mac_offline` — the targeted row is active, has no live socket, and was not recently seen.
+- `mac_replaced` — the targeted row was revoked by a re-pair and no successor is live; the user must reselect the Mac.
 - `mac_queued` — outbox accepted queueable work.
 
 `buildTargetMacOfflineDispatchError` and `deliverOrQueueAgentWitchDispatchMessage` implement the split. New code branches on `errorCode`, not string equality on `errorMessage`.
@@ -128,5 +136,6 @@ Shipped in stages with tests: registry + migration; lifecycle wiring; presence t
 
 - `src/lib/agentWitch/resolveLiveAgentClientsByDeviceIdForUser.ts`
 - `src/lib/dispatch/resolveLiveWriterAgentForRun.ts`, `retargetWriterRunToSoleLiveMac.ts`
+- `src/lib/agentWitch/resolveDispatchTargetAgentClient.ts`, `resolveCurrentAgentWitchDeviceId.ts`
 - `src/features/agent-witch/KNOWN_ISSUES.md` (OPEN-001–003)
 - ADR 0002 (WebSocket server), ADR 0006 (production hosting)

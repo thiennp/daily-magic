@@ -1,26 +1,20 @@
-import { AGENT_WITCH_DISPATCH_ERROR_CODES } from "@/lib/agentWitch/agentWitchDispatchErrorCode.constant";
 import { listFreshRegistryDeviceIdsForUser } from "@/lib/agentWitch/agentWitchConnectionRegistry";
+import {
+  MAC_RECONNECTING_QUEUED_ERROR,
+  MAC_RECONNECTING_RETRY_ERROR,
+} from "@/lib/agentWitch/agentWitchDispatchErrorCode.constant";
+import type { AgentWitchDispatchUnavailableResult } from "@/lib/agentWitch/buildAgentWitchDispatchUnavailableResult";
+import { buildAgentWitchDispatchUnavailableResult } from "@/lib/agentWitch/buildAgentWitchDispatchUnavailableResult";
 import { enqueueAgentWitchDispatchOutbox } from "@/lib/agentWitch/enqueueAgentWitchDispatchOutbox";
-import { findEnrichedAgentClientForUser } from "@/lib/agentWitch/findEnrichedAgentClientForUser";
-import { findAgentWitchDeviceById } from "@/lib/agentWitch/findAgentWitchDeviceById";
 import { getAgentWitchHub } from "@/lib/agentWitch/getAgentWitchHub";
-import { isAgentWitchDeviceRecentlySeen } from "@/lib/agentWitch/agentWitchHeartbeat.constant";
 import { isQueueableAgentWitchDispatchMessageType } from "@/lib/agentWitch/isQueueableAgentWitchDispatchMessageType";
+import { resolveDispatchTargetAgentClient } from "@/lib/agentWitch/resolveDispatchTargetAgentClient";
 import type AgentWitchMessage from "@/lib/agentWitch/types/AgentWitchMessage.type";
 
 export type DeliverOrQueueAgentWitchDispatchResult =
   | { readonly kind: "delivered" }
   | { readonly kind: "queued"; readonly outboxId: string }
-  | {
-      readonly kind: "retry";
-      readonly errorMessage: string;
-      readonly errorCode: typeof AGENT_WITCH_DISPATCH_ERROR_CODES.MAC_RECONNECTING;
-    }
-  | {
-      readonly kind: "offline";
-      readonly errorMessage: string;
-      readonly errorCode: typeof AGENT_WITCH_DISPATCH_ERROR_CODES.MAC_OFFLINE;
-    };
+  | AgentWitchDispatchUnavailableResult;
 
 export const deliverOrQueueAgentWitchDispatchMessage = async (input: {
   readonly userId: string;
@@ -28,38 +22,22 @@ export const deliverOrQueueAgentWitchDispatchMessage = async (input: {
   readonly message: AgentWitchMessage;
   readonly idempotencyKey: string;
 }): Promise<DeliverOrQueueAgentWitchDispatchResult> => {
-  const hub = getAgentWitchHub();
-  const agentClient = await findEnrichedAgentClientForUser(
-    hub,
-    input.userId,
-    input.deviceId,
-  );
+  const resolved = await resolveDispatchTargetAgentClient({
+    runtime: getAgentWitchHub(),
+    userId: input.userId,
+    deviceId: input.deviceId,
+  });
 
-  if (agentClient !== undefined) {
-    agentClient.send(input.message);
+  if (resolved !== undefined) {
+    resolved.agentClient.send(input.message);
     return { kind: "delivered" };
   }
 
   if (!isQueueableAgentWitchDispatchMessageType(input.message.type)) {
-    const device = await findAgentWitchDeviceById(input.deviceId);
-    const recentlySeen =
-      device !== null &&
-      isAgentWitchDeviceRecentlySeen(device.lastSeenAt, Date.now());
-
-    if (recentlySeen) {
-      return {
-        kind: "retry",
-        errorMessage:
-          "The selected Mac is reconnecting. Try again in a few seconds.",
-        errorCode: AGENT_WITCH_DISPATCH_ERROR_CODES.MAC_RECONNECTING,
-      };
-    }
-
-    return {
-      kind: "offline",
-      errorMessage: "The selected Mac is not online right now.",
-      errorCode: AGENT_WITCH_DISPATCH_ERROR_CODES.MAC_OFFLINE,
-    };
+    return buildAgentWitchDispatchUnavailableResult({
+      deviceId: input.deviceId,
+      reconnectingMessage: MAC_RECONNECTING_RETRY_ERROR,
+    });
   }
 
   const registryDeviceIds = await listFreshRegistryDeviceIdsForUser(
@@ -76,23 +54,8 @@ export const deliverOrQueueAgentWitchDispatchMessage = async (input: {
     return { kind: "queued", outboxId };
   }
 
-  const device = await findAgentWitchDeviceById(input.deviceId);
-  const recentlySeen =
-    device !== null &&
-    isAgentWitchDeviceRecentlySeen(device.lastSeenAt, Date.now());
-
-  if (recentlySeen) {
-    return {
-      kind: "retry",
-      errorMessage:
-        "The selected Mac is reconnecting. Your task will send when it checks in.",
-      errorCode: AGENT_WITCH_DISPATCH_ERROR_CODES.MAC_RECONNECTING,
-    };
-  }
-
-  return {
-    kind: "offline",
-    errorMessage: "The selected Mac is not online right now.",
-    errorCode: AGENT_WITCH_DISPATCH_ERROR_CODES.MAC_OFFLINE,
-  };
+  return buildAgentWitchDispatchUnavailableResult({
+    deviceId: input.deviceId,
+    reconnectingMessage: MAC_RECONNECTING_QUEUED_ERROR,
+  });
 };

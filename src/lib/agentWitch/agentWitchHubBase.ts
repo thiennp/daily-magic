@@ -72,10 +72,10 @@ export class AgentWitchHubBase {
     return listSortedHarnessManifestReports(this.manifestByAgentClientId);
   }
 
-  handleMessage(
+  async handleMessage(
     senderId: string,
     message: AgentWitchMessage,
-  ): AgentWitchMessage | null {
+  ): Promise<AgentWitchMessage | null> {
     return dispatchAgentWitchHubMessage(
       this as unknown as AgentWitchHubRuntime,
       this.clients,

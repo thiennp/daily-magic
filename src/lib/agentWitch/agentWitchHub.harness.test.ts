@@ -4,6 +4,10 @@ vi.mock("@/lib/harness/syncHarnessCatalogFromReport", () => ({
   syncHarnessCatalogFromReport: vi.fn(async () => undefined),
 }));
 
+vi.mock("@/lib/agentWitch/findAgentWitchDeviceByToken", () => ({
+  findAgentWitchDeviceByToken: vi.fn(async () => null),
+}));
+
 import { AgentWitchHub } from "./agentWitchHub";
 import { AgentWitchPairingStore } from "./agentWitchPairingStore";
 import {
@@ -27,7 +31,7 @@ describe("AgentWitchHub harness", () => {
     const agent = createCollector();
     await registerPairedClients(hub, pairingStore, agent.send, () => undefined);
 
-    const response = hub.handleMessage("dash-1", {
+    const response = await hub.handleMessage("dash-1", {
       type: AGENT_WITCH_MESSAGE_TYPES.HARNESS_REQUEST,
       payload: {
         writerAgent: "claude-cli",
@@ -65,7 +69,7 @@ describe("AgentWitchHub harness", () => {
       dashboard.send,
     );
 
-    const response = hub.handleMessage("agent-1", {
+    const response = await hub.handleMessage("agent-1", {
       type: AGENT_WITCH_MESSAGE_TYPES.HARNESS_MANIFEST_REPORT,
       payload: {
         hostname: "local-mac",
@@ -94,7 +98,7 @@ describe("AgentWitchHub harness", () => {
       dashboard.send,
     );
 
-    hub.handleMessage("agent-1", {
+    await hub.handleMessage("agent-1", {
       type: AGENT_WITCH_MESSAGE_TYPES.HARNESS_REQUEST_RESULT,
       payload: {
         success: true,

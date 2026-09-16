@@ -74,15 +74,28 @@ export const insertAgentWitchDeviceClaim = async (input: {
 export const revokeSiblingDevicesWithSameLabel = async (input: {
   readonly keepDeviceId: string;
   readonly userId: string;
-  readonly deviceLabel: string;
+  readonly deviceLabels: readonly string[];
 }): Promise<void> => {
+  const matchedLabels = [
+    ...new Set(
+      input.deviceLabels
+        .map((deviceLabel) => deviceLabel.trim())
+        .filter((deviceLabel) => deviceLabel.length > 0),
+    ),
+  ];
+
+  if (matchedLabels.length === 0) {
+    return;
+  }
+
   const sql = getSql();
   await sql`
     UPDATE agent_witch_devices
-    SET revoked_at = NOW()
+    SET revoked_at = NOW(),
+        superseded_by_device_id = ${input.keepDeviceId}
     WHERE user_id = ${input.userId}
       AND revoked_at IS NULL
-      AND device_label = ${input.deviceLabel.trim()}
+      AND device_label = ANY(${matchedLabels}::text[])
       AND id <> ${input.keepDeviceId}
   `;
 };

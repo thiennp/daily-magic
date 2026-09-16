@@ -1,7 +1,11 @@
-import { AGENT_WITCH_DISPATCH_ERROR_CODES } from "@/lib/agentWitch/agentWitchDispatchErrorCode.constant";
+import {
+  AGENT_WITCH_DISPATCH_ERROR_CODES,
+  MAC_OFFLINE_ERROR,
+  MAC_RECONNECTING_RETRY_ERROR,
+  MAC_REPLACED_ERROR,
+} from "@/lib/agentWitch/agentWitchDispatchErrorCode.constant";
 import { isDeviceLiveOnAnotherInstance } from "@/lib/agentWitch/agentWitchConnectionRegistryQueries";
-import { findAgentWitchDeviceById } from "@/lib/agentWitch/findAgentWitchDeviceById";
-import { isAgentWitchDeviceRecentlySeen } from "@/lib/agentWitch/agentWitchHeartbeat.constant";
+import { classifyAgentWitchDispatchUnavailability } from "@/lib/agentWitch/classifyAgentWitchDispatchUnavailability";
 import { buildDispatchError } from "@/lib/dispatch/buildDispatchError";
 
 export const buildTargetMacOfflineDispatchError = async (
@@ -11,27 +15,33 @@ export const buildTargetMacOfflineDispatchError = async (
 ): Promise<ReturnType<typeof buildDispatchError>> => {
   if (await isDeviceLiveOnAnotherInstance(executorUserId, targetDeviceId)) {
     return buildDispatchError(
-      "The selected Mac is reconnecting. Try again in a few seconds.",
+      MAC_RECONNECTING_RETRY_ERROR,
       requestId,
       AGENT_WITCH_DISPATCH_ERROR_CODES.MAC_RECONNECTING,
     );
   }
 
-  const device = await findAgentWitchDeviceById(targetDeviceId);
-  const recentlySeen =
-    device !== null &&
-    isAgentWitchDeviceRecentlySeen(device.lastSeenAt, Date.now());
+  const unavailability =
+    await classifyAgentWitchDispatchUnavailability(targetDeviceId);
 
-  if (recentlySeen) {
+  if (unavailability === "reconnecting") {
     return buildDispatchError(
-      "The selected Mac is reconnecting. Try again in a few seconds.",
+      MAC_RECONNECTING_RETRY_ERROR,
       requestId,
       AGENT_WITCH_DISPATCH_ERROR_CODES.MAC_RECONNECTING,
+    );
+  }
+
+  if (unavailability === "replaced") {
+    return buildDispatchError(
+      MAC_REPLACED_ERROR,
+      requestId,
+      AGENT_WITCH_DISPATCH_ERROR_CODES.MAC_REPLACED,
     );
   }
 
   return buildDispatchError(
-    "The selected Mac is not online right now.",
+    MAC_OFFLINE_ERROR,
     requestId,
     AGENT_WITCH_DISPATCH_ERROR_CODES.MAC_OFFLINE,
   );

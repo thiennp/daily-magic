@@ -36,7 +36,7 @@ export const reclaimAgentWitchDeviceByHostname = async (input: {
   await revokeSiblingDevicesWithSameLabel({
     keepDeviceId: rotated.id,
     userId: input.userId,
-    deviceLabel: input.deviceLabel,
+    deviceLabels: [input.deviceLabel],
   });
 
   return rotated;

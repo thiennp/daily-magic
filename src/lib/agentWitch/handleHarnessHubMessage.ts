@@ -1,17 +1,30 @@
+import {
+  MAC_OFFLINE_ERROR,
+  MAC_REPLACED_ERROR,
+} from "./agentWitchDispatchErrorCode.constant";
+import { classifyAgentWitchDispatchUnavailability } from "./classifyAgentWitchDispatchUnavailability";
 import isHarnessRequestPayload from "./harness/isHarnessRequestPayload";
 import isNonEmptyString from "./isNonEmptyString";
 import { MAC_OFFLINE_FOR_ACCOUNT_ERROR } from "./macOfflineForAccountErrorMessage.constant";
+import { resolveDispatchTargetAgentClient } from "./resolveDispatchTargetAgentClient";
 import { unauthorizedAgentOnlyError } from "./agentWitchHubClientOperations";
 import type AgentWitchHubClient from "./types/AgentWitchHubClient.type";
 import type AgentWitchHubRuntime from "./types/AgentWitchHubRuntime.type";
 import type AgentWitchMessage from "./types/AgentWitchMessage.type";
 import { AGENT_WITCH_MESSAGE_TYPES } from "./types/AgentWitchMessageType.constant";
 
-export const handleHarnessRequestMessage = (
+const buildHarnessRequestOfflineMessage = async (
+  deviceId: string,
+): Promise<string> =>
+  (await classifyAgentWitchDispatchUnavailability(deviceId)) === "replaced"
+    ? MAC_REPLACED_ERROR
+    : MAC_OFFLINE_ERROR;
+
+export const handleHarnessRequestMessage = async (
   runtime: AgentWitchHubRuntime,
   message: AgentWitchMessage,
   sender: AgentWitchHubClient | undefined,
-): AgentWitchMessage | null => {
+): Promise<AgentWitchMessage | null> => {
   if (sender?.role !== "dashboard" || !isNonEmptyString(sender.userId)) {
     return {
       type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR,
@@ -40,23 +53,26 @@ export const handleHarnessRequestMessage = (
       ? message.payload.targetDeviceId
       : undefined;
 
-  const agentClient = runtime.findAgentClientForUser(
-    sender.userId,
-    targetDeviceId,
-  );
+  const resolved = await resolveDispatchTargetAgentClient({
+    runtime,
+    userId: sender.userId,
+    deviceId: targetDeviceId,
+  });
 
-  if (agentClient === undefined) {
+  if (resolved === undefined) {
     return {
       type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR,
       payload: {
         errorMessage:
           targetDeviceId !== undefined
-            ? "The selected Mac is not online right now."
+            ? await buildHarnessRequestOfflineMessage(targetDeviceId)
             : MAC_OFFLINE_FOR_ACCOUNT_ERROR,
       },
       requestId: message.requestId,
     };
   }
+
+  const agentClient = resolved.agentClient;
 
   agentClient.send({
     type: AGENT_WITCH_MESSAGE_TYPES.HARNESS_REQUEST,

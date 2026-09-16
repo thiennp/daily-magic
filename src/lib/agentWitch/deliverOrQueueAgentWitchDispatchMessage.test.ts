@@ -27,6 +27,14 @@ vi.mock("@/lib/agentWitch/getAgentWitchHub", () => ({
   getAgentWitchHub: () => ({}),
 }));
 
+vi.mock("@/lib/agentWitch/resolveCurrentAgentWitchDeviceId", () => ({
+  resolveCurrentAgentWitchDeviceId: async (deviceId: string) => deviceId,
+}));
+
+vi.mock("@/lib/dispatch/retargetWriterRunToSoleLiveMac", () => ({
+  retargetWriterRunToSoleLiveMac: async () => undefined,
+}));
+
 import { deliverOrQueueAgentWitchDispatchMessage } from "@/lib/agentWitch/deliverOrQueueAgentWitchDispatchMessage";
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
 

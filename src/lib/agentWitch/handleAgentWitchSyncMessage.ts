@@ -11,12 +11,12 @@ import type AgentWitchHubRuntime from "./types/AgentWitchHubRuntime.type";
 import type AgentWitchMessage from "./types/AgentWitchMessage.type";
 import { AGENT_WITCH_MESSAGE_TYPES } from "./types/AgentWitchMessageType.constant";
 
-export const handleAgentWitchSyncMessage = (
+export const handleAgentWitchSyncMessage = async (
   runtime: AgentWitchHubRuntime,
   senderId: string,
   message: AgentWitchMessage,
   sender: AgentWitchHubClient | undefined,
-): AgentWitchMessage | null => {
+): Promise<AgentWitchMessage | null> => {
   if (message.type === AGENT_WITCH_MESSAGE_TYPES.AGENT_REGISTER) {
     return {
       type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ACK,

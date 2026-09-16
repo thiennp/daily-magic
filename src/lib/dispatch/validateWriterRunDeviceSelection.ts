@@ -1,4 +1,4 @@
-import isAgentWitchDeviceOwnedByUser from "@/lib/agentWitch/isAgentWitchDeviceOwnedByUser";
+import { isAgentWitchDeviceOrSuccessorOwnedByUser } from "@/lib/agentWitch/isAgentWitchDeviceOrSuccessorOwnedByUser";
 import type AgentWitchHubRuntime from "@/lib/agentWitch/types/AgentWitchHubRuntime.type";
 import { buildDispatchError } from "@/lib/dispatch/buildDispatchError";
 import type { ClaudeRunAgentResolution } from "@/lib/dispatch/resolveWriterRunAgentClient";
@@ -13,7 +13,7 @@ export const validateWriterRunDeviceSelection = async (input: {
   if (
     input.targetDeviceId !== undefined &&
     input.executorUserId === input.senderUserId &&
-    !(await isAgentWitchDeviceOwnedByUser(
+    !(await isAgentWitchDeviceOrSuccessorOwnedByUser(
       input.targetDeviceId,
       input.senderUserId,
     ))

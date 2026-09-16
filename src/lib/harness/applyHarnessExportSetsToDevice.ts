@@ -1,3 +1,5 @@
+import { MAC_OFFLINE_ERROR } from "@/lib/agentWitch/agentWitchDispatchErrorCode.constant";
+import { resolveDispatchTargetAgentClient } from "@/lib/agentWitch/resolveDispatchTargetAgentClient";
 import type { BorrowedHarnessExportSet } from "@/lib/harness/types/HarnessExportResult.type";
 import type HarnessItemWriteSpec from "@/lib/agentWitch/harness/types/HarnessItemWriteSpec.type";
 import type { HarnessItemKind } from "@/lib/agentWitch/harness/types/HarnessItemKind.constant";
@@ -32,23 +34,29 @@ const mergeExportSetItems = (
   return [...merged.values()];
 };
 
-export const applyHarnessExportSetsToDevice = (
+export const applyHarnessExportSetsToDevice = async (
   runtime: AgentWitchHubRuntime,
   borrowerUserId: string,
   targetDeviceId: string,
   sets: readonly BorrowedHarnessExportSet[],
-): { readonly installed: boolean; readonly errorMessage: string | null } => {
-  const agentClient = runtime.findAgentClientForUser(
-    borrowerUserId,
-    targetDeviceId,
-  );
+): Promise<{
+  readonly installed: boolean;
+  readonly errorMessage: string | null;
+}> => {
+  const resolved = await resolveDispatchTargetAgentClient({
+    runtime,
+    userId: borrowerUserId,
+    deviceId: targetDeviceId,
+  });
 
-  if (agentClient === undefined) {
+  if (resolved === undefined) {
     return {
       installed: false,
-      errorMessage: "The selected Mac is not online right now.",
+      errorMessage: MAC_OFFLINE_ERROR,
     };
   }
+
+  const agentClient = resolved.agentClient;
 
   for (const set of sets) {
     sendHarnessInstallToAgentClient(agentClient, {

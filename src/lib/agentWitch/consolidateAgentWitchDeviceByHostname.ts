@@ -42,7 +42,7 @@ export const consolidateAgentWitchDeviceByHostname = async (input: {
   await revokeSiblingDevicesWithSameLabel({
     keepDeviceId: rotated.id,
     userId: input.userId,
-    deviceLabel: label,
+    deviceLabels: [label],
   });
 
   return rotated;

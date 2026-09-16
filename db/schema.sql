@@ -95,7 +95,9 @@ CREATE TABLE IF NOT EXISTS agent_witch_devices (
   last_wake_error_at TIMESTAMPTZ,
   link_code TEXT,
   install_bundle_version TEXT,
-  wake_port INTEGER
+  wake_port INTEGER,
+  superseded_by_device_id TEXT
+    REFERENCES agent_witch_devices(id) ON DELETE SET NULL
 );
 
 CREATE TABLE IF NOT EXISTS agent_witch_connections (
@@ -183,6 +185,10 @@ CREATE INDEX IF NOT EXISTS agent_witch_devices_user_id_idx
 CREATE INDEX IF NOT EXISTS agent_witch_devices_active_user_idx
   ON agent_witch_devices (user_id)
   WHERE revoked_at IS NULL;
+
+CREATE INDEX IF NOT EXISTS agent_witch_devices_superseded_by_idx
+  ON agent_witch_devices (superseded_by_device_id)
+  WHERE superseded_by_device_id IS NOT NULL;
 
 CREATE TABLE IF NOT EXISTS published_capabilities (
   id TEXT PRIMARY KEY DEFAULT gen_random_uuid()::text,

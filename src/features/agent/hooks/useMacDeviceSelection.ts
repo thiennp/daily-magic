@@ -45,9 +45,15 @@ const useMacDeviceSelection = (): {
     searchParams.get(SEND_TASK_DEVICE_ID_QUERY_PARAM) ?? "";
   const [manualDeviceId, setManualDeviceId] = useState<string | null>(null);
   const [storedDeviceId] = useState(readPreferredMacDeviceId);
-  const preferredDeviceId =
+  const requestedDeviceId =
     manualDeviceId ??
     (deviceIdFromQuery.length > 0 ? deviceIdFromQuery : storedDeviceId);
+  // A remembered or linked id can point at a device row that a re-pair replaced.
+  const preferredDeviceId = devices.some(
+    (device) => device.id === requestedDeviceId,
+  )
+    ? requestedDeviceId
+    : "";
 
   const selectedDeviceId = useMemo(() => {
     if (devices.length === 0) {

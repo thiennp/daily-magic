@@ -5,12 +5,12 @@ import type AgentWitchHubRuntime from "./types/AgentWitchHubRuntime.type";
 import type AgentWitchMessage from "./types/AgentWitchMessage.type";
 import { AGENT_WITCH_MESSAGE_TYPES } from "./types/AgentWitchMessageType.constant";
 
-export const dispatchAgentWitchHubMessage = (
+export const dispatchAgentWitchHubMessage = async (
   runtime: AgentWitchHubRuntime,
   clients: Map<string, AgentWitchHubClient>,
   senderId: string,
   message: AgentWitchMessage,
-): AgentWitchMessage | null => {
+): Promise<AgentWitchMessage | null> => {
   if (message.type === AGENT_WITCH_MESSAGE_TYPES.AGENT_PAIR) {
     return null;
   }
