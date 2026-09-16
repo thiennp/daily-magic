@@ -1,5 +1,8 @@
+import type WriterLlmUsage from "@/lib/agentWitch/writerLlmUsage.type";
+
 import type { WriterApiProvider } from "./WriterApiProvider.constant";
 import { DEFAULT_WRITER_API_MODELS } from "./WriterApiProvider.constant";
+import { parseWriterLlmUsageFromApiBody } from "./parseWriterLlmUsageFromApiBody";
 import type { WriterApiProviderSecret } from "./WriterApiSecrets.type";
 
 export interface CallWriterApiInput {
@@ -12,6 +15,7 @@ export interface CallWriterApiInput {
 export interface CallWriterApiResult {
   readonly exitCode: number;
   readonly output: string;
+  readonly llmUsage?: WriterLlmUsage;
 }
 
 const extractAnthropicText = (body: unknown): string => {
@@ -70,7 +74,12 @@ const callAnthropicApi = async (
   if (text.length > 0) {
     input.onChunk?.(text);
   }
-  return { exitCode: 0, output: text };
+  const llmUsage = parseWriterLlmUsageFromApiBody("anthropic", body, model);
+  return {
+    exitCode: 0,
+    output: text,
+    ...(llmUsage !== null ? { llmUsage } : {}),
+  };
 };
 
 const extractOpenAiText = (body: unknown): string => {
@@ -122,7 +131,12 @@ const callOpenAiApi = async (
   if (text.length > 0) {
     input.onChunk?.(text);
   }
-  return { exitCode: 0, output: text };
+  const llmUsage = parseWriterLlmUsageFromApiBody("openai", body, model);
+  return {
+    exitCode: 0,
+    output: text,
+    ...(llmUsage !== null ? { llmUsage } : {}),
+  };
 };
 
 const extractGoogleText = (body: unknown): string => {
@@ -182,7 +196,12 @@ const callGoogleApi = async (
   if (text.length > 0) {
     input.onChunk?.(text);
   }
-  return { exitCode: 0, output: text };
+  const llmUsage = parseWriterLlmUsageFromApiBody("google", body, model);
+  return {
+    exitCode: 0,
+    output: text,
+    ...(llmUsage !== null ? { llmUsage } : {}),
+  };
 };
 
 export const callWriterApi = async (

@@ -1,3 +1,6 @@
+import { appendWriterLlmUsageFooter } from "@/lib/agentWitch/formatWriterLlmUsageFooter";
+import type WriterLlmUsage from "@/lib/agentWitch/writerLlmUsage.type";
+
 import type { HarnessWriterAgentId } from "../buildWriterCliInvocation";
 import type { AgentWitchRunConfig } from "../readAgentWitchRunConfig";
 
@@ -14,7 +17,11 @@ export const runWriterApiPrompt = async (
   writerAgent: HarnessWriterAgentId,
   prompt: string,
   onChunk?: (chunk: string) => void,
-): Promise<{ readonly exitCode: number; readonly output: string }> => {
+): Promise<{
+  readonly exitCode: number;
+  readonly output: string;
+  readonly llmUsage?: WriterLlmUsage;
+}> => {
   const trimmed = prompt.trim();
   if (trimmed.length === 0) {
     return {
@@ -43,10 +50,18 @@ export const runWriterApiPrompt = async (
     };
   }
 
-  return callWriterApi({
+  const apiResult = await callWriterApi({
     provider,
     secret,
     prompt: trimmed,
     onChunk,
   });
+
+  return {
+    exitCode: apiResult.exitCode,
+    output: appendWriterLlmUsageFooter(apiResult.output, apiResult.llmUsage),
+    ...(apiResult.llmUsage !== undefined
+      ? { llmUsage: apiResult.llmUsage }
+      : {}),
+  };
 };

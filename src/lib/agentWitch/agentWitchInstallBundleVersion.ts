@@ -1,2 +1,2 @@
 /** Bump when any Agent Witch install bundle changes. */
-export const AGENT_WITCH_INSTALL_BUNDLE_VERSION = "107";
+export const AGENT_WITCH_INSTALL_BUNDLE_VERSION = "108";

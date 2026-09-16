@@ -11,6 +11,8 @@ export const AGENT_WITCH_CLIENT_INSTALL_WRITER_API_SCRIPT_NAMES = [
   "writerApi/resolveWriterApiProvider.ts",
   "writerApi/shouldUseWriterApi.ts",
   "writerApi/callWriterApi.ts",
+  "writerApi/parseWriterLlmUsageFromApiBody.ts",
+  "writerApi/estimateWriterLlmUsageCostUsd.ts",
   "writerApi/runWriterApiPrompt.ts",
   "writerApi/applyWriterApiSettings.ts",
 ] as const;

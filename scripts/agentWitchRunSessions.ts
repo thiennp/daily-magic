@@ -37,6 +37,9 @@ import {
 } from "./agentWitchRunSessionsAwaitingInput";
 import { tryRunWriterTaskInPty } from "./agentWitchRunSessionsPty";
 import { markWriterConversationStarted } from "./agentWitchWriterSession";
+import { appendWriterLlmUsageFooter } from "@/lib/agentWitch/formatWriterLlmUsageFooter";
+import type WriterLlmUsage from "@/lib/agentWitch/writerLlmUsage.type";
+
 import { runWriterApiPrompt } from "./writerApi/runWriterApiPrompt";
 import { shouldUseWriterApi } from "./writerApi/shouldUseWriterApi";
 import {
@@ -163,9 +166,10 @@ const finishRun = (
   exitCode: number,
   output: string,
   originalPrompt: string,
+  llmUsage?: WriterLlmUsage,
 ): void => {
   let resolvedExitCode = exitCode;
-  let resolvedOutput = output;
+  let resolvedOutput = appendWriterLlmUsageFooter(output, llmUsage);
 
   if (agentRunId !== undefined && runsStoppedByUser.has(agentRunId)) {
     runsStoppedByUser.delete(agentRunId);
@@ -219,6 +223,7 @@ const finishRun = (
       exitCode: resolvedExitCode,
       output: resolvedOutput,
       ...(agentRunId !== undefined ? { agentRunId } : {}),
+      ...(llmUsage !== undefined ? { llmUsage } : {}),
     },
     requestId,
   });
@@ -482,6 +487,7 @@ const runWriterApiTask = (
         result.exitCode,
         result.output,
         prompt,
+        result.llmUsage,
       );
     })
     .catch((error) => {
