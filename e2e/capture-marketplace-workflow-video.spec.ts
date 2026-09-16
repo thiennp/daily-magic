@@ -89,9 +89,9 @@ test.describe("Marketplace workflow video @e2e-capture", () => {
     await pauseForVideo(page, 1500);
 
     await page.getByRole("button", { name: "Start a task" }).click();
-    await expect(
-      page.getByRole("heading", { name: "Send a task" }),
-    ).toBeVisible({ timeout: 15_000 });
+    await expect(page.getByRole("heading", { name: "New task" })).toBeVisible({
+      timeout: 15_000,
+    });
     await pauseForVideo(page, 1200);
 
     const writerHeading = page.getByRole("heading", {

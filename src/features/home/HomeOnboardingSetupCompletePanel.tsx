@@ -37,7 +37,7 @@ export default function HomeOnboardingSetupCompletePanel({
           className={APP_SURFACE_CTA_PRIMARY_CLASS}
           onClick={onDismiss}
         >
-          Send another task
+          New task
         </Link>
         <button
           type="button"

@@ -107,9 +107,9 @@ test.describe("Marketplace workflow self-delegate", () => {
     });
 
     await page.getByRole("button", { name: "Start a task" }).click();
-    await expect(
-      page.getByRole("heading", { name: "Send a task" }),
-    ).toBeVisible({ timeout: 15_000 });
+    await expect(page.getByRole("heading", { name: "New task" })).toBeVisible({
+      timeout: 15_000,
+    });
 
     const writerHeading = page.getByRole("heading", {
       name: /Choose an AI on your Mac/i,

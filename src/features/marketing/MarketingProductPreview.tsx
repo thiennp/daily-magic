@@ -26,7 +26,7 @@ export default function MarketingProductPreview() {
           <span className="h-2 w-2 rounded-full bg-zinc-600" aria-hidden />
           <span className="h-2 w-2 rounded-full bg-zinc-600" aria-hidden />
           <p className="ml-2 text-[11px] font-medium text-zinc-400">
-            Agent Witch · Send task
+            Agent Witch · New task
           </p>
         </header>
 
@@ -52,7 +52,7 @@ export default function MarketingProductPreview() {
             className="flex h-8 w-full items-center justify-center rounded-md border border-dashed border-zinc-600 bg-zinc-800/50 text-[11px] font-medium text-zinc-400"
             aria-hidden
           >
-            Send to my Mac
+            New task
           </p>
 
           <ol className="grid grid-cols-4 gap-1.5 border-t border-zinc-800/80 pt-3">

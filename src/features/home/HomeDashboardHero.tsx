@@ -68,10 +68,10 @@ export default function HomeDashboardHero({ user }: HomeDashboardHeroProps) {
             Open task composer →
           </Link>
           <Link href="/library" className={APP_SURFACE_TEXT_LINK_CLASS}>
-            Playbooks →
+            Library →
           </Link>
           <Link href="/reports" className={APP_SURFACE_TEXT_LINK_MUTED_CLASS}>
-            Runs →
+            Reports →
           </Link>
           <HomeMacSettingsLink />
           {teamNavEnabled ? (

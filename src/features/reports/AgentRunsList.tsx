@@ -11,6 +11,8 @@ import {
 } from "@/features/empty-states/buildGuestAuthHrefs";
 import { REPORTS_GUEST_EMPTY_COPY } from "@/features/empty-states/signedOutPageEmptyCopy.constant";
 import { useGuestSessionState } from "@/features/empty-states/useGuestSessionState";
+import useShellNavContext from "@/features/shell/hooks/useShellNavContext";
+import { resolveReportsSignedInEmptyBody } from "@/lib/copy/resolveSoloTeamSurfaceCopy";
 import AgentRunCard from "@/features/reports/AgentRunCard";
 import AgentRunsFilters from "@/features/reports/AgentRunsFilters";
 import { useAgentRunsList } from "@/features/reports/hooks/useAgentRunsList";
@@ -25,6 +27,7 @@ import type { AgentRunStatusValue } from "@/lib/dispatch/AgentRunStatus.constant
 
 export default function AgentRunsList() {
   const { sessionState } = useGuestSessionState();
+  const { teamNavEnabled } = useShellNavContext();
   const { groups } = useDispatchTargets();
   const [statusFilter, setStatusFilter] = useState<AgentRunStatusValue | "all">(
     "all",
@@ -114,7 +117,7 @@ export default function AgentRunsList() {
         <EmptyStatePanel
           density="page"
           title="No reports yet"
-          body="Send a task to your Mac — finished jobs and approvals will land here."
+          body={resolveReportsSignedInEmptyBody({ teamNavEnabled })}
           primaryCta={{
             label: "New task",
             href: buildAgentComposerHref({ customTask: true }),

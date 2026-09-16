@@ -9,6 +9,8 @@ import {
 import { LIBRARY_GUEST_EMPTY_COPY } from "@/features/empty-states/signedOutPageEmptyCopy.constant";
 import { useGuestSessionState } from "@/features/empty-states/useGuestSessionState";
 import LibraryPlaybookCard from "@/features/library/LibraryPlaybookCard";
+import useShellNavContext from "@/features/shell/hooks/useShellNavContext";
+import { resolveLibrarySignedInEmptyBody } from "@/lib/copy/resolveSoloTeamSurfaceCopy";
 import { useLibraryCapabilities } from "@/features/library/hooks/useLibraryCapabilities";
 import buildAgentComposerHref from "@/lib/library/buildAgentComposerHref";
 import { CapabilityStatus } from "@/lib/capabilities/CapabilityStatus.constant";
@@ -23,6 +25,7 @@ export default function LibraryPanel({
   onUpdated,
 }: LibraryPanelProps) {
   const { sessionState } = useGuestSessionState();
+  const { teamNavEnabled } = useShellNavContext();
   const capabilitiesEnabled = sessionState === "signed_in";
   const { capabilities, isLoading: isCapabilitiesLoading } =
     useLibraryCapabilities(refreshKey, capabilitiesEnabled);
@@ -65,7 +68,7 @@ export default function LibraryPanel({
       <EmptyStatePanel
         density="page"
         title="No items in your library yet"
-        body="Save one from Marketplace or turn a New task into a saved workflow."
+        body={resolveLibrarySignedInEmptyBody({ teamNavEnabled })}
         primaryCta={{ label: "Browse Marketplace", href: "/marketplace" }}
         secondaryCta={{
           label: "New task",

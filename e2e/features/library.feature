@@ -11,7 +11,7 @@ Feature: Library
     Given I have no saved playbooks
     When I open "/library"
     Then I should see "No items in your library yet"
-    And I should see "Save one from Marketplace or turn a New task into a saved workflow."
+    And I should see "Save one from Marketplace or turn a New task into a saved workflow. Only you see and run these."
 
   Scenario: Create a new playbook
     When I open "/library"

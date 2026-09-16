@@ -12,7 +12,7 @@ const firstAgentTaskIn5Minutes: ShowcaseArticle = {
     "Sign-in so the browser can send work to your Mac live",
     "A short task description — one sentence is enough",
   ],
-  tryNext: { label: "Open Send a task", href: "/?sendTask=1" },
+  tryNext: { label: "New task", href: "/?sendTask=1" },
   sections: [
     {
       paragraphs: [
@@ -23,7 +23,7 @@ const firstAgentTaskIn5Minutes: ShowcaseArticle = {
       heading: "Step by step",
       bullets: [
         "Sign in and open Home → Your setup to add your Mac as a worker",
-        "Go to Send a task and write what you want done",
+        "Go to New task and write what you want done",
         "Press send — your Mac runs the agent with your local context",
         "Open Job history in this browser to see status and output",
       ],

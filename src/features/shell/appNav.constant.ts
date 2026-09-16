@@ -19,12 +19,12 @@ export const PRIMARY_NAV: readonly AppNavItem[] = [
   },
   {
     href: "/reports",
-    label: "Runs",
+    label: "Reports",
     isActive: (pathname) => pathname.startsWith("/reports"),
   },
   {
     href: "/library",
-    label: "Playbooks",
+    label: "Library",
     isActive: (pathname) => pathname.startsWith("/library"),
   },
   {
