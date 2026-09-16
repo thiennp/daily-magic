@@ -1,23 +1,47 @@
 "use client";
 
 import { useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
 
-export type GuestSessionState = "loading" | "guest" | "signed_in";
+import {
+  GUEST_SESSION_LOADING_TIMEOUT_MS,
+  resolveGuestSessionState,
+  type GuestSessionState,
+} from "@/features/empty-states/resolveGuestSessionState";
+
+export type { GuestSessionState };
 
 export function useGuestSessionState(): {
   readonly sessionState: GuestSessionState;
   readonly isSignedIn: boolean;
 } {
   const { data: session, status } = useSession();
+  const [loadingTimedOut, setLoadingTimedOut] = useState(false);
 
-  if (status === "loading") {
-    return { sessionState: "loading", isSignedIn: false };
-  }
+  useEffect(() => {
+    if (status !== "loading") {
+      return undefined;
+    }
 
-  const isSignedIn = status === "authenticated" && Boolean(session?.user);
+    const timeoutId = window.setTimeout(() => {
+      setLoadingTimedOut(true);
+    }, GUEST_SESSION_LOADING_TIMEOUT_MS);
+
+    return () => {
+      window.clearTimeout(timeoutId);
+      setLoadingTimedOut(false);
+    };
+  }, [status]);
+
+  const hasUser = Boolean(session?.user);
+  const sessionState = resolveGuestSessionState({
+    status,
+    hasUser,
+    loadingTimedOut,
+  });
 
   return {
-    sessionState: isSignedIn ? "signed_in" : "guest",
-    isSignedIn,
+    sessionState,
+    isSignedIn: sessionState === "signed_in",
   };
 }
