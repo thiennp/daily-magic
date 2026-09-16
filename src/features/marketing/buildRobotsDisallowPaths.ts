@@ -4,6 +4,7 @@ const STAFF_AND_INTERNAL_DISALLOW_PATHS: readonly string[] = [
   "/admin/",
   "/api/",
   "/dev/",
+  "/dev/writer-session-stream",
   "/connection-lab",
   "/styleguide",
   "/ws-test",
