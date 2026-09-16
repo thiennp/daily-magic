@@ -14,3 +14,10 @@ export const signInTestAccount = async (
     );
   }
 };
+
+export const saveAuthStorageState = async (
+  page: Page,
+  filePath: string,
+): Promise<void> => {
+  await page.context().storageState({ path: filePath });
+};

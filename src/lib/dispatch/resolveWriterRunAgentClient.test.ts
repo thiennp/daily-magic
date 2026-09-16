@@ -83,7 +83,7 @@ describe("resolveClaudeRunAgentClient", () => {
     });
   });
 
-  it("queues when the Mac is not on the hub (AGENT-022)", async () => {
+  it("returns device id without a local hub client for relay handoff (OPEN-002)", async () => {
     const hub = new AgentWitchHub(new AgentWitchPairingStore());
 
     const result = await resolveClaudeRunAgentClient({

@@ -16,20 +16,24 @@ const readDispatchErrorMessage = (
     : "Dispatch failed.";
 
 const buildDispatchFailureResponse = (
-  errorMessage: string,
+  message: {
+    readonly type: string;
+    readonly payload?: Readonly<Record<string, unknown>>;
+    readonly requestId?: string;
+  },
   status: number,
-): Response =>
-  Response.json(
+): Response => {
+  const errorMessage = readDispatchErrorMessage(message.payload);
+
+  return Response.json(
     {
       ok: false,
       errorMessage,
-      message: {
-        type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR,
-        payload: { errorMessage },
-      },
+      message,
     },
     { status },
   );
+};
 
 export async function POST(request: Request): Promise<Response> {
   try {
@@ -43,12 +47,24 @@ export async function POST(request: Request): Promise<Response> {
     const parsed = parseAgentRunDispatchBody(body);
 
     if (parsed === null) {
-      return buildDispatchFailureResponse("prompt is required.", 400);
+      return buildDispatchFailureResponse(
+        {
+          type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR,
+          payload: { errorMessage: "prompt is required." },
+        },
+        400,
+      );
     }
 
     if (isCursorCloudDispatchBody(parsed) && !isAllowedAppHttpOrigin(request)) {
       return buildDispatchFailureResponse(
-        "Cursor Cloud dispatch must be requested from this app origin.",
+        {
+          type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR,
+          payload: {
+            errorMessage:
+              "Cursor Cloud dispatch must be requested from this app origin.",
+          },
+        },
         403,
       );
     }
@@ -61,10 +77,7 @@ export async function POST(request: Request): Promise<Response> {
     });
 
     if (!result.ok) {
-      return buildDispatchFailureResponse(
-        readDispatchErrorMessage(result.message.payload),
-        400,
-      );
+      return buildDispatchFailureResponse(result.message, 400);
     }
 
     return Response.json({
@@ -76,6 +89,12 @@ export async function POST(request: Request): Promise<Response> {
     const errorMessage =
       error instanceof Error ? error.message : "Dispatch failed.";
     console.error("[dispatch] POST /api/agent-runs/dispatch failed:", error);
-    return buildDispatchFailureResponse(errorMessage, 500);
+    return buildDispatchFailureResponse(
+      {
+        type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR,
+        payload: { errorMessage },
+      },
+      500,
+    );
   }
 }

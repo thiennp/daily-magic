@@ -4,6 +4,7 @@ import {
   upsertAgentWitchConnection,
 } from "@/lib/agentWitch/agentWitchConnectionRegistry";
 import type { AgentWitchRole } from "@/lib/agentWitch/types/AgentWitchRole.type";
+import { isDatabaseUrlConfigured } from "@/lib/db";
 
 export const syncAgentWitchConnectionRegistry = async (input: {
   readonly clientId: string;
@@ -11,6 +12,10 @@ export const syncAgentWitchConnectionRegistry = async (input: {
   readonly userId?: string;
   readonly deviceId?: string;
 }): Promise<void> => {
+  if (!isDatabaseUrlConfigured()) {
+    return;
+  }
+
   if (
     input.role !== "agent" ||
     input.userId === undefined ||
@@ -29,11 +34,19 @@ export const syncAgentWitchConnectionRegistry = async (input: {
 export const touchAgentWitchConnectionRegistry = async (
   clientId: string,
 ): Promise<void> => {
+  if (!isDatabaseUrlConfigured()) {
+    return;
+  }
+
   await touchAgentWitchConnection(clientId);
 };
 
 export const removeAgentWitchConnectionRegistry = async (
   clientId: string,
 ): Promise<void> => {
+  if (!isDatabaseUrlConfigured()) {
+    return;
+  }
+
   await deleteAgentWitchConnection(clientId);
 };

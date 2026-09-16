@@ -130,7 +130,7 @@
 
 ---
 
-## SHOWCASES-015 — E2E verified card covers 404 on `/showcases` (BUG-007)
+## SHOWCASES-016 — E2E verified card covers 404 on `/showcases` (BUG-007)
 
 **Symptom:** Six “E2E verified” cards on `/showcases` showed broken images; network tab requested `/showcases/e2e/*.svg` with 404 while the PNG assets existed.
 
@@ -151,6 +151,18 @@
 **Fix:** Capture clips `#popular-presets-heading` section; card covers use the curated presets SVG via `resolveShowcaseCoverSrc` (tall PNGs still fall back to SVG elsewhere).
 
 **Regression test:** `resolveShowcaseCoverSrc.test.ts`, `resolveShowcaseArticleCoverImage.test.ts`.
+
+---
+
+## SHOWCASES-015 — Team dispatch SVGs broke in the browser (BUG-006)
+
+**Symptom:** `/showcases` card “Agent to agent inside your company” showed a blank illustration area; article figures for team dispatch could fail the same way.
+
+**Root cause:** Curated files under `public/showcases/team-dispatch/*.svg` contained XML control character `0x14` (and a U+FFFD byte in one label). Browsers refuse to render the SVG as an `<img>` source.
+
+**Fix:** Sanitize the three team-dispatch SVGs (em dash / middle dot / bullet labels). Tighten `assertValidShowcaseSvg` in `showcaseArticleImages.test.ts` to reject control characters and U+FFFD.
+
+**Regression test:** `showcaseArticleImages.test.ts`, `resolveShowcaseArticleCoverImage.test.ts` (BUG-006).
 
 ---
 

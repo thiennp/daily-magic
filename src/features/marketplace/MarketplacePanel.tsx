@@ -5,6 +5,7 @@ import { useState } from "react";
 import AppPanel from "@/components/surfaces/AppPanel";
 import MarketplaceInstallModal from "@/features/marketplace/MarketplaceInstallModal";
 import MarketplaceListingSections from "@/features/marketplace/MarketplaceListingSections";
+import { useMarketplaceInstallFromCapabilityIdQuery } from "@/features/marketplace/hooks/useMarketplaceInstallFromCapabilityIdQuery";
 import { useMarketplaceState } from "@/features/marketplace/hooks/useMarketplaceState";
 import type HarnessMarketplaceListing from "@/lib/harness/types/HarnessMarketplaceListing.type";
 
@@ -20,6 +21,12 @@ export default function MarketplacePanel({
   const { listings, isLoading } = useMarketplaceState();
   const [installListing, setInstallListing] =
     useState<HarnessMarketplaceListing | null>(null);
+
+  useMarketplaceInstallFromCapabilityIdQuery(
+    listings,
+    isLoading,
+    setInstallListing,
+  );
 
   const officialListings = listings.filter(
     (listing) => listing.isOfficialPreset === true,

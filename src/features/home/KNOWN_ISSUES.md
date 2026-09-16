@@ -302,18 +302,6 @@ Document every production bug or UX regression here. Each entry must link to a t
 
 ---
 
-## Adding issues
-
-## HOME-025 — Device row did not show “This Mac” or connect action
-
-**Symptom:** Home listed a connected Mac by hostname only (`L92KQX615Q`); no indication that the browser was on that machine, and no way to link the current Mac from the device panel when it was not listed.
-
-**Fix:** On macOS, read wake-server `/identity` once, cache hostname in `agent_witch_local_host` cookie, show a **This Mac** badge on the matching row, and render **Connect this Mac** when the current computer is not in the device list.
-
-**Regression tests:** `resolveShouldShowConnectThisMac.test.ts` (HOME-025).
-
----
-
 ## HOME-026 — Connect this Mac row skipped install modal
 
 **Symptom:** Clicking **Connect this Mac** in Your Devices tried to link immediately instead of opening the install modal with the bash command and Terminal paste flow. On mobile, the row was hidden or offered no MacBook guidance.
@@ -430,4 +418,28 @@ Document every production bug or UX regression here. Each entry must link to a t
 
 ---
 
-Use the next ID (`HOME-036`, …). Include symptom, root cause, fix paths, and test file.
+## HOME-036 — Device row did not show “This Mac” or connect action
+
+**Symptom:** Home listed a connected Mac by hostname only (`L92KQX615Q`); no indication that the browser was on that machine, and no way to link the current Mac from the device panel when it was not listed.
+
+**Fix:** On macOS, read wake-server `/identity` once, cache hostname in `agent_witch_local_host` cookie, show a **This Mac** badge on the matching row, and render **Connect this Mac** when the current computer is not in the device list.
+
+**Regression tests:** `resolveShouldShowConnectThisMac.test.ts` (HOME-036).
+
+---
+
+## HOME-037 — Homepage preset lost on sign-in (BUG-005)
+
+**Symptom:** Choosing a popular preset on `/` then **Sign in** sent users to `/login?callbackUrl=%2Fmarketplace` with no preset/workflow context (e.g. “Add vibe coding app feature”).
+
+**Root cause:** `HomeMarketingPopularPresetSignInDialog` hard-coded `callbackUrl=/marketplace` instead of the selected template’s marketplace listing.
+
+**Fix:** `buildHomePopularPresetSignInHref` / `buildHomePopularPresetMarketplaceCallbackPath` encode `capabilityId=preset:<templateId>`; `useMarketplaceInstallFromCapabilityIdQuery` opens the install modal after auth.
+
+**Regression test:** `buildHomePopularPresetSignInHref.test.ts`, `findMarketplaceListingByCapabilityId.test.ts`.
+
+---
+
+## Adding issues
+
+Use the next ID (`HOME-038`, …). Include symptom, root cause, fix paths, and test file.

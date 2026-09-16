@@ -1,5 +1,5 @@
 import isNonEmptyString from "@/lib/agentWitch/isNonEmptyString";
-import { MAC_OFFLINE_FOR_ACCOUNT_ERROR } from "@/lib/agentWitch/macOfflineForAccountErrorMessage.constant";
+import { buildWriterRunUnavailableDispatchMessage } from "@/lib/dispatch/buildWriterRunUnavailableDispatchMessage";
 import type AgentWitchHubClient from "@/lib/agentWitch/types/AgentWitchHubClient.type";
 import type AgentWitchHubRuntime from "@/lib/agentWitch/types/AgentWitchHubRuntime.type";
 import type AgentWitchMessage from "@/lib/agentWitch/types/AgentWitchMessage.type";
@@ -42,7 +42,18 @@ export const handleShellSessionOpenMessageAsync = async (
     return agentResolution.error;
   }
   if (agentResolution.agentClient === undefined) {
-    return buildDispatchError(MAC_OFFLINE_FOR_ACCOUNT_ERROR, message.requestId);
+    const deviceId = agentResolution.deviceId;
+    if (deviceId === null || deviceId.length === 0) {
+      return buildDispatchError(
+        "The selected Mac is not online right now.",
+        message.requestId,
+      );
+    }
+
+    return buildWriterRunUnavailableDispatchMessage({
+      deviceId,
+      requestId: message.requestId,
+    });
   }
 
   const session = createShellSession({

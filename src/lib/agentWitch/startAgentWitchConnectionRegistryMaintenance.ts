@@ -4,8 +4,11 @@ import {
   sweepStaleAgentWitchConnections,
 } from "@/lib/agentWitch/agentWitchConnectionRegistry";
 import { drainAgentWitchDispatchOutboxForHub } from "@/lib/agentWitch/drainAgentWitchDispatchOutboxForHub";
+import { expireStaleAgentWitchHubDispatchRelays } from "@/lib/agentWitch/updateAgentWitchHubDispatchRelayStatus";
+import { processAgentWitchHubDispatchRelaysForHub } from "@/lib/agentWitch/processAgentWitchHubDispatchRelaysForHub";
 import { getAgentWitchHub } from "@/lib/agentWitch/getAgentWitchHub";
 import { getAgentWitchHubInstanceId } from "@/lib/agentWitch/getAgentWitchHubInstanceId";
+import { isDatabaseUrlConfigured } from "@/lib/db";
 
 const maintenanceGlobalKey =
   "__dailyMagicAgentWitchConnectionRegistryMaintenance";
@@ -16,6 +19,10 @@ export const startAgentWitchConnectionRegistryMaintenance = (): void => {
   };
 
   if (globalState[maintenanceGlobalKey] === true) {
+    return;
+  }
+
+  if (!isDatabaseUrlConfigured()) {
     return;
   }
 
@@ -32,6 +39,15 @@ export const startAgentWitchConnectionRegistryMaintenance = (): void => {
   );
 
   const sweepIntervalMs = AGENT_WITCH_HEARTBEAT_INTERVAL_MS;
+  const relayPollIntervalMs = 1_000;
+  setInterval(() => {
+    void processAgentWitchHubDispatchRelaysForHub(getAgentWitchHub()).catch(
+      (error: unknown) => {
+        console.error("[agent-witch/relay] process poll failed", error);
+      },
+    );
+  }, relayPollIntervalMs);
+
   setInterval(() => {
     void sweepStaleAgentWitchConnections().catch((error: unknown) => {
       console.error("[agent-witch/registry] sweeper failed", error);
@@ -41,5 +57,8 @@ export const startAgentWitchConnectionRegistryMaintenance = (): void => {
         console.error("[agent-witch/outbox] drain poll failed", error);
       },
     );
+    void expireStaleAgentWitchHubDispatchRelays().catch((error: unknown) => {
+      console.error("[agent-witch/relay] expire sweep failed", error);
+    });
   }, sweepIntervalMs);
 };
