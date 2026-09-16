@@ -101,7 +101,7 @@ See [concepts.md](concepts.md) for engineer glossary; UI should prefer the table
 3. **Repository is a task attribute** — Link playbooks to a repo on task advanced panel or repo settings, not a top-level peer of Home.
 4. **Two-app feeling** — Browser = daily work; Mac helper = setup and troubleshooting.
 5. **Plain status** — Online / Sleeping (we can wake) / Offline (install or fix).
-6. **Context-aware chrome** — Solo: hide empty team marketplace; show “Invite teammates” as growth, not dead nav.
+6. **Context-aware chrome** — Solo: keep **Marketplace** in primary nav for official harness install (SHELL-003); show “Invite teammates” as growth, not dead nav.
 
 ---
 
@@ -180,7 +180,7 @@ Use for Home / first-run design reviews. **Default path = solo.** “Team” var
 
 - [x] `teamNavEnabled` from `GET /api/me/shell-context` (group membership): hide **Automations** in nav (Marketplace stays for solo harness browse/install)
 - [x] `showAdminNav` when privileged global role or team membership
-- [ ] Hide marketplace/library routes from nav when solo; deep links still work for power users
+- [x] Solo primary nav keeps **Marketplace** and **Playbooks** (`/library`); only **Automations** and admin are gated (`filterAppNavForShellContext`; see [SHELL-003](../../src/features/shell/KNOWN_ISSUES.md)) — not hidden for solo users
 - [x] Onboarding API steps mapped to UI steps 1–2 only in default checklist
 
 ---
@@ -196,6 +196,7 @@ Use for Home / first-run design reviews. **Default path = solo.** “Team” var
 
 ## Changelog
 
-| Date       | Change                                             |
-| ---------- | -------------------------------------------------- |
-| 2026-09-15 | Initial draft from UX/PM simplification discussion |
+| Date       | Change                                                                                                        |
+| ---------- | ------------------------------------------------------------------------------------------------------------- |
+| 2026-09-15 | Initial draft from UX/PM simplification discussion                                                            |
+| 2026-09-16 | BUG-004: document shipped solo Marketplace nav (SHELL-003); drop stale “hide marketplace when solo” checklist |
