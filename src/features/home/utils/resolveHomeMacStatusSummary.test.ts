@@ -29,11 +29,12 @@ describe("resolveHomeMacStatusSummary", () => {
     expect(summary.label).toBe("Mac reconnecting");
   });
 
-  it("reports sleeping when only recent presence exists", () => {
+  it("reports soft reconnecting when only recent presence exists", () => {
     const summary = resolveHomeMacStatusSummary([
       { isConnected: false, isOnline: true, presenceTier: "recent" },
     ]);
 
     expect(summary.tone).toBe("sleeping");
+    expect(summary.label).toBe("Mac reconnecting");
   });
 });

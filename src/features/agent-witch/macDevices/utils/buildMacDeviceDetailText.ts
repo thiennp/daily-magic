@@ -1,4 +1,8 @@
-import { formatMacPresenceStatusLabel } from "@/features/agent-witch/online-wake";
+import {
+  formatMacPresenceStatusLabel,
+  shouldShowMacPresenceLastSeen,
+} from "@/features/agent-witch/online-wake";
+import type { MacPresenceTier } from "@/features/agent-witch/online-wake";
 import { buildMacDeviceInstallBundleText } from "@/features/agent-witch/macDevices/utils/buildMacDeviceInstallBundleText";
 import { formatLastSeenText } from "@/lib/time/formatRelativeTimeAgo";
 
@@ -6,6 +10,7 @@ export const buildMacDeviceDetailText = (input: {
   readonly device: {
     readonly isConnected: boolean;
     readonly isOnline: boolean;
+    readonly presenceTier?: MacPresenceTier;
     readonly lastSeenAt: string | null;
     readonly installBundleVersion: string | null;
   };
@@ -14,10 +19,14 @@ export const buildMacDeviceDetailText = (input: {
   const presence = {
     isConnected: input.device.isConnected,
     isOnline: input.device.isOnline,
+    presenceTier: input.device.presenceTier,
   };
   const parts: string[] = [formatMacPresenceStatusLabel(presence)];
 
-  if (!presence.isOnline && input.device.lastSeenAt !== null) {
+  if (
+    shouldShowMacPresenceLastSeen(presence) &&
+    input.device.lastSeenAt !== null
+  ) {
     const lastSeenText = formatLastSeenText(input.device.lastSeenAt);
     if (lastSeenText !== null) {
       parts.push(lastSeenText);

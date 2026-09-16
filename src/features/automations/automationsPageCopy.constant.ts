@@ -12,5 +12,5 @@ export const AUTOMATIONS_PAGE_COPY = {
   webhookSecretTitle: "Webhook secret (copy now)",
   webhookUrlTitle: "Webhook URL",
   syncFailed:
-    "Saved in Daily Magic, but could not sync to this Mac. Re-run Agent Witch install or open Automations again.",
+    "Saved in Agent Witch, but could not sync to this Mac. Re-run Agent Witch install or open Automations again.",
 } as const;

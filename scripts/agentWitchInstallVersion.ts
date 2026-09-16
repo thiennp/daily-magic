@@ -1,6 +1,8 @@
 import fs from "node:fs";
 import path from "node:path";
 
+import { AGENT_WITCH_INSTALL_BUNDLE_VERSION } from "@/lib/agentWitch/agentWitchInstallBundleVersion";
+
 import { resolveAgentWitchInstallDir } from "./resolveAgentWitchLocalLayout";
 
 export const AGENT_WITCH_INSTALL_VERSION_FILE_NAME = "install-version.json";
@@ -54,6 +56,30 @@ export const writeAgentWitchInstallVersion = (
   const versionPath = resolveAgentWitchInstallVersionPath(installDir);
   fs.mkdirSync(path.dirname(versionPath), { recursive: true });
   fs.writeFileSync(versionPath, `${JSON.stringify(record, null, 2)}\n`, "utf8");
+};
+
+export const resolveAgentWitchHeartbeatInstallBundleVersion = (
+  installDir: string = resolveAgentWitchInstallDir(),
+): string =>
+  readAgentWitchInstallVersion(installDir)?.bundleVersion ??
+  AGENT_WITCH_INSTALL_BUNDLE_VERSION;
+
+export const ensureAgentWitchInstallVersionRecorded = (
+  installDir: string,
+  appOrigin: string,
+): AgentWitchInstallVersionRecord => {
+  const existing = readAgentWitchInstallVersion(installDir);
+  if (existing !== null) {
+    return existing;
+  }
+
+  const record: AgentWitchInstallVersionRecord = {
+    bundleVersion: AGENT_WITCH_INSTALL_BUNDLE_VERSION,
+    appOrigin,
+    updatedAt: new Date().toISOString(),
+  };
+  writeAgentWitchInstallVersion(record, installDir);
+  return record;
 };
 
 export const isRemoteAgentWitchBundleVersionNewer = (

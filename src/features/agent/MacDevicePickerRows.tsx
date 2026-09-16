@@ -55,6 +55,7 @@ export default function MacDevicePickerRows({
             displayName={displayNameById.get(device.id) ?? "Your Mac"}
             isOnline={device.isOnline}
             isConnected={device.isConnected}
+            presenceTier={device.presenceTier}
             detailText={detail?.text}
             detailWarning={detail?.isMismatch === true}
             isThisMac={isThisMac}

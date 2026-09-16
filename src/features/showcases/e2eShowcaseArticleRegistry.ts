@@ -14,3 +14,10 @@ export const E2E_SHOWCASE_ARTICLES: readonly ShowcaseArticle[] = [
   e2eAutomationsAndReports,
   e2eCompanyAdmin,
 ] as const;
+
+const E2E_SHOWCASE_SLUGS = new Set(
+  E2E_SHOWCASE_ARTICLES.map((article) => article.slug),
+);
+
+export const isE2eShowcaseSlug = (slug: string): boolean =>
+  E2E_SHOWCASE_SLUGS.has(slug);

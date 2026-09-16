@@ -5,6 +5,8 @@ import { useState } from "react";
 import AppPanel from "@/components/surfaces/AppPanel";
 import MarketplaceInstallModal from "@/features/marketplace/MarketplaceInstallModal";
 import MarketplaceListingSections from "@/features/marketplace/MarketplaceListingSections";
+import MarketplaceVisitorEmptyState from "@/features/marketplace/MarketplaceVisitorEmptyState";
+import { shouldShowMarketplaceVisitorEmptyState } from "@/features/marketplace/shouldShowMarketplaceVisitorEmptyState";
 import { useMarketplaceInstallFromCapabilityIdQuery } from "@/features/marketplace/hooks/useMarketplaceInstallFromCapabilityIdQuery";
 import { useMarketplaceState } from "@/features/marketplace/hooks/useMarketplaceState";
 import useShellNavContext from "@/features/shell/hooks/useShellNavContext";
@@ -37,6 +39,15 @@ export default function MarketplacePanel({
     (listing) => listing.isOfficialPreset !== true,
   );
 
+  const showVisitorEmptyState = shouldShowMarketplaceVisitorEmptyState(
+    variant,
+    isLoading,
+    {
+      officialCount: officialListings.length,
+      teammateCount: teammateListings.length,
+    },
+  );
+
   const listingSections = (
     <MarketplaceListingSections
       officialListings={officialListings}
@@ -48,12 +59,18 @@ export default function MarketplacePanel({
     />
   );
 
+  const panelBody = showVisitorEmptyState ? (
+    <MarketplaceVisitorEmptyState />
+  ) : (
+    listingSections
+  );
+
   return (
     <>
       {variant === "page" ? (
-        <div className="space-y-8">{listingSections}</div>
+        <div className="space-y-8">{panelBody}</div>
       ) : (
-        <AppPanel>{listingSections}</AppPanel>
+        <AppPanel>{panelBody}</AppPanel>
       )}
       <MarketplaceInstallModal
         key={installListing?.capabilityId ?? "closed"}
