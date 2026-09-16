@@ -4,6 +4,8 @@ Canonical agent instructions for Codex, Cursor, Claude, and compatible tools.
 
 Read **`CLAUDE.md`** for project overview, stack, and verification commands.
 
+**Docs-first map:** [docs/README.md](docs/README.md) · **Task paths:** [docs/conventions/load-context.md](docs/conventions/load-context.md) · **Reveal order (L0–L4):** [docs/conventions/agent-context.md](docs/conventions/agent-context.md) · **Domains (L1):** [docs/domains/README.md](docs/domains/README.md) · **Script index:** [docs/conventions/script-index.md](docs/conventions/script-index.md) · **When behavior changes:** [docs/conventions/docs-first.md](docs/conventions/docs-first.md)
+
 ## Product vs repository name (read first)
 
 - **Repo folder:** `daily-magic` — this git project.
@@ -21,8 +23,10 @@ Details: **`docs/product/repo-name-and-hosting.md`** · rule **`rules-product-ho
 - **Rules:** `.cursor/rules/` (registered in `.cursor.json`)
 - **Commands:** `.cursor/commands/`
 - **Skills:** `.cursor/skills/`
-- **Scripts:** `.agents/scripts/`
+- **Scripts:** `.agents/scripts/` (implementations; see [docs/conventions/script-index.md](docs/conventions/script-index.md) for `npm run` wrappers)
 - **Husky:** `.husky/pre-commit`, `.husky/commit-msg`
+
+**Context loading:** read this file → [load-context](docs/conventions/load-context.md) or one [domain](docs/domains/README.md) → optional [script-index](docs/conventions/script-index.md) observe step → `npm run feature-knowledge:query` → feature `README.md` / `KNOWN_ISSUES.md`. Details: [agent-context](docs/conventions/agent-context.md).
 
 ## Verification and commit
 
@@ -65,4 +69,4 @@ Standard commands live in `CLAUDE.md` / `README.md` / `package.json`. Notes belo
 - **The injected `DATABASE_URL` secret points at an UNRELATED database.** It resolves to a different product's Neon database (Wishees/greeting-card/Amazon-affiliate app: ~50 tables, real `users` rows) whose `users` table conflicts with daily-magic's schema (`bigint` id vs `text`). The correct daily-magic Neon connection string (plus `AUTH_SECRET`, Google OAuth, and Resend keys) is kept in **`.env.local`** (gitignored, not in the repo, per-VM). Point at a **dedicated empty Neon database** before applying schema.
 - **CRITICAL — `.env.local` does NOT override injected env vars.** Next.js/`@next/env` will not overwrite a variable already present in `process.env`, and the VM injects `DATABASE_URL` (and `RESEND_API_KEY`) as real env vars. So `npm run dev` and `psql "$DATABASE_URL"` use the WRONG (injected) database unless you first export `.env.local` into the shell: `set -a; . ./.env.local; set +a`. Do this before starting the dev server or running `psql`, or the app silently talks to the unrelated database.
 - **Applying the schema:** once `DATABASE_URL` points at the dedicated empty DB, run `npm run db:schema` (needs the `psql` client — a system dependency, not in the update script). `db/migrations/*` largely overlap `db/schema.sql` and are idempotent; migration `003-published-capabilities.sql` throws a harmless "constraint ... already exists" error because `schema.sql` already created that FK.
-- **Auth + testing authenticated pages:** Google OAuth and Resend are configured via `.env.local`, but real login needs external Google consent or an email inbox (not doable headlessly). NextAuth uses the **database** session strategy, so to test logged-in/`/admin/*` pages, seed a row in `users` (`global_role='super_admin'`) + `sessions`, then set the browser cookie `authjs.session-token=<sessions.session_token>` (plain `authjs.` prefix in local dev; `__Secure-authjs.session-token` in production).
+- **Auth + testing authenticated pages:** Prefer **test auth bypass** (no OAuth / magic link): sign in as `test*@agentwitch.com` via login UI (`npm run dev`), `POST /api/auth/test-login`, Playwright `e2e/helpers/signInTestAccount.ts`, or `npm run test:auth:session` (prints `authjs.session-token` for manual cookies). Gated by `ALLOW_TEST_AUTH=1`, `E2E=1`, or non-production `NODE_ENV`; **disabled on `www.agentwitch.com`**. For `/admin/users`, pass `--super-admin` to the seed script or use a configured super-admin email. Legacy manual path: seed `users` + `sessions` and set the session cookie yourself.

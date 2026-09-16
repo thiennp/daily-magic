@@ -4,12 +4,12 @@ const e2eTestAccountSignIn: ShowcaseArticle = {
   slug: "e2e-test-account-sign-in",
   title: "E2E: Sign in with a test account",
   subtitle:
-    "test*@agentwitch.com addresses skip email and use SECRET-backed test login.",
+    "test*@agentwitch.com addresses skip email and use gated test-login (not available on www.agentwitch.com).",
   category: "E2E verified",
   supportLevel: "full",
   readMinutes: 2,
   whatYouNeed: [
-    "SECRET configured on the server",
+    "ALLOW_TEST_AUTH=1 (or npm run dev) on non-production hosts",
     "A test*@agentwitch.com email",
   ],
   tryNext: { label: "Open sign in", href: "/login" },

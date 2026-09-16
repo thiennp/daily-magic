@@ -9,7 +9,7 @@ const baseInput = {
   devices: [] as readonly { readonly tokenHash?: string | null }[],
 };
 
-describe("resolveShouldShowConnectThisMac (HOME-025/028)", () => {
+describe("resolveShouldShowConnectThisMac (HOME-036/028)", () => {
   it("hides connect on non-Mac browsers without listed devices", () => {
     expect(
       resolveShouldShowConnectThisMac({

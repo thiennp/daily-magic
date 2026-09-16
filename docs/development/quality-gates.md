@@ -23,4 +23,4 @@ GitHub Actions (`.github/workflows/ci.yml`) runs unit tests, architecture checks
 
 ## Agent docs
 
-Pointers: `CLAUDE.md`, `AGENTS.md`. Deep technical content: `docs/` (indexed for feature knowledge).
+Pointers: `CLAUDE.md`, `AGENTS.md`. Deep technical content: `docs/` (indexed for feature knowledge). Context loading and which npm script to run when: [conventions/agent-context.md](../conventions/agent-context.md).

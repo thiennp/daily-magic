@@ -2,19 +2,28 @@
 
 Scripts and templates for AI-assisted development. Application code is in **`src/`**.
 
-| Path         | Purpose                                                     |
-| ------------ | ----------------------------------------------------------- |
-| `scripts/`   | Architecture checks, structure validation wrapper, codemods |
-| `diagrams/`  | Architecture notes (markdown)                               |
-| `scaffold/`  | Scaffold docs                                               |
-| `templates/` | File templates for generators                               |
+**For agents:** canonical reveal order and task paths live in **`docs/conventions/`** ([agent-context.md](../docs/conventions/agent-context.md), [script-index.md](../docs/conventions/script-index.md)). Entry file: [AGENTS.md](../AGENTS.md).
 
-## npm scripts
+| Path         | Purpose                                                                                   |
+| ------------ | ----------------------------------------------------------------------------------------- |
+| `scripts/`   | Harness bootstrap, architecture checks, feature-knowledge, structure validation, codemods |
+| `diagrams/`  | Architecture notes (markdown)                                                             |
+| `scaffold/`  | Scaffold docs for new files                                                               |
+| `templates/` | File templates for generators                                                             |
 
-- `npm run cursor:architecture`
-- `npm run cursor:verify`
-- `npm run validate:staged`
-- `npm run validate:all`
+## `scripts/` → `npm run` (common)
+
+| File / area                          | npm script                               |
+| ------------------------------------ | ---------------------------------------- |
+| `harnessBootstrap.ts`                | `harness:bootstrap`, `harness:sync`      |
+| `architecture-check.ts`              | `cursor:architecture`, `ci:architecture` |
+| `verify-rules.ts`                    | `cursor:verify`                          |
+| `validate-structure-staged.sh`       | `validate:staged`                        |
+| `feature-knowledge-index.ts`         | `feature-knowledge:index`                |
+| `feature-knowledge-query.ts`         | `feature-knowledge:query`                |
+| `feature-knowledge-scaffold-docs.ts` | `feature-knowledge:scaffold-docs`        |
+
+Full product/runtime scripts (`dev`, `agent-witch`, `db:*`, `test`): [docs/conventions/script-index.md](../docs/conventions/script-index.md).
 
 ## Removed (EnergyCenter)
 

@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 
 import createDatabaseAuthSession from "@/lib/auth/createDatabaseAuthSession";
 import findOrCreateUserByEmail from "@/lib/auth/findOrCreateUserByEmail";
-import isDevSecretConfigured from "@/lib/auth/isDevSecretConfigured";
+import { isTestAuthBypassAllowedForRequest } from "@/lib/auth/isTestAuthBypassAllowed";
 import isTestAgentWitchEmail from "@/lib/auth/isTestAgentWitchEmail";
 import resolveAuthSessionCookieOptionsFromRequest from "@/lib/auth/resolveAuthSessionCookieOptionsFromRequest";
 
@@ -25,7 +25,7 @@ const isDatabaseConfigured = (): boolean =>
   process.env.DATABASE_URL.trim().length > 0;
 
 export async function POST(request: Request): Promise<NextResponse> {
-  if (!isDevSecretConfigured()) {
+  if (!isTestAuthBypassAllowedForRequest(request)) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
 

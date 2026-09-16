@@ -1,3 +1,4 @@
+import { buildAgentWitchLocalCloudBanner } from "./buildAgentWitchLocalCloudBanner";
 import type { LocalHarnessRevealResult } from "./localHarness/revealLocalHarnessCandidates.types";
 import type { LocalHarnessSubmitSet } from "./localHarness/submitLocalHarnessSelection";
 import path from "node:path";
@@ -203,12 +204,21 @@ export const buildAgentWitchLocalHarnessPageBody = (input: {
   readonly scanFolder: string;
   readonly reveal: LocalHarnessRevealResult | null;
   readonly installed: InstalledLocalHarnessSnapshot;
+  readonly cloudAppOrigin: string;
   readonly flashMessage?: string | null;
   readonly flashError?: string | null;
   readonly importSectionExpanded: boolean;
 }): string => {
+  const cloudBanner = buildAgentWitchLocalCloudBanner({
+    cloudAppOrigin: input.cloudAppOrigin,
+    manageHref: `${input.cloudAppOrigin}/marketplace`,
+    manageLabel: "Install playbooks on Agent Witch Live",
+    body: "Install and update playbooks in the browser; this Mac keeps a copy under your profile harness. Use Projects to link sets into a repo’s .cursor tree.",
+  });
+
   const installedSection = buildAgentWitchLocalHarnessInstalledSection({
     installed: input.installed,
+    cloudAppOrigin: input.cloudAppOrigin,
   });
 
   const flash = input.flashError
@@ -230,7 +240,7 @@ export const buildAgentWitchLocalHarnessPageBody = (input: {
   const importCollapsed = !input.importSectionExpanded;
   const importToggle = importCollapsed
     ? `<section class="card">
-        <p class="muted">Import is hidden after a successful submit. Scan another folder when you need more harness files.</p>
+        <p class="muted">Advanced: pull rules from an existing folder on disk (does not replace installing from Agent Witch Live).</p>
         <div class="actions">
           <a class="btn btn-secondary" href="/harness?import=1">Import from folder…</a>
         </div>
@@ -240,9 +250,9 @@ export const buildAgentWitchLocalHarnessPageBody = (input: {
   const importSection = importCollapsed
     ? ""
     : `<section class="card">
-      <p class="eyebrow">Import</p>
-      <h1>Reveal &amp; submit</h1>
-      <p class="lede">Pick one folder under your home directory, scan for projects with <code>.cursor</code>, then submit your selection to the local harness. Scanning <code>~</code> can take a while — prefer a project folder or use <strong>Stop</strong>.</p>
+      <p class="eyebrow">Advanced</p>
+      <h1>Import from disk</h1>
+      <p class="lede">Scan a folder for existing <code>.cursor</code> rules and copy them into the profile harness on this Mac. Prefer installing playbooks from Agent Witch Live when possible.</p>
       <div class="stack">
         <label class="field">
           <span class="field-label">Scan folder (required)</span>
@@ -263,7 +273,7 @@ export const buildAgentWitchLocalHarnessPageBody = (input: {
     <script>${buildLocalHarnessRevealClientScript()}</script>
     <script>${buildLocalHarnessTreePreviewClientScript()}</script>`;
 
-  return `${installedSection}${flash}${importToggle}${importSection}`;
+  return `${cloudBanner}${installedSection}${flash}${importToggle}${importSection}`;
 };
 
 const buildRevealForm = (reveal: LocalHarnessRevealResult): string => {

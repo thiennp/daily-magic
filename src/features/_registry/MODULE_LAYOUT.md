@@ -1,5 +1,7 @@
 # Feature module layout
 
+Canonical narrative: [docs/architecture/codebase-map.md](../../../docs/architecture/codebase-map.md).
+
 ## Registry fields
 
 | Field             | Meaning                                       |
