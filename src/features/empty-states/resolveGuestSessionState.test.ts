@@ -3,6 +3,17 @@ import { describe, expect, it } from "vitest";
 import { resolveGuestSessionState } from "@/features/empty-states/resolveGuestSessionState";
 
 describe("resolveGuestSessionState", () => {
+  it("fails open to guest while loading when the server hint is signed_out", () => {
+    expect(
+      resolveGuestSessionState({
+        status: "loading",
+        hasUser: false,
+        loadingTimedOut: false,
+        serverSessionHint: "signed_out",
+      }),
+    ).toBe("guest");
+  });
+
   it("stays loading until timeout when session status is loading", () => {
     expect(
       resolveGuestSessionState({

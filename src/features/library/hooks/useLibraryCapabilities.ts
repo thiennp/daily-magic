@@ -4,7 +4,10 @@ import { useCallback, useEffect, useState } from "react";
 
 import type PublishedCapabilityRecord from "@/lib/capabilities/types/PublishedCapabilityRecord.type";
 
-export function useLibraryCapabilities(refreshKey = 0): {
+export function useLibraryCapabilities(
+  refreshKey = 0,
+  enabled = true,
+): {
   readonly capabilities: readonly PublishedCapabilityRecord[];
   readonly isLoading: boolean;
   readonly removeCapability: (capabilityId: string) => void;
@@ -15,6 +18,10 @@ export function useLibraryCapabilities(refreshKey = 0): {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    if (!enabled) {
+      return undefined;
+    }
+
     const loadLibrary = async (): Promise<void> => {
       setIsLoading(true);
       try {
@@ -41,7 +48,7 @@ export function useLibraryCapabilities(refreshKey = 0): {
     };
 
     void loadLibrary();
-  }, [refreshKey]);
+  }, [enabled, refreshKey]);
 
   const removeCapability = useCallback((capabilityId: string): void => {
     setCapabilities((current) =>
@@ -49,5 +56,9 @@ export function useLibraryCapabilities(refreshKey = 0): {
     );
   }, []);
 
-  return { capabilities, isLoading, removeCapability };
+  return {
+    capabilities,
+    isLoading: enabled && isLoading,
+    removeCapability,
+  };
 }

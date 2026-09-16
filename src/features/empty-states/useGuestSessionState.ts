@@ -3,6 +3,7 @@
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 
+import { useGuestSessionHint } from "@/features/empty-states/GuestSessionStateProvider";
 import {
   GUEST_SESSION_LOADING_TIMEOUT_MS,
   resolveGuestSessionState,
@@ -15,6 +16,7 @@ export function useGuestSessionState(): {
   readonly sessionState: GuestSessionState;
   readonly isSignedIn: boolean;
 } {
+  const serverSessionHint = useGuestSessionHint();
   const { data: session, status } = useSession();
   const [loadingTimedOut, setLoadingTimedOut] = useState(false);
 
@@ -29,15 +31,17 @@ export function useGuestSessionState(): {
 
     return () => {
       window.clearTimeout(timeoutId);
-      setLoadingTimedOut(false);
     };
   }, [status]);
 
   const hasUser = Boolean(session?.user);
+  const loadingTimedOutForResolve =
+    status === "loading" ? loadingTimedOut : false;
   const sessionState = resolveGuestSessionState({
     status,
     hasUser,
-    loadingTimedOut,
+    loadingTimedOut: loadingTimedOutForResolve,
+    serverSessionHint,
   });
 
   return {

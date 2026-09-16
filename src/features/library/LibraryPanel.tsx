@@ -23,8 +23,9 @@ export default function LibraryPanel({
   onUpdated,
 }: LibraryPanelProps) {
   const { sessionState } = useGuestSessionState();
+  const capabilitiesEnabled = sessionState === "signed_in";
   const { capabilities, isLoading: isCapabilitiesLoading } =
-    useLibraryCapabilities(refreshKey);
+    useLibraryCapabilities(refreshKey, capabilitiesEnabled);
   const libraryItems = capabilities.filter(
     (capability) => capability.status !== CapabilityStatus.ARCHIVED,
   );

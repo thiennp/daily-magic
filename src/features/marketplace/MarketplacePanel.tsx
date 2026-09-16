@@ -9,6 +9,7 @@ import MarketplaceVisitorEmptyState from "@/features/marketplace/MarketplaceVisi
 import { shouldShowMarketplaceVisitorEmptyState } from "@/features/marketplace/shouldShowMarketplaceVisitorEmptyState";
 import { useMarketplaceInstallFromCapabilityIdQuery } from "@/features/marketplace/hooks/useMarketplaceInstallFromCapabilityIdQuery";
 import { useMarketplaceState } from "@/features/marketplace/hooks/useMarketplaceState";
+import { useGuestSessionState } from "@/features/empty-states/useGuestSessionState";
 import useShellNavContext from "@/features/shell/hooks/useShellNavContext";
 import type HarnessMarketplaceListing from "@/lib/harness/types/HarnessMarketplaceListing.type";
 
@@ -22,7 +23,9 @@ export default function MarketplacePanel({
   variant = "embedded",
 }: MarketplacePanelProps) {
   const { listings, isLoading } = useMarketplaceState();
+  const { sessionState } = useGuestSessionState();
   const { teamNavEnabled } = useShellNavContext();
+  const isGuest = sessionState !== "signed_in";
   const [installListing, setInstallListing] =
     useState<HarnessMarketplaceListing | null>(null);
 
@@ -46,6 +49,7 @@ export default function MarketplacePanel({
       officialCount: officialListings.length,
       teammateCount: teammateListings.length,
     },
+    isGuest,
   );
 
   const listingSections = (
@@ -59,8 +63,23 @@ export default function MarketplacePanel({
     />
   );
 
+  const teammatesOnlySections = (
+    <MarketplaceListingSections
+      officialListings={officialListings}
+      teammateListings={teammateListings}
+      isLoading={isLoading}
+      onInstall={setInstallListing}
+      variant={variant}
+      teamNavEnabled={teamNavEnabled}
+      sectionVisibility="teammatesOnly"
+    />
+  );
+
   const panelBody = showVisitorEmptyState ? (
-    <MarketplaceVisitorEmptyState />
+    <>
+      <MarketplaceVisitorEmptyState />
+      {teammatesOnlySections}
+    </>
   ) : (
     listingSections
   );
