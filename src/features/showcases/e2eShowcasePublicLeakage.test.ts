@@ -44,10 +44,8 @@ describe("e2e showcase public leakage (Testi P0)", () => {
     );
 
     expect(pageSource.includes("isE2eShowcaseSlug(slug)")).toBe(true);
-    expect(
-      pageSource.includes("buildShowcaseArticleMetadata(article)") &&
-        pageSource.includes("isGlobalAdmin(actor)"),
-    ).toBe(true);
+    expect(pageSource.includes("isStaffPageViewer()")).toBe(true);
+    expect(pageSource.includes("requireStaffPageAccess()")).toBe(true);
   });
 
   it("E2E test-auth article copy is only in staff-gated article file", () => {

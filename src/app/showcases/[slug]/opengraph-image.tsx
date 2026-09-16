@@ -3,8 +3,7 @@ import { ImageResponse } from "next/og";
 import { isE2eShowcaseSlug } from "@/features/showcases/e2eShowcaseArticleRegistry";
 import { showcaseOgImageLayout } from "@/features/showcases/showcaseOgImageLayout";
 import { getShowcaseArticleBySlug } from "@/features/showcases/showcaseArticleRegistry";
-import { getAuthActor } from "@/lib/auth/auth";
-import { isGlobalAdmin } from "@/lib/auth/globalRolePermissions";
+import { isStaffPageViewer } from "@/lib/auth/requireStaffPageAccess";
 
 export const alt = "Agent Witch real example";
 export const size = { width: 1200, height: 630 };
@@ -17,8 +16,7 @@ interface ShowcaseOgImageProps {
 export default async function Image({ params }: ShowcaseOgImageProps) {
   const { slug } = await params;
   const article = getShowcaseArticleBySlug(slug);
-  const actor = await getAuthActor();
-  const canViewE2e = actor !== null && isGlobalAdmin(actor);
+  const canViewE2e = await isStaffPageViewer();
 
   if (!article || (isE2eShowcaseSlug(slug) && !canViewE2e)) {
     return new ImageResponse(

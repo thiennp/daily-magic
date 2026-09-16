@@ -9,13 +9,17 @@ import {
   getShowcaseArticleBySlug,
 } from "@/features/showcases/showcaseArticleRegistry";
 import MarketingShell from "@/features/marketing/MarketingShell";
-import { getAuthActor } from "@/lib/auth/auth";
-import { isGlobalAdmin } from "@/lib/auth/globalRolePermissions";
-import { requireStaffPageAccess } from "@/lib/auth/requireStaffPageAccess";
+import {
+  isStaffPageViewer,
+  requireStaffPageAccess,
+} from "@/lib/auth/requireStaffPageAccess";
 
 interface ShowcaseArticlePageProps {
   readonly params: Promise<{ readonly slug: string }>;
 }
+
+/** Auth gates for E2E slugs need request-time rendering (see SHOWCASES-015). */
+export const dynamic = "force-dynamic";
 
 export function generateStaticParams(): { readonly slug: string }[] {
   return SHOWCASE_ARTICLES.filter(
@@ -34,8 +38,7 @@ export async function generateMetadata({
   }
 
   if (isE2eShowcaseSlug(slug)) {
-    const actor = await getAuthActor();
-    if (!actor || !isGlobalAdmin(actor)) {
+    if (!(await isStaffPageViewer())) {
       return { title: "Example not found" };
     }
   }
