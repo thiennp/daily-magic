@@ -8,6 +8,7 @@ import MacDeviceRowMenuItems from "@/features/agent-witch/macDevices/MacDeviceRo
 
 interface MacDeviceRowMenuProps {
   readonly onEdit: () => void;
+  readonly showThisMacSubmenu?: boolean;
   readonly onUpdateLocal?: () => void;
   readonly onDeleteLocalScript?: () => void;
   readonly onSeeLocalLog?: () => void;
@@ -22,6 +23,7 @@ const stopRowSelection = (event: { stopPropagation: () => void }) => {
 
 export default function MacDeviceRowMenu({
   onEdit,
+  showThisMacSubmenu = false,
   onUpdateLocal,
   onDeleteLocalScript,
   onSeeLocalLog,
@@ -60,11 +62,12 @@ export default function MacDeviceRowMenu({
       <Dropdown
         isOpen={isOpen}
         onClose={closeMenu}
-        className="w-52 py-1 dark:bg-gray-dark"
+        className="w-56 py-1 dark:bg-gray-dark"
       >
         <MacDeviceRowMenuItems
           closeMenu={closeMenu}
           onEdit={onEdit}
+          showThisMacSubmenu={showThisMacSubmenu}
           onUpdateLocal={onUpdateLocal}
           onDeleteLocalScript={onDeleteLocalScript}
           onSeeLocalLog={onSeeLocalLog}
