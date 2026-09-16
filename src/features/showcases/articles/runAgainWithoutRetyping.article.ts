@@ -4,14 +4,14 @@ const runAgainWithoutRetyping: ShowcaseArticle = {
   slug: "run-again-without-retyping",
   title: "Run the same task again without retyping",
   subtitle: "Job history becomes your weekly habit button.",
-  category: "Job history",
+  category: "Reports",
   supportLevel: "full",
   readMinutes: 2,
   whatYouNeed: [
     "At least one completed job in this browser's Job history",
     "Mac agent online if you want to send again (not just view)",
   ],
-  tryNext: { label: "Open Job history", href: "/reports" },
+  tryNext: { label: "Reports", href: "/reports" },
   sections: [
     {
       paragraphs: [
@@ -21,7 +21,7 @@ const runAgainWithoutRetyping: ShowcaseArticle = {
     {
       heading: "How it works",
       bullets: [
-        "Open Job history and find a completed job",
+        "Open Reports and find a completed job",
         "Tap Run again on the card or detail page",
         "The task composer opens with the prompt prefilled",
       ],

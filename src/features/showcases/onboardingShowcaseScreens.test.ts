@@ -23,14 +23,14 @@ describe("onboarding showcase screens", () => {
       buildShowcaseOnboardingArticleImage(
         ONBOARDING_SHOWCASE_SCREEN.JOB_HISTORY,
         {
-          alt: "Job history",
+          alt: "Reports",
           caption: "Completed run",
         },
       ),
     ).toEqual({
       screenId: "04-job-history",
       src: "/showcases/onboarding/04-job-history.png",
-      alt: "Job history",
+      alt: "Reports",
       caption: "Completed run",
     });
   });

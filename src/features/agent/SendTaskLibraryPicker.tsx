@@ -55,11 +55,8 @@ export default function SendTaskLibraryPicker({
       {!isLoading && capabilities.length === 0 ? (
         <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
           No saved items yet.{" "}
-          <Link
-            href="/library"
-            className="text-brand-700 dark:text-brand-300"
-          >
-            Open Library
+          <Link href="/library" className="text-brand-700 dark:text-brand-300">
+            Library
           </Link>{" "}
           or save one from Marketplace.
         </p>

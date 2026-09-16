@@ -3,6 +3,6 @@ export const MARKETING_INTEGRATION_ITEMS = [
   "Codex on your Mac",
   "Browser dashboard",
   "Company accounts",
-  "Job history",
+  "Reports",
   "Starts when you sign in",
 ] as const;

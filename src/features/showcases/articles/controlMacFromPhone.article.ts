@@ -13,7 +13,7 @@ const controlMacFromPhone: ShowcaseArticle = {
     "Your Mac agent online to actually send a job",
     "Or skip send and use Copy prompt for ChatGPT on your phone",
   ],
-  tryNext: { label: "Open Library", href: "/library" },
+  tryNext: { label: "Library", href: "/library" },
   relatedShowcases: [
     {
       slug: "what-phone-can-do-alone",

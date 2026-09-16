@@ -13,7 +13,7 @@ const whatPhoneCanDoAlone: ShowcaseArticle = {
     "To send: browser connected to the app + a Mac online to run the job",
     "For team dispatch: a teammate's Mac as executor",
   ],
-  tryNext: { label: "Open Library", href: "/library" },
+  tryNext: { label: "Library", href: "/library" },
   relatedShowcases: [
     {
       slug: "control-mac-from-phone",

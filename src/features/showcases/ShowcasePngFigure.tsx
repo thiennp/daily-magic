@@ -4,6 +4,7 @@ import {
   SHOWCASE_FIGURE_PADDING_CLASS,
   shouldPreferShowcaseSvgFallback,
 } from "@/features/showcases/showcaseFigureCrop.constant";
+import { MARKETING_TEXT_MUTED_CLASSES } from "@/features/marketing/marketingSurfaceClasses.constant";
 import { mergeMarketingClasses } from "@/features/marketing/mergeMarketingClasses";
 
 interface ShowcasePngFigureProps {
@@ -61,7 +62,12 @@ export default function ShowcasePngFigure({
           </picture>
         )}
       </div>
-      <figcaption className="mt-3 text-sm text-gray-600 dark:text-gray-400">
+      <figcaption
+        className={mergeMarketingClasses(
+          "mt-3 text-sm",
+          MARKETING_TEXT_MUTED_CLASSES,
+        )}
+      >
         {caption}
       </figcaption>
     </figure>
