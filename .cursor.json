@@ -67,6 +67,12 @@
       "glob": "**/*.test.{ts,tsx}"
     },
     {
+      "name": "rules-product-hosting-boundaries",
+      "description": "Agent Witch = agentwitch.com; repo daily-magic; exclude CHECK24 daily-magic URL",
+      "path": "rules-product-hosting-boundaries.mdc",
+      "glob": "**/*"
+    },
+    {
       "name": "rules-harness-bootstrap",
       "description": "Harness bootstrap: match intent to one command playbook",
       "path": "rules-harness-bootstrap.mdc",

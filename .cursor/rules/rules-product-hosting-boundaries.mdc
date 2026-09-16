@@ -1,0 +1,23 @@
+---
+description: Agent Witch hosting boundaries — repo name vs agentwitch.com; exclude CHECK24 daily-magic URL
+globs:
+alwaysApply: true
+---
+
+# Product hosting boundaries (Agent Witch)
+
+This repository is **`daily-magic`** in git but ships **Agent Witch** to **`https://www.agentwitch.com`**.
+
+## Required assumptions
+
+- Production UI and APIs: **`www.agentwitch.com`** (see `AGENT_WITCH_DEFAULT_ORIGIN`).
+- Mac client `wsUrl`: **`wss://<same-origin-as-browser>/api/agent-witch/ws`** (production install → `www.agentwitch.com`).
+- Local dev: **`http://localhost:3000`** with `npm run dev` (not plain `next dev` for WebSocket bridge).
+
+## Forbidden conflation
+
+- Do **not** treat **`daily-magic.d.energie.check24.de`** as Agent Witch production or default AW Live unless the user explicitly names that deployment.
+- Do **not** describe “daily-magic” and “agentwitch” as two unrelated products — same codebase; different names (repo vs brand).
+- Do **not** apply Cursor Cloud VM database notes from `AGENTS.md` to production agentwitch.com ops without saying they are VM-only.
+
+Canonical detail: **`docs/product/repo-name-and-hosting.md`**.

@@ -127,6 +127,7 @@ import { generateAgentRunReportKey } from "./dispatch/generateAgentRunReportKey"
 import { AGENT_RUN_WORKING_ESTIMATE_MARKER } from "./dispatch/agentRunWorkingEstimate.constant";
 import { seedAgentRunReportFile } from "./agentWitchRunReport";
 import { runAgentRunPreEstimate } from "./runAgentRunPreEstimate";
+import { resolveAgentWitchClientWsUrl } from "@/lib/agentWitch/resolveAgentWitchClientWsUrl";
 
 interface AgentWitchConfig {
   readonly email: string | null;
@@ -140,7 +141,6 @@ interface AgentWitchConfig {
   readonly layout: AgentWitchLocalLayout;
 }
 
-const DEFAULT_WS_URL = "ws://localhost:3000/api/agent-witch/ws";
 const DEFAULT_CLAUDE_COMMAND = "claude";
 const DEFAULT_CODEX_COMMAND = "codex";
 const DEFAULT_CURSOR_COMMAND = "cursor";
@@ -182,15 +182,12 @@ const readConfig = (
       throw new Error("Config must be a JSON object.");
     }
 
-    const envWsUrl = process.env.AGENT_WITCH_WS_URL?.trim() ?? "";
     const configWsUrl =
       typeof parsed.wsUrl === "string" ? parsed.wsUrl.trim() : "";
-    const wsUrl =
-      envWsUrl.length > 0
-        ? envWsUrl
-        : configWsUrl.length > 0
-          ? configWsUrl
-          : DEFAULT_WS_URL;
+    const wsUrl = resolveAgentWitchClientWsUrl({
+      installDir: layout.installDir,
+      configWsUrl,
+    });
     const workspace =
       typeof parsed.workspace === "string" && parsed.workspace.length > 0
         ? parsed.workspace
@@ -842,15 +839,21 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
     if (state.socket === undefined) {
       return;
     }
-    state.socket.removeAllListeners();
-    if (
-      state.socket.readyState === WebSocket.OPEN ||
-      state.socket.readyState === WebSocket.CONNECTING
-    ) {
-      state.socket.close();
-    }
+    const socket = state.socket;
     state.socket = undefined;
     state.wsConnected = false;
+    socket.removeAllListeners("open");
+    socket.removeAllListeners("message");
+    socket.removeAllListeners("close");
+    socket.on("error", () => {
+      // Closing a CONNECTING socket emits error; avoid uncaught 'error' crash.
+    });
+    if (
+      socket.readyState === WebSocket.OPEN ||
+      socket.readyState === WebSocket.CONNECTING
+    ) {
+      socket.close();
+    }
   };
 
   const startLocalHealthCheck = (): void => {
@@ -1621,10 +1624,20 @@ const main = async (): Promise<void> => {
     process.exit(0);
   }
 
-  const reconnectWebSockets = (): void => {
-    for (const client of clients) {
-      client.reviveWebSocket();
-    }
+  const reconnectWebSocketsIfStale = (): void => {
+    configs.forEach((config, index) => {
+      const health = readAgentWitchConnectionHealth(config.layout);
+      if (
+        health !== null &&
+        !isAgentWitchConnectionHealthStale(
+          health,
+          AGENT_WITCH_CONNECTION_STALE_MS,
+        )
+      ) {
+        return;
+      }
+      clients[index]?.reviveWebSocket();
+    });
   };
 
   let shutdown = (): void => {
@@ -1632,7 +1645,7 @@ const main = async (): Promise<void> => {
   };
 
   const inProcessServices = await startAgentWitchInProcessServices({
-    reconnectWebSockets,
+    reconnectWebSockets: reconnectWebSocketsIfStale,
     onLostMachineLease: () => {
       console.log(
         "[agent-witch] Lost machine lease to another process — shutting down.",
@@ -1645,7 +1658,7 @@ const main = async (): Promise<void> => {
     layout: configs[0]!.layout,
     controllers: {
       getStatus: primaryClient.getStatus,
-      reviveWebSocket: reconnectWebSockets,
+      reviveWebSocket: reconnectWebSocketsIfStale,
       reportHarnessManifestIfConnected:
         primaryClient.reportHarnessManifestIfConnected,
     },

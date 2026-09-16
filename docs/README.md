@@ -14,6 +14,7 @@ Product overview lives in the [root README](../README.md). This tree holds **tec
 
 ## Product concepts
 
+- [Repository name vs Agent Witch hosting](product/repo-name-and-hosting.md)
 - [Capabilities, harness, library, marketplace](product/concepts.md)
 - [UX simplification — personas, language, onboarding checklist](product/ux-simplification.md)
 

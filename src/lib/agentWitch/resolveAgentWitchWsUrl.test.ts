@@ -15,12 +15,15 @@ describe("resolveAgentWitchWsUrl", () => {
     process.env.AGENT_WITCH_WS_URL = previousValue;
   });
 
-  it("builds the websocket url from the app origin by default", () => {
+  it("hardcodes production WS for non-local origins when env unset", () => {
     const previousValue = process.env.AGENT_WITCH_WS_URL;
     process.env.AGENT_WITCH_WS_URL = "";
 
-    expect(resolveAgentWitchWsUrl("https://www.agentwitch.com")).toBe(
+    expect(resolveAgentWitchWsUrl("https://agentwitch.com")).toBe(
       "wss://www.agentwitch.com/api/agent-witch/ws",
+    );
+    expect(resolveAgentWitchWsUrl("http://localhost:3000")).toBe(
+      "ws://localhost:3000/api/agent-witch/ws",
     );
 
     process.env.AGENT_WITCH_WS_URL = previousValue;

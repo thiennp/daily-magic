@@ -15,8 +15,8 @@ export interface AgentWitchInProcessServicesHandle {
 
 export interface StartAgentWitchInProcessServicesInput {
   /**
-   * When set, stale WS recovery reconnects in-process instead of
-   * launchctl kickstart (which spawned duplicate clients).
+   * When set, called on the watchdog interval. The implementation should
+   * reconnect only when connection health is stale (not on every tick).
    */
   readonly reconnectWebSockets?: () => void;
   readonly onLostMachineLease?: () => void;

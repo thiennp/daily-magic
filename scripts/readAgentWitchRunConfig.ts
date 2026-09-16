@@ -1,5 +1,7 @@
 import fs from "node:fs";
 
+import { resolveAgentWitchClientWsUrl } from "@/lib/agentWitch/resolveAgentWitchClientWsUrl";
+
 import {
   resolveAgentWitchLocalLayout,
   type AgentWitchLocalLayout,
@@ -17,7 +19,6 @@ export interface AgentWitchRunConfig {
   readonly layout: AgentWitchLocalLayout;
 }
 
-const DEFAULT_WS_URL = "ws://localhost:3000/api/agent-witch/ws";
 const DEFAULT_CLAUDE_COMMAND = "claude";
 const DEFAULT_CODEX_COMMAND = "codex";
 const DEFAULT_CURSOR_COMMAND = "cursor";
@@ -42,10 +43,12 @@ export const readAgentWitchRunConfig = (): AgentWitchRunConfig | null => {
       return null;
     }
 
-    const wsUrl =
-      typeof parsed.wsUrl === "string" && parsed.wsUrl.length > 0
-        ? parsed.wsUrl
-        : DEFAULT_WS_URL;
+    const configWsUrl =
+      typeof parsed.wsUrl === "string" ? parsed.wsUrl.trim() : "";
+    const wsUrl = resolveAgentWitchClientWsUrl({
+      installDir: layout.installDir,
+      configWsUrl,
+    });
     const workspace =
       typeof parsed.workspace === "string" && parsed.workspace.length > 0
         ? parsed.workspace

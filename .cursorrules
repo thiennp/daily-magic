@@ -5,3 +5,5 @@ Bootstrap: **`rules-harness-bootstrap.mdc`** + **`npm run harness:bootstrap`** (
 Invariants: **`rules-bundle-core.mdc`**. Git hooks: **`npm run harness:bootstrap -- --workflow=commit`**.
 
 Tailwind CSS 4 — not SCSS modules. No EnergyCenter Jira/Bitbucket/Sentry/React Router patterns unless reintroduced.
+
+Product: repo **daily-magic** = **Agent Witch** at **www.agentwitch.com** — not `daily-magic.d.energie.check24.de` (`docs/product/repo-name-and-hosting.md`).

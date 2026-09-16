@@ -4,6 +4,14 @@ Canonical agent instructions for Codex, Cursor, Claude, and compatible tools.
 
 Read **`CLAUDE.md`** for project overview, stack, and verification commands.
 
+## Product vs repository name (read first)
+
+- **Repo folder:** `daily-magic` — this git project.
+- **Product / production:** **Agent Witch** at **`https://www.agentwitch.com`** (same codebase).
+- **Not Agent Witch:** `daily-magic.d.energie.check24.de` and other CHECK24 hosts — do not use for Mac `wsUrl`, AW Live, or deploy recovery unless the user explicitly says so.
+
+Details: **`docs/product/repo-name-and-hosting.md`** · rule **`rules-product-hosting-boundaries.mdc`**.
+
 ## Harness locations
 
 - **Bootstrap:** `npm run harness:bootstrap` — manifest `.cursor/harness/agent-bootstrap.manifest.json`

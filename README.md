@@ -1,6 +1,6 @@
-# Daily Magic
+# Daily Magic (Agent Witch)
 
-Daily Magic is a web control plane for **running AI coding agents on your Mac** (and optional **Cursor Cloud**), with team dispatch, run history, and shared agent capabilities.
+This repository (`daily-magic`) is the codebase for **[Agent Witch](https://www.agentwitch.com)** — a web control plane for **running AI coding agents on your Mac** (and optional **Cursor Cloud**), with team dispatch, run history, and shared agent capabilities.
 
 ## What you can do
 
