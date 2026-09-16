@@ -96,6 +96,11 @@ import {
 } from "./agentWitchDeviceKeypair";
 import { appendAgentWitchLocalTraffic } from "./agentWitchLocalTrafficLog";
 import {
+  recordAgentWitchLocalTraceEvent,
+  recordAgentWitchWsTraceFromObject,
+} from "./agentWitchLocalWsTraceLog";
+import { registerAgentWitchProcessTraceHandlers } from "./registerAgentWitchProcessTraceHandlers";
+import {
   resolveLocalAppPublicKey,
   startAgentWitchLocalApp,
 } from "./agentWitchLocalApp";
@@ -259,6 +264,7 @@ const sendMessage = (
         type: String(message.type ?? "unknown"),
         summary: "outbound WS frame",
       });
+      recordAgentWitchWsTraceFromObject(layout, "out", message);
     }
   }
 };
@@ -911,6 +917,7 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
       type: parsed.type,
       summary: "inbound WS frame",
     });
+    recordAgentWitchWsTraceFromObject(config.layout, "in", parsed);
 
     const requestId =
       typeof parsed.requestId === "string" ? parsed.requestId : undefined;
@@ -1473,17 +1480,30 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
       }
     });
 
-    socket.on("close", () => {
+    socket.on("close", (code, reason) => {
       clearHeartbeat();
       state.socket = undefined;
       state.wsConnected = false;
       state.reconnectAttempt += 1;
+      const reasonText =
+        typeof reason === "string" ? reason : reason.toString("utf8");
+      recordAgentWitchLocalTraceEvent(config.layout, {
+        kind: "ws_close",
+        message: "WebSocket closed",
+        code,
+        reason: reasonText,
+      });
       console.log("[agent-witch] Disconnected from server.");
       scheduleReconnect();
     });
 
     socket.on("error", (error) => {
       state.wakeError = error.message;
+      recordAgentWitchLocalTraceEvent(config.layout, {
+        kind: "ws_error",
+        message: error.message,
+        stack: error.stack,
+      });
       console.error(`[agent-witch] Socket error: ${error.message}`);
     });
   };
@@ -1589,6 +1609,10 @@ const main = async (): Promise<void> => {
   bootoutAgentWitchAuxiliaryLaunchAgents();
 
   const configs = await waitForConfigs();
+  const primaryConfig = configs[0];
+  if (primaryConfig !== undefined) {
+    registerAgentWitchProcessTraceHandlers(primaryConfig.layout);
+  }
   const clients = configs.map((config) => createAgentWitchClient(config));
   const primaryClient = clients[0];
   if (primaryClient === undefined) {

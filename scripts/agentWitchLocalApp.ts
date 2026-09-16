@@ -12,6 +12,11 @@ import {
   readAgentWitchLocalTraffic,
 } from "./agentWitchLocalTrafficLog";
 import {
+  clearAgentWitchLocalWsTrace,
+  readAgentWitchLocalWsTrace,
+} from "./agentWitchLocalWsTraceLog";
+import { buildAgentWitchLocalStatusTraceSection } from "./buildAgentWitchLocalStatusTraceSection";
+import {
   queryAgentWitchRag,
   readAgentWitchRagChunks,
 } from "./agentWitchLocalRag";
@@ -357,6 +362,27 @@ export const startAgentWitchLocalApp = (input: {
         return;
       }
 
+      if (method === "GET" && pathname === "/api/trace") {
+        sendJson(response, 200, {
+          entries: readAgentWitchLocalWsTrace(input.layout),
+        });
+        return;
+      }
+
+      if (
+        (method === "DELETE" && pathname === "/api/trace") ||
+        (method === "POST" && pathname === "/api/trace/clear")
+      ) {
+        clearAgentWitchLocalWsTrace(input.layout);
+        if (method === "POST") {
+          response.writeHead(303, { Location: "/status" });
+          response.end();
+          return;
+        }
+        sendJson(response, 200, { ok: true });
+        return;
+      }
+
       if (method === "GET" && pathname === "/api/knowledge") {
         const url = new URL(
           request.url ?? "/",
@@ -529,13 +555,15 @@ export const startAgentWitchLocalApp = (input: {
             title: "Status",
             activePath: "/status",
             installVersion: installBundle.installVersion,
-            body: buildStatusBody({
+            body: `${buildStatusBody({
               status,
               stale,
               linkCode: ensureLinkCode(),
               installBundleVersion: installBundle.installBundleVersion,
               installBundleUpdatedAt: installBundle.installBundleUpdatedAt,
-            }),
+            })}${buildAgentWitchLocalStatusTraceSection({
+              entries: readAgentWitchLocalWsTrace(input.layout),
+            })}`,
           }),
         );
         return;
