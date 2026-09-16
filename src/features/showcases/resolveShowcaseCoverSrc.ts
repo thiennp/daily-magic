@@ -27,6 +27,11 @@ export const resolveShowcaseCoverSrc = (
     return buildTeamDispatchShowcaseSvgPath(image.teamDispatchScreenId);
   }
 
+  // E2E verified articles ship viewport PNGs only (no curated SVG pair).
+  if (image.src.startsWith("/showcases/e2e/")) {
+    return image.src;
+  }
+
   if (image.src.endsWith(".png")) {
     return image.src.replace(/\.png$/u, ".svg");
   }
