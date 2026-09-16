@@ -4,7 +4,7 @@ export const HOME_MARKETING_HERO_COPY = {
   eyebrow: "For you and your team",
   title: "Agent jobs on your Mac — solo or with your team.",
   description: `${AGENT_WITCH_PRODUCT_NAME} connects your browser to Mac runners: pick a workflow, send a New task, and track every job in Reports.`,
-  cta: "Create free account →",
+  cta: "Create free account",
   steps: [
     "Pick a ready-made workflow—or make your own",
     "Add your Mac as the worker—it runs the jobs you set up",
@@ -29,7 +29,7 @@ export const HOME_MARKETING_POPULAR_PRESET_DIALOG_COPY = {
   bodySuffix:
     ", create a free account or sign in. You will be ready to run it in minutes.",
   signIn: "Sign in",
-  register: "Create account here",
+  register: "Create free account",
   dismiss: "Not now",
 } as const;
 

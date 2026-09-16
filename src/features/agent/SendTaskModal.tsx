@@ -64,7 +64,7 @@ export default function SendTaskModal({
       {isExpanded ? (
         <button
           type="button"
-          aria-label="Minimize send a task overlay"
+          aria-label="Minimize New task dialog"
           className="fixed inset-0 h-full w-full bg-gray-400/50 backdrop-blur-[32px]"
           onClick={onMinimize}
         />
@@ -96,7 +96,7 @@ export default function SendTaskModal({
           {isMinimized ? (
             <button
               type="button"
-              aria-label="Expand send a task"
+              aria-label="Expand New task dialog"
               className="absolute inset-0 z-10 cursor-pointer bg-transparent"
               onClick={onExpand}
             />

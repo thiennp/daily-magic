@@ -1,6 +1,6 @@
 # Styleguide
 
-TailAdmin component catalog for development.
+Agent Witch design system reference for staff (components, surfaces, and brand).
 
 ## Registry
 

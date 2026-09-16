@@ -22,7 +22,8 @@ describe("buildAgentLiveProgressSteps", () => {
   it("stays on prepare when only the ready banner is present", () => {
     const result = buildAgentLiveProgressSteps({
       status: "idle",
-      output: "Claude is ready on your Mac.\nSend a task from the box below.\n",
+      output:
+        "Claude is ready on your Mac.\nUse New task below when you are ready.\n",
     });
 
     expect(result.steps.map((step) => [step.label, step.state])).toEqual([
