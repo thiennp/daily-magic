@@ -28,6 +28,12 @@ export default function WsTestComposerFooter({
   const canCopyPrompt =
     composer.resolvedPrompt.trim().length > 0 &&
     composer.workflowValidationErrors.length === 0;
+  const focusPrompt = (): void => {
+    const promptField = document.querySelector<HTMLTextAreaElement>(
+      "[data-send-task-prompt]",
+    );
+    promptField?.focus();
+  };
   return (
     <WsTestComposerActions
       connectionStatus={connectionStatus}
@@ -40,11 +46,16 @@ export default function WsTestComposerFooter({
       }
       isWorkflowTask={composer.isWorkflowTask}
       isTeamDispatch={composer.isTeamDispatch}
+      isLibraryPlaybook={composer.isLibraryPlaybook}
+      resolvedPrompt={composer.resolvedPrompt}
+      workflowValidationErrors={composer.workflowValidationErrors}
       hasDispatchReadyMac={composer.hasDispatchReadyMac}
       selectedDeviceCanDispatch={composer.selectedDeviceCanDispatch}
       devices={composer.macDevices}
       selectedDeviceId={macDispatchDeviceId}
       devicesHadLoadError={composer.devicesHadLoadError}
+      serverInstallBundleVersion={composer.serverInstallBundleVersion}
+      onFocusPrompt={focusPrompt}
       selectedGroupId={composer.selectedGroupId}
       selectedTargetUserId={composer.selectedTargetUserId}
       selectedCapabilityId={composer.selectedCapabilityId}

@@ -1,11 +1,12 @@
 "use client";
 
-import { useMemo } from "react";
-
 import ComposerBlockedActionButtons from "@/features/agent/ComposerBlockedActionButtons";
 import WsTestComposerHelperText from "@/features/agent/WsTestComposerHelperText";
+import { useWsTestComposerActionsModel } from "@/features/agent/hooks/useWsTestComposerActionsModel";
+import type { MacPresenceTier } from "@/features/agent-witch/online-wake";
+import SendReadinessBanner from "@/features/agent/send-readiness/SendReadinessBanner";
+import SendReadinessMacReadyChip from "@/features/agent/send-readiness/SendReadinessMacReadyChip";
 import type { WsTestConnectionStatus } from "@/features/agent/types/WsTestConnectionStatus.type";
-import { resolveComposerBlockedAction } from "@/features/agent/utils/resolveComposerBlockedAction";
 import { useCopyToClipboard } from "@/hooks/useCopyToClipboard";
 
 interface WsTestComposerActionsProps {
@@ -16,15 +17,22 @@ interface WsTestComposerActionsProps {
   readonly sendLabel: string;
   readonly isWorkflowTask: boolean;
   readonly isTeamDispatch: boolean;
+  readonly isLibraryPlaybook: boolean;
+  readonly resolvedPrompt: string;
+  readonly workflowValidationErrors: readonly string[];
   readonly hasDispatchReadyMac: boolean;
   readonly selectedDeviceCanDispatch: boolean;
   readonly devices: readonly {
     readonly id: string;
     readonly isConnected: boolean;
     readonly isOnline: boolean;
+    readonly presenceTier?: MacPresenceTier;
+    readonly isDispatchReady?: boolean;
+    readonly installBundleVersion?: string | null;
   }[];
   readonly selectedDeviceId: string;
   readonly devicesHadLoadError: boolean;
+  readonly serverInstallBundleVersion: string | null;
   readonly selectedGroupId: string;
   readonly selectedTargetUserId: string;
   readonly selectedCapabilityId: string;
@@ -33,39 +41,30 @@ interface WsTestComposerActionsProps {
   readonly onQueue: () => void;
   readonly onRetryDevices: () => void;
   readonly onUseOnlineMac: (deviceId: string) => void;
+  readonly onFocusPrompt: () => void;
 }
 
 export default function WsTestComposerActions(
   props: WsTestComposerActionsProps,
 ) {
   const { copied, copy } = useCopyToClipboard();
-
-  const blockedAction = useMemo(
-    () =>
-      resolveComposerBlockedAction({
-        connectionStatus: props.connectionStatus,
-        isTeamDispatch: props.isTeamDispatch,
-        isWorkflowTask: props.isWorkflowTask,
-        canCopyPrompt: props.canCopyPrompt,
-        hasDispatchReadyMac: props.hasDispatchReadyMac,
-        selectedDeviceCanDispatch: props.selectedDeviceCanDispatch,
-        devices: props.devices,
-        selectedDeviceId: props.selectedDeviceId,
-        devicesHadLoadError: props.devicesHadLoadError,
-        isSendDisabled: props.isSendDisabled,
-        selectedGroupId: props.selectedGroupId,
-        selectedTargetUserId: props.selectedTargetUserId,
-        selectedCapabilityId: props.selectedCapabilityId,
-        manageMacsHref: "/#your-setup",
-      }),
-    [props],
-  );
+  const { blockedAction, readinessUi } = useWsTestComposerActionsModel(props);
 
   return (
     <>
+      {readinessUi.readinessBanner !== null ? (
+        <SendReadinessBanner
+          banner={readinessUi.readinessBanner}
+          onRetry={props.onRetryDevices}
+          onFocusPrompt={props.onFocusPrompt}
+        />
+      ) : readinessUi.showMacReadyChip ? (
+        <SendReadinessMacReadyChip />
+      ) : null}
       <ComposerBlockedActionButtons
         blockedAction={blockedAction}
         isSendDisabled={props.isSendDisabled}
+        sendDisabledReason={readinessUi.sendDisabledReason}
         sendLabel={props.sendLabel}
         copied={copied}
         onSend={props.onSend}
@@ -81,7 +80,9 @@ export default function WsTestComposerActions(
         }}
         onRetryDevices={props.onRetryDevices}
       />
-      <WsTestComposerHelperText blockedAction={blockedAction} />
+      {readinessUi.showLegacyHelper ? (
+        <WsTestComposerHelperText blockedAction={blockedAction} />
+      ) : null}
     </>
   );
 }

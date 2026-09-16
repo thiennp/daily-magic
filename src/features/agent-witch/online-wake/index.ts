@@ -21,6 +21,12 @@ export {
 } from "./macDevicePresence";
 
 export {
+  countWriterSendReadyMacs,
+  hasAnyWriterSendReadyMac,
+  isMacWriterSendReady,
+} from "./macDeviceWriterSendReady";
+
+export {
   canRequestAgentWitchWake,
   requestAgentWitchWake,
 } from "./requestAgentWitchWake";

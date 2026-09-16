@@ -1,4 +1,4 @@
-import { canDispatchToMac } from "@/features/agent-witch/online-wake";
+import { isMacWriterSendReady } from "@/features/agent-witch/online-wake";
 import { buildWsTestSendDisabledState } from "@/features/agent/utils/buildWsTestSendDisabledState";
 import { isCursorCloudExecutorDeviceId } from "@/lib/cursorCloud/cursorCloudExecutorDeviceId.constant";
 import type useMacDeviceSelection from "@/features/agent/hooks/useMacDeviceSelection";
@@ -23,6 +23,7 @@ export const buildWsTestComposerDispatchState = (input: {
   readonly dispatchReadyMacCount: number;
   readonly selectedDeviceCanDispatch: boolean;
   readonly devicesHadLoadError: boolean;
+  readonly serverInstallBundleVersion: string | null;
   readonly refreshMacDevices: () => Promise<void>;
   readonly renameMacDevice: ReturnType<
     typeof useMacDeviceSelection
@@ -52,7 +53,7 @@ export const buildWsTestComposerDispatchState = (input: {
     const selectedDevice = input.macSelection.devices.find(
       (device) => device.id === deviceId,
     );
-    return selectedDevice !== undefined && canDispatchToMac(selectedDevice);
+    return selectedDevice !== undefined && isMacWriterSendReady(selectedDevice);
   };
 
   return {
@@ -69,6 +70,7 @@ export const buildWsTestComposerDispatchState = (input: {
       input.macSelection.selectedDeviceId,
     ),
     devicesHadLoadError: input.macSelection.devicesHadLoadError,
+    serverInstallBundleVersion: input.macSelection.serverInstallBundleVersion,
     refreshMacDevices: input.macSelection.refreshDevices,
     renameMacDevice: input.macSelection.renameDevice,
     isOwnDeviceDispatch: input.macSelection.isOwnDeviceDispatch,
