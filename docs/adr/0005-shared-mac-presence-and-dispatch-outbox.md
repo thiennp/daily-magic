@@ -50,6 +50,10 @@ Lifecycle hooks reuse existing call sites:
 
 Presence resolution checks the local hub first (unchanged fast path), then the registry for **other** instances. Cross-instance delivery for queueable work goes through the outbox rather than direct instance-to-instance RPC.
 
+**Writer / shell interactive dispatch** uses a short-lived **`agent_witch_hub_dispatch_relay`** table when the registry shows the Mac live on another `instance_id`: the HTTP handler that lacks the socket enqueues a relay row for the owner instance, polls for completion (≤ ~15s), and returns the owner’s result. The owner replica drains relay rows on a 1s poll (and on outbox drain). Writer runs are still created only after hub client resolution on the executing Node — never queued as `running` (AGENT-022).
+
+`GET /api/agent-witch/devices` sets an **`aw_hub_instance`** HttpOnly cookie (local hub id or registry owner) so operators can optionally configure load-balancer sticky routing to the socket-owning replica.
+
 ### Durable dispatch outbox
 
 ```sql
@@ -79,12 +83,12 @@ Only work that can legitimately wait is queued:
 
 `GET /api/agent-witch/devices` exposes four tiers via `presenceTier`:
 
-| Tier                  | Meaning                                       | `isConnected` | `isDispatchReady`              | Writer send-a-task               |
-| --------------------- | --------------------------------------------- | ------------- | ------------------------------ | -------------------------------- |
-| `live`                | Agent socket on **this** Node hub             | `true`        | `true` (same as `isConnected`) | Allowed                          |
-| `live_other_instance` | Registry says socket on another `instance_id` | `false`       | `false`                        | Not allowed; use retry / refresh |
-| `recent`              | `last_seen_at` within ~90s, no live socket    | `false`       | `false`                        | Not allowed                      |
-| `offline`             | Otherwise                                     | `false`       | `false`                        | Not allowed                      |
+| Tier                  | Meaning                                       | `isConnected` | `isDispatchReady`              | Writer send-a-task                         |
+| --------------------- | --------------------------------------------- | ------------- | ------------------------------ | ------------------------------------------ |
+| `live`                | Agent socket on **this** Node hub             | `true`        | `true` (same as `isConnected`) | Allowed                                    |
+| `live_other_instance` | Registry says socket on another `instance_id` | `false`       | `false`                        | Relay to owner instance or retry / refresh |
+| `recent`              | `last_seen_at` within ~90s, no live socket    | `false`       | `false`                        | Not allowed                                |
+| `offline`             | Otherwise                                     | `false`       | `false`                        | Not allowed                                |
 
 `isOnline` remains `true` for `live`, `live_other_instance`, or `recent` (visibility / wake hints). **Do not** treat `isOnline` alone as writer-ready.
 
@@ -125,7 +129,7 @@ Shipped in stages with tests: registry + migration; lifecycle wiring; presence t
 
 ## Consequences
 
-- **Class A** is **classified**, not eliminated for writer dispatch: the UI can show `live_other_instance` or “Mac reconnecting” while `POST /api/agent-runs/dispatch` on another instance still cannot run the writer until the Mac’s socket is on that process (OPEN-002).
+- **Class A** is mitigated for writer dispatch via **hub dispatch relay** and optional **`aw_hub_instance` sticky routing**; brief deploy handoff can still return `mac_reconnecting` until the registry and relay align (OPEN-002 in `KNOWN_ISSUES.md`).
 - **Class B** becomes a visible wait (`mac_reconnecting`, queued outbox) rather than a generic offline string for queueable types.
 - Interactive shell and writer messages still fail during reconnect windows by design; they gain clearer causes and limited client retry instead of silent queuing.
 - Presence fallback adds database reads; the local-hub map path is unchanged for the common `live` case.
@@ -135,7 +139,8 @@ Shipped in stages with tests: registry + migration; lifecycle wiring; presence t
 ## References
 
 - `src/lib/agentWitch/resolveLiveAgentClientsByDeviceIdForUser.ts`
-- `src/lib/dispatch/resolveLiveWriterAgentForRun.ts`, `retargetWriterRunToSoleLiveMac.ts`
+- `src/lib/agentWitch/agentWitchHubDispatchRelay.ts`, `processAgentWitchHubDispatchRelaysForHub.ts`
+- `src/lib/dispatch/tryDispatchClaudeRunThroughHubRelay.ts`
 - `src/lib/agentWitch/resolveDispatchTargetAgentClient.ts`, `resolveCurrentAgentWitchDeviceId.ts`
 - `src/features/agent-witch/KNOWN_ISSUES.md` (OPEN-001–003)
 - ADR 0002 (WebSocket server), ADR 0006 (production hosting)
