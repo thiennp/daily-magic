@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import HomeMarketingPopularPresetsGrid from "@/features/home/components/HomeMarketingPopularPresetsGrid";
+import { homeMarketingSignInCallbackMarketplaceHref } from "@/features/home/constants/homeMarketingAuthCallbackHrefs.constant";
 import { HOME_MARKETING_POPULAR_PRESETS_COPY } from "@/features/home/constants/homeMarketingLandingCopy.constant";
 import resolveHomePopularPresets from "@/features/home/utils/resolveHomePopularPresets";
 import { MARKETING_TEXT_LINK_CLASSES } from "@/features/marketing/marketingInteractiveClasses.constant";
@@ -28,7 +29,7 @@ export default function HomeMarketingPopularPresets() {
       >
         {copy.footerPrefix}{" "}
         <Link
-          href="/login?callbackUrl=%2Fmarketplace"
+          href={homeMarketingSignInCallbackMarketplaceHref}
           className={MARKETING_TEXT_LINK_CLASSES}
         >
           {copy.footerLink}

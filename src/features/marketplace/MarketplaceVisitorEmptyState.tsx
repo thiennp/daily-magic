@@ -1,5 +1,6 @@
 "use client";
 
+import { homeMarketingSignInCallbackMarketplaceHref } from "@/features/home/constants/homeMarketingAuthCallbackHrefs.constant";
 import HomeMarketingPopularPresetsGrid from "@/features/home/components/HomeMarketingPopularPresetsGrid";
 import resolveHomePopularPresets from "@/features/home/utils/resolveHomePopularPresets";
 import MarketingCtaLink from "@/features/marketing/MarketingCtaLink";
@@ -31,7 +32,7 @@ export default function MarketplaceVisitorEmptyState() {
           Create free account
         </MarketingCtaLink>
         <MarketingCtaLink
-          href="/login?callbackUrl=%2Fmarketplace"
+          href={homeMarketingSignInCallbackMarketplaceHref}
           variant="secondary"
         >
           Sign in
