@@ -291,6 +291,68 @@ export const completeAgentRunOnCloud = async (
   }
 };
 
+export interface AgentWitchCloudProject {
+  readonly id: string;
+  readonly name: string;
+  readonly folderPath: string;
+}
+
+const parseAgentWitchCloudProjectsResponse = (
+  body: unknown,
+): readonly AgentWitchCloudProject[] | null => {
+  if (typeof body !== "object" || body === null) {
+    return null;
+  }
+
+  const record = body as { ok?: unknown; projects?: unknown };
+  if (record.ok !== true || !Array.isArray(record.projects)) {
+    return null;
+  }
+
+  const projects: AgentWitchCloudProject[] = [];
+
+  for (const item of record.projects) {
+    if (typeof item !== "object" || item === null) {
+      continue;
+    }
+    const row = item as Record<string, unknown>;
+    const id = typeof row.id === "string" ? row.id.trim() : "";
+    const name = typeof row.name === "string" ? row.name.trim() : "";
+    const folderPath =
+      typeof row.folderPath === "string" ? row.folderPath.trim() : "";
+    if (id.length === 0 || name.length === 0 || folderPath.length === 0) {
+      continue;
+    }
+    projects.push({ id, name, folderPath });
+  }
+
+  return projects;
+};
+
+export const fetchAgentWitchCloudProjects = async (
+  config: AgentWitchCloudApiConfig,
+): Promise<readonly AgentWitchCloudProject[] | null> => {
+  try {
+    const response = await fetch(
+      `${config.appOrigin}/api/agent-witch/projects`,
+      {
+        method: "GET",
+        headers: buildDeviceAuthHeaders(config.pairingToken),
+        signal: AbortSignal.timeout(15_000),
+      },
+    );
+
+    if (!response.ok) {
+      return null;
+    }
+
+    const body: unknown = await response.json();
+    return parseAgentWitchCloudProjectsResponse(body);
+  } catch {
+    return null;
+  }
+};
+
 export const reportLocalAutomationRunToCloud = async (
   config: AgentWitchCloudApiConfig,
   automationId: string,

@@ -1,3 +1,4 @@
+import { buildAgentWitchLocalCloudBanner } from "./buildAgentWitchLocalCloudBanner";
 import type { AgentWitchLocalProjectRegistryEntry } from "./agentWitchLocalProjectsRegistry";
 
 const escapeHtml = (value: string): string =>
@@ -9,6 +10,9 @@ const escapeHtml = (value: string): string =>
 
 export const buildAgentWitchLocalProjectsPageBody = (input: {
   readonly projects: readonly AgentWitchLocalProjectRegistryEntry[];
+  readonly cloudAppOrigin: string;
+  readonly syncMessage?: string | null;
+  readonly syncOk?: boolean;
   readonly flashMessage?: string | null;
   readonly flashError?: string | null;
 }): string => {
@@ -18,30 +22,46 @@ export const buildAgentWitchLocalProjectsPageBody = (input: {
       ? `<div class="alert-success">${escapeHtml(input.flashMessage)}</div>`
       : "";
 
-  const rows =
+  const cloudBanner = buildAgentWitchLocalCloudBanner({
+    cloudAppOrigin: input.cloudAppOrigin,
+    manageHref: `${input.cloudAppOrigin}/agent`,
+    manageLabel: "Manage repositories on Agent Witch Live",
+    body: "Repositories are created in the browser task composer. This page syncs them to this Mac so you can link playbooks into each repo’s .cursor tree.",
+    syncMessage: input.syncMessage,
+    syncOk: input.syncOk,
+  });
+
+  const projectRows =
     input.projects.length === 0
-      ? `<p class="empty">No projects yet. Add a repo folder to link harness sets and run tasks in context.</p>`
+      ? `<p class="empty">No repositories synced yet. Add one in Agent Witch Live (task composer), then refresh this page.</p>`
       : `<ul class="project-list">${input.projects
-          .map(
-            (project) =>
-              `<li class="project-list-item">
+          .map((project) => {
+            const liveBadge =
+              project.cloudProjectId !== undefined
+                ? `<span class="project-live-badge">Live</span>`
+                : `<span class="project-local-badge">Mac only</span>`;
+            return `<li class="project-list-item">
                 <a class="project-list-link" href="/project?id=${encodeURIComponent(project.id)}">
-                  <strong>${escapeHtml(project.name)}</strong>
+                  <strong>${escapeHtml(project.name)}</strong> ${liveBadge}
                   <span class="muted mono">${escapeHtml(project.projectFolderPath)}</span>
                 </a>
-              </li>`,
-          )
+              </li>`;
+          })
           .join("")}</ul>`;
 
-  return `${flash}<section class="card">
-      <p class="eyebrow">Workspaces</p>
+  return `${flash}${cloudBanner}<section class="card">
+      <p class="eyebrow">Repositories</p>
       <h1>Projects</h1>
-      <p class="lede">Register repo folders on this Mac. Open a project to choose which profile harness sets apply to its <code>.cursor</code> tree.</p>
-      <form method="POST" action="/projects/add" class="stack">
-        <div class="actions">
-          <button class="btn btn-primary" type="submit">Add project…</button>
-        </div>
-      </form>
-      ${rows}
+      <p class="lede">Synced from Agent Witch Live when the Mac client is paired. Open a project to link installed playbooks into that folder.</p>
+      <details class="local-advanced-block">
+        <summary>Advanced: register a folder on this Mac only</summary>
+        <form method="POST" action="/projects/add" class="stack">
+          <p class="muted">Use when a repo is not in Agent Witch Live yet. Prefer adding repositories in the browser so tasks and this list stay aligned.</p>
+          <div class="actions">
+            <button class="btn btn-secondary" type="submit">Choose folder…</button>
+          </div>
+        </form>
+      </details>
+      ${projectRows}
     </section>`;
 };

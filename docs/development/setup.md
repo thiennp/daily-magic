@@ -58,6 +58,16 @@ npm run agent-witch
 
 Test UI: http://localhost:3000/ws-test
 
+## Test auth (no Google / magic link)
+
+For QA and E2E on **localhost** (not `www.agentwitch.com`):
+
+1. `npm run dev` — test `test*@agentwitch.com` on `/login` (no email sent), or
+2. `ALLOW_TEST_AUTH=1 npm run start` — same for production builds locally, or
+3. `npm run test:auth:session -- test-qa-1@agentwitch.com` — prints session cookie values for DevTools.
+
+Playwright: `e2e/helpers/signInTestAccount.ts`. Details: `e2e/README.md`.
+
 ## Sample notes API
 
 Legacy tutorial endpoint (optional):

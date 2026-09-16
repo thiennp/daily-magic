@@ -30,7 +30,7 @@ export default defineConfig({
     // Plain `next start` serves HTTP only and leaves agent-witch disconnected.
     // `.env.local` is optional so CI can boot without a checked-in secrets file.
     command:
-      "if [ -f .env.local ]; then set -a && . ./.env.local && set +a; fi && npm run build && npm run start",
+      "if [ -f .env.local ]; then set -a && . ./.env.local && set +a; fi && export ALLOW_TEST_AUTH=1 E2E=1 && npm run build && npm run start",
     url: `${baseURL}/api/health`,
     reuseExistingServer: !isCi,
     timeout: 300_000,

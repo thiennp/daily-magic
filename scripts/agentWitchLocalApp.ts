@@ -50,6 +50,7 @@ import {
 import { applyInstalledHarnessSetsToProjectCursor } from "./applyInstalledHarnessSetsToProjectCursor";
 import { buildAgentWitchLocalProjectDetailPageBody } from "./buildAgentWitchLocalProjectDetailPage";
 import { buildAgentWitchLocalProjectsPageBody } from "./buildAgentWitchLocalProjectsPage";
+import { syncAgentWitchLocalProjectsFromCloud } from "./syncAgentWitchLocalProjectsFromCloud";
 import { readAgentWitchProjectHarnessSetSlugs } from "./readAgentWitchProjectHarnessLink";
 import { readInstalledLocalHarnessSnapshot } from "./readInstalledLocalHarnessSnapshot";
 import { buildDefaultLocalHarnessScanFolder } from "./localHarness/defaultLocalHarnessScanRoots";
@@ -108,16 +109,13 @@ const resolveHarnessImportSectionExpanded = (
     return false;
   }
 
-  if (input.reveal !== null && input.reveal.sets.length > 0) {
-    return true;
-  }
-
-  return readInstalledLocalHarnessSnapshot(layout).sets.length === 0;
+  return input.reveal !== null && input.reveal.sets.length > 0;
 };
 
 const buildHarnessPageBodyInput = (
   layout: AgentWitchLocalLayout,
   input: {
+    readonly cloudAppOrigin: string;
     readonly reveal: LocalHarnessRevealResult | null;
     readonly scanFolder?: string;
     readonly flashMessage?: string | null;
@@ -131,10 +129,27 @@ const buildHarnessPageBodyInput = (
     buildDefaultLocalHarnessScanFolder(),
   reveal: input.reveal,
   installed: readInstalledLocalHarnessSnapshot(layout),
+  cloudAppOrigin: input.cloudAppOrigin,
   flashMessage: input.flashMessage,
   flashError: input.flashError,
   importSectionExpanded: input.importSectionExpanded,
 });
+
+const syncLocalProjectsFromCloud = async (
+  layout: AgentWitchLocalLayout,
+): Promise<{ readonly ok: boolean; readonly message: string }> => {
+  const runConfig = readAgentWitchRunConfig();
+  if (runConfig === null) {
+    return {
+      ok: false,
+      message:
+        "Mac client config missing — showing folders registered on this Mac only.",
+    };
+  }
+
+  const result = await syncAgentWitchLocalProjectsFromCloud(layout, runConfig);
+  return { ok: result.ok, message: result.message };
+};
 
 type LocalAppStatus = {
   readonly wsConnected: boolean;
@@ -660,6 +675,10 @@ export const startAgentWitchLocalApp = (input: {
           `http://127.0.0.1:${AGENT_WITCH_LOCAL_APP_PORT}`,
         );
         const installBundle = buildInstallBundleStatus();
+        const cloudAppOrigin = resolveAgentWitchLocalCloudAppOrigin(
+          installBundle.installVersion,
+        );
+        const sync = await syncLocalProjectsFromCloud(input.layout);
         const flashMessage =
           url.searchParams.get("added") === "1" ? "Project added." : null;
         sendHtml(
@@ -670,6 +689,9 @@ export const startAgentWitchLocalApp = (input: {
             installVersion: installBundle.installVersion,
             body: buildAgentWitchLocalProjectsPageBody({
               projects: readAgentWitchLocalProjectsRegistry(input.layout),
+              cloudAppOrigin,
+              syncMessage: sync.message,
+              syncOk: sync.ok,
               flashMessage,
             }),
           }),
@@ -683,14 +705,14 @@ export const startAgentWitchLocalApp = (input: {
           `http://127.0.0.1:${AGENT_WITCH_LOCAL_APP_PORT}`,
         );
         const projectId = url.searchParams.get("id")?.trim() ?? "";
+        const installBundle = buildInstallBundleStatus();
+        await syncLocalProjectsFromCloud(input.layout);
         const project = findAgentWitchLocalProjectById(input.layout, projectId);
         if (project === null) {
           response.writeHead(404);
           response.end("Project not found");
           return;
         }
-
-        const installBundle = buildInstallBundleStatus();
         const linkedFlash =
           url.searchParams.get("linked") === "1"
             ? `Harness linked (${url.searchParams.get("files") ?? "0"} file(s) written).`
@@ -806,6 +828,9 @@ export const startAgentWitchLocalApp = (input: {
             justSubmitted,
           },
         );
+        const cloudAppOrigin = resolveAgentWitchLocalCloudAppOrigin(
+          installBundle.installVersion,
+        );
         sendHtml(
           response,
           await buildLocalAppShell({
@@ -814,6 +839,7 @@ export const startAgentWitchLocalApp = (input: {
             installVersion: installBundle.installVersion,
             body: buildAgentWitchLocalHarnessPageBody(
               buildHarnessPageBodyInput(input.layout, {
+                cloudAppOrigin,
                 reveal,
                 scanFolder,
                 flashMessage,
@@ -962,6 +988,9 @@ export const startAgentWitchLocalApp = (input: {
         const reveal = readLocalHarnessRevealCache(input.layout);
         if (reveal === null) {
           const installBundle = buildInstallBundleStatus();
+          const cloudAppOrigin = resolveAgentWitchLocalCloudAppOrigin(
+            installBundle.installVersion,
+          );
           sendHtml(
             response,
             await buildLocalAppShell({
@@ -970,6 +999,7 @@ export const startAgentWitchLocalApp = (input: {
               installVersion: installBundle.installVersion,
               body: buildAgentWitchLocalHarnessPageBody(
                 buildHarnessPageBodyInput(input.layout, {
+                  cloudAppOrigin,
                   reveal: null,
                   flashError: "Run reveal before submit.",
                   importSectionExpanded: true,
@@ -990,6 +1020,9 @@ export const startAgentWitchLocalApp = (input: {
 
         if (!result.ok) {
           const installBundle = buildInstallBundleStatus();
+          const cloudAppOrigin = resolveAgentWitchLocalCloudAppOrigin(
+            installBundle.installVersion,
+          );
           sendHtml(
             response,
             await buildLocalAppShell({
@@ -998,6 +1031,7 @@ export const startAgentWitchLocalApp = (input: {
               installVersion: installBundle.installVersion,
               body: buildAgentWitchLocalHarnessPageBody(
                 buildHarnessPageBodyInput(input.layout, {
+                  cloudAppOrigin,
                   reveal,
                   flashError: result.errorMessage ?? "Submit failed.",
                   importSectionExpanded: true,

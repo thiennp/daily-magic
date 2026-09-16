@@ -6,6 +6,7 @@ import { afterEach, describe, expect, it } from "vitest";
 
 import {
   addAgentWitchLocalProjectToRegistry,
+  mergeCloudProjectsIntoLocalRegistry,
   readAgentWitchLocalProjectsRegistry,
 } from "./agentWitchLocalProjectsRegistry";
 import type { AgentWitchLocalLayout } from "./resolveAgentWitchLocalLayout";
@@ -51,5 +52,33 @@ describe("agentWitchLocalProjectsRegistry", () => {
     const projects = readAgentWitchLocalProjectsRegistry(layout);
     expect(projects).toHaveLength(1);
     expect(projects[0]?.name).toBe("My App");
+  });
+
+  it("merges cloud projects and links cloudProjectId", () => {
+    const layout = makeLayout();
+    addAgentWitchLocalProjectToRegistry(layout, {
+      projectFolderPath: "/Users/me/dev/app",
+      name: "Old name",
+    });
+
+    const localId = readAgentWitchLocalProjectsRegistry(layout)[0]?.id;
+    expect(localId).toBeDefined();
+
+    const { added, updated } = mergeCloudProjectsIntoLocalRegistry(layout, [
+      {
+        id: "cloud-uuid-1",
+        name: "Live App",
+        folderPath: "/Users/me/dev/app",
+      },
+    ]);
+
+    expect(added).toBe(0);
+    expect(updated).toBe(1);
+
+    const merged = readAgentWitchLocalProjectsRegistry(layout);
+    expect(merged).toHaveLength(1);
+    expect(merged[0]?.cloudProjectId).toBe("cloud-uuid-1");
+    expect(merged[0]?.name).toBe("Live App");
+    expect(merged[0]?.id).toBe(localId);
   });
 });

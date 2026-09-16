@@ -5,6 +5,7 @@ import { buildAgentWitchLocalHarnessInstalledSection } from "./buildAgentWitchLo
 describe("buildAgentWitchLocalHarnessInstalledSection", () => {
   it("lists installed sets without apply-to-project form", () => {
     const html = buildAgentWitchLocalHarnessInstalledSection({
+      cloudAppOrigin: "https://www.agentwitch.com",
       installed: {
         manifestUpdatedAt: "2026-01-01T00:00:00.000Z",
         sets: [

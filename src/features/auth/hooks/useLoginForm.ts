@@ -59,7 +59,7 @@ export default function useLoginForm({
         setFeedback(
           buildLoginFeedback(
             result.error ??
-              "Test account login failed. Ensure SECRET is configured on the server.",
+              "Test account login failed. Use npm run dev locally, or set ALLOW_TEST_AUTH=1 for production builds on localhost.",
           ),
         );
         return;
