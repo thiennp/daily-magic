@@ -27,11 +27,14 @@ export default function MarketplaceVisitorEmptyState() {
       </div>
       <HomeMarketingPopularPresetsGrid presets={presets} />
       <div className="flex flex-wrap items-center gap-3 pt-2">
-        <MarketingCtaLink href="/login?callbackUrl=%2Fmarketplace">
-          Get started
+        <MarketingCtaLink href="/#get-started">
+          Create free account
         </MarketingCtaLink>
-        <MarketingCtaLink href="/showcases" variant="secondary">
-          Browse real examples
+        <MarketingCtaLink
+          href="/login?callbackUrl=%2Fmarketplace"
+          variant="secondary"
+        >
+          Sign in
         </MarketingCtaLink>
       </div>
     </section>
