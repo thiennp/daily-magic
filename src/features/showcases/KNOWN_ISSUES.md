@@ -142,6 +142,18 @@
 
 ---
 
+## SHOWCASES-015 — Team dispatch SVGs broke in the browser (BUG-006)
+
+**Symptom:** `/showcases` card “Agent to agent inside your company” showed a blank illustration area; article figures for team dispatch could fail the same way.
+
+**Root cause:** Curated files under `public/showcases/team-dispatch/*.svg` contained XML control character `0x14` (and a U+FFFD byte in one label). Browsers refuse to render the SVG as an `<img>` source.
+
+**Fix:** Sanitize the three team-dispatch SVGs (em dash / middle dot / bullet labels). Tighten `assertValidShowcaseSvg` in `showcaseArticleImages.test.ts` to reject control characters and U+FFFD.
+
+**Regression test:** `showcaseArticleImages.test.ts`, `resolveShowcaseArticleCoverImage.test.ts` (BUG-006).
+
+---
+
 ## SHOWCASES-014 — Card and article images illegible / wrong content
 
 **Symptom:** Home and /showcases card covers used full-page PNGs (`object-cover object-top`) so text was unreadable at ~300px wide; some topic PNGs (e.g. approvals) were identical admin captures that did not match the story.

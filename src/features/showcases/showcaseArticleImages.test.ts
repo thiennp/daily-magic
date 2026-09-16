@@ -23,6 +23,14 @@ const assertValidShowcaseSvg = (contents: string): void => {
     throw new Error("Expected SVG root element");
   }
 
+  if (/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/.test(contents)) {
+    throw new Error("SVG contains XML control characters");
+  }
+
+  if (contents.includes("\uFFFD")) {
+    throw new Error("SVG contains U+FFFD replacement character");
+  }
+
   if (/&(?!amp;|lt;|gt;|quot;|apos;|#[0-9]+;|#x[0-9A-Fa-f]+;)/.test(contents)) {
     throw new Error("SVG contains an unescaped ampersand");
   }
