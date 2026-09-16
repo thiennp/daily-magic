@@ -4,6 +4,7 @@ import type { WriterExecutionBackend } from "./resolveWriterExecutionBackend";
 import type { WriterApiSecretsFile } from "./WriterApiSecrets.type";
 import { readWriterApiSecretsFile } from "./readWriterApiSecrets";
 import { writeWriterApiSecretsFile } from "./writeWriterApiSecrets";
+import { isUnchangedMaskedWriterApiKeyInput } from "./maskWriterApiKeyForDisplay";
 import { resolveAgentWitchProfileDirFromConfigPath } from "./shouldUseWriterApi";
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
@@ -26,9 +27,12 @@ const mergeProviderSecret = (
   apiKeyInput: string | undefined,
   modelInput: string | undefined,
 ): WriterApiSecretsFile => {
-  const apiKey = apiKeyInput?.trim() ?? "";
-  const model = modelInput?.trim() ?? "";
   const previous = existing[provider];
+  const rawApiKey = apiKeyInput?.trim() ?? "";
+  const apiKey = isUnchangedMaskedWriterApiKeyInput(rawApiKey, previous?.apiKey)
+    ? ""
+    : rawApiKey;
+  const model = modelInput?.trim() ?? "";
 
   if (apiKey.length === 0 && model.length === 0) {
     return existing;

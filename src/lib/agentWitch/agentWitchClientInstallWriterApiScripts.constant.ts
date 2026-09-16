@@ -5,6 +5,7 @@ export const AGENT_WITCH_CLIENT_INSTALL_WRITER_API_SCRIPT_NAMES = [
   "writerApi/WriterApiProvider.constant.ts",
   "writerApi/WriterApiSecrets.type.ts",
   "writerApi/writerApiSecretsPath.ts",
+  "writerApi/maskWriterApiKeyForDisplay.ts",
   "writerApi/readWriterApiSecrets.ts",
   "writerApi/writeWriterApiSecrets.ts",
   "writerApi/resolveWriterExecutionBackend.ts",

@@ -1,6 +1,7 @@
 import type { WriterExecutionBackend } from "./writerApi/resolveWriterExecutionBackend";
 import type { WriterApiSecretsFile } from "./writerApi/WriterApiSecrets.type";
 import { DEFAULT_WRITER_API_MODELS } from "./writerApi/WriterApiProvider.constant";
+import { maskWriterApiKeyForDisplay } from "./writerApi/maskWriterApiKeyForDisplay";
 
 const escapeHtml = (value: string): string =>
   value
@@ -12,8 +13,23 @@ const escapeHtml = (value: string): string =>
 const keyStatus = (
   secrets: WriterApiSecretsFile,
   provider: keyof WriterApiSecretsFile,
-): string =>
-  secrets[provider]?.apiKey !== undefined ? "Saved (hidden)" : "Not set";
+): string => {
+  const apiKey = secrets[provider]?.apiKey;
+  return apiKey !== undefined && apiKey.length > 0 ? "Saved" : "Not set";
+};
+
+const apiKeyInputAttributes = (
+  secrets: WriterApiSecretsFile,
+  provider: keyof WriterApiSecretsFile,
+  emptyPlaceholder: string,
+): string => {
+  const apiKey = secrets[provider]?.apiKey;
+  if (apiKey !== undefined && apiKey.length > 0) {
+    const masked = maskWriterApiKeyForDisplay(apiKey);
+    return `value="${escapeHtml(masked)}" placeholder="Paste a new key to replace"`;
+  }
+  return `placeholder="${escapeHtml(emptyPlaceholder)}"`;
+};
 
 export const buildAgentWitchLocalWriterApiPageBody = (input: {
   readonly writerExecutionBackend: WriterExecutionBackend;
@@ -43,7 +59,7 @@ export const buildAgentWitchLocalWriterApiPageBody = (input: {
         <p class="muted">Maps: Claude → Anthropic, Codex → OpenAI, Antigravity → Google Gemini. Cursor still requires CLI or Cursor Cloud on the website.</p>
         <label class="field">
           <span class="field-label">Anthropic API key — ${escapeHtml(keyStatus(input.secrets, "anthropic"))}</span>
-          <input class="input mono" type="password" name="anthropicApiKey" autocomplete="off" placeholder="sk-ant-… (leave blank to keep)" />
+          <input class="input mono" type="password" name="anthropicApiKey" autocomplete="off" ${apiKeyInputAttributes(input.secrets, "anthropic", "sk-ant-…")} />
         </label>
         <label class="field">
           <span class="field-label">Anthropic model (optional)</span>
@@ -51,7 +67,7 @@ export const buildAgentWitchLocalWriterApiPageBody = (input: {
         </label>
         <label class="field">
           <span class="field-label">OpenAI API key — ${escapeHtml(keyStatus(input.secrets, "openai"))}</span>
-          <input class="input mono" type="password" name="openaiApiKey" autocomplete="off" placeholder="sk-… (leave blank to keep)" />
+          <input class="input mono" type="password" name="openaiApiKey" autocomplete="off" ${apiKeyInputAttributes(input.secrets, "openai", "sk-…")} />
         </label>
         <label class="field">
           <span class="field-label">OpenAI model (optional)</span>
@@ -59,7 +75,7 @@ export const buildAgentWitchLocalWriterApiPageBody = (input: {
         </label>
         <label class="field">
           <span class="field-label">Google API key — ${escapeHtml(keyStatus(input.secrets, "google"))}</span>
-          <input class="input mono" type="password" name="googleApiKey" autocomplete="off" placeholder="AI… (leave blank to keep)" />
+          <input class="input mono" type="password" name="googleApiKey" autocomplete="off" ${apiKeyInputAttributes(input.secrets, "google", "AI…")} />
         </label>
         <label class="field">
           <span class="field-label">Gemini model (optional)</span>
