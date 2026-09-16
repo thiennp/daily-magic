@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 
-import LoginForm from "@/features/auth/LoginForm";
+import HomeMarketingLoginForm from "@/features/home/components/HomeMarketingLoginForm";
 import { HOME_MARKETING_AUTH_COPY } from "@/features/home/constants/homeMarketingLandingCopy.constant";
 import { MARKETING_FOCAL_CARD_CLASSES } from "@/features/marketing/marketingPalette.constant";
 import {
@@ -42,7 +42,7 @@ export default function HomeMarketingAuthSection() {
             </p>
           }
         >
-          <LoginForm defaultCallbackUrl="/" appearance="marketing" />
+          <HomeMarketingLoginForm />
         </Suspense>
       </div>
     </section>

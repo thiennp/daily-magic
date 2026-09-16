@@ -15,10 +15,8 @@ describe("MarketplaceVisitorEmptyState (MUST 2)", () => {
 
     expect(source.includes("Create free account")).toBe(true);
     expect(source.includes("Sign in")).toBe(true);
-    expect(source.includes("/#get-started")).toBe(true);
-    expect(source.includes("homeMarketingSignInCallbackMarketplaceHref")).toBe(
-      true,
-    );
+    expect(source.includes("buildMarketingGetStartedHref")).toBe(true);
+    expect(source.includes("buildSignInHrefFromSearchParams")).toBe(true);
     expect(source.includes("Get started")).toBe(false);
     expect(source.includes("/signup")).toBe(false);
   });
