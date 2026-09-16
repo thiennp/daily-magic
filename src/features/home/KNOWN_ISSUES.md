@@ -440,6 +440,18 @@ Document every production bug or UX regression here. Each entry must link to a t
 
 ---
 
+## HOME-038 — Guest preset pick dropped capabilityId on dismiss (#94)
+
+**Symptom:** On `/`, guest clicks a popular preset then dismisses the sign-in dialog; address bar has no `capabilityId` query param.
+
+**Root cause:** `HomeMarketingPopularPresetsGrid.closeDialog` called `removePresetCapabilityIdFromSearchParams` and `router.replace`, clearing the param Magi intended to keep for callbackUrl/deep-link flow.
+
+**Fix:** Close dialog only clears local modal state; `capabilityId` stays in the URL after dismiss (still set on preset pick).
+
+**Regression test:** `HomeMarketingPopularPresetsGrid.test.tsx` (HOME-038).
+
+---
+
 ## Adding issues
 
-Use the next ID (`HOME-038`, …). Include symptom, root cause, fix paths, and test file.
+Use the next ID (`HOME-039`, …). Include symptom, root cause, fix paths, and test file.
