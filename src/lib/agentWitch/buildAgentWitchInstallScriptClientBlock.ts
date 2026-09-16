@@ -37,10 +37,10 @@ resolve_agent_witch_profile_paths
 ensure_agent_witch_profile_directories
 mkdir -p "\${LOG_DIR}"
 cd "\${INSTALL_DIR}"
-exec >>"\${MAIN_LOG_PATH}" 2> >(
-  while IFS= read -r line || [ -n "\${line}" ]; do
-    printf '%s %s\\n' "\$(date -u +%Y-%m-%dT%H:%M:%SZ)" "\${line}"
-  done >> "\${ERROR_LOG_PATH}"
+exec >>"\\\${MAIN_LOG_PATH}" 2> >(
+  while IFS= read -r line || [ -n "\\\${line}" ]; do
+    printf '%s %s\\n' "\\\$(date -u +%Y-%m-%dT%H:%M:%SZ)" "\\\${line}"
+  done >> "\\\${ERROR_LOG_PATH}"
 )
 exec "\${NODE_BIN}" "\${APP_DIR}/${AGENT_WITCH_INSTALL_BUNDLE_ARTIFACT.fileName}"
 EOF
