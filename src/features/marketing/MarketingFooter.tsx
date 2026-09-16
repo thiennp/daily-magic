@@ -4,6 +4,7 @@ import Link from "next/link";
 
 import useStyleguideNavAccess from "@/features/auth/hooks/useStyleguideNavAccess";
 import { AGENT_WITCH_PRODUCT_NAME } from "@/lib/agentWitch/agentWitchProductName.constant";
+import MarketingFooterLegalBar from "@/features/marketing/MarketingFooterLegalBar";
 import {
   FOOTER_ADMIN_LINKS,
   resolveMarketingFooterProductLinks,
@@ -104,14 +105,7 @@ export default function MarketingFooter() {
           </div>
         ) : null}
       </div>
-      <div
-        className={mergeMarketingClasses(
-          "border-t border-zinc-200 py-4 text-center text-xs",
-          MARKETING_TEXT_MUTED_CLASSES,
-        )}
-      >
-        AI tasks for teams — with approval when you need it.
-      </div>
+      <MarketingFooterLegalBar />
     </footer>
   );
 }

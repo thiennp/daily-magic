@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   FOOTER_ADMIN_LINKS,
+  FOOTER_LEGAL_LINKS,
   resolveMarketingFooterProductLinks,
   shouldShowMarketingFooterAdmin,
 } from "@/features/marketing/resolveMarketingFooterNav";
@@ -32,5 +33,12 @@ describe("resolveMarketingFooterNav (UX-P0c)", () => {
 
   it("shows admin column for staff", () => {
     expect(shouldShowMarketingFooterAdmin(true)).toBe(true);
+  });
+
+  it("exposes Privacy and Terms for all visitors", () => {
+    expect(FOOTER_LEGAL_LINKS.map((link) => link.href)).toEqual([
+      "/privacy",
+      "/terms",
+    ]);
   });
 });

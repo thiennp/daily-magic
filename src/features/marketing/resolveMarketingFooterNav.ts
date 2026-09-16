@@ -21,6 +21,12 @@ export const FOOTER_ADMIN_LINKS: readonly MarketingFooterLink[] = [
   { label: "Users", href: "/admin/users" },
 ];
 
+/** Shown to all visitors (COPY-LEGAL-1). */
+export const FOOTER_LEGAL_LINKS: readonly MarketingFooterLink[] = [
+  { label: "Privacy", href: "/privacy" },
+  { label: "Terms", href: "/terms" },
+];
+
 export const resolveMarketingFooterProductLinks = (
   showStaffLinks: boolean,
 ): readonly MarketingFooterLink[] =>
