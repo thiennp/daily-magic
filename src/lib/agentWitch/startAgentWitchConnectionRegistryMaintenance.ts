@@ -6,11 +6,16 @@ import {
 import { drainAgentWitchDispatchOutboxForHub } from "@/lib/agentWitch/drainAgentWitchDispatchOutboxForHub";
 import { getAgentWitchHub } from "@/lib/agentWitch/getAgentWitchHub";
 import { getAgentWitchHubInstanceId } from "@/lib/agentWitch/getAgentWitchHubInstanceId";
+import { isDatabaseUrlConfigured } from "@/lib/db";
 
 const maintenanceGlobalKey =
   "__dailyMagicAgentWitchConnectionRegistryMaintenance";
 
 export const startAgentWitchConnectionRegistryMaintenance = (): void => {
+  if (!isDatabaseUrlConfigured()) {
+    return;
+  }
+
   const globalState = globalThis as typeof globalThis & {
     [maintenanceGlobalKey]?: boolean;
   };

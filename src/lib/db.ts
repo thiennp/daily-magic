@@ -2,14 +2,17 @@ import { neon } from "@neondatabase/serverless";
 
 type Sql = ReturnType<typeof neon>;
 
-function createSql(): Sql {
+export function isDatabaseUrlConfigured(): boolean {
   const databaseUrl = process.env.DATABASE_URL;
+  return typeof databaseUrl === "string" && databaseUrl.trim().length > 0;
+}
 
-  if (!databaseUrl) {
+function createSql(): Sql {
+  if (!isDatabaseUrlConfigured()) {
     throw new Error("DATABASE_URL is not set");
   }
 
-  return neon(databaseUrl);
+  return neon(process.env.DATABASE_URL as string);
 }
 
 const sqlHolder: { value?: Sql } = {};
