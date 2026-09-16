@@ -26,10 +26,13 @@ export const buildAgentWitchLocalErrorLogPageBody = (input: {
   return `<section class="card">
       <p class="eyebrow">Diagnostics</p>
       <h1>Error log</h1>
-      <p class="lede">Tail of the Agent Witch client stderr log on this Mac (newest lines at the bottom).</p>
+      <p class="lede">Tail of the Agent Witch client stderr log on this Mac (newest lines at the bottom). New entries are prefixed with a UTC timestamp (<code>YYYY-MM-DDTHH:MM:SSZ</code>).</p>
       <p class="muted mono">${escapeHtml(input.errorLogPath)} · ${input.byteSize.toLocaleString("en-US")} bytes</p>
       ${truncatedNote}
       ${body}
+      <form method="POST" action="/api/errors/clear" class="actions" style="margin-bottom:12px">
+        <button class="btn btn-ghost" type="submit">Clear error log</button>
+      </form>
       <div class="actions">
         <a class="btn btn-secondary" href="/">← Home</a>
         <a class="btn btn-secondary" href="/errors">Refresh</a>

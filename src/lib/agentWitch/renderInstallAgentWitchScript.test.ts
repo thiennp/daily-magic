@@ -42,6 +42,7 @@ describe("renderInstallAgentWitchScript", () => {
     expect(script).toContain("resolve_agent_witch_profile_paths");
     expect(script).toContain("MAIN_LOG_PATH");
     expect(script).toContain("ERROR_LOG_PATH");
+    expect(script).toContain("date -u +%Y-%m-%dT%H:%M:%SZ");
     expect(script).toContain('PROFILE_DIR}/reports"');
     expect(script).toContain("install-version.json");
   });

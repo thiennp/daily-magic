@@ -1,6 +1,12 @@
 import fs from "node:fs";
+import path from "node:path";
 
 export const AGENT_WITCH_ERROR_LOG_TAIL_MAX_BYTES = 256_000;
+
+export const clearAgentWitchErrorLog = (errorLogPath: string): void => {
+  fs.mkdirSync(path.dirname(errorLogPath), { recursive: true });
+  fs.writeFileSync(errorLogPath, "", "utf8");
+};
 
 export const readAgentWitchErrorLogTail = (
   errorLogPath: string,

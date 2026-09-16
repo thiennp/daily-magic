@@ -63,7 +63,10 @@ import {
 } from "./localHarness/submitLocalHarnessSelection";
 import { ensureAgentWitchProjectFolder } from "./ensureAgentWitchProjectFolder";
 import { formatAgentWitchInstallBundleVersionLabel } from "./formatAgentWitchInstallBundleVersionLabel";
-import { readAgentWitchErrorLogTail } from "./readAgentWitchErrorLogTail";
+import {
+  clearAgentWitchErrorLog,
+  readAgentWitchErrorLogTail,
+} from "./readAgentWitchErrorLogTail";
 import { readAgentWitchInstallVersion } from "./agentWitchInstallVersion";
 import { runLocalSelfDelegatedTask } from "./runLocalSelfDelegatedTask";
 import { readAgentWitchRunConfig } from "./readAgentWitchRunConfig";
@@ -380,6 +383,13 @@ export const startAgentWitchLocalApp = (input: {
           return;
         }
         sendJson(response, 200, { ok: true });
+        return;
+      }
+
+      if (method === "POST" && pathname === "/api/errors/clear") {
+        clearAgentWitchErrorLog(input.layout.errorLogPath);
+        response.writeHead(303, { Location: "/errors" });
+        response.end();
         return;
       }
 
