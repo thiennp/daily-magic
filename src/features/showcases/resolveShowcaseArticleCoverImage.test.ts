@@ -45,7 +45,7 @@ describe("resolveShowcaseArticleCoverImage (SHOWCASES-009)", () => {
     );
 
     expect(cover?.src).toBe("/showcases/team-dispatch/01-request-task.svg");
-    expect(cover?.alt.toLowerCase()).toMatch(/send a task/);
+    expect(cover?.alt.toLowerCase()).toMatch(/new task/);
   });
 
   it("SHOWCASES-014: manager-approval card uses approvals SVG, not admin PNG", () => {

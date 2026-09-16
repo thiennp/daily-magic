@@ -19,9 +19,9 @@ export const agentDelegatesInsideYourCompanySections: readonly ShowcaseArticleSe
       ],
     },
     {
-      heading: "1. Open Send a task and choose the company",
+      heading: "1. Open New task and choose the company",
       bullets: [
-        "Home → Send a task (or /?sendTask=1)",
+        "Home → New task (or /?sendTask=1)",
         "Under Who receives this task, pick your company — not My Mac (self)",
         "Select the teammate who owns the repo on their Mac",
         "Pick their published workflow (e.g. Repo branch standup)",
@@ -29,9 +29,9 @@ export const agentDelegatesInsideYourCompanySections: readonly ShowcaseArticleSe
       image: buildShowcaseTeamDispatchArticleImage(
         TEAM_DISPATCH_SHOWCASE_SCREEN.REQUEST_TASK,
         {
-          alt: "Send a task form with company, teammate, and workflow selected",
+          alt: "New task form with company, teammate, and workflow selected",
           caption:
-            "Send a task to Alex Chen at Acme Design Co with the Repo branch standup workflow.",
+            "New task to Alex Chen at Acme Design Co with the Repo branch standup workflow.",
         },
       ),
     },

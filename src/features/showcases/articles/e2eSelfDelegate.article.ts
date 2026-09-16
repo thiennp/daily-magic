@@ -2,9 +2,9 @@ import type ShowcaseArticle from "@/features/showcases/types/ShowcaseArticle.typ
 
 const e2eSelfDelegate: ShowcaseArticle = {
   slug: "e2e-self-delegate",
-  title: "E2E: Send a task to your own Mac",
+  title: "E2E: New task on your own Mac",
   subtitle:
-    "Pair once, open Send a task, run Claude on this computer, and find it in Job history.",
+    "Pair once, open New task, run Claude on this computer, and find it in Job history.",
   category: "E2E verified",
   supportLevel: "full",
   readMinutes: 3,
@@ -13,7 +13,7 @@ const e2eSelfDelegate: ShowcaseArticle = {
     "agent-witch profile for that email on ws://localhost:3000",
     "Production custom server (`npm run start`) so WebSocket upgrades work",
   ],
-  tryNext: { label: "Send a task", href: "/?sendTask=1" },
+  tryNext: { label: "New task", href: "/?sendTask=1" },
   sections: [
     {
       bullets: [
@@ -24,7 +24,7 @@ const e2eSelfDelegate: ShowcaseArticle = {
       ],
       image: {
         src: "/showcases/e2e/self-delegate-live-terminal.png",
-        alt: "Send a task modal with Claude live terminal running a self-delegate prompt",
+        alt: "New task modal with Claude live terminal running a self-delegate prompt",
         caption: "Self-delegate: Claude running on the paired Mac.",
       },
     },
