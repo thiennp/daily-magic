@@ -55,7 +55,7 @@ const onboardIn15Minutes: ShowcaseArticle = {
     {
       heading: "3. Open the weekly status workflow",
       bullets: [
-        'Open Library — look for "Weekly status update"',
+        'Library — look for "Weekly status update"',
         "What you should see: fields Week of, Highlights, Blockers (optional)",
       ],
       image: buildShowcaseOnboardingArticleImage(
@@ -77,16 +77,16 @@ const onboardIn15Minutes: ShowcaseArticle = {
       ],
     },
     {
-      heading: "5. Confirm in Job history",
+      heading: "5. Confirm in Reports",
       bullets: [
-        "Open Job history — find the run you just sent",
+        "Reports — find the run you just sent",
         "What you should see: prompt, status, and output when the Mac finishes",
         "Tip: history stays in this browser — use the same browser next Monday for Run again",
       ],
       image: buildShowcaseOnboardingArticleImage(
         ONBOARDING_SHOWCASE_SCREEN.JOB_HISTORY,
         {
-          alt: "Job history card for a completed weekly status run",
+          alt: "Reports card for a completed weekly status run",
           caption: "Completed weekly status run in Job history.",
         },
       ),

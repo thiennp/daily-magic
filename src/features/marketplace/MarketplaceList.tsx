@@ -1,6 +1,8 @@
 "use client";
 
 import MarketplaceListCard from "@/features/marketplace/MarketplaceListCard";
+import { MARKETING_TEXT_MUTED_CLASSES } from "@/features/marketing/marketingSurfaceClasses.constant";
+import { mergeMarketingClasses } from "@/features/marketing/mergeMarketingClasses";
 import type HarnessMarketplaceListing from "@/lib/harness/types/HarnessMarketplaceListing.type";
 
 interface MarketplaceListProps {
@@ -18,7 +20,12 @@ export default function MarketplaceList({
 }: MarketplaceListProps) {
   if (isLoading) {
     return (
-      <p className="mt-4 text-sm text-gray-500 dark:text-gray-400">
+      <p
+        className={mergeMarketingClasses(
+          "mt-4 text-sm",
+          MARKETING_TEXT_MUTED_CLASSES,
+        )}
+      >
         Loading marketplace…
       </p>
     );
@@ -26,7 +33,12 @@ export default function MarketplaceList({
 
   if (listings.length === 0) {
     return (
-      <p className="mt-4 text-sm text-gray-500 dark:text-gray-400">
+      <p
+        className={mergeMarketingClasses(
+          "mt-4 text-sm",
+          MARKETING_TEXT_MUTED_CLASSES,
+        )}
+      >
         {emptyMessage}
       </p>
     );

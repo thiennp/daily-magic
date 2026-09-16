@@ -2,13 +2,13 @@ import type ShowcaseArticle from "@/features/showcases/types/ShowcaseArticle.typ
 
 const e2eAutomationsAndReports: ShowcaseArticle = {
   slug: "e2e-automations-and-reports",
-  title: "E2E: Automations and Job history",
+  title: "E2E: Automations and Reports",
   subtitle: "Schedule library playbooks and review runs.",
   category: "E2E verified",
   supportLevel: "full",
   readMinutes: 3,
   whatYouNeed: ["Library playbook", "Paired Mac"],
-  tryNext: { label: "Open Job history", href: "/reports" },
+  tryNext: { label: "Reports", href: "/reports" },
   sections: [
     {
       heading: "Automations",
@@ -19,10 +19,10 @@ const e2eAutomationsAndReports: ShowcaseArticle = {
       },
     },
     {
-      heading: "Job history",
+      heading: "Reports",
       image: {
         src: "/showcases/e2e/06-reports.png",
-        alt: "Job history page",
+        alt: "Reports page",
         caption: "Past agent runs and status.",
       },
     },

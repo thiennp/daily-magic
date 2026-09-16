@@ -3,6 +3,7 @@ import {
   SHOWCASE_FIGURE_IMAGE_CLASS,
   SHOWCASE_FIGURE_PADDING_CLASS,
 } from "@/features/showcases/showcaseFigureCrop.constant";
+import { MARKETING_TEXT_MUTED_CLASSES } from "@/features/marketing/marketingSurfaceClasses.constant";
 import { mergeMarketingClasses } from "@/features/marketing/mergeMarketingClasses";
 
 interface ShowcaseArticleFigureProps {
@@ -33,7 +34,12 @@ export default function ShowcaseArticleFigure({
           className={SHOWCASE_FIGURE_IMAGE_CLASS}
         />
       </div>
-      <figcaption className="mt-3 text-sm text-gray-600 dark:text-gray-400">
+      <figcaption
+        className={mergeMarketingClasses(
+          "mt-3 text-sm",
+          MARKETING_TEXT_MUTED_CLASSES,
+        )}
+      >
         {caption}
       </figcaption>
     </figure>

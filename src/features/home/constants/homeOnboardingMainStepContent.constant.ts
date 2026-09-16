@@ -13,14 +13,14 @@ export const HOME_ONBOARDING_MAIN_STEP_CONTENT: Readonly<
     headline: "Save a playbook",
     detail:
       "Publish a workflow or custom agent in Library so you and teammates can reuse how work gets done.",
-    ctaLabel: "Open Library",
+    ctaLabel: "Library",
   },
   "create-workflow": {
     eyebrow: "Getting started",
     headline: "Save a playbook",
     detail:
       "Publish a workflow or custom agent in Library so you and teammates can reuse how work gets done.",
-    ctaLabel: "Open Library",
+    ctaLabel: "Library",
   },
   task: {
     eyebrow: "Getting started",

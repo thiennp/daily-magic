@@ -5,7 +5,7 @@ const seeWhatTheAgentDid: ShowcaseArticle = {
   title: "See what the agent did — not just a chat reply",
   subtitle:
     "Who asked, who ran it, what came back, and when — in this browser.",
-  category: "Job history",
+  category: "Reports",
   supportLevel: "partial",
   readMinutes: 3,
   whatYouNeed: [
@@ -13,7 +13,7 @@ const seeWhatTheAgentDid: ShowcaseArticle = {
     "The same browser where you sent or watched the run",
   ],
   tryNext: {
-    label: "Open Job history",
+    label: "Reports",
     href: "/reports",
   },
   sections: [
@@ -32,7 +32,7 @@ const seeWhatTheAgentDid: ShowcaseArticle = {
       ],
     },
     {
-      heading: "How Job history helps you",
+      heading: "How Reports helps you",
       paragraphs: [
         "Job history lives in your browser with live session data—a practical ops log for this machine. Use it to rerun work and review what happened on your sessions.",
       ],

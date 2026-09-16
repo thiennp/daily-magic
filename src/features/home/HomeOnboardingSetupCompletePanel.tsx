@@ -74,14 +74,14 @@ export default function HomeOnboardingSetupCompletePanel({
           className={APP_SURFACE_TEXT_LINK_MUTED_CLASS}
           onClick={onDismiss}
         >
-          Open Library →
+          Library →
         </Link>
         <Link
           href="/reports"
           className={APP_SURFACE_TEXT_LINK_MUTED_CLASS}
           onClick={onDismiss}
         >
-          View job history →
+          Reports →
         </Link>
       </div>
     </AppHero>

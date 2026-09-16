@@ -26,10 +26,10 @@ export default function MarketingLegalPageLayout({
 }: MarketingLegalPageLayoutProps) {
   return (
     <MarketingShell>
-      <article className="mx-auto max-w-2xl py-4">
+      <article className="mx-auto max-w-3xl py-2 sm:py-4">
         <h1
           className={mergeMarketingClasses(
-            "text-3xl font-semibold tracking-tight",
+            "text-3xl font-semibold tracking-tight sm:text-4xl",
             MARKETING_TEXT_PRIMARY_CLASSES,
           )}
         >
@@ -51,12 +51,12 @@ export default function MarketingLegalPageLayout({
         >
           {intro}
         </p>
-        <div className="mt-10 space-y-8">
+        <div className="mt-12 space-y-10 border-t border-zinc-200/80 pt-10 dark:border-gray-800">
           {sections.map((section) => (
             <section key={section.heading}>
               <h2
                 className={mergeMarketingClasses(
-                  "text-lg font-semibold",
+                  "text-xl font-semibold tracking-tight",
                   MARKETING_TEXT_PRIMARY_CLASSES,
                 )}
               >
@@ -64,7 +64,7 @@ export default function MarketingLegalPageLayout({
               </h2>
               <p
                 className={mergeMarketingClasses(
-                  "mt-2 text-sm leading-relaxed",
+                  "mt-3 text-base leading-relaxed",
                   MARKETING_TEXT_SECONDARY_CLASSES,
                 )}
               >

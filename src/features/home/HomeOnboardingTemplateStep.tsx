@@ -42,17 +42,11 @@ export default function HomeOnboardingTemplateStep({
         is online.
       </p>
       <div className="mt-5 flex flex-wrap gap-3">
-        <Link
-          href="/library"
-          className={APP_SURFACE_CTA_PRIMARY_SM_CLASS}
-        >
+        <Link href="/library" className={APP_SURFACE_CTA_PRIMARY_SM_CLASS}>
           Create in Library
         </Link>
-        <Link
-          href="/library"
-          className={APP_SURFACE_CTA_SECONDARY_SM_CLASS}
-        >
-          Open Library
+        <Link href="/library" className={APP_SURFACE_CTA_SECONDARY_SM_CLASS}>
+          Library
         </Link>
       </div>
       <CapabilityTemplatePicker onSaved={onSaved} />

@@ -1,6 +1,11 @@
 import Link from "next/link";
 
 import AppPanel from "@/components/surfaces/AppPanel";
+import {
+  MARKETING_TEXT_PRIMARY_CLASSES,
+  MARKETING_TEXT_SECONDARY_CLASSES,
+} from "@/features/marketing/marketingSurfaceClasses.constant";
+import { mergeMarketingClasses } from "@/features/marketing/mergeMarketingClasses";
 import ShowcaseArticleBody from "@/features/showcases/ShowcaseArticleBody";
 import ShowcaseRelatedShowcases from "@/features/showcases/ShowcaseRelatedShowcases";
 import ShowcaseTryNextLink from "@/features/showcases/ShowcaseTryNextLink";
@@ -26,10 +31,20 @@ export default function ShowcaseArticleLayout({
         <p className="text-sm font-medium text-brand-600 dark:text-brand-400">
           {article.category} · {article.readMinutes} min read
         </p>
-        <h1 className="mt-3 text-3xl font-semibold tracking-tight text-gray-900 sm:text-4xl dark:text-white/90">
+        <h1
+          className={mergeMarketingClasses(
+            "mt-3 text-3xl font-semibold tracking-tight sm:text-4xl",
+            MARKETING_TEXT_PRIMARY_CLASSES,
+          )}
+        >
           {article.title}
         </h1>
-        <p className="mt-4 text-xl leading-relaxed text-gray-600 dark:text-gray-400">
+        <p
+          className={mergeMarketingClasses(
+            "mt-4 text-xl leading-relaxed",
+            MARKETING_TEXT_SECONDARY_CLASSES,
+          )}
+        >
           {article.subtitle}
         </p>
       </header>

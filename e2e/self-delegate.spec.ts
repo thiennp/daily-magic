@@ -168,9 +168,7 @@ test.describe("Self-delegate on own Mac", () => {
 
     await page.goto("/reports");
     await page.waitForLoadState("load");
-    await expect(
-      page.getByRole("heading", { name: "Job history" }),
-    ).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Reports" })).toBeVisible();
     await expect(page.getByText(TASK_MARKER).first()).toBeVisible({
       timeout: 30_000,
     });

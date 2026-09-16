@@ -25,7 +25,7 @@ const firstAgentTaskIn5Minutes: ShowcaseArticle = {
         "Sign in and open Home → Your setup to add your Mac as a worker",
         "Go to New task and write what you want done",
         "Press send — your Mac runs the agent with your local context",
-        "Open Job history in this browser to see status and output",
+        "Open Reports in this browser to see status and output",
       ],
     },
     {

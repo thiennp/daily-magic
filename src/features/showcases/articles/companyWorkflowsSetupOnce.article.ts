@@ -12,7 +12,7 @@ const companyWorkflowsSetupOnce: ShowcaseArticle = {
     "Workflow fields defined: labels, types, required flags",
     "Teammates who save or use published playbooks from Marketplace or directory",
   ],
-  tryNext: { label: "Open Library", href: "/library" },
+  tryNext: { label: "Library", href: "/library" },
   relatedShowcases: [
     {
       slug: "human-checkpoints-before-mac-runs",

@@ -12,7 +12,7 @@ const stopCopyPasteEveryMonday: ShowcaseArticle = {
     "Two minutes to save it as a playbook or fork from a teammate",
   ],
   tryNext: {
-    label: "Open Library",
+    label: "Library",
     href: "/library",
   },
   relatedShowcases: [

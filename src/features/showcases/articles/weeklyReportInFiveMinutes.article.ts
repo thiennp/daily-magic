@@ -12,7 +12,7 @@ const weeklyReportInFiveMinutes: ShowcaseArticle = {
     "Mac agent online to send, or copy the assembled prompt elsewhere",
   ],
   tryNext: {
-    label: "Open Library (weekly status workflow)",
+    label: "Library (weekly status workflow)",
     href: "/library",
   },
   relatedShowcases: [

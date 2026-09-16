@@ -13,7 +13,7 @@ const managerApprovesBeforeRun: ShowcaseArticle = {
     "Requester sends through team dispatch — not ad-hoc chat",
   ],
   tryNext: {
-    label: "Open Job history",
+    label: "Reports",
     href: "/reports",
   },
   relatedShowcases: [

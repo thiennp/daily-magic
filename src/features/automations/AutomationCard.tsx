@@ -81,7 +81,7 @@ export default function AutomationCard({
         </Button>
         {automation.lastRunAt !== null ? (
           <Link href="/reports">
-            <Button variant="outline">Job history</Button>
+            <Button variant="outline">Reports</Button>
           </Link>
         ) : null}
       </div>
