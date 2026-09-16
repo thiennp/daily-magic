@@ -4,13 +4,13 @@ Human-readable end-to-end scenarios for real-user flows in Agent Witch. These sp
 
 ## Conventions
 
-| Item        | Value                                                                                         |
-| ----------- | --------------------------------------------------------------------------------------------- |
-| Test emails | `test*@agentwitch.com` (e.g. `test-admin-1@agentwitch.com`)                                   |
-| Login       | SECRET bypass via `POST /api/auth/test-login` (no email, no localStorage)                     |
-| Mac bridge  | Real `agent-witch` with localhost profile: `npm run e2e:agent-witch:setup -- <email> --start` |
-| Cleanup log | `.e2e/cleanup-log.ndjson` — rows created by test accounts                                     |
-| Tags        | `@smoke`, `@requires-mac`, `@multi-user`, `@admin`                                            |
+| Item        | Value                                                                                                                                                |
+| ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Test emails | `test*@agentwitch.com` (e.g. `test-admin-1@agentwitch.com`)                                                                                          |
+| Login       | `POST /api/auth/test-login` for `test*@agentwitch.com` when `ALLOW_TEST_AUTH=1`, `E2E=1`, or `NODE_ENV≠production` (blocked on `www.agentwitch.com`) |
+| Mac bridge  | Real `agent-witch` with localhost profile: `npm run e2e:agent-witch:setup -- <email> --start`                                                        |
+| Cleanup log | `.e2e/cleanup-log.ndjson` — rows created by test accounts                                                                                            |
+| Tags        | `@smoke`, `@requires-mac`, `@multi-user`, `@admin`                                                                                                   |
 
 ## Same-Mac multi-account team
 
@@ -58,6 +58,27 @@ npm run build && npx next start -p 3000
 ```
 
 Or use the API helper in Playwright: `e2e/helpers/signInTestAccount.ts`.
+
+### Playwright session (no OAuth UI)
+
+```typescript
+import { signInTestAccount } from "./helpers/signInTestAccount";
+
+await signInTestAccount(page, "test-admin-1@agentwitch.com");
+await page.goto("/admin");
+```
+
+`playwright.config.ts` exports `ALLOW_TEST_AUTH=1` and `E2E=1` for the web server so `npm run start` E2E works.
+
+### CLI session + cookie (manual QA)
+
+```bash
+set -a; . ./.env.local; set +a
+npm run test:auth:session -- test-qa-1@agentwitch.com
+npm run test:auth:session -- test-qa-admin@agentwitch.com --super-admin
+```
+
+The script prints `cookieName` and `sessionToken` for DevTools → Application → Cookies, or use the printed `curlTestLogin` against a running app with `ALLOW_TEST_AUTH=1`.
 
 For Mac pairing during E2E:
 
