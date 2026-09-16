@@ -506,6 +506,13 @@ input.input[type="text"] {
 }
 
 .field-label { font-size: 0.8125rem; color: var(--aw-zinc-600); }
+.field-link {
+  color: var(--aw-zinc-700);
+  font-weight: 500;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.field-link:hover { color: var(--aw-zinc-900); }
 
 .textarea { min-height: 6rem; resize: vertical; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 0.8125rem; }
 

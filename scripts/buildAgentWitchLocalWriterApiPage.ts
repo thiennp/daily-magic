@@ -3,6 +3,7 @@ import type { WriterExecutionBackend } from "./writerApi/resolveWriterExecutionB
 import type { WriterApiSecretsFile } from "./writerApi/WriterApiSecrets.type";
 import { maskWriterApiKeyForDisplay } from "./writerApi/maskWriterApiKeyForDisplay";
 import { resolveWriterApiModelSelectValue } from "./writerApi/resolveWriterApiModel";
+import { WRITER_API_KEY_CONSOLE_LINKS } from "./writerApi/writerApiKeyConsoleUrls.constant";
 import {
   WRITER_API_MODEL_AUTO,
   WRITER_API_MODEL_SELECT_OPTIONS,
@@ -34,6 +35,20 @@ const apiKeyInputAttributes = (
     return `value="${escapeHtml(masked)}" placeholder="Paste a new key to replace"`;
   }
   return `placeholder="${escapeHtml(emptyPlaceholder)}"`;
+};
+
+const buildApiKeyField = (
+  secrets: WriterApiSecretsFile,
+  provider: WriterApiProvider,
+  fieldName: string,
+  title: string,
+  emptyPlaceholder: string,
+): string => {
+  const consoleLink = WRITER_API_KEY_CONSOLE_LINKS[provider];
+  return `<label class="field">
+          <span class="field-label">${escapeHtml(title)} API key — ${escapeHtml(keyStatus(secrets, provider))} · <a class="field-link" href="${escapeHtml(consoleLink.href)}" target="_blank" rel="noopener noreferrer">${escapeHtml(consoleLink.label)}</a></span>
+          <input class="input mono" type="password" name="${escapeHtml(fieldName)}" autocomplete="off" ${apiKeyInputAttributes(secrets, provider, emptyPlaceholder)} />
+        </label>`;
 };
 
 const buildModelSelectField = (
@@ -89,20 +104,11 @@ export const buildAgentWitchLocalWriterApiPageBody = (input: {
           <label><input type="radio" name="writerExecutionBackend" value="api"${apiChecked} /> API key + Agent Witch script</label>
         </fieldset>
         <p class="muted">Maps: Claude → Anthropic, Codex → OpenAI, Antigravity → Google Gemini. Cursor still requires CLI or Cursor Cloud on the website.</p>
-        <label class="field">
-          <span class="field-label">Anthropic API key — ${escapeHtml(keyStatus(input.secrets, "anthropic"))}</span>
-          <input class="input mono" type="password" name="anthropicApiKey" autocomplete="off" ${apiKeyInputAttributes(input.secrets, "anthropic", "sk-ant-…")} />
-        </label>
+        ${buildApiKeyField(input.secrets, "anthropic", "anthropicApiKey", "Anthropic", "sk-ant-…")}
         ${buildModelSelectField(input.secrets, "anthropic", "anthropicModel", "Anthropic model")}
-        <label class="field">
-          <span class="field-label">OpenAI API key — ${escapeHtml(keyStatus(input.secrets, "openai"))}</span>
-          <input class="input mono" type="password" name="openaiApiKey" autocomplete="off" ${apiKeyInputAttributes(input.secrets, "openai", "sk-…")} />
-        </label>
+        ${buildApiKeyField(input.secrets, "openai", "openaiApiKey", "OpenAI", "sk-…")}
         ${buildModelSelectField(input.secrets, "openai", "openaiModel", "OpenAI model")}
-        <label class="field">
-          <span class="field-label">Google API key — ${escapeHtml(keyStatus(input.secrets, "google"))}</span>
-          <input class="input mono" type="password" name="googleApiKey" autocomplete="off" ${apiKeyInputAttributes(input.secrets, "google", "AI…")} />
-        </label>
+        ${buildApiKeyField(input.secrets, "google", "googleApiKey", "Google", "AI…")}
         ${buildModelSelectField(input.secrets, "google", "googleModel", "Gemini model")}
         <div class="actions">
           <button class="btn btn-primary" type="submit">Save</button>
