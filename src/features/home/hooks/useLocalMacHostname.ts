@@ -1,7 +1,12 @@
 "use client";
 
-import { useEffect, useState, useSyncExternalStore } from "react";
+import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
 
+import { collectUniqueWakePorts } from "@/features/agent-witch/utils/collectUniqueWakePorts";
+import {
+  getPairedDevicesSnapshotOrEmpty,
+  pairedDevicesResource,
+} from "@/features/agent-witch/pairedDevicesResource";
 import { requestLocalAgentWitchIdentity } from "@/features/agent-witch/utils/requestLocalAgentWitchIdentity";
 import {
   readAgentWitchLocalHostCookie,
@@ -32,6 +37,20 @@ const useLocalMacHostname = (): {
   const [isCheckingLocalHostname, setIsCheckingLocalHostname] = useState(
     () => detectBrowserOperatingSystem() === "mac",
   );
+  const pairedDevicesSnapshot = useSyncExternalStore(
+    pairedDevicesResource.subscribe,
+    () => pairedDevicesResource.getSnapshot(),
+    () => null,
+  );
+  const extraWakePorts = useMemo(
+    () =>
+      collectUniqueWakePorts(
+        (
+          pairedDevicesSnapshot ?? getPairedDevicesSnapshotOrEmpty()
+        ).devices.map((device) => device.wakePort),
+      ),
+    [pairedDevicesSnapshot],
+  );
 
   useEffect(() => {
     consumeLocalTokenHashQueryParam({
@@ -50,7 +69,7 @@ const useLocalMacHostname = (): {
 
     const abortController = new AbortController();
 
-    void requestLocalAgentWitchIdentity().then((identity) => {
+    void requestLocalAgentWitchIdentity({ extraWakePorts }).then((identity) => {
       if (abortController.signal.aborted) {
         return;
       }
@@ -75,7 +94,7 @@ const useLocalMacHostname = (): {
     return () => {
       abortController.abort();
     };
-  }, []);
+  }, [extraWakePorts]);
 
   return { localHostname, localTokenHash, isCheckingLocalHostname };
 };

@@ -20,6 +20,10 @@ export const retargetWriterRunToSoleLiveMac = async (input: {
     return undefined;
   }
 
+  if (liveByDeviceId.has(input.targetDeviceId)) {
+    return undefined;
+  }
+
   const agentClient = liveClients[0];
   const deviceIdsForClient = [...liveByDeviceId.entries()]
     .filter(([, client]) => client.id === agentClient.id)
@@ -29,10 +33,7 @@ export const retargetWriterRunToSoleLiveMac = async (input: {
     deviceIdsForClient[0] ??
     agentClient.deviceId;
 
-  if (
-    resolvedDeviceId === undefined ||
-    resolvedDeviceId === input.targetDeviceId
-  ) {
+  if (resolvedDeviceId === undefined) {
     return undefined;
   }
 

@@ -1,32 +1,28 @@
-import { parseLocalAgentWitchIdentity } from "@/features/agent-witch/utils/parseLocalAgentWitchIdentity";
+import { collectUniqueWakePorts } from "@/features/agent-witch/utils/collectUniqueWakePorts";
+import { fetchLocalAgentWitchIdentityAtWakePort } from "@/features/agent-witch/utils/fetchLocalAgentWitchIdentityAtWakePort";
 import type { LocalAgentWitchIdentity } from "@/features/agent-witch/utils/parseLocalAgentWitchIdentity";
-import { resolveAgentWitchWakeBaseUrlForPage } from "@/lib/agentWitch/resolveAgentWitchWakeBaseUrl";
+import { resolveAgentWitchWakePortForPage } from "@/lib/agentWitch/resolveAgentWitchWakeBaseUrl";
 
 export type { LocalAgentWitchIdentity };
 
-export const requestLocalAgentWitchIdentity =
-  async (): Promise<LocalAgentWitchIdentity | null> => {
-    if (typeof window === "undefined") {
-      return null;
+export const requestLocalAgentWitchIdentity = async (input?: {
+  readonly extraWakePorts?: readonly (number | null | undefined)[];
+}): Promise<LocalAgentWitchIdentity | null> => {
+  if (typeof window === "undefined") {
+    return null;
+  }
+
+  const portsToTry = collectUniqueWakePorts([
+    resolveAgentWitchWakePortForPage(),
+    ...(input?.extraWakePorts ?? []),
+  ]);
+
+  for (const wakePort of portsToTry) {
+    const identity = await fetchLocalAgentWitchIdentityAtWakePort(wakePort);
+    if (identity !== null) {
+      return identity;
     }
+  }
 
-    try {
-      const response = await fetch(
-        `${resolveAgentWitchWakeBaseUrlForPage()}/identity`,
-        {
-          method: "GET",
-          mode: "cors",
-          signal: AbortSignal.timeout(2_000),
-        },
-      );
-
-      if (!response.ok) {
-        return null;
-      }
-
-      const payload: unknown = await response.json();
-      return parseLocalAgentWitchIdentity(payload);
-    } catch {
-      return null;
-    }
-  };
+  return null;
+};
