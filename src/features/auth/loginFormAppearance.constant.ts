@@ -1,4 +1,7 @@
-import { MARKETING_INPUT_BASE_CLASSES, MARKETING_INPUT_FOCUS_CLASSES } from "@/features/marketing/marketingSurfaceClasses.constant";
+import {
+  MARKETING_INPUT_BASE_CLASSES,
+  MARKETING_INPUT_FOCUS_CLASSES,
+} from "@/features/marketing/marketingSurfaceClasses.constant";
 import {
   MARKETING_FORM_OUTLINE_BUTTON_CLASSES,
   MARKETING_FORM_PRIMARY_BUTTON_CLASSES,
@@ -31,7 +34,7 @@ export const LOGIN_FORM_APPEARANCE_CLASSES: Record<
   marketing: {
     description: "text-sm text-zinc-600",
     divider:
-      "relative py-2 text-center text-xs uppercase tracking-wide text-zinc-400",
+      "relative py-2 text-center text-xs uppercase tracking-wide text-zinc-600",
     label: "block text-sm font-medium text-zinc-700",
     input: mergeMarketingClasses(
       MARKETING_INPUT_BASE_CLASSES,

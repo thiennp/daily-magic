@@ -65,7 +65,7 @@ export default function HomeMarketingPopularPresetsGrid({
                 </h3>
                 <p
                   className={mergeMarketingClasses(
-                    "line-clamp-3 text-sm leading-relaxed",
+                    "line-clamp-4 text-sm leading-relaxed",
                     MARKETING_TEXT_SECONDARY_CLASSES,
                   )}
                 >

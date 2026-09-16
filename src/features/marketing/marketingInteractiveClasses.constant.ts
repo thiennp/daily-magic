@@ -32,7 +32,7 @@ export const MARKETING_CTA_SECONDARY_CLASSES = [
 
 export const MARKETING_CTA_GHOST_CLASSES = [
   "inline-flex items-center",
-  "text-sm font-medium text-zinc-600 underline-offset-4",
+  "text-sm font-medium text-zinc-700 underline-offset-4",
   "rounded-sm",
   "dark:text-gray-400 dark:hover:text-white",
   "transition-all duration-200 ease-out hover:text-zinc-900 hover:underline",
