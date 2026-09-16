@@ -48,7 +48,7 @@ export default function StyleguideShell({
         </div>
       </header>
 
-      <div className="mx-auto grid max-w-[1600px] gap-6 px-4 py-6 lg:grid-cols-[240px_1fr] lg:px-6">
+      <div className="mx-auto grid max-w-[1600px] gap-6 px-4 py-6 lg:grid-cols-[minmax(0,240px)_minmax(0,1fr)] lg:px-6">
         <AppPanel
           as="aside"
           padding="compact"
@@ -70,7 +70,7 @@ export default function StyleguideShell({
           </nav>
         </AppPanel>
 
-        <main className="space-y-10">{children}</main>
+        <main className="min-w-0 space-y-10">{children}</main>
       </div>
     </div>
   );
