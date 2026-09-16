@@ -1,8 +1,14 @@
+"use client";
+
 import Link from "next/link";
 
-import { COMPANIES_ENTITY_LABEL } from "@/lib/admin/companyGroupCopy.constant";
+import useStyleguideNavAccess from "@/features/auth/hooks/useStyleguideNavAccess";
 import { AGENT_WITCH_PRODUCT_NAME } from "@/lib/agentWitch/agentWitchProductName.constant";
-import buildAgentComposerHref from "@/lib/library/buildAgentComposerHref";
+import {
+  FOOTER_ADMIN_LINKS,
+  resolveMarketingFooterProductLinks,
+  shouldShowMarketingFooterAdmin,
+} from "@/features/marketing/resolveMarketingFooterNav";
 import { MARKETING_TEXT_LINK_CLASSES } from "@/features/marketing/marketingInteractiveClasses.constant";
 import {
   MARKETING_TEXT_PRIMARY_CLASSES,
@@ -11,22 +17,21 @@ import {
 } from "@/features/marketing/marketingSurfaceClasses.constant";
 import { mergeMarketingClasses } from "@/features/marketing/mergeMarketingClasses";
 
-const FOOTER_PRODUCT_LINKS = [
-  { label: "Real examples", href: "/showcases" },
-  { label: "Send a task", href: buildAgentComposerHref() },
-  { label: "Reports", href: "/reports" },
-  { label: "Styleguide", href: "/styleguide" },
-] as const;
-
-const FOOTER_ADMIN_LINKS = [
-  { label: COMPANIES_ENTITY_LABEL, href: "/admin/groups" },
-  { label: "Users", href: "/admin/users" },
-] as const;
-
 export default function MarketingFooter() {
+  const showStaffLinks = useStyleguideNavAccess();
+  const productLinks = resolveMarketingFooterProductLinks(showStaffLinks);
+  const showAdminLinks = shouldShowMarketingFooterAdmin(showStaffLinks);
+
   return (
     <footer className="border-t border-zinc-200 bg-white">
-      <div className="mx-auto grid max-w-6xl gap-10 px-6 py-12 md:grid-cols-[1.2fr_1fr_1fr]">
+      <div
+        className={mergeMarketingClasses(
+          "mx-auto grid max-w-6xl gap-10 px-6 py-12",
+          showStaffLinks
+            ? "md:grid-cols-[1.2fr_1fr_1fr]"
+            : "md:grid-cols-[1.2fr_1fr]",
+        )}
+      >
         <div>
           <p
             className={mergeMarketingClasses(
@@ -56,7 +61,7 @@ export default function MarketingFooter() {
             Product
           </p>
           <ul className="mt-3 space-y-2">
-            {FOOTER_PRODUCT_LINKS.map((link) => (
+            {productLinks.map((link) => (
               <li key={link.href}>
                 <Link
                   href={link.href}
@@ -71,31 +76,33 @@ export default function MarketingFooter() {
             ))}
           </ul>
         </div>
-        <div>
-          <p
-            className={mergeMarketingClasses(
-              "text-xs font-semibold uppercase tracking-wide",
-              MARKETING_TEXT_MUTED_CLASSES,
-            )}
-          >
-            Admin
-          </p>
-          <ul className="mt-3 space-y-2">
-            {FOOTER_ADMIN_LINKS.map((link) => (
-              <li key={link.href}>
-                <Link
-                  href={link.href}
-                  className={mergeMarketingClasses(
-                    "text-sm",
-                    MARKETING_TEXT_LINK_CLASSES,
-                  )}
-                >
-                  {link.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
+        {showAdminLinks ? (
+          <div>
+            <p
+              className={mergeMarketingClasses(
+                "text-xs font-semibold uppercase tracking-wide",
+                MARKETING_TEXT_MUTED_CLASSES,
+              )}
+            >
+              Admin
+            </p>
+            <ul className="mt-3 space-y-2">
+              {FOOTER_ADMIN_LINKS.map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className={mergeMarketingClasses(
+                      "text-sm",
+                      MARKETING_TEXT_LINK_CLASSES,
+                    )}
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ) : null}
       </div>
       <div
         className={mergeMarketingClasses(
