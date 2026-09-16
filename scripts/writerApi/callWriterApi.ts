@@ -1,7 +1,7 @@
 import type WriterLlmUsage from "@/lib/agentWitch/writerLlmUsage.type";
 
 import type { WriterApiProvider } from "./WriterApiProvider.constant";
-import { DEFAULT_WRITER_API_MODELS } from "./WriterApiProvider.constant";
+import { resolveWriterApiModel } from "./resolveWriterApiModel";
 import { parseWriterLlmUsageFromApiBody } from "./parseWriterLlmUsageFromApiBody";
 import type { WriterApiProviderSecret } from "./WriterApiSecrets.type";
 
@@ -42,7 +42,7 @@ const extractAnthropicText = (body: unknown): string => {
 const callAnthropicApi = async (
   input: CallWriterApiInput,
 ): Promise<CallWriterApiResult> => {
-  const model = input.secret.model ?? DEFAULT_WRITER_API_MODELS.anthropic;
+  const model = resolveWriterApiModel("anthropic", input.secret.model);
   const response = await fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",
     headers: {
@@ -101,7 +101,7 @@ const extractOpenAiText = (body: unknown): string => {
 const callOpenAiApi = async (
   input: CallWriterApiInput,
 ): Promise<CallWriterApiResult> => {
-  const model = input.secret.model ?? DEFAULT_WRITER_API_MODELS.openai;
+  const model = resolveWriterApiModel("openai", input.secret.model);
   const response = await fetch("https://api.openai.com/v1/chat/completions", {
     method: "POST",
     headers: {
@@ -169,7 +169,7 @@ const extractGoogleText = (body: unknown): string => {
 const callGoogleApi = async (
   input: CallWriterApiInput,
 ): Promise<CallWriterApiResult> => {
-  const model = input.secret.model ?? DEFAULT_WRITER_API_MODELS.google;
+  const model = resolveWriterApiModel("google", input.secret.model);
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(input.secret.apiKey)}`;
   const response = await fetch(url, {
     method: "POST",

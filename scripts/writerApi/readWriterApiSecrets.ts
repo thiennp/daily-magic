@@ -5,6 +5,7 @@ import type {
   WriterApiProviderSecret,
   WriterApiSecretsFile,
 } from "./WriterApiSecrets.type";
+import { normalizeWriterApiModelForStorage } from "./resolveWriterApiModel";
 import { resolveWriterApiSecretsPath } from "./writerApiSecretsPath";
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
@@ -20,10 +21,8 @@ const parseProviderSecret = (
   if (apiKey.length === 0) {
     return null;
   }
-  const model =
-    typeof value.model === "string" && value.model.trim().length > 0
-      ? value.model.trim()
-      : undefined;
+  const rawModel = typeof value.model === "string" ? value.model : undefined;
+  const model = normalizeWriterApiModelForStorage(rawModel);
   return { apiKey, ...(model !== undefined ? { model } : {}) };
 };
 

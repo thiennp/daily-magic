@@ -1,7 +1,12 @@
+import type { WriterApiProvider } from "./writerApi/WriterApiProvider.constant";
 import type { WriterExecutionBackend } from "./writerApi/resolveWriterExecutionBackend";
 import type { WriterApiSecretsFile } from "./writerApi/WriterApiSecrets.type";
-import { DEFAULT_WRITER_API_MODELS } from "./writerApi/WriterApiProvider.constant";
 import { maskWriterApiKeyForDisplay } from "./writerApi/maskWriterApiKeyForDisplay";
+import { resolveWriterApiModelSelectValue } from "./writerApi/resolveWriterApiModel";
+import {
+  WRITER_API_MODEL_AUTO,
+  WRITER_API_MODEL_SELECT_OPTIONS,
+} from "./writerApi/writerApiModelOptions.constant";
 
 const escapeHtml = (value: string): string =>
   value
@@ -29,6 +34,33 @@ const apiKeyInputAttributes = (
     return `value="${escapeHtml(masked)}" placeholder="Paste a new key to replace"`;
   }
   return `placeholder="${escapeHtml(emptyPlaceholder)}"`;
+};
+
+const buildModelSelectField = (
+  secrets: WriterApiSecretsFile,
+  provider: WriterApiProvider,
+  fieldName: string,
+  label: string,
+): string => {
+  const selected = resolveWriterApiModelSelectValue(secrets[provider]?.model);
+  const knownValues = new Set(
+    WRITER_API_MODEL_SELECT_OPTIONS[provider].map((option) => option.value),
+  );
+  const optionsHtml = WRITER_API_MODEL_SELECT_OPTIONS[provider]
+    .map((option) => {
+      const isSelected = option.value === selected ? " selected" : "";
+      return `<option value="${escapeHtml(option.value)}"${isSelected}>${escapeHtml(option.label)}</option>`;
+    })
+    .join("");
+  const legacyOption =
+    selected !== WRITER_API_MODEL_AUTO && !knownValues.has(selected)
+      ? `<option value="${escapeHtml(selected)}" selected>${escapeHtml(selected)} (saved)</option>`
+      : "";
+
+  return `<label class="field">
+          <span class="field-label">${escapeHtml(label)}</span>
+          <select class="input mono" name="${escapeHtml(fieldName)}">${optionsHtml}${legacyOption}</select>
+        </label>`;
 };
 
 export const buildAgentWitchLocalWriterApiPageBody = (input: {
@@ -61,26 +93,17 @@ export const buildAgentWitchLocalWriterApiPageBody = (input: {
           <span class="field-label">Anthropic API key — ${escapeHtml(keyStatus(input.secrets, "anthropic"))}</span>
           <input class="input mono" type="password" name="anthropicApiKey" autocomplete="off" ${apiKeyInputAttributes(input.secrets, "anthropic", "sk-ant-…")} />
         </label>
-        <label class="field">
-          <span class="field-label">Anthropic model (optional)</span>
-          <input class="input mono" type="text" name="anthropicModel" placeholder="${escapeHtml(DEFAULT_WRITER_API_MODELS.anthropic)}" value="${escapeHtml(input.secrets.anthropic?.model ?? "")}" />
-        </label>
+        ${buildModelSelectField(input.secrets, "anthropic", "anthropicModel", "Anthropic model")}
         <label class="field">
           <span class="field-label">OpenAI API key — ${escapeHtml(keyStatus(input.secrets, "openai"))}</span>
           <input class="input mono" type="password" name="openaiApiKey" autocomplete="off" ${apiKeyInputAttributes(input.secrets, "openai", "sk-…")} />
         </label>
-        <label class="field">
-          <span class="field-label">OpenAI model (optional)</span>
-          <input class="input mono" type="text" name="openaiModel" placeholder="${escapeHtml(DEFAULT_WRITER_API_MODELS.openai)}" value="${escapeHtml(input.secrets.openai?.model ?? "")}" />
-        </label>
+        ${buildModelSelectField(input.secrets, "openai", "openaiModel", "OpenAI model")}
         <label class="field">
           <span class="field-label">Google API key — ${escapeHtml(keyStatus(input.secrets, "google"))}</span>
           <input class="input mono" type="password" name="googleApiKey" autocomplete="off" ${apiKeyInputAttributes(input.secrets, "google", "AI…")} />
         </label>
-        <label class="field">
-          <span class="field-label">Gemini model (optional)</span>
-          <input class="input mono" type="text" name="googleModel" placeholder="${escapeHtml(DEFAULT_WRITER_API_MODELS.google)}" value="${escapeHtml(input.secrets.google?.model ?? "")}" />
-        </label>
+        ${buildModelSelectField(input.secrets, "google", "googleModel", "Gemini model")}
         <div class="actions">
           <button class="btn btn-primary" type="submit">Save</button>
         </div>
