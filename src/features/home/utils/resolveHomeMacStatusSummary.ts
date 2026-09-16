@@ -23,17 +23,25 @@ export const resolveHomeMacStatusSummary = (
   }
 
   const counts = countMacPresenceTiers(devices);
-  const connectedCount = counts.live + counts.liveOtherInstance;
 
-  if (connectedCount > 0) {
+  if (counts.live > 0) {
     const suffix =
       counts.liveOtherInstance > 0
-        ? " One Mac is connected on another server."
+        ? " Additional Macs are connected on another server."
         : "";
     return {
       tone: "online",
       label: "Mac online",
-      detail: `${connectedCount} Mac${connectedCount === 1 ? "" : "s"} ready to run tasks.${suffix}`,
+      detail: `${counts.live} Mac${counts.live === 1 ? "" : "s"} ready to run tasks.${suffix}`,
+    };
+  }
+
+  if (counts.liveOtherInstance > 0) {
+    return {
+      tone: "sleeping",
+      label: "Mac reconnecting",
+      detail:
+        "Your Mac is connected on another server. Wait a few seconds or refresh, then try again.",
     };
   }
 

@@ -18,7 +18,7 @@ export const resolveOnlineClientsByDeviceId = async (
     }
 
     const device = await findAgentWitchDeviceByToken(client.pairingToken);
-    if (device === null || device.revokedAt !== null) {
+    if (device == null || device.revokedAt !== null) {
       continue;
     }
 

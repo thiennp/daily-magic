@@ -59,7 +59,7 @@ describe("buildAgentWitchDevicesWithOnlineStatus", () => {
       isConnected: false,
       isOnline: true,
       presenceTier: "live_other_instance",
-      isDispatchReady: true,
+      isDispatchReady: false,
     });
   });
 

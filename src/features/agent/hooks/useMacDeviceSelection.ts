@@ -4,7 +4,6 @@ import { useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 
 import {
-  canDispatchToMac,
   canRunWriterDispatchToMac,
   pickDefaultMacDeviceId,
 } from "@/features/agent-witch/online-wake";
@@ -59,7 +58,11 @@ const useMacDeviceSelection = (): {
       (device) => device.id === preferredDeviceId,
     );
 
-    if (deviceIdFromQuery.length > 0 && preferredDevice !== undefined) {
+    if (
+      deviceIdFromQuery.length > 0 &&
+      preferredDevice !== undefined &&
+      canRunWriterDispatchToMac(preferredDevice)
+    ) {
       return preferredDeviceId;
     }
 
@@ -74,7 +77,7 @@ const useMacDeviceSelection = (): {
   }, [deviceIdFromQuery, devices, preferredDeviceId]);
 
   const dispatchReadyMacCount = devices.filter((device) =>
-    canDispatchToMac(device),
+    canRunWriterDispatchToMac(device),
   ).length;
 
   return {

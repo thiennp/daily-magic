@@ -55,12 +55,8 @@ export const formatMacPresenceStatusLabel = (
 export const canRunWriterDispatchToMac = (device: MacDevicePresence): boolean =>
   resolveMacPresenceTier(device) === "live";
 
-/** Mac can receive queued install/send tasks when live locally or on another instance. */
+/** Mac can receive queued work when live locally or on another server instance. */
 export const canDispatchToMac = (device: MacDevicePresence): boolean => {
-  if (device.isDispatchReady !== undefined) {
-    return device.isDispatchReady;
-  }
-
   const tier = resolveMacPresenceTier(device);
   return tier === "live" || tier === "live_other_instance";
 };

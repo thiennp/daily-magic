@@ -60,6 +60,43 @@ describe("resolveClaudeRunAgentClient", () => {
     });
   });
 
+  it("retargets to the sole live Mac when the requested device id is stale", async () => {
+    vi.mocked(findAgentWitchDeviceByToken).mockResolvedValue({
+      id: "device-live",
+      userId: "user-1",
+      deviceLabel: "Studio-Mac",
+      displayName: null,
+      claimedAt: "2026-01-01T00:00:00.000Z",
+      lastSeenAt: null,
+      revokedAt: null,
+      dispatchPolicy: null,
+    });
+
+    const pairingStore = new AgentWitchPairingStore();
+    const hub = new AgentWitchHub(pairingStore);
+    hub.registerClient({
+      id: "agent-1",
+      role: "agent",
+      userId: "user-1",
+      deviceId: "stale-device-id",
+      pairingToken: "pair-token",
+      send: () => undefined,
+    });
+
+    const result = await resolveClaudeRunAgentClient({
+      runtime: hub,
+      senderUserId: "user-1",
+      executorUserId: "user-1",
+      targetDeviceId: "stale-device-row-id",
+    });
+
+    expect(result).toEqual({
+      ok: true,
+      agentClient: expect.objectContaining({ id: "agent-1" }),
+      deviceId: "device-live",
+    });
+  });
+
   it("does not treat a fresh last_seen alone as dispatch-ready (AGENT-022)", async () => {
     const pairingStore = new AgentWitchPairingStore();
     const hub = new AgentWitchHub(pairingStore);

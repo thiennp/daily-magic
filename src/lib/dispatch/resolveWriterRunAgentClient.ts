@@ -1,13 +1,13 @@
-import isAgentWitchDeviceOwnedByUser from "@/lib/agentWitch/isAgentWitchDeviceOwnedByUser";
 import {
   MAC_OFFLINE_FOR_ACCOUNT_ERROR,
   TEAMMATE_MAC_OFFLINE_ERROR,
 } from "@/lib/agentWitch/macOfflineForAccountErrorMessage.constant";
-import { findEnrichedAgentClientForUser } from "@/lib/agentWitch/findEnrichedAgentClientForUser";
 import type AgentWitchHubClient from "@/lib/agentWitch/types/AgentWitchHubClient.type";
 import type AgentWitchHubRuntime from "@/lib/agentWitch/types/AgentWitchHubRuntime.type";
 import { buildTargetMacOfflineDispatchError } from "@/lib/dispatch/buildTargetMacOfflineDispatchError";
 import { buildDispatchError } from "@/lib/dispatch/buildDispatchError";
+import { resolveLiveWriterAgentForRun } from "@/lib/dispatch/resolveLiveWriterAgentForRun";
+import { validateWriterRunDeviceSelection } from "@/lib/dispatch/validateWriterRunDeviceSelection";
 
 export const resolveTargetDeviceId = (
   payload: Readonly<Record<string, unknown>>,
@@ -35,57 +35,25 @@ export const resolveClaudeRunAgentClient = async (input: {
   readonly targetDeviceId: string | undefined;
   readonly requestId?: string;
 }): Promise<ClaudeRunAgentResolution> => {
-  if (
-    input.targetDeviceId !== undefined &&
-    input.executorUserId === input.senderUserId &&
-    !(await isAgentWitchDeviceOwnedByUser(
-      input.targetDeviceId,
-      input.senderUserId,
-    ))
-  ) {
+  const validationError = await validateWriterRunDeviceSelection(input);
+  if (validationError !== undefined) {
+    return validationError;
+  }
+
+  const resolved = await resolveLiveWriterAgentForRun({
+    runtime: input.runtime,
+    executorUserId: input.executorUserId,
+    targetDeviceId: input.targetDeviceId,
+  });
+
+  if (resolved !== undefined) {
     return {
-      ok: false,
-      error: buildDispatchError(
-        "The selected Mac is not connected to your account.",
-        input.requestId,
-      ),
+      ok: true,
+      agentClient: resolved.agentClient,
+      deviceId: resolved.deviceId,
     };
   }
 
-  if (input.targetDeviceId === undefined) {
-    const onlineAgents = input.runtime.listOnlineAgentClientsForUser(
-      input.executorUserId,
-    );
-
-    if (
-      input.executorUserId === input.senderUserId &&
-      onlineAgents.length > 1
-    ) {
-      return {
-        ok: false,
-        error: buildDispatchError(
-          "Select which Mac should run this task.",
-          input.requestId,
-        ),
-      };
-    }
-  }
-
-  const agentClient = await findEnrichedAgentClientForUser(
-    input.runtime,
-    input.executorUserId,
-    input.targetDeviceId,
-  );
-
-  if (agentClient !== undefined) {
-    const deviceId =
-      input.targetDeviceId ??
-      (agentClient.deviceId !== undefined ? agentClient.deviceId : null);
-    return { ok: true, agentClient, deviceId: deviceId ?? null };
-  }
-
-  // HTTP command pull is retired — dispatch requires a live hub WebSocket.
-  // A fresh last_seen_at alone must not return ok without agentClient.
   if (input.targetDeviceId !== undefined) {
     return {
       ok: false,

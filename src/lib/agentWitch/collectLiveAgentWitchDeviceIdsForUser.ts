@@ -1,5 +1,4 @@
-import { enrichOnlineAgentClients } from "@/lib/agentWitch/enrichOnlineAgentClients";
-import { resolveOnlineClientsByDeviceId } from "@/lib/agentWitch/resolveOnlineClientsByDeviceId";
+import { resolveLiveAgentClientsByDeviceIdForUser } from "@/lib/agentWitch/resolveLiveAgentClientsByDeviceIdForUser";
 import type AgentWitchHubRuntime from "@/lib/agentWitch/types/AgentWitchHubRuntime.type";
 
 /**
@@ -11,14 +10,10 @@ export const collectLiveAgentWitchDeviceIdsForUser = async (
   runtime: AgentWitchHubRuntime,
   userId: string,
 ): Promise<ReadonlySet<string>> => {
-  const enriched = await enrichOnlineAgentClients(
-    runtime.pairingStore,
-    runtime.listAgentClients(),
+  const byDeviceId = await resolveLiveAgentClientsByDeviceIdForUser(
+    runtime,
+    userId,
   );
-  const agentsForUser = enriched.filter(
-    (client) => client.role === "agent" && client.userId === userId,
-  );
-  const byDeviceId = await resolveOnlineClientsByDeviceId(agentsForUser);
 
   return new Set(byDeviceId.keys());
 };

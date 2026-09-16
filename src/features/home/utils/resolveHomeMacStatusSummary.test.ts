@@ -16,6 +16,19 @@ describe("resolveHomeMacStatusSummary", () => {
     expect(summary.label).toBe("Mac online");
   });
 
+  it("reports reconnecting when only live_other_instance presence exists", () => {
+    const summary = resolveHomeMacStatusSummary([
+      {
+        isConnected: false,
+        isOnline: true,
+        presenceTier: "live_other_instance",
+      },
+    ]);
+
+    expect(summary.tone).toBe("sleeping");
+    expect(summary.label).toBe("Mac reconnecting");
+  });
+
   it("reports sleeping when only recent presence exists", () => {
     const summary = resolveHomeMacStatusSummary([
       { isConnected: false, isOnline: true, presenceTier: "recent" },

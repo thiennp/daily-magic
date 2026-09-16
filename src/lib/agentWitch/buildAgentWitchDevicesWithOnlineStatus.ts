@@ -1,7 +1,4 @@
-import {
-  isAgentWitchDeviceDispatchReadyTier,
-  resolveAgentWitchDevicePresenceTier,
-} from "@/lib/agentWitch/resolveAgentWitchDevicePresenceTier";
+import { resolveAgentWitchDevicePresenceTier } from "@/lib/agentWitch/resolveAgentWitchDevicePresenceTier";
 import type AgentWitchDeviceRecord from "@/lib/agentWitch/types/AgentWitchDeviceRecord.type";
 import type AgentWitchPresenceTier from "@/lib/agentWitch/types/AgentWitchPresenceTier.type";
 import { isAgentWitchDeviceRecentlySeen } from "@/lib/agentWitch/agentWitchHeartbeat.constant";
@@ -53,7 +50,7 @@ const buildAgentWitchDevicesWithOnlineStatus = (
       isConnected ||
       presenceTier === "live_other_instance" ||
       isAgentWitchDeviceRecentlySeen(device.lastSeenAt, nowMs);
-    const isDispatchReady = isAgentWitchDeviceDispatchReadyTier(presenceTier);
+    const isDispatchReady = isConnected;
 
     return {
       id: device.id,
