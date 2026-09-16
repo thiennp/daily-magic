@@ -6,9 +6,7 @@ import {
   readAgentWitchInstallVersion,
   writeAgentWitchInstallVersion,
 } from "./agentWitchInstallVersion";
-import { kickstartAgentWitchLaunchAgent } from "./kickstartAgentWitchLaunchAgent";
 import { bootoutAgentWitchAuxiliaryLaunchAgents } from "./bootoutAgentWitchAuxiliaryLaunchAgents";
-import { listAgentWitchLaunchTargets } from "./listAgentWitchLaunchTargets";
 import { resolveAgentWitchAppOriginFromWsUrl } from "./resolveAgentWitchAppOriginFromWsUrl";
 import {
   readActiveProfileEmailFromFile,
@@ -128,10 +126,9 @@ const downloadInstallBundle = async (
 
 const kickstartServicesAfterUpdate = async (): Promise<void> => {
   bootoutAgentWitchAuxiliaryLaunchAgents();
-  const targets = listAgentWitchLaunchTargets();
-  for (const target of targets) {
-    await kickstartAgentWitchLaunchAgent(target.launchAgentLabel);
-  }
+  const { kickstartAgentWitchClientLaunchAgents } =
+    await import("./kickstartAgentWitchClientLaunchAgents");
+  await kickstartAgentWitchClientLaunchAgents();
 };
 
 const buildSelfUpdateResult = (

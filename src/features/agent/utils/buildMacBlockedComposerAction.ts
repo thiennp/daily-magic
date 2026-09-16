@@ -52,9 +52,13 @@ export const buildMacBlockedComposerAction = (
       ? hasAlternate
         ? "The selected Mac is offline. Switch to a connected Mac or start Agent Witch on this Mac."
         : "The selected Mac is offline. Start Agent Witch on your Mac to send tasks."
-      : hasAlternate
-        ? "The selected Mac is not connected. Switch to a connected Mac or wait for it to reconnect."
-        : "The selected Mac is not connected. Wait for it to reconnect.";
+      : selectedTier === "recent"
+        ? hasAlternate
+          ? "The selected Mac was seen recently and may reconnect on the next check-in. Switch to a connected Mac or wait."
+          : "The selected Mac was seen recently and may reconnect on the next check-in."
+        : hasAlternate
+          ? "The selected Mac is not connected. Switch to a connected Mac or wait for it to reconnect."
+          : "The selected Mac is not connected. Wait for it to reconnect.";
 
   return withComposerCopyFlag(
     {

@@ -42,6 +42,27 @@ describe("buildMacBlockedComposerAction", () => {
     expect(action.helperMessage).not.toContain("offline");
   });
 
+  it("OPEN-002: uses soft reconnecting copy for recent tier, not offline", () => {
+    const action = buildMacBlockedComposerAction(
+      "selected_mac_offline",
+      {
+        ...baseInput,
+        devices: [
+          {
+            id: "mac-a",
+            isConnected: false,
+            isOnline: true,
+            presenceTier: "recent",
+          },
+        ],
+      },
+      null,
+    );
+
+    expect(action.helperMessage.toLowerCase()).toContain("seen recently");
+    expect(action.helperMessage.toLowerCase()).not.toContain("offline");
+  });
+
   it("OPEN-002: uses offline copy for hard offline tier, not reconnecting", () => {
     const action = buildMacBlockedComposerAction(
       "selected_mac_offline",
