@@ -12,12 +12,13 @@
 
 ## Read next if…
 
-| If you need…                  | Open                                                                         |
-| ----------------------------- | ---------------------------------------------------------------------------- |
-| Cursor Cloud origin rules     | [adr/0004](../adr/0004-cursor-cloud-dispatch-origin.md)                      |
-| Mac writer vs queued / outbox | [adr/0005](../adr/0005-shared-mac-presence-and-dispatch-outbox.md)           |
-| Run feedback loop             | L2 `src/features/feedback/README.md`, `improvements/README.md`               |
-| Composer UI / APIs            | L2 `src/features/agent/README.md`, `dispatch/README.md`, `reports/README.md` |
+| If you need…                  | Open                                                                                        |
+| ----------------------------- | ------------------------------------------------------------------------------------------- |
+| Cursor Cloud origin rules     | [adr/0004](../adr/0004-cursor-cloud-dispatch-origin.md)                                     |
+| Mac writer vs queued / outbox | [adr/0005](../adr/0005-shared-mac-presence-and-dispatch-outbox.md)                          |
+| Run feedback loop             | L2 `src/features/feedback/README.md`, `improvements/README.md`                              |
+| Composer UI / APIs            | L2 `src/features/agent/README.md`, `dispatch/README.md`, `reports/README.md`                |
+| New task send readiness       | [agent-witch/send-readiness-reason-codes.md](../agent-witch/send-readiness-reason-codes.md) |
 
 ```bash
 npm run feature-knowledge:query -- "approvals dispatch queue" --feature=dispatch

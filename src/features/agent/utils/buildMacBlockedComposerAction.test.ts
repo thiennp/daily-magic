@@ -38,6 +38,7 @@ describe("buildMacBlockedComposerAction", () => {
       null,
     );
 
+    expect(action.helperMessage).toContain("reconnecting");
     expect(action.helperMessage).toContain("another server");
     expect(action.helperMessage).not.toContain("offline");
   });

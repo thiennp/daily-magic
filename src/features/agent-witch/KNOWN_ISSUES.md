@@ -41,4 +41,6 @@ Architecture for multi-instance presence and the dispatch outbox: `docs/adr/0005
 
 **Cause:** Self-update depends on heartbeat push, wake `POST /update/run`, or hourly updater — can lag if wake API or network fails.
 
+**UI (shipped):** New task composer shows **`update_needed`** readiness (blocks Send, **Update agent** CTA). Home Mac rows flag bundle mismatch in device detail. Contract: `docs/agent-witch/send-readiness-reason-codes.md`.
+
 **What to do:** Run **Update local** / `npm run agent-witch:self-update` on the Mac; check `~/.agent-witch/install-version.json` vs `GET /install/agent-witch/version`.

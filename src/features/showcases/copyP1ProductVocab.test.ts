@@ -19,6 +19,14 @@ const APP_BOTTOM_NAV_PATH = join(
   process.cwd(),
   "src/features/shell/appBottomNav.constant.ts",
 );
+const REPORTS_LIST_PATH = join(
+  process.cwd(),
+  "src/features/reports/AgentRunsList.tsx",
+);
+const SOLO_SURFACE_COPY_PATH = join(
+  process.cwd(),
+  "src/lib/copy/resolveSoloTeamSurfaceCopy.ts",
+);
 const SHOWCASE_ARTICLES_DIR = join(
   process.cwd(),
   "src/features/showcases/articles",
@@ -57,6 +65,16 @@ describe("COPY-P1 product vocab", () => {
 
     expect(source).toContain('label: "New task"');
     expect(source).not.toContain('label: "Send"');
+  });
+
+  it("Reports empty states use New task not Send a task (Rity)", () => {
+    const reportsList = readFileSync(REPORTS_LIST_PATH, "utf8");
+    const soloCopy = readFileSync(SOLO_SURFACE_COPY_PATH, "utf8");
+
+    expect(reportsList).toContain("New task");
+    expect(reportsList).not.toMatch(/Send a task/i);
+    expect(soloCopy).toContain("New task");
+    expect(soloCopy).not.toMatch(/Send a task/i);
   });
 
   it("showcase article assets do not use Send a task user-visible copy", () => {
