@@ -13,6 +13,8 @@ Documentation is stacked so you **stop reading** once your task is oriented. Do 
 
 **Code is L4** — open only after L0–L3 (or `feature-knowledge:query`) point you at the right folders.
 
+**Observation (parallel, not a layer):** runnable scripts confirm what docs claim — [script-index.md](script-index.md). Run the smallest command that answers your question (health `curl`, `feature-knowledge:query`, focused `test`), without archiving logs in markdown.
+
 ## Rules
 
 1. **Descend one layer at a time** — domain entry before ADRs; module brief before `src/lib/`.

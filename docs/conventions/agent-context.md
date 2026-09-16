@@ -2,20 +2,21 @@
 
 How coding agents (Cursor, Claude, Codex, etc.) should **reveal** system knowledge without loading the whole repo.
 
-**Start here for task paths:** [load-context.md](load-context.md) (bugfix, feature, refactor, deploy, architecture). **Layers L0–L4:** [progressive-disclosure.md](progressive-disclosure.md). **Domain pick list:** [domains/README.md](../domains/README.md).
+**Start here for task paths:** [load-context.md](load-context.md). **Layers L0–L4:** [progressive-disclosure.md](progressive-disclosure.md). **Domains:** [domains/README.md](../domains/README.md). **All npm scripts (observe system):** [script-index.md](script-index.md).
 
 ## Recommended reveal order (token-efficient)
 
 Use the **smallest** source that answers the question; stop when you have enough to edit safely.
 
-| Step | Layer | Source                                                                            | When                                                           |
-| ---- | ----- | --------------------------------------------------------------------------------- | -------------------------------------------------------------- |
-| 1    | —     | [AGENTS.md](../../AGENTS.md)                                                      | Every task — product name, harness paths, Cloud VM DB caveats  |
-| 2    | L0/L1 | [load-context.md](load-context.md) or one [domain entry](../domains/README.md)    | Match task type; do not read all domains                       |
-| 3    | —     | `npm run harness:bootstrap -- --match="…"`                                        | Matched command playbook / workflow (`verify`, `commit`, `pr`) |
-| 4    | L2    | `feature-knowledge:query` then `src/features/<slug>/README.md`, `KNOWN_ISSUES.md` | Before substantive feature edits                               |
-| 5    | L3    | Linked deep dive or ADR from domain “read next if…”                               | Only when L1/L2 point here                                     |
-| 6    | L4    | Source under `src/app`, `src/lib`, `server.ts`                                    | Implementation after orientation                               |
+| Step | Layer   | Source                                                                            | When                                                                        |
+| ---- | ------- | --------------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
+| 1    | —       | [AGENTS.md](../../AGENTS.md)                                                      | Every task — product name, harness paths, Cloud VM DB caveats               |
+| 2    | L0/L1   | [load-context.md](load-context.md) or one [domain entry](../domains/README.md)    | Match task type; do not read all domains                                    |
+| 3    | —       | `npm run harness:bootstrap -- --match="…"`                                        | Matched command playbook / workflow (`verify`, `commit`, `pr`)              |
+| 4    | L2      | `feature-knowledge:query` then `src/features/<slug>/README.md`, `KNOWN_ISSUES.md` | Before substantive feature edits                                            |
+| 5    | L3      | Linked deep dive or ADR from domain “read next if…”                               | Only when L1/L2 point here                                                  |
+| 6    | L4      | Source under `src/app`, `src/lib`, `server.ts`                                    | Implementation after orientation                                            |
+| —    | Observe | One command from [script-index.md](script-index.md)                               | Confirm docs; e.g. `feature-knowledge:query`, `dev` + health `curl`, `test` |
 
 **Slug** for cross-cutting docs in feature-knowledge is `docs` (all markdown under `docs/` is indexed). Example:
 
@@ -35,55 +36,9 @@ Path-scoped Cursor rules load from `.cursor.json` when you touch matching paths 
 
 Rebuild after edits: `npm run feature-knowledge:index`. Scaffold missing feature docs from registry: `npm run feature-knowledge:scaffold-docs`.
 
-## npm scripts — what they reveal
+## npm scripts
 
-Scripts **do not** replace docs; they **validate** or **route** agents to the right workflow.
-
-### Context and documentation
-
-| Script                            | Reveals / does                                                           |
-| --------------------------------- | ------------------------------------------------------------------------ |
-| `feature-knowledge:query`         | Ranked doc chunks (docs + features) for a natural-language question      |
-| `feature-knowledge:index`         | Rebuilds TF-IDF index from docs + feature markdown                       |
-| `feature-knowledge:scaffold-docs` | Creates stub `README.md` / `AGENTS.md` / `KNOWN_ISSUES.md` from registry |
-| `harness:bootstrap`               | Manifest routing: which command playbook and workflow match user text    |
-| `harness:sync`                    | Writes git-hooks doc from manifest (commit workflow reference)           |
-
-### Application runtime (Agent Witch product)
-
-| Script                                                          | Reveals / does                                    |
-| --------------------------------------------------------------- | ------------------------------------------------- |
-| `dev`                                                           | Custom server + Next + WebSocket (`server.ts`)    |
-| `dev:next`                                                      | Next only — **no** Mac WS bridge                  |
-| `agent-witch`                                                   | Local Mac bridge client entry                     |
-| `agent-witch:install`                                           | Install bundle to `~/.agent-witch`                |
-| `agent-witch:watchdog` / `self-update` / `automation-scheduler` | macOS maintenance CLIs                            |
-| `build:agent-witch`                                             | Regenerates install bundle consumed by production |
-
-### Quality and structure (before commit/PR)
-
-| Script                                   | Reveals / does                               |
-| ---------------------------------------- | -------------------------------------------- |
-| `harness:bootstrap -- --workflow=verify` | Lists verify steps (see manifest)            |
-| `cursor:verify`                          | Rule/policy checks (barrels, naming, etc.)   |
-| `cursor:architecture`                    | Layer import rules + staged file size limits |
-| `validate:staged` / `validate:all`       | `structure-validation.config.json` layout    |
-| `lint` / `typecheck` / `test`            | Standard TS/React/Vitest gates               |
-| `test:e2e` / `test:e2e:shipped-install`  | Playwright; shipped install blackbox         |
-
-### Database
-
-| Script                 | Reveals / does                         |
-| ---------------------- | -------------------------------------- |
-| `db:migrate`           | Applies `db/migrations` (deploy path)  |
-| `db:schema`            | Full `db/schema.sql` via `psql`        |
-| `db:migrate:bootstrap` | One-time `schema_migrations` bootstrap |
-
-### Scaffolding
-
-| Script          | Reveals / does                                              |
-| --------------- | ----------------------------------------------------------- |
-| `pnpm scaffold` | New components/hooks/utils per `.agents/scaffold/README.md` |
+Canonical grouped index (what each command reveals, observe-by-task table, macOS notes): **[script-index.md](script-index.md)**. Quick verify workflow: `npm run harness:bootstrap -- --workflow=verify`.
 
 ## Harness files (static context)
 

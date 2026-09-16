@@ -15,7 +15,8 @@
 | First-time machine setup            | [development/setup.md](../development/setup.md)                                                     |
 | Deploy / Railway / Vercel notes     | [development/deployment.md](../development/deployment.md)                                           |
 | CI and pre-commit                   | [development/quality-gates.md](../development/quality-gates.md)                                     |
-| Agent script map                    | [conventions/agent-context.md](../conventions/agent-context.md)                                     |
+| Script index (observe / npm run)    | [conventions/script-index.md](../conventions/script-index.md)                                       |
+| Agent harness map                   | [conventions/agent-context.md](../conventions/agent-context.md)                                     |
 | Architecture constraints for deploy | [domains/architecture.md](architecture.md) + [adr/0006](../adr/0006-production-hosting-and-neon.md) |
 
 **Task path:** [conventions/load-context.md](../conventions/load-context.md) § Deploy.

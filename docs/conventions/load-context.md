@@ -1,6 +1,10 @@
 # How to load context (humans and AI)
 
-**Goal:** build enough mental model to work safely, using the **fewest** documents. Model: [progressive-disclosure.md](progressive-disclosure.md) (L0→L4). Script reference: [agent-context.md](agent-context.md).
+**Goal:** build enough mental model to work safely, using the **fewest** documents and **targeted** commands. Model: [progressive-disclosure.md](progressive-disclosure.md) (L0→L4). Scripts: [script-index.md](script-index.md) · harness map: [agent-context.md](agent-context.md).
+
+## Learn by running (not read-only)
+
+After picking a task path below, use the **script index** to confirm behavior: e.g. `npm run feature-knowledge:query`, `npm run harness:bootstrap -- --match="…"`, `npm run dev` + `curl` health URLs, or `npm run test` for the area you changed. See [script-index.md](script-index.md) § Learn by running — do not paste full logs into docs or PRs.
 
 ## Always (≈30 seconds)
 
