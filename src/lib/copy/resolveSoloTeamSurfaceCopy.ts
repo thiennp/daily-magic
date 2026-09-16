@@ -24,7 +24,7 @@ export const resolveReportsSignedInEmptyBody = (
 ): string =>
   input.teamNavEnabled
     ? "Team jobs and named approvals land here."
-    : "Send a task to your Mac — finished jobs and approvals will land here.";
+    : "Start a New task on your Mac — finished jobs and approvals will land here.";
 
 export const resolveComposerApprovalHelper = (
   input: SoloTeamCopyInput,

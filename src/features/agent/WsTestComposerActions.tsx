@@ -6,6 +6,7 @@ import { useWsTestComposerActionsModel } from "@/features/agent/hooks/useWsTestC
 import type { MacPresenceTier } from "@/features/agent-witch/online-wake";
 import SendReadinessBanner from "@/features/agent/send-readiness/SendReadinessBanner";
 import SendReadinessMacReadyChip from "@/features/agent/send-readiness/SendReadinessMacReadyChip";
+import { resolveComposerSendDisabledWithReadiness } from "@/features/agent/send-readiness/resolveComposerSendDisabledWithReadiness";
 import type { WsTestConnectionStatus } from "@/features/agent/types/WsTestConnectionStatus.type";
 import { useCopyToClipboard } from "@/hooks/useCopyToClipboard";
 
@@ -49,6 +50,10 @@ export default function WsTestComposerActions(
 ) {
   const { copied, copy } = useCopyToClipboard();
   const { blockedAction, readinessUi } = useWsTestComposerActionsModel(props);
+  const effectiveSendDisabled = resolveComposerSendDisabledWithReadiness({
+    isSendDisabled: props.isSendDisabled,
+    readinessBanner: readinessUi.readinessBanner,
+  });
 
   return (
     <>
@@ -63,7 +68,7 @@ export default function WsTestComposerActions(
       ) : null}
       <ComposerBlockedActionButtons
         blockedAction={blockedAction}
-        isSendDisabled={props.isSendDisabled}
+        isSendDisabled={effectiveSendDisabled}
         sendDisabledReason={readinessUi.sendDisabledReason}
         sendLabel={props.sendLabel}
         copied={copied}

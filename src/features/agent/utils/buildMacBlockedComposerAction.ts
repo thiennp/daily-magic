@@ -47,11 +47,11 @@ export const buildMacBlockedComposerAction = (
   const selectedOnOtherInstance = selectedTier === "live_other_instance";
   const selectedHardOffline = isMacPresenceTierHardOffline(selectedTier);
   const helperMessage = selectedOnOtherInstance
-    ? "This Mac is connected on another server (common right after deploy). Wait a few seconds and try again."
+    ? "This Mac is reconnecting on another server (common right after deploy). Wait a few seconds, then try New task again."
     : selectedHardOffline
       ? hasAlternate
         ? "The selected Mac is offline. Switch to a connected Mac or start Agent Witch on this Mac."
-        : "The selected Mac is offline. Start Agent Witch on your Mac to send tasks."
+        : "The selected Mac is offline. Start Agent Witch on your Mac to run a New task."
       : selectedTier === "recent"
         ? hasAlternate
           ? "The selected Mac was seen recently and may reconnect on the next check-in. Switch to a connected Mac or wait."

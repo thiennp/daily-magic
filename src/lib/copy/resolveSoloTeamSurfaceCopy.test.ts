@@ -38,6 +38,12 @@ describe("resolveSoloTeamSurfaceCopy", () => {
     expect(resolveReportsSignedInEmptyBody({ teamNavEnabled: true })).toBe(
       "Team jobs and named approvals land here.",
     );
+    expect(
+      resolveReportsSignedInEmptyBody({ teamNavEnabled: false }),
+    ).toContain("New task");
+    expect(
+      resolveReportsSignedInEmptyBody({ teamNavEnabled: false }),
+    ).not.toMatch(/Send a task/i);
   });
 
   it("uses solo vs team composer approval helper", () => {
