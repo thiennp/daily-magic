@@ -2,28 +2,17 @@
 
 import AppPanel from "@/components/surfaces/AppPanel";
 import { ThemeToggleButton } from "@/components/common/ThemeToggleButton";
+import { useStyleguideActiveSection } from "@/features/styleguide/hooks/useStyleguideActiveSection";
+import { STYLEGUIDE_SECTIONS } from "@/features/styleguide/styleguideSections.constant";
 import Link from "next/link";
-
-const STYLEGUIDE_SECTIONS = [
-  { id: "brand-logo", label: "Brand logo" },
-  { id: "surfaces", label: "App surfaces" },
-  { id: "buttons", label: "Buttons" },
-  { id: "alerts", label: "Alerts" },
-  { id: "badges", label: "Badges" },
-  { id: "avatars", label: "Avatars" },
-  { id: "images", label: "Images" },
-  { id: "videos", label: "Videos" },
-  { id: "modals", label: "Modals" },
-  { id: "forms", label: "Form elements" },
-  { id: "tables", label: "Tables" },
-  { id: "charts", label: "Charts" },
-] as const;
 
 export default function StyleguideShell({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const activeSectionId = useStyleguideActiveSection();
+
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <header className="sticky top-0 z-50 border-b border-gray-200 bg-white/95 backdrop-blur dark:border-gray-800 dark:bg-gray-800/95">
@@ -58,15 +47,24 @@ export default function StyleguideShell({
             Sections
           </p>
           <nav className="flex flex-row flex-wrap gap-2 lg:flex-col lg:gap-1">
-            {STYLEGUIDE_SECTIONS.map((section) => (
-              <a
-                key={section.id}
-                href={`#${section.id}`}
-                className="rounded-lg px-3 py-2 text-sm text-gray-600 transition hover:bg-gray-50 hover:text-brand-600 dark:text-gray-300 dark:hover:bg-white/5 dark:hover:text-brand-400"
-              >
-                {section.label}
-              </a>
-            ))}
+            {STYLEGUIDE_SECTIONS.map((section) => {
+              const isActive = section.id === activeSectionId;
+
+              return (
+                <a
+                  key={section.id}
+                  href={`#${section.id}`}
+                  aria-current={isActive ? "location" : undefined}
+                  className={`rounded-lg px-3 py-2 text-sm transition ${
+                    isActive
+                      ? "bg-brand-50 font-medium text-brand-700 dark:bg-brand-950/40 dark:text-brand-300"
+                      : "text-gray-600 hover:bg-gray-50 hover:text-brand-600 dark:text-gray-300 dark:hover:bg-white/5 dark:hover:text-brand-400"
+                  }`}
+                >
+                  {section.label}
+                </a>
+              );
+            })}
           </nav>
         </AppPanel>
 

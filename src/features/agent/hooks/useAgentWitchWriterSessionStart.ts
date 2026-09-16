@@ -28,7 +28,7 @@ const buildDemoWriterSessionReady = (writerAgent: HarnessWriterAgent): string =>
     type: AGENT_WITCH_MESSAGE_TYPES.COMMAND_WRITER_SESSION_READY,
     payload: {
       writerAgent,
-      output: `${DEMO_WRITER_SESSION_READY_LABELS[writerAgent]} is ready on your Mac.\nSend a task from the box below when you are ready.\n`,
+      output: `${DEMO_WRITER_SESSION_READY_LABELS[writerAgent]} is ready on your Mac.\nUse New task below when you are ready.\n`,
       exitCode: 0,
     },
   });

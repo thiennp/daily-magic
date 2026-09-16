@@ -34,7 +34,7 @@ export const stripAgentLiveProgressCliChrome = (output: string): string =>
       if (/ is ready on your Mac\.?$/i.test(trimmed)) {
         return false;
       }
-      if (/^Send a task from the box below/i.test(trimmed)) {
+      if (/^Use New task below/i.test(trimmed)) {
         return false;
       }
       if (/^\d+\.\d+\.\d+\s*\(Claude Code\)/i.test(trimmed)) {
