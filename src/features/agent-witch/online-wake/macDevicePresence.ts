@@ -51,13 +51,9 @@ export const formatMacPresenceStatusLabel = (
   return "Offline";
 };
 
-/** Send-a-task can run live or queue until the Mac checks in again. */
-export const canRunWriterDispatchToMac = (
-  device: MacDevicePresence,
-): boolean => {
-  void device;
-  return true;
-};
+/** Live on this server — preferred default Mac for writer dispatch. */
+export const canRunWriterDispatchToMac = (device: MacDevicePresence): boolean =>
+  resolveMacPresenceTier(device) === "live";
 
 /** Mac can receive queued work when live locally or on another server instance. */
 export const canDispatchToMac = (device: MacDevicePresence): boolean => {

@@ -1,4 +1,3 @@
-import { canRunWriterDispatchToMac } from "@/features/agent-witch/online-wake";
 import { buildWsTestSendDisabledState } from "@/features/agent/utils/buildWsTestSendDisabledState";
 import { isCursorCloudExecutorDeviceId } from "@/lib/cursorCloud/cursorCloudExecutorDeviceId.constant";
 import type useMacDeviceSelection from "@/features/agent/hooks/useMacDeviceSelection";
@@ -52,9 +51,7 @@ export const buildWsTestComposerDispatchState = (input: {
     const selectedDevice = input.macSelection.devices.find(
       (device) => device.id === deviceId,
     );
-    return selectedDevice === undefined
-      ? false
-      : canRunWriterDispatchToMac(selectedDevice);
+    return selectedDevice !== undefined;
   };
 
   return {

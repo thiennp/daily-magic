@@ -3,10 +3,7 @@
 import { useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 
-import {
-  canRunWriterDispatchToMac,
-  pickDefaultMacDeviceId,
-} from "@/features/agent-witch/online-wake";
+import { pickDefaultMacDeviceId } from "@/features/agent-witch/online-wake";
 import { SEND_TASK_DEVICE_ID_QUERY_PARAM } from "@/features/agent/constants/sendTaskModalQuery.constant";
 import useMyMacDevices from "@/features/agent/hooks/useMyMacDevices";
 import {
@@ -64,18 +61,7 @@ const useMacDeviceSelection = (): {
       (device) => device.id === preferredDeviceId,
     );
 
-    if (
-      deviceIdFromQuery.length > 0 &&
-      preferredDevice !== undefined &&
-      canRunWriterDispatchToMac(preferredDevice)
-    ) {
-      return preferredDeviceId;
-    }
-
-    if (
-      preferredDevice !== undefined &&
-      canRunWriterDispatchToMac(preferredDevice)
-    ) {
+    if (preferredDevice !== undefined) {
       return preferredDeviceId;
     }
 

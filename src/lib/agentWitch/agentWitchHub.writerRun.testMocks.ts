@@ -29,6 +29,14 @@ vi.mock("@/lib/agentWitch/findAgentWitchDeviceByToken", () => ({
   findAgentWitchDeviceByToken: vi.fn(async () => null),
 }));
 
+vi.mock("@/lib/agentWitch/resolveCurrentAgentWitchDeviceId", () => ({
+  resolveCurrentAgentWitchDeviceId: async (id: string) => id,
+}));
+
+vi.mock("@/lib/agentWitch/listAgentWitchDevicesForUser", () => ({
+  listAgentWitchDevicesForUser: vi.fn(async () => []),
+}));
+
 vi.mock("@/lib/dispatch/persistAgentRun", () => ({
   persistAgentRun: vi.fn(async () => mockAgentRun),
 }));
