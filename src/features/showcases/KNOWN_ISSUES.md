@@ -130,6 +130,18 @@
 
 ---
 
+## SHOWCASES-015 — E2E verified card covers 404 on `/showcases` (BUG-007)
+
+**Symptom:** Six “E2E verified” cards on `/showcases` showed broken images; network tab requested `/showcases/e2e/*.svg` with 404 while the PNG assets existed.
+
+**Root cause:** `resolveShowcaseCoverSrc` swapped any bare `.png` `src` to `.svg` for card covers. E2E article images only reference committed viewport PNGs (no SVG pair).
+
+**Fix:** Skip the PNG→SVG swap when `src` is under `/showcases/e2e/`.
+
+**Regression test:** `resolveShowcaseCoverSrc.test.ts` (BUG-007 case).
+
+---
+
 ## SHOWCASES-013 — Home card cover showed marketing hero, not presets
 
 **Symptom:** Featured “Automate for yourself” card used `01-home-popular-presets.png` but the crop showed the home hero/sign-up UI, not popular workflow cards.

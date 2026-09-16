@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { AUTOMATION_SHOWCASE_SCREEN } from "@/features/showcases/automationShowcaseScreens.constant";
+import { E2E_SHOWCASE_ARTICLES } from "@/features/showcases/e2eShowcaseArticleRegistry";
 import { resolveShowcaseCoverSrc } from "@/features/showcases/resolveShowcaseCoverSrc";
 import { ONBOARDING_SHOWCASE_SCREEN } from "@/features/showcases/onboardingShowcaseScreens.constant";
 import { SHOWCASE_TOPIC_SCREEN } from "@/features/showcases/showcaseTopicScreens.constant";
@@ -33,5 +34,16 @@ describe("resolveShowcaseCoverSrc (SHOWCASES-013/014)", () => {
         caption: "Weekly status",
       }),
     ).toBe("/showcases/onboarding/03-sample-workflow.svg");
+  });
+
+  it("BUG-007: E2E verified card covers keep PNG src (no missing .svg swap)", () => {
+    for (const article of E2E_SHOWCASE_ARTICLES) {
+      const image = article.sections.find(
+        (section) => section.image !== undefined,
+      )?.image;
+      expect(image).toBeDefined();
+      expect(resolveShowcaseCoverSrc(image!)).toBe(image!.src);
+      expect(image!.src).toMatch(/^\/showcases\/e2e\/.+\.png$/u);
+    }
   });
 });
