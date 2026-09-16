@@ -61,7 +61,7 @@ const automateForYourselfOrYourTeam: ShowcaseArticle = {
         "Open Automations → New automation",
         "Choose the saved workflow and fill its fields once",
         "Pick Schedule (hourly, daily, weekdays) or Webhook for external triggers",
-        "Agent Witch cloud syncs the job to your Mac; the local scheduler runs it",
+        "Agent Witch syncs the job to your Mac; the local scheduler runs it",
       ],
       image: buildShowcaseAutomationArticleImage(
         AUTOMATION_SHOWCASE_SCREEN.NEW_AUTOMATION,

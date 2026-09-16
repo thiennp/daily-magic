@@ -3,8 +3,7 @@ import type ShowcaseArticle from "@/features/showcases/types/ShowcaseArticle.typ
 const scheduleWorkflowOnYourMac: ShowcaseArticle = {
   slug: "schedule-workflow-on-your-mac",
   title: "Schedule a workflow on your Mac — not in the cloud",
-  subtitle:
-    "Agent Witch cloud stores the plan; Agent Witch on your Mac runs it on time.",
+  subtitle: "Agent Witch stores the plan; your Mac runs it on time.",
   category: "Workflows",
   supportLevel: "full",
   readMinutes: 4,
@@ -49,7 +48,7 @@ const scheduleWorkflowOnYourMac: ShowcaseArticle = {
       heading: "How it works",
       bullets: [
         "You define name, workflow, field values, and schedule in /automations",
-        "Agent Witch cloud syncs the job list to ~/.agent-witch on your Mac",
+        "Agent Witch syncs the job list to ~/.agent-witch on your Mac",
         "com.agent-witch-automation-scheduler checks every minute and dispatches due runs",
         "Results land in Job history like any manual send",
       ],
