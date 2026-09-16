@@ -1,6 +1,6 @@
 # Agent Witch local bridge
 
-Agent Witch is the Mac client that heartbeats to Daily Magic, receives tasks, and streams writer CLI output back to the browser.
+Agent Witch is the Mac client that heartbeats to the Agent Witch control plane (`www.agentwitch.com` or local `npm run dev`), receives tasks, and streams writer CLI output back to the browser.
 
 ## Install
 
@@ -33,3 +33,5 @@ http://localhost:3000/ws-test — send a task to the local agent.
 ## Server implementation
 
 Cloud-side logic: `src/lib/agentWitch/`. UI: `src/features/agent-witch/`.
+
+Presence tiers, dispatch outbox, and writer vs queued work: **ADR 0005** (`docs/adr/0005-shared-mac-presence-and-dispatch-outbox.md`). Production hosting: **ADR 0006**.

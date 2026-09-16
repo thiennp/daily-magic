@@ -1,0 +1,36 @@
+---
+description: Catalog of binding ADRs for daily-magic (Agent Witch)
+globs:
+alwaysApply: true
+---
+
+# Architecture decision records (daily-magic / Agent Witch)
+
+Canonical index: [docs/adr/README.md](docs/adr/README.md). Full text lives in `docs/adr/NNNN-*.md`.
+
+## When to load
+
+| Change area | ADR |
+| ----------- | --- |
+| `server.ts`, WebSocket upgrade, Mac `wsUrl` | 0002, 0006 |
+| `getAgentWitchHub`, presence, devices API, writer dispatch, outbox | 0005 |
+| `src/features/*` vs `src/lib/*` layout | 0003 |
+| Cursor Cloud dispatch, origin checks | 0004 |
+| Deploy, Railway, Neon, `www.agentwitch.com` | 0006, `docs/product/repo-name-and-hosting.md` |
+| New numbered ADR | 0001 (process) |
+
+## Catalog
+
+| ADR | Decision |
+| --- | -------- |
+| 0001 | ADRs under `docs/adr/`; feature-knowledge index for agents |
+| 0002 | `tsx server.ts` for `/api/agent-witch/ws`; hardcoded production `wss://www.agentwitch.com/...` |
+| 0003 | Features in `src/features/`; shared server code in `src/lib/`; API routes in `src/app/api/` |
+| 0004 | Cursor Cloud dispatch requires allowed app origin in production |
+| 0005 | `agent_witch_connections` + dispatch outbox; presence tiers; writer needs `live` on same Node; unified `resolveLiveAgentClientsByDeviceIdForUser` |
+| 0006 | Production on Railway + Docker + `npm start`; Neon `DATABASE_URL`; not CHECK24 daily-magic URL |
+
+## Rules
+
+- Do not contradict an **Accepted** ADR; update the ADR when product behavior changes.
+- Open operational caveats (DNS, multi-instance handoff) stay in `src/features/agent-witch/KNOWN_ISSUES.md`, not duplicated as historical AGENT-* tickets in ADRs.

@@ -8,22 +8,20 @@ Accepted
 
 "Mac online, dispatch-ready" is process-local state: the live WebSocket lives in an in-memory `Map` inside one Node process (`AgentWitchHubBase.clients`, held on `globalThis` by `getAgentWitchHub`). Dispatch fails closed when no live socket is found — HTTP command pull was retired in AGENT-022 because a fresh `last_seen_at` lied about readiness.
 
-The consequence is structural, not a bug in one function: any request handled by a process that does not hold the Mac's socket sees an empty hub and returns `The selected Mac is not online right now.` Two distinct failure classes produce that one message:
+The consequence is structural, not a bug in one function: any request handled by a process that does not hold the Mac's socket sees an empty hub and returns `The selected Mac is not online right now.` Two distinct failure classes produced that one message:
 
 | Class | Cause                                         | Examples                                                                                          |
 | ----- | --------------------------------------------- | ------------------------------------------------------------------------------------------------- |
 | A     | Request lands on a process without the socket | Multiple replicas, deploy or restart, browser origin whose backend differs from the Mac's `wsUrl` |
 | B     | Mac genuinely not connected at that instant   | Client reconnect window, install-bundle self-update restart, laptop asleep                        |
 
-Class A is a lie the system tells about its own state. Class B is real, but surfacing it as a hard error is wrong for work that could simply wait.
-
-Presence tiers already distinguish `isConnected` (live socket on this hub) from `isOnline` (live or seen within ~90s) in `buildAgentWitchDevicesWithOnlineStatus`, so the UI can disagree with dispatch whenever the socket lives elsewhere.
+Class A is a lie the system tells about its own state unless presence is classified. Class B is real, but surfacing it as a hard error is wrong for work that could simply wait.
 
 ## Decision
 
 ### Prerequisite
 
-WebSocket termination and every dispatch route run in the same deployment. Production is Railway (`railway.toml`, `npm start` → `tsx server.ts`). Dispatch routes must not be served by a platform that cannot hold the upgrade.
+WebSocket termination and every dispatch route run in the same deployment class as production Agent Witch (ADR 0006: Railway + `tsx server.ts`). Dispatch routes must not be served by a platform that cannot hold the upgrade on the same origin as `AGENT_WITCH_PRODUCTION_WS_URL`.
 
 ### Shared presence registry
 
@@ -50,7 +48,7 @@ Lifecycle hooks reuse existing call sites:
 
 `instance_id` is generated once per process and held on `globalThis`, matching how the hub itself is shared.
 
-Presence resolution checks the local hub first (unchanged fast path), then the registry. Cross-instance delivery goes through the outbox rather than direct instance-to-instance calls, so no Redis or private networking is required.
+Presence resolution checks the local hub first (unchanged fast path), then the registry for **other** instances. Cross-instance delivery for queueable work goes through the outbox rather than direct instance-to-instance RPC.
 
 ### Durable dispatch outbox
 
@@ -75,21 +73,60 @@ The process owning the socket drains `queued` rows for a device on `agent.regist
 Only work that can legitimately wait is queued:
 
 - **Queued:** harness install, harness write-items, capability template install, marketplace install push, automation dispatch.
-- **Not queued** (needs a live session): `shell.*`, `writer.input.respond`, `writer.stop`, terminal control. These fail fast, but with a cause the user can act on.
+- **Not queued** (needs a live session on **this** hub process): `shell.*`, `writer.*` dispatch, `writer.input.respond`, `writer.stop`, terminal control. These fail fast with a classified error.
+
+### Presence tiers and API fields
+
+`GET /api/agent-witch/devices` exposes four tiers via `presenceTier`:
+
+| Tier                  | Meaning                                       | `isConnected` | `isDispatchReady`              | Writer send-a-task               |
+| --------------------- | --------------------------------------------- | ------------- | ------------------------------ | -------------------------------- |
+| `live`                | Agent socket on **this** Node hub             | `true`        | `true` (same as `isConnected`) | Allowed                          |
+| `live_other_instance` | Registry says socket on another `instance_id` | `false`       | `false`                        | Not allowed; use retry / refresh |
+| `recent`              | `last_seen_at` within ~90s, no live socket    | `false`       | `false`                        | Not allowed                      |
+| `offline`             | Otherwise                                     | `false`       | `false`                        | Not allowed                      |
+
+`isOnline` remains `true` for `live`, `live_other_instance`, or `recent` (visibility / wake hints). **Do not** treat `isOnline` alone as writer-ready.
+
+Home hero “Mac online” counts only `live` on this process; `live_other_instance` is shown as reconnecting (see `resolveHomeMacStatusSummary`).
+
+### Unified live client resolution
+
+Devices API and writer dispatch must use the **same** hub matching rules:
+
+- `resolveLiveAgentClientsByDeviceIdForUser` — enrich agents, then `resolveOnlineClientsByDeviceId` (pairing token + `deviceId`).
+- `collectLiveAgentWitchDeviceIdsForUser` — keys of that map (`live` tier).
+- `findEnrichedAgentClientForUser` — `map.get(deviceId)` for targeted dispatch.
+- `retargetWriterRunToSoleLiveMac` — when the requested `targetDeviceId` is stale but exactly one live agent exists on this hub, retarget to the canonical device id (token-resolved id preferred over stale hub `deviceId`).
+
+Do not resolve live Macs via `findAgentClientForUser` + raw `client.deviceId` alone; that diverged from the devices API and caused “online in UI, offline on dispatch”.
 
 ### Response contract
 
-Replace the single offline message with a structured `errorCode` and three outcomes: `queued` (with a run id to follow), `retry` (client retries; Mac is reconnecting or attached to another instance), and `offline` (Agent Witch not running; offer wake). Device presence becomes four tiers — `live`, `live_other_instance`, `recent`, `offline` — so the Mac picker and dispatch agree. `isMacDispatchOfflineErrorMessage` keeps working for older clients but new code branches on `errorCode`, not string equality.
+Structured `errorCode` on dispatch failures:
+
+- `mac_reconnecting` — registry or recent heartbeat suggests handoff / reconnect (client may retry writer dispatch).
+- `mac_offline` — no live socket and not recently seen.
+- `mac_queued` — outbox accepted queueable work.
+
+`buildTargetMacOfflineDispatchError` and `deliverOrQueueAgentWitchDispatchMessage` implement the split. New code branches on `errorCode`, not string equality on `errorMessage`.
 
 ### Rollout
 
-Staged, one commit per step with tests: registry module and migration; lifecycle wiring; presence tiers through the devices API and Mac picker; outbox enqueue and drain; error classification with client retry; then `KNOWN_ISSUES.md`, regression tests, and `npm run feature-knowledge:index`.
+Shipped in stages with tests: registry + migration; lifecycle wiring; presence tiers on devices API; outbox enqueue/drain; error classification + client retry; unified live resolution + writer retarget (2026).
 
 ## Consequences
 
-- Class A disappears once presence is shared: the UI stops reporting a Mac as available when dispatch cannot reach it.
-- Class B becomes a visible wait rather than a failure for queued message types. It cannot be eliminated — a powered-off Mac cannot run anything — so "queued" is the honest end state, not "sent".
-- Interactive shell and writer-session messages still fail during reconnect windows by design; they gain a clearer cause and client-side retry instead of silent queuing that would strand a session.
-- Presence resolution adds a database read on the fallback path. The local-hub fast path is unchanged, so the common case keeps its current cost.
-- Registry rows are authoritative only while heartbeats continue; the sweeper window (~3× heartbeat) bounds how long a crashed instance can appear to own a device.
-- Reintroducing queued delivery reopens the AGENT-022 hazard if "queued" is ever presented as "running". The contract above keeps them distinct states.
+- **Class A** is **classified**, not eliminated for writer dispatch: the UI can show `live_other_instance` or “Mac reconnecting” while `POST /api/agent-runs/dispatch` on another instance still cannot run the writer until the Mac’s socket is on that process (OPEN-002).
+- **Class B** becomes a visible wait (`mac_reconnecting`, queued outbox) rather than a generic offline string for queueable types.
+- Interactive shell and writer messages still fail during reconnect windows by design; they gain clearer causes and limited client retry instead of silent queuing.
+- Presence fallback adds database reads; the local-hub map path is unchanged for the common `live` case.
+- Registry rows are authoritative only while heartbeats continue; the sweeper bounds stale ownership.
+- Reintroducing “queued” as “running” would repeat the AGENT-022 hazard; writer runs are created only after hub client resolution succeeds.
+
+## References
+
+- `src/lib/agentWitch/resolveLiveAgentClientsByDeviceIdForUser.ts`
+- `src/lib/dispatch/resolveLiveWriterAgentForRun.ts`, `retargetWriterRunToSoleLiveMac.ts`
+- `src/features/agent-witch/KNOWN_ISSUES.md` (OPEN-001–003)
+- ADR 0002 (WebSocket server), ADR 0006 (production hosting)

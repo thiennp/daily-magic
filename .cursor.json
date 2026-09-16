@@ -83,6 +83,12 @@
       "description": "Query feature RAG and KNOWN_ISSUES before editing features",
       "path": "rules-feature-knowledge.mdc",
       "glob": "src/features/**"
+    },
+    {
+      "name": "architecture-decision-records",
+      "description": "Binding ADR catalog for Agent Witch (docs/adr)",
+      "path": "architecture-decision-records.mdc",
+      "glob": "**/*"
     }
   ]
 }
