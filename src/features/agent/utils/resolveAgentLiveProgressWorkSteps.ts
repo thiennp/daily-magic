@@ -23,6 +23,7 @@ export const resolveAgentLiveProgressWorkSteps = (input: {
   readonly cleaned: string;
   readonly workState: AgentLiveProgressStepState;
   readonly stallState?: AgentLiveProgressStallState;
+  readonly approvalWaitingLabel?: string | null;
 }): readonly AgentLiveProgressStep[] => {
   if (input.updates.length > 0) {
     return buildAgentLiveProgressTimelineSteps({
@@ -59,6 +60,7 @@ export const resolveAgentLiveProgressWorkSteps = (input: {
         started: input.started,
         isFinished: input.isFinished,
         cleaned: input.cleaned,
+        approvalWaitingLabel: input.approvalWaitingLabel,
       }),
       detail: resolveAgentLiveProgressStallDetail({
         stallState: input.stallState ?? "none",

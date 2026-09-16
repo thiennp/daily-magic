@@ -14,7 +14,7 @@
 
 **Cause:** `AgentRunDetailContent` dumped `resultOutput` verbatim and never reused the live-terminal next-actions parser/UI.
 
-**Fix:** Split result text with `splitAgentRunResultForDisplay`, hide the marker block from the `<pre>`, and render `AgentLiveTerminalNextActions` buttons that open Send a task with the chosen prompt.
+**Fix:** Split result text with `splitAgentRunResultForDisplay`, hide the marker block from the `<pre>`, and render `AgentLiveTerminalNextActions` buttons that open **New task** with the chosen prompt.
 
 ## REPORTS-003 — Continue finished job with Mac CLI context
 
@@ -30,7 +30,7 @@
 
 **Cause:** Job result UI only rendered next-action chips and a Continue conversation link — no freeform continue field.
 
-**Fix:** Add an auto-growing, non-resizable textarea under suggested next steps; Enter sends (Shift+Enter newline) into Send-a-task with `continueSession=1`. `shouldSubmitContinueMessageOnKeyDown.test.ts` (REPORTS-004).
+**Fix:** Add an auto-growing, non-resizable textarea under suggested next steps; Enter sends (Shift+Enter newline) into **New task** with `continueSession=1`. `shouldSubmitContinueMessageOnKeyDown.test.ts` (REPORTS-004).
 
 ## REPORTS-005 — Job history spammed `agent-runs?scope=all` while a run stayed RUNNING
 
@@ -42,7 +42,7 @@
 
 ## REPORTS-007 — Running jobs stuck in progress with no user-visible status
 
-**Symptom:** After navigating away, a job could stay `running` in Home / Send a task with no plain-language summary of what finished or what blocked.
+**Symptom:** After navigating away, a job could stay `running` in Home / **New task** with no plain-language summary of what finished or what blocked.
 
 **Cause:** Completion depended on live terminal output and `command.claude.result`; there was no durable per-run report file for the agent to maintain.
 

@@ -29,6 +29,7 @@ export const buildAgentLiveProgressSteps = (input: {
   readonly partialOutput?: string | null;
   readonly stallState?: AgentLiveProgressStallState;
   readonly estimateSeconds?: number | null;
+  readonly approvalWaitingLabel?: string | null;
 }): {
   readonly steps: readonly AgentLiveProgressStep[];
   readonly replyPreview: string | null;
@@ -86,6 +87,7 @@ export const buildAgentLiveProgressSteps = (input: {
     cleaned,
     workState: states.workState,
     stallState: input.stallState,
+    approvalWaitingLabel: input.approvalWaitingLabel,
   });
 
   const shell = buildAgentLiveProgressShellSteps({

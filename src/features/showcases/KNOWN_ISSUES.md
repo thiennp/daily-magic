@@ -68,7 +68,7 @@
 
 ## SHOWCASES-007 — Marketplace workflow E2E Start click hits Home CTA
 
-**Symptom:** Playwright `getByRole("button", { name: "Start" })` matched both the home hero Start and the Send-a-task modal Start (strict mode violation).
+**Symptom:** Playwright `getByRole("button", { name: "Start" })` matched both the home hero Start and the **New task** modal Start (strict mode violation).
 
 **Fix:** Scope the click to `.modal` with `exact: true` in `marketplace-workflow-self-delegate.spec.ts`.
 
@@ -120,7 +120,7 @@
 
 ## SHOWCASES-012 — Try-next CTAs broke for logged-out readers
 
-**Symptom:** “Open Send a task” (`/?sendTask=1`) and similar app CTAs from showcase articles opened the marketing home (or empty app shell) when the reader was not signed in. “Open Automations” via a hard-coded login URL also skipped signed-in users past the destination.
+**Symptom:** “Open New task” (`/?sendTask=1`) and similar app CTAs from showcase articles opened the marketing home (or empty app shell) when the reader was not signed in. “Open Automations” via a hard-coded login URL also skipped signed-in users past the destination.
 
 **Root cause:** Home renders `HomeMarketingLanding` when anonymous, so `sendTask` is ignored. tryNext links pointed at app routes without an auth-aware wrap.
 

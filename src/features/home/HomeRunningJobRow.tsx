@@ -2,7 +2,9 @@
 
 import { useState } from "react";
 
+import { useComposerApprovalWaitingLabel } from "@/features/agent/hooks/useComposerApprovalWaitingLabel";
 import AgentRunStatusBadge from "@/features/reports/AgentRunStatusBadge";
+import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
 import { formatHomeRunningJobAliveLabel } from "@/features/home/utils/formatHomeRunningJobAliveLabel";
 import { formatHomeRunningJobTitle } from "@/features/home/utils/formatHomeRunningJobTitle";
 import { deleteAgentRunHistory } from "@/features/reports/utils/deleteAgentRunHistory";
@@ -21,6 +23,10 @@ export default function HomeRunningJobRow({
   onExpand,
 }: HomeRunningJobRowProps) {
   const [isDeleting, setIsDeleting] = useState(false);
+  const approvalWaitingLabel = useComposerApprovalWaitingLabel({
+    activeRunId: run.id,
+    isWaitingApproval: run.status === AgentRunStatus.PENDING_APPROVAL,
+  });
 
   const handleDelete = (): void => {
     if (isDeleting) {
@@ -61,7 +67,10 @@ export default function HomeRunningJobRow({
             {" · Click to expand"}
           </span>
         </span>
-        <AgentRunStatusBadge status={run.status} />
+        <AgentRunStatusBadge
+          status={run.status}
+          labelOverride={approvalWaitingLabel}
+        />
       </button>
       <button
         type="button"

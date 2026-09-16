@@ -1,5 +1,6 @@
-import { getAgentRunLocalCache } from "@/features/reports/agentRunLocalCache";
+import { useComposerApprovalWaitingLabel } from "@/features/agent/hooks/useComposerApprovalWaitingLabel";
 import { useAgentLiveProgressStallState } from "@/features/agent/hooks/useAgentLiveProgressStallState";
+import { getAgentRunLocalCache } from "@/features/reports/agentRunLocalCache";
 import { useAgentRunHeartbeatStallReset } from "@/features/agent/hooks/useAgentRunHeartbeatStallReset";
 import { useAgentWitchDashboard } from "@/features/agent-witch/dashboard/AgentWitchDashboardContext";
 import type { AgentLiveTerminalStatus } from "@/features/agent/utils/agentLiveTerminalState.type";
@@ -17,6 +18,10 @@ export function useAgentLiveTerminalPanelProgress(input: {
   readonly feedbackPendingQuestion: string | null;
   readonly feedbackPendingPartialOutput?: string | null;
 }) {
+  const approvalWaitingLabel = useComposerApprovalWaitingLabel({
+    activeRunId: input.activeRunId,
+    isWaitingApproval: input.status === "waiting_approval",
+  });
   const isStopping = input.status === "stopping";
   const isWorking = isAgentLiveTerminalWorking(input.status);
   const dashboard = useAgentWitchDashboard();
@@ -53,6 +58,7 @@ export function useAgentLiveTerminalPanelProgress(input: {
     partialOutput: input.feedbackPendingPartialOutput ?? null,
     stallState,
     estimateSeconds,
+    approvalWaitingLabel,
   });
   const cachedReportSummary =
     input.activeRunId !== null &&
@@ -85,5 +91,6 @@ export function useAgentLiveTerminalPanelProgress(input: {
     estimateProgress,
     wavePlanItems,
     progress: progressWithReport,
+    approvalWaitingLabel,
   };
 }

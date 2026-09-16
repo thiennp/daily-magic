@@ -12,7 +12,7 @@ const isActiveAgentRunStatus = (status: string): boolean =>
   status === AgentRunStatus.RUNNING ||
   status === AgentRunStatus.PENDING_APPROVAL;
 
-/** Clears docked Send-a-task / Home running rows for a Mac that was removed. */
+/** Clears docked New task / Home running rows for a Mac that was removed. */
 export const purgeLocalAgentTasksForRevokedDevice = (
   deviceId: string,
 ): readonly string[] => {
