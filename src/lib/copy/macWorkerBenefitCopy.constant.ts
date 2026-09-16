@@ -42,7 +42,7 @@ export const MAC_WORKER_BENEFIT_COPY = {
   marketplacePageDescription:
     "Pick a free starter or a teammate listing, then run it on your Mac.",
   libraryPageDescription:
-    "Your saved playbooks. Open Agent to run a workflow—set up a Mac on Home first if Send is disabled.",
+    "Your saved workflows in Library. Run them with New task — connect a Mac on Home first if send is disabled.",
   marketplacePromo:
     "Install free starters or teammate listings so they run on your Mac.",
   runsOnMacMeta: "runs on your Mac",

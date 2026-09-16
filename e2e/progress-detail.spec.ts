@@ -21,7 +21,7 @@ const signInAs = async (page: Page, email: string): Promise<void> => {
 const openCustomClaudeComposer = async (page: Page): Promise<void> => {
   await page.goto("/?sendTask=1");
   await page.waitForLoadState("load");
-  await expect(page.getByRole("heading", { name: "Send a task" })).toBeVisible({
+  await expect(page.getByRole("heading", { name: "New task" })).toBeVisible({
     timeout: 15_000,
   });
 

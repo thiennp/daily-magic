@@ -14,7 +14,7 @@ const agentDelegatesInsideYourCompany: ShowcaseArticle = {
     "Teammate published a workflow or assistant in Library",
     "Their Mac agent online when the job runs (or after approval)",
   ],
-  tryNext: { label: "Open Send a task", href: "/?sendTask=1" },
+  tryNext: { label: "New task", href: "/?sendTask=1" },
   relatedShowcases: [
     {
       slug: "phone-asks-coworker-mac-runs",

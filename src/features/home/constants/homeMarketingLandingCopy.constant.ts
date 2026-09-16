@@ -2,9 +2,9 @@ import { AGENT_WITCH_PRODUCT_NAME } from "@/lib/agentWitch/agentWitchProductName
 
 export const HOME_MARKETING_HERO_COPY = {
   eyebrow: "For you and your team",
-  title: "An agent assistant for you and your organization.",
-  description: `${AGENT_WITCH_PRODUCT_NAME} helps you deploy agents across your organization in as little as 15 minutes. Delegate work to dedicated Mac agents, keep coordination in one workspace, and maintain manager approvals with full visibility into outcomes.`,
-  cta: "Create a free account →",
+  title: "Agent jobs on your Mac — solo or with your team.",
+  description: `${AGENT_WITCH_PRODUCT_NAME} connects your browser to Mac runners: pick a workflow, send a New task, and track every job in Reports.`,
+  cta: "Create free account →",
   steps: [
     "Pick a ready-made workflow—or make your own",
     "Add your Mac as the worker—it runs the jobs you set up",

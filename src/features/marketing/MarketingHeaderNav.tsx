@@ -19,10 +19,7 @@ export default function MarketingHeaderNav({
   return (
     <nav className="flex items-center gap-4 text-sm">
       {showStyleguide ? (
-        <Link
-          href="/styleguide"
-          className={MARKETING_HEADER_LINK_CLASSES}
-        >
+        <Link href="/styleguide" className={MARKETING_HEADER_LINK_CLASSES}>
           Styleguide
         </Link>
       ) : null}
@@ -33,13 +30,13 @@ export default function MarketingHeaderNav({
       ) : null}
       <Link
         href="/#get-started"
-        aria-label="Get started with sign in"
+        aria-label="Create free account"
         className={mergeMarketingClasses(
           MARKETING_CTA_PRIMARY_CLASSES,
           "h-10 px-4",
         )}
       >
-        Get started
+        Create free account
       </Link>
     </nav>
   );

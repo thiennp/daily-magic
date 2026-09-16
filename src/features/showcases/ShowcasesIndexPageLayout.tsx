@@ -91,7 +91,7 @@ export default function ShowcasesIndexPageLayout() {
       <p className="mt-10 text-center text-sm text-gray-600">
         Ready to try it?{" "}
         <Link href="/#get-started" className={MARKETING_TEXT_LINK_CLASSES}>
-          Get started free
+          Create free account
         </Link>
       </p>
     </MarketingShell>

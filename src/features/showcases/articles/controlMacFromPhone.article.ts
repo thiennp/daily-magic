@@ -36,7 +36,7 @@ const controlMacFromPhone: ShowcaseArticle = {
         "Browse My library and Marketplace",
         "Use a playbook — workflow stepper on small screens",
         "Copy prompt into ChatGPT or Gemini without a Mac",
-        "Send a task when your browser is connected and your Mac agent is online",
+        "New task when your browser is connected and your Mac agent is online",
       ],
     },
     {

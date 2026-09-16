@@ -1,6 +1,10 @@
+"use client";
+
 import AppPanel from "@/components/surfaces/AppPanel";
 import { ConnectionStatusBadge } from "@/features/shell/ConnectionStatusBadge";
+import useShellNavContext from "@/features/shell/hooks/useShellNavContext";
 import type { WsTestConnectionStatus } from "@/features/agent/types/WsTestConnectionStatus.type";
+import { resolveComposerApprovalHelper } from "@/lib/copy/resolveSoloTeamSurfaceCopy";
 
 interface WsTestPanelStatusSectionProps {
   readonly isModal: boolean;
@@ -17,6 +21,8 @@ export default function WsTestPanelStatusSection({
   queueMessage,
   errorMessage = null,
 }: WsTestPanelStatusSectionProps) {
+  const { teamNavEnabled } = useShellNavContext();
+  const approvalHelper = resolveComposerApprovalHelper({ teamNavEnabled });
   if (isModal) {
     if (queueCount === 0 && errorMessage === null) {
       return null;
@@ -42,8 +48,8 @@ export default function WsTestPanelStatusSection({
     <AppPanel>
       <div className="flex flex-wrap items-start justify-between gap-3">
         <p className="text-sm text-gray-600 dark:text-gray-400">
-          Send a task to your Mac or to a teammate on your team. Every job is
-          saved in Job history.
+          Dispatch a New task to your Mac or to a teammate on your team. Every
+          job is saved in Reports. {approvalHelper}
         </p>
         <ConnectionStatusBadge status={connectionStatus} />
       </div>

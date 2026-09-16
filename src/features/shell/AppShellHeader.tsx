@@ -32,7 +32,7 @@ export default function AppShellHeader() {
           <div className="flex shrink-0 items-center gap-2 sm:gap-3">
             <Link
               href={buildAgentComposerHref()}
-              aria-label="Send a task"
+              aria-label="New task"
               className={APP_SURFACE_CTA_PRIMARY_ICON_CLASS}
             >
               <AppIcon icon={BoltIcon} size="md" />

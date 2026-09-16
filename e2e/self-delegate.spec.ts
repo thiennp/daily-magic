@@ -54,9 +54,7 @@ test.describe("Self-delegate on own Mac", () => {
     await signInAs(page, SELF);
     await page.goto("/?sendTask=1");
     await page.waitForLoadState("load");
-    await expect(
-      page.getByRole("heading", { name: "Send a task" }),
-    ).toBeVisible({
+    await expect(page.getByRole("heading", { name: "New task" })).toBeVisible({
       timeout: 15_000,
     });
 

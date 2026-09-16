@@ -31,7 +31,7 @@ export default function SendTaskModalChrome({
           </button>
           <button
             type="button"
-            aria-label="Close send a task"
+            aria-label="Close New task"
             className="rounded-lg px-2 py-1 text-xs text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700"
             onClick={onClose}
           >
@@ -49,7 +49,7 @@ export default function SendTaskModalChrome({
           id={titleId}
           className="text-lg font-semibold text-gray-900 dark:text-white/90"
         >
-          Send a task
+          New task
         </h2>
         <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
           Choose a Mac, confirm the active project, pick a workflow or agent,
@@ -59,7 +59,7 @@ export default function SendTaskModalChrome({
       <div className="absolute right-3 top-3 z-20 flex items-center gap-1 sm:right-6 sm:top-6">
         <button
           type="button"
-          aria-label="Minimize send a task"
+          aria-label="Minimize New task"
           className="flex h-9.5 w-9.5 items-center justify-center rounded-full bg-gray-100 text-gray-500 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 sm:h-11 sm:w-11"
           onClick={onMinimize}
         >
@@ -67,7 +67,7 @@ export default function SendTaskModalChrome({
         </button>
         <button
           type="button"
-          aria-label="Close send a task"
+          aria-label="Close New task"
           className="flex h-9.5 w-9.5 items-center justify-center rounded-full bg-gray-100 text-gray-400 hover:bg-gray-200 hover:text-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700 dark:hover:text-white sm:h-11 sm:w-11"
           onClick={onClose}
         >

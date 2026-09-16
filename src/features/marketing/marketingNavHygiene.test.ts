@@ -36,13 +36,15 @@ describe("marketing nav hygiene", () => {
     expect(offenders).toEqual([]);
   });
 
-  it("uses existing auth entry for get started CTA", () => {
+  it("uses existing auth entry for signup CTA", () => {
     const headerSource = readFileSync(
       join(process.cwd(), "src/features/marketing/MarketingHeaderNav.tsx"),
       "utf8",
     );
 
     expect(headerSource.includes("/#get-started")).toBe(true);
+    expect(headerSource.includes("Create free account")).toBe(true);
+    expect(headerSource.includes("Get started")).toBe(false);
     expect(headerSource.includes("/signup")).toBe(false);
   });
 });
