@@ -175,3 +175,15 @@
 **Fix:** Covers and marketing figures prefer curated SVGs; cards/figures use `object-contain` with larger min-heights; topic alts use screen captions.
 
 **Regression test:** `resolveShowcaseCoverSrc.test.ts`, `resolveShowcaseArticleCoverImage.test.ts`.
+
+---
+
+## SHOWCASES-015 — E2E showcase URLs returned 500 for anonymous visitors
+
+**Symptom:** `GET /showcases/e2e-test-account-sign-in` (and other E2E slugs) returned HTTP 500 (`DYNAMIC_SERVER_USAGE`) on production instead of a clean 404 like `/styleguide`.
+
+**Root cause:** The shared `/showcases/[slug]` segment uses `generateStaticParams` for public articles while E2E slugs call `auth()` for staff gating. Next.js cannot run dynamic auth on that hybrid segment without opting the route into request-time rendering.
+
+**Fix:** `export const dynamic = "force-dynamic"` on `src/app/showcases/[slug]/page.tsx`, staff checks via `isStaffPageViewer` / `requireStaffPageAccess` (with `connection()` before auth), and generic metadata when anonymous.
+
+**Regression test:** `showcaseE2eStaffGate.test.ts`, `requireStaffPageAccess.test.ts`, `e2eShowcasePublicLeakage.test.ts`.
