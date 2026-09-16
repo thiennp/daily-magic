@@ -7,7 +7,7 @@ test("BUG-008 styleguide has no horizontal page overflow at 1280px", async ({
   await page.goto("/styleguide");
 
   await expect(
-    page.getByRole("heading", { level: 1, name: "Component Styleguide" }),
+    page.getByRole("heading", { level: 1, name: "Design system" }),
   ).toBeVisible();
 
   const overflow = await page.evaluate(() => {

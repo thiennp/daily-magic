@@ -41,8 +41,8 @@ export default function HomeProjectsPanel() {
     <AppPanel padding="compact">
       <h2 className={APP_SURFACE_SECTION_TITLE_CLASS}>Projects</h2>
       <p className={`mt-1 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
-        Saved folders on your Mac under {projectsHomePath}. Pick one to send a
-        task, or save a new project below.
+        Saved folders on your Mac under {projectsHomePath}. Pick one to open New
+        task with that project, or save a new project below.
       </p>
       <div className="mt-4">
         <SendTaskComposerProjectPickerStep

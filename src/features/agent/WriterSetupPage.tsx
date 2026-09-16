@@ -65,7 +65,7 @@ export default function WriterSetupPage() {
       </h1>
       <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">
         Agent Witch will install and check login on the Mac linked to your
-        account. You can change this later when you send a task.
+        account. You can change this later from New task.
       </p>
       <ul className="mt-8 space-y-3">
         {WRITER_SETUP_OPTIONS.map((writer) => (

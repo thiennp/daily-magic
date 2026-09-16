@@ -10,7 +10,7 @@ export const AGENT_WITCH_INSTRUCTION_TASKS_SECTION: AgentWitchInstructionSection
       {
         id: "open-composer",
         title: "Opening the task composer",
-        body: "Use Send a task from Home or navigation. The composer opens as a modal on Home with optional prefill from Library or Job history.",
+        body: "Use New task from Home or navigation. The composer opens as a modal on Home with optional prefill from Playbooks or Reports.",
       },
       {
         id: "writer-agents",

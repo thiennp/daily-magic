@@ -33,7 +33,7 @@ export default function TeamDirectoryPanel() {
         {COMPANY_DIRECTORY_TITLE}
       </h2>
       <p className={`mt-2 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
-        See which assistants your teammates offer before you send a task.
+        See which assistants your teammates offer before you start a new task.
       </p>
       <div className="mt-4 space-y-6">
         {groups.map((group) => (
