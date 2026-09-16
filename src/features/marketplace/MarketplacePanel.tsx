@@ -7,6 +7,7 @@ import MarketplaceInstallModal from "@/features/marketplace/MarketplaceInstallMo
 import MarketplaceListingSections from "@/features/marketplace/MarketplaceListingSections";
 import { useMarketplaceInstallFromCapabilityIdQuery } from "@/features/marketplace/hooks/useMarketplaceInstallFromCapabilityIdQuery";
 import { useMarketplaceState } from "@/features/marketplace/hooks/useMarketplaceState";
+import useShellNavContext from "@/features/shell/hooks/useShellNavContext";
 import type HarnessMarketplaceListing from "@/lib/harness/types/HarnessMarketplaceListing.type";
 
 type MarketplacePanelVariant = "embedded" | "page";
@@ -19,6 +20,7 @@ export default function MarketplacePanel({
   variant = "embedded",
 }: MarketplacePanelProps) {
   const { listings, isLoading } = useMarketplaceState();
+  const { teamNavEnabled } = useShellNavContext();
   const [installListing, setInstallListing] =
     useState<HarnessMarketplaceListing | null>(null);
 
@@ -42,6 +44,7 @@ export default function MarketplacePanel({
       isLoading={isLoading}
       onInstall={setInstallListing}
       variant={variant}
+      teamNavEnabled={teamNavEnabled}
     />
   );
 

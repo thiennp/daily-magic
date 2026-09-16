@@ -1,7 +1,16 @@
 "use client";
 
+import EmptyStatePanel from "@/features/empty-states/EmptyStatePanel";
+import EmptyStatePanelSkeleton from "@/features/empty-states/EmptyStatePanelSkeleton";
+import {
+  CREATE_FREE_ACCOUNT_HREF,
+  buildSignInHref,
+} from "@/features/empty-states/buildGuestAuthHrefs";
+import { LIBRARY_GUEST_EMPTY_COPY } from "@/features/empty-states/signedOutPageEmptyCopy.constant";
+import { useGuestSessionState } from "@/features/empty-states/useGuestSessionState";
 import LibraryPlaybookCard from "@/features/library/LibraryPlaybookCard";
 import { useLibraryCapabilities } from "@/features/library/hooks/useLibraryCapabilities";
+import buildAgentComposerHref from "@/lib/library/buildAgentComposerHref";
 import { CapabilityStatus } from "@/lib/capabilities/CapabilityStatus.constant";
 
 interface LibraryPanelProps {
@@ -13,7 +22,9 @@ export default function LibraryPanel({
   refreshKey = 0,
   onUpdated,
 }: LibraryPanelProps) {
-  const { capabilities, isLoading } = useLibraryCapabilities(refreshKey);
+  const { sessionState } = useGuestSessionState();
+  const { capabilities, isLoading: isCapabilitiesLoading } =
+    useLibraryCapabilities(refreshKey);
   const libraryItems = capabilities.filter(
     (capability) => capability.status !== CapabilityStatus.ARCHIVED,
   );
@@ -21,29 +32,60 @@ export default function LibraryPanel({
     (capability) => capability.status === CapabilityStatus.PUBLISHED,
   ).length;
 
+  const isLoading =
+    sessionState === "loading" ||
+    (sessionState === "signed_in" && isCapabilitiesLoading);
+
+  if (isLoading) {
+    return <EmptyStatePanelSkeleton />;
+  }
+
+  if (sessionState === "guest") {
+    return (
+      <EmptyStatePanel
+        density="page"
+        title={LIBRARY_GUEST_EMPTY_COPY.title}
+        body="Your saved workflows live here after you create an account. Browse starters on Marketplace, or start from a New task."
+        primaryCta={{
+          label: LIBRARY_GUEST_EMPTY_COPY.primaryCtaLabel,
+          href: CREATE_FREE_ACCOUNT_HREF,
+        }}
+        secondaryCta={{
+          label: LIBRARY_GUEST_EMPTY_COPY.secondaryCtaLabel,
+          href: buildSignInHref("/library"),
+        }}
+        tertiaryLink={{ label: "Browse Marketplace", href: "/marketplace" }}
+      />
+    );
+  }
+
+  if (libraryItems.length === 0) {
+    return (
+      <EmptyStatePanel
+        density="page"
+        title="No items in your library yet"
+        body="Save one from Marketplace or turn a New task into a saved workflow."
+        primaryCta={{ label: "Browse Marketplace", href: "/marketplace" }}
+        secondaryCta={{
+          label: "New task",
+          href: buildAgentComposerHref({ customTask: true }),
+        }}
+      />
+    );
+  }
+
   return (
     <section className="space-y-4">
-      {isLoading ? (
-        <p className="text-sm text-gray-500 dark:text-gray-400">
-          Loading your library…
-        </p>
-      ) : libraryItems.length === 0 ? (
-        <p className="text-sm text-gray-500 dark:text-gray-400">
-          No playbooks yet. Save one from Marketplace or publish your own
-          workflow above.
-        </p>
-      ) : (
-        <div className="space-y-3">
-          {libraryItems.map((capability) => (
-            <LibraryPlaybookCard
-              key={capability.id}
-              capability={capability}
-              onUpdated={onUpdated}
-            />
-          ))}
-        </div>
-      )}
-      {!isLoading && publishedCount === 0 && libraryItems.length > 0 ? (
+      <div className="space-y-3">
+        {libraryItems.map((capability) => (
+          <LibraryPlaybookCard
+            key={capability.id}
+            capability={capability}
+            onUpdated={onUpdated}
+          />
+        ))}
+      </div>
+      {publishedCount === 0 && libraryItems.length > 0 ? (
         <p className="text-sm text-amber-700 dark:text-amber-300">
           Draft playbooks are private until you publish them for teammates.
         </p>

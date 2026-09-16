@@ -6,8 +6,8 @@ export default function ReportsPageLayout() {
   return (
     <div className={APP_PAGE_STACK_CLASS}>
       <AppPageHeader
-        title="Runs"
-        description="Every task you send is listed here. Jobs are stored on this device, so history survives refresh and restarts."
+        title="Reports"
+        description="History of jobs you sent to your Mac — status, approvals, and results."
       />
       <AgentRunsList />
     </div>
