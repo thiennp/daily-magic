@@ -6,7 +6,10 @@ import { describe, expect, it } from "vitest";
 describe("agent-witch writer login on connect", () => {
   it("AGENT-042: does not auto-ensure every writer CLI on websocket connect", () => {
     const source = readFileSync(
-      join(dirname(fileURLToPath(import.meta.url)), "agent-witch.ts"),
+      join(
+        dirname(fileURLToPath(import.meta.url)),
+        "../apps/install/entry/startAgentWitchClient.ts",
+      ),
       "utf8",
     );
 
