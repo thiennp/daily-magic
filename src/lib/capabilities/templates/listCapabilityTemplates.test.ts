@@ -68,7 +68,7 @@ describe("capability templates catalog", () => {
     ).toHaveLength(3);
     expect(
       finance?.harness.items.filter((item) => item.kind === "operator"),
-    ).toHaveLength(3);
+    ).toHaveLength(4);
     expect(subagent?.title).toContain("subagent");
     expect(subagent?.content).toContain("weekly status subagent");
     expect(
