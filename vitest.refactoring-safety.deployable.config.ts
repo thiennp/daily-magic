@@ -18,6 +18,9 @@ const includeByDeployable: Record<string, readonly string[]> = {
     "scripts/buildAgentWitchLocalAppShell.test.ts",
   ],
   AWB: [
+    "apps/bridge/**/*.test.ts",
+    "test/awbFeaturesRegistry.test.ts",
+    "test/deployableBoundary.test.ts",
     "scripts/ensureAgentWitchCoupledWakeClientHealth.test.ts",
     "scripts/requestLocalAgentWitch*.test.ts",
     "src/features/agent-witch/utils/*Wake*.test.ts",
