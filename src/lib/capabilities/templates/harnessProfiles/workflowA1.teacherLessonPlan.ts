@@ -1,4 +1,5 @@
 import type { PresetHarnessSeed } from "@/lib/capabilities/templates/harnessProfiles/PresetHarnessSeed.type";
+import { TEACHER_LESSON_PLAN_EXAMPLE_REQUEST } from "@/lib/capabilities/templates/harnessProfiles/workflowA1.teacherLessonPlan.exampleRequest";
 import { TEACHER_LESSON_PLAN_OPERATOR_STEPS } from "@/lib/capabilities/templates/harnessProfiles/workflowA1.teacherLessonPlan.operatorSteps";
 
 export const TEACHER_LESSON_PLAN_PRESET: PresetHarnessSeed = {
@@ -6,16 +7,15 @@ export const TEACHER_LESSON_PLAN_PRESET: PresetHarnessSeed = {
   name: "Teacher lesson plan",
   category: "Education",
   description:
-    "Build a timed lesson plan aligned to your topic and grade — with objectives, activities, and checks for understanding.",
-  exampleRequest:
-    "Create a lesson plan for subject and gradeLevel covering topicStandard within classDuration. Use materialsPath if present and wait for my approval before I teach from it.",
+    "Build a timed lesson plan aligned to your topic and grade — objectives, activities, checks for understanding, and post-lesson reflection prompts after you approve.",
+  exampleRequest: TEACHER_LESSON_PLAN_EXAMPLE_REQUEST,
   operatorSteps: TEACHER_LESSON_PLAN_OPERATOR_STEPS,
   profile: {
     ruleFocus: [
       "Align objectives to topicStandard and gradeLevel readability.",
       "Fit every segment inside classDuration with buffer for transitions.",
       "Prefer low-prep activities unless materialsPath supplies resources.",
-      "Pause with [[AWAITING_INPUT]] before calling the plan teach-ready.",
+      "Pause at operator approval before calling the plan teach-ready; use workflow checkpoints, not [[AWAITING_INPUT]].",
     ],
     skillSections: [
       {
@@ -38,10 +38,10 @@ export const TEACHER_LESSON_PLAN_PRESET: PresetHarnessSeed = {
       },
     ],
     commandSteps: [
-      "Parse standards, duration, and optional materials.",
-      "Draft timed agenda and materials list.",
-      "Present plan and wait for approval.",
-      "Offer post-lesson reflection prompts.",
+      "Confirm syllabus fields and optional materialsPath at the first checkpoint.",
+      "Draft objectives and timed agenda for operator approval.",
+      "Finalize after approval and add reflection prompts.",
+      "Teacher delivers class; agent does not access LMS or gradebook.",
     ],
     instructionAddendum:
       "Classroom delivery and grading stay with the teacher.",
