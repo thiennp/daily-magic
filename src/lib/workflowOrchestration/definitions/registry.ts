@@ -1,10 +1,12 @@
 import type OfficialWorkflowDefinition from "@/lib/workflowOrchestration/types/OfficialWorkflowDefinition.type";
 
+import { OFFICIAL_WORKFLOW_DEFINITION as sprintRecap } from "@/lib/workflowOrchestration/definitions/sprintRecap.definition";
 import { OFFICIAL_WORKFLOW_DEFINITION as vibeCodingAppFeature } from "@/lib/workflowOrchestration/definitions/vibeCodingAppFeature.definition";
 
 const CUSTOM_OFFICIAL_WORKFLOW_DEFINITIONS: Readonly<
   Record<string, OfficialWorkflowDefinition>
 > = {
+  "sprint-recap": sprintRecap,
   "vibe-coding-app-feature": vibeCodingAppFeature,
 };
 

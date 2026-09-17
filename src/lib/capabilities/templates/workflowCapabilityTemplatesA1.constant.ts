@@ -33,8 +33,16 @@ export const WORKFLOW_CAPABILITY_TEMPLATES_A1: readonly WorkflowCapabilityTempla
       "sprint-recap",
       "Reporting",
       "Sprint recap",
-      "Summarize what shipped, what slipped, and what is next.",
-      "Write a sprint recap for stakeholders. Keep it factual and action-oriented.",
+      "Turn sprint notes into a stakeholder-ready recap — shipped outcomes, deferrals with reasons, and up to three next-sprint priorities.",
+      [
+        "Write a sprint recap for stakeholders. Keep it factual and action-oriented.",
+        "",
+        "## Normalize inputs",
+        "Align shipped to sprintName. Tag each deferral with scope, risk, or dependency. Ask only what is missing.",
+        "",
+        "## Draft recap",
+        "Sections: Shipped (outcomes first) / Deferred (one line each, no blame) / Next focus (max three priorities).",
+      ].join("\n"),
       [
         ["sprintName", "Sprint name", "text"],
         ["shipped", "Shipped", "textarea"],
