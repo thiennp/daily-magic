@@ -33,6 +33,7 @@ const postClaudePromptDispatchOnce = async (input: {
   readonly sourceRunId?: string;
   readonly projectFolderPath?: string;
   readonly projectId?: string;
+  readonly runScopedComponentIds?: readonly string[];
   readonly onDispatchedRunId?: (runId: string) => void;
 }): Promise<string> => {
   const response = await fetch("/api/agent-runs/dispatch", {
@@ -61,6 +62,10 @@ const postClaudePromptDispatchOnce = async (input: {
         ? { projectFolderPath: input.projectFolderPath }
         : {}),
       ...(input.projectId !== undefined ? { projectId: input.projectId } : {}),
+      ...(input.runScopedComponentIds !== undefined &&
+      input.runScopedComponentIds.length > 0
+        ? { runScopedComponentIds: [...input.runScopedComponentIds] }
+        : {}),
     }),
   });
 
@@ -98,6 +103,7 @@ export async function postClaudePromptDispatch(input: {
   readonly sourceRunId?: string;
   readonly projectFolderPath?: string;
   readonly projectId?: string;
+  readonly runScopedComponentIds?: readonly string[];
   readonly onDispatchedRunId?: (runId: string) => void;
 }): Promise<string> {
   return retryPostClaudePromptDispatch(() =>

@@ -13,6 +13,7 @@ import { useWsTestComposerWorkflowState } from "@/features/agent/hooks/useWsTest
 import { buildLibraryCapabilitySelectionUpdate } from "@/features/agent/utils/buildLibraryCapabilitySelectionUpdate";
 import { buildWsTestComposerDispatchState } from "@/features/agent/utils/buildWsTestComposerDispatchState";
 import { buildWsTestTaskComposerResult } from "@/features/agent/utils/buildWsTestTaskComposerResult";
+import useRunScopedComponentIds from "@/features/agent/hooks/useRunScopedComponentIds";
 import { createWsTestSelectionHandlers } from "@/features/agent/utils/createWsTestSelectionHandlers";
 
 export function useWsTestTaskComposer(): UseWsTestTaskComposerResult {
@@ -31,6 +32,7 @@ export function useWsTestTaskComposer(): UseWsTestTaskComposerResult {
     librarySelection.libraryPlaybook?.workflowFields ??
     selectedCapability?.workflowFields ??
     [];
+  const runScopedSelection = useRunScopedComponentIds();
   const projectSelection = useComposerProjectSelection({
     workflowFields: composerWorkflowFields,
     deviceId: macSelection.selectedDeviceId,
@@ -52,6 +54,7 @@ export function useWsTestTaskComposer(): UseWsTestTaskComposerResult {
   return buildWsTestTaskComposerResult({
     workflow,
     projectSelection,
+    runScopedSelection,
     selection,
     selectionHandlers: createWsTestSelectionHandlers(
       selection,

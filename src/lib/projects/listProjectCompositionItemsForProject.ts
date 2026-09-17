@@ -10,6 +10,7 @@ const listProjectCompositionItemsForProject = async (
     await sql`
       SELECT
         pc.id,
+        pc.component_id,
         pc.kind,
         c.name,
         cv.version_label
@@ -34,6 +35,7 @@ const listProjectCompositionItemsForProject = async (
 
     return {
       id: String(row.id),
+      componentId: String(row.component_id),
       kind: normalizedKind,
       name: String(row.name),
       versionLabel:

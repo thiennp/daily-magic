@@ -68,9 +68,13 @@ import {
   syncProjectHarnessBindingsToCloud,
   updateAgentWitchCloudProjectFolder,
 } from "@agent-witch/live-projects";
+import { AGENT_WITCH_PAIRING_TOKEN_HEADER } from "../../../projects/internal/core/agentWitchDeviceAuth.constant";
+import fetchProjectCompositionFromCloud from "../../../projects/internal/core/fetchProjectCompositionFromCloud";
+import promoteAllProjectKnowledgeCandidatesFromCloud from "../../../projects/internal/core/knowledge/promoteAllProjectKnowledgeCandidatesFromCloud";
 import {
-  buildAgentWitchLocalProjectDetailPageBody,
+  buildAgentWitchLocalProjectEditorPageBody,
   buildAgentWitchLocalProjectsPageBody,
+  type ProjectEditorTab,
 } from "@agent-witch/live-projects/presentation";
 import {
   formatAgentWitchInstallBundleVersionLabel,
@@ -793,19 +797,82 @@ export const startAgentWitchLocalApp = (input: {
             : url.searchParams.get("folderUpdated") === "1"
               ? "Project folder updated and synced with Agent Witch."
               : null;
+        const knowledgePromotedCount =
+          url.searchParams.get("knowledgePromoted");
+        const knowledgeFlashMessage =
+          knowledgePromotedCount !== null
+            ? `Marked ${knowledgePromotedCount} lesson(s) as promoted in Agent Witch.`
+            : null;
+        const knowledgeFlashError =
+          url.searchParams.get("knowledgePromoteFailed") === "1"
+            ? "Could not promote lessons — check Mac pairing and cloud connection on Status."
+            : null;
+        const tabParam = url.searchParams.get("tab")?.trim() ?? "harness";
+        const activeTab: ProjectEditorTab =
+          tabParam === "workflows" ||
+          tabParam === "agents" ||
+          tabParam === "knowledge"
+            ? tabParam
+            : "harness";
+        const runConfig = readAgentWitchRunConfig();
+        const cloudConfig =
+          runConfig === null
+            ? null
+            : resolveAgentWitchCloudApiConfig({
+                wsUrl: runConfig.wsUrl,
+                pairingToken: runConfig.pairingToken,
+              });
+        const composition =
+          cloudConfig === null
+            ? null
+            : await fetchProjectCompositionFromCloud(cloudConfig, project.id);
+        let knowledgeCandidateCount = 0;
+        if (cloudConfig !== null) {
+          try {
+            const knowledgeResponse = await fetch(
+              `${cloudConfig.appOrigin}/api/agent-witch/projects/${encodeURIComponent(project.id)}/knowledge`,
+              {
+                method: "GET",
+                headers: {
+                  [AGENT_WITCH_PAIRING_TOKEN_HEADER]: cloudConfig.pairingToken,
+                },
+                signal: AbortSignal.timeout(10_000),
+              },
+            );
+            if (knowledgeResponse.ok) {
+              const knowledgeBody: unknown = await knowledgeResponse.json();
+              if (
+                typeof knowledgeBody === "object" &&
+                knowledgeBody !== null &&
+                typeof (knowledgeBody as { candidateCount?: unknown })
+                  .candidateCount === "number"
+              ) {
+                knowledgeCandidateCount = (
+                  knowledgeBody as { candidateCount: number }
+                ).candidateCount;
+              }
+            }
+          } catch {
+            knowledgeCandidateCount = 0;
+          }
+        }
         sendHtml(
           response,
           await buildLocalAppShell({
             title: project.name,
             activePath: "/projects",
             installVersion: installBundle.installVersion,
-            body: buildAgentWitchLocalProjectDetailPageBody({
+            body: buildAgentWitchLocalProjectEditorPageBody({
               project,
               installed: readInstalledLocalHarnessSnapshot(input.layout),
               linkedSetSlugs: listLinkedHarnessSetSlugsFromProjectFolder(
                 project.projectFolderPath,
               ),
-              flashMessage: linkedFlash,
+              composition,
+              knowledgeCandidateCount,
+              activeTab,
+              flashMessage: linkedFlash ?? knowledgeFlashMessage,
+              flashError: knowledgeFlashError,
             }),
           }),
         );
@@ -842,12 +909,15 @@ export const startAgentWitchLocalApp = (input: {
               title: project.name,
               activePath: "/projects",
               installVersion: installBundle.installVersion,
-              body: buildAgentWitchLocalProjectDetailPageBody({
+              body: buildAgentWitchLocalProjectEditorPageBody({
                 project,
                 installed: readInstalledLocalHarnessSnapshot(input.layout),
                 linkedSetSlugs: listLinkedHarnessSetSlugsFromProjectFolder(
                   project.projectFolderPath,
                 ),
+                composition: null,
+                knowledgeCandidateCount: 0,
+                activeTab: "harness",
                 flashError: applyResult.errorMessage,
               }),
             }),
@@ -876,6 +946,54 @@ export const startAgentWitchLocalApp = (input: {
           linked: "1",
           files: String(applyResult.writtenFileCount),
           bindingsSynced: bindingsSynced ? "1" : "0",
+        });
+
+        response.writeHead(303, {
+          Location: `/project?id=${encodeURIComponent(project.id)}&${redirectQuery.toString()}`,
+        });
+        response.end();
+        return;
+      }
+
+      if (method === "POST" && pathname === "/project/knowledge/promote-all") {
+        const rawBody = await readBody(request);
+        const form = new URLSearchParams(rawBody);
+        const projectId = form.get("projectId")?.trim() ?? "";
+        const cloudProjects = await loadCloudProjectsForLocalApp(input.layout);
+        const project = findAgentWitchProjectById(
+          cloudProjects.projects,
+          projectId,
+        );
+        if (project === null) {
+          response.writeHead(404);
+          response.end("Project not found");
+          return;
+        }
+
+        const runConfig = readAgentWitchRunConfig();
+        const cloudConfig =
+          runConfig === null
+            ? null
+            : resolveAgentWitchCloudApiConfig({
+                wsUrl: runConfig.wsUrl,
+                pairingToken: runConfig.pairingToken,
+              });
+
+        const promoteResult =
+          cloudConfig === null
+            ? { ok: false, promotedCount: 0 }
+            : await promoteAllProjectKnowledgeCandidatesFromCloud(
+                cloudConfig,
+                project.id,
+              );
+
+        const redirectQuery = new URLSearchParams({
+          tab: "knowledge",
+          ...(promoteResult.ok
+            ? {
+                knowledgePromoted: String(promoteResult.promotedCount),
+              }
+            : { knowledgePromoteFailed: "1" }),
         });
 
         response.writeHead(303, {
