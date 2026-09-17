@@ -1,4 +1,5 @@
 import buildWorkflowTemplate from "@/lib/capabilities/templates/buildWorkflowTemplate";
+import { INTERVIEW_DEBRIEF_WORKFLOW } from "@/lib/capabilities/templates/workflowCapabilityTemplatesB2.interviewDebrief.constant";
 import type { WorkflowCapabilityTemplate } from "@/lib/capabilities/templates/types/CapabilityTemplate.type";
 
 export const WORKFLOW_CAPABILITY_TEMPLATES_B2: readonly WorkflowCapabilityTemplate[] =
@@ -16,19 +17,8 @@ export const WORKFLOW_CAPABILITY_TEMPLATES_B2: readonly WorkflowCapabilityTempla
         ["followUps", "Follow-ups", "textarea"],
       ],
     ),
-    buildWorkflowTemplate(
-      "interview-debrief",
-      "HR",
-      "Interview debrief",
-      "Capture signal and a hire/no-hire lean after interviews.",
-      "Write an interview debrief with strengths, concerns, and recommendation.",
-      [
-        ["candidate", "Candidate", "text"],
-        ["role", "Role", "text"],
-        ["strengths", "Strengths", "textarea"],
-        ["concerns", "Concerns", "textarea", false],
-      ],
-    ),
+    INTERVIEW_DEBRIEF_WORKFLOW,
+
     buildWorkflowTemplate(
       "personal-weekly-review",
       "Personal",

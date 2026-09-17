@@ -1,5 +1,6 @@
 import type OfficialWorkflowDefinition from "@/lib/workflowOrchestration/types/OfficialWorkflowDefinition.type";
 
+import { OFFICIAL_WORKFLOW_DEFINITION as interviewDebrief } from "@/lib/workflowOrchestration/definitions/interviewDebrief.definition";
 import { OFFICIAL_WORKFLOW_DEFINITION as meetingNotesActions } from "@/lib/workflowOrchestration/definitions/meetingNotesActions.definition";
 import { OFFICIAL_WORKFLOW_DEFINITION as prSummary } from "@/lib/workflowOrchestration/definitions/prSummary.definition";
 import { OFFICIAL_WORKFLOW_DEFINITION as researchBrief } from "@/lib/workflowOrchestration/definitions/researchBrief.definition";
@@ -11,6 +12,7 @@ import { OFFICIAL_WORKFLOW_DEFINITION as weeklyTeamStatus } from "@/lib/workflow
 const CUSTOM_OFFICIAL_WORKFLOW_DEFINITIONS: Readonly<
   Record<string, OfficialWorkflowDefinition>
 > = {
+  "interview-debrief": interviewDebrief,
   "meeting-notes-actions": meetingNotesActions,
   "pr-summary": prSummary,
   "research-brief": researchBrief,
