@@ -47,7 +47,7 @@ export default function LibraryPanel({
   if (sessionState === "guest") {
     return (
       <EmptyStatePanel
-        density="page"
+        density="section"
         title={LIBRARY_GUEST_EMPTY_COPY.title}
         body="Your saved workflows live here after you create an account. Browse starters on Marketplace, or start from a New task."
         primaryCta={{

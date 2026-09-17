@@ -7,7 +7,7 @@ export const SHOWCASE_TOPIC_SCREEN_CAPTION: Readonly<
   [SHOWCASE_TOPIC_SCREEN.SEND_TASK]:
     "Describe the task and send it to your Mac.",
   [SHOWCASE_TOPIC_SCREEN.JOB_HISTORY]:
-    "Completed weekly status run in Job history.",
+    "Completed weekly status run in Reports.",
   [SHOWCASE_TOPIC_SCREEN.MARKETPLACE]:
     "Popular workflow presets on the home page.",
   [SHOWCASE_TOPIC_SCREEN.AUTOMATIONS]:
@@ -15,7 +15,7 @@ export const SHOWCASE_TOPIC_SCREEN_CAPTION: Readonly<
   [SHOWCASE_TOPIC_SCREEN.MOBILE]:
     "Open New task from your phone while away from your desk.",
   [SHOWCASE_TOPIC_SCREEN.LIBRARY]: "Company playbooks saved in Library.",
-  [SHOWCASE_TOPIC_SCREEN.REPORTS]: "Weekly report output in Job history.",
+  [SHOWCASE_TOPIC_SCREEN.REPORTS]: "Weekly report output in Reports.",
   [SHOWCASE_TOPIC_SCREEN.APPROVALS]:
     "Sensitive task waiting for manager approval.",
   [SHOWCASE_TOPIC_SCREEN.COMPANY_ADMIN]:
