@@ -28,6 +28,15 @@ describe("official workflow definitions for marketplace templates", () => {
     });
   });
 
+  it("uses curated graph for weekly team status", () => {
+    const definition =
+      findOfficialWorkflowDefinitionByTemplateId("weekly-team-status");
+    expect(definition?.version).toBeGreaterThanOrEqual(2);
+    expect(
+      definition?.nodes.filter((node) => node.kind === "agent"),
+    ).toHaveLength(2);
+  });
+
   it("splits vibe coding example request into sections", () => {
     const template = allCapabilityTemplates.find(
       (entry) => entry.id === "vibe-coding-app-feature",

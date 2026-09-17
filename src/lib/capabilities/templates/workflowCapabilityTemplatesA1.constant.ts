@@ -2,22 +2,12 @@ import buildWorkflowTemplate from "@/lib/capabilities/templates/buildWorkflowTem
 import { MEETING_NOTES_ACTIONS_EXAMPLE_REQUEST } from "@/lib/capabilities/templates/harnessProfiles/workflowA1.meetingNotesActions.exampleRequest";
 import type { WorkflowCapabilityTemplate } from "@/lib/capabilities/templates/types/CapabilityTemplate.type";
 import { WORKFLOW_CAPABILITY_TEMPLATES_A1_FEATURED } from "@/lib/capabilities/templates/workflowCapabilityTemplatesA1Featured.constant";
+import { WEEKLY_TEAM_STATUS_WORKFLOW } from "@/lib/capabilities/templates/workflowCapabilityTemplatesA1Featured.weeklyTeamStatus.constant";
 
 export const WORKFLOW_CAPABILITY_TEMPLATES_A1: readonly WorkflowCapabilityTemplate[] =
   [
     ...WORKFLOW_CAPABILITY_TEMPLATES_A1_FEATURED,
-    buildWorkflowTemplate(
-      "weekly-team-status",
-      "Reporting",
-      "Weekly team status",
-      "Turn highlights and blockers into a polished team update.",
-      "Write a concise team status update with bullets. Lead with outcomes and call out blockers clearly.",
-      [
-        ["weekOf", "Week of", "text"],
-        ["highlights", "Highlights", "textarea"],
-        ["blockers", "Blockers (optional)", "textarea", false],
-      ],
-    ),
+    WEEKLY_TEAM_STATUS_WORKFLOW,
     buildWorkflowTemplate(
       "daily-standup",
       "Reporting",

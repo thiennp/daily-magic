@@ -6,6 +6,7 @@ import { OFFICIAL_WORKFLOW_DEFINITION as researchBrief } from "@/lib/workflowOrc
 import { OFFICIAL_WORKFLOW_DEFINITION as slackThreadSummary } from "@/lib/workflowOrchestration/definitions/slackThreadSummary.definition";
 import { OFFICIAL_WORKFLOW_DEFINITION as teamRepoStandup } from "@/lib/workflowOrchestration/definitions/teamRepoStandup.definition";
 import { OFFICIAL_WORKFLOW_DEFINITION as vibeCodingAppFeature } from "@/lib/workflowOrchestration/definitions/vibeCodingAppFeature.definition";
+import { OFFICIAL_WORKFLOW_DEFINITION as weeklyTeamStatus } from "@/lib/workflowOrchestration/definitions/weeklyTeamStatus.definition";
 
 const CUSTOM_OFFICIAL_WORKFLOW_DEFINITIONS: Readonly<
   Record<string, OfficialWorkflowDefinition>
@@ -16,6 +17,7 @@ const CUSTOM_OFFICIAL_WORKFLOW_DEFINITIONS: Readonly<
   "slack-thread-summary": slackThreadSummary,
   "team-repo-standup": teamRepoStandup,
   "vibe-coding-app-feature": vibeCodingAppFeature,
+  "weekly-team-status": weeklyTeamStatus,
 };
 
 export const findCustomOfficialWorkflowDefinitionByTemplateId = (
