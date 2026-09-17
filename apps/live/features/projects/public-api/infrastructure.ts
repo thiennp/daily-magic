@@ -1,2 +1,31 @@
-/** AWL slice `projects` — Node HTTP / FS adapters (placeholder). */
-export const awlprojectsInfrastructurePlaceholder = true;
+export {
+  addAgentWitchLocalProjectToRegistry,
+  findAgentWitchLocalProjectById,
+  readAgentWitchLocalProjectsRegistry,
+} from "../internal/core/agentWitchLocalProjectsRegistry";
+
+export { default as expandAgentWitchProjectFolderPath } from "../internal/core/expandAgentWitchProjectFolderPath";
+
+export { ensureAgentWitchProjectFolder } from "../internal/core/ensureAgentWitchProjectFolder";
+
+export { pickMacOsFolderDialog } from "../internal/core/pickMacOsFolderDialog";
+
+export { syncAgentWitchLocalProjectsFromCloud } from "../internal/core/syncAgentWitchLocalProjectsFromCloud";
+
+export {
+  claimAgentRunFromCloud,
+  completeAgentRunOnCloud,
+  fetchAgentWitchCloudProjects,
+  parseAgentWitchHeartbeatResponse,
+  parseAgentWitchPollResponse,
+  pollAgentWitchCommand,
+  postAgentWitchDeviceHeartbeat,
+  postAgentWitchMessage,
+  reportLocalAutomationRunToCloud,
+  resolveAgentWitchCloudApiConfig,
+  startLocalSelfDispatchOnCloud,
+  type AgentWitchCloudApiConfig,
+  type AgentWitchCloudProject,
+  type AgentWitchHeartbeatResponse,
+  type ClaimedCloudAgentRun,
+} from "../internal/core/agentWitchCloudApi";

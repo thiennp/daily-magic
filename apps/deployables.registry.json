@@ -22,7 +22,10 @@
         "http://127.0.0.1:43347"
       ],
       "defaultPort": 43347,
-      "entrypoints": ["scripts/agentWitchLocalApp.ts"]
+      "entrypoints": [
+        "apps/live/entry/startLocalAppServer.ts",
+        "scripts/agentWitchLocalApp.ts"
+      ]
     },
     {
       "id": "AWB",

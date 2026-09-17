@@ -87,6 +87,114 @@
       ],
       "@agent-witch/install-process-host": [
         "./apps/install/features/process-host/public-api/infrastructure.ts"
+      ],
+      "@agent-witch/live-local-server": [
+        "./apps/live/features/local-server/public-api/infrastructure.ts"
+      ],
+      "@agent-witch/live-local-server/types": [
+        "./apps/live/features/local-server/public-api/types.ts"
+      ],
+      "@agent-witch/live-local-server/presentation": [
+        "./apps/live/features/local-server/public-api/presentation.ts"
+      ],
+      "@agent-witch/live-shell": [
+        "./apps/live/features/shell/public-api/infrastructure.ts"
+      ],
+      "@agent-witch/live-shell/types": [
+        "./apps/live/features/shell/public-api/types.ts"
+      ],
+      "@agent-witch/live-shell/presentation": [
+        "./apps/live/features/shell/public-api/presentation.ts"
+      ],
+      "@agent-witch/live-home": [
+        "./apps/live/features/home/public-api/infrastructure.ts"
+      ],
+      "@agent-witch/live-home/types": [
+        "./apps/live/features/home/public-api/types.ts"
+      ],
+      "@agent-witch/live-home/presentation": [
+        "./apps/live/features/home/public-api/presentation.ts"
+      ],
+      "@agent-witch/live-tasks": [
+        "./apps/live/features/tasks/public-api/infrastructure.ts"
+      ],
+      "@agent-witch/live-tasks/types": [
+        "./apps/live/features/tasks/public-api/types.ts"
+      ],
+      "@agent-witch/live-tasks/presentation": [
+        "./apps/live/features/tasks/public-api/presentation.ts"
+      ],
+      "@agent-witch/live-projects": [
+        "./apps/live/features/projects/public-api/infrastructure.ts"
+      ],
+      "@agent-witch/live-projects/types": [
+        "./apps/live/features/projects/public-api/types.ts"
+      ],
+      "@agent-witch/live-projects/presentation": [
+        "./apps/live/features/projects/public-api/presentation.ts"
+      ],
+      "@agent-witch/live-harness": [
+        "./apps/live/features/harness/public-api/infrastructure.ts"
+      ],
+      "@agent-witch/live-harness/types": [
+        "./apps/live/features/harness/public-api/types.ts"
+      ],
+      "@agent-witch/live-harness/presentation": [
+        "./apps/live/features/harness/public-api/presentation.ts"
+      ],
+      "@agent-witch/live-knowledge": [
+        "./apps/live/features/knowledge/public-api/infrastructure.ts"
+      ],
+      "@agent-witch/live-knowledge/types": [
+        "./apps/live/features/knowledge/public-api/types.ts"
+      ],
+      "@agent-witch/live-knowledge/presentation": [
+        "./apps/live/features/knowledge/public-api/presentation.ts"
+      ],
+      "@agent-witch/live-memory": [
+        "./apps/live/features/memory/public-api/infrastructure.ts"
+      ],
+      "@agent-witch/live-memory/types": [
+        "./apps/live/features/memory/public-api/types.ts"
+      ],
+      "@agent-witch/live-memory/presentation": [
+        "./apps/live/features/memory/public-api/presentation.ts"
+      ],
+      "@agent-witch/live-writer-settings": [
+        "./apps/live/features/writer-settings/public-api/infrastructure.ts"
+      ],
+      "@agent-witch/live-writer-settings/types": [
+        "./apps/live/features/writer-settings/public-api/types.ts"
+      ],
+      "@agent-witch/live-writer-settings/presentation": [
+        "./apps/live/features/writer-settings/public-api/presentation.ts"
+      ],
+      "@agent-witch/live-status-health": [
+        "./apps/live/features/status-health/public-api/infrastructure.ts"
+      ],
+      "@agent-witch/live-status-health/types": [
+        "./apps/live/features/status-health/public-api/types.ts"
+      ],
+      "@agent-witch/live-status-health/presentation": [
+        "./apps/live/features/status-health/public-api/presentation.ts"
+      ],
+      "@agent-witch/live-diagnostics": [
+        "./apps/live/features/diagnostics/public-api/infrastructure.ts"
+      ],
+      "@agent-witch/live-diagnostics/types": [
+        "./apps/live/features/diagnostics/public-api/types.ts"
+      ],
+      "@agent-witch/live-diagnostics/presentation": [
+        "./apps/live/features/diagnostics/public-api/presentation.ts"
+      ],
+      "@agent-witch/live-automations": [
+        "./apps/live/features/automations/public-api/infrastructure.ts"
+      ],
+      "@agent-witch/live-automations/types": [
+        "./apps/live/features/automations/public-api/types.ts"
+      ],
+      "@agent-witch/live-automations/presentation": [
+        "./apps/live/features/automations/public-api/presentation.ts"
       ]
     }
   },

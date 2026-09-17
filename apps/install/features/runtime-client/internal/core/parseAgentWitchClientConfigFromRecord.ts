@@ -7,7 +7,7 @@ import {
   DEFAULT_CURSOR_COMMAND,
 } from "./agentWitchClientConfigDefaults.constants";
 import { resolveAgentWitchClientWsUrl } from "./resolveAgentWitchClientWsUrl";
-import { resolveWriterExecutionBackend } from "./resolveWriterExecutionBackend";
+import { resolveWriterExecutionBackend } from "./writerApi/resolveWriterExecutionBackend";
 import type { AgentWitchClientConfig } from "./agentWitchClientConfig.type";
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>

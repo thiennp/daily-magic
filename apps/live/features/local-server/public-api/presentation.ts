@@ -1,2 +1,2 @@
-/** AWL slice `local-server` — HTML presentation exports (placeholder). */
-export const awllocalServerPresentationPlaceholder = true;
+/** AWL slice `local-server` — no HTML builders (router only). */
+export {};

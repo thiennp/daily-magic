@@ -1,2 +1,2 @@
-/** AWL slice `home` — Node HTTP / FS adapters (placeholder). */
-export const awlhomeInfrastructurePlaceholder = true;
+/** AWL slice `home` — presentation-only dashboard. */
+export {};

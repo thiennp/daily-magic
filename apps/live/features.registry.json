@@ -6,15 +6,15 @@
     {
       "slug": "local-server",
       "title": "Local HTTP server and routing",
-      "fsaStatus": "in-progress",
+      "fsaStatus": "fsa",
       "featurePath": "apps/live/features/local-server",
       "legacyPaths": ["scripts/agentWitchLocalApp.ts"],
-      "notes": "Types re-export @agent-witch/shared live network constants; router still in scripts."
+      "notes": "Router in startAgentWitchLocalApp; scripts/agentWitchLocalApp.ts shims apps/live/entry/."
     },
     {
       "slug": "shell",
       "title": "App shell, nav, and chrome",
-      "fsaStatus": "legacy",
+      "fsaStatus": "fsa",
       "featurePath": "apps/live/features/shell",
       "legacyPaths": [
         "scripts/buildAgentWitchLocalAppShell.ts",
@@ -24,14 +24,14 @@
     {
       "slug": "home",
       "title": "Home dashboard",
-      "fsaStatus": "legacy",
+      "fsaStatus": "fsa",
       "featurePath": "apps/live/features/home",
       "legacyPaths": ["scripts/buildAgentWitchLocalHomePage.ts"]
     },
     {
       "slug": "tasks",
       "title": "Local tasks and self-delegated runs",
-      "fsaStatus": "legacy",
+      "fsaStatus": "fsa",
       "featurePath": "apps/live/features/tasks",
       "legacyPaths": [
         "scripts/buildAgentWitchLocalTaskPage.ts",
@@ -41,7 +41,7 @@
     {
       "slug": "projects",
       "title": "Projects and folders",
-      "fsaStatus": "legacy",
+      "fsaStatus": "fsa",
       "featurePath": "apps/live/features/projects",
       "legacyPaths": [
         "scripts/agentWitchLocalProjectsRegistry.ts",
@@ -52,7 +52,7 @@
     {
       "slug": "harness",
       "title": "Local playbook reveal and Cursor install",
-      "fsaStatus": "legacy",
+      "fsaStatus": "fsa",
       "featurePath": "apps/live/features/harness",
       "legacyPaths": [
         "scripts/localHarness/",
@@ -62,28 +62,28 @@
     {
       "slug": "knowledge",
       "title": "RAG knowledge browse",
-      "fsaStatus": "legacy",
+      "fsaStatus": "fsa",
       "featurePath": "apps/live/features/knowledge",
       "legacyPaths": ["scripts/agentWitchLocalRag.ts"]
     },
     {
       "slug": "memory",
       "title": "Local memory",
-      "fsaStatus": "legacy",
+      "fsaStatus": "fsa",
       "featurePath": "apps/live/features/memory",
       "legacyPaths": ["scripts/agentWitchLocalMemory.ts"]
     },
     {
       "slug": "writer-settings",
       "title": "Writer API and execution backend settings",
-      "fsaStatus": "legacy",
+      "fsaStatus": "fsa",
       "featurePath": "apps/live/features/writer-settings",
       "legacyPaths": ["scripts/buildAgentWitchLocalWriterApiPage.ts"]
     },
     {
       "slug": "status-health",
       "title": "Connection and heartbeat status UI",
-      "fsaStatus": "legacy",
+      "fsaStatus": "fsa",
       "featurePath": "apps/live/features/status-health",
       "legacyPaths": [
         "scripts/buildAgentWitchLocalHeartbeatElapsedMarkup.ts",
@@ -93,7 +93,7 @@
     {
       "slug": "diagnostics",
       "title": "Traffic, trace, and error log pages",
-      "fsaStatus": "legacy",
+      "fsaStatus": "fsa",
       "featurePath": "apps/live/features/diagnostics",
       "legacyPaths": [
         "scripts/agentWitchLocalTrafficLog.ts",
@@ -104,13 +104,13 @@
     {
       "slug": "automations",
       "title": "Scheduled automations (UI/tick)",
-      "fsaStatus": "legacy",
+      "fsaStatus": "fsa",
       "featurePath": "apps/live/features/automations",
       "legacyPaths": [
         "scripts/agentWitchLocalAutomationStore.ts",
         "scripts/tickAgentWitchScheduledAutomations.ts"
       ],
-      "notes": "May share ownership with AWI runtime-client; decide before fsa migration."
+      "notes": "Automation tick also consumed from AWI/AWB via script shims."
     }
   ]
 }

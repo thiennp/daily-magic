@@ -1,2 +1,3 @@
-/** AWL slice `projects` — HTML presentation exports (placeholder). */
-export const awlprojectsPresentationPlaceholder = true;
+export { buildAgentWitchLocalProjectDetailPageBody } from "../internal/core/buildAgentWitchLocalProjectDetailPage";
+
+export { buildAgentWitchLocalProjectsPageBody } from "../internal/core/buildAgentWitchLocalProjectsPage";

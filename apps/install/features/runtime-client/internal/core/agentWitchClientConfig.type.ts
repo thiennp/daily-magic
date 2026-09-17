@@ -1,6 +1,6 @@
 import type { AgentWitchLocalLayout } from "@agent-witch/install-layout/types";
 
-import type { WriterExecutionBackend } from "./resolveWriterExecutionBackend";
+import type { WriterExecutionBackend } from "./writerApi/resolveWriterExecutionBackend";
 
 export interface AgentWitchClientConfig {
   readonly email: string | null;

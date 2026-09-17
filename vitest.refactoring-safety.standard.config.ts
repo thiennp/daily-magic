@@ -13,7 +13,7 @@ export default defineConfig({
       "src/lib/dispatch/**/*.test.ts",
       "src/features/agent-witch/**/*.test.ts",
       "scripts/agentWitch*.test.ts",
-      "scripts/buildAgentWitchLocal*.test.ts",
+      "apps/live/features/**/*.test.ts",
       "scripts/ensureAgentWitch*.test.ts",
       "scripts/resolveAgentWitch*.test.ts",
       "scripts/reviveAgentWitch*.test.ts",

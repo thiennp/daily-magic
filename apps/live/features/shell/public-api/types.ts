@@ -1,2 +1,3 @@
-/** AWL slice `shell` — types (contract placeholder). */
-export const awlshellSlug = "shell";
+export type { AgentWitchLocalAppNavPath } from "../internal/core/buildAgentWitchLocalAppShell";
+
+export type { LocalAgentWitchSelfUpdateResult } from "../internal/core/requestLocalAgentWitchSelfUpdate";

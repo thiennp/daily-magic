@@ -1,2 +1,1 @@
-/** AWL slice `status-health` — Node HTTP / FS adapters (placeholder). */
-export const awlstatusHealthInfrastructurePlaceholder = true;
+export { formatAgentWitchHeartbeatElapsed } from "../internal/core/formatAgentWitchHeartbeatElapsed";

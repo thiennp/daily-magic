@@ -1,0 +1,381 @@
+import { AGENT_WITCH_PAIRING_TOKEN_HEADER } from "./agentWitchDeviceAuth.constant";
+import { resolveAgentWitchAppOriginFromWsUrl } from "@agent-witch/install-self-update";
+
+export interface AgentWitchCloudApiConfig {
+  readonly appOrigin: string;
+  readonly pairingToken: string;
+}
+
+export interface ClaimedCloudAgentRun {
+  readonly id: string;
+  readonly prompt: string;
+  readonly writerAgent: string;
+}
+
+export const resolveAgentWitchCloudApiConfig = (input: {
+  readonly wsUrl: string;
+  readonly pairingToken: string;
+}): AgentWitchCloudApiConfig | null => {
+  const appOrigin = resolveAgentWitchAppOriginFromWsUrl(input.wsUrl);
+
+  if (appOrigin === null || input.pairingToken.trim().length === 0) {
+    return null;
+  }
+
+  return {
+    appOrigin,
+    pairingToken: input.pairingToken.trim(),
+  };
+};
+
+const buildDeviceAuthHeaders = (
+  pairingToken: string,
+): Record<string, string> => ({
+  [AGENT_WITCH_PAIRING_TOKEN_HEADER]: pairingToken,
+  "Content-Type": "application/json",
+});
+
+export interface AgentWitchHeartbeatResponse {
+  readonly ok: boolean;
+  readonly restartRequested: boolean;
+}
+
+export const parseAgentWitchHeartbeatResponse = (
+  body: unknown,
+): AgentWitchHeartbeatResponse => {
+  if (typeof body !== "object" || body === null) {
+    return { ok: false, restartRequested: false };
+  }
+
+  const record = body as { ok?: unknown; restartRequested?: unknown };
+  return {
+    ok: record.ok === true,
+    restartRequested: record.restartRequested === true,
+  };
+};
+
+export const parseAgentWitchPollResponse = (
+  body: unknown,
+): {
+  readonly ok: boolean;
+  readonly commandMessage: Record<string, unknown> | null;
+} => {
+  if (typeof body !== "object" || body === null) {
+    return { ok: false, commandMessage: null };
+  }
+
+  const record = body as { ok?: unknown; command?: unknown };
+  if (record.ok !== true) {
+    return { ok: false, commandMessage: null };
+  }
+
+  if (record.command === null || record.command === undefined) {
+    return { ok: true, commandMessage: null };
+  }
+
+  if (typeof record.command !== "object" || record.command === null) {
+    return { ok: true, commandMessage: null };
+  }
+
+  const command = record.command as { message?: unknown };
+  if (
+    typeof command.message !== "object" ||
+    command.message === null ||
+    Array.isArray(command.message)
+  ) {
+    return { ok: true, commandMessage: null };
+  }
+
+  const message = command.message as Record<string, unknown>;
+  if (typeof message.type !== "string") {
+    return { ok: true, commandMessage: null };
+  }
+
+  return { ok: true, commandMessage: message };
+};
+
+export const pollAgentWitchCommand = async (
+  config: AgentWitchCloudApiConfig,
+  waitMs: number = 25_000,
+): Promise<Record<string, unknown> | null> => {
+  const response = await fetch(
+    `${config.appOrigin}/api/agent-witch/commands/poll`,
+    {
+      method: "POST",
+      headers: buildDeviceAuthHeaders(config.pairingToken),
+      body: JSON.stringify({ waitMs }),
+      signal: AbortSignal.timeout(waitMs + 15_000),
+    },
+  );
+
+  if (!response.ok) {
+    throw new Error(`Agent Witch command poll failed (${response.status})`);
+  }
+
+  const body: unknown = await response.json();
+  const parsed = parseAgentWitchPollResponse(body);
+
+  if (!parsed.ok) {
+    throw new Error("Agent Witch command poll returned invalid payload");
+  }
+
+  return parsed.commandMessage;
+};
+
+export const postAgentWitchMessage = async (
+  config: AgentWitchCloudApiConfig,
+  message: Record<string, unknown>,
+): Promise<boolean> => {
+  try {
+    const response = await fetch(
+      `${config.appOrigin}/api/agent-witch/messages`,
+      {
+        method: "POST",
+        headers: buildDeviceAuthHeaders(config.pairingToken),
+        body: JSON.stringify(message),
+        signal: AbortSignal.timeout(30_000),
+      },
+    );
+
+    return response.ok;
+  } catch {
+    return false;
+  }
+};
+
+export const postAgentWitchDeviceHeartbeat = async (
+  config: AgentWitchCloudApiConfig,
+  input: {
+    readonly hostname: string;
+    readonly restartAck?: boolean;
+  },
+): Promise<AgentWitchHeartbeatResponse> => {
+  try {
+    const response = await fetch(
+      `${config.appOrigin}/api/agent-witch/heartbeat`,
+      {
+        method: "POST",
+        headers: buildDeviceAuthHeaders(config.pairingToken),
+        body: JSON.stringify({
+          hostname: input.hostname,
+          ...(input.restartAck === true ? { restartAck: true } : {}),
+        }),
+        signal: AbortSignal.timeout(10_000),
+      },
+    );
+
+    if (!response.ok) {
+      return { ok: false, restartRequested: false };
+    }
+
+    const body: unknown = await response.json();
+    return parseAgentWitchHeartbeatResponse(body);
+  } catch {
+    return { ok: false, restartRequested: false };
+  }
+};
+
+export const claimAgentRunFromCloud = async (
+  config: AgentWitchCloudApiConfig,
+): Promise<ClaimedCloudAgentRun | null> => {
+  try {
+    const response = await fetch(
+      `${config.appOrigin}/api/agent-witch/runs/claim`,
+      {
+        method: "POST",
+        headers: buildDeviceAuthHeaders(config.pairingToken),
+        signal: AbortSignal.timeout(15_000),
+      },
+    );
+
+    if (!response.ok) {
+      return null;
+    }
+
+    const body: unknown = await response.json();
+    if (
+      typeof body !== "object" ||
+      body === null ||
+      (body as { run?: unknown }).run === null
+    ) {
+      return null;
+    }
+
+    const run = (body as { run: Record<string, unknown> }).run;
+    const id = typeof run.id === "string" ? run.id : "";
+    const prompt = typeof run.prompt === "string" ? run.prompt : "";
+    const writerAgent =
+      typeof run.writerAgent === "string" ? run.writerAgent : "claude-cli";
+
+    if (id.length === 0 || prompt.length === 0) {
+      return null;
+    }
+
+    return { id, prompt, writerAgent };
+  } catch {
+    return null;
+  }
+};
+
+export const startLocalSelfDispatchOnCloud = async (
+  config: AgentWitchCloudApiConfig,
+  input: {
+    readonly agentRunId: string;
+    readonly prompt: string;
+    readonly writerAgent: string;
+  },
+): Promise<ClaimedCloudAgentRun | null> => {
+  try {
+    const response = await fetch(
+      `${config.appOrigin}/api/agent-witch/runs/local-self-dispatch`,
+      {
+        method: "POST",
+        headers: buildDeviceAuthHeaders(config.pairingToken),
+        body: JSON.stringify(input),
+        signal: AbortSignal.timeout(30_000),
+      },
+    );
+
+    if (!response.ok) {
+      return null;
+    }
+
+    const body: unknown = await response.json();
+    if (typeof body !== "object" || body === null) {
+      return null;
+    }
+
+    const run = (body as { run?: unknown }).run;
+    if (typeof run !== "object" || run === null) {
+      return null;
+    }
+
+    const record = run as Record<string, unknown>;
+    const id = typeof record.id === "string" ? record.id : "";
+    const prompt = typeof record.prompt === "string" ? record.prompt : "";
+    const writerAgent =
+      typeof record.writerAgent === "string"
+        ? record.writerAgent
+        : "claude-cli";
+
+    if (id.length === 0 || prompt.length === 0) {
+      return null;
+    }
+
+    return { id, prompt, writerAgent };
+  } catch {
+    return null;
+  }
+};
+
+export const completeAgentRunOnCloud = async (
+  config: AgentWitchCloudApiConfig,
+  runId: string,
+  exitCode: number,
+  output: string,
+): Promise<boolean> => {
+  try {
+    const response = await fetch(
+      `${config.appOrigin}/api/agent-witch/runs/${encodeURIComponent(runId)}/complete`,
+      {
+        method: "POST",
+        headers: buildDeviceAuthHeaders(config.pairingToken),
+        body: JSON.stringify({ exitCode, output }),
+        signal: AbortSignal.timeout(30_000),
+      },
+    );
+
+    return response.ok;
+  } catch {
+    return false;
+  }
+};
+
+export interface AgentWitchCloudProject {
+  readonly id: string;
+  readonly name: string;
+  readonly folderPath: string;
+}
+
+const parseAgentWitchCloudProjectsResponse = (
+  body: unknown,
+): readonly AgentWitchCloudProject[] | null => {
+  if (typeof body !== "object" || body === null) {
+    return null;
+  }
+
+  const record = body as { ok?: unknown; projects?: unknown };
+  if (record.ok !== true || !Array.isArray(record.projects)) {
+    return null;
+  }
+
+  const projects: AgentWitchCloudProject[] = [];
+
+  for (const item of record.projects) {
+    if (typeof item !== "object" || item === null) {
+      continue;
+    }
+    const row = item as Record<string, unknown>;
+    const id = typeof row.id === "string" ? row.id.trim() : "";
+    const name = typeof row.name === "string" ? row.name.trim() : "";
+    const folderPath =
+      typeof row.folderPath === "string" ? row.folderPath.trim() : "";
+    if (id.length === 0 || name.length === 0 || folderPath.length === 0) {
+      continue;
+    }
+    projects.push({ id, name, folderPath });
+  }
+
+  return projects;
+};
+
+export const fetchAgentWitchCloudProjects = async (
+  config: AgentWitchCloudApiConfig,
+): Promise<readonly AgentWitchCloudProject[] | null> => {
+  try {
+    const response = await fetch(
+      `${config.appOrigin}/api/agent-witch/projects`,
+      {
+        method: "GET",
+        headers: buildDeviceAuthHeaders(config.pairingToken),
+        signal: AbortSignal.timeout(15_000),
+      },
+    );
+
+    if (!response.ok) {
+      return null;
+    }
+
+    const body: unknown = await response.json();
+    return parseAgentWitchCloudProjectsResponse(body);
+  } catch {
+    return null;
+  }
+};
+
+export const reportLocalAutomationRunToCloud = async (
+  config: AgentWitchCloudApiConfig,
+  automationId: string,
+  input: {
+    readonly agentRunId: string;
+    readonly exitCode: number;
+    readonly output: string;
+    readonly prompt: string;
+  },
+): Promise<boolean> => {
+  try {
+    const response = await fetch(
+      `${config.appOrigin}/api/automations/${encodeURIComponent(automationId)}/local-run`,
+      {
+        method: "POST",
+        headers: buildDeviceAuthHeaders(config.pairingToken),
+        body: JSON.stringify(input),
+        signal: AbortSignal.timeout(30_000),
+      },
+    );
+
+    return response.ok;
+  } catch {
+    return false;
+  }
+};

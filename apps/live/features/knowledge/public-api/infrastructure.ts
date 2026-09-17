@@ -1,2 +1,6 @@
-/** AWL slice `knowledge` — Node HTTP / FS adapters (placeholder). */
-export const awlknowledgeInfrastructurePlaceholder = true;
+export {
+  queryAgentWitchRag,
+  readAgentWitchRagChunks,
+  indexAgentWitchRagText,
+  formatRagContextForPrompt,
+} from "../internal/core/agentWitchLocalRag";

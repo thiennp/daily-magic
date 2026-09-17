@@ -1,6 +1,6 @@
 # AWL Fractal Slice Architecture plan
 
-**Status:** Working plan (commit-worthy).  
+**Status:** AWL slices migrated (`fsaStatus: fsa` on all registry slugs). Entry: `apps/live/entry/startLocalAppServer.ts`; shim: `scripts/agentWitchLocalApp.ts`.  
 **Deployable:** **AWL** — Agent Witch Live (`apps/live/`).  
 **Policy:** [ADR 0007](../adr/0007-fractal-slice-architecture.md) · **Deployables:** [agent-witch-deployables.md](../product/agent-witch-deployables.md) · **Registry:** `apps/live/features.registry.json`.
 
@@ -75,20 +75,20 @@ Optional nested slice (later): `features/harness/features/reveal/` for stream/ca
 
 ## Feature slugs and mapping
 
-| Slug              | `fsaStatus` (initial) | Owns                                            | Main legacy paths (today)                                              |
-| ----------------- | --------------------- | ----------------------------------------------- | ---------------------------------------------------------------------- |
-| `local-server`    | `in-progress`         | Bind `127.0.0.1:43347`, HTTP router             | `scripts/agentWitchLocalApp.ts` (server)                               |
-| `shell`           | `legacy`              | App chrome, nav, cloud banner, update flash     | `buildAgentWitchLocalAppShell`, `buildAgentWitchLocalCloudBanner`      |
-| `home`            | `legacy`              | `/` dashboard                                   | `buildAgentWitchLocalHomePage`                                         |
-| `tasks`           | `legacy`              | Local task page, self-delegated runs            | `buildAgentWitchLocalTaskPage`, `runLocalSelfDelegatedTask`            |
-| `projects`        | `legacy`              | Project registry, folders, cloud sync           | `agentWitchLocalProjectsRegistry`, `buildAgentWitchLocalProjectsPage`  |
-| `harness`         | `legacy`              | Playbook reveal/install to Cursor               | `scripts/localHarness/*`, `buildAgentWitchLocalHarnessPage`            |
-| `knowledge`       | `legacy`              | RAG browse/query (`/knowledge`)                 | `agentWitchLocalRag`                                                   |
-| `memory`          | `legacy`              | Local memory store UI                           | `agentWitchLocalMemory`                                                |
-| `writer-settings` | `legacy`              | Writer API / execution backend UI               | `buildAgentWitchLocalWriterApiPage`, `writerApi/*` (AWL-only)          |
-| `status-health`   | `legacy`              | Connection health + heartbeat UI                | `buildAgentWitchLocalHeartbeatElapsedMarkup`, health read helpers      |
-| `diagnostics`     | `legacy`              | Traffic/ws trace/error log pages                | `agentWitchLocalTrafficLog`, `buildAgentWitchLocalErrorLogPage`        |
-| `automations`     | `legacy`              | Scheduled automations UI/tick (owner split TBD) | `agentWitchLocalAutomationStore`, `tickAgentWitchScheduledAutomations` |
+| Slug              | `fsaStatus` (initial) | Owns                                        | Main legacy paths (today)                                   |
+| ----------------- | --------------------- | ------------------------------------------- | ----------------------------------------------------------- |
+| `local-server`    | `fsa`                 | Bind `127.0.0.1:43347`, HTTP router         | `apps/live/features/local-server/` + entry shim             |
+| `shell`           | `fsa`                 | App chrome, nav, cloud banner, update flash | `apps/live/features/shell/`                                 |
+| `home`            | `fsa`                 | `/` dashboard                               | `apps/live/features/home/`                                  |
+| `tasks`           | `fsa`                 | Local task page, self-delegated runs        | `apps/live/features/tasks/`                                 |
+| `projects`        | `fsa`                 | Project registry, folders, cloud sync       | `apps/live/features/projects/`                              |
+| `harness`         | `fsa`                 | Playbook reveal/install to Cursor           | `apps/live/features/harness/internal/core/localHarness/`    |
+| `knowledge`       | `fsa`                 | RAG browse/query (`/knowledge`)             | `apps/live/features/knowledge/`                             |
+| `memory`          | `fsa`                 | Local memory store UI                       | `apps/live/features/memory/`                                |
+| `writer-settings` | `fsa`                 | Writer API / execution backend UI           | `apps/live/features/writer-settings/` (writer runtime: AWI) |
+| `status-health`   | `fsa`                 | Connection health + heartbeat UI            | `apps/live/features/status-health/`                         |
+| `diagnostics`     | `fsa`                 | Traffic/ws trace/error log pages            | `apps/live/features/diagnostics/`                           |
+| `automations`     | `fsa`                 | Scheduled automations UI/tick               | `apps/live/features/automations/`                           |
 
 ## Migration order (recommended PR slices)
 

@@ -1,2 +1,1 @@
-/** AWL slice `writer-settings` — HTML presentation exports (placeholder). */
-export const awlwriterSettingsPresentationPlaceholder = true;
+export { buildAgentWitchLocalWriterApiPageBody } from "../internal/core/buildAgentWitchLocalWriterApiPage";

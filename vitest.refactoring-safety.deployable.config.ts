@@ -12,10 +12,11 @@ const includeByDeployable: Record<string, readonly string[]> = {
     "src/features/agent-witch/online-wake/**/*.test.ts",
   ],
   AWL: [
+    "test/awlFeaturesRegistry.test.ts",
+    "test/deployableBoundary.test.ts",
     "src/lib/agentWitch/agentWitchLocalAppPort.constant.test.ts",
-    "scripts/buildAgentWitchLocal*.test.ts",
-    "scripts/agentWitchLocal*.test.ts",
-    "scripts/buildAgentWitchLocalAppShell.test.ts",
+    "apps/live/features/**/*.test.ts",
+    "scripts/agentWitchCloudApi.test.ts",
   ],
   AWB: [
     "apps/bridge/**/*.test.ts",

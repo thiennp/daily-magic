@@ -1,2 +1,4 @@
-/** AWL slice `harness` — HTML presentation exports (placeholder). */
-export const awlharnessPresentationPlaceholder = true;
+export {
+  buildAgentWitchLocalHarnessPageBody,
+  parseHarnessSubmitFormBody,
+} from "../internal/core/buildAgentWitchLocalHarnessPage";

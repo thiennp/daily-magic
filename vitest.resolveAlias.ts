@@ -106,5 +106,149 @@ export const vitestResolveAlias: Record<string, string> = {
     ROOT,
     "./apps/install/features/process-host/public-api/infrastructure.ts",
   ),
+  "@agent-witch/live-local-server": path.resolve(
+    ROOT,
+    "./apps/live/features/local-server/public-api/infrastructure.ts",
+  ),
+  "@agent-witch/live-local-server/types": path.resolve(
+    ROOT,
+    "./apps/live/features/local-server/public-api/types.ts",
+  ),
+  "@agent-witch/live-local-server/presentation": path.resolve(
+    ROOT,
+    "./apps/live/features/local-server/public-api/presentation.ts",
+  ),
+  "@agent-witch/live-shell": path.resolve(
+    ROOT,
+    "./apps/live/features/shell/public-api/infrastructure.ts",
+  ),
+  "@agent-witch/live-shell/types": path.resolve(
+    ROOT,
+    "./apps/live/features/shell/public-api/types.ts",
+  ),
+  "@agent-witch/live-shell/presentation": path.resolve(
+    ROOT,
+    "./apps/live/features/shell/public-api/presentation.ts",
+  ),
+  "@agent-witch/live-home": path.resolve(
+    ROOT,
+    "./apps/live/features/home/public-api/infrastructure.ts",
+  ),
+  "@agent-witch/live-home/types": path.resolve(
+    ROOT,
+    "./apps/live/features/home/public-api/types.ts",
+  ),
+  "@agent-witch/live-home/presentation": path.resolve(
+    ROOT,
+    "./apps/live/features/home/public-api/presentation.ts",
+  ),
+  "@agent-witch/live-tasks": path.resolve(
+    ROOT,
+    "./apps/live/features/tasks/public-api/infrastructure.ts",
+  ),
+  "@agent-witch/live-tasks/types": path.resolve(
+    ROOT,
+    "./apps/live/features/tasks/public-api/types.ts",
+  ),
+  "@agent-witch/live-tasks/presentation": path.resolve(
+    ROOT,
+    "./apps/live/features/tasks/public-api/presentation.ts",
+  ),
+  "@agent-witch/live-projects": path.resolve(
+    ROOT,
+    "./apps/live/features/projects/public-api/infrastructure.ts",
+  ),
+  "@agent-witch/live-projects/types": path.resolve(
+    ROOT,
+    "./apps/live/features/projects/public-api/types.ts",
+  ),
+  "@agent-witch/live-projects/presentation": path.resolve(
+    ROOT,
+    "./apps/live/features/projects/public-api/presentation.ts",
+  ),
+  "@agent-witch/live-harness": path.resolve(
+    ROOT,
+    "./apps/live/features/harness/public-api/infrastructure.ts",
+  ),
+  "@agent-witch/live-harness/types": path.resolve(
+    ROOT,
+    "./apps/live/features/harness/public-api/types.ts",
+  ),
+  "@agent-witch/live-harness/presentation": path.resolve(
+    ROOT,
+    "./apps/live/features/harness/public-api/presentation.ts",
+  ),
+  "@agent-witch/live-knowledge": path.resolve(
+    ROOT,
+    "./apps/live/features/knowledge/public-api/infrastructure.ts",
+  ),
+  "@agent-witch/live-knowledge/types": path.resolve(
+    ROOT,
+    "./apps/live/features/knowledge/public-api/types.ts",
+  ),
+  "@agent-witch/live-knowledge/presentation": path.resolve(
+    ROOT,
+    "./apps/live/features/knowledge/public-api/presentation.ts",
+  ),
+  "@agent-witch/live-memory": path.resolve(
+    ROOT,
+    "./apps/live/features/memory/public-api/infrastructure.ts",
+  ),
+  "@agent-witch/live-memory/types": path.resolve(
+    ROOT,
+    "./apps/live/features/memory/public-api/types.ts",
+  ),
+  "@agent-witch/live-memory/presentation": path.resolve(
+    ROOT,
+    "./apps/live/features/memory/public-api/presentation.ts",
+  ),
+  "@agent-witch/live-writer-settings": path.resolve(
+    ROOT,
+    "./apps/live/features/writer-settings/public-api/infrastructure.ts",
+  ),
+  "@agent-witch/live-writer-settings/types": path.resolve(
+    ROOT,
+    "./apps/live/features/writer-settings/public-api/types.ts",
+  ),
+  "@agent-witch/live-writer-settings/presentation": path.resolve(
+    ROOT,
+    "./apps/live/features/writer-settings/public-api/presentation.ts",
+  ),
+  "@agent-witch/live-status-health": path.resolve(
+    ROOT,
+    "./apps/live/features/status-health/public-api/infrastructure.ts",
+  ),
+  "@agent-witch/live-status-health/types": path.resolve(
+    ROOT,
+    "./apps/live/features/status-health/public-api/types.ts",
+  ),
+  "@agent-witch/live-status-health/presentation": path.resolve(
+    ROOT,
+    "./apps/live/features/status-health/public-api/presentation.ts",
+  ),
+  "@agent-witch/live-diagnostics": path.resolve(
+    ROOT,
+    "./apps/live/features/diagnostics/public-api/infrastructure.ts",
+  ),
+  "@agent-witch/live-diagnostics/types": path.resolve(
+    ROOT,
+    "./apps/live/features/diagnostics/public-api/types.ts",
+  ),
+  "@agent-witch/live-diagnostics/presentation": path.resolve(
+    ROOT,
+    "./apps/live/features/diagnostics/public-api/presentation.ts",
+  ),
+  "@agent-witch/live-automations": path.resolve(
+    ROOT,
+    "./apps/live/features/automations/public-api/infrastructure.ts",
+  ),
+  "@agent-witch/live-automations/types": path.resolve(
+    ROOT,
+    "./apps/live/features/automations/public-api/types.ts",
+  ),
+  "@agent-witch/live-automations/presentation": path.resolve(
+    ROOT,
+    "./apps/live/features/automations/public-api/presentation.ts",
+  ),
   "@": path.resolve(ROOT, "./src"),
 };
