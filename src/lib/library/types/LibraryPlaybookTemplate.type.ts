@@ -9,4 +9,5 @@ export default interface LibraryPlaybookTemplate {
   readonly exampleRequest: string;
   readonly workflowFields: readonly WorkflowFieldDefinition[];
   readonly operatorSteps: readonly OperatorStepDefinition[];
+  readonly harnessSetSlug: string | null;
 }

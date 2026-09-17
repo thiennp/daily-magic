@@ -47,6 +47,14 @@ export const handleClaudeResultMessageAsync = async (
   if (agentRunId !== null) {
     dispatchAgentRunInputRegistry.remove(agentRunId);
     await markAgentRunCompleted(runtime, agentRunId, exitCode, output);
+    const { advanceOfficialWorkflowRunAfterAgentRun } =
+      await import("@/lib/workflowOrchestration/advanceOfficialWorkflowRunAfterAgentRun");
+    await advanceOfficialWorkflowRunAfterAgentRun(
+      runtime,
+      agentRunId,
+      exitCode,
+      output,
+    );
   }
 
   return {

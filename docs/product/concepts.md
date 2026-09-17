@@ -12,6 +12,8 @@ A **published agent offering** your team can dispatch to—metadata, version, an
 
 A **capability shape** with dynamic task fields (forms). Workflows define how a capability collects input before dispatch.
 
+**Official marketplace presets** also use **server-orchestrated workflow runs**: a persisted step graph alternates **operator checkpoints** (human) and **bounded agent dispatches** (Mac/cloud sub-runs), instead of one monolithic prompt. Definitions are generated from each preset’s operator steps and instruction sections.
+
 ## Harness
 
 The **rules/skills/commands bundle** installed on a Mac under `~/.agent-witch/harness/`. The harness catalog lets you publish, share, and install consistent agent instructions—not the run itself.
