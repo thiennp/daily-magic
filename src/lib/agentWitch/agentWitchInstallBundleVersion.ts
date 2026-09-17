@@ -1,2 +1,2 @@
-/** Bump when any Agent Witch install bundle changes. */
-export const AGENT_WITCH_INSTALL_BUNDLE_VERSION = "114";
+/** @deprecated Import from `@agent-witch/install-bundle` — shim for AWC routes and legacy paths. */
+export { AGENT_WITCH_INSTALL_BUNDLE_VERSION } from "@agent-witch/install-bundle";

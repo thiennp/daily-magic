@@ -6,7 +6,7 @@
     {
       "slug": "bundle",
       "title": "Install bundle and version",
-      "fsaStatus": "in-progress",
+      "fsaStatus": "fsa",
       "featurePath": "apps/install/features/bundle",
       "legacyPaths": [
         "public/install/agent-witch/",

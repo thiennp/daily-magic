@@ -26,5 +26,13 @@ export const vitestResolveAlias: Record<string, string> = {
     ROOT,
     "./apps/install/features/install-layout/public-api/infrastructure.ts",
   ),
+  "@agent-witch/install-bundle/types": path.resolve(
+    ROOT,
+    "./apps/install/features/bundle/public-api/types.ts",
+  ),
+  "@agent-witch/install-bundle": path.resolve(
+    ROOT,
+    "./apps/install/features/bundle/public-api/infrastructure.ts",
+  ),
   "@": path.resolve(ROOT, "./src"),
 };

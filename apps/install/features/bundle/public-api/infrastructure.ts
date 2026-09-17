@@ -1,5 +1,10 @@
 /**
- * AWI slice `bundle` — public-api/infrastructure (FSA placeholder).
- * Migrate exports from legacy paths listed in features.registry.json.
+ * AWI slice `bundle` — install bundle version and shipped artifact paths.
  */
-export {};
+export { AGENT_WITCH_INSTALL_BUNDLE_VERSION } from "./types";
+
+export {
+  resolveAgentWitchInstallBundleOutfile,
+  resolveAgentWitchShippedInstallBundleAppDir,
+  resolveAgentWitchShippedInstallBundleRootDir,
+} from "../internal/core/resolveAgentWitchInstallBundlePaths";

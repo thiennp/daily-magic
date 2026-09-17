@@ -4,7 +4,10 @@ import { fileURLToPath } from "node:url";
 
 import esbuild from "esbuild";
 
-import { AGENT_WITCH_APP_BUNDLE_FILE_NAME } from "../src/lib/agentWitch/agentWitchInstallApp.constant";
+import {
+  resolveAgentWitchInstallBundleOutfile,
+  resolveAgentWitchShippedInstallBundleAppDir,
+} from "@agent-witch/install-bundle";
 import { buildAgentWitchBundledDepsArchive } from "./buildAgentWitchBundledDepsArchive";
 
 const workspaceRoot = path.resolve(
@@ -13,8 +16,8 @@ const workspaceRoot = path.resolve(
 );
 
 const entryPath = path.join(workspaceRoot, "scripts/agentWitchAppEntry.ts");
-const outDir = path.join(workspaceRoot, "public/install/agent-witch/app");
-const outfile = path.join(outDir, AGENT_WITCH_APP_BUNDLE_FILE_NAME);
+const outDir = resolveAgentWitchShippedInstallBundleAppDir(workspaceRoot);
+const outfile = resolveAgentWitchInstallBundleOutfile(workspaceRoot);
 
 const buildAgentWitchInstallBundle = async (): Promise<void> => {
   fs.mkdirSync(outDir, { recursive: true });

@@ -5,7 +5,11 @@ import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 
 import { AWI_INSTALL_ROOT_DIR_NAMES } from "../apps/install/features/install-layout/public-api/types";
-import { AWI_INSTALL_VERSION_FILENAME } from "../apps/install/features/bundle/public-api/types";
+import {
+  AGENT_WITCH_INSTALL_BUNDLE_VERSION,
+  AWI_INSTALL_VERSION_FILENAME,
+} from "../apps/install/features/bundle/public-api/types";
+import { AGENT_WITCH_INSTALL_BUNDLE_VERSION as AGENT_WITCH_INSTALL_BUNDLE_VERSION_FROM_INFRA } from "@agent-witch/install-bundle";
 
 const APP_ROOT = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
@@ -84,5 +88,12 @@ describe("apps/install/features.registry.json", () => {
 
   it("bundle contract exposes install-version filename", () => {
     expect(AWI_INSTALL_VERSION_FILENAME).toBe("install-version.json");
+  });
+
+  it("bundle version is single-sourced across public-api layers", () => {
+    expect(AGENT_WITCH_INSTALL_BUNDLE_VERSION_FROM_INFRA).toBe(
+      AGENT_WITCH_INSTALL_BUNDLE_VERSION,
+    );
+    expect(AGENT_WITCH_INSTALL_BUNDLE_VERSION.length).toBeGreaterThan(0);
   });
 });
