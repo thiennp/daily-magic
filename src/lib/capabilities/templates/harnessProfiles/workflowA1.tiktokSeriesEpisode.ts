@@ -1,4 +1,5 @@
 import type { PresetHarnessSeed } from "@/lib/capabilities/templates/harnessProfiles/PresetHarnessSeed.type";
+import { TIKTOK_SERIES_EPISODE_EXAMPLE_REQUEST } from "@/lib/capabilities/templates/harnessProfiles/workflowA1.tiktokSeriesEpisode.exampleRequest";
 import { TIKTOK_SERIES_EPISODE_OPERATOR_STEPS } from "@/lib/capabilities/templates/harnessProfiles/workflowA1.tiktokSeriesEpisode.operatorSteps";
 
 export const TIKTOK_SERIES_EPISODE_PRESET: PresetHarnessSeed = {
@@ -6,9 +7,8 @@ export const TIKTOK_SERIES_EPISODE_PRESET: PresetHarnessSeed = {
   name: "TikTok series episode",
   category: "Social",
   description:
-    "Plan one TikTok episode in a related-topic series: hook, script, shots, and caption — without repeating recent episode angles.",
-  exampleRequest:
-    "Prepare this TikTok episode for the series. Read seriesHistoryPath, avoid duplicate hooks, fit episodeAngle within seriesTopics, and deliver a film-ready script for targetLength. Wait for my approval before I treat the script as final.",
+    "Script one episode in a topic series on your Mac — dedupe against history, approve the script, then get shots, caption, and a history update after you post.",
+  exampleRequest: TIKTOK_SERIES_EPISODE_EXAMPLE_REQUEST,
   operatorSteps: TIKTOK_SERIES_EPISODE_OPERATOR_STEPS,
   profile: {
     ruleFocus: [
@@ -16,7 +16,7 @@ export const TIKTOK_SERIES_EPISODE_PRESET: PresetHarnessSeed = {
       "Read seriesHistoryPath and do not reuse the same hook, premise, or CTA as recent entries.",
       "Hit targetLength with tight pacing; one idea per episode.",
       "Match toneStyle; default to clear, punchy, mobile-first delivery.",
-      "Pause with [[AWAITING_INPUT]] for script approval before calling the episode final.",
+      "Pause at human checkpoints for script approval before treating the script as final.",
     ],
     skillSections: [
       {
