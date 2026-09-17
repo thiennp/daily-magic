@@ -2,6 +2,18 @@ import { describe, expect, it } from "vitest";
 
 import { buildWsTestSendOptions } from "@/features/agent/utils/buildWsTestSendOptions";
 import type { useWsTestTaskComposer } from "@/features/agent/hooks/useWsTestTaskComposer";
+import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
+
+const selectedProjectFixture: UserProjectRecord = {
+  id: "proj-1",
+  ownerUserId: "user-1",
+  deviceId: "mac-1",
+  name: "Launch",
+  folderPath: "~/projects/launch",
+  lastUsedAt: null,
+  createdAt: "2026-09-17T00:00:00.000Z",
+  updatedAt: "2026-09-17T00:00:00.000Z",
+};
 
 const buildComposer = (
   overrides: Partial<ReturnType<typeof useWsTestTaskComposer>> = {},
@@ -43,5 +55,18 @@ describe("buildWsTestSendOptions (official workflow orchestration)", () => {
 
     expect(options.useOfficialWorkflowOrchestration).toBeUndefined();
     expect(options.fieldValues).toBeUndefined();
+  });
+
+  it("includes selected project id alongside orchestration fields", () => {
+    const options = buildWsTestSendOptions(
+      buildComposer({
+        selectedProject: selectedProjectFixture,
+      }),
+      "claude-cli",
+      "mac-1",
+    );
+
+    expect(options.projectId).toBe("proj-1");
+    expect(options.useOfficialWorkflowOrchestration).toBe(true);
   });
 });
