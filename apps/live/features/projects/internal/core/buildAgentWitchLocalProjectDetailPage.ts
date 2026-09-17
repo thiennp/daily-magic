@@ -43,7 +43,7 @@ export const buildAgentWitchLocalProjectDetailPageBody = (input: {
       <h1>${escapeHtml(input.project.name)}</h1>
       <p class="muted mono">${escapeHtml(input.project.projectFolderPath)}</p>
       <div class="actions"><a class="btn btn-secondary" href="/projects/select-folder?projectId=${encodeURIComponent(input.project.id)}">Choose another folder…</a></div>
-      <p class="lede">Linked harness sets are copied into this project&apos;s <code>.cursor</code> folder and recorded in <code>.agent-witch/project.json</code>.</p>
+      <p class="lede">Linked harness sets materialize into this repo&apos;s <code>.cursor</code> tree with a ledger in <code>.agent-witch/materialization.json</code>. Unchecking a set removes only the files that ledger recorded.</p>
       <form method="POST" action="/projects/link-harness" class="stack">
         <input type="hidden" name="projectId" value="${escapeHtml(input.project.id)}" />
         <p class="field-label">Harness sets</p>

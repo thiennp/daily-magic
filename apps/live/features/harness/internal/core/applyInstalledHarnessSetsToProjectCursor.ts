@@ -3,8 +3,19 @@ import path from "node:path";
 
 import type { AgentWitchLocalLayout } from "@agent-witch/install-layout/types";
 
+import { harnessSetComponentId } from "../../../projects/internal/core/agentWitchMaterialization.constants";
+import {
+  buildLedgerEntryForManagedFile,
+  materializeManagedRepoFile,
+} from "../../../projects/internal/core/materializeManagedRepoFile";
+import { readAgentWitchMaterializationLedger } from "../../../projects/internal/core/readAgentWitchMaterializationLedger";
+import { removeHarnessSetMaterializationFromLedger } from "../../../projects/internal/core/removeHarnessSetMaterialization";
+import { resolveAgentWitchMaterializationPaths } from "../../../projects/internal/core/resolveAgentWitchMaterializationPaths";
+import { resolveNamespacedHarnessCursorRelativePath } from "../../../projects/internal/core/resolveNamespacedHarnessCursorRelativePath";
+import { writeAgentWitchMaterializationLedger } from "../../../projects/internal/core/writeAgentWitchMaterializationLedger";
 import expandAgentWitchProjectFolderPath from "../../../projects/internal/core/expandAgentWitchProjectFolderPath";
 import { ensureAgentWitchProjectFolder } from "../../../projects/internal/core/ensureAgentWitchProjectFolder";
+import { readAgentWitchProjectHarnessSetSlugs } from "./readAgentWitchProjectHarnessLink";
 import { resolveSafePathUnderHome } from "./localHarness/pathSafety";
 import { resolveHarnessManifestItemCursorRelativePath } from "./resolveHarnessManifestItemCursorRelativePath";
 
@@ -18,6 +29,9 @@ export type ApplyInstalledHarnessSetsToProjectCursorResult =
   | {
       readonly ok: true;
       readonly writtenFileCount: number;
+      readonly skippedFileCount: number;
+      readonly backedUpFileCount: number;
+      readonly removedLedgerPathCount: number;
       readonly projectFolderPath: string;
       readonly appliedSetSlugs: readonly string[];
     }
@@ -114,10 +128,6 @@ export const applyInstalledHarnessSetsToProjectCursor = (
     ),
   ];
 
-  if (uniqueSlugs.length === 0) {
-    return { ok: false, errorMessage: "Choose at least one harness set." };
-  }
-
   const expandedProjectPath = expandAgentWitchProjectFolderPath(
     input.projectFolderPath,
   );
@@ -146,6 +156,43 @@ export const applyInstalledHarnessSetsToProjectCursor = (
     };
   }
 
+  const ensureResult = ensureAgentWitchProjectFolder({
+    projectFolderPath: safeProjectPath,
+  });
+  const { ledgerFilePath, backupsDirPath } =
+    resolveAgentWitchMaterializationPaths(ensureResult.layout);
+
+  const previousSlugs = readAgentWitchProjectHarnessSetSlugs(safeProjectPath);
+  const removedSlugs = previousSlugs.filter(
+    (slug) => !uniqueSlugs.includes(slug),
+  );
+
+  let ledger = readAgentWitchMaterializationLedger(ledgerFilePath);
+  let removedLedgerPathCount = 0;
+  if (removedSlugs.length > 0) {
+    const removal = removeHarnessSetMaterializationFromLedger({
+      repoRoot: safeProjectPath,
+      setSlugs: removedSlugs,
+      ledger,
+    });
+    ledger = removal.ledger;
+    removedLedgerPathCount = removal.summary.removedPaths.length;
+  }
+
+  if (uniqueSlugs.length === 0) {
+    writeAgentWitchMaterializationLedger(ledgerFilePath, ledger);
+    writeProjectHarnessLinkMeta(ensureResult.layout.metaFilePath, []);
+    return {
+      ok: true,
+      writtenFileCount: 0,
+      skippedFileCount: 0,
+      backedUpFileCount: 0,
+      removedLedgerPathCount,
+      projectFolderPath: safeProjectPath,
+      appliedSetSlugs: [],
+    };
+  }
+
   const manifest = readHarnessManifestRecord(input.layout.harnessManifestPath);
   if (manifest === null) {
     return {
@@ -155,8 +202,9 @@ export const applyInstalledHarnessSetsToProjectCursor = (
   }
 
   const setsRecord = isRecord(manifest.sets) ? manifest.sets : {};
-  const cursorRoot = path.join(safeProjectPath, ".cursor");
   let writtenFileCount = 0;
+  let skippedFileCount = 0;
+  let backedUpFileCount = 0;
 
   for (const slug of uniqueSlugs) {
     const setEntry = setsRecord[slug];
@@ -167,7 +215,11 @@ export const applyInstalledHarnessSetsToProjectCursor = (
       };
     }
 
+    const versionId =
+      typeof setEntry.version === "number" ? String(setEntry.version) : "1";
+    const componentId = harnessSetComponentId(slug);
     const items = Array.isArray(setEntry.items) ? setEntry.items : [];
+
     for (const item of items) {
       if (!isRecord(item)) {
         continue;
@@ -185,6 +237,14 @@ export const applyInstalledHarnessSetsToProjectCursor = (
         continue;
       }
 
+      const namespacedRelative = resolveNamespacedHarnessCursorRelativePath(
+        slug,
+        cursorRelativePath,
+      );
+      const repoRelativeDestination = path.posix
+        .join(".cursor", namespacedRelative)
+        .replaceAll("\\", "/");
+
       const sourcePath = resolveHarnessItemAbsolutePath(
         input.layout,
         slug,
@@ -194,14 +254,59 @@ export const applyInstalledHarnessSetsToProjectCursor = (
         continue;
       }
 
-      const destinationPath = path.join(cursorRoot, cursorRelativePath);
-      fs.mkdirSync(path.dirname(destinationPath), { recursive: true });
-      fs.copyFileSync(sourcePath, destinationPath);
+      const materializeResult = materializeManagedRepoFile({
+        repoRoot: safeProjectPath,
+        backupsDir: backupsDirPath,
+        repoRelativeDestination,
+        sourceAbsolutePath: sourcePath,
+        componentId,
+        versionId,
+        ledger,
+      });
+
+      if (materializeResult.kind === "skipped_unchanged") {
+        skippedFileCount += 1;
+        continue;
+      }
+
+      if (materializeResult.kind === "backed_up_user_file") {
+        backedUpFileCount += 1;
+        writtenFileCount += 1;
+        ledger = {
+          version: 1,
+          entries: {
+            ...ledger.entries,
+            [repoRelativeDestination]: buildLedgerEntryForManagedFile({
+              componentId,
+              versionId,
+              sourceAbsolutePath: sourcePath,
+              backupPath: materializeResult.backupPath,
+            }),
+          },
+        };
+        continue;
+      }
+
       writtenFileCount += 1;
+      ledger = {
+        version: 1,
+        entries: {
+          ...ledger.entries,
+          [repoRelativeDestination]: buildLedgerEntryForManagedFile({
+            componentId,
+            versionId,
+            sourceAbsolutePath: sourcePath,
+          }),
+        },
+      };
     }
   }
 
-  if (writtenFileCount === 0) {
+  if (
+    writtenFileCount === 0 &&
+    skippedFileCount === 0 &&
+    removedLedgerPathCount === 0
+  ) {
     return {
       ok: false,
       errorMessage:
@@ -209,14 +314,15 @@ export const applyInstalledHarnessSetsToProjectCursor = (
     };
   }
 
-  const ensureResult = ensureAgentWitchProjectFolder({
-    projectFolderPath: safeProjectPath,
-  });
+  writeAgentWitchMaterializationLedger(ledgerFilePath, ledger);
   writeProjectHarnessLinkMeta(ensureResult.layout.metaFilePath, uniqueSlugs);
 
   return {
     ok: true,
     writtenFileCount,
+    skippedFileCount,
+    backedUpFileCount,
+    removedLedgerPathCount,
     projectFolderPath: safeProjectPath,
     appliedSetSlugs: uniqueSlugs,
   };

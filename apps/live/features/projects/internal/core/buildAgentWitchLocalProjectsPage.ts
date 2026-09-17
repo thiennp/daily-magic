@@ -49,8 +49,8 @@ export const buildAgentWitchLocalProjectsPageBody = (input: {
 
   return `${flash}${cloudBanner}<section class="card">
       <p class="eyebrow">Repositories</p>
-      <h1>Projects</h1>
-      <p class="lede">Loaded from Agent Witch Console when the Mac client is paired. Choose a folder to update where a project runs on this Mac. Repo-local harness and docs stay under each project’s <code>.agent-witch</code> folder.</p>
+      <h1>Projects on this Mac</h1>
+      <p class="lede">Synced from Agent Witch Console for this paired Mac only. Choose a folder per project, then link harness sets into each repo’s <code>.cursor</code> tree (tracked in <code>.agent-witch/materialization.json</code>).</p>
       ${projectRows}
     </section>`;
 };
