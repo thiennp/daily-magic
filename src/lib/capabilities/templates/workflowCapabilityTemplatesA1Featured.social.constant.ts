@@ -1,5 +1,5 @@
 import buildWorkflowTemplate from "@/lib/capabilities/templates/buildWorkflowTemplate";
-import { FINANCE_SHEET_QA_EXAMPLE_REQUEST } from "@/lib/capabilities/templates/harnessProfiles/workflowA1.financeSheetQa.exampleRequest";
+import { EMAIL_INBOX_REPLY_EXAMPLE_REQUEST } from "@/lib/capabilities/templates/harnessProfiles/workflowA1.emailInboxReply.exampleRequest";
 import type { WorkflowCapabilityTemplate } from "@/lib/capabilities/templates/types/CapabilityTemplate.type";
 
 export const WORKFLOW_CAPABILITY_TEMPLATES_A1_FEATURED_SOCIAL: readonly WorkflowCapabilityTemplate[] =
@@ -9,7 +9,7 @@ export const WORKFLOW_CAPABILITY_TEMPLATES_A1_FEATURED_SOCIAL: readonly Workflow
       "Finance",
       "Finance sheet Q&A",
       "Analyze a finance Google Sheet open in your browser and answer questions with numbers cited from the visible workbook.",
-      FINANCE_SHEET_QA_EXAMPLE_REQUEST,
+      "Read the Google Sheet open in the browser. Answer userQuestion using only figures you can see in the sheet. Cite tab names and cell ranges. Ask one clarifying question if the data is missing or ambiguous.",
       [
         ["sheetUrl", "Google Sheet URL", "text"],
         [
@@ -27,7 +27,7 @@ export const WORKFLOW_CAPABILITY_TEMPLATES_A1_FEATURED_SOCIAL: readonly Workflow
       "Communication",
       "Email inbox reply",
       "Read focused inbox messages, draft grounded replies using files from a folder on your Mac, and send only after you approve each answer.",
-      "Handle the inbox messages described in inboxFocus. Read knowledgeFolderPath for facts, draft one reply per message, show previews, and send only after I approve in the live terminal.",
+      EMAIL_INBOX_REPLY_EXAMPLE_REQUEST,
       [
         [
           "knowledgeFolderPath",

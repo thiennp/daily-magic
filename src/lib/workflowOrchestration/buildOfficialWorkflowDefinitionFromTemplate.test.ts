@@ -49,4 +49,13 @@ describe("official workflow definitions for marketplace templates", () => {
     const sections = parseExampleRequestSections(template.exampleRequest);
     expect(sections.length).toBeGreaterThan(3);
   });
+
+  it("uses custom orchestration for email inbox reply", () => {
+    const definition =
+      findOfficialWorkflowDefinitionByTemplateId("email-inbox-reply");
+    expect(definition?.version).toBeGreaterThanOrEqual(2);
+    expect(
+      definition?.nodes.filter((node) => node.kind === "agent"),
+    ).toHaveLength(3);
+  });
 });

@@ -1,4 +1,5 @@
 import type { PresetHarnessSeed } from "@/lib/capabilities/templates/harnessProfiles/PresetHarnessSeed.type";
+import { EMAIL_INBOX_REPLY_EXAMPLE_REQUEST } from "@/lib/capabilities/templates/harnessProfiles/workflowA1.emailInboxReply.exampleRequest";
 import { EMAIL_INBOX_REPLY_OPERATOR_STEPS } from "@/lib/capabilities/templates/harnessProfiles/workflowA1.emailInboxReply.operatorSteps";
 
 export const EMAIL_INBOX_REPLY_PRESET: PresetHarnessSeed = {
@@ -7,8 +8,7 @@ export const EMAIL_INBOX_REPLY_PRESET: PresetHarnessSeed = {
   category: "Communication",
   description:
     "Read focused inbox messages, draft grounded replies using files from a folder on your Mac, and send only after you approve each answer.",
-  exampleRequest:
-    "Handle the inbox messages described in inboxFocus. Read knowledgeFolderPath for facts, draft one reply per message, show previews, and send only after I approve in the live terminal.",
+  exampleRequest: EMAIL_INBOX_REPLY_EXAMPLE_REQUEST,
   operatorSteps: EMAIL_INBOX_REPLY_OPERATOR_STEPS,
   profile: {
     ruleFocus: [
@@ -47,7 +47,7 @@ export const EMAIL_INBOX_REPLY_PRESET: PresetHarnessSeed = {
         heading: "Send safely",
         bullets: [
           "Show To, Subject, and full reply body for each message before sending.",
-          "Pause with [[AWAITING_INPUT]] until the operator approves that reply.",
+          "Wait for operator approval at the workflow human checkpoint before sending.",
           "After send, append thread id, subject, and date to answeredLogPath when set.",
         ],
       },
