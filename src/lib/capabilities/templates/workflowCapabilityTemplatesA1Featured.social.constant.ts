@@ -1,4 +1,5 @@
 import buildWorkflowTemplate from "@/lib/capabilities/templates/buildWorkflowTemplate";
+import { FACEBOOK_PAGE_POST_EXAMPLE_REQUEST } from "@/lib/capabilities/templates/harnessProfiles/workflowA1.facebookPagePost.exampleRequest";
 import type { WorkflowCapabilityTemplate } from "@/lib/capabilities/templates/types/CapabilityTemplate.type";
 
 export const WORKFLOW_CAPABILITY_TEMPLATES_A1_FEATURED_SOCIAL: readonly WorkflowCapabilityTemplate[] =
@@ -53,7 +54,7 @@ export const WORKFLOW_CAPABILITY_TEMPLATES_A1_FEATURED_SOCIAL: readonly Workflow
       "Social",
       "Facebook Page post",
       "Draft unique Facebook Page copy, generate image or video assets, and publish after you approve — while avoiding repeats from your post history.",
-      "Prepare a Facebook Page post from the workflow inputs. Load post history, avoid duplicate angles and phrasing, generate media if requested, show me a preview, and publish only after I approve in the live terminal.",
+      FACEBOOK_PAGE_POST_EXAMPLE_REQUEST,
       [
         ["pageName", "Facebook Page name", "text"],
         ["topicBrief", "Topic or announcement", "textarea"],

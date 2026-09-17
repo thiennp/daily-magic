@@ -1,4 +1,5 @@
 import type { PresetHarnessSeed } from "@/lib/capabilities/templates/harnessProfiles/PresetHarnessSeed.type";
+import { FACEBOOK_PAGE_POST_EXAMPLE_REQUEST } from "@/lib/capabilities/templates/harnessProfiles/workflowA1.facebookPagePost.exampleRequest";
 import { FACEBOOK_PAGE_POST_OPERATOR_STEPS } from "@/lib/capabilities/templates/harnessProfiles/workflowA1.facebookPagePost.operatorSteps";
 
 export const FACEBOOK_PAGE_POST_PRESET: PresetHarnessSeed = {
@@ -7,8 +8,7 @@ export const FACEBOOK_PAGE_POST_PRESET: PresetHarnessSeed = {
   category: "Social",
   description:
     "Draft unique Facebook Page copy, generate image or video assets, and publish after you approve — while avoiding repeats from your post history.",
-  exampleRequest:
-    "Prepare a Facebook Page post from the workflow inputs. Load post history, avoid duplicate angles and phrasing, generate media if requested, show me a preview, and publish only after I approve in the live terminal.",
+  exampleRequest: FACEBOOK_PAGE_POST_EXAMPLE_REQUEST,
   operatorSteps: FACEBOOK_PAGE_POST_OPERATOR_STEPS,
   profile: {
     ruleFocus: [
@@ -47,7 +47,7 @@ export const FACEBOOK_PAGE_POST_PRESET: PresetHarnessSeed = {
         heading: "Publish safely",
         bullets: [
           "Show caption, hashtags, media summary, and target pageName in the preview.",
-          "Pause with [[AWAITING_INPUT]] until the operator approves publish.",
+          "Wait for the workflow approval checkpoint before publishing.",
           "After publish, append { date, pageName, caption, mediaType, topicBrief } to history.",
         ],
       },
