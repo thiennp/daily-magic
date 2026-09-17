@@ -1,7 +1,20 @@
+export type { default as AgentWitchProjectView } from "../internal/core/agentWitchProjectView.type";
+
+export {
+  fetchAgentWitchProjectsForLocalApp,
+  type FetchAgentWitchProjectsForLocalAppResult,
+} from "../internal/core/fetchAgentWitchProjectsForLocalApp";
+
+export {
+  findAgentWitchProjectById,
+  mapAgentWitchCloudProjectsToViews,
+} from "../internal/core/mapAgentWitchCloudProjectsToViews";
+
 export {
   addAgentWitchLocalProjectToRegistry,
   findAgentWitchLocalProjectById,
   readAgentWitchLocalProjectsRegistry,
+  type AgentWitchLocalProjectRegistryEntry,
 } from "../internal/core/agentWitchLocalProjectsRegistry";
 
 export { default as expandAgentWitchProjectFolderPath } from "../internal/core/expandAgentWitchProjectFolderPath";

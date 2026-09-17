@@ -1,5 +1,5 @@
 import { buildAgentWitchLocalCloudBanner } from "../../../shell/internal/core/buildAgentWitchLocalCloudBanner";
-import type { AgentWitchLocalProjectRegistryEntry } from "./agentWitchLocalProjectsRegistry";
+import type AgentWitchProjectView from "./agentWitchProjectView.type";
 
 const escapeHtml = (value: string): string =>
   value
@@ -9,7 +9,7 @@ const escapeHtml = (value: string): string =>
     .replaceAll('"', "&quot;");
 
 export const buildAgentWitchLocalProjectsPageBody = (input: {
-  readonly projects: readonly AgentWitchLocalProjectRegistryEntry[];
+  readonly projects: readonly AgentWitchProjectView[];
   readonly cloudAppOrigin: string;
   readonly syncMessage?: string | null;
   readonly syncOk?: boolean;
@@ -33,20 +33,13 @@ export const buildAgentWitchLocalProjectsPageBody = (input: {
 
   const projectRows =
     input.projects.length === 0
-      ? `<p class="empty">No repositories synced yet. Add one in Agent Witch Live (task composer), then refresh this page.</p>`
+      ? `<p class="empty">No projects loaded yet. Create one in Agent Witch Console, then refresh this page.</p>`
       : `<ul class="project-list">${input.projects
           .map((project) => {
-            const liveBadge =
-              project.cloudProjectId !== undefined
-                ? `<span class="project-live-badge">Live</span>`
-                : `<span class="project-local-badge">Mac only</span>`;
-            const chooseFolder =
-              project.cloudProjectId !== undefined
-                ? `<a class="btn btn-secondary" href="/projects/select-folder?projectId=${encodeURIComponent(project.cloudProjectId)}">Choose folder…</a>`
-                : "";
+            const chooseFolder = `<a class="btn btn-secondary" href="/projects/select-folder?projectId=${encodeURIComponent(project.id)}">Choose folder…</a>`;
             return `<li class="project-list-item">
                 <a class="project-list-link" href="/project?id=${encodeURIComponent(project.id)}">
-                  <strong>${escapeHtml(project.name)}</strong> ${liveBadge}
+                  <strong>${escapeHtml(project.name)}</strong>
                   <span class="muted mono">${escapeHtml(project.projectFolderPath)}</span>
                 </a>
                 <div class="actions">${chooseFolder}</div>
@@ -57,16 +50,7 @@ export const buildAgentWitchLocalProjectsPageBody = (input: {
   return `${flash}${cloudBanner}<section class="card">
       <p class="eyebrow">Repositories</p>
       <h1>Projects</h1>
-      <p class="lede">Synced from Agent Witch Console when the Mac client is paired. Choose a folder to update where a project runs on this Mac.</p>
-      <details class="local-advanced-block">
-        <summary>Advanced: register a folder on this Mac only</summary>
-        <form method="POST" action="/projects/add" class="stack">
-          <p class="muted">Use when a repo is not in Agent Witch Live yet. Prefer adding repositories in the browser so tasks and this list stay aligned.</p>
-          <div class="actions">
-            <button class="btn btn-secondary" type="submit">Choose folder…</button>
-          </div>
-        </form>
-      </details>
+      <p class="lede">Loaded from Agent Witch Console when the Mac client is paired. Choose a folder to update where a project runs on this Mac. Repo-local harness and docs stay under each project’s <code>.agent-witch</code> folder.</p>
       ${projectRows}
     </section>`;
 };
