@@ -1,9 +1,9 @@
 import {
   buildAgentWitchWakeLocalLogHtml,
   buildAgentWitchWakeLocalPageHeaders,
-  readAgentWitchSelfUpdateLogEntries,
-  readAgentWitchWatchdogLogEntries,
 } from "../../../../../adapters/legacyScripts";
+import { readAgentWitchSelfUpdateLogEntries } from "../../../../operations/features/self-update-api/public-api/infrastructure";
+import { readAgentWitchWatchdogLogEntries } from "../../../../operations/features/watchdog-api/public-api/infrastructure";
 import type { BridgeRequestContext } from "../../../../server/internal/bridgeRequestContext.type";
 
 export const tryHandleLocalDebugPageRoute = (

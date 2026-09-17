@@ -1,7 +1,7 @@
 import {
   buildAgentWitchWatchdogStatus,
   readAgentWitchWatchdogLogEntries,
-} from "../../../../../adapters/legacyScripts";
+} from "../public-api/infrastructure";
 import {
   parseQueryLimit,
   sendJson,

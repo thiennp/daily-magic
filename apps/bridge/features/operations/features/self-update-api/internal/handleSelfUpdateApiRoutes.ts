@@ -1,9 +1,9 @@
+import { parseAgentWitchSelfUpdateRunBody } from "../../../../../adapters/legacyScripts";
 import {
   buildAgentWitchSelfUpdateStatusFromWakeServer,
-  parseAgentWitchSelfUpdateRunBody,
   readAgentWitchSelfUpdateLogEntries,
   runAgentWitchSelfUpdateFromWakeServer,
-} from "../../../../../adapters/legacyScripts";
+} from "../public-api/infrastructure";
 import {
   parseQueryLimit,
   sendJson,
