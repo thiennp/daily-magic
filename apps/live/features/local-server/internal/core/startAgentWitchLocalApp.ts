@@ -65,6 +65,7 @@ import {
   findAgentWitchProjectById,
   pickMacOsFolderDialog,
   resolveAgentWitchCloudApiConfig,
+  syncProjectHarnessBindingsToCloud,
   updateAgentWitchCloudProjectFolder,
 } from "@agent-witch/live-projects";
 import {
@@ -786,7 +787,9 @@ export const startAgentWitchLocalApp = (input: {
         }
         const linkedFlash =
           url.searchParams.get("linked") === "1"
-            ? `Harness linked (${url.searchParams.get("files") ?? "0"} file(s) written).`
+            ? url.searchParams.get("bindingsSynced") === "0"
+              ? `Harness linked locally (${url.searchParams.get("files") ?? "0"} file(s)). Cloud composition sync failed — check WS connection on Status.`
+              : `Harness linked (${url.searchParams.get("files") ?? "0"} file(s) written) and composition synced to cloud.`
             : url.searchParams.get("folderUpdated") === "1"
               ? "Project folder updated and synced with Agent Witch."
               : null;
@@ -852,8 +855,31 @@ export const startAgentWitchLocalApp = (input: {
           return;
         }
 
+        const runConfig = readAgentWitchRunConfig();
+        const cloudConfig =
+          runConfig === null
+            ? null
+            : resolveAgentWitchCloudApiConfig({
+                wsUrl: runConfig.wsUrl,
+                pairingToken: runConfig.pairingToken,
+              });
+        const bindingsSynced =
+          cloudConfig === null
+            ? false
+            : await syncProjectHarnessBindingsToCloud(
+                cloudConfig,
+                project.id,
+                applyResult.appliedSetSlugs,
+              );
+
+        const redirectQuery = new URLSearchParams({
+          linked: "1",
+          files: String(applyResult.writtenFileCount),
+          bindingsSynced: bindingsSynced ? "1" : "0",
+        });
+
         response.writeHead(303, {
-          Location: `/project?id=${encodeURIComponent(project.id)}&linked=1&files=${applyResult.writtenFileCount}`,
+          Location: `/project?id=${encodeURIComponent(project.id)}&${redirectQuery.toString()}`,
         });
         response.end();
         return;

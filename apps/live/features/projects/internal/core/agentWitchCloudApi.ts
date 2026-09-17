@@ -404,6 +404,37 @@ export const fetchAgentWitchCloudProjects = async (
   }
 };
 
+export const syncProjectHarnessBindingsToCloud = async (
+  config: AgentWitchCloudApiConfig,
+  projectId: string,
+  harnessSetSlugs: readonly string[],
+): Promise<boolean> => {
+  try {
+    const response = await fetch(
+      `${config.appOrigin}/api/agent-witch/projects/${encodeURIComponent(projectId)}/components`,
+      {
+        method: "PUT",
+        headers: buildDeviceAuthHeaders(config.pairingToken),
+        body: JSON.stringify({ harnessSetSlugs: [...harnessSetSlugs] }),
+        signal: AbortSignal.timeout(30_000),
+      },
+    );
+
+    if (!response.ok) {
+      return false;
+    }
+
+    const body: unknown = await response.json();
+    return (
+      typeof body === "object" &&
+      body !== null &&
+      (body as { ok?: unknown }).ok === true
+    );
+  } catch {
+    return false;
+  }
+};
+
 export const reportLocalAutomationRunToCloud = async (
   config: AgentWitchCloudApiConfig,
   automationId: string,

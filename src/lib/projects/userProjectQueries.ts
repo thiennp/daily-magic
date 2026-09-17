@@ -14,7 +14,7 @@ export const listUserProjectsForOwner = async (
             SELECT *
             FROM user_projects
             WHERE owner_user_id = ${ownerUserId}
-              AND (device_id IS NULL OR device_id = ${deviceId})
+              AND device_id = ${deviceId}
             ORDER BY last_used_at DESC NULLS LAST, created_at DESC
           `,
         )

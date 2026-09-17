@@ -42,6 +42,7 @@ export {
   postAgentWitchDeviceHeartbeat,
   postAgentWitchMessage,
   reportLocalAutomationRunToCloud,
+  syncProjectHarnessBindingsToCloud,
   resolveAgentWitchCloudApiConfig,
   startLocalSelfDispatchOnCloud,
   type AgentWitchCloudApiConfig,

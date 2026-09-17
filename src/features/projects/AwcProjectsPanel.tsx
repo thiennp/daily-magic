@@ -13,8 +13,13 @@ export default function AwcProjectsPanel() {
   const { localTokenHash } = useLocalMacBrowserContext();
   const { devices, displayNameById } = useMyMacDevices();
   const defaultDeviceId = pickDefaultMacDeviceId(devices) ?? "";
-  const { projects, isLoading, addProject, refreshProjects } =
-    useUserProjects("");
+  const {
+    projects,
+    compositionCountsByProjectId,
+    isLoading,
+    addProject,
+    refreshProjects,
+  } = useUserProjects("");
 
   return (
     <AppPanel padding="compact">
@@ -36,6 +41,13 @@ export default function AwcProjectsPanel() {
             <li key={project.id}>
               <AwcProjectListRow
                 project={project}
+                compositionCounts={
+                  compositionCountsByProjectId[project.id] ?? {
+                    harness: 0,
+                    workflow: 0,
+                    agent: 0,
+                  }
+                }
                 devices={devices}
                 displayNameById={displayNameById}
                 localTokenHash={localTokenHash}

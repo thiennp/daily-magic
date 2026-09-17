@@ -1,5 +1,6 @@
 import { createUserProject } from "@/lib/projects/userProjectMutations";
 import { ensureDefaultUserProject } from "@/lib/projects/ensureDefaultUserProject";
+import listProjectCompositionCountsForOwner from "@/lib/projects/listProjectCompositionCountsForOwner";
 import { listUserProjectsForOwner } from "@/lib/projects/userProjectQueries";
 import { parseCreateUserProjectBody } from "@/lib/projects/parseUserProjectBody";
 import { requireAuth } from "@/lib/auth/requireAuth";
@@ -25,7 +26,15 @@ export async function GET(request: Request): Promise<Response> {
     deviceId && deviceId.length > 0 ? deviceId : null,
   );
 
-  return Response.json({ ok: true, projects });
+  const compositionCountsByProjectId = Object.fromEntries(
+    await listProjectCompositionCountsForOwner(actor.id),
+  );
+
+  return Response.json({
+    ok: true,
+    projects,
+    compositionCountsByProjectId,
+  });
 }
 
 export async function POST(request: Request): Promise<Response> {
@@ -57,11 +66,13 @@ export async function POST(request: Request): Promise<Response> {
 
     return Response.json({ ok: true, project });
   } catch (caught) {
-    const message =
+    const isDuplicateName =
       caught instanceof Error &&
-      caught.message.includes("user_projects_owner_name_idx")
-        ? "You already have a project with that name."
-        : "Could not save project.";
+      (caught.message.includes("user_projects_owner_device_name_idx") ||
+        caught.message.includes("user_projects_owner_name_idx"));
+    const message = isDuplicateName
+      ? "You already have a project with that name."
+      : "Could not save project.";
 
     return Response.json({ ok: false, errorMessage: message }, { status: 409 });
   }

@@ -5,10 +5,13 @@ import Link from "next/link";
 import type { MyMacDevice } from "@/features/agent/hooks/useMyMacDevices";
 import AwcProjectEditOnMacActions from "@/features/projects/AwcProjectEditOnMacActions";
 import useAwcProjectDevicePresentation from "@/features/projects/hooks/useAwcProjectDevicePresentation";
+import formatProjectCompositionCountsLine from "@/lib/projects/formatProjectCompositionCountsLine";
+import type ProjectCompositionCounts from "@/lib/projects/types/ProjectCompositionCounts.type";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
 
 interface AwcProjectListRowProps {
   readonly project: UserProjectRecord;
+  readonly compositionCounts: ProjectCompositionCounts;
   readonly devices: readonly MyMacDevice[];
   readonly displayNameById: ReadonlyMap<string, string>;
   readonly localTokenHash: string | null;
@@ -16,6 +19,7 @@ interface AwcProjectListRowProps {
 
 export default function AwcProjectListRow({
   project,
+  compositionCounts,
   devices,
   displayNameById,
   localTokenHash,
@@ -41,8 +45,7 @@ export default function AwcProjectListRow({
           {presence.text}
         </p>
         <p className="text-xs text-gray-500 dark:text-gray-400">
-          Composition counts sync in a later release — edit on your Mac to
-          manage Harness, Workflows, and Agents.
+          {formatProjectCompositionCountsLine(compositionCounts)}
         </p>
       </div>
       <div className="mt-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-end">

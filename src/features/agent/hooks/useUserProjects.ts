@@ -2,48 +2,32 @@
 
 import { useCallback, useEffect, useState } from "react";
 
+import loadUserProjectsFromApi from "@/features/agent/hooks/loadUserProjectsFromApi";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
-
-const loadUserProjects = async (
-  deviceId: string,
-): Promise<readonly UserProjectRecord[]> => {
-  const query =
-    deviceId.length > 0 ? `?deviceId=${encodeURIComponent(deviceId)}` : "";
-  const response = await fetch(`/api/projects${query}`);
-
-  if (!response.ok) {
-    return [];
-  }
-
-  const data: unknown = await response.json();
-
-  if (
-    typeof data === "object" &&
-    data !== null &&
-    "projects" in data &&
-    Array.isArray((data as { projects: unknown }).projects)
-  ) {
-    return (data as { projects: UserProjectRecord[] }).projects;
-  }
-
-  return [];
-};
+import type ProjectCompositionCounts from "@/lib/projects/types/ProjectCompositionCounts.type";
 
 export function useUserProjects(deviceId: string): {
   readonly projects: readonly UserProjectRecord[];
+  readonly compositionCountsByProjectId: Readonly<
+    Record<string, ProjectCompositionCounts>
+  >;
   readonly isLoading: boolean;
   readonly refreshProjects: () => Promise<void>;
   readonly addProject: (project: UserProjectRecord) => void;
   readonly removeProject: (projectId: string) => void;
 } {
   const [projects, setProjects] = useState<readonly UserProjectRecord[]>([]);
+  const [compositionCountsByProjectId, setCompositionCountsByProjectId] =
+    useState<Readonly<Record<string, ProjectCompositionCounts>>>({});
   const [isLoading, setIsLoading] = useState(true);
 
   const refreshProjects = useCallback(async (): Promise<void> => {
     setIsLoading(true);
 
     try {
-      setProjects(await loadUserProjects(deviceId));
+      const loaded = await loadUserProjectsFromApi(deviceId);
+      setProjects(loaded.projects);
+      setCompositionCountsByProjectId(loaded.compositionCountsByProjectId);
     } finally {
       setIsLoading(false);
     }
@@ -56,10 +40,11 @@ export function useUserProjects(deviceId: string): {
       setIsLoading(true);
 
       try {
-        const nextProjects = await loadUserProjects(deviceId);
+        const loaded = await loadUserProjectsFromApi(deviceId);
 
         if (!controller.signal.aborted) {
-          setProjects(nextProjects);
+          setProjects(loaded.projects);
+          setCompositionCountsByProjectId(loaded.compositionCountsByProjectId);
         }
       } finally {
         if (!controller.signal.aborted) {
@@ -97,5 +82,12 @@ export function useUserProjects(deviceId: string): {
     );
   }, []);
 
-  return { projects, isLoading, refreshProjects, addProject, removeProject };
+  return {
+    projects,
+    compositionCountsByProjectId,
+    isLoading,
+    refreshProjects,
+    addProject,
+    removeProject,
+  };
 }

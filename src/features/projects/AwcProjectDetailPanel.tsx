@@ -5,7 +5,9 @@ import Link from "next/link";
 import useMyMacDevices from "@/features/agent/hooks/useMyMacDevices";
 import AwcProjectEditOnMacActions from "@/features/projects/AwcProjectEditOnMacActions";
 import AwcProjectReadOnlyCompositionSections from "@/features/projects/AwcProjectReadOnlyCompositionSections";
+import useAwcProjectComposition from "@/features/projects/hooks/useAwcProjectComposition";
 import useAwcProjectDevicePresentation from "@/features/projects/hooks/useAwcProjectDevicePresentation";
+import formatProjectCompositionCountsLine from "@/lib/projects/formatProjectCompositionCountsLine";
 import useLocalMacBrowserContext from "@/features/home/hooks/useLocalMacBrowserContext";
 import AppPanel from "@/components/surfaces/AppPanel";
 import {
@@ -30,6 +32,11 @@ export default function AwcProjectDetailPanel({
       displayNameById,
       localTokenHash,
     });
+  const {
+    counts,
+    items,
+    isLoading: isCompositionLoading,
+  } = useAwcProjectComposition(project.id);
 
   return (
     <AppPanel padding="compact">
@@ -63,9 +70,19 @@ export default function AwcProjectDetailPanel({
             {presence.text}
           </dd>
         </div>
+        <div>
+          <dt className="text-xs font-medium text-gray-500 dark:text-gray-400">
+            Composition
+          </dt>
+          <dd className="mt-0.5 text-gray-800 dark:text-white/90">
+            {formatProjectCompositionCountsLine(counts)}
+          </dd>
+        </div>
       </dl>
       <AwcProjectReadOnlyCompositionSections
         deviceDisplayName={deviceDisplayName}
+        items={items}
+        isLoading={isCompositionLoading}
       />
       <div className="mt-6">
         <AwcProjectEditOnMacActions editCta={editCta} />
