@@ -1,4 +1,5 @@
 import buildWorkflowTemplate from "@/lib/capabilities/templates/buildWorkflowTemplate";
+import { EMAIL_INBOX_REPLY_EXAMPLE_REQUEST } from "@/lib/capabilities/templates/harnessProfiles/workflowA1.emailInboxReply.exampleRequest";
 import type { WorkflowCapabilityTemplate } from "@/lib/capabilities/templates/types/CapabilityTemplate.type";
 
 export const WORKFLOW_CAPABILITY_TEMPLATES_A1_FEATURED_SOCIAL: readonly WorkflowCapabilityTemplate[] =
@@ -26,7 +27,7 @@ export const WORKFLOW_CAPABILITY_TEMPLATES_A1_FEATURED_SOCIAL: readonly Workflow
       "Communication",
       "Email inbox reply",
       "Read focused inbox messages, draft grounded replies using files from a folder on your Mac, and send only after you approve each answer.",
-      "Handle the inbox messages described in inboxFocus. Read knowledgeFolderPath for facts, draft one reply per message, show previews, and send only after I approve in the live terminal.",
+      EMAIL_INBOX_REPLY_EXAMPLE_REQUEST,
       [
         [
           "knowledgeFolderPath",
