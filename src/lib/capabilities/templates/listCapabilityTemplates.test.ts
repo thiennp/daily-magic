@@ -56,16 +56,16 @@ describe("capability templates catalog", () => {
     ).toHaveLength(3);
     expect(
       dropship?.harness.items.filter((item) => item.kind === "operator"),
-    ).toHaveLength(3);
+    ).toHaveLength(4);
     expect(
       tiktok?.harness.items.filter((item) => item.kind === "operator"),
-    ).toHaveLength(3);
+    ).toHaveLength(4);
     expect(
       facebook?.harness.items.filter((item) => item.kind === "operator"),
     ).toHaveLength(3);
     expect(
       email?.harness.items.filter((item) => item.kind === "operator"),
-    ).toHaveLength(3);
+    ).toHaveLength(4);
     expect(
       finance?.harness.items.filter((item) => item.kind === "operator"),
     ).toHaveLength(4);

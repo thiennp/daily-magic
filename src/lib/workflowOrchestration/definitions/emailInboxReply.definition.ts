@@ -86,6 +86,15 @@ export const OFFICIAL_WORKFLOW_DEFINITION: OfficialWorkflowDefinition = {
       "Send approved replies and update the answered log",
       SEND_AFTER_APPROVAL,
     ),
+    buildOfficialWorkflowHumanNode(
+      3,
+      "Confirm sends and answered log",
+      [
+        "1. Spot-check the mailbox for messages the agent reported as sent or skipped.",
+        "2. Open answeredLogPath when set and confirm new rows look correct.",
+        "3. Reply done when this batch is closed.",
+      ].join("\n"),
+    ),
   ],
 };
 

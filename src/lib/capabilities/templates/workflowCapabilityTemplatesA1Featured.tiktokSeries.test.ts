@@ -5,7 +5,7 @@ import { CapabilityType } from "@/lib/capabilities/CapabilityType.constant";
 import { mapHarnessItemsToOperatorSteps } from "@/lib/harness/partitionHarnessItemsByAudience";
 
 describe("tiktok-series-episode workflow", () => {
-  it("is registered with series fields and three operator checkpoints", () => {
+  it("is registered with series fields and four operator checkpoints", () => {
     const template = findCapabilityTemplateById("tiktok-series-episode");
 
     expect(template?.type).toBe(CapabilityType.WORKFLOW);
@@ -32,6 +32,7 @@ describe("tiktok-series-episode workflow", () => {
       "Confirm the series brief and past episodes",
       "Approve the script before filming",
       "Film and publish on your side",
+      "Confirm series history update",
     ]);
 
     expect(template.exampleRequest).toContain(
