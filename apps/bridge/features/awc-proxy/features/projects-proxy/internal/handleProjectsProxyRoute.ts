@@ -1,4 +1,4 @@
-import { ensureAgentWitchProjectFolderFromWakeServer } from "../../../../../adapters/legacyScripts";
+import { ensureAgentWitchProjectFolderFromWakeServer } from "../public-api/infrastructure";
 import { sendJson } from "../../../../server/features/http-server/internal/bridgeHttp.util";
 import type { BridgeRequestContext } from "../../../../server/internal/bridgeRequestContext.type";
 

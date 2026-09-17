@@ -1,4 +1,4 @@
-import { installHarnessFromWakeServer } from "../../../../../adapters/legacyScripts";
+import { installHarnessFromWakeServer } from "../public-api/infrastructure";
 import { sendJson } from "../../../../server/features/http-server/internal/bridgeHttp.util";
 import type { BridgeRequestContext } from "../../../../server/internal/bridgeRequestContext.type";
 

@@ -94,21 +94,21 @@
       "slug": "harness-proxy",
       "title": "Harness install and borrow",
       "parentSlug": "awc-proxy",
-      "fsaStatus": "in-progress",
+      "fsaStatus": "fsa",
       "featurePath": "apps/bridge/features/awc-proxy/features/harness-proxy"
     },
     {
       "slug": "projects-proxy",
       "title": "Project folder ensure",
       "parentSlug": "awc-proxy",
-      "fsaStatus": "in-progress",
+      "fsaStatus": "fsa",
       "featurePath": "apps/bridge/features/awc-proxy/features/projects-proxy"
     },
     {
       "slug": "automations-proxy",
       "title": "Local automations sync and run",
       "parentSlug": "awc-proxy",
-      "fsaStatus": "in-progress",
+      "fsaStatus": "fsa",
       "featurePath": "apps/bridge/features/awc-proxy/features/automations-proxy"
     }
   ]
