@@ -47,7 +47,9 @@ describe("preset marketplace listings", () => {
     expect(listing.harnessSetSlug).toBe(template!.harness.slug);
     expect(borrow.isOfficialPreset).toBe(true);
     expect(borrow.templateId).toBe("weekly-team-status");
-    expect(borrow.harnessItemPaths).toHaveLength(5);
+    expect(borrow.harnessItemPaths).toHaveLength(
+      template!.harness.items.length,
+    );
     expect(borrow.manifest.sets).toBeDefined();
   });
 });
