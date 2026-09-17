@@ -2,6 +2,7 @@ import type OfficialWorkflowDefinition from "@/lib/workflowOrchestration/types/O
 
 import { OFFICIAL_WORKFLOW_DEFINITION as meetingNotesActions } from "@/lib/workflowOrchestration/definitions/meetingNotesActions.definition";
 import { OFFICIAL_WORKFLOW_DEFINITION as researchBrief } from "@/lib/workflowOrchestration/definitions/researchBrief.definition";
+import { OFFICIAL_WORKFLOW_DEFINITION as slackThreadSummary } from "@/lib/workflowOrchestration/definitions/slackThreadSummary.definition";
 import { OFFICIAL_WORKFLOW_DEFINITION as teamRepoStandup } from "@/lib/workflowOrchestration/definitions/teamRepoStandup.definition";
 import { OFFICIAL_WORKFLOW_DEFINITION as vibeCodingAppFeature } from "@/lib/workflowOrchestration/definitions/vibeCodingAppFeature.definition";
 
@@ -10,6 +11,7 @@ const CUSTOM_OFFICIAL_WORKFLOW_DEFINITIONS: Readonly<
 > = {
   "meeting-notes-actions": meetingNotesActions,
   "research-brief": researchBrief,
+  "slack-thread-summary": slackThreadSummary,
   "team-repo-standup": teamRepoStandup,
   "vibe-coding-app-feature": vibeCodingAppFeature,
 };
