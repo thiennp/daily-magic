@@ -66,6 +66,20 @@ const run = async (): Promise<void> => {
     return;
   }
 
+  if (subcommand === "bridge") {
+    const { runAgentWitchBridgeCli } =
+      await import("../apps/install/entry/runAgentWitchBridgeCli");
+    await runAgentWitchBridgeCli();
+    return;
+  }
+
+  if (subcommand === "local-app") {
+    const { runAgentWitchExternalLiveCli } =
+      await import("../apps/install/entry/runAgentWitchExternalLiveCli");
+    runAgentWitchExternalLiveCli();
+    return;
+  }
+
   const { startAgentWitchClient } = await import("./agent-witch");
   await startAgentWitchClient();
 };

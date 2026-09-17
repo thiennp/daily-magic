@@ -24,7 +24,7 @@ fi
 
 cd "\${INSTALL_DIR}"
 export AGENT_WITCH_HOME="\${INSTALL_DIR}"
-exec "\${NODE_BIN}" "\${APP_BUNDLE}" wake
+exec "\${NODE_BIN}" "\${APP_BUNDLE}" bridge
 WAKE_EOF
 chmod +x "\${APP_DIR}/${AGENT_WITCH_COMMAND_DIR_NAME}/wake.sh"
 ${buildAgentWitchInstallScriptWakeServerPlist()}

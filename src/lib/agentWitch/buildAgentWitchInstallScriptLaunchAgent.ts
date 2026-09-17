@@ -1,3 +1,5 @@
+import { buildAgentWitchInstallScriptProcessHostLaunchAgentEnvEntries } from "@agent-witch/install-process-host";
+
 import { AGENT_WITCH_LAUNCH_AGENT_PATH_VALUE } from "@/lib/agentWitch/buildAgentWitchInstallScriptWriterPath";
 
 export const buildAgentWitchInstallScriptLaunchAgent = (): string => `
@@ -27,6 +29,7 @@ if [[ "\$(uname -s)" == "Darwin" ]]; then
     <string>\${INSTALL_DIR}</string>
     <key>AGENT_WITCH_WAKE_PORT</key>
     <string>\${AGENT_WITCH_WAKE_PORT}</string>
+${buildAgentWitchInstallScriptProcessHostLaunchAgentEnvEntries()}
   </dict>
   <key>RunAtLoad</key>
   <true/>

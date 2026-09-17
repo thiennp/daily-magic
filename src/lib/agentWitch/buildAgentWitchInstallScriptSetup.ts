@@ -5,6 +5,11 @@ import type { AgentWitchInstallScriptPreset } from "@/lib/agentWitch/AgentWitchI
 import { buildAgentWitchInstallScriptClientBlock } from "@/lib/agentWitch/buildAgentWitchInstallScriptClientBlock";
 import { buildAgentWitchInstallScriptConfigBlock } from "@/lib/agentWitch/buildAgentWitchInstallScriptConfigBlock";
 import { buildAgentWitchInstallScriptMacOsConsoleUserGuard } from "@/lib/agentWitch/buildAgentWitchInstallScriptMacOsConsoleUserGuard";
+import {
+  buildAgentWitchInstallScriptProcessHostEnvCapture,
+  buildAgentWitchInstallScriptTruthyEnvFunction,
+} from "@agent-witch/install-process-host";
+
 import { buildAgentWitchInstallScriptRetireAuxiliaryLaunchAgents } from "@/lib/agentWitch/buildAgentWitchInstallScriptRetireAuxiliaryLaunchAgents";
 import { buildAgentWitchInstallScriptPresetBlock } from "@/lib/agentWitch/buildAgentWitchInstallScriptPresetBlock";
 import { buildAgentWitchInstallScriptProgress } from "@/lib/agentWitch/buildAgentWitchInstallScriptProgress";
@@ -36,6 +41,7 @@ ${buildAgentWitchInstallScriptPresetBlock(input)}
 ${updateExistingInstall ? "AGENT_WITCH_SKIP_OPEN_HOME=1\n" : ""}
 INSTALL_DIR="\${HOME}/${appHome.installDirName}"
 AGENT_WITCH_HOME="\${INSTALL_DIR}"
+${buildAgentWitchInstallScriptProcessHostEnvCapture()}
 LAUNCH_AGENT_PREFIX="${appHome.launchAgentPrefix}"
 CURL_BIN="\$(command -v curl)"
 
@@ -91,6 +97,7 @@ fi
 
 PLIST_PATH="\${HOME}/Library/LaunchAgents/\${LAUNCH_AGENT_LABEL}.plist"
 ${buildAgentWitchInstallScriptMacOsConsoleUserGuard()}
+${buildAgentWitchInstallScriptTruthyEnvFunction()}
 ${buildAgentWitchInstallScriptRetireAuxiliaryLaunchAgents()}
 ${buildAgentWitchInstallScriptProgress({ updateExistingInstall })}
 ${updateExistingInstall ? buildAgentWitchInstallScriptUpdateVersionSummary(input.appOrigin) : ""}${updateExistingInstall ? "agent_witch_print_update_version_summary\n" : ""}agent_witch_install_begin

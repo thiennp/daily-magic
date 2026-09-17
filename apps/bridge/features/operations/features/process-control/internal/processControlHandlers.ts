@@ -1,10 +1,13 @@
 import {
-  ensureAgentWitchCoupledWakeClientHealth,
   kickstartAgentWitchLaunchAgent,
   listAgentWitchLaunchTargets,
-  reviveAgentWitchWebSocket,
   spawnAgentWitchClient,
-} from "../../../../../adapters/macLifecycle";
+} from "@agent-witch/install-macos-launch";
+
+import {
+  ensureAgentWitchCoupledWakeClientHealth,
+  reviveAgentWitchWebSocket,
+} from "../../../../../adapters/macAgentLifecycleBindings";
 import type {
   AgentWitchWakeKickResult,
   AgentWitchWakeResponse,

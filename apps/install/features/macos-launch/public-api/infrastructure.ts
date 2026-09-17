@@ -5,9 +5,15 @@ export {
   AGENT_WITCH_AUTOMATION_SCHEDULER_LAUNCH_AGENT_LABEL,
   AGENT_WITCH_UPDATER_INTERVAL_SEC,
   AGENT_WITCH_UPDATER_LAUNCH_AGENT_LABEL,
+  AGENT_WITCH_LIVE_LAUNCH_AGENT_LABEL,
   AGENT_WITCH_WAKE_LAUNCH_AGENT_LABEL,
   AGENT_WITCH_WATCHDOG_LAUNCH_AGENT_LABEL,
 } from "../internal/core/agentWitchServiceLaunchAgentLabels";
+
+export {
+  spawnAgentWitchClient,
+  type SpawnAgentWitchClientResult,
+} from "../internal/core/spawnAgentWitchClient";
 
 export { bootoutAgentWitchLaunchAgentSync } from "../internal/core/bootoutAgentWitchLaunchAgent";
 

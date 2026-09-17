@@ -4,7 +4,7 @@
  * Phase 1 (today): one OS process may still host hub client + AWB wake HTTP + AWL UI;
  * env flags declare **external** deployable tracks without starting in-process copies.
  *
- * Phase 2 (later): separate OS processes / LaunchAgents per deployable.
+ * Phase 2: install script + LaunchAgents start external AWB/AWL when installer env sets the flags above.
  */
 
 /** Env: `AGENT_WITCH_EXTERNAL_BRIDGE=1` skips in-process AWB (wake server). */

@@ -7,6 +7,7 @@ describe("collectAgentWitchLaunchAgentLabels", () => {
     const labels = collectAgentWitchLaunchAgentLabels("/tmp/.agent-witch");
 
     expect(labels).toContain("com.agent-witch-wake");
+    expect(labels).toContain("com.agent-witch-live");
     expect(labels).toContain("com.agent-witch-watchdog");
     expect(labels).toContain("com.agent-witch-updater");
     expect(labels).toContain("com.agent-witch-automation-scheduler");

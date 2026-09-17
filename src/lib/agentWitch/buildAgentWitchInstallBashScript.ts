@@ -5,6 +5,7 @@ import { buildAgentWitchInstallScriptSetup } from "@/lib/agentWitch/buildAgentWi
 import { buildAgentWitchInstallScriptUpdater } from "@/lib/agentWitch/buildAgentWitchInstallScriptUpdater";
 import { buildAgentWitchInstallScriptVersionStamp } from "@/lib/agentWitch/buildAgentWitchInstallScriptVersionStamp";
 import { buildAgentWitchInstallScriptWatchdog } from "@/lib/agentWitch/buildAgentWitchInstallScriptWatchdog";
+import { buildAgentWitchInstallScriptLiveServer } from "@/lib/agentWitch/buildAgentWitchInstallScriptLiveServer";
 import { buildAgentWitchInstallScriptWakeServer } from "@/lib/agentWitch/buildAgentWitchInstallScriptWakeServer";
 import type { AgentWitchInstallBashScriptInput } from "@/lib/agentWitch/AgentWitchInstallBashScriptInput.type";
 import type { AgentWitchInstallScriptPreset } from "@/lib/agentWitch/AgentWitchInstallScriptPreset.type";
@@ -31,7 +32,9 @@ export const buildAgentWitchInstallBashScript = (
     {
       installDirName: appHome.installDirName,
     },
-  )}${buildAgentWitchInstallScriptWatchdog({
+  )}${buildAgentWitchInstallScriptLiveServer({
+    installDirName: appHome.installDirName,
+  })}${buildAgentWitchInstallScriptWatchdog({
     installDirName: appHome.installDirName,
   })}${buildAgentWitchInstallScriptFinish({ appOrigin: input.appOrigin })}`;
 };

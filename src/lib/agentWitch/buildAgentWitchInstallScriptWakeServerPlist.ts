@@ -1,3 +1,50 @@
+import { AGENT_WITCH_LAUNCH_AGENT_PATH_VALUE } from "@/lib/agentWitch/buildAgentWitchInstallScriptWriterPath";
+
 export const buildAgentWitchInstallScriptWakeServerPlist = (): string => `
-agent_witch_retire_auxiliary_launch_agents
+if [[ "\$(uname -s)" == "Darwin" ]]; then
+  if agent_witch_is_truthy_env "\${AGENT_WITCH_INSTALL_EXTERNAL_BRIDGE}"; then
+    cat > "\${WAKE_PLIST_PATH}" <<EOF
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>\${WAKE_LAUNCH_AGENT_LABEL}</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>\${APP_DIR}/command/wake.sh</string>
+  </array>
+  <key>WorkingDirectory</key>
+  <string>\${INSTALL_DIR}</string>
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>HOME</key>
+    <string>\${HOME}</string>
+    <key>PATH</key>
+    <string>${AGENT_WITCH_LAUNCH_AGENT_PATH_VALUE}</string>
+    <key>AGENT_WITCH_HOME</key>
+    <string>\${INSTALL_DIR}</string>
+    <key>AGENT_WITCH_WAKE_PORT</key>
+    <string>\${AGENT_WITCH_WAKE_PORT}</string>
+    <key>AGENT_WITCH_EXTERNAL_BRIDGE</key>
+    <string>1</string>
+  </dict>
+  <key>RunAtLoad</key>
+  <true/>
+  <key>KeepAlive</key>
+  <true/>
+  <key>StandardOutPath</key>
+  <string>\${INSTALL_DIR}/agent-witch-wake.log</string>
+  <key>StandardErrorPath</key>
+  <string>\${INSTALL_DIR}/agent-witch-wake.error.log</string>
+</dict>
+</plist>
+EOF
+
+    register_agent_witch_launch_agent "\${WAKE_LAUNCH_AGENT_LABEL}" "\${WAKE_PLIST_PATH}" || true
+  else
+    launchctl bootout "gui/\$(id -u)/\${WAKE_LAUNCH_AGENT_LABEL}" 2>/dev/null || true
+    rm -f "\${WAKE_PLIST_PATH}"
+  fi
+fi
 `;

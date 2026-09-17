@@ -18,6 +18,7 @@ export const collectAgentWitchLaunchAgentLabels = (
   const prefix = resolveAgentWitchLaunchAgentPrefix(installDir);
   const labels = new Set<string>([
     `${prefix}-wake`,
+    `${prefix}-live`,
     `${prefix}-watchdog`,
     `${prefix}-updater`,
     `${prefix}-automation-scheduler`,
