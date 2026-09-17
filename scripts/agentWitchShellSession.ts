@@ -238,6 +238,7 @@ export const spawnAgentCommandInPty = async (input: {
   readonly command: string;
   readonly args: readonly string[];
   readonly cwd: string;
+  readonly env?: NodeJS.ProcessEnv;
   readonly send: SendMessage;
   readonly requestId?: string;
   readonly onData: (chunk: string) => void;
@@ -256,7 +257,7 @@ export const spawnAgentCommandInPty = async (input: {
       cols: 120,
       rows: 32,
       cwd: input.cwd,
-      env: process.env as Record<string, string>,
+      env: (input.env ?? process.env) as Record<string, string>,
     });
   } catch (error) {
     // node-pty can throw (e.g. posix_spawnp failed). Fall back to pipe spawn.

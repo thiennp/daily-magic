@@ -1,6 +1,7 @@
 "use client";
 
 import SendTaskComposerActiveProjectBadge from "@/features/agent/SendTaskComposerActiveProjectBadge";
+import SendTaskRunScopedComponentsPanel from "@/features/agent/SendTaskRunScopedComponentsPanel";
 import SendTaskComposerStepTrail from "@/features/agent/SendTaskComposerStepTrail";
 import WsTestComposerFormStep from "@/features/agent/WsTestComposerFormStep";
 import type { SendTaskComposerStepTrailViewItem } from "@/features/agent/types/SendTaskComposerStepTrailViewItem.type";
@@ -50,6 +51,13 @@ export default function WsTestComposerFormStepSection({
           isLoading={composer.isProjectsLoading}
         />
       </div>
+      {composer.selectedProject !== null ? (
+        <SendTaskRunScopedComponentsPanel
+          projectId={composer.selectedProject.id}
+          selectedComponentIds={composer.runScopedComponentIds}
+          onToggleComponentId={composer.toggleRunScopedComponentId}
+        />
+      ) : null}
       <WsTestComposerFormStep
         composer={composer}
         writerAgent={writerAgent}

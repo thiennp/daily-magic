@@ -548,6 +548,7 @@ export const runWriterTask = (
   projectFolderPath?: string,
   reportKey?: string,
   userTranscriptPrompt?: string,
+  processEnv?: NodeJS.ProcessEnv,
 ): void => {
   const resolvedTranscriptPrompt = resolveUserTranscriptPrompt(
     prompt,
@@ -593,7 +594,7 @@ export const runWriterTask = (
     const child = spawn(invocation.command, [...invocation.args], {
       cwd: config.workspace,
       stdio: ["ignore", "pipe", "pipe"],
-      env: process.env,
+      env: processEnv ?? process.env,
     });
     attachChildHandlers(
       config,
@@ -658,6 +659,7 @@ export const runWriterTask = (
     command: invocation.command,
     args: invocation.args,
     cwd: config.workspace,
+    processEnv,
     originalPrompt: prompt,
     writerAgent,
     onInputRequired: (parsed) => {

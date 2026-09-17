@@ -4,11 +4,13 @@ import type { createWsTestSelectionHandlers } from "@/features/agent/utils/creat
 import type { useComposerProjectSelection } from "@/features/agent/hooks/useComposerProjectSelection";
 import type { useLibraryPlaybookSelection } from "@/features/agent/hooks/useLibraryPlaybookSelection";
 import type { useTeamDispatchSelection } from "@/features/dispatch/hooks/useTeamDispatchSelection";
+import type useRunScopedComponentIds from "@/features/agent/hooks/useRunScopedComponentIds";
 import type { useWsTestComposerWorkflowState } from "@/features/agent/hooks/useWsTestComposerWorkflowState";
 
 export const buildWsTestTaskComposerResult = (input: {
   readonly workflow: ReturnType<typeof useWsTestComposerWorkflowState>;
   readonly projectSelection: ReturnType<typeof useComposerProjectSelection>;
+  readonly runScopedSelection: ReturnType<typeof useRunScopedComponentIds>;
   readonly selection: ReturnType<typeof useTeamDispatchSelection>;
   readonly selectionHandlers: ReturnType<typeof createWsTestSelectionHandlers>;
   readonly librarySelection: ReturnType<typeof useLibraryPlaybookSelection>;
@@ -60,5 +62,11 @@ export const buildWsTestTaskComposerResult = (input: {
   resetComposer: () => {
     input.workflow.setPrompt("");
     input.clearWorkflowFields();
+    input.runScopedSelection.clearRunScopedComponentIds();
   },
+  runScopedComponentIds: input.runScopedSelection.runScopedComponentIds,
+  toggleRunScopedComponentId:
+    input.runScopedSelection.toggleRunScopedComponentId,
+  clearRunScopedComponentIds:
+    input.runScopedSelection.clearRunScopedComponentIds,
 });

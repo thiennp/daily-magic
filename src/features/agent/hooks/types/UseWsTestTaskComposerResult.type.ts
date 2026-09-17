@@ -63,4 +63,7 @@ export interface UseWsTestTaskComposerResult {
   readonly renameMacDevice: ReturnType<
     typeof useMacDeviceSelection
   >["renameDevice"];
+  readonly runScopedComponentIds: readonly string[];
+  readonly toggleRunScopedComponentId: (componentId: string) => void;
+  readonly clearRunScopedComponentIds: () => void;
 }

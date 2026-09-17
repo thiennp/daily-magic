@@ -16,6 +16,7 @@ export async function dispatchClaudePrompt(input: {
   readonly sourceRunId?: string;
   readonly projectFolderPath?: string;
   readonly projectId?: string;
+  readonly runScopedComponentIds?: readonly string[];
   readonly fieldValues?: Readonly<Record<string, string>>;
   readonly useOfficialWorkflowOrchestration?: boolean;
   readonly onResponse: (response: string) => void;
@@ -60,6 +61,7 @@ export async function dispatchClaudePrompt(input: {
       sourceRunId: input.sourceRunId,
       projectFolderPath: input.projectFolderPath,
       projectId: input.projectId,
+      runScopedComponentIds: input.runScopedComponentIds,
       onDispatchedRunId: input.onDispatchedRunId,
     });
     input.onResponse(raw);

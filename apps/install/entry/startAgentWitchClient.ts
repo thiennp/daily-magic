@@ -28,6 +28,8 @@ import {
   parseProjectCompositionSnapshotWire,
   removeRunCompositionOverlay,
   resolveRunProjectFolderPath,
+  readAgentWitchRunConfig,
+  resolveWriterSpawnEnv,
   verifyProjectCompositionSnapshotBlobs,
   waitForAgentWitchClientConfigs as waitForConfigs,
 } from "@agent-witch/install-runtime-client";
@@ -64,8 +66,10 @@ import {
   startNewWriterTranscriptSession,
 } from "@agent-witch/live-memory";
 import {
+  distillProjectKnowledgeLesson,
   ensureAgentWitchProjectFolder,
   shouldCaptureRunOutputForProjectKnowledge,
+  syncProjectKnowledgeCandidateToCloud,
 } from "@agent-witch/live-projects";
 import { AGENT_WITCH_DEFAULT_ORIGIN } from "@agent-witch/shared/network";
 
@@ -126,6 +130,7 @@ const shellSessionIdByRunId = new Map<string, string>();
 const projectFolderPathByRunId = new Map<string, string>();
 const projectIdByRunId = new Map<string, string>();
 const promptByRunId = new Map<string, string>();
+const runScopedOverlayByRunId = new Map<string, boolean>();
 
 interface AgentWitchOutboundSocket {
   readonly readyState: number;
@@ -431,6 +436,10 @@ const dispatchWriterTask = async (
     );
   }
 
+  const hasRunScopedOverlay =
+    agentRunId !== undefined &&
+    runScopedOverlayByRunId.get(agentRunId) === true;
+
   runWriterTask(
     config,
     writerAgent,
@@ -445,6 +454,7 @@ const dispatchWriterTask = async (
     resolvedProjectFolderPath,
     resolvedReportKey,
     prompt,
+    resolveWriterSpawnEnv(config.layout, agentRunId, hasRunScopedOverlay),
   );
 
   if (needsWarmup && agentRunId !== undefined) {
@@ -1122,6 +1132,13 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
               });
               return;
             }
+
+            runScopedOverlayByRunId.set(
+              agentRunId,
+              compositionSnapshot.entries.some(
+                (entry) => entry.scope === "run",
+              ),
+            );
           }
         }
 
@@ -1452,8 +1469,30 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
         });
       }
 
+      if (
+        shouldCapture &&
+        projectId !== undefined &&
+        projectId.trim().length > 0
+      ) {
+        const runConfig = readAgentWitchRunConfig();
+        const cloudConfig =
+          runConfig === null
+            ? null
+            : resolveAgentWitchCloudApiConfig({
+                wsUrl: runConfig.wsUrl,
+                pairingToken: runConfig.pairingToken,
+              });
+        if (cloudConfig !== null) {
+          void syncProjectKnowledgeCandidateToCloud(cloudConfig, projectId, {
+            ...(agentRunId !== undefined ? { sourceRunId: agentRunId } : {}),
+            lesson: distillProjectKnowledgeLesson({ prompt, output }),
+          });
+        }
+      }
+
       if (agentRunId !== undefined) {
         removeRunCompositionOverlay(config.layout, agentRunId);
+        runScopedOverlayByRunId.delete(agentRunId);
         projectIdByRunId.delete(agentRunId);
       }
     }

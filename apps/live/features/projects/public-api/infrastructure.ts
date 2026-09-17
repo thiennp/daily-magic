@@ -25,6 +25,10 @@ export { listLinkedHarnessSetSlugsFromProjectFolder } from "../internal/core/lis
 
 export { default as shouldCaptureRunOutputForProjectKnowledge } from "../internal/core/knowledge/shouldCaptureRunOutputForProjectKnowledge";
 
+export { default as distillProjectKnowledgeLesson } from "../internal/core/knowledge/distillProjectKnowledgeLesson";
+
+export { default as syncProjectKnowledgeCandidateToCloud } from "../internal/core/knowledge/syncProjectKnowledgeCandidateToCloud";
+
 export { pickMacOsFolderDialog } from "../internal/core/pickMacOsFolderDialog";
 
 export { syncAgentWitchLocalProjectsFromCloud } from "../internal/core/syncAgentWitchLocalProjectsFromCloud";

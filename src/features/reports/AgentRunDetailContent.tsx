@@ -3,6 +3,7 @@ import AgentRunAgainButton from "@/features/reports/AgentRunAgainButton";
 import AgentRunContinueButton from "@/features/reports/AgentRunContinueButton";
 import AgentRunLiveTerminal from "@/features/reports/AgentRunLiveTerminal";
 import AgentRunResultOutput from "@/features/reports/AgentRunResultOutput";
+import AgentRunKeepInProjectButton from "@/features/reports/AgentRunKeepInProjectButton";
 import AgentRunStatusBadge from "@/features/reports/AgentRunStatusBadge";
 import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
 import type EnrichedAgentRunRecord from "@/lib/dispatch/types/EnrichedAgentRunRecord.type";
@@ -64,6 +65,7 @@ export default function AgentRunDetailContent({
       {run.resultOutput ? (
         <AgentRunResultOutput run={run} resultOutput={run.resultOutput} />
       ) : null}
+      <AgentRunKeepInProjectButton runId={run.id} projectId={run.projectId} />
       {run.denialReason ? (
         <p className="mt-4 text-sm text-rose-600 dark:text-rose-400">
           {run.denialReason}

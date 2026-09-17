@@ -17,6 +17,8 @@ export { default as materializeRunScopedCompositionOverlay } from "../internal/c
 
 export { default as removeRunCompositionOverlay } from "../internal/core/composition/removeRunCompositionOverlay";
 
+export { default as resolveWriterSpawnEnv } from "../internal/core/composition/resolveWriterSpawnEnv";
+
 export { resolveWriterExecutionBackend } from "../internal/core/writerApi/resolveWriterExecutionBackend";
 
 export {

@@ -22,6 +22,7 @@ export const tryRunWriterTaskInPty = async (input: {
   readonly command: string;
   readonly args: readonly string[];
   readonly cwd: string;
+  readonly processEnv?: NodeJS.ProcessEnv;
   readonly originalPrompt: string;
   readonly writerAgent: HarnessWriterAgentId;
   readonly onInputRequired: (parsed: {
@@ -65,6 +66,7 @@ export const tryRunWriterTaskInPty = async (input: {
     command: input.command,
     args: input.args,
     cwd: input.cwd,
+    env: input.processEnv,
     send: (message) => {
       input.sendMessage(input.socket, message);
     },

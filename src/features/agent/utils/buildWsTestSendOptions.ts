@@ -28,6 +28,7 @@ export const buildWsTestSendOptions = (
   readonly projectId?: string;
   readonly fieldValues?: Readonly<Record<string, string>>;
   readonly useOfficialWorkflowOrchestration?: boolean;
+  readonly runScopedComponentIds?: readonly string[];
 } => {
   const orchestrationContext =
     buildOfficialWorkflowOrchestrationContext(composer);
@@ -62,5 +63,8 @@ export const buildWsTestSendOptions = (
             ? { capabilityId: composer.libraryCapabilityId }
             : {}),
         }),
+    ...((composer.runScopedComponentIds ?? []).length > 0
+      ? { runScopedComponentIds: [...(composer.runScopedComponentIds ?? [])] }
+      : {}),
   };
 };
