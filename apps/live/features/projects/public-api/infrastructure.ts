@@ -21,6 +21,8 @@ export { default as expandAgentWitchProjectFolderPath } from "../internal/core/e
 
 export { ensureAgentWitchProjectFolder } from "../internal/core/ensureAgentWitchProjectFolder";
 
+export { default as shouldCaptureRunOutputForProjectKnowledge } from "../internal/core/knowledge/shouldCaptureRunOutputForProjectKnowledge";
+
 export { pickMacOsFolderDialog } from "../internal/core/pickMacOsFolderDialog";
 
 export { syncAgentWitchLocalProjectsFromCloud } from "../internal/core/syncAgentWitchLocalProjectsFromCloud";

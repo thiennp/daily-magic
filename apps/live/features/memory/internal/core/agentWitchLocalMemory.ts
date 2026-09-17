@@ -1,8 +1,8 @@
 import fs from "node:fs";
 import path from "node:path";
 
-import { AGENT_WITCH_PROJECT_MEMORY_RUNS_FILE_NAME } from "../../../projects/internal/core/agentWitchProjectStorage.constants";
-import { resolveAgentWitchProjectStorageLayout } from "../../../projects/internal/core/resolveAgentWitchProjectStorageLayout";
+import redactTextForProjectKnowledge from "../../../projects/internal/core/knowledge/redactTextForProjectKnowledge";
+import resolveAgentWitchProjectKnowledgePaths from "../../../projects/internal/core/knowledge/resolveAgentWitchProjectKnowledgePaths";
 import type { AgentWitchLocalLayout } from "@agent-witch/install-layout/types";
 
 export type AgentWitchMemoryEntry = {
@@ -16,17 +16,31 @@ export type AgentWitchMemoryEntry = {
 const resolveMemoryRunsPath = (
   layout: AgentWitchLocalLayout,
   projectFolderPath: string,
-): string =>
-  path.join(
-    resolveAgentWitchProjectStorageLayout(projectFolderPath).memoryDirPath,
-    AGENT_WITCH_PROJECT_MEMORY_RUNS_FILE_NAME,
-  );
+  projectId?: string,
+): string | null => {
+  const knowledgePaths = resolveAgentWitchProjectKnowledgePaths({
+    layout,
+    projectFolderPath,
+    projectId,
+  });
+
+  return knowledgePaths?.memoryRunsFilePath ?? null;
+};
 
 export const readAgentWitchMemoryEntries = (
   layout: AgentWitchLocalLayout,
   projectFolderPath: string,
+  projectId?: string,
 ): readonly AgentWitchMemoryEntry[] => {
-  const memoryPath = resolveMemoryRunsPath(layout, projectFolderPath);
+  const memoryPath = resolveMemoryRunsPath(
+    layout,
+    projectFolderPath,
+    projectId,
+  );
+
+  if (memoryPath === null) {
+    return [];
+  }
 
   if (!fs.existsSync(memoryPath)) {
     return [];
@@ -49,14 +63,27 @@ export const readAgentWitchMemoryEntries = (
 export const appendAgentWitchMemoryEntry = (input: {
   readonly layout: AgentWitchLocalLayout;
   readonly projectFolderPath: string;
+  readonly projectId?: string;
   readonly entry: AgentWitchMemoryEntry;
 }): void => {
   const memoryPath = resolveMemoryRunsPath(
     input.layout,
     input.projectFolderPath,
+    input.projectId,
   );
+
+  if (memoryPath === null) {
+    return;
+  }
+
+  const entry = {
+    ...input.entry,
+    prompt: redactTextForProjectKnowledge(input.entry.prompt),
+    output: redactTextForProjectKnowledge(input.entry.output),
+  };
+
   fs.mkdirSync(path.dirname(memoryPath), { recursive: true });
-  fs.appendFileSync(memoryPath, `${JSON.stringify(input.entry)}\n`, "utf8");
+  fs.appendFileSync(memoryPath, `${JSON.stringify(entry)}\n`, "utf8");
 };
 
 export const formatMemoryContextForPrompt = (

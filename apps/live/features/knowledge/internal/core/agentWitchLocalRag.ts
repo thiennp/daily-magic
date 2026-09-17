@@ -1,11 +1,11 @@
 import fs from "node:fs";
 import path from "node:path";
 
-import { AGENT_WITCH_PROJECT_RAG_CHUNKS_FILE_NAME } from "../../../projects/internal/core/agentWitchProjectStorage.constants";
-import { resolveAgentWitchProjectStorageLayout } from "../../../projects/internal/core/resolveAgentWitchProjectStorageLayout";
+import redactTextForProjectKnowledge from "../../../projects/internal/core/knowledge/redactTextForProjectKnowledge";
+import resolveAgentWitchProjectKnowledgePaths from "../../../projects/internal/core/knowledge/resolveAgentWitchProjectKnowledgePaths";
+import trimRagChunksToCeiling from "../../../projects/internal/core/knowledge/trimRagChunksToCeiling";
 import type { AgentWitchLocalLayout } from "@agent-witch/install-layout/types";
 
-const RAG_DIR_NAME = "rag";
 const DEFAULT_OLLAMA_URL = "http://127.0.0.1:11434";
 const DEFAULT_EMBED_MODEL = "nomic-embed-text";
 
@@ -17,22 +17,18 @@ export type AgentWitchRagChunk = {
   readonly source?: string;
 };
 
-const resolveRagDir = (layout: AgentWitchLocalLayout): string =>
-  path.join(layout.installDir, RAG_DIR_NAME);
-
 const resolveRagChunksPath = (
   layout: AgentWitchLocalLayout,
   projectFolderPath?: string,
-): string => {
-  if (projectFolderPath !== undefined && projectFolderPath.trim().length > 0) {
-    return resolveAgentWitchProjectStorageLayout(projectFolderPath)
-      .ragChunksFilePath;
-  }
+  projectId?: string,
+): string | null => {
+  const knowledgePaths = resolveAgentWitchProjectKnowledgePaths({
+    layout,
+    projectFolderPath,
+    projectId,
+  });
 
-  return path.join(
-    resolveRagDir(layout),
-    AGENT_WITCH_PROJECT_RAG_CHUNKS_FILE_NAME,
-  );
+  return knowledgePaths?.ragChunksFilePath ?? null;
 };
 
 const cosineSimilarity = (a: number[], b: number[]): number => {
@@ -101,9 +97,10 @@ export const embedTextWithOllama = async (
 export const readAgentWitchRagChunks = (
   layout: AgentWitchLocalLayout,
   projectFolderPath?: string,
+  projectId?: string,
 ): AgentWitchRagChunk[] => {
-  const chunksPath = resolveRagChunksPath(layout, projectFolderPath);
-  if (!fs.existsSync(chunksPath)) {
+  const chunksPath = resolveRagChunksPath(layout, projectFolderPath, projectId);
+  if (chunksPath === null || !fs.existsSync(chunksPath)) {
     return [];
   }
   const lines = fs.readFileSync(chunksPath, "utf8").split("\n").filter(Boolean);
@@ -123,15 +120,23 @@ export const indexAgentWitchRagText = async (input: {
   readonly text: string;
   readonly source?: string;
   readonly projectFolderPath?: string;
+  readonly projectId?: string;
 }): Promise<number> => {
-  const parts = chunkTextForRag(input.text);
+  const redacted = redactTextForProjectKnowledge(input.text);
+  const parts = chunkTextForRag(redacted);
   if (parts.length === 0) {
     return 0;
   }
   const chunksPath = resolveRagChunksPath(
     input.layout,
     input.projectFolderPath,
+    input.projectId,
   );
+
+  if (chunksPath === null) {
+    return 0;
+  }
+
   fs.mkdirSync(path.dirname(chunksPath), { recursive: true });
   let indexed = 0;
   for (const part of parts) {
@@ -149,6 +154,9 @@ export const indexAgentWitchRagText = async (input: {
     fs.appendFileSync(chunksPath, `${JSON.stringify(chunk)}\n`, "utf8");
     indexed += 1;
   }
+
+  trimRagChunksToCeiling(chunksPath);
+
   return indexed;
 };
 
@@ -158,13 +166,18 @@ export const queryAgentWitchRag = async (input: {
   readonly limit?: number;
   readonly minScore?: number;
   readonly projectFolderPath?: string;
+  readonly projectId?: string;
 }): Promise<AgentWitchRagChunk[]> => {
   const embedding = await embedTextWithOllama(input.query);
   if (embedding === null) {
     return [];
   }
   const minScore = input.minScore ?? 0;
-  const chunks = readAgentWitchRagChunks(input.layout, input.projectFolderPath);
+  const chunks = readAgentWitchRagChunks(
+    input.layout,
+    input.projectFolderPath,
+    input.projectId,
+  );
   const scored = chunks
     .map((chunk) => ({
       chunk,
