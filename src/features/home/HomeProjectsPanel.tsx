@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 
 import AppPanel from "@/components/surfaces/AppPanel";
@@ -7,7 +8,7 @@ import {
   APP_SURFACE_BODY_TEXT_CLASS,
   APP_SURFACE_SECTION_TITLE_CLASS,
 } from "@/components/surfaces/appSurfaceStyles.constant";
-import SendTaskComposerProjectPickerStep from "@/features/agent/SendTaskComposerProjectPickerStep";
+import HomeProjectListRow from "@/features/home/HomeProjectListRow";
 import { useUserProjects } from "@/features/agent/hooks/useUserProjects";
 import buildAgentComposerHref from "@/lib/library/buildAgentComposerHref";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
@@ -15,8 +16,7 @@ import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type"
 export default function HomeProjectsPanel() {
   const router = useRouter();
   const pathname = usePathname();
-  const { projects, isLoading, addProject, removeProject } =
-    useUserProjects("");
+  const { projects, isLoading } = useUserProjects("");
 
   const openProjectInComposer = (project: UserProjectRecord): void => {
     router.push(
@@ -33,20 +33,42 @@ export default function HomeProjectsPanel() {
     <AppPanel padding="compact">
       <h2 className={APP_SURFACE_SECTION_TITLE_CLASS}>Your projects</h2>
       <p className={`mt-1 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
-        Pick a project for New task. Set or change folders in Agent Witch Live
-        on the Mac that stores each repo.
+        Pick a project for New task, or manage folders on the{" "}
+        <Link
+          href="/projects"
+          className="font-medium text-brand-600 hover:text-brand-700 dark:text-brand-400"
+        >
+          Projects
+        </Link>{" "}
+        page.
       </p>
-      <div className="mt-4">
-        <SendTaskComposerProjectPickerStep
-          projects={projects}
-          isLoading={isLoading}
-          deviceId=""
-          showHeader={false}
-          onSelect={openProjectInComposer}
-          onProjectCreated={addProject}
-          onProjectDeleted={removeProject}
-        />
-      </div>
+      {isLoading ? (
+        <p className="mt-4 text-sm text-gray-500 dark:text-gray-400">
+          Loading projects…
+        </p>
+      ) : projects.length === 0 ? (
+        <p className="mt-4 text-sm text-gray-500 dark:text-gray-400">
+          No projects yet.{" "}
+          <Link
+            href="/projects"
+            className="font-medium text-brand-600 hover:text-brand-700 dark:text-brand-400"
+          >
+            Create one on Projects
+          </Link>
+          .
+        </p>
+      ) : (
+        <ul className="mt-4 space-y-2">
+          {projects.map((project) => (
+            <li key={project.id}>
+              <HomeProjectListRow
+                project={project}
+                onEdit={openProjectInComposer}
+              />
+            </li>
+          ))}
+        </ul>
+      )}
     </AppPanel>
   );
 }

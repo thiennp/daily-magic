@@ -476,6 +476,18 @@ Document every production bug or UX regression here. Each entry must link to a t
 
 ---
 
+## HOME-049 — Home projects row showed folder path and delete
+
+**Symptom:** Home **Your projects** listed folder paths, delete controls, and inline create form noise.
+
+**Root cause:** Reused `SendTaskComposerProjectPickerStep` meant for the task composer wizard.
+
+**Fix:** `HomeProjectListRow` shows name + **Edit** only; create/manage on `/projects`.
+
+**Regression test:** `HomeProjectListRow.test.ts`, `HomeProjectsPanel.test.ts` (HOME-049).
+
+---
+
 ## Adding issues
 
-Use the next ID (`HOME-041`, …). Include symptom, root cause, fix paths, and test file.
+Use the next ID (`HOME-050`, …). Include symptom, root cause, fix paths, and test file.
