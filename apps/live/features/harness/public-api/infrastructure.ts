@@ -6,8 +6,6 @@ export { parseHarnessInstallBundle } from "../internal/core/parseHarnessInstallB
 
 export { planHarnessInstallBundle } from "../internal/core/planHarnessInstallBundle";
 
-export { readAgentWitchProjectHarnessSetSlugs } from "../internal/core/readAgentWitchProjectHarnessLink";
-
 export { readInstalledLocalHarnessSnapshot } from "../internal/core/readInstalledLocalHarnessSnapshot";
 
 export { buildDefaultLocalHarnessScanFolder } from "../internal/core/localHarness/defaultLocalHarnessScanRoots";

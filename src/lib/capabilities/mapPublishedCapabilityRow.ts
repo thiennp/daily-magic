@@ -4,6 +4,7 @@ import { isCapabilityVisibility } from "@/lib/capabilities/CapabilityVisibility.
 import type PublishedCapabilityRecord from "@/lib/capabilities/types/PublishedCapabilityRecord.type";
 import { isDispatchPolicy } from "@/lib/dispatch/DispatchPolicy.constant";
 import { parseWorkflowFieldDefinitions } from "@/lib/workflows/parseWorkflowFieldDefinitions";
+import resolveHarnessSetSlugFromCapabilityRow from "@/lib/capabilities/resolveHarnessSetSlugFromCapabilityRow";
 import { parseOperatorStepDefinitions } from "@/lib/workflows/parseOperatorStepDefinitions";
 
 export default function mapPublishedCapabilityRow(
@@ -30,7 +31,7 @@ export default function mapPublishedCapabilityRow(
       dispatchOverride && isDispatchPolicy(dispatchOverride)
         ? dispatchOverride
         : null,
-    harnessSetSlug: row.harness_set_slug ? String(row.harness_set_slug) : null,
+    harnessSetSlug: resolveHarnessSetSlugFromCapabilityRow(row),
     currentVersionId: row.current_version_id
       ? String(row.current_version_id)
       : null,

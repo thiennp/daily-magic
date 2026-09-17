@@ -16,7 +16,7 @@ import { writeAgentWitchMaterializationLedger } from "../../../projects/internal
 import expandAgentWitchProjectFolderPath from "../../../projects/internal/core/expandAgentWitchProjectFolderPath";
 import { ensureAgentWitchProjectFolder } from "../../../projects/internal/core/ensureAgentWitchProjectFolder";
 import { resolveHarnessItemSourceAbsolutePath } from "./componentStore/resolveHarnessItemSourceAbsolutePath";
-import { readAgentWitchProjectHarnessSetSlugs } from "./readAgentWitchProjectHarnessLink";
+import { listLinkedHarnessSetSlugsFromProjectFolder } from "../../../projects/internal/core/listLinkedHarnessSetSlugsFromProjectFolder";
 import { resolveSafePathUnderHome } from "./localHarness/pathSafety";
 import { resolveHarnessManifestItemCursorRelativePath } from "./resolveHarnessManifestItemCursorRelativePath";
 
@@ -61,31 +61,6 @@ const readHarnessManifestRecord = (
   }
 
   return null;
-};
-
-const writeProjectHarnessLinkMeta = (
-  metaFilePath: string,
-  appliedSetSlugs: readonly string[],
-): void => {
-  let existing: Record<string, unknown> = {};
-  if (fs.existsSync(metaFilePath)) {
-    try {
-      const parsed: unknown = JSON.parse(fs.readFileSync(metaFilePath, "utf8"));
-      if (isRecord(parsed)) {
-        existing = parsed;
-      }
-    } catch {
-      existing = {};
-    }
-  }
-
-  const merged = {
-    ...existing,
-    harnessSetSlugs: [...appliedSetSlugs],
-    harnessAppliedAt: new Date().toISOString(),
-  };
-
-  fs.writeFileSync(metaFilePath, `${JSON.stringify(merged, null, 2)}\n`);
 };
 
 export const applyInstalledHarnessSetsToProjectCursor = (
@@ -133,7 +108,8 @@ export const applyInstalledHarnessSetsToProjectCursor = (
   const { ledgerFilePath, backupsDirPath } =
     resolveAgentWitchMaterializationPaths(ensureResult.layout);
 
-  const previousSlugs = readAgentWitchProjectHarnessSetSlugs(safeProjectPath);
+  const previousSlugs =
+    listLinkedHarnessSetSlugsFromProjectFolder(safeProjectPath);
   const removedSlugs = previousSlugs.filter(
     (slug) => !uniqueSlugs.includes(slug),
   );
@@ -152,7 +128,6 @@ export const applyInstalledHarnessSetsToProjectCursor = (
 
   if (uniqueSlugs.length === 0) {
     writeAgentWitchMaterializationLedger(ledgerFilePath, ledger);
-    writeProjectHarnessLinkMeta(ensureResult.layout.metaFilePath, []);
     return {
       ok: true,
       writtenFileCount: 0,
@@ -289,7 +264,6 @@ export const applyInstalledHarnessSetsToProjectCursor = (
   }
 
   writeAgentWitchMaterializationLedger(ledgerFilePath, ledger);
-  writeProjectHarnessLinkMeta(ensureResult.layout.metaFilePath, uniqueSlugs);
 
   return {
     ok: true,

@@ -91,7 +91,7 @@ const createHarnessLayout = (): {
 };
 
 describe("applyInstalledHarnessSetsToProjectCursor", () => {
-  it("copies harness files into project .cursor and records link meta", () => {
+  it("copies harness files into project .cursor and records materialization ledger", () => {
     const { layout, projectDir } = createHarnessLayout();
 
     const result = applyInstalledHarnessSetsToProjectCursor({
@@ -125,11 +125,13 @@ describe("applyInstalledHarnessSetsToProjectCursor", () => {
     const gitignorePath = path.join(projectDir, ".agent-witch", ".gitignore");
     expect(fs.readFileSync(gitignorePath, "utf8")).toContain("project.json");
 
-    const metaPath = path.join(projectDir, ".agent-witch", "project.json");
-    const meta = JSON.parse(fs.readFileSync(metaPath, "utf8")) as {
-      harnessSetSlugs?: string[];
+    const ledger = JSON.parse(fs.readFileSync(ledgerPath, "utf8")) as {
+      entries?: Record<string, { componentId?: string }>;
     };
-    expect(meta.harnessSetSlugs).toEqual(["demo"]);
+    const componentIds = Object.values(ledger.entries ?? {}).map(
+      (entry) => entry.componentId,
+    );
+    expect(componentIds.some((id) => id === "harness-set:demo")).toBe(true);
   });
 
   it("P1: re-applying unchanged harness is a no-op write", () => {

@@ -46,9 +46,13 @@ const backfillOnePublishedCapabilityToComponents = async (
     `,
   );
 
+  const capabilityHarnessSetSlug = row.harness_set_slug
+    ? String(row.harness_set_slug)
+    : null;
+
   const versionRows = asRowArray(
     await sql`
-      SELECT id, version_number, changelog, harness_set_slug, published_at
+      SELECT id, version_number, changelog, published_at
       FROM capability_versions
       WHERE capability_id = ${capabilityId}
     `,
@@ -75,11 +79,7 @@ const backfillOnePublishedCapabilityToComponents = async (
             ${versionNumber},
             ${String(versionNumber)},
             ${String(versionRow.changelog ?? "")},
-            ${
-              versionRow.harness_set_slug
-                ? String(versionRow.harness_set_slug)
-                : null
-            },
+            ${capabilityHarnessSetSlug},
             ${versionRow.published_at ?? new Date().toISOString()}
           )
           ON CONFLICT (component_id, version_number) DO NOTHING

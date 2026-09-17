@@ -4,6 +4,7 @@ import { CapabilityStatus } from "@/lib/capabilities/CapabilityStatus.constant";
 import { CapabilityType } from "@/lib/capabilities/CapabilityType.constant";
 import type { CapabilityTypeValue } from "@/lib/capabilities/CapabilityType.constant";
 import { DEFAULT_CAPABILITY_VISIBILITY } from "@/lib/capabilities/CapabilityVisibility.constant";
+import ensureAgentComponentForPublishedCapability from "@/lib/capabilities/ensureAgentComponentForPublishedCapability";
 import mapPublishedCapabilityRow from "@/lib/capabilities/mapPublishedCapabilityRow";
 import type PublishedCapabilityRecord from "@/lib/capabilities/types/PublishedCapabilityRecord.type";
 import type WorkflowFieldDefinition from "@/lib/workflows/types/WorkflowFieldDefinition.type";
@@ -43,8 +44,7 @@ export async function createPublishedCapability(
         visibility,
         status,
         workflow_fields,
-        operator_steps,
-        harness_set_slug
+        operator_steps
       )
       VALUES (
         ${capabilityId},
@@ -57,12 +57,28 @@ export async function createPublishedCapability(
         ${DEFAULT_CAPABILITY_VISIBILITY},
         ${CapabilityStatus.DRAFT},
         ${workflowFieldsJson}::jsonb,
-        ${operatorStepsJson}::jsonb,
-        ${input.harnessSetSlug ?? null}
+        ${operatorStepsJson}::jsonb
       )
       RETURNING *
     `,
   );
 
-  return mapPublishedCapabilityRow(rows[0]);
+  await ensureAgentComponentForPublishedCapability({
+    capabilityId,
+    ownerUserId: input.ownerUserId,
+    name: input.name,
+    description: input.description ?? "",
+    visibility: DEFAULT_CAPABILITY_VISIBILITY,
+    capabilityType,
+    harnessSetSlug: input.harnessSetSlug ?? null,
+  });
+
+  const capability = mapPublishedCapabilityRow(rows[0]);
+  if (input.harnessSetSlug?.trim()) {
+    return {
+      ...capability,
+      harnessSetSlug: input.harnessSetSlug.trim(),
+    };
+  }
+  return capability;
 }

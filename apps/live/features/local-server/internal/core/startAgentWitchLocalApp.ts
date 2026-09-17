@@ -52,7 +52,6 @@ import {
   buildDefaultLocalHarnessScanFolder,
   clearLocalHarnessRevealCache,
   mergeLocalHarnessRevealWithCursorDir,
-  readAgentWitchProjectHarnessSetSlugs,
   readInstalledLocalHarnessSnapshot,
   readLocalHarnessRevealCache,
   streamLocalHarnessReveal,
@@ -63,6 +62,7 @@ import {
   ensureAgentWitchProjectFolder,
   fetchAgentWitchProjectsForLocalApp,
   findAgentWitchProjectById,
+  listLinkedHarnessSetSlugsFromProjectFolder,
   pickMacOsFolderDialog,
   resolveAgentWitchCloudApiConfig,
   syncProjectHarnessBindingsToCloud,
@@ -802,7 +802,7 @@ export const startAgentWitchLocalApp = (input: {
             body: buildAgentWitchLocalProjectDetailPageBody({
               project,
               installed: readInstalledLocalHarnessSnapshot(input.layout),
-              linkedSetSlugs: readAgentWitchProjectHarnessSetSlugs(
+              linkedSetSlugs: listLinkedHarnessSetSlugsFromProjectFolder(
                 project.projectFolderPath,
               ),
               flashMessage: linkedFlash,
@@ -845,7 +845,7 @@ export const startAgentWitchLocalApp = (input: {
               body: buildAgentWitchLocalProjectDetailPageBody({
                 project,
                 installed: readInstalledLocalHarnessSnapshot(input.layout),
-                linkedSetSlugs: readAgentWitchProjectHarnessSetSlugs(
+                linkedSetSlugs: listLinkedHarnessSetSlugsFromProjectFolder(
                   project.projectFolderPath,
                 ),
                 flashError: applyResult.errorMessage,

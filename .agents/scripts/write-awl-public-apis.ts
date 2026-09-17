@@ -162,8 +162,6 @@ export { parseHarnessSubmitFormBody } from "../internal/core/buildAgentWitchLoca
 
 export { parseHarnessInstallBundle } from "../internal/core/parseHarnessInstallBundle";
 
-export { readAgentWitchProjectHarnessSetSlugs } from "../internal/core/readAgentWitchProjectHarnessLink";
-
 export { readInstalledLocalHarnessSnapshot } from "../internal/core/readInstalledLocalHarnessSnapshot";
 
 export { buildDefaultLocalHarnessScanFolder } from "../internal/core/localHarness/defaultLocalHarnessScanRoots";

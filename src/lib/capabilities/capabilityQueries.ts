@@ -8,25 +8,7 @@ import type PublishedCapabilityRecord from "@/lib/capabilities/types/PublishedCa
 import type { PublishedCapabilitySummary } from "@/lib/capabilities/types/PublishedCapabilityRecord.type";
 import { asRowArray, getSql } from "@/lib/db";
 
-export async function getPublishedCapabilityById(
-  capabilityId: string,
-): Promise<PublishedCapabilityRecord | null> {
-  const sql = getSql();
-  const rows = asRowArray(
-    await sql`
-      SELECT *
-      FROM published_capabilities
-      WHERE id = ${capabilityId}
-      LIMIT 1
-    `,
-  );
-
-  if (rows.length === 0) {
-    return null;
-  }
-
-  return mapPublishedCapabilityRow(rows[0]);
-}
+export { getPublishedCapabilityById } from "@/lib/capabilities/getPublishedCapabilityById";
 
 export async function listPublishedCapabilitiesForOwner(
   ownerUserId: string,

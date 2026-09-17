@@ -18,7 +18,15 @@ const backfillPublishedCapabilitiesToComponents =
           name,
           description,
           visibility,
-          harness_set_slug
+          (
+            SELECT cv.harness_set_slug
+            FROM components c
+            INNER JOIN component_versions cv ON cv.component_id = c.id
+            WHERE c.published_capability_id = published_capabilities.id
+              AND cv.harness_set_slug IS NOT NULL
+            ORDER BY cv.version_number DESC
+            LIMIT 1
+          ) AS harness_set_slug
         FROM published_capabilities
       `,
     );

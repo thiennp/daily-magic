@@ -1,7 +1,9 @@
 import { randomUUID } from "node:crypto";
 
 import { CapabilityStatus } from "@/lib/capabilities/CapabilityStatus.constant";
-import mapPublishedCapabilityRow from "@/lib/capabilities/mapPublishedCapabilityRow";
+import { getPublishedCapabilityById } from "@/lib/capabilities/getPublishedCapabilityById";
+import insertComponentVersionForCapabilityPublish from "@/lib/capabilities/insertComponentVersionForCapabilityPublish";
+import resolveHarnessSetSlugForCapabilityPublish from "@/lib/capabilities/resolveHarnessSetSlugForCapabilityPublish";
 import type PublishedCapabilityRecord from "@/lib/capabilities/types/PublishedCapabilityRecord.type";
 import { asRowArray, getSql } from "@/lib/db";
 
@@ -37,38 +39,42 @@ export async function publishCapabilityVersion(
       ? versionRows[0].max_version + 1
       : 1;
   const versionId = randomUUID();
-  const harnessSetSlug = existing[0].harness_set_slug
-    ? String(existing[0].harness_set_slug)
-    : null;
+  const capabilityName = String(existing[0].name);
+  const harnessSetSlug = await resolveHarnessSetSlugForCapabilityPublish(
+    capabilityId,
+    capabilityName,
+  );
 
   await sql`
     INSERT INTO capability_versions (
       id,
       capability_id,
       version_number,
-      changelog,
-      harness_set_slug
+      changelog
     )
     VALUES (
       ${versionId},
       ${capabilityId},
       ${nextVersion},
-      ${changelog},
-      ${harnessSetSlug}
+      ${changelog}
     )
   `;
 
-  const updated = asRowArray(
-    await sql`
-      UPDATE published_capabilities
-      SET
-        status = ${CapabilityStatus.PUBLISHED},
-        current_version_id = ${versionId},
-        updated_at = NOW()
-      WHERE id = ${capabilityId}
-      RETURNING *
-    `,
-  );
+  await insertComponentVersionForCapabilityPublish({
+    capabilityId,
+    versionNumber: nextVersion,
+    changelog,
+    harnessSetSlug,
+  });
 
-  return mapPublishedCapabilityRow(updated[0]);
+  await sql`
+    UPDATE published_capabilities
+    SET
+      status = ${CapabilityStatus.PUBLISHED},
+      current_version_id = ${versionId},
+      updated_at = NOW()
+    WHERE id = ${capabilityId}
+  `;
+
+  return getPublishedCapabilityById(capabilityId);
 }

@@ -205,7 +205,6 @@ CREATE TABLE IF NOT EXISTS published_capabilities (
   dispatch_policy_override TEXT CHECK (
     dispatch_policy_override IN ('open', 'approval')
   ),
-  harness_set_slug TEXT,
   current_version_id TEXT,
   workflow_fields JSONB NOT NULL DEFAULT '[]'::jsonb,
   operator_steps JSONB NOT NULL DEFAULT '[]'::jsonb,
@@ -278,7 +277,6 @@ CREATE TABLE IF NOT EXISTS capability_versions (
   capability_id TEXT NOT NULL REFERENCES published_capabilities(id) ON DELETE CASCADE,
   version_number INTEGER NOT NULL,
   changelog TEXT NOT NULL DEFAULT '',
-  harness_set_slug TEXT,
   published_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   UNIQUE (capability_id, version_number)
 );

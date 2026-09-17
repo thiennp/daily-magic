@@ -1,75 +1,16 @@
 import { getUserById } from "@/lib/auth/userRepository";
 import { canViewPublishedCapability } from "@/lib/capabilities/canViewPublishedCapability";
-import { CapabilityStatus } from "@/lib/capabilities/CapabilityStatus.constant";
-import { CapabilityVisibility } from "@/lib/capabilities/CapabilityVisibility.constant";
 import mapPublishedCapabilityRow from "@/lib/capabilities/mapPublishedCapabilityRow";
-import { canViewHarnessSet } from "@/lib/harness/harnessSetSharingQueries";
-import { getHarnessCatalogSnapshot } from "@/lib/harness/harnessCatalogMutations";
-import summarizeHarnessManifestSet from "@/lib/harness/summarizeHarnessManifestSet";
+import { queryPublishedCapabilitiesWithHarnessForMarketplace } from "@/lib/harness/queryPublishedCapabilitiesWithHarnessForMarketplace";
+import { enrichHarnessMarketplaceListingFromCatalog } from "@/lib/harness/enrichHarnessMarketplaceListingFromCatalog";
 import type HarnessMarketplaceListing from "@/lib/harness/types/HarnessMarketplaceListing.type";
-import { asRowArray, getSql } from "@/lib/db";
-
-const enrichListingFromCatalog = async (
-  viewerUserId: string,
-  ownerUserId: string,
-  harnessSetSlug: string,
-): Promise<{
-  readonly harnessSetName: string | null;
-  readonly harnessItemCount: number | null;
-  readonly hostname: string | null;
-}> => {
-  const snapshot = await getHarnessCatalogSnapshot(ownerUserId);
-
-  if (snapshot === null) {
-    return {
-      harnessSetName: null,
-      harnessItemCount: null,
-      hostname: null,
-    };
-  }
-
-  const canViewSet = await canViewHarnessSet(
-    viewerUserId,
-    ownerUserId,
-    harnessSetSlug,
-  );
-
-  if (!canViewSet) {
-    return {
-      harnessSetName: null,
-      harnessItemCount: null,
-      hostname: null,
-    };
-  }
-
-  const summary = summarizeHarnessManifestSet(
-    snapshot.manifestJson,
-    harnessSetSlug,
-  );
-
-  return {
-    harnessSetName: summary.setName,
-    harnessItemCount: summary.itemCount,
-    hostname: snapshot.hostname,
-  };
-};
 
 export async function listHarnessMarketplaceForViewer(
   viewerUserId: string,
   onlineOwnerIds: ReadonlySet<string>,
 ): Promise<readonly HarnessMarketplaceListing[]> {
-  const sql = getSql();
-  const rows = asRowArray(
-    await sql`
-      SELECT *
-      FROM published_capabilities
-      WHERE status = ${CapabilityStatus.PUBLISHED}
-        AND visibility <> ${CapabilityVisibility.PRIVATE}
-        AND harness_set_slug IS NOT NULL
-        AND owner_user_id <> ${viewerUserId}
-      ORDER BY name ASC
-    `,
-  );
+  const rows =
+    await queryPublishedCapabilitiesWithHarnessForMarketplace(viewerUserId);
 
   const listings: HarnessMarketplaceListing[] = [];
 
@@ -87,7 +28,7 @@ export async function listHarnessMarketplaceForViewer(
     }
 
     const owner = await getUserById(capability.ownerUserId);
-    const catalogSummary = await enrichListingFromCatalog(
+    const catalogSummary = await enrichHarnessMarketplaceListingFromCatalog(
       viewerUserId,
       capability.ownerUserId,
       capability.harnessSetSlug,
