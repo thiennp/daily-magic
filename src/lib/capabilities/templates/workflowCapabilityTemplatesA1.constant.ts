@@ -1,6 +1,7 @@
 import buildWorkflowTemplate from "@/lib/capabilities/templates/buildWorkflowTemplate";
 import { DAILY_STANDUP_EXAMPLE_REQUEST } from "@/lib/capabilities/templates/harnessProfiles/workflowA1.dailyStandup.exampleRequest";
 import type { WorkflowCapabilityTemplate } from "@/lib/capabilities/templates/types/CapabilityTemplate.type";
+import { ONE_ON_ONE_PREP_WORKFLOW } from "@/lib/capabilities/templates/workflowCapabilityTemplatesA1Featured.oneOnOnePrep.constant";
 import { WORKFLOW_CAPABILITY_TEMPLATES_A1_FEATURED } from "@/lib/capabilities/templates/workflowCapabilityTemplatesA1Featured.constant";
 
 export const WORKFLOW_CAPABILITY_TEMPLATES_A1: readonly WorkflowCapabilityTemplate[] =
@@ -55,17 +56,5 @@ export const WORKFLOW_CAPABILITY_TEMPLATES_A1: readonly WorkflowCapabilityTempla
         ["notes", "Raw notes", "textarea"],
       ],
     ),
-    buildWorkflowTemplate(
-      "one-on-one-prep",
-      "Communication",
-      "1:1 talking points",
-      "Prepare a focused 1:1 agenda and feedback.",
-      "Draft 1:1 talking points with prompts, feedback, and follow-ups.",
-      [
-        ["person", "Person", "text"],
-        ["sinceLast", "Since last 1:1", "textarea", false],
-        ["topics", "Topics to cover", "textarea"],
-        ["feedback", "Feedback to share", "textarea", false],
-      ],
-    ),
+    ONE_ON_ONE_PREP_WORKFLOW,
   ];
