@@ -405,7 +405,32 @@ Two deliberate removals from the repo tree: **`harnessSetSlugs` (composition mov
 
 ---
 
-## 5. Pull into project versus pull into task
+## 5. UX v2 conflicts and resolutions
+
+Every affordance in the [v2 wireframes](../product/projects-view-wireframes-v2.md) checked against the current model. "Phase" refers to §7.
+
+| #   | UX v2 element                                                    | Conflict with today's model                                                                                       | Resolution                                                                                          | Phase |
+| --- | ---------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- | ----- |
+| 1   | AWC list chip `3 Harness · 2 Workflows · 5 Agents`               | Composition exists only in a repo file on one Mac; workflows and agents are not bound anywhere at all             | `project_components` in the cloud; counts are a grouped count query                                 | P4    |
+| 2   | AWC detail rows with versions (`v2.1`, `v3.4`)                   | No version identity on either side — the manifest stores no hash, the repo stores a bare slug                     | Catalog `component_versions` plus `device_component_installs` for "installed version on this Mac"   | P2–P4 |
+| 3   | AWL `[ Update ]` and `(update available)`                        | Nothing to compare against; the only available write is an unconditional clobber                                  | Compare bound version against `current_version_id`; ledger-driven update with user-file backup      | P1–P2 |
+| 4   | AWL `[ Remove ]`                                                 | No record of which files were written; unchecking a set leaves every copied file behind                           | `materialization.json` ledger; remove deletes exactly its own paths and restores backups            | P1    |
+| 5   | AWL `[ Pull into repo ▾ ] from Marketplace or another project`   | Cross-owner and cross-project pull on a per-owner slug is ambiguous by construction                               | Pull by `componentId` + `versionId`; slug becomes display sugar                                     | P3    |
+| 6   | `legacy-tools — No folder set yet` card state                    | `user_projects.folder_path` is `TEXT NOT NULL` — the state is unrepresentable                                     | Path moves to `project_device_bindings.folder_path` (nullable); `user_projects.folder_path` dropped | P4    |
+| 7   | Tabs greyed out until a folder is set                            | Conflates declaring composition with writing files — a needless dead end                                          | Binding needs no folder; only materialization does. Tabs stay live, `Pull into repo` is disabled    | P4    |
+| 8   | AWL header "Projects on this Mac"                                | `listUserProjectsForOwner` returns `device_id IS NULL OR device_id = $1`, so unbound projects appear on every Mac | Require a device binding; drop the `IS NULL` branch                                                 | P4/P7 |
+| 9   | Same repo checked out on two Macs                                | `UNIQUE (owner_user_id, lower(name))` forbids it — the exact case device binding exists for                       | `UNIQUE (owner_user_id, device_id, lower(name))`                                                    | P4    |
+| 10  | AWL deep-link error "not registered on this Mac"                 | Dispatch does the opposite today: an unknown path falls back to a default folder and `mkdir -p` creates it        | `projectId` ownership check fails the run loudly; no default-folder fallback                        | P0    |
+| 11  | Delete modal: "The folder on disk is not deleted"                | True but incomplete — `.agent-witch/rag` and `memory` stay in the repo holding embeddings and transcripts         | Knowledge moves to the profile keyed by `projectId`; the modal states whether memory is purged      | P6    |
+| 12  | `[ Pull into repo ]` on a repo with hand-written `.cursor` rules | Silent overwrite: destination is derived by slugifying the item title, with no diff, prompt, or backup            | Slug-namespaced destinations, pre-write hashing, backup to `.agent-witch/backups/`                  | P1    |
+| 13  | AWC read-only detail rendered from a phone                       | Any Mac-querying read model fails here and in the explicit offline card state                                     | Cloud is the read model; the Mac is never on the read path                                          | P4    |
+| 14  | `Agents` label vs "agent run"                                    | A naming collision v2 flagged rather than renamed                                                                 | Schema uses `components.kind = 'agent'`; the fix belongs in copy, not in tables                     | —     |
+
+Two wireframe elements need **no** change: the three-state `Edit on this Mac` CTA and the device status chip already map onto the presence tiers from [ADR 0005](../adr/0005-shared-mac-presence-and-dispatch-outbox.md) (`live`, `live_other_instance`, `recent`, `offline`). Identity matching is a solved problem here; composition is not.
+
+---
+
+## 6. Pull into project versus pull into task
 
 This is the distinction the current code cannot express, and the one that decides whether the repo stays clean.
 
@@ -434,7 +459,7 @@ Practical guidance for callers:
 
 ---
 
-## 6. Phased PR plan
+## 7. Phased PR plan
 
 Each phase is independently shippable and independently revertible. Migration numbering continues from `027-agent-witch-hub-dispatch-relay.sql`.
 
@@ -508,7 +533,7 @@ Each phase is independently shippable and independently revertible. Migration nu
 
 ---
 
-## 7. Architect sign-off
+## 8. Architect sign-off
 
 **I sign off on this design**, with the conditions below. The reasoning: the six layers each have one authority, the dependency arrows never reverse, and every UX v2 affordance that is impossible today (`Remove`, `Update`, version labels, offline AWC counts, per-project history, cross-project pull) becomes a straightforward read or diff once content identity, bindings, and the ledger exist. Nothing in the plan requires AWC to acquire write access to composition, so the "one editable source of truth" principle survives intact — it is enforced by table ownership rather than by convention.
 
