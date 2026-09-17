@@ -15,10 +15,18 @@ for (const guide of LEADERSHIP_GUIDES) {
   test(`${guide.slug} renders leadership guide`, async ({ page }) => {
     await page.goto(`/showcases/${guide.slug}`);
 
-    await expect(page.getByRole("heading", { level: 1 })).toHaveText(
+    const article = page
+      .getByRole("article")
+      .filter({
+        has: page.getByRole("heading", { level: 1, name: guide.title }),
+      });
+
+    await expect(article.getByRole("heading", { level: 1 })).toHaveText(
       guide.title,
     );
-    await expect(page.getByText("For leadership")).toBeVisible();
+    await expect(article.locator("header p").first()).toContainText(
+      "For leadership",
+    );
   });
 }
 
