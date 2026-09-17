@@ -24,6 +24,27 @@ describe("buildAgentWitchInstallScriptConfigBlock", () => {
     expect(block).not.toContain('PAIRING_TOKEN="${PRESET_PAIRING_TOKEN}"');
   });
 
+  it("reads pairing token from legacy install config when profile config has none", () => {
+    const block = buildAgentWitchInstallScriptConfigBlock({
+      wsUrl: "wss://www.agentwitch.com/api/agent-witch/ws",
+      updateExistingInstall: true,
+    });
+
+    expect(block).toContain("agent_witch_resolve_local_pairing_token");
+    expect(block).toContain('"\${INSTALL_DIR}/config.json"');
+    expect(block).toContain("profiles");
+  });
+
+  it("allows bundle-only update when local config exists but pairing token is missing", () => {
+    const block = buildAgentWitchInstallScriptConfigBlock({
+      wsUrl: "wss://www.agentwitch.com/api/agent-witch/ws",
+      updateExistingInstall: true,
+    });
+
+    expect(block).toContain("updating app files only");
+    expect(block).toContain("has_local_config");
+  });
+
   it("AGENT-047: refuses Connect without profile email and skips stealing active-profile", () => {
     const block = buildAgentWitchInstallScriptConfigBlock({
       wsUrl: "wss://www.agentwitch.com/api/agent-witch/ws",

@@ -10,6 +10,7 @@ describe("renderUpdateAgentWitchScript", () => {
     expect(script).toContain("AGENT_WITCH_SKIP_OPEN_HOME=1");
     expect(script).toContain('PAIRING_TOKEN="${PRESET_PAIRING_TOKEN:-}"');
     expect(script).toContain("typeof parsed.pairingToken === 'string'");
+    expect(script).toContain("agent_witch_resolve_local_pairing_token");
     expect(script).toContain(
       "No linked Mac identity found in your local Agent Witch config.",
     );
