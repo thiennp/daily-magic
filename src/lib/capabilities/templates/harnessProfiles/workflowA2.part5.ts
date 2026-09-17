@@ -1,6 +1,8 @@
 import type { PresetHarnessSeed } from "@/lib/capabilities/templates/harnessProfiles/PresetHarnessSeed.type";
+import { TEAM_REPO_STANDUP_PRESET } from "@/lib/capabilities/templates/harnessProfiles/workflowA2.teamRepoStandup";
 
 export const WORKFLOW_A2_PART5: readonly PresetHarnessSeed[] = [
+  TEAM_REPO_STANDUP_PRESET,
   {
     id: "research-brief",
     name: "Research brief",

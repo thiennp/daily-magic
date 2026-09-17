@@ -1,4 +1,5 @@
 import buildWorkflowTemplate from "@/lib/capabilities/templates/buildWorkflowTemplate";
+import { TEAM_REPO_STANDUP_EXAMPLE_REQUEST } from "@/lib/capabilities/templates/harnessProfiles/workflowA2.teamRepoStandup.exampleRequest";
 import type { WorkflowCapabilityTemplate } from "@/lib/capabilities/templates/types/CapabilityTemplate.type";
 
 export const WORKFLOW_CAPABILITY_TEMPLATES_A2: readonly WorkflowCapabilityTemplate[] =
@@ -45,7 +46,7 @@ export const WORKFLOW_CAPABILITY_TEMPLATES_A2: readonly WorkflowCapabilityTempla
       "Team dispatch",
       "Repo branch standup (teammate Mac)",
       "Ask a colleague's Mac to summarize git activity on a local repo branch — ideal for team delegation demos.",
-      "Summarize commits on the branch for a standup update. Use plain English bullets for someone who did not read the diffs.",
+      TEAM_REPO_STANDUP_EXAMPLE_REQUEST,
       [
         ["repoPath", "Project folder on their Mac", "project"],
         ["branch", "Branch name", "text"],
