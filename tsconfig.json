@@ -21,7 +21,13 @@
     "paths": {
       "@/*": ["./src/*"],
       "@agent-witch/shared": ["./packages/shared/src/index.ts"],
-      "@agent-witch/shared/*": ["./packages/shared/src/*"]
+      "@agent-witch/shared/*": ["./packages/shared/src/*"],
+      "@agent-witch/install-layout": [
+        "./apps/install/features/install-layout/public-api/infrastructure.ts"
+      ],
+      "@agent-witch/install-layout/types": [
+        "./apps/install/features/install-layout/public-api/types.ts"
+      ]
     }
   },
   "include": [

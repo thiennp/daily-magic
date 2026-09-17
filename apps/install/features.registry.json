@@ -17,7 +17,7 @@
     {
       "slug": "install-layout",
       "title": "On-disk install layout and profile paths",
-      "fsaStatus": "in-progress",
+      "fsaStatus": "fsa",
       "featurePath": "apps/install/features/install-layout",
       "legacyPaths": [
         "src/features/agent-witch/LOCAL_INSTALL_LAYOUT.md",

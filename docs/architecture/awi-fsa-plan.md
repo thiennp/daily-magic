@@ -99,7 +99,7 @@ Optional nested slice (later): `features/runtime-client/features/hub-connection/
 ## Migration order (recommended PR slices)
 
 1. **Scaffold + boundaries (this initiative)** — registry, placeholders, `public-api/types` for `install-layout` + `bundle`, vitest gates. No moves from `src/lib/agentWitch`.
-2. **`install-layout`** — move `resolveAgentWitchAppHome` + path helpers into `internal/`; re-export from `public-api/types`; keep shim in `src/lib/agentWitch`.
+2. **`install-layout`** — **done** — `resolveAgentWitchAppHome` + `resolveAgentWitchLocalLayout` live in `apps/install/features/install-layout/internal/core/`; `@agent-witch/install-layout` + shims in `src/lib/agentWitch/resolveAgentWitchAppHome.ts` and `scripts/resolveAgentWitchLocalLayout.ts`; registry `fsaStatus` = `fsa`.
 3. **`bundle`** — version constant + install bundle build metadata; AWC keeps HTTP routes, calls AWI `public-api/infrastructure` when ready.
 4. **`macos-launch`** + **`watchdog`** — LaunchAgent labels and plist generation.
 5. **`runtime-client`** — peel `scripts/agent-witch.ts` into `entry/` + runtime slice; optional nested **`hub-connection`**.

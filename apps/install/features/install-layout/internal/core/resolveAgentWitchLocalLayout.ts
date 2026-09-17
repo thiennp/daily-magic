@@ -1,0 +1,337 @@
+import fs from "node:fs";
+import os from "node:os";
+import path from "node:path";
+
+import { isNonNullObject } from "guardz";
+
+import {
+  AGENT_WITCH_ACTIVE_PROFILE_FILE_NAME,
+  AGENT_WITCH_APP_BUNDLE_FILE_NAME,
+  AGENT_WITCH_APP_DIR_NAME,
+  AGENT_WITCH_DEVICE_KEYPAIR_FILE_NAME,
+  AGENT_WITCH_ERROR_LOG_FILE_NAME,
+  AGENT_WITCH_HARNESS_DIR_NAME,
+  AGENT_WITCH_HARNESS_SETS_DIR_NAME,
+  AGENT_WITCH_LOCAL_INSTALL_DIR_NAME,
+  AGENT_WITCH_LOCAL_LAUNCH_AGENT_PREFIX,
+  AGENT_WITCH_LOCAL_WAKE_PORT,
+  AGENT_WITCH_LOGS_DIR_NAME,
+  AGENT_WITCH_MAIN_LOG_FILE_NAME,
+  AGENT_WITCH_MANIFEST_FILE_NAME,
+  AGENT_WITCH_PROD_INSTALL_DIR_NAME,
+  AGENT_WITCH_PROD_LAUNCH_AGENT_PREFIX,
+  AGENT_WITCH_PROD_WAKE_PORT,
+  AGENT_WITCH_PROFILES_DIR_NAME,
+  AGENT_WITCH_PROJECTS_DIR_NAME,
+  AGENT_WITCH_REPORTS_DIR_NAME,
+} from "../../public-api/types";
+
+import type { AgentWitchLocalLayout } from "../../public-api/types";
+
+import { resolveAgentWitchBundleAppDir } from "./resolveAgentWitchBundleAppDir";
+
+const moduleDirname = resolveAgentWitchBundleAppDir();
+
+export const sanitizeProfileEmailForDir = (email: string): string =>
+  email.trim().toLowerCase();
+
+export const sanitizeProfileEmailForLaunchAgentLabel = (
+  email: string,
+): string =>
+  sanitizeProfileEmailForDir(email)
+    .replace(/@/g, "-at-")
+    .replace(/\./g, "-")
+    .replace(/[^a-z0-9-]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+
+export const resolveAgentWitchInstallDir = (): string => {
+  const fromEnv = process.env.AGENT_WITCH_HOME?.trim();
+  if (fromEnv !== undefined && fromEnv.length > 0) {
+    return path.resolve(fromEnv);
+  }
+
+  const candidate = path.resolve(moduleDirname);
+  const baseName = path.basename(candidate);
+  const parentName = path.basename(path.dirname(candidate));
+
+  if (
+    baseName === AGENT_WITCH_APP_DIR_NAME &&
+    (parentName === AGENT_WITCH_PROD_INSTALL_DIR_NAME ||
+      parentName === AGENT_WITCH_LOCAL_INSTALL_DIR_NAME)
+  ) {
+    return path.dirname(candidate);
+  }
+
+  if (
+    baseName === AGENT_WITCH_PROD_INSTALL_DIR_NAME ||
+    baseName === AGENT_WITCH_LOCAL_INSTALL_DIR_NAME
+  ) {
+    return candidate;
+  }
+
+  return path.join(os.homedir(), AGENT_WITCH_PROD_INSTALL_DIR_NAME);
+};
+
+export const resolveAgentWitchAppDir = (
+  installDir: string = resolveAgentWitchInstallDir(),
+): string => path.join(installDir, AGENT_WITCH_APP_DIR_NAME);
+
+export const resolveAgentWitchAppBundlePath = (
+  installDir: string = resolveAgentWitchInstallDir(),
+): string =>
+  path.join(
+    resolveAgentWitchAppDir(installDir),
+    AGENT_WITCH_APP_BUNDLE_FILE_NAME,
+  );
+
+const resolveProfileScopedDir = (
+  installDir: string,
+  profileEmail: string | null,
+  dirName: string,
+): string => {
+  if (profileEmail !== null) {
+    return path.join(
+      installDir,
+      AGENT_WITCH_PROFILES_DIR_NAME,
+      profileEmail,
+      dirName,
+    );
+  }
+
+  return path.join(installDir, dirName);
+};
+
+export const resolveAgentWitchProjectsDir = (
+  layout: Pick<AgentWitchLocalLayout, "installDir" | "profileEmail">,
+): string =>
+  resolveProfileScopedDir(
+    layout.installDir,
+    layout.profileEmail,
+    AGENT_WITCH_PROJECTS_DIR_NAME,
+  );
+
+export const resolveAgentWitchLogsDir = (
+  layout: Pick<AgentWitchLocalLayout, "installDir" | "profileEmail">,
+): string =>
+  resolveProfileScopedDir(
+    layout.installDir,
+    layout.profileEmail,
+    AGENT_WITCH_LOGS_DIR_NAME,
+  );
+
+export const resolveAgentWitchMainLogPath = (
+  layout: Pick<AgentWitchLocalLayout, "logsDir">,
+): string => path.join(layout.logsDir, AGENT_WITCH_MAIN_LOG_FILE_NAME);
+
+export const resolveAgentWitchErrorLogPath = (
+  layout: Pick<AgentWitchLocalLayout, "logsDir">,
+): string => path.join(layout.logsDir, AGENT_WITCH_ERROR_LOG_FILE_NAME);
+
+export const resolveAgentWitchReportsDir = (
+  layout: Pick<AgentWitchLocalLayout, "installDir" | "profileEmail">,
+): string =>
+  resolveProfileScopedDir(
+    layout.installDir,
+    layout.profileEmail,
+    AGENT_WITCH_REPORTS_DIR_NAME,
+  );
+
+export const resolveAgentWitchDeviceKeypairPath = (
+  layout: Pick<AgentWitchLocalLayout, "installDir" | "profileEmail">,
+): string => {
+  if (layout.profileEmail !== null) {
+    return path.join(
+      layout.installDir,
+      AGENT_WITCH_PROFILES_DIR_NAME,
+      layout.profileEmail,
+      AGENT_WITCH_DEVICE_KEYPAIR_FILE_NAME,
+    );
+  }
+
+  return path.join(layout.installDir, AGENT_WITCH_DEVICE_KEYPAIR_FILE_NAME);
+};
+
+export const isAgentWitchLocalInstallDir = (installDir: string): boolean =>
+  path.basename(installDir) === AGENT_WITCH_LOCAL_INSTALL_DIR_NAME;
+
+export const resolveAgentWitchLaunchAgentPrefix = (
+  installDir: string = resolveAgentWitchInstallDir(),
+): string =>
+  isAgentWitchLocalInstallDir(installDir)
+    ? AGENT_WITCH_LOCAL_LAUNCH_AGENT_PREFIX
+    : AGENT_WITCH_PROD_LAUNCH_AGENT_PREFIX;
+
+export const resolveAgentWitchDefaultWakePort = (
+  installDir: string = resolveAgentWitchInstallDir(),
+): number =>
+  isAgentWitchLocalInstallDir(installDir)
+    ? AGENT_WITCH_LOCAL_WAKE_PORT
+    : AGENT_WITCH_PROD_WAKE_PORT;
+
+export const resolveActiveProfileEmailFromEnv = (): string | null => {
+  const fromProfile = process.env.AGENT_WITCH_PROFILE?.trim();
+  if (fromProfile !== undefined && fromProfile.length > 0) {
+    return sanitizeProfileEmailForDir(fromProfile);
+  }
+
+  const fromEmail = process.env.AGENT_WITCH_EMAIL?.trim();
+  if (fromEmail !== undefined && fromEmail.length > 0) {
+    return sanitizeProfileEmailForDir(fromEmail);
+  }
+
+  return null;
+};
+
+export const readActiveProfileEmailFromFile = (
+  installDir: string = resolveAgentWitchInstallDir(),
+): string | null => {
+  const activeProfilePath = path.join(
+    installDir,
+    AGENT_WITCH_ACTIVE_PROFILE_FILE_NAME,
+  );
+
+  if (!fs.existsSync(activeProfilePath)) {
+    return null;
+  }
+
+  try {
+    const parsed: unknown = JSON.parse(
+      fs.readFileSync(activeProfilePath, "utf8"),
+    );
+    if (
+      isNonNullObject(parsed) &&
+      typeof parsed.email === "string" &&
+      parsed.email.trim().length > 0
+    ) {
+      return sanitizeProfileEmailForDir(parsed.email);
+    }
+  } catch {
+    return null;
+  }
+
+  return null;
+};
+
+export const resolveActiveProfileEmail = (
+  profileEmailOverride?: string | null,
+): string | null => {
+  if (profileEmailOverride !== undefined) {
+    if (profileEmailOverride === null) {
+      return null;
+    }
+
+    const trimmed = profileEmailOverride.trim();
+    if (trimmed.length > 0) {
+      return sanitizeProfileEmailForDir(trimmed);
+    }
+
+    return null;
+  }
+
+  const fromEnv = resolveActiveProfileEmailFromEnv();
+  if (fromEnv !== null) {
+    return fromEnv;
+  }
+
+  return readActiveProfileEmailFromFile();
+};
+
+export const resolveAgentWitchLocalLayout = (
+  profileEmailOverride?: string | null,
+): AgentWitchLocalLayout => {
+  const installDir = resolveAgentWitchInstallDir();
+  const appDir = resolveAgentWitchAppDir(installDir);
+  const appBundlePath = resolveAgentWitchAppBundlePath(installDir);
+  const profileEmail = resolveActiveProfileEmail(profileEmailOverride);
+
+  if (profileEmail !== null) {
+    const profileDir = path.join(
+      installDir,
+      AGENT_WITCH_PROFILES_DIR_NAME,
+      profileEmail,
+    );
+    const harnessRootDir = path.join(profileDir, AGENT_WITCH_HARNESS_DIR_NAME);
+    const projectsDir = path.join(profileDir, AGENT_WITCH_PROJECTS_DIR_NAME);
+    const logsDir = path.join(profileDir, AGENT_WITCH_LOGS_DIR_NAME);
+    const reportsDir = path.join(profileDir, AGENT_WITCH_REPORTS_DIR_NAME);
+    const deviceKeypairPath = path.join(
+      profileDir,
+      AGENT_WITCH_DEVICE_KEYPAIR_FILE_NAME,
+    );
+    const mainLogPath = path.join(
+      profileDir,
+      AGENT_WITCH_LOGS_DIR_NAME,
+      AGENT_WITCH_MAIN_LOG_FILE_NAME,
+    );
+    const errorLogPath = path.join(
+      profileDir,
+      AGENT_WITCH_LOGS_DIR_NAME,
+      AGENT_WITCH_ERROR_LOG_FILE_NAME,
+    );
+
+    return {
+      profileEmail,
+      installDir,
+      appDir,
+      appBundlePath,
+      projectsDir,
+      logsDir,
+      mainLogPath,
+      errorLogPath,
+      reportsDir,
+      deviceKeypairPath,
+      configPath: path.join(profileDir, "config.json"),
+      harnessRootDir,
+      harnessManifestPath: path.join(
+        harnessRootDir,
+        AGENT_WITCH_MANIFEST_FILE_NAME,
+      ),
+      harnessSetsDir: path.join(
+        harnessRootDir,
+        AGENT_WITCH_HARNESS_SETS_DIR_NAME,
+      ),
+    };
+  }
+
+  const harnessRootDir = path.join(installDir, AGENT_WITCH_HARNESS_DIR_NAME);
+  const projectsDir = path.join(installDir, AGENT_WITCH_PROJECTS_DIR_NAME);
+  const logsDir = path.join(installDir, AGENT_WITCH_LOGS_DIR_NAME);
+  const reportsDir = path.join(installDir, AGENT_WITCH_REPORTS_DIR_NAME);
+  const deviceKeypairPath = path.join(
+    installDir,
+    AGENT_WITCH_DEVICE_KEYPAIR_FILE_NAME,
+  );
+  const mainLogPath = path.join(
+    installDir,
+    AGENT_WITCH_LOGS_DIR_NAME,
+    AGENT_WITCH_MAIN_LOG_FILE_NAME,
+  );
+  const errorLogPath = path.join(
+    installDir,
+    AGENT_WITCH_LOGS_DIR_NAME,
+    AGENT_WITCH_ERROR_LOG_FILE_NAME,
+  );
+
+  return {
+    profileEmail: null,
+    installDir,
+    appDir,
+    appBundlePath,
+    projectsDir,
+    logsDir,
+    mainLogPath,
+    errorLogPath,
+    reportsDir,
+    deviceKeypairPath,
+    configPath: path.join(installDir, "config.json"),
+    harnessRootDir,
+    harnessManifestPath: path.join(
+      harnessRootDir,
+      AGENT_WITCH_MANIFEST_FILE_NAME,
+    ),
+    harnessSetsDir: path.join(
+      harnessRootDir,
+      AGENT_WITCH_HARNESS_SETS_DIR_NAME,
+    ),
+  };
+};

@@ -1,5 +1,29 @@
 /**
- * AWI slice `install-layout` — public-api/infrastructure (FSA placeholder).
- * Migrate exports from legacy paths listed in features.registry.json.
+ * AWI slice `install-layout` — path resolution (Node / server only).
  */
-export {};
+export {
+  isLocalAgentWitchHostname,
+  isLocalAgentWitchOrigin,
+  resolveAgentWitchAppHome,
+} from "../internal/core/resolveAgentWitchAppHome";
+
+export {
+  isAgentWitchLocalInstallDir,
+  readActiveProfileEmailFromFile,
+  resolveActiveProfileEmail,
+  resolveActiveProfileEmailFromEnv,
+  resolveAgentWitchAppBundlePath,
+  resolveAgentWitchAppDir,
+  resolveAgentWitchDefaultWakePort,
+  resolveAgentWitchDeviceKeypairPath,
+  resolveAgentWitchErrorLogPath,
+  resolveAgentWitchInstallDir,
+  resolveAgentWitchLaunchAgentPrefix,
+  resolveAgentWitchLocalLayout,
+  resolveAgentWitchLogsDir,
+  resolveAgentWitchMainLogPath,
+  resolveAgentWitchProjectsDir,
+  resolveAgentWitchReportsDir,
+  sanitizeProfileEmailForDir,
+  sanitizeProfileEmailForLaunchAgentLabel,
+} from "../internal/core/resolveAgentWitchLocalLayout";

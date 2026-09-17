@@ -1,5 +1,4 @@
 /**
- * AWI slice `install-layout` — public-api/presentation (FSA placeholder).
- * Migrate exports from legacy paths listed in features.registry.json.
+ * AWI slice `install-layout` — presentation (no browser UI for this slice).
  */
 export {};

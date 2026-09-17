@@ -18,5 +18,13 @@ export const vitestResolveAlias: Record<string, string> = {
     "./packages/shared/src/deployables/index.ts",
   ),
   "@agent-witch/shared": path.resolve(ROOT, "./packages/shared/src/index.ts"),
+  "@agent-witch/install-layout/types": path.resolve(
+    ROOT,
+    "./apps/install/features/install-layout/public-api/types.ts",
+  ),
+  "@agent-witch/install-layout": path.resolve(
+    ROOT,
+    "./apps/install/features/install-layout/public-api/infrastructure.ts",
+  ),
   "@": path.resolve(ROOT, "./src"),
 };

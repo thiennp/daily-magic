@@ -76,3 +76,77 @@ export const AGENT_WITCH_PROFILE_RELATIVE_PATHS: AgentWitchProfileRelativePaths 
 
 export const profileDirForEmail = (sanitizedEmail: string): string =>
   `profiles/${sanitizedEmail}`;
+
+/** Legacy names — prefer `AWI_INSTALL_ROOT_DIR_NAMES` for new code. */
+export const AGENT_WITCH_PROD_INSTALL_DIR_NAME =
+  AWI_INSTALL_ROOT_DIR_NAMES.production;
+export const AGENT_WITCH_LOCAL_INSTALL_DIR_NAME =
+  AWI_INSTALL_ROOT_DIR_NAMES.localhost;
+
+/** @deprecated Prefer AGENT_WITCH_PROD_INSTALL_DIR_NAME */
+export const AGENT_WITCH_INSTALL_DIR_NAME = AGENT_WITCH_PROD_INSTALL_DIR_NAME;
+
+export const AGENT_WITCH_PROD_WAKE_PORT =
+  AWI_INSTALL_ROOT_WAKE_PORTS.production;
+export const AGENT_WITCH_LOCAL_WAKE_PORT =
+  AWI_INSTALL_ROOT_WAKE_PORTS.localhost;
+
+export const AGENT_WITCH_PROD_LAUNCH_AGENT_PREFIX =
+  AWI_LAUNCH_AGENT_PREFIX.production;
+export const AGENT_WITCH_LOCAL_LAUNCH_AGENT_PREFIX =
+  AWI_LAUNCH_AGENT_PREFIX.localhost;
+
+export const AGENT_WITCH_PROFILES_DIR_NAME = "profiles";
+
+export const AGENT_WITCH_ACTIVE_PROFILE_FILE_NAME =
+  AWI_INSTALL_ROOT_FILES.activeProfile;
+
+export const AGENT_WITCH_HARNESS_DIR_NAME = "harness";
+
+export const AGENT_WITCH_HARNESS_SETS_DIR_NAME = "sets";
+
+export const AGENT_WITCH_MANIFEST_FILE_NAME = "manifest.json";
+
+export const AGENT_WITCH_PROJECTS_DIR_NAME =
+  AGENT_WITCH_PROFILE_RELATIVE_PATHS.projectsDir;
+
+export const AGENT_WITCH_LOGS_DIR_NAME =
+  AGENT_WITCH_PROFILE_RELATIVE_PATHS.logsDir;
+
+export const AGENT_WITCH_MAIN_LOG_FILE_NAME = "agent-witch.log";
+
+export const AGENT_WITCH_ERROR_LOG_FILE_NAME = "agent-witch.error.log";
+
+export const AGENT_WITCH_REPORTS_DIR_NAME =
+  AGENT_WITCH_PROFILE_RELATIVE_PATHS.reportsDir;
+
+export const AGENT_WITCH_DEVICE_KEYPAIR_FILE_NAME =
+  AGENT_WITCH_PROFILE_RELATIVE_PATHS.deviceKeypairJson;
+
+export const AGENT_WITCH_APP_DIR_NAME = AWI_BUNDLED_APP_DIR;
+
+export const AGENT_WITCH_APP_BUNDLE_FILE_NAME = "agent-witch.js";
+
+export interface AgentWitchAppHome {
+  readonly installDirName: string;
+  readonly wakePort: number;
+  readonly launchAgentPrefix: string;
+  readonly isLocalApp: boolean;
+}
+
+export interface AgentWitchLocalLayout {
+  readonly profileEmail: string | null;
+  readonly installDir: string;
+  readonly appDir: string;
+  readonly appBundlePath: string;
+  readonly projectsDir: string;
+  readonly logsDir: string;
+  readonly mainLogPath: string;
+  readonly errorLogPath: string;
+  readonly reportsDir: string;
+  readonly deviceKeypairPath: string;
+  readonly configPath: string;
+  readonly harnessRootDir: string;
+  readonly harnessManifestPath: string;
+  readonly harnessSetsDir: string;
+}
