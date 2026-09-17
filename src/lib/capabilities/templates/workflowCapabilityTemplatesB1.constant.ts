@@ -1,7 +1,6 @@
 import buildWorkflowTemplate from "@/lib/capabilities/templates/buildWorkflowTemplate";
-import { COMPARE_OPTIONS_EXAMPLE_REQUEST } from "@/lib/capabilities/templates/harnessProfiles/workflowB1.compareOptions.exampleRequest";
+import { RELEASE_NOTES_DRAFT_EXAMPLE_REQUEST } from "@/lib/capabilities/templates/harnessProfiles/workflowB1.releaseNotesDraft.exampleRequest";
 import type { WorkflowCapabilityTemplate } from "@/lib/capabilities/templates/types/CapabilityTemplate.type";
-import { PR_SUMMARY_WORKFLOW } from "@/lib/capabilities/templates/workflowCapabilityTemplatesB1.prSummary.constant";
 
 export const WORKFLOW_CAPABILITY_TEMPLATES_B1: readonly WorkflowCapabilityTemplate[] =
   [
@@ -9,8 +8,8 @@ export const WORKFLOW_CAPABILITY_TEMPLATES_B1: readonly WorkflowCapabilityTempla
       "compare-options",
       "Research",
       "Compare options",
-      "Score two paths against your criteria and get a clear recommendation — clarify weights first, then review the table before you decide.",
-      COMPARE_OPTIONS_EXAMPLE_REQUEST,
+      "Build a pros/cons comparison and recommendation.",
+      "Compare the options using the criteria. End with a clear recommendation.",
       [
         ["optionA", "Option A", "textarea"],
         ["optionB", "Option B", "textarea"],
@@ -29,8 +28,18 @@ export const WORKFLOW_CAPABILITY_TEMPLATES_B1: readonly WorkflowCapabilityTempla
         ["format", "Output format", "text", false],
       ],
     ),
-    PR_SUMMARY_WORKFLOW,
-
+    buildWorkflowTemplate(
+      "pr-summary",
+      "Engineering",
+      "PR / code change summary",
+      "Explain a change for reviewers or non-engineers.",
+      "Summarize the change, risk areas, and test notes for reviewers.",
+      [
+        ["context", "PR / branch context", "text"],
+        ["change", "What changed", "textarea"],
+        ["audience", "Audience", "text"],
+      ],
+    ),
     buildWorkflowTemplate(
       "bug-report-writer",
       "Engineering",
@@ -49,7 +58,7 @@ export const WORKFLOW_CAPABILITY_TEMPLATES_B1: readonly WorkflowCapabilityTempla
       "Engineering",
       "Release notes draft",
       "Turn a change list into customer-ready release notes.",
-      "Draft release notes grouped by user impact. Keep language plain.",
+      RELEASE_NOTES_DRAFT_EXAMPLE_REQUEST,
       [
         ["version", "Version", "text"],
         ["changes", "Changes", "textarea"],
