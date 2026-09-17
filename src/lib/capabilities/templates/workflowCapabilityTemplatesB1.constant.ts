@@ -1,4 +1,5 @@
 import buildWorkflowTemplate from "@/lib/capabilities/templates/buildWorkflowTemplate";
+import { RELEASE_NOTES_DRAFT_EXAMPLE_REQUEST } from "@/lib/capabilities/templates/harnessProfiles/workflowB1.releaseNotesDraft.exampleRequest";
 import type { WorkflowCapabilityTemplate } from "@/lib/capabilities/templates/types/CapabilityTemplate.type";
 
 export const WORKFLOW_CAPABILITY_TEMPLATES_B1: readonly WorkflowCapabilityTemplate[] =
@@ -57,7 +58,7 @@ export const WORKFLOW_CAPABILITY_TEMPLATES_B1: readonly WorkflowCapabilityTempla
       "Engineering",
       "Release notes draft",
       "Turn a change list into customer-ready release notes.",
-      "Draft release notes grouped by user impact. Keep language plain.",
+      RELEASE_NOTES_DRAFT_EXAMPLE_REQUEST,
       [
         ["version", "Version", "text"],
         ["changes", "Changes", "textarea"],
