@@ -1,4 +1,5 @@
 import type { PresetHarnessSeed } from "@/lib/capabilities/templates/harnessProfiles/PresetHarnessSeed.type";
+import { FREELANCER_CLIENT_PROPOSAL_EXAMPLE_REQUEST } from "@/lib/capabilities/templates/harnessProfiles/workflowA1.freelancerClientProposal.exampleRequest";
 import { FREELANCER_CLIENT_PROPOSAL_OPERATOR_STEPS } from "@/lib/capabilities/templates/harnessProfiles/workflowA1.freelancerClientProposal.operatorSteps";
 
 export const FREELANCER_CLIENT_PROPOSAL_PRESET: PresetHarnessSeed = {
@@ -7,15 +8,14 @@ export const FREELANCER_CLIENT_PROPOSAL_PRESET: PresetHarnessSeed = {
   category: "Freelance",
   description:
     "Turn a client brief into a scoped proposal with timeline, pricing, and portfolio proof — send only after you approve.",
-  exampleRequest:
-    "Draft a client proposal from projectBrief. Pull proof from portfolioFolderPath, respect budgetRange, avoid repeating pitches in proposalHistoryPath, and wait for my approval before I send.",
+  exampleRequest: FREELANCER_CLIENT_PROPOSAL_EXAMPLE_REQUEST,
   operatorSteps: FREELANCER_CLIENT_PROPOSAL_OPERATOR_STEPS,
   profile: {
     ruleFocus: [
       "Scope only what projectBrief asks; call out assumptions explicitly.",
       "Cite real portfolio samples from portfolioFolderPath.",
       "Read proposalHistoryPath; vary positioning from recent pitches.",
-      "Pause with [[AWAITING_INPUT]] before the proposal is send-ready.",
+      "Stop before send; the orchestrator pauses at human approval checkpoints.",
     ],
     skillSections: [
       {
@@ -41,10 +41,10 @@ export const FREELANCER_CLIENT_PROPOSAL_PRESET: PresetHarnessSeed = {
       },
     ],
     commandSteps: [
-      "Read brief, portfolio folder, and proposal history.",
+      "Confirm brief and portfolio fit with the operator.",
       "Draft scope, timeline, and pricing.",
-      "Present proposal and wait for approval.",
-      "Log pitch in proposalHistoryPath after operator sends.",
+      "Finalize after operator approval.",
+      "Operator sends; append proposalHistoryPath when asked.",
     ],
     instructionAddendum:
       "Contract signing and platform submission stay with the operator.",
