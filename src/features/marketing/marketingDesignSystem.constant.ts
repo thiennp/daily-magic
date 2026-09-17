@@ -32,19 +32,19 @@ export const MARKETING_SECTION_HEADING_CLASSES =
 
 export const MARKETING_BODY_CLASSES = "text-gray-600 leading-relaxed";
 
-export const MARKETING_META_LABEL_CLASSES =
-  "font-mono text-sm text-brand-600";
+export const MARKETING_META_LABEL_CLASSES = "font-mono text-sm text-brand-600";
 
 /** Surfaces */
 export const MARKETING_BORDER_SUBTLE_CLASSES = "border border-gray-200";
 
-export const MARKETING_CARD_RADIUS_CLASSES = "rounded-xl";
+export const MARKETING_CARD_RADIUS_CLASSES = "rounded-2xl";
 
 export const MARKETING_SURFACE_ELEVATED_CLASSES = [
   MARKETING_CARD_RADIUS_CLASSES,
   "bg-white",
   MARKETING_BORDER_SUBTLE_CLASSES,
-  "shadow-sm",
+  "shadow-[0_4px_20px_-2px_rgba(16,24,40,0.06)]",
+  "transition-all duration-200 hover:shadow-[0_8px_30px_-4px_rgba(16,24,40,0.08)]",
 ].join(" ");
 
 export const MARKETING_GROUPED_CARD_SHELL_CLASSES = [
@@ -52,56 +52,57 @@ export const MARKETING_GROUPED_CARD_SHELL_CLASSES = [
   "overflow-hidden",
   MARKETING_BORDER_SUBTLE_CLASSES,
   "bg-white",
-  "divide-y divide-gray-200 sm:divide-y-0 sm:divide-x",
+  "shadow-[0_4px_20px_-2px_rgba(16,24,40,0.05)]",
+  "divide-y divide-gray-200/80 sm:divide-y-0 sm:divide-x",
 ].join(" ");
 
 /** Icon tiles (feature grid) */
 export const MARKETING_ICON_TILE_CLASSES = [
-  "flex h-10 w-10 shrink-0 items-center justify-center rounded-lg",
-  "bg-brand-50 text-brand-600",
+  "flex h-11 w-11 shrink-0 items-center justify-center rounded-xl",
+  "bg-brand-50/80 text-brand-600 shadow-sm ring-1 ring-brand-500/10",
 ].join(" ");
 
 /** Stats / trust metric dividers */
 export const MARKETING_METRIC_DIVIDER_CLASSES =
-  "border-brand-200 lg:divide-brand-200";
+  "border-brand-200/80 lg:divide-brand-200/80";
 
 export const MARKETING_METRIC_VALUE_CLASSES =
-  "text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl";
+  "text-2xl font-extrabold tracking-tight text-gray-900 sm:text-3xl";
 
 export const MARKETING_METRIC_DESCRIPTION_CLASSES =
-  "mt-1 text-sm leading-snug text-gray-600";
+  "mt-1 text-sm font-medium leading-snug text-gray-600";
 
 /** Primary & secondary actions on light surfaces */
 export const MARKETING_BUTTON_PRIMARY_CLASSES = [
   "inline-flex items-center justify-center",
-  MARKETING_CARD_RADIUS_CLASSES,
+  "rounded-xl",
   "px-5 py-2.5",
   "text-sm font-semibold text-white",
   "bg-brand-600 hover:bg-brand-700",
-  "shadow-sm",
-  "transition-colors duration-200",
+  "shadow-sm hover:shadow-md hover:-translate-y-0.5 active:translate-y-0",
+  "transition-all duration-200",
   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/40 focus-visible:ring-offset-2",
-  "motion-reduce:transition-none",
+  "motion-reduce:transition-none motion-reduce:hover:translate-y-0",
 ].join(" ");
 
 export const MARKETING_BUTTON_SECONDARY_CLASSES = [
   "inline-flex items-center justify-center",
-  MARKETING_CARD_RADIUS_CLASSES,
-  "border border-gray-200 bg-white px-5 py-2.5",
+  "rounded-xl",
+  "border border-gray-200/90 bg-white px-5 py-2.5",
   "text-sm font-semibold text-gray-800",
-  "shadow-sm hover:border-gray-300 hover:bg-gray-50",
-  "transition-colors duration-200",
+  "shadow-sm hover:border-gray-300 hover:bg-gray-50 hover:shadow hover:-translate-y-0.5 active:translate-y-0",
+  "transition-all duration-200",
   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-300/60 focus-visible:ring-offset-2",
-  "motion-reduce:transition-none",
+  "motion-reduce:transition-none motion-reduce:hover:translate-y-0",
 ].join(" ");
 
 export const MARKETING_BUTTON_ON_BRAND_BAND_CLASSES = [
   "inline-flex items-center justify-center",
-  MARKETING_CARD_RADIUS_CLASSES,
+  "rounded-xl",
   "bg-white px-6 py-3",
   "text-sm font-semibold text-brand-700",
-  "shadow-sm hover:bg-brand-50",
-  "transition-colors duration-200",
+  "shadow-sm hover:bg-brand-50 hover:shadow-md hover:-translate-y-0.5 active:translate-y-0",
+  "transition-all duration-200",
   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 focus-visible:ring-offset-brand-600",
 ].join(" ");
 

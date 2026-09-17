@@ -17,7 +17,7 @@ export default function AppShellHeader() {
   const showStyleguide = useStyleguideNavAccess();
 
   return (
-    <header className="sticky top-0 z-50 border-b border-gray-200 bg-white/95 backdrop-blur dark:border-gray-800 dark:bg-gray-800/95">
+    <header className="sticky top-0 z-50 border-b border-gray-200/80 bg-white/90 backdrop-blur-md shadow-[0_2px_15px_-3px_rgba(0,0,0,0.04)] dark:border-gray-800/80 dark:bg-gray-900/90 dark:shadow-[0_2px_15px_-3px_rgba(0,0,0,0.4)]">
       <div className="mx-auto flex max-w-[1600px] items-center justify-between gap-4 px-4 py-4 sm:px-6">
         <div className="min-w-0">
           <Link href="/" aria-label="Agent Witch home">
