@@ -2,6 +2,7 @@ import { CapabilityType } from "@/lib/capabilities/CapabilityType.constant";
 import findCapabilityTemplateById from "@/lib/capabilities/templates/findCapabilityTemplateById";
 import type { WorkflowCapabilityTemplate } from "@/lib/capabilities/templates/types/CapabilityTemplate.type";
 import { mapHarnessItemsToOperatorSteps } from "@/lib/harness/partitionHarnessItemsByAudience";
+import { findCustomOfficialWorkflowDefinitionByTemplateId } from "@/lib/workflowOrchestration/definitions/registry";
 import { parseExampleRequestSections } from "@/lib/workflowOrchestration/parseExampleRequestSections";
 import type OfficialWorkflowDefinition from "@/lib/workflowOrchestration/types/OfficialWorkflowDefinition.type";
 import type {
@@ -90,6 +91,11 @@ export const buildOfficialWorkflowDefinitionFromTemplate = (
 export const findOfficialWorkflowDefinitionByTemplateId = (
   templateId: string,
 ): OfficialWorkflowDefinition | null => {
+  const custom = findCustomOfficialWorkflowDefinitionByTemplateId(templateId);
+  if (custom !== undefined) {
+    return custom;
+  }
+
   const template = findCapabilityTemplateById(templateId);
   if (template === undefined || template.type !== CapabilityType.WORKFLOW) {
     return null;

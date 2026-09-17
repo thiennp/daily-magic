@@ -19,7 +19,7 @@ export type OfficialWorkflowNode =
 
 export interface OfficialWorkflowDefinition {
   readonly templateId: string;
-  readonly version: 1;
+  readonly version: number;
   readonly capabilityName: string;
   readonly nodes: readonly OfficialWorkflowNode[];
 }
