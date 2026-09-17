@@ -44,14 +44,15 @@
     {
       "slug": "runtime-client",
       "title": "Mac runtime process and CLI commands",
-      "fsaStatus": "in-progress",
+      "fsaStatus": "fsa",
       "featurePath": "apps/install/features/runtime-client",
       "legacyPaths": [
         "scripts/agent-witch.ts",
         "public/install/agent-witch/app/agent-witch.js",
-        "scripts/agentWitchAppEntry.ts"
+        "scripts/agentWitchAppEntry.ts",
+        "apps/install/entry/startAgentWitchClient.ts"
       ],
-      "notes": "Config load + waitForConfigs extracted; WS hub + createAgentWitchClient still in scripts/agent-witch.ts. Optional nested slice: hub-connection."
+      "notes": "Config + WS hub client orchestration: runtime-client public-api; hub-connection nested types; entry owns startAgentWitchClient (AWL script bridge in entry/)."
     },
     {
       "slug": "self-update",

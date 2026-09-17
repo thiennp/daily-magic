@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 /**
- * AWI runtime entry (FSA target). Forwards to `scripts/agent-witch.ts` until the
- * WebSocket client orchestration moves out of scripts in a later slice.
+ * AWI runtime entry — Mac WebSocket client process (`startAgentWitchClient`).
  */
-export { startAgentWitchClient } from "../../../scripts/agent-witch";
+export { startAgentWitchClient } from "./startAgentWitchClient";
