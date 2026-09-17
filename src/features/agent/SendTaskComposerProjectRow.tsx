@@ -9,6 +9,7 @@ interface SendTaskComposerProjectRowProps {
   readonly onSelect: (project: UserProjectRecord) => void;
   readonly onDelete: (projectId: string) => void | Promise<void>;
   readonly onChooseFolder?: (project: UserProjectRecord) => void;
+  readonly isChooseFolderBusy?: boolean;
 }
 
 export default function SendTaskComposerProjectRow({
@@ -16,6 +17,7 @@ export default function SendTaskComposerProjectRow({
   onSelect,
   onDelete,
   onChooseFolder,
+  isChooseFolderBusy = false,
 }: SendTaskComposerProjectRowProps) {
   const canDelete = !isDefaultUserProject(project);
 
@@ -43,12 +45,13 @@ export default function SendTaskComposerProjectRow({
       {onChooseFolder !== undefined ? (
         <button
           type="button"
+          disabled={isChooseFolderBusy}
           onClick={() => {
             onChooseFolder(project);
           }}
-          className="shrink-0 rounded-xl border border-brand-200 bg-brand-50 px-3 py-2 text-xs font-medium text-brand-700 transition hover:bg-brand-100 dark:border-brand-900/50 dark:bg-brand-950/30 dark:text-brand-300 dark:hover:bg-brand-950/50"
+          className="shrink-0 rounded-xl border border-brand-200 bg-brand-50 px-3 py-2 text-xs font-medium text-brand-700 transition hover:bg-brand-100 disabled:cursor-not-allowed disabled:opacity-60 dark:border-brand-900/50 dark:bg-brand-950/30 dark:text-brand-300 dark:hover:bg-brand-950/50"
         >
-          Choose on this Mac
+          {isChooseFolderBusy ? "Choosing…" : "Choose on this Mac"}
         </button>
       ) : null}
       {canDelete ? (

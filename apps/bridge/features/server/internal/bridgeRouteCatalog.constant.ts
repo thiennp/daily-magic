@@ -95,6 +95,12 @@ export const BRIDGE_ROUTE_CATALOG: readonly BridgeRouteCatalogRow[] = [
   },
   {
     method: "POST",
+    pathname: "/projects/select-folder",
+    featureSlug: "projects-proxy",
+    parentSlug: "awc-proxy",
+  },
+  {
+    method: "POST",
     pathname: "/harness/borrow",
     featureSlug: "harness-proxy",
     parentSlug: "awc-proxy",
