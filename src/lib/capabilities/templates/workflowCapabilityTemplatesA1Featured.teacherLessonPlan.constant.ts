@@ -1,4 +1,5 @@
 import buildWorkflowTemplate from "@/lib/capabilities/templates/buildWorkflowTemplate";
+import { TEACHER_LESSON_PLAN_EXAMPLE_REQUEST } from "@/lib/capabilities/templates/harnessProfiles/workflowA1.teacherLessonPlan.exampleRequest";
 import type { WorkflowCapabilityTemplate } from "@/lib/capabilities/templates/types/CapabilityTemplate.type";
 
 export const TEACHER_LESSON_PLAN_WORKFLOW: WorkflowCapabilityTemplate =
@@ -6,8 +7,8 @@ export const TEACHER_LESSON_PLAN_WORKFLOW: WorkflowCapabilityTemplate =
     "teacher-lesson-plan",
     "Education",
     "Teacher lesson plan",
-    "Build a timed lesson plan aligned to your topic and grade — with objectives, activities, and checks for understanding.",
-    "Create a lesson plan for subject and gradeLevel covering topicStandard within classDuration. Use materialsPath if present and wait for my approval before I teach from it.",
+    "Build a timed lesson plan aligned to your topic and grade — objectives, activities, checks for understanding, and post-lesson reflection prompts after you approve.",
+    TEACHER_LESSON_PLAN_EXAMPLE_REQUEST,
     [
       ["subject", "Subject", "text"],
       ["gradeLevel", "Grade level", "text"],

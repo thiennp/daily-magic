@@ -1,4 +1,5 @@
 import buildWorkflowTemplate from "@/lib/capabilities/templates/buildWorkflowTemplate";
+import { TENANT_SUPPORT_REPLY_EXAMPLE_REQUEST } from "@/lib/capabilities/templates/harnessProfiles/workflowA1.tenantSupportReply.exampleRequest";
 import type { WorkflowCapabilityTemplate } from "@/lib/capabilities/templates/types/CapabilityTemplate.type";
 
 export const TENANT_SUPPORT_REPLY_WORKFLOW: WorkflowCapabilityTemplate =
@@ -7,7 +8,7 @@ export const TENANT_SUPPORT_REPLY_WORKFLOW: WorkflowCapabilityTemplate =
     "Property",
     "Tenant support reply",
     "Draft calm, policy-grounded replies to tenant maintenance and lease questions using your lease notes — send only after you approve.",
-    "Reply to the tenant situation in tenantMessage. Read leaseNotesPath, follow issueType handling, match replyTone, and wait for my approval before I send.",
+    TENANT_SUPPORT_REPLY_EXAMPLE_REQUEST,
     [
       ["propertyName", "Property or building name", "text"],
       ["tenantMessage", "Tenant message or situation summary", "textarea"],

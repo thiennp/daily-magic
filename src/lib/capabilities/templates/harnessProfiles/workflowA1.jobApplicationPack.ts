@@ -1,4 +1,5 @@
 import type { PresetHarnessSeed } from "@/lib/capabilities/templates/harnessProfiles/PresetHarnessSeed.type";
+import { JOB_APPLICATION_PACK_EXAMPLE_REQUEST } from "@/lib/capabilities/templates/harnessProfiles/workflowA1.jobApplicationPack.exampleRequest";
 import { JOB_APPLICATION_PACK_OPERATOR_STEPS } from "@/lib/capabilities/templates/harnessProfiles/workflowA1.jobApplicationPack.operatorSteps";
 
 export const JOB_APPLICATION_PACK_PRESET: PresetHarnessSeed = {
@@ -7,15 +8,14 @@ export const JOB_APPLICATION_PACK_PRESET: PresetHarnessSeed = {
   category: "Career",
   description:
     "Tailor resume bullets and a cover letter to a specific job using your real files — submit only after you approve every claim.",
-  exampleRequest:
-    "Build a job application pack from the workflow inputs. Read resumeFolderPath and the job posting, map evidence to requirements, draft a cover letter, and wait for my approval before I submit.",
+  exampleRequest: JOB_APPLICATION_PACK_EXAMPLE_REQUEST,
   operatorSteps: JOB_APPLICATION_PACK_OPERATOR_STEPS,
   profile: {
     ruleFocus: [
       "Use only facts found in resumeFolderPath; never invent employers or skills.",
       "Mirror keywords from jobDescription without keyword stuffing.",
       "Flag gaps honestly and suggest bridge language where experience is thin.",
-      "Pause with [[AWAITING_INPUT]] before calling the pack submission-ready.",
+      "Wait for operator approval checkpoints before calling the pack submission-ready.",
     ],
     skillSections: [
       {
@@ -41,11 +41,10 @@ export const JOB_APPLICATION_PACK_PRESET: PresetHarnessSeed = {
       },
     ],
     commandSteps: [
-      "Read resumeFolderPath and job posting text.",
-      "Map requirements to evidence and draft tailored bullets.",
-      "Write cover letter and gap notes.",
-      "Present pack and wait for approval.",
-      "Log application in applicationHistoryPath when operator submits.",
+      "Confirm job posting and workflow fields with the operator.",
+      "Map requirements to resume evidence.",
+      "Draft tailored bullets and cover letter.",
+      "Finalize after approval; operator submits and logs.",
     ],
     instructionAddendum:
       "Application submission stays with the operator; the agent prepares truthful materials.",

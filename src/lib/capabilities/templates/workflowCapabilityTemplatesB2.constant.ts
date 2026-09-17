@@ -1,4 +1,5 @@
 import buildWorkflowTemplate from "@/lib/capabilities/templates/buildWorkflowTemplate";
+import { INCIDENT_POSTMORTEM_EXAMPLE_REQUEST } from "@/lib/capabilities/templates/harnessProfiles/workflowB2.incidentPostmortem.exampleRequest";
 import type { WorkflowCapabilityTemplate } from "@/lib/capabilities/templates/types/CapabilityTemplate.type";
 
 export const WORKFLOW_CAPABILITY_TEMPLATES_B2: readonly WorkflowCapabilityTemplate[] =
@@ -7,8 +8,8 @@ export const WORKFLOW_CAPABILITY_TEMPLATES_B2: readonly WorkflowCapabilityTempla
       "incident-postmortem",
       "Engineering",
       "Incident postmortem draft",
-      "Structure timeline, impact, and follow-ups after an incident.",
-      "Draft an incident postmortem with timeline, impact, root cause, and action items.",
+      "Turn rough incident notes into a blameless postmortem with timeline, impact, root cause, and owned follow-ups.",
+      INCIDENT_POSTMORTEM_EXAMPLE_REQUEST,
       [
         ["timeline", "Timeline", "textarea"],
         ["impact", "Impact", "textarea"],

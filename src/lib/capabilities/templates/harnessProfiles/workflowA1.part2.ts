@@ -1,13 +1,18 @@
 import type { PresetHarnessSeed } from "@/lib/capabilities/templates/harnessProfiles/PresetHarnessSeed.type";
+import { DAILY_STANDUP_EXAMPLE_REQUEST } from "@/lib/capabilities/templates/harnessProfiles/workflowA1.dailyStandup.exampleRequest";
+import { DAILY_STANDUP_OPERATOR_STEPS } from "@/lib/capabilities/templates/harnessProfiles/workflowA1.dailyStandup.operatorSteps";
+import { SPRINT_RECAP_PRESET } from "@/lib/capabilities/templates/harnessProfiles/workflowA1.sprintRecap";
+import { WEEKLY_TEAM_STATUS_PRESET } from "@/lib/capabilities/templates/harnessProfiles/workflowA1.weeklyTeamStatus";
 
 export const WORKFLOW_A1_PART2: readonly PresetHarnessSeed[] = [
   {
     id: "daily-standup",
     name: "Daily standup",
     category: "Reporting",
-    description: "Capture yesterday, today, and blockers in standup format.",
-    exampleRequest:
-      "Format this as a short standup update I can paste into chat.",
+    description:
+      "Turn rough notes into a crisp Yesterday / Today / Blockers post you can paste into async chat.",
+    exampleRequest: DAILY_STANDUP_EXAMPLE_REQUEST,
+    operatorSteps: DAILY_STANDUP_OPERATOR_STEPS,
     profile: {
       ruleFocus: [
         "Keep each section to 1–3 bullets.",
@@ -40,53 +45,6 @@ export const WORKFLOW_A1_PART2: readonly PresetHarnessSeed[] = [
       outputFormat: "Three labeled sections: Yesterday / Today / Blockers.",
     },
   },
-  {
-    id: "weekly-team-status",
-    name: "Weekly team status",
-    category: "Reporting",
-    description: "Turn highlights and blockers into a polished team update.",
-    exampleRequest:
-      "Write a concise team status update with bullets. Lead with outcomes and call out blockers clearly.",
-    profile: {
-      ruleFocus: [
-        "Lead with shipped outcomes and measurable progress.",
-        "Separate highlights, risks, and asks.",
-        "Name owners on blockers; propose a next step or decision needed.",
-      ],
-      skillSections: [
-        {
-          heading: "Gather",
-          bullets: [
-            "Map weekOf to the reporting period.",
-            "Extract wins from highlights; quantify when possible.",
-            "Turn blockers into owner + impact + ask.",
-          ],
-        },
-        {
-          heading: "Draft",
-          bullets: [
-            "Open with one-line summary of the week.",
-            "Use bullets for highlights and blockers sections.",
-            "End with priorities for next week.",
-          ],
-        },
-      ],
-      commandSteps: [
-        "Confirm weekOf and highlights are present.",
-        "Draft status using the playbook sections.",
-        "Verify every blocker has an owner or explicit TBD.",
-      ],
-      instructionAddendum:
-        "Optimize for managers scanning in under 60 seconds.",
-      subagentMission:
-        "You are the weekly status subagent. Produce leadership-ready team updates from raw highlights and blockers.",
-      subagentExpertise: [
-        "Executive summaries",
-        "Blocker escalation framing",
-        "Outcome-first writing",
-      ],
-      outputFormat:
-        "Bullets grouped by theme; blockers with owner and ask; under 250 words unless user asks for more.",
-    },
-  },
+  WEEKLY_TEAM_STATUS_PRESET,
+  SPRINT_RECAP_PRESET,
 ];

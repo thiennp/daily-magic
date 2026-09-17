@@ -1,4 +1,5 @@
 import type { PresetHarnessSeed } from "@/lib/capabilities/templates/harnessProfiles/PresetHarnessSeed.type";
+import { LOCAL_BUSINESS_GOOGLE_POST_EXAMPLE_REQUEST } from "@/lib/capabilities/templates/harnessProfiles/workflowA1.localBusinessGooglePost.exampleRequest";
 import { LOCAL_BUSINESS_GOOGLE_POST_OPERATOR_STEPS } from "@/lib/capabilities/templates/harnessProfiles/workflowA1.localBusinessGooglePost.operatorSteps";
 
 export const LOCAL_BUSINESS_GOOGLE_POST_PRESET: PresetHarnessSeed = {
@@ -6,16 +7,15 @@ export const LOCAL_BUSINESS_GOOGLE_POST_PRESET: PresetHarnessSeed = {
   name: "Local business Google post",
   category: "Local",
   description:
-    "Draft a Google Business Profile post for hours, offers, or events — without repeating recent posts from your history file.",
-  exampleRequest:
-    "Prepare a Google Business post for businessName. Read postHistoryPath, avoid duplicate angles, honor hoursOrOffer, and wait for my approval before I publish.",
+    "Draft a Google Business Profile post for hours, offers, or events — dedupe against your Mac history file, approve copy, then you publish.",
+  exampleRequest: LOCAL_BUSINESS_GOOGLE_POST_EXAMPLE_REQUEST,
   operatorSteps: LOCAL_BUSINESS_GOOGLE_POST_OPERATOR_STEPS,
   profile: {
     ruleFocus: [
       "Read postHistoryPath; do not reuse recent hooks or offers.",
       "Keep hoursOrOffer and dates accurate for businessType.",
       "Write scannable mobile copy with one clear CTA.",
-      "Pause with [[AWAITING_INPUT]] before publish-ready.",
+      "Pause at workflow human checkpoints; do not log in to Google or publish yourself.",
     ],
     skillSections: [
       {

@@ -26,7 +26,16 @@ export const FINANCE_SHEET_QA_OPERATOR_STEPS: readonly OperatorStepDefinition[] 
       content: [
         "1. Ask additional finance questions in the task composer or live terminal.",
         "2. Keep the same Google Sheet tab open while the agent analyzes.",
-        "3. Say when you are done so the agent can stop before you close the sheet.",
+        "3. Reply when you are done asking follow-ups for this session.",
+      ].join("\n"),
+    },
+    {
+      id: "finance-sheet-qa-operator-review",
+      title: "Review cited answers before you close the sheet",
+      content: [
+        "1. Read the agent’s answer table and tab/range citations.",
+        "2. Ask for corrections if a number or range looks wrong.",
+        "3. Reply approve when you are satisfied and ready to close the sheet.",
       ].join("\n"),
     },
   ];

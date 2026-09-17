@@ -1,4 +1,5 @@
 import buildWorkflowTemplate from "@/lib/capabilities/templates/buildWorkflowTemplate";
+import { DOCUMENT_SUMMARY_EXAMPLE_REQUEST } from "@/lib/capabilities/templates/harnessProfiles/workflowA2.documentSummary.exampleRequest";
 import { RESEARCH_BRIEF_EXAMPLE_REQUEST } from "@/lib/capabilities/templates/harnessProfiles/workflowA2.researchBrief.exampleRequest";
 import { SLACK_THREAD_SUMMARY_WORKFLOW } from "@/lib/capabilities/templates/workflowCapabilityTemplatesA2.slackThreadSummary.constant";
 import { TEAM_REPO_STANDUP_EXAMPLE_REQUEST } from "@/lib/capabilities/templates/harnessProfiles/workflowA2.teamRepoStandup.exampleRequest";
@@ -11,12 +12,12 @@ export const WORKFLOW_CAPABILITY_TEMPLATES_A2: readonly WorkflowCapabilityTempla
       "document-summary",
       "Research",
       "Document summary",
-      "Summarize pasted content with the focus you choose.",
-      "Summarize the source. Highlight decisions, risks, and recommended actions.",
+      "Summarize pasted content with the length and focus you choose — clarify gaps, then get decisions, risks, and actions.",
+      DOCUMENT_SUMMARY_EXAMPLE_REQUEST,
       [
         ["source", "Source text", "textarea"],
-        ["length", "Length", "text"],
-        ["focus", "Focus", "text"],
+        ["length", "Length (short, medium, or long)", "text"],
+        ["focus", "Focus (what matters most to the reader)", "text"],
       ],
     ),
     buildWorkflowTemplate(

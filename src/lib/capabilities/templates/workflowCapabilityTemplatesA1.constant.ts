@@ -1,29 +1,22 @@
 import buildWorkflowTemplate from "@/lib/capabilities/templates/buildWorkflowTemplate";
+import { DAILY_STANDUP_EXAMPLE_REQUEST } from "@/lib/capabilities/templates/harnessProfiles/workflowA1.dailyStandup.exampleRequest";
 import { MEETING_NOTES_ACTIONS_EXAMPLE_REQUEST } from "@/lib/capabilities/templates/harnessProfiles/workflowA1.meetingNotesActions.exampleRequest";
+import { SPRINT_RECAP_EXAMPLE_REQUEST } from "@/lib/capabilities/templates/harnessProfiles/workflowA1.sprintRecap.exampleRequest";
 import type { WorkflowCapabilityTemplate } from "@/lib/capabilities/templates/types/CapabilityTemplate.type";
+import { ONE_ON_ONE_PREP_WORKFLOW } from "@/lib/capabilities/templates/workflowCapabilityTemplatesA1Featured.oneOnOnePrep.constant";
+import { WEEKLY_TEAM_STATUS_WORKFLOW } from "@/lib/capabilities/templates/workflowCapabilityTemplatesA1Featured.weeklyTeamStatus.constant";
 import { WORKFLOW_CAPABILITY_TEMPLATES_A1_FEATURED } from "@/lib/capabilities/templates/workflowCapabilityTemplatesA1Featured.constant";
 
 export const WORKFLOW_CAPABILITY_TEMPLATES_A1: readonly WorkflowCapabilityTemplate[] =
   [
     ...WORKFLOW_CAPABILITY_TEMPLATES_A1_FEATURED,
-    buildWorkflowTemplate(
-      "weekly-team-status",
-      "Reporting",
-      "Weekly team status",
-      "Turn highlights and blockers into a polished team update.",
-      "Write a concise team status update with bullets. Lead with outcomes and call out blockers clearly.",
-      [
-        ["weekOf", "Week of", "text"],
-        ["highlights", "Highlights", "textarea"],
-        ["blockers", "Blockers (optional)", "textarea", false],
-      ],
-    ),
+    WEEKLY_TEAM_STATUS_WORKFLOW,
     buildWorkflowTemplate(
       "daily-standup",
       "Reporting",
       "Daily standup",
-      "Capture yesterday, today, and blockers in standup format.",
-      "Format this as a short standup update I can paste into chat.",
+      "Turn rough notes into a crisp Yesterday / Today / Blockers post you can paste into async chat.",
+      DAILY_STANDUP_EXAMPLE_REQUEST,
       [
         ["yesterday", "Yesterday", "textarea"],
         ["today", "Today", "textarea"],
@@ -34,8 +27,8 @@ export const WORKFLOW_CAPABILITY_TEMPLATES_A1: readonly WorkflowCapabilityTempla
       "sprint-recap",
       "Reporting",
       "Sprint recap",
-      "Summarize what shipped, what slipped, and what is next.",
-      "Write a sprint recap for stakeholders. Keep it factual and action-oriented.",
+      "Turn sprint notes into a stakeholder-ready recap — shipped outcomes, deferrals with reasons, and up to three next-sprint priorities.",
+      SPRINT_RECAP_EXAMPLE_REQUEST,
       [
         ["sprintName", "Sprint name", "text"],
         ["shipped", "Shipped", "textarea"],
@@ -55,17 +48,5 @@ export const WORKFLOW_CAPABILITY_TEMPLATES_A1: readonly WorkflowCapabilityTempla
         ["notes", "Raw notes", "textarea"],
       ],
     ),
-    buildWorkflowTemplate(
-      "one-on-one-prep",
-      "Communication",
-      "1:1 talking points",
-      "Prepare a focused 1:1 agenda and feedback.",
-      "Draft 1:1 talking points with prompts, feedback, and follow-ups.",
-      [
-        ["person", "Person", "text"],
-        ["sinceLast", "Since last 1:1", "textarea", false],
-        ["topics", "Topics to cover", "textarea"],
-        ["feedback", "Feedback to share", "textarea", false],
-      ],
-    ),
+    ONE_ON_ONE_PREP_WORKFLOW,
   ];

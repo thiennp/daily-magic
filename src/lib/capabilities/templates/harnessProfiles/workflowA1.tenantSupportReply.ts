@@ -1,4 +1,5 @@
 import type { PresetHarnessSeed } from "@/lib/capabilities/templates/harnessProfiles/PresetHarnessSeed.type";
+import { TENANT_SUPPORT_REPLY_EXAMPLE_REQUEST } from "@/lib/capabilities/templates/harnessProfiles/workflowA1.tenantSupportReply.exampleRequest";
 import { TENANT_SUPPORT_REPLY_OPERATOR_STEPS } from "@/lib/capabilities/templates/harnessProfiles/workflowA1.tenantSupportReply.operatorSteps";
 
 export const TENANT_SUPPORT_REPLY_PRESET: PresetHarnessSeed = {
@@ -7,15 +8,14 @@ export const TENANT_SUPPORT_REPLY_PRESET: PresetHarnessSeed = {
   category: "Property",
   description:
     "Draft calm, policy-grounded replies to tenant maintenance and lease questions using your lease notes — send only after you approve.",
-  exampleRequest:
-    "Reply to the tenant situation in tenantMessage. Read leaseNotesPath, follow issueType handling, match replyTone, and wait for my approval before I send.",
+  exampleRequest: TENANT_SUPPORT_REPLY_EXAMPLE_REQUEST,
   operatorSteps: TENANT_SUPPORT_REPLY_OPERATOR_STEPS,
   profile: {
     ruleFocus: [
       "Ground rights and timelines in leaseNotesPath only.",
       "Stay professional; do not admit liability or illegal promises.",
       "Give clear next steps: timeline, vendor dispatch, or documents needed.",
-      "Pause with [[AWAITING_INPUT]] before send-ready.",
+      "Use workflow human checkpoints for approval; do not send without operator OK.",
     ],
     skillSections: [
       {
