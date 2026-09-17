@@ -21,7 +21,7 @@ export {
   wakeAgentWitchLaunchAgents,
 } from "../../../scripts/agentWitchWakeHandlers";
 
-export { buildWakeServerCorsHeaders } from "../../../scripts/agentWitchWakeAllowedOrigins";
+export { buildWakeServerCorsHeaders } from "../features/server/features/cors-origin/public-api/infrastructure";
 
 export {
   buildAgentWitchWakeLocalLogHtml,

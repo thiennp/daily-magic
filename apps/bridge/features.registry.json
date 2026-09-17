@@ -14,8 +14,15 @@
       "slug": "http-server",
       "title": "HTTP helpers",
       "parentSlug": "server",
-      "fsaStatus": "in-progress",
+      "fsaStatus": "fsa",
       "featurePath": "apps/bridge/features/server/features/http-server"
+    },
+    {
+      "slug": "cors-origin",
+      "title": "CORS and allowed AWC origins",
+      "parentSlug": "server",
+      "fsaStatus": "fsa",
+      "featurePath": "apps/bridge/features/server/features/cors-origin"
     },
     {
       "slug": "discovery",

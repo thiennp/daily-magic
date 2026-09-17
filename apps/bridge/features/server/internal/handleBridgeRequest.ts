@@ -9,7 +9,7 @@ import { tryHandleInstallDeleteApiRoute } from "../../operations/features/instal
 import { tryHandleProcessControlRoutes } from "../../operations/features/process-control/internal/handleProcessControlRoutes";
 import { tryHandleSelfUpdateApiRoutes } from "../../operations/features/self-update-api/internal/handleSelfUpdateApiRoutes";
 import { tryHandleWatchdogApiRoutes } from "../../operations/features/watchdog-api/internal/handleWatchdogApiRoutes";
-import { buildWakeServerCorsHeaders } from "../../../adapters/legacyScripts";
+import { buildWakeServerCorsHeaders } from "../features/cors-origin/public-api/infrastructure";
 import {
   parsePathname,
   readJsonBody,
