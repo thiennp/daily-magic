@@ -1,5 +1,5 @@
 import { installHarnessFromWakeServer } from "../public-api/infrastructure";
-import { sendJson } from "../../../../server/features/http-server/internal/bridgeHttp.util";
+import { sendJson } from "../../../../server/features/http-server/public-api/infrastructure";
 import type { BridgeRequestContext } from "../../../../server/internal/bridgeRequestContext.type";
 
 const readHarnessBody = async (

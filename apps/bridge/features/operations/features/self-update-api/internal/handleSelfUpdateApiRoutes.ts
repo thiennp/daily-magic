@@ -7,7 +7,7 @@ import {
 import {
   parseQueryLimit,
   sendJson,
-} from "../../../../server/features/http-server/internal/bridgeHttp.util";
+} from "../../../../server/features/http-server/public-api/infrastructure";
 import type { BridgeRequestContext } from "../../../../server/internal/bridgeRequestContext.type";
 
 export const tryHandleSelfUpdateApiRoutes = async (
