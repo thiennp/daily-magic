@@ -37,6 +37,7 @@
     "typecheck": "npm run lint && tsc --noEmit",
     "db:schema": "psql \"$DATABASE_URL\" -f db/schema.sql",
     "db:migrate": "tsx scripts/db-migrate.ts",
+    "db:backfill-components": "tsx scripts/backfillComponentCatalog.ts",
     "db:migrate:bootstrap": "tsx scripts/db-migrate-bootstrap.ts",
     "db:migrate:onboarding-first-task": "psql \"$DATABASE_URL\" -v ON_ERROR_STOP=1 -f db/migrations/013-onboarding-first-task-sent.sql",
     "prepare": "npx is-ci || npx husky",
