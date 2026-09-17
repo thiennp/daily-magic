@@ -27,5 +27,5 @@ export interface AgentWitchProcessHostResolution {
 }
 
 export interface ResolveAgentWitchProcessHostInput {
-  readonly env?: NodeJS.ProcessEnv;
+  readonly env?: Readonly<Record<string, string | undefined>>;
 }

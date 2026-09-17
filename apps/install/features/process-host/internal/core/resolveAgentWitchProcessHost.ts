@@ -29,7 +29,8 @@ const resolveHostModeLabel = (
 export const resolveAgentWitchProcessHost = (
   input: ResolveAgentWitchProcessHostInput = {},
 ): AgentWitchProcessHostResolution => {
-  const env = input.env ?? process.env;
+  const env: Readonly<Record<string, string | undefined>> =
+    input.env ?? process.env;
   const skipInProcessBridge = isAgentWitchTruthyEnv(
     env[AGENT_WITCH_EXTERNAL_BRIDGE_ENV],
   );
