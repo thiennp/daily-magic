@@ -39,6 +39,8 @@ import {
 } from "@agent-witch/live-shell/presentation";
 import { buildAgentWitchLocalHomePageBody } from "@agent-witch/live-home/presentation";
 import { buildAgentWitchLocalTaskPageBody } from "@agent-witch/live-tasks/presentation";
+import { buildAgentWitchLocalWriterSessionsPageBody } from "@agent-witch/live-memory/presentation";
+import { listWriterSessionCanonicalRecords } from "@agent-witch/live-memory";
 import { buildAgentWitchLocalWriterApiPageBody } from "@agent-witch/live-writer-settings/presentation";
 import {
   buildAgentWitchLocalHarnessPageBody,
@@ -589,6 +591,22 @@ export const startAgentWitchLocalApp = (input: {
         }
         response.writeHead(303, { Location: `/task?${query.toString()}` });
         response.end();
+        return;
+      }
+
+      if (method === "GET" && pathname === "/writer-sessions") {
+        const installBundle = buildInstallBundleStatus();
+        const sessions = listWriterSessionCanonicalRecords(input.layout, 12);
+        sendHtml(
+          response,
+          await buildLocalAppShell({
+            title: "Writer sessions",
+            activePath: "/writer-sessions",
+            installVersion: installBundle.installVersion,
+            updateFlash: readLocalAppUpdateFlash(request.url ?? undefined),
+            body: buildAgentWitchLocalWriterSessionsPageBody({ sessions }),
+          }),
+        );
         return;
       }
 

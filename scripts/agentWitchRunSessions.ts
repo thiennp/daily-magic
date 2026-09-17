@@ -37,6 +37,8 @@ import {
 } from "./agentWitchRunSessionsAwaitingInput";
 import { tryRunWriterTaskInPty } from "./agentWitchRunSessionsPty";
 import { markWriterConversationStarted } from "./agentWitchWriterSession";
+import { appendWriterTranscriptTurn } from "./writerSessionTranscriptStore";
+import { extractUserTaskFromWrappedPrompt } from "./dispatch/extractUserTaskFromWrappedPrompt";
 import { appendWriterLlmUsageFooter } from "@/lib/agentWitch/formatWriterLlmUsageFooter";
 import type WriterLlmUsage from "@/lib/agentWitch/writerLlmUsage.type";
 
@@ -57,6 +59,7 @@ export { parseAwaitingInputFromOutput } from "./agentWitchRunSessionsAwaitingInp
 
 interface ActiveRunSession {
   readonly originalPrompt: string;
+  readonly userTranscriptPrompt: string;
   readonly writerAgent: HarnessWriterAgentId;
   readonly projectFolderPath?: string;
   readonly reportKey?: string;
@@ -69,6 +72,18 @@ const runsStoppedByUser = new Set<string>();
 
 const STOPPED_EXIT_CODE = 130;
 const STOPPED_OUTPUT_SUFFIX = "\n\nStopped by user.";
+
+const resolveUserTranscriptPrompt = (
+  wrappedPrompt: string,
+  explicitPrompt: string | undefined,
+): string => {
+  const explicit = explicitPrompt?.trim() ?? "";
+  if (explicit.length > 0) {
+    return explicit;
+  }
+
+  return extractUserTaskFromWrappedPrompt(wrappedPrompt);
+};
 
 let cloudApiConfig: AgentWitchCloudApiConfig | null = null;
 
@@ -193,6 +208,18 @@ const finishRun = (
       clearTerminalStreamState(agentRunId);
     }
 
+    const session = runSessions.get(agentRunId);
+    if (session !== undefined) {
+      appendWriterTranscriptTurn({
+        layout: config.layout,
+        writerAgent: session.writerAgent,
+        projectFolderPath: session.projectFolderPath,
+        userPrompt: session.userTranscriptPrompt,
+        assistantOutput: resolvedOutput,
+        agentRunId,
+      });
+    }
+
     persistFinishedAgentRun(config.layout, {
       agentRunId,
       originalPrompt,
@@ -283,6 +310,7 @@ const attachChildHandlers = (
   requestId: string | undefined,
   agentRunId: string | undefined,
   originalPrompt: string,
+  userTranscriptPrompt: string,
   writerAgent: HarnessWriterAgentId,
 ): void => {
   const outputChunks: string[] = [];
@@ -310,6 +338,8 @@ const attachChildHandlers = (
     activeChildren.set(agentRunId, child);
     runSessions.set(agentRunId, {
       originalPrompt,
+      userTranscriptPrompt:
+        existingSession?.userTranscriptPrompt ?? userTranscriptPrompt,
       writerAgent,
       projectFolderPath: existingSession?.projectFolderPath,
       reportKey: existingSession?.reportKey,
@@ -432,10 +462,17 @@ const runWriterApiTask = (
   agentRunId?: string,
   projectFolderPath?: string,
   reportKey?: string,
+  userTranscriptPrompt?: string,
 ): void => {
+  const resolvedTranscriptPrompt = resolveUserTranscriptPrompt(
+    prompt,
+    userTranscriptPrompt,
+  );
+
   if (agentRunId !== undefined) {
     runSessions.set(agentRunId, {
       originalPrompt: prompt,
+      userTranscriptPrompt: resolvedTranscriptPrompt,
       writerAgent,
       projectFolderPath,
       reportKey,
@@ -507,7 +544,13 @@ export const runWriterTask = (
   shellSessionId?: string,
   projectFolderPath?: string,
   reportKey?: string,
+  userTranscriptPrompt?: string,
 ): void => {
+  const resolvedTranscriptPrompt = resolveUserTranscriptPrompt(
+    prompt,
+    userTranscriptPrompt,
+  );
+
   if (shouldUseWriterApi(config, writerAgent)) {
     runWriterApiTask(
       config,
@@ -518,6 +561,7 @@ export const runWriterTask = (
       agentRunId,
       projectFolderPath,
       reportKey,
+      resolvedTranscriptPrompt,
     );
     return;
   }
@@ -555,6 +599,7 @@ export const runWriterTask = (
       requestId,
       agentRunId,
       prompt,
+      resolvedTranscriptPrompt,
       writerAgent,
     );
   };
@@ -566,6 +611,7 @@ export const runWriterTask = (
 
   runSessions.set(agentRunId, {
     originalPrompt: prompt,
+    userTranscriptPrompt: resolvedTranscriptPrompt,
     writerAgent,
     projectFolderPath,
     reportKey,
@@ -737,6 +783,7 @@ export const continueClaudeTaskAfterInput = (
     input.shellSessionId,
     projectFolderPath,
     reportKey,
+    session?.userTranscriptPrompt,
   );
 };
 
@@ -747,6 +794,9 @@ export const replayPendingRunInputRequests = (
   for (const session of listPendingRunInputSessions(config.layout)) {
     runSessions.set(session.agentRunId, {
       originalPrompt: session.originalPrompt,
+      userTranscriptPrompt: extractUserTaskFromWrappedPrompt(
+        session.originalPrompt,
+      ),
       writerAgent: "claude-cli",
       accumulatedOutput: session.accumulatedOutput,
     });

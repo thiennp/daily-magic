@@ -86,6 +86,12 @@ export const buildAgentWitchLocalHomePageBody = (input: {
         <p class="home-card-lede">Browse and search local RAG chunks written after agent runs on this Mac.</p>
         <p class="home-card-meta">${escapeHtml(knowledgeMeta)}</p>
       </a>
+      <a class="home-card" href="/writer-sessions">
+        <p class="home-card-eyebrow">Memory</p>
+        <h2 class="home-card-title">Writer transcripts</h2>
+        <p class="home-card-lede">Full local writer conversation logs and cold-continue context bundles.</p>
+        <p class="home-card-meta">Canonical turns stored under ~/.agent-witch</p>
+      </a>
       <a class="home-card" href="/errors">
         <p class="home-card-eyebrow">Diagnostics</p>
         <h2 class="home-card-title">Error log</h2>

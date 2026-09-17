@@ -10,6 +10,7 @@ export type AgentWitchLocalAppNavPath =
   | "/errors"
   | "/traffic"
   | "/knowledge"
+  | "/writer-sessions"
   | "/harness"
   | "/writer-api";
 
@@ -31,6 +32,7 @@ const NAV_ITEMS: ReadonlyArray<{
   { href: "/harness", label: "Harness" },
   { href: "/writer-api", label: "Writer API" },
   { href: "/knowledge", label: "Knowledge" },
+  { href: "/writer-sessions", label: "Transcripts" },
   { href: "/errors", label: "Errors" },
   { href: "/traffic", label: "Traffic" },
 ];

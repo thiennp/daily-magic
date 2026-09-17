@@ -49,8 +49,13 @@ import {
 } from "@agent-witch/live-local-server";
 import {
   appendAgentWitchMemoryEntry,
+  buildWriterSessionColdContinuePrompt,
+  endActiveWriterTranscriptSession,
   formatMemoryContextForPrompt,
+  loadWriterSessionCanonical,
   readAgentWitchMemoryEntries,
+  resolveActiveWriterSessionId,
+  startNewWriterTranscriptSession,
 } from "@agent-witch/live-memory";
 import { ensureAgentWitchProjectFolder } from "@agent-witch/live-projects";
 import { AGENT_WITCH_DEFAULT_ORIGIN } from "@agent-witch/shared/network";
@@ -246,6 +251,22 @@ const dispatchWriterTask = async (
     }
   }
 
+  const resolvedProjectFolderPath = resolveRunProjectFolderPath(
+    projectFolderPath,
+    buildDefaultUserProjectFolderPath,
+  );
+  ensureAgentWitchProjectFolder({
+    projectFolderPath: resolvedProjectFolderPath,
+  });
+
+  if (!sessionContinuation) {
+    startNewWriterTranscriptSession(
+      config.layout,
+      writerAgent,
+      resolvedProjectFolderPath,
+    );
+  }
+
   const sessionTurn =
     sessionContinuation &&
     supportsWriterSessionContinuation(writerAgent) &&
@@ -270,15 +291,25 @@ const dispatchWriterTask = async (
         userMessage: prompt,
       });
     }
+  } else if (sessionContinuation && sessionTurn === "first") {
+    const activeSessionId = resolveActiveWriterSessionId(
+      config.layout,
+      writerAgent,
+      resolvedProjectFolderPath,
+    );
+    if (activeSessionId !== null) {
+      const canonical = loadWriterSessionCanonical(
+        config.layout,
+        activeSessionId,
+      );
+      if (canonical !== null && canonical.turns.length > 0) {
+        resolvedPrompt = buildWriterSessionColdContinuePrompt({
+          priorTurns: canonical.turns,
+          userMessage: prompt,
+        });
+      }
+    }
   }
-
-  const resolvedProjectFolderPath = resolveRunProjectFolderPath(
-    projectFolderPath,
-    buildDefaultUserProjectFolderPath,
-  );
-  ensureAgentWitchProjectFolder({
-    projectFolderPath: resolvedProjectFolderPath,
-  });
 
   const ragChunks = await queryAgentWitchRag({
     layout: config.layout,
@@ -363,6 +394,7 @@ const dispatchWriterTask = async (
     shellSessionId,
     resolvedProjectFolderPath,
     resolvedReportKey,
+    prompt,
   );
 
   if (needsWarmup && agentRunId !== undefined) {
@@ -1080,6 +1112,7 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
         isHarnessWriterAgentId(writerAgent)
       ) {
         clearWriterSession(writerAgent);
+        endActiveWriterTranscriptSession(config.layout, writerAgent);
       }
     }
 
