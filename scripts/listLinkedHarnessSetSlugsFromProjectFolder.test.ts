@@ -2,14 +2,6 @@ import { describe, expect, it } from "vitest";
 
 import { listLinkedHarnessSetSlugsFromMaterializationLedger } from "../apps/live/features/projects/internal/core/listLinkedHarnessSetSlugsFromProjectFolder";
 
-const tempRoots: string[] = [];
-
-afterEach(() => {
-  for (const root of tempRoots.splice(0)) {
-    fs.rmSync(root, { recursive: true, force: true });
-  }
-});
-
 describe("listLinkedHarnessSetSlugsFromMaterializationLedger", () => {
   it("collects unique harness set slugs from ledger component ids", () => {
     const slugs = listLinkedHarnessSetSlugsFromMaterializationLedger({
