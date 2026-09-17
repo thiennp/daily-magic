@@ -1,8 +1,4 @@
-import fs from "node:fs";
-import os from "node:os";
-import path from "node:path";
-
-import { afterEach, describe, expect, it } from "vitest";
+import { describe, expect, it } from "vitest";
 
 import { listLinkedHarnessSetSlugsFromMaterializationLedger } from "../apps/live/features/projects/internal/core/listLinkedHarnessSetSlugsFromProjectFolder";
 
