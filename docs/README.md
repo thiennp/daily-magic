@@ -54,6 +54,7 @@ Model: [conventions/progressive-disclosure.md](conventions/progressive-disclosur
 - [Repository name vs hosting](product/repo-name-and-hosting.md)
 - [Concepts glossary](product/concepts.md)
 - [UX simplification](product/ux-simplification.md)
+- [Projects view wireframes v2](product/projects-view-wireframes-v2.md) — AWC list/detail vs AWL editor UX review
 
 ## Security
 
