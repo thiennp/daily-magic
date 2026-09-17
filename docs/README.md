@@ -31,6 +31,10 @@ Model: [conventions/progressive-disclosure.md](conventions/progressive-disclosur
 
 - [Domain map](domains/README.md) — one entry per product area, “read next if…” only
 
+## System Q&A (RAG)
+
+- [Q&A index](qa/README.md) — stable “how it works” answers (`npm run feature-knowledge:query -- "…" --feature=docs`); agents read **`rules-system-qa-rag.mdc`**
+
 ## Conventions
 
 - [Load context — task paths](conventions/load-context.md)

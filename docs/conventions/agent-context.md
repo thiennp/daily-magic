@@ -29,10 +29,11 @@ Path-scoped Cursor rules load from `.cursor.json` when you touch matching paths 
 
 ## What gets indexed
 
-| Location          | Files indexed                                                       |
-| ----------------- | ------------------------------------------------------------------- |
-| `docs/**/*.md`    | All markdown (chunked by heading → `.feature-knowledge/index.json`) |
-| `src/features/*/` | `README.md`, `AGENTS.md`, `KNOWN_ISSUES.md` per feature folder      |
+| Location          | Files indexed                                                                                |
+| ----------------- | -------------------------------------------------------------------------------------------- |
+| `docs/**/*.md`    | All markdown (chunked by heading → `.feature-knowledge/index.json`)                          |
+| `docs/qa/*.md`    | **System Q&A** — answer “how it works” from here before code (see `rules-system-qa-rag.mdc`) |
+| `src/features/*/` | `README.md`, `AGENTS.md`, `KNOWN_ISSUES.md` per feature folder                               |
 
 Rebuild after edits: `npm run feature-knowledge:index`. Scaffold missing feature docs from registry: `npm run feature-knowledge:scaffold-docs`.
 

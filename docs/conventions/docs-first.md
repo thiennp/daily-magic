@@ -20,6 +20,7 @@ Treat markdown under `docs/` and feature folders as the **canonical map**. Code 
 | Deploy / hosting / env                     | [development/deployment.md](../development/deployment.md), ADR 0006                                                                                                  |
 | Security boundary                          | [security/threat-model.md](../security/threat-model.md)                                                                                                              |
 | Bug fix with recurrence risk               | Row in feature `KNOWN_ISSUES.md` + regression test                                                                                                                   |
+| Repeat “how does the system work?” answer  | New or updated `docs/qa/<topic>.md` + catalog in `docs/qa/README.md`; `npm run feature-knowledge:index`                                                              |
 | New harness rule for agents                | `.cursor/rules/` or command under `.cursor/commands/` — only if automation needs it; summarize in [agent-context.md](agent-context.md) if it affects context loading |
 | FSA new slice or migrate one slug          | [ADR 0007](../adr/0007-fractal-slice-architecture.md), [fsa-workflows.md](fsa-workflows.md), `command-fsa-*.md`                                                      |
 

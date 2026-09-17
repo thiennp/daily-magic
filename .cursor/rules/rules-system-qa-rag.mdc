@@ -1,0 +1,37 @@
+---
+description: Answer system "how it works" questions from docs/qa RAG first; append new Q&A when missing
+globs:
+alwaysApply: true
+---
+
+# System Q&A (RAG-first)
+
+Canonical Q&A lives in **`docs/qa/`**. It is indexed with all `docs/**/*.md` into `.feature-knowledge/index.json` (TF-IDF). Query slug: **`docs`**.
+
+## Before answering
+
+When the user asks **how Agent Witch works** (architecture, identity, dispatch, hosting, deployables AWC/AWL/AWB/AWI, “why does the UI…”), **do not infer from code first**.
+
+1. Run:
+   ```bash
+   npm run feature-knowledge:query -- "<user question excerpt>" --feature=docs
+   ```
+   If no good hit, retry without `--feature` or with English keywords from [docs/qa/README.md](../../docs/qa/README.md).
+
+2. If a top hit is under **`docs/qa/`**, base the reply on that markdown (short answer + details). Cite the file path. Use code only to **verify the doc is still accurate** or to fix the doc if stale.
+
+3. If **no** `docs/qa/` hit covers the question:
+   - Answer from ADRs, domains, and code as needed.
+   - **In the same task**, add a new `docs/qa/<topic-slug>.md` following the format in `docs/qa/README.md` (include **Query aliases** in multiple languages when the user asked in Vietnamese or other locales).
+   - Add a catalog row in `docs/qa/README.md`.
+   - Run `npm run feature-knowledge:index` and stage `.feature-knowledge/index.json` when committing.
+
+## Do not use Q&A for
+
+- One-off bug triage → feature `KNOWN_ISSUES.md` + regression test.
+- Ticket implementation → feature README + ADRs.
+- Secrets, tokens, or user-specific env values in Q&A files.
+
+## Commits
+
+When Q&A or index changes ship, commit **`docs/qa/**`** and **`.feature-knowledge/index.json`** together (see `rules-feature-knowledge.mdc`).

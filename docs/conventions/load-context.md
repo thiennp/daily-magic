@@ -76,6 +76,18 @@ Optional: `npm run harness:bootstrap -- --match="<short task description>"` for 
 
 ---
 
+### System “how it works?” (explain product behavior)
+
+| Step | Read                                                                                            |
+| ---- | ----------------------------------------------------------------------------------------------- |
+| 1    | `npm run feature-knowledge:query -- "<question>" --feature=docs` — prefer hits under `docs/qa/` |
+| 2    | [docs/qa/README.md](../qa/README.md) catalog if query is weak                                   |
+| 3    | Linked ADR/domain from the Q&A file only if the doc points there                                |
+
+**Then** source code only to confirm or update the Q&A doc. Rule: **`rules-system-qa-rag.mdc`**.
+
+---
+
 ### Understand architecture (onboarding, design review)
 
 | Step | Read                                                                                                          |
@@ -95,6 +107,7 @@ Optional: `npm run harness:bootstrap -- --match="<short task description>"` for 
 | ------------------------- | ------------------------------------------------------------------ |
 | Know the feature slug     | `npm run feature-knowledge:query -- "question" --feature=dispatch` |
 | Cross-cutting / docs only | `npm run feature-knowledge:query -- "question" --feature=docs`     |
+| System Q&A (how it works) | Same; open `docs/qa/*.md` when ranked first                        |
 | Unsure of slug            | Query without `--feature`, then open top `sourcePath` hits         |
 
 ## Maintaining the reveal layers

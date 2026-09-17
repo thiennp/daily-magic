@@ -103,6 +103,12 @@
       "glob": "src/features/**"
     },
     {
+      "name": "rules-system-qa-rag",
+      "description": "System how-it-works Q&A in docs/qa; RAG query before code; append missing topics",
+      "path": "rules-system-qa-rag.mdc",
+      "glob": "**/*"
+    },
+    {
       "name": "architecture-decision-records",
       "description": "Binding ADR catalog for Agent Witch (docs/adr)",
       "path": "architecture-decision-records.mdc",
