@@ -22,21 +22,24 @@ See manifest `skip.signals` — explanation-only, review-only, status, meta chat
 
 See manifest `routing` (sorted by `priority`). Examples:
 
-| Priority | Signals (subset)           | Command                                              |
-| -------- | -------------------------- | ---------------------------------------------------- |
-| 1        | comprehensive commit       | `command-git-commit-comprehensive-review.md`         |
-| 2        | commit, quick commit       | `command-git-commit-quick.md`                        |
-| 8        | verify, lint, typecheck    | `command-verify-post-change-lint-typecheck-tests.md` |
-| 9        | structure, validate staged | workflow `structure` only                            |
+| Priority | Signals (subset)                | Command                                              |
+| -------- | ------------------------------- | ---------------------------------------------------- |
+| 1        | comprehensive commit            | `command-git-commit-comprehensive-review.md`         |
+| 2        | commit, quick commit            | `command-git-commit-quick.md`                        |
+| 8        | verify, lint, typecheck         | `command-verify-post-change-lint-typecheck-tests.md` |
+| 9        | structure, validate staged      | workflow `structure` only                            |
+| 9        | AWC, AWL, AWB, AWI, deployables | read `docs/product/agent-witch-deployables.md`       |
+| 12       | refactor gate, apps/live, …     | workflow `refactor-safety` → `test:refactor-gate`    |
 
 ## Workflows (scripts — do not duplicate in rules)
 
-| Workflow    | Scripts                                                        |
-| ----------- | -------------------------------------------------------------- |
-| `verify`    | `cursor:verify`, `lint`, `typecheck`, Vitest `--changed`       |
-| `commit`    | `validate:staged` + Husky manifest                             |
-| `pr`        | `validate:staged`, `cursor:architecture --staged`, `typecheck` |
-| `structure` | `validate:staged`                                              |
+| Workflow          | Scripts                                                        |
+| ----------------- | -------------------------------------------------------------- |
+| `verify`          | `cursor:verify`, `lint`, `typecheck`, Vitest `--changed`       |
+| `commit`          | `validate:staged` + Husky manifest                             |
+| `pr`              | `validate:staged`, `cursor:architecture --staged`, `typecheck` |
+| `structure`       | `validate:staged`                                              |
+| `refactor-safety` | `npm run test:refactor-gate`                                   |
 
 ## Trackers
 

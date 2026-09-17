@@ -1,0 +1,74 @@
+{
+  "version": 1,
+  "description": "Curated gates before AWC/AWL/AWB/AWI folder moves and FSA refactors (no product logic required in manifest-only PRs).",
+  "tiers": {
+    "fast": {
+      "label": "Fast (~1 min)",
+      "when": "After each small refactor step or doc-only + harness change",
+      "vitestConfig": "vitest.refactoring-safety.fast.config.ts",
+      "npmScripts": []
+    },
+    "standard": {
+      "label": "Standard refactor gate (~3–8 min)",
+      "when": "Before moving Mac/cloud code between deployable folders or large import reshuffles",
+      "vitestConfig": "vitest.refactoring-safety.standard.config.ts",
+      "npmScripts": [
+        "npm run validate:changes",
+        "npm run cursor:architecture -- --staged"
+      ]
+    },
+    "full": {
+      "label": "Full pre-merge (CI parity)",
+      "when": "Before merging a refactor branch; matches main CI expectations",
+      "vitestConfig": null,
+      "npmScripts": [
+        "npm test",
+        "npm run ci:architecture",
+        "npm run typecheck",
+        "npm run build"
+      ]
+    }
+  },
+  "deployables": {
+    "AWC": {
+      "vitest": [
+        "src/lib/agentWitch/**/*.test.ts",
+        "src/lib/dispatch/**/*.test.ts",
+        "src/features/agent-witch/online-wake/**/*.test.ts"
+      ]
+    },
+    "AWL": {
+      "vitest": [
+        "src/lib/agentWitch/agentWitchLocalAppPort.constant.test.ts",
+        "scripts/buildAgentWitchLocal*.test.ts",
+        "scripts/agentWitchLocal*.test.ts",
+        "scripts/buildAgentWitchLocalAppShell.test.ts"
+      ]
+    },
+    "AWB": {
+      "vitest": [
+        "scripts/ensureAgentWitchCoupledWakeClientHealth.test.ts",
+        "scripts/requestLocalAgentWitch*.test.ts",
+        "src/features/agent-witch/utils/*Wake*.test.ts"
+      ]
+    },
+    "AWI": {
+      "vitest": [
+        "test/awiFeaturesRegistry.test.ts",
+        "test/deployableBoundary.test.ts",
+        "src/lib/agentWitch/renderInstallAgentWitchScript.test.ts",
+        "src/lib/agentWitch/buildAgentWitchInstallScriptConfigBlock.test.ts",
+        "scripts/agentWitchInstallVersion*.test.ts",
+        "scripts/kickstartAgentWitchClientLaunchAgents.test.ts"
+      ]
+    }
+  },
+  "optionalLocal": {
+    "description": "Not part of default gates; run on a Mac with dev server + install when touching end-to-end flows",
+    "playwright": [
+      "e2e/test-account-login.spec.ts",
+      "e2e/self-delegate.spec.ts"
+    ],
+    "npmScripts": ["npm run test:shipped-install-blackbox"]
+  }
+}

@@ -16,6 +16,7 @@ Canonical index: [docs/adr/README.md](docs/adr/README.md). Full text lives in `d
 | `getAgentWitchHub`, presence, devices API, writer dispatch, outbox | 0005 |
 | `src/features/*` vs `src/lib/*` layout | 0003 |
 | FSA, `public-api/`, `internal/`, hubs | 0007 |
+| `apps/*`, AWC / AWL / AWB / AWI, Mac ports | `docs/product/agent-witch-deployables.md`, `rules-agent-witch-deployables.mdc` |
 | Cursor Cloud dispatch, origin checks | 0004 |
 | Deploy, Railway, Neon, `www.agentwitch.com` | 0006, `docs/product/repo-name-and-hosting.md` |
 | New numbered ADR | 0001 (process) |

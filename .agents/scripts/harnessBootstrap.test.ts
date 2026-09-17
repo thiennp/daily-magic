@@ -30,6 +30,14 @@ describe("matchRoutingRow", () => {
     expect(row?.priority).toBe(1);
   });
 
+  it("HARNESS-002: matches deployable abbreviations to deployables doc", () => {
+    const manifest = loadAgentBootstrapManifest();
+    const row = matchRoutingRow(manifest, "refactor AWL local app");
+
+    expect(row?.doc).toBe("docs/product/agent-witch-deployables.md");
+    expect(row?.command).toBeNull();
+  });
+
   it("matches verify intent when no higher-priority signal matches", () => {
     const manifest = loadAgentBootstrapManifest();
     const row = matchRoutingRow(

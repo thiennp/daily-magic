@@ -40,12 +40,12 @@ Same core loop; company adds **visibility, templates, and policy**.
 
 **Deferred or secondary language**
 
-| Internal            | User-facing                                                          |
-| ------------------- | -------------------------------------------------------------------- |
-| Knowledge / RAG     | **Memory from past runs** (automatic); optional **Search past runs** |
-| Harness             | **Playbook** or **Team standards**                                   |
-| Projects / registry | **Repository** or **Code folder** (task attribute + settings)        |
-| Local app `:43347`  | **Mac settings** (link from Home / troubleshooting)                  |
+| Internal            | User-facing                                                           |
+| ------------------- | --------------------------------------------------------------------- |
+| Knowledge / RAG     | **Memory from past runs** (automatic); optional **Search past runs**  |
+| Harness             | **Playbook** or **Team standards**                                    |
+| Projects / registry | **Repository** or **Code folder** (task attribute + settings)         |
+| **AWL** (`:43347`)  | **Agent Witch on this Mac** (or “Mac app”) — link from Home / account |
 
 See [concepts.md](concepts.md) for engineer glossary; UI should prefer the table above.
 
@@ -90,7 +90,7 @@ See [concepts.md](concepts.md) for engineer glossary; UI should prefer the table
 - Knowledge → Runs (“Search past runs”) or Mac settings
 - Traffic / errors → Mac settings → Developer
 
-**Local Mac UI** (`local.agentwitch.com:43347`): installer, health, logs, advanced playbook sync — not a parallel product nav for typical users.
+**AWL** (`local.agentwitch.com:43347`): full Mac app (tasks, projects, playbooks, memory, health). Not duplicated in AWC primary nav; AWC links here when the user works on this Mac.
 
 ---
 

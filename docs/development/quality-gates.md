@@ -15,9 +15,12 @@ npm run validate:staged
 npm run cursor:architecture -- --staged
 npm run typecheck
 npm run test
+npm run test:refactor-gate   # before AWC/AWL/AWB/AWI folder moves (see refactoring-safety-tests.md)
 npm run test:e2e:install   # once per machine
 npm run test:e2e
 ```
+
+**Refactor / FSA moves:** [refactoring-safety-tests.md](refactoring-safety-tests.md) (`test:safety`, `test:refactor-gate`, `test:safety:full`).
 
 ## CI
 

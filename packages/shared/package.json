@@ -1,0 +1,13 @@
+{
+  "name": "@agent-witch/shared",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Cross-deployable TypeScript contracts (AWC, AWL, AWB, AWI)",
+  "exports": {
+    ".": "./src/index.ts",
+    "./protocol": "./src/protocol/index.ts",
+    "./deployables": "./src/deployables/index.ts",
+    "./network": "./src/network/index.ts"
+  }
+}

@@ -8,7 +8,8 @@
 
 This page will contain the **detailed** architecture description:
 
-- Full directory tree for Agent Witch (`entry`, `shared`, `features`, `hubs`)
+- Full directory tree per deployable (**AWC**, **AWL**, **AWB**, **AWI**) — see [agent-witch-deployables.md](../product/agent-witch-deployables.md)
+- Full directory tree for AWC (`entry`, `shared`, `features`, `hubs`)
 - Mapping from every current registry slug to target `public-api` exports
 - Hub catalog (commands, queries, ownership)
 - Import boundary examples (`@/features/dispatch/public-api/presentation`)
@@ -23,11 +24,15 @@ This page will contain the **detailed** architecture description:
 - Cross-feature effects via `src/hubs/` (CQRS-style), not opaque pub/sub
 - Incremental migration per slug; playbooks in `.cursor/commands/command-fsa-*.md`
 
+## Refactoring plan
+
+Working migration order and top-level feature inventory: **[fsa-refactoring-plan.md](fsa-refactoring-plan.md)**.
+
 ## Next step (step 2)
 
 When authoring the full description:
 
-1. Inventory `features.registry.json` and `libPath` entries.
+1. Inventory `features.registry.json` and `libPath` entries (see **fsa-refactoring-plan.md** §1).
 2. Propose hub boundaries for dispatch, agent runs, and notifications.
 3. Add mermaid diagrams to this file.
 4. Mark sections Accepted in ADR 0007 or add ADR 0008 if hubs need a separate decision record.

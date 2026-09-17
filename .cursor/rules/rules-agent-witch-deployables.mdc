@@ -1,0 +1,22 @@
+---
+description: AWC AWL AWB AWI deployable names, folders, and abbreviations
+alwaysApply: true
+---
+
+# Agent Witch deployables (AWC, AWL, AWB, AWI)
+
+Four deployables in one repo. Use **abbreviations** in chat and tickets.
+
+| Abbr | Name | Folder | Port / origin |
+| ---- | ---- | ------ | ------------- |
+| **AWC** | Agent Witch Console | `apps/console/` (target) · today `src/app/` + `server.ts` | `www.agentwitch.com`, `localhost:3000` |
+| **AWL** | Agent Witch Live | `apps/live/` · today `scripts/agentWitchLocalApp*` | `local.agentwitch.com:43347`, `127.0.0.1:43347` |
+| **AWB** | Agent Witch Bridge | `apps/bridge/` · today `scripts/agent-witch-wake-server.ts` | `127.0.0.1:47892` / `47893` |
+| **AWI** | Agent Witch Install | `apps/install/` · today `public/install/agent-witch/`, `scripts/agent-witch.ts` | Mac install dirs `~/.agent-witch`, `~/.local-agent-witch` |
+
+- **AWL** is a real Mac product app, not a debug-only surface.
+- **AWB** is browser-on-same-Mac glue for AWC; **AWL** is the dedicated Mac UI.
+- **AWI** ships and runs the Mac runtime (often one process hosting AWL + AWB today).
+- Shared contracts: **`@agent-witch/shared`** (`packages/shared/`). Registry: `apps/deployables.registry.json`.
+- Cross-app types/constants go in `packages/shared/src/` first; no `@/` imports inside that package.
+- Full doc: `docs/product/agent-witch-deployables.md`. Do not conflate CHECK24 `daily-magic` URLs with AWC production.

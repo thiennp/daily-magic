@@ -8,18 +8,20 @@ There is **no Makefile** in this repo. Primary surface: **`package.json` scripts
 
 Use docs to pick a **hypothesis**, then run **one** script or probe to confirm behavior. Prefer short commands and read exit codes / JSON — do not dump full test output into chat.
 
-| Goal                  | Command                                                       | What you learn                                                  |
-| --------------------- | ------------------------------------------------------------- | --------------------------------------------------------------- |
-| App + WebSocket entry | `npm run dev`                                                 | `server.ts` serves Next and upgrades `/api/agent-witch/ws`      |
-| Next without bridge   | `npm run dev:next`                                            | UI-only; Mac WS **absent** (contrast with ADR 0002)             |
-| Process up            | `curl -sS http://localhost:3000/api/health`                   | Custom server health (deploy probe)                             |
-| DB configured         | `curl -sS http://localhost:3000/api/db/health`                | Neon connectivity from app env                                  |
-| Doc search (RAG)      | `npm run feature-knowledge:query -- "topic" [--feature=slug]` | Which markdown chunks matter                                    |
-| Harness routing       | `npm run harness:bootstrap -- --match="commit"`               | Which playbook/workflow applies                                 |
-| Unit behavior         | `npm run test`                                                | Vitest contracts (runs `build:agent-witch` first via `pretest`) |
-| Browser flows         | `npm run test:e2e`                                            | Playwright against running app (install Chromium once)          |
-| Mac bridge client     | `npm run agent-witch`                                         | Local client process (needs install + `dev`)                    |
-| Install bundle        | `npm run build:agent-witch`                                   | What ships in `public/install/agent-witch/`                     |
+| Goal                   | Command                                                       | What you learn                                                  |
+| ---------------------- | ------------------------------------------------------------- | --------------------------------------------------------------- |
+| App + WebSocket entry  | `npm run dev`                                                 | `server.ts` serves Next and upgrades `/api/agent-witch/ws`      |
+| Next without bridge    | `npm run dev:next`                                            | UI-only; Mac WS **absent** (contrast with ADR 0002)             |
+| Process up             | `curl -sS http://localhost:3000/api/health`                   | Custom server health (deploy probe)                             |
+| DB configured          | `curl -sS http://localhost:3000/api/db/health`                | Neon connectivity from app env                                  |
+| Doc search (RAG)       | `npm run feature-knowledge:query -- "topic" [--feature=slug]` | Which markdown chunks matter                                    |
+| Harness routing        | `npm run harness:bootstrap -- --match="commit"`               | Which playbook/workflow applies                                 |
+| Unit behavior          | `npm run test`                                                | Vitest contracts (runs `build:agent-witch` first via `pretest`) |
+| Refactor safety        | `npm run test:refactor-gate`                                  | Tiered Agent Witch + structure/architecture before folder moves |
+| Refactor safety (fast) | `npm run test:safety`                                         | Manifest + deployables registry + harness (~1 min)              |
+| Browser flows          | `npm run test:e2e`                                            | Playwright against running app (install Chromium once)          |
+| Mac bridge client      | `npm run agent-witch`                                         | Local client process (needs install + `dev`)                    |
+| Install bundle         | `npm run build:agent-witch`                                   | What ships in `public/install/agent-witch/`                     |
 
 On **Cursor Cloud VM**: export `.env.local` before `dev`/`db:*` — [AGENTS.md](../../AGENTS.md). Mac-only scripts below may not apply on Linux.
 

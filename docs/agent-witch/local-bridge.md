@@ -1,6 +1,8 @@
 # Agent Witch local bridge
 
-Agent Witch is the Mac client that heartbeats to the Agent Witch control plane (`www.agentwitch.com` or local `npm run dev`), receives tasks, and streams writer CLI output back to the browser.
+**AWI** (Mac runtime) connects to **AWC** (`www.agentwitch.com` or local `npm run dev`), receives tasks, and streams writer output back to the browser. **AWL** (`:43347`) is the Mac-local app; **AWB** (`47892`/`47893`) serves browser-on-same-Mac APIs.
+
+Deployables: [agent-witch-deployables.md](../product/agent-witch-deployables.md).
 
 ## Install
 
@@ -32,6 +34,6 @@ http://localhost:3000/ws-test — send a task to the local agent.
 
 ## Server implementation
 
-Cloud-side logic: `src/lib/agentWitch/`. UI: `src/features/agent-witch/`.
+**AWC** cloud logic: `src/lib/agentWitch/`. **AWC** UI: `src/features/agent-witch/`. **AWL** / **AWB** / **AWI**: `scripts/` (target `apps/live`, `apps/bridge`, `apps/install`).
 
 Presence tiers, dispatch outbox, and writer vs queued work: **ADR 0005** (`docs/adr/0005-shared-mac-presence-and-dispatch-outbox.md`). Production hosting: **ADR 0006**.

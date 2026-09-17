@@ -38,6 +38,8 @@ Optional: `npm run harness:bootstrap -- --match="<short task description>"` for 
 | 2    | [product/concepts.md](../product/concepts.md) if UI copy or nouns overlap                                     |
 | 3    | `src/features/_registry/features.registry.json` + target `README.md`                                          |
 | 4    | [codebase-map.md](../architecture/codebase-map.md) if adding routes/APIs/lib                                  |
+| 4b   | [agent-witch-deployables.md](../product/agent-witch-deployables.md) if touching AWC / AWL / AWB / AWI         |
+| 4c   | [awi-fsa-plan.md](../architecture/awi-fsa-plan.md) + `apps/install/features.registry.json` for AWI slice work |
 | 5    | [ADR 0007](../adr/0007-fractal-slice-architecture.md) + [fsa-workflows.md](fsa-workflows.md) for slice layout |
 | 6    | `@.cursor/commands/command-fsa-implement-feature.md` when scaffolding FSA                                     |
 | 7    | [docs-first.md](docs-first.md) checklist before PR                                                            |
@@ -48,15 +50,16 @@ Optional: `npm run harness:bootstrap -- --match="<short task description>"` for 
 
 ### Refactor (structure, imports, no intended behavior change)
 
-| Step | Read                                                                                                                 |
-| ---- | -------------------------------------------------------------------------------------------------------------------- |
-| 1    | [codebase-map.md](../architecture/codebase-map.md) + [ADR 0003](../adr/0003-feature-ui-with-server-lib.md)           |
-| 2    | [ADR 0007](../adr/0007-fractal-slice-architecture.md) + [fsa-workflows.md](fsa-workflows.md) if restructuring a slug |
-| 3    | `@.cursor/commands/command-fsa-migrate-feature.md` for FSA migration                                                 |
-| 4    | `.agents/diagrams/application-architecture.md` (import rules summary)                                                |
-| 5    | Feature `README.md` only for touched slugs                                                                           |
+| Step | Read                                                                                                                   |
+| ---- | ---------------------------------------------------------------------------------------------------------------------- |
+| 1    | [codebase-map.md](../architecture/codebase-map.md) + [ADR 0003](../adr/0003-feature-ui-with-server-lib.md)             |
+| 2    | [ADR 0007](../adr/0007-fractal-slice-architecture.md) + [fsa-workflows.md](fsa-workflows.md) if restructuring a slug   |
+| 3    | `@.cursor/commands/command-fsa-migrate-feature.md` for FSA migration                                                   |
+| 4    | [refactoring-safety-tests.md](../development/refactoring-safety-tests.md) — `npm run test:refactor-gate` between steps |
+| 5    | `.agents/diagrams/application-architecture.md` (import rules summary)                                                  |
+| 6    | Feature `README.md` only for touched slugs                                                                             |
 
-**Then** code; `npm run cursor:architecture -- --staged`, `validate:staged`. Agent sessions also enforce via [cursor-hooks.md](cursor-hooks.md). Runtime guards: [guardz-and-structure-validation.md](guardz-and-structure-validation.md). Do **not** load product/UX docs unless behavior changes.
+**Then** code; `npm run test:refactor-gate` (or `test:safety` after tiny steps); `npm run cursor:architecture -- --staged`, `validate:staged`. Agent sessions also enforce via [cursor-hooks.md](cursor-hooks.md). Runtime guards: [guardz-and-structure-validation.md](guardz-and-structure-validation.md). Do **not** load product/UX docs unless behavior changes.
 
 ---
 
@@ -75,12 +78,12 @@ Optional: `npm run harness:bootstrap -- --match="<short task description>"` for 
 
 ### Understand architecture (onboarding, design review)
 
-| Step | Read                                                                                                   |
-| ---- | ------------------------------------------------------------------------------------------------------ |
-| 1    | [overview.md](../overview.md)                                                                          |
-| 2    | [domains/architecture.md](../domains/architecture.md)                                                  |
-| 3    | [system-map.md](../architecture/system-map.md) then [codebase-map.md](../architecture/codebase-map.md) |
-| 4    | [adr/README.md](../adr/README.md) — scan table, open 1–2 ADRs as needed                                |
+| Step | Read                                                                                                          |
+| ---- | ------------------------------------------------------------------------------------------------------------- |
+| 1    | [overview.md](../overview.md) · [agent-witch-deployables.md](../product/agent-witch-deployables.md) (AWC–AWI) |
+| 2    | [domains/architecture.md](../domains/architecture.md)                                                         |
+| 3    | [system-map.md](../architecture/system-map.md) then [codebase-map.md](../architecture/codebase-map.md)        |
+| 4    | [adr/README.md](../adr/README.md) — scan table, open 1–2 ADRs as needed                                       |
 
 **Stop** unless you own a domain — then read that [domain entry](../domains/README.md) only.
 

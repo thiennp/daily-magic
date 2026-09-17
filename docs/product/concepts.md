@@ -32,6 +32,17 @@ One **dispatched execution** (Mac via Agent Witch or Cursor Cloud), with status,
 
 **Who may run what for whom**—targets, approvals, queue, and policies. Mac dispatch uses paired devices; Cursor Cloud uses stored API keys and cloud executor id `__cursor_cloud__`.
 
-## Agent Witch
+## Deployables (AWC, AWL, AWB, AWI)
 
-The **Mac bridge process** that connects devices to the cloud. Distinct from “an agent” (the AI task).
+Four named apps in one repo. See [agent-witch-deployables.md](agent-witch-deployables.md).
+
+| Abbr    | Meaning                                                                    |
+| ------- | -------------------------------------------------------------------------- |
+| **AWC** | **Console** — cloud control plane (`www.agentwitch.com`)                   |
+| **AWL** | **Live** — Mac-local web app (`local.agentwitch.com:43347`)                |
+| **AWB** | **Bridge** — Mac loopback HTTP for browser-on-same-Mac (`47892` / `47893`) |
+| **AWI** | **Install** — Mac bundle, runtime, LaunchAgents                            |
+
+## Agent Witch (colloquial)
+
+Often means the **product** or the **Mac side** (AWI + AWL + AWB). Distinct from “an agent” (the AI task). Prefer **AWC** / **AWL** / **AWB** / **AWI** in engineering docs.

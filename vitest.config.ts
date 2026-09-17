@@ -1,5 +1,6 @@
 import { defineConfig } from "vitest/config";
-import path from "node:path";
+
+import { vitestResolveAlias } from "./vitest.resolveAlias";
 
 export default defineConfig({
   test: {
@@ -8,11 +9,11 @@ export default defineConfig({
       "src/**/*.test.ts",
       "scripts/**/*.test.ts",
       ".agents/**/*.test.ts",
+      "test/**/*.test.ts",
+      "packages/shared/**/*.test.ts",
     ],
   },
   resolve: {
-    alias: {
-      "@": path.resolve(__dirname, "./src"),
-    },
+    alias: vitestResolveAlias,
   },
 });

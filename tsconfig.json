@@ -19,7 +19,9 @@
       }
     ],
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@agent-witch/shared": ["./packages/shared/src/index.ts"],
+      "@agent-witch/shared/*": ["./packages/shared/src/*"]
     }
   },
   "include": [

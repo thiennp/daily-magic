@@ -3,6 +3,8 @@ export interface AgentBootstrapRoutingRow {
   readonly signals: readonly string[];
   readonly command: string | null;
   readonly workflow: string | null;
+  /** Optional doc path (repo root) for context-only routing rows */
+  readonly doc?: string;
 }
 
 export interface AgentBootstrapWorkflow {

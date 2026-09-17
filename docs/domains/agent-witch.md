@@ -1,6 +1,8 @@
 # Domain: Mac bridge & devices
 
-**Scope:** Mac install bundle, local client, WebSocket to `/api/agent-witch/ws`, device pairing, presence, writer sessions, local wake/watchdog APIs.
+**Scope:** **AWI** install/runtime, **AWL** Mac app (`:43347`), **AWB** loopback API (`47892`/`47893`), WebSocket to **AWC** `/api/agent-witch/ws`, device pairing, presence, writer sessions.
+
+Deployables: [agent-witch-deployables.md](../product/agent-witch-deployables.md).
 
 **Registry slugs:** `agent-witch`, `mac-devices` · **Lib:** `src/lib/agentWitch` · **APIs:** `/api/agent-witch/*`
 

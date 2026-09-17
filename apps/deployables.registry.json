@@ -1,0 +1,52 @@
+{
+  "$schema": "./deployables.registry.schema.json",
+  "version": 1,
+  "deployables": [
+    {
+      "id": "AWC",
+      "name": "Agent Witch Console",
+      "slug": "console",
+      "folder": "apps/console",
+      "description": "Cloud control plane: Next.js App Router, APIs, WebSocket hub",
+      "origins": ["https://www.agentwitch.com", "http://localhost:3000"],
+      "entrypoints": ["server.ts", "npm run dev", "npm start"]
+    },
+    {
+      "id": "AWL",
+      "name": "Agent Witch Live",
+      "slug": "live",
+      "folder": "apps/live",
+      "description": "Mac-local web app: tasks, projects, playbooks, memory, Mac health",
+      "origins": [
+        "http://local.agentwitch.com:43347",
+        "http://127.0.0.1:43347"
+      ],
+      "defaultPort": 43347,
+      "entrypoints": ["scripts/agentWitchLocalApp.ts"]
+    },
+    {
+      "id": "AWB",
+      "name": "Agent Witch Bridge",
+      "slug": "bridge",
+      "folder": "apps/bridge",
+      "description": "Mac loopback HTTP for browser-on-same-Mac integration",
+      "origins": ["http://127.0.0.1:47892", "http://127.0.0.1:47893"],
+      "defaultPorts": { "productionInstall": 47892, "localhostInstall": 47893 },
+      "entrypoints": ["scripts/agent-witch-wake-server.ts"]
+    },
+    {
+      "id": "AWI",
+      "name": "Agent Witch Install",
+      "slug": "install",
+      "folder": "apps/install",
+      "description": "Mac install bundle, runtime process, LaunchAgents, self-update",
+      "installDirs": ["~/.agent-witch", "~/.local-agent-witch"],
+      "entrypoints": ["scripts/agent-witch.ts", "public/install/agent-witch/"]
+    }
+  ],
+  "shared": {
+    "id": "shared",
+    "folder": "packages/shared",
+    "description": "Cross-deployable protocol, types, validation (target)"
+  }
+}

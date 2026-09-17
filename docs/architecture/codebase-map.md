@@ -2,18 +2,20 @@
 
 ## Top-level layout
 
-| Path                         | Role                                                                                 |
-| ---------------------------- | ------------------------------------------------------------------------------------ |
-| `src/app/`                   | Next.js App Router pages, layouts, **`src/app/api/`** route handlers                 |
-| `src/features/`              | Product UI, hooks, and feature-local docs                                            |
-| `src/lib/`                   | Server/domain modules shared across features (e.g. `agentWitch`, `dispatch`, `auth`) |
-| `src/components/`            | Shared TailAdmin UI (must not import features or app routes)                         |
-| `src/hooks/`, `src/context/` | Shared React utilities                                                               |
-| `db/`                        | SQL schema and migrations                                                            |
-| `scripts/`                   | Agent Witch install bundle, DB migrate, e2e helpers                                  |
-| `server.ts`                  | Custom HTTP + WebSocket entry (see [system map](system-map.md))                      |
-| `.cursor/`                   | Agent harness: rules, commands, skills, bootstrap manifest                           |
-| `.agents/`                   | Verification scripts, diagrams, scaffold (non-runtime)                               |
+| Path                         | Role                                                                                                              |
+| ---------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| `apps/`                      | **Target** homes for deployables AWC / AWL / AWB / AWI — see [deployables](../product/agent-witch-deployables.md) |
+| `packages/shared/`           | **`@agent-witch/shared`** — cross-app TypeScript contracts (see `packages/shared/README.md`)                      |
+| `src/app/`                   | Next.js App Router pages, layouts, **`src/app/api/`** route handlers (**AWC** today)                              |
+| `src/features/`              | Product UI, hooks, and feature-local docs                                                                         |
+| `src/lib/`                   | Server/domain modules shared across features (e.g. `agentWitch`, `dispatch`, `auth`)                              |
+| `src/components/`            | Shared TailAdmin UI (must not import features or app routes)                                                      |
+| `src/hooks/`, `src/context/` | Shared React utilities                                                                                            |
+| `db/`                        | SQL schema and migrations                                                                                         |
+| `scripts/`                   | **AWL** / **AWB** / **AWI** Mac code today; DB migrate, e2e helpers                                               |
+| `server.ts`                  | **AWC** custom HTTP + WebSocket entry (see [system map](system-map.md))                                           |
+| `.cursor/`                   | Agent harness: rules, commands, skills, bootstrap manifest                                                        |
+| `.agents/`                   | Verification scripts, diagrams, scaffold (non-runtime)                                                            |
 
 Import boundaries are enforced by `npm run cursor:architecture` (see `.agents/scripts/lib/srcLayerImportRules.ts`).
 
@@ -43,7 +45,7 @@ Do not move API handlers into `src/features/` without an explicit architectural 
 
 ## Target: Fractal Slice Architecture (ADR 0007, Proposed)
 
-Incremental migration to `public-api/` + `internal/` per slug; cross-feature effects via `src/hubs/` when introduced. Policy and agent playbooks: [ADR 0007](../adr/0007-fractal-slice-architecture.md), [fsa-workflows.md](../conventions/fsa-workflows.md). Detailed tree: [fractal-slice-architecture.md](fractal-slice-architecture.md) (draft).
+Incremental migration to `public-api/` + `internal/` per slug; cross-feature effects via `src/hubs/` when introduced. Policy and agent playbooks: [ADR 0007](../adr/0007-fractal-slice-architecture.md), [fsa-workflows.md](../conventions/fsa-workflows.md). **Migration plan:** [fsa-refactoring-plan.md](fsa-refactoring-plan.md). Detailed tree: [fractal-slice-architecture.md](fractal-slice-architecture.md) (draft).
 
 ## Product features (slugs)
 

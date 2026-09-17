@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Agent Witch deployables registry",
+  "type": "object",
+  "required": ["version", "deployables"],
+  "properties": {
+    "version": { "type": "integer", "minimum": 1 },
+    "deployables": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "slug", "folder", "description"],
+        "properties": {
+          "id": { "type": "string", "enum": ["AWC", "AWL", "AWB", "AWI"] },
+          "name": { "type": "string" },
+          "slug": { "type": "string" },
+          "folder": { "type": "string" }
+        }
+      }
+    },
+    "shared": { "type": "object" }
+  }
+}

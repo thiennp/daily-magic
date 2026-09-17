@@ -1,7 +1,1 @@
-import type { AgentWitchMessageType } from "./AgentWitchMessageType.constant";
-
-export default interface AgentWitchMessage {
-  readonly type: AgentWitchMessageType;
-  readonly payload?: Readonly<Record<string, unknown>>;
-  readonly requestId?: string;
-}
+export type { default } from "@agent-witch/shared/protocol/AgentWitchMessage.type";

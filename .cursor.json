@@ -79,6 +79,12 @@
       "glob": "**/*.test.{ts,tsx}"
     },
     {
+      "name": "rules-agent-witch-deployables",
+      "description": "AWC AWL AWB AWI deployables: names, folders, ports (apps/ layout)",
+      "path": "rules-agent-witch-deployables.mdc",
+      "glob": "**/*"
+    },
+    {
       "name": "rules-product-hosting-boundaries",
       "description": "Agent Witch = agentwitch.com; repo daily-magic; exclude CHECK24 daily-magic URL",
       "path": "rules-product-hosting-boundaries.mdc",

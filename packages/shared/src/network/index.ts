@@ -1,0 +1,13 @@
+export {
+  AGENT_WITCH_DEFAULT_ORIGIN,
+  AGENT_WITCH_PRODUCTION_WS_URL,
+  AGENT_WITCH_SUPPORTED_HOSTS,
+  AGENT_WITCH_WS_PATH,
+  type AgentWitchSupportedHost,
+} from "./agentWitchConsoleNetwork.constant";
+export {
+  AGENT_WITCH_LIVE_APP_HOST,
+  AGENT_WITCH_LIVE_APP_LOOPBACK_ORIGIN,
+  AGENT_WITCH_LIVE_APP_ORIGIN,
+  AGENT_WITCH_LIVE_APP_PORT,
+} from "./agentWitchLiveNetwork.constant";

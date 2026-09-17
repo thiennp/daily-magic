@@ -4,14 +4,14 @@
 
 ```mermaid
 flowchart LR
-  Browser[Browser UI\nNext.js App Router]
+  AWC[AWC Console\nBrowser + Next.js]
   Node[Node server\nserver.ts]
   Hub[Agent Witch hub\nin-process]
-  Mac[Mac client\n~/.agent-witch]
+  Mac[AWI · AWL :43347 · AWB :47892]
   Neon[(Neon PostgreSQL)]
   Cloud[Cursor Cloud executor]
 
-  Browser --> Node
+  AWC --> Node
   Mac -->|wss /api/agent-witch/ws| Node
   Node --> Hub
   Hub --> Mac

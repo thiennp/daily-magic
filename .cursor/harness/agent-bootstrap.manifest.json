@@ -67,6 +67,27 @@
       "workflow": "structure"
     },
     {
+      "priority": 9,
+      "signals": [
+        "AWC",
+        "AWL",
+        "AWB",
+        "AWI",
+        "deployables",
+        "apps/console",
+        "apps/live",
+        "apps/bridge",
+        "apps/install",
+        "agent witch console",
+        "agent witch live",
+        "agent witch bridge",
+        "agent witch install"
+      ],
+      "command": null,
+      "workflow": null,
+      "doc": "docs/product/agent-witch-deployables.md"
+    },
+    {
       "priority": 10,
       "signals": [
         "fractal slice",
@@ -77,6 +98,26 @@
       ],
       "command": "command-fsa-migrate-feature.md",
       "workflow": "structure"
+    },
+    {
+      "priority": 12,
+      "signals": [
+        "refactor gate",
+        "refactoring safety",
+        "test:safety",
+        "test:refactor-gate",
+        "AWC move",
+        "AWL move",
+        "AWB move",
+        "AWI move",
+        "apps/console",
+        "apps/live",
+        "apps/bridge",
+        "apps/install"
+      ],
+      "command": null,
+      "workflow": "refactor-safety",
+      "doc": "docs/development/refactoring-safety-tests.md"
     },
     {
       "priority": 11,
@@ -114,6 +155,11 @@
     "structure": {
       "description": "Folder and structure validation only",
       "scripts": ["npm run validate:staged"],
+      "command": null
+    },
+    "refactor-safety": {
+      "description": "Before AWC/AWL/AWB/AWI folder moves (cosmetic / structural refactors)",
+      "scripts": ["npm run test:refactor-gate"],
       "command": null
     }
   },

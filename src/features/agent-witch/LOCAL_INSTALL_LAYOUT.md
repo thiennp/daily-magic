@@ -242,7 +242,7 @@ Legacy per-email LaunchAgent labels (`com.agent-witch.<email>`) are retired; ins
 
 Override install root with `AGENT_WITCH_HOME`. Override profile with `AGENT_WITCH_PROFILE` or `AGENT_WITCH_EMAIL`.
 
-Local debug UI (not inside install dir): `http://127.0.0.1:43347` (`local.agentwitch.com` DNS → loopback).
+**AWL** (Agent Witch Live; not inside install dir): `http://127.0.0.1:43347` (`local.agentwitch.com` DNS → loopback). See [agent-witch-deployables.md](../../../docs/product/agent-witch-deployables.md).
 
 ---
 

@@ -47,10 +47,13 @@ const printSummary = (): void => {
     "## Routing (first match wins)",
     ...manifest.routing
       .sort((a, b) => a.priority - b.priority)
-      .map(
-        (row) =>
-          `${row.priority}. ${row.signals.join(" | ")} → ${row.command ?? "(workflow only)"}${row.workflow ? ` [${row.workflow}]` : ""}`,
-      ),
+      .map((row) => {
+        const target =
+          row.command ?? (row.workflow ? `(workflow only)` : "(context)");
+        const workflowSuffix = row.workflow ? ` [${row.workflow}]` : "";
+        const docSuffix = row.doc ? ` → read ${row.doc}` : "";
+        return `${row.priority}. ${row.signals.slice(0, 3).join(" | ")}${row.signals.length > 3 ? " | …" : ""} → ${target}${workflowSuffix}${docSuffix}`;
+      }),
     "",
     "## Workflows",
     ...Object.entries(manifest.workflows).map(
@@ -106,6 +109,7 @@ const printMatch = (text: string): void => {
         workflow: row.workflow,
         scripts: workflow?.scripts ?? [],
         includesGitHooks: workflow?.includesGitHooks ?? false,
+        doc: row.doc ?? null,
       },
       null,
       2,

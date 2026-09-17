@@ -8,6 +8,7 @@ const svgrLoaderOptions = {
 };
 
 const nextConfig: NextConfig = {
+  transpilePackages: ["@agent-witch/shared"],
   serverExternalPackages: ["esbuild"],
   async redirects() {
     return [

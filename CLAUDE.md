@@ -6,7 +6,7 @@ Project guidance for Claude and other AI agents. Rules live in **`.cursor/rules/
 
 ## Project Overview
 
-**daily-magic** (this repo) is the codebase for **Agent Witch** (`https://www.agentwitch.com`) — web control plane for Mac-bound agents, team dispatch, and shared capabilities. The git name is historical; production is **not** `daily-magic.d.energie.check24.de` unless you explicitly deploy there. See **`docs/product/repo-name-and-hosting.md`**. Product overview: root **`README.md`**. Documentation map: **`docs/README.md`**; agent context order: **`docs/conventions/agent-context.md`** (indexed via `npm run feature-knowledge:query`).
+**daily-magic** (this repo) is the codebase for **Agent Witch** (`https://www.agentwitch.com`) — four deployables **AWC** (Console), **AWL** (Live Mac app), **AWB** (Bridge), **AWI** (Install); see `docs/product/agent-witch-deployables.md`. The git name is historical; production is **not** `daily-magic.d.energie.check24.de` unless you explicitly deploy there. See **`docs/product/repo-name-and-hosting.md`**. Product overview: root **`README.md`**. Documentation map: **`docs/README.md`**; agent context order: **`docs/conventions/agent-context.md`** (indexed via `npm run feature-knowledge:query`).
 
 Stack: Next.js 16 App Router, React 19, TypeScript, Tailwind CSS 4, Neon PostgreSQL, Vercel.
 

@@ -1,0 +1,91 @@
+{
+  "$schema": "./features.registry.schema.json",
+  "version": 1,
+  "deployableId": "AWI",
+  "features": [
+    {
+      "slug": "bundle",
+      "title": "Install bundle and version",
+      "fsaStatus": "in-progress",
+      "featurePath": "apps/install/features/bundle",
+      "legacyPaths": [
+        "public/install/agent-witch/",
+        "scripts/buildAgentWitchInstallBundle.ts",
+        "src/lib/agentWitch/agentWitchInstallBundleVersion.ts"
+      ]
+    },
+    {
+      "slug": "install-layout",
+      "title": "On-disk install layout and profile paths",
+      "fsaStatus": "in-progress",
+      "featurePath": "apps/install/features/install-layout",
+      "legacyPaths": [
+        "src/features/agent-witch/LOCAL_INSTALL_LAYOUT.md",
+        "src/lib/agentWitch/resolveAgentWitchAppHome.ts"
+      ]
+    },
+    {
+      "slug": "device-identity",
+      "title": "Device keypair and pairing",
+      "fsaStatus": "legacy",
+      "featurePath": "apps/install/features/device-identity",
+      "legacyPaths": ["src/lib/agentWitch/ (device credentials)"]
+    },
+    {
+      "slug": "macos-launch",
+      "title": "macOS LaunchAgents and shell wrappers",
+      "fsaStatus": "legacy",
+      "featurePath": "apps/install/features/macos-launch",
+      "legacyPaths": [
+        "scripts/kickstartAgentWitchClientLaunchAgents.ts",
+        "public/install/agent-witch/ (command/*.sh)"
+      ]
+    },
+    {
+      "slug": "runtime-client",
+      "title": "Mac runtime process and CLI commands",
+      "fsaStatus": "legacy",
+      "featurePath": "apps/install/features/runtime-client",
+      "legacyPaths": [
+        "scripts/agent-witch.ts",
+        "public/install/agent-witch/app/agent-witch.js"
+      ],
+      "notes": "Optional nested slice: hub-connection (WS to AWC)"
+    },
+    {
+      "slug": "self-update",
+      "title": "Install bundle self-update",
+      "fsaStatus": "legacy",
+      "featurePath": "apps/install/features/self-update",
+      "legacyPaths": ["scripts/agent-witch-self-update.ts"]
+    },
+    {
+      "slug": "watchdog",
+      "title": "Client watchdog and revive",
+      "fsaStatus": "legacy",
+      "featurePath": "apps/install/features/watchdog",
+      "legacyPaths": ["scripts/agent-witch-watchdog.ts"]
+    },
+    {
+      "slug": "bundled-deps",
+      "title": "Bundled native deps (node-pty)",
+      "fsaStatus": "legacy",
+      "featurePath": "apps/install/features/bundled-deps",
+      "legacyPaths": ["public/install/agent-witch/app/deps.tar.gz"]
+    },
+    {
+      "slug": "connection-health",
+      "title": "Hub connection health snapshot",
+      "fsaStatus": "legacy",
+      "featurePath": "apps/install/features/connection-health",
+      "legacyPaths": ["connection-health.json (profile)"]
+    },
+    {
+      "slug": "uninstall",
+      "title": "Uninstall and cleanup",
+      "fsaStatus": "legacy",
+      "featurePath": "apps/install/features/uninstall",
+      "legacyPaths": ["scripts/install-agent-witch.sh (uninstall paths)"]
+    }
+  ]
+}

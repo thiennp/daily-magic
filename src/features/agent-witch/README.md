@@ -1,26 +1,29 @@
-# Agent Witch bridge
+# Agent Witch bridge (AWC cloud ↔ AWI / AWL / AWB on Mac)
 
-Mac pairing, install script, mutual WebSocket bridge, local app (`:43347`), and paired-device API client.
+Mac pairing, install (**AWI**), mutual WebSocket to **AWC**, **AWL** Mac app (`:43347`), **AWB** loopback API, and paired-device API client.
+
+Deployables: [docs/product/agent-witch-deployables.md](../../../docs/product/agent-witch-deployables.md).
 
 ## Scope
 
 | Area           | Path                                |
 | -------------- | ----------------------------------- |
-| Feature client | `src/features/agent-witch/`         |
-| Server / hub   | `src/lib/agentWitch/`               |
-| APIs           | `/api/agent-witch/*`                |
-| Local Mac app  | `http://local.agentwitch.com:43347` |
+| AWC feature UI | `src/features/agent-witch/`         |
+| AWC server/hub | `src/lib/agentWitch/`               |
+| AWC APIs       | `/api/agent-witch/*`                |
+| **AWL**        | `http://local.agentwitch.com:43347` |
+| **AWB**        | `127.0.0.1:47892` / `47893`         |
 
 ## Transport
 
-| Direction        | Mechanism                                                                                |
-| ---------------- | ---------------------------------------------------------------------------------------- |
-| Mac ↔ cloud      | Single mutually authenticated WebSocket (`/api/agent-witch/ws`) with Ed25519 device keys |
-| Online           | Hub live WS = connected; fresh `last_seen_at` alone = seen recently (~90s)               |
-| Commands → Mac   | Hub sends over the open WS (e.g. `writer.ensure`, `command.claude.run`)                  |
-| Mac → server     | WS frames (`agent.register`, `writer.status`, results, shell, harness)                   |
-| Server → browser | HTTPS APIs + optional SSE; dashboard may also use WS when authenticated                  |
-| Local debug      | Traffic log + knowledge + status on `:43347`                                             |
+| Direction         | Mechanism                                                                                       |
+| ----------------- | ----------------------------------------------------------------------------------------------- |
+| Mac ↔ cloud       | Single mutually authenticated WebSocket (`/api/agent-witch/ws`) with Ed25519 device keys        |
+| Online            | Hub live WS = connected; fresh `last_seen_at` alone = seen recently (~90s)                      |
+| Commands → Mac    | Hub sends over the open WS (e.g. `writer.ensure`, `command.claude.run`)                         |
+| Mac → server      | WS frames (`agent.register`, `writer.status`, results, shell, harness)                          |
+| Server → browser  | HTTPS APIs + optional SSE; dashboard may also use WS when authenticated                         |
+| **AWL** (Mac app) | Tasks, projects, playbooks, knowledge, status on `:43347` (plus developer traffic/errors pages) |
 
 Mac HTTP `heartbeat` / `commands/poll` / `messages` return **410 Gone** (retired).
 
@@ -40,7 +43,7 @@ Post-install AI picker: `/setup/writer` on agentwitch.com → WS `writer.ensure`
 - `utils/pairedDevicesApi.ts` — fetch/revoke devices, dispatch policy
 - `macDevices/` — device row, rename, menus
 
-Browser presence uses `/api/agent-witch/devices` (WS hub). Local `:43347` is Mac-only UI; the site does not probe it.
+Browser presence uses `/api/agent-witch/devices` (AWC hub). **AWL** is Mac-only; AWC does not fetch `:43347` (AGENT-021).
 
 ## Local vs production Mac installs
 
