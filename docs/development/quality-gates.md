@@ -4,7 +4,9 @@
 
 - `.cursor/` — rules, commands, skills
 - `.agents/scripts/` — architecture and structure validation
-- `structure-validation.config.json` — folder layout rules
+- `structure-validation.config.json` — folder layout rules ([structure-validation](https://www.npmjs.com/package/structure-validation)); `npm run validate:changes` for git diff scope
+- **Cursor agent hooks** — `.cursor/hooks.json` ([conventions doc](../conventions/cursor-hooks.md))
+- **guardz** — runtime DTO guards at boundaries ([conventions doc](../conventions/guardz-and-structure-validation.md))
 
 ## Commands
 

@@ -1,6 +1,12 @@
 {
   "rules": [
     {
+      "name": "rules-agent-hooks",
+      "description": "Cursor hooks enforce mechanical checks; avoid duplicating them in long rules",
+      "path": "rules-agent-hooks.mdc",
+      "glob": "**/*"
+    },
+    {
       "name": "rules-bundle-core",
       "description": "Project invariants: commits, scaffolding preference, protected files",
       "path": "rules-bundle-core.mdc",
@@ -22,6 +28,12 @@
       "name": "rules-typescript-validation-and-typeguards",
       "description": "Type guards, type files, JSON safety, enum validation",
       "path": "rules-typescript-validation-and-typeguards.mdc",
+      "glob": "**/*.{ts,tsx}"
+    },
+    {
+      "name": "rules-guardz",
+      "description": "Runtime validation with guardz at API/WS/JSON boundaries",
+      "path": "rules-guardz.mdc",
       "glob": "**/*.{ts,tsx}"
     },
     {

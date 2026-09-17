@@ -28,6 +28,7 @@ Agent-oriented configuration for this Next.js project. Runnable scripts live in 
 | Scoped rules | Other `rules/*.mdc` via `.cursor.json` globs                | Matching paths                     |
 | Commands     | `commands/*.md`                                             | Routing match or explicit `@`      |
 | Git hooks    | `harness:sync` → `git-hooks.md`                             | Commit / PR workflows              |
+| Cursor hooks | `.cursor/hooks.json`                                        | Agent write/stop mechanical checks |
 
 ## Index
 

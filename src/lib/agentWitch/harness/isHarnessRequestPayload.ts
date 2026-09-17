@@ -1,3 +1,6 @@
+import { isNonEmptyString, isOneOf, isString } from "guardz";
+
+import isRecord from "@/lib/agentWitch/isRecord";
 import isHarnessWriterAgent from "./isHarnessWriterAgent";
 import { HARNESS_ITEM_KINDS } from "./types/HarnessItemKind.constant";
 import type { HarnessItemKind } from "./types/HarnessItemKind.constant";
@@ -5,12 +8,8 @@ import type HarnessItemWriteSpec from "./types/HarnessItemWriteSpec.type";
 import type HarnessRequestSpec from "./types/HarnessRequestSpec.type";
 import type { HarnessWriterAgent } from "./types/HarnessWriterAgent.constant";
 
-const isRecord = (value: unknown): value is Record<string, unknown> =>
-  typeof value === "object" && value !== null && !Array.isArray(value);
-
 const isHarnessItemKind = (value: unknown): value is HarnessItemKind =>
-  typeof value === "string" &&
-  (HARNESS_ITEM_KINDS as readonly string[]).includes(value);
+  isOneOf(...HARNESS_ITEM_KINDS)(value);
 
 const isHarnessItemWriteSpec = (
   value: unknown,
@@ -28,12 +27,10 @@ const isHarnessItemWriteSpec = (
     );
 
   return (
-    typeof value.id === "string" &&
-    value.id.length > 0 &&
+    isNonEmptyString(value.id) &&
     isHarnessItemKind(value.kind) &&
-    typeof value.title === "string" &&
-    value.title.length > 0 &&
-    typeof value.content === "string" &&
+    isNonEmptyString(value.title) &&
+    isString(value.content) &&
     hasSetSlugs
   );
 };
@@ -44,12 +41,7 @@ const isHarnessRequestSpec = (value: unknown): value is HarnessRequestSpec => {
   }
 
   if (value.mode === "create-set") {
-    return (
-      typeof value.name === "string" &&
-      value.name.length > 0 &&
-      typeof value.slug === "string" &&
-      value.slug.length > 0
-    );
+    return isNonEmptyString(value.name) && isNonEmptyString(value.slug);
   }
 
   if (value.mode === "write-items") {
@@ -79,8 +71,7 @@ const isHarnessRequestPayload = (
   return (
     isHarnessWriterAgent(payload.writerAgent) &&
     isHarnessRequestSpec(payload.spec) &&
-    typeof payload.instruction === "string" &&
-    payload.instruction.trim().length > 0
+    isNonEmptyString(payload.instruction)
   );
 };
 

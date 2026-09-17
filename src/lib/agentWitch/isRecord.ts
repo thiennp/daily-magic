@@ -1,4 +1,6 @@
+import { isNonNullObject } from "guardz";
+
 const isRecord = (value: unknown): value is Record<string, unknown> =>
-  typeof value === "object" && value !== null && !Array.isArray(value);
+  isNonNullObject(value);
 
 export default isRecord;

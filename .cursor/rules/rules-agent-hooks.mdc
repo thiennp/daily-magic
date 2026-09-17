@@ -1,0 +1,28 @@
+---
+description: >-
+  Cursor agent hooks enforce mechanical checks; keep path-scoped rules for judgment-only guidance.
+globs:
+alwaysApply: true
+---
+
+# Cursor agent hooks (token-efficient enforcement)
+
+**Config:** `.cursor/hooks.json` · **Scripts:** `.agents/scripts/cursor-hooks/` · **Doc:** [docs/conventions/cursor-hooks.md](../../docs/conventions/cursor-hooks.md)
+
+## What hooks enforce (do not restate in long rules)
+
+| Check | Hook | Script |
+| ----- | ---- | ------ |
+| Layer imports, barrel allowlist, utility camelCase, max effective lines | `postToolUse` (Write/StrReplace), `stop` | `architecture-check.ts` |
+| Folder/file placement (`structure-validation.config.json`) | `stop` (changed `src/` / `db/`) | `structure-validation --scope changes` |
+
+Husky **pre-commit** still runs `validate:staged`, ESLint, typecheck — hooks are for **agent loops**, not a substitute for git hooks.
+
+## Agent behavior
+
+- When a hook injects `additional_context` or `followup_message`, **fix the reported violations** before declaring the task done.
+- Do not paste full verification playbooks every turn; run `npm run harness:bootstrap -- --workflow=verify` only when the user asks or routing matches verify/commit.
+
+## Rules trimmed by hooks
+
+Path-scoped rules for **folder layout**, **barrels**, and **utility naming** are judgment + examples only; violations surface from hooks. **guardz** and API semantics are not hook-linted — keep `rules-guardz.mdc` when editing parsers/DTOs.

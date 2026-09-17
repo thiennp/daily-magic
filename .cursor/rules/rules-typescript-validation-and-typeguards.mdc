@@ -15,10 +15,10 @@ alwaysApply: false
 This rule defines the recommended patterns for creating and using type guards in the codebase to ensure consistent type validation across all components.
 
 ## General Principles
-- Use existing type guard utilities rather than creating new ones
-- Apply the composition pattern for complex type validations
-- Use standard error handling patterns with proper debug information
+- Use **[guardz](https://www.npmjs.com/package/guardz)** (`isType`, `isString`, `isNonEmptyString`, `isOneOf`, …) — see **`rules-guardz.mdc`** and [docs/conventions/guardz-and-structure-validation.md](../../docs/conventions/guardz-and-structure-validation.md)
+- Apply `isType` composition for multi-field objects; use custom guards only for discriminated unions or constraints guardz does not express
 - Ensure type guards provide precise TypeScript type narrowing
+- **File pairing** (`*.type.ts` / `is*.ts`) and **folder placement** are not repeated in chat — hooks + `structure-validation` enforce layout; guardz usage is agent judgment unless a test covers the guard
 
 ## File Organization
 
@@ -56,15 +56,13 @@ export default interface ErrorResponse {
 }
 
 // isErrorResponse.ts - Only contains the type guard
-import isNumber from "./isNumber";
-import isString from "./isString";
-import isType from "./isType";
-import isUndefinedOr from "./isUndefinedOr";
+import { isNumber, isString, isType, isUndefinedOr } from "guardz";
+
 import type ErrorResponse from "./ErrorResponse.type";
 
 const isErrorResponse = isType<ErrorResponse>({
   errorMessage: isString,
-  statusCode: isUndefinedOr(isNumber)
+  statusCode: isUndefinedOr(isNumber),
 });
 
 export default isErrorResponse;
@@ -82,9 +80,7 @@ export default interface MyDTO {
 
 **isMyDTO.ts:**
 ```typescript
-import isNumber from "utils/typeguards/isNumber";
-import isString from "utils/typeguards/isString";
-import isType from "utils/typeguards/isType";
+import { isNumber, isString, isType } from "guardz";
 
 import type MyDTO from "./MyDTO.type";
 
@@ -466,7 +462,7 @@ This rule describes the standard pattern for validating enum values in the codeb
 
 ```typescript
 // Import the utility
-import isEnum from "utils/typeguards/isEnum";
+import { isEnum } from "guardz";
 import { ProductEnum } from "enums/Product.enum";
 
 // In validation logic:

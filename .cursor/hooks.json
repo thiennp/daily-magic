@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "hooks": {
+    "sessionStart": [
+      {
+        "command": ".cursor/hooks/session-start.sh",
+        "timeout": 15
+      }
+    ],
+    "postToolUse": [
+      {
+        "command": ".cursor/hooks/post-tool-use-verify.sh",
+        "matcher": "Write|StrReplace",
+        "timeout": 45
+      }
+    ],
+    "stop": [
+      {
+        "command": ".cursor/hooks/stop-verify.sh",
+        "timeout": 120,
+        "loop_limit": 2
+      }
+    ]
+  }
+}

@@ -9,6 +9,8 @@ alwaysApply: false
 
 # Folder and feature layout
 
+**Mechanical enforcement:** barrel allowlist, utility `camelCase`, layer imports, and effective line limits are checked by **Cursor hooks** + `npm run cursor:architecture` (not repeated here). **Folder placement** uses **structure-validation** on agent stop and Husky `validate:staged`. See [cursor-hooks.md](../../docs/conventions/cursor-hooks.md).
+
 ## Feature-first structure
 
 - Organize product code by feature under `src/features/{FeatureName}` (and route-owned code under `src/app/`) instead of grouping unrelated UI by technical layer only.

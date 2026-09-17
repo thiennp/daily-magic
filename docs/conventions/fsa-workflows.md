@@ -22,6 +22,7 @@ FSA is **folder discipline inside `src/features/`** plus thin `src/app/` wiring.
 - Client UI (`'use client'`) must not import server/infrastructure public APIs.
 - Keep `server.ts` at repo root for Agent Witch WebSocket (ADR 0002).
 - Before committing FSA file moves: `npm run validate:staged` and `npm run build` (or `npm run harness:bootstrap -- --workflow=verify`).
+- Parse/validate boundary payloads with **[guardz](https://www.npmjs.com/package/guardz)**; extend **[structure-validation](https://www.npmjs.com/package/structure-validation)** when adding roots or FSA file names — [guardz-and-structure-validation.md](guardz-and-structure-validation.md).
 
 Full table: [ADR 0007 § 1b](../adr/0007-fractal-slice-architecture.md).
 

@@ -56,7 +56,7 @@ Optional: `npm run harness:bootstrap -- --match="<short task description>"` for 
 | 4    | `.agents/diagrams/application-architecture.md` (import rules summary)                                                |
 | 5    | Feature `README.md` only for touched slugs                                                                           |
 
-**Then** code; `npm run cursor:architecture -- --staged`, `validate:staged`. Do **not** load product/UX docs unless behavior changes.
+**Then** code; `npm run cursor:architecture -- --staged`, `validate:staged`. Agent sessions also enforce via [cursor-hooks.md](cursor-hooks.md). Runtime guards: [guardz-and-structure-validation.md](guardz-and-structure-validation.md). Do **not** load product/UX docs unless behavior changes.
 
 ---
 

@@ -1,0 +1,43 @@
+---
+description: >-
+  Runtime validation with guardz — type guards at API/WS/JSON boundaries; no ad-hoc typeof chains.
+globs:
+  - "**/*.ts"
+  - "**/*.tsx"
+alwaysApply: false
+---
+
+# guardz (runtime type guards)
+
+**Package:** `guardz` · **Doc:** [docs/conventions/guardz-and-structure-validation.md](../../docs/conventions/guardz-and-structure-validation.md)
+
+## When to use
+
+- Parsing `unknown` from HTTP bodies, WebSocket messages, SSE, `JSON.parse`, or third-party APIs
+- Validating nested DTOs before business logic runs
+- New `is*.ts` guards in features or `src/lib/`
+
+## Required patterns
+
+- Import guards from **`guardz`** (`isString`, `isNonEmptyString`, `isType`, `isOneOf`, `isArrayWithEachItem`, `isUndefinedOr`, `isNonNullObject`, …)
+- Prefer **`isType<Interface>({ … })`** over manual property checks when the shape has multiple fields
+- Keep **types** in `*.type.ts`; keep guards in separate `is*.ts` or `*.guardz.ts` files (see `rules-typescript-validation-and-typeguards.mdc`)
+- Use **`readonly`** on DTO interfaces; use **`Nullable<T>`** from guardz for nullable fields when appropriate
+
+## Shared re-exports (daily-magic)
+
+- `@/lib/agentWitch/isRecord` → `isNonNullObject` from guardz
+- `@/lib/agentWitch/isNonEmptyString` → `isNonEmptyString` from guardz
+
+Prefer guardz directly in new code when there is no legacy import path.
+
+## Forbidden
+
+- New hand-rolled `typeof x === "object" && x !== null` helpers when `isNonNullObject` / `isRecord` applies
+- Duplicating guardz under `src/utils/typeguards/` (EnergyCenter pattern — not this repo)
+- Using `any` to skip validation at boundaries
+
+## Related
+
+- `rules-typescript-validation-and-typeguards.mdc`
+- `rules-fractal-slice-architecture.mdc` — validate at `public-api` / route boundaries

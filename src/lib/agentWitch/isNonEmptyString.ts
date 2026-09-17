@@ -1,4 +1,3 @@
-const isNonEmptyString = (value: unknown): value is string =>
-  typeof value === "string" && value.trim().length > 0;
+import { isNonEmptyString } from "guardz";
 
 export default isNonEmptyString;

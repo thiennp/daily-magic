@@ -44,6 +44,17 @@
       "AGENTS.md",
       ".gitignore"
     ],
-    "**": ["*.test.ts", "*.test.tsx", "index.ts", "index.tsx"]
+    "**": [
+      "*.test.ts",
+      "*.test.tsx",
+      "index.ts",
+      "index.tsx",
+      "presentation.ts",
+      "infrastructure.ts",
+      "types.ts",
+      "*.type.ts",
+      "*.constant.ts",
+      "*.guardz.ts"
+    ]
   }
 }

@@ -29,6 +29,7 @@ alwaysApply: true
 
 ## Verification (when to run, not how)
 
+- **Cursor agent hooks** (`.cursor/hooks.json`) run architecture + structure checks after writes and on agent stop — see **`rules-agent-hooks.mdc`**.
 - Scripts and routing: **`npm run harness:bootstrap -- --workflow=verify`** (manifest: **`.cursor/harness/agent-bootstrap.manifest.json`**).
 - After substantive code changes: attach **`@.cursor/commands/command-verify-post-change-lint-typecheck-tests.md`** when routing matches.
 - Before commit: **`npm run harness:bootstrap -- --workflow=commit`** or Husky (see **`npm run harness:sync`** output).

@@ -12,11 +12,12 @@ Authoritative machine config: **`.cursor/harness/agent-bootstrap.manifest.json`*
 
 ## Every request
 
-1. Resolve intent with **`npm run harness:bootstrap -- --match="<user message excerpt>"`** (or read the manifest routing table).
-2. If matched: attach **only** that **`@.cursor/commands/<file>.md`** when `command` is set.
-3. If `workflow` is set, run **`npm run harness:bootstrap -- --workflow=<name>`** for scripts (do not duplicate script lists from rules).
-4. If no match, or skip signals in the manifest: no command playbooks.
-5. Path-scoped **rules** from **`.cursor.json`** only.
+1. Mechanical layout/import checks run via **`.cursor/hooks.json`** (`rules-agent-hooks.mdc`) — do not duplicate those lists in replies.
+2. Resolve intent with **`npm run harness:bootstrap -- --match="<user message excerpt>"`** (or read the manifest routing table).
+3. If matched: attach **only** that **`@.cursor/commands/<file>.md`** when `command` is set.
+4. If `workflow` is set, run **`npm run harness:bootstrap -- --workflow=<name>`** for scripts (do not duplicate script lists from rules).
+5. If no match, or skip signals in the manifest: no command playbooks.
+6. Path-scoped **rules** from **`.cursor.json`** only.
 
 ## Git hooks (Husky)
 
