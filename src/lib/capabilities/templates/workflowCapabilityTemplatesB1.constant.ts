@@ -1,4 +1,5 @@
 import buildWorkflowTemplate from "@/lib/capabilities/templates/buildWorkflowTemplate";
+import { COMPETITOR_SNAPSHOT_WORKFLOW } from "@/lib/capabilities/templates/workflowCapabilityTemplatesB1.competitorSnapshot.constant";
 import type { WorkflowCapabilityTemplate } from "@/lib/capabilities/templates/types/CapabilityTemplate.type";
 
 export const WORKFLOW_CAPABILITY_TEMPLATES_B1: readonly WorkflowCapabilityTemplate[] =
@@ -15,18 +16,8 @@ export const WORKFLOW_CAPABILITY_TEMPLATES_B1: readonly WorkflowCapabilityTempla
         ["criteria", "Criteria", "textarea"],
       ],
     ),
-    buildWorkflowTemplate(
-      "competitor-snapshot",
-      "Research",
-      "Competitor snapshot",
-      "Capture how a competitor compares on what matters to you.",
-      "Write a competitor snapshot with positioning, strengths, weaknesses, and implications.",
-      [
-        ["competitor", "Competitor", "text"],
-        ["focus", "What we care about", "textarea"],
-        ["format", "Output format", "text", false],
-      ],
-    ),
+    COMPETITOR_SNAPSHOT_WORKFLOW,
+
     buildWorkflowTemplate(
       "pr-summary",
       "Engineering",
