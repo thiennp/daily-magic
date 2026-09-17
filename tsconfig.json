@@ -45,6 +45,12 @@
       ],
       "@agent-witch/install-watchdog/types": [
         "./apps/install/features/watchdog/public-api/types.ts"
+      ],
+      "@agent-witch/install-runtime-client": [
+        "./apps/install/features/runtime-client/public-api/infrastructure.ts"
+      ],
+      "@agent-witch/install-runtime-client/types": [
+        "./apps/install/features/runtime-client/public-api/types.ts"
       ]
     }
   },

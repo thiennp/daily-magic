@@ -24,7 +24,11 @@ import {
   claimAgentWitchMachineLease,
   releaseAgentWitchMachineLease,
 } from "./claimAgentWitchMachineLease";
-import { listAgentWitchProfileEmails } from "./listAgentWitchLaunchTargets";
+import {
+  resolveRunProjectFolderPath,
+  waitForAgentWitchClientConfigs as waitForConfigs,
+} from "@agent-witch/install-runtime-client";
+import type { AgentWitchClientConfig as AgentWitchConfig } from "@agent-witch/install-runtime-client/types";
 import { terminateOtherAgentWitchClientProcesses } from "./terminateOtherAgentWitchClientProcesses";
 
 import { migrateLegacyAgentWitchInstallLogsForActiveProfiles } from "./migrateLegacyAgentWitchInstallLogs";
@@ -32,7 +36,6 @@ import { startAgentWitchInProcessServices } from "./startAgentWitchInProcessServ
 import { resolveAgentWitchWakePort } from "./agentWitchWakeConstants";
 import {
   resolveAgentWitchInstallDir,
-  resolveAgentWitchLocalLayout,
   type AgentWitchLocalLayout,
 } from "./resolveAgentWitchLocalLayout";
 import {
@@ -132,27 +135,11 @@ import { generateAgentRunReportKey } from "./dispatch/generateAgentRunReportKey"
 import { AGENT_RUN_WORKING_ESTIMATE_MARKER } from "./dispatch/agentRunWorkingEstimate.constant";
 import { seedAgentRunReportFile } from "./agentWitchRunReport";
 import { runAgentRunPreEstimate } from "./runAgentRunPreEstimate";
-import { resolveAgentWitchClientWsUrl } from "@/lib/agentWitch/resolveAgentWitchClientWsUrl";
-import type { AgentWitchRunConfig } from "./readAgentWitchRunConfig";
-import { resolveWriterExecutionBackend } from "./writerApi/resolveWriterExecutionBackend";
-
-type AgentWitchConfig = AgentWitchRunConfig;
-
-const DEFAULT_CLAUDE_COMMAND = "claude";
-const DEFAULT_CODEX_COMMAND = "codex";
-const DEFAULT_CURSOR_COMMAND = "cursor";
-const DEFAULT_ANTIGRAVITY_COMMAND = "agy";
 const HEARTBEAT_INTERVAL_MS = 30_000;
 const MAX_RECONNECT_DELAY_MS = 30_000;
 const shellSessionIdByRunId = new Map<string, string>();
 const projectFolderPathByRunId = new Map<string, string>();
 const promptByRunId = new Map<string, string>();
-
-const resolveRunProjectFolderPath = (projectFolderPath?: string): string => {
-  const trimmed = projectFolderPath?.trim() ?? "";
-
-  return trimmed.length > 0 ? trimmed : buildDefaultUserProjectFolderPath();
-};
 
 interface AgentWitchOutboundSocket {
   readonly readyState: number;
@@ -161,92 +148,6 @@ interface AgentWitchOutboundSocket {
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === "object" && value !== null && !Array.isArray(value);
-
-const readConfig = (
-  profileEmailOverride?: string | null,
-): AgentWitchConfig | null => {
-  const layout = resolveAgentWitchLocalLayout(profileEmailOverride);
-
-  if (!fs.existsSync(layout.configPath)) {
-    return null;
-  }
-
-  try {
-    const parsed: unknown = JSON.parse(
-      fs.readFileSync(layout.configPath, "utf8"),
-    );
-    if (!isRecord(parsed)) {
-      throw new Error("Config must be a JSON object.");
-    }
-
-    const configWsUrl =
-      typeof parsed.wsUrl === "string" ? parsed.wsUrl.trim() : "";
-    const wsUrl = resolveAgentWitchClientWsUrl({
-      installDir: layout.installDir,
-      configWsUrl,
-    });
-    const workspace =
-      typeof parsed.workspace === "string" && parsed.workspace.length > 0
-        ? parsed.workspace
-        : process.cwd();
-    const claudeCommand =
-      typeof parsed.claudeCommand === "string" &&
-      parsed.claudeCommand.length > 0
-        ? parsed.claudeCommand
-        : (process.env.CLAUDE_COMMAND ?? DEFAULT_CLAUDE_COMMAND);
-    const codexCommand =
-      typeof parsed.codexCommand === "string" && parsed.codexCommand.length > 0
-        ? parsed.codexCommand
-        : (process.env.CODEX_COMMAND ?? DEFAULT_CODEX_COMMAND);
-    const cursorCommand =
-      typeof parsed.cursorCommand === "string" &&
-      parsed.cursorCommand.length > 0
-        ? parsed.cursorCommand
-        : (process.env.CURSOR_COMMAND ?? DEFAULT_CURSOR_COMMAND);
-    const antigravityCommand =
-      typeof parsed.antigravityCommand === "string" &&
-      parsed.antigravityCommand.length > 0
-        ? parsed.antigravityCommand
-        : (process.env.ANTIGRAVITY_COMMAND ?? DEFAULT_ANTIGRAVITY_COMMAND);
-    const pairingToken =
-      typeof parsed.pairingToken === "string" && parsed.pairingToken.length > 0
-        ? parsed.pairingToken.trim()
-        : "";
-    const configEmail =
-      typeof parsed.email === "string" && parsed.email.trim().length > 0
-        ? parsed.email.trim().toLowerCase()
-        : layout.profileEmail;
-
-    if (pairingToken.length === 0) {
-      console.error(
-        `[agent-witch] Missing pairingToken in ${layout.configPath}. Re-run the install script.`,
-      );
-      return null;
-    }
-
-    return {
-      email: configEmail,
-      wsUrl,
-      workspace,
-      claudeCommand,
-      codexCommand,
-      cursorCommand,
-      antigravityCommand,
-      pairingToken,
-      writerExecutionBackend: resolveWriterExecutionBackend(
-        parsed.writerExecutionBackend,
-      ),
-      layout,
-    };
-  } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "Unknown config error";
-    console.error(
-      `[agent-witch] Invalid config at ${layout.configPath}: ${message}`,
-    );
-    return null;
-  }
-};
 
 const sendMessage = (
   socket: AgentWitchOutboundSocket,
@@ -400,8 +301,10 @@ const dispatchWriterTask = async (
     }
   }
 
-  const resolvedProjectFolderPath =
-    resolveRunProjectFolderPath(projectFolderPath);
+  const resolvedProjectFolderPath = resolveRunProjectFolderPath(
+    projectFolderPath,
+    buildDefaultUserProjectFolderPath,
+  );
   ensureAgentWitchProjectFolder({
     projectFolderPath: resolvedProjectFolderPath,
   });
@@ -1095,6 +998,7 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
         typeof parsed.payload.projectFolderPath === "string"
           ? parsed.payload.projectFolderPath
           : undefined,
+        buildDefaultUserProjectFolderPath,
       );
       const reportKey =
         typeof parsed.payload.reportKey === "string"
@@ -1380,6 +1284,7 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
         agentRunId !== undefined
           ? projectFolderPathByRunId.get(agentRunId)
           : undefined,
+        buildDefaultUserProjectFolderPath,
       );
       const prompt =
         agentRunId !== undefined ? (promptByRunId.get(agentRunId) ?? "") : "";
@@ -1548,42 +1453,6 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
       return { ok: true };
     },
   };
-};
-
-const waitForConfigs = async (): Promise<readonly AgentWitchConfig[]> => {
-  const loadConfigs = (): readonly AgentWitchConfig[] => {
-    const profileEmails = listAgentWitchProfileEmails();
-    if (profileEmails.length === 0) {
-      const legacy = readConfig(null);
-      return legacy === null ? [] : [legacy];
-    }
-
-    return profileEmails.flatMap((profileEmail) => {
-      const config = readConfig(profileEmail);
-      return config === null ? [] : [config];
-    });
-  };
-
-  const existing = loadConfigs();
-  if (existing.length > 0) {
-    return existing;
-  }
-
-  console.error("[agent-witch] Waiting for valid config…");
-
-  return new Promise((resolve) => {
-    const retry = (): void => {
-      const configs = loadConfigs();
-      if (configs.length > 0) {
-        resolve(configs);
-        return;
-      }
-
-      setTimeout(retry, 10_000);
-    };
-
-    retry();
-  });
 };
 
 const main = async (): Promise<void> => {

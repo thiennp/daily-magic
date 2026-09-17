@@ -2,6 +2,6 @@
 
 Thin CLI and process bootstrap for Agent Witch Install.
 
-**Today:** `scripts/agent-witch.ts` and `scripts/agentWitchAppEntry.ts` remain the runtime entrypoints. Future work wires this folder to those commands without moving behavior in one PR.
+**Today:** `scripts/agentWitchAppEntry.ts` remains the npm `agent-witch` CLI router. `apps/install/entry/agent-witch.ts` re-exports `startAgentWitchClient` from `scripts/agent-witch.ts` while config loading moves into `features/runtime-client/`.
 
 See [awi-fsa-plan.md](../../docs/architecture/awi-fsa-plan.md).

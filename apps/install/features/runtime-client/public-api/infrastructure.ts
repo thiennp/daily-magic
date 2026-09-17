@@ -1,5 +1,23 @@
 /**
- * AWI slice `runtime-client` — public-api/infrastructure (FSA placeholder).
- * Migrate exports from legacy paths listed in features.registry.json.
+ * AWI slice `runtime-client` — Mac runtime config loading and helpers.
  */
-export {};
+export { readAgentWitchClientConfig } from "../internal/core/readAgentWitchClientConfig";
+
+export { resolveAgentWitchClientWsUrl } from "../internal/core/resolveAgentWitchClientWsUrl";
+
+export { resolveRunProjectFolderPath } from "../internal/core/resolveRunProjectFolderPath";
+
+export { resolveWriterExecutionBackend } from "../internal/core/resolveWriterExecutionBackend";
+
+export { waitForAgentWitchClientConfigs } from "../internal/core/waitForAgentWitchClientConfigsDefault";
+
+export {
+  parseAgentWitchClientConfigFromRecord,
+  type ParseAgentWitchClientConfigFromRecordInput,
+  type ParseAgentWitchClientConfigFromRecordResult,
+} from "../internal/core/parseAgentWitchClientConfigFromRecord";
+
+export {
+  waitForAgentWitchClientConfigsWithDeps,
+  type WaitForAgentWitchClientConfigsDeps,
+} from "../internal/core/waitForAgentWitchClientConfigs";

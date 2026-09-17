@@ -1,5 +1,2 @@
-export type WriterExecutionBackend = "cli" | "api";
-
-export const resolveWriterExecutionBackend = (
-  configValue: unknown,
-): WriterExecutionBackend => (configValue === "api" ? "api" : "cli");
+export type { WriterExecutionBackend } from "@agent-witch/install-runtime-client/types";
+export { resolveWriterExecutionBackend } from "@agent-witch/install-runtime-client";

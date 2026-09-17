@@ -50,5 +50,13 @@ export const vitestResolveAlias: Record<string, string> = {
     ROOT,
     "./apps/install/features/watchdog/public-api/infrastructure.ts",
   ),
+  "@agent-witch/install-runtime-client/types": path.resolve(
+    ROOT,
+    "./apps/install/features/runtime-client/public-api/types.ts",
+  ),
+  "@agent-witch/install-runtime-client": path.resolve(
+    ROOT,
+    "./apps/install/features/runtime-client/public-api/infrastructure.ts",
+  ),
   "@": path.resolve(ROOT, "./src"),
 };
