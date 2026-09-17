@@ -1,9 +1,11 @@
 import type { AgentWitchRunConfig } from "@agent-witch/install-runtime-client";
+import type { AgentWitchLocalLayout } from "@agent-witch/install-layout/types";
 
 import {
   fetchAgentWitchCloudProjects,
   resolveAgentWitchCloudApiConfig,
 } from "./agentWitchCloudApi";
+import { migrateLegacyProjectsRegistryToCloud } from "./migrateLegacyProjectsRegistryToCloud";
 import { mapAgentWitchCloudProjectsToViews } from "./mapAgentWitchCloudProjectsToViews";
 import type AgentWitchProjectView from "./agentWitchProjectView.type";
 
@@ -15,7 +17,12 @@ export interface FetchAgentWitchProjectsForLocalAppResult {
 
 export const fetchAgentWitchProjectsForLocalApp = async (
   runConfig: AgentWitchRunConfig,
+  layout?: AgentWitchLocalLayout,
 ): Promise<FetchAgentWitchProjectsForLocalAppResult> => {
+  if (layout !== undefined) {
+    await migrateLegacyProjectsRegistryToCloud(layout, runConfig);
+  }
+
   const cloudConfig = resolveAgentWitchCloudApiConfig({
     wsUrl: runConfig.wsUrl,
     pairingToken: runConfig.pairingToken,

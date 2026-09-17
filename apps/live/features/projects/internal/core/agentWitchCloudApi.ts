@@ -329,6 +329,57 @@ const parseAgentWitchCloudProjectsResponse = (
   return projects;
 };
 
+export const createAgentWitchCloudProject = async (
+  config: AgentWitchCloudApiConfig,
+  input: {
+    readonly name: string;
+    readonly folderPath: string;
+  },
+): Promise<AgentWitchCloudProject | null> => {
+  try {
+    const response = await fetch(
+      `${config.appOrigin}/api/agent-witch/projects`,
+      {
+        method: "POST",
+        headers: buildDeviceAuthHeaders(config.pairingToken),
+        body: JSON.stringify({
+          name: input.name,
+          folderPath: input.folderPath,
+        }),
+        signal: AbortSignal.timeout(15_000),
+      },
+    );
+
+    if (!response.ok) {
+      return null;
+    }
+
+    const body: unknown = await response.json();
+    if (typeof body !== "object" || body === null) {
+      return null;
+    }
+
+    const record = body as { ok?: unknown; project?: unknown };
+    if (record.ok !== true || typeof record.project !== "object") {
+      return null;
+    }
+
+    const project = record.project as Record<string, unknown>;
+    const id = typeof project.id === "string" ? project.id.trim() : "";
+    const name = typeof project.name === "string" ? project.name.trim() : "";
+    const folderPath =
+      typeof project.folderPath === "string" ? project.folderPath.trim() : "";
+
+    if (id.length === 0 || name.length === 0 || folderPath.length === 0) {
+      return null;
+    }
+
+    return { id, name, folderPath };
+  } catch {
+    return null;
+  }
+};
+
 export const fetchAgentWitchCloudProjects = async (
   config: AgentWitchCloudApiConfig,
 ): Promise<readonly AgentWitchCloudProject[] | null> => {

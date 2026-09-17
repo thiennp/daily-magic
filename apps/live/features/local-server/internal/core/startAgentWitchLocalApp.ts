@@ -139,9 +139,9 @@ const buildHarnessPageBodyInput = (
   importSectionExpanded: input.importSectionExpanded,
 });
 
-const loadCloudProjectsForLocalApp = async (): Promise<
-  Awaited<ReturnType<typeof fetchAgentWitchProjectsForLocalApp>>
-> => {
+const loadCloudProjectsForLocalApp = async (
+  layout: AgentWitchLocalLayout,
+): Promise<Awaited<ReturnType<typeof fetchAgentWitchProjectsForLocalApp>>> => {
   const runConfig = readAgentWitchRunConfig();
   if (runConfig === null) {
     return {
@@ -152,7 +152,7 @@ const loadCloudProjectsForLocalApp = async (): Promise<
     };
   }
 
-  return fetchAgentWitchProjectsForLocalApp(runConfig);
+  return fetchAgentWitchProjectsForLocalApp(runConfig, layout);
 };
 
 type LocalAppStatus = {
@@ -698,7 +698,7 @@ export const startAgentWitchLocalApp = (input: {
         const cloudAppOrigin = resolveAgentWitchLocalCloudAppOrigin(
           installBundle.installVersion,
         );
-        const cloudProjects = await loadCloudProjectsForLocalApp();
+        const cloudProjects = await loadCloudProjectsForLocalApp(input.layout);
         const flashError =
           url.searchParams.get("folderError") === "1"
             ? "Could not save the selected folder to Agent Witch. Check the Mac connection and try again."
@@ -774,7 +774,7 @@ export const startAgentWitchLocalApp = (input: {
         );
         const projectId = url.searchParams.get("id")?.trim() ?? "";
         const installBundle = buildInstallBundleStatus();
-        const cloudProjects = await loadCloudProjectsForLocalApp();
+        const cloudProjects = await loadCloudProjectsForLocalApp(input.layout);
         const project = findAgentWitchProjectById(
           cloudProjects.projects,
           projectId,
@@ -813,7 +813,7 @@ export const startAgentWitchLocalApp = (input: {
         const rawBody = await readBody(request);
         const form = new URLSearchParams(rawBody);
         const projectId = form.get("projectId")?.trim() ?? "";
-        const cloudProjects = await loadCloudProjectsForLocalApp();
+        const cloudProjects = await loadCloudProjectsForLocalApp(input.layout);
         const project = findAgentWitchProjectById(
           cloudProjects.projects,
           projectId,

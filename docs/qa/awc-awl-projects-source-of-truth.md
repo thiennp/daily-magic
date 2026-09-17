@@ -24,6 +24,10 @@ On disk under each repo, **`.agent-witch/`** (and linked `.cursor` harness files
 
 Create projects in the browser first; AWL only maps cloud projects to folders and manages repo-local harness.
 
+### One-time migration
+
+If `~/.agent-witch/harness/projects-registry.json` still exists from older installs, AWL migrates **Mac-only** rows into `user_projects` the first time projects load (device `POST /api/agent-witch/projects`), then renames the file to `projects-registry.json.migrated`.
+
 ## Related
 
 - [awc-project-folder-path-picker.md](awc-project-folder-path-picker.md)
