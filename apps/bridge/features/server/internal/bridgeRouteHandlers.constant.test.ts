@@ -8,8 +8,6 @@ describe("BRIDGE_ROUTE_HANDLERS", () => {
     const catalogFeatureSlugs = [
       ...new Set(BRIDGE_ROUTE_CATALOG.map((row) => row.featureSlug)),
     ];
-    expect(BRIDGE_ROUTE_HANDLERS.length).toBeGreaterThanOrEqual(
-      catalogFeatureSlugs.length,
-    );
+    expect(BRIDGE_ROUTE_HANDLERS.length).toBe(catalogFeatureSlugs.length);
   });
 });
