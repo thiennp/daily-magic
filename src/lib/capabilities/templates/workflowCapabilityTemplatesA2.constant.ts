@@ -1,22 +1,12 @@
 import buildWorkflowTemplate from "@/lib/capabilities/templates/buildWorkflowTemplate";
 import { RESEARCH_BRIEF_EXAMPLE_REQUEST } from "@/lib/capabilities/templates/harnessProfiles/workflowA2.researchBrief.exampleRequest";
+import { SLACK_THREAD_SUMMARY_WORKFLOW } from "@/lib/capabilities/templates/workflowCapabilityTemplatesA2.slackThreadSummary.constant";
 import { TEAM_REPO_STANDUP_EXAMPLE_REQUEST } from "@/lib/capabilities/templates/harnessProfiles/workflowA2.teamRepoStandup.exampleRequest";
 import type { WorkflowCapabilityTemplate } from "@/lib/capabilities/templates/types/CapabilityTemplate.type";
 
 export const WORKFLOW_CAPABILITY_TEMPLATES_A2: readonly WorkflowCapabilityTemplate[] =
   [
-    buildWorkflowTemplate(
-      "slack-thread-summary",
-      "Communication",
-      "Slack thread summary",
-      "Summarize a long thread into decisions and next steps.",
-      "Summarize the thread for someone who missed it. Include decisions and owners.",
-      [
-        ["thread", "Thread text", "textarea"],
-        ["audience", "Audience", "text", false],
-        ["goal", "What you need", "text"],
-      ],
-    ),
+    SLACK_THREAD_SUMMARY_WORKFLOW,
     buildWorkflowTemplate(
       "document-summary",
       "Research",
@@ -46,7 +36,7 @@ export const WORKFLOW_CAPABILITY_TEMPLATES_A2: readonly WorkflowCapabilityTempla
       "team-repo-standup",
       "Team dispatch",
       "Repo branch standup (teammate Mac)",
-      "Ask a colleague's Mac to summarize git activity on a local repo branch — ideal for team delegation demos.",
+      "Ask a colleague's Mac to summarize git activity on a local repo branch when you need a standup update without cloning locally.",
       TEAM_REPO_STANDUP_EXAMPLE_REQUEST,
       [
         ["repoPath", "Project folder on their Mac", "project"],

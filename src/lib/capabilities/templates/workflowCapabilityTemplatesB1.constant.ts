@@ -1,5 +1,6 @@
 import buildWorkflowTemplate from "@/lib/capabilities/templates/buildWorkflowTemplate";
 import type { WorkflowCapabilityTemplate } from "@/lib/capabilities/templates/types/CapabilityTemplate.type";
+import { PR_SUMMARY_WORKFLOW } from "@/lib/capabilities/templates/workflowCapabilityTemplatesB1.prSummary.constant";
 
 export const WORKFLOW_CAPABILITY_TEMPLATES_B1: readonly WorkflowCapabilityTemplate[] =
   [
@@ -27,18 +28,8 @@ export const WORKFLOW_CAPABILITY_TEMPLATES_B1: readonly WorkflowCapabilityTempla
         ["format", "Output format", "text", false],
       ],
     ),
-    buildWorkflowTemplate(
-      "pr-summary",
-      "Engineering",
-      "PR / code change summary",
-      "Explain a change for reviewers or non-engineers.",
-      "Summarize the change, risk areas, and test notes for reviewers.",
-      [
-        ["context", "PR / branch context", "text"],
-        ["change", "What changed", "textarea"],
-        ["audience", "Audience", "text"],
-      ],
-    ),
+    PR_SUMMARY_WORKFLOW,
+
     buildWorkflowTemplate(
       "bug-report-writer",
       "Engineering",
