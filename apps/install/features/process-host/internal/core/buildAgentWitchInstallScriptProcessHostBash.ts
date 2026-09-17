@@ -25,13 +25,13 @@ AGENT_WITCH_INSTALL_EXTERNAL_LIVE="\${${AGENT_WITCH_EXTERNAL_LIVE_ENV}:-}"
 export const buildAgentWitchInstallScriptProcessHostLaunchAgentEnvEntries =
   (): string => `
 if agent_witch_is_truthy_env "\${AGENT_WITCH_INSTALL_EXTERNAL_BRIDGE}"; then
-  cat <<'AWI_PROCESS_HOST_ENV'
+  cat >> "\${PLIST_PATH}" <<'AWI_PROCESS_HOST_ENV'
     <key>${AGENT_WITCH_EXTERNAL_BRIDGE_ENV}</key>
     <string>1</string>
 AWI_PROCESS_HOST_ENV
 fi
 if agent_witch_is_truthy_env "\${AGENT_WITCH_INSTALL_EXTERNAL_LIVE}"; then
-  cat <<'AWI_PROCESS_HOST_ENV'
+  cat >> "\${PLIST_PATH}" <<'AWI_PROCESS_HOST_ENV'
     <key>${AGENT_WITCH_EXTERNAL_LIVE_ENV}</key>
     <string>1</string>
 AWI_PROCESS_HOST_ENV

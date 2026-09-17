@@ -1,4 +1,17 @@
+import {
+  resolveAgentWitchInstallDir,
+  resolveAgentWitchLaunchAgentPrefix,
+} from "@agent-witch/install-layout";
+import { ensureAgentWitchLaunchAgentPlist } from "@agent-witch/install-macos-launch";
+
 import { requestLocalAgentWitchSelfUpdate } from "./requestLocalAgentWitchSelfUpdate";
+
+const repairLaunchAgentPlistBeforeUpdate = (): void => {
+  ensureAgentWitchLaunchAgentPlist({
+    launchAgentLabel: resolveAgentWitchLaunchAgentPrefix(),
+    installDir: resolveAgentWitchInstallDir(),
+  });
+};
 
 const readUpdateMessageFromPayload = (payload: unknown): string | null => {
   if (typeof payload !== "object" || payload === null) {
@@ -13,6 +26,7 @@ export const triggerAgentWitchLocalInstallBundleUpdate = async (): Promise<{
   readonly ok: boolean;
   readonly message: string;
 }> => {
+  repairLaunchAgentPlistBeforeUpdate();
   const wakeResult = await requestLocalAgentWitchSelfUpdate({ force: true });
 
   if (wakeResult.ok) {
@@ -33,7 +47,8 @@ export const triggerAgentWitchLocalInstallBundleUpdate = async (): Promise<{
     };
   }
 
-  const { runAgentWitchSelfUpdate } = await import("@agent-witch/install-self-update");
+  const { runAgentWitchSelfUpdate } =
+    await import("@agent-witch/install-self-update");
   const directResult = await runAgentWitchSelfUpdate({ force: true });
 
   return {

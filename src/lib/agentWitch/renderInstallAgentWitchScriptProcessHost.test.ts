@@ -13,5 +13,20 @@ describe("renderInstallAgentWitchScript process-host (phase 2)", () => {
     expect(script).toContain('exec "${NODE_BIN}" "${APP_BUNDLE}" local-app');
     expect(script).toContain("${LAUNCH_AGENT_PREFIX}-live");
     expect(script).toContain("command/live.sh");
+    expect(script).toContain(
+      "cat >> \"${PLIST_PATH}\" <<'AWI_PROCESS_HOST_ENV'",
+    );
+  });
+
+  it("AGENT-067: keeps process-host bash outside the LaunchAgent plist XML heredoc", () => {
+    const script = renderInstallAgentWitchScript("https://www.agentwitch.com");
+    const plistXmlStart = script.indexOf("<?xml version=");
+    const firstEof = script.indexOf("\nEOF", plistXmlStart);
+
+    expect(plistXmlStart).toBeGreaterThanOrEqual(0);
+    expect(firstEof).toBeGreaterThan(plistXmlStart);
+    expect(script.slice(plistXmlStart, firstEof)).not.toContain(
+      "agent_witch_is_truthy_env",
+    );
   });
 });

@@ -1,4 +1,4 @@
-import { resolveAgentWitchDefaultWakePort } from "@agent-witch/install-layout";
+import { resolveAgentWitchRuntimeWakePort } from "@agent-witch/install-layout";
 
 export interface LocalAgentWitchSelfUpdateResult {
   readonly ok: boolean;
@@ -7,7 +7,7 @@ export interface LocalAgentWitchSelfUpdateResult {
 }
 
 export const resolveLocalAgentWitchSelfUpdateUrl = (): string =>
-  `http://127.0.0.1:${resolveAgentWitchDefaultWakePort()}/update/run`;
+  `http://127.0.0.1:${resolveAgentWitchRuntimeWakePort()}/update/run`;
 
 export const requestLocalAgentWitchSelfUpdate = async (input?: {
   readonly force?: boolean;

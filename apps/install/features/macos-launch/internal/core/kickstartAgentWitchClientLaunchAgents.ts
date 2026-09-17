@@ -12,6 +12,7 @@ export const kickstartAgentWitchClientLaunchAgents = async (
   for (const target of listAgentWitchLaunchTargets(installDir)) {
     const result = await kickstartAgentWitchLaunchAgent(
       target.launchAgentLabel,
+      installDir,
     );
     if (result.ok) {
       kicked.push(target.launchAgentLabel);

@@ -44,3 +44,24 @@ Architecture for multi-instance presence and the dispatch outbox: `docs/adr/0005
 **UI (shipped):** New task composer shows **`update_needed`** readiness (blocks Send, **Update agent** CTA). Home Mac rows flag bundle mismatch in device detail. Contract: `docs/agent-witch/send-readiness-reason-codes.md`.
 
 **What to do:** Run **Update local** / `npm run agent-witch:self-update` on the Mac; check `~/.agent-witch/install-version.json` vs `GET /install/agent-witch/version`.
+
+---
+
+## AGENT-067 — Update local wrote bash into `com.agent-witch.plist`
+
+**Symptom:** After **Update local**, AWC stayed on **Mac reconnecting** (`presenceTier: recent`) and `wake.sh` could not load the official LaunchAgent. Default AWB `:47892` was down.
+
+**Cause:** The install script wrote process-host `if` / `cat` bash inside the LaunchAgent plist heredoc, so `launchctl bootstrap` rejected the file. AWL Update always posted to default `:47892`, missed a fallback wake port, and fell back to a direct file copy that did not repair the plist.
+
+**Fix (must hold for every later bundle):**
+
+- Close the plist XML heredoc before optional env keys; append those keys with `cat >> "$PLIST_PATH"`.
+- `register_agent_witch_launch_agent` lints XML (`plutil` + reject leaked bash) before bootstrap.
+- `ensureAgentWitchLaunchAgentPlist` rewrites a missing/invalid plist on client start, AWL **Update**, heartbeat self-update, and kickstart/self-update (bundle **125+**).
+- AWL `/update/run` uses `wake-port.json` when present (`resolveAgentWitchRuntimeWakePort`).
+
+**What to do on a Mac that already has the broken plist:** install bundle **125+** self-update, or restart AWI — the client rewrites the plist. If cloud says the Mac identity is not linked, run **Connect this Mac** from Home while signed in.
+
+**Regression tests:** `buildAgentWitchInstallScriptLaunchAgent.test.ts`, `renderInstallAgentWitchScriptProcessHost.test.ts`, `buildAgentWitchInstallScriptProcessHostBash.test.ts`, `ensureAgentWitchLaunchAgentPlist.test.ts`, `isAgentWitchLaunchAgentPlistXmlValid.test.ts`, `buildAgentWitchInstallScriptRegisterLaunchAgent.test.ts`, `resolveAgentWitchRuntimeWakePort.test.ts`, `triggerAgentWitchLocalInstallBundleUpdate.test.ts`, `requestLocalAgentWitchSelfUpdate.test.ts` (AGENT-067).
+
+**Q&A:** `docs/qa/awi-update-local-launchagent-plist.md`

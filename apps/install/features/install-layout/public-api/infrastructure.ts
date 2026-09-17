@@ -21,3 +21,8 @@ export {
   sanitizeProfileEmailForDir,
   sanitizeProfileEmailForLaunchAgentLabel,
 } from "../internal/core/resolveAgentWitchLocalLayout";
+
+export {
+  readAgentWitchWakePortFromFile,
+  resolveAgentWitchRuntimeWakePort,
+} from "../internal/core/resolveAgentWitchRuntimeWakePort";

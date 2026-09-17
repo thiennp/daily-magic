@@ -29,7 +29,9 @@ if [[ "\$(uname -s)" == "Darwin" ]]; then
     <string>\${INSTALL_DIR}</string>
     <key>AGENT_WITCH_WAKE_PORT</key>
     <string>\${AGENT_WITCH_WAKE_PORT}</string>
+EOF
 ${buildAgentWitchInstallScriptProcessHostLaunchAgentEnvEntries()}
+  cat >> "\${PLIST_PATH}" <<EOF
   </dict>
   <key>RunAtLoad</key>
   <true/>

@@ -1,22 +1,15 @@
 import { execFile } from "node:child_process";
 import fs from "node:fs";
-import os from "node:os";
-import path from "node:path";
 import { promisify } from "node:util";
+
+import { resolveAgentWitchInstallDir } from "@agent-witch/install-layout";
 
 import type { KickstartLaunchAgentResult } from "../../public-api/types";
 
+import { ensureAgentWitchLaunchAgentPlist } from "./ensureAgentWitchLaunchAgentPlist";
 import { isActiveMacOsConsoleUser } from "./isActiveMacOsConsoleUser";
 
 const execFileAsync = promisify(execFile);
-
-const resolveLaunchAgentPlistPath = (launchAgentLabel: string): string =>
-  path.join(
-    os.homedir(),
-    "Library",
-    "LaunchAgents",
-    `${launchAgentLabel}.plist`,
-  );
 
 const isLaunchAgentLoaded = async (serviceTarget: string): Promise<boolean> => {
   try {
@@ -55,6 +48,7 @@ const kickstartLoadedLaunchAgent = async (
 
 export const kickstartAgentWitchLaunchAgent = async (
   launchAgentLabel: string,
+  installDir: string = resolveAgentWitchInstallDir(),
 ): Promise<KickstartLaunchAgentResult> => {
   if (process.platform !== "darwin") {
     return {
@@ -81,12 +75,24 @@ export const kickstartAgentWitchLaunchAgent = async (
 
   const domain = `gui/${uid}`;
   const serviceTarget = `${domain}/${launchAgentLabel}`;
+  const ensured = ensureAgentWitchLaunchAgentPlist({
+    launchAgentLabel,
+    installDir,
+  });
+  if (!ensured.ok) {
+    return {
+      ok: false,
+      errorMessage:
+        ensured.errorMessage ??
+        `Could not repair LaunchAgent plist for ${launchAgentLabel}.`,
+    };
+  }
 
-  if (await kickstartLoadedLaunchAgent(serviceTarget)) {
+  if (!ensured.rewritten && (await kickstartLoadedLaunchAgent(serviceTarget))) {
     return { ok: true };
   }
 
-  const plistPath = resolveLaunchAgentPlistPath(launchAgentLabel);
+  const plistPath = ensured.plistPath;
   if (!fs.existsSync(plistPath)) {
     return {
       ok: false,

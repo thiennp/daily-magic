@@ -1,3 +1,6 @@
+import { resolveAgentWitchLaunchAgentPrefix } from "@agent-witch/install-layout";
+import { ensureAgentWitchLaunchAgentPlist } from "@agent-witch/install-macos-launch";
+
 import { appendAgentWitchLocalTraffic } from "./agentWitchLocalTrafficLog";
 import { readAgentWitchInstallVersion } from "./agentWitchInstallVersion";
 import type { AgentWitchLocalLayout } from "./resolveAgentWitchLocalLayout";
@@ -45,7 +48,8 @@ export const runLocalInstallBundleUpdate = async (input: {
   readonly trigger: "system.ack" | "install.bundle.update";
 }): Promise<void> => {
   const localBundleVersion =
-    readAgentWitchInstallVersion(input.layout.installDir)?.bundleVersion ?? null;
+    readAgentWitchInstallVersion(input.layout.installDir)?.bundleVersion ??
+    null;
 
   if (
     !shouldTriggerAgentWitchHeartbeatSelfUpdate({
@@ -63,6 +67,12 @@ export const runLocalInstallBundleUpdate = async (input: {
     action: "install-bundle-update-start",
   });
 
+  ensureAgentWitchLaunchAgentPlist({
+    launchAgentLabel: resolveAgentWitchLaunchAgentPrefix(
+      input.layout.installDir,
+    ),
+    installDir: input.layout.installDir,
+  });
   const wakeResult = await requestLocalAgentWitchSelfUpdate({ force: true });
   if (wakeResult.ok) {
     console.log(

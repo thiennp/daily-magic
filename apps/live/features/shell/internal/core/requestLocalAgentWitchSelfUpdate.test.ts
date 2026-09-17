@@ -23,12 +23,6 @@ describe("requestLocalAgentWitchSelfUpdate", () => {
     tempDirs.length = 0;
   });
 
-  it("targets the local wake server update endpoint (AGENT-030)", () => {
-    expect(resolveLocalAgentWitchSelfUpdateUrl()).toMatch(
-      /^http:\/\/127\.0\.0\.1:\d+\/update\/run$/,
-    );
-  });
-
   it("AGENT-067: posts update to the runtime wake port from wake-port.json", () => {
     const installDir = fs.mkdtempSync(
       path.join(os.tmpdir(), "agent-witch-self-update-url-"),

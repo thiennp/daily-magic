@@ -5,12 +5,17 @@ import os from "node:os";
 import WebSocket from "ws";
 
 import {
+  resolveAgentWitchInstallDir,
+  resolveAgentWitchLaunchAgentPrefix,
+} from "@agent-witch/install-layout";
+import {
   bootoutAgentWitchAuxiliaryLaunchAgents,
   bootoutAgentWitchLaunchAgentsForCurrentUser,
+  ensureAgentWitchLaunchAgentPlist,
   exitUnlessActiveMacOsConsoleUser,
+  kickstartAgentWitchClientLaunchAgents,
   startActiveMacOsConsoleUserGuard,
 } from "@agent-witch/install-macos-launch";
-import { resolveAgentWitchInstallDir } from "@agent-witch/install-layout";
 import type { AgentWitchLocalLayout } from "@agent-witch/install-layout/types";
 import {
   AGENT_WITCH_CONNECTION_STALE_MS,
@@ -1649,8 +1654,6 @@ const main = async (): Promise<void> => {
 
   const machineLease = claimAgentWitchMachineLease();
   if (!machineLease.ok) {
-    const { kickstartAgentWitchClientLaunchAgents } =
-      await import("../../../scripts/kickstartAgentWitchClientLaunchAgents");
     await kickstartAgentWitchClientLaunchAgents(installDir);
     process.stdout.write(
       "[agent-witch] Another Agent Witch process already owns this Mac user lease — kickstarted LaunchAgent and exiting.\n",
@@ -1663,6 +1666,14 @@ const main = async (): Promise<void> => {
     console.log(
       `[agent-witch] Stopped ${terminated.length} sibling process(es): ${terminated.join(", ")}`,
     );
+  }
+
+  const launchAgentPlist = ensureAgentWitchLaunchAgentPlist({
+    launchAgentLabel: resolveAgentWitchLaunchAgentPrefix(installDir),
+    installDir,
+  });
+  if (launchAgentPlist.rewritten) {
+    console.log("[agent-witch] Repaired LaunchAgent plist (AGENT-067).");
   }
 
   bootoutAgentWitchAuxiliaryLaunchAgents();

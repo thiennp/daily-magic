@@ -35,6 +35,15 @@ export { kickstartAgentWitchClientLaunchAgents } from "../internal/core/kickstar
 export { kickstartAgentWitchLaunchAgent } from "../internal/core/kickstartAgentWitchLaunchAgent";
 
 export {
+  ensureAgentWitchLaunchAgentPlist,
+  resolveAgentWitchLaunchAgentPlistPath,
+} from "../internal/core/ensureAgentWitchLaunchAgentPlist";
+
+export { isAgentWitchLaunchAgentPlistXmlValid } from "../internal/core/isAgentWitchLaunchAgentPlistXmlValid";
+
+export { buildAgentWitchLaunchAgentPlistXml } from "../internal/core/buildAgentWitchLaunchAgentPlistXml";
+
+export {
   listAgentWitchLaunchTargets,
   listAgentWitchProfileEmails,
 } from "../internal/core/listAgentWitchLaunchTargets";

@@ -20,6 +20,16 @@ vi.mock("./agentWitchInstallVersion", () => ({
   })),
 }));
 
+vi.mock("@agent-witch/install-macos-launch", () => ({
+  ensureAgentWitchLaunchAgentPlist: vi.fn(() => ({
+    ok: true,
+    rewritten: false,
+    plistPath: "/tmp/com.agent-witch.plist",
+  })),
+}));
+
+import { ensureAgentWitchLaunchAgentPlist } from "@agent-witch/install-macos-launch";
+
 import { runAgentWitchSelfUpdate } from "./agentWitchSelfUpdate";
 import { requestLocalAgentWitchSelfUpdate } from "./requestLocalAgentWitchSelfUpdate";
 import { runLocalInstallBundleUpdate } from "./runLocalInstallBundleUpdate";
@@ -46,6 +56,7 @@ describe("runLocalInstallBundleUpdate", () => {
       trigger: "install.bundle.update",
     });
 
+    expect(ensureAgentWitchLaunchAgentPlist).toHaveBeenCalled();
     expect(requestLocalAgentWitchSelfUpdate).toHaveBeenCalledWith({
       force: true,
     });

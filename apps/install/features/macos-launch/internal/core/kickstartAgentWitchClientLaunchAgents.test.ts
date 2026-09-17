@@ -23,6 +23,7 @@ describe("kickstartAgentWitchClientLaunchAgents", () => {
     expect(listAgentWitchLaunchTargets).toHaveBeenCalledWith("/tmp/install");
     expect(kickstartAgentWitchLaunchAgent).toHaveBeenCalledWith(
       "com.agent-witch",
+      "/tmp/install",
     );
     expect(kicked).toEqual(["com.agent-witch"]);
   });
