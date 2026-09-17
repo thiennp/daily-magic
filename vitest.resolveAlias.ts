@@ -58,5 +58,45 @@ export const vitestResolveAlias: Record<string, string> = {
     ROOT,
     "./apps/install/features/runtime-client/public-api/infrastructure.ts",
   ),
+  "@agent-witch/install-bundled-deps/types": path.resolve(
+    ROOT,
+    "./apps/install/features/bundled-deps/public-api/types.ts",
+  ),
+  "@agent-witch/install-bundled-deps": path.resolve(
+    ROOT,
+    "./apps/install/features/bundled-deps/public-api/infrastructure.ts",
+  ),
+  "@agent-witch/install-connection-health/types": path.resolve(
+    ROOT,
+    "./apps/install/features/connection-health/public-api/types.ts",
+  ),
+  "@agent-witch/install-connection-health": path.resolve(
+    ROOT,
+    "./apps/install/features/connection-health/public-api/infrastructure.ts",
+  ),
+  "@agent-witch/install-device-identity/types": path.resolve(
+    ROOT,
+    "./apps/install/features/device-identity/public-api/types.ts",
+  ),
+  "@agent-witch/install-device-identity": path.resolve(
+    ROOT,
+    "./apps/install/features/device-identity/public-api/infrastructure.ts",
+  ),
+  "@agent-witch/install-self-update/types": path.resolve(
+    ROOT,
+    "./apps/install/features/self-update/public-api/types.ts",
+  ),
+  "@agent-witch/install-self-update": path.resolve(
+    ROOT,
+    "./apps/install/features/self-update/public-api/infrastructure.ts",
+  ),
+  "@agent-witch/install-uninstall/types": path.resolve(
+    ROOT,
+    "./apps/install/features/uninstall/public-api/types.ts",
+  ),
+  "@agent-witch/install-uninstall": path.resolve(
+    ROOT,
+    "./apps/install/features/uninstall/public-api/infrastructure.ts",
+  ),
   "@": path.resolve(ROOT, "./src"),
 };

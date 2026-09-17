@@ -27,7 +27,7 @@
     {
       "slug": "device-identity",
       "title": "Device keypair and pairing",
-      "fsaStatus": "legacy",
+      "fsaStatus": "fsa",
       "featurePath": "apps/install/features/device-identity",
       "legacyPaths": ["src/lib/agentWitch/ (device credentials)"]
     },
@@ -56,7 +56,7 @@
     {
       "slug": "self-update",
       "title": "Install bundle self-update",
-      "fsaStatus": "legacy",
+      "fsaStatus": "fsa",
       "featurePath": "apps/install/features/self-update",
       "legacyPaths": ["scripts/agent-witch-self-update.ts"]
     },
@@ -70,21 +70,21 @@
     {
       "slug": "bundled-deps",
       "title": "Bundled native deps (node-pty)",
-      "fsaStatus": "legacy",
+      "fsaStatus": "fsa",
       "featurePath": "apps/install/features/bundled-deps",
       "legacyPaths": ["public/install/agent-witch/app/deps.tar.gz"]
     },
     {
       "slug": "connection-health",
       "title": "Hub connection health snapshot",
-      "fsaStatus": "legacy",
+      "fsaStatus": "fsa",
       "featurePath": "apps/install/features/connection-health",
       "legacyPaths": ["connection-health.json (profile)"]
     },
     {
       "slug": "uninstall",
       "title": "Uninstall and cleanup",
-      "fsaStatus": "legacy",
+      "fsaStatus": "fsa",
       "featurePath": "apps/install/features/uninstall",
       "legacyPaths": ["scripts/install-agent-witch.sh (uninstall paths)"]
     }

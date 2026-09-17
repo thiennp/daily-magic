@@ -85,14 +85,14 @@ Optional nested slice (later): `features/runtime-client/features/hub-connection/
 | ------------------- | --------------------- | ------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
 | `bundle`            | `in-progress`         | Shipped tarball/JS, `deps.tar.gz`, bundle version | `public/install/agent-witch/`, `scripts/buildAgentWitchInstallBundle.ts`, `AGENT_WITCH_INSTALL_BUNDLE_VERSION` |
 | `install-layout`    | `in-progress`         | On-disk layout, profile paths, install roots      | `LOCAL_INSTALL_LAYOUT.md`, `resolveAgentWitchAppHome.ts`, install shell in `renderInstallAgentWitchScript*`    |
-| `device-identity`   | `legacy`              | Device keypair, pairing                           | `device-keypair.json`, pairing in client                                                                       |
+| `device-identity`   | `fsa`                 | Device keypair, pairing                           | `device-keypair.json`, pairing in client                                                                       |
 | `macos-launch`      | `legacy`              | LaunchAgents, `run.sh`, login autostart           | `kickstartAgentWitchClientLaunchAgents*`, `com.agent-witch*` plist labels                                      |
 | `runtime-client`    | `legacy`              | Main Node process, command dispatch               | `scripts/agent-witch.ts`, bundled `agent-witch.js`                                                             |
-| `self-update`       | `legacy`              | Bundle pull, `install-version.json`               | `agent-witch-self-update.ts`, updater LaunchAgent                                                              |
+| `self-update`       | `fsa`                 | Bundle pull, `install-version.json`               | `agent-witch-self-update.ts`, updater LaunchAgent                                                              |
 | `watchdog`          | `legacy`              | Stale client revive                               | `agent-witch-watchdog.ts`, watchdog LaunchAgent                                                                |
-| `bundled-deps`      | `legacy`              | `node-pty` prebuilds in `app/deps/`               | install extract step, `deps.tar.gz`                                                                            |
-| `connection-health` | `legacy`              | `connection-health.json`, hub ack snapshot        | client WS health writers                                                                                       |
-| `uninstall`         | `legacy`              | Remove install, agents                            | install script uninstall paths                                                                                 |
+| `bundled-deps`      | `fsa`                 | `node-pty` prebuilds in `app/deps/`               | install extract step, `deps.tar.gz`                                                                            |
+| `connection-health` | `fsa`                 | `connection-health.json`, hub ack snapshot        | client WS health writers                                                                                       |
+| `uninstall`         | `fsa`                 | Remove install, agents                            | install script uninstall paths                                                                                 |
 
 **Not AWI features:** AWB wake routes (`agent-witch-wake-server.ts`), AWL pages (`agentWitchLocalApp*`). Cross-links only in docs.
 
@@ -103,7 +103,7 @@ Optional nested slice (later): `features/runtime-client/features/hub-connection/
 3. **`bundle`** — version constant + install bundle build metadata; AWC keeps HTTP routes, calls AWI `public-api/infrastructure` when ready.
 4. **`macos-launch`** + **`watchdog`** — **done** — kickstart/bootout, launch targets, service labels, console-user guard, and watchdog reinstall state live under `apps/install/features/macos-launch/` and `apps/install/features/watchdog/`; `@agent-witch/install-macos-launch` + `@agent-witch/install-watchdog` with `scripts/` shims; registry `fsaStatus` = `fsa`.
 5. **`runtime-client`** — **in progress** — `readAgentWitchClientConfig`, `waitForAgentWitchClientConfigs`, `resolveRunProjectFolderPath`, and `resolveAgentWitchClientWsUrl` live under `apps/install/features/runtime-client/internal/core/`; `@agent-witch/install-runtime-client` + `scripts/readAgentWitchClientConfig.ts` shim; `apps/install/entry/agent-witch.ts` forwards to `scripts/agent-witch.ts`. **Still in `scripts/agent-witch.ts`:** `createAgentWitchClient`, WebSocket message dispatch, machine lease bootstrap, in-process services. Optional nested **`hub-connection`** later.
-6. **`self-update`**, **`device-identity`**, **`connection-health`**, **`bundled-deps`**, **`uninstall`** — leaf slices.
+6. **`self-update`**, **`device-identity`**, **`connection-health`**, **`bundled-deps`**, **`uninstall`** — **done** — core logic under `apps/install/features/<slug>/internal/core/`; `@agent-witch/install-*` + `scripts/` shims; registry `fsaStatus` = `fsa`.
 7. **Split process** — AWL/AWB out of single AWI process (separate deployable tracks; see [fsa-refactoring-plan.md](fsa-refactoring-plan.md) §0).
 
 Each slice PR: one slug, shims for old import paths, `fsaStatus` bump, `npm run test:refactor-gate`.

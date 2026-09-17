@@ -51,6 +51,36 @@
       ],
       "@agent-witch/install-runtime-client/types": [
         "./apps/install/features/runtime-client/public-api/types.ts"
+      ],
+      "@agent-witch/install-bundled-deps/types": [
+        "./apps/install/features/bundled-deps/public-api/types.ts"
+      ],
+      "@agent-witch/install-bundled-deps": [
+        "./apps/install/features/bundled-deps/public-api/infrastructure.ts"
+      ],
+      "@agent-witch/install-connection-health/types": [
+        "./apps/install/features/connection-health/public-api/types.ts"
+      ],
+      "@agent-witch/install-connection-health": [
+        "./apps/install/features/connection-health/public-api/infrastructure.ts"
+      ],
+      "@agent-witch/install-device-identity/types": [
+        "./apps/install/features/device-identity/public-api/types.ts"
+      ],
+      "@agent-witch/install-device-identity": [
+        "./apps/install/features/device-identity/public-api/infrastructure.ts"
+      ],
+      "@agent-witch/install-self-update/types": [
+        "./apps/install/features/self-update/public-api/types.ts"
+      ],
+      "@agent-witch/install-self-update": [
+        "./apps/install/features/self-update/public-api/infrastructure.ts"
+      ],
+      "@agent-witch/install-uninstall/types": [
+        "./apps/install/features/uninstall/public-api/types.ts"
+      ],
+      "@agent-witch/install-uninstall": [
+        "./apps/install/features/uninstall/public-api/infrastructure.ts"
       ]
     }
   },

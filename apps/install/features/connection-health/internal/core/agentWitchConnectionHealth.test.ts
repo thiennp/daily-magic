@@ -10,22 +10,22 @@ import {
   writeAgentWitchConnectionHealth,
 } from "./agentWitchConnectionHealth";
 import { AGENT_WITCH_CONNECTION_STALE_MS } from "./agentWitchConnectionHealth.constants";
-import type { AgentWitchLocalLayout } from "./resolveAgentWitchLocalLayout";
 import {
-  AGENT_WITCH_APP_BUNDLE_FILE_NAME,
-  AGENT_WITCH_APP_DIR_NAME,
-} from "./agentWitchInstallApp.constants";
+  AWI_SHIPPED_APP_DIR_NAME,
+  AWI_SHIPPED_MAIN_SCRIPT_FILE_NAME,
+} from "@agent-witch/install-bundle/types";
+import type { AgentWitchLocalLayout } from "@agent-witch/install-layout/types";
 
 const tempDirs: string[] = [];
 
 const createLayout = (rootDir: string): AgentWitchLocalLayout => ({
   profileEmail: "user@example.com",
   installDir: rootDir,
-  appDir: path.join(rootDir, AGENT_WITCH_APP_DIR_NAME),
+  appDir: path.join(rootDir, AWI_SHIPPED_APP_DIR_NAME),
   appBundlePath: path.join(
     rootDir,
-    AGENT_WITCH_APP_DIR_NAME,
-    AGENT_WITCH_APP_BUNDLE_FILE_NAME,
+    AWI_SHIPPED_APP_DIR_NAME,
+    AWI_SHIPPED_MAIN_SCRIPT_FILE_NAME,
   ),
   configPath: path.join(rootDir, "profiles", "user@example.com", "config.json"),
   harnessRootDir: path.join(rootDir, "profiles", "user@example.com", "harness"),

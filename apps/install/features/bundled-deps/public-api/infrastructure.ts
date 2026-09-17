@@ -1,5 +1,11 @@
 /**
- * AWI slice `bundled-deps` — public-api/infrastructure (FSA placeholder).
- * Migrate exports from legacy paths listed in features.registry.json.
+ * AWI slice `bundled-deps` — node-pty archive build and install extract.
  */
-export {};
+export { buildAgentWitchBundledDepsArchive } from "../internal/core/buildAgentWitchBundledDepsArchive";
+
+export {
+  extractAgentWitchBundledDepsArchive,
+  removeLegacyAgentWitchNpmInstallArtifacts,
+  resolveAgentWitchBundledDepsArchivePath,
+  resolveAgentWitchBundledDepsDir,
+} from "../internal/core/extractAgentWitchBundledDepsArchive";

@@ -1,5 +1,7 @@
 /**
- * AWI slice `uninstall` — public-api/infrastructure (FSA placeholder).
- * Migrate exports from legacy paths listed in features.registry.json.
+ * AWI slice `uninstall` — remove local install and LaunchAgents.
  */
-export {};
+export {
+  runAgentWitchUninstallLocal,
+  type AgentWitchUninstallLocalResult,
+} from "../internal/core/agentWitchUninstallLocal";

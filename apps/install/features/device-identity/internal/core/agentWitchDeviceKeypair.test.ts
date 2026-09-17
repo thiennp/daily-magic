@@ -4,11 +4,11 @@ import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 
 import { loadOrCreateAgentWitchDeviceKeypair } from "./agentWitchDeviceKeypair";
-import type { AgentWitchLocalLayout } from "./resolveAgentWitchLocalLayout";
 import {
-  AGENT_WITCH_APP_BUNDLE_FILE_NAME,
-  AGENT_WITCH_APP_DIR_NAME,
-} from "./agentWitchInstallApp.constants";
+  AWI_SHIPPED_APP_DIR_NAME,
+  AWI_SHIPPED_MAIN_SCRIPT_FILE_NAME,
+} from "@agent-witch/install-bundle/types";
+import type { AgentWitchLocalLayout } from "@agent-witch/install-layout/types";
 
 const tempDirs: string[] = [];
 
@@ -30,11 +30,11 @@ const createLayout = (input: {
   return {
     profileEmail: input.profileEmail,
     installDir: input.installDir,
-    appDir: path.join(input.installDir, AGENT_WITCH_APP_DIR_NAME),
+    appDir: path.join(input.installDir, AWI_SHIPPED_APP_DIR_NAME),
     appBundlePath: path.join(
       input.installDir,
-      AGENT_WITCH_APP_DIR_NAME,
-      AGENT_WITCH_APP_BUNDLE_FILE_NAME,
+      AWI_SHIPPED_APP_DIR_NAME,
+      AWI_SHIPPED_MAIN_SCRIPT_FILE_NAME,
     ),
     configPath: path.join(profileDir, "config.json"),
     harnessRootDir: path.join(profileDir, "harness"),

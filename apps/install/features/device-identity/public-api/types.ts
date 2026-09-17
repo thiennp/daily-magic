@@ -1,2 +1,1 @@
-/** AWI slice `device-identity` — types (FSA placeholder). */
-export {};
+export type { AgentWitchDeviceKeypair } from "../internal/core/agentWitchDeviceKeypair";

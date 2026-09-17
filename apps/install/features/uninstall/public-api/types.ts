@@ -1,2 +1,1 @@
-/** AWI slice `uninstall` — types (FSA placeholder). */
-export {};
+export type { AgentWitchUninstallLocalResult } from "../internal/core/agentWitchUninstallLocal";
