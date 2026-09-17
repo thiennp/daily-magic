@@ -2,12 +2,6 @@
  * AWI slice `install-layout` — path resolution (Node / server only).
  */
 export {
-  isLocalAgentWitchHostname,
-  isLocalAgentWitchOrigin,
-  resolveAgentWitchAppHome,
-} from "../internal/core/resolveAgentWitchAppHome";
-
-export {
   isAgentWitchLocalInstallDir,
   readActiveProfileEmailFromFile,
   resolveActiveProfileEmail,

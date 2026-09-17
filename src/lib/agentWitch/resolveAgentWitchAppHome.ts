@@ -13,4 +13,4 @@ export {
   isLocalAgentWitchHostname,
   isLocalAgentWitchOrigin,
   resolveAgentWitchAppHome,
-} from "@agent-witch/install-layout";
+} from "@agent-witch/install-layout/presentation";

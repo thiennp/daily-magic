@@ -1,4 +1,8 @@
 /**
- * AWI slice `install-layout` — presentation (no browser UI for this slice).
+ * AWI slice `install-layout` — browser-safe origin / install-dir resolution (no node:fs).
  */
-export {};
+export {
+  isLocalAgentWitchHostname,
+  isLocalAgentWitchOrigin,
+  resolveAgentWitchAppHome,
+} from "../internal/core/resolveAgentWitchAppHome";

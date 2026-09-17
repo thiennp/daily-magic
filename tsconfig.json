@@ -22,6 +22,9 @@
       "@/*": ["./src/*"],
       "@agent-witch/shared": ["./packages/shared/src/index.ts"],
       "@agent-witch/shared/*": ["./packages/shared/src/*"],
+      "@agent-witch/install-layout/presentation": [
+        "./apps/install/features/install-layout/public-api/presentation.ts"
+      ],
       "@agent-witch/install-layout": [
         "./apps/install/features/install-layout/public-api/infrastructure.ts"
       ],
