@@ -1,6 +1,7 @@
 import buildWorkflowTemplate from "@/lib/capabilities/templates/buildWorkflowTemplate";
 import { RELEASE_NOTES_DRAFT_EXAMPLE_REQUEST } from "@/lib/capabilities/templates/harnessProfiles/workflowB1.releaseNotesDraft.exampleRequest";
 import type { WorkflowCapabilityTemplate } from "@/lib/capabilities/templates/types/CapabilityTemplate.type";
+import { BUG_REPORT_WRITER_WORKFLOW } from "@/lib/capabilities/templates/workflowCapabilityTemplatesB1.bugReportWriter.constant";
 
 export const WORKFLOW_CAPABILITY_TEMPLATES_B1: readonly WorkflowCapabilityTemplate[] =
   [
@@ -40,19 +41,8 @@ export const WORKFLOW_CAPABILITY_TEMPLATES_B1: readonly WorkflowCapabilityTempla
         ["audience", "Audience", "text"],
       ],
     ),
-    buildWorkflowTemplate(
-      "bug-report-writer",
-      "Engineering",
-      "Bug report writer",
-      "Turn a rough repro into a clear bug ticket.",
-      "Write a bug report with repro steps, expected vs actual, and severity.",
-      [
-        ["summary", "What happened", "textarea"],
-        ["steps", "Steps to reproduce", "textarea"],
-        ["expectedActual", "Expected vs actual", "textarea"],
-        ["severity", "Severity", "text"],
-      ],
-    ),
+    BUG_REPORT_WRITER_WORKFLOW,
+
     buildWorkflowTemplate(
       "release-notes-draft",
       "Engineering",
