@@ -1,13 +1,16 @@
 import type { PresetHarnessSeed } from "@/lib/capabilities/templates/harnessProfiles/PresetHarnessSeed.type";
+import { COMPARE_OPTIONS_EXAMPLE_REQUEST } from "@/lib/capabilities/templates/harnessProfiles/workflowB1.compareOptions.exampleRequest";
+import { COMPARE_OPTIONS_OPERATOR_STEPS } from "@/lib/capabilities/templates/harnessProfiles/workflowB1.compareOptions.operatorSteps";
 
 export const WORKFLOW_B1_PART1: readonly PresetHarnessSeed[] = [
   {
     id: "compare-options",
     name: "Compare options",
     category: "Research",
-    description: "Build a pros/cons comparison and recommendation.",
-    exampleRequest:
-      "Compare the options using the criteria. End with a clear recommendation.",
+    description:
+      "Score two paths against your criteria and get a clear recommendation — clarify weights first, then review the table before you decide.",
+    exampleRequest: COMPARE_OPTIONS_EXAMPLE_REQUEST,
+    operatorSteps: COMPARE_OPTIONS_OPERATOR_STEPS,
     profile: {
       ruleFocus: [
         "Score against user criteria, not generic pros/cons.",
