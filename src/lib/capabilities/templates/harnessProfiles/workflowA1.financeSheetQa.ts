@@ -1,4 +1,5 @@
 import type { PresetHarnessSeed } from "@/lib/capabilities/templates/harnessProfiles/PresetHarnessSeed.type";
+import { FINANCE_SHEET_QA_EXAMPLE_REQUEST } from "@/lib/capabilities/templates/harnessProfiles/workflowA1.financeSheetQa.exampleRequest";
 import { FINANCE_SHEET_QA_OPERATOR_STEPS } from "@/lib/capabilities/templates/harnessProfiles/workflowA1.financeSheetQa.operatorSteps";
 
 export const FINANCE_SHEET_QA_PRESET: PresetHarnessSeed = {
@@ -7,8 +8,7 @@ export const FINANCE_SHEET_QA_PRESET: PresetHarnessSeed = {
   category: "Finance",
   description:
     "Analyze a finance Google Sheet open in your browser and answer questions with numbers cited from the visible workbook.",
-  exampleRequest:
-    "Read the Google Sheet open in the browser. Answer userQuestion using only figures you can see in the sheet. Cite tab names and cell ranges. Ask one clarifying question if the data is missing or ambiguous.",
+  exampleRequest: FINANCE_SHEET_QA_EXAMPLE_REQUEST,
   operatorSteps: FINANCE_SHEET_QA_OPERATOR_STEPS,
   profile: {
     ruleFocus: [
