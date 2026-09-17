@@ -60,13 +60,11 @@ import {
   writeLocalHarnessRevealCache,
 } from "@agent-witch/live-harness";
 import {
-  addAgentWitchLocalProjectToRegistry,
   ensureAgentWitchProjectFolder,
-  findAgentWitchLocalProjectById,
+  fetchAgentWitchProjectsForLocalApp,
+  findAgentWitchProjectById,
   pickMacOsFolderDialog,
-  readAgentWitchLocalProjectsRegistry,
   resolveAgentWitchCloudApiConfig,
-  syncAgentWitchLocalProjectsFromCloud,
   updateAgentWitchCloudProjectFolder,
 } from "@agent-witch/live-projects";
 import {
@@ -141,20 +139,20 @@ const buildHarnessPageBodyInput = (
   importSectionExpanded: input.importSectionExpanded,
 });
 
-const syncLocalProjectsFromCloud = async (
+const loadCloudProjectsForLocalApp = async (
   layout: AgentWitchLocalLayout,
-): Promise<{ readonly ok: boolean; readonly message: string }> => {
+): Promise<Awaited<ReturnType<typeof fetchAgentWitchProjectsForLocalApp>>> => {
   const runConfig = readAgentWitchRunConfig();
   if (runConfig === null) {
     return {
       ok: false,
+      projects: [],
       message:
-        "Mac client config missing — showing folders registered on this Mac only.",
+        "Mac client config missing — pair this Mac in Agent Witch Console to load projects.",
     };
   }
 
-  const result = await syncAgentWitchLocalProjectsFromCloud(layout, runConfig);
-  return { ok: result.ok, message: result.message };
+  return fetchAgentWitchProjectsForLocalApp(runConfig, layout);
 };
 
 type LocalAppStatus = {
@@ -700,9 +698,7 @@ export const startAgentWitchLocalApp = (input: {
         const cloudAppOrigin = resolveAgentWitchLocalCloudAppOrigin(
           installBundle.installVersion,
         );
-        const sync = await syncLocalProjectsFromCloud(input.layout);
-        const flashMessage =
-          url.searchParams.get("added") === "1" ? "Project added." : null;
+        const cloudProjects = await loadCloudProjectsForLocalApp(input.layout);
         const flashError =
           url.searchParams.get("folderError") === "1"
             ? "Could not save the selected folder to Agent Witch. Check the Mac connection and try again."
@@ -714,11 +710,11 @@ export const startAgentWitchLocalApp = (input: {
             activePath: "/projects",
             installVersion: installBundle.installVersion,
             body: buildAgentWitchLocalProjectsPageBody({
-              projects: readAgentWitchLocalProjectsRegistry(input.layout),
+              projects: cloudProjects.projects,
               cloudAppOrigin,
-              syncMessage: sync.message,
-              syncOk: sync.ok,
-              flashMessage,
+              syncMessage: cloudProjects.message,
+              syncOk: cloudProjects.ok,
+              flashMessage: null,
               flashError,
             }),
           }),
@@ -764,7 +760,6 @@ export const startAgentWitchLocalApp = (input: {
           return;
         }
 
-        await syncLocalProjectsFromCloud(input.layout);
         response.writeHead(303, {
           Location: `/project?id=${encodeURIComponent(projectId)}&folderUpdated=1`,
         });
@@ -779,8 +774,11 @@ export const startAgentWitchLocalApp = (input: {
         );
         const projectId = url.searchParams.get("id")?.trim() ?? "";
         const installBundle = buildInstallBundleStatus();
-        await syncLocalProjectsFromCloud(input.layout);
-        const project = findAgentWitchLocalProjectById(input.layout, projectId);
+        const cloudProjects = await loadCloudProjectsForLocalApp(input.layout);
+        const project = findAgentWitchProjectById(
+          cloudProjects.projects,
+          projectId,
+        );
         if (project === null) {
           response.writeHead(404);
           response.end("Project not found");
@@ -811,28 +809,15 @@ export const startAgentWitchLocalApp = (input: {
         return;
       }
 
-      if (method === "POST" && pathname === "/projects/add") {
-        const chosen = pickMacOsFolderDialog();
-        if (chosen === null) {
-          response.writeHead(303, { Location: "/projects" });
-          response.end();
-          return;
-        }
-
-        ensureAgentWitchProjectFolder({ projectFolderPath: chosen });
-        addAgentWitchLocalProjectToRegistry(input.layout, {
-          projectFolderPath: chosen,
-        });
-        response.writeHead(303, { Location: "/projects?added=1" });
-        response.end();
-        return;
-      }
-
       if (method === "POST" && pathname === "/projects/link-harness") {
         const rawBody = await readBody(request);
         const form = new URLSearchParams(rawBody);
         const projectId = form.get("projectId")?.trim() ?? "";
-        const project = findAgentWitchLocalProjectById(input.layout, projectId);
+        const cloudProjects = await loadCloudProjectsForLocalApp(input.layout);
+        const project = findAgentWitchProjectById(
+          cloudProjects.projects,
+          projectId,
+        );
         if (project === null) {
           response.writeHead(404);
           response.end("Project not found");

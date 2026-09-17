@@ -34,13 +34,14 @@ Open the top `sourcePath` under `docs/qa/` when present.
 
 ## Catalog
 
-| File                                                                                     | Topic                                                     |
-| ---------------------------------------------------------------------------------------- | --------------------------------------------------------- |
-| [awc-how-browser-knows-this-computer.md](awc-how-browser-knows-this-computer.md)         | AWC “This computer” / “this Mac” vs cloud device list     |
-| [awb-localhost-identity-and-cors.md](awb-localhost-identity-and-cors.md)                 | AWB `/identity`, CORS, AWI config vs AWL                  |
-| [delegate-local-cli-conversation-context.md](delegate-local-cli-conversation-context.md) | Local CLI (Cursor, etc.) follow-up context / `--continue` |
-| [writer-dispatch-cascade-routing.md](writer-dispatch-cascade-routing.md)                 | Mac dispatch route: continuation vs memory/RAG budget     |
-| [awc-project-folder-path-picker.md](awc-project-folder-path-picker.md)                   | AWC Projects opens AWL for paired local folder selection  |
+| File                                                                                     | Topic                                                                        |
+| ---------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| [awc-how-browser-knows-this-computer.md](awc-how-browser-knows-this-computer.md)         | AWC “This computer” / “this Mac” vs cloud device list                        |
+| [awb-localhost-identity-and-cors.md](awb-localhost-identity-and-cors.md)                 | AWB `/identity`, CORS, AWI config vs AWL                                     |
+| [delegate-local-cli-conversation-context.md](delegate-local-cli-conversation-context.md) | Local CLI (Cursor, etc.) follow-up context / `--continue`                    |
+| [writer-dispatch-cascade-routing.md](writer-dispatch-cascade-routing.md)                 | Mac dispatch route: continuation vs memory/RAG budget                        |
+| [awc-project-folder-path-picker.md](awc-project-folder-path-picker.md)                   | AWC Projects opens AWL for paired local folder selection                     |
+| [awc-awl-projects-source-of-truth.md](awc-awl-projects-source-of-truth.md)               | AWC DB owns project metadata; AWL loads cloud; `.agent-witch/` is repo-local |
 
 Add a row here when you add a Q&A file.
 

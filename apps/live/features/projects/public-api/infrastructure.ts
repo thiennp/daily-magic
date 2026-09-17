@@ -1,7 +1,20 @@
+export type { default as AgentWitchProjectView } from "../internal/core/agentWitchProjectView.type";
+
+export {
+  fetchAgentWitchProjectsForLocalApp,
+  type FetchAgentWitchProjectsForLocalAppResult,
+} from "../internal/core/fetchAgentWitchProjectsForLocalApp";
+
+export {
+  findAgentWitchProjectById,
+  mapAgentWitchCloudProjectsToViews,
+} from "../internal/core/mapAgentWitchCloudProjectsToViews";
+
 export {
   addAgentWitchLocalProjectToRegistry,
   findAgentWitchLocalProjectById,
   readAgentWitchLocalProjectsRegistry,
+  type AgentWitchLocalProjectRegistryEntry,
 } from "../internal/core/agentWitchLocalProjectsRegistry";
 
 export { default as expandAgentWitchProjectFolderPath } from "../internal/core/expandAgentWitchProjectFolderPath";
@@ -14,9 +27,14 @@ export { syncAgentWitchLocalProjectsFromCloud } from "../internal/core/syncAgent
 
 export { updateAgentWitchCloudProjectFolder } from "../internal/core/updateAgentWitchCloudProjectFolder";
 
+export { migrateLegacyProjectsRegistryToCloud } from "../internal/core/migrateLegacyProjectsRegistryToCloud";
+
+export { readLegacyAgentWitchProjectsRegistry } from "../internal/core/readLegacyAgentWitchProjectsRegistry";
+
 export {
   claimAgentRunFromCloud,
   completeAgentRunOnCloud,
+  createAgentWitchCloudProject,
   fetchAgentWitchCloudProjects,
   parseAgentWitchHeartbeatResponse,
   parseAgentWitchPollResponse,

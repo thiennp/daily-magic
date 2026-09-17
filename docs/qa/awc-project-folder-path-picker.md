@@ -40,8 +40,7 @@ A website cannot read the POSIX path of a folder the user selects in a file dial
 | Select-folder deep link | AWL runs `osascript` `choose folder` and ensures the selected project directory exists                                               |
 | Save cloud path         | AWL calls device-authenticated `PATCH /api/agent-witch/projects/:projectId`                                                          |
 | Bind project            | The endpoint verifies the pairing token, owns the project by the device user, updates `folderPath`, and binds `deviceId` to that Mac |
-| Sync local registry     | AWL pulls cloud projects again, then opens the updated local project detail                                                          |
-| Add Mac-only project    | Advanced `POST /projects/add` remains available from AWL                                                                             |
+| Refresh project list    | AWL reloads projects from the AWC database and opens the updated project detail                                                      |
 
 AGENT-021 still holds: AWC **navigates** the user to AWL but never fetches AWL from the public website.
 
