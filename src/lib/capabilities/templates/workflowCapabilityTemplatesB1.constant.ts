@@ -1,7 +1,6 @@
 import buildWorkflowTemplate from "@/lib/capabilities/templates/buildWorkflowTemplate";
-import { RELEASE_NOTES_DRAFT_EXAMPLE_REQUEST } from "@/lib/capabilities/templates/harnessProfiles/workflowB1.releaseNotesDraft.exampleRequest";
+import { COMPETITOR_SNAPSHOT_WORKFLOW } from "@/lib/capabilities/templates/workflowCapabilityTemplatesB1.competitorSnapshot.constant";
 import type { WorkflowCapabilityTemplate } from "@/lib/capabilities/templates/types/CapabilityTemplate.type";
-import { BUG_REPORT_WRITER_WORKFLOW } from "@/lib/capabilities/templates/workflowCapabilityTemplatesB1.bugReportWriter.constant";
 
 export const WORKFLOW_CAPABILITY_TEMPLATES_B1: readonly WorkflowCapabilityTemplate[] =
   [
@@ -17,18 +16,8 @@ export const WORKFLOW_CAPABILITY_TEMPLATES_B1: readonly WorkflowCapabilityTempla
         ["criteria", "Criteria", "textarea"],
       ],
     ),
-    buildWorkflowTemplate(
-      "competitor-snapshot",
-      "Research",
-      "Competitor snapshot",
-      "Capture how a competitor compares on what matters to you.",
-      "Write a competitor snapshot with positioning, strengths, weaknesses, and implications.",
-      [
-        ["competitor", "Competitor", "text"],
-        ["focus", "What we care about", "textarea"],
-        ["format", "Output format", "text", false],
-      ],
-    ),
+    COMPETITOR_SNAPSHOT_WORKFLOW,
+
     buildWorkflowTemplate(
       "pr-summary",
       "Engineering",
@@ -41,14 +30,25 @@ export const WORKFLOW_CAPABILITY_TEMPLATES_B1: readonly WorkflowCapabilityTempla
         ["audience", "Audience", "text"],
       ],
     ),
-    BUG_REPORT_WRITER_WORKFLOW,
-
+    buildWorkflowTemplate(
+      "bug-report-writer",
+      "Engineering",
+      "Bug report writer",
+      "Turn a rough repro into a clear bug ticket.",
+      "Write a bug report with repro steps, expected vs actual, and severity.",
+      [
+        ["summary", "What happened", "textarea"],
+        ["steps", "Steps to reproduce", "textarea"],
+        ["expectedActual", "Expected vs actual", "textarea"],
+        ["severity", "Severity", "text"],
+      ],
+    ),
     buildWorkflowTemplate(
       "release-notes-draft",
       "Engineering",
       "Release notes draft",
       "Turn a change list into customer-ready release notes.",
-      RELEASE_NOTES_DRAFT_EXAMPLE_REQUEST,
+      "Draft release notes grouped by user impact. Keep language plain.",
       [
         ["version", "Version", "text"],
         ["changes", "Changes", "textarea"],

@@ -23,6 +23,16 @@ Server-orchestrated marketplace workflows (`template-*` harness slugs) must **no
 3. `src/lib/workflowOrchestration/definitions/<template-id>.definition.test.ts` — asserts graph quality and field references.
 4. Co-located template/harness updates under `src/lib/capabilities/templates/` as needed.
 
+## Reference implementations in-repo
+
+| Template ID               | Definition module                    | Notes                                                                                                                                           |
+| ------------------------- | ------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| `vibe-coding-app-feature` | `vibeCodingAppFeature.definition.ts` | Engineering: clarify → architecture → implement → review (four human, three agent).                                                             |
+| `research-brief`          | `researchBrief.definition.ts`        | Research: confirm → clarify → synthesize → review (three human, two agent).                                                                     |
+| `competitor-snapshot`     | `competitorSnapshot.definition.ts`   | Same graph shape as `slackThreadSummary.definition.ts` (confirm → parse/clarify → draft → approve). Harness: `workflowB1.competitorSnapshot.*`. |
+
+When optimizing a preset, mirror the **file split**: `*.exampleRequest.ts`, `*.operatorSteps.ts`, harness preset module, `workflowCapabilityTemplates*.constant.ts`, co-located Vitest.
+
 ## Verification
 
 ```bash
