@@ -1,4 +1,5 @@
 import buildWorkflowTemplate from "@/lib/capabilities/templates/buildWorkflowTemplate";
+import { RESEARCH_BRIEF_EXAMPLE_REQUEST } from "@/lib/capabilities/templates/harnessProfiles/workflowA2.researchBrief.exampleRequest";
 import type { WorkflowCapabilityTemplate } from "@/lib/capabilities/templates/types/CapabilityTemplate.type";
 
 export const WORKFLOW_CAPABILITY_TEMPLATES_A2: readonly WorkflowCapabilityTemplate[] =
@@ -31,8 +32,8 @@ export const WORKFLOW_CAPABILITY_TEMPLATES_A2: readonly WorkflowCapabilityTempla
       "research-brief",
       "Research",
       "Research brief",
-      "Structure a research question into a brief with sources.",
-      "Write a research brief with key findings, open questions, and suggested next steps.",
+      "Turn a research question into a structured brief — clarify scope, triangulate sources, then review before you share.",
+      RESEARCH_BRIEF_EXAMPLE_REQUEST,
       [
         ["topic", "Topic", "text"],
         ["audience", "Audience", "text"],
