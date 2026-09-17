@@ -3,6 +3,11 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
+import {
+  APP_SHELL_NAV_LINK_ACTIVE_CLASSES,
+  APP_SHELL_NAV_LINK_BASE_CLASSES,
+  APP_SHELL_NAV_LINK_INACTIVE_CLASSES,
+} from "@/features/shell/appShellNavClasses.constant";
 import useShellNavContext from "@/features/shell/hooks/useShellNavContext";
 import { PRIMARY_NAV } from "@/features/shell/appNav.constant";
 import { filterAppNavForShellContext } from "@/lib/shell/filterAppNavForShellContext";
@@ -22,10 +27,10 @@ export default function AppShellNav() {
             key={item.href}
             href={item.href}
             aria-current={isActive ? "page" : undefined}
-            className={`rounded-lg px-3 py-2 text-sm font-medium transition ${
+            className={`${APP_SHELL_NAV_LINK_BASE_CLASSES} ${
               isActive
-                ? "bg-zinc-100 text-zinc-900 dark:bg-white/10 dark:text-white"
-                : "text-gray-600 hover:bg-gray-50 hover:text-zinc-900 dark:text-gray-300 dark:hover:bg-white/5 dark:hover:text-white"
+                ? APP_SHELL_NAV_LINK_ACTIVE_CLASSES
+                : APP_SHELL_NAV_LINK_INACTIVE_CLASSES
             }`}
           >
             {item.label}

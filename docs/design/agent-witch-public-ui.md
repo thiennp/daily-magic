@@ -18,6 +18,8 @@ Enterprise SaaS landing and local Mac UI share one visual language:
 | ------- | ------------- |
 | Landing, login, legal | `marketingDesignSystem.constant.ts` + `marketingPalette.constant.ts` |
 | Signed-in app panels | `src/components/surfaces/appSurfaceStyles.constant.ts` (brand primary buttons, brand eyebrows) |
+| Signed-in shell nav | `src/features/shell/appShellNavClasses.constant.ts` + `AppShellBottomNav` (brand active) |
+| TailAdmin `Button` | `src/components/ui/button/Button.tsx` primary/outline match marketing CTAs |
 
 Marketing pages use `marketing-light-surface` so global `.dark` does not invert public chrome.
 

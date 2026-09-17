@@ -6,7 +6,7 @@ describe("resolveAgentWitchLogoSurfaceClasses", () => {
   it("MARKETING-001 keeps logo text dark on light marketing surfaces", () => {
     const classes = resolveAgentWitchLogoSurfaceClasses("light");
 
-    expect(classes.text).toContain("text-zinc-900");
+    expect(classes.text).toContain("text-gray-900");
     expect(classes.text).not.toContain("dark:");
     expect(classes.root).not.toContain("dark:");
     expect(classes.markCross).not.toContain("dark:");

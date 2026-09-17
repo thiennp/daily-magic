@@ -32,18 +32,18 @@ const Button: React.FC<ButtonProps> = ({
   // Variant Classes
   const variantClasses = {
     primary: [
-      "bg-zinc-900 text-white shadow-sm",
-      "hover:bg-zinc-800",
-      "dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-100",
-      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-900/40 focus-visible:ring-offset-2",
-      "dark:focus-visible:ring-white/40 dark:focus-visible:ring-offset-gray-900",
+      "bg-brand-600 text-white shadow-sm",
+      "hover:bg-brand-700",
+      "dark:bg-brand-500 dark:hover:bg-brand-400",
+      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/40 focus-visible:ring-offset-2",
+      "dark:focus-visible:ring-brand-400/40 dark:focus-visible:ring-offset-gray-900",
       "disabled:cursor-not-allowed disabled:opacity-50",
     ].join(" "),
     outline: [
-      "bg-white text-zinc-900 ring-1 ring-inset ring-zinc-200 shadow-sm",
-      "hover:border-zinc-400 hover:bg-zinc-50",
-      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400/40 focus-visible:ring-offset-2",
-      "dark:bg-gray-800 dark:text-gray-200 dark:ring-gray-700 dark:hover:bg-white/[0.03]",
+      "border border-gray-200 bg-white text-gray-800 shadow-sm",
+      "hover:border-gray-300 hover:bg-gray-50",
+      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-300/60 focus-visible:ring-offset-2",
+      "dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-white/[0.03]",
     ].join(" "),
   };
 

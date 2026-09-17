@@ -22,8 +22,8 @@ export default function AppShellHeader() {
         <div className="min-w-0">
           <Link href="/" aria-label="Agent Witch home">
             <AgentWitchLogo
-              markClassName="h-6 w-6 text-zinc-900 dark:text-zinc-100"
-              textClassName="text-sm font-bold tracking-tight text-zinc-900 dark:text-zinc-100"
+              markClassName="h-6 w-6 text-gray-900 dark:text-zinc-100"
+              textClassName="text-sm font-bold tracking-tight text-gray-900 dark:text-zinc-100"
             />
           </Link>
         </div>
