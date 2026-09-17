@@ -11,5 +11,6 @@ export default function mapPublishedCapabilityToPlaybookTemplate(
     exampleRequest: capability.exampleRequest,
     workflowFields: capability.workflowFields,
     operatorSteps: capability.operatorSteps,
+    harnessSetSlug: capability.harnessSetSlug,
   };
 }

@@ -41,6 +41,8 @@ export const useAgentWitchPromptDispatch = (input: {
     readonly targetDeviceId?: string;
     readonly projectFolderPath?: string;
     readonly projectId?: string;
+    readonly fieldValues?: Readonly<Record<string, string>>;
+    readonly useOfficialWorkflowOrchestration?: boolean;
   },
 ) => void) => {
   const searchParams = useSearchParams();
@@ -91,6 +93,12 @@ export const useAgentWitchPromptDispatch = (input: {
           : {}),
         ...(options.projectId !== undefined
           ? { projectId: options.projectId }
+          : {}),
+        ...(options.fieldValues !== undefined
+          ? { fieldValues: options.fieldValues }
+          : {}),
+        ...(options.useOfficialWorkflowOrchestration === true
+          ? { useOfficialWorkflowOrchestration: true }
           : {}),
         onResponse: (raw) => {
           input.applySocketMessage(raw);

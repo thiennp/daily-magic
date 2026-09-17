@@ -20,6 +20,7 @@ export interface UseWsTestTaskComposerResult {
   readonly isWorkflowTask: boolean;
   readonly isLibraryPlaybook: boolean;
   readonly libraryCapabilityId: string;
+  readonly harnessSetSlug: string | null;
   readonly workflowFields: readonly WorkflowFieldDefinition[];
   readonly composerWorkflowFields: readonly WorkflowFieldDefinition[];
   readonly workflowValidationErrors: readonly string[];

@@ -33,6 +33,7 @@ export function useWsTestComposerWorkflowState(
   readonly resolvedPrompt: string;
   readonly isLibraryPlaybook: boolean;
   readonly libraryCapabilityId: string;
+  readonly harnessSetSlug: string | null;
 } {
   const initialPrompt =
     rerunPrompt.length > 0
@@ -94,5 +95,6 @@ export function useWsTestComposerWorkflowState(
     resolvedPrompt,
     isLibraryPlaybook,
     libraryCapabilityId: libraryPlaybook?.id ?? "",
+    harnessSetSlug: libraryPlaybook?.harnessSetSlug ?? null,
   };
 }

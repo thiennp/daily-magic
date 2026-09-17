@@ -30,6 +30,9 @@ export interface UseAgentWitchSocketResult {
       readonly groupId?: string;
       readonly capabilityId?: string;
       readonly targetDeviceId?: string;
+      readonly projectFolderPath?: string;
+      readonly fieldValues?: Readonly<Record<string, string>>;
+      readonly useOfficialWorkflowOrchestration?: boolean;
     },
   ) => void;
   readonly startWriterSession: (

@@ -1,6 +1,8 @@
+import { buildOfficialWorkflowOrchestrationContext } from "@/features/agent/utils/buildOfficialWorkflowOrchestrationContext";
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
 import type { useWsTestTaskComposer } from "@/features/agent/hooks/useWsTestTaskComposer";
 import { buildDefaultUserProjectFolderPath } from "@/lib/projects/defaultUserProject.constants";
+import { shouldUseOfficialWorkflowOrchestration } from "@/lib/workflowOrchestration/shouldUseOfficialWorkflowOrchestration";
 
 const resolveComposerProjectFolderPath = (
   composer: ReturnType<typeof useWsTestTaskComposer>,
@@ -24,26 +26,41 @@ export const buildWsTestSendOptions = (
   readonly targetDeviceId?: string;
   readonly projectFolderPath: string;
   readonly projectId?: string;
-} => ({
-  writerAgent,
-  projectFolderPath: resolveComposerProjectFolderPath(composer, profileEmail),
-  ...(composer.selectedProject !== null &&
-  composer.selectedProject !== undefined
-    ? { projectId: composer.selectedProject.id }
-    : {}),
-  ...(composer.isTeamDispatch
-    ? {
-        targetUserId: composer.selectedTargetUserId,
-        groupId: composer.selectedGroupId,
-        capabilityId: composer.selectedCapabilityId,
-      }
-    : {
-        ...(activeDeviceId !== undefined && activeDeviceId.length > 0
-          ? { targetDeviceId: activeDeviceId }
-          : {}),
-        ...(composer.isLibraryPlaybook &&
-        composer.libraryCapabilityId.length > 0
-          ? { capabilityId: composer.libraryCapabilityId }
-          : {}),
-      }),
-});
+  readonly fieldValues?: Readonly<Record<string, string>>;
+  readonly useOfficialWorkflowOrchestration?: boolean;
+} => {
+  const orchestrationContext =
+    buildOfficialWorkflowOrchestrationContext(composer);
+  const useOfficialWorkflowOrchestration =
+    shouldUseOfficialWorkflowOrchestration(orchestrationContext);
+
+  return {
+    writerAgent,
+    projectFolderPath: resolveComposerProjectFolderPath(composer, profileEmail),
+    ...(composer.selectedProject !== null &&
+    composer.selectedProject !== undefined
+      ? { projectId: composer.selectedProject.id }
+      : {}),
+    ...(useOfficialWorkflowOrchestration
+      ? {
+          useOfficialWorkflowOrchestration: true,
+          fieldValues: composer.workflowFieldValues,
+        }
+      : {}),
+    ...(composer.isTeamDispatch
+      ? {
+          targetUserId: composer.selectedTargetUserId,
+          groupId: composer.selectedGroupId,
+          capabilityId: composer.selectedCapabilityId,
+        }
+      : {
+          ...(activeDeviceId !== undefined && activeDeviceId.length > 0
+            ? { targetDeviceId: activeDeviceId }
+            : {}),
+          ...(composer.isLibraryPlaybook &&
+          composer.libraryCapabilityId.length > 0
+            ? { capabilityId: composer.libraryCapabilityId }
+            : {}),
+        }),
+  };
+};
