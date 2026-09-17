@@ -15,6 +15,7 @@ import { resolveNamespacedHarnessCursorRelativePath } from "../../../projects/in
 import { writeAgentWitchMaterializationLedger } from "../../../projects/internal/core/writeAgentWitchMaterializationLedger";
 import expandAgentWitchProjectFolderPath from "../../../projects/internal/core/expandAgentWitchProjectFolderPath";
 import { ensureAgentWitchProjectFolder } from "../../../projects/internal/core/ensureAgentWitchProjectFolder";
+import { resolveHarnessItemSourceAbsolutePath } from "./componentStore/resolveHarnessItemSourceAbsolutePath";
 import { readAgentWitchProjectHarnessSetSlugs } from "./readAgentWitchProjectHarnessLink";
 import { resolveSafePathUnderHome } from "./localHarness/pathSafety";
 import { resolveHarnessManifestItemCursorRelativePath } from "./resolveHarnessManifestItemCursorRelativePath";
@@ -60,36 +61,6 @@ const readHarnessManifestRecord = (
   }
 
   return null;
-};
-
-const resolveHarnessItemAbsolutePath = (
-  layout: AgentWitchLocalLayout,
-  setSlug: string,
-  manifestItemPath: string,
-): string | null => {
-  const trimmed = manifestItemPath.trim();
-  if (trimmed.length === 0) {
-    return null;
-  }
-
-  const absolutePath = trimmed.startsWith("shared/")
-    ? path.join(layout.harnessRootDir, trimmed)
-    : path.join(layout.harnessSetsDir, setSlug, trimmed);
-
-  if (!fs.existsSync(absolutePath)) {
-    return null;
-  }
-
-  try {
-    const stat = fs.statSync(absolutePath);
-    if (!stat.isFile()) {
-      return null;
-    }
-  } catch {
-    return null;
-  }
-
-  return absolutePath;
 };
 
 const writeProjectHarnessLinkMeta = (
@@ -245,11 +216,14 @@ export const applyInstalledHarnessSetsToProjectCursor = (
         .join(".cursor", namespacedRelative)
         .replaceAll("\\", "/");
 
-      const sourcePath = resolveHarnessItemAbsolutePath(
-        input.layout,
-        slug,
+      const manifestItemId = typeof item.id === "string" ? item.id.trim() : "";
+      const sourcePath = resolveHarnessItemSourceAbsolutePath({
+        layout: input.layout,
+        setSlug: slug,
+        setVersion: typeof setEntry.version === "number" ? setEntry.version : 1,
         manifestItemPath,
-      );
+        manifestItemId,
+      });
       if (sourcePath === null) {
         continue;
       }

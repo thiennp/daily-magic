@@ -1,10 +1,12 @@
+import crypto from "node:crypto";
+
 import type {
   HarnessInstallBundle,
   HarnessInstallBundleItem,
   HarnessInstallItemKind,
 } from "./harnessInstallBundle.types";
 
-const sanitizeHarnessSlug = (value: string): string => {
+export const sanitizeHarnessSlug = (value: string): string => {
   const normalized = value
     .trim()
     .toLowerCase()
@@ -69,6 +71,7 @@ interface HarnessManifestItem {
   readonly kind: HarnessInstallItemKind;
   readonly title: string;
   readonly path: string;
+  readonly contentSha256: string;
 }
 
 interface HarnessManifestSet {
@@ -144,6 +147,9 @@ const ensureSetEntry = (
   };
 };
 
+const sha256Utf8Content = (content: string): string =>
+  crypto.createHash("sha256").update(content, "utf8").digest("hex");
+
 const buildManifestItem = (
   item: HarnessInstallBundleItem,
 ): HarnessManifestItem => ({
@@ -151,6 +157,7 @@ const buildManifestItem = (
   kind: item.kind,
   title: item.title,
   path: resolveHarnessSharedItemPath(item.id, item.kind, item.title),
+  contentSha256: sha256Utf8Content(item.content),
 });
 
 export const planHarnessInstallBundle = (input: {

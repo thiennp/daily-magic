@@ -3,7 +3,11 @@ import os from "node:os";
 import path from "node:path";
 
 import type { HarnessInstallBundle } from "../harnessInstallBundle.types";
-import { planHarnessInstallBundle } from "../planHarnessInstallBundle";
+import {
+  planHarnessInstallBundle,
+  sanitizeHarnessSlug,
+} from "../planHarnessInstallBundle";
+import { persistHarnessSetVersionToComponentStore } from "../componentStore/persistHarnessSetVersionToComponentStore";
 import type { AgentWitchLocalLayout } from "@agent-witch/install-layout/types";
 import { assertReadableFileUnderHome } from "./pathSafety";
 import { normalizeLocalHarnessRevealResult } from "./normalizeLocalHarnessRevealResult";
@@ -148,6 +152,26 @@ export const submitLocalHarnessSelection = (
       input.layout.harnessManifestPath,
       `${JSON.stringify(manifest, null, 2)}\n`,
     );
+
+    for (const set of input.sets) {
+      const hasIncluded = set.items.some((item) => item.include);
+      if (!hasIncluded) {
+        continue;
+      }
+
+      const slug = sanitizeHarnessSlug(set.slug);
+      const setEntry = manifest.sets[slug];
+      if (setEntry === undefined) {
+        continue;
+      }
+
+      persistHarnessSetVersionToComponentStore({
+        installDir: input.layout.installDir,
+        harnessRootDir: input.layout.harnessRootDir,
+        setSlug: slug,
+        setEntry,
+      });
+    }
 
     return {
       ok: true,
