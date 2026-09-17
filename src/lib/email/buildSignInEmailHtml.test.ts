@@ -34,7 +34,7 @@ describe("buildSignInEmailHtml", () => {
     expect(html).toContain(SIGN_IN_EMAIL_DISCLAIMER);
     expect(html).toContain(logoUrl);
     expect(html).toContain(SIGN_IN_EMAIL_BRAND_COLOR);
-    expect(html).toContain("Outfit");
+    expect(html).toContain("Inter");
     expect(html).not.toContain("TailAdmin");
     expect(html).not.toContain("/images/logo/logo.svg");
     expect(html).not.toContain("#465fff");

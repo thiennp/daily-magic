@@ -6,9 +6,9 @@ export const LINE_CHART_ONE_OPTIONS: ApexOptions = {
     position: "top",
     horizontalAlign: "left",
   },
-  colors: ["#465FFF", "#9CB9FF"],
+  colors: ["#1E4FD8", "#85A5F2"],
   chart: {
-    fontFamily: "Outfit, sans-serif",
+    fontFamily: "Inter, sans-serif",
     height: 310,
     type: "line",
     toolbar: {

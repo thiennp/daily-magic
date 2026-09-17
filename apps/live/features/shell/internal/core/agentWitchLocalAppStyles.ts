@@ -2,9 +2,9 @@ import { AGENT_WITCH_PUBLIC_UI_TOKENS } from "@agent-witch/shared/ui";
 
 const t = AGENT_WITCH_PUBLIC_UI_TOKENS;
 
-/** Inline CSS mirroring Agent Witch marketing surfaces (Outfit + brand gray). */
+/** Inline CSS mirroring Agent Witch marketing surfaces (Inter + brand gray). */
 export const AGENT_WITCH_LOCAL_APP_STYLES = `
-@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap");
 
 :root {
   color-scheme: light;
@@ -37,7 +37,7 @@ export const AGENT_WITCH_LOCAL_APP_STYLES = `
 body {
   margin: 0;
   min-height: 100vh;
-  font-family: Outfit, ui-sans-serif, system-ui, sans-serif;
+  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
   background: var(--aw-zinc-50);
   color: var(--aw-zinc-900);
   -webkit-font-smoothing: antialiased;
@@ -221,7 +221,7 @@ h1 {
 }
 
 code, .mono {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   font-size: 0.8125rem;
 }
 
@@ -258,7 +258,7 @@ code, .mono {
 }
 
 .btn:focus-visible {
-  outline: 2px solid rgb(54 65 255 / 0.45);
+  outline: 2px solid rgb(26 68 190 / 0.45);
   outline-offset: 2px;
 }
 
@@ -330,7 +330,7 @@ code, .mono {
 .input:focus {
   outline: none;
   border-color: var(--aw-brand-600);
-  box-shadow: 0 0 0 2px rgb(54 65 255 / 0.2);
+  box-shadow: 0 0 0 2px rgb(26 68 190 / 0.2);
 }
 
 .table-wrap {
@@ -374,7 +374,7 @@ pre {
   background: var(--aw-zinc-50);
   white-space: pre-wrap;
   word-break: break-word;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   font-size: 0.75rem;
   color: var(--aw-zinc-800);
 }
@@ -476,7 +476,7 @@ pre {
   background: var(--aw-zinc-900);
   border-radius: var(--aw-radius-lg);
   color: var(--aw-zinc-50);
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   font-size: 0.75rem;
   line-height: 1.45;
   margin-top: 0.75rem;
@@ -521,7 +521,7 @@ input.input[type="text"] {
 }
 .field-link:hover { color: var(--aw-zinc-900); }
 
-.textarea { min-height: 6rem; resize: vertical; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 0.8125rem; }
+.textarea { min-height: 6rem; resize: vertical; font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 0.8125rem; }
 
 .check-list { list-style: none; margin: 0.75rem 0 0; padding: 0; display: flex; flex-direction: column; gap: 0.5rem; }
 .reveal-live-list { display: flex; flex-direction: column; gap: 0.5rem; max-height: 16rem; overflow-y: auto; margin-top: 0.5rem; }

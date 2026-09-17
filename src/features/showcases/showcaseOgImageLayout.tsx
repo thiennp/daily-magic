@@ -14,7 +14,7 @@ export function showcaseOgImageLayout({ article }: ShowcaseOgImageLayoutProps) {
         flexDirection: "column",
         justifyContent: "space-between",
         background:
-          "linear-gradient(135deg, #0f172a 0%, #1e3a5f 55%, #465fff 100%)",
+          "linear-gradient(135deg, #0f172a 0%, #1e3a5f 55%, #1e4fd8 100%)",
         padding: "64px",
         color: "#ffffff",
         fontFamily: "system-ui, sans-serif",

@@ -1,9 +1,9 @@
 import type { ApexOptions } from "apexcharts";
 
 export const BAR_CHART_ONE_OPTIONS: ApexOptions = {
-  colors: ["#465fff"],
+  colors: ["#1e4fd8"],
   chart: {
-    fontFamily: "Outfit, sans-serif",
+    fontFamily: "Inter, sans-serif",
     type: "bar",
     height: 180,
     toolbar: {
@@ -52,7 +52,7 @@ export const BAR_CHART_ONE_OPTIONS: ApexOptions = {
     show: true,
     position: "top",
     horizontalAlign: "left",
-    fontFamily: "Outfit",
+    fontFamily: "Inter",
   },
   yaxis: {
     title: {

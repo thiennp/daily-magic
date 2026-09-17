@@ -9,7 +9,7 @@ export const APP_SURFACE_PANEL_PADDING_DEFAULT_CLASS = "p-6";
 export const APP_SURFACE_PANEL_PADDING_COMPACT_CLASS = "p-5";
 
 export const APP_SURFACE_ACCENT_PANEL_CLASS =
-  "rounded-2xl border border-brand-200/90 bg-brand-50/60 shadow-[0_4px_20px_-2px_rgba(70,95,255,0.06)] dark:border-brand-900/50 dark:bg-brand-950/30";
+  "rounded-2xl border border-brand-200/90 bg-brand-50/60 shadow-[0_4px_20px_-2px_rgba(30,79,216,0.06)] dark:border-brand-900/50 dark:bg-brand-950/30";
 
 export const APP_SURFACE_HERO_NEUTRAL_CLASS =
   "overflow-hidden rounded-3xl border border-gray-200/80 bg-gradient-to-br from-gray-50/90 via-white to-white p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)] ring-1 ring-gray-200/60 dark:border-gray-800/80 dark:from-gray-900/90 dark:via-gray-900/60 dark:to-gray-950/90 dark:ring-gray-800/80";

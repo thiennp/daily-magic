@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import { buildAgentWitchLocalAppShell } from "./buildAgentWitchLocalAppShell";
 
 describe("buildAgentWitchLocalAppShell", () => {
-  it("uses Outfit + brand gray marketing shell for local UI (AGENT-026)", () => {
+  it("uses Inter + brand gray marketing shell for local UI (AGENT-026)", () => {
     const html = buildAgentWitchLocalAppShell({
       title: "Status",
       activePath: "/",
@@ -13,8 +13,8 @@ describe("buildAgentWitchLocalAppShell", () => {
       body: '<div class="card">ok</div>',
     });
 
-    expect(html).toContain("family=Outfit");
-    expect(html).toContain("--aw-brand-600: #3641f5");
+    expect(html).toContain("family=Inter");
+    expect(html).toContain("--aw-brand-600: #1a44be");
     expect(html).toContain("--aw-zinc-900: #101828");
     expect(html).toContain('class="site-header"');
     expect(html).toContain('aria-current="page"');

@@ -4,10 +4,10 @@
  * `src/app/globals.css` when brand ramps change.
  */
 export const AGENT_WITCH_PUBLIC_UI_TOKENS = {
-  brand50: "#ecf3ff",
-  brand100: "#dde9ff",
-  brand600: "#3641f5",
-  brand700: "#2a31d8",
+  brand50: "#eaf0fe",
+  brand100: "#d6e1fc",
+  brand600: "#1a44be",
+  brand700: "#15359c",
   gray50: "#f9fafb",
   gray100: "#f2f4f7",
   gray200: "#e4e7ec",
@@ -26,5 +26,4 @@ export const AGENT_WITCH_PUBLIC_UI_TOKENS = {
   error700: "#b42318",
 } as const;
 
-export type AgentWitchPublicUiTokens =
-  typeof AGENT_WITCH_PUBLIC_UI_TOKENS;
+export type AgentWitchPublicUiTokens = typeof AGENT_WITCH_PUBLIC_UI_TOKENS;
