@@ -48,3 +48,8 @@ export {
   INVALID_MACOS_CONSOLE_USERNAMES,
   MACOS_CONSOLE_USER_GUARD_INTERVAL_MS,
 } from "../internal/core/macOsConsoleUser.constants";
+
+export {
+  exitUnlessActiveMacOsConsoleUser,
+  startActiveMacOsConsoleUserGuard,
+} from "../internal/core/guardMacOsConsoleUser";

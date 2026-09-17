@@ -7,7 +7,7 @@
 
 Move from **horizontal** layout (UI in `src/features/`, server in `src/lib/`, thin routes in `src/app/`) to **vertical fractal slices** (`public-api/` + `internal/` per slug), without breaking Next.js App Router or Agent Witch `server.ts`.
 
-**Current FSA progress:** No slug has `public-api/` yet. Registry `migrationStatus: "migrated"` means **ADR 0003** feature-folder migration only.
+**Current FSA progress:** **AWI**, **AWL**, and **AWB** deployables use `apps/<deployable>/features/*` with `fsaStatus: fsa` in their registries (see `awi-fsa-plan.md`, `awl-fsa-plan.md`). **AWC** cloud modules remain under `src/features/` with ADR 0003 `migrationStatus`; target folder `apps/console/` is not populated yet. Legacy `scripts/` shims and inventory: [legacy-surfaces.md](legacy-surfaces.md).
 
 ---
 

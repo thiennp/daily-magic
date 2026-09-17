@@ -1,3 +1,4 @@
+import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -15,6 +16,17 @@ const AWI_FEATURES = path.join(APP_ROOT, "apps/install/features");
 const AWL_FEATURES = path.join(APP_ROOT, "apps/live/features");
 const AWB_FEATURES = path.join(APP_ROOT, "apps/bridge/features");
 const AWB_ADAPTERS = path.join(APP_ROOT, "apps/bridge/adapters");
+const AWI_ENTRY = path.join(APP_ROOT, "apps/install/entry");
+
+const isForbiddenAwiEntryImport = (specifier: string): boolean => {
+  if (
+    specifier.includes("/scripts/") ||
+    specifier.startsWith("../../../scripts")
+  ) {
+    return true;
+  }
+  return false;
+};
 
 const isForbiddenAwiImport = (specifier: string): boolean => {
   if (specifier.startsWith("@/features/")) {
@@ -130,6 +142,22 @@ describe("deployable import boundaries", () => {
     const imports = collectTypeScriptImportStrings(AWB_FEATURES);
     const violations = imports.filter(isForbiddenAwbFeatureImport);
     expect(violations).toEqual([]);
+  });
+
+  it("apps/install/entry imports scripts/ only via legacyScriptDeps.ts", () => {
+    const directEntryScriptImports: string[] = [];
+    for (const name of fs.readdirSync(AWI_ENTRY)) {
+      if (!name.endsWith(".ts") || name === "legacyScriptDeps.ts") {
+        continue;
+      }
+      const fileImports = collectTypeScriptImportStrings(
+        path.join(AWI_ENTRY, name),
+      );
+      directEntryScriptImports.push(
+        ...fileImports.filter(isForbiddenAwiEntryImport),
+      );
+    }
+    expect(directEntryScriptImports).toEqual([]);
   });
 
   it("apps/bridge/adapters may import scripts/ but not src/features", () => {

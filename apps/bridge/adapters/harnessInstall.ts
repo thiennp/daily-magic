@@ -1,4 +1,4 @@
 import { applyHarnessInstallLocally } from "../../../scripts/applyHarnessInstallLocally";
-import { parseHarnessInstallBundle } from "../../../scripts/parseHarnessInstallBundle";
+import { parseHarnessInstallBundle } from "@agent-witch/live-harness";
 
 export { applyHarnessInstallLocally, parseHarnessInstallBundle };

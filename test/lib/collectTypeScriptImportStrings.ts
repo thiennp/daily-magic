@@ -22,8 +22,13 @@ const walkTsFiles = (rootDir: string): string[] => {
   });
 };
 
-export const collectTypeScriptImportStrings = (rootDir: string): string[] => {
-  const files = walkTsFiles(rootDir);
+export const collectTypeScriptImportStrings = (rootPath: string): string[] => {
+  const stat = statSync(rootPath);
+  const files = stat.isDirectory()
+    ? walkTsFiles(rootPath)
+    : /\.(ts|tsx|mts|cts)$/.test(rootPath) && !rootPath.endsWith(".d.ts")
+      ? [rootPath]
+      : [];
   const imports = new Set<string>();
   files.forEach((filePath) => {
     const source = readFileSync(filePath, "utf8");

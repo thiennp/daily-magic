@@ -16,7 +16,7 @@ import {
   startAgentWitchLocalApp,
 } from "../../live/features/local-server/public-api/infrastructure";
 
-import { exitUnlessActiveMacOsConsoleUser } from "../../../scripts/guardMacOsConsoleUser";
+import { exitUnlessActiveMacOsConsoleUser } from "@agent-witch/install-macos-launch";
 
 const readLinkCode = (installDir: string): string | null => {
   const linkCodePath = path.join(installDir, "link-code.txt");

@@ -59,12 +59,14 @@ AWC may link to AWL (“Open on this Mac”). That is navigation, not a downgrad
 
 ## Migration map (today → target)
 
-| Abbr | Current main paths                                                                                |
-| ---- | ------------------------------------------------------------------------------------------------- |
-| AWC  | `src/app/`, `server.ts`, `src/features/`, `src/lib/` (cloud-owned)                                |
-| AWL  | `scripts/agentWitchLocalApp*.ts`, `scripts/buildAgentWitchLocal*`                                 |
-| AWB  | `scripts/agent-witch-wake-server.ts`, wake/restart/update helpers under `scripts/`                |
-| AWI  | `scripts/agent-witch.ts`, `public/install/agent-witch/`, Mac `src/lib/agentWitch/` client/runtime |
+| Abbr | Canonical implementation                             | Stable legacy entry / glue                                                                        |
+| ---- | ---------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
+| AWC  | `src/app/`, `server.ts`, `src/features/`, `src/lib/` | Target: `apps/console/` (README only today)                                                       |
+| AWL  | `apps/live/features/*`, `apps/live/entry/`           | `scripts/agentWitchLocalApp.ts`, `scripts/buildAgentWitchLocal*` shims                            |
+| AWB  | `apps/bridge/features/*`, `apps/bridge/entry/`       | `scripts/agent-witch-wake-server.ts`; some `apps/bridge/adapters/*` → `scripts/`                  |
+| AWI  | `apps/install/features/*`, `apps/install/entry/`     | `scripts/agent-witch.ts`, `public/install/agent-witch/`, `entry/legacyScriptDeps.ts` → `scripts/` |
+
+Detail: [legacy-surfaces.md](../architecture/legacy-surfaces.md).
 
 Each app keeps its own **`features/`** tree under FSA (ADR 0007); cross-app contracts live in **`@agent-witch/shared`** ([README](../../packages/shared/README.md)).
 

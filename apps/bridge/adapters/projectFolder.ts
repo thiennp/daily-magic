@@ -1,3 +1,3 @@
-import { ensureAgentWitchProjectFolder } from "../../../scripts/ensureAgentWitchProjectFolder";
+import { ensureAgentWitchProjectFolder } from "@agent-witch/live-projects";
 
 export { ensureAgentWitchProjectFolder };

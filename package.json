@@ -23,6 +23,7 @@
     "test:safety:standard": "tsx .agents/scripts/runRefactoringSafetyGate.ts --tier=standard",
     "test:safety:full": "tsx .agents/scripts/runRefactoringSafetyGate.ts --tier=full",
     "test:refactor-gate": "npm run test:safety:standard",
+    "harness:script-shims": "tsx .agents/scripts/write-awl-script-shims.ts",
     "test:watch": "vitest",
     "test:e2e": "playwright test",
     "test:e2e:install": "playwright install chromium",

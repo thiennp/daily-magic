@@ -37,6 +37,7 @@ Open the top `sourcePath` under `docs/qa/` when present.
 | File                                                                             | Topic                                                 |
 | -------------------------------------------------------------------------------- | ----------------------------------------------------- |
 | [awc-how-browser-knows-this-computer.md](awc-how-browser-knows-this-computer.md) | AWC “This computer” / “this Mac” vs cloud device list |
+| [awb-localhost-identity-and-cors.md](awb-localhost-identity-and-cors.md)         | AWB `/identity`, CORS, AWI config vs AWL              |
 
 Add a row here when you add a Q&A file.
 

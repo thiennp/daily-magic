@@ -1,7 +1,7 @@
 import {
   exitUnlessActiveMacOsConsoleUser,
   startActiveMacOsConsoleUserGuard,
-} from "../../../scripts/guardMacOsConsoleUser";
+} from "@agent-witch/install-macos-launch";
 import { startBridgeServer } from "../../bridge/features/server/public-api/infrastructure";
 
 export const runAgentWitchBridgeCli = async (): Promise<void> => {

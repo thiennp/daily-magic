@@ -5,64 +5,13 @@ import os from "node:os";
 import WebSocket from "ws";
 
 import {
+  bootoutAgentWitchAuxiliaryLaunchAgents,
+  bootoutAgentWitchLaunchAgentsForCurrentUser,
   exitUnlessActiveMacOsConsoleUser,
   startActiveMacOsConsoleUserGuard,
-} from "../../../scripts/guardMacOsConsoleUser";
-import { bootoutAgentWitchAuxiliaryLaunchAgents } from "../../../scripts/bootoutAgentWitchAuxiliaryLaunchAgents";
-import { bootoutAgentWitchLaunchAgentsForCurrentUser } from "../../../scripts/bootoutAgentWitchLaunchAgentsForCurrentUser";
-import {
-  claimAgentWitchMachineLease,
-  releaseAgentWitchMachineLease,
-} from "../../../scripts/claimAgentWitchMachineLease";
-import { resolveAgentWitchProcessHost } from "@agent-witch/install-process-host";
-import {
-  resolveRunProjectFolderPath,
-  waitForAgentWitchClientConfigs as waitForConfigs,
-} from "@agent-witch/install-runtime-client";
-import type { AgentWitchClientConfig as AgentWitchConfig } from "@agent-witch/install-runtime-client/types";
-import { terminateOtherAgentWitchClientProcesses } from "../../../scripts/terminateOtherAgentWitchClientProcesses";
-
-import { migrateLegacyAgentWitchInstallLogsForActiveProfiles } from "../../../scripts/migrateLegacyAgentWitchInstallLogs";
-import { startAgentWitchInProcessServices } from "../../../scripts/startAgentWitchInProcessServices";
-import { resolveAgentWitchWakePort } from "../../../scripts/agentWitchWakeConstants";
+} from "@agent-witch/install-macos-launch";
 import { resolveAgentWitchInstallDir } from "@agent-witch/install-layout";
 import type { AgentWitchLocalLayout } from "@agent-witch/install-layout/types";
-import {
-  continueClaudeTaskAfterInput,
-  configureAgentWitchRunCloudApi,
-  flushPendingAgentRunCompletions,
-  replayPendingRunInputRequests,
-  runWriterTask,
-  stopAgentRun,
-} from "../../../scripts/agentWitchRunSessions";
-import { resolveAgentWitchCloudApiConfig } from "../../../scripts/agentWitchCloudApi";
-import {
-  closeShellPtySession,
-  openInteractiveShellPty,
-  resizeShellPty,
-  writeShellPtyInput,
-} from "../../../scripts/agentWitchShellSession";
-import {
-  buildWriterSessionReadyMessage,
-  buildWriterSessionWarmupMessage,
-  clearWriterSession,
-  isWriterConversationStarted,
-  isWriterSessionWarmed,
-  markWriterSessionWarmed,
-  runWriterSessionStart,
-  supportsWriterSessionContinuation,
-  supportsWriterSessionWarmup,
-} from "../../../scripts/agentWitchWriterSession";
-import { ensureHarnessWriterCli } from "../../../scripts/ensureHarnessWriterCli";
-import {
-  buildWriterCliInvocation,
-  isHarnessWriterAgentId,
-  resolveWriterCliCommands,
-} from "../../../scripts/buildWriterCliInvocation";
-import {
-  listAgentRunsLocal,
-  loadAgentRunLocal,
-} from "../../../scripts/agentWitchLocalRunStore";
 import {
   AGENT_WITCH_CONNECTION_STALE_MS,
   isAgentWitchConnectionHealthStale,
@@ -70,57 +19,93 @@ import {
   writeAgentWitchConnectionHealth,
 } from "@agent-witch/install-connection-health";
 import {
-  acceptTerminalStream,
-  isTerminalStreamAccepted,
-  queueTerminalStreamChunk,
-} from "../../../scripts/agentWitchTerminalStreamState";
-import { requestLocalAgentWitchRestart } from "../../../scripts/requestLocalAgentWitchRestart";
-import { runLocalInstallBundleUpdate } from "../../../scripts/runLocalInstallBundleUpdate";
-import { AGENT_WITCH_DEFAULT_ORIGIN } from "@agent-witch/shared/network";
-
+  buildDeviceAuthHelloFields,
+  verifyServerAttestationLocally,
+} from "@agent-witch/install-device-identity";
+import { resolveAgentWitchProcessHost } from "@agent-witch/install-process-host";
+import {
+  resolveRunProjectFolderPath,
+  waitForAgentWitchClientConfigs as waitForConfigs,
+} from "@agent-witch/install-runtime-client";
+import type { AgentWitchClientConfig as AgentWitchConfig } from "@agent-witch/install-runtime-client/types";
 import {
   ensureAgentWitchInstallVersionRecorded,
   resolveAgentWitchAppOriginFromWsUrl,
   resolveAgentWitchHeartbeatInstallBundleVersion,
 } from "@agent-witch/install-self-update";
-import { readInstallBundleVersionFromHeartbeatAck } from "../../../scripts/readInstallBundleVersionFromHeartbeatAck";
 import {
-  applyAutomationsRunFromCloud,
-  applyAutomationsSyncFromCloud,
-} from "../../../scripts/handleAgentWitchCloudControlMessages";
-import {
-  buildDeviceAuthHelloFields,
-  verifyServerAttestationLocally,
-} from "@agent-witch/install-device-identity";
-import { appendAgentWitchLocalTraffic } from "../../../scripts/agentWitchLocalTrafficLog";
-import {
+  appendAgentWitchLocalTraffic,
   recordAgentWitchLocalTraceEvent,
   recordAgentWitchWsTraceFromObject,
-} from "../../../scripts/agentWitchLocalWsTraceLog";
-import { registerAgentWitchProcessTraceHandlers } from "../../../scripts/registerAgentWitchProcessTraceHandlers";
-import {
-  resolveLocalAppPublicKey,
-  startAgentWitchLocalApp,
-} from "../../../scripts/agentWitchLocalApp";
+} from "@agent-witch/live-diagnostics";
 import {
   formatRagContextForPrompt,
   indexAgentWitchRagText,
   queryAgentWitchRag,
-} from "../../../scripts/agentWitchLocalRag";
+} from "@agent-witch/live-knowledge";
+import {
+  resolveLocalAppPublicKey,
+  startAgentWitchLocalApp,
+} from "@agent-witch/live-local-server";
 import {
   appendAgentWitchMemoryEntry,
   formatMemoryContextForPrompt,
   readAgentWitchMemoryEntries,
-} from "../../../scripts/agentWitchLocalMemory";
-import { buildDefaultUserProjectFolderPath } from "../../../scripts/buildDefaultUserProjectFolderPath";
-import { ensureAgentWitchProjectFolder } from "../../../scripts/ensureAgentWitchProjectFolder";
-import { runWriterEnsure } from "../../../scripts/handleAgentWitchWriterEnsure";
-import { wrapPromptWithAgentRunReportInstruction } from "../../../scripts/dispatch/agentRunReport.constant";
-import { wrapPromptWithPrerecordedAgentRunEstimate } from "../../../scripts/dispatch/wrapPromptWithPrerecordedAgentRunEstimate";
-import { generateAgentRunReportKey } from "../../../scripts/dispatch/generateAgentRunReportKey";
-import { AGENT_RUN_WORKING_ESTIMATE_MARKER } from "../../../scripts/dispatch/agentRunWorkingEstimate.constant";
-import { seedAgentRunReportFile } from "../../../scripts/agentWitchRunReport";
-import { runAgentRunPreEstimate } from "../../../scripts/runAgentRunPreEstimate";
+} from "@agent-witch/live-memory";
+import { ensureAgentWitchProjectFolder } from "@agent-witch/live-projects";
+import { AGENT_WITCH_DEFAULT_ORIGIN } from "@agent-witch/shared/network";
+
+import {
+  acceptTerminalStream,
+  AGENT_RUN_WORKING_ESTIMATE_MARKER,
+  applyAutomationsRunFromCloud,
+  applyAutomationsSyncFromCloud,
+  buildDefaultUserProjectFolderPath,
+  buildWriterCliInvocation,
+  buildWriterSessionReadyMessage,
+  buildWriterSessionWarmupMessage,
+  claimAgentWitchMachineLease,
+  clearWriterSession,
+  closeShellPtySession,
+  configureAgentWitchRunCloudApi,
+  continueClaudeTaskAfterInput,
+  ensureHarnessWriterCli,
+  flushPendingAgentRunCompletions,
+  generateAgentRunReportKey,
+  isHarnessWriterAgentId,
+  isTerminalStreamAccepted,
+  isWriterConversationStarted,
+  isWriterSessionWarmed,
+  listAgentRunsLocal,
+  loadAgentRunLocal,
+  markWriterSessionWarmed,
+  migrateLegacyAgentWitchInstallLogsForActiveProfiles,
+  openInteractiveShellPty,
+  queueTerminalStreamChunk,
+  readInstallBundleVersionFromHeartbeatAck,
+  registerAgentWitchProcessTraceHandlers,
+  releaseAgentWitchMachineLease,
+  replayPendingRunInputRequests,
+  requestLocalAgentWitchRestart,
+  resizeShellPty,
+  resolveAgentWitchCloudApiConfig,
+  resolveAgentWitchWakePort,
+  resolveWriterCliCommands,
+  runAgentRunPreEstimate,
+  runLocalInstallBundleUpdate,
+  runWriterEnsure,
+  runWriterSessionStart,
+  runWriterTask,
+  seedAgentRunReportFile,
+  startAgentWitchInProcessServices,
+  stopAgentRun,
+  supportsWriterSessionContinuation,
+  supportsWriterSessionWarmup,
+  terminateOtherAgentWitchClientProcesses,
+  wrapPromptWithAgentRunReportInstruction,
+  wrapPromptWithPrerecordedAgentRunEstimate,
+  writeShellPtyInput,
+} from "./legacyScriptDeps";
 const HEARTBEAT_INTERVAL_MS = 30_000;
 const MAX_RECONNECT_DELAY_MS = 30_000;
 const shellSessionIdByRunId = new Map<string, string>();
