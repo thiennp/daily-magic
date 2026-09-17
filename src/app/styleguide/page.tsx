@@ -5,6 +5,7 @@ import { requireStaffPageAccess } from "@/lib/auth/requireStaffPageAccess";
 import { AGENT_WITCH_PRODUCT_NAME } from "@/lib/agentWitch/agentWitchProductName.constant";
 import SurfacesSection from "@/features/styleguide/sections/SurfacesSection";
 import BrandLogoSection from "@/features/styleguide/sections/BrandLogoSection";
+import MarketingBrandSection from "@/features/styleguide/sections/MarketingBrandSection";
 import AlertsSection from "@/features/styleguide/sections/AlertsSection";
 import AvatarsSection from "@/features/styleguide/sections/AvatarsSection";
 import BadgesSection from "@/features/styleguide/sections/BadgesSection";
@@ -26,6 +27,7 @@ export default async function StyleguidePage() {
   return (
     <StyleguideShell>
       <BrandLogoSection />
+      <MarketingBrandSection />
       <SurfacesSection />
       <ButtonsSection />
       <AlertsSection />

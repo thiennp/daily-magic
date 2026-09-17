@@ -1,5 +1,6 @@
 export const STYLEGUIDE_SECTIONS = [
   { id: "brand-logo", label: "Brand logo" },
+  { id: "marketing-brand", label: "Marketing brand" },
   { id: "surfaces", label: "App surfaces" },
   { id: "buttons", label: "Buttons" },
   { id: "alerts", label: "Alerts" },

@@ -2,75 +2,74 @@ import MarketingStatusBadge from "@/features/marketing/MarketingStatusBadge";
 import { MAC_WORKER_BENEFIT_COPY } from "@/lib/copy/macWorkerBenefitCopy.constant";
 import { MARKETING_MOCK_SHELL_CLASSES } from "@/features/marketing/marketingPalette.constant";
 
-const PREVIEW_FLOW_STEPS = [
-  { label: "You", detail: "Pick a workflow" },
-  { label: "Approve", detail: "If your team requires it" },
-  { label: "Mac", detail: "It runs the job" },
-  { label: "History", detail: "Results are saved" },
+const PREVIEW_TASKS = [
+  {
+    title: "Weekly status summary",
+    runner: "runner: mac-eng-04",
+    tone: "success" as const,
+    status: "Delivered",
+    time: "2m ago",
+  },
+  {
+    title: "Client proposal draft",
+    runner: "runner: mac-sales-02",
+    tone: "info" as const,
+    status: "Pending",
+    time: "Just now",
+  },
+  {
+    title: "Inbox reply batch",
+    runner: "runner: mac-ops-01",
+    tone: "neutral" as const,
+    status: "Running",
+    time: "Live",
+  },
 ] as const;
 
 export default function MarketingProductPreview() {
   return (
-    <figure className="opacity-80">
-      <figcaption className="mb-2 text-[11px] font-medium uppercase tracking-wider text-zinc-600">
+    <figure>
+      <figcaption className="mb-2 text-[11px] font-semibold uppercase tracking-[0.12em] text-brand-700">
         Product preview
       </figcaption>
 
       <aside
         aria-hidden
-        aria-label="Illustration of the Agent Witch task flow"
+        aria-label="Illustration of Agent Witch task queue on organization Macs"
         className={MARKETING_MOCK_SHELL_CLASSES}
       >
-        <header className="flex items-center gap-2 border-b border-zinc-800/80 bg-zinc-900/90 px-4 py-2.5">
-          <span className="h-2 w-2 rounded-full bg-zinc-600" aria-hidden />
-          <span className="h-2 w-2 rounded-full bg-zinc-600" aria-hidden />
-          <span className="h-2 w-2 rounded-full bg-zinc-600" aria-hidden />
-          <p className="ml-2 text-[11px] font-medium text-zinc-400">
-            Agent Witch · New task
-          </p>
+        <header
+          className="flex items-center justify-between gap-3 border-b border-gray-200 bg-white px-4 py-3"
+        >
+          <p className="text-xs font-semibold text-gray-900">Macs online</p>
+          <MarketingStatusBadge tone="success">
+            {MAC_WORKER_BENEFIT_COPY.macReadyBadge}
+          </MarketingStatusBadge>
         </header>
 
-        <section className="space-y-3 p-4">
-          <div className="flex items-center justify-between gap-3">
-            <p className="text-xs font-medium text-zinc-400">New task</p>
-            <MarketingStatusBadge tone="success" onDark>
-              {MAC_WORKER_BENEFIT_COPY.macReadyBadge}
-            </MarketingStatusBadge>
-          </div>
-
-          <blockquote className="rounded-lg bg-zinc-900 p-3 ring-1 ring-zinc-800">
-            <p className="text-[10px] font-medium uppercase tracking-wide text-zinc-400">
-              What you want done
-            </p>
-            <p className="mt-1.5 text-xs leading-relaxed text-zinc-200">
-              Summarize this document and list anything we should fix before
-              sharing it.
-            </p>
-          </blockquote>
-
-          <p
-            className="flex h-8 w-full items-center justify-center rounded-md bg-zinc-100 text-[11px] font-medium text-zinc-900"
-            aria-hidden
-          >
-            New task
-          </p>
-
-          <ol className="grid grid-cols-4 gap-1.5 border-t border-zinc-800/80 pt-3">
-            {PREVIEW_FLOW_STEPS.map((step, index) => (
-              <li key={step.label} className="text-center">
-                <span className="mx-auto flex h-6 w-6 items-center justify-center rounded-full bg-zinc-800 text-[10px] font-medium text-zinc-400 ring-1 ring-zinc-700/80">
-                  {index + 1}
-                </span>
-                <p className="mt-1.5 text-[10px] font-medium text-zinc-400">
-                  {step.label}
+        <ul className="divide-y divide-gray-200 bg-white">
+          {PREVIEW_TASKS.map((task) => (
+            <li
+              key={task.title}
+              className="flex items-center justify-between gap-3 px-4 py-3"
+            >
+              <div className="min-w-0">
+                <p className="truncate text-sm font-semibold text-gray-900">
+                  {task.title}
                 </p>
-                <p className="text-[9px] leading-snug text-zinc-400">
-                  {step.detail}
+                <p className="font-mono text-[11px] text-brand-600">
+                  {task.runner}
                 </p>
-              </li>
-            ))}
-          </ol>
-        </section>
+              </div>
+              <div className="flex shrink-0 flex-col items-end gap-1">
+                <MarketingStatusBadge tone={task.tone}>
+                  {task.status}
+                </MarketingStatusBadge>
+                <span className="text-[10px] text-gray-500">{task.time}</span>
+              </div>
+            </li>
+          ))}
+        </ul>
       </aside>
     </figure>
   );

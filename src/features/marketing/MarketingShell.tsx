@@ -1,8 +1,8 @@
 import type { ReactNode } from "react";
 
-import GridShape from "@/components/common/GridShape";
 import MarketingFooter from "@/features/marketing/MarketingFooter";
 import MarketingHeader from "@/features/marketing/MarketingHeader";
+import { MARKETING_PAGE_BACKGROUND_CLASSES } from "@/features/marketing/marketingDesignSystem.constant";
 import { MARKETING_LIGHT_SURFACE_CLASS } from "@/features/marketing/marketingSurfaceClasses.constant";
 
 interface MarketingShellProps {
@@ -18,9 +18,8 @@ export default function MarketingShell({
 }: MarketingShellProps) {
   return (
     <div
-      className={`${MARKETING_LIGHT_SURFACE_CLASS} relative min-h-screen bg-zinc-50`}
+      className={`${MARKETING_LIGHT_SURFACE_CLASS} relative min-h-screen ${MARKETING_PAGE_BACKGROUND_CLASSES}`}
     >
-      <GridShape />
       <MarketingHeader showSignIn={showSignIn} />
       <main className="relative mx-auto max-w-6xl px-6 py-10 sm:py-14">
         {children}

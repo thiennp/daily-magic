@@ -2,20 +2,20 @@ import type { ReactElement } from "react";
 
 import AppIcon from "@/components/ui/icon/AppIcon";
 import MarketingStatusBadge from "@/features/marketing/MarketingStatusBadge";
-import { MARKETING_ACCENT_EMERALD_CLASSES } from "@/features/marketing/marketingPalette.constant";
+import { MARKETING_ACCENT_BRAND_CLASSES } from "@/features/marketing/marketingPalette.constant";
 import type { MarketingFeaturePreviewKey } from "@/features/marketing/marketingFeatureItems.constant";
 import { mergeMarketingClasses } from "@/features/marketing/mergeMarketingClasses";
 import { LockIcon } from "@/icons";
 
 const DISPATCH_PREVIEW = (): ReactElement => (
-  <div className="space-y-2 rounded-xl bg-zinc-50 p-3 ring-1 ring-zinc-200/40">
+  <div className="space-y-2 rounded-lg bg-gray-50 p-3 ring-1 ring-gray-200/80">
     <div className="flex items-center justify-between text-xs">
-      <span className="font-medium text-zinc-700">Organization setup</span>
+      <span className="font-medium text-gray-800">Organization setup</span>
       <MarketingStatusBadge tone="success">
         4 agents connected
       </MarketingStatusBadge>
     </div>
-    <div className="rounded-lg bg-white px-3 py-2 text-xs text-zinc-600 ring-1 ring-zinc-200/30">
+    <div className="rounded-lg bg-white px-3 py-2 text-xs text-gray-600 ring-1 ring-gray-200/80">
       Team workflows · ready to deploy
     </div>
   </div>
@@ -25,36 +25,36 @@ const APPROVE_PREVIEW = (): ReactElement => (
   <div
     className={mergeMarketingClasses(
       "space-y-2 rounded-xl p-3 ring-1",
-      MARKETING_ACCENT_EMERALD_CLASSES.mutedBg,
-      "ring-emerald-500/10",
+      MARKETING_ACCENT_BRAND_CLASSES.mutedBg,
+      "ring-brand-500/15",
     )}
   >
     <span
       className={mergeMarketingClasses(
         "inline-flex items-center gap-1.5 text-xs font-semibold",
-        MARKETING_ACCENT_EMERALD_CLASSES.text,
+        MARKETING_ACCENT_BRAND_CLASSES.text,
       )}
     >
       <AppIcon
         icon={LockIcon}
         size="xs"
-        className={MARKETING_ACCENT_EMERALD_CLASSES.icon}
+        className={MARKETING_ACCENT_BRAND_CLASSES.icon}
       />
       Organization policy
     </span>
-    <p className="text-xs leading-relaxed text-zinc-600">
+    <p className="text-xs leading-relaxed text-gray-600">
       Managers approve before cross-Mac jobs run.
     </p>
   </div>
 );
 
 const REPORT_PREVIEW = (): ReactElement => (
-  <div className="space-y-2 rounded-xl bg-zinc-50 p-3 ring-1 ring-zinc-200/40">
+  <div className="space-y-2 rounded-lg bg-gray-50 p-3 ring-1 ring-gray-200/80">
     <div className="flex items-center justify-between text-xs">
-      <span className="font-medium text-zinc-700">Team workflow #1042</span>
+      <span className="font-medium text-gray-800">Team workflow #1042</span>
       <MarketingStatusBadge tone="success">Finished</MarketingStatusBadge>
     </div>
-    <p className="truncate text-xs text-zinc-500">
+    <p className="truncate text-xs text-gray-500">
       Visible to managers and teammates
     </p>
   </div>

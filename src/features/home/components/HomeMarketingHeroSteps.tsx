@@ -14,7 +14,7 @@ export default function HomeMarketingHeroSteps() {
       {HOME_MARKETING_HERO_COPY.steps.map((step, index) => (
         <li key={step} className="flex gap-3">
           <span
-            className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-zinc-900 text-xs font-semibold text-white dark:bg-white dark:text-zinc-900"
+            className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-brand-600 text-xs font-semibold text-white"
             aria-hidden
           >
             {index + 1}

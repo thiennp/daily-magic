@@ -3,6 +3,7 @@ import HomeMarketingPopularPresets from "@/features/home/components/HomeMarketin
 import HomeMarketingFeatures from "@/features/home/HomeMarketingFeatures";
 import HomeMarketingShowcases from "@/features/home/HomeMarketingShowcases";
 import HomeMarketingSteps from "@/features/home/HomeMarketingSteps";
+import MarketingCtaBand from "@/features/marketing/MarketingCtaBand";
 import MarketingIntegrationsRow from "@/features/marketing/MarketingIntegrationsRow";
 import MarketingShell from "@/features/marketing/MarketingShell";
 
@@ -14,6 +15,7 @@ export default function HomeMarketingLanding() {
       <HomeMarketingFeatures />
       <HomeMarketingShowcases />
       <HomeMarketingSteps />
+      <MarketingCtaBand />
       <MarketingIntegrationsRow />
     </MarketingShell>
   );

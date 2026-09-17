@@ -27,7 +27,7 @@ export default function HomeMarketingSteps() {
             <li key={step.title}>
               <Link
                 href={step.href}
-                className="group flex h-full flex-col space-y-3 rounded-xl p-2 transition duration-200 hover:bg-slate-50/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400/50 focus-visible:ring-offset-2"
+                className="group flex h-full flex-col space-y-3 rounded-xl p-2 transition duration-200 hover:bg-brand-50/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/30 focus-visible:ring-offset-2"
               >
                 <span
                   className={`h-9 w-9 shadow-sm transition duration-200 group-hover:scale-105 ${APP_SURFACE_STEP_BADGE_CLASS}`}

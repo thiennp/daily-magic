@@ -24,7 +24,7 @@ export default function MarketingFooter() {
   const showAdminLinks = shouldShowMarketingFooterAdmin(showStaffLinks);
 
   return (
-    <footer className="border-t border-zinc-200 bg-white">
+    <footer className="border-t border-gray-200 bg-white">
       <div
         className={mergeMarketingClasses(
           "mx-auto grid max-w-6xl gap-10 px-6 py-12",

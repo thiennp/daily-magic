@@ -1,6 +1,6 @@
+import { MARKETING_SECTION_HEADING_CLASSES } from "@/features/marketing/marketingDesignSystem.constant";
 import {
   MARKETING_EYEBROW_TEXT_CLASSES,
-  MARKETING_TEXT_PRIMARY_CLASSES,
   MARKETING_TEXT_SECONDARY_CLASSES,
 } from "@/features/marketing/marketingSurfaceClasses.constant";
 import { mergeMarketingClasses } from "@/features/marketing/mergeMarketingClasses";
@@ -44,8 +44,8 @@ export default function MarketingSectionHeader({
       <h2
         id={headingId}
         className={mergeMarketingClasses(
-          "mt-2 text-2xl font-semibold tracking-[-0.02em] sm:text-3xl",
-          MARKETING_TEXT_PRIMARY_CLASSES,
+          "mt-2 text-2xl sm:text-3xl",
+          MARKETING_SECTION_HEADING_CLASSES,
         )}
       >
         {title}

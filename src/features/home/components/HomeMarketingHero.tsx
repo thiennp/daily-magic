@@ -5,10 +5,10 @@ import HomeMarketingHeroSteps from "./HomeMarketingHeroSteps";
 import { HOME_MARKETING_HERO_COPY } from "@/features/home/constants/homeMarketingLandingCopy.constant";
 import MarketingProductPreview from "@/features/marketing/MarketingProductPreview";
 import MarketingTrustStrip from "@/features/marketing/MarketingTrustStrip";
+import { MARKETING_DISPLAY_HEADING_CLASSES } from "@/features/marketing/marketingDesignSystem.constant";
 import { MARKETING_CTA_PRIMARY_CLASSES } from "@/features/marketing/marketingInteractiveClasses.constant";
 import {
   MARKETING_EYEBROW_TEXT_CLASSES,
-  MARKETING_TEXT_PRIMARY_CLASSES,
   MARKETING_TEXT_SECONDARY_CLASSES,
 } from "@/features/marketing/marketingSurfaceClasses.constant";
 import { mergeMarketingClasses } from "@/features/marketing/mergeMarketingClasses";
@@ -28,8 +28,8 @@ export default function HomeMarketingHero() {
           </p>
           <h1
             className={mergeMarketingClasses(
-              "text-4xl font-semibold tracking-[-0.02em] sm:text-5xl lg:text-[3.25rem] lg:leading-[1.1]",
-              MARKETING_TEXT_PRIMARY_CLASSES,
+              "text-4xl sm:text-5xl lg:text-[3.25rem] lg:leading-[1.08]",
+              MARKETING_DISPLAY_HEADING_CLASSES,
             )}
           >
             {HOME_MARKETING_HERO_COPY.title}
