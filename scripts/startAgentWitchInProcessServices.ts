@@ -9,11 +9,16 @@ import { renewAgentWitchMachineLease } from "./claimAgentWitchMachineLease";
 import { tickAgentWitchScheduledAutomations } from "./tickAgentWitchScheduledAutomations";
 
 export interface AgentWitchInProcessServicesHandle {
-  readonly wakeServer: http.Server;
+  readonly wakeServer: http.Server | null;
   readonly stop: () => void;
 }
 
 export interface StartAgentWitchInProcessServicesInput {
+  /**
+   * When true, do not start in-process AWB (wake HTTP). Use when AWB runs as
+   * an external process (`AGENT_WITCH_EXTERNAL_BRIDGE=1`).
+   */
+  readonly skipInProcessBridge?: boolean;
   /**
    * When set, called on the watchdog interval. The implementation should
    * reconnect only when connection health is stale (not on every tick).
@@ -25,7 +30,9 @@ export interface StartAgentWitchInProcessServicesInput {
 export const startAgentWitchInProcessServices = async (
   input: StartAgentWitchInProcessServicesInput = {},
 ): Promise<AgentWitchInProcessServicesHandle> => {
-  const wakeServer = await startAgentWitchWakeServer();
+  const wakeServer = input.skipInProcessBridge
+    ? null
+    : await startAgentWitchWakeServer();
 
   void tickAgentWitchScheduledAutomations();
 
@@ -47,7 +54,7 @@ export const startAgentWitchInProcessServices = async (
     stop: () => {
       clearInterval(schedulerTimer);
       clearInterval(watchdogTimer);
-      wakeServer.close();
+      wakeServer?.close();
     },
   };
 };

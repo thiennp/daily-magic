@@ -81,6 +81,12 @@
       ],
       "@agent-witch/install-uninstall": [
         "./apps/install/features/uninstall/public-api/infrastructure.ts"
+      ],
+      "@agent-witch/install-process-host/types": [
+        "./apps/install/features/process-host/public-api/types.ts"
+      ],
+      "@agent-witch/install-process-host": [
+        "./apps/install/features/process-host/public-api/infrastructure.ts"
       ]
     }
   },

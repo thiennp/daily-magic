@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "AWL features registry",
+  "type": "object",
+  "required": ["version", "deployableId", "features"],
+  "properties": {
+    "version": { "type": "integer", "minimum": 1 },
+    "deployableId": { "const": "AWL" },
+    "features": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["slug", "title", "fsaStatus"],
+        "properties": {
+          "slug": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
+          "title": { "type": "string" },
+          "fsaStatus": {
+            "type": "string",
+            "enum": ["legacy", "in-progress", "fsa"]
+          },
+          "featurePath": { "type": "string" },
+          "legacyPaths": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "parentSlug": { "type": "string" },
+          "notes": { "type": "string" }
+        }
+      }
+    }
+  }
+}

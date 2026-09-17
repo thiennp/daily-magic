@@ -26,7 +26,9 @@ Cross-app contracts: `packages/shared/`. Canonical doc: [agent-witch-deployables
 
 **AWC** feature slugs in §1 remain the cloud product modules. **AWL / AWB / AWI** migrations are separate PR tracks after console FSA patterns exist.
 
-**AWI track (started):** scaffold + boundary tests under `apps/install/` — see [awi-fsa-plan.md](awi-fsa-plan.md) and `apps/install/features.registry.json`. No big-bang move of `scripts/agent-witch.ts` or `src/lib/agentWitch/` yet.
+**AWI track (started):** scaffold + slice migrations under `apps/install/` — see [awi-fsa-plan.md](awi-fsa-plan.md) and `apps/install/features.registry.json`.
+
+**AWL track (started):** scaffold + boundary tests under `apps/live/` — see [awl-fsa-plan.md](awl-fsa-plan.md) and `apps/live/features.registry.json`. No big-bang move of `scripts/agentWitchLocalApp.ts` yet.
 
 ---
 

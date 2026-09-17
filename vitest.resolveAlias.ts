@@ -98,5 +98,13 @@ export const vitestResolveAlias: Record<string, string> = {
     ROOT,
     "./apps/install/features/uninstall/public-api/infrastructure.ts",
   ),
+  "@agent-witch/install-process-host/types": path.resolve(
+    ROOT,
+    "./apps/install/features/process-host/public-api/types.ts",
+  ),
+  "@agent-witch/install-process-host": path.resolve(
+    ROOT,
+    "./apps/install/features/process-host/public-api/infrastructure.ts",
+  ),
   "@": path.resolve(ROOT, "./src"),
 };

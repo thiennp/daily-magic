@@ -104,7 +104,7 @@ Optional nested slice (later): `features/runtime-client/features/hub-connection/
 4. **`macos-launch`** + **`watchdog`** — **done** — kickstart/bootout, launch targets, service labels, console-user guard, and watchdog reinstall state live under `apps/install/features/macos-launch/` and `apps/install/features/watchdog/`; `@agent-witch/install-macos-launch` + `@agent-witch/install-watchdog` with `scripts/` shims; registry `fsaStatus` = `fsa`.
 5. **`runtime-client`** — **done** — config helpers under `apps/install/features/runtime-client/`; nested **`hub-connection`** types; `apps/install/entry/startAgentWitchClient.ts` owns `startAgentWitchClient` (WS hub + dispatch; AWL/AWB via `scripts/` bridge); `scripts/agent-witch.ts` thin shim; `@agent-witch/install-runtime-client` + shims.
 6. **`self-update`**, **`device-identity`**, **`connection-health`**, **`bundled-deps`**, **`uninstall`** — **done** — core logic under `apps/install/features/<slug>/internal/core/`; `@agent-witch/install-*` + `scripts/` shims; registry `fsaStatus` = `fsa`.
-7. **Split process** — AWL/AWB out of single AWI process (separate deployable tracks; see [fsa-refactoring-plan.md](fsa-refactoring-plan.md) §0).
+7. **Split process** — **done (phase 1)** — `process-host` slice: `AgentWitchHostMode` (`monolith` \| `bridge-external` \| `live-external`) from `AGENT_WITCH_EXTERNAL_BRIDGE` / `AGENT_WITCH_EXTERNAL_LIVE`; `startAgentWitchClient` skips in-process AWB wake server and/or AWL local app when set (default unchanged). **Phase 2:** separate OS processes / LaunchAgents per AWL and AWB (see [fsa-refactoring-plan.md](fsa-refactoring-plan.md) §0).
 
 Each slice PR: one slug, shims for old import paths, `fsaStatus` bump, `npm run test:refactor-gate`.
 

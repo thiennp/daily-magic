@@ -14,6 +14,7 @@ import {
   claimAgentWitchMachineLease,
   releaseAgentWitchMachineLease,
 } from "../../../scripts/claimAgentWitchMachineLease";
+import { resolveAgentWitchProcessHost } from "@agent-witch/install-process-host";
 import {
   resolveRunProjectFolderPath,
   waitForAgentWitchClientConfigs as waitForConfigs,
@@ -1443,6 +1444,7 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
 const main = async (): Promise<void> => {
   exitUnlessActiveMacOsConsoleUser("agent-witch");
 
+  const processHost = resolveAgentWitchProcessHost();
   const installDir = resolveAgentWitchInstallDir();
 
   const machineLease = claimAgentWitchMachineLease();
@@ -1505,6 +1507,7 @@ const main = async (): Promise<void> => {
   };
 
   const inProcessServices = await startAgentWitchInProcessServices({
+    skipInProcessBridge: processHost.skipInProcessBridge,
     reconnectWebSockets: reconnectWebSocketsIfStale,
     onLostMachineLease: () => {
       console.log(
@@ -1514,15 +1517,27 @@ const main = async (): Promise<void> => {
     },
   });
 
-  startAgentWitchLocalApp({
-    layout: configs[0]!.layout,
-    controllers: {
-      getStatus: primaryClient.getStatus,
-      reviveWebSocket: reconnectWebSocketsIfStale,
-      reportHarnessManifestIfConnected:
-        primaryClient.reportHarnessManifestIfConnected,
-    },
-  });
+  if (!processHost.skipInProcessLive) {
+    startAgentWitchLocalApp({
+      layout: configs[0]!.layout,
+      controllers: {
+        getStatus: primaryClient.getStatus,
+        reviveWebSocket: reconnectWebSocketsIfStale,
+        reportHarnessManifestIfConnected:
+          primaryClient.reportHarnessManifestIfConnected,
+      },
+    });
+  } else {
+    console.log(
+      "[agent-witch] Skipping in-process AWL (AGENT_WITCH_EXTERNAL_LIVE).",
+    );
+  }
+
+  if (processHost.skipInProcessBridge) {
+    console.log(
+      "[agent-witch] Skipping in-process AWB wake server (AGENT_WITCH_EXTERNAL_BRIDGE).",
+    );
+  }
 
   for (const client of clients) {
     client.startLocalHealthCheck();
@@ -1530,7 +1545,7 @@ const main = async (): Promise<void> => {
   }
 
   console.log(
-    `[agent-witch] Bridging ${clients.length} account profile(s) in one process.`,
+    `[agent-witch] Host mode ${processHost.mode}; bridging ${clients.length} account profile(s) in one process.`,
   );
 
   const stopConsoleUserGuard = startActiveMacOsConsoleUserGuard(() => {

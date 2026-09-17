@@ -1,6 +1,15 @@
+import {
+  kickstartAgentWitchLaunchAgent,
+  listAgentWitchLaunchTargets,
+} from "@agent-witch/install-macos-launch";
+import {
+  buildAgentWitchSelfUpdateStatus,
+  readAgentWitchSelfUpdateLogs,
+  runAgentWitchSelfUpdate,
+} from "@agent-witch/install-self-update";
+import { runAgentWitchUninstallLocal } from "@agent-witch/install-uninstall";
+
 import { ensureAgentWitchCoupledWakeClientHealth } from "../../../scripts/ensureAgentWitchCoupledWakeClientHealth";
-import { kickstartAgentWitchLaunchAgent } from "../../../scripts/kickstartAgentWitchLaunchAgent";
-import { listAgentWitchLaunchTargets } from "../../../scripts/listAgentWitchLaunchTargets";
 import { spawnAgentWitchClient } from "../../../scripts/spawnAgentWitchClient";
 import {
   reviveAgentWitchWebSocket,
@@ -14,12 +23,6 @@ import {
   readAgentWitchWatchdogLogs,
   type AgentWitchWatchdogLogEntry,
 } from "../../../scripts/agentWitchWatchdogLog";
-import {
-  buildAgentWitchSelfUpdateStatus,
-  runAgentWitchSelfUpdate,
-} from "../../../scripts/agentWitchSelfUpdate";
-import { readAgentWitchSelfUpdateLogs } from "../../../scripts/agentWitchSelfUpdateLog";
-import { runAgentWitchUninstallLocal } from "../../../scripts/agentWitchUninstallLocal";
 
 export {
   ensureAgentWitchCoupledWakeClientHealth,

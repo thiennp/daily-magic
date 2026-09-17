@@ -39,6 +39,8 @@
     },
     "AWL": {
       "vitest": [
+        "test/awlFeaturesRegistry.test.ts",
+        "test/deployableBoundary.test.ts",
         "src/lib/agentWitch/agentWitchLocalAppPort.constant.test.ts",
         "scripts/buildAgentWitchLocal*.test.ts",
         "scripts/agentWitchLocal*.test.ts",
@@ -62,7 +64,8 @@
         "src/lib/agentWitch/renderInstallAgentWitchScript.test.ts",
         "src/lib/agentWitch/buildAgentWitchInstallScriptConfigBlock.test.ts",
         "scripts/agentWitchInstallVersion*.test.ts",
-        "apps/install/features/macos-launch/internal/core/kickstartAgentWitchClientLaunchAgents.test.ts"
+        "apps/install/features/macos-launch/internal/core/kickstartAgentWitchClientLaunchAgents.test.ts",
+        "apps/install/features/process-host/internal/core/resolveAgentWitchProcessHost.test.ts"
       ]
     }
   },

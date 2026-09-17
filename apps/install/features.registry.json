@@ -88,6 +88,17 @@
       "fsaStatus": "fsa",
       "featurePath": "apps/install/features/uninstall",
       "legacyPaths": ["scripts/install-agent-witch.sh (uninstall paths)"]
+    },
+    {
+      "slug": "process-host",
+      "title": "AWL/AWB co-hosting and external-process flags",
+      "fsaStatus": "fsa",
+      "featurePath": "apps/install/features/process-host",
+      "legacyPaths": [
+        "scripts/startAgentWitchInProcessServices.ts",
+        "apps/install/entry/startAgentWitchClient.ts"
+      ],
+      "notes": "HostMode env flags; phase 1 skips in-process AWB/AWL; phase 2 = separate OS processes."
     }
   ]
 }

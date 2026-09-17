@@ -12,6 +12,7 @@ const APP_ROOT = path.resolve(
 
 const SHARED_SRC = path.join(APP_ROOT, "packages/shared/src");
 const AWI_FEATURES = path.join(APP_ROOT, "apps/install/features");
+const AWL_FEATURES = path.join(APP_ROOT, "apps/live/features");
 const AWB_FEATURES = path.join(APP_ROOT, "apps/bridge/features");
 const AWB_ADAPTERS = path.join(APP_ROOT, "apps/bridge/adapters");
 
@@ -26,6 +27,28 @@ const isForbiddenAwiImport = (specifier: string): boolean => {
     return true;
   }
   if (/agentWitchLocalApp|agent-witch-wake-server/.test(specifier)) {
+    return true;
+  }
+  return false;
+};
+
+const isForbiddenAwlFeatureImport = (specifier: string): boolean => {
+  if (specifier.startsWith("@/features/")) {
+    return true;
+  }
+  if (specifier.includes("src/features/")) {
+    return true;
+  }
+  if (specifier.startsWith("@/") && !specifier.startsWith("@agent-witch/")) {
+    return true;
+  }
+  if (/agent-witch-wake-server|agentWitchWake/.test(specifier)) {
+    return true;
+  }
+  if (
+    /\/scripts\//.test(specifier) ||
+    specifier.startsWith("../../../scripts")
+  ) {
     return true;
   }
   return false;
@@ -81,6 +104,21 @@ describe("deployable import boundaries", () => {
 
   it("AWI starter slices only depend on @agent-witch/shared or relative paths", () => {
     const imports = collectTypeScriptImportStrings(AWI_FEATURES);
+    const external = imports.filter(
+      (specifier) =>
+        specifier.startsWith("@") && !specifier.startsWith("@agent-witch/"),
+    );
+    expect(external).toEqual([]);
+  });
+
+  it("apps/live/features does not import AWC feature UI or scripts/", () => {
+    const imports = collectTypeScriptImportStrings(AWL_FEATURES);
+    const violations = imports.filter(isForbiddenAwlFeatureImport);
+    expect(violations).toEqual([]);
+  });
+
+  it("AWL starter slices only depend on @agent-witch/shared or relative paths", () => {
+    const imports = collectTypeScriptImportStrings(AWL_FEATURES);
     const external = imports.filter(
       (specifier) =>
         specifier.startsWith("@") && !specifier.startsWith("@agent-witch/"),
