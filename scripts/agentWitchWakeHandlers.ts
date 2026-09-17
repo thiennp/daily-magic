@@ -1,16 +1,13 @@
 import { applyAutomationSyncLocally } from "./applyAutomationSyncLocally";
 import { runLocalScheduledAutomationById } from "./agentWitchLocalAutomationRunner";
 import { readLocalAutomationStore } from "./agentWitchLocalAutomationStore";
-import hashPairingToken from "./hashPairingToken";
 import { readAgentWitchRunConfig } from "./readAgentWitchRunConfig";
 import os from "node:os";
 
 import { isAgentWitchWakeServerAllowedOrigin } from "./agentWitchWakeAllowedOrigins";
-import { resolveAgentWitchWakePort } from "./agentWitchWakeConstants";
 import { ensureAgentWitchCoupledWakeClientHealth } from "./ensureAgentWitchCoupledWakeClientHealth";
 import { kickstartAgentWitchLaunchAgent } from "./kickstartAgentWitchLaunchAgent";
 import { listAgentWitchLaunchTargets } from "./listAgentWitchLaunchTargets";
-import { listAgentWitchLocalTokenHashes } from "./listAgentWitchLocalTokenHashes";
 import { parseHarnessInstallBundle } from "./parseHarnessInstallBundle";
 import { applyHarnessInstallLocally } from "./applyHarnessInstallLocally";
 import { spawnAgentWitchClient } from "./spawnAgentWitchClient";
@@ -31,25 +28,10 @@ import {
   type AgentWitchReviveResult,
 } from "./reviveAgentWitchWebSocket";
 
-export interface AgentWitchWakeHealthResponse {
-  readonly ok: true;
-  readonly port: number;
-  readonly hostname: string;
-  readonly profileCount: number;
-}
-
-export interface AgentWitchWakeIdentityResponse {
-  readonly hostname: string;
-  readonly port: number;
-  /** sha256 of the active profile pairing token; never the raw token. */
-  readonly tokenHash: string | null;
-  /** sha256 hashes for every local profile + legacy config on this Mac. */
-  readonly tokenHashes: readonly string[];
-  readonly profiles: readonly {
-    readonly email: string | null;
-    readonly launchAgentLabel: string;
-  }[];
-}
+export type {
+  AgentWitchWakeHealthResponse,
+  AgentWitchWakeIdentityResponse,
+} from "../apps/bridge/features/discovery/features/health-identity/public-api/types";
 
 export interface AgentWitchWakeKickResult {
   readonly launchAgentLabel: string;
@@ -233,40 +215,10 @@ export const buildAgentWitchAutomationStatusFromWakeServer =
     };
   };
 
-export const buildAgentWitchWakeHealthResponse =
-  (): AgentWitchWakeHealthResponse => {
-    const targets = listAgentWitchLaunchTargets();
-    return {
-      ok: true,
-      port: resolveAgentWitchWakePort(),
-      hostname: os.hostname(),
-      profileCount: targets.length,
-    };
-  };
-
-export const buildAgentWitchWakeIdentityResponse =
-  (): AgentWitchWakeIdentityResponse => {
-    const targets = listAgentWitchLaunchTargets();
-    const pairingToken = readAgentWitchRunConfig()?.pairingToken.trim() ?? "";
-    const tokenHash =
-      pairingToken.length > 0 ? hashPairingToken(pairingToken) : null;
-    const tokenHashes = listAgentWitchLocalTokenHashes();
-    return {
-      hostname: os.hostname(),
-      port: resolveAgentWitchWakePort(),
-      tokenHash,
-      tokenHashes:
-        tokenHashes.length > 0
-          ? tokenHashes
-          : tokenHash !== null
-            ? [tokenHash]
-            : [],
-      profiles: targets.map((target) => ({
-        email: target.profileEmail,
-        launchAgentLabel: target.launchAgentLabel,
-      })),
-    };
-  };
+export {
+  buildAgentWitchWakeHealthResponse,
+  buildAgentWitchWakeIdentityResponse,
+} from "../apps/bridge/features/discovery/features/health-identity/public-api/infrastructure";
 
 export const wakeAgentWitchLaunchAgents =
   async (): Promise<AgentWitchWakeResponse> => {

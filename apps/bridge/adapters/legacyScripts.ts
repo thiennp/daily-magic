@@ -4,8 +4,6 @@
  */
 
 export {
-  buildAgentWitchWakeHealthResponse,
-  buildAgentWitchWakeIdentityResponse,
   buildAgentWitchAutomationStatusFromWakeServer,
   buildAgentWitchSelfUpdateStatusFromWakeServer,
   installHarnessFromWakeServer,

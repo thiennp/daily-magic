@@ -34,7 +34,7 @@
       "slug": "health-identity",
       "title": "GET /health and /identity",
       "parentSlug": "discovery",
-      "fsaStatus": "in-progress",
+      "fsaStatus": "fsa",
       "featurePath": "apps/bridge/features/discovery/features/health-identity"
     },
     {
