@@ -27,6 +27,10 @@ export const renderOfficialWorkflowAgentPrompt = (input: {
     "You are executing ONE orchestrated agent step only. Do not skip ahead to later workflow phases.",
     "Do not emit [[AWAITING_INPUT]] for workflow human checkpoints — the platform will pause the workflow between steps.",
     "",
+    "Daily-use rules:",
+    "- Use only real values from the workflow form and prior checkpoint replies — never invent companies, people, metrics, or thread text.",
+    "- If a required input is empty, say what is missing in [[PROGRESS]] and stop this step; the operator will fix it at the next checkpoint.",
+    "",
     "Workflow form inputs:",
     ...fieldLines,
     ...(priorLines.length > 0

@@ -7,7 +7,7 @@ export const TEAM_REPO_STANDUP_PRESET: PresetHarnessSeed = {
   name: "Repo branch standup (teammate Mac)",
   category: "Team dispatch",
   description:
-    "Ask a colleague's Mac to summarize git activity on a local repo branch — ideal for team delegation demos.",
+    "Ask a colleague's Mac to summarize git activity on a local repo branch when you need a standup update without cloning locally.",
   exampleRequest: TEAM_REPO_STANDUP_EXAMPLE_REQUEST,
   operatorSteps: TEAM_REPO_STANDUP_OPERATOR_STEPS,
   profile: {
