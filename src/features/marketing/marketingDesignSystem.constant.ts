@@ -1,21 +1,24 @@
 /**
  * Agent Witch marketing / public-site design system (v2026).
- * Derived from the enterprise landing reference: light gray canvas, brand blue
- * accents, navy dark bands, border-first cards, tight display headings.
+ * Enterprise landing reference: gray-50 canvas, brand blue accents, navy dark
+ * bands, border-first cards, tight display headings. Shared with AWL inline CSS
+ * via `@agent-witch/shared/ui`.
  */
 
-export const MARKETING_DESIGN_SYSTEM_VERSION = "2026-03";
+export const MARKETING_DESIGN_SYSTEM_VERSION = "2026-09";
+
+/** Top announcement strip (navy) above marketing header */
+export const MARKETING_ANNOUNCEMENT_BAR_CLASSES =
+  "bg-gray-950 px-4 py-2.5 text-center text-xs font-medium text-gray-200 sm:text-sm";
 
 /** Page and section backgrounds */
 export const MARKETING_PAGE_BACKGROUND_CLASSES = "bg-gray-50";
 
-export const MARKETING_DARK_SECTION_CLASSES =
-  "bg-gray-950 text-white";
+export const MARKETING_DARK_SECTION_CLASSES = "bg-gray-950 text-white";
 
 export const MARKETING_DARK_SECTION_MUTED_TEXT_CLASSES = "text-gray-400";
 
-export const MARKETING_CTA_BAND_CLASSES =
-  "bg-brand-600 text-white";
+export const MARKETING_CTA_BAND_CLASSES = "bg-brand-600 text-white";
 
 /** Typography */
 export const MARKETING_EYEBROW_CLASSES =
@@ -52,7 +55,7 @@ export const MARKETING_GROUPED_CARD_SHELL_CLASSES = [
   "divide-y divide-gray-200 sm:divide-y-0 sm:divide-x",
 ].join(" ");
 
-/** Icon tiles (feature grid, trust) */
+/** Icon tiles (feature grid) */
 export const MARKETING_ICON_TILE_CLASSES = [
   "flex h-10 w-10 shrink-0 items-center justify-center rounded-lg",
   "bg-brand-50 text-brand-600",
@@ -61,6 +64,12 @@ export const MARKETING_ICON_TILE_CLASSES = [
 /** Stats / trust metric dividers */
 export const MARKETING_METRIC_DIVIDER_CLASSES =
   "border-brand-200 lg:divide-brand-200";
+
+export const MARKETING_METRIC_VALUE_CLASSES =
+  "text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl";
+
+export const MARKETING_METRIC_DESCRIPTION_CLASSES =
+  "mt-1 text-sm leading-snug text-gray-600";
 
 /** Primary & secondary actions on light surfaces */
 export const MARKETING_BUTTON_PRIMARY_CLASSES = [

@@ -3,6 +3,7 @@
 import Link from "next/link";
 
 import useStyleguideNavAccess from "@/features/auth/hooks/useStyleguideNavAccess";
+import { MARKETING_HEADER_NAV_ITEMS } from "@/features/marketing/marketingHeaderNavItems.constant";
 import { MARKETING_CTA_PRIMARY_CLASSES } from "@/features/marketing/marketingInteractiveClasses.constant";
 import { MARKETING_HEADER_LINK_CLASSES } from "@/features/marketing/marketingSurfaceClasses.constant";
 import { mergeMarketingClasses } from "@/features/marketing/mergeMarketingClasses";
@@ -18,6 +19,20 @@ export default function MarketingHeaderNav({
 
   return (
     <nav className="flex items-center gap-4 text-sm">
+      <div className="hidden items-center gap-1 lg:flex">
+        {MARKETING_HEADER_NAV_ITEMS.map((item) => (
+          <Link
+            key={item.href}
+            href={item.href}
+            className={mergeMarketingClasses(
+              MARKETING_HEADER_LINK_CLASSES,
+              "rounded-lg px-3 py-2",
+            )}
+          >
+            {item.label}
+          </Link>
+        ))}
+      </div>
       {showStyleguide ? (
         <Link href="/styleguide" className={MARKETING_HEADER_LINK_CLASSES}>
           Styleguide

@@ -6,7 +6,10 @@ import { HOME_MARKETING_HERO_COPY } from "@/features/home/constants/homeMarketin
 import MarketingProductPreview from "@/features/marketing/MarketingProductPreview";
 import MarketingTrustStrip from "@/features/marketing/MarketingTrustStrip";
 import { MARKETING_DISPLAY_HEADING_CLASSES } from "@/features/marketing/marketingDesignSystem.constant";
-import { MARKETING_CTA_PRIMARY_CLASSES } from "@/features/marketing/marketingInteractiveClasses.constant";
+import {
+  MARKETING_CTA_PRIMARY_CLASSES,
+  MARKETING_CTA_SECONDARY_CLASSES,
+} from "@/features/marketing/marketingInteractiveClasses.constant";
 import {
   MARKETING_EYEBROW_TEXT_CLASSES,
   MARKETING_TEXT_SECONDARY_CLASSES,
@@ -45,13 +48,22 @@ export default function HomeMarketingHero() {
           <HomeMarketingHeroSteps />
         </div>
 
-        <nav aria-label="Jump to sign in">
+        <nav
+          className="flex flex-wrap items-center gap-3"
+          aria-label="Primary calls to action"
+        >
           <Link
             href="#get-started"
             className={MARKETING_CTA_PRIMARY_CLASSES}
             aria-label="Jump to Create free account"
           >
             {HOME_MARKETING_HERO_COPY.cta}
+          </Link>
+          <Link
+            href={HOME_MARKETING_HERO_COPY.secondaryCtaHref}
+            className={MARKETING_CTA_SECONDARY_CLASSES}
+          >
+            {HOME_MARKETING_HERO_COPY.secondaryCta}
           </Link>
         </nav>
 

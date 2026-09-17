@@ -5,10 +5,12 @@ import {
 } from "@/features/home/constants/homeMarketingAuthCallbackHrefs.constant";
 
 export const HOME_MARKETING_HERO_COPY = {
-  eyebrow: "For you and your team",
-  title: "Agent jobs on your Mac — solo or with your team.",
-  description: `${AGENT_WITCH_PRODUCT_NAME} connects your browser to Mac runners: pick a workflow, send a New task, and track every job in Reports.`,
+  eyebrow: "Agent operations, for the whole company",
+  title: "Delegate AI work to Macs your organization controls.",
+  description: `${AGENT_WITCH_PRODUCT_NAME} routes tasks from a shared dashboard to Mac runners your team already owns, applies your approval policy before anything sensitive ships, and keeps a full record of every run.`,
   cta: "Create free account",
+  secondaryCta: "Review security model",
+  secondaryCtaHref: "#features-heading",
   steps: [
     "Pick a ready-made workflow—or make your own",
     "Add your Mac as the worker—it runs the jobs you set up",

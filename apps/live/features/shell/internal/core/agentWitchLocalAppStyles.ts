@@ -1,28 +1,35 @@
-/** Inline CSS mirroring Agent Witch marketing surfaces (Outfit + zinc). */
+import { AGENT_WITCH_PUBLIC_UI_TOKENS } from "@agent-witch/shared/ui";
+
+const t = AGENT_WITCH_PUBLIC_UI_TOKENS;
+
+/** Inline CSS mirroring Agent Witch marketing surfaces (Outfit + brand gray). */
 export const AGENT_WITCH_LOCAL_APP_STYLES = `
 @import url("https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap");
 
 :root {
   color-scheme: light;
-  --aw-zinc-50: #fafafa;
-  --aw-zinc-100: #f4f4f5;
-  --aw-zinc-200: #e4e4e7;
-  --aw-zinc-400: #a1a1aa;
-  --aw-zinc-500: #71717a;
-  --aw-zinc-600: #52525b;
-  --aw-zinc-700: #3f3f46;
-  --aw-zinc-800: #27272a;
-  --aw-zinc-900: #18181b;
-  --aw-emerald-50: #ecfdf5;
-  --aw-emerald-700: #047857;
-  --aw-amber-50: #fffbeb;
-  --aw-amber-900: #78350f;
-  --aw-red-50: #fef2f2;
-  --aw-red-700: #b91c1c;
+  --aw-zinc-50: ${t.gray50};
+  --aw-zinc-100: ${t.gray100};
+  --aw-zinc-200: ${t.gray200};
+  --aw-zinc-400: ${t.gray400};
+  --aw-zinc-500: ${t.gray500};
+  --aw-zinc-600: ${t.gray600};
+  --aw-zinc-700: ${t.gray700};
+  --aw-zinc-800: ${t.gray900};
+  --aw-zinc-900: ${t.gray900};
+  --aw-brand-600: ${t.brand600};
+  --aw-brand-700: ${t.brand700};
+  --aw-brand-50: ${t.brand50};
+  --aw-emerald-50: ${t.success50};
+  --aw-emerald-700: ${t.success700};
+  --aw-amber-50: ${t.warning50};
+  --aw-amber-900: ${t.warning900};
+  --aw-red-50: ${t.error50};
+  --aw-red-700: ${t.error700};
   --aw-radius-lg: 0.5rem;
   --aw-radius-xl: 0.75rem;
   --aw-radius-2xl: 1rem;
-  --aw-shadow-sm: 0 1px 2px rgb(24 24 27 / 0.05);
+  --aw-shadow-sm: 0 1px 2px rgb(16 24 40 / 0.06);
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -134,7 +141,7 @@ a { color: inherit; text-decoration: none; }
 }
 
 .nav-link:hover { color: var(--aw-zinc-900); background: var(--aw-zinc-100); }
-.nav-link.is-active { color: var(--aw-zinc-900); background: var(--aw-zinc-100); }
+.nav-link.is-active { color: var(--aw-brand-700); background: var(--aw-brand-50); }
 
 .site-main {
   max-width: 72rem;
@@ -158,10 +165,10 @@ a { color: inherit; text-decoration: none; }
 .eyebrow {
   margin: 0 0 0.5rem;
   font-size: 0.75rem;
-  font-weight: 500;
-  letter-spacing: 0.06em;
+  font-weight: 600;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--aw-zinc-500);
+  color: var(--aw-brand-700);
 }
 
 h1 {
@@ -251,16 +258,16 @@ code, .mono {
 }
 
 .btn:focus-visible {
-  outline: 2px solid rgb(24 24 27 / 0.4);
+  outline: 2px solid rgb(54 65 255 / 0.45);
   outline-offset: 2px;
 }
 
 .btn-primary {
-  background: var(--aw-zinc-900);
+  background: var(--aw-brand-600);
   color: #fff;
   box-shadow: var(--aw-shadow-sm);
 }
-.btn-primary:hover { background: var(--aw-zinc-800); }
+.btn-primary:hover { background: var(--aw-brand-700); }
 
 .btn-secondary {
   background: #fff;
@@ -322,8 +329,8 @@ code, .mono {
 .input::placeholder { color: var(--aw-zinc-400); }
 .input:focus {
   outline: none;
-  border-color: var(--aw-zinc-900);
-  box-shadow: 0 0 0 2px rgb(24 24 27 / 0.15);
+  border-color: var(--aw-brand-600);
+  box-shadow: 0 0 0 2px rgb(54 65 255 / 0.2);
 }
 
 .table-wrap {

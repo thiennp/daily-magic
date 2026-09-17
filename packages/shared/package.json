@@ -8,6 +8,7 @@
     ".": "./src/index.ts",
     "./protocol": "./src/protocol/index.ts",
     "./deployables": "./src/deployables/index.ts",
-    "./network": "./src/network/index.ts"
+    "./network": "./src/network/index.ts",
+    "./ui": "./src/ui/index.ts"
   }
 }

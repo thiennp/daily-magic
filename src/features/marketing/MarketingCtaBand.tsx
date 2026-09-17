@@ -17,11 +17,11 @@ export default function MarketingCtaBand() {
             id="marketing-cta-band-heading"
             className="text-2xl font-bold tracking-[-0.02em] sm:text-3xl"
           >
-            Ready to delegate agent work on Macs you control?
+            Set your approval policy, connect your first Mac.
           </h2>
           <p className="text-base text-brand-100">
-            Create a free workspace, connect your first Mac, and run your first
-            workflow today.
+            Free account — connect a runner and run your first workflow in about
+            fifteen minutes.
           </p>
         </div>
         <Link

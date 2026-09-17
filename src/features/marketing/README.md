@@ -1,6 +1,9 @@
 # Marketing
 
-Landing sections, marketing shell, public CTAs.
+Landing sections, marketing shell, public CTAs. Design tokens:
+`marketingDesignSystem.constant.ts` (v2026-09). Doc:
+`docs/design/agent-witch-public-ui.md`. Live preview: `/styleguide` →
+Marketing brand.
 
 ## Registry
 

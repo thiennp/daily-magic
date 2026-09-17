@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 
+import MarketingAnnouncementBar from "@/features/marketing/MarketingAnnouncementBar";
 import MarketingFooter from "@/features/marketing/MarketingFooter";
 import MarketingHeader from "@/features/marketing/MarketingHeader";
 import { MARKETING_PAGE_BACKGROUND_CLASSES } from "@/features/marketing/marketingDesignSystem.constant";
@@ -20,6 +21,7 @@ export default function MarketingShell({
     <div
       className={`${MARKETING_LIGHT_SURFACE_CLASS} relative min-h-screen ${MARKETING_PAGE_BACKGROUND_CLASSES}`}
     >
+      <MarketingAnnouncementBar />
       <MarketingHeader showSignIn={showSignIn} />
       <main className="relative mx-auto max-w-6xl px-6 py-10 sm:py-14">
         {children}
