@@ -42,6 +42,11 @@ export const buildAgentWitchLocalProjectDetailPageBody = (input: {
       <p class="eyebrow"><a href="/projects">Projects</a></p>
       <h1>${escapeHtml(input.project.name)}</h1>
       <p class="muted mono">${escapeHtml(input.project.projectFolderPath)}</p>
+      ${
+        input.project.cloudProjectId !== undefined
+          ? `<div class="actions"><a class="btn btn-secondary" href="/projects/select-folder?projectId=${encodeURIComponent(input.project.cloudProjectId)}">Choose another folder…</a></div>`
+          : ""
+      }
       <p class="lede">Linked harness sets are copied into this project&apos;s <code>.cursor</code> folder and recorded in <code>.agent-witch/project.json</code>.</p>
       <form method="POST" action="/projects/link-harness" class="stack">
         <input type="hidden" name="projectId" value="${escapeHtml(input.project.id)}" />

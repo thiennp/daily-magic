@@ -65,7 +65,9 @@ import {
   findAgentWitchLocalProjectById,
   pickMacOsFolderDialog,
   readAgentWitchLocalProjectsRegistry,
+  resolveAgentWitchCloudApiConfig,
   syncAgentWitchLocalProjectsFromCloud,
+  updateAgentWitchCloudProjectFolder,
 } from "@agent-witch/live-projects";
 import {
   buildAgentWitchLocalProjectDetailPageBody,
@@ -701,6 +703,10 @@ export const startAgentWitchLocalApp = (input: {
         const sync = await syncLocalProjectsFromCloud(input.layout);
         const flashMessage =
           url.searchParams.get("added") === "1" ? "Project added." : null;
+        const flashError =
+          url.searchParams.get("folderError") === "1"
+            ? "Could not save the selected folder to Agent Witch. Check the Mac connection and try again."
+            : null;
         sendHtml(
           response,
           await buildLocalAppShell({
@@ -713,9 +719,56 @@ export const startAgentWitchLocalApp = (input: {
               syncMessage: sync.message,
               syncOk: sync.ok,
               flashMessage,
+              flashError,
             }),
           }),
         );
+        return;
+      }
+
+      if (method === "GET" && pathname === "/projects/select-folder") {
+        const url = new URL(
+          request.url ?? "/",
+          `http://127.0.0.1:${AGENT_WITCH_LOCAL_APP_PORT}`,
+        );
+        const projectId = url.searchParams.get("projectId")?.trim() ?? "";
+        const runConfig = readAgentWitchRunConfig();
+        const cloudConfig =
+          runConfig === null
+            ? null
+            : resolveAgentWitchCloudApiConfig({
+                wsUrl: runConfig.wsUrl,
+                pairingToken: runConfig.pairingToken,
+              });
+        const chosen =
+          projectId.length > 0 && cloudConfig !== null
+            ? pickMacOsFolderDialog()
+            : null;
+
+        if (chosen === null || cloudConfig === null) {
+          response.writeHead(303, { Location: "/projects" });
+          response.end();
+          return;
+        }
+
+        ensureAgentWitchProjectFolder({ projectFolderPath: chosen });
+        const updated = await updateAgentWitchCloudProjectFolder(
+          cloudConfig,
+          projectId,
+          chosen,
+        );
+
+        if (!updated) {
+          response.writeHead(303, { Location: "/projects?folderError=1" });
+          response.end();
+          return;
+        }
+
+        await syncLocalProjectsFromCloud(input.layout);
+        response.writeHead(303, {
+          Location: `/project?id=${encodeURIComponent(projectId)}&folderUpdated=1`,
+        });
+        response.end();
         return;
       }
 
@@ -736,7 +789,9 @@ export const startAgentWitchLocalApp = (input: {
         const linkedFlash =
           url.searchParams.get("linked") === "1"
             ? `Harness linked (${url.searchParams.get("files") ?? "0"} file(s) written).`
-            : null;
+            : url.searchParams.get("folderUpdated") === "1"
+              ? "Project folder updated and synced with Agent Witch."
+              : null;
         sendHtml(
           response,
           await buildLocalAppShell({

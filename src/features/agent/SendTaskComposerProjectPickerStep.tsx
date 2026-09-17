@@ -14,6 +14,7 @@ interface SendTaskComposerProjectPickerStepProps {
   readonly onSelect: (project: UserProjectRecord) => void;
   readonly onProjectCreated: (project: UserProjectRecord) => void;
   readonly onProjectDeleted: (projectId: string) => void;
+  readonly onChooseFolder?: (project: UserProjectRecord) => void;
   readonly showHeader?: boolean;
 }
 
@@ -24,6 +25,7 @@ export default function SendTaskComposerProjectPickerStep({
   onSelect,
   onProjectCreated,
   onProjectDeleted,
+  onChooseFolder,
   showHeader = true,
 }: SendTaskComposerProjectPickerStepProps) {
   const { data: session } = useSession();
@@ -55,6 +57,7 @@ export default function SendTaskComposerProjectPickerStep({
               <SendTaskComposerProjectRow
                 project={project}
                 onSelect={onSelect}
+                {...(onChooseFolder !== undefined ? { onChooseFolder } : {})}
                 onDelete={async (projectId) => {
                   const response = await fetch(`/api/projects/${projectId}`, {
                     method: "DELETE",

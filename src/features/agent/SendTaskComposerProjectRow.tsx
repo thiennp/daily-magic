@@ -8,17 +8,19 @@ interface SendTaskComposerProjectRowProps {
   readonly project: UserProjectRecord;
   readonly onSelect: (project: UserProjectRecord) => void;
   readonly onDelete: (projectId: string) => void | Promise<void>;
+  readonly onChooseFolder?: (project: UserProjectRecord) => void;
 }
 
 export default function SendTaskComposerProjectRow({
   project,
   onSelect,
   onDelete,
+  onChooseFolder,
 }: SendTaskComposerProjectRowProps) {
   const canDelete = !isDefaultUserProject(project);
 
   return (
-    <div className="flex items-stretch gap-2">
+    <div className="flex flex-col items-stretch gap-2 sm:flex-row">
       <button
         type="button"
         onClick={() => {
@@ -35,12 +37,20 @@ export default function SendTaskComposerProjectRow({
           </span>
           <span className="mt-0.5 block truncate text-xs text-gray-500 dark:text-gray-400">
             {project.folderPath}
-            <span className="ml-1 text-[10px] uppercase tracking-wide text-gray-400 dark:text-gray-500">
-              · locked
-            </span>
           </span>
         </span>
       </button>
+      {onChooseFolder !== undefined ? (
+        <button
+          type="button"
+          onClick={() => {
+            onChooseFolder(project);
+          }}
+          className="shrink-0 rounded-xl border border-brand-200 bg-brand-50 px-3 py-2 text-xs font-medium text-brand-700 transition hover:bg-brand-100 dark:border-brand-900/50 dark:bg-brand-950/30 dark:text-brand-300 dark:hover:bg-brand-950/50"
+        >
+          Choose on this Mac
+        </button>
+      ) : null}
       {canDelete ? (
         <button
           type="button"
@@ -48,7 +58,7 @@ export default function SendTaskComposerProjectRow({
           onClick={() => {
             void onDelete(project.id);
           }}
-          className="inline-flex shrink-0 items-center justify-center rounded-xl border border-gray-200 bg-white px-3 text-gray-500 transition hover:border-error-200 hover:bg-error-50 hover:text-error-600 dark:border-gray-800 dark:bg-white/[0.02] dark:hover:border-error-900/40 dark:hover:bg-error-950/20 dark:hover:text-error-400"
+          className="inline-flex shrink-0 items-center justify-center rounded-xl border border-gray-200 bg-white px-3 py-2 text-gray-500 transition hover:border-error-200 hover:bg-error-50 hover:text-error-600 dark:border-gray-800 dark:bg-white/[0.02] dark:hover:border-error-900/40 dark:hover:bg-error-950/20 dark:hover:text-error-400"
         >
           <TrashBinIcon className="h-4 w-4" />
         </button>

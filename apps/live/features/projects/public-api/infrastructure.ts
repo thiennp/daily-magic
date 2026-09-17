@@ -12,6 +12,8 @@ export { pickMacOsFolderDialog } from "../internal/core/pickMacOsFolderDialog";
 
 export { syncAgentWitchLocalProjectsFromCloud } from "../internal/core/syncAgentWitchLocalProjectsFromCloud";
 
+export { updateAgentWitchCloudProjectFolder } from "../internal/core/updateAgentWitchCloudProjectFolder";
+
 export {
   claimAgentRunFromCloud,
   completeAgentRunOnCloud,

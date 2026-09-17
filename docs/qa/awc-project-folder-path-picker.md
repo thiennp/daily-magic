@@ -8,39 +8,47 @@
 - chọn folder project Agent Witch Console
 - showDirectoryPicker project folder
 - Folder path (optional, cannot be changed later)
+- setup project path from local app
+- click AWC open AWL folder picker
+- co the setup tu local app duoc khong khi muon thay doi bam vao se mo local app
+- AWC deep link local.agentwitch.com projects choose folder
 
 ## Short answer
 
-**No.** In **AWC** (the cloud console in the browser), the project folder field is a **text input**. Clicking it does **not** open a native “Choose folder” dialog on the Mac. The user types or pastes an absolute path (or leaves it empty for the default under `~/.agent-witch/profiles/<email>/projects/…`). After create, that path is **immutable**. The macOS folder picker lives in **AWL**, not AWC.
+**Yes.** Open **Projects** in AWC and click **Choose on this Mac** for a project. AWC opens **AWL** on the same Mac; AWL shows the native Finder folder picker, then uses that Mac’s pairing token to update and rebind the cloud project. Returning to AWC refreshes the project list. The browser still cannot write an arbitrary replacement path through its regular project API.
 
 ## Details
 
 ### Why the browser cannot fill a real Mac path by clicking
 
-A website cannot read the POSIX path of a folder the user selects in a file dialog. `input type="file"` / `webkitdirectory` and `showDirectoryPicker()` give a sandboxed handle, not `/Users/you/code/repo`. AWC therefore stores whatever string the user types.
+A website cannot read the POSIX path of a folder the user selects in a file dialog. `input type="file"` / `webkitdirectory` and `showDirectoryPicker()` give a sandboxed handle, not `/Users/you/code/repo`. AWC therefore opens AWL, where the installed Mac process can run the native picker and securely submit the selected path.
 
 ### AWC (www.agentwitch.com / localhost:3000)
 
-| Action                           | What happens                                                                    |
-| -------------------------------- | ------------------------------------------------------------------------------- |
-| Create project → **Folder path** | Optional `type="text"`; placeholder is the default profile path                 |
-| Click the input                  | Focus + type; **no** OS folder dialog                                           |
-| Leave empty                      | Server uses `buildDefaultProjectFolderPath`                                     |
-| Update later                     | API rejects `folderPath` (`folder_immutable`); UI copy: cannot be changed later |
+| Action                           | What happens                                                                              |
+| -------------------------------- | ----------------------------------------------------------------------------------------- |
+| Open **Projects**                | Dedicated AWC management route at `/projects`, available in desktop and mobile navigation |
+| Create project → **Folder path** | Optional typed path; leaving it empty uses `buildDefaultProjectFolderPath`                |
+| **Choose on this Mac**           | Opens `http://127.0.0.1:43347/projects/select-folder?projectId=…` in a new tab            |
+| Return to AWC                    | Window focus refreshes the project list                                                   |
+| Browser `PATCH folderPath`       | Rejected; users must use the paired local picker                                          |
 
 ### AWL (local.agentwitch.com:43347)
 
-| Action                             | What happens                                                           |
-| ---------------------------------- | ---------------------------------------------------------------------- |
-| Add project (`POST /projects/add`) | **AWI/AWL** runs `osascript` `choose folder` and stores the POSIX path |
-| Harness scan folder                | `POST /api/harness/pick-folder` uses the same Mac dialog               |
+| Action                  | What happens                                                                                                                         |
+| ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| Select-folder deep link | AWL runs `osascript` `choose folder` and ensures the selected project directory exists                                               |
+| Save cloud path         | AWL calls device-authenticated `PATCH /api/agent-witch/projects/:projectId`                                                          |
+| Bind project            | The endpoint verifies the pairing token, owns the project by the device user, updates `folderPath`, and binds `deviceId` to that Mac |
+| Sync local registry     | AWL pulls cloud projects again, then opens the updated local project detail                                                          |
+| Add Mac-only project    | Advanced `POST /projects/add` remains available from AWL                                                                             |
 
-AWC does **not** call those AWL endpoints from the composer form.
+AGENT-021 still holds: AWC **navigates** the user to AWL but never fetches AWL from the public website.
 
 ## Related
 
 - Composer: `src/features/agent/SendTaskComposerCreateProjectForm.tsx`
-- Immutable path: `src/lib/projects/parseUserProjectBody.ts` (`folder_immutable`)
+- Device-authenticated update: `src/app/api/agent-witch/projects/[projectId]/route.ts`
 - Mac picker: `apps/live/features/projects/internal/core/pickMacOsFolderDialog.ts`
 - Deployables: [agent-witch-deployables.md](../product/agent-witch-deployables.md)
 

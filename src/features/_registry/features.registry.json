@@ -25,10 +25,10 @@
     {
       "slug": "agent",
       "title": "Task composer",
-      "purpose": "Compose and send tasks to Mac via Agent Witch.",
+      "purpose": "Compose tasks and manage their Mac project folders.",
       "featurePath": "src/features/agent",
       "libPath": null,
-      "routePaths": ["/agent", "/ws-test"],
+      "routePaths": ["/agent", "/projects", "/ws-test"],
       "apiPaths": ["/api/agent-runs"],
       "dependsOn": ["dispatch", "capabilities", "workflows", "agent-witch"],
       "migrationStatus": "migrated"

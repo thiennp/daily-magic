@@ -75,6 +75,18 @@ export function useUserProjects(deviceId: string): {
     };
   }, [deviceId]);
 
+  useEffect(() => {
+    const refreshAfterReturningFromLocalApp = (): void => {
+      void refreshProjects();
+    };
+
+    window.addEventListener("focus", refreshAfterReturningFromLocalApp);
+
+    return () => {
+      window.removeEventListener("focus", refreshAfterReturningFromLocalApp);
+    };
+  }, [refreshProjects]);
+
   const addProject = useCallback((project: UserProjectRecord): void => {
     setProjects((current) => [project, ...current]);
   }, []);

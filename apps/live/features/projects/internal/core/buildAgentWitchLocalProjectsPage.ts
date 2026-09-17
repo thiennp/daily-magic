@@ -24,9 +24,9 @@ export const buildAgentWitchLocalProjectsPageBody = (input: {
 
   const cloudBanner = buildAgentWitchLocalCloudBanner({
     cloudAppOrigin: input.cloudAppOrigin,
-    manageHref: `${input.cloudAppOrigin}/agent`,
-    manageLabel: "Manage repositories on Agent Witch Live",
-    body: "Repositories are created in the browser task composer. This page syncs them to this Mac so you can link playbooks into each repo’s .cursor tree.",
+    manageHref: `${input.cloudAppOrigin}/projects`,
+    manageLabel: "Manage projects in Agent Witch Console",
+    body: "Projects are created in the browser. This page chooses their folders on this Mac and links playbooks into each repo’s .cursor tree.",
     syncMessage: input.syncMessage,
     syncOk: input.syncOk,
   });
@@ -40,11 +40,16 @@ export const buildAgentWitchLocalProjectsPageBody = (input: {
               project.cloudProjectId !== undefined
                 ? `<span class="project-live-badge">Live</span>`
                 : `<span class="project-local-badge">Mac only</span>`;
+            const chooseFolder =
+              project.cloudProjectId !== undefined
+                ? `<a class="btn btn-secondary" href="/projects/select-folder?projectId=${encodeURIComponent(project.cloudProjectId)}">Choose folder…</a>`
+                : "";
             return `<li class="project-list-item">
                 <a class="project-list-link" href="/project?id=${encodeURIComponent(project.id)}">
                   <strong>${escapeHtml(project.name)}</strong> ${liveBadge}
                   <span class="muted mono">${escapeHtml(project.projectFolderPath)}</span>
                 </a>
+                <div class="actions">${chooseFolder}</div>
               </li>`;
           })
           .join("")}</ul>`;
@@ -52,7 +57,7 @@ export const buildAgentWitchLocalProjectsPageBody = (input: {
   return `${flash}${cloudBanner}<section class="card">
       <p class="eyebrow">Repositories</p>
       <h1>Projects</h1>
-      <p class="lede">Synced from Agent Witch Live when the Mac client is paired. Open a project to link installed playbooks into that folder.</p>
+      <p class="lede">Synced from Agent Witch Console when the Mac client is paired. Choose a folder to update where a project runs on this Mac.</p>
       <details class="local-advanced-block">
         <summary>Advanced: register a folder on this Mac only</summary>
         <form method="POST" action="/projects/add" class="stack">

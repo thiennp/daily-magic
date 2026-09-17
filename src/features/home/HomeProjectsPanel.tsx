@@ -2,8 +2,6 @@
 
 import { usePathname, useRouter } from "next/navigation";
 
-import { useSession } from "next-auth/react";
-
 import AppPanel from "@/components/surfaces/AppPanel";
 import {
   APP_SURFACE_BODY_TEXT_CLASS,
@@ -11,20 +9,15 @@ import {
 } from "@/components/surfaces/appSurfaceStyles.constant";
 import SendTaskComposerProjectPickerStep from "@/features/agent/SendTaskComposerProjectPickerStep";
 import { useUserProjects } from "@/features/agent/hooks/useUserProjects";
+import { AGENT_WITCH_LOCAL_APP_LOOPBACK_ORIGIN } from "@/lib/agentWitch/agentWitchLocalAppPort.constant";
 import buildAgentComposerHref from "@/lib/library/buildAgentComposerHref";
-import { buildAgentWitchProjectsHomePath } from "@/lib/projects/buildAgentWitchProjectsHomePath";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
 
 export default function HomeProjectsPanel() {
   const router = useRouter();
   const pathname = usePathname();
-  const { data: session } = useSession();
   const { projects, isLoading, addProject, removeProject } =
     useUserProjects("");
-  const projectsHomePath =
-    session?.user?.email !== undefined
-      ? buildAgentWitchProjectsHomePath(session.user.email)
-      : "~/.agent-witch/profiles/<account>/projects";
 
   const openProjectInComposer = (project: UserProjectRecord): void => {
     router.push(
@@ -37,12 +30,21 @@ export default function HomeProjectsPanel() {
     );
   };
 
+  const chooseProjectFolderOnThisMac = (project: UserProjectRecord): void => {
+    window.open(
+      `${AGENT_WITCH_LOCAL_APP_LOOPBACK_ORIGIN}/projects/select-folder?projectId=${encodeURIComponent(project.id)}`,
+      "_blank",
+      "noopener,noreferrer",
+    );
+  };
+
   return (
     <AppPanel padding="compact">
-      <h2 className={APP_SURFACE_SECTION_TITLE_CLASS}>Projects</h2>
+      <h2 className={APP_SURFACE_SECTION_TITLE_CLASS}>Your projects</h2>
       <p className={`mt-1 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
-        Saved folders on your Mac under {projectsHomePath}. Pick one to open New
-        task with that project, or save a new project below.
+        Pick a project for New task, or choose its folder through Agent Witch on
+        this Mac. The local app opens Finder and securely syncs the selected
+        path.
       </p>
       <div className="mt-4">
         <SendTaskComposerProjectPickerStep
@@ -53,6 +55,7 @@ export default function HomeProjectsPanel() {
           onSelect={openProjectInComposer}
           onProjectCreated={addProject}
           onProjectDeleted={removeProject}
+          onChooseFolder={chooseProjectFolderOnThisMac}
         />
       </div>
     </AppPanel>

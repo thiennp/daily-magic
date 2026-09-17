@@ -50,7 +50,8 @@ export async function PATCH(
     return Response.json(
       {
         ok: false,
-        errorMessage: "Project folder cannot be changed after it is saved.",
+        errorMessage:
+          "Use Choose on this Mac so Agent Witch can verify the local folder.",
       },
       { status: 400 },
     );

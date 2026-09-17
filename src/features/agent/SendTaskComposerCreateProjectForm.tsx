@@ -75,7 +75,7 @@ export default function SendTaskComposerCreateProjectForm({
         />
       </label>
       <label className="mt-3 block text-sm font-medium text-gray-800 dark:text-white/90">
-        Folder path (optional, cannot be changed later)
+        Folder path (optional)
         <input
           type="text"
           value={folderPath}
@@ -87,7 +87,9 @@ export default function SendTaskComposerCreateProjectForm({
         />
       </label>
       <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
-        RAG and memory for this project are stored under{" "}
+        Leave this empty for the default folder. You can later use{" "}
+        <strong>Choose on this Mac</strong> to select a folder in Finder. RAG
+        and memory are stored under{" "}
         <code className="text-[11px]">.agent-witch/</code> inside the folder.
       </p>
       {errorMessage !== null ? (

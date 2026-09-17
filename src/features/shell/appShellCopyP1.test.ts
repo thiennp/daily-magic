@@ -9,8 +9,9 @@ import { resolveMarketingFooterProductLinks } from "@/features/marketing/resolve
 import { LOGIN_PAGE_COPY } from "@/features/auth/loginPageCopy.constant";
 
 describe("COPY-P1 shell and auth labels", () => {
-  it("uses Library, Reports, Marketplace, and New task in primary nav", () => {
+  it("uses Projects, Library, Reports, Marketplace, and New task in primary nav", () => {
     const labels = PRIMARY_NAV.map((item) => item.label);
+    expect(labels).toContain("Projects");
     expect(labels).toContain("Library");
     expect(labels).toContain("Reports");
     expect(labels).toContain("New task");
@@ -22,6 +23,7 @@ describe("COPY-P1 shell and auth labels", () => {
     const labels = BOTTOM_NAV.map((item) => item.label);
     expect(labels).toEqual([
       "Home",
+      "Projects",
       "Library",
       "Marketplace",
       "New task",

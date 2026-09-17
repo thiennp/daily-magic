@@ -10,6 +10,11 @@ export const BOTTOM_NAV: readonly AppNavItem[] = [
     isActive: (pathname) => pathname === "/",
   },
   {
+    href: "/projects",
+    label: "Projects",
+    isActive: (pathname) => pathname.startsWith("/projects"),
+  },
+  {
     href: "/library",
     label: "Library",
     isActive: (pathname) => pathname.startsWith("/library"),
