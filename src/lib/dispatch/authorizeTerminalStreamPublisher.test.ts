@@ -31,6 +31,7 @@ const baseRun = (overrides: Partial<AgentRunRecord> = {}): AgentRunRecord => ({
   capabilityId: null,
   capabilityVersionId: null,
   deviceId: null,
+  projectId: null,
   writerAgent: "claude-cli",
   lastRunHeartbeatAt: null,
   ...overrides,

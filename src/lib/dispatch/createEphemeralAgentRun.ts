@@ -38,6 +38,7 @@ export const createEphemeralAgentRun = (
     approvalExpiresAt: input.approvalExpiresAt ?? null,
     capabilityId: input.capabilityId ?? null,
     capabilityVersionId: input.capabilityVersionId ?? null,
+    projectId: null,
     deviceId: null,
     writerAgent: "claude-cli",
     lastRunHeartbeatAt: null,

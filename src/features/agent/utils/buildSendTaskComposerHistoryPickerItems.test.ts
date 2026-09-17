@@ -23,6 +23,7 @@ const buildRun = (
     capabilityId: null,
     capabilityVersionId: null,
     deviceId: "mac-1",
+    projectId: null,
     writerAgent: "claude-cli",
     ...overrides,
   }) as AgentRunRecord;

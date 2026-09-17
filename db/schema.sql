@@ -313,6 +313,7 @@ CREATE TABLE IF NOT EXISTS agent_runs (
   capability_id TEXT REFERENCES published_capabilities(id) ON DELETE SET NULL,
   capability_version_id TEXT REFERENCES capability_versions(id) ON DELETE SET NULL,
   automation_id TEXT REFERENCES agent_automations(id) ON DELETE SET NULL,
+  project_id TEXT REFERENCES user_projects(id) ON DELETE SET NULL,
   approval_expires_at TIMESTAMPTZ,
   lease_expires_at TIMESTAMPTZ,
   claimed_at TIMESTAMPTZ,
@@ -331,6 +332,10 @@ CREATE INDEX IF NOT EXISTS agent_runs_executor_idx
 
 CREATE INDEX IF NOT EXISTS agent_runs_capability_idx
   ON agent_runs (capability_id, created_at DESC);
+
+CREATE INDEX IF NOT EXISTS agent_runs_project_idx
+  ON agent_runs (project_id, created_at DESC)
+  WHERE project_id IS NOT NULL;
 
 CREATE INDEX IF NOT EXISTS agent_runs_automation_idx
   ON agent_runs (automation_id, created_at DESC)

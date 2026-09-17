@@ -199,6 +199,7 @@ const dispatchWriterTask = async (
   sourceRunId?: string,
   projectFolderPath?: string,
   reportKey?: string,
+  projectId?: string,
 ): Promise<void> => {
   if (!isHarnessWriterAgentId(writerAgent)) {
     sendMessage(socket, {
@@ -256,7 +257,21 @@ const dispatchWriterTask = async (
   const resolvedProjectFolderPath = resolveRunProjectFolderPath(
     projectFolderPath,
     buildDefaultUserProjectFolderPath,
+    projectId,
   );
+  if (resolvedProjectFolderPath === null) {
+    sendMessage(socket, {
+      type: "command.claude.result",
+      payload: {
+        exitCode: -1,
+        output:
+          "This project has no folder on this Mac yet. Open Agent Witch Live and set the project folder before running tasks.",
+        ...(agentRunId !== undefined ? { agentRunId } : {}),
+      },
+      requestId,
+    });
+    return;
+  }
   ensureAgentWitchProjectFolder({
     projectFolderPath: resolvedProjectFolderPath,
   });
@@ -1015,11 +1030,16 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
         typeof parsed.payload.shellSessionId === "string"
           ? parsed.payload.shellSessionId
           : undefined;
+      const projectId =
+        typeof parsed.payload.projectId === "string"
+          ? parsed.payload.projectId
+          : undefined;
       const projectFolderPath = resolveRunProjectFolderPath(
         typeof parsed.payload.projectFolderPath === "string"
           ? parsed.payload.projectFolderPath
           : undefined,
         buildDefaultUserProjectFolderPath,
+        projectId,
       );
       const reportKey =
         typeof parsed.payload.reportKey === "string"
@@ -1030,6 +1050,19 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
         console.log(
           `[agent-witch] Running ${writerAgent} task (${sessionContinuation ? "continue" : "first"})…`,
         );
+        if (projectFolderPath === null) {
+          sendMessage(socket, {
+            type: "command.claude.result",
+            payload: {
+              exitCode: -1,
+              output:
+                "This project has no folder on this Mac yet. Open Agent Witch Live and set the project folder before running tasks.",
+              ...(agentRunId !== undefined ? { agentRunId } : {}),
+            },
+            requestId,
+          });
+          return;
+        }
         if (agentRunId !== undefined && shellSessionId !== undefined) {
           shellSessionIdByRunId.set(agentRunId, shellSessionId);
         }
@@ -1050,6 +1083,7 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
           sourceRunId,
           projectFolderPath,
           reportKey,
+          projectId,
         );
       }
     }
@@ -1311,14 +1345,16 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
       const prompt =
         agentRunId !== undefined ? (promptByRunId.get(agentRunId) ?? "") : "";
 
-      void indexAgentWitchRagText({
-        layout: config.layout,
-        text: parsed.payload.output,
-        source: agentRunId ?? "command.claude.result",
-        projectFolderPath,
-      });
+      if (projectFolderPath !== null) {
+        void indexAgentWitchRagText({
+          layout: config.layout,
+          text: parsed.payload.output,
+          source: agentRunId ?? "command.claude.result",
+          projectFolderPath,
+        });
+      }
 
-      if (prompt.trim().length > 0) {
+      if (prompt.trim().length > 0 && projectFolderPath !== null) {
         appendAgentWitchMemoryEntry({
           layout: config.layout,
           projectFolderPath,

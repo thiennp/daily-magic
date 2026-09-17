@@ -2,20 +2,12 @@ import { randomUUID } from "node:crypto";
 
 import type AgentWitchHubRuntime from "@/lib/agentWitch/types/AgentWitchHubRuntime.type";
 import { isCursorCloudExecutorDeviceId } from "@/lib/cursorCloud/cursorCloudExecutorDeviceId.constant";
-import { resolveCapabilityForDispatch } from "@/lib/capabilities/resolveCapabilityForDispatch";
 import { buildClaudeDispatchPayloadFromBody } from "@/lib/dispatch/buildWriterDispatchPayloadFromBody";
 import { buildDashboardHttpSender } from "@/lib/dispatch/buildDashboardHttpSender";
+import { dispatchClaudeRunForDashboardUserMac } from "@/lib/dispatch/dispatchClaudeRunForDashboardUserMac";
 import { dispatchCursorCloudRunForDashboardUser } from "@/lib/dispatch/dispatchCursorCloudRunForDashboardUser";
-import { executeClaudeRunDispatch } from "@/lib/dispatch/executeWriterRunDispatch";
-import { finalizeDashboardDispatchResult } from "@/lib/dispatch/finalizeDashboardDispatchResult";
 import type { AgentRunDispatchBody } from "@/lib/dispatch/parseAgentRunDispatchBody";
-import { resolveDispatchPolicyForExecutor } from "@/lib/dispatch/resolveDispatchPolicyForExecutor";
-import {
-  resolveClaudeRunAgentClient,
-  resolveTargetDeviceId,
-} from "@/lib/dispatch/resolveWriterRunAgentClient";
-import { resolveClaudeDispatchTarget } from "@/lib/dispatch/resolveWriterDispatchTarget";
-import { resolveWriterDispatchWithoutLiveHubClient } from "@/lib/dispatch/resolveWriterDispatchWithoutLiveHubClient";
+import { resolveTargetDeviceId } from "@/lib/dispatch/resolveWriterRunAgentClient";
 import { validateSessionContinuationRequiresTargetDevice } from "@/lib/dispatch/validateSessionContinuationRequiresTargetDevice";
 import type { DispatchClaudeRunForDashboardResult } from "@/lib/dispatch/types/DispatchClaudeRunForDashboardResult.type";
 
@@ -58,68 +50,14 @@ export const dispatchClaudeRunForDashboardUser = async (input: {
     });
   }
 
-  const target = await resolveClaudeDispatchTarget(sender, payload);
-  if (!target.ok) {
-    return { ok: false, message: target.error };
-  }
-
-  const capabilityResolution = await resolveCapabilityForDispatch(
-    input.requesterUserId,
-    target.executorUserId,
-    input.body.capabilityId ?? undefined,
-    target.groupId,
-    requestId,
-  );
-
-  if (!capabilityResolution.ok) {
-    return { ok: false, message: capabilityResolution.error };
-  }
-
-  const agentResolution = await resolveClaudeRunAgentClient({
+  return dispatchClaudeRunForDashboardUserMac({
     runtime: input.runtime,
-    senderUserId: input.requesterUserId,
-    executorUserId: target.executorUserId,
-    targetDeviceId,
-    requestId,
-  });
-
-  if (!agentResolution.ok) {
-    return { ok: false, message: agentResolution.error };
-  }
-
-  if (agentResolution.agentClient === undefined) {
-    return resolveWriterDispatchWithoutLiveHubClient({
-      allowHubRelay: input.allowHubRelay !== false,
-      agentResolution,
-      executorUserId: target.executorUserId,
-      requesterUserId: input.requesterUserId,
-      requestId,
-      body: input.body,
-      fallbackDeviceId: targetDeviceId,
-    });
-  }
-
-  const dispatchPolicy = await resolveDispatchPolicyForExecutor({
-    executorUserId: target.executorUserId,
-    groupId: target.groupId,
-    capabilityPolicyOverride:
-      capabilityResolution.capability?.dispatchPolicyOverride ?? null,
-  });
-
-  const message = await executeClaudeRunDispatch({
-    runtime: input.runtime,
-    agentClient: agentResolution.agentClient,
-    deviceId: agentResolution.deviceId,
     sender,
-    prompt: input.body.prompt,
-    payload,
-    executorUserId: target.executorUserId,
-    groupId: target.groupId,
-    dispatchPolicy,
-    capabilityId: capabilityResolution.capability?.id ?? null,
-    capabilityVersionId: capabilityResolution.capabilityVersionId,
+    body: input.body,
+    requesterUserId: input.requesterUserId,
     requestId,
+    allowHubRelay: input.allowHubRelay !== false,
+    payload,
+    targetDeviceId,
   });
-
-  return finalizeDashboardDispatchResult(message, requestId);
 };

@@ -4,6 +4,7 @@ export const readWriterRunDispatchPayloadFields = (
   readonly sessionContinuation: boolean;
   readonly sourceRunId?: string;
   readonly projectFolderPath?: string;
+  readonly projectId?: string;
 } => ({
   sessionContinuation: payload.sessionContinuation === true,
   sourceRunId:
@@ -12,4 +13,6 @@ export const readWriterRunDispatchPayloadFields = (
     typeof payload.projectFolderPath === "string"
       ? payload.projectFolderPath
       : undefined,
+  projectId:
+    typeof payload.projectId === "string" ? payload.projectId : undefined,
 });

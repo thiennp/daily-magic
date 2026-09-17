@@ -17,4 +17,13 @@ describe("resolveRunProjectFolderPath", () => {
       "~/Default",
     );
   });
+
+  it("requires a folder when projectId is set", () => {
+    expect(
+      resolveRunProjectFolderPath(undefined, () => "~/Default", "proj-1"),
+    ).toBeNull();
+    expect(
+      resolveRunProjectFolderPath("~/app", () => "~/Default", "proj-1"),
+    ).toBe("~/app");
+  });
 });

@@ -17,6 +17,7 @@ export interface PersistAgentRunInput {
   readonly capabilityId?: string | null;
   readonly capabilityVersionId?: string | null;
   readonly approvalExpiresAt?: string | null;
+  readonly projectId?: string | null;
 }
 
 export const persistAgentRun = async (

@@ -14,6 +14,7 @@ export const buildCommandClaudeRunDispatchMessage = (input: {
   readonly sourceRunId?: string;
   readonly shellSessionId?: string;
   readonly projectFolderPath?: string;
+  readonly projectId?: string;
 }): AgentWitchMessage => {
   const trimmedProjectFolderPath = input.projectFolderPath?.trim();
   const reportKey =
@@ -42,6 +43,9 @@ export const buildCommandClaudeRunDispatchMessage = (input: {
       ...(trimmedProjectFolderPath !== undefined &&
       trimmedProjectFolderPath.length > 0
         ? { projectFolderPath: trimmedProjectFolderPath }
+        : {}),
+      ...(typeof input.projectId === "string" && input.projectId.length > 0
+        ? { projectId: input.projectId }
         : {}),
       ...(reportKey !== undefined ? { reportKey } : {}),
     },

@@ -23,9 +23,14 @@ export const buildWsTestSendOptions = (
   readonly capabilityId?: string;
   readonly targetDeviceId?: string;
   readonly projectFolderPath: string;
+  readonly projectId?: string;
 } => ({
   writerAgent,
   projectFolderPath: resolveComposerProjectFolderPath(composer, profileEmail),
+  ...(composer.selectedProject !== null &&
+  composer.selectedProject !== undefined
+    ? { projectId: composer.selectedProject.id }
+    : {}),
   ...(composer.isTeamDispatch
     ? {
         targetUserId: composer.selectedTargetUserId,

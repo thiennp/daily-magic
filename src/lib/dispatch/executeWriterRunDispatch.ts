@@ -35,6 +35,9 @@ export const executeClaudeRunDispatch = async (input: {
     dispatchPolicy: input.dispatchPolicy,
   });
 
+  const payloadFields = readWriterRunDispatchPayloadFields(input.payload);
+  const resolvedProjectId = payloadFields.projectId?.trim() ?? "";
+
   const run = await persistAgentRun({
     groupId: input.groupId,
     requesterUserId,
@@ -48,6 +51,7 @@ export const executeClaudeRunDispatch = async (input: {
     writerAgent,
     capabilityId: input.capabilityId,
     capabilityVersionId: input.capabilityVersionId,
+    projectId: resolvedProjectId.length > 0 ? resolvedProjectId : null,
   });
 
   broadcastAgentRunRecord(input.runtime, run, input.requestId);
@@ -61,8 +65,6 @@ export const executeClaudeRunDispatch = async (input: {
     executorUserId: input.executorUserId,
     groupId: input.groupId,
   });
-  const payloadFields = readWriterRunDispatchPayloadFields(input.payload);
-
   if (input.agentClient === undefined) {
     return queueClaudeRunFromExecuteDispatch({
       executorUserId: input.executorUserId,

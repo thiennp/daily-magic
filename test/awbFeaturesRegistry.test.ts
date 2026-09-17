@@ -48,6 +48,6 @@ describe("apps/bridge/features.registry.json", () => {
   });
 
   it("route catalog row count matches registry HTTP routes", () => {
-    expect(BRIDGE_ROUTE_CATALOG.length).toBe(18);
+    expect(BRIDGE_ROUTE_CATALOG.length).toBe(19);
   });
 });

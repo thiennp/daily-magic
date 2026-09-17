@@ -59,6 +59,7 @@ const buildRun = (
   denialReason: null,
   capabilityId: null,
   capabilityVersionId: null,
+  projectId: null,
   approvalExpiresAt: null,
   lastRunHeartbeatAt: null,
 });

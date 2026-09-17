@@ -13,6 +13,7 @@ export async function dispatchClaudePrompt(input: {
   readonly sessionContinuation?: boolean;
   readonly sourceRunId?: string;
   readonly projectFolderPath?: string;
+  readonly projectId?: string;
   readonly onResponse: (response: string) => void;
   readonly onDispatchedRunId?: (runId: string) => void;
 }): Promise<void> {
@@ -27,6 +28,7 @@ export async function dispatchClaudePrompt(input: {
       sessionContinuation: input.sessionContinuation,
       sourceRunId: input.sourceRunId,
       projectFolderPath: input.projectFolderPath,
+      projectId: input.projectId,
       onDispatchedRunId: input.onDispatchedRunId,
     });
     input.onResponse(raw);

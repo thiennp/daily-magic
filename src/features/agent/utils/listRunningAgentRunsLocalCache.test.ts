@@ -28,6 +28,7 @@ const sampleRun = (
   capabilityId: null,
   capabilityVersionId: null,
   deviceId: "mac-1",
+  projectId: null,
   writerAgent: "cursor",
   lastRunHeartbeatAt: null,
   ...overrides,

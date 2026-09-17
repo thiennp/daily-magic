@@ -25,4 +25,7 @@ export const buildClaudeDispatchPayloadFromBody = (
   body.projectFolderPath.length > 0
     ? { projectFolderPath: body.projectFolderPath }
     : {}),
+  ...(typeof body.projectId === "string" && body.projectId.length > 0
+    ? { projectId: body.projectId }
+    : {}),
 });

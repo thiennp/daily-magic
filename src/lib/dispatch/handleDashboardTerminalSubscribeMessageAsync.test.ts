@@ -47,6 +47,7 @@ describe("handleDashboardTerminalSubscribeMessageAsync", () => {
       capabilityId: null,
       capabilityVersionId: null,
       deviceId: null,
+      projectId: null,
       writerAgent: "claude-cli",
       lastRunHeartbeatAt: null,
     });

@@ -22,6 +22,7 @@ export interface CreateAgentRunInput {
   readonly capabilityId?: string | null;
   readonly capabilityVersionId?: string | null;
   readonly approvalExpiresAt?: string | null;
+  readonly projectId?: string | null;
 }
 
 const createAgentRun = async (
@@ -44,6 +45,7 @@ const createAgentRun = async (
       writerAgent,
       capabilityId: input.capabilityId ?? null,
       capabilityVersionId: input.capabilityVersionId ?? null,
+      projectId: input.projectId ?? null,
       approvalExpiresAt: input.approvalExpiresAt ?? null,
       resultOutput: null,
       resultExitCode: null,
@@ -73,6 +75,7 @@ const createAgentRun = async (
         writer_agent,
         capability_id,
         capability_version_id,
+        project_id,
         approval_expires_at
       )
       VALUES (
@@ -87,6 +90,7 @@ const createAgentRun = async (
         ${writerAgent},
         ${input.capabilityId ?? null},
         ${input.capabilityVersionId ?? null},
+        ${input.projectId ?? null},
         ${input.approvalExpiresAt ?? null}
       )
       RETURNING *

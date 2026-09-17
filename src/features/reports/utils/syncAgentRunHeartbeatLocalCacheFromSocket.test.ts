@@ -29,6 +29,7 @@ const makeRun = (id: string): AgentRunRecord => ({
   capabilityId: null,
   capabilityVersionId: null,
   deviceId: "d1",
+  projectId: null,
   writerAgent: "claude-cli",
   lastRunHeartbeatAt: null,
 });

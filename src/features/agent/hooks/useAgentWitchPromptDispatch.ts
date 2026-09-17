@@ -40,6 +40,7 @@ export const useAgentWitchPromptDispatch = (input: {
     readonly capabilityId?: string;
     readonly targetDeviceId?: string;
     readonly projectFolderPath?: string;
+    readonly projectId?: string;
   },
 ) => void) => {
   const searchParams = useSearchParams();
@@ -87,6 +88,9 @@ export const useAgentWitchPromptDispatch = (input: {
         ...(sourceRunId.length > 0 ? { sourceRunId } : {}),
         ...(options.projectFolderPath !== undefined
           ? { projectFolderPath: options.projectFolderPath }
+          : {}),
+        ...(options.projectId !== undefined
+          ? { projectId: options.projectId }
           : {}),
         onResponse: (raw) => {
           input.applySocketMessage(raw);
