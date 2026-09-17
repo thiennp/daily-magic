@@ -28,4 +28,8 @@ export const buildClaudeDispatchPayloadFromBody = (
   ...(typeof body.projectId === "string" && body.projectId.length > 0
     ? { projectId: body.projectId }
     : {}),
+  ...(body.runScopedComponentIds !== undefined &&
+  body.runScopedComponentIds.length > 0
+    ? { runScopedComponentIds: [...body.runScopedComponentIds] }
+    : {}),
 });

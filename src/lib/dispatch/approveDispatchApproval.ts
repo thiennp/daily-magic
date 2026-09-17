@@ -18,6 +18,7 @@ import {
 } from "@/lib/dispatch/dispatchWriterRunToAgent";
 import { isLocalMacAgentRunDispatch } from "@/lib/dispatch/isLocalMacAgentRunDispatch";
 import { notifyDispatchApprovalRunning } from "@/lib/dispatch/notifyDispatchApprovalRunning";
+import loadAgentRunDispatchCompositionExtras from "@/lib/dispatch/loadAgentRunDispatchCompositionExtras";
 import { DEFAULT_DELEGATED_WRITER_AGENT } from "@/lib/dispatch/resolveDelegatedWriterAgent";
 
 export const denyDispatchApproval = async (
@@ -92,6 +93,8 @@ export const approveDispatchApproval = async (
     });
   }
 
+  const compositionExtras = await loadAgentRunDispatchCompositionExtras(runId);
+
   dispatchClaudeRunToAgent(
     runtime,
     resolved.agentClient,
@@ -100,6 +103,12 @@ export const approveDispatchApproval = async (
     writerAgent,
     pending.requestId,
     includeNextActions,
+    false,
+    undefined,
+    undefined,
+    undefined,
+    compositionExtras.projectId ?? undefined,
+    compositionExtras.compositionSnapshot ?? undefined,
   );
 
   await markAgentRunRunning(runtime, runId);

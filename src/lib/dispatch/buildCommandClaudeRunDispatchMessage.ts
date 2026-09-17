@@ -1,4 +1,5 @@
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
+import type { ProjectCompositionSnapshotWire } from "@agent-witch/shared/protocol";
 import type AgentWitchMessage from "@/lib/agentWitch/types/AgentWitchMessage.type";
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
 import { generateAgentRunReportKey } from "@/lib/dispatch/generateAgentRunReportKey";
@@ -15,6 +16,7 @@ export const buildCommandClaudeRunDispatchMessage = (input: {
   readonly shellSessionId?: string;
   readonly projectFolderPath?: string;
   readonly projectId?: string;
+  readonly compositionSnapshot?: ProjectCompositionSnapshotWire;
 }): AgentWitchMessage => {
   const trimmedProjectFolderPath = input.projectFolderPath?.trim();
   const reportKey =
@@ -46,6 +48,9 @@ export const buildCommandClaudeRunDispatchMessage = (input: {
         : {}),
       ...(typeof input.projectId === "string" && input.projectId.length > 0
         ? { projectId: input.projectId }
+        : {}),
+      ...(input.compositionSnapshot !== undefined
+        ? { compositionSnapshot: input.compositionSnapshot }
         : {}),
       ...(reportKey !== undefined ? { reportKey } : {}),
     },

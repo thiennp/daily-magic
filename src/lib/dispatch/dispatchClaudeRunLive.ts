@@ -3,6 +3,7 @@ import type AgentWitchHubClient from "@/lib/agentWitch/types/AgentWitchHubClient
 import type AgentWitchHubRuntime from "@/lib/agentWitch/types/AgentWitchHubRuntime.type";
 import type AgentWitchMessage from "@/lib/agentWitch/types/AgentWitchMessage.type";
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
+import type { ProjectCompositionSnapshotWire } from "@agent-witch/shared/protocol";
 import type { DispatchPolicyValue } from "@/lib/dispatch/DispatchPolicy.constant";
 import { startAgentRunWithShellSession } from "@/lib/dispatch/startAgentRunWithShellSession";
 
@@ -21,6 +22,8 @@ export const dispatchClaudeRunLive = async (input: {
   readonly sessionContinuation: boolean;
   readonly sourceRunId?: string;
   readonly projectFolderPath?: string;
+  readonly projectId?: string;
+  readonly compositionSnapshot?: ProjectCompositionSnapshotWire;
   readonly requestId?: string;
 }): Promise<AgentWitchMessage> => {
   const shellSessionId = await startAgentRunWithShellSession({
@@ -36,6 +39,8 @@ export const dispatchClaudeRunLive = async (input: {
     sessionContinuation: input.sessionContinuation,
     sourceRunId: input.sourceRunId,
     projectFolderPath: input.projectFolderPath,
+    projectId: input.projectId,
+    compositionSnapshot: input.compositionSnapshot,
     requestId: input.requestId,
   });
 

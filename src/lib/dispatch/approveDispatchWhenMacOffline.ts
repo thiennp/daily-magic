@@ -4,6 +4,7 @@ import type AgentWitchMessage from "@/lib/agentWitch/types/AgentWitchMessage.typ
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
 import { markAgentRunRunning } from "@/lib/dispatch/dispatchWriterRunToAgent";
 import { notifyDispatchApprovalRunning } from "@/lib/dispatch/notifyDispatchApprovalRunning";
+import loadAgentRunDispatchCompositionExtras from "@/lib/dispatch/loadAgentRunDispatchCompositionExtras";
 import {
   buildQueuedClaudeRunDispatchAck,
   queueClaudeRunInDispatchOutbox,
@@ -21,6 +22,10 @@ export const approveDispatchWhenMacOffline = async (input: {
   readonly pendingRequestId?: string;
   readonly includeNextActions: boolean;
 }): Promise<AgentWitchMessage> => {
+  const compositionExtras = await loadAgentRunDispatchCompositionExtras(
+    input.runId,
+  );
+
   await queueClaudeRunInDispatchOutbox({
     executorUserId: input.executorUserId,
     deviceId: input.deviceId,
@@ -29,6 +34,8 @@ export const approveDispatchWhenMacOffline = async (input: {
     writerAgent: input.writerAgent,
     requestId: input.pendingRequestId,
     includeNextActions: input.includeNextActions,
+    projectId: compositionExtras.projectId ?? undefined,
+    compositionSnapshot: compositionExtras.compositionSnapshot ?? undefined,
   });
 
   await markAgentRunRunning(input.runtime, input.runId);

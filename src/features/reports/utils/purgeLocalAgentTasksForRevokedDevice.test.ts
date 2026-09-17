@@ -60,6 +60,7 @@ const buildRun = (
   capabilityId: null,
   capabilityVersionId: null,
   projectId: null,
+  compositionSnapshotId: null,
   approvalExpiresAt: null,
   lastRunHeartbeatAt: null,
 });

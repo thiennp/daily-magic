@@ -1,5 +1,7 @@
 import { spawn, type ChildProcess } from "node:child_process";
 
+import { removeRunCompositionOverlay } from "@agent-witch/install-runtime-client";
+
 import type { AgentWitchLocalLayout } from "./resolveAgentWitchLocalLayout";
 import {
   buildWriterCliInvocation,
@@ -198,6 +200,7 @@ const finishRun = (
 
   if (agentRunId !== undefined) {
     stopRunHeartbeat(agentRunId);
+    removeRunCompositionOverlay(config.layout, agentRunId);
 
     if (isTerminalStreamAccepted(agentRunId)) {
       sendMessage(socket, {

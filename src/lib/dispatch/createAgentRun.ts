@@ -23,6 +23,7 @@ export interface CreateAgentRunInput {
   readonly capabilityVersionId?: string | null;
   readonly approvalExpiresAt?: string | null;
   readonly projectId?: string | null;
+  readonly compositionSnapshotId?: string | null;
 }
 
 const createAgentRun = async (
@@ -46,6 +47,7 @@ const createAgentRun = async (
       capabilityId: input.capabilityId ?? null,
       capabilityVersionId: input.capabilityVersionId ?? null,
       projectId: input.projectId ?? null,
+      compositionSnapshotId: input.compositionSnapshotId ?? null,
       approvalExpiresAt: input.approvalExpiresAt ?? null,
       resultOutput: null,
       resultExitCode: null,
@@ -76,6 +78,7 @@ const createAgentRun = async (
         capability_id,
         capability_version_id,
         project_id,
+        composition_snapshot_id,
         approval_expires_at
       )
       VALUES (
@@ -91,6 +94,7 @@ const createAgentRun = async (
         ${input.capabilityId ?? null},
         ${input.capabilityVersionId ?? null},
         ${input.projectId ?? null},
+        ${input.compositionSnapshotId ?? null},
         ${input.approvalExpiresAt ?? null}
       )
       RETURNING *

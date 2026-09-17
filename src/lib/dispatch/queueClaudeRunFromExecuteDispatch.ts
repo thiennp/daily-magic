@@ -1,4 +1,5 @@
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
+import type { ProjectCompositionSnapshotWire } from "@agent-witch/shared/protocol";
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
 import type AgentWitchMessage from "@/lib/agentWitch/types/AgentWitchMessage.type";
 import type { DispatchPolicyValue } from "@/lib/dispatch/DispatchPolicy.constant";
@@ -20,6 +21,8 @@ export const queueClaudeRunFromExecuteDispatch = async (input: {
   readonly sessionContinuation: boolean;
   readonly sourceRunId?: string;
   readonly projectFolderPath?: string;
+  readonly projectId?: string;
+  readonly compositionSnapshot?: ProjectCompositionSnapshotWire;
 }): Promise<AgentWitchMessage> => {
   if (input.deviceId === null || input.deviceId.length === 0) {
     return {
@@ -43,6 +46,8 @@ export const queueClaudeRunFromExecuteDispatch = async (input: {
     sessionContinuation: input.sessionContinuation,
     sourceRunId: input.sourceRunId,
     projectFolderPath: input.projectFolderPath,
+    projectId: input.projectId,
+    compositionSnapshot: input.compositionSnapshot,
   });
 
   return buildQueuedClaudeRunDispatchAck({

@@ -24,7 +24,11 @@ import {
 } from "@agent-witch/install-device-identity";
 import { resolveAgentWitchProcessHost } from "@agent-witch/install-process-host";
 import {
+  materializeRunScopedCompositionOverlay,
+  parseProjectCompositionSnapshotWire,
+  removeRunCompositionOverlay,
   resolveRunProjectFolderPath,
+  verifyProjectCompositionSnapshotBlobs,
   waitForAgentWitchClientConfigs as waitForConfigs,
 } from "@agent-witch/install-runtime-client";
 import type { AgentWitchClientConfig as AgentWitchConfig } from "@agent-witch/install-runtime-client/types";
@@ -1041,6 +1045,9 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
         buildDefaultUserProjectFolderPath,
         projectId,
       );
+      const compositionSnapshot = parseProjectCompositionSnapshotWire(
+        parsed.payload.compositionSnapshot,
+      );
       const reportKey =
         typeof parsed.payload.reportKey === "string"
           ? parsed.payload.reportKey
@@ -1063,6 +1070,48 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
           });
           return;
         }
+
+        if (compositionSnapshot !== null) {
+          const blobError = verifyProjectCompositionSnapshotBlobs(
+            config.layout,
+            compositionSnapshot,
+          );
+
+          if (blobError !== null) {
+            sendMessage(socket, {
+              type: "command.claude.result",
+              payload: {
+                exitCode: -1,
+                output: blobError,
+                ...(agentRunId !== undefined ? { agentRunId } : {}),
+              },
+              requestId,
+            });
+            return;
+          }
+
+          if (agentRunId !== undefined) {
+            const overlayResult = materializeRunScopedCompositionOverlay(
+              config.layout,
+              agentRunId,
+              compositionSnapshot,
+            );
+
+            if (!overlayResult.ok) {
+              sendMessage(socket, {
+                type: "command.claude.result",
+                payload: {
+                  exitCode: -1,
+                  output: overlayResult.errorMessage,
+                  ...(agentRunId !== undefined ? { agentRunId } : {}),
+                },
+                requestId,
+              });
+              return;
+            }
+          }
+        }
+
         if (agentRunId !== undefined && shellSessionId !== undefined) {
           shellSessionIdByRunId.set(agentRunId, shellSessionId);
         }
@@ -1366,6 +1415,10 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
             createdAt: new Date().toISOString(),
           },
         });
+      }
+
+      if (agentRunId !== undefined) {
+        removeRunCompositionOverlay(config.layout, agentRunId);
       }
     }
   };

@@ -1,6 +1,7 @@
 import type AgentWitchHubClient from "@/lib/agentWitch/types/AgentWitchHubClient.type";
 import type AgentWitchHubRuntime from "@/lib/agentWitch/types/AgentWitchHubRuntime.type";
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
+import type { ProjectCompositionSnapshotWire } from "@agent-witch/shared/protocol";
 import {
   buildRunTerminalSubscriptionKey,
   subscribeDashboardTerminal,
@@ -25,6 +26,8 @@ export const startAgentRunWithShellSession = async (input: {
   readonly sessionContinuation: boolean;
   readonly sourceRunId?: string;
   readonly projectFolderPath?: string;
+  readonly projectId?: string;
+  readonly compositionSnapshot?: ProjectCompositionSnapshotWire;
   readonly requestId?: string;
 }): Promise<string> => {
   const shellSession = createShellSession({
@@ -48,6 +51,10 @@ export const startAgentRunWithShellSession = async (input: {
       input.projectFolderPath.length > 0
       ? input.projectFolderPath
       : undefined,
+    typeof input.projectId === "string" && input.projectId.length > 0
+      ? input.projectId
+      : undefined,
+    input.compositionSnapshot,
   );
   await markAgentRunRunning(input.runtime, input.runId);
   subscribeDashboardTerminal(

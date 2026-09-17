@@ -30,6 +30,7 @@ const sampleRun = (
   capabilityVersionId: null,
   deviceId: "mac-1",
   projectId: null,
+  compositionSnapshotId: null,
   writerAgent: "cursor",
   lastRunHeartbeatAt: null,
   ...overrides,

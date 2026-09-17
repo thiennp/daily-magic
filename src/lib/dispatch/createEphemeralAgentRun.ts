@@ -39,6 +39,7 @@ export const createEphemeralAgentRun = (
     capabilityId: input.capabilityId ?? null,
     capabilityVersionId: input.capabilityVersionId ?? null,
     projectId: null,
+    compositionSnapshotId: null,
     deviceId: null,
     writerAgent: "claude-cli",
     lastRunHeartbeatAt: null,

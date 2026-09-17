@@ -20,6 +20,7 @@ const makeRun = (id: string, prompt = "hello"): AgentRunRecord => ({
   executorUserId: "user-1",
   deviceId: null,
   projectId: null,
+  compositionSnapshotId: null,
   prompt,
   status: AgentRunStatus.COMPLETED,
   dispatchPolicy: DispatchPolicy.OPEN,

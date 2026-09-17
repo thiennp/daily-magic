@@ -30,6 +30,7 @@ export const buildTerminalStreamTestRun = (
   capabilityVersionId: null,
   deviceId: null,
   projectId: null,
+  compositionSnapshotId: null,
   writerAgent: "claude-cli",
   lastRunHeartbeatAt: null,
   ...overrides,

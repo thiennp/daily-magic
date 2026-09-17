@@ -6,3 +6,9 @@ export {
   type AgentWitchMessageType,
 } from "./protocol/AgentWitchMessageType.constant";
 export type { default as AgentWitchMessage } from "./protocol/AgentWitchMessage.type";
+export type {
+  CompositionSnapshotComponentKind,
+  CompositionSnapshotItemScope,
+  ProjectCompositionSnapshotItemWire,
+  ProjectCompositionSnapshotWire,
+} from "./protocol/ProjectCompositionSnapshot.type";

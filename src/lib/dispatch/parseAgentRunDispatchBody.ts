@@ -13,6 +13,7 @@ export interface AgentRunDispatchBody {
   readonly sourceRunId?: string;
   readonly projectFolderPath?: string;
   readonly projectId?: string;
+  readonly runScopedComponentIds?: readonly string[];
 }
 
 export const parseAgentRunDispatchBody = (
@@ -52,6 +53,13 @@ export const parseAgentRunDispatchBody = (
       : {}),
     ...(typeof body.projectId === "string" && body.projectId.length > 0
       ? { projectId: body.projectId }
+      : {}),
+    ...(Array.isArray(body.runScopedComponentIds)
+      ? {
+          runScopedComponentIds: body.runScopedComponentIds.filter(
+            (value): value is string => typeof value === "string",
+          ),
+        }
       : {}),
   };
 };

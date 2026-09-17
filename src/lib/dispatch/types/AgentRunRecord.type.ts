@@ -22,6 +22,7 @@ export default interface AgentRunRecord {
   readonly capabilityVersionId: string | null;
   readonly deviceId: string | null;
   readonly projectId: string | null;
+  readonly compositionSnapshotId: string | null;
   readonly writerAgent: string;
   readonly lastRunHeartbeatAt: string | null;
   readonly reportStatus?: string | null;

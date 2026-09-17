@@ -35,6 +35,9 @@ export default function mapAgentRunRow(
       : null,
     deviceId: row.device_id ? String(row.device_id) : null,
     projectId: row.project_id ? String(row.project_id) : null,
+    compositionSnapshotId: row.composition_snapshot_id
+      ? String(row.composition_snapshot_id)
+      : null,
     writerAgent:
       typeof row.writer_agent === "string" && row.writer_agent.length > 0
         ? row.writer_agent

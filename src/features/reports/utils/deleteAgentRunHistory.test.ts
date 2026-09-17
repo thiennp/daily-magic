@@ -21,6 +21,7 @@ const makeRun = (id: string): AgentRunRecord => ({
   executorUserId: "user-1",
   deviceId: null,
   projectId: null,
+  compositionSnapshotId: null,
   prompt: "hello",
   status: AgentRunStatus.COMPLETED,
   dispatchPolicy: DispatchPolicy.OPEN,

@@ -11,6 +11,7 @@ import { persistAgentRun } from "@/lib/dispatch/persistAgentRun";
 import { queueClaudeRunFromExecuteDispatch } from "@/lib/dispatch/queueClaudeRunFromExecuteDispatch";
 import { readWriterRunDispatchPayloadFields } from "@/lib/dispatch/readWriterRunDispatchPayloadFields";
 import { resolveDelegatedWriterAgent } from "@/lib/dispatch/resolveDelegatedWriterAgent";
+import { resolveDispatchCompositionContext } from "@/lib/dispatch/resolveDispatchCompositionContext";
 import { shouldRequireDispatchApproval } from "@/lib/dispatch/shouldRequireDispatchApproval";
 
 export const executeClaudeRunDispatch = async (input: {
@@ -37,6 +38,20 @@ export const executeClaudeRunDispatch = async (input: {
 
   const payloadFields = readWriterRunDispatchPayloadFields(input.payload);
   const resolvedProjectId = payloadFields.projectId?.trim() ?? "";
+  const compositionContext = await resolveDispatchCompositionContext({
+    requesterUserId,
+    payload: input.payload,
+    projectId: resolvedProjectId,
+    requestId: input.requestId,
+  });
+
+  if (!compositionContext.ok) {
+    return compositionContext.message;
+  }
+
+  const dispatchPayloadFields = readWriterRunDispatchPayloadFields(
+    compositionContext.enrichedPayload,
+  );
 
   const run = await persistAgentRun({
     groupId: input.groupId,
@@ -52,6 +67,7 @@ export const executeClaudeRunDispatch = async (input: {
     capabilityId: input.capabilityId,
     capabilityVersionId: input.capabilityVersionId,
     projectId: resolvedProjectId.length > 0 ? resolvedProjectId : null,
+    compositionSnapshotId: compositionContext.compositionSnapshotId,
   });
 
   broadcastAgentRunRecord(input.runtime, run, input.requestId);
@@ -76,7 +92,8 @@ export const executeClaudeRunDispatch = async (input: {
       requesterUserId,
       dispatchPolicy: input.dispatchPolicy,
       includeNextActions,
-      ...payloadFields,
+      ...dispatchPayloadFields,
+      compositionSnapshot: compositionContext.compositionSnapshot,
     });
   }
 
@@ -92,7 +109,8 @@ export const executeClaudeRunDispatch = async (input: {
     requesterUserId,
     dispatchPolicy: input.dispatchPolicy,
     includeNextActions,
-    ...payloadFields,
+    ...dispatchPayloadFields,
+    compositionSnapshot: compositionContext.compositionSnapshot,
     requestId: input.requestId,
   });
 };

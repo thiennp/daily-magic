@@ -4,6 +4,7 @@ import {
 } from "@/lib/agentWitch/agentWitchDispatchErrorCode.constant";
 import { enqueueAgentWitchDispatchOutbox } from "@/lib/agentWitch/enqueueAgentWitchDispatchOutbox";
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
+import type { ProjectCompositionSnapshotWire } from "@agent-witch/shared/protocol";
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
 import type AgentWitchMessage from "@/lib/agentWitch/types/AgentWitchMessage.type";
 import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
@@ -21,6 +22,8 @@ export const queueClaudeRunInDispatchOutbox = async (input: {
   readonly sessionContinuation?: boolean;
   readonly sourceRunId?: string;
   readonly projectFolderPath?: string;
+  readonly projectId?: string;
+  readonly compositionSnapshot?: ProjectCompositionSnapshotWire;
 }): Promise<void> => {
   await enqueueAgentWitchDispatchOutbox({
     userId: input.executorUserId,
@@ -35,6 +38,8 @@ export const queueClaudeRunInDispatchOutbox = async (input: {
       sessionContinuation: input.sessionContinuation,
       sourceRunId: input.sourceRunId,
       projectFolderPath: input.projectFolderPath,
+      projectId: input.projectId,
+      compositionSnapshot: input.compositionSnapshot,
     }),
   });
 };

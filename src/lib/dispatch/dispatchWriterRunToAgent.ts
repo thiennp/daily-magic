@@ -1,4 +1,5 @@
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
+import type { ProjectCompositionSnapshotWire } from "@agent-witch/shared/protocol";
 import type AgentWitchHubClient from "@/lib/agentWitch/types/AgentWitchHubClient.type";
 import type AgentWitchHubRuntime from "@/lib/agentWitch/types/AgentWitchHubRuntime.type";
 import type AgentWitchMessage from "@/lib/agentWitch/types/AgentWitchMessage.type";
@@ -23,6 +24,8 @@ export const dispatchClaudeRunToAgent = (
   sourceRunId?: string,
   shellSessionId?: string,
   projectFolderPath?: string,
+  projectId?: string,
+  compositionSnapshot?: ProjectCompositionSnapshotWire,
 ): void => {
   void _runtime;
   agentClient.send(
@@ -36,6 +39,8 @@ export const dispatchClaudeRunToAgent = (
       sourceRunId,
       shellSessionId,
       projectFolderPath,
+      projectId,
+      compositionSnapshot,
     }),
   );
 };

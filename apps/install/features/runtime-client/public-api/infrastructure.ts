@@ -9,6 +9,14 @@ export { resolveAgentWitchClientWsUrl } from "../internal/core/resolveAgentWitch
 
 export { resolveRunProjectFolderPath } from "../internal/core/resolveRunProjectFolderPath";
 
+export { default as parseProjectCompositionSnapshotWire } from "../internal/core/composition/parseProjectCompositionSnapshotWire";
+
+export { default as verifyProjectCompositionSnapshotBlobs } from "../internal/core/composition/verifyProjectCompositionSnapshotBlobs";
+
+export { default as materializeRunScopedCompositionOverlay } from "../internal/core/composition/materializeRunScopedCompositionOverlay";
+
+export { default as removeRunCompositionOverlay } from "../internal/core/composition/removeRunCompositionOverlay";
+
 export { resolveWriterExecutionBackend } from "../internal/core/writerApi/resolveWriterExecutionBackend";
 
 export {
