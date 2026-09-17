@@ -1,5 +1,5 @@
 import AppPageHeader from "@/components/surfaces/AppPageHeader";
-import HomeProjectsPanel from "@/features/home/HomeProjectsPanel";
+import AwcProjectsPanel from "@/features/projects/AwcProjectsPanel";
 import { APP_PAGE_STACK_CLASS } from "@/features/shell/appPageLayout.constant";
 
 export default function ProjectsPageLayout() {
@@ -7,9 +7,9 @@ export default function ProjectsPageLayout() {
     <div className={APP_PAGE_STACK_CLASS}>
       <AppPageHeader
         title="Projects"
-        description="Choose where tasks run on this Mac and start work in the right repository."
+        description="Repos your Macs can run agents against. Edit composition and folders in Agent Witch Live on each Mac."
       />
-      <HomeProjectsPanel />
+      <AwcProjectsPanel />
     </div>
   );
 }
