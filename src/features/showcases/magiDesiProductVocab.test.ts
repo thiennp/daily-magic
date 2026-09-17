@@ -52,6 +52,43 @@ describe("Magi Desi product vocab (showcases + home CTAs)", () => {
     }
   });
 
+  it("onboard-in-15 and standup articles use Reports as product surface", () => {
+    const onboard = readFileSync(
+      join(
+        process.cwd(),
+        "src/features/showcases/articles/onboardIn15Minutes.article.ts",
+      ),
+      "utf8",
+    );
+    const standup = readFileSync(
+      join(
+        process.cwd(),
+        "src/features/showcases/articles/standupFromLocalBranch.article.ts",
+      ),
+      "utf8",
+    );
+
+    expect(onboard).toContain("open Reports.");
+    expect(onboard).not.toMatch(/open Job history/i);
+    expect(onboard).toContain("Completed weekly status run in Reports.");
+    expect(onboard).toContain("Reports shows one completed run");
+    expect(standup).toContain("Run again from Reports when standup time moves");
+    expect(standup).not.toMatch(/Run again from Job history/i);
+  });
+
+  it("showcase topic captions use Reports not Job history product label", () => {
+    const captions = readFileSync(
+      join(
+        process.cwd(),
+        "src/features/showcases/showcaseTopicScreenCaptions.constant.ts",
+      ),
+      "utf8",
+    );
+
+    expect(captions).not.toMatch(/in Job history/i);
+    expect(captions).toContain("in Reports.");
+  });
+
   it("showcase marketing SVG mock H1s use Reports not Job history", () => {
     const reportsSvg = readFileSync(
       join(PUBLIC_SHOWCASES_DIR, "topics/02-job-history.svg"),

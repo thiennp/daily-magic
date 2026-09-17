@@ -36,13 +36,13 @@ const standupFromLocalBranch: ShowcaseArticle = {
       bullets: [
         "Files stay on your machine — no upload of private diffs",
         "Same prompt every day → save as a library workflow",
-        "Run again from Job history when standup time moves",
+        "Run again from Reports when standup time moves",
       ],
     },
     {
       heading: "Best results",
       paragraphs: [
-        "Keep the Mac with the repo awake and connected. Job history stays in your browser so you can Run again from the same place next week.",
+        "Keep the Mac with the repo awake and connected. Run history stays in your browser so you can Run again from the same place next week.",
       ],
     },
   ],

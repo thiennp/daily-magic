@@ -63,7 +63,7 @@ export default function AgentRunsList() {
   if (sessionState === "guest") {
     return (
       <EmptyStatePanel
-        density="page"
+        density="section"
         title={REPORTS_GUEST_EMPTY_COPY.title}
         body="After you connect a Mac and run a New task, every job shows up here."
         primaryCta={{

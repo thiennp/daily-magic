@@ -6,7 +6,7 @@ const onboardIn15Minutes: ShowcaseArticle = {
   slug: "onboard-in-15-minutes",
   title: "Onboard in 15 minutes — walk through with real screens",
   subtitle:
-    "Sign in, set up your Mac to run jobs, run the seeded weekly status workflow, open Job history.",
+    "Sign in, set up your Mac to run jobs, run the seeded weekly status workflow, open Reports.",
   category: "Start here",
   supportLevel: "full",
   readMinutes: 5,
@@ -87,14 +87,14 @@ const onboardIn15Minutes: ShowcaseArticle = {
         ONBOARDING_SHOWCASE_SCREEN.JOB_HISTORY,
         {
           alt: "Reports card for a completed weekly status run",
-          caption: "Completed weekly status run in Job history.",
+          caption: "Completed weekly status run in Reports.",
         },
       ),
     },
     {
       heading: "Done when",
       paragraphs: [
-        "Checklist shows Mac worker setup and Send first task complete, Library still has the weekly status playbook (or your renamed copy), and Job history shows one completed run. That is enough trust proof before inviting teammates.",
+        "Checklist shows Mac worker setup and Send first task complete, Library still has the weekly status playbook (or your renamed copy), and Reports shows one completed run. That is enough trust proof before inviting teammates.",
       ],
     },
   ],
