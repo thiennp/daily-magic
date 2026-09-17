@@ -110,14 +110,101 @@ describe("applyInstalledHarnessSetsToProjectCursor", () => {
       projectDir,
       ".cursor",
       "rules",
+      "demo",
       "demo.mdc",
     );
     expect(fs.readFileSync(cursorRulePath, "utf8")).toContain("# demo rule");
+
+    const ledgerPath = path.join(
+      projectDir,
+      ".agent-witch",
+      "materialization.json",
+    );
+    expect(fs.existsSync(ledgerPath)).toBe(true);
+
+    const gitignorePath = path.join(projectDir, ".agent-witch", ".gitignore");
+    expect(fs.readFileSync(gitignorePath, "utf8")).toContain("project.json");
 
     const metaPath = path.join(projectDir, ".agent-witch", "project.json");
     const meta = JSON.parse(fs.readFileSync(metaPath, "utf8")) as {
       harnessSetSlugs?: string[];
     };
     expect(meta.harnessSetSlugs).toEqual(["demo"]);
+  });
+
+  it("P1: re-applying unchanged harness is a no-op write", () => {
+    const { layout, projectDir } = createHarnessLayout();
+    const first = applyInstalledHarnessSetsToProjectCursor({
+      layout,
+      projectFolderPath: projectDir,
+      setSlugs: ["demo"],
+    });
+    expect(first.ok).toBe(true);
+
+    const second = applyInstalledHarnessSetsToProjectCursor({
+      layout,
+      projectFolderPath: projectDir,
+      setSlugs: ["demo"],
+    });
+    expect(second.ok).toBe(true);
+    if (!second.ok) {
+      throw new Error(second.errorMessage);
+    }
+    expect(second.writtenFileCount).toBe(0);
+    expect(second.skippedFileCount).toBe(1);
+  });
+
+  it("P1: backs up hand-edited managed paths before overwrite", () => {
+    const { layout, projectDir } = createHarnessLayout();
+    const rulePath = path.join(
+      projectDir,
+      ".cursor",
+      "rules",
+      "demo",
+      "demo.mdc",
+    );
+    fs.mkdirSync(path.dirname(rulePath), { recursive: true });
+    fs.writeFileSync(rulePath, "# user authored\n");
+
+    const result = applyInstalledHarnessSetsToProjectCursor({
+      layout,
+      projectFolderPath: projectDir,
+      setSlugs: ["demo"],
+    });
+    expect(result.ok).toBe(true);
+    if (!result.ok) {
+      throw new Error(result.errorMessage);
+    }
+    expect(result.backedUpFileCount).toBe(1);
+    expect(fs.readFileSync(rulePath, "utf8")).toContain("# demo rule");
+  });
+
+  it("P1: unchecking a set removes ledger-managed files", () => {
+    const { layout, projectDir } = createHarnessLayout();
+    const linked = applyInstalledHarnessSetsToProjectCursor({
+      layout,
+      projectFolderPath: projectDir,
+      setSlugs: ["demo"],
+    });
+    expect(linked.ok).toBe(true);
+
+    const cleared = applyInstalledHarnessSetsToProjectCursor({
+      layout,
+      projectFolderPath: projectDir,
+      setSlugs: [],
+    });
+    expect(cleared.ok).toBe(true);
+    if (!cleared.ok) {
+      throw new Error(cleared.errorMessage);
+    }
+    expect(cleared.removedLedgerPathCount).toBe(1);
+    const rulePath = path.join(
+      projectDir,
+      ".cursor",
+      "rules",
+      "demo",
+      "demo.mdc",
+    );
+    expect(fs.existsSync(rulePath)).toBe(false);
   });
 });

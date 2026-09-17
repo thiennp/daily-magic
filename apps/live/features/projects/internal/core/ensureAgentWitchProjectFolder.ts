@@ -2,6 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 
 import { AGENT_WITCH_PROJECT_MEMORY_RUNS_FILE_NAME } from "./agentWitchProjectStorage.constants";
+import { ensureAgentWitchProjectDotGitignore } from "./ensureAgentWitchProjectDotGitignore";
 import {
   resolveAgentWitchProjectStorageLayout,
   type AgentWitchProjectStorageLayout,
@@ -61,6 +62,7 @@ export const ensureAgentWitchProjectFolder = (
   fs.mkdirSync(layout.resolvedProjectFolderPath, { recursive: true });
   fs.mkdirSync(layout.ragDirPath, { recursive: true });
   fs.mkdirSync(layout.memoryDirPath, { recursive: true });
+  ensureAgentWitchProjectDotGitignore(layout.metaDirPath);
   writeProjectMetaIfMissing(layout, input);
   touchProjectStorageFiles(layout);
 
