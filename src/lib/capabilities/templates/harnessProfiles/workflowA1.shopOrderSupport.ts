@@ -1,4 +1,5 @@
 import type { PresetHarnessSeed } from "@/lib/capabilities/templates/harnessProfiles/PresetHarnessSeed.type";
+import { SHOP_ORDER_SUPPORT_EXAMPLE_REQUEST } from "@/lib/capabilities/templates/harnessProfiles/workflowA1.shopOrderSupport.exampleRequest";
 import { SHOP_ORDER_SUPPORT_OPERATOR_STEPS } from "@/lib/capabilities/templates/harnessProfiles/workflowA1.shopOrderSupport.operatorSteps";
 
 export const SHOP_ORDER_SUPPORT_PRESET: PresetHarnessSeed = {
@@ -7,15 +8,14 @@ export const SHOP_ORDER_SUPPORT_PRESET: PresetHarnessSeed = {
   category: "Commerce",
   description:
     "Draft grounded replies to where-is-my-order and support messages using your order files and policies — send only after you approve.",
-  exampleRequest:
-    "Handle customer messages in inboxFocus. Read ordersFolderPath and policiesFolderPath, draft one reply per thread with tracking facts, and send only after I approve each answer.",
+  exampleRequest: SHOP_ORDER_SUPPORT_EXAMPLE_REQUEST,
   operatorSteps: SHOP_ORDER_SUPPORT_OPERATOR_STEPS,
   profile: {
     ruleFocus: [
       "Ground every date and tracking number in ordersFolderPath.",
       "Follow refund and shipping rules in policiesFolderPath.",
       "Never promise refunds or delivery dates outside policy.",
-      "Pause with [[AWAITING_INPUT]] per thread before marking ready to send.",
+      "Use orchestration human checkpoints for per-thread approval; do not gate on [[AWAITING_INPUT]].",
     ],
     skillSections: [
       {
@@ -40,10 +40,10 @@ export const SHOP_ORDER_SUPPORT_PRESET: PresetHarnessSeed = {
       },
     ],
     commandSteps: [
-      "Load policies and recent orders from folder paths.",
-      "Draft replies for each thread in inboxFocus.",
-      "Present previews and wait for per-message approval.",
-      "Append resolutions to supportLogPath after send.",
+      "Open inbox scope; load policies and orders from folder paths.",
+      "Draft policy-safe replies with tracking facts in [[PROGRESS]].",
+      "Operator approves each draft at the human checkpoint.",
+      "Finalize log lines; operator sends from shop tools.",
     ],
     instructionAddendum:
       "Sending customer email stays with the operator; the agent drafts policy-safe replies.",
