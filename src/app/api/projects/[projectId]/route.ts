@@ -51,7 +51,7 @@ export async function PATCH(
       {
         ok: false,
         errorMessage:
-          "Use Choose on this Mac so Agent Witch can verify the local folder.",
+          "Folder path cannot be changed from the browser. Set it in Agent Witch Live on your Mac.",
       },
       { status: 400 },
     );
