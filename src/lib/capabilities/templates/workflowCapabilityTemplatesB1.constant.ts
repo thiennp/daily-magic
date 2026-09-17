@@ -1,4 +1,5 @@
 import buildWorkflowTemplate from "@/lib/capabilities/templates/buildWorkflowTemplate";
+import { COMPARE_OPTIONS_EXAMPLE_REQUEST } from "@/lib/capabilities/templates/harnessProfiles/workflowB1.compareOptions.exampleRequest";
 import type { WorkflowCapabilityTemplate } from "@/lib/capabilities/templates/types/CapabilityTemplate.type";
 
 export const WORKFLOW_CAPABILITY_TEMPLATES_B1: readonly WorkflowCapabilityTemplate[] =
@@ -7,8 +8,8 @@ export const WORKFLOW_CAPABILITY_TEMPLATES_B1: readonly WorkflowCapabilityTempla
       "compare-options",
       "Research",
       "Compare options",
-      "Build a pros/cons comparison and recommendation.",
-      "Compare the options using the criteria. End with a clear recommendation.",
+      "Score two paths against your criteria and get a clear recommendation — clarify weights first, then review the table before you decide.",
+      COMPARE_OPTIONS_EXAMPLE_REQUEST,
       [
         ["optionA", "Option A", "textarea"],
         ["optionB", "Option B", "textarea"],
