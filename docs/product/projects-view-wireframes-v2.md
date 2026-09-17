@@ -79,7 +79,7 @@ flowchart TD
 flowchart LR
     P[Project] --> H[Harness]
     P --> W[Workflows]
-    P --> AG["Agents *(profiles)*"]
+    P --> AG["Agents (profiles)"]
     H --> H1[Installed]
     H --> H2["+ Create new"]
     H --> H3["Pull into repo"]
