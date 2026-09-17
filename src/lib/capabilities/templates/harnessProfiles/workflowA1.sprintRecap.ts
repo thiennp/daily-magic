@@ -1,4 +1,5 @@
 import type { PresetHarnessSeed } from "@/lib/capabilities/templates/harnessProfiles/PresetHarnessSeed.type";
+import { SPRINT_RECAP_EXAMPLE_REQUEST } from "@/lib/capabilities/templates/harnessProfiles/workflowA1.sprintRecap.exampleRequest";
 import { SPRINT_RECAP_OPERATOR_STEPS } from "@/lib/capabilities/templates/harnessProfiles/workflowA1.sprintRecap.operatorSteps";
 
 export const SPRINT_RECAP_PRESET: PresetHarnessSeed = {
@@ -7,8 +8,7 @@ export const SPRINT_RECAP_PRESET: PresetHarnessSeed = {
   category: "Reporting",
   description:
     "Turn sprint notes into a stakeholder-ready recap — what shipped, what deferred with reasons, and up to three next-sprint priorities.",
-  exampleRequest:
-    "Write a sprint recap for stakeholders. Keep it factual and action-oriented.",
+  exampleRequest: SPRINT_RECAP_EXAMPLE_REQUEST,
   operatorSteps: SPRINT_RECAP_OPERATOR_STEPS,
   profile: {
     ruleFocus: [

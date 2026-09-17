@@ -1,5 +1,6 @@
 import buildWorkflowTemplate from "@/lib/capabilities/templates/buildWorkflowTemplate";
 import { EMAIL_INBOX_REPLY_EXAMPLE_REQUEST } from "@/lib/capabilities/templates/harnessProfiles/workflowA1.emailInboxReply.exampleRequest";
+import { FINANCE_SHEET_QA_EXAMPLE_REQUEST } from "@/lib/capabilities/templates/harnessProfiles/workflowA1.financeSheetQa.exampleRequest";
 import type { WorkflowCapabilityTemplate } from "@/lib/capabilities/templates/types/CapabilityTemplate.type";
 
 export const WORKFLOW_CAPABILITY_TEMPLATES_A1_FEATURED_SOCIAL: readonly WorkflowCapabilityTemplate[] =
@@ -9,7 +10,7 @@ export const WORKFLOW_CAPABILITY_TEMPLATES_A1_FEATURED_SOCIAL: readonly Workflow
       "Finance",
       "Finance sheet Q&A",
       "Analyze a finance Google Sheet open in your browser and answer questions with numbers cited from the visible workbook.",
-      "Read the Google Sheet open in the browser. Answer userQuestion using only figures you can see in the sheet. Cite tab names and cell ranges. Ask one clarifying question if the data is missing or ambiguous.",
+      FINANCE_SHEET_QA_EXAMPLE_REQUEST,
       [
         ["sheetUrl", "Google Sheet URL", "text"],
         [

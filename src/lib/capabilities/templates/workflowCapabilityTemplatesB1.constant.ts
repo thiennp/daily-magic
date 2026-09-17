@@ -1,5 +1,9 @@
 import buildWorkflowTemplate from "@/lib/capabilities/templates/buildWorkflowTemplate";
+import { COMPARE_OPTIONS_EXAMPLE_REQUEST } from "@/lib/capabilities/templates/harnessProfiles/workflowB1.compareOptions.exampleRequest";
 import { COMPETITOR_SNAPSHOT_WORKFLOW } from "@/lib/capabilities/templates/workflowCapabilityTemplatesB1.competitorSnapshot.constant";
+import { BUG_REPORT_WRITER_WORKFLOW } from "@/lib/capabilities/templates/workflowCapabilityTemplatesB1.bugReportWriter.constant";
+import { PR_SUMMARY_WORKFLOW } from "@/lib/capabilities/templates/workflowCapabilityTemplatesB1.prSummary.constant";
+import { RELEASE_NOTES_DRAFT_WORKFLOW } from "@/lib/capabilities/templates/workflowCapabilityTemplatesB1.releaseNotesDraft.constant";
 import type { WorkflowCapabilityTemplate } from "@/lib/capabilities/templates/types/CapabilityTemplate.type";
 
 export const WORKFLOW_CAPABILITY_TEMPLATES_B1: readonly WorkflowCapabilityTemplate[] =
@@ -8,8 +12,8 @@ export const WORKFLOW_CAPABILITY_TEMPLATES_B1: readonly WorkflowCapabilityTempla
       "compare-options",
       "Research",
       "Compare options",
-      "Build a pros/cons comparison and recommendation.",
-      "Compare the options using the criteria. End with a clear recommendation.",
+      "Score two paths against your criteria and get a clear recommendation — clarify weights first, then review the table before you decide.",
+      COMPARE_OPTIONS_EXAMPLE_REQUEST,
       [
         ["optionA", "Option A", "textarea"],
         ["optionB", "Option B", "textarea"],
@@ -17,42 +21,7 @@ export const WORKFLOW_CAPABILITY_TEMPLATES_B1: readonly WorkflowCapabilityTempla
       ],
     ),
     COMPETITOR_SNAPSHOT_WORKFLOW,
-
-    buildWorkflowTemplate(
-      "pr-summary",
-      "Engineering",
-      "PR / code change summary",
-      "Explain a change for reviewers or non-engineers.",
-      "Summarize the change, risk areas, and test notes for reviewers.",
-      [
-        ["context", "PR / branch context", "text"],
-        ["change", "What changed", "textarea"],
-        ["audience", "Audience", "text"],
-      ],
-    ),
-    buildWorkflowTemplate(
-      "bug-report-writer",
-      "Engineering",
-      "Bug report writer",
-      "Turn a rough repro into a clear bug ticket.",
-      "Write a bug report with repro steps, expected vs actual, and severity.",
-      [
-        ["summary", "What happened", "textarea"],
-        ["steps", "Steps to reproduce", "textarea"],
-        ["expectedActual", "Expected vs actual", "textarea"],
-        ["severity", "Severity", "text"],
-      ],
-    ),
-    buildWorkflowTemplate(
-      "release-notes-draft",
-      "Engineering",
-      "Release notes draft",
-      "Turn a change list into customer-ready release notes.",
-      "Draft release notes grouped by user impact. Keep language plain.",
-      [
-        ["version", "Version", "text"],
-        ["changes", "Changes", "textarea"],
-        ["audience", "Audience", "text"],
-      ],
-    ),
+    PR_SUMMARY_WORKFLOW,
+    BUG_REPORT_WRITER_WORKFLOW,
+    RELEASE_NOTES_DRAFT_WORKFLOW,
   ];
