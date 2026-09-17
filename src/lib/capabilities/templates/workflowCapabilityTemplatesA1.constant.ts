@@ -1,4 +1,5 @@
 import buildWorkflowTemplate from "@/lib/capabilities/templates/buildWorkflowTemplate";
+import { MEETING_NOTES_ACTIONS_EXAMPLE_REQUEST } from "@/lib/capabilities/templates/harnessProfiles/workflowA1.meetingNotesActions.exampleRequest";
 import type { WorkflowCapabilityTemplate } from "@/lib/capabilities/templates/types/CapabilityTemplate.type";
 import { WORKFLOW_CAPABILITY_TEMPLATES_A1_FEATURED } from "@/lib/capabilities/templates/workflowCapabilityTemplatesA1Featured.constant";
 
@@ -46,8 +47,8 @@ export const WORKFLOW_CAPABILITY_TEMPLATES_A1: readonly WorkflowCapabilityTempla
       "meeting-notes-actions",
       "Communication",
       "Meeting notes → actions",
-      "Convert messy notes into decisions and action items.",
-      "Produce meeting notes with decisions, owners, and action items.",
+      "Turn messy notes into decisions and an action table with owners — clarify gaps, correct the draft, then share.",
+      MEETING_NOTES_ACTIONS_EXAMPLE_REQUEST,
       [
         ["meetingTitle", "Meeting title", "text"],
         ["attendees", "Attendees", "text", false],
