@@ -29,4 +29,13 @@ export const EMAIL_INBOX_REPLY_OPERATOR_STEPS: readonly OperatorStepDefinition[]
         "3. Reply approve per message when you want the agent to send (or save as draft).",
       ].join("\n"),
     },
+    {
+      id: "email-inbox-reply-operator-done",
+      title: "Confirm sends and answered log",
+      content: [
+        "1. Spot-check the mailbox for messages the agent reported as sent or skipped.",
+        "2. Open answeredLogPath when set and confirm new rows look correct.",
+        "3. Reply done when this batch is closed.",
+      ].join("\n"),
+    },
   ];

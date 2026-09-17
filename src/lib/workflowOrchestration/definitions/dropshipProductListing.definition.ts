@@ -81,6 +81,15 @@ export const OFFICIAL_WORKFLOW_DEFINITION: OfficialWorkflowDefinition = {
       "Append listing summary to history file",
       APPEND_LISTING_HISTORY,
     ),
+    buildOfficialWorkflowHumanNode(
+      3,
+      "Confirm listing history entry",
+      [
+        "1. Open listingHistoryPath and verify the new SKU entry matches what you published.",
+        "2. Ask for edits if positioning or price summary is wrong.",
+        "3. Reply done when history is accurate for the next listing run.",
+      ].join("\n"),
+    ),
   ],
 };
 

@@ -29,4 +29,13 @@ export const DROPSHIP_PRODUCT_LISTING_OPERATOR_STEPS: readonly OperatorStepDefin
         "3. Ask the agent to append this SKU to listingHistoryPath after publish.",
       ].join("\n"),
     },
+    {
+      id: "dropship-product-listing-operator-history",
+      title: "Confirm listing history entry",
+      content: [
+        "1. Open listingHistoryPath and verify the new SKU entry matches what you published.",
+        "2. Ask for edits if positioning or price summary is wrong.",
+        "3. Reply done when history is accurate for the next listing run.",
+      ].join("\n"),
+    },
   ];

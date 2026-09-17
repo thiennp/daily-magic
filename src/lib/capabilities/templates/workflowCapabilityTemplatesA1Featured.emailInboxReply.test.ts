@@ -5,7 +5,7 @@ import { CapabilityType } from "@/lib/capabilities/CapabilityType.constant";
 import { mapHarnessItemsToOperatorSteps } from "@/lib/harness/partitionHarnessItemsByAudience";
 
 describe("email-inbox-reply workflow", () => {
-  it("is registered with knowledge fields and three operator checkpoints", () => {
+  it("is registered with knowledge fields and four operator checkpoints", () => {
     const template = findCapabilityTemplateById("email-inbox-reply");
 
     expect(template?.type).toBe(CapabilityType.WORKFLOW);
@@ -31,6 +31,7 @@ describe("email-inbox-reply workflow", () => {
       "Open your inbox in the browser",
       "Confirm the knowledge folder on your Mac",
       "Approve each reply before it is sent",
+      "Confirm sends and answered log",
     ]);
 
     expect(template.exampleRequest).toContain("Index knowledge and triage");

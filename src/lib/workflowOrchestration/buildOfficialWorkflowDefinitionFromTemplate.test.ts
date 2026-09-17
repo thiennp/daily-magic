@@ -11,7 +11,7 @@ describe("official workflow definitions for marketplace templates", () => {
       (template) => template.type === CapabilityType.WORKFLOW,
     );
 
-    expect(workflows.length).toBeGreaterThan(20);
+    expect(workflows.length).toBe(29);
 
     workflows.forEach((template) => {
       const definition = findOfficialWorkflowDefinitionByTemplateId(
@@ -22,7 +22,9 @@ describe("official workflow definitions for marketplace templates", () => {
         return;
       }
       expect(definition.templateId).toBe(template.id);
-      expect(definition.nodes.length).toBeGreaterThanOrEqual(2);
+      expect(definition.version).toBeGreaterThanOrEqual(2);
+      expect(definition.nodes.length).toBeGreaterThanOrEqual(3);
+      expect(definition.nodes.at(-1)?.kind).toBe("human");
       expect(definition.nodes.some((node) => node.kind === "human")).toBe(true);
       expect(definition.nodes.some((node) => node.kind === "agent")).toBe(true);
     });

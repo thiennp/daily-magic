@@ -29,4 +29,13 @@ export const TIKTOK_SERIES_EPISODE_OPERATOR_STEPS: readonly OperatorStepDefiniti
         "3. Ask the agent to append this episode to seriesHistoryPath after you publish.",
       ].join("\n"),
     },
+    {
+      id: "tiktok-series-episode-operator-history",
+      title: "Confirm series history update",
+      content: [
+        "1. Open seriesHistoryPath and verify the episode summary matches what you posted.",
+        "2. Adjust the suggested next angle if it does not fit your calendar.",
+        "3. Reply done when history is ready for the next episode.",
+      ].join("\n"),
+    },
   ];

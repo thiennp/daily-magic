@@ -81,6 +81,15 @@ export const OFFICIAL_WORKFLOW_DEFINITION: OfficialWorkflowDefinition = {
       "Update series history and suggest next episode",
       POST_PUBLISH_CONTINUITY,
     ),
+    buildOfficialWorkflowHumanNode(
+      3,
+      "Confirm series history update",
+      [
+        "1. Open seriesHistoryPath and verify the episode summary matches what you posted.",
+        "2. Adjust the suggested next angle if it does not fit your calendar.",
+        "3. Reply done when history is ready for the next episode.",
+      ].join("\n"),
+    ),
   ],
 };
 
