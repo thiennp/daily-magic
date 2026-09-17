@@ -1,13 +1,16 @@
 import type { PresetHarnessSeed } from "@/lib/capabilities/templates/harnessProfiles/PresetHarnessSeed.type";
+import { DAILY_STANDUP_EXAMPLE_REQUEST } from "@/lib/capabilities/templates/harnessProfiles/workflowA1.dailyStandup.exampleRequest";
+import { DAILY_STANDUP_OPERATOR_STEPS } from "@/lib/capabilities/templates/harnessProfiles/workflowA1.dailyStandup.operatorSteps";
 
 export const WORKFLOW_A1_PART2: readonly PresetHarnessSeed[] = [
   {
     id: "daily-standup",
     name: "Daily standup",
     category: "Reporting",
-    description: "Capture yesterday, today, and blockers in standup format.",
-    exampleRequest:
-      "Format this as a short standup update I can paste into chat.",
+    description:
+      "Turn rough notes into a crisp Yesterday / Today / Blockers post you can paste into async chat.",
+    exampleRequest: DAILY_STANDUP_EXAMPLE_REQUEST,
+    operatorSteps: DAILY_STANDUP_OPERATOR_STEPS,
     profile: {
       ruleFocus: [
         "Keep each section to 1–3 bullets.",

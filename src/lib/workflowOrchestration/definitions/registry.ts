@@ -1,10 +1,12 @@
 import type OfficialWorkflowDefinition from "@/lib/workflowOrchestration/types/OfficialWorkflowDefinition.type";
 
+import { OFFICIAL_WORKFLOW_DEFINITION as dailyStandup } from "@/lib/workflowOrchestration/definitions/dailyStandup.definition";
 import { OFFICIAL_WORKFLOW_DEFINITION as vibeCodingAppFeature } from "@/lib/workflowOrchestration/definitions/vibeCodingAppFeature.definition";
 
 const CUSTOM_OFFICIAL_WORKFLOW_DEFINITIONS: Readonly<
   Record<string, OfficialWorkflowDefinition>
 > = {
+  "daily-standup": dailyStandup,
   "vibe-coding-app-feature": vibeCodingAppFeature,
 };
 

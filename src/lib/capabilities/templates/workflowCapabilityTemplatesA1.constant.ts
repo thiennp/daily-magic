@@ -1,4 +1,5 @@
 import buildWorkflowTemplate from "@/lib/capabilities/templates/buildWorkflowTemplate";
+import { DAILY_STANDUP_EXAMPLE_REQUEST } from "@/lib/capabilities/templates/harnessProfiles/workflowA1.dailyStandup.exampleRequest";
 import type { WorkflowCapabilityTemplate } from "@/lib/capabilities/templates/types/CapabilityTemplate.type";
 import { WORKFLOW_CAPABILITY_TEMPLATES_A1_FEATURED } from "@/lib/capabilities/templates/workflowCapabilityTemplatesA1Featured.constant";
 
@@ -21,8 +22,8 @@ export const WORKFLOW_CAPABILITY_TEMPLATES_A1: readonly WorkflowCapabilityTempla
       "daily-standup",
       "Reporting",
       "Daily standup",
-      "Capture yesterday, today, and blockers in standup format.",
-      "Format this as a short standup update I can paste into chat.",
+      "Turn rough notes into a crisp Yesterday / Today / Blockers post you can paste into async chat.",
+      DAILY_STANDUP_EXAMPLE_REQUEST,
       [
         ["yesterday", "Yesterday", "textarea"],
         ["today", "Today", "textarea"],
