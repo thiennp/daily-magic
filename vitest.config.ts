@@ -11,6 +11,8 @@ export default defineConfig({
       ".agents/**/*.test.ts",
       "test/**/*.test.ts",
       "packages/shared/**/*.test.ts",
+      "apps/bridge/**/*.test.ts",
+      "apps/install/**/*.test.ts",
     ],
   },
   resolve: {

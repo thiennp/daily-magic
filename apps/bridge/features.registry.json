@@ -1,0 +1,108 @@
+{
+  "$schema": "./features.registry.schema.json",
+  "version": 1,
+  "deployableId": "AWB",
+  "features": [
+    {
+      "slug": "server",
+      "title": "Loopback HTTP server and routing",
+      "fsaStatus": "in-progress",
+      "featurePath": "apps/bridge/features/server",
+      "legacyPaths": ["scripts/agent-witch-wake-server.ts"]
+    },
+    {
+      "slug": "http-server",
+      "title": "HTTP helpers",
+      "parentSlug": "server",
+      "fsaStatus": "in-progress",
+      "featurePath": "apps/bridge/features/server/features/http-server"
+    },
+    {
+      "slug": "discovery",
+      "title": "Health and identity",
+      "fsaStatus": "in-progress",
+      "featurePath": "apps/bridge/features/discovery"
+    },
+    {
+      "slug": "health-identity",
+      "title": "GET /health and /identity",
+      "parentSlug": "discovery",
+      "fsaStatus": "in-progress",
+      "featurePath": "apps/bridge/features/discovery/features/health-identity"
+    },
+    {
+      "slug": "diagnostics",
+      "title": "Local diagnostics",
+      "fsaStatus": "in-progress",
+      "featurePath": "apps/bridge/features/diagnostics"
+    },
+    {
+      "slug": "local-debug-page",
+      "title": "GET /local HTML log viewer",
+      "parentSlug": "diagnostics",
+      "fsaStatus": "in-progress",
+      "featurePath": "apps/bridge/features/diagnostics/features/local-debug-page"
+    },
+    {
+      "slug": "operations",
+      "title": "Mac lifecycle operations (delegates to AWI)",
+      "fsaStatus": "in-progress",
+      "featurePath": "apps/bridge/features/operations"
+    },
+    {
+      "slug": "watchdog-api",
+      "title": "Watchdog status and logs",
+      "parentSlug": "operations",
+      "fsaStatus": "in-progress",
+      "featurePath": "apps/bridge/features/operations/features/watchdog-api"
+    },
+    {
+      "slug": "process-control",
+      "title": "Wake, restart, WS revive",
+      "parentSlug": "operations",
+      "fsaStatus": "in-progress",
+      "featurePath": "apps/bridge/features/operations/features/process-control"
+    },
+    {
+      "slug": "self-update-api",
+      "title": "Self-update status, logs, run",
+      "parentSlug": "operations",
+      "fsaStatus": "in-progress",
+      "featurePath": "apps/bridge/features/operations/features/self-update-api"
+    },
+    {
+      "slug": "install-delete-api",
+      "title": "POST /install/delete",
+      "parentSlug": "operations",
+      "fsaStatus": "in-progress",
+      "featurePath": "apps/bridge/features/operations/features/install-delete-api"
+    },
+    {
+      "slug": "awc-proxy",
+      "title": "AWC browser proxy routes",
+      "fsaStatus": "in-progress",
+      "featurePath": "apps/bridge/features/awc-proxy"
+    },
+    {
+      "slug": "harness-proxy",
+      "title": "Harness install and borrow",
+      "parentSlug": "awc-proxy",
+      "fsaStatus": "in-progress",
+      "featurePath": "apps/bridge/features/awc-proxy/features/harness-proxy"
+    },
+    {
+      "slug": "projects-proxy",
+      "title": "Project folder ensure",
+      "parentSlug": "awc-proxy",
+      "fsaStatus": "in-progress",
+      "featurePath": "apps/bridge/features/awc-proxy/features/projects-proxy"
+    },
+    {
+      "slug": "automations-proxy",
+      "title": "Local automations sync and run",
+      "parentSlug": "awc-proxy",
+      "fsaStatus": "in-progress",
+      "featurePath": "apps/bridge/features/awc-proxy/features/automations-proxy"
+    }
+  ]
+}

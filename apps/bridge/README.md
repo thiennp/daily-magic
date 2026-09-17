@@ -2,6 +2,8 @@
 
 Loopback HTTP on `127.0.0.1:47892` (production install) or `47893` (localhost-origin install).
 
-**Today:** `scripts/agent-witch-wake-server.ts` and related wake/watchdog/update routes.
+**Implementation:** `apps/bridge/` (FSA). **Shim:** `scripts/agent-witch-wake-server.ts`.
 
-**Target:** `apps/bridge/features/` — APIs consumed by AWC when the user’s browser is on the same Mac.
+**Run:** `npm run agent-witch:wake-server`
+
+Layout and boundaries: [`FSA.md`](./FSA.md) · registry: [`features.registry.json`](./features.registry.json).

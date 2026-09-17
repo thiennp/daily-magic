@@ -12,6 +12,8 @@ const APP_ROOT = path.resolve(
 
 const SHARED_SRC = path.join(APP_ROOT, "packages/shared/src");
 const AWI_FEATURES = path.join(APP_ROOT, "apps/install/features");
+const AWB_FEATURES = path.join(APP_ROOT, "apps/bridge/features");
+const AWB_ADAPTERS = path.join(APP_ROOT, "apps/bridge/adapters");
 
 const isForbiddenAwiImport = (specifier: string): boolean => {
   if (specifier.startsWith("@/features/")) {
@@ -24,6 +26,28 @@ const isForbiddenAwiImport = (specifier: string): boolean => {
     return true;
   }
   if (/agentWitchLocalApp|agent-witch-wake-server/.test(specifier)) {
+    return true;
+  }
+  return false;
+};
+
+const isForbiddenAwbFeatureImport = (specifier: string): boolean => {
+  if (specifier.startsWith("@/features/")) {
+    return true;
+  }
+  if (specifier.includes("src/features/")) {
+    return true;
+  }
+  if (specifier.startsWith("@/") && !specifier.startsWith("@agent-witch/")) {
+    return true;
+  }
+  if (/^src\//.test(specifier)) {
+    return true;
+  }
+  if (
+    /\/scripts\//.test(specifier) ||
+    specifier.startsWith("../../../scripts")
+  ) {
     return true;
   }
   return false;
@@ -62,5 +86,22 @@ describe("deployable import boundaries", () => {
         specifier.startsWith("@") && !specifier.startsWith("@agent-witch/"),
     );
     expect(external).toEqual([]);
+  });
+
+  it("apps/bridge/features does not import AWC or scripts/ directly", () => {
+    const imports = collectTypeScriptImportStrings(AWB_FEATURES);
+    const violations = imports.filter(isForbiddenAwbFeatureImport);
+    expect(violations).toEqual([]);
+  });
+
+  it("apps/bridge/adapters may import scripts/ but not src/features", () => {
+    const imports = collectTypeScriptImportStrings(AWB_ADAPTERS);
+    const violations = imports.filter(
+      (specifier) =>
+        specifier.startsWith("@/features/") ||
+        specifier.includes("src/features/") ||
+        (specifier.startsWith("@/") && !specifier.startsWith("@agent-witch/")),
+    );
+    expect(violations).toEqual([]);
   });
 });
