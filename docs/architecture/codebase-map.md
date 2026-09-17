@@ -41,6 +41,10 @@ Loader: `src/features/_registry/features.registry.ts`. When adding a feature, up
 
 Do not move API handlers into `src/features/` without an explicit architectural change and ADR update.
 
+## Target: Fractal Slice Architecture (ADR 0007, Proposed)
+
+Incremental migration to `public-api/` + `internal/` per slug; cross-feature effects via `src/hubs/` when introduced. Policy and agent playbooks: [ADR 0007](../adr/0007-fractal-slice-architecture.md), [fsa-workflows.md](../conventions/fsa-workflows.md). Detailed tree: [fractal-slice-architecture.md](fractal-slice-architecture.md) (draft).
+
 ## Product features (slugs)
 
 | Slug                        | Title                | Primary routes                       |

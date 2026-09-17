@@ -1,0 +1,32 @@
+---
+description: ADR 0007 — Fractal Slice Architecture for feature modules and hubs
+globs:
+  - "src/features/**"
+  - "src/app/**"
+  - "src/hubs/**"
+  - "docs/architecture/fractal-slice-architecture.md"
+  - "docs/conventions/fsa-workflows.md"
+alwaysApply: false
+---
+
+# ADR 0007: Fractal Slice Architecture
+
+**Status:** Proposed · **Full text:** [docs/adr/0007-fractal-slice-architecture.md](../../../docs/adr/0007-fractal-slice-architecture.md)
+
+## Binding decisions
+
+- Vertical slices per `src/features/<slug>/` with `public-api/` (segregated `presentation`, `infrastructure`, `types`) and private `internal/{presentation,core,infrastructure}`; optional nested `features/`.
+- `src/app/` + `server.ts` = orchestrator; API `route.ts` files stay in App Router paths only (never under `src/features/`).
+- `'use client'` code must not import `public-api/infrastructure` (see ADR § 1b).
+- No imports from another feature’s `internal/`.
+- Cross-feature side effects via `src/hubs/` (CQRS-style command/query), not opaque pub/sub; hubs do not import feature internals.
+- Incremental migration (Boy Scout); one slug per PR by default.
+- Agents use `command-fsa-implement-feature.md` / `command-fsa-migrate-feature.md` and [fsa-workflows.md](../../../docs/conventions/fsa-workflows.md).
+
+## Does not replace (yet)
+
+- [ADR 0003](../../../docs/adr/0003-feature-ui-with-server-lib.md) — `libPath` and `src/lib/` remain valid during transition.
+
+## When this ADR conflicts with old layout
+
+Follow ADR 0007 for **new** structure in touched slugs; do not expand legacy cross-feature deep imports. Update ADR 0007 or the draft architecture doc if the product requires an exception.

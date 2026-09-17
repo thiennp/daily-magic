@@ -65,6 +65,24 @@
       "signals": ["structure", "folder layout", "validate staged"],
       "command": null,
       "workflow": "structure"
+    },
+    {
+      "priority": 10,
+      "signals": [
+        "fractal slice",
+        "FSA",
+        "public-api",
+        "migrate feature slice",
+        "implement feature slice"
+      ],
+      "command": "command-fsa-migrate-feature.md",
+      "workflow": "structure"
+    },
+    {
+      "priority": 11,
+      "signals": ["new feature FSA", "FSA implement", "scaffold FSA slice"],
+      "command": "command-fsa-implement-feature.md",
+      "workflow": "structure"
     }
   ],
   "workflows": {

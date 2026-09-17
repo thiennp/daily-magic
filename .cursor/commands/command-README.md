@@ -16,6 +16,15 @@ Slash-style workflows for this Next.js repo. Use with GitHub, Linear, or other t
 | `command-git-commit-comprehensive-review.md` | Fuller pre-commit review for larger changes |
 | `command-github-pull-request.md`             | Push branch and open PR with `gh`           |
 
+## Fractal Slice Architecture (ADR 0007)
+
+| Command                            | Purpose                                            |
+| ---------------------------------- | -------------------------------------------------- |
+| `command-fsa-implement-feature.md` | New registry slug with `public-api` + `internal/`  |
+| `command-fsa-migrate-feature.md`   | Migrate one existing slug to FSA (one PR per slug) |
+
+Workflow doc: [docs/conventions/fsa-workflows.md](../../docs/conventions/fsa-workflows.md).
+
 ## Refactor & tests
 
 | Command                                 | Purpose                                 |

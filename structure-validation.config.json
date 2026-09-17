@@ -14,6 +14,7 @@
     "src/features/_registry": ["*.ts", "*.json", "README.md"],
     "src/hooks": ["use*.ts"],
     "src/lib": ["*.ts"],
+    "src/hubs": ["*.ts"],
     "src/server": ["*.ts"],
     "src/context": ["*.tsx"],
     "src/icons": ["*.svg", "index.tsx"],

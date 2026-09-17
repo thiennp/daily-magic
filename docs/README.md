@@ -35,6 +35,7 @@ Model: [conventions/progressive-disclosure.md](conventions/progressive-disclosur
 - [Load context — task paths](conventions/load-context.md)
 - [Progressive disclosure](conventions/progressive-disclosure.md)
 - [Docs-first maintenance](conventions/docs-first.md)
+- [FSA workflows](conventions/fsa-workflows.md) — implement / migrate feature slices (ADR 0007)
 - [Script index — learn by running](conventions/script-index.md)
 - [Agent context & harness map](conventions/agent-context.md)
 

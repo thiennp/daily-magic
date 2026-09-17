@@ -1,0 +1,73 @@
+---
+description: >-
+  Fractal Slice Architecture — public-api contracts, internal isolation, hubs, migration discipline (ADR 0007).
+globs:
+  - "src/features/**"
+  - "src/app/**"
+  - "src/hubs/**"
+alwaysApply: false
+---
+
+# Fractal Slice Architecture (FSA)
+
+**ADR:** [docs/adr/0007-fractal-slice-architecture.md](../../docs/adr/0007-fractal-slice-architecture.md)  
+**Workflows:** [docs/conventions/fsa-workflows.md](../../docs/conventions/fsa-workflows.md)  
+**Target detail (draft):** [docs/architecture/fractal-slice-architecture.md](../../docs/architecture/fractal-slice-architecture.md)
+
+Load this rule when adding features, migrating a slug to FSA, touching cross-feature imports, or introducing integration hubs.
+
+## Module shape (target)
+
+Each registry slug under `src/features/<slug>/`:
+
+```text
+public-api/     → presentation.ts | infrastructure.ts | types.ts (segregated; no mixed barrel)
+internal/       → presentation/ | core/ | infrastructure/ (private)
+features/       → nested sub-slices (optional, same rules)
+```
+
+**Entry/orchestrator:** `src/app/`, `server.ts` — thin wiring only.  
+**Shared UI:** `src/components/` — no feature `internal/` imports.
+
+## Three rules (enforce on every change)
+
+1. **Segregated contracts** — Import another feature only from `@/features/<slug>/public-api/presentation`, `…/infrastructure`, or `…/types`. Never a single mixed `index.ts` for presentation + server code.
+
+2. **No cross-feature internal imports** — `src/features/<a>/internal/**` is private to `<a>`. Forbidden: `@/features/other/internal/...`.
+
+3. **Deletion test** — Slice-specific code lives under `src/features/<slug>/` (plus `src/app` routes and registry). Do not add slice-only logic to global `src/hooks/` or anonymous shared utils without an owner.
+
+## Next.js constraints (breaking if violated)
+
+- **App Router only in `src/app/`** — `page.tsx`, `layout.tsx`, `route.ts`, etc. Never move route files into `src/features/`.
+- **API handlers** — thin `src/app/api/**/route.ts`; delegate to `public-api/infrastructure` or `src/lib/`.
+- **Custom server** — root `server.ts` (ADR 0002); no WebSocket upgrade inside feature `internal/`.
+- **Client boundary** — `'use client'` modules import only `public-api/presentation` and `public-api/types`. Never `public-api/infrastructure` or `internal/infrastructure/**`.
+- **No new top-level roots** (e.g. `src/shared/`, `src/hubs/`) without `structure-validation.config.json` + ADR update in the same PR.
+- **Verify migrations** — `npm run build` or harness `verify` workflow after any FSA code move.
+
+## Cross-feature effects
+
+- Prefer **integration hubs** under `src/hubs/<Name>/` (command/query split).
+- Features may depend on hubs; hubs must not depend on feature `internal/`.
+- Do not introduce domain-wide pub/sub for traceable business coupling.
+
+## Agent playbooks (required)
+
+| Task | Command |
+| ---- | ------- |
+| New capability | `@.cursor/commands/command-fsa-implement-feature.md` |
+| Migrate one slug | `@.cursor/commands/command-fsa-migrate-feature.md` |
+| Verify | `@.cursor/commands/command-verify-post-change-lint-typecheck-tests.md` |
+
+Run `npm run harness:bootstrap -- --match="FSA"` to resolve workflow. One slug per migration unless the user batches.
+
+## Coexistence with ADR 0003
+
+`libPath` and flat `hooks/` / `utils/` are **legacy layout** until migrated. New code in an FSA-scaffolded slug goes under `internal/` and `public-api/`.
+
+## Related
+
+- `rules-folder-organization.mdc` — naming and co-location habits
+- `architecture-decision-records.mdc` — catalog
+- `.cursor/rules/adr/0007-fractal-slice-architecture.mdc` — ADR summary when editing matched paths

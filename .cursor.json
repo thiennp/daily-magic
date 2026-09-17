@@ -89,6 +89,12 @@
       "description": "Binding ADR catalog for Agent Witch (docs/adr)",
       "path": "architecture-decision-records.mdc",
       "glob": "**/*"
+    },
+    {
+      "name": "rules-fractal-slice-architecture",
+      "description": "FSA: public-api contracts, internal isolation, hubs, migration playbooks (ADR 0007)",
+      "path": "rules-fractal-slice-architecture.mdc",
+      "glob": "src/features/**"
     }
   ]
 }

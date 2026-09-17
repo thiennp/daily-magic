@@ -32,13 +32,15 @@ Optional: `npm run harness:bootstrap -- --match="<short task description>"` for 
 
 ### New or changed product feature
 
-| Step | Read                                                                         |
-| ---- | ---------------------------------------------------------------------------- |
-| 1    | [domains/README.md](../domains/README.md) → relevant **domain entry**        |
-| 2    | [product/concepts.md](../product/concepts.md) if UI copy or nouns overlap    |
-| 3    | `src/features/_registry/features.registry.json` + target `README.md`         |
-| 4    | [codebase-map.md](../architecture/codebase-map.md) if adding routes/APIs/lib |
-| 5    | [docs-first.md](docs-first.md) checklist before PR                           |
+| Step | Read                                                                                                          |
+| ---- | ------------------------------------------------------------------------------------------------------------- |
+| 1    | [domains/README.md](../domains/README.md) → relevant **domain entry**                                         |
+| 2    | [product/concepts.md](../product/concepts.md) if UI copy or nouns overlap                                     |
+| 3    | `src/features/_registry/features.registry.json` + target `README.md`                                          |
+| 4    | [codebase-map.md](../architecture/codebase-map.md) if adding routes/APIs/lib                                  |
+| 5    | [ADR 0007](../adr/0007-fractal-slice-architecture.md) + [fsa-workflows.md](fsa-workflows.md) for slice layout |
+| 6    | `@.cursor/commands/command-fsa-implement-feature.md` when scaffolding FSA                                     |
+| 7    | [docs-first.md](docs-first.md) checklist before PR                                                            |
 
 **Then** implement; run `npm run harness:bootstrap -- --workflow=verify`.
 
@@ -46,11 +48,13 @@ Optional: `npm run harness:bootstrap -- --match="<short task description>"` for 
 
 ### Refactor (structure, imports, no intended behavior change)
 
-| Step | Read                                                                                                       |
-| ---- | ---------------------------------------------------------------------------------------------------------- |
-| 1    | [codebase-map.md](../architecture/codebase-map.md) + [ADR 0003](../adr/0003-feature-ui-with-server-lib.md) |
-| 2    | `.agents/diagrams/application-architecture.md` (import rules summary)                                      |
-| 3    | Feature `README.md` only for touched slugs                                                                 |
+| Step | Read                                                                                                                 |
+| ---- | -------------------------------------------------------------------------------------------------------------------- |
+| 1    | [codebase-map.md](../architecture/codebase-map.md) + [ADR 0003](../adr/0003-feature-ui-with-server-lib.md)           |
+| 2    | [ADR 0007](../adr/0007-fractal-slice-architecture.md) + [fsa-workflows.md](fsa-workflows.md) if restructuring a slug |
+| 3    | `@.cursor/commands/command-fsa-migrate-feature.md` for FSA migration                                                 |
+| 4    | `.agents/diagrams/application-architecture.md` (import rules summary)                                                |
+| 5    | Feature `README.md` only for touched slugs                                                                           |
 
 **Then** code; `npm run cursor:architecture -- --staged`, `validate:staged`. Do **not** load product/UX docs unless behavior changes.
 

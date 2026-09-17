@@ -15,6 +15,7 @@ Canonical index: [docs/adr/README.md](docs/adr/README.md). Full text lives in `d
 | `server.ts`, WebSocket upgrade, Mac `wsUrl` | 0002, 0006 |
 | `getAgentWitchHub`, presence, devices API, writer dispatch, outbox | 0005 |
 | `src/features/*` vs `src/lib/*` layout | 0003 |
+| FSA, `public-api/`, `internal/`, hubs | 0007 |
 | Cursor Cloud dispatch, origin checks | 0004 |
 | Deploy, Railway, Neon, `www.agentwitch.com` | 0006, `docs/product/repo-name-and-hosting.md` |
 | New numbered ADR | 0001 (process) |
@@ -29,6 +30,7 @@ Canonical index: [docs/adr/README.md](docs/adr/README.md). Full text lives in `d
 | 0004 | Cursor Cloud dispatch requires allowed app origin in production |
 | 0005 | `agent_witch_connections` + dispatch outbox; presence tiers; writer needs `live` on same Node; unified `resolveLiveAgentClientsByDeviceIdForUser` |
 | 0006 | Production on Railway + Docker + `npm start`; Neon `DATABASE_URL`; not CHECK24 daily-magic URL |
+| 0007 | Fractal slices: segregated `public-api`, private `internal/`, hubs for cross-feature integration; incremental migration |
 
 ## Rules
 
