@@ -452,6 +452,18 @@ Document every production bug or UX regression here. Each entry must link to a t
 
 ---
 
+## HOME-039 — Your setup chevron misaligned when expanded
+
+**Symptom:** Expanding **Your setup** on Home made the disclosure arrow sit too low relative to the title (especially above the logged-in **New to AI agents?** showcases block).
+
+**Root cause:** Native `<summary>` marker alignment inside padded `details`, plus scroll anchoring when lazy content mounted pushed the viewport too far down.
+
+**Fix:** Flex summary with `ChevronDownIcon` (rotate when open), hide WebKit marker, `scroll-mt-24` + `/#your-setup` opens with `scrollIntoView({ block: "nearest" })`, and `[overflow-anchor:none]` on expanded content.
+
+**Regression tests:** `HomeSetupSectionShell.test.ts`, `openHomeSetupFromLocationHash.test.ts` (HOME-039).
+
+---
+
 ## Adding issues
 
-Use the next ID (`HOME-039`, …). Include symptom, root cause, fix paths, and test file.
+Use the next ID (`HOME-040`, …). Include symptom, root cause, fix paths, and test file.
