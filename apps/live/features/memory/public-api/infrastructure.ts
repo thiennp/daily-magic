@@ -17,6 +17,17 @@ export {
   buildWriterSessionColdContinuePrompt,
   buildWriterSessionContinuationInjectionBody,
 } from "../internal/core/buildWriterSessionContinuationInjection";
+export {
+  resolveWriterDispatchRoute,
+  resolveWriterSessionTurn,
+} from "../internal/core/resolveWriterDispatchRoute";
+export type {
+  ResolveWriterDispatchRouteInput,
+  WriterDispatchContextBudget,
+  WriterDispatchContinuationStrategy,
+  WriterDispatchRoutePlan,
+  WriterDispatchSessionTurn,
+} from "../internal/core/resolveWriterDispatchRoute";
 export type {
   WriterSessionCanonicalRecord,
   WriterSessionTranscriptTurn,

@@ -156,18 +156,21 @@ export const queryAgentWitchRag = async (input: {
   readonly layout: AgentWitchLocalLayout;
   readonly query: string;
   readonly limit?: number;
+  readonly minScore?: number;
   readonly projectFolderPath?: string;
 }): Promise<AgentWitchRagChunk[]> => {
   const embedding = await embedTextWithOllama(input.query);
   if (embedding === null) {
     return [];
   }
+  const minScore = input.minScore ?? 0;
   const chunks = readAgentWitchRagChunks(input.layout, input.projectFolderPath);
   const scored = chunks
     .map((chunk) => ({
       chunk,
       score: cosineSimilarity(embedding, chunk.embedding),
     }))
+    .filter((entry) => entry.score >= minScore)
     .sort((left, right) => right.score - left.score)
     .slice(0, input.limit ?? 5);
   return scored.map((entry) => entry.chunk);

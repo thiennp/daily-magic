@@ -55,6 +55,8 @@ import {
   loadWriterSessionCanonical,
   readAgentWitchMemoryEntries,
   resolveActiveWriterSessionId,
+  resolveWriterDispatchRoute,
+  resolveWriterSessionTurn,
   startNewWriterTranscriptSession,
 } from "@agent-witch/live-memory";
 import { ensureAgentWitchProjectFolder } from "@agent-witch/live-projects";
@@ -267,21 +269,45 @@ const dispatchWriterTask = async (
     );
   }
 
-  const sessionTurn =
-    sessionContinuation &&
-    supportsWriterSessionContinuation(writerAgent) &&
-    isWriterConversationStarted(writerAgent)
-      ? "continue"
-      : "first";
+  const sessionTurn = resolveWriterSessionTurn({
+    sessionContinuation,
+    supportsWriterSessionContinuation:
+      supportsWriterSessionContinuation(writerAgent),
+    isWriterConversationStarted: isWriterConversationStarted(writerAgent),
+  });
+
+  const activeSessionId =
+    sessionContinuation && sessionTurn === "first"
+      ? resolveActiveWriterSessionId(
+          config.layout,
+          writerAgent,
+          resolvedProjectFolderPath,
+        )
+      : null;
+  const canonicalForRoute =
+    activeSessionId !== null
+      ? loadWriterSessionCanonical(config.layout, activeSessionId)
+      : null;
+  const hasCanonicalTurns =
+    canonicalForRoute !== null && canonicalForRoute.turns.length > 0;
+
+  const dispatchRoute = resolveWriterDispatchRoute({
+    sessionContinuation,
+    supportsWriterSessionContinuation:
+      supportsWriterSessionContinuation(writerAgent),
+    isWriterConversationStarted: isWriterConversationStarted(writerAgent),
+    hasSourceRunId:
+      typeof sourceRunId === "string" && sourceRunId.trim().length > 0,
+    hasCanonicalTurns,
+    userPromptCharacterCount: prompt.length,
+  });
 
   let resolvedPrompt = prompt;
-  if (
-    sessionContinuation &&
-    sessionTurn === "first" &&
-    typeof sourceRunId === "string" &&
-    sourceRunId.length > 0
-  ) {
-    const priorRun = loadAgentRunLocal(config.layout, sourceRunId);
+  if (dispatchRoute.continuationStrategy === "source_run_seed") {
+    const priorRun =
+      typeof sourceRunId === "string" && sourceRunId.length > 0
+        ? loadAgentRunLocal(config.layout, sourceRunId)
+        : null;
     if (priorRun !== null) {
       const { buildContinuationPromptWithContext } =
         await import("../../../scripts/buildContinuationPromptWithContext");
@@ -291,37 +317,29 @@ const dispatchWriterTask = async (
         userMessage: prompt,
       });
     }
-  } else if (sessionContinuation && sessionTurn === "first") {
-    const activeSessionId = resolveActiveWriterSessionId(
-      config.layout,
-      writerAgent,
-      resolvedProjectFolderPath,
-    );
-    if (activeSessionId !== null) {
-      const canonical = loadWriterSessionCanonical(
-        config.layout,
-        activeSessionId,
-      );
-      if (canonical !== null && canonical.turns.length > 0) {
-        resolvedPrompt = buildWriterSessionColdContinuePrompt({
-          priorTurns: canonical.turns,
-          userMessage: prompt,
-        });
-      }
+  } else if (dispatchRoute.continuationStrategy === "transcript_seed") {
+    if (canonicalForRoute !== null && canonicalForRoute.turns.length > 0) {
+      resolvedPrompt = buildWriterSessionColdContinuePrompt({
+        priorTurns: canonicalForRoute.turns,
+        userMessage: prompt,
+      });
     }
   }
 
-  const ragChunks = await queryAgentWitchRag({
-    layout: config.layout,
-    query: resolvedPrompt,
-    limit: 5,
-    projectFolderPath: resolvedProjectFolderPath,
-  });
-  const memoryEntries = readAgentWitchMemoryEntries(
-    config.layout,
-    resolvedProjectFolderPath,
-  );
-  let promptWithProjectContext = `${formatMemoryContextForPrompt(memoryEntries)}${formatRagContextForPrompt(ragChunks)}${resolvedPrompt}`;
+  const ragChunks =
+    dispatchRoute.ragLimit > 0
+      ? await queryAgentWitchRag({
+          layout: config.layout,
+          query: resolvedPrompt,
+          limit: dispatchRoute.ragLimit,
+          minScore: dispatchRoute.ragMinScore,
+          projectFolderPath: resolvedProjectFolderPath,
+        })
+      : [];
+  const memoryEntries = dispatchRoute.injectMemory
+    ? readAgentWitchMemoryEntries(config.layout, resolvedProjectFolderPath)
+    : [];
+  let promptWithProjectContext = `${formatMemoryContextForPrompt(memoryEntries, dispatchRoute.memoryEntryLimit)}${formatRagContextForPrompt(ragChunks)}${resolvedPrompt}`;
 
   const resolvedReportKey =
     reportKey?.trim() ??
@@ -389,7 +407,7 @@ const dispatchWriterTask = async (
     asLegacyWebSocket(socket),
     agentRunId,
     {
-      sessionTurn,
+      sessionTurn: dispatchRoute.sessionTurn,
     },
     shellSessionId,
     resolvedProjectFolderPath,
