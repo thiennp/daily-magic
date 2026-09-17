@@ -1,10 +1,12 @@
 import type OfficialWorkflowDefinition from "@/lib/workflowOrchestration/types/OfficialWorkflowDefinition.type";
 
+import { OFFICIAL_WORKFLOW_DEFINITION as jobApplicationPack } from "@/lib/workflowOrchestration/definitions/jobApplicationPack.definition";
 import { OFFICIAL_WORKFLOW_DEFINITION as vibeCodingAppFeature } from "@/lib/workflowOrchestration/definitions/vibeCodingAppFeature.definition";
 
 const CUSTOM_OFFICIAL_WORKFLOW_DEFINITIONS: Readonly<
   Record<string, OfficialWorkflowDefinition>
 > = {
+  "job-application-pack": jobApplicationPack,
   "vibe-coding-app-feature": vibeCodingAppFeature,
 };
 

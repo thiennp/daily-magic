@@ -1,4 +1,5 @@
 import buildWorkflowTemplate from "@/lib/capabilities/templates/buildWorkflowTemplate";
+import { JOB_APPLICATION_PACK_EXAMPLE_REQUEST } from "@/lib/capabilities/templates/harnessProfiles/workflowA1.jobApplicationPack.exampleRequest";
 import type { WorkflowCapabilityTemplate } from "@/lib/capabilities/templates/types/CapabilityTemplate.type";
 
 export const JOB_APPLICATION_PACK_WORKFLOW: WorkflowCapabilityTemplate =
@@ -7,7 +8,7 @@ export const JOB_APPLICATION_PACK_WORKFLOW: WorkflowCapabilityTemplate =
     "Career",
     "Job application pack",
     "Tailor resume bullets and a cover letter to a specific job using your real files — submit only after you approve every claim.",
-    "Build a job application pack from the workflow inputs. Read resumeFolderPath and the job posting, map evidence to requirements, draft a cover letter, and wait for my approval before I submit.",
+    JOB_APPLICATION_PACK_EXAMPLE_REQUEST,
     [
       ["targetRole", "Target role title", "text"],
       ["companyName", "Company name", "text"],
