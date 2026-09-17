@@ -7,12 +7,16 @@ import CopyableBashCommand from "@/features/home/CopyableBashCommand";
 interface UpdateLocalMacModalProps {
   readonly isOpen: boolean;
   readonly updateCommand: string;
+  readonly isUpdateCommandLoading: boolean;
+  readonly updateCommandError: string | null;
   readonly onClose: () => void;
 }
 
 export default function UpdateLocalMacModal({
   isOpen,
   updateCommand,
+  isUpdateCommandLoading,
+  updateCommandError,
   onClose,
 }: UpdateLocalMacModalProps) {
   return (
@@ -22,11 +26,22 @@ export default function UpdateLocalMacModal({
       </h2>
       <p className={`mt-3 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
         On this Mac, open Terminal, paste this command, and press Return. It
-        stops the running background services, replaces your local install files
-        with the latest version, and restarts Agent Witch with the same Mac
-        link—no new device row. You can close this page after copying.
+        includes your account link (same as Connect this Mac), stops background
+        services, replaces your local install files with the latest version, and
+        restarts Agent Witch. You can close this page after copying.
       </p>
-      <CopyableBashCommand command={updateCommand} variant="bash" />
+      {updateCommandError !== null ? (
+        <p className="mt-3 text-sm text-red-600 dark:text-red-400">
+          {updateCommandError}
+        </p>
+      ) : null}
+      {isUpdateCommandLoading ? (
+        <p className="mt-4 text-sm text-gray-500 dark:text-gray-400">
+          Preparing your install command…
+        </p>
+      ) : (
+        <CopyableBashCommand command={updateCommand} variant="bash" />
+      )}
     </Modal>
   );
 }

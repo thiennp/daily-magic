@@ -37,6 +37,8 @@ export default function HomeConnectedMacDeviceRow(
     isUpdateLocalModalOpen,
     isDeleteLocalModalOpen,
     updateLocalCommand,
+    isUpdateLocalCommandLoading,
+    updateLocalCommandError,
     deleteLocalCommand,
     wakePort,
     closeUpdateLocalModal,
@@ -95,6 +97,8 @@ export default function HomeConnectedMacDeviceRow(
       <UpdateLocalMacModal
         isOpen={isUpdateLocalModalOpen}
         updateCommand={updateLocalCommand}
+        isUpdateCommandLoading={isUpdateLocalCommandLoading}
+        updateCommandError={updateLocalCommandError}
         onClose={closeUpdateLocalModal}
       />
       <DeleteLocalMacModal

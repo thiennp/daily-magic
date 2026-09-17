@@ -464,6 +464,18 @@ Document every production bug or UX regression here. Each entry must link to a t
 
 ---
 
+## HOME-040 — Update local showed tokenless repair curl
+
+**Symptom:** **Update local Agent Witch** copied `agent-witch-update.sh` without a pairing token; install failed when the Mac had no local identity in config.
+
+**Root cause:** `useThisMacLocalInstallActions` used `buildAgentWitchUpdateInstallCommand` only; update scripts require a preset or on-disk pairing token.
+
+**Fix:** When the update modal opens, fetch the same personalized Connect install command (`/api/agent-witch/install-token`) via `usePersonalizedAgentWitchInstallCommand`.
+
+**Regression test:** `UpdateLocalMacModal.test.ts` (HOME-040).
+
+---
+
 ## Adding issues
 
-Use the next ID (`HOME-040`, …). Include symptom, root cause, fix paths, and test file.
+Use the next ID (`HOME-041`, …). Include symptom, root cause, fix paths, and test file.

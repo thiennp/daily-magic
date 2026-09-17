@@ -82,6 +82,10 @@ export default function MacDevicePicker({
         isUpdateLocalModalOpen={localInstallActions.isUpdateLocalModalOpen}
         isDeleteLocalModalOpen={localInstallActions.isDeleteLocalModalOpen}
         updateLocalCommand={localInstallActions.updateLocalCommand}
+        isUpdateLocalCommandLoading={
+          localInstallActions.isUpdateLocalCommandLoading
+        }
+        updateLocalCommandError={localInstallActions.updateLocalCommandError}
         deleteLocalCommand={localInstallActions.deleteLocalCommand}
         wakePort={localInstallActions.wakePort}
         closeUpdateLocalModal={localInstallActions.closeUpdateLocalModal}

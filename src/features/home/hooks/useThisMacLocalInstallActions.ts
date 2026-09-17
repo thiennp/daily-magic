@@ -2,6 +2,7 @@
 
 import { useCallback, useMemo, useState } from "react";
 
+import usePersonalizedAgentWitchInstallCommand from "@/features/home/hooks/usePersonalizedAgentWitchInstallCommand";
 import { buildAgentWitchDeleteLocalInstallCommand } from "@/lib/agentWitch/buildAgentWitchDeleteLocalInstallCommand";
 import { buildAgentWitchUpdateInstallCommand } from "@/lib/agentWitch/buildAgentWitchUpdateInstallCommand";
 
@@ -13,6 +14,8 @@ const useThisMacLocalInstallActions = (input?: {
   readonly isUpdateLocalModalOpen: boolean;
   readonly isDeleteLocalModalOpen: boolean;
   readonly updateLocalCommand: string;
+  readonly isUpdateLocalCommandLoading: boolean;
+  readonly updateLocalCommandError: string | null;
   readonly deleteLocalCommand: string;
   readonly wakePort: number | null;
   readonly closeUpdateLocalModal: () => void;
@@ -21,13 +24,24 @@ const useThisMacLocalInstallActions = (input?: {
   const [isUpdateLocalModalOpen, setIsUpdateLocalModalOpen] = useState(false);
   const [isDeleteLocalModalOpen, setIsDeleteLocalModalOpen] = useState(false);
   const wakePort = input?.wakePort ?? null;
-  const updateLocalCommand = useMemo(() => {
+  const fallbackUpdateLocalCommand = useMemo(() => {
     if (typeof window === "undefined") {
       return "";
     }
 
     return buildAgentWitchUpdateInstallCommand(window.location.origin);
   }, []);
+  const {
+    installCommand: personalizedUpdateLocalCommand,
+    isLoading: isUpdateLocalCommandLoading,
+    error: updateLocalCommandError,
+  } = usePersonalizedAgentWitchInstallCommand({
+    enabled: isUpdateLocalModalOpen,
+    fallbackInstallCommand: fallbackUpdateLocalCommand,
+  });
+  const updateLocalCommand = isUpdateLocalModalOpen
+    ? personalizedUpdateLocalCommand
+    : fallbackUpdateLocalCommand;
   const deleteLocalCommand = useMemo(() => {
     if (typeof window === "undefined") {
       return "";
@@ -58,6 +72,8 @@ const useThisMacLocalInstallActions = (input?: {
     isUpdateLocalModalOpen,
     isDeleteLocalModalOpen,
     updateLocalCommand,
+    isUpdateLocalCommandLoading,
+    updateLocalCommandError,
     deleteLocalCommand,
     wakePort,
     closeUpdateLocalModal,

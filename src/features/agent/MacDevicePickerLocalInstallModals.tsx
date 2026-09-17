@@ -7,6 +7,8 @@ interface MacDevicePickerLocalInstallModalsProps {
   readonly isUpdateLocalModalOpen: boolean;
   readonly isDeleteLocalModalOpen: boolean;
   readonly updateLocalCommand: string;
+  readonly isUpdateLocalCommandLoading: boolean;
+  readonly updateLocalCommandError: string | null;
   readonly deleteLocalCommand: string;
   readonly wakePort: number | null;
   readonly closeUpdateLocalModal: () => void;
@@ -17,6 +19,8 @@ export default function MacDevicePickerLocalInstallModals({
   isUpdateLocalModalOpen,
   isDeleteLocalModalOpen,
   updateLocalCommand,
+  isUpdateLocalCommandLoading,
+  updateLocalCommandError,
   deleteLocalCommand,
   wakePort,
   closeUpdateLocalModal,
@@ -27,6 +31,8 @@ export default function MacDevicePickerLocalInstallModals({
       <UpdateLocalMacModal
         isOpen={isUpdateLocalModalOpen}
         updateCommand={updateLocalCommand}
+        isUpdateCommandLoading={isUpdateLocalCommandLoading}
+        updateCommandError={updateLocalCommandError}
         onClose={closeUpdateLocalModal}
       />
       <DeleteLocalMacModal
