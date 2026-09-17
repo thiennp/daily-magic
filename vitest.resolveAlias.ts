@@ -5,6 +5,10 @@ const ROOT = path.dirname(fileURLToPath(import.meta.url));
 
 /** More specific `@agent-witch/shared/*` keys must come before the package root. */
 export const vitestResolveAlias: Record<string, string> = {
+  "@agent-witch/shared/ui": path.resolve(
+    ROOT,
+    "./packages/shared/src/ui/index.ts",
+  ),
   "@agent-witch/shared/network": path.resolve(
     ROOT,
     "./packages/shared/src/network/index.ts",

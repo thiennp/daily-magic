@@ -1,6 +1,6 @@
 export type MarketingFeaturePreviewKey = "dispatch" | "approve" | "report";
 
-export default interface MarketingFeatureItem {
+export interface MarketingFeatureItem {
   readonly title: string;
   readonly body: string;
   readonly preview: MarketingFeaturePreviewKey;
