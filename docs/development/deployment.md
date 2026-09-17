@@ -2,7 +2,7 @@
 
 ## Production control plane (WebSocket + dispatch)
 
-**Agent Witch production** runs as a **long-lived Node process** with the custom WebSocket server (`npm start` → `tsx server.ts`), typically on **Railway** using the repo `Dockerfile` and `railway.toml` (migrations in `preDeployCommand`, health check `/api/health`).
+**Agent Witch production** runs as a **long-lived Node process** with the custom WebSocket server (`npm start` → `tsx server.ts`), typically on **Railway** using the repo `Dockerfile` and `railway.toml` (migrations in `preDeployCommand`, health check `/api/health`). The production image must include `apps/` and `packages/` so `tsx` can resolve `@agent-witch/*` path aliases at runtime (see `tsconfig.json` `paths`).
 
 See **ADR 0006** (`docs/adr/0006-production-hosting-and-neon.md`) and **ADR 0002** for why serverless-only deploys do not host the Mac bridge on `wss://www.agentwitch.com/api/agent-witch/ws`.
 
