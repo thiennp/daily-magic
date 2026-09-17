@@ -33,6 +33,18 @@
       ],
       "@agent-witch/install-bundle": [
         "./apps/install/features/bundle/public-api/infrastructure.ts"
+      ],
+      "@agent-witch/install-macos-launch": [
+        "./apps/install/features/macos-launch/public-api/infrastructure.ts"
+      ],
+      "@agent-witch/install-macos-launch/types": [
+        "./apps/install/features/macos-launch/public-api/types.ts"
+      ],
+      "@agent-witch/install-watchdog": [
+        "./apps/install/features/watchdog/public-api/infrastructure.ts"
+      ],
+      "@agent-witch/install-watchdog/types": [
+        "./apps/install/features/watchdog/public-api/types.ts"
       ]
     }
   },

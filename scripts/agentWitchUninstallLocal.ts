@@ -4,11 +4,8 @@ import os from "node:os";
 import path from "node:path";
 import { promisify } from "node:util";
 
-import { listAgentWitchLaunchTargets } from "./listAgentWitchLaunchTargets";
-import {
-  resolveAgentWitchInstallDir,
-  resolveAgentWitchLaunchAgentPrefix,
-} from "./resolveAgentWitchLocalLayout";
+import { collectAgentWitchLaunchAgentLabels } from "@agent-witch/install-macos-launch";
+import { resolveAgentWitchInstallDir } from "./resolveAgentWitchLocalLayout";
 
 const execFileAsync = promisify(execFile);
 
@@ -42,42 +39,6 @@ const removeLaunchAgentPlist = (launchAgentLabel: string): void => {
   if (fs.existsSync(plistPath)) {
     fs.unlinkSync(plistPath);
   }
-};
-
-export const collectAgentWitchLaunchAgentLabels = (
-  installDir: string = resolveAgentWitchInstallDir(),
-): readonly string[] => {
-  const prefix = resolveAgentWitchLaunchAgentPrefix(installDir);
-  const labels = new Set<string>([
-    `${prefix}-wake`,
-    `${prefix}-watchdog`,
-    `${prefix}-updater`,
-    `${prefix}-automation-scheduler`,
-  ]);
-
-  for (const target of listAgentWitchLaunchTargets(installDir)) {
-    labels.add(target.launchAgentLabel);
-  }
-
-  const launchAgentsDir = resolveLaunchAgentsDir();
-  if (fs.existsSync(launchAgentsDir)) {
-    for (const entry of fs.readdirSync(launchAgentsDir)) {
-      if (!entry.endsWith(".plist")) {
-        continue;
-      }
-
-      const launchAgentLabel = entry.slice(0, -".plist".length);
-      if (
-        launchAgentLabel === prefix ||
-        launchAgentLabel.startsWith(`${prefix}.`) ||
-        launchAgentLabel.startsWith(`${prefix}-`)
-      ) {
-        labels.add(launchAgentLabel);
-      }
-    }
-  }
-
-  return [...labels];
 };
 
 const scheduleInstallDirRemoval = (installDir: string): void => {

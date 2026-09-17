@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { collectAgentWitchLaunchAgentLabels } from "./agentWitchUninstallLocal";
+import { collectAgentWitchLaunchAgentLabels } from "./collectAgentWitchLaunchAgentLabels";
 
 describe("collectAgentWitchLaunchAgentLabels", () => {
   it("MAC_DEVICES-003: includes service launch agents for the install prefix", () => {

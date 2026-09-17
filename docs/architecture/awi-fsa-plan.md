@@ -101,7 +101,7 @@ Optional nested slice (later): `features/runtime-client/features/hub-connection/
 1. **Scaffold + boundaries (this initiative)** — registry, placeholders, `public-api/types` for `install-layout` + `bundle`, vitest gates. No moves from `src/lib/agentWitch`.
 2. **`install-layout`** — **done** — `resolveAgentWitchAppHome` + `resolveAgentWitchLocalLayout` live in `apps/install/features/install-layout/internal/core/`; `@agent-witch/install-layout` + shims in `src/lib/agentWitch/resolveAgentWitchAppHome.ts` and `scripts/resolveAgentWitchLocalLayout.ts`; registry `fsaStatus` = `fsa`.
 3. **`bundle`** — version constant + install bundle build metadata; AWC keeps HTTP routes, calls AWI `public-api/infrastructure` when ready.
-4. **`macos-launch`** + **`watchdog`** — LaunchAgent labels and plist generation.
+4. **`macos-launch`** + **`watchdog`** — **done** — kickstart/bootout, launch targets, service labels, console-user guard, and watchdog reinstall state live under `apps/install/features/macos-launch/` and `apps/install/features/watchdog/`; `@agent-witch/install-macos-launch` + `@agent-witch/install-watchdog` with `scripts/` shims; registry `fsaStatus` = `fsa`.
 5. **`runtime-client`** — peel `scripts/agent-witch.ts` into `entry/` + runtime slice; optional nested **`hub-connection`**.
 6. **`self-update`**, **`device-identity`**, **`connection-health`**, **`bundled-deps`**, **`uninstall`** — leaf slices.
 7. **Split process** — AWL/AWB out of single AWI process (separate deployable tracks; see [fsa-refactoring-plan.md](fsa-refactoring-plan.md) §0).

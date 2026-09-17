@@ -1,5 +1,13 @@
 /**
- * AWI slice `watchdog` — public-api/infrastructure (FSA placeholder).
- * Migrate exports from legacy paths listed in features.registry.json.
+ * AWI slice `watchdog` — reinstall cooldown state and revive orchestration.
  */
-export {};
+export {
+  canRunAgentWitchWatchdogReinstall,
+  readAgentWitchWatchdogReinstallState,
+  recordAgentWitchWatchdogReinstallAttempt,
+} from "../internal/core/agentWitchWatchdogReinstallState";
+
+export {
+  attemptAgentWitchWatchdogReinstall,
+  type ReinstallAgentWitchFromInstallScriptResult,
+} from "../internal/core/attemptAgentWitchWatchdogReinstall";

@@ -12,6 +12,7 @@ vi.mock("./listAgentWitchLaunchTargets", () => ({
 
 import { kickstartAgentWitchLaunchAgent } from "./kickstartAgentWitchLaunchAgent";
 import { kickstartAgentWitchClientLaunchAgents } from "./kickstartAgentWitchClientLaunchAgents";
+import { listAgentWitchLaunchTargets } from "./listAgentWitchLaunchTargets";
 
 describe("kickstartAgentWitchClientLaunchAgents", () => {
   it("kickstarts each client launch target", async () => {
@@ -19,6 +20,7 @@ describe("kickstartAgentWitchClientLaunchAgents", () => {
 
     const kicked = await kickstartAgentWitchClientLaunchAgents("/tmp/install");
 
+    expect(listAgentWitchLaunchTargets).toHaveBeenCalledWith("/tmp/install");
     expect(kickstartAgentWitchLaunchAgent).toHaveBeenCalledWith(
       "com.agent-witch",
     );

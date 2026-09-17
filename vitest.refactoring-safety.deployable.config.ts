@@ -29,7 +29,7 @@ const includeByDeployable: Record<string, readonly string[]> = {
     "src/lib/agentWitch/renderInstallAgentWitchScript.test.ts",
     "src/lib/agentWitch/buildAgentWitchInstallScriptConfigBlock.test.ts",
     "scripts/agentWitchInstallVersion*.test.ts",
-    "scripts/kickstartAgentWitchClientLaunchAgents.test.ts",
+    "apps/install/features/macos-launch/internal/core/kickstartAgentWitchClientLaunchAgents.test.ts",
   ],
 };
 

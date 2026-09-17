@@ -7,6 +7,7 @@ export default defineConfig({
     environment: "node",
     include: [
       "test/**/*.test.ts",
+      "apps/install/features/**/*.test.ts",
       ".agents/**/*.test.ts",
       "src/lib/agentWitch/**/*.test.ts",
       "src/lib/dispatch/**/*.test.ts",
@@ -14,7 +15,6 @@ export default defineConfig({
       "scripts/agentWitch*.test.ts",
       "scripts/buildAgentWitchLocal*.test.ts",
       "scripts/ensureAgentWitch*.test.ts",
-      "scripts/kickstartAgentWitch*.test.ts",
       "scripts/resolveAgentWitch*.test.ts",
       "scripts/reviveAgentWitch*.test.ts",
       "scripts/requestLocalAgentWitch*.test.ts",

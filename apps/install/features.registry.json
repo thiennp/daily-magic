@@ -34,7 +34,7 @@
     {
       "slug": "macos-launch",
       "title": "macOS LaunchAgents and shell wrappers",
-      "fsaStatus": "legacy",
+      "fsaStatus": "fsa",
       "featurePath": "apps/install/features/macos-launch",
       "legacyPaths": [
         "scripts/kickstartAgentWitchClientLaunchAgents.ts",
@@ -62,7 +62,7 @@
     {
       "slug": "watchdog",
       "title": "Client watchdog and revive",
-      "fsaStatus": "legacy",
+      "fsaStatus": "fsa",
       "featurePath": "apps/install/features/watchdog",
       "legacyPaths": ["scripts/agent-witch-watchdog.ts"]
     },
