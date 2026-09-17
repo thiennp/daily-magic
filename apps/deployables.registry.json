@@ -32,7 +32,10 @@
       "description": "Mac loopback HTTP for browser-on-same-Mac integration",
       "origins": ["http://127.0.0.1:47892", "http://127.0.0.1:47893"],
       "defaultPorts": { "productionInstall": 47892, "localhostInstall": 47893 },
-      "entrypoints": ["scripts/agent-witch-wake-server.ts"]
+      "entrypoints": [
+        "apps/bridge/entry/wake-server.ts",
+        "scripts/agent-witch-wake-server.ts"
+      ]
     },
     {
       "id": "AWI",

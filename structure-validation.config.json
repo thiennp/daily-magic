@@ -26,6 +26,7 @@
     "apps/bridge": ["README.md", "FSA.md", "*.json"],
     "apps/bridge/entry": ["*.ts", "README.md"],
     "apps/bridge/adapters": ["*.ts"],
+    "apps/bridge/public-api": ["*.ts"],
     "apps/bridge/features": ["**/*"],
     "apps/install": ["README.md", "FSA.md", "*.json"],
     "apps/install/entry": ["README.md"],

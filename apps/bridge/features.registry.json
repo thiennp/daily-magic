@@ -27,7 +27,7 @@
     {
       "slug": "discovery",
       "title": "Health and identity",
-      "fsaStatus": "in-progress",
+      "fsaStatus": "fsa",
       "featurePath": "apps/bridge/features/discovery"
     },
     {
@@ -40,7 +40,7 @@
     {
       "slug": "diagnostics",
       "title": "Local diagnostics",
-      "fsaStatus": "in-progress",
+      "fsaStatus": "fsa",
       "featurePath": "apps/bridge/features/diagnostics"
     },
     {
@@ -53,7 +53,7 @@
     {
       "slug": "operations",
       "title": "Mac lifecycle operations (delegates to AWI)",
-      "fsaStatus": "in-progress",
+      "fsaStatus": "fsa",
       "featurePath": "apps/bridge/features/operations"
     },
     {
@@ -87,7 +87,7 @@
     {
       "slug": "awc-proxy",
       "title": "AWC browser proxy routes",
-      "fsaStatus": "in-progress",
+      "fsaStatus": "fsa",
       "featurePath": "apps/bridge/features/awc-proxy"
     },
     {
