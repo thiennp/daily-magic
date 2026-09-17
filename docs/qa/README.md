@@ -40,6 +40,7 @@ Open the top `sourcePath` under `docs/qa/` when present.
 | [awb-localhost-identity-and-cors.md](awb-localhost-identity-and-cors.md)                 | AWB `/identity`, CORS, AWI config vs AWL                  |
 | [delegate-local-cli-conversation-context.md](delegate-local-cli-conversation-context.md) | Local CLI (Cursor, etc.) follow-up context / `--continue` |
 | [writer-dispatch-cascade-routing.md](writer-dispatch-cascade-routing.md)                 | Mac dispatch route: continuation vs memory/RAG budget     |
+| [awc-project-folder-path-picker.md](awc-project-folder-path-picker.md)                   | AWC project folder is typed; native picker is AWL only    |
 
 Add a row here when you add a Q&A file.
 
