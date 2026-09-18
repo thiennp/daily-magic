@@ -1,24 +1,16 @@
 "use client";
 
-import Link from "next/link";
-
 import AppHero from "@/components/surfaces/AppHero";
 import AppIcon from "@/components/ui/icon/AppIcon";
 import {
   APP_SURFACE_BODY_TEXT_CLASS,
   APP_SURFACE_CTA_PRIMARY_LG_CLASS,
   APP_SURFACE_EYEBROW_TEXT_CLASS,
-  APP_SURFACE_TEXT_LINK_CLASS,
-  APP_SURFACE_TEXT_LINK_MUTED_CLASS,
 } from "@/components/surfaces/appSurfaceStyles.constant";
 import { useSendTaskModal } from "@/features/agent/SendTaskModalProvider";
 import HomeMacSettingsLink from "@/features/home/HomeMacSettingsLink";
 import HomeMacStatusBanner from "@/features/home/HomeMacStatusBanner";
-import HomeOpenLocalConsoleWhenOnline from "@/features/home/HomeOpenLocalConsoleWhenOnline";
 import HomeRunningJobsPanel from "@/features/home/HomeRunningJobsPanel";
-import useShellNavContext from "@/features/shell/hooks/useShellNavContext";
-import { COMPANY_RULES_NAV_LABEL } from "@/lib/admin/companyGroupCopy.constant";
-import buildAgentComposerHref from "@/lib/library/buildAgentComposerHref";
 import formatGlobalRole from "@/lib/auth/formatGlobalRole";
 import type { GlobalRoleValue } from "@/lib/auth/roles";
 import { BoltIcon } from "@/icons";
@@ -34,7 +26,6 @@ interface HomeDashboardHeroProps {
 export default function HomeDashboardHero({ user }: HomeDashboardHeroProps) {
   const displayName = user.name ?? user.email;
   const { openSendTaskModal } = useSendTaskModal();
-  const { teamNavEnabled, showAdminNav } = useShellNavContext();
 
   return (
     <AppHero variant="neutral">
@@ -48,52 +39,23 @@ export default function HomeDashboardHero({ user }: HomeDashboardHeroProps) {
       </p>
       <HomeMacStatusBanner />
       <div className="mt-6">
-        <button
-          type="button"
-          onClick={() => {
-            openSendTaskModal();
-          }}
-          className={`${APP_SURFACE_CTA_PRIMARY_LG_CLASS} gap-2`}
-        >
-          <AppIcon icon={BoltIcon} size="lg" />
-          New task
-        </button>
-        <HomeOpenLocalConsoleWhenOnline />
-        <HomeRunningJobsPanel />
-        <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm">
-          <Link
-            href={buildAgentComposerHref({ customTask: true })}
-            className={APP_SURFACE_TEXT_LINK_CLASS}
+        <div className="flex flex-wrap items-center gap-3">
+          <button
+            type="button"
+            onClick={() => {
+              openSendTaskModal();
+            }}
+            className={`${APP_SURFACE_CTA_PRIMARY_LG_CLASS} gap-2`}
           >
-            Open task composer →
-          </Link>
-          <Link href="/library" className={APP_SURFACE_TEXT_LINK_CLASS}>
-            Library →
-          </Link>
-          <Link href="/reports" className={APP_SURFACE_TEXT_LINK_MUTED_CLASS}>
-            Reports →
-          </Link>
+            <AppIcon icon={BoltIcon} size="lg" />
+            New task
+          </button>
           <HomeMacSettingsLink />
-          {teamNavEnabled ? (
-            <Link
-              href="/automations"
-              className={APP_SURFACE_TEXT_LINK_MUTED_CLASS}
-            >
-              Automations →
-            </Link>
-          ) : null}
-          {showAdminNav ? (
-            <Link
-              href="/admin/groups"
-              className={APP_SURFACE_TEXT_LINK_MUTED_CLASS}
-            >
-              {COMPANY_RULES_NAV_LABEL} →
-            </Link>
-          ) : null}
         </div>
+        <HomeRunningJobsPanel />
         <p className="mt-3 text-xs text-gray-500 dark:text-gray-400">
-          Having trouble? Expand <strong>Your setup</strong> below or open Mac
-          settings.
+          Having trouble? Expand <strong>Your setup</strong> below, or open Mac
+          settings above.
         </p>
       </div>
     </AppHero>

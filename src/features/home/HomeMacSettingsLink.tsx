@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 
-import { APP_SURFACE_TEXT_LINK_MUTED_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
+import { APP_SURFACE_CTA_SECONDARY_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
 import useThisMacHasConnectedLocalBridge from "@/features/home/hooks/useThisMacHasConnectedLocalBridge";
 import { AGENT_WITCH_LOCAL_APP_LOOPBACK_ORIGIN } from "@/lib/agentWitch/agentWitchLocalAppPort.constant";
 
@@ -15,16 +15,16 @@ export default function HomeMacSettingsLink() {
         href={AGENT_WITCH_LOCAL_APP_LOOPBACK_ORIGIN}
         target="_blank"
         rel="noopener noreferrer"
-        className={APP_SURFACE_TEXT_LINK_MUTED_CLASS}
+        className={APP_SURFACE_CTA_SECONDARY_CLASS}
       >
-        Mac settings →
+        Status & settings on this Mac
       </a>
     );
   }
 
   return (
-    <Link href="/#your-setup" className={APP_SURFACE_TEXT_LINK_MUTED_CLASS}>
-      Mac settings & connect →
+    <Link href="/#your-setup" className={APP_SURFACE_CTA_SECONDARY_CLASS}>
+      Mac settings & connect
     </Link>
   );
 }
