@@ -708,6 +708,34 @@ export const startAgentWitchLocalApp = (input: {
           url.searchParams.get("folderError") === "1"
             ? "Could not save the selected folder to Agent Witch. Check the Mac connection and try again."
             : null;
+        const listRunConfig = readAgentWitchRunConfig();
+        const listCloudConfig =
+          listRunConfig === null
+            ? null
+            : resolveAgentWitchCloudApiConfig({
+                wsUrl: listRunConfig.wsUrl,
+                pairingToken: listRunConfig.pairingToken,
+              });
+        const compositionCountsByProjectId =
+          listCloudConfig === null
+            ? {}
+            : Object.fromEntries(
+                (
+                  await Promise.all(
+                    cloudProjects.projects.map(async (project) => {
+                      const composition =
+                        await fetchProjectCompositionFromCloud(
+                          listCloudConfig,
+                          project.id,
+                        );
+                      return [project.id, composition?.counts ?? null] as const;
+                    }),
+                  )
+                ).filter(
+                  (entry): entry is [string, NonNullable<(typeof entry)[1]>] =>
+                    entry[1] !== null,
+                ),
+              );
         sendHtml(
           response,
           await buildLocalAppShell({
@@ -716,6 +744,7 @@ export const startAgentWitchLocalApp = (input: {
             installVersion: installBundle.installVersion,
             body: buildAgentWitchLocalProjectsPageBody({
               projects: cloudProjects.projects,
+              compositionCountsByProjectId,
               cloudAppOrigin,
               syncMessage: cloudProjects.message,
               syncOk: cloudProjects.ok,

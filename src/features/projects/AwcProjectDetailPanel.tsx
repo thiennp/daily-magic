@@ -52,6 +52,23 @@ export default function AwcProjectDetailPanel({
       <p className={`mt-1 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
         View-only on the web. Edit on {deviceDisplayName} in Agent Witch Live.
       </p>
+      <div className="mt-4 flex flex-col gap-3 rounded-xl border border-gray-200/80 bg-gray-50/80 p-4 dark:border-gray-800/80 dark:bg-white/[0.03] sm:flex-row sm:items-center sm:justify-between">
+        <p className="text-sm text-gray-700 dark:text-gray-200">
+          <span aria-hidden="true">{statusPrefix} </span>
+          {presence.text}
+        </p>
+        <AwcProjectEditOnMacActions
+          editCta={editCta}
+          size="compact"
+          layout="buttonOnly"
+          fullWidthOnMobile
+        />
+      </div>
+      {editCta.helperText !== null ? (
+        <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
+          {editCta.helperText}
+        </p>
+      ) : null}
       <dl className="mt-4 space-y-3 text-sm">
         <div>
           <dt className="text-xs font-medium text-gray-500 dark:text-gray-400">
@@ -59,15 +76,6 @@ export default function AwcProjectDetailPanel({
           </dt>
           <dd className="mt-0.5 text-gray-800 dark:text-white/90">
             {project.folderPath}
-          </dd>
-        </div>
-        <div>
-          <dt className="text-xs font-medium text-gray-500 dark:text-gray-400">
-            Mac
-          </dt>
-          <dd className="mt-0.5 text-gray-800 dark:text-white/90">
-            <span aria-hidden="true">{statusPrefix} </span>
-            {presence.text}
           </dd>
         </div>
         <div>
@@ -84,9 +92,6 @@ export default function AwcProjectDetailPanel({
         items={items}
         isLoading={isCompositionLoading}
       />
-      <div className="mt-6">
-        <AwcProjectEditOnMacActions editCta={editCta} />
-      </div>
     </AppPanel>
   );
 }

@@ -8,6 +8,10 @@ import useAwcProjectDevicePresentation from "@/features/projects/hooks/useAwcPro
 import formatProjectCompositionCountsLine from "@/lib/projects/formatProjectCompositionCountsLine";
 import type ProjectCompositionCounts from "@/lib/projects/types/ProjectCompositionCounts.type";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
+import {
+  APP_SURFACE_NESTED_CARD_CLASS,
+  APP_SURFACE_CTA_SECONDARY_SM_CLASS,
+} from "@/components/surfaces/appSurfaceStyles.constant";
 
 interface AwcProjectListRowProps {
   readonly project: UserProjectRecord;
@@ -32,7 +36,7 @@ export default function AwcProjectListRow({
   });
 
   return (
-    <article className="rounded-xl border border-gray-200 bg-white px-4 py-3 dark:border-gray-800 dark:bg-white/[0.02]">
+    <article className={APP_SURFACE_NESTED_CARD_CLASS}>
       <div className="flex min-w-0 flex-col gap-1">
         <h3 className="truncate text-sm font-medium text-gray-800 dark:text-white/90">
           {project.name}
@@ -51,7 +55,7 @@ export default function AwcProjectListRow({
       <div className="mt-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-end">
         <Link
           href={`/projects/${project.id}`}
-          className="inline-flex items-center justify-center rounded-xl border border-gray-200 bg-white px-3 py-2 text-xs font-medium text-gray-700 transition hover:border-brand-200 hover:bg-brand-50/40 dark:border-gray-800 dark:bg-white/[0.02] dark:text-gray-200 dark:hover:border-brand-900/40"
+          className={`${APP_SURFACE_CTA_SECONDARY_SM_CLASS} w-full sm:w-auto`}
         >
           View details
         </Link>
@@ -59,6 +63,7 @@ export default function AwcProjectListRow({
           editCta={editCta}
           size="compact"
           layout="buttonOnly"
+          fullWidthOnMobile
         />
       </div>
       {editCta.helperText !== null ? (

@@ -8,18 +8,22 @@ interface AwcProjectEditOnMacActionsProps {
   readonly editCta: ProjectEditOnMacCta;
   readonly size?: "compact" | "default";
   readonly layout?: "stacked" | "buttonOnly";
+  readonly fullWidthOnMobile?: boolean;
 }
 
 export default function AwcProjectEditOnMacActions({
   editCta,
   size = "default",
   layout = "stacked",
+  fullWidthOnMobile = false,
 }: AwcProjectEditOnMacActionsProps) {
   const helperId = useId();
+  const widthClass = fullWidthOnMobile ? " w-full sm:w-auto" : "";
   const buttonClass =
-    size === "compact"
+    (size === "compact"
       ? "inline-flex items-center justify-center rounded-xl border px-3 py-2 text-xs font-medium"
-      : "inline-flex items-center justify-center rounded-xl border px-4 py-2.5 text-sm font-medium";
+      : "inline-flex items-center justify-center rounded-xl border px-4 py-2.5 text-sm font-medium") +
+    widthClass;
 
   const button =
     editCta.href !== null ? (

@@ -8,8 +8,22 @@ const escapeHtml = (value: string): string =>
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;");
 
+export interface AgentWitchProjectCompositionCounts {
+  readonly harness: number;
+  readonly workflow: number;
+  readonly agent: number;
+}
+
+const formatCompositionCountsLine = (
+  counts: AgentWitchProjectCompositionCounts,
+): string =>
+  `${counts.harness} Harness · ${counts.workflow} Workflows · ${counts.agent} Agents`;
+
 export const buildAgentWitchLocalProjectsPageBody = (input: {
   readonly projects: readonly AgentWitchProjectView[];
+  readonly compositionCountsByProjectId?: Readonly<
+    Record<string, AgentWitchProjectCompositionCounts>
+  >;
   readonly cloudAppOrigin: string;
   readonly syncMessage?: string | null;
   readonly syncOk?: boolean;
@@ -36,13 +50,20 @@ export const buildAgentWitchLocalProjectsPageBody = (input: {
       ? `<p class="empty">No projects loaded yet. Create one in Agent Witch Console, then refresh this page.</p>`
       : `<ul class="project-list">${input.projects
           .map((project) => {
+            const counts = input.compositionCountsByProjectId?.[project.id];
+            const countsLine =
+              counts !== undefined
+                ? `<span class="muted">${escapeHtml(formatCompositionCountsLine(counts))}</span>`
+                : "";
             const chooseFolder = `<a class="btn btn-secondary" href="/projects/select-folder?projectId=${encodeURIComponent(project.id)}">Choose folder…</a>`;
+            const openProject = `<a class="btn btn-primary btn-compact" href="/project?id=${encodeURIComponent(project.id)}">Open project →</a>`;
             return `<li class="project-list-item">
                 <a class="project-list-link" href="/project?id=${encodeURIComponent(project.id)}">
                   <strong>${escapeHtml(project.name)}</strong>
                   <span class="muted mono">${escapeHtml(project.projectFolderPath)}</span>
+                  ${countsLine}
                 </a>
-                <div class="actions">${chooseFolder}</div>
+                <div class="actions">${openProject}${chooseFolder}</div>
               </li>`;
           })
           .join("")}</ul>`;
