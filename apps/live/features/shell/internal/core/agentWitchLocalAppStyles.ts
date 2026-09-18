@@ -262,6 +262,14 @@ code, .mono {
   outline-offset: 2px;
 }
 
+.btn:disabled,
+.btn[disabled] {
+  opacity: 0.45;
+  cursor: not-allowed;
+  pointer-events: none;
+  transform: none;
+}
+
 .btn-primary {
   background: var(--aw-brand-600);
   color: #fff;

@@ -13,6 +13,7 @@ export default defineConfig({
       "packages/shared/**/*.test.ts",
       "apps/bridge/**/*.test.ts",
       "apps/install/**/*.test.ts",
+      "apps/live/**/*.test.ts",
     ],
   },
   resolve: {

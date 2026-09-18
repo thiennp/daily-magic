@@ -34,33 +34,43 @@ const buildCompositionList = (
     .join("")}</ul>`;
 };
 
+const buildEmptyHarnessTab = (): string => `<div class="stack">
+        <p class="field-label">Installed</p>
+        <p class="empty" id="harness-empty">No harness on this Mac yet. Install from the Harness page, then return here to write it into this repo.</p>
+        <div class="actions">
+          <a class="btn btn-primary" href="/harness" aria-describedby="harness-empty">Pull into repo</a>
+        </div>
+      </div>`;
+
 const buildHarnessTab = (input: {
   readonly project: AgentWitchProjectView;
   readonly installed: InstalledLocalHarnessSnapshot;
   readonly linkedSetSlugs: readonly string[];
 }): string => {
+  if (input.installed.sets.length === 0) {
+    return buildEmptyHarnessTab();
+  }
+
   const linked = new Set(input.linkedSetSlugs);
-  const setRows =
-    input.installed.sets.length === 0
-      ? `<p class="empty">No harness on this Mac yet. Use <a href="/harness?import=1">Harness → Import</a> first.</p>`
-      : `<ul class="harness-installed-set-list">${input.installed.sets
-          .map(
-            (set) => `<li class="harness-installed-set">
+  const setRows = `<ul class="harness-installed-set-list">${input.installed.sets
+    .map(
+      (set) => `<li class="harness-installed-set">
           <label class="check-row">
             <input type="checkbox" name="applySet" value="${escapeHtml(set.slug)}"${linked.has(set.slug) ? " checked" : ""} />
             <span><strong>${escapeHtml(set.name)}</strong> <span class="muted mono">(${escapeHtml(set.slug)})</span></span>
           </label>
           <p class="muted">${set.itemCount} item(s)</p>
         </li>`,
-          )
-          .join("")}</ul>`;
+    )
+    .join("")}</ul>`;
 
   return `<form method="POST" action="/projects/link-harness" class="stack">
         <input type="hidden" name="projectId" value="${escapeHtml(input.project.id)}" />
         <p class="field-label">Installed</p>
+        <p class="lede">Check the sets to write into this repo&apos;s <code>.cursor</code> tree, then pull.</p>
         ${setRows}
         <div class="actions">
-          <button class="btn btn-primary" type="submit"${input.installed.sets.length === 0 ? " disabled" : ""}>Pull into repo</button>
+          <button class="btn btn-primary" type="submit">Pull into repo</button>
         </div>
       </form>`;
 };
