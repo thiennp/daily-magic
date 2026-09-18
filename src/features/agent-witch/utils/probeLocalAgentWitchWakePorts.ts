@@ -1,6 +1,10 @@
 import { collectUniqueWakePorts } from "@/features/agent-witch/utils/collectUniqueWakePorts";
 import { fetchLocalAgentWitchIdentityAtWakePort } from "@/features/agent-witch/utils/fetchLocalAgentWitchIdentityAtWakePort";
 import type { LocalAgentWitchIdentity } from "@/features/agent-witch/utils/parseLocalAgentWitchIdentity";
+import {
+  AGENT_WITCH_LOCAL_WAKE_PORT,
+  AGENT_WITCH_PROD_WAKE_PORT,
+} from "@/lib/agentWitch/resolveAgentWitchAppHome";
 import { resolveAgentWitchWakePortForPage } from "@/lib/agentWitch/resolveAgentWitchWakeBaseUrl";
 
 export const buildAllWakePortsForPage = (
@@ -8,6 +12,8 @@ export const buildAllWakePortsForPage = (
 ): readonly number[] =>
   collectUniqueWakePorts([
     resolveAgentWitchWakePortForPage(),
+    AGENT_WITCH_PROD_WAKE_PORT,
+    AGENT_WITCH_LOCAL_WAKE_PORT,
     ...extraWakePorts,
   ]);
 

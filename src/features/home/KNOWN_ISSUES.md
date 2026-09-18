@@ -488,6 +488,18 @@ Document every production bug or UX regression here. Each entry must link to a t
 
 ---
 
+## HOME-050 — this Mac identity probe did not retry after AWB came back
+
+**Symptom:** On this Mac, AWC never sent `GET http://127.0.0.1:{wakePort}/identity` after Agent Witch Bridge came back, so the **this Mac** badge stayed missing even though AWB `/identity` worked from curl.
+
+**Root cause:** The browser probed each wake port once per tab session and then suppressed retries. If AWB was down on first load (or only the page-origin port was tried), later focus on Home did not send identity again. Localhost AWC also skipped production port `47892`.
+
+**Fix:** Retry the wake identity probe on tab focus/`visibilitychange` when identity is still missing; always include both `47892` and `47893`.
+
+**Regression tests:** `shouldRetryUnreachableWakeIdentityProbe.test.ts`, `buildAllWakePortsForPage.test.ts`, `useProbeLocalMacWakeIdentity.test.ts` (HOME-050).
+
+---
+
 ## Adding issues
 
 Use the next ID (`HOME-050`, …). Include symptom, root cause, fix paths, and test file.

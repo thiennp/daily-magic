@@ -1,10 +1,10 @@
 import type { LocalAgentWitchIdentitySnapshot } from "@/features/agent-witch/localAgentWitchIdentitySnapshot.type";
-import { collectUniqueWakePorts } from "@/features/agent-witch/utils/collectUniqueWakePorts";
 import {
   clearAgentWitchWakeIdentityProbeSuppression,
   isAgentWitchWakeIdentityProbeSuppressed,
   suppressAgentWitchWakeIdentityProbe,
 } from "@/features/agent-witch/utils/agentWitchWakeIdentityProbeSession";
+import { collectUniqueWakePorts } from "@/features/agent-witch/utils/collectUniqueWakePorts";
 import {
   buildAllWakePortsForPage,
   probeLocalAgentWitchWakePorts,

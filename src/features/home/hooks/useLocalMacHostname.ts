@@ -3,11 +3,9 @@
 import { useEffect, useMemo, useSyncExternalStore } from "react";
 
 import {
-  ensureLocalAgentWitchIdentityLoaded,
   getLocalAgentWitchIdentitySnapshot,
   subscribeLocalAgentWitchIdentity,
 } from "@/features/agent-witch/localAgentWitchIdentityResource";
-import { collectUniqueWakePorts } from "@/features/agent-witch/utils/collectUniqueWakePorts";
 import {
   getPairedDevicesSnapshotOrEmpty,
   pairedDevicesResource,
@@ -16,6 +14,8 @@ import {
   readAgentWitchLocalHostCookie,
   setAgentWitchLocalHostCookie,
 } from "@/features/agent-witch/utils/agentWitchLocalHostCookie";
+import { collectUniqueWakePorts } from "@/features/agent-witch/utils/collectUniqueWakePorts";
+import useProbeLocalMacWakeIdentity from "@/features/home/hooks/useProbeLocalMacWakeIdentity";
 import { consumeLocalTokenHashQueryParam } from "@/features/home/utils/consumeLocalTokenHashQueryParam";
 import detectBrowserOperatingSystem from "@/features/home/utils/detectBrowserOperatingSystem";
 import {
@@ -24,6 +24,10 @@ import {
   subscribeLocalMacTokenHash,
 } from "@/features/home/utils/localMacTokenHashStore";
 import { resolveLocalMacTokenHashFromWakeIdentity } from "@/features/home/utils/resolveLocalMacTokenHashFromWakeIdentity";
+
+const subscribeToOperatingSystem = (): (() => void) => () => undefined;
+
+const getServerOperatingSystemSnapshot = (): "other" => "other";
 
 const useLocalMacHostname = (): {
   readonly localHostname: string | null;
@@ -48,7 +52,12 @@ const useLocalMacHostname = (): {
     }
     return readAgentWitchLocalHostCookie();
   }, [identitySnapshot.identity]);
-  const isMacBrowser = detectBrowserOperatingSystem() === "mac";
+  const operatingSystem = useSyncExternalStore(
+    subscribeToOperatingSystem,
+    detectBrowserOperatingSystem,
+    getServerOperatingSystemSnapshot,
+  );
+  const isMacBrowser = operatingSystem === "mac";
   const isCheckingLocalHostname =
     isMacBrowser &&
     (identitySnapshot.status === "idle" ||
@@ -78,13 +87,7 @@ const useLocalMacHostname = (): {
     });
   }, []);
 
-  useEffect(() => {
-    if (!isMacBrowser) {
-      return;
-    }
-
-    void ensureLocalAgentWitchIdentityLoaded(extraWakePorts);
-  }, [extraWakePorts, isMacBrowser]);
+  useProbeLocalMacWakeIdentity(isMacBrowser, extraWakePorts);
 
   useEffect(() => {
     const identity = identitySnapshot.identity;

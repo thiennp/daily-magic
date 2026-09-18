@@ -10,6 +10,9 @@
 - browser links this computer to your account
 - wake server identity endpoint
 - deviceMatchesLocalTokenHash
+- I don't see identity request on this Mac
+- agentwitch send identity request to get device identity
+- AWC not calling /identity
 
 ## Short answer
 
@@ -32,8 +35,10 @@
 
 ### Local side (browser on the same Mac as AWB)
 
-- Only when the user agent is **macOS**, the client probes **Agent Witch Bridge (AWB)** wake ports (default and ports from known devices’ `wakePort`).
-- Request: `GET http://127.0.0.1:{port}/identity` (CORS to localhost).
+- Only when the user agent is **macOS**, the client probes **Agent Witch Bridge (AWB)** wake ports (production `47892`, localhost `47893`, and ports from known devices’ `wakePort`).
+- Request: `GET http://127.0.0.1:{port}/identity` (CORS to localhost). Look for **`127.0.0.1`**, not `www.agentwitch.com`.
+- AWL Status/Traffic shows WebSocket `agent.register` + `device.auth.attestation`, not this HTTP `/identity` call.
+- Signed-out marketing Home does not probe. Signed-in AWC retries on tab focus if the first probe failed (HOME-050).
 - Response includes `tokenHash` and optionally `tokenHashes` from local install config (`readAgentWitchRunConfig` / profile tokens on the Mac).
 - The browser stores the resolved hash in client state (`localMacTokenHashStore`); it may also be seeded from a URL query param after install flows.
 
@@ -65,4 +70,4 @@ Install instructions state: _“While signed in on the same Mac, the browser lin
 
 ## Last reviewed
 
-2026-09-17
+2026-09-18
