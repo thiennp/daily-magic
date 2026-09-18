@@ -317,7 +317,7 @@ const buildRevealForm = (reveal: LocalHarnessRevealResult): string => {
 
           return `<div class="harness-set-block">
               <label class="check-row harness-set-include">
-                <input type="checkbox" name="includeSet" value="${setIndex}" checked />
+                <input type="checkbox" name="includeSet" value="${setIndex}" />
                 Include in submit
               </label>
               <input type="hidden" name="setSlug-${setIndex}" value="${escapeHtml(set.proposedSlug)}" />
@@ -344,7 +344,7 @@ const buildRevealForm = (reveal: LocalHarnessRevealResult): string => {
   return `<form method="POST" action="/harness/submit">
       <input type="hidden" name="setCount" value="${reveal.sets.length}" />
       ${groupBlocks}
-      <p class="muted">Click a file path to expand its contents (view only). Toggle sets with <strong>Include in submit</strong>. After submit, your manifest is reported to cloud when the bridge is connected.</p>
+      <p class="muted">Click a file path to expand its contents (view only). Check <strong>Include in submit</strong> on the sets you want. After submit, your manifest is reported to cloud when the bridge is connected.</p>
       <div class="actions">
         <button class="btn btn-primary" type="submit">Submit</button>
       </div>
@@ -399,8 +399,7 @@ export const parseHarnessSubmitFormBody = (
     const name =
       nameFromForm.length > 0 ? nameFromForm : revealSet.proposedName;
 
-    const includeSet =
-      includedSetIndices.size === 0 || includedSetIndices.has(setIndex);
+    const includeSet = includedSetIndices.has(setIndex);
 
     const items = revealSet.items.map((item) => ({
       id: item.id,
