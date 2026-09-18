@@ -15,8 +15,13 @@ interface DispatchPolicyPreviewProps {
   readonly groupId: string;
 }
 
-const formatPolicy = (value: string | null): string =>
-  value === null ? "inherit" : value;
+const POLICY_VALUE_TEXT: Record<string, string> = {
+  approval: "Approval required",
+  open: "Runs immediately",
+};
+
+const formatPolicyValue = (value: string | null): string =>
+  value === null ? "Not set" : (POLICY_VALUE_TEXT[value] ?? value);
 
 export default function DispatchPolicyPreview({
   deviceId,
@@ -64,10 +69,14 @@ export default function DispatchPolicyPreview({
   }
 
   const rows = [
-    { label: "Device", value: breakdown.devicePolicy, key: "device" },
-    { label: "User", value: breakdown.userPolicy, key: "user" },
-    { label: COMPANY_ENTITY_LABEL, value: breakdown.groupPolicy, key: "group" },
-    { label: "Default", value: breakdown.defaultPolicy, key: "default" },
+    { label: "This Mac", value: breakdown.devicePolicy, key: "device" },
+    { label: "Your default", value: breakdown.userPolicy, key: "user" },
+    {
+      label: `${COMPANY_ENTITY_LABEL} rule`,
+      value: breakdown.groupPolicy,
+      key: "group",
+    },
+    { label: "System default", value: breakdown.defaultPolicy, key: "default" },
   ] as const;
 
   return (
@@ -80,8 +89,8 @@ export default function DispatchPolicyPreview({
     >
       <p className="text-sm font-medium text-gray-800 dark:text-white/90">
         Effective policy:{" "}
-        <span className="capitalize text-brand-600 dark:text-brand-400">
-          {breakdown.effective}
+        <span className="text-brand-600 dark:text-brand-400">
+          {formatPolicyValue(breakdown.effective)}
         </span>
       </p>
       <ul className="mt-3 space-y-1 text-xs text-gray-600 dark:text-gray-400">
@@ -94,8 +103,8 @@ export default function DispatchPolicyPreview({
                 : undefined
             }
           >
-            {row.label}: {formatPolicy(row.value)}
-            {breakdown.winningSource === row.key ? " · applies" : null}
+            {row.label}: {formatPolicyValue(row.value)}
+            {breakdown.winningSource === row.key ? " — this applies" : null}
           </li>
         ))}
       </ul>

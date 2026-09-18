@@ -7,7 +7,7 @@ import HomeConnectedMacsPanel from "@/features/home/HomeConnectedMacsPanel";
 import HomeOnboardingMainPanel from "@/features/home/HomeOnboardingMainPanel";
 import HomeProjectsPanel from "@/features/home/HomeProjectsPanel";
 import HomeLinkAccountGate from "@/features/home/HomeLinkAccountGate";
-import HomeMarketingShowcases from "@/features/home/HomeMarketingShowcases";
+import HomeCollapsibleMarketingShowcases from "@/features/home/HomeCollapsibleMarketingShowcases";
 import HomeOnboardingAutomateNudge from "@/features/home/HomeOnboardingAutomateNudge";
 import HomeOnboardingChecklist from "@/features/home/HomeOnboardingChecklist";
 import HomeSetupSection from "@/features/home/HomeSetupSection";
@@ -78,7 +78,7 @@ export default async function HomeAuthenticatedView({
       </HomeLinkAccountGate>
       <div className={HOME_DASHBOARD_GRID_CLASS}>
         <div className={HOME_MAIN_COLUMN_CLASS}>
-          <HomeMarketingShowcases />
+          <HomeCollapsibleMarketingShowcases />
         </div>
       </div>
     </>

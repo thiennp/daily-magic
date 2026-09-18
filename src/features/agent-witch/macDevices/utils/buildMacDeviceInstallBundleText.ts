@@ -13,7 +13,7 @@ export const buildMacDeviceInstallBundleText = (input: {
 
   if (localVersion.length === 0) {
     return {
-      text: `Bundle unknown${serverVersion.length > 0 ? ` · cloud ${serverVersion}` : ""}`,
+      text: `Version unknown${serverVersion.length > 0 ? ` · latest ${serverVersion}` : ""}`,
       isMismatch: serverVersion.length > 0,
     };
   }
@@ -25,7 +25,7 @@ export const buildMacDeviceInstallBundleText = (input: {
 
   if (!isMismatch) {
     return {
-      text: `Bundle ${localVersion}`,
+      text: `Version ${localVersion}`,
       isMismatch: false,
     };
   }
@@ -33,8 +33,8 @@ export const buildMacDeviceInstallBundleText = (input: {
   return {
     text:
       serverVersion.length > 0
-        ? `Bundle ${localVersion} · update available (cloud ${serverVersion})`
-        : `Bundle ${localVersion}`,
+        ? `Version ${localVersion} · update available (latest ${serverVersion})`
+        : `Version ${localVersion}`,
     isMismatch: true,
   };
 };

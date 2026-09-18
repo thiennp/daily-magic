@@ -33,6 +33,7 @@ export default function AppShellHeader() {
             <Link
               href={buildAgentComposerHref()}
               aria-label="New task"
+              title="New task"
               className={APP_SURFACE_CTA_PRIMARY_ICON_CLASS}
             >
               <AppIcon icon={BoltIcon} size="md" />

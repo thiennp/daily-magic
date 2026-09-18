@@ -40,6 +40,20 @@ describe("resolveMacDeviceDisplayName", () => {
     expect(isGenericMacDeviceLabel("Office iMac")).toBe(false);
   });
 
+  it("disambiguates two devices sharing the same raw hostname", () => {
+    const names = buildMacDeviceDisplayNameById([
+      { id: "device-aaaa1111", deviceLabel: "MKX52CMWN7" },
+      { id: "device-bbbb2222", deviceLabel: "MKX52CMWN7" },
+    ]);
+
+    const first = names.get("device-aaaa1111");
+    const second = names.get("device-bbbb2222");
+
+    expect(first).not.toBe(second);
+    expect(first).toContain("MKX52CMWN7");
+    expect(second).toContain("MKX52CMWN7");
+  });
+
   it("AGENT-048: strips macOS username from composite install labels in UI fallback", () => {
     expect(
       resolveMacDeviceDisplayName({

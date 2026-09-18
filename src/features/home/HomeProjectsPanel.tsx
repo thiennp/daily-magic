@@ -10,6 +10,8 @@ import {
 } from "@/components/surfaces/appSurfaceStyles.constant";
 import HomeProjectListRow from "@/features/home/HomeProjectListRow";
 import { useUserProjects } from "@/features/agent/hooks/useUserProjects";
+import useMyMacDevices from "@/features/agent/hooks/useMyMacDevices";
+import useLocalMacBrowserContext from "@/features/home/hooks/useLocalMacBrowserContext";
 import buildAgentComposerHref from "@/lib/library/buildAgentComposerHref";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
 
@@ -17,6 +19,8 @@ export default function HomeProjectsPanel() {
   const router = useRouter();
   const pathname = usePathname();
   const { projects, isLoading } = useUserProjects("");
+  const { devices, displayNameById } = useMyMacDevices();
+  const { localTokenHash } = useLocalMacBrowserContext();
 
   const openProjectInComposer = (project: UserProjectRecord): void => {
     router.push(
@@ -64,6 +68,9 @@ export default function HomeProjectsPanel() {
               <HomeProjectListRow
                 project={project}
                 onEdit={openProjectInComposer}
+                devices={devices}
+                displayNameById={displayNameById}
+                localTokenHash={localTokenHash}
               />
             </li>
           ))}

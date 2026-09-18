@@ -10,6 +10,7 @@ import {
   getPairedDevicesSnapshotOrEmpty,
   pairedDevicesResource,
 } from "@/features/agent-witch/pairedDevicesResource";
+import { buildMacDeviceDisplayNameById } from "@/features/agent-witch/utils/resolveMacDeviceDisplayName";
 import { useDispatchTargets } from "@/features/dispatch/hooks/useDispatchTargets";
 
 export default function DispatchPolicyPreviewControls() {
@@ -21,6 +22,10 @@ export default function DispatchPolicyPreviewControls() {
   );
   const devices = (snapshot ?? getPairedDevicesSnapshotOrEmpty())
     .devices as readonly MyMacDevice[];
+  const displayNameById = useMemo(
+    () => buildMacDeviceDisplayNameById(devices),
+    [devices],
+  );
   const [preferredDeviceId, setPreferredDeviceId] = useState("");
   const [groupId, setGroupId] = useState("");
   const deviceId = useMemo(() => {
@@ -55,7 +60,7 @@ export default function DispatchPolicyPreviewControls() {
             <option value="">Most recent device</option>
             {devices.map((device) => (
               <option key={device.id} value={device.id}>
-                {device.deviceLabel ?? "Your Mac"}
+                {displayNameById.get(device.id) ?? "Your Mac"}
               </option>
             ))}
           </select>

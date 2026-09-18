@@ -15,7 +15,7 @@ describe("buildMacDeviceDetailText", () => {
         serverInstallBundleVersion: "34",
       }),
     ).toEqual({
-      text: "Online · Bundle 34",
+      text: "Online · Version 34",
       isMismatch: false,
     });
   });
@@ -33,7 +33,7 @@ describe("buildMacDeviceDetailText", () => {
         },
         serverInstallBundleVersion: "54",
       })?.text,
-    ).toMatch(/^Offline · Last seen .* · Bundle 54$/);
+    ).toMatch(/^Offline · Last seen .* · Version 54$/);
   });
 
   it("OPEN-002: shows reconnecting for live_other_instance instead of Offline", () => {
@@ -49,7 +49,7 @@ describe("buildMacDeviceDetailText", () => {
         serverInstallBundleVersion: "34",
       }),
     ).toEqual({
-      text: "Reconnecting (another server) · Bundle 34",
+      text: "Reconnecting (another server) · Version 34",
       isMismatch: false,
     });
   });
@@ -66,7 +66,7 @@ describe("buildMacDeviceDetailText", () => {
         serverInstallBundleVersion: "34",
       }),
     ).toEqual({
-      text: "Online · Bundle 33 · update available (cloud 34)",
+      text: "Online · Version 33 · update available (latest 34)",
       isMismatch: true,
     });
   });
