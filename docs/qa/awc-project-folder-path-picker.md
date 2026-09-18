@@ -12,7 +12,7 @@
 - click AWC open AWL folder picker
 - AWC AWB choose folder without new tab
 - co the setup tu local app duoc khong khi muon thay doi bam vao se mo local app
-- AWC deep link local.agentwitch.com projects choose folder
+- AWC deep link 127.0.0.1:43347 projects choose folder
 - Choose on this Mac projects
 
 ## Short answer
@@ -40,7 +40,7 @@ A website cannot read the POSIX path of a folder the user selects in a file dial
 | `POST /projects/select-folder` | Runs Finder via `pickMacOsFolderDialog`, then `PATCH /api/agent-witch/projects/:projectId` on AWC |
 | Cancel Finder                  | Returns `{ ok: false, cancelled: true }` — no cloud change                                        |
 
-### AWL (local.agentwitch.com:43347)
+### AWL (http://127.0.0.1:43347)
 
 AWL exposes `/projects/select-folder` for choosing folders from the Mac app UI.
 
@@ -54,4 +54,4 @@ AWL exposes `/projects/select-folder` for choosing folders from the Mac app UI.
 
 ## Last reviewed
 
-2026-09-17
+2026-09-18

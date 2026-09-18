@@ -43,6 +43,8 @@ Open the top `sourcePath` under `docs/qa/` when present.
 | [awc-project-folder-path-picker.md](awc-project-folder-path-picker.md)                   | AWC cannot pick Mac folders; use AWL / AWB `select-folder`                   |
 | [awc-awl-projects-source-of-truth.md](awc-awl-projects-source-of-truth.md)               | AWC DB owns project metadata; AWL loads cloud; `.agent-witch/` is repo-local |
 | [awi-update-local-launchagent-plist.md](awi-update-local-launchagent-plist.md)           | Update local invalid LaunchAgent plist / Mac reconnecting (AGENT-067)        |
+| [awc-mac-reconnecting-vs-local-live.md](awc-mac-reconnecting-vs-local-live.md)           | AWC “reconnecting / checks in” vs local AWI/AWB being up                     |
+| [awl-loopback-origin.md](awl-loopback-origin.md)                                         | AWL is only `http://127.0.0.1:43347` (no vanity hostname)                    |
 
 Add a row here when you add a Q&A file.
 

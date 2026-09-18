@@ -17,10 +17,7 @@
       "slug": "live",
       "folder": "apps/live",
       "description": "Mac-local web app: tasks, projects, playbooks, memory, Mac health",
-      "origins": [
-        "http://local.agentwitch.com:43347",
-        "http://127.0.0.1:43347"
-      ],
+      "origins": ["http://127.0.0.1:43347"],
       "defaultPort": 43347,
       "entrypoints": [
         "apps/live/entry/startLocalAppServer.ts",

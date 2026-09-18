@@ -12,5 +12,7 @@ describe("buildAgentWitchInstallBundle output", () => {
     expect(source.startsWith("#!/usr/bin/env node")).toBe(true);
     expect(source).toContain('"use strict"');
     expect(source).not.toContain("Dynamic require of");
+    expect(source).not.toContain("local.agentwitch.com");
+    expect(source).toContain("127.0.0.1");
   });
 });

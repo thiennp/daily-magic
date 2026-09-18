@@ -6,7 +6,7 @@
 
 ## Goal
 
-Move the Mac-local web app (`http://local.agentwitch.com:43347`, `127.0.0.1:43347`) from horizontal `scripts/agentWitchLocalApp*` and `scripts/localHarness/*` into **vertical FSA slices** under `apps/live/features/<slug>/`, without a big-bang move in one PR.
+Move the Mac-local web app (`http://127.0.0.1:43347`) from horizontal `scripts/agentWitchLocalApp*` and `scripts/localHarness/*` into **vertical FSA slices** under `apps/live/features/<slug>/`, without a big-bang move in one PR.
 
 Cross-deployable contracts: **`@agent-witch/shared`** (live port/origins), **`@agent-witch/install-layout`** (profile paths on disk). AWC **must not** fetch AWL (AGENT-021).
 

@@ -41,7 +41,7 @@ Four named apps in one repo. See [agent-witch-deployables.md](agent-witch-deploy
 | Abbr    | Meaning                                                                    |
 | ------- | -------------------------------------------------------------------------- |
 | **AWC** | **Console** — cloud control plane (`www.agentwitch.com`)                   |
-| **AWL** | **Live** — Mac-local web app (`local.agentwitch.com:43347`)                |
+| **AWL** | **Live** — Mac-local web app (`http://127.0.0.1:43347`)                    |
 | **AWB** | **Bridge** — Mac loopback HTTP for browser-on-same-Mac (`47892` / `47893`) |
 | **AWI** | **Install** — Mac bundle, runtime, LaunchAgents                            |
 

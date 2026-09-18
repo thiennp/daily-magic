@@ -5,7 +5,7 @@ Four **named deployables** share one git repo (`daily-magic`). Use the **abbrevi
 | Abbr    | Name                | Folder (target) | Primary origin / port                                                        |
 | ------- | ------------------- | --------------- | ---------------------------------------------------------------------------- |
 | **AWC** | Agent Witch Console | `apps/console/` | `https://www.agentwitch.com` · local `http://localhost:3000`                 |
-| **AWL** | Agent Witch Live    | `apps/live/`    | `http://local.agentwitch.com:43347` · `http://127.0.0.1:43347`               |
+| **AWL** | Agent Witch Live    | `apps/live/`    | `http://127.0.0.1:43347`                                                     |
 | **AWB** | Agent Witch Bridge  | `apps/bridge/`  | `http://127.0.0.1:47892` (prod install) · `47893` (localhost-origin install) |
 | **AWI** | Agent Witch Install | `apps/install/` | Mac bundle (`curl \| bash`), `~/.agent-witch` / `~/.local-agent-witch`       |
 
@@ -22,7 +22,7 @@ Shared types and protocol: **`@agent-witch/shared`** (`packages/shared/`) — de
 Cloud **control plane**: signed-in browser UI, REST APIs, WebSocket hub (`/api/agent-witch/ws`), auth, dispatch, runs, playbooks, admin.
 
 - **Today:** `src/app/`, `server.ts`, `src/features/*`, `src/lib/*`
-- **Not:** Mac loopback HTTP; not `local.agentwitch.com`
+- **Not:** Mac loopback HTTP (that is AWL / AWB)
 
 ### AWL — Live
 

@@ -21,7 +21,7 @@ The **`GET /identity` HTTP route is served by AWB** (Agent Witch Bridge — loop
 | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **AWB**    | Owns **`GET /health`** and **`GET /identity`** on the wake HTTP server (`apps/bridge/…/health-identity`).                                                     |
 | **AWI**    | Owns **on-disk config** (pairing token, LaunchAgent profiles, install dirs). AWB reads this when building the identity JSON.                                  |
-| **AWL**    | Mac-local app UI (`local.agentwitch.com:43347` / `127.0.0.1:43347`). **Does not** expose `/identity` for AWC.                                                 |
+| **AWL**    | Mac-local app UI (`http://127.0.0.1:43347`). **Does not** expose `/identity` for AWC.                                                                         |
 | **AWC**    | Cloud/browser console. **Calls** `http://127.0.0.1:{wakePort}/identity` from JavaScript when running on macOS (see `fetchLocalAgentWitchIdentityAtWakePort`). |
 
 So: **API surface = AWB**; **credential identity = AWI install state**; **AWC = caller**.
@@ -62,4 +62,4 @@ AWL heartbeat/WebSocket traffic to AWC is separate from this wake discovery API.
 
 ## Last reviewed
 
-2026-09-17
+2026-09-18

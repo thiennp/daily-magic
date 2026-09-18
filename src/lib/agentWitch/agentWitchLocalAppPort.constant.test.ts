@@ -8,14 +8,13 @@ import {
 } from "@/lib/agentWitch/agentWitchLocalAppPort.constant";
 
 describe("agentWitchLocalAppPort.constant", () => {
-  it("advertises loopback and local.agentwitch.com origins (AGENT-028)", () => {
-    expect(AGENT_WITCH_LOCAL_APP_HOST).toBe("local.agentwitch.com");
+  it("advertises only the IPv4 loopback origin", () => {
+    expect(AGENT_WITCH_LOCAL_APP_HOST).toBe("127.0.0.1");
     expect(AGENT_WITCH_LOCAL_APP_PORT).toBe(43347);
-    expect(AGENT_WITCH_LOCAL_APP_ORIGIN).toBe(
-      "http://local.agentwitch.com:43347",
-    );
+    expect(AGENT_WITCH_LOCAL_APP_ORIGIN).toBe("http://127.0.0.1:43347");
     expect(AGENT_WITCH_LOCAL_APP_LOOPBACK_ORIGIN).toBe(
-      "http://127.0.0.1:43347",
+      AGENT_WITCH_LOCAL_APP_ORIGIN,
     );
+    expect(AGENT_WITCH_LOCAL_APP_ORIGIN).not.toContain("local.agentwitch.com");
   });
 });

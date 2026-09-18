@@ -6,13 +6,13 @@ Deployables: [docs/product/agent-witch-deployables.md](../../../docs/product/age
 
 ## Scope
 
-| Area           | Path                                |
-| -------------- | ----------------------------------- |
-| AWC feature UI | `src/features/agent-witch/`         |
-| AWC server/hub | `src/lib/agentWitch/`               |
-| AWC APIs       | `/api/agent-witch/*`                |
-| **AWL**        | `http://local.agentwitch.com:43347` |
-| **AWB**        | `127.0.0.1:47892` / `47893`         |
+| Area           | Path                        |
+| -------------- | --------------------------- |
+| AWC feature UI | `src/features/agent-witch/` |
+| AWC server/hub | `src/lib/agentWitch/`       |
+| AWC APIs       | `/api/agent-witch/*`        |
+| **AWL**        | `http://127.0.0.1:43347`    |
+| **AWB**        | `127.0.0.1:47892` / `47893` |
 
 ## Transport
 
@@ -29,9 +29,9 @@ Mac HTTP `heartbeat` / `commands/poll` / `messages` return **410 Gone** (retired
 
 ## Local RAG
 
-After agent turns, chunks are embedded with local Ollama (`nomic-embed-text` by default) into `~/.agent-witch/rag/`. Cloud-originated tasks query RAG first and inject hits into the writer prompt. Browse at `http://local.agentwitch.com:43347/knowledge`.
+After agent turns, chunks are embedded with local Ollama (`nomic-embed-text` by default) into `~/.agent-witch/rag/`. Cloud-originated tasks query RAG first and inject hits into the writer prompt. Browse at `http://127.0.0.1:43347/knowledge`.
 
-`local.agentwitch.com` is a public DNS loopback name (`A` → `127.0.0.1`, `AAAA` → `::1`). The UI binds only to `127.0.0.1:43347` (AGENT-021 — the website never fetches it). There is no privileged port-80 proxy, so other local servers can keep using `:80`.
+AWL binds only to `127.0.0.1:43347` (AGENT-021 — the website never fetches it). There is no privileged port-80 proxy, so other local servers can keep using `:80`.
 
 ## Writer setup
 

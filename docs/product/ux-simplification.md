@@ -90,7 +90,7 @@ See [concepts.md](concepts.md) for engineer glossary; UI should prefer the table
 - Knowledge → Runs (“Search past runs”) or Mac settings
 - Traffic / errors → Mac settings → Developer
 
-**AWL** (`local.agentwitch.com:43347`): full Mac app (tasks, projects, playbooks, memory, health). Not duplicated in AWC primary nav; AWC links here when the user works on this Mac.
+**AWL** (`http://127.0.0.1:43347`): full Mac app (tasks, projects, playbooks, memory, health). Not duplicated in AWC primary nav; AWC links here when the user works on this Mac.
 
 ---
 
