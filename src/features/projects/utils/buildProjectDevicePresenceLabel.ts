@@ -1,6 +1,6 @@
 import type { MacDevicePresence } from "@/features/agent-witch/online-wake/macDevicePresence";
 import { resolveMacPresenceTier } from "@/features/agent-witch/online-wake/macDevicePresence";
-import { formatLastSeenText } from "@/lib/time/formatRelativeTimeAgo";
+import { formatRelativeTimeAgo } from "@/lib/time/formatRelativeTimeAgo";
 
 export interface ProjectDevicePresenceLabel {
   readonly statusIcon: "online" | "offline" | "reconnecting";
@@ -18,7 +18,7 @@ const buildProjectDevicePresenceLabel = (input: {
   if (input.device === null) {
     return {
       statusIcon: "offline",
-      text: `No Mac linked — ${name}`,
+      text: "No Mac linked",
     };
   }
 
@@ -32,7 +32,7 @@ const buildProjectDevicePresenceLabel = (input: {
   }
 
   if (tier === "offline") {
-    const lastSeen = formatLastSeenText(input.deviceLastSeenAt);
+    const lastSeen = formatRelativeTimeAgo(input.deviceLastSeenAt);
     const suffix = lastSeen !== null ? ` · last seen ${lastSeen}` : "";
     return {
       statusIcon: "offline",

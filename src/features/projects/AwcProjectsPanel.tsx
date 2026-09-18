@@ -8,13 +8,10 @@ import { useUserProjects } from "@/features/agent/hooks/useUserProjects";
 import useMyMacDevices from "@/features/agent/hooks/useMyMacDevices";
 import { pickDefaultMacDeviceId } from "@/features/agent-witch/online-wake";
 import AwcProjectListRow from "@/features/projects/AwcProjectListRow";
+import AwcProjectsSearchBar from "@/features/projects/AwcProjectsSearchBar";
 import useLocalMacBrowserContext from "@/features/home/hooks/useLocalMacBrowserContext";
 import AppPanel from "@/components/surfaces/AppPanel";
-import {
-  APP_SURFACE_BODY_TEXT_CLASS,
-  APP_SURFACE_FIELD_CLASS,
-  APP_SURFACE_TEXT_LINK_CLASS,
-} from "@/components/surfaces/appSurfaceStyles.constant";
+import { APP_SURFACE_TEXT_LINK_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
 
 export default function AwcProjectsPanel() {
   const { localTokenHash } = useLocalMacBrowserContext();
@@ -43,18 +40,12 @@ export default function AwcProjectsPanel() {
 
   return (
     <AppPanel padding="compact">
-      <p className={APP_SURFACE_BODY_TEXT_CLASS}>
-        Repos your Macs can run agents against. Rename, folder, and composition
-        editing happen in Agent Witch Live on the Mac that stores each repo.
-      </p>
       {!isLoading && projects.length > 0 ? (
-        <input
-          type="search"
-          value={searchQuery}
-          onChange={(event) => setSearchQuery(event.target.value)}
-          placeholder="Search projects…"
-          aria-label="Search projects"
-          className={`mt-4 ${APP_SURFACE_FIELD_CLASS}`}
+        <AwcProjectsSearchBar
+          searchQuery={searchQuery}
+          onSearchQueryChange={setSearchQuery}
+          totalCount={projects.length}
+          visibleCount={visibleProjects.length}
         />
       ) : null}
       {isLoading ? (
@@ -78,7 +69,7 @@ export default function AwcProjectsPanel() {
           No projects match &ldquo;{searchQuery.trim()}&rdquo;.
         </p>
       ) : (
-        <ul className="mt-4 space-y-3">
+        <ul className="mt-2 divide-y divide-gray-200/80 dark:divide-gray-800/80">
           {visibleProjects.map((project) => (
             <li key={project.id}>
               <AwcProjectListRow

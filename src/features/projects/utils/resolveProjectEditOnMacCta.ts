@@ -4,7 +4,7 @@ import {
   resolveMacPresenceTier,
 } from "@/features/agent-witch/online-wake/macDevicePresence";
 import buildAgentWitchLocalProjectEditorHref from "@/lib/projects/buildAgentWitchLocalProjectEditorHref";
-import { formatLastSeenText } from "@/lib/time/formatRelativeTimeAgo";
+import { formatRelativeTimeAgo } from "@/lib/time/formatRelativeTimeAgo";
 
 export type ProjectEditOnMacCtaState =
   "enabled" | "wrong_mac" | "offline" | "reconnecting" | "unknown_device";
@@ -50,7 +50,7 @@ const resolveProjectEditOnMacCta = (
   }
 
   if (isMacPresenceTierHardOffline(tier)) {
-    const lastSeen = formatLastSeenText(input.deviceLastSeenAt);
+    const lastSeen = formatRelativeTimeAgo(input.deviceLastSeenAt);
     const lastSeenSuffix = lastSeen !== null ? ` · last seen ${lastSeen}` : "";
     return {
       state: "offline",
@@ -76,5 +76,14 @@ const resolveProjectEditOnMacCta = (
     href: null,
   };
 };
+
+/**
+ * "offline" and "reconnecting" helper text just restates the presence line
+ * shown next to it — only show the helper text for states that add a reason
+ * the presence line doesn't already say (wrong Mac, no Mac linked).
+ */
+export const shouldShowProjectEditOnMacHelperText = (
+  state: ProjectEditOnMacCtaState,
+): boolean => state !== "offline" && state !== "reconnecting";
 
 export default resolveProjectEditOnMacCta;

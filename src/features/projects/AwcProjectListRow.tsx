@@ -4,14 +4,13 @@ import Link from "next/link";
 
 import type { MyMacDevice } from "@/features/agent/hooks/useMyMacDevices";
 import AwcProjectEditOnMacActions from "@/features/projects/AwcProjectEditOnMacActions";
+import AwcProjectPresenceBadge from "@/features/projects/AwcProjectPresenceBadge";
 import useAwcProjectDevicePresentation from "@/features/projects/hooks/useAwcProjectDevicePresentation";
+import { shouldShowProjectEditOnMacHelperText } from "@/features/projects/utils/resolveProjectEditOnMacCta";
 import formatProjectCompositionCountsLine from "@/lib/projects/formatProjectCompositionCountsLine";
 import type ProjectCompositionCounts from "@/lib/projects/types/ProjectCompositionCounts.type";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
-import {
-  APP_SURFACE_NESTED_CARD_CLASS,
-  APP_SURFACE_CTA_SECONDARY_SM_CLASS,
-} from "@/components/surfaces/appSurfaceStyles.constant";
+import { APP_SURFACE_CTA_SECONDARY_SM_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
 
 interface AwcProjectListRowProps {
   readonly project: UserProjectRecord;
@@ -28,26 +27,36 @@ export default function AwcProjectListRow({
   displayNameById,
   localTokenHash,
 }: AwcProjectListRowProps) {
-  const { presence, editCta, statusPrefix } = useAwcProjectDevicePresentation({
+  const { presence, editCta } = useAwcProjectDevicePresentation({
     project,
     devices,
     displayNameById,
     localTokenHash,
   });
 
+  const showHelperText =
+    editCta.helperText !== null &&
+    shouldShowProjectEditOnMacHelperText(editCta.state);
+
   return (
-    <article className={APP_SURFACE_NESTED_CARD_CLASS}>
+    <article className="py-4">
       <div className="flex min-w-0 flex-col gap-1">
-        <h3 className="truncate text-sm font-medium text-gray-800 dark:text-white/90">
+        <h3
+          className="truncate text-sm font-medium text-gray-800 dark:text-white/90"
+          title={project.name}
+        >
           {project.name}
         </h3>
-        <p className="truncate text-xs text-gray-500 dark:text-gray-400">
+        <p
+          className="truncate text-xs text-gray-500 dark:text-gray-400"
+          title={project.folderPath}
+        >
           {project.folderPath}
         </p>
-        <p className="text-xs text-gray-600 dark:text-gray-300">
-          <span aria-hidden="true">{statusPrefix} </span>
-          {presence.text}
-        </p>
+        <AwcProjectPresenceBadge
+          statusIcon={presence.statusIcon}
+          text={presence.text}
+        />
         <p className="text-xs text-gray-500 dark:text-gray-400">
           {formatProjectCompositionCountsLine(compositionCounts)}
         </p>
@@ -66,7 +75,7 @@ export default function AwcProjectListRow({
           fullWidthOnMobile
         />
       </div>
-      {editCta.helperText !== null ? (
+      {showHelperText ? (
         <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
           {editCta.helperText}
         </p>

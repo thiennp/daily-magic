@@ -4,9 +4,11 @@ import Link from "next/link";
 
 import useMyMacDevices from "@/features/agent/hooks/useMyMacDevices";
 import AwcProjectEditOnMacActions from "@/features/projects/AwcProjectEditOnMacActions";
+import AwcProjectPresenceBadge from "@/features/projects/AwcProjectPresenceBadge";
 import AwcProjectReadOnlyCompositionSections from "@/features/projects/AwcProjectReadOnlyCompositionSections";
 import useAwcProjectComposition from "@/features/projects/hooks/useAwcProjectComposition";
 import useAwcProjectDevicePresentation from "@/features/projects/hooks/useAwcProjectDevicePresentation";
+import { shouldShowProjectEditOnMacHelperText } from "@/features/projects/utils/resolveProjectEditOnMacCta";
 import formatProjectCompositionCountsLine from "@/lib/projects/formatProjectCompositionCountsLine";
 import useLocalMacBrowserContext from "@/features/home/hooks/useLocalMacBrowserContext";
 import AppPanel from "@/components/surfaces/AppPanel";
@@ -25,7 +27,7 @@ export default function AwcProjectDetailPanel({
 }: AwcProjectDetailPanelProps) {
   const { localTokenHash } = useLocalMacBrowserContext();
   const { devices, displayNameById } = useMyMacDevices();
-  const { deviceDisplayName, presence, editCta, statusPrefix } =
+  const { deviceDisplayName, presence, editCta } =
     useAwcProjectDevicePresentation({
       project,
       devices,
@@ -53,10 +55,10 @@ export default function AwcProjectDetailPanel({
         View-only on the web. Edit on {deviceDisplayName} in Agent Witch Live.
       </p>
       <div className="mt-4 flex flex-col gap-3 rounded-xl border border-gray-200/80 bg-gray-50/80 p-4 dark:border-gray-800/80 dark:bg-white/[0.03] sm:flex-row sm:items-center sm:justify-between">
-        <p className="text-sm text-gray-700 dark:text-gray-200">
-          <span aria-hidden="true">{statusPrefix} </span>
-          {presence.text}
-        </p>
+        <AwcProjectPresenceBadge
+          statusIcon={presence.statusIcon}
+          text={presence.text}
+        />
         <AwcProjectEditOnMacActions
           editCta={editCta}
           size="compact"
@@ -64,7 +66,8 @@ export default function AwcProjectDetailPanel({
           fullWidthOnMobile
         />
       </div>
-      {editCta.helperText !== null ? (
+      {editCta.helperText !== null &&
+      shouldShowProjectEditOnMacHelperText(editCta.state) ? (
         <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
           {editCta.helperText}
         </p>
