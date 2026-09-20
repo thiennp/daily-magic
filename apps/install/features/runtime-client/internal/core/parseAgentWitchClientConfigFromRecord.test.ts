@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import type { AgentWitchLocalLayout } from "@agent-witch/install-layout/types";
 
+import { PRE_ESTIMATE_WRITER_MODES } from "./preEstimate/resolvePreEstimateWriterMode";
 import { parseAgentWitchClientConfigFromRecord } from "./parseAgentWitchClientConfigFromRecord";
 
 const profileRoot = "/Users/me/.local-agent-witch/profiles/a@example.com";
@@ -44,6 +45,27 @@ describe("parseAgentWitchClientConfigFromRecord", () => {
         "ws://localhost:3000/api/agent-witch/ws",
       );
       expect(result.config.email).toBe("a@example.com");
+      expect(result.config.preEstimateWriterMode).toBe(
+        PRE_ESTIMATE_WRITER_MODES.SAME,
+      );
+    }
+  });
+
+  it("parses preEstimateWriterMode fast-api", () => {
+    const result = parseAgentWitchClientConfigFromRecord({
+      parsed: {
+        pairingToken: "pair-123",
+        preEstimateWriterMode: "fast-api",
+      },
+      layout,
+      env: {},
+      cwd: "/cwd",
+    });
+    expect(result.ok).toBe(true);
+    if (result.ok) {
+      expect(result.config.preEstimateWriterMode).toBe(
+        PRE_ESTIMATE_WRITER_MODES.FAST_API,
+      );
     }
   });
 

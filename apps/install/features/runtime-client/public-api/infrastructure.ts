@@ -3,6 +3,8 @@
  */
 export { runHeadlessWriter } from "../internal/core/agentWitchHeadlessWriterRun";
 
+export { runPreEstimateHeadlessWriter } from "../internal/core/runPreEstimateHeadlessWriter";
+
 export { readAgentWitchClientConfig } from "../internal/core/readAgentWitchClientConfig";
 
 export { resolveAgentWitchClientWsUrl } from "../internal/core/resolveAgentWitchClientWsUrl";

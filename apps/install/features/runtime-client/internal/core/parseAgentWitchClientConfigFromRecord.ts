@@ -7,6 +7,7 @@ import {
   DEFAULT_CURSOR_COMMAND,
 } from "./agentWitchClientConfigDefaults.constants";
 import { resolveAgentWitchClientWsUrl } from "./resolveAgentWitchClientWsUrl";
+import { resolvePreEstimateWriterMode } from "./preEstimate/resolvePreEstimateWriterMode";
 import { resolveWriterExecutionBackend } from "./writerApi/resolveWriterExecutionBackend";
 import type { AgentWitchClientConfig } from "./agentWitchClientConfig.type";
 
@@ -95,6 +96,9 @@ export const parseAgentWitchClientConfigFromRecord = (
       pairingToken,
       writerExecutionBackend: resolveWriterExecutionBackend(
         parsed.writerExecutionBackend,
+      ),
+      preEstimateWriterMode: resolvePreEstimateWriterMode(
+        parsed.preEstimateWriterMode,
       ),
       layout: input.layout,
     },

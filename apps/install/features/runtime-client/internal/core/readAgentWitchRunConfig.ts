@@ -4,6 +4,10 @@ import { resolveAgentWitchClientWsUrl } from "./resolveAgentWitchClientWsUrl";
 import { resolveAgentWitchLocalLayout } from "@agent-witch/install-layout";
 import type { AgentWitchLocalLayout } from "@agent-witch/install-layout/types";
 import {
+  resolvePreEstimateWriterMode,
+  type PreEstimateWriterMode,
+} from "./preEstimate/resolvePreEstimateWriterMode";
+import {
   resolveWriterExecutionBackend,
   type WriterExecutionBackend,
 } from "./writerApi/resolveWriterExecutionBackend";
@@ -18,6 +22,7 @@ export interface AgentWitchRunConfig {
   readonly antigravityCommand: string;
   readonly pairingToken: string;
   readonly writerExecutionBackend: WriterExecutionBackend;
+  readonly preEstimateWriterMode: PreEstimateWriterMode;
   readonly layout: AgentWitchLocalLayout;
 }
 
@@ -64,6 +69,9 @@ export const readAgentWitchRunConfig = (): AgentWitchRunConfig | null => {
       workspace,
       writerExecutionBackend: resolveWriterExecutionBackend(
         parsed.writerExecutionBackend,
+      ),
+      preEstimateWriterMode: resolvePreEstimateWriterMode(
+        parsed.preEstimateWriterMode,
       ),
       claudeCommand:
         typeof parsed.claudeCommand === "string" &&

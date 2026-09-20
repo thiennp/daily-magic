@@ -10,7 +10,20 @@ export interface CallWriterApiInput {
   readonly secret: WriterApiProviderSecret;
   readonly prompt: string;
   readonly onChunk?: (chunk: string) => void;
+  /** When set, ignores stored per-provider model (e.g. pre-estimate fast tier). */
+  readonly modelOverride?: string;
+  readonly maxOutputTokens?: number;
 }
+
+const resolveCallWriterApiModel = (input: CallWriterApiInput): string =>
+  input.modelOverride?.trim().length
+    ? input.modelOverride.trim()
+    : resolveWriterApiModel(input.provider, input.secret.model);
+
+const resolveCallWriterApiMaxTokens = (input: CallWriterApiInput): number =>
+  input.maxOutputTokens !== undefined && input.maxOutputTokens > 0
+    ? input.maxOutputTokens
+    : 8192;
 
 export interface CallWriterApiResult {
   readonly exitCode: number;
@@ -42,7 +55,8 @@ const extractAnthropicText = (body: unknown): string => {
 const callAnthropicApi = async (
   input: CallWriterApiInput,
 ): Promise<CallWriterApiResult> => {
-  const model = resolveWriterApiModel("anthropic", input.secret.model);
+  const model = resolveCallWriterApiModel(input);
+  const maxTokens = resolveCallWriterApiMaxTokens(input);
   const response = await fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",
     headers: {
@@ -52,7 +66,7 @@ const callAnthropicApi = async (
     },
     body: JSON.stringify({
       model,
-      max_tokens: 8192,
+      max_tokens: maxTokens,
       messages: [{ role: "user", content: input.prompt }],
     }),
   });
@@ -101,7 +115,7 @@ const extractOpenAiText = (body: unknown): string => {
 const callOpenAiApi = async (
   input: CallWriterApiInput,
 ): Promise<CallWriterApiResult> => {
-  const model = resolveWriterApiModel("openai", input.secret.model);
+  const model = resolveCallWriterApiModel(input);
   const response = await fetch("https://api.openai.com/v1/chat/completions", {
     method: "POST",
     headers: {
@@ -169,7 +183,7 @@ const extractGoogleText = (body: unknown): string => {
 const callGoogleApi = async (
   input: CallWriterApiInput,
 ): Promise<CallWriterApiResult> => {
-  const model = resolveWriterApiModel("google", input.secret.model);
+  const model = resolveCallWriterApiModel(input);
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(input.secret.apiKey)}`;
   const response = await fetch(url, {
     method: "POST",
