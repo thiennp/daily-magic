@@ -1,5 +1,6 @@
 import type { AgentWitchLocalLayout } from "@agent-witch/install-layout/types";
 
+import type { PreEstimateWriterMode } from "./preEstimate/resolvePreEstimateWriterMode";
 import type { WriterExecutionBackend } from "./writerApi/resolveWriterExecutionBackend";
 
 export interface AgentWitchClientConfig {
@@ -12,5 +13,6 @@ export interface AgentWitchClientConfig {
   readonly antigravityCommand: string;
   readonly pairingToken: string;
   readonly writerExecutionBackend: WriterExecutionBackend;
+  readonly preEstimateWriterMode: PreEstimateWriterMode;
   readonly layout: AgentWitchLocalLayout;
 }

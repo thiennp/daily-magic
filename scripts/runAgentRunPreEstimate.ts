@@ -1,7 +1,5 @@
-import {
-  runHeadlessWriter,
-  type AgentWitchHeadlessWriterConfig,
-} from "./agentWitchHeadlessWriterRun";
+import type { AgentWitchHeadlessWriterConfig } from "./agentWitchHeadlessWriterRun";
+import { runPreEstimateHeadlessWriter } from "@agent-witch/install-runtime-client";
 import type { HarnessWriterAgentId } from "./buildWriterCliInvocation";
 import { buildAgentRunPreEstimatePrompt } from "./dispatch/agentRunWorkingEstimate.constant";
 import { extractUserTaskFromWrappedPrompt } from "./dispatch/extractUserTaskFromWrappedPrompt";
@@ -27,7 +25,7 @@ export const runAgentRunPreEstimate = async (input: {
 }): Promise<AgentRunPreEstimateResult> => {
   const taskPrompt = extractUserTaskFromWrappedPrompt(input.wrappedPrompt);
   const estimatePrompt = buildAgentRunPreEstimatePrompt(taskPrompt);
-  const headlessResult = await runHeadlessWriter(
+  const headlessResult = await runPreEstimateHeadlessWriter(
     input.config,
     input.writerAgent,
     estimatePrompt,
