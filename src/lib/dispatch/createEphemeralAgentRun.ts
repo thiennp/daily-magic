@@ -30,6 +30,7 @@ export const createEphemeralAgentRun = (
     dispatchPolicy: input.dispatchPolicy,
     resultOutput: null,
     resultExitCode: null,
+    resultOutcomeCode: null,
     denialReason: null,
     createdAt: now,
     updatedAt: now,

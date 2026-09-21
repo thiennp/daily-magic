@@ -1,5 +1,6 @@
 "use client";
 
+import AgentLiveProgressBudgetNotices from "@/features/agent/AgentLiveProgressBudgetNotices";
 import AgentLiveProgressActivityBar from "@/features/agent/AgentLiveProgressActivityBar";
 import AgentLiveProgressFeedStopControl from "@/features/agent/AgentLiveProgressFeedStopControl";
 import AgentLiveProgressEstimateBar from "@/features/agent/AgentLiveProgressEstimateBar";
@@ -9,6 +10,7 @@ import type { WsTestConnectionStatus } from "@/features/agent/types/WsTestConnec
 import { formatAgentLiveProgressLastMacUpdate } from "@/features/agent/utils/formatAgentLiveProgressLastMacUpdate";
 import { resolveAgentLiveProgressConnectionHint } from "@/features/agent/utils/resolveAgentLiveProgressConnectionHint";
 import type { AgentLiveProgressStallState } from "@/features/agent/utils/resolveAgentLiveProgressStallState";
+import { resolveAgentLiveRunBudgetNotices } from "@/features/agent/utils/resolveAgentLiveRunBudgetNotices";
 import type { AgentLiveWorkingEstimateProgress } from "@/features/agent/utils/resolveAgentLiveWorkingEstimateProgress";
 
 interface AgentLiveProgressFeedStatusProps {
@@ -48,6 +50,10 @@ export default function AgentLiveProgressFeedStatus({
       : "text-amber-800 dark:text-amber-200";
   const showEstimateProgress =
     isWorking && estimateProgress !== null && stallState !== "stuck";
+  const budgetNotices = resolveAgentLiveRunBudgetNotices({
+    isWorking,
+    estimateProgress,
+  });
 
   return (
     <>
@@ -79,12 +85,13 @@ export default function AgentLiveProgressFeedStatus({
         <AgentLiveProgressEstimateBar
           estimateSeconds={estimateProgress.estimateSeconds}
           percent={estimateProgress.percent}
+          showEstimateOkMeta={!estimateProgress.isPastSoftEstimate}
         />
       ) : null}
+      <AgentLiveProgressBudgetNotices notices={budgetNotices} />
       {stallState === "stuck" ? (
         <AgentLiveProgressStuckBanner isThisMac={isThisMac} />
-      ) : null}
-      {stallState === "warning" && !showEstimateProgress ? (
+      ) : stallState === "warning" && !showEstimateProgress ? (
         <p
           className="mt-3 text-sm text-gray-600 dark:text-gray-300"
           role="status"

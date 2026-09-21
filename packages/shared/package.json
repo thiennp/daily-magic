@@ -9,6 +9,7 @@
     "./protocol": "./src/protocol/index.ts",
     "./deployables": "./src/deployables/index.ts",
     "./network": "./src/network/index.ts",
-    "./ui": "./src/ui/index.ts"
+    "./ui": "./src/ui/index.ts",
+    "./dispatch": "./src/dispatch/index.ts"
   }
 }

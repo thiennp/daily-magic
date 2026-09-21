@@ -1,15 +1,10 @@
+import { buildAgentRunEstimateOkMeta } from "@/lib/dispatch/agentRunBudgetNoticeCopy.constant";
+import { formatWorkingEstimateDurationLabel } from "@/lib/dispatch/formatWorkingEstimateDurationLabel";
+
+/** Quiet meta while under WORKING_ESTIMATE (`estimate_ok`). */
 export const formatAgentLiveWorkingEstimateLabel = (
   estimateSeconds: number,
-): string => {
-  if (estimateSeconds < 60) {
-    return `Est. ${estimateSeconds}s`;
-  }
-
-  const minutes = Math.round(estimateSeconds / 60);
-  if (minutes < 60) {
-    return `Est. ~${minutes} min`;
-  }
-
-  const hours = Math.round(minutes / 60);
-  return `Est. ~${hours} hr`;
-};
+): string =>
+  buildAgentRunEstimateOkMeta(
+    formatWorkingEstimateDurationLabel(estimateSeconds),
+  );

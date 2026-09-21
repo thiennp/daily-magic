@@ -28,6 +28,7 @@ describe("syncAgentRunLocalCacheFromSocket", () => {
             dispatchPolicy: DispatchPolicy.OPEN,
             resultOutput: null,
             resultExitCode: null,
+            resultOutcomeCode: null,
             denialReason: null,
             createdAt: "2026-07-14T20:00:00.000Z",
             updatedAt: "2026-07-14T20:00:00.000Z",

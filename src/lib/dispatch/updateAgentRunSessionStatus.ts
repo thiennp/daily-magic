@@ -9,6 +9,7 @@ export const updateAgentRunSessionStatus = (
   fields?: {
     readonly resultOutput?: string | null;
     readonly resultExitCode?: number | null;
+    readonly resultOutcomeCode?: string | null;
     readonly denialReason?: string | null;
     readonly approvalExpiresAt?: string | null;
   },
@@ -31,6 +32,9 @@ export const updateAgentRunSessionStatus = (
         : {}),
       ...(fields?.resultExitCode !== undefined
         ? { resultExitCode: fields.resultExitCode }
+        : {}),
+      ...(fields?.resultOutcomeCode !== undefined
+        ? { resultOutcomeCode: fields.resultOutcomeCode }
         : {}),
       ...(fields?.denialReason !== undefined
         ? { denialReason: fields.denialReason }

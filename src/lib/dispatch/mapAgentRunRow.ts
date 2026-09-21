@@ -21,6 +21,9 @@ export default function mapAgentRunRow(
     resultOutput: row.result_output ? String(row.result_output) : null,
     resultExitCode:
       typeof row.result_exit_code === "number" ? row.result_exit_code : null,
+    resultOutcomeCode: row.result_outcome_code
+      ? String(row.result_outcome_code)
+      : null,
     denialReason: row.denial_reason ? String(row.denial_reason) : null,
     createdAt: String(row.created_at),
     updatedAt: String(row.updated_at),

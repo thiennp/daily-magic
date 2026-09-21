@@ -10,6 +10,7 @@ import AgentRunStatusBadge from "@/features/reports/AgentRunStatusBadge";
 import { deleteAgentRunHistory } from "@/features/reports/utils/deleteAgentRunHistory";
 import type EnrichedAgentRunRecord from "@/lib/dispatch/types/EnrichedAgentRunRecord.type";
 import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
+import { resolveAgentRunStatusBadgeLabel } from "@/lib/dispatch/resolveAgentRunStatusBadgeLabel";
 
 interface AgentRunCardProps {
   readonly run: EnrichedAgentRunRecord;
@@ -34,7 +35,10 @@ export default function AgentRunCard({ run }: AgentRunCardProps) {
   return (
     <AppPanel as="article" padding="compact">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <AgentRunStatusBadge status={run.status} />
+        <AgentRunStatusBadge
+          status={run.status}
+          labelOverride={resolveAgentRunStatusBadgeLabel(run)}
+        />
         <p className="text-xs text-gray-500 dark:text-gray-400">
           {new Date(run.createdAt).toLocaleString()}
         </p>

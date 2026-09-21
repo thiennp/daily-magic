@@ -51,6 +51,7 @@ const createAgentRun = async (
       approvalExpiresAt: input.approvalExpiresAt ?? null,
       resultOutput: null,
       resultExitCode: null,
+      resultOutcomeCode: null,
       denialReason: null,
       createdAt: now,
       updatedAt: now,

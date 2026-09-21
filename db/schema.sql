@@ -308,6 +308,7 @@ CREATE TABLE IF NOT EXISTS agent_runs (
   writer_agent TEXT NOT NULL DEFAULT 'claude-cli',
   result_output TEXT,
   result_exit_code INTEGER,
+  result_outcome_code TEXT,
   denial_reason TEXT,
   capability_id TEXT REFERENCES published_capabilities(id) ON DELETE SET NULL,
   capability_version_id TEXT REFERENCES capability_versions(id) ON DELETE SET NULL,

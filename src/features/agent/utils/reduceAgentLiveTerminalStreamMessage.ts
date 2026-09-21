@@ -1,5 +1,9 @@
-import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
+import { resolveAgentRunOutcomeFromWriterOutput } from "@agent-witch/shared/dispatch";
 
+import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
+import { formatHardStopOutcomeTerminalBlock } from "@/lib/dispatch/formatHardStopOutcomeTerminalBlock";
+
+import { applySessionLimitHardStopToTerminalState } from "./applySessionLimitHardStopToTerminalState";
 import type { AgentLiveTerminalState } from "./agentLiveTerminalState.type";
 import { appendAgentLiveTerminalPrompt } from "./agentLiveTerminalPrompt.constant";
 import {
@@ -17,10 +21,19 @@ export const reduceAgentLiveTerminalStreamMessage = (
     matchesActiveRun(state.activeRunId, payload)
   ) {
     const chunk = typeof payload.chunk === "string" ? payload.chunk : "";
+    const nextOutput = `${state.output}${chunk}`;
+    const hardStop = applySessionLimitHardStopToTerminalState(
+      { ...state, output: nextOutput },
+      nextOutput,
+    );
+    if (hardStop !== null) {
+      return hardStop;
+    }
+
     return {
       ...state,
       status: "streaming",
-      output: `${state.output}${chunk}`,
+      output: nextOutput,
     };
   }
 
@@ -30,12 +43,26 @@ export const reduceAgentLiveTerminalStreamMessage = (
   ) {
     const resultOutput =
       typeof payload.output === "string" ? payload.output : "";
+    const mergedOutput = appendAgentLiveTerminalPrompt(
+      mergeTerminalResultOutput(state.output, resultOutput),
+    );
+    const outcome = resolveAgentRunOutcomeFromWriterOutput(resultOutput);
+
+    if (outcome !== null) {
+      const banner = formatHardStopOutcomeTerminalBlock(outcome);
+
+      return {
+        ...state,
+        output: `${mergedOutput}\n${banner}\n`,
+        status: "error",
+        pendingInput: null,
+        pendingCommandLine: null,
+      };
+    }
 
     return {
       ...state,
-      output: appendAgentLiveTerminalPrompt(
-        mergeTerminalResultOutput(state.output, resultOutput),
-      ),
+      output: mergedOutput,
       status: "finished",
       pendingInput: null,
       pendingCommandLine: null,
@@ -47,6 +74,14 @@ export const reduceAgentLiveTerminalStreamMessage = (
     matchesActiveRun(state.activeRunId, payload) &&
     (state.status === "streaming" || state.status === "stopping")
   ) {
+    const hardStop = applySessionLimitHardStopToTerminalState(
+      state,
+      state.output,
+    );
+    if (hardStop !== null) {
+      return hardStop;
+    }
+
     return {
       ...state,
       output: appendAgentLiveTerminalPrompt(state.output),

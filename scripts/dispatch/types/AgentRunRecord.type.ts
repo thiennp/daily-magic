@@ -11,6 +11,7 @@ export default interface AgentRunRecord {
   readonly dispatchPolicy: DispatchPolicyValue;
   readonly resultOutput: string | null;
   readonly resultExitCode: number | null;
+  readonly resultOutcomeCode: string | null;
   readonly denialReason: string | null;
   readonly createdAt: string;
   readonly updatedAt: string;

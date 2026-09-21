@@ -25,7 +25,11 @@ export const resolveAgentLiveProgressStallState = (input: {
       estimateSeconds,
       workedMs,
     });
-    if (estimateProgress.isExceeded) {
+    if (
+      estimateProgress.isExceeded &&
+      input.msSinceLastActivity !== null &&
+      input.msSinceLastActivity >= AGENT_LIVE_PROGRESS_STALL_STUCK_MS
+    ) {
       return "stuck";
     }
   } else if (

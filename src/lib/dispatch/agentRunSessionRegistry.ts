@@ -30,6 +30,7 @@ export const updateAgentRunSession = (
       | "status"
       | "resultOutput"
       | "resultExitCode"
+      | "resultOutcomeCode"
       | "denialReason"
       | "startedAt"
       | "completedAt"

@@ -56,6 +56,7 @@ const buildRun = (
   groupId: null,
   resultOutput: null,
   resultExitCode: null,
+  resultOutcomeCode: null,
   denialReason: null,
   capabilityId: null,
   capabilityVersionId: null,
