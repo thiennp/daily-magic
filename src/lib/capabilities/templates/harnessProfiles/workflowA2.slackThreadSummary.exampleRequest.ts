@@ -1,19 +1,26 @@
 export const SLACK_THREAD_SUMMARY_EXAMPLE_REQUEST = `Summarize a long Slack thread for someone who missed it.
 
-Read thread (pasted messages), goal (what the reader needs), and audience when set.
-If audience is empty, write for a busy teammate who needs decisions and next steps, not play-by-play.
+Read thread, goal, and audience from the workflow form.
+If audience is empty, assume a busy teammate who missed the thread and needs decisions plus next steps.
 
-## 1. Parse and clarify
-Separate firm decisions from debate.
-Extract action items and owners when names appear.
-List ambiguities or missing owners in [[PROGRESS]] for the operator — the workflow pauses at the next checkpoint.
+## 1. Parse the thread (this step only)
+Separate firm decisions from ongoing debate.
+Extract action items and owners when names or handles appear in the thread.
+Flag unresolved threads, ambiguous pronouns, or decisions that still read like suggestions.
 
-## 2. Draft the shareable summary
-Use Slack-friendly markdown aligned to goal and audience:
+List only the clarifications you still need in [[PROGRESS]] — the operator answers at the next human checkpoint.
+Do not write the final Slack-ready summary in this step.
+
+## 2. Draft the shareable summary (this step only)
+Continue from prior operator answers (see checkpoint responses above).
+
+Use Slack-friendly markdown aligned to goal and audience from the form.
+
+Include:
 - TL;DR (two sentences max)
 - Decisions with who decided when known
 - Action items with owners
-- Open questions / unresolved threads
+- Open questions or threads that still need input
 
-## 3. Review gate
-Present the draft for operator review; apply edits if requested before they post to Slack.`;
+Call out unresolved items explicitly instead of smoothing them over.
+Stop before final operator review — they approve before posting.`;

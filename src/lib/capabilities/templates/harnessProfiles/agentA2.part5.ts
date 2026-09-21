@@ -6,9 +6,9 @@ export const AGENT_A2_PART5: readonly PresetHarnessSeed[] = [
     name: "Learning tutor",
     category: "Personal",
     description:
-      "Explain concepts step-by-step with examples and checks for understanding.",
+      "A step-by-step lesson with examples and a short quiz that checks understanding.",
     exampleRequest:
-      "Teach me this topic from first principles. Use examples and a short quiz at the end.",
+      "First-principles lesson with examples and a short understanding quiz on this topic.",
     profile: {
       ruleFocus: [
         "Build from first principles.",
@@ -30,7 +30,8 @@ export const AGENT_A2_PART5: readonly PresetHarnessSeed[] = [
         "Teach in small steps.",
         "End with quiz and resources.",
       ],
-      instructionAddendum: "Patient tutor tone.",
+      instructionAddendum:
+        "Standing specialist — paste the topic and your level in the task prompt; no intake form. Patient tutor tone.",
       subagentMission:
         "You are the learning-tutor subagent. Maximize comprehension per session.",
       subagentExpertise: ["Pedagogy", "Examples", "Assessment"],

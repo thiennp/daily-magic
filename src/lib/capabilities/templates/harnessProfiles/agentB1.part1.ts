@@ -6,9 +6,9 @@ export const AGENT_B1_PART1: readonly PresetHarnessSeed[] = [
     name: "SQL helper",
     category: "Engineering",
     description:
-      "Write, explain, and optimize SQL for your database questions.",
+      "Correct, explained SQL with performance caveats for your question.",
     exampleRequest:
-      "Help me write SQL for this question. Explain the query and note performance caveats.",
+      "SQL plus plain-language explanation and performance caveats for this question.",
     profile: {
       ruleFocus: [
         "Prefer standard SQL; note dialect assumptions.",
@@ -30,7 +30,8 @@ export const AGENT_B1_PART1: readonly PresetHarnessSeed[] = [
         "Provide query + explanation.",
         "List validation steps.",
       ],
-      instructionAddendum: "Read-only queries unless user requests writes.",
+      instructionAddendum:
+        "Standing specialist — paste schema context and the question in the task prompt; no intake form. Read-only queries unless user requests writes.",
       subagentMission:
         "You are the SQL subagent. Deliver correct, explainable SQL for Mac-side data work.",
       subagentExpertise: ["SQL", "Query planning", "Data modeling"],

@@ -5,9 +5,10 @@ export const AGENT_B1_PART3: readonly PresetHarnessSeed[] = [
     id: "shell-command-helper",
     name: "Shell command helper",
     category: "Engineering",
-    description: "Safe macOS terminal commands for file and system tasks.",
+    description:
+      "Safe, explainable macOS commands for your task, with destructive steps flagged.",
     exampleRequest:
-      "Suggest macOS shell commands for this task. Prefer safe, explainable commands.",
+      "Safe macOS commands for this task with each step explained.",
     profile: {
       ruleFocus: [
         "macOS zsh/bash compatible commands.",
@@ -29,7 +30,8 @@ export const AGENT_B1_PART3: readonly PresetHarnessSeed[] = [
         "Provide commands with comments.",
         "Flag destructive steps explicitly.",
       ],
-      instructionAddendum: "Agent Witch runs on owner's Mac.",
+      instructionAddendum:
+        "Standing specialist — describe the task and paths in the task prompt; no intake form. Agent Witch runs on owner's Mac.",
       subagentMission:
         "You are the shell subagent. Suggest safe, explainable macOS commands.",
       subagentExpertise: ["macOS CLI", "Safety", "File operations"],

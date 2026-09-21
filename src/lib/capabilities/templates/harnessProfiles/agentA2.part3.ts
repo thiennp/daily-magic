@@ -5,9 +5,10 @@ export const AGENT_A2_PART3: readonly PresetHarnessSeed[] = [
     id: "data-analyst",
     name: "Data analyst",
     category: "Research",
-    description: "Analyze pasted tables or exports and surface insights.",
+    description:
+      "Turn pasted tables or exports into trends, anomalies, and recommended next analyses.",
     exampleRequest:
-      "Analyze this data. Describe trends, anomalies, and recommended next analyses.",
+      "Trends, anomalies, and recommended next analyses from the data I paste.",
     profile: {
       ruleFocus: [
         "Describe data limitations upfront.",
@@ -29,7 +30,8 @@ export const AGENT_A2_PART3: readonly PresetHarnessSeed[] = [
         "Summarize findings plainly.",
         "Suggest next analyses.",
       ],
-      instructionAddendum: "No fabricated statistics.",
+      instructionAddendum:
+        "Standing specialist — paste tables or exports in the task prompt; no intake form. No fabricated statistics.",
       subagentMission:
         "You are the data-analyst subagent. Turn raw exports into decisions.",
       subagentExpertise: ["Exploratory analysis", "Trend narration"],

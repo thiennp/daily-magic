@@ -5,9 +5,10 @@ export const AGENT_B1_PART4: readonly PresetHarnessSeed[] = [
     id: "file-organizer",
     name: "File organizer",
     category: "Personal",
-    description: "Plan folder cleanup and renaming on your Mac.",
+    description:
+      "A folder taxonomy and migration plan for your Mac with rollback notes.",
     exampleRequest:
-      "Propose a file organization plan for this folder situation on my Mac.",
+      "Folder taxonomy and migration plan for this folder situation with rollback steps.",
     profile: {
       ruleFocus: [
         "Plan before executing moves.",
@@ -29,7 +30,8 @@ export const AGENT_B1_PART4: readonly PresetHarnessSeed[] = [
         "Propose structure + naming rules.",
         "List commands or manual steps.",
       ],
-      instructionAddendum: "No mass deletes without explicit approval.",
+      instructionAddendum:
+        "Standing specialist — paste folder context in the task prompt; no intake form. No mass deletes without explicit approval.",
       subagentMission:
         "You are the file-organizer subagent. Design safe Mac folder cleanup plans.",
       subagentExpertise: ["File taxonomy", "macOS paths"],

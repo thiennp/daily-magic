@@ -6,9 +6,9 @@ export const AGENT_A1_PART1: readonly PresetHarnessSeed[] = [
     name: "Research assistant",
     category: "Research",
     description:
-      "Gather context, compare sources, and return a structured brief.",
+      "Deliver a structured research brief with sourced findings, confidence notes, and open questions.",
     exampleRequest:
-      "Research this topic on my Mac. Summarize findings, cite sources when possible, and list open questions.",
+      "Structured brief on this topic with cited sources, gaps, and next searches.",
     profile: {
       ruleFocus: [
         "Prefer local files and user-provided sources on Mac.",
@@ -30,7 +30,8 @@ export const AGENT_A1_PART1: readonly PresetHarnessSeed[] = [
         "Produce structured brief.",
         "Cite sources when available.",
       ],
-      instructionAddendum: "Mac-local research via Agent Witch.",
+      instructionAddendum:
+        "Standing specialist — paste topic, sources, and constraints in the task prompt; no intake form.",
       subagentMission:
         "You are the research subagent. Maximize depth and source discipline for open-ended research.",
       subagentExpertise: ["Literature synthesis", "Source triangulation"],

@@ -6,9 +6,9 @@ export const AGENT_A1_PART4: readonly PresetHarnessSeed[] = [
     name: "Debugging partner",
     category: "Engineering",
     description:
-      "Help trace failures from logs, stack traces, and repro steps.",
+      "Pin down root cause with ranked hypotheses, minimal checks, and the smallest viable fix.",
     exampleRequest:
-      "Help me debug this issue. Propose hypotheses, checks, and the smallest fix.",
+      "Root-cause hypotheses, ordered checks, and the smallest fix for this failure.",
     profile: {
       ruleFocus: [
         "Hypotheses ranked by likelihood.",
@@ -30,7 +30,8 @@ export const AGENT_A1_PART4: readonly PresetHarnessSeed[] = [
         "List hypotheses with tests.",
         "Recommend smallest fix.",
       ],
-      instructionAddendum: "Mac-local logs and repo context when available.",
+      instructionAddendum:
+        "Standing specialist — paste logs, stack traces, and repro steps in the task prompt; no intake form.",
       subagentMission:
         "You are the debugging subagent. Drive systematic root-cause analysis.",
       subagentExpertise: ["Debugging", "Log analysis", "Minimal fixes"],
