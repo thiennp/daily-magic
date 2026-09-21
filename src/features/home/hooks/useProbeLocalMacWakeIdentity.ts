@@ -1,5 +1,6 @@
 "use client";
 
+import { useSession } from "next-auth/react";
 import { useEffect } from "react";
 
 import {
@@ -13,8 +14,10 @@ const useProbeLocalMacWakeIdentity = (
   isMacBrowser: boolean,
   extraWakePorts: readonly number[],
 ): void => {
+  const { status: sessionStatus } = useSession();
+
   useEffect(() => {
-    if (!isMacBrowser) {
+    if (!isMacBrowser || sessionStatus !== "authenticated") {
       return;
     }
 
@@ -41,7 +44,7 @@ const useProbeLocalMacWakeIdentity = (
       window.removeEventListener("focus", retryIfUnreachable);
       document.removeEventListener("visibilitychange", retryIfUnreachable);
     };
-  }, [extraWakePorts, isMacBrowser]);
+  }, [extraWakePorts, isMacBrowser, sessionStatus]);
 };
 
 export default useProbeLocalMacWakeIdentity;

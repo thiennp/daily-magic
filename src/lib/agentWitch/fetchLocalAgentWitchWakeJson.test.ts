@@ -1,6 +1,9 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-import { resolveLocalAgentWitchWakeBaseUrl } from "@/lib/agentWitch/fetchLocalAgentWitchWakeJson";
+import {
+  resolveLocalAgentWitchWakeBaseUrl,
+  resolveLocalAgentWitchWakeBaseUrlForWakePort,
+} from "@/lib/agentWitch/fetchLocalAgentWitchWakeJson";
 import {
   AGENT_WITCH_LOCAL_WAKE_PORT,
   AGENT_WITCH_PROD_WAKE_PORT,
@@ -29,6 +32,12 @@ describe("resolveLocalAgentWitchWakeBaseUrl", () => {
     vi.stubEnv("NODE_ENV", "production");
     expect(resolveLocalAgentWitchWakeBaseUrl()).toBe(
       `http://127.0.0.1:${AGENT_WITCH_PROD_WAKE_PORT}`,
+    );
+  });
+
+  it("honors an explicit wake port override", () => {
+    expect(resolveLocalAgentWitchWakeBaseUrlForWakePort(47_891)).toBe(
+      "http://127.0.0.1:47891",
     );
   });
 });
