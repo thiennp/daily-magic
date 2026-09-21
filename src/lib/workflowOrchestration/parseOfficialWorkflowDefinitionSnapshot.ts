@@ -1,6 +1,14 @@
 import type OfficialWorkflowDefinition from "@/lib/workflowOrchestration/types/OfficialWorkflowDefinition.type";
 import type { OfficialWorkflowNode } from "@/lib/workflowOrchestration/types/OfficialWorkflowDefinition.type";
 
+const parseSkipPhrases = (value: unknown): readonly string[] =>
+  Array.isArray(value)
+    ? value.filter(
+        (phrase): phrase is string =>
+          typeof phrase === "string" && phrase.trim().length > 0,
+      )
+    : [];
+
 export const parseOfficialWorkflowDefinitionSnapshot = (
   snapshot: Record<string, unknown>,
 ): OfficialWorkflowDefinition | null => {
@@ -8,7 +16,12 @@ export const parseOfficialWorkflowDefinitionSnapshot = (
     typeof snapshot.templateId === "string" ? snapshot.templateId : "";
   const capabilityName =
     typeof snapshot.capabilityName === "string" ? snapshot.capabilityName : "";
-  const version = snapshot.version === 1 ? 1 : null;
+  const version =
+    typeof snapshot.version === "number" &&
+    Number.isInteger(snapshot.version) &&
+    snapshot.version >= 1
+      ? snapshot.version
+      : null;
   const nodesRaw = snapshot.nodes;
 
   if (
@@ -39,14 +52,31 @@ export const parseOfficialWorkflowDefinitionSnapshot = (
       if (instructions.length === 0) {
         return null;
       }
-      nodes.push({ id, kind, title, instructions });
+      nodes.push({
+        id,
+        kind,
+        title,
+        instructions,
+        ...(record.allowSkip === true ? { allowSkip: true } : {}),
+      });
     } else {
       const promptSection =
         typeof record.promptSection === "string" ? record.promptSection : "";
       if (promptSection.length === 0) {
         return null;
       }
-      nodes.push({ id, kind, title, promptSection });
+      const skipWhenPriorResponseMatches = parseSkipPhrases(
+        record.skipWhenPriorResponseMatches,
+      );
+      nodes.push({
+        id,
+        kind,
+        title,
+        promptSection,
+        ...(skipWhenPriorResponseMatches.length > 0
+          ? { skipWhenPriorResponseMatches }
+          : {}),
+      });
     }
   }
 

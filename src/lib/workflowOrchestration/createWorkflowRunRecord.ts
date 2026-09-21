@@ -14,9 +14,11 @@ export const createWorkflowRunRecord = async (input: {
   readonly templateId: string;
   readonly fieldValues: Readonly<Record<string, string>>;
   readonly definitionSnapshot: Record<string, unknown>;
+  readonly orchestrationVersion?: number;
 }): Promise<WorkflowRunRecord> => {
   const id = randomUUID();
   const now = new Date().toISOString();
+  const orchestrationVersion = input.orchestrationVersion ?? 1;
 
   if (isAgentWitchDevDashboardEnabled()) {
     const run: WorkflowRunRecord = {
@@ -26,7 +28,7 @@ export const createWorkflowRunRecord = async (input: {
       deviceId: input.deviceId,
       capabilityId: input.capabilityId,
       templateId: input.templateId,
-      orchestrationVersion: 1,
+      orchestrationVersion,
       status: "running",
       currentStepIndex: 0,
       fieldValues: input.fieldValues,
@@ -65,7 +67,7 @@ export const createWorkflowRunRecord = async (input: {
         ${input.deviceId},
         ${input.capabilityId},
         ${input.templateId},
-        1,
+        ${orchestrationVersion},
         'running',
         0,
         ${JSON.stringify(input.fieldValues)}::jsonb,

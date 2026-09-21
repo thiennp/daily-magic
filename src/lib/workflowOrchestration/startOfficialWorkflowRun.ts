@@ -76,6 +76,7 @@ export const startOfficialWorkflowRun = async (input: {
     templateId,
     fieldValues: input.fieldValues,
     definitionSnapshot: definition as unknown as Record<string, unknown>,
+    orchestrationVersion: definition.version,
   });
 
   return continueOfficialWorkflowRun({

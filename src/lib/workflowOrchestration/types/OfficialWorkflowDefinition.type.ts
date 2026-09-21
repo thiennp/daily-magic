@@ -5,6 +5,8 @@ export interface OfficialWorkflowHumanNode {
   readonly kind: "human";
   readonly title: string;
   readonly instructions: string;
+  /** Checkpoint the operator may pass without writing an answer. */
+  readonly allowSkip?: boolean;
 }
 
 export interface OfficialWorkflowAgentNode {
@@ -12,6 +14,8 @@ export interface OfficialWorkflowAgentNode {
   readonly kind: "agent";
   readonly title: string;
   readonly promptSection: string;
+  /** Skip the step when the previous operator answer matches one of these phrases. */
+  readonly skipWhenPriorResponseMatches?: readonly string[];
 }
 
 export type OfficialWorkflowNode =
