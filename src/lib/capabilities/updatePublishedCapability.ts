@@ -5,6 +5,7 @@ import type { ParsedUpdateCapabilityBody } from "@/lib/capabilities/parseUpdateC
 import { publishCapabilityVersion } from "@/lib/capabilities/publishCapabilityVersion";
 import type PublishedCapabilityRecord from "@/lib/capabilities/types/PublishedCapabilityRecord.type";
 import { CapabilityStatus } from "@/lib/capabilities/CapabilityStatus.constant";
+import { ensurePublishedCapabilityWorkflowOutputFieldsSchema } from "@/lib/capabilities/ensurePublishedCapabilityWorkflowOutputFieldsSchema";
 import { asRowArray, getSql } from "@/lib/db";
 
 export async function updatePublishedCapability(
@@ -30,6 +31,7 @@ export async function updatePublishedCapability(
   }
 
   const sql = getSql();
+  await ensurePublishedCapabilityWorkflowOutputFieldsSchema();
   const workflowFieldsJson = JSON.stringify(
     existing.type === CapabilityType.WORKFLOW ? workflowFields : [],
   );
