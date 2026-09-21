@@ -23,7 +23,7 @@ export default function WorkflowBuilderEntryPointTreeNode({
   onAddQuestion,
 }: WorkflowBuilderEntryPointTreeNodeProps) {
   return (
-    <div role="treeitem" aria-expanded={isExpanded}>
+    <div role="treeitem" aria-expanded={isExpanded} aria-selected={false}>
       <div className="flex flex-wrap items-center gap-2">
         <button
           type="button"

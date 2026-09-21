@@ -24,7 +24,7 @@ export default function WorkflowBuilderRunStepTreeRow({
   onRemove,
 }: WorkflowBuilderRunStepTreeRowProps) {
   return (
-    <div role="treeitem">
+    <div role="treeitem" aria-selected={false}>
       <div className="flex flex-wrap items-center gap-2">
         <span className="w-4 text-center text-xs text-gray-400">│</span>
         <button
