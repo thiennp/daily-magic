@@ -1,8 +1,21 @@
-import createCapabilityFromTemplate from "@/lib/capabilities/createCapabilityFromTemplate";
 import findCapabilityTemplateById from "@/lib/capabilities/templates/findCapabilityTemplateById";
+import buildComponentSlugFromCapability from "@/lib/components/buildComponentSlugFromCapability";
+import { CapabilityType } from "@/lib/capabilities/CapabilityType.constant";
+import { findOwnerLibraryCapabilityIdForComponentSlug } from "@/lib/capabilities/findOwnerLibraryCapabilityIdForComponentSlug";
 import buildHarnessInstallBundleFromTemplateHarness from "@/lib/agentWitch/harness/buildHarnessInstallBundleFromTemplateHarness";
 import { pushHarnessInstallBundleToDevice } from "@/lib/marketplace/pushHarnessInstallBundleToDevice";
+import { saveMarketplacePresetToLibrary } from "@/lib/marketplace/saveMarketplacePresetToLibrary";
 import type { MarketplaceInstallResult } from "@/lib/marketplace/types/MarketplaceInstallResult.type";
+
+const installFailure = (errorMessage: string): MarketplaceInstallResult => ({
+  ok: false,
+  errorMessage,
+  savedToLibrary: false,
+  libraryCapabilityId: null,
+  harnessInstalled: false,
+  harnessInstallMessage: null,
+  localHarnessBundle: null,
+});
 
 const installOfficialPresetListing = async (
   actorUserId: string,
@@ -12,37 +25,39 @@ const installOfficialPresetListing = async (
   const template = findCapabilityTemplateById(templateId);
 
   if (template === undefined) {
-    return {
-      ok: false,
-      errorMessage: "Listing not found.",
-      savedToLibrary: false,
-      libraryCapabilityId: null,
-      harnessInstalled: false,
-      harnessInstallMessage: null,
-      localHarnessBundle: null,
-    };
+    return installFailure("Listing not found.");
   }
 
-  const result = await createCapabilityFromTemplate(
-    actorUserId,
-    templateId,
-    undefined,
-    { deferHarnessInstall: true },
+  const componentSlug = buildComponentSlugFromCapability({
+    name: template.name,
+    harnessSetSlug: template.harness.slug,
+  });
+  const componentKind =
+    template.type === CapabilityType.WORKFLOW ? "workflow" : "agent";
+
+  const existingLibraryCapabilityId =
+    await findOwnerLibraryCapabilityIdForComponentSlug({
+      ownerUserId: actorUserId,
+      kind: componentKind,
+      slug: componentSlug,
+    });
+
+  const librarySave =
+    existingLibraryCapabilityId !== null
+      ? {
+          ok: true as const,
+          libraryCapabilityId: existingLibraryCapabilityId,
+          harness: template.harness,
+        }
+      : await saveMarketplacePresetToLibrary({ actorUserId, templateId });
+
+  if (!librarySave.ok) {
+    return installFailure(librarySave.errorMessage);
+  }
+
+  const bundle = buildHarnessInstallBundleFromTemplateHarness(
+    librarySave.harness,
   );
-
-  if (result === null) {
-    return {
-      ok: false,
-      errorMessage: "Could not save this starter.",
-      savedToLibrary: false,
-      libraryCapabilityId: null,
-      harnessInstalled: false,
-      harnessInstallMessage: null,
-      localHarnessBundle: null,
-    };
-  }
-
-  const bundle = buildHarnessInstallBundleFromTemplateHarness(result.harness);
   const push = await pushHarnessInstallBundleToDevice({
     userId: actorUserId,
     deviceId,
@@ -53,7 +68,7 @@ const installOfficialPresetListing = async (
     ok: true,
     errorMessage: null,
     savedToLibrary: true,
-    libraryCapabilityId: result.capability.id,
+    libraryCapabilityId: librarySave.libraryCapabilityId,
     harnessInstalled: push.installed,
     harnessInstallMessage: push.installed
       ? null

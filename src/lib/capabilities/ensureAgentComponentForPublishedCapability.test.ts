@@ -15,7 +15,9 @@ describe("ensureAgentComponentForPublishedCapability", () => {
   });
 
   it("completes when slug upsert returns an existing component id", async () => {
-    sqlMock.mockResolvedValue([{ id: "existing-component-id" }]);
+    sqlMock
+      .mockResolvedValueOnce([])
+      .mockResolvedValueOnce([{ id: "existing-component-id" }]);
 
     await expect(
       ensureAgentComponentForPublishedCapability({
@@ -29,11 +31,11 @@ describe("ensureAgentComponentForPublishedCapability", () => {
       }),
     ).resolves.toBeUndefined();
 
-    expect(sqlMock).toHaveBeenCalledTimes(1);
+    expect(sqlMock).toHaveBeenCalledTimes(2);
   });
 
   it("throws when upsert returns no row", async () => {
-    sqlMock.mockResolvedValue([]);
+    sqlMock.mockResolvedValueOnce([]).mockResolvedValueOnce([]);
 
     await expect(
       ensureAgentComponentForPublishedCapability({

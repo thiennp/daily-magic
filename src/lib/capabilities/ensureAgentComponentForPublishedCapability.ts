@@ -1,3 +1,5 @@
+import { randomUUID } from "node:crypto";
+
 import buildComponentSlugFromCapability from "@/lib/components/buildComponentSlugFromCapability";
 import { asRowArray, getSql } from "@/lib/db";
 
@@ -17,6 +19,13 @@ const ensureAgentComponentForPublishedCapability = async (input: {
     name: input.name,
     harnessSetSlug: input.harnessSetSlug ?? null,
   });
+  const componentId = randomUUID();
+
+  await sql`
+    UPDATE components
+    SET published_capability_id = NULL, updated_at = NOW()
+    WHERE published_capability_id = ${input.capabilityId}
+  `;
 
   const rows = asRowArray(
     await sql`
@@ -31,7 +40,7 @@ const ensureAgentComponentForPublishedCapability = async (input: {
         published_capability_id
       )
       VALUES (
-        ${input.capabilityId},
+        ${componentId},
         ${input.ownerUserId},
         ${kind},
         ${slug},
