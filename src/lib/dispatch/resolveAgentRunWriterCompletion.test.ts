@@ -16,7 +16,9 @@ describe("resolveAgentRunWriterCompletion", () => {
     expect(completion.resultOutcomeCode).toBe(
       AgentRunOutcomeCode.SESSION_LIMIT,
     );
-    expect(completion.denialReason).toContain("Hard stop: session limit");
+    expect(completion.denialReason).toBe(
+      "This run stopped at the session limit. That is a hard stop — not a missed estimate.",
+    );
   });
 
   it("keeps ordinary success", () => {

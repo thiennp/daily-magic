@@ -6,6 +6,16 @@ interface AgentLiveProgressBudgetNoticesProps {
   readonly notices: readonly AgentLiveRunBudgetNotice[];
 }
 
+const severityClassName = (
+  severity: AgentLiveRunBudgetNotice["severity"],
+): string => {
+  if (severity === "info") {
+    return "border-gray-200 bg-gray-50 text-gray-800 dark:border-gray-700 dark:bg-white/[0.04] dark:text-gray-200";
+  }
+
+  return "border-amber-200 bg-amber-50 text-amber-950 dark:border-amber-900/50 dark:bg-amber-950/30 dark:text-amber-100";
+};
+
 export default function AgentLiveProgressBudgetNotices({
   notices,
 }: AgentLiveProgressBudgetNoticesProps) {
@@ -13,16 +23,16 @@ export default function AgentLiveProgressBudgetNotices({
     <>
       {notices.map((notice) => (
         <div
-          key={notice.label}
-          className={`mt-3 rounded-lg border px-3 py-2 text-sm ${
-            notice.tone === "soft"
-              ? "border-sky-200 bg-sky-50 text-sky-950 dark:border-sky-900/50 dark:bg-sky-950/30 dark:text-sky-100"
-              : "border-rose-200 bg-rose-50 text-rose-950 dark:border-rose-900/50 dark:bg-rose-950/30 dark:text-rose-100"
-          }`}
+          key={notice.reasonCode}
+          className={`mt-3 rounded-lg border px-3 py-2 text-sm ${severityClassName(notice.severity)}`}
           role="status"
+          data-reason-code={notice.reasonCode}
         >
-          <p className="font-medium">{notice.label}</p>
+          <p className="font-medium">{notice.title}</p>
           <p className="mt-1">{notice.body}</p>
+          {notice.secondary !== undefined ? (
+            <p className="mt-1 text-xs opacity-90">{notice.secondary}</p>
+          ) : null}
         </div>
       ))}
     </>

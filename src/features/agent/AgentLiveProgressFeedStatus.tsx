@@ -85,6 +85,7 @@ export default function AgentLiveProgressFeedStatus({
         <AgentLiveProgressEstimateBar
           estimateSeconds={estimateProgress.estimateSeconds}
           percent={estimateProgress.percent}
+          showEstimateOkMeta={!estimateProgress.isPastSoftEstimate}
         />
       ) : null}
       <AgentLiveProgressBudgetNotices notices={budgetNotices} />

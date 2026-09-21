@@ -5,14 +5,7 @@ import { buildAgentRunOutcomePresentation } from "@/lib/dispatch/buildAgentRunOu
 export const formatHardStopOutcomeTerminalBlock = (
   outcome: ResolvedAgentRunOutcome,
 ): string => {
-  const presentation = buildAgentRunOutcomePresentation(
-    outcome.code,
-    outcome.resetHint,
-  );
+  const presentation = buildAgentRunOutcomePresentation(outcome.code);
 
-  return [
-    presentation.title,
-    `Stopped reason: ${presentation.detail}`,
-    presentation.nextStep,
-  ].join("\n");
+  return `${presentation.title}\n${presentation.body}`;
 };

@@ -5,18 +5,22 @@ import { formatAgentLiveWorkingEstimateLabel } from "@/features/agent/utils/form
 interface AgentLiveProgressEstimateBarProps {
   readonly estimateSeconds: number;
   readonly percent: number;
+  readonly showEstimateOkMeta?: boolean;
 }
 
 export default function AgentLiveProgressEstimateBar({
   estimateSeconds,
   percent,
+  showEstimateOkMeta = true,
 }: AgentLiveProgressEstimateBarProps) {
-  const label = formatAgentLiveWorkingEstimateLabel(estimateSeconds);
+  const label = showEstimateOkMeta
+    ? formatAgentLiveWorkingEstimateLabel(estimateSeconds)
+    : null;
 
   return (
     <div className="mt-3" role="status" aria-live="polite">
       <div className="flex items-center justify-between gap-3 text-xs text-gray-600 dark:text-gray-300">
-        <span>{label}</span>
+        <span>{label ?? "Progress"}</span>
         <span>{percent}%</span>
       </div>
       <div

@@ -1,14 +1,15 @@
 import { describe, expect, it } from "vitest";
 
 import {
-  AGENT_LIVE_SESSION_LIMIT_PREWARN_LABEL,
-  AGENT_LIVE_SOFT_ESTIMATE_LABEL,
-} from "@/lib/dispatch/agentRunBudgetLabels.constant";
+  AgentRunBudgetReasonCode,
+  AGENT_RUN_ESTIMATE_PAST_TITLE,
+  AGENT_RUN_SESSION_LIMIT_APPROACHING_TITLE,
+} from "@/lib/dispatch/agentRunBudgetNoticeCopy.constant";
 import { resolveAgentLiveRunBudgetNotices } from "@/features/agent/utils/resolveAgentLiveRunBudgetNotices";
 import { resolveAgentLiveWorkingEstimateProgress } from "@/features/agent/utils/resolveAgentLiveWorkingEstimateProgress";
 
-describe("resolveAgentLiveRunBudgetNotices", () => {
-  it("returns no notices while within the soft estimate", () => {
+describe("resolveAgentLiveRunBudgetNotices (Desi P0)", () => {
+  it("estimate_ok — no banner while under WORKING_ESTIMATE", () => {
     const estimateProgress = resolveAgentLiveWorkingEstimateProgress({
       estimateSeconds: 100,
       workedMs: 40_000,
@@ -22,7 +23,7 @@ describe("resolveAgentLiveRunBudgetNotices", () => {
     ).toEqual([]);
   });
 
-  it("shows soft guidance past WORKING_ESTIMATE without session-limit pre-warn yet", () => {
+  it("estimate_past — exact title and body", () => {
     const estimateProgress = resolveAgentLiveWorkingEstimateProgress({
       estimateSeconds: 100,
       workedMs: 105_000,
@@ -33,24 +34,31 @@ describe("resolveAgentLiveRunBudgetNotices", () => {
       estimateProgress,
     });
 
-    expect(notices.map((n) => n.label)).toEqual([
-      AGENT_LIVE_SOFT_ESTIMATE_LABEL,
-    ]);
-    expect(notices[0]?.tone).toBe("soft");
+    expect(notices[0]?.reasonCode).toBe(AgentRunBudgetReasonCode.ESTIMATE_PAST);
+    expect(notices[0]?.title).toBe(AGENT_RUN_ESTIMATE_PAST_TITLE);
+    expect(notices[0]?.body).toBe(
+      "This run is past its working estimate (about 2 min). It can keep going until the session limit.",
+    );
   });
 
-  it("adds session-limit pre-warn before a hard stop when deep past soft budget", () => {
+  it("session_limit_approaching — exact pre-warn copy", () => {
     const estimateProgress = resolveAgentLiveWorkingEstimateProgress({
       estimateSeconds: 100,
       workedMs: 140_000,
     });
 
-    const labels = resolveAgentLiveRunBudgetNotices({
+    const prewarn = resolveAgentLiveRunBudgetNotices({
       isWorking: true,
       estimateProgress,
-    }).map((n) => n.label);
+    }).find(
+      (n) =>
+        n.reasonCode === AgentRunBudgetReasonCode.SESSION_LIMIT_APPROACHING,
+    );
 
-    expect(labels).toContain(AGENT_LIVE_SOFT_ESTIMATE_LABEL);
-    expect(labels).toContain(AGENT_LIVE_SESSION_LIMIT_PREWARN_LABEL);
+    expect(prewarn?.title).toBe(AGENT_RUN_SESSION_LIMIT_APPROACHING_TITLE);
+    expect(prewarn?.body).toBe(
+      "This run is near the session limit — a hard stop. Wrap up or expect the run to stop when the limit is hit.",
+    );
+    expect(prewarn?.secondary).toBe("Working estimate was about 2 min (soft).");
   });
 });
