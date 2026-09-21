@@ -1,24 +1,28 @@
 export const TIKTOK_SERIES_EPISODE_EXAMPLE_REQUEST = `Prepare one TikTok episode for an ongoing topic series on the operator's Mac.
 
-Read seriesName, seriesTopics, episodeAngle, targetLength, toneStyle (when set), and episodeNumber (when set).
-Load seriesHistoryPath when provided (JSON or markdown on the Mac) and list hooks, premises, and CTAs to avoid from recent entries.
+Read seriesName, seriesTopics, episodeAngle, targetLength, toneStyle (when set), episodeNumber (when set), and seriesHistoryPath from the workflow form.
 
-## 1. Series fit and script draft
-State in one sentence how this episode advances the series arc.
-Cross-check episodeAngle against the last five history entries; note dedupe risks in [[PROGRESS]].
-Draft a pattern-interrupt hook, beat outline, timed voiceover for targetLength (15s, 30s, or 60s), and on-screen text cues.
-Match toneStyle when set; otherwise use clear, punchy, mobile-first delivery.
-Do not treat the script as final — the workflow pauses for operator script approval.
+## 1. Series context and script draft (this step only)
+Load seriesHistoryPath on the Mac when provided. List hooks, premises, and CTAs to avoid from the last five history entries.
+State in one sentence how this episode advances the series arc. Summarize dedupe notes in [[PROGRESS]].
 
-## 2. Film-ready pack
-Apply operator feedback from the prior checkpoint.
-Finalize hook, timed script, and on-screen text for targetLength.
-Add a vertical 9:16 shot list (framing, action, B-roll), props or screen-recording notes, caption, 3–8 hashtags, and optional pinned comment.
-Flag any remaining overlap with recent episode hooks.
+Open with a 1–2 second pattern interrupt tied to episodeAngle.
+Draft beat outline, timed voiceover for targetLength (15s, 30s, or 60s), and on-screen text cues for key numbers or steps.
+Match toneStyle when set; otherwise clear, punchy, mobile-first delivery.
+Do not append to seriesHistoryPath yet and do not call the script final — the operator approves at the next human checkpoint.
 
-## 3. Post-publish continuity
-When the operator confirms they posted, append a concise episode summary to seriesHistoryPath (hook, angle, CTA, publish notes).
-Suggest one next episode angle to keep momentum.
-Summarize in plain language what was delivered and where history was updated.
+## 2. Final script and film pack (this step only)
+Continue from prior operator answers and any script feedback from the approval checkpoint.
 
-Emit [[PROGRESS]] through: series fit → draft script → approval gate → film pack → publish → history update.`;
+Finalize hook, beats, voiceover timing, and on-screen text for targetLength.
+Resolve any overlap the operator flagged with recent episode hooks.
+Provide a vertical 9:16 shot list: framing, action, B-roll, props, screen recordings, or jump cuts.
+Draft caption, 3–8 hashtags, and optional pinned comment.
+Summarize the film-ready package in [[PROGRESS]]. Filming and posting stay with the operator.
+
+## 3. History and momentum (this step only)
+Continue when the operator confirms they filmed and published (or when they ask to update history).
+
+Append a concise episode summary to seriesHistoryPath on the Mac: hook, angle, CTA, and publish notes.
+Suggest one next episode angle to maintain series momentum.
+Summarize in plain language what was written to history and the suggested follow-up episode.`;

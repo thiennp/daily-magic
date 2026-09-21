@@ -36,9 +36,11 @@ describe("tiktok-series-episode workflow", () => {
     ]);
 
     expect(template.exampleRequest).toContain(
-      "## 1. Series fit and script draft",
+      "## 1. Series context and script draft (this step only)",
     );
-    expect(template.exampleRequest).toContain("## 2. Film-ready pack");
+    expect(template.exampleRequest).toContain(
+      "## 2. Final script and film pack (this step only)",
+    );
     expect(template.exampleRequest).toContain("seriesHistoryPath");
   });
 });
