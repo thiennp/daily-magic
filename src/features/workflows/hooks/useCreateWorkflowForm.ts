@@ -3,7 +3,11 @@
 import { useState } from "react";
 
 import { useCapabilityHarnessDraft } from "@/features/capabilities/hooks/useCapabilityHarnessDraft";
-import { submitCreatePlaybook } from "@/features/capabilities/submitCreatePlaybook";
+import {
+  submitCreatePlaybook,
+  type CreatePlaybookResult,
+} from "@/features/capabilities/submitCreatePlaybook";
+import type { CreatePlaybookPayload } from "@/features/capabilities/submitCreatePlaybook";
 import { buildWorkflowOutputFieldsFromDrafts } from "@/features/workflows/buildWorkflowOutputFieldsFromDrafts";
 import { buildWorkflowFieldsFromDrafts } from "@/features/workflows/buildWorkflowFieldsFromDrafts";
 import { createDraftWorkflowField } from "@/features/workflows/createDraftWorkflowField";
@@ -15,11 +19,15 @@ import { CapabilityType } from "@/lib/capabilities/CapabilityType.constant";
 interface UseCreateWorkflowFormOptions {
   readonly onCreated: () => void;
   readonly onCancel: () => void;
+  readonly submitPlaybook?: (
+    payload: CreatePlaybookPayload,
+  ) => Promise<CreatePlaybookResult>;
 }
 
 export function useCreateWorkflowForm({
   onCreated,
   onCancel,
+  submitPlaybook = submitCreatePlaybook,
 }: UseCreateWorkflowFormOptions) {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -60,7 +68,7 @@ export function useCreateWorkflowForm({
       buildWorkflowOutputFieldsFromDrafts(outputFields);
 
     setIsSubmitting(true);
-    const result = await submitCreatePlaybook({
+    const result = await submitPlaybook({
       type: CapabilityType.WORKFLOW,
       name: trimmedName,
       description: description.trim(),

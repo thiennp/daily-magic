@@ -11,7 +11,7 @@ export default function LibraryPageHeader() {
   const description =
     sessionState === "signed_in"
       ? resolveLibraryPageSubtitle({ teamNavEnabled })
-      : undefined;
+      : "Draft playbooks on this browser; sign in to sync the newest copy to your account and Mac.";
 
   return <AppPageHeader title="Library" description={description} />;
 }

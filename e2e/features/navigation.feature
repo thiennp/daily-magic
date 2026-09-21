@@ -14,6 +14,7 @@ Feature: App shell navigation
       | /            |
       | /showcases   |
       | /login       |
+      | /library     |
 
   Scenario Outline: Authenticated user reaches app routes
     Given I am signed in as "test-nav-1@agentwitch.com"

@@ -47,6 +47,7 @@ Open the top `sourcePath` under `docs/qa/` when present.
 | [awl-loopback-origin.md](awl-loopback-origin.md)                                           | AWL is only `http://127.0.0.1:43347` (no vanity hostname)                    |
 | [workflow-builder-field-types.md](workflow-builder-field-types.md)                         | Create workflow questions: Answer length vs input types; no user graph       |
 | [workflow-file-upload-and-semantic-output.md](workflow-file-upload-and-semantic-output.md) | PDF/image workflow fields; artifact markers; Summary tab                     |
+| [guest-library-browser-drafts.md](guest-library-browser-drafts.md)                         | Guest `/library` drafts in browser + latest-wins sync on sign-in             |
 
 Add a row here when you add a Q&A file.
 

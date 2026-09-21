@@ -5,6 +5,7 @@ import {
   buildMarketingGetStartedHref,
   buildSignInHref,
   buildSignInHrefForPostAuthReturn,
+  buildSignInHrefFromPathAndSearchParams,
   buildSignInHrefFromSearchParams,
   marketplaceFreeStartersSectionHref,
 } from "@/features/empty-states/buildGuestAuthHrefs";
@@ -29,6 +30,17 @@ describe("buildGuestAuthHrefs", () => {
       }),
     ).toBe(
       "/login?callbackUrl=%2Fmarketplace%3FcapabilityId%3Dpreset%253Aweekly-team-status",
+    );
+  });
+
+  it("buildSignInHrefFromPathAndSearchParams keeps the current path and query", () => {
+    expect(
+      buildSignInHrefFromPathAndSearchParams(
+        "/library",
+        new URLSearchParams("sendTask=1&libraryCapabilityId=cap-1"),
+      ),
+    ).toBe(
+      "/login?callbackUrl=%2Flibrary%3FsendTask%3D1%26libraryCapabilityId%3Dcap-1",
     );
   });
 

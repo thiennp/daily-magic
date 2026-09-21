@@ -26,13 +26,7 @@ Feature: Authentication
     Then I should see feedback that a sign-in email was sent
     And no session should be created without the link
 
-  Scenario: Protected route redirects to login
-    Given I am signed out
-    When I open "/library"
-    Then I should be redirected to "/login"
-
   Scenario: Sign out clears session
     Given I am signed in as "test-member-a-2@agentwitch.com"
     When I sign out from the user menu
     Then I should be signed out
-    And opening "/library" should redirect to "/login"

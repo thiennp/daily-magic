@@ -1,25 +1,32 @@
 "use client";
 
-import Button from "@/components/ui/button/Button";
 import PlaybookBasicsFields from "@/features/capabilities/PlaybookBasicsFields";
-import CreateWorkflowFieldsEditor from "@/features/workflows/CreateWorkflowFieldsEditor";
-import CreateWorkflowOutputsEditor from "@/features/workflows/CreateWorkflowOutputsEditor";
+import CreateWorkflowFormSubmitFooter from "@/features/workflows/CreateWorkflowFormSubmitFooter";
+import CreateWorkflowFormEditors from "@/features/workflows/CreateWorkflowFormEditors";
 import CreateWorkflowHarnessSections from "@/features/workflows/CreateWorkflowHarnessSections";
 import CreateWorkflowTrialRunSection from "@/features/workflows/CreateWorkflowTrialRunSection";
-import { createDraftWorkflowField } from "@/features/workflows/createDraftWorkflowField";
-import { createDraftWorkflowOutputField } from "@/features/workflows/createDraftWorkflowOutputField";
+import {
+  type CreatePlaybookPayload,
+  type CreatePlaybookResult,
+} from "@/features/capabilities/submitCreatePlaybook";
 import { useCreateWorkflowForm } from "@/features/workflows/hooks/useCreateWorkflowForm";
 
 interface CreateWorkflowFormProps {
   readonly onCreated: () => void;
   readonly onCancel: () => void;
+  readonly submitPlaybook?: (
+    payload: CreatePlaybookPayload,
+  ) => Promise<CreatePlaybookResult>;
+  readonly submitLabel?: string;
 }
 
 export default function CreateWorkflowForm({
   onCreated,
   onCancel,
+  submitPlaybook,
+  submitLabel = "Publish workflow",
 }: CreateWorkflowFormProps) {
-  const form = useCreateWorkflowForm({ onCreated, onCancel });
+  const form = useCreateWorkflowForm({ onCreated, onCancel, submitPlaybook });
 
   return (
     <div className="mt-6 space-y-4">
@@ -32,44 +39,11 @@ export default function CreateWorkflowForm({
         onDescriptionChange={form.setDescription}
         onExampleRequestChange={form.setExampleRequest}
       />
-      <CreateWorkflowFieldsEditor
+      <CreateWorkflowFormEditors
         fields={form.fields}
-        onChange={(id, patch) => {
-          form.setFields((current) =>
-            current.map((field) =>
-              field.id === id ? { ...field, ...patch } : field,
-            ),
-          );
-        }}
-        onAdd={() => {
-          form.setFields((current) => [...current, createDraftWorkflowField()]);
-        }}
-        onRemove={(id) => {
-          form.setFields((current) =>
-            current.filter((entry) => entry.id !== id),
-          );
-        }}
-      />
-      <CreateWorkflowOutputsEditor
-        fields={form.outputFields}
-        onChange={(id, patch) => {
-          form.setOutputFields((current) =>
-            current.map((field) =>
-              field.id === id ? { ...field, ...patch } : field,
-            ),
-          );
-        }}
-        onAdd={() => {
-          form.setOutputFields((current) => [
-            ...current,
-            createDraftWorkflowOutputField(),
-          ]);
-        }}
-        onRemove={(id) => {
-          form.setOutputFields((current) =>
-            current.filter((entry) => entry.id !== id),
-          );
-        }}
+        outputFields={form.outputFields}
+        onFieldsChange={form.setFields}
+        onOutputFieldsChange={form.setOutputFields}
       />
       <CreateWorkflowHarnessSections
         items={form.harness.items}
@@ -83,27 +57,14 @@ export default function CreateWorkflowForm({
         draftFields={form.fields}
         harnessReadyItems={form.harness.readyItems}
       />
-      {form.error ? (
-        <p className="text-sm text-error-600 dark:text-error-400">
-          {form.error}
-        </p>
-      ) : null}
-      {form.notice ? (
-        <p className="text-sm text-amber-700 dark:text-amber-300">
-          {form.notice}
-        </p>
-      ) : null}
-      <div className="flex flex-wrap gap-2">
-        <Button
-          disabled={form.isSubmitting}
-          onClick={() => void form.handleSubmit()}
-        >
-          {form.isSubmitting ? "Publishing…" : "Publish workflow"}
-        </Button>
-        <Button variant="outline" onClick={onCancel}>
-          Cancel
-        </Button>
-      </div>
+      <CreateWorkflowFormSubmitFooter
+        error={form.error}
+        notice={form.notice}
+        isSubmitting={form.isSubmitting}
+        submitLabel={submitLabel}
+        onSubmit={() => void form.handleSubmit()}
+        onCancel={onCancel}
+      />
     </div>
   );
 }

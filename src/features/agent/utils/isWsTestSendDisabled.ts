@@ -11,7 +11,12 @@ export function isWsTestSendDisabled(input: {
   readonly isLibraryPlaybook: boolean;
   readonly hasDispatchReadyMac: boolean;
   readonly selectedDeviceCanDispatch: boolean;
+  readonly isWorkflowTrialBlocked?: boolean;
 }): boolean {
+  if (input.isWorkflowTrialBlocked === true) {
+    return true;
+  }
+
   const promptIsEmpty =
     input.isWorkflowTask || input.isLibraryPlaybook
       ? input.workflowValidationErrors.length > 0

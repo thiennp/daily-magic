@@ -9,6 +9,8 @@ interface CapabilityTemplateCardProps {
   readonly isSaving: boolean;
   readonly savedTemplateId: string | null;
   readonly harnessMessage: string | null;
+  readonly saveButtonLabel?: string;
+  readonly savedButtonLabel?: string;
   readonly onSelect: (templateId: string) => void;
   readonly onSave: (templateId: string) => void;
 }
@@ -19,6 +21,8 @@ export default function CapabilityTemplateCard({
   isSaving,
   savedTemplateId,
   harnessMessage,
+  saveButtonLabel = "Save",
+  savedButtonLabel = "Saved",
   onSelect,
   onSave,
 }: CapabilityTemplateCardProps) {
@@ -90,7 +94,7 @@ export default function CapabilityTemplateCard({
           onSave(template.id);
         }}
       >
-        {isSaved ? "Saved" : isSaving ? "Saving…" : "Save"}
+        {isSaved ? savedButtonLabel : isSaving ? "Saving…" : saveButtonLabel}
       </Button>
     </article>
   );
