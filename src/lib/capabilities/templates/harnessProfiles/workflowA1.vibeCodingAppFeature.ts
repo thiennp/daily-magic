@@ -12,7 +12,7 @@ export const VIBE_CODING_APP_FEATURE_PRESET: PresetHarnessSeed = {
   operatorSteps: VIBE_CODING_APP_FEATURE_OPERATOR_STEPS,
   profile: {
     ruleFocus: [
-      "Clarify with [[AWAITING_INPUT]] before editing; never lead with a full plan.",
+      "Clarify at human checkpoints before editing; never lead with a full plan.",
       "Resolve appTarget as path or local app name; ask if unclear.",
       "Analyze architecture and side effects in plain language; store notes for reuse.",
       "When tradeoffs are unclear, show a non-tech decision table and wait.",

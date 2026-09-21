@@ -4,20 +4,23 @@ Read targetRole, companyName, jobPostingUrl, and jobDescription (paste when URL 
 Open resumeFolderPath on this Mac and use only facts found there — never invent employers, dates, or skills.
 Mirror keywords from the posting without keyword stuffing; flag gaps honestly.
 
-When applicationHistoryPath is set, prepare a log line the operator can append after they submit (do not write the file until they ask at the final checkpoint).
-
 ## Map requirements to resume evidence
-Load the job posting text and list top requirements.
-Match each requirement to resume evidence from resumeFolderPath; note gaps and honest bridge language.
-Summarize the map in [[PROGRESS]] for the operator; do not draft the cover letter yet in this step.
+Continue from the operator’s job posting confirmation (checkpoint responses above).
+
+Load the job posting text (URL or pasted jobDescription).
+List top requirements and match each to resume evidence from resumeFolderPath; note gaps and honest bridge language.
+Summarize the map in [[PROGRESS]] before drafting prose.
 
 ## Draft tailored bullets and cover letter
-Rewrite 3–5 resume bullet lines with quantified outcomes where the source material supports them.
-Draft a cover letter under one page: role + company fit, evidence-backed claims, one clear ask.
-Keep plain text the operator can paste into Word or PDF; include gap notes where experience is thin.
-Stop before final approval — the workflow pauses for the operator to review accuracy.
+Rewrite 3–5 resume bullet lines with quantified outcomes only where source files support them.
+Draft a cover letter under one page with role + company fit and one clear ask.
+Include gap notes where experience is thin; keep plain text for Word or PDF paste.
+Stop before final approval — the workflow pauses for the operator to review every claim.
 
-## Finalize pack after approval
-Apply any fixes from the operator’s approval checkpoint.
-Emit a submission checklist (portal steps, attachments) and a draft application log line when applicationHistoryPath is provided.
-The operator submits the application themselves; do not click apply or send email on their behalf.`;
+## Finalize pack after approval (this step only)
+Continue from the operator’s approval checkpoint (fix requests in checkpoint responses above).
+
+Apply accuracy fixes the operator requested; do not reintroduce invented facts.
+Emit a submission checklist (portal steps, attachments).
+When applicationHistoryPath is provided, draft one log line the operator can append after they submit — do not write the file until they ask.
+The operator submits the application themselves; do not apply or send on their behalf.`;

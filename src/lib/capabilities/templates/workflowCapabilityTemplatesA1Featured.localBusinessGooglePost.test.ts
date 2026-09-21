@@ -34,7 +34,7 @@ describe("local-business-google-post workflow", () => {
     ]);
 
     expect(template.exampleRequest).toContain("Load history and dedupe");
-    expect(template.exampleRequest).toContain("Draft post copy");
+    expect(template.exampleRequest).toContain("Draft Google Business post");
     expect(template.exampleRequest).toContain("postHistoryPath");
   });
 });

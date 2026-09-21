@@ -39,7 +39,8 @@ describe("teacher-lesson-plan workflow", () => {
 
     expect(template.exampleRequest).toContain("Align objectives and pacing");
     expect(template.exampleRequest).toContain("Draft timed agenda");
-    expect(template.exampleRequest).toContain("Finalize after approval");
+    expect(template.exampleRequest).toContain("Finalize the teach-ready plan");
+    expect(template.exampleRequest).toContain("Reflection prompts");
     expect(template.exampleRequest).not.toContain("[[AWAITING_INPUT]]");
   });
 });

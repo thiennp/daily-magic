@@ -5,10 +5,9 @@ export const AGENT_A1_PART2: readonly PresetHarnessSeed[] = [
     id: "writing-coach",
     name: "Writing coach",
     category: "Communication",
-    description:
-      "Ship a clearer draft that keeps your voice, with major edits explained.",
+    description: "Polish drafts for clarity, tone, and structure.",
     exampleRequest:
-      "Clearer draft with my voice preserved and major edits called out.",
+      "Improve this draft for clarity and tone. Preserve my voice and call out major edits.",
     profile: {
       ruleFocus: [
         "Preserve author voice unless asked to change it.",
@@ -30,8 +29,7 @@ export const AGENT_A1_PART2: readonly PresetHarnessSeed[] = [
         "Return revised draft + edit notes.",
         "Flag optional deeper rewrites.",
       ],
-      instructionAddendum:
-        "Standing specialist — paste the draft and audience in the task prompt; no intake form. Show before/after for major changes when helpful.",
+      instructionAddendum: "Show before/after for major changes when helpful.",
       subagentMission:
         "You are the writing-coach subagent. Improve clarity while keeping the author's voice.",
       subagentExpertise: ["Editing", "Tone", "Structure"],

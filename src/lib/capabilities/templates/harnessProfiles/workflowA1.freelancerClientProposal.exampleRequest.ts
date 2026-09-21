@@ -3,23 +3,27 @@ export const FREELANCER_CLIENT_PROPOSAL_EXAMPLE_REQUEST = `Draft a client-ready 
 Read clientName, projectBrief, budgetRange, portfolioFolderPath, and proposalHistoryPath when present.
 If portfolioFolderPath is empty, ask at the next human checkpoint which samples to cite — do not invent portfolio proof.
 
-## 1. Brief and portfolio fit (analysis only)
-Summarize the client ask, constraints, and risks in plain language.
-Skim portfolioFolderPath for 2–3 relevant proof points with one-line outcomes each.
-If proposalHistoryPath exists, note recent pitches so positioning can vary.
-List any clarifying questions in [[PROGRESS]]; the operator confirms scope at the human checkpoint — do not send yet.
+## Brief and portfolio fit
+Summarize the client ask, budget constraints, and scope risks in plain language.
+Skim portfolioFolderPath for relevant case studies; cite real paths or titles — never invent proof.
+If proposalHistoryPath exists, note recent pitches so positioning can vary from prior outreach.
+List assumptions in [[PROGRESS]] when the brief is ambiguous.
 
-## 2. Draft proposal (scope, timeline, pricing)
-Produce a send-ready draft with:
-- Executive summary tied to projectBrief
-- In-scope deliverables, out-of-scope items, and revision rounds
-- Milestone timeline the operator can honor
-- Pricing aligned with budgetRange (or tiered options with assumptions)
-- Optional add-ons separated from core price
-- Assumptions and dependencies called out explicitly
-Stop before send — the workflow pauses for operator approval.
+## Draft proposal (this step)
+Write a client-ready draft with:
+- Executive summary tied to projectBrief and clientName
+- In-scope deliverables, explicit out-of-scope items, and revision rounds
+- Milestone timeline with dates the operator can honor
+- Pricing aligned with budgetRange, or tiered options with clear assumptions
+- Optional add-ons separated from the core price
+- 2–3 portfolio proof lines with outcomes (from portfolioFolderPath)
 
-## 3. Finalize after approval
-Apply revision notes from the operator checkpoint if any.
-Polish formatting for email or platform upload.
-Prepare a short append entry for proposalHistoryPath after the operator sends (do not send or sign on their behalf).`;
+Stop before sending — the workflow pauses for operator approval at the next checkpoint.
+
+## Finalize after approval (this step only)
+Continue from operator approval or revision notes at the prior checkpoint.
+
+Apply requested edits to scope, timeline, or pricing.
+Polish formatting for email or platform upload (Upwork, CRM, etc.).
+Prepare a concise log snippet the operator can append to proposalHistoryPath after they send.
+Do not send email, accept contracts, or submit bids on the operator’s behalf.`;

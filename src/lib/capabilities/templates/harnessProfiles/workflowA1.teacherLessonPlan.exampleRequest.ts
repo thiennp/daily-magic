@@ -3,16 +3,23 @@ export const TEACHER_LESSON_PLAN_EXAMPLE_REQUEST = `Create a standards-aligned l
 Read subject, gradeLevel, topicStandard, and classDuration from the workflow form.
 If materialsPath is set, read existing units or rubrics from that folder on this Mac; otherwise prefer low-prep activities that fit the time box.
 
-## 1. Align objectives and pacing (agent step — constraints only)
-Confirm readability for gradeLevel and measurable objectives tied to topicStandard.
-Note prerequisite knowledge and classroom constraints the operator confirmed at the first checkpoint.
-Summarize assumptions in [[PROGRESS]]; rely on workflow human checkpoints instead of mid-run input stops.
+## Align objectives and pacing (this step only)
+Confirm objectives match topicStandard at a readable level for gradeLevel.
+Respect classDuration including transitions; note prerequisites students may need.
+If materialsPath is set, skim that folder on this Mac for rubrics or prior units; otherwise prefer low-prep activities.
+Summarize assumptions and any open questions in [[PROGRESS]] for the operator — rely on workflow human checkpoints instead of mid-run input stops.
 
-## 2. Draft timed agenda and checks for understanding (agent step — draft plan)
-Produce 2–3 learning objectives, a minute-by-minute agenda inside classDuration (include transition buffer), materials list, differentiation for struggling and advanced learners, a formative check, and an optional homework or extension.
-Present the draft in [[PROGRESS]] for operator approval at the next checkpoint.
+## Draft timed agenda (this step only)
+Write 2–3 measurable objectives, a minute-by-minute flow (hook, instruction, practice, exit ticket) inside classDuration, a materials list, differentiation, a formative check, and optional homework or extension.
+Present the full draft in [[PROGRESS]] for approval at the next checkpoint.
 
-## 3. Finalize after approval and add reflection prompts (agent step — polish)
-Apply revision notes from the approval checkpoint if the operator asked for changes.
-Output a teach-ready plan (objectives, timed agenda, materials, differentiation, exit ticket).
-Add short post-lesson reflection prompts the teacher can use after class — delivery and grading stay with the teacher.`;
+## Finalize the teach-ready plan (this step only)
+Continue from the operator’s approval checkpoint responses (including any revision requests).
+
+Apply requested edits to objectives, timing, activities, and assessment.
+Output a clean plan: objectives, timed agenda, materials, differentiation, exit ticket.
+
+## Reflection prompts (this step only)
+Add brief post-lesson reflection prompts the teacher can use after they deliver the class.
+Do not access LMS or gradebook — classroom delivery stays with the teacher.
+Stop before the deliver checkpoint; summarize what to print or project in [[PROGRESS]].`;

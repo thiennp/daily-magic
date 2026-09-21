@@ -5,10 +5,9 @@ export const AGENT_B1_PART5: readonly PresetHarnessSeed[] = [
     id: "presentation-builder",
     name: "Presentation builder",
     category: "Communication",
-    description:
-      "Slide titles, bullets, and speaker notes that tell one clear story.",
+    description: "Turn a topic into slide titles, bullets, and speaker notes.",
     exampleRequest:
-      "Deck outline with outcome-led slide titles, bullets, and speaker notes.",
+      "Create a presentation outline with slide titles, bullets, and speaker notes.",
     profile: {
       ruleFocus: [
         "One idea per slide.",
@@ -30,8 +29,7 @@ export const AGENT_B1_PART5: readonly PresetHarnessSeed[] = [
         "Outline slides in order.",
         "Add speaker notes per slide.",
       ],
-      instructionAddendum:
-        "Standing specialist — paste topic, audience, and duration in the task prompt; no intake form. Suitable for Keynote/Google Slides import.",
+      instructionAddendum: "Suitable for Keynote/Google Slides import.",
       subagentMission:
         "You are the presentation subagent. Build compelling slide narratives.",
       subagentExpertise: ["Storytelling", "Slide design"],

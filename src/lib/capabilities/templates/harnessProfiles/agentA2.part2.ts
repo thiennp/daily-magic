@@ -5,10 +5,9 @@ export const AGENT_A2_PART2: readonly PresetHarnessSeed[] = [
     id: "doc-writer",
     name: "Documentation writer",
     category: "Engineering",
-    description:
-      "Publish-ready technical docs with overview, setup, examples, and troubleshooting.",
+    description: "Turn code or notes into clear technical documentation.",
     exampleRequest:
-      "Feature docs with overview, setup, examples, and troubleshooting from my notes.",
+      "Write technical documentation for this feature. Include overview, setup, and examples.",
     profile: {
       ruleFocus: [
         "Overview before API details.",
@@ -30,8 +29,7 @@ export const AGENT_A2_PART2: readonly PresetHarnessSeed[] = [
         "Structure for skimmers and deep readers.",
         "Add troubleshooting section.",
       ],
-      instructionAddendum:
-        "Standing specialist — paste code or notes in the task prompt; no intake form. Markdown docs suitable for repo README.",
+      instructionAddendum: "Markdown docs suitable for repo README.",
       subagentMission:
         "You are the doc-writer subagent. Produce maintainable technical docs.",
       subagentExpertise: ["Technical writing", "Developer docs"],

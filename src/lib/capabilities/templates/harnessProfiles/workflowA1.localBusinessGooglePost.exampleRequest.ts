@@ -2,20 +2,24 @@ export const LOCAL_BUSINESS_GOOGLE_POST_EXAMPLE_REQUEST = `Draft a Google Busine
 
 Read businessName, businessType, postTopic, hoursOrOffer, and postHistoryPath from the workflow form.
 
-## 1. Load history and dedupe
-Load postHistoryPath on this Mac if it exists; if missing, note that you will help seed the file after publish.
-Avoid repeating hooks, offers, or angles from recent history entries.
+## Load history and dedupe (this step only)
+Load postHistoryPath on this Mac if it exists; if missing, note that you will help create the first entry after publish.
+Scan recent entries and avoid reusing hooks, offers, or angles from the last few posts.
 Summarize dedupe notes in [[PROGRESS]].
 
-## 2. Draft post copy
-Write scannable mobile copy: headline, body, one clear CTA (call, book, directions, or redeem offer).
-Keep hoursOrOffer and event dates accurate for businessType.
-Avoid expired promos and unverifiable superlatives; suggest photos if helpful.
-The workflow pauses for operator approval at the next human checkpoint — do not use [[AWAITING_INPUT]] for workflow gates.
+## Draft Google Business post (this step only)
+Write mobile-scannable copy tuned for local search: headline, body, one clear CTA (call, book, directions, or redeem).
+Honor hoursOrOffer and dates exactly for businessType; avoid expired promos and unverifiable superlatives.
+Include a short photo brief if images would help.
+The workflow pauses for operator approval at the next checkpoint — use human checkpoints instead of mid-run input stops for workflow gates.
 
-## 3. Revise after approval and prepare history
-If the operator requested edits at the approval checkpoint, apply them.
-Prepare a short history entry (date, topic, CTA snippet) to append to postHistoryPath after they publish in Google Business Profile.
-Google Business login and publish stay with the operator.
+## Revise copy if needed (this step only)
+Continue from operator feedback at the approval checkpoint above.
 
-Emit [[PROGRESS]] through: history → draft → revise (if needed) → history append draft.`;
+If the operator requested edits, update headline, body, CTA, and dates for accuracy.
+If they approved as-is, keep the approved copy and only polish formatting.
+
+## Prepare history append (this step only)
+Draft a concise entry (date, topic snippet, CTA) ready to append to postHistoryPath after the operator publishes in Google Business Profile.
+Remind the operator they publish manually and can ask you to write the file append once done.
+Do not publish or log in to Google in this step.`;

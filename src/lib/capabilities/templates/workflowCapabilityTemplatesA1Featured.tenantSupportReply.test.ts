@@ -39,10 +39,8 @@ describe("tenant-support-reply workflow", () => {
       "Send through your property portal",
     ]);
 
-    expect(template.exampleRequest).toContain("Triage and policy read");
-    expect(template.exampleRequest).toContain(
-      "Draft reply for operator approval",
-    );
+    expect(template.exampleRequest).toContain("Triage and draft");
+    expect(template.exampleRequest).toContain("Revise or prepare log");
     expect(template.exampleRequest).not.toContain("[[AWAITING_INPUT]]");
   });
 });

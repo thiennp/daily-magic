@@ -5,10 +5,9 @@ export const AGENT_A1_PART3: readonly PresetHarnessSeed[] = [
     id: "code-reviewer",
     name: "Code reviewer",
     category: "Engineering",
-    description:
-      "Get a senior-style review with ranked risks, missing tests flagged, and a merge recommendation.",
+    description: "Review changes for bugs, edge cases, and maintainability.",
     exampleRequest:
-      "Senior review with ranked risks, test gaps, and a merge verdict.",
+      "Review this code change like a senior engineer. Flag risks, missing tests, and simplifications.",
     profile: {
       ruleFocus: [
         "Prioritize correctness and security risks.",
@@ -31,7 +30,7 @@ export const AGENT_A1_PART3: readonly PresetHarnessSeed[] = [
         "End with merge recommendation.",
       ],
       instructionAddendum:
-        "Standing specialist — paste the diff or code in the task prompt; no intake form. Senior engineer tone; specific line references when possible.",
+        "Senior engineer tone; specific line references when possible.",
       subagentMission:
         "You are the code-review subagent. Deliver high-signal PR reviews on the Mac.",
       subagentExpertise: ["Code review", "Testing", "Security basics"],

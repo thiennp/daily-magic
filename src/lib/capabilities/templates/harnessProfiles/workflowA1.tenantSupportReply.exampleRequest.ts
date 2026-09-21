@@ -5,22 +5,20 @@ Open leaseNotesPath on this Mac for policies, deposits, repair responsibilities,
 Honor replyTone when set; otherwise use a professional, de-escalating tone.
 Use tenantLogPath after send to log the thread when the operator provides that path.
 
-## 1. Triage and policy read (before drafting)
-Classify urgency for issueType (emergency vs routine maintenance, rent, noise, lease, other).
-List facts you can verify from tenantMessage and lease notes only.
-Note missing information the tenant should provide — summarize in [[PROGRESS]] for the operator.
-Do not admit liability, promise illegal outcomes, or give legal advice.
-Do not produce a send-ready reply in this phase.
+## Triage and draft (this step only)
+Continue from the operator’s context checkpoint when responses are present.
 
-## 2. Draft reply for operator approval
-Continue from prior operator checkpoint responses when present.
-Draft a reply that acknowledges the concern, cites applicable policy from leaseNotesPath, and states clear next steps (timeline, vendor dispatch, documents needed).
-Match replyTone; avoid jargon and threats.
-The workflow will pause for operator approval — do not claim the message was sent.
+Open leaseNotesPath on this Mac and read policies relevant to issueType.
+Classify urgency (emergency vs routine). List verified facts and missing information from the tenant.
+Draft a send-ready reply that matches replyTone (default: professional, calm).
+Ground rights and timelines only in lease notes — no liability admissions or illegal promises.
+Include acknowledgment, policy cite, next steps, and a realistic ETA window.
+Summarize triage and present the full draft in [[PROGRESS]].
+Do not use mid-run input stops — the workflow pauses at human checkpoints before send.
 
-## 3. After approval — revise or log
-If the operator requested edits at the approval checkpoint, revise the draft accordingly.
-When the reply is approved, prepare a concise log line for tenantLogPath (create or append if the path exists).
-Vendor dispatch and portal sending stay with the operator; you do not send email or access building systems.
+## Revise or prepare log (this step only)
+Continue from the approval checkpoint response above.
 
-Emit [[PROGRESS]] through: triage → draft → approval gate → revise/log.`;
+If the operator asked for edits, revise the draft and show the updated version in [[PROGRESS]].
+If the operator approved, prepare a concise log line for tenantLogPath (read or append on this Mac when the path is set).
+Do not send through email or tenant portals; the operator sends manually at the final checkpoint.`;

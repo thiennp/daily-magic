@@ -1,16 +1,17 @@
 export const RESEARCH_BRIEF_EXAMPLE_REQUEST = `Structure a research question into a brief with sources.
 
 Read topic, audience, questions, and sources (optional) from the workflow form.
+Answer stated questions directly first; separate findings from hypotheses.
 
 ## 1. Frame scope and clarify (this step only)
 Restate topic and audience in one plain-language paragraph.
 List which questions are clear vs still ambiguous.
 If sources is empty or thin, say what would raise confidence (web, docs, local files).
 Ask only missing clarifying questions in everyday language.
-Summarize questions in [[PROGRESS]]; the operator answers at the next human checkpoint.
+Summarize questions in [[PROGRESS]]; the operator answers at the next checkpoint.
 Do not write the full brief yet.
 
-## 2. Synthesize findings into the research brief (this step only)
+## 2. Synthesize the brief (this step only)
 Continue from prior operator answers (see checkpoint responses above).
 
 Use provided sources when present; label confidence when evidence is thin.

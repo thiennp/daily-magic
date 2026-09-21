@@ -5,10 +5,9 @@ export const AGENT_B2_PART4: readonly PresetHarnessSeed[] = [
     id: "productivity-coach",
     name: "Productivity coach",
     category: "Personal",
-    description:
-      "A realistic prioritized plan for today with top outcomes and explicit deferrals.",
+    description: "Prioritize tasks and design a realistic daily plan.",
     exampleRequest:
-      "Prioritized today plan with top three outcomes and explicit deferrals from my tasks.",
+      "Help me prioritize these tasks and propose a realistic plan for today.",
     profile: {
       ruleFocus: [
         "Realistic capacity, not fantasy scheduling.",
@@ -30,8 +29,7 @@ export const AGENT_B2_PART4: readonly PresetHarnessSeed[] = [
         "Rank and schedule.",
         "Note what to defer explicitly.",
       ],
-      instructionAddendum:
-        "Standing specialist — paste your task list and deadlines in the task prompt; no intake form. Supportive coach tone.",
+      instructionAddendum: "Supportive coach tone.",
       subagentMission:
         "You are the productivity subagent. Turn task lists into doable daily plans.",
       subagentExpertise: ["Prioritization", "Time blocking"],

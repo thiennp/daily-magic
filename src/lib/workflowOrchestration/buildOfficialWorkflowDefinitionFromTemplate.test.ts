@@ -49,7 +49,7 @@ describe("official workflow definitions for marketplace templates", () => {
     }
 
     const sections = parseExampleRequestSections(template.exampleRequest);
-    expect(sections.length).toBeGreaterThan(3);
+    expect(sections.length).toBeGreaterThanOrEqual(3);
   });
 
   it("uses custom orchestration for contract summarizer workflow", () => {

@@ -39,8 +39,11 @@ describe("vibe-coding-app-feature workflow", () => {
     ]);
 
     expect(template.exampleRequest).toContain("Clarify first");
-    expect(template.exampleRequest).toContain("Architecture decisions");
+    expect(template.exampleRequest).toContain(
+      "Architecture analysis and decisions",
+    );
     expect(template.exampleRequest).toContain("Upsides");
     expect(template.exampleRequest).toContain("feature-knowledge");
+    expect(template.exampleRequest).not.toContain("[[AWAITING_INPUT]]");
   });
 });

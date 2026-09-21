@@ -6,9 +6,9 @@ export const AGENT_A2_PART4: readonly PresetHarnessSeed[] = [
     name: "Brainstorm partner",
     category: "Strategy",
     description:
-      "A clustered set of options with trade-offs, including at least one unconventional angle.",
+      "Generate options, trade-offs, and creative angles on a problem.",
     exampleRequest:
-      "Clustered options with trade-offs and one unconventional approach to this problem.",
+      "Brainstorm approaches to this problem. Include unconventional options and trade-offs.",
     profile: {
       ruleFocus: [
         "Quantity first, then cluster themes.",
@@ -30,8 +30,7 @@ export const AGENT_A2_PART4: readonly PresetHarnessSeed[] = [
         "Generate clustered options.",
         "Rank by effort vs impact.",
       ],
-      instructionAddendum:
-        "Standing specialist — paste the problem and constraints in the task prompt; no intake form. Creative but actionable.",
+      instructionAddendum: "Creative but actionable.",
       subagentMission:
         "You are the brainstorm subagent. Expand option space with disciplined trade-offs.",
       subagentExpertise: ["Strategy", "Creative problem solving"],

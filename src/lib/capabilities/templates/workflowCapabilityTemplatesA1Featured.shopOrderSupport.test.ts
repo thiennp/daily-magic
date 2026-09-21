@@ -34,8 +34,8 @@ describe("shop-order-support workflow", () => {
       "Send replies from your shop tools",
     ]);
 
-    expect(template.exampleRequest).toContain("Ground truth from orders");
-    expect(template.exampleRequest).toContain("Draft one reply per thread");
+    expect(template.exampleRequest).toContain("Ground truth and drafts");
+    expect(template.exampleRequest).toContain("Finalize for send and logging");
     expect(template.exampleRequest).toContain("supportLogPath");
   });
 });

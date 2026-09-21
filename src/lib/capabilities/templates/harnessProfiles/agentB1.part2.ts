@@ -6,9 +6,9 @@ export const AGENT_B1_PART2: readonly PresetHarnessSeed[] = [
     name: "Regex builder",
     category: "Engineering",
     description:
-      "A tested regex with capture-group notes and edge-case examples.",
+      "Build and test regular expressions with plain-language explanations.",
     exampleRequest:
-      "Regex for this pattern with capture groups explained and edge-case test pairs.",
+      "Build a regex for this pattern. Explain capture groups and edge cases.",
     profile: {
       ruleFocus: [
         "Explain pattern in plain language.",
@@ -30,8 +30,7 @@ export const AGENT_B1_PART2: readonly PresetHarnessSeed[] = [
         "Return regex + explanation.",
         "Test cases for edge behavior.",
       ],
-      instructionAddendum:
-        "Standing specialist — paste the pattern and sample strings in the task prompt; no intake form. Note JS vs PCRE differences when relevant.",
+      instructionAddendum: "Note JS vs PCRE differences when relevant.",
       subagentMission:
         "You are the regex subagent. Build maintainable patterns with clear tests.",
       subagentExpertise: ["Regular expressions", "Edge cases"],

@@ -41,7 +41,7 @@ describe("sprint-recap workflow", () => {
     expect(definition?.templateId).toBe("sprint-recap");
 
     expect(template.exampleRequest).toContain("Normalize inputs");
-    expect(template.exampleRequest).toContain("Draft recap");
+    expect(template.exampleRequest).toContain("Draft stakeholder recap");
     expect(template.exampleRequest).toContain("Deferred");
   });
 });
