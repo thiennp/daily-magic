@@ -39,6 +39,10 @@ const parseWorkflowHumanStepPayload = (
     value.priorAgentOutputPreview.trim().length > 0
       ? { priorAgentOutputPreview: value.priorAgentOutputPreview }
       : {}),
+    ...(typeof value.workflowLabel === "string" &&
+    value.workflowLabel.trim().length > 0
+      ? { workflowLabel: value.workflowLabel }
+      : {}),
   };
 };
 

@@ -4,6 +4,7 @@ import AppShellBottomNav from "@/features/shell/AppShellBottomNav";
 import AppShellHeader from "@/features/shell/AppShellHeader";
 import { APP_SHELL_WIDE_CONTENT_CLASS } from "@/features/shell/appShellContentWidth.constant";
 import DispatchApprovalListener from "@/features/dispatch/DispatchApprovalListener";
+import WorkflowAttentionBanner from "@/features/dispatch/WorkflowAttentionBanner";
 import WorkflowHumanStepListener from "@/features/dispatch/WorkflowHumanStepListener";
 import GuestLibraryDraftSyncListener from "@/features/library/GuestLibraryDraftSyncListener";
 
@@ -24,6 +25,7 @@ export default function AppShell({
   return (
     <div className="min-h-screen bg-gray-50 pb-16 md:pb-0 dark:bg-gray-900">
       <AppShellHeader />
+      <WorkflowAttentionBanner />
       <DispatchApprovalListener />
       <WorkflowHumanStepListener />
       <GuestLibraryDraftSyncListener />

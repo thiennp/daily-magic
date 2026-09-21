@@ -5,6 +5,7 @@ import { useState } from "react";
 import { Modal } from "@/components/ui/modal";
 import WorkflowHumanStepModalFooter from "@/features/dispatch/WorkflowHumanStepModalFooter";
 import WorkflowHumanStepPriorOutput from "@/features/dispatch/WorkflowHumanStepPriorOutput";
+import WorkflowRunStepProgress from "@/features/dispatch/WorkflowRunStepProgress";
 import type { WorkflowHumanStepRequest } from "@/lib/workflowOrchestration/types/WorkflowHumanStepPayload.type";
 
 interface WorkflowHumanStepModalProps {
@@ -32,26 +33,30 @@ export default function WorkflowHumanStepModal({
     <Modal
       isOpen
       onClose={onDismiss}
-      showCloseButton={false}
-      className="max-w-xl p-6"
+      showCloseButton
+      className="max-w-lg p-6 sm:p-8"
     >
-      <p className="text-xs font-medium uppercase tracking-wide text-brand-500">
-        {request.totalSteps !== undefined
-          ? `Step ${request.stepIndex + 1} of ${request.totalSteps}`
-          : `Step ${request.stepIndex + 1}`}
-      </p>
-      <h2 className="mt-1 text-lg font-semibold text-gray-800 dark:text-white/90">
+      {request.workflowLabel !== undefined ? (
+        <p className="text-sm font-medium text-brand-600 dark:text-brand-400">
+          {request.workflowLabel}
+        </p>
+      ) : null}
+      <h2 className="mt-1 text-xl font-semibold text-gray-900 dark:text-white">
         {request.title}
       </h2>
       <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-        This workflow paused until you complete this step. The run stays{" "}
-        <span className="font-medium">running</span> in job history.
+        Your assistant paused here so you can review or answer. You can close
+        this and come back anytime — we will keep your place.
       </p>
-      <div className="mt-4 rounded-lg border border-gray-200 bg-white p-3 dark:border-gray-700 dark:bg-gray-900/40">
-        <p className="text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">
-          Instructions
+      <WorkflowRunStepProgress
+        stepIndex={request.stepIndex}
+        totalSteps={request.totalSteps}
+      />
+      <div className="mt-5 rounded-xl border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-900/30">
+        <p className="text-sm font-medium text-gray-900 dark:text-white">
+          What to do
         </p>
-        <p className="mt-2 whitespace-pre-wrap text-sm text-gray-800 dark:text-white/90">
+        <p className="mt-2 whitespace-pre-wrap text-sm leading-relaxed text-gray-700 dark:text-gray-300">
           {request.instructions}
         </p>
       </div>
@@ -60,20 +65,20 @@ export default function WorkflowHumanStepModal({
           outputPreview={request.priorAgentOutputPreview}
         />
       ) : null}
-      <label className="mt-4 block text-sm text-gray-700 dark:text-gray-300">
-        Your response
+      <label className="mt-5 block text-sm font-medium text-gray-900 dark:text-white">
+        Your reply
         <textarea
           value={response}
           onChange={(event) => {
             setResponse(event.target.value);
           }}
           rows={4}
-          placeholder="Type your response…"
-          className="mt-2 w-full rounded-lg border border-gray-200 px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-800"
+          placeholder="Type your answer here…"
+          className="mt-2 w-full rounded-xl border border-gray-200 px-3 py-2.5 text-sm text-gray-900 shadow-sm focus:border-brand-300 focus:outline-none focus:ring-2 focus:ring-brand-500/20 dark:border-gray-600 dark:bg-gray-800 dark:text-white"
         />
       </label>
       {submitError !== null ? (
-        <p className="mt-2 text-sm text-red-600 dark:text-red-400">
+        <p className="mt-2 text-sm text-red-600 dark:text-red-400" role="alert">
           {submitError}
         </p>
       ) : null}

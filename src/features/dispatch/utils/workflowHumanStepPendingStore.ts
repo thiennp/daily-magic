@@ -1,3 +1,4 @@
+import { clearWorkflowAttentionSnoozeForRun } from "@/features/dispatch/utils/workflowAttentionSnoozeStore";
 import type { WorkflowHumanStepRequest } from "@/lib/workflowOrchestration/types/WorkflowHumanStepPayload.type";
 
 const pendingState: { current: WorkflowHumanStepRequest | null } = {
@@ -20,6 +21,9 @@ export const subscribeWorkflowHumanStepPending = (
 export const setWorkflowHumanStepPending = (
   request: WorkflowHumanStepRequest | null,
 ): void => {
+  if (request !== null) {
+    clearWorkflowAttentionSnoozeForRun(request.workflowRunId);
+  }
   pendingState.current = request;
   listeners.forEach((listener) => {
     listener();

@@ -2,6 +2,7 @@ import type AgentWitchHubRuntime from "@/lib/agentWitch/types/AgentWitchHubRunti
 import { broadcastWorkflowStepFailed } from "@/lib/workflowOrchestration/broadcastWorkflowStepFailed";
 import { continueOfficialWorkflowRun } from "@/lib/workflowOrchestration/continueOfficialWorkflowRun";
 import { buildAgentStepOutputPreview } from "@/lib/workflowOrchestration/buildAgentStepOutputPreview";
+import { readWorkflowLabelFromRun } from "@/lib/workflowOrchestration/readWorkflowLabelFromRun";
 import {
   completeWorkflowStepRun,
   getWorkflowRunById,
@@ -36,11 +37,13 @@ export const advanceOfficialWorkflowRunAfterAgentRun = async (
       status: "failed",
       errorMessage,
     });
+    const workflowLabel = readWorkflowLabelFromRun(run);
     broadcastWorkflowStepFailed(runtime, run.requesterUserId, run.id, {
       stepRunId: step.id,
       stepIndex: step.stepIndex,
       title: step.title,
       errorMessage,
+      ...(workflowLabel !== undefined ? { workflowLabel } : {}),
     });
     return;
   }

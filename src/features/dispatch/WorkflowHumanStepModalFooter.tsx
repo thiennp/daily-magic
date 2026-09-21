@@ -20,19 +20,16 @@ export default function WorkflowHumanStepModalFooter({
   onDismiss,
 }: WorkflowHumanStepModalFooterProps) {
   return (
-    <div className="mt-6 flex flex-wrap items-center justify-between gap-3">
+    <div className="mt-6 flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-between">
       <button
         type="button"
         onClick={onDismiss}
         disabled={isSubmitting}
-        className="text-left text-sm text-gray-600 hover:text-gray-800 disabled:opacity-50 dark:text-gray-400 dark:hover:text-gray-200"
+        className="text-sm font-medium text-gray-600 hover:text-gray-800 disabled:opacity-50 dark:text-gray-400 dark:hover:text-gray-200"
       >
-        <span className="font-medium">Remind me later</span>
-        <span className="mt-0.5 block text-xs text-gray-500 dark:text-gray-500">
-          Workflow stays paused — answer from job history anytime.
-        </span>
+        Not now
       </button>
-      <div className="flex items-center gap-3">
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
         {allowSkip ? (
           <button
             type="button"
@@ -43,8 +40,12 @@ export default function WorkflowHumanStepModalFooter({
             Skip this step
           </button>
         ) : null}
-        <Button disabled={!canSubmit} onClick={onSubmit}>
-          {isSubmitting ? "Sending…" : "Send and continue"}
+        <Button
+          className="w-full sm:w-auto"
+          disabled={!canSubmit}
+          onClick={onSubmit}
+        >
+          {isSubmitting ? "Saving…" : "Continue"}
         </Button>
       </div>
     </div>

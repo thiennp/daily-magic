@@ -9,6 +9,8 @@ export default interface WorkflowHumanStepPayload {
   readonly allowSkip?: boolean;
   /** Output of the closest preceding agent step, so the operator can answer in place. */
   readonly priorAgentOutputPreview?: string;
+  /** Friendly product name for the workflow preset (e.g. marketplace title). */
+  readonly workflowLabel?: string;
 }
 
 export interface WorkflowHumanStepRequest extends WorkflowHumanStepPayload {

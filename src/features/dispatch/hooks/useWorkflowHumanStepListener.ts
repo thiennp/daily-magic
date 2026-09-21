@@ -5,6 +5,7 @@ import { useCallback, useSyncExternalStore, useState } from "react";
 import { useAgentWitchDashboardSubscription } from "@/features/agent-witch/dashboard/useAgentWitchDashboardSubscription";
 import { postWorkflowHumanStepComplete } from "@/features/agent/utils/postWorkflowHumanStepComplete";
 import { parseWorkflowHumanStepSocketMessage } from "@/features/dispatch/utils/workflowHumanStepSocket";
+import { snoozeWorkflowHumanAttention } from "@/features/dispatch/utils/workflowAttentionSnoozeStore";
 import {
   getWorkflowHumanStepPendingSnapshot,
   setWorkflowHumanStepPending,
@@ -70,7 +71,8 @@ export function useWorkflowHumanStepListener(): {
       setSubmitError(
         result.ok
           ? null
-          : (result.errorMessage ?? "Could not submit your answer."),
+          : (result.errorMessage ??
+              "We could not save your reply. Please try again."),
       );
     },
     [pendingHumanStep],
@@ -95,9 +97,12 @@ export function useWorkflowHumanStepListener(): {
   }, [pendingHumanStep, submitHumanStep]);
 
   const dismissHumanStep = useCallback(() => {
+    if (pendingHumanStep !== null) {
+      snoozeWorkflowHumanAttention(pendingHumanStep);
+    }
     setWorkflowHumanStepPending(null);
     setSubmitError(null);
-  }, []);
+  }, [pendingHumanStep]);
 
   return {
     pendingHumanStep,

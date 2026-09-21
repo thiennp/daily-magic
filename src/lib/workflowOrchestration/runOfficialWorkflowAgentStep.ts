@@ -6,6 +6,7 @@ import findCapabilityTemplateById from "@/lib/capabilities/templates/findCapabil
 import { dispatchClaudeRunForDashboardUser } from "@/lib/dispatch/dispatchWriterRunForDashboardUser";
 import type { AgentRunDispatchBody } from "@/lib/dispatch/parseAgentRunDispatchBody";
 import { broadcastWorkflowStepFailed } from "@/lib/workflowOrchestration/broadcastWorkflowStepFailed";
+import { readWorkflowLabelFromRun } from "@/lib/workflowOrchestration/readWorkflowLabelFromRun";
 import { collectPriorHumanResponsesFromWorkflowRun } from "@/lib/workflowOrchestration/collectPriorHumanResponsesFromWorkflowRun";
 import { buildWorkflowRunStepResponse } from "@/lib/workflowOrchestration/buildWorkflowRunStepResponse";
 import { readDispatchErrorMessageFromAgentWitchMessage } from "@/lib/workflowOrchestration/readDispatchErrorMessageFromAgentWitchMessage";
@@ -80,6 +81,7 @@ export const runOfficialWorkflowAgentStep = async (input: {
       status: "failed",
       errorMessage,
     });
+    const workflowLabel = readWorkflowLabelFromRun(input.run);
     broadcastWorkflowStepFailed(
       input.runtime,
       input.run.requesterUserId,
@@ -89,6 +91,7 @@ export const runOfficialWorkflowAgentStep = async (input: {
         stepIndex: input.run.currentStepIndex,
         title: input.agentNode.title,
         errorMessage,
+        ...(workflowLabel !== undefined ? { workflowLabel } : {}),
       },
     );
     return buildWorkflowRunStepResponse({

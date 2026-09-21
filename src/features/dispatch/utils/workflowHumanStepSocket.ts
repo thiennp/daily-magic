@@ -60,6 +60,9 @@ export const parseWorkflowHumanStepSocketMessage = (
           priorAgentOutputPreview: readString(payload.priorAgentOutputPreview),
         }
       : {}),
+    ...(readString(payload.workflowLabel).trim().length > 0
+      ? { workflowLabel: readString(payload.workflowLabel) }
+      : {}),
   });
 };
 
@@ -93,5 +96,8 @@ export const parseWorkflowStepFailedSocketMessage = (
     title,
     errorMessage:
       errorMessage.length > 0 ? errorMessage : "Agent step failed on your Mac.",
+    ...(readString(payload.workflowLabel).trim().length > 0
+      ? { workflowLabel: readString(payload.workflowLabel) }
+      : {}),
   });
 };

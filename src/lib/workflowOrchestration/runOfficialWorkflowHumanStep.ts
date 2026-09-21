@@ -2,6 +2,7 @@ import { randomUUID } from "node:crypto";
 
 import type AgentWitchHubRuntime from "@/lib/agentWitch/types/AgentWitchHubRuntime.type";
 import { broadcastWorkflowHumanStepRequired } from "@/lib/workflowOrchestration/broadcastWorkflowHumanStepRequired";
+import { readWorkflowLabelFromRun } from "@/lib/workflowOrchestration/readWorkflowLabelFromRun";
 import { buildWorkflowRunStepResponse } from "@/lib/workflowOrchestration/buildWorkflowRunStepResponse";
 import type { OfficialWorkflowHumanNode } from "@/lib/workflowOrchestration/types/OfficialWorkflowDefinition.type";
 import type WorkflowRunRecord from "@/lib/workflowOrchestration/types/WorkflowRunRecord.type";
@@ -18,7 +19,10 @@ export const runOfficialWorkflowHumanStep = async (input: {
   readonly requesterUserId: string;
   readonly totalSteps?: number;
   readonly priorAgentOutputPreview?: string;
+  readonly workflowLabel?: string;
 }): Promise<WorkflowRunStepResponse> => {
+  const workflowLabel =
+    input.workflowLabel ?? readWorkflowLabelFromRun(input.run);
   const stepRunId = randomUUID();
   await upsertWorkflowStepRunRecord({
     id: stepRunId,
@@ -47,6 +51,7 @@ export const runOfficialWorkflowHumanStep = async (input: {
     ...(input.priorAgentOutputPreview !== undefined
       ? { priorAgentOutputPreview: input.priorAgentOutputPreview }
       : {}),
+    ...(workflowLabel !== undefined ? { workflowLabel } : {}),
   };
 
   broadcastWorkflowHumanStepRequired(

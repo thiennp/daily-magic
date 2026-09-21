@@ -1,3 +1,4 @@
+import { clearWorkflowAttentionSnoozeForRun } from "@/features/dispatch/utils/workflowAttentionSnoozeStore";
 import type { WorkflowStepFailureRequest } from "@/lib/workflowOrchestration/types/WorkflowStepFailurePayload.type";
 
 const pendingState: { current: WorkflowStepFailureRequest | null } = {
@@ -20,6 +21,9 @@ export const subscribeWorkflowStepFailurePending = (
 export const setWorkflowStepFailurePending = (
   request: WorkflowStepFailureRequest | null,
 ): void => {
+  if (request !== null) {
+    clearWorkflowAttentionSnoozeForRun(request.workflowRunId);
+  }
   pendingState.current = request;
   listeners.forEach((listener) => {
     listener();

@@ -3,6 +3,7 @@ import type { AgentRunDispatchBody } from "@/lib/dispatch/parseAgentRunDispatchB
 import { buildWorkflowRunStepResponse } from "@/lib/workflowOrchestration/buildWorkflowRunStepResponse";
 import { parseOfficialWorkflowDefinitionSnapshot } from "@/lib/workflowOrchestration/parseOfficialWorkflowDefinitionSnapshot";
 import { readPriorAgentOutputPreview } from "@/lib/workflowOrchestration/readPriorAgentOutputPreview";
+import { readWorkflowLabelFromRun } from "@/lib/workflowOrchestration/readWorkflowLabelFromRun";
 import { runOfficialWorkflowAgentStep } from "@/lib/workflowOrchestration/runOfficialWorkflowAgentStep";
 import { runOfficialWorkflowHumanStep } from "@/lib/workflowOrchestration/runOfficialWorkflowHumanStep";
 import { shouldSkipOfficialWorkflowAgentNode } from "@/lib/workflowOrchestration/shouldSkipOfficialWorkflowAgentNode";
@@ -72,6 +73,7 @@ export const continueOfficialWorkflowRun = async (input: {
       definition,
       run.currentStepIndex,
     );
+    const workflowLabel = readWorkflowLabelFromRun(run);
     return runOfficialWorkflowHumanStep({
       runtime: input.runtime,
       run,
@@ -81,6 +83,7 @@ export const continueOfficialWorkflowRun = async (input: {
       ...(priorAgentOutputPreview !== undefined
         ? { priorAgentOutputPreview }
         : {}),
+      ...(workflowLabel !== undefined ? { workflowLabel } : {}),
     });
   }
 

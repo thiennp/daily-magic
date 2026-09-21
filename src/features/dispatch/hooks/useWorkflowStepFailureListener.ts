@@ -5,6 +5,7 @@ import { useCallback, useState, useSyncExternalStore } from "react";
 import { useAgentWitchDashboardSubscription } from "@/features/agent-witch/dashboard/useAgentWitchDashboardSubscription";
 import { postWorkflowRunStepRetry } from "@/features/agent/utils/postWorkflowRunStepRetry";
 import { parseWorkflowStepFailedSocketMessage } from "@/features/dispatch/utils/workflowHumanStepSocket";
+import { snoozeWorkflowFailureAttention } from "@/features/dispatch/utils/workflowAttentionSnoozeStore";
 import {
   getWorkflowStepFailurePendingSnapshot,
   setWorkflowStepFailurePending,
@@ -59,7 +60,9 @@ export function useWorkflowStepFailureListener(): {
     setIsRetrying(false);
 
     if (!result.ok) {
-      setRetryError(result.errorMessage ?? "Could not retry this step.");
+      setRetryError(
+        result.errorMessage ?? "Could not try again. Check your Mac.",
+      );
       return;
     }
 
@@ -67,9 +70,12 @@ export function useWorkflowStepFailureListener(): {
   }, [pendingFailure]);
 
   const dismissFailure = useCallback(() => {
+    if (pendingFailure !== null) {
+      snoozeWorkflowFailureAttention(pendingFailure);
+    }
     setWorkflowStepFailurePending(null);
     setRetryError(null);
-  }, []);
+  }, [pendingFailure]);
 
   return {
     pendingFailure,
