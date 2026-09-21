@@ -1,5 +1,5 @@
 import { AGENT_AUTOMATION_LAST_RUN_STATUSES } from "@/lib/automations/AgentAutomationLastRunStatus.constant";
-import { buildAutomationDispatchPrompt } from "@/lib/automations/buildAutomationDispatchPrompt";
+import { buildAutomationDispatchPromptAsync } from "@/lib/automations/buildAutomationDispatchPrompt";
 import {
   linkAgentRunToAutomation,
   recordAgentAutomationRun,
@@ -23,7 +23,7 @@ export const completeWebhookAutomationDispatch = async (input: {
   readonly runtime: AgentWitchHubRuntime;
   readonly fieldValues: Readonly<Record<string, string>>;
 }): Promise<DispatchAgentAutomationResult> => {
-  const prompt = buildAutomationDispatchPrompt(
+  const prompt = await buildAutomationDispatchPromptAsync(
     input.capability,
     input.fieldValues,
   );

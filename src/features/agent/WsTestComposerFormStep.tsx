@@ -6,52 +6,28 @@ import DelegatedWriterAgentField from "@/features/agent/DelegatedWriterAgentFiel
 import { useWsTestComposerDeferredSubmit } from "@/features/agent/hooks/useWsTestComposerDeferredSubmit";
 import WsTestComposerFooter from "@/features/agent/WsTestComposerFooter";
 import WsTestOperatorStepsSection from "@/features/agent/WsTestOperatorStepsSection";
-import type { useWsTestTaskComposer } from "@/features/agent/hooks/useWsTestTaskComposer";
 import WsTestTaskInputsSection from "@/features/agent/WsTestTaskInputsSection";
-import type { WsTestConnectionStatus } from "@/features/agent/types/WsTestConnectionStatus.type";
+import type WsTestComposerFormStepProps from "@/features/agent/types/WsTestComposerFormStepProps.type";
 import { isComposerStartHotkey } from "@/features/agent/utils/isComposerStartHotkey";
-import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
 
-interface WsTestComposerFormStepProps {
-  readonly composer: ReturnType<typeof useWsTestTaskComposer>;
-  readonly writerAgent: HarnessWriterAgent;
-  readonly onWriterAgentChange: (value: HarnessWriterAgent) => void;
-  readonly isWriterAgentLocked: boolean;
-  readonly isSteppedComposer: boolean;
-  readonly macDispatchDeviceId: string;
-  readonly connectionStatus: WsTestConnectionStatus;
-  readonly isSendDisabled: boolean;
-  readonly onSend: () => void;
-  readonly onClear: () => void;
-  readonly onQueue: () => void;
-  readonly showTopSpacing: boolean;
-}
-
-export default function WsTestComposerFormStep({
-  composer,
-  writerAgent,
-  onWriterAgentChange,
-  isWriterAgentLocked,
-  isSteppedComposer,
-  macDispatchDeviceId,
-  connectionStatus,
-  isSendDisabled,
-  onSend,
-  onClear,
-  onQueue,
-  showTopSpacing,
-}: WsTestComposerFormStepProps) {
+export default function WsTestComposerFormStep(
+  props: WsTestComposerFormStepProps,
+) {
   const deferredSubmit = useWsTestComposerDeferredSubmit({
-    composer,
-    enabled: isSteppedComposer,
-    onSend,
-    onClear,
+    composer: props.composer,
+    enabled: props.isSteppedComposer,
+    onSend: props.onSend,
+    onClear: props.onClear,
   });
-  const handleSend = isSteppedComposer ? deferredSubmit.handleSend : onSend;
-  const handleClear = isSteppedComposer ? deferredSubmit.handleClear : onClear;
-  const effectiveSendDisabled = isSteppedComposer
+  const handleSend = props.isSteppedComposer
+    ? deferredSubmit.handleSend
+    : props.onSend;
+  const handleClear = props.isSteppedComposer
+    ? deferredSubmit.handleClear
+    : props.onClear;
+  const effectiveSendDisabled = props.isSteppedComposer
     ? deferredSubmit.isSendDisabled
-    : isSendDisabled;
+    : props.isSendDisabled;
 
   const handleFormKeyDown = (event: ReactKeyboardEvent<HTMLDivElement>) => {
     if (!isComposerStartHotkey(event) || effectiveSendDisabled) {
@@ -64,48 +40,54 @@ export default function WsTestComposerFormStep({
 
   return (
     <div onKeyDown={handleFormKeyDown}>
-      {!isSteppedComposer ? (
-        <div className={showTopSpacing ? "mt-6" : undefined}>
+      {!props.isSteppedComposer ? (
+        <div className={props.showTopSpacing ? "mt-6" : undefined}>
           <DelegatedWriterAgentField
-            writerAgent={writerAgent}
-            onWriterAgentChange={onWriterAgentChange}
-            disabled={isWriterAgentLocked}
+            writerAgent={props.writerAgent}
+            onWriterAgentChange={props.onWriterAgentChange}
+            disabled={props.isWriterAgentLocked}
           />
         </div>
       ) : null}
-      <div className={isSteppedComposer ? undefined : "mt-6"}>
-        <WsTestOperatorStepsSection operatorSteps={composer.operatorSteps} />
+      <div className={props.isSteppedComposer ? undefined : "mt-6"}>
+        <WsTestOperatorStepsSection
+          operatorSteps={props.composer.operatorSteps}
+        />
       </div>
       <div className="mt-6">
         <WsTestTaskInputsSection
-          isWorkflowTask={composer.isWorkflowTask}
+          isWorkflowTask={props.composer.isWorkflowTask}
           useMobileStepper={
-            composer.isLibraryPlaybook && composer.isWorkflowTask
+            props.composer.isLibraryPlaybook && props.composer.isWorkflowTask
           }
-          prompt={composer.prompt}
-          workflowFields={composer.composerWorkflowFields}
-          workflowFieldValues={composer.workflowFieldValues}
+          prompt={props.composer.prompt}
+          workflowFields={props.composer.composerWorkflowFields}
+          workflowFieldValues={props.composer.workflowFieldValues}
           workflowFieldErrors={
-            isSteppedComposer
+            props.isSteppedComposer
               ? deferredSubmit.visibleWorkflowFieldErrors
-              : composer.workflowFieldErrors
+              : props.composer.workflowFieldErrors
           }
           promptValidationError={
-            isSteppedComposer ? deferredSubmit.promptValidationError : undefined
+            props.isSteppedComposer
+              ? deferredSubmit.promptValidationError
+              : undefined
           }
-          onPromptChange={composer.setPrompt}
-          onWorkflowFieldChange={composer.onWorkflowFieldChange}
+          onPromptChange={props.composer.setPrompt}
+          onWorkflowFieldChange={props.composer.onWorkflowFieldChange}
         />
       </div>
       <WsTestComposerFooter
-        composer={composer}
-        macDispatchDeviceId={macDispatchDeviceId}
-        connectionStatus={connectionStatus}
+        composer={props.composer}
+        macDispatchDeviceId={props.macDispatchDeviceId}
+        connectionStatus={props.connectionStatus}
         isSendDisabled={effectiveSendDisabled}
-        sendLabel={isSteppedComposer ? deferredSubmit.sendLabel : undefined}
+        sendLabel={
+          props.isSteppedComposer ? deferredSubmit.sendLabel : undefined
+        }
         onSend={handleSend}
         onClear={handleClear}
-        onQueue={onQueue}
+        onQueue={props.onQueue}
       />
     </div>
   );

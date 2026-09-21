@@ -14,4 +14,5 @@ export const WORKFLOW_BUILDER_INPUT_TYPE_OPTIONS: readonly {
   { value: WorkflowFieldInputType.DATE, label: "Date" },
   { value: WorkflowFieldInputType.BOOLEAN, label: "Yes / no" },
   { value: WorkflowFieldInputType.SELECT, label: "Choice list" },
+  { value: WorkflowFieldInputType.FILE, label: "File (PDF or image)" },
 ];

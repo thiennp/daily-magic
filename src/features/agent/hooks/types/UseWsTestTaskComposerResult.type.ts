@@ -27,6 +27,7 @@ export interface UseWsTestTaskComposerResult {
   readonly workflowFieldErrors: Readonly<Record<string, string>>;
   readonly operatorSteps: readonly OperatorStepDefinition[];
   readonly resolvedPrompt: string;
+  readonly registerUploadExcerpt: (uploadId: string, excerpt: string) => void;
   readonly isSendDisabled: (
     connectionStatus: string,
     deviceId?: string,

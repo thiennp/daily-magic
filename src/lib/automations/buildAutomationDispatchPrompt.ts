@@ -1,4 +1,5 @@
 import type PublishedCapabilityRecord from "@/lib/capabilities/types/PublishedCapabilityRecord.type";
+import { expandWorkflowFieldUploadRefs } from "@/lib/workflows/expandWorkflowFieldUploadRefs";
 import {
   buildWorkflowPrompt,
   validateWorkflowFieldValues,
@@ -14,6 +15,19 @@ export const buildAutomationDispatchPrompt = (
     fieldValues,
     capability.exampleRequest,
   );
+
+export const buildAutomationDispatchPromptAsync = async (
+  capability: PublishedCapabilityRecord,
+  fieldValues: Readonly<Record<string, string>>,
+): Promise<string> => {
+  const expanded = await expandWorkflowFieldUploadRefs({
+    ownerUserId: capability.ownerUserId,
+    fields: capability.workflowFields,
+    values: fieldValues,
+  });
+
+  return buildAutomationDispatchPrompt(capability, expanded);
+};
 
 export const readAutomationFieldValidationErrors = (
   capability: PublishedCapabilityRecord,

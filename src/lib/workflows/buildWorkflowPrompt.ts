@@ -1,4 +1,5 @@
 import { appendOperatorCheckpointsToPrompt } from "@/lib/workflows/buildOperatorCheckpointPromptSection";
+import { formatWorkflowFieldValueForPromptLine } from "@/lib/workflows/formatWorkflowFieldValueForPromptLine";
 import { buildWorkflowFieldValidationErrors } from "@/lib/workflows/buildWorkflowFieldValidationErrors";
 import type OperatorStepDefinition from "@/lib/workflows/types/OperatorStepDefinition.type";
 import type WorkflowFieldDefinition from "@/lib/workflows/types/WorkflowFieldDefinition.type";
@@ -18,10 +19,15 @@ export function buildWorkflowPrompt(
   values: Readonly<Record<string, string>>,
   instructions: string,
   operatorSteps: readonly OperatorStepDefinition[] = [],
+  uploadExcerptById: Readonly<Record<string, string>> = {},
 ): string {
   const fieldLines = fields.map((field) => {
     const value = values[field.key]?.trim() ?? "";
-    return `- ${field.label}: ${value.length > 0 ? value : "(empty)"}`;
+    const formatted =
+      value.length > 0
+        ? formatWorkflowFieldValueForPromptLine(value, uploadExcerptById)
+        : "(empty)";
+    return `- ${field.label}: ${formatted}`;
   });
 
   const trimmedInstructions = instructions.trim();

@@ -15,6 +15,7 @@ export const useComposerResolvedPrompt = (input: {
   readonly effectiveWorkflowFieldValues: Readonly<Record<string, string>>;
   readonly prompt: string;
   readonly operatorSteps: readonly OperatorStepDefinition[];
+  readonly uploadExcerptById?: Readonly<Record<string, string>>;
 }): {
   readonly workflowFieldErrors: Readonly<Record<string, string>>;
   readonly workflowValidationErrors: readonly string[];
@@ -36,6 +37,7 @@ export const useComposerResolvedPrompt = (input: {
             input.effectiveWorkflowFieldValues,
             input.prompt,
             input.operatorSteps,
+            input.uploadExcerptById ?? {},
           )
         : appendOperatorCheckpointsToPrompt(input.prompt, input.operatorSteps),
     [
@@ -45,6 +47,7 @@ export const useComposerResolvedPrompt = (input: {
       input.playbookName,
       input.prompt,
       input.workflowFields,
+      input.uploadExcerptById,
     ],
   );
 

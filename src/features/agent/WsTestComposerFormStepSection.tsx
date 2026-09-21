@@ -4,6 +4,7 @@ import SendTaskComposerActiveProjectBadge from "@/features/agent/SendTaskCompose
 import SendTaskRunScopedComponentsPanel from "@/features/agent/SendTaskRunScopedComponentsPanel";
 import SendTaskComposerStepTrail from "@/features/agent/SendTaskComposerStepTrail";
 import WsTestComposerFormStep from "@/features/agent/WsTestComposerFormStep";
+import { WorkflowUploadExcerptProvider } from "@/features/workflows/WorkflowUploadExcerptContext";
 import type { SendTaskComposerStepTrailViewItem } from "@/features/agent/types/SendTaskComposerStepTrailViewItem.type";
 import type { useWsTestTaskComposer } from "@/features/agent/hooks/useWsTestTaskComposer";
 import type { WsTestConnectionStatus } from "@/features/agent/types/WsTestConnectionStatus.type";
@@ -58,20 +59,24 @@ export default function WsTestComposerFormStepSection({
           onToggleComponentId={composer.toggleRunScopedComponentId}
         />
       ) : null}
-      <WsTestComposerFormStep
-        composer={composer}
-        writerAgent={writerAgent}
-        onWriterAgentChange={onWriterAgentChange}
-        isWriterAgentLocked={isWriterAgentLocked}
-        isSteppedComposer={isSteppedComposer}
-        macDispatchDeviceId={macDispatchDeviceId}
-        connectionStatus={connectionStatus}
-        isSendDisabled={isSendDisabled}
-        onSend={onSend}
-        onClear={onClear}
-        onQueue={onQueue}
-        showTopSpacing={showTopSpacing}
-      />
+      <WorkflowUploadExcerptProvider
+        registerUploadExcerpt={composer.registerUploadExcerpt}
+      >
+        <WsTestComposerFormStep
+          composer={composer}
+          writerAgent={writerAgent}
+          onWriterAgentChange={onWriterAgentChange}
+          isWriterAgentLocked={isWriterAgentLocked}
+          isSteppedComposer={isSteppedComposer}
+          macDispatchDeviceId={macDispatchDeviceId}
+          connectionStatus={connectionStatus}
+          isSendDisabled={isSendDisabled}
+          onSend={onSend}
+          onClear={onClear}
+          onQueue={onQueue}
+          showTopSpacing={showTopSpacing}
+        />
+      </WorkflowUploadExcerptProvider>
     </div>
   );
 }

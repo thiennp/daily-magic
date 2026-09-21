@@ -4,6 +4,7 @@ import { isValidWorkflowEmailValue } from "@/lib/workflows/isValidWorkflowEmailV
 import { isValidWorkflowNumberValue } from "@/lib/workflows/isValidWorkflowNumberValue";
 import { isValidWorkflowPhoneValue } from "@/lib/workflows/isValidWorkflowPhoneValue";
 import { isValidWorkflowUrlValue } from "@/lib/workflows/isValidWorkflowUrlValue";
+import { isWorkflowFieldUploadRef } from "@/lib/workflows/parseWorkflowFieldUploadRef";
 import { WorkflowFieldInputType } from "@/lib/workflows/types/WorkflowFieldInputType.constant";
 import type WorkflowFieldDefinition from "@/lib/workflows/types/WorkflowFieldDefinition.type";
 
@@ -66,6 +67,13 @@ export const validateWorkflowFieldValue = (
     if (options.length === 0 || !options.includes(value)) {
       return formatTypeError(field.label, "one of the listed choices");
     }
+  }
+
+  if (
+    field.type === WorkflowFieldInputType.FILE &&
+    !isWorkflowFieldUploadRef(value)
+  ) {
+    return `${field.label} needs an uploaded file.`;
   }
 
   return null;

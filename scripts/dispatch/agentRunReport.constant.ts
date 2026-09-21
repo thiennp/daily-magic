@@ -21,6 +21,12 @@ export type AgentRunReportFile = {
   readonly estimateSeconds?: number;
   readonly details?: string;
   readonly history: readonly AgentRunReportHistoryEntry[];
+  readonly artifacts?: readonly {
+    readonly kind: string;
+    readonly title: string;
+    readonly body?: string;
+    readonly url?: string;
+  }[];
 };
 
 export const isTerminalAgentRunReportStatus = (
