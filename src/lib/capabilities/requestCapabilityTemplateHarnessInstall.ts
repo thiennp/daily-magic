@@ -43,7 +43,21 @@ const requestCapabilityTemplateHarnessInstall = async (
     };
   }
 
-  sendTemplateHarnessToAgent(resolved.agentClient, harness);
+  const targetDeviceId =
+    resolved.deviceId ?? resolved.agentClient.deviceId ?? deviceId;
+  if (targetDeviceId === undefined || targetDeviceId.length === 0) {
+    return {
+      installed: false,
+      errorMessage: "Could not resolve a Mac device id for harness install.",
+    };
+  }
+
+  await sendTemplateHarnessToAgent(
+    resolved.agentClient,
+    harness,
+    userId,
+    targetDeviceId,
+  );
 
   return {
     installed: true,
@@ -51,10 +65,12 @@ const requestCapabilityTemplateHarnessInstall = async (
   };
 };
 
-export const sendTemplateHarnessToAgent = (
+export const sendTemplateHarnessToAgent = async (
   agentClient: AgentWitchHubClient,
   harness: CapabilityTemplateHarness,
-): void => {
+  userId: string,
+  deviceId: string,
+): Promise<void> => {
   const items: readonly HarnessItemWriteSpec[] =
     filterAgentHarnessItemsForInstall(harness.items).map((item) => ({
       id: item.id,
@@ -64,11 +80,15 @@ export const sendTemplateHarnessToAgent = (
       setSlugs: [harness.slug],
     }));
 
-  sendHarnessInstallToAgentClient(agentClient, {
-    name: harness.name,
-    slug: harness.slug,
-    items,
-  });
+  await sendHarnessInstallToAgentClient(
+    agentClient,
+    {
+      name: harness.name,
+      slug: harness.slug,
+      items,
+    },
+    { userId, deviceId },
+  );
 };
 
 export default requestCapabilityTemplateHarnessInstall;

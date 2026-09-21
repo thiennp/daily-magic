@@ -2,6 +2,13 @@ export { applyInstalledHarnessSetsToProjectCursor } from "../internal/core/apply
 
 export { resolveHarnessManifestItemCursorRelativePath } from "../internal/core/resolveHarnessManifestItemCursorRelativePath";
 
+export {
+  applyHarnessInstallLocally,
+  type ApplyHarnessInstallLocallyResult,
+} from "../internal/core/applyHarnessInstallLocally";
+
+export { fetchHarnessInstallBundleArtifact } from "../internal/core/fetchHarnessInstallBundleArtifact";
+
 export { parseHarnessInstallBundle } from "../internal/core/parseHarnessInstallBundle";
 
 export { planHarnessInstallBundle } from "../internal/core/planHarnessInstallBundle";

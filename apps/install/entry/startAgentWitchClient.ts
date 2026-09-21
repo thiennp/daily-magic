@@ -76,6 +76,11 @@ import {
   shouldCaptureRunOutputForProjectKnowledge,
   syncProjectKnowledgeCandidateToCloud,
 } from "@agent-witch/live-projects";
+import {
+  applyHarnessInstallLocally,
+  fetchHarnessInstallBundleArtifact,
+  parseHarnessInstallBundle,
+} from "@agent-witch/live-harness";
 import { AGENT_WITCH_DEFAULT_ORIGIN } from "@agent-witch/shared/network";
 
 import {
@@ -605,12 +610,122 @@ const runWriterProcess = (
     });
   });
 
+const runDeterministicHarnessInstall = async (
+  config: AgentWitchConfig,
+  payload: Readonly<Record<string, unknown>>,
+  requestId: string | undefined,
+  socket: AgentWitchOutboundSocket,
+): Promise<boolean> => {
+  if (payload.installMethod !== "deterministic-bundle") {
+    return false;
+  }
+
+  sendMessage(socket, {
+    type: "harness.request.ack",
+    payload: {
+      writerAgent: "deterministic",
+      status: "dispatching",
+    },
+    requestId,
+  });
+
+  const inlineBundle = parseHarnessInstallBundle(payload.bundle);
+  const bundleFetch = isRecord(payload.bundleFetch)
+    ? payload.bundleFetch
+    : null;
+
+  const resolvedBundle = await (async () => {
+    if (inlineBundle !== null) {
+      return inlineBundle;
+    }
+
+    if (bundleFetch === null) {
+      return null;
+    }
+
+    const artifactId =
+      typeof bundleFetch.artifactId === "string"
+        ? bundleFetch.artifactId.trim()
+        : "";
+    const contentSha256 =
+      typeof bundleFetch.contentSha256 === "string"
+        ? bundleFetch.contentSha256.trim()
+        : "";
+
+    if (artifactId.length === 0 || contentSha256.length === 0) {
+      return null;
+    }
+
+    const appOrigin =
+      resolveAgentWitchAppOriginFromWsUrl(config.wsUrl) ??
+      AGENT_WITCH_DEFAULT_ORIGIN;
+    const fetched = await fetchHarnessInstallBundleArtifact({
+      appOrigin,
+      pairingToken: config.pairingToken,
+      artifactId,
+      expectedContentSha256: contentSha256,
+    });
+
+    return fetched.ok ? fetched.bundle : null;
+  })();
+
+  if (resolvedBundle === null) {
+    sendMessage(socket, {
+      type: "harness.request.result",
+      payload: {
+        success: false,
+        writerAgent: "deterministic",
+        errorMessage:
+          "deterministic-bundle requires inline bundle or valid bundleFetch.",
+      },
+      requestId,
+    });
+    return true;
+  }
+
+  const installResult = applyHarnessInstallLocally({
+    bundle: resolvedBundle,
+    layout: config.layout,
+  });
+
+  sendMessage(socket, {
+    type: "harness.request.result",
+    payload: {
+      success: installResult.ok,
+      writerAgent: "deterministic",
+      exitCode: installResult.ok ? 0 : 1,
+      output: installResult.ok
+        ? `Installed harness set "${resolvedBundle.slug}" (${installResult.writtenItemCount ?? 0} files).`
+        : (installResult.errorMessage ?? "Harness install failed."),
+      ...(installResult.ok
+        ? {}
+        : {
+            errorMessage:
+              installResult.errorMessage ?? "Harness install failed.",
+          }),
+    },
+    requestId,
+  });
+
+  if (installResult.ok) {
+    reportHarnessManifest(socket, config.layout);
+  }
+
+  return true;
+};
+
 const runHarnessRequest = async (
   config: AgentWitchConfig,
   payload: Readonly<Record<string, unknown>>,
   requestId: string | undefined,
   socket: AgentWitchOutboundSocket,
 ): Promise<void> => {
+  if (
+    await runDeterministicHarnessInstall(config, payload, requestId, socket)
+  ) {
+    return;
+  }
+
   const writerAgent =
     typeof payload.writerAgent === "string" ? payload.writerAgent : "";
   const instruction =

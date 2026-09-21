@@ -33,9 +33,7 @@ See `src/features/agent-witch/README.md` and ADR **0002** (WebSocket), **0005** 
 | **Save to my library** (template fork)  | `createCapabilityFromTemplate` → `requestCapabilityTemplateHarnessInstall` (unless `deferHarnessInstall`) | Same bundle push when a target device is chosen           |
 | **Run on your Mac** (harness catalog)   | Local wake API `POST …/harness/install` on **AWB** when browser and Mac share the machine                 | Bridge forwards harness install without cloud WS          |
 
-Message builder: `buildHarnessInstallDispatchMessages` in `src/lib/harness/sendHarnessInstallToAgentClient.ts`.
-
-Mac handler: `runHarnessRequest` in `apps/install/entry/startAgentWitchClient.ts` — ack → run writer CLI from `instruction` → `harness.request.result` → refresh manifest.
+Cloud push: `buildHarnessInstallDispatchMessage` sends **`installMethod: "deterministic-bundle"`** with inline `bundle` or `bundleFetch` (HTTPS gzip artifact when the JSON exceeds ~96 KiB). Mac: `runDeterministicHarnessInstall` → `applyHarnessInstallLocally` (no writer CLI). Legacy dashboard harness UI still uses `instruction` + writer CLI.
 
 Harness is **files on disk**, not the execution graph.
 
@@ -96,4 +94,4 @@ If `resolveDispatchTargetAgentClient` finds no live socket but the device is **f
 
 ## Last reviewed
 
-2026-09-21
+2026-09-21 (deterministic harness install + artifact fetch)

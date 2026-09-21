@@ -4,6 +4,7 @@ import {
 } from "./agentWitchDispatchErrorCode.constant";
 import { classifyAgentWitchDispatchUnavailability } from "./classifyAgentWitchDispatchUnavailability";
 import isHarnessRequestPayload from "./harness/isHarnessRequestPayload";
+import isRecord from "./isRecord";
 import isNonEmptyString from "./isNonEmptyString";
 import { MAC_OFFLINE_FOR_ACCOUNT_ERROR } from "./macOfflineForAccountErrorMessage.constant";
 import { resolveDispatchTargetAgentClient } from "./resolveDispatchTargetAgentClient";
@@ -74,13 +75,11 @@ export const handleHarnessRequestMessage = async (
 
   const agentClient = resolved.agentClient;
 
+  const relayPayload = isRecord(message.payload) ? message.payload : {};
+
   agentClient.send({
     type: AGENT_WITCH_MESSAGE_TYPES.HARNESS_REQUEST,
-    payload: {
-      writerAgent: message.payload.writerAgent,
-      spec: message.payload.spec,
-      instruction: message.payload.instruction,
-    },
+    payload: relayPayload,
     requestId: message.requestId,
   });
 

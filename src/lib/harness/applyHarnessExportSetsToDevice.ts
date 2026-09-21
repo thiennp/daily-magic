@@ -4,35 +4,18 @@ import type { BorrowedHarnessExportSet } from "@/lib/harness/types/HarnessExport
 import type HarnessItemWriteSpec from "@/lib/agentWitch/harness/types/HarnessItemWriteSpec.type";
 import type { HarnessItemKind } from "@/lib/agentWitch/harness/types/HarnessItemKind.constant";
 import type AgentWitchHubRuntime from "@/lib/agentWitch/types/AgentWitchHubRuntime.type";
-import {
-  sendHarnessInstallToAgentClient,
-  sendHarnessWriteItemsToAgentClient,
-} from "@/lib/harness/sendHarnessInstallToAgentClient";
+import { sendHarnessInstallToAgentClient } from "@/lib/harness/sendHarnessInstallToAgentClient";
 
-const mergeExportSetItems = (
-  sets: readonly BorrowedHarnessExportSet[],
-): readonly HarnessItemWriteSpec[] => {
-  const merged = new Map<string, HarnessItemWriteSpec>();
-
-  for (const set of sets) {
-    for (const item of set.items) {
-      const existing = merged.get(item.id);
-      const nextSetSlugs = existing
-        ? [...new Set([...existing.setSlugs, set.slug])]
-        : [set.slug];
-
-      merged.set(item.id, {
-        id: item.id,
-        kind: item.kind as HarnessItemKind,
-        title: item.title,
-        content: item.content,
-        setSlugs: nextSetSlugs,
-      });
-    }
-  }
-
-  return [...merged.values()];
-};
+const mapExportSetItems = (
+  set: BorrowedHarnessExportSet,
+): readonly HarnessItemWriteSpec[] =>
+  set.items.map((item) => ({
+    id: item.id,
+    kind: item.kind as HarnessItemKind,
+    title: item.title,
+    content: item.content,
+    setSlugs: [set.slug],
+  }));
 
 export const applyHarnessExportSetsToDevice = async (
   runtime: AgentWitchHubRuntime,
@@ -57,18 +40,18 @@ export const applyHarnessExportSetsToDevice = async (
   }
 
   const agentClient = resolved.agentClient;
+  const deviceId = agentClient.deviceId ?? targetDeviceId;
 
   for (const set of sets) {
-    sendHarnessInstallToAgentClient(agentClient, {
-      name: set.name,
-      slug: set.slug,
-      items: [],
-    });
-  }
-
-  const items = mergeExportSetItems(sets);
-  if (items.length > 0) {
-    sendHarnessWriteItemsToAgentClient(agentClient, items);
+    await sendHarnessInstallToAgentClient(
+      agentClient,
+      {
+        name: set.name,
+        slug: set.slug,
+        items: mapExportSetItems(set),
+      },
+      { userId: borrowerUserId, deviceId },
+    );
   }
 
   return {
