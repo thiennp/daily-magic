@@ -29,6 +29,7 @@ export const buildWsTestTaskComposerResult = (input: {
   isTeamDispatch: input.isTeamDispatch,
   isWorkflowTask: input.workflow.isWorkflowTask,
   isLibraryPlaybook: input.workflow.isLibraryPlaybook,
+  isWorkflowCreateDraft: input.librarySelection.isWorkflowCreateDraft,
   libraryCapabilityId: input.workflow.libraryCapabilityId,
   harnessSetSlug: input.workflow.harnessSetSlug,
   workflowFields: input.workflow.workflowFields,

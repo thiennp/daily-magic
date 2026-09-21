@@ -19,6 +19,7 @@ export interface UseWsTestTaskComposerResult {
   readonly hasRememberedMacSelection: boolean;
   readonly isWorkflowTask: boolean;
   readonly isLibraryPlaybook: boolean;
+  readonly isWorkflowCreateDraft: boolean;
   readonly libraryCapabilityId: string;
   readonly harnessSetSlug: string | null;
   readonly workflowFields: readonly WorkflowFieldDefinition[];

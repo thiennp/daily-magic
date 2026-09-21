@@ -79,4 +79,13 @@ describe("buildAgentComposerHref", () => {
       }),
     ).toBe("/?sendTask=1&libraryCapabilityId=cap-1&projectId=project-1");
   });
+
+  it("opens composer with an unpublished workflow draft", () => {
+    expect(
+      buildAgentComposerHref({
+        workflowDraft: true,
+        prompt: "Tone: concise",
+      }),
+    ).toBe("/?sendTask=1&prompt=Tone%3A+concise&workflowDraft=1");
+  });
 });

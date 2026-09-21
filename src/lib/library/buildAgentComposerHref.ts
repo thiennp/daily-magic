@@ -14,6 +14,8 @@ interface BuildAgentComposerHrefInput {
   readonly projectId?: string;
   /** Expand a docked live panel (restore persisted terminal). */
   readonly resumeLiveSession?: boolean;
+  /** Load workflow fields from the unpublished create-form draft in sessionStorage. */
+  readonly workflowDraft?: boolean;
 }
 
 const SEND_TASK_MODAL_QUERY_PARAM = "sendTask";
@@ -62,6 +64,10 @@ export default function buildAgentComposerHref(
 
   if (input.resumeLiveSession === true) {
     params.set("resumeLive", "1");
+  }
+
+  if (input.workflowDraft === true) {
+    params.set("workflowDraft", "1");
   }
 
   const path =

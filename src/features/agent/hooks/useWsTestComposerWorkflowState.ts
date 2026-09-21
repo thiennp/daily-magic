@@ -44,7 +44,7 @@ export function useWsTestComposerWorkflowState(
   const [prompt, setPrompt] = useState(initialPrompt);
   const [workflowFieldValues, setWorkflowFieldValues] = useState<
     Record<string, string>
-  >({});
+  >(() => ({ ...(libraryPlaybook?.initialWorkflowFieldValues ?? {}) }));
   const isLibraryPlaybook = libraryPlaybook !== null;
   const { playbookName, isWorkflowTask } = resolveComposerPlaybookContext(
     selectedCapability,

@@ -4,6 +4,7 @@ import Button from "@/components/ui/button/Button";
 import PlaybookBasicsFields from "@/features/capabilities/PlaybookBasicsFields";
 import CreateWorkflowFieldsEditor from "@/features/workflows/CreateWorkflowFieldsEditor";
 import CreateWorkflowHarnessSections from "@/features/workflows/CreateWorkflowHarnessSections";
+import CreateWorkflowTrialRunSection from "@/features/workflows/CreateWorkflowTrialRunSection";
 import { createDraftWorkflowField } from "@/features/workflows/createDraftWorkflowField";
 import { useCreateWorkflowForm } from "@/features/workflows/hooks/useCreateWorkflowForm";
 
@@ -52,6 +53,12 @@ export default function CreateWorkflowForm({
         onAdd={form.harness.addItem}
         onRemove={form.harness.removeItem}
         onChange={form.harness.updateItem}
+      />
+      <CreateWorkflowTrialRunSection
+        name={form.name}
+        exampleRequest={form.exampleRequest}
+        draftFields={form.fields}
+        harnessReadyItems={form.harness.readyItems}
       />
       {form.error ? (
         <p className="text-sm text-error-600 dark:text-error-400">
