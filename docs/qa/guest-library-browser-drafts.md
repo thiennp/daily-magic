@@ -7,6 +7,7 @@
 - save workflow to browser localStorage
 - sync guest library after sign in
 - reconciliation latest wins library
+- cursor agent hooks library guest
 
 ## Short answer
 
@@ -23,6 +24,12 @@ Unsigned users can open **AWC** `/library`, save starter templates or custom wor
 | Reconcile    | `planGuestLibraryReconciliation` → push (`POST`/`PATCH`) or drop local                  |
 | Sync trigger | `GuestLibraryDraftSyncListener` in `AppShell` on session → signed-in                    |
 | Run workflow | Guest → sign in; signed-in → Mac or Cursor Cloud (`resolveWorkflowTrialRunEligibility`) |
+
+## Cursor agent hooks (not React hooks)
+
+Guest library does **not** register custom entries in `.cursor/hooks.json`. Edits under `src/features/library/` and `src/lib/library/guest/` are still covered by the repo-wide agent hooks (`postToolUse` / `stop` → architecture + structure validation). See [docs/conventions/cursor-hooks.md](../conventions/cursor-hooks.md).
+
+Prefer pure helpers in `src/lib/library/guest/` (e.g. reconcile, storage) over new React hooks when logic is not UI-bound.
 
 ## Related
 
