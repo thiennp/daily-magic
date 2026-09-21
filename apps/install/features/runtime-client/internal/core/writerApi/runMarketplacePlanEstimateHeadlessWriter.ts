@@ -14,20 +14,20 @@ const logMarketplacePlanEstimateRoute = (
 ): void => {
   if (execution.backend === "anthropic-writer-api") {
     console.log(
-      `[agent-witch] marketplace plan/estimate modelOverride=${execution.modelOverride ?? "unknown"} (anthropic Writer API)`,
+      `[agent-witch] marketplace plan/estimate modelOverride=${execution.modelOverride ?? "unknown"}`,
     );
     return;
   }
 
   if (execution.backend === "cli-fallback-missing-anthropic-key") {
     console.log(
-      `[agent-witch] marketplace plan/estimate modelOverride=${execution.modelOverride ?? "unknown"} skipped — no Anthropic API key in writer-api-secrets; falling back to ${"claude-cli"} headless pre-estimate`,
+      "[agent-witch] marketplace plan/estimate falling back to claude-cli (no Anthropic Writer API key)",
     );
     return;
   }
 
   console.log(
-    "[agent-witch] marketplace plan/estimate catalog model id empty; falling back to CLI headless pre-estimate",
+    "[agent-witch] marketplace plan/estimate falling back to claude-cli (empty catalog model id)",
   );
 };
 

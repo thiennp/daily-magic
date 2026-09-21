@@ -87,10 +87,7 @@ export const runAgentRunPreEstimate = async (input: {
     catalogModelId !== null &&
     catalogModelId.trim().length > 0;
 
-  let marketplacePlanEstimate: MarketplacePlanEstimatePreRunDiagnostics | null =
-    null;
-
-  const headlessResult = useCatalogCheapModel
+  const { headlessResult, marketplacePlanEstimate } = useCatalogCheapModel
     ? await (async () => {
         const cheapResult = await runMarketplacePlanEstimateHeadlessWriter(
           input.config,
@@ -98,12 +95,14 @@ export const runAgentRunPreEstimate = async (input: {
           estimatePrompt,
           catalogModelId,
         );
-        marketplacePlanEstimate = {
-          backend: cheapResult.execution.backend,
-          catalogModelId,
-          marketplaceTemplateId: resolvedMarketplaceTemplateId,
+        return {
+          headlessResult: cheapResult,
+          marketplacePlanEstimate: {
+            backend: cheapResult.execution.backend,
+            catalogModelId,
+            marketplaceTemplateId: resolvedMarketplaceTemplateId,
+          } satisfies MarketplacePlanEstimatePreRunDiagnostics,
         };
-        return cheapResult;
       })()
     : await (async () => {
         if (resolvedMarketplaceTemplateId !== null) {
@@ -111,19 +110,21 @@ export const runAgentRunPreEstimate = async (input: {
             `[agent-witch] marketplace plan/estimate skipped cheap model (recipe=${resolvedMarketplaceTemplateId}, cheaperModelEligible=${String(planEstimateWriterRoute?.cheaperModelEligible === true)}, catalogModelId=${catalogModelId ?? "null"}) — using CLI headless pre-estimate`,
           );
         }
-        marketplacePlanEstimate =
-          resolvedMarketplaceTemplateId !== null
-            ? {
-                backend: "cli-non-marketplace-pre-estimate",
-                catalogModelId,
-                marketplaceTemplateId: resolvedMarketplaceTemplateId,
-              }
-            : null;
-        return runHeadlessWriter(
-          input.config,
-          input.writerAgent,
-          estimatePrompt,
-        );
+        return {
+          headlessResult: await runHeadlessWriter(
+            input.config,
+            input.writerAgent,
+            estimatePrompt,
+          ),
+          marketplacePlanEstimate:
+            resolvedMarketplaceTemplateId !== null
+              ? {
+                  backend: "cli-non-marketplace-pre-estimate" as const,
+                  catalogModelId,
+                  marketplaceTemplateId: resolvedMarketplaceTemplateId,
+                }
+              : null,
+        };
       })();
 
   const estimateSeconds = parseAgentRunWorkingEstimateSeconds(
@@ -131,13 +132,29 @@ export const runAgentRunPreEstimate = async (input: {
   );
   const estimateSummary = formatAgentRunEstimateSummary(estimateSeconds);
 
+  const planEstimateReportNote =
+    marketplacePlanEstimate === null
+      ? null
+      : marketplacePlanEstimate.backend === "cli-fallback-missing-anthropic-key"
+        ? "Plan/estimate used claude-cli because no Anthropic Writer API key is configured in writer-api-secrets."
+        : marketplacePlanEstimate.backend === "anthropic-writer-api"
+          ? `Plan/estimate used Anthropic Writer API (modelOverride=${marketplacePlanEstimate.catalogModelId ?? "unknown"}).`
+          : null;
+
+  const reportDetailsParts = [
+    planEstimateReportNote,
+    headlessResult.output.trim().length > 0
+      ? headlessResult.output.trim()
+      : null,
+  ].filter((part): part is string => part !== null && part.length > 0);
+
   upsertAgentRunReportFile({
     reportKey: input.reportKey,
     agentRunId: input.agentRunId,
     status: AGENT_RUN_REPORT_STATUSES.IN_PROGRESS,
     userSummary: estimateSummary,
-    ...(headlessResult.output.trim().length > 0
-      ? { details: headlessResult.output.trim() }
+    ...(reportDetailsParts.length > 0
+      ? { details: reportDetailsParts.join("\n\n") }
       : {}),
     ...(estimateSeconds !== null ? { estimateSeconds } : {}),
   });
