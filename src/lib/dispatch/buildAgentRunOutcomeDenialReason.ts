@@ -1,6 +1,8 @@
 import { AgentRunOutcomeCode } from "@agent-witch/shared/dispatch";
 import type { ResolvedAgentRunOutcome } from "@agent-witch/shared/dispatch";
 
+import { AGENT_LIVE_HARD_STOP_SESSION_LIMIT_LABEL } from "@/lib/dispatch/agentRunBudgetLabels.constant";
+
 export const buildAgentRunOutcomeDenialReason = (
   outcome: ResolvedAgentRunOutcome,
 ): string => {
@@ -9,8 +11,8 @@ export const buildAgentRunOutcomeDenialReason = (
       outcome.resetHint !== null && outcome.resetHint.length > 0
         ? ` Session resets ${outcome.resetHint}.`
         : "";
-    return `Claude session limit reached on your Mac.${resetSuffix} Wait for the reset, then run the task again or continue in a new session.`;
+    return `${AGENT_LIVE_HARD_STOP_SESSION_LIMIT_LABEL}. Stopped reason: Claude session limit on your Mac.${resetSuffix} This run cannot continue until the session resets.`;
   }
 
-  return "The writer hit a provider usage or quota limit. Wait for the limit to reset or switch writer settings, then try again.";
+  return "Hard stop: provider quota. Stopped reason: provider usage or rate limit. This run cannot continue until the limit resets.";
 };

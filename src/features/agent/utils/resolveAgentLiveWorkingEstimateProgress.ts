@@ -8,6 +8,9 @@ export interface AgentLiveWorkingEstimateProgress {
   readonly workedMs: number;
   /** 0–100 based on worked / (estimate + buffer). */
   readonly percent: number;
+  /** Past `[[WORKING_ESTIMATE]]` seconds (soft budget only). */
+  readonly isPastSoftEstimate: boolean;
+  /** Past soft estimate + buffer (used for stall / pre-warn timing). */
   readonly isExceeded: boolean;
 }
 
@@ -31,6 +34,7 @@ export const resolveAgentLiveWorkingEstimateProgress = (input: {
     budgetMs,
     workedMs,
     percent,
+    isPastSoftEstimate: workedMs >= estimateMs && estimateMs > 0,
     isExceeded: workedMs >= budgetMs,
   };
 };

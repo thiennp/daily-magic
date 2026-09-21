@@ -3,6 +3,8 @@ import {
   type AgentRunOutcomeCodeValue,
 } from "@agent-witch/shared/dispatch";
 
+import { AGENT_LIVE_HARD_STOP_SESSION_LIMIT_LABEL } from "@/lib/dispatch/agentRunBudgetLabels.constant";
+
 export interface AgentRunOutcomePresentation {
   readonly title: string;
   readonly detail: string;
@@ -19,17 +21,17 @@ export const buildAgentRunOutcomePresentation = (
         ? ` Your Claude session resets ${resetHint}.`
         : "";
     return {
-      title: "Session limit reached",
-      detail: `The writer stopped because Claude hit its session cap on your Mac.${resetDetail}`,
+      title: AGENT_LIVE_HARD_STOP_SESSION_LIMIT_LABEL,
+      detail: `Hard stop — Claude hit its session limit on your Mac. This run cannot continue.${resetDetail}`,
       nextStep:
-        "Wait for the reset (or start a fresh Claude session on the Mac), then use Run again or Continue to pick up where you left off.",
+        "Wait for the session reset (or start a fresh Claude session on the Mac), then use Run again or Continue in a new session.",
     };
   }
 
   return {
-    title: "Provider quota reached",
+    title: "Hard stop: provider quota",
     detail:
-      "The writer stopped because the AI provider reported a usage or rate limit.",
+      "Hard stop — the writer reported a provider usage or rate limit. This run cannot continue.",
     nextStep:
       "Wait for the limit to reset or adjust writer API settings on your Mac, then run the task again.",
   };

@@ -1,5 +1,6 @@
 import { isAgentRunOutcomeCode } from "@agent-witch/shared/dispatch";
 
+import { AGENT_LIVE_HARD_STOP_SESSION_LIMIT_LABEL } from "@/lib/dispatch/agentRunBudgetLabels.constant";
 import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
 import type { AgentRunStatusValue } from "@/lib/dispatch/AgentRunStatus.constant";
 import type AgentRunRecord from "@/lib/dispatch/types/AgentRunRecord.type";
@@ -13,10 +14,10 @@ export const resolveAgentRunStatusBadgeLabel = (
     isAgentRunOutcomeCode(run.resultOutcomeCode)
   ) {
     if (run.resultOutcomeCode === "session_limit") {
-      return "Session limit";
+      return AGENT_LIVE_HARD_STOP_SESSION_LIMIT_LABEL;
     }
 
-    return "Provider quota";
+    return "Hard stop: provider quota";
   }
 
   return null;

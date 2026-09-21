@@ -1,8 +1,9 @@
 import { resolveAgentRunOutcomeFromWriterOutput } from "@agent-witch/shared/dispatch";
 
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
-import { buildAgentRunOutcomePresentation } from "@/lib/dispatch/buildAgentRunOutcomePresentation";
+import { formatHardStopOutcomeTerminalBlock } from "@/lib/dispatch/formatHardStopOutcomeTerminalBlock";
 
+import { applySessionLimitHardStopToTerminalState } from "./applySessionLimitHardStopToTerminalState";
 import type { AgentLiveTerminalState } from "./agentLiveTerminalState.type";
 import { appendAgentLiveTerminalPrompt } from "./agentLiveTerminalPrompt.constant";
 import {
@@ -20,10 +21,19 @@ export const reduceAgentLiveTerminalStreamMessage = (
     matchesActiveRun(state.activeRunId, payload)
   ) {
     const chunk = typeof payload.chunk === "string" ? payload.chunk : "";
+    const nextOutput = `${state.output}${chunk}`;
+    const hardStop = applySessionLimitHardStopToTerminalState(
+      { ...state, output: nextOutput },
+      nextOutput,
+    );
+    if (hardStop !== null) {
+      return hardStop;
+    }
+
     return {
       ...state,
       status: "streaming",
-      output: `${state.output}${chunk}`,
+      output: nextOutput,
     };
   }
 
@@ -39,11 +49,7 @@ export const reduceAgentLiveTerminalStreamMessage = (
     const outcome = resolveAgentRunOutcomeFromWriterOutput(resultOutput);
 
     if (outcome !== null) {
-      const presentation = buildAgentRunOutcomePresentation(
-        outcome.code,
-        outcome.resetHint,
-      );
-      const banner = `${presentation.title}\n${presentation.detail}\n${presentation.nextStep}`;
+      const banner = formatHardStopOutcomeTerminalBlock(outcome);
 
       return {
         ...state,
@@ -68,6 +74,14 @@ export const reduceAgentLiveTerminalStreamMessage = (
     matchesActiveRun(state.activeRunId, payload) &&
     (state.status === "streaming" || state.status === "stopping")
   ) {
+    const hardStop = applySessionLimitHardStopToTerminalState(
+      state,
+      state.output,
+    );
+    if (hardStop !== null) {
+      return hardStop;
+    }
+
     return {
       ...state,
       output: appendAgentLiveTerminalPrompt(state.output),

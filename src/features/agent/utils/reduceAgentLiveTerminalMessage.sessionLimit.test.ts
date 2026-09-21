@@ -29,6 +29,7 @@ describe("reduceAgentLiveTerminalMessage session limit (AGENT-126)", () => {
     });
 
     expect(finished.status).toBe("error");
-    expect(finished.output).toContain("Session limit reached");
+    expect(finished.output).toContain("Hard stop: session limit");
+    expect(finished.output).toContain("Stopped reason:");
   });
 });

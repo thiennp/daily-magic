@@ -36,11 +36,14 @@ export default function AgentRunOutcomeBanner({
 
   return (
     <div
-      className="mt-4 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-950 dark:border-amber-900/50 dark:bg-amber-950/30 dark:text-amber-100"
+      className="mt-4 rounded-lg border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-950 dark:border-rose-900/50 dark:bg-rose-950/30 dark:text-rose-100"
       role="status"
     >
       <p className="font-medium">{presentation.title}</p>
-      <p className="mt-1">{presentation.detail}</p>
+      <p className="mt-1">
+        <span className="font-medium">Stopped reason:</span>{" "}
+        {presentation.detail}
+      </p>
       <p className="mt-2 text-amber-900/90 dark:text-amber-100/90">
         {presentation.nextStep}
       </p>
