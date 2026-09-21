@@ -21,6 +21,7 @@ import {
   readAgentWitchInstallVersion,
   writeAgentWitchInstallVersion,
 } from "./agentWitchInstallVersion";
+import { isAgentWitchWriterWorkInProgress } from "../../../../../../scripts/agentWitchWriterWorkGuard";
 import { resolveAgentWitchAppOriginFromWsUrl } from "./resolveAgentWitchAppOriginFromWsUrl";
 import {
   appendAgentWitchSelfUpdateLog,
@@ -243,6 +244,31 @@ export const runAgentWitchSelfUpdate = async (input?: {
       appOrigin,
       updatedAt: new Date().toISOString(),
     });
+
+    const layout = resolveAgentWitchLocalLayout(
+      readActiveProfileEmailFromFile(installDir),
+    );
+    if (isAgentWitchWriterWorkInProgress(layout)) {
+      const result = buildSelfUpdateResult(
+        {
+          ok: true,
+          updated: false,
+          message:
+            "Install bundle files updated; service restart deferred until the active writer task finishes.",
+          remoteBundleVersion: manifest.bundleVersion,
+        },
+        manifest.bundleVersion,
+      );
+      appendAgentWitchSelfUpdateLog({
+        event: "update_applied",
+        ok: true,
+        message: result.message,
+        localBundleVersion,
+        remoteBundleVersion: manifest.bundleVersion,
+      });
+      return result;
+    }
+
     await kickstartServicesAfterUpdate();
 
     const result = buildSelfUpdateResult(

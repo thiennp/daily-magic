@@ -6,6 +6,10 @@ import { readAgentWitchInstallVersion } from "./agentWitchInstallVersion";
 import type { AgentWitchLocalLayout } from "./resolveAgentWitchLocalLayout";
 import { requestLocalAgentWitchSelfUpdate } from "./requestLocalAgentWitchSelfUpdate";
 import { shouldTriggerAgentWitchHeartbeatSelfUpdate } from "./shouldTriggerAgentWitchHeartbeatSelfUpdate";
+import {
+  deferAgentWitchInstallBundleUpdate,
+  isAgentWitchWriterWorkInProgress,
+} from "./agentWitchWriterWorkGuard";
 
 const logInstallBundleUpdateTraffic = (
   layout: AgentWitchLocalLayout,
@@ -57,6 +61,18 @@ export const runLocalInstallBundleUpdate = async (input: {
       remoteBundleVersion: input.remoteBundleVersion,
     })
   ) {
+    return;
+  }
+
+  if (isAgentWitchWriterWorkInProgress(input.layout)) {
+    deferAgentWitchInstallBundleUpdate({
+      layout: input.layout,
+      remoteBundleVersion: input.remoteBundleVersion,
+      trigger: input.trigger,
+    });
+    console.log(
+      `[agent-witch] Deferring install bundle update (${input.remoteBundleVersion} via ${input.trigger}) until the active writer task finishes.`,
+    );
     return;
   }
 

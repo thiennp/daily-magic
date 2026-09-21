@@ -88,7 +88,12 @@ import {
   AGENT_RUN_WORKING_ESTIMATE_MARKER,
   applyAutomationsRunFromCloud,
   applyAutomationsSyncFromCloud,
+  beginAgentWitchWriterWork,
   buildDefaultUserProjectFolderPath,
+  deferAgentWitchInstallBundleUpdate,
+  deferAgentWitchLocalRestart,
+  endAgentWitchWriterWork,
+  isAgentWitchWriterWorkInProgress,
   buildWriterCliInvocation,
   buildWriterSessionReadyMessage,
   buildWriterSessionWarmupMessage,
@@ -127,7 +132,10 @@ import {
   seedAgentRunReportFile,
   startAgentWitchInProcessServices,
   stopAgentRun,
+  subscribeAgentWitchWriterWorkIdle,
   supportsWriterSessionContinuation,
+  takeDeferredAgentWitchInstallBundleUpdate,
+  takeDeferredAgentWitchLocalRestartReason,
   supportsWriterSessionWarmup,
   terminateOtherAgentWitchClientProcesses,
   wrapPromptWithAgentRunReportInstruction,
@@ -766,6 +774,7 @@ const runHarnessRequest = async (
     return;
   }
 
+  beginAgentWitchWriterWork(config.layout);
   const result = await (async () => {
     try {
       await ensureHarnessWriterCli(config.layout.installDir, writerAgent);
@@ -778,7 +787,9 @@ const runHarnessRequest = async (
     }
 
     return runWriterProcess(config, writerAgent, instruction);
-  })();
+  })().finally(() => {
+    endAgentWitchWriterWork(config.layout);
+  });
 
   sendMessage(socket, {
     type: "harness.request.result",
@@ -827,6 +838,14 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
       return;
     }
 
+    if (isAgentWitchWriterWorkInProgress(config.layout)) {
+      deferAgentWitchLocalRestart(reason);
+      console.log(
+        `[agent-witch] Deferring local restart (${reason}) until the active writer task finishes.`,
+      );
+      return;
+    }
+
     state.restartInFlight = true;
     console.log(`[agent-witch] Local restart requested (${reason})…`);
     state.wakeError = `restart:${reason}`;
@@ -858,6 +877,18 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
     trigger: "system.ack" | "install.bundle.update" = "system.ack",
   ): void => {
     if (state.selfUpdateInFlight) {
+      return;
+    }
+
+    if (isAgentWitchWriterWorkInProgress(config.layout)) {
+      deferAgentWitchInstallBundleUpdate({
+        layout: config.layout,
+        remoteBundleVersion,
+        trigger,
+      });
+      console.log(
+        `[agent-witch] Deferring install bundle update (${remoteBundleVersion} via ${trigger}) until the active writer task finishes.`,
+      );
       return;
     }
 
@@ -1726,6 +1757,25 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
     clearReconnectTimer();
     closeSocket();
   };
+
+  subscribeAgentWitchWriterWorkIdle(() => {
+    const deferredUpdate = takeDeferredAgentWitchInstallBundleUpdate();
+    if (
+      deferredUpdate !== null &&
+      deferredUpdate.layout.installDir === config.layout.installDir &&
+      deferredUpdate.layout.profileEmail === config.layout.profileEmail
+    ) {
+      runLocalSelfUpdateFromHeartbeat(
+        deferredUpdate.remoteBundleVersion,
+        deferredUpdate.trigger,
+      );
+    }
+
+    const deferredRestart = takeDeferredAgentWitchLocalRestartReason();
+    if (deferredRestart !== null) {
+      runLocalRestart(deferredRestart);
+    }
+  });
 
   return {
     connect,
