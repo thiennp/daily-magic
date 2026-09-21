@@ -23,6 +23,7 @@ export const queueClaudeRunFromExecuteDispatch = async (input: {
   readonly projectFolderPath?: string;
   readonly projectId?: string;
   readonly compositionSnapshot?: ProjectCompositionSnapshotWire;
+  readonly marketplaceTemplateId?: string | null;
 }): Promise<AgentWitchMessage> => {
   if (input.deviceId === null || input.deviceId.length === 0) {
     return {
@@ -48,6 +49,7 @@ export const queueClaudeRunFromExecuteDispatch = async (input: {
     projectFolderPath: input.projectFolderPath,
     projectId: input.projectId,
     compositionSnapshot: input.compositionSnapshot,
+    marketplaceTemplateId: input.marketplaceTemplateId,
   });
 
   return buildQueuedClaudeRunDispatchAck({

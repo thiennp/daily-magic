@@ -28,6 +28,7 @@ export const startAgentRunWithShellSession = async (input: {
   readonly projectFolderPath?: string;
   readonly projectId?: string;
   readonly compositionSnapshot?: ProjectCompositionSnapshotWire;
+  readonly marketplaceTemplateId?: string | null;
   readonly requestId?: string;
 }): Promise<string> => {
   const shellSession = createShellSession({
@@ -55,6 +56,7 @@ export const startAgentRunWithShellSession = async (input: {
       ? input.projectId
       : undefined,
     input.compositionSnapshot,
+    input.marketplaceTemplateId,
   );
   await markAgentRunRunning(input.runtime, input.runId);
   subscribeDashboardTerminal(

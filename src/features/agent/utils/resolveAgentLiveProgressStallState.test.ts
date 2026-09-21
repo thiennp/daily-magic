@@ -61,4 +61,16 @@ describe("resolveAgentLiveProgressStallState (AGENT-038 / AGENT-052)", () => {
       }),
     ).toBe("stuck");
   });
+
+  it("P0 session limit hard-stops even inside soft WORKING_ESTIMATE window", () => {
+    expect(
+      resolveAgentLiveProgressStallState({
+        isWorking: true,
+        msSinceLastActivity: 1_000,
+        workedMs: 61_000,
+        estimateSeconds: 600,
+        sessionLimitSeconds: 60,
+      }),
+    ).toBe("stuck");
+  });
 });

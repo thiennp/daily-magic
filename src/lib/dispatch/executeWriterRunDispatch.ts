@@ -4,11 +4,10 @@ import type AgentWitchMessage from "@/lib/agentWitch/types/AgentWitchMessage.typ
 import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
 import { broadcastAgentRunRecord } from "@/lib/dispatch/broadcastAgentRunRecord";
 import type { DispatchPolicyValue } from "@/lib/dispatch/DispatchPolicy.constant";
-import { dispatchClaudeRunLive } from "@/lib/dispatch/dispatchClaudeRunLive";
+import { dispatchClaudeRunAfterPersist } from "@/lib/dispatch/dispatchClaudeRunAfterPersist";
 import { executeApprovalGatedClaudeRunDispatch } from "@/lib/dispatch/executeApprovalGatedWriterRunDispatch";
-import { isLocalMacAgentRunDispatch } from "@/lib/dispatch/isLocalMacAgentRunDispatch";
 import { persistAgentRun } from "@/lib/dispatch/persistAgentRun";
-import { queueClaudeRunFromExecuteDispatch } from "@/lib/dispatch/queueClaudeRunFromExecuteDispatch";
+import { resolveMarketplaceRunDispatchControls } from "@/lib/dispatch/resolveIncludeNextActionsForAgentRunDispatch";
 import { readWriterRunDispatchPayloadFields } from "@/lib/dispatch/readWriterRunDispatchPayloadFields";
 import { resolveDelegatedWriterAgent } from "@/lib/dispatch/resolveDelegatedWriterAgent";
 import { resolveDispatchCompositionContext } from "@/lib/dispatch/resolveDispatchCompositionContext";
@@ -53,6 +52,12 @@ export const executeClaudeRunDispatch = async (input: {
     compositionContext.enrichedPayload,
   );
 
+  const capabilityIdForRun =
+    input.capabilityId ??
+    (typeof input.payload.capabilityId === "string"
+      ? input.payload.capabilityId
+      : null);
+
   const run = await persistAgentRun({
     groupId: input.groupId,
     requesterUserId,
@@ -64,7 +69,7 @@ export const executeClaudeRunDispatch = async (input: {
       : AgentRunStatus.RUNNING,
     dispatchPolicy: input.dispatchPolicy,
     writerAgent,
-    capabilityId: input.capabilityId,
+    capabilityId: capabilityIdForRun,
     capabilityVersionId: input.capabilityVersionId,
     projectId: resolvedProjectId.length > 0 ? resolvedProjectId : null,
     compositionSnapshotId: compositionContext.compositionSnapshotId,
@@ -76,41 +81,30 @@ export const executeClaudeRunDispatch = async (input: {
     return executeApprovalGatedClaudeRunDispatch(input, run, writerAgent);
   }
 
-  const includeNextActions = isLocalMacAgentRunDispatch({
-    requesterUserId,
-    executorUserId: input.executorUserId,
-    groupId: input.groupId,
-  });
-  if (input.agentClient === undefined) {
-    return queueClaudeRunFromExecuteDispatch({
-      executorUserId: input.executorUserId,
-      deviceId: input.deviceId,
-      runId: run.id,
-      prompt: input.prompt,
-      writerAgent,
-      requestId: input.requestId,
+  const { includeNextActions, marketplaceTemplateId } =
+    await resolveMarketplaceRunDispatchControls({
       requesterUserId,
-      dispatchPolicy: input.dispatchPolicy,
-      includeNextActions,
-      ...dispatchPayloadFields,
-      compositionSnapshot: compositionContext.compositionSnapshot,
+      executorUserId: input.executorUserId,
+      groupId: input.groupId,
+      capabilityId: input.capabilityId,
+      payload: input.payload,
     });
-  }
 
-  return dispatchClaudeRunLive({
+  return dispatchClaudeRunAfterPersist({
     runtime: input.runtime,
     agentClient: input.agentClient,
+    deviceId: input.deviceId,
     sender: input.sender,
     prompt: input.prompt,
     runId: run.id,
     writerAgent,
     executorUserId: input.executorUserId,
-    deviceId: input.deviceId,
     requesterUserId,
     dispatchPolicy: input.dispatchPolicy,
     includeNextActions,
+    marketplaceTemplateId,
+    requestId: input.requestId,
     ...dispatchPayloadFields,
     compositionSnapshot: compositionContext.compositionSnapshot,
-    requestId: input.requestId,
   });
 };

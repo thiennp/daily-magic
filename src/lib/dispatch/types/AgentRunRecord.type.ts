@@ -28,4 +28,6 @@ export default interface AgentRunRecord {
   readonly reportStatus?: string | null;
   readonly reportSummary?: string | null;
   readonly reportHistory?: readonly AgentRunReportHistoryEntry[] | null;
+  /** P0 hard session limit (seconds). When set, overrides soft WORKING_ESTIMATE stall only. */
+  readonly sessionLimitSeconds?: number | null;
 }

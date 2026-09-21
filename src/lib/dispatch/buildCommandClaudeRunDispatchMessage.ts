@@ -11,6 +11,7 @@ export const buildCommandClaudeRunDispatchMessage = (input: {
   readonly writerAgent: HarnessWriterAgent;
   readonly requestId?: string;
   readonly includeNextActions?: boolean;
+  readonly marketplaceTemplateId?: string | null;
   readonly sessionContinuation?: boolean;
   readonly sourceRunId?: string;
   readonly shellSessionId?: string;
@@ -25,11 +26,17 @@ export const buildCommandClaudeRunDispatchMessage = (input: {
       ? generateAgentRunReportKey()
       : undefined;
 
+  const marketplaceTemplateId = input.marketplaceTemplateId?.trim();
+
   return {
     type: AGENT_WITCH_MESSAGE_TYPES.COMMAND_CLAUDE_RUN,
     payload: {
       prompt: wrapPromptForAgentRun(input.prompt, {
         includeNextActions: input.includeNextActions === true,
+        ...(marketplaceTemplateId !== undefined &&
+        marketplaceTemplateId.length > 0
+          ? { marketplaceTemplateId }
+          : {}),
       }),
       agentRunId: input.agentRunId,
       writerAgent: input.writerAgent,
@@ -53,6 +60,10 @@ export const buildCommandClaudeRunDispatchMessage = (input: {
         ? { compositionSnapshot: input.compositionSnapshot }
         : {}),
       ...(reportKey !== undefined ? { reportKey } : {}),
+      ...(marketplaceTemplateId !== undefined &&
+      marketplaceTemplateId.length > 0
+        ? { marketplaceTemplateId }
+        : {}),
     },
     requestId: input.requestId,
   };

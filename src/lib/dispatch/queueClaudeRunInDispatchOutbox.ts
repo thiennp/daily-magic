@@ -24,6 +24,7 @@ export const queueClaudeRunInDispatchOutbox = async (input: {
   readonly projectFolderPath?: string;
   readonly projectId?: string;
   readonly compositionSnapshot?: ProjectCompositionSnapshotWire;
+  readonly marketplaceTemplateId?: string | null;
 }): Promise<void> => {
   await enqueueAgentWitchDispatchOutbox({
     userId: input.executorUserId,
@@ -40,6 +41,7 @@ export const queueClaudeRunInDispatchOutbox = async (input: {
       projectFolderPath: input.projectFolderPath,
       projectId: input.projectId,
       compositionSnapshot: input.compositionSnapshot,
+      marketplaceTemplateId: input.marketplaceTemplateId,
     }),
   });
 };
