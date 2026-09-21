@@ -1,7 +1,6 @@
 /**
- * Magi/Archi paste the real Marketplace catalog cheap-tier model id here.
- * Until set, plan/estimate uses the same default writer model as write (stage split + eligibility only).
- * Do not invent ids. No Gemini / AppleScript Marketplace defaults.
+ * Marketplace catalog cheap-tier model for plan/estimate when `cheaperModelEligible: true`.
+ * Anthropic only — no Gemini / AppleScript Marketplace defaults.
  */
-export const MARKETPLACE_CATALOG_PLAN_ESTIMATE_MODEL_ID_HOLD: string | null =
-  null;
+export const MARKETPLACE_CATALOG_PLAN_ESTIMATE_MODEL_ID_HOLD =
+  "claude-3-5-haiku-20241022";

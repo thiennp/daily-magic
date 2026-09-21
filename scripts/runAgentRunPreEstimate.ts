@@ -1,7 +1,8 @@
 import {
   runHeadlessWriter,
+  runMarketplacePlanEstimateHeadlessWriter,
   type AgentWitchHeadlessWriterConfig,
-} from "./agentWitchHeadlessWriterRun";
+} from "@agent-witch/install-runtime-client";
 import type { HarnessWriterAgentId } from "./buildWriterCliInvocation";
 import { buildAgentRunPreEstimatePrompt } from "./dispatch/agentRunWorkingEstimate.constant";
 import { extractUserTaskFromWrappedPrompt } from "./dispatch/extractUserTaskFromWrappedPrompt";
@@ -54,19 +55,26 @@ export const runAgentRunPreEstimate = async (input: {
         )
       : null;
 
-  // TODO(Pimi/Magi catalog): when planEstimateWriterRoute?.catalogModelId is set, route headless plan/estimate to that model only.
-  void planEstimateWriterRoute;
-
   const taskPrompt = extractUserTaskFromWrappedPrompt(input.wrappedPrompt);
   const estimatePrompt = buildPreEstimatePrompt(
     taskPrompt,
     input.marketplaceTemplateId,
   );
-  const headlessResult = await runHeadlessWriter(
-    input.config,
-    input.writerAgent,
-    estimatePrompt,
-  );
+
+  const catalogModelId = planEstimateWriterRoute?.catalogModelId ?? null;
+  const useCatalogCheapModel =
+    planEstimateWriterRoute?.cheaperModelEligible === true &&
+    catalogModelId !== null &&
+    catalogModelId.trim().length > 0;
+
+  const headlessResult = useCatalogCheapModel
+    ? await runMarketplacePlanEstimateHeadlessWriter(
+        input.config,
+        input.writerAgent,
+        estimatePrompt,
+        catalogModelId,
+      )
+    : await runHeadlessWriter(input.config, input.writerAgent, estimatePrompt);
   const estimateSeconds = parseAgentRunWorkingEstimateSeconds(
     headlessResult.output,
   );
