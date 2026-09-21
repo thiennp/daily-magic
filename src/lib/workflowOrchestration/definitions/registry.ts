@@ -5,10 +5,7 @@ import { OFFICIAL_WORKFLOW_DEFINITION as compareOptions } from "@/lib/workflowOr
 import { OFFICIAL_WORKFLOW_DEFINITION as competitorSnapshot } from "@/lib/workflowOrchestration/definitions/competitorSnapshot.definition";
 import { OFFICIAL_WORKFLOW_DEFINITION as dailyStandup } from "@/lib/workflowOrchestration/definitions/dailyStandup.definition";
 import { OFFICIAL_WORKFLOW_DEFINITION as documentSummary } from "@/lib/workflowOrchestration/definitions/documentSummary.definition";
-import { OFFICIAL_WORKFLOW_DEFINITION as dropshipProductListing } from "@/lib/workflowOrchestration/definitions/dropshipProductListing.definition";
-import { OFFICIAL_WORKFLOW_DEFINITION as emailInboxReply } from "@/lib/workflowOrchestration/definitions/emailInboxReply.definition";
-import { OFFICIAL_WORKFLOW_DEFINITION as facebookPagePost } from "@/lib/workflowOrchestration/definitions/facebookPagePost.definition";
-import { OFFICIAL_WORKFLOW_DEFINITION as financeSheetQa } from "@/lib/workflowOrchestration/definitions/financeSheetQa.definition";
+import { OFFICIAL_WORKFLOW_DEFINITION as contractSummarizer } from "@/lib/workflowOrchestration/definitions/contractSummarizer.definition";
 import { OFFICIAL_WORKFLOW_DEFINITION as freelancerClientProposal } from "@/lib/workflowOrchestration/definitions/freelancerClientProposal.definition";
 import { OFFICIAL_WORKFLOW_DEFINITION as incidentPostmortem } from "@/lib/workflowOrchestration/definitions/incidentPostmortem.definition";
 import { OFFICIAL_WORKFLOW_DEFINITION as interviewDebrief } from "@/lib/workflowOrchestration/definitions/interviewDebrief.definition";
@@ -27,6 +24,7 @@ import { OFFICIAL_WORKFLOW_DEFINITION as teacherLessonPlan } from "@/lib/workflo
 import { OFFICIAL_WORKFLOW_DEFINITION as teamRepoStandup } from "@/lib/workflowOrchestration/definitions/teamRepoStandup.definition";
 import { OFFICIAL_WORKFLOW_DEFINITION as tenantSupportReply } from "@/lib/workflowOrchestration/definitions/tenantSupportReply.definition";
 import { OFFICIAL_WORKFLOW_DEFINITION as tiktokSeriesEpisode } from "@/lib/workflowOrchestration/definitions/tiktokSeriesEpisode.definition";
+import { OFFICIAL_WORKFLOW_DEFINITION as travelPlanner } from "@/lib/workflowOrchestration/definitions/travelPlanner.definition";
 import { OFFICIAL_WORKFLOW_DEFINITION as vibeCodingAppFeature } from "@/lib/workflowOrchestration/definitions/vibeCodingAppFeature.definition";
 import { OFFICIAL_WORKFLOW_DEFINITION as weeklyTeamStatus } from "@/lib/workflowOrchestration/definitions/weeklyTeamStatus.definition";
 
@@ -38,10 +36,7 @@ const CUSTOM_OFFICIAL_WORKFLOW_DEFINITIONS: Readonly<
   "competitor-snapshot": competitorSnapshot,
   "daily-standup": dailyStandup,
   "document-summary": documentSummary,
-  "dropship-product-listing": dropshipProductListing,
-  "email-inbox-reply": emailInboxReply,
-  "facebook-page-post": facebookPagePost,
-  "finance-sheet-qa": financeSheetQa,
+  "contract-summarizer": contractSummarizer,
   "freelancer-client-proposal": freelancerClientProposal,
   "incident-postmortem": incidentPostmortem,
   "interview-debrief": interviewDebrief,
@@ -60,6 +55,7 @@ const CUSTOM_OFFICIAL_WORKFLOW_DEFINITIONS: Readonly<
   "team-repo-standup": teamRepoStandup,
   "tenant-support-reply": tenantSupportReply,
   "tiktok-series-episode": tiktokSeriesEpisode,
+  "travel-planner": travelPlanner,
   "vibe-coding-app-feature": vibeCodingAppFeature,
   "weekly-team-status": weeklyTeamStatus,
 };

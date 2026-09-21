@@ -32,20 +32,6 @@ export const AGENT_CAPABILITY_TEMPLATES_A: readonly AgentCapabilityTemplate[] =
       "Help me debug this issue. Propose hypotheses, checks, and the smallest fix.",
     ),
     buildAgentTemplate(
-      "meeting-prep-assistant",
-      "Communication",
-      "Meeting prep assistant",
-      "Build agendas, questions, and pre-reads before important meetings.",
-      "Prepare me for this meeting with an agenda, key questions, and likely decisions.",
-    ),
-    buildAgentTemplate(
-      "email-triage-assistant",
-      "Communication",
-      "Email triage assistant",
-      "Sort inbox themes and draft replies for urgent threads.",
-      "Triage these emails by urgency, summarize each thread, and draft replies where needed.",
-    ),
-    buildAgentTemplate(
       "doc-writer",
       "Engineering",
       "Documentation writer",

@@ -8,7 +8,7 @@ import {
 } from "@/lib/capabilities/templates/listCapabilityTemplates";
 
 describe("capability templates catalog", () => {
-  it("ships 29 workflow and 20 agent presets with harness bundles", () => {
+  it("ships 27 workflow and 15 agent presets with harness bundles", () => {
     const summaries = listCapabilityTemplateSummaries();
     const workflows = summaries.filter(
       (template) => template.type === CapabilityType.WORKFLOW,
@@ -17,9 +17,9 @@ describe("capability templates catalog", () => {
       (template) => template.type === CapabilityType.AGENT,
     );
 
-    expect(allCapabilityTemplates).toHaveLength(49);
-    expect(workflows).toHaveLength(29);
-    expect(agents).toHaveLength(20);
+    expect(allCapabilityTemplates).toHaveLength(42);
+    expect(workflows).toHaveLength(27);
+    expect(agents).toHaveLength(15);
     expect(summaries[0]?.id).toBe("vibe-coding-app-feature");
     expect(summaries.every((template) => template.harnessItemCount >= 5)).toBe(
       true,
@@ -33,19 +33,18 @@ describe("capability templates catalog", () => {
     expect(findCapabilityTemplateById("weekly-team-status")?.name).toBe(
       "Weekly team status",
     );
+    expect(findCapabilityTemplateById("contract-summarizer")?.type).toBe(
+      CapabilityType.WORKFLOW,
+    );
     expect(findCapabilityTemplateById("customer-success-copilot")?.type).toBe(
       CapabilityType.AGENT,
     );
     expect(findCapabilityTemplateById("missing-template")).toBeUndefined();
+    expect(findCapabilityTemplateById("email-inbox-reply")).toBeUndefined();
   });
 
   it("uses enriched harness with subagent per preset", () => {
     const jobApplication = findCapabilityTemplateById("job-application-pack");
-    const dropship = findCapabilityTemplateById("dropship-product-listing");
-    const tiktok = findCapabilityTemplateById("tiktok-series-episode");
-    const facebook = findCapabilityTemplateById("facebook-page-post");
-    const email = findCapabilityTemplateById("email-inbox-reply");
-    const finance = findCapabilityTemplateById("finance-sheet-qa");
     const weekly = findCapabilityTemplateById("weekly-team-status");
     const subagent = weekly?.harness.items.find(
       (item) => item.kind === "agent",
@@ -54,21 +53,6 @@ describe("capability templates catalog", () => {
     expect(
       jobApplication?.harness.items.filter((item) => item.kind === "operator"),
     ).toHaveLength(3);
-    expect(
-      dropship?.harness.items.filter((item) => item.kind === "operator"),
-    ).toHaveLength(4);
-    expect(
-      tiktok?.harness.items.filter((item) => item.kind === "operator"),
-    ).toHaveLength(4);
-    expect(
-      facebook?.harness.items.filter((item) => item.kind === "operator"),
-    ).toHaveLength(3);
-    expect(
-      email?.harness.items.filter((item) => item.kind === "operator"),
-    ).toHaveLength(4);
-    expect(
-      finance?.harness.items.filter((item) => item.kind === "operator"),
-    ).toHaveLength(4);
     expect(
       weekly?.harness.items.filter((item) => item.kind === "operator"),
     ).toHaveLength(3);

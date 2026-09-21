@@ -11,7 +11,7 @@ describe("official workflow definitions for marketplace templates", () => {
       (template) => template.type === CapabilityType.WORKFLOW,
     );
 
-    expect(workflows.length).toBe(29);
+    expect(workflows.length).toBe(27);
 
     workflows.forEach((template) => {
       const definition = findOfficialWorkflowDefinitionByTemplateId(
@@ -52,12 +52,13 @@ describe("official workflow definitions for marketplace templates", () => {
     expect(sections.length).toBeGreaterThan(3);
   });
 
-  it("uses custom orchestration for email inbox reply", () => {
-    const definition =
-      findOfficialWorkflowDefinitionByTemplateId("email-inbox-reply");
+  it("uses custom orchestration for contract summarizer workflow", () => {
+    const definition = findOfficialWorkflowDefinitionByTemplateId(
+      "contract-summarizer",
+    );
     expect(definition?.version).toBeGreaterThanOrEqual(2);
     expect(
       definition?.nodes.filter((node) => node.kind === "agent"),
-    ).toHaveLength(3);
+    ).toHaveLength(2);
   });
 });

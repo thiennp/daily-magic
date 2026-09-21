@@ -39,27 +39,6 @@ export const AGENT_CAPABILITY_TEMPLATES_B: readonly AgentCapabilityTemplate[] =
       "Create a presentation outline with slide titles, bullets, and speaker notes.",
     ),
     buildAgentTemplate(
-      "social-post-writer",
-      "Marketing",
-      "Social post writer",
-      "Draft LinkedIn or social posts from ideas and links.",
-      "Draft a social post from this idea. Offer two tones: professional and casual.",
-    ),
-    buildAgentTemplate(
-      "contract-summarizer",
-      "Legal & Ops",
-      "Contract summarizer",
-      "Summarize agreements with risks, obligations, and dates.",
-      "Summarize this contract for a non-lawyer. Highlight obligations, risks, and dates.",
-    ),
-    buildAgentTemplate(
-      "travel-planner",
-      "Personal",
-      "Travel planner",
-      "Build itineraries from dates, budget, and preferences.",
-      "Plan a trip itinerary from these constraints. Include options and trade-offs.",
-    ),
-    buildAgentTemplate(
       "productivity-coach",
       "Personal",
       "Productivity coach",

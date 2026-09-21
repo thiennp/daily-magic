@@ -1,12 +1,11 @@
 export const HOME_POPULAR_PRESET_IDS = [
   "vibe-coding-app-feature",
   "job-application-pack",
-  "email-inbox-reply",
   "freelancer-client-proposal",
   "shop-order-support",
   "tiktok-series-episode",
-  "finance-sheet-qa",
-  "facebook-page-post",
+  "daily-standup",
+  "research-brief",
   "teacher-lesson-plan",
 ] as const;
 

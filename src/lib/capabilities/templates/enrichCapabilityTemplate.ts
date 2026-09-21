@@ -32,17 +32,17 @@ const defaultOutcomes = (
 ): readonly string[] => {
   if (seed.type === CapabilityType.WORKFLOW) {
     return [
-      "Workflow saved to Library with guided form fields",
-      "Rules bundle: rule, skill, shortcut, instruction, and specialist assistant",
-      "Specialist owns the deliverable when the main agent delegates this preset",
-      "Run from Agent on your Mac when connected",
+      "Entry-point form fields when someone starts the run",
+      "Linear human and specialist steps with review checkpoints",
+      "Official orchestration graph on marketplace presets",
+      "Rules bundle installs to your Mac for consistent runs",
     ];
   }
 
   return [
-    "Agent saved to Library with a tuned default prompt",
-    "Rules bundle: rule, skill, shortcut, instruction, and specialist assistant",
-    "Specialist maximizes depth for this agent's domain on your Mac",
+    "Standing specialist — bring context in the task prompt",
+    "Rules bundle: rule, skill, shortcut, instruction, and specialist",
+    "Best for open-ended Mac work without a fixed intake form",
     "Run from Agent on your Mac when connected",
   ];
 };
@@ -51,7 +51,10 @@ const defaultDetail = (seed: CapabilityTemplateSeedInput): string =>
   [
     seed.description,
     "",
-    `This preset includes a full rules bundle (${seed.category}): behavior rules, a domain skill, a run shortcut, default instructions, and a specialist assistant that owns the core work when delegated.`,
+    `This preset includes a full rules bundle (${seed.category}): behavior rules, a domain skill, a run shortcut, default instructions, and a specialist assistant.`,
+    seed.type === CapabilityType.WORKFLOW
+      ? "Workflows collect answers at the entry point, then run human checkpoints and Mac steps in order."
+      : "Agents are reusable specialists — save to Library and install the bundle to your Mac.",
     "Save it to your Library, then install the bundle to your Mac so tasks follow the same standards every time.",
   ].join(" ");
 
