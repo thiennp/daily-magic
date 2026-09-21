@@ -1,7 +1,7 @@
 import { CapabilityType } from "@/lib/capabilities/CapabilityType.constant";
 import enrichCapabilityTemplate from "@/lib/capabilities/templates/enrichCapabilityTemplate";
 import type { WorkflowCapabilityTemplate } from "@/lib/capabilities/templates/types/CapabilityTemplate.type";
-import { WorkflowFieldInputType } from "@/lib/workflows/types/WorkflowFieldDefinition.type";
+import { WorkflowFieldInputType } from "@/lib/workflows/types/WorkflowFieldInputType.constant";
 
 type WorkflowFieldSpec = readonly [
   string,

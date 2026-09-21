@@ -1,6 +1,7 @@
 import { slugifyWorkflowFieldKey } from "@/lib/workflows/slugifyWorkflowFieldKey";
+import { WorkflowFieldInputType } from "@/lib/workflows/types/WorkflowFieldInputType.constant";
 import type WorkflowFieldDefinition from "@/lib/workflows/types/WorkflowFieldDefinition.type";
-import type { DraftWorkflowField } from "@/features/workflows/WorkflowBuilderFieldRow";
+import type DraftWorkflowField from "@/features/workflows/types/DraftWorkflowField.type";
 
 function makeUniqueFieldKey(
   baseKey: string,
@@ -12,6 +13,12 @@ function makeUniqueFieldKey(
     ? makeUniqueFieldKey(baseKey, usedKeys, attempt + 1)
     : candidate;
 }
+
+const compactSelectOptions = (
+  options: readonly string[],
+): readonly string[] => [
+  ...new Set(options.map((option) => option.trim()).filter(Boolean)),
+];
 
 export function buildWorkflowFieldsFromDrafts(
   drafts: readonly DraftWorkflowField[],
@@ -27,6 +34,7 @@ export function buildWorkflowFieldsFromDrafts(
     const baseKey = slugifyWorkflowFieldKey(label);
     const key = makeUniqueFieldKey(baseKey, usedKeys);
     usedKeys.add(key);
+    const options = compactSelectOptions(draft.options);
 
     return [
       {
@@ -34,6 +42,9 @@ export function buildWorkflowFieldsFromDrafts(
         label,
         type: draft.type,
         required: draft.required,
+        ...(draft.type === WorkflowFieldInputType.SELECT && options.length > 0
+          ? { options }
+          : {}),
       },
     ];
   });

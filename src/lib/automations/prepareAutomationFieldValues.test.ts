@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 
 import { prepareAutomationFieldValues } from "@/lib/automations/prepareAutomationFieldValues";
-import { WorkflowFieldInputType } from "@/lib/workflows/types/WorkflowFieldDefinition.type";
+import { WorkflowFieldInputType } from "@/lib/workflows/types/WorkflowFieldInputType.constant";
 import type PublishedCapabilityRecord from "@/lib/capabilities/types/PublishedCapabilityRecord.type";
 
 vi.mock("@/lib/projects/userProjectQueries", () => ({

@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { buildWorkflowFieldsFromDrafts } from "@/features/workflows/buildWorkflowFieldsFromDrafts";
+import { WorkflowFieldInputType } from "@/lib/workflows/types/WorkflowFieldInputType.constant";
 
 describe("buildWorkflowFieldsFromDrafts", () => {
   it("maps labels to slug keys and skips empty rows", () => {
@@ -8,14 +9,16 @@ describe("buildWorkflowFieldsFromDrafts", () => {
       {
         id: "1",
         label: "Week of",
-        type: "text",
+        type: WorkflowFieldInputType.TEXT,
         required: true,
+        options: [],
       },
       {
         id: "2",
         label: "",
-        type: "textarea",
+        type: WorkflowFieldInputType.TEXTAREA,
         required: false,
+        options: [],
       },
     ]);
 
@@ -23,7 +26,7 @@ describe("buildWorkflowFieldsFromDrafts", () => {
       {
         key: "week_of",
         label: "Week of",
-        type: "text",
+        type: WorkflowFieldInputType.TEXT,
         required: true,
       },
     ]);
@@ -34,17 +37,41 @@ describe("buildWorkflowFieldsFromDrafts", () => {
       {
         id: "1",
         label: "Week Of",
-        type: "text",
+        type: WorkflowFieldInputType.TEXT,
         required: true,
+        options: [],
       },
       {
         id: "2",
         label: "Week  Of",
-        type: "textarea",
+        type: WorkflowFieldInputType.TEXTAREA,
         required: false,
+        options: [],
       },
     ]);
 
     expect(fields.map((field) => field.key)).toEqual(["week_of", "week_of_2"]);
+  });
+
+  it("stores unique trimmed choices on select fields", () => {
+    expect(
+      buildWorkflowFieldsFromDrafts([
+        {
+          id: "1",
+          label: "Size",
+          type: WorkflowFieldInputType.SELECT,
+          required: true,
+          options: [" S ", "M", "S", ""],
+        },
+      ]),
+    ).toEqual([
+      {
+        key: "size",
+        label: "Size",
+        type: WorkflowFieldInputType.SELECT,
+        required: true,
+        options: ["S", "M"],
+      },
+    ]);
   });
 });

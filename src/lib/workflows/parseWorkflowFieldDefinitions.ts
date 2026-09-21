@@ -1,12 +1,9 @@
-import { WorkflowFieldInputType } from "@/lib/workflows/types/WorkflowFieldDefinition.type";
-import type WorkflowFieldDefinition from "@/lib/workflows/types/WorkflowFieldDefinition.type";
+import { isNonNullObject, isString } from "guardz";
 
-const isWorkflowFieldInputType = (
-  value: string,
-): value is WorkflowFieldDefinition["type"] =>
-  value === WorkflowFieldInputType.TEXT ||
-  value === WorkflowFieldInputType.TEXTAREA ||
-  value === WorkflowFieldInputType.PROJECT;
+import { isWorkflowFieldInputType } from "@/lib/workflows/isWorkflowFieldInputType";
+import { parseWorkflowFieldSelectOptions } from "@/lib/workflows/parseWorkflowFieldSelectOptions";
+import { WorkflowFieldInputType } from "@/lib/workflows/types/WorkflowFieldInputType.constant";
+import type WorkflowFieldDefinition from "@/lib/workflows/types/WorkflowFieldDefinition.type";
 
 export function parseWorkflowFieldDefinitions(
   value: unknown,
@@ -16,17 +13,16 @@ export function parseWorkflowFieldDefinitions(
   }
 
   return value.flatMap((entry) => {
-    if (typeof entry !== "object" || entry === null) {
+    if (!isNonNullObject(entry)) {
       return [];
     }
 
-    const record = entry as Record<string, unknown>;
-    const key = typeof record.key === "string" ? record.key.trim() : "";
-    const label = typeof record.label === "string" ? record.label.trim() : "";
-    const type =
-      typeof record.type === "string" && isWorkflowFieldInputType(record.type)
-        ? record.type
-        : WorkflowFieldInputType.TEXT;
+    const key = isString(entry.key) ? entry.key.trim() : "";
+    const label = isString(entry.label) ? entry.label.trim() : "";
+    const type = isWorkflowFieldInputType(entry.type)
+      ? entry.type
+      : WorkflowFieldInputType.TEXT;
+    const options = parseWorkflowFieldSelectOptions(entry.options);
 
     if (key.length === 0 || label.length === 0) {
       return [];
@@ -37,7 +33,10 @@ export function parseWorkflowFieldDefinitions(
         key,
         label,
         type,
-        required: record.required === true,
+        required: entry.required === true,
+        ...(type === WorkflowFieldInputType.SELECT && options.length > 0
+          ? { options }
+          : {}),
       },
     ];
   });

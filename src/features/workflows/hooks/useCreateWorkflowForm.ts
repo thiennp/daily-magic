@@ -4,18 +4,11 @@ import { useState } from "react";
 
 import { useCapabilityHarnessDraft } from "@/features/capabilities/hooks/useCapabilityHarnessDraft";
 import { submitCreatePlaybook } from "@/features/capabilities/submitCreatePlaybook";
-import { type DraftWorkflowField } from "@/features/workflows/WorkflowBuilderFieldRow";
 import { buildWorkflowFieldsFromDrafts } from "@/features/workflows/buildWorkflowFieldsFromDrafts";
+import { createDraftWorkflowField } from "@/features/workflows/createDraftWorkflowField";
+import { findWorkflowDraftFieldError } from "@/features/workflows/findWorkflowDraftFieldError";
+import type DraftWorkflowField from "@/features/workflows/types/DraftWorkflowField.type";
 import { CapabilityType } from "@/lib/capabilities/CapabilityType.constant";
-
-function createDraftField(): DraftWorkflowField {
-  return {
-    id: crypto.randomUUID(),
-    label: "",
-    type: "text",
-    required: true,
-  };
-}
 
 interface UseCreateWorkflowFormOptions {
   readonly onCreated: () => void;
@@ -30,7 +23,7 @@ export function useCreateWorkflowForm({
   const [description, setDescription] = useState("");
   const [exampleRequest, setExampleRequest] = useState("");
   const [fields, setFields] = useState<readonly DraftWorkflowField[]>(() => [
-    createDraftField(),
+    createDraftWorkflowField(),
   ]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -43,6 +36,12 @@ export function useCreateWorkflowForm({
     const trimmedName = name.trim();
     if (trimmedName.length === 0) {
       setError("Workflow name is required.");
+      return;
+    }
+
+    const draftError = findWorkflowDraftFieldError(fields);
+    if (draftError !== null) {
+      setError(draftError);
       return;
     }
 

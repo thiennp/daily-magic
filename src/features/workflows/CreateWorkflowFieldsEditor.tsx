@@ -1,9 +1,8 @@
 "use client";
 
 import Button from "@/components/ui/button/Button";
-import WorkflowBuilderFieldRow, {
-  type DraftWorkflowField,
-} from "@/features/workflows/WorkflowBuilderFieldRow";
+import WorkflowBuilderFieldRow from "@/features/workflows/WorkflowBuilderFieldRow";
+import type DraftWorkflowField from "@/features/workflows/types/DraftWorkflowField.type";
 import { WORKFLOW_BUILDER_QUESTIONS_SECTION } from "@/features/workflows/workflowBuilderCopy.constant";
 
 interface CreateWorkflowFieldsEditorProps {

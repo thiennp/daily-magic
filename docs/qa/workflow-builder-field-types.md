@@ -14,23 +14,30 @@
 
 ## Short answer
 
-Today each workflow question has a **type**, but the create UI labels it **Answer length** and only offers **One line** (`text`) and **Multiple lines** (`textarea`). A hidden `project` type exists for marketplace templates (folder binding), not the builder dropdown. User-created workflows do **not** run the official human↔agent graph; that graph is marketplace-only. A proposed richer form + step/graph plan lives in [workflow-builder-form-and-graph.md](../product/workflow-builder-form-and-graph.md).
+Create workflow questions use **Input type**: text, paragraph, number, phone, email, link, date, yes/no, and choice list. A hidden `project` type still exists for marketplace folder binding. There is no file upload yet. Human step and specialist sit under **How this workflow runs**; extra Mac rules stay optional. User-created workflows still dispatch as one Mac prompt; the official human↔agent graph remains marketplace-only.
 
 ## Details
 
 ### Builder (AWC Create workflow)
 
-| Control                        | Stored as                                                   | Run widget                                      |
-| ------------------------------ | ----------------------------------------------------------- | ----------------------------------------------- |
-| Question label                 | `workflow_fields[].label` (key is slugified from the label) | Field caption                                   |
-| Answer length → One line       | `type: "text"`                                              | Single-line text                                |
-| Answer length → Multiple lines | `type: "textarea"`                                          | Paragraph                                       |
-| Required to run                | `required`                                                  | `*` + empty-string error                        |
-| (not in builder)               | `type: "project"`                                           | Hidden; filled from the selected project folder |
+| Control                  | Stored as                                                | Run widget                                      |
+| ------------------------ | -------------------------------------------------------- | ----------------------------------------------- |
+| Question                 | `workflow_fields[].label` (key slugified from the label) | Field caption                                   |
+| Input type → Text        | `type: "text"`                                           | One-line text                                   |
+| Input type → Paragraph   | `type: "textarea"`                                       | Multi-line text                                 |
+| Input type → Number      | `type: "number"`                                         | Number input                                    |
+| Input type → Phone       | `type: "phone"`                                          | Telephone input                                 |
+| Input type → Email       | `type: "email"`                                          | Email input                                     |
+| Input type → Link        | `type: "url"`                                            | URL input                                       |
+| Input type → Date        | `type: "date"`                                           | Date input                                      |
+| Input type → Yes / no    | `type: "boolean"`                                        | Yes / No radios (`yes` / `no`)                  |
+| Input type → Choice list | `type: "select"` plus `options[]`                        | Dropdown                                        |
+| Required to run          | `required`                                               | `*` plus validation message                     |
+| (not in builder)         | `type: "project"`                                        | Hidden; filled from the selected project folder |
 
-Values at run time are always strings (`Record<string, string>`). Validation is required/trim only — no phone, number, or file checks.
+Values stay strings (`Record<string, string>`). Empty required fields fail; typed fields also check format.
 
-Create **agent** has **no** question list. Both surfaces can add harness items: rule, skill, command, instruction, **Specialist** (`agent` / subagent copy on the Mac), **Human step** (`operator` → `operator_steps`). Those items sit under **Extra rules for your Mac**, not a step diagram.
+Create **agent** still has no question list. Create **workflow** splits harness items: **How this workflow runs** (human step + specialist) vs **Extra rules for your Mac** (rule, skill, command, instruction).
 
 ### Official vs user-created runs
 
@@ -39,9 +46,7 @@ Create **agent** has **no** question list. Both surfaces can add harness items: 
 | User-created workflow                      | `workflow_fields` | One Mac prompt; operator steps appended as text checkpoints |
 | Official marketplace preset (`template-*`) | Same field model  | Server graph `human` / `agent` nodes in `workflow_runs`     |
 
-`startOfficialWorkflowRun` returns _This workflow is not an official orchestrated preset_ for owner-created playbooks.
-
-**Wave** in this product is a **runtime** marker (`[[WAVE_PLAN]]`) the writer may emit during an agent run. It is not a node you add in Create workflow.
+**Wave** is a runtime marker (`[[WAVE_PLAN]]`) during an agent run, not a Create workflow node.
 
 ### Upload
 
@@ -52,7 +57,7 @@ There is no workflow upload field. A browser file picker cannot supply a Mac POS
 - Product plan: [docs/product/workflow-builder-form-and-graph.md](../product/workflow-builder-form-and-graph.md)
 - Concepts: [docs/product/concepts.md](../product/concepts.md)
 - Official graphs: [docs/product/official-marketplace-workflow-best-practices.md](../product/official-marketplace-workflow-best-practices.md)
-- Code: `src/lib/workflows/types/WorkflowFieldDefinition.type.ts`, `src/features/workflows/WorkflowBuilderFieldRow.tsx`, `src/features/workflows/WorkflowTaskFields.tsx`
+- Code: `src/lib/workflows/types/WorkflowFieldInputType.constant.ts`, `src/features/workflows/WorkflowBuilderFieldRow.tsx`, `src/features/workflows/WorkflowTaskFields.tsx`
 
 ## Last reviewed
 

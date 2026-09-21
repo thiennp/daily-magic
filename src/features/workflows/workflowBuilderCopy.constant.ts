@@ -12,8 +12,14 @@ export const WORKFLOW_BUILDER_QUESTIONS_SECTION = {
   untitledQuestion: "New question",
   questionLabel: "Question",
   questionPlaceholder: "e.g. Week of, Client name, Main topic",
-  inputTypeLabel: "Answer length",
+  inputTypeLabel: "Input type",
   requiredLabel: "Required to run",
+} as const;
+
+export const WORKFLOW_BUILDER_STEPS_SECTION = {
+  title: "How this workflow runs",
+  description:
+    "Human steps pause for the person running it. Specialists are extra instructions copied to the Mac.",
 } as const;
 
 export const WORKFLOW_BUILDER_INSTRUCTIONS_LABEL =

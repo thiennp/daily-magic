@@ -1,8 +1,8 @@
 "use client";
 
-import { workflowFieldInputClassName } from "@/features/workflows/utils/workflowFieldInputClassName";
+import WorkflowTaskFieldBlock from "@/features/workflows/WorkflowTaskFieldBlock";
 import type WorkflowFieldDefinition from "@/lib/workflows/types/WorkflowFieldDefinition.type";
-import { WorkflowFieldInputType } from "@/lib/workflows/types/WorkflowFieldDefinition.type";
+import { WorkflowFieldInputType } from "@/lib/workflows/types/WorkflowFieldInputType.constant";
 
 interface WorkflowTaskFieldsProps {
   readonly fields: readonly WorkflowFieldDefinition[];
@@ -17,59 +17,27 @@ export default function WorkflowTaskFields({
   fieldErrors = {},
   onChange,
 }: WorkflowTaskFieldsProps) {
-  if (fields.length === 0) {
+  const visibleFields = fields.filter(
+    (field) => field.type !== WorkflowFieldInputType.PROJECT,
+  );
+
+  if (visibleFields.length === 0) {
     return null;
   }
 
   return (
     <div className="mt-4 space-y-4">
-      {fields.map((field) => {
-        if (field.type === WorkflowFieldInputType.PROJECT) {
-          return null;
-        }
-
-        const errorMessage = fieldErrors[field.key];
-
-        return (
-          <label
-            key={field.key}
-            className="block text-sm font-medium text-gray-800 dark:text-white/90"
-          >
-            {field.label}
-            {field.required ? " *" : ""}
-            {field.type === "textarea" ? (
-              <textarea
-                value={values[field.key] ?? ""}
-                onChange={(event) => {
-                  onChange(field.key, event.target.value);
-                }}
-                rows={4}
-                aria-invalid={errorMessage !== undefined}
-                className={workflowFieldInputClassName(
-                  errorMessage !== undefined,
-                )}
-              />
-            ) : (
-              <input
-                type="text"
-                value={values[field.key] ?? ""}
-                onChange={(event) => {
-                  onChange(field.key, event.target.value);
-                }}
-                aria-invalid={errorMessage !== undefined}
-                className={workflowFieldInputClassName(
-                  errorMessage !== undefined,
-                )}
-              />
-            )}
-            {errorMessage !== undefined ? (
-              <span className="mt-1 block text-sm text-rose-600 dark:text-rose-400">
-                {errorMessage}
-              </span>
-            ) : null}
-          </label>
-        );
-      })}
+      {visibleFields.map((field) => (
+        <WorkflowTaskFieldBlock
+          key={field.key}
+          field={field}
+          value={values[field.key] ?? ""}
+          errorMessage={fieldErrors[field.key]}
+          onChange={(value) => {
+            onChange(field.key, value);
+          }}
+        />
+      ))}
     </div>
   );
 }

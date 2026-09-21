@@ -27,8 +27,8 @@ export default function CreatePlaybookPanel({
             Create workflow or agent
           </h2>
           <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
-            Define prompts, questions, and optional rules — skills, shortcuts,
-            instructions, and specialists that install to your Mac.
+            Questions become a typed form. Then add human steps and specialists
+            for the Mac.
           </p>
         </div>
         <Button

@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { applyProjectFolderToWorkflowFieldValues } from "@/lib/workflows/applyProjectFolderToWorkflowFieldValues";
-import { WorkflowFieldInputType } from "@/lib/workflows/types/WorkflowFieldDefinition.type";
+import { WorkflowFieldInputType } from "@/lib/workflows/types/WorkflowFieldInputType.constant";
 
 describe("applyProjectFolderToWorkflowFieldValues", () => {
   it("fills project workflow fields with the selected folder path", () => {

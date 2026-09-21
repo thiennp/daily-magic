@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { buildWorkflowFieldValidationErrors } from "@/lib/workflows/buildWorkflowPrompt";
+import { buildWorkflowFieldValidationErrors } from "@/lib/workflows/buildWorkflowFieldValidationErrors";
 
 describe("buildWorkflowFieldValidationErrors", () => {
   it("maps required field errors by field key", () => {
@@ -19,6 +19,24 @@ describe("buildWorkflowFieldValidationErrors", () => {
       ),
     ).toEqual({
       email: "Original email is required.",
+    });
+  });
+
+  it("maps type errors by field key", () => {
+    expect(
+      buildWorkflowFieldValidationErrors(
+        [
+          {
+            key: "count",
+            label: "Count",
+            type: "number",
+            required: true,
+          },
+        ],
+        { count: "dozen" },
+      ),
+    ).toEqual({
+      count: "Count must be a number.",
     });
   });
 });

@@ -1,9 +1,10 @@
 "use client";
 
 import Button from "@/components/ui/button/Button";
-import CapabilityHarnessItemsEditor from "@/features/capabilities/CapabilityHarnessItemsEditor";
 import PlaybookBasicsFields from "@/features/capabilities/PlaybookBasicsFields";
 import CreateWorkflowFieldsEditor from "@/features/workflows/CreateWorkflowFieldsEditor";
+import CreateWorkflowHarnessSections from "@/features/workflows/CreateWorkflowHarnessSections";
+import { createDraftWorkflowField } from "@/features/workflows/createDraftWorkflowField";
 import { useCreateWorkflowForm } from "@/features/workflows/hooks/useCreateWorkflowForm";
 
 interface CreateWorkflowFormProps {
@@ -38,15 +39,7 @@ export default function CreateWorkflowForm({
           );
         }}
         onAdd={() => {
-          form.setFields((current) => [
-            ...current,
-            {
-              id: crypto.randomUUID(),
-              label: "",
-              type: "text",
-              required: true,
-            },
-          ]);
+          form.setFields((current) => [...current, createDraftWorkflowField()]);
         }}
         onRemove={(id) => {
           form.setFields((current) =>
@@ -54,7 +47,7 @@ export default function CreateWorkflowForm({
           );
         }}
       />
-      <CapabilityHarnessItemsEditor
+      <CreateWorkflowHarnessSections
         items={form.harness.items}
         onAdd={form.harness.addItem}
         onRemove={form.harness.removeItem}

@@ -23,8 +23,7 @@ export default function CreateWorkflowPanel({
             Create workflow
           </h2>
           <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
-            Define questions once — Agent turns answers into a prompt for your
-            Mac. No automation canvas or code required.
+            Define the questions people answer, then the human and Mac steps.
           </p>
         </div>
         <Button

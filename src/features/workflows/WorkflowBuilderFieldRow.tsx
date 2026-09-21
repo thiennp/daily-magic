@@ -1,19 +1,9 @@
 "use client";
 
-import Label from "@/components/form/Label";
+import WorkflowBuilderFieldRowInputs from "@/features/workflows/WorkflowBuilderFieldRowInputs";
 import { WORKFLOW_BUILDER_QUESTIONS_SECTION } from "@/features/workflows/workflowBuilderCopy.constant";
 import resolveWorkflowFieldRowTitle from "@/features/workflows/resolveWorkflowFieldRowTitle";
-import {
-  WorkflowFieldInputType,
-  type WorkflowFieldInputTypeValue,
-} from "@/lib/workflows/types/WorkflowFieldDefinition.type";
-
-export interface DraftWorkflowField {
-  readonly id: string;
-  readonly label: string;
-  readonly type: WorkflowFieldInputTypeValue;
-  readonly required: boolean;
-}
+import type DraftWorkflowField from "@/features/workflows/types/DraftWorkflowField.type";
 
 interface WorkflowBuilderFieldRowProps {
   readonly field: DraftWorkflowField;
@@ -22,9 +12,6 @@ interface WorkflowBuilderFieldRowProps {
   readonly onChange: (id: string, patch: Partial<DraftWorkflowField>) => void;
   readonly onRemove: (id: string) => void;
 }
-
-const inputClass =
-  "h-11 w-full rounded-lg border border-gray-300 bg-transparent px-3 text-sm shadow-theme-xs focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-800";
 
 export default function WorkflowBuilderFieldRow({
   field,
@@ -51,46 +38,7 @@ export default function WorkflowBuilderFieldRow({
           </button>
         ) : null}
       </div>
-      <div className="mt-3 grid gap-3 sm:grid-cols-2">
-        <div>
-          <Label htmlFor={`wf-label-${field.id}`}>
-            {WORKFLOW_BUILDER_QUESTIONS_SECTION.questionLabel}
-          </Label>
-          <input
-            id={`wf-label-${field.id}`}
-            value={field.label}
-            placeholder={WORKFLOW_BUILDER_QUESTIONS_SECTION.questionPlaceholder}
-            onChange={(event) => {
-              onChange(field.id, { label: event.target.value });
-            }}
-            className={inputClass}
-          />
-        </div>
-        <div>
-          <Label htmlFor={`wf-type-${field.id}`}>
-            {WORKFLOW_BUILDER_QUESTIONS_SECTION.inputTypeLabel}
-          </Label>
-          <select
-            id={`wf-type-${field.id}`}
-            value={field.type}
-            onChange={(event) => {
-              const nextType = event.target.value;
-              if (
-                nextType === WorkflowFieldInputType.TEXT ||
-                nextType === WorkflowFieldInputType.TEXTAREA
-              ) {
-                onChange(field.id, { type: nextType });
-              }
-            }}
-            className={inputClass}
-          >
-            <option value={WorkflowFieldInputType.TEXT}>One line</option>
-            <option value={WorkflowFieldInputType.TEXTAREA}>
-              Multiple lines
-            </option>
-          </select>
-        </div>
-      </div>
+      <WorkflowBuilderFieldRowInputs field={field} onChange={onChange} />
       <label className="mt-3 flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
         <input
           type="checkbox"

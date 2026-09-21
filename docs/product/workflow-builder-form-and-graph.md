@@ -1,6 +1,6 @@
 # Workflow / agent builder: form inputs, steps, and graph
 
-**Status:** Proposed product analysis (no code change yet)  
+**Status:** Phase 1 shipped in AWC create/edit/run forms (typed questions + split Human/Specialist vs extra Mac rules). File upload and a runnable user graph are still later.  
 **Audience:** PM, design, engineering deciding the next Create workflow / Create agent work  
 **Surfaces:** AWC create/edit playbook (`CreateWorkflowForm`, `CreateAgentForm`), run-time form (`WorkflowTaskFields`), official orchestration (`workflow_runs`)
 

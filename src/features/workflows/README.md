@@ -13,7 +13,7 @@ Workflow capabilities with dynamic task fields.
 
 Workflow = capability with dynamic task fields: [docs/product/concepts.md](../../../docs/product/concepts.md).
 
-Builder today (Answer length = `text` / `textarea` only): [docs/qa/workflow-builder-field-types.md](../../../docs/qa/workflow-builder-field-types.md).
+Builder questions use **Input type** (text, paragraph, number, phone, email, link, date, yes/no, choice list): [docs/qa/workflow-builder-field-types.md](../../../docs/qa/workflow-builder-field-types.md).
 
 Proposed input types + linear graph: [docs/product/workflow-builder-form-and-graph.md](../../../docs/product/workflow-builder-form-and-graph.md).
 

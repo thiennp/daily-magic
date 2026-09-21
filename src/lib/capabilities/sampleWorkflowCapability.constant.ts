@@ -1,5 +1,5 @@
-import { WorkflowFieldInputType } from "@/lib/workflows/types/WorkflowFieldDefinition.type";
 import type WorkflowFieldDefinition from "@/lib/workflows/types/WorkflowFieldDefinition.type";
+import { WorkflowFieldInputType } from "@/lib/workflows/types/WorkflowFieldInputType.constant";
 
 export const SAMPLE_WORKFLOW_CAPABILITY_NAME = "Sample: Weekly status update";
 
