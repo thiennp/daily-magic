@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { runMarketplacePlanEstimateHeadlessWriter } from "./runMarketplacePlanEstimateHeadlessWriter";
 import {
-  MARKETPLACE_PLAN_ESTIMATE_LOG_FAIL_PREFIX,
+  MARKETPLACE_PLAN_ESTIMATE_LOG_CLI_FALLBACK_MISSING_KEY,
   MARKETPLACE_PLAN_ESTIMATE_LOG_PASS_PREFIX,
   MARKETPLACE_PLAN_ESTIMATE_MISSING_ANTHROPIC_WRITER_API_KEY,
 } from "./marketplacePlanEstimateReasonCode.constant";
@@ -34,7 +34,6 @@ describe("runMarketplacePlanEstimateHeadlessWriter", () => {
     vi.mocked(readWriterApiProviderSecret).mockReset();
     vi.mocked(runHeadlessWriter).mockReset();
     vi.spyOn(console, "log").mockImplementation(() => {});
-    vi.spyOn(console, "error").mockImplementation(() => {});
   });
 
   it("calls Anthropic Writer API with catalog model override when key exists", async () => {
@@ -68,8 +67,12 @@ describe("runMarketplacePlanEstimateHeadlessWriter", () => {
     );
   });
 
-  it("fails plan/estimate when no Anthropic API key (no claude-cli fallback)", async () => {
+  it("observably falls back to claude-cli when no Anthropic API key", async () => {
     vi.mocked(readWriterApiProviderSecret).mockReturnValue(null);
+    vi.mocked(runHeadlessWriter).mockResolvedValue({
+      exitCode: 0,
+      output: "cli fallback",
+    });
 
     const result = await runMarketplacePlanEstimateHeadlessWriter(
       baseConfig as never,
@@ -79,13 +82,19 @@ describe("runMarketplacePlanEstimateHeadlessWriter", () => {
     );
 
     expect(callWriterApi).not.toHaveBeenCalled();
-    expect(runHeadlessWriter).not.toHaveBeenCalled();
-    expect(result.exitCode).toBe(-1);
+    expect(runHeadlessWriter).toHaveBeenCalledWith(
+      baseConfig,
+      "claude-cli",
+      "estimate task",
+    );
+    expect(result.execution.backend).toBe(
+      "cli-fallback-missing-anthropic-writer-api-key",
+    );
     expect(result.execution.reasonCode).toBe(
       MARKETPLACE_PLAN_ESTIMATE_MISSING_ANTHROPIC_WRITER_API_KEY,
     );
-    expect(console.error).toHaveBeenCalledWith(
-      `${MARKETPLACE_PLAN_ESTIMATE_LOG_FAIL_PREFIX}${MARKETPLACE_PLAN_ESTIMATE_MISSING_ANTHROPIC_WRITER_API_KEY} modelOverride=claude-3-5-haiku-20241022`,
+    expect(console.log).toHaveBeenCalledWith(
+      MARKETPLACE_PLAN_ESTIMATE_LOG_CLI_FALLBACK_MISSING_KEY,
     );
   });
 });

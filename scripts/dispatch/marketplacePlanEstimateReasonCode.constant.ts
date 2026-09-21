@@ -8,5 +8,8 @@ export const MARKETPLACE_PLAN_ESTIMATE_EMPTY_CATALOG_MODEL_ID =
 export const MARKETPLACE_PLAN_ESTIMATE_LOG_PASS_PREFIX =
   "[agent-witch] marketplace plan/estimate modelOverride=";
 
-export const MARKETPLACE_PLAN_ESTIMATE_LOG_FAIL_PREFIX =
-  "[agent-witch] marketplace plan/estimate FAILED reasonCode=";
+export const MARKETPLACE_PLAN_ESTIMATE_LOG_CLI_FALLBACK_MISSING_KEY =
+  "[agent-witch] marketplace plan/estimate falling back to claude-cli (Writer API key missing)";
+
+export const MARKETPLACE_PLAN_ESTIMATE_LOG_CLI_FALLBACK_EMPTY_CATALOG =
+  "[agent-witch] marketplace plan/estimate falling back to claude-cli (empty catalog model id)";

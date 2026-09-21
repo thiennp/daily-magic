@@ -21,11 +21,11 @@ describe("buildMarketplacePlanEstimateTerminalStreamPayload", () => {
     expect(payload.chunk).toContain("[[MARKETPLACE_PLAN_ESTIMATE]]");
   });
 
-  it("includes reasonCode on failure diagnostics", () => {
+  it("includes reasonCode on CLI fallback diagnostics", () => {
     const payload = buildMarketplacePlanEstimateTerminalStreamPayload({
       runId: "run-1",
       diagnostics: {
-        backend: "failed-missing-anthropic-writer-api-key",
+        backend: "cli-fallback-missing-anthropic-writer-api-key",
         catalogModelId: "claude-3-5-haiku-20241022",
         marketplaceTemplateId: "vibe-coding-app-feature",
         reasonCode:
@@ -33,11 +33,11 @@ describe("buildMarketplacePlanEstimateTerminalStreamPayload", () => {
       },
     });
 
+    expect(payload.marketplacePlanEstimateBackend).toBe(
+      "cli-fallback-missing-anthropic-writer-api-key",
+    );
     expect(payload.marketplacePlanEstimateReasonCode).toBe(
       "MARKETPLACE_PLAN_ESTIMATE_MISSING_ANTHROPIC_WRITER_API_KEY",
-    );
-    expect(payload.chunk).toContain(
-      "marketplacePlanEstimateReasonCode=MARKETPLACE_PLAN_ESTIMATE_MISSING_ANTHROPIC_WRITER_API_KEY",
     );
   });
 });

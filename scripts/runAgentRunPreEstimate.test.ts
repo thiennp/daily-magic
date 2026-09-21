@@ -20,12 +20,12 @@ describe("runAgentRunPreEstimate (marketplace plan/estimate routing)", () => {
     vi.mocked(runMarketplacePlanEstimateHeadlessWriter).mockReset();
   });
 
-  it("marks stage failed when Writer API key missing (preset capabilityId)", async () => {
+  it("uses observable CLI fallback path when Writer API key missing", async () => {
     vi.mocked(runMarketplacePlanEstimateHeadlessWriter).mockResolvedValue({
-      exitCode: -1,
-      output: "missing key",
+      exitCode: 0,
+      output: "[[WORKING_ESTIMATE]]\n120\n",
       execution: {
-        backend: "failed-missing-anthropic-writer-api-key",
+        backend: "cli-fallback-missing-anthropic-writer-api-key",
         modelOverride: "claude-3-5-haiku-20241022",
         reasonCode: MARKETPLACE_PLAN_ESTIMATE_MISSING_ANTHROPIC_WRITER_API_KEY,
       },
@@ -43,10 +43,9 @@ describe("runAgentRunPreEstimate (marketplace plan/estimate routing)", () => {
     });
 
     expect(runMarketplacePlanEstimateHeadlessWriter).toHaveBeenCalled();
-    expect(runHeadlessWriter).not.toHaveBeenCalled();
-    expect(result.planEstimateStageFailed).toBe(true);
-    expect(result.planEstimateReasonCode).toBe(
-      MARKETPLACE_PLAN_ESTIMATE_MISSING_ANTHROPIC_WRITER_API_KEY,
+    expect(result.marketplacePlanEstimate?.backend).toBe(
+      "cli-fallback-missing-anthropic-writer-api-key",
     );
+    expect(result.estimateSeconds).toBe(120);
   });
 });

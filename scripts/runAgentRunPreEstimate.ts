@@ -36,8 +36,6 @@ export type AgentRunPreEstimateResult = {
   readonly estimateSummary: string;
   readonly estimateOutput: string;
   readonly marketplacePlanEstimate: MarketplacePlanEstimatePreRunDiagnostics | null;
-  readonly planEstimateStageFailed: boolean;
-  readonly planEstimateReasonCode: string | null;
 };
 
 const buildPreEstimatePrompt = (
@@ -50,6 +48,18 @@ const buildPreEstimatePrompt = (
   }
 
   return buildMarketplaceVibeCodingPlanEstimatePrompt(taskPrompt);
+};
+
+const buildPlanEstimateReportNote = (
+  diagnostics: MarketplacePlanEstimatePreRunDiagnostics,
+): string | null => {
+  if (diagnostics.backend === "anthropic-writer-api") {
+    return `Plan/estimate used Anthropic Writer API (modelOverride=${diagnostics.catalogModelId ?? "unknown"}).`;
+  }
+  if (diagnostics.backend === "cli-fallback-missing-anthropic-writer-api-key") {
+    return "Plan/estimate fell back to claude-cli because no Anthropic Writer API key is in writer-api-secrets.json on this Mac.";
+  }
+  return null;
 };
 
 export const runAgentRunPreEstimate = async (input: {
@@ -132,30 +142,30 @@ export const runAgentRunPreEstimate = async (input: {
         };
       })();
 
-  const planEstimateStageFailed =
-    useCatalogCheapModel && headlessResult.exitCode !== 0;
-  const planEstimateReasonCode =
-    marketplacePlanEstimate?.reasonCode ??
-    (planEstimateStageFailed ? "MARKETPLACE_PLAN_ESTIMATE_FAILED" : null);
+  const estimateSeconds = parseAgentRunWorkingEstimateSeconds(
+    headlessResult.output,
+  );
+  const estimateSummary = formatAgentRunEstimateSummary(estimateSeconds);
 
-  const estimateSeconds = planEstimateStageFailed
-    ? null
-    : parseAgentRunWorkingEstimateSeconds(headlessResult.output);
-  const estimateSummary = planEstimateStageFailed
-    ? headlessResult.output.trim()
-    : formatAgentRunEstimateSummary(estimateSeconds);
+  const planEstimateReportNote =
+    marketplacePlanEstimate === null
+      ? null
+      : buildPlanEstimateReportNote(marketplacePlanEstimate);
+
+  const reportDetailsParts = [
+    planEstimateReportNote,
+    headlessResult.output.trim().length > 0
+      ? headlessResult.output.trim()
+      : null,
+  ].filter((part): part is string => part !== null && part.length > 0);
 
   upsertAgentRunReportFile({
     reportKey: input.reportKey,
     agentRunId: input.agentRunId,
-    status: planEstimateStageFailed
-      ? AGENT_RUN_REPORT_STATUSES.FAILED
-      : AGENT_RUN_REPORT_STATUSES.IN_PROGRESS,
-    userSummary: planEstimateStageFailed
-      ? "Plan/estimate stage failed on your Mac."
-      : estimateSummary,
-    ...(headlessResult.output.trim().length > 0
-      ? { details: headlessResult.output.trim() }
+    status: AGENT_RUN_REPORT_STATUSES.IN_PROGRESS,
+    userSummary: estimateSummary,
+    ...(reportDetailsParts.length > 0
+      ? { details: reportDetailsParts.join("\n\n") }
       : {}),
     ...(estimateSeconds !== null ? { estimateSeconds } : {}),
   });
@@ -165,7 +175,5 @@ export const runAgentRunPreEstimate = async (input: {
     estimateSummary,
     estimateOutput: headlessResult.output,
     marketplacePlanEstimate,
-    planEstimateStageFailed,
-    planEstimateReasonCode,
   };
 };
