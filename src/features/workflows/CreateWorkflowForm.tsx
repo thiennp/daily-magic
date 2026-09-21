@@ -1,11 +1,16 @@
 "use client";
 
 import Button from "@/components/ui/button/Button";
+import CapabilityHarnessItemsEditor from "@/features/capabilities/CapabilityHarnessItemsEditor";
 import PlaybookBasicsFields from "@/features/capabilities/PlaybookBasicsFields";
-import CreateWorkflowFieldsEditor from "@/features/workflows/CreateWorkflowFieldsEditor";
-import CreateWorkflowHarnessSections from "@/features/workflows/CreateWorkflowHarnessSections";
+import { PLAYBOOK_HARNESS_SECTION } from "@/features/capabilities/playbookBuilderCopy.constant";
 import { createDraftWorkflowField } from "@/features/workflows/createDraftWorkflowField";
+import { filterHarnessItemsByKinds } from "@/features/workflows/filterHarnessItemsByKinds";
 import { useCreateWorkflowForm } from "@/features/workflows/hooks/useCreateWorkflowForm";
+import WorkflowBuilderCollapsibleSection from "@/features/workflows/WorkflowBuilderCollapsibleSection";
+import WorkflowBuilderFlowTree from "@/features/workflows/WorkflowBuilderFlowTree";
+import { WORKFLOW_BUILDER_ABOUT_SECTION } from "@/features/workflows/workflowBuilderCopy.constant";
+import { WORKFLOW_EXTRA_RULE_HARNESS_KINDS } from "@/features/workflows/workflowHarnessKindGroups.constant";
 
 interface CreateWorkflowFormProps {
   readonly onCreated: () => void;
@@ -20,39 +25,64 @@ export default function CreateWorkflowForm({
 
   return (
     <div className="mt-6 space-y-4">
-      <PlaybookBasicsFields
-        playbookType="workflow"
-        name={form.name}
-        description={form.description}
-        exampleRequest={form.exampleRequest}
-        onNameChange={form.setName}
-        onDescriptionChange={form.setDescription}
-        onExampleRequestChange={form.setExampleRequest}
-      />
-      <CreateWorkflowFieldsEditor
+      <WorkflowBuilderCollapsibleSection
+        title={WORKFLOW_BUILDER_ABOUT_SECTION.title}
+        description={WORKFLOW_BUILDER_ABOUT_SECTION.description}
+        defaultExpanded
+      >
+        <PlaybookBasicsFields
+          playbookType="workflow"
+          name={form.name}
+          description={form.description}
+          exampleRequest={form.exampleRequest}
+          onNameChange={form.setName}
+          onDescriptionChange={form.setDescription}
+          onExampleRequestChange={form.setExampleRequest}
+        />
+      </WorkflowBuilderCollapsibleSection>
+
+      <WorkflowBuilderFlowTree
         fields={form.fields}
-        onChange={(id, patch) => {
+        onFieldChange={(id, patch) => {
           form.setFields((current) =>
             current.map((field) =>
               field.id === id ? { ...field, ...patch } : field,
             ),
           );
         }}
-        onAdd={() => {
+        onFieldAdd={() => {
           form.setFields((current) => [...current, createDraftWorkflowField()]);
         }}
-        onRemove={(id) => {
+        onFieldRemove={(id) => {
           form.setFields((current) =>
             current.filter((entry) => entry.id !== id),
           );
         }}
+        harnessItems={form.harness.items}
+        onHarnessAdd={form.harness.addItem}
+        onHarnessRemove={form.harness.removeItem}
+        onHarnessChange={form.harness.updateItem}
       />
-      <CreateWorkflowHarnessSections
-        items={form.harness.items}
-        onAdd={form.harness.addItem}
-        onRemove={form.harness.removeItem}
-        onChange={form.harness.updateItem}
-      />
+
+      <WorkflowBuilderCollapsibleSection
+        title={PLAYBOOK_HARNESS_SECTION.title}
+        description={PLAYBOOK_HARNESS_SECTION.description}
+        defaultExpanded={false}
+      >
+        <CapabilityHarnessItemsEditor
+          kinds={WORKFLOW_EXTRA_RULE_HARNESS_KINDS}
+          items={filterHarnessItemsByKinds(
+            form.harness.items,
+            WORKFLOW_EXTRA_RULE_HARNESS_KINDS,
+          )}
+          onAdd={form.harness.addItem}
+          onRemove={form.harness.removeItem}
+          onChange={form.harness.updateItem}
+          title={PLAYBOOK_HARNESS_SECTION.title}
+          description={PLAYBOOK_HARNESS_SECTION.description}
+        />
+      </WorkflowBuilderCollapsibleSection>
+
       {form.error ? (
         <p className="text-sm text-error-600 dark:text-error-400">
           {form.error}
