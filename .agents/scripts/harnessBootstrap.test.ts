@@ -58,5 +58,7 @@ describe("renderAgentBootstrapGitHooksMarkdown", () => {
 
     expect(md).toContain("agent-bootstrap.manifest.json");
     expect(md).toContain("npm run cursor:architecture -- --staged");
+    expect(md).toContain("## pre-push");
+    expect(md).toContain("npm run ci");
   });
 });

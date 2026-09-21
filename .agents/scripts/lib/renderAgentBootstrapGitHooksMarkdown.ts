@@ -3,7 +3,11 @@ import type { AgentBootstrapManifest } from "./agentBootstrapManifest.type";
 export const renderAgentBootstrapGitHooksMarkdown = (
   manifest: AgentBootstrapManifest,
 ): string => {
-  const rows = manifest.gitHooks.preCommit
+  const preCommitRows = manifest.gitHooks.preCommit
+    .map((row) => `| ${row.step} | ${row.when} | ${row.run} |`)
+    .join("\n");
+
+  const prePushRows = manifest.gitHooks.prePush
     .map((row) => `| ${row.step} | ${row.when} | ${row.run} |`)
     .join("\n");
 
@@ -32,7 +36,13 @@ export const renderAgentBootstrapGitHooksMarkdown = (
 
     "| Step | When staged paths match | Command / script |",
     "| ---- | ----------------------- | ---------------- |",
-    rows,
+    preCommitRows,
+    "",
+    "## pre-push",
+    "",
+    "| Step | When | Command / script |",
+    "| ---- | ---- | ---------------- |",
+    prePushRows,
     "",
     "## commit-msg",
     "",
