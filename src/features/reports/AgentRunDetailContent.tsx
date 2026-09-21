@@ -2,10 +2,12 @@ import AppPanel from "@/components/surfaces/AppPanel";
 import AgentRunAgainButton from "@/features/reports/AgentRunAgainButton";
 import AgentRunContinueButton from "@/features/reports/AgentRunContinueButton";
 import AgentRunLiveTerminal from "@/features/reports/AgentRunLiveTerminal";
+import AgentRunOutcomeBanner from "@/features/reports/AgentRunOutcomeBanner";
 import AgentRunResultOutput from "@/features/reports/AgentRunResultOutput";
 import AgentRunKeepInProjectButton from "@/features/reports/AgentRunKeepInProjectButton";
 import AgentRunStatusBadge from "@/features/reports/AgentRunStatusBadge";
 import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
+import { resolveAgentRunStatusBadgeLabel } from "@/lib/dispatch/resolveAgentRunStatusBadgeLabel";
 import type EnrichedAgentRunRecord from "@/lib/dispatch/types/EnrichedAgentRunRecord.type";
 
 interface AgentRunDetailContentProps {
@@ -18,7 +20,10 @@ export default function AgentRunDetailContent({
   return (
     <AppPanel as="div">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <AgentRunStatusBadge status={run.status} />
+        <AgentRunStatusBadge
+          status={run.status}
+          labelOverride={resolveAgentRunStatusBadgeLabel(run)}
+        />
         <p className="text-xs text-gray-500 dark:text-gray-400">
           Created {new Date(run.createdAt).toLocaleString()}
         </p>
@@ -62,6 +67,7 @@ export default function AgentRunDetailContent({
       {run.status === AgentRunStatus.RUNNING ? (
         <AgentRunLiveTerminal key={run.id} runId={run.id} />
       ) : null}
+      <AgentRunOutcomeBanner run={run} />
       {run.resultOutput ? (
         <AgentRunResultOutput run={run} resultOutput={run.resultOutput} />
       ) : null}

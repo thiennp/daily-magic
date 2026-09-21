@@ -9,6 +9,7 @@ import type { WsTestConnectionStatus } from "@/features/agent/types/WsTestConnec
 import { formatAgentLiveProgressLastMacUpdate } from "@/features/agent/utils/formatAgentLiveProgressLastMacUpdate";
 import { resolveAgentLiveProgressConnectionHint } from "@/features/agent/utils/resolveAgentLiveProgressConnectionHint";
 import type { AgentLiveProgressStallState } from "@/features/agent/utils/resolveAgentLiveProgressStallState";
+import { resolveAgentLiveSoftBudgetWarning } from "@/features/agent/utils/resolveAgentLiveSoftBudgetWarning";
 import type { AgentLiveWorkingEstimateProgress } from "@/features/agent/utils/resolveAgentLiveWorkingEstimateProgress";
 
 interface AgentLiveProgressFeedStatusProps {
@@ -48,6 +49,10 @@ export default function AgentLiveProgressFeedStatus({
       : "text-amber-800 dark:text-amber-200";
   const showEstimateProgress =
     isWorking && estimateProgress !== null && stallState !== "stuck";
+  const softBudgetWarning = resolveAgentLiveSoftBudgetWarning({
+    isWorking,
+    estimateProgress,
+  });
 
   return (
     <>
@@ -80,6 +85,14 @@ export default function AgentLiveProgressFeedStatus({
           estimateSeconds={estimateProgress.estimateSeconds}
           percent={estimateProgress.percent}
         />
+      ) : null}
+      {softBudgetWarning !== null ? (
+        <p
+          className="mt-3 rounded-lg border border-sky-200 bg-sky-50 px-3 py-2 text-sm text-sky-950 dark:border-sky-900/50 dark:bg-sky-950/30 dark:text-sky-100"
+          role="status"
+        >
+          {softBudgetWarning}
+        </p>
       ) : null}
       {stallState === "stuck" ? (
         <AgentLiveProgressStuckBanner isThisMac={isThisMac} />

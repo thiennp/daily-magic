@@ -8,6 +8,7 @@ import { appendAgentRunEvent } from "@/lib/dispatch/agentRunEventQueries";
 import { updateAgentRunStatus } from "@/lib/dispatch/agentRunQueries";
 import { broadcastAgentRunRecord } from "@/lib/dispatch/broadcastAgentRunRecord";
 import { buildCommandClaudeRunDispatchMessage } from "@/lib/dispatch/buildCommandClaudeRunDispatchMessage";
+import { resolveAgentRunWriterCompletion } from "@/lib/dispatch/resolveAgentRunWriterCompletion";
 import type AgentRunRecord from "@/lib/dispatch/types/AgentRunRecord.type";
 
 export { buildCommandClaudeRunDispatchMessage } from "@/lib/dispatch/buildCommandClaudeRunDispatchMessage";
@@ -67,22 +68,31 @@ export const markAgentRunCompleted = async (
   exitCode: number,
   output: string,
 ): Promise<AgentRunRecord | null> => {
-  const status =
-    exitCode === 0 ? AgentRunStatus.COMPLETED : AgentRunStatus.FAILED;
-  const run = await updateAgentRunStatus(runId, status, {
-    resultExitCode: exitCode,
+  const completion = resolveAgentRunWriterCompletion({ exitCode, output });
+  const run = await updateAgentRunStatus(runId, completion.status, {
+    resultExitCode: completion.resultExitCode,
+    resultOutcomeCode: completion.resultOutcomeCode,
     resultOutput: output,
+    denialReason: completion.denialReason,
   });
   if (run !== null) {
     await appendAgentRunEvent({
       agentRunId: runId,
       kind: "terminal.end",
-      payload: { exitCode, output },
+      payload: {
+        exitCode: completion.resultExitCode,
+        output,
+        outcomeCode: completion.resultOutcomeCode,
+      },
     });
     await appendAgentRunEvent({
       agentRunId: runId,
-      kind: `status.${status}`,
-      payload: { status, exitCode },
+      kind: `status.${completion.status}`,
+      payload: {
+        status: completion.status,
+        exitCode: completion.resultExitCode,
+        outcomeCode: completion.resultOutcomeCode,
+      },
     });
     broadcastAgentRunRecord(runtime, run);
   }

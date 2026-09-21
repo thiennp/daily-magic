@@ -22,6 +22,7 @@ export async function updateAgentRunStatus(
   fields?: {
     readonly resultOutput?: string | null;
     readonly resultExitCode?: number | null;
+    readonly resultOutcomeCode?: string | null;
     readonly denialReason?: string | null;
     readonly approvalExpiresAt?: string | null;
   },
@@ -48,6 +49,7 @@ export async function updateAgentRunStatus(
         status = ${status},
         result_output = COALESCE(${fields?.resultOutput ?? null}, result_output),
         result_exit_code = COALESCE(${fields?.resultExitCode ?? null}, result_exit_code),
+        result_outcome_code = COALESCE(${fields?.resultOutcomeCode ?? null}, result_outcome_code),
         denial_reason = COALESCE(${fields?.denialReason ?? null}, denial_reason),
         approval_expires_at = COALESCE(${fields?.approvalExpiresAt ?? null}, approval_expires_at),
         started_at = COALESCE(${startedAt ?? null}, started_at),

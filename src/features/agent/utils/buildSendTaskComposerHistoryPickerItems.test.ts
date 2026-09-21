@@ -14,6 +14,7 @@ const buildRun = (
     dispatchPolicy: "open",
     resultOutput: null,
     resultExitCode: 0,
+    resultOutcomeCode: null,
     denialReason: null,
     createdAt: "2026-07-19T00:00:00.000Z",
     updatedAt: "2026-07-19T00:00:00.000Z",

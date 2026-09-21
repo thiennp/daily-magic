@@ -40,11 +40,22 @@ describe("resolveAgentLiveProgressStallState (AGENT-038 / AGENT-052)", () => {
     ).toBe("warning");
   });
 
-  it("AGENT-052: marks stuck when worked time exceeds estimate + buffer", () => {
+  it("AGENT-052: past estimate + buffer stays active until Mac output stalls", () => {
     expect(
       resolveAgentLiveProgressStallState({
         isWorking: true,
         msSinceLastActivity: 5_000,
+        workedMs: 130_000,
+        estimateSeconds: 100,
+      }),
+    ).toBe("none");
+  });
+
+  it("AGENT-126: marks stuck when past soft budget and Mac output is silent", () => {
+    expect(
+      resolveAgentLiveProgressStallState({
+        isWorking: true,
+        msSinceLastActivity: AGENT_LIVE_PROGRESS_STALL_STUCK_MS,
         workedMs: 130_000,
         estimateSeconds: 100,
       }),

@@ -8,7 +8,11 @@ export const dynamic = "force-dynamic";
 
 const parseCompleteBody = (
   body: unknown,
-): { readonly exitCode: number; readonly output: string } | null => {
+): {
+  readonly exitCode: number;
+  readonly output: string;
+  readonly outcomeCode: string | null;
+} | null => {
   if (typeof body !== "object" || body === null) {
     return null;
   }
@@ -20,7 +24,16 @@ const parseCompleteBody = (
     return null;
   }
 
-  return { exitCode, output };
+  const outcomeCode = (body as { outcomeCode?: unknown }).outcomeCode;
+
+  return {
+    exitCode,
+    output,
+    outcomeCode:
+      typeof outcomeCode === "string" && outcomeCode.trim().length > 0
+        ? outcomeCode.trim()
+        : null,
+  };
 };
 
 export async function POST(

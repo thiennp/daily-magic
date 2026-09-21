@@ -1,4 +1,7 @@
+import { resolveAgentRunOutcomeFromWriterOutput } from "@agent-witch/shared/dispatch";
+
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
+import { buildAgentRunOutcomePresentation } from "@/lib/dispatch/buildAgentRunOutcomePresentation";
 
 import type { AgentLiveTerminalState } from "./agentLiveTerminalState.type";
 import { appendAgentLiveTerminalPrompt } from "./agentLiveTerminalPrompt.constant";
@@ -30,12 +33,30 @@ export const reduceAgentLiveTerminalStreamMessage = (
   ) {
     const resultOutput =
       typeof payload.output === "string" ? payload.output : "";
+    const mergedOutput = appendAgentLiveTerminalPrompt(
+      mergeTerminalResultOutput(state.output, resultOutput),
+    );
+    const outcome = resolveAgentRunOutcomeFromWriterOutput(resultOutput);
+
+    if (outcome !== null) {
+      const presentation = buildAgentRunOutcomePresentation(
+        outcome.code,
+        outcome.resetHint,
+      );
+      const banner = `${presentation.title}\n${presentation.detail}\n${presentation.nextStep}`;
+
+      return {
+        ...state,
+        output: `${mergedOutput}\n${banner}\n`,
+        status: "error",
+        pendingInput: null,
+        pendingCommandLine: null,
+      };
+    }
 
     return {
       ...state,
-      output: appendAgentLiveTerminalPrompt(
-        mergeTerminalResultOutput(state.output, resultOutput),
-      ),
+      output: mergedOutput,
       status: "finished",
       pendingInput: null,
       pendingCommandLine: null,

@@ -1,4 +1,5 @@
-import { AgentRunStatus } from "./dispatch/AgentRunStatus.constant";
+import { resolveAgentRunWriterCompletion } from "@/lib/dispatch/resolveAgentRunWriterCompletion";
+
 import { DispatchPolicy } from "./dispatch/DispatchPolicy.constant";
 import type AgentRunRecord from "./dispatch/types/AgentRunRecord.type";
 
@@ -18,6 +19,10 @@ export const buildFinishedAgentRunRecord = (
 ): AgentRunRecord => {
   const now = new Date().toISOString();
   const executorUserId = input.layout.profileEmail ?? "local-agent";
+  const completion = resolveAgentRunWriterCompletion({
+    exitCode: input.exitCode,
+    output: input.output,
+  });
 
   return {
     id: input.agentRunId,
@@ -25,12 +30,12 @@ export const buildFinishedAgentRunRecord = (
     requesterUserId: executorUserId,
     executorUserId,
     prompt: input.originalPrompt,
-    status:
-      input.exitCode === 0 ? AgentRunStatus.COMPLETED : AgentRunStatus.FAILED,
+    status: completion.status,
     dispatchPolicy: DispatchPolicy.OPEN,
     resultOutput: input.output,
-    resultExitCode: input.exitCode,
-    denialReason: null,
+    resultExitCode: completion.resultExitCode,
+    resultOutcomeCode: completion.resultOutcomeCode,
+    denialReason: completion.denialReason,
     createdAt: now,
     updatedAt: now,
     startedAt: now,

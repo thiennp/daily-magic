@@ -11,6 +11,7 @@ export interface AgentRunCompletionOutboxEntry {
   readonly runId: string;
   readonly exitCode: number;
   readonly output: string;
+  readonly outcomeCode?: string | null;
   readonly createdAt: string;
 }
 
