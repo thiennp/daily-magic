@@ -55,6 +55,7 @@ Model: [conventions/progressive-disclosure.md](conventions/progressive-disclosur
 - [Concepts glossary](product/concepts.md)
 - [UX simplification](product/ux-simplification.md)
 - [Projects view wireframes v2](product/projects-view-wireframes-v2.md) — AWC list/detail vs AWL editor UX review
+- [Workflow builder: form inputs, steps, graph](product/workflow-builder-form-and-graph.md) — proposed create-workflow input types and linear graph
 
 ## Security
 

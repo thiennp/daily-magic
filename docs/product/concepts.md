@@ -14,6 +14,8 @@ A **capability shape** with dynamic task fields (forms). Workflows define how a 
 
 **Official marketplace presets** also use **server-orchestrated workflow runs**: a persisted step graph alternates **operator checkpoints** (human) and **bounded agent dispatches** (Mac/cloud sub-runs), instead of one monolithic prompt. Definitions are generated from each preset’s operator steps and instruction sections.
 
+Create-workflow field types and a proposed step/graph builder: [workflow-builder-form-and-graph.md](workflow-builder-form-and-graph.md). Current builder types: [docs/qa/workflow-builder-field-types.md](../qa/workflow-builder-field-types.md).
+
 ## Harness
 
 The **rules/skills/commands bundle** installed on a Mac under `~/.agent-witch/harness/`. The harness catalog lets you publish, share, and install consistent agent instructions—not the run itself.
