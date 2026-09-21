@@ -4,6 +4,7 @@ import {
   sweepStaleAgentWitchConnections,
 } from "@/lib/agentWitch/agentWitchConnectionRegistry";
 import { drainAgentWitchDispatchOutboxForHub } from "@/lib/agentWitch/drainAgentWitchDispatchOutboxForHub";
+import { ensureAgentWitchPresenceSchema } from "@/lib/agentWitch/ensureAgentWitchPresenceSchema";
 import { expireStaleAgentWitchHubDispatchRelays } from "@/lib/agentWitch/updateAgentWitchHubDispatchRelayStatus";
 import { processAgentWitchHubDispatchRelaysForHub } from "@/lib/agentWitch/processAgentWitchHubDispatchRelaysForHub";
 import { getAgentWitchHub } from "@/lib/agentWitch/getAgentWitchHub";
@@ -38,27 +39,40 @@ export const startAgentWitchConnectionRegistryMaintenance = (): void => {
     },
   );
 
-  const sweepIntervalMs = AGENT_WITCH_HEARTBEAT_INTERVAL_MS;
-  const relayPollIntervalMs = 1_000;
-  setInterval(() => {
-    void processAgentWitchHubDispatchRelaysForHub(getAgentWitchHub()).catch(
-      (error: unknown) => {
-        console.error("[agent-witch/relay] process poll failed", error);
-      },
-    );
-  }, relayPollIntervalMs);
+  const startPolling = (): void => {
+    const sweepIntervalMs = AGENT_WITCH_HEARTBEAT_INTERVAL_MS;
+    const relayPollIntervalMs = 1_000;
+    setInterval(() => {
+      void processAgentWitchHubDispatchRelaysForHub(getAgentWitchHub()).catch(
+        (error: unknown) => {
+          console.error("[agent-witch/relay] process poll failed", error);
+        },
+      );
+    }, relayPollIntervalMs);
 
-  setInterval(() => {
-    void sweepStaleAgentWitchConnections().catch((error: unknown) => {
-      console.error("[agent-witch/registry] sweeper failed", error);
+    setInterval(() => {
+      void sweepStaleAgentWitchConnections().catch((error: unknown) => {
+        console.error("[agent-witch/registry] sweeper failed", error);
+      });
+      void drainAgentWitchDispatchOutboxForHub(getAgentWitchHub()).catch(
+        (error: unknown) => {
+          console.error("[agent-witch/outbox] drain poll failed", error);
+        },
+      );
+      void expireStaleAgentWitchHubDispatchRelays().catch((error: unknown) => {
+        console.error("[agent-witch/relay] expire sweep failed", error);
+      });
+    }, sweepIntervalMs);
+  };
+
+  void ensureAgentWitchPresenceSchema()
+    .then(() => {
+      startPolling();
+    })
+    .catch((error: unknown) => {
+      console.error(
+        "[agent-witch/presence] DB relay/outbox maintenance disabled until agent_witch schema is available on DATABASE_URL",
+        error,
+      );
     });
-    void drainAgentWitchDispatchOutboxForHub(getAgentWitchHub()).catch(
-      (error: unknown) => {
-        console.error("[agent-witch/outbox] drain poll failed", error);
-      },
-    );
-    void expireStaleAgentWitchHubDispatchRelays().catch((error: unknown) => {
-      console.error("[agent-witch/relay] expire sweep failed", error);
-    });
-  }, sweepIntervalMs);
 };
