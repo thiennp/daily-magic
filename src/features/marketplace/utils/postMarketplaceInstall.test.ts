@@ -33,6 +33,27 @@ describe("postMarketplaceInstall", () => {
     expect(readOnboardingWorkflowCreated()).toBe(true);
   });
 
+  it("returns a clear error when the response body is not JSON (MARKETPLACE-002)", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue({
+        ok: false,
+        status: 500,
+        json: async () => {
+          throw new SyntaxError("Unexpected token");
+        },
+      }),
+    );
+
+    const result = await postMarketplaceInstall({
+      capabilityId: "preset:vibe-coding-app-feature",
+      deviceId: "device-1",
+    });
+
+    expect(result.ok).toBe(false);
+    expect(result.errorMessage).toBe("Install failed (500).");
+  });
+
   it("does not mark workflow onboarding when library save is skipped", async () => {
     vi.stubGlobal(
       "fetch",

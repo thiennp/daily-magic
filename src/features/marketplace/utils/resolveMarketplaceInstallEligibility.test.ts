@@ -17,7 +17,26 @@ const onlineDevice: MyMacDevice = {
   wakePort: 47892,
 };
 
+const offlineDevice: MyMacDevice = {
+  ...onlineDevice,
+  isConnected: false,
+  isOnline: false,
+  presenceTier: "offline",
+  lastHeartbeatAt: null,
+};
+
 describe("resolveMarketplaceInstallEligibility", () => {
+  it("disables install for official preset when Mac is offline (MARKETPLACE-002)", () => {
+    const result = resolveMarketplaceInstallEligibility({
+      capabilityId: "preset:vibe-coding-app-feature",
+      selectedDevice: offlineDevice,
+      isWakeServerReachable: false,
+      status: "idle",
+    });
+
+    expect(result.canInstall).toBe(false);
+  });
+
   it("disables install after success (MARKETPLACE-001)", () => {
     const result = resolveMarketplaceInstallEligibility({
       capabilityId: "preset:weekly-team-status",

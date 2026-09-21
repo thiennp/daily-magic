@@ -63,13 +63,19 @@ export default function MarketplaceInstallModal({
     setMessage(null);
     setLibraryCapabilityId(null);
 
-    const outcome = await runMarketplaceInstall({
-      capabilityId: listing.capabilityId,
-      deviceId: macSelection.selectedDeviceId,
-    });
-    setStatus(outcome.status);
-    setMessage(outcome.message);
-    setLibraryCapabilityId(outcome.libraryCapabilityId);
+    try {
+      const outcome = await runMarketplaceInstall({
+        capabilityId: listing.capabilityId,
+        deviceId: macSelection.selectedDeviceId,
+      });
+      setStatus(outcome.status);
+      setMessage(outcome.message);
+      setLibraryCapabilityId(outcome.libraryCapabilityId);
+    } catch {
+      setStatus("error");
+      setMessage("Install failed. Try again.");
+      setLibraryCapabilityId(null);
+    }
   };
 
   const handleStartTask = (): void => {

@@ -35,7 +35,16 @@ export async function POST(request: Request): Promise<Response> {
     return error;
   }
 
-  const parsed = parseInstallBody(await request.json());
+  const bodyResult = await request
+    .json()
+    .then((value: unknown) => ({ ok: true as const, value }))
+    .catch(() => ({ ok: false as const }));
+
+  if (!bodyResult.ok) {
+    return Response.json({ error: "Invalid JSON body." }, { status: 400 });
+  }
+
+  const parsed = parseInstallBody(bodyResult.value);
 
   if (parsed === null) {
     return Response.json(
@@ -44,25 +53,33 @@ export async function POST(request: Request): Promise<Response> {
     );
   }
 
-  const result = await installMarketplaceListing({
-    actorUserId: actor.id,
-    capabilityId: parsed.capabilityId,
-    deviceId: parsed.deviceId,
-  });
+  try {
+    const result = await installMarketplaceListing({
+      actorUserId: actor.id,
+      capabilityId: parsed.capabilityId,
+      deviceId: parsed.deviceId,
+    });
 
-  if (!result.ok) {
+    if (!result.ok) {
+      return Response.json(
+        { error: result.errorMessage ?? "Install failed." },
+        { status: 409 },
+      );
+    }
+
+    return Response.json({
+      ok: true,
+      savedToLibrary: result.savedToLibrary,
+      libraryCapabilityId: result.libraryCapabilityId,
+      harnessInstalled: result.harnessInstalled,
+      harnessInstallMessage: result.harnessInstallMessage,
+      localHarnessBundle: result.localHarnessBundle,
+    });
+  } catch (installError) {
+    console.error("[marketplace/install] unhandled error", installError);
     return Response.json(
-      { error: result.errorMessage ?? "Install failed." },
-      { status: 400 },
+      { error: "Install failed. Try again in a moment." },
+      { status: 500 },
     );
   }
-
-  return Response.json({
-    ok: true,
-    savedToLibrary: result.savedToLibrary,
-    libraryCapabilityId: result.libraryCapabilityId,
-    harnessInstalled: result.harnessInstalled,
-    harnessInstallMessage: result.harnessInstallMessage,
-    localHarnessBundle: result.localHarnessBundle,
-  });
 }

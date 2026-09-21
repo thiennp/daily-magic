@@ -1,9 +1,18 @@
 import installOfficialPresetListing from "@/lib/marketplace/installOfficialPresetListing";
 import installTeammateListing from "@/lib/marketplace/installTeammateListing";
 import type { MarketplaceInstallResult } from "@/lib/marketplace/types/MarketplaceInstallResult.type";
-import { validateMarketplaceInstallDeviceOwnership } from "@/lib/marketplace/validateMarketplaceInstallTarget";
 import { validateMarketplaceInstallTarget } from "@/lib/marketplace/validateMarketplaceInstallTargetOnline";
 import { parsePresetMarketplaceTemplateId } from "@/lib/marketplace/presetMarketplaceCapabilityId";
+
+const installFailure = (errorMessage: string): MarketplaceInstallResult => ({
+  ok: false,
+  errorMessage,
+  savedToLibrary: false,
+  libraryCapabilityId: null,
+  harnessInstalled: false,
+  harnessInstallMessage: null,
+  localHarnessBundle: null,
+});
 
 const installMarketplaceListing = async (input: {
   readonly actorUserId: string;
@@ -13,21 +22,13 @@ const installMarketplaceListing = async (input: {
   const templateId = parsePresetMarketplaceTemplateId(input.capabilityId);
 
   if (templateId !== null) {
-    const ownershipError = await validateMarketplaceInstallDeviceOwnership(
+    const targetError = await validateMarketplaceInstallTarget(
       input.actorUserId,
       input.deviceId,
     );
 
-    if (ownershipError !== null) {
-      return {
-        ok: false,
-        errorMessage: ownershipError,
-        savedToLibrary: false,
-        libraryCapabilityId: null,
-        harnessInstalled: false,
-        harnessInstallMessage: null,
-        localHarnessBundle: null,
-      };
+    if (targetError !== null) {
+      return installFailure(targetError);
     }
 
     return installOfficialPresetListing(
@@ -43,15 +44,7 @@ const installMarketplaceListing = async (input: {
   );
 
   if (targetError !== null) {
-    return {
-      ok: false,
-      errorMessage: targetError,
-      savedToLibrary: false,
-      libraryCapabilityId: null,
-      harnessInstalled: false,
-      harnessInstallMessage: null,
-      localHarnessBundle: null,
-    };
+    return installFailure(targetError);
   }
 
   return installTeammateListing(
