@@ -34,8 +34,6 @@ export default function LibraryPlaybookCard({
     libraryCapabilityId: capability.id,
   });
   const copyPrompt = resolveLibraryCopyPrompt(capability);
-  const canManage = capability.type === CapabilityType.WORKFLOW;
-
   return (
     <AppPanel as="article" padding="compact">
       <div className="flex flex-wrap items-center gap-2">
@@ -79,7 +77,6 @@ export default function LibraryPlaybookCard({
           ) : null}
           <LibraryPlaybookWorkflowActions
             capability={capability}
-            canManage={canManage}
             isEditing={isEditing}
             onToggleEdit={() => {
               setIsEditing((editing) => !editing);

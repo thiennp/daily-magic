@@ -5,11 +5,11 @@ import { useState } from "react";
 import Button from "@/components/ui/button/Button";
 import { CapabilityType } from "@/lib/capabilities/CapabilityType.constant";
 import type PublishedCapabilityRecord from "@/lib/capabilities/types/PublishedCapabilityRecord.type";
+import { buildLibraryPlaybookRemoveConfirmMessage } from "@/features/library/libraryPlaybookRemoveConfirmMessage";
 import { submitArchiveWorkflow } from "@/features/workflows/submitArchiveWorkflow";
 
 interface LibraryPlaybookWorkflowActionsProps {
   readonly capability: PublishedCapabilityRecord;
-  readonly canManage: boolean;
   readonly isEditing: boolean;
   readonly onToggleEdit: () => void;
   readonly onDeleted: () => void;
@@ -17,21 +17,17 @@ interface LibraryPlaybookWorkflowActionsProps {
 
 export default function LibraryPlaybookWorkflowActions({
   capability,
-  canManage,
   isEditing,
   onToggleEdit,
   onDeleted,
 }: LibraryPlaybookWorkflowActionsProps) {
   const [isDeleting, setIsDeleting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const isWorkflow = capability.type === CapabilityType.WORKFLOW;
 
-  if (!canManage || capability.type !== CapabilityType.WORKFLOW) {
-    return null;
-  }
-
-  const handleDelete = async (): Promise<void> => {
+  const handleRemove = async (): Promise<void> => {
     const confirmed = window.confirm(
-      `Delete "${capability.name}" from your library?`,
+      buildLibraryPlaybookRemoveConfirmMessage(capability.name),
     );
 
     if (!confirmed) {
@@ -53,17 +49,19 @@ export default function LibraryPlaybookWorkflowActions({
 
   return (
     <>
-      <Button variant="outline" onClick={onToggleEdit}>
-        {isEditing ? "Close edit" : "Edit"}
-      </Button>
+      {isWorkflow ? (
+        <Button variant="outline" onClick={onToggleEdit}>
+          {isEditing ? "Close edit" : "Edit"}
+        </Button>
+      ) : null}
       <Button
         variant="outline"
         disabled={isDeleting}
         onClick={() => {
-          void handleDelete();
+          void handleRemove();
         }}
       >
-        {isDeleting ? "Deleting…" : "Delete"}
+        {isDeleting ? "Removing…" : "Remove"}
       </Button>
       {error ? (
         <p className="w-full text-sm text-error-600 dark:text-error-400">
