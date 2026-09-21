@@ -1,4 +1,5 @@
 import type WorkflowFieldDefinition from "@/lib/workflows/types/WorkflowFieldDefinition.type";
+import type WorkflowOutputFieldDefinition from "@/lib/workflows/types/WorkflowOutputFieldDefinition.type";
 
 export interface UpdateWorkflowPayload {
   readonly capabilityId: string;
@@ -6,6 +7,7 @@ export interface UpdateWorkflowPayload {
   readonly description: string;
   readonly exampleRequest: string;
   readonly workflowFields: readonly WorkflowFieldDefinition[];
+  readonly workflowOutputFields: readonly WorkflowOutputFieldDefinition[];
 }
 
 export async function submitUpdateWorkflow(
@@ -21,6 +23,7 @@ export async function submitUpdateWorkflow(
       description: payload.description,
       exampleRequest: payload.exampleRequest,
       workflowFields: payload.workflowFields,
+      workflowOutputFields: payload.workflowOutputFields,
     }),
   });
 

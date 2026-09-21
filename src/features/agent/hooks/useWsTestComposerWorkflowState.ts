@@ -46,7 +46,7 @@ export function useWsTestComposerWorkflowState(
   const [prompt, setPrompt] = useState(initialPrompt);
   const [workflowFieldValues, setWorkflowFieldValues] = useState<
     Record<string, string>
-  >({});
+  >(() => ({ ...(libraryPlaybook?.initialWorkflowFieldValues ?? {}) }));
   const { uploadExcerptById, registerUploadExcerpt } =
     useWorkflowUploadExcerptState();
   const isLibraryPlaybook = libraryPlaybook !== null;

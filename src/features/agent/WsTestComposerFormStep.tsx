@@ -6,6 +6,7 @@ import DelegatedWriterAgentField from "@/features/agent/DelegatedWriterAgentFiel
 import { useWsTestComposerDeferredSubmit } from "@/features/agent/hooks/useWsTestComposerDeferredSubmit";
 import WsTestComposerFooter from "@/features/agent/WsTestComposerFooter";
 import WsTestOperatorStepsSection from "@/features/agent/WsTestOperatorStepsSection";
+import WorkflowCreateDraftComposerNotice from "@/features/workflows/WorkflowCreateDraftComposerNotice";
 import WsTestTaskInputsSection from "@/features/agent/WsTestTaskInputsSection";
 import type WsTestComposerFormStepProps from "@/features/agent/types/WsTestComposerFormStepProps.type";
 import { isComposerStartHotkey } from "@/features/agent/utils/isComposerStartHotkey";
@@ -40,6 +41,9 @@ export default function WsTestComposerFormStep(
 
   return (
     <div onKeyDown={handleFormKeyDown}>
+      <WorkflowCreateDraftComposerNotice
+        visible={props.composer.isWorkflowCreateDraft}
+      />
       {!props.isSteppedComposer ? (
         <div className={props.showTopSpacing ? "mt-6" : undefined}>
           <DelegatedWriterAgentField

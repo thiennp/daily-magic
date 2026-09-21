@@ -23,6 +23,7 @@ const baseCapability: PublishedCapabilityRecord = {
       required: true,
     },
   ],
+  workflowOutputFields: [],
   operatorSteps: [],
   forkedFromCapabilityId: null,
   harnessSetSlug: null,

@@ -1,11 +1,14 @@
 import { parseWorkflowFieldDefinitions } from "@/lib/workflows/parseWorkflowFieldDefinitions";
+import { parseWorkflowOutputFieldDefinitions } from "@/lib/workflows/parseWorkflowOutputFieldDefinitions";
 import type WorkflowFieldDefinition from "@/lib/workflows/types/WorkflowFieldDefinition.type";
+import type WorkflowOutputFieldDefinition from "@/lib/workflows/types/WorkflowOutputFieldDefinition.type";
 
 export interface ParsedUpdateCapabilityBody {
   readonly name?: string;
   readonly description?: string;
   readonly exampleRequest?: string;
   readonly workflowFields?: readonly WorkflowFieldDefinition[];
+  readonly workflowOutputFields?: readonly WorkflowOutputFieldDefinition[];
 }
 
 export function parseUpdateCapabilityBody(
@@ -21,6 +24,7 @@ export function parseUpdateCapabilityBody(
     description?: string;
     exampleRequest?: string;
     workflowFields?: readonly WorkflowFieldDefinition[];
+    workflowOutputFields?: readonly WorkflowOutputFieldDefinition[];
   } = {};
 
   if ("name" in record) {
@@ -46,6 +50,12 @@ export function parseUpdateCapabilityBody(
     }
 
     parsed.workflowFields = workflowFields;
+  }
+
+  if ("workflowOutputFields" in record) {
+    parsed.workflowOutputFields = parseWorkflowOutputFieldDefinitions(
+      record.workflowOutputFields,
+    );
   }
 
   return Object.keys(parsed).length > 0 ? parsed : undefined;

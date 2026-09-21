@@ -79,3 +79,20 @@ export async function getWorkflowFieldUploadForOwner(input: {
   const row = rows[0];
   return row ? mapWorkflowFieldUploadRow(row) : null;
 }
+
+export async function getWorkflowFieldUploadById(
+  uploadId: string,
+): Promise<WorkflowFieldUploadRow | null> {
+  const sql = getSql();
+  const rows = asRowArray(
+    await sql`
+      SELECT *
+      FROM workflow_field_uploads
+      WHERE id = ${uploadId}
+      LIMIT 1
+    `,
+  );
+
+  const row = rows[0];
+  return row ? mapWorkflowFieldUploadRow(row) : null;
+}

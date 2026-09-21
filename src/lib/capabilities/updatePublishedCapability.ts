@@ -19,6 +19,8 @@ export async function updatePublishedCapability(
   }
 
   const workflowFields = input.workflowFields ?? existing.workflowFields;
+  const workflowOutputFields =
+    input.workflowOutputFields ?? existing.workflowOutputFields;
 
   if (
     existing.type === CapabilityType.WORKFLOW &&
@@ -31,6 +33,9 @@ export async function updatePublishedCapability(
   const workflowFieldsJson = JSON.stringify(
     existing.type === CapabilityType.WORKFLOW ? workflowFields : [],
   );
+  const workflowOutputFieldsJson = JSON.stringify(
+    existing.type === CapabilityType.WORKFLOW ? workflowOutputFields : [],
+  );
   const rows = asRowArray(
     await sql`
       UPDATE published_capabilities
@@ -39,6 +44,7 @@ export async function updatePublishedCapability(
         description = ${input.description ?? existing.description},
         example_request = ${input.exampleRequest ?? existing.exampleRequest},
         workflow_fields = ${workflowFieldsJson}::jsonb,
+        workflow_output_fields = ${workflowOutputFieldsJson}::jsonb,
         updated_at = NOW()
       WHERE id = ${capabilityId}
         AND owner_user_id = ${ownerUserId}

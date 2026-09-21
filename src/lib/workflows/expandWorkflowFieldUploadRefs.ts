@@ -1,3 +1,4 @@
+import { buildWorkflowFieldUploadAgentUrl } from "@/lib/workflows/buildWorkflowFieldUploadAgentUrl";
 import { getWorkflowFieldUploadForOwner } from "@/lib/workflows/workflowFieldUploadQueries";
 import { parseWorkflowFieldUploadRef } from "@/lib/workflows/parseWorkflowFieldUploadRef";
 import type WorkflowFieldDefinition from "@/lib/workflows/types/WorkflowFieldDefinition.type";
@@ -27,7 +28,17 @@ export async function expandWorkflowFieldUploadRefs(input: {
         return;
       }
 
-      expanded[field.key] = `[${upload.fileName}]\n${upload.extractedText}`;
+      const agentUrl = buildWorkflowFieldUploadAgentUrl({
+        uploadId,
+        ownerUserId: input.ownerUserId,
+      });
+      const downloadLine =
+        agentUrl !== null
+          ? `Agent download URL (signed, 24h): ${agentUrl}\n\n`
+          : "";
+
+      expanded[field.key] =
+        `[${upload.fileName}]\n${downloadLine}${upload.extractedText}`;
     }),
   );
 

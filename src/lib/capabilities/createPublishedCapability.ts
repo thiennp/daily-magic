@@ -8,6 +8,7 @@ import ensureAgentComponentForPublishedCapability from "@/lib/capabilities/ensur
 import mapPublishedCapabilityRow from "@/lib/capabilities/mapPublishedCapabilityRow";
 import type PublishedCapabilityRecord from "@/lib/capabilities/types/PublishedCapabilityRecord.type";
 import type WorkflowFieldDefinition from "@/lib/workflows/types/WorkflowFieldDefinition.type";
+import type WorkflowOutputFieldDefinition from "@/lib/workflows/types/WorkflowOutputFieldDefinition.type";
 import type OperatorStepDefinition from "@/lib/workflows/types/OperatorStepDefinition.type";
 import { asRowArray, getSql } from "@/lib/db";
 
@@ -19,6 +20,7 @@ export interface CreatePublishedCapabilityInput {
   readonly groupId?: string | null;
   readonly type?: CapabilityTypeValue;
   readonly workflowFields?: readonly WorkflowFieldDefinition[];
+  readonly workflowOutputFields?: readonly WorkflowOutputFieldDefinition[];
   readonly operatorSteps?: readonly OperatorStepDefinition[];
   readonly harnessSetSlug?: string | null;
 }
@@ -30,6 +32,9 @@ export async function createPublishedCapability(
   const capabilityId = randomUUID();
   const capabilityType = input.type ?? CapabilityType.AGENT;
   const workflowFieldsJson = JSON.stringify(input.workflowFields ?? []);
+  const workflowOutputFieldsJson = JSON.stringify(
+    input.workflowOutputFields ?? [],
+  );
   const operatorStepsJson = JSON.stringify(input.operatorSteps ?? []);
   const rows = asRowArray(
     await sql`
@@ -44,6 +49,7 @@ export async function createPublishedCapability(
         visibility,
         status,
         workflow_fields,
+        workflow_output_fields,
         operator_steps
       )
       VALUES (
@@ -57,6 +63,7 @@ export async function createPublishedCapability(
         ${DEFAULT_CAPABILITY_VISIBILITY},
         ${CapabilityStatus.DRAFT},
         ${workflowFieldsJson}::jsonb,
+        ${workflowOutputFieldsJson}::jsonb,
         ${operatorStepsJson}::jsonb
       )
       RETURNING *

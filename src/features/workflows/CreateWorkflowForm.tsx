@@ -3,8 +3,11 @@
 import Button from "@/components/ui/button/Button";
 import PlaybookBasicsFields from "@/features/capabilities/PlaybookBasicsFields";
 import CreateWorkflowFieldsEditor from "@/features/workflows/CreateWorkflowFieldsEditor";
+import CreateWorkflowOutputsEditor from "@/features/workflows/CreateWorkflowOutputsEditor";
 import CreateWorkflowHarnessSections from "@/features/workflows/CreateWorkflowHarnessSections";
+import CreateWorkflowTrialRunSection from "@/features/workflows/CreateWorkflowTrialRunSection";
 import { createDraftWorkflowField } from "@/features/workflows/createDraftWorkflowField";
+import { createDraftWorkflowOutputField } from "@/features/workflows/createDraftWorkflowOutputField";
 import { useCreateWorkflowForm } from "@/features/workflows/hooks/useCreateWorkflowForm";
 
 interface CreateWorkflowFormProps {
@@ -47,11 +50,38 @@ export default function CreateWorkflowForm({
           );
         }}
       />
+      <CreateWorkflowOutputsEditor
+        fields={form.outputFields}
+        onChange={(id, patch) => {
+          form.setOutputFields((current) =>
+            current.map((field) =>
+              field.id === id ? { ...field, ...patch } : field,
+            ),
+          );
+        }}
+        onAdd={() => {
+          form.setOutputFields((current) => [
+            ...current,
+            createDraftWorkflowOutputField(),
+          ]);
+        }}
+        onRemove={(id) => {
+          form.setOutputFields((current) =>
+            current.filter((entry) => entry.id !== id),
+          );
+        }}
+      />
       <CreateWorkflowHarnessSections
         items={form.harness.items}
         onAdd={form.harness.addItem}
         onRemove={form.harness.removeItem}
         onChange={form.harness.updateItem}
+      />
+      <CreateWorkflowTrialRunSection
+        name={form.name}
+        exampleRequest={form.exampleRequest}
+        draftFields={form.fields}
+        harnessReadyItems={form.harness.readyItems}
       />
       {form.error ? (
         <p className="text-sm text-error-600 dark:text-error-400">

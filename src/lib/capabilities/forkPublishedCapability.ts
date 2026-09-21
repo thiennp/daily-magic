@@ -44,6 +44,7 @@ export async function forkPublishedCapability(
   const sql = getSql();
   const capabilityId = randomUUID();
   const workflowFieldsJson = JSON.stringify(source.workflowFields);
+  const workflowOutputFieldsJson = JSON.stringify(source.workflowOutputFields);
   const rows = asRowArray(
     await sql`
       INSERT INTO published_capabilities (
@@ -57,6 +58,7 @@ export async function forkPublishedCapability(
         visibility,
         status,
         workflow_fields,
+        workflow_output_fields,
         forked_from_capability_id
       )
       VALUES (
@@ -70,6 +72,7 @@ export async function forkPublishedCapability(
         ${CapabilityVisibility.PRIVATE},
         ${CapabilityStatus.DRAFT},
         ${workflowFieldsJson}::jsonb,
+        ${workflowOutputFieldsJson}::jsonb,
         ${sourceCapabilityId}
       )
       RETURNING *

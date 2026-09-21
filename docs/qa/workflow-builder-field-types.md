@@ -39,6 +39,8 @@ Values stay strings (`Record<string, string>`). Empty required fields fail; type
 
 Create **agent** still has no question list. Create **workflow** splits harness items: **How this workflow runs** (human step + specialist) vs **Extra rules for your Mac** (rule, skill, command, instruction).
 
+**Try before publish:** On the create form, answer sample questions and choose **Try on Mac** — no publish required. The draft lives in browser session storage until you publish or close the tab.
+
 ### Official vs user-created runs
 
 | Kind                                       | Intake form       | Execution                                                   |

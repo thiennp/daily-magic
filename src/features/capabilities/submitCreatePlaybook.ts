@@ -2,6 +2,7 @@ import { markOnboardingWorkflowCreated } from "@/features/home/utils/onboardingW
 import { CapabilityType } from "@/lib/capabilities/CapabilityType.constant";
 import type { HarnessItemKind } from "@/lib/agentWitch/harness/types/HarnessItemKind.constant";
 import type WorkflowFieldDefinition from "@/lib/workflows/types/WorkflowFieldDefinition.type";
+import type WorkflowOutputFieldDefinition from "@/lib/workflows/types/WorkflowOutputFieldDefinition.type";
 
 export interface CreatePlaybookHarnessItem {
   readonly id: string;
@@ -16,6 +17,7 @@ export interface CreatePlaybookPayload {
   readonly description: string;
   readonly exampleRequest: string;
   readonly workflowFields?: readonly WorkflowFieldDefinition[];
+  readonly workflowOutputFields?: readonly WorkflowOutputFieldDefinition[];
   readonly harnessItems: readonly CreatePlaybookHarnessItem[];
 }
 
@@ -40,6 +42,7 @@ export async function submitCreatePlaybook(
       description: payload.description,
       exampleRequest: payload.exampleRequest,
       workflowFields: payload.workflowFields ?? [],
+      workflowOutputFields: payload.workflowOutputFields ?? [],
       harnessItems: payload.harnessItems,
     }),
   });

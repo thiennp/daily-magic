@@ -1,16 +1,12 @@
 "use client";
 
-import { useState } from "react";
-
 import Button from "@/components/ui/button/Button";
 import CreateWorkflowBasicsFields from "@/features/workflows/CreateWorkflowBasicsFields";
 import CreateWorkflowFieldsEditor from "@/features/workflows/CreateWorkflowFieldsEditor";
-import { capabilityWorkflowFieldsToDrafts } from "@/features/workflows/capabilityWorkflowFieldsToDrafts";
+import CreateWorkflowOutputsEditor from "@/features/workflows/CreateWorkflowOutputsEditor";
 import { createDraftWorkflowField } from "@/features/workflows/createDraftWorkflowField";
-import { findWorkflowDraftFieldError } from "@/features/workflows/findWorkflowDraftFieldError";
-import type DraftWorkflowField from "@/features/workflows/types/DraftWorkflowField.type";
-import { buildWorkflowFieldsFromDrafts } from "@/features/workflows/createWorkflowSubmit";
-import { submitUpdateWorkflow } from "@/features/workflows/submitUpdateWorkflow";
+import { createDraftWorkflowOutputField } from "@/features/workflows/createDraftWorkflowOutputField";
+import { useEditWorkflowForm } from "@/features/workflows/hooks/useEditWorkflowForm";
 import type PublishedCapabilityRecord from "@/lib/capabilities/types/PublishedCapabilityRecord.type";
 
 interface EditWorkflowFormProps {
@@ -24,90 +20,68 @@ export default function EditWorkflowForm({
   onSaved,
   onCancel,
 }: EditWorkflowFormProps) {
-  const [name, setName] = useState(capability.name);
-  const [description, setDescription] = useState(capability.description);
-  const [exampleRequest, setExampleRequest] = useState(
-    capability.exampleRequest,
-  );
-  const [fields, setFields] = useState<readonly DraftWorkflowField[]>(() =>
-    capability.workflowFields.length > 0
-      ? capabilityWorkflowFieldsToDrafts(capability.workflowFields)
-      : [createDraftWorkflowField()],
-  );
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  const handleSubmit = async (): Promise<void> => {
-    setError(null);
-    const trimmedName = name.trim();
-    if (trimmedName.length === 0) {
-      setError("Workflow name is required.");
-      return;
-    }
-
-    const draftError = findWorkflowDraftFieldError(fields);
-    if (draftError !== null) {
-      setError(draftError);
-      return;
-    }
-
-    const workflowFields = buildWorkflowFieldsFromDrafts(fields);
-    if (workflowFields.length === 0) {
-      setError("Add at least one question with a label.");
-      return;
-    }
-
-    setIsSubmitting(true);
-    const result = await submitUpdateWorkflow({
-      capabilityId: capability.id,
-      name: trimmedName,
-      description: description.trim(),
-      exampleRequest: exampleRequest.trim(),
-      workflowFields,
-    });
-    setIsSubmitting(false);
-
-    if (!result.ok) {
-      setError(result.errorMessage);
-      return;
-    }
-
-    onSaved();
-    onCancel();
-  };
+  const form = useEditWorkflowForm({ capability, onSaved, onCancel });
 
   return (
     <div className="mt-4 space-y-4 rounded-xl border border-gray-100 p-4 dark:border-gray-800">
       <CreateWorkflowBasicsFields
-        name={name}
-        description={description}
-        exampleRequest={exampleRequest}
-        onNameChange={setName}
-        onDescriptionChange={setDescription}
-        onExampleRequestChange={setExampleRequest}
+        name={form.name}
+        description={form.description}
+        exampleRequest={form.exampleRequest}
+        onNameChange={form.setName}
+        onDescriptionChange={form.setDescription}
+        onExampleRequestChange={form.setExampleRequest}
       />
       <CreateWorkflowFieldsEditor
-        fields={fields}
+        fields={form.fields}
         onChange={(id, patch) => {
-          setFields((current) =>
+          form.setFields((current) =>
             current.map((field) =>
               field.id === id ? { ...field, ...patch } : field,
             ),
           );
         }}
         onAdd={() => {
-          setFields((current) => [...current, createDraftWorkflowField()]);
+          form.setFields((current) => [...current, createDraftWorkflowField()]);
         }}
         onRemove={(id) => {
-          setFields((current) => current.filter((entry) => entry.id !== id));
+          form.setFields((current) =>
+            current.filter((entry) => entry.id !== id),
+          );
         }}
       />
-      {error ? (
-        <p className="text-sm text-error-600 dark:text-error-400">{error}</p>
+      <CreateWorkflowOutputsEditor
+        fields={form.outputFields}
+        onChange={(id, patch) => {
+          form.setOutputFields((current) =>
+            current.map((field) =>
+              field.id === id ? { ...field, ...patch } : field,
+            ),
+          );
+        }}
+        onAdd={() => {
+          form.setOutputFields((current) => [
+            ...current,
+            createDraftWorkflowOutputField(),
+          ]);
+        }}
+        onRemove={(id) => {
+          form.setOutputFields((current) =>
+            current.filter((entry) => entry.id !== id),
+          );
+        }}
+      />
+      {form.error ? (
+        <p className="text-sm text-error-600 dark:text-error-400">
+          {form.error}
+        </p>
       ) : null}
       <div className="flex flex-wrap gap-2">
-        <Button disabled={isSubmitting} onClick={() => void handleSubmit()}>
-          {isSubmitting ? "Saving…" : "Save changes"}
+        <Button
+          disabled={form.isSubmitting}
+          onClick={() => void form.handleSubmit()}
+        >
+          {form.isSubmitting ? "Saving…" : "Save changes"}
         </Button>
         <Button variant="outline" onClick={onCancel}>
           Cancel

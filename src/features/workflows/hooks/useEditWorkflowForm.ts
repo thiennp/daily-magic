@@ -2,42 +2,49 @@
 
 import { useState } from "react";
 
-import { useCapabilityHarnessDraft } from "@/features/capabilities/hooks/useCapabilityHarnessDraft";
-import { submitCreatePlaybook } from "@/features/capabilities/submitCreatePlaybook";
 import { buildWorkflowOutputFieldsFromDrafts } from "@/features/workflows/buildWorkflowOutputFieldsFromDrafts";
-import { buildWorkflowFieldsFromDrafts } from "@/features/workflows/buildWorkflowFieldsFromDrafts";
+import { capabilityWorkflowOutputFieldsToDrafts } from "@/features/workflows/capabilityWorkflowOutputFieldsToDrafts";
+import { capabilityWorkflowFieldsToDrafts } from "@/features/workflows/capabilityWorkflowFieldsToDrafts";
+import { buildWorkflowFieldsFromDrafts } from "@/features/workflows/createWorkflowSubmit";
 import { createDraftWorkflowField } from "@/features/workflows/createDraftWorkflowField";
 import { findWorkflowDraftFieldError } from "@/features/workflows/findWorkflowDraftFieldError";
-import type DraftWorkflowOutputField from "@/features/workflows/types/DraftWorkflowOutputField.type";
+import { submitUpdateWorkflow } from "@/features/workflows/submitUpdateWorkflow";
 import type DraftWorkflowField from "@/features/workflows/types/DraftWorkflowField.type";
-import { CapabilityType } from "@/lib/capabilities/CapabilityType.constant";
+import type DraftWorkflowOutputField from "@/features/workflows/types/DraftWorkflowOutputField.type";
+import type PublishedCapabilityRecord from "@/lib/capabilities/types/PublishedCapabilityRecord.type";
 
-interface UseCreateWorkflowFormOptions {
-  readonly onCreated: () => void;
+interface UseEditWorkflowFormOptions {
+  readonly capability: PublishedCapabilityRecord;
+  readonly onSaved: () => void;
   readonly onCancel: () => void;
 }
 
-export function useCreateWorkflowForm({
-  onCreated,
+export function useEditWorkflowForm({
+  capability,
+  onSaved,
   onCancel,
-}: UseCreateWorkflowFormOptions) {
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [exampleRequest, setExampleRequest] = useState("");
-  const [fields, setFields] = useState<readonly DraftWorkflowField[]>(() => [
-    createDraftWorkflowField(),
-  ]);
+}: UseEditWorkflowFormOptions) {
+  const [name, setName] = useState(capability.name);
+  const [description, setDescription] = useState(capability.description);
+  const [exampleRequest, setExampleRequest] = useState(
+    capability.exampleRequest,
+  );
+  const [fields, setFields] = useState<readonly DraftWorkflowField[]>(() =>
+    capability.workflowFields.length > 0
+      ? capabilityWorkflowFieldsToDrafts(capability.workflowFields)
+      : [createDraftWorkflowField()],
+  );
   const [outputFields, setOutputFields] = useState(
-    [] as readonly DraftWorkflowOutputField[],
+    () =>
+      capabilityWorkflowOutputFieldsToDrafts(
+        capability.workflowOutputFields,
+      ) as readonly DraftWorkflowOutputField[],
   );
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [notice, setNotice] = useState<string | null>(null);
-  const harness = useCapabilityHarnessDraft();
 
   const handleSubmit = async (): Promise<void> => {
     setError(null);
-    setNotice(null);
     const trimmedName = name.trim();
     if (trimmedName.length === 0) {
       setError("Workflow name is required.");
@@ -60,14 +67,13 @@ export function useCreateWorkflowForm({
       buildWorkflowOutputFieldsFromDrafts(outputFields);
 
     setIsSubmitting(true);
-    const result = await submitCreatePlaybook({
-      type: CapabilityType.WORKFLOW,
+    const result = await submitUpdateWorkflow({
+      capabilityId: capability.id,
       name: trimmedName,
       description: description.trim(),
       exampleRequest: exampleRequest.trim(),
       workflowFields,
       workflowOutputFields,
-      harnessItems: harness.readyItems,
     });
     setIsSubmitting(false);
 
@@ -76,14 +82,8 @@ export function useCreateWorkflowForm({
       return;
     }
 
-    if (!result.harnessInstalled && result.harnessInstallMessage) {
-      setNotice(result.harnessInstallMessage);
-    }
-
-    onCreated();
-    if (result.harnessInstalled || !result.harnessInstallMessage) {
-      onCancel();
-    }
+    onSaved();
+    onCancel();
   };
 
   return {
@@ -94,8 +94,6 @@ export function useCreateWorkflowForm({
     outputFields,
     isSubmitting,
     error,
-    notice,
-    harness,
     setName,
     setDescription,
     setExampleRequest,
