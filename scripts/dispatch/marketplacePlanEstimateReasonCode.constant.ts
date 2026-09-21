@@ -1,4 +1,4 @@
-/** AWC/docs mirror — keep string values in sync with AWI `marketplacePlanEstimateReasonCode.constant.ts`. */
+/** Mac bundle + scripts mirror — keep in sync with AWI `marketplacePlanEstimateReasonCode.constant.ts`. */
 export const MARKETPLACE_PLAN_ESTIMATE_MISSING_ANTHROPIC_WRITER_API_KEY =
   "MARKETPLACE_PLAN_ESTIMATE_MISSING_ANTHROPIC_WRITER_API_KEY";
 

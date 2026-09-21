@@ -1,4 +1,4 @@
-/** AWC/docs mirror — keep string values in sync with AWI `marketplacePlanEstimateReasonCode.constant.ts`. */
+/** Mac vibe plan/estimate observability (Testi grep). Keep in sync with `src/lib/marketplace/runRecipe/marketplacePlanEstimateReasonCode.constant.ts`. */
 export const MARKETPLACE_PLAN_ESTIMATE_MISSING_ANTHROPIC_WRITER_API_KEY =
   "MARKETPLACE_PLAN_ESTIMATE_MISSING_ANTHROPIC_WRITER_API_KEY";
 
