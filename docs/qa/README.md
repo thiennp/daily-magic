@@ -45,6 +45,7 @@ Open the top `sourcePath` under `docs/qa/` when present.
 | [awi-update-local-launchagent-plist.md](awi-update-local-launchagent-plist.md)           | Update local invalid LaunchAgent plist / Mac reconnecting (AGENT-067)        |
 | [awc-mac-reconnecting-vs-local-live.md](awc-mac-reconnecting-vs-local-live.md)           | AWC “reconnecting / checks in” vs local AWI/AWB being up                     |
 | [awl-loopback-origin.md](awl-loopback-origin.md)                                         | AWL is only `http://127.0.0.1:43347` (no vanity hostname)                    |
+| [guest-library-browser-drafts.md](guest-library-browser-drafts.md)                       | Guest `/library` drafts in browser + latest-wins sync on sign-in             |
 
 Add a row here when you add a Q&A file.
 
