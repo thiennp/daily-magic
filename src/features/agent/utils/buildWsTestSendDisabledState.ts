@@ -13,4 +13,5 @@ export const buildWsTestSendDisabledState = (input: {
   readonly isLibraryPlaybook: boolean;
   readonly hasDispatchReadyMac: boolean;
   readonly selectedDeviceCanDispatch: boolean;
+  readonly isWorkflowTrialBlocked?: boolean;
 }): boolean => isWsTestSendDisabled(input);

@@ -16,9 +16,10 @@ export const buildWsTestTaskComposerResult = (input: {
   readonly librarySelection: ReturnType<typeof useLibraryPlaybookSelection>;
   readonly dispatchState: ReturnType<typeof buildWsTestComposerDispatchState>;
   readonly isTeamDispatch: boolean;
+  readonly hasCursorCloudConnection: boolean;
   readonly selectLibraryCapability: (capabilityId: string) => void;
   readonly clearWorkflowFields: () => void;
-}): UseWsTestTaskComposerResult => ({
+}): Omit<UseWsTestTaskComposerResult, "workflowTrialRunEligibility"> => ({
   prompt: input.workflow.prompt,
   setPrompt: input.workflow.setPrompt,
   workflowFieldValues: input.workflow.workflowFieldValues,
@@ -53,6 +54,7 @@ export const buildWsTestTaskComposerResult = (input: {
   addSavedProject: input.projectSelection.addProject,
   removeSavedProject: input.projectSelection.removeProject,
   ...input.dispatchState,
+  hasCursorCloudConnection: input.hasCursorCloudConnection,
   onWorkflowFieldChange: (key: string, value: string) => {
     input.workflow.setWorkflowFieldValues((current) => ({
       ...current,

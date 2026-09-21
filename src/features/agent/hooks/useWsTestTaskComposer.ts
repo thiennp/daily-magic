@@ -1,5 +1,6 @@
 "use client";
 
+import { useSession } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
 
 import type { UseWsTestTaskComposerResult } from "@/features/agent/hooks/types/UseWsTestTaskComposerResult.type";
@@ -15,8 +16,10 @@ import { buildWsTestComposerDispatchState } from "@/features/agent/utils/buildWs
 import { buildWsTestTaskComposerResult } from "@/features/agent/utils/buildWsTestTaskComposerResult";
 import useRunScopedComponentIds from "@/features/agent/hooks/useRunScopedComponentIds";
 import { createWsTestSelectionHandlers } from "@/features/agent/utils/createWsTestSelectionHandlers";
+import { resolveWorkflowTrialRunEligibility } from "@/lib/dispatch/resolveWorkflowTrialRunEligibility";
 
 export function useWsTestTaskComposer(): UseWsTestTaskComposerResult {
+  const { data: session } = useSession();
   const searchParams = useSearchParams();
   const urlCapabilityId = searchParams.get("libraryCapabilityId") ?? "";
   const librarySelection = useLibraryPlaybookSelection();
@@ -51,7 +54,7 @@ export function useWsTestTaskComposer(): UseWsTestTaskComposerResult {
     workflow.setWorkflowFieldValues({});
   };
 
-  return buildWsTestTaskComposerResult({
+  const baseResult = buildWsTestTaskComposerResult({
     workflow,
     projectSelection,
     runScopedSelection,
@@ -69,6 +72,7 @@ export function useWsTestTaskComposer(): UseWsTestTaskComposerResult {
       hasCursorCloudConnection: cursorCloudSummary.connected,
     }),
     isTeamDispatch,
+    hasCursorCloudConnection: cursorCloudSummary.connected,
     clearWorkflowFields,
     selectLibraryCapability: (capabilityId: string) => {
       librarySelection.setSelectedLibraryCapabilityId(capabilityId);
@@ -84,4 +88,20 @@ export function useWsTestTaskComposer(): UseWsTestTaskComposerResult {
       clearWorkflowFields();
     },
   });
+  const workflowTrialRunEligibility = resolveWorkflowTrialRunEligibility({
+    isSignedIn: Boolean(session?.user),
+    hasDispatchReadyMac: baseResult.hasDispatchReadyMac,
+    hasCursorCloudConnection: cursorCloudSummary.connected,
+  });
+  const shouldBlockWorkflowTrial =
+    (baseResult.isLibraryPlaybook || baseResult.isWorkflowTask) &&
+    !workflowTrialRunEligibility.allowed;
+
+  return {
+    ...baseResult,
+    workflowTrialRunEligibility,
+    isSendDisabled: (connectionStatus: string, deviceId?: string) =>
+      shouldBlockWorkflowTrial ||
+      baseResult.isSendDisabled(connectionStatus, deviceId),
+  };
 }

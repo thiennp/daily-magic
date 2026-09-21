@@ -1,5 +1,6 @@
 "use client";
 
+import WorkflowTrialRunGatePanel from "@/features/agent/WorkflowTrialRunGatePanel";
 import WsTestPromptSection from "@/features/agent/WsTestPromptSection";
 import type { useWsTestComposerPanelActions } from "@/features/agent/hooks/useWsTestComposerPanelActions";
 import type { useWsTestComposerWizard } from "@/features/agent/hooks/useWsTestComposerWizard";
@@ -39,6 +40,17 @@ export default function WsTestPanelDelegationSection({
   stepTrail,
   onStartWriterAgent,
 }: WsTestPanelDelegationSectionProps) {
+  const shouldShowWorkflowTrialGate =
+    (composer.isLibraryPlaybook || composer.isWorkflowTask) &&
+    !composer.workflowTrialRunEligibility.allowed;
+
+  if (shouldShowWorkflowTrialGate) {
+    const eligibility = composer.workflowTrialRunEligibility;
+    if (!eligibility.allowed) {
+      return <WorkflowTrialRunGatePanel reason={eligibility.reason} />;
+    }
+  }
+
   return (
     <WsTestPromptSection
       composer={composer}
