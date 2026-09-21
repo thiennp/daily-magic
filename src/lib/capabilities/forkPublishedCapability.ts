@@ -6,6 +6,7 @@ import { CapabilityVisibility } from "@/lib/capabilities/CapabilityVisibility.co
 import { getPublishedCapabilityById } from "@/lib/capabilities/capabilityQueries";
 import { recordCapabilityFork } from "@/lib/capabilities/capabilityForkAudit";
 import mapPublishedCapabilityRow from "@/lib/capabilities/mapPublishedCapabilityRow";
+import { ensurePublishedCapabilityWorkflowOutputFieldsSchema } from "@/lib/capabilities/ensurePublishedCapabilityWorkflowOutputFieldsSchema";
 import type { ForkPublishedCapabilityResult } from "@/lib/capabilities/types/ForkPublishedCapabilityResult.type";
 import { asRowArray, getSql } from "@/lib/db";
 
@@ -42,6 +43,7 @@ export async function forkPublishedCapability(
   }
 
   const sql = getSql();
+  await ensurePublishedCapabilityWorkflowOutputFieldsSchema();
   const capabilityId = randomUUID();
   const workflowFieldsJson = JSON.stringify(source.workflowFields);
   const workflowOutputFieldsJson = JSON.stringify(source.workflowOutputFields);

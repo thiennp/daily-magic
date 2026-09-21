@@ -5,6 +5,7 @@ import { CapabilityType } from "@/lib/capabilities/CapabilityType.constant";
 import type { CapabilityTypeValue } from "@/lib/capabilities/CapabilityType.constant";
 import { DEFAULT_CAPABILITY_VISIBILITY } from "@/lib/capabilities/CapabilityVisibility.constant";
 import ensureAgentComponentForPublishedCapability from "@/lib/capabilities/ensureAgentComponentForPublishedCapability";
+import { ensurePublishedCapabilityWorkflowOutputFieldsSchema } from "@/lib/capabilities/ensurePublishedCapabilityWorkflowOutputFieldsSchema";
 import mapPublishedCapabilityRow from "@/lib/capabilities/mapPublishedCapabilityRow";
 import type PublishedCapabilityRecord from "@/lib/capabilities/types/PublishedCapabilityRecord.type";
 import type WorkflowFieldDefinition from "@/lib/workflows/types/WorkflowFieldDefinition.type";
@@ -28,6 +29,7 @@ export interface CreatePublishedCapabilityInput {
 export async function createPublishedCapability(
   input: CreatePublishedCapabilityInput,
 ): Promise<PublishedCapabilityRecord> {
+  await ensurePublishedCapabilityWorkflowOutputFieldsSchema();
   const sql = getSql();
   const capabilityId = randomUUID();
   const capabilityType = input.type ?? CapabilityType.AGENT;

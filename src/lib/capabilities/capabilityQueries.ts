@@ -1,4 +1,5 @@
 import mapPublishedCapabilityRow from "@/lib/capabilities/mapPublishedCapabilityRow";
+import { ensurePublishedCapabilityWorkflowOutputFieldsSchema } from "@/lib/capabilities/ensurePublishedCapabilityWorkflowOutputFieldsSchema";
 import { CapabilityStatus } from "@/lib/capabilities/CapabilityStatus.constant";
 import { isCapabilityType } from "@/lib/capabilities/CapabilityType.constant";
 import { isCapabilityVisibility } from "@/lib/capabilities/CapabilityVisibility.constant";
@@ -57,6 +58,7 @@ export async function listPublishedSummariesForOwners(
     return [];
   }
 
+  await ensurePublishedCapabilityWorkflowOutputFieldsSchema();
   const sql = getSql();
   const rows = asRowArray(
     await sql`
