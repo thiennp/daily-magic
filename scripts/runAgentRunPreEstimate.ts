@@ -2,6 +2,7 @@ import {
   runHeadlessWriter,
   runMarketplacePlanEstimateHeadlessWriter,
   type AgentWitchHeadlessWriterConfig,
+  type MarketplacePlanEstimateHeadlessWriterExecution,
 } from "@agent-witch/install-runtime-client";
 import type { HarnessWriterAgentId } from "./buildWriterCliInvocation";
 import { buildAgentRunPreEstimatePrompt } from "./dispatch/agentRunWorkingEstimate.constant";
@@ -12,21 +13,33 @@ import { buildMarketplaceVibeCodingPlanEstimatePrompt } from "@/lib/marketplace/
 import { MARKETPLACE_RUN_PHASES } from "@/lib/marketplace/runRecipe/MarketplaceRunPhase.constant";
 import { resolveMarketplaceRunPhaseWriterRoute } from "@/lib/marketplace/runRecipe/resolveMarketplaceRunPhaseWriterRoute";
 import { resolveMarketplaceRunRecipeByTemplateId } from "@/lib/marketplace/runRecipe/resolveMarketplaceRunRecipeByTemplateId";
+import { resolveMarketplaceTemplateIdForMacClient } from "@/lib/marketplace/runRecipe/resolveMarketplaceTemplateIdForMacClient";
 
 import {
   AGENT_RUN_REPORT_STATUSES,
   upsertAgentRunReportFile,
 } from "./agentWitchRunReport";
 
+export type MarketplacePlanEstimatePreRunBackend =
+  | MarketplacePlanEstimateHeadlessWriterExecution["backend"]
+  | "cli-non-marketplace-pre-estimate";
+
+export type MarketplacePlanEstimatePreRunDiagnostics = {
+  readonly backend: MarketplacePlanEstimatePreRunBackend;
+  readonly catalogModelId: string | null;
+  readonly marketplaceTemplateId: string | null;
+};
+
 export type AgentRunPreEstimateResult = {
   readonly estimateSeconds: number | null;
   readonly estimateSummary: string;
   readonly estimateOutput: string;
+  readonly marketplacePlanEstimate: MarketplacePlanEstimatePreRunDiagnostics | null;
 };
 
 const buildPreEstimatePrompt = (
   taskPrompt: string,
-  marketplaceTemplateId: string | null | undefined,
+  marketplaceTemplateId: string | null,
 ): string => {
   const recipe = resolveMarketplaceRunRecipeByTemplateId(marketplaceTemplateId);
   if (recipe === null) {
@@ -43,9 +56,16 @@ export const runAgentRunPreEstimate = async (input: {
   readonly reportKey: string;
   readonly agentRunId: string;
   readonly marketplaceTemplateId?: string | null;
+  readonly capabilityId?: string | null;
 }): Promise<AgentRunPreEstimateResult> => {
+  const resolvedMarketplaceTemplateId =
+    resolveMarketplaceTemplateIdForMacClient(
+      input.marketplaceTemplateId,
+      input.capabilityId,
+    );
+
   const marketplaceRecipe = resolveMarketplaceRunRecipeByTemplateId(
-    input.marketplaceTemplateId,
+    resolvedMarketplaceTemplateId,
   );
   const planEstimateWriterRoute =
     marketplaceRecipe !== null
@@ -58,7 +78,7 @@ export const runAgentRunPreEstimate = async (input: {
   const taskPrompt = extractUserTaskFromWrappedPrompt(input.wrappedPrompt);
   const estimatePrompt = buildPreEstimatePrompt(
     taskPrompt,
-    input.marketplaceTemplateId,
+    resolvedMarketplaceTemplateId,
   );
 
   const catalogModelId = planEstimateWriterRoute?.catalogModelId ?? null;
@@ -67,14 +87,45 @@ export const runAgentRunPreEstimate = async (input: {
     catalogModelId !== null &&
     catalogModelId.trim().length > 0;
 
+  let marketplacePlanEstimate: MarketplacePlanEstimatePreRunDiagnostics | null =
+    null;
+
   const headlessResult = useCatalogCheapModel
-    ? await runMarketplacePlanEstimateHeadlessWriter(
-        input.config,
-        input.writerAgent,
-        estimatePrompt,
-        catalogModelId,
-      )
-    : await runHeadlessWriter(input.config, input.writerAgent, estimatePrompt);
+    ? await (async () => {
+        const cheapResult = await runMarketplacePlanEstimateHeadlessWriter(
+          input.config,
+          input.writerAgent,
+          estimatePrompt,
+          catalogModelId,
+        );
+        marketplacePlanEstimate = {
+          backend: cheapResult.execution.backend,
+          catalogModelId,
+          marketplaceTemplateId: resolvedMarketplaceTemplateId,
+        };
+        return cheapResult;
+      })()
+    : await (async () => {
+        if (resolvedMarketplaceTemplateId !== null) {
+          console.log(
+            `[agent-witch] marketplace plan/estimate skipped cheap model (recipe=${resolvedMarketplaceTemplateId}, cheaperModelEligible=${String(planEstimateWriterRoute?.cheaperModelEligible === true)}, catalogModelId=${catalogModelId ?? "null"}) — using CLI headless pre-estimate`,
+          );
+        }
+        marketplacePlanEstimate =
+          resolvedMarketplaceTemplateId !== null
+            ? {
+                backend: "cli-non-marketplace-pre-estimate",
+                catalogModelId,
+                marketplaceTemplateId: resolvedMarketplaceTemplateId,
+              }
+            : null;
+        return runHeadlessWriter(
+          input.config,
+          input.writerAgent,
+          estimatePrompt,
+        );
+      })();
+
   const estimateSeconds = parseAgentRunWorkingEstimateSeconds(
     headlessResult.output,
   );
@@ -95,5 +146,6 @@ export const runAgentRunPreEstimate = async (input: {
     estimateSeconds,
     estimateSummary,
     estimateOutput: headlessResult.output,
+    marketplacePlanEstimate,
   };
 };

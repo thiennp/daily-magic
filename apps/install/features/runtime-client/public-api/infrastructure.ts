@@ -5,6 +5,11 @@ export { runHeadlessWriter } from "../internal/core/agentWitchHeadlessWriterRun"
 
 export { runMarketplacePlanEstimateHeadlessWriter } from "../internal/core/writerApi/runMarketplacePlanEstimateHeadlessWriter";
 
+export type {
+  MarketplacePlanEstimateHeadlessWriterBackend,
+  MarketplacePlanEstimateHeadlessWriterExecution,
+} from "../internal/core/writerApi/MarketplacePlanEstimateHeadlessWriterExecution.type";
+
 export { readAgentWitchClientConfig } from "../internal/core/readAgentWitchClientConfig";
 
 export { resolveAgentWitchClientWsUrl } from "../internal/core/resolveAgentWitchClientWsUrl";

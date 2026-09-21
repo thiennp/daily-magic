@@ -56,6 +56,8 @@ describe("runMarketplacePlanEstimateHeadlessWriter", () => {
     expect(runHeadlessWriter).not.toHaveBeenCalled();
     expect(result.exitCode).toBe(0);
     expect(result.output).toContain("plan output");
+    expect(result.execution.backend).toBe("anthropic-writer-api");
+    expect(result.execution.modelOverride).toBe("claude-3-5-haiku-20241022");
   });
 
   it("falls back to CLI headless writer when no Anthropic API key", async () => {
@@ -65,7 +67,7 @@ describe("runMarketplacePlanEstimateHeadlessWriter", () => {
       output: "cli fallback",
     });
 
-    await runMarketplacePlanEstimateHeadlessWriter(
+    const result = await runMarketplacePlanEstimateHeadlessWriter(
       baseConfig as never,
       "claude-cli",
       "estimate task",
@@ -78,5 +80,6 @@ describe("runMarketplacePlanEstimateHeadlessWriter", () => {
       "claude-cli",
       "estimate task",
     );
+    expect(result.execution.backend).toBe("cli-fallback-missing-anthropic-key");
   });
 });

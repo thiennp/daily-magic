@@ -125,6 +125,7 @@ import {
   resolveAgentWitchWakePort,
   resolveWriterCliCommands,
   runAgentRunPreEstimate,
+  buildMarketplacePlanEstimateTerminalStreamPayload,
   runLocalInstallBundleUpdate,
   runWriterEnsure,
   runWriterSessionStart,
@@ -232,6 +233,7 @@ const dispatchWriterTask = async (
   reportKey?: string,
   projectId?: string,
   marketplaceTemplateId?: string,
+  capabilityId?: string,
 ): Promise<void> => {
   const resolvedProjectId = projectId?.trim() ?? "";
   if (!isHarnessWriterAgentId(writerAgent)) {
@@ -422,7 +424,25 @@ const dispatchWriterTask = async (
       reportKey: resolvedReportKey,
       agentRunId,
       marketplaceTemplateId,
+      capabilityId,
     });
+
+    if (preEstimate.marketplacePlanEstimate !== null) {
+      const planEstimateProgress =
+        buildMarketplacePlanEstimateTerminalStreamPayload({
+          runId: agentRunId,
+          diagnostics: preEstimate.marketplacePlanEstimate,
+        });
+      if (isTerminalStreamAccepted(agentRunId)) {
+        sendMessage(socket, {
+          type: "terminal.stream.chunk",
+          payload: planEstimateProgress,
+          requestId,
+        });
+      } else {
+        queueTerminalStreamChunk(agentRunId, planEstimateProgress.chunk);
+      }
+    }
 
     if (preEstimate.estimateSeconds !== null) {
       const estimateChunk = `${AGENT_RUN_WORKING_ESTIMATE_MARKER}\n${preEstimate.estimateSeconds}\n`;
@@ -1232,6 +1252,10 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
         typeof parsed.payload.marketplaceTemplateId === "string"
           ? parsed.payload.marketplaceTemplateId
           : undefined;
+      const capabilityId =
+        typeof parsed.payload.capabilityId === "string"
+          ? parsed.payload.capabilityId
+          : undefined;
 
       if (typeof prompt === "string" && prompt.trim().length > 0) {
         console.log(
@@ -1329,6 +1353,7 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
           reportKey,
           projectId,
           marketplaceTemplateId,
+          capabilityId,
         );
       }
     }
