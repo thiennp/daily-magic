@@ -11,7 +11,10 @@ describe("resolveDelegatedWriterAgent", () => {
 
   it("returns a valid writer agent from the payload", () => {
     expect(
-      resolveDelegatedWriterAgent({ prompt: "run tests", writerAgent: "cursor" }),
+      resolveDelegatedWriterAgent({
+        prompt: "run tests",
+        writerAgent: "cursor",
+      }),
     ).toBe("cursor");
   });
 });

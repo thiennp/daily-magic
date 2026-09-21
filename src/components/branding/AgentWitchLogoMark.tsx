@@ -27,7 +27,10 @@ export default function AgentWitchLogoMark({
       aria-hidden
       focusable="false"
     >
-      <path d="M12 2L2 12l10 10 10-10L12 2z" className={surfaceClasses.markFill} />
+      <path
+        d="M12 2L2 12l10 10 10-10L12 2z"
+        className={surfaceClasses.markFill}
+      />
       <path
         d="M12 6v12m-6-6h12"
         className={surfaceClasses.markCross}

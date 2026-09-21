@@ -1,9 +1,6 @@
 import { WORKFLOW_BUILDER_QUESTIONS_SECTION } from "@/features/workflows/workflowBuilderCopy.constant";
 
-const resolveWorkflowFieldRowTitle = (
-  label: string,
-  index: number,
-): string => {
+const resolveWorkflowFieldRowTitle = (label: string, index: number): string => {
   const trimmedLabel = label.trim();
 
   if (trimmedLabel.length > 0) {

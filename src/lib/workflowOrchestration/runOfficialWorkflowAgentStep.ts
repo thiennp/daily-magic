@@ -5,6 +5,7 @@ import { CapabilityType } from "@/lib/capabilities/CapabilityType.constant";
 import findCapabilityTemplateById from "@/lib/capabilities/templates/findCapabilityTemplateById";
 import { dispatchClaudeRunForDashboardUser } from "@/lib/dispatch/dispatchWriterRunForDashboardUser";
 import type { AgentRunDispatchBody } from "@/lib/dispatch/parseAgentRunDispatchBody";
+import { broadcastWorkflowStepFailed } from "@/lib/workflowOrchestration/broadcastWorkflowStepFailed";
 import { collectPriorHumanResponsesFromWorkflowRun } from "@/lib/workflowOrchestration/collectPriorHumanResponsesFromWorkflowRun";
 import { buildWorkflowRunStepResponse } from "@/lib/workflowOrchestration/buildWorkflowRunStepResponse";
 import { readDispatchErrorMessageFromAgentWitchMessage } from "@/lib/workflowOrchestration/readDispatchErrorMessageFromAgentWitchMessage";
@@ -74,10 +75,22 @@ export const runOfficialWorkflowAgentStep = async (input: {
       status: "failed",
       output: { error: errorMessage },
     });
+    // Keep currentStepIndex so the operator can retry this same step.
     await updateWorkflowRunRecord(input.run.id, {
       status: "failed",
       errorMessage,
     });
+    broadcastWorkflowStepFailed(
+      input.runtime,
+      input.run.requesterUserId,
+      input.run.id,
+      {
+        stepRunId,
+        stepIndex: input.run.currentStepIndex,
+        title: input.agentNode.title,
+        errorMessage,
+      },
+    );
     return buildWorkflowRunStepResponse({
       ok: false,
       message: errorMessage,

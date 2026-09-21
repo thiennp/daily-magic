@@ -38,6 +38,7 @@ export async function POST(request: Request): Promise<Response> {
     workflowRunId: parsed.workflowRunId,
     stepRunId: parsed.stepRunId,
     response: parsed.response,
+    ...(parsed.skipped === true ? { skipped: true } : {}),
     dispatchBodyBase: {
       ...(writerAgent !== undefined ? { writerAgent } : {}),
       ...(parsed.targetDeviceId !== undefined

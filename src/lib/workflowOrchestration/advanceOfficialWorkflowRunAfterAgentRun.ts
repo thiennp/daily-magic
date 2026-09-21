@@ -1,5 +1,7 @@
 import type AgentWitchHubRuntime from "@/lib/agentWitch/types/AgentWitchHubRuntime.type";
+import { broadcastWorkflowStepFailed } from "@/lib/workflowOrchestration/broadcastWorkflowStepFailed";
 import { continueOfficialWorkflowRun } from "@/lib/workflowOrchestration/continueOfficialWorkflowRun";
+import { buildAgentStepOutputPreview } from "@/lib/workflowOrchestration/buildAgentStepOutputPreview";
 import {
   completeWorkflowStepRun,
   getWorkflowRunById,
@@ -24,26 +26,40 @@ export const advanceOfficialWorkflowRunAfterAgentRun = async (
   }
 
   if (exitCode !== 0) {
+    const errorMessage = `Agent step failed with exit code ${exitCode}.`;
     await completeWorkflowStepRun(step.id, {
       status: "failed",
-      output: { exitCode, output },
+      output: { exitCode, outputPreview: buildAgentStepOutputPreview(output) },
     });
+    // Keep currentStepIndex so the operator can retry this same step.
     await updateWorkflowRunRecord(run.id, {
       status: "failed",
-      errorMessage: `Agent step failed with exit code ${exitCode}.`,
+      errorMessage,
+    });
+    broadcastWorkflowStepFailed(runtime, run.requesterUserId, run.id, {
+      stepRunId: step.id,
+      stepIndex: step.stepIndex,
+      title: step.title,
+      errorMessage,
     });
     return;
   }
 
+  const outputPreview = buildAgentStepOutputPreview(output);
+
   await completeWorkflowStepRun(step.id, {
     status: "completed",
-    output: { exitCode, outputPreview: output.slice(0, 4000) },
+    output: { exitCode, outputPreview },
   });
 
   const nextIndex = run.currentStepIndex + 1;
   await updateWorkflowRunRecord(run.id, {
     currentStepIndex: nextIndex,
     status: "running",
+    stepOutputs: {
+      ...run.stepOutputs,
+      [step.nodeId]: { outputPreview },
+    },
   });
 
   await continueOfficialWorkflowRun({

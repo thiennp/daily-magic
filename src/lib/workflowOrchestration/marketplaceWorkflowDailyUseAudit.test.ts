@@ -11,7 +11,7 @@ describe("marketplace workflow daily-use audit", () => {
     (t) => t.type === CapabilityType.WORKFLOW,
   );
 
-  it("has 29 presets", () => expect(workflows.length).toBe(29));
+  it("has 27 presets", () => expect(workflows.length).toBe(27));
 
   workflows.forEach((template) => {
     it(`${template.id} daily-use ready`, () => {

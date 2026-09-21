@@ -15,10 +15,7 @@ import {
 import { mergeMarketingClasses } from "@/features/marketing/mergeMarketingClasses";
 import { BoltIcon, LockIcon, PieChartIcon } from "@/icons";
 
-const FEATURE_ICON_MAP: Record<
-  MarketingFeaturePreviewKey,
-  typeof BoltIcon
-> = {
+const FEATURE_ICON_MAP: Record<MarketingFeaturePreviewKey, typeof BoltIcon> = {
   dispatch: BoltIcon,
   approve: LockIcon,
   report: PieChartIcon,

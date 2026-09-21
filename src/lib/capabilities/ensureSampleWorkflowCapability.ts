@@ -24,9 +24,7 @@ const ensureSampleWorkflowCapability = async (
     CapabilityType.WORKFLOW,
   );
 
-  if (
-    !shouldSeedSampleWorkflow({ capabilities, archivedSampleExists })
-  ) {
+  if (!shouldSeedSampleWorkflow({ capabilities, archivedSampleExists })) {
     return null;
   }
 

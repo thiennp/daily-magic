@@ -63,9 +63,17 @@ export default function AvatarsSection() {
         </ComponentCard>
         <ComponentCard title="Avatar with busy indicator">
           <div className="flex flex-col items-center justify-center gap-5 sm:flex-row">
-            <Avatar src="/images/user/user-01.jpg" size="medium" status="busy" />
+            <Avatar
+              src="/images/user/user-01.jpg"
+              size="medium"
+              status="busy"
+            />
             <Avatar src="/images/user/user-01.jpg" size="large" status="busy" />
-            <Avatar src="/images/user/user-01.jpg" size="xlarge" status="busy" />
+            <Avatar
+              src="/images/user/user-01.jpg"
+              size="xlarge"
+              status="busy"
+            />
           </div>
         </ComponentCard>
       </div>

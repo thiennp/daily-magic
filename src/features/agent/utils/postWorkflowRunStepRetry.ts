@@ -2,21 +2,13 @@ import { readDispatchHttpResponseError } from "@/features/agent/utils/readDispat
 import { setWorkflowHumanStepPending } from "@/features/dispatch/utils/workflowHumanStepPendingStore";
 import { parseWorkflowRunStepResponse } from "@/lib/workflowOrchestration/parseWorkflowRunStepResponse";
 
-export async function postWorkflowHumanStepComplete(input: {
+export async function postWorkflowRunStepRetry(input: {
   readonly workflowRunId: string;
-  readonly stepRunId: string;
-  readonly response: string;
-  readonly skipped?: boolean;
 }): Promise<{ readonly ok: boolean; readonly errorMessage?: string }> {
-  const httpResponse = await fetch("/api/workflow-runs/human-step", {
+  const httpResponse = await fetch("/api/workflow-runs/retry-step", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      workflowRunId: input.workflowRunId,
-      stepRunId: input.stepRunId,
-      response: input.response,
-      ...(input.skipped === true ? { skipped: true } : {}),
-    }),
+    body: JSON.stringify({ workflowRunId: input.workflowRunId }),
   });
 
   const data: unknown = await httpResponse.json().catch(() => null);
@@ -34,8 +26,6 @@ export async function postWorkflowHumanStepComplete(input: {
       workflowRunId: parsed.workflowRunId,
       ...parsed.humanStep,
     });
-  } else {
-    setWorkflowHumanStepPending(null);
   }
 
   return { ok: true };

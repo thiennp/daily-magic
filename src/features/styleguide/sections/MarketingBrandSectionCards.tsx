@@ -29,7 +29,10 @@ export default function MarketingBrandSectionCards() {
         </p>
       </ComponentCard>
 
-      <ComponentCard title="Logo on marketing canvas" desc="Unchanged AW mark + wordmark.">
+      <ComponentCard
+        title="Logo on marketing canvas"
+        desc="Unchanged AW mark + wordmark."
+      >
         <div className="rounded-xl bg-gray-50 p-6">
           <AgentWitchLogo surface="light" />
         </div>
@@ -55,7 +58,10 @@ export default function MarketingBrandSectionCards() {
         </div>
       </ComponentCard>
 
-      <ComponentCard title="Buttons & badges" desc="Primary, secondary, status pills.">
+      <ComponentCard
+        title="Buttons & badges"
+        desc="Primary, secondary, status pills."
+      >
         <div className="flex flex-wrap items-center gap-3">
           <button type="button" className={MARKETING_BUTTON_PRIMARY_CLASSES}>
             Primary
@@ -72,7 +78,10 @@ export default function MarketingBrandSectionCards() {
         </div>
       </ComponentCard>
 
-      <ComponentCard title="Trust metrics" desc="Hero stat row with brand dividers.">
+      <ComponentCard
+        title="Trust metrics"
+        desc="Hero stat row with brand dividers."
+      >
         <div className="grid gap-6 border-y border-brand-200 py-6 sm:grid-cols-2 lg:grid-cols-4">
           <div className="lg:border-l lg:border-brand-200 lg:pl-6 first:lg:border-l-0">
             <p className={MARKETING_METRIC_VALUE_CLASSES}>~15 min</p>
@@ -90,7 +99,12 @@ export default function MarketingBrandSectionCards() {
       </ComponentCard>
 
       <ComponentCard title="Elevated card" desc="Default marketing panel.">
-        <div className={mergeMarketingClasses(MARKETING_SURFACE_ELEVATED_CLASSES, "p-6")}>
+        <div
+          className={mergeMarketingClasses(
+            MARKETING_SURFACE_ELEVATED_CLASSES,
+            "p-6",
+          )}
+        >
           <p className="text-sm font-semibold text-gray-900">Card title</p>
           <p className="mt-2 text-sm text-gray-600">
             White fill, gray-200 border, sm shadow — no heavy drop shadows.
@@ -98,7 +112,10 @@ export default function MarketingBrandSectionCards() {
         </div>
       </ComponentCard>
 
-      <ComponentCard title="CTA band" desc="Full-width call to action on landing.">
+      <ComponentCard
+        title="CTA band"
+        desc="Full-width call to action on landing."
+      >
         <MarketingCtaBand />
       </ComponentCard>
     </div>

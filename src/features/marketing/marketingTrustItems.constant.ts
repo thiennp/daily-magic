@@ -18,7 +18,8 @@ export const MARKETING_TRUST_ITEMS: readonly MarketingTrustItem[] = [
   },
   {
     metric: "0",
-    description: "company secrets stored on vendor servers—runs stay on your Macs",
+    description:
+      "company secrets stored on vendor servers—runs stay on your Macs",
     icon: "connect",
   },
 ] as const;

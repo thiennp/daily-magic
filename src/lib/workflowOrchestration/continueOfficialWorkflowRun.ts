@@ -2,13 +2,18 @@ import type AgentWitchHubRuntime from "@/lib/agentWitch/types/AgentWitchHubRunti
 import type { AgentRunDispatchBody } from "@/lib/dispatch/parseAgentRunDispatchBody";
 import { buildWorkflowRunStepResponse } from "@/lib/workflowOrchestration/buildWorkflowRunStepResponse";
 import { parseOfficialWorkflowDefinitionSnapshot } from "@/lib/workflowOrchestration/parseOfficialWorkflowDefinitionSnapshot";
+import { readPriorAgentOutputPreview } from "@/lib/workflowOrchestration/readPriorAgentOutputPreview";
 import { runOfficialWorkflowAgentStep } from "@/lib/workflowOrchestration/runOfficialWorkflowAgentStep";
 import { runOfficialWorkflowHumanStep } from "@/lib/workflowOrchestration/runOfficialWorkflowHumanStep";
+import { shouldSkipOfficialWorkflowAgentNode } from "@/lib/workflowOrchestration/shouldSkipOfficialWorkflowAgentNode";
+import { skipOfficialWorkflowAgentStep } from "@/lib/workflowOrchestration/skipOfficialWorkflowAgentStep";
 import type WorkflowRunStepResponse from "@/lib/workflowOrchestration/types/WorkflowRunStepResponse.type";
 import {
   getWorkflowRunById,
   updateWorkflowRunRecord,
 } from "@/lib/workflowOrchestration/workflowRunQueries";
+
+const SKIPPED_BY_APPROVAL_REASON = "Operator approved without changes.";
 
 export const continueOfficialWorkflowRun = async (input: {
   readonly runtime: AgentWitchHubRuntime;
@@ -62,12 +67,37 @@ export const continueOfficialWorkflowRun = async (input: {
   }
 
   if (node.kind === "human") {
+    const priorAgentOutputPreview = readPriorAgentOutputPreview(
+      run,
+      definition,
+      run.currentStepIndex,
+    );
     return runOfficialWorkflowHumanStep({
       runtime: input.runtime,
       run,
       humanNode: node,
+      totalSteps: definition.nodes.length,
       requesterUserId: input.requesterUserId,
+      ...(priorAgentOutputPreview !== undefined
+        ? { priorAgentOutputPreview }
+        : {}),
     });
+  }
+
+  if (
+    shouldSkipOfficialWorkflowAgentNode({
+      run,
+      definition,
+      node,
+      stepIndex: run.currentStepIndex,
+    })
+  ) {
+    await skipOfficialWorkflowAgentStep({
+      run,
+      node,
+      reason: SKIPPED_BY_APPROVAL_REASON,
+    });
+    return continueOfficialWorkflowRun(input);
   }
 
   return runOfficialWorkflowAgentStep({

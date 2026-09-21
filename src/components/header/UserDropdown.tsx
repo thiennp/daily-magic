@@ -23,7 +23,9 @@ interface UserDropdownProps {
   readonly showStyleguide?: boolean;
 }
 
-export default function UserDropdown({ showStyleguide = false }: UserDropdownProps) {
+export default function UserDropdown({
+  showStyleguide = false,
+}: UserDropdownProps) {
   const { data: session } = useSession();
   const [isOpen, setIsOpen] = useState(false);
   const [imageError, setImageError] = useState(false);

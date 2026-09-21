@@ -10,7 +10,10 @@ const SWATCHES = [
 
 export default function MarketingBrandColorSwatchesCard() {
   return (
-    <ComponentCard title="Color swatches" desc="Tailwind tokens from @theme brand + gray.">
+    <ComponentCard
+      title="Color swatches"
+      desc="Tailwind tokens from @theme brand + gray."
+    >
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         {SWATCHES.map((swatch) => (
           <div key={swatch.label} className="space-y-2">

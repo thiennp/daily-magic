@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 
-import Button from "@/components/ui/button/Button";
 import { Modal } from "@/components/ui/modal";
+import WorkflowHumanStepModalFooter from "@/features/dispatch/WorkflowHumanStepModalFooter";
+import WorkflowHumanStepPriorOutput from "@/features/dispatch/WorkflowHumanStepPriorOutput";
 import type { WorkflowHumanStepRequest } from "@/lib/workflowOrchestration/types/WorkflowHumanStepPayload.type";
 
 interface WorkflowHumanStepModalProps {
@@ -11,6 +12,7 @@ interface WorkflowHumanStepModalProps {
   readonly isSubmitting: boolean;
   readonly submitError: string | null;
   readonly onSubmit: (response: string) => void;
+  readonly onSkip: () => void;
   readonly onDismiss: () => void;
 }
 
@@ -19,6 +21,7 @@ export default function WorkflowHumanStepModal({
   isSubmitting,
   submitError,
   onSubmit,
+  onSkip,
   onDismiss,
 }: WorkflowHumanStepModalProps) {
   const [response, setResponse] = useState("");
@@ -32,7 +35,12 @@ export default function WorkflowHumanStepModal({
       showCloseButton={false}
       className="max-w-xl p-6"
     >
-      <h2 className="text-lg font-semibold text-gray-800 dark:text-white/90">
+      <p className="text-xs font-medium uppercase tracking-wide text-brand-500">
+        {request.totalSteps !== undefined
+          ? `Step ${request.stepIndex + 1} of ${request.totalSteps}`
+          : `Step ${request.stepIndex + 1}`}
+      </p>
+      <h2 className="mt-1 text-lg font-semibold text-gray-800 dark:text-white/90">
         {request.title}
       </h2>
       <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
@@ -47,6 +55,11 @@ export default function WorkflowHumanStepModal({
           {request.instructions}
         </p>
       </div>
+      {request.priorAgentOutputPreview !== undefined ? (
+        <WorkflowHumanStepPriorOutput
+          outputPreview={request.priorAgentOutputPreview}
+        />
+      ) : null}
       <label className="mt-4 block text-sm text-gray-700 dark:text-gray-300">
         Your response
         <textarea
@@ -64,27 +77,16 @@ export default function WorkflowHumanStepModal({
           {submitError}
         </p>
       ) : null}
-      <div className="mt-6 flex flex-wrap items-center justify-between gap-3">
-        <button
-          type="button"
-          onClick={onDismiss}
-          disabled={isSubmitting}
-          className="text-left text-sm text-gray-600 hover:text-gray-800 disabled:opacity-50 dark:text-gray-400 dark:hover:text-gray-200"
-        >
-          <span className="font-medium">Remind me later</span>
-          <span className="mt-0.5 block text-xs text-gray-500 dark:text-gray-500">
-            Workflow stays paused — answer from job history anytime.
-          </span>
-        </button>
-        <Button
-          disabled={!canSubmit}
-          onClick={() => {
-            onSubmit(trimmedResponse);
-          }}
-        >
-          {isSubmitting ? "Sending…" : "Send and continue"}
-        </Button>
-      </div>
+      <WorkflowHumanStepModalFooter
+        isSubmitting={isSubmitting}
+        canSubmit={canSubmit}
+        allowSkip={request.allowSkip === true}
+        onSubmit={() => {
+          onSubmit(trimmedResponse);
+        }}
+        onSkip={onSkip}
+        onDismiss={onDismiss}
+      />
     </Modal>
   );
 }

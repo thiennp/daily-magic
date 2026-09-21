@@ -38,9 +38,7 @@ export default function MarketingProductPreview() {
         aria-label="Illustration of Agent Witch task queue on organization Macs"
         className={MARKETING_MOCK_SHELL_CLASSES}
       >
-        <header
-          className="flex items-center justify-between gap-3 border-b border-gray-200 bg-white px-4 py-3"
-        >
+        <header className="flex items-center justify-between gap-3 border-b border-gray-200 bg-white px-4 py-3">
           <p className="text-xs font-semibold text-gray-900">Macs online</p>
           <MarketingStatusBadge tone="success">
             {MAC_WORKER_BENEFIT_COPY.macReadyBadge}

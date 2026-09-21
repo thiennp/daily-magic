@@ -17,6 +17,7 @@ export function useWorkflowHumanStepListener(): {
   readonly isSubmitting: boolean;
   readonly submitError: string | null;
   readonly respondToHumanStep: (response: string) => Promise<void>;
+  readonly skipHumanStep: () => Promise<void>;
   readonly dismissHumanStep: () => void;
 } {
   const pendingHumanStep = useSyncExternalStore(
@@ -49,10 +50,9 @@ export function useWorkflowHumanStepListener(): {
 
   useAgentWitchDashboardSubscription(handleDashboardMessage);
 
-  const respondToHumanStep = useCallback(
-    async (response: string) => {
-      const trimmedResponse = response.trim();
-      if (pendingHumanStep === null || trimmedResponse.length === 0) {
+  const submitHumanStep = useCallback(
+    async (response: string, skipped: boolean) => {
+      if (pendingHumanStep === null) {
         return;
       }
 
@@ -62,20 +62,37 @@ export function useWorkflowHumanStepListener(): {
       const result = await postWorkflowHumanStepComplete({
         workflowRunId: pendingHumanStep.workflowRunId,
         stepRunId: pendingHumanStep.stepRunId,
-        response: trimmedResponse,
+        response,
+        ...(skipped ? { skipped: true } : {}),
       });
 
       setIsSubmitting(false);
-
-      if (!result.ok) {
-        setSubmitError(result.errorMessage ?? "Could not submit your answer.");
-        return;
-      }
-
-      setSubmitError(null);
+      setSubmitError(
+        result.ok
+          ? null
+          : (result.errorMessage ?? "Could not submit your answer."),
+      );
     },
     [pendingHumanStep],
   );
+
+  const respondToHumanStep = useCallback(
+    async (response: string) => {
+      const trimmedResponse = response.trim();
+      if (trimmedResponse.length === 0) {
+        return;
+      }
+      await submitHumanStep(trimmedResponse, false);
+    },
+    [submitHumanStep],
+  );
+
+  const skipHumanStep = useCallback(async () => {
+    if (pendingHumanStep?.allowSkip !== true) {
+      return;
+    }
+    await submitHumanStep("", true);
+  }, [pendingHumanStep, submitHumanStep]);
 
   const dismissHumanStep = useCallback(() => {
     setWorkflowHumanStepPending(null);
@@ -87,6 +104,7 @@ export function useWorkflowHumanStepListener(): {
     isSubmitting,
     submitError,
     respondToHumanStep,
+    skipHumanStep,
     dismissHumanStep,
   };
 }

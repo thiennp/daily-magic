@@ -13,8 +13,9 @@ interface AdminGroupsSidebarState {
   readonly setSelectedGroupId: (groupId: string) => void;
 }
 
-const AdminGroupsSidebarContext =
-  createContext<AdminGroupsSidebarState | null>(null);
+const AdminGroupsSidebarContext = createContext<AdminGroupsSidebarState | null>(
+  null,
+);
 
 export function AdminGroupsSidebarProvider({
   children,

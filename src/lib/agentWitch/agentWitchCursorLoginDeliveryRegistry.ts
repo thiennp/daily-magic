@@ -16,7 +16,10 @@ export const shouldDeliverAgentWitchCursorLogin = (input: {
   const now = input.now ?? Date.now();
   const lastDeliveredAt = lastDeliveredAtByKey.get(key);
 
-  if (lastDeliveredAt !== undefined && now - lastDeliveredAt < CURSOR_LOGIN_DELIVERY_COOLDOWN_MS) {
+  if (
+    lastDeliveredAt !== undefined &&
+    now - lastDeliveredAt < CURSOR_LOGIN_DELIVERY_COOLDOWN_MS
+  ) {
     return false;
   }
 
@@ -28,10 +31,7 @@ export const markAgentWitchCursorLoginDelivered = (input: {
   readonly clientId: string;
   readonly now?: number;
 }): void => {
-  lastDeliveredAtByKey.set(
-    resolveDeliveryKey(input),
-    input.now ?? Date.now(),
-  );
+  lastDeliveredAtByKey.set(resolveDeliveryKey(input), input.now ?? Date.now());
 };
 
 export const clearAgentWitchCursorLoginDeliveryRegistryForTests = (): void => {

@@ -15,6 +15,7 @@ export const AGENT_WITCH_MESSAGE_TYPES = {
   DISPATCH_APPROVAL_RESPOND: "dispatch.approval.respond",
   DISPATCH_APPROVAL_RESULT: "dispatch.approval.result",
   WORKFLOW_HUMAN_STEP_REQUIRED: "workflow.human_step.required",
+  WORKFLOW_STEP_FAILED: "workflow.step.failed",
   HARNESS_REQUEST: "harness.request",
   HARNESS_REQUEST_ACK: "harness.request.ack",
   HARNESS_REQUEST_RESULT: "harness.request.result",

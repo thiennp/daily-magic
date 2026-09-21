@@ -12,7 +12,10 @@ describe("MacDeviceRowMainContent", () => {
 
   it("MAC_DEVICES-002: renders bundle detail inline with the this Mac badge", () => {
     const source = readFileSync(
-      join(dirname(fileURLToPath(import.meta.url)), "MacDeviceRowMainContent.tsx"),
+      join(
+        dirname(fileURLToPath(import.meta.url)),
+        "MacDeviceRowMainContent.tsx",
+      ),
       "utf8",
     );
 

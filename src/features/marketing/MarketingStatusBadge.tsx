@@ -2,11 +2,7 @@ import type { ReactNode } from "react";
 
 import { mergeMarketingClasses } from "@/features/marketing/mergeMarketingClasses";
 
-export type MarketingStatusTone =
-  | "success"
-  | "warning"
-  | "info"
-  | "neutral";
+export type MarketingStatusTone = "success" | "warning" | "info" | "neutral";
 
 interface MarketingStatusBadgeProps {
   readonly tone: MarketingStatusTone;
@@ -19,8 +15,7 @@ const TONE_CLASSES: Record<
   { readonly light: string; readonly dark: string }
 > = {
   success: {
-    light:
-      "bg-success-50 text-success-700 ring-1 ring-success-500/20",
+    light: "bg-success-50 text-success-700 ring-1 ring-success-500/20",
     dark: "bg-gray-800 text-success-300 ring-1 ring-gray-700/80",
   },
   warning: {

@@ -16,6 +16,8 @@ export const runOfficialWorkflowHumanStep = async (input: {
   readonly run: WorkflowRunRecord;
   readonly humanNode: OfficialWorkflowHumanNode;
   readonly requesterUserId: string;
+  readonly totalSteps?: number;
+  readonly priorAgentOutputPreview?: string;
 }): Promise<WorkflowRunStepResponse> => {
   const stepRunId = randomUUID();
   await upsertWorkflowStepRunRecord({
@@ -40,6 +42,11 @@ export const runOfficialWorkflowHumanStep = async (input: {
     stepIndex: input.run.currentStepIndex,
     title: input.humanNode.title,
     instructions: input.humanNode.instructions,
+    ...(input.totalSteps !== undefined ? { totalSteps: input.totalSteps } : {}),
+    ...(input.humanNode.allowSkip === true ? { allowSkip: true } : {}),
+    ...(input.priorAgentOutputPreview !== undefined
+      ? { priorAgentOutputPreview: input.priorAgentOutputPreview }
+      : {}),
   };
 
   broadcastWorkflowHumanStepRequired(

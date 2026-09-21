@@ -29,6 +29,8 @@ export const readAgentWitchLocalHostCookie = (): string | null => {
     return null;
   }
 
-  const value = decodeURIComponent(cookiePart.slice(cookiePrefix.length)).trim();
+  const value = decodeURIComponent(
+    cookiePart.slice(cookiePrefix.length),
+  ).trim();
   return value.length > 0 ? value : null;
 };

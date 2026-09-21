@@ -40,7 +40,7 @@ export default function HomeSetupSectionShell({
     // Deep-link bootstrap: sync React chevron/lazy-mount with native <details open>.
     // eslint-disable-next-line react-hooks/set-state-in-effect -- HOME-039 hash navigation
     setHasExpanded(true);
-     
+
     setIsOpen(true);
   }, []);
 

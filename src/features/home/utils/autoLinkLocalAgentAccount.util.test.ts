@@ -9,9 +9,9 @@ describe("shouldStopAutoLinkAfterFailure", () => {
         "This pairing token is already linked to another account.",
       ),
     ).toBe(true);
-    expect(shouldStopAutoLinkAfterFailure("This device has been revoked.")).toBe(
-      true,
-    );
+    expect(
+      shouldStopAutoLinkAfterFailure("This device has been revoked."),
+    ).toBe(true);
   });
 
   it("keeps retrying for transient failures", () => {

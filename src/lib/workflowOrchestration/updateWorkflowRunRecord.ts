@@ -37,6 +37,8 @@ export const updateWorkflowRunRecord = async (
     return;
   }
 
+  const clearErrorMessage = patch.errorMessage === null;
+
   const sql = getSql();
   const rows = asRowArray(
     await sql`
@@ -45,7 +47,10 @@ export const updateWorkflowRunRecord = async (
         status = COALESCE(${patch.status ?? null}, status),
         current_step_index = COALESCE(${patch.currentStepIndex ?? null}, current_step_index),
         step_outputs = COALESCE(${patch.stepOutputs ? JSON.stringify(patch.stepOutputs) : null}::jsonb, step_outputs),
-        error_message = COALESCE(${patch.errorMessage ?? null}, error_message),
+        error_message = CASE
+          WHEN ${clearErrorMessage} THEN NULL
+          ELSE COALESCE(${patch.errorMessage ?? null}, error_message)
+        END,
         completed_at = COALESCE(${patch.completedAt ?? null}, completed_at),
         updated_at = NOW()
       WHERE id = ${workflowRunId}

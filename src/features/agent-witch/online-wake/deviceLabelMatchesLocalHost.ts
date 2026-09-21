@@ -1,5 +1,8 @@
 const normalizeHostLabel = (value: string): string =>
-  value.trim().toLowerCase().replace(/\.local$/, "");
+  value
+    .trim()
+    .toLowerCase()
+    .replace(/\.local$/, "");
 
 export const deviceLabelMatchesLocalHost = (
   deviceLabel: string | null,
@@ -9,7 +12,5 @@ export const deviceLabelMatchesLocalHost = (
     return false;
   }
 
-  return (
-    normalizeHostLabel(deviceLabel) === normalizeHostLabel(localHost)
-  );
+  return normalizeHostLabel(deviceLabel) === normalizeHostLabel(localHost);
 };

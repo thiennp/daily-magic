@@ -31,8 +31,7 @@ export default function GroupCompanySettingsAccess({
 }: GroupCompanySettingsAccessProps) {
   const selectedGroup = groups.find((group) => group.id === selectedGroupId);
   const canOpenSettings =
-    Boolean(selectedGroupId) &&
-    (canDeleteTeam || canConfigureDispatchPolicy);
+    Boolean(selectedGroupId) && (canDeleteTeam || canConfigureDispatchPolicy);
   const gearProps = {
     groups,
     selectedGroupId,

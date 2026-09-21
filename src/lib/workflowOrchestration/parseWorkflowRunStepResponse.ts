@@ -26,7 +26,20 @@ const parseWorkflowHumanStepPayload = (
     return undefined;
   }
 
-  return { stepRunId, stepIndex, title, instructions };
+  return {
+    stepRunId,
+    stepIndex,
+    title,
+    instructions,
+    ...(typeof value.totalSteps === "number" && value.totalSteps > 0
+      ? { totalSteps: value.totalSteps }
+      : {}),
+    ...(value.allowSkip === true ? { allowSkip: true } : {}),
+    ...(typeof value.priorAgentOutputPreview === "string" &&
+    value.priorAgentOutputPreview.trim().length > 0
+      ? { priorAgentOutputPreview: value.priorAgentOutputPreview }
+      : {}),
+  };
 };
 
 export const parseWorkflowRunStepResponse = (

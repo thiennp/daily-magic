@@ -1,23 +1,18 @@
 import type AgentWitchHubRuntime from "@/lib/agentWitch/types/AgentWitchHubRuntime.type";
 import type { AgentRunDispatchBody } from "@/lib/dispatch/parseAgentRunDispatchBody";
-import { continueOfficialWorkflowRun } from "@/lib/workflowOrchestration/continueOfficialWorkflowRun";
 import { buildWorkflowRunStepResponse } from "@/lib/workflowOrchestration/buildWorkflowRunStepResponse";
+import { continueOfficialWorkflowRun } from "@/lib/workflowOrchestration/continueOfficialWorkflowRun";
 import type WorkflowRunStepResponse from "@/lib/workflowOrchestration/types/WorkflowRunStepResponse.type";
 import {
-  completeWorkflowStepRun,
   getWorkflowRunById,
-  getWorkflowStepRunById,
   updateWorkflowRunRecord,
 } from "@/lib/workflowOrchestration/workflowRunQueries";
 
-export const completeOfficialWorkflowHumanStep = async (input: {
+export const retryOfficialWorkflowRunStep = async (input: {
   readonly runtime: AgentWitchHubRuntime;
   readonly requesterUserId: string;
   readonly requesterEmail?: string | null;
   readonly workflowRunId: string;
-  readonly stepRunId: string;
-  readonly response: string;
-  readonly skipped?: boolean;
   readonly dispatchBodyBase: Omit<
     AgentRunDispatchBody,
     "prompt" | "capabilityId"
@@ -31,33 +26,18 @@ export const completeOfficialWorkflowHumanStep = async (input: {
     });
   }
 
-  const step = await getWorkflowStepRunById(input.stepRunId);
-  if (
-    step === null ||
-    step.workflowRunId !== run.id ||
-    step.nodeKind !== "human"
-  ) {
+  if (run.status !== "failed") {
     return buildWorkflowRunStepResponse({
       ok: false,
-      message: "Workflow step not found.",
+      workflowRunId: run.id,
+      currentStep: run.currentStepIndex,
+      message: `Only a failed workflow can be retried (status: ${run.status}).`,
     });
   }
 
-  await completeWorkflowStepRun(step.id, {
-    status: input.skipped === true ? "skipped" : "completed",
-    output: { response: input.response.trim() },
-  });
-
-  const stepOutputs = {
-    ...run.stepOutputs,
-    [step.nodeId]: { response: input.response.trim() },
-  };
-
-  const nextIndex = run.currentStepIndex + 1;
   await updateWorkflowRunRecord(run.id, {
     status: "running",
-    currentStepIndex: nextIndex,
-    stepOutputs,
+    errorMessage: null,
   });
 
   return continueOfficialWorkflowRun({
@@ -68,8 +48,12 @@ export const completeOfficialWorkflowHumanStep = async (input: {
     dispatchBodyBase: {
       ...input.dispatchBodyBase,
       capabilityId: run.capabilityId,
+      ...(input.dispatchBodyBase.targetDeviceId === undefined &&
+      run.deviceId !== null
+        ? { targetDeviceId: run.deviceId }
+        : {}),
     },
   });
 };
 
-export default completeOfficialWorkflowHumanStep;
+export default retryOfficialWorkflowRunStep;
