@@ -13,7 +13,7 @@ export interface CapabilityHarnessItemPayload {
   readonly content: string;
 }
 
-interface UseCapabilityHarnessDraftResult {
+export interface UseCapabilityHarnessDraftResult {
   readonly items: readonly HarnessItemDraft[];
   readonly readyItems: readonly CapabilityHarnessItemPayload[];
   readonly addItem: (kind: HarnessItemKind) => void;

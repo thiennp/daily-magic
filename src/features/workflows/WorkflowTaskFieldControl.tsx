@@ -10,6 +10,7 @@ import {
 } from "@/lib/workflows/isValidWorkflowBooleanValue";
 import { WorkflowFieldInputType } from "@/lib/workflows/types/WorkflowFieldInputType.constant";
 import type WorkflowFieldDefinition from "@/lib/workflows/types/WorkflowFieldDefinition.type";
+import WorkflowTaskFieldFileInput from "@/features/workflows/WorkflowTaskFieldFileInput";
 
 interface WorkflowTaskFieldControlProps {
   readonly field: WorkflowFieldDefinition;
@@ -86,6 +87,17 @@ export default function WorkflowTaskFieldControl({
           </option>
         ))}
       </select>
+    );
+  }
+
+  if (field.type === WorkflowFieldInputType.FILE) {
+    return (
+      <WorkflowTaskFieldFileInput
+        field={field}
+        value={value}
+        hasError={hasError}
+        onChange={onChange}
+      />
     );
   }
 

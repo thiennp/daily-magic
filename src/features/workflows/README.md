@@ -19,7 +19,7 @@ Proposed input types + linear graph: [docs/product/workflow-builder-form-and-gra
 
 ## Routes
 
-_None wired in this feature folder._
+_Create workflow trial run opens the home send-task modal with `workflowDraft=1` and a sessionStorage draft._
 
 ## APIs
 

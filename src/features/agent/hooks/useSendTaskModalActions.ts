@@ -1,8 +1,10 @@
 "use client";
 
 import { useCallback } from "react";
+import { useSession } from "next-auth/react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
+import { buildSignInHref } from "@/features/empty-states/buildGuestAuthHrefs";
 import { resolveSendTaskCloseAction } from "@/features/agent/utils/resolveSendTaskPresentation";
 import { resolveSendTaskModalPanelKey } from "@/features/agent/utils/resolveSendTaskModalPanelKey";
 import { clearPersistedAgentLiveTerminalState } from "@/features/agent/utils/agentLiveTerminalLocalStore";
@@ -28,6 +30,7 @@ export const useSendTaskModalActions = (input: {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const { data: session } = useSession();
   const { isSessionActive, setKeepAlive, setPanelKey } = input;
 
   const minimizeSendTaskModal = useCallback(() => {
@@ -62,6 +65,13 @@ export const useSendTaskModalActions = (input: {
       readonly prompt?: string;
       readonly deviceId?: string;
     }) => {
+      const composerHref = buildAgentComposerHref({ ...options, pathname });
+
+      if (!session?.user && options?.libraryCapabilityId) {
+        router.push(buildSignInHref(composerHref), { scroll: false });
+        return;
+      }
+
       setKeepAlive(true);
       clearPersistedAgentLiveTerminalState();
       setPanelKey(
@@ -70,11 +80,11 @@ export const useSendTaskModalActions = (input: {
           capabilityFromUrl: "custom",
         }),
       );
-      router.push(buildAgentComposerHref({ ...options, pathname }), {
+      router.push(composerHref, {
         scroll: false,
       });
     },
-    [pathname, router, setKeepAlive, setPanelKey],
+    [pathname, router, session?.user, setKeepAlive, setPanelKey],
   );
 
   const expandRunningSendTask = useCallback(

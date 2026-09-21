@@ -3,6 +3,7 @@ import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type"
 import type PublishedCapabilityRecord from "@/lib/capabilities/types/PublishedCapabilityRecord.type";
 import type WorkflowFieldDefinition from "@/lib/workflows/types/WorkflowFieldDefinition.type";
 import type OperatorStepDefinition from "@/lib/workflows/types/OperatorStepDefinition.type";
+import type { WorkflowTrialRunEligibility } from "@/lib/dispatch/resolveWorkflowTrialRunEligibility";
 
 export interface UseWsTestTaskComposerResult {
   readonly prompt: string;
@@ -19,6 +20,8 @@ export interface UseWsTestTaskComposerResult {
   readonly hasRememberedMacSelection: boolean;
   readonly isWorkflowTask: boolean;
   readonly isLibraryPlaybook: boolean;
+  readonly isWorkflowCreateDraft: boolean;
+  readonly workflowTrialRunEligibility: WorkflowTrialRunEligibility;
   readonly libraryCapabilityId: string;
   readonly harnessSetSlug: string | null;
   readonly workflowFields: readonly WorkflowFieldDefinition[];
@@ -27,6 +30,7 @@ export interface UseWsTestTaskComposerResult {
   readonly workflowFieldErrors: Readonly<Record<string, string>>;
   readonly operatorSteps: readonly OperatorStepDefinition[];
   readonly resolvedPrompt: string;
+  readonly registerUploadExcerpt: (uploadId: string, excerpt: string) => void;
   readonly isSendDisabled: (
     connectionStatus: string,
     deviceId?: string,
@@ -55,6 +59,7 @@ export interface UseWsTestTaskComposerResult {
   readonly setSelectedDeviceId: (deviceId: string) => void;
   readonly isMacDevicesLoading: boolean;
   readonly hasDispatchReadyMac: boolean;
+  readonly hasCursorCloudConnection: boolean;
   readonly dispatchReadyMacCount: number;
   readonly selectedDeviceCanDispatch: boolean;
   readonly devicesHadLoadError: boolean;

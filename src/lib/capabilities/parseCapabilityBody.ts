@@ -7,7 +7,9 @@ import {
 import { parseCapabilityHarnessItems } from "@/lib/capabilities/parseCapabilityHarnessItems";
 import type { ParsedCapabilityHarnessItem } from "@/lib/capabilities/parseCapabilityHarnessItems";
 import { parseWorkflowFieldDefinitions } from "@/lib/workflows/parseWorkflowFieldDefinitions";
+import { parseWorkflowOutputFieldDefinitions } from "@/lib/workflows/parseWorkflowOutputFieldDefinitions";
 import type WorkflowFieldDefinition from "@/lib/workflows/types/WorkflowFieldDefinition.type";
+import type WorkflowOutputFieldDefinition from "@/lib/workflows/types/WorkflowOutputFieldDefinition.type";
 
 export interface ParsedCapabilityBody {
   readonly name: string;
@@ -17,6 +19,7 @@ export interface ParsedCapabilityBody {
   readonly groupId?: string | null;
   readonly type: typeof CapabilityType.AGENT | typeof CapabilityType.WORKFLOW;
   readonly workflowFields: readonly WorkflowFieldDefinition[];
+  readonly workflowOutputFields: readonly WorkflowOutputFieldDefinition[];
   readonly harnessItems: readonly ParsedCapabilityHarnessItem[];
 }
 
@@ -47,6 +50,11 @@ export function parseCreateCapabilityBody(
       ? parseWorkflowFieldDefinitions(record.workflowFields)
       : [];
 
+  const workflowOutputFields =
+    type === CapabilityType.WORKFLOW
+      ? parseWorkflowOutputFieldDefinitions(record.workflowOutputFields)
+      : [];
+
   if (type === CapabilityType.WORKFLOW && workflowFields.length === 0) {
     return undefined;
   }
@@ -70,6 +78,7 @@ export function parseCreateCapabilityBody(
         : null,
     type,
     workflowFields,
+    workflowOutputFields,
     harnessItems,
   };
 }

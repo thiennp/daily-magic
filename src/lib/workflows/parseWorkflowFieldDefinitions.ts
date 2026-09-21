@@ -2,6 +2,7 @@ import { isNonNullObject, isString } from "guardz";
 
 import { isWorkflowFieldInputType } from "@/lib/workflows/isWorkflowFieldInputType";
 import { parseWorkflowFieldSelectOptions } from "@/lib/workflows/parseWorkflowFieldSelectOptions";
+import { parseWorkflowFieldAccept } from "@/lib/workflows/parseWorkflowFieldAccept";
 import { WorkflowFieldInputType } from "@/lib/workflows/types/WorkflowFieldInputType.constant";
 import type WorkflowFieldDefinition from "@/lib/workflows/types/WorkflowFieldDefinition.type";
 
@@ -23,6 +24,7 @@ export function parseWorkflowFieldDefinitions(
       ? entry.type
       : WorkflowFieldInputType.TEXT;
     const options = parseWorkflowFieldSelectOptions(entry.options);
+    const accept = parseWorkflowFieldAccept(entry.accept);
 
     if (key.length === 0 || label.length === 0) {
       return [];
@@ -37,6 +39,11 @@ export function parseWorkflowFieldDefinitions(
         ...(type === WorkflowFieldInputType.SELECT && options.length > 0
           ? { options }
           : {}),
+        ...(type === WorkflowFieldInputType.FILE && accept.length > 0
+          ? { accept }
+          : type === WorkflowFieldInputType.FILE
+            ? { accept: ["pdf", "image"] as const }
+            : {}),
       },
     ];
   });

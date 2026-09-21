@@ -12,3 +12,5 @@ export const SEND_TASK_RESUME_LIVE_SESSION_QUERY_PARAM = "resumeLive";
 export const SEND_TASK_RESUME_LIVE_SESSION_QUERY_VALUE = "1";
 export const SEND_TASK_SOURCE_RUN_ID_QUERY_PARAM = "sourceRunId";
 export const SEND_TASK_WRITER_AGENT_QUERY_PARAM = "writerAgent";
+export const SEND_TASK_WORKFLOW_DRAFT_QUERY_PARAM = "workflowDraft";
+export const SEND_TASK_WORKFLOW_DRAFT_QUERY_VALUE = "1";

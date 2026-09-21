@@ -10,4 +10,6 @@ export default interface LibraryPlaybookTemplate {
   readonly workflowFields: readonly WorkflowFieldDefinition[];
   readonly operatorSteps: readonly OperatorStepDefinition[];
   readonly harnessSetSlug: string | null;
+  /** Populated for unpublished create-flow trials only. */
+  readonly initialWorkflowFieldValues?: Readonly<Record<string, string>>;
 }

@@ -34,18 +34,20 @@ Open the top `sourcePath` under `docs/qa/` when present.
 
 ## Catalog
 
-| File                                                                                     | Topic                                                                        |
-| ---------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
-| [awc-how-browser-knows-this-computer.md](awc-how-browser-knows-this-computer.md)         | AWC “This computer” / “this Mac” vs cloud device list                        |
-| [awb-localhost-identity-and-cors.md](awb-localhost-identity-and-cors.md)                 | AWB `/identity`, CORS, AWI config vs AWL                                     |
-| [delegate-local-cli-conversation-context.md](delegate-local-cli-conversation-context.md) | Local CLI (Cursor, etc.) follow-up context / `--continue`                    |
-| [writer-dispatch-cascade-routing.md](writer-dispatch-cascade-routing.md)                 | Mac dispatch route: continuation vs memory/RAG budget                        |
-| [awc-project-folder-path-picker.md](awc-project-folder-path-picker.md)                   | AWC cannot pick Mac folders; use AWL / AWB `select-folder`                   |
-| [awc-awl-projects-source-of-truth.md](awc-awl-projects-source-of-truth.md)               | AWC DB owns project metadata; AWL loads cloud; `.agent-witch/` is repo-local |
-| [awi-update-local-launchagent-plist.md](awi-update-local-launchagent-plist.md)           | Update local invalid LaunchAgent plist / Mac reconnecting (AGENT-067)        |
-| [awc-mac-reconnecting-vs-local-live.md](awc-mac-reconnecting-vs-local-live.md)           | AWC “reconnecting / checks in” vs local AWI/AWB being up                     |
-| [awl-loopback-origin.md](awl-loopback-origin.md)                                         | AWL is only `http://127.0.0.1:43347` (no vanity hostname)                    |
-| [workflow-builder-field-types.md](workflow-builder-field-types.md)                       | Create workflow questions: Answer length vs input types; no user graph       |
+| File                                                                                       | Topic                                                                        |
+| ------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------- |
+| [awc-how-browser-knows-this-computer.md](awc-how-browser-knows-this-computer.md)           | AWC “This computer” / “this Mac” vs cloud device list                        |
+| [awb-localhost-identity-and-cors.md](awb-localhost-identity-and-cors.md)                   | AWB `/identity`, CORS, AWI config vs AWL                                     |
+| [delegate-local-cli-conversation-context.md](delegate-local-cli-conversation-context.md)   | Local CLI (Cursor, etc.) follow-up context / `--continue`                    |
+| [writer-dispatch-cascade-routing.md](writer-dispatch-cascade-routing.md)                   | Mac dispatch route: continuation vs memory/RAG budget                        |
+| [awc-project-folder-path-picker.md](awc-project-folder-path-picker.md)                     | AWC cannot pick Mac folders; use AWL / AWB `select-folder`                   |
+| [awc-awl-projects-source-of-truth.md](awc-awl-projects-source-of-truth.md)                 | AWC DB owns project metadata; AWL loads cloud; `.agent-witch/` is repo-local |
+| [awi-update-local-launchagent-plist.md](awi-update-local-launchagent-plist.md)             | Update local invalid LaunchAgent plist / Mac reconnecting (AGENT-067)        |
+| [awc-mac-reconnecting-vs-local-live.md](awc-mac-reconnecting-vs-local-live.md)             | AWC “reconnecting / checks in” vs local AWI/AWB being up                     |
+| [awl-loopback-origin.md](awl-loopback-origin.md)                                           | AWL is only `http://127.0.0.1:43347` (no vanity hostname)                    |
+| [workflow-builder-field-types.md](workflow-builder-field-types.md)                         | Create workflow questions: Answer length vs input types; no user graph       |
+| [workflow-file-upload-and-semantic-output.md](workflow-file-upload-and-semantic-output.md) | PDF/image workflow fields; artifact markers; Summary tab                     |
+| [guest-library-browser-drafts.md](guest-library-browser-drafts.md)                         | Guest `/library` drafts in browser + latest-wins sync on sign-in             |
 
 Add a row here when you add a Q&A file.
 

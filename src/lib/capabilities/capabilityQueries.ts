@@ -3,6 +3,7 @@ import { CapabilityStatus } from "@/lib/capabilities/CapabilityStatus.constant";
 import { isCapabilityType } from "@/lib/capabilities/CapabilityType.constant";
 import { isCapabilityVisibility } from "@/lib/capabilities/CapabilityVisibility.constant";
 import { parseWorkflowFieldDefinitions } from "@/lib/workflows/parseWorkflowFieldDefinitions";
+import { parseWorkflowOutputFieldDefinitions } from "@/lib/workflows/parseWorkflowOutputFieldDefinitions";
 import { parseOperatorStepDefinitions } from "@/lib/workflows/parseOperatorStepDefinitions";
 import type PublishedCapabilityRecord from "@/lib/capabilities/types/PublishedCapabilityRecord.type";
 import type { PublishedCapabilitySummary } from "@/lib/capabilities/types/PublishedCapabilityRecord.type";
@@ -68,6 +69,7 @@ export async function listPublishedSummariesForOwners(
         example_request,
         visibility,
         workflow_fields,
+        workflow_output_fields,
         operator_steps
       FROM published_capabilities
       WHERE owner_user_id = ANY(${ownerUserIds})
@@ -92,6 +94,9 @@ export async function listPublishedSummariesForOwners(
         ? rawVisibility
         : "group",
       workflowFields: parseWorkflowFieldDefinitions(row.workflow_fields),
+      workflowOutputFields: parseWorkflowOutputFieldDefinitions(
+        row.workflow_output_fields,
+      ),
       operatorSteps: parseOperatorStepDefinitions(row.operator_steps),
     };
   });

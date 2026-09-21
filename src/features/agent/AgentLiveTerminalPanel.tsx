@@ -1,47 +1,19 @@
 "use client";
 
-import { useState } from "react";
-
 import AgentLiveTerminalPanelProgressFeed from "@/features/agent/AgentLiveTerminalPanelProgressFeed";
 import AgentLiveTerminalFeedbackChat from "@/features/agent/AgentLiveTerminalFeedbackChat";
-import AgentLiveTerminalMirrorToggle from "@/features/agent/AgentLiveTerminalMirrorToggle";
+import AgentLiveTerminalPanelSteppedOutput from "@/features/agent/AgentLiveTerminalPanelSteppedOutput";
 import AgentLiveTerminalNextActions from "@/features/agent/AgentLiveTerminalNextActions";
 import { useAgentLiveTerminalPanelProgress } from "@/features/agent/hooks/useAgentLiveTerminalPanelProgress";
-import type { AgentMacShellPanelProps } from "@/features/agent/types/AgentMacShellPanelProps.type";
-import type { AgentLiveTerminalStatus } from "@/features/agent/utils/agentLiveTerminalState.type";
+import type AgentLiveTerminalPanelProps from "@/features/agent/types/AgentLiveTerminalPanelProps.type";
 import { buildAgentLiveTerminalPanelMirror } from "@/features/agent/utils/buildAgentLiveTerminalPanelMirror";
-import type { AgentLiveTerminalFeedbackPreferredMode } from "@/features/agent/utils/resolveAgentLiveTerminalFeedbackAction";
 import { parseLatestAgentLiveTerminalNextActions } from "@/features/agent/utils/splitAgentLiveTerminalOutput";
-
-interface AgentLiveTerminalPanelProps extends AgentMacShellPanelProps {
-  readonly output: string;
-  readonly status: AgentLiveTerminalStatus;
-  readonly activeRunId?: string | null;
-  readonly sessionDeviceId?: string | null;
-  readonly pendingCommandLine?: string | null;
-  readonly feedbackVisible: boolean;
-  readonly feedbackPendingQuestion: string | null;
-  readonly feedbackPendingPartialOutput?: string | null;
-  readonly feedbackQueuedCount: number;
-  readonly feedbackQueueNotice: string | null;
-  readonly isFeedbackSubmitting: boolean;
-  readonly feedbackAutoFocus?: boolean;
-  readonly isSteppedComposer?: boolean;
-  readonly onSubmitFeedback: (
-    message: string,
-    preferredMode?: AgentLiveTerminalFeedbackPreferredMode,
-  ) => void;
-  readonly onFinishSession: () => void;
-  readonly onStopRun: () => void;
-  readonly onDeleteRun: () => void;
-}
 
 export default function AgentLiveTerminalPanel(
   props: AgentLiveTerminalPanelProps,
 ) {
   const pendingCommandLine = props.pendingCommandLine ?? null;
   const isSteppedComposer = props.isSteppedComposer === true;
-  const [isTerminalOpen, setIsTerminalOpen] = useState(false);
   const nextActions = parseLatestAgentLiveTerminalNextActions(props.output);
   const showNextActions =
     nextActions.length > 0 && props.feedbackPendingQuestion === null;
@@ -54,7 +26,7 @@ export default function AgentLiveTerminalPanel(
     feedbackPendingPartialOutput: props.feedbackPendingPartialOutput,
   });
   const terminalBody = buildAgentLiveTerminalPanelMirror({
-    show: !isSteppedComposer || isTerminalOpen,
+    show: !isSteppedComposer,
     output: props.output,
     status: props.status,
     pendingCommandLine,
@@ -102,13 +74,10 @@ export default function AgentLiveTerminalPanel(
         onStopRun={props.onStopRun}
       />
       {isSteppedComposer ? (
-        <>
-          <AgentLiveTerminalMirrorToggle
-            isOpen={isTerminalOpen}
-            onToggle={() => setIsTerminalOpen((open) => !open)}
-          />
-          {terminalBody}
-        </>
+        <AgentLiveTerminalPanelSteppedOutput
+          pendingCommandLine={pendingCommandLine}
+          {...props}
+        />
       ) : null}
     </section>
   );

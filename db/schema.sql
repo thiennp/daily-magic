@@ -207,6 +207,7 @@ CREATE TABLE IF NOT EXISTS published_capabilities (
   ),
   current_version_id TEXT,
   workflow_fields JSONB NOT NULL DEFAULT '[]'::jsonb,
+  workflow_output_fields JSONB NOT NULL DEFAULT '[]'::jsonb,
   operator_steps JSONB NOT NULL DEFAULT '[]'::jsonb,
   forked_from_capability_id TEXT
     REFERENCES published_capabilities(id) ON DELETE SET NULL,
@@ -650,6 +651,24 @@ CREATE TABLE IF NOT EXISTS cursor_cloud_connections (
   connected_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
+
+CREATE TABLE IF NOT EXISTS workflow_field_uploads (
+  id TEXT PRIMARY KEY DEFAULT gen_random_uuid()::text,
+  owner_user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  sha256 TEXT NOT NULL,
+  mime_type TEXT NOT NULL,
+  file_name TEXT NOT NULL,
+  byte_size INTEGER NOT NULL CHECK (byte_size >= 0),
+  extracted_text TEXT NOT NULL DEFAULT '',
+  storage_path TEXT NOT NULL,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS workflow_field_uploads_owner_idx
+  ON workflow_field_uploads (owner_user_id, created_at DESC);
+
+CREATE UNIQUE INDEX IF NOT EXISTS workflow_field_uploads_owner_sha256_idx
+  ON workflow_field_uploads (owner_user_id, sha256);
 
 CREATE TABLE IF NOT EXISTS schema_migrations (
   filename TEXT PRIMARY KEY,

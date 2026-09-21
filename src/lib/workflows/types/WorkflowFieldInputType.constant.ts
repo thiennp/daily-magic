@@ -9,6 +9,7 @@ export const WorkflowFieldInputType = {
   BOOLEAN: "boolean",
   SELECT: "select",
   PROJECT: "project",
+  FILE: "file",
 } as const;
 
 export type WorkflowFieldInputTypeValue =
@@ -24,6 +25,7 @@ export const WORKFLOW_FIELD_INPUT_TYPE_VALUES = [
   WorkflowFieldInputType.DATE,
   WorkflowFieldInputType.BOOLEAN,
   WorkflowFieldInputType.SELECT,
+  WorkflowFieldInputType.FILE,
   WorkflowFieldInputType.PROJECT,
 ] as const;
 
@@ -37,6 +39,7 @@ export const AUTHORABLE_WORKFLOW_FIELD_INPUT_TYPES = [
   WorkflowFieldInputType.DATE,
   WorkflowFieldInputType.BOOLEAN,
   WorkflowFieldInputType.SELECT,
+  WorkflowFieldInputType.FILE,
 ] as const;
 
 export type AuthorableWorkflowFieldInputType =

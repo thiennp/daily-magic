@@ -1,9 +1,12 @@
 "use client";
 
+import { useMemo } from "react";
 import { useRouter } from "next/navigation";
 
 import AgentLiveTerminalNextActions from "@/features/agent/AgentLiveTerminalNextActions";
 import AgentRunContinueMessageField from "@/features/reports/AgentRunContinueMessageField";
+import AgentRunSemanticOutputView from "@/features/dispatch/AgentRunSemanticOutputView";
+import { formatAgentRunSemanticOutput } from "@/features/dispatch/utils/formatAgentRunSemanticOutput";
 import { buildAgentRunContinueHref } from "@/features/reports/utils/buildAgentRunContinueHref";
 import { canContinueAgentRunOnStoredMac } from "@/features/reports/utils/canContinueAgentRunOnStoredMac";
 import { splitAgentRunResultForDisplay } from "@/features/reports/utils/splitAgentRunResultForDisplay";
@@ -23,6 +26,7 @@ export default function AgentRunResultOutput({
 }: AgentRunResultOutputProps) {
   const router = useRouter();
   const { body, nextActions } = splitAgentRunResultForDisplay(resultOutput);
+  const semantic = useMemo(() => formatAgentRunSemanticOutput(body), [body]);
   const canContinue = canContinueAgentRunOnStoredMac(run.deviceId);
 
   const continueWithPrompt = (prompt: string) => {
@@ -38,11 +42,7 @@ export default function AgentRunResultOutput({
       <h2 className="mt-6 text-sm font-medium text-gray-800 dark:text-white/90">
         Result
       </h2>
-      {body.length > 0 ? (
-        <pre className="mt-2 max-h-96 overflow-auto rounded-lg bg-gray-50 p-3 text-xs text-gray-700 dark:bg-gray-800 dark:text-gray-300">
-          {body}
-        </pre>
-      ) : null}
+      <AgentRunSemanticOutputView formatted={semantic} fallbackPlain={body} />
       <div className="mt-3 rounded-lg border border-gray-200 bg-gray-50 p-3 dark:border-gray-800 dark:bg-gray-900/50">
         {canContinue ? (
           <>

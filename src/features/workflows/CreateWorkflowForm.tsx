@@ -1,27 +1,35 @@
 "use client";
 
-import Button from "@/components/ui/button/Button";
-import CapabilityHarnessItemsEditor from "@/features/capabilities/CapabilityHarnessItemsEditor";
 import PlaybookBasicsFields from "@/features/capabilities/PlaybookBasicsFields";
-import { PLAYBOOK_HARNESS_SECTION } from "@/features/capabilities/playbookBuilderCopy.constant";
+import {
+  type CreatePlaybookPayload,
+  type CreatePlaybookResult,
+} from "@/features/capabilities/submitCreatePlaybook";
+import CreateWorkflowFormCollapsiblePanels from "@/features/workflows/CreateWorkflowFormCollapsiblePanels";
+import CreateWorkflowFormSubmitFooter from "@/features/workflows/CreateWorkflowFormSubmitFooter";
+import CreateWorkflowTrialRunSection from "@/features/workflows/CreateWorkflowTrialRunSection";
 import { createDraftWorkflowField } from "@/features/workflows/createDraftWorkflowField";
-import { filterHarnessItemsByKinds } from "@/features/workflows/filterHarnessItemsByKinds";
 import { useCreateWorkflowForm } from "@/features/workflows/hooks/useCreateWorkflowForm";
 import WorkflowBuilderCollapsibleSection from "@/features/workflows/WorkflowBuilderCollapsibleSection";
 import WorkflowBuilderFlowTree from "@/features/workflows/WorkflowBuilderFlowTree";
 import { WORKFLOW_BUILDER_ABOUT_SECTION } from "@/features/workflows/workflowBuilderCopy.constant";
-import { WORKFLOW_EXTRA_RULE_HARNESS_KINDS } from "@/features/workflows/workflowHarnessKindGroups.constant";
 
 interface CreateWorkflowFormProps {
   readonly onCreated: () => void;
   readonly onCancel: () => void;
+  readonly submitPlaybook?: (
+    payload: CreatePlaybookPayload,
+  ) => Promise<CreatePlaybookResult>;
+  readonly submitLabel?: string;
 }
 
 export default function CreateWorkflowForm({
   onCreated,
   onCancel,
+  submitPlaybook,
+  submitLabel = "Publish workflow",
 }: CreateWorkflowFormProps) {
-  const form = useCreateWorkflowForm({ onCreated, onCancel });
+  const form = useCreateWorkflowForm({ onCreated, onCancel, submitPlaybook });
 
   return (
     <div className="mt-6 space-y-4">
@@ -64,46 +72,27 @@ export default function CreateWorkflowForm({
         onHarnessChange={form.harness.updateItem}
       />
 
-      <WorkflowBuilderCollapsibleSection
-        title={PLAYBOOK_HARNESS_SECTION.title}
-        description={PLAYBOOK_HARNESS_SECTION.description}
-        defaultExpanded={false}
-      >
-        <CapabilityHarnessItemsEditor
-          kinds={WORKFLOW_EXTRA_RULE_HARNESS_KINDS}
-          items={filterHarnessItemsByKinds(
-            form.harness.items,
-            WORKFLOW_EXTRA_RULE_HARNESS_KINDS,
-          )}
-          onAdd={form.harness.addItem}
-          onRemove={form.harness.removeItem}
-          onChange={form.harness.updateItem}
-          title={PLAYBOOK_HARNESS_SECTION.title}
-          description={PLAYBOOK_HARNESS_SECTION.description}
-        />
-      </WorkflowBuilderCollapsibleSection>
+      <CreateWorkflowFormCollapsiblePanels
+        outputFields={form.outputFields}
+        onOutputFieldsChange={form.setOutputFields}
+        harness={form.harness}
+      />
 
-      {form.error ? (
-        <p className="text-sm text-error-600 dark:text-error-400">
-          {form.error}
-        </p>
-      ) : null}
-      {form.notice ? (
-        <p className="text-sm text-amber-700 dark:text-amber-300">
-          {form.notice}
-        </p>
-      ) : null}
-      <div className="flex flex-wrap gap-2">
-        <Button
-          disabled={form.isSubmitting}
-          onClick={() => void form.handleSubmit()}
-        >
-          {form.isSubmitting ? "Publishing…" : "Publish workflow"}
-        </Button>
-        <Button variant="outline" onClick={onCancel}>
-          Cancel
-        </Button>
-      </div>
+      <CreateWorkflowTrialRunSection
+        name={form.name}
+        exampleRequest={form.exampleRequest}
+        draftFields={form.fields}
+        harnessReadyItems={form.harness.readyItems}
+      />
+
+      <CreateWorkflowFormSubmitFooter
+        error={form.error}
+        notice={form.notice}
+        isSubmitting={form.isSubmitting}
+        submitLabel={submitLabel}
+        onSubmit={() => void form.handleSubmit()}
+        onCancel={onCancel}
+      />
     </div>
   );
 }

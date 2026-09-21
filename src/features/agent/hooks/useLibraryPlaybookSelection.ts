@@ -3,7 +3,12 @@
 import { useSearchParams } from "next/navigation";
 import { useMemo, useState } from "react";
 
+import {
+  SEND_TASK_WORKFLOW_DRAFT_QUERY_PARAM,
+  SEND_TASK_WORKFLOW_DRAFT_QUERY_VALUE,
+} from "@/features/agent/constants/sendTaskModalQuery.constant";
 import { useLibraryCapabilities } from "@/features/library/hooks/useLibraryCapabilities";
+import { readWorkflowCreateDraftPlaybook } from "@/features/workflows/readWorkflowCreateDraftPlaybook";
 import { CapabilityStatus } from "@/lib/capabilities/CapabilityStatus.constant";
 import type PublishedCapabilityRecord from "@/lib/capabilities/types/PublishedCapabilityRecord.type";
 import mapPublishedCapabilityToPlaybookTemplate from "@/lib/library/mapPublishedCapabilityToPlaybookTemplate";
@@ -17,10 +22,14 @@ export function useLibraryPlaybookSelection(): {
   readonly removeLibraryCapability: (capabilityId: string) => void;
   readonly rerunPrompt: string;
   readonly isLoading: boolean;
+  readonly isWorkflowCreateDraft: boolean;
 } {
   const searchParams = useSearchParams();
   const urlCapabilityId = searchParams.get("libraryCapabilityId") ?? "";
   const rerunPrompt = searchParams.get("prompt") ?? "";
+  const isWorkflowCreateDraft =
+    searchParams.get(SEND_TASK_WORKFLOW_DRAFT_QUERY_PARAM) ===
+    SEND_TASK_WORKFLOW_DRAFT_QUERY_VALUE;
   const { capabilities, isLoading, removeCapability } =
     useLibraryCapabilities();
   const [manualId, setManualId] = useState<string | null>(null);
@@ -34,7 +43,16 @@ export function useLibraryPlaybookSelection(): {
     [capabilities],
   );
 
+  const draftPlaybook = useMemo(
+    () => (isWorkflowCreateDraft ? readWorkflowCreateDraftPlaybook() : null),
+    [isWorkflowCreateDraft],
+  );
+
   const libraryPlaybook = useMemo(() => {
+    if (draftPlaybook !== null) {
+      return draftPlaybook;
+    }
+
     if (selectedId.length === 0) {
       return null;
     }
@@ -44,7 +62,7 @@ export function useLibraryPlaybookSelection(): {
     );
 
     return match ? mapPublishedCapabilityToPlaybookTemplate(match) : null;
-  }, [libraryCapabilities, selectedId]);
+  }, [draftPlaybook, libraryCapabilities, selectedId]);
 
   return {
     libraryPlaybook,
@@ -54,5 +72,6 @@ export function useLibraryPlaybookSelection(): {
     removeLibraryCapability: removeCapability,
     rerunPrompt,
     isLoading,
+    isWorkflowCreateDraft: isWorkflowCreateDraft && draftPlaybook !== null,
   };
 }

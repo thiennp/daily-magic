@@ -4,15 +4,24 @@ import CapabilityTemplateCard from "@/features/capabilities/CapabilityTemplateCa
 import CapabilityTemplateShowAllButton from "@/features/capabilities/CapabilityTemplateShowAllButton";
 import CapabilityTemplateTabBar from "@/features/capabilities/CapabilityTemplateTabBar";
 import { useCapabilityTemplatePicker } from "@/features/capabilities/hooks/useCapabilityTemplatePicker";
+import type SaveCapabilityTemplateOutcome from "@/features/capabilities/types/SaveCapabilityTemplateOutcome.type";
 
 interface CapabilityTemplatePickerProps {
   readonly onSaved?: () => void;
+  readonly saveTemplate?: (
+    templateId: string,
+  ) => Promise<SaveCapabilityTemplateOutcome>;
+  readonly saveButtonLabel?: string;
+  readonly savedButtonLabel?: string;
 }
 
 export default function CapabilityTemplatePicker({
   onSaved,
+  saveTemplate,
+  saveButtonLabel = "Save",
+  savedButtonLabel = "Saved",
 }: CapabilityTemplatePickerProps) {
-  const picker = useCapabilityTemplatePicker({ onSaved });
+  const picker = useCapabilityTemplatePicker({ onSaved, saveTemplate });
 
   if (picker.isLoading) {
     return (
@@ -44,6 +53,8 @@ export default function CapabilityTemplatePicker({
             isSaving={picker.savingTemplateId === template.id}
             savedTemplateId={picker.savedTemplateId}
             harnessMessage={picker.harnessMessage}
+            saveButtonLabel={saveButtonLabel}
+            savedButtonLabel={savedButtonLabel}
             onSelect={picker.setSelectedTemplateId}
             onSave={(templateId) => {
               void picker.handleSave(templateId);

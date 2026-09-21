@@ -18,6 +18,21 @@ export const buildSignInHrefFromSearchParams = (
 ): string =>
   buildSignInHref(resolvePostAuthReturnFromSearchParams(searchParams));
 
+/** Preserve the current app route (e.g. `/library?sendTask=1`) after sign-in. */
+export const buildSignInHrefFromPathAndSearchParams = (
+  pathname: string,
+  searchParams: URLSearchParams,
+): string => {
+  const query = searchParams.toString();
+  const callbackPath = query.length > 0 ? `${pathname}?${query}` : pathname;
+
+  if (!callbackPath.startsWith("/") || callbackPath.startsWith("//")) {
+    return buildSignInHref("/");
+  }
+
+  return buildSignInHref(callbackPath);
+};
+
 /** Hero `#get-started` on `/` — carries capabilityId / sendTask in the query when present. */
 export const buildMarketingGetStartedHref = (
   searchParams: URLSearchParams,

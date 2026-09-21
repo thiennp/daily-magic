@@ -3,17 +3,25 @@
 import { useState } from "react";
 
 import { useCapabilityHarnessDraft } from "@/features/capabilities/hooks/useCapabilityHarnessDraft";
-import { submitCreatePlaybook } from "@/features/capabilities/submitCreatePlaybook";
+import {
+  submitCreatePlaybook,
+  type CreatePlaybookResult,
+} from "@/features/capabilities/submitCreatePlaybook";
+import type CreateGuestPlaybookPayload from "@/lib/library/guest/types/CreateGuestPlaybookPayload.type";
 import { CapabilityType } from "@/lib/capabilities/CapabilityType.constant";
 
 interface UseCreateAgentFormOptions {
   readonly onCreated: () => void;
   readonly onCancel: () => void;
+  readonly submitPlaybook?: (
+    payload: CreateGuestPlaybookPayload,
+  ) => Promise<CreatePlaybookResult>;
 }
 
 export function useCreateAgentForm({
   onCreated,
   onCancel,
+  submitPlaybook = submitCreatePlaybook,
 }: UseCreateAgentFormOptions) {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -38,7 +46,7 @@ export function useCreateAgentForm({
     }
 
     setIsSubmitting(true);
-    const result = await submitCreatePlaybook({
+    const result = await submitPlaybook({
       type: CapabilityType.AGENT,
       name: trimmedName,
       description: description.trim(),

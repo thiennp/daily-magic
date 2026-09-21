@@ -32,6 +32,7 @@ const publishCapabilityWithHarness = async (
     groupId: parsed.groupId,
     type: parsed.type,
     workflowFields: parsed.workflowFields,
+    workflowOutputFields: parsed.workflowOutputFields,
     operatorSteps,
     harnessSetSlug,
   });

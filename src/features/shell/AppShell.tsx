@@ -5,6 +5,7 @@ import AppShellHeader from "@/features/shell/AppShellHeader";
 import { APP_SHELL_WIDE_CONTENT_CLASS } from "@/features/shell/appShellContentWidth.constant";
 import DispatchApprovalListener from "@/features/dispatch/DispatchApprovalListener";
 import WorkflowHumanStepListener from "@/features/dispatch/WorkflowHumanStepListener";
+import GuestLibraryDraftSyncListener from "@/features/library/GuestLibraryDraftSyncListener";
 
 interface AppShellProps {
   readonly children: React.ReactNode;
@@ -25,6 +26,7 @@ export default function AppShell({
       <AppShellHeader />
       <DispatchApprovalListener />
       <WorkflowHumanStepListener />
+      <GuestLibraryDraftSyncListener />
       {sidebar ? (
         <div className="mx-auto grid max-w-[1600px] gap-6 px-4 py-6 pb-24 lg:grid-cols-[240px_1fr] lg:px-6 md:pb-6">
           {sidebar}

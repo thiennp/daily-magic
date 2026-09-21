@@ -5,16 +5,26 @@ import { useState } from "react";
 import Button from "@/components/ui/button/Button";
 import AppPanel from "@/components/surfaces/AppPanel";
 import CreateAgentForm from "@/features/capabilities/CreateAgentForm";
+import { type CreatePlaybookResult } from "@/features/capabilities/submitCreatePlaybook";
 import CreateWorkflowForm from "@/features/workflows/CreateWorkflowForm";
+import type CreateGuestPlaybookPayload from "@/lib/library/guest/types/CreateGuestPlaybookPayload.type";
 
 type PlaybookTab = "workflow" | "agent";
 
 interface CreatePlaybookPanelProps {
   readonly onCreated: () => void;
+  readonly submitPlaybook?: (
+    payload: CreateGuestPlaybookPayload,
+  ) => Promise<CreatePlaybookResult>;
+  readonly workflowSubmitLabel?: string;
+  readonly agentSubmitLabel?: string;
 }
 
 export default function CreatePlaybookPanel({
   onCreated,
+  submitPlaybook,
+  workflowSubmitLabel,
+  agentSubmitLabel,
 }: CreatePlaybookPanelProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<PlaybookTab>("workflow");
@@ -73,6 +83,8 @@ export default function CreatePlaybookPanel({
           {activeTab === "workflow" ? (
             <CreateWorkflowForm
               onCreated={onCreated}
+              submitPlaybook={submitPlaybook}
+              submitLabel={workflowSubmitLabel}
               onCancel={() => {
                 setIsOpen(false);
               }}
@@ -80,6 +92,8 @@ export default function CreatePlaybookPanel({
           ) : (
             <CreateAgentForm
               onCreated={onCreated}
+              submitPlaybook={submitPlaybook}
+              submitLabel={agentSubmitLabel}
               onCancel={() => {
                 setIsOpen(false);
               }}

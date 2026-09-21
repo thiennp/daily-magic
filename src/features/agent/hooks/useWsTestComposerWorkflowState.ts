@@ -2,13 +2,15 @@
 
 import { useMemo, useState, type Dispatch, type SetStateAction } from "react";
 
+import { useWorkflowUploadExcerptState } from "@/features/agent/hooks/useWorkflowUploadExcerptState";
+
 import type { DispatchTargetCapability } from "@/features/dispatch/hooks/useDispatchTargets";
 import { useComposerResolvedPrompt } from "@/features/agent/hooks/useComposerResolvedPrompt";
 import { useEffectiveWorkflowFieldValues } from "@/features/agent/hooks/useEffectiveWorkflowFieldValues";
 import { resolveComposerPlaybookContext } from "@/features/agent/utils/resolveComposerPlaybookContext";
 import type OperatorStepDefinition from "@/lib/workflows/types/OperatorStepDefinition.type";
 import type LibraryPlaybookTemplate from "@/lib/library/types/LibraryPlaybookTemplate.type";
-import { CapabilityType } from "@/lib/capabilities/CapabilityType.constant";
+import { resolveComposerInitialPrompt } from "@/features/agent/utils/resolveComposerInitialPrompt";
 import type WorkflowFieldDefinition from "@/lib/workflows/types/WorkflowFieldDefinition.type";
 import { filterNonProjectWorkflowFields } from "@/lib/workflows/workflowProjectFields";
 
@@ -34,17 +36,19 @@ export function useWsTestComposerWorkflowState(
   readonly isLibraryPlaybook: boolean;
   readonly libraryCapabilityId: string;
   readonly harnessSetSlug: string | null;
+  readonly uploadExcerptById: Readonly<Record<string, string>>;
+  readonly registerUploadExcerpt: (uploadId: string, excerpt: string) => void;
 } {
-  const initialPrompt =
-    rerunPrompt.length > 0
-      ? rerunPrompt
-      : libraryPlaybook?.type === CapabilityType.AGENT
-        ? libraryPlaybook.exampleRequest
-        : "";
+  const initialPrompt = resolveComposerInitialPrompt(
+    rerunPrompt,
+    libraryPlaybook,
+  );
   const [prompt, setPrompt] = useState(initialPrompt);
   const [workflowFieldValues, setWorkflowFieldValues] = useState<
     Record<string, string>
-  >({});
+  >(() => ({ ...(libraryPlaybook?.initialWorkflowFieldValues ?? {}) }));
+  const { uploadExcerptById, registerUploadExcerpt } =
+    useWorkflowUploadExcerptState();
   const isLibraryPlaybook = libraryPlaybook !== null;
   const { playbookName, isWorkflowTask } = resolveComposerPlaybookContext(
     selectedCapability,
@@ -79,6 +83,7 @@ export function useWsTestComposerWorkflowState(
       effectiveWorkflowFieldValues,
       prompt,
       operatorSteps,
+      uploadExcerptById,
     });
 
   return {
@@ -96,5 +101,7 @@ export function useWsTestComposerWorkflowState(
     isLibraryPlaybook,
     libraryCapabilityId: libraryPlaybook?.id ?? "",
     harnessSetSlug: libraryPlaybook?.harnessSetSlug ?? null,
+    uploadExcerptById,
+    registerUploadExcerpt,
   };
 }
