@@ -1,6 +1,11 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { runMarketplacePlanEstimateHeadlessWriter } from "./runMarketplacePlanEstimateHeadlessWriter";
+import {
+  MARKETPLACE_PLAN_ESTIMATE_LOG_FAIL_PREFIX,
+  MARKETPLACE_PLAN_ESTIMATE_LOG_PASS_PREFIX,
+  MARKETPLACE_PLAN_ESTIMATE_MISSING_ANTHROPIC_WRITER_API_KEY,
+} from "@/lib/marketplace/runRecipe/marketplacePlanEstimateReasonCode.constant";
 
 vi.mock("./callWriterApi", () => ({
   callWriterApi: vi.fn(),
@@ -28,6 +33,8 @@ describe("runMarketplacePlanEstimateHeadlessWriter", () => {
     vi.mocked(callWriterApi).mockReset();
     vi.mocked(readWriterApiProviderSecret).mockReset();
     vi.mocked(runHeadlessWriter).mockReset();
+    vi.spyOn(console, "log").mockImplementation(() => {});
+    vi.spyOn(console, "error").mockImplementation(() => {});
   });
 
   it("calls Anthropic Writer API with catalog model override when key exists", async () => {
@@ -55,17 +62,14 @@ describe("runMarketplacePlanEstimateHeadlessWriter", () => {
     );
     expect(runHeadlessWriter).not.toHaveBeenCalled();
     expect(result.exitCode).toBe(0);
-    expect(result.output).toContain("plan output");
     expect(result.execution.backend).toBe("anthropic-writer-api");
-    expect(result.execution.modelOverride).toBe("claude-3-5-haiku-20241022");
+    expect(console.log).toHaveBeenCalledWith(
+      `${MARKETPLACE_PLAN_ESTIMATE_LOG_PASS_PREFIX}claude-3-5-haiku-20241022`,
+    );
   });
 
-  it("falls back to CLI headless writer when no Anthropic API key", async () => {
+  it("fails plan/estimate when no Anthropic API key (no claude-cli fallback)", async () => {
     vi.mocked(readWriterApiProviderSecret).mockReturnValue(null);
-    vi.mocked(runHeadlessWriter).mockResolvedValue({
-      exitCode: 0,
-      output: "cli fallback",
-    });
 
     const result = await runMarketplacePlanEstimateHeadlessWriter(
       baseConfig as never,
@@ -75,11 +79,13 @@ describe("runMarketplacePlanEstimateHeadlessWriter", () => {
     );
 
     expect(callWriterApi).not.toHaveBeenCalled();
-    expect(runHeadlessWriter).toHaveBeenCalledWith(
-      baseConfig,
-      "claude-cli",
-      "estimate task",
+    expect(runHeadlessWriter).not.toHaveBeenCalled();
+    expect(result.exitCode).toBe(-1);
+    expect(result.execution.reasonCode).toBe(
+      MARKETPLACE_PLAN_ESTIMATE_MISSING_ANTHROPIC_WRITER_API_KEY,
     );
-    expect(result.execution.backend).toBe("cli-fallback-missing-anthropic-key");
+    expect(console.error).toHaveBeenCalledWith(
+      `${MARKETPLACE_PLAN_ESTIMATE_LOG_FAIL_PREFIX}${MARKETPLACE_PLAN_ESTIMATE_MISSING_ANTHROPIC_WRITER_API_KEY} modelOverride=claude-3-5-haiku-20241022`,
+    );
   });
 });

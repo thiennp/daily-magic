@@ -29,10 +29,17 @@ export const handleTerminalStreamChunkMessageAsync = async (
     typeof message.payload?.marketplacePlanEstimateBackend === "string"
       ? message.payload.marketplacePlanEstimateBackend
       : undefined;
+  const marketplacePlanEstimateReasonCode =
+    typeof message.payload?.marketplacePlanEstimateReasonCode === "string"
+      ? message.payload.marketplacePlanEstimateReasonCode
+      : message.payload?.marketplacePlanEstimateReasonCode === null
+        ? null
+        : undefined;
 
   const hasObservabilityFields =
     marketplacePlanEstimateModelId !== undefined ||
-    marketplacePlanEstimateBackend !== undefined;
+    marketplacePlanEstimateBackend !== undefined ||
+    marketplacePlanEstimateReasonCode !== undefined;
 
   if (chunk.length > 0 || hasObservabilityFields) {
     const limitResult =
@@ -53,6 +60,9 @@ export const handleTerminalStreamChunkMessageAsync = async (
           : {}),
         ...(marketplacePlanEstimateBackend !== undefined
           ? { marketplacePlanEstimateBackend }
+          : {}),
+        ...(marketplacePlanEstimateReasonCode !== undefined
+          ? { marketplacePlanEstimateReasonCode }
           : {}),
       },
     });

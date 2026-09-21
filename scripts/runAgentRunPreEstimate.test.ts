@@ -10,6 +10,8 @@ import {
   runMarketplacePlanEstimateHeadlessWriter,
 } from "@agent-witch/install-runtime-client";
 
+import { MARKETPLACE_PLAN_ESTIMATE_MISSING_ANTHROPIC_WRITER_API_KEY } from "@/lib/marketplace/runRecipe/marketplacePlanEstimateReasonCode.constant";
+
 import { runAgentRunPreEstimate } from "./runAgentRunPreEstimate";
 
 describe("runAgentRunPreEstimate (marketplace plan/estimate routing)", () => {
@@ -18,13 +20,14 @@ describe("runAgentRunPreEstimate (marketplace plan/estimate routing)", () => {
     vi.mocked(runMarketplacePlanEstimateHeadlessWriter).mockReset();
   });
 
-  it("uses Writer API path when only preset capabilityId is provided", async () => {
+  it("marks stage failed when Writer API key missing (preset capabilityId)", async () => {
     vi.mocked(runMarketplacePlanEstimateHeadlessWriter).mockResolvedValue({
-      exitCode: 0,
-      output: "[[WORKING_ESTIMATE]]\n120\n",
+      exitCode: -1,
+      output: "missing key",
       execution: {
-        backend: "anthropic-writer-api",
+        backend: "failed-missing-anthropic-writer-api-key",
         modelOverride: "claude-3-5-haiku-20241022",
+        reasonCode: MARKETPLACE_PLAN_ESTIMATE_MISSING_ANTHROPIC_WRITER_API_KEY,
       },
     });
 
@@ -39,18 +42,11 @@ describe("runAgentRunPreEstimate (marketplace plan/estimate routing)", () => {
       capabilityId: "preset:vibe-coding-app-feature",
     });
 
-    expect(runMarketplacePlanEstimateHeadlessWriter).toHaveBeenCalledWith(
-      expect.anything(),
-      "claude-cli",
-      expect.stringContaining("Marketplace vibe-coding run"),
-      "claude-3-5-haiku-20241022",
-    );
+    expect(runMarketplacePlanEstimateHeadlessWriter).toHaveBeenCalled();
     expect(runHeadlessWriter).not.toHaveBeenCalled();
-    expect(result.marketplacePlanEstimate?.backend).toBe(
-      "anthropic-writer-api",
-    );
-    expect(result.marketplacePlanEstimate?.catalogModelId).toBe(
-      "claude-3-5-haiku-20241022",
+    expect(result.planEstimateStageFailed).toBe(true);
+    expect(result.planEstimateReasonCode).toBe(
+      MARKETPLACE_PLAN_ESTIMATE_MISSING_ANTHROPIC_WRITER_API_KEY,
     );
   });
 });

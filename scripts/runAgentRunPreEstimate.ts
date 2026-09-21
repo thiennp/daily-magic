@@ -28,6 +28,7 @@ export type MarketplacePlanEstimatePreRunDiagnostics = {
   readonly backend: MarketplacePlanEstimatePreRunBackend;
   readonly catalogModelId: string | null;
   readonly marketplaceTemplateId: string | null;
+  readonly reasonCode: string | null;
 };
 
 export type AgentRunPreEstimateResult = {
@@ -35,6 +36,8 @@ export type AgentRunPreEstimateResult = {
   readonly estimateSummary: string;
   readonly estimateOutput: string;
   readonly marketplacePlanEstimate: MarketplacePlanEstimatePreRunDiagnostics | null;
+  readonly planEstimateStageFailed: boolean;
+  readonly planEstimateReasonCode: string | null;
 };
 
 const buildPreEstimatePrompt = (
@@ -101,6 +104,7 @@ export const runAgentRunPreEstimate = async (input: {
             backend: cheapResult.execution.backend,
             catalogModelId,
             marketplaceTemplateId: resolvedMarketplaceTemplateId,
+            reasonCode: cheapResult.execution.reasonCode,
           } satisfies MarketplacePlanEstimatePreRunDiagnostics,
         };
       })()
@@ -122,39 +126,36 @@ export const runAgentRunPreEstimate = async (input: {
                   backend: "cli-non-marketplace-pre-estimate" as const,
                   catalogModelId,
                   marketplaceTemplateId: resolvedMarketplaceTemplateId,
+                  reasonCode: null,
                 }
               : null,
         };
       })();
 
-  const estimateSeconds = parseAgentRunWorkingEstimateSeconds(
-    headlessResult.output,
-  );
-  const estimateSummary = formatAgentRunEstimateSummary(estimateSeconds);
+  const planEstimateStageFailed =
+    useCatalogCheapModel && headlessResult.exitCode !== 0;
+  const planEstimateReasonCode =
+    marketplacePlanEstimate?.reasonCode ??
+    (planEstimateStageFailed ? "MARKETPLACE_PLAN_ESTIMATE_FAILED" : null);
 
-  const planEstimateReportNote =
-    marketplacePlanEstimate === null
-      ? null
-      : marketplacePlanEstimate.backend === "cli-fallback-missing-anthropic-key"
-        ? "Plan/estimate used claude-cli because no Anthropic Writer API key is configured in writer-api-secrets."
-        : marketplacePlanEstimate.backend === "anthropic-writer-api"
-          ? `Plan/estimate used Anthropic Writer API (modelOverride=${marketplacePlanEstimate.catalogModelId ?? "unknown"}).`
-          : null;
-
-  const reportDetailsParts = [
-    planEstimateReportNote,
-    headlessResult.output.trim().length > 0
-      ? headlessResult.output.trim()
-      : null,
-  ].filter((part): part is string => part !== null && part.length > 0);
+  const estimateSeconds = planEstimateStageFailed
+    ? null
+    : parseAgentRunWorkingEstimateSeconds(headlessResult.output);
+  const estimateSummary = planEstimateStageFailed
+    ? headlessResult.output.trim()
+    : formatAgentRunEstimateSummary(estimateSeconds);
 
   upsertAgentRunReportFile({
     reportKey: input.reportKey,
     agentRunId: input.agentRunId,
-    status: AGENT_RUN_REPORT_STATUSES.IN_PROGRESS,
-    userSummary: estimateSummary,
-    ...(reportDetailsParts.length > 0
-      ? { details: reportDetailsParts.join("\n\n") }
+    status: planEstimateStageFailed
+      ? AGENT_RUN_REPORT_STATUSES.FAILED
+      : AGENT_RUN_REPORT_STATUSES.IN_PROGRESS,
+    userSummary: planEstimateStageFailed
+      ? "Plan/estimate stage failed on your Mac."
+      : estimateSummary,
+    ...(headlessResult.output.trim().length > 0
+      ? { details: headlessResult.output.trim() }
       : {}),
     ...(estimateSeconds !== null ? { estimateSeconds } : {}),
   });
@@ -164,5 +165,7 @@ export const runAgentRunPreEstimate = async (input: {
     estimateSummary,
     estimateOutput: headlessResult.output,
     marketplacePlanEstimate,
+    planEstimateStageFailed,
+    planEstimateReasonCode,
   };
 };

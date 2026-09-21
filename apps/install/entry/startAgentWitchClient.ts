@@ -444,6 +444,22 @@ const dispatchWriterTask = async (
       }
     }
 
+    if (preEstimate.planEstimateStageFailed) {
+      sendMessage(socket, {
+        type: "command.claude.result",
+        payload: {
+          exitCode: -1,
+          output: preEstimate.estimateOutput,
+          agentRunId,
+          ...(preEstimate.planEstimateReasonCode !== null
+            ? { reasonCode: preEstimate.planEstimateReasonCode }
+            : {}),
+        },
+        requestId,
+      });
+      return;
+    }
+
     if (preEstimate.estimateSeconds !== null) {
       const estimateChunk = `${AGENT_RUN_WORKING_ESTIMATE_MARKER}\n${preEstimate.estimateSeconds}\n`;
       if (isTerminalStreamAccepted(agentRunId)) {
