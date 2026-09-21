@@ -4,18 +4,26 @@ import Button from "@/components/ui/button/Button";
 import CapabilityHarnessItemsEditor from "@/features/capabilities/CapabilityHarnessItemsEditor";
 import PlaybookBasicsFields from "@/features/capabilities/PlaybookBasicsFields";
 import CreateWorkflowFieldsEditor from "@/features/workflows/CreateWorkflowFieldsEditor";
+import { type CreatePlaybookResult } from "@/features/capabilities/submitCreatePlaybook";
 import { useCreateWorkflowForm } from "@/features/workflows/hooks/useCreateWorkflowForm";
+import type CreateGuestPlaybookPayload from "@/lib/library/guest/types/CreateGuestPlaybookPayload.type";
 
 interface CreateWorkflowFormProps {
   readonly onCreated: () => void;
   readonly onCancel: () => void;
+  readonly submitPlaybook?: (
+    payload: CreateGuestPlaybookPayload,
+  ) => Promise<CreatePlaybookResult>;
+  readonly submitLabel?: string;
 }
 
 export default function CreateWorkflowForm({
   onCreated,
   onCancel,
+  submitPlaybook,
+  submitLabel = "Publish workflow",
 }: CreateWorkflowFormProps) {
-  const form = useCreateWorkflowForm({ onCreated, onCancel });
+  const form = useCreateWorkflowForm({ onCreated, onCancel, submitPlaybook });
 
   return (
     <div className="mt-6 space-y-4">
@@ -75,7 +83,7 @@ export default function CreateWorkflowForm({
           disabled={form.isSubmitting}
           onClick={() => void form.handleSubmit()}
         >
-          {form.isSubmitting ? "Publishing…" : "Publish workflow"}
+          {form.isSubmitting ? "Saving…" : submitLabel}
         </Button>
         <Button variant="outline" onClick={onCancel}>
           Cancel

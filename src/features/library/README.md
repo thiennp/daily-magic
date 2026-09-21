@@ -17,9 +17,15 @@ Saved playbooks—not a separate runtime: [docs/product/concepts.md](../../../do
 
 - `/library`
 
+## Guest (unsigned) library
+
+- Draft playbooks persist in `localStorage` (`agentwitch.library.guest-drafts.v1`).
+- Starter templates use public `GET /api/capabilities/templates` (+ detail); save copies a draft locally.
+- On sign-in, `syncGuestLibraryDraftsToCloud` reconciles with `/api/capabilities/mine` using **latest `updatedAt` wins** (cloud wins on tie).
+
 ## APIs
 
-_None._
+_None (guest sync uses existing capabilities routes)._
 
 ## Dependencies
 

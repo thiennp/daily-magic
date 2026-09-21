@@ -5,16 +5,26 @@ import { useMemo, useState } from "react";
 import type { TemplateTab } from "@/features/capabilities/CapabilityTemplateTabBar";
 import { CAPABILITY_TEMPLATE_PICKER_VISIBLE_COUNT } from "@/features/capabilities/constants/capabilityTemplatePicker.constant";
 import useCapabilityTemplates from "@/features/capabilities/hooks/useCapabilityTemplates";
-import { saveCapabilityTemplateToLibrary } from "@/features/capabilities/utils/capabilityTemplatesApi";
+import {
+  defaultSaveCapabilityTemplateOutcome,
+  resolveCapabilityTemplateSaveHarnessMessage,
+} from "@/features/capabilities/utils/defaultSaveCapabilityTemplateOutcome";
 import { CapabilityType } from "@/lib/capabilities/CapabilityType.constant";
+import type SaveCapabilityTemplateOutcome from "@/features/capabilities/types/SaveCapabilityTemplateOutcome.type";
 import type { CapabilityTemplateSummary } from "@/lib/capabilities/templates/types/CapabilityTemplate.type";
+
+export type { SaveCapabilityTemplateOutcome };
 
 interface UseCapabilityTemplatePickerOptions {
   readonly onSaved?: () => void;
+  readonly saveTemplate?: (
+    templateId: string,
+  ) => Promise<SaveCapabilityTemplateOutcome>;
 }
 
 export function useCapabilityTemplatePicker({
   onSaved,
+  saveTemplate = defaultSaveCapabilityTemplateOutcome,
 }: UseCapabilityTemplatePickerOptions) {
   const { templates, isLoading } = useCapabilityTemplates();
   const [activeTab, setActiveTab] = useState<TemplateTab>("workflow");
@@ -27,18 +37,15 @@ export function useCapabilityTemplatePicker({
   const [harnessMessage, setHarnessMessage] = useState<string | null>(null);
   const [showAll, setShowAll] = useState(false);
 
-  const workflowCount = useMemo(
-    () =>
-      templates.filter((template) => template.type === CapabilityType.WORKFLOW)
-        .length,
-    [templates],
-  );
-  const agentCount = useMemo(
-    () =>
-      templates.filter((template) => template.type === CapabilityType.AGENT)
-        .length,
-    [templates],
-  );
+  const { workflowCount, agentCount } = useMemo(() => {
+    const workflowTemplates = templates.filter(
+      (template) => template.type === CapabilityType.WORKFLOW,
+    );
+    return {
+      workflowCount: workflowTemplates.length,
+      agentCount: templates.length - workflowTemplates.length,
+    };
+  }, [templates]);
 
   const visibleTemplates = useMemo(
     (): readonly CapabilityTemplateSummary[] =>
@@ -70,7 +77,7 @@ export function useCapabilityTemplatePicker({
     setErrorMessage(null);
     setHarnessMessage(null);
     setSavingTemplateId(templateId);
-    const result = await saveCapabilityTemplateToLibrary(templateId);
+    const result = await saveTemplate(templateId);
     setSavingTemplateId(null);
 
     if (!result.ok) {
@@ -79,12 +86,7 @@ export function useCapabilityTemplatePicker({
     }
 
     setSavedTemplateId(templateId);
-    setHarnessMessage(
-      result.harnessInstalled
-        ? "Install requested on your Mac."
-        : (result.harnessInstallMessage ??
-            "Saved to Library. Open Agent when your Mac is online to finish install."),
-    );
+    setHarnessMessage(resolveCapabilityTemplateSaveHarnessMessage(result));
     onSaved?.();
   };
 

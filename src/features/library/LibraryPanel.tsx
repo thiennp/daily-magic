@@ -2,11 +2,6 @@
 
 import EmptyStatePanel from "@/features/empty-states/EmptyStatePanel";
 import EmptyStatePanelSkeleton from "@/features/empty-states/EmptyStatePanelSkeleton";
-import {
-  CREATE_FREE_ACCOUNT_HREF,
-  buildSignInHref,
-} from "@/features/empty-states/buildGuestAuthHrefs";
-import { LIBRARY_GUEST_EMPTY_COPY } from "@/features/empty-states/signedOutPageEmptyCopy.constant";
 import { useGuestSessionState } from "@/features/empty-states/useGuestSessionState";
 import LibraryPlaybookCard from "@/features/library/LibraryPlaybookCard";
 import useShellNavContext from "@/features/shell/hooks/useShellNavContext";
@@ -42,25 +37,6 @@ export default function LibraryPanel({
 
   if (isLoading) {
     return <EmptyStatePanelSkeleton />;
-  }
-
-  if (sessionState === "guest") {
-    return (
-      <EmptyStatePanel
-        density="section"
-        title={LIBRARY_GUEST_EMPTY_COPY.title}
-        body="Your saved workflows live here after you create an account. Browse starters on Marketplace, or start from a New task."
-        primaryCta={{
-          label: LIBRARY_GUEST_EMPTY_COPY.primaryCtaLabel,
-          href: CREATE_FREE_ACCOUNT_HREF,
-        }}
-        secondaryCta={{
-          label: LIBRARY_GUEST_EMPTY_COPY.secondaryCtaLabel,
-          href: buildSignInHref("/library"),
-        }}
-        tertiaryLink={{ label: "Browse Marketplace", href: "/marketplace" }}
-      />
-    );
   }
 
   if (libraryItems.length === 0) {
