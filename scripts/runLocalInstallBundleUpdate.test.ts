@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 vi.mock("./requestLocalAgentWitchSelfUpdate", () => ({
   requestLocalAgentWitchSelfUpdate: vi.fn(),
@@ -20,6 +20,11 @@ vi.mock("./agentWitchInstallVersion", () => ({
   })),
 }));
 
+vi.mock("./agentWitchWriterWorkGuard", () => ({
+  deferAgentWitchInstallBundleUpdate: vi.fn(),
+  isAgentWitchWriterWorkInProgress: vi.fn(() => false),
+}));
+
 vi.mock("@agent-witch/install-macos-launch", () => ({
   ensureAgentWitchLaunchAgentPlist: vi.fn(() => ({
     ok: true,
@@ -32,10 +37,21 @@ import { ensureAgentWitchLaunchAgentPlist } from "@agent-witch/install-macos-lau
 
 import { runAgentWitchSelfUpdate } from "./agentWitchSelfUpdate";
 import { requestLocalAgentWitchSelfUpdate } from "./requestLocalAgentWitchSelfUpdate";
+import {
+  deferAgentWitchInstallBundleUpdate,
+  isAgentWitchWriterWorkInProgress,
+} from "./agentWitchWriterWorkGuard";
 import { runLocalInstallBundleUpdate } from "./runLocalInstallBundleUpdate";
 import { resolveAgentWitchLocalLayout } from "./resolveAgentWitchLocalLayout";
 
 describe("runLocalInstallBundleUpdate", () => {
+  beforeEach(() => {
+    vi.mocked(isAgentWitchWriterWorkInProgress).mockReturnValue(false);
+    vi.mocked(requestLocalAgentWitchSelfUpdate).mockReset();
+    vi.mocked(runAgentWitchSelfUpdate).mockReset();
+    vi.mocked(deferAgentWitchInstallBundleUpdate).mockReset();
+  });
+
   it("AGENT-043: falls back to direct self-update when wake API is unreachable", async () => {
     vi.mocked(requestLocalAgentWitchSelfUpdate).mockResolvedValue({
       ok: false,
@@ -61,5 +77,23 @@ describe("runLocalInstallBundleUpdate", () => {
       force: true,
     });
     expect(runAgentWitchSelfUpdate).toHaveBeenCalledWith({ force: true });
+  });
+
+  it("defers install bundle update while a writer task is active", async () => {
+    vi.mocked(isAgentWitchWriterWorkInProgress).mockReturnValue(true);
+    const layout = resolveAgentWitchLocalLayout();
+
+    await runLocalInstallBundleUpdate({
+      layout,
+      remoteBundleVersion: "38",
+      trigger: "system.ack",
+    });
+
+    expect(deferAgentWitchInstallBundleUpdate).toHaveBeenCalledWith({
+      layout,
+      remoteBundleVersion: "38",
+      trigger: "system.ack",
+    });
+    expect(requestLocalAgentWitchSelfUpdate).not.toHaveBeenCalled();
   });
 });

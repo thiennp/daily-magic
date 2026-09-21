@@ -44,6 +44,11 @@ import { extractUserTaskFromWrappedPrompt } from "./dispatch/extractUserTaskFrom
 import { appendWriterLlmUsageFooter } from "@/lib/agentWitch/formatWriterLlmUsageFooter";
 import type WriterLlmUsage from "@/lib/agentWitch/writerLlmUsage.type";
 
+import {
+  beginAgentWitchWriterWork,
+  endAgentWitchWriterWork,
+} from "./agentWitchWriterWorkGuard";
+
 import { runWriterApiPrompt } from "./writerApi/runWriterApiPrompt";
 import { shouldUseWriterApi } from "./writerApi/shouldUseWriterApi";
 import {
@@ -257,6 +262,8 @@ const finishRun = (
     },
     requestId,
   });
+
+  endAgentWitchWriterWork(config.layout);
 };
 
 const requestRunInput = (
@@ -554,6 +561,8 @@ export const runWriterTask = (
     prompt,
     userTranscriptPrompt,
   );
+
+  beginAgentWitchWriterWork(config.layout);
 
   if (shouldUseWriterApi(config, writerAgent)) {
     runWriterApiTask(

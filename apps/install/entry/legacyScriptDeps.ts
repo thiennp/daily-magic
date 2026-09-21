@@ -36,6 +36,16 @@ export {
 } from "../../../scripts/agentWitchTerminalStreamState";
 export { requestLocalAgentWitchRestart } from "../../../scripts/requestLocalAgentWitchRestart";
 export { runLocalInstallBundleUpdate } from "../../../scripts/runLocalInstallBundleUpdate";
+export {
+  beginAgentWitchWriterWork,
+  deferAgentWitchInstallBundleUpdate,
+  deferAgentWitchLocalRestart,
+  endAgentWitchWriterWork,
+  isAgentWitchWriterWorkInProgress,
+  subscribeAgentWitchWriterWorkIdle,
+  takeDeferredAgentWitchInstallBundleUpdate,
+  takeDeferredAgentWitchLocalRestartReason,
+} from "../../../scripts/agentWitchWriterWorkGuard";
 export { readInstallBundleVersionFromHeartbeatAck } from "../../../scripts/readInstallBundleVersionFromHeartbeatAck";
 export {
   applyAutomationsRunFromCloud,

@@ -81,6 +81,7 @@ export const AGENT_WITCH_CLIENT_INSTALL_SCRIPT_NAMES = [
   "agentWitchLocalApp.ts",
   "handleAgentWitchWriterEnsure.ts",
   "runLocalInstallBundleUpdate.ts",
+  "agentWitchWriterWorkGuard.ts",
   "handleAgentWitchCloudControlMessages.ts",
   "dispatch/agentRunInputGuardrails.constant.ts",
   "dispatch/agentRunReport.constant.ts",

@@ -34,6 +34,10 @@ vi.mock("./listAgentWitchLaunchTargets", () => ({
   listAgentWitchLaunchTargets: vi.fn(),
 }));
 
+vi.mock("./agentWitchWriterWorkGuard", () => ({
+  isAgentWitchWriterWorkInProgress: vi.fn(() => false),
+}));
+
 vi.mock("./spawnAgentWitchClient", () => ({
   spawnAgentWitchClient: vi.fn(),
 }));
@@ -52,12 +56,14 @@ import { isAgentWitchLaunchAgentRunning } from "./isAgentWitchLaunchAgentRunning
 import { kickstartAgentWitchLaunchAgent } from "./kickstartAgentWitchLaunchAgent";
 import { listAgentWitchLaunchTargets } from "./listAgentWitchLaunchTargets";
 import { attemptAgentWitchWatchdogReinstall } from "./attemptAgentWitchWatchdogReinstall";
+import { isAgentWitchWriterWorkInProgress } from "./agentWitchWriterWorkGuard";
 import { reviveAgentWitchWebSocket } from "./reviveAgentWitchWebSocket";
 import { spawnAgentWitchClient } from "./spawnAgentWitchClient";
 import { verifyAgentWitchReviveAfterKickstart } from "./verifyAgentWitchReviveAfterKickstart";
 
 beforeEach(() => {
   vi.mocked(isActiveMacOsConsoleUser).mockReturnValue(true);
+  vi.mocked(isAgentWitchWriterWorkInProgress).mockReturnValue(false);
   vi.mocked(verifyAgentWitchReviveAfterKickstart).mockResolvedValue(true);
   vi.mocked(attemptAgentWitchWatchdogReinstall).mockResolvedValue({
     attempted: false,
@@ -80,7 +86,32 @@ describe("reviveAgentWitchWebSocket", () => {
     expect(result).toEqual({ ok: true, targets: [] });
   });
 
+  it("does not kickstart while a writer task is active", async () => {
+    vi.mocked(isAgentWitchWriterWorkInProgress).mockReturnValue(true);
+    vi.mocked(listAgentWitchLaunchTargets).mockReturnValue([
+      {
+        profileEmail: "user@example.com",
+        launchAgentLabel: "com.agent-witch.user-at-example-com",
+      },
+    ]);
+    vi.mocked(isAgentWitchLaunchAgentRunning).mockResolvedValue(true);
+    vi.mocked(readAgentWitchConnectionHealth).mockReturnValue({
+      lastAckAt: "2020-01-01T00:00:00.000Z",
+      wsUrl: "ws://localhost:3000/api/agent-witch/ws",
+      connectedAt: "2020-01-01T00:00:00.000Z",
+    });
+
+    const result = await reviveAgentWitchWebSocket({ skipLog: true });
+
+    expect(kickstartAgentWitchLaunchAgent).not.toHaveBeenCalled();
+    expect(result.targets[0]).toMatchObject({
+      revived: false,
+      reason: "healthy",
+    });
+  });
+
   it("kickstarts launch agents with stale connection health", async () => {
+    vi.mocked(isAgentWitchWriterWorkInProgress).mockReturnValue(false);
     vi.mocked(listAgentWitchLaunchTargets).mockReturnValue([
       {
         profileEmail: "user@example.com",

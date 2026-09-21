@@ -19,6 +19,7 @@ import {
   resolveAgentWitchInstallDir,
   resolveAgentWitchLocalLayout,
 } from "./resolveAgentWitchLocalLayout";
+import { isAgentWitchWriterWorkInProgress } from "./agentWitchWriterWorkGuard";
 import { spawnAgentWitchClient } from "./spawnAgentWitchClient";
 import {
   appendAgentWitchWatchdogLog,
@@ -48,6 +49,10 @@ const shouldReviveTarget = async (
   }
 
   const layout = resolveProfileLayout(profileEmail);
+  if (isAgentWitchWriterWorkInProgress(layout)) {
+    return "healthy";
+  }
+
   const health = readAgentWitchConnectionHealth(layout);
   if (isAgentWitchConnectionHealthStale(health, staleAfterMs)) {
     return "stale_connection";
