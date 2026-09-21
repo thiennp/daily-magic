@@ -20,7 +20,27 @@ export const postMarketplaceInstall = async (input: {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(input),
   });
-  const payload: unknown = await response.json();
+
+  const payloadResult = await response
+    .json()
+    .then((value: unknown) => ({ ok: true as const, value }))
+    .catch(() => ({ ok: false as const }));
+
+  if (!payloadResult.ok) {
+    return {
+      ok: false,
+      errorMessage: response.ok
+        ? "Install failed."
+        : `Install failed (${response.status}).`,
+      savedToLibrary: false,
+      libraryCapabilityId: null,
+      harnessInstalled: false,
+      harnessInstallMessage: null,
+      localHarnessBundle: null,
+    };
+  }
+
+  const payload = payloadResult.value;
 
   if (!response.ok) {
     const errorMessage =

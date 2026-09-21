@@ -39,7 +39,12 @@ const ensureAgentComponentForPublishedCapability = async (input: {
       ${input.visibility},
       ${input.capabilityId}
     )
-    ON CONFLICT (id) DO NOTHING
+    ON CONFLICT (owner_user_id, kind, slug) DO UPDATE SET
+      published_capability_id = EXCLUDED.published_capability_id,
+      name = EXCLUDED.name,
+      description = EXCLUDED.description,
+      visibility = EXCLUDED.visibility,
+      updated_at = NOW()
   `;
 
   const rows = asRowArray(
