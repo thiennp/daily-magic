@@ -50,7 +50,7 @@ describe("buildAgentLiveProgressSteps", () => {
     expect(result.steps.find((step) => step.id === "estimate")).toMatchObject({
       label: "Analyzing requirements and estimating",
       state: "done",
-      detail: "Est. ~2 min planned",
+      detail: "About 2 min for this run planned",
     });
     expect(result.steps.find((step) => step.id === "work")).toMatchObject({
       label: "Reading files and requirements",
