@@ -22,6 +22,21 @@ export const WORKFLOW_BUILDER_STEPS_SECTION = {
     "Human steps pause for the person running it. Specialists are extra instructions copied to the Mac.",
 } as const;
 
+export const WORKFLOW_BUILDER_FLOW_SECTION = {
+  title: "Workflow steps",
+  description:
+    "Entry point collects answers when someone starts the run. Steps below run in order (linear graph).",
+  entryPointLabel: "Entry point",
+  entryPointHint: "Form questions at the start of every run",
+  editEntryFormButton: "Edit form",
+  addQuestionButton: "Add question",
+  addHumanStepButton: "Human step",
+  addSpecialistStepButton: "Specialist",
+  untitledStep: "Untitled step",
+  branchComingSoon:
+    "Conditional branches are not available yet — steps always continue to the next node.",
+} as const;
+
 export const WORKFLOW_BUILDER_INSTRUCTIONS_LABEL =
   "Standing instructions (optional)";
 

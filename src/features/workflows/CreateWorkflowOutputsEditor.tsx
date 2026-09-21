@@ -13,6 +13,7 @@ interface CreateWorkflowOutputsEditorProps {
   ) => void;
   readonly onAdd: () => void;
   readonly onRemove: (id: string) => void;
+  readonly variant?: "section" | "plain";
 }
 
 export default function CreateWorkflowOutputsEditor({
@@ -20,17 +21,25 @@ export default function CreateWorkflowOutputsEditor({
   onChange,
   onAdd,
   onRemove,
+  variant = "section",
 }: CreateWorkflowOutputsEditorProps) {
+  const sectionClass =
+    variant === "section"
+      ? "space-y-4 rounded-xl border border-gray-100 p-4 dark:border-gray-800"
+      : "space-y-4";
+
   return (
-    <section className="space-y-4 rounded-xl border border-gray-100 p-4 dark:border-gray-800">
-      <div>
-        <h3 className="text-sm font-semibold text-gray-900 dark:text-white/90">
-          {WORKFLOW_BUILDER_OUTPUTS_SECTION.title}
-        </h3>
-        <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
-          {WORKFLOW_BUILDER_OUTPUTS_SECTION.description}
-        </p>
-      </div>
+    <section className={sectionClass}>
+      {variant === "section" ? (
+        <div>
+          <h3 className="text-sm font-semibold text-gray-900 dark:text-white/90">
+            {WORKFLOW_BUILDER_OUTPUTS_SECTION.title}
+          </h3>
+          <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+            {WORKFLOW_BUILDER_OUTPUTS_SECTION.description}
+          </p>
+        </div>
+      ) : null}
       {fields.length > 0 ? (
         <div className="space-y-3">
           {fields.map((field, index) => (

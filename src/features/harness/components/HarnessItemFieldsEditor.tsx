@@ -8,6 +8,7 @@ interface HarnessItemFieldsEditorProps {
   readonly canRemove: boolean;
   readonly onRemove: () => void;
   readonly onChange: (nextItem: HarnessItemDraft) => void;
+  readonly allowedKinds?: readonly HarnessItemKind[];
 }
 
 const fieldClass =
@@ -19,7 +20,15 @@ export default function HarnessItemFieldsEditor({
   canRemove,
   onRemove,
   onChange,
+  allowedKinds,
 }: HarnessItemFieldsEditorProps) {
+  const kindOptions =
+    allowedKinds === undefined
+      ? HARNESS_KIND_OPTIONS
+      : HARNESS_KIND_OPTIONS.filter((option) =>
+          allowedKinds.includes(option.value),
+        );
+
   return (
     <div className="rounded-lg border border-gray-200 p-4 dark:border-gray-700">
       <div className="mb-3 flex items-center justify-between gap-3">
@@ -52,7 +61,7 @@ export default function HarnessItemFieldsEditor({
             }}
             className={fieldClass}
           >
-            {HARNESS_KIND_OPTIONS.map((option) => (
+            {kindOptions.map((option) => (
               <option key={option.value} value={option.value}>
                 {option.label}
               </option>
