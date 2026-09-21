@@ -1,13 +1,19 @@
 export const TRAVEL_PLANNER_EXAMPLE_REQUEST = `Build a trip itinerary from the workflow form constraints.
 
-## Confirm trip inputs
-Read destination, travelDates, budget, and preferences.
+Read destination, travelDates, budget, and preferences from the workflow form.
 
-## Clarify trade-offs
-Ask about pace, must-see items, and non-negotiables before drafting.
+## Clarify before planning
+Check for ambiguous dates, unrealistic budget, or missing constraints (pace, accessibility, fixed bookings).
+List clarifying questions in [[PROGRESS]]; the operator answers at the next human checkpoint.
+Do not draft the full itinerary in this step.
 
 ## Draft itinerary
-Propose a day-by-day plan with transport, lodging options, and trade-offs.
+Continue from prior operator answers (see checkpoint responses above).
 
-## Review
-Pause for operator approval before they book or share the plan.`;
+Produce:
+- Day-by-day outline within travelDates
+- Transport and lodging options within budget
+- Trade-offs when preferences conflict
+- Short prep checklist before travel
+
+Stop before operator approval.`;

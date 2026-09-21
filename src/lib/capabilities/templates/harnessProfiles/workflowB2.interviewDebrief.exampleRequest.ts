@@ -3,14 +3,19 @@ export const INTERVIEW_DEBRIEF_EXAMPLE_REQUEST = `Write a fair, evidence-based i
 Read candidate, role, strengths, and concerns from the workflow form.
 Do not include protected-class commentary or speculation about personal life.
 
-## 1. Validate context and clarify
-Check that strengths and concerns cite interview evidence, not generic praise.
-List gaps, contradictions, or missing examples in [[PROGRESS]] — the workflow pauses at the next checkpoint.
+## Validate context
+Check that strengths and concerns cite interview evidence, not generic praise or protected-class commentary.
+Flag gaps, contradictions, thin examples, or missing role-fit signal.
+Summarize clarifying questions in [[PROGRESS]]; the operator answers at the next human checkpoint.
+Do not write the final debrief or recommendation in this step.
 
-## 2. Draft debrief and recommendation
-Balance strengths vs concerns with severity and mitigations when relevant.
-State a clear recommendation: hire, no-hire, or hold, with rationale tied to role fit.
-Use a confidential hiring-committee tone suitable for internal notes.
+## Draft debrief
+Continue from prior operator answers (see checkpoint responses above).
 
-## 3. Review gate
-Present the debrief for operator review; apply edits if requested before they share it.`;
+Write for a confidential hiring committee:
+- Role fit against the stated role
+- Strengths with evidence from the interview
+- Concerns with severity and mitigations when relevant
+- Clear recommendation: hire, no-hire, or hold, with rationale tied to role fit
+
+Stop before the operator’s final review — the workflow pauses for approval.`;

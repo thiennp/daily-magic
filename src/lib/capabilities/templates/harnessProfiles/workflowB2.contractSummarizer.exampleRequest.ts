@@ -1,13 +1,19 @@
-export const CONTRACT_SUMMARIZER_EXAMPLE_REQUEST = `Summarize the pasted agreement for a non-lawyer reader.
+export const CONTRACT_SUMMARIZER_EXAMPLE_REQUEST = `Summarize the pasted agreement for a non-lawyer reader — not legal advice.
 
-## Confirm inputs
-Check contractText, focusAreas, and signingDeadline from the workflow form.
+Read contractText, focusAreas, and signingDeadline from the workflow form.
 
-## Clarify gaps
-Flag missing parties, ambiguous dates, or sections that need the full text.
+## Clarify before summarizing
+Check for missing parties, effective dates, or truncated text.
+List clarifying questions in [[PROGRESS]]; the operator answers at the next human checkpoint.
+Do not produce the final summary in this step.
 
-## Summarize
-Produce obligations, key dates, risks in plain language, and flags for lawyer review.
+## Draft contract summary
+Continue from prior operator answers (see checkpoint responses above).
 
-## Review
-Pause for operator approval before sharing the summary outside the run.`;
+For a non-lawyer reader include:
+- Parties and purpose
+- Key obligations with dates
+- Termination, liability, and unusual clauses called out in focusAreas when set
+- Plain-language risk flags and items needing lawyer review
+
+Stop before operator approval.`;

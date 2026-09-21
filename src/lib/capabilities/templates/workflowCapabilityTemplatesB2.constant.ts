@@ -1,7 +1,9 @@
 import buildWorkflowTemplate from "@/lib/capabilities/templates/buildWorkflowTemplate";
 import { CONTRACT_SUMMARIZER_EXAMPLE_REQUEST } from "@/lib/capabilities/templates/harnessProfiles/workflowB2.contractSummarizer.exampleRequest";
 import { INCIDENT_POSTMORTEM_EXAMPLE_REQUEST } from "@/lib/capabilities/templates/harnessProfiles/workflowB2.incidentPostmortem.exampleRequest";
+import { PERSONAL_WEEKLY_REVIEW_EXAMPLE_REQUEST } from "@/lib/capabilities/templates/harnessProfiles/workflowB2.personalWeeklyReview.exampleRequest";
 import { TRAVEL_PLANNER_EXAMPLE_REQUEST } from "@/lib/capabilities/templates/harnessProfiles/workflowB2.travelPlanner.exampleRequest";
+import { INTERVIEW_DEBRIEF_WORKFLOW } from "@/lib/capabilities/templates/workflowCapabilityTemplatesB2.interviewDebrief.constant";
 import type { WorkflowCapabilityTemplate } from "@/lib/capabilities/templates/types/CapabilityTemplate.type";
 
 export const WORKFLOW_CAPABILITY_TEMPLATES_B2: readonly WorkflowCapabilityTemplate[] =
@@ -19,25 +21,13 @@ export const WORKFLOW_CAPABILITY_TEMPLATES_B2: readonly WorkflowCapabilityTempla
         ["followUps", "Follow-ups", "textarea"],
       ],
     ),
-    buildWorkflowTemplate(
-      "interview-debrief",
-      "HR",
-      "Interview debrief",
-      "Capture signal and a hire/no-hire lean after interviews.",
-      "Write an interview debrief with strengths, concerns, and recommendation.",
-      [
-        ["candidate", "Candidate", "text"],
-        ["role", "Role", "text"],
-        ["strengths", "Strengths", "textarea"],
-        ["concerns", "Concerns", "textarea", false],
-      ],
-    ),
+    INTERVIEW_DEBRIEF_WORKFLOW,
     buildWorkflowTemplate(
       "personal-weekly-review",
       "Personal",
       "Personal weekly review",
-      "Reflect on wins, lessons, and priorities for next week.",
-      "Write a personal weekly review that is honest, brief, and forward-looking.",
+      "Reflect on wins, lessons, and priorities for next week — clarify thin notes, then a review you approve before saving.",
+      PERSONAL_WEEKLY_REVIEW_EXAMPLE_REQUEST,
       [
         ["weekOf", "Week of", "text"],
         ["wins", "Wins", "textarea"],
@@ -61,7 +51,7 @@ export const WORKFLOW_CAPABILITY_TEMPLATES_B2: readonly WorkflowCapabilityTempla
       "travel-planner",
       "Personal",
       "Travel planner",
-      "Build a day-by-day itinerary from your dates, budget, and preferences.",
+      "Turn dates, budget, and preferences into a day-by-day itinerary you approve before booking.",
       TRAVEL_PLANNER_EXAMPLE_REQUEST,
       [
         ["destination", "Destination", "text"],
