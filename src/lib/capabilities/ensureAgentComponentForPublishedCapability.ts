@@ -18,38 +18,35 @@ const ensureAgentComponentForPublishedCapability = async (input: {
     harnessSetSlug: input.harnessSetSlug ?? null,
   });
 
-  await sql`
-    INSERT INTO components (
-      id,
-      owner_user_id,
-      kind,
-      slug,
-      name,
-      description,
-      visibility,
-      published_capability_id
-    )
-    VALUES (
-      ${input.capabilityId},
-      ${input.ownerUserId},
-      ${kind},
-      ${slug},
-      ${input.name},
-      ${input.description},
-      ${input.visibility},
-      ${input.capabilityId}
-    )
-    ON CONFLICT (owner_user_id, kind, slug) DO UPDATE SET
-      published_capability_id = EXCLUDED.published_capability_id,
-      name = EXCLUDED.name,
-      description = EXCLUDED.description,
-      visibility = EXCLUDED.visibility,
-      updated_at = NOW()
-  `;
-
   const rows = asRowArray(
     await sql`
-      SELECT id FROM components WHERE id = ${input.capabilityId} LIMIT 1
+      INSERT INTO components (
+        id,
+        owner_user_id,
+        kind,
+        slug,
+        name,
+        description,
+        visibility,
+        published_capability_id
+      )
+      VALUES (
+        ${input.capabilityId},
+        ${input.ownerUserId},
+        ${kind},
+        ${slug},
+        ${input.name},
+        ${input.description},
+        ${input.visibility},
+        ${input.capabilityId}
+      )
+      ON CONFLICT (owner_user_id, kind, slug) DO UPDATE SET
+        published_capability_id = EXCLUDED.published_capability_id,
+        name = EXCLUDED.name,
+        description = EXCLUDED.description,
+        visibility = EXCLUDED.visibility,
+        updated_at = NOW()
+      RETURNING id
     `,
   );
 
