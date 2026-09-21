@@ -61,6 +61,7 @@ export { generateAgentRunReportKey } from "../../../scripts/dispatch/generateAge
 export { AGENT_RUN_WORKING_ESTIMATE_MARKER } from "../../../scripts/dispatch/agentRunWorkingEstimate.constant";
 export { seedAgentRunReportFile } from "../../../scripts/agentWitchRunReport";
 export { runAgentRunPreEstimate } from "../../../scripts/runAgentRunPreEstimate";
+export { buildMarketplacePlanEstimateTerminalStreamPayload } from "../../../scripts/dispatch/buildMarketplacePlanEstimateTerminalStreamPayload";
 export {
   closeShellPtySession,
   openInteractiveShellPty,

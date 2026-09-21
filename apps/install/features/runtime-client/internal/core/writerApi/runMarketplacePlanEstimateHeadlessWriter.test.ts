@@ -1,6 +1,11 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { runMarketplacePlanEstimateHeadlessWriter } from "./runMarketplacePlanEstimateHeadlessWriter";
+import {
+  MARKETPLACE_PLAN_ESTIMATE_LOG_CLI_FALLBACK_MISSING_KEY,
+  MARKETPLACE_PLAN_ESTIMATE_LOG_PASS_PREFIX,
+  MARKETPLACE_PLAN_ESTIMATE_MISSING_ANTHROPIC_WRITER_API_KEY,
+} from "./marketplacePlanEstimateReasonCode.constant";
 
 vi.mock("./callWriterApi", () => ({
   callWriterApi: vi.fn(),
@@ -28,6 +33,7 @@ describe("runMarketplacePlanEstimateHeadlessWriter", () => {
     vi.mocked(callWriterApi).mockReset();
     vi.mocked(readWriterApiProviderSecret).mockReset();
     vi.mocked(runHeadlessWriter).mockReset();
+    vi.spyOn(console, "log").mockImplementation(() => {});
   });
 
   it("calls Anthropic Writer API with catalog model override when key exists", async () => {
@@ -55,17 +61,20 @@ describe("runMarketplacePlanEstimateHeadlessWriter", () => {
     );
     expect(runHeadlessWriter).not.toHaveBeenCalled();
     expect(result.exitCode).toBe(0);
-    expect(result.output).toContain("plan output");
+    expect(result.execution.backend).toBe("anthropic-writer-api");
+    expect(console.log).toHaveBeenCalledWith(
+      `${MARKETPLACE_PLAN_ESTIMATE_LOG_PASS_PREFIX}claude-3-5-haiku-20241022`,
+    );
   });
 
-  it("falls back to CLI headless writer when no Anthropic API key", async () => {
+  it("observably falls back to claude-cli when no Anthropic API key", async () => {
     vi.mocked(readWriterApiProviderSecret).mockReturnValue(null);
     vi.mocked(runHeadlessWriter).mockResolvedValue({
       exitCode: 0,
       output: "cli fallback",
     });
 
-    await runMarketplacePlanEstimateHeadlessWriter(
+    const result = await runMarketplacePlanEstimateHeadlessWriter(
       baseConfig as never,
       "claude-cli",
       "estimate task",
@@ -77,6 +86,15 @@ describe("runMarketplacePlanEstimateHeadlessWriter", () => {
       baseConfig,
       "claude-cli",
       "estimate task",
+    );
+    expect(result.execution.backend).toBe(
+      "cli-fallback-missing-anthropic-writer-api-key",
+    );
+    expect(result.execution.reasonCode).toBe(
+      MARKETPLACE_PLAN_ESTIMATE_MISSING_ANTHROPIC_WRITER_API_KEY,
+    );
+    expect(console.log).toHaveBeenCalledWith(
+      MARKETPLACE_PLAN_ESTIMATE_LOG_CLI_FALLBACK_MISSING_KEY,
     );
   });
 });

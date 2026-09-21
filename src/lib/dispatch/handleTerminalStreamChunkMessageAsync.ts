@@ -19,16 +19,52 @@ export const handleTerminalStreamChunkMessageAsync = async (
   const runId = authorization.run.id;
   const chunk =
     typeof message.payload?.chunk === "string" ? message.payload.chunk : "";
+  const marketplacePlanEstimateModelId =
+    typeof message.payload?.marketplacePlanEstimateModelId === "string"
+      ? message.payload.marketplacePlanEstimateModelId
+      : message.payload?.marketplacePlanEstimateModelId === null
+        ? null
+        : undefined;
+  const marketplacePlanEstimateBackend =
+    typeof message.payload?.marketplacePlanEstimateBackend === "string"
+      ? message.payload.marketplacePlanEstimateBackend
+      : undefined;
+  const marketplacePlanEstimateReasonCode =
+    typeof message.payload?.marketplacePlanEstimateReasonCode === "string"
+      ? message.payload.marketplacePlanEstimateReasonCode
+      : message.payload?.marketplacePlanEstimateReasonCode === null
+        ? null
+        : undefined;
 
-  if (chunk.length > 0) {
-    const limitResult = validateTerminalStreamChunkLimits(runId, chunk);
+  const hasObservabilityFields =
+    marketplacePlanEstimateModelId !== undefined ||
+    marketplacePlanEstimateBackend !== undefined ||
+    marketplacePlanEstimateReasonCode !== undefined;
+
+  if (chunk.length > 0 || hasObservabilityFields) {
+    const limitResult =
+      chunk.length > 0
+        ? validateTerminalStreamChunkLimits(runId, chunk)
+        : { ok: true as const };
     if (!limitResult.ok) {
       return buildDispatchError(limitResult.errorMessage, message.requestId);
     }
 
     broadcastTerminalStreamToRunParticipants(runtime, authorization.run, {
       type: AGENT_WITCH_MESSAGE_TYPES.TERMINAL_STREAM_CHUNK,
-      payload: { runId, chunk },
+      payload: {
+        runId,
+        chunk,
+        ...(marketplacePlanEstimateModelId !== undefined
+          ? { marketplacePlanEstimateModelId }
+          : {}),
+        ...(marketplacePlanEstimateBackend !== undefined
+          ? { marketplacePlanEstimateBackend }
+          : {}),
+        ...(marketplacePlanEstimateReasonCode !== undefined
+          ? { marketplacePlanEstimateReasonCode }
+          : {}),
+      },
     });
   }
 
