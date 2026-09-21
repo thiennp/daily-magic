@@ -14,6 +14,7 @@ describe("useProbeLocalMacWakeIdentity (HOME-050)", () => {
     );
 
     expect(source).toContain("retryUnreachableLocalAgentWitchIdentity");
+    expect(source).toContain("resolveShouldProbeWakeIdentityInBrowser");
     expect(source).toContain('sessionStatus !== "authenticated"');
     expect(source).toContain("visibilitychange");
     expect(source).toContain("focus");

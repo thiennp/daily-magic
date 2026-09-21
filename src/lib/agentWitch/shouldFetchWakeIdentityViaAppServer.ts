@@ -1,10 +1,21 @@
+import { isProductionAgentWitchWebOrigin } from "@/lib/agentWitch/isProductionAgentWitchWebOrigin";
 import { isLocalAgentWitchHostname } from "@/lib/agentWitch/resolveAgentWitchAppHome";
 
-/** Loopback AWC dev: Node can reach AWB; browser need not call 127.0.0.1 directly. */
+/**
+ * When false, the browser must call AWB on loopback (production AWC on a Mac).
+ * Otherwise AWC uses same-origin `/api/agent-witch/local-identity` so Node probes AWB.
+ */
 export const shouldFetchWakeIdentityViaAppServer = (): boolean => {
   if (typeof window === "undefined") {
     return false;
   }
 
-  return isLocalAgentWitchHostname(window.location.hostname);
+  if (isProductionAgentWitchWebOrigin(window.location.origin)) {
+    return false;
+  }
+
+  return (
+    isLocalAgentWitchHostname(window.location.hostname) ||
+    window.location.protocol === "http:"
+  );
 };
