@@ -512,6 +512,18 @@ Document every production bug or UX regression here. Each entry must link to a t
 
 ---
 
+## HOME-052 — Wake `/identity` still logged on production or when token already known
+
+**Symptom:** After HOME-051, DevTools still showed `GET http://127.0.0.1:47892/identity` and `:47893/identity` `net::ERR_CONNECTION_REFUSED` (often on `https://www.agentwitch.com`, or when install already seeded `localTokenHash`).
+
+**Root cause:** App-server proxy only applied to strict loopback hostnames; production AWC must use browser loopback when AWB is required. Probes still ran when `localTokenHash` was already set or when the account had zero claimed devices (no this-Mac match needed).
+
+**Fix:** Use app-server batch probes for all non-production origins (including LAN `http://` dev). On production, skip wake probes when `localTokenHash` is present or `claimedDeviceCount === 0`. Direct loopback remains only for signed-in production Mac users with devices and no local token yet.
+
+**Regression tests:** `resolveShouldProbeWakeIdentityInBrowser.test.ts`, `isProductionAgentWitchWebOrigin.test.ts`, `shouldFetchWakeIdentityViaAppServer.test.ts`, `useProbeLocalMacWakeIdentity.test.ts` (HOME-052).
+
+---
+
 ## Adding issues
 
 Use the next ID (`HOME-050`, …). Include symptom, root cause, fix paths, and test file.
