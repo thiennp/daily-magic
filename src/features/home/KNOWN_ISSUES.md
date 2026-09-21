@@ -500,6 +500,18 @@ Document every production bug or UX regression here. Each entry must link to a t
 
 ---
 
+## HOME-051 — Console ERR_CONNECTION_REFUSED for wake `/identity` when AWB is down
+
+**Symptom:** On macOS (especially `http://localhost:3000`), DevTools showed red `GET http://127.0.0.1:47892/identity` and `:47893/identity` `net::ERR_CONNECTION_REFUSED` even though AWC handled the failure and continued.
+
+**Root cause:** The browser called AWB loopback URLs directly. Chromium logs connection refused for failed loopback fetches. Probes also ran before sign-in on pages that mounted `useLocalMacBrowserContext`.
+
+**Fix:** On loopback AWC, batch wake identity probes through `GET /api/agent-witch/local-identity` (Node fetches AWB). Gate macOS wake probes on authenticated sessions only. Production `www.agentwitch.com` still uses direct loopback fetch when AWB is required.
+
+**Regression tests:** `shouldFetchWakeIdentityViaAppServer.test.ts`, `probeLocalAgentWitchWakePorts.test.ts`, `parseWakePortsQuery.test.ts`, `useProbeLocalMacWakeIdentity.test.ts` (HOME-051).
+
+---
+
 ## Adding issues
 
 Use the next ID (`HOME-050`, …). Include symptom, root cause, fix paths, and test file.
