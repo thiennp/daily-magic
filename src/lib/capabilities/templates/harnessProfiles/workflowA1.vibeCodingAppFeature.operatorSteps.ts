@@ -4,10 +4,10 @@ export const VIBE_CODING_APP_FEATURE_OPERATOR_STEPS: readonly OperatorStepDefini
   [
     {
       id: "vibe-coding-app-feature-operator-confirm",
-      title: "Confirm the vibe, screen, and which app to change",
+      title: "Confirm the vibe, screen, and app folder",
       content: [
         "1. Check featureBrief and targetSurface feel right.",
-        "2. If appTarget is empty or unclear, tell the agent the folder path or app name on your Mac.",
+        "2. Confirm appTarget points at the app folder you want changed on this Mac.",
         "3. Reply ready when the goal is clear enough to continue.",
       ].join("\n"),
     },
@@ -26,7 +26,7 @@ export const VIBE_CODING_APP_FEATURE_OPERATOR_STEPS: readonly OperatorStepDefini
       content: [
         "1. Read the Option / Upsides / Downsides table in everyday words.",
         "2. Choose an option, or say go with the agent’s suggestion.",
-        "3. Skip this checkpoint if the agent did not show a table.",
+        "3. Skip this step if the agent did not show a table.",
       ].join("\n"),
     },
     {
@@ -34,8 +34,17 @@ export const VIBE_CODING_APP_FEATURE_OPERATOR_STEPS: readonly OperatorStepDefini
       title: "Review the result before you merge",
       content: [
         "1. Read the summary: what changed, tests, and how to try it.",
-        "2. Ask for fixes if something feels wrong.",
+        "2. Ask for fixes if something feels wrong — the agent gets one fix pass.",
         "3. Reply approve when you are ready to merge yourself.",
+      ].join("\n"),
+    },
+    {
+      id: "vibe-coding-app-feature-operator-confirm-fixes",
+      title: "Confirm the fixes",
+      content: [
+        "1. Check the fix summary against what you asked for.",
+        "2. Ask for another run if something is still wrong.",
+        "3. Skip this step if you already approved without changes.",
       ].join("\n"),
     },
   ];

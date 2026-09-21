@@ -25,7 +25,7 @@ describe("vibe-coding-app-feature official workflow definition", () => {
     );
     expect(
       OFFICIAL_WORKFLOW_DEFINITION.nodes.filter((n) => n.kind === "agent"),
-    ).toHaveLength(3);
+    ).toHaveLength(5);
     expect(OFFICIAL_WORKFLOW_DEFINITION.version).toBeGreaterThanOrEqual(2);
   });
 

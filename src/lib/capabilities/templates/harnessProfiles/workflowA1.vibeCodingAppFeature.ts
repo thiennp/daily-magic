@@ -13,7 +13,7 @@ export const VIBE_CODING_APP_FEATURE_PRESET: PresetHarnessSeed = {
   profile: {
     ruleFocus: [
       "Clarify at human checkpoints before editing; never lead with a full plan.",
-      "Resolve appTarget as path or local app name; ask if unclear.",
+      "Resolve appTarget and stop early when it is not a git repository.",
       "Analyze architecture and side effects in plain language; store notes for reuse.",
       "When tradeoffs are unclear, show a non-tech decision table and wait.",
       "Add feature-knowledge + regression tests before claiming done.",
@@ -42,10 +42,11 @@ export const VIBE_CODING_APP_FEATURE_PRESET: PresetHarnessSeed = {
       },
     ],
     commandSteps: [
-      "Resolve appTarget (path or app name).",
+      "Resolve appTarget and verify it is a git repo.",
       "Clarify with the operator.",
       "Architecture analysis; decision table if needed.",
-      "Implement slice; update knowledge and tests; review gate.",
+      "Implement slice; then tests, knowledge, and summary.",
+      "Review gate; one fix pass when the operator asks for changes.",
     ],
     instructionAddendum:
       "Merging and production deploys stay with the operator. Never skip hooks or force-push.",
