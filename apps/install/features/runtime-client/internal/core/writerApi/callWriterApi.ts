@@ -10,6 +10,8 @@ export interface CallWriterApiInput {
   readonly secret: WriterApiProviderSecret;
   readonly prompt: string;
   readonly onChunk?: (chunk: string) => void;
+  /** When set (e.g. Marketplace plan/estimate catalog id), overrides stored profile model. */
+  readonly modelOverride?: string;
 }
 
 export interface CallWriterApiResult {
@@ -39,10 +41,26 @@ const extractAnthropicText = (body: unknown): string => {
     .join("");
 };
 
+const resolveCallWriterApiModel = (
+  provider: WriterApiProvider,
+  secret: WriterApiProviderSecret,
+  modelOverride: string | undefined,
+): string => {
+  const override = modelOverride?.trim() ?? "";
+  if (override.length > 0) {
+    return override;
+  }
+  return resolveWriterApiModel(provider, secret.model);
+};
+
 const callAnthropicApi = async (
   input: CallWriterApiInput,
 ): Promise<CallWriterApiResult> => {
-  const model = resolveWriterApiModel("anthropic", input.secret.model);
+  const model = resolveCallWriterApiModel(
+    "anthropic",
+    input.secret,
+    input.modelOverride,
+  );
   const response = await fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",
     headers: {
@@ -101,7 +119,11 @@ const extractOpenAiText = (body: unknown): string => {
 const callOpenAiApi = async (
   input: CallWriterApiInput,
 ): Promise<CallWriterApiResult> => {
-  const model = resolveWriterApiModel("openai", input.secret.model);
+  const model = resolveCallWriterApiModel(
+    "openai",
+    input.secret,
+    input.modelOverride,
+  );
   const response = await fetch("https://api.openai.com/v1/chat/completions", {
     method: "POST",
     headers: {
@@ -169,7 +191,11 @@ const extractGoogleText = (body: unknown): string => {
 const callGoogleApi = async (
   input: CallWriterApiInput,
 ): Promise<CallWriterApiResult> => {
-  const model = resolveWriterApiModel("google", input.secret.model);
+  const model = resolveCallWriterApiModel(
+    "google",
+    input.secret,
+    input.modelOverride,
+  );
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(input.secret.apiKey)}`;
   const response = await fetch(url, {
     method: "POST",

@@ -15,6 +15,7 @@ export const useAgentLiveProgressStallState = (input: {
   readonly isWorking: boolean;
   readonly activityFingerprint: string;
   readonly estimateSeconds?: number | null;
+  readonly sessionLimitSeconds?: number | null;
 }): {
   readonly stallState: AgentLiveProgressStallState;
   readonly msSinceLastActivity: number | null;
@@ -79,6 +80,7 @@ export const useAgentLiveProgressStallState = (input: {
       msSinceLastActivity,
       workedMs,
       estimateSeconds: input.estimateSeconds ?? null,
+      sessionLimitSeconds: input.sessionLimitSeconds ?? null,
     }),
     msSinceLastActivity,
     workedMs,

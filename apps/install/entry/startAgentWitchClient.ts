@@ -231,6 +231,7 @@ const dispatchWriterTask = async (
   projectFolderPath?: string,
   reportKey?: string,
   projectId?: string,
+  marketplaceTemplateId?: string,
 ): Promise<void> => {
   const resolvedProjectId = projectId?.trim() ?? "";
   if (!isHarnessWriterAgentId(writerAgent)) {
@@ -420,6 +421,7 @@ const dispatchWriterTask = async (
       wrappedPrompt: promptWithProjectContext,
       reportKey: resolvedReportKey,
       agentRunId,
+      marketplaceTemplateId,
     });
 
     if (preEstimate.estimateSeconds !== null) {
@@ -1226,6 +1228,10 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
         typeof parsed.payload.reportKey === "string"
           ? parsed.payload.reportKey
           : undefined;
+      const marketplaceTemplateId =
+        typeof parsed.payload.marketplaceTemplateId === "string"
+          ? parsed.payload.marketplaceTemplateId
+          : undefined;
 
       if (typeof prompt === "string" && prompt.trim().length > 0) {
         console.log(
@@ -1322,6 +1328,7 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
           projectFolderPath,
           reportKey,
           projectId,
+          marketplaceTemplateId,
         );
       }
     }

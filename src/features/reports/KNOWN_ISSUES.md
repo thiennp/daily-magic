@@ -57,3 +57,11 @@
 **Cause:** `useAgentRunsActiveSse` called full `refresh()` on status transitions; list merged API + cache but treated SSE as the primary update path.
 
 **Fix:** Drive the list from dashboard-bus cache patches (`AGENT_RUNS_LOCAL_CACHE_UPDATED_EVENT`); keep `useAgentRunsRemoteSync` slow poll (~60s) as a safety net only. `useAgentRunsList.test.ts` (REPORTS-006).
+
+## REPORTS-008 — Marketplace run → Reports detail felt empty while Mac was working
+
+**Symptom:** After installing a marketplace capability and running on Mac, `/reports/[runId]` showed only the prompt and terminal placeholder—no `reportSummary` from heartbeats, stale “Job not found” copy, and no reconnect hint when the dashboard WebSocket dropped.
+
+**Cause:** Detail/list UI ignored `reportSummary` / `reportStatus`; live terminal did not surface connection state; product vocab still said “job history”.
+
+**Fix:** `AgentRunReportProgress`, report summary on list cards, `resolveAgentRunDetailOutcomeMessage`, reconnect copy + `ConnectionStatusBadge` on live terminal, Reports vocab on detail chrome. `resolveAgentRunDetailOutcomeMessage.test.ts`, `formatAgentRunReportSummaryLine.test.ts` (REPORTS-008).

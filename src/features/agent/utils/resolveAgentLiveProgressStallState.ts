@@ -1,9 +1,13 @@
 import {
-  AGENT_LIVE_PROGRESS_STALL_WARNING_MS,
   AGENT_LIVE_PROGRESS_STALL_STUCK_MS,
+  AGENT_LIVE_PROGRESS_STALL_WARNING_MS,
 } from "@/features/agent/utils/agentLiveProgressStall.constant";
 import { AGENT_LIVE_PROGRESS_ESTIMATE_FALLBACK_STUCK_MS } from "@/features/agent/utils/agentLiveWorkingEstimate.constant";
 import { resolveAgentLiveWorkingEstimateProgress } from "@/features/agent/utils/resolveAgentLiveWorkingEstimateProgress";
+import {
+  isAgentRunSessionLimitExceeded,
+  parseAgentRunSessionLimit,
+} from "@/lib/dispatch/types/AgentRunSessionLimit.type";
 
 export type AgentLiveProgressStallState = "none" | "warning" | "stuck";
 
@@ -12,6 +16,7 @@ export const resolveAgentLiveProgressStallState = (input: {
   readonly msSinceLastActivity: number | null;
   readonly workedMs?: number | null;
   readonly estimateSeconds?: number | null;
+  readonly sessionLimitSeconds?: number | null;
 }): AgentLiveProgressStallState => {
   if (!input.isWorking) {
     return "none";
@@ -19,6 +24,13 @@ export const resolveAgentLiveProgressStallState = (input: {
 
   const workedMs = input.workedMs ?? null;
   const estimateSeconds = input.estimateSeconds ?? null;
+  const sessionLimit = parseAgentRunSessionLimit(input.sessionLimitSeconds);
+
+  if (sessionLimit !== null && workedMs !== null) {
+    if (isAgentRunSessionLimitExceeded({ sessionLimit, workedMs })) {
+      return "stuck";
+    }
+  }
 
   if (estimateSeconds !== null && estimateSeconds > 0 && workedMs !== null) {
     const estimateProgress = resolveAgentLiveWorkingEstimateProgress({

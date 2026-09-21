@@ -27,6 +27,7 @@ export const dispatchClaudeRunToAgent = (
   projectFolderPath?: string,
   projectId?: string,
   compositionSnapshot?: ProjectCompositionSnapshotWire,
+  marketplaceTemplateId?: string | null,
 ): void => {
   void _runtime;
   agentClient.send(
@@ -42,6 +43,7 @@ export const dispatchClaudeRunToAgent = (
       projectFolderPath,
       projectId,
       compositionSnapshot,
+      marketplaceTemplateId,
     }),
   );
 };

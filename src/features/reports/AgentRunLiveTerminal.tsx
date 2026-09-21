@@ -4,6 +4,8 @@ import { useState } from "react";
 
 import LocalTerminalPre from "@/components/surfaces/LocalTerminalPre";
 import Button from "@/components/ui/button/Button";
+import { useAgentWitchDashboard } from "@/features/agent-witch/dashboard/AgentWitchDashboardContext";
+import { ConnectionStatusBadge } from "@/features/shell/ConnectionStatusBadge";
 import { useAgentRunLiveTerminal } from "@/features/reports/hooks/useAgentRunLiveTerminal";
 
 interface AgentRunLiveTerminalProps {
@@ -15,15 +17,23 @@ export default function AgentRunLiveTerminal({
 }: AgentRunLiveTerminalProps) {
   const { output, pendingInput, submitInput, dismissInput } =
     useAgentRunLiveTerminal(runId, true);
+  const { connectionStatus } = useAgentWitchDashboard();
   const [response, setResponse] = useState("");
+  const isLiveConnected = connectionStatus === "connected";
+  const waitingLabel = isLiveConnected
+    ? "Waiting for agent output…"
+    : "Reconnecting to your Mac… Live output resumes when Agent Witch connects.";
 
   return (
     <section className="mt-6">
-      <h2 className="text-sm font-medium text-gray-800 dark:text-white/90">
-        Live terminal
-      </h2>
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <h2 className="text-sm font-medium text-gray-800 dark:text-white/90">
+          Live terminal
+        </h2>
+        <ConnectionStatusBadge status={connectionStatus} />
+      </div>
       <LocalTerminalPre className="mt-2 max-h-80">
-        {output.length > 0 ? output : "Waiting for agent output…"}
+        {output.length > 0 ? output : waitingLabel}
       </LocalTerminalPre>
       {pendingInput !== null ? (
         <div className="mt-4 rounded-lg border border-amber-200 bg-amber-50 p-4 dark:border-amber-900/50 dark:bg-amber-950/30">

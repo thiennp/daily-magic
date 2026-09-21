@@ -104,4 +104,15 @@ describe("Magi Desi product vocab (showcases + home CTAs)", () => {
     expect(onboardingReportsSvg).not.toMatch(/>\s*Job history\s*</);
     expect(onboardingReportsSvg).toContain("Reports");
   });
+
+  it("Reports run detail chrome uses Reports vocab (REPORTS-008)", () => {
+    const detail = readFileSync(
+      join(process.cwd(), "src/features/reports/AgentRunDetail.tsx"),
+      "utf8",
+    );
+
+    expect(detail).toContain("Back to Reports");
+    expect(detail).not.toMatch(/job history/i);
+    expect(detail).not.toContain("Job not found.");
+  });
 });

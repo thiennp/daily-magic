@@ -5,7 +5,9 @@ import AgentRunLiveTerminal from "@/features/reports/AgentRunLiveTerminal";
 import AgentRunOutcomeBanner from "@/features/reports/AgentRunOutcomeBanner";
 import AgentRunResultOutput from "@/features/reports/AgentRunResultOutput";
 import AgentRunKeepInProjectButton from "@/features/reports/AgentRunKeepInProjectButton";
+import AgentRunReportProgress from "@/features/reports/AgentRunReportProgress";
 import AgentRunStatusBadge from "@/features/reports/AgentRunStatusBadge";
+import { resolveAgentRunDetailOutcomeMessage } from "@/features/reports/utils/resolveAgentRunDetailOutcomeMessage";
 import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
 import { resolveAgentRunStatusBadgeLabel } from "@/lib/dispatch/resolveAgentRunStatusBadgeLabel";
 import type EnrichedAgentRunRecord from "@/lib/dispatch/types/EnrichedAgentRunRecord.type";
@@ -17,6 +19,13 @@ interface AgentRunDetailContentProps {
 export default function AgentRunDetailContent({
   run,
 }: AgentRunDetailContentProps) {
+  const outcomeMessage = resolveAgentRunDetailOutcomeMessage({
+    status: run.status,
+    resultOutput: run.resultOutput,
+    denialReason: run.denialReason,
+    reportSummary: run.reportSummary,
+  });
+
   return (
     <AppPanel as="div">
       <div className="flex flex-wrap items-center justify-between gap-3">
@@ -64,6 +73,10 @@ export default function AgentRunDetailContent({
       <pre className="mt-2 max-h-64 overflow-auto rounded-lg bg-gray-50 p-3 text-xs text-gray-700 dark:bg-gray-800 dark:text-gray-300">
         {run.prompt}
       </pre>
+      <AgentRunReportProgress
+        reportSummary={run.reportSummary}
+        reportStatus={run.reportStatus}
+      />
       {run.status === AgentRunStatus.RUNNING ? (
         <AgentRunLiveTerminal key={run.id} runId={run.id} />
       ) : null}
@@ -72,9 +85,10 @@ export default function AgentRunDetailContent({
         <AgentRunResultOutput run={run} resultOutput={run.resultOutput} />
       ) : null}
       <AgentRunKeepInProjectButton runId={run.id} projectId={run.projectId} />
-      {run.denialReason ? (
+      {outcomeMessage !== null &&
+      (run.resultOutput === null || run.resultOutput.trim().length === 0) ? (
         <p className="mt-4 text-sm text-rose-600 dark:text-rose-400">
-          {run.denialReason}
+          {outcomeMessage}
         </p>
       ) : null}
       {run.status === AgentRunStatus.COMPLETED ? (

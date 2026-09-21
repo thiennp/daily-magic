@@ -21,13 +21,15 @@ export default function AgentRunDetail({ runId }: AgentRunDetailProps) {
 
   if (isLoading) {
     return (
-      <p className="text-sm text-gray-500 dark:text-gray-400">Loading job…</p>
+      <p className="text-sm text-gray-500 dark:text-gray-400">Loading run…</p>
     );
   }
 
   if (run === null) {
     return (
-      <p className="text-sm text-gray-500 dark:text-gray-400">Job not found.</p>
+      <p className="text-sm text-gray-500 dark:text-gray-400">
+        Run not found. It may have been deleted or never synced to this browser.
+      </p>
     );
   }
 
@@ -49,7 +51,7 @@ export default function AgentRunDetail({ runId }: AgentRunDetailProps) {
           href="/reports"
           className="text-sm font-medium text-brand-600 hover:text-brand-700 dark:text-brand-400"
         >
-          Back to job history
+          Back to Reports
         </Link>
         <AgentRunDetailDeleteButton runId={runId} />
       </div>

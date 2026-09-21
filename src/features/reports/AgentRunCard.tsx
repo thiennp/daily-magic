@@ -7,6 +7,7 @@ import AppPanel from "@/components/surfaces/AppPanel";
 import AgentRunAgainButton from "@/features/reports/AgentRunAgainButton";
 import { buildAgentRunContinueHref } from "@/features/reports/utils/buildAgentRunContinueHref";
 import AgentRunStatusBadge from "@/features/reports/AgentRunStatusBadge";
+import { formatAgentRunReportSummaryLine } from "@/features/reports/utils/formatAgentRunReportSummaryLine";
 import { deleteAgentRunHistory } from "@/features/reports/utils/deleteAgentRunHistory";
 import type EnrichedAgentRunRecord from "@/lib/dispatch/types/EnrichedAgentRunRecord.type";
 import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
@@ -18,6 +19,7 @@ interface AgentRunCardProps {
 
 export default function AgentRunCard({ run }: AgentRunCardProps) {
   const canRunAgain = run.status === AgentRunStatus.COMPLETED;
+  const reportSummaryLine = formatAgentRunReportSummaryLine(run.reportSummary);
   const [isDeleting, setIsDeleting] = useState(false);
 
   const handleDelete = async (): Promise<void> => {
@@ -49,6 +51,11 @@ export default function AgentRunCard({ run }: AgentRunCardProps) {
       <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
         Policy: {run.dispatchPolicy}
       </p>
+      {reportSummaryLine !== null ? (
+        <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
+          {reportSummaryLine}
+        </p>
+      ) : null}
       <pre className="mt-3 max-h-32 overflow-auto rounded-lg bg-gray-50 p-3 text-xs text-gray-700 dark:bg-gray-800 dark:text-gray-300">
         {run.prompt}
       </pre>
