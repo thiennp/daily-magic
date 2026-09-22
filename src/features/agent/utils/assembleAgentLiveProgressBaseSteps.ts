@@ -23,7 +23,6 @@ export const assembleAgentLiveProgressBaseSteps = (input: {
   readonly approvalWaitingLabel?: string | null;
 }): {
   readonly baseSteps: readonly AgentLiveProgressStep[];
-  readonly finishStep: AgentLiveProgressStep;
   readonly isFinished: boolean;
   readonly workState: AgentLiveProgressStepState;
 } => {
@@ -76,15 +75,13 @@ export const assembleAgentLiveProgressBaseSteps = (input: {
   const shell = buildAgentLiveProgressShellSteps({
     started,
     isReadyBanner,
-    isFinished,
     prepareState: states.prepareState,
     startState: states.startState,
-    finishState: states.finishState,
   });
 
   return {
     baseSteps: [
-      ...shell.leading,
+      ...shell,
       buildAgentLiveProgressEstimateStep({
         estimateState: states.estimateState,
         estimateSeconds: input.estimateSeconds,
@@ -92,7 +89,6 @@ export const assembleAgentLiveProgressBaseSteps = (input: {
       }),
       ...workSteps,
     ],
-    finishStep: shell.finish,
     isFinished,
     workState: states.workState,
   };

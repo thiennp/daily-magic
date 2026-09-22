@@ -74,7 +74,7 @@ export default function AgentLiveProgressFeed({
         onDeleteRun={onDeleteRun}
       />
       {humanSummary !== null ? (
-        <p className="mt-3 text-sm text-gray-700 dark:text-gray-200">
+        <p className="mt-3 whitespace-pre-line text-sm text-gray-700 dark:text-gray-200">
           {humanSummary}
         </p>
       ) : null}

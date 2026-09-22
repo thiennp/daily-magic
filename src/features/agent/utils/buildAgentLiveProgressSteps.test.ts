@@ -14,7 +14,6 @@ describe("buildAgentLiveProgressSteps", () => {
       "pending",
       "pending",
       "pending",
-      "pending",
     ]);
     expect(result.replyPreview).toBeNull();
   });
@@ -27,11 +26,10 @@ describe("buildAgentLiveProgressSteps", () => {
     });
 
     expect(result.steps.map((step) => [step.label, step.state])).toEqual([
-      ["Preparing agent on your Mac", "done"],
+      ["Preparing agent", "done"],
       ["Ready for your message", "active"],
-      ["Analyzing requirements and estimating", "pending"],
-      ["Working on your request", "pending"],
-      ["Finishing up", "pending"],
+      ["Analyzing…", "pending"],
+      ["Working…", "pending"],
     ]);
     expect(result.replyPreview).toBeNull();
   });
@@ -48,7 +46,7 @@ describe("buildAgentLiveProgressSteps", () => {
       "done",
     );
     expect(result.steps.find((step) => step.id === "estimate")).toMatchObject({
-      label: "Analyzing requirements and estimating",
+      label: "Analyzing…",
       state: "done",
       detail: "About 2 min for this run planned",
     });
@@ -102,8 +100,6 @@ describe("buildAgentLiveProgressSteps", () => {
     expect(result.replyPreview).toBeNull();
     expect(result.outcome.kind).toBe("passed");
     expect(result.outcome.chipLabel).toBe("Success");
-    expect(result.steps.find((step) => step.id === "finish")?.state).toBe(
-      "done",
-    );
+    expect(result.steps.some((step) => step.id === "finish")).toBe(false);
   });
 });

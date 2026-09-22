@@ -93,7 +93,7 @@ test.describe("Self-delegate on own Mac", () => {
       timeout: 90_000,
     });
     await expect(
-      page.getByText(/Ready for your message|Preparing agent on your Mac/i),
+      page.getByText(/Ready for your message|Preparing agent/i),
     ).toBeVisible({ timeout: 90_000 });
 
     await page.screenshot({
@@ -124,9 +124,7 @@ test.describe("Self-delegate on own Mac", () => {
       timeout: 30_000,
     });
     await expect(page.getByText("Agent started")).toBeVisible();
-    await expect(
-      page.getByText(/Analyzing requirements and estimating/i),
-    ).toBeVisible();
+    await expect(page.getByText(/Analyzing…/i)).toBeVisible();
     await page.screenshot({
       path: ".e2e/screenshots/self-delegate-progress-working.png",
       fullPage: true,
@@ -135,7 +133,7 @@ test.describe("Self-delegate on own Mac", () => {
     await expect(page.getByText(/ack1/i).first()).toBeVisible({
       timeout: 120_000,
     });
-    await expect(page.getByText("Finished").first()).toBeVisible({
+    await expect(page.getByText("Success").first()).toBeVisible({
       timeout: 30_000,
     });
 

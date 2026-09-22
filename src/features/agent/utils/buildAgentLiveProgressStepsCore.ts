@@ -56,7 +56,6 @@ export const buildAgentLiveProgressStepsCore = (input: {
     hasProgressUpdates: updates.length > 0,
     workState: assembled.workState,
     steps: assembled.baseSteps,
-    finishStep: assembled.finishStep,
   });
 
   return {

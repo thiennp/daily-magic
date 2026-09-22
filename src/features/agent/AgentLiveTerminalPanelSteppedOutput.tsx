@@ -2,11 +2,9 @@
 
 import { useState } from "react";
 
-import AgentLiveTerminalOutputTabs from "@/features/agent/AgentLiveTerminalOutputTabs";
 import AgentLiveTerminalSteppedMirror from "@/features/agent/AgentLiveTerminalSteppedMirror";
 import { buildAgentLiveTerminalPanelMirror } from "@/features/agent/utils/buildAgentLiveTerminalPanelMirror";
 import type { AgentMacShellPanelProps } from "@/features/agent/types/AgentMacShellPanelProps.type";
-import type { AgentLiveRunOutcome } from "@/features/agent/utils/agentLiveRunOutcomeKind.type";
 import type { AgentLiveTerminalStatus } from "@/features/agent/utils/agentLiveTerminalState.type";
 
 interface AgentLiveTerminalPanelSteppedOutputProps extends AgentMacShellPanelProps {
@@ -14,8 +12,6 @@ interface AgentLiveTerminalPanelSteppedOutputProps extends AgentMacShellPanelPro
   readonly status: AgentLiveTerminalStatus;
   readonly pendingCommandLine: string | null;
   readonly feedbackPendingQuestion: string | null;
-  readonly runOutcome: AgentLiveRunOutcome;
-  readonly humanSummary: string | null;
 }
 
 export default function AgentLiveTerminalPanelSteppedOutput(
@@ -33,19 +29,12 @@ export default function AgentLiveTerminalPanelSteppedOutput(
   });
 
   return (
-    <AgentLiveTerminalOutputTabs
-      output={props.output}
-      runOutcome={props.runOutcome}
-      humanSummary={props.humanSummary}
-      terminalBody={
-        <AgentLiveTerminalSteppedMirror
-          isTerminalOpen={isTerminalOpen}
-          onToggleTerminal={() => {
-            setIsTerminalOpen((open) => !open);
-          }}
-          terminalBody={terminalBody}
-        />
-      }
+    <AgentLiveTerminalSteppedMirror
+      isTerminalOpen={isTerminalOpen}
+      onToggleTerminal={() => {
+        setIsTerminalOpen((open) => !open);
+      }}
+      terminalBody={terminalBody}
     />
   );
 }
