@@ -9,7 +9,7 @@ import AgentRunReportProgress from "@/features/reports/AgentRunReportProgress";
 import AgentRunStatusBadge from "@/features/reports/AgentRunStatusBadge";
 import { resolveAgentRunDetailOutcomeMessage } from "@/features/reports/utils/resolveAgentRunDetailOutcomeMessage";
 import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
-import { resolveAgentRunStatusBadgeLabel } from "@/lib/dispatch/resolveAgentRunStatusBadgeLabel";
+import { resolveAgentRunHistoryOutcomeBadge } from "@/features/reports/utils/resolveAgentRunHistoryOutcomeBadge";
 import type EnrichedAgentRunRecord from "@/lib/dispatch/types/EnrichedAgentRunRecord.type";
 
 interface AgentRunDetailContentProps {
@@ -19,6 +19,7 @@ interface AgentRunDetailContentProps {
 export default function AgentRunDetailContent({
   run,
 }: AgentRunDetailContentProps) {
+  const outcomeBadge = resolveAgentRunHistoryOutcomeBadge(run);
   const outcomeMessage = resolveAgentRunDetailOutcomeMessage({
     status: run.status,
     resultOutput: run.resultOutput,
@@ -31,7 +32,8 @@ export default function AgentRunDetailContent({
       <div className="flex flex-wrap items-center justify-between gap-3">
         <AgentRunStatusBadge
           status={run.status}
-          labelOverride={resolveAgentRunStatusBadgeLabel(run)}
+          labelOverride={outcomeBadge.label}
+          classNameOverride={outcomeBadge.className}
         />
         <p className="text-xs text-gray-500 dark:text-gray-400">
           Created {new Date(run.createdAt).toLocaleString()}

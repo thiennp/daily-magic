@@ -76,6 +76,8 @@ export default function AgentLiveTerminalPanel(
       {isSteppedComposer ? (
         <AgentLiveTerminalPanelSteppedOutput
           pendingCommandLine={pendingCommandLine}
+          runOutcome={panelProgress.progress.outcome}
+          humanSummary={panelProgress.progress.humanSummary}
           {...props}
         />
       ) : null}

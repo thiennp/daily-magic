@@ -1,3 +1,4 @@
+import { dedupeConsecutiveLogLines } from "@/features/agent/utils/dedupeConsecutiveLogLines";
 import type { AgentLiveTerminalStatus } from "@/features/agent/utils/agentLiveTerminalState.type";
 import {
   AGENT_LIVE_BASH_PROMPT,
@@ -32,10 +33,12 @@ export const buildAgentLiveTerminalDisplay = (input: {
     input.status === "finished" &&
     !visibleOutput.endsWith(AGENT_LIVE_BASH_PROMPT)
   ) {
-    return appendAgentLiveTerminalPrompt(visibleOutput);
+    return dedupeConsecutiveLogLines(
+      appendAgentLiveTerminalPrompt(visibleOutput),
+    );
   }
 
-  return visibleOutput;
+  return dedupeConsecutiveLogLines(visibleOutput);
 };
 
 export const shouldShowAgentLiveTerminalCursor = (

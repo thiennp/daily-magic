@@ -50,6 +50,7 @@ Open the top `sourcePath` under `docs/qa/` when present.
 | [guest-library-browser-drafts.md](guest-library-browser-drafts.md)                               | Guest `/library` drafts in browser + latest-wins sync on sign-in             |
 | [official-workflow-run-checkpoints-and-retry.md](official-workflow-run-checkpoints-and-retry.md) | Human checkpoints, skip, and retry of a failed agent step                    |
 | [mac-harness-workflow-agent-dispatch.md](mac-harness-workflow-agent-dispatch.md)                 | Harness install vs workflow/agent `command.claude.run` over Mac WebSocket    |
+| [run-ux-honesty-strings.md](run-ux-honesty-strings.md)                                           | Pimi locked run outcome chips, suffixes, cli-fallback copy (live progress)   |
 
 Add a row here when you add a Q&A file.
 

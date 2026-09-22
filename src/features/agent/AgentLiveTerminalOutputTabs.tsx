@@ -2,7 +2,9 @@
 
 import { useMemo, useState, type ReactNode } from "react";
 
+import AgentLiveRunOutcomeChip from "@/features/agent/AgentLiveRunOutcomeChip";
 import AgentRunSemanticOutputView from "@/features/dispatch/AgentRunSemanticOutputView";
+import type { AgentLiveRunOutcome } from "@/features/agent/utils/agentLiveRunOutcomeKind.type";
 import {
   formatAgentRunSemanticOutput,
   hasAgentRunSemanticOutput,
@@ -11,18 +13,25 @@ import {
 interface AgentLiveTerminalOutputTabsProps {
   readonly output: string;
   readonly terminalBody: ReactNode;
+  readonly runOutcome?: AgentLiveRunOutcome | null;
+  readonly humanSummary?: string | null;
 }
 
 export default function AgentLiveTerminalOutputTabs({
   output,
   terminalBody,
+  runOutcome = null,
+  humanSummary = null,
 }: AgentLiveTerminalOutputTabsProps) {
   const formatted = useMemo(
     () => formatAgentRunSemanticOutput(output),
     [output],
   );
+  const useHonestySummary = runOutcome !== null;
   const [view, setView] = useState<"summary" | "terminal">(
-    hasAgentRunSemanticOutput(formatted) ? "summary" : "terminal",
+    useHonestySummary || hasAgentRunSemanticOutput(formatted)
+      ? "summary"
+      : "terminal",
   );
 
   return (
@@ -52,14 +61,28 @@ export default function AgentLiveTerminalOutputTabs({
             setView("terminal");
           }}
         >
-          Terminal
+          Expand log
         </button>
       </div>
       {view === "summary" ? (
-        <AgentRunSemanticOutputView
-          formatted={formatted}
-          fallbackPlain={output}
-        />
+        useHonestySummary && runOutcome !== null ? (
+          <div className="mt-2 space-y-2">
+            <AgentLiveRunOutcomeChip
+              kind={runOutcome.kind}
+              label={runOutcome.chipLabel}
+            />
+            {humanSummary !== null && humanSummary.length > 0 ? (
+              <p className="text-sm text-gray-700 dark:text-gray-200">
+                {humanSummary}
+              </p>
+            ) : null}
+          </div>
+        ) : (
+          <AgentRunSemanticOutputView
+            formatted={formatted}
+            fallbackPlain={undefined}
+          />
+        )
       ) : (
         terminalBody
       )}

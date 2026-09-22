@@ -88,17 +88,20 @@ describe("buildAgentLiveProgressSteps", () => {
         "active",
       ],
     ]);
-    expect(result.replyPreview).toBe("Proposal draft coming next.");
+    expect(result.replyPreview).toBeNull();
+    expect(result.humanSummary).toBeNull();
   });
 
-  it("strips CLI chrome from the reply preview", () => {
+  it("strips CLI chrome and surfaces Success outcome on finish", () => {
     const result = buildAgentLiveProgressSteps({
       status: "finished",
       output:
         'agent-witch@mac ~ % claude -p "hi"\nHello there\nagent-witch@mac ~ % ',
     });
 
-    expect(result.replyPreview).toBe("Hello there");
+    expect(result.replyPreview).toBeNull();
+    expect(result.outcome.kind).toBe("passed");
+    expect(result.outcome.chipLabel).toBe("Success");
     expect(result.steps.find((step) => step.id === "finish")?.state).toBe(
       "done",
     );

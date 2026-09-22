@@ -11,7 +11,7 @@ import { formatAgentRunReportSummaryLine } from "@/features/reports/utils/format
 import { deleteAgentRunHistory } from "@/features/reports/utils/deleteAgentRunHistory";
 import type EnrichedAgentRunRecord from "@/lib/dispatch/types/EnrichedAgentRunRecord.type";
 import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
-import { resolveAgentRunStatusBadgeLabel } from "@/lib/dispatch/resolveAgentRunStatusBadgeLabel";
+import { resolveAgentRunHistoryOutcomeBadge } from "@/features/reports/utils/resolveAgentRunHistoryOutcomeBadge";
 
 interface AgentRunCardProps {
   readonly run: EnrichedAgentRunRecord;
@@ -20,6 +20,7 @@ interface AgentRunCardProps {
 export default function AgentRunCard({ run }: AgentRunCardProps) {
   const canRunAgain = run.status === AgentRunStatus.COMPLETED;
   const reportSummaryLine = formatAgentRunReportSummaryLine(run.reportSummary);
+  const outcomeBadge = resolveAgentRunHistoryOutcomeBadge(run);
   const [isDeleting, setIsDeleting] = useState(false);
 
   const handleDelete = async (): Promise<void> => {
@@ -39,7 +40,8 @@ export default function AgentRunCard({ run }: AgentRunCardProps) {
       <div className="flex flex-wrap items-center justify-between gap-2">
         <AgentRunStatusBadge
           status={run.status}
-          labelOverride={resolveAgentRunStatusBadgeLabel(run)}
+          labelOverride={outcomeBadge.label}
+          classNameOverride={outcomeBadge.className}
         />
         <p className="text-xs text-gray-500 dark:text-gray-400">
           {new Date(run.createdAt).toLocaleString()}

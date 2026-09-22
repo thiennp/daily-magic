@@ -4,6 +4,7 @@ import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
 interface AgentRunStatusBadgeProps {
   readonly status: EnrichedAgentRunRecord["status"];
   readonly labelOverride?: string | null;
+  readonly classNameOverride?: string | null;
 }
 
 const STATUS_CLASS_MAP: Record<EnrichedAgentRunRecord["status"], string> = {
@@ -26,15 +27,21 @@ const formatRunStatus = (status: string): string => status.replaceAll("_", " ");
 export default function AgentRunStatusBadge({
   status,
   labelOverride = null,
+  classNameOverride = null,
 }: AgentRunStatusBadgeProps) {
   const label =
     labelOverride !== null && labelOverride.trim().length > 0
       ? labelOverride
       : formatRunStatus(status);
 
+  const toneClass =
+    classNameOverride !== null && classNameOverride.trim().length > 0
+      ? classNameOverride
+      : STATUS_CLASS_MAP[status];
+
   return (
     <span
-      className={`rounded-full px-2.5 py-1 text-xs font-medium ${labelOverride ? "" : "capitalize"} ${STATUS_CLASS_MAP[status]}`}
+      className={`rounded-full px-2.5 py-1 text-xs font-medium ${labelOverride ? "" : "capitalize"} ${toneClass}`}
     >
       {label}
     </span>

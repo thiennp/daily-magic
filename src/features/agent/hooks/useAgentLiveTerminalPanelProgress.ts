@@ -68,10 +68,12 @@ export function useAgentLiveTerminalPanelProgress(input: {
       : null;
   const progressWithReport = {
     ...progress,
-    replyPreview:
-      progress.replyPreview ??
-      (cachedReportSummary !== null && cachedReportSummary.trim().length > 0
-        ? cachedReportSummary.trim()
+    humanSummary:
+      progress.humanSummary ??
+      (cachedReportSummary !== null &&
+      cachedReportSummary.trim().length > 0 &&
+      progress.outcome.kind === "passed"
+        ? cachedReportSummary.trim().slice(0, 280)
         : null),
   };
   const estimateProgress =

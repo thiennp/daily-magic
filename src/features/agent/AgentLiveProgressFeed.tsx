@@ -6,7 +6,10 @@ import AgentLiveProgressWavesPanel from "@/features/agent/AgentLiveProgressWaves
 import AgentLiveTerminalNextActions from "@/features/agent/AgentLiveTerminalNextActions";
 import { useAgentLiveTerminalLoadingDots } from "@/features/agent/hooks/useAgentLiveTerminalLoadingDots";
 import type { WsTestConnectionStatus } from "@/features/agent/types/WsTestConnectionStatus.type";
-import type { AgentLiveProgressStep } from "@/features/agent/utils/buildAgentLiveProgressSteps";
+import type {
+  AgentLiveProgressStep,
+  AgentLiveRunOutcome,
+} from "@/features/agent/utils/buildAgentLiveProgressSteps";
 import { buildAgentLiveTerminalLoadingLine } from "@/features/agent/utils/buildAgentLiveTerminalDisplay";
 import type { AgentLiveProgressStallState } from "@/features/agent/utils/resolveAgentLiveProgressStallState";
 import type { AgentLiveWorkingEstimateProgress } from "@/features/agent/utils/resolveAgentLiveWorkingEstimateProgress";
@@ -14,7 +17,8 @@ import type { AgentLiveWavePlanViewItem } from "@/features/agent/utils/agentLive
 
 interface AgentLiveProgressFeedProps {
   readonly steps: readonly AgentLiveProgressStep[];
-  readonly replyPreview: string | null;
+  readonly humanSummary: string | null;
+  readonly outcome: AgentLiveRunOutcome;
   readonly isWorking: boolean;
   readonly isStopping?: boolean;
   readonly stallState?: AgentLiveProgressStallState;
@@ -32,7 +36,8 @@ interface AgentLiveProgressFeedProps {
 
 export default function AgentLiveProgressFeed({
   steps,
-  replyPreview,
+  humanSummary,
+  outcome,
   isWorking,
   isStopping = false,
   stallState = "none",
@@ -56,6 +61,7 @@ export default function AgentLiveProgressFeed({
       aria-busy={isWorking || isStopping}
     >
       <AgentLiveProgressFeedStatus
+        outcome={outcome}
         isWorking={isWorking}
         isStopping={isStopping}
         workingEllipsis={workingEllipsis}
@@ -67,6 +73,11 @@ export default function AgentLiveProgressFeed({
         onStopRun={onStopRun}
         onDeleteRun={onDeleteRun}
       />
+      {humanSummary !== null ? (
+        <p className="mt-3 text-sm text-gray-700 dark:text-gray-200">
+          {humanSummary}
+        </p>
+      ) : null}
       <AgentLiveProgressWavesPanel items={wavePlanItems} />
       <ol className="mt-4 space-y-3">
         {steps.map((step) => (
@@ -78,11 +89,6 @@ export default function AgentLiveProgressFeed({
           />
         ))}
       </ol>
-      {replyPreview !== null ? (
-        <div className="mt-4 rounded-lg bg-gray-50 p-3 text-sm whitespace-pre-wrap text-gray-700 dark:bg-gray-900/60 dark:text-gray-200">
-          {replyPreview}
-        </div>
-      ) : null}
       {nextActions.length > 0 && onSelectNextAction !== undefined ? (
         <AgentLiveTerminalNextActions
           actions={nextActions}
