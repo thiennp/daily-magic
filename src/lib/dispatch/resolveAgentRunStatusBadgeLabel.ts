@@ -1,4 +1,4 @@
-import { resolveAgentRunHonestyOutcomeFromRecord } from "@/lib/dispatch/resolveAgentRunHonestyOutcome";
+import { resolveAgentRunHonestyOutcomeFromRecord } from "@/lib/dispatch/resolveAgentRunHonestyOutcomeFromRecord";
 import type AgentRunRecord from "@/lib/dispatch/types/AgentRunRecord.type";
 
 export const resolveAgentRunStatusBadgeLabel = (

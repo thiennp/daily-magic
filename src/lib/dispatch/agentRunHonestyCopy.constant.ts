@@ -7,6 +7,7 @@ export const AGENT_RUN_HONESTY_CHIP_LABEL = {
   failed: "Failed",
   waiting_you: "Waiting on you",
   running: "In progress",
+  connecting: "Connecting",
   stopped: "Stopped",
   timed_out: "Timed out",
 } as const;

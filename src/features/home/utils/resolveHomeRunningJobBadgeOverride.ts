@@ -1,4 +1,4 @@
-import { resolveAgentRunHonestyOutcomeFromRecord } from "@/lib/dispatch/resolveAgentRunHonestyOutcome";
+import { resolveAgentRunHonestyOutcomeFromRecord } from "@/lib/dispatch/resolveAgentRunHonestyOutcomeFromRecord";
 import { resolveAgentLiveRunOutcomeChipClassName } from "@/features/agent/utils/agentLiveRunOutcomeChip.constant";
 import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
 import type AgentRunRecord from "@/lib/dispatch/types/AgentRunRecord.type";

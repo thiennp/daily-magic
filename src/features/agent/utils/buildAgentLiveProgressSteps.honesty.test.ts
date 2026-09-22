@@ -48,6 +48,21 @@ describe("buildAgentLiveProgressSteps run UX honesty", () => {
     );
   });
 
+  it("shows Connecting while starting before log attaches", () => {
+    const result = buildAgentLiveProgressSteps({
+      status: "starting",
+      output: "",
+      pendingCommandLine: 'claude -p "demo"',
+      estimateSeconds: 90,
+    });
+
+    expect(result.outcome.kind).toBe("connecting");
+    expect(result.outcome.chipLabel).toBe("Connecting");
+    expect(result.steps.find((step) => step.id === "finish")?.state).toBe(
+      "pending",
+    );
+  });
+
   it("shows Waiting for output… while streaming with empty work body", () => {
     const result = buildAgentLiveProgressSteps({
       status: "streaming",

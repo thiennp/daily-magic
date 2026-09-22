@@ -13,6 +13,8 @@ export const AGENT_LIVE_RUN_OUTCOME_CHIP_CLASS: Record<
     "bg-brand-100 text-brand-900 dark:bg-brand-950/40 dark:text-brand-100",
   running:
     "bg-brand-100 text-brand-900 dark:bg-brand-950/40 dark:text-brand-100",
+  connecting:
+    "bg-brand-100 text-brand-900 dark:bg-brand-950/40 dark:text-brand-100",
   stopped: "bg-gray-200 text-gray-900 dark:bg-gray-800 dark:text-gray-100",
   timed_out:
     "bg-orange-100 text-orange-950 dark:bg-orange-950/40 dark:text-orange-100",

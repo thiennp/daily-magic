@@ -4,6 +4,7 @@ export type AgentRunHonestyOutcomeKind =
   | "failed"
   | "waiting_you"
   | "running"
+  | "connecting"
   | "stopped"
   | "timed_out";
 

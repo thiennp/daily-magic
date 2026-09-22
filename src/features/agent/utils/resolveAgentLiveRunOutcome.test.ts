@@ -45,6 +45,16 @@ describe("resolveAgentLiveRunOutcome", () => {
     expect(outcome.chipLabel).toBe("In progress");
   });
 
+  it("maps starting to Connecting before log is attached", () => {
+    const outcome = resolveAgentLiveRunOutcome({
+      status: "starting",
+      output: "",
+    });
+
+    expect(outcome.kind).toBe("connecting");
+    expect(outcome.chipLabel).toBe("Connecting");
+  });
+
   it("maps pending question to Waiting on you", () => {
     const outcome = resolveAgentLiveRunOutcome({
       status: "streaming",

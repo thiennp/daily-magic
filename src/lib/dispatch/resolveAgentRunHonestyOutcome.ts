@@ -2,35 +2,19 @@ import {
   AGENT_RUN_HONESTY_CHIP_LABEL,
   formatAgentRunHonestyFailedSummary,
 } from "@/lib/dispatch/agentRunHonestyCopy.constant";
+import { buildAgentRunHonestyWaitingYouSummary } from "@/lib/dispatch/buildAgentRunHonestyWaitingYouSummary";
 import type {
   AgentRunHonestyLiveStatus,
   AgentRunHonestyOutcome,
 } from "@/lib/dispatch/agentRunHonestyOutcome.type";
-import { mapAgentRunStatusToHonestyLiveStatus } from "@/lib/dispatch/mapAgentRunStatusToHonestyLiveStatus";
 import { resolveAgentRunHonestyTerminalOutcome } from "@/lib/dispatch/resolveAgentRunHonestyTerminalOutcome";
 import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
 import type { AgentRunStatusValue } from "@/lib/dispatch/AgentRunStatus.constant";
 
-const isHonestyLiveWorking = (status: AgentRunHonestyLiveStatus): boolean =>
-  status === "starting" ||
+const isHonestyLiveInProgress = (status: AgentRunHonestyLiveStatus): boolean =>
   status === "streaming" ||
   status === "waiting_approval" ||
   status === "stopping";
-
-const buildWaitingYouSummary = (input: {
-  readonly approvalWaitingLabel?: string | null;
-  readonly pendingQuestion?: string | null;
-}): readonly string[] => {
-  const approval = (input.approvalWaitingLabel ?? "").trim();
-  if (approval.length > 0) {
-    return [approval];
-  }
-  const question = (input.pendingQuestion ?? "").trim();
-  if (question.length > 0) {
-    return [question];
-  }
-  return ["Waiting on you — your input is needed to continue."];
-};
 
 export const resolveAgentRunHonestyOutcome = (input: {
   readonly status: AgentRunHonestyLiveStatus;
@@ -50,12 +34,20 @@ export const resolveAgentRunHonestyOutcome = (input: {
     return {
       kind: "waiting_you",
       chipLabel: AGENT_RUN_HONESTY_CHIP_LABEL.waiting_you,
-      summaryLines: buildWaitingYouSummary(input),
+      summaryLines: buildAgentRunHonestyWaitingYouSummary(input),
+    };
+  }
+
+  if (input.status === "starting") {
+    return {
+      kind: "connecting",
+      chipLabel: AGENT_RUN_HONESTY_CHIP_LABEL.connecting,
+      summaryLines: [],
     };
   }
 
   if (
-    isHonestyLiveWorking(input.status) ||
+    isHonestyLiveInProgress(input.status) ||
     input.runStatus === AgentRunStatus.RUNNING
   ) {
     return {
@@ -101,19 +93,3 @@ export const resolveAgentRunHonestyOutcome = (input: {
     summaryLines: [],
   };
 };
-
-export const resolveAgentRunHonestyOutcomeFromRecord = (input: {
-  readonly status: AgentRunStatusValue;
-  readonly resultOutput: string | null;
-  readonly resultOutcomeCode?: string | null;
-  readonly pendingQuestion?: string | null;
-  readonly approvalWaitingLabel?: string | null;
-}): AgentRunHonestyOutcome =>
-  resolveAgentRunHonestyOutcome({
-    status: mapAgentRunStatusToHonestyLiveStatus(input.status),
-    output: input.resultOutput ?? "",
-    pendingQuestion: input.pendingQuestion,
-    approvalWaitingLabel: input.approvalWaitingLabel,
-    runStatus: input.status,
-    resultOutcomeCode: input.resultOutcomeCode ?? null,
-  });
