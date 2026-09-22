@@ -1,10 +1,10 @@
 import { describe, expect, it } from "vitest";
 
 import {
-  buildMacDeviceDisplayNameById,
   isGenericMacDeviceLabel,
   resolveMacDeviceDisplayName,
 } from "@/features/agent-witch/utils/resolveMacDeviceDisplayName";
+import { buildMacDeviceDisplayNameById } from "@/features/agent-witch/utils/buildMacDeviceDisplayNameById";
 
 describe("resolveMacDeviceDisplayName", () => {
   it("uses the hostname when it is specific", () => {
@@ -60,5 +60,15 @@ describe("resolveMacDeviceDisplayName", () => {
         deviceLabel: "L92KQX615Q#thiennguyen",
       }),
     ).toBe("L92KQX615Q");
+  });
+
+  it("labels Linux hosts without pretending they are Macs", () => {
+    expect(
+      resolveMacDeviceDisplayName({
+        deviceLabel: "cloud-vm#dev",
+        platform: "linux",
+        deviceCount: 1,
+      }),
+    ).toBe("Linux device");
   });
 });

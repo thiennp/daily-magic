@@ -1851,10 +1851,16 @@ const main = async (): Promise<void> => {
 
   const machineLease = claimAgentWitchMachineLease();
   if (!machineLease.ok) {
-    await kickstartAgentWitchClientLaunchAgents(installDir);
-    process.stdout.write(
-      "[agent-witch] Another Agent Witch process already owns this Mac user lease — kickstarted LaunchAgent and exiting.\n",
-    );
+    if (process.platform === "darwin") {
+      await kickstartAgentWitchClientLaunchAgents(installDir);
+      process.stdout.write(
+        "[agent-witch] Another Agent Witch process already owns this Mac user lease — kickstarted LaunchAgent and exiting.\n",
+      );
+    } else {
+      process.stdout.write(
+        "[agent-witch] Another Agent Witch process may already be running — exiting.\n",
+      );
+    }
     process.exit(0);
   }
   migrateLegacyAgentWitchInstallLogsForActiveProfiles(installDir);
@@ -1865,15 +1871,17 @@ const main = async (): Promise<void> => {
     );
   }
 
-  const launchAgentPlist = ensureAgentWitchLaunchAgentPlist({
-    launchAgentLabel: resolveAgentWitchLaunchAgentPrefix(installDir),
-    installDir,
-  });
-  if (launchAgentPlist.rewritten) {
-    console.log("[agent-witch] Repaired LaunchAgent plist (AGENT-067).");
-  }
+  if (process.platform === "darwin") {
+    const launchAgentPlist = ensureAgentWitchLaunchAgentPlist({
+      launchAgentLabel: resolveAgentWitchLaunchAgentPrefix(installDir),
+      installDir,
+    });
+    if (launchAgentPlist.rewritten) {
+      console.log("[agent-witch] Repaired LaunchAgent plist (AGENT-067).");
+    }
 
-  bootoutAgentWitchAuxiliaryLaunchAgents();
+    bootoutAgentWitchAuxiliaryLaunchAgents();
+  }
 
   const configs = await waitForConfigs();
   const primaryConfig = configs[0];

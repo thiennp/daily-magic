@@ -42,6 +42,15 @@
       ]
     },
     {
+      "slug": "linux-launch",
+      "title": "Linux systemd user unit and Node tarball",
+      "fsaStatus": "fsa",
+      "featurePath": "apps/install/features/linux-launch",
+      "legacyPaths": [
+        "src/lib/agentWitch/buildAgentWitchInstallScriptLaunchAgent.ts"
+      ]
+    },
+    {
       "slug": "runtime-client",
       "title": "Mac runtime process and CLI commands",
       "fsaStatus": "fsa",

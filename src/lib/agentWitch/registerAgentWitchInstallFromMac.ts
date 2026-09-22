@@ -3,13 +3,16 @@ import { findAgentWitchDeviceByToken } from "@/lib/agentWitch/findAgentWitchDevi
 import { getAgentWitchPairingStore } from "@/lib/agentWitch/getAgentWitchHub";
 import { touchAgentWitchDeviceLastSeen } from "@/lib/agentWitch/touchAgentWitchDeviceLastSeen";
 import { updateAgentWitchDeviceInstallBundleVersion } from "@/lib/agentWitch/updateAgentWitchDeviceInstallBundleVersion";
+import { updateAgentWitchDevicePlatform } from "@/lib/agentWitch/updateAgentWitchDevicePlatform";
 import { updateAgentWitchDeviceWakePort } from "@/lib/agentWitch/updateAgentWitchDeviceWakePort";
+import type { AgentWitchDevicePlatform } from "@/lib/agentWitch/types/AgentWitchDevicePlatform.type";
 
 export const registerAgentWitchInstallFromMac = async (input: {
   readonly pairingToken: string;
   readonly deviceLabel: string;
   readonly installBundleVersion?: string;
   readonly wakePort?: number;
+  readonly platform?: AgentWitchDevicePlatform;
 }): Promise<{ readonly ok: true; readonly deviceId: string } | null> => {
   const device = await findAgentWitchDeviceByToken(input.pairingToken);
   if (device === null || device.revokedAt !== null) {
@@ -39,6 +42,13 @@ export const registerAgentWitchInstallFromMac = async (input: {
     await updateAgentWitchDeviceWakePort({
       deviceId: device.id,
       wakePort: input.wakePort,
+    });
+  }
+
+  if (input.platform !== undefined) {
+    await updateAgentWitchDevicePlatform({
+      deviceId: device.id,
+      platform: input.platform,
     });
   }
 

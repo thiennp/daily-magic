@@ -6,6 +6,7 @@ import { isAgentWitchDeviceRecentlySeen } from "@/lib/agentWitch/agentWitchHeart
 export interface AgentWitchDeviceWithOnlineStatus {
   readonly id: string;
   readonly tokenHash: string | null;
+  readonly platform: AgentWitchDeviceRecord["platform"];
   readonly deviceLabel: string | null;
   readonly displayName: string | null;
   readonly claimedAt: string;
@@ -55,6 +56,7 @@ const buildAgentWitchDevicesWithOnlineStatus = (
     return {
       id: device.id,
       tokenHash: device.tokenHash ?? null,
+      platform: device.platform ?? "mac",
       deviceLabel: device.deviceLabel,
       displayName: device.displayName,
       claimedAt: device.claimedAt,

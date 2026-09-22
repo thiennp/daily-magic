@@ -17,6 +17,25 @@ describe("parseRegisterInstallBody", () => {
       deviceLabel: "Mac-Light-S#owner",
       installBundleVersion: "54",
       wakePort: undefined,
+      platform: undefined,
+    });
+  });
+
+  it("accepts platform linux from register-install", () => {
+    const token = "a".repeat(64);
+
+    expect(
+      parseRegisterInstallBody({
+        pairingToken: token,
+        deviceLabel: "vm#dev",
+        platform: "linux",
+      }),
+    ).toEqual({
+      pairingToken: token,
+      deviceLabel: "vm#dev",
+      installBundleVersion: undefined,
+      wakePort: undefined,
+      platform: "linux",
     });
   });
 
@@ -34,6 +53,7 @@ describe("parseRegisterInstallBody", () => {
       deviceLabel: "Mac-Light-S#owner",
       installBundleVersion: undefined,
       wakePort: 51234,
+      platform: undefined,
     });
   });
 });

@@ -15,6 +15,7 @@ describe("buildAgentWitchInstallScriptRegisterInstall", () => {
     expect(script).toContain("/api/agent-witch/register-install");
     expect(script).toContain("installBundleVersion");
     expect(script).toContain("wakePort");
-    expect(script).toContain("AGENT_WITCH_WAKE_PORT");
+    expect(script).toContain("REGISTER_PLATFORM");
+    expect(script).toContain("platformRaw === 'linux'");
   });
 });

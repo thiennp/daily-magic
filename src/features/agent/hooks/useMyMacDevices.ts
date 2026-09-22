@@ -8,6 +8,7 @@ import {
   refreshPairedDevices,
 } from "@/features/agent-witch/pairedDevicesResource";
 import type { MacPresenceTier } from "@/features/agent-witch/online-wake";
+import type { AgentWitchDevicePlatform } from "@/lib/agentWitch/types/AgentWitchDevicePlatform.type";
 import useSubscribeMacDeviceRevoked from "@/features/agent-witch/macDevices/hooks/useSubscribeMacDeviceRevoked";
 import { buildMacDeviceDisplayNameById } from "@/features/agent-witch/utils/resolveMacDeviceDisplayName";
 import { useConnectionLab } from "@/features/agent-witch/connection-lab/ConnectionLabContext";
@@ -15,6 +16,7 @@ import { useConnectionLab } from "@/features/agent-witch/connection-lab/Connecti
 export interface MyMacDevice {
   readonly id: string;
   readonly tokenHash: string | null;
+  readonly platform?: AgentWitchDevicePlatform;
   readonly deviceLabel: string | null;
   readonly displayName: string | null;
   readonly claimedAt: string;

@@ -1,7 +1,10 @@
+import type { AgentWitchDevicePlatform } from "@/lib/agentWitch/types/AgentWitchDevicePlatform.type";
+
 export default interface AgentWitchDeviceRecord {
   readonly id: string;
   readonly userId: string;
   readonly tokenHash?: string | null;
+  readonly platform?: AgentWitchDevicePlatform;
   readonly deviceLabel: string | null;
   readonly displayName: string | null;
   readonly dispatchPolicy:

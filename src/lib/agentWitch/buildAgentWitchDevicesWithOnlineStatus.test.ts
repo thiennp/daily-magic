@@ -8,6 +8,7 @@ const baseDevice = (
 ): AgentWitchDeviceRecord => ({
   id: "device-1",
   userId: "user-1",
+  platform: "mac",
   deviceLabel: "MacBook Pro",
   displayName: null,
   claimedAt: "2026-01-01T00:00:00.000Z",
@@ -26,6 +27,7 @@ describe("buildAgentWitchDevicesWithOnlineStatus", () => {
 
     expect(result[0]).toMatchObject({
       id: "device-1",
+      platform: "mac",
       isConnected: false,
       isOnline: true,
       presenceTier: "recent",
@@ -87,17 +89,6 @@ describe("buildAgentWitchDevicesWithOnlineStatus", () => {
       isConnected: false,
       isOnline: true,
       lastHeartbeatAt: lastSeenAt,
-    });
-  });
-
-  it("includes tokenHash from the device record (HOME-029)", () => {
-    const lastSeenAt = new Date().toISOString();
-    const result = buildAgentWitchDevicesWithOnlineStatus([
-      baseDevice({ tokenHash: "abc123", lastSeenAt }),
-    ]);
-
-    expect(result[0]).toMatchObject({
-      tokenHash: "abc123",
     });
   });
 

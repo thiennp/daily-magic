@@ -49,6 +49,9 @@ describe("parseRegisterInstallBody", () => {
     ).toEqual({
       pairingToken,
       deviceLabel: "MacBook-Pro",
+      installBundleVersion: undefined,
+      wakePort: undefined,
+      platform: undefined,
     });
   });
 

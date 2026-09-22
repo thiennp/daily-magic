@@ -1,4 +1,5 @@
 import { isDispatchPolicy } from "@/lib/dispatch/DispatchPolicy.constant";
+import { isAgentWitchDevicePlatform } from "@/lib/agentWitch/isAgentWitchDevicePlatform";
 import type AgentWitchDeviceRecord from "@/lib/agentWitch/types/AgentWitchDeviceRecord.type";
 
 export default function mapAgentWitchDeviceRow(
@@ -10,10 +11,17 @@ export default function mapAgentWitchDeviceRow(
       ? dispatchPolicyRaw
       : null;
 
+  const platformRaw = row.platform;
+  const platform =
+    typeof platformRaw === "string" && isAgentWitchDevicePlatform(platformRaw)
+      ? platformRaw
+      : "mac";
+
   return {
     id: String(row.id),
     userId: String(row.user_id),
     tokenHash: row.token_hash ? String(row.token_hash) : null,
+    platform,
     deviceLabel: row.device_label ? String(row.device_label) : null,
     displayName: row.display_name ? String(row.display_name) : null,
     dispatchPolicy,
