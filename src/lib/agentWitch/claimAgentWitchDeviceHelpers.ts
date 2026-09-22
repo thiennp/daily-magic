@@ -31,7 +31,7 @@ export const updateExistingClaimForUser = async (input: {
             device_label = COALESCE(${input.deviceLabel}, device_label)
           WHERE token_hash = ${input.tokenHash}
             AND user_id = ${input.userId}
-          RETURNING id, user_id, device_label, display_name, dispatch_policy, claimed_at, last_seen_at, revoked_at
+          RETURNING id, user_id, platform, device_label, display_name, dispatch_policy, claimed_at, last_seen_at, revoked_at
         `,
       )
     : asRowArray(
@@ -43,7 +43,7 @@ export const updateExistingClaimForUser = async (input: {
           WHERE token_hash = ${input.tokenHash}
             AND user_id = ${input.userId}
             AND revoked_at IS NULL
-          RETURNING id, user_id, device_label, display_name, dispatch_policy, claimed_at, last_seen_at, revoked_at
+          RETURNING id, user_id, platform, device_label, display_name, dispatch_policy, claimed_at, last_seen_at, revoked_at
         `,
       );
 
@@ -58,9 +58,9 @@ export const insertAgentWitchDeviceClaim = async (input: {
   const sql = getSql();
   const insertResult = asRowArray(
     await sql`
-      INSERT INTO agent_witch_devices (user_id, token_hash, device_label, last_seen_at)
-      VALUES (${input.userId}, ${input.tokenHash}, ${input.deviceLabel}, NOW())
-      RETURNING id, user_id, device_label, display_name, dispatch_policy, claimed_at, last_seen_at, revoked_at
+      INSERT INTO agent_witch_devices (user_id, token_hash, device_label, platform, last_seen_at)
+      VALUES (${input.userId}, ${input.tokenHash}, ${input.deviceLabel}, 'mac', NOW())
+      RETURNING id, user_id, platform, device_label, display_name, dispatch_policy, claimed_at, last_seen_at, revoked_at
     `,
   );
 

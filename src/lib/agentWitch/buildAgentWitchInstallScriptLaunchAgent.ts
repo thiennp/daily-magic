@@ -1,8 +1,10 @@
 import { buildAgentWitchInstallScriptProcessHostLaunchAgentEnvEntries } from "@agent-witch/install-process-host";
 
 import { AGENT_WITCH_LAUNCH_AGENT_PATH_VALUE } from "@/lib/agentWitch/buildAgentWitchInstallScriptWriterPath";
+import { buildAgentWitchInstallScriptSystemdUserUnitBlock } from "@agent-witch/install-linux-launch";
 
 export const buildAgentWitchInstallScriptLaunchAgent = (): string => `
+${buildAgentWitchInstallScriptSystemdUserUnitBlock()}
 agent_witch_install_step
 if [[ "\$(uname -s)" == "Darwin" ]]; then
   mkdir -p "\${HOME}/Library/LaunchAgents"
@@ -52,6 +54,6 @@ EOF
     sleep 1
   fi
 else
-  echo "Agent Witch installed. Run: \${RUN_PATH}" >&2
+  agent_witch_install_linux_systemd_user_unit
 fi
 `;

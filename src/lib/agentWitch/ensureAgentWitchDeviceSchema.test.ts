@@ -11,6 +11,9 @@ vi.mock("@/lib/db", () => ({
   getSql: () => sqlMock,
 }));
 
+const sqlCallsAsText = (): string =>
+  sqlMock.mock.calls.map((call) => String(call[0])).join("\n");
+
 describe("ensureAgentWitchDeviceSchema", () => {
   beforeEach(() => {
     sqlMock.mockClear();
@@ -21,9 +24,12 @@ describe("ensureAgentWitchDeviceSchema", () => {
     await ensureAgentWitchDeviceSchema();
     await ensureAgentWitchDeviceSchema();
 
-    // display_name, restart_requested_at, public_key, last_handshake_at,
-    // preferred_writer, last_wake_error, last_wake_error_at, link_code,
-    // install_bundle_version
-    expect(sqlMock).toHaveBeenCalledTimes(9);
+    // display_name … install_bundle_version (9) + platform column + platform check (2)
+    expect(sqlMock).toHaveBeenCalledTimes(11);
+
+    const sqlText = sqlCallsAsText();
+    expect(sqlText).toContain("ADD COLUMN IF NOT EXISTS platform");
+    expect(sqlText).toContain("agent_witch_devices_platform_check");
+    expect(sqlText).toContain("'mac', 'linux'");
   });
 });

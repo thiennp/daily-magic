@@ -11,6 +11,7 @@ const buildDevice = (
     Pick<AgentWitchDeviceRecord, "id">,
 ): AgentWitchDeviceRecord => ({
   userId: "user-1",
+  platform: "mac",
   deviceLabel: "Studio-Mac",
   displayName: null,
   dispatchPolicy: null,

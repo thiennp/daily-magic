@@ -54,6 +54,14 @@ export const vitestResolveAlias: Record<string, string> = {
     ROOT,
     "./apps/install/features/macos-launch/public-api/infrastructure.ts",
   ),
+  "@agent-witch/install-linux-launch/types": path.resolve(
+    ROOT,
+    "./apps/install/features/linux-launch/public-api/types.ts",
+  ),
+  "@agent-witch/install-linux-launch": path.resolve(
+    ROOT,
+    "./apps/install/features/linux-launch/public-api/infrastructure.ts",
+  ),
   "@agent-witch/install-watchdog/types": path.resolve(
     ROOT,
     "./apps/install/features/watchdog/public-api/types.ts",

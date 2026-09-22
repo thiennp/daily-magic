@@ -29,7 +29,11 @@ cat > "\${RUN_PATH}" <<EOF
 set -euo pipefail
 INSTALL_DIR="\${AGENT_WITCH_HOME:-\${HOME}/.agent-witch}"
 AGENT_WITCH_HOME="\${INSTALL_DIR}"
-NODE_BIN="\$(command -v node)"
+if [[ -x "\${INSTALL_DIR}/.node/bin/node" ]]; then
+  NODE_BIN="\${INSTALL_DIR}/.node/bin/node"
+else
+  NODE_BIN="\$(command -v node)"
+fi
 APP_DIR="\${INSTALL_DIR}/${AGENT_WITCH_INSTALL_BUNDLE_ARTIFACT.appDirName}"
 ${AGENT_WITCH_INSTALL_SCRIPT_PATH_EXPORT}
 ${buildAgentWitchInstallScriptResolveProfilePathsBlock()}${buildAgentWitchInstallScriptEnsureProfileDirectoriesBlock()}

@@ -1,9 +1,11 @@
 import type { MyMacDevice } from "@/features/agent/hooks/useMyMacDevices";
 import type { MacPresenceTier } from "@/features/agent-witch/online-wake";
+import type { AgentWitchDevicePlatform } from "@/lib/agentWitch/types/AgentWitchDevicePlatform.type";
 
 interface ApiMacDevice {
   readonly id: string;
   readonly tokenHash?: string | null;
+  readonly platform?: AgentWitchDevicePlatform;
   readonly deviceLabel: string | null;
   readonly displayName: string | null;
   readonly claimedAt: string;
@@ -59,6 +61,10 @@ const parseMyMacDevices = (
           device.tokenHash.trim().length > 0
             ? device.tokenHash.trim()
             : null,
+        platform:
+          device.platform === "linux" || device.platform === "mac"
+            ? device.platform
+            : "mac",
         deviceLabel: device.deviceLabel,
         displayName:
           typeof device.displayName === "string" ? device.displayName : null,

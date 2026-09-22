@@ -43,6 +43,12 @@
       "@agent-witch/install-macos-launch/types": [
         "./apps/install/features/macos-launch/public-api/types.ts"
       ],
+      "@agent-witch/install-linux-launch": [
+        "./apps/install/features/linux-launch/public-api/infrastructure.ts"
+      ],
+      "@agent-witch/install-linux-launch/types": [
+        "./apps/install/features/linux-launch/public-api/types.ts"
+      ],
       "@agent-witch/install-watchdog": [
         "./apps/install/features/watchdog/public-api/infrastructure.ts"
       ],

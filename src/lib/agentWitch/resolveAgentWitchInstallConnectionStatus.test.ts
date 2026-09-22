@@ -8,6 +8,7 @@ const device = (
 ): AgentWitchDeviceRecord => ({
   id: "device-1",
   userId: "user-1",
+  platform: "mac",
   deviceLabel: null,
   displayName: "Office Mac",
   dispatchPolicy: null,

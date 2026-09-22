@@ -1,10 +1,13 @@
 import { isValidAgentWitchPairingToken } from "@/lib/agentWitch/generateAgentWitchPairingToken";
+import { isAgentWitchDevicePlatform } from "@/lib/agentWitch/isAgentWitchDevicePlatform";
+import type { AgentWitchDevicePlatform } from "@/lib/agentWitch/types/AgentWitchDevicePlatform.type";
 
 export interface RegisterInstallBody {
   readonly pairingToken: string;
   readonly deviceLabel: string;
   readonly installBundleVersion?: string;
   readonly wakePort?: number;
+  readonly platform?: AgentWitchDevicePlatform;
 }
 
 export const parseRegisterInstallBody = (
@@ -54,5 +57,21 @@ export const parseRegisterInstallBody = (
       ? wakePortRaw
       : undefined;
 
-  return { pairingToken, deviceLabel, installBundleVersion, wakePort };
+  const platformRaw =
+    "platform" in body &&
+    typeof (body as { platform: unknown }).platform === "string"
+      ? (body as { platform: string }).platform.trim().toLowerCase()
+      : "";
+  const platform =
+    platformRaw.length > 0 && isAgentWitchDevicePlatform(platformRaw)
+      ? platformRaw
+      : undefined;
+
+  return {
+    pairingToken,
+    deviceLabel,
+    installBundleVersion,
+    wakePort,
+    platform,
+  };
 };

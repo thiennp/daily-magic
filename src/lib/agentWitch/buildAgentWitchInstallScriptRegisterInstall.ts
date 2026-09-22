@@ -3,9 +3,17 @@ export const buildAgentWitchInstallScriptRegisterInstall = (input: {
 }): string => `
 DEVICE_HOSTNAME="\$(hostname 2>/dev/null || hostname -s)"
 MACOS_USERNAME="\$(id -un 2>/dev/null || whoami)"
+LINUX_USERNAME="\$(id -un 2>/dev/null || whoami)"
 DEVICE_HOSTNAME="\$(printf '%s' "\${DEVICE_HOSTNAME}" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')"
 MACOS_USERNAME="\$(printf '%s' "\${MACOS_USERNAME}" | tr '[:upper:]' '[:lower:]' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')"
-if [[ -n "\${DEVICE_HOSTNAME}" && -n "\${MACOS_USERNAME}" ]]; then
+LINUX_USERNAME="\$(printf '%s' "\${LINUX_USERNAME}" | tr '[:upper:]' '[:lower:]' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')"
+REGISTER_PLATFORM="mac"
+if [[ "\$(uname -s)" == "Linux" ]]; then
+  REGISTER_PLATFORM="linux"
+fi
+if [[ "\${REGISTER_PLATFORM}" == "linux" && -n "\${DEVICE_HOSTNAME}" && -n "\${LINUX_USERNAME}" ]]; then
+  DEVICE_LABEL="\${DEVICE_HOSTNAME}#\${LINUX_USERNAME}"
+elif [[ -n "\${DEVICE_HOSTNAME}" && -n "\${MACOS_USERNAME}" ]]; then
   DEVICE_LABEL="\${DEVICE_HOSTNAME}#\${MACOS_USERNAME}"
 else
   DEVICE_LABEL="\${DEVICE_HOSTNAME}"
@@ -24,7 +32,9 @@ const label = process.argv[1] ?? '';
 const token = process.argv[2] ?? '';
 const bundleVersion = process.argv[3] ?? '';
 const wakePortRaw = process.argv[4] ?? '';
-const payload = { pairingToken: token, deviceLabel: label };
+const platformRaw = process.argv[5] ?? 'mac';
+const platform = platformRaw === 'linux' ? 'linux' : 'mac';
+const payload = { pairingToken: token, deviceLabel: label, platform };
 if (bundleVersion.length > 0) {
   payload.installBundleVersion = bundleVersion;
 }
@@ -35,7 +45,7 @@ if (wakePortRaw.length > 0) {
   }
 }
 process.stdout.write(JSON.stringify(payload));
-" "\${DEVICE_LABEL}" "\${PAIRING_TOKEN}" "\${INSTALL_BUNDLE_VERSION}" "\${AGENT_WITCH_WAKE_PORT}" )"
+" "\${DEVICE_LABEL}" "\${PAIRING_TOKEN}" "\${INSTALL_BUNDLE_VERSION}" "\${AGENT_WITCH_WAKE_PORT}" "\${REGISTER_PLATFORM}" )"
 "\${CURL_BIN}" -fsS -X POST "${input.appOrigin}/api/agent-witch/register-install" \\
   -H "Content-Type: application/json" \\
   -d "\${REGISTER_PAYLOAD}" >/dev/null 2>&1 || true

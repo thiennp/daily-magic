@@ -28,8 +28,13 @@ vi.mock("@/lib/agentWitch/updateAgentWitchDeviceWakePort", () => ({
   updateAgentWitchDeviceWakePort: vi.fn(),
 }));
 
+vi.mock("@/lib/agentWitch/updateAgentWitchDevicePlatform", () => ({
+  updateAgentWitchDevicePlatform: vi.fn(),
+}));
+
 import { findAgentWitchDeviceByToken } from "@/lib/agentWitch/findAgentWitchDeviceByToken";
 import { updateAgentWitchDeviceInstallBundleVersion } from "@/lib/agentWitch/updateAgentWitchDeviceInstallBundleVersion";
+import { updateAgentWitchDevicePlatform } from "@/lib/agentWitch/updateAgentWitchDevicePlatform";
 import { updateAgentWitchDeviceWakePort } from "@/lib/agentWitch/updateAgentWitchDeviceWakePort";
 
 describe("registerAgentWitchInstallFromMac", () => {
@@ -70,6 +75,25 @@ describe("registerAgentWitchInstallFromMac", () => {
     expect(updateAgentWitchDeviceWakePort).toHaveBeenCalledWith({
       deviceId: "device-1",
       wakePort: 51234,
+    });
+  });
+
+  it("stores platform reported after install", async () => {
+    vi.mocked(findAgentWitchDeviceByToken).mockResolvedValue({
+      id: "device-1",
+      userId: "user-1",
+      revokedAt: null,
+    } as never);
+
+    await registerAgentWitchInstallFromMac({
+      pairingToken: "b".repeat(64),
+      deviceLabel: "vm#dev",
+      platform: "linux",
+    });
+
+    expect(updateAgentWitchDevicePlatform).toHaveBeenCalledWith({
+      deviceId: "device-1",
+      platform: "linux",
     });
   });
 });
