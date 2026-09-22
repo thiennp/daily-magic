@@ -1,7 +1,9 @@
 import {
   AGENT_RUN_HONESTY_CHIP_LABEL,
   formatAgentRunHonestyDegradedSummary,
+  formatAgentRunHonestyFailedSummary,
   resolveMarketplacePlanEstimateFallbackReason,
+  WRITER_MISSING_CLI_CANT_RUN_LOCKED_REASON,
 } from "@/lib/dispatch/agentRunHonestyCopy.constant";
 import type { AgentRunHonestyOutcome } from "@/lib/dispatch/agentRunHonestyOutcome.type";
 import { hasRealAgentRunTerminalWork } from "@/lib/dispatch/hasRealAgentRunTerminalWork";
@@ -18,7 +20,15 @@ export const tryResolveWriterApiMissingCliFallbackTerminalOutcome = (input: {
   }
 
   if (!hasRealAgentRunTerminalWork(input.output)) {
-    return null;
+    return {
+      kind: "failed",
+      chipLabel: AGENT_RUN_HONESTY_CHIP_LABEL.failed,
+      summaryLines: [
+        formatAgentRunHonestyFailedSummary(
+          WRITER_MISSING_CLI_CANT_RUN_LOCKED_REASON,
+        ),
+      ],
+    };
   }
 
   const reason = resolveMarketplacePlanEstimateFallbackReason(

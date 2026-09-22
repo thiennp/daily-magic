@@ -10,6 +10,8 @@ import {
   isStoppedByUserOutput,
 } from "@/lib/dispatch/agentRunHonestyCopy.constant";
 import type { AgentRunHonestyOutcome } from "@/lib/dispatch/agentRunHonestyOutcome.type";
+import { buildClaudeLoginExpiredWaitingYouOutcome } from "@/lib/dispatch/buildClaudeLoginExpiredWaitingYouOutcome";
+import { isClaudeCliAuthBlockerInOutput } from "@/lib/dispatch/isClaudeCliAuthBlockerInOutput";
 import { tryResolveWriterApiMissingCliFallbackTerminalOutcome } from "@/lib/dispatch/tryResolveWriterApiMissingCliFallbackTerminalOutcome";
 import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
 import type { AgentRunStatusValue } from "@/lib/dispatch/AgentRunStatus.constant";
@@ -25,6 +27,10 @@ export const resolveAgentRunHonestyTerminalOutcome = (input: {
       chipLabel: AGENT_RUN_HONESTY_CHIP_LABEL.timed_out,
       summaryLines: ["Timed out — approval expired before this run finished."],
     };
+  }
+
+  if (isClaudeCliAuthBlockerInOutput(input.output)) {
+    return buildClaudeLoginExpiredWaitingYouOutcome();
   }
 
   const writerApiCliFallbackOutcome =
