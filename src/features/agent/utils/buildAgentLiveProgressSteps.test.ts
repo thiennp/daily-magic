@@ -92,7 +92,7 @@ describe("buildAgentLiveProgressSteps", () => {
     expect(result.humanSummary).toBeNull();
   });
 
-  it("strips CLI chrome and surfaces passed outcome on finish", () => {
+  it("strips CLI chrome and surfaces Success outcome on finish", () => {
     const result = buildAgentLiveProgressSteps({
       status: "finished",
       output:
@@ -100,8 +100,8 @@ describe("buildAgentLiveProgressSteps", () => {
     });
 
     expect(result.replyPreview).toBeNull();
-    expect(result.humanSummary).toContain("finished");
     expect(result.outcome.kind).toBe("passed");
+    expect(result.outcome.chipLabel).toBe("Success");
     expect(result.steps.find((step) => step.id === "finish")?.state).toBe(
       "done",
     );

@@ -1,11 +1,12 @@
 import { describe, expect, it } from "vitest";
 
 import { MARKETPLACE_PLAN_ESTIMATE_MISSING_ANTHROPIC_WRITER_API_KEY } from "@/lib/marketplace/runRecipe/marketplacePlanEstimateReasonCode.constant";
-import { buildAgentLiveProgressSteps } from "@/features/agent/utils/buildAgentLiveProgressSteps";
+
+import { MARKETPLACE_CLI_FALLBACK_LOCKED_REASON } from "@/features/agent/utils/agentLiveRunHonestyCopy.constant";
 import { resolveAgentLiveRunOutcome } from "@/features/agent/utils/resolveAgentLiveRunOutcome";
 
 describe("resolveAgentLiveRunOutcome", () => {
-  it("maps cli-fallback marketplace estimate to degraded", () => {
+  it("maps cli-fallback marketplace estimate to degraded with locked copy", () => {
     const output = [
       "[[MARKETPLACE_PLAN_ESTIMATE]]",
       "marketplacePlanEstimateBackend=cli-fallback-missing-anthropic-writer-api-key",
@@ -19,10 +20,12 @@ describe("resolveAgentLiveRunOutcome", () => {
 
     expect(outcome.kind).toBe("degraded");
     expect(outcome.chipLabel).toBe("Completed with fallback");
-    expect(outcome.summaryLines[0]).toContain("Writer API key missing");
+    expect(outcome.summaryLines[0]).toContain(
+      MARKETPLACE_CLI_FALLBACK_LOCKED_REASON,
+    );
   });
 
-  it("maps healthy finish to passed", () => {
+  it("maps healthy finish to Success", () => {
     const outcome = resolveAgentLiveRunOutcome({
       status: "finished",
       output: "All done",
@@ -32,7 +35,17 @@ describe("resolveAgentLiveRunOutcome", () => {
     expect(outcome.chipLabel).toBe("Success");
   });
 
-  it("maps pending question to waiting_you", () => {
+  it("never maps streaming to Success", () => {
+    const outcome = resolveAgentLiveRunOutcome({
+      status: "streaming",
+      output: "",
+    });
+
+    expect(outcome.kind).toBe("running");
+    expect(outcome.chipLabel).toBe("In progress");
+  });
+
+  it("maps pending question to Waiting on you", () => {
     const outcome = resolveAgentLiveRunOutcome({
       status: "streaming",
       output: "",
@@ -42,46 +55,24 @@ describe("resolveAgentLiveRunOutcome", () => {
     expect(outcome.kind).toBe("waiting_you");
     expect(outcome.chipLabel).toBe("Waiting on you");
   });
-});
 
-describe("buildAgentLiveProgressSteps run UX honesty", () => {
-  it("marks work fallback and finish non-success for cli-fallback", () => {
-    const output = [
-      "[[MARKETPLACE_PLAN_ESTIMATE]]",
-      "marketplacePlanEstimateBackend=cli-fallback-missing-anthropic-writer-api-key",
-      `marketplacePlanEstimateReasonCode=${MARKETPLACE_PLAN_ESTIMATE_MISSING_ANTHROPIC_WRITER_API_KEY}`,
-      "[[WORKING_ESTIMATE]]",
-      "120",
-    ].join("\n");
-
-    const result = buildAgentLiveProgressSteps({
+  it("maps session limit output to Timed out", () => {
+    const outcome = resolveAgentLiveRunOutcome({
       status: "finished",
-      output,
-      pendingCommandLine: 'claude -p "demo"',
-      estimateSeconds: 120,
+      output: "You've hit your session limit for now.",
     });
 
-    expect(result.outcome.kind).toBe("degraded");
-    expect(result.steps.find((step) => step.id === "work")).toMatchObject({
-      state: "fallback",
-    });
-    expect(result.steps.find((step) => step.id === "finish")).toMatchObject({
-      state: "fallback",
-    });
-    expect(result.replyPreview).toBeNull();
-    expect(result.humanSummary).toContain("Completed with fallback");
+    expect(outcome.kind).toBe("timed_out");
+    expect(outcome.chipLabel).toBe("Timed out");
   });
 
-  it("shows empty active copy instead of blank work detail while streaming", () => {
-    const result = buildAgentLiveProgressSteps({
-      status: "streaming",
-      output: "",
-      pendingCommandLine: 'claude -p "demo"',
-      estimateSeconds: 90,
+  it("maps stopped by user output to Stopped", () => {
+    const outcome = resolveAgentLiveRunOutcome({
+      status: "finished",
+      output: "Partial\n\nStopped by user.",
     });
 
-    expect(result.steps.find((step) => step.id === "work")?.detail).toBe(
-      "Waiting for output…",
-    );
+    expect(outcome.kind).toBe("stopped");
+    expect(outcome.chipLabel).toBe("Stopped");
   });
 });

@@ -1,57 +1,11 @@
+import { adjustAgentLiveRunOutcomeForEmptyWork } from "@/features/agent/utils/adjustAgentLiveRunOutcomeForEmptyWork";
 import type { AgentLiveProgressStep } from "@/features/agent/utils/agentLiveProgressStep.type";
 import type { AgentLiveRunOutcome } from "@/features/agent/utils/agentLiveRunOutcomeKind.type";
 import type { AgentLiveTerminalStatus } from "@/features/agent/utils/agentLiveTerminalState.type";
+import { patchAgentLiveProgressWorkStepHonesty } from "@/features/agent/utils/patchAgentLiveProgressWorkStepHonesty";
 import { resolveAgentLiveRunOutcome } from "@/features/agent/utils/resolveAgentLiveRunOutcome";
 import { resolveAgentLiveProgressFinishStepState } from "@/features/agent/utils/resolveAgentLiveProgressFinishStepState";
-import {
-  resolveAgentLiveProgressWorkHonestyDetail,
-  resolveAgentLiveProgressWorkHonestyState,
-} from "@/features/agent/utils/resolveAgentLiveProgressWorkHonesty";
 import type { AgentLiveProgressStepState } from "@/features/agent/utils/resolveAgentLiveProgressStepStates";
-
-const patchWorkStepHonesty = (
-  step: AgentLiveProgressStep,
-  input: {
-    readonly outcome: AgentLiveRunOutcome;
-    readonly isFinished: boolean;
-    readonly cleanedLength: number;
-    readonly hasProgressUpdates: boolean;
-    readonly workState: AgentLiveProgressStepState;
-  },
-): AgentLiveProgressStep => {
-  if (step.id !== "work") {
-    return step;
-  }
-
-  const honestyState = resolveAgentLiveProgressWorkHonestyState({
-    workState:
-      step.state === "pending" ||
-      step.state === "active" ||
-      step.state === "done"
-        ? step.state
-        : input.workState,
-    isFinished: input.isFinished,
-    cleanedLength: input.cleanedLength,
-    hasProgressUpdates: input.hasProgressUpdates,
-    outcome: input.outcome,
-  });
-
-  const existingDetail = step.detail;
-  const isActiveWithEmptyBody =
-    honestyState === "active" && (existingDetail ?? "").trim().length === 0;
-
-  return {
-    ...step,
-    state: honestyState,
-    detail: resolveAgentLiveProgressWorkHonestyDetail({
-      state: honestyState,
-      existingDetail,
-      outcome: input.outcome,
-      workLabel: step.label,
-      isActiveWithEmptyBody,
-    }),
-  };
-};
 
 export const buildAgentLiveProgressHonestyLayer = (input: {
   readonly status: AgentLiveTerminalStatus;
@@ -69,11 +23,17 @@ export const buildAgentLiveProgressHonestyLayer = (input: {
   readonly outcome: AgentLiveRunOutcome;
   readonly humanSummary: string | null;
 } => {
-  const outcome = resolveAgentLiveRunOutcome({
+  const resolvedOutcome = resolveAgentLiveRunOutcome({
     status: input.status,
     output: input.output,
     pendingQuestion: input.pendingQuestion,
     approvalWaitingLabel: input.approvalWaitingLabel,
+  });
+  const outcome = adjustAgentLiveRunOutcomeForEmptyWork({
+    outcome: resolvedOutcome,
+    isFinished: input.isFinished,
+    cleanedLength: input.cleanedLength,
+    hasProgressUpdates: input.hasProgressUpdates,
   });
 
   const finishState = resolveAgentLiveProgressFinishStepState({
@@ -82,7 +42,7 @@ export const buildAgentLiveProgressHonestyLayer = (input: {
   });
 
   const patchedWorkSteps = input.steps.map((step) =>
-    patchWorkStepHonesty(step, {
+    patchAgentLiveProgressWorkStepHonesty(step, {
       outcome,
       isFinished: input.isFinished,
       cleanedLength: input.cleanedLength,

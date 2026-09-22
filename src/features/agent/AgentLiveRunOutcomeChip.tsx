@@ -1,16 +1,5 @@
 import type { AgentLiveRunOutcomeKind } from "@/features/agent/utils/agentLiveRunOutcomeKind.type";
-
-const OUTCOME_CHIP_CLASS: Record<AgentLiveRunOutcomeKind, string> = {
-  passed:
-    "bg-emerald-100 text-emerald-900 dark:bg-emerald-950/50 dark:text-emerald-100",
-  degraded:
-    "bg-amber-100 text-amber-950 dark:bg-amber-950/40 dark:text-amber-100",
-  failed: "bg-rose-100 text-rose-950 dark:bg-rose-950/40 dark:text-rose-100",
-  waiting_you:
-    "bg-brand-100 text-brand-900 dark:bg-brand-950/40 dark:text-brand-100",
-  running:
-    "bg-brand-100 text-brand-900 dark:bg-brand-950/40 dark:text-brand-100",
-};
+import { resolveAgentLiveRunOutcomeChipClassName } from "@/features/agent/utils/agentLiveRunOutcomeChip.constant";
 
 interface AgentLiveRunOutcomeChipProps {
   readonly kind: AgentLiveRunOutcomeKind;
@@ -23,7 +12,7 @@ export default function AgentLiveRunOutcomeChip({
 }: AgentLiveRunOutcomeChipProps) {
   return (
     <span
-      className={`inline-flex shrink-0 items-center rounded-full px-2.5 py-1 text-xs font-medium ${OUTCOME_CHIP_CLASS[kind]}`}
+      className={`inline-flex shrink-0 items-center rounded-full px-2.5 py-1 text-xs font-medium ${resolveAgentLiveRunOutcomeChipClassName(kind)}`}
       role="status"
       data-run-outcome={kind}
     >

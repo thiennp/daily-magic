@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { parseMarketplacePlanEstimateFromOutput } from "@/features/agent/utils/parseMarketplacePlanEstimateFromOutput";
+import { parseMarketplacePlanEstimateFromOutput } from "@/lib/dispatch/parseMarketplacePlanEstimateFromOutput";
 import { MARKETPLACE_PLAN_ESTIMATE_MISSING_ANTHROPIC_WRITER_API_KEY } from "@/lib/marketplace/runRecipe/marketplacePlanEstimateReasonCode.constant";
 
 describe("parseMarketplacePlanEstimateFromOutput", () => {

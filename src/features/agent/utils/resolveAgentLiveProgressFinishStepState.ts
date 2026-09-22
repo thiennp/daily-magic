@@ -13,7 +13,11 @@ export const resolveAgentLiveProgressFinishStepState = (input: {
   if (input.outcome.kind === "degraded") {
     return "fallback";
   }
-  if (input.outcome.kind === "failed") {
+  if (
+    input.outcome.kind === "failed" ||
+    input.outcome.kind === "stopped" ||
+    input.outcome.kind === "timed_out"
+  ) {
     return "failed";
   }
   return "pending";

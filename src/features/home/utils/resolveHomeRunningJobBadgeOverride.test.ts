@@ -2,10 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
 import { DispatchPolicy } from "@/lib/dispatch/DispatchPolicy.constant";
-import {
-  resolveHomeRunningJobBadgeClassName,
-  resolveHomeRunningJobBadgeOverride,
-} from "@/features/home/utils/resolveHomeRunningJobBadgeOverride";
+import { resolveHomeRunningJobBadgeOverride } from "@/features/home/utils/resolveHomeRunningJobBadgeOverride";
 import type AgentRunRecord from "@/lib/dispatch/types/AgentRunRecord.type";
 
 const baseRun: AgentRunRecord = {
@@ -44,12 +41,12 @@ describe("resolveHomeRunningJobBadgeOverride", () => {
     ).toBe("Waiting on you");
   });
 
-  it("applies blue tone for waiting badge", () => {
+  it("shows In progress for running jobs", () => {
     expect(
-      resolveHomeRunningJobBadgeClassName({
-        run: { ...baseRun, status: AgentRunStatus.PENDING_APPROVAL },
+      resolveHomeRunningJobBadgeOverride({
+        run: { ...baseRun, status: AgentRunStatus.RUNNING },
         approvalWaitingLabel: null,
       }),
-    ).toContain("brand");
+    ).toBe("In progress");
   });
 });

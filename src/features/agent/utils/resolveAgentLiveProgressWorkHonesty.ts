@@ -1,6 +1,7 @@
 import {
   AGENT_LIVE_PROGRESS_EMPTY_ACTIVE_DETAIL,
   formatAgentLiveProgressSkippedDetail,
+  MARKETPLACE_CLI_FALLBACK_LOCKED_REASON,
 } from "@/features/agent/utils/agentLiveRunHonestyCopy.constant";
 import type { AgentLiveRunOutcome } from "@/features/agent/utils/agentLiveRunOutcomeKind.type";
 
@@ -61,16 +62,14 @@ export const resolveAgentLiveProgressWorkHonestyDetail = (input: {
   if (input.state === "fallback" && input.outcome.kind === "degraded") {
     const summary = input.outcome.summaryLines[0] ?? "";
     const prefix = "Completed with fallback — ";
-    return summary.startsWith(prefix)
-      ? summary.slice(prefix.length)
-      : "Used CLI fallback";
+    if (summary.startsWith(prefix)) {
+      return summary.slice(prefix.length);
+    }
+    return MARKETPLACE_CLI_FALLBACK_LOCKED_REASON;
   }
 
   if (input.state === "skipped") {
-    return formatAgentLiveProgressSkippedDetail({
-      stepLabel: input.workLabel,
-      reason: "No agent output was captured",
-    });
+    return formatAgentLiveProgressSkippedDetail("No agent output was captured");
   }
 
   if (input.isActiveWithEmptyBody) {
