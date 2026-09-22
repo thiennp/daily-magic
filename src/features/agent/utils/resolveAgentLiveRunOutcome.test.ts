@@ -11,6 +11,7 @@ describe("resolveAgentLiveRunOutcome", () => {
       "[[MARKETPLACE_PLAN_ESTIMATE]]",
       "marketplacePlanEstimateBackend=cli-fallback-missing-anthropic-writer-api-key",
       `marketplacePlanEstimateReasonCode=${MARKETPLACE_PLAN_ESTIMATE_MISSING_ANTHROPIC_WRITER_API_KEY}`,
+      "done",
     ].join("\n");
 
     const outcome = resolveAgentLiveRunOutcome({
@@ -84,5 +85,42 @@ describe("resolveAgentLiveRunOutcome", () => {
 
     expect(outcome.kind).toBe("stopped");
     expect(outcome.chipLabel).toBe("Stopped");
+  });
+
+  it("maps writer-absent CLI completion to degraded with exact reason", () => {
+    const output = [
+      "[[AGENT_RUN_WRITER_EXECUTION]]",
+      "agentRunWriterExecutionBackend=cli-writer-api-key-missing",
+      `agentRunWriterExecutionReasonCode=${MARKETPLACE_PLAN_ESTIMATE_MISSING_ANTHROPIC_WRITER_API_KEY}`,
+      "Task output from claude-cli",
+    ].join("\n");
+
+    const outcome = resolveAgentLiveRunOutcome({
+      status: "finished",
+      output,
+    });
+
+    expect(outcome.kind).toBe("degraded");
+    expect(outcome.chipLabel).toBe("Completed with fallback");
+    expect(outcome.summaryLines[0]).toContain(
+      MARKETPLACE_CLI_FALLBACK_LOCKED_REASON,
+    );
+  });
+
+  it("maps stopping with CLI fallback marker and work to degraded", () => {
+    const output = [
+      "[[AGENT_RUN_WRITER_EXECUTION]]",
+      "agentRunWriterExecutionBackend=cli-writer-api-key-missing",
+      `agentRunWriterExecutionReasonCode=${MARKETPLACE_PLAN_ESTIMATE_MISSING_ANTHROPIC_WRITER_API_KEY}`,
+      "streaming partial",
+    ].join("\n");
+
+    const outcome = resolveAgentLiveRunOutcome({
+      status: "stopping",
+      output,
+    });
+
+    expect(outcome.kind).toBe("degraded");
+    expect(outcome.chipLabel).toBe("Completed with fallback");
   });
 });

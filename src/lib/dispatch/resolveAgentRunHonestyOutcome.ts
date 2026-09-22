@@ -46,6 +46,17 @@ export const resolveAgentRunHonestyOutcome = (input: {
     };
   }
 
+  if (input.status === "stopping") {
+    const stoppingTerminal = resolveAgentRunHonestyTerminalOutcome({
+      output: input.output,
+      runStatus: input.runStatus ?? AgentRunStatus.RUNNING,
+      resultOutcomeCode: input.resultOutcomeCode,
+    });
+    if (stoppingTerminal?.kind === "degraded") {
+      return stoppingTerminal;
+    }
+  }
+
   if (
     isHonestyLiveInProgress(input.status) ||
     input.runStatus === AgentRunStatus.RUNNING

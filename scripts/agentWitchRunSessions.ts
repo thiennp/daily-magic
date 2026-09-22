@@ -1,6 +1,9 @@
 import { spawn, type ChildProcess } from "node:child_process";
 
-import { removeRunCompositionOverlay } from "@agent-witch/install-runtime-client";
+import {
+  removeRunCompositionOverlay,
+  shouldEmitWriterApiMissingCliFallbackHonesty,
+} from "@agent-witch/install-runtime-client";
 
 import type { AgentWitchLocalLayout } from "./resolveAgentWitchLocalLayout";
 import {
@@ -40,6 +43,7 @@ import {
 import { tryRunWriterTaskInPty } from "./agentWitchRunSessionsPty";
 import { markWriterConversationStarted } from "./agentWitchWriterSession";
 import { appendWriterTranscriptTurn } from "./writerSessionTranscriptStore";
+import { buildAgentRunWriterExecutionHonestyChunk } from "./dispatch/buildAgentRunWriterExecutionHonestyChunk";
 import { extractUserTaskFromWrappedPrompt } from "./dispatch/extractUserTaskFromWrappedPrompt";
 import { appendWriterLlmUsageFooter } from "@/lib/agentWitch/formatWriterLlmUsageFooter";
 import type WriterLlmUsage from "@/lib/agentWitch/writerLlmUsage.type";
@@ -76,6 +80,45 @@ interface ActiveRunSession {
 const activeChildren = new Map<string, ChildProcess>();
 const runSessions = new Map<string, ActiveRunSession>();
 const runsStoppedByUser = new Set<string>();
+
+const publishTerminalStreamChunk = (
+  socket: WebSocket,
+  agentRunId: string,
+  requestId: string | undefined,
+  chunk: string,
+): void => {
+  const text = chunk.endsWith("\n") ? chunk : `${chunk}\n`;
+  if (isTerminalStreamAccepted(agentRunId)) {
+    sendMessage(socket, {
+      type: "terminal.stream.chunk",
+      payload: { runId: agentRunId, chunk: text },
+      requestId,
+    });
+    return;
+  }
+  queueTerminalStreamChunk(agentRunId, text);
+};
+
+const seedWriterApiMissingCliFallbackHonesty = (
+  config: AgentWitchRunConfig,
+  socket: WebSocket,
+  agentRunId: string,
+  requestId: string | undefined,
+  writerAgent: HarnessWriterAgentId,
+): void => {
+  if (!shouldEmitWriterApiMissingCliFallbackHonesty(config, writerAgent)) {
+    return;
+  }
+  const chunk = `${buildAgentRunWriterExecutionHonestyChunk()}\n`;
+  publishTerminalStreamChunk(socket, agentRunId, requestId, chunk);
+  const session = runSessions.get(agentRunId);
+  if (session !== undefined) {
+    session.accumulatedOutput =
+      session.accumulatedOutput.length > 0
+        ? `${session.accumulatedOutput}\n\n${chunk}`.trim()
+        : chunk;
+  }
+};
 
 const STOPPED_EXIT_CODE = 130;
 const STOPPED_OUTPUT_SUFFIX = "\n\nStopped by user.";
@@ -630,6 +673,14 @@ export const runWriterTask = (
     reportKey,
     accumulatedOutput: runSessions.get(agentRunId)?.accumulatedOutput ?? "",
   });
+
+  seedWriterApiMissingCliFallbackHonesty(
+    config,
+    socket,
+    agentRunId,
+    requestId,
+    writerAgent,
+  );
 
   if (
     projectFolderPath !== undefined &&

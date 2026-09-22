@@ -51,6 +51,7 @@ export { WRITER_API_KEY_CONSOLE_LINKS } from "../internal/core/writerApi/writerA
 export { runWriterApiPrompt } from "../internal/core/writerApi/runWriterApiPrompt";
 
 export { shouldUseWriterApi } from "../internal/core/writerApi/shouldUseWriterApi";
+export { shouldEmitWriterApiMissingCliFallbackHonesty } from "../internal/core/writerApi/shouldEmitWriterApiMissingCliFallbackHonesty";
 
 export { resolveWriterApiProvider } from "../internal/core/writerApi/resolveWriterApiProvider";
 

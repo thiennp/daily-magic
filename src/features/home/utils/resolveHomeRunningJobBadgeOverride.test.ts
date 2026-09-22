@@ -59,6 +59,7 @@ describe("resolveHomeRunningJobBadgeOverride", () => {
       "[[MARKETPLACE_PLAN_ESTIMATE]]",
       "marketplacePlanEstimateBackend=cli-fallback-missing-anthropic-writer-api-key",
       `marketplacePlanEstimateReasonCode=${MARKETPLACE_PLAN_ESTIMATE_MISSING_ANTHROPIC_WRITER_API_KEY}`,
+      "agent output",
     ].join("\n");
 
     expect(
@@ -81,5 +82,25 @@ describe("resolveHomeRunningJobBadgeOverride", () => {
         approvalWaitingLabel: null,
       }),
     ).toContain("amber");
+  });
+
+  it("matches floater chip for writer-absent CLI honesty marker", () => {
+    const output = [
+      "[[AGENT_RUN_WRITER_EXECUTION]]",
+      "agentRunWriterExecutionBackend=cli-writer-api-key-missing",
+      `agentRunWriterExecutionReasonCode=${MARKETPLACE_PLAN_ESTIMATE_MISSING_ANTHROPIC_WRITER_API_KEY}`,
+      "claude-cli output",
+    ].join("\n");
+
+    expect(
+      resolveHomeRunningJobBadgeOverride({
+        run: {
+          ...baseRun,
+          status: AgentRunStatus.COMPLETED,
+          resultOutput: output,
+        },
+        approvalWaitingLabel: null,
+      }),
+    ).toBe("Completed with fallback");
   });
 });

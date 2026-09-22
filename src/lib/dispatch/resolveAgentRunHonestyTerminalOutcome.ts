@@ -6,14 +6,11 @@ import {
 
 import {
   AGENT_RUN_HONESTY_CHIP_LABEL,
-  formatAgentRunHonestyDegradedSummary,
   formatAgentRunHonestyFailedSummary,
-  isCliFallbackMarketplacePlanEstimateBackend,
   isStoppedByUserOutput,
-  resolveMarketplacePlanEstimateFallbackReason,
 } from "@/lib/dispatch/agentRunHonestyCopy.constant";
 import type { AgentRunHonestyOutcome } from "@/lib/dispatch/agentRunHonestyOutcome.type";
-import { parseMarketplacePlanEstimateFromOutput } from "@/lib/dispatch/parseMarketplacePlanEstimateFromOutput";
+import { tryResolveWriterApiMissingCliFallbackTerminalOutcome } from "@/lib/dispatch/tryResolveWriterApiMissingCliFallbackTerminalOutcome";
 import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
 import type { AgentRunStatusValue } from "@/lib/dispatch/AgentRunStatus.constant";
 
@@ -28,6 +25,15 @@ export const resolveAgentRunHonestyTerminalOutcome = (input: {
       chipLabel: AGENT_RUN_HONESTY_CHIP_LABEL.timed_out,
       summaryLines: ["Timed out — approval expired before this run finished."],
     };
+  }
+
+  const writerApiCliFallbackOutcome =
+    tryResolveWriterApiMissingCliFallbackTerminalOutcome({
+      output: input.output,
+      runStatus: input.runStatus,
+    });
+  if (writerApiCliFallbackOutcome !== null) {
+    return writerApiCliFallbackOutcome;
   }
 
   if (isStoppedByUserOutput(input.output)) {
@@ -64,20 +70,6 @@ export const resolveAgentRunHonestyTerminalOutcome = (input: {
         writerOutcome.matchedLine ??
           "Timed out — this run hit the hard session limit on your Mac.",
       ],
-    };
-  }
-
-  const planEstimate = parseMarketplacePlanEstimateFromOutput(input.output);
-  if (
-    isCliFallbackMarketplacePlanEstimateBackend(planEstimate?.backend ?? null)
-  ) {
-    const reason = resolveMarketplacePlanEstimateFallbackReason(
-      planEstimate?.reasonCode ?? null,
-    );
-    return {
-      kind: "degraded",
-      chipLabel: AGENT_RUN_HONESTY_CHIP_LABEL.degraded,
-      summaryLines: [formatAgentRunHonestyDegradedSummary(reason)],
     };
   }
 
