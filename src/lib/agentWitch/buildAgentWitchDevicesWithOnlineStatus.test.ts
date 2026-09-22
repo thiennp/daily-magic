@@ -22,11 +22,12 @@ describe("buildAgentWitchDevicesWithOnlineStatus", () => {
   it("marks fresh last_seen without a live hub socket as recent only (AGENT-022)", () => {
     const lastSeenAt = new Date().toISOString();
     const result = buildAgentWitchDevicesWithOnlineStatus([
-      baseDevice({ lastSeenAt }),
+      baseDevice({ lastSeenAt, tokenHash: "abc123" }),
     ]);
 
     expect(result[0]).toMatchObject({
       id: "device-1",
+      tokenHash: "abc123",
       platform: "mac",
       isConnected: false,
       isOnline: true,
