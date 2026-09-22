@@ -60,7 +60,7 @@ export const resolveAgentRunHonestyOutcome = (input: {
   if (input.status === "error") {
     const terminal = resolveAgentRunHonestyTerminalOutcome({
       output: input.output,
-      runStatus: AgentRunStatus.FAILED,
+      runStatus: input.runStatus ?? AgentRunStatus.FAILED,
       resultOutcomeCode: input.resultOutcomeCode,
     });
     return (

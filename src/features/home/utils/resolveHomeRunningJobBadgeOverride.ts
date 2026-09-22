@@ -1,6 +1,7 @@
 import { resolveAgentRunHonestyOutcomeFromRecord } from "@/lib/dispatch/resolveAgentRunHonestyOutcomeFromRecord";
 import { resolveAgentLiveRunOutcomeChipClassName } from "@/features/agent/utils/agentLiveRunOutcomeChip.constant";
 import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
+import { isTerminalAgentRunStatus } from "@/lib/dispatch/isTerminalAgentRunStatus";
 import type AgentRunRecord from "@/lib/dispatch/types/AgentRunRecord.type";
 
 export const resolveHomeRunningJobBadgeOverride = (input: {
@@ -22,6 +23,9 @@ export const resolveHomeRunningJobBadgeOverride = (input: {
   if (input.run.status === AgentRunStatus.RUNNING) {
     return outcome.chipLabel;
   }
+  if (isTerminalAgentRunStatus(input.run.status)) {
+    return outcome.chipLabel;
+  }
   return (input.approvalWaitingLabel ?? "").trim().length > 0
     ? input.approvalWaitingLabel
     : null;
@@ -41,7 +45,8 @@ export const resolveHomeRunningJobBadgeClassName = (input: {
     outcome.kind === "waiting_you" ||
     outcome.kind === "running" ||
     input.run.status === AgentRunStatus.PENDING_APPROVAL ||
-    input.run.status === AgentRunStatus.RUNNING
+    input.run.status === AgentRunStatus.RUNNING ||
+    isTerminalAgentRunStatus(input.run.status)
   ) {
     return resolveAgentLiveRunOutcomeChipClassName(outcome.kind);
   }

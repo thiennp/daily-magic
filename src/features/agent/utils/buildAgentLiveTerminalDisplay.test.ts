@@ -20,6 +20,17 @@ describe("buildAgentLiveTerminalDisplay", () => {
     ).toBe(AGENT_LIVE_BASH_PROMPT);
   });
 
+  it("shows honest empty copy when a finished run has no captured output", () => {
+    expect(
+      buildAgentLiveTerminalDisplay({
+        output: "",
+        status: "finished",
+      }),
+    ).toBe(
+      `${AGENT_LIVE_BASH_PROMPT}No agent output was captured for this run.\n`,
+    );
+  });
+
   it("appends a fresh prompt after a finished run", () => {
     expect(
       buildAgentLiveTerminalDisplay({

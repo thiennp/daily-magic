@@ -67,6 +67,20 @@ export const resolveAgentRunHonestyTerminalOutcome = (input: {
     };
   }
 
+  const planEstimate = parseMarketplacePlanEstimateFromOutput(input.output);
+  if (
+    isCliFallbackMarketplacePlanEstimateBackend(planEstimate?.backend ?? null)
+  ) {
+    const reason = resolveMarketplacePlanEstimateFallbackReason(
+      planEstimate?.reasonCode ?? null,
+    );
+    return {
+      kind: "degraded",
+      chipLabel: AGENT_RUN_HONESTY_CHIP_LABEL.degraded,
+      summaryLines: [formatAgentRunHonestyDegradedSummary(reason)],
+    };
+  }
+
   if (
     writerOutcome?.code === AgentRunOutcomeCode.PROVIDER_QUOTA ||
     codedOutcome === AgentRunOutcomeCode.PROVIDER_QUOTA ||
@@ -82,20 +96,6 @@ export const resolveAgentRunHonestyTerminalOutcome = (input: {
       kind: "failed",
       chipLabel: AGENT_RUN_HONESTY_CHIP_LABEL.failed,
       summaryLines: [formatAgentRunHonestyFailedSummary(reason)],
-    };
-  }
-
-  const planEstimate = parseMarketplacePlanEstimateFromOutput(input.output);
-  if (
-    isCliFallbackMarketplacePlanEstimateBackend(planEstimate?.backend ?? null)
-  ) {
-    const reason = resolveMarketplacePlanEstimateFallbackReason(
-      planEstimate?.reasonCode ?? null,
-    );
-    return {
-      kind: "degraded",
-      chipLabel: AGENT_RUN_HONESTY_CHIP_LABEL.degraded,
-      summaryLines: [formatAgentRunHonestyDegradedSummary(reason)],
     };
   }
 
