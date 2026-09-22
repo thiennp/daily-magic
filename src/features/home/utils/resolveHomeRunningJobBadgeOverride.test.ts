@@ -2,7 +2,11 @@ import { describe, expect, it } from "vitest";
 
 import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
 import { DispatchPolicy } from "@/lib/dispatch/DispatchPolicy.constant";
-import { resolveHomeRunningJobBadgeOverride } from "@/features/home/utils/resolveHomeRunningJobBadgeOverride";
+import {
+  resolveHomeRunningJobBadgeClassName,
+  resolveHomeRunningJobBadgeOverride,
+} from "@/features/home/utils/resolveHomeRunningJobBadgeOverride";
+import { MARKETPLACE_PLAN_ESTIMATE_MISSING_ANTHROPIC_WRITER_API_KEY } from "@/lib/marketplace/runRecipe/marketplacePlanEstimateReasonCode.constant";
 import type AgentRunRecord from "@/lib/dispatch/types/AgentRunRecord.type";
 
 const baseRun: AgentRunRecord = {
@@ -48,5 +52,34 @@ describe("resolveHomeRunningJobBadgeOverride", () => {
         approvalWaitingLabel: null,
       }),
     ).toBe("In progress");
+  });
+
+  it("uses honesty chip for terminal failed runs with cli-fallback output", () => {
+    const output = [
+      "[[MARKETPLACE_PLAN_ESTIMATE]]",
+      "marketplacePlanEstimateBackend=cli-fallback-missing-anthropic-writer-api-key",
+      `marketplacePlanEstimateReasonCode=${MARKETPLACE_PLAN_ESTIMATE_MISSING_ANTHROPIC_WRITER_API_KEY}`,
+    ].join("\n");
+
+    expect(
+      resolveHomeRunningJobBadgeOverride({
+        run: {
+          ...baseRun,
+          status: AgentRunStatus.FAILED,
+          resultOutput: output,
+        },
+        approvalWaitingLabel: null,
+      }),
+    ).toBe("Completed with fallback");
+    expect(
+      resolveHomeRunningJobBadgeClassName({
+        run: {
+          ...baseRun,
+          status: AgentRunStatus.FAILED,
+          resultOutput: output,
+        },
+        approvalWaitingLabel: null,
+      }),
+    ).toContain("amber");
   });
 });

@@ -26,6 +26,10 @@ export const buildAgentLiveTerminalDisplay = (input: {
       return buildAgentLiveTerminalCommandEntry(pendingCommandLine);
     }
 
+    if (input.status === "finished" || input.status === "error") {
+      return `${buildAgentLiveTerminalIdleLine()}No agent output was captured for this run.\n`;
+    }
+
     return buildAgentLiveTerminalIdleLine();
   }
 

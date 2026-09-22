@@ -25,6 +25,22 @@ describe("resolveAgentRunHonestyTerminalOutcome", () => {
     );
   });
 
+  it("maps cli-fallback before generic failed when run status is failed", () => {
+    const output = [
+      "[[MARKETPLACE_PLAN_ESTIMATE]]",
+      "marketplacePlanEstimateBackend=cli-fallback-missing-anthropic-writer-api-key",
+      `marketplacePlanEstimateReasonCode=${MARKETPLACE_PLAN_ESTIMATE_MISSING_ANTHROPIC_WRITER_API_KEY}`,
+    ].join("\n");
+
+    const outcome = resolveAgentRunHonestyTerminalOutcome({
+      output,
+      runStatus: AgentRunStatus.FAILED,
+    });
+
+    expect(outcome?.kind).toBe("degraded");
+    expect(outcome?.chipLabel).toBe("Completed with fallback");
+  });
+
   it("does not map empty completed output to Success", () => {
     const outcome = resolveAgentRunHonestyTerminalOutcome({
       output: "",
