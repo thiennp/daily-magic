@@ -28,6 +28,16 @@
 Code labels: `src/lib/dispatch/agentRunHonestyCopy.constant.ts`  
 Chrome roles: `src/lib/dispatch/agentRunHonestyChipChrome.constant.ts`
 
+### Connecting vs In progress (locked)
+
+| Phase                      | Chip           | Chrome    |
+| -------------------------- | -------------- | --------- |
+| Log not attached yet       | Connecting     | progress  |
+| Active work (log attached) | In progress    | progress  |
+| Human gate                 | Waiting on you | attention |
+
+Wire: live terminal `starting` → Connecting; `streaming` → In progress.
+
 ## Step suffixes (locked)
 
 - `Skipped — {reason}`
