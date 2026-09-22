@@ -5,6 +5,10 @@ import { useState } from "react";
 import { useComposerApprovalWaitingLabel } from "@/features/agent/hooks/useComposerApprovalWaitingLabel";
 import AgentRunStatusBadge from "@/features/reports/AgentRunStatusBadge";
 import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
+import {
+  resolveHomeRunningJobBadgeClassName,
+  resolveHomeRunningJobBadgeOverride,
+} from "@/features/home/utils/resolveHomeRunningJobBadgeOverride";
 import { formatHomeRunningJobAliveLabel } from "@/features/home/utils/formatHomeRunningJobAliveLabel";
 import { formatHomeRunningJobTitle } from "@/features/home/utils/formatHomeRunningJobTitle";
 import { deleteAgentRunHistory } from "@/features/reports/utils/deleteAgentRunHistory";
@@ -26,6 +30,14 @@ export default function HomeRunningJobRow({
   const approvalWaitingLabel = useComposerApprovalWaitingLabel({
     activeRunId: run.id,
     isWaitingApproval: run.status === AgentRunStatus.PENDING_APPROVAL,
+  });
+  const badgeLabelOverride = resolveHomeRunningJobBadgeOverride({
+    run,
+    approvalWaitingLabel,
+  });
+  const badgeClassNameOverride = resolveHomeRunningJobBadgeClassName({
+    run,
+    approvalWaitingLabel,
   });
 
   const handleDelete = (): void => {
@@ -69,7 +81,8 @@ export default function HomeRunningJobRow({
         </span>
         <AgentRunStatusBadge
           status={run.status}
-          labelOverride={approvalWaitingLabel}
+          labelOverride={badgeLabelOverride}
+          classNameOverride={badgeClassNameOverride}
         />
       </button>
       <button

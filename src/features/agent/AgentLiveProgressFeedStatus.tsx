@@ -12,8 +12,11 @@ import { resolveAgentLiveProgressConnectionHint } from "@/features/agent/utils/r
 import type { AgentLiveProgressStallState } from "@/features/agent/utils/resolveAgentLiveProgressStallState";
 import { resolveAgentLiveRunBudgetNotices } from "@/features/agent/utils/resolveAgentLiveRunBudgetNotices";
 import type { AgentLiveWorkingEstimateProgress } from "@/features/agent/utils/resolveAgentLiveWorkingEstimateProgress";
+import type { AgentLiveRunOutcome } from "@/features/agent/utils/agentLiveRunOutcomeKind.type";
+import AgentLiveRunOutcomeChip from "@/features/agent/AgentLiveRunOutcomeChip";
 
 interface AgentLiveProgressFeedStatusProps {
+  readonly outcome?: AgentLiveRunOutcome | null;
   readonly isWorking: boolean;
   readonly isStopping?: boolean;
   readonly workingEllipsis: string;
@@ -27,6 +30,7 @@ interface AgentLiveProgressFeedStatusProps {
 }
 
 export default function AgentLiveProgressFeedStatus({
+  outcome = null,
   isWorking,
   isStopping = false,
   workingEllipsis,
@@ -58,9 +62,17 @@ export default function AgentLiveProgressFeedStatus({
   return (
     <>
       <div className="flex items-center justify-between gap-3">
-        <h3 className="text-sm font-medium text-gray-900 dark:text-white/90">
-          Progress on your Mac
-        </h3>
+        <div className="flex min-w-0 flex-wrap items-center gap-2">
+          <h3 className="text-sm font-medium text-gray-900 dark:text-white/90">
+            Progress on your Mac
+          </h3>
+          {outcome !== null ? (
+            <AgentLiveRunOutcomeChip
+              kind={outcome.kind}
+              label={outcome.chipLabel}
+            />
+          ) : null}
+        </div>
         <AgentLiveProgressFeedStopControl
           isWorking={isWorking}
           isStopping={isStopping}

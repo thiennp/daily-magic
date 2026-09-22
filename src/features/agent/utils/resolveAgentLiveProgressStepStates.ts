@@ -1,6 +1,7 @@
 import type { AgentLiveTerminalStatus } from "@/features/agent/utils/agentLiveTerminalState.type";
 
-export type AgentLiveProgressStepState = "done" | "active" | "pending";
+export type AgentLiveProgressStepState =
+  "done" | "active" | "pending" | "skipped" | "failed" | "fallback";
 
 export const resolveAgentLiveProgressStepStates = (input: {
   readonly started: boolean;

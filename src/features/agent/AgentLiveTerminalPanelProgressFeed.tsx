@@ -32,7 +32,8 @@ export default function AgentLiveTerminalPanelProgressFeed({
       ) : null}
       <AgentLiveProgressFeed
         steps={panelProgress.progress.steps}
-        replyPreview={panelProgress.progress.replyPreview}
+        humanSummary={panelProgress.progress.humanSummary}
+        outcome={panelProgress.progress.outcome}
         isWorking={panelProgress.isWorking}
         isStopping={panelProgress.isStopping}
         stallState={panelProgress.stallState}

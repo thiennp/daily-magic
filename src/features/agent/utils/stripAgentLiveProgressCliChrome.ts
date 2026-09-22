@@ -40,6 +40,17 @@ export const stripAgentLiveProgressCliChrome = (output: string): string =>
       if (/^\d+\.\d+\.\d+\s*\(Claude Code\)/i.test(trimmed)) {
         return false;
       }
+      if (trimmed === "[[MARKETPLACE_PLAN_ESTIMATE]]") {
+        return false;
+      }
+      if (trimmed.startsWith("marketplacePlanEstimate")) {
+        return false;
+      }
+      if (
+        /marketplace plan\/estimate falling back to claude-cli/i.test(trimmed)
+      ) {
+        return false;
+      }
       return true;
     })
     .join("\n")

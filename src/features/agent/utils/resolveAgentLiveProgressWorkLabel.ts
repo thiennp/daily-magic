@@ -96,5 +96,5 @@ export const resolveAgentLiveProgressFallbackWorkDetail = (input: {
   if (input.isFinished) {
     return null;
   }
-  return snippet ?? "Waiting for the first update from your Mac agent…";
+  return snippet ?? "Waiting for output…";
 };
