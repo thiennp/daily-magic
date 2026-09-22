@@ -20,6 +20,17 @@ describe("hasRealAgentRunTerminalWork", () => {
     expect(hasRealAgentRunTerminalWork(output)).toBe(false);
   });
 
+  it("returns false when only OAuth auth failure remains after diagnostics", () => {
+    const output = [
+      AGENT_RUN_WRITER_EXECUTION_HONESTY_MARKER,
+      `agentRunWriterExecutionBackend=${AGENT_RUN_WRITER_EXECUTION_CLI_MISSING_WRITER_API_KEY_BACKEND}`,
+      `agentRunWriterExecutionReasonCode=${AGENT_RUN_WRITER_EXECUTION_MISSING_WRITER_API_KEY_REASON_CODE}`,
+      "Failed to authenticate. API Error: 401 OAuth access token has expired. Re-authenticate to continue.",
+    ].join("\n");
+
+    expect(hasRealAgentRunTerminalWork(output)).toBe(false);
+  });
+
   it("returns true when CLI output exists beyond diagnostics", () => {
     const output = [
       AGENT_RUN_WRITER_EXECUTION_HONESTY_MARKER,

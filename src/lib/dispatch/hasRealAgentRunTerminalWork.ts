@@ -2,6 +2,11 @@ import { AGENT_RUN_WRITER_EXECUTION_HONESTY_MARKER } from "@agent-witch/shared/d
 
 import { isStoppedByUserOutput } from "@/lib/dispatch/agentRunHonestyCopy.constant";
 import { AGENT_RUN_WORKING_ESTIMATE_MARKER } from "@/lib/dispatch/agentRunWorkingEstimate.constant";
+import { isClaudeCliAuthBlockerInOutput } from "@/lib/dispatch/isClaudeCliAuthBlockerInOutput";
+import {
+  MARKETPLACE_PLAN_ESTIMATE_LOG_CLI_FALLBACK_EMPTY_CATALOG,
+  MARKETPLACE_PLAN_ESTIMATE_LOG_CLI_FALLBACK_MISSING_KEY,
+} from "@/lib/marketplace/runRecipe/marketplacePlanEstimateReasonCode.constant";
 
 const MARKETPLACE_PLAN_ESTIMATE_MARKER = "[[MARKETPLACE_PLAN_ESTIMATE]]";
 
@@ -50,11 +55,36 @@ const stripHonestyDiagnosticBlocks = (output: string): string =>
     output,
   );
 
+const stripAuthAndFallbackLogNoise = (output: string): string =>
+  output
+    .split("\n")
+    .filter((line) => {
+      const trimmed = line.trim();
+      if (trimmed.length === 0) {
+        return false;
+      }
+      if (isClaudeCliAuthBlockerInOutput(trimmed)) {
+        return false;
+      }
+      if (
+        trimmed === MARKETPLACE_PLAN_ESTIMATE_LOG_CLI_FALLBACK_MISSING_KEY ||
+        trimmed === MARKETPLACE_PLAN_ESTIMATE_LOG_CLI_FALLBACK_EMPTY_CATALOG
+      ) {
+        return false;
+      }
+      if (trimmed.startsWith("[agent-witch] marketplace plan/estimate")) {
+        return false;
+      }
+      return true;
+    })
+    .join("\n");
+
 export const hasRealAgentRunTerminalWork = (output: string): boolean => {
   const withoutDiagnostics = stripHonestyDiagnosticBlocks(output);
   const withoutEstimate = stripWorkingEstimateBlock(withoutDiagnostics);
   const withoutStopped = isStoppedByUserOutput(withoutEstimate)
     ? withoutEstimate.replace(/Stopped by user\.?/gi, "")
     : withoutEstimate;
-  return withoutStopped.trim().length > 0;
+  const withoutAuthNoise = stripAuthAndFallbackLogNoise(withoutStopped);
+  return withoutAuthNoise.trim().length > 0;
 };
