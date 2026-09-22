@@ -25,9 +25,7 @@ describe("buildAgentLiveProgressSteps run UX honesty", () => {
     expect(result.steps.find((step) => step.id === "work")).toMatchObject({
       state: "fallback",
     });
-    expect(result.steps.find((step) => step.id === "finish")).toMatchObject({
-      state: "fallback",
-    });
+    expect(result.steps.some((step) => step.id === "finish")).toBe(false);
     expect(result.replyPreview).toBeNull();
     expect(result.humanSummary).toContain("Completed with fallback");
     expect(result.humanSummary).toContain("ran via CLI fallback");
@@ -43,9 +41,7 @@ describe("buildAgentLiveProgressSteps run UX honesty", () => {
 
     expect(result.outcome.kind).toBe("failed");
     expect(result.outcome.chipLabel).toBe("Failed");
-    expect(result.steps.find((step) => step.id === "finish")?.state).not.toBe(
-      "done",
-    );
+    expect(result.steps.some((step) => step.id === "finish")).toBe(false);
   });
 
   it("shows Connecting while starting before log attaches", () => {
@@ -58,9 +54,7 @@ describe("buildAgentLiveProgressSteps run UX honesty", () => {
 
     expect(result.outcome.kind).toBe("connecting");
     expect(result.outcome.chipLabel).toBe("Connecting");
-    expect(result.steps.find((step) => step.id === "finish")?.state).toBe(
-      "pending",
-    );
+    expect(result.steps.some((step) => step.id === "finish")).toBe(false);
   });
 
   it("shows Waiting for output… while streaming with empty work body", () => {

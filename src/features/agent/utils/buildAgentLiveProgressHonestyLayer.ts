@@ -4,7 +4,6 @@ import type { AgentLiveRunOutcome } from "@/features/agent/utils/agentLiveRunOut
 import type { AgentLiveTerminalStatus } from "@/features/agent/utils/agentLiveTerminalState.type";
 import { patchAgentLiveProgressWorkStepHonesty } from "@/features/agent/utils/patchAgentLiveProgressWorkStepHonesty";
 import { resolveAgentLiveRunOutcome } from "@/features/agent/utils/resolveAgentLiveRunOutcome";
-import { resolveAgentLiveProgressFinishStepState } from "@/features/agent/utils/resolveAgentLiveProgressFinishStepState";
 import type { AgentLiveProgressStepState } from "@/features/agent/utils/resolveAgentLiveProgressStepStates";
 
 export const buildAgentLiveProgressHonestyLayer = (input: {
@@ -17,7 +16,6 @@ export const buildAgentLiveProgressHonestyLayer = (input: {
   readonly hasProgressUpdates: boolean;
   readonly workState: AgentLiveProgressStepState;
   readonly steps: readonly AgentLiveProgressStep[];
-  readonly finishStep: AgentLiveProgressStep;
 }): {
   readonly steps: readonly AgentLiveProgressStep[];
   readonly outcome: AgentLiveRunOutcome;
@@ -36,11 +34,6 @@ export const buildAgentLiveProgressHonestyLayer = (input: {
     hasProgressUpdates: input.hasProgressUpdates,
   });
 
-  const finishState = resolveAgentLiveProgressFinishStepState({
-    isFinished: input.isFinished,
-    outcome,
-  });
-
   const patchedWorkSteps = input.steps.map((step) =>
     patchAgentLiveProgressWorkStepHonesty(step, {
       outcome,
@@ -57,17 +50,7 @@ export const buildAgentLiveProgressHonestyLayer = (input: {
       : null;
 
   return {
-    steps: [
-      ...patchedWorkSteps,
-      {
-        ...input.finishStep,
-        state: finishState,
-        detail:
-          finishState === "fallback" || finishState === "failed"
-            ? (humanSummary ?? input.finishStep.detail)
-            : input.finishStep.detail,
-      },
-    ],
+    steps: patchedWorkSteps,
     outcome,
     humanSummary,
   };

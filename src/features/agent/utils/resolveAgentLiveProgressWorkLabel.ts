@@ -1,3 +1,4 @@
+import { AGENT_LIVE_PROGRESS_WORKING_FALLBACK_LABEL } from "@/features/agent/utils/agentLiveProgressMarketplaceStepLabels.constant";
 import type { AgentLiveTerminalStatus } from "@/features/agent/utils/agentLiveTerminalState.type";
 import { AGENT_LIVE_PROGRESS_ACTIVITY_PATTERNS } from "@/features/agent/utils/agentLiveProgressPatterns.constant";
 
@@ -12,7 +13,7 @@ export const resolveAgentLiveProgressActivityLabel = (
       return activity.label;
     }
   }
-  return "Working on your request";
+  return AGENT_LIVE_PROGRESS_WORKING_FALLBACK_LABEL;
 };
 
 export const hasAgentLiveProgressStartedUserTask = (input: {
@@ -52,7 +53,7 @@ export const resolveAgentLiveProgressFallbackWorkLabel = (input: {
   if (input.started && !input.isFinished) {
     return resolveAgentLiveProgressActivityLabel(input.cleaned);
   }
-  return "Working on your request";
+  return AGENT_LIVE_PROGRESS_WORKING_FALLBACK_LABEL;
 };
 
 const resolveCleanedOutputSnippet = (cleaned: string): string | null => {

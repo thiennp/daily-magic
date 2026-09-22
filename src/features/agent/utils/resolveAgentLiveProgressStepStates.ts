@@ -17,7 +17,6 @@ export const resolveAgentLiveProgressStepStates = (input: {
   readonly startState: AgentLiveProgressStepState;
   readonly estimateState: AgentLiveProgressStepState;
   readonly workState: AgentLiveProgressStepState;
-  readonly finishState: AgentLiveProgressStepState;
 } => {
   // Failed before the Mac confirmed ready — do not mark "Agent started".
   if (input.status === "error" && !input.isReadyBanner) {
@@ -26,7 +25,6 @@ export const resolveAgentLiveProgressStepStates = (input: {
       startState: "pending",
       estimateState: "pending",
       workState: "pending",
-      finishState: "pending",
     };
   }
 
@@ -67,6 +65,5 @@ export const resolveAgentLiveProgressStepStates = (input: {
     startState,
     estimateState,
     workState,
-    finishState: input.isFinished ? "done" : "pending",
   };
 };
