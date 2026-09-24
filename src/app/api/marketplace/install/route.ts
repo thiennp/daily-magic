@@ -5,19 +5,26 @@ export const dynamic = "force-dynamic";
 
 const parseInstallBody = (
   body: unknown,
-): { readonly capabilityId: string; readonly deviceId: string } | null => {
+): {
+  readonly capabilityId: string;
+  readonly deviceId: string;
+  readonly projectId: string;
+} | null => {
   if (typeof body !== "object" || body === null) {
     return null;
   }
 
   const capabilityId = (body as { capabilityId?: unknown }).capabilityId;
   const deviceId = (body as { deviceId?: unknown }).deviceId;
+  const projectId = (body as { projectId?: unknown }).projectId;
 
   if (
     typeof capabilityId !== "string" ||
     capabilityId.trim().length === 0 ||
     typeof deviceId !== "string" ||
-    deviceId.trim().length === 0
+    deviceId.trim().length === 0 ||
+    typeof projectId !== "string" ||
+    projectId.trim().length === 0
   ) {
     return null;
   }
@@ -25,6 +32,7 @@ const parseInstallBody = (
   return {
     capabilityId: capabilityId.trim(),
     deviceId: deviceId.trim(),
+    projectId: projectId.trim(),
   };
 };
 
@@ -48,7 +56,7 @@ export async function POST(request: Request): Promise<Response> {
 
   if (parsed === null) {
     return Response.json(
-      { error: "capabilityId and deviceId are required." },
+      { error: "capabilityId, deviceId, and projectId are required." },
       { status: 400 },
     );
   }
@@ -58,6 +66,7 @@ export async function POST(request: Request): Promise<Response> {
       actorUserId: actor.id,
       capabilityId: parsed.capabilityId,
       deviceId: parsed.deviceId,
+      projectId: parsed.projectId,
     });
 
     if (!result.ok) {
@@ -71,6 +80,7 @@ export async function POST(request: Request): Promise<Response> {
       ok: true,
       savedToLibrary: result.savedToLibrary,
       libraryCapabilityId: result.libraryCapabilityId,
+      projectId: result.projectId,
       harnessInstalled: result.harnessInstalled,
       harnessInstallMessage: result.harnessInstallMessage,
       localHarnessBundle: result.localHarnessBundle,

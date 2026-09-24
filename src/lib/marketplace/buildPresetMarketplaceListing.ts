@@ -1,5 +1,6 @@
 import { CapabilityType } from "@/lib/capabilities/CapabilityType.constant";
 import { CapabilityVisibility } from "@/lib/capabilities/CapabilityVisibility.constant";
+import buildUsageGuideForTemplate from "@/lib/capabilities/templates/buildUsageGuideForTemplate";
 import type { CapabilityTemplate } from "@/lib/capabilities/templates/types/CapabilityTemplate.type";
 import type HarnessMarketplaceListing from "@/lib/harness/types/HarnessMarketplaceListing.type";
 import {
@@ -24,6 +25,7 @@ const buildPresetMarketplaceListing = (
   visibility: CapabilityVisibility.PUBLIC,
   workflowFields:
     template.type === CapabilityType.WORKFLOW ? template.workflowFields : [],
+  usageGuide: buildUsageGuideForTemplate(template),
   harnessSetSlug: template.harness.slug,
   harnessSetName: template.harness.name,
   harnessItemCount: template.harness.items.length,

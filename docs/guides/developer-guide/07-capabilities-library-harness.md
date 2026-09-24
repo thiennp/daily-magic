@@ -32,11 +32,11 @@ Routes: `/library`, `/marketplace`. APIs include `/api/capabilities`, `/api/harn
 
 Harness is **files on disk**, not an agent run.
 
-| User action                      | Cloud                                                                      | Mac                                                         |
-| -------------------------------- | -------------------------------------------------------------------------- | ----------------------------------------------------------- |
-| Marketplace → Install (+ device) | `installOfficialPresetListing` → `pushHarnessInstallBundleToDevice`        | `harness.request` (`installMethod: "deterministic-bundle"`) |
-| Save to library (template fork)  | `createCapabilityFromTemplate` → `requestCapabilityTemplateHarnessInstall` | Same when a target device is chosen                         |
-| Browser on same Mac (catalog)    | Proxied via AWC                                                            | AWB `POST http://127.0.0.1:47892/harness/install`           |
+| User action                                      | Cloud                                                                                     | Mac                                                                                                                          |
+| ------------------------------------------------ | ----------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| Marketplace → Install (+ device + **projectId**) | `installOfficialPresetListing` → `bindMarketplaceInstallToProject` (`project_components`) | Pull into repo on Mac (`applyInstalledHarnessSetsToProjectCursor`); no global `pushHarnessInstallBundleToDevice` for presets |
+| Save to library (template fork)                  | `createCapabilityFromTemplate` → `requestCapabilityTemplateHarnessInstall`                | Same when a target device is chosen                                                                                          |
+| Browser on same Mac (catalog)                    | Proxied via AWC                                                                           | AWB `POST http://127.0.0.1:47892/harness/install`                                                                            |
 
 Message builder: `buildHarnessInstallDispatchMessage` — inline `bundle` or `bundleFetch` (gzip artifact when JSON exceeds ~96 KiB). Mac: `runDeterministicHarnessInstall` → `applyHarnessInstallLocally` (no writer CLI for deterministic installs). Legacy dashboard harness UI may still use writer `instruction` paths.
 
@@ -58,10 +58,10 @@ Details: [guest-library-browser-drafts.md](../../qa/guest-library-browser-drafts
 
 ## Marketplace → capability → workflow orchestration
 
-1. Listing ships harness preset + capability template (`template-*` slug).
-2. **Install** pushes harness files to the Mac.
+1. Listing ships capability template (`template-*` slug) + generated **usageGuide** (UI); harness preset stays internal to templates.
+2. **Install** requires `projectId`; binds workflow/agent + harness slug via `bindMarketplaceInstallToProject` / `bindPublishedCapabilityHarnessToProject`.
 3. **Run** may start an **official workflow run** if the capability resolves to a registered orchestration template ([Chapter 6](06-workflows-orchestration.md)).
-4. Workflow **specialist** harness items tag files agents read under `~/.agent-witch/harness/` — still harness install, separate from each `command.claude.run`.
+4. Playbook files materialize under the **project repo** after Mac pull; dispatch still uses `command.claude.run` per step.
 
 Adding or changing a marketplace preset: co-locate harness template, capability constant, and `workflowOrchestration/definitions/*.definition.ts` per [official-marketplace-workflow-best-practices.md](../../product/official-marketplace-workflow-best-practices.md).
 

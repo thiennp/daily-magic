@@ -22,6 +22,7 @@ export const finishTeammateHarnessInstall = async (input: {
       errorMessage: null,
       savedToLibrary: true,
       libraryCapabilityId: input.libraryCapabilityId,
+      projectId: null,
       harnessInstalled: false,
       harnessInstallMessage:
         "Saved to your library. Rules bundle is not available to install.",
@@ -41,6 +42,7 @@ export const finishTeammateHarnessInstall = async (input: {
       errorMessage: null,
       savedToLibrary: true,
       libraryCapabilityId: input.libraryCapabilityId,
+      projectId: null,
       harnessInstalled: false,
       harnessInstallMessage: harness.harnessInstallMessage,
       localHarnessBundle: null,
@@ -58,6 +60,7 @@ export const finishTeammateHarnessInstall = async (input: {
     errorMessage: null,
     savedToLibrary: true,
     libraryCapabilityId: input.libraryCapabilityId,
+    projectId: null,
     harnessInstalled: push.installed,
     harnessInstallMessage: push.installed
       ? null

@@ -1,4 +1,6 @@
+import buildUsageGuideForPublishedCapability from "@/lib/capabilities/buildUsageGuideForPublishedCapability";
 import { getUserById } from "@/lib/auth/userRepository";
+import type CapabilityTemplateUsageGuide from "@/lib/capabilities/templates/types/CapabilityTemplateUsageGuide.type";
 import type PublishedCapabilityRecord from "@/lib/capabilities/types/PublishedCapabilityRecord.type";
 import { filterBorrowableManifestToSetSlugs } from "@/lib/harness/filterBorrowableManifest";
 import type HarnessCatalogEntry from "@/lib/harness/types/HarnessCatalogEntry.type";
@@ -11,6 +13,7 @@ export interface HarnessMarketplaceBorrowPayload {
   readonly description: string;
   readonly exampleRequest: string;
   readonly workflowFields: PublishedCapabilityRecord["workflowFields"];
+  readonly usageGuide: CapabilityTemplateUsageGuide;
   readonly ownerUserId: string;
   readonly ownerEmail: string;
   readonly ownerName: string | null;
@@ -50,6 +53,7 @@ export async function buildHarnessMarketplaceBorrowPayload(
     description: capability.description,
     exampleRequest: capability.exampleRequest,
     workflowFields: capability.workflowFields,
+    usageGuide: buildUsageGuideForPublishedCapability(capability),
     ownerUserId: capability.ownerUserId,
     ownerEmail: owner?.email ?? capability.ownerUserId,
     ownerName: owner?.name ?? null,

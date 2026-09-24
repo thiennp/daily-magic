@@ -30,7 +30,7 @@ Create-workflow field types and a proposed step/graph builder: [workflow-builder
 
 ## Harness
 
-The **rules/skills/commands bundle** installed on a Mac under `~/.agent-witch/harness/`. The harness catalog lets you publish, share, and install consistent agent instructions—not the run itself.
+The **rules/skills/commands bundle** for how agents behave. For marketplace workflows/agents, playbook files **materialize inside a project repo** (`.cursor/`, `project.json`) after Mac pull—not as a separate marketplace install surface. Global `~/.agent-witch/harness/` remains for legacy/catalog paths.
 
 ## Library
 
@@ -38,7 +38,7 @@ The **rules/skills/commands bundle** installed on a Mac under `~/.agent-witch/ha
 
 ## Marketplace
 
-**Company-published harness/capability listings** others can browse and borrow. Marketplace sits on top of harness + capabilities; it is not a third runtime.
+**Company-published workflow and agent listings** with per-listing **usage guides**. Install requires a **project** + Mac; cloud binds `project_components`. Marketplace is not a third runtime.
 
 ## Agent run
 

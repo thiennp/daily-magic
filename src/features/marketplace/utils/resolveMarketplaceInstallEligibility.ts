@@ -7,6 +7,7 @@ import { isOfficialPresetMarketplaceCapabilityId } from "@/lib/marketplace/prese
 
 export const resolveMarketplaceInstallEligibility = (input: {
   readonly capabilityId: string | null;
+  readonly selectedProjectId: string;
   readonly selectedDevice: MyMacDevice | undefined;
   readonly isWakeServerReachable: boolean;
   readonly status: "idle" | "installing" | "done" | "error";
@@ -22,8 +23,10 @@ export const resolveMarketplaceInstallEligibility = (input: {
     isOfficialPreset &&
     input.isWakeServerReachable &&
     input.selectedDevice !== undefined;
+  const hasProject = input.selectedProjectId.trim().length > 0;
   const canInstall =
     input.capabilityId !== null &&
+    hasProject &&
     input.selectedDevice !== undefined &&
     (canDispatchToMac(input.selectedDevice) || canInstallHarnessLocally) &&
     input.status !== "installing" &&

@@ -14,6 +14,7 @@ export interface MarketplaceInstallApiResult {
 export const postMarketplaceInstall = async (input: {
   readonly capabilityId: string;
   readonly deviceId: string;
+  readonly projectId: string;
 }): Promise<MarketplaceInstallApiResult> => {
   const response = await fetch("/api/marketplace/install", {
     method: "POST",

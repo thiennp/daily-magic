@@ -35,21 +35,16 @@ interface MarketplaceListCardProps {
 }
 
 const formatListingMetadata = (listing: HarnessMarketplaceListing): string => {
+  const minutes = listing.usageGuide.estimatedMinutes;
+  const timeSuffix = minutes !== undefined ? `~${minutes} min · ` : "";
+
   if (listing.isOfficialPreset) {
-    const ruleCount =
-      listing.harnessItemCount !== null
-        ? `${listing.harnessItemCount} rules · `
-        : "";
-    return `${ruleCount}rules · ${MAC_WORKER_BENEFIT_COPY.runsOnMacMeta}`;
+    return `${timeSuffix}${MAC_WORKER_BENEFIT_COPY.runsOnMacMeta}`;
   }
 
   const owner = listing.ownerName ?? listing.ownerEmail;
-  const ruleSuffix =
-    listing.harnessItemCount !== null
-      ? ` · ${listing.harnessItemCount} rules`
-      : "";
   const onlineSuffix = listing.isOnline ? " · online" : "";
-  return `${owner}${ruleSuffix}${onlineSuffix}`;
+  return `${timeSuffix}${owner}${onlineSuffix}`;
 };
 
 export default function MarketplaceListCard({

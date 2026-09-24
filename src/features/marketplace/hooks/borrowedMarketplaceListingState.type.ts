@@ -7,6 +7,7 @@ export interface BorrowedMarketplaceListingState {
   readonly description: string;
   readonly exampleRequest: string;
   readonly workflowFields: HarnessMarketplaceListing["workflowFields"];
+  readonly usageGuide: HarnessMarketplaceListing["usageGuide"];
   readonly ownerUserId: string;
   readonly ownerEmail: string;
   readonly ownerName: string | null;

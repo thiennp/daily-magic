@@ -1,7 +1,7 @@
 import { forkPublishedCapability } from "@/lib/capabilities/forkPublishedCapability";
 import { getPublishedCapabilityById } from "@/lib/capabilities/capabilityQueries";
 import { canViewPublishedCapability } from "@/lib/capabilities/canViewPublishedCapability";
-import { finishTeammateHarnessInstall } from "@/lib/marketplace/finishTeammateHarnessInstall";
+import bindPublishedCapabilityHarnessToProject from "@/lib/marketplace/bindPublishedCapabilityHarnessToProject";
 import type { MarketplaceInstallResult } from "@/lib/marketplace/types/MarketplaceInstallResult.type";
 
 const installFailure = (errorMessage: string): MarketplaceInstallResult => ({
@@ -9,6 +9,7 @@ const installFailure = (errorMessage: string): MarketplaceInstallResult => ({
   errorMessage,
   savedToLibrary: false,
   libraryCapabilityId: null,
+  projectId: null,
   harnessInstalled: false,
   harnessInstallMessage: null,
   localHarnessBundle: null,
@@ -18,6 +19,7 @@ const installTeammateListing = async (
   actorUserId: string,
   capabilityId: string,
   deviceId: string,
+  projectId: string,
 ): Promise<MarketplaceInstallResult> => {
   const capability = await getPublishedCapabilityById(capabilityId);
 
@@ -46,13 +48,31 @@ const installTeammateListing = async (
     );
   }
 
-  return finishTeammateHarnessInstall({
-    actorUserId,
+  const bound = await bindPublishedCapabilityHarnessToProject({
+    ownerUserId: actorUserId,
+    projectId,
     deviceId,
     libraryCapabilityId: forkResult.capability.id,
-    ownerUserId: capability.ownerUserId,
+    capabilityType: capability.type,
     harnessSetSlug: capability.harnessSetSlug,
+    harnessSetName: capability.name,
   });
+
+  if (!bound.ok) {
+    return installFailure(bound.errorMessage);
+  }
+
+  return {
+    ok: true,
+    errorMessage: null,
+    savedToLibrary: true,
+    libraryCapabilityId: forkResult.capability.id,
+    projectId,
+    harnessInstalled: false,
+    harnessInstallMessage:
+      "Linked to your project. Pull playbook files into the repo from Agent Witch on your Mac.",
+    localHarnessBundle: null,
+  };
 };
 
 export default installTeammateListing;

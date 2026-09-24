@@ -26,6 +26,7 @@ describe("postMarketplaceInstall", () => {
     const result = await postMarketplaceInstall({
       capabilityId: "cap-1",
       deviceId: "device-1",
+      projectId: "project-1",
     });
 
     expect(result.ok).toBe(true);
@@ -48,6 +49,7 @@ describe("postMarketplaceInstall", () => {
     const result = await postMarketplaceInstall({
       capabilityId: "preset:vibe-coding-app-feature",
       deviceId: "device-1",
+      projectId: "project-1",
     });
 
     expect(result.ok).toBe(false);
@@ -69,6 +71,7 @@ describe("postMarketplaceInstall", () => {
     await postMarketplaceInstall({
       capabilityId: "cap-1",
       deviceId: "device-1",
+      projectId: "project-1",
     });
 
     expect(readOnboardingWorkflowCreated()).toBe(false);

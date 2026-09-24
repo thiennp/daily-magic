@@ -92,6 +92,18 @@ test.describe("Marketplace workflow self-delegate", () => {
       await onlineMac.click();
     }
 
+    const projectList = installModal.getByText("Project", { exact: false });
+    if (await projectList.isVisible().catch(() => false)) {
+      const firstProject = installModal
+        .locator("ul")
+        .last()
+        .getByRole("button")
+        .first();
+      if (await firstProject.isVisible().catch(() => false)) {
+        await firstProject.click();
+      }
+    }
+
     await installModal.getByRole("button", { name: "Install" }).click();
     await expect(
       page.getByRole("heading", { name: `${WORKFLOW_NAME} installed` }),

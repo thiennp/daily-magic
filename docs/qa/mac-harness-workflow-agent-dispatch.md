@@ -27,11 +27,11 @@ See `src/features/agent-witch/README.md` and ADR **0002** (WebSocket), **0005** 
 
 ### Harness — what moves and when
 
-| User action                             | Cloud                                                                                                     | Mac                                                       |
-| --------------------------------------- | --------------------------------------------------------------------------------------------------------- | --------------------------------------------------------- |
-| **Marketplace → Install** (with device) | `installOfficialPresetListing` → `pushHarnessInstallBundleToDevice`                                       | Receives `harness.request` (create-set, then write-items) |
-| **Save to my library** (template fork)  | `createCapabilityFromTemplate` → `requestCapabilityTemplateHarnessInstall` (unless `deferHarnessInstall`) | Same bundle push when a target device is chosen           |
-| **Run on your Mac** (harness catalog)   | Local wake API `POST …/harness/install` on **AWB** when browser and Mac share the machine                 | Bridge forwards harness install without cloud WS          |
+| User action                                        | Cloud                                                                                                     | Mac                                                                                     |
+| -------------------------------------------------- | --------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
+| **Marketplace → Install** (device + **projectId**) | `installOfficialPresetListing` → `bindMarketplaceInstallToProject` (`project_components`)                 | Pull playbook into repo on Mac; no global `harness.request` bundle for official presets |
+| **Save to my library** (template fork)             | `createCapabilityFromTemplate` → `requestCapabilityTemplateHarnessInstall` (unless `deferHarnessInstall`) | Same bundle push when a target device is chosen                                         |
+| **Run on your Mac** (harness catalog)              | Local wake API `POST …/harness/install` on **AWB** when browser and Mac share the machine                 | Bridge forwards harness install without cloud WS                                        |
 
 Cloud push: `buildHarnessInstallDispatchMessage` sends **`installMethod: "deterministic-bundle"`** with inline `bundle` or `bundleFetch` (HTTPS gzip artifact when the JSON exceeds ~96 KiB). Mac: `runDeterministicHarnessInstall` → `applyHarnessInstallLocally` (no writer CLI). Legacy dashboard harness UI still uses `instruction` + writer CLI.
 
