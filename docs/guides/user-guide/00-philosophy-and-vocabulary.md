@@ -12,6 +12,38 @@ Agent Witch exists so you can:
 
 That is the whole product. Everything else—workflows, marketplace, harness/playbooks, Cursor Cloud dispatch—is **how** that job gets done safely at scale, not a separate product.
 
+Four **product pillars** describe how Agent Witch gets better over time without changing that job. Canonical detail for writers and engineers: [product pillars](../../product/product-pillars.md).
+
+---
+
+## Four pillars
+
+These promises stack on the same loop you already use: connect a **Mac**, send a **Task**, watch a **Run**, optionally save a **Playbook**.
+
+| Pillar               | What we promise you                                                                                                                                                    |
+| -------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Easy authoring**   | Workflows and agents feel approachable—even if you are not an AI expert. Start with a plain **Task**; use forms and team **Workflows** when you need structure.        |
+| **Learn from usage** | Rough **Runs** can become improvements—you stay in control. Agent Witch may surface feedback and suggestions; you accept before **Playbooks** or **Workflows** change. |
+| **Efficient memory** | Each new **Task** can reuse useful context from past **Runs** so you do not repeat the same setup every time—solo or on a team.                                        |
+| **Team learning**    | Teammates share **Runs**, **Playbooks**, and company templates so the org gets better together—not isolated one-off prompts.                                           |
+
+Chapter map: authoring (1, 6) · learning from runs (5, 9) · memory and reuse (5, 7, 8) · team sharing (7, 8).
+
+---
+
+## North star vs today
+
+Docs stay honest: some pillar ideas are stronger today than others. This is the user-facing summary (not a feature checklist).
+
+| Pillar               | You can rely on today                                                                                      | Where we are headed                                                                                   |
+| -------------------- | ---------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| **Easy authoring**   | **New task** composer, workflow forms, official presets in **Marketplace**, human checkpoints in workflows | Richer no-jargon builder, more presets, clearer “start simple” onboarding                             |
+| **Learn from usage** | **Run again**, **Save as playbook**, honest run status, feedback on some surfaces                          | Smoother loop: a failed or rough run → reviewed suggestion → updated playbook or workflow you approve |
+| **Efficient memory** | Recent context on the **Mac**, saved **Playbooks**, search past **Runs** when offered                      | Smarter reuse (what to carry forward, what to skip) and clearer team sharing rules                    |
+| **Team learning**    | Team **Runs**, **Library**, **Marketplace**, install playbooks to a teammate’s **Mac**                     | Stronger sharing defaults, audit-friendly reuse, org templates as the normal path                     |
+
+If UI copy promises something this table does not list as “today,” treat the product as ahead of the guide and file a doc fix—or check [System Q&A](../../qa/README.md).
+
 ---
 
 ## What Agent Witch is not
@@ -85,3 +117,6 @@ Engineers changing code should read the [developer guide](../developer-guide/REA
 - triet ly Agent Witch, daily-magic vs agentwitch
 - Mac Task Run Playbook vocabulary
 - solo vs company Agent Witch
+- four pillars Agent Witch, product values, north star vs today
+- bon tru cot Agent Witch, de tao workflow, hoc tu loi, tiet kiem ngữ cảnh, team chia se kinh nghiem
+- huong dan bon tru cot, triet ly san pham Agent Witch

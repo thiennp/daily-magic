@@ -68,6 +68,8 @@ Agent Witch uses one codebase with **persona gates** in navigation:
 
 Exact nav labels follow [UX simplification](../../product/ux-simplification.md). Your org may enable groups without changing how **Mac** pairing works.
 
+**Team learning** ([Chapter 0 — four pillars](00-philosophy-and-vocabulary.md#four-pillars)) starts here: the same account can see shared **Runs**, install org **Playbooks** from **Marketplace**, and reuse templates in **Library**—not only private one-off prompts. Solo makers still pair a **Mac** the same way; company mode adds visibility and shared standards.
+
 **Admins** (super-admin or team admin) may see extra routes (user management, policy). Those are not part of every user’s Home checklist.
 
 ---
@@ -110,7 +112,7 @@ Open your profile / account menu (top bar) for:
 
 Unsigned visitors may browse **Marketplace** / guest library drafts in **browser storage** on that device only. **Running** workflows and dispatch require sign-in and a dispatch-ready **Mac** (or configured Cursor Cloud key). See [guest library Q&A](../../qa/guest-library-browser-drafts.md).
 
-After you sign in, guest drafts can sync to your cloud library (newer `updatedAt` wins).
+After you sign in, guest drafts can sync to your cloud library (newer `updatedAt` wins). That handoff is personal reuse today; team **Library** and **Marketplace** are where org-wide **team learning** lives ([Chapter 7](07-capabilities-library-playbooks.md)).
 
 ---
 
@@ -152,3 +154,4 @@ Threat model for engineers: [security/threat-model.md](../../security/threat-mod
 - dang nhap Agent Witch, tai khoan, lien ket Mac
 - email magic link Agent Witch, test auth localhost
 - team nav solo marketplace Agent Witch account
+- team learning shared runs library account, team chia se kinh nghiem tai khoan

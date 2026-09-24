@@ -2,6 +2,8 @@
 
 This chapter walks you from zero to **one completed Run** with live terminal output—the solo-maker success bar in [Chapter 0](00-philosophy-and-vocabulary.md). You will use plain product words: **Mac**, **Task**, **Run**, **Playbook** ([UX simplification](../../product/ux-simplification.md)).
 
+That path is the **easy authoring** pillar in practice: one prompt on **New task**, no workflow builder required. Team templates and structured **Workflows** come later when you need them ([Chapter 6](06-workflows-and-checkpoints.md)).
+
 **Production URL:** [https://www.agentwitch.com](https://www.agentwitch.com) (Agent Witch Console). The git repo is named `daily-magic`; the product you use in the browser is **Agent Witch**, not CHECK24 `daily-magic.*` hosts unless your organization says otherwise ([repo name & hosting](../../product/repo-name-and-hosting.md)).
 
 ---
@@ -81,7 +83,7 @@ Pairing means: **your account** knows **this install**, and the browser on this 
 1. From **Home**, click **New task** (or open the task composer from the nav).
 2. **Mac:** leave **your Mac** selected (default when paired).
 3. **Prompt:** describe a small, safe job—for example: “List files in my home directory and summarize in three bullets.”
-4. Expand **More options** only if you need them (repository folder, **Playbook**, writer choice). For the first run, the default Mac + prompt is enough ([UX simplification — progressive disclosure](../../product/ux-simplification.md)).
+4. Expand **More options** only if you need them (repository folder, **Playbook**, writer choice). For the first run, the default Mac + prompt is enough—that is intentional **progressive disclosure** so authoring stays approachable ([UX simplification](../../product/ux-simplification.md), [four pillars — easy authoring](00-philosophy-and-vocabulary.md#four-pillars)).
 5. Click **Send**.
 
 **If Send is disabled**, read the banner above the button—it is intentional, not a bug:
@@ -108,9 +110,9 @@ The Console **blocks Send** with a clear reason rather than failing silently ([r
    | **Waiting on you**              | The agent needs your answer (`[[AWAITING_INPUT]]` checkpoints). |
    | **Success** / **Failed** / etc. | Terminal outcome only after real completion.                    |
 
-3. When the run finishes, you should see output in history and can use **Run again** later (Chapter 5).
+3. When the run finishes, you should see output in history and can use **Run again** later (Chapter 5)—the start of **learn from usage** and **efficient memory** when you save what worked as a **Playbook**.
 
-**Success for this chapter:** one **Run** reached a terminal outcome (**Success**, **Completed with fallback**, or a clear **Failed** with a reason)—not merely clicking Send.
+**Success for this chapter:** one **Run** reached a terminal outcome (**Success**, **Completed with fallback**, or a clear **Failed** with a reason)—not merely clicking Send. A clear **Failed** with a reason is still a successful first lesson; fix and **Run again** rather than guessing.
 
 ---
 
@@ -142,3 +144,4 @@ The Console **blocks Send** with a clear reason rather than failing silently ([r
 - bat dau Agent Witch, cai dat Mac, ket noi may, gui task dau tien
 - Agent Witch beginner guide chapter 1
 - huong dan su dung Agent Witch tu dau, chay agent tren Mac lan dau
+- de tao task dau tien, bon tru cot de tao workflow, bat dau don gian Agent Witch

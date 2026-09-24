@@ -2,6 +2,8 @@
 
 Start here when **Send** is blocked, the **Mac** looks wrong in Home, a **Run** never attaches, or updates fail. This chapter uses user words (**Mac**, **Task**, **Run**, **Playbook**) and points to deeper [System Q&A](../../qa/README.md) and open [KNOWN_ISSUES](../../../src/features/agent-witch/KNOWN_ISSUES.md) entries.
 
+Most fixes are **learn from usage** in practice: read the honest banner, adjust **Mac** health or DNS, **Run again** or **Try again** on one workflow step—then **Save as playbook** when you have a stable pattern ([four pillars — learn from usage](00-philosophy-and-vocabulary.md#four-pillars)). Agent Witch does not auto-rewrite your **Playbooks** because a run failed; you stay in control.
+
 Quick wins first, then themed sections for DNS, reconnecting, and bundle update.
 
 ---
@@ -233,3 +235,5 @@ npm run feature-knowledge:query -- "Mac reconnecting DNS update bundle" --featur
 - loi DNS www.agentwitch.com tren Mac
 - cap nhat bundle Agent Witch update needed
 - sau update local van reconnecting plist
+- hoc tu loi troubleshooting, run lai sau khi sua loi Mac
+- bon tru cot learn from usage sua loi agent

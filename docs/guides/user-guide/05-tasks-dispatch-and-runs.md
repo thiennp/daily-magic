@@ -4,6 +4,8 @@ A **Task** is what you ask for in the composer. A **Run** is what actually happe
 
 Background: [Chapter 0 vocabulary](00-philosophy-and-vocabulary.md) · Dispatch mechanics (Q&A): [harness, workflow, agent runs to Mac](../../qa/mac-harness-workflow-agent-dispatch.md).
 
+This chapter is where three pillars meet daily work: **easy authoring** (composer + **More options**), **learn from usage** (**Run again**, **Save as playbook**, honest outcomes), and **efficient memory** (continue conversation, search past **Runs**). See [four pillars](00-philosophy-and-vocabulary.md#four-pillars) and [north star vs today](00-philosophy-and-vocabulary.md#north-star-vs-today).
+
 ---
 
 ## Task composer — minimum viable send
@@ -81,11 +83,11 @@ Open **Runs** to:
 | Action                | Use                                                                                                                                                                               |
 | --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Inspect output        | Audit what the agent did.                                                                                                                                                         |
-| **Run again**         | Repeat task with edits.                                                                                                                                                           |
-| **Save as playbook**  | Reuse instructions (see guide Chapter 7).                                                                                                                                         |
+| **Run again**         | Repeat task with edits—core **learn from usage** loop after a rough or good **Run**.                                                                                              |
+| **Save as playbook**  | Reuse instructions you approve (Chapter 7)—nothing changes on the **Mac** until you accept install/save flows.                                                                    |
 | Continue conversation | Follow-up messages while session is warm—or **Continue** from history with `sourceRunId` ([delegate local CLI context Q&A](../../qa/delegate-local-cli-conversation-context.md)). |
 
-**Search past runs** (when offered) searches memory from prior work—UI avoids the word “Knowledge.”
+**Search past runs** (when offered) pulls useful context from earlier **Runs** (**efficient memory**)—UI avoids the word “Knowledge.” Not every prior run is replayed automatically; scope improves over time ([north star vs today](00-philosophy-and-vocabulary.md#north-star-vs-today)).
 
 Team filters (who, which Mac, playbook, date) support audit—not required for solo makers.
 
@@ -133,7 +135,7 @@ Test dispatch without Home: developer `ws-test` UI ([local bridge](../../agent-w
 
 - [Chapter 3 — Home and navigation](03-home-and-navigation.md)
 - [Chapter 4 — Mac connect and bridge](04-mac-connect-and-bridge.md)
-- [Guide Chapter 6 — Workflows and checkpoints](06-workflows-and-checkpoints.md) (when published)
+- [Chapter 6 — Workflows and checkpoints](06-workflows-and-checkpoints.md)
 - [System Q&A index](../../qa/README.md)
 
 ---
@@ -145,3 +147,5 @@ Test dispatch without Home: developer `ws-test` UI ([local bridge](../../agent-w
 - gui task Agent Witch, xem run, terminal honesty Connecting In progress
 - thuc thi task tren Mac, dispatch outbox reconnecting
 - project folder playbook writer more options New task
+- learn from usage run again save playbook, efficient memory continue conversation
+- hoc tu loi run lai, luu playbook, tiet kiem ngữ cảnh task truoc
