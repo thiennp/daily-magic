@@ -42,6 +42,9 @@ export const parseOfficialWorkflowHumanStepBody = (
     stepRunId,
     response,
     ...(skipped ? { skipped: true } : {}),
+    ...(typeof body.writerAgent === "string" && body.writerAgent.length > 0
+      ? { writerAgent: body.writerAgent }
+      : {}),
     ...(typeof body.targetDeviceId === "string" &&
     body.targetDeviceId.length > 0
       ? { targetDeviceId: body.targetDeviceId }
