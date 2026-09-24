@@ -171,7 +171,7 @@ Exact paths may shift; trust nav labels over memorizing URLs.
 - [Chapter 1 — Getting started](01-getting-started.md)
 - [Chapter 4 — Mac connect and bridge](04-mac-connect-and-bridge.md)
 - [Chapter 5 — Tasks, dispatch, and runs](05-tasks-dispatch-and-runs.md)
-- [Home known issues (engineers)](../../src/features/home/KNOWN_ISSUES.md)
+- [Home known issues (engineers)](../../../src/features/home/KNOWN_ISSUES.md)
 - [System Q&A](../../qa/README.md)
 
 ---
