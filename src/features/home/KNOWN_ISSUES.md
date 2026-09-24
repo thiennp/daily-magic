@@ -560,6 +560,18 @@ Document every production bug or UX regression here. Each entry must link to a t
 
 ---
 
+## HOME-056 — Connect another Mac opened macOS paste modal on Windows
+
+**Symptom:** On a Windows or Linux browser, copying the install command from **Connect another Mac** (empty device list or device panel footer) opened “Paste into Terminal” with Command (⌘) + V instructions.
+
+**Root cause:** HOME-054 gated the paste modal in the connect guide and **Connect this Mac** row only; `ConnectAnotherMacButton` always called `setIsPasteModalOpen(true)` on copy.
+
+**Fix:** `ConnectAnotherMacButton` uses `shouldOpenConnectInstallPasteModal(operatingSystem)` like the other connect flows.
+
+**Regression test:** `ConnectAnotherMacButton.test.ts` (HOME-056).
+
+---
+
 ## Adding issues
 
 Use the next ID (`HOME-050`, …). Include symptom, root cause, fix paths, and test file.
