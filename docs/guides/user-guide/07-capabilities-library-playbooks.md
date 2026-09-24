@@ -109,6 +109,17 @@ Wrong folder → failed or misleading **Runs**; fix the path in settings or the 
 
 ---
 
+## Local hints vs cloud improvements (pillar 2 vs 3)
+
+| Surface                                             | What it does                                                                                | You approve?                                                    |
+| --------------------------------------------------- | ------------------------------------------------------------------------------------------- | --------------------------------------------------------------- |
+| **Agent Witch on this Mac → Knowledge** suggestions | Counts how often snippets or errors repeat; may suggest a **Playbook** step or harness rule | Yes—nothing installs until you act on the Mac or in the Console |
+| **Capabilities → improvements** (Console)           | Proposed new capability version from feedback                                               | Yes—accept or reject before publish                             |
+
+Saving a **Playbook** from a **Run** is separate from both: you name what worked; the Mac does not silently rewrite harness files when a suggestion appears ([Chapter 4](04-mac-connect-and-bridge.md#local-knowledge-mac-app--efficient-memory), [Chapter 10 dev — memory loop](../developer-guide/10-learning-memory-and-improvements.md)).
+
+---
+
 ## What to defer until you need it
 
 | Defer                          | Reach for when                    |

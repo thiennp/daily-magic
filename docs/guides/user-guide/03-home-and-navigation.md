@@ -34,7 +34,7 @@ Home is the hub for **easy authoring** (**New task** up front) and for **team le
 
 **Not primary nav (by design):**
 
-- Deep **Knowledge / RAG** admin → use **Search past runs** under Runs or Mac settings.
+- Deep **Knowledge / RAG** on the **Mac** → **Agent Witch on this Mac** → **Knowledge** ([Chapter 4](04-mac-connect-and-bridge.md#local-knowledge-mac-app--efficient-memory)). In the Console, **Search past runs** under **Runs** reuses context without the “Knowledge” label.
 - Raw traffic / developer logs → **Mac settings → Developer**.
 
 ---

@@ -102,6 +102,8 @@ Open **Runs** to:
 
 **Search past runs** (when offered) pulls useful context from earlier **Runs** (**efficient memory**)—UI avoids the word “Knowledge.” Not every prior run is replayed automatically; scope improves over time ([north star vs today](00-philosophy-and-vocabulary.md#north-star-vs-today)).
 
+On the **Mac**, the writer may also receive project snippets and “avoid repeating” notes from past failures before it runs—the **Knowledge** page on **Agent Witch on this Mac** shows what was saved and how often it was reused ([Chapter 4 — Local knowledge](04-mac-connect-and-bridge.md#local-knowledge-mac-app--efficient-memory)). That stays on your machine until you explicitly promote or publish something in the Console.
+
 Team filters (who, which Mac, playbook, date) support audit—not required for solo makers.
 
 ---
