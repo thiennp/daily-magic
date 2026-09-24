@@ -1,5 +1,6 @@
 import { listAgentWitchDevicesForUser } from "@/lib/agentWitch/listAgentWitchDevicesForUser";
 
+import { executeAgentAccessGuideTool } from "@/lib/agentAccess/executeAgentAccessGuideTool";
 import { executeAgentAccessRunTool } from "@/lib/agentAccess/executeAgentAccessRunTool";
 import { executeAgentAccessSendTask } from "@/lib/agentAccess/executeAgentAccessSendTask";
 import { executeAgentAccessWorkflowTool } from "@/lib/agentAccess/executeAgentAccessWorkflowTool";
@@ -64,10 +65,7 @@ export const executeAgentAccessTool = async (input: {
   }
 
   const token = readBearerAgentAccessToken(input.authorization);
-
-  if (token === null) {
-    return agentAccessUnauthorized();
-  }
+  if (token === null) return agentAccessUnauthorized();
 
   const gated = await guardAgentAccessToolUse({
     name: input.name,
@@ -101,6 +99,17 @@ export const executeAgentAccessTool = async (input: {
 
   if (input.name === "send_task") {
     return executeAgentAccessSendTask(actor, input.args);
+  }
+
+  const guideResult = await executeAgentAccessGuideTool({
+    actor,
+    name: input.name,
+    args: input.args,
+    token,
+  });
+
+  if (guideResult !== null) {
+    return guideResult;
   }
 
   const workflowResult = await executeAgentAccessWorkflowTool({

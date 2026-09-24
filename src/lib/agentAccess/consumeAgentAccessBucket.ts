@@ -22,23 +22,39 @@ const countBucket = async (
   return typeof count === "number" ? count : Number(count ?? 0);
 };
 
-export const consumeAgentAccessBucket = async (input: {
+export const countAgentAccessBucketAttempts = async (input: {
   readonly subjectHash: string;
   readonly bucket: string;
-  readonly limit: number;
-}): Promise<boolean> => {
+}): Promise<number> => {
   await ensureAgentAccessSchema();
-  const recent = await countBucket(input.subjectHash, input.bucket);
 
-  if (recent >= input.limit) {
-    return false;
-  }
+  return countBucket(input.subjectHash, input.bucket);
+};
 
+export const recordAgentAccessBucketAttempt = async (input: {
+  readonly subjectHash: string;
+  readonly bucket: string;
+}): Promise<void> => {
+  await ensureAgentAccessSchema();
   const sql = getSql();
   await sql`
     INSERT INTO agent_access_api_attempts (subject_hash, bucket)
     VALUES (${input.subjectHash}, ${input.bucket})
   `;
+};
+
+export const consumeAgentAccessBucket = async (input: {
+  readonly subjectHash: string;
+  readonly bucket: string;
+  readonly limit: number;
+}): Promise<boolean> => {
+  const recent = await countAgentAccessBucketAttempts(input);
+
+  if (recent >= input.limit) {
+    return false;
+  }
+
+  await recordAgentAccessBucketAttempt(input);
 
   return true;
 };

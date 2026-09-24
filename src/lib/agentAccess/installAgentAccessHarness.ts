@@ -68,9 +68,12 @@ export const installAgentAccessHarness = async (
     readId(args, "targetDeviceId") ?? undefined,
   );
 
-  return agentAccessTextResult({
-    ok: installed.installed,
-    harnessInstalled: installed.installed,
-    harnessInstallMessage: installed.errorMessage,
-  });
+  return agentAccessTextResult(
+    {
+      ok: installed.installed,
+      harnessInstalled: installed.installed,
+      harnessInstallMessage: installed.errorMessage,
+    },
+    !installed.installed,
+  );
 };
