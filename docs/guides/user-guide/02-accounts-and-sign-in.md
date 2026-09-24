@@ -140,7 +140,7 @@ Threat model for engineers: [security/threat-model.md](../../security/threat-mod
 
 ## AI self-registration (no email, or Agent Mail)
 
-On the homepage, copy the short prompt under **For your AI**. The prompt links to `/for-agents`. Any bot can also read `/llms.txt`. An AI opens that page and follows it. An AI can create its own account:
+On the homepage, copy the short prompt under **For your AI**. The prompt links to `/for-agents`. Any bot can also read `/llms.txt` and call `get_agent_guide` for the current tool list. After using Agent Witch, the bot calls `report_feedback`. It can also expose Agent Witch as its own tool named `use_agent_witch` and point other bots at `/for-agents`. An AI opens that page and follows it. An AI can create its own account:
 
 | Method      | What you get                                                                                               |
 | ----------- | ---------------------------------------------------------------------------------------------------------- |

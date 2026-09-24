@@ -7,9 +7,11 @@ import {
 } from "@/features/marketing/marketingSurfaceClasses.constant";
 import { mergeMarketingClasses } from "@/features/marketing/mergeMarketingClasses";
 import { buildAgentAccessGuideline } from "@/lib/agentAccess/buildAgentAccessGuideline";
+import { buildAgentAccessLiveGuide } from "@/lib/agentAccess/buildAgentAccessLiveGuide";
 
 export default function AgentAccessGuidelinePage(): ReactElement {
   const guideline = buildAgentAccessGuideline();
+  const liveGuide = buildAgentAccessLiveGuide();
 
   return (
     <MarketingShell>
@@ -30,6 +32,30 @@ export default function AgentAccessGuidelinePage(): ReactElement {
         >
           {guideline.description}
         </p>
+        <section className="mt-12">
+          <h2
+            className={mergeMarketingClasses(
+              "text-xl font-semibold tracking-tight",
+              MARKETING_TEXT_PRIMARY_CLASSES,
+            )}
+          >
+            Live tools
+          </h2>
+          <ul className="mt-4 space-y-3">
+            {liveGuide.tools.map((tool) => (
+              <li key={tool.name}>
+                <p
+                  className={mergeMarketingClasses(
+                    "text-base leading-relaxed",
+                    MARKETING_TEXT_SECONDARY_CLASSES,
+                  )}
+                >
+                  {tool.name}. {tool.description}
+                </p>
+              </li>
+            ))}
+          </ul>
+        </section>
         <div className="mt-12 space-y-10">
           {guideline.sections.map((section) => (
             <section key={section.heading}>
