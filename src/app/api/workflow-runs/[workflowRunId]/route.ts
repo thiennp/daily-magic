@@ -1,6 +1,9 @@
 import { getAgentWitchHub } from "@/lib/agentWitch/getAgentWitchHub";
 import { requireAuth } from "@/lib/auth/requireAuth";
-import { getWorkflowRunById } from "@/lib/workflowOrchestration/workflowRunQueries";
+import {
+  getWorkflowRunById,
+  listWorkflowStepRunsForWorkflowRunId,
+} from "@/lib/workflowOrchestration/workflowRunQueries";
 
 export const dynamic = "force-dynamic";
 
@@ -22,5 +25,7 @@ export async function GET(
 
   void getAgentWitchHub();
 
-  return Response.json({ ok: true, run });
+  const steps = await listWorkflowStepRunsForWorkflowRunId(workflowRunId);
+
+  return Response.json({ ok: true, run, steps });
 }

@@ -14,6 +14,7 @@ import ChartsSection from "@/features/styleguide/sections/ChartsSection";
 import FormsSection from "@/features/styleguide/sections/FormsSection";
 import ImagesSection from "@/features/styleguide/sections/ImagesSection";
 import ModalsSection from "@/features/styleguide/sections/ModalsSection";
+import WorkflowProgressSection from "@/features/styleguide/sections/WorkflowProgressSection";
 import TablesSection from "@/features/styleguide/sections/TablesSection";
 export const metadata: Metadata = {
   title: `Design system | ${AGENT_WITCH_PRODUCT_NAME}`,
@@ -35,6 +36,7 @@ export default async function StyleguidePage() {
       <AvatarsSection />
       <ImagesSection />
       <ModalsSection />
+      <WorkflowProgressSection />
       <FormsSection />
       <TablesSection />
       <ChartsSection />

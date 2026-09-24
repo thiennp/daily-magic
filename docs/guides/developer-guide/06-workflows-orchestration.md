@@ -69,7 +69,7 @@ Key modules:
 | Conditional skip     | `shouldSkipOfficialWorkflowAgentNode.ts`, `skipOfficialWorkflowAgentStep.ts` |
 | UI payloads          | `broadcastWorkflowHumanStepRequired.ts`, `broadcastWorkflowStepFailed.ts`    |
 
-Checkpoint UI: `WorkflowHumanStepModal`, `WorkflowAttentionBanner` under `src/features/dispatch/`.
+Checkpoint UI: `WorkflowHumanStepModal`, `WorkflowStepFailureModal`, `WorkflowAttentionBanner` under `src/features/dispatch/`. Step checklist: `WorkflowRunStepTimeline` (maps `workflow_step_runs` via `buildWorkflowRunStepTimelineSteps`, reuses `AgentLiveProgressStepRow`); modals poll `GET /api/workflow-runs/[workflowRunId]` for `{ run, steps }`.
 
 ---
 

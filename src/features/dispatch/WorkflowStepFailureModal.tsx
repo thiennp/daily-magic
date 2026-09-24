@@ -4,6 +4,7 @@ import Button from "@/components/ui/button/Button";
 import { Modal } from "@/components/ui/modal";
 import { formatWorkflowStepFriendlyError } from "@/features/dispatch/utils/formatWorkflowStepFriendlyError";
 import WorkflowRunStepProgress from "@/features/dispatch/WorkflowRunStepProgress";
+import WorkflowRunStepTimelineBlock from "@/features/dispatch/WorkflowRunStepTimelineBlock";
 import type { WorkflowStepFailureRequest } from "@/lib/workflowOrchestration/types/WorkflowStepFailurePayload.type";
 
 interface WorkflowStepFailureModalProps {
@@ -43,6 +44,11 @@ export default function WorkflowStepFailureModal({
         did was lost — trying again picks up from this step.
       </p>
       <WorkflowRunStepProgress stepIndex={request.stepIndex} />
+      <WorkflowRunStepTimelineBlock
+        workflowRunId={request.workflowRunId}
+        highlightStepIndex={request.stepIndex}
+        isWorking={isRetrying}
+      />
       <p className="mt-5 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-950 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-100">
         {friendly.headline}
       </p>
