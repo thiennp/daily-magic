@@ -81,7 +81,7 @@ Install registers **LaunchAgents** so the helper restarts after login. A **watch
 
 ### Update local
 
-When Home or the composer shows **Update needed**, run **Update** from Mac settings or the Mac app. Updates rewrite install files and may restart bridge/runtime.
+When Home or the composer shows **Update needed**, run **Update** from Mac settings or the Mac app. Updates rewrite install files and may restart bridge/runtime. A Mac that has not saved an app origin yet still downloads the bundle from `https://www.agentwitch.com`.
 
 **Honest UX:** A bad LaunchAgent plist after update once left the bridge down while cloud still showed **Seen recently** ([Q&A: update local reconnecting](../../qa/awi-update-local-launchagent-plist.md)). New bundles heal invalid plists; if status stays wrong, use Mac settings **Update** and check watchdog logs—not repeated full reinstalls.
 

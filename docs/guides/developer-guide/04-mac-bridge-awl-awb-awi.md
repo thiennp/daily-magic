@@ -112,6 +112,8 @@ Test from browser: **`/ws-test`** on AWC.
 
 Install bundle version API: `GET /install/agent-witch/version`.
 
+Self-update resolves the app origin from `config.json` `wsUrl`, then from `install-version.json` `appOrigin`. When both are missing, it uses `AGENT_WITCH_DEFAULT_ORIGIN` (`https://www.agentwitch.com`), the same default AWL uses for the update offer. A missing local bundle version still counts as older than the remote bundle.
+
 ---
 
 ## Common agent mistakes
