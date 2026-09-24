@@ -11,6 +11,7 @@ import {
 import { parseAgentMailInboxResponse } from "@/lib/agentAccess/createAgentMailInbox";
 import { isAgentAccessRateLimited } from "@/lib/agentAccess/agentAccessRateLimit";
 import { buildSyntheticAgentEmail } from "@/lib/agentAccess/buildSyntheticAgentEmail";
+import { isAgentAccessSyntheticEmail } from "@/lib/agentAccess/isAgentAccessSyntheticEmail";
 
 describe("agent access registration", () => {
   it("accepts none and agentmail and rejects other methods", () => {
@@ -74,6 +75,10 @@ describe("agent access registration", () => {
     expect(buildSyntheticAgentEmail()).toMatch(
       /^agt-[0-9a-f-]+@agents\.agentwitch\.com$/,
     );
+    expect(isAgentAccessSyntheticEmail("agt-1@agents.agentwitch.com")).toBe(
+      true,
+    );
+    expect(isAgentAccessSyntheticEmail("human@example.com")).toBe(false);
   });
 
   it("reads an Agent Mail inbox id as the account email", () => {

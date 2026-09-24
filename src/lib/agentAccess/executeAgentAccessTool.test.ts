@@ -10,8 +10,8 @@ vi.mock("@/lib/db", () => ({
   asRowArray: (rows: unknown) => (Array.isArray(rows) ? rows : []),
 }));
 
-vi.mock("@/lib/auth/findOrCreateUserByEmail", () => ({
-  default: vi.fn(async () => ({ id: "user-1", name: "Scout", email: "a@b.c" })),
+vi.mock("@/lib/agentAccess/resolveAgentAccessRegisterUser", () => ({
+  resolveAgentAccessRegisterUser: vi.fn(async () => "user-1"),
 }));
 
 vi.mock("@/lib/agentWitch/listAgentWitchDevicesForUser", () => ({

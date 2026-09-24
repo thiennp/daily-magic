@@ -1,5 +1,4 @@
-import findOrCreateUserByEmail from "@/lib/auth/findOrCreateUserByEmail";
-import { asRowArray, getSql } from "@/lib/db";
+import { getSql } from "@/lib/db";
 import { AGENT_ACCESS_GLOBAL_SUBJECT } from "@/lib/agentAccess/agentAccess.constant";
 import {
   isAgentAccessGloballyRateLimited,
@@ -21,6 +20,7 @@ import {
   buildDefaultAgentMailClient,
   resolveAgentAccessAccountEmail,
 } from "@/lib/agentAccess/resolveAgentAccessAccountEmail";
+import { resolveAgentAccessRegisterUser } from "@/lib/agentAccess/resolveAgentAccessRegisterUser";
 import type {
   AgentAccessRegisterFailure,
   AgentAccessRegisterOutcome,
@@ -66,33 +66,20 @@ export const registerAgentAccessAccount = async (input: {
     return failure(503, email.message, "agentmail_unavailable");
   }
 
+  const displayName = input.body.displayName ?? null;
+  const userId = await resolveAgentAccessRegisterUser({
+    email,
+    displayName,
+  });
+
+  if (typeof userId !== "string") {
+    return userId;
+  }
+
   const sql = getSql();
-  const existing = asRowArray(
-    await sql`SELECT id FROM users WHERE email = ${email} LIMIT 1`,
-  );
-
-  if (existing.length > 0) {
-    return failure(
-      409,
-      "That account already exists. Register a new agent instead.",
-      "account_exists",
-    );
-  }
-
-  const user = await findOrCreateUserByEmail(email);
-
-  if (user?.id === undefined) {
-    return failure(
-      500,
-      "Could not create the account.",
-      "account_create_failed",
-    );
-  }
-
-  const displayName = input.body.displayName ?? user.name ?? null;
 
   if (displayName !== null) {
-    await sql`UPDATE users SET name = ${displayName} WHERE id = ${user.id}`;
+    await sql`UPDATE users SET name = ${displayName} WHERE id = ${userId}`;
   }
 
   const token = createAgentAccessToken();
@@ -101,7 +88,7 @@ export const registerAgentAccessAccount = async (input: {
       user_id, token_hash, token_prefix, registration_method, agentmail_inbox
     )
     VALUES (
-      ${user.id},
+      ${userId},
       ${hashAgentAccessToken(token)},
       ${token.slice(0, 10)},
       ${input.body.method},
@@ -119,7 +106,7 @@ export const registerAgentAccessAccount = async (input: {
       token,
       tokenType: "Bearer",
       account: {
-        id: user.id,
+        id: userId,
         email,
         displayName,
         registrationMethod: input.body.method,
