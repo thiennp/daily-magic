@@ -6,7 +6,7 @@ Canonical **value pillars** for UX, guides, and agent rules. The **core job** is
 
 > Run a trusted agent on a Mac you control (or a teammate’s), see what happened in the browser, and reuse what worked.
 
-**User vocabulary:** Mac · Task · Run · Playbook — see [ux-simplification.md](ux-simplification.md).
+**User vocabulary:** Mac · Task · Run · Playbook — see [ux-simplification.md](ux-simplification.md). **Readable copy rules (VI + EN):** [philosophy-and-copy-guideline.md](philosophy-and-copy-guideline.md).
 
 ---
 

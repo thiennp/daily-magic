@@ -1,4 +1,4 @@
-# Documentation — Agent Witch (daily-magic)
+# Documentation — Agent Witch
 
 **[Overview](overview.md)** — what the product is and where to go next.
 
@@ -55,6 +55,7 @@ Model: [conventions/progressive-disclosure.md](conventions/progressive-disclosur
 ## Product
 
 - [Product pillars](product/product-pillars.md) — four value pillars, north star vs today, pillar → guide map
+- [Philosophy & copy guideline](product/philosophy-and-copy-guideline.md) — readable rules for UI, marketing, articles (VI + EN)
 - [Deployables AWC / AWL / AWB / AWI](product/agent-witch-deployables.md)
 - [Repository name vs hosting](product/repo-name-and-hosting.md)
 - [Concepts glossary](product/concepts.md)
