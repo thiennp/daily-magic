@@ -79,6 +79,15 @@ AWC proxies some routes when the tab is on the same Mac:
 
 Mac client cloud HTTP (legacy long-poll paths still documented in CLAUDE.md): heartbeat, commands poll, messages, events SSE — primary live path is **WebSocket** to AWC.
 
+### AWL loopback pages (pillar 3 memory)
+
+| Path         | Module                                                                                | Notes                                                                                                   |
+| ------------ | ------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| `/knowledge` | `startAgentWitchLocalApp.ts` + `agentWitchLocalRag` / `agentWitchLocalKnowledgeUsage` | Project RAG chunks, retrieval counts (`usage-stats.json`), local tool/rule **hints** (not auto-publish) |
+| `/errors`    | diagnostics                                                                           | Client stderr tail — not the same as `error-chunks.ndjson` RAG                                          |
+
+Telemetry and dispatch wiring: [Chapter 10](10-learning-memory-and-improvements.md). Do not conflate with repo `.feature-knowledge/`.
+
 ---
 
 ## WebSocket client (AWI → AWC)
