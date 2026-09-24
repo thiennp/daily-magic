@@ -33,9 +33,9 @@ describe("agent access registration", () => {
   });
 
   it("builds a short prompt that points at the agent guideline", () => {
-    const prompt = buildAgentAccessPrompt("https://www.agentwitch.com");
+    const prompt = buildAgentAccessPrompt();
 
-    expect(prompt).toContain("Grokbot");
+    expect(prompt).toContain("You are a bot");
     expect(prompt).toContain("https://www.agentwitch.com/for-agents");
     expect(prompt).toContain("Open the guideline");
     expect(prompt).toContain("Do not ask the human");
@@ -45,7 +45,7 @@ describe("agent access registration", () => {
   });
 
   it("keeps the full procedure on the guideline page", () => {
-    const guideline = buildAgentAccessGuideline("https://www.agentwitch.com");
+    const guideline = buildAgentAccessGuideline();
     const text = guideline.sections
       .flatMap((section) => section.body)
       .join("\n");

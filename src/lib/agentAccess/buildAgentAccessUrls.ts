@@ -7,15 +7,11 @@ export interface AgentAccessUrls {
   readonly guidelineUrl: string;
 }
 
-export const buildAgentAccessUrls = (origin: string): AgentAccessUrls => {
-  const trimmed = origin.replace(/\/$/, "");
-
-  return {
-    origin: trimmed,
-    registerUrl: `${trimmed}/api/agent-access/register`,
-    mcpUrl: `${trimmed}/api/agent-access/mcp`,
-    invokeUrl: `${trimmed}/api/agent-access/invoke`,
-    discoveryUrl: `${trimmed}/.well-known/webmcp.json`,
-    guidelineUrl: `${trimmed}/for-agents`,
-  };
-};
+export const buildAgentAccessUrls = (): AgentAccessUrls => ({
+  origin: "https://www.agentwitch.com",
+  registerUrl: "https://www.agentwitch.com/api/agent-access/register",
+  mcpUrl: "https://www.agentwitch.com/api/agent-access/mcp",
+  invokeUrl: "https://www.agentwitch.com/api/agent-access/invoke",
+  discoveryUrl: "https://www.agentwitch.com/.well-known/webmcp.json",
+  guidelineUrl: "https://www.agentwitch.com/for-agents",
+});

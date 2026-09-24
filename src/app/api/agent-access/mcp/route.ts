@@ -1,4 +1,3 @@
-import { resolveAppBaseUrl } from "@/lib/app/resolveAppBaseUrl";
 import { buildWebMcpDocument } from "@/lib/agentAccess/buildWebMcpDocument";
 import { executeAgentAccessTool } from "@/lib/agentAccess/executeAgentAccessTool";
 import { guardAgentAccessPost } from "@/lib/agentAccess/guardAgentAccessPost";
@@ -15,7 +14,7 @@ export async function GET(request: Request): Promise<Response> {
     return limited;
   }
 
-  return Response.json(buildWebMcpDocument(resolveAppBaseUrl()));
+  return Response.json(buildWebMcpDocument());
 }
 
 export async function POST(request: Request): Promise<Response> {

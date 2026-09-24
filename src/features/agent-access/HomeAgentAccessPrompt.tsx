@@ -3,12 +3,10 @@ import type { ReactElement } from "react";
 import { AGENT_WITCH_PRODUCT_NAME } from "@/lib/agentWitch/agentWitchProductName.constant";
 import { buildAgentAccessPrompt } from "@/lib/agentAccess/buildAgentAccessPrompt";
 import { buildAgentAccessUrls } from "@/lib/agentAccess/buildAgentAccessUrls";
-import { resolveAppBaseUrl } from "@/lib/app/resolveAppBaseUrl";
 
 export default function HomeAgentAccessPrompt(): ReactElement {
-  const origin = resolveAppBaseUrl();
-  const prompt = buildAgentAccessPrompt(origin);
-  const urls = buildAgentAccessUrls(origin);
+  const prompt = buildAgentAccessPrompt();
+  const urls = buildAgentAccessUrls();
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "HowTo",
@@ -55,7 +53,7 @@ export default function HomeAgentAccessPrompt(): ReactElement {
         <a className="underline" href={urls.guidelineUrl}>
           agent guideline
         </a>{" "}
-        and follows it. Plain text for Grokbot is at{" "}
+        and follows it. Plain text for any bot is at{" "}
         <a className="underline" href={`${urls.origin}/llms.txt`}>
           llms.txt
         </a>

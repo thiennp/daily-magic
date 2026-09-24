@@ -1,7 +1,5 @@
 import findOrCreateUserByEmail from "@/lib/auth/findOrCreateUserByEmail";
 import { asRowArray, getSql } from "@/lib/db";
-import { resolveAppBaseUrl } from "@/lib/app/resolveAppBaseUrl";
-
 import { AGENT_ACCESS_GLOBAL_SUBJECT } from "@/lib/agentAccess/agentAccess.constant";
 import {
   isAgentAccessGloballyRateLimited,
@@ -38,7 +36,6 @@ export const registerAgentAccessAccount = async (input: {
   readonly body: AgentAccessRegisterBody;
   readonly ipHash: string;
   readonly agentMailClient?: AgentMailInboxClient;
-  readonly origin?: string;
 }): Promise<AgentAccessRegisterOutcome> => {
   await ensureAgentAccessSchema();
   const recentAttempts = await countRecentAgentAccessAttempts(input.ipHash);
@@ -112,8 +109,7 @@ export const registerAgentAccessAccount = async (input: {
     )
   `;
 
-  const origin = input.origin ?? resolveAppBaseUrl();
-  const urls = buildAgentAccessUrls(origin);
+  const urls = buildAgentAccessUrls();
 
   return {
     ok: true,
@@ -132,7 +128,7 @@ export const registerAgentAccessAccount = async (input: {
       mcpUrl: urls.mcpUrl,
       invokeUrl: urls.invokeUrl,
       discoveryUrl: urls.discoveryUrl,
-      prompt: buildAgentAccessPrompt(origin),
+      prompt: buildAgentAccessPrompt(),
     },
   };
 };

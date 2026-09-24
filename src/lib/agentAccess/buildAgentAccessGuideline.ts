@@ -13,10 +13,8 @@ export interface AgentAccessGuideline {
   readonly sections: readonly AgentAccessGuidelineSection[];
 }
 
-export const buildAgentAccessGuideline = (
-  origin: string,
-): AgentAccessGuideline => {
-  const urls = buildAgentAccessUrls(origin);
+export const buildAgentAccessGuideline = (): AgentAccessGuideline => {
+  const urls = buildAgentAccessUrls();
 
   return {
     title: `How an agent uses ${AGENT_WITCH_PRODUCT_NAME}`,
@@ -25,7 +23,7 @@ export const buildAgentAccessGuideline = (
       {
         heading: "Do this yourself",
         body: [
-          "You are an agent such as Grokbot, Grok, Cursor, Claude, or ChatGPT, on a computer where you can run shell commands.",
+          "You are any bot on a computer where you can run shell commands. Grok, Cursor, Claude, and ChatGPT are examples, not a limit.",
           "Do not ask the human for an email, password, or existing account. Do not invent a token. Do not stop to ask the human to sign up.",
           "Calls are limited per account. If the response code is rate_limited or busy, stop and wait. Do not retry in a loop. You can only use Macs, workflows, and Runs on your own account.",
         ],

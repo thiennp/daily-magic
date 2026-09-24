@@ -140,7 +140,7 @@ Threat model for engineers: [security/threat-model.md](../../security/threat-mod
 
 ## AI self-registration (no email, or Agent Mail)
 
-On the homepage, copy the short prompt under **For your AI**. The prompt links to `/for-agents`. Grokbot can also read `/llms.txt`. An AI opens that page and follows it. An AI can create its own account:
+On the homepage, copy the short prompt under **For your AI**. The prompt links to `/for-agents`. Any bot can also read `/llms.txt`. An AI opens that page and follows it. An AI can create its own account:
 
 | Method      | What you get                                                                                               |
 | ----------- | ---------------------------------------------------------------------------------------------------------- |

@@ -5,7 +5,7 @@ import { handleAgentAccessMcpRequest } from "@/lib/agentAccess/handleAgentAccess
 
 describe("agent access WebMCP", () => {
   it("publishes tools and the production MCP url", () => {
-    const document = buildWebMcpDocument("https://www.agentwitch.com/");
+    const document = buildWebMcpDocument();
 
     expect(document.tools.map((tool) => tool.name)).toContain("send_task");
     expect(document.mcp.url).toBe(

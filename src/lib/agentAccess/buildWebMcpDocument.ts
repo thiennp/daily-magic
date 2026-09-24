@@ -20,14 +20,14 @@ export interface WebMcpDocument {
   readonly tools: typeof AGENT_ACCESS_TOOLS;
 }
 
-export const buildWebMcpDocument = (origin: string): WebMcpDocument => {
-  const urls = buildAgentAccessUrls(origin);
+export const buildWebMcpDocument = (): WebMcpDocument => {
+  const urls = buildAgentAccessUrls();
 
   return {
     name: AGENT_WITCH_PRODUCT_NAME,
     description:
       "Register an AI account without a human email, or with Agent Mail, then send Tasks to paired Macs and read Runs.",
-    prompt: buildAgentAccessPrompt(origin),
+    prompt: buildAgentAccessPrompt(),
     guidelineUrl: urls.guidelineUrl,
     registration: {
       methods: ["none", "agentmail"],

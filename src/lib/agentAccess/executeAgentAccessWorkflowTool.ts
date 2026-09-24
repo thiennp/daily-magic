@@ -1,5 +1,5 @@
 import { createAgentWitchInstallTokenForUser } from "@/lib/agentWitch/createAgentWitchInstallTokenForUser";
-import { resolveAppBaseUrl } from "@/lib/app/resolveAppBaseUrl";
+import { buildAgentAccessUrls } from "@/lib/agentAccess/buildAgentAccessUrls";
 import createCapabilityFromTemplate from "@/lib/capabilities/createCapabilityFromTemplate";
 import { listPublishedCapabilitiesForOwner } from "@/lib/capabilities/capabilityQueries";
 import { CapabilityType } from "@/lib/capabilities/CapabilityType.constant";
@@ -39,7 +39,7 @@ export const executeAgentAccessWorkflowTool = async (input: {
     const install = await createAgentWitchInstallTokenForUser({
       userId: input.actor.id,
       email: input.actor.email,
-      origin: resolveAppBaseUrl(),
+      origin: buildAgentAccessUrls().origin,
     });
 
     return agentAccessTextResult({

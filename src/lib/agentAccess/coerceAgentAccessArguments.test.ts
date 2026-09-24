@@ -7,7 +7,7 @@ import {
 import { formatAgentAccessLlmsText } from "@/lib/agentAccess/formatAgentAccessLlmsText";
 import { handleAgentAccessMcpRequest } from "@/lib/agentAccess/handleAgentAccessMcpRequest";
 
-describe("Grokbot agent access calls", () => {
+describe("bot agent access calls", () => {
   it("accepts tool arguments sent as a JSON string", () => {
     expect(coerceAgentAccessArguments('{"method":"none"}')).toEqual({
       method: "none",
@@ -15,11 +15,11 @@ describe("Grokbot agent access calls", () => {
     expect(
       readAgentAccessInvokeBody({
         name: "register_account",
-        arguments: '{"method":"none","displayName":"Grokbot"}',
+        arguments: '{"method":"none","displayName":"Scout"}',
       }),
     ).toEqual({
       name: "register_account",
-      arguments: { method: "none", displayName: "Grokbot" },
+      arguments: { method: "none", displayName: "Scout" },
     });
     expect(
       readAgentAccessInvokeBody({
@@ -53,10 +53,10 @@ describe("Grokbot agent access calls", () => {
     expect(seen).toEqual([{}]);
   });
 
-  it("publishes a plain-text guide Grokbot can read", () => {
-    const text = formatAgentAccessLlmsText("https://www.agentwitch.com");
+  it("publishes a plain-text guide any bot can read", () => {
+    const text = formatAgentAccessLlmsText();
 
-    expect(text).toContain("Grokbot");
+    expect(text).toContain("Any bot");
     expect(text).toContain("https://www.agentwitch.com/for-agents");
     expect(text).toContain("https://www.agentwitch.com/llms.txt");
     expect(text).toContain("get_install_command");

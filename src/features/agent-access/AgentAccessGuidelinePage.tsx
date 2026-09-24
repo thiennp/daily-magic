@@ -7,10 +7,9 @@ import {
 } from "@/features/marketing/marketingSurfaceClasses.constant";
 import { mergeMarketingClasses } from "@/features/marketing/mergeMarketingClasses";
 import { buildAgentAccessGuideline } from "@/lib/agentAccess/buildAgentAccessGuideline";
-import { resolveAppBaseUrl } from "@/lib/app/resolveAppBaseUrl";
 
 export default function AgentAccessGuidelinePage(): ReactElement {
-  const guideline = buildAgentAccessGuideline(resolveAppBaseUrl());
+  const guideline = buildAgentAccessGuideline();
 
   return (
     <MarketingShell>
