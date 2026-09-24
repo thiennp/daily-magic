@@ -1,6 +1,6 @@
 # Agent Witch guides
 
-Two long-form books live here. They complement [docs/qa/](../qa/README.md) (short RAG answers), [product/concepts.md](../product/concepts.md) (engineer glossary), and [product/ux-simplification.md](../product/ux-simplification.md) (UI language).
+Two long-form books live here. They complement [docs/qa/](../qa/README.md) (short RAG answers), [product/product-pillars.md](../product/product-pillars.md) (four pillars + north star vs today), [product/concepts.md](../product/concepts.md) (engineer glossary), and [product/ux-simplification.md](../product/ux-simplification.md) (UI language).
 
 | Book                                             | Audience                                       | Start                                                                              |
 | ------------------------------------------------ | ---------------------------------------------- | ---------------------------------------------------------------------------------- |
@@ -9,7 +9,7 @@ Two long-form books live here. They complement [docs/qa/](../qa/README.md) (shor
 
 ## Maintenance contract
 
-When product behavior or copy changes, update the matching guide chapter **in the same PR** as code (see [docs-first.md](../conventions/docs-first.md)). Path → chapter mapping: [guide-maintenance.map.json](./guide-maintenance.map.json). Cursor **stop/postToolUse hooks** remind agents when touched code requires a guide pass.
+When product behavior or copy changes, update the matching guide chapter **in the same PR** as code (see [docs-first.md](../conventions/docs-first.md)). Path → chapter mapping: [guide-maintenance.map.json](./guide-maintenance.map.json) (includes `src/features/feedback/`, `src/features/improvements/`, and `docs/product/product-pillars.md`). If a change shifts **north star vs today** for a pillar, update [product-pillars.md](../product/product-pillars.md) and the pillar’s guide chapters. Cursor **stop/postToolUse hooks** remind agents when touched code requires a guide pass.
 
 After any edit under `docs/guides/`:
 

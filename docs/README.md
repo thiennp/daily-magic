@@ -54,6 +54,7 @@ Model: [conventions/progressive-disclosure.md](conventions/progressive-disclosur
 
 ## Product
 
+- [Product pillars](product/product-pillars.md) — four value pillars, north star vs today, pillar → guide map
 - [Deployables AWC / AWL / AWB / AWI](product/agent-witch-deployables.md)
 - [Repository name vs hosting](product/repo-name-and-hosting.md)
 - [Concepts glossary](product/concepts.md)

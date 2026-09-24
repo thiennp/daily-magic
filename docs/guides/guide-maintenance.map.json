@@ -10,6 +10,7 @@
       "pathPrefixes": [
         "docs/product/concepts.md",
         "docs/product/ux-simplification.md",
+        "docs/product/product-pillars.md",
         "docs/overview.md"
       ]
     },
@@ -58,6 +59,8 @@
         "src/features/agent/",
         "src/features/reports/",
         "src/features/home/",
+        "src/features/feedback/",
+        "src/features/improvements/",
         "docs/qa/writer-dispatch",
         "docs/qa/mac-harness-workflow"
       ]
@@ -83,6 +86,21 @@
         "src/features/library/",
         "src/features/harness/",
         "src/features/marketplace/"
+      ]
+    },
+    {
+      "id": "learning-memory",
+      "title": "Feedback, improvements & run memory",
+      "userGuide": "docs/guides/user-guide/05-tasks-dispatch-and-runs.md",
+      "developerGuide": "docs/guides/developer-guide/10-learning-memory-and-improvements.md",
+      "pathPrefixes": [
+        "src/features/feedback/",
+        "src/features/improvements/",
+        "src/lib/feedback/",
+        "src/lib/improvements/",
+        "apps/live/features/memory/",
+        "docs/product/product-pillars.md",
+        "docs/architecture/project-composition.md"
       ]
     },
     {

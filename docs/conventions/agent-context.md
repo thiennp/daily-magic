@@ -8,16 +8,17 @@ How coding agents (Cursor, Claude, Codex, etc.) should **reveal** system knowled
 
 Use the **smallest** source that answers the question; stop when you have enough to edit safely.
 
-| Step | Layer   | Source                                                                                         | When                                                                        |
-| ---- | ------- | ---------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
-| 1    | —       | [AGENTS.md](../../AGENTS.md)                                                                   | Every task — product name, harness paths, Cloud VM DB caveats               |
-| 2    | L0/L1   | [load-context.md](load-context.md) or one [domain entry](../domains/README.md)                 | Match task type; do not read all domains                                    |
-| 3    | —       | `npm run harness:bootstrap -- --match="…"`                                                     | Matched command playbook / workflow (`verify`, `commit`, `pr`)              |
-| 4    | L2      | `feature-knowledge:query` then `src/features/<slug>/README.md`, `KNOWN_ISSUES.md`              | Before substantive feature edits                                            |
-| 4b   | Guides  | `docs/guides/` chapter from [guide-maintenance.map.json](../guides/guide-maintenance.map.json) | Before Agent Witch bridge, dispatch, workflows, harness edits               |
-| 5    | L3      | Linked deep dive or ADR from domain “read next if…”                                            | Only when L1/L2 point here                                                  |
-| 6    | L4      | Source under `src/app`, `src/lib`, `server.ts`                                                 | Implementation after orientation                                            |
-| —    | Observe | One command from [script-index.md](script-index.md)                                            | Confirm docs; e.g. `feature-knowledge:query`, `dev` + health `curl`, `test` |
+| Step | Layer   | Source                                                                                         | When                                                                                                         |
+| ---- | ------- | ---------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| 1    | —       | [AGENTS.md](../../AGENTS.md)                                                                   | Every task — product name, harness paths, Cloud VM DB caveats                                                |
+| 2    | L0/L1   | [load-context.md](load-context.md) or one [domain entry](../domains/README.md)                 | Match task type; do not read all domains                                                                     |
+| 3    | —       | `npm run harness:bootstrap -- --match="…"`                                                     | Matched command playbook / workflow (`verify`, `commit`, `pr`)                                               |
+| 4    | L2      | `feature-knowledge:query` then `src/features/<slug>/README.md`, `KNOWN_ISSUES.md`              | Before substantive feature edits                                                                             |
+| 4b   | Guides  | `docs/guides/` chapter from [guide-maintenance.map.json](../guides/guide-maintenance.map.json) | Before Agent Witch bridge, dispatch, workflows, harness edits                                                |
+| 4c   | Product | [product/product-pillars.md](../product/product-pillars.md)                                    | Before user-visible product behavior, copy, or pillar features (`feedback`, `improvements`, memory, sharing) |
+| 5    | L3      | Linked deep dive or ADR from domain “read next if…”                                            | Only when L1/L2 point here                                                                                   |
+| 6    | L4      | Source under `src/app`, `src/lib`, `server.ts`                                                 | Implementation after orientation                                                                             |
+| —    | Observe | One command from [script-index.md](script-index.md)                                            | Confirm docs; e.g. `feature-knowledge:query`, `dev` + health `curl`, `test`                                  |
 
 **Slug** for cross-cutting docs in feature-knowledge is `docs` (all markdown under `docs/` is indexed). Example:
 

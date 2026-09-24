@@ -11,6 +11,9 @@ globs:
   - src/features/harness/**
   - src/features/capabilities/**
   - src/features/library/**
+  - src/features/feedback/**
+  - src/features/improvements/**
+  - docs/product/product-pillars.md
   - apps/bridge/**
   - apps/live/**
   - apps/install/**
@@ -22,9 +25,10 @@ globs:
 
 ## Before substantive edits
 
-1. Read [docs/guides/user-guide/00-philosophy-and-vocabulary.md](../../docs/guides/user-guide/00-philosophy-and-vocabulary.md) for product vocabulary (Mac, Task, Run, Playbook).
-2. Open the chapter pair listed in [docs/guides/guide-maintenance.map.json](../../docs/guides/guide-maintenance.map.json) for your path prefix.
-3. Read [docs/guides/developer-guide/agent-mistakes-catalog.md](../../docs/guides/developer-guide/agent-mistakes-catalog.md) for recurring agent failures.
+1. Read [docs/product/product-pillars.md](../../docs/product/product-pillars.md) for the four value pillars and **north star vs today** (keep guides honest).
+2. Read [docs/guides/user-guide/00-philosophy-and-vocabulary.md](../../docs/guides/user-guide/00-philosophy-and-vocabulary.md) for product vocabulary (Mac, Task, Run, Playbook).
+3. Open the chapter pair listed in [docs/guides/guide-maintenance.map.json](../../docs/guides/guide-maintenance.map.json) for your path prefix.
+4. Read [docs/guides/developer-guide/agent-mistakes-catalog.md](../../docs/guides/developer-guide/agent-mistakes-catalog.md) for recurring agent failures.
 
 Query RAG:
 
@@ -35,6 +39,8 @@ npm run feature-knowledge:query -- "your topic" --feature=docs
 ## When behavior or examples change
 
 Update **both** the user-guide and developer-guide chapter in the **same PR** as code. Refresh worked examples (commands, URLs, screenshots described in prose) so they match production (**www.agentwitch.com**) and local dev (`npm run dev`).
+
+**Pillar-aware updates:** Identify which pillar(s) the change affects (see [product-pillars.md](../../docs/product/product-pillars.md) pillar → doc map). When shipped behavior moves toward or away from north star, update the **North star vs today** table in `product-pillars.md` and the guide chapters listed for that pillar—not only the path-mapped chapter for your folder.
 
 Run:
 
