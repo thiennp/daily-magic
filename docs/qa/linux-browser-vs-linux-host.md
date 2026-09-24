@@ -29,7 +29,7 @@ Send still requires `presenceTier: live`. A Linux host that is paired but not li
 ### Why the answer sounds contradictory
 
 1. **Product vocabulary still says Mac.** Philosophy and Home copy treat “Mac” as the machine that runs agents. That sentence is true for the original product and false as a blanket for the console and for the Linux host.
-2. **Desktop Linux Home shows the install command.** `detectBrowserOperatingSystem` returns `linux`. Windows and phones still say “Agent Witch installs on macOS.” The installer branches on `uname -s` == `Linux` and posts `platform: "linux"`.
+2. **Desktop Linux Home shows the install command.** `detectBrowserOperatingSystem` returns `linux`. Windows Home installs that same Linux host inside WSL. Phones still say “Agent Witch installs on macOS.” The installer branches on `uname -s` == `Linux` and posts `platform: "linux"`.
 3. **Only the picker is honest.** `MacDevicePickerRows` and `resolveMacDeviceDisplayName` say **Linux device**. Offline banners, benefit copy, and the user guide still say **Your Mac**.
 4. **“This computer” is not the Linux host.** A Linux browser never reads AWB `/identity`, so it will not show a local badge even after a Linux host is live. The host still appears in the cloud device list.
 

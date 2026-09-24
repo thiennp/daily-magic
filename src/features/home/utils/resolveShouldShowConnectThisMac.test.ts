@@ -14,7 +14,7 @@ describe("resolveShouldShowConnectThisMac (HOME-036/028)", () => {
     expect(
       resolveShouldShowConnectThisMac({
         ...baseInput,
-        operatingSystem: "windows",
+        operatingSystem: "other",
         localTokenHash: "abc",
         devices: [],
       }),
