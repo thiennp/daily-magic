@@ -43,6 +43,26 @@ const buildConnectComputerGuideSteps = (
     return MAC_TERMINAL_STEPS;
   }
 
+  if (operatingSystem === "linux") {
+    return [
+      {
+        title: "Open a terminal",
+        description:
+          "On this Linux computer, open a terminal. The install command pairs this machine to the account you are signed in with.",
+      },
+      {
+        title: CONNECT_COMPUTER_COPY_STEP_TITLE,
+        description:
+          "The command is tied to the account you are signed in with. It installs the agent host for this Linux user and does not replace other accounts.",
+      },
+      {
+        title: "Paste into the terminal and run it",
+        description:
+          "Click inside the terminal, paste with Ctrl+Shift+V, then press Enter. The installer starts a systemd user service on this computer.",
+      },
+    ];
+  }
+
   return [
     {
       title: "Use a Mac",

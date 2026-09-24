@@ -1,4 +1,4 @@
-export type BrowserOperatingSystem = "mac" | "windows" | "other";
+export type BrowserOperatingSystem = "mac" | "windows" | "linux" | "other";
 
 const detectBrowserOperatingSystem = (): BrowserOperatingSystem => {
   if (typeof navigator === "undefined") {
@@ -20,6 +20,14 @@ const detectBrowserOperatingSystem = (): BrowserOperatingSystem => {
 
   if (normalized.includes("win")) {
     return "windows";
+  }
+
+  if (normalized.includes("android")) {
+    return "other";
+  }
+
+  if (normalized.includes("linux")) {
+    return "linux";
   }
 
   return "other";

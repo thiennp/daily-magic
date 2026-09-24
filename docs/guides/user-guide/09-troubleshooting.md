@@ -6,7 +6,7 @@ Most fixes are **learn from usage** in practice: read the honest banner, adjust 
 
 Quick wins first, then themed sections for DNS, reconnecting, and bundle update.
 
-A Linux browser can use the Console. “Linux cannot access Agent Witch” mixes that up with the Mac-only local app. An x86_64 Linux machine can host Tasks; it will not show “this Mac” ([Q&A](../../qa/linux-browser-vs-linux-host.md)).
+A Linux browser can use the Console. Desktop Linux Home shows the host install command. An x86_64 Linux machine can host Tasks. It will not show “this Mac” ([Q&A](../../qa/linux-browser-vs-linux-host.md)).
 
 ---
 

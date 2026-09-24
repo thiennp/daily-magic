@@ -6,7 +6,7 @@ Architecture context: ADR **0005** (presence, dispatch outbox, multi-instance re
 
 When you close an open item: remove or shrink the KNOWN_ISSUES row, add/adjust regression tests, and add `docs/qa/<topic>.md` if operators will ask again.
 
-**Linux access is not an open outage.** Console works from a Linux browser; x86_64 Linux can host AWI; AWL/AWB stay Mac-only. The confusing part is Home copy that still says “installs on macOS” ([Q&A](../../qa/linux-browser-vs-linux-host.md)).
+**Linux access is not an open outage.** Console works from a Linux browser. Desktop Linux Home shows the host install command. x86_64 Linux can host AWI. AWL/AWB stay Mac-only ([Q&A](../../qa/linux-browser-vs-linux-host.md)).
 
 ---
 

@@ -13,7 +13,7 @@
 
 **The website can be used from Linux.** Agent Witch Console (AWC) at `https://www.agentwitch.com` is a normal browser app. A Linux desktop can sign in, read Runs, and send Tasks to a host that is already live.
 
-**Running the agent on that Linux machine is a separate, narrower path.** The install script can pair an **x86_64 Linux** host (AWI) with `platform: "linux"`, a systemd user unit, and the same WebSocket dispatch rules as a Mac. The device picker labels that row **Linux device**. **Agent Witch Live (AWL)** and the loopback bridge (**AWB**, “this computer”) stay **Mac-only**. Most Home copy still says “installs on macOS” and “Your Mac”, which is why a bot collapses all of this into “Linux cannot access Agent Witch”.
+**Running the agent on that Linux machine is a separate, narrower path.** The install script can pair an **x86_64 Linux** host (AWI) with `platform: "linux"`, a systemd user unit, and the same WebSocket dispatch rules as a Mac. Desktop Linux Home shows that install command. The device picker labels the row **Linux device**. **Agent Witch Live (AWL)** and the loopback bridge (**AWB**, “this computer”) stay **Mac-only**. Many status lines still say “Your Mac”.
 
 ## Details
 
@@ -29,19 +29,19 @@ Send still requires `presenceTier: live`. A Linux host that is paired but not li
 ### Why the answer sounds contradictory
 
 1. **Product vocabulary still says Mac.** Philosophy and Home copy treat “Mac” as the machine that runs agents. That sentence is true for the original product and false as a blanket for the console and for the Linux host.
-2. **Connect steps on a non-Mac browser still deny install.** `buildConnectComputerGuideSteps` tells Windows and every other OS, including desktop Linux (`operatingSystem: "other"`), “Agent Witch installs on macOS.” The installer itself branches on `uname -s` == `Linux` and posts `platform: "linux"`.
+2. **Desktop Linux Home shows the install command.** `detectBrowserOperatingSystem` returns `linux`. Windows and phones still say “Agent Witch installs on macOS.” The installer branches on `uname -s` == `Linux` and posts `platform: "linux"`.
 3. **Only the picker is honest.** `MacDevicePickerRows` and `resolveMacDeviceDisplayName` say **Linux device**. Offline banners, benefit copy, and the user guide still say **Your Mac**.
 4. **“This computer” is not the Linux host.** A Linux browser never reads AWB `/identity`, so it will not show a local badge even after a Linux host is live. The host still appears in the cloud device list.
 
 ### What to fix
 
-| Fix                                                                                                             | Why                                                  |
-| --------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------- |
-| Split the sentence in support, philosophy, and Home: console vs host vs Mac-only local app                      | Stops “can’t access via Linux”                       |
-| Detect desktop Linux in `detectBrowserOperatingSystem` and give Terminal + systemd steps instead of “Use a Mac” | The connect guide is the line users and bots quote   |
-| Keep AWL and AWB Mac-only in that copy                                                                          | Do not promise the local Mac app on Linux            |
-| Status and error strings that say “Your Mac” need a host-neutral line when `platform` is `linux`                | Picker and banners currently disagree                |
-| Leave `mac_*` reason codes, or rename them in one pass with tests                                               | Renaming without a pass will break readiness clients |
+| Fix                                                                                                             | Why                                                                                      |
+| --------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| Split the sentence in support, philosophy, and Home: console vs host vs Mac-only local app                      | Stops “can’t access via Linux”                                                           |
+| Detect desktop Linux in `detectBrowserOperatingSystem` and give Terminal + systemd steps instead of “Use a Mac” | Shipped. Desktop Linux gets the install command. Windows and phones still say use a Mac. |
+| Keep AWL and AWB Mac-only in that copy                                                                          | Do not promise the local Mac app on Linux                                                |
+| Status and error strings that say “Your Mac” need a host-neutral line when `platform` is `linux`                | Picker and banners currently disagree                                                    |
+| Leave `mac_*` reason codes, or rename them in one pass with tests                                               | Renaming without a pass will break readiness clients                                     |
 
 Smoke checklist and install command: [linux-agent-host-smoke.md](../product/linux-agent-host-smoke.md).
 
