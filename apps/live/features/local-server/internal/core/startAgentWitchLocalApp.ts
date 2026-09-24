@@ -18,6 +18,11 @@ import {
 } from "@agent-witch/live-diagnostics";
 import { buildAgentWitchLocalErrorLogPageBody } from "@agent-witch/live-diagnostics/presentation";
 import {
+  type LocalAppHealthFileBadge,
+  isAgentWitchLastHeartbeatStale,
+  resolveLocalAppHealthFileBadge,
+} from "@agent-witch/live-status-health";
+import {
   buildAgentWitchLocalHeartbeatElapsedMarkup,
   buildAgentWitchLocalStatusTraceSection,
 } from "@agent-witch/live-status-health/presentation";
@@ -179,22 +184,6 @@ const escapeHtml = (value: string): string =>
     .replaceAll('"', "&quot;");
 
 const LOCAL_APP_UPDATE_ERROR_MAX_CHARS = 200;
-
-type LocalAppHealthFileBadge = "No heartbeat yet" | "Stale" | "Fresh";
-
-const resolveLocalAppHealthFileBadge = (input: {
-  readonly lastHeartbeatAt: string | null;
-  readonly healthFileMissing: boolean;
-  readonly heartbeatIsStale: boolean;
-}): LocalAppHealthFileBadge => {
-  if (input.lastHeartbeatAt === null || input.healthFileMissing) {
-    return "No heartbeat yet";
-  }
-  if (input.heartbeatIsStale) {
-    return "Stale";
-  }
-  return "Fresh";
-};
 
 const buildLocalAppHealthFileBadgeHtml = (
   badge: LocalAppHealthFileBadge,
@@ -792,13 +781,19 @@ export const startAgentWitchLocalApp = (input: {
         );
         const status = input.controllers.getStatus();
         const health = readAgentWitchConnectionHealth(input.layout);
+        const heartbeatIsStale =
+          health !== null
+            ? isAgentWitchConnectionHealthStale(
+                health,
+                AGENT_WITCH_CONNECTION_STALE_MS,
+              )
+            : isAgentWitchLastHeartbeatStale(
+                status.lastHeartbeatAt,
+                AGENT_WITCH_CONNECTION_STALE_MS,
+              );
         const healthBadge = resolveLocalAppHealthFileBadge({
           lastHeartbeatAt: status.lastHeartbeatAt,
-          healthFileMissing: health === null,
-          heartbeatIsStale: isAgentWitchConnectionHealthStale(
-            health,
-            AGENT_WITCH_CONNECTION_STALE_MS,
-          ),
+          heartbeatIsStale,
         });
         const installBundle = buildInstallBundleStatus();
         sendHtml(
