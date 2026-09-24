@@ -58,6 +58,8 @@ Canonical implementation: `apps/live/features/memory/internal/core/agentWitchLoc
 
 RAG indexing often runs in the same capture block (`indexAgentWitchRagText`) — **separate file**, same folder policy; do not treat RAG chunks as the improvements loop.
 
+**Local telemetry (Mac, pillar 3):** `recordAgentWitchChunkRetrievals` increments per-chunk hits when `queryAgentWitchRag` selects chunks for dispatch. Failed runs call `recordAgentWitchErrorOccurrence` + `indexAgentWitchErrorKnowledgeText`. `computeAgentWitchKnowledgeSuggestions` surfaces thresholds (10× RAG without tool, 3× same error → tool then rule hints) on AWL `/knowledge` — **not** auto-accept; cloud `capability_improvements` stays pillar 2 human-in-the-loop.
+
 **Playbooks / library** reuse capability definitions (pillar 3 + 4): saved prompts are not the same as automatic run memory — see [concepts.md](../../product/concepts.md) (Run memory vs Library).
 
 ---
@@ -66,12 +68,12 @@ RAG indexing often runs in the same capture block (`indexAgentWitchRagText`) —
 
 Copy this table when describing behavior; do not imply features that are not wired.
 
-| Area             | Shipped today                                                                  | North star (direction)                                                             |
-| ---------------- | ------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------- |
-| **Run memory**   | Recency-based prompt/output pairs injected regardless of run outcome           | Outcome-aware capture; failures excluded from injection; distillation + dedupe     |
-| **RAG**          | Append + cosine scan over project (or install-wide fallback when folder unset) | Bounded store, no cross-project fallback, projectId-keyed knowledge                |
-| **Improvements** | Cloud `capability_improvements` + accept → new capability version              | Full loop from failed run → reviewed suggestion → playbook/workflow/harness update |
-| **Mac ↔ cloud**  | Memory stays on device; improvements are cloud                                 | Explicit promotion gates; no implicit upload of run transcripts                    |
+| Area             | Shipped today                                                                                                                                                                                          | North star (direction)                                                                         |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------- |
+| **Run memory**   | Recency-based prompt/output pairs injected regardless of run outcome                                                                                                                                   | Outcome-aware capture; failures excluded from injection; distillation + dedupe                 |
+| **RAG**          | Append + cosine scan; **retrieval counts** in `usage-stats.json`; failed runs index `error-chunks.ndjson` and inject “past failures” on dispatch; AWL `/knowledge` shows usage + local tool/rule hints | Bounded store; linked tools; optional local router LLM before writer; no install-wide fallback |
+| **Improvements** | Cloud `capability_improvements` + accept → new capability version                                                                                                                                      | Full loop from failed run → reviewed suggestion → playbook/workflow/harness update             |
+| **Mac ↔ cloud**  | Memory stays on device; improvements are cloud                                                                                                                                                         | Explicit promotion gates; no implicit upload of run transcripts                                |
 
 Architecture critique and target layers: [project-composition.md](../../architecture/project-composition.md) (Knowledge layer §2, §1.10).
 
