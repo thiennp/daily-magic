@@ -4,9 +4,7 @@ const repo = (): string =>
   process.env.AGENT_WITCH_FEEDBACK_GITHUB_REPO?.trim() || "thiennp/daily-magic";
 
 const token = (): string =>
-  process.env.AGENT_WITCH_FEEDBACK_GITHUB_TOKEN?.trim() ||
-  process.env.GITHUB_TOKEN?.trim() ||
-  "";
+  process.env.AGENT_WITCH_FEEDBACK_GITHUB_TOKEN?.trim() || "";
 
 export const openAgentFeedbackGitHubIssue = async (input: {
   readonly feedback: AgentAccessFeedbackInput;

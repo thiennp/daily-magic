@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 import { buildAgentAccessPassAlong } from "@/lib/agentAccess/buildAgentAccessPassAlong";
 import { buildAgentAccessLiveGuide } from "@/lib/agentAccess/buildAgentAccessLiveGuide";
@@ -49,10 +49,7 @@ describe("live agent guide", () => {
   });
 
   it("skips GitHub when no token is configured", async () => {
-    const previous = process.env.AGENT_WITCH_FEEDBACK_GITHUB_TOKEN;
-    const github = process.env.GITHUB_TOKEN;
-    delete process.env.AGENT_WITCH_FEEDBACK_GITHUB_TOKEN;
-    delete process.env.GITHUB_TOKEN;
+    vi.stubEnv("AGENT_WITCH_FEEDBACK_GITHUB_TOKEN", "");
 
     const url = await openAgentFeedbackGitHubIssue({
       feedback: {
@@ -64,14 +61,7 @@ describe("live agent guide", () => {
       feedbackId: "fb-1",
     });
 
-    if (previous === undefined) {
-      delete process.env.AGENT_WITCH_FEEDBACK_GITHUB_TOKEN;
-    } else {
-      process.env.AGENT_WITCH_FEEDBACK_GITHUB_TOKEN = previous;
-    }
-    if (github !== undefined) {
-      process.env.GITHUB_TOKEN = github;
-    }
+    vi.unstubAllEnvs();
 
     expect(url).toBeNull();
   });

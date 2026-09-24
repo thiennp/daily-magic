@@ -2,7 +2,10 @@ import { asRowArray, getSql } from "@/lib/db";
 
 import { AGENT_ACCESS_FEEDBACK_PER_HOUR } from "@/lib/agentAccess/agentAccess.constant";
 import { buildAgentAccessLiveGuide } from "@/lib/agentAccess/buildAgentAccessLiveGuide";
-import { consumeAgentAccessBucket } from "@/lib/agentAccess/consumeAgentAccessBucket";
+import {
+  countAgentAccessBucketAttempts,
+  recordAgentAccessBucketAttempt,
+} from "@/lib/agentAccess/consumeAgentAccessBucket";
 import { ensureAgentAccessSchema } from "@/lib/agentAccess/ensureAgentAccessSchema";
 import { hashAgentAccessToken } from "@/lib/agentAccess/hashAgentAccessToken";
 import type { AgentAccessToolCallResult } from "@/lib/agentAccess/handleAgentAccessMcpRequest";
@@ -61,13 +64,13 @@ export const executeAgentAccessGuideTool = async (input: {
     );
   }
 
-  const allowed = await consumeAgentAccessBucket({
-    subjectHash: hashAgentAccessToken(input.token),
+  const subjectHash = hashAgentAccessToken(input.token);
+  const recentFeedback = await countAgentAccessBucketAttempts({
+    subjectHash,
     bucket: "feedback",
-    limit: AGENT_ACCESS_FEEDBACK_PER_HOUR,
   });
 
-  if (!allowed) {
+  if (recentFeedback >= AGENT_ACCESS_FEEDBACK_PER_HOUR) {
     return agentAccessTextResult(
       {
         ok: false,
@@ -91,6 +94,11 @@ export const executeAgentAccessGuideTool = async (input: {
       true,
     );
   }
+
+  await recordAgentAccessBucketAttempt({
+    subjectHash,
+    bucket: "feedback",
+  });
 
   const githubIssueUrl = await openAgentFeedbackGitHubIssue({
     feedback,
