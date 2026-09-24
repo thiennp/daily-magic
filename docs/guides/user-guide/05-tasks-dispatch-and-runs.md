@@ -74,6 +74,19 @@ Live UI uses **locked outcome chips**—do not show **Success** while still conn
 
 One primary log surface per run—avoid duplicate “success” chrome elsewhere.
 
+### Git check on the Mac (git repos only)
+
+When your **code folder** is a git repository, the Mac records a short **git verdict** after the writer finishes—before/after dirty paths and a summary of tracked changes vs `HEAD`. It is stored in the Mac run report **details** (alongside the agent’s own summary), not as a separate Console screen.
+
+| You might see in details               | Meaning                                                                               |
+| -------------------------------------- | ------------------------------------------------------------------------------------- |
+| `clean before run` / `clean after run` | Working tree had no uncommitted paths (porcelain empty).                              |
+| `N dirty path(s)`                      | Uncommitted or untracked paths counted at snapshot time.                              |
+| `diff vs HEAD: …`                      | Short `git diff --shortstat` after the run (may be empty if nothing tracked changed). |
+| `not a repository`                     | Folder is not a git checkout—no verdict beyond that line.                             |
+
+This supports **learn from usage** (pillar 2): **Success** in the Console can still mean “CLI exited cleanly” while the verdict shows whether files actually changed. It does **not** block **Send** or replace **Runs** history in the cloud by itself.
+
 ---
 
 ## Runs list and actions
@@ -146,6 +159,7 @@ Test dispatch without Home: developer `ws-test` UI ([local bridge](../../agent-w
 - run again continue conversation, waiting on you AWAITING_INPUT
 - gui task Agent Witch, xem run, terminal honesty Connecting In progress
 - thuc thi task tren Mac, dispatch outbox reconnecting
+- git verdict run report details Mac repository dirty paths
 - project folder playbook writer more options New task
 - learn from usage run again save playbook, efficient memory continue conversation
 - hoc tu loi run lai, luu playbook, tiet kiem ngữ cảnh task truoc

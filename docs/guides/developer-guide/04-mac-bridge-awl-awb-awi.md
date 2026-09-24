@@ -95,6 +95,7 @@ Telemetry and dispatch wiring: [Chapter 10](10-learning-memory-and-improvements.
 1. Mac opens **`wss://<app-origin>/api/agent-witch/ws`** with session/device identity after pairing.
 2. `server.ts` upgrades and registers client in hub + **`agent_witch_connections`** (ADR 0005).
 3. Writer/shell traffic flows hub ↔ Mac; browser subscribes over the same hub connection model.
+4. On **`command.claude.run`**, `startAgentWitchClient.ts` may capture a **git worktree snapshot** before spawn and append a one-line **git verdict** to the Mac run report `details` after completion when the project folder is a git repo (`captureAgentWitchGitWorktreeSnapshot`, `formatAgentWitchGitWorktreeVerdict` under `apps/live/features/projects/internal/core/knowledge/`). See [Chapter 10](10-learning-memory-and-improvements.md).
 
 **Requires** `npm run dev` or `npm run start` — not `npm run dev:next` alone.
 
@@ -147,4 +148,5 @@ npm run feature-knowledge:query -- "Mac WebSocket" --feature=agent-witch
 - AWL AWB AWI ports 43347 47892 agent-witch install harness
 - Mac bridge wake server identity this computer
 - npm run agent-witch install bundle LaunchAgent
+- git worktree snapshot captureAgentWitchGitWorktreeSnapshot run report details
 - cầu nối Mac Agent Witch, cài đặt AWI, cổng loopback
