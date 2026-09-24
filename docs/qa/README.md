@@ -34,26 +34,27 @@ Open the top `sourcePath` under `docs/qa/` when present.
 
 ## Catalog
 
-| File                                                                                             | Topic                                                                        |
-| ------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------- |
-| [awc-how-browser-knows-this-computer.md](awc-how-browser-knows-this-computer.md)                 | AWC “This computer” / “this Mac” vs cloud device list                        |
-| [awb-localhost-identity-and-cors.md](awb-localhost-identity-and-cors.md)                         | AWB `/identity`, CORS, AWI config vs AWL                                     |
-| [delegate-local-cli-conversation-context.md](delegate-local-cli-conversation-context.md)         | Local CLI (Cursor, etc.) follow-up context / `--continue`                    |
-| [writer-dispatch-cascade-routing.md](writer-dispatch-cascade-routing.md)                         | Mac dispatch route: continuation vs memory/RAG budget                        |
-| [awc-project-folder-path-picker.md](awc-project-folder-path-picker.md)                           | AWC cannot pick Mac folders; use AWL / AWB `select-folder`                   |
-| [awc-awl-projects-source-of-truth.md](awc-awl-projects-source-of-truth.md)                       | AWC DB owns project metadata; AWL loads cloud; `.agent-witch/` is repo-local |
-| [awi-update-local-launchagent-plist.md](awi-update-local-launchagent-plist.md)                   | Update local invalid LaunchAgent plist / Mac reconnecting (AGENT-067)        |
-| [awc-mac-reconnecting-vs-local-live.md](awc-mac-reconnecting-vs-local-live.md)                   | AWC “reconnecting / checks in” vs local AWI/AWB being up                     |
-| [awl-loopback-origin.md](awl-loopback-origin.md)                                                 | AWL is only `http://127.0.0.1:43347` (no vanity hostname)                    |
-| [workflow-builder-field-types.md](workflow-builder-field-types.md)                               | Create workflow questions: Answer length vs input types; no user graph       |
-| [workflow-file-upload-and-semantic-output.md](workflow-file-upload-and-semantic-output.md)       | PDF/image workflow fields; artifact markers; Summary tab                     |
-| [guest-library-browser-drafts.md](guest-library-browser-drafts.md)                               | Guest `/library` drafts in browser + latest-wins sync on sign-in             |
-| [official-workflow-run-checkpoints-and-retry.md](official-workflow-run-checkpoints-and-retry.md) | Human checkpoints, skip, and retry of a failed agent step                    |
-| [mac-harness-workflow-agent-dispatch.md](mac-harness-workflow-agent-dispatch.md)                 | Harness install vs workflow/agent `command.claude.run` over Mac WebSocket    |
-| [marketplace-project-scoped-install.md](marketplace-project-scoped-install.md)                   | Marketplace install requires project; usage guides; no global harness push   |
-| [run-ux-honesty-strings.md](run-ux-honesty-strings.md)                                           | Pimi locked run outcome chips, suffixes, cli-fallback copy (live progress)   |
-| [bedrock-agentcore-vs-agent-witch-flow.md](bedrock-agentcore-vs-agent-witch-flow.md)             | AWS Bedrock AgentCore harness flow vs Agent Witch dispatch, layer by layer   |
-| [agent-witch-product-pillars.md](agent-witch-product-pillars.md)                                 | Core job + four product pillars (authoring, learning, memory, team)          |
+| File                                                                                             | Topic                                                                         |
+| ------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------- |
+| [awc-how-browser-knows-this-computer.md](awc-how-browser-knows-this-computer.md)                 | AWC “This computer” / “this Mac” vs cloud device list                         |
+| [awb-localhost-identity-and-cors.md](awb-localhost-identity-and-cors.md)                         | AWB `/identity`, CORS, AWI config vs AWL                                      |
+| [delegate-local-cli-conversation-context.md](delegate-local-cli-conversation-context.md)         | Local CLI (Cursor, etc.) follow-up context / `--continue`                     |
+| [writer-dispatch-cascade-routing.md](writer-dispatch-cascade-routing.md)                         | Mac dispatch route: continuation vs memory/RAG budget                         |
+| [awc-project-folder-path-picker.md](awc-project-folder-path-picker.md)                           | AWC cannot pick Mac folders; use AWL / AWB `select-folder`                    |
+| [awc-awl-projects-source-of-truth.md](awc-awl-projects-source-of-truth.md)                       | AWC DB owns project metadata; AWL loads cloud; `.agent-witch/` is repo-local  |
+| [awi-update-local-launchagent-plist.md](awi-update-local-launchagent-plist.md)                   | Update local invalid LaunchAgent plist / Mac reconnecting (AGENT-067)         |
+| [awc-mac-reconnecting-vs-local-live.md](awc-mac-reconnecting-vs-local-live.md)                   | AWC “reconnecting / checks in” vs local AWI/AWB being up                      |
+| [awl-loopback-origin.md](awl-loopback-origin.md)                                                 | AWL is only `http://127.0.0.1:43347` (no vanity hostname)                     |
+| [workflow-builder-field-types.md](workflow-builder-field-types.md)                               | Create workflow questions: Answer length vs input types; no user graph        |
+| [workflow-file-upload-and-semantic-output.md](workflow-file-upload-and-semantic-output.md)       | PDF/image workflow fields; artifact markers; Summary tab                      |
+| [guest-library-browser-drafts.md](guest-library-browser-drafts.md)                               | Guest `/library` drafts in browser + latest-wins sync on sign-in              |
+| [official-workflow-run-checkpoints-and-retry.md](official-workflow-run-checkpoints-and-retry.md) | Human checkpoints, skip, and retry of a failed agent step                     |
+| [mac-harness-workflow-agent-dispatch.md](mac-harness-workflow-agent-dispatch.md)                 | Harness install vs workflow/agent `command.claude.run` over Mac WebSocket     |
+| [marketplace-project-scoped-install.md](marketplace-project-scoped-install.md)                   | Marketplace install requires project; usage guides; no global harness push    |
+| [run-ux-honesty-strings.md](run-ux-honesty-strings.md)                                           | Pimi locked run outcome chips, suffixes, cli-fallback copy (live progress)    |
+| [bedrock-agentcore-vs-agent-witch-flow.md](bedrock-agentcore-vs-agent-witch-flow.md)             | AWS Bedrock AgentCore harness flow vs Agent Witch dispatch, layer by layer    |
+| [agent-witch-product-pillars.md](agent-witch-product-pillars.md)                                 | Core job + four product pillars (authoring, learning, memory, team)           |
+| [ai-self-registration-webmcp.md](ai-self-registration-webmcp.md)                                 | AI self-registration without email or via Agent Mail, WebMCP, homepage prompt |
 
 Add a row here when you add a Q&A file.
 

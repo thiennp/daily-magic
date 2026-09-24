@@ -223,13 +223,14 @@ Developers: `AGENT_WITCH_OLLAMA_URL` / `AGENT_WITCH_EMBED_MODEL` — [developer 
 
 ## Where to search next
 
-| Need                             | Location                                                                                                       |
-| -------------------------------- | -------------------------------------------------------------------------------------------------------------- |
-| Short “how it works” answers     | [docs/qa/README.md](../../qa/README.md)                                                                        |
-| Open Mac bridge / dispatch risks | [src/features/agent-witch/KNOWN_ISSUES.md](../../../src/features/agent-witch/KNOWN_ISSUES.md)                  |
-| Mac Home / Update local UI       | [macDevices KNOWN_ISSUES](../../../src/features/agent-witch/macDevices/KNOWN_ISSUES.md)                        |
-| Trust and boundaries             | [Chapter 8 — Production and trust](08-production-and-trust.md)                                                 |
-| First-time setup                 | [Chapter 1 — Getting started](01-getting-started.md) · [Chapter 4 — Mac connect](04-mac-connect-and-bridge.md) |
+| Need                             | Location                                                                                                                                                                                                                               |
+| -------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Short “how it works” answers     | [docs/qa/README.md](../../qa/README.md)                                                                                                                                                                                                |
+| Open Mac bridge / dispatch risks | [src/features/agent-witch/KNOWN_ISSUES.md](../../../src/features/agent-witch/KNOWN_ISSUES.md)                                                                                                                                          |
+| Mac Home / Update local UI       | [macDevices KNOWN_ISSUES](../../../src/features/agent-witch/macDevices/KNOWN_ISSUES.md)                                                                                                                                                |
+| Trust and boundaries             | [Chapter 8 — Production and trust](08-production-and-trust.md)                                                                                                                                                                         |
+| First-time setup                 | [Chapter 1 — Getting started](01-getting-started.md) · [Chapter 4 — Mac connect](04-mac-connect-and-bridge.md)                                                                                                                         |
+| AI registration / Agent Mail     | [ai-self-registration-webmcp.md](../../qa/ai-self-registration-webmcp.md) — method `none` works without a mailbox; `agentmail` returns 503 when the server key is missing. `rate_limited` or `busy` means wait; do not retry in a loop |
 
 Indexed search (agents and power users):
 

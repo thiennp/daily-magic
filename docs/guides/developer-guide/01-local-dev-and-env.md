@@ -158,13 +158,14 @@ Routing map for which guide chapter matches a path: [guide-maintenance.map.json]
 
 ## Related
 
-| Topic                | Link                                                        |
-| -------------------- | ----------------------------------------------------------- |
-| User first run       | [user guide ch.1](../user-guide/01-getting-started.md)      |
-| Test sign-in         | [Chapter 2](02-auth-and-test-login.md)                      |
-| Architecture         | [Chapter 3](03-architecture-map.md)                         |
-| Hosting / production | [Chapter 8](08-deploy-hosting-neon.md) (when present)       |
-| Domain: development  | [docs/domains/development.md](../../domains/development.md) |
+| Topic                | Link                                                                                                     |
+| -------------------- | -------------------------------------------------------------------------------------------------------- |
+| User first run       | [user guide ch.1](../user-guide/01-getting-started.md)                                                   |
+| Test sign-in         | [Chapter 2](02-auth-and-test-login.md)                                                                   |
+| Architecture         | [Chapter 3](03-architecture-map.md)                                                                      |
+| Hosting / production | [Chapter 8](08-deploy-hosting-neon.md) (when present)                                                    |
+| Domain: development  | [docs/domains/development.md](../../domains/development.md)                                              |
+| AI self-registration | [ai-self-registration-webmcp.md](../../qa/ai-self-registration-webmcp.md) — optional `AGENTMAIL_API_KEY` |
 
 ---
 

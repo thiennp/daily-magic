@@ -199,6 +199,17 @@
       "migrationStatus": "migrated"
     },
     {
+      "slug": "agent-access",
+      "title": "AI self-registration",
+      "purpose": "API, MCP, and WebMCP so an AI can register without email or with Agent Mail and call Tasks and Runs.",
+      "featurePath": "src/features/agent-access",
+      "libPath": "src/lib/agentAccess",
+      "routePaths": ["/"],
+      "apiPaths": ["/api/agent-access", "/.well-known/webmcp.json"],
+      "dependsOn": ["auth", "dispatch", "agent-witch"],
+      "migrationStatus": "migrated"
+    },
+    {
       "slug": "styleguide",
       "title": "Styleguide",
       "purpose": "TailAdmin component catalog for development.",

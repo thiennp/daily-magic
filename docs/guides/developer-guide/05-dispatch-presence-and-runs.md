@@ -113,6 +113,12 @@ See [docs/qa/mac-harness-workflow-agent-dispatch.md](../../qa/mac-harness-workfl
 
 ---
 
+## Agent access `send_task`
+
+`executeAgentAccessSendTask` calls `dispatchClaudeRunForDashboardUser` with the user id from the bearer token. It does not open a second dispatch path. Tool catalog: `src/lib/agentAccess/agentAccessToolCatalog.constant.ts`.
+
+---
+
 ## Testing dispatch locally
 
 1. [Chapter 1](01-local-dev-and-env.md) — `npm run dev`, correct `DATABASE_URL`.

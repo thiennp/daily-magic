@@ -1,3 +1,4 @@
+import HomeAgentAccessPrompt from "@/features/agent-access/HomeAgentAccessPrompt";
 import MyOfferingsPanel from "@/features/capabilities/MyOfferingsPanel";
 import TeamDirectoryPanel from "@/features/capabilities/TeamDirectoryPanel";
 import FeedbackInboxPanel from "@/features/feedback/FeedbackInboxPanel";
@@ -78,6 +79,7 @@ export default async function HomeAuthenticatedView({
       </HomeLinkAccountGate>
       <div className={HOME_DASHBOARD_GRID_CLASS}>
         <div className={HOME_MAIN_COLUMN_CLASS}>
+          <HomeAgentAccessPrompt />
           <HomeCollapsibleMarketingShowcases />
         </div>
       </div>
