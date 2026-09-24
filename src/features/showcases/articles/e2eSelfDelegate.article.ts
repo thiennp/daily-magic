@@ -4,7 +4,7 @@ const e2eSelfDelegate: ShowcaseArticle = {
   slug: "e2e-self-delegate",
   title: "E2E: New task on your own Mac",
   subtitle:
-    "Pair once, open New task, run Claude on this computer, and find it in Job history.",
+    "Pair once, open New task, run Claude on this computer, and find it in Reports.",
   category: "E2E verified",
   supportLevel: "full",
   readMinutes: 3,
@@ -20,7 +20,7 @@ const e2eSelfDelegate: ShowcaseArticle = {
         "Home auto-links the local Agent Witch profile to Your Devices",
         "Custom task + Claude opens a live terminal on your Mac",
         "Send feedback dispatches a real agent run (wait for /api/agent-runs/dispatch)",
-        "The same prompt appears in Job history for that browser session",
+        "The same prompt appears in Reports for that browser session",
       ],
       image: {
         src: "/showcases/e2e/self-delegate-live-terminal.png",
@@ -30,13 +30,13 @@ const e2eSelfDelegate: ShowcaseArticle = {
     },
     {
       bullets: [
-        "Job history lists requester and executor as the same account",
+        "Reports lists requester and executor as the same account",
         "Status moves to completed when the Mac finishes the run",
       ],
       image: {
         src: "/showcases/e2e/self-delegate-job-history.png",
-        alt: "Job history showing a completed self-delegate run",
-        caption: "Completed self-delegate run in Job history.",
+        alt: "Reports showing a completed self-delegate run",
+        caption: "Completed self-delegate run in Reports.",
       },
     },
   ],

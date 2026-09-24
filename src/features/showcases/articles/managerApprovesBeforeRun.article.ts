@@ -38,7 +38,7 @@ const managerApprovesBeforeRun: ShowcaseArticle = {
         "Admin sets group policy to approval",
         "Requester sends task to teammate's capability",
         "Job sits in pending until approved or denied",
-        "Completed jobs stay in Job history for review in the browsers that watched the run",
+        "Completed jobs stay in Reports for review in the browsers that watched the run",
       ],
     },
     {

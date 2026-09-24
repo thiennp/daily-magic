@@ -43,7 +43,7 @@ const humanCheckpointsBeforeMacRuns: ShowcaseArticle = {
         "An amber “Your steps” panel lists each checkpoint with full instructions",
         "Workflow fields still collect names, dates, and paths as usual",
         "Only checkpoint titles are appended to the Mac prompt as a short summary",
-        "Agent harness files install to ~/.agent-witch; operator rules stay in the app",
+        "Playbook files install to ~/.agent-witch; operator rules stay in the app",
       ],
     },
     {

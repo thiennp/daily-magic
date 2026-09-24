@@ -37,7 +37,7 @@ const requestSensitiveWorkWithApproval: ShowcaseArticle = {
       heading: "Example scenario",
       bullets: [
         "Junior PM requests: summarize open PRs in ~/projects/client-app",
-        "Job sits pending — approver sees the full prompt in Job history",
+        "Job sits pending — approver sees the full prompt in Reports",
         "Manager approves → executor's Mac runs Claude locally",
         "Both sides keep a run log in their browsers",
       ],
@@ -53,7 +53,7 @@ const requestSensitiveWorkWithApproval: ShowcaseArticle = {
     {
       heading: "How approval feels in practice",
       paragraphs: [
-        "An approver reviews the request, then an online executor Mac runs the job. Both sides can open Job history in their browser to see the prompt and result.",
+        "An approver reviews the request, then an online executor Mac runs the job. Both sides can open Reports in their browser to see the prompt and result.",
       ],
     },
   ],

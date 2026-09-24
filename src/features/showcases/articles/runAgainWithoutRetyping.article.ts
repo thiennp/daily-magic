@@ -3,12 +3,12 @@ import type ShowcaseArticle from "@/features/showcases/types/ShowcaseArticle.typ
 const runAgainWithoutRetyping: ShowcaseArticle = {
   slug: "run-again-without-retyping",
   title: "Run the same task again without retyping",
-  subtitle: "Job history becomes your weekly habit button.",
+  subtitle: "Reports becomes your weekly habit button.",
   category: "Reports",
   supportLevel: "full",
   readMinutes: 2,
   whatYouNeed: [
-    "At least one completed job in this browser's Job history",
+    "At least one completed job in this browser's Reports",
     "Mac agent online if you want to send again (not just view)",
   ],
   tryNext: { label: "Reports", href: "/reports" },

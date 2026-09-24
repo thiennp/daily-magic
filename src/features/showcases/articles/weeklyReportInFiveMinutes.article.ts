@@ -46,7 +46,7 @@ const weeklyReportInFiveMinutes: ShowcaseArticle = {
       bullets: [
         "Publish once with standard fields",
         "Everyone gets the same structure",
-        "Job history in each person's browser shows their recent runs",
+        "Reports in each person's browser shows their recent runs",
       ],
     },
   ],
