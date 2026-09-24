@@ -97,6 +97,8 @@ Technical detail: [System map](../../architecture/system-map.md), [deployables](
 
 Agent Witch shows **honest run UX**: if the Mac is reconnecting, updating, or offline, the composer blocks **Send** with a clear reason—not a silent failure. If output is waiting for you (`[[AWAITING_INPUT]]`), the UI asks; the Mac does not guess.
 
+On a **git repository**, the Mac also records a short **git check** after a **Run** (dirty paths and tracked changes)—see [Chapter 5 — Git check on the Mac](05-tasks-dispatch-and-runs.md#git-check-on-the-mac-git-repos-only). That is separate from the Success chip in the browser.
+
 See [run UX honesty](../../qa/run-ux-honesty-strings.md) for reason codes engineers use; users see plain language.
 
 ---

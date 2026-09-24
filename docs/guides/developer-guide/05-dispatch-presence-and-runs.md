@@ -41,6 +41,8 @@ Routing cascade (continuation vs memory budget): [docs/qa/writer-dispatch-cascad
 
 **Product pillars:** dispatch + Reports are the spine for **pillar 2** (feedback on runs, honest run status) and **pillar 3** (memory entry limits in cascade routing). Details: [Chapter 10](10-learning-memory-and-improvements.md).
 
+**Mac post-run git verdict:** when `projectFolderPath` is a git repo, AWI snapshots the worktree before writer spawn and appends a one-line verdict to the Mac run report `details` after `command.claude.result` (user-facing copy: [user guide ch.5](../user-guide/05-tasks-dispatch-and-runs.md#git-check-on-the-mac-git-repos-only); code: [Chapter 4](04-mac-bridge-awl-awb-awi.md) step 4, [Chapter 10](10-learning-memory-and-improvements.md)).
+
 **Production Cursor Cloud:** request `Origin` or `Referer` host must match app base URL (ADR 0004). Local dev skips for ergonomics.
 
 ---
