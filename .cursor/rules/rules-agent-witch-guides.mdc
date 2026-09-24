@@ -1,0 +1,55 @@
+---
+description: Agent Witch user & developer guides — read before edits; update with behavior changes
+globs:
+  - src/lib/agentWitch/**
+  - src/features/agent-witch/**
+  - src/features/dispatch/**
+  - src/features/agent/**
+  - src/features/home/**
+  - src/features/reports/**
+  - src/features/workflows/**
+  - src/features/harness/**
+  - src/features/capabilities/**
+  - src/features/library/**
+  - apps/bridge/**
+  - apps/live/**
+  - apps/install/**
+  - server.ts
+  - docs/guides/**
+---
+
+# Agent Witch guides (required reading)
+
+## Before substantive edits
+
+1. Read [docs/guides/user-guide/00-philosophy-and-vocabulary.md](../../docs/guides/user-guide/00-philosophy-and-vocabulary.md) for product vocabulary (Mac, Task, Run, Playbook).
+2. Open the chapter pair listed in [docs/guides/guide-maintenance.map.json](../../docs/guides/guide-maintenance.map.json) for your path prefix.
+3. Read [docs/guides/developer-guide/agent-mistakes-catalog.md](../../docs/guides/developer-guide/agent-mistakes-catalog.md) for recurring agent failures.
+
+Query RAG:
+
+```bash
+npm run feature-knowledge:query -- "your topic" --feature=docs
+```
+
+## When behavior or examples change
+
+Update **both** the user-guide and developer-guide chapter in the **same PR** as code. Refresh worked examples (commands, URLs, screenshots described in prose) so they match production (**www.agentwitch.com**) and local dev (`npm run dev`).
+
+Run:
+
+```bash
+npm run feature-knowledge:index
+```
+
+Commit `.feature-knowledge/index.json` with the branch.
+
+## Hooks
+
+Cursor **postToolUse** injects chapter reminders when you edit mapped paths. **stop** nags if `src/` / `db/` / `server.ts` changed without any `docs/guides/**` diff—confirm guides still match or update them.
+
+## Do not
+
+- Contradict [UX simplification](../../docs/product/ux-simplification.md) user terms in user-guide chapters.
+- Document CHECK24 hosts as default Agent Witch production.
+- Split harness / library / marketplace into separate “runtimes” in guide prose.

@@ -21,11 +21,12 @@ Official reference: [cursor.com/docs/hooks](https://cursor.com/docs/hooks.md).
 
 ## Overlap with Husky
 
-| Gate                       | Agent hook             | Husky pre-commit               |
-| -------------------------- | ---------------------- | ------------------------------ |
-| structure-validation       | `stop` (changes scope) | `validate:staged`              |
-| architecture-check         | `postToolUse` + `stop` | `cursor:architecture --staged` |
-| ESLint / typecheck / tests | —                      | pre-commit / CI                |
+| Gate                       | Agent hook             | Husky pre-commit                                        |
+| -------------------------- | ---------------------- | ------------------------------------------------------- |
+| structure-validation       | `stop` (changes scope) | `validate:staged`                                       |
+| architecture-check         | `postToolUse` + `stop` | `cursor:architecture --staged`                          |
+| Agent Witch guide chapters | `postToolUse` + `stop` | `guideMaintenanceCheck.ts` (read/update `docs/guides/`) |
+| ESLint / typecheck / tests | —                      | pre-commit / CI                                         |
 
 ## Local debugging
 
