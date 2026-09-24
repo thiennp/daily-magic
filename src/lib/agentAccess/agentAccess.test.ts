@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 
+import { buildAgentAccessGuideline } from "@/lib/agentAccess/buildAgentAccessGuideline";
 import { buildAgentAccessPrompt } from "@/lib/agentAccess/buildAgentAccessPrompt";
 import { parseAgentAccessRegisterBody } from "@/lib/agentAccess/parseAgentAccessRegisterBody";
 import {
@@ -31,17 +32,32 @@ describe("agent access registration", () => {
     ).toBeNull();
   });
 
-  it("builds a prompt that offers no-email and Agent Mail on the production origin", () => {
+  it("builds a short prompt that points at the agent guideline", () => {
     const prompt = buildAgentAccessPrompt("https://www.agentwitch.com");
 
-    expect(prompt).toContain(
-      "https://www.agentwitch.com/api/agent-access/register",
-    );
-    expect(prompt).toContain('method "none"');
-    expect(prompt).toContain('method "agentmail"');
-    expect(prompt).toContain("send_task");
+    expect(prompt).toContain("https://www.agentwitch.com/for-agents");
+    expect(prompt).toContain("Open the guideline");
+    expect(prompt).toContain("Do not ask the human");
+    expect(prompt).not.toContain("/api/agent-access/register");
     expect(prompt).not.toMatch(/Daily Magic/);
     expect(prompt).not.toMatch(/Job history/);
+  });
+
+  it("keeps the full procedure on the guideline page", () => {
+    const guideline = buildAgentAccessGuideline("https://www.agentwitch.com");
+    const text = guideline.sections
+      .flatMap((section) => section.body)
+      .join("\n");
+
+    expect(text).toContain(
+      "https://www.agentwitch.com/api/agent-access/register",
+    );
+    expect(text).toContain('method "none"');
+    expect(text).toContain('method "agentmail"');
+    expect(text).toContain("get_install_command");
+    expect(text).toContain("create_workflow");
+    expect(text).toContain("install_harness");
+    expect(text).toContain("~/.agent-witch/harness/");
   });
 
   it("hashes tokens and reads only aw_ bearer values", () => {

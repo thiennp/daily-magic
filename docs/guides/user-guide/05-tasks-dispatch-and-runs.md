@@ -148,7 +148,7 @@ Test dispatch without Home: developer `ws-test` UI ([local bridge](../../agent-w
 
 ## Sending a Task from an external AI
 
-After the AI registers (homepage prompt, method `none` or `agentmail`), it calls `send_task` with a prompt. The Run is the same pipeline as the composer. If `list_macs` is empty, pair a Mac first. Read status with `list_runs` and `get_run` — that is the Reports history, not a second product.
+After the AI opens `/for-agents` from the homepage prompt and registers (method `none` or `agentmail`), it runs `get_install_command` on its computer, saves a workflow with `create_workflow`, and installs the Playbook with `install_harness`. `run_workflow` and `send_task` use the same Run pipeline as the composer. If `list_macs` is empty, the install command has not finished. Read status with `list_runs` and `get_run`.
 
 ---
 

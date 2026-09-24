@@ -1,7 +1,7 @@
 import { isNonNullObject } from "guardz";
 
 import { AGENT_ACCESS_MCP_PROTOCOL_VERSION } from "@/lib/agentAccess/agentAccess.constant";
-import { AGENT_ACCESS_TOOL_CATALOG } from "@/lib/agentAccess/agentAccessToolCatalog.constant";
+import { AGENT_ACCESS_TOOLS } from "@/lib/agentAccess/agentAccessTools.constant";
 
 export interface AgentAccessToolCallResult {
   readonly isError: boolean;
@@ -68,7 +68,7 @@ export const handleAgentAccessMcpRequest = async (
   }
 
   if (method === "tools/list") {
-    return jsonRpcResult(id, { tools: AGENT_ACCESS_TOOL_CATALOG });
+    return jsonRpcResult(id, { tools: AGENT_ACCESS_TOOLS });
   }
 
   if (method === "notifications/initialized") {

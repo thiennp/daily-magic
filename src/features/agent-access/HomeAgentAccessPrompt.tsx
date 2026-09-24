@@ -12,24 +12,19 @@ export default function HomeAgentAccessPrompt(): ReactElement {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "HowTo",
-    name: `Let an AI use ${AGENT_WITCH_PRODUCT_NAME}`,
+    name: `Give an AI an ${AGENT_WITCH_PRODUCT_NAME} account`,
     description:
-      "Copy a prompt so an AI can register without a human email, or with Agent Mail, then send Tasks to a paired Mac and read Runs.",
+      "Copy a short prompt. The AI opens the agent guideline, registers with no human email, and follows the steps on that page.",
     step: [
       {
         "@type": "HowToStep",
         name: "Copy the prompt",
-        text: "Paste the prompt into your AI.",
+        text: "Paste the short prompt into your AI.",
       },
       {
         "@type": "HowToStep",
-        name: "The AI registers",
-        text: 'The AI calls the register API with method "none" or "agentmail".',
-      },
-      {
-        "@type": "HowToStep",
-        name: "The AI sends a Task",
-        text: "After a Mac is paired, the AI sends a Task and reads the Run.",
+        name: "Open the guideline",
+        text: `The AI opens ${urls.guidelineUrl} and follows every step.`,
       },
     ],
   };
@@ -54,19 +49,15 @@ export default function HomeAgentAccessPrompt(): ReactElement {
         Give your AI an account. No email required.
       </h2>
       <p className="mt-3 max-w-3xl text-base leading-relaxed text-gray-600 dark:text-gray-300">
-        Copy this prompt into ChatGPT, Claude, or Cursor. The AI registers
-        itself with method none (no mailbox) or Agent Mail, then sends Tasks to
-        a paired Mac and reads Runs. Discovery lives at{" "}
-        <a className="underline" href={urls.discoveryUrl}>
-          webmcp.json
-        </a>
-        .
+        {AGENT_WITCH_PRODUCT_NAME} lets an AI register itself, pair a Mac,
+        create a workflow, and write the Playbook. Copy the short prompt. The
+        agent opens the{" "}
+        <a className="underline" href={urls.guidelineUrl}>
+          agent guideline
+        </a>{" "}
+        and follows it.
       </p>
-      <p className="mt-2 max-w-3xl text-sm leading-relaxed text-gray-500">
-        Dán prompt này vào AI của bạn. AI tự tạo tài khoản không cần email, hoặc
-        dùng Agent Mail, rồi dùng các tính năng Agent Witch.
-      </p>
-      <pre className="mt-5 max-h-80 overflow-auto rounded-xl bg-gray-950 p-4 text-left text-xs leading-relaxed text-gray-100">
+      <pre className="mt-5 overflow-auto rounded-xl bg-gray-950 p-4 text-left text-sm leading-relaxed text-gray-100">
         {prompt}
       </pre>
       <div

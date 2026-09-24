@@ -1,10 +1,8 @@
-import { isNonEmptyString, isType } from "guardz";
-
 import { listAgentWitchDevicesForUser } from "@/lib/agentWitch/listAgentWitchDevicesForUser";
-import { getAgentRunForParticipant } from "@/lib/dispatch/getAgentRunForParticipant";
-import { listAgentRunsForUser } from "@/lib/dispatch/listAgentRunsForUser";
 
+import { executeAgentAccessRunTool } from "@/lib/agentAccess/executeAgentAccessRunTool";
 import { executeAgentAccessSendTask } from "@/lib/agentAccess/executeAgentAccessSendTask";
+import { executeAgentAccessWorkflowTool } from "@/lib/agentAccess/executeAgentAccessWorkflowTool";
 import type { AgentAccessToolCallResult } from "@/lib/agentAccess/handleAgentAccessMcpRequest";
 import { parseAgentAccessRegisterBody } from "@/lib/agentAccess/parseAgentAccessRegisterBody";
 import { registerAgentAccessAccount } from "@/lib/agentAccess/registerAgentAccessAccount";
@@ -15,11 +13,6 @@ import {
   requireAgentAccessActor,
 } from "@/lib/agentAccess/requireAgentAccessActor";
 import { summarizeAgentAccessMac } from "@/lib/agentAccess/summarizeAgentAccessMac";
-import { summarizeAgentAccessRun } from "@/lib/agentAccess/summarizeAgentAccessRun";
-
-const runIdArgs = isType<{ readonly runId: string }>({
-  runId: isNonEmptyString,
-});
 
 const registerAccount = async (
   args: unknown,
@@ -91,29 +84,24 @@ export const executeAgentAccessTool = async (input: {
     return executeAgentAccessSendTask(actor, input.args);
   }
 
-  if (input.name === "list_runs") {
-    const runs = await listAgentRunsForUser(actor.id, { limit: 20 });
-    return agentAccessTextResult({
-      ok: true,
-      runs: runs.map(summarizeAgentAccessRun),
-    });
+  const workflowResult = await executeAgentAccessWorkflowTool({
+    actor,
+    name: input.name,
+    args: input.args,
+  });
+
+  if (workflowResult !== null) {
+    return workflowResult;
   }
 
-  if (input.name === "get_run" && runIdArgs(input.args)) {
-    const run = await getAgentRunForParticipant(input.args.runId, actor.id);
-    return run === null
-      ? agentAccessTextResult(
-          { ok: false, error: "Run not found.", code: "not_found" },
-          true,
-        )
-      : agentAccessTextResult({ ok: true, run: summarizeAgentAccessRun(run) });
-  }
+  const runResult = await executeAgentAccessRunTool(
+    actor,
+    input.name,
+    input.args,
+  );
 
-  if (input.name === "get_run") {
-    return agentAccessTextResult(
-      { ok: false, error: "runId is required.", code: "invalid_arguments" },
-      true,
-    );
+  if (runResult !== null) {
+    return runResult;
   }
 
   return agentAccessTextResult(

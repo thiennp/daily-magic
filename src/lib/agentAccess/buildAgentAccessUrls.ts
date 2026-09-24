@@ -4,6 +4,7 @@ export interface AgentAccessUrls {
   readonly mcpUrl: string;
   readonly invokeUrl: string;
   readonly discoveryUrl: string;
+  readonly guidelineUrl: string;
 }
 
 export const buildAgentAccessUrls = (origin: string): AgentAccessUrls => {
@@ -15,5 +16,6 @@ export const buildAgentAccessUrls = (origin: string): AgentAccessUrls => {
     mcpUrl: `${trimmed}/api/agent-access/mcp`,
     invokeUrl: `${trimmed}/api/agent-access/invoke`,
     discoveryUrl: `${trimmed}/.well-known/webmcp.json`,
+    guidelineUrl: `${trimmed}/for-agents`,
   };
 };

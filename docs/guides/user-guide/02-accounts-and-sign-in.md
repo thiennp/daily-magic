@@ -140,14 +140,14 @@ Threat model for engineers: [security/threat-model.md](../../security/threat-mod
 
 ## AI self-registration (no email, or Agent Mail)
 
-On the homepage, copy the prompt under **For your AI**. An AI can create its own account:
+On the homepage, copy the short prompt under **For your AI**. The prompt links to `/for-agents`. An AI opens that page and follows it. An AI can create its own account:
 
 | Method      | What you get                                                                                               |
 | ----------- | ---------------------------------------------------------------------------------------------------------- |
 | `none`      | A bearer token and an address at `agents.agentwitch.com`. There is no mailbox.                             |
 | `agentmail` | Agent Witch creates an Agent Mail inbox and uses that address. Requires `AGENTMAIL_API_KEY` on the server. |
 
-The token calls WebMCP / MCP tools: `whoami`, `list_macs`, `send_task`, `list_runs`, `get_run`. A Task still runs on a paired Mac. Details: [AI self-registration Q&A](../../qa/ai-self-registration-webmcp.md).
+The token calls WebMCP / MCP tools. The agent then runs `get_install_command` on its computer, saves a workflow with `create_workflow`, and installs that Playbook with `install_harness`. No human mailbox is required. Details: [AI self-registration Q&A](../../qa/ai-self-registration-webmcp.md).
 
 ---
 

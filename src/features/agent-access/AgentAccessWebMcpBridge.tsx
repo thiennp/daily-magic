@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 
-import { AGENT_ACCESS_TOOL_CATALOG } from "@/lib/agentAccess/agentAccessToolCatalog.constant";
+import { AGENT_ACCESS_TOOLS } from "@/lib/agentAccess/agentAccessTools.constant";
 
 interface ModelContextTool {
   readonly name: string;
@@ -70,7 +70,7 @@ export default function AgentAccessWebMcpBridge(): null {
       return;
     }
 
-    const tools: ModelContextTool[] = AGENT_ACCESS_TOOL_CATALOG.map((tool) => ({
+    const tools: ModelContextTool[] = AGENT_ACCESS_TOOLS.map((tool) => ({
       name: tool.name,
       description: tool.description,
       inputSchema: tool.inputSchema,

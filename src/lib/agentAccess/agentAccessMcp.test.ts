@@ -11,7 +11,8 @@ describe("agent access WebMCP", () => {
     expect(document.mcp.url).toBe(
       "https://www.agentwitch.com/api/agent-access/mcp",
     );
-    expect(document.prompt).toContain("agentmail");
+    expect(document.prompt).toContain("https://www.agentwitch.com/for-agents");
+    expect(document.guidelineUrl).toBe("https://www.agentwitch.com/for-agents");
   });
 
   it("answers initialize, tools/list, and tools/call", async () => {

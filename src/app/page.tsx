@@ -11,7 +11,7 @@ export const dynamic = "force-dynamic";
 
 const homeTitle = `${AGENT_WITCH_PRODUCT_NAME} — AI accounts, Tasks, and Mac Runs`;
 const homeDescription =
-  "Let an AI register for Agent Witch with no email or with Agent Mail, then send Tasks to a Mac you control and read every Run. Copy the prompt on the homepage.";
+  "Give an AI an Agent Witch account with no email. Copy the short homepage prompt. The agent opens the guideline and follows it.";
 
 export const metadata: Metadata = {
   title: homeTitle,
