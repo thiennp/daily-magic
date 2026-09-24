@@ -205,6 +205,22 @@ Console cannot pick Mac folders remotely. Use **Agent Witch Live** or local fold
 
 ---
 
+## Mac Knowledge page empty or search returns nothing
+
+**Symptoms**
+
+- **Agent Witch on this Mac → Knowledge** shows no chunks after successful **Runs** on a linked project folder, or search always returns empty.
+
+**Checks**
+
+1. **Project folder** is set for the repo ([Chapter 4](04-mac-connect-and-bridge.md#repositories-and-folders-mac-side))—knowledge is keyed to that folder on the Mac, not the Console alone.
+2. **Finished Runs** with exit code success index snippets; failed runs use a separate error path (see [Local knowledge](04-mac-connect-and-bridge.md#local-knowledge-mac-app--efficient-memory)).
+3. **Embeddings** use a local **Ollama** API on the Mac (`http://127.0.0.1:11434` by default). If Ollama is not running, indexing and search may no-op without blocking **Send**.
+
+Developers: `AGENT_WITCH_OLLAMA_URL` / `AGENT_WITCH_EMBED_MODEL` — [developer guide ch.10](../developer-guide/10-learning-memory-and-improvements.md).
+
+---
+
 ## Where to search next
 
 | Need                             | Location                                                                                                       |
