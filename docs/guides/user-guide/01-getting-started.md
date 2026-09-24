@@ -10,12 +10,12 @@ That path is the **easy authoring** pillar in practice: one prompt on **New task
 
 ## What you need
 
-| Requirement                             | Why                                                                                                                                                                                                              |
-| --------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| A modern browser (Chrome, Safari, Edge) | Daily work happens in the **Console** (signed-in web app).                                                                                                                                                       |
-| A **Mac** you control (macOS)           | Agents run in a **real shell** on your machine via the Mac helper install. Windows/Linux browsers can sign in and view team history, but they **cannot** pair as “this Mac” or receive dispatched tasks locally. |
-| Network access to `www.agentwitch.com`  | Auth, dispatch, and run history live in the cloud.                                                                                                                                                               |
-| ~10–15 minutes                          | Install, pair, send one **Task**, watch one **Run**.                                                                                                                                                             |
+| Requirement                             | Why                                                                                                                                                                                                                                                                                                |
+| --------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| A modern browser (Chrome, Safari, Edge) | Daily work happens in the **Console** (signed-in web app).                                                                                                                                                                                                                                         |
+| A computer that will run the agent      | A **Mac** is the usual host. An **x86_64 Linux** machine can install the same host and receive Tasks. A Linux or Windows **browser** can sign in and use the Console either way. Only macOS gets the “this computer” badge and the local Mac app ([Q&A](../../qa/linux-browser-vs-linux-host.md)). |
+| Network access to `www.agentwitch.com`  | Auth, dispatch, and run history live in the cloud.                                                                                                                                                                                                                                                 |
+| ~10–15 minutes                          | Install, pair, send one **Task**, watch one **Run**.                                                                                                                                                                                                                                               |
 
 You do **not** need to understand harnesses, WebSockets, or deployable abbreviations (AWC/AWL/AWB/AWI) to finish this chapter—those are covered when you need them in [Chapter 4](04-mac-connect-and-bridge.md).
 
@@ -134,7 +134,8 @@ The Console **blocks Send** with a clear reason rather than failing silently ([r
 2. **Expecting folder pickers in the browser** — Real Mac paths are chosen on the Mac ([folder picker Q&A](../../qa/awc-project-folder-path-picker.md)).
 3. **Calling local helper “offline” when only Console says reconnecting** — Local bridge can be up while cloud dispatch waits for a live socket; refresh and retry ([Q&A](../../qa/awc-mac-reconnecting-vs-local-live.md)).
 4. **Skipping install autostart** — If the helper is not running, Mac status stays **Offline** until you start it from Mac settings.
-5. **Asking an AI to use Agent Witch without the homepage prompt** — Copy **For your AI** on the homepage. The prompt points at `/for-agents`. Method `none` needs no email; Agent Mail needs the server key. A Task still needs a paired Mac ([Q&A](../../qa/ai-self-registration-webmcp.md)).
+5. **Asking an AI to use Agent Witch without the homepage prompt** — Copy **For your AI** on the homepage. The prompt points at `/for-agents`. Method `none` needs no email; Agent Mail needs the server key. A Task still needs a paired host ([Q&A](../../qa/ai-self-registration-webmcp.md)).
+6. **Hearing “Linux cannot use Agent Witch”** — The Console works in a Linux browser. An x86_64 Linux machine can host Tasks. The Mac app and “this computer” badge stay on macOS ([Q&A](../../qa/linux-browser-vs-linux-host.md)). Home still tells that browser “installs on macOS”; that connect copy is stale.
 
 ---
 
@@ -146,3 +147,4 @@ The Console **blocks Send** with a clear reason rather than failing silently ([r
 - Agent Witch beginner guide chapter 1
 - huong dan su dung Agent Witch tu dau, chay agent tren Mac lan dau
 - de tao task dau tien, bon tru cot de tao workflow, bat dau don gian Agent Witch
+- Linux cannot use Agent Witch, Linux browser console, Linux host

@@ -6,6 +6,8 @@ Architecture context: ADR **0005** (presence, dispatch outbox, multi-instance re
 
 When you close an open item: remove or shrink the KNOWN_ISSUES row, add/adjust regression tests, and add `docs/qa/<topic>.md` if operators will ask again.
 
+**Linux access is not an open outage.** Console works from a Linux browser; x86_64 Linux can host AWI; AWL/AWB stay Mac-only. The confusing part is Home copy that still says “installs on macOS” ([Q&A](../../qa/linux-browser-vs-linux-host.md)).
+
 ---
 
 ## OPEN-001 — Mac cannot resolve `www.agentwitch.com`
@@ -111,4 +113,5 @@ When fixing bridge/dispatch bugs:
 - lỗi đã biết Agent Witch Mac bridge regression test
 - Mac không kết nối DNS agentwitch.com OPEN-001
 - dispatch nhiều replica Railway mac_reconnecting OPEN-002
+- Linux cannot access Agent Witch, Linux host not an outage
 - cập nhật bundle Mac cũ update_needed OPEN-003

@@ -6,6 +6,8 @@ Most fixes are **learn from usage** in practice: read the honest banner, adjust 
 
 Quick wins first, then themed sections for DNS, reconnecting, and bundle update.
 
+A Linux browser can use the Console. “Linux cannot access Agent Witch” mixes that up with the Mac-only local app. An x86_64 Linux machine can host Tasks; it will not show “this Mac” ([Q&A](../../qa/linux-browser-vs-linux-host.md)).
+
 ---
 
 ## Before you reinstall
@@ -249,6 +251,7 @@ npm run feature-knowledge:query -- "Mac reconnecting DNS update bundle" --featur
 - this Mac identity connect bridge 47892
 - sua loi Agent Witch Mac reconnecting
 - khong gui duoc task vi Mac offline
+- Linux cannot access Agent Witch, Linux host vs Mac app
 - loi DNS www.agentwitch.com tren Mac
 - cap nhat bundle Agent Witch update needed
 - sau update local van reconnecting plist

@@ -17,6 +17,8 @@ Pairing and honest **Mac status** are the trust foundation for every pillar: age
 
 The cloud **never** runs your shell jobs. It **dispatches** to your Mac and streams results back ([overview](../../overview.md)).
 
+A **Linux browser** can use this Console. An **x86_64 Linux** computer can also install the host and receive Tasks. The Mac app and the “this computer” badge stay on macOS ([Q&A: Linux browser vs Linux host](../../qa/linux-browser-vs-linux-host.md)). Home connect steps still tell non-Mac browsers “installs on macOS”; that line is the stale part.
+
 ---
 
 ## Install

@@ -55,6 +55,7 @@ Open the top `sourcePath` under `docs/qa/` when present.
 | [bedrock-agentcore-vs-agent-witch-flow.md](bedrock-agentcore-vs-agent-witch-flow.md)             | AWS Bedrock AgentCore harness flow vs Agent Witch dispatch, layer by layer    |
 | [agent-witch-product-pillars.md](agent-witch-product-pillars.md)                                 | Core job + four product pillars (authoring, learning, memory, team)           |
 | [ai-self-registration-webmcp.md](ai-self-registration-webmcp.md)                                 | AI self-registration without email or via Agent Mail, WebMCP, homepage prompt |
+| [linux-browser-vs-linux-host.md](linux-browser-vs-linux-host.md)                                 | Linux browser can use AWC; Linux x64 can host AWI; AWL/AWB stay Mac-only      |
 
 Add a row here when you add a Q&A file.
 
