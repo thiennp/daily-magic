@@ -6,15 +6,8 @@ import { parseAgentRunDispatchBody } from "@/lib/dispatch/parseAgentRunDispatchB
 
 import { AGENT_ACCESS_PROMPT_MAX_LENGTH } from "@/lib/agentAccess/agentAccess.constant";
 import type { AgentAccessToolCallResult } from "@/lib/agentAccess/handleAgentAccessMcpRequest";
+import { agentAccessTextResult } from "@/lib/agentAccess/requireAgentAccessActor";
 import type { AgentAccessActor } from "@/lib/agentAccess/resolveAgentAccessActor";
-
-const textResult = (
-  value: unknown,
-  isError = false,
-): AgentAccessToolCallResult => ({
-  isError,
-  text: JSON.stringify(value),
-});
 
 const sendTaskArgs = isType<{
   readonly prompt: string;
@@ -32,7 +25,7 @@ export const executeAgentAccessSendTask = async (
     !sendTaskArgs(args) ||
     args.prompt.length > AGENT_ACCESS_PROMPT_MAX_LENGTH
   ) {
-    return textResult(
+    return agentAccessTextResult(
       { ok: false, error: "prompt is required.", code: "invalid_arguments" },
       true,
     );
@@ -46,7 +39,7 @@ export const executeAgentAccessSendTask = async (
   });
 
   if (parsed === null) {
-    return textResult(
+    return agentAccessTextResult(
       { ok: false, error: "prompt is required.", code: "invalid_arguments" },
       true,
     );
@@ -62,7 +55,7 @@ export const executeAgentAccessSendTask = async (
   if (!result.ok) {
     const errorMessage = result.message.payload?.errorMessage;
 
-    return textResult(
+    return agentAccessTextResult(
       {
         ok: false,
         error:
@@ -75,5 +68,5 @@ export const executeAgentAccessSendTask = async (
     );
   }
 
-  return textResult({ ok: true, run: result.run });
+  return agentAccessTextResult({ ok: true, run: result.run });
 };
