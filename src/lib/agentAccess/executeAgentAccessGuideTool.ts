@@ -102,7 +102,6 @@ export const executeAgentAccessGuideTool = async (input: {
 
   const githubIssueUrl = await openAgentFeedbackGitHubIssue({
     feedback,
-    accountEmail: input.actor.email,
     feedbackId,
   });
 

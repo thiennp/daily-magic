@@ -60,6 +60,8 @@ describe("agent access registration", () => {
     expect(text).toContain("create_workflow");
     expect(text).toContain("install_harness");
     expect(text).toContain("~/.agent-witch/harness/");
+    expect(text).toContain("There is no directory of other people's bots.");
+    expect(text).not.toContain("Pass this to another bot");
   });
 
   it("hashes tokens and reads only aw_ bearer values", () => {
