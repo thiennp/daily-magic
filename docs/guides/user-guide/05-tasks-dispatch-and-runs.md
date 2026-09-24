@@ -83,7 +83,7 @@ When your **code folder** is a git repository, the Mac records a short **git ver
 | `clean before run` / `clean after run` | Working tree had no uncommitted paths (porcelain empty).                              |
 | `N dirty path(s)`                      | Uncommitted or untracked paths counted at snapshot time.                              |
 | `diff vs HEAD: …`                      | Short `git diff --shortstat` after the run (may be empty if nothing tracked changed). |
-| `not a repository`                     | Folder is not a git checkout—no verdict beyond that line.                             |
+| `Git: not a repository`                | Folder is not a git checkout—no worktree verdict beyond that line.                    |
 
 This supports **learn from usage** (pillar 2): **Success** in the Console can still mean “CLI exited cleanly” while the verdict shows whether files actually changed. It does **not** block **Send** or replace **Runs** history in the cloud by itself.
 

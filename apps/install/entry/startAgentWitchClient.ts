@@ -505,6 +505,16 @@ const dispatchWriterTask = async (
     agentRunId !== undefined &&
     runScopedOverlayByRunId.get(agentRunId) === true;
 
+  if (agentRunId !== undefined && resolvedProjectFolderPath.trim().length > 0) {
+    const gitBefore = await captureAgentWitchGitWorktreeSnapshot(
+      resolvedProjectFolderPath,
+    );
+    gitSnapshotBeforeByRunId.set(agentRunId, gitBefore);
+    if (resolvedReportKey !== undefined && resolvedReportKey.length > 0) {
+      reportKeyByRunId.set(agentRunId, resolvedReportKey);
+    }
+  }
+
   runWriterTask(
     config,
     writerAgent,
@@ -521,16 +531,6 @@ const dispatchWriterTask = async (
     prompt,
     resolveWriterSpawnEnv(config.layout, agentRunId, hasRunScopedOverlay),
   );
-
-  if (agentRunId !== undefined && resolvedProjectFolderPath.trim().length > 0) {
-    const gitBefore = await captureAgentWitchGitWorktreeSnapshot(
-      resolvedProjectFolderPath,
-    );
-    gitSnapshotBeforeByRunId.set(agentRunId, gitBefore);
-    if (resolvedReportKey !== undefined && resolvedReportKey.length > 0) {
-      reportKeyByRunId.set(agentRunId, resolvedReportKey);
-    }
-  }
 
   if (needsWarmup && agentRunId !== undefined) {
     sendMessage(socket, {
