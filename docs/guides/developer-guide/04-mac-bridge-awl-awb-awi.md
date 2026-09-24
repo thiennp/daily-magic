@@ -1,6 +1,6 @@
 # Chapter 4 — Mac bridge (AWL, AWB, AWI)
 
-**AWI** ships and runs the Mac runtime; **AWL** is the loopback Mac app; **AWB** exposes localhost HTTP for a browser tab on the **same Mac**. **AWC** holds the hub and pairing UI. User-facing connect/update flows: [user guide ch.4 — Mac connect and bridge](../user-guide/04-mac-connect-and-bridge.md).
+**AWI** ships and runs the host runtime (Mac LaunchAgents, or an x86_64 Linux systemd user unit). **AWL** is the loopback Mac app. **AWB** exposes localhost HTTP for a browser tab on the **same Mac**. **AWC** holds the hub and pairing UI and works from a Linux browser. Do not answer “Linux cannot access Agent Witch” — split console, host, and Mac-only local app ([Q&A](../../qa/linux-browser-vs-linux-host.md)). User-facing connect/update flows: [user guide ch.4 — Mac connect and bridge](../user-guide/04-mac-connect-and-bridge.md).
 
 Deep reference: [docs/agent-witch/local-bridge.md](../../agent-witch/local-bridge.md) · domain [agent-witch.md](../../domains/agent-witch.md).
 

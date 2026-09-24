@@ -29,11 +29,12 @@ export default function ConnectThisMacModal({
   onInstallEngaged,
 }: ConnectThisMacModalProps) {
   const isMacBrowser = operatingSystem === "mac";
+  const isLinuxBrowser = operatingSystem === "linux";
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} className="max-w-lg p-6">
       <h2 className="pr-10 text-lg font-semibold text-gray-900 dark:text-white/90">
-        Connect this Mac
+        {isLinuxBrowser ? "Connect this computer" : "Connect this Mac"}
       </h2>
 
       {!isWebSocketSupported ? (
@@ -47,6 +48,25 @@ export default function ConnectThisMacModal({
             this page after copying—the command adds your account on this Mac
             when you run it in Terminal, without replacing another account’s
             profile.
+          </p>
+          {isInstallCommandLoading ? (
+            <p className="mt-4 text-sm text-gray-500 dark:text-gray-400">
+              Preparing your install command…
+            </p>
+          ) : (
+            <CopyableBashCommand
+              command={installCommand}
+              variant="bash"
+              onEngaged={onInstallEngaged}
+            />
+          )}
+        </>
+      ) : isLinuxBrowser ? (
+        <>
+          <p className={`mt-3 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
+            On this Linux computer, open a terminal, paste this command, and
+            press Enter. It installs the agent host for the account you are
+            signed in with.
           </p>
           {isInstallCommandLoading ? (
             <p className="mt-4 text-sm text-gray-500 dark:text-gray-400">

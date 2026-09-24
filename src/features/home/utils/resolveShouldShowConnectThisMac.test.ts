@@ -52,6 +52,16 @@ describe("resolveShouldShowConnectThisMac (HOME-036/028)", () => {
     ).toBe(true);
   });
 
+  it("HOME-053: shows connect on Linux with no devices yet", () => {
+    expect(
+      resolveShouldShowConnectThisMac({
+        ...baseInput,
+        operatingSystem: "linux",
+        devices: [],
+      }),
+    ).toBe(true);
+  });
+
   it("hides connect on mobile when no devices exist yet", () => {
     expect(
       resolveShouldShowConnectThisMac({

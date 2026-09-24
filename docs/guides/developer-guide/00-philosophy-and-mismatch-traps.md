@@ -6,14 +6,14 @@ Same product contract as the [user guide ch.0](../user-guide/00-philosophy-and-v
 
 ## Names that must not drift
 
-| Name            | Meaning                                                                |
-| --------------- | ---------------------------------------------------------------------- |
-| **daily-magic** | Git repository folder and historical name                              |
-| **Agent Witch** | Product brand; production origin **https://www.agentwitch.com**        |
-| **AWC**         | Cloud console (this Next.js app + `server.ts`)                         |
-| **AWL**         | Mac-local UI at `http://127.0.0.1:43347`                               |
-| **AWB**         | Loopback bridge (`127.0.0.1:47892` / `47893`) — `/health`, `/identity` |
-| **AWI**         | Mac install bundle, LaunchAgents, `~/.agent-witch`                     |
+| Name            | Meaning                                                                                |
+| --------------- | -------------------------------------------------------------------------------------- |
+| **daily-magic** | Git repository folder and historical name                                              |
+| **Agent Witch** | Product brand; production origin **https://www.agentwitch.com**                        |
+| **AWC**         | Cloud console (this Next.js app + `server.ts`)                                         |
+| **AWL**         | Mac-local UI at `http://127.0.0.1:43347`                                               |
+| **AWB**         | Loopback bridge (`127.0.0.1:47892` / `47893`) — `/health`, `/identity`                 |
+| **AWI**         | Install/runtime: Mac LaunchAgents, or x86_64 Linux systemd user unit, `~/.agent-witch` |
 
 **Forbidden default:** pointing Mac `wsUrl` or “production” docs at CHECK24 `daily-magic.d.energie.check24.de` unless a human explicitly names that deployment. See [repo-name-and-hosting.md](../../product/repo-name-and-hosting.md).
 

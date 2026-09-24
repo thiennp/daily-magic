@@ -524,6 +524,18 @@ Document every production bug or UX regression here. Each entry must link to a t
 
 ---
 
+## HOME-053 — Linux browser told to install on a Mac
+
+**Symptom:** A desktop Linux browser on Home saw “Agent Witch installs on macOS” and, with no devices yet, hid Connect entirely.
+
+**Root cause:** OS detection folded Linux into `other`, and Connect was hidden for every non-Mac browser until a device already existed.
+
+**Fix:** `detectBrowserOperatingSystem` returns `linux`. Connect stays visible, and the guide plus Connect modal show the terminal install command.
+
+**Regression tests:** `detectBrowserOperatingSystem.test.ts`, `buildConnectComputerGuideSteps.test.ts`, `resolveShouldShowConnectThisMac.test.ts` (HOME-053).
+
+---
+
 ## Adding issues
 
 Use the next ID (`HOME-050`, …). Include symptom, root cause, fix paths, and test file.
