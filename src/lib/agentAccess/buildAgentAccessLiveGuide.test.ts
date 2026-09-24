@@ -34,6 +34,11 @@ describe("live agent guide", () => {
 
     expect(ok.passAlong).toBe(buildAgentAccessPassAlong());
     expect(failed.passAlong).toBeUndefined();
+
+    const failedOkField = JSON.parse(
+      agentAccessTextResult({ ok: false, error: "nope" }).text,
+    ) as { passAlong?: string };
+    expect(failedOkField.passAlong).toBeUndefined();
   });
 
   it("accepts a short feedback report and rejects a blank one", () => {

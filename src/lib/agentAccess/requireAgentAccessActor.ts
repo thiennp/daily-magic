@@ -6,12 +6,16 @@ import {
   type AgentAccessActor,
 } from "@/lib/agentAccess/resolveAgentAccessActor";
 
+const isFailedToolPayload = (value: object): boolean =>
+  "ok" in value && (value as { ok?: unknown }).ok === false;
+
 const withPassAlong = (value: unknown, isError: boolean): unknown => {
   if (
     isError ||
     typeof value !== "object" ||
     value === null ||
-    Array.isArray(value)
+    Array.isArray(value) ||
+    isFailedToolPayload(value)
   ) {
     return value;
   }
