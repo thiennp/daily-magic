@@ -19,9 +19,22 @@ export const openAgentFeedbackGitHubIssue = async (input: {
     return null;
   }
 
-  const response = await fetch(
-    `https://api.github.com/repos/${repo()}/issues`,
-    {
+  const title =
+    `[agent-feedback] ${input.feedback.outcome}: ${input.feedback.summary}`.slice(
+      0,
+      120,
+    );
+  const body = [
+    `Account: ${input.accountEmail}`,
+    `Feedback id: ${input.feedbackId}`,
+    `Outcome: ${input.feedback.outcome}`,
+    "",
+    input.feedback.summary,
+    "",
+    input.feedback.detail ?? "",
+  ].join("\n");
+  const postIssue = (labels: readonly string[]) =>
+    fetch(`https://api.github.com/repos/${repo()}/issues`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${githubToken}`,
@@ -29,25 +42,10 @@ export const openAgentFeedbackGitHubIssue = async (input: {
         "Content-Type": "application/json",
         "User-Agent": "agent-witch",
       },
-      body: JSON.stringify({
-        title:
-          `[agent-feedback] ${input.feedback.outcome}: ${input.feedback.summary}`.slice(
-            0,
-            120,
-          ),
-        labels: ["agent-feedback"],
-        body: [
-          `Account: ${input.accountEmail}`,
-          `Feedback id: ${input.feedbackId}`,
-          `Outcome: ${input.feedback.outcome}`,
-          "",
-          input.feedback.summary,
-          "",
-          input.feedback.detail ?? "",
-        ].join("\n"),
-      }),
-    },
-  );
+      body: JSON.stringify({ title, body, labels }),
+    });
+  const labeled = await postIssue(["agent-feedback"]);
+  const response = labeled.ok ? labeled : await postIssue([]);
 
   if (!response.ok) {
     return null;
