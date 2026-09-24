@@ -73,6 +73,8 @@ Adding or changing a marketplace preset: co-locate harness template, capability 
 
 See [awc-awl-projects-source-of-truth.md](../../qa/awc-awl-projects-source-of-truth.md).
 
+**Pillars:** **4** — library/marketplace/harness sharing; **3** — project-folder RAG + run memory (not the same as repo `feature-knowledge`). Memory and improvements wiring: [Chapter 10](10-learning-memory-and-improvements.md).
+
 ---
 
 ## Agent editing checklist

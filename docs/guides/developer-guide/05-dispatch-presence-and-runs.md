@@ -39,6 +39,8 @@ Composer UI: `/agent` · smoke UI: `/ws-test` · history: `/reports`.
 
 Routing cascade (continuation vs memory budget): [docs/qa/writer-dispatch-cascade-routing.md](../../qa/writer-dispatch-cascade-routing.md).
 
+**Product pillars:** dispatch + Reports are the spine for **pillar 2** (feedback on runs, honest run status) and **pillar 3** (memory entry limits in cascade routing). Details: [Chapter 10](10-learning-memory-and-improvements.md).
+
 **Production Cursor Cloud:** request `Origin` or `Referer` host must match app base URL (ADR 0004). Local dev skips for ergonomics.
 
 ---

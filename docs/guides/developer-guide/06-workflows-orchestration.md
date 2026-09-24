@@ -2,6 +2,8 @@
 
 How **official marketplace workflow runs** are orchestrated in **AWC** (Postgres + APIs) while **bounded agent steps** dispatch to the Mac like any other writer run. User-facing vocabulary: [user guide ch.6](../user-guide/06-workflows-and-checkpoints.md) (when present) and [docs/product/concepts.md](../../product/concepts.md).
 
+**Product pillar 1** (easy authoring) lives here — forms, presets, and progressive orchestration. Closed-loop learning from workflow steps (pillar 2) is mostly cloud feedback/improvements today, not automatic graph edits: [Chapter 10](10-learning-memory-and-improvements.md).
+
 ---
 
 ## Two workflow execution modes

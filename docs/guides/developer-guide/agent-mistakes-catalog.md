@@ -56,6 +56,19 @@ Living list of **repeat failures** by coding agents (and fast human edits). When
 
 ---
 
+## Memory, improvements & repo RAG
+
+| Mistake                                                        | Why it hurts                                                          | Do instead                                                                                                                                                  |
+| -------------------------------------------------------------- | --------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Treat `npm run feature-knowledge:query` as **user run memory** | Wrong product story; confuses git docs with Mac Tasks                 | User memory: `appendAgentWitchMemoryEntry` + [ch.10](10-learning-memory-and-improvements.md); repo agents: feature-knowledge only                           |
+| Assume failed runs are excluded from prompt memory             | Failed output is injected today with same weight as success           | Document honestly; see [project-composition.md](../../architecture/project-composition.md) §1.10 and [product-pillars.md](../../product/product-pillars.md) |
+| Conflate **RAG chunks** with **capability_improvements**       | RAG is retrieval at dispatch; improvements are cloud proposals        | RAG: `agentWitchLocalRag`; loop: `src/lib/improvements/` + feedback APIs                                                                                    |
+| Expect accepting an improvement to auto-update Mac harness     | Accept publishes capability version; harness is separate install path | [Chapter 7](07-capabilities-library-harness.md), `acceptCapabilityImprovement`                                                                              |
+| Describe memory as “fully learned” or “team-shared by default” | Overpromises pillar 3/4; privacy and wiring gaps                      | Use **Today vs north star** table in [ch.10](10-learning-memory-and-improvements.md)                                                                        |
+| Edit memory paths without checking install-wide RAG fallback   | Cross-project leak when folder unset                                  | Architecture notes in [project-composition.md](../../architecture/project-composition.md) §1.9                                                              |
+
+---
+
 ## Codebase layout
 
 | Mistake                                             | Why it hurts                | Do instead                       |
