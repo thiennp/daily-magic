@@ -50,9 +50,13 @@ import {
   recordAgentWitchWsTraceFromObject,
 } from "@agent-witch/live-diagnostics";
 import {
+  formatErrorKnowledgeContextForPrompt,
   formatRagContextForPrompt,
+  indexAgentWitchErrorKnowledgeText,
   indexAgentWitchRagText,
+  queryAgentWitchErrorKnowledge,
   queryAgentWitchRag,
+  recordAgentWitchErrorOccurrence,
 } from "@agent-witch/live-knowledge";
 import {
   resolveLocalAppPublicKey,
@@ -390,6 +394,19 @@ const dispatchWriterTask = async (
             : {}),
         })
       : [];
+  const errorKnowledgeChunks =
+    dispatchRoute.ragLimit > 0 && resolvedProjectFolderPath.trim().length > 0
+      ? await queryAgentWitchErrorKnowledge({
+          layout: config.layout,
+          query: resolvedPrompt,
+          limit: 2,
+          minScore: 0.32,
+          projectFolderPath: resolvedProjectFolderPath,
+          ...(resolvedProjectId.length > 0
+            ? { projectId: resolvedProjectId }
+            : {}),
+        })
+      : [];
   const memoryEntries = dispatchRoute.injectMemory
     ? readAgentWitchMemoryEntries(
         config.layout,
@@ -397,7 +414,7 @@ const dispatchWriterTask = async (
         resolvedProjectId.length > 0 ? resolvedProjectId : undefined,
       )
     : [];
-  let promptWithProjectContext = `${formatMemoryContextForPrompt(memoryEntries, dispatchRoute.memoryEntryLimit)}${formatRagContextForPrompt(ragChunks)}${resolvedPrompt}`;
+  let promptWithProjectContext = `${formatMemoryContextForPrompt(memoryEntries, dispatchRoute.memoryEntryLimit)}${formatRagContextForPrompt(ragChunks)}${formatErrorKnowledgeContextForPrompt(errorKnowledgeChunks)}${resolvedPrompt}`;
 
   const resolvedReportKey =
     reportKey?.trim() ??
@@ -1628,6 +1645,24 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
           layout: config.layout,
           text: output,
           source: agentRunId ?? "command.claude.result",
+          projectFolderPath,
+          ...(projectId !== undefined ? { projectId } : {}),
+        });
+      }
+
+      const runFailed =
+        exitCode !== undefined && exitCode !== null && exitCode !== 0;
+      if (runFailed && output.trim().length > 0 && projectFolderPath !== null) {
+        recordAgentWitchErrorOccurrence({
+          layout: config.layout,
+          errorText: output,
+          projectFolderPath,
+          ...(projectId !== undefined ? { projectId } : {}),
+        });
+        void indexAgentWitchErrorKnowledgeText({
+          layout: config.layout,
+          text: output,
+          source: agentRunId ?? "command.claude.result.failure",
           projectFolderPath,
           ...(projectId !== undefined ? { projectId } : {}),
         });

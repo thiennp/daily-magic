@@ -103,6 +103,20 @@ The Console cannot open a native folder picker for a real `/Users/...` path. Set
 
 ---
 
+## Local knowledge (Mac app — efficient memory)
+
+In **Agent Witch on this Mac**, open **Knowledge** (`http://127.0.0.1:43347/knowledge`) to see text the Mac saved from **finished Runs** on a linked project folder and how often each snippet was reused in later **Tasks** (**efficient memory**, pillar 3).
+
+| What you see             | What it means                                                                                                |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------ |
+| Indexed chunks           | Useful output from successful **Runs** (stored on this Mac, not uploaded by default)                         |
+| “Used in N dispatch(es)” | How often that snippet was injected before the writer ran again                                              |
+| Suggestions              | Local hints when the same snippet or error keeps repeating—e.g. consider a **Playbook** step or harness rule |
+
+**Honest UX:** Suggestions do **not** change your **Workflows** or cloud **Library** by themselves. Accepting a capability improvement still happens in the Console ([Chapter 7](07-capabilities-library-playbooks.md)). Failed **Runs** can be remembered separately so the Mac can warn the writer—not every past failure is replayed into every **Task** ([north star vs today](00-philosophy-and-vocabulary.md#north-star-vs-today)).
+
+---
+
 ## Reading Mac status vs Send readiness
 
 | Layer                              | Tells you                                                                  |

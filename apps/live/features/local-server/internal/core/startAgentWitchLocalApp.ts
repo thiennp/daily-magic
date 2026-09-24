@@ -27,7 +27,10 @@ import {
 } from "@agent-witch/install-connection-health";
 import { AGENT_WITCH_CONNECTION_STALE_MS } from "@agent-witch/install-connection-health/types";
 import {
+  computeAgentWitchKnowledgeSuggestions,
+  getAgentWitchChunkRetrievalCount,
   queryAgentWitchRag,
+  readAgentWitchKnowledgeUsageStats,
   readAgentWitchRagChunks,
 } from "@agent-witch/live-knowledge";
 import {
@@ -1349,6 +1352,10 @@ export const startAgentWitchLocalApp = (input: {
         );
         const q = url.searchParams.get("q")?.trim() ?? "";
         const installBundle = buildInstallBundleStatus();
+        const usageStats = readAgentWitchKnowledgeUsageStats({
+          layout: input.layout,
+        });
+        const suggestions = computeAgentWitchKnowledgeSuggestions(usageStats);
         const chunks =
           q.length > 0
             ? await queryAgentWitchRag({
@@ -1358,11 +1365,29 @@ export const startAgentWitchLocalApp = (input: {
               })
             : readAgentWitchRagChunks(input.layout).slice(-50).reverse();
         const list = chunks
-          .map(
-            (chunk) =>
-              `<article class="card"><div class="muted" title="${escapeHtml(chunk.createdAt)}">${escapeHtml(formatLocalAppTimestamp(chunk.createdAt))}${chunk.source ? ` · ${escapeHtml(chunk.source)}` : ""}</div><pre>${escapeHtml(chunk.text)}</pre></article>`,
-          )
+          .map((chunk) => {
+            const retrievalCount = getAgentWitchChunkRetrievalCount(
+              usageStats,
+              chunk.id,
+            );
+            const usageLabel =
+              retrievalCount > 0
+                ? ` · used in ${retrievalCount} dispatch(es)`
+                : "";
+            return `<article class="card"><div class="muted" title="${escapeHtml(chunk.createdAt)}">${escapeHtml(formatLocalAppTimestamp(chunk.createdAt))}${chunk.source ? ` · ${escapeHtml(chunk.source)}` : ""}${usageLabel}</div><pre>${escapeHtml(chunk.text)}</pre></article>`;
+          })
           .join("");
+        const suggestionsHtml =
+          suggestions.length > 0
+            ? `<section class="card"><p class="eyebrow">Suggestions</p><h2>Save context as tools or rules</h2><ul>${suggestions
+                .map(
+                  (suggestion) =>
+                    `<li><strong>P${suggestion.priority}</strong> — ${escapeHtml(suggestion.message)}</li>`,
+                )
+                .join(
+                  "",
+                )}</ul><p class="muted">Accepting a cloud capability improvement still requires review in AWC — these hints are local on your Mac.</p></section>`
+            : "";
         sendHtml(
           response,
           await buildLocalAppShell({
@@ -1372,12 +1397,12 @@ export const startAgentWitchLocalApp = (input: {
             body: `<section class="card">
               <p class="eyebrow">Local RAG</p>
               <h1>Knowledge</h1>
-              <p class="lede">Indexed chunks from finished agent turns on this Mac.</p>
+              <p class="lede">Indexed chunks from finished agent turns on this Mac. Retrieval counts update when dispatch injects a chunk into the next writer prompt.</p>
               <form class="search-row" method="GET" action="/knowledge">
                 <input class="input" name="q" value="${escapeHtml(q)}" placeholder="Search local knowledge" aria-label="Search local knowledge" />
                 <button class="btn btn-primary" type="submit">Search</button>
               </form>
-            </section>${list || '<p class="empty">No chunks yet. Finish an agent turn to index.</p>'}`,
+            </section>${suggestionsHtml}${list || '<p class="empty">No chunks yet. Finish an agent turn to index.</p>'}`,
           }),
         );
         return;

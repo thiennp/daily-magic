@@ -6,6 +6,8 @@ import resolveAgentWitchProjectKnowledgePaths from "../../../projects/internal/c
 import trimRagChunksToCeiling from "../../../projects/internal/core/knowledge/trimRagChunksToCeiling";
 import type { AgentWitchLocalLayout } from "@agent-witch/install-layout/types";
 
+import { recordAgentWitchChunkRetrievals } from "./agentWitchLocalKnowledgeUsage";
+
 const DEFAULT_OLLAMA_URL = "http://127.0.0.1:11434";
 const DEFAULT_EMBED_MODEL = "nomic-embed-text";
 
@@ -186,7 +188,14 @@ export const queryAgentWitchRag = async (input: {
     .filter((entry) => entry.score >= minScore)
     .sort((left, right) => right.score - left.score)
     .slice(0, input.limit ?? 5);
-  return scored.map((entry) => entry.chunk);
+  const selected = scored.map((entry) => entry.chunk);
+  recordAgentWitchChunkRetrievals({
+    layout: input.layout,
+    chunkIds: selected.map((chunk) => chunk.id),
+    projectFolderPath: input.projectFolderPath,
+    projectId: input.projectId,
+  });
+  return selected;
 };
 
 export const formatRagContextForPrompt = (
