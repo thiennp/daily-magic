@@ -3,7 +3,7 @@
 import { Modal } from "@/components/ui/modal";
 import { APP_SURFACE_BODY_TEXT_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
 import AgentWitchUnsupportedHostNotice from "@/features/home/AgentWitchUnsupportedHostNotice";
-import CopyableBashCommand from "@/features/home/CopyableBashCommand";
+import ConnectThisComputerInstallBody from "@/features/home/ConnectThisComputerInstallBody";
 import type { BrowserOperatingSystem } from "@/features/home/utils/detectBrowserOperatingSystem";
 import { MAC_WORKER_BENEFIT_COPY } from "@/lib/copy/macWorkerBenefitCopy.constant";
 
@@ -18,6 +18,14 @@ interface ConnectThisMacModalProps {
   readonly onInstallEngaged: () => void;
 }
 
+const CONNECT_MODAL_COPY: Partial<Record<BrowserOperatingSystem, string>> = {
+  mac: `${MAC_WORKER_BENEFIT_COPY.connectThisMacModalIntro} You can close this page after copying—the command adds your account on this Mac when you run it in Terminal, without replacing another account’s profile.`,
+  linux:
+    "On this Linux computer, open a terminal, paste this command, and press Enter. It installs the agent host for the account you are signed in with.",
+  windows:
+    "On this Windows computer, install WSL if needed (wsl --install), open the Ubuntu tab, paste this command there, and press Enter. The host runs inside WSL and shows up as a Linux device.",
+};
+
 export default function ConnectThisMacModal({
   isOpen,
   operatingSystem,
@@ -28,58 +36,27 @@ export default function ConnectThisMacModal({
   onClose,
   onInstallEngaged,
 }: ConnectThisMacModalProps) {
-  const isMacBrowser = operatingSystem === "mac";
-  const isLinuxBrowser = operatingSystem === "linux";
+  const installDescription = CONNECT_MODAL_COPY[operatingSystem];
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} className="max-w-lg p-6">
       <h2 className="pr-10 text-lg font-semibold text-gray-900 dark:text-white/90">
-        {isLinuxBrowser ? "Connect this computer" : "Connect this Mac"}
+        {installDescription !== undefined && operatingSystem !== "mac"
+          ? "Connect this computer"
+          : "Connect this Mac"}
       </h2>
 
       {!isWebSocketSupported ? (
         <div className="mt-4">
           <AgentWitchUnsupportedHostNotice host={host} />
         </div>
-      ) : isMacBrowser ? (
-        <>
-          <p className={`mt-3 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
-            {MAC_WORKER_BENEFIT_COPY.connectThisMacModalIntro} You can close
-            this page after copying—the command adds your account on this Mac
-            when you run it in Terminal, without replacing another account’s
-            profile.
-          </p>
-          {isInstallCommandLoading ? (
-            <p className="mt-4 text-sm text-gray-500 dark:text-gray-400">
-              Preparing your install command…
-            </p>
-          ) : (
-            <CopyableBashCommand
-              command={installCommand}
-              variant="bash"
-              onEngaged={onInstallEngaged}
-            />
-          )}
-        </>
-      ) : isLinuxBrowser ? (
-        <>
-          <p className={`mt-3 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
-            On this Linux computer, open a terminal, paste this command, and
-            press Enter. It installs the agent host for the account you are
-            signed in with.
-          </p>
-          {isInstallCommandLoading ? (
-            <p className="mt-4 text-sm text-gray-500 dark:text-gray-400">
-              Preparing your install command…
-            </p>
-          ) : (
-            <CopyableBashCommand
-              command={installCommand}
-              variant="bash"
-              onEngaged={onInstallEngaged}
-            />
-          )}
-        </>
+      ) : installDescription !== undefined ? (
+        <ConnectThisComputerInstallBody
+          description={installDescription}
+          installCommand={installCommand}
+          isInstallCommandLoading={isInstallCommandLoading}
+          onInstallEngaged={onInstallEngaged}
+        />
       ) : (
         <div className={`mt-3 space-y-4 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
           <p>{MAC_WORKER_BENEFIT_COPY.connectThisMacMobileModalIntro}</p>

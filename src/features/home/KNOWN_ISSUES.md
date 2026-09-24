@@ -548,6 +548,18 @@ Document every production bug or UX regression here. Each entry must link to a t
 
 ---
 
+## HOME-055 — Windows browser told to install on a Mac
+
+**Symptom:** A Windows browser on Home saw “Agent Witch installs on macOS” and hid Connect until a device already existed.
+
+**Root cause:** Connect steps treated Windows as a phone, and Connect stayed hidden for every non-Mac, non-Linux browser with an empty device list.
+
+**Fix:** Windows Home shows WSL install steps and the same bash command, pasted inside Ubuntu. The host is the Linux runner inside WSL and appears as a Linux device. Native Windows without WSL is not a host.
+
+**Regression tests:** `buildConnectComputerGuideSteps.test.ts`, `resolveShouldShowConnectThisMac.windows.test.ts` (HOME-055).
+
+---
+
 ## Adding issues
 
 Use the next ID (`HOME-050`, …). Include symptom, root cause, fix paths, and test file.
