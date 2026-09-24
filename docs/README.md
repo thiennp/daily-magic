@@ -56,6 +56,7 @@ Model: [conventions/progressive-disclosure.md](conventions/progressive-disclosur
 - [UX simplification](product/ux-simplification.md)
 - [Projects view wireframes v2](product/projects-view-wireframes-v2.md) — AWC list/detail vs AWL editor UX review
 - [Workflow builder: form inputs, steps, graph](product/workflow-builder-form-and-graph.md) — proposed create-workflow input types and linear graph
+- [AgentCore lessons with no recurring cost](product/agentcore-lessons-zero-marginal-cost.md) — proposed trust tiers, git verdicts, derived scorecards and traces
 
 ## Security
 
