@@ -2,7 +2,19 @@
 
 Use this glossary to avoid overlapping names in UI and docs.
 
-For **user-facing language, nav, and onboarding**, see [UX simplification](ux-simplification.md). This file stays the engineer-oriented glossary.
+For **user-facing language, nav, and onboarding**, see [UX simplification](ux-simplification.md). For the four **product pillars** (authoring, learning, memory, team), see [product-pillars.md](product-pillars.md). This file stays the engineer-oriented glossary.
+
+## Run memory
+
+**Pillar 3 — efficient memory.** Context from prior **Runs** (prompt/output pairs, playbook scope, harness feature-knowledge) injected into new **Tasks** so users do not repeat setup. User copy says **memory from past runs**, not tokens or RAG. Mac-side storage and cloud `capability_improvements` are related but not identical; see [product-pillars.md](product-pillars.md) and architecture memory notes in [project-composition.md](../architecture/project-composition.md).
+
+## Improvements loop
+
+**Pillar 2 — learn from usage.** Feedback on a **Run** feeds **improvements** (suggestions to update playbooks, workflows, or capability metadata). Changes are **human-in-the-loop**: the product surfaces proposals; the user accepts before publish. Features: `feedback`, `improvements`, run history, save-as-playbook. Not every Mac ↔ cloud path is fully wired—see feature `KNOWN_ISSUES.md`.
+
+## Team learning
+
+**Pillar 4 — team learning.** Org-visible **Runs**, shared **Playbooks**, library/marketplace templates, and harness publish/install so teams reuse what worked together. Distinct from solo run memory: policy, visibility, and catalog domains ([catalog-and-sharing](../domains/catalog-and-sharing.md)). Dispatch still enforces who may run what.
 
 ## Capability
 

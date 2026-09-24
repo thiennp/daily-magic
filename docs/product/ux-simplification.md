@@ -8,11 +8,22 @@ Product and UX direction for Daily Magic. **Audience:** PM, design, and engineer
 
 ## Problem
 
-The product delivers a simple job:
+The product delivers a simple job (same wording as [product pillars](product-pillars.md)):
 
-> Run a trusted agent on a Mac (or team Mac), see what happened, reuse what worked.
+> Run a trusted agent on a Mac you control (or a teammate’s), see what happened in the browser, and reuse what worked.
 
-Implementation introduces many nouns (Agent Witch, harness, knowledge, projects, registry, marketplace, library, capabilities, dispatch, wake, local app on another host). Power users need depth; most users need **one browser story** with advanced setup deferred.
+That loop is expressed in four user-facing terms: **Mac** · **Task** · **Run** · **Playbook** (see [User-facing mental model](#user-facing-mental-model-four-ideas)). UX work should keep those four words primary while the product grows along **four pillars**—each pillar stacks on the core loop without replacing it:
+
+| Pillar                 | UX pressure                                                                                                                      |
+| ---------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| **1 Easy authoring**   | Start with a plain Task; defer workflow graphs, marketplace depth, and harness jargon until the user asks for structure.         |
+| **2 Learn from usage** | Runs should invite feedback and “save what worked”; never imply success when a run failed or degraded.                           |
+| **3 Efficient memory** | Prefer “memory from past runs” over internal names (RAG, chunks); optional search under Runs, not a top-level **Knowledge** nav. |
+| **4 Team learning**    | Company mode adds shared Playbooks and team Runs visibility—not a second product vocabulary.                                     |
+
+Shipped vs aspirational behavior per pillar: [product-pillars.md § North star vs today](product-pillars.md#north-star-vs-today).
+
+Implementation still introduces many nouns (Agent Witch, harness, knowledge, projects, registry, marketplace, library, capabilities, dispatch, wake, local app on another host). Power users need depth; most users need **one browser story** with advanced setup deferred.
 
 ---
 
@@ -187,6 +198,7 @@ Use for Home / first-run design reviews. **Default path = solo.** “Team” var
 
 ## Related docs
 
+- [Product pillars](product-pillars.md)
 - [Product concepts (glossary)](concepts.md)
 - [Root README — routes](../../README.md)
 - [Agent Witch bridge](../../src/features/agent-witch/README.md)
