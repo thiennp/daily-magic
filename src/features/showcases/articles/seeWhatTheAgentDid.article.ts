@@ -19,7 +19,7 @@ const seeWhatTheAgentDid: ShowcaseArticle = {
   sections: [
     {
       paragraphs: [
-        "Chat scrolls away. Slack threads sink. Job history keeps a run log for work you dispatch — especially useful when a teammate runs a task on their Mac and you both need the same record of what was asked.",
+        "Chat scrolls away. Slack threads sink. Reports keeps a run log for work you dispatch — especially useful when a teammate runs a task on their Mac and you both need the same record of what was asked.",
       ],
     },
     {
@@ -34,7 +34,7 @@ const seeWhatTheAgentDid: ShowcaseArticle = {
     {
       heading: "How Reports helps you",
       paragraphs: [
-        "Job history lives in your browser with live session data—a practical ops log for this machine. Use it to rerun work and review what happened on your sessions.",
+        "Reports lives in your browser with live session data—a practical ops log for this machine. Use it to rerun work and review what happened on your sessions.",
       ],
     },
   ],

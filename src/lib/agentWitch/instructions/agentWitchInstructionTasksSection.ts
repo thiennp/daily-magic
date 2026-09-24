@@ -5,7 +5,7 @@ export const AGENT_WITCH_INSTRUCTION_TASKS_SECTION: AgentWitchInstructionSection
     id: "tasks",
     title: "Sending tasks",
     summary:
-      "Tasks are composed in the browser, sent to a Mac, executed there, and recorded in Job history.",
+      "Tasks are composed in the browser, sent to a Mac, executed there, and recorded in Reports.",
     topics: [
       {
         id: "open-composer",
@@ -50,8 +50,8 @@ export const AGENT_WITCH_INSTRUCTION_TASKS_SECTION: AgentWitchInstructionSection
       },
       {
         id: "job-history",
-        title: "Job history",
-        body: "Every task creates a record with status, timestamps, and output. Job history is available in Reports and is also cached locally in the browser.",
+        title: "Reports",
+        body: "Every task creates a record with status, timestamps, and output. Reports is also cached locally in the browser.",
       },
     ],
   };

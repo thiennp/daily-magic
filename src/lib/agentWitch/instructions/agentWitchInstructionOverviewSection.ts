@@ -5,7 +5,7 @@ export const AGENT_WITCH_INSTRUCTION_OVERVIEW_SECTION: AgentWitchInstructionSect
     id: "overview",
     title: "What Agent Witch does",
     summary:
-      "Agent Witch connects the web app to AI writer tools on a paired Mac so people can send tasks from a browser and review results in job history.",
+      "Agent Witch connects the web app to AI writer tools on a paired Mac so people can send tasks from a browser and review results in Reports.",
     topics: [
       {
         id: "product-purpose",
@@ -14,7 +14,7 @@ export const AGENT_WITCH_INSTRUCTION_OVERVIEW_SECTION: AgentWitchInstructionSect
         bullets: [
           "Sign in to the web app, install the local bridge on your Mac, and pair the computer.",
           "Send tasks from Home to your Mac or to a teammate in your company.",
-          "Read outputs and statuses in Job history.",
+          "Read outputs and statuses in Reports.",
         ],
       },
       {

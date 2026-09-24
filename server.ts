@@ -83,7 +83,7 @@ server.on("upgrade", (request, socket, head) => {
 });
 
 server.listen(port, host, () => {
-  console.log(`> Daily Magic listening on http://${host}:${port}`);
+  console.log(`> Agent Witch listening on http://${host}:${port}`);
   console.log(`> Health check: http://${host}:${port}${healthPath}`);
 });
 
@@ -91,10 +91,10 @@ void app
   .prepare()
   .then(() => {
     nextReady = true;
-    console.log(`> Daily Magic ready on http://${hostname}:${port}`);
+    console.log(`> Agent Witch ready on http://${hostname}:${port}`);
     console.log(`> Agent Witch WebSocket: ${wsPath}`);
   })
   .catch((error: unknown) => {
-    console.error("Failed to prepare Daily Magic server:", error);
+    console.error("Failed to prepare Agent Witch server:", error);
     process.exit(1);
   });

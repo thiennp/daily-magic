@@ -27,7 +27,7 @@ const whyLocalMacNotCloud: ShowcaseArticle = {
         "Files stay on the Mac that already has access",
         'Clear executor in job history — not "the platform"',
         "Company can set group dispatch and approval policies",
-        "Run log in Job history: requester, prompt, result, timestamp (local-first in that browser)",
+        "Run log in Reports: requester, prompt, result, timestamp (local-first in that browser)",
       ],
     },
     {

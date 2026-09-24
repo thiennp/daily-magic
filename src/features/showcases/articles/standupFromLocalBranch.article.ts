@@ -25,7 +25,7 @@ const standupFromLocalBranch: ShowcaseArticle = {
     {
       heading: "Example prompt shape",
       bullets: [
-        "Repo: ~/projects/daily-magic",
+        "Repo: ~/projects/my-app",
         "Since: yesterday 5pm",
         "Output: 3 bullets — shipped, in progress, blocked",
         "Do not push or commit anything",

@@ -28,7 +28,7 @@ const notASlackReplacement: ShowcaseArticle = {
       bullets: [
         "Saved playbooks in a library — not buried in #random",
         "Dispatch to a real Mac with files and tools",
-        "Job history — who asked, who ran it, what came back",
+        "Reports — who asked, who ran it, what came back",
       ],
     },
     {
