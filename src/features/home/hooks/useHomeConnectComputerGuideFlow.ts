@@ -8,16 +8,19 @@ import {
   buildConnectInstallConnectionStatus,
   type ConnectInstallConnectionStatus,
 } from "@/features/home/utils/buildConnectInstallConnectionStatus";
+import type { BrowserOperatingSystem } from "@/features/home/utils/detectBrowserOperatingSystem";
+import { shouldOpenConnectInstallPasteModal } from "@/features/home/utils/shouldOpenConnectInstallPasteModal";
 
 const useHomeConnectComputerGuideFlow = (input: {
   readonly onLinked: () => void;
+  readonly operatingSystem: BrowserOperatingSystem;
 }): {
   readonly connectionStatus: ConnectInstallConnectionStatus | null;
   readonly handleClosePasteModal: () => void;
   readonly handleInstallEngaged: () => void;
   readonly isPasteModalOpen: boolean;
 } => {
-  const { onLinked } = input;
+  const { onLinked, operatingSystem } = input;
   const [installEngaged, setInstallEngaged] = useState(false);
   const [isPasteModalOpen, setIsPasteModalOpen] = useState(false);
   const { isInstallConnectionFinished } = useInstallConnectionStatus({
@@ -30,8 +33,10 @@ const useHomeConnectComputerGuideFlow = (input: {
 
   const handleInstallEngaged = useCallback(() => {
     setInstallEngaged(true);
-    setIsPasteModalOpen(true);
-  }, []);
+    if (shouldOpenConnectInstallPasteModal(operatingSystem)) {
+      setIsPasteModalOpen(true);
+    }
+  }, [operatingSystem]);
 
   const handleClosePasteModal = useCallback(() => {
     setIsPasteModalOpen(false);

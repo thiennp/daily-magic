@@ -42,6 +42,11 @@ export default function HomeConnectComputerGuide({
     isCheckingLocalApp,
     isLocalAppInstalled,
   });
+  const operatingSystem = useSyncExternalStore(
+    subscribeToOperatingSystem,
+    detectBrowserOperatingSystem,
+    getServerOperatingSystemSnapshot,
+  );
   const {
     installCommand: personalizedInstallCommand,
     isLoading: isInstallCommandLoading,
@@ -57,12 +62,8 @@ export default function HomeConnectComputerGuide({
     isPasteModalOpen,
   } = useHomeConnectComputerGuideFlow({
     onLinked,
+    operatingSystem,
   });
-  const operatingSystem = useSyncExternalStore(
-    subscribeToOperatingSystem,
-    detectBrowserOperatingSystem,
-    getServerOperatingSystemSnapshot,
-  );
 
   return (
     <AppHero variant="plain">

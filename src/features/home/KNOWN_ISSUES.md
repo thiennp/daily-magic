@@ -536,6 +536,18 @@ Document every production bug or UX regression here. Each entry must link to a t
 
 ---
 
+## HOME-054 — Linux connect guide showed macOS paste modal
+
+**Symptom:** On desktop Linux, copying the install command on the Home connect guide opened “Paste into Terminal” with Command (⌘) + V instructions.
+
+**Root cause:** `useHomeConnectComputerGuideFlow` always opened `ConnectInstallPasteModal` on copy; only `useConnectThisMacRowFlow` skipped it for non-Mac browsers.
+
+**Fix:** `shouldOpenConnectInstallPasteModal` — paste modal only when `operatingSystem === "mac"`. Guide flow passes OS into the hook.
+
+**Regression test:** `shouldOpenConnectInstallPasteModal.test.ts` (HOME-054).
+
+---
+
 ## Adding issues
 
 Use the next ID (`HOME-050`, …). Include symptom, root cause, fix paths, and test file.

@@ -4,6 +4,7 @@ import { useCallback, useState } from "react";
 
 import useConnectInstallPasteModalDismissal from "@/features/home/hooks/useConnectInstallPasteModalDismissal";
 import type { BrowserOperatingSystem } from "@/features/home/utils/detectBrowserOperatingSystem";
+import { shouldOpenConnectInstallPasteModal } from "@/features/home/utils/shouldOpenConnectInstallPasteModal";
 
 const useConnectThisMacRowFlow = (input: {
   readonly operatingSystem: BrowserOperatingSystem;
@@ -29,7 +30,7 @@ const useConnectThisMacRowFlow = (input: {
 
   const handleInstallEngaged = useCallback(() => {
     setIsModalOpen(false);
-    if (operatingSystem === "mac") {
+    if (shouldOpenConnectInstallPasteModal(operatingSystem)) {
       setIsPasteModalOpen(true);
     }
   }, [operatingSystem]);
