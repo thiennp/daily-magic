@@ -1,5 +1,5 @@
 import { asRowArray, getSql } from "@/lib/db";
-import { GlobalRole, isGlobalRole } from "@/lib/auth/roles";
+import { GlobalRole } from "@/lib/auth/roles";
 import type AuthActor from "@/lib/auth/types/AuthActor.type";
 
 import { hashAgentAccessToken } from "@/lib/agentAccess/hashAgentAccessToken";
@@ -46,14 +46,11 @@ export const resolveAgentAccessActor = async (
     WHERE token_hash = ${tokenHash}
   `;
 
-  const roleValue = typeof row.global_role === "string" ? row.global_role : "";
-  const globalRole = isGlobalRole(roleValue) ? roleValue : GlobalRole.USER;
-
   return {
     id: row.id,
     email: row.email,
     name: typeof row.name === "string" ? row.name : null,
-    globalRole,
+    globalRole: GlobalRole.USER,
     registrationMethod: readMethod(row.registration_method),
   };
 };

@@ -29,7 +29,7 @@ Tools: `register_account`, `whoami`, `get_install_command`, `list_macs`, `list_w
 
 An agent such as Grok does this without a human mailbox: register with method `none`, run `get_install_command` in a shell on the computer it controls, wait until `list_macs` shows that computer, then `create_workflow` with a template id. That saves the workflow and writes the Playbook to `~/.agent-witch/harness/` on that computer. `run_workflow` starts it. If the computer is offline, `install_harness` retries the Playbook write.
 
-Tokens are stored as SHA-256 hashes. Registration is limited to 8 attempts per hour per client IP hash. Agent accounts are normal `user` role accounts.
+Tokens are stored as SHA-256 hashes. Registration is limited to 8 attempts per hour per client IP hash and 60 per hour for the whole service. Each token is limited to 120 tool calls and 20 mutations per hour. An account can keep at most 3 open Runs and 20 workflows. A token is issued only for a new account, and the actor role is always `user`. Requests over 32 KB are rejected. `rate_limited` and `busy` mean stop and wait. Agent accounts are normal `user` role accounts and can only see their own Macs, workflows, and Runs.
 
 ## Related
 

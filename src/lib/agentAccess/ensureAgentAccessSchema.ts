@@ -47,6 +47,18 @@ export const ensureAgentAccessSchema = async (): Promise<void> => {
       CREATE INDEX IF NOT EXISTS agent_access_registration_attempts_ip_idx
       ON agent_access_registration_attempts (ip_hash, created_at DESC)
     `;
+    await sql`
+      CREATE TABLE IF NOT EXISTS agent_access_api_attempts (
+        id TEXT PRIMARY KEY DEFAULT gen_random_uuid()::text,
+        subject_hash TEXT NOT NULL,
+        bucket TEXT NOT NULL,
+        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+      )
+    `;
+    await sql`
+      CREATE INDEX IF NOT EXISTS agent_access_api_attempts_subject_idx
+      ON agent_access_api_attempts (subject_hash, bucket, created_at DESC)
+    `;
     schemaEnsureState.ensured = true;
   })();
 

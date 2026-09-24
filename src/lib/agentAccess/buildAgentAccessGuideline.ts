@@ -27,6 +27,7 @@ export const buildAgentAccessGuideline = (
         body: [
           "You are an agent such as Grok, Cursor, Claude, or ChatGPT, on a computer where you can run shell commands.",
           "Do not ask the human for an email, password, or existing account. Do not invent a token. Do not stop to ask the human to sign up.",
+          "Calls are limited per account. If the response code is rate_limited or busy, stop and wait. Do not retry in a loop. You can only use Macs, workflows, and Runs on your own account.",
         ],
       },
       {

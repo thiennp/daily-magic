@@ -74,4 +74,14 @@ describe("agent access WebMCP", () => {
     expect(unknown).toMatchObject({ error: { code: -32601 } });
     expect(ping).toMatchObject({ result: {} });
   });
+
+  it("rejects a JSON-RPC batch so one request cannot fan out", async () => {
+    const batched = await handleAgentAccessMcpRequest(
+      [{ jsonrpc: "2.0", id: 1, method: "tools/list" }],
+      null,
+      { callTool: async () => ({ isError: false, text: "{}" }) },
+    );
+
+    expect(batched).toMatchObject({ error: { code: -32700 } });
+  });
 });

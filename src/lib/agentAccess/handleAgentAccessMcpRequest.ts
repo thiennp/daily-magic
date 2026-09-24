@@ -43,7 +43,7 @@ export const handleAgentAccessMcpRequest = async (
   authorization: string | null,
   deps: AgentAccessMcpDeps,
 ): Promise<Readonly<Record<string, unknown>>> => {
-  if (!isNonNullObject(body)) {
+  if (!isNonNullObject(body) || Array.isArray(body)) {
     return jsonRpcError(null, -32700, "Parse error");
   }
 

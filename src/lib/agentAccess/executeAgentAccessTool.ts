@@ -3,12 +3,15 @@ import { listAgentWitchDevicesForUser } from "@/lib/agentWitch/listAgentWitchDev
 import { executeAgentAccessRunTool } from "@/lib/agentAccess/executeAgentAccessRunTool";
 import { executeAgentAccessSendTask } from "@/lib/agentAccess/executeAgentAccessSendTask";
 import { executeAgentAccessWorkflowTool } from "@/lib/agentAccess/executeAgentAccessWorkflowTool";
+import { guardAgentAccessToolUse } from "@/lib/agentAccess/guardAgentAccessToolUse";
 import type { AgentAccessToolCallResult } from "@/lib/agentAccess/handleAgentAccessMcpRequest";
+import { readBearerAgentAccessToken } from "@/lib/agentAccess/hashAgentAccessToken";
 import { parseAgentAccessRegisterBody } from "@/lib/agentAccess/parseAgentAccessRegisterBody";
 import { registerAgentAccessAccount } from "@/lib/agentAccess/registerAgentAccessAccount";
 import { hashAgentAccessClientIp } from "@/lib/agentAccess/readClientIp";
 import {
   agentAccessTextResult,
+  agentAccessUnauthorized,
   isAgentAccessActor,
   requireAgentAccessActor,
 } from "@/lib/agentAccess/requireAgentAccessActor";
@@ -58,6 +61,22 @@ export const executeAgentAccessTool = async (input: {
 
   if (!isAgentAccessActor(actor)) {
     return actor;
+  }
+
+  const token = readBearerAgentAccessToken(input.authorization);
+
+  if (token === null) {
+    return agentAccessUnauthorized();
+  }
+
+  const gated = await guardAgentAccessToolUse({
+    name: input.name,
+    token,
+    userId: actor.id,
+  });
+
+  if (gated !== null) {
+    return gated;
   }
 
   if (input.name === "whoami") {

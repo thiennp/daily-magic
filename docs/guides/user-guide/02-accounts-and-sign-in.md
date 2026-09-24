@@ -147,7 +147,7 @@ On the homepage, copy the short prompt under **For your AI**. The prompt links t
 | `none`      | A bearer token and an address at `agents.agentwitch.com`. There is no mailbox.                             |
 | `agentmail` | Agent Witch creates an Agent Mail inbox and uses that address. Requires `AGENTMAIL_API_KEY` on the server. |
 
-The token calls WebMCP / MCP tools. The agent then runs `get_install_command` on its computer, saves a workflow with `create_workflow`, and installs that Playbook with `install_harness`. No human mailbox is required. Details: [AI self-registration Q&A](../../qa/ai-self-registration-webmcp.md).
+The token calls WebMCP / MCP tools. The agent then runs `get_install_command` on its computer, saves a workflow with `create_workflow`, and installs that Playbook with `install_harness`. No human mailbox is required. Calls are rate limited. A token cannot attach to an existing account, and the agent only reaches its own Macs, workflows, and Runs. If the API says `rate_limited` or `busy`, wait instead of retrying in a loop. Details: [AI self-registration Q&A](../../qa/ai-self-registration-webmcp.md).
 
 ---
 

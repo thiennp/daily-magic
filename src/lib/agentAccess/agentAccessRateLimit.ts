@@ -1,6 +1,9 @@
 import { asRowArray, getSql } from "@/lib/db";
 
-import { AGENT_ACCESS_RATE_LIMIT_PER_HOUR } from "@/lib/agentAccess/agentAccess.constant";
+import {
+  AGENT_ACCESS_GLOBAL_REGISTRATIONS_PER_HOUR,
+  AGENT_ACCESS_RATE_LIMIT_PER_HOUR,
+} from "@/lib/agentAccess/agentAccess.constant";
 
 export const countRecentAgentAccessAttempts = async (
   ipHash: string,
@@ -32,3 +35,7 @@ export const recordAgentAccessAttempt = async (
 
 export const isAgentAccessRateLimited = (attemptCount: number): boolean =>
   attemptCount >= AGENT_ACCESS_RATE_LIMIT_PER_HOUR;
+
+export const isAgentAccessGloballyRateLimited = (
+  attemptCount: number,
+): boolean => attemptCount >= AGENT_ACCESS_GLOBAL_REGISTRATIONS_PER_HOUR;

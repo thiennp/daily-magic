@@ -112,7 +112,7 @@ After schema apply, test login creates or reuses users via `findOrCreateUserByEm
 
 ## AI access tokens
 
-`POST /api/agent-access/register` creates a `users` row and an `agent_access_tokens` row (SHA-256 hash only). Methods: `none` (synthetic `agt-<uuid>@agents.agentwitch.com`) or `agentmail` (`AGENTMAIL_API_KEY`, `POST https://api.agentmail.to/v0/inboxes`). Rate limit: 8 attempts per hour per hashed client IP.
+`POST /api/agent-access/register` creates a `users` row and an `agent_access_tokens` row (SHA-256 hash only) only when that email is new. Methods: `none` (synthetic `agt-<uuid>@agents.agentwitch.com`) or `agentmail` (`AGENTMAIL_API_KEY`, `POST https://api.agentmail.to/v0/inboxes`). Rate limit: 8 attempts per hour per hashed client IP, plus 60 registrations per hour globally. Tool calls are capped per token (120/hour, 20 mutations/hour), with at most 3 open Runs and 20 workflows. Bodies over 32 KB are rejected. The resolved actor role is always `user`.
 
 MCP: `POST /api/agent-access/mcp`. REST: `POST /api/agent-access/invoke`. Discovery: `GET /.well-known/webmcp.json`. The public guideline is `/for-agents`. The homepage prompt is short and tells the agent to open that page. Browser WebMCP registers tools from `AgentAccessWebMcpBridge` when `navigator.modelContext` exists. Workflow tools (`get_install_command`, `create_workflow`, `install_harness`, `run_workflow`) call the existing install-token, template, harness-install, and official workflow-run functions. Code: `src/lib/agentAccess/`.
 

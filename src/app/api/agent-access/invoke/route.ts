@@ -6,6 +6,11 @@ import {
 } from "guardz";
 
 import { executeAgentAccessTool } from "@/lib/agentAccess/executeAgentAccessTool";
+import {
+  agentAccessTooLargeResponse,
+  guardAgentAccessPost,
+} from "@/lib/agentAccess/guardAgentAccessPost";
+import { readBoundedAgentAccessBody } from "@/lib/agentAccess/readBoundedAgentAccessBody";
 import { readClientIp } from "@/lib/agentAccess/readClientIp";
 
 export const dynamic = "force-dynamic";
@@ -26,8 +31,38 @@ const isInvokeBody = isType<{
   arguments: isUndefinedOr(isNonNullObject),
 });
 
+const statusForToolError = (parsed: unknown): number => {
+  if (typeof parsed !== "object" || parsed === null) {
+    return 400;
+  }
+
+  const code = (parsed as { code?: unknown }).code;
+
+  if (code === "unauthorized") {
+    return 401;
+  }
+
+  if (code === "rate_limited" || code === "busy") {
+    return 429;
+  }
+
+  return 400;
+};
+
 export async function POST(request: Request): Promise<Response> {
-  const body: unknown = await request.json().catch(() => null);
+  const limited = await guardAgentAccessPost(request);
+
+  if (limited !== null) {
+    return limited;
+  }
+
+  const payload = await readBoundedAgentAccessBody(request);
+
+  if (payload === "too_large") {
+    return agentAccessTooLargeResponse();
+  }
+
+  const body: unknown = payload;
 
   if (!isInvokeBody(body)) {
     return Response.json(
@@ -44,5 +79,7 @@ export async function POST(request: Request): Promise<Response> {
   });
   const parsed = parseToolText(result.text);
 
-  return Response.json(parsed, { status: result.isError ? 400 : 200 });
+  return Response.json(parsed, {
+    status: result.isError ? statusForToolError(parsed) : 200,
+  });
 }

@@ -1,8 +1,10 @@
 import findOrCreateUserByEmail from "@/lib/auth/findOrCreateUserByEmail";
-import { getSql } from "@/lib/db";
+import { asRowArray, getSql } from "@/lib/db";
 import { resolveAppBaseUrl } from "@/lib/app/resolveAppBaseUrl";
 
+import { AGENT_ACCESS_GLOBAL_SUBJECT } from "@/lib/agentAccess/agentAccess.constant";
 import {
+  isAgentAccessGloballyRateLimited,
   isAgentAccessRateLimited,
   countRecentAgentAccessAttempts,
   recordAgentAccessAttempt,
@@ -41,7 +43,14 @@ export const registerAgentAccessAccount = async (input: {
   await ensureAgentAccessSchema();
   const recentAttempts = await countRecentAgentAccessAttempts(input.ipHash);
 
-  if (isAgentAccessRateLimited(recentAttempts)) {
+  const globalAttempts = await countRecentAgentAccessAttempts(
+    AGENT_ACCESS_GLOBAL_SUBJECT,
+  );
+
+  if (
+    isAgentAccessRateLimited(recentAttempts) ||
+    isAgentAccessGloballyRateLimited(globalAttempts)
+  ) {
     return failure(
       429,
       "Too many registration attempts. Try again in an hour.",
@@ -50,6 +59,7 @@ export const registerAgentAccessAccount = async (input: {
   }
 
   await recordAgentAccessAttempt(input.ipHash);
+  await recordAgentAccessAttempt(AGENT_ACCESS_GLOBAL_SUBJECT);
   const email = await resolveAgentAccessAccountEmail(
     input.body,
     input.agentMailClient ?? buildDefaultAgentMailClient(),
@@ -57,6 +67,19 @@ export const registerAgentAccessAccount = async (input: {
 
   if (email instanceof AgentMailUnavailableError) {
     return failure(503, email.message, "agentmail_unavailable");
+  }
+
+  const sql = getSql();
+  const existing = asRowArray(
+    await sql`SELECT id FROM users WHERE email = ${email} LIMIT 1`,
+  );
+
+  if (existing.length > 0) {
+    return failure(
+      409,
+      "That account already exists. Register a new agent instead.",
+      "account_exists",
+    );
   }
 
   const user = await findOrCreateUserByEmail(email);
@@ -70,7 +93,6 @@ export const registerAgentAccessAccount = async (input: {
   }
 
   const displayName = input.body.displayName ?? user.name ?? null;
-  const sql = getSql();
 
   if (displayName !== null) {
     await sql`UPDATE users SET name = ${displayName} WHERE id = ${user.id}`;

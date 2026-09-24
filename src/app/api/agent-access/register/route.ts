@@ -1,4 +1,9 @@
+import {
+  agentAccessTooLargeResponse,
+  guardAgentAccessPost,
+} from "@/lib/agentAccess/guardAgentAccessPost";
 import { parseAgentAccessRegisterBody } from "@/lib/agentAccess/parseAgentAccessRegisterBody";
+import { readBoundedAgentAccessBody } from "@/lib/agentAccess/readBoundedAgentAccessBody";
 import {
   hashAgentAccessClientIp,
   readClientIp,
@@ -8,9 +13,19 @@ import { registerAgentAccessAccount } from "@/lib/agentAccess/registerAgentAcces
 export const dynamic = "force-dynamic";
 
 export async function POST(request: Request): Promise<Response> {
-  const body = parseAgentAccessRegisterBody(
-    await request.json().catch(() => null),
-  );
+  const limited = await guardAgentAccessPost(request);
+
+  if (limited !== null) {
+    return limited;
+  }
+
+  const payload = await readBoundedAgentAccessBody(request);
+
+  if (payload === "too_large") {
+    return agentAccessTooLargeResponse();
+  }
+
+  const body = parseAgentAccessRegisterBody(payload);
 
   if (body === null) {
     return Response.json(
