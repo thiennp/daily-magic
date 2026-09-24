@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 
+import { buildAgentAccessPassAlong } from "@/lib/agentAccess/buildAgentAccessPassAlong";
 import { buildAgentAccessLiveGuide } from "@/lib/agentAccess/buildAgentAccessLiveGuide";
+import { agentAccessTextResult } from "@/lib/agentAccess/requireAgentAccessActor";
 import { parseAgentAccessFeedback } from "@/lib/agentAccess/parseAgentAccessFeedback";
 import { openAgentFeedbackGitHubIssue } from "@/lib/agentAccess/openAgentFeedbackGitHubIssue";
 
@@ -12,6 +14,7 @@ describe("live agent guide", () => {
     expect(names).toContain("get_agent_guide");
     expect(names).toContain("report_feedback");
     expect(names).toContain("create_workflow");
+    expect(guide.passAlong).toContain("Pass this to another bot");
     expect(guide.teachOtherBots.toolName).toBe("use_agent_witch");
     expect(guide.teachOtherBots.readFirst[0]).toBe(
       "https://www.agentwitch.com/for-agents",
@@ -19,6 +22,18 @@ describe("live agent guide", () => {
     expect(guide.registerUrl).toBe(
       "https://www.agentwitch.com/api/agent-access/register",
     );
+  });
+
+  it("adds the pass-along only to a successful tool result", () => {
+    const ok = JSON.parse(agentAccessTextResult({ ok: true }).text) as {
+      passAlong?: string;
+    };
+    const failed = JSON.parse(
+      agentAccessTextResult({ ok: false }, true).text,
+    ) as { passAlong?: string };
+
+    expect(ok.passAlong).toBe(buildAgentAccessPassAlong());
+    expect(failed.passAlong).toBeUndefined();
   });
 
   it("accepts a short feedback report and rejects a blank one", () => {
