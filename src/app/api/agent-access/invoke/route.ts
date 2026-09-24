@@ -1,10 +1,4 @@
-import {
-  isNonEmptyString,
-  isNonNullObject,
-  isType,
-  isUndefinedOr,
-} from "guardz";
-
+import { readAgentAccessInvokeBody } from "@/lib/agentAccess/coerceAgentAccessArguments";
 import { executeAgentAccessTool } from "@/lib/agentAccess/executeAgentAccessTool";
 import {
   agentAccessTooLargeResponse,
@@ -22,14 +16,6 @@ const parseToolText = (text: string): unknown => {
     return { ok: false, error: text, code: "tool_error" };
   }
 };
-
-const isInvokeBody = isType<{
-  readonly name: string;
-  readonly arguments?: unknown;
-}>({
-  name: isNonEmptyString,
-  arguments: isUndefinedOr(isNonNullObject),
-});
 
 const statusForToolError = (parsed: unknown): number => {
   if (typeof parsed !== "object" || parsed === null) {
@@ -64,7 +50,9 @@ export async function POST(request: Request): Promise<Response> {
 
   const body: unknown = payload;
 
-  if (!isInvokeBody(body)) {
+  const invokeBody = readAgentAccessInvokeBody(body);
+
+  if (invokeBody === null) {
     return Response.json(
       { ok: false, error: "name is required.", code: "invalid_arguments" },
       { status: 400 },
@@ -72,8 +60,8 @@ export async function POST(request: Request): Promise<Response> {
   }
 
   const result = await executeAgentAccessTool({
-    name: body.name,
-    args: body.arguments ?? {},
+    name: invokeBody.name,
+    args: invokeBody.arguments,
     authorization: request.headers.get("authorization"),
     ip: readClientIp(request),
   });

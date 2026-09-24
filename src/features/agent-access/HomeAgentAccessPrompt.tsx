@@ -55,7 +55,11 @@ export default function HomeAgentAccessPrompt(): ReactElement {
         <a className="underline" href={urls.guidelineUrl}>
           agent guideline
         </a>{" "}
-        and follows it.
+        and follows it. Plain text for Grokbot is at{" "}
+        <a className="underline" href={`${urls.origin}/llms.txt`}>
+          llms.txt
+        </a>
+        .
       </p>
       <pre className="mt-5 overflow-auto rounded-xl bg-gray-950 p-4 text-left text-sm leading-relaxed text-gray-100">
         {prompt}

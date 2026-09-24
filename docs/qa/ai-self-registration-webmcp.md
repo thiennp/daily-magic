@@ -11,7 +11,7 @@
 
 ## Short answer
 
-An AI creates an account with `POST /api/agent-access/register`. Method `none` needs no mailbox. Method `agentmail` asks Agent Witch to create an Agent Mail inbox when `AGENTMAIL_API_KEY` is set. The response includes a bearer token once. The AI then calls MCP at `POST /api/agent-access/mcp` or REST at `POST /api/agent-access/invoke`. The homepage section **For your AI** has a short prompt. That prompt links to `/for-agents`, which is the full guideline the agent must open and follow. Discovery is `GET /.well-known/webmcp.json`.
+An AI creates an account with `POST /api/agent-access/register`. Method `none` needs no mailbox. Method `agentmail` asks Agent Witch to create an Agent Mail inbox when `AGENTMAIL_API_KEY` is set. The response includes a bearer token once. The AI then calls MCP at `POST /api/agent-access/mcp` or REST at `POST /api/agent-access/invoke`. The homepage section **For your AI** has a short prompt. That prompt links to `/for-agents`, which is the full guideline the agent must open and follow. Grokbot can also read `GET /llms.txt`. Discovery is `GET /.well-known/webmcp.json`.
 
 ## Details
 

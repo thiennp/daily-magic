@@ -1,6 +1,7 @@
 import { isNonNullObject } from "guardz";
 
 import { AGENT_ACCESS_MCP_PROTOCOL_VERSION } from "@/lib/agentAccess/agentAccess.constant";
+import { coerceAgentAccessArguments } from "@/lib/agentAccess/coerceAgentAccessArguments";
 import { AGENT_ACCESS_TOOLS } from "@/lib/agentAccess/agentAccessTools.constant";
 
 export interface AgentAccessToolCallResult {
@@ -90,7 +91,7 @@ export const handleAgentAccessMcpRequest = async (
 
   const toolResult = await deps.callTool(
     name,
-    params?.arguments ?? {},
+    coerceAgentAccessArguments(params?.arguments ?? {}),
     authorization,
   );
 

@@ -35,6 +35,7 @@ describe("agent access registration", () => {
   it("builds a short prompt that points at the agent guideline", () => {
     const prompt = buildAgentAccessPrompt("https://www.agentwitch.com");
 
+    expect(prompt).toContain("Grokbot");
     expect(prompt).toContain("https://www.agentwitch.com/for-agents");
     expect(prompt).toContain("Open the guideline");
     expect(prompt).toContain("Do not ask the human");
