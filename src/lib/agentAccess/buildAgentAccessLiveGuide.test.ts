@@ -67,24 +67,26 @@ describe("live agent guide", () => {
 
   it("opens a GitHub issue without an account email", async () => {
     vi.stubEnv("AGENT_WITCH_FEEDBACK_GITHUB_TOKEN", "ghtoken");
-    const fetchMock = vi.fn(
-      async (_input: RequestInfo | URL, _init?: RequestInit) =>
-        new Response(
+    const postedBodies: string[] = [];
+    vi.stubGlobal(
+      "fetch",
+      async (input: RequestInfo | URL, init?: RequestInit) => {
+        void input;
+        postedBodies.push(typeof init?.body === "string" ? init.body : "");
+
+        return new Response(
           JSON.stringify({ html_url: "https://github.com/x/issues/1" }),
-          {
-            status: 201,
-          },
-        ),
+          { status: 201 },
+        );
+      },
     );
-    vi.stubGlobal("fetch", fetchMock);
 
     await openAgentFeedbackGitHubIssue({
       feedback: { outcome: "ok", summary: "The run finished", detail: null },
       feedbackId: "fb-1",
     });
 
-    const init = fetchMock.mock.calls[0]?.[1] as { body?: string } | undefined;
-    const posted = JSON.parse(init?.body ?? "{}") as { body?: string };
+    const posted = JSON.parse(postedBodies[0] ?? "{}") as { body?: string };
 
     vi.unstubAllGlobals();
     vi.unstubAllEnvs();
