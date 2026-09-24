@@ -1,6 +1,6 @@
 # UX simplification — personas, language, and onboarding
 
-Product and UX direction for Daily Magic. **Audience:** PM, design, and engineering when changing nav, copy, or onboarding. Technical storage (harness paths, RAG files) stays in [Agent Witch local layout](../../src/features/agent-witch/LOCAL_INSTALL_LAYOUT.md) and [product concepts](concepts.md).
+Product and UX direction for **Agent Witch**. **Audience:** PM, design, and engineering when changing nav, copy, or onboarding. Technical storage (harness paths, RAG files) stays in [Agent Witch local layout](../../src/features/agent-witch/LOCAL_INSTALL_LAYOUT.md) and [product concepts](concepts.md). Copy rules: [philosophy-and-copy-guideline.md](philosophy-and-copy-guideline.md).
 
 **Status:** In progress (2026). Nav labels, onboarding, Home Mac status + Mac settings link, solo team-nav gating shipped; Playbooks merge UI and composer progressive disclosure still open.
 

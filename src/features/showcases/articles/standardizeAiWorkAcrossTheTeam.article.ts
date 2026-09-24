@@ -43,7 +43,7 @@ const standardizeAiWorkAcrossTheTeam: ShowcaseArticle = {
         "Company groups set who can run on whose Mac",
         "Approval policy pauses sensitive jobs until a manager says yes",
         "Published playbooks show up in Marketplace and team directories",
-        "Job history in each browser shows prompts and results for that person's runs",
+        "Reports in each browser shows prompts and results for that person's runs",
       ],
     },
     {

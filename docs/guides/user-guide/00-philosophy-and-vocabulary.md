@@ -12,7 +12,7 @@ Agent Witch exists so you can:
 
 That is the whole product. Everything else—workflows, marketplace, harness/playbooks, Cursor Cloud dispatch—is **how** that job gets done safely at scale, not a separate product.
 
-Four **product pillars** describe how Agent Witch gets better over time without changing that job. Canonical detail for writers and engineers: [product pillars](../../product/product-pillars.md).
+Four **product pillars** describe how Agent Witch gets better over time without changing that job. Canonical detail: [product pillars](../../product/product-pillars.md). **Copy checklist (VI + EN):** [philosophy-and-copy-guideline.md](../../product/philosophy-and-copy-guideline.md).
 
 ---
 

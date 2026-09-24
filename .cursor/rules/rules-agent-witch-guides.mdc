@@ -14,7 +14,8 @@ globs:
   - src/features/feedback/**
   - src/features/improvements/**
   - docs/product/product-pillars.md
-  - apps/bridge/**
+  - docs/product/philosophy-and-copy-guideline.md
+  - src/features/showcases/**
   - apps/live/**
   - apps/install/**
   - server.ts
@@ -25,7 +26,7 @@ globs:
 
 ## Before substantive edits
 
-1. Read [docs/product/product-pillars.md](../../docs/product/product-pillars.md) for the four value pillars and **north star vs today** (keep guides honest).
+1. Read [docs/product/philosophy-and-copy-guideline.md](../../docs/product/philosophy-and-copy-guideline.md) (human-readable copy rules) and [product-pillars.md](../../docs/product/product-pillars.md) for the four value pillars and **north star vs today**.
 2. Read [docs/guides/user-guide/00-philosophy-and-vocabulary.md](../../docs/guides/user-guide/00-philosophy-and-vocabulary.md) for product vocabulary (Mac, Task, Run, Playbook).
 3. Open the chapter pair listed in [docs/guides/guide-maintenance.map.json](../../docs/guides/guide-maintenance.map.json) for your path prefix.
 4. Read [docs/guides/developer-guide/agent-mistakes-catalog.md](../../docs/guides/developer-guide/agent-mistakes-catalog.md) for recurring agent failures.

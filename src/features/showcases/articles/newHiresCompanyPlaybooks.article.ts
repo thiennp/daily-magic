@@ -27,7 +27,7 @@ const newHiresCompanyPlaybooks: ShowcaseArticle = {
       bullets: [
         "Pair your Mac from Home → Your setup",
         "Browse Marketplace — save 2–3 playbooks to library",
-        "Run one low-risk task and check Job history",
+        "Run one low-risk task and check Reports",
         "Ask who publishes updates when the process changes",
       ],
     },

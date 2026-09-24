@@ -41,7 +41,7 @@ export const agentDelegatesInsideYourCompanySections: readonly ShowcaseArticleSe
         "Group dispatch policy can be open or approval",
         "If approval: job stays pending until the executor (or manager) taps Approve",
         "Executor must be online after approval for Claude to start",
-        "Both sides see the run in Job history in their browsers",
+        "Both sides see the run in Reports in their browsers",
       ],
       image: buildShowcaseTeamDispatchArticleImage(
         TEAM_DISPATCH_SHOWCASE_SCREEN.APPROVAL,
@@ -57,7 +57,7 @@ export const agentDelegatesInsideYourCompanySections: readonly ShowcaseArticleSe
         "After dispatch (or approval), command.claude.run reaches their Agent Witch client",
         "With session continuation, Claude reuses the warmed writer session",
         "Terminal stream chunks appear in your browser while they work locally",
-        "Result lands in Job history for both requester and executor views",
+        "Result lands in Reports for both requester and executor views",
       ],
       image: buildShowcaseTeamDispatchArticleImage(
         TEAM_DISPATCH_SHOWCASE_SCREEN.MAC_RUNNING,
@@ -79,7 +79,7 @@ export const agentDelegatesInsideYourCompanySections: readonly ShowcaseArticleSe
     {
       heading: "How team dispatch stays trustworthy",
       paragraphs: [
-        "Team dispatch uses your signed-in company group, memberships, and published capabilities. Each person opens Job history in their browser to review the prompts and results for their runs.",
+        "Team dispatch uses your signed-in company group, memberships, and published capabilities. Each person opens Reports in their browser to review the prompts and results for their runs.",
       ],
     },
   ];

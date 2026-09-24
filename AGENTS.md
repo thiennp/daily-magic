@@ -16,7 +16,7 @@ Read **`CLAUDE.md`** for project overview, stack, and verification commands.
 
 Details: **`docs/product/repo-name-and-hosting.md`** · rule **`rules-product-hosting-boundaries.mdc`**.
 
-**Product pillars:** [docs/product/product-pillars.md](docs/product/product-pillars.md) — four value pillars and north star vs today; read before user-visible behavior or guide edits (`rules-agent-witch-guides.mdc`).
+**Product pillars:** [docs/product/product-pillars.md](docs/product/product-pillars.md) · **Copy guideline (readable):** [docs/product/philosophy-and-copy-guideline.md](docs/product/philosophy-and-copy-guideline.md)
 
 ## Harness locations
 

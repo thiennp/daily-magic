@@ -61,13 +61,13 @@ const companyOnboardIn30Minutes: ShowcaseArticle = {
       bullets: [
         "Champion A sends a task to Champion B's Mac",
         "Approver says yes — run starts only after approval",
-        "Both open Job history in their browsers and confirm the prompt + result",
+        "Both open Reports in their browsers and confirm the prompt + result",
       ],
       image: buildShowcaseOnboardingArticleImage(
         ONBOARDING_SHOWCASE_SCREEN.JOB_HISTORY,
         {
           alt: "Completed job history card after an approved run",
-          caption: "Completed run after manager approval in Job history.",
+          caption: "Completed run after manager approval in Reports.",
         },
       ),
     },

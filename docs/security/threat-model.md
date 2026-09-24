@@ -1,4 +1,4 @@
-# Threat model — Daily Magic
+# Threat model — Agent Witch
 
 This document describes **what we protect**, **who can attack**, and **which controls exist today**. It is not a penetration test report. Query it via:
 

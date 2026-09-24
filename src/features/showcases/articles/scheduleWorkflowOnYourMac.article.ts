@@ -50,7 +50,7 @@ const scheduleWorkflowOnYourMac: ShowcaseArticle = {
         "You define name, workflow, field values, and schedule in /automations",
         "Agent Witch syncs the job list to ~/.agent-witch on your Mac",
         "com.agent-witch-automation-scheduler checks every minute and dispatches due runs",
-        "Results land in Job history like any manual send",
+        "Results land in Reports like any manual send",
       ],
     },
     {
@@ -63,7 +63,7 @@ const scheduleWorkflowOnYourMac: ShowcaseArticle = {
       heading: "Built around your Mac",
       bullets: [
         "Your Mac runs the schedule so jobs stay close to your local files",
-        "When a run finishes, open Job history to review the result",
+        "When a run finishes, open Reports to review the result",
         "After an Agent Witch update, open Automations once so schedules stay in sync",
       ],
     },

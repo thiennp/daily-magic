@@ -76,7 +76,7 @@ const automateForYourselfOrYourTeam: ShowcaseArticle = {
       heading: "3. Your Mac runs it; the team can reuse it",
       bullets: [
         "Enabled automations show next run time and last status",
-        "Results land in Job history like any manual send",
+        "Results land in Reports like any manual send",
         "Publish the same workflow to Marketplace so teammates save and automate their own copy",
         "Company rules can require manager approval before someone else's Mac runs a sensitive job",
       ],

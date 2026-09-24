@@ -41,7 +41,7 @@ const whenExecutorMacIsOffline: ShowcaseArticle = {
     {
       heading: "Always-on setups",
       paragraphs: [
-        "For recurring jobs, keep a Mac awake or schedule automations on a dedicated machine. Check Job history when you want the finished output.",
+        "For recurring jobs, keep a Mac awake or schedule automations on a dedicated machine. Open Reports when you want the finished output.",
       ],
     },
     {

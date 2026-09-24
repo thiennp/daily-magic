@@ -82,7 +82,7 @@ export const AGENT_WITCH_INSTRUCTION_MESSAGE_TYPES: readonly AgentWitchInstructi
     {
       type: AGENT_WITCH_MESSAGE_TYPES.AGENT_RUN_RECORD,
       direction: "mac_to_browser",
-      purpose: "Persist run metadata and output for Job history.",
+      purpose: "Persist run metadata and output for Reports.",
     },
     {
       type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ACK,
