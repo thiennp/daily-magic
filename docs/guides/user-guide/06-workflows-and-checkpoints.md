@@ -4,16 +4,18 @@ This chapter is for anyone who runs **official workflows** from the marketplace 
 
 If you have not finished [Chapter 5 — Tasks, dispatch, and runs](05-tasks-dispatch-and-runs.md), read that first. Vocabulary: [Chapter 0](00-philosophy-and-vocabulary.md) (**Mac**, **Task**, **Run**, **Playbook**).
 
+**Workflows** are the structured side of the **easy authoring** pillar: forms and checkpoints instead of a blank prompt. You can still start every week with a plain **Task** and only open workflows when a process repeats ([four pillars](00-philosophy-and-vocabulary.md#four-pillars)).
+
 ---
 
 ## Workflows vs plain Tasks
 
-|                   | **Task (composer / home)**                    | **Workflow**                                              |
-| ----------------- | --------------------------------------------- | --------------------------------------------------------- |
-| **What you send** | One prompt (plus optional folder, capability) | A **capability** with a form and often a **step graph**   |
-| **What you get**  | One **Run**                                   | A **workflow run** that may spawn several agent **Runs**  |
-| **Human pauses**  | Mid-run `[[AWAITING_INPUT]]` in the terminal  | Built-in **checkpoints** between agent steps              |
-| **Best for**      | Ad hoc work, quick fixes                      | Repeatable processes (e.g. “ship a feature in this repo”) |
+|                   | **Task (composer / home)**                                   | **Workflow**                                                                   |
+| ----------------- | ------------------------------------------------------------ | ------------------------------------------------------------------------------ |
+| **What you send** | One prompt (plus optional folder, capability)                | A **capability** with a form and often a **step graph**                        |
+| **What you get**  | One **Run**                                                  | A **workflow run** that may spawn several agent **Runs**                       |
+| **Human pauses**  | Mid-run `[[AWAITING_INPUT]]` in the terminal                 | Built-in **checkpoints** between agent steps                                   |
+| **Best for**      | Ad hoc work, quick fixes (**easy authoring** — start simple) | Repeatable processes (e.g. “ship a feature in this repo”) when structure helps |
 
 Workflows still **dispatch** agent work to your **Mac** (or Cursor Cloud when configured). The browser keeps the graph, your answers, and history; the Mac runs each agent step in a real shell when it is your turn.
 
@@ -69,6 +71,8 @@ What to do:
 2. Fix the underlying issue on the **Mac** if needed (path, credentials, network).
 3. Use **Try again** (or the workflow **retry** action) to re-dispatch **the same step** only.
 
+That retry path is part of **learn from usage**: fix the cause, rerun the step, keep earlier answers—no need to retype the whole form. Automated “turn this failure into a new playbook” is still evolving ([north star vs today](00-philosophy-and-vocabulary.md#north-star-vs-today)).
+
 Retry is available while the run is in a failed state; it clears the error and sends that node again. Details: [Official workflow run — checkpoints and retry](../../qa/official-workflow-run-checkpoints-and-retry.md).
 
 **Example:** The **vibe coding app feature** preset expects an **app target** folder on the Mac that is a git repository. If the folder is missing, the first agent step fails fast instead of editing the wrong directory.
@@ -105,11 +109,11 @@ Reason codes: [Send readiness contract](../../agent-witch/send-readiness-reason-
 
 ## Solo vs team
 
-|                   | **Solo**                                  | **Team**                                                |
-| ----------------- | ----------------------------------------- | ------------------------------------------------------- |
-| **Run workflows** | From library or marketplace after install | Same; runs appear in shared **Runs** / reports          |
-| **Templates**     | Save forks to **Library** as playbooks    | Share capabilities and published workflows              |
-| **Checkpoints**   | Only you answer                           | Whoever owns the run answers (policy may tighten later) |
+|                   | **Solo**                                  | **Team**                                                       |
+| ----------------- | ----------------------------------------- | -------------------------------------------------------------- |
+| **Run workflows** | From library or marketplace after install | Same; runs appear in shared **Runs** / reports                 |
+| **Templates**     | Save forks to **Library** as playbooks    | Share capabilities and published workflows (**team learning**) |
+| **Checkpoints**   | Only you answer                           | Whoever owns the run answers (policy may tighten later)        |
 
 ---
 
@@ -131,3 +135,4 @@ Reason codes: [Send readiness contract](../../agent-witch/send-readiness-reason-
 - thu lai buoc agent bi loi workflow
 - workflow cho nguoi dung lam gi truoc khi agent chay tiep
 - tai file PDF trong workflow Agent Witch
+- de tao workflow, bon tru cot de tao workflow, form workflow de hieu

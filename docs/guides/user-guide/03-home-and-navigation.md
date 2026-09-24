@@ -4,6 +4,8 @@ Once you are signed in, Agent Witch orients you around **three daily surfaces**:
 
 Vocabulary: [Chapter 0](00-philosophy-and-vocabulary.md) · Nav direction: [UX simplification](../../product/ux-simplification.md).
 
+Home is the hub for **easy authoring** (**New task** up front) and for **team learning** when **Runs** and **Playbooks** appear in nav—same shell, different org chrome ([four pillars](00-philosophy-and-vocabulary.md#four-pillars)).
+
 ---
 
 ## Primary navigation (signed-in)
@@ -104,14 +106,14 @@ Full composer behavior: [Chapter 5](05-tasks-dispatch-and-runs.md).
 
 **Runs** is the system of record for **what happened**:
 
-| Action               | When to use                                                      |
-| -------------------- | ---------------------------------------------------------------- |
-| Open a run           | Read live or historical terminal output.                         |
-| **Run again**        | Repeat with same or edited prompt.                               |
-| **Save as playbook** | Capture how you worked (Chapter 7 in the guide series).          |
-| **Search past runs** | Memory from prior work (RAG)—not labeled “Knowledge” in UI copy. |
+| Action               | When to use                                                                                  |
+| -------------------- | -------------------------------------------------------------------------------------------- |
+| Open a run           | Read live or historical terminal output.                                                     |
+| **Run again**        | Repeat with same or edited prompt.                                                           |
+| **Save as playbook** | Capture how you worked (Chapter 7 in the guide series).                                      |
+| **Search past runs** | Reuse context from prior **Runs** (**efficient memory**)—not labeled “Knowledge” in UI copy. |
 
-Company users may filter by person, Mac, playbook, or date when those filters ship.
+Company users may filter by person, Mac, playbook, or date when those filters ship—that supports **team learning** and audit without a separate product area.
 
 Outcome chips in Runs match live progress honesty—never **Success** while still **Connecting** ([run UX honesty](../../qa/run-ux-honesty-strings.md)).
 
@@ -181,3 +183,4 @@ Exact paths may shift; trust nav labels over memorizing URLs.
 - trang chu Agent Witch, dieu huong, trang thai Mac
 - where is New task, Mac status banner meaning
 - Agent Witch Console primary navigation marketplace library
+- team learning Runs library nav, tiet kiem ngữ cảnh tim run cu

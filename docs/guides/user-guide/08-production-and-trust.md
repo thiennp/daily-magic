@@ -4,6 +4,8 @@ This chapter answers: **what runs where**, **what Agent Witch can see**, and **w
 
 It is written for team leads, security reviewers, and solo makers who want clarity before they pair a **Mac** or save a **Playbook**. Vocabulary: [Chapter 0](00-philosophy-and-vocabulary.md).
 
+Trust boundaries below enable all [four pillars](00-philosophy-and-vocabulary.md#four-pillars): **easy authoring** only works if you know what the composer will touch; **learn from usage** requires honest **Run** records; **efficient memory** must not leak one teammate’s context into another’s **Task** without policy; **team learning** needs clear rules for shared **Library** / **Marketplace** installs on paired **Macs**.
+
 ---
 
 ## Production vs repository name
@@ -107,6 +109,15 @@ Writer routing (continuation vs memory limits): [Writer dispatch cascade routing
 
 Agent Witch is built for teams who accept that **running an agent on a Mac is equivalent to giving a developer shell access in the chosen folder**, mediated by your prompts and playbooks.
 
+### Pillars and data (honest summary)
+
+| Pillar               | Trust takeaway                                                                                                                                                                                                                                  |
+| -------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Easy authoring**   | Forms and uploads you submit are stored for the workflow run; agents on the **Mac** only receive what dispatch sends.                                                                                                                           |
+| **Learn from usage** | Improvements and feedback features vary by surface—you approve playbook/workflow changes; cloud stores run history for audit.                                                                                                                   |
+| **Efficient memory** | Prior **Run** context may be injected on the **Mac** or via search—treat attached folders and transcripts as sensitive; team-wide memory policy is still maturing ([north star vs today](00-philosophy-and-vocabulary.md#north-star-vs-today)). |
+| **Team learning**    | Shared templates and **Runs** visibility follow account/team membership; installing a **Playbook** writes files on the chosen **Mac**.                                                                                                          |
+
 ---
 
 ## Multi-instance production (brief)
@@ -143,3 +154,4 @@ Update flows use the local bridge and LaunchAgents; a bad update historically co
 - agentwitch.com production khac daily-magic repo
 - Mac pairing tokenHash this computer trust
 - chan Send khi Mac reconnecting update needed
+- bon tru cot tin cay, du lieu memory team learning bao mat

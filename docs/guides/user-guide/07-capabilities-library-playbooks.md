@@ -4,6 +4,8 @@ This chapter explains how Agent Witch turns “something that worked once” int
 
 Vocabulary: [Chapter 0](00-philosophy-and-vocabulary.md). One runtime, many surfaces: [Product concepts](../../product/concepts.md).
 
+**Library** and **Marketplace** are the home of **team learning**: shared **Playbooks**, org templates, and install-to-**Mac** flows. **Save as playbook** and library reruns are how **efficient memory** becomes something you can name and run again—not only ad hoc chat ([four pillars](00-philosophy-and-vocabulary.md#four-pillars)).
+
 ---
 
 ## One dispatch engine, four names you might hear
@@ -45,7 +47,7 @@ Typical solo loop:
 2. **Save to library** (or fork from marketplace).
 3. Open the playbook later, adjust if needed, and **run again** on your **Mac**.
 
-Library items reference capabilities/workflows you already use. Running from library still creates a normal **Run** (or workflow run)—same honesty rules for terminal and outcomes ([run UX honesty](../../qa/run-ux-honesty-strings.md)).
+You stay in control: saving or forking does not silently change team templates until publish/install flows say so (**learn from usage**). Library items reference capabilities/workflows you already use. Running from library still creates a normal **Run** (or workflow run)—same honesty rules for terminal and outcomes ([run UX honesty](../../qa/run-ux-honesty-strings.md)).
 
 ### Guest library (before sign-in)
 
@@ -74,7 +76,7 @@ After install, the next **Task** or workflow agent step still dispatches as a **
 
 ## Marketplace (team templates)
 
-**Marketplace** listings are published harness/capability packages for others to borrow. For a company user, marketplace is how leads ship **standard playbooks** without every teammate rebuilding forms and rules.
+**Marketplace** listings are published harness/capability packages for others to borrow. For a company user, marketplace is how leads ship **standard playbooks** without every teammate rebuilding forms and rules—that is **team learning** as a default path, not a side quest.
 
 Flow (simplified):
 
@@ -138,3 +140,5 @@ Solo makers: library + one installed playbook + [Chapter 5](05-tasks-dispatch-an
 - cai dat harness len Mac tu marketplace
 - khach luu workflow tren trinh duyet chua dang nhap
 - capability workflow khac nhau the nao
+- team learning marketplace library share playbooks, team chia se playbook
+- tiet kiem ngữ cảnh playbook thu vien, luu kinh nghiem chay lai

@@ -2,6 +2,8 @@
 
 Connecting a **Mac** means installing the helper, pairing it to your account, and keeping it healthy enough for **Tasks** to become **Runs**. This chapter uses user vocabulary from [UX simplification](../../product/ux-simplification.md); engineers map the same pieces to **AWI** (install/runtime), **AWB** (bridge), **AWL** (Mac app), and **AWC** (browser Console)—see [deployables](../../product/agent-witch-deployables.md).
 
+Pairing and honest **Mac status** are the trust foundation for every pillar: agents run on hardware you control, and the Console tells you when dispatch is not ready instead of faking success ([Chapter 8 — Production and trust](08-production-and-trust.md), [four pillars](00-philosophy-and-vocabulary.md#four-pillars)). **Efficient memory** also has a Mac side—the **Agent Witch on this Mac** app holds project folders and local run context ([Chapter 5](05-tasks-dispatch-and-runs.md)).
+
 ---
 
 ## What “connect a Mac” actually does
@@ -151,3 +153,4 @@ Chapter 9 (troubleshooting guide) expands FAQ-style flows.
 - ket noi Mac, cai dat agent tren Mac, cap nhat local
 - AWB identity this Mac, pairing token hash
 - Mac offline reconnecting fix Agent Witch
+- tin cay ket noi Mac, pairing an toan, bo nho tren may Mac Agent Witch

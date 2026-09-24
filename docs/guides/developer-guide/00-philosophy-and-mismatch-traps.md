@@ -27,6 +27,23 @@ Capabilities, workflows, library, harness, marketplace, and dispatch share **one
 - **Agent run** is one execution with events in Reports.
 - **Harness** is files under `~/.agent-witch/harness/`—not the run itself.
 
+Product **pillars** (authoring, learning, memory, team) stack on that loop — see [product-pillars.md](../../product/product-pillars.md).
+
+---
+
+## Pillar → module map (engineering)
+
+Use this when routing doc updates or agent context; it is not a second runtime.
+
+| Pillar                 | Primary modules / features                                                                 | Developer guide                                                                                                                       |
+| ---------------------- | ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------- |
+| **1 Easy authoring**   | `src/features/workflows/`, workflow orchestration lib, composer / capability forms         | [ch.6](06-workflows-orchestration.md)                                                                                                 |
+| **2 Learn from usage** | `src/features/feedback/`, `src/features/improvements/`, run feedback APIs, Reports honesty | [ch.5](05-dispatch-presence-and-runs.md), [ch.9](09-known-issues-and-regressions.md), [ch.10](10-learning-memory-and-improvements.md) |
+| **3 Efficient memory** | `apps/live/features/memory/`, RAG under project folder, playbooks/library scope            | [ch.10](10-learning-memory-and-improvements.md)                                                                                       |
+| **4 Team learning**    | `library`, `marketplace`, `harness`, team Runs visibility                                  | [ch.7](07-capabilities-library-harness.md)                                                                                            |
+
+Repo-only **feature-knowledge** (`.feature-knowledge/index.json`) supports pillar **3** for **coding agents in git**, not end-user run memory — see [ch.10](10-learning-memory-and-improvements.md).
+
 ---
 
 ## How coding agents should load context
