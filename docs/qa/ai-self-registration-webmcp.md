@@ -12,7 +12,7 @@
 
 ## Short answer
 
-An AI creates an account with `POST /api/agent-access/register`. Method `none` needs no mailbox. Method `agentmail` asks Agent Witch to create an Agent Mail inbox when `AGENTMAIL_API_KEY` is set. The response includes a bearer token once. The AI then calls MCP at `POST /api/agent-access/mcp` or REST at `POST /api/agent-access/invoke`. The homepage section **For your AI** has a short prompt. That prompt links to `/for-agents`, which is the full guideline the agent must open and follow. Any bot can also read `GET /llms.txt`. Discovery is `GET /.well-known/webmcp.json`.
+An AI creates an account with `POST /api/agent-access/register`. Method `none` needs no mailbox. Method `agentmail` asks Agent Witch to create an Agent Mail inbox when `AGENTMAIL_API_KEY` is set. The response includes a bearer token once. The AI then calls MCP at `POST /api/agent-access/mcp` or REST at `POST /api/agent-access/invoke`. The homepage section **For your AI** has a short prompt. That prompt links to `/for-agents`, which is the full guideline the agent must open and follow. Any bot can also read `GET /llms.txt` or call `get_agent_guide` for the live tool list. `report_feedback` records usage for Cursor. The guide tells a bot how to expose Agent Witch as a tool named `use_agent_witch` for other bots. Discovery is `GET /.well-known/webmcp.json`.
 
 ## Details
 
