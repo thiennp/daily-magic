@@ -71,8 +71,10 @@ import {
   startNewWriterTranscriptSession,
 } from "@agent-witch/live-memory";
 import {
+  captureAgentWitchGitWorktreeSnapshot,
   distillProjectKnowledgeLesson,
   ensureAgentWitchProjectFolder,
+  formatAgentWitchGitWorktreeVerdict,
   shouldCaptureRunOutputForProjectKnowledge,
   syncProjectKnowledgeCandidateToCloud,
 } from "@agent-witch/live-projects";
@@ -105,6 +107,7 @@ import {
   ensureHarnessWriterCli,
   flushPendingAgentRunCompletions,
   generateAgentRunReportKey,
+  appendAgentRunReportDetailsLine,
   isHarnessWriterAgentId,
   isTerminalStreamAccepted,
   isWriterConversationStarted,
@@ -149,6 +152,11 @@ const shellSessionIdByRunId = new Map<string, string>();
 const projectFolderPathByRunId = new Map<string, string>();
 const projectIdByRunId = new Map<string, string>();
 const promptByRunId = new Map<string, string>();
+const reportKeyByRunId = new Map<string, string>();
+const gitSnapshotBeforeByRunId = new Map<
+  string,
+  Awaited<ReturnType<typeof captureAgentWitchGitWorktreeSnapshot>>
+>();
 const runScopedOverlayByRunId = new Map<string, boolean>();
 
 interface AgentWitchOutboundSocket {
@@ -496,6 +504,16 @@ const dispatchWriterTask = async (
     prompt,
     resolveWriterSpawnEnv(config.layout, agentRunId, hasRunScopedOverlay),
   );
+
+  if (agentRunId !== undefined && resolvedProjectFolderPath.trim().length > 0) {
+    const gitBefore = await captureAgentWitchGitWorktreeSnapshot(
+      resolvedProjectFolderPath,
+    );
+    gitSnapshotBeforeByRunId.set(agentRunId, gitBefore);
+    if (resolvedReportKey !== undefined && resolvedReportKey.length > 0) {
+      reportKeyByRunId.set(agentRunId, resolvedReportKey);
+    }
+  }
 
   if (needsWarmup && agentRunId !== undefined) {
     sendMessage(socket, {
@@ -1650,6 +1668,24 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
             createdAt: new Date().toISOString(),
           },
         });
+      }
+
+      if (agentRunId !== undefined && projectFolderPath !== null) {
+        const reportKey = reportKeyByRunId.get(agentRunId);
+        const gitBefore = gitSnapshotBeforeByRunId.get(agentRunId);
+        if (reportKey !== undefined && gitBefore !== undefined) {
+          void captureAgentWitchGitWorktreeSnapshot(projectFolderPath).then(
+            (gitAfter) => {
+              const verdictLine = formatAgentWitchGitWorktreeVerdict({
+                before: gitBefore,
+                after: gitAfter,
+              });
+              appendAgentRunReportDetailsLine(reportKey, verdictLine);
+              gitSnapshotBeforeByRunId.delete(agentRunId);
+              reportKeyByRunId.delete(agentRunId);
+            },
+          );
+        }
       }
 
       if (

@@ -128,6 +128,34 @@ export const seedAgentRunReportFile = (input: {
   });
 };
 
+export const appendAgentRunReportDetailsLine = (
+  reportKey: string,
+  line: string,
+): AgentRunReportFile | null => {
+  const trimmedLine = line.trim();
+  if (trimmedLine.length === 0) {
+    return readAgentRunReportFile(reportKey);
+  }
+
+  const existing = readAgentRunReportFile(reportKey);
+  if (existing === null) {
+    return null;
+  }
+
+  const mergedDetails =
+    existing.details !== undefined && existing.details.trim().length > 0
+      ? `${existing.details.trim()}\n${trimmedLine}`
+      : trimmedLine;
+
+  const next: AgentRunReportFile = {
+    ...existing,
+    updatedAt: new Date().toISOString(),
+    details: mergedDetails,
+  };
+  writeAgentRunReportFile(next);
+  return next;
+};
+
 export const buildAgentRunReportHeartbeatPayload = (
   report: AgentRunReportFile | null,
 ): {

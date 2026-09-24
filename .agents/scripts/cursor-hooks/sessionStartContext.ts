@@ -6,5 +6,5 @@ import { emitHookJson } from "./emitHookJson";
 
 emitHookJson({
   additional_context:
-    "daily-magic: mechanical layout/import/barrel/utility-line limits are enforced by project Cursor hooks (.cursor/hooks.json) after writes and on agent stop—not repeated in chat rules. Semantic guidance stays in path-scoped .cursor/rules.",
+    "daily-magic: mechanical layout/import/barrel/utility-line limits are enforced by project Cursor hooks (.cursor/hooks.json) after writes and on agent stop—not repeated in chat rules. Agent Witch code edits: read/update docs/guides/ chapters (rules-agent-witch-guides.mdc). Semantic guidance stays in path-scoped .cursor/rules.",
 });

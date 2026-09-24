@@ -52,6 +52,7 @@ Open the top `sourcePath` under `docs/qa/` when present.
 | [mac-harness-workflow-agent-dispatch.md](mac-harness-workflow-agent-dispatch.md)                 | Harness install vs workflow/agent `command.claude.run` over Mac WebSocket    |
 | [run-ux-honesty-strings.md](run-ux-honesty-strings.md)                                           | Pimi locked run outcome chips, suffixes, cli-fallback copy (live progress)   |
 | [bedrock-agentcore-vs-agent-witch-flow.md](bedrock-agentcore-vs-agent-witch-flow.md)             | AWS Bedrock AgentCore harness flow vs Agent Witch dispatch, layer by layer   |
+| [agent-witch-product-pillars.md](agent-witch-product-pillars.md)                                 | Core job + four product pillars (authoring, learning, memory, team)          |
 
 Add a row here when you add a Q&A file.
 

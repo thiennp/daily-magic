@@ -10,6 +10,15 @@
 
 One codebase: the repo folder name is not a separate product from Agent Witch. Do not treat CHECK24 `daily-magic.*` hosts as production Agent Witch unless a human says so. See [product/repo-name-and-hosting.md](product/repo-name-and-hosting.md).
 
+**Core job:** run a trusted agent on a Mac you control (or a teammate’s), see what happened in the browser, and reuse what worked. Day-to-day language: **Mac** · **Task** · **Run** · **Playbook** ([UX simplification](product/ux-simplification.md)).
+
+**Four product pillars** (how the product improves over time; full table and north-star honesty in [product/product-pillars.md](product/product-pillars.md)):
+
+1. **Easy authoring** — approachable Tasks and workflows without AI-expert jargon.
+2. **Learn from usage** — rough runs become reviewed improvements; you stay in control.
+3. **Efficient memory** — new Tasks reuse useful context from past Runs (solo or team).
+4. **Team learning** — shared Runs, Playbooks, and company templates so the org improves together.
+
 ## What the system does (runtime)
 
 1. **Users** sign in (NextAuth + Neon), connect a **Mac** (install script + WebSocket to the same origin), compose tasks, and watch live terminal output.

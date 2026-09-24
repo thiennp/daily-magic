@@ -10,6 +10,15 @@
 - **Agent** (`/agent`) = compose and send tasks; **Reports** (`/reports`) = history and live output.
 - Glossary: [product/concepts.md](../product/concepts.md) (dispatch, agent run).
 
+**Product pillars (this domain):**
+
+| Pillar                 | Here                                                                                                                                                                                                 |
+| ---------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **2 Learn from usage** | Run feedback, improvements, run-again / save-as-playbook, honest run UX — L2 `feedback`, `improvements`, [run-ux-honesty-strings.md](../qa/run-ux-honesty-strings.md)                                |
+| **3 Efficient memory** | Run memory injection on dispatch, playbook scope, writer routing that respects memory budget — [writer-dispatch-cascade-routing.md](../qa/writer-dispatch-cascade-routing.md), concepts § Run memory |
+
+Pillar map: [product/product-pillars.md](../product/product-pillars.md).
+
 ## Read next if…
 
 | If you need…                  | Open                                                                                        |

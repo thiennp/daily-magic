@@ -8,6 +8,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { emitFollowupMessage } from "./emitHookJson";
+import { guideMaintenanceStopMessage } from "./guideMaintenanceCheck";
 import { readHookInput, type HookInputBase } from "./readHookInput";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -35,15 +36,21 @@ const run = (command: string): string | null => {
   }
 };
 
-const hasSrcOrDbChanges = (): boolean => {
+const listChangedPaths = (): readonly string[] => {
   try {
-    const out = execSync('git diff --name-only HEAD -- "src/" "db/"', {
-      cwd: REPO_ROOT,
-      encoding: "utf8",
-    }).trim();
-    return out.length > 0;
+    const out = execSync(
+      'git diff --name-only HEAD -- "src/" "db/" "docs/guides/" "server.ts"',
+      {
+        cwd: REPO_ROOT,
+        encoding: "utf8",
+      },
+    ).trim();
+    if (out.length === 0) {
+      return [];
+    }
+    return out.split("\n").filter(Boolean);
   } catch {
-    return false;
+    return [];
   }
 };
 
@@ -58,12 +65,21 @@ const main = (): void => {
     emitFollowupMessage("");
     return;
   }
-  if (!hasSrcOrDbChanges()) {
+  const changedPaths = listChangedPaths();
+  const hasSrcOrDbChanges = changedPaths.some(
+    (p) => p.startsWith("src/") || p.startsWith("db/") || p === "server.ts",
+  );
+  if (!hasSrcOrDbChanges) {
     emitFollowupMessage("");
     return;
   }
 
   const failures: string[] = [];
+
+  const guideMessage = guideMaintenanceStopMessage({ changedPaths });
+  if (guideMessage.length > 0) {
+    failures.push(guideMessage);
+  }
 
   const architectureFailure = run("npm run cursor:architecture");
   if (architectureFailure !== null) {

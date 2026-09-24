@@ -63,7 +63,7 @@ Ranked by the size of the gap this flow exposes:
 3. **Shared memory tier.** Local RAG and transcripts are per-machine; promoting a redacted subset into AWC would let a second device or a teammate reuse them.
 4. **Traces and metrics.** `agent_runs` records outcomes but not spans; OTel-style traces would make multi-step workflow runs diagnosable without reading raw terminal output.
 
-Each of these can be closed without adding recurring cost for the user or the team, mostly by deriving from data already written and by using the sandbox tiers already shipped inside the writer CLIs. The proposed shape, ranked with its honest catches, is in [docs/product/agentcore-lessons-zero-marginal-cost.md](../product/agentcore-lessons-zero-marginal-cost.md).
+Each of these can be closed without adding recurring cost for the user or the team, mostly by deriving from data already written and by using the sandbox tiers already shipped inside the writer CLIs. The proposed shape, ranked with its honest catches, is in [docs/product/agentcore-lessons-zero-marginal-cost.md](../product/agentcore-lessons-zero-marginal-cost.md). That doc aligns with [product-pillars.md](../product/product-pillars.md) pillars **2** (learn from usage — human-in-the-loop improvements, no LLM judge) and **3** (efficient memory — outcome signals, not raw replay).
 
 ## Related
 

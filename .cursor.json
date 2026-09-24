@@ -109,6 +109,12 @@
       "glob": "**/*"
     },
     {
+      "name": "rules-agent-witch-guides",
+      "description": "User & developer guide books; read/update chapters when touching Agent Witch code",
+      "path": "rules-agent-witch-guides.mdc",
+      "glob": "**/*"
+    },
+    {
       "name": "architecture-decision-records",
       "description": "Binding ADR catalog for Agent Witch (docs/adr)",
       "path": "architecture-decision-records.mdc",

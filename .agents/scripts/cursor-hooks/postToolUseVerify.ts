@@ -10,6 +10,10 @@ import {
   type PostToolUseInput,
 } from "./readHookInput";
 import {
+  formatGuideReminder,
+  sectionsForChangedPath,
+} from "./guideMaintenanceCheck";
+import {
   runArchitectureOnFile,
   shouldArchitectureCheck,
   toRepoRelativePath,
@@ -37,20 +41,37 @@ const main = (): void => {
   }
 
   const repoRelative = toRepoRelativePath(absolutePath, input.cwd);
-  if (repoRelative === null || !shouldArchitectureCheck(repoRelative)) {
+  if (repoRelative === null) {
     emitAdditionalContext("");
+    return;
+  }
+
+  const guideSections = sectionsForChangedPath(repoRelative);
+  const guideBlock =
+    guideSections.length > 0 ? `\n\n${formatGuideReminder(guideSections)}` : "";
+
+  if (!shouldArchitectureCheck(repoRelative)) {
+    if (guideBlock.length > 0) {
+      emitAdditionalContext(truncate(guideBlock.trim()));
+    } else {
+      emitAdditionalContext("");
+    }
     return;
   }
 
   const failure = runArchitectureOnFile(repoRelative);
   if (failure === null) {
-    emitAdditionalContext("");
+    if (guideBlock.length > 0) {
+      emitAdditionalContext(truncate(guideBlock.trim()));
+    } else {
+      emitAdditionalContext("");
+    }
     return;
   }
 
   emitAdditionalContext(
     truncate(
-      `[Cursor hook: architecture-check] Fix before continuing:\n\n${failure}`,
+      `[Cursor hook: architecture-check] Fix before continuing:\n\n${failure}${guideBlock}`,
     ),
   );
 };
