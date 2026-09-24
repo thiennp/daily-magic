@@ -1,0 +1,73 @@
+import { describe, expect, it } from "vitest";
+
+import { buildAgentAccessPrompt } from "@/lib/agentAccess/buildAgentAccessPrompt";
+import { parseAgentAccessRegisterBody } from "@/lib/agentAccess/parseAgentAccessRegisterBody";
+import {
+  createAgentAccessToken,
+  hashAgentAccessToken,
+  readBearerAgentAccessToken,
+} from "@/lib/agentAccess/hashAgentAccessToken";
+import { parseAgentMailInboxResponse } from "@/lib/agentAccess/createAgentMailInbox";
+import { isAgentAccessRateLimited } from "@/lib/agentAccess/agentAccessRateLimit";
+import { buildSyntheticAgentEmail } from "@/lib/agentAccess/buildSyntheticAgentEmail";
+
+describe("agent access registration", () => {
+  it("accepts none and agentmail and rejects other methods", () => {
+    expect(parseAgentAccessRegisterBody({ method: "none" })?.method).toBe(
+      "none",
+    );
+    expect(
+      parseAgentAccessRegisterBody({
+        method: "agentmail",
+        displayName: "Scout",
+      })?.displayName,
+    ).toBe("Scout");
+    expect(parseAgentAccessRegisterBody({ method: "gmail" })).toBeNull();
+    expect(
+      parseAgentAccessRegisterBody({
+        method: "none",
+        displayName: "x".repeat(81),
+      }),
+    ).toBeNull();
+  });
+
+  it("builds a prompt that offers no-email and Agent Mail on the production origin", () => {
+    const prompt = buildAgentAccessPrompt("https://www.agentwitch.com");
+
+    expect(prompt).toContain(
+      "https://www.agentwitch.com/api/agent-access/register",
+    );
+    expect(prompt).toContain('method "none"');
+    expect(prompt).toContain('method "agentmail"');
+    expect(prompt).toContain("send_task");
+    expect(prompt).not.toMatch(/Daily Magic/);
+    expect(prompt).not.toMatch(/Job history/);
+  });
+
+  it("hashes tokens and reads only aw_ bearer values", () => {
+    const token = createAgentAccessToken();
+
+    expect(token.startsWith("aw_")).toBe(true);
+    expect(hashAgentAccessToken(token)).toHaveLength(64);
+    expect(readBearerAgentAccessToken(`Bearer ${token}`)).toBe(token);
+    expect(readBearerAgentAccessToken("Bearer nope")).toBeNull();
+  });
+
+  it("uses a synthetic mailbox-less domain for method none", () => {
+    expect(buildSyntheticAgentEmail()).toMatch(
+      /^agt-[0-9a-f-]+@agents\.agentwitch\.com$/,
+    );
+  });
+
+  it("reads an Agent Mail inbox id as the account email", () => {
+    expect(
+      parseAgentMailInboxResponse({ inbox_id: "aw1@agentmail.to" })?.email,
+    ).toBe("aw1@agentmail.to");
+    expect(parseAgentMailInboxResponse({ inbox_id: "no-at" })).toBeNull();
+  });
+
+  it("rate limits the 8th attempt in an hour", () => {
+    expect(isAgentAccessRateLimited(7)).toBe(false);
+    expect(isAgentAccessRateLimited(8)).toBe(true);
+  });
+});

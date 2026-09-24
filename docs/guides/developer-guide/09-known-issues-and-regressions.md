@@ -98,6 +98,7 @@ When fixing bridge/dispatch bugs:
 | Mac reconnecting vs local live | [awc-mac-reconnecting-vs-local-live.md](../../qa/awc-mac-reconnecting-vs-local-live.md)   |
 | Harness vs agent dispatch      | [mac-harness-workflow-agent-dispatch.md](../../qa/mac-harness-workflow-agent-dispatch.md) |
 | Writer routing                 | [writer-dispatch-cascade-routing.md](../../qa/writer-dispatch-cascade-routing.md)         |
+| AI register / WebMCP           | [ai-self-registration-webmcp.md](../../qa/ai-self-registration-webmcp.md)                 |
 
 ---
 

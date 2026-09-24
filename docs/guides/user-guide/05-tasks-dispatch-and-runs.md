@@ -146,6 +146,12 @@ Test dispatch without Home: developer `ws-test` UI ([local bridge](../../agent-w
 
 ---
 
+## Sending a Task from an external AI
+
+After the AI registers (homepage prompt, method `none` or `agentmail`), it calls `send_task` with a prompt. The Run is the same pipeline as the composer. If `list_macs` is empty, pair a Mac first. Read status with `list_runs` and `get_run` — that is the Reports history, not a second product.
+
+---
+
 ## Related docs
 
 - [Chapter 3 — Home and navigation](03-home-and-navigation.md)

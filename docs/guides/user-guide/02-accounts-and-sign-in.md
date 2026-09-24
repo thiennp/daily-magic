@@ -138,6 +138,19 @@ Threat model for engineers: [security/threat-model.md](../../security/threat-mod
 
 ---
 
+## AI self-registration (no email, or Agent Mail)
+
+On the homepage, copy the prompt under **For your AI**. An AI can create its own account:
+
+| Method      | What you get                                                                                               |
+| ----------- | ---------------------------------------------------------------------------------------------------------- |
+| `none`      | A bearer token and an address at `agents.agentwitch.com`. There is no mailbox.                             |
+| `agentmail` | Agent Witch creates an Agent Mail inbox and uses that address. Requires `AGENTMAIL_API_KEY` on the server. |
+
+The token calls WebMCP / MCP tools: `whoami`, `list_macs`, `send_task`, `list_runs`, `get_run`. A Task still runs on a paired Mac. Details: [AI self-registration Q&A](../../qa/ai-self-registration-webmcp.md).
+
+---
+
 ## Related docs
 
 - [Chapter 1 — Getting started](01-getting-started.md)
@@ -152,6 +165,7 @@ Threat model for engineers: [security/threat-model.md](../../security/threat-mod
 - Agent Witch sign in, login, Google OAuth, magic link
 - account pairing Mac, connect this Mac, this computer badge
 - dang nhap Agent Witch, tai khoan, lien ket Mac
+- AI tu dang ky khong email, Agent Mail, WebMCP prompt trang chu
 - email magic link Agent Witch, test auth localhost
 - team nav solo marketplace Agent Witch account
 - team learning shared runs library account, team chia se kinh nghiem tai khoan

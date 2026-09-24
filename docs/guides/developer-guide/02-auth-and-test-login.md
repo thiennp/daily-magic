@@ -110,6 +110,14 @@ After schema apply, test login creates or reuses users via `findOrCreateUserByEm
 
 ---
 
+## AI access tokens
+
+`POST /api/agent-access/register` creates a `users` row and an `agent_access_tokens` row (SHA-256 hash only). Methods: `none` (synthetic `agt-<uuid>@agents.agentwitch.com`) or `agentmail` (`AGENTMAIL_API_KEY`, `POST https://api.agentmail.to/v0/inboxes`). Rate limit: 8 attempts per hour per hashed client IP.
+
+MCP: `POST /api/agent-access/mcp`. REST: `POST /api/agent-access/invoke`. Discovery: `GET /.well-known/webmcp.json`. Browser WebMCP registers tools from `AgentAccessWebMcpBridge` when `navigator.modelContext` exists. Code: `src/lib/agentAccess/`.
+
+---
+
 ## Related
 
 | Topic                   | Link                                                                  |
