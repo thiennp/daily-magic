@@ -30,6 +30,7 @@
     "test:e2e:shipped-install": "playwright test --config=playwright.shipped-install.config.ts",
     "test:shipped-install-blackbox": "tsx scripts/runShippedInstallBlackbox.ts",
     "showcase:capture": "node .agents/scripts/capture-showcase-screens.mjs",
+    "portfolio:push-github-io": "bash .agents/scripts/pushThiennpGithubIo.sh",
     "e2e:capture-screenshots": "playwright test --config=playwright.capture.config.ts",
     "e2e:agent-witch:setup": "tsx scripts/e2e-setup-agent-witch-localhost.ts",
     "test:auth:session": "tsx scripts/seedTestAuthSession.ts",

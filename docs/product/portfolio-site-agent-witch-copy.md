@@ -2,7 +2,10 @@
 
 Use this when updating [https://thiennp.github.io/](https://thiennp.github.io/) to match [product-pillars.md](product-pillars.md) and [philosophy-and-copy-guideline.md](philosophy-and-copy-guideline.md).
 
-Cloud agents may not have push access to `thiennp/thiennp.github.io`; apply locally on branch `master`.
+Cloud agents on **`thiennp/daily-magic`** cannot push **`thiennp/thiennp.github.io`** until a PAT is configured. Use one of:
+
+1. **Canonical HTML** in this repo: [`external/thiennp.github.io/`](../../external/thiennp.github.io/) — run `npm run portfolio:push-github-io` locally (needs push access), or
+2. **GitHub Actions** workflow **Sync thiennp.github.io** after adding repo secret `THIENNP_GITHUB_IO_DEPLOY_TOKEN` (fine-grained PAT with `contents: write` on `thiennp.github.io`).
 
 ## `index.html` — Featured Projects → Agent Witch card
 

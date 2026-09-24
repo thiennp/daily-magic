@@ -1,0 +1,72 @@
+commit b9c0a6776ecd298428f769677350eee60fdb0078
+Author: Cursor Agent <cursoragent@cursor.com>
+Date:   Thu Sep 24 06:49:03 2026 +0000
+
+    docs: align Agent Witch intro with product pillars and agentwitch.com
+
+diff --git a/agent-witch-case-study.html b/agent-witch-case-study.html
+index 281f542..70fad31 100644
+--- a/agent-witch-case-study.html
++++ b/agent-witch-case-study.html
+@@ -50,10 +50,15 @@
+         <div class="hero">
+             <p class="eyebrow">Architecture Case Study</p>
+             <h1>Agent Witch</h1>
+-            <p class="tagline">A control plane for running AI coding agents on real hardware — not only inside the IDE.</p>
++            <p class="tagline">A control plane for running AI coding agents on real hardware — Mac-first, browser-visible, team-ready.</p>
+         </div>
+ 
+         <article class="section">
++            <h2 class="section-title">Product pillars (2026)</h2>
++            <p class="card-desc">
++                Beyond the core loop (connect a Mac, send a Task, watch a Run, save a Playbook), Agent Witch is built around four promises: <strong>easy authoring</strong> for people who are not prompt engineers; <strong>learn from usage</strong> with human approval before playbooks change; <strong>efficient memory</strong> so new tasks reuse useful context from past runs; and <strong>team learning</strong> through shared Reports, Playbooks, and company templates—not isolated chat threads.
++            </p>
++
+             <h2 class="section-title">The Problem</h2>
+             <p class="card-desc">
+                 Most AI coding agents run wherever the IDE happens to be open. That's fine for a solo developer, but it breaks down for a team: there's no shared run history, no way to dispatch a task to a teammate's machine, no audit trail, and no policy layer over who can run what. Agent Witch exists to give a team a single place to trigger trusted agent runs on real hardware &mdash; a Mac they own, not a shared cloud sandbox &mdash; with the same rigor you'd expect from any internal platform: authentication, approvals, and a record of what happened.
+@@ -126,7 +131,7 @@
+ 
+         <article class="section">
+             <div class="links">
+-                <a href="https://agentwitch.com" class="btn" target="_blank">Launch Agent Witch</a>
++                <a href="https://www.agentwitch.com" class="btn" target="_blank" rel="noopener">Launch Agent Witch</a>
+                 <a href="index.html#featured-projects" class="btn btn-secondary">&larr; Back to Projects</a>
+             </div>
+         </article>
+diff --git a/index.html b/index.html
+index 101bb2a..638cdcc 100644
+--- a/index.html
++++ b/index.html
+@@ -77,13 +77,17 @@
+             <article class="card">
+                 <h3 class="card-title"><img class="card-icon" src="assets/icons/agentwitch.svg" alt=""> Agent Witch</h3>
+                 <p class="card-desc">
+-                    A web control plane for running AI coding agents on your Mac (and Cursor Cloud), with team dispatch, run history, and shared agent capabilities — not only inside the IDE.
++                    A web control plane for running AI coding agents on your Mac (and Cursor Cloud), with team dispatch, run history, and shared playbooks—not only inside the IDE.
++                </p>
++                <p class="card-desc" style="margin-top:12px;">
++                    <strong>Core job:</strong> run a trusted agent on a Mac you control, see what happened in the browser, reuse what worked.
++                    <strong>Four pillars:</strong> easy authoring (start with a Task) · learn from usage (you approve changes) · efficient memory from past Runs · team learning via shared Playbooks and Reports.
+                 </p>
+                 <ul class="bullets">
+-                    <li>Cloud Control Plane decoupled from distributed Mac worker nodes via secure, origin-verified WebSocket connections</li>
+-                    <li>Durable, persisted workflow state machine with Human-in-the-Loop checkpoints that suspend and resume runs without losing context</li>
+-                    <li>HTTPS-only WebSocket upgrades, origin allow-listing, and automatic single-instance process supervision</li>
+-                    <li>Publish and share capabilities, harness bundles, and marketplace offerings inside your company</li>
++                    <li>Cloud control plane (AWC) decoupled from Mac workers via origin-verified WebSocket connections</li>
++                    <li>Durable workflow checkpoints—human-in-the-loop before the next agent step</li>
++                    <li>Honest run UX: offline Mac, updates, and reconnecting states block Send with clear reasons</li>
++                    <li>Company library, marketplace templates, and Playbooks on one dispatch runtime</li>
+                 </ul>
+                 <div class="pills">
+                     <span class="pill">TypeScript</span>
+@@ -92,7 +96,7 @@
+                     <span class="pill">Multi-Agent Orchestration</span>
+                 </div>
+                 <div class="links">
+-                    <a href="https://agentwitch.com" class="btn" target="_blank">Launch Agent Witch</a>
++                    <a href="https://www.agentwitch.com" class="btn" target="_blank" rel="noopener">Launch Agent Witch</a>
+                     <a href="agent-witch-case-study.html" class="btn btn-secondary">Read the Architecture Case Study</a>
+                 </div>
+             </article>
