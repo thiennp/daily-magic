@@ -1,0 +1,140 @@
+# Chapter 7 — Capabilities, library, and playbooks
+
+This chapter explains how Agent Witch turns “something that worked once” into something you can **run again**, share with a team, or install on a **Mac**—without treating library, marketplace, and harness as three different products.
+
+Vocabulary: [Chapter 0](00-philosophy-and-vocabulary.md). One runtime, many surfaces: [Product concepts](../../product/concepts.md).
+
+---
+
+## One dispatch engine, four names you might hear
+
+| User-facing idea | What it is                                                        | Where it lives                                                  |
+| ---------------- | ----------------------------------------------------------------- | --------------------------------------------------------------- |
+| **Playbook**     | Saved behavior: prompts, rules, templates                         | **Library**, marketplace listings, harness files on the **Mac** |
+| **Capability**   | A published **agent offering** (metadata, version, policy)        | Cloud (Agent Witch Console)                                     |
+| **Workflow**     | A capability shape with a **form** (and sometimes a step graph)   | Cloud                                                           |
+| **Harness**      | Rules/skills/commands **on disk** under `~/.agent-witch/harness/` | Your **Mac**                                                    |
+
+**Library** = your saved playbooks. **Marketplace** = company-published listings others can browse and install. Neither replaces dispatch—they point at capabilities and push harness bundles when you install.
+
+Engineering detail: [Mac harness, workflow, and agent dispatch](../../qa/mac-harness-workflow-agent-dispatch.md).
+
+---
+
+## Capabilities (what can run)
+
+A **capability** answers: _which agent profile, which form fields, and which policies apply_ before Agent Witch creates a **Run**.
+
+You encounter capabilities when you:
+
+- Pick an offering in the task composer or workflow runner.
+- Publish or edit a workflow (create/edit forms, optional outputs).
+- Browse team directory or admin tooling (company setups).
+
+Capabilities are **cloud** objects. They do not execute code on the Mac by themselves—they describe what the next **Task** or workflow step will send.
+
+---
+
+## Playbooks and the library
+
+The **Library** (`/library`) is where **playbooks** you care about live after you save or fork them.
+
+Typical solo loop:
+
+1. Complete a good **Run** or finish a workflow you like.
+2. **Save to library** (or fork from marketplace).
+3. Open the playbook later, adjust if needed, and **run again** on your **Mac**.
+
+Library items reference capabilities/workflows you already use. Running from library still creates a normal **Run** (or workflow run)—same honesty rules for terminal and outcomes ([run UX honesty](../../qa/run-ux-honesty-strings.md)).
+
+### Guest library (before sign-in)
+
+You can open `/library` without an account and save **drafts in this browser only** (local storage). Starter templates come from public template APIs. After you sign in, drafts **sync** to your cloud library; **newer `updatedAt` wins**, with the cloud copy winning on a tie.
+
+Details: [Guest library browser drafts](../../qa/guest-library-browser-drafts.md).
+
+### Running from library
+
+- **Guests** are redirected to sign in before send.
+- **Signed-in users** need a **dispatch-ready Mac** or a configured **Cursor Cloud** API key before **Send** is enabled; otherwise the UI shows connect / API-key guidance.
+
+---
+
+## Installing playbooks on your Mac
+
+When you **install** from marketplace or save certain templates with a target device, Agent Witch pushes a **harness bundle** to the paired **Mac** over the Agent Witch WebSocket (`harness.request`). The Mac writes files under `~/.agent-witch/harness/`.
+
+If the browser and **Mac** are the **same machine**, install can also go through the local **bridge** (loopback HTTP) without waiting on cloud socket timing—useful when you are setting up from **Connect this Mac**.
+
+Same-machine identity: [How AWC knows this computer](../../qa/awc-how-browser-knows-this-computer.md).
+
+After install, the next **Task** or workflow agent step still dispatches as a **Run**; harness files shape how the local CLI behaves.
+
+---
+
+## Marketplace (team templates)
+
+**Marketplace** listings are published harness/capability packages for others to borrow. For a company user, marketplace is how leads ship **standard playbooks** without every teammate rebuilding forms and rules.
+
+Flow (simplified):
+
+1. Browse listing → **Install** (choose **Mac** when prompted).
+2. Harness lands on the Mac; capability metadata lives in cloud.
+3. Teammates run from library or marketplace entry → shared **Runs** history.
+
+Marketplace is not a separate runtime—install + library + dispatch.
+
+---
+
+## Workflows as playbooks with forms
+
+A **workflow** capability adds structured **questions** before dispatch: text, choices, file upload, etc. Official presets may add **checkpoints** (see [Chapter 6 — Workflows and checkpoints](06-workflows-and-checkpoints.md)).
+
+When you save a workflow to library, you are saving a **playbook** you can rerun with the same form shape. Custom workflows without an official graph still dispatch as one agent **Run** with operator steps embedded in the prompt ([workflow builder](../../qa/workflow-builder-field-types.md)).
+
+---
+
+## Project folder and Mac-only pickers
+
+The console cannot browse your Mac’s disk directly. Set **repository / project folder** via:
+
+- **Agent Witch Live** on the Mac (`127.0.0.1:43347`), or
+- Local **bridge** folder picker when the browser runs on that **Mac**.
+
+See [AWC project folder picker](../../qa/awc-project-folder-path-picker.md) and [AWC vs AWL projects source of truth](../../qa/awc-awl-projects-source-of-truth.md).
+
+Wrong folder → failed or misleading **Runs**; fix the path in settings or the workflow form before blaming the agent.
+
+---
+
+## What to defer until you need it
+
+| Defer                          | Reach for when                    |
+| ------------------------------ | --------------------------------- |
+| Authoring marketplace listings | You own team standards            |
+| Deep harness file editing      | You outgrow UI install            |
+| Cursor Cloud dispatch          | No Mac available (explicit setup) |
+
+Solo makers: library + one installed playbook + [Chapter 5](05-tasks-dispatch-and-runs.md) covers most weeks.
+
+---
+
+## Related reading
+
+- [System Q&A index](../../qa/README.md)
+- [Developer guide — mismatch traps](../developer-guide/00-philosophy-and-mismatch-traps.md) (if UI says harness and docs say playbook, fix the product copy)
+- Feature READMEs: `src/features/library/README.md`, `src/features/capabilities/README.md`
+
+---
+
+## Query aliases
+
+- Agent Witch library playbooks capabilities marketplace
+- save to library run again fork workflow
+- install playbook on Mac harness
+- guest library localStorage sign in sync
+- capability vs workflow vs playbook user guide
+- thu vien Agent Witch, playbook luu lai chay lai
+- cai dat harness len Mac tu marketplace
+- khach luu workflow tren trinh duyet chua dang nhap
+- capability workflow khac nhau the nao
