@@ -2,6 +2,17 @@
 
 This repository (`daily-magic`) is the codebase for **[Agent Witch](https://www.agentwitch.com)** — a web control plane for **running AI coding agents on your Mac** (and optional **Cursor Cloud**), with team dispatch, run history, and shared agent capabilities.
 
+## Product
+
+**Core job:** run a trusted agent on a Mac you control (or a teammate’s), see what happened in the browser, and reuse what worked. User terms: **Mac** · **Task** · **Run** · **Playbook**. Canonical pillars and roadmap honesty: [docs/product/product-pillars.md](docs/product/product-pillars.md).
+
+| Pillar               | One line                                                                    |
+| -------------------- | --------------------------------------------------------------------------- |
+| **Easy authoring**   | Start with a plain Task; add workflows and forms when you need structure.   |
+| **Learn from usage** | Feedback and suggestions from Runs—you accept before playbooks change.      |
+| **Efficient memory** | New Tasks reuse useful context from past Runs without repeating setup.      |
+| **Team learning**    | Share Runs, Playbooks, and company templates so the team improves together. |
+
 ## What you can do
 
 - **Connect a Mac** with the Agent Witch client, then send tasks from the browser and watch live terminal output.

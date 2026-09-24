@@ -10,7 +10,14 @@
 - **Harness** = instructions installed on Mac under `~/.agent-witch/harness/` (not the run itself).
 - **Library** = saved playbooks; **marketplace** = company-published listings on top of harness + capabilities.
 
-Engineer glossary: [product/concepts.md](../product/concepts.md).
+**Product pillars (this domain):**
+
+| Pillar               | Here                                                                                                                                                                          |
+| -------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **1 Easy authoring** | Workflow forms, capability metadata, official marketplace presets, progressive composer → [workflow-builder-form-and-graph.md](../product/workflow-builder-form-and-graph.md) |
+| **4 Team learning**  | Library, marketplace, harness publish/install, shared templates — org reuse, not one-off prompts                                                                              |
+
+Pillar map: [product/product-pillars.md](../product/product-pillars.md). Engineer glossary: [product/concepts.md](../product/concepts.md).
 
 ## Read next if…
 
