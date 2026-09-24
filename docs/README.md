@@ -35,6 +35,10 @@ Model: [conventions/progressive-disclosure.md](conventions/progressive-disclosur
 
 - [Q&A index](qa/README.md) — stable “how it works” answers (`npm run feature-knowledge:query -- "…" --feature=docs`); agents read **`rules-system-qa-rag.mdc`**
 
+## Guides (books)
+
+- [Guides index](guides/README.md) — **user guide** + **developer guide** (chaptered); maintenance map `guides/guide-maintenance.map.json`; rule **`rules-agent-witch-guides.mdc`**
+
 ## Conventions
 
 - [Load context — task paths](conventions/load-context.md)

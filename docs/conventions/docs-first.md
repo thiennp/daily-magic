@@ -12,17 +12,19 @@ Treat markdown under `docs/` and feature folders as the **canonical map**. Code 
 
 ## Checklist by change type
 
-| Change                                     | Update                                                                                                                                                               |
-| ------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Scope of a product area (multiple slugs)   | Matching `docs/domains/<area>.md` (L1)                                                                                                                               |
-| New or renamed route/API                   | Registry JSON + feature `README.md` (L2); architecture map if user-facing route table changes                                                                        |
-| Agent Witch bridge, WS, presence, dispatch | ADR or `KNOWN_ISSUES.md`; [agent-witch/local-bridge.md](../agent-witch/local-bridge.md) for install/runtime                                                          |
-| Deploy / hosting / env                     | [development/deployment.md](../development/deployment.md), ADR 0006                                                                                                  |
-| Security boundary                          | [security/threat-model.md](../security/threat-model.md)                                                                                                              |
-| Bug fix with recurrence risk               | Row in feature `KNOWN_ISSUES.md` + regression test                                                                                                                   |
-| Repeat “how does the system work?” answer  | New or updated `docs/qa/<topic>.md` + catalog in `docs/qa/README.md`; `npm run feature-knowledge:index`                                                              |
-| New harness rule for agents                | `.cursor/rules/` or command under `.cursor/commands/` — only if automation needs it; summarize in [agent-context.md](agent-context.md) if it affects context loading |
-| FSA new slice or migrate one slug          | [ADR 0007](../adr/0007-fractal-slice-architecture.md), [fsa-workflows.md](fsa-workflows.md), `command-fsa-*.md`                                                      |
+| Change                                      | Update                                                                                                                                                               |
+| ------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Scope of a product area (multiple slugs)    | Matching `docs/domains/<area>.md` (L1)                                                                                                                               |
+| New or renamed route/API                    | Registry JSON + feature `README.md` (L2); architecture map if user-facing route table changes                                                                        |
+| Agent Witch bridge, WS, presence, dispatch  | ADR or `KNOWN_ISSUES.md`; [agent-witch/local-bridge.md](../agent-witch/local-bridge.md) for install/runtime                                                          |
+| Deploy / hosting / env                      | [development/deployment.md](../development/deployment.md), ADR 0006                                                                                                  |
+| Security boundary                           | [security/threat-model.md](../security/threat-model.md)                                                                                                              |
+| Bug fix with recurrence risk                | Row in feature `KNOWN_ISSUES.md` + regression test                                                                                                                   |
+| Repeat “how does the system work?” answer   | New or updated `docs/qa/<topic>.md` + catalog in `docs/qa/README.md`; `npm run feature-knowledge:index`                                                              |
+| User-visible Agent Witch flow or Mac bridge | Matching chapter in `docs/guides/user-guide/` + `docs/guides/developer-guide/` (see `guide-maintenance.map.json`)                                                    |
+| Agent Witch code under mapped paths         | Read guide chapters before edit; update examples in same PR if behavior changed                                                                                      |
+| New harness rule for agents                 | `.cursor/rules/` or command under `.cursor/commands/` — only if automation needs it; summarize in [agent-context.md](agent-context.md) if it affects context loading |
+| FSA new slice or migrate one slug           | [ADR 0007](../adr/0007-fractal-slice-architecture.md), [fsa-workflows.md](fsa-workflows.md), `command-fsa-*.md`                                                      |
 
 ## Index for agents and RAG
 

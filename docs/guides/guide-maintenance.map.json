@@ -1,0 +1,107 @@
+{
+  "version": 1,
+  "description": "Maps repo path prefixes to user-guide and developer-guide chapters. Used by Cursor hooks and agents.",
+  "sections": [
+    {
+      "id": "philosophy",
+      "title": "Philosophy & vocabulary",
+      "userGuide": "docs/guides/user-guide/00-philosophy-and-vocabulary.md",
+      "developerGuide": "docs/guides/developer-guide/00-philosophy-and-mismatch-traps.md",
+      "pathPrefixes": [
+        "docs/product/concepts.md",
+        "docs/product/ux-simplification.md",
+        "docs/overview.md"
+      ]
+    },
+    {
+      "id": "getting-started",
+      "title": "Getting started",
+      "userGuide": "docs/guides/user-guide/01-getting-started.md",
+      "developerGuide": "docs/guides/developer-guide/01-local-dev-and-env.md",
+      "pathPrefixes": ["docs/development/setup.md", "README.md", "AGENTS.md"]
+    },
+    {
+      "id": "auth",
+      "title": "Sign-in & accounts",
+      "userGuide": "docs/guides/user-guide/02-accounts-and-sign-in.md",
+      "developerGuide": "docs/guides/developer-guide/02-auth-and-test-login.md",
+      "pathPrefixes": [
+        "src/features/auth/",
+        "src/app/api/auth/",
+        "db/migrations/"
+      ]
+    },
+    {
+      "id": "mac-bridge",
+      "title": "Mac, AWB, AWL, AWI",
+      "userGuide": "docs/guides/user-guide/04-mac-connect-and-bridge.md",
+      "developerGuide": "docs/guides/developer-guide/04-mac-bridge-awl-awb-awi.md",
+      "pathPrefixes": [
+        "src/lib/agentWitch/",
+        "src/features/agent-witch/",
+        "apps/bridge/",
+        "apps/live/",
+        "apps/install/",
+        "public/install/agent-witch/",
+        "scripts/agent-witch",
+        "docs/agent-witch/",
+        "server.ts"
+      ]
+    },
+    {
+      "id": "dispatch-runs",
+      "title": "Tasks, dispatch & runs",
+      "userGuide": "docs/guides/user-guide/05-tasks-dispatch-and-runs.md",
+      "developerGuide": "docs/guides/developer-guide/05-dispatch-presence-and-runs.md",
+      "pathPrefixes": [
+        "src/features/dispatch/",
+        "src/features/agent/",
+        "src/features/reports/",
+        "src/features/home/",
+        "docs/qa/writer-dispatch",
+        "docs/qa/mac-harness-workflow"
+      ]
+    },
+    {
+      "id": "workflows",
+      "title": "Workflows & checkpoints",
+      "userGuide": "docs/guides/user-guide/06-workflows-and-checkpoints.md",
+      "developerGuide": "docs/guides/developer-guide/06-workflows-orchestration.md",
+      "pathPrefixes": [
+        "src/features/workflows/",
+        "docs/qa/workflow-",
+        "docs/qa/official-workflow"
+      ]
+    },
+    {
+      "id": "capabilities-library",
+      "title": "Capabilities, library, playbooks",
+      "userGuide": "docs/guides/user-guide/07-capabilities-library-playbooks.md",
+      "developerGuide": "docs/guides/developer-guide/07-capabilities-library-harness.md",
+      "pathPrefixes": [
+        "src/features/capabilities/",
+        "src/features/library/",
+        "src/features/harness/",
+        "src/features/marketplace/"
+      ]
+    },
+    {
+      "id": "hosting",
+      "title": "Production & hosting",
+      "userGuide": "docs/guides/user-guide/08-production-and-trust.md",
+      "developerGuide": "docs/guides/developer-guide/08-deploy-hosting-neon.md",
+      "pathPrefixes": [
+        "docs/development/deployment.md",
+        "docs/product/repo-name-and-hosting.md",
+        "docs/adr/0006"
+      ]
+    },
+    {
+      "id": "troubleshooting",
+      "title": "Troubleshooting",
+      "userGuide": "docs/guides/user-guide/09-troubleshooting.md",
+      "developerGuide": "docs/guides/developer-guide/09-known-issues-and-regressions.md",
+      "pathPrefixes": ["KNOWN_ISSUES.md", "docs/qa/"]
+    }
+  ]
+}
