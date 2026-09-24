@@ -519,6 +519,20 @@ export const startAgentWitchLocalApp = (input: {
         return;
       }
 
+      if (
+        method === "GET" &&
+        (pathname === "/favicon.ico" || pathname === "/favicon.svg")
+      ) {
+        response.writeHead(200, {
+          "Content-Type": "image/svg+xml",
+          "Cache-Control": "public, max-age=86400",
+        });
+        response.end(
+          `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="none" stroke="#18181b" stroke-width="2" d="M12 2L2 12l10 10 10-10L12 2z"/><path fill="none" stroke="#18181b" stroke-width="2.5" stroke-linecap="round" d="M12 6v12m-6-6h12"/><path fill="none" stroke="#a1a1aa" stroke-width="1.5" stroke-linecap="round" d="M15.5 8.5l-7 7"/></svg>`,
+        );
+        return;
+      }
+
       if (method === "GET" && pathname === "/health") {
         const status = input.controllers.getStatus();
         const installBundle = buildInstallBundleStatus();

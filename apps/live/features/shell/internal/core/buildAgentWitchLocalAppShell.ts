@@ -69,6 +69,7 @@ export const buildAgentWitchLocalAppShell = (input: {
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   <title>${escapeHtml(input.title)} · Agent Witch Local</title>
   <style>${AGENT_WITCH_LOCAL_APP_STYLES}</style>
 </head>
