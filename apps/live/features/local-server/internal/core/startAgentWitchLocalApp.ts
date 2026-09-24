@@ -178,6 +178,65 @@ const escapeHtml = (value: string): string =>
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;");
 
+const LOCAL_APP_UPDATE_ERROR_MAX_CHARS = 200;
+
+type LocalAppHealthFileBadge = "No heartbeat yet" | "Stale" | "Fresh";
+
+const resolveLocalAppHealthFileBadge = (input: {
+  readonly lastHeartbeatAt: string | null;
+  readonly healthFileMissing: boolean;
+  readonly heartbeatIsStale: boolean;
+}): LocalAppHealthFileBadge => {
+  if (input.lastHeartbeatAt === null || input.healthFileMissing) {
+    return "No heartbeat yet";
+  }
+  if (input.heartbeatIsStale) {
+    return "Stale";
+  }
+  return "Fresh";
+};
+
+const buildLocalAppHealthFileBadgeHtml = (
+  badge: LocalAppHealthFileBadge,
+): string => {
+  if (badge === "Fresh") {
+    return `<span class="badge badge-online">Fresh</span>`;
+  }
+  if (badge === "Stale") {
+    return `<span class="badge badge-warn">Stale</span>`;
+  }
+  return `<span class="badge badge-offline">No heartbeat yet</span>`;
+};
+
+const buildLocalAppUpdateFailedLocation = (message: string): string => {
+  const error = message.trim().slice(0, LOCAL_APP_UPDATE_ERROR_MAX_CHARS);
+  const query = new URLSearchParams({ update: "failed" });
+  if (error.length > 0) {
+    query.set("error", error);
+  }
+  return `/?${query.toString()}`;
+};
+
+const buildLocalAppUpdateFailureDetailHtml = (
+  flash: AgentWitchLocalInstallUpdateFlash,
+  updateError: string | null,
+): string => {
+  if (flash !== "failed" || updateError === null || updateError.length === 0) {
+    return "";
+  }
+  return `<div class="alert-error">${escapeHtml(updateError)}</div>`;
+};
+
+const buildKnowledgeEmptyHtml = (query: string, chunkCount: number): string => {
+  if (chunkCount > 0) {
+    return "";
+  }
+  if (query.length > 0) {
+    return `<p class="empty">No matches for "${escapeHtml(query)}".</p>`;
+  }
+  return `<p class="empty">No chunks yet. Finish an agent turn to index.</p>`;
+};
+
 const LOCAL_APP_CORS_HEADERS: Record<string, string> = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Methods": "GET, POST, DELETE, OPTIONS",
@@ -213,7 +272,8 @@ const readBody = async (request: http.IncomingMessage): Promise<string> => {
 
 const buildStatusBody = (input: {
   readonly status: LocalAppStatus;
-  readonly stale: boolean;
+  readonly healthBadge: LocalAppHealthFileBadge;
+  readonly revived: boolean;
   readonly linkCode: string;
   readonly installBundleVersion: string;
   readonly installBundleUpdatedAt: string | null;
@@ -221,17 +281,18 @@ const buildStatusBody = (input: {
   const connectedBadge = input.status.wsConnected
     ? `<span class="badge badge-online">Connected</span>`
     : `<span class="badge badge-offline">Disconnected</span>`;
-  const healthBadge = input.stale
-    ? `<span class="badge badge-warn">Stale</span>`
-    : `<span class="badge badge-online">Fresh</span>`;
+  const healthBadge = buildLocalAppHealthFileBadgeHtml(input.healthBadge);
   const wakeError = input.status.wakeError
     ? `<div class="alert-error">${escapeHtml(input.status.wakeError)}</div>`
+    : "";
+  const revivedNotice = input.revived
+    ? `<div class="alert-success">Revive requested. The bridge will reconnect if this Mac can reach launchd.</div>`
     : "";
   const reviveActions = shouldShowAgentWitchLocalReviveButton(
     input.status.wsConnected,
   )
     ? `<div class="actions">
-        <form method="POST" action="/api/revive" onsubmit="fetch('/api/revive',{method:'POST'});return false;">
+        <form method="POST" action="/api/revive">
           <button class="btn btn-primary" type="submit">Revive WebSocket</button>
         </form>
       </div>`
@@ -241,6 +302,7 @@ const buildStatusBody = (input: {
       <p class="eyebrow">Local bridge</p>
       <h1>Status</h1>
       <p class="lede">Connection and pairing details for Agent Witch on this Mac.</p>
+      ${revivedNotice}
       <div class="meta-grid">
         <div class="meta-item"><span class="meta-label">WebSocket</span><span class="meta-value">${connectedBadge}</span></div>
         <div class="meta-item"><span class="meta-label">Last heartbeat</span><span class="meta-value">${buildAgentWitchLocalHeartbeatElapsedMarkup(input.status.lastHeartbeatAt)}</span></div>
@@ -272,6 +334,20 @@ const readLocalAppUpdateFlash = (
     return "started";
   }
   return null;
+};
+
+const readLocalAppUpdateError = (
+  requestUrl: string | undefined,
+): string | null => {
+  const url = new URL(
+    requestUrl ?? "/",
+    `http://127.0.0.1:${AGENT_WITCH_LOCAL_APP_PORT}`,
+  );
+  const value = url.searchParams.get("error")?.trim() ?? "";
+  if (value.length === 0) {
+    return null;
+  }
+  return value.slice(0, LOCAL_APP_UPDATE_ERROR_MAX_CHARS);
 };
 
 export type AgentWitchLocalAppControllers = {
@@ -307,12 +383,17 @@ export const startAgentWitchLocalApp = (input: {
     readonly body: string;
     readonly installVersion?: ReturnType<typeof readInstallVersion> | null;
     readonly updateFlash?: AgentWitchLocalInstallUpdateFlash;
+    readonly updateError?: string | null;
   }): Promise<string> => {
     const installVersion = shell.installVersion ?? readInstallVersion();
     const offer = await getInstallUpdateOffer();
     const updatePromptHtml = buildAgentWitchLocalInstallUpdatePromptHtml(offer);
-    const updateFlashHtml = buildAgentWitchLocalInstallUpdateFlashHtml(
-      shell.updateFlash ?? null,
+    const updateFlash = shell.updateFlash ?? null;
+    const updateFlashHtml =
+      buildAgentWitchLocalInstallUpdateFlashHtml(updateFlash);
+    const updateFailureDetailHtml = buildLocalAppUpdateFailureDetailHtml(
+      updateFlash,
+      shell.updateError ?? null,
     );
     return buildAgentWitchLocalAppShell({
       title: shell.title,
@@ -321,7 +402,7 @@ export const startAgentWitchLocalApp = (input: {
       cloudAppOrigin: resolveAgentWitchLocalCloudAppOrigin(installVersion),
       installBundleVersionLabel:
         formatAgentWitchInstallBundleVersionLabel(installVersion),
-      prependBody: `${updateFlashHtml}${updatePromptHtml}`,
+      prependBody: `${updateFlashHtml}${updateFailureDetailHtml}${updatePromptHtml}`,
       headerUpdateButtonHtml:
         buildAgentWitchLocalInstallUpdateHeaderButtonHtml(offer),
     });
@@ -351,23 +432,6 @@ export const startAgentWitchLocalApp = (input: {
     installUpdateOfferCache = null;
   };
   let localInstallBundleUpdateInFlight = false;
-  const runLocalInstallBundleUpdateInBackground = (): void => {
-    if (localInstallBundleUpdateInFlight) {
-      return;
-    }
-    localInstallBundleUpdateInFlight = true;
-    void triggerAgentWitchLocalInstallBundleUpdate()
-      .catch((error: unknown) => {
-        console.error(
-          "[agent-witch-local-app] install bundle update failed:",
-          error,
-        );
-      })
-      .finally(() => {
-        localInstallBundleUpdateInFlight = false;
-        clearInstallUpdateOfferCache();
-      });
-  };
   const handleLocalInstallBundleUpdateRequest = async (
     response: http.ServerResponse,
   ): Promise<void> => {
@@ -379,9 +443,61 @@ export const startAgentWitchLocalApp = (input: {
       return;
     }
 
-    response.writeHead(303, { Location: "/?update=started" });
-    response.end();
-    runLocalInstallBundleUpdateInBackground();
+    if (localInstallBundleUpdateInFlight) {
+      response.writeHead(303, {
+        Location: buildLocalAppUpdateFailedLocation(
+          "An update is already running.",
+        ),
+      });
+      response.end();
+      return;
+    }
+
+    localInstallBundleUpdateInFlight = true;
+    try {
+      const result = await triggerAgentWitchLocalInstallBundleUpdate();
+      const location = result.ok
+        ? "/?update=ok"
+        : buildLocalAppUpdateFailedLocation(result.message);
+      response.writeHead(303, { Location: location });
+      response.end();
+    } catch (error: unknown) {
+      const message =
+        error instanceof Error && error.message.trim().length > 0
+          ? error.message
+          : "Install bundle update failed.";
+      response.writeHead(303, {
+        Location: buildLocalAppUpdateFailedLocation(message),
+      });
+      response.end();
+    } finally {
+      localInstallBundleUpdateInFlight = false;
+      clearInstallUpdateOfferCache();
+    }
+  };
+  const sendLocalAppNotFound = async (
+    response: http.ServerResponse,
+    heading: "Not found" | "Project not found",
+  ): Promise<void> => {
+    const sentence =
+      heading === "Project not found"
+        ? "That project is not available on this Mac."
+        : "That page does not exist on this Mac.";
+    const installBundle = buildInstallBundleStatus();
+    const html = await buildLocalAppShell({
+      title: heading,
+      activePath: heading === "Project not found" ? "/projects" : "/",
+      installVersion: installBundle.installVersion,
+      body: `<section class="card">
+      <h1>${escapeHtml(heading)}</h1>
+      <p>${escapeHtml(sentence)}</p>
+      <div class="actions"><a class="btn btn-secondary" href="/">Home</a></div>
+    </section>`,
+    });
+    response.writeHead(404, {
+      "Content-Type": "text/html; charset=utf-8",
+    });
+    response.end(html);
   };
   const ensureLinkCode = (): string => {
     if (fs.existsSync(linkCodePath)) {
@@ -433,8 +549,16 @@ export const startAgentWitchLocalApp = (input: {
         return;
       }
 
-      if (method === "DELETE" && pathname === "/api/traffic") {
+      if (
+        (method === "DELETE" && pathname === "/api/traffic") ||
+        (method === "POST" && pathname === "/api/traffic/clear")
+      ) {
         clearAgentWitchLocalTraffic(input.layout);
+        if (method === "POST") {
+          response.writeHead(303, { Location: "/traffic?cleared=1" });
+          response.end();
+          return;
+        }
         sendJson(response, 200, { ok: true });
         return;
       }
@@ -462,7 +586,7 @@ export const startAgentWitchLocalApp = (input: {
 
       if (method === "POST" && pathname === "/api/errors/clear") {
         clearAgentWitchErrorLog(input.layout.errorLogPath);
-        response.writeHead(303, { Location: "/errors" });
+        response.writeHead(303, { Location: "/errors?cleared=1" });
         response.end();
         return;
       }
@@ -490,7 +614,8 @@ export const startAgentWitchLocalApp = (input: {
 
       if (method === "POST" && pathname === "/api/revive") {
         input.controllers.reviveWebSocket();
-        sendJson(response, 200, { ok: true });
+        response.writeHead(303, { Location: "/status?revived=1" });
+        response.end();
         return;
       }
 
@@ -520,6 +645,7 @@ export const startAgentWitchLocalApp = (input: {
             activePath: "/",
             installVersion: installBundle.installVersion,
             updateFlash: readLocalAppUpdateFlash(request.url ?? undefined),
+            updateError: readLocalAppUpdateError(request.url ?? undefined),
             body: buildAgentWitchLocalHomePageBody({
               wsConnected: status.wsConnected,
               lastHeartbeatAt: status.lastHeartbeatAt,
@@ -612,6 +738,7 @@ export const startAgentWitchLocalApp = (input: {
             activePath: "/writer-sessions",
             installVersion: installBundle.installVersion,
             updateFlash: readLocalAppUpdateFlash(request.url ?? undefined),
+            updateError: readLocalAppUpdateError(request.url ?? undefined),
             body: buildAgentWitchLocalWriterSessionsPageBody({ sessions }),
           }),
         );
@@ -633,6 +760,11 @@ export const startAgentWitchLocalApp = (input: {
               exists: errorLog.exists,
               truncated: errorLog.truncated,
               byteSize: errorLog.byteSize,
+              cleared:
+                new URL(
+                  request.url ?? "/",
+                  `http://127.0.0.1:${AGENT_WITCH_LOCAL_APP_PORT}`,
+                ).searchParams.get("cleared") === "1",
             }),
           }),
         );
@@ -640,12 +772,20 @@ export const startAgentWitchLocalApp = (input: {
       }
 
       if (method === "GET" && pathname === "/status") {
+        const statusUrl = new URL(
+          request.url ?? "/",
+          `http://127.0.0.1:${AGENT_WITCH_LOCAL_APP_PORT}`,
+        );
         const status = input.controllers.getStatus();
         const health = readAgentWitchConnectionHealth(input.layout);
-        const stale = isAgentWitchConnectionHealthStale(
-          health,
-          AGENT_WITCH_CONNECTION_STALE_MS,
-        );
+        const healthBadge = resolveLocalAppHealthFileBadge({
+          lastHeartbeatAt: status.lastHeartbeatAt,
+          healthFileMissing: health === null,
+          heartbeatIsStale: isAgentWitchConnectionHealthStale(
+            health,
+            AGENT_WITCH_CONNECTION_STALE_MS,
+          ),
+        });
         const installBundle = buildInstallBundleStatus();
         sendHtml(
           response,
@@ -655,7 +795,8 @@ export const startAgentWitchLocalApp = (input: {
             installVersion: installBundle.installVersion,
             body: `${buildStatusBody({
               status,
-              stale,
+              healthBadge,
+              revived: statusUrl.searchParams.get("revived") === "1",
               linkCode: ensureLinkCode(),
               installBundleVersion: installBundle.installBundleVersion,
               installBundleUpdatedAt: installBundle.installBundleUpdatedAt,
@@ -668,6 +809,10 @@ export const startAgentWitchLocalApp = (input: {
       }
 
       if (method === "GET" && pathname === "/traffic") {
+        const trafficUrl = new URL(
+          request.url ?? "/",
+          `http://127.0.0.1:${AGENT_WITCH_LOCAL_APP_PORT}`,
+        );
         const entries = readAgentWitchLocalTraffic(input.layout);
         const installBundle = buildInstallBundleStatus();
         const rows = entries
@@ -680,6 +825,10 @@ export const startAgentWitchLocalApp = (input: {
           entries.length > 0
             ? `<div class="table-wrap"><table><thead><tr><th>At</th><th>Dir</th><th>Type</th><th>Summary</th><th>Action</th></tr></thead><tbody>${rows}</tbody></table></div>`
             : `<p class="empty">No traffic yet. Frames appear here when the bridge is active.</p>`;
+        const clearedNotice =
+          trafficUrl.searchParams.get("cleared") === "1"
+            ? `<div class="alert-success">Traffic log cleared.</div>`
+            : "";
         sendHtml(
           response,
           await buildLocalAppShell({
@@ -690,7 +839,11 @@ export const startAgentWitchLocalApp = (input: {
               <p class="eyebrow">Diagnostics</p>
               <h1>WS traffic log</h1>
               <p class="lede">Frames sent and received, plus local bridge actions.</p>
+              ${clearedNotice}
               ${table}
+              <form method="POST" action="/api/traffic/clear" class="actions" style="margin-bottom:12px">
+                <button class="btn btn-ghost" type="submit">Clear traffic</button>
+              </form>
             </section>`,
           }),
         );
@@ -817,8 +970,7 @@ export const startAgentWitchLocalApp = (input: {
           projectId,
         );
         if (project === null) {
-          response.writeHead(404);
-          response.end("Project not found");
+          await sendLocalAppNotFound(response, "Project not found");
           return;
         }
         const linkedFlash =
@@ -921,8 +1073,7 @@ export const startAgentWitchLocalApp = (input: {
           projectId,
         );
         if (project === null) {
-          response.writeHead(404);
-          response.end("Project not found");
+          await sendLocalAppNotFound(response, "Project not found");
           return;
         }
 
@@ -997,8 +1148,7 @@ export const startAgentWitchLocalApp = (input: {
           projectId,
         );
         if (project === null) {
-          response.writeHead(404);
-          response.end("Project not found");
+          await sendLocalAppNotFound(response, "Project not found");
           return;
         }
 
@@ -1402,7 +1552,7 @@ export const startAgentWitchLocalApp = (input: {
                 <input class="input" name="q" value="${escapeHtml(q)}" placeholder="Search local knowledge" aria-label="Search local knowledge" />
                 <button class="btn btn-primary" type="submit">Search</button>
               </form>
-            </section>${suggestionsHtml}${list || '<p class="empty">No chunks yet. Finish an agent turn to index.</p>'}`,
+            </section>${suggestionsHtml}${list}${buildKnowledgeEmptyHtml(q, chunks.length)}`,
           }),
         );
         return;
@@ -1412,8 +1562,7 @@ export const startAgentWitchLocalApp = (input: {
         await readBody(request);
       }
 
-      response.writeHead(404);
-      response.end("Not found");
+      await sendLocalAppNotFound(response, "Not found");
     })().catch((error: unknown) => {
       console.error("[agent-witch-local-app]", error);
       response.writeHead(500);
