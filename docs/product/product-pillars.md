@@ -27,12 +27,12 @@ Pillars **stack on the core loop** (connect Mac → Task → Run → Playbook), 
 
 Use this table in guides so docs stay honest.
 
-| Pillar                 | Shipped today (examples)                                                                                                                          | North star (direction)                                                                           |
-| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
-| **1 Easy authoring**   | New task composer, workflow forms, official workflow checkpoints, marketplace presets                                                             | Richer no-jargon builder; more presets; clearer “start simple” onboarding                        |
-| **2 Learn from usage** | Run again, save as playbook, run UX honesty, feedback/improvements features (varies by surface)                                                   | Closed loop: failed run → reviewed suggestion → published playbook/workflow update               |
-| **3 Efficient memory** | Mac run memory, project RAG chunks, AWL **Knowledge** (retrieval counts + local hints), playbooks; cloud `capability_improvements` (human review) | Selective memory (dedupe, linked tools, team-scoped policy); optional local router before writer |
-| **4 Team learning**    | Team Runs, library, marketplace, harness install to Mac                                                                                           | Stronger sharing defaults, audit-friendly reuse, org templates as default path                   |
+| Pillar                 | Shipped today (examples)                                                                                                                                          | North star (direction)                                                                           |
+| ---------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| **1 Easy authoring**   | New task composer, workflow forms, official workflow checkpoints, marketplace presets                                                                             | Richer no-jargon builder; more presets; clearer “start simple” onboarding                        |
+| **2 Learn from usage** | Run again, save as playbook, run UX honesty, feedback/improvements features (varies by surface)                                                                   | Closed loop: failed run → reviewed suggestion → published playbook/workflow update               |
+| **3 Efficient memory** | Mac run memory, project RAG + AWL **Knowledge** telemetry, **git worktree verdict** on Mac run reports, playbooks; cloud `capability_improvements` (human review) | Selective memory (dedupe, linked tools, team-scoped policy); optional local router before writer |
+| **4 Team learning**    | Team Runs, library, marketplace, harness install to Mac                                                                                                           | Stronger sharing defaults, audit-friendly reuse, org templates as default path                   |
 
 **Known gaps (developers):** run memory still recency-based; local suggestions do not auto-publish tools; Mac ↔ cloud promotion is explicit — see [project-composition.md](../architecture/project-composition.md) (memory section), [developer guide ch.10](../guides/developer-guide/10-learning-memory-and-improvements.md), and feature `KNOWN_ISSUES.md`.
 
@@ -40,12 +40,12 @@ Use this table in guides so docs stay honest.
 
 ## Pillar → documentation map
 
-| Pillar | User guide  | Developer guide | Product / Q&A                                                                                                                                         |
-| ------ | ----------- | --------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1      | ch. 1, 6    | ch. 6           | [workflow-builder-form-and-graph.md](workflow-builder-form-and-graph.md), [qa/workflow-builder-field-types.md](../qa/workflow-builder-field-types.md) |
-| 2      | ch. 5, 9    | ch. 5, 9, 10    | [qa/run-ux-honesty-strings.md](../qa/run-ux-honesty-strings.md)                                                                                       |
-| 3      | ch. 5, 7, 8 | ch. 10          | [concepts.md](concepts.md) (memory terms)                                                                                                             |
-| 4      | ch. 7, 8    | ch. 7           | [catalog-and-sharing](../domains/catalog-and-sharing.md) domain                                                                                       |
+| Pillar | User guide  | Developer guide | Product / Q&A                                                                                                                                                                                         |
+| ------ | ----------- | --------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1      | ch. 1, 6    | ch. 6           | [workflow-builder-form-and-graph.md](workflow-builder-form-and-graph.md), [qa/workflow-builder-field-types.md](../qa/workflow-builder-field-types.md)                                                 |
+| 2      | ch. 5, 9    | ch. 5, 9, 10    | [qa/run-ux-honesty-strings.md](../qa/run-ux-honesty-strings.md), [product/agentcore-lessons-zero-marginal-cost.md](../product/agentcore-lessons-zero-marginal-cost.md) (eval / scorecards — proposed) |
+| 3      | ch. 5, 7, 8 | ch. 10          | [concepts.md](concepts.md) (memory terms), [qa/bedrock-agentcore-vs-agent-witch-flow.md](../qa/bedrock-agentcore-vs-agent-witch-flow.md) (external comparison)                                        |
+| 4      | ch. 7, 8    | ch. 7           | [catalog-and-sharing](../domains/catalog-and-sharing.md) domain                                                                                                                                       |
 
 ---
 

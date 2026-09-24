@@ -59,7 +59,10 @@ export { wrapPromptWithAgentRunReportInstruction } from "../../../scripts/dispat
 export { wrapPromptWithPrerecordedAgentRunEstimate } from "../../../scripts/dispatch/wrapPromptWithPrerecordedAgentRunEstimate";
 export { generateAgentRunReportKey } from "../../../scripts/dispatch/generateAgentRunReportKey";
 export { AGENT_RUN_WORKING_ESTIMATE_MARKER } from "../../../scripts/dispatch/agentRunWorkingEstimate.constant";
-export { seedAgentRunReportFile } from "../../../scripts/agentWitchRunReport";
+export {
+  seedAgentRunReportFile,
+  appendAgentRunReportDetailsLine,
+} from "../../../scripts/agentWitchRunReport";
 export { runAgentRunPreEstimate } from "../../../scripts/runAgentRunPreEstimate";
 export { buildMarketplacePlanEstimateTerminalStreamPayload } from "../../../scripts/dispatch/buildMarketplacePlanEstimateTerminalStreamPayload";
 export {

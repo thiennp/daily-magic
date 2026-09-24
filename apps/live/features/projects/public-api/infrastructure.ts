@@ -25,6 +25,13 @@ export { listLinkedHarnessSetSlugsFromProjectFolder } from "../internal/core/lis
 
 export { default as shouldCaptureRunOutputForProjectKnowledge } from "../internal/core/knowledge/shouldCaptureRunOutputForProjectKnowledge";
 
+export {
+  captureAgentWitchGitWorktreeSnapshot,
+  type AgentWitchGitWorktreeSnapshot,
+} from "../internal/core/knowledge/captureAgentWitchGitWorktreeSnapshot";
+
+export { formatAgentWitchGitWorktreeVerdict } from "../internal/core/knowledge/formatAgentWitchGitWorktreeVerdict";
+
 export { default as distillProjectKnowledgeLesson } from "../internal/core/knowledge/distillProjectKnowledgeLesson";
 
 export { default as syncProjectKnowledgeCandidateToCloud } from "../internal/core/knowledge/syncProjectKnowledgeCandidateToCloud";

@@ -5,6 +5,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { AGENT_RUN_REPORT_STATUSES } from "./dispatch/agentRunReport.constant";
 import {
+  appendAgentRunReportDetailsLine,
   buildAgentRunReportHeartbeatPayload,
   readAgentRunReportFile,
   resolveAgentRunCompletionFromReport,
@@ -127,5 +128,25 @@ describe("agentWitchRunReport", () => {
         },
       ],
     });
+  });
+
+  it("appends lines to report details without dropping prior text", () => {
+    createInstallDir();
+    seedAgentRunReportFile({
+      reportKey: "key-git",
+      agentRunId: "run-git",
+    });
+    upsertAgentRunReportFile({
+      reportKey: "key-git",
+      agentRunId: "run-git",
+      status: AGENT_RUN_REPORT_STATUSES.IN_PROGRESS,
+      userSummary: "Working.",
+      details: "First note.",
+    });
+
+    appendAgentRunReportDetailsLine("key-git", "Git verdict: clean.");
+
+    const report = readAgentRunReportFile("key-git");
+    expect(report?.details).toBe("First note.\nGit verdict: clean.");
   });
 });
