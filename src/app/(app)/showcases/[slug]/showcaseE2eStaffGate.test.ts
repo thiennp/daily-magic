@@ -7,7 +7,7 @@ import { describe, expect, it } from "vitest";
 describe("showcase E2E staff gate (Testi A2)", () => {
   it("opts into dynamic rendering before auth on staff-gated showcase routes", () => {
     const pageSource = readFileSync(
-      join(process.cwd(), "src/app/showcases/[slug]/page.tsx"),
+      join(process.cwd(), "src/app/(app)/showcases/[slug]/page.tsx"),
       "utf8",
     );
     const staffAccessSource = readFileSync(

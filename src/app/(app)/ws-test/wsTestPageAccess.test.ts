@@ -7,7 +7,7 @@ import { describe, expect, it } from "vitest";
 describe("ws-test page access (Rity P0)", () => {
   it("requires staff access before redirecting", () => {
     const source = readFileSync(
-      join(process.cwd(), "src/app/ws-test/page.tsx"),
+      join(process.cwd(), "src/app/(app)/ws-test/page.tsx"),
       "utf8",
     );
 
