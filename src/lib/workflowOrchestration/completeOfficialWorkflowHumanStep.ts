@@ -53,7 +53,8 @@ export const completeOfficialWorkflowHumanStep = async (input: {
     [step.nodeId]: { response: input.response.trim() },
   };
 
-  const nextIndex = run.currentStepIndex + 1;
+  // The run record may be a stale cache copy from another server bundle; the step is authoritative.
+  const nextIndex = step.stepIndex + 1;
   await updateWorkflowRunRecord(run.id, {
     status: "running",
     currentStepIndex: nextIndex,
