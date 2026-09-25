@@ -1,0 +1,3 @@
+#!/bin/sh
+echo "Running CI parity checks (npm run ci) before push..."
+npm run ci

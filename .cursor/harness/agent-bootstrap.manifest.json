@@ -148,7 +148,7 @@
       "scripts": [
         "npm run validate:staged",
         "npm run cursor:architecture -- --staged",
-        "npm run typecheck"
+        "npm run ci"
       ],
       "command": "command-github-pull-request.md"
     },
@@ -164,7 +164,7 @@
     }
   },
   "gitHooks": {
-    "sources": [".husky/pre-commit", ".husky/commit-msg"],
+    "sources": [".husky/pre-commit", ".husky/commit-msg", ".husky/pre-push"],
     "preCommit": [
       {
         "step": "Prettier",
@@ -190,6 +190,13 @@
         "step": "Typecheck",
         "when": "src JS/TS or toolchain configs",
         "run": "npm run typecheck"
+      }
+    ],
+    "prePush": [
+      {
+        "step": "CI parity",
+        "when": "every push",
+        "run": "npm run ci (test, ci:architecture, typecheck, build — matches .github/workflows/ci.yml verify job)"
       }
     ],
     "commitMsg": {
