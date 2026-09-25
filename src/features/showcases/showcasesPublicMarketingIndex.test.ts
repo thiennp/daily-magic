@@ -27,7 +27,7 @@ describe("showcases public marketing index (COPY-P0c)", () => {
 
   it("gates E2E showcase article pages behind staff access", () => {
     const pageSource = readFileSync(
-      join(process.cwd(), "src/app/showcases/[slug]/page.tsx"),
+      join(process.cwd(), "src/app/(app)/showcases/[slug]/page.tsx"),
       "utf8",
     );
 

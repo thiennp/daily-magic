@@ -8,12 +8,12 @@ import { FOOTER_LEGAL_LINKS } from "@/features/marketing/resolveMarketingFooterN
 /** COPY-LEGAL-1 */
 describe("marketing legal pages", () => {
   it("defines privacy and terms app routes", () => {
-    expect(existsSync(join(process.cwd(), "src/app/privacy/page.tsx"))).toBe(
-      true,
-    );
-    expect(existsSync(join(process.cwd(), "src/app/terms/page.tsx"))).toBe(
-      true,
-    );
+    expect(
+      existsSync(join(process.cwd(), "src/app/(app)/privacy/page.tsx")),
+    ).toBe(true);
+    expect(
+      existsSync(join(process.cwd(), "src/app/(app)/terms/page.tsx")),
+    ).toBe(true);
   });
 
   it("exposes Privacy and Terms in the public marketing footer", () => {

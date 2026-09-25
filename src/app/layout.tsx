@@ -1,16 +1,7 @@
 import { Inter } from "next/font/google";
-import { Suspense } from "react";
 import "./globals.css";
 import "flatpickr/dist/flatpickr.css";
-import AgentAccessWebMcpBridge from "@/features/agent-access/AgentAccessWebMcpBridge";
-import AppGoogleAnalytics from "@/components/analytics/AppGoogleAnalytics";
-import GoogleAnalyticsPageView from "@/components/analytics/GoogleAnalyticsPageView";
 import { AGENT_WITCH_PRODUCT_NAME } from "@/lib/agentWitch/agentWitchProductName.constant";
-import { AgentWitchDashboardProvider } from "@/features/agent-witch/dashboard/AgentWitchDashboardProvider";
-import { SendTaskModalProvider } from "@/features/agent/SendTaskModalProvider";
-import AuthSessionProvider from "@/features/auth/AuthSessionProvider";
-import { SidebarProvider } from "@/context/SidebarContext";
-import { ThemeProvider } from "@/context/ThemeContext";
 import type { Metadata } from "next";
 
 const inter = Inter({
@@ -30,22 +21,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.className} dark:bg-gray-900`}>
-        <AgentAccessWebMcpBridge />
-        <ThemeProvider>
-          <AuthSessionProvider>
-            <SidebarProvider>
-              <AgentWitchDashboardProvider>
-                <SendTaskModalProvider>{children}</SendTaskModalProvider>
-              </AgentWitchDashboardProvider>
-            </SidebarProvider>
-          </AuthSessionProvider>
-        </ThemeProvider>
-        <Suspense fallback={null}>
-          <GoogleAnalyticsPageView />
-        </Suspense>
-      </body>
-      <AppGoogleAnalytics />
+      <body className={`${inter.className} dark:bg-gray-900`}>{children}</body>
     </html>
   );
 }

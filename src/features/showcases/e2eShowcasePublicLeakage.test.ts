@@ -39,7 +39,7 @@ describe("e2e showcase public leakage (Testi P0)", () => {
 
   it("showcase article page gates metadata for E2E slugs", () => {
     const pageSource = readFileSync(
-      join(process.cwd(), "src/app/showcases/[slug]/page.tsx"),
+      join(process.cwd(), "src/app/(app)/showcases/[slug]/page.tsx"),
       "utf8",
     );
 

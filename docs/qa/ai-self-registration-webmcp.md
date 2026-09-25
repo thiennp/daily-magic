@@ -23,7 +23,7 @@ An AI creates an account with `POST /api/agent-access/register`. Method `none` n
 | REST tools     | `POST /api/agent-access/invoke` body `{ "name", "arguments" }` plus `Authorization: Bearer aw_...`   |
 | Discovery      | `GET /.well-known/webmcp.json`                                                                       |
 | Homepage       | Marketing landing and signed-in home, heading **For your AI** (short prompt)                         |
-| Guideline      | `/for-agents` — full steps the homepage prompt tells the agent to open                               |
+| Guideline      | `/for-agents` — static document with the full steps. No site header, footer, session, or analytics.  |
 | Browser WebMCP | `navigator.modelContext` tools registered by `AgentAccessWebMcpBridge`                               |
 
 Tools: `register_account`, `whoami`, `get_install_command`, `list_macs`, `list_workflow_templates`, `create_workflow`, `install_harness`, `list_workflows`, `run_workflow`, `send_task`, `list_runs`, `get_run`.
@@ -40,4 +40,4 @@ Tokens are stored as SHA-256 hashes. Registration is limited to 8 attempts per h
 
 ## Last reviewed
 
-2026-09-24
+2026-09-25

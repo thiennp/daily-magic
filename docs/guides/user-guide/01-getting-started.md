@@ -134,7 +134,7 @@ The Console **blocks Send** with a clear reason rather than failing silently ([r
 2. **Expecting folder pickers in the browser** — Real Mac paths are chosen on the Mac ([folder picker Q&A](../../qa/awc-project-folder-path-picker.md)).
 3. **Calling local helper “offline” when only Console says reconnecting** — Local bridge can be up while cloud dispatch waits for a live socket; refresh and retry ([Q&A](../../qa/awc-mac-reconnecting-vs-local-live.md)).
 4. **Skipping install autostart** — If the helper is not running, Mac status stays **Offline** until you start it from Mac settings.
-5. **Asking an AI to use Agent Witch without the homepage prompt** — Copy **For your AI** on the homepage. The prompt points at `/for-agents`. Method `none` needs no email; Agent Mail needs the server key. A Task still needs a paired host ([Q&A](../../qa/ai-self-registration-webmcp.md)).
+5. **Asking an AI to use Agent Witch without the homepage prompt** — Copy **For your AI** on the homepage. The prompt points at `/for-agents`, a static page with the steps and no site header or footer. Method `none` needs no email; Agent Mail needs the server key. A Task still needs a paired host ([Q&A](../../qa/ai-self-registration-webmcp.md)).
 6. **Hearing “Linux cannot use Agent Witch”** — The Console works in a Linux browser. Desktop Linux Home offers the install command for this computer. An x86_64 Linux machine can host Tasks. The Mac app and “this computer” badge stay on macOS ([Q&A](../../qa/linux-browser-vs-linux-host.md)).
 
 ---
