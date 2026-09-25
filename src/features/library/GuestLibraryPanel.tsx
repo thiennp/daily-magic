@@ -76,7 +76,7 @@ export default function GuestLibraryPanel({
           href={CREATE_FREE_ACCOUNT_HREF}
           className="text-brand-600 hover:underline dark:text-brand-400"
         >
-          Create a free account
+          Create free account
         </Link>{" "}
         to run tasks on your Mac and keep playbooks across devices.
       </p>
