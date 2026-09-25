@@ -6,25 +6,35 @@ import { describe, expect, it } from "vitest";
 import { SHOWCASE_ARTICLES } from "@/features/showcases/showcaseArticleRegistry";
 import { isShowcaseTryNextAuthRequired } from "@/features/showcases/resolveShowcaseTryNextHref";
 
-const APP_ROOT = "src/app";
+const APP_PAGE_ROOTS = ["src/app/(app)", "src/app"] as const;
+
+const pageFileForPathname = (root: string, pathname: string): string => {
+  if (pathname === "/") {
+    return join(root, "page.tsx");
+  }
+
+  if (pathname === "/showcases") {
+    return join(root, "showcases/page.tsx");
+  }
+
+  if (pathname.startsWith("/showcases/")) {
+    return join(root, "showcases/[slug]/page.tsx");
+  }
+
+  return join(root, pathname.slice(1), "page.tsx");
+};
 
 const resolveAppPagePath = (pathname: string): string | null => {
   const clean = pathname.replace(/\/$/, "") || "/";
 
-  if (clean === "/") {
-    return join(APP_ROOT, "page.tsx");
+  for (const root of APP_PAGE_ROOTS) {
+    const pagePath = pageFileForPathname(root, clean);
+    if (existsSync(pagePath)) {
+      return pagePath;
+    }
   }
 
-  if (clean === "/showcases") {
-    return join(APP_ROOT, "showcases/page.tsx");
-  }
-
-  if (clean.startsWith("/showcases/")) {
-    return join(APP_ROOT, "showcases/[slug]/page.tsx");
-  }
-
-  const pagePath = join(APP_ROOT, clean.slice(1), "page.tsx");
-  return existsSync(pagePath) ? pagePath : null;
+  return null;
 };
 
 describe("showcase article links (SHOWCASES-012)", () => {
