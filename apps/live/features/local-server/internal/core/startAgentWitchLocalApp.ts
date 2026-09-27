@@ -1508,12 +1508,18 @@ export const startAgentWitchLocalApp = (input: {
       }
 
       if (method === "GET" && pathname === "/estimates") {
+        response.writeHead(302, { Location: "/history" });
+        response.end();
+        return;
+      }
+
+      if (method === "GET" && pathname === "/history") {
         const installBundle = buildInstallBundleStatus();
         sendHtml(
           response,
           await buildLocalAppShell({
-            title: "Estimates",
-            activePath: "/estimates",
+            title: "History",
+            activePath: "/history",
             installVersion: installBundle.installVersion,
             body: buildAgentWitchLocalEstimateHistoryPageBody({
               reportsDir: input.layout.reportsDir,

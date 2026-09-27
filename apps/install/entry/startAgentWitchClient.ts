@@ -134,6 +134,9 @@ import {
   resolveWriterCliCommands,
   beginAgentRunPreEstimate,
   recordAgentRunPreEstimateOutput,
+  storeAgentRunTimeEstimateHistory,
+  beginAgentRunTokenPreEstimate,
+  recordAgentRunTokenPreEstimateOutput,
   resolveTaskWriterEstimateLabel,
   runLocalInstallBundleUpdate,
   runWriterEnsure,
@@ -263,15 +266,24 @@ const dispatchWriterTask = async (
     return;
   }
 
+  const writerLabel = resolveTaskWriterEstimateLabel({
+    writerAgent,
+    writerExecutionBackend: config.writerExecutionBackend,
+    configPath: config.layout.configPath,
+  });
   const estimateRequest =
     agentRunId !== undefined
       ? beginAgentRunPreEstimate({
           wrappedPrompt: prompt,
-          writerLabel: resolveTaskWriterEstimateLabel({
-            writerAgent,
-            writerExecutionBackend: config.writerExecutionBackend,
-            configPath: config.layout.configPath,
-          }),
+          writerLabel,
+          reportsDir: config.layout.reportsDir,
+        }).catch(() => null)
+      : null;
+  const tokenEstimateRequest =
+    agentRunId !== undefined
+      ? beginAgentRunTokenPreEstimate({
+          wrappedPrompt: prompt,
+          writerLabel,
           reportsDir: config.layout.reportsDir,
         }).catch(() => null)
       : null;
@@ -513,6 +525,41 @@ const dispatchWriterTask = async (
         installDir: config.layout.installDir,
       },
     );
+  }
+
+  if (agentRunId !== undefined && estimateRequest !== null) {
+    void estimateRequest
+      .then((draft) => {
+        if (draft === null) {
+          return;
+        }
+        storeAgentRunTimeEstimateHistory({
+          estimateOutput: draft.estimateOutput ?? "",
+          agentRunId,
+          reportsDir: config.layout.reportsDir,
+          task: draft.task,
+          writerLabel: draft.writerLabel,
+          embedding: draft.embedding,
+        });
+      })
+      .catch(() => undefined);
+  }
+
+  if (agentRunId !== undefined && tokenEstimateRequest !== null) {
+    void tokenEstimateRequest
+      .then((draft) => {
+        if (draft === null) {
+          return;
+        }
+        recordAgentRunTokenPreEstimateOutput({
+          estimateOutput: draft.estimateOutput ?? "",
+          agentRunId,
+          reportsDir: config.layout.reportsDir,
+          task: draft.task,
+          writerLabel: draft.writerLabel,
+        });
+      })
+      .catch(() => undefined);
   }
 
   const hasRunScopedOverlay =

@@ -65,7 +65,12 @@ export {
   runAgentRunPreEstimate,
   beginAgentRunPreEstimate,
   recordAgentRunPreEstimateOutput,
+  storeAgentRunTimeEstimateHistory,
 } from "../../../scripts/runAgentRunPreEstimate";
+export {
+  beginAgentRunTokenPreEstimate,
+  recordAgentRunTokenPreEstimateOutput,
+} from "../../../scripts/runAgentRunTokenPreEstimate";
 export { resolveTaskWriterEstimateLabel } from "../../../scripts/dispatch/resolveTaskWriterEstimateLabel";
 export {
   closeShellPtySession,

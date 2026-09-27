@@ -4,6 +4,7 @@ import path from "node:path";
 const HISTORY_FILE_NAME = "estimate-history.ndjson";
 const PROMPT_HISTORY_LIMIT = 100;
 const MAX_TASK_CHARS = 500;
+const MAX_HISTORY_TEXT_CHARS = 20_000;
 
 export interface AgentRunEstimateHistoryRow {
   readonly id: string;
@@ -11,6 +12,10 @@ export interface AgentRunEstimateHistoryRow {
   readonly writerLabel: string;
   readonly estimateSeconds: number | null;
   readonly actualSeconds: number | null;
+  readonly estimateTokens: number | null;
+  readonly actualTokens: number | null;
+  readonly input: string;
+  readonly output: string;
   readonly startedAt: string;
   readonly completedAt: string | null;
   readonly embedding: readonly number[];
@@ -29,6 +34,31 @@ const redactTask = (task: string): string =>
     .replace(/\s+/g, " ")
     .trim()
     .slice(0, MAX_TASK_CHARS);
+
+const redactHistoryText = (value: string): string =>
+  value
+    .replace(
+      /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g,
+      "[redacted-email]",
+    )
+    .replace(/\bsk-[a-zA-Z0-9]{20,}\b/g, "[redacted-secret]")
+    .trim()
+    .slice(0, MAX_HISTORY_TEXT_CHARS);
+
+const readStoredTokens = (value: unknown): number | null =>
+  typeof value === "number" && Number.isFinite(value) && value >= 1
+    ? Math.round(value)
+    : null;
+
+const normalizeRow = (
+  row: AgentRunEstimateHistoryRow,
+): AgentRunEstimateHistoryRow => ({
+  ...row,
+  estimateTokens: readStoredTokens(row.estimateTokens),
+  actualTokens: readStoredTokens(row.actualTokens),
+  input: typeof row.input === "string" ? row.input : "",
+  output: typeof row.output === "string" ? row.output : "",
+});
 
 const isRow = (value: unknown): value is AgentRunEstimateHistoryRow => {
   if (typeof value !== "object" || value === null) {
@@ -59,7 +89,7 @@ const readRows = (reportsDir: string): AgentRunEstimateHistoryRow[] => {
       }
       try {
         const parsed: unknown = JSON.parse(trimmed);
-        return isRow(parsed) ? [parsed] : [];
+        return isRow(parsed) ? [normalizeRow(parsed)] : [];
       } catch {
         return [];
       }
@@ -123,6 +153,10 @@ export const rememberAgentRunEstimate = (input: {
     writerLabel: input.writerLabel,
     estimateSeconds: input.estimateSeconds,
     actualSeconds: existing?.actualSeconds ?? null,
+    estimateTokens: existing?.estimateTokens ?? null,
+    actualTokens: existing?.actualTokens ?? null,
+    input: existing?.input ?? "",
+    output: existing?.output ?? "",
     startedAt: existing?.startedAt ?? new Date().toISOString(),
     completedAt: existing?.completedAt ?? null,
     embedding:
@@ -151,6 +185,10 @@ export const recordAgentRunEstimateActual = (input: {
     writerLabel: input.writerLabel ?? existing?.writerLabel ?? "",
     estimateSeconds: existing?.estimateSeconds ?? null,
     actualSeconds: input.actualSeconds,
+    estimateTokens: existing?.estimateTokens ?? null,
+    actualTokens: existing?.actualTokens ?? null,
+    input: existing?.input ?? "",
+    output: existing?.output ?? "",
     startedAt: existing?.startedAt ?? completedAt,
     completedAt,
     embedding: existing?.embedding ?? [],
@@ -170,9 +208,45 @@ export const listAgentRunEstimateHistoryForDisplay = (
   reportsDir: string,
 ): readonly AgentRunEstimateHistoryRow[] =>
   [...readRows(reportsDir)]
-    .slice(-PROMPT_HISTORY_LIMIT)
-    .filter((row) => row.actualSeconds !== null && row.task.trim().length > 0)
+    .filter(
+      (row) =>
+        row.task.trim().length > 0 ||
+        row.input.trim().length > 0 ||
+        row.output.trim().length > 0,
+    )
     .reverse();
+
+export const recordAgentRunPromptExchange = (input: {
+  readonly reportsDir: string;
+  readonly agentRunId: string;
+  readonly input: string;
+  readonly output: string;
+  readonly writerLabel?: string;
+}): void => {
+  const rows = readRows(input.reportsDir);
+  const existing = rows.find((row) => row.id === input.agentRunId);
+  const promptInput = redactHistoryText(input.input);
+  const promptOutput = redactHistoryText(input.output);
+  const task = redactTask(promptInput);
+  const writerLabel = input.writerLabel?.trim() ?? "";
+  const next: AgentRunEstimateHistoryRow = {
+    id: input.agentRunId,
+    task: task.length > 0 ? task : (existing?.task ?? ""),
+    writerLabel:
+      writerLabel.length > 0 ? writerLabel : (existing?.writerLabel ?? ""),
+    estimateSeconds: existing?.estimateSeconds ?? null,
+    actualSeconds: existing?.actualSeconds ?? null,
+    estimateTokens: existing?.estimateTokens ?? null,
+    actualTokens: existing?.actualTokens ?? null,
+    input: promptInput.length > 0 ? promptInput : (existing?.input ?? ""),
+    output: promptOutput.length > 0 ? promptOutput : (existing?.output ?? ""),
+    startedAt: existing?.startedAt ?? new Date().toISOString(),
+    completedAt: existing?.completedAt ?? new Date().toISOString(),
+    embedding: existing?.embedding ?? [],
+  };
+  const without = rows.filter((row) => row.id !== input.agentRunId);
+  writeRows(input.reportsDir, [...without, next]);
+};
 
 export const readAgentRunEstimateComparison = (
   reportsDir: string,
@@ -203,3 +277,96 @@ export const queryAgentRunEstimateHistoryForPrompt = (
   ),
   embedding: null,
 });
+
+const latestFinishedTokenRows = (
+  rows: readonly AgentRunEstimateHistoryRow[],
+): AgentRunEstimateHistoryRow[] =>
+  rows
+    .filter(
+      (row) =>
+        row.estimateTokens !== null &&
+        row.actualTokens !== null &&
+        row.task.length > 0,
+    )
+    .slice(-PROMPT_HISTORY_LIMIT);
+
+export const formatAgentRunTokenEstimateHistoryTable = (
+  rows: readonly AgentRunEstimateHistoryRow[],
+): string => {
+  const finished = latestFinishedTokenRows(rows);
+  if (finished.length === 0) {
+    return "No finished tasks with a recorded token count yet.";
+  }
+
+  const lines = [
+    "Latest finished tasks on this Mac. Use estimated vs actual total tokens to calibrate:",
+    "| Task | Writer | Estimated tokens | Actual tokens |",
+    "| --- | --- | --- | --- |",
+    ...finished.map(
+      (row) =>
+        `| ${tableCell(row.task)} | ${tableCell(row.writerLabel)} | ${row.estimateTokens} | ${row.actualTokens} |`,
+    ),
+  ];
+  return lines.join("\n");
+};
+
+export const rememberAgentRunTokenEstimate = (input: {
+  readonly reportsDir: string;
+  readonly agentRunId: string;
+  readonly task: string;
+  readonly writerLabel: string;
+  readonly estimateTokens: number;
+}): void => {
+  const rows = readRows(input.reportsDir);
+  const task = redactTask(input.task);
+  const existing = rows.find((row) => row.id === input.agentRunId);
+  const next: AgentRunEstimateHistoryRow = {
+    id: input.agentRunId,
+    task: task.length > 0 ? task : (existing?.task ?? ""),
+    writerLabel:
+      input.writerLabel.length > 0
+        ? input.writerLabel
+        : (existing?.writerLabel ?? ""),
+    estimateSeconds: existing?.estimateSeconds ?? null,
+    actualSeconds: existing?.actualSeconds ?? null,
+    estimateTokens: input.estimateTokens,
+    actualTokens: existing?.actualTokens ?? null,
+    input: existing?.input ?? "",
+    output: existing?.output ?? "",
+    startedAt: existing?.startedAt ?? new Date().toISOString(),
+    completedAt: existing?.completedAt ?? null,
+    embedding: existing?.embedding ?? [],
+  };
+  const without = rows.filter((row) => row.id !== input.agentRunId);
+  writeRows(input.reportsDir, [...without, next]);
+};
+
+export const recordAgentRunTokenEstimateActual = (input: {
+  readonly reportsDir: string;
+  readonly agentRunId: string;
+  readonly actualTokens: number;
+}): void => {
+  const rows = readRows(input.reportsDir);
+  const existing = rows.find((row) => row.id === input.agentRunId);
+  const completedAt = new Date().toISOString();
+  const next: AgentRunEstimateHistoryRow = {
+    id: input.agentRunId,
+    task: existing?.task ?? "",
+    writerLabel: existing?.writerLabel ?? "",
+    estimateSeconds: existing?.estimateSeconds ?? null,
+    actualSeconds: existing?.actualSeconds ?? null,
+    estimateTokens: existing?.estimateTokens ?? null,
+    actualTokens: input.actualTokens,
+    input: existing?.input ?? "",
+    output: existing?.output ?? "",
+    startedAt: existing?.startedAt ?? completedAt,
+    completedAt: existing?.completedAt ?? completedAt,
+    embedding: existing?.embedding ?? [],
+  };
+  const without = rows.filter((row) => row.id !== input.agentRunId);
+  writeRows(input.reportsDir, [...without, next]);
+};
+
+export const queryAgentRunTokenEstimateHistoryForPrompt = (
+  reportsDir: string,
+): string => formatAgentRunTokenEstimateHistoryTable(readRows(reportsDir));

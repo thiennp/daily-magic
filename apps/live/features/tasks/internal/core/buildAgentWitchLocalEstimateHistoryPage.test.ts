@@ -31,7 +31,8 @@ describe("buildAgentWitchLocalEstimateHistoryPageBody", () => {
 
     const html = buildAgentWitchLocalEstimateHistoryPageBody({ reportsDir });
 
-    expect(html).toContain("Estimates");
+    expect(html).toContain("History");
+    expect(html).toContain("Input");
     expect(html).toContain("fix the login form");
     expect(html).toContain("Claude CLI");
     expect(html).toContain("2 min");

@@ -79,6 +79,29 @@ export const beginAgentRunPreEstimate = async (input: {
   };
 };
 
+export const storeAgentRunTimeEstimateHistory = (input: {
+  readonly estimateOutput: string;
+  readonly agentRunId: string;
+  readonly reportsDir: string;
+  readonly task: string;
+  readonly writerLabel: string;
+  readonly embedding: readonly number[] | null;
+}): void => {
+  const estimateSeconds = parseOllamaTaskEstimateSeconds(input.estimateOutput);
+  if (estimateSeconds === null) {
+    return;
+  }
+
+  rememberAgentRunEstimate({
+    reportsDir: input.reportsDir,
+    agentRunId: input.agentRunId,
+    task: input.task,
+    writerLabel: input.writerLabel,
+    estimateSeconds,
+    embedding: input.embedding,
+  });
+};
+
 export const recordAgentRunPreEstimateOutput = (input: {
   readonly estimateOutput: string;
   readonly reportKey: string;

@@ -21,7 +21,11 @@ import {
 import {
   recordAgentRunEstimateActual,
   readAgentRunEstimateComparison,
+  recordAgentRunPromptExchange,
+  recordAgentRunTokenEstimateActual,
 } from "./agentRunEstimateHistory";
+import { resolveTaskWriterEstimateLabel } from "./dispatch/resolveTaskWriterEstimateLabel";
+import { readActualTaskTokenCount } from "./dispatch/readActualTaskTokenCount";
 import {
   enqueueAgentRunCompletionOutbox,
   flushAgentRunCompletionOutbox,
@@ -284,6 +288,15 @@ const finishRun = (
         ),
       });
     }
+
+    const actualTokens = readActualTaskTokenCount(llmUsage, resolvedOutput);
+    if (actualTokens !== null) {
+      recordAgentRunTokenEstimateActual({
+        reportsDir: config.layout.reportsDir,
+        agentRunId,
+        actualTokens,
+      });
+    }
   }
 
   if (agentRunId !== undefined && runsStoppedByUser.has(agentRunId)) {
@@ -315,6 +328,21 @@ const finishRun = (
     }
 
     const session = runSessions.get(agentRunId);
+    recordAgentRunPromptExchange({
+      reportsDir: config.layout.reportsDir,
+      agentRunId,
+      input: extractUserTaskFromWrappedPrompt(originalPrompt),
+      output: resolvedOutput,
+      ...(session !== undefined
+        ? {
+            writerLabel: resolveTaskWriterEstimateLabel({
+              writerAgent: session.writerAgent,
+              writerExecutionBackend: config.writerExecutionBackend,
+              configPath: config.layout.configPath,
+            }),
+          }
+        : {}),
+    });
     if (session !== undefined) {
       appendWriterTranscriptTurn({
         layout: config.layout,
