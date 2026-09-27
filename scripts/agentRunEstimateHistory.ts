@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 
 const HISTORY_FILE_NAME = "estimate-history.ndjson";
-const MAX_ROWS = 100;
+const PROMPT_HISTORY_LIMIT = 100;
 const MAX_TASK_CHARS = 500;
 
 export interface AgentRunEstimateHistoryRow {
@@ -71,11 +71,10 @@ const writeRows = (
   rows: readonly AgentRunEstimateHistoryRow[],
 ): void => {
   fs.mkdirSync(reportsDir, { recursive: true });
-  const kept = rows.slice(-MAX_ROWS);
   const body =
-    kept.length === 0
+    rows.length === 0
       ? ""
-      : `${kept.map((row) => JSON.stringify(row)).join("\n")}\n`;
+      : `${rows.map((row) => JSON.stringify(row)).join("\n")}\n`;
   fs.writeFileSync(historyPath(reportsDir), body, "utf8");
 };
 
@@ -164,16 +163,14 @@ const latestFinishedRows = (
   rows: readonly AgentRunEstimateHistoryRow[],
 ): AgentRunEstimateHistoryRow[] =>
   rows
-    .slice(-MAX_ROWS)
-    .filter(
-      (row) => row.actualSeconds !== null && row.estimateSeconds !== null,
-    );
+    .filter((row) => row.actualSeconds !== null && row.estimateSeconds !== null)
+    .slice(-PROMPT_HISTORY_LIMIT);
 
 export const listAgentRunEstimateHistoryForDisplay = (
   reportsDir: string,
 ): readonly AgentRunEstimateHistoryRow[] =>
   [...readRows(reportsDir)]
-    .slice(-MAX_ROWS)
+    .slice(-PROMPT_HISTORY_LIMIT)
     .filter((row) => row.actualSeconds !== null && row.task.trim().length > 0)
     .reverse();
 

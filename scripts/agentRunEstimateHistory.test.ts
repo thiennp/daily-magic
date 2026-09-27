@@ -76,7 +76,7 @@ describe("agentRunEstimateHistory", () => {
     expect(history.table).toContain("30");
   });
 
-  it("keeps only the latest 100 stored estimates", () => {
+  it("stores every estimate instead of dropping rows past 100", () => {
     const cappedDir = fs.mkdtempSync(
       path.join(os.tmpdir(), "aw-estimate-history-cap-"),
     );
@@ -97,9 +97,9 @@ describe("agentRunEstimateHistory", () => {
       .split("\n")
       .map((line) => (JSON.parse(line) as { id: string }).id);
 
-    expect(ids).toHaveLength(100);
-    expect(ids[0]).toBe("run-1");
-    expect(ids[99]).toBe("run-100");
+    expect(ids).toHaveLength(101);
+    expect(ids[0]).toBe("run-0");
+    expect(ids[100]).toBe("run-100");
   });
 
   it("puts the latest 100 finished tasks in the estimate prompt", () => {
