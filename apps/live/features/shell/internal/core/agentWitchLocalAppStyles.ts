@@ -143,6 +143,71 @@ a { color: inherit; text-decoration: none; }
 .nav-link:hover { color: var(--aw-zinc-900); background: var(--aw-zinc-100); }
 .nav-link.is-active { color: var(--aw-brand-700); background: var(--aw-brand-50); }
 
+.site-sidebar { display: none; }
+
+@media (max-width: 767px) {
+  .site-header-inner {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .site-header-actions {
+    justify-content: flex-start;
+  }
+
+  .site-nav-header { width: 100%; }
+}
+
+@media (min-width: 768px) {
+  body { padding-left: 14rem; }
+
+  .site-sidebar {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 30;
+    width: 14rem;
+    height: 100vh;
+    overflow-y: auto;
+    gap: 1rem;
+    padding: 1rem 0.75rem;
+    border-right: 1px solid rgb(228 228 231 / 0.7);
+    background: rgb(255 255 255 / 0.96);
+  }
+
+  .site-sidebar .brand {
+    align-self: flex-start;
+    align-items: flex-start;
+  }
+
+  .site-sidebar .brand-text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    white-space: nowrap;
+  }
+
+  .site-sidebar .brand-sub { margin-left: 0; }
+
+  .site-sidebar .site-nav {
+    flex-direction: column;
+    align-items: stretch;
+    flex-wrap: nowrap;
+  }
+
+  .site-sidebar .nav-link { width: 100%; }
+
+  .brand-in-header,
+  .site-nav-header { display: none; }
+
+  .site-header-inner {
+    max-width: none;
+    justify-content: flex-end;
+  }
+}
+
 .site-main {
   max-width: 72rem;
   margin: 0 auto;

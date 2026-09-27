@@ -1,6 +1,6 @@
 # App shell
 
-Header, nav, connection badge, approval listener mount.
+Header actions, desktop left nav, mobile bottom nav, connection badge, approval listener mount.
 
 ## Registry
 
