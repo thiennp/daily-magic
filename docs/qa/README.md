@@ -56,6 +56,7 @@ Open the top `sourcePath` under `docs/qa/` when present.
 | [agent-witch-product-pillars.md](agent-witch-product-pillars.md)                                 | Core job + four product pillars (authoring, learning, memory, team)           |
 | [ai-self-registration-webmcp.md](ai-self-registration-webmcp.md)                                 | AI self-registration without email or via Agent Mail, WebMCP, homepage prompt |
 | [linux-browser-vs-linux-host.md](linux-browser-vs-linux-host.md)                                 | Linux browser can use AWC; Linux x64 can host AWI; AWL/AWB stay Mac-only      |
+| [prompt-lab-workflow-eval.md](prompt-lab-workflow-eval.md)                                       | Prompt Lab: workflow scenarios, baselines, usage/output reports (prompt SDLC) |
 
 Add a row here when you add a Q&A file.
 
