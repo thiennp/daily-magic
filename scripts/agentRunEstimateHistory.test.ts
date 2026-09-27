@@ -165,9 +165,40 @@ describe("agentRunEstimateHistory", () => {
 
     expect(ids).toHaveLength(101);
     expect(ids[0]).toBe("token-0");
+    expect(history).toContain("Claude CLI actuals are 25–1015");
     expect(history).toContain("| token task 1 |");
     expect(history).toContain("| token task 100 |");
     expect(history).not.toContain("| token task 0 |");
+  });
+
+  it("drops a single token spike from the estimate table", () => {
+    const spikeDir = fs.mkdtempSync(
+      path.join(os.tmpdir(), "aw-token-spike-history-"),
+    );
+    for (const [id, actualTokens] of [
+      ["typical", 35000],
+      ["again", 36000],
+      ["spike", 70000],
+    ] as const) {
+      rememberAgentRunTokenEstimate({
+        reportsDir: spikeDir,
+        agentRunId: id,
+        task: id,
+        writerLabel: "Claude CLI",
+        estimateTokens: 35000,
+      });
+      recordAgentRunTokenEstimateActual({
+        reportsDir: spikeDir,
+        agentRunId: id,
+        actualTokens,
+      });
+    }
+
+    const history = queryAgentRunTokenEstimateHistoryForPrompt(spikeDir);
+
+    expect(history).toContain("| 35000 |");
+    expect(history).toContain("| 36000 |");
+    expect(history).not.toContain("70000");
   });
 
   it("stores every prompt exchange and keeps the estimate", () => {

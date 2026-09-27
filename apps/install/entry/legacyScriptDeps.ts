@@ -72,6 +72,7 @@ export {
   recordAgentRunTokenPreEstimateOutput,
 } from "../../../scripts/runAgentRunTokenPreEstimate";
 export { resolveTaskWriterEstimateLabel } from "../../../scripts/dispatch/resolveTaskWriterEstimateLabel";
+export { probeLocalRunClis } from "../../../scripts/dispatch/probeLocalRunClis";
 export {
   closeShellPtySession,
   openInteractiveShellPty,

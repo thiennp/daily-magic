@@ -278,6 +278,39 @@ export const queryAgentRunEstimateHistoryForPrompt = (
   embedding: null,
 });
 
+const withoutTokenSpikes = (
+  rows: readonly AgentRunEstimateHistoryRow[],
+): AgentRunEstimateHistoryRow[] => {
+  const byWriter = new Map<string, number[]>();
+  for (const row of rows) {
+    if (row.actualTokens === null) {
+      continue;
+    }
+    const writer = row.writerLabel.trim() || "Writer";
+    const totals = byWriter.get(writer) ?? [];
+    totals.push(row.actualTokens);
+    byWriter.set(writer, totals);
+  }
+  const spikes = new Set<string>();
+  for (const [writer, totals] of byWriter) {
+    const sorted = [...totals].sort((left, right) => left - right);
+    const top = sorted[sorted.length - 1];
+    const next = sorted[sorted.length - 2];
+    if (
+      sorted.length >= 3 &&
+      top !== undefined &&
+      next !== undefined &&
+      top > next * 1.5
+    ) {
+      spikes.add(`${writer}:${top}`);
+    }
+  }
+  return rows.filter((row) => {
+    const writer = row.writerLabel.trim() || "Writer";
+    return !spikes.has(`${writer}:${row.actualTokens}`);
+  });
+};
+
 const latestFinishedTokenRows = (
   rows: readonly AgentRunEstimateHistoryRow[],
 ): AgentRunEstimateHistoryRow[] =>
@@ -293,19 +326,38 @@ const latestFinishedTokenRows = (
 export const formatAgentRunTokenEstimateHistoryTable = (
   rows: readonly AgentRunEstimateHistoryRow[],
 ): string => {
-  const finished = latestFinishedTokenRows(rows);
+  const finished = withoutTokenSpikes(latestFinishedTokenRows(rows));
   if (finished.length === 0) {
     return "No finished tasks with a recorded token count yet.";
   }
 
+  const actualsByWriter = new Map<string, number[]>();
+  for (const row of finished) {
+    if (row.actualTokens === null) {
+      continue;
+    }
+    const writer = row.writerLabel.trim() || "Writer";
+    const totals = actualsByWriter.get(writer) ?? [];
+    totals.push(row.actualTokens);
+    actualsByWriter.set(writer, totals);
+  }
+  const ranges = [...actualsByWriter.entries()].map(([writer, totals]) => {
+    const low = Math.min(...totals);
+    const high = Math.max(...totals);
+    return low === high
+      ? `${writer} actuals are ${low}`
+      : `${writer} actuals are ${low}–${high}`;
+  });
   const lines = [
-    "Latest finished tasks on this Mac. Use estimated vs actual total tokens to calibrate:",
-    "| Task | Writer | Estimated tokens | Actual tokens |",
+    "Actual tokens are the writer-reported total, including cache. Match the row with the closest task length, then use that row's actual:",
+    ranges.join(". ") + (ranges.length > 0 ? "." : ""),
+    "| Task | Writer | Task chars | Actual tokens |",
     "| --- | --- | --- | --- |",
-    ...finished.map(
-      (row) =>
-        `| ${tableCell(row.task)} | ${tableCell(row.writerLabel)} | ${row.estimateTokens} | ${row.actualTokens} |`,
-    ),
+    ...finished.map((row) => {
+      const taskChars =
+        row.input.length > 0 ? row.input.length : row.task.length;
+      return `| ${tableCell(row.task)} | ${tableCell(row.writerLabel)} | ${taskChars} | ${row.actualTokens} |`;
+    }),
   ];
   return lines.join("\n");
 };

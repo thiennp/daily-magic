@@ -17,13 +17,21 @@ export const beginAgentRunTokenPreEstimate = async (input: {
   readonly wrappedPrompt: string;
   readonly writerLabel: string;
   readonly reportsDir: string;
+  readonly estimateModel?: string | null;
+  readonly capabilityNote?: string;
 }): Promise<AgentRunTokenPreEstimateDraft> => {
   const task = extractUserTaskFromWrappedPrompt(input.wrappedPrompt);
   const historyTable = queryAgentRunTokenEstimateHistoryForPrompt(
     input.reportsDir,
   );
   const estimateOutput = await requestOllamaTaskEstimate(
-    buildAgentRunTokenPreEstimatePrompt(task, input.writerLabel, historyTable),
+    buildAgentRunTokenPreEstimatePrompt(
+      task,
+      input.writerLabel,
+      historyTable,
+      input.capabilityNote ?? "",
+    ),
+    input.estimateModel,
   );
   return {
     estimateOutput,

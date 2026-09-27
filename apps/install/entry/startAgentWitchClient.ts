@@ -138,6 +138,7 @@ import {
   beginAgentRunTokenPreEstimate,
   recordAgentRunTokenPreEstimateOutput,
   resolveTaskWriterEstimateLabel,
+  probeLocalRunClis,
   runLocalInstallBundleUpdate,
   runWriterEnsure,
   runWriterSessionStart,
@@ -271,12 +272,23 @@ const dispatchWriterTask = async (
     writerExecutionBackend: config.writerExecutionBackend,
     configPath: config.layout.configPath,
   });
+  const cliProbe = await probeLocalRunClis({
+    commands: {
+      claudeCommand: config.claudeCommand,
+      codexCommand: config.codexCommand,
+      cursorCommand: config.cursorCommand,
+      antigravityCommand: config.antigravityCommand,
+    },
+    writerAgent,
+  }).catch(() => null);
   const estimateRequest =
     agentRunId !== undefined
       ? beginAgentRunPreEstimate({
           wrappedPrompt: prompt,
           writerLabel,
           reportsDir: config.layout.reportsDir,
+          estimateModel: cliProbe?.estimateModel,
+          capabilityNote: cliProbe?.capabilityNote,
         }).catch(() => null)
       : null;
   const tokenEstimateRequest =
@@ -285,6 +297,8 @@ const dispatchWriterTask = async (
           wrappedPrompt: prompt,
           writerLabel,
           reportsDir: config.layout.reportsDir,
+          estimateModel: cliProbe?.estimateModel,
+          capabilityNote: cliProbe?.capabilityNote,
         }).catch(() => null)
       : null;
 

@@ -21,12 +21,15 @@ describe("requestOllamaTaskEstimate", () => {
     });
     vi.stubGlobal("fetch", fetchMock);
 
-    const text = await requestOllamaTaskEstimate("estimate this");
+    const text = await requestOllamaTaskEstimate("estimate this", "qwen2.5:7b");
 
     expect(text).toBe("[[WORKING_ESTIMATE]]\n120");
     expect(fetchMock).toHaveBeenCalledWith(
       "http://127.0.0.1:11434/api/chat",
-      expect.objectContaining({ method: "POST" }),
+      expect.objectContaining({
+        method: "POST",
+        body: expect.stringContaining('"model":"qwen2.5:7b"'),
+      }),
     );
   });
 
@@ -35,7 +38,9 @@ describe("requestOllamaTaskEstimate", () => {
       "fetch",
       vi.fn().mockRejectedValue(new Error("connect ECONNREFUSED")),
     );
-    expect(await requestOllamaTaskEstimate("estimate this")).toBeNull();
+    expect(
+      await requestOllamaTaskEstimate("estimate this", "qwen2.5:7b"),
+    ).toBeNull();
 
     vi.stubGlobal(
       "fetch",
@@ -44,7 +49,9 @@ describe("requestOllamaTaskEstimate", () => {
         json: () => Promise.resolve({}),
       }),
     );
-    expect(await requestOllamaTaskEstimate("estimate this")).toBeNull();
+    expect(
+      await requestOllamaTaskEstimate("estimate this", "qwen2.5:7b"),
+    ).toBeNull();
 
     const emptyBodies: unknown[] = [
       null,
@@ -63,7 +70,9 @@ describe("requestOllamaTaskEstimate", () => {
           json: () => Promise.resolve(body),
         }),
       );
-      expect(await requestOllamaTaskEstimate("estimate this")).toBeNull();
+      expect(
+        await requestOllamaTaskEstimate("estimate this", "qwen2.5:7b"),
+      ).toBeNull();
     }
   });
 });

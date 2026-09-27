@@ -374,6 +374,54 @@ td {
 
 tbody tr:last-child td { border-bottom: none; }
 
+.history-table-wrap { overflow-x: auto; }
+
+.history-row { cursor: pointer; }
+.history-row:hover td,
+.history-row:focus-within td { background: var(--aw-brand-50); }
+
+.history-open {
+  background: none;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  color: var(--aw-brand-700);
+  text-align: left;
+  cursor: pointer;
+}
+
+.history-dialog {
+  width: min(48rem, calc(100vw - 2rem));
+  max-height: calc(100vh - 2rem);
+  margin: auto;
+  padding: 0;
+  border: 1px solid var(--aw-zinc-200);
+  border-radius: var(--aw-radius-2xl);
+  background: #fff;
+  color: var(--aw-zinc-900);
+  box-shadow: 0 24px 48px rgb(16 24 40 / 0.18);
+}
+
+.history-dialog::backdrop { background: rgb(16 24 40 / 0.45); }
+
+.history-dialog-bar {
+  display: flex;
+  justify-content: flex-end;
+  padding: 0.75rem 0.75rem 0;
+}
+
+.history-dialog-body {
+  overflow: auto;
+  max-height: calc(100vh - 5.5rem);
+  padding: 0 1.25rem 1.25rem;
+}
+
+.history-dialog-body h2 {
+  margin: 1rem 0 0;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
 pre {
   margin: 0.75rem 0 0;
   padding: 0.75rem;

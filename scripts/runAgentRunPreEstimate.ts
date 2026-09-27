@@ -65,11 +65,19 @@ export const beginAgentRunPreEstimate = async (input: {
   readonly wrappedPrompt: string;
   readonly writerLabel: string;
   readonly reportsDir: string;
+  readonly estimateModel?: string | null;
+  readonly capabilityNote?: string;
 }): Promise<AgentRunPreEstimateDraft> => {
   const task = extractUserTaskFromWrappedPrompt(input.wrappedPrompt);
   const history = queryAgentRunEstimateHistoryForPrompt(input.reportsDir);
   const estimateOutput = await requestOllamaTaskEstimate(
-    buildAgentRunPreEstimatePrompt(task, input.writerLabel, history.table),
+    buildAgentRunPreEstimatePrompt(
+      task,
+      input.writerLabel,
+      history.table,
+      input.capabilityNote ?? "",
+    ),
+    input.estimateModel,
   );
   return {
     estimateOutput,
