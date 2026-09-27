@@ -56,9 +56,24 @@
     "feature-knowledge:query": "tsx .agents/scripts/feature-knowledge-query.ts",
     "feature-knowledge:scaffold-docs": "tsx .agents/scripts/feature-knowledge-scaffold-docs.ts"
   },
+  "overrides": {
+    "baseline-browser-mapping": "2.11.0",
+    "@ts-morph/common": {
+      "brace-expansion": "5.0.9"
+    },
+    "@typescript-eslint/typescript-estree": {
+      "brace-expansion": "5.0.9"
+    },
+    "minimatch": {
+      "brace-expansion": "1.1.18"
+    },
+    "browserslist": "4.28.7",
+    "js-yaml": "4.3.2",
+    "svgo": "3.3.5"
+  },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",
-    "@next/third-parties": "^16.2.10",
+    "@next/third-parties": "^16.3.6",
     "@tailwindcss/forms": "^0.5.11",
     "@xterm/addon-fit": "^0.11.0",
     "@xterm/xterm": "^6.0.0",
@@ -66,8 +81,8 @@
     "esbuild": "^0.28.1",
     "flatpickr": "^4.6.13",
     "guardz": "^1.13.0",
-    "next": "16.2.10",
-    "next-auth": "^5.0.0-beta.30",
+    "next": "16.3.6",
+    "next-auth": "^5.0.0-beta.32",
     "node-pty": "^1.1.0",
     "pdf-parse": "^1.1.1",
     "react": "19.2.4",
@@ -83,18 +98,18 @@
     "@playwright/test": "^1.55.0",
     "@svgr/webpack": "^8.1.0",
     "@tailwindcss/postcss": "^4",
-    "@types/node": "^20",
+    "@types/node": "^22",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@types/ws": "^8.18.1",
     "eslint": "^9",
-    "eslint-config-next": "16.2.10",
+    "eslint-config-next": "16.3.6",
     "husky": "^9.1.7",
     "is-ci": "^4.1.0",
     "prettier": "^3.6.2",
     "structure-validation": "^0.0.14",
     "tailwindcss": "^4",
     "typescript": "^5",
-    "vitest": "^3.2.4"
+    "vitest": "5.0.2"
   }
 }
