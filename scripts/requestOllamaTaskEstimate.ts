@@ -1,5 +1,6 @@
+import { AGENT_WITCH_OLLAMA_ESTIMATE_MODEL } from "@agent-witch/install-self-update";
+
 const DEFAULT_OLLAMA_URL = "http://127.0.0.1:11434";
-const DEFAULT_ESTIMATE_MODEL = "qwen2.5:7b";
 const ESTIMATE_REQUEST_TIMEOUT_MS = 45_000;
 
 const readOllamaMessageContent = (body: unknown): string | null => {
@@ -31,7 +32,8 @@ export const requestOllamaTaskEstimate = async (
   const baseUrl =
     process.env.AGENT_WITCH_OLLAMA_URL?.trim() || DEFAULT_OLLAMA_URL;
   const model =
-    process.env.AGENT_WITCH_ESTIMATE_MODEL?.trim() || DEFAULT_ESTIMATE_MODEL;
+    process.env.AGENT_WITCH_ESTIMATE_MODEL?.trim() ||
+    AGENT_WITCH_OLLAMA_ESTIMATE_MODEL;
 
   try {
     const response = await fetch(`${baseUrl}/api/chat`, {

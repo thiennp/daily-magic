@@ -1,4 +1,4 @@
-# Does AWI install a local LLM such as Ollama?
+# Does AWI install Ollama?
 
 ## Query aliases
 
@@ -9,29 +9,29 @@
 - nomic-embed-text install
 - cài Ollama khi cài Agent Witch
 - AWI có cài LLM local không
+- AWI update installs Ollama
 
 ## Short answer
 
-**No.** The Mac install (**AWI**) installs the Agent Witch runtime, Node.js when it is missing, LaunchAgents, and optional writer CLIs (Claude, Codex, Cursor, Antigravity). It does not install Ollama or any other local chat model.
-
-Ollama is an optional local server. Task time estimates call its chat API when it is already running. RAG embeddings call its embeddings API. If nothing is listening on `http://127.0.0.1:11434`, those calls are skipped and the task still runs.
+**Yes, when it is missing.** Mac install and update (**AWI**) check for the `ollama` command. AWI tries `brew install ollama`. If Homebrew cannot install it, the macOS release is downloaded into the Agent Witch home directory and linked from `~/.local/bin/ollama`. AWI then starts the local server and pulls `qwen2.5:7b` and `nomic-embed-text` in the background when those models are not already present. A failed Ollama install does not stop the Agent Witch install.
 
 ## Details
 
-| Piece   | What AWI does                                                                                           |
-| ------- | ------------------------------------------------------------------------------------------------------- |
-| Runtime | Node client under `~/.agent-witch` (or `~/.local-agent-witch` for localhost), LaunchAgents, self-update |
-| Node    | Homebrew `node@22` (or `node`) only when Node is missing or too old                                     |
-| Writers | On demand: `claude`, Codex, `cursor`, `agy` — cloud CLIs, not a local model server                      |
-| Ollama  | Not installed, not started, no model pull                                                               |
+| Piece             | What AWI does                                                                                                                                                                       |
+| ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Install script    | `agent_witch_ensure_ollama` runs after the Node.js check on a fresh install and on the bash update script                                                                           |
+| Self-update       | `runAgentWitchSelfUpdate` runs the same check before it decides whether the install bundle is newer                                                                                 |
+| Already installed | Skips `brew install` and only starts the server or pulls a missing model                                                                                                            |
+| Homebrew fails    | Downloads `ollama-darwin.tgz` into the install home and links `~/.local/bin/ollama`                                                                                                 |
+| Models            | Estimate chat `qwen2.5:7b` (`AGENT_WITCH_ESTIMATE_MODEL`). Embeddings `nomic-embed-text` (`AGENT_WITCH_EMBED_MODEL`). Pull progress is appended to `<install>/logs/ollama-pull.log` |
 
-Task estimates use `POST /api/chat` with `qwen2.5:7b` unless `AGENT_WITCH_ESTIMATE_MODEL` is set. RAG uses `nomic-embed-text` unless `AGENT_WITCH_EMBED_MODEL` is set. Both honor `AGENT_WITCH_OLLAMA_URL`.
+Task estimates call `http://127.0.0.1:11434/api/chat`. If the server or model is not ready yet, the task still runs and the estimate column stays empty until Ollama answers.
 
 ## Related
 
 - [task-estimate-uses-ollama-sidecar.md](task-estimate-uses-ollama-sidecar.md)
-- Code: `scripts/requestOllamaTaskEstimate.ts`
-- Code: `apps/live/features/knowledge/internal/core/agentWitchLocalRag.ts`
+- Code: `apps/install/features/self-update/internal/core/buildAgentWitchEnsureOllamaShell.ts`
+- Code: `apps/install/features/self-update/internal/core/ensureAgentWitchOllamaInstalled.ts`
 
 ## Last reviewed
 

@@ -51,9 +51,16 @@ export const buildAgentWitchLocalEstimateHistoryPageBody = (input: {
           <tbody>
             ${rows
               .map((row) => {
-                const estimateSeconds = row.estimateSeconds ?? 0;
                 const actualSeconds = row.actualSeconds ?? 0;
-                return `<tr><td>${escapeHtml(row.task)}</td><td>${escapeHtml(row.writerLabel)}</td><td>${formatDuration(estimateSeconds)}</td><td>${formatDuration(actualSeconds)}</td><td>${escapeHtml(comparisonCell(estimateSeconds, actualSeconds))}</td></tr>`;
+                const estimateLabel =
+                  row.estimateSeconds === null
+                    ? "—"
+                    : formatDuration(row.estimateSeconds);
+                const comparisonLabel =
+                  row.estimateSeconds === null
+                    ? "no estimate"
+                    : comparisonCell(row.estimateSeconds, actualSeconds);
+                return `<tr><td>${escapeHtml(row.task)}</td><td>${escapeHtml(row.writerLabel)}</td><td>${estimateLabel}</td><td>${formatDuration(actualSeconds)}</td><td>${escapeHtml(comparisonLabel)}</td></tr>`;
               })
               .join("")}
           </tbody>

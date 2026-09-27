@@ -1,5 +1,6 @@
+import { AGENT_WITCH_OLLAMA_EMBED_MODEL } from "@agent-witch/install-self-update";
+
 const DEFAULT_OLLAMA_URL = "http://127.0.0.1:11434";
-const DEFAULT_EMBED_MODEL = "nomic-embed-text";
 
 const readEmbedding = (body: unknown): number[] | null => {
   if (typeof body !== "object" || body === null || !("embedding" in body)) {
@@ -25,7 +26,8 @@ export const requestOllamaEmbedding = async (
   const baseUrl =
     process.env.AGENT_WITCH_OLLAMA_URL?.trim() || DEFAULT_OLLAMA_URL;
   const model =
-    process.env.AGENT_WITCH_EMBED_MODEL?.trim() || DEFAULT_EMBED_MODEL;
+    process.env.AGENT_WITCH_EMBED_MODEL?.trim() ||
+    AGENT_WITCH_OLLAMA_EMBED_MODEL;
 
   try {
     const response = await fetch(`${baseUrl}/api/embeddings`, {

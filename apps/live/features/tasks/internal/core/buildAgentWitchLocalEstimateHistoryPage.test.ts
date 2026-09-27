@@ -38,4 +38,23 @@ describe("buildAgentWitchLocalEstimateHistoryPageBody", () => {
     expect(html).toContain("1 min 30s");
     expect(html).toContain("30s under");
   });
+
+  it("renders a finished run when the estimate is missing", () => {
+    const reportsDir = fs.mkdtempSync(
+      path.join(os.tmpdir(), "aw-estimate-page-"),
+    );
+    recordAgentRunEstimateActual({
+      reportsDir,
+      agentRunId: "sleep-5",
+      actualSeconds: 5,
+      task: "Sleep for 5 seconds, then finish.",
+      writerLabel: "Claude CLI",
+    });
+
+    const html = buildAgentWitchLocalEstimateHistoryPageBody({ reportsDir });
+
+    expect(html).toContain("Sleep for 5 seconds, then finish.");
+    expect(html).toContain("5s");
+    expect(html).toContain("no estimate");
+  });
 });

@@ -139,14 +139,17 @@ export const recordAgentRunEstimateActual = (input: {
   readonly reportsDir: string;
   readonly agentRunId: string;
   readonly actualSeconds: number;
+  readonly task?: string;
+  readonly writerLabel?: string;
 }): void => {
   const rows = readRows(input.reportsDir);
   const existing = rows.find((row) => row.id === input.agentRunId);
   const completedAt = new Date().toISOString();
+  const providedTask = input.task !== undefined ? redactTask(input.task) : "";
   const next: AgentRunEstimateHistoryRow = {
     id: input.agentRunId,
-    task: existing?.task ?? "",
-    writerLabel: existing?.writerLabel ?? "",
+    task: providedTask.length > 0 ? providedTask : (existing?.task ?? ""),
+    writerLabel: input.writerLabel ?? existing?.writerLabel ?? "",
     estimateSeconds: existing?.estimateSeconds ?? null,
     actualSeconds: input.actualSeconds,
     startedAt: existing?.startedAt ?? completedAt,
@@ -169,7 +172,10 @@ const latestFinishedRows = (
 export const listAgentRunEstimateHistoryForDisplay = (
   reportsDir: string,
 ): readonly AgentRunEstimateHistoryRow[] =>
-  [...latestFinishedRows(readRows(reportsDir))].reverse();
+  [...readRows(reportsDir)]
+    .slice(-MAX_ROWS)
+    .filter((row) => row.actualSeconds !== null && row.task.trim().length > 0)
+    .reverse();
 
 export const readAgentRunEstimateComparison = (
   reportsDir: string,

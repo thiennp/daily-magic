@@ -28,6 +28,7 @@ import {
   appendAgentWitchSelfUpdateLog,
   readAgentWitchSelfUpdateLogs,
 } from "./agentWitchSelfUpdateLog";
+import { ensureAgentWitchOllamaInstalled } from "./ensureAgentWitchOllamaInstalled";
 
 interface RemoteBundleManifest {
   readonly bundleVersion: string;
@@ -159,6 +160,14 @@ export const runAgentWitchSelfUpdate = async (input?: {
   const installDir = resolveAgentWitchInstallDir();
   const localVersion = readAgentWitchInstallVersion(installDir);
   const localBundleVersion = localVersion?.bundleVersion ?? null;
+  const ollamaEnsure = await ensureAgentWitchOllamaInstalled();
+  appendAgentWitchSelfUpdateLog({
+    event: "check_complete",
+    ok: ollamaEnsure.ok,
+    message: ollamaEnsure.message,
+    localBundleVersion,
+    remoteBundleVersion: null,
+  });
   const wsUrl = readConfigWsUrl(installDir);
   const appOrigin = resolveAgentWitchSelfUpdateAppOrigin(
     wsUrl,
