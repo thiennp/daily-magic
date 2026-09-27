@@ -46,6 +46,7 @@ import {
   buildAgentWitchLocalAppShell,
 } from "@agent-witch/live-shell/presentation";
 import { buildAgentWitchLocalHomePageBody } from "@agent-witch/live-home/presentation";
+import { tryHandlePromptSdlcLocalRequest } from "../../../prompt-sdlc/public-api/infrastructure";
 import {
   buildAgentWitchLocalEstimateHistoryPageBody,
   buildAgentWitchLocalTaskPageBody,
@@ -512,16 +513,21 @@ export const startAgentWitchLocalApp = (input: {
       }
 
       if (
-        method === "GET" &&
-        (pathname === "/favicon.ico" || pathname === "/favicon.svg")
+        await tryHandlePromptSdlcLocalRequest({
+          method,
+          pathname,
+          request,
+          response,
+          requestUrl: request.url ?? "/",
+          storePath: path.join(
+            path.dirname(input.layout.configPath),
+            "prompt-sdlc-cycles.json",
+          ),
+          readBody,
+          sendHtml,
+          renderShell: buildLocalAppShell,
+        })
       ) {
-        response.writeHead(200, {
-          "Content-Type": "image/svg+xml",
-          "Cache-Control": "public, max-age=86400",
-        });
-        response.end(
-          `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="none" stroke="#18181b" stroke-width="2" d="M12 2L2 12l10 10 10-10L12 2z"/><path fill="none" stroke="#18181b" stroke-width="2.5" stroke-linecap="round" d="M12 6v12m-6-6h12"/><path fill="none" stroke="#a1a1aa" stroke-width="1.5" stroke-linecap="round" d="M15.5 8.5l-7 7"/></svg>`,
-        );
         return;
       }
 

@@ -48,6 +48,10 @@ One **dispatched execution** (Mac via Agent Witch or Cursor Cloud), with status,
 
 **Who may run what for whom**—targets, approvals, queue, and policies. Mac dispatch uses paired devices; Cursor Cloud uses stored API keys and cloud executor id `__cursor_cloud__`.
 
+## Prompt SDLC
+
+A **separate prompt-optimization loop** in Agent Witch Live. The user supplies one prompt and a goal. Live picks the best reasoning writers it can run, then scores and rewrites the prompt until it passes or a small round cap is hit. It is not a workflow, a playbook, or a capability improvement.
+
 ## Deployables (AWC, AWL, AWB, AWI)
 
 Four named apps in one repo. See [agent-witch-deployables.md](agent-witch-deployables.md).

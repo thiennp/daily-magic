@@ -34,6 +34,14 @@ export const parseOllamaListModelNames = (stdout: string): readonly string[] =>
     .map((line) => line.trim().split(/\s+/)[0] ?? "")
     .filter((name) => name.length > 0 && name !== "NAME");
 
+/** Chat models already installed. Embedding tags are omitted. */
+export const listInstalledOllamaChatModels = (
+  installedNames: readonly string[],
+): readonly string[] =>
+  installedNames.filter(
+    (name) => name.trim().length > 0 && !isEmbeddingModelName(name),
+  );
+
 /** Best chat model that is already installed. Null when only embeddings exist. */
 export const selectInstalledOllamaEstimateModel = (
   installedNames: readonly string[],

@@ -13,7 +13,8 @@ export type AgentWitchLocalAppNavPath =
   | "/history"
   | "/writer-sessions"
   | "/harness"
-  | "/writer-api";
+  | "/writer-api"
+  | "/prompt-sdlc";
 
 const LOGO_MARK_SVG = `<svg class="brand-mark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
   <path class="brand-mark-outline" d="M12 2L2 12l10 10 10-10L12 2z" />
@@ -28,6 +29,7 @@ const NAV_ITEMS: ReadonlyArray<{
 }> = [
   { href: "/", label: "Home" },
   { href: "/task", label: "Task" },
+  { href: "/prompt-sdlc", label: "Prompt SDLC" },
   { href: "/status", label: "Status" },
   { href: "/projects", label: "Projects" },
   { href: "/harness", label: "Harness" },

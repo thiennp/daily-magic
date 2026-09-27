@@ -48,6 +48,7 @@ Open the top `sourcePath` under `docs/qa/` when present.
 | [awi-does-not-install-local-llm.md](awi-does-not-install-local-llm.md)                   | AWI installs Ollama on install and update when the command is missing          |
 | [awi-owns-update-local.md](awi-owns-update-local.md)                                     | Update local work is AWI; the button is AWC; `/update/run` is AWB              |
 | [task-estimate-uses-ollama-sidecar.md](task-estimate-uses-ollama-sidecar.md)             | Task time estimate is a non-blocking Ollama sidecar; history RAG calibrates it |
+| [prompt-sdlc.md](prompt-sdlc.md)                                                         | Prompt SDLC on Agent Witch Live: best local writers optimize one prompt        |
 
 Add a row here when you add a Q&A file.
 

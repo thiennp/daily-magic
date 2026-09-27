@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import {
+  listInstalledOllamaChatModels,
   parseOllamaListModelNames,
   selectInstalledOllamaEstimateModel,
 } from "./selectInstalledOllamaEstimateModel";
@@ -30,6 +31,17 @@ describe("selectInstalledOllamaEstimateModel", () => {
         null,
       ),
     ).toBe("qwen2.5:7b");
+  });
+
+  it("lists chat models and drops embedding tags", () => {
+    expect(
+      listInstalledOllamaChatModels([
+        "qwen2.5:7b",
+        "nomic-embed-text:latest",
+        "bge-m3",
+        "  ",
+      ]),
+    ).toEqual(["qwen2.5:7b"]);
   });
 
   it("falls back to the next installed chat model", () => {

@@ -1,0 +1,34 @@
+import {
+  PROMPT_SDLC_MAX_ROUNDS,
+  PROMPT_SDLC_PASS_SCORE,
+} from "@/lib/promptSdlc/promptSdlcLimits.constant";
+import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
+
+export const createPromptSdlcLocalCycle = (input: {
+  readonly goal: string;
+  readonly sourcePrompt: string;
+  readonly judgeModel: PromptSdlcLocalCycle["judgeModel"];
+  readonly improverModel: PromptSdlcLocalCycle["improverModel"];
+}): PromptSdlcLocalCycle => {
+  const now = new Date().toISOString();
+  return {
+    id: crypto.randomUUID(),
+    goal: input.goal.trim(),
+    judgeModel: input.judgeModel,
+    improverModel: input.improverModel,
+    status: "judging",
+    currentRound: 0,
+    passScore: PROMPT_SDLC_PASS_SCORE,
+    maxRounds: PROMPT_SDLC_MAX_ROUNDS,
+    errorMessage: null,
+    createdAt: now,
+    updatedAt: now,
+    revisions: [
+      {
+        roundNumber: 0,
+        promptText: input.sourcePrompt.trim(),
+        judgement: null,
+      },
+    ],
+  };
+};
