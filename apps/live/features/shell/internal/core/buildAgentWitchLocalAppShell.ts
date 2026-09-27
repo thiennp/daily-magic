@@ -46,6 +46,12 @@ const escapeHtml = (value: string): string =>
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;");
 
+const buildBrandLink = (
+  className: string,
+  installBundleVersionLabel: string,
+): string =>
+  `<a class="${className}" href="/" aria-label="Agent Witch Local home, install bundle ${installBundleVersionLabel}">${LOGO_MARK_SVG}<span class="brand-text">Agent Witch<span class="brand-sub">Local(${installBundleVersionLabel})</span></span></a>`;
+
 export const buildAgentWitchLocalAppShell = (input: {
   readonly title: string;
   readonly activePath: AgentWitchLocalAppNavPath;
@@ -65,6 +71,14 @@ export const buildAgentWitchLocalAppShell = (input: {
   const installBundleVersionLabel = escapeHtml(
     input.installBundleVersionLabel?.trim() ?? "unknown",
   );
+  const sidebarBrand = buildBrandLink(
+    "brand brand-in-sidebar",
+    installBundleVersionLabel,
+  );
+  const headerBrand = buildBrandLink(
+    "brand brand-in-header",
+    installBundleVersionLabel,
+  );
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -76,14 +90,15 @@ export const buildAgentWitchLocalAppShell = (input: {
   <style>${AGENT_WITCH_LOCAL_APP_STYLES}</style>
 </head>
 <body>
+  <aside class="site-sidebar">
+    ${sidebarBrand}
+    <nav class="site-nav site-nav-sidebar" aria-label="Local bridge">${nav}</nav>
+  </aside>
   <header class="site-header">
     <div class="site-header-inner">
-      <a class="brand" href="/" aria-label="Agent Witch Local home, install bundle ${installBundleVersionLabel}">
-        ${LOGO_MARK_SVG}
-        <span class="brand-text">Agent Witch<span class="brand-sub">Local(${installBundleVersionLabel})</span></span>
-      </a>
+      ${headerBrand}
       <div class="site-header-actions">
-        <nav class="site-nav" aria-label="Local bridge">${nav}</nav>
+        <nav class="site-nav site-nav-header" aria-label="Local bridge">${nav}</nav>
         ${headerUpdateButtonHtml}
         <a class="btn btn-secondary cloud-open-link" href="${cloudOrigin}" target="_blank" rel="noopener noreferrer" aria-label="Open Agent Witch cloud at ${cloudOrigin}">Open cloud ↗</a>
       </div>
