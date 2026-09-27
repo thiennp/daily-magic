@@ -1,4 +1,6 @@
 import type AgentWitchHubRuntime from "@/lib/agentWitch/types/AgentWitchHubRuntime.type";
+import isHarnessWriterAgent from "@/lib/agentWitch/harness/isHarnessWriterAgent";
+import { getAgentRunById } from "@/lib/dispatch/agentRunQueries";
 import { broadcastWorkflowStepFailed } from "@/lib/workflowOrchestration/broadcastWorkflowStepFailed";
 import { continueOfficialWorkflowRun } from "@/lib/workflowOrchestration/continueOfficialWorkflowRun";
 import { buildAgentStepOutputPreview } from "@/lib/workflowOrchestration/buildAgentStepOutputPreview";
@@ -66,14 +68,21 @@ export const advanceOfficialWorkflowRunAfterAgentRun = async (
     },
   });
 
+  const completedAgentRun = await getAgentRunById(agentRunId);
+  const writerAgent =
+    completedAgentRun !== null &&
+    isHarnessWriterAgent(completedAgentRun.writerAgent)
+      ? completedAgentRun.writerAgent
+      : undefined;
+
   await continueOfficialWorkflowRun({
     runtime,
     workflowRunId: run.id,
     requesterUserId: run.requesterUserId,
     dispatchBodyBase: {
-      writerAgent: "claude-cli",
       capabilityId: run.capabilityId,
-      targetDeviceId: run.deviceId ?? undefined,
+      ...(writerAgent !== undefined ? { writerAgent } : {}),
+      ...(run.deviceId !== null ? { targetDeviceId: run.deviceId } : {}),
     },
   });
 };

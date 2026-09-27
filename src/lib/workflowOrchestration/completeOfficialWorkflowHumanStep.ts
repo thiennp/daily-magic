@@ -69,6 +69,10 @@ export const completeOfficialWorkflowHumanStep = async (input: {
     dispatchBodyBase: {
       ...input.dispatchBodyBase,
       capabilityId: run.capabilityId,
+      ...(input.dispatchBodyBase.targetDeviceId === undefined &&
+      run.deviceId !== null
+        ? { targetDeviceId: run.deviceId }
+        : {}),
     },
   });
 };
