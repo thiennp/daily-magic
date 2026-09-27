@@ -1,51 +1,90 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import fs from "node:fs";
+import os from "node:os";
+import path from "node:path";
 
-vi.mock("@agent-witch/install-runtime-client", () => ({
-  runHeadlessWriter: vi.fn(),
-  runMarketplacePlanEstimateHeadlessWriter: vi.fn(),
-}));
+import { afterEach, describe, expect, it, vi } from "vitest";
 
-import {
-  runHeadlessWriter,
-  runMarketplacePlanEstimateHeadlessWriter,
-} from "@agent-witch/install-runtime-client";
-
-import { MARKETPLACE_PLAN_ESTIMATE_MISSING_ANTHROPIC_WRITER_API_KEY } from "./dispatch/marketplacePlanEstimateReasonCode.constant";
-
+import { readAgentRunReportFile } from "./agentWitchRunReport";
 import { runAgentRunPreEstimate } from "./runAgentRunPreEstimate";
 
-describe("runAgentRunPreEstimate (marketplace plan/estimate routing)", () => {
-  beforeEach(() => {
-    vi.mocked(runHeadlessWriter).mockReset();
-    vi.mocked(runMarketplacePlanEstimateHeadlessWriter).mockReset();
+describe("runAgentRunPreEstimate", () => {
+  const home = fs.mkdtempSync(path.join(os.tmpdir(), "aw-estimate-"));
+  const previousHome = process.env.AGENT_WITCH_HOME;
+  const previousProfile = process.env.AGENT_WITCH_PROFILE;
+  const previousEmail = process.env.AGENT_WITCH_EMAIL;
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    if (previousHome === undefined) {
+      delete process.env.AGENT_WITCH_HOME;
+    } else {
+      process.env.AGENT_WITCH_HOME = previousHome;
+    }
+    if (previousProfile === undefined) {
+      delete process.env.AGENT_WITCH_PROFILE;
+    } else {
+      process.env.AGENT_WITCH_PROFILE = previousProfile;
+    }
+    if (previousEmail === undefined) {
+      delete process.env.AGENT_WITCH_EMAIL;
+    } else {
+      process.env.AGENT_WITCH_EMAIL = previousEmail;
+    }
   });
 
-  it("uses observable CLI fallback path when Writer API key missing", async () => {
-    vi.mocked(runMarketplacePlanEstimateHeadlessWriter).mockResolvedValue({
-      exitCode: 0,
-      output: "[[WORKING_ESTIMATE]]\n120\n",
-      execution: {
-        backend: "cli-fallback-missing-anthropic-writer-api-key",
-        modelOverride: "claude-3-5-haiku-20241022",
-        reasonCode: MARKETPLACE_PLAN_ESTIMATE_MISSING_ANTHROPIC_WRITER_API_KEY,
-      },
+  it("records seconds from Ollama without calling the task writer", async () => {
+    process.env.AGENT_WITCH_HOME = home;
+    delete process.env.AGENT_WITCH_PROFILE;
+    delete process.env.AGENT_WITCH_EMAIL;
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: () =>
+        Promise.resolve({
+          message: { content: "[[WORKING_ESTIMATE]]\n120" },
+        }),
     });
+    vi.stubGlobal("fetch", fetchMock);
 
     const result = await runAgentRunPreEstimate({
-      config: {
-        layout: { configPath: "/tmp/.agent-witch/config.json" },
-      } as never,
-      writerAgent: "claude-cli",
-      wrappedPrompt: "Task: build feature",
-      reportKey: "report-key",
+      wrappedPrompt: "run the tests",
+      reportKey: "report-1",
       agentRunId: "run-1",
-      capabilityId: "preset:vibe-coding-app-feature",
+      writerLabel: "Claude CLI",
     });
 
-    expect(runMarketplacePlanEstimateHeadlessWriter).toHaveBeenCalled();
-    expect(result.marketplacePlanEstimate?.backend).toBe(
-      "cli-fallback-missing-anthropic-writer-api-key",
-    );
     expect(result.estimateSeconds).toBe(120);
+    expect(result.estimateSummary).toContain("2 min");
+    const requestBody = JSON.parse(
+      String(
+        (fetchMock.mock.calls[0]?.[1] as { body?: string } | undefined)?.body,
+      ),
+    ) as { messages?: { content?: string }[] };
+    expect(requestBody.messages?.[0]?.content).toContain("Claude CLI");
+    expect(requestBody.messages?.[0]?.content).toContain(
+      "already starting in parallel",
+    );
+    const report = readAgentRunReportFile("report-1");
+    expect(report?.estimateSeconds).toBe(120);
+    expect(report?.userSummary).toContain("2 min");
+  });
+
+  it("leaves the report unwritten when Ollama returns no estimate", async () => {
+    process.env.AGENT_WITCH_HOME = home;
+    delete process.env.AGENT_WITCH_PROFILE;
+    delete process.env.AGENT_WITCH_EMAIL;
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockRejectedValue(new Error("connect ECONNREFUSED")),
+    );
+
+    const result = await runAgentRunPreEstimate({
+      wrappedPrompt: "run the tests",
+      reportKey: "report-missing",
+      agentRunId: "run-2",
+      writerLabel: "Cursor agent CLI",
+    });
+
+    expect(result.estimateSeconds).toBeNull();
+    expect(readAgentRunReportFile("report-missing")).toBeNull();
   });
 });

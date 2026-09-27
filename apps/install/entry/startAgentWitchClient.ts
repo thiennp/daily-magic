@@ -131,8 +131,9 @@ import {
   resolveAgentWitchCloudApiConfig,
   resolveAgentWitchWakePort,
   resolveWriterCliCommands,
-  runAgentRunPreEstimate,
-  buildMarketplacePlanEstimateTerminalStreamPayload,
+  beginAgentRunPreEstimate,
+  recordAgentRunPreEstimateOutput,
+  resolveTaskWriterEstimateLabel,
   runLocalInstallBundleUpdate,
   runWriterEnsure,
   runWriterSessionStart,
@@ -147,7 +148,7 @@ import {
   supportsWriterSessionWarmup,
   terminateOtherAgentWitchClientProcesses,
   wrapPromptWithAgentRunReportInstruction,
-  wrapPromptWithPrerecordedAgentRunEstimate,
+  wrapPromptWithSidecarAgentRunEstimate,
   writeShellPtyInput,
 } from "./legacyScriptDeps";
 const HEARTBEAT_INTERVAL_MS = 30_000;
@@ -260,6 +261,18 @@ const dispatchWriterTask = async (
     });
     return;
   }
+
+  const estimateRequest =
+    agentRunId !== undefined
+      ? beginAgentRunPreEstimate({
+          wrappedPrompt: prompt,
+          writerLabel: resolveTaskWriterEstimateLabel({
+            writerAgent,
+            writerExecutionBackend: config.writerExecutionBackend,
+            configPath: config.layout.configPath,
+          }),
+        }).catch(() => null)
+      : null;
 
   const needsWarmup =
     supportsWriterSessionWarmup(writerAgent) &&
@@ -439,55 +452,42 @@ const dispatchWriterTask = async (
     seedAgentRunReportFile({
       reportKey: resolvedReportKey,
       agentRunId,
-      userSummary: "Estimating how long this will take…",
+      userSummary: "Working on your Mac…",
     });
 
-    const preEstimate = await runAgentRunPreEstimate({
-      config,
-      writerAgent,
-      wrappedPrompt: promptWithProjectContext,
-      reportKey: resolvedReportKey,
-      agentRunId,
-      marketplaceTemplateId,
-      capabilityId,
-    });
+    const taskPromptForEstimate = promptWithProjectContext;
+    if (estimateRequest !== null) {
+      void estimateRequest
+        .then((estimateOutput) => {
+          const preEstimate = recordAgentRunPreEstimateOutput({
+            estimateOutput: estimateOutput ?? "",
+            reportKey: resolvedReportKey,
+            agentRunId,
+          });
+          if (preEstimate.estimateSeconds === null) {
+            return;
+          }
 
-    if (preEstimate.marketplacePlanEstimate !== null) {
-      const planEstimateProgress =
-        buildMarketplacePlanEstimateTerminalStreamPayload({
-          runId: agentRunId,
-          diagnostics: preEstimate.marketplacePlanEstimate,
-        });
-      if (isTerminalStreamAccepted(agentRunId)) {
-        sendMessage(socket, {
-          type: "terminal.stream.chunk",
-          payload: planEstimateProgress,
-          requestId,
-        });
-      } else {
-        queueTerminalStreamChunk(agentRunId, planEstimateProgress.chunk);
-      }
+          const estimateChunk = `${AGENT_RUN_WORKING_ESTIMATE_MARKER}\n${preEstimate.estimateSeconds}\n`;
+          if (isTerminalStreamAccepted(agentRunId)) {
+            sendMessage(socket, {
+              type: "terminal.stream.chunk",
+              payload: {
+                runId: agentRunId,
+                chunk: estimateChunk,
+              },
+              requestId,
+            });
+            return;
+          }
+
+          queueTerminalStreamChunk(agentRunId, estimateChunk);
+        })
+        .catch(() => undefined);
     }
 
-    if (preEstimate.estimateSeconds !== null) {
-      const estimateChunk = `${AGENT_RUN_WORKING_ESTIMATE_MARKER}\n${preEstimate.estimateSeconds}\n`;
-      if (isTerminalStreamAccepted(agentRunId)) {
-        sendMessage(socket, {
-          type: "terminal.stream.chunk",
-          payload: {
-            runId: agentRunId,
-            chunk: estimateChunk,
-          },
-          requestId,
-        });
-      } else {
-        queueTerminalStreamChunk(agentRunId, estimateChunk);
-      }
-    }
-
-    promptWithProjectContext = wrapPromptWithPrerecordedAgentRunEstimate(
-      promptWithProjectContext,
-      preEstimate,
+    promptWithProjectContext = wrapPromptWithSidecarAgentRunEstimate(
+      taskPromptForEstimate,
     );
 
     promptWithProjectContext = wrapPromptWithAgentRunReportInstruction(

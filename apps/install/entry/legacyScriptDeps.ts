@@ -56,15 +56,16 @@ export { buildDefaultUserProjectFolderPath } from "../../../scripts/buildDefault
 export { registerAgentWitchProcessTraceHandlers } from "../../../scripts/registerAgentWitchProcessTraceHandlers";
 export { runWriterEnsure } from "../../../scripts/handleAgentWitchWriterEnsure";
 export { wrapPromptWithAgentRunReportInstruction } from "../../../scripts/dispatch/agentRunReport.constant";
-export { wrapPromptWithPrerecordedAgentRunEstimate } from "../../../scripts/dispatch/wrapPromptWithPrerecordedAgentRunEstimate";
+export { wrapPromptWithSidecarAgentRunEstimate } from "../../../scripts/dispatch/wrapPromptWithSidecarAgentRunEstimate";
 export { generateAgentRunReportKey } from "../../../scripts/dispatch/generateAgentRunReportKey";
 export { AGENT_RUN_WORKING_ESTIMATE_MARKER } from "../../../scripts/dispatch/agentRunWorkingEstimate.constant";
+export { seedAgentRunReportFile } from "../../../scripts/agentWitchRunReport";
 export {
-  seedAgentRunReportFile,
-  appendAgentRunReportDetailsLine,
-} from "../../../scripts/agentWitchRunReport";
-export { runAgentRunPreEstimate } from "../../../scripts/runAgentRunPreEstimate";
-export { buildMarketplacePlanEstimateTerminalStreamPayload } from "../../../scripts/dispatch/buildMarketplacePlanEstimateTerminalStreamPayload";
+  runAgentRunPreEstimate,
+  beginAgentRunPreEstimate,
+  recordAgentRunPreEstimateOutput,
+} from "../../../scripts/runAgentRunPreEstimate";
+export { resolveTaskWriterEstimateLabel } from "../../../scripts/dispatch/resolveTaskWriterEstimateLabel";
 export {
   closeShellPtySession,
   openInteractiveShellPty,
