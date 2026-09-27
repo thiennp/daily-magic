@@ -36,12 +36,21 @@ describe("runAgentRunPreEstimate", () => {
     process.env.AGENT_WITCH_HOME = home;
     delete process.env.AGENT_WITCH_PROFILE;
     delete process.env.AGENT_WITCH_EMAIL;
-    const fetchMock = vi.fn().mockResolvedValue({
-      ok: true,
-      json: () =>
-        Promise.resolve({
-          message: { content: "[[WORKING_ESTIMATE]]\n120" },
-        }),
+    const reportsDir = path.join(home, "reports");
+    const fetchMock = vi.fn().mockImplementation((url: string) => {
+      if (String(url).endsWith("/api/embeddings")) {
+        return Promise.resolve({
+          ok: true,
+          json: () => Promise.resolve({ embedding: [1, 0] }),
+        });
+      }
+      return Promise.resolve({
+        ok: true,
+        json: () =>
+          Promise.resolve({
+            message: { content: "[[WORKING_ESTIMATE]]\n120" },
+          }),
+      });
     });
     vi.stubGlobal("fetch", fetchMock);
 
@@ -50,18 +59,29 @@ describe("runAgentRunPreEstimate", () => {
       reportKey: "report-1",
       agentRunId: "run-1",
       writerLabel: "Claude CLI",
+      reportsDir,
     });
 
     expect(result.estimateSeconds).toBe(120);
     expect(result.estimateSummary).toContain("2 min");
     const requestBody = JSON.parse(
       String(
-        (fetchMock.mock.calls[0]?.[1] as { body?: string } | undefined)?.body,
+        (
+          fetchMock.mock.calls.find((call) =>
+            String(call[0]).endsWith("/api/chat"),
+          )?.[1] as { body?: string } | undefined
+        )?.body,
       ),
     ) as { messages?: { content?: string }[] };
     expect(requestBody.messages?.[0]?.content).toContain("Claude CLI");
     expect(requestBody.messages?.[0]?.content).toContain(
       "already starting in parallel",
+    );
+    expect(requestBody.messages?.[0]?.content).toContain(
+      "latest finished tasks below",
+    );
+    expect(requestBody.messages?.[0]?.content).toContain(
+      "No finished tasks with a recorded duration yet.",
     );
     const report = readAgentRunReportFile("report-1");
     expect(report?.estimateSeconds).toBe(120);
@@ -82,6 +102,7 @@ describe("runAgentRunPreEstimate", () => {
       reportKey: "report-missing",
       agentRunId: "run-2",
       writerLabel: "Cursor agent CLI",
+      reportsDir: path.join(home, "reports"),
     });
 
     expect(result.estimateSeconds).toBeNull();

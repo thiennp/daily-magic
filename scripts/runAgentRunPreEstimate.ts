@@ -6,6 +6,10 @@ import { buildAgentRunPreEstimatePrompt } from "./dispatch/agentRunWorkingEstima
 import { extractUserTaskFromWrappedPrompt } from "./dispatch/extractUserTaskFromWrappedPrompt";
 import { formatAgentRunEstimateSummary } from "./dispatch/formatAgentRunEstimateSummary";
 import { parseOllamaTaskEstimateSeconds } from "./dispatch/parseOllamaTaskEstimateSeconds";
+import {
+  queryAgentRunEstimateHistoryForPrompt,
+  rememberAgentRunEstimate,
+} from "./agentRunEstimateHistory";
 import { requestOllamaTaskEstimate } from "./requestOllamaTaskEstimate";
 
 export type MarketplacePlanEstimatePreRunBackend =
@@ -50,21 +54,39 @@ const buildPlanEstimateReportNote = (
   return null;
 };
 
-export const beginAgentRunPreEstimate = (input: {
+export type AgentRunPreEstimateDraft = {
+  readonly estimateOutput: string | null;
+  readonly task: string;
+  readonly writerLabel: string;
+  readonly embedding: readonly number[] | null;
+};
+
+export const beginAgentRunPreEstimate = async (input: {
   readonly wrappedPrompt: string;
   readonly writerLabel: string;
-}): Promise<string | null> =>
-  requestOllamaTaskEstimate(
-    buildAgentRunPreEstimatePrompt(
-      extractUserTaskFromWrappedPrompt(input.wrappedPrompt),
-      input.writerLabel,
-    ),
+  readonly reportsDir: string;
+}): Promise<AgentRunPreEstimateDraft> => {
+  const task = extractUserTaskFromWrappedPrompt(input.wrappedPrompt);
+  const history = queryAgentRunEstimateHistoryForPrompt(input.reportsDir);
+  const estimateOutput = await requestOllamaTaskEstimate(
+    buildAgentRunPreEstimatePrompt(task, input.writerLabel, history.table),
   );
+  return {
+    estimateOutput,
+    task,
+    writerLabel: input.writerLabel,
+    embedding: history.embedding,
+  };
+};
 
 export const recordAgentRunPreEstimateOutput = (input: {
   readonly estimateOutput: string;
   readonly reportKey: string;
   readonly agentRunId: string;
+  readonly reportsDir: string;
+  readonly task: string;
+  readonly writerLabel: string;
+  readonly embedding: readonly number[] | null;
 }): AgentRunPreEstimateResult => {
   const estimateSeconds = parseOllamaTaskEstimateSeconds(input.estimateOutput);
   if (estimateSeconds === null) {
@@ -84,6 +106,14 @@ export const recordAgentRunPreEstimateOutput = (input: {
     details: input.estimateOutput.trim(),
     estimateSeconds,
   });
+  rememberAgentRunEstimate({
+    reportsDir: input.reportsDir,
+    agentRunId: input.agentRunId,
+    task: input.task,
+    writerLabel: input.writerLabel,
+    estimateSeconds,
+    embedding: input.embedding,
+  });
 
   return {
     estimateSeconds,
@@ -97,11 +127,16 @@ export const runAgentRunPreEstimate = async (input: {
   readonly reportKey: string;
   readonly agentRunId: string;
   readonly writerLabel: string;
+  readonly reportsDir: string;
 }): Promise<AgentRunPreEstimateResult> => {
-  const estimateOutput = (await beginAgentRunPreEstimate(input)) ?? "";
+  const draft = await beginAgentRunPreEstimate(input);
   return recordAgentRunPreEstimateOutput({
-    estimateOutput,
+    estimateOutput: draft.estimateOutput ?? "",
     reportKey: input.reportKey,
     agentRunId: input.agentRunId,
+    reportsDir: input.reportsDir,
+    task: draft.task,
+    writerLabel: draft.writerLabel,
+    embedding: draft.embedding,
   });
 };
