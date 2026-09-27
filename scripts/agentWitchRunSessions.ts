@@ -18,11 +18,15 @@ import {
   removePendingRunInputSession,
   savePendingRunInputSession,
 } from "./agentWitchPendingRunSessions";
-import { persistFinishedAgentRun } from "./agentWitchRunFinish";
+import {
+  recordAgentRunEstimateActual,
+  readAgentRunEstimateComparison,
+} from "./agentRunEstimateHistory";
 import {
   enqueueAgentRunCompletionOutbox,
   flushAgentRunCompletionOutbox,
 } from "./agentWitchRunCompletionOutbox";
+import { reportAgentRunEstimateComparisonOnCloud } from "./agentWitchCloudApi";
 import { startRunHeartbeat, stopRunHeartbeat } from "./agentWitchRunHeartbeat";
 import { isProcessAlive } from "./isProcessAlive";
 import type { AgentWitchCloudApiConfig } from "./agentWitchCloudApi";
@@ -42,6 +46,7 @@ import {
 } from "./agentWitchRunSessionsAwaitingInput";
 import { tryRunWriterTaskInPty } from "./agentWitchRunSessionsPty";
 import { markWriterConversationStarted } from "./agentWitchWriterSession";
+import { persistFinishedAgentRun } from "./agentWitchRunFinish";
 import { appendWriterTranscriptTurn } from "./writerSessionTranscriptStore";
 import { buildAgentRunWriterExecutionHonestyChunk } from "./dispatch/buildAgentRunWriterExecutionHonestyChunk";
 import { extractUserTaskFromWrappedPrompt } from "./dispatch/extractUserTaskFromWrappedPrompt";
@@ -80,6 +85,13 @@ interface ActiveRunSession {
 const activeChildren = new Map<string, ChildProcess>();
 const runSessions = new Map<string, ActiveRunSession>();
 const runsStoppedByUser = new Set<string>();
+const taskStartedAtMsByRunId = new Map<string, number>();
+
+const noteTaskStarted = (agentRunId: string | undefined): void => {
+  if (agentRunId !== undefined && !taskStartedAtMsByRunId.has(agentRunId)) {
+    taskStartedAtMsByRunId.set(agentRunId, Date.now());
+  }
+};
 
 const publishTerminalStreamChunk = (
   socket: WebSocket,
@@ -141,6 +153,29 @@ export const configureAgentWitchRunCloudApi = (
   config: AgentWitchCloudApiConfig | null,
 ): void => {
   cloudApiConfig = config;
+};
+
+export const publishAgentRunEstimateComparison = (
+  reportsDir: string,
+  agentRunId: string,
+): void => {
+  if (cloudApiConfig === null) {
+    return;
+  }
+
+  const comparison = readAgentRunEstimateComparison(reportsDir, agentRunId);
+  if (
+    comparison === null ||
+    (comparison.estimateSeconds === null && comparison.actualSeconds === null)
+  ) {
+    return;
+  }
+
+  void reportAgentRunEstimateComparisonOnCloud(
+    cloudApiConfig,
+    agentRunId,
+    comparison,
+  );
 };
 
 export const flushPendingAgentRunCompletions = async (
@@ -236,6 +271,21 @@ const finishRun = (
   let resolvedExitCode = exitCode;
   let resolvedOutput = appendWriterLlmUsageFooter(output, llmUsage);
 
+  if (agentRunId !== undefined) {
+    const startedAtMs = taskStartedAtMsByRunId.get(agentRunId);
+    taskStartedAtMsByRunId.delete(agentRunId);
+    if (startedAtMs !== undefined) {
+      recordAgentRunEstimateActual({
+        reportsDir: config.layout.reportsDir,
+        agentRunId,
+        actualSeconds: Math.max(
+          1,
+          Math.round((Date.now() - startedAtMs) / 1000),
+        ),
+      });
+    }
+  }
+
   if (agentRunId !== undefined && runsStoppedByUser.has(agentRunId)) {
     runsStoppedByUser.delete(agentRunId);
     resolvedExitCode = STOPPED_EXIT_CODE;
@@ -245,6 +295,11 @@ const finishRun = (
         ? `${resolvedOutput.trim()}${STOPPED_OUTPUT_SUFFIX}`
         : "Stopped by user.";
   }
+
+  const comparison =
+    agentRunId !== undefined
+      ? readAgentRunEstimateComparison(config.layout.reportsDir, agentRunId)
+      : null;
 
   if (agentRunId !== undefined) {
     stopRunHeartbeat(agentRunId);
@@ -284,6 +339,12 @@ const finishRun = (
       exitCode: resolvedExitCode,
       output: resolvedOutput,
       createdAt: new Date().toISOString(),
+      ...(typeof comparison?.estimateSeconds === "number"
+        ? { estimateSeconds: comparison.estimateSeconds }
+        : {}),
+      ...(typeof comparison?.actualSeconds === "number"
+        ? { actualSeconds: comparison.actualSeconds }
+        : {}),
     });
     void flushAgentRunCompletionOutbox({
       layout: config.layout,
@@ -301,6 +362,12 @@ const finishRun = (
       exitCode: resolvedExitCode,
       output: resolvedOutput,
       ...(agentRunId !== undefined ? { agentRunId } : {}),
+      ...(typeof comparison?.estimateSeconds === "number"
+        ? { estimateSeconds: comparison.estimateSeconds }
+        : {}),
+      ...(typeof comparison?.actualSeconds === "number"
+        ? { actualSeconds: comparison.actualSeconds }
+        : {}),
       ...(llmUsage !== undefined ? { llmUsage } : {}),
     },
     requestId,
@@ -608,6 +675,7 @@ export const runWriterTask = (
   beginAgentWitchWriterWork(config.layout);
 
   if (shouldUseWriterApi(config, writerAgent)) {
+    noteTaskStarted(agentRunId);
     runWriterApiTask(
       config,
       writerAgent,
@@ -641,6 +709,8 @@ export const runWriterTask = (
     );
     return;
   }
+
+  noteTaskStarted(agentRunId);
 
   const startPipeChild = (): void => {
     const child = spawn(invocation.command, [...invocation.args], {

@@ -12,6 +12,8 @@ export const updateAgentRunSessionStatus = (
     readonly resultOutcomeCode?: string | null;
     readonly denialReason?: string | null;
     readonly approvalExpiresAt?: string | null;
+    readonly estimateSeconds?: number | null;
+    readonly actualSeconds?: number | null;
   },
 ): AgentRunRecord | null => {
   const now = new Date().toISOString();
@@ -41,6 +43,12 @@ export const updateAgentRunSessionStatus = (
         : {}),
       ...(startedAt !== undefined ? { startedAt } : {}),
       ...(completedAt !== undefined ? { completedAt } : {}),
+      ...(typeof fields?.estimateSeconds === "number"
+        ? { estimateSeconds: fields.estimateSeconds }
+        : {}),
+      ...(typeof fields?.actualSeconds === "number"
+        ? { actualSeconds: fields.actualSeconds }
+        : {}),
       updatedAt: now,
     }) ?? null
   );

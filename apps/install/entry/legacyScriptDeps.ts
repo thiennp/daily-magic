@@ -17,6 +17,7 @@ export {
   flushPendingAgentRunCompletions,
   replayPendingRunInputRequests,
   runWriterTask,
+  publishAgentRunEstimateComparison,
   stopAgentRun,
 } from "../../../scripts/agentWitchRunSessions";
 export { ensureHarnessWriterCli } from "../../../scripts/ensureHarnessWriterCli";

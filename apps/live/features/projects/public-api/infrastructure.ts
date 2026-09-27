@@ -49,6 +49,7 @@ export { readLegacyAgentWitchProjectsRegistry } from "../internal/core/readLegac
 export {
   claimAgentRunFromCloud,
   completeAgentRunOnCloud,
+  reportAgentRunEstimateComparisonOnCloud,
   createAgentWitchCloudProject,
   fetchAgentWitchCloudProjects,
   parseAgentWitchHeartbeatResponse,

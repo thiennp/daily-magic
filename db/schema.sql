@@ -356,6 +356,12 @@ ALTER TABLE agent_runs
 ALTER TABLE agent_runs
   ADD COLUMN IF NOT EXISTS workflow_step_run_id TEXT;
 
+ALTER TABLE agent_runs
+  ADD COLUMN IF NOT EXISTS estimate_seconds INTEGER;
+
+ALTER TABLE agent_runs
+  ADD COLUMN IF NOT EXISTS actual_seconds INTEGER;
+
 CREATE TABLE IF NOT EXISTS workflow_runs (
   id TEXT PRIMARY KEY DEFAULT gen_random_uuid()::text,
   requester_user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,

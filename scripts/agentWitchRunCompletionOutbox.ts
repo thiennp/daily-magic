@@ -13,6 +13,8 @@ export interface AgentRunCompletionOutboxEntry {
   readonly output: string;
   readonly outcomeCode?: string | null;
   readonly createdAt: string;
+  readonly estimateSeconds?: number;
+  readonly actualSeconds?: number;
 }
 
 const OUTBOX_FILENAME = "run-completion-outbox.json";
@@ -98,6 +100,10 @@ export const flushAgentRunCompletionOutbox = async (input: {
       entry.runId,
       entry.exitCode,
       entry.output,
+      {
+        estimateSeconds: entry.estimateSeconds,
+        actualSeconds: entry.actualSeconds,
+      },
     );
 
     if (!completed) {

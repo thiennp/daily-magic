@@ -7,6 +7,7 @@ import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMess
 import { dispatchAgentRunInputRegistry } from "@/lib/dispatch/dispatchAgentRunInputRegistry";
 import { getAgentRunSession } from "@/lib/dispatch/agentRunSessionRegistry";
 import { markAgentRunCompleted } from "@/lib/dispatch/dispatchWriterRunToAgent";
+import { readOptionalPositiveSeconds } from "@/lib/dispatch/readOptionalPositiveSeconds";
 
 export const handleClaudeResultMessageAsync = async (
   runtime: AgentWitchHubRuntime,
@@ -46,7 +47,14 @@ export const handleClaudeResultMessageAsync = async (
 
   if (agentRunId !== null) {
     dispatchAgentRunInputRegistry.remove(agentRunId);
-    await markAgentRunCompleted(runtime, agentRunId, exitCode, output);
+    await markAgentRunCompleted(runtime, agentRunId, exitCode, output, {
+      estimateSeconds: readOptionalPositiveSeconds(
+        message.payload?.estimateSeconds,
+      ),
+      actualSeconds: readOptionalPositiveSeconds(
+        message.payload?.actualSeconds,
+      ),
+    });
     const { advanceOfficialWorkflowRunAfterAgentRun } =
       await import("@/lib/workflowOrchestration/advanceOfficialWorkflowRunAfterAgentRun");
     await advanceOfficialWorkflowRunAfterAgentRun(

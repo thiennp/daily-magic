@@ -46,7 +46,10 @@ import {
   buildAgentWitchLocalAppShell,
 } from "@agent-witch/live-shell/presentation";
 import { buildAgentWitchLocalHomePageBody } from "@agent-witch/live-home/presentation";
-import { buildAgentWitchLocalTaskPageBody } from "@agent-witch/live-tasks/presentation";
+import {
+  buildAgentWitchLocalEstimateHistoryPageBody,
+  buildAgentWitchLocalTaskPageBody,
+} from "@agent-witch/live-tasks/presentation";
 import { buildAgentWitchLocalWriterSessionsPageBody } from "@agent-witch/live-memory/presentation";
 import { listWriterSessionCanonicalRecords } from "@agent-witch/live-memory";
 import { buildAgentWitchLocalWriterApiPageBody } from "@agent-witch/live-writer-settings/presentation";
@@ -1501,6 +1504,22 @@ export const startAgentWitchLocalApp = (input: {
         });
         response.writeHead(303, { Location: "/writer-api?saved=1" });
         response.end();
+        return;
+      }
+
+      if (method === "GET" && pathname === "/estimates") {
+        const installBundle = buildInstallBundleStatus();
+        sendHtml(
+          response,
+          await buildLocalAppShell({
+            title: "Estimates",
+            activePath: "/estimates",
+            installVersion: installBundle.installVersion,
+            body: buildAgentWitchLocalEstimateHistoryPageBody({
+              reportsDir: input.layout.reportsDir,
+            }),
+          }),
+        );
         return;
       }
 

@@ -122,6 +122,7 @@ import {
   migrateLegacyAgentWitchInstallLogsForActiveProfiles,
   openInteractiveShellPty,
   queueTerminalStreamChunk,
+  publishAgentRunEstimateComparison,
   readInstallBundleVersionFromHeartbeatAck,
   registerAgentWitchProcessTraceHandlers,
   releaseAgentWitchMachineLease,
@@ -271,6 +272,7 @@ const dispatchWriterTask = async (
             writerExecutionBackend: config.writerExecutionBackend,
             configPath: config.layout.configPath,
           }),
+          reportsDir: config.layout.reportsDir,
         }).catch(() => null)
       : null;
 
@@ -458,15 +460,27 @@ const dispatchWriterTask = async (
     const taskPromptForEstimate = promptWithProjectContext;
     if (estimateRequest !== null) {
       void estimateRequest
-        .then((estimateOutput) => {
+        .then((draft) => {
+          if (draft === null) {
+            return;
+          }
           const preEstimate = recordAgentRunPreEstimateOutput({
-            estimateOutput: estimateOutput ?? "",
+            estimateOutput: draft.estimateOutput ?? "",
             reportKey: resolvedReportKey,
             agentRunId,
+            reportsDir: config.layout.reportsDir,
+            task: draft.task,
+            writerLabel: draft.writerLabel,
+            embedding: draft.embedding,
           });
           if (preEstimate.estimateSeconds === null) {
             return;
           }
+
+          publishAgentRunEstimateComparison(
+            config.layout.reportsDir,
+            agentRunId,
+          );
 
           const estimateChunk = `${AGENT_RUN_WORKING_ESTIMATE_MARKER}\n${preEstimate.estimateSeconds}\n`;
           if (isTerminalStreamAccepted(agentRunId)) {

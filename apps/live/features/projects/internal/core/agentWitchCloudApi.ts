@@ -273,6 +273,10 @@ export const completeAgentRunOnCloud = async (
   runId: string,
   exitCode: number,
   output: string,
+  comparison?: {
+    readonly estimateSeconds?: number | null;
+    readonly actualSeconds?: number | null;
+  },
 ): Promise<boolean> => {
   try {
     const response = await fetch(
@@ -280,7 +284,55 @@ export const completeAgentRunOnCloud = async (
       {
         method: "POST",
         headers: buildDeviceAuthHeaders(config.pairingToken),
-        body: JSON.stringify({ exitCode, output }),
+        body: JSON.stringify({
+          exitCode,
+          output,
+          ...(typeof comparison?.estimateSeconds === "number"
+            ? { estimateSeconds: comparison.estimateSeconds }
+            : {}),
+          ...(typeof comparison?.actualSeconds === "number"
+            ? { actualSeconds: comparison.actualSeconds }
+            : {}),
+        }),
+        signal: AbortSignal.timeout(30_000),
+      },
+    );
+
+    return response.ok;
+  } catch {
+    return false;
+  }
+};
+
+export const reportAgentRunEstimateComparisonOnCloud = async (
+  config: AgentWitchCloudApiConfig,
+  runId: string,
+  comparison: {
+    readonly estimateSeconds?: number | null;
+    readonly actualSeconds?: number | null;
+  },
+): Promise<boolean> => {
+  if (
+    typeof comparison.estimateSeconds !== "number" &&
+    typeof comparison.actualSeconds !== "number"
+  ) {
+    return false;
+  }
+
+  try {
+    const response = await fetch(
+      `${config.appOrigin}/api/agent-witch/runs/${encodeURIComponent(runId)}/complete`,
+      {
+        method: "POST",
+        headers: buildDeviceAuthHeaders(config.pairingToken),
+        body: JSON.stringify({
+          ...(typeof comparison.estimateSeconds === "number"
+            ? { estimateSeconds: comparison.estimateSeconds }
+            : {}),
+          ...(typeof comparison.actualSeconds === "number"
+            ? { actualSeconds: comparison.actualSeconds }
+            : {}),
+        }),
         signal: AbortSignal.timeout(30_000),
       },
     );

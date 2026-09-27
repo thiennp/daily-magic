@@ -2,6 +2,19 @@ import { isAgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
 import { isDispatchPolicy } from "@/lib/dispatch/DispatchPolicy.constant";
 import type AgentRunRecord from "@/lib/dispatch/types/AgentRunRecord.type";
 
+const readStoredSeconds = (value: unknown): number | null => {
+  if (typeof value === "number" && Number.isFinite(value) && value >= 1) {
+    return Math.round(value);
+  }
+  if (typeof value === "string" && value.trim().length > 0) {
+    const parsed = Number(value);
+    if (Number.isFinite(parsed) && parsed >= 1) {
+      return Math.round(parsed);
+    }
+  }
+  return null;
+};
+
 export default function mapAgentRunRow(
   row: Record<string, unknown>,
 ): AgentRunRecord {
@@ -48,5 +61,7 @@ export default function mapAgentRunRow(
     lastRunHeartbeatAt: row.last_run_heartbeat_at
       ? String(row.last_run_heartbeat_at)
       : null,
+    estimateSeconds: readStoredSeconds(row.estimate_seconds),
+    actualSeconds: readStoredSeconds(row.actual_seconds),
   };
 }

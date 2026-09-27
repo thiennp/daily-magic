@@ -4,6 +4,7 @@ import AgentRunContinueButton from "@/features/reports/AgentRunContinueButton";
 import AgentRunLiveTerminal from "@/features/reports/AgentRunLiveTerminal";
 import AgentRunOutcomeBanner from "@/features/reports/AgentRunOutcomeBanner";
 import AgentRunResultOutput from "@/features/reports/AgentRunResultOutput";
+import AgentRunEstimateComparison from "@/features/reports/AgentRunEstimateComparison";
 import AgentRunKeepInProjectButton from "@/features/reports/AgentRunKeepInProjectButton";
 import AgentRunReportProgress from "@/features/reports/AgentRunReportProgress";
 import AgentRunStatusBadge from "@/features/reports/AgentRunStatusBadge";
@@ -69,6 +70,10 @@ export default function AgentRunDetailContent({
           </div>
         ) : null}
       </dl>
+      <AgentRunEstimateComparison
+        estimateSeconds={run.estimateSeconds}
+        actualSeconds={run.actualSeconds}
+      />
       <h2 className="mt-6 text-sm font-medium text-gray-800 dark:text-white/90">
         Prompt
       </h2>
