@@ -6,7 +6,9 @@ Architecture context: ADR **0005** (presence, dispatch outbox, multi-instance re
 
 When you close an open item: remove or shrink the KNOWN_ISSUES row, add/adjust regression tests, and add `docs/qa/<topic>.md` if operators will ask again.
 
-**Linux access is not an open outage.** Console works from a Linux browser. Desktop Linux Home shows the host install command. x86_64 Linux can host AWI. AWL/AWB stay Mac-only ([Q&A](../../qa/linux-browser-vs-linux-host.md)).
+**Linux access is not an open outage.** Console works from a Linux browser. Desktop Linux Home shows the host install command. x86_64 Linux can host AWI. AWL/AWB stay Mac-only ([Q&A](../../qa/linux-browser-vs-linux-host.md)). `agent.register` persists `platform` so a Linux `npm run agent-witch` host is not stored as `mac` (MAC_DEVICES-004, bundle **159**).
+
+Shipped in this release: marketplace pull writes official playbook bytes into `.cursor` (MARKETPLACE-009); a missing CLI after a missing writer API key is **Failed**, not **Completed with fallback** (AGENT-129).
 
 ---
 

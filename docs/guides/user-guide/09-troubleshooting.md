@@ -6,7 +6,11 @@ Most fixes are **learn from usage** in practice: read the honest banner, adjust 
 
 Quick wins first, then themed sections for DNS, reconnecting, and bundle update.
 
-A Linux browser can use the Console. Desktop Linux Home shows the host install command. An x86_64 Linux machine can host Tasks. It will not show “this Mac” ([Q&A](../../qa/linux-browser-vs-linux-host.md)).
+A Linux browser can use the Console. Desktop Linux Home shows the host install command. An x86_64 Linux machine can host Tasks. It will not show “this Mac” ([Q&A](../../qa/linux-browser-vs-linux-host.md)). A host started with `npm run agent-witch` is listed as Linux when it runs on Linux.
+
+**Pull into repo** on a project writes the linked playbook into `.cursor`. The folder must be under your home directory.
+
+A run that lacks a writer API key and cannot start the CLI shows **Failed** — Writer API key missing and Claude CLI can’t run. **Completed with fallback** means the CLI did run.
 
 ---
 

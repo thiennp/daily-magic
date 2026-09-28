@@ -1,4 +1,5 @@
 import fs from "node:fs";
+import os from "node:os";
 import path from "node:path";
 
 import { expect, test, type Page, type Request } from "@playwright/test";
@@ -17,7 +18,7 @@ import { signInTestAccount } from "./helpers/signInTestAccount";
 const SELF = "test-e2e-flow@agentwitch.com";
 const WORKFLOW_NAME = "Freelancer client proposal";
 const PROJECT_NAME = `E2E Flow ${Date.now()}`;
-const PROJECT_FOLDER = path.join("/tmp", "aw-e2e-flow-project");
+const PROJECT_FOLDER = path.join(os.homedir(), "aw-e2e-flow-project");
 const TASK_MARKER = `E2E-FLOW-${Date.now()}`;
 const ARTIFACT_DIR = "/opt/cursor/artifacts/e2e-project-workflow";
 
@@ -36,18 +37,12 @@ const shot = async (page: Page, name: string): Promise<void> => {
   });
 };
 
-const fillCaptionedField = async (
+const fillLabeledField = async (
   page: Page,
-  caption: RegExp,
+  label: RegExp,
   value: string,
 ): Promise<void> => {
-  const paragraph = page
-    .locator(".modal p")
-    .filter({ hasText: caption })
-    .locator("visible=true")
-    .first();
-  const box = paragraph.locator("xpath=../textarea | ../input").first();
-  await box.fill(value, { timeout: 15_000 });
+  await page.getByLabel(label).fill(value, { timeout: 15_000 });
 };
 
 const readDispatchProject = (
@@ -97,6 +92,9 @@ test.describe("Create project, pull harness, run workflow", () => {
       liveDevice,
       "a live host must be connected on this computer",
     ).toBeTruthy();
+    if (process.platform === "linux") {
+      expect(liveDevice?.platform).toBe("linux");
+    }
 
     await page.goto("/projects");
     await page.waitForLoadState("load");
@@ -188,25 +186,30 @@ test.describe("Create project, pull harness, run workflow", () => {
     );
     await awl.waitForLoadState("load");
     await shot(awl, "03-awl-harness-tab");
-    const pullForm = awl.locator('form[action="/projects/link-harness"]');
-    const pullLink = awl.getByRole("link", { name: "Pull into repo" });
-    const harnessWasPullable = await pullForm.isVisible().catch(() => false);
-    if (harnessWasPullable) {
-      await pullForm.getByRole("button", { name: "Pull into repo" }).click();
-      await awl.waitForLoadState("load");
-    } else {
-      await expect(awl.getByText(/Harness \(1\)/)).toBeVisible();
-      await expect(awl.getByText("No harness on this Mac yet")).toBeVisible();
-      await expect(pullLink).toHaveAttribute("href", "/harness");
-      await pullLink.click();
-      await awl.waitForLoadState("load");
-    }
+    const pullForm = awl.locator(
+      'form[action="/projects/link-harness"], form[action="/projects/pull-bound-harness"]',
+    );
+    await expect(pullForm).toBeVisible({ timeout: 15_000 });
+    const checkboxes = pullForm.locator('input[name="applySet"]');
+    const checkboxCount = await checkboxes.count();
+    await Array.from({ length: checkboxCount }).reduce<Promise<void>>(
+      async (previous, _, index) => {
+        await previous;
+        await checkboxes.nth(index).check();
+      },
+      Promise.resolve(),
+    );
+    await pullForm.getByRole("button", { name: "Pull into repo" }).click();
+    await awl.waitForLoadState("load");
     await shot(awl, "04-harness-pulled");
     const harnessPageText = await awl.locator("body").innerText();
     await awl.close();
 
     const cursorTree = path.join(PROJECT_FOLDER, ".cursor");
     const harnessFilesLanded = fs.existsSync(cursorTree);
+    expect(harnessFilesLanded, "pull writes .cursor into the project").toBe(
+      true,
+    );
 
     await page.getByRole("button", { name: "Start a task" }).click();
     await expect(page.getByRole("heading", { name: "New task" })).toBeVisible({
@@ -239,25 +242,22 @@ test.describe("Create project, pull harness, run workflow", () => {
     });
     await shot(page, "05-composer-project");
 
-    await fillCaptionedField(
+    await fillLabeledField(
       page,
       /Client or company name/i,
       FREELANCER_PROPOSAL_MOCK.clientName,
     );
-    await fillCaptionedField(
+    await fillLabeledField(
       page,
       /Project brief from the client/i,
       FREELANCER_PROPOSAL_MOCK.projectBrief,
     );
-    await fillCaptionedField(
+    await fillLabeledField(
       page,
       /Budget range or rate target/i,
       FREELANCER_PROPOSAL_MOCK.budgetRange,
     );
-    const portfolioField = page.getByText(/Portfolio folder/i);
-    if (await portfolioField.isVisible().catch(() => false)) {
-      await fillCaptionedField(page, /Portfolio folder/i, portfolioPath);
-    }
+    await fillLabeledField(page, /Portfolio folder/i, portfolioPath);
     await page
       .getByRole("textbox", { name: /Additional instructions/i })
       .fill(
@@ -287,6 +287,7 @@ test.describe("Create project, pull harness, run workflow", () => {
     expect(dispatched.projectFolderPath).toBe(PROJECT_FOLDER);
     expect(dispatched.prompt).toContain(TASK_MARKER);
     expect(dispatched.prompt).toContain("Nordlicht Outdoor");
+    expect(dispatched.prompt).toContain(portfolioPath);
 
     const dispatchResponse = await dispatchRequest.response();
     expect(dispatchResponse?.ok()).toBe(true);
@@ -294,7 +295,7 @@ test.describe("Create project, pull harness, run workflow", () => {
     await shot(page, "07-run-started");
     const tokenLine = page.getByText(/Tokens:\s+\d[\d,]*\s+in/i);
     const writerOutcome = page.getByText(
-      /Writer API key missing|Completed with fallback|execvp\(3\) failed/i,
+      /Failed — Writer API key missing and Claude CLI can’t run|Tokens:\s+\d/i,
     );
     await expect(tokenLine.or(writerOutcome).first()).toBeVisible({
       timeout: 120_000,
@@ -315,7 +316,7 @@ test.describe("Create project, pull harness, run workflow", () => {
         `folder=${PROJECT_FOLDER}`,
         `marker=${TASK_MARKER}`,
         `platform=${liveDevice?.platform ?? ""}`,
-        `harnessPullForm=${harnessWasPullable}`,
+        `harnessPullForm=true`,
         `harnessFilesLanded=${harnessFilesLanded}`,
         `tokenVisible=${await tokenLine.isVisible().catch(() => false)}`,
         "",
