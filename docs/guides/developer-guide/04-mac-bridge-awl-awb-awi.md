@@ -124,6 +124,8 @@ Self-update resolves the app origin from `config.json` `wsUrl`, then from `insta
 
 Failed browser calls to `http://127.0.0.1:47892/identity` and `:47893/identity` mean AWB is down. They do not insert device rows.
 
+The click does not signal a running AWL. The Mac keeps `~/.agent-witch` until the install command runs. That command writes the new token when the config email matches (`buildAgentWitchInstallScriptConfigUpdateExisting`), restarts the LaunchAgent (`launchctl kickstart -k`), and `registerAgentWitchInstallFromMac` stamps the hostname onto the new row and revokes other active rows with that label. A Console delete only sets `revoked_at` and disconnects the socket (`DELETE /api/agent-witch/devices/:id`). The old token then fails `agent.register` with “This Mac identity is not linked”. Update local (`updateExistingInstall`) keeps the on-disk token, so it does not relink a revoked device.
+
 ---
 
 ## Common agent mistakes
