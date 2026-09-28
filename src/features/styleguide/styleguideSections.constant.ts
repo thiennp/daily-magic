@@ -8,6 +8,7 @@ export const STYLEGUIDE_SECTIONS = [
   { id: "avatars", label: "Avatars" },
   { id: "images", label: "Images" },
   { id: "modals", label: "Modals" },
+  { id: "workflow-progress", label: "Workflow progress" },
   { id: "forms", label: "Form elements" },
   { id: "tables", label: "Tables" },
   { id: "charts", label: "Charts" },

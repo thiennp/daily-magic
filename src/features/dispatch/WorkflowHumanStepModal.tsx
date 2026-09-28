@@ -6,6 +6,7 @@ import { Modal } from "@/components/ui/modal";
 import WorkflowHumanStepModalFooter from "@/features/dispatch/WorkflowHumanStepModalFooter";
 import WorkflowHumanStepPriorOutput from "@/features/dispatch/WorkflowHumanStepPriorOutput";
 import WorkflowRunStepProgress from "@/features/dispatch/WorkflowRunStepProgress";
+import WorkflowRunStepTimelineBlock from "@/features/dispatch/WorkflowRunStepTimelineBlock";
 import type { WorkflowHumanStepRequest } from "@/lib/workflowOrchestration/types/WorkflowHumanStepPayload.type";
 
 interface WorkflowHumanStepModalProps {
@@ -51,6 +52,10 @@ export default function WorkflowHumanStepModal({
       <WorkflowRunStepProgress
         stepIndex={request.stepIndex}
         totalSteps={request.totalSteps}
+      />
+      <WorkflowRunStepTimelineBlock
+        workflowRunId={request.workflowRunId}
+        highlightStepIndex={request.stepIndex}
       />
       <div className="mt-5 rounded-xl border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-900/30">
         <p className="text-sm font-medium text-gray-900 dark:text-white">

@@ -10,6 +10,7 @@ import {
   findWorkflowStepRunSessionByAgentRunId,
   getWorkflowRunSession,
   getWorkflowStepRunSession,
+  listWorkflowStepRunSessionsForRun,
   registerWorkflowRunSession,
   registerWorkflowStepRunSession,
 } from "@/lib/workflowOrchestration/workflowRunSessionRegistry";
@@ -73,6 +74,35 @@ export const getWorkflowStepRunById = async (
   const step = mapWorkflowStepRunRow(rows[0]);
   registerWorkflowStepRunSession(step);
   return step;
+};
+
+export const listWorkflowStepRunsForWorkflowRunId = async (
+  workflowRunId: string,
+): Promise<readonly WorkflowStepRunRecord[]> => {
+  const fromSession = listWorkflowStepRunSessionsForRun(workflowRunId);
+  if (fromSession.length > 0) {
+    return fromSession;
+  }
+
+  if (isAgentWitchDevDashboardEnabled()) {
+    return [];
+  }
+
+  const sql = getSql();
+  const rows = asRowArray(
+    await sql`
+      SELECT * FROM workflow_step_runs
+      WHERE workflow_run_id = ${workflowRunId}
+      ORDER BY step_index ASC
+    `,
+  );
+
+  const steps = rows.map((row) => mapWorkflowStepRunRow(row));
+  for (const step of steps) {
+    registerWorkflowStepRunSession(step);
+  }
+
+  return steps;
 };
 
 export const getWorkflowStepRunByAgentRunId = async (

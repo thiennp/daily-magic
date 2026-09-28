@@ -43,6 +43,7 @@ Deep dive: [Official workflow run — checkpoints and retry](../../qa/official-w
 When a workflow needs you, status becomes something like **Waiting on you** (aligned with [run UX honesty](../../qa/run-ux-honesty-strings.md)). The checkpoint sheet includes:
 
 - **Workflow name** and a **progress** indicator (where you are in the graph).
+- **Workflow steps** — a checklist of every step in this run: finished steps, the one waiting on you (or running on your Mac), and what is still ahead. The same checklist appears on the failure sheet when a step needs **Try again**.
 - **What to do** — plain instructions for this step.
 - **From your assistant** — a short preview of what the last agent step produced (when available).
 - **Continue** — submit your answer and advance the graph.
