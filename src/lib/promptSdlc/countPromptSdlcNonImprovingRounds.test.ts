@@ -35,10 +35,13 @@ describe("countPromptSdlcNonImprovingRounds", () => {
     expect(dropped.continuation.type).toBe("call");
     if (dropped.continuation.type === "call") {
       expect(dropped.continuation.prompt).toContain(
-        "Current prompt:\nBest so far",
+        "highest scoring version so far",
       );
+      expect(dropped.continuation.prompt).toContain("Best so far");
       expect(dropped.continuation.prompt).toContain("Judge score: 84");
-      expect(dropped.continuation.prompt).toContain("Weaker draft");
+      expect(dropped.continuation.prompt).toContain("Avoid:");
+      expect(dropped.continuation.prompt).toContain("lost the screen");
+      expect(dropped.continuation.prompt).not.toContain("Weaker draft");
     }
 
     const stalled = continueAfterJudgeReply({
@@ -87,7 +90,7 @@ describe("countPromptSdlcNonImprovingRounds", () => {
     expect(stalled.continuation).toEqual({
       type: "stopped",
       errorMessage:
-        "Stopped because the score stopped rising. The best prompt is kept.",
+        "Stopped because the score stopped rising. The best prompt is kept. Avoid: lost the screen; closer; still under.",
     });
   });
 });

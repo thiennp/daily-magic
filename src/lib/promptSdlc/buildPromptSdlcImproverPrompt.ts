@@ -3,11 +3,13 @@ export const buildPromptSdlcImproverPrompt = (input: {
   readonly promptText: string;
   readonly score: number;
   readonly reasons: string;
-  readonly history?: string | null;
+  readonly avoid?: string | null;
 }): string => {
-  const history = input.history?.trim() ?? "";
-  const historyLines =
-    history.length === 0 ? [] : ["", "History:", history, ""];
+  const avoid = input.avoid?.trim() ?? "";
+  const avoidLines =
+    avoid.length === 0
+      ? []
+      : ["", "Avoid:", avoid, "", "Do not repeat anything in Avoid."];
 
   return [
     "You improve prompts.",
@@ -18,12 +20,13 @@ export const buildPromptSdlcImproverPrompt = (input: {
     input.goal.trim(),
     "",
     "Current prompt:",
+    "This is the highest scoring version so far. Start from it.",
     input.promptText.trim(),
     "",
     `Judge score: ${input.score}`,
     "Judge reasons:",
     input.reasons.trim(),
-    ...historyLines,
+    ...avoidLines,
     "",
     "Write the next prompt.",
   ].join("\n");
