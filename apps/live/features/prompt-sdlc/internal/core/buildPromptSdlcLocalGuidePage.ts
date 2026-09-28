@@ -18,7 +18,7 @@ export const buildPromptSdlcLocalGuidePageBody =
   (): string => `<section class="card">
       <p class="eyebrow">Prompt SDLC</p>
       <h1>How Prompt SDLC works</h1>
-      <p class="lede">You give it a prompt and a goal. A judge scores the prompt. Under the pass score, an improver rewrites it, and the judge scores again. The loop keeps going until the score passes. Later rewrites include earlier rounds. When the score is not rising, those earlier prompts are included too. The pass score starts at ${PROMPT_SDLC_PASS_SCORE}.</p>
+      <p class="lede">You give it a prompt and a goal. A judge scores the prompt. Under the pass score, an improver rewrites it, and the judge scores again. The loop keeps going until the score passes. Later rewrites include earlier rounds. When the score is not rising, those earlier prompts are included too. Click a step to see the score, the feedback, and the prompt saved for that step. When the run finishes, the highest scoring prompt is shown, and you can save it as a skill in the folder you chose. The pass score starts at ${PROMPT_SDLC_PASS_SCORE}.</p>
       <p><a href="/prompt-sdlc">Back to Prompt SDLC</a></p>
       <h2>Goal and prompt</h2>
       <p>The goal is the outcome of using the prompt. The prompt is the instruction the model will follow. A stronger prompt changes the slots, the decision order, and when the model must stop. Pasting the goal onto the old prompt does not do that.</p>

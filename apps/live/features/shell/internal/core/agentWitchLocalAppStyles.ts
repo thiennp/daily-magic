@@ -700,9 +700,12 @@ form.sdlc-form { display: flex; flex-direction: column; }
 .sdlc-band-close { background: #fef9c3; color: #854d0e; }
 .sdlc-band-passes { background: #dcfce7; color: #166534; }
 .sdlc-tree { list-style: none; margin: 1rem 0 0; padding: 0; }
-.sdlc-node { display: grid; grid-template-columns: 1.25rem minmax(0, 1fr); column-gap: 0.75rem; position: relative; align-items: start; padding-bottom: 1rem; }
+.sdlc-node { display: block; position: relative; padding-bottom: 1rem; }
 .sdlc-node:last-child { padding-bottom: 0; }
 .sdlc-node:not(:last-child)::after { content: ""; position: absolute; left: 0.42rem; top: 1.05rem; bottom: 0; width: 2px; background: #d0d5dd; }
+.sdlc-node-open { display: grid; grid-template-columns: 1.25rem minmax(0, 1fr); column-gap: 0.75rem; align-items: start; width: 100%; margin: 0; padding: 0; border: 0; background: none; color: inherit; font: inherit; text-align: left; cursor: pointer; }
+.sdlc-node-open:hover .sdlc-node-label,
+.sdlc-node-open:focus-visible .sdlc-node-label { text-decoration: underline; }
 .sdlc-node-mark { width: 0.95rem; height: 0.95rem; margin-top: 0.15rem; border-radius: 999px; background: #166534; box-shadow: 0 0 0 4px #dcfce7; position: relative; z-index: 1; }
 .sdlc-node-active .sdlc-spin { margin-top: 0.15rem; position: relative; z-index: 1; }
 .sdlc-node-label { line-height: 1.4; padding-top: 0.05rem; }

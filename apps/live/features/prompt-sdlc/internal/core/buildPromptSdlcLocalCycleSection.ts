@@ -7,6 +7,7 @@ import {
   renderPromptSdlcLocalScoreScale,
   renderPromptSdlcLocalStepTree,
 } from "./buildPromptSdlcLocalStepTree";
+import { renderPromptSdlcLocalBestPrompt } from "./renderPromptSdlcLocalBestPrompt";
 import { describePromptSdlcLocalActivity } from "./buildPromptSdlcLocalActivity";
 import { buildPromptSdlcLocalImproverHistory } from "./buildPromptSdlcLocalImproverHistory";
 import { isPromptSdlcLocalManualWait } from "./isPromptSdlcLocalManualWait";
@@ -88,7 +89,9 @@ export const buildPromptSdlcLocalCycleSection = (
   const activity = describePromptSdlcLocalActivity(cycle);
   const steps = renderPromptSdlcLocalStepTree(
     buildPromptSdlcSteps(toCycleView(cycle)),
+    cycle,
   );
+  const best = renderPromptSdlcLocalBestPrompt(cycle);
   const error =
     cycle.errorMessage === null
       ? ""
@@ -126,5 +129,5 @@ export const buildPromptSdlcLocalCycleSection = (
         history,
       })
     : "";
-  return `<section class="card" id="prompt-sdlc-run" data-live="${live ? "true" : "false"}" data-since="${escapeHtml(cycle.updatedAt)}" aria-busy="${live ? "true" : "false"}"><p class="eyebrow">This run</p><div class="sdlc-working">${spinner}<div><h2>${escapeHtml(activity.title)}</h2>${detail}${folder}</div></div>${error}${renderPromptSdlcLocalScoreScale(cycle.passScore)}${steps}${manual}</section>${cycle.revisions.map(renderRevision).join("")}`;
+  return `<section class="card" id="prompt-sdlc-run" data-live="${live ? "true" : "false"}" data-since="${escapeHtml(cycle.updatedAt)}" aria-busy="${live ? "true" : "false"}"><p class="eyebrow">This run</p><div class="sdlc-working">${spinner}<div><h2>${escapeHtml(activity.title)}</h2>${detail}${folder}</div></div>${error}${renderPromptSdlcLocalScoreScale(cycle.passScore)}${steps}${best}${manual}</section>${cycle.revisions.map(renderRevision).join("")}`;
 };
