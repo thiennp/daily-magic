@@ -690,7 +690,18 @@ form.sdlc-form { display: flex; flex-direction: column; }
 }
 .sdlc-submit { display: flex; justify-content: flex-end; }
 .sdlc-submit .btn-primary { min-width: 8.5rem; }
-.sdlc-writers { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem 1.25rem; }
+.sdlc-writers { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem 1.25rem; align-items: start; }
+.sdlc-limits { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(14rem, 0.9fr); gap: 1rem 1.5rem; align-items: start; }
+form.sdlc-form textarea.input.sdlc-instruction {
+  min-height: 4.5rem;
+  font-family: inherit;
+  font-size: 0.875rem;
+}
+@media (max-width: 767px) {
+  .sdlc-writers,
+  .sdlc-limits { grid-template-columns: 1fr; }
+  .sdlc-folder { flex-direction: column; align-items: stretch; }
+}
 .sdlc-writer { display: flex; flex-direction: column; gap: 0.35rem; }
 .sdlc-writer p { margin: 0; }
 .sdlc-score { display: flex; gap: 0.35rem; flex-wrap: wrap; margin-top: 1rem; }

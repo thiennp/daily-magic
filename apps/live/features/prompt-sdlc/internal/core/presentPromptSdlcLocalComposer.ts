@@ -49,6 +49,8 @@ export const presentPromptSdlcLocalComposer = async (input: {
       writers: input.selection.writers,
       judge: decision.judge,
       improver: decision.improver,
+      judgeInstructions: decision.judgeInstructions,
+      improverInstructions: decision.improverInstructions,
       folder: displayPromptSdlcLocalFolder(decision.workingDirectory),
       passScore: String(decision.passScore),
       maxRounds: String(decision.maxRounds),
@@ -74,6 +76,12 @@ export const presentPromptSdlcLocalComposer = async (input: {
       workingDirectory: decision.workingDirectory,
       passScore: decision.passScore,
       maxRounds: decision.maxRounds,
+      ...(decision.judgeInstructions.length === 0
+        ? {}
+        : { judgeInstructions: decision.judgeInstructions }),
+      ...(decision.improverInstructions.length === 0
+        ? {}
+        : { improverInstructions: decision.improverInstructions }),
       ...(sourceSkill === null
         ? {}
         : {
@@ -108,6 +116,8 @@ export const presentPromptSdlcLocalComposer = async (input: {
     writers: input.selection.writers,
     judge: decision.judge,
     improver: decision.improver,
+    judgeInstructions: decision.judgeInstructions,
+    improverInstructions: decision.improverInstructions,
     folder: decision.folder,
     passScore: decision.passScore,
     maxRounds: decision.maxRounds,

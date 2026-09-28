@@ -40,6 +40,10 @@ describe("buildPromptSdlcLocalPageBody", () => {
     expect(html).toContain("Choose folder");
     expect(html).toContain("I'll score it");
     expect(html).toContain("I'll rewrite it");
+    expect(html).toContain('name="judgeInstructions"');
+    expect(html).toContain('name="improverInstructions"');
+    expect(html).toContain("Judge and improver");
+    expect(html).toContain("When to stop");
     expect(html).not.toContain('name="deviceId"');
   });
 
@@ -62,7 +66,7 @@ describe("buildPromptSdlcLocalPageBody", () => {
       history: [],
     });
 
-    expect(html).toContain("Choose who scores the prompt and who rewrites it.");
+    expect(html).toContain("Instructions are optional.");
     expect(html).toContain("I'll score it");
     expect(html).toContain("I'll rewrite it");
     expect(html).toContain("Choose who does this step.");

@@ -13,6 +13,8 @@ export const readPromptSdlcLocalShownForm = (input: {
   readonly maxRounds?: string;
   readonly judge: string;
   readonly improver: string;
+  readonly judgeInstructions?: string;
+  readonly improverInstructions?: string;
   readonly cycle: PromptSdlcLocalCycle | null;
 }): {
   readonly goal: string;
@@ -22,6 +24,8 @@ export const readPromptSdlcLocalShownForm = (input: {
   readonly maxRounds: string;
   readonly judge: string;
   readonly improver: string;
+  readonly judgeInstructions: string;
+  readonly improverInstructions: string;
   readonly running: boolean;
 } => {
   const cycle = input.cycle;
@@ -34,6 +38,8 @@ export const readPromptSdlcLocalShownForm = (input: {
       maxRounds: input.maxRounds ?? String(PROMPT_SDLC_MAX_ROUNDS),
       judge: input.judge,
       improver: input.improver,
+      judgeInstructions: input.judgeInstructions ?? "",
+      improverInstructions: input.improverInstructions ?? "",
       running: false,
     };
   }
@@ -50,6 +56,8 @@ export const readPromptSdlcLocalShownForm = (input: {
     maxRounds: String(cycle.maxRounds),
     judge: cycle.judgeModel,
     improver: cycle.improverModel,
+    judgeInstructions: cycle.judgeInstructions ?? "",
+    improverInstructions: cycle.improverInstructions ?? "",
     running: !isPromptSdlcTerminalStatus(cycle.status),
   };
 };

@@ -15,6 +15,8 @@ export const createPromptSdlcLocalCycle = (input: {
   readonly passScore?: number;
   readonly maxRounds?: number;
   readonly sourceSkill?: PromptSdlcLocalCycle["sourceSkill"];
+  readonly judgeInstructions?: string;
+  readonly improverInstructions?: string;
 }): PromptSdlcLocalCycle => {
   const now = new Date().toISOString();
   return {
@@ -40,5 +42,11 @@ export const createPromptSdlcLocalCycle = (input: {
     ...(input.sourceSkill === undefined
       ? {}
       : { sourceSkill: input.sourceSkill }),
+    ...(input.judgeInstructions === undefined
+      ? {}
+      : { judgeInstructions: input.judgeInstructions }),
+    ...(input.improverInstructions === undefined
+      ? {}
+      : { improverInstructions: input.improverInstructions }),
   };
 };

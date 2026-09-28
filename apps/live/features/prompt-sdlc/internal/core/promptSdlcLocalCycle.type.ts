@@ -38,4 +38,6 @@ export interface PromptSdlcLocalCycle {
     readonly name: string;
     readonly description: string;
   };
+  readonly judgeInstructions?: string;
+  readonly improverInstructions?: string;
 }

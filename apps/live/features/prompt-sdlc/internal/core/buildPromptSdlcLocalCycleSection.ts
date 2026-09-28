@@ -83,6 +83,10 @@ export const buildPromptSdlcLocalCycleSection = (
         score: reference?.score ?? current?.judgement?.score ?? null,
         reasons: reference?.reasons ?? current?.judgement?.reasons ?? null,
         avoid: reference?.avoid ?? null,
+        instructions:
+          cycle.status === "judging"
+            ? cycle.judgeInstructions
+            : cycle.improverInstructions,
       })
     : "";
   return `<section class="card" id="prompt-sdlc-run" data-live="${live ? "true" : "false"}" data-since="${escapeHtml(cycle.updatedAt)}" aria-busy="${live ? "true" : "false"}"><p class="eyebrow">This run</p><div class="sdlc-working">${spinner}<div><h2>${escapeHtml(activity.title)}</h2>${detail}${folder}${stop}</div></div>${error}${tokens}${renderPromptSdlcLocalScoreScale(cycle.passScore)}${steps}${best}${manual}</section>${renderPromptSdlcLocalRevisions(cycle)}`;

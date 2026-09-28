@@ -31,6 +31,8 @@ export type PromptSdlcLocalPostDecision =
       readonly passScore: number;
       readonly maxRounds: number;
       readonly sourceSkillFile: string;
+      readonly judgeInstructions: string;
+      readonly improverInstructions: string;
     }
   | {
       readonly kind: "form";
@@ -42,6 +44,8 @@ export type PromptSdlcLocalPostDecision =
       readonly errorMessage: string | null;
       readonly judge: string;
       readonly improver: string;
+      readonly judgeInstructions: string;
+      readonly improverInstructions: string;
     };
 
 export const decidePromptSdlcLocalPost = (input: {
@@ -62,6 +66,10 @@ export const decidePromptSdlcLocalPost = (input: {
   const typedMaxRounds = promptSdlcLocalMaxRoundsText(
     input.posted?.get("maxRounds") ?? null,
   );
+  const judgeInstructions =
+    input.posted?.get("judgeInstructions")?.trim() ?? "";
+  const improverInstructions =
+    input.posted?.get("improverInstructions")?.trim() ?? "";
   const form = (
     folder: string,
     errorMessage: string | null,
@@ -75,6 +83,8 @@ export const decidePromptSdlcLocalPost = (input: {
     errorMessage,
     judge: shown.judge,
     improver: shown.improver,
+    judgeInstructions,
+    improverInstructions,
   });
   if (input.posted === null) {
     return form(PROMPT_SDLC_LOCAL_DEFAULT_FOLDER, null);
@@ -128,5 +138,7 @@ export const decidePromptSdlcLocalPost = (input: {
     passScore: passScore.passScore,
     maxRounds: maxRounds.maxRounds,
     sourceSkillFile: input.posted.get("skillFile")?.trim() ?? "",
+    judgeInstructions,
+    improverInstructions,
   };
 };

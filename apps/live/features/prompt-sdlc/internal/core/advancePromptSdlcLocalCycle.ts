@@ -71,6 +71,7 @@ export const advancePromptSdlcLocalCycle = async (
         goal: cycle.goal,
         promptText: revision.promptText,
         passScore: cycle.passScore,
+        instructions: cycle.judgeInstructions,
       }),
       signal,
     });
@@ -116,6 +117,7 @@ export const advancePromptSdlcLocalCycle = async (
       score: reference.score,
       reasons: reference.reasons,
       avoid: reference.avoid,
+      instructions: cycle.improverInstructions,
     }),
     signal,
   });
