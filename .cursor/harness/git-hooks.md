@@ -4,7 +4,7 @@ Authoritative source: `.cursor/harness/agent-bootstrap.manifest.json`. Regenerat
 
 Machine enforcement for commits. Agents load via `npm run harness:bootstrap -- --workflow=commit`, not every turn.
 
-Sources: `.husky/pre-commit`, `.husky/commit-msg`.
+Sources: `.husky/pre-commit`, `.husky/commit-msg`, `.husky/pre-push`.
 
 ## pre-commit (staged files)
 
@@ -15,6 +15,12 @@ Sources: `.husky/pre-commit`, `.husky/commit-msg`.
 | Structure    | src/, db/, public/             | npm run validate:staged                 |
 | Architecture | src/**/*.{ts,tsx}              | npm run cursor:architecture -- --staged |
 | Typecheck    | src JS/TS or toolchain configs | npm run typecheck                       |
+
+## pre-push
+
+| Step      | When       | Command / script                                                                                   |
+| --------- | ---------- | -------------------------------------------------------------------------------------------------- |
+| CI parity | every push | npm run ci (test, ci:architecture, typecheck, build — matches .github/workflows/ci.yml verify job) |
 
 ## commit-msg
 
