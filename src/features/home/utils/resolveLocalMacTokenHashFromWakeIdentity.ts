@@ -1,6 +1,8 @@
 /**
  * Decide whether wake `/identity` may update the browser's local token hash.
- * Never replace an existing hash with a different account's active-profile hash.
+ * Never replace an existing hash with a different account's active-profile hash
+ * while that hash is still present on this Mac (HOME-032). Drop or remint when
+ * the cookie hash is no longer installed here (HOME-061).
  */
 export const resolveLocalMacTokenHashFromWakeIdentity = (input: {
   readonly currentTokenHash: string | null;
@@ -22,11 +24,17 @@ export const resolveLocalMacTokenHashFromWakeIdentity = (input: {
     .filter((hash): hash is string => hash !== null);
 
   if (current !== null) {
-    if (localHashes.length === 0 || localHashes.includes(current)) {
+    if (localHashes.length === 0) {
       return current;
     }
-    // Stale cookie for a token no longer on this Mac — keep until Connect remints.
-    return current;
+    if (localHashes.includes(current)) {
+      return current;
+    }
+    // Cookie hash is not on this Mac anymore (repaired / reconnected install).
+    if (localHashes.length === 1) {
+      return localHashes[0] ?? null;
+    }
+    return null;
   }
 
   if (localHashes.length === 1) {

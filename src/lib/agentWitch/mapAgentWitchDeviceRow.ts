@@ -2,6 +2,26 @@ import { isDispatchPolicy } from "@/lib/dispatch/DispatchPolicy.constant";
 import { isAgentWitchDevicePlatform } from "@/lib/agentWitch/isAgentWitchDevicePlatform";
 import type AgentWitchDeviceRecord from "@/lib/agentWitch/types/AgentWitchDeviceRecord.type";
 
+const parseAgentWitchDeviceWakePort = (raw: unknown): number | null => {
+  if (
+    typeof raw === "number" &&
+    Number.isInteger(raw) &&
+    raw > 0 &&
+    raw <= 65_535
+  ) {
+    return raw;
+  }
+
+  if (typeof raw === "string" && /^\d+$/.test(raw.trim())) {
+    const parsed = Number(raw.trim());
+    if (Number.isInteger(parsed) && parsed > 0 && parsed <= 65_535) {
+      return parsed;
+    }
+  }
+
+  return null;
+};
+
 export default function mapAgentWitchDeviceRow(
   row: Record<string, unknown>,
 ): AgentWitchDeviceRecord {
@@ -37,11 +57,6 @@ export default function mapAgentWitchDeviceRow(
     installBundleVersion: row.install_bundle_version
       ? String(row.install_bundle_version)
       : null,
-    wakePort:
-      typeof row.wake_port === "number" &&
-      Number.isInteger(row.wake_port) &&
-      row.wake_port > 0
-        ? row.wake_port
-        : null,
+    wakePort: parseAgentWitchDeviceWakePort(row.wake_port),
   };
 }

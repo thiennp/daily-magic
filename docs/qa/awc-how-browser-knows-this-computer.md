@@ -46,6 +46,7 @@
 
 - `isThisMac` is true when `localTokenHash !== null` and `deviceMatchesLocalTokenHash(device.tokenHash, localTokenHash)` (case-insensitive string compare).
 - **Hostname is not used** for this badge (HOME-029): two accounts on one physical Mac used to both look “local” when only hostname matched.
+- **Stale cookie** (HOME-061): if the cookie hash only matches an **offline** claim while another device is live, AWC re-probes AWB `/identity` (including each device’s `wakePort` from `GET /api/agent-witch/devices`) and replaces the cookie when wake reports a sole current hash. Offline presence on the stale row is still correct—that claim is not heartbeating; the bug was the badge.
 
 ### What AWC cannot do
 
@@ -65,9 +66,9 @@ Install instructions state: _“While signed in on the same Mac, the browser lin
 - [local-bridge.md](../agent-witch/local-bridge.md) — AWB ports and browser ↔ Mac glue
 - [agent-witch-deployables.md](../product/agent-witch-deployables.md) — AWC vs AWB
 - ADR 0005 — presence, devices, dispatch (successor device IDs)
-- Feature: `src/features/home/KNOWN_ISSUES.md` (HOME-029, HOME-030, HOME-036)
-- Code (update this doc when behavior changes): `useLocalMacHostname`, `deviceMatchesLocalTokenHash`, `buildAgentWitchWakeIdentityResponse`
+- Feature: `src/features/home/KNOWN_ISSUES.md` (HOME-029, HOME-030, HOME-036, HOME-061)
+- Code (update this doc when behavior changes): `useLocalMacHostname`, `deviceMatchesLocalTokenHash`, `buildAgentWitchWakeIdentityResponse`, `resolveShouldProbeWakeIdentityInBrowser`, `listAgentWitchDevicesForUser`
 
 ## Last reviewed
 
-2026-09-18
+2026-09-28

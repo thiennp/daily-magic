@@ -18,5 +18,6 @@ describe("useProbeLocalMacWakeIdentity (HOME-050)", () => {
     expect(source).toContain('sessionStatus !== "authenticated"');
     expect(source).toContain("visibilitychange");
     expect(source).toContain("focus");
+    expect(source).toContain("resolveLocalTokenHashMatchesReachableDevice");
   });
 });

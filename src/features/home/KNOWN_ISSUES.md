@@ -622,4 +622,22 @@ Document every production bug or UX regression here. Each entry must link to a t
 
 ## Adding issues
 
-Use the next ID (`HOME-061`, …). Include symptom, root cause, fix paths, and test file.
+## HOME-061 — this Mac badge stuck on an offline “Your Mac” while another Mac is Online
+
+**Symptom:** Your Devices showed **MKX52CMWN7 Online · Version 157** and a separate **Your Mac this Mac Offline · Version unknown · latest 157**. The browser was on the live Mac; AWL reported `wsConnected: true` and AWB `/identity` on the runtime wake port returned the live install’s `tokenHash`.
+
+**Root cause:**
+
+1. Cookie `agent_witch_local_token_hash` still held an older claim hash that matched only a never-seen / offline placeholder row (generic **Your Mac**, `installBundleVersion` null). HOME-052 skipped wake probes whenever any local hash was set, so the cookie never refreshed.
+2. `resolveLocalMacTokenHashFromWakeIdentity` kept that stale cookie even after wake identity listed a different sole hash.
+3. `listAgentWitchDevicesForUser` omitted `wake_port`, so AWC never learned the runtime AWB port (e.g. `50199` when defaults `47892`/`47893` were free/unused) and could not re-probe identity on the live bridge.
+
+**Fix:** Re-probe when the cookie hash does not match any live/recent device; adopt the sole wake `tokenHashes` entry when the cookie is absent from this Mac; select and map `wake_port` on the devices API.
+
+**Regression tests:** `resolveShouldProbeWakeIdentityInBrowser.test.ts`, `resolveLocalMacTokenHashFromWakeIdentity.test.ts`, `resolveLocalTokenHashMatchesReachableDevice.test.ts`, `listAgentWitchDevicesForUser.test.ts`, `mapAgentWitchDeviceRow.test.ts`, `useProbeLocalMacWakeIdentity.test.ts` (HOME-061).
+
+---
+
+## Adding issues
+
+Use the next ID (`HOME-062`, …). Include symptom, root cause, fix paths, and test file.

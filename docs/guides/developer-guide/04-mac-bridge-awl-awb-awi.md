@@ -132,14 +132,15 @@ The click does not signal a running AWL. The Mac keeps `~/.agent-witch` until th
 
 ## Common agent mistakes
 
-| Mistake                                      | Truth                                                                                                               |
-| -------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
-| AWL reachable from AWC server-side fetch     | AWL is **loopback-only** on the user’s Mac                                                                          |
-| AWB up ⇒ dispatch ready                      | Writer needs **live WSS on AWC** ([Q&A awc-mac-reconnecting](../../qa/awc-mac-reconnecting-vs-local-live.md))       |
-| Point `wsUrl` at CHECK24 daily-magic host    | Production Mac uses **agentwitch.com** ([hosting doc](../../product/repo-name-and-hosting.md))                      |
-| Folder picker in AWC for Mac paths           | Use AWL/AWB `select-folder` ([Q&A awc-project-folder-path-picker](../../qa/awc-project-folder-path-picker.md))      |
-| Stamp `last_seen_at` on install-token insert | Each click looks like a live Mac (HOME-059). Leave `last_seen_at` null until check-in and revoke older placeholders |
-| Set `revoked_at` and leave the Mac running   | The identity stays known, so a later connect will not forget the local link (HOME-060)                              |
+| Mistake                                                    | Truth                                                                                                               |
+| ---------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| AWL reachable from AWC server-side fetch                   | AWL is **loopback-only** on the user’s Mac                                                                          |
+| AWB up ⇒ dispatch ready                                    | Writer needs **live WSS on AWC** ([Q&A awc-mac-reconnecting](../../qa/awc-mac-reconnecting-vs-local-live.md))       |
+| Point `wsUrl` at CHECK24 daily-magic host                  | Production Mac uses **agentwitch.com** ([hosting doc](../../product/repo-name-and-hosting.md))                      |
+| Folder picker in AWC for Mac paths                         | Use AWL/AWB `select-folder` ([Q&A awc-project-folder-path-picker](../../qa/awc-project-folder-path-picker.md))      |
+| Stamp `last_seen_at` on install-token insert               | Each click looks like a live Mac (HOME-059). Leave `last_seen_at` null until check-in and revoke older placeholders |
+| Set `revoked_at` and leave the Mac running                 | The identity stays known, so a later connect will not forget the local link (HOME-060)                              |
+| Treat Offline **Your Mac** + **this Mac** as the live host | Cookie may match a dead claim while another row is `live` (HOME-061). Devices API must return `wakePort`.           |
 
 Open issues: `src/features/agent-witch/KNOWN_ISSUES.md`.
 

@@ -154,13 +154,14 @@ When dispatch queues because the hub socket is momentarily missing, you may see:
 
 ## Troubleshooting checklist
 
-| Symptom                         | Check                                                                                  |
-| ------------------------------- | -------------------------------------------------------------------------------------- |
-| No **this Mac** badge           | macOS? Same Mac as install? Bridge port reachable? Refresh tab on focus.               |
-| **Offline** forever             | LaunchAgent loaded? Run install/start from Mac settings; see AGENT-067 plist heal doc. |
-| **Reconnecting** after deploy   | Wait ~seconds; refresh Home; retry Send—AWI reconnects WebSocket automatically.        |
-| **Update needed** stuck         | Run update on runtime wake port from `wake-port.json`, not only default 47892.         |
-| Dispatch works but wrong folder | Fix path in Mac app, not typed guess in Console.                                       |
+| Symptom                                                 | Check                                                                                        |
+| ------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
+| No **this Mac** badge                                   | macOS? Same Mac as install? Bridge port reachable? Refresh tab on focus.                     |
+| **this Mac** on Offline row while another Mac is Online | Stale browser cookie (HOME-061). Refresh Home after deploy; remove stale claim or reconnect. |
+| **Offline** forever                                     | LaunchAgent loaded? Run install/start from Mac settings; see AGENT-067 plist heal doc.       |
+| **Reconnecting** after deploy                           | Wait ~seconds; refresh Home; retry Send—AWI reconnects WebSocket automatically.              |
+| **Update needed** stuck                                 | Run update on runtime wake port from `wake-port.json`, not only default 47892.               |
+| Dispatch works but wrong folder                         | Fix path in Mac app, not typed guess in Console.                                             |
 
 Chapter 9 (troubleshooting guide) expands FAQ-style flows.
 
