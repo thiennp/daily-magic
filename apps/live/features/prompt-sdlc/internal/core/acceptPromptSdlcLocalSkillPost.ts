@@ -32,6 +32,9 @@ export const readPromptSdlcSkillNotice = (
   if (params.get("skillError") === "prompt") {
     return "Enter the prompt to save.";
   }
+  if (params.get("skillError") === "overwrite") {
+    return "That skill file already exists. Check Replace, then save again.";
+  }
   return null;
 };
 
@@ -73,9 +76,15 @@ export const acceptPromptSdlcLocalSkillPost = (input: {
 
   const written = writePromptSdlcLocalSkill({
     workingDirectory: promptSdlcLocalWorkingDirectory(cycle),
-    name: input.posted.get("skillName") ?? "",
-    description: input.posted.get("skillDescription") ?? "",
+    name: input.posted.get("skillName") ?? cycle.sourceSkill?.name ?? "",
+    description:
+      input.posted.get("skillDescription") ??
+      cycle.sourceSkill?.description ??
+      "",
     promptText: input.posted.get("skillPrompt") ?? "",
+    fileName:
+      input.posted.get("skillFileName") ?? cycle.sourceSkill?.fileName ?? "",
+    overwrite: input.posted.get("skillOverwrite") === "yes",
   });
   if (!written.ok) {
     const code = written.errorCode === "path" ? "folder" : written.errorCode;

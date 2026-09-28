@@ -30,6 +30,7 @@ export type PromptSdlcLocalPostDecision =
       readonly workingDirectory: string;
       readonly passScore: number;
       readonly maxRounds: number;
+      readonly sourceSkillFile: string;
     }
   | {
       readonly kind: "form";
@@ -126,5 +127,6 @@ export const decidePromptSdlcLocalPost = (input: {
     workingDirectory: folder.path,
     passScore: passScore.passScore,
     maxRounds: maxRounds.maxRounds,
+    sourceSkillFile: input.posted.get("skillFile")?.trim() ?? "",
   };
 };

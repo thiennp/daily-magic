@@ -27,7 +27,7 @@ describe("writePromptSdlcLocalSkill", () => {
       path.join(folder, written.relativePath),
       "utf8",
     );
-    expect(document).toContain('name: "stay-inside-the-facts"');
+    expect(document).toContain('name: "Stay inside the facts"');
     expect(document).toContain('description: "Stay inside the facts"');
     expect(document).toContain("Answer only from the ticket.");
   });
@@ -66,6 +66,50 @@ describe("writePromptSdlcLocalSkill", () => {
         promptText: "Answer only from the ticket.",
       }),
     ).toEqual({ ok: false, errorCode: "name" });
+  });
+
+  it("keeps the skill file name and asks before replacing it", () => {
+    const folder = fs.mkdtempSync(path.join(os.tmpdir(), "prompt-sdlc-skill-"));
+    const first = writePromptSdlcLocalSkill({
+      workingDirectory: folder,
+      name: "Support reply",
+      description: "Answer the customer",
+      promptText: "Answer the question they asked.",
+      fileName: "support-reply",
+    });
+    expect(first).toEqual({
+      ok: true,
+      relativePath: ".cursor/skills/support-reply/SKILL.md",
+    });
+
+    expect(
+      writePromptSdlcLocalSkill({
+        workingDirectory: folder,
+        name: "Support reply",
+        description: "Answer the customer",
+        promptText: "Answer only from the ticket.",
+        fileName: "support-reply",
+      }),
+    ).toEqual({ ok: false, errorCode: "overwrite" });
+
+    const replaced = writePromptSdlcLocalSkill({
+      workingDirectory: folder,
+      name: "Support reply",
+      description: "Answer the customer",
+      promptText: "Answer only from the ticket.",
+      fileName: "support-reply",
+      overwrite: true,
+    });
+    expect(replaced.ok).toBe(true);
+    if (!replaced.ok) {
+      return;
+    }
+    const document = fs.readFileSync(
+      path.join(folder, replaced.relativePath),
+      "utf8",
+    );
+    expect(document).toContain('name: "Support reply"');
+    expect(document).toContain("Answer only from the ticket.");
   });
 
   it("rejects an empty prompt", () => {

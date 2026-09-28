@@ -14,8 +14,13 @@ import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
 import type { PromptSdlcLocalWriterChoice } from "./promptSdlcLocalForm";
 import { readPromptSdlcLocalShownForm } from "./readPromptSdlcLocalShownForm";
 import { renderPromptSdlcLocalHistory } from "./renderPromptSdlcLocalHistory";
+import { listPromptSdlcFolderSkills } from "./readPromptSdlcFolderSkills";
 import { renderPromptSdlcLocalMaxRounds } from "./renderPromptSdlcLocalMaxRounds";
 import { renderPromptSdlcLocalPassScore } from "./renderPromptSdlcLocalPassScore";
+import {
+  PROMPT_SDLC_SKILL_SELECT_SCRIPT,
+  renderPromptSdlcLocalSkillSelect,
+} from "./renderPromptSdlcLocalSkillSelect";
 import { renderPromptSdlcLocalWriterFields } from "./renderPromptSdlcLocalWriterFields";
 
 const escapeHtml = (value: string): string =>
@@ -111,6 +116,7 @@ export const buildPromptSdlcLocalPageBody = (input: {
           </label>
           <button class="btn btn-secondary" type="submit" name="intent" value="choose-folder" formnovalidate>Choose folder…</button>
         </div>
+        ${renderPromptSdlcLocalSkillSelect(listPromptSdlcFolderSkills(shown.folder))}
         ${renderPromptSdlcLocalPassScore(shown.passScore)}
         ${renderPromptSdlcLocalMaxRounds(shown.maxRounds)}
           ${writerFields}
@@ -121,5 +127,5 @@ export const buildPromptSdlcLocalPageBody = (input: {
         </fieldset>
       </form>
     </section>`;
-  return `${error}${skillNotice}${cycle}${nodeDialog}${live}${form}${renderPromptSdlcLocalHistory(input.history, input.cycle?.id ?? null)}${PROMPT_SDLC_LOCAL_FORM_SCRIPT}`;
+  return `${error}${skillNotice}${cycle}${nodeDialog}${live}${form}${renderPromptSdlcLocalHistory(input.history, input.cycle?.id ?? null)}${PROMPT_SDLC_LOCAL_FORM_SCRIPT}${PROMPT_SDLC_SKILL_SELECT_SCRIPT}`;
 };

@@ -9,6 +9,7 @@ import {
   savePromptSdlcLocalCycle,
 } from "./promptSdlcLocalStore";
 import { displayPromptSdlcLocalFolder } from "./promptSdlcLocalFolder";
+import { readPromptSdlcFolderSkill } from "./readPromptSdlcFolderSkills";
 import { readPromptSdlcChosenWritersReady } from "./probePromptSdlcWriterReady";
 import { ensurePromptSdlcLocalCycleRunning } from "./runPromptSdlcLocalCycle";
 import type { PromptSdlcLocalRouteInput } from "./tryHandlePromptSdlcLocalRequest";
@@ -61,6 +62,10 @@ export const presentPromptSdlcLocalComposer = async (input: {
   }
 
   if (decision.kind === "start") {
+    const sourceSkill = readPromptSdlcFolderSkill(
+      decision.workingDirectory,
+      decision.sourceSkillFile,
+    );
     const cycle = createPromptSdlcLocalCycle({
       goal: input.goal,
       sourcePrompt: input.prompt,
@@ -69,6 +74,15 @@ export const presentPromptSdlcLocalComposer = async (input: {
       workingDirectory: decision.workingDirectory,
       passScore: decision.passScore,
       maxRounds: decision.maxRounds,
+      ...(sourceSkill === null
+        ? {}
+        : {
+            sourceSkill: {
+              fileName: sourceSkill.fileName,
+              name: sourceSkill.name,
+              description: sourceSkill.description,
+            },
+          }),
     });
     savePromptSdlcLocalCycle(input.route.storePath, cycle);
     ensurePromptSdlcLocalCycleRunning(input.route.storePath, cycle.id);

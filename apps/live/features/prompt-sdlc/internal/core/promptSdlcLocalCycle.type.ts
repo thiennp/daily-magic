@@ -33,4 +33,9 @@ export interface PromptSdlcLocalCycle {
   readonly createdAt: string;
   readonly updatedAt: string;
   readonly revisions: readonly PromptSdlcLocalRevision[];
+  readonly sourceSkill?: {
+    readonly fileName: string;
+    readonly name: string;
+    readonly description: string;
+  };
 }
