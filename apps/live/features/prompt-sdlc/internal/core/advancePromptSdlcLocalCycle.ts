@@ -84,7 +84,11 @@ export const advancePromptSdlcLocalCycle = async (
     if (stopped !== null) {
       return stopped;
     }
-    return applyPromptSdlcLocalJudgeReply(cycle, reply.ok ? reply.text : "");
+    return applyPromptSdlcLocalJudgeReply(
+      cycle,
+      reply.ok ? reply.text : "",
+      reply.ok ? reply.tokens : null,
+    );
   }
 
   if (cycle.status !== "improving") {
@@ -111,7 +115,7 @@ export const advancePromptSdlcLocalCycle = async (
       promptText: reference.promptText,
       score: reference.score,
       reasons: reference.reasons,
-      history: reference.history,
+      avoid: reference.avoid,
     }),
     signal,
   });
@@ -125,5 +129,9 @@ export const advancePromptSdlcLocalCycle = async (
   if (stopped !== null) {
     return stopped;
   }
-  return applyPromptSdlcLocalImproverReply(cycle, reply.ok ? reply.text : "");
+  return applyPromptSdlcLocalImproverReply(
+    cycle,
+    reply.ok ? reply.text : "",
+    reply.ok ? reply.tokens : null,
+  );
 };

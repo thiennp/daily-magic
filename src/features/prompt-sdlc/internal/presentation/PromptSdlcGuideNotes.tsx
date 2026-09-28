@@ -39,8 +39,12 @@ export default function PromptSdlcGuideNotes(): ReactElement {
           <li>
             The judge scores that new prompt. This repeats until the score
             reaches the pass score, the round limit, or the score has not risen
-            for 3 rounds. A drop rewrites the best prompt so far. You can stop
-            the run. The round limit starts at 10.
+            for 3 rounds. The next rewrite always starts from the highest
+            scoring prompt. Reasons from lower scores become an avoid list.
+            After 3 tries that do not beat the best, the run stops and those
+            reasons are included. Finish ends the writers and counts the run as
+            complete. After each scored round the page shows the tokens spent so
+            far. The round limit starts at 10.
           </li>
         </ol>
         <p className={APP_SURFACE_BODY_TEXT_CLASS}>
@@ -57,12 +61,13 @@ export default function PromptSdlcGuideNotes(): ReactElement {
           judged round shows the score and the reason. When the run finishes,
           the page shows the highest scoring prompt. Save as a skill writes that
           prompt into the folder you chose, under .cursor/skills. The run keeps
-          going until the score reaches the pass score you set, you press Stop,
-          the round limit is hit, or the score has not risen for 3 rounds.
-          Passed means the score reached the pass score. Stopped means the best
-          prompt is kept. Failed means the judge did not return a score, the
-          improver returned nothing, or the call could not start. The message on
-          the page names which one.
+          going until the score reaches the pass score you set, you press
+          Finish, the round limit is hit, or the score has not risen for 3
+          rounds. Passed means the score reached the pass score. Finish, the
+          round limit, and a flat score all keep the best prompt and count as
+          complete. Failed means the judge did not return a score, the improver
+          returned nothing, or the call could not start. The message on the page
+          names which one.
         </p>
       </section>
       <section className="space-y-3">

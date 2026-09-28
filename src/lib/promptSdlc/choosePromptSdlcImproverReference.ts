@@ -1,60 +1,39 @@
 import type { PromptSdlcPriorRound } from "@/lib/promptSdlc/collectPromptSdlcPriorRounds";
+import { formatPromptSdlcAvoidList } from "@/lib/promptSdlc/reconcilePromptSdlcAvoidReasons";
 import { selectPromptSdlcBestPrompt } from "@/lib/promptSdlc/selectPromptSdlcBestPrompt";
-import { selectPromptSdlcImproverHistory } from "@/lib/promptSdlc/selectPromptSdlcImproverHistory";
 
 export interface PromptSdlcImproverReference {
   readonly promptText: string;
   readonly score: number;
   readonly reasons: string;
-  readonly history: string | null;
+  readonly avoid: string | null;
 }
 
-const historyFor = (
-  rounds: readonly PromptSdlcPriorRound[],
-  score: number,
-  includePrompts: boolean,
-): string | null =>
-  selectPromptSdlcImproverHistory({
-    priorRounds: rounds,
-    currentScore: score,
-    includePrompts,
-  });
-
 /**
- * A new high is rewritten from itself.
- * A drop or a tie rewrites the best prompt so far, later round on a tie.
- * The other rounds stay in history, with prompt text when the score did not rise.
+ * The next rewrite always starts from the highest scoring prompt.
+ * A tie keeps the later round.
+ * Reasons from lower scores become an avoid list. Earlier prompt text is not sent.
  */
 export const choosePromptSdlcImproverReference = (input: {
   readonly current: PromptSdlcPriorRound;
   readonly priorRounds: readonly PromptSdlcPriorRound[];
 }): PromptSdlcImproverReference => {
-  const bestPrior =
-    input.priorRounds.length === 0
-      ? null
-      : Math.max(...input.priorRounds.map((round) => round.score));
-  if (bestPrior === null || input.current.score > bestPrior) {
-    return {
-      promptText: input.current.promptText,
-      score: input.current.score,
-      reasons: input.current.reasons,
-      history: historyFor(input.priorRounds, input.current.score, false),
-    };
-  }
-
-  const best = selectPromptSdlcBestPrompt([
-    ...input.priorRounds,
-    input.current,
-  ]);
-  const chosen = best ?? input.current;
-  const others = [...input.priorRounds, input.current].filter(
-    (round) => round.roundNumber !== chosen.roundNumber,
-  );
+  const rounds = [...input.priorRounds, input.current];
+  const best = selectPromptSdlcBestPrompt(rounds) ?? {
+    roundNumber: input.current.roundNumber,
+    promptText: input.current.promptText,
+    score: input.current.score,
+    reasons: input.current.reasons,
+  };
+  const lowerReasons = [...rounds]
+    .filter((round) => round.score < best.score)
+    .sort((left, right) => right.roundNumber - left.roundNumber)
+    .map((round) => round.reasons);
 
   return {
-    promptText: chosen.promptText,
-    score: chosen.score,
-    reasons: chosen.reasons ?? input.current.reasons,
-    history: historyFor(others, chosen.score, true),
+    promptText: best.promptText,
+    score: best.score,
+    reasons: best.reasons ?? input.current.reasons,
+    avoid: formatPromptSdlcAvoidList(lowerReasons),
   };
 };

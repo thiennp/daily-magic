@@ -51,8 +51,16 @@ export const continueAfterJudgeReply = (input: {
 
   const priorRounds = input.priorRounds ?? [];
   const round = input.round ?? priorRounds.length;
+  const scored = [
+    ...priorRounds.map((item) => ({
+      score: item.score,
+      reasons: item.reasons,
+    })),
+    { score: verdict.score, reasons: verdict.reasons },
+  ];
   const stop = readPromptSdlcRewriteStop({
-    scores: [...priorRounds.map((item) => item.score), verdict.score],
+    scores: scored.map((item) => item.score),
+    reasons: scored.map((item) => item.reasons),
     round,
     maxRounds: input.maxRounds ?? PROMPT_SDLC_MAX_ROUNDS,
   });
@@ -81,7 +89,7 @@ export const continueAfterJudgeReply = (input: {
         promptText: reference.promptText,
         score: reference.score,
         reasons: reference.reasons,
-        history: reference.history,
+        avoid: reference.avoid,
       }),
     },
   };

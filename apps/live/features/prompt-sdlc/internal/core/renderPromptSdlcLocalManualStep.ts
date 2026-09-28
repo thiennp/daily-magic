@@ -19,18 +19,18 @@ export const renderPromptSdlcLocalManualStep = (input: {
   readonly promptText: string;
   readonly score: number | null;
   readonly reasons: string | null;
-  readonly history?: string | null;
+  readonly avoid?: string | null;
 }): string => {
   const hidden = `<input type="hidden" name="cycleId" value="${escapeHtml(input.cycleId)}">`;
   if (input.role === "judge") {
     return `<form class="sdlc-manual" method="POST" action="/prompt-sdlc"><input type="hidden" name="intent" value="manual-judge">${hidden}<label class="field"><span class="field-label">Score</span><input class="input sdlc-manual-score" type="number" name="score" min="0" max="100" step="1" required></label><label class="field"><span class="field-label">Reason</span><textarea class="input textarea" name="reasons" rows="4" required></textarea></label><div class="actions"><button class="btn btn-primary" type="submit">Save score</button></div></form>`;
   }
 
-  const history = input.history?.trim() ?? "";
-  const historyBlock =
-    history.length === 0
+  const avoid = input.avoid?.trim() ?? "";
+  const avoidBlock =
+    avoid.length === 0
       ? ""
-      : `<pre class="mono">${escapeHtml(history)}</pre>`;
+      : `<p class="muted">Avoid</p><pre class="mono">${escapeHtml(avoid)}</pre>`;
 
-  return `<form class="sdlc-manual" method="POST" action="/prompt-sdlc"><input type="hidden" name="intent" value="manual-improve">${hidden}${verdictLine(input.score, input.reasons)}${historyBlock}<label class="field"><span class="field-label">Rewritten prompt</span><textarea class="input textarea" name="prompt" rows="8" required>${escapeHtml(input.promptText)}</textarea></label><div class="actions"><button class="btn btn-primary" type="submit">Save revision</button></div></form>`;
+  return `<form class="sdlc-manual" method="POST" action="/prompt-sdlc"><input type="hidden" name="intent" value="manual-improve">${hidden}${verdictLine(input.score, input.reasons)}${avoidBlock}<label class="field"><span class="field-label">Rewritten prompt</span><textarea class="input textarea" name="prompt" rows="8" required>${escapeHtml(input.promptText)}</textarea></label><div class="actions"><button class="btn btn-primary" type="submit">Save revision</button></div></form>`;
 };

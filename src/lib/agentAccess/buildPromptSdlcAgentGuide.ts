@@ -11,7 +11,7 @@ export const buildPromptSdlcAgentGuide = () => ({
   context: PROMPT_SDLC_LOCAL_CONTEXT_REASON,
   useItYourself:
     "Before send_task, or before you save a prompt, POST your own prompt here. Do not ask the human to paste it into a different optimizer.",
-  poll: `GET ${PROMPT_SDLC_AGENT_URL}?cycle=<cycleId> until done is true. The loop rewrites until the score passes, the round limit, or the score has not risen for 3 rounds. A drop rewrites the best prompt so far. When status is passed, use the returned prompt. When status is failed, do not use the prompt. bestPrompt is the highest scoring prompt.`,
+  poll: `GET ${PROMPT_SDLC_AGENT_URL}?cycle=<cycleId> until done is true. The loop rewrites until the score passes, the round limit, the score has not risen for 3 rounds, or the person finishes the run. The next rewrite always starts from the highest scoring prompt. Lower scores become an avoid list, and earlier prompt text is not sent. After 3 tries that do not beat the best, the stop includes those reasons. When status is passed or stopped, use bestPrompt. When status is failed, do not use the prompt. totalTokens is the reported writer tokens so far.`,
   writers:
     "GET lists installed writer ids. Set judge and improver to those ids. When only one writer is installed, omit both and that writer fills both roles. Do not send manual. Scoring or rewriting by hand is the human page.",
 });

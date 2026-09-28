@@ -40,12 +40,14 @@ describe("continuePromptSdlc", () => {
       expect(rewrite.continuation.prompt).toContain("Do not edit files");
       expect(rewrite.continuation.prompt).toContain("Ship the button");
       expect(rewrite.continuation.prompt).toContain(
-        "Current prompt:\nAdd something.",
+        "highest scoring version so far",
       );
+      expect(rewrite.continuation.prompt).toContain("Add something.");
       expect(rewrite.continuation.prompt).toContain("Judge score: 85");
       expect(rewrite.continuation.prompt).toContain("No screen.");
-      expect(rewrite.continuation.prompt).toContain("Add a button");
+      expect(rewrite.continuation.prompt).toContain("Avoid:");
       expect(rewrite.continuation.prompt).toContain("vague");
+      expect(rewrite.continuation.prompt).not.toContain("Add a button");
     }
 
     const stopped = continueAfterJudgeReply({

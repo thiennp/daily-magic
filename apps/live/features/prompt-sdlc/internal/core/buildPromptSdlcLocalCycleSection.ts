@@ -14,6 +14,10 @@ import { readPromptSdlcLocalImproverReference } from "./readPromptSdlcLocalImpro
 import { renderPromptSdlcLocalManualStep } from "./renderPromptSdlcLocalManualStep";
 import { renderPromptSdlcLocalRevisions } from "./renderPromptSdlcLocalRevisions";
 import { renderPromptSdlcLocalStopForm } from "./renderPromptSdlcLocalStopForm";
+import {
+  formatPromptSdlcTokenCount,
+  sumPromptSdlcLocalTokens,
+} from "./sumPromptSdlcLocalTokens";
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
 import {
   displayPromptSdlcLocalFolder,
@@ -66,6 +70,11 @@ export const buildPromptSdlcLocalCycleSection = (
     cycle.status === "improving"
       ? readPromptSdlcLocalImproverReference(cycle)
       : null;
+  const tokenTotal = sumPromptSdlcLocalTokens(cycle);
+  const tokens =
+    tokenTotal > 0
+      ? `<p class="muted">Tokens so far: ${formatPromptSdlcTokenCount(tokenTotal)}</p>`
+      : "";
   const manual = isPromptSdlcLocalManualWait(cycle)
     ? renderPromptSdlcLocalManualStep({
         role: cycle.status === "judging" ? "judge" : "improve",
@@ -73,8 +82,8 @@ export const buildPromptSdlcLocalCycleSection = (
         promptText: reference?.promptText ?? current?.promptText ?? "",
         score: reference?.score ?? current?.judgement?.score ?? null,
         reasons: reference?.reasons ?? current?.judgement?.reasons ?? null,
-        history: reference?.history ?? null,
+        avoid: reference?.avoid ?? null,
       })
     : "";
-  return `<section class="card" id="prompt-sdlc-run" data-live="${live ? "true" : "false"}" data-since="${escapeHtml(cycle.updatedAt)}" aria-busy="${live ? "true" : "false"}"><p class="eyebrow">This run</p><div class="sdlc-working">${spinner}<div><h2>${escapeHtml(activity.title)}</h2>${detail}${folder}${stop}</div></div>${error}${renderPromptSdlcLocalScoreScale(cycle.passScore)}${steps}${best}${manual}</section>${renderPromptSdlcLocalRevisions(cycle)}`;
+  return `<section class="card" id="prompt-sdlc-run" data-live="${live ? "true" : "false"}" data-since="${escapeHtml(cycle.updatedAt)}" aria-busy="${live ? "true" : "false"}"><p class="eyebrow">This run</p><div class="sdlc-working">${spinner}<div><h2>${escapeHtml(activity.title)}</h2>${detail}${folder}${stop}</div></div>${error}${tokens}${renderPromptSdlcLocalScoreScale(cycle.passScore)}${steps}${best}${manual}</section>${renderPromptSdlcLocalRevisions(cycle)}`;
 };
