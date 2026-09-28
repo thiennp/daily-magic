@@ -11,6 +11,8 @@ import {
   readPromptSdlcLocalCycles,
   savePromptSdlcLocalCycle,
 } from "./promptSdlcLocalStore";
+import { displayPromptSdlcLocalFolder } from "./promptSdlcLocalFolder";
+import { readPromptSdlcChosenWritersReady } from "./probePromptSdlcWriterReady";
 import {
   ensurePromptSdlcLocalCycleRunning,
   readPromptSdlcInstalledWriters,
@@ -41,6 +43,30 @@ export const servePromptSdlcLocalPage = async (
     pickFolder: () =>
       pickMacOsFolderDialog("Choose the folder this prompt should run in"),
   });
+  const writerBlock =
+    decision.kind === "start"
+      ? await readPromptSdlcChosenWritersReady(
+          decision.judge,
+          decision.improver,
+        )
+      : null;
+  if (decision.kind === "start" && writerBlock !== null) {
+    await sendPage(input, {
+      goal: decision.goal,
+      prompt: decision.prompt,
+      modelNote: selection.note,
+      writers: selection.writers,
+      judge: decision.judge,
+      improver: decision.improver,
+      folder: displayPromptSdlcLocalFolder(decision.workingDirectory),
+      canRun: true,
+      errorMessage: writerBlock,
+      cycle: null,
+      history: readPromptSdlcLocalCycles(input.storePath),
+    });
+    return;
+  }
+
   if (decision.kind === "start") {
     const cycle = createPromptSdlcLocalCycle({
       goal,

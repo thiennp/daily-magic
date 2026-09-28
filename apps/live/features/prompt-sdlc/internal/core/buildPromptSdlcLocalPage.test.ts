@@ -1,8 +1,10 @@
 import { describe, expect, it } from "vitest";
 
 import { buildPromptSdlcLocalCycleSection } from "./buildPromptSdlcLocalCycleSection";
+import { buildPromptSdlcLocalGuidePageBody } from "./buildPromptSdlcLocalGuidePage";
 import { buildPromptSdlcLocalPageBody } from "./buildPromptSdlcLocalPage";
 import { createPromptSdlcLocalCycle } from "./createPromptSdlcLocalCycle";
+import { promptSdlcLocalHistoryTitle } from "./promptSdlcLocalHistoryTitle";
 
 describe("buildPromptSdlcLocalPageBody", () => {
   it("shows the chosen models and does not ask for a Mac or a model", () => {
@@ -82,6 +84,12 @@ describe("buildPromptSdlcLocalPageBody", () => {
     expect(html.indexOf("Claude is scoring round 1 of 3.")).toBeLessThan(
       html.indexOf("Optimize a prompt"),
     );
+    expect(html).toContain("What the score means");
+    expect(html).toContain("0–39 bad");
+    expect(html).toContain("80–100 passes");
+    expect(html).toContain(
+      "- Done: Source prompt saved\n  |\n- Progressing score for round 0...",
+    );
     expect(html).toContain("Folder ~");
     expect(html).toContain('data-live="true"');
     expect(html).toContain("data-elapsed");
@@ -118,6 +126,44 @@ describe("buildPromptSdlcLocalPageBody", () => {
     const html = buildPromptSdlcLocalCycleSection(cycle);
     expect(html).toContain("did not return a prompt");
     expect(html).toContain("later scores are 0");
-    expect(html).not.toContain("<pre");
+    expect(html).toContain("0 / 100 (bad)");
+    expect(html).not.toContain('<pre class="mono">');
+  });
+
+  it("shows a short history title and an instruction page that can run the sample", () => {
+    const goal =
+      "When this prompt is used on a customer email, the reply answers the question they asked.";
+    const cycle = createPromptSdlcLocalCycle({
+      goal,
+      sourcePrompt: "Be helpful.",
+      judgeModel: "claude-cli",
+      improverModel: "codex",
+    });
+    const html = buildPromptSdlcLocalPageBody({
+      goal: "",
+      prompt: "",
+      modelNote: "",
+      writers: [],
+      judge: "",
+      improver: "",
+      folder: "~",
+      canRun: true,
+      errorMessage: null,
+      cycle: null,
+      history: [cycle],
+    });
+    const guide = buildPromptSdlcLocalGuidePageBody();
+
+    expect(promptSdlcLocalHistoryTitle(goal)).toBe(
+      "When this prompt is used on a customer email",
+    );
+    expect(html).toContain('class="sdlc-history"');
+    expect(html).toContain("When this prompt is used on a customer email");
+    expect(html).not.toContain(goal);
+    expect(html).toContain('href="/prompt-sdlc/guide"');
+    expect(guide).toContain("How Prompt SDLC works");
+    expect(guide).toContain("Run this sample");
+    expect(guide).toContain('name="intent" value="run"');
+    expect(guide).toContain("CUSTOMER_MESSAGE");
   });
 });

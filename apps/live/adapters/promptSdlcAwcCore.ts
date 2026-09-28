@@ -19,5 +19,9 @@ export {
 } from "@/lib/promptSdlc/continuePromptSdlc";
 export { buildPromptSdlcImproverPrompt } from "@/lib/promptSdlc/buildPromptSdlcImproverPrompt";
 export { buildPromptSdlcJudgePrompt } from "@/lib/promptSdlc/buildPromptSdlcJudgePrompt";
-export { buildPromptSdlcSteps } from "@/lib/promptSdlc/buildPromptSdlcSteps";
+export {
+  buildPromptSdlcSteps,
+  type PromptSdlcStep,
+} from "@/lib/promptSdlc/buildPromptSdlcSteps";
+export { buildPromptSdlcScoreScale } from "@/lib/promptSdlc/describePromptSdlcScore";
 export type { default as PromptSdlcCycleView } from "@/lib/promptSdlc/types/PromptSdlcCycleView.type";

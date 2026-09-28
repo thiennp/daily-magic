@@ -12,4 +12,4 @@ Optimize one prompt on this Mac. When more than one reasoning writer is installe
 - `http://127.0.0.1:43347/prompt-sdlc`
 - `http://127.0.0.1:43347/prompt-sdlc/guide`
 
-Cycles are stored in `prompt-sdlc-cycles.json` beside the Mac profile config. The loop does not edit the repo: each writer call uses a temporary folder.
+Cycles are stored in `prompt-sdlc-cycles.json` beside the Mac profile config. Writers run in the folder you choose. The reply file stays in a temporary directory. `/prompt-sdlc/guide` explains the loop and can start the sample. History shows a short title, the first clause of the goal.

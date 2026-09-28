@@ -33,7 +33,7 @@ describe("buildPromptSdlcSteps", () => {
   it("shows the source and the judge step while scoring", () => {
     expect(buildPromptSdlcSteps(cycle({})).map((step) => step.label)).toEqual([
       "Source prompt saved",
-      "Judge is scoring round 0",
+      "score for round 0...",
     ]);
   });
 
@@ -60,8 +60,8 @@ describe("buildPromptSdlcSteps", () => {
 
     expect(labels).toEqual([
       "done:Source prompt saved",
-      "done:Judge scored round 0: 42",
-      "active:Improver is rewriting round 0",
+      "done:Judge scored round 0: 42 / 100 (weak)",
+      "active:revision 1...",
     ]);
   });
 

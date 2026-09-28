@@ -26,6 +26,19 @@ describe("readPromptSdlcWriterOutput", () => {
     });
   });
 
+  it("does not treat a writer login error as a prompt", () => {
+    const raw =
+      "Error: Authentication required. Please run 'cursor agent login' first, or set CURSOR_API_KEY environment variable.";
+    expect(
+      readPromptSdlcWriterOutput({
+        writerAgent: "cursor",
+        stdout: raw,
+        stderr: "",
+        replyFileText: raw,
+      }),
+    ).toEqual({ ok: false, errorMessage: raw });
+  });
+
   it("asks Codex to run outside a git repo and keeps the last message", () => {
     expect(
       buildPromptSdlcWriterArgs({

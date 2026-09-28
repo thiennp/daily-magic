@@ -644,6 +644,13 @@ input.input[type="text"] {
 
 .textarea { min-height: 6rem; resize: vertical; font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 0.8125rem; }
 form.sdlc-form { display: flex; flex-direction: column; gap: 1.25rem; }
+.sdlc-score { display: flex; gap: 0.35rem; flex-wrap: wrap; margin-top: 1rem; }
+.sdlc-band { flex: 1 1 6.5rem; padding: 0.4rem 0.5rem; border-radius: 0.5rem; font-size: 0.75rem; text-align: center; }
+.sdlc-band-bad { background: #fee2e2; color: #991b1b; }
+.sdlc-band-weak { background: #ffedd5; color: #9a3412; }
+.sdlc-band-close { background: #fef9c3; color: #854d0e; }
+.sdlc-band-passes { background: #dcfce7; color: #166534; }
+.sdlc-tree { margin: 0.75rem 0 0; line-height: 1.55; }
 .sdlc-folder { display: flex; gap: 0.75rem; align-items: flex-end; }
 .sdlc-folder > .field { flex: 1 1 auto; }
 form.sdlc-form > .actions { margin-top: 0.25rem; }
@@ -657,6 +664,9 @@ form.sdlc-form > .field > textarea.input {
   resize: none;
 }
 form.sdlc-form > .field > textarea.input[name="prompt"] { min-height: 12rem; }
+.sdlc-history { list-style: none; margin: 0.75rem 0 0; padding: 0; display: flex; flex-direction: column; gap: 1.25rem; }
+.sdlc-history li { margin: 0; }
+.sdlc-history p { margin: 0.2rem 0 0; }
 
 .check-list { list-style: none; margin: 0.75rem 0 0; padding: 0; display: flex; flex-direction: column; gap: 0.5rem; }
 .reveal-live-list { display: flex; flex-direction: column; gap: 0.5rem; max-height: 16rem; overflow-y: auto; margin-top: 0.5rem; }

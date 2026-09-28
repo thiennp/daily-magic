@@ -8,6 +8,45 @@ export const PROMPT_SDLC_LOCAL_FORM_SCRIPT = `<script>
     fit(area);
     area.addEventListener("input", () => fit(area));
   });
+  const button = document.querySelector("[data-sdlc-run]");
+  const slots = [...document.querySelectorAll("[data-writer-status]")];
+  const paintReady = () => {
+    if (!(button instanceof HTMLButtonElement)) return;
+    button.disabled =
+      button.dataset.canRun !== "true" ||
+      slots.some((slot) => slot.dataset.ready !== "true");
+  };
+  const paintWriter = async (writer, fresh) => {
+    const targets = slots.filter((slot) => slot.dataset.writer === writer);
+    targets.forEach((slot) => {
+      slot.textContent = "Checking…";
+      slot.dataset.ready = "false";
+    });
+    paintReady();
+    const url = "/prompt-sdlc?writer-check=" + encodeURIComponent(writer) + (fresh ? "&fresh=1" : "");
+    const response = await fetch(url, { cache: "no-store" }).catch(() => null);
+    const body = response === null || !response.ok ? null : await response.json().catch(() => null);
+    const message = body && typeof body.message === "string" ? body.message : "The writer did not reply.";
+    const ok = body !== null && body.ok === true;
+    targets.forEach((slot) => {
+      slot.textContent = message;
+      slot.dataset.ready = ok ? "true" : "false";
+      slot.className = ok ? "muted" : "alert-error";
+    });
+    paintReady();
+  };
+  document.querySelectorAll("[data-writer-select]").forEach((select) => {
+    select.addEventListener("change", () => {
+      const slot = document.querySelector('[data-writer-status="' + select.dataset.writerSelect + '"]');
+      if (!slot) return;
+      slot.dataset.writer = select.value;
+      void paintWriter(select.value, true);
+    });
+  });
+  [...new Set(slots.map((slot) => slot.dataset.writer))].forEach((writer) => {
+    if (writer) void paintWriter(writer, false);
+  });
+  paintReady();
 })();
 </script>`;
 

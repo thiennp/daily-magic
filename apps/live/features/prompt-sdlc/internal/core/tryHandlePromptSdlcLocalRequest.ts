@@ -3,6 +3,7 @@ import type http from "node:http";
 import { buildPromptSdlcLocalGuidePageBody } from "./buildPromptSdlcLocalGuidePage";
 import { servePromptSdlcLocalPage } from "./servePromptSdlcLocalPage";
 import { trySendPromptSdlcLocalRunFragment } from "./trySendPromptSdlcLocalRunFragment";
+import { trySendPromptSdlcWriterCheck } from "./trySendPromptSdlcWriterCheck";
 
 export interface PromptSdlcLocalRouteInput {
   readonly method: string;
@@ -45,6 +46,16 @@ export const tryHandlePromptSdlcLocalRequest = async (
         body: buildPromptSdlcLocalGuidePageBody(),
       }),
     );
+    return true;
+  }
+
+  if (
+    await trySendPromptSdlcWriterCheck({
+      method: input.method,
+      requestUrl: input.requestUrl,
+      response: input.response,
+    })
+  ) {
     return true;
   }
 

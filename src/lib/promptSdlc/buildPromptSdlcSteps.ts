@@ -1,4 +1,5 @@
 import { isPromptSdlcTerminalStatus } from "@/lib/promptSdlc/PromptSdlcCycleStatus.constant";
+import { describePromptSdlcScoreBand } from "@/lib/promptSdlc/describePromptSdlcScore";
 import type PromptSdlcCycleView from "@/lib/promptSdlc/types/PromptSdlcCycleView.type";
 
 export interface PromptSdlcStep {
@@ -43,7 +44,7 @@ export const buildPromptSdlcSteps = (
         saved,
         {
           id: `score-${revision.roundNumber}`,
-          label: `Judge scored round ${revision.roundNumber}: ${revision.judgement.score}`,
+          label: `Judge scored round ${revision.roundNumber}: ${revision.judgement.score} / 100 (${describePromptSdlcScoreBand(revision.judgement.score, cycle.passScore)})`,
           state: "done" as const,
           detail: revision.judgement.reasons,
         },
@@ -54,7 +55,7 @@ export const buildPromptSdlcSteps = (
         saved,
         {
           id: `score-${revision.roundNumber}`,
-          label: `Judge is scoring round ${revision.roundNumber}`,
+          label: `score for round ${revision.roundNumber}...`,
           state: "active" as const,
           detail: cycle.judgeModel,
         },
@@ -66,7 +67,7 @@ export const buildPromptSdlcSteps = (
     ? [
         {
           id: "rewrite",
-          label: `Improver is rewriting round ${cycle.currentRound}`,
+          label: `revision ${cycle.currentRound + 1}...`,
           state: "active",
           detail: cycle.improverModel,
         },

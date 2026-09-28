@@ -57,6 +57,8 @@ Shipped bundle build: `npm run build:agent-witch` (runs in `npm run build`).
 
 Registry: [agent-witch-deployables.md](../../product/agent-witch-deployables.md).
 
+Prompt SDLC is an AWL feature at `apps/live/features/prompt-sdlc`. Routes: `/prompt-sdlc` and `/prompt-sdlc/guide` on `127.0.0.1:43347`. The guide page posts the sample goal and prompt to start a cycle. History titles are the first clause of the goal.
+
 ---
 
 ## AWB HTTP surface (same Mac as browser)

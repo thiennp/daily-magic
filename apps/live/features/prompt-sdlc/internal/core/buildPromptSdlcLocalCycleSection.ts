@@ -3,6 +3,10 @@ import {
   isPromptSdlcTerminalStatus,
   type PromptSdlcCycleView,
 } from "../../../../adapters/promptSdlcAwcCore";
+import {
+  renderPromptSdlcLocalScoreScale,
+  renderPromptSdlcLocalStepTree,
+} from "./buildPromptSdlcLocalStepTree";
 import { describePromptSdlcLocalActivity } from "./buildPromptSdlcLocalActivity";
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
 import {
@@ -77,12 +81,9 @@ export const buildPromptSdlcLocalCycleSection = (
 ): string => {
   const live = !isPromptSdlcTerminalStatus(cycle.status);
   const activity = describePromptSdlcLocalActivity(cycle);
-  const steps = buildPromptSdlcSteps(toCycleView(cycle))
-    .map((step) => {
-      const marker = step.state === "active" ? "In progress" : "Done";
-      return `<li>${escapeHtml(marker)}: ${escapeHtml(step.label)}</li>`;
-    })
-    .join("");
+  const steps = renderPromptSdlcLocalStepTree(
+    buildPromptSdlcSteps(toCycleView(cycle)),
+  );
   const error =
     cycle.errorMessage === null
       ? ""
@@ -100,5 +101,5 @@ export const buildPromptSdlcLocalCycleSection = (
     cycle.workingDirectory.length > 0
       ? `<p class="muted">Folder ${escapeHtml(displayPromptSdlcLocalFolder(promptSdlcLocalWorkingDirectory(cycle)))}</p>`
       : "";
-  return `<section class="card" id="prompt-sdlc-run" data-live="${live ? "true" : "false"}" data-since="${escapeHtml(cycle.updatedAt)}" aria-busy="${live ? "true" : "false"}"><p class="eyebrow">This run</p><div class="sdlc-working">${spinner}<div><h2>${escapeHtml(activity.title)}</h2>${detail}${folder}</div></div>${error}<ol>${steps}</ol></section>${cycle.revisions.map(renderRevision).join("")}`;
+  return `<section class="card" id="prompt-sdlc-run" data-live="${live ? "true" : "false"}" data-since="${escapeHtml(cycle.updatedAt)}" aria-busy="${live ? "true" : "false"}"><p class="eyebrow">This run</p><div class="sdlc-working">${spinner}<div><h2>${escapeHtml(activity.title)}</h2>${detail}${folder}</div></div>${error}${renderPromptSdlcLocalScoreScale(cycle.passScore)}${steps}</section>${cycle.revisions.map(renderRevision).join("")}`;
 };

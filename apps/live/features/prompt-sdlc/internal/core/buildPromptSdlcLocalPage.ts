@@ -7,6 +7,8 @@ import {
 } from "./buildPromptSdlcLocalLiveScript";
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
 import type { PromptSdlcLocalWriterChoice } from "./promptSdlcLocalForm";
+import { promptSdlcLocalHistoryTitle } from "./promptSdlcLocalHistoryTitle";
+import { renderPromptSdlcLocalWriterFields } from "./renderPromptSdlcLocalWriterFields";
 
 const escapeHtml = (value: string): string =>
   value
@@ -24,25 +26,10 @@ const renderHistory = (history: readonly PromptSdlcLocalCycle[]): string => {
     .slice(0, 20)
     .map(
       (cycle) =>
-        `<li><a href="/prompt-sdlc?cycle=${escapeHtml(cycle.id)}">${escapeHtml(cycle.goal)}</a> <span class="muted">${escapeHtml(cycle.status)} · round ${cycle.currentRound}</span></li>`,
+        `<li><a href="/prompt-sdlc?cycle=${escapeHtml(cycle.id)}">${escapeHtml(promptSdlcLocalHistoryTitle(cycle.goal))}</a><p class="muted">${escapeHtml(cycle.status)} · round ${cycle.currentRound}</p></li>`,
     )
     .join("");
-  return `<section class="card"><h2>History</h2><ul>${items}</ul></section>`;
-};
-
-const renderWriterSelect = (
-  name: string,
-  label: string,
-  selected: string,
-  choices: readonly PromptSdlcLocalWriterChoice[],
-): string => {
-  const options = choices
-    .map(
-      (choice) =>
-        `<option value="${escapeHtml(choice.id)}"${choice.id === selected ? " selected" : ""}>${escapeHtml(choice.label)}</option>`,
-    )
-    .join("");
-  return `<label class="field"><span class="field-label">${label}</span><select class="input" name="${name}">${options}</select></label>`;
+  return `<section class="card"><h2>History</h2><ul class="sdlc-history">${items}</ul></section>`;
 };
 
 export const buildPromptSdlcLocalPageBody = (input: {
@@ -69,9 +56,7 @@ export const buildPromptSdlcLocalPageBody = (input: {
       ? `${PROMPT_SDLC_LOCAL_LIVE_STYLE}${PROMPT_SDLC_LOCAL_LIVE_SCRIPT}`
       : "";
   const choosing = input.writers.length > 1;
-  const writerFields = choosing
-    ? `${renderWriterSelect("judge", "Judge", input.judge, input.writers)}${renderWriterSelect("improver", "Improver", input.improver, input.writers)}`
-    : "";
+  const writerFields = renderPromptSdlcLocalWriterFields(input);
   const intro = choosing
     ? "Choose which writers run this prompt."
     : "This Mac uses the reasoning model it can run.";
@@ -79,7 +64,7 @@ export const buildPromptSdlcLocalPageBody = (input: {
       <p class="eyebrow">Prompt SDLC</p>
       <h1>Optimize a prompt</h1>
       <p class="lede">${intro} ${escapeHtml(input.modelNote)}</p>
-      <p><a href="/prompt-sdlc/guide">See an example of a goal that changes how the prompt works</a></p>
+      <p class="actions"><a class="btn btn-secondary" href="/prompt-sdlc/guide">Instructions and example</a></p>
       <form class="sdlc-form" method="POST" action="/prompt-sdlc">
         <label class="field">
           <span class="field-label">Goal</span>
@@ -98,7 +83,7 @@ export const buildPromptSdlcLocalPageBody = (input: {
         </div>
         ${writerFields}
         <div class="actions">
-          <button class="btn btn-primary" type="submit" name="intent" value="run" ${input.canRun ? "" : "disabled"}>Run</button>
+          <button class="btn btn-primary" type="submit" name="intent" value="run" data-sdlc-run data-can-run="${input.canRun ? "true" : "false"}" disabled>Run</button>
         </div>
       </form>
     </section>`;

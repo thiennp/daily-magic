@@ -33,6 +33,7 @@ export const runPromptSdlcWriterReply = (input: {
   readonly writerAgent: string;
   readonly prompt: string;
   readonly workingDirectory: string;
+  readonly timeoutMs?: number;
 }): Promise<PromptSdlcWriterResult> =>
   new Promise((resolve) => {
     if (!isLocalWriter(input.writerAgent)) {
@@ -89,7 +90,7 @@ export const runPromptSdlcWriterReply = (input: {
     state.timer = setTimeout(() => {
       child.kill("SIGTERM");
       finish({ ok: false, errorMessage: "The writer did not reply." });
-    }, WRITER_REPLY_TIMEOUT_MS);
+    }, input.timeoutMs ?? WRITER_REPLY_TIMEOUT_MS);
     child.stdout.on("data", (chunk: Buffer | string) => {
       stdoutChunks.push(Buffer.from(chunk));
     });

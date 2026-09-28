@@ -11,6 +11,26 @@ const CODEX_TRUST_ERROR =
 const STDIN_ERROR =
   "The writer waited on terminal input and did not return a prompt.";
 
+const CLI_STATUS_ERROR =
+  /authentication required|please run .+login|api[_ ]?key|not logged in|login required|unauthorized|invalid api key|quota|usage limit|insufficient credit|rate limit|billing|subscription required/i;
+
+const cliStatusLine = (raw: string): string | null => {
+  const trimmed = raw.trim();
+  if (
+    trimmed.length === 0 ||
+    trimmed.length >= 500 ||
+    !CLI_STATUS_ERROR.test(trimmed)
+  ) {
+    return null;
+  }
+  const line =
+    trimmed
+      .split("\n")
+      .map((item) => item.trim())
+      .find((item) => CLI_STATUS_ERROR.test(item)) ?? trimmed;
+  return line.length > 280 ? `${line.slice(0, 277)}...` : line;
+};
+
 export const describePromptSdlcWriterTerminalFailure = (
   raw: string,
 ): string | null => {
@@ -24,7 +44,7 @@ export const describePromptSdlcWriterTerminalFailure = (
   ) {
     return STDIN_ERROR;
   }
-  return null;
+  return cliStatusLine(raw);
 };
 
 export const buildPromptSdlcWriterArgs = (input: {
@@ -55,15 +75,15 @@ export const readPromptSdlcWriterOutput = (input: {
   readonly replyFileText: string | null;
 }): PromptSdlcWriterResult => {
   const replyFile = input.replyFileText?.trim() ?? "";
-  if (replyFile.length > 0) {
-    return { ok: true, text: replyFile };
-  }
-
   const failure = describePromptSdlcWriterTerminalFailure(
-    `${input.stdout}\n${input.stderr}`,
+    [replyFile, input.stdout, input.stderr].join("\n"),
   );
   if (failure !== null) {
     return { ok: false, errorMessage: failure };
+  }
+
+  if (replyFile.length > 0) {
+    return { ok: true, text: replyFile };
   }
 
   if (input.writerAgent === "claude-cli") {
