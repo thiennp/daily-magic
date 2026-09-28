@@ -1,3 +1,7 @@
+import fs from "node:fs";
+import os from "node:os";
+import path from "node:path";
+
 import { describe, expect, it } from "vitest";
 
 import { buildPromptSdlcLocalCycleSection } from "./buildPromptSdlcLocalCycleSection";
@@ -36,6 +40,10 @@ describe("buildPromptSdlcLocalPageBody", () => {
     expect(html).toContain("Choose folder");
     expect(html).toContain("I'll score it");
     expect(html).toContain("I'll rewrite it");
+    expect(html).toContain('name="judgeInstructions"');
+    expect(html).toContain('name="improverInstructions"');
+    expect(html).toContain("Judge and improver");
+    expect(html).toContain("When to stop");
     expect(html).not.toContain('name="deviceId"');
   });
 
@@ -58,7 +66,7 @@ describe("buildPromptSdlcLocalPageBody", () => {
       history: [],
     });
 
-    expect(html).toContain("Choose who scores the prompt and who rewrites it.");
+    expect(html).toContain("Instructions are optional.");
     expect(html).toContain("I'll score it");
     expect(html).toContain("I'll rewrite it");
     expect(html).toContain("Choose who does this step.");
@@ -217,6 +225,44 @@ describe("buildPromptSdlcLocalPageBody", () => {
       "Answer only from the ticket, and stop when a fact is missing.",
     );
     expect(html).toContain('value="save-skill"');
+    expect(html).toContain('name="skillName"');
+    expect(html).toContain('value="the-reply-stays-inside-the-facts"');
+    expect(html).toContain('name="skillDescription"');
+    expect(html).toContain("The reply stays inside the facts.");
+    expect(html).toContain('name="skillPrompt"');
+    expect(html).toContain('name="skillFileName"');
+    expect(html).toContain("Optional.");
+  });
+
+  it("lists skills in the chosen folder so one can fill the prompt", () => {
+    const folder = fs.mkdtempSync(path.join(os.tmpdir(), "prompt-sdlc-list-"));
+    const skillDir = path.join(folder, ".cursor", "skills", "support-reply");
+    fs.mkdirSync(skillDir, { recursive: true });
+    fs.writeFileSync(
+      path.join(skillDir, "SKILL.md"),
+      '---\nname: "Support reply"\ndescription: "Answer the customer"\n---\n\nAnswer the question they asked.\n',
+      "utf8",
+    );
+
+    const html = buildPromptSdlcLocalPageBody({
+      goal: "",
+      prompt: "",
+      modelNote: "",
+      writers: [],
+      judge: "",
+      improver: "",
+      folder,
+      passScore: "90",
+      canRun: true,
+      errorMessage: null,
+      cycle: null,
+      history: [],
+    });
+
+    expect(html).toContain('name="skillFile"');
+    expect(html).toContain('value="support-reply"');
+    expect(html).toContain("Answer the question they asked.");
+    expect(html).toContain("Fills the prompt from that skill.");
   });
 
   it("explains a Codex terminal error instead of showing it as the revision", () => {

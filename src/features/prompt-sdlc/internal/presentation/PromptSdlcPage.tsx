@@ -2,30 +2,53 @@ import Link from "next/link";
 import type { ReactElement } from "react";
 
 import AppPageHeader from "@/components/surfaces/AppPageHeader";
-import { APP_SURFACE_TEXT_LINK_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
-import { AGENT_WITCH_LIVE_APP_ORIGIN } from "@agent-witch/shared/network";
-
-const liveHref = `${AGENT_WITCH_LIVE_APP_ORIGIN}/prompt-sdlc`;
+import {
+  APP_SURFACE_BODY_TEXT_CLASS,
+  APP_SURFACE_CTA_PRIMARY_CLASS,
+  APP_SURFACE_TEXT_LINK_CLASS,
+} from "@/components/surfaces/appSurfaceStyles.constant";
+import {
+  PROMPT_SDLC_AWL_GUIDE_HREF,
+  PROMPT_SDLC_AWL_PAGE_HREF,
+} from "@/features/prompt-sdlc/internal/presentation/promptSdlcAwlHref.constant";
 
 export default function PromptSdlcPage(): ReactElement {
   return (
     <div className="space-y-6">
       <AppPageHeader
-        title="Prompt SDLC"
-        description="Prompt SDLC runs in Agent Witch Live on this Mac. You choose the folder, the pass score, and who scores and rewrites the prompt. The judge and the improver run inside that folder, so they can read the Playbook and the code. A score from a tool that never sees that folder is not about this project."
+        title="Prompt optimizer"
+        description="Prompt SDLC is the prompt optimizer in the console. Run it in Agent Witch Live on this Mac. The judge and the improver run in the folder you choose, so they can read the Playbook and the code."
       />
+      <ol
+        className={`${APP_SURFACE_BODY_TEXT_CLASS} list-decimal space-y-2 pl-5`}
+      >
+        <li>Open Agent Witch Live on this Mac.</li>
+        <li>Paste the prompt and the goal, and choose the project folder.</li>
+        <li>Choose who scores the prompt and who rewrites it.</li>
+      </ol>
       <p>
-        <Link href={liveHref} className={APP_SURFACE_TEXT_LINK_CLASS}>
-          Open Prompt SDLC in Agent Witch Live
-        </Link>
+        <a
+          href={PROMPT_SDLC_AWL_PAGE_HREF}
+          className={APP_SURFACE_CTA_PRIMARY_CLASS}
+        >
+          Run it in Agent Witch Live
+        </a>
+      </p>
+      <p className={APP_SURFACE_BODY_TEXT_CLASS}>
+        Agent Witch Live is the Mac app at {PROMPT_SDLC_AWL_PAGE_HREF}. The
+        console does not run the optimizer.
       </p>
       <p>
-        <Link
-          href={`${liveHref}/guide`}
+        <Link href="/prompt-sdlc/guide" className={APP_SURFACE_TEXT_LINK_CLASS}>
+          How it works
+        </Link>
+        {" · "}
+        <a
+          href={PROMPT_SDLC_AWL_GUIDE_HREF}
           className={APP_SURFACE_TEXT_LINK_CLASS}
         >
           Instructions in Agent Witch Live
-        </Link>
+        </a>
       </p>
     </div>
   );

@@ -9,6 +9,7 @@ import {
   savePromptSdlcLocalCycle,
 } from "./promptSdlcLocalStore";
 import { displayPromptSdlcLocalFolder } from "./promptSdlcLocalFolder";
+import { readPromptSdlcFolderSkill } from "./readPromptSdlcFolderSkills";
 import { readPromptSdlcChosenWritersReady } from "./probePromptSdlcWriterReady";
 import { ensurePromptSdlcLocalCycleRunning } from "./runPromptSdlcLocalCycle";
 import type { PromptSdlcLocalRouteInput } from "./tryHandlePromptSdlcLocalRequest";
@@ -48,6 +49,8 @@ export const presentPromptSdlcLocalComposer = async (input: {
       writers: input.selection.writers,
       judge: decision.judge,
       improver: decision.improver,
+      judgeInstructions: decision.judgeInstructions,
+      improverInstructions: decision.improverInstructions,
       folder: displayPromptSdlcLocalFolder(decision.workingDirectory),
       passScore: String(decision.passScore),
       maxRounds: String(decision.maxRounds),
@@ -61,6 +64,10 @@ export const presentPromptSdlcLocalComposer = async (input: {
   }
 
   if (decision.kind === "start") {
+    const sourceSkill = readPromptSdlcFolderSkill(
+      decision.workingDirectory,
+      decision.sourceSkillFile,
+    );
     const cycle = createPromptSdlcLocalCycle({
       goal: input.goal,
       sourcePrompt: input.prompt,
@@ -69,6 +76,21 @@ export const presentPromptSdlcLocalComposer = async (input: {
       workingDirectory: decision.workingDirectory,
       passScore: decision.passScore,
       maxRounds: decision.maxRounds,
+      ...(decision.judgeInstructions.length === 0
+        ? {}
+        : { judgeInstructions: decision.judgeInstructions }),
+      ...(decision.improverInstructions.length === 0
+        ? {}
+        : { improverInstructions: decision.improverInstructions }),
+      ...(sourceSkill === null
+        ? {}
+        : {
+            sourceSkill: {
+              fileName: sourceSkill.fileName,
+              name: sourceSkill.name,
+              description: sourceSkill.description,
+            },
+          }),
     });
     savePromptSdlcLocalCycle(input.route.storePath, cycle);
     ensurePromptSdlcLocalCycleRunning(input.route.storePath, cycle.id);
@@ -94,6 +116,8 @@ export const presentPromptSdlcLocalComposer = async (input: {
     writers: input.selection.writers,
     judge: decision.judge,
     improver: decision.improver,
+    judgeInstructions: decision.judgeInstructions,
+    improverInstructions: decision.improverInstructions,
     folder: decision.folder,
     passScore: decision.passScore,
     maxRounds: decision.maxRounds,

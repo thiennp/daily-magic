@@ -13,6 +13,9 @@ describe("resolveMarketingFooterNav (UX-P0c)", () => {
     const labels = links.map((link) => link.label);
 
     expect(labels).toContain("Real examples");
+    expect(links.find((link) => link.label === "Prompt optimizer")?.href).toBe(
+      "/prompt-sdlc",
+    );
     expect(labels).not.toContain("Styleguide");
   });
 

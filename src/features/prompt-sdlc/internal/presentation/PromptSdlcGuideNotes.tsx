@@ -59,15 +59,16 @@ export default function PromptSdlcGuideNotes(): ReactElement {
           Round 0 is your text. Later rounds are rewrites. Click a step to open
           the score, the feedback, and the prompt saved for that step. Each
           judged round shows the score and the reason. When the run finishes,
-          the page shows the highest scoring prompt. Save as a skill writes that
-          prompt into the folder you chose, under .cursor/skills. The run keeps
-          going until the score reaches the pass score you set, you press
-          Finish, the round limit is hit, or the score has not risen for 3
-          rounds. Passed means the score reached the pass score. Finish, the
-          round limit, and a flat score all keep the best prompt and count as
-          complete. Failed means the judge did not return a score, the improver
-          returned nothing, or the call could not start. The message on the page
-          names which one.
+          the page shows the highest scoring prompt. After a folder is chosen, a
+          skill in that folder can fill the prompt. Save as a skill uses that
+          skill’s name, description, and file name, and asks before replacing
+          the file under .cursor/skills. The run keeps going until the score
+          reaches the pass score you set, you press Finish, the round limit is
+          hit, or the score has not risen for 3 rounds. Passed means the score
+          reached the pass score. Finish, the round limit, and a flat score all
+          keep the best prompt and count as complete. Failed means the judge did
+          not return a score, the improver returned nothing, or the call could
+          not start. The message on the page names which one.
         </p>
       </section>
       <section className="space-y-3">
