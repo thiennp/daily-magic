@@ -86,7 +86,12 @@ const useLocalMacHostname = (): {
     }),
   });
   const extraWakePorts = useMemo(
-    () => collectUniqueWakePorts(devices.map((device) => device.wakePort)),
+    () =>
+      collectUniqueWakePorts(
+        (
+          pairedDevicesSnapshot ?? getPairedDevicesSnapshotOrEmpty()
+        ).devices.map((device) => device.wakePort),
+      ),
     [pairedDevicesSnapshot],
   );
 
