@@ -34,6 +34,7 @@ import {
 import { reportAgentRunEstimateComparisonOnCloud } from "./agentWitchCloudApi";
 import { startRunHeartbeat, stopRunHeartbeat } from "./agentWitchRunHeartbeat";
 import { isProcessAlive } from "./isProcessAlive";
+import { resolveWriterTaskCwd } from "./resolveWriterTaskCwd";
 import type { AgentWitchCloudApiConfig } from "./agentWitchCloudApi";
 import {
   clearTerminalStreamState,
@@ -768,9 +769,14 @@ export const runWriterTask = (
 
   noteTaskStarted(agentRunId);
 
+  const cwd = resolveWriterTaskCwd({
+    workspace: config.workspace,
+    projectFolderPath,
+  });
+
   const startPipeChild = (): void => {
     const child = spawn(invocation.command, [...invocation.args], {
-      cwd: config.workspace,
+      cwd,
       stdio: ["ignore", "pipe", "pipe"],
       env: processEnv ?? process.env,
     });
@@ -844,7 +850,7 @@ export const runWriterTask = (
     shellSessionId,
     command: invocation.command,
     args: invocation.args,
-    cwd: config.workspace,
+    cwd,
     processEnv,
     originalPrompt: prompt,
     writerAgent,

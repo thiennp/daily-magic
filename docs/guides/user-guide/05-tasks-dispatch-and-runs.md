@@ -12,7 +12,7 @@ This chapter is where three pillars meet daily work: **easy authoring** (compose
 
 1. Open **New task** from Home or nav.
 2. Choose **Mac** — yours by default when **this Mac** is linked; teammates’ Macs appear when paired to your org.
-3. Choose a **project folder**. **Default** is only the starting folder. The folder you pick stays selected when you choose a workflow or custom task and when you choose the LLM CLI.
+3. Choose a **project folder**. **Default** is only the starting folder. The folder you pick stays selected when you choose a workflow or custom task and when you choose the LLM CLI. The Mac runs the writer CLI in that folder.
 4. Write the **prompt** — concrete scope beats vague “fix everything.”
 5. Click **Send** when enabled.
 

@@ -113,6 +113,8 @@ User word: **Playbook**. Internal word: harness.
 
 The Console cannot open a native folder picker for a real `/Users/...` path. Set or change project folders in **Agent Witch on this Mac** or via bridge APIs used by the Mac app ([folder picker Q&A](../../qa/awc-project-folder-path-picker.md), [AWL vs AWC projects](../../qa/awc-awl-projects-source-of-truth.md)).
 
+Sending a task starts the writer CLI in that project folder. Update **Agent Witch on this Mac** when the Console offers a newer install, so an older Mac app does not keep starting tasks in the install workspace.
+
 ---
 
 ## Local knowledge (Mac app — efficient memory)
