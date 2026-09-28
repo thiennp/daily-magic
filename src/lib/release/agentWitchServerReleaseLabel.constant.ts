@@ -3,4 +3,4 @@
  * without opening Railway (surfaced on GET /api/health and the in-app badge).
  */
 export const AGENT_WITCH_SERVER_RELEASE_LABEL =
-  "2026-09-24-awl-health-file-badge";
+  "2026-09-28-disabled-field-styles";

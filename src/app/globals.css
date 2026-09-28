@@ -193,6 +193,68 @@
   }
 }
 
+/*
+  Disabled text fields must not share the editable field fill.
+  Utilities such as bg-white and dark:bg-gray-800 apply in both states, and
+  disabled:* loses when the same property is set without the variant.
+  Unlayered rules beat the utilities layer. Checkboxes, radios, files, and
+  other non-text controls keep their own disabled treatment.
+*/
+:root {
+  --disabled-field-bg: var(--color-gray-100);
+  --disabled-field-fg: var(--color-gray-600);
+  --disabled-field-border: var(--color-gray-400);
+  --disabled-field-placeholder: var(--color-gray-500);
+}
+
+.dark {
+  --disabled-field-bg: var(--color-gray-950);
+  --disabled-field-fg: var(--color-gray-300);
+  --disabled-field-border: var(--color-gray-600);
+  --disabled-field-placeholder: var(--color-gray-500);
+}
+
+.dark .marketing-light-surface {
+  --disabled-field-bg: var(--color-gray-100);
+  --disabled-field-fg: var(--color-gray-600);
+  --disabled-field-border: var(--color-gray-400);
+  --disabled-field-placeholder: var(--color-gray-500);
+}
+
+:is(
+  input:not(
+    [type="checkbox"],
+    [type="radio"],
+    [type="range"],
+    [type="file"],
+    [type="button"],
+    [type="submit"],
+    [type="reset"],
+    [type="hidden"],
+    [type="image"],
+    [type="color"]
+  ),
+  textarea,
+  select
+):disabled {
+  cursor: not-allowed;
+  border-width: 1px;
+  border-style: dashed;
+  border-color: var(--disabled-field-border);
+  background-color: var(--disabled-field-bg);
+  background-image: none;
+  color: var(--disabled-field-fg);
+  -webkit-text-fill-color: var(--disabled-field-fg);
+  box-shadow: none;
+  opacity: 1;
+
+  &::placeholder {
+    color: var(--disabled-field-placeholder);
+    -webkit-text-fill-color: var(--disabled-field-placeholder);
+    opacity: 1;
+  }
+}
+
 @utility glass-panel {
   @apply bg-white/80 backdrop-blur-md dark:bg-gray-900/80 border border-gray-200/80 dark:border-gray-800/80;
 }
