@@ -54,6 +54,11 @@ export default function AgentRunCard({ run }: AgentRunCardProps) {
       <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
         Policy: {run.dispatchPolicy}
       </p>
+      {reportSummaryLine !== null ? (
+        <p className="mt-2 text-sm text-gray-800 dark:text-white/90">
+          {reportSummaryLine}
+        </p>
+      ) : null}
       <AgentRunEstimateComparison
         estimateSeconds={run.estimateSeconds}
         actualSeconds={run.actualSeconds}

@@ -70,7 +70,7 @@ const useMacDeviceSelection = (): {
     }
 
     return pickDefaultMacDeviceId(devices);
-  }, [deviceIdFromQuery, devices, preferredDeviceId]);
+  }, [devices, preferredDeviceId]);
 
   const dispatchReadyMacCount = countWriterSendReadyMacs(devices);
 
