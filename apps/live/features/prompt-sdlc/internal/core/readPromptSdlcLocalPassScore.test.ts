@@ -24,6 +24,8 @@ describe("readPromptSdlcLocalPassScore", () => {
         prompt: "Be helpful.",
         folder: "~",
         passScore: "75",
+        judge: "claude-cli",
+        improver: "claude-cli",
       }),
       installedIds: ["claude-cli"],
       selection,

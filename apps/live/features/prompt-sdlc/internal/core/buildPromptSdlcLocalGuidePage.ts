@@ -26,10 +26,10 @@ export const buildPromptSdlcLocalGuidePageBody =
       <h2>Goal and prompt</h2>
       <p>The goal is the outcome of using the prompt. The prompt is the instruction the model will follow. A stronger prompt changes the slots, the decision order, and when the model must stop. Pasting the goal onto the old prompt does not do that.</p>
       <h2>Score</h2>
-      <p>You set the pass score on the form. The default is ${PROMPT_SDLC_PASS_SCORE}. There is no pause between the score and the rewrite.</p>
+      <p>You set the pass score with the slider. The bar fades from a weak score to a pass. The mark is the usual ${PROMPT_SDLC_PASS_SCORE}. A score includes the reason for that score. You can score it yourself, or let a writer score it.</p>
       ${renderPromptSdlcLocalScoreScale(PROMPT_SDLC_PASS_SCORE)}
       <h2>Writers and folder</h2>
-      <p>When more than one writer is installed, you choose the judge and the improver. The folder is where they run, so they can use that folder as context. The default is your home directory. A writer that is not signed in stays blocked until its status says it is ready.</p>
+      <p>You choose the judge and the improver. I'll score it and I'll rewrite it mean you do that step. A writer runs in the folder you choose, so it can use that folder as context. The default is your home directory. A writer that is not signed in stays blocked until its status says it is ready. Run this sample asks you to choose both roles first.</p>
       <h2>Example</h2>
       <p>This sample is a support reply. The weak prompt can still invent a refund or skip the question the customer asked.</p>
       <h3>Goal</h3>

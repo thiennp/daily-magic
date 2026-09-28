@@ -8,6 +8,8 @@ import {
   renderPromptSdlcLocalStepTree,
 } from "./buildPromptSdlcLocalStepTree";
 import { describePromptSdlcLocalActivity } from "./buildPromptSdlcLocalActivity";
+import { isPromptSdlcLocalManualWait } from "./isPromptSdlcLocalManualWait";
+import { renderPromptSdlcLocalManualStep } from "./renderPromptSdlcLocalManualStep";
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
 import {
   displayPromptSdlcLocalFolder,
@@ -79,7 +81,9 @@ const renderRevision = (
 export const buildPromptSdlcLocalCycleSection = (
   cycle: PromptSdlcLocalCycle,
 ): string => {
-  const live = !isPromptSdlcTerminalStatus(cycle.status);
+  const live =
+    !isPromptSdlcTerminalStatus(cycle.status) &&
+    !isPromptSdlcLocalManualWait(cycle);
   const activity = describePromptSdlcLocalActivity(cycle);
   const steps = renderPromptSdlcLocalStepTree(
     buildPromptSdlcSteps(toCycleView(cycle)),
@@ -101,5 +105,17 @@ export const buildPromptSdlcLocalCycleSection = (
     cycle.workingDirectory.length > 0
       ? `<p class="muted">Folder ${escapeHtml(displayPromptSdlcLocalFolder(promptSdlcLocalWorkingDirectory(cycle)))}</p>`
       : "";
-  return `<section class="card" id="prompt-sdlc-run" data-live="${live ? "true" : "false"}" data-since="${escapeHtml(cycle.updatedAt)}" aria-busy="${live ? "true" : "false"}"><p class="eyebrow">This run</p><div class="sdlc-working">${spinner}<div><h2>${escapeHtml(activity.title)}</h2>${detail}${folder}</div></div>${error}${renderPromptSdlcLocalScoreScale(cycle.passScore)}${steps}</section>${cycle.revisions.map(renderRevision).join("")}`;
+  const current = cycle.revisions.find(
+    (item) => item.roundNumber === cycle.currentRound,
+  );
+  const manual = isPromptSdlcLocalManualWait(cycle)
+    ? renderPromptSdlcLocalManualStep({
+        role: cycle.status === "judging" ? "judge" : "improve",
+        cycleId: cycle.id,
+        promptText: current?.promptText ?? "",
+        score: current?.judgement?.score ?? null,
+        reasons: current?.judgement?.reasons ?? null,
+      })
+    : "";
+  return `<section class="card" id="prompt-sdlc-run" data-live="${live ? "true" : "false"}" data-since="${escapeHtml(cycle.updatedAt)}" aria-busy="${live ? "true" : "false"}"><p class="eyebrow">This run</p><div class="sdlc-working">${spinner}<div><h2>${escapeHtml(activity.title)}</h2>${detail}${folder}</div></div>${error}${renderPromptSdlcLocalScoreScale(cycle.passScore)}${steps}${manual}</section>${cycle.revisions.map(renderRevision).join("")}`;
 };

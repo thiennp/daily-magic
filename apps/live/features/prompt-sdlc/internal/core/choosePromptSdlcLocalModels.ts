@@ -1,5 +1,7 @@
 import type { HarnessWriterAgent } from "../../../../adapters/promptSdlcAwcCore";
 
+export const PROMPT_SDLC_MANUAL_ACTOR = "manual";
+
 const PREFERENCE = [
   "claude-cli",
   "codex",
@@ -17,12 +19,19 @@ export const PROMPT_SDLC_LOCAL_MODEL_LABELS: Record<
   antigravity: "Antigravity",
 };
 
-export const labelPromptSdlcLocalModel = (writer: string): string =>
-  writer in PROMPT_SDLC_LOCAL_MODEL_LABELS
+export type PromptSdlcLocalActor =
+  (typeof PREFERENCE)[number] | typeof PROMPT_SDLC_MANUAL_ACTOR;
+
+export const labelPromptSdlcLocalModel = (writer: string): string => {
+  if (writer === PROMPT_SDLC_MANUAL_ACTOR) {
+    return "You";
+  }
+  return writer in PROMPT_SDLC_LOCAL_MODEL_LABELS
     ? PROMPT_SDLC_LOCAL_MODEL_LABELS[
         writer as keyof typeof PROMPT_SDLC_LOCAL_MODEL_LABELS
       ]
     : writer;
+};
 
 export const listPromptSdlcLocalWriters = (
   installedWriterIds: readonly string[],
@@ -44,26 +53,28 @@ export const choosePromptSdlcLocalModels = (
   return { judge, improver: available[1] ?? judge };
 };
 
+const acceptedActor = (
+  available: readonly (typeof PREFERENCE)[number][],
+  posted: string | null,
+): PromptSdlcLocalActor | null => {
+  if (posted === PROMPT_SDLC_MANUAL_ACTOR) {
+    return PROMPT_SDLC_MANUAL_ACTOR;
+  }
+  return available.find((writer) => writer === posted) ?? null;
+};
+
 export const readPromptSdlcLocalRunModels = (
   installedWriterIds: readonly string[],
   postedJudge: string | null,
   postedImprover: string | null,
 ): {
-  readonly judge: (typeof PREFERENCE)[number];
-  readonly improver: (typeof PREFERENCE)[number];
+  readonly judge: PromptSdlcLocalActor;
+  readonly improver: PromptSdlcLocalActor;
 } | null => {
   const available = listPromptSdlcLocalWriters(installedWriterIds);
-  const defaults = choosePromptSdlcLocalModels(installedWriterIds);
-  if (defaults === null) {
-    return null;
-  }
-  if (available.length < 2) {
-    return defaults;
-  }
-
-  const judge = available.find((writer) => writer === postedJudge);
-  const improver = available.find((writer) => writer === postedImprover);
-  if (judge === undefined || improver === undefined) {
+  const judge = acceptedActor(available, postedJudge);
+  const improver = acceptedActor(available, postedImprover);
+  if (judge === null || improver === null) {
     return null;
   }
 

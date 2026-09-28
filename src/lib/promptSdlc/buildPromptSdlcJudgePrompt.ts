@@ -16,7 +16,8 @@ export const buildPromptSdlcJudgePrompt = (input: {
     "",
     `Score the prompt from 0 to 100 for how well it would achieve the goal.`,
     `Set passed to true only when the score is at least ${input.passScore}.`,
-    "reasons is one short paragraph.",
+    "reasons is required and explains the score.",
+    "A score without a reason is not a verdict.",
     "",
     '{"score": 0, "passed": false, "reasons": "why"}',
   ].join("\n");

@@ -16,7 +16,8 @@ export type PromptSdlcContinuation =
   | { readonly type: "stopped" }
   | { readonly type: "failed"; readonly errorMessage: string };
 
-export const JUDGE_REPLY_WAS_NOT_A_SCORE = "The judge reply was not a score.";
+export const JUDGE_REPLY_WAS_NOT_A_SCORE =
+  "The judge reply needs a score and a reason.";
 
 export const IMPROVER_REPLY_WAS_EMPTY = "The improver reply was empty.";
 

@@ -12,6 +12,7 @@ const renderWriterSelect = (
   label: string,
   selected: string,
   choices: readonly PromptSdlcLocalWriterChoice[],
+  manualLabel: string,
 ): string => {
   const blank = `<option value=""${selected === "" ? " selected" : ""}>Choose</option>`;
   const options = choices
@@ -20,7 +21,8 @@ const renderWriterSelect = (
         `<option value="${escapeHtml(choice.id)}"${choice.id === selected ? " selected" : ""}>${escapeHtml(choice.label)}</option>`,
     )
     .join("");
-  return `<label class="field"><span class="field-label">${label}</span><select class="input" name="${name}" data-writer-select="${name}">${blank}${options}</select></label>`;
+  const manual = `<option value="manual"${selected === "manual" ? " selected" : ""}>${escapeHtml(manualLabel)}</option>`;
+  return `<label class="field"><span class="field-label">${label}</span><select class="input" name="${name}" data-writer-select="${name}">${blank}${options}${manual}</select></label>`;
 };
 
 const renderWriterStatus = (
@@ -29,7 +31,10 @@ const renderWriterStatus = (
   choices: readonly PromptSdlcLocalWriterChoice[],
 ): string => {
   if (writerId.length === 0) {
-    return `<p class="muted" data-writer-status="${role}" data-writer="">Choose a writer.</p>`;
+    return `<p class="muted" data-writer-status="${role}" data-writer="">Choose who does this step.</p>`;
+  }
+  if (writerId === "manual") {
+    return `<p class="muted" data-writer-status="${role}" data-writer="manual" data-ready="true">You will do this step.</p>`;
   }
   const label =
     choices.find((choice) => choice.id === writerId)?.label ?? writerId;
@@ -41,11 +46,5 @@ export const renderPromptSdlcLocalWriterFields = (input: {
   readonly judge: string;
   readonly improver: string;
 }): string => {
-  if (input.writers.length === 0) {
-    return "";
-  }
-  if (input.writers.length === 1) {
-    return renderWriterStatus("judge", input.judge, input.writers);
-  }
-  return `${renderWriterSelect("judge", "Judge", input.judge, input.writers)}${renderWriterStatus("judge", input.judge, input.writers)}${renderWriterSelect("improver", "Improver", input.improver, input.writers)}${renderWriterStatus("improver", input.improver, input.writers)}`;
+  return `<div class="sdlc-writers"><div class="sdlc-writer">${renderWriterSelect("judge", "Judge", input.judge, input.writers, "I'll score it")}${renderWriterStatus("judge", input.judge, input.writers)}</div><div class="sdlc-writer">${renderWriterSelect("improver", "Improver", input.improver, input.writers, "I'll rewrite it")}${renderWriterStatus("improver", input.improver, input.writers)}</div></div>`;
 };

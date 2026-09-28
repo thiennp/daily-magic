@@ -15,7 +15,11 @@ const renderNode = (step: PromptSdlcStep): string => {
     step.state === "active"
       ? `<span class="sdlc-spin" aria-hidden="true"></span>`
       : `<span class="sdlc-node-mark" aria-hidden="true"></span>`;
-  return `<li class="sdlc-node sdlc-node-${step.state}">${mark}<span class="sdlc-node-label">${escapeHtml(step.label)}</span></li>`;
+  const reason =
+    step.state === "done" && step.id.startsWith("score-") && step.detail
+      ? `<span class="sdlc-node-reason">${escapeHtml(step.detail)}</span>`
+      : "";
+  return `<li class="sdlc-node sdlc-node-${step.state}">${mark}<span class="sdlc-node-label">${escapeHtml(step.label)}${reason}</span></li>`;
 };
 
 export const renderPromptSdlcLocalStepTree = (

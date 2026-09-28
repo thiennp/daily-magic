@@ -1,6 +1,9 @@
 import os from "node:os";
 
-import { labelPromptSdlcLocalModel } from "./choosePromptSdlcLocalModels";
+import {
+  labelPromptSdlcLocalModel,
+  PROMPT_SDLC_MANUAL_ACTOR,
+} from "./choosePromptSdlcLocalModels";
 import {
   readRememberedPromptSdlcWriter,
   rememberPromptSdlcWriterReady,
@@ -14,6 +17,9 @@ export const readPromptSdlcWriterReady = async (
   storePath: string,
   writer: string,
 ): Promise<{ readonly ok: boolean; readonly message: string }> => {
+  if (writer === PROMPT_SDLC_MANUAL_ACTOR) {
+    return { ok: true, message: "You will do this step." };
+  }
   const remembered = readRememberedPromptSdlcWriter(storePath, writer);
   if (remembered !== null) {
     return { ok: true, message: remembered };

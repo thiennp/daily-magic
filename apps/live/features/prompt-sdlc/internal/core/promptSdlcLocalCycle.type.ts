@@ -19,8 +19,8 @@ export interface PromptSdlcLocalRevision {
 export interface PromptSdlcLocalCycle {
   readonly id: string;
   readonly goal: string;
-  readonly judgeModel: HarnessWriterAgent;
-  readonly improverModel: HarnessWriterAgent;
+  readonly judgeModel: HarnessWriterAgent | "manual";
+  readonly improverModel: HarnessWriterAgent | "manual";
   readonly workingDirectory?: string;
   readonly status: PromptSdlcCycleStatus;
   readonly currentRound: number;

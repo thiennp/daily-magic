@@ -6,6 +6,7 @@ import {
   applyPromptSdlcLocalImproverReply,
   applyPromptSdlcLocalJudgeReply,
 } from "./applyPromptSdlcLocalReply";
+import { PROMPT_SDLC_MANUAL_ACTOR } from "./choosePromptSdlcLocalModels";
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
 import { promptSdlcLocalWorkingDirectory } from "./promptSdlcLocalFolder";
 import { runPromptSdlcWriterReply } from "./runPromptSdlcWriterReply";
@@ -32,6 +33,9 @@ export const advancePromptSdlcLocalCycle = async (
   }
 
   if (cycle.status === "judging") {
+    if (cycle.judgeModel === PROMPT_SDLC_MANUAL_ACTOR) {
+      return cycle;
+    }
     const reply = await runPromptSdlcWriterReply({
       writerAgent: cycle.judgeModel,
       workingDirectory: promptSdlcLocalWorkingDirectory(cycle),
@@ -55,14 +59,24 @@ export const advancePromptSdlcLocalCycle = async (
     );
   }
 
+  if (cycle.improverModel === PROMPT_SDLC_MANUAL_ACTOR) {
+    return cycle;
+  }
+
+  const score = revision.judgement?.score;
+  const reasons = revision.judgement?.reasons?.trim() ?? "";
+  if (score === null || score === undefined || reasons.length === 0) {
+    return failCycle(cycle, "The improver needs the score and the reason.");
+  }
+
   const reply = await runPromptSdlcWriterReply({
     writerAgent: cycle.improverModel,
     workingDirectory: promptSdlcLocalWorkingDirectory(cycle),
     prompt: buildPromptSdlcImproverPrompt({
       goal: cycle.goal,
       promptText: revision.promptText,
-      score: revision.judgement?.score ?? 0,
-      reasons: revision.judgement?.reasons ?? "",
+      score,
+      reasons,
     }),
   });
   if (!reply.ok) {

@@ -1,4 +1,5 @@
 import { pickMacOsFolderDialog } from "../../../projects/public-api/infrastructure";
+import { acceptPromptSdlcLocalManualPost } from "./acceptPromptSdlcLocalManualPost";
 import { createPromptSdlcLocalCycle } from "./createPromptSdlcLocalCycle";
 import { decidePromptSdlcLocalPost } from "./decidePromptSdlcLocalPost";
 import { redirectAfterPromptSdlcHistoryDelete } from "./redirectAfterPromptSdlcHistoryDelete";
@@ -30,6 +31,43 @@ export const servePromptSdlcLocalPage = async (
     input.method === "POST"
       ? new URLSearchParams(await input.readBody(input.request))
       : null;
+  const manual =
+    posted === null
+      ? { kind: "ignored" as const }
+      : acceptPromptSdlcLocalManualPost({
+          posted,
+          storePath: input.storePath,
+        });
+  if (manual.kind === "saved") {
+    ensurePromptSdlcLocalCycleRunning(input.storePath, manual.cycleId);
+    input.response.writeHead(303, {
+      Location: `/prompt-sdlc?cycle=${encodeURIComponent(manual.cycleId)}`,
+    });
+    input.response.end();
+    return;
+  }
+  if (manual.kind === "missing") {
+    input.response.writeHead(303, { Location: "/prompt-sdlc" });
+    input.response.end();
+    return;
+  }
+  if (manual.kind === "invalid") {
+    await sendPromptSdlcLocalPage(input, {
+      goal: "",
+      prompt: "",
+      modelNote: selection.note,
+      writers: selection.writers,
+      judge: manual.cycle.judgeModel,
+      improver: manual.cycle.improverModel,
+      folder: "~",
+      passScore: String(manual.cycle.passScore),
+      canRun: selection.canRun,
+      errorMessage: manual.errorMessage,
+      cycle: manual.cycle,
+      history: readPromptSdlcLocalCycles(input.storePath),
+    });
+    return;
+  }
   const filled = readPromptSdlcLocalExampleFields(
     url.searchParams.get("example"),
   );

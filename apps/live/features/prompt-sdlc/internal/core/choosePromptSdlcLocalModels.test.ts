@@ -31,9 +31,13 @@ describe("choosePromptSdlcLocalModels", () => {
     expect(
       readPromptSdlcLocalRunModels(["claude-cli", "codex"], "ollama", "codex"),
     ).toBeNull();
-    expect(readPromptSdlcLocalRunModels(["cursor"], null, null)).toEqual({
-      judge: "cursor",
-      improver: "cursor",
+    expect(readPromptSdlcLocalRunModels(["cursor"], null, null)).toBeNull();
+    expect(
+      readPromptSdlcLocalRunModels(["cursor"], "manual", "cursor"),
+    ).toEqual({ judge: "manual", improver: "cursor" });
+    expect(readPromptSdlcLocalRunModels([], "manual", "manual")).toEqual({
+      judge: "manual",
+      improver: "manual",
     });
   });
 });

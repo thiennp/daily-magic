@@ -1,5 +1,6 @@
 import type http from "node:http";
 
+import { PROMPT_SDLC_MANUAL_ACTOR } from "./choosePromptSdlcLocalModels";
 import { readPromptSdlcWriterReady } from "./probePromptSdlcWriterReady";
 
 const WRITERS = ["claude-cli", "codex", "cursor", "antigravity"] as const;
@@ -20,7 +21,9 @@ export const trySendPromptSdlcWriterCheck = async (input: {
     return false;
   }
 
-  const known = (WRITERS as readonly string[]).includes(writer);
+  const known =
+    writer === PROMPT_SDLC_MANUAL_ACTOR ||
+    (WRITERS as readonly string[]).includes(writer);
   const status = known
     ? await readPromptSdlcWriterReady(input.storePath, writer)
     : { ok: false, message: "This writer is not available." };

@@ -6,6 +6,7 @@ import {
   choosePromptSdlcLocalModels,
   listPromptSdlcLocalWriters,
   PROMPT_SDLC_LOCAL_MODEL_LABELS,
+  PROMPT_SDLC_MANUAL_ACTOR,
 } from "./choosePromptSdlcLocalModels";
 import {
   PROMPT_SDLC_LOCAL_GUIDE_EXAMPLE,
@@ -51,44 +52,43 @@ export const describePromptSdlcLocalModels = (
     id,
     label: PROMPT_SDLC_LOCAL_MODEL_LABELS[id],
   }));
-  if (models === null) {
-    return {
-      note: "No reasoning model is installed on this Mac.",
-      canRun: false,
-      models,
-      writers,
-      judge: "",
-      improver: "",
-    };
-  }
-
-  const choosing = writers.length > 1;
+  const note =
+    writers.length === 0
+      ? "No reasoning model is installed. You can score and rewrite the prompt yourself."
+      : `Installed: ${writers.map((writer) => writer.label).join(", ")}.`;
   return {
-    note: choosing
-      ? `Installed: ${writers.map((writer) => writer.label).join(", ")}.`
-      : `Judge: ${PROMPT_SDLC_LOCAL_MODEL_LABELS[models.judge]}. Improver: ${PROMPT_SDLC_LOCAL_MODEL_LABELS[models.improver]}.`,
+    note,
     canRun: true,
     models,
     writers,
-    judge: choosing ? "" : models.judge,
-    improver: choosing ? "" : models.improver,
+    judge: "",
+    improver: "",
   };
+};
+
+const shownActor = (
+  selection: PromptSdlcLocalModelSelection,
+  posted: string | null,
+  fallback: string,
+): string => {
+  if (
+    posted === PROMPT_SDLC_MANUAL_ACTOR ||
+    (posted !== null &&
+      selection.writers.some((writer) => writer.id === posted))
+  ) {
+    return posted;
+  }
+  return fallback;
 };
 
 export const shownPromptSdlcLocalWriters = (
   selection: PromptSdlcLocalModelSelection,
   postedJudge: string | null,
   postedImprover: string | null,
-): { readonly judge: string; readonly improver: string } => {
-  const judge = selection.writers.find((writer) => writer.id === postedJudge);
-  const improver = selection.writers.find(
-    (writer) => writer.id === postedImprover,
-  );
-  return {
-    judge: judge?.id ?? selection.judge,
-    improver: improver?.id ?? selection.improver,
-  };
-};
+): { readonly judge: string; readonly improver: string } => ({
+  judge: shownActor(selection, postedJudge, selection.judge),
+  improver: shownActor(selection, postedImprover, selection.improver),
+});
 
 export const readPromptSdlcLocalExampleFields = (
   example: string | null,

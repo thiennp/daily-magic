@@ -35,6 +35,8 @@ describe("continuePromptSdlc", () => {
       expect(rewrite.continuation.role).toBe("improve");
       expect(rewrite.continuation.prompt).toContain("Do not edit files");
       expect(rewrite.continuation.prompt).toContain("Ship the button");
+      expect(rewrite.continuation.prompt).toContain("Judge score: 79");
+      expect(rewrite.continuation.prompt).toContain("vague");
     }
 
     const stopped = continueAfterJudgeReply({
@@ -48,7 +50,7 @@ describe("continuePromptSdlc", () => {
     });
     expect(stopped.continuation).toEqual({
       type: "failed",
-      errorMessage: "The judge reply was not a score.",
+      errorMessage: "The judge reply needs a score and a reason.",
     });
 
     const capped = continueAfterJudgeReply({

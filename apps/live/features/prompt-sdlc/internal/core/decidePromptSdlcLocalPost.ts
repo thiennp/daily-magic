@@ -90,12 +90,7 @@ export const decidePromptSdlcLocalPost = (input: {
     input.posted.get("improver"),
   );
   if (chosen === null) {
-    return form(
-      typedFolder,
-      input.selection.models === null
-        ? input.selection.note
-        : "Choose a judge and an improver.",
-    );
+    return form(typedFolder, "Choose a judge and an improver.");
   }
 
   const folder = resolvePromptSdlcLocalFolder(typedFolder);

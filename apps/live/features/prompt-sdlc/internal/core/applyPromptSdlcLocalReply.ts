@@ -1,8 +1,17 @@
 import {
   continueAfterImproveReply,
   continueAfterJudgeReply,
+  type HarnessWriterAgent,
 } from "../../../../adapters/promptSdlcAwcCore";
+import { PROMPT_SDLC_MANUAL_ACTOR } from "./choosePromptSdlcLocalModels";
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
+
+const writerChoice = (
+  actor: PromptSdlcLocalCycle["judgeModel"],
+): { readonly kind: "writer"; readonly writerAgent: HarnessWriterAgent } =>
+  actor === PROMPT_SDLC_MANUAL_ACTOR
+    ? { kind: "writer", writerAgent: "claude-cli" }
+    : { kind: "writer", writerAgent: actor };
 
 const withJudgement = (
   cycle: PromptSdlcLocalCycle,
@@ -34,7 +43,7 @@ export const applyPromptSdlcLocalJudgeReply = (
     passScore: cycle.passScore,
     goal: cycle.goal,
     promptText: revision?.promptText ?? "",
-    improver: { kind: "writer", writerAgent: cycle.improverModel },
+    improver: writerChoice(cycle.improverModel),
   });
   const revisions = withJudgement(
     cycle,
@@ -71,7 +80,7 @@ export const applyPromptSdlcLocalImproverReply = (
 ): PromptSdlcLocalCycle => {
   const result = continueAfterImproveReply({
     raw: rawReply,
-    judge: { kind: "writer", writerAgent: cycle.judgeModel },
+    judge: writerChoice(cycle.judgeModel),
     goal: cycle.goal,
     passScore: cycle.passScore,
   });

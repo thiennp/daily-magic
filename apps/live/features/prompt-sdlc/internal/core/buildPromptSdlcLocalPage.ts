@@ -1,3 +1,4 @@
+import { isPromptSdlcLocalManualWait } from "./isPromptSdlcLocalManualWait";
 import { isPromptSdlcTerminalStatus } from "../../../../adapters/promptSdlcAwcCore";
 import { buildPromptSdlcLocalCycleSection } from "./buildPromptSdlcLocalCycleSection";
 import {
@@ -8,6 +9,8 @@ import { PROMPT_SDLC_LOCAL_FORM_SCRIPT } from "./promptSdlcLocalFormScript";
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
 import type { PromptSdlcLocalWriterChoice } from "./promptSdlcLocalForm";
 import { promptSdlcLocalHistoryTitle } from "./promptSdlcLocalHistoryTitle";
+import { readPromptSdlcLocalShownForm } from "./readPromptSdlcLocalShownForm";
+import { renderPromptSdlcLocalPassScore } from "./renderPromptSdlcLocalPassScore";
 import { renderPromptSdlcLocalWriterFields } from "./renderPromptSdlcLocalWriterFields";
 
 const escapeHtml = (value: string): string =>
@@ -64,44 +67,69 @@ export const buildPromptSdlcLocalPageBody = (input: {
   const cycle =
     input.cycle === null ? "" : buildPromptSdlcLocalCycleSection(input.cycle);
   const live =
-    input.cycle !== null && !isPromptSdlcTerminalStatus(input.cycle.status)
+    input.cycle !== null &&
+    !isPromptSdlcTerminalStatus(input.cycle.status) &&
+    !isPromptSdlcLocalManualWait(input.cycle)
       ? `${PROMPT_SDLC_LOCAL_LIVE_STYLE}${PROMPT_SDLC_LOCAL_LIVE_SCRIPT}`
       : "";
-  const choosing = input.writers.length > 1;
-  const writerFields = renderPromptSdlcLocalWriterFields(input);
-  const intro = choosing
-    ? "Choose which writers run this prompt."
-    : "This Mac uses the reasoning model it can run.";
-  const form = `<section class="card">
-      <p class="eyebrow">Prompt SDLC</p>
-      <h1>Optimize a prompt</h1>
+  const waitingOnYou =
+    input.cycle !== null && isPromptSdlcLocalManualWait(input.cycle);
+  const shown = readPromptSdlcLocalShownForm(input);
+  const runLabel = waitingOnYou
+    ? "Waiting for you"
+    : shown.running
+      ? "Running…"
+      : "Run";
+  const writerFields = renderPromptSdlcLocalWriterFields({
+    writers: input.writers,
+    judge: shown.judge,
+    improver: shown.improver,
+  });
+  const intro =
+    "Choose who scores the prompt and who rewrites it. You can do either step yourself.";
+  const locked = shown.running
+    ? `<p class="sdlc-locked" data-sdlc-locked>This run is using these choices.</p>`
+    : "";
+  const form = `<section class="card sdlc-compose">
+      <div class="sdlc-form-head">
+        <div>
+          <p class="eyebrow">Prompt SDLC</p>
+          <h1>Optimize a prompt</h1>
+        </div>
+        <a class="btn btn-secondary" href="/prompt-sdlc/guide">Instructions and example</a>
+      </div>
       <p class="lede">${intro} ${escapeHtml(input.modelNote)}</p>
-      <p class="actions"><a class="btn btn-secondary" href="/prompt-sdlc/guide">Instructions and example</a></p>
       <form class="sdlc-form" method="POST" action="/prompt-sdlc">
-        <label class="field">
-          <span class="field-label">Goal</span>
-          <textarea class="input textarea" name="goal" rows="4" required>${escapeHtml(input.goal)}</textarea>
-        </label>
-        <label class="field">
-          <span class="field-label">Prompt</span>
-          <textarea class="input textarea" name="prompt" rows="10" required>${escapeHtml(input.prompt)}</textarea>
-        </label>
-        <div class="sdlc-folder">
+        <fieldset class="sdlc-fields"${shown.running ? " disabled" : ""}>
+        ${locked}
+        <div class="sdlc-block">
+          <p class="sdlc-block-title">Prompt and goal</p>
+          <label class="field">
+            <span class="field-label">Goal</span>
+            <textarea class="input textarea" name="goal" rows="4" required>${escapeHtml(shown.goal)}</textarea>
+          </label>
+          <label class="field">
+            <span class="field-label">Prompt</span>
+            <textarea class="input textarea" name="prompt" rows="10" required>${escapeHtml(shown.prompt)}</textarea>
+          </label>
+        </div>
+        <div class="sdlc-block">
+          <p class="sdlc-block-title">How this run works</p>
+          <div class="sdlc-folder">
           <label class="field">
             <span class="field-label">Folder</span>
-            <input class="input" type="text" name="folder" value="${escapeHtml(input.folder)}" onkeydown="if (event.key === 'Enter') event.preventDefault()">
+            <input class="input" type="text" name="folder" value="${escapeHtml(shown.folder)}" onkeydown="if (event.key === 'Enter') event.preventDefault()">
           </label>
           <button class="btn btn-secondary" type="submit" name="intent" value="choose-folder" formnovalidate>Choose folder…</button>
         </div>
-        <label class="field sdlc-pass">
-          <span class="field-label">Pass score</span>
-          <input class="input" type="number" name="passScore" min="1" max="100" step="1" value="${escapeHtml(input.passScore)}" required>
-        </label>
-        ${writerFields}
-        <div class="actions">
-          <button class="btn btn-primary" type="submit" name="intent" value="run" data-sdlc-run data-can-run="${input.canRun ? "true" : "false"}" disabled>Run</button>
+        ${renderPromptSdlcLocalPassScore(shown.passScore)}
+          ${writerFields}
         </div>
+        <div class="sdlc-submit">
+          <button class="btn btn-primary" type="submit" name="intent" value="run" data-sdlc-run data-can-run="${input.canRun ? "true" : "false"}" disabled>${runLabel}</button>
+        </div>
+        </fieldset>
       </form>
     </section>`;
-  return `${error}${cycle}${live}${renderHistory(input.history, input.cycle?.id ?? null)}${form}${PROMPT_SDLC_LOCAL_FORM_SCRIPT}`;
+  return `${error}${cycle}${live}${form}${renderHistory(input.history, input.cycle?.id ?? null)}${PROMPT_SDLC_LOCAL_FORM_SCRIPT}`;
 };

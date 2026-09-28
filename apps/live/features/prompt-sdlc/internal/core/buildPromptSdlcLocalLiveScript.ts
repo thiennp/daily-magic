@@ -39,7 +39,11 @@ export const PROMPT_SDLC_LOCAL_LIVE_SCRIPT = `<script>
     root.dataset.since = incoming.dataset.since ?? "";
     root.innerHTML = incoming.innerHTML;
     paintElapsed();
-    if (root.dataset.live === "true") setTimeout(poll, 2000);
+    if (root.dataset.live !== "true") {
+      document.dispatchEvent(new Event("sdlc-run-finished"));
+      return;
+    }
+    setTimeout(poll, 2000);
   };
   if (root.dataset.live === "true") setTimeout(poll, 2000);
 })();
