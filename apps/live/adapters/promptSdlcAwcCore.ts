@@ -14,7 +14,6 @@ export {
 export {
   continueAfterImproveReply,
   continueAfterJudgeReply,
-  continuePromptSdlc,
   type PromptSdlcContinuation,
 } from "@/lib/promptSdlc/continuePromptSdlc";
 export { buildPromptSdlcImproverPrompt } from "@/lib/promptSdlc/buildPromptSdlcImproverPrompt";

@@ -3,6 +3,8 @@ import path from "node:path";
 
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
 
+const droppedCycleIds = new Set<string>();
+
 const isCycle = (value: unknown): value is PromptSdlcLocalCycle =>
   typeof value === "object" &&
   value !== null &&
@@ -33,10 +35,26 @@ export const readPromptSdlcLocalCycle = (
   readPromptSdlcLocalCycles(storePath).find((cycle) => cycle.id === cycleId) ??
   null;
 
+export const deletePromptSdlcLocalCycle = (
+  storePath: string,
+  cycleId: string,
+): void => {
+  droppedCycleIds.add(cycleId);
+  const next = readPromptSdlcLocalCycles(storePath).filter(
+    (cycle) => cycle.id !== cycleId,
+  );
+  fs.mkdirSync(path.dirname(storePath), { recursive: true });
+  fs.writeFileSync(storePath, `${JSON.stringify(next, null, 2)}\n`);
+};
+
 export const savePromptSdlcLocalCycle = (
   storePath: string,
   cycle: PromptSdlcLocalCycle,
 ): void => {
+  if (droppedCycleIds.has(cycle.id)) {
+    return;
+  }
+
   const cycles = readPromptSdlcLocalCycles(storePath);
   const next = cycles.some((item) => item.id === cycle.id)
     ? cycles.map((item) => (item.id === cycle.id ? cycle : item))

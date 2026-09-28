@@ -70,8 +70,8 @@ export const describePromptSdlcLocalModels = (
     canRun: true,
     models,
     writers,
-    judge: models.judge,
-    improver: models.improver,
+    judge: choosing ? "" : models.judge,
+    improver: choosing ? "" : models.improver,
   };
 };
 

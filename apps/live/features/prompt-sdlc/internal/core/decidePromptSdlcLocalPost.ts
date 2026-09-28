@@ -1,4 +1,6 @@
+import { PROMPT_SDLC_PASS_SCORE } from "../../../../adapters/promptSdlcAwcCore";
 import { readPromptSdlcLocalRunModels } from "./choosePromptSdlcLocalModels";
+import { readPromptSdlcLocalPassScore } from "./readPromptSdlcLocalPassScore";
 import {
   displayPromptSdlcLocalFolder,
   PROMPT_SDLC_LOCAL_DEFAULT_FOLDER,
@@ -22,12 +24,14 @@ export type PromptSdlcLocalPostDecision =
       readonly judge: PromptSdlcLocalRunModels["judge"];
       readonly improver: PromptSdlcLocalRunModels["improver"];
       readonly workingDirectory: string;
+      readonly passScore: number;
     }
   | {
       readonly kind: "form";
       readonly goal: string;
       readonly prompt: string;
       readonly folder: string;
+      readonly passScore: string;
       readonly errorMessage: string | null;
       readonly judge: string;
       readonly improver: string;
@@ -46,6 +50,8 @@ export const decidePromptSdlcLocalPost = (input: {
     input.posted?.get("judge") ?? null,
     input.posted?.get("improver") ?? null,
   );
+  const typedPassScore =
+    input.posted?.get("passScore") ?? String(PROMPT_SDLC_PASS_SCORE);
   const form = (
     folder: string,
     errorMessage: string | null,
@@ -54,6 +60,7 @@ export const decidePromptSdlcLocalPost = (input: {
     goal: input.goal,
     prompt: input.prompt,
     folder,
+    passScore: typedPassScore,
     errorMessage,
     judge: shown.judge,
     improver: shown.improver,
@@ -87,13 +94,18 @@ export const decidePromptSdlcLocalPost = (input: {
       typedFolder,
       input.selection.models === null
         ? input.selection.note
-        : "Choose a writer that is installed on this Mac.",
+        : "Choose a judge and an improver.",
     );
   }
 
   const folder = resolvePromptSdlcLocalFolder(typedFolder);
   if (!folder.ok) {
     return form(typedFolder, folder.errorMessage);
+  }
+
+  const passScore = readPromptSdlcLocalPassScore(typedPassScore);
+  if (!passScore.ok) {
+    return form(typedFolder, passScore.errorMessage);
   }
 
   return {
@@ -103,5 +115,6 @@ export const decidePromptSdlcLocalPost = (input: {
     judge: chosen.judge,
     improver: chosen.improver,
     workingDirectory: folder.path,
+    passScore: passScore.passScore,
   };
 };

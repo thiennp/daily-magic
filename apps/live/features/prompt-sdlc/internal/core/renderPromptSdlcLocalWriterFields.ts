@@ -13,13 +13,14 @@ const renderWriterSelect = (
   selected: string,
   choices: readonly PromptSdlcLocalWriterChoice[],
 ): string => {
+  const blank = `<option value=""${selected === "" ? " selected" : ""}>Choose</option>`;
   const options = choices
     .map(
       (choice) =>
         `<option value="${escapeHtml(choice.id)}"${choice.id === selected ? " selected" : ""}>${escapeHtml(choice.label)}</option>`,
     )
     .join("");
-  return `<label class="field"><span class="field-label">${label}</span><select class="input" name="${name}" data-writer-select="${name}">${options}</select></label>`;
+  return `<label class="field"><span class="field-label">${label}</span><select class="input" name="${name}" data-writer-select="${name}">${blank}${options}</select></label>`;
 };
 
 const renderWriterStatus = (
@@ -27,6 +28,9 @@ const renderWriterStatus = (
   writerId: string,
   choices: readonly PromptSdlcLocalWriterChoice[],
 ): string => {
+  if (writerId.length === 0) {
+    return `<p class="muted" data-writer-status="${role}" data-writer="">Choose a writer.</p>`;
+  }
   const label =
     choices.find((choice) => choice.id === writerId)?.label ?? writerId;
   return `<p class="muted" data-writer-status="${role}" data-writer="${escapeHtml(writerId)}">Checking ${escapeHtml(label)}…</p>`;

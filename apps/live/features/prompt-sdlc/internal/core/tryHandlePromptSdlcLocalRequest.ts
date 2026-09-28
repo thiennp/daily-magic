@@ -54,6 +54,7 @@ export const tryHandlePromptSdlcLocalRequest = async (
       method: input.method,
       requestUrl: input.requestUrl,
       response: input.response,
+      storePath: input.storePath,
     })
   ) {
     return true;

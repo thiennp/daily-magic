@@ -1,3 +1,5 @@
+import { PROMPT_SDLC_PASS_SCORE } from "../../../../adapters/promptSdlcAwcCore";
+import { renderPromptSdlcLocalScoreScale } from "./buildPromptSdlcLocalStepTree";
 import {
   PROMPT_SDLC_LOCAL_GUIDE_EXAMPLE,
   PROMPT_SDLC_LOCAL_GUIDE_GOAL,
@@ -19,12 +21,13 @@ export const buildPromptSdlcLocalGuidePageBody =
   (): string => `<section class="card">
       <p class="eyebrow">Prompt SDLC</p>
       <h1>How Prompt SDLC works</h1>
-      <p class="lede">You give it a prompt and a goal. A judge scores the prompt. Under 80, an improver rewrites it, and the judge scores again. The loop stops when the score passes, or after 3 rounds.</p>
+      <p class="lede">You give it a prompt and a goal. A judge scores the prompt. Under the pass score, an improver rewrites it, and the judge scores again. The loop stops when the score passes, or after 3 rounds. The pass score starts at ${PROMPT_SDLC_PASS_SCORE}.</p>
       <p><a href="/prompt-sdlc">Back to Prompt SDLC</a></p>
       <h2>Goal and prompt</h2>
       <p>The goal is the outcome of using the prompt. The prompt is the instruction the model will follow. A stronger prompt changes the slots, the decision order, and when the model must stop. Pasting the goal onto the old prompt does not do that.</p>
       <h2>Score</h2>
-      <p>0–39 is bad. 40–59 is weak. 60–79 is close. 80–100 passes. There is no pause between the score and the rewrite.</p>
+      <p>You set the pass score on the form. The default is ${PROMPT_SDLC_PASS_SCORE}. There is no pause between the score and the rewrite.</p>
+      ${renderPromptSdlcLocalScoreScale(PROMPT_SDLC_PASS_SCORE)}
       <h2>Writers and folder</h2>
       <p>When more than one writer is installed, you choose the judge and the improver. The folder is where they run, so they can use that folder as context. The default is your home directory. A writer that is not signed in stays blocked until its status says it is ready.</p>
       <h2>Example</h2>
@@ -40,6 +43,7 @@ export const buildPromptSdlcLocalGuidePageBody =
         ${hidden("goal", PROMPT_SDLC_LOCAL_GUIDE_GOAL)}
         ${hidden("prompt", PROMPT_SDLC_LOCAL_GUIDE_WEAK_PROMPT)}
         ${hidden("folder", "~")}
+        ${hidden("passScore", String(PROMPT_SDLC_PASS_SCORE))}
         <button class="btn btn-primary" type="submit">Run this sample</button>
         <a class="btn btn-secondary" href="/prompt-sdlc?example=${PROMPT_SDLC_LOCAL_GUIDE_EXAMPLE}">Open it in the form</a>
       </form>

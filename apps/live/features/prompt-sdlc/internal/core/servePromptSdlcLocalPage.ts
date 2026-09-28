@@ -1,7 +1,8 @@
 import { pickMacOsFolderDialog } from "../../../projects/public-api/infrastructure";
-import { buildPromptSdlcLocalPageBody } from "./buildPromptSdlcLocalPage";
 import { createPromptSdlcLocalCycle } from "./createPromptSdlcLocalCycle";
 import { decidePromptSdlcLocalPost } from "./decidePromptSdlcLocalPost";
+import { redirectAfterPromptSdlcHistoryDelete } from "./redirectAfterPromptSdlcHistoryDelete";
+import { sendPromptSdlcLocalPage } from "./sendPromptSdlcLocalPage";
 import {
   describePromptSdlcLocalModels,
   readPromptSdlcLocalExampleFields,
@@ -34,6 +35,17 @@ export const servePromptSdlcLocalPage = async (
   );
   const goal = posted?.get("goal") ?? filled.goal;
   const prompt = posted?.get("prompt") ?? filled.prompt;
+  const deletedTo = redirectAfterPromptSdlcHistoryDelete({
+    posted,
+    storePath: input.storePath,
+    openCycleId: url.searchParams.get("cycle"),
+  });
+  if (deletedTo !== null) {
+    input.response.writeHead(303, { Location: deletedTo });
+    input.response.end();
+    return;
+  }
+
   const decision = decidePromptSdlcLocalPost({
     posted,
     installedIds,
@@ -46,12 +58,13 @@ export const servePromptSdlcLocalPage = async (
   const writerBlock =
     decision.kind === "start"
       ? await readPromptSdlcChosenWritersReady(
+          input.storePath,
           decision.judge,
           decision.improver,
         )
       : null;
   if (decision.kind === "start" && writerBlock !== null) {
-    await sendPage(input, {
+    await sendPromptSdlcLocalPage(input, {
       goal: decision.goal,
       prompt: decision.prompt,
       modelNote: selection.note,
@@ -59,6 +72,7 @@ export const servePromptSdlcLocalPage = async (
       judge: decision.judge,
       improver: decision.improver,
       folder: displayPromptSdlcLocalFolder(decision.workingDirectory),
+      passScore: String(decision.passScore),
       canRun: true,
       errorMessage: writerBlock,
       cycle: null,
@@ -74,6 +88,7 @@ export const servePromptSdlcLocalPage = async (
       judgeModel: decision.judge,
       improverModel: decision.improver,
       workingDirectory: decision.workingDirectory,
+      passScore: decision.passScore,
     });
     savePromptSdlcLocalCycle(input.storePath, cycle);
     ensurePromptSdlcLocalCycleRunning(input.storePath, cycle.id);
@@ -93,7 +108,7 @@ export const servePromptSdlcLocalPage = async (
     ensurePromptSdlcLocalCycleRunning(input.storePath, cycle.id);
   }
 
-  await sendPage(input, {
+  await sendPromptSdlcLocalPage(input, {
     goal: decision.goal,
     prompt: decision.prompt,
     modelNote: selection.note,
@@ -101,23 +116,10 @@ export const servePromptSdlcLocalPage = async (
     judge: decision.judge,
     improver: decision.improver,
     folder: decision.folder,
+    passScore: decision.passScore,
     canRun: selection.canRun,
     errorMessage: decision.errorMessage,
     cycle,
     history: readPromptSdlcLocalCycles(input.storePath),
   });
-};
-
-const sendPage = async (
-  input: PromptSdlcLocalRouteInput,
-  body: Parameters<typeof buildPromptSdlcLocalPageBody>[0],
-): Promise<void> => {
-  input.sendHtml(
-    input.response,
-    await input.renderShell({
-      title: "Prompt SDLC",
-      activePath: "/prompt-sdlc",
-      body: buildPromptSdlcLocalPageBody(body),
-    }),
-  );
 };

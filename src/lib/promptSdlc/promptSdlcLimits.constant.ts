@@ -1,4 +1,4 @@
-export const PROMPT_SDLC_PASS_SCORE = 80;
+export const PROMPT_SDLC_PASS_SCORE = 90;
 
 export const PROMPT_SDLC_MAX_ROUNDS = 3;
 

@@ -54,7 +54,7 @@ Requires `npm run dev` (custom `server.ts`) so WebSocket upgrades work—not pla
 | **Agent Witch on this Mac** (Mac app) | `http://127.0.0.1:43347`                                                      | Projects/folders, local tasks, playbooks, memory, connection health UI                                 |
 | **Console**                           | `https://www.agentwitch.com`                                                  | Daily **Tasks** and **Runs**                                                                           |
 
-**Prompt SDLC** is in the Mac app at `http://127.0.0.1:43347/prompt-sdlc`. Instructions and a sample you can run are at `http://127.0.0.1:43347/prompt-sdlc/guide`. History on that page shows a short title for each run.
+**Prompt SDLC** is in the Mac app at `http://127.0.0.1:43347/prompt-sdlc`. Instructions and a sample you can run are at `http://127.0.0.1:43347/prompt-sdlc/guide`. History on that page shows a short title for each run, and Delete removes that run. Steps in a run are a timeline. The pass score defaults to 90 and can be changed on the form. Judge and improver stay blank until you choose them. A writer that has already checked out stays ready until that writer returns an error.
 
 **Honest UX:** Opening the Mac app proves the runtime is up locally; it does **not** by itself prove the **Console** can dispatch **right now** ([reconnecting Q&A](../../qa/awc-mac-reconnecting-vs-local-live.md)).
 

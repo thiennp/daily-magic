@@ -4,6 +4,7 @@ import {
   resolveWriterCliCommands,
 } from "../../../../adapters/writerDispatch";
 import { advancePromptSdlcLocalCycle } from "./advancePromptSdlcLocalCycle";
+import { forgetPromptSdlcWriterReady } from "./promptSdlcWriterReadyStore";
 import {
   readPromptSdlcLocalCycle,
   savePromptSdlcLocalCycle,
@@ -39,7 +40,9 @@ const runUntilTerminal = async (
     return;
   }
 
-  const next = await advancePromptSdlcLocalCycle(cycle);
+  const next = await advancePromptSdlcLocalCycle(cycle, (writer) => {
+    forgetPromptSdlcWriterReady(storePath, writer);
+  });
   savePromptSdlcLocalCycle(storePath, next);
   if (!isPromptSdlcTerminalStatus(next.status)) {
     await runUntilTerminal(storePath, cycleId);

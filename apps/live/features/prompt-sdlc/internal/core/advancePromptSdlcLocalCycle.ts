@@ -22,6 +22,7 @@ const failCycle = (
 
 export const advancePromptSdlcLocalCycle = async (
   cycle: PromptSdlcLocalCycle,
+  onWriterFailure?: (writer: string) => void,
 ): Promise<PromptSdlcLocalCycle> => {
   const revision = cycle.revisions.find(
     (item) => item.roundNumber === cycle.currentRound,
@@ -40,9 +41,11 @@ export const advancePromptSdlcLocalCycle = async (
         passScore: cycle.passScore,
       }),
     });
-    return reply.ok
-      ? applyPromptSdlcLocalJudgeReply(cycle, reply.text)
-      : failCycle(cycle, reply.errorMessage);
+    if (!reply.ok) {
+      onWriterFailure?.(cycle.judgeModel);
+      return failCycle(cycle, reply.errorMessage);
+    }
+    return applyPromptSdlcLocalJudgeReply(cycle, reply.text);
   }
 
   if (cycle.status !== "improving") {
@@ -62,7 +65,9 @@ export const advancePromptSdlcLocalCycle = async (
       reasons: revision.judgement?.reasons ?? "",
     }),
   });
-  return reply.ok
-    ? applyPromptSdlcLocalImproverReply(cycle, reply.text)
-    : failCycle(cycle, reply.errorMessage);
+  if (!reply.ok) {
+    onWriterFailure?.(cycle.improverModel);
+    return failCycle(cycle, reply.errorMessage);
+  }
+  return applyPromptSdlcLocalImproverReply(cycle, reply.text);
 };

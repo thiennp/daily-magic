@@ -16,6 +16,7 @@ describe("buildPromptSdlcLocalPageBody", () => {
       judge: "claude-cli",
       improver: "claude-cli",
       folder: "~",
+      passScore: "90",
       canRun: true,
       errorMessage: null,
       cycle: null,
@@ -43,9 +44,10 @@ describe("buildPromptSdlcLocalPageBody", () => {
         { id: "claude-cli", label: "Claude" },
         { id: "codex", label: "Codex" },
       ],
-      judge: "claude-cli",
-      improver: "codex",
+      judge: "",
+      improver: "",
       folder: "~",
+      passScore: "90",
       canRun: true,
       errorMessage: null,
       cycle: null,
@@ -55,8 +57,10 @@ describe("buildPromptSdlcLocalPageBody", () => {
     expect(html).toContain("Choose which writers run this prompt.");
     expect(html).toContain('name="judge"');
     expect(html).toContain('name="improver"');
-    expect(html).toContain('value="claude-cli" selected');
-    expect(html).toContain('value="codex" selected');
+    expect(html).toContain('value="" selected');
+    expect(html).toContain("Choose a writer.");
+    expect(html).not.toContain('value="claude-cli" selected');
+    expect(html).not.toContain('value="codex" selected');
     expect(html).not.toContain('name="deviceId"');
   });
 
@@ -75,6 +79,7 @@ describe("buildPromptSdlcLocalPageBody", () => {
       judge: "",
       improver: "",
       folder: "~",
+      passScore: "90",
       canRun: true,
       errorMessage: null,
       cycle,
@@ -85,11 +90,16 @@ describe("buildPromptSdlcLocalPageBody", () => {
       html.indexOf("Optimize a prompt"),
     );
     expect(html).toContain("What the score means");
-    expect(html).toContain("0–39 bad");
-    expect(html).toContain("80–100 passes");
-    expect(html).toContain(
-      "- Done: Source prompt saved\n  |\n- Progressing score for round 0...",
-    );
+    expect(html).toContain("0–44 bad");
+    expect(html).toContain("90–100 passes");
+    expect(html).toContain('name="passScore"');
+    expect(html).toContain('value="90"');
+    expect(html).toContain('class="sdlc-tree"');
+    expect(html).toContain("sdlc-node-done");
+    expect(html).toContain("sdlc-node-active");
+    expect(html).toContain("Source prompt saved");
+    expect(html).toContain("score for round 0...");
+    expect(html).not.toContain("  |");
     expect(html).toContain("Folder ~");
     expect(html).toContain('data-live="true"');
     expect(html).toContain("data-elapsed");
@@ -147,6 +157,7 @@ describe("buildPromptSdlcLocalPageBody", () => {
       judge: "",
       improver: "",
       folder: "~",
+      passScore: "90",
       canRun: true,
       errorMessage: null,
       cycle: null,
@@ -158,6 +169,8 @@ describe("buildPromptSdlcLocalPageBody", () => {
       "When this prompt is used on a customer email",
     );
     expect(html).toContain('class="sdlc-history"');
+    expect(html).toContain('value="delete-history"');
+    expect(html).toContain(">Delete<");
     expect(html).toContain("When this prompt is used on a customer email");
     expect(html).not.toContain(goal);
     expect(html).toContain('href="/prompt-sdlc/guide"');

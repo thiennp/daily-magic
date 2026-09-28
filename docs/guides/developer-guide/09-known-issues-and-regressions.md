@@ -98,7 +98,7 @@ When fixing bridge/dispatch bugs:
 | Topic                          | Doc                                                                                       |
 | ------------------------------ | ----------------------------------------------------------------------------------------- |
 | Mac reconnecting vs local live | [awc-mac-reconnecting-vs-local-live.md](../../qa/awc-mac-reconnecting-vs-local-live.md)   |
-| Prompt SDLC                    | [prompt-sdlc.md](../../qa/prompt-sdlc.md)                                                 |
+| Prompt SDLC                    | [prompt-sdlc.md](../../qa/prompt-sdlc.md) — timeline steps; Delete removes a history run  |
 | Harness vs agent dispatch      | [mac-harness-workflow-agent-dispatch.md](../../qa/mac-harness-workflow-agent-dispatch.md) |
 | Writer routing                 | [writer-dispatch-cascade-routing.md](../../qa/writer-dispatch-cascade-routing.md)         |
 | AI register / WebMCP           | [ai-self-registration-webmcp.md](../../qa/ai-self-registration-webmcp.md)                 |

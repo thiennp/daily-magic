@@ -8,6 +8,7 @@ export const trySendPromptSdlcWriterCheck = async (input: {
   readonly method: string;
   readonly requestUrl: string;
   readonly response: http.ServerResponse;
+  readonly storePath: string;
 }): Promise<boolean> => {
   if (input.method !== "GET") {
     return false;
@@ -21,12 +22,7 @@ export const trySendPromptSdlcWriterCheck = async (input: {
 
   const known = (WRITERS as readonly string[]).includes(writer);
   const status = known
-    ? await readPromptSdlcWriterReady(
-        writer,
-        new URL(input.requestUrl, "http://127.0.0.1").searchParams.get(
-          "fresh",
-        ) === "1",
-      )
+    ? await readPromptSdlcWriterReady(input.storePath, writer)
     : { ok: false, message: "This writer is not available." };
   input.response.writeHead(200, {
     "content-type": "application/json; charset=utf-8",

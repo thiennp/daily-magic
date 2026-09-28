@@ -12,6 +12,7 @@ export const createPromptSdlcLocalCycle = (input: {
   readonly judgeModel: PromptSdlcLocalCycle["judgeModel"];
   readonly improverModel: PromptSdlcLocalCycle["improverModel"];
   readonly workingDirectory?: string;
+  readonly passScore?: number;
 }): PromptSdlcLocalCycle => {
   const now = new Date().toISOString();
   return {
@@ -22,7 +23,7 @@ export const createPromptSdlcLocalCycle = (input: {
     workingDirectory: input.workingDirectory ?? os.homedir(),
     status: "judging",
     currentRound: 0,
-    passScore: PROMPT_SDLC_PASS_SCORE,
+    passScore: input.passScore ?? PROMPT_SDLC_PASS_SCORE,
     maxRounds: PROMPT_SDLC_MAX_ROUNDS,
     errorMessage: null,
     createdAt: now,

@@ -57,7 +57,7 @@ Shipped bundle build: `npm run build:agent-witch` (runs in `npm run build`).
 
 Registry: [agent-witch-deployables.md](../../product/agent-witch-deployables.md).
 
-Prompt SDLC is an AWL feature at `apps/live/features/prompt-sdlc`. Routes: `/prompt-sdlc` and `/prompt-sdlc/guide` on `127.0.0.1:43347`. The guide page posts the sample goal and prompt to start a cycle. History titles are the first clause of the goal.
+Prompt SDLC is an AWL feature at `apps/live/features/prompt-sdlc`. Routes: `/prompt-sdlc` and `/prompt-sdlc/guide` on `127.0.0.1:43347`. The guide page posts the sample goal and prompt to start a cycle. History titles are the first clause of the goal. Delete posts `intent=delete-history` and drops that cycle so a writer still finishing cannot save it back. Steps render as `ol.sdlc-tree`. The pass score field posts `passScore` (default 90, whole numbers 1–100) and is stored on the cycle. Judge and improver are blank until posted. A successful writer check is stored in `prompt-sdlc-writer-ready.json` and cleared when that writer’s reply fails.
 
 ---
 

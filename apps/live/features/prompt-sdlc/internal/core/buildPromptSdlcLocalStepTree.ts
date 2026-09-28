@@ -10,19 +10,17 @@ const escapeHtml = (value: string): string =>
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;");
 
-const nodeText = (step: PromptSdlcStep): string =>
-  step.state === "active"
-    ? `- Progressing ${step.label}`
-    : `- Done: ${step.label}`;
+const renderNode = (step: PromptSdlcStep): string => {
+  const mark =
+    step.state === "active"
+      ? `<span class="sdlc-spin" aria-hidden="true"></span>`
+      : `<span class="sdlc-node-mark" aria-hidden="true"></span>`;
+  return `<li class="sdlc-node sdlc-node-${step.state}">${mark}<span class="sdlc-node-label">${escapeHtml(step.label)}</span></li>`;
+};
 
 export const renderPromptSdlcLocalStepTree = (
   steps: readonly PromptSdlcStep[],
-): string => {
-  const lines = steps.flatMap((step, index) =>
-    index === 0 ? [nodeText(step)] : ["  |", nodeText(step)],
-  );
-  return `<pre class="mono sdlc-tree">${escapeHtml(lines.join("\n"))}</pre>`;
-};
+): string => `<ol class="sdlc-tree">${steps.map(renderNode).join("")}</ol>`;
 
 export const renderPromptSdlcLocalScoreScale = (passScore: number): string => {
   const bands = buildPromptSdlcScoreScale(passScore)
