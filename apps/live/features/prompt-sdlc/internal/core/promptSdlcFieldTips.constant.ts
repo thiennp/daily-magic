@@ -15,7 +15,7 @@ export const PROMPT_SDLC_FIELD_TIPS = {
   folder: {
     title: "Folder",
     practice:
-      "Choose the project folder. The run can change files here. If this folder is a git repo, the judge reads the git changes. If it is not, the judge reads the files the prompt names.",
+      "Choose the project folder. The judge reads git changes, or the files the prompt names when this folder is not a git repo. After the score is saved, those edits are put back, including a commit the run made and cache files it wrote, so the next round starts from the same folder.",
     example: "~/work/support-bot",
   },
   skill: {

@@ -10,6 +10,10 @@ import {
   describePromptSdlcRunEvidence,
   readPromptSdlcWorkspaceSnapshot,
 } from "./collectPromptSdlcRunEvidence";
+import {
+  capturePromptSdlcRestorePoint,
+  revertPromptSdlcRunChanges,
+} from "./revertPromptSdlcRunChanges";
 import { PROMPT_SDLC_MANUAL_ACTOR } from "./choosePromptSdlcLocalModels";
 import type {
   PromptSdlcLocalCycle,
@@ -76,6 +80,11 @@ const executePrompt = async (input: {
     promptText: input.revision.promptText,
     instructions: input.cycle.judgeInstructions,
   });
+  const restorePoint = capturePromptSdlcRestorePoint({
+    workingDirectory,
+    git: before.git,
+    namedPaths: before.paths,
+  });
   const startedMs = Date.now();
   const reply = await runPromptSdlcWriterReply({
     writerAgent: input.runner,
@@ -86,6 +95,14 @@ const executePrompt = async (input: {
     }),
     signal: input.signal,
   });
+  const evidence = reply.ok
+    ? describePromptSdlcRunEvidence({
+        workingDirectory,
+        before,
+        writerReply: reply.text,
+      })
+    : null;
+  const reverted = revertPromptSdlcRunChanges(restorePoint);
   if (!reply.ok) {
     if (reply.stopped === true || input.signal?.aborted === true) {
       return { ok: false, cycle: stoppedCycle(input.cycle) };
@@ -93,11 +110,17 @@ const executePrompt = async (input: {
     input.onWriterFailure?.(input.runner);
     return { ok: false, cycle: failCycle(input.cycle, reply.errorMessage) };
   }
-  const evidence = describePromptSdlcRunEvidence({
-    workingDirectory,
-    before,
-    writerReply: reply.text,
-  });
+  if (!reverted.ok || evidence === null) {
+    return {
+      ok: false,
+      cycle: failCycle(
+        input.cycle,
+        reverted.ok
+          ? "Could not put the folder back after the run."
+          : reverted.errorMessage,
+      ),
+    };
+  }
   return {
     ok: true,
     run: {
