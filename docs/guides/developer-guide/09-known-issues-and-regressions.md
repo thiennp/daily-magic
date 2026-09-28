@@ -75,6 +75,14 @@ Documented in KNOWN_ISSUES because **every future install bundle** must preserve
 
 ---
 
+## Offline devices and a missing Connect button
+
+Home **Mac offline** means claimed devices have no live socket. **Connect this Mac** still shows when no row matches this browser (`resolveShouldShowConnectThisMac`). It hides only while a wake probe is actually pending (`resolveIsCheckingLocalMacIdentity`), on a phone, or after the local token hash matches a device. A skipped probe must not leave identity status `idle` looking like an in-flight check (HOME-057). **Mac settings & connect** (`HomeMacSettingsLink`) only navigates to `/#your-setup`.
+
+**Q&A:** [awc-offline-devices-hide-connect-button.md](../../qa/awc-offline-devices-hide-connect-button.md).
+
+---
+
 ## How to find regression coverage
 
 ```bash

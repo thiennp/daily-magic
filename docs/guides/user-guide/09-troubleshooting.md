@@ -155,8 +155,13 @@ Invalid `com.agent-witch.plist` (install script once embedded bash inside XML). 
 | ------------------------ | -------------------------------------------------- |
 | **Connect this Mac** row | Link the Mac where you opened the browser          |
 | **this Mac** badge       | Cloud device hash matches local bridge `/identity` |
+| **Mac offline**          | Device is already paired; the helper is not live   |
+
+If no row says **this Mac**, use **Connect this Mac** in the hero or under **Your Devices**. That links the computer you are using now. The button stays hidden only after this browser’s pairing token already matches a listed device. **Mac settings & connect** only opens **Your setup**. When a row is already **this Mac** and **Offline**, start Agent Witch on that computer. Click the offline row for wake steps.
 
 If you do not see **this Mac** on macOS: bridge not running, wrong port, or signed-out page (no probe). Not a DNS issue by itself.
+
+[Why there is no Connect button when devices are offline](../../qa/awc-offline-devices-hide-connect-button.md).
 
 [How AWC knows this computer](../../qa/awc-how-browser-knows-this-computer.md) · [AWB localhost identity](../../qa/awb-localhost-identity-and-cors.md).
 

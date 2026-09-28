@@ -39,7 +39,14 @@ export default function HomeDashboardSectionClient({
   }
 
   if (hasPairedDevice) {
-    return <HomeOnboardingMainPanel user={user} />;
+    return (
+      <HomeOnboardingMainPanel
+        user={user}
+        installCommand={installCommand}
+        isWebSocketSupported={isWebSocketSupported}
+        host={host}
+      />
+    );
   }
 
   return (

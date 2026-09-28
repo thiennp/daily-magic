@@ -61,6 +61,7 @@ Routing cascade (continuation vs memory budget): [docs/qa/writer-dispatch-cascad
 - **`isOnline`** — visibility / wake hints (`live`, `live_other_instance`, or `recent`).
 - **`isDispatchReady`** — writer-ready; only **`live`** on this process (and relay path for other instance).
 - Home “Mac online” hero counts **`live`** on this process only — `live_other_instance` shows reconnecting UX.
+- **this Mac** is a browser token-hash match, not a presence tier. When no row matches, Home shows **Connect this Mac** (`resolveIsCheckingLocalMacIdentity`, HOME-057). A skipped wake probe must not leave that button hidden.
 
 Unified resolver (devices API + dispatch must match): `resolveLiveAgentClientsByDeviceIdForUser` (see ADR 0005 full text).
 

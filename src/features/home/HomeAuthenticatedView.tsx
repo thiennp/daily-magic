@@ -64,7 +64,12 @@ export default async function HomeAuthenticatedView({
           </aside>
 
           <main className={HOME_MAIN_COLUMN_CLASS}>
-            <HomeOnboardingMainPanel user={user} />
+            <HomeOnboardingMainPanel
+              user={user}
+              installCommand={installCommand}
+              isWebSocketSupported={isWebSocketSupported}
+              host={host}
+            />
             <HomeProjectsPanel />
             <MyOfferingsPanel />
             <TeamDirectoryPanel />
