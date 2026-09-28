@@ -50,6 +50,7 @@ Open the top `sourcePath` under `docs/qa/` when present.
 | [awi-owns-update-local.md](awi-owns-update-local.md)                                     | Update local work is AWI; the button is AWC; `/update/run` is AWB                          |
 | [task-estimate-uses-ollama-sidecar.md](task-estimate-uses-ollama-sidecar.md)             | Task time estimate is a non-blocking Ollama sidecar; history RAG calibrates it             |
 | [prompt-sdlc.md](prompt-sdlc.md)                                                         | Prompt SDLC on this Mac: writers run in the project folder; bots call `/prompt-sdlc/agent` |
+| [prompt-lab-workflow-eval.md](prompt-lab-workflow-eval.md)                               | Prompt Lab: workflow scenarios, baselines, usage/output reports (prompt SDLC)              |
 
 Add a row here when you add a Q&A file.
 
