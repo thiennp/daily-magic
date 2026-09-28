@@ -2,11 +2,15 @@
 import type React from "react";
 import { useEffect, useRef } from "react";
 
+import { isDocumentMouseDownOutsideDropdown } from "@/components/ui/dropdown/isDocumentMouseDownOutsideDropdown.util";
+
 interface DropdownProps {
   isOpen: boolean;
   onClose: () => void;
   children: React.ReactNode;
   className?: string;
+  /** When set, only this control is treated as inside the dropdown (not every `.dropdown-toggle`). */
+  toggleRef?: React.RefObject<HTMLElement | null>;
 }
 
 export const Dropdown: React.FC<DropdownProps> = ({
@@ -14,15 +18,19 @@ export const Dropdown: React.FC<DropdownProps> = ({
   onClose,
   children,
   className = "",
+  toggleRef,
 }) => {
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Node;
       if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node) &&
-        !(event.target as HTMLElement).closest(".dropdown-toggle")
+        isDocumentMouseDownOutsideDropdown(
+          target,
+          dropdownRef.current,
+          toggleRef?.current ?? undefined,
+        )
       ) {
         onClose();
       }
@@ -32,7 +40,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [onClose]);
+  }, [onClose, toggleRef]);
 
   if (!isOpen) return null;
 

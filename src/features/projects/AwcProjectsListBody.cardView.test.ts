@@ -26,5 +26,6 @@ describe("Awc projects card view", () => {
     expect(menu).toContain("buildAgentComposerHref");
     expect(menu).toContain("customTask: true");
     expect(menu).toContain("projectId");
+    expect(menu).toContain("toggleRef={toggleRef}");
   });
 });

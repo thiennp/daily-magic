@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useState } from "react";
+import { useId, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 
 import { Dropdown } from "@/components/ui/dropdown/Dropdown";
@@ -29,6 +29,7 @@ export default function AwcProjectCardActionsMenu({
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
   const menuId = useId();
+  const toggleRef = useRef<HTMLButtonElement>(null);
 
   const closeMenu = (): void => {
     setIsOpen(false);
@@ -43,6 +44,7 @@ export default function AwcProjectCardActionsMenu({
   return (
     <div className="relative shrink-0">
       <button
+        ref={toggleRef}
         type="button"
         aria-label="Project actions"
         aria-haspopup="menu"
@@ -58,6 +60,7 @@ export default function AwcProjectCardActionsMenu({
       <Dropdown
         isOpen={isOpen}
         onClose={closeMenu}
+        toggleRef={toggleRef}
         className="w-48 py-1 dark:bg-gray-dark"
       >
         <ul id={menuId} role="menu" aria-label="Project actions">
