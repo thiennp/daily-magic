@@ -23,7 +23,7 @@ flowchart LR
 
 Production and local dev use **`tsx server.ts`** (`npm run dev` / `npm start`):
 
-- Serves the Next.js app and **`GET /api/health`**.
+- Serves the Next.js app and **`GET /api/health`** (process liveness; HTTP 200 before Next is ready). Other routes stay **503** `Service starting` until `next.prepare()` finishes. See [awc-process-health.md](../qa/awc-process-health.md).
 - Terminates **WebSocket** upgrades on **`/api/agent-witch/ws`** (path configurable via `AGENT_WITCH_WS_PATH`).
 - Hosts the in-memory **Agent Witch hub** (`getAgentWitchHub`) and connection registry maintenance.
 

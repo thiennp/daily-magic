@@ -33,7 +33,7 @@ File: **`server.ts`** (repo root).
 Responsibilities:
 
 1. **`createServer`** — serves Next via `app.getRequestHandler()` after `next.prepare()`.
-2. **`GET /api/health`** — liveness on the Node process (503 until Next is ready).
+2. **`GET /api/health`** — process liveness. `server.ts` returns HTTP 200 as soon as the process is listening, including while Next is still preparing. Other routes return **503** `Service starting` until `next.prepare()` finishes. WebSocket upgrades are dropped until then. Payload: [awc-process-health.md](../../qa/awc-process-health.md).
 3. **WebSocket upgrade** — only path `AGENT_WITCH_WS_PATH` (default **`/api/agent-witch/ws`**).
 4. **Upgrade guards** — `isSecureAgentWitchUpgrade`, `isAllowedAgentWitchOrigin`.
 5. **Auth on upgrade** — cookie → `resolveAuthActorFromCookieHeader`; fallback `resolveDevDashboardActor` when dev dashboard env is set.
