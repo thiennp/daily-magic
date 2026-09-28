@@ -5,11 +5,15 @@ vi.mock("@/lib/release/readDeviceSupersessionMigrationApplied", () => ({
 }));
 
 import { AGENT_WITCH_SERVER_RELEASE_LABEL } from "@/lib/release/agentWitchServerReleaseLabel.constant";
-import { buildAgentWitchHealthPayload } from "@/lib/release/buildAgentWitchHealthPayload";
+import {
+  buildAgentWitchHealthPayload,
+  resetAgentWitchHealthPayloadCachesForTests,
+} from "@/lib/release/buildAgentWitchHealthPayload";
 import { readDeviceSupersessionMigrationApplied } from "@/lib/release/readDeviceSupersessionMigrationApplied";
 
 describe("buildAgentWitchHealthPayload", () => {
   beforeEach(() => {
+    resetAgentWitchHealthPayloadCachesForTests();
     vi.mocked(readDeviceSupersessionMigrationApplied).mockResolvedValue(true);
   });
 
@@ -31,5 +35,14 @@ describe("buildAgentWitchHealthPayload", () => {
     expect(payload.ok).toBe(true);
     expect(payload.release.label).toBe(AGENT_WITCH_SERVER_RELEASE_LABEL);
     expect(payload.deviceSupersessionMigrationApplied).toBe(false);
+  });
+
+  it("reuses the migration lookup result for frequent health probes", async () => {
+    vi.mocked(readDeviceSupersessionMigrationApplied).mockResolvedValue(true);
+
+    await buildAgentWitchHealthPayload();
+    await buildAgentWitchHealthPayload();
+
+    expect(readDeviceSupersessionMigrationApplied).toHaveBeenCalledTimes(1);
   });
 });

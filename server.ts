@@ -4,7 +4,10 @@ import { parse } from "node:url";
 import next from "next";
 import { WebSocketServer } from "ws";
 
-import { buildAgentWitchHealthPayload } from "./src/lib/release/buildAgentWitchHealthPayload";
+import {
+  buildAgentWitchHealthPayload,
+  buildAgentWitchHealthPayloadSync,
+} from "./src/lib/release/buildAgentWitchHealthPayload";
 import { getAgentWitchHub } from "./src/lib/agentWitch/getAgentWitchHub";
 import {
   isAllowedAgentWitchOrigin,
@@ -33,15 +36,21 @@ const server = createServer((request, response) => {
   const parsedUrl = parse(request.url ?? "", true);
 
   if (parsedUrl.pathname === healthPath) {
-    void buildAgentWitchHealthPayload()
-      .catch(() => null)
-      .then((payload) => {
-        if (response.writableEnded) {
-          return;
-        }
+    const sendHealthJson = (payload: unknown): void => {
+      if (response.writableEnded) {
+        return;
+      }
 
-        response.writeHead(200, { "Content-Type": "application/json" });
-        response.end(JSON.stringify(payload ?? { ok: true }));
+      response.writeHead(200, { "Content-Type": "application/json" });
+      response.end(JSON.stringify(payload));
+    };
+
+    void buildAgentWitchHealthPayload()
+      .then((payload) => {
+        sendHealthJson(payload);
+      })
+      .catch(() => {
+        sendHealthJson(buildAgentWitchHealthPayloadSync());
       });
     return;
   }
