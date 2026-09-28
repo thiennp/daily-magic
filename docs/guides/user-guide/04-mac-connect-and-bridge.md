@@ -75,7 +75,7 @@ Why the browser may call `127.0.0.1` from a public site: [AWB localhost identity
 
 If install succeeded but identity is not linked, pairing token may not be claimed—repeat connect flow ([update plist Q&A — identity note](../../qa/awi-update-local-launchagent-plist.md)).
 
-Opening **Connect this Mac** again replaces the unused link. It does not add another computer. A row counts as **seen recently** only after that Mac checks in. Extra **Your Mac** / **Mac 2** rows from earlier clicks (version unknown, no hostname) disappear the next time Home loads the device list. A named computer that has already checked in stays.
+Opening **Connect this Mac** again replaces the unused link. It does not add another computer. A row counts as **seen recently** only after that Mac checks in, and that check-in stays fresh for about 3 minutes. Extra **Your Mac** / **Mac 2** rows from earlier clicks (version unknown, no hostname) disappear the next time Home loads the device list. A named computer that has already checked in stays.
 
 **Do not use hostname alone** to guess ownership—two accounts on one physical Mac used to both look local; matching uses **token hash** ([Q&A](../../qa/awc-how-browser-knows-this-computer.md)).
 

@@ -4,8 +4,12 @@ export const AGENT_WITCH_HEARTBEAT_INTERVAL_MS = 30_000;
 export const AGENT_WITCH_ACTIVE_THRESHOLD_MS =
   AGENT_WITCH_HEARTBEAT_INTERVAL_MS;
 
-/** Device is reachable if last_seen_at is newer than this (3× heartbeat interval). */
-export const AGENT_WITCH_ONLINE_THRESHOLD_MS = 90_000;
+/**
+ * How long a heartbeat still counts. 6× the 30s interval (180s) is double the
+ * old 3× window so one delayed check-in does not flip the Mac to offline.
+ */
+export const AGENT_WITCH_ONLINE_THRESHOLD_MS =
+  AGENT_WITCH_HEARTBEAT_INTERVAL_MS * 6;
 
 export const isAgentWitchDeviceRecentlySeen = (
   lastSeenAt: string | null,

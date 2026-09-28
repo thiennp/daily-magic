@@ -51,12 +51,12 @@ Routing cascade (continuation vs memory budget): [docs/qa/writer-dispatch-cascad
 
 `GET /api/agent-witch/devices` exposes **`presenceTier`** per device (ADR 0005):
 
-| Tier                  | Meaning                                   | Writer send-a-task              |
-| --------------------- | ----------------------------------------- | ------------------------------- |
-| `live`                | Socket on **this** Node hub               | Allowed                         |
-| `live_other_instance` | Registry: socket on another `instance_id` | Relay or retry / sticky routing |
-| `recent`              | `last_seen_at` ~90s, no live socket       | Not allowed                     |
-| `offline`             | Otherwise                                 | Not allowed                     |
+| Tier                  | Meaning                                    | Writer send-a-task              |
+| --------------------- | ------------------------------------------ | ------------------------------- |
+| `live`                | Socket on **this** Node hub                | Allowed                         |
+| `live_other_instance` | Registry: socket on another `instance_id`  | Relay or retry / sticky routing |
+| `recent`              | `last_seen_at` within 180s, no live socket | Not allowed                     |
+| `offline`             | Otherwise                                  | Not allowed                     |
 
 - **`isOnline`** — visibility / wake hints (`live`, `live_other_instance`, or `recent`).
 - **`isDispatchReady`** — writer-ready; only **`live`** on this process (and relay path for other instance).

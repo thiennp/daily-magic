@@ -24,14 +24,14 @@ Try this order (most issues resolve without a fresh install):
 
 ## Send blocked — read the banner
 
-| Banner / reason (typical)                 | Meaning                                                   | What to do                                                                   |
-| ----------------------------------------- | --------------------------------------------------------- | ---------------------------------------------------------------------------- |
-| **Update needed**                         | Mac install bundle older than cloud requires              | [Update local](#install-bundle-update-stale-or-blocked-send)                 |
-| **Mac unreachable**                       | DNS/network from Mac to `www.agentwitch.com`              | [DNS / ENOTFOUND](#dns-mac-cannot-reach-agentwitchcom-open-001)              |
-| **Mac offline**                           | That device row has no hub socket and no check-in in ~90s | [AWL Connected but AWC offline](../../qa/awc-offline-while-awl-connected.md) |
-| **Reconnecting**                          | Seen recently, no live socket on this request             | [Reconnecting](#mac-reconnecting-after-deploy-or-multi-server-open-002)      |
-| **Connecting** / **New task isn’t ready** | Multi-server relay or handoff                             | Wait, refresh devices, retry                                                 |
-| **Add a task**                            | Empty prompt / form validation                            | Fill composer or workflow form                                               |
+| Banner / reason (typical)                 | Meaning                                                              | What to do                                                                   |
+| ----------------------------------------- | -------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| **Update needed**                         | Mac install bundle older than cloud requires                         | [Update local](#install-bundle-update-stale-or-blocked-send)                 |
+| **Mac unreachable**                       | DNS/network from Mac to `www.agentwitch.com`                         | [DNS / ENOTFOUND](#dns-mac-cannot-reach-agentwitchcom-open-001)              |
+| **Mac offline**                           | That device row has no hub socket and no check-in in about 3 minutes | [AWL Connected but AWC offline](../../qa/awc-offline-while-awl-connected.md) |
+| **Reconnecting**                          | Seen recently, no live socket on this request                        | [Reconnecting](#mac-reconnecting-after-deploy-or-multi-server-open-002)      |
+| **Connecting** / **New task isn’t ready** | Multi-server relay or handoff                                        | Wait, refresh devices, retry                                                 |
+| **Add a task**                            | Empty prompt / form validation                                       | Fill composer or workflow form                                               |
 
 Mac picker labels (**Online**, **Seen recently**, **Reconnecting (another server)**, **Offline**) describe presence—not always send-ready. You need **Online** + dispatch-ready for writer **Tasks**.
 

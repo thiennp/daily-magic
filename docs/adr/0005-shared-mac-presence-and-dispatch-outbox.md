@@ -44,7 +44,7 @@ Lifecycle hooks reuse existing call sites:
 - `updateClient()` updates the row when enrichment resolves a previously unknown `deviceId`.
 - The heartbeat handler touches `last_ack_at`.
 - `unregisterClient()` and `socket.on("close")` delete the row.
-- Process startup deletes rows for its own `instance_id` (crash residue); a sweeper deletes rows older than ~3× the heartbeat interval.
+- Process startup deletes rows for its own `instance_id` (crash residue); a sweeper deletes rows older than the online threshold (6× the heartbeat interval, 180s).
 
 `instance_id` is generated once per process and held on `globalThis`, matching how the hub itself is shared.
 
@@ -87,7 +87,7 @@ Only work that can legitimately wait is queued:
 | --------------------- | --------------------------------------------- | ------------- | ------------------------------ | ------------------------------------------ |
 | `live`                | Agent socket on **this** Node hub             | `true`        | `true` (same as `isConnected`) | Allowed                                    |
 | `live_other_instance` | Registry says socket on another `instance_id` | `false`       | `false`                        | Relay to owner instance or retry / refresh |
-| `recent`              | `last_seen_at` within ~90s, no live socket    | `false`       | `false`                        | Not allowed                                |
+| `recent`              | `last_seen_at` within 180s, no live socket    | `false`       | `false`                        | Not allowed                                |
 | `offline`             | Otherwise                                     | `false`       | `false`                        | Not allowed                                |
 
 `isOnline` remains `true` for `live`, `live_other_instance`, or `recent` (visibility / wake hints). **Do not** treat `isOnline` alone as writer-ready.
