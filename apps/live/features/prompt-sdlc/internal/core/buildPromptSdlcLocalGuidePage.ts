@@ -14,9 +14,6 @@ const escapeHtml = (value: string): string =>
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;");
 
-const hidden = (name: string, value: string): string =>
-  `<input type="hidden" name="${name}" value="${escapeHtml(value)}">`;
-
 export const buildPromptSdlcLocalGuidePageBody =
   (): string => `<section class="card">
       <p class="eyebrow">Prompt SDLC</p>
@@ -38,13 +35,7 @@ export const buildPromptSdlcLocalGuidePageBody =
       <pre class="mono">${escapeHtml(PROMPT_SDLC_LOCAL_GUIDE_WEAK_PROMPT)}</pre>
       <h3>What a better prompt changes</h3>
       <pre class="mono">${escapeHtml(PROMPT_SDLC_LOCAL_GUIDE_STRONGER_PROMPT)}</pre>
-      <form class="actions" method="POST" action="/prompt-sdlc">
-        ${hidden("intent", "run")}
-        ${hidden("goal", PROMPT_SDLC_LOCAL_GUIDE_GOAL)}
-        ${hidden("prompt", PROMPT_SDLC_LOCAL_GUIDE_WEAK_PROMPT)}
-        ${hidden("folder", "~")}
-        ${hidden("passScore", String(PROMPT_SDLC_PASS_SCORE))}
-        <button class="btn btn-primary" type="submit">Run this sample</button>
-        <a class="btn btn-secondary" href="/prompt-sdlc?example=${PROMPT_SDLC_LOCAL_GUIDE_EXAMPLE}">Open it in the form</a>
-      </form>
+      <div class="actions">
+        <a class="btn btn-primary" href="/prompt-sdlc?example=${escapeHtml(PROMPT_SDLC_LOCAL_GUIDE_EXAMPLE)}">Run this sample</a>
+      </div>
     </section>`;

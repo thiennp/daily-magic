@@ -4,6 +4,7 @@ import { buildPromptSdlcLocalCycleSection } from "./buildPromptSdlcLocalCycleSec
 import { buildPromptSdlcLocalGuidePageBody } from "./buildPromptSdlcLocalGuidePage";
 import { buildPromptSdlcLocalPageBody } from "./buildPromptSdlcLocalPage";
 import { createPromptSdlcLocalCycle } from "./createPromptSdlcLocalCycle";
+import { PROMPT_SDLC_LOCAL_GUIDE_EXAMPLE } from "./promptSdlcLocalGuide.constant";
 import { promptSdlcLocalHistoryTitle } from "./promptSdlcLocalHistoryTitle";
 
 describe("buildPromptSdlcLocalPageBody", () => {
@@ -220,7 +221,10 @@ describe("buildPromptSdlcLocalPageBody", () => {
     expect(html).toContain('href="/prompt-sdlc/guide"');
     expect(guide).toContain("How Prompt SDLC works");
     expect(guide).toContain("Run this sample");
-    expect(guide).toContain('name="intent" value="run"');
+    expect(guide).toContain(
+      `href="/prompt-sdlc?example=${PROMPT_SDLC_LOCAL_GUIDE_EXAMPLE}"`,
+    );
+    expect(guide).not.toContain('name="intent" value="run"');
     expect(guide).toContain("CUSTOMER_MESSAGE");
   });
 
