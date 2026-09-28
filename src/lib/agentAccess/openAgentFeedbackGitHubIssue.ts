@@ -8,7 +8,6 @@ const token = (): string =>
 
 export const openAgentFeedbackGitHubIssue = async (input: {
   readonly feedback: AgentAccessFeedbackInput;
-  readonly accountEmail: string;
   readonly feedbackId: string;
 }): Promise<string | null> => {
   const githubToken = token();
@@ -23,7 +22,6 @@ export const openAgentFeedbackGitHubIssue = async (input: {
       120,
     );
   const body = [
-    `Account: ${input.accountEmail}`,
     `Feedback id: ${input.feedbackId}`,
     `Outcome: ${input.feedback.outcome}`,
     "",
