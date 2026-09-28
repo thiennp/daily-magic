@@ -7,6 +7,7 @@ import { promptSdlcLocalWorkingDirectory } from "./promptSdlcLocalFolder";
 import { describePromptSdlcWriterTerminalFailure } from "./readPromptSdlcWriterOutput";
 import {
   promptSdlcSkillExists,
+  promptSdlcSkillFileName,
   promptSdlcSkillSlug,
 } from "./writePromptSdlcLocalSkill";
 
@@ -70,9 +71,12 @@ const renderPromptSdlcLocalSkillForm = (input: {
     input.sourceSkill?.fileName ?? promptSdlcSkillSlug(input.goal);
   const name = input.sourceSkill?.name ?? fileName;
   const description = input.sourceSkill?.description ?? input.goal;
-  const exists = promptSdlcSkillExists(input.workingDirectory, fileName);
+  const skillSlug = promptSdlcSkillFileName(fileName, name);
+  const exists =
+    skillSlug.length > 0 &&
+    promptSdlcSkillExists(input.workingDirectory, skillSlug);
   const replace = exists
-    ? `<label class="check-row"><input type="checkbox" name="skillOverwrite" value="yes" required> Replace .cursor/skills/${escapeHtml(fileName)}/SKILL.md</label>`
+    ? `<label class="check-row"><input type="checkbox" name="skillOverwrite" value="yes"> Replace .cursor/skills/${escapeHtml(skillSlug)}/SKILL.md</label>`
     : "";
   return `<form class="sdlc-manual" method="POST" action="/prompt-sdlc"><input type="hidden" name="intent" value="save-skill"><input type="hidden" name="cycleId" value="${escapeHtml(input.cycleId)}"><label class="field"><span class="field-label">Name</span><input class="input" type="text" name="skillName" value="${escapeHtml(name)}" required></label><label class="field"><span class="field-label">Description</span><textarea class="input textarea" name="skillDescription" rows="3">${escapeHtml(description)}</textarea><span class="muted">Optional.</span></label><label class="field"><span class="field-label">File name</span><input class="input" type="text" name="skillFileName" value="${escapeHtml(fileName)}" required><span class="muted">This is the skill folder under .cursor/skills/.</span></label><label class="field"><span class="field-label">Prompt</span><textarea class="input textarea" name="skillPrompt" rows="10" required>${escapeHtml(input.promptText)}</textarea></label>${replace}<div class="actions"><button class="btn btn-primary" type="submit">${exists ? "Replace skill" : "Save as a skill"}</button></div><p class="muted">Saves this prompt at .cursor/skills/ in the folder for this run. You can change the name, the description, the file name, and the prompt before saving.</p></form>`;
 };

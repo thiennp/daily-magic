@@ -69,8 +69,8 @@ export const presentPromptSdlcLocalComposer = async (input: {
       decision.sourceSkillFile,
     );
     const cycle = createPromptSdlcLocalCycle({
-      goal: input.goal,
-      sourcePrompt: input.prompt,
+      goal: decision.goal,
+      sourcePrompt: decision.prompt,
       judgeModel: decision.judge,
       improverModel: decision.improver,
       workingDirectory: decision.workingDirectory,

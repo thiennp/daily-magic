@@ -74,6 +74,7 @@ export const acceptPromptSdlcLocalSkillPost = (input: {
     return { kind: "redirect", location: back("skillError=empty") };
   }
 
+  const postedPrompt = input.posted.get("skillPrompt")?.trim() ?? "";
   const written = writePromptSdlcLocalSkill({
     workingDirectory: promptSdlcLocalWorkingDirectory(cycle),
     name: input.posted.get("skillName") ?? cycle.sourceSkill?.name ?? "",
@@ -81,7 +82,7 @@ export const acceptPromptSdlcLocalSkillPost = (input: {
       input.posted.get("skillDescription") ??
       cycle.sourceSkill?.description ??
       "",
-    promptText: input.posted.get("skillPrompt") ?? "",
+    promptText: postedPrompt.length > 0 ? postedPrompt : best.promptText,
     fileName:
       input.posted.get("skillFileName") ?? cycle.sourceSkill?.fileName ?? "",
     overwrite: input.posted.get("skillOverwrite") === "yes",
