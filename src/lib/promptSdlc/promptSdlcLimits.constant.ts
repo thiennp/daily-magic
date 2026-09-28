@@ -15,7 +15,7 @@ export const PROMPT_SDLC_STOP_ROUND_LIMIT =
 export const PROMPT_SDLC_STOP_STALL =
   "Stopped because the score stopped rising. The best prompt is kept.";
 
-export const PROMPT_SDLC_STOP_USER = "Stopped. The best prompt is kept.";
+export const PROMPT_SDLC_STOP_USER = "Finished. The best prompt is the result.";
 
 export const PROMPT_SDLC_GOAL_MAX_LENGTH = 2_000;
 

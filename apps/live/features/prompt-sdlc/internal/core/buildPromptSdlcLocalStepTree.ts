@@ -5,6 +5,10 @@ import {
 import { describePromptSdlcLocalNodeDetail } from "./describePromptSdlcLocalNodeDetail";
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
 import { renderPromptSdlcLocalNodeModal } from "./renderPromptSdlcLocalNodeModal";
+import {
+  formatPromptSdlcTokenCount,
+  sumPromptSdlcLocalTokens,
+} from "./sumPromptSdlcLocalTokens";
 
 const escapeHtml = (value: string): string =>
   value
@@ -21,6 +25,15 @@ const renderNode = (
     step.state === "active"
       ? `<span class="sdlc-spin" aria-hidden="true"></span>`
       : `<span class="sdlc-node-mark" aria-hidden="true"></span>`;
+  const scoreRound = /^score-(\d+)$/.exec(step.id);
+  const tokens =
+    step.state === "done" && scoreRound !== null
+      ? sumPromptSdlcLocalTokens(cycle, Number(scoreRound[1]))
+      : 0;
+  const tokenNote =
+    tokens > 0
+      ? `<span class="sdlc-node-reason">${formatPromptSdlcTokenCount(tokens)} tokens so far</span>`
+      : "";
   const reason =
     step.state === "done" && step.id.startsWith("score-") && step.detail
       ? `<span class="sdlc-node-reason">${escapeHtml(step.detail)}</span>`
@@ -29,7 +42,7 @@ const renderNode = (
     describePromptSdlcLocalNodeDetail(cycle, step),
   );
 
-  return `<li class="sdlc-node sdlc-node-${step.state}"><button type="button" class="sdlc-node-open" data-sdlc-node>${mark}<span class="sdlc-node-label">${escapeHtml(step.label)}${reason}</span></button><template>${modal}</template></li>`;
+  return `<li class="sdlc-node sdlc-node-${step.state}"><button type="button" class="sdlc-node-open" data-sdlc-node>${mark}<span class="sdlc-node-label">${escapeHtml(step.label)}${reason}${tokenNote}</span></button><template>${modal}</template></li>`;
 };
 
 export const renderPromptSdlcLocalStepTree = (

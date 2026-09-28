@@ -71,5 +71,13 @@ describe("buildPromptSdlcSteps", () => {
     ).map((step) => step.label);
 
     expect(labels.at(-1)).toBe("Passed");
+    expect(
+      buildPromptSdlcSteps(
+        cycle({
+          status: "stopped",
+          errorMessage: "Finished. The best prompt is the result.",
+        }),
+      ).at(-1)?.label,
+    ).toBe("Finished");
   });
 });

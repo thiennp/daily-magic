@@ -1,6 +1,9 @@
 import { describe, expect, it } from "vitest";
 
-import { applyPromptSdlcLocalJudgeReply } from "./applyPromptSdlcLocalReply";
+import {
+  applyPromptSdlcLocalImproverReply,
+  applyPromptSdlcLocalJudgeReply,
+} from "./applyPromptSdlcLocalReply";
 import { createPromptSdlcLocalCycle } from "./createPromptSdlcLocalCycle";
 
 describe("applyPromptSdlcLocalJudgeReply", () => {
@@ -146,5 +149,28 @@ describe("applyPromptSdlcLocalJudgeReply", () => {
     );
     expect(stalled.status).toBe("stopped");
     expect(stalled.errorMessage).toContain("stopped rising");
+  });
+
+  it("stores the tokens from the judge and the improver", () => {
+    const cycle = createPromptSdlcLocalCycle({
+      goal: "The reply stays inside the facts.",
+      sourcePrompt: "Be helpful.",
+      judgeModel: "claude-cli",
+      improverModel: "codex",
+    });
+    const scored = applyPromptSdlcLocalJudgeReply(
+      cycle,
+      '{"score":40,"passed":false,"reasons":"Too vague."}',
+      1_200,
+    );
+    const rewritten = applyPromptSdlcLocalImproverReply(
+      scored,
+      "Name the facts the reply may use.",
+      800,
+    );
+
+    expect(scored.revisions[0]?.judgement?.tokens).toBe(1_200);
+    expect(rewritten.revisions[1]?.writerTokens).toBe(800);
+    expect(rewritten.currentRound).toBe(1);
   });
 });

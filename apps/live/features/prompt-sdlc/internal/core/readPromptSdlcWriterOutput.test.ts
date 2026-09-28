@@ -58,6 +58,7 @@ describe("readPromptSdlcWriterOutput", () => {
       "--ephemeral",
       "--color",
       "never",
+      "--json",
       "--output-last-message",
       "/tmp/reply.txt",
       "-s",
@@ -72,5 +73,21 @@ describe("readPromptSdlcWriterOutput", () => {
         replyFileText: "Use only the facts in the thread.",
       }).ok,
     ).toBe(true);
+  });
+
+  it("keeps the prompt text and the last reported token total", () => {
+    const result = readPromptSdlcWriterOutput({
+      writerAgent: "codex",
+      stdout:
+        '{"input_tokens":4,"output_tokens":1}\n{"input_tokens":100,"output_tokens":25}',
+      stderr: "",
+      replyFileText: "Use only the facts in the thread.",
+    });
+
+    expect(result).toEqual({
+      ok: true,
+      text: "Use only the facts in the thread.",
+      tokens: 125,
+    });
   });
 });
