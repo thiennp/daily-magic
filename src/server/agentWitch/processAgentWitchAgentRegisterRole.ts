@@ -2,6 +2,7 @@ import type { WebSocket } from "ws";
 
 import type { AgentWitchHub } from "@/lib/agentWitch/agentWitchHub";
 import { findAgentWitchDeviceByToken } from "@/lib/agentWitch/findAgentWitchDeviceByToken";
+import { resolveAgentRegisterIdentityRejection } from "@/lib/agentWitch/resolveAgentRegisterIdentityRejection";
 import { resolvePairingTokenFromRegisterPayload } from "@/lib/agentWitch/resolveAgentWitchRegisterPayload";
 import type AgentWitchMessage from "@/lib/agentWitch/types/AgentWitchMessage.type";
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
@@ -40,17 +41,18 @@ export const processAgentWitchAgentRegisterRole = async (
   );
 
   if (!isAgentWitchDevDashboardEnabled()) {
-    const device = await findAgentWitchDeviceByToken(pairingToken);
-    if (
-      device === null ||
-      device.revokedAt !== null ||
-      connectionState.userId === undefined
-    ) {
+    const rejection = resolveAgentRegisterIdentityRejection({
+      device: await findAgentWitchDeviceByToken(pairingToken),
+      userId: connectionState.userId,
+    });
+    if (rejection !== null) {
       sendAgentWitchSocketMessage(socket, {
         type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR,
         payload: {
-          errorMessage:
-            "This Mac identity is not linked. Run the install command from Home while signed in.",
+          errorMessage: rejection.errorMessage,
+          ...(rejection.errorCode !== undefined
+            ? { errorCode: rejection.errorCode }
+            : {}),
         },
         requestId: message.requestId,
       });

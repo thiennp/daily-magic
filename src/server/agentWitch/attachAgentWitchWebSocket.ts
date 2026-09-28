@@ -40,6 +40,9 @@ export const attachAgentWitchWebSocket = (
       send: (message) => {
         sendAgentWitchSocketMessage(socket, message);
       },
+      close: () => {
+        socket.close();
+      },
     });
     connectionState.registered = true;
     void syncAgentWitchConnectionRegistry({

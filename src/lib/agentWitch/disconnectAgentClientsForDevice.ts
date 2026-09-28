@@ -1,3 +1,5 @@
+import { AGENT_WITCH_UNKNOWN_IDENTITY_ERROR_CODE } from "@agent-witch/shared/protocol";
+
 import type { AgentWitchHub } from "@/lib/agentWitch/agentWitchHub";
 import { AGENT_WITCH_MESSAGE_TYPES } from "@/lib/agentWitch/types/AgentWitchMessageType.constant";
 
@@ -14,9 +16,11 @@ const disconnectAgentClientsForDevice = (
     client.send({
       type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR,
       payload: {
+        errorCode: AGENT_WITCH_UNKNOWN_IDENTITY_ERROR_CODE,
         errorMessage: "This device was removed from your account.",
       },
     });
+    client.close?.();
     hub.unregisterClient(client.id);
   });
 };

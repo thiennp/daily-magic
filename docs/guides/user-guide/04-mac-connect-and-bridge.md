@@ -79,7 +79,7 @@ Opening **Connect this Mac** again replaces the unused link. It does not add ano
 
 **Do not use hostname alone** to guess ownership—two accounts on one physical Mac used to both look local; matching uses **token hash** ([Q&A](../../qa/awc-how-browser-knows-this-computer.md)).
 
-If Agent Witch is already running on this Mac, the click still only reserves a cloud link. Paste the command to write that link into this account, replace an outdated install, and restart the helper. Removing the Mac in the Console revokes that cloud device and does not uninstall the app. After a removal, **Update local** keeps the revoked token; **Connect this Mac** is what links it again ([Q&A](../../qa/awc-connect-when-awl-already-running.md)).
+If Agent Witch is already running on this Mac, the click still only reserves a cloud link. Paste the command to write that link into this account, replace an outdated install, and restart the helper. Removing the Mac in the Console deletes that cloud identity. A current install then stops the helper and the bridge and removes the connection and the shipped app code. Your projects, Playbooks, reports, runs, and Ollama stay. **Update local** does not create a new link after that removal. **Connect this Mac** does ([Q&A](../../qa/awc-delete-mac-forgets-local-connection.md)).
 
 ---
 

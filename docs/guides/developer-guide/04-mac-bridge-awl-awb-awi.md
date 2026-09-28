@@ -124,7 +124,7 @@ Self-update resolves the app origin from `config.json` `wsUrl`, then from `insta
 
 Failed browser calls to `http://127.0.0.1:47892/identity` and `:47893/identity` mean AWB is down. They do not insert device rows.
 
-The click does not signal a running AWL. The Mac keeps `~/.agent-witch` until the install command runs. That command writes the new token when the config email matches (`buildAgentWitchInstallScriptConfigUpdateExisting`), restarts the LaunchAgent (`launchctl kickstart -k`), and `registerAgentWitchInstallFromMac` stamps the hostname onto the new row and revokes other active rows with that label. A Console delete only sets `revoked_at` and disconnects the socket (`DELETE /api/agent-witch/devices/:id`). The old token then fails `agent.register` with “This Mac identity is not linked”. Update local (`updateExistingInstall`) keeps the on-disk token, so it does not relink a revoked device.
+The click does not signal a running AWL. The Mac keeps `~/.agent-witch` until the install command runs. That command writes the new token when the config email matches (`buildAgentWitchInstallScriptConfigUpdateExisting`), restarts the LaunchAgent (`launchctl kickstart -k`), and `registerAgentWitchInstallFromMac` stamps the hostname onto the new row and revokes other active rows with that label. A Console delete removes the `agent_witch_devices` row (`deleteAgentWitchDevice`) after cancelling in-flight runs and queued dispatch. The live socket, and the next `agent.register` when the row is gone, send `system.error` with `errorCode` `unknown_identity`. Bundle 148+ (`forgetAgentWitchLocalConnection`) then stops LaunchAgents and deletes connection files plus `app/`. Project, harness, report, run, rag, and Ollama paths stay. A revoked row that still exists is “not linked” and does not wipe. Update local (`updateExistingInstall`) keeps the on-disk token, so it does not create a new identity. **Connect this Mac** inserts a known row before the Mac connects.
 
 ---
 
@@ -137,6 +137,7 @@ The click does not signal a running AWL. The Mac keeps `~/.agent-witch` until th
 | Point `wsUrl` at CHECK24 daily-magic host    | Production Mac uses **agentwitch.com** ([hosting doc](../../product/repo-name-and-hosting.md))                      |
 | Folder picker in AWC for Mac paths           | Use AWL/AWB `select-folder` ([Q&A awc-project-folder-path-picker](../../qa/awc-project-folder-path-picker.md))      |
 | Stamp `last_seen_at` on install-token insert | Each click looks like a live Mac (HOME-059). Leave `last_seen_at` null until check-in and revoke older placeholders |
+| Set `revoked_at` and leave the Mac running   | The identity stays known, so a later connect will not forget the local link (HOME-060)                              |
 
 Open issues: `src/features/agent-witch/KNOWN_ISSUES.md`.
 
