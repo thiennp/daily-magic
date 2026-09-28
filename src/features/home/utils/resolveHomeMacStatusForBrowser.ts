@@ -10,7 +10,11 @@ export const resolveHomeMacStatusForBrowser = (input: {
 }): HomeMacStatusSummary => {
   const summary = resolveHomeMacStatusSummary(input.devices);
 
-  if (!input.shouldShowConnectThisMac || summary.tone !== "offline") {
+  if (!input.shouldShowConnectThisMac || summary.tone === "online") {
+    return summary;
+  }
+
+  if (summary.tone === "none") {
     return summary;
   }
 

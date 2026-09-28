@@ -36,4 +36,14 @@ describe("resolveHomeMacStatusForBrowser (HOME-057)", () => {
 
     expect(summary.label).toBe("Mac online");
   });
+
+  it("HOME-058: uses not-linked copy when another Mac is only seen recently", () => {
+    const summary = resolveHomeMacStatusForBrowser({
+      devices: [{ isConnected: false, isOnline: true, presenceTier: "recent" }],
+      shouldShowConnectThisMac: true,
+    });
+
+    expect(summary.label).toBe("This computer is not linked");
+    expect(summary.detail).toContain("Connect this Mac");
+  });
 });

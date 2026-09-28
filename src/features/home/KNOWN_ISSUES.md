@@ -584,6 +584,18 @@ Document every production bug or UX regression here. Each entry must link to a t
 
 ---
 
+## HOME-058 — Reconnecting banner when this computer is not linked
+
+**Symptom:** Home showed **Mac reconnecting** in the hero while **Connect this Mac** was visible because another account Mac was only `recent`, even though this browser was not linked yet.
+
+**Root cause:** `resolveHomeMacStatusForBrowser` rewrote the banner only when aggregate tone was `offline`, not `sleeping` (`recent` / `live_other_instance`).
+
+**Fix:** When `shouldShowConnectThisMac` is true, use **This computer is not linked** for every non-`online` tone except `none` (empty device list).
+
+**Regression test:** `resolveHomeMacStatusForBrowser.test.ts` (HOME-058).
+
+---
+
 ## Adding issues
 
-Use the next ID (`HOME-058`, …). Include symptom, root cause, fix paths, and test file.
+Use the next ID (`HOME-059`, …). Include symptom, root cause, fix paths, and test file.
