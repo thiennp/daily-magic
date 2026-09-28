@@ -17,6 +17,13 @@ export const PROMPT_SDLC_LOCAL_MODEL_LABELS: Record<
   antigravity: "Antigravity",
 };
 
+export const labelPromptSdlcLocalModel = (writer: string): string =>
+  writer in PROMPT_SDLC_LOCAL_MODEL_LABELS
+    ? PROMPT_SDLC_LOCAL_MODEL_LABELS[
+        writer as keyof typeof PROMPT_SDLC_LOCAL_MODEL_LABELS
+      ]
+    : writer;
+
 export const choosePromptSdlcLocalModels = (
   installedWriterIds: readonly string[],
 ): {

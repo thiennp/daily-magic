@@ -28,7 +28,7 @@ export const advancePromptSdlcLocalCycle = async (
   }
 
   if (cycle.status === "judging") {
-    const raw = await runPromptSdlcWriterReply({
+    const reply = await runPromptSdlcWriterReply({
       writerAgent: cycle.judgeModel,
       prompt: buildPromptSdlcJudgePrompt({
         goal: cycle.goal,
@@ -36,9 +36,9 @@ export const advancePromptSdlcLocalCycle = async (
         passScore: cycle.passScore,
       }),
     });
-    return raw === null
-      ? failCycle(cycle, "The judge did not reply.")
-      : applyPromptSdlcLocalJudgeReply(cycle, raw);
+    return reply.ok
+      ? applyPromptSdlcLocalJudgeReply(cycle, reply.text)
+      : failCycle(cycle, reply.errorMessage);
   }
 
   if (cycle.status !== "improving") {
@@ -48,7 +48,7 @@ export const advancePromptSdlcLocalCycle = async (
     );
   }
 
-  const raw = await runPromptSdlcWriterReply({
+  const reply = await runPromptSdlcWriterReply({
     writerAgent: cycle.improverModel,
     prompt: buildPromptSdlcImproverPrompt({
       goal: cycle.goal,
@@ -57,7 +57,7 @@ export const advancePromptSdlcLocalCycle = async (
       reasons: revision.judgement?.reasons ?? "",
     }),
   });
-  return raw === null
-    ? failCycle(cycle, "The improver did not reply.")
-    : applyPromptSdlcLocalImproverReply(cycle, raw);
+  return reply.ok
+    ? applyPromptSdlcLocalImproverReply(cycle, reply.text)
+    : failCycle(cycle, reply.errorMessage);
 };

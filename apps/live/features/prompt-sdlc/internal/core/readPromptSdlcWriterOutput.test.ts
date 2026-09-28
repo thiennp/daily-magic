@@ -1,0 +1,57 @@
+import { describe, expect, it } from "vitest";
+
+import {
+  buildPromptSdlcWriterArgs,
+  describePromptSdlcWriterTerminalFailure,
+  readPromptSdlcWriterOutput,
+} from "./readPromptSdlcWriterOutput";
+
+describe("readPromptSdlcWriterOutput", () => {
+  it("does not treat a Codex terminal error as a prompt", () => {
+    const raw =
+      "Reading additional input from stdin...\nNot inside a trusted directory and --skip-git-repo-check was not specified.";
+    expect(describePromptSdlcWriterTerminalFailure(raw)).toMatch(
+      /did not return a prompt/,
+    );
+    expect(
+      readPromptSdlcWriterOutput({
+        writerAgent: "codex",
+        stdout: raw,
+        stderr: "",
+        replyFileText: null,
+      }),
+    ).toEqual({
+      ok: false,
+      errorMessage: expect.stringMatching(/trusted git directory/),
+    });
+  });
+
+  it("asks Codex to run outside a git repo and keeps the last message", () => {
+    expect(
+      buildPromptSdlcWriterArgs({
+        writerAgent: "codex",
+        baseArgs: ["exec", "-s", "danger-full-access", "Rewrite the prompt."],
+        replyPath: "/tmp/reply.txt",
+      }),
+    ).toEqual([
+      "exec",
+      "--skip-git-repo-check",
+      "--ephemeral",
+      "--color",
+      "never",
+      "--output-last-message",
+      "/tmp/reply.txt",
+      "-s",
+      "danger-full-access",
+      "Rewrite the prompt.",
+    ]);
+    expect(
+      readPromptSdlcWriterOutput({
+        writerAgent: "codex",
+        stdout: "Reading additional input from stdin...",
+        stderr: "",
+        replyFileText: "Use only the facts in the thread.",
+      }).ok,
+    ).toBe(true);
+  });
+});

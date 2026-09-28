@@ -1,5 +1,10 @@
-import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
+import { isPromptSdlcTerminalStatus } from "@/lib/promptSdlc/PromptSdlcCycleStatus.constant";
 import { buildPromptSdlcLocalCycleSection } from "./buildPromptSdlcLocalCycleSection";
+import {
+  PROMPT_SDLC_LOCAL_LIVE_SCRIPT,
+  PROMPT_SDLC_LOCAL_LIVE_STYLE,
+} from "./buildPromptSdlcLocalLiveScript";
+import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
 
 const escapeHtml = (value: string): string =>
   value
@@ -17,7 +22,7 @@ const renderHistory = (history: readonly PromptSdlcLocalCycle[]): string => {
     .slice(0, 20)
     .map(
       (cycle) =>
-        `<li><a href="/prompt-sdlc?cycle=${escapeHtml(cycle.id)}">${escapeHtml(cycle.goal)}</a> <span class="muted">${escapeHtml(cycle.status)}</span></li>`,
+        `<li><a href="/prompt-sdlc?cycle=${escapeHtml(cycle.id)}">${escapeHtml(cycle.goal)}</a> <span class="muted">${escapeHtml(cycle.status)} · round ${cycle.currentRound}</span></li>`,
     )
     .join("");
   return `<section class="card"><h2>History</h2><ul>${items}</ul></section>`;
@@ -38,7 +43,11 @@ export const buildPromptSdlcLocalPageBody = (input: {
       : `<div class="alert-error">${escapeHtml(input.errorMessage)}</div>`;
   const cycle =
     input.cycle === null ? "" : buildPromptSdlcLocalCycleSection(input.cycle);
-  return `${error}<section class="card">
+  const live =
+    input.cycle !== null && !isPromptSdlcTerminalStatus(input.cycle.status)
+      ? `${PROMPT_SDLC_LOCAL_LIVE_STYLE}${PROMPT_SDLC_LOCAL_LIVE_SCRIPT}`
+      : "";
+  const form = `<section class="card">
       <p class="eyebrow">Prompt SDLC</p>
       <h1>Optimize a prompt</h1>
       <p class="lede">This Mac picks the best reasoning models it can run. ${escapeHtml(input.modelNote)}</p>
@@ -56,5 +65,6 @@ export const buildPromptSdlcLocalPageBody = (input: {
           <button class="btn btn-primary" type="submit" ${input.canRun ? "" : "disabled"}>Run</button>
         </div>
       </form>
-    </section>${cycle}${renderHistory(input.history)}`;
+    </section>`;
+  return `${error}${cycle}${live}${renderHistory(input.history)}${form}`;
 };

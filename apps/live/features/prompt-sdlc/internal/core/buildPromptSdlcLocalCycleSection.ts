@@ -1,7 +1,9 @@
 import { isPromptSdlcTerminalStatus } from "@/lib/promptSdlc/PromptSdlcCycleStatus.constant";
 import { buildPromptSdlcSteps } from "@/lib/promptSdlc/buildPromptSdlcSteps";
 import type PromptSdlcCycleView from "@/lib/promptSdlc/types/PromptSdlcCycleView.type";
+import { describePromptSdlcLocalActivity } from "./buildPromptSdlcLocalActivity";
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
+import { describePromptSdlcWriterTerminalFailure } from "./readPromptSdlcWriterOutput";
 
 const escapeHtml = (value: string): string =>
   value
@@ -47,6 +49,9 @@ const renderRevision = (
     revision.judgement?.score === null || revision.judgement === null
       ? "Not scored yet"
       : `Score ${revision.judgement.score}`;
+  const writerFailure = describePromptSdlcWriterTerminalFailure(
+    revision.promptText,
+  );
   const reasons = revision.judgement?.reasons
     ? `<p class="muted">${escapeHtml(revision.judgement.reasons)}</p>`
     : "";
@@ -54,24 +59,35 @@ const renderRevision = (
     revision.roundNumber === 0
       ? "Source prompt"
       : `Revision ${revision.roundNumber}`;
-  return `<article class="card"><h2>${title}</h2><p class="muted">${score}</p>${reasons}<pre class="mono">${escapeHtml(revision.promptText)}</pre></article>`;
+  const body =
+    writerFailure === null
+      ? `<pre class="mono">${escapeHtml(revision.promptText)}</pre>`
+      : `<div class="alert-error">${escapeHtml(writerFailure)}</div>`;
+  return `<article class="card"><h2>${title}</h2><p class="muted">${score}</p>${reasons}${body}</article>`;
 };
 
 export const buildPromptSdlcLocalCycleSection = (
   cycle: PromptSdlcLocalCycle,
 ): string => {
+  const live = !isPromptSdlcTerminalStatus(cycle.status);
+  const activity = describePromptSdlcLocalActivity(cycle);
   const steps = buildPromptSdlcSteps(toCycleView(cycle))
-    .map(
-      (step) =>
-        `<li>${escapeHtml(step.state === "active" ? "In progress" : "Done")}: ${escapeHtml(step.label)}</li>`,
-    )
+    .map((step) => {
+      const marker = step.state === "active" ? "In progress" : "Done";
+      return `<li>${escapeHtml(marker)}: ${escapeHtml(step.label)}</li>`;
+    })
     .join("");
   const error =
     cycle.errorMessage === null
       ? ""
       : `<div class="alert-error">${escapeHtml(cycle.errorMessage)}</div>`;
-  const refresh = isPromptSdlcTerminalStatus(cycle.status)
-    ? ""
-    : `<script>setTimeout(() => location.reload(), 2000)</script>`;
-  return `<section class="card"><p class="eyebrow">This run</p><h2>${escapeHtml(cycle.status)}</h2>${error}<ol>${steps}</ol></section>${cycle.revisions.map(renderRevision).join("")}${refresh}`;
+  const spinner = live
+    ? `<span class="sdlc-spin" aria-hidden="true"></span>`
+    : "";
+  const elapsed = live ? ` Working for <span data-elapsed>0s</span>.` : "";
+  const detail =
+    activity.detail.length === 0
+      ? ""
+      : `<p class="muted">${escapeHtml(activity.detail)}${elapsed}</p>`;
+  return `<section class="card" id="prompt-sdlc-run" data-live="${live ? "true" : "false"}" data-since="${escapeHtml(cycle.updatedAt)}" aria-busy="${live ? "true" : "false"}"><p class="eyebrow">This run</p><div class="sdlc-working">${spinner}<div><h2>${escapeHtml(activity.title)}</h2>${detail}</div></div>${error}<ol>${steps}</ol></section>${cycle.revisions.map(renderRevision).join("")}`;
 };

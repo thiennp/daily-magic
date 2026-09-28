@@ -10,13 +10,13 @@
 
 ## Short answer
 
-Prompt SDLC runs in Agent Witch Live at `http://127.0.0.1:43347/prompt-sdlc`. You paste a prompt and a goal. Live picks the best reasoning writer installed on this Mac as the judge, and the next best as the improver. The judge returns a score. If the score is under 80, the improver rewrites the prompt and the judge runs again, up to 3 rounds. There is no Mac picker, no model picker, and no human step between the score and the rewrite. The guide at `/prompt-sdlc/guide` can load an example into the form. The page lists each step of the open run, including the step in progress, and a history of earlier runs.
+Prompt SDLC runs in Agent Witch Live at `http://127.0.0.1:43347/prompt-sdlc`. You paste a prompt and a goal. Live picks the best reasoning writer installed on this Mac as the judge, and the next best as the improver. The judge returns a score. If the score is under 80, the improver rewrites the prompt and the judge runs again, up to 3 rounds. There is no Mac picker, no model picker, and no human step between the score and the rewrite. The guide at `/prompt-sdlc/guide` can load an example into the form. The page lists each step of the open run, including the step in progress, and a history of earlier runs. While a writer is working, the run panel stays on screen, shows a timer, and refreshes itself. The rest of the page does not reload.
 
 ## Details
 
 - Preference order is Claude, then Codex, then Cursor, then Antigravity. Small and local models are not used. Cursor Cloud is not required.
 - Each writer call runs in a temporary folder, so the loop does not edit the repo.
-- A reply that is not a score stops the cycle. The raw reply is kept on the judgement.
+- A reply that is not a score stops the cycle. The raw reply is kept on the judgement. A writer terminal error is not saved as the next prompt.
 - Cycles stay in `prompt-sdlc-cycles.json` beside the Mac profile config. They are not capability improvements and not workflow runs.
 - The console page at `/prompt-sdlc` only links to Live.
 
