@@ -21,6 +21,7 @@ import {
   PROMPT_SDLC_SKILL_SELECT_SCRIPT,
   renderPromptSdlcLocalSkillSelect,
 } from "./renderPromptSdlcLocalSkillSelect";
+import { renderPromptSdlcFieldHeading } from "./renderPromptSdlcFieldTip";
 import { renderPromptSdlcLocalWriterFields } from "./renderPromptSdlcLocalWriterFields";
 
 const escapeHtml = (value: string): string =>
@@ -102,22 +103,22 @@ export const buildPromptSdlcLocalPageBody = (input: {
         ${locked}
         <div class="sdlc-block">
           <p class="sdlc-block-title">Prompt and goal</p>
-          <label class="field">
-            <span class="field-label">Goal</span>
+          <div class="field">
+            ${renderPromptSdlcFieldHeading("Goal", "goal")}
             <textarea class="input textarea" name="goal" rows="4" required>${escapeHtml(shown.goal)}</textarea>
-          </label>
-          <label class="field">
-            <span class="field-label">Prompt</span>
+          </div>
+          <div class="field">
+            ${renderPromptSdlcFieldHeading("Prompt", "prompt")}
             <textarea class="input textarea" name="prompt" rows="10" required>${escapeHtml(shown.prompt)}</textarea>
-          </label>
+          </div>
         </div>
         <div class="sdlc-block">
           <p class="sdlc-block-title">Folder</p>
           <div class="sdlc-folder">
-          <label class="field">
-            <span class="field-label">Folder</span>
+          <div class="field">
+            ${renderPromptSdlcFieldHeading("Folder", "folder")}
             <input class="input" type="text" name="folder" value="${escapeHtml(shown.folder)}" onkeydown="if (event.key === 'Enter') event.preventDefault()">
-          </label>
+          </div>
           <button class="btn btn-secondary" type="submit" name="intent" value="choose-folder" formnovalidate>Choose folder…</button>
         </div>
         ${renderPromptSdlcLocalSkillSelect(listPromptSdlcFolderSkills(shown.folder))}

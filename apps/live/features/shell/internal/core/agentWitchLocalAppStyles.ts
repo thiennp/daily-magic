@@ -697,10 +697,69 @@ form.sdlc-form textarea.input.sdlc-instruction {
   font-family: inherit;
   font-size: 0.875rem;
 }
+.field-label-row { display: inline-flex; align-items: center; gap: 0.3rem; max-width: 100%; }
+.sdlc-tip {
+  position: relative;
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 1.25rem;
+  height: 1.25rem;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--aw-zinc-500);
+  cursor: help;
+}
+.sdlc-tip:hover,
+.sdlc-tip:focus-visible { color: var(--aw-zinc-900); background: var(--aw-zinc-100); }
+.sdlc-tip-icon { width: 0.95rem; height: 0.95rem; display: block; }
+.sdlc-tip-panel {
+  display: none;
+  position: absolute;
+  z-index: 30;
+  top: calc(100% + 0.4rem);
+  left: 0;
+  width: min(22rem, 72vw);
+  padding: 0.75rem 0.85rem;
+  border: 1px solid var(--aw-zinc-200);
+  border-radius: 0.75rem;
+  background: #fff;
+  box-shadow: 0 10px 28px rgba(16, 24, 40, 0.12);
+  color: var(--aw-zinc-800);
+  font-size: 0.8125rem;
+  font-weight: 400;
+  letter-spacing: normal;
+  line-height: 1.45;
+  text-align: left;
+  text-transform: none;
+}
+.sdlc-tip:hover .sdlc-tip-panel,
+.sdlc-tip:focus .sdlc-tip-panel,
+.sdlc-tip:focus-visible .sdlc-tip-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+.sdlc-tip-kicker {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--aw-zinc-500);
+}
+.sdlc-tip-example { white-space: pre-wrap; }
+.sdlc-writer:nth-child(2) .sdlc-tip-panel,
+.sdlc-limits > :last-child .sdlc-tip-panel { left: auto; right: 0; }
 @media (max-width: 767px) {
   .sdlc-writers,
   .sdlc-limits { grid-template-columns: 1fr; }
   .sdlc-folder { flex-direction: column; align-items: stretch; }
+  .sdlc-writer:nth-child(2) .sdlc-tip-panel,
+  .sdlc-limits > :last-child .sdlc-tip-panel { left: 0; right: auto; }
 }
 .sdlc-writer { display: flex; flex-direction: column; gap: 0.35rem; }
 .sdlc-writer p { margin: 0; }

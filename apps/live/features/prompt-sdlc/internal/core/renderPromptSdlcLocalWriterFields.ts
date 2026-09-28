@@ -1,4 +1,5 @@
 import type { PromptSdlcLocalWriterChoice } from "./promptSdlcLocalForm";
+import { renderPromptSdlcFieldHeading } from "./renderPromptSdlcFieldTip";
 
 const escapeHtml = (value: string): string =>
   value
@@ -22,7 +23,7 @@ const renderWriterSelect = (
     )
     .join("");
   const manual = `<option value="manual"${selected === "manual" ? " selected" : ""}>${escapeHtml(manualLabel)}</option>`;
-  return `<label class="field"><span class="field-label">${label}</span><select class="input" name="${name}" data-writer-select="${name}">${blank}${options}${manual}</select></label>`;
+  return `<div class="field">${renderPromptSdlcFieldHeading(label, name === "judge" ? "judge" : "improver")}<select class="input" name="${name}" data-writer-select="${name}">${blank}${options}${manual}</select></div>`;
 };
 
 const renderWriterStatus = (
@@ -47,7 +48,7 @@ const renderInstruction = (
   value: string,
   hint: string,
 ): string =>
-  `<label class="field"><span class="field-label">${label}</span><textarea class="input textarea sdlc-instruction" name="${name}" rows="3">${escapeHtml(value)}</textarea><span class="muted">${hint}</span></label>`;
+  `<div class="field">${renderPromptSdlcFieldHeading(label, name === "judgeInstructions" ? "judgeInstructions" : "improverInstructions")}<textarea class="input textarea sdlc-instruction" name="${name}" rows="3">${escapeHtml(value)}</textarea><span class="muted">${hint}</span></div>`;
 
 export const renderPromptSdlcLocalWriterFields = (input: {
   readonly writers: readonly PromptSdlcLocalWriterChoice[];

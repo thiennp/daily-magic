@@ -2,6 +2,7 @@ import {
   PROMPT_SDLC_PASS_SCORE,
   buildPromptSdlcScoreScale,
 } from "../../../../adapters/promptSdlcAwcCore";
+import { renderPromptSdlcFieldHeading } from "./renderPromptSdlcFieldTip";
 
 const escapeHtml = (value: string): string =>
   value
@@ -31,5 +32,5 @@ export const renderPromptSdlcLocalPassScore = (passScore: string): string => {
     .map((band) => band.label)
     .join(" · ");
   const style = `--sdlc-weak:${weak}%;--sdlc-close:${close}%;--sdlc-pass:${score}%`;
-  return `<div class="field sdlc-pass"><div class="sdlc-pass-head"><span class="field-label" id="sdlc-pass-label">Pass score</span><output class="sdlc-pass-value" data-sdlc-pass-value for="sdlc-pass">${score}</output></div><div class="sdlc-pass-scale" style="${style}"><span class="sdlc-pass-bar" aria-hidden="true"></span><input id="sdlc-pass" class="sdlc-pass-range" type="range" name="passScore" min="1" max="100" step="1" value="${score}" data-sdlc-pass aria-labelledby="sdlc-pass-label"><span class="sdlc-pass-mark" style="left:${markLeft(PROMPT_SDLC_PASS_SCORE)}" aria-hidden="true"><span class="sdlc-pass-mark-label">${PROMPT_SDLC_PASS_SCORE}</span></span></div><p class="sdlc-pass-legend" data-sdlc-pass-legend>${escapeHtml(legend)}</p><p class="muted">The bar fades from a weak score to a pass. The mark is the usual ${PROMPT_SDLC_PASS_SCORE}.</p></div>`;
+  return `<div class="field sdlc-pass"><div class="sdlc-pass-head">${renderPromptSdlcFieldHeading("Pass score", "passScore", "sdlc-pass-label")}<output class="sdlc-pass-value" data-sdlc-pass-value for="sdlc-pass">${score}</output></div><div class="sdlc-pass-scale" style="${style}"><span class="sdlc-pass-bar" aria-hidden="true"></span><input id="sdlc-pass" class="sdlc-pass-range" type="range" name="passScore" min="1" max="100" step="1" value="${score}" data-sdlc-pass aria-labelledby="sdlc-pass-label"><span class="sdlc-pass-mark" style="left:${markLeft(PROMPT_SDLC_PASS_SCORE)}" aria-hidden="true"><span class="sdlc-pass-mark-label">${PROMPT_SDLC_PASS_SCORE}</span></span></div><p class="sdlc-pass-legend" data-sdlc-pass-legend>${escapeHtml(legend)}</p><p class="muted">The bar fades from a weak score to a pass. The mark is the usual ${PROMPT_SDLC_PASS_SCORE}.</p></div>`;
 };

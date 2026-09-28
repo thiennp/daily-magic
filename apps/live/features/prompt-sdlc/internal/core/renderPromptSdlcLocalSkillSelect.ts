@@ -1,4 +1,5 @@
 import type { PromptSdlcFolderSkill } from "./readPromptSdlcFolderSkills";
+import { renderPromptSdlcFieldHeading } from "./renderPromptSdlcFieldTip";
 
 const escapeHtml = (value: string): string =>
   value
@@ -21,7 +22,7 @@ export const renderPromptSdlcLocalSkillSelect = (
   skills: readonly PromptSdlcFolderSkill[],
 ): string => {
   if (skills.length === 0) {
-    return `<label class="field"><span class="field-label">Skill</span><span class="muted">No skills in .cursor/skills for this folder.</span></label>`;
+    return `<div class="field">${renderPromptSdlcFieldHeading("Skill", "skill")}<span class="muted">No skills in .cursor/skills for this folder.</span></div>`;
   }
 
   const options = skills
@@ -30,7 +31,7 @@ export const renderPromptSdlcLocalSkillSelect = (
         `<option value="${escapeHtml(skill.fileName)}">${escapeHtml(skill.fileName)}</option>`,
     )
     .join("");
-  return `<label class="field"><span class="field-label">Skill</span><select class="input" name="skillFile" data-skill-select><option value="">Choose a skill in this folder</option>${options}</select><span class="muted">Fills the prompt from that skill.</span></label><script type="application/json" id="prompt-sdlc-skill-catalog">${promptSdlcSkillCatalogJson(skills)}</script>`;
+  return `<div class="field">${renderPromptSdlcFieldHeading("Skill", "skill")}<select class="input" name="skillFile" data-skill-select><option value="">Choose a skill in this folder</option>${options}</select><span class="muted">Fills the prompt from that skill.</span></div><script type="application/json" id="prompt-sdlc-skill-catalog">${promptSdlcSkillCatalogJson(skills)}</script>`;
 };
 
 export const PROMPT_SDLC_SKILL_SELECT_SCRIPT = `<script>

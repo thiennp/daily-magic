@@ -44,6 +44,10 @@ describe("buildPromptSdlcLocalPageBody", () => {
     expect(html).toContain('name="improverInstructions"');
     expect(html).toContain("Judge and improver");
     expect(html).toContain("When to stop");
+    expect(html.match(/class="sdlc-tip"/g)?.length).toBe(10);
+    expect(html).toContain("does not run the prompt");
+    expect(html).toContain("How to use Goal");
+    expect(html).toContain("How to use Round limit");
     expect(html).not.toContain('name="deviceId"');
   });
 
