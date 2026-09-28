@@ -1,10 +1,10 @@
 import { cancelQueuedAgentWitchDispatchOutboxForDevice } from "@/lib/agentWitch/cancelQueuedAgentWitchDispatchOutboxForDevice";
+import { deleteAgentWitchDevice } from "@/lib/agentWitch/deleteAgentWitchDevice";
 import disconnectAgentClientsForDevice from "@/lib/agentWitch/disconnectAgentClientsForDevice";
 import {
   getAgentWitchHub,
   getAgentWitchPairingStore,
 } from "@/lib/agentWitch/getAgentWitchHub";
-import { revokeAgentWitchDevice } from "@/lib/agentWitch/revokeAgentWitchDevice";
 import { deleteActiveAgentRunsForRevokedDevice } from "@/lib/dispatch/deleteActiveAgentRunsForRevokedDevice";
 import { requireAuth } from "@/lib/auth/requireAuth";
 
@@ -27,19 +27,6 @@ export async function DELETE(
   }
 
   const { deviceId } = await context.params;
-  const revoked = await revokeAgentWitchDevice({
-    deviceId,
-    userId: actor.id,
-  });
-
-  if (!revoked) {
-    return Response.json({ error: "Device not found." }, { status: 404 });
-  }
-
-  const hub = getAgentWitchHub();
-  getAgentWitchPairingStore().evictDeviceFromCache(deviceId);
-  disconnectAgentClientsForDevice(hub, actor.id, deviceId);
-
   const [deletedRunIds] = await Promise.all([
     deleteActiveAgentRunsForRevokedDevice({
       deviceId,
@@ -50,6 +37,18 @@ export async function DELETE(
       userId: actor.id,
     }),
   ]);
+  const deleted = await deleteAgentWitchDevice({
+    deviceId,
+    userId: actor.id,
+  });
 
-  return Response.json({ ok: true, revoked: true, deletedRunIds });
+  if (!deleted) {
+    return Response.json({ error: "Device not found." }, { status: 404 });
+  }
+
+  const hub = getAgentWitchHub();
+  getAgentWitchPairingStore().evictDeviceFromCache(deviceId);
+  disconnectAgentClientsForDevice(hub, actor.id, deviceId);
+
+  return Response.json({ ok: true, deleted: true, deletedRunIds });
 }

@@ -608,6 +608,18 @@ Document every production bug or UX regression here. Each entry must link to a t
 
 ---
 
+## HOME-060 — Deleting a Mac left the local install running
+
+**Symptom:** Removing a Mac in the Console set `revoked_at` and closed the socket. The Mac app kept the pairing token, retried, and stayed installed. Projects were not the only thing left behind; the helper and bridge kept their identity too.
+
+**Root cause:** Delete never removed the `agent_witch_devices` row, and the Mac client treated every `system.error` as ignorable. A revoked row is still a known identity, so the client had no signal to forget the connection.
+
+**Fix:** Delete removes the row after cancelling in-flight runs and queued dispatch. Register and the live disconnect send `errorCode` `unknown_identity` only when the token hash is absent. Bundle 148 stops reconnecting and deletes connection files plus shipped app code. Projects, harness, reports, runs, rag, memory, and Ollama stay. Generic errors and revoked-but-present rows do not wipe.
+
+**Regression tests:** `deleteAgentWitchDevice.test.ts`, `resolveAgentRegisterIdentityRejection.test.ts`, `disconnectAgentClientsForDevice.test.ts`, `forgetAgentWitchLocalConnection.test.ts`, `isUnknownAgentWitchIdentityError.test.ts` (HOME-060).
+
+---
+
 ## Adding issues
 
-Use the next ID (`HOME-060`, …). Include symptom, root cause, fix paths, and test file.
+Use the next ID (`HOME-061`, …). Include symptom, root cause, fix paths, and test file.

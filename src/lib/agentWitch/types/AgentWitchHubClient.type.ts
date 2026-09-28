@@ -11,4 +11,5 @@ export default interface AgentWitchHubClient {
   readonly deviceLabel?: string;
   readonly lastHeartbeatAt?: string;
   readonly send: (message: AgentWitchMessage) => void;
+  readonly close?: () => void;
 }

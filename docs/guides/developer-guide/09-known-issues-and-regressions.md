@@ -91,6 +91,14 @@ Each **Connect this Mac** click used to insert a device with `last_seen_at = NOW
 
 ---
 
+## Deleting a Mac removes the identity
+
+`DELETE /api/agent-witch/devices/:id` deletes the device row after clearing in-flight runs and queued dispatch (HOME-060). It does not set `revoked_at`. `findAgentWitchDeviceByToken` looks up `token_hash` with no user filter. A missing row is `unknown_identity`. A row that still exists with `revoked_at` set stays “not linked” and must not wipe the Mac. Bundle 148+ handles that code in `startAgentWitchClient` by stopping reconnect, calling `forgetAgentWitchLocalConnection`, releasing the machine lease, and exiting. Forget removes LaunchAgents, connection files, and `app/`. It leaves projects, harness, reports, runs, rag, memory, and Ollama. There is no local Redis.
+
+**Q&A:** [awc-delete-mac-forgets-local-connection.md](../../qa/awc-delete-mac-forgets-local-connection.md).
+
+---
+
 ## How to find regression coverage
 
 ```bash
