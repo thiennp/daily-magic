@@ -9,23 +9,31 @@ import { formatAgentWitchGitWorktreeVerdict } from "./formatAgentWitchGitWorktre
 
 const tempDirs: string[] = [];
 
+const gitEnv = (): NodeJS.ProcessEnv => {
+  const env = { ...process.env };
+  delete env.GIT_DIR;
+  delete env.GIT_WORK_TREE;
+  delete env.GIT_INDEX_FILE;
+  return env;
+};
+
 afterEach(() => {
   for (const dir of tempDirs.splice(0)) {
     fs.rmSync(dir, { recursive: true, force: true });
   }
 });
 
+const git = (dir: string, args: readonly string[]): void => {
+  execFileSync("git", args, { cwd: dir, env: gitEnv() });
+};
+
 const initGitRepo = (dir: string): void => {
-  execFileSync("git", ["init"], { cwd: dir });
-  execFileSync("git", ["config", "user.email", "test@agentwitch.com"], {
-    cwd: dir,
-  });
-  execFileSync("git", ["config", "user.name", "Agent Witch Test"], {
-    cwd: dir,
-  });
+  git(dir, ["init"]);
+  git(dir, ["config", "user.email", "test@agentwitch.com"]);
+  git(dir, ["config", "user.name", "Agent Witch Test"]);
   fs.writeFileSync(path.join(dir, "README.md"), "hello\n");
-  execFileSync("git", ["add", "README.md"], { cwd: dir });
-  execFileSync("git", ["commit", "-m", "init"], { cwd: dir });
+  git(dir, ["add", "README.md"]);
+  git(dir, ["commit", "-m", "init"]);
 };
 
 describe("captureAgentWitchGitWorktreeSnapshot", () => {
