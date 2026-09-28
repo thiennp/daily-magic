@@ -27,16 +27,6 @@ export async function DELETE(
   }
 
   const { deviceId } = await context.params;
-  const [deletedRunIds] = await Promise.all([
-    deleteActiveAgentRunsForRevokedDevice({
-      deviceId,
-      userId: actor.id,
-    }),
-    cancelQueuedAgentWitchDispatchOutboxForDevice({
-      deviceId,
-      userId: actor.id,
-    }),
-  ]);
   const deleted = await deleteAgentWitchDevice({
     deviceId,
     userId: actor.id,
@@ -49,6 +39,17 @@ export async function DELETE(
   const hub = getAgentWitchHub();
   getAgentWitchPairingStore().evictDeviceFromCache(deviceId);
   disconnectAgentClientsForDevice(hub, actor.id, deviceId);
+
+  const [deletedRunIds] = await Promise.all([
+    deleteActiveAgentRunsForRevokedDevice({
+      deviceId,
+      userId: actor.id,
+    }),
+    cancelQueuedAgentWitchDispatchOutboxForDevice({
+      deviceId,
+      userId: actor.id,
+    }),
+  ]);
 
   return Response.json({ ok: true, deleted: true, deletedRunIds });
 }
