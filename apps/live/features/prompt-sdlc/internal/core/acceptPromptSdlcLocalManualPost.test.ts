@@ -5,6 +5,10 @@ import path from "node:path";
 import { describe, expect, it } from "vitest";
 
 import { acceptPromptSdlcLocalManualPost } from "./acceptPromptSdlcLocalManualPost";
+import {
+  closePromptSdlcLocalCycleAbort,
+  openPromptSdlcLocalCycleAbort,
+} from "./stopPromptSdlcLocalCycle";
 import { createPromptSdlcLocalCycle } from "./createPromptSdlcLocalCycle";
 import {
   readPromptSdlcLocalCycle,
@@ -52,6 +56,40 @@ describe("acceptPromptSdlcLocalManualPost", () => {
     expect(next?.revisions[0]?.judgement?.reasons).toBe(
       "The prompt never names the facts it may use.",
     );
+    fs.rmSync(storePath, { force: true });
+  });
+
+  it("stops the run and aborts the writer", () => {
+    const storePath = path.join(
+      os.tmpdir(),
+      `prompt-sdlc-stop-${crypto.randomUUID()}.json`,
+    );
+    const cycle = createPromptSdlcLocalCycle({
+      goal: "Stay in the facts.",
+      sourcePrompt: "Be helpful.",
+      judgeModel: "claude-cli",
+      improverModel: "codex",
+    });
+    savePromptSdlcLocalCycle(storePath, cycle);
+    const signal = openPromptSdlcLocalCycleAbort(cycle.id);
+
+    const stopped = acceptPromptSdlcLocalManualPost({
+      storePath,
+      posted: new URLSearchParams({
+        intent: "stop",
+        cycleId: cycle.id,
+      }),
+    });
+
+    expect(stopped).toEqual({ kind: "saved", cycleId: cycle.id });
+    expect(signal.aborted).toBe(true);
+    expect(readPromptSdlcLocalCycle(storePath, cycle.id)?.status).toBe(
+      "stopped",
+    );
+    expect(readPromptSdlcLocalCycle(storePath, cycle.id)?.errorMessage).toBe(
+      "Finished. The best prompt is the result.",
+    );
+    closePromptSdlcLocalCycleAbort(cycle.id);
     fs.rmSync(storePath, { force: true });
   });
 });

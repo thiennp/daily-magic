@@ -1,10 +1,10 @@
 import { cancelQueuedAgentWitchDispatchOutboxForDevice } from "@/lib/agentWitch/cancelQueuedAgentWitchDispatchOutboxForDevice";
+import { deleteAgentWitchDevice } from "@/lib/agentWitch/deleteAgentWitchDevice";
 import disconnectAgentClientsForDevice from "@/lib/agentWitch/disconnectAgentClientsForDevice";
 import {
   getAgentWitchHub,
   getAgentWitchPairingStore,
 } from "@/lib/agentWitch/getAgentWitchHub";
-import { revokeAgentWitchDevice } from "@/lib/agentWitch/revokeAgentWitchDevice";
 import { deleteActiveAgentRunsForRevokedDevice } from "@/lib/dispatch/deleteActiveAgentRunsForRevokedDevice";
 import { requireAuth } from "@/lib/auth/requireAuth";
 
@@ -27,12 +27,12 @@ export async function DELETE(
   }
 
   const { deviceId } = await context.params;
-  const revoked = await revokeAgentWitchDevice({
+  const deleted = await deleteAgentWitchDevice({
     deviceId,
     userId: actor.id,
   });
 
-  if (!revoked) {
+  if (!deleted) {
     return Response.json({ error: "Device not found." }, { status: 404 });
   }
 
@@ -51,5 +51,5 @@ export async function DELETE(
     }),
   ]);
 
-  return Response.json({ ok: true, revoked: true, deletedRunIds });
+  return Response.json({ ok: true, deleted: true, deletedRunIds });
 }

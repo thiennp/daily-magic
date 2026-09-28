@@ -14,13 +14,13 @@ export const describePromptSdlcLocalActivity = (
     cycle.judgeModel === PROMPT_SDLC_MANUAL_ACTOR
   ) {
     return {
-      title: `Score round ${cycle.currentRound + 1} of ${cycle.maxRounds}.`,
+      title: `Score round ${cycle.currentRound + 1}.`,
       detail: "Add a score from 0 to 100 and the reason for that score.",
     };
   }
   if (cycle.status === "judging") {
     return {
-      title: `${labelPromptSdlcLocalModel(cycle.judgeModel)} is scoring round ${cycle.currentRound + 1} of ${cycle.maxRounds}.`,
+      title: `${labelPromptSdlcLocalModel(cycle.judgeModel)} is scoring round ${cycle.currentRound + 1}.`,
       detail:
         "That writer is working on this Mac. This panel keeps updating, so the page is not stuck.",
     };
@@ -58,11 +58,16 @@ export const describePromptSdlcLocalActivity = (
       (revision) =>
         describePromptSdlcWriterTerminalFailure(revision.promptText) !== null,
     );
+    const message = cycle.errorMessage?.trim() ?? "";
+    const finished = (cycle.errorMessage ?? "").startsWith("Finished");
     return {
-      title: "Stopped after the last round.",
-      detail: writerFailed
-        ? "The improver returned a terminal error instead of a prompt, so the later scores are 0. This run is listed in History."
-        : "",
+      title: finished ? "Finished." : "Stopped.",
+      detail:
+        message.length > 0
+          ? message
+          : writerFailed
+            ? "The improver returned a terminal error instead of a prompt, so the later scores are 0. This run is listed in History."
+            : "The best prompt is kept.",
     };
   }
   if (isPromptSdlcTerminalStatus(cycle.status)) {

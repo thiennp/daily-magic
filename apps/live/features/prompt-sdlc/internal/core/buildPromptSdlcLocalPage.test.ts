@@ -1,3 +1,7 @@
+import fs from "node:fs";
+import os from "node:os";
+import path from "node:path";
+
 import { describe, expect, it } from "vitest";
 
 import { buildPromptSdlcLocalCycleSection } from "./buildPromptSdlcLocalCycleSection";
@@ -36,6 +40,10 @@ describe("buildPromptSdlcLocalPageBody", () => {
     expect(html).toContain("Choose folder");
     expect(html).toContain("I'll score it");
     expect(html).toContain("I'll rewrite it");
+    expect(html).toContain('name="judgeInstructions"');
+    expect(html).toContain('name="improverInstructions"');
+    expect(html).toContain("Judge and improver");
+    expect(html).toContain("When to stop");
     expect(html).not.toContain('name="deviceId"');
   });
 
@@ -58,7 +66,7 @@ describe("buildPromptSdlcLocalPageBody", () => {
       history: [],
     });
 
-    expect(html).toContain("Choose who scores the prompt and who rewrites it.");
+    expect(html).toContain("Instructions are optional.");
     expect(html).toContain("I'll score it");
     expect(html).toContain("I'll rewrite it");
     expect(html).toContain("Choose who does this step.");
@@ -94,7 +102,7 @@ describe("buildPromptSdlcLocalPageBody", () => {
       history: [],
     });
 
-    expect(html.indexOf("Claude is scoring round 1 of 3.")).toBeLessThan(
+    expect(html.indexOf("Claude is scoring round 1.")).toBeLessThan(
       html.indexOf("Optimize a prompt"),
     );
     expect(html).toContain("The reply stays inside the facts.");
@@ -107,6 +115,11 @@ describe("buildPromptSdlcLocalPageBody", () => {
     expect(html).toContain("What the score means");
     expect(html).toContain("0–44 bad");
     expect(html).toContain("90–100 passes");
+    expect(html).toContain('type="number" name="maxRounds"');
+    expect(html).toContain('value="10"');
+    expect(html).toContain('name="intent" value="stop"');
+    expect(html).toContain(">Finish<");
+    expect(html).toContain("This run counts as complete.");
     expect(html).toContain('type="range" name="passScore"');
     expect(html).toContain('value="90"');
     expect(html).toContain("sdlc-pass-range");
@@ -152,6 +165,104 @@ describe("buildPromptSdlcLocalPageBody", () => {
     expect(finished).toContain('value="claude-cli" selected');
     expect(finished).not.toContain('fieldset class="sdlc-fields" disabled');
     expect(finished).toContain(">Run<");
+  });
+
+  it("opens a saved prompt from a timeline node and offers the best prompt as a skill", () => {
+    const cycle = {
+      ...createPromptSdlcLocalCycle({
+        goal: "The reply stays inside the facts.",
+        sourcePrompt: "Be helpful.",
+        judgeModel: "claude-cli" as const,
+        improverModel: "codex" as const,
+      }),
+      status: "passed" as const,
+      revisions: [
+        {
+          roundNumber: 0,
+          promptText: "Be helpful.",
+          judgement: {
+            score: 40,
+            passed: false,
+            reasons: "Too vague.",
+            rawReply: "40",
+          },
+        },
+        {
+          roundNumber: 1,
+          promptText:
+            "Answer only from the ticket, and stop when a fact is missing.",
+          judgement: {
+            score: 94,
+            passed: true,
+            reasons: "It names the stop.",
+            rawReply: "94",
+          },
+        },
+      ],
+    };
+    const html = buildPromptSdlcLocalPageBody({
+      goal: "",
+      prompt: "",
+      modelNote: "",
+      writers: [],
+      judge: "",
+      improver: "",
+      folder: "~",
+      passScore: "90",
+      canRun: true,
+      errorMessage: null,
+      cycle,
+      history: [],
+    });
+
+    expect(html).toContain("data-sdlc-node");
+    expect(html).toContain('id="sdlc-node-dialog"');
+    expect(html).toContain("Be helpful.");
+    expect(html).toContain("Too vague.");
+    expect(html).toContain('id="prompt-sdlc-best"');
+    expect(html).toContain("Round 1 · Score 94 / 100");
+    expect(html).toContain(
+      "Answer only from the ticket, and stop when a fact is missing.",
+    );
+    expect(html).toContain('value="save-skill"');
+    expect(html).toContain('name="skillName"');
+    expect(html).toContain('value="the-reply-stays-inside-the-facts"');
+    expect(html).toContain('name="skillDescription"');
+    expect(html).toContain("The reply stays inside the facts.");
+    expect(html).toContain('name="skillPrompt"');
+    expect(html).toContain('name="skillFileName"');
+    expect(html).toContain("Optional.");
+  });
+
+  it("lists skills in the chosen folder so one can fill the prompt", () => {
+    const folder = fs.mkdtempSync(path.join(os.tmpdir(), "prompt-sdlc-list-"));
+    const skillDir = path.join(folder, ".cursor", "skills", "support-reply");
+    fs.mkdirSync(skillDir, { recursive: true });
+    fs.writeFileSync(
+      path.join(skillDir, "SKILL.md"),
+      '---\nname: "Support reply"\ndescription: "Answer the customer"\n---\n\nAnswer the question they asked.\n',
+      "utf8",
+    );
+
+    const html = buildPromptSdlcLocalPageBody({
+      goal: "",
+      prompt: "",
+      modelNote: "",
+      writers: [],
+      judge: "",
+      improver: "",
+      folder,
+      passScore: "90",
+      canRun: true,
+      errorMessage: null,
+      cycle: null,
+      history: [],
+    });
+
+    expect(html).toContain('name="skillFile"');
+    expect(html).toContain('value="support-reply"');
+    expect(html).toContain("Answer the question they asked.");
+    expect(html).toContain("Fills the prompt from that skill.");
   });
 
   it("explains a Codex terminal error instead of showing it as the revision", () => {
@@ -226,6 +337,8 @@ describe("buildPromptSdlcLocalPageBody", () => {
     );
     expect(guide).not.toContain('name="intent" value="run"');
     expect(guide).toContain("CUSTOMER_MESSAGE");
+    expect(guide).toContain("Finish");
+    expect(guide).toContain("tokens spent so far");
   });
 
   it("asks for a score and a reason when the judge is you", () => {
@@ -304,5 +417,44 @@ describe("buildPromptSdlcLocalPageBody", () => {
     expect(html.indexOf("sdlc-manual-verdict")).toBeLessThan(
       html.indexOf('name="prompt"'),
     );
+  });
+
+  it("shows the tokens spent through each scored round", () => {
+    const running = {
+      ...createPromptSdlcLocalCycle({
+        goal: "Stay in the facts.",
+        sourcePrompt: "Be helpful.",
+        judgeModel: "claude-cli" as const,
+        improverModel: "codex" as const,
+      }),
+      status: "improving" as const,
+      revisions: [
+        {
+          roundNumber: 0,
+          promptText: "Be helpful.",
+          judgement: {
+            score: 40,
+            passed: false,
+            reasons: "Thin.",
+            rawReply: "{}",
+            tokens: 1_500,
+          },
+        },
+      ],
+    };
+    const finished = {
+      ...running,
+      status: "stopped" as const,
+      errorMessage: "Finished. The best prompt is the result.",
+    };
+    const runningHtml = buildPromptSdlcLocalCycleSection(running);
+    const finishedHtml = buildPromptSdlcLocalCycleSection(finished);
+
+    expect(runningHtml).toContain("Tokens so far: 1,500");
+    expect(runningHtml).toContain("1,500 tokens so far");
+    expect(runningHtml).toContain(">Finish<");
+    expect(finishedHtml).toContain("Finished.");
+    expect(finishedHtml).toContain("Finished");
+    expect(finishedHtml).not.toContain(">Finish<");
   });
 });

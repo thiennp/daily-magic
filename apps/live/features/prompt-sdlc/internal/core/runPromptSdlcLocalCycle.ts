@@ -5,6 +5,10 @@ import {
 } from "../../../../adapters/writerDispatch";
 import { advancePromptSdlcLocalCycle } from "./advancePromptSdlcLocalCycle";
 import { isPromptSdlcLocalManualWait } from "./isPromptSdlcLocalManualWait";
+import {
+  closePromptSdlcLocalCycleAbort,
+  openPromptSdlcLocalCycleAbort,
+} from "./stopPromptSdlcLocalCycle";
 import { forgetPromptSdlcWriterReady } from "./promptSdlcWriterReadyStore";
 import {
   readPromptSdlcLocalCycle,
@@ -35,22 +39,32 @@ export const readPromptSdlcInstalledWriters = async (): Promise<
 const runUntilTerminal = async (
   storePath: string,
   cycleId: string,
+  signal: AbortSignal,
 ): Promise<void> => {
   const cycle = readPromptSdlcLocalCycle(storePath, cycleId);
   if (
     cycle === null ||
     isPromptSdlcTerminalStatus(cycle.status) ||
-    isPromptSdlcLocalManualWait(cycle)
+    isPromptSdlcLocalManualWait(cycle) ||
+    signal.aborted
   ) {
     return;
   }
 
-  const next = await advancePromptSdlcLocalCycle(cycle, (writer) => {
-    forgetPromptSdlcWriterReady(storePath, writer);
-  });
+  const next = await advancePromptSdlcLocalCycle(
+    cycle,
+    (writer) => {
+      forgetPromptSdlcWriterReady(storePath, writer);
+    },
+    signal,
+  );
+  const latest = readPromptSdlcLocalCycle(storePath, cycleId);
+  if (latest?.status === "stopped" || signal.aborted) {
+    return;
+  }
   savePromptSdlcLocalCycle(storePath, next);
   if (!isPromptSdlcTerminalStatus(next.status)) {
-    await runUntilTerminal(storePath, cycleId);
+    await runUntilTerminal(storePath, cycleId, signal);
   }
 };
 
@@ -72,7 +86,9 @@ export const ensurePromptSdlcLocalCycleRunning = (
   }
 
   runningCycleIds.add(cycleId);
-  void runUntilTerminal(storePath, cycleId).finally(() => {
+  const signal = openPromptSdlcLocalCycleAbort(cycleId);
+  void runUntilTerminal(storePath, cycleId, signal).finally(() => {
     runningCycleIds.delete(cycleId);
+    closePromptSdlcLocalCycleAbort(cycleId);
   });
 };

@@ -87,6 +87,10 @@ import {
   fetchHarnessInstallBundleArtifact,
   parseHarnessInstallBundle,
 } from "@agent-witch/live-harness";
+import {
+  forgetAgentWitchLocalConnection,
+  isUnknownAgentWitchIdentityError,
+} from "@agent-witch/install-uninstall";
 import { AGENT_WITCH_DEFAULT_ORIGIN } from "@agent-witch/shared/network";
 
 import {
@@ -1157,6 +1161,20 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
     socket: AgentWitchOutboundSocket,
   ): void => {
     if (typeof parsed.type !== "string") {
+      return;
+    }
+
+    if (isUnknownAgentWitchIdentityError(parsed)) {
+      state.stopped = true;
+      clearHeartbeat();
+      clearReconnectTimer();
+      closeSocket();
+      void forgetAgentWitchLocalConnection({ layout: config.layout }).finally(
+        () => {
+          releaseAgentWitchMachineLease();
+          process.exit(0);
+        },
+      );
       return;
     }
 

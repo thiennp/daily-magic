@@ -5,12 +5,22 @@ import {
   PROMPT_SDLC_LOCAL_LIVE_SCRIPT,
   PROMPT_SDLC_LOCAL_LIVE_STYLE,
 } from "./buildPromptSdlcLocalLiveScript";
+import {
+  PROMPT_SDLC_NODE_DIALOG,
+  PROMPT_SDLC_NODE_DIALOG_SCRIPT,
+} from "./buildPromptSdlcLocalStepTree";
 import { PROMPT_SDLC_LOCAL_FORM_SCRIPT } from "./promptSdlcLocalFormScript";
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
 import type { PromptSdlcLocalWriterChoice } from "./promptSdlcLocalForm";
-import { promptSdlcLocalHistoryTitle } from "./promptSdlcLocalHistoryTitle";
 import { readPromptSdlcLocalShownForm } from "./readPromptSdlcLocalShownForm";
+import { renderPromptSdlcLocalHistory } from "./renderPromptSdlcLocalHistory";
+import { listPromptSdlcFolderSkills } from "./readPromptSdlcFolderSkills";
+import { renderPromptSdlcLocalMaxRounds } from "./renderPromptSdlcLocalMaxRounds";
 import { renderPromptSdlcLocalPassScore } from "./renderPromptSdlcLocalPassScore";
+import {
+  PROMPT_SDLC_SKILL_SELECT_SCRIPT,
+  renderPromptSdlcLocalSkillSelect,
+} from "./renderPromptSdlcLocalSkillSelect";
 import { renderPromptSdlcLocalWriterFields } from "./renderPromptSdlcLocalWriterFields";
 
 const escapeHtml = (value: string): string =>
@@ -20,32 +30,6 @@ const escapeHtml = (value: string): string =>
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;");
 
-const renderHistoryItem = (
-  cycle: PromptSdlcLocalCycle,
-  openCycleId: string | null,
-): string => {
-  const open =
-    openCycleId === null
-      ? ""
-      : `<input type="hidden" name="openCycleId" value="${escapeHtml(openCycleId)}">`;
-  return `<li><div><a href="/prompt-sdlc?cycle=${escapeHtml(cycle.id)}">${escapeHtml(promptSdlcLocalHistoryTitle(cycle.goal))}</a><p class="muted">${escapeHtml(cycle.status)} · round ${cycle.currentRound}</p></div><form method="POST" action="/prompt-sdlc"><input type="hidden" name="intent" value="delete-history"><input type="hidden" name="cycleId" value="${escapeHtml(cycle.id)}">${open}<button class="btn btn-secondary" type="submit">Delete</button></form></li>`;
-};
-
-const renderHistory = (
-  history: readonly PromptSdlcLocalCycle[],
-  openCycleId: string | null,
-): string => {
-  if (history.length === 0) {
-    return `<section class="card"><h2>History</h2><p class="muted">No runs yet.</p></section>`;
-  }
-
-  const items = history
-    .slice(0, 20)
-    .map((cycle) => renderHistoryItem(cycle, openCycleId))
-    .join("");
-  return `<section class="card"><h2>History</h2><ul class="sdlc-history">${items}</ul></section>`;
-};
-
 export const buildPromptSdlcLocalPageBody = (input: {
   readonly goal: string;
   readonly prompt: string;
@@ -53,10 +37,14 @@ export const buildPromptSdlcLocalPageBody = (input: {
   readonly writers: readonly PromptSdlcLocalWriterChoice[];
   readonly judge: string;
   readonly improver: string;
+  readonly judgeInstructions?: string;
+  readonly improverInstructions?: string;
   readonly folder: string;
   readonly passScore: string;
+  readonly maxRounds?: string;
   readonly canRun: boolean;
   readonly errorMessage: string | null;
+  readonly skillNotice?: string | null;
   readonly cycle: PromptSdlcLocalCycle | null;
   readonly history: readonly PromptSdlcLocalCycle[];
 }): string => {
@@ -64,6 +52,14 @@ export const buildPromptSdlcLocalPageBody = (input: {
     input.errorMessage === null
       ? ""
       : `<div class="alert-error">${escapeHtml(input.errorMessage)}</div>`;
+  const skillNotice =
+    (input.skillNotice ?? null) === null
+      ? ""
+      : `<div class="alert-success">${escapeHtml(input.skillNotice ?? "")}</div>`;
+  const nodeDialog =
+    input.cycle === null
+      ? ""
+      : `${PROMPT_SDLC_NODE_DIALOG}${PROMPT_SDLC_NODE_DIALOG_SCRIPT}`;
   const cycle =
     input.cycle === null ? "" : buildPromptSdlcLocalCycleSection(input.cycle);
   const live =
@@ -84,9 +80,11 @@ export const buildPromptSdlcLocalPageBody = (input: {
     writers: input.writers,
     judge: shown.judge,
     improver: shown.improver,
+    judgeInstructions: shown.judgeInstructions,
+    improverInstructions: shown.improverInstructions,
   });
   const intro =
-    "Choose who scores the prompt and who rewrites it. You can do either step yourself.";
+    "Set the goal and the prompt, then choose who scores and who rewrites. Instructions are optional.";
   const locked = shown.running
     ? `<p class="sdlc-locked" data-sdlc-locked>This run is using these choices.</p>`
     : "";
@@ -114,7 +112,7 @@ export const buildPromptSdlcLocalPageBody = (input: {
           </label>
         </div>
         <div class="sdlc-block">
-          <p class="sdlc-block-title">How this run works</p>
+          <p class="sdlc-block-title">Folder</p>
           <div class="sdlc-folder">
           <label class="field">
             <span class="field-label">Folder</span>
@@ -122,8 +120,18 @@ export const buildPromptSdlcLocalPageBody = (input: {
           </label>
           <button class="btn btn-secondary" type="submit" name="intent" value="choose-folder" formnovalidate>Choose folder…</button>
         </div>
-        ${renderPromptSdlcLocalPassScore(shown.passScore)}
+        ${renderPromptSdlcLocalSkillSelect(listPromptSdlcFolderSkills(shown.folder))}
+        </div>
+        <div class="sdlc-block">
+          <p class="sdlc-block-title">Judge and improver</p>
           ${writerFields}
+        </div>
+        <div class="sdlc-block">
+          <p class="sdlc-block-title">When to stop</p>
+          <div class="sdlc-limits">
+            ${renderPromptSdlcLocalPassScore(shown.passScore)}
+            ${renderPromptSdlcLocalMaxRounds(shown.maxRounds)}
+          </div>
         </div>
         <div class="sdlc-submit">
           <button class="btn btn-primary" type="submit" name="intent" value="run" data-sdlc-run data-can-run="${input.canRun ? "true" : "false"}" disabled>${runLabel}</button>
@@ -131,5 +139,5 @@ export const buildPromptSdlcLocalPageBody = (input: {
         </fieldset>
       </form>
     </section>`;
-  return `${error}${cycle}${live}${form}${renderHistory(input.history, input.cycle?.id ?? null)}${PROMPT_SDLC_LOCAL_FORM_SCRIPT}`;
+  return `${error}${skillNotice}${cycle}${nodeDialog}${live}${form}${renderPromptSdlcLocalHistory(input.history, input.cycle?.id ?? null)}${PROMPT_SDLC_LOCAL_FORM_SCRIPT}${PROMPT_SDLC_SKILL_SELECT_SCRIPT}`;
 };

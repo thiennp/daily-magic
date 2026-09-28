@@ -1,4 +1,5 @@
 import {
+  collectPromptSdlcPriorRounds,
   continueAfterImproveReply,
   continueAfterJudgeReply,
   type HarnessWriterAgent,
@@ -19,12 +20,13 @@ const withJudgement = (
   score: number | null,
   passed: boolean | null,
   reasons: string | null,
+  tokens: number | null,
 ): PromptSdlcLocalCycle["revisions"] =>
   cycle.revisions.map((revision) =>
     revision.roundNumber === cycle.currentRound
       ? {
           ...revision,
-          judgement: { score, passed, reasons, rawReply },
+          judgement: { score, passed, reasons, rawReply, tokens },
         }
       : revision,
   );
@@ -32,18 +34,28 @@ const withJudgement = (
 export const applyPromptSdlcLocalJudgeReply = (
   cycle: PromptSdlcLocalCycle,
   rawReply: string,
+  tokens: number | null = null,
 ): PromptSdlcLocalCycle => {
   const revision = cycle.revisions.find(
     (item) => item.roundNumber === cycle.currentRound,
   );
   const result = continueAfterJudgeReply({
     raw: rawReply,
-    round: cycle.currentRound,
-    maxRounds: cycle.maxRounds,
     passScore: cycle.passScore,
     goal: cycle.goal,
     promptText: revision?.promptText ?? "",
     improver: writerChoice(cycle.improverModel),
+    round: cycle.currentRound,
+    maxRounds: cycle.maxRounds,
+    priorRounds: collectPromptSdlcPriorRounds(
+      cycle.revisions.map((item) => ({
+        roundNumber: item.roundNumber,
+        promptText: item.promptText,
+        score: item.judgement?.score ?? null,
+        reasons: item.judgement?.reasons ?? null,
+      })),
+      cycle.currentRound,
+    ),
   });
   const revisions = withJudgement(
     cycle,
@@ -51,25 +63,21 @@ export const applyPromptSdlcLocalJudgeReply = (
     result.verdict?.score ?? null,
     result.verdict?.passed ?? null,
     result.verdict?.reasons ?? null,
+    tokens,
   );
   const updatedAt = new Date().toISOString();
   if (result.continuation.type === "call") {
     return { ...cycle, revisions, status: "improving", updatedAt };
-  }
-  if (result.continuation.type === "failed") {
-    return {
-      ...cycle,
-      revisions,
-      status: "failed",
-      errorMessage: result.continuation.errorMessage,
-      updatedAt,
-    };
   }
 
   return {
     ...cycle,
     revisions,
     status: result.continuation.type,
+    errorMessage:
+      result.continuation.type === "passed"
+        ? null
+        : result.continuation.errorMessage,
     updatedAt,
   };
 };
@@ -77,6 +85,7 @@ export const applyPromptSdlcLocalJudgeReply = (
 export const applyPromptSdlcLocalImproverReply = (
   cycle: PromptSdlcLocalCycle,
   rawReply: string,
+  tokens: number | null = null,
 ): PromptSdlcLocalCycle => {
   const result = continueAfterImproveReply({
     raw: rawReply,
@@ -107,6 +116,7 @@ export const applyPromptSdlcLocalImproverReply = (
         roundNumber: cycle.currentRound + 1,
         promptText: result.nextPrompt,
         judgement: null,
+        writerTokens: tokens,
       },
     ],
     updatedAt,

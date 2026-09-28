@@ -51,3 +51,22 @@ export const parsePromptJudgementVerdict = (
     reasons: verdict.reasons.trim(),
   };
 };
+
+/** Aligns `passed` with the configured pass score; the judge JSON can disagree. */
+export const normalizePromptSdlcJudgeVerdict = (
+  verdict: PromptSdlcVerdict,
+  passScore: number,
+): PromptSdlcVerdict => ({
+  ...verdict,
+  passed: verdict.score >= passScore,
+});
+
+export const parsePromptSdlcJudgeVerdict = (
+  raw: string,
+  passScore: number,
+): PromptSdlcVerdict | null => {
+  const verdict = parsePromptJudgementVerdict(raw);
+  return verdict === null
+    ? null
+    : normalizePromptSdlcJudgeVerdict(verdict, passScore);
+};

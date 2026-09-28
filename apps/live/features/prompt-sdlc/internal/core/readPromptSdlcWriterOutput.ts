@@ -1,9 +1,14 @@
 import type { HarnessWriterAgentId } from "../../../../adapters/writerDispatch";
 import { parseClaudeCliPrintResult } from "../../../../adapters/writerDispatch";
+import { readPromptSdlcWriterTokens } from "./readPromptSdlcWriterTokens";
 
 export type PromptSdlcWriterResult =
-  | { readonly ok: true; readonly text: string }
-  | { readonly ok: false; readonly errorMessage: string };
+  | { readonly ok: true; readonly text: string; readonly tokens: number | null }
+  | {
+      readonly ok: false;
+      readonly errorMessage: string;
+      readonly stopped?: boolean;
+    };
 
 const CODEX_TRUST_ERROR =
   "Codex stopped with a terminal error (not a trusted git directory) and did not return a prompt.";
@@ -87,6 +92,7 @@ export const buildPromptSdlcWriterArgs = (input: {
     "--ephemeral",
     "--color",
     "never",
+    "--json",
     "--output-last-message",
     input.replyPath,
     ...input.baseArgs.slice(1),
@@ -115,20 +121,23 @@ export const readPromptSdlcWriterOutput = (input: {
     return { ok: false, errorMessage: cliFailure };
   }
 
+  const tokens = readPromptSdlcWriterTokens(
+    [input.stdout, input.stderr, replyFile].join("\n"),
+  );
   if (replyFile.length > 0) {
-    return { ok: true, text: replyFile };
+    return { ok: true, text: replyFile, tokens };
   }
 
   if (input.writerAgent === "claude-cli") {
     const parsed = parseClaudeCliPrintResult(input.stdout);
     if (parsed !== null && parsed.text.trim().length > 0) {
-      return { ok: true, text: parsed.text };
+      return { ok: true, text: parsed.text, tokens: parsed.totalTokens };
     }
   }
 
   const text =
     input.stdout.trim().length > 0 ? input.stdout.trim() : input.stderr.trim();
   return text.length > 0
-    ? { ok: true, text }
+    ? { ok: true, text, tokens }
     : { ok: false, errorMessage: "The writer did not reply." };
 };

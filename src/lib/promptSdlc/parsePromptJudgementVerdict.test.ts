@@ -1,6 +1,9 @@
 import { describe, expect, it } from "vitest";
 
-import { parsePromptJudgementVerdict } from "@/lib/promptSdlc/parsePromptJudgementVerdict";
+import {
+  parsePromptJudgementVerdict,
+  parsePromptSdlcJudgeVerdict,
+} from "@/lib/promptSdlc/parsePromptJudgementVerdict";
 
 describe("parsePromptJudgementVerdict", () => {
   it("reads the last verdict, including one wrapped in prose", () => {
@@ -38,5 +41,18 @@ describe("parsePromptJudgementVerdict", () => {
       ),
     ).toBeNull();
     expect(parsePromptJudgementVerdict('{"score": "80"}')).toBeNull();
+  });
+
+  it("aligns passed with the pass score after parsing", () => {
+    expect(
+      parsePromptSdlcJudgeVerdict(
+        '{"score": 85, "passed": false, "reasons": "clear enough"}',
+        80,
+      ),
+    ).toEqual({
+      score: 85,
+      passed: true,
+      reasons: "clear enough",
+    });
   });
 });

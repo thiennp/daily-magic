@@ -48,6 +48,7 @@ Open the top `sourcePath` under `docs/qa/` when present.
 | [awc-offline-devices-hide-connect-button.md](awc-offline-devices-hide-connect-button.md)   | Connect this Mac when this computer is not in the device list                              |
 | [awc-connect-click-creates-duplicate-macs.md](awc-connect-click-creates-duplicate-macs.md) | Repeated Connect this Mac clicks must not clone Your Mac / Mac 2                           |
 | [awc-connect-when-awl-already-running.md](awc-connect-when-awl-already-running.md)         | Connect this Mac while AWL is already running, outdated, or deleted in the Console         |
+| [awc-delete-mac-forgets-local-connection.md](awc-delete-mac-forgets-local-connection.md)   | Deleting a Mac removes the cloud identity; the Mac forgets connection and app code         |
 | [awl-loopback-origin.md](awl-loopback-origin.md)                                           | AWL is only `http://127.0.0.1:43347` (no vanity hostname)                                  |
 | [awi-does-not-install-local-llm.md](awi-does-not-install-local-llm.md)                     | AWI installs Ollama on install and update when the command is missing                      |
 | [awi-owns-update-local.md](awi-owns-update-local.md)                                       | Update local work is AWI; the button is AWC; `/update/run` is AWB                          |

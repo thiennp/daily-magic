@@ -13,6 +13,10 @@ export const createPromptSdlcLocalCycle = (input: {
   readonly improverModel: PromptSdlcLocalCycle["improverModel"];
   readonly workingDirectory?: string;
   readonly passScore?: number;
+  readonly maxRounds?: number;
+  readonly sourceSkill?: PromptSdlcLocalCycle["sourceSkill"];
+  readonly judgeInstructions?: string;
+  readonly improverInstructions?: string;
 }): PromptSdlcLocalCycle => {
   const now = new Date().toISOString();
   return {
@@ -24,7 +28,7 @@ export const createPromptSdlcLocalCycle = (input: {
     status: "judging",
     currentRound: 0,
     passScore: input.passScore ?? PROMPT_SDLC_PASS_SCORE,
-    maxRounds: PROMPT_SDLC_MAX_ROUNDS,
+    maxRounds: input.maxRounds ?? PROMPT_SDLC_MAX_ROUNDS,
     errorMessage: null,
     createdAt: now,
     updatedAt: now,
@@ -35,5 +39,14 @@ export const createPromptSdlcLocalCycle = (input: {
         judgement: null,
       },
     ],
+    ...(input.sourceSkill === undefined
+      ? {}
+      : { sourceSkill: input.sourceSkill }),
+    ...(input.judgeInstructions === undefined
+      ? {}
+      : { judgeInstructions: input.judgeInstructions }),
+    ...(input.improverInstructions === undefined
+      ? {}
+      : { improverInstructions: input.improverInstructions }),
   };
 };

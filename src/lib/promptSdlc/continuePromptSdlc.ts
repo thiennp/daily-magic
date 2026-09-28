@@ -1,55 +1,40 @@
 import { buildPromptSdlcImproverPrompt } from "@/lib/promptSdlc/buildPromptSdlcImproverPrompt";
-import { buildPromptSdlcJudgePrompt } from "@/lib/promptSdlc/buildPromptSdlcJudgePrompt";
-import { extractImprovedPrompt } from "@/lib/promptSdlc/extractImprovedPrompt";
-import { parsePromptJudgementVerdict } from "@/lib/promptSdlc/parsePromptJudgementVerdict";
+import { choosePromptSdlcImproverReference } from "@/lib/promptSdlc/choosePromptSdlcImproverReference";
+import { parsePromptSdlcJudgeVerdict } from "@/lib/promptSdlc/parsePromptJudgementVerdict";
 import type { PromptSdlcVerdict } from "@/lib/promptSdlc/parsePromptJudgementVerdict";
+import type { PromptSdlcPriorRound } from "@/lib/promptSdlc/collectPromptSdlcPriorRounds";
+import {
+  JUDGE_REPLY_WAS_NOT_A_SCORE,
+  type PromptSdlcContinuation,
+} from "@/lib/promptSdlc/promptSdlcContinuation.type";
+import { PROMPT_SDLC_MAX_ROUNDS } from "@/lib/promptSdlc/promptSdlcLimits.constant";
+import { readPromptSdlcRewriteStop } from "@/lib/promptSdlc/readPromptSdlcRewriteStop";
 import type { PromptSdlcModelChoice } from "@/lib/promptSdlc/types/PromptSdlcModelChoice.type";
 
-export type PromptSdlcContinuation =
-  | {
-      readonly type: "call";
-      readonly role: "judge" | "improve";
-      readonly prompt: string;
-      readonly choice: PromptSdlcModelChoice;
-    }
-  | { readonly type: "passed" }
-  | { readonly type: "stopped" }
-  | { readonly type: "failed"; readonly errorMessage: string };
-
-export const JUDGE_REPLY_WAS_NOT_A_SCORE =
-  "The judge reply needs a score and a reason.";
-
-export const IMPROVER_REPLY_WAS_EMPTY = "The improver reply was empty.";
-
-export const buildJudgeContinuation = (input: {
-  readonly goal: string;
-  readonly promptText: string;
-  readonly passScore: number;
-  readonly choice: PromptSdlcModelChoice;
-}): PromptSdlcContinuation => ({
-  type: "call",
-  role: "judge",
-  choice: input.choice,
-  prompt: buildPromptSdlcJudgePrompt({
-    goal: input.goal,
-    promptText: input.promptText,
-    passScore: input.passScore,
-  }),
-});
+export type { PromptSdlcContinuation } from "@/lib/promptSdlc/promptSdlcContinuation.type";
+export {
+  IMPROVER_REPLY_WAS_EMPTY,
+  JUDGE_REPLY_WAS_NOT_A_SCORE,
+} from "@/lib/promptSdlc/promptSdlcContinuation.type";
+export {
+  buildJudgeContinuation,
+  continueAfterImproveReply,
+} from "@/lib/promptSdlc/continuePromptSdlcAfterImprove";
 
 export const continueAfterJudgeReply = (input: {
   readonly raw: string;
-  readonly round: number;
-  readonly maxRounds: number;
   readonly passScore: number;
   readonly goal: string;
   readonly promptText: string;
   readonly improver: PromptSdlcModelChoice;
+  readonly priorRounds?: readonly PromptSdlcPriorRound[];
+  readonly round?: number;
+  readonly maxRounds?: number;
 }): {
   readonly verdict: PromptSdlcVerdict | null;
   readonly continuation: PromptSdlcContinuation;
 } => {
-  const verdict = parsePromptJudgementVerdict(input.raw);
+  const verdict = parsePromptSdlcJudgeVerdict(input.raw, input.passScore);
   if (verdict === null) {
     return {
       verdict: null,
@@ -60,13 +45,38 @@ export const continueAfterJudgeReply = (input: {
     };
   }
 
-  if (verdict.score >= input.passScore) {
+  if (verdict.passed) {
     return { verdict, continuation: { type: "passed" } };
   }
 
-  if (input.round + 1 >= input.maxRounds) {
-    return { verdict, continuation: { type: "stopped" } };
+  const priorRounds = input.priorRounds ?? [];
+  const round = input.round ?? priorRounds.length;
+  const scored = [
+    ...priorRounds.map((item) => ({
+      score: item.score,
+      reasons: item.reasons,
+    })),
+    { score: verdict.score, reasons: verdict.reasons },
+  ];
+  const stop = readPromptSdlcRewriteStop({
+    scores: scored.map((item) => item.score),
+    reasons: scored.map((item) => item.reasons),
+    round,
+    maxRounds: input.maxRounds ?? PROMPT_SDLC_MAX_ROUNDS,
+  });
+  if (stop !== null) {
+    return { verdict, continuation: stop };
   }
+
+  const reference = choosePromptSdlcImproverReference({
+    current: {
+      roundNumber: round,
+      promptText: input.promptText,
+      score: verdict.score,
+      reasons: verdict.reasons,
+    },
+    priorRounds,
+  });
 
   return {
     verdict,
@@ -76,41 +86,11 @@ export const continueAfterJudgeReply = (input: {
       choice: input.improver,
       prompt: buildPromptSdlcImproverPrompt({
         goal: input.goal,
-        promptText: input.promptText,
-        score: verdict.score,
-        reasons: verdict.reasons,
+        promptText: reference.promptText,
+        score: reference.score,
+        reasons: reference.reasons,
+        avoid: reference.avoid,
       }),
     },
-  };
-};
-
-export const continueAfterImproveReply = (input: {
-  readonly raw: string;
-  readonly judge: PromptSdlcModelChoice;
-  readonly goal: string;
-  readonly passScore: number;
-}): {
-  readonly nextPrompt: string | null;
-  readonly continuation: PromptSdlcContinuation;
-} => {
-  const nextPrompt = extractImprovedPrompt(input.raw);
-  if (nextPrompt === null) {
-    return {
-      nextPrompt: null,
-      continuation: {
-        type: "failed",
-        errorMessage: IMPROVER_REPLY_WAS_EMPTY,
-      },
-    };
-  }
-
-  return {
-    nextPrompt,
-    continuation: buildJudgeContinuation({
-      goal: input.goal,
-      promptText: nextPrompt,
-      passScore: input.passScore,
-      choice: input.judge,
-    }),
   };
 };

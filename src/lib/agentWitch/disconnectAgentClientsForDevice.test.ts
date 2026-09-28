@@ -1,3 +1,4 @@
+import { AGENT_WITCH_UNKNOWN_IDENTITY_ERROR_CODE } from "@agent-witch/shared/protocol";
 import { describe, expect, it } from "vitest";
 
 import { AgentWitchHub } from "@/lib/agentWitch/agentWitchHub";
@@ -12,6 +13,7 @@ describe("disconnectAgentClientsForDevice", () => {
   it("disconnects only matching online agent clients for the user", () => {
     const { hub } = createHubFixture();
     const sentMessages: unknown[] = [];
+    const closedClientIds: string[] = [];
 
     hub.registerClient({
       id: "agent-target",
@@ -20,6 +22,9 @@ describe("disconnectAgentClientsForDevice", () => {
       deviceId: DEVICE_ID,
       send: (message) => {
         sentMessages.push(message);
+      },
+      close: () => {
+        closedClientIds.push("agent-target");
       },
     });
     hub.registerClient({
@@ -43,10 +48,12 @@ describe("disconnectAgentClientsForDevice", () => {
       {
         type: AGENT_WITCH_MESSAGE_TYPES.SYSTEM_ERROR,
         payload: {
+          errorCode: AGENT_WITCH_UNKNOWN_IDENTITY_ERROR_CODE,
           errorMessage: "This device was removed from your account.",
         },
       },
     ]);
+    expect(closedClientIds).toEqual(["agent-target"]);
     expect(hub.listOnlineAgentClientsForUser(USER_ID)).toHaveLength(1);
     expect(hub.listOnlineAgentClientsForUser(USER_ID)[0]?.id).toBe(
       "agent-other-device",

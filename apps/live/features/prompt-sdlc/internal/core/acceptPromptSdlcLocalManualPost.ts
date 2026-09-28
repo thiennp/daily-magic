@@ -1,4 +1,5 @@
 import { PROMPT_SDLC_MANUAL_ACTOR } from "./choosePromptSdlcLocalModels";
+import { stopPromptSdlcLocalCycle } from "./stopPromptSdlcLocalCycle";
 import {
   applyPromptSdlcLocalImproverReply,
   applyPromptSdlcLocalJudgeReply,
@@ -32,6 +33,12 @@ export const acceptPromptSdlcLocalManualPost = (input: {
     }
   | { readonly kind: "saved"; readonly cycleId: string } => {
   const intent = input.posted.get("intent");
+  if (intent === "stop") {
+    const cycleId = input.posted.get("cycleId") ?? "";
+    return stopPromptSdlcLocalCycle(input.storePath, cycleId)
+      ? { kind: "saved", cycleId }
+      : { kind: "missing" };
+  }
   if (intent !== "manual-judge" && intent !== "manual-improve") {
     return { kind: "ignored" };
   }
