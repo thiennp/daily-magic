@@ -9,6 +9,7 @@ export interface PromptSdlcAgentBody {
   readonly judge: string | null;
   readonly improver: string | null;
   readonly passScore: string | null;
+  readonly maxRounds: string | null;
 }
 
 interface PromptSdlcAgentJson {
@@ -18,6 +19,7 @@ interface PromptSdlcAgentJson {
   readonly judge?: string;
   readonly improver?: string;
   readonly passScore?: number;
+  readonly maxRounds?: number;
 }
 
 const isPromptSdlcAgentJson = isType<PromptSdlcAgentJson>({
@@ -27,6 +29,7 @@ const isPromptSdlcAgentJson = isType<PromptSdlcAgentJson>({
   judge: isUndefinedOr(isString),
   improver: isUndefinedOr(isString),
   passScore: isUndefinedOr(isNumber),
+  maxRounds: isUndefinedOr(isNumber),
 });
 
 const readOptionalWriter = (value: string | undefined): string | null => {
@@ -64,6 +67,8 @@ export const parsePromptSdlcAgentBody = (
       improver: readOptionalWriter(parsed.improver),
       passScore:
         parsed.passScore === undefined ? null : String(parsed.passScore),
+      maxRounds:
+        parsed.maxRounds === undefined ? null : String(parsed.maxRounds),
     },
   };
 };

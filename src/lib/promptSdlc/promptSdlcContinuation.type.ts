@@ -8,7 +8,7 @@ export type PromptSdlcContinuation =
       readonly choice: PromptSdlcModelChoice;
     }
   | { readonly type: "passed" }
-  | { readonly type: "stopped" }
+  | { readonly type: "stopped"; readonly errorMessage: string }
   | { readonly type: "failed"; readonly errorMessage: string };
 
 export const JUDGE_REPLY_WAS_NOT_A_SCORE =

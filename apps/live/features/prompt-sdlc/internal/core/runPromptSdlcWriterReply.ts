@@ -9,6 +9,10 @@ import {
   type HarnessWriterAgentId,
 } from "../../../../adapters/writerDispatch";
 import {
+  bindPromptSdlcWriterAbort,
+  PROMPT_SDLC_WRITER_STOPPED,
+} from "./bindPromptSdlcWriterAbort";
+import {
   buildPromptSdlcWriterArgs,
   readPromptSdlcWriterOutput,
   type PromptSdlcWriterResult,
@@ -34,8 +38,14 @@ export const runPromptSdlcWriterReply = (input: {
   readonly prompt: string;
   readonly workingDirectory: string;
   readonly timeoutMs?: number;
+  readonly signal?: AbortSignal;
 }): Promise<PromptSdlcWriterResult> =>
   new Promise((resolve) => {
+    if (input.signal?.aborted) {
+      resolve(PROMPT_SDLC_WRITER_STOPPED);
+      return;
+    }
+
     if (!isLocalWriter(input.writerAgent)) {
       resolve({ ok: false, errorMessage: "The writer did not reply." });
       return;
@@ -87,6 +97,7 @@ export const runPromptSdlcWriterReply = (input: {
       clearTimeout(state.timer);
       resolve(value);
     };
+    bindPromptSdlcWriterAbort(child, input.signal, finish);
     state.timer = setTimeout(() => {
       child.kill("SIGTERM");
       finish({ ok: false, errorMessage: "The writer did not reply." });

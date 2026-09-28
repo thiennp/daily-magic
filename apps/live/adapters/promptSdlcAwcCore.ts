@@ -8,8 +8,10 @@ export {
 export {
   PROMPT_SDLC_GOAL_MAX_LENGTH,
   PROMPT_SDLC_MAX_ROUNDS,
+  PROMPT_SDLC_MAX_ROUNDS_LIMIT,
   PROMPT_SDLC_PASS_SCORE,
   PROMPT_SDLC_PROMPT_MAX_LENGTH,
+  PROMPT_SDLC_STOP_USER,
 } from "@/lib/promptSdlc/promptSdlcLimits.constant";
 export {
   continueAfterImproveReply,
@@ -18,6 +20,10 @@ export {
 } from "@/lib/promptSdlc/continuePromptSdlc";
 export { buildPromptSdlcImproverPrompt } from "@/lib/promptSdlc/buildPromptSdlcImproverPrompt";
 export { buildPromptSdlcJudgePrompt } from "@/lib/promptSdlc/buildPromptSdlcJudgePrompt";
+export {
+  choosePromptSdlcImproverReference,
+  type PromptSdlcImproverReference,
+} from "@/lib/promptSdlc/choosePromptSdlcImproverReference";
 export { collectPromptSdlcPriorRounds } from "@/lib/promptSdlc/collectPromptSdlcPriorRounds";
 export { selectPromptSdlcImproverHistory } from "@/lib/promptSdlc/selectPromptSdlcImproverHistory";
 export { selectPromptSdlcBestPrompt } from "@/lib/promptSdlc/selectPromptSdlcBestPrompt";

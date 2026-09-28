@@ -38,8 +38,9 @@ export default function PromptSdlcGuideNotes(): ReactElement {
           </li>
           <li>
             The judge scores that new prompt. This repeats until the score
-            reaches the pass score. Later rewrites include earlier rounds. When
-            the score is not rising, those earlier prompts are included too.
+            reaches the pass score, the round limit, or the score has not risen
+            for 3 rounds. A drop rewrites the best prompt so far. You can stop
+            the run. The round limit starts at 10.
           </li>
         </ol>
         <p className={APP_SURFACE_BODY_TEXT_CLASS}>
@@ -56,8 +57,10 @@ export default function PromptSdlcGuideNotes(): ReactElement {
           judged round shows the score and the reason. When the run finishes,
           the page shows the highest scoring prompt. Save as a skill writes that
           prompt into the folder you chose, under .cursor/skills. The run keeps
-          going until the score reaches the pass score you set. Passed means
-          that happened. Failed means the judge did not return a score, the
+          going until the score reaches the pass score you set, you press Stop,
+          the round limit is hit, or the score has not risen for 3 rounds.
+          Passed means the score reached the pass score. Stopped means the best
+          prompt is kept. Failed means the judge did not return a score, the
           improver returned nothing, or the call could not start. The message on
           the page names which one.
         </p>

@@ -25,6 +25,7 @@ describe("parsePromptSdlcAgentBody", () => {
         judge: "claude-cli",
         improver: "codex",
         passScore: "90",
+        maxRounds: null,
       },
     });
   });
@@ -41,6 +42,7 @@ describe("parsePromptSdlcAgentBody", () => {
     expect(parsed.ok && parsed.body.judge).toBe(null);
     expect(parsed.ok && parsed.body.improver).toBe(null);
     expect(parsed.ok && parsed.body.passScore).toBe(null);
+    expect(parsed.ok && parsed.body.maxRounds).toBe(null);
     expect(parsed.ok && parsed.body.workingDirectory).toBe("~/repo");
   });
 

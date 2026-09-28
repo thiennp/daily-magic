@@ -37,6 +37,7 @@ describe("readPromptSdlcLocalPassScore", () => {
     expect(decision.kind).toBe("start");
     if (decision.kind === "start") {
       expect(decision.passScore).toBe(75);
+      expect(decision.maxRounds).toBe(10);
     }
   });
 });

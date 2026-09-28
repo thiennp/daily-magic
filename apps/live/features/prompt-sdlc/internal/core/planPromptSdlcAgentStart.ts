@@ -1,5 +1,6 @@
 import {
   PROMPT_SDLC_AGENT_MANUAL_ERROR,
+  PROMPT_SDLC_MAX_ROUNDS,
   PROMPT_SDLC_PASS_SCORE,
 } from "../../../../adapters/promptSdlcAwcCore";
 import {
@@ -28,6 +29,7 @@ export const planPromptSdlcAgentStart = (input: {
       readonly improver: PromptSdlcLocalActor;
       readonly workingDirectory: string;
       readonly passScore: number;
+      readonly maxRounds: number;
     }
   | {
       readonly ok: false;
@@ -67,6 +69,7 @@ export const planPromptSdlcAgentStart = (input: {
     prompt: input.body.prompt,
     folder: input.body.workingDirectory,
     passScore: input.body.passScore ?? String(PROMPT_SDLC_PASS_SCORE),
+    maxRounds: input.body.maxRounds ?? String(PROMPT_SDLC_MAX_ROUNDS),
     judge,
     improver,
   });
@@ -95,5 +98,6 @@ export const planPromptSdlcAgentStart = (input: {
     improver: decision.improver,
     workingDirectory: decision.workingDirectory,
     passScore: decision.passScore,
+    maxRounds: decision.maxRounds,
   };
 };

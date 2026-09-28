@@ -1,4 +1,5 @@
 import {
+  collectPromptSdlcPriorRounds,
   continueAfterImproveReply,
   continueAfterJudgeReply,
   type HarnessWriterAgent,
@@ -42,6 +43,17 @@ export const applyPromptSdlcLocalJudgeReply = (
     goal: cycle.goal,
     promptText: revision?.promptText ?? "",
     improver: writerChoice(cycle.improverModel),
+    round: cycle.currentRound,
+    maxRounds: cycle.maxRounds,
+    priorRounds: collectPromptSdlcPriorRounds(
+      cycle.revisions.map((item) => ({
+        roundNumber: item.roundNumber,
+        promptText: item.promptText,
+        score: item.judgement?.score ?? null,
+        reasons: item.judgement?.reasons ?? null,
+      })),
+      cycle.currentRound,
+    ),
   });
   const revisions = withJudgement(
     cycle,
@@ -54,20 +66,15 @@ export const applyPromptSdlcLocalJudgeReply = (
   if (result.continuation.type === "call") {
     return { ...cycle, revisions, status: "improving", updatedAt };
   }
-  if (result.continuation.type === "failed") {
-    return {
-      ...cycle,
-      revisions,
-      status: "failed",
-      errorMessage: result.continuation.errorMessage,
-      updatedAt,
-    };
-  }
 
   return {
     ...cycle,
     revisions,
     status: result.continuation.type,
+    errorMessage:
+      result.continuation.type === "passed"
+        ? null
+        : result.continuation.errorMessage,
     updatedAt,
   };
 };

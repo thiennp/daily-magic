@@ -12,8 +12,9 @@ import {
 import { PROMPT_SDLC_LOCAL_FORM_SCRIPT } from "./promptSdlcLocalFormScript";
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
 import type { PromptSdlcLocalWriterChoice } from "./promptSdlcLocalForm";
-import { promptSdlcLocalHistoryTitle } from "./promptSdlcLocalHistoryTitle";
 import { readPromptSdlcLocalShownForm } from "./readPromptSdlcLocalShownForm";
+import { renderPromptSdlcLocalHistory } from "./renderPromptSdlcLocalHistory";
+import { renderPromptSdlcLocalMaxRounds } from "./renderPromptSdlcLocalMaxRounds";
 import { renderPromptSdlcLocalPassScore } from "./renderPromptSdlcLocalPassScore";
 import { renderPromptSdlcLocalWriterFields } from "./renderPromptSdlcLocalWriterFields";
 
@@ -24,32 +25,6 @@ const escapeHtml = (value: string): string =>
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;");
 
-const renderHistoryItem = (
-  cycle: PromptSdlcLocalCycle,
-  openCycleId: string | null,
-): string => {
-  const open =
-    openCycleId === null
-      ? ""
-      : `<input type="hidden" name="openCycleId" value="${escapeHtml(openCycleId)}">`;
-  return `<li><div><a href="/prompt-sdlc?cycle=${escapeHtml(cycle.id)}">${escapeHtml(promptSdlcLocalHistoryTitle(cycle.goal))}</a><p class="muted">${escapeHtml(cycle.status)} · round ${cycle.currentRound}</p></div><form method="POST" action="/prompt-sdlc"><input type="hidden" name="intent" value="delete-history"><input type="hidden" name="cycleId" value="${escapeHtml(cycle.id)}">${open}<button class="btn btn-secondary" type="submit">Delete</button></form></li>`;
-};
-
-const renderHistory = (
-  history: readonly PromptSdlcLocalCycle[],
-  openCycleId: string | null,
-): string => {
-  if (history.length === 0) {
-    return `<section class="card"><h2>History</h2><p class="muted">No runs yet.</p></section>`;
-  }
-
-  const items = history
-    .slice(0, 20)
-    .map((cycle) => renderHistoryItem(cycle, openCycleId))
-    .join("");
-  return `<section class="card"><h2>History</h2><ul class="sdlc-history">${items}</ul></section>`;
-};
-
 export const buildPromptSdlcLocalPageBody = (input: {
   readonly goal: string;
   readonly prompt: string;
@@ -59,6 +34,7 @@ export const buildPromptSdlcLocalPageBody = (input: {
   readonly improver: string;
   readonly folder: string;
   readonly passScore: string;
+  readonly maxRounds?: string;
   readonly canRun: boolean;
   readonly errorMessage: string | null;
   readonly skillNotice?: string | null;
@@ -136,6 +112,7 @@ export const buildPromptSdlcLocalPageBody = (input: {
           <button class="btn btn-secondary" type="submit" name="intent" value="choose-folder" formnovalidate>Choose folder…</button>
         </div>
         ${renderPromptSdlcLocalPassScore(shown.passScore)}
+        ${renderPromptSdlcLocalMaxRounds(shown.maxRounds)}
           ${writerFields}
         </div>
         <div class="sdlc-submit">
@@ -144,5 +121,5 @@ export const buildPromptSdlcLocalPageBody = (input: {
         </fieldset>
       </form>
     </section>`;
-  return `${error}${skillNotice}${cycle}${nodeDialog}${live}${form}${renderHistory(input.history, input.cycle?.id ?? null)}${PROMPT_SDLC_LOCAL_FORM_SCRIPT}`;
+  return `${error}${skillNotice}${cycle}${nodeDialog}${live}${form}${renderPromptSdlcLocalHistory(input.history, input.cycle?.id ?? null)}${PROMPT_SDLC_LOCAL_FORM_SCRIPT}`;
 };

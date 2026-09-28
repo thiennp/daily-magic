@@ -102,6 +102,7 @@ export const servePromptSdlcAgent = async (input: {
     improverModel: plan.improver,
     workingDirectory: plan.workingDirectory,
     passScore: plan.passScore,
+    maxRounds: plan.maxRounds,
   });
   savePromptSdlcLocalCycle(input.storePath, cycle);
   input.handlers.startCycle(input.storePath, cycle.id);

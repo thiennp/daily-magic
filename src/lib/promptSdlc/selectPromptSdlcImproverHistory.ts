@@ -22,6 +22,7 @@ const EMPTY_HISTORY_FIT: PromptSdlcHistoryFit = {
 export const selectPromptSdlcImproverHistory = (input: {
   readonly priorRounds: readonly PromptSdlcPriorRound[];
   readonly currentScore: number;
+  readonly includePrompts?: boolean;
   readonly charBudget?: number;
 }): string | null => {
   if (input.priorRounds.length === 0) {
@@ -30,7 +31,8 @@ export const selectPromptSdlcImproverHistory = (input: {
 
   const budget = input.charBudget ?? PROMPT_SDLC_HISTORY_CHAR_BUDGET;
   const bestPrior = Math.max(...input.priorRounds.map((round) => round.score));
-  const includePrompts = input.currentScore <= bestPrior;
+  const includePrompts =
+    input.includePrompts ?? input.currentScore <= bestPrior;
   const fitted = [...input.priorRounds]
     .reverse()
     .reduce(
