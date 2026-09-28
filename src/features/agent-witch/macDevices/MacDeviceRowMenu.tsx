@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 import { Dropdown } from "@/components/ui/dropdown/Dropdown";
 import { MoreDotIcon } from "@/icons";
@@ -32,6 +32,7 @@ export default function MacDeviceRowMenu({
   onDelete,
 }: MacDeviceRowMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const toggleRef = useRef<HTMLButtonElement>(null);
   const closeMenu = () => {
     setIsOpen(false);
   };
@@ -48,6 +49,7 @@ export default function MacDeviceRowMenu({
       onKeyDown={stopRowSelection}
     >
       <button
+        ref={toggleRef}
         type="button"
         aria-label="Mac actions"
         aria-expanded={isOpen}
@@ -62,6 +64,7 @@ export default function MacDeviceRowMenu({
       <Dropdown
         isOpen={isOpen}
         onClose={closeMenu}
+        toggleRef={toggleRef}
         className="w-56 py-1 dark:bg-gray-dark"
       >
         <MacDeviceRowMenuItems

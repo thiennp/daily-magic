@@ -35,6 +35,8 @@ curl -fsSL https://www.agentwitch.com/install/agent-witch.sh | bash
 
 Follow on-screen prompts. The bundle version on the server should match or exceed what Home expects; mismatches show **Update needed** on the composer ([send readiness — `update_needed`](../../agent-witch/send-readiness-reason-codes.md)).
 
+In the signed-in Console, the primary nav home link (“Agent Witch”) shows the **latest compatible Mac install version** this Console ships (for example `AWL 157`). That is the cloud’s expected install bundle—not the version on a particular paired Mac. Each Mac row under **Mac & devices** still reports that Mac’s own version (or **Version unknown** when the helper has not reported one yet).
+
 ### Local development (engineers)
 
 Against a dev Console on `localhost:3000`:
@@ -137,9 +139,12 @@ In **Agent Witch on this Mac**, open **Knowledge** (`http://127.0.0.1:43347/know
 
 | Layer                              | Tells you                                                                  |
 | ---------------------------------- | -------------------------------------------------------------------------- |
+| Primary nav home link              | Latest compatible Mac install version this Console expects (`AWL …`)       |
 | Home banner                        | Aggregate Mac story for onboarding                                         |
 | Composer **Send readiness** banner | Exact reason **Send** is blocked (`offline`, `recent`, `update_needed`, …) |
-| Mac picker label                   | Presence tier in plain language                                            |
+| Mac picker / device row            | That Mac’s presence and reported install version (or **Version unknown**)  |
+
+The Console header does **not** show a Live server-release chip. Deploy/release labels for the cloud app stay on health checks for operators—not in the daily Task chrome.
 
 When dispatch queues because the hub socket is momentarily missing, you may see: **The selected Mac is reconnecting. Your task will send when it checks in.** That is queueable outbox behavior—not necessarily a dead Mac ([Q&A](../../qa/awc-mac-reconnecting-vs-local-live.md)).
 

@@ -26,9 +26,11 @@ Deep reference: [docs/agent-witch/local-bridge.md](../../agent-witch/local-bridg
 | `~/.agent-witch/config.json` | Device identity, app origin — **not** production `wsUrl` override |
 | `~/.agent-witch/harness/`    | Harness file drops from browser install API                       |
 
-Install bundle version: bump `AGENT_WITCH_INSTALL_BUNDLE_VERSION` in `apps/install/features/bundle/public-api/types.ts` whenever the shipped Mac client changes, including Prompt SDLC in `agent-witch.js`. `src/lib/agentWitch/agentWitchInstallBundleVersion.ts` re-exports that constant. A source change that is not rebuilt into `public/install/agent-witch/` does not update AWL. Current bundle: **159**.
+Install bundle version: bump `AGENT_WITCH_INSTALL_BUNDLE_VERSION` in `apps/install/features/bundle/public-api/types.ts` whenever the shipped Mac client changes, including Prompt SDLC in `agent-witch.js`. `src/lib/agentWitch/agentWitchInstallBundleVersion.ts` re-exports that constant. A source change that is not rebuilt into `public/install/agent-witch/` does not update AWL. Current bundle: **159**. AWC’s primary nav brand (`AppShellNav`) renders that constant as `AWL {version}` under the product name so the Console chrome shows the latest compatible AWI/AWL bundle this deploy expects. That label is **not** per-device presence data—device rows still use each Mac’s reported install version.
 
 `agent.register` includes `platform`: `linux` when `process.platform` is `linux`, otherwise `mac`. The hub stores it with `updateAgentWitchDevicePlatform` (`resolveAgentRegisterPlatform`). The install script already posted platform; the dev WebSocket client does too.
+
+`AGENT_WITCH_SERVER_RELEASE_LABEL` (`src/lib/release/agentWitchServerReleaseLabel.constant.ts`) is surfaced on **`GET /api/health`** only. There is no in-app Live header badge (`AgentWitchServerReleaseBadge` / `useAgentWitchServerRelease` were removed).
 
 ### Commands
 
@@ -114,7 +116,7 @@ Test from browser: **`/ws-test`** on AWC.
 | `com.agent-witch-watchdog` | `npm run agent-witch:watchdog`    |
 | `com.agent-witch-updater`  | `npm run agent-witch:self-update` |
 
-Install bundle version API: `GET /install/agent-witch/version`.
+Install bundle version API: `GET /install/agent-witch/version` (same integer the Console nav shows as `AWL {n}`).
 
 Self-update resolves the app origin from `config.json` `wsUrl`, then from `install-version.json` `appOrigin`. When both are missing, it uses `AGENT_WITCH_DEFAULT_ORIGIN` (`https://www.agentwitch.com`), the same default AWL uses for the update offer. A missing local bundle version still counts as older than the remote bundle.
 

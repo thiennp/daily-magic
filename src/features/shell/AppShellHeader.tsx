@@ -8,7 +8,6 @@ import AppIcon from "@/components/ui/icon/AppIcon";
 import { ThemeToggleButton } from "@/components/common/ThemeToggleButton";
 import UserDropdown from "@/components/header/UserDropdown";
 import useStyleguideNavAccess from "@/features/auth/hooks/useStyleguideNavAccess";
-import AgentWitchServerReleaseBadge from "@/features/agent-witch/components/AgentWitchServerReleaseBadge";
 import buildAgentComposerHref from "@/lib/library/buildAgentComposerHref";
 import { BoltIcon } from "@/icons";
 
@@ -35,7 +34,6 @@ export default function AppShellHeader() {
           >
             <AppIcon icon={BoltIcon} size="md" />
           </Link>
-          <AgentWitchServerReleaseBadge />
           <ThemeToggleButton />
           <UserDropdown showStyleguide={showStyleguide} />
         </div>

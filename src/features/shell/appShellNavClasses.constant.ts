@@ -1,10 +1,14 @@
-/** Desktop primary nav — left rail from the `md` breakpoint, aligned with AWL `.nav-link`. */
+import {
+  APP_SURFACE_PANEL_CLASS,
+  APP_SURFACE_PANEL_PADDING_COMPACT_CLASS,
+} from "@/components/surfaces/appSurfaceStyles.constant";
 
-export const APP_SHELL_DESKTOP_NAV_CLASS =
-  "fixed inset-y-0 left-0 z-40 hidden w-56 flex-col gap-4 overflow-y-auto border-r border-gray-200/80 bg-white/95 px-3 py-4 backdrop-blur-md dark:border-gray-800/80 dark:bg-gray-900/95 md:flex";
-
-/** Matches `w-56` on the desktop nav rail. */
-export const APP_SHELL_DESKTOP_NAV_OFFSET_CLASS = "md:pl-56";
+/** Desktop primary nav — card panel from the `md` breakpoint (mobile uses bottom nav). */
+export const APP_SHELL_DESKTOP_NAV_CLASS = [
+  APP_SURFACE_PANEL_CLASS,
+  APP_SURFACE_PANEL_PADDING_COMPACT_CLASS,
+  "hidden w-full flex-col gap-4 md:flex",
+].join(" ");
 
 export const APP_SHELL_NAV_LINK_BASE_CLASSES =
   "flex w-full rounded-xl px-3.5 py-2 text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/30";

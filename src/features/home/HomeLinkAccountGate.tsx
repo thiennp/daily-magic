@@ -19,6 +19,7 @@ import {
 } from "@/features/home/PairedDeviceContext";
 import { OnboardingStepsProvider } from "@/features/home/hooks/useOnboardingSteps";
 import { resolveHomeDashboardMode } from "@/features/home/utils/resolveHomeDashboardMode";
+import AppShellNav from "@/features/shell/AppShellNav";
 
 interface HomeLinkAccountGateProps {
   readonly appOrigin: string;
@@ -74,6 +75,9 @@ function HomeLinkAccountGateContent({
   if (dashboardMode === "loading") {
     return (
       <div className={HOME_DASHBOARD_GRID_CLASS}>
+        <aside className={HOME_LEFT_RAIL_CLASS}>
+          <AppShellNav />
+        </aside>
         <main className={HOME_MAIN_COLUMN_CLASS}>
           <AppHero variant="plain">
             <p className="text-sm text-gray-500 dark:text-gray-400">
@@ -89,6 +93,7 @@ function HomeLinkAccountGateContent({
     return (
       <div className={HOME_DASHBOARD_GRID_CLASS}>
         <aside className={HOME_LEFT_RAIL_CLASS}>
+          <AppShellNav />
           <HomeConnectedMacsPanel
             installCommand={installCommand}
             isWebSocketSupported={isWebSocketSupported}
