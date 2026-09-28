@@ -1881,6 +1881,7 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
             role: "agent",
             hostname: os.hostname(),
             macOsUsername: os.userInfo().username,
+            platform: process.platform === "linux" ? "linux" : "mac",
             pairingToken: config.pairingToken,
             ...(config.email !== null ? { email: config.email } : {}),
             ...auth,

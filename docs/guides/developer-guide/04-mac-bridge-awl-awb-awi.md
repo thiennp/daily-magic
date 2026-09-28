@@ -26,7 +26,9 @@ Deep reference: [docs/agent-witch/local-bridge.md](../../agent-witch/local-bridg
 | `~/.agent-witch/config.json` | Device identity, app origin — **not** production `wsUrl` override |
 | `~/.agent-witch/harness/`    | Harness file drops from browser install API                       |
 
-Install bundle version: bump `AGENT_WITCH_INSTALL_BUNDLE_VERSION` in `apps/install/features/bundle/public-api/types.ts` whenever the shipped Mac client changes, including Prompt SDLC in `agent-witch.js`. `src/lib/agentWitch/agentWitchInstallBundleVersion.ts` re-exports that constant. A source change that is not rebuilt into `public/install/agent-witch/` does not update AWL.
+Install bundle version: bump `AGENT_WITCH_INSTALL_BUNDLE_VERSION` in `apps/install/features/bundle/public-api/types.ts` whenever the shipped Mac client changes, including Prompt SDLC in `agent-witch.js`. `src/lib/agentWitch/agentWitchInstallBundleVersion.ts` re-exports that constant. A source change that is not rebuilt into `public/install/agent-witch/` does not update AWL. Current bundle: **159**.
+
+`agent.register` includes `platform`: `linux` when `process.platform` is `linux`, otherwise `mac`. The hub stores it with `updateAgentWitchDevicePlatform` (`resolveAgentRegisterPlatform`). The install script already posted platform; the dev WebSocket client does too.
 
 ### Commands
 

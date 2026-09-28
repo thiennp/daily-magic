@@ -19,6 +19,8 @@ The cloud **never** runs your shell jobs. It **dispatches** to your Mac and stre
 
 A **Linux browser** can use this Console. On desktop Linux, Home shows a terminal install command for this computer. An **x86_64 Linux** host can then receive Tasks. The Mac app and the “this computer” badge stay on macOS ([Q&A: Linux browser vs Linux host](../../qa/linux-browser-vs-linux-host.md)). Windows Home installs the host inside WSL and lists it as a Linux device. Phones still say to install on a Mac.
 
+A host started with `npm run agent-witch` reports its platform when it connects: **linux** on Linux, **mac** on macOS. The device list uses that report.
+
 ---
 
 ## Install
