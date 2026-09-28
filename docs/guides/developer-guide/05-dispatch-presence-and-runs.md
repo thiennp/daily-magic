@@ -62,6 +62,7 @@ Routing cascade (continuation vs memory budget): [docs/qa/writer-dispatch-cascad
 - **`isDispatchReady`** — writer-ready; only **`live`** on this process (and relay path for other instance).
 - Home “Mac online” hero counts **`live`** on this process only — `live_other_instance` shows reconnecting UX.
 - **this Mac** is a browser token-hash match, not a presence tier. When no row matches, Home shows **Connect this Mac** (`resolveIsCheckingLocalMacIdentity`, HOME-057). A skipped wake probe must not leave that button hidden.
+- An install-token row is not a check-in. It stays `offline` until the Mac heartbeats. Repeated Connect clicks must not create extra `recent` rows (HOME-059). `GET /api/agent-witch/devices` revokes older unlabeled placeholders and keeps the newest.
 
 Unified resolver (devices API + dispatch must match): `resolveLiveAgentClientsByDeviceIdForUser` (see ADR 0005 full text).
 

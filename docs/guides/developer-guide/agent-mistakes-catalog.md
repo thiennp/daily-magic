@@ -37,11 +37,12 @@ Living list of **repeat failures** by coding agents (and fast human edits). When
 
 ## Dispatch & presence
 
-| Mistake                                      | Why it hurts                             | Do instead                                                                                |
-| -------------------------------------------- | ---------------------------------------- | ----------------------------------------------------------------------------------------- |
-| Ignore `live_other_instance` / multi-replica | Writer **New task** fails intermittently | ADR 0005 relay + sticky `aw_hub_instance`; read OPEN-002 in agent-witch `KNOWN_ISSUES.md` |
-| Create runs before hub client resolves       | Ghost runs, bad UX                       | Fail closed with `mac_reconnecting` / structured errors                                   |
-| Skip device list as source of truth          | UI shows wrong “Mac connected”           | `pairedDevicesApi` + presence tiers                                                       |
+| Mistake                                            | Why it hurts                                                    | Do instead                                                                                |
+| -------------------------------------------------- | --------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| Ignore `live_other_instance` / multi-replica       | Writer **New task** fails intermittently                        | ADR 0005 relay + sticky `aw_hub_instance`; read OPEN-002 in agent-witch `KNOWN_ISSUES.md` |
+| Create runs before hub client resolves             | Ghost runs, bad UX                                              | Fail closed with `mac_reconnecting` / structured errors                                   |
+| Skip device list as source of truth                | UI shows wrong “Mac connected”                                  | `pairedDevicesApi` + presence tiers                                                       |
+| Stamp `last_seen_at` when issuing an install token | Repeated **Connect this Mac** clicks clone “seen recently” Macs | `recordLastSeen: false`; revoke unlabeled placeholders (HOME-059)                         |
 
 ---
 

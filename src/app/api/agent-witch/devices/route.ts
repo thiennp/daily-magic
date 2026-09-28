@@ -6,6 +6,7 @@ import { consolidateDuplicateAgentWitchDevicesForUser } from "@/lib/agentWitch/c
 import { ensureAgentWitchDeviceSchema } from "@/lib/agentWitch/ensureAgentWitchDeviceSchema";
 import { getAgentWitchHub } from "@/lib/agentWitch/getAgentWitchHub";
 import { listAgentWitchDevicesForUser } from "@/lib/agentWitch/listAgentWitchDevicesForUser";
+import { revokePendingInstallDevicesForUser } from "@/lib/agentWitch/revokePendingInstallDevicesForUser";
 import { buildMockDevicesApiResponse } from "@/lib/agentWitch/mock/buildMockDevicesApiResponse";
 import { readAgentWitchMockScenario } from "@/lib/agentWitch/mock/readAgentWitchMockScenario";
 import { recordAgentWitchTraffic } from "@/lib/agentWitch/agentWitchTrafficLog";
@@ -36,6 +37,7 @@ export async function GET(): Promise<Response> {
 
   try {
     await ensureAgentWitchDeviceSchema();
+    await revokePendingInstallDevicesForUser({ userId: actor.id });
     const localLiveDeviceIds = await collectLiveAgentWitchDeviceIdsForUser(
       getAgentWitchHub(),
       actor.id,

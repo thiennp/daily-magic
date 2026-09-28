@@ -9,18 +9,11 @@ import hashPairingToken from "@/lib/agentWitch/hashPairingToken";
 import { reclaimAgentWitchDeviceByHostname } from "@/lib/agentWitch/reclaimAgentWitchDeviceByHostname";
 import type AgentWitchDeviceRecord from "@/lib/agentWitch/types/AgentWitchDeviceRecord.type";
 
-const finishClaim = async (input: {
-  readonly claimedDevice: AgentWitchDeviceRecord;
-  readonly userId: string;
-  readonly tokenHash: string;
-  readonly deviceLabel: string | null;
-}): Promise<AgentWitchDeviceRecord> =>
-  consolidateAgentWitchDeviceByHostname(input);
-
 export async function claimAgentWitchDevice(input: {
   readonly pairingToken: string;
   readonly userId: string;
   readonly deviceLabel?: string | null;
+  readonly recordLastSeen?: boolean;
 }): Promise<AgentWitchDeviceRecord> {
   const tokenHash = hashPairingToken(input.pairingToken);
   const deviceLabel = input.deviceLabel ?? null;
@@ -38,7 +31,7 @@ export async function claimAgentWitchDevice(input: {
       unrevoke: false,
     });
     if (updated !== null) {
-      return finishClaim({
+      return consolidateAgentWitchDeviceByHostname({
         claimedDevice: updated,
         userId: input.userId,
         tokenHash,
@@ -59,7 +52,7 @@ export async function claimAgentWitchDevice(input: {
       unrevoke: true,
     });
     if (restored !== null) {
-      return finishClaim({
+      return consolidateAgentWitchDeviceByHostname({
         claimedDevice: restored,
         userId: input.userId,
         tokenHash,
@@ -86,8 +79,9 @@ export async function claimAgentWitchDevice(input: {
       userId: input.userId,
       tokenHash,
       deviceLabel,
+      recordLastSeen: input.recordLastSeen,
     });
-    return finishClaim({
+    return consolidateAgentWitchDeviceByHostname({
       claimedDevice: inserted,
       userId: input.userId,
       tokenHash,
@@ -101,7 +95,7 @@ export async function claimAgentWitchDevice(input: {
         raced.userId === input.userId &&
         raced.revokedAt === null
       ) {
-        return finishClaim({
+        return consolidateAgentWitchDeviceByHostname({
           claimedDevice: raced,
           userId: input.userId,
           tokenHash,
