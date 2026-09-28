@@ -49,6 +49,8 @@ Wire: live terminal `starting` → Connecting; `streaming` → In progress.
 `MISSING_ANTHROPIC_WRITER_API_KEY` / cli-fallback →  
 **Writer API key missing — ran via CLI fallback.**
 
+That chip is only for a CLI that actually produced output. If the writer API key is missing and the CLI cannot start (`execvp`, `ENOENT`, “No such file or directory”), the chip is **Failed** and the summary is **Writer API key missing and Claude CLI can’t run.**
+
 ## Query aliases
 
 - Pimi run UX honesty strings

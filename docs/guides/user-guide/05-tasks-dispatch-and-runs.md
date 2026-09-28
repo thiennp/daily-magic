@@ -24,11 +24,11 @@ If **Send** is disabled, fix what the **Send readiness** banner says first—emp
 
 Expand **More options** when you need more than Mac + prompt:
 
-| Option                       | User meaning                                | Honest limits                                                                                                                                                                                               |
-| ---------------------------- | ------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Repository / code folder** | Where the writer CLI runs on the Mac        | Browser cannot pick a real POSIX path via native dialog—type a path you know, use defaults, or set folder in **Agent Witch on this Mac** ([folder picker Q&A](../../qa/awc-project-folder-path-picker.md)). |
-| **Playbook**                 | Rules/skills/templates installed on the Mac | Files live under `~/.agent-witch/harness/`; installing from Marketplace is a separate flow ([dispatch Q&A](../../qa/mac-harness-workflow-agent-dispatch.md)).                                               |
-| **Writer**                   | Which local CLI (Cursor, Claude Code, …)    | Must exist on the Mac; missing API keys may yield **Completed with fallback** honesty copy.                                                                                                                 |
+| Option                       | User meaning                                | Honest limits                                                                                                                                                                                                   |
+| ---------------------------- | ------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Repository / code folder** | Where the writer CLI runs on the Mac        | Browser cannot pick a real POSIX path via native dialog—type a path you know, use defaults, or set folder in **Agent Witch on this Mac** ([folder picker Q&A](../../qa/awc-project-folder-path-picker.md)).     |
+| **Playbook**                 | Rules/skills/templates installed on the Mac | Files live under `~/.agent-witch/harness/`; installing from Marketplace is a separate flow ([dispatch Q&A](../../qa/mac-harness-workflow-agent-dispatch.md)).                                                   |
+| **Writer**                   | Which local CLI (Cursor, Claude Code, …)    | Must exist on the Mac. A missing writer API key that still runs the CLI shows **Completed with fallback**. If the CLI cannot start, the run shows **Failed** — Writer API key missing and Claude CLI can’t run. |
 
 Company-only hints (run on behalf, policy) appear when org rules exist—not on every solo Home.
 

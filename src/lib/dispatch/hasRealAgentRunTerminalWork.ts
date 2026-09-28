@@ -75,6 +75,13 @@ const stripAuthAndFallbackLogNoise = (output: string): string =>
       if (trimmed.startsWith("[agent-witch] marketplace plan/estimate")) {
         return false;
       }
+      if (
+        /execvp\(\d+\) failed/i.test(trimmed) ||
+        /no such file or directory/i.test(trimmed) ||
+        /\bENOENT\b/.test(trimmed)
+      ) {
+        return false;
+      }
       return true;
     })
     .join("\n");

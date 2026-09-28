@@ -31,6 +31,17 @@ describe("hasRealAgentRunTerminalWork", () => {
     expect(hasRealAgentRunTerminalWork(output)).toBe(false);
   });
 
+  it("returns false when the only leftover text is a missing CLI binary (AGENT-129)", () => {
+    const output = [
+      AGENT_RUN_WRITER_EXECUTION_HONESTY_MARKER,
+      `agentRunWriterExecutionBackend=${AGENT_RUN_WRITER_EXECUTION_CLI_MISSING_WRITER_API_KEY_BACKEND}`,
+      `agentRunWriterExecutionReasonCode=${AGENT_RUN_WRITER_EXECUTION_MISSING_WRITER_API_KEY_REASON_CODE}`,
+      "execvp(3) failed.: No such file or directory",
+    ].join("\n");
+
+    expect(hasRealAgentRunTerminalWork(output)).toBe(false);
+  });
+
   it("returns true when CLI output exists beyond diagnostics", () => {
     const output = [
       AGENT_RUN_WRITER_EXECUTION_HONESTY_MARKER,
