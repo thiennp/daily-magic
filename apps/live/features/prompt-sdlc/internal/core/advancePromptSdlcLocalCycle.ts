@@ -2,6 +2,7 @@ import {
   buildPromptSdlcImproverPrompt,
   buildPromptSdlcJudgePrompt,
 } from "../../../../adapters/promptSdlcAwcCore";
+import { buildPromptSdlcLocalImproverHistory } from "./buildPromptSdlcLocalImproverHistory";
 import {
   applyPromptSdlcLocalImproverReply,
   applyPromptSdlcLocalJudgeReply,
@@ -77,6 +78,7 @@ export const advancePromptSdlcLocalCycle = async (
       promptText: revision.promptText,
       score,
       reasons,
+      history: buildPromptSdlcLocalImproverHistory(cycle, score),
     }),
   });
   if (!reply.ok) {

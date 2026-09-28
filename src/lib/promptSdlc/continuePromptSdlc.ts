@@ -3,6 +3,8 @@ import { buildPromptSdlcJudgePrompt } from "@/lib/promptSdlc/buildPromptSdlcJudg
 import { extractImprovedPrompt } from "@/lib/promptSdlc/extractImprovedPrompt";
 import { parsePromptJudgementVerdict } from "@/lib/promptSdlc/parsePromptJudgementVerdict";
 import type { PromptSdlcVerdict } from "@/lib/promptSdlc/parsePromptJudgementVerdict";
+import type { PromptSdlcPriorRound } from "@/lib/promptSdlc/collectPromptSdlcPriorRounds";
+import { selectPromptSdlcImproverHistory } from "@/lib/promptSdlc/selectPromptSdlcImproverHistory";
 import type { PromptSdlcModelChoice } from "@/lib/promptSdlc/types/PromptSdlcModelChoice.type";
 
 export type PromptSdlcContinuation =
@@ -39,12 +41,11 @@ export const buildJudgeContinuation = (input: {
 
 export const continueAfterJudgeReply = (input: {
   readonly raw: string;
-  readonly round: number;
-  readonly maxRounds: number;
   readonly passScore: number;
   readonly goal: string;
   readonly promptText: string;
   readonly improver: PromptSdlcModelChoice;
+  readonly priorRounds?: readonly PromptSdlcPriorRound[];
 }): {
   readonly verdict: PromptSdlcVerdict | null;
   readonly continuation: PromptSdlcContinuation;
@@ -64,10 +65,6 @@ export const continueAfterJudgeReply = (input: {
     return { verdict, continuation: { type: "passed" } };
   }
 
-  if (input.round + 1 >= input.maxRounds) {
-    return { verdict, continuation: { type: "stopped" } };
-  }
-
   return {
     verdict,
     continuation: {
@@ -79,6 +76,10 @@ export const continueAfterJudgeReply = (input: {
         promptText: input.promptText,
         score: verdict.score,
         reasons: verdict.reasons,
+        history: selectPromptSdlcImproverHistory({
+          priorRounds: input.priorRounds ?? [],
+          currentScore: verdict.score,
+        }),
       }),
     },
   };

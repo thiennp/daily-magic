@@ -5,10 +5,10 @@ import {
 } from "@/lib/promptSdlc/continuePromptSdlc";
 import { parsePromptSdlcModelChoice } from "@/lib/promptSdlc/promptSdlcModelChoice";
 import { savePromptSdlcCycleProgress } from "@/lib/promptSdlc/promptSdlcCycleQueries";
+import { loadPromptSdlcPriorRounds } from "@/lib/promptSdlc/loadPromptSdlcPriorRounds";
 import {
   insertPromptSdlcJudgement,
   insertPromptSdlcRevision,
-  listPromptSdlcRevisions,
 } from "@/lib/promptSdlc/promptSdlcRevisionQueries";
 import { placePromptSdlcContinuation } from "@/lib/promptSdlc/placePromptSdlcContinuation";
 import type PromptSdlcCycleRecord from "@/lib/promptSdlc/types/PromptSdlcCycleRecord.type";
@@ -43,9 +43,9 @@ export const applyPromptSdlcReply = async (input: {
     input.cycle.improverKind,
     input.cycle.improverModel,
   );
-  const revisions = await listPromptSdlcRevisions(input.cycle.id);
-  const current = revisions.find(
-    (revision) => revision.roundNumber === input.cycle.currentRound,
+  const { current, priorRounds } = await loadPromptSdlcPriorRounds(
+    input.cycle.id,
+    input.cycle.currentRound,
   );
 
   if (judge === null || improver === null || current === undefined) {
@@ -56,12 +56,11 @@ export const applyPromptSdlcReply = async (input: {
   if (input.role === "judge") {
     const judged = continueAfterJudgeReply({
       raw: input.raw,
-      round: input.cycle.currentRound,
-      maxRounds: input.cycle.maxRounds,
       passScore: input.cycle.passScore,
       goal: input.cycle.goal,
       promptText: current.promptText,
       improver,
+      priorRounds,
     });
     await insertPromptSdlcJudgement({
       cycleId: input.cycle.id,
