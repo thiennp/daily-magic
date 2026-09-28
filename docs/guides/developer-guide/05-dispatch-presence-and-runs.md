@@ -28,6 +28,8 @@ sequenceDiagram
 
 Composer UI: `/agent` · smoke UI: `/ws-test` · history: `/reports`.
 
+New task order is Mac → project → workflow or custom task → LLM CLI → prompt. Selecting a workflow or custom task keeps `selectedProjectId`. That setter must not call `clearSelectedProject`, which writes the Default project id into manual state and overrides the `projectId` query param (AGENT-127).
+
 ---
 
 ## Dispatch targets

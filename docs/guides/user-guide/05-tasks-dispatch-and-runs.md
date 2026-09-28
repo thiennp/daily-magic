@@ -12,8 +12,9 @@ This chapter is where three pillars meet daily work: **easy authoring** (compose
 
 1. Open **New task** from Home or nav.
 2. Choose **Mac** — yours by default when **this Mac** is linked; teammates’ Macs appear when paired to your org.
-3. Write the **prompt** — concrete scope beats vague “fix everything.”
-4. Click **Send** when enabled.
+3. Choose a **project folder**. **Default** is only the starting folder. The folder you pick stays selected when you choose a workflow or custom task and when you choose the LLM CLI.
+4. Write the **prompt** — concrete scope beats vague “fix everything.”
+5. Click **Send** when enabled.
 
 If **Send** is disabled, fix what the **Send readiness** banner says first—empty prompt, Mac offline, update needed, reconnecting, etc. ([reason codes](../../agent-witch/send-readiness-reason-codes.md)). The product **blocks** bad sends instead of dropping tasks silently.
 

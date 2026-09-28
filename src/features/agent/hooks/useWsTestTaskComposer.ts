@@ -11,7 +11,7 @@ import { useTeamDispatchSelection } from "@/features/dispatch/hooks/useTeamDispa
 import useMacDeviceSelection from "@/features/agent/hooks/useMacDeviceSelection";
 import useCursorCloudConnection from "@/features/home/hooks/useCursorCloudConnection";
 import { useWsTestComposerWorkflowState } from "@/features/agent/hooks/useWsTestComposerWorkflowState";
-import { buildLibraryCapabilitySelectionUpdate } from "@/features/agent/utils/buildLibraryCapabilitySelectionUpdate";
+import { applyComposerLibraryCapabilitySelection } from "@/features/agent/utils/applyComposerLibraryCapabilitySelection";
 import { buildWsTestComposerDispatchState } from "@/features/agent/utils/buildWsTestComposerDispatchState";
 import { buildWsTestTaskComposerResult } from "@/features/agent/utils/buildWsTestTaskComposerResult";
 import useRunScopedComponentIds from "@/features/agent/hooks/useRunScopedComponentIds";
@@ -75,17 +75,18 @@ export function useWsTestTaskComposer(): UseWsTestTaskComposerResult {
     hasCursorCloudConnection: cursorCloudSummary.connected,
     clearWorkflowFields,
     selectLibraryCapability: (capabilityId: string) => {
-      librarySelection.setSelectedLibraryCapabilityId(capabilityId);
-      projectSelection.clearSelectedProject();
-      const { nextPrompt } = buildLibraryCapabilitySelectionUpdate({
+      applyComposerLibraryCapabilitySelection({
         capabilityId,
+        selectedProjectId: projectSelection.selectedProjectId,
         libraryCapabilities: librarySelection.libraryCapabilities,
         rerunPrompt: librarySelection.rerunPrompt,
         urlCapabilityId,
-        fallbackPrompt: "",
+        setSelectedLibraryCapabilityId:
+          librarySelection.setSelectedLibraryCapabilityId,
+        setSelectedProjectId: projectSelection.setSelectedProjectId,
+        setPrompt: workflow.setPrompt,
+        clearWorkflowFields,
       });
-      workflow.setPrompt(nextPrompt);
-      clearWorkflowFields();
     },
   });
   const workflowTrialRunEligibility = resolveWorkflowTrialRunEligibility({
