@@ -66,7 +66,7 @@ export default function HomeMarketingShowcases() {
       <HomeMarketingShowcaseSection
         eyebrow="Straight answers"
         title="Common questions"
-        description="Not Slack, not n8n, not just chat — what Agent Witch actually is."
+        description="Not Slack, not n8n, not just chat, and not a prompt optimizer that scores from somewhere else."
       >
         <div className="grid gap-6 md:grid-cols-3">
           {objections.map((article) => (

@@ -1,21 +1,24 @@
-/** Agent emits this early so the UI can show estimated working progress. */
+/** Marker the estimate sidecar and the UI share. */
 export const AGENT_RUN_WORKING_ESTIMATE_MARKER = "[[WORKING_ESTIMATE]]";
 
-export const AGENT_RUN_WORKING_ESTIMATE_INSTRUCTION = [
-  "Put this marker on its own line:",
-  AGENT_RUN_WORKING_ESTIMATE_MARKER,
-  "On the next line, emit only an integer number of seconds (for example: 120).",
-  "Then add one short plain-language sentence explaining the estimate.",
-  "Do not use [[AWAITING_INPUT]], [[PROGRESS]], or [[NEXT_ACTIONS]].",
-].join("\n");
-
-export const buildAgentRunPreEstimatePrompt = (taskPrompt: string): string =>
+export const buildAgentRunPreEstimatePrompt = (
+  taskPrompt: string,
+  writerLabel: string,
+  historyTable: string,
+  capabilityNote = "",
+): string =>
   [
-    "Estimate how long the following task will take on this Mac.",
-    "Do not start the task yet. Do not ask the operator to confirm.",
+    "Estimate how long the following task will take on this Mac, in seconds.",
+    `The task is already starting in parallel on this writer: ${writerLabel}.`,
+    ...(capabilityNote.trim().length > 0 ? [capabilityNote.trim()] : []),
+    "Factor in that writer's typical speed and the latest finished tasks below.",
+    "Do not run the task. Do not ask questions.",
+    "Reply with exactly two lines and nothing else:",
+    AGENT_RUN_WORKING_ESTIMATE_MARKER,
+    "<integer seconds>",
     "",
-    AGENT_RUN_WORKING_ESTIMATE_INSTRUCTION,
+    historyTable.trim(),
     "",
-    "Task to estimate:",
+    "Task:",
     taskPrompt.trim(),
   ].join("\n");

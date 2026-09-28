@@ -30,7 +30,7 @@ Create-workflow field types and a proposed step/graph builder: [workflow-builder
 
 ## Harness
 
-The **rules/skills/commands bundle** installed on a Mac under `~/.agent-witch/harness/`. The harness catalog lets you publish, share, and install consistent agent instructions—not the run itself.
+The **rules/skills/commands bundle** for how agents behave. For marketplace workflows/agents, playbook files **materialize inside a project repo** (`.cursor/`, `project.json`) after Mac pull—not as a separate marketplace install surface. Global `~/.agent-witch/harness/` remains for legacy/catalog paths.
 
 ## Library
 
@@ -38,7 +38,7 @@ The **rules/skills/commands bundle** installed on a Mac under `~/.agent-witch/ha
 
 ## Marketplace
 
-**Company-published harness/capability listings** others can browse and borrow. Marketplace sits on top of harness + capabilities; it is not a third runtime.
+**Company-published workflow and agent listings** with per-listing **usage guides**. Install requires a **project** + Mac; cloud binds `project_components`. Marketplace is not a third runtime.
 
 ## Agent run
 
@@ -47,6 +47,10 @@ One **dispatched execution** (Mac via Agent Witch or Cursor Cloud), with status,
 ## Dispatch
 
 **Who may run what for whom**—targets, approvals, queue, and policies. Mac dispatch uses paired devices; Cursor Cloud uses stored API keys and cloud executor id `__cursor_cloud__`.
+
+## Prompt SDLC
+
+A **separate prompt-optimization loop** in Agent Witch Live. The user supplies one prompt and a goal, chooses the judge and improver when more than one reasoning writer is installed, and chooses the folder those writers run in. The default folder is the home directory. Live then scores and rewrites the prompt until it passes or a small round cap is hit. It is not a workflow, a playbook, or a capability improvement.
 
 ## Deployables (AWC, AWL, AWB, AWI)
 

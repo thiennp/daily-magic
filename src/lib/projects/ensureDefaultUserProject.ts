@@ -11,13 +11,19 @@ export const ensureDefaultUserProject = async (
   ownerUserId: string,
   profileEmail: string,
   deviceId?: string | null,
-): Promise<UserProjectRecord> => {
+): Promise<UserProjectRecord | null> => {
+  const linkedDeviceId = deviceId?.trim() ?? "";
+  if (linkedDeviceId.length === 0) {
+    return null;
+  }
+
   const sql = getSql();
   const rows = asRowArray(
     await sql`
       SELECT *
       FROM user_projects
       WHERE owner_user_id = ${ownerUserId}
+        AND device_id = ${linkedDeviceId}
         AND lower(name) = lower(${DEFAULT_USER_PROJECT_NAME})
       LIMIT 1
     `,
@@ -30,7 +36,7 @@ export const ensureDefaultUserProject = async (
   const created = await createUserProject(ownerUserId, {
     name: DEFAULT_USER_PROJECT_NAME,
     folderPath: buildDefaultUserProjectFolderPath(profileEmail),
-    deviceId: deviceId ?? null,
+    deviceId: linkedDeviceId,
   });
 
   if (created === null) {

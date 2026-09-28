@@ -356,6 +356,12 @@ ALTER TABLE agent_runs
 ALTER TABLE agent_runs
   ADD COLUMN IF NOT EXISTS workflow_step_run_id TEXT;
 
+ALTER TABLE agent_runs
+  ADD COLUMN IF NOT EXISTS estimate_seconds INTEGER;
+
+ALTER TABLE agent_runs
+  ADD COLUMN IF NOT EXISTS actual_seconds INTEGER;
+
 CREATE TABLE IF NOT EXISTS workflow_runs (
   id TEXT PRIMARY KEY DEFAULT gen_random_uuid()::text,
   requester_user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
@@ -654,23 +660,66 @@ CREATE TABLE IF NOT EXISTS cursor_cloud_connections (
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
-CREATE TABLE IF NOT EXISTS workflow_field_uploads (
-  id TEXT PRIMARY KEY DEFAULT gen_random_uuid()::text,
+CREATE TABLE IF NOT EXISTS prompt_sdlc_cycles (
+  id TEXT PRIMARY KEY,
   owner_user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-  sha256 TEXT NOT NULL,
-  mime_type TEXT NOT NULL,
-  file_name TEXT NOT NULL,
-  byte_size INTEGER NOT NULL CHECK (byte_size >= 0),
-  extracted_text TEXT NOT NULL DEFAULT '',
-  storage_path TEXT NOT NULL,
+  device_id TEXT REFERENCES agent_witch_devices(id) ON DELETE SET NULL,
+  goal TEXT NOT NULL,
+  source_prompt TEXT NOT NULL,
+  judge_kind TEXT NOT NULL CHECK (judge_kind IN ('writer', 'ollama')),
+  judge_model TEXT NOT NULL,
+  improver_kind TEXT NOT NULL CHECK (improver_kind IN ('writer', 'ollama')),
+  improver_model TEXT NOT NULL,
+  pass_score INTEGER NOT NULL,
+  max_rounds INTEGER NOT NULL,
+  status TEXT NOT NULL CHECK (
+    status IN (
+      'judging',
+      'improving',
+      'awaiting_local',
+      'passed',
+      'stopped',
+      'failed'
+    )
+  ),
+  active_run_id TEXT REFERENCES agent_runs(id) ON DELETE SET NULL,
+  pending_local_prompt TEXT,
+  pending_local_role TEXT CHECK (
+    pending_local_role IS NULL OR pending_local_role IN ('judge', 'improve')
+  ),
+  current_round INTEGER NOT NULL DEFAULT 0,
+  error_message TEXT,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS prompt_sdlc_cycles_owner_idx
+  ON prompt_sdlc_cycles (owner_user_id, created_at DESC);
+
+CREATE TABLE IF NOT EXISTS prompt_sdlc_revisions (
+  id TEXT PRIMARY KEY,
+  cycle_id TEXT NOT NULL REFERENCES prompt_sdlc_cycles(id) ON DELETE CASCADE,
+  round_number INTEGER NOT NULL,
+  prompt_text TEXT NOT NULL,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  UNIQUE (cycle_id, round_number)
+);
+
+CREATE TABLE IF NOT EXISTS prompt_sdlc_judgements (
+  id TEXT PRIMARY KEY,
+  cycle_id TEXT NOT NULL REFERENCES prompt_sdlc_cycles(id) ON DELETE CASCADE,
+  revision_id TEXT NOT NULL REFERENCES prompt_sdlc_revisions(id) ON DELETE CASCADE,
+  judge_kind TEXT NOT NULL CHECK (judge_kind IN ('writer', 'ollama')),
+  judge_model TEXT NOT NULL,
+  score INTEGER,
+  passed BOOLEAN,
+  reasons TEXT,
+  raw_reply TEXT NOT NULL,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
-CREATE INDEX IF NOT EXISTS workflow_field_uploads_owner_idx
-  ON workflow_field_uploads (owner_user_id, created_at DESC);
-
-CREATE UNIQUE INDEX IF NOT EXISTS workflow_field_uploads_owner_sha256_idx
-  ON workflow_field_uploads (owner_user_id, sha256);
+CREATE INDEX IF NOT EXISTS prompt_sdlc_judgements_cycle_idx
+  ON prompt_sdlc_judgements (cycle_id, created_at ASC);
 
 CREATE TABLE IF NOT EXISTS schema_migrations (
   filename TEXT PRIMARY KEY,

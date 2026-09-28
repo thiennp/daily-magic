@@ -1,3 +1,4 @@
+import buildUsageGuideForPublishedCapability from "@/lib/capabilities/buildUsageGuideForPublishedCapability";
 import { getUserById } from "@/lib/auth/userRepository";
 import { canViewPublishedCapability } from "@/lib/capabilities/canViewPublishedCapability";
 import mapPublishedCapabilityRow from "@/lib/capabilities/mapPublishedCapabilityRow";
@@ -45,6 +46,7 @@ export async function listHarnessMarketplaceForViewer(
       exampleRequest: capability.exampleRequest,
       visibility: capability.visibility,
       workflowFields: capability.workflowFields,
+      usageGuide: buildUsageGuideForPublishedCapability(capability),
       harnessSetSlug: capability.harnessSetSlug,
       harnessSetName: catalogSummary.harnessSetName,
       harnessItemCount: catalogSummary.harnessItemCount,

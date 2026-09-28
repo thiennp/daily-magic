@@ -17,7 +17,7 @@ Vocabulary: [Chapter 0](00-philosophy-and-vocabulary.md). One runtime, many surf
 | **Workflow**     | A capability shape with a **form** (and sometimes a step graph)   | Cloud                                                           |
 | **Harness**      | Rules/skills/commands **on disk** under `~/.agent-witch/harness/` | Your **Mac**                                                    |
 
-**Library** = your saved playbooks. **Marketplace** = company-published listings others can browse and install. Neither replaces dispatch—they point at capabilities and push harness bundles when you install.
+**Library** = your saved playbooks. **Marketplace** = company-published listings others can browse and install. Neither replaces dispatch—they point at capabilities and **project composition** when you install (Mac pull applies files into the repo).
 
 Engineering detail: [Mac harness, workflow, and agent dispatch](../../qa/mac-harness-workflow-agent-dispatch.md).
 
@@ -62,15 +62,15 @@ Details: [Guest library browser drafts](../../qa/guest-library-browser-drafts.md
 
 ---
 
-## Installing playbooks on your Mac
+## Installing workflows and agents (project-first)
 
-When you **install** from marketplace or save certain templates with a target device, Agent Witch pushes a **harness bundle** to the paired **Mac** over the Agent Witch WebSocket (`harness.request`). The Mac writes files under `~/.agent-witch/harness/`.
+Marketplace **Install** always asks for a **project** and a **Mac**. The listing is saved to your **library** and linked in cloud **project composition** (workflow/agent + playbook metadata)—not as a global dump into `~/.agent-witch/harness/`.
 
-If the browser and **Mac** are the **same machine**, install can also go through the local **bridge** (loopback HTTP) without waiting on cloud socket timing—useful when you are setting up from **Connect this Mac**.
+On the Mac, open the same **project** in Agent Witch Live and **pull playbook files into the repo** so rules land under the project’s `.cursor/` tree and `project.json` stays in sync.
+
+Each marketplace card includes a **How to use** section (steps, prerequisites, supported writers: Anthropic, OpenAI, Cursor, Google).
 
 Same-machine identity: [How AWC knows this computer](../../qa/awc-how-browser-knows-this-computer.md).
-
-After install, the next **Task** or workflow agent step still dispatches as a **Run**; harness files shape how the local CLI behaves.
 
 ---
 
@@ -80,8 +80,8 @@ After install, the next **Task** or workflow agent step still dispatches as a **
 
 Flow (simplified):
 
-1. Browse listing → **Install** (choose **Mac** when prompted).
-2. Harness lands on the Mac; capability metadata lives in cloud.
+1. Browse listing → read **How to use** → **Install** (choose **Mac** and **project**).
+2. Cloud records library + project bindings; Mac pulls files into the repo when you are ready.
 3. Teammates run from library or marketplace entry → shared **Runs** history.
 
 Marketplace is not a separate runtime—install + library + dispatch.

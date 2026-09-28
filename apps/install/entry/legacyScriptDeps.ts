@@ -17,6 +17,7 @@ export {
   flushPendingAgentRunCompletions,
   replayPendingRunInputRequests,
   runWriterTask,
+  publishAgentRunEstimateComparison,
   stopAgentRun,
 } from "../../../scripts/agentWitchRunSessions";
 export { ensureHarnessWriterCli } from "../../../scripts/ensureHarnessWriterCli";
@@ -56,15 +57,25 @@ export { buildDefaultUserProjectFolderPath } from "../../../scripts/buildDefault
 export { registerAgentWitchProcessTraceHandlers } from "../../../scripts/registerAgentWitchProcessTraceHandlers";
 export { runWriterEnsure } from "../../../scripts/handleAgentWitchWriterEnsure";
 export { wrapPromptWithAgentRunReportInstruction } from "../../../scripts/dispatch/agentRunReport.constant";
-export { wrapPromptWithPrerecordedAgentRunEstimate } from "../../../scripts/dispatch/wrapPromptWithPrerecordedAgentRunEstimate";
+export { wrapPromptWithSidecarAgentRunEstimate } from "../../../scripts/dispatch/wrapPromptWithSidecarAgentRunEstimate";
 export { generateAgentRunReportKey } from "../../../scripts/dispatch/generateAgentRunReportKey";
 export { AGENT_RUN_WORKING_ESTIMATE_MARKER } from "../../../scripts/dispatch/agentRunWorkingEstimate.constant";
 export {
   seedAgentRunReportFile,
   appendAgentRunReportDetailsLine,
 } from "../../../scripts/agentWitchRunReport";
-export { runAgentRunPreEstimate } from "../../../scripts/runAgentRunPreEstimate";
-export { buildMarketplacePlanEstimateTerminalStreamPayload } from "../../../scripts/dispatch/buildMarketplacePlanEstimateTerminalStreamPayload";
+export {
+  runAgentRunPreEstimate,
+  beginAgentRunPreEstimate,
+  recordAgentRunPreEstimateOutput,
+  storeAgentRunTimeEstimateHistory,
+} from "../../../scripts/runAgentRunPreEstimate";
+export {
+  beginAgentRunTokenPreEstimate,
+  recordAgentRunTokenPreEstimateOutput,
+} from "../../../scripts/runAgentRunTokenPreEstimate";
+export { resolveTaskWriterEstimateLabel } from "../../../scripts/dispatch/resolveTaskWriterEstimateLabel";
+export { probeLocalRunClis } from "../../../scripts/dispatch/probeLocalRunClis";
 export {
   closeShellPtySession,
   openInteractiveShellPty,

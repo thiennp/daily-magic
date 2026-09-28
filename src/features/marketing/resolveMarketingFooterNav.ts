@@ -8,6 +8,7 @@ export interface MarketingFooterLink {
 
 const FOOTER_PUBLIC_PRODUCT_LINKS: readonly MarketingFooterLink[] = [
   { label: "Real examples", href: "/showcases" },
+  { label: "For agents", href: "/for-agents" },
   { label: "New task", href: buildAgentComposerHref() },
   { label: "Reports", href: "/reports" },
 ];

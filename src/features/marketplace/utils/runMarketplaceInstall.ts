@@ -3,6 +3,7 @@ import { postMarketplaceInstall } from "@/features/marketplace/utils/postMarketp
 export const runMarketplaceInstall = async (input: {
   readonly capabilityId: string;
   readonly deviceId: string;
+  readonly projectId: string;
 }): Promise<{
   readonly status: "done" | "error";
   readonly message: string;
@@ -18,19 +19,13 @@ export const runMarketplaceInstall = async (input: {
     };
   }
 
-  if (result.harnessInstalled) {
-    return {
-      status: "done",
-      message: "Saved to your library and installed rules on your Mac.",
-      libraryCapabilityId: result.libraryCapabilityId,
-    };
-  }
-
   return {
     status: "done",
     message:
       result.harnessInstallMessage ??
-      (result.savedToLibrary ? "Saved to your library." : "Install requested."),
+      (result.savedToLibrary
+        ? "Saved to your library and linked to your project."
+        : "Install requested."),
     libraryCapabilityId: result.libraryCapabilityId,
   };
 };

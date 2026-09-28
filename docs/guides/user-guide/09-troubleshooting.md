@@ -6,6 +6,8 @@ Most fixes are **learn from usage** in practice: read the honest banner, adjust 
 
 Quick wins first, then themed sections for DNS, reconnecting, and bundle update.
 
+A Linux browser can use the Console. Desktop Linux Home shows the host install command. An x86_64 Linux machine can host Tasks. It will not show “this Mac” ([Q&A](../../qa/linux-browser-vs-linux-host.md)).
+
 ---
 
 ## Before you reinstall
@@ -153,8 +155,13 @@ Invalid `com.agent-witch.plist` (install script once embedded bash inside XML). 
 | ------------------------ | -------------------------------------------------- |
 | **Connect this Mac** row | Link the Mac where you opened the browser          |
 | **this Mac** badge       | Cloud device hash matches local bridge `/identity` |
+| **Mac offline**          | Device is already paired; the helper is not live   |
+
+If no row says **this Mac**, use **Connect this Mac** in the hero or under **Your Devices**. That links the computer you are using now. The button stays hidden only after this browser’s pairing token already matches a listed device. **Mac settings & connect** only opens **Your setup**. When a row is already **this Mac** and **Offline**, start Agent Witch on that computer. Click the offline row for wake steps.
 
 If you do not see **this Mac** on macOS: bridge not running, wrong port, or signed-out page (no probe). Not a DNS issue by itself.
+
+[Why there is no Connect button when devices are offline](../../qa/awc-offline-devices-hide-connect-button.md).
 
 [How AWC knows this computer](../../qa/awc-how-browser-knows-this-computer.md) · [AWB localhost identity](../../qa/awb-localhost-identity-and-cors.md).
 
@@ -223,13 +230,15 @@ Developers: `AGENT_WITCH_OLLAMA_URL` / `AGENT_WITCH_EMBED_MODEL` — [developer 
 
 ## Where to search next
 
-| Need                             | Location                                                                                                       |
-| -------------------------------- | -------------------------------------------------------------------------------------------------------------- |
-| Short “how it works” answers     | [docs/qa/README.md](../../qa/README.md)                                                                        |
-| Open Mac bridge / dispatch risks | [src/features/agent-witch/KNOWN_ISSUES.md](../../../src/features/agent-witch/KNOWN_ISSUES.md)                  |
-| Mac Home / Update local UI       | [macDevices KNOWN_ISSUES](../../../src/features/agent-witch/macDevices/KNOWN_ISSUES.md)                        |
-| Trust and boundaries             | [Chapter 8 — Production and trust](08-production-and-trust.md)                                                 |
-| First-time setup                 | [Chapter 1 — Getting started](01-getting-started.md) · [Chapter 4 — Mac connect](04-mac-connect-and-bridge.md) |
+| Need                             | Location                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Short “how it works” answers     | [docs/qa/README.md](../../qa/README.md)                                                                                                                                                                                                                                                                                                                                                                                                          |
+| Prompt SDLC sample and history   | [prompt-sdlc.md](../../qa/prompt-sdlc.md) — instructions at `http://127.0.0.1:43347/prompt-sdlc/guide`; history shows a short title, Delete removes a run, the pass score fades across the score colors, and the form stays filled and locked while a run is working, and a manual score and its reason are shown to the improver. A bot on this Mac calls `http://127.0.0.1:43347/prompt-sdlc/agent` and runs the writers in the project folder |
+| Open Mac bridge / dispatch risks | [src/features/agent-witch/KNOWN_ISSUES.md](../../../src/features/agent-witch/KNOWN_ISSUES.md)                                                                                                                                                                                                                                                                                                                                                    |
+| Mac Home / Update local UI       | [macDevices KNOWN_ISSUES](../../../src/features/agent-witch/macDevices/KNOWN_ISSUES.md)                                                                                                                                                                                                                                                                                                                                                          |
+| Trust and boundaries             | [Chapter 8 — Production and trust](08-production-and-trust.md)                                                                                                                                                                                                                                                                                                                                                                                   |
+| First-time setup                 | [Chapter 1 — Getting started](01-getting-started.md) · [Chapter 4 — Mac connect](04-mac-connect-and-bridge.md)                                                                                                                                                                                                                                                                                                                                   |
+| AI registration / Agent Mail     | [ai-self-registration-webmcp.md](../../qa/ai-self-registration-webmcp.md) — method `none` works without a mailbox; `agentmail` returns 503 when the server key is missing. `rate_limited` or `busy` means wait; do not retry in a loop. Call `get_agent_guide` for the current tool list                                                                                                                                                         |
 
 Indexed search (agents and power users):
 
@@ -248,6 +257,7 @@ npm run feature-knowledge:query -- "Mac reconnecting DNS update bundle" --featur
 - this Mac identity connect bridge 47892
 - sua loi Agent Witch Mac reconnecting
 - khong gui duoc task vi Mac offline
+- Linux cannot access Agent Witch, Linux host vs Mac app
 - loi DNS www.agentwitch.com tren Mac
 - cap nhat bundle Agent Witch update needed
 - sau update local van reconnecting plist

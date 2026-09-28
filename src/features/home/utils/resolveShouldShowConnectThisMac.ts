@@ -12,6 +12,13 @@ export const resolveShouldShowConnectThisMac = (input: {
     return false;
   }
 
+  if (
+    input.operatingSystem === "linux" ||
+    input.operatingSystem === "windows"
+  ) {
+    return true;
+  }
+
   if (input.operatingSystem !== "mac") {
     return input.devices.length > 0;
   }

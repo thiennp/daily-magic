@@ -51,7 +51,8 @@ Plain status language ([UX principles](../../product/ux-simplification.md)):
 | ------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Online**                           | Cloud has a **live** dispatch path to this Mac on the current server (you can send writer tasks when the composer agrees).                         |
 | **Reconnecting** / **Seen recently** | Helper may be running, but the Console is waiting for a **live WebSocket** on the hub handling your request—common for a few seconds after deploy. |
-| **Offline**                          | No recent live socket—install, start helper, or fix LaunchAgent/update issues.                                                                     |
+| **This computer is not linked**      | Other computers may already be listed, but none is **this Mac**. Use **Connect this Mac** in the hero.                                             |
+| **Offline**                          | A linked computer has no recent live socket—start the helper, or fix LaunchAgent/update issues.                                                    |
 | **None / not connected**             | No paired Mac yet—follow **Connect your Mac**.                                                                                                     |
 
 **Honest UX:** Home **reconnecting** is **not** the same as “Safari can reach google.com.” It reflects **dispatch readiness**, not just local bridge health. Read both Home and the composer banner before reinstalling ([Q&A: reconnecting vs local live](../../qa/awc-mac-reconnecting-vs-local-live.md)).
@@ -171,7 +172,7 @@ Exact paths may shift; trust nav labels over memorizing URLs.
 - [Chapter 1 — Getting started](01-getting-started.md)
 - [Chapter 4 — Mac connect and bridge](04-mac-connect-and-bridge.md)
 - [Chapter 5 — Tasks, dispatch, and runs](05-tasks-dispatch-and-runs.md)
-- [Home known issues (engineers)](../../src/features/home/KNOWN_ISSUES.md)
+- [Home known issues (engineers)](../../../src/features/home/KNOWN_ISSUES.md)
 - [System Q&A](../../qa/README.md)
 
 ---

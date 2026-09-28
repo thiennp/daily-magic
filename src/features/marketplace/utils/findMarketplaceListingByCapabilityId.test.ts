@@ -1,7 +1,13 @@
 import { describe, expect, it } from "vitest";
 
 import { findMarketplaceListingByCapabilityId } from "@/features/marketplace/utils/findMarketplaceListingByCapabilityId";
+import buildUsageGuideForTemplate from "@/lib/capabilities/templates/buildUsageGuideForTemplate";
+import findCapabilityTemplateById from "@/lib/capabilities/templates/findCapabilityTemplateById";
 import type HarnessMarketplaceListing from "@/lib/harness/types/HarnessMarketplaceListing.type";
+
+const templateGuide = buildUsageGuideForTemplate(
+  findCapabilityTemplateById("weekly-team-status")!,
+);
 
 const buildListing = (capabilityId: string): HarnessMarketplaceListing => ({
   capabilityId,
@@ -14,6 +20,7 @@ const buildListing = (capabilityId: string): HarnessMarketplaceListing => ({
   exampleRequest: "Run",
   visibility: "public",
   workflowFields: [],
+  usageGuide: templateGuide,
   harnessSetSlug: "slug",
   harnessSetName: null,
   harnessItemCount: 1,

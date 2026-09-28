@@ -48,13 +48,14 @@ If UI copy promises something this table does not list as “today,” treat the
 
 ## What Agent Witch is not
 
-| Misconception                                      | Reality                                                                                                                                                                     |
-| -------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| “Daily Magic” is a different app                   | **daily-magic** is the git repo name; **Agent Witch** is the product at **www.agentwitch.com**. Same codebase.                                                              |
-| Production is `daily-magic.d.energie.check24.de`   | Agent Witch production is **www.agentwitch.com** unless your organization explicitly deploys elsewhere.                                                                     |
-| “Agent Witch” always means the Mac app             | Colloquially yes; in engineering we split **AWC** (browser console), **AWL** (Mac UI), **AWB** (bridge), **AWI** (install/runtime). Users usually see **Mac** and **Runs**. |
-| Harness / library / marketplace are three runtimes | **One dispatch runtime.** Harness = rules on disk; library = saved playbooks; marketplace = published listings.                                                             |
-| Cloud agents replace your Mac                      | **Mac runs local CLI/shell work** on your machine. **Cursor Cloud** is an optional dispatch target when you configure it—not a silent substitute for your laptop.           |
+| Misconception                                      | Reality                                                                                                                                                                                               |
+| -------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| “Daily Magic” is a different app                   | **daily-magic** is the git repo name; **Agent Witch** is the product at **www.agentwitch.com**. Same codebase.                                                                                        |
+| Production is `daily-magic.d.energie.check24.de`   | Agent Witch production is **www.agentwitch.com** unless your organization explicitly deploys elsewhere.                                                                                               |
+| “Agent Witch” always means the Mac app             | Colloquially yes; in engineering we split **AWC** (browser console), **AWL** (Mac UI), **AWB** (bridge), **AWI** (install/runtime). Users usually see **Mac** and **Runs**.                           |
+| Harness / library / marketplace are three runtimes | **One dispatch runtime.** Harness = rules on disk; library = saved playbooks; marketplace = published listings.                                                                                       |
+| Cloud agents replace your Mac                      | **Mac runs local CLI/shell work** on your machine. **Cursor Cloud** is an optional dispatch target when you configure it—not a silent substitute for your laptop.                                     |
+| “Linux cannot use Agent Witch”                     | The **Console** works in a Linux browser. An **x86_64 Linux** machine can also host the agent. The Mac app and “this computer” bridge stay Mac-only ([Q&A](../../qa/linux-browser-vs-linux-host.md)). |
 
 ---
 
@@ -122,3 +123,4 @@ Engineers changing code should read the [developer guide](../developer-guide/REA
 - four pillars Agent Witch, product values, north star vs today
 - bon tru cot Agent Witch, de tao workflow, hoc tu loi, tiet kiem ngữ cảnh, team chia se kinh nghiem
 - huong dan bon tru cot, triet ly san pham Agent Witch
+- Linux cannot use Agent Witch, console vs Linux host

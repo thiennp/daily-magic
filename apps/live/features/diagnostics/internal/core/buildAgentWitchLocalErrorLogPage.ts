@@ -11,10 +11,16 @@ export const buildAgentWitchLocalErrorLogPageBody = (input: {
   readonly exists: boolean;
   readonly truncated: boolean;
   readonly byteSize: number;
+  readonly cleared?: boolean;
 }): string => {
   const truncatedNote = input.truncated
     ? `<p class="alert-warn">Showing the last portion of a large log file.</p>`
     : "";
+
+  const clearedAlert =
+    input.cleared === true
+      ? `<div class="alert-success">Error log cleared.</div>`
+      : "";
 
   const body =
     input.exists && input.content.length > 0
@@ -23,7 +29,7 @@ export const buildAgentWitchLocalErrorLogPageBody = (input: {
         ? `<p class="empty">Error log exists but is empty.</p>`
         : `<p class="empty">No error log yet. When the Mac client crashes or writes stderr, entries appear in <code>${escapeHtml(input.errorLogPath)}</code>.</p>`;
 
-  return `<section class="card">
+  return `${clearedAlert}<section class="card">
       <p class="eyebrow">Diagnostics</p>
       <h1>Error log</h1>
       <p class="lede">Tail of the Agent Witch client stderr log on this Mac (newest lines at the bottom). New entries are prefixed with a UTC timestamp (<code>YYYY-MM-DDTHH:MM:SSZ</code>).</p>

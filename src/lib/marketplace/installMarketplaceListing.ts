@@ -9,6 +9,7 @@ const installFailure = (errorMessage: string): MarketplaceInstallResult => ({
   errorMessage,
   savedToLibrary: false,
   libraryCapabilityId: null,
+  projectId: null,
   harnessInstalled: false,
   harnessInstallMessage: null,
   localHarnessBundle: null,
@@ -18,6 +19,7 @@ const installMarketplaceListing = async (input: {
   readonly actorUserId: string;
   readonly capabilityId: string;
   readonly deviceId: string;
+  readonly projectId: string;
 }): Promise<MarketplaceInstallResult> => {
   const templateId = parsePresetMarketplaceTemplateId(input.capabilityId);
 
@@ -35,6 +37,7 @@ const installMarketplaceListing = async (input: {
       input.actorUserId,
       templateId,
       input.deviceId,
+      input.projectId,
     );
   }
 
@@ -51,6 +54,7 @@ const installMarketplaceListing = async (input: {
     input.actorUserId,
     input.capabilityId,
     input.deviceId,
+    input.projectId,
   );
 };
 

@@ -2,6 +2,8 @@
 
 import AppShellBottomNav from "@/features/shell/AppShellBottomNav";
 import AppShellHeader from "@/features/shell/AppShellHeader";
+import AppShellNav from "@/features/shell/AppShellNav";
+import { APP_SHELL_DESKTOP_NAV_OFFSET_CLASS } from "@/features/shell/appShellNavClasses.constant";
 import { APP_SHELL_WIDE_CONTENT_CLASS } from "@/features/shell/appShellContentWidth.constant";
 import DispatchApprovalListener from "@/features/dispatch/DispatchApprovalListener";
 import WorkflowAttentionBanner from "@/features/dispatch/WorkflowAttentionBanner";
@@ -23,7 +25,10 @@ export default function AppShell({
     contentClassName ?? (sidebar ? undefined : APP_SHELL_WIDE_CONTENT_CLASS);
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-16 md:pb-0 dark:bg-gray-900">
+    <div
+      className={`min-h-screen bg-gray-50 pb-16 md:pb-0 dark:bg-gray-900 ${APP_SHELL_DESKTOP_NAV_OFFSET_CLASS}`}
+    >
+      <AppShellNav />
       <AppShellHeader />
       <WorkflowAttentionBanner />
       <DispatchApprovalListener />

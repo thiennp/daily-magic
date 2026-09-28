@@ -1,7 +1,5 @@
 "use client";
 
-import { useSyncExternalStore } from "react";
-
 import AppPanel from "@/components/surfaces/AppPanel";
 import { APP_SURFACE_CTA_SECONDARY_SM_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
 import ConnectAnotherMacButton from "@/features/home/ConnectAnotherMacButton";
@@ -11,9 +9,7 @@ import HomeConnectedMacsEmptyState from "@/features/home/HomeConnectedMacsEmptyS
 import useHomeConnectedMacDeviceActions from "@/features/home/hooks/useHomeConnectedMacDeviceActions";
 import useHomeConnectedMacs from "@/features/home/hooks/useHomeConnectedMacs";
 import useLocalMacBrowserContext from "@/features/home/hooks/useLocalMacBrowserContext";
-import detectBrowserOperatingSystem from "@/features/home/utils/detectBrowserOperatingSystem";
-import isMobileBrowser from "@/features/home/utils/isMobileBrowser";
-import { resolveShouldShowConnectThisMac } from "@/features/home/utils/resolveShouldShowConnectThisMac";
+import useShouldShowConnectThisMac from "@/features/home/hooks/useShouldShowConnectThisMac";
 import {
   buildMacDevicesStatusLine,
   countMacPresenceTiers,
@@ -24,12 +20,6 @@ interface HomeConnectedMacsPanelProps {
   readonly isWebSocketSupported: boolean;
   readonly host: string;
 }
-
-const subscribeToOperatingSystem = () => () => undefined;
-
-const getServerOperatingSystemSnapshot = () => "other" as const;
-
-const getServerMobileBrowserSnapshot = () => false;
 
 export default function HomeConnectedMacsPanel({
   installCommand,
@@ -45,28 +35,11 @@ export default function HomeConnectedMacsPanel({
     serverInstallBundleVersion,
     renameDevice,
   } = useHomeConnectedMacs();
-  const { localHostname, localTokenHash, isCheckingLocalHostname } =
-    useLocalMacBrowserContext();
-  const operatingSystem = useSyncExternalStore(
-    subscribeToOperatingSystem,
-    detectBrowserOperatingSystem,
-    getServerOperatingSystemSnapshot,
-  );
-  const mobileBrowser = useSyncExternalStore(
-    subscribeToOperatingSystem,
-    isMobileBrowser,
-    getServerMobileBrowserSnapshot,
-  );
+  const { localHostname, localTokenHash } = useLocalMacBrowserContext();
+  const shouldShowConnectThisMac = useShouldShowConnectThisMac();
   const presenceCounts = countMacPresenceTiers(devices);
   const statusLine = buildMacDevicesStatusLine(presenceCounts);
   const hasExistingDevices = devices.length > 0;
-  const shouldShowConnectThisMac = resolveShouldShowConnectThisMac({
-    operatingSystem,
-    localTokenHash,
-    isCheckingLocalHostname,
-    isMobileBrowser: mobileBrowser,
-    devices,
-  });
 
   return (
     <AppPanel padding="compact">

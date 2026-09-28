@@ -111,6 +111,13 @@
         "scripts/tickAgentWitchScheduledAutomations.ts"
       ],
       "notes": "Automation tick also consumed from AWI/AWB via script shims."
+    },
+    {
+      "slug": "prompt-sdlc",
+      "title": "Prompt SDLC",
+      "fsaStatus": "fsa",
+      "featurePath": "apps/live/features/prompt-sdlc",
+      "notes": "Local prompt judge and improver loop. Picks the best installed reasoning writers."
     }
   ]
 }

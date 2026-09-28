@@ -1,6 +1,6 @@
 # Chapter 4 — Mac bridge (AWL, AWB, AWI)
 
-**AWI** ships and runs the Mac runtime; **AWL** is the loopback Mac app; **AWB** exposes localhost HTTP for a browser tab on the **same Mac**. **AWC** holds the hub and pairing UI. User-facing connect/update flows: [user guide ch.4 — Mac connect and bridge](../user-guide/04-mac-connect-and-bridge.md).
+**AWI** ships and runs the host runtime (Mac LaunchAgents, or an x86_64 Linux systemd user unit). **AWL** is the loopback Mac app. **AWB** exposes localhost HTTP for a browser tab on the **same Mac**. **AWC** holds the hub and pairing UI and works from a Linux browser. Do not answer “Linux cannot access Agent Witch” — split console, host, and Mac-only local app ([Q&A](../../qa/linux-browser-vs-linux-host.md)). User-facing connect/update flows: [user guide ch.4 — Mac connect and bridge](../user-guide/04-mac-connect-and-bridge.md).
 
 Deep reference: [docs/agent-witch/local-bridge.md](../../agent-witch/local-bridge.md) · domain [agent-witch.md](../../domains/agent-witch.md).
 
@@ -57,6 +57,8 @@ Shipped bundle build: `npm run build:agent-witch` (runs in `npm run build`).
 
 Registry: [agent-witch-deployables.md](../../product/agent-witch-deployables.md).
 
+Prompt SDLC is an AWL feature at `apps/live/features/prompt-sdlc`. Routes: `/prompt-sdlc`, `/prompt-sdlc/guide`, and `/prompt-sdlc/agent` on `127.0.0.1:43347`. `GET /prompt-sdlc/agent` lists installed writers. `POST` JSON `{ goal, prompt, workingDirectory, judge?, improver?, passScore? }` starts a cycle in that folder. `GET ?cycle=` returns the snapshot until `done` is true. One installed writer fills both roles when judge and improver are omitted. `manual` is rejected on this API; the human page still offers I'll score it and I'll rewrite it. Bots read the same contract from `buildPromptSdlcAgentGuide` on `/for-agents`, `llms.txt`, and `get_agent_guide`. The judge and improver run in `workingDirectory`, so they can read the harness and the code. That is the product difference from an optimizer that runs somewhere else. The guide page posts the sample goal and prompt to start a cycle. History titles are the first clause of the goal. Delete posts `intent=delete-history` and drops that cycle so a writer still finishing cannot save it back. Steps render as `ol.sdlc-tree`. The pass score is a range input named `passScore` (default 90, whole numbers 1–100). The track is one gradient through the bad, weak, close, and pass colors, and a mark stays at 90. The posted value is stored on the cycle. While the cycle is not terminal, the form is a disabled fieldset filled from that cycle. Judge and improver are blank until posted. The option `manual` is I'll score it or I'll rewrite it. That step waits for a form post (`manual-judge` needs `score` and `reasons`; `manual-improve` needs the next prompt). The rewrite form shows the score and the reason. A writer improver is given the same score and reason in its prompt. A score without a reason is rejected. A successful writer check is stored in `prompt-sdlc-writer-ready.json` and cleared when that writer’s reply fails.
+
 ---
 
 ## AWB HTTP surface (same Mac as browser)
@@ -111,6 +113,8 @@ Test from browser: **`/ws-test`** on AWC.
 | `com.agent-witch-updater`  | `npm run agent-witch:self-update` |
 
 Install bundle version API: `GET /install/agent-witch/version`.
+
+Self-update resolves the app origin from `config.json` `wsUrl`, then from `install-version.json` `appOrigin`. When both are missing, it uses `AGENT_WITCH_DEFAULT_ORIGIN` (`https://www.agentwitch.com`), the same default AWL uses for the update offer. A missing local bundle version still counts as older than the remote bundle.
 
 ---
 

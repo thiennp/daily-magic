@@ -3,9 +3,15 @@
 import Button from "@/components/ui/button/Button";
 import useMacDeviceSelection from "@/features/agent/hooks/useMacDeviceSelection";
 import MarketplaceInstallMacPicker from "@/features/marketplace/MarketplaceInstallMacPicker";
+import MarketplaceInstallProjectPicker from "@/features/marketplace/MarketplaceInstallProjectPicker";
+import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
 
 interface MarketplaceInstallFormPanelProps {
   readonly listingName: string;
+  readonly projects: readonly UserProjectRecord[];
+  readonly isProjectsLoading: boolean;
+  readonly selectedProjectId: string;
+  readonly onSelectProjectId: (projectId: string) => void;
   readonly macSelection: ReturnType<typeof useMacDeviceSelection>;
   readonly localHostname: string | null;
   readonly localTokenHash: string | null;
@@ -20,6 +26,10 @@ interface MarketplaceInstallFormPanelProps {
 
 export default function MarketplaceInstallFormPanel({
   listingName,
+  projects,
+  isProjectsLoading,
+  selectedProjectId,
+  onSelectProjectId,
   macSelection,
   localHostname,
   localTokenHash,
@@ -37,7 +47,8 @@ export default function MarketplaceInstallFormPanel({
         Install {listingName}
       </h2>
       <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-        Saves to your library and installs rules on the Mac you choose.
+        Saves to your library and links this listing to the project you choose.
+        Pull playbook files into the repo from Agent Witch on your Mac.
       </p>
 
       <MarketplaceInstallMacPicker
@@ -45,6 +56,14 @@ export default function MarketplaceInstallFormPanel({
         localHostname={localHostname}
         localTokenHash={localTokenHash}
         isWakeServerReachable={isWakeServerReachable}
+      />
+
+      <MarketplaceInstallProjectPicker
+        projects={projects}
+        isProjectsLoading={isProjectsLoading}
+        selectedProjectId={selectedProjectId}
+        onSelectProjectId={onSelectProjectId}
+        selectedDeviceId={macSelection.selectedDeviceId}
       />
 
       {needsLiveConnection ? (

@@ -184,6 +184,6 @@
 
 **Root cause:** The shared `/showcases/[slug]` segment uses `generateStaticParams` for public articles while E2E slugs call `auth()` for staff gating. Next.js cannot run dynamic auth on that hybrid segment without opting the route into request-time rendering.
 
-**Fix:** `export const dynamic = "force-dynamic"` on `src/app/showcases/[slug]/page.tsx`, staff checks via `isStaffPageViewer` / `requireStaffPageAccess` (with `connection()` before auth), and generic metadata when anonymous.
+**Fix:** `export const dynamic = "force-dynamic"` on `src/app/(app)/showcases/[slug]/page.tsx`, staff checks via `isStaffPageViewer` / `requireStaffPageAccess` (with `connection()` before auth), and generic metadata when anonymous.
 
 **Regression test:** `showcaseE2eStaffGate.test.ts`, `requireStaffPageAccess.test.ts`, `e2eShowcasePublicLeakage.test.ts`.

@@ -29,8 +29,21 @@ describe("resolveMarketplaceInstallEligibility", () => {
   it("disables install for official preset when Mac is offline (MARKETPLACE-002)", () => {
     const result = resolveMarketplaceInstallEligibility({
       capabilityId: "preset:vibe-coding-app-feature",
+      selectedProjectId: "project-1",
       selectedDevice: offlineDevice,
       isWakeServerReachable: false,
+      status: "idle",
+    });
+
+    expect(result.canInstall).toBe(false);
+  });
+
+  it("disables install without a selected project", () => {
+    const result = resolveMarketplaceInstallEligibility({
+      capabilityId: "preset:weekly-team-status",
+      selectedProjectId: "",
+      selectedDevice: onlineDevice,
+      isWakeServerReachable: true,
       status: "idle",
     });
 
@@ -40,6 +53,7 @@ describe("resolveMarketplaceInstallEligibility", () => {
   it("disables install after success (MARKETPLACE-001)", () => {
     const result = resolveMarketplaceInstallEligibility({
       capabilityId: "preset:weekly-team-status",
+      selectedProjectId: "project-1",
       selectedDevice: onlineDevice,
       isWakeServerReachable: true,
       status: "done",

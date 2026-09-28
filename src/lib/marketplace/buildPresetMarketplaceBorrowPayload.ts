@@ -1,4 +1,5 @@
 import { CapabilityType } from "@/lib/capabilities/CapabilityType.constant";
+import buildUsageGuideForTemplate from "@/lib/capabilities/templates/buildUsageGuideForTemplate";
 import type { CapabilityTemplate } from "@/lib/capabilities/templates/types/CapabilityTemplate.type";
 import type { HarnessMarketplaceBorrowPayload } from "@/lib/harness/buildHarnessMarketplaceBorrowPayload";
 import summarizeHarnessManifestSet from "@/lib/harness/summarizeHarnessManifestSet";
@@ -29,6 +30,7 @@ const buildPresetMarketplaceBorrowPayload = (
     exampleRequest: template.exampleRequest,
     workflowFields:
       template.type === CapabilityType.WORKFLOW ? template.workflowFields : [],
+    usageGuide: buildUsageGuideForTemplate(template),
     ownerUserId: OFFICIAL_PRESET_MARKETPLACE_OWNER_USER_ID,
     ownerEmail: OFFICIAL_PRESET_MARKETPLACE_OWNER_EMAIL,
     ownerName: OFFICIAL_PRESET_MARKETPLACE_OWNER_NAME,

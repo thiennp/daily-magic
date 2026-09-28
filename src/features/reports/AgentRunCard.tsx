@@ -5,6 +5,7 @@ import { useState } from "react";
 
 import AppPanel from "@/components/surfaces/AppPanel";
 import AgentRunAgainButton from "@/features/reports/AgentRunAgainButton";
+import AgentRunEstimateComparison from "@/features/reports/AgentRunEstimateComparison";
 import { buildAgentRunContinueHref } from "@/features/reports/utils/buildAgentRunContinueHref";
 import AgentRunStatusBadge from "@/features/reports/AgentRunStatusBadge";
 import { formatAgentRunReportSummaryLine } from "@/features/reports/utils/formatAgentRunReportSummaryLine";
@@ -53,11 +54,10 @@ export default function AgentRunCard({ run }: AgentRunCardProps) {
       <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
         Policy: {run.dispatchPolicy}
       </p>
-      {reportSummaryLine !== null ? (
-        <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
-          {reportSummaryLine}
-        </p>
-      ) : null}
+      <AgentRunEstimateComparison
+        estimateSeconds={run.estimateSeconds}
+        actualSeconds={run.actualSeconds}
+      />
       <pre className="mt-3 max-h-32 overflow-auto rounded-lg bg-gray-50 p-3 text-xs text-gray-700 dark:bg-gray-800 dark:text-gray-300">
         {run.prompt}
       </pre>

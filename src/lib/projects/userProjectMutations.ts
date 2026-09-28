@@ -13,6 +13,11 @@ export const createUserProject = async (
   ownerUserId: string,
   input: CreateUserProjectInput,
 ): Promise<UserProjectRecord | null> => {
+  const linkedDeviceId = input.deviceId?.trim() ?? "";
+  if (linkedDeviceId.length === 0) {
+    return null;
+  }
+
   const projectId = randomUUID();
   const sql = getSql();
   const rows = asRowArray(
@@ -27,7 +32,7 @@ export const createUserProject = async (
       VALUES (
         ${projectId},
         ${ownerUserId},
-        ${input.deviceId ?? null},
+        ${linkedDeviceId},
         ${input.name},
         ${input.folderPath}
       )

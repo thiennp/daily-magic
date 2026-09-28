@@ -19,6 +19,9 @@ interface HomeOnboardingMainPanelProps {
     readonly name: string | null;
     readonly globalRole: GlobalRoleValue;
   };
+  readonly installCommand: string;
+  readonly isWebSocketSupported: boolean;
+  readonly host: string;
 }
 
 const isMacConnectStep = (stepId: string): boolean =>
@@ -26,6 +29,9 @@ const isMacConnectStep = (stepId: string): boolean =>
 
 export default function HomeOnboardingMainPanel({
   user,
+  installCommand,
+  isWebSocketSupported,
+  host,
 }: HomeOnboardingMainPanelProps) {
   const {
     steps,
@@ -63,7 +69,14 @@ export default function HomeOnboardingMainPanel({
     (!(nextStep.id in HOME_ONBOARDING_MAIN_STEP_CONTENT) &&
       !isWorkflowOnboardingStep(nextStep.id))
   ) {
-    return <HomeDashboardHero user={user} />;
+    return (
+      <HomeDashboardHero
+        user={user}
+        installCommand={installCommand}
+        isWebSocketSupported={isWebSocketSupported}
+        host={host}
+      />
+    );
   }
 
   if (isWorkflowOnboardingStep(nextStep.id)) {
