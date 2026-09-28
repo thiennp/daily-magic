@@ -10,9 +10,11 @@ export type AgentWitchLocalAppNavPath =
   | "/errors"
   | "/traffic"
   | "/knowledge"
+  | "/history"
   | "/writer-sessions"
   | "/harness"
-  | "/writer-api";
+  | "/writer-api"
+  | "/prompt-sdlc";
 
 const LOGO_MARK_SVG = `<svg class="brand-mark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
   <path class="brand-mark-outline" d="M12 2L2 12l10 10 10-10L12 2z" />
@@ -27,11 +29,13 @@ const NAV_ITEMS: ReadonlyArray<{
 }> = [
   { href: "/", label: "Home" },
   { href: "/task", label: "Task" },
+  { href: "/prompt-sdlc", label: "Prompt SDLC" },
   { href: "/status", label: "Status" },
   { href: "/projects", label: "Projects" },
   { href: "/harness", label: "Harness" },
   { href: "/writer-api", label: "Writer API" },
   { href: "/knowledge", label: "Knowledge" },
+  { href: "/history", label: "History" },
   { href: "/writer-sessions", label: "Transcripts" },
   { href: "/errors", label: "Errors" },
   { href: "/traffic", label: "Traffic" },
@@ -43,6 +47,12 @@ const escapeHtml = (value: string): string =>
     .replaceAll("<", "&lt;")
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;");
+
+const buildBrandLink = (
+  className: string,
+  installBundleVersionLabel: string,
+): string =>
+  `<a class="${className}" href="/" aria-label="Agent Witch Local home, install bundle ${installBundleVersionLabel}">${LOGO_MARK_SVG}<span class="brand-text">Agent Witch<span class="brand-sub">Local(${installBundleVersionLabel})</span></span></a>`;
 
 export const buildAgentWitchLocalAppShell = (input: {
   readonly title: string;
@@ -63,6 +73,14 @@ export const buildAgentWitchLocalAppShell = (input: {
   const installBundleVersionLabel = escapeHtml(
     input.installBundleVersionLabel?.trim() ?? "unknown",
   );
+  const sidebarBrand = buildBrandLink(
+    "brand brand-in-sidebar",
+    installBundleVersionLabel,
+  );
+  const headerBrand = buildBrandLink(
+    "brand brand-in-header",
+    installBundleVersionLabel,
+  );
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -74,14 +92,15 @@ export const buildAgentWitchLocalAppShell = (input: {
   <style>${AGENT_WITCH_LOCAL_APP_STYLES}</style>
 </head>
 <body>
+  <aside class="site-sidebar">
+    ${sidebarBrand}
+    <nav class="site-nav site-nav-sidebar" aria-label="Local bridge">${nav}</nav>
+  </aside>
   <header class="site-header">
     <div class="site-header-inner">
-      <a class="brand" href="/" aria-label="Agent Witch Local home, install bundle ${installBundleVersionLabel}">
-        ${LOGO_MARK_SVG}
-        <span class="brand-text">Agent Witch<span class="brand-sub">Local(${installBundleVersionLabel})</span></span>
-      </a>
+      ${headerBrand}
       <div class="site-header-actions">
-        <nav class="site-nav" aria-label="Local bridge">${nav}</nav>
+        <nav class="site-nav site-nav-header" aria-label="Local bridge">${nav}</nav>
         ${headerUpdateButtonHtml}
         <a class="btn btn-secondary cloud-open-link" href="${cloudOrigin}" target="_blank" rel="noopener noreferrer" aria-label="Open Agent Witch cloud at ${cloudOrigin}">Open cloud ↗</a>
       </div>

@@ -75,6 +75,14 @@ Documented in KNOWN_ISSUES because **every future install bundle** must preserve
 
 ---
 
+## Offline devices and a missing Connect button
+
+Home **Mac offline** means claimed devices have no live socket. **Connect this Mac** still shows when no row matches this browser (`resolveShouldShowConnectThisMac`). It hides only while a wake probe is actually pending (`resolveIsCheckingLocalMacIdentity`), on a phone, or after the local token hash matches a device. A skipped probe must not leave identity status `idle` looking like an in-flight check (HOME-057). **Mac settings & connect** (`HomeMacSettingsLink`) only navigates to `/#your-setup`.
+
+**Q&A:** [awc-offline-devices-hide-connect-button.md](../../qa/awc-offline-devices-hide-connect-button.md).
+
+---
+
 ## How to find regression coverage
 
 ```bash
@@ -95,12 +103,13 @@ When fixing bridge/dispatch bugs:
 
 ## Related Q&A (symptoms → docs)
 
-| Topic                          | Doc                                                                                       |
-| ------------------------------ | ----------------------------------------------------------------------------------------- |
-| Mac reconnecting vs local live | [awc-mac-reconnecting-vs-local-live.md](../../qa/awc-mac-reconnecting-vs-local-live.md)   |
-| Harness vs agent dispatch      | [mac-harness-workflow-agent-dispatch.md](../../qa/mac-harness-workflow-agent-dispatch.md) |
-| Writer routing                 | [writer-dispatch-cascade-routing.md](../../qa/writer-dispatch-cascade-routing.md)         |
-| AI register / WebMCP           | [ai-self-registration-webmcp.md](../../qa/ai-self-registration-webmcp.md)                 |
+| Topic                          | Doc                                                                                                                                                                            |
+| ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Mac reconnecting vs local live | [awc-mac-reconnecting-vs-local-live.md](../../qa/awc-mac-reconnecting-vs-local-live.md)                                                                                        |
+| Prompt SDLC                    | [prompt-sdlc.md](../../qa/prompt-sdlc.md) — I'll score it and I'll rewrite it; a score and its reason go to the improver; bots call `/prompt-sdlc/agent` in the project folder |
+| Harness vs agent dispatch      | [mac-harness-workflow-agent-dispatch.md](../../qa/mac-harness-workflow-agent-dispatch.md)                                                                                      |
+| Writer routing                 | [writer-dispatch-cascade-routing.md](../../qa/writer-dispatch-cascade-routing.md)                                                                                              |
+| AI register / WebMCP           | [ai-self-registration-webmcp.md](../../qa/ai-self-registration-webmcp.md)                                                                                                      |
 
 ---
 

@@ -30,3 +30,19 @@ export {
 } from "../internal/core/agentWitchSelfUpdate";
 
 export { resolveAgentWitchAppOriginFromWsUrl } from "../internal/core/resolveAgentWitchAppOriginFromWsUrl";
+
+export {
+  AGENT_WITCH_OLLAMA_DOWNLOAD_HINT,
+  AGENT_WITCH_OLLAMA_EMBED_MODEL,
+  AGENT_WITCH_OLLAMA_ESTIMATE_MODEL,
+} from "../internal/core/agentWitchOllamaInstall.constant";
+
+export {
+  buildAgentWitchEnsureOllamaShell,
+  buildAgentWitchInstallScriptOllama,
+} from "../internal/core/buildAgentWitchEnsureOllamaShell";
+
+export {
+  ensureAgentWitchOllamaInstalled,
+  type AgentWitchOllamaEnsureResult,
+} from "../internal/core/ensureAgentWitchOllamaInstalled";

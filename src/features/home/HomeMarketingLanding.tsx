@@ -1,4 +1,5 @@
 import HomeAgentAccessPrompt from "@/features/agent-access/HomeAgentAccessPrompt";
+import HomePromptSdlcSection from "@/features/home/components/HomePromptSdlcSection";
 import HomeMarketingHero from "@/features/home/components/HomeMarketingHero";
 import HomeMarketingPopularPresets from "@/features/home/components/HomeMarketingPopularPresets";
 import HomeMarketingFeatures from "@/features/home/HomeMarketingFeatures";
@@ -13,6 +14,7 @@ export default function HomeMarketingLanding() {
     <MarketingShell>
       <HomeMarketingHero />
       <HomeAgentAccessPrompt />
+      <HomePromptSdlcSection />
       <HomeMarketingPopularPresets />
       <HomeMarketingFeatures />
       <HomeMarketingShowcases />

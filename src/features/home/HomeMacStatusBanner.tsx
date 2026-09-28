@@ -6,6 +6,7 @@ import {
   getPairedDevicesSnapshotOrEmpty,
   pairedDevicesResource,
 } from "@/features/agent-witch/pairedDevicesResource";
+import { resolveHomeMacStatusForBrowser } from "@/features/home/utils/resolveHomeMacStatusForBrowser";
 import { resolveHomeMacStatusSummary } from "@/features/home/utils/resolveHomeMacStatusSummary";
 
 const TONE_CLASS_MAP: Record<
@@ -21,14 +22,23 @@ const TONE_CLASS_MAP: Record<
   none: "border-zinc-200 bg-zinc-50 text-zinc-800 dark:border-zinc-700 dark:bg-zinc-900/50 dark:text-zinc-100",
 };
 
-export default function HomeMacStatusBanner() {
+interface HomeMacStatusBannerProps {
+  readonly shouldShowConnectThisMac: boolean;
+}
+
+export default function HomeMacStatusBanner({
+  shouldShowConnectThisMac,
+}: HomeMacStatusBannerProps) {
   const snapshot = useSyncExternalStore(
     pairedDevicesResource.subscribe,
     () => pairedDevicesResource.getSnapshot(),
     () => null,
   );
   const devices = (snapshot ?? getPairedDevicesSnapshotOrEmpty()).devices;
-  const summary = resolveHomeMacStatusSummary(devices);
+  const summary = resolveHomeMacStatusForBrowser({
+    devices,
+    shouldShowConnectThisMac,
+  });
 
   return (
     <div

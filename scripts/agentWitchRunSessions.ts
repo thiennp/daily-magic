@@ -18,11 +18,20 @@ import {
   removePendingRunInputSession,
   savePendingRunInputSession,
 } from "./agentWitchPendingRunSessions";
-import { persistFinishedAgentRun } from "./agentWitchRunFinish";
+import {
+  recordAgentRunEstimateActual,
+  readAgentRunEstimateComparison,
+  recordAgentRunPromptExchange,
+  recordAgentRunTokenEstimateActual,
+} from "./agentRunEstimateHistory";
+import { resolveTaskWriterEstimateLabel } from "./dispatch/resolveTaskWriterEstimateLabel";
+import { readActualTaskTokenCount } from "./dispatch/readActualTaskTokenCount";
+import { resolveClaudeCliPrintOutput } from "./dispatch/parseClaudeCliPrintResult";
 import {
   enqueueAgentRunCompletionOutbox,
   flushAgentRunCompletionOutbox,
 } from "./agentWitchRunCompletionOutbox";
+import { reportAgentRunEstimateComparisonOnCloud } from "./agentWitchCloudApi";
 import { startRunHeartbeat, stopRunHeartbeat } from "./agentWitchRunHeartbeat";
 import { isProcessAlive } from "./isProcessAlive";
 import type { AgentWitchCloudApiConfig } from "./agentWitchCloudApi";
@@ -42,6 +51,7 @@ import {
 } from "./agentWitchRunSessionsAwaitingInput";
 import { tryRunWriterTaskInPty } from "./agentWitchRunSessionsPty";
 import { markWriterConversationStarted } from "./agentWitchWriterSession";
+import { persistFinishedAgentRun } from "./agentWitchRunFinish";
 import { appendWriterTranscriptTurn } from "./writerSessionTranscriptStore";
 import { buildAgentRunWriterExecutionHonestyChunk } from "./dispatch/buildAgentRunWriterExecutionHonestyChunk";
 import { extractUserTaskFromWrappedPrompt } from "./dispatch/extractUserTaskFromWrappedPrompt";
@@ -80,6 +90,13 @@ interface ActiveRunSession {
 const activeChildren = new Map<string, ChildProcess>();
 const runSessions = new Map<string, ActiveRunSession>();
 const runsStoppedByUser = new Set<string>();
+const taskStartedAtMsByRunId = new Map<string, number>();
+
+const noteTaskStarted = (agentRunId: string | undefined): void => {
+  if (agentRunId !== undefined && !taskStartedAtMsByRunId.has(agentRunId)) {
+    taskStartedAtMsByRunId.set(agentRunId, Date.now());
+  }
+};
 
 const publishTerminalStreamChunk = (
   socket: WebSocket,
@@ -141,6 +158,29 @@ export const configureAgentWitchRunCloudApi = (
   config: AgentWitchCloudApiConfig | null,
 ): void => {
   cloudApiConfig = config;
+};
+
+export const publishAgentRunEstimateComparison = (
+  reportsDir: string,
+  agentRunId: string,
+): void => {
+  if (cloudApiConfig === null) {
+    return;
+  }
+
+  const comparison = readAgentRunEstimateComparison(reportsDir, agentRunId);
+  if (
+    comparison === null ||
+    (comparison.estimateSeconds === null && comparison.actualSeconds === null)
+  ) {
+    return;
+  }
+
+  void reportAgentRunEstimateComparisonOnCloud(
+    cloudApiConfig,
+    agentRunId,
+    comparison,
+  );
 };
 
 export const flushPendingAgentRunCompletions = async (
@@ -233,8 +273,39 @@ const finishRun = (
   originalPrompt: string,
   llmUsage?: WriterLlmUsage,
 ): void => {
+  const printed = resolveClaudeCliPrintOutput(output, llmUsage);
   let resolvedExitCode = exitCode;
-  let resolvedOutput = appendWriterLlmUsageFooter(output, llmUsage);
+  let resolvedOutput = appendWriterLlmUsageFooter(
+    printed.output,
+    printed.llmUsage,
+  );
+
+  if (agentRunId !== undefined) {
+    const startedAtMs = taskStartedAtMsByRunId.get(agentRunId);
+    taskStartedAtMsByRunId.delete(agentRunId);
+    if (startedAtMs !== undefined) {
+      recordAgentRunEstimateActual({
+        reportsDir: config.layout.reportsDir,
+        agentRunId,
+        actualSeconds: Math.max(
+          1,
+          Math.round((Date.now() - startedAtMs) / 1000),
+        ),
+      });
+    }
+
+    const actualTokens = readActualTaskTokenCount(
+      printed.llmUsage,
+      resolvedOutput,
+    );
+    if (actualTokens !== null) {
+      recordAgentRunTokenEstimateActual({
+        reportsDir: config.layout.reportsDir,
+        agentRunId,
+        actualTokens,
+      });
+    }
+  }
 
   if (agentRunId !== undefined && runsStoppedByUser.has(agentRunId)) {
     runsStoppedByUser.delete(agentRunId);
@@ -245,6 +316,11 @@ const finishRun = (
         ? `${resolvedOutput.trim()}${STOPPED_OUTPUT_SUFFIX}`
         : "Stopped by user.";
   }
+
+  const comparison =
+    agentRunId !== undefined
+      ? readAgentRunEstimateComparison(config.layout.reportsDir, agentRunId)
+      : null;
 
   if (agentRunId !== undefined) {
     stopRunHeartbeat(agentRunId);
@@ -260,6 +336,21 @@ const finishRun = (
     }
 
     const session = runSessions.get(agentRunId);
+    recordAgentRunPromptExchange({
+      reportsDir: config.layout.reportsDir,
+      agentRunId,
+      input: extractUserTaskFromWrappedPrompt(originalPrompt),
+      output: resolvedOutput,
+      ...(session !== undefined
+        ? {
+            writerLabel: resolveTaskWriterEstimateLabel({
+              writerAgent: session.writerAgent,
+              writerExecutionBackend: config.writerExecutionBackend,
+              configPath: config.layout.configPath,
+            }),
+          }
+        : {}),
+    });
     if (session !== undefined) {
       appendWriterTranscriptTurn({
         layout: config.layout,
@@ -284,6 +375,12 @@ const finishRun = (
       exitCode: resolvedExitCode,
       output: resolvedOutput,
       createdAt: new Date().toISOString(),
+      ...(typeof comparison?.estimateSeconds === "number"
+        ? { estimateSeconds: comparison.estimateSeconds }
+        : {}),
+      ...(typeof comparison?.actualSeconds === "number"
+        ? { actualSeconds: comparison.actualSeconds }
+        : {}),
     });
     void flushAgentRunCompletionOutbox({
       layout: config.layout,
@@ -301,6 +398,12 @@ const finishRun = (
       exitCode: resolvedExitCode,
       output: resolvedOutput,
       ...(agentRunId !== undefined ? { agentRunId } : {}),
+      ...(typeof comparison?.estimateSeconds === "number"
+        ? { estimateSeconds: comparison.estimateSeconds }
+        : {}),
+      ...(typeof comparison?.actualSeconds === "number"
+        ? { actualSeconds: comparison.actualSeconds }
+        : {}),
       ...(llmUsage !== undefined ? { llmUsage } : {}),
     },
     requestId,
@@ -418,10 +521,17 @@ const attachChildHandlers = (
     );
   }
 
+  const bufferClaudeJson = writerAgent === "claude-cli";
+  const stdoutChunks: string[] = [];
+
   child.stdout?.on("data", (chunk: Buffer) => {
     const text = chunk.toString("utf8");
-    outputChunks.push(text);
-    emitTerminalStreamChunk(text);
+    if (bufferClaudeJson) {
+      stdoutChunks.push(text);
+    } else {
+      outputChunks.push(text);
+      emitTerminalStreamChunk(text);
+    }
 
     if (inputRequested || agentRunId === undefined) {
       return;
@@ -472,11 +582,23 @@ const attachChildHandlers = (
 
     const session =
       agentRunId !== undefined ? runSessions.get(agentRunId) : undefined;
-    const chunkOutput = outputChunks.join("").trim();
+    const printed = bufferClaudeJson
+      ? resolveClaudeCliPrintOutput(stdoutChunks.join(""))
+      : {
+          output: outputChunks.join("").trim(),
+          llmUsage: undefined,
+        };
+    const stderrText = bufferClaudeJson ? outputChunks.join("").trim() : "";
+    const visibleOutput = [printed.output.trim(), stderrText]
+      .filter((part) => part.length > 0)
+      .join("\n");
+    if (bufferClaudeJson && printed.output.trim().length > 0) {
+      emitTerminalStreamChunk(printed.output);
+    }
     const mergedOutput =
       session !== undefined && session.accumulatedOutput.length > 0
-        ? `${session.accumulatedOutput}\n\n${chunkOutput}`.trim()
-        : chunkOutput;
+        ? `${session.accumulatedOutput}\n\n${visibleOutput}`.trim()
+        : visibleOutput;
 
     finishRun(
       config,
@@ -486,6 +608,7 @@ const attachChildHandlers = (
       exitCode ?? -1,
       mergedOutput,
       originalPrompt,
+      printed.llmUsage,
     );
   });
 
@@ -608,6 +731,7 @@ export const runWriterTask = (
   beginAgentWitchWriterWork(config.layout);
 
   if (shouldUseWriterApi(config, writerAgent)) {
+    noteTaskStarted(agentRunId);
     runWriterApiTask(
       config,
       writerAgent,
@@ -641,6 +765,8 @@ export const runWriterTask = (
     );
     return;
   }
+
+  noteTaskStarted(agentRunId);
 
   const startPipeChild = (): void => {
     const child = spawn(invocation.command, [...invocation.args], {
@@ -754,11 +880,12 @@ export const runWriterTask = (
     },
     onFinished: (exitCode, output) => {
       markWriterConversationStarted(writerAgent);
+      const printed = resolveClaudeCliPrintOutput(output);
       const session = runSessions.get(agentRunId);
       const mergedOutput =
         session !== undefined && session.accumulatedOutput.length > 0
-          ? `${session.accumulatedOutput}\n\n${output}`.trim()
-          : output;
+          ? `${session.accumulatedOutput}\n\n${printed.output}`.trim()
+          : printed.output;
       finishRun(
         config,
         socket,
@@ -767,6 +894,7 @@ export const runWriterTask = (
         exitCode,
         mergedOutput,
         prompt,
+        printed.llmUsage,
       );
     },
   })

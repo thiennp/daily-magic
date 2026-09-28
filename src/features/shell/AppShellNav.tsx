@@ -3,7 +3,9 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
+import AgentWitchLogo from "@/components/branding/AgentWitchLogo";
 import {
+  APP_SHELL_DESKTOP_NAV_CLASS,
   APP_SHELL_NAV_LINK_ACTIVE_CLASSES,
   APP_SHELL_NAV_LINK_BASE_CLASSES,
   APP_SHELL_NAV_LINK_INACTIVE_CLASSES,
@@ -18,25 +20,33 @@ export default function AppShellNav() {
   const navItems = filterAppNavForShellContext(PRIMARY_NAV, shellNav);
 
   return (
-    <nav aria-label="Primary" className="hidden items-center gap-1 md:flex">
-      {navItems.map((item) => {
-        const isActive = item.isActive(pathname);
+    <nav aria-label="Primary" className={APP_SHELL_DESKTOP_NAV_CLASS}>
+      <Link href="/" aria-label="Agent Witch home" className="px-1">
+        <AgentWitchLogo
+          markClassName="h-6 w-6 text-gray-900 dark:text-zinc-100"
+          textClassName="text-sm font-bold tracking-tight text-gray-900 dark:text-zinc-100"
+        />
+      </Link>
+      <div className="flex flex-col gap-1">
+        {navItems.map((item) => {
+          const isActive = item.isActive(pathname);
 
-        return (
-          <Link
-            key={item.href}
-            href={item.href}
-            aria-current={isActive ? "page" : undefined}
-            className={`${APP_SHELL_NAV_LINK_BASE_CLASSES} ${
-              isActive
-                ? APP_SHELL_NAV_LINK_ACTIVE_CLASSES
-                : APP_SHELL_NAV_LINK_INACTIVE_CLASSES
-            }`}
-          >
-            {item.label}
-          </Link>
-        );
-      })}
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              aria-current={isActive ? "page" : undefined}
+              className={`${APP_SHELL_NAV_LINK_BASE_CLASSES} ${
+                isActive
+                  ? APP_SHELL_NAV_LINK_ACTIVE_CLASSES
+                  : APP_SHELL_NAV_LINK_INACTIVE_CLASSES
+              }`}
+            >
+              {item.label}
+            </Link>
+          );
+        })}
+      </div>
     </nav>
   );
 }

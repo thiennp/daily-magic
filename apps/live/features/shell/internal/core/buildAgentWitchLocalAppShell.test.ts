@@ -17,6 +17,10 @@ describe("buildAgentWitchLocalAppShell", () => {
     expect(html).toContain("--aw-brand-600: #1a44be");
     expect(html).toContain("--aw-zinc-900: #101828");
     expect(html).toContain('class="site-header"');
+    expect(html).toContain('class="site-sidebar"');
+    expect(html).toContain('class="site-nav site-nav-sidebar"');
+    expect(html).toContain('class="site-nav site-nav-header"');
+    expect(html).toContain("padding-left: 14rem");
     expect(html).toContain('aria-current="page"');
     expect(html).toContain("Agent Witch");
     expect(html).toContain('href="/"');
@@ -24,6 +28,7 @@ describe("buildAgentWitchLocalAppShell", () => {
     expect(html).toContain('href="/status"');
     expect(html).toContain('href="/traffic"');
     expect(html).toContain('href="/knowledge"');
+    expect(html).toContain('href="/history"');
     expect(html).toContain('href="/projects"');
     expect(html).toContain('href="/harness"');
     expect(html).toContain('href="https://www.agentwitch.com"');

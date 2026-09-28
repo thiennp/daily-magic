@@ -20,6 +20,7 @@ import {
 import { buildAgentWitchInstallScriptRegisterLaunchAgentFn } from "@/lib/agentWitch/buildAgentWitchInstallScriptRegisterLaunchAgent";
 import { buildAgentWitchInstallScriptWakePortAllocation } from "@/lib/agentWitch/buildAgentWitchInstallScriptWakePortAllocation";
 import { buildAgentWitchInstallScriptNodeRuntime } from "@/lib/agentWitch/buildAgentWitchInstallScriptNodeRuntime";
+import { buildAgentWitchInstallScriptOllama } from "@agent-witch/install-self-update";
 import { buildAgentWitchInstallScriptUpdateVersionSummary } from "@/lib/agentWitch/buildAgentWitchInstallScriptUpdateVersionSummary";
 import { buildAgentWitchInstallScriptWriterBootstrap } from "@/lib/agentWitch/buildAgentWitchInstallScriptWriterBootstrap";
 
@@ -51,6 +52,7 @@ if [[ -z "\${CURL_BIN}" ]]; then
 fi
 
 ${buildAgentWitchInstallScriptNodeRuntime()}
+${buildAgentWitchInstallScriptOllama()}
 
 while [[ $# -gt 0 ]]; do
   case "$1" in

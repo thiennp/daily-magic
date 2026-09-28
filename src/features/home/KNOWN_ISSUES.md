@@ -572,6 +572,30 @@ Document every production bug or UX regression here. Each entry must link to a t
 
 ---
 
+## HOME-057 — No Connect button when this Mac is not in the list
+
+**Symptom:** Home listed other computers as offline, none marked **this Mac**, and there was no **Connect this Mac** button. **Mac settings & connect** only opened Your setup.
+
+**Root cause:** After a skipped wake-identity probe (token already stored, or a previous failed probe suppressed in sessionStorage), identity status stayed `idle`. `isCheckingLocalHostname` treated every `idle` state as still checking, so `resolveShouldShowConnectThisMac` hid the button even though no device matched this browser.
+
+**Fix:** `resolveIsCheckingLocalMacIdentity` is pending only while a probe will run or is loading. When this computer is not linked, Home shows **Connect this Mac** in the hero and under Your Devices, and the banner says **This computer is not linked**.
+
+**Regression tests:** `resolveIsCheckingLocalMacIdentity.test.ts`, `resolveHomeMacStatusForBrowser.test.ts` (HOME-057).
+
+---
+
+## HOME-058 — Reconnecting banner when this computer is not linked
+
+**Symptom:** Home showed **Mac reconnecting** in the hero while **Connect this Mac** was visible because another account Mac was only `recent`, even though this browser was not linked yet.
+
+**Root cause:** `resolveHomeMacStatusForBrowser` rewrote the banner only when aggregate tone was `offline`, not `sleeping` (`recent` / `live_other_instance`).
+
+**Fix:** When `shouldShowConnectThisMac` is true, use **This computer is not linked** for every non-`online` tone except `none` (empty device list).
+
+**Regression test:** `resolveHomeMacStatusForBrowser.test.ts` (HOME-058).
+
+---
+
 ## Adding issues
 
-Use the next ID (`HOME-050`, …). Include symptom, root cause, fix paths, and test file.
+Use the next ID (`HOME-059`, …). Include symptom, root cause, fix paths, and test file.

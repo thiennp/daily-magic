@@ -46,6 +46,7 @@
     "harness:sync": "tsx .agents/scripts/harnessBootstrap.ts --write-git-hooks",
     "cursor:verify": "tsx .agents/scripts/verify-rules.ts",
     "cursor:architecture": "tsx .agents/scripts/architecture-check.ts",
+    "ci": "npm test && npm run ci:architecture && npm run typecheck && npm run build",
     "ci:architecture": "tsx .agents/scripts/architecture-check.ts --base=origin/main",
     "validate:staged": "sh .agents/scripts/validate-structure-staged.sh",
     "validate:all": "npx structure-validation --scope all --verify-root --skip-error",

@@ -61,6 +61,7 @@ Routing cascade (continuation vs memory budget): [docs/qa/writer-dispatch-cascad
 - **`isOnline`** — visibility / wake hints (`live`, `live_other_instance`, or `recent`).
 - **`isDispatchReady`** — writer-ready; only **`live`** on this process (and relay path for other instance).
 - Home “Mac online” hero counts **`live`** on this process only — `live_other_instance` shows reconnecting UX.
+- **this Mac** is a browser token-hash match, not a presence tier. When no row matches, Home shows **Connect this Mac** (`resolveIsCheckingLocalMacIdentity`, HOME-057). A skipped wake probe must not leave that button hidden.
 
 Unified resolver (devices API + dispatch must match): `resolveLiveAgentClientsByDeviceIdForUser` (see ADR 0005 full text).
 
@@ -115,7 +116,7 @@ See [docs/qa/mac-harness-workflow-agent-dispatch.md](../../qa/mac-harness-workfl
 
 ## Agent access `send_task`
 
-`executeAgentAccessSendTask` calls `dispatchClaudeRunForDashboardUser` with the user id from the bearer token. It does not open a second dispatch path. Tool catalog: `src/lib/agentAccess/agentAccessToolCatalog.constant.ts`.
+`executeAgentAccessSendTask` calls `dispatchClaudeRunForDashboardUser` with the user id from the bearer token. It does not open a second dispatch path. Tool catalog: `src/lib/agentAccess/agentAccessToolCatalog.constant.ts`. Before that call, the agent guideline tells the bot to optimize the prompt with AWL `POST /prompt-sdlc/agent` in the project folder. `get_agent_guide` returns `promptSdlc` with the same contract. The Mac instruction topic `prompt-sdlc` tells a writer on this computer to do the same.
 
 ---
 

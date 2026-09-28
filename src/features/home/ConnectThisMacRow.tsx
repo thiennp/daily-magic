@@ -1,15 +1,8 @@
 "use client";
 
-import { useSyncExternalStore } from "react";
-
 import MacDeviceIcon from "@/features/agent-witch/macDevices/MacDeviceIcon";
 import { resolveMacDeviceIconClassName } from "@/features/agent-witch/macDevices/utils/resolveMacDeviceIconClassName";
-import { APP_SURFACE_CTA_SECONDARY_SM_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
-import ConnectInstallPasteModal from "@/features/home/ConnectInstallPasteModal";
-import ConnectThisMacModal from "@/features/home/ConnectThisMacModal";
-import useConnectThisMacRowFlow from "@/features/home/hooks/useConnectThisMacRowFlow";
-import usePersonalizedAgentWitchInstallCommand from "@/features/home/hooks/usePersonalizedAgentWitchInstallCommand";
-import detectBrowserOperatingSystem from "@/features/home/utils/detectBrowserOperatingSystem";
+import ConnectThisMacButton from "@/features/home/ConnectThisMacButton";
 
 interface ConnectThisMacRowProps {
   readonly installCommand: string;
@@ -17,37 +10,11 @@ interface ConnectThisMacRowProps {
   readonly host: string;
 }
 
-const subscribeToOperatingSystem = () => () => undefined;
-
-const getServerOperatingSystemSnapshot = () => "other" as const;
-
 export default function ConnectThisMacRow({
   installCommand,
   isWebSocketSupported,
   host,
 }: ConnectThisMacRowProps) {
-  const operatingSystem = useSyncExternalStore(
-    subscribeToOperatingSystem,
-    detectBrowserOperatingSystem,
-    getServerOperatingSystemSnapshot,
-  );
-  const {
-    handleCloseModal,
-    handleClosePasteModal,
-    handleInstallEngaged,
-    handleOpenModal,
-    isModalOpen,
-    isPasteModalOpen,
-  } = useConnectThisMacRowFlow({ operatingSystem });
-  const {
-    installCommand: personalizedInstallCommand,
-    isLoading: isInstallCommandLoading,
-    error: installCommandError,
-  } = usePersonalizedAgentWitchInstallCommand({
-    enabled: isModalOpen,
-    fallbackInstallCommand: installCommand,
-  });
-
   return (
     <li>
       <div className="rounded-lg border border-dashed border-gray-200 bg-gray-50/80 px-3 py-3 dark:border-gray-700 dark:bg-white/[0.02]">
@@ -66,38 +33,15 @@ export default function ConnectThisMacRow({
               <p className="mt-0.5 text-xs text-gray-500 dark:text-gray-400">
                 Link the Mac you are using now to your account.
               </p>
-              {installCommandError !== null ? (
-                <p className="mt-2 text-xs text-red-600 dark:text-red-400">
-                  {installCommandError}
-                </p>
-              ) : null}
             </div>
           </div>
-          <button
-            type="button"
-            className={`w-full shrink-0 sm:w-auto ${APP_SURFACE_CTA_SECONDARY_SM_CLASS}`}
-            disabled={isInstallCommandLoading}
-            onClick={handleOpenModal}
-          >
-            {isInstallCommandLoading ? "Preparing…" : "Connect this Mac"}
-          </button>
+          <ConnectThisMacButton
+            installCommand={installCommand}
+            isWebSocketSupported={isWebSocketSupported}
+            host={host}
+          />
         </div>
       </div>
-
-      <ConnectThisMacModal
-        isOpen={isModalOpen}
-        operatingSystem={operatingSystem}
-        installCommand={personalizedInstallCommand}
-        isInstallCommandLoading={isInstallCommandLoading}
-        isWebSocketSupported={isWebSocketSupported}
-        host={host}
-        onClose={handleCloseModal}
-        onInstallEngaged={handleInstallEngaged}
-      />
-      <ConnectInstallPasteModal
-        isOpen={isPasteModalOpen}
-        onClose={handleClosePasteModal}
-      />
     </li>
   );
 }

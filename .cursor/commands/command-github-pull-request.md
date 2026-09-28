@@ -21,13 +21,13 @@ git log main..HEAD --oneline
 git diff main...HEAD
 ```
 
-2. Verify locally:
+2. Verify locally (same gate as GitHub CI verify job):
 
 ```bash
-npm run lint
-npm run typecheck
-npm run build
+npm run ci
 ```
+
+Husky **pre-push** runs `npm run ci` automatically; use `--no-verify` only when a human explicitly requests bypassing hooks.
 
 3. Push branch:
 

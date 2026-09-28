@@ -25,6 +25,8 @@ export async function updateAgentRunStatus(
     readonly resultOutcomeCode?: string | null;
     readonly denialReason?: string | null;
     readonly approvalExpiresAt?: string | null;
+    readonly estimateSeconds?: number | null;
+    readonly actualSeconds?: number | null;
   },
 ): Promise<AgentRunRecord | null> {
   if (isAgentWitchDevDashboardEnabled()) {
@@ -54,6 +56,8 @@ export async function updateAgentRunStatus(
         approval_expires_at = COALESCE(${fields?.approvalExpiresAt ?? null}, approval_expires_at),
         started_at = COALESCE(${startedAt ?? null}, started_at),
         completed_at = COALESCE(${completedAt ?? null}, completed_at),
+        estimate_seconds = COALESCE(${fields?.estimateSeconds ?? null}, estimate_seconds),
+        actual_seconds = COALESCE(${fields?.actualSeconds ?? null}, actual_seconds),
         updated_at = NOW()
       WHERE id = ${runId}
       RETURNING *

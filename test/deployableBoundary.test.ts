@@ -16,6 +16,7 @@ const AWI_FEATURES = path.join(APP_ROOT, "apps/install/features");
 const AWL_FEATURES = path.join(APP_ROOT, "apps/live/features");
 const AWB_FEATURES = path.join(APP_ROOT, "apps/bridge/features");
 const AWB_ADAPTERS = path.join(APP_ROOT, "apps/bridge/adapters");
+const AWL_ADAPTERS = path.join(APP_ROOT, "apps/live/adapters");
 const AWI_ENTRY = path.join(APP_ROOT, "apps/install/entry");
 
 const isForbiddenAwiEntryImport = (specifier: string): boolean => {
@@ -167,6 +168,16 @@ describe("deployable import boundaries", () => {
         specifier.startsWith("@/features/") ||
         specifier.includes("src/features/") ||
         (specifier.startsWith("@/") && !specifier.startsWith("@agent-witch/")),
+    );
+    expect(violations).toEqual([]);
+  });
+
+  it("apps/live/adapters may import scripts/ and AWC lib but not src/features", () => {
+    const imports = collectTypeScriptImportStrings(AWL_ADAPTERS);
+    const violations = imports.filter(
+      (specifier) =>
+        specifier.startsWith("@/features/") ||
+        specifier.includes("src/features/"),
     );
     expect(violations).toEqual([]);
   });

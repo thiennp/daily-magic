@@ -69,13 +69,18 @@ export const markAgentRunCompleted = async (
   runId: string,
   exitCode: number,
   output: string,
+  comparison?: {
+    readonly estimateSeconds?: number | null;
+    readonly actualSeconds?: number | null;
+  },
 ): Promise<AgentRunRecord | null> => {
   const completion = resolveAgentRunWriterCompletion({ exitCode, output });
   const run = await updateAgentRunStatus(runId, completion.status, {
     resultExitCode: completion.resultExitCode,
     resultOutcomeCode: completion.resultOutcomeCode,
     resultOutput: output,
-    denialReason: completion.denialReason,
+    estimateSeconds: comparison?.estimateSeconds,
+    actualSeconds: comparison?.actualSeconds,
   });
   if (run !== null) {
     await appendAgentRunEvent({

@@ -219,6 +219,17 @@
       "apiPaths": [],
       "dependsOn": ["auth"],
       "migrationStatus": "migrated"
+    },
+    {
+      "slug": "prompt-sdlc",
+      "title": "Prompt SDLC",
+      "purpose": "Console pointer to Prompt SDLC on Agent Witch Live, which picks the best local reasoning writers.",
+      "featurePath": "src/features/prompt-sdlc",
+      "libPath": "src/lib/promptSdlc",
+      "routePaths": ["/prompt-sdlc", "/prompt-sdlc/guide"],
+      "apiPaths": ["/api/prompt-sdlc"],
+      "dependsOn": ["dispatch", "agent-witch"],
+      "migrationStatus": "migrated"
     }
   ]
 }
