@@ -26,6 +26,7 @@ export const buildPromptSdlcAgentCatalog = (
         judge: sole ?? "installed writer id",
         improver: sole ?? "installed writer id",
         passScore: 90,
+        maxRounds: 10,
       },
     },
     poll: `GET ${PROMPT_SDLC_AGENT_URL}?cycle=<cycleId> until done is true.`,

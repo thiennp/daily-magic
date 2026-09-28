@@ -3,7 +3,11 @@ import { parseClaudeCliPrintResult } from "../../../../adapters/writerDispatch";
 
 export type PromptSdlcWriterResult =
   | { readonly ok: true; readonly text: string }
-  | { readonly ok: false; readonly errorMessage: string };
+  | {
+      readonly ok: false;
+      readonly errorMessage: string;
+      readonly stopped?: boolean;
+    };
 
 const CODEX_TRUST_ERROR =
   "Codex stopped with a terminal error (not a trusted git directory) and did not return a prompt.";

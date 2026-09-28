@@ -58,11 +58,15 @@ export const describePromptSdlcLocalActivity = (
       (revision) =>
         describePromptSdlcWriterTerminalFailure(revision.promptText) !== null,
     );
+    const message = cycle.errorMessage?.trim() ?? "";
     return {
-      title: "Stopped after the last round.",
-      detail: writerFailed
-        ? "The improver returned a terminal error instead of a prompt, so the later scores are 0. This run is listed in History."
-        : "",
+      title: "Stopped.",
+      detail:
+        message.length > 0
+          ? message
+          : writerFailed
+            ? "The improver returned a terminal error instead of a prompt, so the later scores are 0. This run is listed in History."
+            : "The best prompt is kept.",
     };
   }
   if (isPromptSdlcTerminalStatus(cycle.status)) {

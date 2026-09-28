@@ -73,4 +73,78 @@ describe("applyPromptSdlcLocalJudgeReply", () => {
     expect(next.status).toBe("improving");
     expect(next.currentRound).toBe(2);
   });
+
+  it("stops at the round limit and when the score stops rising", () => {
+    const base = createPromptSdlcLocalCycle({
+      goal: "The reply stays inside the facts.",
+      sourcePrompt: "Be helpful.",
+      judgeModel: "claude-cli",
+      improverModel: "codex",
+      maxRounds: 3,
+    });
+    const limited = applyPromptSdlcLocalJudgeReply(
+      {
+        ...base,
+        currentRound: 2,
+        revisions: [
+          {
+            roundNumber: 2,
+            promptText: "Name the stop.",
+            judgement: null,
+          },
+        ],
+      },
+      '{"score":40,"passed":false,"reasons":"Still thin."}',
+    );
+    expect(limited.status).toBe("stopped");
+    expect(limited.errorMessage).toContain("round limit");
+
+    const stalled = applyPromptSdlcLocalJudgeReply(
+      {
+        ...base,
+        maxRounds: 30,
+        currentRound: 3,
+        revisions: [
+          {
+            roundNumber: 0,
+            promptText: "Best.",
+            judgement: {
+              score: 84,
+              passed: false,
+              reasons: "Clear.",
+              rawReply: "",
+            },
+          },
+          {
+            roundNumber: 1,
+            promptText: "Drop.",
+            judgement: {
+              score: 38,
+              passed: false,
+              reasons: "Lost it.",
+              rawReply: "",
+            },
+          },
+          {
+            roundNumber: 2,
+            promptText: "Partial.",
+            judgement: {
+              score: 61,
+              passed: false,
+              reasons: "Closer.",
+              rawReply: "",
+            },
+          },
+          {
+            roundNumber: 3,
+            promptText: "Flat.",
+            judgement: null,
+          },
+        ],
+      },
+      '{"score":58,"passed":false,"reasons":"Still under the best."}',
+    );
+    expect(stalled.status).toBe("stopped");
+    expect(stalled.errorMessage).toContain("stopped rising");
+  });
 });

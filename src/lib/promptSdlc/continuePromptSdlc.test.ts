@@ -39,12 +39,13 @@ describe("continuePromptSdlc", () => {
       expect(rewrite.continuation.role).toBe("improve");
       expect(rewrite.continuation.prompt).toContain("Do not edit files");
       expect(rewrite.continuation.prompt).toContain("Ship the button");
-      expect(rewrite.continuation.prompt).toContain("Judge score: 79");
-      expect(rewrite.continuation.prompt).toContain("vague");
       expect(rewrite.continuation.prompt).toContain(
-        "Round 0 scored 85. No screen.",
+        "Current prompt:\nAdd something.",
       );
-      expect(rewrite.continuation.prompt).toContain("Add something.");
+      expect(rewrite.continuation.prompt).toContain("Judge score: 85");
+      expect(rewrite.continuation.prompt).toContain("No screen.");
+      expect(rewrite.continuation.prompt).toContain("Add a button");
+      expect(rewrite.continuation.prompt).toContain("vague");
     }
 
     const stopped = continueAfterJudgeReply({

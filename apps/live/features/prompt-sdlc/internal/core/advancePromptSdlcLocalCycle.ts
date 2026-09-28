@@ -1,12 +1,14 @@
 import {
   buildPromptSdlcImproverPrompt,
   buildPromptSdlcJudgePrompt,
+  PROMPT_SDLC_STOP_USER,
 } from "../../../../adapters/promptSdlcAwcCore";
-import { buildPromptSdlcLocalImproverHistory } from "./buildPromptSdlcLocalImproverHistory";
 import {
   applyPromptSdlcLocalImproverReply,
   applyPromptSdlcLocalJudgeReply,
 } from "./applyPromptSdlcLocalReply";
+import { readPromptSdlcLocalImproverReference } from "./readPromptSdlcLocalImproverReference";
+import type { PromptSdlcWriterResult } from "./readPromptSdlcWriterOutput";
 import { PROMPT_SDLC_MANUAL_ACTOR } from "./choosePromptSdlcLocalModels";
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
 import { promptSdlcLocalWorkingDirectory } from "./promptSdlcLocalFolder";
@@ -22,9 +24,34 @@ const failCycle = (
   updatedAt: new Date().toISOString(),
 });
 
+const stoppedCycle = (cycle: PromptSdlcLocalCycle): PromptSdlcLocalCycle => ({
+  ...cycle,
+  status: "stopped",
+  errorMessage: PROMPT_SDLC_STOP_USER,
+  updatedAt: new Date().toISOString(),
+});
+
+const replyOrStop = (
+  cycle: PromptSdlcLocalCycle,
+  reply: PromptSdlcWriterResult,
+  writer: string,
+  signal: AbortSignal | undefined,
+  onWriterFailure?: (writer: string) => void,
+): PromptSdlcLocalCycle | null => {
+  if (reply.ok) {
+    return null;
+  }
+  if (reply.stopped === true || signal?.aborted === true) {
+    return stoppedCycle(cycle);
+  }
+  onWriterFailure?.(writer);
+  return failCycle(cycle, reply.errorMessage);
+};
+
 export const advancePromptSdlcLocalCycle = async (
   cycle: PromptSdlcLocalCycle,
   onWriterFailure?: (writer: string) => void,
+  signal?: AbortSignal,
 ): Promise<PromptSdlcLocalCycle> => {
   const revision = cycle.revisions.find(
     (item) => item.roundNumber === cycle.currentRound,
@@ -45,12 +72,19 @@ export const advancePromptSdlcLocalCycle = async (
         promptText: revision.promptText,
         passScore: cycle.passScore,
       }),
+      signal,
     });
-    if (!reply.ok) {
-      onWriterFailure?.(cycle.judgeModel);
-      return failCycle(cycle, reply.errorMessage);
+    const stopped = replyOrStop(
+      cycle,
+      reply,
+      cycle.judgeModel,
+      signal,
+      onWriterFailure,
+    );
+    if (stopped !== null) {
+      return stopped;
     }
-    return applyPromptSdlcLocalJudgeReply(cycle, reply.text);
+    return applyPromptSdlcLocalJudgeReply(cycle, reply.ok ? reply.text : "");
   }
 
   if (cycle.status !== "improving") {
@@ -64,9 +98,8 @@ export const advancePromptSdlcLocalCycle = async (
     return cycle;
   }
 
-  const score = revision.judgement?.score;
-  const reasons = revision.judgement?.reasons?.trim() ?? "";
-  if (score === null || score === undefined || reasons.length === 0) {
+  const reference = readPromptSdlcLocalImproverReference(cycle);
+  if (reference === null) {
     return failCycle(cycle, "The improver needs the score and the reason.");
   }
 
@@ -75,15 +108,22 @@ export const advancePromptSdlcLocalCycle = async (
     workingDirectory: promptSdlcLocalWorkingDirectory(cycle),
     prompt: buildPromptSdlcImproverPrompt({
       goal: cycle.goal,
-      promptText: revision.promptText,
-      score,
-      reasons,
-      history: buildPromptSdlcLocalImproverHistory(cycle, score),
+      promptText: reference.promptText,
+      score: reference.score,
+      reasons: reference.reasons,
+      history: reference.history,
     }),
+    signal,
   });
-  if (!reply.ok) {
-    onWriterFailure?.(cycle.improverModel);
-    return failCycle(cycle, reply.errorMessage);
+  const stopped = replyOrStop(
+    cycle,
+    reply,
+    cycle.improverModel,
+    signal,
+    onWriterFailure,
+  );
+  if (stopped !== null) {
+    return stopped;
   }
-  return applyPromptSdlcLocalImproverReply(cycle, reply.text);
+  return applyPromptSdlcLocalImproverReply(cycle, reply.ok ? reply.text : "");
 };

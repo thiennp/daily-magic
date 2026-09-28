@@ -27,7 +27,7 @@ const saveTerminal = (
     pendingLocalRole: null,
     currentRound,
     errorMessage:
-      continuation.type === "failed" ? continuation.errorMessage : null,
+      continuation.type === "passed" ? null : continuation.errorMessage,
   });
 
 export const placePromptSdlcContinuation = async (input: {

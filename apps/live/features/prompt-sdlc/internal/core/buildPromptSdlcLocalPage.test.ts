@@ -107,6 +107,9 @@ describe("buildPromptSdlcLocalPageBody", () => {
     expect(html).toContain("What the score means");
     expect(html).toContain("0–44 bad");
     expect(html).toContain("90–100 passes");
+    expect(html).toContain('type="number" name="maxRounds"');
+    expect(html).toContain('value="10"');
+    expect(html).toContain('name="intent" value="stop"');
     expect(html).toContain('type="range" name="passScore"');
     expect(html).toContain('value="90"');
     expect(html).toContain("sdlc-pass-range");

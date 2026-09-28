@@ -61,6 +61,8 @@ export const applyPromptSdlcReply = async (input: {
       promptText: current.promptText,
       improver,
       priorRounds,
+      round: input.cycle.currentRound,
+      maxRounds: input.cycle.maxRounds,
     });
     await insertPromptSdlcJudgement({
       cycleId: input.cycle.id,
