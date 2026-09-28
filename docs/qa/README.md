@@ -44,6 +44,7 @@ Open the top `sourcePath` under `docs/qa/` when present.
 | [awc-awl-projects-source-of-truth.md](awc-awl-projects-source-of-truth.md)                 | AWC DB owns project metadata; AWL loads cloud; `.agent-witch/` is repo-local               |
 | [awi-update-local-launchagent-plist.md](awi-update-local-launchagent-plist.md)             | Update local invalid LaunchAgent plist / Mac reconnecting (AGENT-067)                      |
 | [awc-mac-reconnecting-vs-local-live.md](awc-mac-reconnecting-vs-local-live.md)             | AWC “reconnecting / checks in” vs local AWI/AWB being up                                   |
+| [awc-offline-while-awl-connected.md](awc-offline-while-awl-connected.md)                   | AWC “Mac offline” while AWL says Connected and the WebSocket handshake succeeded           |
 | [awc-offline-devices-hide-connect-button.md](awc-offline-devices-hide-connect-button.md)   | Connect this Mac when this computer is not in the device list                              |
 | [awc-connect-click-creates-duplicate-macs.md](awc-connect-click-creates-duplicate-macs.md) | Repeated Connect this Mac clicks must not clone Your Mac / Mac 2                           |
 | [awc-connect-when-awl-already-running.md](awc-connect-when-awl-already-running.md)         | Connect this Mac while AWL is already running, outdated, or deleted in the Console         |

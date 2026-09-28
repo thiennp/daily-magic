@@ -81,6 +81,8 @@ Home **Mac offline** means claimed devices have no live socket. **Connect this M
 
 **Q&A:** [awc-offline-devices-hide-connect-button.md](../../qa/awc-offline-devices-hide-connect-button.md).
 
+AWL Status **Connected** is the Mac client’s socket-open flag (`wsConnected` on `open`). It stays true when that socket is bound to a different device id, account, or `wsUrl` origin than the row Home renders as **Mac offline**. A browser `dashboard` upgrade and `system.ack` do not set `presenceTier`. See [awc-offline-while-awl-connected.md](../../qa/awc-offline-while-awl-connected.md).
+
 ---
 
 ## Repeated Connect clicks cloned devices
