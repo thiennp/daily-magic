@@ -13,16 +13,43 @@ export const describePromptSdlcLocalActivity = (
     cycle.status === "judging" &&
     cycle.judgeModel === PROMPT_SDLC_MANUAL_ACTOR
   ) {
+    const ran = cycle.revisions.some(
+      (revision) =>
+        revision.roundNumber === cycle.currentRound &&
+        revision.run !== undefined,
+    );
+    if (!ran && cycle.improverModel !== PROMPT_SDLC_MANUAL_ACTOR) {
+      return {
+        title: `${labelPromptSdlcLocalModel(cycle.improverModel)} is running the prompt for round ${cycle.currentRound + 1}.`,
+        detail: "You score the changes after this run.",
+      };
+    }
     return {
-      title: `Score round ${cycle.currentRound + 1}.`,
-      detail: "Add a score from 0 to 100 and the reason for that score.",
+      title: `Score the changes from round ${cycle.currentRound + 1}.`,
+      detail: ran
+        ? "Score the changes below. Weigh the tokens and the delay."
+        : "Choose a writer as the judge so this Mac can run the prompt.",
+    };
+  }
+  if (cycle.status === "judging" && cycle.judgePhase === "reviewing") {
+    return {
+      title: `${labelPromptSdlcLocalModel(cycle.judgeModel)} is checking the tokens for round ${cycle.currentRound + 1}.`,
+      detail:
+        "A separate pass reads the token spend and suggests what to cut before the improver runs. This panel keeps updating, so the page is not stuck.",
+    };
+  }
+  if (cycle.status === "judging" && cycle.judgePhase === "scoring") {
+    return {
+      title: `${labelPromptSdlcLocalModel(cycle.judgeModel)} is scoring the changes from round ${cycle.currentRound + 1}.`,
+      detail:
+        "The score uses the git changes or the files the prompt names. This panel keeps updating, so the page is not stuck.",
     };
   }
   if (cycle.status === "judging") {
     return {
-      title: `${labelPromptSdlcLocalModel(cycle.judgeModel)} is scoring round ${cycle.currentRound + 1}.`,
+      title: `${labelPromptSdlcLocalModel(cycle.judgeModel)} is running the prompt for round ${cycle.currentRound + 1}.`,
       detail:
-        "That writer is working on this Mac. This panel keeps updating, so the page is not stuck.",
+        "The judge runs the prompt, then reads the changes, then checks the tokens. This panel keeps updating, so the page is not stuck.",
     };
   }
   if (

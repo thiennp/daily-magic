@@ -1,12 +1,9 @@
 import {
   buildPromptSdlcImproverPrompt,
-  buildPromptSdlcJudgePrompt,
   PROMPT_SDLC_STOP_USER,
 } from "../../../../adapters/promptSdlcAwcCore";
-import {
-  applyPromptSdlcLocalImproverReply,
-  applyPromptSdlcLocalJudgeReply,
-} from "./applyPromptSdlcLocalReply";
+import { applyPromptSdlcLocalImproverReply } from "./applyPromptSdlcLocalReply";
+import { judgePromptSdlcLocalRound } from "./judgePromptSdlcLocalRound";
 import { readPromptSdlcLocalImproverReference } from "./readPromptSdlcLocalImproverReference";
 import type { PromptSdlcWriterResult } from "./readPromptSdlcWriterOutput";
 import { PROMPT_SDLC_MANUAL_ACTOR } from "./choosePromptSdlcLocalModels";
@@ -52,6 +49,7 @@ export const advancePromptSdlcLocalCycle = async (
   cycle: PromptSdlcLocalCycle,
   onWriterFailure?: (writer: string) => void,
   signal?: AbortSignal,
+  onProgress?: (cycle: PromptSdlcLocalCycle) => void,
 ): Promise<PromptSdlcLocalCycle> => {
   const revision = cycle.revisions.find(
     (item) => item.roundNumber === cycle.currentRound,
@@ -61,35 +59,13 @@ export const advancePromptSdlcLocalCycle = async (
   }
 
   if (cycle.status === "judging") {
-    if (cycle.judgeModel === PROMPT_SDLC_MANUAL_ACTOR) {
-      return cycle;
-    }
-    const reply = await runPromptSdlcWriterReply({
-      writerAgent: cycle.judgeModel,
-      workingDirectory: promptSdlcLocalWorkingDirectory(cycle),
-      prompt: buildPromptSdlcJudgePrompt({
-        goal: cycle.goal,
-        promptText: revision.promptText,
-        passScore: cycle.passScore,
-        instructions: cycle.judgeInstructions,
-      }),
-      signal,
-    });
-    const stopped = replyOrStop(
+    return judgePromptSdlcLocalRound({
       cycle,
-      reply,
-      cycle.judgeModel,
-      signal,
+      revision,
       onWriterFailure,
-    );
-    if (stopped !== null) {
-      return stopped;
-    }
-    return applyPromptSdlcLocalJudgeReply(
-      cycle,
-      reply.ok ? reply.text : "",
-      reply.ok ? reply.tokens : null,
-    );
+      signal,
+      onProgress,
+    });
   }
 
   if (cycle.status !== "improving") {

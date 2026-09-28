@@ -45,7 +45,9 @@ describe("buildPromptSdlcLocalPageBody", () => {
     expect(html).toContain("Judge and improver");
     expect(html).toContain("When to stop");
     expect(html.match(/class="sdlc-tip"/g)?.length).toBe(10);
-    expect(html).toContain("does not run the prompt");
+    expect(html).toContain(
+      "If the prompt needs an input, put that input here.",
+    );
     expect(html).toContain("How to use Goal");
     expect(html).toContain("How to use Round limit");
     expect(html).not.toContain('name="deviceId"');
@@ -106,9 +108,9 @@ describe("buildPromptSdlcLocalPageBody", () => {
       history: [],
     });
 
-    expect(html.indexOf("Claude is scoring round 1.")).toBeLessThan(
-      html.indexOf("Optimize a prompt"),
-    );
+    expect(
+      html.indexOf("Claude is running the prompt for round 1."),
+    ).toBeLessThan(html.indexOf("Optimize a prompt"));
     expect(html).toContain("The reply stays inside the facts.");
     expect(html).toContain("Be helpful.");
     expect(html).toContain('value="claude-cli" selected');
@@ -345,7 +347,7 @@ describe("buildPromptSdlcLocalPageBody", () => {
     expect(guide).toContain("tokens spent so far");
   });
 
-  it("asks for a score and a reason when the judge is you", () => {
+  it("asks for a score of the output when the judge is you", () => {
     const cycle = {
       ...createPromptSdlcLocalCycle({
         goal: "Stay in the facts.",
@@ -353,6 +355,18 @@ describe("buildPromptSdlcLocalPageBody", () => {
         judgeModel: "manual",
         improverModel: "codex",
       }),
+      revisions: [
+        {
+          roundNumber: 0,
+          promptText: "Be helpful.",
+          judgement: null,
+          run: {
+            output: "The ticket has no refund.",
+            tokens: 80,
+            delayMs: 1500,
+          },
+        },
+      ],
     };
     const html = buildPromptSdlcLocalPageBody({
       goal: "",
@@ -372,7 +386,12 @@ describe("buildPromptSdlcLocalPageBody", () => {
     expect(html).toContain("Save score");
     expect(html).toContain("Waiting for you");
     expect(html).toContain('name="reasons"');
-    expect(html).toContain("Add a score from 0 to 100 and the reason");
+    expect(html).toContain("The ticket has no refund.");
+    expect(html).toContain("Tokens used: 80");
+    expect(html).toContain("Delay: 1.5s");
+    expect(html).toContain(
+      "Score the changes below. Weigh the tokens and the delay.",
+    );
     expect(html).toContain('fieldset class="sdlc-fields" disabled');
     expect(html).not.toContain('data-live="true"');
   });

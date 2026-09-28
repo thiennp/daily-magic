@@ -1,5 +1,6 @@
 import { PROMPT_SDLC_MANUAL_ACTOR } from "./choosePromptSdlcLocalModels";
 import { stopPromptSdlcLocalCycle } from "./stopPromptSdlcLocalCycle";
+import { appendPromptSdlcLocalTokenReview } from "./appendPromptSdlcLocalTokenReview";
 import {
   applyPromptSdlcLocalImproverReply,
   applyPromptSdlcLocalJudgeReply,
@@ -60,13 +61,19 @@ export const acceptPromptSdlcLocalManualPost = (input: {
     if (score === null || reasons.length === 0) {
       return { kind: "invalid", cycle, errorMessage: JUDGE_ERROR };
     }
-    const next = applyPromptSdlcLocalJudgeReply(
-      cycle,
-      JSON.stringify({
-        score,
-        passed: score >= cycle.passScore,
-        reasons,
-      }),
+    const tokenReview =
+      cycle.revisions.find((item) => item.roundNumber === cycle.currentRound)
+        ?.run?.tokenReview ?? "";
+    const next = appendPromptSdlcLocalTokenReview(
+      applyPromptSdlcLocalJudgeReply(
+        cycle,
+        JSON.stringify({
+          score,
+          passed: score >= cycle.passScore,
+          reasons,
+        }),
+      ),
+      tokenReview,
     );
     savePromptSdlcLocalCycle(input.storePath, next);
     return { kind: "saved", cycleId: cycle.id };

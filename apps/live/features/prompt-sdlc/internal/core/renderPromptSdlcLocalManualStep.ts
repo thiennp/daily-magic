@@ -1,3 +1,6 @@
+import { formatPromptSdlcRunDelay } from "../../../../adapters/promptSdlcAwcCore";
+import type { PromptSdlcLocalRun } from "./promptSdlcLocalCycle.type";
+
 const escapeHtml = (value: string): string =>
   value
     .replaceAll("&", "&amp;")
@@ -21,6 +24,7 @@ export const renderPromptSdlcLocalManualStep = (input: {
   readonly reasons: string | null;
   readonly avoid?: string | null;
   readonly instructions?: string | null;
+  readonly run?: PromptSdlcLocalRun | null;
 }): string => {
   const hidden = `<input type="hidden" name="cycleId" value="${escapeHtml(input.cycleId)}">`;
   const instructions = input.instructions?.trim() ?? "";
@@ -28,8 +32,16 @@ export const renderPromptSdlcLocalManualStep = (input: {
     instructions.length === 0
       ? ""
       : `<p class="muted">Instructions</p><p>${escapeHtml(instructions)}</p>`;
+  const run = input.run ?? null;
+  const runBody = (run?.evidence ?? run?.output ?? "").trim();
+  const lookedAt = run?.lookedAt?.trim() ?? "";
+  const tokenReview = run?.tokenReview?.trim() ?? "";
+  const runNote =
+    run === null
+      ? ""
+      : `${lookedAt.length === 0 ? "" : `<p class="muted">Looked at ${escapeHtml(lookedAt)}.</p>`}<pre class="mono">${escapeHtml(runBody.length === 0 ? run.output : runBody)}</pre><p class="muted">Tokens used: ${run.tokens === null ? "not reported" : String(run.tokens)}. Delay: ${formatPromptSdlcRunDelay(run.delayMs)}.</p>${tokenReview.length === 0 ? "" : `<p class="muted">Token review: ${escapeHtml(tokenReview)}</p>`}`;
   if (input.role === "judge") {
-    return `<form class="sdlc-manual" method="POST" action="/prompt-sdlc"><input type="hidden" name="intent" value="manual-judge">${hidden}${instructionNote}<label class="field"><span class="field-label">Score</span><input class="input sdlc-manual-score" type="number" name="score" min="0" max="100" step="1" required></label><label class="field"><span class="field-label">Reason</span><textarea class="input textarea" name="reasons" rows="4" required></textarea></label><div class="actions"><button class="btn btn-primary" type="submit">Save score</button></div></form>`;
+    return `<form class="sdlc-manual" method="POST" action="/prompt-sdlc"><input type="hidden" name="intent" value="manual-judge">${hidden}${instructionNote}${runNote}<label class="field"><span class="field-label">Score</span><input class="input sdlc-manual-score" type="number" name="score" min="0" max="100" step="1" required></label><label class="field"><span class="field-label">Reason</span><textarea class="input textarea" name="reasons" rows="4" required></textarea></label><div class="actions"><button class="btn btn-primary" type="submit">Save score</button></div></form>`;
   }
 
   const avoid = input.avoid?.trim() ?? "";

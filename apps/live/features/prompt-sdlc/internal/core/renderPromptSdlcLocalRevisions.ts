@@ -1,3 +1,4 @@
+import { formatPromptSdlcRunDelay } from "../../../../adapters/promptSdlcAwcCore";
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
 import { describePromptSdlcWriterTerminalFailure } from "./readPromptSdlcWriterOutput";
 
@@ -21,6 +22,12 @@ const renderRevision = (
   const reasons = revision.judgement?.reasons
     ? `<p class="muted">${escapeHtml(revision.judgement.reasons)}</p>`
     : "";
+  const runBody = (revision.run?.evidence ?? revision.run?.output ?? "").trim();
+  const lookedAt = revision.run?.lookedAt?.trim() ?? "";
+  const run =
+    revision.run === undefined
+      ? ""
+      : `${lookedAt.length === 0 ? "" : `<p class="muted">Looked at ${escapeHtml(lookedAt)}.</p>`}<pre class="mono">${escapeHtml(runBody.length === 0 ? revision.run.output : runBody)}</pre><p class="muted">Tokens used: ${revision.run.tokens === null ? "not reported" : String(revision.run.tokens)}. Delay: ${formatPromptSdlcRunDelay(revision.run.delayMs)}.</p>`;
   const title =
     revision.roundNumber === 0
       ? "Source prompt"
@@ -29,7 +36,7 @@ const renderRevision = (
     writerFailure === null
       ? `<pre class="mono">${escapeHtml(revision.promptText)}</pre>`
       : `<div class="alert-error">${escapeHtml(writerFailure)}</div>`;
-  return `<article class="card"><h2>${title}</h2><p class="muted">${score}</p>${reasons}${body}</article>`;
+  return `<article class="card"><h2>${title}</h2><p class="muted">${score}</p>${reasons}${run}${body}</article>`;
 };
 
 export const renderPromptSdlcLocalRevisions = (

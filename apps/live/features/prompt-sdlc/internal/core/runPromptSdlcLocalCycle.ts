@@ -57,6 +57,13 @@ const runUntilTerminal = async (
       forgetPromptSdlcWriterReady(storePath, writer);
     },
     signal,
+    (progress) => {
+      const current = readPromptSdlcLocalCycle(storePath, cycleId);
+      if (current?.status === "stopped" || signal.aborted) {
+        return;
+      }
+      savePromptSdlcLocalCycle(storePath, progress);
+    },
   );
   const latest = readPromptSdlcLocalCycle(storePath, cycleId);
   if (latest?.status === "stopped" || signal.aborted) {

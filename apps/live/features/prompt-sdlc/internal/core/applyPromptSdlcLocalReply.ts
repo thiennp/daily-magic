@@ -67,12 +67,19 @@ export const applyPromptSdlcLocalJudgeReply = (
   );
   const updatedAt = new Date().toISOString();
   if (result.continuation.type === "call") {
-    return { ...cycle, revisions, status: "improving", updatedAt };
+    return {
+      ...cycle,
+      revisions,
+      status: "improving",
+      judgePhase: undefined,
+      updatedAt,
+    };
   }
 
   return {
     ...cycle,
     revisions,
+    judgePhase: undefined,
     status: result.continuation.type,
     errorMessage:
       result.continuation.type === "passed"

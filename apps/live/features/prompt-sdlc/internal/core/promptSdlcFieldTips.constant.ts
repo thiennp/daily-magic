@@ -8,14 +8,14 @@ export const PROMPT_SDLC_FIELD_TIPS = {
   prompt: {
     title: "Prompt",
     practice:
-      "Paste the prompt you use today. Each round the judge scores this text. The improver rewrites it.",
+      "Paste the prompt you use today. Name the files it should change, or use a git repo, so the judge knows where to look. The judge runs it, reads those changes, and checks the tokens. The improver rewrites this text.",
     example:
-      "You help support agents. Be warm. Solve the problem in the customer's words.",
+      "Update replies/latest.md for the customer. Use only facts from the ticket.",
   },
   folder: {
     title: "Folder",
     practice:
-      "Choose the project folder when the prompt is about that code. The judge and the improver can read the Playbook and the code there.",
+      "Choose the project folder. The run can change files here. If this folder is a git repo, the judge reads the git changes. If it is not, the judge reads the files the prompt names.",
     example: "~/work/support-bot",
   },
   skill: {
@@ -27,15 +27,15 @@ export const PROMPT_SDLC_FIELD_TIPS = {
   judge: {
     title: "Judge",
     practice:
-      "Choose who scores the prompt each round. I'll score it when you want to type the score and the reason yourself.",
+      "Choose who runs the prompt. A separate pass scores the changes. Another pass checks the tokens and suggests what to cut before the improver runs. I'll score it when you want to score the changes yourself.",
     example: "Claude",
   },
   judgeInstructions: {
     title: "Instructions for the judge",
     practice:
-      "Optional. The judge reads the prompt with the goal and these instructions. It does not run the prompt or check a real output. Add 2 or 3 cases. Each case has an input, the output you want, and one failure to mark down. Put the same cases in the improver instructions.",
+      "Optional. If the prompt needs an input, put that input here. Name the file to check when the folder is not a git repo. The score is about the changes, the tokens, and the delay. It does not score the prompt wording.",
     example:
-      "Input: Where is my refund?\nWanted output: The ticket has no refund. Ask which order.\nMark down: A reply that invents a refund amount.",
+      "Input: Where is my refund?\nCheck: replies/latest.md\nWanted: The ticket has no refund.\nMark down: A file that invents a refund amount.",
   },
   improver: {
     title: "Improver",
@@ -46,7 +46,7 @@ export const PROMPT_SDLC_FIELD_TIPS = {
   improverInstructions: {
     title: "Instructions for the improver",
     practice:
-      "Optional. Used with the goal when rewriting. The improver does not see the judge instructions, so repeat the input and output cases here.",
+      "Optional. Used with the goal when rewriting. The improver also receives the token suggestion. It does not see the judge instructions, so repeat the input and the file to change.",
     example:
       "Keep the reply under four sentences.\nInput: Where is my refund?\nWanted output: The ticket has no refund. Ask which order.",
   },

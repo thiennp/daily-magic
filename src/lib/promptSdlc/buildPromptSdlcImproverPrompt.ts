@@ -33,6 +33,7 @@ export const buildPromptSdlcImproverPrompt = (input: {
     input.reasons.trim(),
     ...avoidLines,
     "",
+    "The score describes the changes, the tokens used, and the delay. A token review may say how to spend less. Change the prompt so the next run does better.",
     instructions.length === 0
       ? "Write the next prompt."
       : "Write the next prompt. Follow the goal and the instructions.",

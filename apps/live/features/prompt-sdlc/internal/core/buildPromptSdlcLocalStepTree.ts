@@ -58,7 +58,7 @@ export const renderPromptSdlcLocalScoreScale = (passScore: number): string => {
         `<span class="sdlc-band sdlc-band-${band.band}">${escapeHtml(band.label)}</span>`,
     )
     .join("");
-  return `<div class="sdlc-score" aria-label="What the score means">${bands}</div><p class="muted">${passScore} or higher passes. The score is how well this prompt would achieve the goal.</p>`;
+  return `<div class="sdlc-score" aria-label="What the score means">${bands}</div><p class="muted">${passScore} or higher passes. The score is how well the changes achieve the goal, including the tokens and the delay.</p>`;
 };
 
 export const PROMPT_SDLC_NODE_DIALOG = `<dialog id="sdlc-node-dialog" class="history-dialog"><div class="history-dialog-bar"><form method="dialog"><button class="btn btn-secondary" type="submit">Close</button></form></div><div class="history-dialog-body" data-sdlc-dialog-body></div></dialog>`;

@@ -1,4 +1,4 @@
-import { buildPromptSdlcJudgePrompt } from "@/lib/promptSdlc/buildPromptSdlcJudgePrompt";
+import { buildPromptSdlcStoredJudgePrompt } from "@/lib/promptSdlc/buildPromptSdlcJudgePrompt";
 import { extractImprovedPrompt } from "@/lib/promptSdlc/extractImprovedPrompt";
 import {
   IMPROVER_REPLY_WAS_EMPTY,
@@ -15,7 +15,7 @@ export const buildJudgeContinuation = (input: {
   type: "call",
   role: "judge",
   choice: input.choice,
-  prompt: buildPromptSdlcJudgePrompt({
+  prompt: buildPromptSdlcStoredJudgePrompt({
     goal: input.goal,
     promptText: input.promptText,
     passScore: input.passScore,

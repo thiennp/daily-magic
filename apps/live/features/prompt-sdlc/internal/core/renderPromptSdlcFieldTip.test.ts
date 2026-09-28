@@ -11,7 +11,10 @@ describe("renderPromptSdlcFieldTip", () => {
     expect(html).toContain('role="tooltip"');
     expect(html).toContain("Best practice");
     expect(html).toContain("Example");
-    expect(html).toContain("does not run the prompt");
+    expect(html).toContain(
+      "If the prompt needs an input, put that input here.",
+    );
+    expect(html).toContain("does not score the prompt wording");
     expect(html).toContain("Input: Where is my refund?");
     expect(html).toContain(
       'aria-label="How to use Instructions for the judge"',
