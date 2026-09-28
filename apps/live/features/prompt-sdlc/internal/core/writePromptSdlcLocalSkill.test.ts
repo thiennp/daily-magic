@@ -29,4 +29,18 @@ describe("writePromptSdlcLocalSkill", () => {
     expect(document).toContain('name: "stay-inside-the-facts"');
     expect(document).toContain("Answer only from the ticket.");
   });
+
+  it("refuses a working directory that is not a folder", () => {
+    const folder = fs.mkdtempSync(path.join(os.tmpdir(), "prompt-sdlc-skill-"));
+    const filePath = path.join(folder, "not-a-dir");
+    fs.writeFileSync(filePath, "x", "utf8");
+
+    expect(
+      writePromptSdlcLocalSkill({
+        workingDirectory: filePath,
+        goal: "Stay inside the facts",
+        promptText: "Answer only from the ticket.",
+      }),
+    ).toEqual({ ok: false, errorCode: "folder" });
+  });
 });

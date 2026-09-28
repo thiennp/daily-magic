@@ -46,7 +46,11 @@ export const writePromptSdlcLocalSkill = (input: {
   | { readonly ok: true; readonly relativePath: string }
   | { readonly ok: false; readonly errorCode: "folder" | "path" } => {
   const root = path.resolve(input.workingDirectory);
-  if (!fs.existsSync(root)) {
+  try {
+    if (!fs.statSync(root).isDirectory()) {
+      return { ok: false, errorCode: "folder" };
+    }
+  } catch {
     return { ok: false, errorCode: "folder" };
   }
 
@@ -58,7 +62,11 @@ export const writePromptSdlcLocalSkill = (input: {
     return { ok: false, errorCode: "path" };
   }
 
-  fs.mkdirSync(path.dirname(absolute), { recursive: true });
-  fs.writeFileSync(absolute, skill.document, "utf8");
+  try {
+    fs.mkdirSync(path.dirname(absolute), { recursive: true });
+    fs.writeFileSync(absolute, skill.document, "utf8");
+  } catch {
+    return { ok: false, errorCode: "folder" };
+  }
   return { ok: true, relativePath };
 };
