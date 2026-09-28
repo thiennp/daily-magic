@@ -1,6 +1,8 @@
 # App shell
 
-Header actions, desktop left nav, mobile bottom nav, connection badge, approval listener mount.
+Header actions, desktop primary nav card, mobile bottom nav, connection badge, approval listener mount.
+
+On home, the primary nav card sits in the devices column above Your Devices (`renderPrimaryNav={false}` on `AppShell`). Other routes render the same card above page content.
 
 ## Registry
 

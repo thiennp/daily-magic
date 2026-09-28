@@ -47,7 +47,7 @@ export default async function Home() {
 
   if (actor) {
     return (
-      <AppShell>
+      <AppShell renderPrimaryNav={false}>
         <HomePageLayout
           user={{
             email: actor.email,

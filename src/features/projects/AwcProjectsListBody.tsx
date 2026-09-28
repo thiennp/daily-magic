@@ -3,7 +3,7 @@
 import Link from "next/link";
 
 import type { MyMacDevice } from "@/features/agent/hooks/useMyMacDevices";
-import AwcProjectListRow from "@/features/projects/AwcProjectListRow";
+import AwcProjectCard from "@/features/projects/AwcProjectCard";
 import { APP_SURFACE_TEXT_LINK_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
 import type ProjectCompositionCounts from "@/lib/projects/types/ProjectCompositionCounts.type";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
@@ -70,10 +70,10 @@ export default function AwcProjectsListBody({
   }
 
   return (
-    <ul className="mt-2 divide-y divide-gray-200/80 dark:divide-gray-800/80">
+    <ul className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
       {visibleProjects.map((project) => (
-        <li key={project.id}>
-          <AwcProjectListRow
+        <li key={project.id} className="min-w-0">
+          <AwcProjectCard
             project={project}
             compositionCounts={
               compositionCountsByProjectId[project.id] ??
