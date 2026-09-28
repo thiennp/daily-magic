@@ -4,6 +4,7 @@ import { useSession } from "next-auth/react";
 import { useEffect, useSyncExternalStore } from "react";
 
 import { isAgentWitchWakeIdentityProbeSuppressed } from "@/features/agent-witch/utils/agentWitchWakeIdentityProbeSession";
+import { resolveLocalTokenHashMatchesReachableDevice } from "@/features/agent-witch/utils/resolveLocalTokenHashMatchesReachableDevice";
 import { resolveShouldProbeWakeIdentityInBrowser } from "@/features/agent-witch/utils/resolveShouldProbeWakeIdentityInBrowser";
 import {
   getPairedDevicesSnapshotOrEmpty,
@@ -35,9 +36,14 @@ const useProbeLocalMacWakeIdentity = (
     () => pairedDevicesResource.getSnapshot(),
     () => null,
   );
-  const claimedDeviceCount = (
-    pairedDevicesSnapshot ?? getPairedDevicesSnapshotOrEmpty()
-  ).devices.length;
+  const devices = (pairedDevicesSnapshot ?? getPairedDevicesSnapshotOrEmpty())
+    .devices;
+  const claimedDeviceCount = devices.length;
+  const localTokenHashMatchesReachableDevice =
+    resolveLocalTokenHashMatchesReachableDevice({
+      localTokenHash,
+      devices,
+    });
 
   useEffect(() => {
     if (!isMacBrowser || sessionStatus !== "authenticated") {
@@ -49,6 +55,7 @@ const useProbeLocalMacWakeIdentity = (
         localTokenHash,
         claimedDeviceCount,
         probeSuppressed: isAgentWitchWakeIdentityProbeSuppressed(),
+        localTokenHashMatchesReachableDevice,
       })
     ) {
       return;
@@ -57,14 +64,20 @@ const useProbeLocalMacWakeIdentity = (
     void ensureLocalAgentWitchIdentityLoaded(extraWakePorts);
 
     const retryIfUnreachable = (): void => {
+      const latestDevices = (
+        pairedDevicesResource.getSnapshot() ?? getPairedDevicesSnapshotOrEmpty()
+      ).devices;
+      const latestTokenHash = getLocalMacTokenHashSnapshot();
       if (
         !resolveShouldProbeWakeIdentityInBrowser({
-          localTokenHash: getLocalMacTokenHashSnapshot(),
-          claimedDeviceCount: (
-            pairedDevicesResource.getSnapshot() ??
-            getPairedDevicesSnapshotOrEmpty()
-          ).devices.length,
+          localTokenHash: latestTokenHash,
+          claimedDeviceCount: latestDevices.length,
           probeSuppressed: isAgentWitchWakeIdentityProbeSuppressed(),
+          localTokenHashMatchesReachableDevice:
+            resolveLocalTokenHashMatchesReachableDevice({
+              localTokenHash: latestTokenHash,
+              devices: latestDevices,
+            }),
         })
       ) {
         return;
@@ -95,6 +108,7 @@ const useProbeLocalMacWakeIdentity = (
     extraWakePorts,
     isMacBrowser,
     localTokenHash,
+    localTokenHashMatchesReachableDevice,
     sessionStatus,
   ]);
 };

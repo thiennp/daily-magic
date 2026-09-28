@@ -163,6 +163,8 @@ Invalid `com.agent-witch.plist` (install script once embedded bash inside XML). 
 
 If no row says **this Mac**, use **Connect this Mac** in the hero or under **Your Devices**. That links the computer you are using now. The button stays hidden only after this browser’s pairing token already matches a listed device. **Mac settings & connect** only opens **Your setup**. When a row is already **this Mac** and **Offline**, start Agent Witch on that computer. Click the offline row for wake steps.
 
+If **this Mac** sits on an Offline **Your Mac** while another named Mac shows **Online**, the badge is on a stale claim (HOME-061)—not proof that the live helper is down. Refresh Home after the Console fix; you can also remove the unused Offline row.
+
 Clicking **Connect this Mac** more than once does not add another computer. Home keeps the latest unused link and drops the extras (rows named **Your Mac** or **Mac 2** with **Version unknown**). Reload Home if those extras are still listed. A computer with a real name, such as a serial or hostname, stays.
 
 If Agent Witch is already open on this Mac, the click does not restart it. Paste the command to relink. After you remove that Mac in the Console, a current install stops and deletes the connection and the app code. Projects, reports, runs, and Ollama remain, so **Connect this Mac** can link the computer again. **Update local** does not. An install from before that behavior only disconnects until it updates. See [Deleting a Mac](../../qa/awc-delete-mac-forgets-local-connection.md).

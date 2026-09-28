@@ -101,6 +101,12 @@ Each **Connect this Mac** click used to insert a device with `last_seen_at = NOW
 
 **Q&A:** [awc-delete-mac-forgets-local-connection.md](../../qa/awc-delete-mac-forgets-local-connection.md).
 
+## this Mac badge on an offline placeholder (HOME-061)
+
+A cookie `agent_witch_local_token_hash` can match an old never-seen **Your Mac** row while a different device is `live`. HOME-052 skipped wake probes whenever any hash was set; `listAgentWitchDevicesForUser` also omitted `wake_port`, so non-default AWB ports were invisible to the browser. Fix: re-probe when the cookie does not match a reachable device; adopt the sole wake hash; select `wake_port` on devices.
+
+**Q&A:** [awc-how-browser-knows-this-computer.md](../../qa/awc-how-browser-knows-this-computer.md).
+
 ---
 
 ## How to find regression coverage
