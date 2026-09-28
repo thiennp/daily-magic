@@ -59,8 +59,9 @@ export const describePromptSdlcLocalActivity = (
         describePromptSdlcWriterTerminalFailure(revision.promptText) !== null,
     );
     const message = cycle.errorMessage?.trim() ?? "";
+    const finished = (cycle.errorMessage ?? "").startsWith("Finished");
     return {
-      title: "Stopped.",
+      title: finished ? "Finished." : "Stopped.",
       detail:
         message.length > 0
           ? message

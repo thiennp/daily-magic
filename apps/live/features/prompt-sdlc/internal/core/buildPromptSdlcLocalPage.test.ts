@@ -110,6 +110,8 @@ describe("buildPromptSdlcLocalPageBody", () => {
     expect(html).toContain('type="number" name="maxRounds"');
     expect(html).toContain('value="10"');
     expect(html).toContain('name="intent" value="stop"');
+    expect(html).toContain(">Finish<");
+    expect(html).toContain("This run counts as complete.");
     expect(html).toContain('type="range" name="passScore"');
     expect(html).toContain('value="90"');
     expect(html).toContain("sdlc-pass-range");
@@ -289,6 +291,8 @@ describe("buildPromptSdlcLocalPageBody", () => {
     );
     expect(guide).not.toContain('name="intent" value="run"');
     expect(guide).toContain("CUSTOMER_MESSAGE");
+    expect(guide).toContain("Finish");
+    expect(guide).toContain("tokens spent so far");
   });
 
   it("asks for a score and a reason when the judge is you", () => {
@@ -367,5 +371,44 @@ describe("buildPromptSdlcLocalPageBody", () => {
     expect(html.indexOf("sdlc-manual-verdict")).toBeLessThan(
       html.indexOf('name="prompt"'),
     );
+  });
+
+  it("shows the tokens spent through each scored round", () => {
+    const running = {
+      ...createPromptSdlcLocalCycle({
+        goal: "Stay in the facts.",
+        sourcePrompt: "Be helpful.",
+        judgeModel: "claude-cli" as const,
+        improverModel: "codex" as const,
+      }),
+      status: "improving" as const,
+      revisions: [
+        {
+          roundNumber: 0,
+          promptText: "Be helpful.",
+          judgement: {
+            score: 40,
+            passed: false,
+            reasons: "Thin.",
+            rawReply: "{}",
+            tokens: 1_500,
+          },
+        },
+      ],
+    };
+    const finished = {
+      ...running,
+      status: "stopped" as const,
+      errorMessage: "Finished. The best prompt is the result.",
+    };
+    const runningHtml = buildPromptSdlcLocalCycleSection(running);
+    const finishedHtml = buildPromptSdlcLocalCycleSection(finished);
+
+    expect(runningHtml).toContain("Tokens so far: 1,500");
+    expect(runningHtml).toContain("1,500 tokens so far");
+    expect(runningHtml).toContain(">Finish<");
+    expect(finishedHtml).toContain("Finished.");
+    expect(finishedHtml).toContain("Finished");
+    expect(finishedHtml).not.toContain(">Finish<");
   });
 });

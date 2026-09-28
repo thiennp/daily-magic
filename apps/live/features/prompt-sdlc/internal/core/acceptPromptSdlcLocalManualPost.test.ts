@@ -87,7 +87,7 @@ describe("acceptPromptSdlcLocalManualPost", () => {
       "stopped",
     );
     expect(readPromptSdlcLocalCycle(storePath, cycle.id)?.errorMessage).toBe(
-      "Stopped. The best prompt is kept.",
+      "Finished. The best prompt is the result.",
     );
     closePromptSdlcLocalCycleAbort(cycle.id);
     fs.rmSync(storePath, { force: true });

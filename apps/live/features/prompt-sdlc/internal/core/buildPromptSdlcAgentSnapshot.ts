@@ -5,6 +5,7 @@ import {
   selectPromptSdlcBestPrompt,
 } from "../../../../adapters/promptSdlcAwcCore";
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
+import { sumPromptSdlcLocalTokens } from "./sumPromptSdlcLocalTokens";
 
 export const buildPromptSdlcAgentSnapshot = (cycle: PromptSdlcLocalCycle) => {
   const latest = cycle.revisions[cycle.revisions.length - 1] ?? null;
@@ -23,7 +24,8 @@ export const buildPromptSdlcAgentSnapshot = (cycle: PromptSdlcLocalCycle) => {
     cycleId: cycle.id,
     status: cycle.status,
     done,
-    useThisPrompt: cycle.status === "passed",
+    useThisPrompt: cycle.status === "passed" || cycle.status === "stopped",
+    totalTokens: sumPromptSdlcLocalTokens(cycle),
     prompt: latest?.promptText ?? "",
     bestPrompt: best?.promptText ?? null,
     bestScore: best?.score ?? null,

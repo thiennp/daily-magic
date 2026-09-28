@@ -8,12 +8,15 @@ export interface PromptSdlcLocalJudgement {
   readonly passed: boolean | null;
   readonly reasons: string | null;
   readonly rawReply: string;
+  readonly tokens?: number | null;
 }
 
 export interface PromptSdlcLocalRevision {
   readonly roundNumber: number;
   readonly promptText: string;
   readonly judgement: PromptSdlcLocalJudgement | null;
+  /** Tokens the improver spent to write this prompt. The source prompt has none. */
+  readonly writerTokens?: number | null;
 }
 
 export interface PromptSdlcLocalCycle {

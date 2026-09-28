@@ -20,12 +20,13 @@ const withJudgement = (
   score: number | null,
   passed: boolean | null,
   reasons: string | null,
+  tokens: number | null,
 ): PromptSdlcLocalCycle["revisions"] =>
   cycle.revisions.map((revision) =>
     revision.roundNumber === cycle.currentRound
       ? {
           ...revision,
-          judgement: { score, passed, reasons, rawReply },
+          judgement: { score, passed, reasons, rawReply, tokens },
         }
       : revision,
   );
@@ -33,6 +34,7 @@ const withJudgement = (
 export const applyPromptSdlcLocalJudgeReply = (
   cycle: PromptSdlcLocalCycle,
   rawReply: string,
+  tokens: number | null = null,
 ): PromptSdlcLocalCycle => {
   const revision = cycle.revisions.find(
     (item) => item.roundNumber === cycle.currentRound,
@@ -61,6 +63,7 @@ export const applyPromptSdlcLocalJudgeReply = (
     result.verdict?.score ?? null,
     result.verdict?.passed ?? null,
     result.verdict?.reasons ?? null,
+    tokens,
   );
   const updatedAt = new Date().toISOString();
   if (result.continuation.type === "call") {
@@ -82,6 +85,7 @@ export const applyPromptSdlcLocalJudgeReply = (
 export const applyPromptSdlcLocalImproverReply = (
   cycle: PromptSdlcLocalCycle,
   rawReply: string,
+  tokens: number | null = null,
 ): PromptSdlcLocalCycle => {
   const result = continueAfterImproveReply({
     raw: rawReply,
@@ -112,6 +116,7 @@ export const applyPromptSdlcLocalImproverReply = (
         roundNumber: cycle.currentRound + 1,
         promptText: result.nextPrompt,
         judgement: null,
+        writerTokens: tokens,
       },
     ],
     updatedAt,

@@ -14,7 +14,9 @@ const terminalLabel = (cycle: PromptSdlcCycleView): string => {
     return "Passed";
   }
   if (cycle.status === "stopped") {
-    return "Stopped";
+    return (cycle.errorMessage ?? "").startsWith("Finished")
+      ? "Finished"
+      : "Stopped";
   }
   return "Failed";
 };
