@@ -60,6 +60,9 @@ describe("agent access registration", () => {
     expect(text).toContain("create_workflow");
     expect(text).toContain("install_harness");
     expect(text).toContain("~/.agent-witch/harness/");
+    expect(text).toContain("http://127.0.0.1:43347/prompt-sdlc/agent");
+    expect(text).toContain("workingDirectory");
+    expect(text).toContain("Do not ask the human to paste the prompt");
   });
 
   it("hashes tokens and reads only aw_ bearer values", () => {

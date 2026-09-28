@@ -115,7 +115,7 @@ See [docs/qa/mac-harness-workflow-agent-dispatch.md](../../qa/mac-harness-workfl
 
 ## Agent access `send_task`
 
-`executeAgentAccessSendTask` calls `dispatchClaudeRunForDashboardUser` with the user id from the bearer token. It does not open a second dispatch path. Tool catalog: `src/lib/agentAccess/agentAccessToolCatalog.constant.ts`.
+`executeAgentAccessSendTask` calls `dispatchClaudeRunForDashboardUser` with the user id from the bearer token. It does not open a second dispatch path. Tool catalog: `src/lib/agentAccess/agentAccessToolCatalog.constant.ts`. Before that call, the agent guideline tells the bot to optimize the prompt with AWL `POST /prompt-sdlc/agent` in the project folder. `get_agent_guide` returns `promptSdlc` with the same contract. The Mac instruction topic `prompt-sdlc` tells a writer on this computer to do the same.
 
 ---
 

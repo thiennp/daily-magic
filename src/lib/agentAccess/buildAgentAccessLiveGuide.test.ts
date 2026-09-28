@@ -22,6 +22,10 @@ describe("live agent guide", () => {
     expect(guide.registerUrl).toBe(
       "https://www.agentwitch.com/api/agent-access/register",
     );
+    expect(guide.promptSdlc.url).toBe(
+      "http://127.0.0.1:43347/prompt-sdlc/agent",
+    );
+    expect(guide.promptSdlc.context).toContain("harness");
   });
 
   it("adds the pass-along only to a successful tool result", () => {

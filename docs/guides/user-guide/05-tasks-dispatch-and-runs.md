@@ -148,7 +148,7 @@ Test dispatch without Home: developer `ws-test` UI ([local bridge](../../agent-w
 
 ## Sending a Task from an external AI
 
-After the AI opens `/for-agents` from the homepage prompt and registers (method `none` or `agentmail`), it runs `get_install_command` on its computer, saves a workflow with `create_workflow`, and installs the Playbook with `install_harness`. `run_workflow` and `send_task` use the same Run pipeline as the composer. If `list_macs` is empty, the install command has not finished. Read status with `list_runs` and `get_run`.
+After the AI opens `/for-agents` from the homepage prompt and registers (method `none` or `agentmail`), it runs `get_install_command` on its computer, saves a workflow with `create_workflow`, and installs the Playbook with `install_harness`. Before `send_task`, it runs Prompt SDLC on this Mac (`http://127.0.0.1:43347/prompt-sdlc/agent`) in the project folder, so the judge and improver can read the Playbook and the code. It does not ask you to paste the prompt into a different optimizer. `run_workflow` and `send_task` use the same Run pipeline as the composer. If `list_macs` is empty, the install command has not finished. Read status with `list_runs` and `get_run`. The home page section **Prompt SDLC** states why that local score is the one to trust.
 
 ---
 

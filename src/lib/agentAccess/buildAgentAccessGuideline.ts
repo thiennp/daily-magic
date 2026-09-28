@@ -1,5 +1,6 @@
 import { AGENT_WITCH_PRODUCT_NAME } from "@/lib/agentWitch/agentWitchProductName.constant";
 
+import { buildPromptSdlcAgentGuidelineSection } from "@/lib/agentAccess/buildPromptSdlcAgentGuide";
 import { buildAgentAccessUrls } from "@/lib/agentAccess/buildAgentAccessUrls";
 
 export interface AgentAccessGuidelineSection {
@@ -66,6 +67,7 @@ export const buildAgentAccessGuideline = (): AgentAccessGuideline => {
           "If harnessInstalled is false, call install_harness with { capabilityId, targetDeviceId } after list_macs shows the computer.",
         ],
       },
+      buildPromptSdlcAgentGuidelineSection(),
       {
         heading: "Run",
         body: [

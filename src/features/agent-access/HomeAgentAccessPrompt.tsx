@@ -48,8 +48,10 @@ export default function HomeAgentAccessPrompt(): ReactElement {
       </h2>
       <p className="mt-3 max-w-3xl text-base leading-relaxed text-gray-600 dark:text-gray-300">
         {AGENT_WITCH_PRODUCT_NAME} lets an AI register itself, pair a Mac,
-        create a workflow, and write the Playbook. Copy the short prompt. The
-        agent opens the{" "}
+        create a workflow, and write the Playbook. The guideline also tells that
+        AI to run Prompt SDLC on this Mac before it sends a Task, inside the
+        project folder, so the score can see the harness and the code. Copy the
+        short prompt. The agent opens the{" "}
         <a className="underline" href={urls.guidelineUrl}>
           agent guideline
         </a>{" "}

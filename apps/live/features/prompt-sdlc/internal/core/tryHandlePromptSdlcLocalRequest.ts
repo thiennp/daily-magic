@@ -4,6 +4,7 @@ import { buildPromptSdlcLocalGuidePageBody } from "./buildPromptSdlcLocalGuidePa
 import { servePromptSdlcLocalPage } from "./servePromptSdlcLocalPage";
 import { trySendPromptSdlcLocalRunFragment } from "./trySendPromptSdlcLocalRunFragment";
 import { trySendPromptSdlcWriterCheck } from "./trySendPromptSdlcWriterCheck";
+import { writePromptSdlcAgentResponse } from "./writePromptSdlcAgentResponse";
 
 export interface PromptSdlcLocalRouteInput {
   readonly method: string;
@@ -26,7 +27,8 @@ export const tryHandlePromptSdlcLocalRequest = async (
 ): Promise<boolean> => {
   if (
     input.pathname !== "/prompt-sdlc" &&
-    input.pathname !== "/prompt-sdlc/guide"
+    input.pathname !== "/prompt-sdlc/guide" &&
+    input.pathname !== "/prompt-sdlc/agent"
   ) {
     return false;
   }
@@ -34,6 +36,11 @@ export const tryHandlePromptSdlcLocalRequest = async (
   if (input.method !== "GET" && input.method !== "POST") {
     input.response.writeHead(405);
     input.response.end();
+    return true;
+  }
+
+  if (input.pathname === "/prompt-sdlc/agent") {
+    await writePromptSdlcAgentResponse(input);
     return true;
   }
 

@@ -7,6 +7,7 @@ import {
   AGENT_ACCESS_MUTATIONS_PER_HOUR,
   AGENT_ACCESS_TOOL_CALLS_PER_HOUR,
 } from "@/lib/agentAccess/agentAccess.constant";
+import { buildPromptSdlcAgentGuide } from "@/lib/agentAccess/buildPromptSdlcAgentGuide";
 import { buildAgentAccessPassAlong } from "@/lib/agentAccess/buildAgentAccessPassAlong";
 import { buildAgentAccessUrls } from "@/lib/agentAccess/buildAgentAccessUrls";
 
@@ -33,6 +34,7 @@ export const buildAgentAccessLiveGuide = () => {
       maxWorkflows: AGENT_ACCESS_MAX_WORKFLOWS,
       maxBodyBytes: AGENT_ACCESS_BODY_MAX_BYTES,
     },
+    promptSdlc: buildPromptSdlcAgentGuide(),
     passAlong: buildAgentAccessPassAlong(),
     teachOtherBots: {
       instruction:
