@@ -26,6 +26,12 @@ describe("readPromptSdlcWriterOutput", () => {
     });
   });
 
+  it("does not treat prompt text that mentions billing as a terminal failure", () => {
+    expect(
+      describePromptSdlcWriterTerminalFailure("Never discuss billing."),
+    ).toBeNull();
+  });
+
   it("does not treat a writer login error as a prompt", () => {
     const raw =
       "Error: Authentication required. Please run 'cursor agent login' first, or set CURSOR_API_KEY environment variable.";

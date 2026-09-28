@@ -31,6 +31,31 @@ const cliStatusLine = (raw: string): string | null => {
   return line.length > 280 ? `${line.slice(0, 277)}...` : line;
 };
 
+const looksLikeCliStatusReply = (text: string): boolean => {
+  const trimmed = text.trim();
+  if (trimmed.length === 0 || trimmed.length >= 500) {
+    return false;
+  }
+  if (/^(Error|Warning|Fatal|✖)/i.test(trimmed)) {
+    return true;
+  }
+  return /authentication required|please run .+login|not logged in|login required/i.test(
+    trimmed,
+  );
+};
+
+const readWriterCliStatusFailure = (input: {
+  readonly replyFile: string;
+  readonly stdout: string;
+  readonly stderr: string;
+}): string | null =>
+  cliStatusLine(input.stdout) ??
+  cliStatusLine(input.stderr) ??
+  (looksLikeCliStatusReply(input.replyFile)
+    ? cliStatusLine(input.replyFile)
+    : null);
+
+/** Codex/stdin failures stored as revision text — not login/quota heuristics. */
 export const describePromptSdlcWriterTerminalFailure = (
   raw: string,
 ): string | null => {
@@ -44,7 +69,7 @@ export const describePromptSdlcWriterTerminalFailure = (
   ) {
     return STDIN_ERROR;
   }
-  return cliStatusLine(raw);
+  return null;
 };
 
 export const buildPromptSdlcWriterArgs = (input: {
@@ -75,11 +100,19 @@ export const readPromptSdlcWriterOutput = (input: {
   readonly replyFileText: string | null;
 }): PromptSdlcWriterResult => {
   const replyFile = input.replyFileText?.trim() ?? "";
-  const failure = describePromptSdlcWriterTerminalFailure(
+  const terminalFailure = describePromptSdlcWriterTerminalFailure(
     [replyFile, input.stdout, input.stderr].join("\n"),
   );
-  if (failure !== null) {
-    return { ok: false, errorMessage: failure };
+  if (terminalFailure !== null) {
+    return { ok: false, errorMessage: terminalFailure };
+  }
+  const cliFailure = readWriterCliStatusFailure({
+    replyFile,
+    stdout: input.stdout,
+    stderr: input.stderr,
+  });
+  if (cliFailure !== null) {
+    return { ok: false, errorMessage: cliFailure };
   }
 
   if (replyFile.length > 0) {
