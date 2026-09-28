@@ -15,6 +15,10 @@ describe("COPY-P1 shell and auth labels", () => {
     expect(labels).toContain("Library");
     expect(labels).toContain("Reports");
     expect(labels).toContain("New task");
+    expect(labels).toContain("Prompt optimizer");
+    expect(
+      PRIMARY_NAV.find((item) => item.label === "Prompt optimizer")?.href,
+    ).toBe("/prompt-sdlc");
     expect(labels).not.toContain("Playbooks");
     expect(labels).not.toContain("Runs");
   });

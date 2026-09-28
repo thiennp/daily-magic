@@ -109,7 +109,7 @@ After a **production deploy**, sockets drop for a few seconds even when AWI reco
 
 **Cause**
 
-Self-update runs on heartbeat, hourly updater, or when you trigger **Update local** via bridge. Network or wake API failures can delay it.
+Self-update runs on heartbeat, hourly updater, or when you trigger **Update local** via bridge. Network or wake API failures can delay it. Prompt SDLC in Live is part of that install. An optimizer change reaches the Mac only after the console advertises a newer bundle version and the Mac updates.
 
 **Fix**
 

@@ -40,7 +40,7 @@ Do not point production Mac troubleshooting at CHECK24 hosts unless the user con
 
 |                |                                                                                                                                                                                                           |
 | -------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Symptom**    | Cloud shows newer install bundle than Mac; old client until update completes.                                                                                                                             |
+| **Symptom**    | Cloud shows newer install bundle than Mac; old client until update completes. Prompt SDLC in Live stays on the previous optimizer until that update.                                                      |
 | **Cause**      | Self-update depends on heartbeat, wake `POST /update/run`, or hourly updater — can lag if wake API or network fails.                                                                                      |
 | **UI**         | Composer **`update_needed`** readiness (blocks Send, **Update agent** CTA); Home device detail flags mismatch. Codes: [send-readiness-reason-codes.md](../../agent-witch/send-readiness-reason-codes.md). |
 | **Mitigation** | **Update local** / `npm run agent-witch:self-update`; compare `~/.agent-witch/install-version.json` vs `GET /install/agent-witch/version`.                                                                |
