@@ -24,19 +24,48 @@ export const labelPromptSdlcLocalModel = (writer: string): string =>
       ]
     : writer;
 
+export const listPromptSdlcLocalWriters = (
+  installedWriterIds: readonly string[],
+): readonly (typeof PREFERENCE)[number][] =>
+  PREFERENCE.filter((writer) => installedWriterIds.includes(writer));
+
 export const choosePromptSdlcLocalModels = (
   installedWriterIds: readonly string[],
 ): {
   readonly judge: (typeof PREFERENCE)[number];
   readonly improver: (typeof PREFERENCE)[number];
 } | null => {
-  const available = PREFERENCE.filter((writer) =>
-    installedWriterIds.includes(writer),
-  );
+  const available = listPromptSdlcLocalWriters(installedWriterIds);
   const judge = available[0];
   if (judge === undefined) {
     return null;
   }
 
   return { judge, improver: available[1] ?? judge };
+};
+
+export const readPromptSdlcLocalRunModels = (
+  installedWriterIds: readonly string[],
+  postedJudge: string | null,
+  postedImprover: string | null,
+): {
+  readonly judge: (typeof PREFERENCE)[number];
+  readonly improver: (typeof PREFERENCE)[number];
+} | null => {
+  const available = listPromptSdlcLocalWriters(installedWriterIds);
+  const defaults = choosePromptSdlcLocalModels(installedWriterIds);
+  if (defaults === null) {
+    return null;
+  }
+  if (available.length < 2) {
+    return defaults;
+  }
+
+  const judge = available.find((writer) => writer === postedJudge);
+  const improver = available.find((writer) => writer === postedImprover);
+  if (judge === undefined || improver === undefined) {
+    return null;
+  }
+
+  return { judge, improver };
 };

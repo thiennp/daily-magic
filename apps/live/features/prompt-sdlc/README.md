@@ -1,6 +1,6 @@
 # Prompt SDLC (Agent Witch Live)
 
-Optimize one prompt on this Mac. Live chooses the best installed reasoning writer as the judge and the next best as the improver.
+Optimize one prompt on this Mac. When more than one reasoning writer is installed, you choose the judge and the improver. You also choose the folder they run in, so they can use that folder as context. The default folder is your home directory. One installed writer fills both roles. Defaults are Claude, then Codex, then Cursor, then Antigravity.
 
 ## Registry
 

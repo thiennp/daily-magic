@@ -643,6 +643,20 @@ input.input[type="text"] {
 .field-link:hover { color: var(--aw-zinc-900); }
 
 .textarea { min-height: 6rem; resize: vertical; font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 0.8125rem; }
+form.sdlc-form { display: flex; flex-direction: column; gap: 1.25rem; }
+.sdlc-folder { display: flex; gap: 0.75rem; align-items: flex-end; }
+.sdlc-folder > .field { flex: 1 1 auto; }
+form.sdlc-form > .actions { margin-top: 0.25rem; }
+form.sdlc-form > .field > textarea.input {
+  height: auto;
+  min-height: 6rem;
+  max-height: none;
+  padding: 0.75rem;
+  line-height: 1.45;
+  overflow: hidden;
+  resize: none;
+}
+form.sdlc-form > .field > textarea.input[name="prompt"] { min-height: 12rem; }
 
 .check-list { list-style: none; margin: 0.75rem 0 0; padding: 0; display: flex; flex-direction: column; gap: 0.5rem; }
 .reveal-live-list { display: flex; flex-direction: column; gap: 0.5rem; max-height: 16rem; overflow-y: auto; margin-top: 0.5rem; }

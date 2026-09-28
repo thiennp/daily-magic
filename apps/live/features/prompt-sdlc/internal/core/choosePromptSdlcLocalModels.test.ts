@@ -1,6 +1,9 @@
 import { describe, expect, it } from "vitest";
 
-import { choosePromptSdlcLocalModels } from "./choosePromptSdlcLocalModels";
+import {
+  choosePromptSdlcLocalModels,
+  readPromptSdlcLocalRunModels,
+} from "./choosePromptSdlcLocalModels";
 
 describe("choosePromptSdlcLocalModels", () => {
   it("picks the best installed judge and a different improver", () => {
@@ -15,5 +18,22 @@ describe("choosePromptSdlcLocalModels", () => {
       improver: "cursor",
     });
     expect(choosePromptSdlcLocalModels(["qwen2.5:7b"])).toBeNull();
+  });
+
+  it("uses the posted writers when more than one is installed", () => {
+    expect(
+      readPromptSdlcLocalRunModels(
+        ["claude-cli", "codex", "cursor"],
+        "cursor",
+        "claude-cli",
+      ),
+    ).toEqual({ judge: "cursor", improver: "claude-cli" });
+    expect(
+      readPromptSdlcLocalRunModels(["claude-cli", "codex"], "ollama", "codex"),
+    ).toBeNull();
+    expect(readPromptSdlcLocalRunModels(["cursor"], null, null)).toEqual({
+      judge: "cursor",
+      improver: "cursor",
+    });
   });
 });

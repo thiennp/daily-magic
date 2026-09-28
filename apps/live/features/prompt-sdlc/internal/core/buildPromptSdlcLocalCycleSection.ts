@@ -3,6 +3,10 @@ import { buildPromptSdlcSteps } from "@/lib/promptSdlc/buildPromptSdlcSteps";
 import type PromptSdlcCycleView from "@/lib/promptSdlc/types/PromptSdlcCycleView.type";
 import { describePromptSdlcLocalActivity } from "./buildPromptSdlcLocalActivity";
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
+import {
+  displayPromptSdlcLocalFolder,
+  promptSdlcLocalWorkingDirectory,
+} from "./promptSdlcLocalFolder";
 import { describePromptSdlcWriterTerminalFailure } from "./readPromptSdlcWriterOutput";
 
 const escapeHtml = (value: string): string =>
@@ -89,5 +93,10 @@ export const buildPromptSdlcLocalCycleSection = (
     activity.detail.length === 0
       ? ""
       : `<p class="muted">${escapeHtml(activity.detail)}${elapsed}</p>`;
-  return `<section class="card" id="prompt-sdlc-run" data-live="${live ? "true" : "false"}" data-since="${escapeHtml(cycle.updatedAt)}" aria-busy="${live ? "true" : "false"}"><p class="eyebrow">This run</p><div class="sdlc-working">${spinner}<div><h2>${escapeHtml(activity.title)}</h2>${detail}</div></div>${error}<ol>${steps}</ol></section>${cycle.revisions.map(renderRevision).join("")}`;
+  const folder =
+    typeof cycle.workingDirectory === "string" &&
+    cycle.workingDirectory.length > 0
+      ? `<p class="muted">Folder ${escapeHtml(displayPromptSdlcLocalFolder(promptSdlcLocalWorkingDirectory(cycle)))}</p>`
+      : "";
+  return `<section class="card" id="prompt-sdlc-run" data-live="${live ? "true" : "false"}" data-since="${escapeHtml(cycle.updatedAt)}" aria-busy="${live ? "true" : "false"}"><p class="eyebrow">This run</p><div class="sdlc-working">${spinner}<div><h2>${escapeHtml(activity.title)}</h2>${detail}${folder}</div></div>${error}<ol>${steps}</ol></section>${cycle.revisions.map(renderRevision).join("")}`;
 };

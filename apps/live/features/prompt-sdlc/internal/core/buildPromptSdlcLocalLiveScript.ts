@@ -1,3 +1,16 @@
+export const PROMPT_SDLC_LOCAL_FORM_SCRIPT = `<script>
+(() => {
+  const fit = (area) => {
+    area.style.height = "auto";
+    area.style.height = area.scrollHeight + "px";
+  };
+  document.querySelectorAll("form.sdlc-form textarea").forEach((area) => {
+    fit(area);
+    area.addEventListener("input", () => fit(area));
+  });
+})();
+</script>`;
+
 export const PROMPT_SDLC_LOCAL_LIVE_STYLE = `<style>
 .sdlc-working { display: flex; gap: 0.75rem; align-items: flex-start; }
 .sdlc-spin { width: 0.95rem; height: 0.95rem; margin-top: 0.35rem; border: 2px solid #d0d5dd; border-top-color: #1a44be; border-radius: 50%; animation: sdlc-spin 0.8s linear infinite; flex: none; }

@@ -5,6 +5,7 @@ import {
   applyPromptSdlcLocalJudgeReply,
 } from "./applyPromptSdlcLocalReply";
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
+import { promptSdlcLocalWorkingDirectory } from "./promptSdlcLocalFolder";
 import { runPromptSdlcWriterReply } from "./runPromptSdlcWriterReply";
 
 const failCycle = (
@@ -30,6 +31,7 @@ export const advancePromptSdlcLocalCycle = async (
   if (cycle.status === "judging") {
     const reply = await runPromptSdlcWriterReply({
       writerAgent: cycle.judgeModel,
+      workingDirectory: promptSdlcLocalWorkingDirectory(cycle),
       prompt: buildPromptSdlcJudgePrompt({
         goal: cycle.goal,
         promptText: revision.promptText,
@@ -50,6 +52,7 @@ export const advancePromptSdlcLocalCycle = async (
 
   const reply = await runPromptSdlcWriterReply({
     writerAgent: cycle.improverModel,
+    workingDirectory: promptSdlcLocalWorkingDirectory(cycle),
     prompt: buildPromptSdlcImproverPrompt({
       goal: cycle.goal,
       promptText: revision.promptText,

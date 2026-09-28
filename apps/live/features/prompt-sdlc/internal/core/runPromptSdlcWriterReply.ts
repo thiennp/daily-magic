@@ -28,10 +28,11 @@ const isLocalWriter = (
 ): writerAgent is HarnessWriterAgentId =>
   (LOCAL_WRITERS as readonly string[]).includes(writerAgent);
 
-/** Runs one prompt-only writer turn in a temp folder so the CLI cannot edit this repo. */
+/** Runs one prompt-only writer turn in the folder the user chose. */
 export const runPromptSdlcWriterReply = (input: {
   readonly writerAgent: string;
   readonly prompt: string;
+  readonly workingDirectory: string;
 }): Promise<PromptSdlcWriterResult> =>
   new Promise((resolve) => {
     if (!isLocalWriter(input.writerAgent)) {
@@ -50,8 +51,18 @@ export const runPromptSdlcWriterReply = (input: {
       return;
     }
 
-    const cwd = fs.mkdtempSync(path.join(os.tmpdir(), "prompt-sdlc-"));
-    const replyPath = path.join(cwd, "reply.txt");
+    if (!fs.existsSync(input.workingDirectory)) {
+      resolve({
+        ok: false,
+        errorMessage: "Choose a folder that exists on this Mac.",
+      });
+      return;
+    }
+
+    const replyPath = path.join(
+      fs.mkdtempSync(path.join(os.tmpdir(), "prompt-sdlc-")),
+      "reply.txt",
+    );
     const args = buildPromptSdlcWriterArgs({
       writerAgent,
       baseArgs: invocation.args,
@@ -64,7 +75,7 @@ export const runPromptSdlcWriterReply = (input: {
       timer: undefined as NodeJS.Timeout | undefined,
     };
     const child = spawn(invocation.command, [...args], {
-      cwd,
+      cwd: input.workingDirectory,
       stdio: ["ignore", "pipe", "pipe"],
     });
     const finish = (value: PromptSdlcWriterResult): void => {

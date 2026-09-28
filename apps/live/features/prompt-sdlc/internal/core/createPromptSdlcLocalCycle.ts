@@ -1,3 +1,5 @@
+import os from "node:os";
+
 import {
   PROMPT_SDLC_MAX_ROUNDS,
   PROMPT_SDLC_PASS_SCORE,
@@ -9,6 +11,7 @@ export const createPromptSdlcLocalCycle = (input: {
   readonly sourcePrompt: string;
   readonly judgeModel: PromptSdlcLocalCycle["judgeModel"];
   readonly improverModel: PromptSdlcLocalCycle["improverModel"];
+  readonly workingDirectory?: string;
 }): PromptSdlcLocalCycle => {
   const now = new Date().toISOString();
   return {
@@ -16,6 +19,7 @@ export const createPromptSdlcLocalCycle = (input: {
     goal: input.goal.trim(),
     judgeModel: input.judgeModel,
     improverModel: input.improverModel,
+    workingDirectory: input.workingDirectory ?? os.homedir(),
     status: "judging",
     currentRound: 0,
     passScore: PROMPT_SDLC_PASS_SCORE,

@@ -50,7 +50,7 @@ One **dispatched execution** (Mac via Agent Witch or Cursor Cloud), with status,
 
 ## Prompt SDLC
 
-A **separate prompt-optimization loop** in Agent Witch Live. The user supplies one prompt and a goal. Live picks the best reasoning writers it can run, then scores and rewrites the prompt until it passes or a small round cap is hit. It is not a workflow, a playbook, or a capability improvement.
+A **separate prompt-optimization loop** in Agent Witch Live. The user supplies one prompt and a goal, chooses the judge and improver when more than one reasoning writer is installed, and chooses the folder those writers run in. The default folder is the home directory. Live then scores and rewrites the prompt until it passes or a small round cap is hit. It is not a workflow, a playbook, or a capability improvement.
 
 ## Deployables (AWC, AWL, AWB, AWI)
 

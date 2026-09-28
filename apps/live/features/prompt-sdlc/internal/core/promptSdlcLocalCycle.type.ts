@@ -19,6 +19,7 @@ export interface PromptSdlcLocalCycle {
   readonly goal: string;
   readonly judgeModel: HarnessWriterAgent;
   readonly improverModel: HarnessWriterAgent;
+  readonly workingDirectory?: string;
   readonly status: PromptSdlcCycleStatus;
   readonly currentRound: number;
   readonly passScore: number;

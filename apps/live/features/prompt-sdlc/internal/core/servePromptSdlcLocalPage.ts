@@ -1,9 +1,10 @@
+import { pickMacOsFolderDialog } from "../../../projects/public-api/infrastructure";
 import { buildPromptSdlcLocalPageBody } from "./buildPromptSdlcLocalPage";
 import { createPromptSdlcLocalCycle } from "./createPromptSdlcLocalCycle";
+import { decidePromptSdlcLocalPost } from "./decidePromptSdlcLocalPost";
 import {
   describePromptSdlcLocalModels,
   readPromptSdlcLocalExampleFields,
-  readPromptSdlcLocalStartError,
 } from "./promptSdlcLocalForm";
 import {
   readPromptSdlcLocalCycle,
@@ -20,11 +21,8 @@ export const servePromptSdlcLocalPage = async (
   input: PromptSdlcLocalRouteInput,
 ): Promise<void> => {
   const url = new URL(input.requestUrl, "http://127.0.0.1");
-  const viewingCycle =
-    input.method === "GET" && url.searchParams.get("cycle") !== null;
-  const selection = viewingCycle
-    ? { note: "", canRun: true, models: null }
-    : describePromptSdlcLocalModels(await readPromptSdlcInstalledWriters());
+  const installedIds = await readPromptSdlcInstalledWriters();
+  const selection = describePromptSdlcLocalModels(installedIds);
   const posted =
     input.method === "POST"
       ? new URLSearchParams(await input.readBody(input.request))
@@ -34,14 +32,22 @@ export const servePromptSdlcLocalPage = async (
   );
   const goal = posted?.get("goal") ?? filled.goal;
   const prompt = posted?.get("prompt") ?? filled.prompt;
-  const startError =
-    posted === null ? null : readPromptSdlcLocalStartError(goal, prompt);
-  if (posted !== null && startError === null && selection.models !== null) {
+  const decision = decidePromptSdlcLocalPost({
+    posted,
+    installedIds,
+    selection,
+    goal,
+    prompt,
+    pickFolder: () =>
+      pickMacOsFolderDialog("Choose the folder this prompt should run in"),
+  });
+  if (decision.kind === "start") {
     const cycle = createPromptSdlcLocalCycle({
       goal,
       sourcePrompt: prompt,
-      judgeModel: selection.models.judge,
-      improverModel: selection.models.improver,
+      judgeModel: decision.judge,
+      improverModel: decision.improver,
+      workingDirectory: decision.workingDirectory,
     });
     savePromptSdlcLocalCycle(input.storePath, cycle);
     ensurePromptSdlcLocalCycleRunning(input.storePath, cycle.id);
@@ -62,13 +68,15 @@ export const servePromptSdlcLocalPage = async (
   }
 
   await sendPage(input, {
-    goal,
-    prompt,
+    goal: decision.goal,
+    prompt: decision.prompt,
     modelNote: selection.note,
+    writers: selection.writers,
+    judge: decision.judge,
+    improver: decision.improver,
+    folder: decision.folder,
     canRun: selection.canRun,
-    errorMessage:
-      startError ??
-      (posted !== null && selection.models === null ? selection.note : null),
+    errorMessage: decision.errorMessage,
     cycle,
     history: readPromptSdlcLocalCycles(input.storePath),
   });

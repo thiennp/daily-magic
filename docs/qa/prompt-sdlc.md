@@ -7,15 +7,21 @@
 - prompt judge and improver
 - tối ưu prompt
 - cham diem prompt
+- why does prompt sdlc use codex
+- writer available check fallback token
+- prompt sdlc folder
+- choose where to run the prompt
 
 ## Short answer
 
-Prompt SDLC runs in Agent Witch Live at `http://127.0.0.1:43347/prompt-sdlc`. You paste a prompt and a goal. Live picks the best reasoning writer installed on this Mac as the judge, and the next best as the improver. The judge returns a score. If the score is under 80, the improver rewrites the prompt and the judge runs again, up to 3 rounds. There is no Mac picker, no model picker, and no human step between the score and the rewrite. The guide at `/prompt-sdlc/guide` can load an example into the form. The page lists each step of the open run, including the step in progress, and a history of earlier runs. While a writer is working, the run panel stays on screen, shows a timer, and refreshes itself. The rest of the page does not reload.
+Prompt SDLC runs in Agent Witch Live at `http://127.0.0.1:43347/prompt-sdlc`. You paste a prompt and a goal. When more than one reasoning writer is installed, you choose the judge and the improver. One installed writer fills both roles. Defaults are Claude, then the next installed writer. You choose the folder the writers run in. The default is your home directory (`~`). The judge returns a score. If the score is under 80, the improver rewrites the prompt and the judge runs again, up to 3 rounds. There is no Mac picker and no human step between the score and the rewrite. The guide at `/prompt-sdlc/guide` can load an example into the form. The page lists each step of the open run, including the step in progress, and a history of earlier runs. While a writer is working, the run panel stays on screen, shows a timer, and refreshes itself. The rest of the page does not reload.
 
 ## Details
 
-- Preference order is Claude, then Codex, then Cursor, then Antigravity. Small and local models are not used. Cursor Cloud is not required.
-- Each writer call runs in a temporary folder, so the loop does not edit the repo.
+- Preference order is Claude, then Codex, then Cursor, then Antigravity. Those are the defaults. When more than one is installed, the form shows a Judge select and an Improver select. If only one is installed, it fills both roles and the form has no select. Small and local models are not used. Cursor Cloud is not required.
+- “Installed” means the CLI version command exits 0 within 3 seconds: `claude -v`, `codex --version`, `cursor agent -v`, `antigravity --version`. That check does not log in, spend tokens, or prove a prompt can finish. A missing quota, a refused login, or a terminal error still counts as available.
+- There is no user command that checks token balance before a run, and a failed writer does not fall through to the next one. The cycle stops as failed.
+- The form has a folder field. Choose folder opens the Mac folder dialog and keeps the goal and prompt. The default is `~`. Writers run in that folder, so Claude and Cursor can use its files as context. The reply file stays in a temporary directory.
 - A reply that is not a score stops the cycle. The raw reply is kept on the judgement. A writer terminal error is not saved as the next prompt.
 - Cycles stay in `prompt-sdlc-cycles.json` beside the Mac profile config. They are not capability improvements and not workflow runs.
 - The console page at `/prompt-sdlc` only links to Live.
@@ -28,4 +34,4 @@ Prompt SDLC runs in Agent Witch Live at `http://127.0.0.1:43347/prompt-sdlc`. Yo
 
 ## Last reviewed
 
-2026-09-27
+2026-09-28
