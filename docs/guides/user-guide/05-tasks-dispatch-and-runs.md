@@ -56,7 +56,9 @@ Optional **Cursor Cloud** dispatch (when configured) targets cloud agents instea
 | Mac offline                                                     | No dispatch; fix connect chapter—not “wait silently forever.”                               |
 | **This computer is not linked**                                 | No row is **this Mac**. **Connect this Mac** on Home links the computer you are using.      |
 
-Details: [Reconnecting vs local live](../../qa/awc-mac-reconnecting-vs-local-live.md) · [No Connect button](../../qa/awc-offline-devices-hide-connect-button.md).
+Details: [Reconnecting vs local live](../../qa/awc-mac-reconnecting-vs-local-live.md) · [No Connect button](../../qa/awc-offline-devices-hide-connect-button.md) · [Duplicate Macs from Connect](../../qa/awc-connect-click-creates-duplicate-macs.md).
+
+**Seen recently** means that computer checked in within the last minute or so. Opening **Connect this Mac** does not count as a check-in. Clicking it again replaces the unused link instead of adding **Mac 2**.
 
 ---
 

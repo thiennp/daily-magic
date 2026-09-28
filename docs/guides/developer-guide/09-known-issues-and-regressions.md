@@ -83,6 +83,14 @@ Home **Mac offline** means claimed devices have no live socket. **Connect this M
 
 ---
 
+## Repeated Connect clicks cloned devices
+
+Each **Connect this Mac** click used to insert a device with `last_seen_at = NOW()` and a null label. `revokePendingInstallDevicesForUser` only deleted rows where `last_seen_at IS NULL`, so the new rows stayed and Home showed **Your Mac**, **Mac 2**, **Mac 3** as **seen recently** with **Version unknown** (HOME-059). Install-token claims now leave `last_seen_at` null. The newest unlabeled placeholder is kept, a false `last_seen_at` on that row is cleared, and older ones are revoked on the next install token and on `GET /api/agent-witch/devices`.
+
+**Q&A:** [awc-connect-click-creates-duplicate-macs.md](../../qa/awc-connect-click-creates-duplicate-macs.md).
+
+---
+
 ## How to find regression coverage
 
 ```bash

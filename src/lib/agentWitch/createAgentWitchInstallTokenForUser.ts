@@ -21,10 +21,10 @@ export const createAgentWitchInstallTokenForUser = async (input: {
     pairingToken,
     userId: input.userId,
     deviceLabel: null,
+    recordLastSeen: false,
   });
   await revokePendingInstallDevicesForUser({
     userId: input.userId,
-    keepPairingToken: pairingToken,
   });
 
   return {

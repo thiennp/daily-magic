@@ -54,14 +54,26 @@ export const insertAgentWitchDeviceClaim = async (input: {
   readonly userId: string;
   readonly tokenHash: string;
   readonly deviceLabel: string | null;
+  /**
+   * Real check-in (pairing / heartbeat path) records presence.
+   * Connect this Mac only reserves a token, so it must leave `last_seen_at` null
+   * until the Mac actually checks in (HOME-059).
+   */
+  readonly recordLastSeen?: boolean;
 }): Promise<AgentWitchDeviceRecord> => {
   const sql = getSql();
   const insertResult = asRowArray(
-    await sql`
-      INSERT INTO agent_witch_devices (user_id, token_hash, device_label, platform, last_seen_at)
-      VALUES (${input.userId}, ${input.tokenHash}, ${input.deviceLabel}, 'mac', NOW())
-      RETURNING id, user_id, platform, device_label, display_name, dispatch_policy, claimed_at, last_seen_at, revoked_at
-    `,
+    input.recordLastSeen === false
+      ? await sql`
+          INSERT INTO agent_witch_devices (user_id, token_hash, device_label, platform)
+          VALUES (${input.userId}, ${input.tokenHash}, ${input.deviceLabel}, 'mac')
+          RETURNING id, user_id, platform, device_label, display_name, dispatch_policy, claimed_at, last_seen_at, revoked_at
+        `
+      : await sql`
+          INSERT INTO agent_witch_devices (user_id, token_hash, device_label, platform, last_seen_at)
+          VALUES (${input.userId}, ${input.tokenHash}, ${input.deviceLabel}, 'mac', NOW())
+          RETURNING id, user_id, platform, device_label, display_name, dispatch_policy, claimed_at, last_seen_at, revoked_at
+        `,
   );
 
   if (!insertResult[0]) {

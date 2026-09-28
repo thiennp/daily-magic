@@ -118,14 +118,25 @@ Self-update resolves the app origin from `config.json` `wsUrl`, then from `insta
 
 ---
 
+## Connect this Mac placeholders (HOME-059)
+
+`POST /api/agent-witch/install-token` reserves a pairing token before AWI checks in. That row is a placeholder: `recordLastSeen: false`, so `last_seen_at` stays null and the list must not say **seen recently**. `revokePendingInstallDevicesForUser` then revokes older placeholders for that user (no hostname, display name, bundle version, handshake, or device key), keeps the newest, and clears a false `last_seen_at` on that kept row. `GET /api/agent-witch/devices` runs the same cleanup so a reload drops extras from repeated clicks. A later heartbeat (`touchAgentWitchDeviceLastSeen`) or `registerAgentWitchInstallFromMac` is what marks the computer seen. Named devices are not placeholders.
+
+Failed browser calls to `http://127.0.0.1:47892/identity` and `:47893/identity` mean AWB is down. They do not insert device rows.
+
+The click does not signal a running AWL. The Mac keeps `~/.agent-witch` until the install command runs. That command writes the new token when the config email matches (`buildAgentWitchInstallScriptConfigUpdateExisting`), restarts the LaunchAgent (`launchctl kickstart -k`), and `registerAgentWitchInstallFromMac` stamps the hostname onto the new row and revokes other active rows with that label. A Console delete only sets `revoked_at` and disconnects the socket (`DELETE /api/agent-witch/devices/:id`). The old token then fails `agent.register` with “This Mac identity is not linked”. Update local (`updateExistingInstall`) keeps the on-disk token, so it does not relink a revoked device.
+
+---
+
 ## Common agent mistakes
 
-| Mistake                                   | Truth                                                                                                          |
-| ----------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
-| AWL reachable from AWC server-side fetch  | AWL is **loopback-only** on the user’s Mac                                                                     |
-| AWB up ⇒ dispatch ready                   | Writer needs **live WSS on AWC** ([Q&A awc-mac-reconnecting](../../qa/awc-mac-reconnecting-vs-local-live.md))  |
-| Point `wsUrl` at CHECK24 daily-magic host | Production Mac uses **agentwitch.com** ([hosting doc](../../product/repo-name-and-hosting.md))                 |
-| Folder picker in AWC for Mac paths        | Use AWL/AWB `select-folder` ([Q&A awc-project-folder-path-picker](../../qa/awc-project-folder-path-picker.md)) |
+| Mistake                                      | Truth                                                                                                               |
+| -------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| AWL reachable from AWC server-side fetch     | AWL is **loopback-only** on the user’s Mac                                                                          |
+| AWB up ⇒ dispatch ready                      | Writer needs **live WSS on AWC** ([Q&A awc-mac-reconnecting](../../qa/awc-mac-reconnecting-vs-local-live.md))       |
+| Point `wsUrl` at CHECK24 daily-magic host    | Production Mac uses **agentwitch.com** ([hosting doc](../../product/repo-name-and-hosting.md))                      |
+| Folder picker in AWC for Mac paths           | Use AWL/AWB `select-folder` ([Q&A awc-project-folder-path-picker](../../qa/awc-project-folder-path-picker.md))      |
+| Stamp `last_seen_at` on install-token insert | Each click looks like a live Mac (HOME-059). Leave `last_seen_at` null until check-in and revoke older placeholders |
 
 Open issues: `src/features/agent-witch/KNOWN_ISSUES.md`.
 
