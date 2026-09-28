@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import findCapabilityTemplateById from "@/lib/capabilities/templates/findCapabilityTemplateById";
 import { CapabilityType } from "@/lib/capabilities/CapabilityType.constant";
 import { mapHarnessItemsToOperatorSteps } from "@/lib/harness/partitionHarnessItemsByAudience";
+import { WorkflowFieldInputType } from "@/lib/workflows/types/WorkflowFieldInputType.constant";
 
 describe("freelancer-client-proposal workflow", () => {
   it("is registered with portfolio path and three operator checkpoints", () => {
@@ -20,6 +21,11 @@ describe("freelancer-client-proposal workflow", () => {
       (field) => field.key === "proposalHistoryPath",
     );
     expect(historyField?.required).toBe(false);
+    expect(
+      template.workflowFields.find(
+        (field) => field.key === "portfolioFolderPath",
+      )?.type,
+    ).toBe(WorkflowFieldInputType.TEXT);
     expect(template.workflowFields.map((field) => field.key)).toEqual([
       "clientName",
       "projectBrief",

@@ -2,20 +2,19 @@
 
 import type { ReactElement } from "react";
 
+import WorkflowTaskFieldBooleanControl from "@/features/workflows/WorkflowTaskFieldBooleanControl";
+import WorkflowTaskFieldFileInput from "@/features/workflows/WorkflowTaskFieldFileInput";
 import { workflowFieldInputClassName } from "@/features/workflows/utils/workflowFieldInputClassName";
 import { workflowFieldHtmlInputType } from "@/features/workflows/workflowFieldHtmlInputType";
-import {
-  WORKFLOW_BOOLEAN_NO,
-  WORKFLOW_BOOLEAN_YES,
-} from "@/lib/workflows/isValidWorkflowBooleanValue";
 import { WorkflowFieldInputType } from "@/lib/workflows/types/WorkflowFieldInputType.constant";
 import type WorkflowFieldDefinition from "@/lib/workflows/types/WorkflowFieldDefinition.type";
-import WorkflowTaskFieldFileInput from "@/features/workflows/WorkflowTaskFieldFileInput";
 
 interface WorkflowTaskFieldControlProps {
   readonly field: WorkflowFieldDefinition;
   readonly value: string;
   readonly hasError: boolean;
+  readonly controlId: string;
+  readonly describedBy?: string;
   readonly onChange: (value: string) => void;
 }
 
@@ -23,6 +22,8 @@ export default function WorkflowTaskFieldControl({
   field,
   value,
   hasError,
+  controlId,
+  describedBy,
   onChange,
 }: WorkflowTaskFieldControlProps): ReactElement {
   const className = workflowFieldInputClassName(hasError);
@@ -30,12 +31,14 @@ export default function WorkflowTaskFieldControl({
   if (field.type === WorkflowFieldInputType.TEXTAREA) {
     return (
       <textarea
+        id={controlId}
         value={value}
         onChange={(event) => {
           onChange(event.target.value);
         }}
         rows={4}
         aria-invalid={hasError}
+        aria-describedby={describedBy}
         className={className}
       />
     );
@@ -43,41 +46,25 @@ export default function WorkflowTaskFieldControl({
 
   if (field.type === WorkflowFieldInputType.BOOLEAN) {
     return (
-      <div className="mt-2 flex gap-4 text-sm font-normal text-gray-700 dark:text-gray-300">
-        <label className="flex items-center gap-2">
-          <input
-            type="radio"
-            name={field.key}
-            checked={value === WORKFLOW_BOOLEAN_YES}
-            onChange={() => {
-              onChange(WORKFLOW_BOOLEAN_YES);
-            }}
-          />
-          Yes
-        </label>
-        <label className="flex items-center gap-2">
-          <input
-            type="radio"
-            name={field.key}
-            checked={value === WORKFLOW_BOOLEAN_NO}
-            onChange={() => {
-              onChange(WORKFLOW_BOOLEAN_NO);
-            }}
-          />
-          No
-        </label>
-      </div>
+      <WorkflowTaskFieldBooleanControl
+        field={field}
+        value={value}
+        controlId={controlId}
+        onChange={onChange}
+      />
     );
   }
 
   if (field.type === WorkflowFieldInputType.SELECT) {
     return (
       <select
+        id={controlId}
         value={value}
         onChange={(event) => {
           onChange(event.target.value);
         }}
         aria-invalid={hasError}
+        aria-describedby={describedBy}
         className={className}
       >
         <option value="">Choose…</option>
@@ -96,6 +83,7 @@ export default function WorkflowTaskFieldControl({
         field={field}
         value={value}
         hasError={hasError}
+        controlId={controlId}
         onChange={onChange}
       />
     );
@@ -105,12 +93,14 @@ export default function WorkflowTaskFieldControl({
 
   return (
     <input
+      id={controlId}
       type={htmlType}
       value={value}
       onChange={(event) => {
         onChange(event.target.value);
       }}
       aria-invalid={hasError}
+      aria-describedby={describedBy}
       className={className}
     />
   );

@@ -29,7 +29,7 @@ Technical overview: [How harness, workflow, and agent runs reach the Mac](../../
 
 Typical flow:
 
-1. You fill the workflow form (text fields, choices, optional file upload—see below).
+1. You fill the workflow form (text fields, choices, optional file upload—see below). Each caption is the field’s label. A portfolio folder is a path you type; it is not replaced by the project folder.
 2. Agent Witch starts the workflow run and dispatches the first agent step to your **Mac**.
 3. You watch the live **Run** terminal like any other task.
 4. When the graph hits a **human** node, the run pauses and the browser shows a **checkpoint sheet**.

@@ -19,21 +19,28 @@ export default function WorkflowTaskFieldBlock({
   onChange,
 }: WorkflowTaskFieldBlockProps): ReactElement {
   const hasError = errorMessage !== undefined;
+  const controlId = `workflow-field-${field.key}`;
+  const errorId = `${controlId}-error`;
 
   return (
-    <div className="block text-sm font-medium text-gray-800 dark:text-white/90">
-      <p>
+    <div className="text-sm font-medium text-gray-800 dark:text-white/90">
+      <label htmlFor={controlId} className="block">
         {field.label}
         {field.required ? " *" : ""}
-      </p>
+      </label>
       <WorkflowTaskFieldControl
         field={field}
         value={value}
         hasError={hasError}
+        controlId={controlId}
+        describedBy={hasError ? errorId : undefined}
         onChange={onChange}
       />
       {hasError ? (
-        <span className="mt-1 block text-sm font-normal text-rose-600 dark:text-rose-400">
+        <span
+          id={errorId}
+          className="mt-1 block text-sm font-normal text-rose-600 dark:text-rose-400"
+        >
           {errorMessage}
         </span>
       ) : null}

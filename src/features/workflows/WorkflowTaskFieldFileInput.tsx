@@ -14,6 +14,7 @@ interface WorkflowTaskFieldFileInputProps {
   readonly field: WorkflowFieldDefinition;
   readonly value: string;
   readonly hasError: boolean;
+  readonly controlId: string;
   readonly onChange: (value: string) => void;
 }
 
@@ -21,6 +22,7 @@ export default function WorkflowTaskFieldFileInput({
   field,
   value,
   hasError,
+  controlId,
   onChange,
 }: WorkflowTaskFieldFileInputProps) {
   const registerUploadExcerpt = useWorkflowUploadExcerptRegistrar();
@@ -70,7 +72,7 @@ export default function WorkflowTaskFieldFileInput({
           isDragActive ? "border-brand-500 bg-brand-50/40" : ""
         }`}
       >
-        <input {...getInputProps()} />
+        <input {...getInputProps({ id: controlId })} aria-invalid={hasError} />
         {isUploading
           ? "Uploading…"
           : isDragActive

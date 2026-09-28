@@ -30,6 +30,8 @@ Curated definitions live under `src/lib/workflowOrchestration/definitions/` and 
 
 Human steps must **not** use `[[AWAITING_INPUT]]` for workflow gates; the platform pauses between graph nodes instead.
 
+Composer fields use `<label htmlFor>` (`WorkflowTaskFieldBlock`, ids `workflow-field-<key>`). `project` fields stay hidden and take the project folder. The freelancer portfolio path is `text`, so the operator types that folder.
+
 ---
 
 ## Engine flow (happy path)
