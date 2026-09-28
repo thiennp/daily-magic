@@ -16,6 +16,7 @@ import {
 } from "@/features/agent-witch/utils/agentWitchLocalHostCookie";
 import { isAgentWitchWakeIdentityProbeSuppressed } from "@/features/agent-witch/utils/agentWitchWakeIdentityProbeSession";
 import { collectUniqueWakePorts } from "@/features/agent-witch/utils/collectUniqueWakePorts";
+import { resolveLocalTokenHashMatchesReachableDevice } from "@/features/agent-witch/utils/resolveLocalTokenHashMatchesReachableDevice";
 import { resolveShouldProbeWakeIdentityInBrowser } from "@/features/agent-witch/utils/resolveShouldProbeWakeIdentityInBrowser";
 import useProbeLocalMacWakeIdentity from "@/features/home/hooks/useProbeLocalMacWakeIdentity";
 import { consumeLocalTokenHashQueryParam } from "@/features/home/utils/consumeLocalTokenHashQueryParam";
@@ -66,9 +67,14 @@ const useLocalMacHostname = (): {
     () => pairedDevicesResource.getSnapshot(),
     () => null,
   );
-  const claimedDeviceCount = (
-    pairedDevicesSnapshot ?? getPairedDevicesSnapshotOrEmpty()
-  ).devices.length;
+  const devices = (pairedDevicesSnapshot ?? getPairedDevicesSnapshotOrEmpty())
+    .devices;
+  const claimedDeviceCount = devices.length;
+  const localTokenHashMatchesReachableDevice =
+    resolveLocalTokenHashMatchesReachableDevice({
+      localTokenHash,
+      devices,
+    });
   const isCheckingLocalHostname = resolveIsCheckingLocalMacIdentity({
     isMacBrowser,
     identityStatus: identitySnapshot.status,
@@ -76,6 +82,7 @@ const useLocalMacHostname = (): {
       localTokenHash,
       claimedDeviceCount,
       probeSuppressed: isAgentWitchWakeIdentityProbeSuppressed(),
+      localTokenHashMatchesReachableDevice,
     }),
   });
   const extraWakePorts = useMemo(

@@ -634,7 +634,7 @@ Document every production bug or UX regression here. Each entry must link to a t
 
 **Fix:** Re-probe when the cookie hash does not match any live/recent device; adopt the sole wake `tokenHashes` entry when the cookie is absent from this Mac; select and map `wake_port` on the devices API.
 
-**Regression tests:** `resolveShouldProbeWakeIdentityInBrowser.test.ts`, `resolveLocalMacTokenHashFromWakeIdentity.test.ts`, `resolveLocalTokenHashMatchesReachableDevice.test.ts`, `listAgentWitchDevicesForUser.test.ts`, `mapAgentWitchDeviceRow.test.ts`, `useProbeLocalMacWakeIdentity.test.ts` (HOME-061).
+**Regression tests:** `resolveShouldProbeWakeIdentityInBrowser.test.ts`, `resolveLocalMacTokenHashFromWakeIdentity.test.ts`, `resolveLocalTokenHashMatchesReachableDevice.test.ts`, `listAgentWitchDevicesForUser.test.ts`, `mapAgentWitchDeviceRow.test.ts`, `useProbeLocalMacWakeIdentity.test.ts`, `useLocalMacHostname.test.ts` (HOME-061).
 
 ---
 
