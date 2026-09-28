@@ -602,9 +602,9 @@ Document every production bug or UX regression here. Each entry must link to a t
 
 **Root cause:** `createAgentWitchInstallTokenForUser` inserted a new `agent_witch_devices` row on every click and `insertAgentWitchDeviceClaim` set `last_seen_at` to now. `revokePendingInstallDevicesForUser` only revoked rows with `last_seen_at IS NULL`, so the cleanup never matched. Failed `127.0.0.1` `/identity` calls are AWB being down; they do not insert rows.
 
-**Fix:** Install-token claims leave `last_seen_at` null until a real check-in. Placeholder cleanup keeps the newest unlabeled row (no hostname, display name, bundle version, handshake, or device key), revokes the rest, and clears a false `last_seen_at` on the kept row. `GET /api/agent-witch/devices` runs that cleanup so a Home reload drops extras that were already created.
+**Fix:** Install-token claims leave `last_seen_at` null until a real check-in. Placeholder cleanup keeps the newest unlabeled row (no hostname, display name, bundle version, handshake, or device key), revokes the rest, and clears a false `last_seen_at` on the kept row. `GET /api/agent-witch/devices` runs that cleanup so a Home reload drops extras that were already created. `updateExistingClaimForUser` must honor `recordLastSeen: false` on the update path, not only on insert.
 
-**Regression tests:** `createAgentWitchInstallTokenForUser.test.ts`, `insertAgentWitchDeviceClaim.test.ts`, `revokePendingInstallDevicesForUser.test.ts` (HOME-059).
+**Regression tests:** `createAgentWitchInstallTokenForUser.test.ts`, `insertAgentWitchDeviceClaim.test.ts`, `revokePendingInstallDevicesForUser.test.ts`, `updateExistingClaimForUser.test.ts` (HOME-059).
 
 ---
 
@@ -622,4 +622,4 @@ Document every production bug or UX regression here. Each entry must link to a t
 
 ## Adding issues
 
-Use the next ID (`HOME-060`, …). Include symptom, root cause, fix paths, and test file.
+Use the next ID (`HOME-061`, …). Include symptom, root cause, fix paths, and test file.

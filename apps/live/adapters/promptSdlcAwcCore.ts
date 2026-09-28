@@ -18,6 +18,9 @@ export {
 } from "@/lib/promptSdlc/continuePromptSdlc";
 export { buildPromptSdlcImproverPrompt } from "@/lib/promptSdlc/buildPromptSdlcImproverPrompt";
 export { buildPromptSdlcJudgePrompt } from "@/lib/promptSdlc/buildPromptSdlcJudgePrompt";
+export { collectPromptSdlcPriorRounds } from "@/lib/promptSdlc/collectPromptSdlcPriorRounds";
+export { selectPromptSdlcImproverHistory } from "@/lib/promptSdlc/selectPromptSdlcImproverHistory";
+export { selectPromptSdlcBestPrompt } from "@/lib/promptSdlc/selectPromptSdlcBestPrompt";
 export {
   buildPromptSdlcSteps,
   type PromptSdlcStep,

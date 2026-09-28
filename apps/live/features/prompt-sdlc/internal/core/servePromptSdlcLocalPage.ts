@@ -1,5 +1,9 @@
 import { pickMacOsFolderDialog } from "../../../projects/public-api/infrastructure";
 import { acceptPromptSdlcLocalManualPost } from "./acceptPromptSdlcLocalManualPost";
+import {
+  acceptPromptSdlcLocalSkillPost,
+  readPromptSdlcSkillNotice,
+} from "./acceptPromptSdlcLocalSkillPost";
 import { createPromptSdlcLocalCycle } from "./createPromptSdlcLocalCycle";
 import { decidePromptSdlcLocalPost } from "./decidePromptSdlcLocalPost";
 import { redirectAfterPromptSdlcHistoryDelete } from "./redirectAfterPromptSdlcHistoryDelete";
@@ -63,6 +67,7 @@ export const servePromptSdlcLocalPage = async (
       passScore: String(manual.cycle.passScore),
       canRun: selection.canRun,
       errorMessage: manual.errorMessage,
+      skillNotice: null,
       cycle: manual.cycle,
       history: readPromptSdlcLocalCycles(input.storePath),
     });
@@ -83,6 +88,16 @@ export const servePromptSdlcLocalPage = async (
     input.response.end();
     return;
   }
+  const skill = acceptPromptSdlcLocalSkillPost({
+    posted,
+    storePath: input.storePath,
+  });
+  if (skill.kind === "redirect") {
+    input.response.writeHead(303, { Location: skill.location });
+    input.response.end();
+    return;
+  }
+  const skillNotice = readPromptSdlcSkillNotice(url.searchParams);
 
   const decision = decidePromptSdlcLocalPost({
     posted,
@@ -113,6 +128,7 @@ export const servePromptSdlcLocalPage = async (
       passScore: String(decision.passScore),
       canRun: true,
       errorMessage: writerBlock,
+      skillNotice,
       cycle: null,
       history: readPromptSdlcLocalCycles(input.storePath),
     });
@@ -157,6 +173,7 @@ export const servePromptSdlcLocalPage = async (
     passScore: decision.passScore,
     canRun: selection.canRun,
     errorMessage: decision.errorMessage,
+    skillNotice,
     cycle,
     history: readPromptSdlcLocalCycles(input.storePath),
   });
