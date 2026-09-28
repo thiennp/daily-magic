@@ -8,12 +8,12 @@ Prior reading: [Chapter 0](00-philosophy-and-mismatch-traps.md) · [AGENTS.md](.
 
 ## Prerequisites
 
-| Requirement           | Notes                                                                 |
-| --------------------- | --------------------------------------------------------------------- |
-| **Node.js 24**        | Matches CI (see root `package.json` / workflows)                      |
-| **Neon PostgreSQL**   | Empty project DB for daily-magic schema — not a shared unrelated Neon |
-| **`psql`** (optional) | For `npm run db:schema`; migrations use `tsx` + Neon driver           |
-| **Mac** (optional)    | AWI/AWL/AWB for full writer dispatch; cloud-only work skips Mac       |
+| Requirement           | Notes                                                                                                                                                                   |
+| --------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Node.js 24**        | Matches CI (see root `package.json` / workflows)                                                                                                                        |
+| **Neon PostgreSQL**   | Empty project DB for daily-magic schema — not a shared unrelated Neon                                                                                                   |
+| **`psql`** (optional) | For `npm run db:schema`; migrations use `tsx` + Neon driver                                                                                                             |
+| **Mac** (optional)    | AWL/AWB plus Mac AWI for the local Mac app. An x86_64 Linux host can run AWI for dispatch; cloud-only work skips both ([Q&A](../../qa/linux-browser-vs-linux-host.md)). |
 
 ---
 
@@ -161,6 +161,7 @@ Routing map for which guide chapter matches a path: [guide-maintenance.map.json]
 | Topic                | Link                                                                                                     |
 | -------------------- | -------------------------------------------------------------------------------------------------------- |
 | User first run       | [user guide ch.1](../user-guide/01-getting-started.md)                                                   |
+| Prompt SDLC on Live  | [prompt-sdlc.md](../../qa/prompt-sdlc.md) — `apps/live/features/prompt-sdlc`                             |
 | Test sign-in         | [Chapter 2](02-auth-and-test-login.md)                                                                   |
 | Architecture         | [Chapter 3](03-architecture-map.md)                                                                      |
 | Hosting / production | [Chapter 8](08-deploy-hosting-neon.md) (when present)                                                    |
@@ -176,3 +177,4 @@ Routing map for which guide chapter matches a path: [guide-maintenance.map.json]
 - set -a env.local override injected DATABASE_URL
 - localhost 3000 ws-test typecheck next-env.d.ts
 - phát triển local Agent Witch, cơ sở dữ liệu Neon, Cursor Cloud DATABASE_URL
+- Linux host AWI local dev, Linux browser console

@@ -14,12 +14,26 @@ describe("buildConnectComputerGuideSteps", () => {
     expect(steps).toHaveLength(3);
   });
 
-  it("prepends a mac requirement step for windows users", () => {
+  it("HOME-055: gives Windows WSL steps instead of a Mac-only warning", () => {
     const steps = buildConnectComputerGuideSteps("windows");
 
-    expect(steps[0]?.title).toBe("Use a Mac");
-    expect(steps[1]?.title).toBe("Open Terminal");
+    expect(steps[0]?.title).toBe("Open Windows Terminal");
+    expect(steps[1]?.description).toContain("wsl --install");
+    expect(steps[2]?.title).toBe(CONNECT_COMPUTER_COPY_STEP_TITLE);
+    expect(steps[2]?.description).toContain("WSL");
+    expect(steps.map((step) => step.title)).not.toContain("Use a Mac");
     expect(steps).toHaveLength(4);
+  });
+
+  it("HOME-053: gives Linux terminal steps instead of a Mac-only warning", () => {
+    const steps = buildConnectComputerGuideSteps("linux");
+
+    expect(steps[0]?.title).toBe("Open a terminal");
+    expect(steps[0]?.description).toContain("Linux");
+    expect(steps[1]?.title).toBe(CONNECT_COMPUTER_COPY_STEP_TITLE);
+    expect(steps[2]?.description).toContain("systemd");
+    expect(steps.map((step) => step.title)).not.toContain("Use a Mac");
+    expect(steps).toHaveLength(3);
   });
 
   it("HOME-032: describes account-scoped install command", () => {

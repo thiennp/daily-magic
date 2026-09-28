@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { renderInstallAgentWitchScript } from "@/lib/agentWitch/renderInstallAgentWitchScript";
+import { renderUpdateAgentWitchScript } from "@/lib/agentWitch/renderUpdateAgentWitchScript";
 
 describe("renderInstallAgentWitchScript node runtime", () => {
   it("AGENT-065: install script resolves Node and prompts before Homebrew changes", () => {
@@ -10,6 +11,11 @@ describe("renderInstallAgentWitchScript node runtime", () => {
     });
 
     expect(script).toContain("agent_witch_ensure_node_runtime");
+    expect(script).toContain("agent_witch_ensure_ollama");
+    expect(script).toContain("install ollama");
     expect(script).toContain("Upgrade declined.");
+    expect(
+      renderUpdateAgentWitchScript("https://www.agentwitch.com"),
+    ).toContain("agent_witch_ensure_ollama");
   });
 });

@@ -4,6 +4,7 @@ import { useCallback, useState, useSyncExternalStore } from "react";
 
 import { useAgentWitchDashboardSubscription } from "@/features/agent-witch/dashboard/useAgentWitchDashboardSubscription";
 import { postWorkflowRunStepRetry } from "@/features/agent/utils/postWorkflowRunStepRetry";
+import { readDelegatedWriterAgentFromStorage } from "@/features/agent/utils/readDelegatedWriterAgentFromStorage";
 import { parseWorkflowStepFailedSocketMessage } from "@/features/dispatch/utils/workflowHumanStepSocket";
 import { snoozeWorkflowFailureAttention } from "@/features/dispatch/utils/workflowAttentionSnoozeStore";
 import {
@@ -55,6 +56,7 @@ export function useWorkflowStepFailureListener(): {
 
     const result = await postWorkflowRunStepRetry({
       workflowRunId: pendingFailure.workflowRunId,
+      writerAgent: readDelegatedWriterAgentFromStorage(),
     });
 
     setIsRetrying(false);

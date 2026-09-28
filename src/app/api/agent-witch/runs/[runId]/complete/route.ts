@@ -1,40 +1,15 @@
 import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
 import { getAgentRunRowById } from "@/lib/dispatch/agentRunEventQueries";
 import { markAgentRunCompleted } from "@/lib/dispatch/dispatchWriterRunToAgent";
+import {
+  parseAgentRunCompleteBody,
+  parseAgentRunEstimateComparisonBody,
+} from "@/lib/dispatch/parseAgentRunCompleteBody";
+import { setAgentRunEstimateComparison } from "@/lib/dispatch/setAgentRunEstimateComparison";
 import { getAgentWitchHub } from "@/lib/agentWitch/getAgentWitchHub";
 import { requireAgentWitchDeviceAuth } from "@/lib/agentWitch/requireAgentWitchDeviceAuth";
 
 export const dynamic = "force-dynamic";
-
-const parseCompleteBody = (
-  body: unknown,
-): {
-  readonly exitCode: number;
-  readonly output: string;
-  readonly outcomeCode: string | null;
-} | null => {
-  if (typeof body !== "object" || body === null) {
-    return null;
-  }
-
-  const exitCode = (body as { exitCode?: unknown }).exitCode;
-  const output = (body as { output?: unknown }).output;
-
-  if (typeof exitCode !== "number" || typeof output !== "string") {
-    return null;
-  }
-
-  const outcomeCode = (body as { outcomeCode?: unknown }).outcomeCode;
-
-  return {
-    exitCode,
-    output,
-    outcomeCode:
-      typeof outcomeCode === "string" && outcomeCode.trim().length > 0
-        ? outcomeCode.trim()
-        : null,
-  };
-};
 
 export async function POST(
   request: Request,
@@ -56,28 +31,39 @@ export async function POST(
     );
   }
 
-  const existingRun = existing;
+  const body = await request.json().catch(() => ({}));
+  const comparison = parseAgentRunEstimateComparisonBody(body);
+  const hub = getAgentWitchHub();
 
-  if (existingRun.status !== AgentRunStatus.RUNNING) {
-    return Response.json({ ok: true, run: existingRun });
+  if (existing.status !== AgentRunStatus.RUNNING) {
+    if (comparison === null) {
+      return Response.json({ ok: true, run: existing });
+    }
+
+    const updated = await setAgentRunEstimateComparison(hub, runId, comparison);
+    return Response.json({ ok: true, run: updated ?? existing });
   }
 
-  const body = await request.json().catch(() => ({}));
-
-  const parsed = parseCompleteBody(body);
+  const parsed = parseAgentRunCompleteBody(body);
 
   if (parsed === null) {
-    return Response.json(
-      { ok: false, error: "exitCode and output are required." },
-      { status: 400 },
-    );
+    if (comparison === null) {
+      return Response.json(
+        { ok: false, error: "exitCode and output are required." },
+        { status: 400 },
+      );
+    }
+
+    const updated = await setAgentRunEstimateComparison(hub, runId, comparison);
+    return Response.json({ ok: true, run: updated ?? existing });
   }
 
   const completed = await markAgentRunCompleted(
-    getAgentWitchHub(),
+    hub,
     runId,
     parsed.exitCode,
     parsed.output,
+    comparison ?? undefined,
   );
 
   return Response.json({ ok: true, run: completed });

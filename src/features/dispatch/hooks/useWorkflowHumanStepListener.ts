@@ -4,6 +4,7 @@ import { useCallback, useSyncExternalStore, useState } from "react";
 
 import { useAgentWitchDashboardSubscription } from "@/features/agent-witch/dashboard/useAgentWitchDashboardSubscription";
 import { postWorkflowHumanStepComplete } from "@/features/agent/utils/postWorkflowHumanStepComplete";
+import { readDelegatedWriterAgentFromStorage } from "@/features/agent/utils/readDelegatedWriterAgentFromStorage";
 import { parseWorkflowHumanStepSocketMessage } from "@/features/dispatch/utils/workflowHumanStepSocket";
 import { snoozeWorkflowHumanAttention } from "@/features/dispatch/utils/workflowAttentionSnoozeStore";
 import {
@@ -65,6 +66,7 @@ export function useWorkflowHumanStepListener(): {
         stepRunId: pendingHumanStep.stepRunId,
         response,
         ...(skipped ? { skipped: true } : {}),
+        writerAgent: readDelegatedWriterAgentFromStorage(),
       });
 
       setIsSubmitting(false);

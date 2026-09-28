@@ -122,6 +122,7 @@ import {
   migrateLegacyAgentWitchInstallLogsForActiveProfiles,
   openInteractiveShellPty,
   queueTerminalStreamChunk,
+  publishAgentRunEstimateComparison,
   readInstallBundleVersionFromHeartbeatAck,
   registerAgentWitchProcessTraceHandlers,
   releaseAgentWitchMachineLease,
@@ -131,8 +132,13 @@ import {
   resolveAgentWitchCloudApiConfig,
   resolveAgentWitchWakePort,
   resolveWriterCliCommands,
-  runAgentRunPreEstimate,
-  buildMarketplacePlanEstimateTerminalStreamPayload,
+  beginAgentRunPreEstimate,
+  recordAgentRunPreEstimateOutput,
+  storeAgentRunTimeEstimateHistory,
+  beginAgentRunTokenPreEstimate,
+  recordAgentRunTokenPreEstimateOutput,
+  resolveTaskWriterEstimateLabel,
+  probeLocalRunClis,
   runLocalInstallBundleUpdate,
   runWriterEnsure,
   runWriterSessionStart,
@@ -147,7 +153,7 @@ import {
   supportsWriterSessionWarmup,
   terminateOtherAgentWitchClientProcesses,
   wrapPromptWithAgentRunReportInstruction,
-  wrapPromptWithPrerecordedAgentRunEstimate,
+  wrapPromptWithSidecarAgentRunEstimate,
   writeShellPtyInput,
 } from "./legacyScriptDeps";
 const HEARTBEAT_INTERVAL_MS = 30_000;
@@ -260,6 +266,41 @@ const dispatchWriterTask = async (
     });
     return;
   }
+
+  const writerLabel = resolveTaskWriterEstimateLabel({
+    writerAgent,
+    writerExecutionBackend: config.writerExecutionBackend,
+    configPath: config.layout.configPath,
+  });
+  const cliProbe = await probeLocalRunClis({
+    commands: {
+      claudeCommand: config.claudeCommand,
+      codexCommand: config.codexCommand,
+      cursorCommand: config.cursorCommand,
+      antigravityCommand: config.antigravityCommand,
+    },
+    writerAgent,
+  }).catch(() => null);
+  const estimateRequest =
+    agentRunId !== undefined
+      ? beginAgentRunPreEstimate({
+          wrappedPrompt: prompt,
+          writerLabel,
+          reportsDir: config.layout.reportsDir,
+          estimateModel: cliProbe?.estimateModel,
+          capabilityNote: cliProbe?.capabilityNote,
+        }).catch(() => null)
+      : null;
+  const tokenEstimateRequest =
+    agentRunId !== undefined
+      ? beginAgentRunTokenPreEstimate({
+          wrappedPrompt: prompt,
+          writerLabel,
+          reportsDir: config.layout.reportsDir,
+          estimateModel: cliProbe?.estimateModel,
+          capabilityNote: cliProbe?.capabilityNote,
+        }).catch(() => null)
+      : null;
 
   const needsWarmup =
     supportsWriterSessionWarmup(writerAgent) &&
@@ -439,55 +480,54 @@ const dispatchWriterTask = async (
     seedAgentRunReportFile({
       reportKey: resolvedReportKey,
       agentRunId,
-      userSummary: "Estimating how long this will take…",
+      userSummary: "Working on your Mac…",
     });
 
-    const preEstimate = await runAgentRunPreEstimate({
-      config,
-      writerAgent,
-      wrappedPrompt: promptWithProjectContext,
-      reportKey: resolvedReportKey,
-      agentRunId,
-      marketplaceTemplateId,
-      capabilityId,
-    });
+    const taskPromptForEstimate = promptWithProjectContext;
+    if (estimateRequest !== null) {
+      void estimateRequest
+        .then((draft) => {
+          if (draft === null) {
+            return;
+          }
+          const preEstimate = recordAgentRunPreEstimateOutput({
+            estimateOutput: draft.estimateOutput ?? "",
+            reportKey: resolvedReportKey,
+            agentRunId,
+            reportsDir: config.layout.reportsDir,
+            task: draft.task,
+            writerLabel: draft.writerLabel,
+            embedding: draft.embedding,
+          });
+          if (preEstimate.estimateSeconds === null) {
+            return;
+          }
 
-    if (preEstimate.marketplacePlanEstimate !== null) {
-      const planEstimateProgress =
-        buildMarketplacePlanEstimateTerminalStreamPayload({
-          runId: agentRunId,
-          diagnostics: preEstimate.marketplacePlanEstimate,
-        });
-      if (isTerminalStreamAccepted(agentRunId)) {
-        sendMessage(socket, {
-          type: "terminal.stream.chunk",
-          payload: planEstimateProgress,
-          requestId,
-        });
-      } else {
-        queueTerminalStreamChunk(agentRunId, planEstimateProgress.chunk);
-      }
+          publishAgentRunEstimateComparison(
+            config.layout.reportsDir,
+            agentRunId,
+          );
+
+          const estimateChunk = `${AGENT_RUN_WORKING_ESTIMATE_MARKER}\n${preEstimate.estimateSeconds}\n`;
+          if (isTerminalStreamAccepted(agentRunId)) {
+            sendMessage(socket, {
+              type: "terminal.stream.chunk",
+              payload: {
+                runId: agentRunId,
+                chunk: estimateChunk,
+              },
+              requestId,
+            });
+            return;
+          }
+
+          queueTerminalStreamChunk(agentRunId, estimateChunk);
+        })
+        .catch(() => undefined);
     }
 
-    if (preEstimate.estimateSeconds !== null) {
-      const estimateChunk = `${AGENT_RUN_WORKING_ESTIMATE_MARKER}\n${preEstimate.estimateSeconds}\n`;
-      if (isTerminalStreamAccepted(agentRunId)) {
-        sendMessage(socket, {
-          type: "terminal.stream.chunk",
-          payload: {
-            runId: agentRunId,
-            chunk: estimateChunk,
-          },
-          requestId,
-        });
-      } else {
-        queueTerminalStreamChunk(agentRunId, estimateChunk);
-      }
-    }
-
-    promptWithProjectContext = wrapPromptWithPrerecordedAgentRunEstimate(
-      promptWithProjectContext,
-      preEstimate,
+    promptWithProjectContext = wrapPromptWithSidecarAgentRunEstimate(
+      taskPromptForEstimate,
     );
 
     promptWithProjectContext = wrapPromptWithAgentRunReportInstruction(
@@ -499,6 +539,41 @@ const dispatchWriterTask = async (
         installDir: config.layout.installDir,
       },
     );
+  }
+
+  if (agentRunId !== undefined && estimateRequest !== null) {
+    void estimateRequest
+      .then((draft) => {
+        if (draft === null) {
+          return;
+        }
+        storeAgentRunTimeEstimateHistory({
+          estimateOutput: draft.estimateOutput ?? "",
+          agentRunId,
+          reportsDir: config.layout.reportsDir,
+          task: draft.task,
+          writerLabel: draft.writerLabel,
+          embedding: draft.embedding,
+        });
+      })
+      .catch(() => undefined);
+  }
+
+  if (agentRunId !== undefined && tokenEstimateRequest !== null) {
+    void tokenEstimateRequest
+      .then((draft) => {
+        if (draft === null) {
+          return;
+        }
+        recordAgentRunTokenPreEstimateOutput({
+          estimateOutput: draft.estimateOutput ?? "",
+          agentRunId,
+          reportsDir: config.layout.reportsDir,
+          task: draft.task,
+          writerLabel: draft.writerLabel,
+        });
+      })
+      .catch(() => undefined);
   }
 
   const hasRunScopedOverlay =

@@ -15,6 +15,7 @@ import {
   resolveAgentWitchLocalLayout,
 } from "@agent-witch/install-layout";
 import { AWI_SHIPPED_MAIN_SCRIPT_FILE_NAME } from "@agent-witch/install-bundle/types";
+import { AGENT_WITCH_DEFAULT_ORIGIN } from "@agent-witch/shared/network";
 
 import {
   isRemoteAgentWitchBundleVersionNewer,
@@ -27,6 +28,7 @@ import {
   appendAgentWitchSelfUpdateLog,
   readAgentWitchSelfUpdateLogs,
 } from "./agentWitchSelfUpdateLog";
+import { ensureAgentWitchOllamaInstalled } from "./ensureAgentWitchOllamaInstalled";
 
 interface RemoteBundleManifest {
   readonly bundleVersion: string;
@@ -134,6 +136,14 @@ const kickstartServicesAfterUpdate = async (): Promise<void> => {
   await kickstartAgentWitchClientLaunchAgents();
 };
 
+const resolveAgentWitchSelfUpdateAppOrigin = (
+  wsUrl: string | null,
+  installAppOrigin: string | undefined,
+): string | null =>
+  wsUrl !== null
+    ? resolveAgentWitchAppOriginFromWsUrl(wsUrl)
+    : (installAppOrigin ?? AGENT_WITCH_DEFAULT_ORIGIN);
+
 const buildSelfUpdateResult = (
   result: Omit<AgentWitchSelfUpdateResult, "localBundleVersion"> & {
     readonly localBundleVersion?: string | null;
@@ -150,11 +160,19 @@ export const runAgentWitchSelfUpdate = async (input?: {
   const installDir = resolveAgentWitchInstallDir();
   const localVersion = readAgentWitchInstallVersion(installDir);
   const localBundleVersion = localVersion?.bundleVersion ?? null;
+  const ollamaEnsure = await ensureAgentWitchOllamaInstalled();
+  appendAgentWitchSelfUpdateLog({
+    event: "check_complete",
+    ok: ollamaEnsure.ok,
+    message: ollamaEnsure.message,
+    localBundleVersion,
+    remoteBundleVersion: null,
+  });
   const wsUrl = readConfigWsUrl(installDir);
-  const appOrigin =
-    wsUrl === null
-      ? (localVersion?.appOrigin ?? null)
-      : resolveAgentWitchAppOriginFromWsUrl(wsUrl);
+  const appOrigin = resolveAgentWitchSelfUpdateAppOrigin(
+    wsUrl,
+    localVersion?.appOrigin,
+  );
 
   if (appOrigin === null) {
     const result = buildSelfUpdateResult(

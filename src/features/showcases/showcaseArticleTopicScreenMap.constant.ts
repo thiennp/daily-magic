@@ -31,6 +31,7 @@ export const SHOWCASE_ARTICLE_TOPIC_SCREEN_BY_SLUG: Readonly<
   "not-a-slack-replacement": SHOWCASE_TOPIC_SCREEN.CONCEPT,
   "works-without-n8n": SHOWCASE_TOPIC_SCREEN.CONCEPT,
   "not-just-another-chatgpt": SHOWCASE_TOPIC_SCREEN.CONCEPT,
+  "prompt-optimizer-in-the-project": SHOWCASE_TOPIC_SCREEN.MAC_STATUS,
   "what-phone-can-do-alone": SHOWCASE_TOPIC_SCREEN.MOBILE,
   "when-executor-mac-is-offline": SHOWCASE_TOPIC_SCREEN.MAC_STATUS,
   "why-local-mac-not-cloud": SHOWCASE_TOPIC_SCREEN.MAC_STATUS,

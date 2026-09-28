@@ -31,6 +31,7 @@ export interface AgentBootstrapManifest {
   readonly gitHooks: {
     readonly sources: readonly string[];
     readonly preCommit: readonly AgentBootstrapGitHookStep[];
+    readonly prePush: readonly AgentBootstrapGitHookStep[];
     readonly commitMsg: {
       readonly conventional: readonly string[];
       readonly ticketPrefix: readonly string[];

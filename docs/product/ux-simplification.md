@@ -103,6 +103,8 @@ See [concepts.md](concepts.md) for engineer glossary; UI should prefer the table
 
 **AWL** (`http://127.0.0.1:43347`): full Mac app (tasks, projects, playbooks, memory, health). Not duplicated in AWC primary nav; AWC links here when the user works on this Mac.
 
+On desktop, AWC and AWL primary nav sits in a left sidebar at the top of the window. Smaller screens keep AWC’s bottom bar and AWL’s header links.
+
 ---
 
 ## UX principles

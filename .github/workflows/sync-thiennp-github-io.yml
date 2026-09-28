@@ -14,10 +14,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Push Agent Witch HTML to portfolio repo
-        if: ${{ secrets.THIENNP_GITHUB_IO_DEPLOY_TOKEN != '' }}
         env:
           THIENNP_GITHUB_IO_DEPLOY_TOKEN: ${{ secrets.THIENNP_GITHUB_IO_DEPLOY_TOKEN }}
-        run: bash .agents/scripts/pushThiennpGithubIo.sh
-      - name: Skip (no deploy token)
-        if: ${{ secrets.THIENNP_GITHUB_IO_DEPLOY_TOKEN == '' }}
-        run: echo "Set THIENNP_GITHUB_IO_DEPLOY_TOKEN to sync thiennp.github.io"
+        run: |
+          if [ -z "$THIENNP_GITHUB_IO_DEPLOY_TOKEN" ]; then
+            echo "Set THIENNP_GITHUB_IO_DEPLOY_TOKEN to sync thiennp.github.io"
+            exit 0
+          fi
+          bash .agents/scripts/pushThiennpGithubIo.sh

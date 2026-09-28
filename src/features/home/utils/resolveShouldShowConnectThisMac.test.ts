@@ -14,7 +14,7 @@ describe("resolveShouldShowConnectThisMac (HOME-036/028)", () => {
     expect(
       resolveShouldShowConnectThisMac({
         ...baseInput,
-        operatingSystem: "windows",
+        operatingSystem: "other",
         localTokenHash: "abc",
         devices: [],
       }),
@@ -48,6 +48,16 @@ describe("resolveShouldShowConnectThisMac (HOME-036/028)", () => {
         ...baseInput,
         operatingSystem: "other",
         devices: [{ tokenHash: "abc" }],
+      }),
+    ).toBe(true);
+  });
+
+  it("HOME-053: shows connect on Linux with no devices yet", () => {
+    expect(
+      resolveShouldShowConnectThisMac({
+        ...baseInput,
+        operatingSystem: "linux",
+        devices: [],
       }),
     ).toBe(true);
   });

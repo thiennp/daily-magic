@@ -33,7 +33,7 @@ Runbook: [deployment.md](../../development/deployment.md).
 
 ### Docker image note
 
-Production image must include `apps/` and `packages/` so `tsx` resolves `@agent-witch/*` path aliases at runtime (`tsconfig.json` `paths`).
+Production image must include `apps/` and `packages/` so `tsx` resolves `@agent-witch/*` path aliases at runtime (`tsconfig.json` `paths`). The image omits the root `test/` directory. Next typechecks every TypeScript file it copies, and those tests import `.agents`, which the image does not ship.
 
 ---
 

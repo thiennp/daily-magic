@@ -17,6 +17,8 @@ Pairing and honest **Mac status** are the trust foundation for every pillar: age
 
 The cloud **never** runs your shell jobs. It **dispatches** to your Mac and streams results back ([overview](../../overview.md)).
 
+A **Linux browser** can use this Console. On desktop Linux, Home shows a terminal install command for this computer. An **x86_64 Linux** host can then receive Tasks. The Mac app and the “this computer” badge stay on macOS ([Q&A: Linux browser vs Linux host](../../qa/linux-browser-vs-linux-host.md)). Windows Home installs the host inside WSL and lists it as a Linux device. Phones still say to install on a Mac.
+
 ---
 
 ## Install
@@ -52,6 +54,12 @@ Requires `npm run dev` (custom `server.ts`) so WebSocket upgrades work—not pla
 | **Agent Witch on this Mac** (Mac app) | `http://127.0.0.1:43347`                                                      | Projects/folders, local tasks, playbooks, memory, connection health UI                                 |
 | **Console**                           | `https://www.agentwitch.com`                                                  | Daily **Tasks** and **Runs**                                                                           |
 
+**Prompt SDLC** is in the Mac app at `http://127.0.0.1:43347/prompt-sdlc`. Instructions and a sample you can run are at `http://127.0.0.1:43347/prompt-sdlc/guide`. History on that page shows a short title for each run, and Delete removes that run. Steps in a run are a timeline. The pass score is a slider that defaults to 90. Its track fades from red through orange and yellow to green, and a mark shows the usual 90. While a run is working, the form under that run keeps the goal, prompt, folder, score, and writers you chose, and those fields stay locked. Judge and improver stay blank until you choose them. Each list includes I'll score it and I'll rewrite it, so you can do that step yourself. A score needs a reason. The improver, writer or you, receives that score and that reason. A writer that has already checked out stays ready until that writer returns an error.
+
+The judge and the improver run in the folder you chose, so they can read the Playbook and the code. An optimizer that runs somewhere else cannot see that folder, so its score is not about this project. Choose the project folder when the prompt is about that code. The home page states this difference, and the article is [A prompt optimizer that can see the project](https://www.agentwitch.com/showcases/prompt-optimizer-in-the-project).
+
+A bot on this Mac runs the same loop itself before it sends a Task. It calls `http://127.0.0.1:43347/prompt-sdlc/agent`. It does not ask you to paste the prompt into a different optimizer. The steps are on the [agent guideline](/for-agents).
+
 **Honest UX:** Opening the Mac app proves the runtime is up locally; it does **not** by itself prove the **Console** can dispatch **right now** ([reconnecting Q&A](../../qa/awc-mac-reconnecting-vs-local-live.md)).
 
 Why the browser may call `127.0.0.1` from a public site: [AWB localhost identity and CORS](../../qa/awb-localhost-identity-and-cors.md).
@@ -79,7 +87,7 @@ Install registers **LaunchAgents** so the helper restarts after login. A **watch
 
 ### Update local
 
-When Home or the composer shows **Update needed**, run **Update** from Mac settings or the Mac app. Updates rewrite install files and may restart bridge/runtime.
+When Home or the composer shows **Update needed**, run **Update** from Mac settings or the Mac app. Updates rewrite install files and may restart bridge/runtime. A Mac that has not saved an app origin yet still downloads the bundle from `https://www.agentwitch.com`.
 
 **Honest UX:** A bad LaunchAgent plist after update once left the bridge down while cloud still showed **Seen recently** ([Q&A: update local reconnecting](../../qa/awi-update-local-launchagent-plist.md)). New bundles heal invalid plists; if status stays wrong, use Mac settings **Update** and check watchdog logs—not repeated full reinstalls.
 

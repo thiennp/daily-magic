@@ -79,10 +79,51 @@ export const buildLocalHarnessRevealClientScript = (): string => `(() => {
   };
 
   document.getElementById("pickFolder")?.addEventListener("click", async () => {
-    const response = await fetch("/api/harness/pick-folder", { method: "POST" });
-    const payload = await response.json();
-    if (scanInput instanceof HTMLInputElement && typeof payload.path === "string") {
-      scanInput.value = payload.path;
+    const status = document.getElementById("pickFolderStatus");
+    const unavailableMessage =
+      "Folder picker is only available on the Mac that runs Agent Witch. Type the folder path instead.";
+    const showPickerUnavailable = () => {
+      if (status instanceof HTMLElement) {
+        status.textContent = unavailableMessage;
+        status.hidden = false;
+        return;
+      }
+      window.alert(unavailableMessage);
+    };
+    const clearPickerStatus = () => {
+      if (status instanceof HTMLElement) {
+        status.textContent = "";
+        status.hidden = true;
+      }
+    };
+
+    const response = await fetch("/api/harness/pick-folder", {
+      method: "POST",
+    }).catch(() => null);
+    if (response === null || !response.ok) {
+      showPickerUnavailable();
+      return;
+    }
+
+    const payload = await response.json().catch(() => null);
+    const cancelled =
+      payload !== null &&
+      typeof payload === "object" &&
+      payload.cancelled === true;
+    const pickedPath =
+      payload !== null &&
+      typeof payload === "object" &&
+      typeof payload.path === "string"
+        ? payload.path
+        : "";
+    if (cancelled || pickedPath.trim().length === 0) {
+      showPickerUnavailable();
+      return;
+    }
+
+    clearPickerStatus();
+    if (scanInput instanceof HTMLInputElement) {
+      scanInput.value = pickedPath;
       syncRevealButtonVisibility();
     }
   });
@@ -212,7 +253,7 @@ export const buildAgentWitchLocalHarnessPageBody = (input: {
   const cloudBanner = buildAgentWitchLocalCloudBanner({
     cloudAppOrigin: input.cloudAppOrigin,
     manageHref: `${input.cloudAppOrigin}/marketplace`,
-    manageLabel: "Install playbooks on Agent Witch Live",
+    manageLabel: "Install playbooks in Agent Witch Console",
     body: "Install and update playbooks in the browser; this Mac keeps a copy under your profile harness. Use Projects to link sets into a repo’s .cursor tree.",
   });
 
@@ -259,7 +300,10 @@ export const buildAgentWitchLocalHarnessPageBody = (input: {
           <input class="input" id="scanFolder" name="scanFolder" type="text" value="${escapeHtml(input.scanFolder)}" placeholder="~" autocomplete="off" data-last-reveal-scan="${escapeHtml(lastRevealScanFolder)}" />
         </label>
         <div class="actions">
-          <button class="btn btn-secondary" type="button" id="pickFolder">Choose folder…</button>
+          <div>
+            <button class="btn btn-secondary" type="button" id="pickFolder">Choose folder…</button>
+            <p class="muted" id="pickFolderStatus" hidden></p>
+          </div>
           <button class="btn btn-primary" type="button" id="revealStart"${hideRevealInitially ? " hidden" : ""}>Reveal</button>
           <button class="btn btn-secondary" type="button" id="revealStop" hidden>Stop</button>
         </div>

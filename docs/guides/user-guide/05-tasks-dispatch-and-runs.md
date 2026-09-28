@@ -54,8 +54,9 @@ Optional **Cursor Cloud** dispatch (when configured) targets cloud agents instea
 | **Mac is reconnecting. Your task will send when it checks in.** | HTTP accepted; outbox will flush when hub socket is live—common right after Console deploy. |
 | **Try again in a few seconds.**                                 | Interactive retry path—not the same as queued writer ack.                                   |
 | Mac offline                                                     | No dispatch; fix connect chapter—not “wait silently forever.”                               |
+| **This computer is not linked**                                 | No row is **this Mac**. **Connect this Mac** on Home links the computer you are using.      |
 
-Details: [Reconnecting vs local live](../../qa/awc-mac-reconnecting-vs-local-live.md).
+Details: [Reconnecting vs local live](../../qa/awc-mac-reconnecting-vs-local-live.md) · [No Connect button](../../qa/awc-offline-devices-hide-connect-button.md).
 
 ---
 
@@ -148,7 +149,7 @@ Test dispatch without Home: developer `ws-test` UI ([local bridge](../../agent-w
 
 ## Sending a Task from an external AI
 
-After the AI opens `/for-agents` from the homepage prompt and registers (method `none` or `agentmail`), it runs `get_install_command` on its computer, saves a workflow with `create_workflow`, and installs the Playbook with `install_harness`. `run_workflow` and `send_task` use the same Run pipeline as the composer. If `list_macs` is empty, the install command has not finished. Read status with `list_runs` and `get_run`.
+After the AI opens `/for-agents` from the homepage prompt and registers (method `none` or `agentmail`), it runs `get_install_command` on its computer, saves a workflow with `create_workflow`, and installs the Playbook with `install_harness`. Before `send_task`, it runs Prompt SDLC on this Mac (`http://127.0.0.1:43347/prompt-sdlc/agent`) in the project folder, so the judge and improver can read the Playbook and the code. It does not ask you to paste the prompt into a different optimizer. `run_workflow` and `send_task` use the same Run pipeline as the composer. If `list_macs` is empty, the install command has not finished. Read status with `list_runs` and `get_run`. The home page section **Prompt SDLC** states why that local score is the one to trust.
 
 ---
 

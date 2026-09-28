@@ -15,7 +15,13 @@ describe("buildWriterCliInvocation", () => {
       buildWriterCliInvocation("claude-cli", "  run tests  ", commands),
     ).toEqual({
       command: "claude",
-      args: ["-p", "--dangerously-skip-permissions", "run tests"],
+      args: [
+        "-p",
+        "--output-format",
+        "json",
+        "--dangerously-skip-permissions",
+        "run tests",
+      ],
     });
   });
 
@@ -26,7 +32,14 @@ describe("buildWriterCliInvocation", () => {
       }),
     ).toEqual({
       command: "claude",
-      args: ["--continue", "-p", "--dangerously-skip-permissions", "follow up"],
+      args: [
+        "--continue",
+        "-p",
+        "--output-format",
+        "json",
+        "--dangerously-skip-permissions",
+        "follow up",
+      ],
     });
   });
 

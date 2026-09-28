@@ -1,4 +1,5 @@
 import HomeAgentAccessPrompt from "@/features/agent-access/HomeAgentAccessPrompt";
+import HomePromptSdlcSection from "@/features/home/components/HomePromptSdlcSection";
 import MyOfferingsPanel from "@/features/capabilities/MyOfferingsPanel";
 import TeamDirectoryPanel from "@/features/capabilities/TeamDirectoryPanel";
 import FeedbackInboxPanel from "@/features/feedback/FeedbackInboxPanel";
@@ -63,7 +64,12 @@ export default async function HomeAuthenticatedView({
           </aside>
 
           <main className={HOME_MAIN_COLUMN_CLASS}>
-            <HomeOnboardingMainPanel user={user} />
+            <HomeOnboardingMainPanel
+              user={user}
+              installCommand={installCommand}
+              isWebSocketSupported={isWebSocketSupported}
+              host={host}
+            />
             <HomeProjectsPanel />
             <MyOfferingsPanel />
             <TeamDirectoryPanel />
@@ -80,6 +86,7 @@ export default async function HomeAuthenticatedView({
       <div className={HOME_DASHBOARD_GRID_CLASS}>
         <div className={HOME_MAIN_COLUMN_CLASS}>
           <HomeAgentAccessPrompt />
+          <HomePromptSdlcSection />
           <HomeCollapsibleMarketingShowcases />
         </div>
       </div>

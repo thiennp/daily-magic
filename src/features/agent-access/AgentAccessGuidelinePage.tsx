@@ -1,7 +1,8 @@
 import type { ReactElement } from "react";
 
-import MarketingShell from "@/features/marketing/MarketingShell";
+import { MARKETING_PAGE_BACKGROUND_CLASSES } from "@/features/marketing/marketingDesignSystem.constant";
 import {
+  MARKETING_LIGHT_SURFACE_CLASS,
   MARKETING_TEXT_PRIMARY_CLASSES,
   MARKETING_TEXT_SECONDARY_CLASSES,
 } from "@/features/marketing/marketingSurfaceClasses.constant";
@@ -14,8 +15,10 @@ export default function AgentAccessGuidelinePage(): ReactElement {
   const liveGuide = buildAgentAccessLiveGuide();
 
   return (
-    <MarketingShell>
-      <article className="mx-auto max-w-3xl py-2 sm:py-4">
+    <article
+      className={`${MARKETING_LIGHT_SURFACE_CLASS} ${MARKETING_PAGE_BACKGROUND_CLASSES} min-h-screen px-6 py-10`}
+    >
+      <div className="mx-auto max-w-3xl">
         <h1
           className={mergeMarketingClasses(
             "text-3xl font-semibold tracking-tight sm:text-4xl",
@@ -81,7 +84,7 @@ export default function AgentAccessGuidelinePage(): ReactElement {
             </section>
           ))}
         </div>
-      </article>
-    </MarketingShell>
+      </div>
+    </article>
   );
 }

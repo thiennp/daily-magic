@@ -96,7 +96,14 @@ export const buildWriterCliInvocation = (
   if (writerAgent === "claude-cli") {
     return {
       command: commands.claudeCommand,
-      args: [...continueArgs, "-p", "--dangerously-skip-permissions", prompt],
+      args: [
+        ...continueArgs,
+        "-p",
+        "--output-format",
+        "json",
+        "--dangerously-skip-permissions",
+        prompt,
+      ],
     };
   }
 

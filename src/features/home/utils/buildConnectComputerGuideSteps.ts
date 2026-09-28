@@ -31,16 +31,50 @@ const buildConnectComputerGuideSteps = (
   if (operatingSystem === "windows") {
     return [
       {
-        title: "Use a Mac",
+        title: "Open Windows Terminal",
         description:
-          "Agent Witch installs on macOS. Switch to the Mac you want to connect, then follow the steps below on that computer.",
+          "On this Windows computer, open Windows Terminal or PowerShell. The agent host runs inside WSL (a Linux environment on Windows).",
       },
-      ...MAC_TERMINAL_STEPS,
+      {
+        title: "Install WSL if this PC does not have it",
+        description:
+          "Run wsl --install, restart if Windows asks, then open the Ubuntu tab. Skip this step when wsl -l already lists a distribution.",
+      },
+      {
+        title: CONNECT_COMPUTER_COPY_STEP_TITLE,
+        description:
+          "The command is tied to the account you are signed in with. Paste it inside the WSL terminal, not in PowerShell.",
+      },
+      {
+        title: "Paste into WSL and run it",
+        description:
+          "In the Ubuntu tab, paste with Ctrl+Shift+V, then press Enter. The installer starts a systemd user service inside WSL. This computer then appears as a Linux device.",
+      },
     ];
   }
 
   if (operatingSystem === "mac") {
     return MAC_TERMINAL_STEPS;
+  }
+
+  if (operatingSystem === "linux") {
+    return [
+      {
+        title: "Open a terminal",
+        description:
+          "On this Linux computer, open a terminal. The install command pairs this machine to the account you are signed in with.",
+      },
+      {
+        title: CONNECT_COMPUTER_COPY_STEP_TITLE,
+        description:
+          "The command is tied to the account you are signed in with. It installs the agent host for this Linux user and does not replace other accounts.",
+      },
+      {
+        title: "Paste into the terminal and run it",
+        description:
+          "Click inside the terminal, paste with Ctrl+Shift+V, then press Enter. The installer starts a systemd user service on this computer.",
+      },
+    ];
   }
 
   return [

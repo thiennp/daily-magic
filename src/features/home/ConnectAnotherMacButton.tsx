@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useState, useSyncExternalStore } from "react";
 
 import { APP_SURFACE_TEXT_LINK_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
 import ConnectAnotherMacModal from "@/features/home/ConnectAnotherMacModal";
@@ -8,7 +8,9 @@ import ConnectInstallPasteModal from "@/features/home/ConnectInstallPasteModal";
 import useConnectInstallPasteModalDismissal from "@/features/home/hooks/useConnectInstallPasteModalDismissal";
 import useLocalMacBrowserContext from "@/features/home/hooks/useLocalMacBrowserContext";
 import usePersonalizedAgentWitchInstallCommand from "@/features/home/hooks/usePersonalizedAgentWitchInstallCommand";
+import detectBrowserOperatingSystem from "@/features/home/utils/detectBrowserOperatingSystem";
 import { resolveConnectAnotherMacLabel } from "@/features/home/utils/resolveConnectAnotherMacLabel";
+import { shouldOpenConnectInstallPasteModal } from "@/features/home/utils/shouldOpenConnectInstallPasteModal";
 import { shouldShowAgentWitchAppDownloadCta } from "@/features/home/utils/shouldShowAgentWitchAppDownloadCta";
 
 interface ConnectAnotherMacButtonProps {
@@ -18,6 +20,10 @@ interface ConnectAnotherMacButtonProps {
   readonly hasExistingDevices: boolean;
   readonly className?: string;
 }
+
+const subscribeToOperatingSystem = () => () => undefined;
+
+const getServerOperatingSystemSnapshot = () => "other" as const;
 
 export default function ConnectAnotherMacButton({
   installCommand,
@@ -42,6 +48,17 @@ export default function ConnectAnotherMacButton({
     isCheckingLocalApp,
     isLocalAppInstalled,
   });
+  const operatingSystem = useSyncExternalStore(
+    subscribeToOperatingSystem,
+    detectBrowserOperatingSystem,
+    getServerOperatingSystemSnapshot,
+  );
+
+  const handleInstallEngaged = useCallback(() => {
+    if (shouldOpenConnectInstallPasteModal(operatingSystem)) {
+      setIsPasteModalOpen(true);
+    }
+  }, [operatingSystem]);
 
   const handleClosePasteModal = useCallback(() => {
     setIsPasteModalOpen(false);
@@ -81,9 +98,7 @@ export default function ConnectAnotherMacButton({
         onClose={() => {
           setIsModalOpen(false);
         }}
-        onInstallEngaged={() => {
-          setIsPasteModalOpen(true);
-        }}
+        onInstallEngaged={handleInstallEngaged}
       />
       <ConnectInstallPasteModal
         isOpen={isPasteModalOpen}

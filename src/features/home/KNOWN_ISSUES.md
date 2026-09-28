@@ -524,6 +524,78 @@ Document every production bug or UX regression here. Each entry must link to a t
 
 ---
 
+## HOME-053 — Linux browser told to install on a Mac
+
+**Symptom:** A desktop Linux browser on Home saw “Agent Witch installs on macOS” and, with no devices yet, hid Connect entirely.
+
+**Root cause:** OS detection folded Linux into `other`, and Connect was hidden for every non-Mac browser until a device already existed.
+
+**Fix:** `detectBrowserOperatingSystem` returns `linux`. Connect stays visible, and the guide plus Connect modal show the terminal install command.
+
+**Regression tests:** `detectBrowserOperatingSystem.test.ts`, `buildConnectComputerGuideSteps.test.ts`, `resolveShouldShowConnectThisMac.test.ts` (HOME-053).
+
+---
+
+## HOME-054 — Linux connect guide showed macOS paste modal
+
+**Symptom:** On desktop Linux, copying the install command on the Home connect guide opened “Paste into Terminal” with Command (⌘) + V instructions.
+
+**Root cause:** `useHomeConnectComputerGuideFlow` always opened `ConnectInstallPasteModal` on copy; only `useConnectThisMacRowFlow` skipped it for non-Mac browsers.
+
+**Fix:** `shouldOpenConnectInstallPasteModal` — paste modal only when `operatingSystem === "mac"`. Guide flow passes OS into the hook.
+
+**Regression test:** `shouldOpenConnectInstallPasteModal.test.ts` (HOME-054).
+
+---
+
+## HOME-055 — Windows browser told to install on a Mac
+
+**Symptom:** A Windows browser on Home saw “Agent Witch installs on macOS” and hid Connect until a device already existed.
+
+**Root cause:** Connect steps treated Windows as a phone, and Connect stayed hidden for every non-Mac, non-Linux browser with an empty device list.
+
+**Fix:** Windows Home shows WSL install steps and the same bash command, pasted inside Ubuntu. The host is the Linux runner inside WSL and appears as a Linux device. Native Windows without WSL is not a host.
+
+**Regression tests:** `buildConnectComputerGuideSteps.test.ts`, `resolveShouldShowConnectThisMac.windows.test.ts` (HOME-055).
+
+---
+
+## HOME-056 — Connect another Mac opened macOS paste modal on Windows
+
+**Symptom:** On a Windows or Linux browser, copying the install command from **Connect another Mac** (empty device list or device panel footer) opened “Paste into Terminal” with Command (⌘) + V instructions.
+
+**Root cause:** HOME-054 gated the paste modal in the connect guide and **Connect this Mac** row only; `ConnectAnotherMacButton` always called `setIsPasteModalOpen(true)` on copy.
+
+**Fix:** `ConnectAnotherMacButton` uses `shouldOpenConnectInstallPasteModal(operatingSystem)` like the other connect flows.
+
+**Regression test:** `ConnectAnotherMacButton.test.ts` (HOME-056).
+
+---
+
+## HOME-057 — No Connect button when this Mac is not in the list
+
+**Symptom:** Home listed other computers as offline, none marked **this Mac**, and there was no **Connect this Mac** button. **Mac settings & connect** only opened Your setup.
+
+**Root cause:** After a skipped wake-identity probe (token already stored, or a previous failed probe suppressed in sessionStorage), identity status stayed `idle`. `isCheckingLocalHostname` treated every `idle` state as still checking, so `resolveShouldShowConnectThisMac` hid the button even though no device matched this browser.
+
+**Fix:** `resolveIsCheckingLocalMacIdentity` is pending only while a probe will run or is loading. When this computer is not linked, Home shows **Connect this Mac** in the hero and under Your Devices, and the banner says **This computer is not linked**.
+
+**Regression tests:** `resolveIsCheckingLocalMacIdentity.test.ts`, `resolveHomeMacStatusForBrowser.test.ts` (HOME-057).
+
+---
+
+## HOME-058 — Reconnecting banner when this computer is not linked
+
+**Symptom:** Home showed **Mac reconnecting** in the hero while **Connect this Mac** was visible because another account Mac was only `recent`, even though this browser was not linked yet.
+
+**Root cause:** `resolveHomeMacStatusForBrowser` rewrote the banner only when aggregate tone was `offline`, not `sleeping` (`recent` / `live_other_instance`).
+
+**Fix:** When `shouldShowConnectThisMac` is true, use **This computer is not linked** for every non-`online` tone except `none` (empty device list).
+
+**Regression test:** `resolveHomeMacStatusForBrowser.test.ts` (HOME-058).
+
+---
+
 ## Adding issues
 
-Use the next ID (`HOME-050`, …). Include symptom, root cause, fix paths, and test file.
+Use the next ID (`HOME-059`, …). Include symptom, root cause, fix paths, and test file.

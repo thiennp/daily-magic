@@ -1,0 +1,7 @@
+export const PROMPT_SDLC_PASS_SCORE = 90;
+
+export const PROMPT_SDLC_MAX_ROUNDS = 3;
+
+export const PROMPT_SDLC_GOAL_MAX_LENGTH = 2_000;
+
+export const PROMPT_SDLC_PROMPT_MAX_LENGTH = 20_000;

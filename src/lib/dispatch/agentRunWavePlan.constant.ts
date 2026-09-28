@@ -6,7 +6,7 @@ export const AGENT_RUN_WAVE_STATUS_MARKER = "[[WAVE_STATUS]]";
 
 export const AGENT_RUN_WAVE_PLAN_INSTRUCTION = [
   "When the work can be split, prefer small waves and delegate independent pieces to subagents (or focused sequential agents) so each finished piece can enrich the report:",
-  "1. Soon after your overall [[WORKING_ESTIMATE]], emit a plan:",
+  "1. Soon after you start, emit a plan:",
   AGENT_RUN_WAVE_PLAN_MARKER,
   "2. Then one line per wave or agent, exactly:",
   "W|<waveId>|<short wave title>|<estimateSeconds>",

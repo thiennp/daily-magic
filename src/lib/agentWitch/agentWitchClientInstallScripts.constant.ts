@@ -1,3 +1,4 @@
+import { AGENT_WITCH_CLIENT_INSTALL_ESTIMATE_SCRIPT_NAMES } from "@/lib/agentWitch/agentWitchClientInstallEstimateScripts.constant";
 import { AGENT_WITCH_CLIENT_INSTALL_WRITER_API_SCRIPT_NAMES } from "@/lib/agentWitch/agentWitchClientInstallWriterApiScripts.constant";
 
 /** Auxiliary scripts required by ~/.agent-witch/agent-witch.ts (downloaded on every install). */
@@ -77,6 +78,7 @@ export const AGENT_WITCH_CLIENT_INSTALL_SCRIPT_NAMES = [
   "agentWitchRunReport.ts",
   "agentWitchReportCli.ts",
   "runAgentRunPreEstimate.ts",
+  ...AGENT_WITCH_CLIENT_INSTALL_ESTIMATE_SCRIPT_NAMES,
   "agentWitchHeadlessWriterRun.ts",
   "agentWitchLocalApp.ts",
   "handleAgentWitchWriterEnsure.ts",
@@ -93,7 +95,6 @@ export const AGENT_WITCH_CLIENT_INSTALL_SCRIPT_NAMES = [
   "dispatch/extractUserTaskFromWrappedPrompt.ts",
   "dispatch/formatAgentRunEstimateSummary.ts",
   "dispatch/parseAgentRunWorkingEstimateSeconds.ts",
-  "dispatch/wrapPromptWithPrerecordedAgentRunEstimate.ts",
   "dispatch/AgentRunStatus.constant.ts",
   "dispatch/DispatchPolicy.constant.ts",
   "dispatch/types/AgentRunRecord.type.ts",
