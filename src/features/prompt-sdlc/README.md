@@ -11,7 +11,7 @@ Console pointer to Prompt SDLC. The loop runs in Agent Witch Live (`http://127.0
 
 ## Product concepts
 
-The prompt is the artifact. A cycle stores the source prompt, each revision, and each judgement. On Agent Witch Live, judge and improver are installed reasoning writers, or you. Local and small models are not used. The console composer still lists Cursor Cloud for an older path; the page people open only links to Live.
+The prompt is the artifact. A cycle stores the source prompt, each revision, and each judgement. The loop continues until the score reaches the pass score. Later rewrites include earlier rounds, and include earlier prompt text when the score is not rising. On Agent Witch Live, judge and improver are installed reasoning writers, or you. Local and small models are not used. The console composer still lists Cursor Cloud for an older path; the page people open only links to Live.
 
 This feature does not write `capability_improvements` and does not run a workflow graph.
 

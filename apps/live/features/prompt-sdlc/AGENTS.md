@@ -5,3 +5,4 @@
 3. Do not use Ollama or other small local models.
 4. Writer calls run in the folder the user chose. The default is the home directory. Keep the reply file outside that folder.
 5. Bots call `GET` and `POST /prompt-sdlc/agent` on this Mac before they send a Task. One installed writer fills both roles when judge and improver are omitted. Do not accept `manual` on that API. The human page stays `/prompt-sdlc`.
+6. The loop continues until the score reaches the pass score. Do not stop it at a fixed round count. Later improver prompts include earlier rounds, and include earlier prompt text when the score is not rising.

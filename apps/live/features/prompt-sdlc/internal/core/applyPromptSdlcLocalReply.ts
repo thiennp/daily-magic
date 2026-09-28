@@ -38,8 +38,6 @@ export const applyPromptSdlcLocalJudgeReply = (
   );
   const result = continueAfterJudgeReply({
     raw: rawReply,
-    round: cycle.currentRound,
-    maxRounds: cycle.maxRounds,
     passScore: cycle.passScore,
     goal: cycle.goal,
     promptText: revision?.promptText ?? "",

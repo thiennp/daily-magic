@@ -1,5 +1,6 @@
 export const PROMPT_SDLC_PASS_SCORE = 90;
 
+/** Stored on the cycle row. A run does not stop at this count. */
 export const PROMPT_SDLC_MAX_ROUNDS = 3;
 
 export const PROMPT_SDLC_GOAL_MAX_LENGTH = 2_000;

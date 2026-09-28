@@ -37,8 +37,9 @@ export default function PromptSdlcGuideNotes(): ReactElement {
             Below that score, the improver returns the next prompt text only.
           </li>
           <li>
-            The judge scores that new prompt. This repeats until a score passes
-            or 3 rounds finish.
+            The judge scores that new prompt. This repeats until the score
+            reaches the pass score. Later rewrites include earlier rounds. When
+            the score is not rising, those earlier prompts are included too.
           </li>
         </ol>
         <p className={APP_SURFACE_BODY_TEXT_CLASS}>
@@ -52,11 +53,9 @@ export default function PromptSdlcGuideNotes(): ReactElement {
         <p className={APP_SURFACE_BODY_TEXT_CLASS}>
           Round 0 is your text. Later rounds are rewrites. Each judged round
           shows the score and the reason. Passed means the score reached the
-          pass score you set. Stopped means three rounds finished below that
-          score, so use the latest prompt or change the goal and run again.
-          Failed means the judge did not return a score, the improver returned
-          nothing, or the call could not start. The message on the page names
-          which one.
+          pass score you set. The run keeps going until that happens. Failed
+          means the judge did not return a score, the improver returned nothing,
+          or the call could not start. The message on the page names which one.
         </p>
       </section>
       <section className="space-y-3">

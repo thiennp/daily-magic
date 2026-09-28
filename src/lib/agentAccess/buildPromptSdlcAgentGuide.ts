@@ -11,7 +11,7 @@ export const buildPromptSdlcAgentGuide = () => ({
   context: PROMPT_SDLC_LOCAL_CONTEXT_REASON,
   useItYourself:
     "Before send_task, or before you save a prompt, POST your own prompt here. Do not ask the human to paste it into a different optimizer.",
-  poll: `GET ${PROMPT_SDLC_AGENT_URL}?cycle=<cycleId> until done is true. When status is passed, use the returned prompt. When status is stopped, it did not reach the pass score. When status is failed, do not use the prompt.`,
+  poll: `GET ${PROMPT_SDLC_AGENT_URL}?cycle=<cycleId> until done is true. The loop keeps rewriting until the score passes. When status is passed, use the returned prompt. When status is failed, do not use the prompt.`,
   writers:
     "GET lists installed writer ids. Set judge and improver to those ids. When only one writer is installed, omit both and that writer fills both roles. Do not send manual. Scoring or rewriting by hand is the human page.",
 });

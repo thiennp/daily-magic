@@ -14,13 +14,13 @@ export const describePromptSdlcLocalActivity = (
     cycle.judgeModel === PROMPT_SDLC_MANUAL_ACTOR
   ) {
     return {
-      title: `Score round ${cycle.currentRound + 1} of ${cycle.maxRounds}.`,
+      title: `Score round ${cycle.currentRound + 1}.`,
       detail: "Add a score from 0 to 100 and the reason for that score.",
     };
   }
   if (cycle.status === "judging") {
     return {
-      title: `${labelPromptSdlcLocalModel(cycle.judgeModel)} is scoring round ${cycle.currentRound + 1} of ${cycle.maxRounds}.`,
+      title: `${labelPromptSdlcLocalModel(cycle.judgeModel)} is scoring round ${cycle.currentRound + 1}.`,
       detail:
         "That writer is working on this Mac. This panel keeps updating, so the page is not stuck.",
     };

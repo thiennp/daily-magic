@@ -8,6 +8,7 @@ import {
   renderPromptSdlcLocalStepTree,
 } from "./buildPromptSdlcLocalStepTree";
 import { describePromptSdlcLocalActivity } from "./buildPromptSdlcLocalActivity";
+import { buildPromptSdlcLocalImproverHistory } from "./buildPromptSdlcLocalImproverHistory";
 import { isPromptSdlcLocalManualWait } from "./isPromptSdlcLocalManualWait";
 import { renderPromptSdlcLocalManualStep } from "./renderPromptSdlcLocalManualStep";
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
@@ -108,13 +109,21 @@ export const buildPromptSdlcLocalCycleSection = (
   const current = cycle.revisions.find(
     (item) => item.roundNumber === cycle.currentRound,
   );
+  const historyScore = current?.judgement?.score;
+  const history =
+    cycle.status === "improving" &&
+    historyScore !== null &&
+    historyScore !== undefined
+      ? buildPromptSdlcLocalImproverHistory(cycle, historyScore)
+      : null;
   const manual = isPromptSdlcLocalManualWait(cycle)
     ? renderPromptSdlcLocalManualStep({
         role: cycle.status === "judging" ? "judge" : "improve",
         cycleId: cycle.id,
         promptText: current?.promptText ?? "",
-        score: current?.judgement?.score ?? null,
+        score: historyScore ?? null,
         reasons: current?.judgement?.reasons ?? null,
+        history,
       })
     : "";
   return `<section class="card" id="prompt-sdlc-run" data-live="${live ? "true" : "false"}" data-since="${escapeHtml(cycle.updatedAt)}" aria-busy="${live ? "true" : "false"}"><p class="eyebrow">This run</p><div class="sdlc-working">${spinner}<div><h2>${escapeHtml(activity.title)}</h2>${detail}${folder}</div></div>${error}${renderPromptSdlcLocalScoreScale(cycle.passScore)}${steps}${manual}</section>${cycle.revisions.map(renderRevision).join("")}`;

@@ -94,7 +94,7 @@ describe("buildPromptSdlcLocalPageBody", () => {
       history: [],
     });
 
-    expect(html.indexOf("Claude is scoring round 1 of 3.")).toBeLessThan(
+    expect(html.indexOf("Claude is scoring round 1.")).toBeLessThan(
       html.indexOf("Optimize a prompt"),
     );
     expect(html).toContain("The reply stays inside the facts.");

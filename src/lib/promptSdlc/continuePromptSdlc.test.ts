@@ -12,8 +12,6 @@ describe("continuePromptSdlc", () => {
   it("passes, asks for a rewrite, or stops from the judge score", () => {
     const passed = continueAfterJudgeReply({
       raw: '{"score": 80, "passed": true, "reasons": "ready"}',
-      round: 0,
-      maxRounds: 3,
       passScore: 80,
       goal: "Ship the button",
       promptText: "Add a button",
@@ -23,12 +21,18 @@ describe("continuePromptSdlc", () => {
 
     const rewrite = continueAfterJudgeReply({
       raw: '{"score": 79, "passed": false, "reasons": "vague"}',
-      round: 0,
-      maxRounds: 3,
       passScore: 80,
       goal: "Ship the button",
       promptText: "Add a button",
       improver,
+      priorRounds: [
+        {
+          roundNumber: 0,
+          promptText: "Add something.",
+          score: 85,
+          reasons: "No screen.",
+        },
+      ],
     });
     expect(rewrite.continuation.type).toBe("call");
     if (rewrite.continuation.type === "call") {
@@ -37,12 +41,14 @@ describe("continuePromptSdlc", () => {
       expect(rewrite.continuation.prompt).toContain("Ship the button");
       expect(rewrite.continuation.prompt).toContain("Judge score: 79");
       expect(rewrite.continuation.prompt).toContain("vague");
+      expect(rewrite.continuation.prompt).toContain(
+        "Round 0 scored 85. No screen.",
+      );
+      expect(rewrite.continuation.prompt).toContain("Add something.");
     }
 
     const stopped = continueAfterJudgeReply({
       raw: "not a verdict",
-      round: 2,
-      maxRounds: 3,
       passScore: 80,
       goal: "Ship the button",
       promptText: "Add a button",
@@ -53,16 +59,14 @@ describe("continuePromptSdlc", () => {
       errorMessage: "The judge reply needs a score and a reason.",
     });
 
-    const capped = continueAfterJudgeReply({
+    const stillUnder = continueAfterJudgeReply({
       raw: '{"score": 10, "passed": false, "reasons": "still vague"}',
-      round: 2,
-      maxRounds: 3,
       passScore: 80,
       goal: "Ship the button",
       promptText: "Add a button",
       improver,
     });
-    expect(capped.continuation).toEqual({ type: "stopped" });
+    expect(stillUnder.continuation.type).toBe("call");
   });
 
   it("turns an improver reply into the next judge call", () => {

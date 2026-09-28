@@ -111,13 +111,13 @@ When fixing bridge/dispatch bugs:
 
 ## Related Q&A (symptoms → docs)
 
-| Topic                          | Doc                                                                                                                                                                            |
-| ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Mac reconnecting vs local live | [awc-mac-reconnecting-vs-local-live.md](../../qa/awc-mac-reconnecting-vs-local-live.md)                                                                                        |
-| Prompt SDLC                    | [prompt-sdlc.md](../../qa/prompt-sdlc.md) — I'll score it and I'll rewrite it; a score and its reason go to the improver; bots call `/prompt-sdlc/agent` in the project folder |
-| Harness vs agent dispatch      | [mac-harness-workflow-agent-dispatch.md](../../qa/mac-harness-workflow-agent-dispatch.md)                                                                                      |
-| Writer routing                 | [writer-dispatch-cascade-routing.md](../../qa/writer-dispatch-cascade-routing.md)                                                                                              |
-| AI register / WebMCP           | [ai-self-registration-webmcp.md](../../qa/ai-self-registration-webmcp.md)                                                                                                      |
+| Topic                          | Doc                                                                                                                                                                                                                                                                                    |
+| ------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Mac reconnecting vs local live | [awc-mac-reconnecting-vs-local-live.md](../../qa/awc-mac-reconnecting-vs-local-live.md)                                                                                                                                                                                                |
+| Prompt SDLC                    | [prompt-sdlc.md](../../qa/prompt-sdlc.md) — I'll score it and I'll rewrite it; a score and its reason go to the improver; the loop continues until the pass score, and earlier prompts are included when the score is not rising; bots call `/prompt-sdlc/agent` in the project folder |
+| Harness vs agent dispatch      | [mac-harness-workflow-agent-dispatch.md](../../qa/mac-harness-workflow-agent-dispatch.md)                                                                                                                                                                                              |
+| Writer routing                 | [writer-dispatch-cascade-routing.md](../../qa/writer-dispatch-cascade-routing.md)                                                                                                                                                                                                      |
+| AI register / WebMCP           | [ai-self-registration-webmcp.md](../../qa/ai-self-registration-webmcp.md)                                                                                                                                                                                                              |
 
 ---
 
