@@ -5,6 +5,10 @@ import {
   PROMPT_SDLC_LOCAL_LIVE_SCRIPT,
   PROMPT_SDLC_LOCAL_LIVE_STYLE,
 } from "./buildPromptSdlcLocalLiveScript";
+import {
+  PROMPT_SDLC_NODE_DIALOG,
+  PROMPT_SDLC_NODE_DIALOG_SCRIPT,
+} from "./buildPromptSdlcLocalStepTree";
 import { PROMPT_SDLC_LOCAL_FORM_SCRIPT } from "./promptSdlcLocalFormScript";
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
 import type { PromptSdlcLocalWriterChoice } from "./promptSdlcLocalForm";
@@ -57,6 +61,7 @@ export const buildPromptSdlcLocalPageBody = (input: {
   readonly passScore: string;
   readonly canRun: boolean;
   readonly errorMessage: string | null;
+  readonly skillNotice?: string | null;
   readonly cycle: PromptSdlcLocalCycle | null;
   readonly history: readonly PromptSdlcLocalCycle[];
 }): string => {
@@ -64,6 +69,14 @@ export const buildPromptSdlcLocalPageBody = (input: {
     input.errorMessage === null
       ? ""
       : `<div class="alert-error">${escapeHtml(input.errorMessage)}</div>`;
+  const skillNotice =
+    (input.skillNotice ?? null) === null
+      ? ""
+      : `<div class="alert-success">${escapeHtml(input.skillNotice ?? "")}</div>`;
+  const nodeDialog =
+    input.cycle === null
+      ? ""
+      : `${PROMPT_SDLC_NODE_DIALOG}${PROMPT_SDLC_NODE_DIALOG_SCRIPT}`;
   const cycle =
     input.cycle === null ? "" : buildPromptSdlcLocalCycleSection(input.cycle);
   const live =
@@ -131,5 +144,5 @@ export const buildPromptSdlcLocalPageBody = (input: {
         </fieldset>
       </form>
     </section>`;
-  return `${error}${cycle}${live}${form}${renderHistory(input.history, input.cycle?.id ?? null)}${PROMPT_SDLC_LOCAL_FORM_SCRIPT}`;
+  return `${error}${skillNotice}${cycle}${nodeDialog}${live}${form}${renderHistory(input.history, input.cycle?.id ?? null)}${PROMPT_SDLC_LOCAL_FORM_SCRIPT}`;
 };

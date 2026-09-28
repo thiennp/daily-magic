@@ -154,6 +154,66 @@ describe("buildPromptSdlcLocalPageBody", () => {
     expect(finished).toContain(">Run<");
   });
 
+  it("opens a saved prompt from a timeline node and offers the best prompt as a skill", () => {
+    const cycle = {
+      ...createPromptSdlcLocalCycle({
+        goal: "The reply stays inside the facts.",
+        sourcePrompt: "Be helpful.",
+        judgeModel: "claude-cli" as const,
+        improverModel: "codex" as const,
+      }),
+      status: "passed" as const,
+      revisions: [
+        {
+          roundNumber: 0,
+          promptText: "Be helpful.",
+          judgement: {
+            score: 40,
+            passed: false,
+            reasons: "Too vague.",
+            rawReply: "40",
+          },
+        },
+        {
+          roundNumber: 1,
+          promptText:
+            "Answer only from the ticket, and stop when a fact is missing.",
+          judgement: {
+            score: 94,
+            passed: true,
+            reasons: "It names the stop.",
+            rawReply: "94",
+          },
+        },
+      ],
+    };
+    const html = buildPromptSdlcLocalPageBody({
+      goal: "",
+      prompt: "",
+      modelNote: "",
+      writers: [],
+      judge: "",
+      improver: "",
+      folder: "~",
+      passScore: "90",
+      canRun: true,
+      errorMessage: null,
+      cycle,
+      history: [],
+    });
+
+    expect(html).toContain("data-sdlc-node");
+    expect(html).toContain('id="sdlc-node-dialog"');
+    expect(html).toContain("Be helpful.");
+    expect(html).toContain("Too vague.");
+    expect(html).toContain('id="prompt-sdlc-best"');
+    expect(html).toContain("Round 1 · Score 94 / 100");
+    expect(html).toContain(
+      "Answer only from the ticket, and stop when a fact is missing.",
+    );
+    expect(html).toContain('value="save-skill"');
+  });
+
   it("explains a Codex terminal error instead of showing it as the revision", () => {
     const cycle = {
       ...createPromptSdlcLocalCycle({
