@@ -3,6 +3,8 @@
 .cursor
 .agents
 .husky
+# Next typechecks every .ts file in the image. Root tests import .agents, which this image does not ship.
+/test
 node_modules
 .next
 coverage
