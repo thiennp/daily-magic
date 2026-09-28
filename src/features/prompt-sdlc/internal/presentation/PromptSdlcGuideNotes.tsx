@@ -55,9 +55,9 @@ export default function PromptSdlcGuideNotes(): ReactElement {
           the score, the feedback, and the prompt saved for that step. Each
           judged round shows the score and the reason. When the run finishes,
           the page shows the highest scoring prompt. Save as a skill writes that
-          prompt into the folder you chose, under .cursor/skills. Passed means
-          the score reached the pass score you set. The run keeps going until
-          that happens. Failed means the judge did not return a score, the
+          prompt into the folder you chose, under .cursor/skills. The run keeps
+          going until the score reaches the pass score you set. Passed means
+          that happened. Failed means the judge did not return a score, the
           improver returned nothing, or the call could not start. The message on
           the page names which one.
         </p>

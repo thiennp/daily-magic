@@ -67,6 +67,16 @@ describe("continuePromptSdlc", () => {
       improver,
     });
     expect(stillUnder.continuation.type).toBe("call");
+
+    const inconsistentPassed = continueAfterJudgeReply({
+      raw: '{"score": 85, "passed": false, "reasons": "clear enough"}',
+      passScore: 80,
+      goal: "Ship the button",
+      promptText: "Add a button",
+      improver,
+    });
+    expect(inconsistentPassed.continuation).toEqual({ type: "passed" });
+    expect(inconsistentPassed.verdict?.passed).toBe(true);
   });
 
   it("turns an improver reply into the next judge call", () => {
