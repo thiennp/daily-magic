@@ -42,6 +42,19 @@ describe("hasRealAgentRunTerminalWork", () => {
     expect(hasRealAgentRunTerminalWork(output)).toBe(false);
   });
 
+  it("returns false when a spawn failure is only wrapped in the live shell prompt", () => {
+    const output = [
+      'agent-witch@mac ~ % claude -p --dangerously-skip-permissions "Draft a proposal"',
+      AGENT_RUN_WRITER_EXECUTION_HONESTY_MARKER,
+      `agentRunWriterExecutionBackend=${AGENT_RUN_WRITER_EXECUTION_CLI_MISSING_WRITER_API_KEY_BACKEND}`,
+      `agentRunWriterExecutionReasonCode=${AGENT_RUN_WRITER_EXECUTION_MISSING_WRITER_API_KEY_REASON_CODE}`,
+      "execvp(3) failed.: No such file or directory",
+      "agent-witch@mac ~ % ",
+    ].join("\n");
+
+    expect(hasRealAgentRunTerminalWork(output)).toBe(false);
+  });
+
   it("returns true when CLI output exists beyond diagnostics", () => {
     const output = [
       AGENT_RUN_WRITER_EXECUTION_HONESTY_MARKER,

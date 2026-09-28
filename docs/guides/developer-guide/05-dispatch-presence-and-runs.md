@@ -6,7 +6,7 @@ Server core: `src/lib/dispatch/` · UI `src/features/dispatch/`, `src/features/a
 
 Binding ADRs: [0004](../../adr/0004-cursor-cloud-dispatch-origin.md) (cloud origin) · [0005](../../adr/0005-shared-mac-presence-and-dispatch-outbox.md) (presence, outbox, relay).
 
-Terminal honesty: `resolveAgentRunHonestyTerminalOutcome` shows **Completed with fallback** only when a missing writer API key still produced CLI output. Spawn failures (`execvp`, `ENOENT`) are **Failed** with the locked can’t-run sentence (AGENT-129).
+Terminal honesty: `resolveAgentRunHonestyTerminalOutcome` shows **Completed with fallback** only when a missing writer API key still produced CLI output. Spawn failures (`execvp`, `ENOENT`, command not found) are **Failed** with the locked can’t-run sentence (AGENT-129). The live panel’s shell prompt and CLI command echo do not count as that output when the binary failed to start.
 
 ---
 

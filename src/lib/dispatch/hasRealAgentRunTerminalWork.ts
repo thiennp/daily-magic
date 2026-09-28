@@ -4,6 +4,11 @@ import { isStoppedByUserOutput } from "@/lib/dispatch/agentRunHonestyCopy.consta
 import { AGENT_RUN_WORKING_ESTIMATE_MARKER } from "@/lib/dispatch/agentRunWorkingEstimate.constant";
 import { isClaudeCliAuthBlockerInOutput } from "@/lib/dispatch/isClaudeCliAuthBlockerInOutput";
 import {
+  isAgentRunBareShellPromptLine,
+  isAgentRunSpawnFailureLine,
+  isAgentRunWriterCliInvocationLine,
+} from "@/lib/dispatch/isAgentRunTerminalChromeLine";
+import {
   MARKETPLACE_PLAN_ESTIMATE_LOG_CLI_FALLBACK_EMPTY_CATALOG,
   MARKETPLACE_PLAN_ESTIMATE_LOG_CLI_FALLBACK_MISSING_KEY,
 } from "@/lib/marketplace/runRecipe/marketplacePlanEstimateReasonCode.constant";
@@ -55,9 +60,13 @@ const stripHonestyDiagnosticBlocks = (output: string): string =>
     output,
   );
 
-const stripAuthAndFallbackLogNoise = (output: string): string =>
-  output
-    .split("\n")
+const stripAuthAndFallbackLogNoise = (output: string): string => {
+  const lines = output.split("\n");
+  const spawnFailed = lines.some((line) =>
+    isAgentRunSpawnFailureLine(line.trim()),
+  );
+
+  return lines
     .filter((line) => {
       const trimmed = line.trim();
       if (trimmed.length === 0) {
@@ -75,16 +84,19 @@ const stripAuthAndFallbackLogNoise = (output: string): string =>
       if (trimmed.startsWith("[agent-witch] marketplace plan/estimate")) {
         return false;
       }
-      if (
-        /execvp\(\d+\) failed/i.test(trimmed) ||
-        /no such file or directory/i.test(trimmed) ||
-        /\bENOENT\b/.test(trimmed)
-      ) {
+      if (isAgentRunBareShellPromptLine(trimmed)) {
+        return false;
+      }
+      if (isAgentRunSpawnFailureLine(trimmed)) {
+        return false;
+      }
+      if (spawnFailed && isAgentRunWriterCliInvocationLine(trimmed)) {
         return false;
       }
       return true;
     })
     .join("\n");
+};
 
 export const hasRealAgentRunTerminalWork = (output: string): boolean => {
   const withoutDiagnostics = stripHonestyDiagnosticBlocks(output);
