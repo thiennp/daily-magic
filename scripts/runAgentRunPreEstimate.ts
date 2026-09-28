@@ -139,6 +139,8 @@ export const runAgentRunPreEstimate = async (input: {
   readonly agentRunId: string;
   readonly writerLabel: string;
   readonly reportsDir: string;
+  readonly estimateModel?: string | null;
+  readonly capabilityNote?: string;
 }): Promise<AgentRunPreEstimateResult> => {
   const draft = await beginAgentRunPreEstimate(input);
   return recordAgentRunPreEstimateOutput({

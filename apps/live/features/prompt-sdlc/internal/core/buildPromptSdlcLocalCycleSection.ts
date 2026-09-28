@@ -1,6 +1,8 @@
-import { isPromptSdlcTerminalStatus } from "@/lib/promptSdlc/PromptSdlcCycleStatus.constant";
-import { buildPromptSdlcSteps } from "@/lib/promptSdlc/buildPromptSdlcSteps";
-import type PromptSdlcCycleView from "@/lib/promptSdlc/types/PromptSdlcCycleView.type";
+import {
+  buildPromptSdlcSteps,
+  isPromptSdlcTerminalStatus,
+  type PromptSdlcCycleView,
+} from "../../../../adapters/promptSdlcAwcCore";
 import { describePromptSdlcLocalActivity } from "./buildPromptSdlcLocalActivity";
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
 import {

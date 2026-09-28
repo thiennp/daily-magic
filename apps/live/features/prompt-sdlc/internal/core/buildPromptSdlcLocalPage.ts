@@ -1,4 +1,4 @@
-import { isPromptSdlcTerminalStatus } from "@/lib/promptSdlc/PromptSdlcCycleStatus.constant";
+import { isPromptSdlcTerminalStatus } from "../../../../adapters/promptSdlcAwcCore";
 import { buildPromptSdlcLocalCycleSection } from "./buildPromptSdlcLocalCycleSection";
 import {
   PROMPT_SDLC_LOCAL_FORM_SCRIPT,

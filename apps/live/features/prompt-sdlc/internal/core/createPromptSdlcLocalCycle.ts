@@ -3,7 +3,7 @@ import os from "node:os";
 import {
   PROMPT_SDLC_MAX_ROUNDS,
   PROMPT_SDLC_PASS_SCORE,
-} from "@/lib/promptSdlc/promptSdlcLimits.constant";
+} from "../../../../adapters/promptSdlcAwcCore";
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
 
 export const createPromptSdlcLocalCycle = (input: {

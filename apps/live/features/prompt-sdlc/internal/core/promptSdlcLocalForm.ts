@@ -1,7 +1,7 @@
 import {
   PROMPT_SDLC_GOAL_MAX_LENGTH,
   PROMPT_SDLC_PROMPT_MAX_LENGTH,
-} from "@/lib/promptSdlc/promptSdlcLimits.constant";
+} from "../../../../adapters/promptSdlcAwcCore";
 import {
   choosePromptSdlcLocalModels,
   listPromptSdlcLocalWriters,

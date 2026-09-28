@@ -1,6 +1,8 @@
-import { resolveWriterCliCommands } from "../../../../../../../scripts/buildWriterCliInvocation";
-import { probeLocalRunClis } from "../../../../../../../scripts/dispatch/probeLocalRunClis";
-import { requestOllamaChat } from "../../../../../../../scripts/requestOllamaChat";
+import {
+  probeLocalRunClis,
+  requestOllamaChat,
+  resolveWriterCliCommands,
+} from "../../../../../adapters/promptSdlcProxy";
 import { sendJson } from "../../../../server/features/http-server/public-api/infrastructure";
 import type { BridgeRequestContext } from "../../../../server/internal/bridgeRequestContext.type";
 import { buildPromptSdlcLocalModelCatalog } from "./buildPromptSdlcLocalModelCatalog";

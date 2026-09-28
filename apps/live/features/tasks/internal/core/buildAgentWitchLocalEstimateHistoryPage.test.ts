@@ -7,7 +7,7 @@ import { describe, expect, it } from "vitest";
 import {
   recordAgentRunEstimateActual,
   rememberAgentRunEstimate,
-} from "../../../../../../scripts/agentRunEstimateHistory";
+} from "../../../../adapters/estimateHistory";
 import { buildAgentWitchLocalEstimateHistoryPageBody } from "./buildAgentWitchLocalEstimateHistoryPage";
 
 describe("buildAgentWitchLocalEstimateHistoryPageBody", () => {

@@ -1,4 +1,4 @@
-import { isPromptSdlcTerminalStatus } from "@/lib/promptSdlc/PromptSdlcCycleStatus.constant";
+import { isPromptSdlcTerminalStatus } from "../../../../adapters/promptSdlcAwcCore";
 import { labelPromptSdlcLocalModel } from "./choosePromptSdlcLocalModels";
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
 import { describePromptSdlcWriterTerminalFailure } from "./readPromptSdlcWriterOutput";

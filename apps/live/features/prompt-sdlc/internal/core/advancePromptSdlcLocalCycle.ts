@@ -1,5 +1,7 @@
-import { buildPromptSdlcImproverPrompt } from "@/lib/promptSdlc/buildPromptSdlcImproverPrompt";
-import { buildPromptSdlcJudgePrompt } from "@/lib/promptSdlc/buildPromptSdlcJudgePrompt";
+import {
+  buildPromptSdlcImproverPrompt,
+  buildPromptSdlcJudgePrompt,
+} from "../../../../adapters/promptSdlcAwcCore";
 import {
   applyPromptSdlcLocalImproverReply,
   applyPromptSdlcLocalJudgeReply,

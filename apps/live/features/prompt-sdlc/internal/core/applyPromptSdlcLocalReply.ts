@@ -1,7 +1,7 @@
 import {
   continueAfterImproveReply,
   continueAfterJudgeReply,
-} from "@/lib/promptSdlc/continuePromptSdlc";
+} from "../../../../adapters/promptSdlcAwcCore";
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
 
 const withJudgement = (

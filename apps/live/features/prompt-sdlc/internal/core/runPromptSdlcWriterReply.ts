@@ -7,7 +7,7 @@ import {
   buildWriterCliInvocation,
   resolveWriterCliCommands,
   type HarnessWriterAgentId,
-} from "../../../../../../scripts/buildWriterCliInvocation";
+} from "../../../../adapters/writerDispatch";
 import {
   buildPromptSdlcWriterArgs,
   readPromptSdlcWriterOutput,

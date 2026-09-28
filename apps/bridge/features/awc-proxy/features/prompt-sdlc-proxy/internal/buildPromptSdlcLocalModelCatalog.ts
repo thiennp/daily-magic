@@ -1,5 +1,7 @@
-import type { HarnessWriterAgentId } from "../../../../../../../scripts/buildWriterCliInvocation";
-import { listInstalledOllamaChatModels } from "../../../../../../../scripts/dispatch/selectInstalledOllamaEstimateModel";
+import {
+  listInstalledOllamaChatModels,
+  type HarnessWriterAgentId,
+} from "../../../../../adapters/promptSdlcProxy";
 
 const WRITER_LABELS: Record<HarnessWriterAgentId, string> = {
   "claude-cli": "Claude (terminal)",

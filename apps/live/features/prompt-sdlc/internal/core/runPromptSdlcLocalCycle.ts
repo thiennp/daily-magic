@@ -1,6 +1,8 @@
-import { isPromptSdlcTerminalStatus } from "@/lib/promptSdlc/PromptSdlcCycleStatus.constant";
-import { probeLocalRunClis } from "../../../../../../scripts/dispatch/probeLocalRunClis";
-import { resolveWriterCliCommands } from "../../../../../../scripts/buildWriterCliInvocation";
+import { isPromptSdlcTerminalStatus } from "../../../../adapters/promptSdlcAwcCore";
+import {
+  probeLocalRunClis,
+  resolveWriterCliCommands,
+} from "../../../../adapters/writerDispatch";
 import { advancePromptSdlcLocalCycle } from "./advancePromptSdlcLocalCycle";
 import {
   readPromptSdlcLocalCycle,

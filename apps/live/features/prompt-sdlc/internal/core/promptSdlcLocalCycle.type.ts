@@ -1,5 +1,7 @@
-import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
-import type { PromptSdlcCycleStatus } from "@/lib/promptSdlc/PromptSdlcCycleStatus.constant";
+import type {
+  HarnessWriterAgent,
+  PromptSdlcCycleStatus,
+} from "../../../../adapters/promptSdlcAwcCore";
 
 export interface PromptSdlcLocalJudgement {
   readonly score: number | null;

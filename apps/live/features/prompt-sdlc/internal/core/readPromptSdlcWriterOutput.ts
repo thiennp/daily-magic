@@ -1,5 +1,5 @@
-import type { HarnessWriterAgentId } from "../../../../../../scripts/buildWriterCliInvocation";
-import { parseClaudeCliPrintResult } from "../../../../../../scripts/dispatch/parseClaudeCliPrintResult";
+import type { HarnessWriterAgentId } from "../../../../adapters/writerDispatch";
+import { parseClaudeCliPrintResult } from "../../../../adapters/writerDispatch";
 
 export type PromptSdlcWriterResult =
   | { readonly ok: true; readonly text: string }

@@ -60,6 +60,7 @@ describe("runAgentRunPreEstimate", () => {
       agentRunId: "run-1",
       writerLabel: "Claude CLI",
       reportsDir,
+      estimateModel: "test-estimate-model",
     });
 
     expect(result.estimateSeconds).toBe(120);

@@ -1,4 +1,4 @@
-import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
+import type { HarnessWriterAgent } from "../../../../adapters/promptSdlcAwcCore";
 
 const PREFERENCE = [
   "claude-cli",

@@ -1,4 +1,4 @@
-import { listAgentRunEstimateHistoryForDisplay } from "../../../../../../scripts/agentRunEstimateHistory";
+import { listAgentRunEstimateHistoryForDisplay } from "../../../../adapters/estimateHistory";
 
 const escapeHtml = (value: string): string =>
   value
