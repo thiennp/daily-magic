@@ -19,7 +19,7 @@ Deployables: [docs/product/agent-witch-deployables.md](../../../docs/product/age
 | Direction         | Mechanism                                                                                       |
 | ----------------- | ----------------------------------------------------------------------------------------------- |
 | Mac ↔ cloud       | Single mutually authenticated WebSocket (`/api/agent-witch/ws`) with Ed25519 device keys        |
-| Online            | Hub live WS = connected; fresh `last_seen_at` alone = seen recently (~90s)                      |
+| Online            | Hub live WS = connected; fresh `last_seen_at` alone = seen recently (180s)                      |
 | Commands → Mac    | Hub sends over the open WS (e.g. `writer.ensure`, `command.claude.run`)                         |
 | Mac → server      | WS frames (`agent.register`, `writer.status`, results, shell, harness)                          |
 | Server → browser  | HTTPS APIs + optional SSE; dashboard may also use WS when authenticated                         |

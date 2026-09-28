@@ -42,6 +42,7 @@ A production deploy recycles Nodes. AWI logs `ws_close` then `agent.register` + 
 - `src/features/agent-witch/KNOWN_ISSUES.md` — OPEN-002
 - `docs/agent-witch/send-readiness-reason-codes.md`
 - [awi-update-local-launchagent-plist.md](awi-update-local-launchagent-plist.md) — reconnecting from a broken LaunchAgent (different cause)
+- [awc-offline-while-awl-connected.md](awc-offline-while-awl-connected.md) — Home says **Mac offline** while AWL Status says **Connected**
 
 ## Last reviewed
 

@@ -24,14 +24,14 @@ Try this order (most issues resolve without a fresh install):
 
 ## Send blocked — read the banner
 
-| Banner / reason (typical)                 | Meaning                                       | What to do                                                              |
-| ----------------------------------------- | --------------------------------------------- | ----------------------------------------------------------------------- |
-| **Update needed**                         | Mac install bundle older than cloud requires  | [Update local](#install-bundle-update-stale-or-blocked-send)            |
-| **Mac unreachable**                       | DNS/network from Mac to `www.agentwitch.com`  | [DNS / ENOTFOUND](#dns-mac-cannot-reach-agentwitchcom-open-001)         |
-| **Mac offline**                           | No recent hub presence                        | Wake Mac, check AWI running, VPN                                        |
-| **Reconnecting**                          | Seen recently, no live socket on this request | [Reconnecting](#mac-reconnecting-after-deploy-or-multi-server-open-002) |
-| **Connecting** / **New task isn’t ready** | Multi-server relay or handoff                 | Wait, refresh devices, retry                                            |
-| **Add a task**                            | Empty prompt / form validation                | Fill composer or workflow form                                          |
+| Banner / reason (typical)                 | Meaning                                                              | What to do                                                                   |
+| ----------------------------------------- | -------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| **Update needed**                         | Mac install bundle older than cloud requires                         | [Update local](#install-bundle-update-stale-or-blocked-send)                 |
+| **Mac unreachable**                       | DNS/network from Mac to `www.agentwitch.com`                         | [DNS / ENOTFOUND](#dns-mac-cannot-reach-agentwitchcom-open-001)              |
+| **Mac offline**                           | That device row has no hub socket and no check-in in about 3 minutes | [AWL Connected but AWC offline](../../qa/awc-offline-while-awl-connected.md) |
+| **Reconnecting**                          | Seen recently, no live socket on this request                        | [Reconnecting](#mac-reconnecting-after-deploy-or-multi-server-open-002)      |
+| **Connecting** / **New task isn’t ready** | Multi-server relay or handoff                                        | Wait, refresh devices, retry                                                 |
+| **Add a task**                            | Empty prompt / form validation                                       | Fill composer or workflow form                                               |
 
 Mac picker labels (**Online**, **Seen recently**, **Reconnecting (another server)**, **Offline**) describe presence—not always send-ready. You need **Online** + dispatch-ready for writer **Tasks**.
 
@@ -151,11 +151,11 @@ Invalid `com.agent-witch.plist` (install script once embedded bash inside XML). 
 
 ## “This Mac” / Connect this Mac confusion
 
-| UI                       | Meaning                                            |
-| ------------------------ | -------------------------------------------------- |
-| **Connect this Mac** row | Link the Mac where you opened the browser          |
-| **this Mac** badge       | Cloud device hash matches local bridge `/identity` |
-| **Mac offline**          | Device is already paired; the helper is not live   |
+| UI                       | Meaning                                                                                                                        |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------ |
+| **Connect this Mac** row | Link the Mac where you opened the browser                                                                                      |
+| **this Mac** badge       | Cloud device hash matches local bridge `/identity`                                                                             |
+| **Mac offline**          | That paired row has no live socket and has not checked in lately. AWL **Connected** can still be a different device or origin. |
 
 If no row says **this Mac**, use **Connect this Mac** in the hero or under **Your Devices**. That links the computer you are using now. The button stays hidden only after this browser’s pairing token already matches a listed device. **Mac settings & connect** only opens **Your setup**. When a row is already **this Mac** and **Offline**, start Agent Witch on that computer. Click the offline row for wake steps.
 

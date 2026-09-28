@@ -27,7 +27,7 @@ export interface AgentWitchDeviceWithOnlineStatus {
 /**
  * Presence tiers for the device list / Mac picker.
  * `isConnected` = live agent WebSocket on this hub process (dispatch-ready).
- * `isOnline` = live OR `last_seen_at` within the online window (~90s).
+ * `isOnline` = live OR `last_seen_at` within the online window (180s).
  * Do not treat a fresh DB heartbeat alone as connected — that lied when the
  * Mac’s WS lived on another replica (or pairing metadata was unbound).
  */

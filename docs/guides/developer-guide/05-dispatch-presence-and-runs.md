@@ -51,18 +51,19 @@ Routing cascade (continuation vs memory budget): [docs/qa/writer-dispatch-cascad
 
 `GET /api/agent-witch/devices` exposes **`presenceTier`** per device (ADR 0005):
 
-| Tier                  | Meaning                                   | Writer send-a-task              |
-| --------------------- | ----------------------------------------- | ------------------------------- |
-| `live`                | Socket on **this** Node hub               | Allowed                         |
-| `live_other_instance` | Registry: socket on another `instance_id` | Relay or retry / sticky routing |
-| `recent`              | `last_seen_at` ~90s, no live socket       | Not allowed                     |
-| `offline`             | Otherwise                                 | Not allowed                     |
+| Tier                  | Meaning                                    | Writer send-a-task              |
+| --------------------- | ------------------------------------------ | ------------------------------- |
+| `live`                | Socket on **this** Node hub                | Allowed                         |
+| `live_other_instance` | Registry: socket on another `instance_id`  | Relay or retry / sticky routing |
+| `recent`              | `last_seen_at` within 180s, no live socket | Not allowed                     |
+| `offline`             | Otherwise                                  | Not allowed                     |
 
 - **`isOnline`** — visibility / wake hints (`live`, `live_other_instance`, or `recent`).
 - **`isDispatchReady`** — writer-ready; only **`live`** on this process (and relay path for other instance).
 - Home “Mac online” hero counts **`live`** on this process only — `live_other_instance` shows reconnecting UX.
 - **this Mac** is a browser token-hash match, not a presence tier. When no row matches, Home shows **Connect this Mac** (`resolveIsCheckingLocalMacIdentity`, HOME-057). A skipped wake probe must not leave that button hidden.
 - An install-token row is not a check-in. It stays `offline` until the Mac heartbeats. Repeated Connect clicks must not create extra `recent` rows (HOME-059). `GET /api/agent-witch/devices` revokes older unlabeled placeholders and keeps the newest.
+- AWL **Connected** is the Mac client’s socket-open flag. It can be true while the device row AWC renders stays `offline` when register bound a different device id or origin ([Q&A](../../qa/awc-offline-while-awl-connected.md)).
 - Deleting a Mac removes the device row after in-flight runs and queued outbox rows for that device are cleared (HOME-060). The Mac forgets its connection only when the token is unknown.
 
 Unified resolver (devices API + dispatch must match): `resolveLiveAgentClientsByDeviceIdForUser` (see ADR 0005 full text).

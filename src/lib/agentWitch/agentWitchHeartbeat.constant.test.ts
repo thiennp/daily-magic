@@ -12,7 +12,7 @@ describe("isAgentWitchDeviceRecentlySeen", () => {
     const nowMs = Date.parse("2026-01-01T12:00:00.000Z");
 
     expect(
-      isAgentWitchDeviceRecentlySeen("2026-01-01T11:58:31.000Z", nowMs),
+      isAgentWitchDeviceRecentlySeen("2026-01-01T11:57:01.000Z", nowMs),
     ).toBe(true);
   });
 
@@ -20,12 +20,15 @@ describe("isAgentWitchDeviceRecentlySeen", () => {
     const nowMs = Date.parse("2026-01-01T12:00:00.000Z");
 
     expect(
-      isAgentWitchDeviceRecentlySeen("2026-01-01T11:58:29.000Z", nowMs),
+      isAgentWitchDeviceRecentlySeen("2026-01-01T11:56:59.000Z", nowMs),
     ).toBe(false);
   });
 
-  it("uses a 90 second threshold", () => {
-    expect(AGENT_WITCH_ONLINE_THRESHOLD_MS).toBe(90_000);
+  it("keeps a check-in fresh for 180 seconds", () => {
+    expect(AGENT_WITCH_ONLINE_THRESHOLD_MS).toBe(180_000);
+    expect(AGENT_WITCH_ONLINE_THRESHOLD_MS).toBe(
+      AGENT_WITCH_HEARTBEAT_INTERVAL_MS * 6,
+    );
   });
 
   it("supports a custom active threshold", () => {
