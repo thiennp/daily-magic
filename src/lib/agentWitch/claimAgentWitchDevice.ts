@@ -1,8 +1,8 @@
 import {
   insertAgentWitchDeviceClaim,
   isUniqueTokenHashViolation,
-  updateExistingClaimForUser,
 } from "@/lib/agentWitch/claimAgentWitchDeviceHelpers";
+import { updateExistingClaimForUser } from "@/lib/agentWitch/updateExistingClaimForUser";
 import { consolidateAgentWitchDeviceByHostname } from "@/lib/agentWitch/consolidateAgentWitchDeviceByHostname";
 import { findAgentWitchDeviceByToken } from "@/lib/agentWitch/findAgentWitchDeviceByToken";
 import hashPairingToken from "@/lib/agentWitch/hashPairingToken";
@@ -29,6 +29,7 @@ export async function claimAgentWitchDevice(input: {
       userId: input.userId,
       deviceLabel,
       unrevoke: false,
+      recordLastSeen: input.recordLastSeen,
     });
     if (updated !== null) {
       return consolidateAgentWitchDeviceByHostname({
