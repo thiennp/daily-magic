@@ -59,8 +59,9 @@ export default function PromptSdlcGuideNotes(): ReactElement {
           Round 0 is your text. Later rounds are rewrites. Click a step to open
           the score, the feedback, and the prompt saved for that step. Each
           judged round shows the score and the reason. When the run finishes,
-          the page shows the highest scoring prompt. Save as a skill writes that
-          prompt into the folder you chose, under .cursor/skills. The run keeps
+          the page shows the highest scoring prompt. Save as a skill lets you
+          edit the name, an optional description, and that prompt, then writes
+          it into the folder you chose, under .cursor/skills. The run keeps
           going until the score reaches the pass score you set, you press
           Finish, the round limit is hit, or the score has not risen for 3
           rounds. Passed means the score reached the pass score. Finish, the

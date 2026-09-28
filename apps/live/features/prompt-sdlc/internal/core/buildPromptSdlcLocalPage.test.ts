@@ -217,6 +217,12 @@ describe("buildPromptSdlcLocalPageBody", () => {
       "Answer only from the ticket, and stop when a fact is missing.",
     );
     expect(html).toContain('value="save-skill"');
+    expect(html).toContain('name="skillName"');
+    expect(html).toContain('value="the-reply-stays-inside-the-facts"');
+    expect(html).toContain('name="skillDescription"');
+    expect(html).toContain("The reply stays inside the facts.");
+    expect(html).toContain('name="skillPrompt"');
+    expect(html).toContain("Optional.");
   });
 
   it("explains a Codex terminal error instead of showing it as the revision", () => {

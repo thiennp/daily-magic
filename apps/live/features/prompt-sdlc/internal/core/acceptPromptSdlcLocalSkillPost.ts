@@ -26,6 +26,12 @@ export const readPromptSdlcSkillNotice = (
   if (params.get("skillError") === "folder") {
     return "The selected folder is not on this Mac.";
   }
+  if (params.get("skillError") === "name") {
+    return "Use a name with letters or numbers.";
+  }
+  if (params.get("skillError") === "prompt") {
+    return "Enter the prompt to save.";
+  }
   return null;
 };
 
@@ -67,11 +73,13 @@ export const acceptPromptSdlcLocalSkillPost = (input: {
 
   const written = writePromptSdlcLocalSkill({
     workingDirectory: promptSdlcLocalWorkingDirectory(cycle),
-    goal: cycle.goal,
-    promptText: best.promptText,
+    name: input.posted.get("skillName") ?? "",
+    description: input.posted.get("skillDescription") ?? "",
+    promptText: input.posted.get("skillPrompt") ?? "",
   });
   if (!written.ok) {
-    return { kind: "redirect", location: back("skillError=folder") };
+    const code = written.errorCode === "path" ? "folder" : written.errorCode;
+    return { kind: "redirect", location: back(`skillError=${code}`) };
   }
 
   return {
