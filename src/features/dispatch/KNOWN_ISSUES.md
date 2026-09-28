@@ -25,3 +25,13 @@
 **Fix:** Split compound questions, render tables/callouts/collapsible context, add quick-reply chips (pull-first / commit-as-is / request changes), and rename Later to “Remind me later” with helper copy.
 
 **Regression tests:** `parseAgentRunPartialOutputSections.test.ts`, `resolveAgentRunInputQuickReplies.test.ts`, `splitAgentRunInputQuestion.test.ts` (DISPATCH-003).
+
+## DISPATCH-004 — Checkpoint timeline missing steps after cross-node API
+
+**Symptom:** Workflow checkpoint modal showed an incomplete step checklist (often a single step) while the run had more steps in Postgres.
+
+**Root cause:** `listWorkflowStepRunsForWorkflowRunId` returned in-memory session rows whenever any existed, skipping Neon. A load-balanced instance that had loaded only one step (for example via `getWorkflowStepRunById`) never listed earlier steps.
+
+**Fix:** Always load ordered rows from Neon and overlay same-index session records so fresh in-process updates win without hiding DB steps.
+
+**Regression test:** `listWorkflowStepRunsForWorkflowRunId.test.ts` (DISPATCH-004).

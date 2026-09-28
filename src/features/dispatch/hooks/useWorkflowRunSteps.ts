@@ -43,20 +43,31 @@ export const useWorkflowRunSteps = (
 
   useEffect(() => {
     const controller = new AbortController();
+    const loadTracker = { generation: 0 };
 
     const load = async (): Promise<void> => {
+      const generation = ++loadTracker.generation;
+
       try {
         const response = await fetch(
           `/api/workflow-runs/${encodeURIComponent(workflowRunId)}`,
           { signal: controller.signal },
         );
         const body: unknown = await response.json();
+
+        if (generation !== loadTracker.generation) {
+          return;
+        }
+
         setState({
           steps: parseWorkflowRunStepsResponse(body),
           isLoading: false,
         });
       } catch (error: unknown) {
         if (isAbortError(error)) {
+          return;
+        }
+        if (generation !== loadTracker.generation) {
           return;
         }
         setState({ steps: [], isLoading: false });
