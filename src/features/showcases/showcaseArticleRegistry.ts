@@ -13,6 +13,7 @@ import managerApprovesBeforeRun from "@/features/showcases/articles/managerAppro
 import newHiresCompanyPlaybooks from "@/features/showcases/articles/newHiresCompanyPlaybooks.article";
 import notASlackReplacement from "@/features/showcases/articles/notASlackReplacement.article";
 import notJustAnotherChatgpt from "@/features/showcases/articles/notJustAnotherChatgpt.article";
+import promptOptimizerInTheProject from "@/features/showcases/articles/promptOptimizerInTheProject.article";
 import onboardIn15Minutes from "@/features/showcases/articles/onboardIn15Minutes.article";
 import oneEmployeeOneAgent from "@/features/showcases/articles/oneEmployeeOneAgent.article";
 import phoneAsksCoworkerMacRuns from "@/features/showcases/articles/phoneAsksCoworkerMacRuns.article";
@@ -80,6 +81,7 @@ export const SHOWCASE_ARTICLES_PHASE_4: readonly ShowcaseArticle[] = [
   notASlackReplacement,
   worksWithoutN8n,
   notJustAnotherChatgpt,
+  promptOptimizerInTheProject,
   whatPhoneCanDoAlone,
   whenExecutorMacIsOffline,
   whyLocalMacNotCloud,

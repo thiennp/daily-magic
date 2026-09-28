@@ -30,6 +30,7 @@ export const HOME_OBJECTIONS_SHOWCASE_SLUGS: readonly string[] = [
   "not-a-slack-replacement",
   "works-without-n8n",
   "why-local-mac-not-cloud",
+  "prompt-optimizer-in-the-project",
 ] as const;
 
 function resolveShowcasesBySlugs(

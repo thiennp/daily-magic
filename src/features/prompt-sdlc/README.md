@@ -1,6 +1,6 @@
 # Prompt SDLC
 
-Console pointer to Prompt SDLC. The loop runs in Agent Witch Live (`http://127.0.0.1:43347/prompt-sdlc`), which picks the best installed reasoning writers.
+Console pointer to Prompt SDLC. The loop runs in Agent Witch Live (`http://127.0.0.1:43347/prompt-sdlc`). You choose the folder, the pass score, and the writers. They run inside that folder so they can read the harness and the code. Bots on this Mac call `http://127.0.0.1:43347/prompt-sdlc/agent`.
 
 ## Registry
 
@@ -11,7 +11,7 @@ Console pointer to Prompt SDLC. The loop runs in Agent Witch Live (`http://127.0
 
 ## Product concepts
 
-The prompt is the artifact. A cycle stores the source prompt, each revision, and each judgement. Judge and improver are chosen independently from installed reasoning writers and Cursor Cloud when that connection exists. Local and small models are not used.
+The prompt is the artifact. A cycle stores the source prompt, each revision, and each judgement. On Agent Witch Live, judge and improver are installed reasoning writers, or you. Local and small models are not used. The console composer still lists Cursor Cloud for an older path; the page people open only links to Live.
 
 This feature does not write `capability_improvements` and does not run a workflow graph.
 

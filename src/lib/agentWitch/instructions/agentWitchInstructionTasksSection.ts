@@ -44,6 +44,11 @@ export const AGENT_WITCH_INSTRUCTION_TASKS_SECTION: AgentWitchInstructionSection
         body: "Workflows and agents can include Human step harness items. The task composer shows them as Your steps for you, while the Mac agent receives only a short checkpoint summary in its prompt.",
       },
       {
+        id: "prompt-sdlc",
+        title: "Optimize the prompt on this Mac",
+        body: "Before you send or save a prompt, run Prompt SDLC yourself at http://127.0.0.1:43347/prompt-sdlc/agent. POST goal, prompt, and workingDirectory for the project folder. The judge and improver run in that folder, so they can read the harness and the code. Do not ask the human to paste the prompt into a different optimizer. Poll GET ?cycle= until done is true, and use the prompt when status is passed.",
+      },
+      {
         id: "mid-run-input",
         title: "Answering questions mid-run",
         body: "If the AI needs input, the live terminal shows a prompt. Reply in the browser; the response goes to your Mac and the run continues.",
