@@ -8,13 +8,13 @@ Production **Agent Witch** is **`https://www.agentwitch.com`** (repo folder **da
 
 Writer dispatch and the Mac bridge need a **long-lived Node process** with `getAgentWitchHub()` on `globalThis` (ADR **0005**). The same process that accepts `POST /api/agent-runs/dispatch` must hold the live hub WebSocket for that Mac (or use hub dispatch relay).
 
-| Requirement              | Implementation                                       |
-| ------------------------ | ---------------------------------------------------- |
-| WebSocket upgrade        | Root `server.ts` — `/api/agent-witch/ws`             |
-| Production start         | `npm start` → `NODE_ENV=production tsx server.ts`    |
-| Shipped host             | **Docker on Railway** — `Dockerfile`, `railway.toml` |
-| Health                   | `GET /api/health`                                    |
-| Migrations before deploy | `preDeployCommand`: `npm run db:migrate`             |
+| Requirement              | Implementation                                                                                                     |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------------ |
+| WebSocket upgrade        | Root `server.ts` — `/api/agent-witch/ws`                                                                           |
+| Production start         | `npm start` → `NODE_ENV=production tsx server.ts`                                                                  |
+| Shipped host             | **Docker on Railway** — `Dockerfile`, `railway.toml`                                                               |
+| Health                   | `GET /api/health` — process 200 before Next is ready. See [awc-process-health.md](../../qa/awc-process-health.md). |
+| Migrations before deploy | `preDeployCommand`: `npm run db:migrate`                                                                           |
 
 Local dev: `npm run dev` (same upgrade path on `http://localhost:3000`). Use `npm run dev:next` only when you explicitly do not need the WebSocket bridge.
 
@@ -81,6 +81,7 @@ AWC ships on Railway; AWI/AWL/AWB ship via install bundle version (`AGENT_WITCH_
 3. Run or rely on `preDeployCommand` migrations.
 4. For multi-replica: enable sticky sessions on `aw_hub_instance` or accept brief relay/handoff windows.
 5. After Mac-facing changes: bump install bundle version and verify self-update path.
+6. After a server deploy: `curl -sS https://www.agentwitch.com/api/health` and match `release.label` to `AGENT_WITCH_SERVER_RELEASE_LABEL`. `deviceSupersessionMigrationApplied: false` means migration `026-agent-witch-device-supersession.sql` is missing or the lookup failed (the probe still returns `ok: true`). A 200 does not mean pages or `/api/agent-witch/ws` are serving yet.
 
 ---
 
@@ -92,3 +93,4 @@ AWC ships on Railway; AWI/AWL/AWB ship via install bundle version (`AGENT_WITCH_
 - triển khai Agent Witch Railway Neon migration
 - production agentwitch.com wsUrl hardcoded Mac
 - Cursor Cloud VM DATABASE_URL env.local override
+- GET /api/health release label before Next ready
