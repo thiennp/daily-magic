@@ -13,7 +13,9 @@ import {
 import { requestOllamaTaskEstimate } from "./requestOllamaTaskEstimate";
 
 export type MarketplacePlanEstimatePreRunBackend =
-  | MarketplacePlanEstimateHeadlessWriterExecution["backend"]
+  | "anthropic-writer-api"
+  | "cli-fallback-missing-anthropic-writer-api-key"
+  | "cli-empty-catalog-model-id"
   | "cli-non-marketplace-pre-estimate";
 
 export type MarketplacePlanEstimatePreRunDiagnostics = {
@@ -28,30 +30,6 @@ export type AgentRunPreEstimateResult = {
   readonly estimateSummary: string;
   readonly estimateOutput: string;
   readonly marketplacePlanEstimate: MarketplacePlanEstimatePreRunDiagnostics | null;
-};
-
-const buildPreEstimatePrompt = (
-  taskPrompt: string,
-  marketplaceTemplateId: string | null,
-): string => {
-  const recipe = resolveMarketplaceRunRecipeByTemplateId(marketplaceTemplateId);
-  if (recipe === null) {
-    return buildAgentRunPreEstimatePrompt(taskPrompt);
-  }
-
-  return buildMarketplaceVibeCodingPlanEstimatePrompt(taskPrompt);
-};
-
-const buildPlanEstimateReportNote = (
-  diagnostics: MarketplacePlanEstimatePreRunDiagnostics,
-): string | null => {
-  if (diagnostics.backend === "anthropic-writer-api") {
-    return `Plan/estimate used Anthropic Writer API (modelOverride=${diagnostics.catalogModelId ?? "unknown"}).`;
-  }
-  if (diagnostics.backend === "cli-fallback-missing-anthropic-writer-api-key") {
-    return "Plan/estimate fell back to claude-cli because no Anthropic Writer API key is in writer-api-secrets.json on this Mac.";
-  }
-  return null;
 };
 
 export type AgentRunPreEstimateDraft = {
@@ -125,6 +103,7 @@ export const recordAgentRunPreEstimateOutput = (input: {
       estimateSeconds: null,
       estimateSummary: "",
       estimateOutput: input.estimateOutput,
+      marketplacePlanEstimate: null,
     };
   }
 
@@ -150,6 +129,7 @@ export const recordAgentRunPreEstimateOutput = (input: {
     estimateSeconds,
     estimateSummary,
     estimateOutput: input.estimateOutput,
+    marketplacePlanEstimate: null,
   };
 };
 

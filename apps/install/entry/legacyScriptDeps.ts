@@ -60,7 +60,10 @@ export { wrapPromptWithAgentRunReportInstruction } from "../../../scripts/dispat
 export { wrapPromptWithSidecarAgentRunEstimate } from "../../../scripts/dispatch/wrapPromptWithSidecarAgentRunEstimate";
 export { generateAgentRunReportKey } from "../../../scripts/dispatch/generateAgentRunReportKey";
 export { AGENT_RUN_WORKING_ESTIMATE_MARKER } from "../../../scripts/dispatch/agentRunWorkingEstimate.constant";
-export { seedAgentRunReportFile } from "../../../scripts/agentWitchRunReport";
+export {
+  seedAgentRunReportFile,
+  appendAgentRunReportDetailsLine,
+} from "../../../scripts/agentWitchRunReport";
 export {
   runAgentRunPreEstimate,
   beginAgentRunPreEstimate,
