@@ -44,6 +44,7 @@ Open the top `sourcePath` under `docs/qa/` when present.
 | [awc-awl-projects-source-of-truth.md](awc-awl-projects-source-of-truth.md)               | AWC DB owns project metadata; AWL loads cloud; `.agent-witch/` is repo-local               |
 | [awi-update-local-launchagent-plist.md](awi-update-local-launchagent-plist.md)           | Update local invalid LaunchAgent plist / Mac reconnecting (AGENT-067)                      |
 | [awc-mac-reconnecting-vs-local-live.md](awc-mac-reconnecting-vs-local-live.md)           | AWC “reconnecting / checks in” vs local AWI/AWB being up                                   |
+| [awc-offline-devices-hide-connect-button.md](awc-offline-devices-hide-connect-button.md) | Offline paired devices hide Connect; start the helper instead                              |
 | [awl-loopback-origin.md](awl-loopback-origin.md)                                         | AWL is only `http://127.0.0.1:43347` (no vanity hostname)                                  |
 | [awi-does-not-install-local-llm.md](awi-does-not-install-local-llm.md)                   | AWI installs Ollama on install and update when the command is missing                      |
 | [awi-owns-update-local.md](awi-owns-update-local.md)                                     | Update local work is AWI; the button is AWC; `/update/run` is AWB                          |

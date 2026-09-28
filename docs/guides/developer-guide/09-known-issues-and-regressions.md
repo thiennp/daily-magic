@@ -75,6 +75,14 @@ Documented in KNOWN_ISSUES because **every future install bundle** must preserve
 
 ---
 
+## Offline devices and a missing Connect button
+
+Home **Mac offline** means claimed devices have no live socket. **Connect this Mac** (`resolveShouldShowConnectThisMac`) and **Connect another Mac** (`shouldShowAgentWitchAppDownloadCta`) are pairing CTAs, so they stay hidden once a device is claimed or this browser’s token hash already matches a row. **Mac settings & connect** (`HomeMacSettingsLink`) only navigates to `/#your-setup`.
+
+**Q&A:** [awc-offline-devices-hide-connect-button.md](../../qa/awc-offline-devices-hide-connect-button.md).
+
+---
+
 ## How to find regression coverage
 
 ```bash
