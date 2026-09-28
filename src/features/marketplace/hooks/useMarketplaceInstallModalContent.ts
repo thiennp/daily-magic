@@ -6,6 +6,7 @@ import { useUserProjects } from "@/features/agent/hooks/useUserProjects";
 import useLocalMacBrowserContext from "@/features/home/hooks/useLocalMacBrowserContext";
 import { useAutoSelectFirstProject } from "@/features/marketplace/hooks/useAutoSelectFirstProject";
 import { useMarketplaceInstallListingReset } from "@/features/marketplace/hooks/useMarketplaceInstallListingReset";
+import { buildMarketplaceInstalledTaskComposerInput } from "@/features/marketplace/utils/buildMarketplaceInstalledTaskComposerInput";
 import { executeMarketplaceInstall } from "@/features/marketplace/utils/executeMarketplaceInstall";
 import { resolveMarketplaceInstallEligibility } from "@/features/marketplace/utils/resolveMarketplaceInstallEligibility";
 import type HarnessMarketplaceListing from "@/lib/harness/types/HarnessMarketplaceListing.type";
@@ -84,10 +85,14 @@ export function useMarketplaceInstallModalContent({
     }
 
     onClose();
-    openSendTaskModal({
-      libraryCapabilityId,
-      prompt: listing.exampleRequest,
-    });
+    openSendTaskModal(
+      buildMarketplaceInstalledTaskComposerInput({
+        libraryCapabilityId,
+        exampleRequest: listing.exampleRequest,
+        deviceId: macSelection.selectedDeviceId,
+        projectId: selectedProjectId,
+      }),
+    );
   };
 
   return {

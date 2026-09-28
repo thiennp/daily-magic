@@ -21,6 +21,7 @@ export const useSendTaskModalActions = (input: {
     readonly libraryCapabilityId?: string;
     readonly prompt?: string;
     readonly deviceId?: string;
+    readonly projectId?: string;
   }) => void;
   readonly expandRunningSendTask: (runId: string) => void;
   readonly closeSendTaskModal: () => void;
@@ -64,6 +65,7 @@ export const useSendTaskModalActions = (input: {
       readonly libraryCapabilityId?: string;
       readonly prompt?: string;
       readonly deviceId?: string;
+      readonly projectId?: string;
     }) => {
       const composerHref = buildAgentComposerHref({ ...options, pathname });
 

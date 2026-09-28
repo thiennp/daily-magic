@@ -66,7 +66,9 @@ Details: [Guest library browser drafts](../../qa/guest-library-browser-drafts.md
 
 Marketplace **Install** always asks for a **project** and a **Mac**. The listing is saved to your **library** and linked in cloud **project composition** (workflow/agent + playbook metadata)—not as a global dump into `~/.agent-witch/harness/`.
 
-On the Mac, open the same **project** in Agent Witch Live and **pull playbook files into the repo** so rules land under the project’s `.cursor/` tree and `project.json` stays in sync.
+**Start a task** on the install success screen opens New task on that same project, not on Default.
+
+On the Mac, open the same **project** in Agent Witch Live. **Pull into repo** writes `.cursor` files only for harness sets already installed on that Mac. A marketplace install still counts as Harness (1) in the tab, but if nothing is installed locally the button opens the Harness page instead of writing the bound playbook.
 
 Each marketplace card includes a **How to use** section (steps, prerequisites, supported writers: Anthropic, OpenAI, Cursor, Google).
 
@@ -81,7 +83,7 @@ Same-machine identity: [How AWC knows this computer](../../qa/awc-how-browser-kn
 Flow (simplified):
 
 1. Browse listing → read **How to use** → **Install** (choose **Mac** and **project**).
-2. Cloud records library + project bindings; Mac pulls files into the repo when you are ready.
+2. Cloud records library + project bindings. **Start a task** keeps that project. Mac pull writes repo files only after the harness set is installed locally.
 3. Teammates run from library or marketplace entry → shared **Runs** history.
 
 Marketplace is not a separate runtime—install + library + dispatch.

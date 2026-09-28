@@ -59,9 +59,10 @@ Details: [guest-library-browser-drafts.md](../../qa/guest-library-browser-drafts
 ## Marketplace → capability → workflow orchestration
 
 1. Listing ships capability template (`template-*` slug) + generated **usageGuide** (UI); harness preset stays internal to templates.
-2. **Install** requires `projectId`; binds workflow/agent + harness slug via `bindMarketplaceInstallToProject` / `bindPublishedCapabilityHarnessToProject`.
-3. **Run** may start an **official workflow run** if the capability resolves to a registered orchestration template ([Chapter 6](06-workflows-orchestration.md)).
-4. Playbook files materialize under the **project repo** after Mac pull; dispatch still uses `command.claude.run` per step.
+2. **Install** requires `projectId`; binds workflow/agent + harness slug via `bindMarketplaceInstallToProject` / `bindPublishedCapabilityHarnessToProject`. It does not push playbook file bytes to the Mac (`localHarnessBundle` stays null).
+3. **Start a task** passes that `projectId` and `deviceId` into the composer (`buildMarketplaceInstalledTaskComposerInput`, MARKETPLACE-008).
+4. **Run** may start an **official workflow run** if the capability resolves to a registered orchestration template ([Chapter 6](06-workflows-orchestration.md)).
+5. AWL **Pull into repo** writes `.cursor` only from `readInstalledLocalHarnessSnapshot`. A cloud harness count with an empty local snapshot renders “No harness on this Mac yet” and links to `/harness`. Dispatch still uses `command.claude.run` per step.
 
 Adding or changing a marketplace preset: co-locate harness template, capability constant, and `workflowOrchestration/definitions/*.definition.ts` per [official-marketplace-workflow-best-practices.md](../../product/official-marketplace-workflow-best-practices.md).
 
