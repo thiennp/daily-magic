@@ -9,6 +9,7 @@ interface WorkflowTaskFieldBlockProps {
   readonly field: WorkflowFieldDefinition;
   readonly value: string;
   readonly errorMessage?: string;
+  readonly controlIdPrefix?: string;
   readonly onChange: (value: string) => void;
 }
 
@@ -16,10 +17,11 @@ export default function WorkflowTaskFieldBlock({
   field,
   value,
   errorMessage,
+  controlIdPrefix = "workflow-field",
   onChange,
 }: WorkflowTaskFieldBlockProps): ReactElement {
   const hasError = errorMessage !== undefined;
-  const controlId = `workflow-field-${field.key}`;
+  const controlId = `${controlIdPrefix}-${field.key}`;
   const errorId = `${controlId}-error`;
 
   return (

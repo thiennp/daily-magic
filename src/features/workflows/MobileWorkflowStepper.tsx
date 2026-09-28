@@ -42,6 +42,7 @@ export default function MobileWorkflowStepper({
           field={field}
           value={values[field.key] ?? ""}
           errorMessage={fieldErrors[field.key]}
+          controlIdPrefix="workflow-field-mobile"
           onChange={(value) => {
             onChange(field.key, value);
           }}

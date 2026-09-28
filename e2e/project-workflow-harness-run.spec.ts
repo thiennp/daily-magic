@@ -42,7 +42,11 @@ const fillLabeledField = async (
   label: RegExp,
   value: string,
 ): Promise<void> => {
-  await page.getByLabel(label).fill(value, { timeout: 15_000 });
+  // The mobile stepper stays mounted (md:hidden) with its own ids. Role lookup
+  // skips that hidden copy and fills the visible desktop field.
+  await page.getByRole("textbox", { name: label }).fill(value, {
+    timeout: 15_000,
+  });
 };
 
 const readDispatchProject = (
