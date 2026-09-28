@@ -30,6 +30,33 @@ describe("buildAgentWitchLocalProjectEditorPageBody", () => {
     expect(html).toContain('href="/harness"');
     expect(html).not.toContain(" disabled");
     expect(html).not.toContain('action="/projects/link-harness"');
+    expect(html).not.toContain('action="/projects/pull-bound-harness"');
+  });
+
+  it("pulls a Console-linked playbook when nothing is installed locally (MARKETPLACE-009)", () => {
+    const html = buildAgentWitchLocalProjectEditorPageBody({
+      project,
+      installed: emptyInstalled,
+      linkedSetSlugs: [],
+      composition: {
+        counts: { harness: 1, workflow: 1, agent: 0 },
+        items: [
+          {
+            id: "bind-1",
+            componentId: "comp-1",
+            kind: "harness",
+            name: "Freelancer client proposal harness",
+            versionLabel: null,
+          },
+        ],
+      },
+      knowledgeCandidateCount: 0,
+      activeTab: "harness",
+    });
+
+    expect(html).toContain('action="/projects/pull-bound-harness"');
+    expect(html).toContain('type="submit">Pull into repo</button>');
+    expect(html).not.toContain('href="/harness"');
   });
 
   it("submits checked harness sets when Pull into repo is used with installed sets", () => {
@@ -48,7 +75,7 @@ describe("buildAgentWitchLocalProjectEditorPageBody", () => {
     const html = buildAgentWitchLocalProjectEditorPageBody({
       project,
       installed,
-      linkedSetSlugs: ["check24-style-guide"],
+      linkedSetSlugs: [],
       composition: null,
       knowledgeCandidateCount: 0,
       activeTab: "harness",

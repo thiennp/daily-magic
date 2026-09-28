@@ -74,6 +74,7 @@ import {
   ensureAgentWitchProjectFolder,
   fetchAgentWitchProjectsForLocalApp,
   findAgentWitchProjectById,
+  handlePullBoundHarnessPost,
   listLinkedHarnessSetSlugsFromProjectFolder,
   pickMacOsFolderDialog,
   resolveAgentWitchCloudApiConfig,
@@ -1076,6 +1077,34 @@ export const startAgentWitchLocalApp = (input: {
               flashMessage: linkedFlash ?? knowledgeFlashMessage,
               flashError: knowledgeFlashError,
             }),
+          }),
+        );
+        return;
+      }
+
+      if (method === "POST" && pathname === "/projects/pull-bound-harness") {
+        const rawBody = await readBody(request);
+        const pullResult = await handlePullBoundHarnessPost({
+          rawBody,
+          layout: input.layout,
+        });
+        if (pullResult.kind === "not_found") {
+          await sendLocalAppNotFound(response, "Project not found");
+          return;
+        }
+        if (pullResult.kind === "redirect") {
+          response.writeHead(303, { Location: pullResult.location });
+          response.end();
+          return;
+        }
+        const installBundle = buildInstallBundleStatus();
+        sendHtml(
+          response,
+          await buildLocalAppShell({
+            title: pullResult.title,
+            activePath: "/projects",
+            installVersion: installBundle.installVersion,
+            body: pullResult.body,
           }),
         );
         return;

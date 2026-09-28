@@ -1,5 +1,7 @@
 export { applyInstalledHarnessSetsToProjectCursor } from "../internal/core/applyInstalledHarnessSetsToProjectCursor";
 
+export { pullBoundHarnessBundlesIntoProjectCursor } from "../internal/core/pullBoundHarnessBundlesIntoProjectCursor";
+
 export { resolveHarnessManifestItemCursorRelativePath } from "../internal/core/resolveHarnessManifestItemCursorRelativePath";
 
 export {

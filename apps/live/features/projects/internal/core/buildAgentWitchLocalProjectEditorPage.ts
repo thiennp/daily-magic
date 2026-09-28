@@ -42,12 +42,25 @@ const buildEmptyHarnessTab = (): string => `<div class="stack">
         </div>
       </div>`;
 
+const buildBoundHarnessPullTab = (project: AgentWitchProjectView): string =>
+  `<form method="POST" action="/projects/pull-bound-harness" class="stack">
+        <input type="hidden" name="projectId" value="${escapeHtml(project.id)}" />
+        <p class="lede">This project’s playbook is linked in Agent Witch Console. Pull writes those files into this repo’s <code>.cursor</code> tree.</p>
+        <div class="actions">
+          <button class="btn btn-primary" type="submit">Pull into repo</button>
+        </div>
+      </form>`;
+
 const buildHarnessTab = (input: {
   readonly project: AgentWitchProjectView;
   readonly installed: InstalledLocalHarnessSnapshot;
   readonly linkedSetSlugs: readonly string[];
+  readonly boundHarnessCount: number;
 }): string => {
   if (input.installed.sets.length === 0) {
+    if (input.boundHarnessCount > 0) {
+      return buildBoundHarnessPullTab(input.project);
+    }
     return buildEmptyHarnessTab();
   }
 
@@ -56,7 +69,7 @@ const buildHarnessTab = (input: {
     .map(
       (set) => `<li class="harness-installed-set">
           <label class="check-row">
-            <input type="checkbox" name="applySet" value="${escapeHtml(set.slug)}"${linked.has(set.slug) ? " checked" : ""} />
+            <input type="checkbox" name="applySet" value="${escapeHtml(set.slug)}"${linked.size === 0 || linked.has(set.slug) ? " checked" : ""} />
             <span><strong>${escapeHtml(set.name)}</strong> <span class="muted mono">(${escapeHtml(set.slug)})</span></span>
           </label>
           <p class="muted">${set.itemCount} item(s)</p>
@@ -132,7 +145,12 @@ export const buildAgentWitchLocalProjectEditorPageBody = (input: {
 
   let tabBody = "";
   if (input.activeTab === "harness") {
-    tabBody = buildHarnessTab(input);
+    tabBody = buildHarnessTab({
+      project: input.project,
+      installed: input.installed,
+      linkedSetSlugs: input.linkedSetSlugs,
+      boundHarnessCount: input.composition?.counts.harness ?? 0,
+    });
   } else if (input.activeTab === "workflows") {
     tabBody = buildCompositionList(
       workflowItems,

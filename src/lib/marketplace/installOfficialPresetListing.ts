@@ -1,4 +1,6 @@
+import buildHarnessInstallBundleFromTemplateHarness from "@/lib/agentWitch/harness/buildHarnessInstallBundleFromTemplateHarness";
 import createCapabilityFromTemplate from "@/lib/capabilities/createCapabilityFromTemplate";
+import requestCapabilityTemplateHarnessInstall from "@/lib/capabilities/requestCapabilityTemplateHarnessInstall";
 import findCapabilityTemplateById from "@/lib/capabilities/templates/findCapabilityTemplateById";
 import bindMarketplaceInstallToProject from "@/lib/marketplace/bindMarketplaceInstallToProject";
 import type { MarketplaceInstallResult } from "@/lib/marketplace/types/MarketplaceInstallResult.type";
@@ -66,15 +68,25 @@ const installOfficialPresetListing = async (
     };
   }
 
+  const localHarnessBundle = buildHarnessInstallBundleFromTemplateHarness(
+    result.harness,
+  );
+  const pushed = await requestCapabilityTemplateHarnessInstall(
+    actorUserId,
+    result.harness,
+    deviceId,
+  );
+
   return {
     ok: true,
     errorMessage: null,
     savedToLibrary: true,
     libraryCapabilityId: result.capability.id,
-    harnessInstalled: false,
-    harnessInstallMessage:
-      "Linked to your project. On the Mac, open the project and pull playbook files into the repo.",
-    localHarnessBundle: null,
+    harnessInstalled: pushed.installed,
+    harnessInstallMessage: pushed.installed
+      ? "Linked to your project. On the Mac, open the project and pull playbook files into the repo."
+      : "Linked to your project. Open the project on the Mac and pull playbook files into the repo.",
+    localHarnessBundle,
     projectId,
   };
 };

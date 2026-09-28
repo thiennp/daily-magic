@@ -68,7 +68,7 @@ Marketplace **Install** always asks for a **project** and a **Mac**. The listing
 
 **Start a task** on the install success screen opens New task on that same project, not on Default.
 
-On the Mac, open the same **project** in Agent Witch Live. **Pull into repo** writes `.cursor` files only for harness sets already installed on that Mac. A marketplace install still counts as Harness (1) in the tab, but if nothing is installed locally the button opens the Harness page instead of writing the bound playbook.
+On the Mac, open the same **project** in Agent Witch Live. **Pull into repo** writes the linked playbook into that folder’s `.cursor` tree. If the playbook is already on the Mac, you confirm the sets and pull. If it is only linked in Console, the same button still writes the official playbook files. The project folder must sit under your home directory.
 
 Each marketplace card includes a **How to use** section (steps, prerequisites, supported writers: Anthropic, OpenAI, Cursor, Google).
 

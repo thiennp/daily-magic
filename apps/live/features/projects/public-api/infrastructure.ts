@@ -21,6 +21,8 @@ export { default as expandAgentWitchProjectFolderPath } from "../internal/core/e
 
 export { ensureAgentWitchProjectFolder } from "../internal/core/ensureAgentWitchProjectFolder";
 
+export { handlePullBoundHarnessPost } from "../internal/core/handlePullBoundHarnessPost";
+
 export { listLinkedHarnessSetSlugsFromProjectFolder } from "../internal/core/listLinkedHarnessSetSlugsFromProjectFolder";
 
 export { default as shouldCaptureRunOutputForProjectKnowledge } from "../internal/core/knowledge/shouldCaptureRunOutputForProjectKnowledge";
