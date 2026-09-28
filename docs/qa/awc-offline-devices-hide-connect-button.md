@@ -1,47 +1,39 @@
-# Why is there no Connect button when my computer is offline?
+# Why is there no Connect button when my computer is not “this Mac”?
 
 ## Query aliases
 
 - no connect button when computer is not connected
 - Mac offline but no Connect this Mac button
+- no this Mac in the device list
 - Mac settings and connect does not connect
 - why is Your Devices offline with no connect button
 - computer not connected yet missing connect button
 - khong co nut connect khi may offline
-- Home hides Connect this Mac when devices already exist
+- this computer is not linked
 
 ## Short answer
 
-**Those computers are already paired.** Home lists them under **Your Devices** and the hero says **Mac offline**. **Connect this Mac** and **Connect another Mac** are the first-time pairing controls. They stay hidden once a device is already on the account (and, on a Mac, once this browser’s pairing-token cookie matches one of those devices). Offline means the helper is not on a live WebSocket right now. The website cannot dial the machine; start Agent Witch on that computer so it checks in. **Mac settings & connect** only scrolls to **Your setup**. It does not pair or wake the computer.
+**Connect this Mac** is how you link the computer you are using. It shows in the hero and under **Your Devices** whenever that computer is not already matched to a listed device. A missing **this Mac** badge means this browser is not linked yet, even if other computers are already on the account and offline. **Mac settings & connect** only opens **Your setup**. It does not link or wake a computer.
+
+If the badge is missing and the button is also missing, Home was stuck treating a skipped identity check as still loading (HOME-057). After that fix, the button stays available until this computer is linked.
 
 ## Details
 
-| What you see                                    | What it means                                                                       |
-| ----------------------------------------------- | ----------------------------------------------------------------------------------- |
-| **No Mac connected** and a Connect control      | No claimed device yet. Pair from Home.                                              |
-| **Mac offline** plus rows such as “Last seen …” | Devices are already claimed. The helper is not live.                                |
-| **Mac settings & connect**                      | Link to `/#your-setup` (rules and sharing) when the local Mac app is not reachable. |
-| **Cursor Cloud connected**                      | A cloud worker session. Separate from the Mac or Linux host.                        |
+| What you see                                             | What you can do                                                           |
+| -------------------------------------------------------- | ------------------------------------------------------------------------- |
+| **This computer is not linked** and **Connect this Mac** | Run the install command on the computer you are using.                    |
+| **this Mac** on a row, status **Mac offline**            | That computer is already linked. Start Agent Witch on it so it checks in. |
+| **Mac settings & connect**                               | Opens rules and sharing. It does not pair the computer.                   |
+| **Cursor Cloud connected**                               | A cloud worker. Separate from the Mac or Linux host.                      |
 
-### Why the buttons are hidden
-
-- **Connect another Mac** renders only when `shouldShowAgentWitchAppDownloadCta` is true: the devices list has finished loading and there is no claimed device (`useLocalMacBrowserContext` treats any claimed device as “local app installed”).
-- **Connect this Mac** is hidden while local identity is still loading, on a phone, and on macOS when `deviceMatchesLocalTokenHash` matches a listed device. A missing local token on macOS still shows the row (HOME-030). Linux and Windows desktops keep the row.
-- An offline device row is clickable and opens wake instructions. There is no button labeled **Connect** on that row.
-
-### How to get the computer online
-
-1. On that computer, start Agent Witch (login autostart, or the wake command from the offline row).
-2. Wait until Home shows **Mac online**. The helper opens `wss://www.agentwitch.com/api/agent-witch/ws`.
-3. If the row says **update available**, update that install before sending tasks. Bundle mismatch blocks dispatch the same way an offline host does.
+The button stays hidden on a phone, while a wake-identity probe is actually in progress, and after this browser’s pairing token matches a listed device.
 
 ## Related
 
-- [Home and navigation](../guides/user-guide/03-home-and-navigation.md) — Offline vs none / not connected
+- [Home and navigation](../guides/user-guide/03-home-and-navigation.md)
 - [Mac connect and bridge](../guides/user-guide/04-mac-connect-and-bridge.md)
 - [How AWC knows this computer](awc-how-browser-knows-this-computer.md)
-- [Reconnecting vs local live](awc-mac-reconnecting-vs-local-live.md)
-- Code: `resolveShouldShowConnectThisMac`, `shouldShowAgentWitchAppDownloadCta`, `HomeMacSettingsLink`, `resolveHomeMacStatusSummary`
+- Code: `resolveShouldShowConnectThisMac`, `resolveIsCheckingLocalMacIdentity`, `ConnectThisMacButton`
 
 ## Last reviewed
 

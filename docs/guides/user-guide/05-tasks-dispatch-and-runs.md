@@ -54,8 +54,9 @@ Optional **Cursor Cloud** dispatch (when configured) targets cloud agents instea
 | **Mac is reconnecting. Your task will send when it checks in.** | HTTP accepted; outbox will flush when hub socket is live—common right after Console deploy. |
 | **Try again in a few seconds.**                                 | Interactive retry path—not the same as queued writer ack.                                   |
 | Mac offline                                                     | No dispatch; fix connect chapter—not “wait silently forever.”                               |
+| **This computer is not linked**                                 | No row is **this Mac**. **Connect this Mac** on Home links the computer you are using.      |
 
-Details: [Reconnecting vs local live](../../qa/awc-mac-reconnecting-vs-local-live.md).
+Details: [Reconnecting vs local live](../../qa/awc-mac-reconnecting-vs-local-live.md) · [No Connect button](../../qa/awc-offline-devices-hide-connect-button.md).
 
 ---
 

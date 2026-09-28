@@ -14,10 +14,13 @@ import {
   readAgentWitchLocalHostCookie,
   setAgentWitchLocalHostCookie,
 } from "@/features/agent-witch/utils/agentWitchLocalHostCookie";
+import { isAgentWitchWakeIdentityProbeSuppressed } from "@/features/agent-witch/utils/agentWitchWakeIdentityProbeSession";
 import { collectUniqueWakePorts } from "@/features/agent-witch/utils/collectUniqueWakePorts";
+import { resolveShouldProbeWakeIdentityInBrowser } from "@/features/agent-witch/utils/resolveShouldProbeWakeIdentityInBrowser";
 import useProbeLocalMacWakeIdentity from "@/features/home/hooks/useProbeLocalMacWakeIdentity";
 import { consumeLocalTokenHashQueryParam } from "@/features/home/utils/consumeLocalTokenHashQueryParam";
 import detectBrowserOperatingSystem from "@/features/home/utils/detectBrowserOperatingSystem";
+import { resolveIsCheckingLocalMacIdentity } from "@/features/home/utils/resolveIsCheckingLocalMacIdentity";
 import {
   getLocalMacTokenHashSnapshot,
   setLocalMacTokenHash,
@@ -58,15 +61,23 @@ const useLocalMacHostname = (): {
     getServerOperatingSystemSnapshot,
   );
   const isMacBrowser = operatingSystem === "mac";
-  const isCheckingLocalHostname =
-    isMacBrowser &&
-    (identitySnapshot.status === "idle" ||
-      identitySnapshot.status === "loading");
   const pairedDevicesSnapshot = useSyncExternalStore(
     pairedDevicesResource.subscribe,
     () => pairedDevicesResource.getSnapshot(),
     () => null,
   );
+  const claimedDeviceCount = (
+    pairedDevicesSnapshot ?? getPairedDevicesSnapshotOrEmpty()
+  ).devices.length;
+  const isCheckingLocalHostname = resolveIsCheckingLocalMacIdentity({
+    isMacBrowser,
+    identityStatus: identitySnapshot.status,
+    shouldProbeWakeIdentity: resolveShouldProbeWakeIdentityInBrowser({
+      localTokenHash,
+      claimedDeviceCount,
+      probeSuppressed: isAgentWitchWakeIdentityProbeSuppressed(),
+    }),
+  });
   const extraWakePorts = useMemo(
     () =>
       collectUniqueWakePorts(

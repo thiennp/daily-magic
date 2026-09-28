@@ -157,7 +157,7 @@ Invalid `com.agent-witch.plist` (install script once embedded bash inside XML). 
 | **this Mac** badge       | Cloud device hash matches local bridge `/identity` |
 | **Mac offline**          | Device is already paired; the helper is not live   |
 
-**Connect this Mac** is hidden once this browser’s pairing token already matches a listed device, and **Connect another Mac** is hidden once any device is claimed. **Mac settings & connect** only opens **Your setup**. Start Agent Witch on that computer so it checks in. Click an offline device row for wake steps.
+If no row says **this Mac**, use **Connect this Mac** in the hero or under **Your Devices**. That links the computer you are using now. The button stays hidden only after this browser’s pairing token already matches a listed device. **Mac settings & connect** only opens **Your setup**. When a row is already **this Mac** and **Offline**, start Agent Witch on that computer. Click the offline row for wake steps.
 
 If you do not see **this Mac** on macOS: bridge not running, wrong port, or signed-out page (no probe). Not a DNS issue by itself.
 
