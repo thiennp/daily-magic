@@ -4,6 +4,7 @@ import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 
 import {
+  clearAgentWitchConnectionHealth,
   isAgentWitchConnectionHealthStale,
   readAgentWitchConnectionHealth,
   resolveAgentWitchConnectionHealthPath,
@@ -90,6 +91,20 @@ describe("agentWitchConnectionHealth", () => {
       wsUrl: "ws://localhost:3000/api/agent-witch/ws",
       lastAckAt: expect.stringMatching(/^\d{4}-\d{2}-\d{2}T/),
     });
+  });
+
+  it("clears connection health from disk", () => {
+    const rootDir = fs.mkdtempSync(path.join(os.tmpdir(), "aw-health-clear-"));
+    tempDirs.push(rootDir);
+    const layout = createLayout(rootDir);
+
+    writeAgentWitchConnectionHealth(layout, {
+      wsUrl: "wss://www.agentwitch.com/api/agent-witch/ws",
+    });
+    expect(readAgentWitchConnectionHealth(layout)).not.toBeNull();
+
+    clearAgentWitchConnectionHealth(layout);
+    expect(readAgentWitchConnectionHealth(layout)).toBeNull();
   });
 
   it("marks missing or old health as stale", () => {

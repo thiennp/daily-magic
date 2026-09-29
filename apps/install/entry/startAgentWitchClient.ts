@@ -19,6 +19,7 @@ import {
 import type { AgentWitchLocalLayout } from "@agent-witch/install-layout/types";
 import {
   AGENT_WITCH_CONNECTION_STALE_MS,
+  clearAgentWitchConnectionHealth,
   isAgentWitchConnectionHealthStale,
   readAgentWitchConnectionHealth,
   writeAgentWitchConnectionHealth,
@@ -1911,6 +1912,7 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
       clearHeartbeat();
       state.socket = undefined;
       state.wsConnected = false;
+      clearAgentWitchConnectionHealth(config.layout);
       state.reconnectAttempt += 1;
       const reasonText =
         typeof reason === "string" ? reason : reason.toString("utf8");

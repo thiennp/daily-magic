@@ -9,6 +9,41 @@ import { describePromptSdlcWriterTerminalFailure } from "./readPromptSdlcWriterO
 export const describePromptSdlcLocalActivity = (
   cycle: PromptSdlcLocalCycle,
 ): { readonly title: string; readonly detail: string } => {
+  if (cycle.status === "wizard_paused") {
+    const message = cycle.errorMessage?.trim() ?? "";
+    return {
+      title: "Wizard paused.",
+      detail:
+        message.length > 0
+          ? message
+          : "Review the step above, then Continue or rerun with feedback.",
+    };
+  }
+  if (
+    cycle.wizard !== undefined &&
+    cycle.wizard.gate === null &&
+    cycle.wizard.phase === "separate" &&
+    cycle.wizard.splitOptions.length === 0 &&
+    !isPromptSdlcTerminalStatus(cycle.status)
+  ) {
+    const writer = cycle.judgeModel;
+    return {
+      title: `${labelPromptSdlcLocalModel(writer)} is suggesting module splits.`,
+      detail: "This panel keeps updating while the writer works on this Mac.",
+    };
+  }
+  if (
+    cycle.wizard !== undefined &&
+    cycle.wizard.gate === null &&
+    cycle.wizard.phase === "generalize" &&
+    !isPromptSdlcTerminalStatus(cycle.status)
+  ) {
+    const writer = cycle.judgeModel;
+    return {
+      title: `${labelPromptSdlcLocalModel(writer)} is generalizing your prompt.`,
+      detail: "This panel keeps updating while the writer works on this Mac.",
+    };
+  }
   if (
     cycle.status === "judging" &&
     cycle.judgeModel === PROMPT_SDLC_MANUAL_ACTOR

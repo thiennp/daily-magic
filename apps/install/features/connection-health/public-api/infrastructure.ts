@@ -2,6 +2,7 @@
  * AWI slice `connection-health` — hub connection health snapshot on disk.
  */
 export {
+  clearAgentWitchConnectionHealth,
   isAgentWitchConnectionHealthStale,
   readAgentWitchConnectionHealth,
   resolveAgentWitchConnectionHealthPath,

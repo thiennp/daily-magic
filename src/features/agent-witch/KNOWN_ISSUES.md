@@ -35,6 +35,18 @@ Architecture for multi-instance presence and the dispatch outbox: `docs/adr/0005
 
 ---
 
+## OPEN-004 — AWL Status showed WebSocket connected after the socket closed
+
+**Symptom:** Agent Witch Live **Status** could show **Connected** for up to ~2 minutes after the Mac client disconnected, while **agentwitch.com** already listed the Mac as offline or reconnecting.
+
+**Cause:** `connection-health.json` kept a fresh `lastAckAt` until it aged out; AWL reads that file in a separate process from the WebSocket client.
+
+**Fix (bundle **162+**):** Clear `connection-health.json` on WebSocket `close` so AWL matches cloud presence immediately.
+
+**Regression test:** `agentWitchConnectionHealth.test.ts` (`clears connection health from disk`).
+
+---
+
 ## OPEN-003 — Stale install bundle on the Mac until update runs
 
 **Symptom:** Cloud shows a newer install bundle than the Mac; old client behavior (missing fixes) until update completes.
