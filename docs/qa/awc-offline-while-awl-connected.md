@@ -18,12 +18,12 @@
 
 ### Two status lights
 
-| What you see                                          | What flipped it                                                | What it leaves unset                   |
-| ----------------------------------------------------- | -------------------------------------------------------------- | -------------------------------------- |
-| AWL home **Connected to cloud**, Status **Connected** | `socket.on("open")` in the Mac client (`wsConnected`)          | Which cloud device row owns the socket |
-| AWC **Mac offline** / picker **Offline**              | `presenceTier === "offline"` on `GET /api/agent-witch/devices` | Whether some other socket is open      |
-| AWC **Mac reconnecting**                              | `live_other_instance` or `recent` (`last_seen_at` within 180s) | —                                      |
-| AWC **Mac online**                                    | Socket for that device id is on the Node serving the page      | —                                      |
+| What you see                                          | What flipped it                                                                                                              | What it leaves unset                   |
+| ----------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- | -------------------------------------- |
+| AWL home **Connected to cloud**, Status **Connected** | Fresh `connection-health.json` (`system.ack`) while the Mac socket is open (bundle **164+**; not merely `socket.on("open")`) | Which cloud device row owns the socket |
+| AWC **Mac offline** / picker **Offline**              | `presenceTier === "offline"` on `GET /api/agent-witch/devices`                                                               | Whether some other socket is open      |
+| AWC **Mac reconnecting**                              | `live_other_instance` or `recent` (`last_seen_at` within 180s)                                                               | —                                      |
+| AWC **Mac online**                                    | Socket for that device id is on the Node serving the page                                                                    | —                                      |
 
 `agent.register` is what binds the open socket to a device. After the server accepts it, it inserts `agent_witch_connections` and touches `last_seen_at`. From then on that row is `live`, `live_other_instance`, or at least `recent` — the Home label is **Mac online** or **Mac reconnecting**.
 
@@ -54,4 +54,4 @@ The handshake and the device row are different checks.
 
 ## Last reviewed
 
-2026-09-28
+2026-09-29

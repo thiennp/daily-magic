@@ -43,7 +43,9 @@ Architecture for multi-instance presence and the dispatch outbox: `docs/adr/0005
 
 **Fix (bundle **162+**):** Clear `connection-health.json` on WebSocket `close` so AWL matches cloud presence immediately.
 
-**Regression test:** `agentWitchConnectionHealth.test.ts` (`clears connection health from disk`).
+**Fix (bundle **164+**):** Do not write `connection-health.json` on socket `open` (only on `system.ack`). AWL `wsConnected` requires a fresh health snapshot while the socket is open, so **Connected** no longer appears before the cloud has acked the Mac client.
+
+**Regression tests:** `agentWitchConnectionHealth.test.ts` (`clears connection health from disk`); `resolveAgentWitchLocalWsConnected.test.ts`.
 
 ---
 

@@ -2,9 +2,8 @@ import fs from "node:fs";
 import path from "node:path";
 
 import {
-  AGENT_WITCH_CONNECTION_STALE_MS,
-  isAgentWitchConnectionHealthStale,
   readAgentWitchConnectionHealth,
+  resolveAgentWitchLocalWsConnected,
 } from "@agent-witch/install-connection-health";
 import {
   resolveAgentWitchInstallDir,
@@ -40,12 +39,9 @@ export const runAgentWitchExternalLiveCli = (): void => {
     controllers: {
       getStatus: () => {
         const health = readAgentWitchConnectionHealth(layout);
-        const wsConnected =
-          health !== null &&
-          !isAgentWitchConnectionHealthStale(
-            health,
-            AGENT_WITCH_CONNECTION_STALE_MS,
-          );
+        const wsConnected = resolveAgentWitchLocalWsConnected(layout, {
+          socketOpen: true,
+        });
         return {
           wsConnected,
           lastHeartbeatAt: health?.lastAckAt ?? null,

@@ -4,6 +4,7 @@ import path from "node:path";
 
 import type { AgentWitchLocalLayout } from "@agent-witch/install-layout/types";
 
+import { resolveLocalAppPublicKey } from "../../../apps/live/features/local-server/public-api/infrastructure";
 import { startAgentWitchLocalApp } from "../../../apps/live/features/local-server/internal/core/startAgentWitchLocalApp";
 
 const installDir =
@@ -48,12 +49,17 @@ const layout: AgentWitchLocalLayout = {
   errorLogPath: path.join(installDir, "logs", "agent-witch.error.log"),
 };
 
+const publicKeyRaw = resolveLocalAppPublicKey(layout);
+
 const server = startAgentWitchLocalApp({
   layout,
   controllers: {
     getStatus: () => ({
-      connected: false,
+      wsConnected: false,
       lastHeartbeatAt: null,
+      wakeError: null,
+      linkCode: null,
+      publicKeyRaw,
     }),
     reviveWebSocket: () => undefined,
   },

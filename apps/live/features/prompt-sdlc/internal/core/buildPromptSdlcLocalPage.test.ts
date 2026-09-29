@@ -444,6 +444,42 @@ describe("buildPromptSdlcLocalPageBody", () => {
     );
   });
 
+  it("shows a resume banner when another wizard run is paused", () => {
+    const paused = {
+      ...createPromptSdlcLocalCycle({
+        goal: "Resume this wizard run.",
+        sourcePrompt: "Be helpful.",
+        judgeModel: "claude-cli" as const,
+        improverModel: "codex" as const,
+      }),
+      status: "wizard_paused" as const,
+      wizard: {
+        step: "evaluate",
+        stepIndex: 1,
+        pendingStepInstructions: null,
+        runnerInstructions: "",
+      },
+    };
+    const html = buildPromptSdlcLocalPageBody({
+      goal: "",
+      prompt: "",
+      modelNote: "",
+      writers: [],
+      judge: "",
+      improver: "",
+      folder: "~",
+      passScore: "90",
+      canRun: true,
+      errorMessage: null,
+      cycle: null,
+      history: [],
+      resumableWizardCycle: paused,
+    });
+
+    expect(html).toContain("Resume wizard");
+    expect(html).toContain(`cycle=${paused.id}`);
+  });
+
   it("shows the tokens spent through each scored round", () => {
     const running = {
       ...createPromptSdlcLocalCycle({
