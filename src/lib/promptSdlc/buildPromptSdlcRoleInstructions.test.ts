@@ -6,7 +6,7 @@ import { buildPromptSdlcRunPrompt } from "@/lib/promptSdlc/buildPromptSdlcRunPro
 import { buildPromptSdlcTokenReviewPrompt } from "@/lib/promptSdlc/buildPromptSdlcTokenReviewPrompt";
 import { findPromptSdlcEvidencePaths } from "@/lib/promptSdlc/findPromptSdlcEvidencePaths";
 
-describe("prompt SDLC role instructions", () => {
+describe("prompt optimizer role instructions", () => {
   it("runs the prompt in the folder and does not ask for a printed score", () => {
     const prompt = buildPromptSdlcRunPrompt({
       promptText: "Update replies/latest.md.",

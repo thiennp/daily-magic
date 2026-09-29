@@ -1,3 +1,3 @@
-# Prompt SDLC — known issues
+# Prompt optimizer — known issues
 
 No open issues yet.

@@ -64,7 +64,7 @@ export const usePromptSdlcModelCatalog = (): {
         localResponse === null
           ? "This Mac's bridge is not reachable, so installed writers are hidden."
           : localResult === null
-            ? "This Mac's bridge does not list Prompt SDLC models yet, so installed writers are hidden."
+            ? "This Mac's bridge does not list prompt optimizer models yet, so installed writers are hidden."
             : "";
       setModelNote(modelNote);
       if (defaults !== null) {

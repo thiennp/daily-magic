@@ -29,7 +29,7 @@ const NAV_ITEMS: ReadonlyArray<{
 }> = [
   { href: "/", label: "Home" },
   { href: "/task", label: "Task" },
-  { href: "/prompt-sdlc", label: "Prompt SDLC" },
+  { href: "/prompt-sdlc", label: "Prompt optimizer" },
   { href: "/status", label: "Status" },
   { href: "/projects", label: "Projects" },
   { href: "/harness", label: "Harness" },

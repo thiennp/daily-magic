@@ -7,7 +7,7 @@
 
 ## Short answer
 
-**Prompt Lab** is the planned Agent Witch surface to run **fixed scenarios** against an official **workflow** and a **baseline** (usually one-shot same inputs), persist **usage and full outputs**, and produce a **report** (cost, repeatability, side-by-side review). MVP dogfoods **`document-summary`** only. It supports **prompt SDLC**: author → version → test → measure → review → promote.
+**Prompt Lab** is the planned Agent Witch surface to run **fixed scenarios** against an official **workflow** and a **baseline** (usually one-shot same inputs), persist **usage and full outputs**, and produce a **report** (cost, repeatability, side-by-side review). MVP dogfoods **`document-summary`** only. It supports the prompt lifecycle: author → version → test → measure → review → promote.
 
 ## Details
 
@@ -29,4 +29,4 @@ Canonical MVP spec: [docs/product/prompt-lab-mvp.md](../product/prompt-lab-mvp.m
 - `src/lib/workflowOrchestration/renderOfficialWorkflowAgentPrompt.ts`
 - [bedrock-agentcore-vs-agent-witch-flow.md](bedrock-agentcore-vs-agent-witch-flow.md) (evaluations gap)
 
-**Last reviewed:** 2026-09-27
+**Last reviewed:** 2026-09-29

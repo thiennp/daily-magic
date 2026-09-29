@@ -49,7 +49,9 @@ export async function POST(request: Request): Promise<Response> {
     return Response.json({ ok: true, cycle: result.cycle });
   } catch (startError: unknown) {
     const errorMessage =
-      startError instanceof Error ? startError.message : "Prompt SDLC failed.";
+      startError instanceof Error
+        ? startError.message
+        : "The prompt optimizer failed.";
     console.error(
       "[prompt-sdlc] POST /api/prompt-sdlc/cycles failed:",
       startError,

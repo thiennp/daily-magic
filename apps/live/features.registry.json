@@ -114,7 +114,7 @@
     },
     {
       "slug": "prompt-sdlc",
-      "title": "Prompt SDLC",
+      "title": "Prompt optimizer",
       "fsaStatus": "fsa",
       "featurePath": "apps/live/features/prompt-sdlc",
       "notes": "Local prompt judge and improver loop. Picks the best installed reasoning writers."

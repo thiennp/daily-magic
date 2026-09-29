@@ -1,4 +1,4 @@
-# Prompt SDLC — agent instructions
+# Prompt optimizer — agent instructions
 
 1. Query feature knowledge: `npm run feature-knowledge:query -- "symptom" --feature=prompt-sdlc`
 2. Read `KNOWN_ISSUES.md` before changing behavior.

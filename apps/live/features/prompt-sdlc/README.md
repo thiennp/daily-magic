@@ -1,4 +1,4 @@
-# Prompt SDLC (Agent Witch Live)
+# Prompt optimizer (Agent Witch Live)
 
 Optimize one prompt on this Mac. You choose the judge and the improver. Each list includes I'll score it and I'll rewrite it. Nothing is selected until you choose. You also choose the folder they run in, so they can use that folder as context. The default folder is your home directory. A writer that has passed its check is not checked again until that writer returns an error. A score includes the reason for that score.
 

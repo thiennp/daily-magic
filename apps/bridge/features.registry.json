@@ -113,7 +113,7 @@
     },
     {
       "slug": "prompt-sdlc-proxy",
-      "title": "Prompt SDLC local models and Ollama chat",
+      "title": "Prompt optimizer local models and Ollama chat",
       "parentSlug": "awc-proxy",
       "fsaStatus": "fsa",
       "featurePath": "apps/bridge/features/awc-proxy/features/prompt-sdlc-proxy"

@@ -31,7 +31,7 @@ export const validatePromptSdlcStart = (
   }
 
   if (input.judge.kind === "ollama" || input.improver.kind === "ollama") {
-    return "Prompt SDLC uses reasoning models only: Claude, Codex, Cursor, Antigravity, or Cursor Cloud.";
+    return "The prompt optimizer uses reasoning models only: Claude, Codex, Cursor, Antigravity, or Cursor Cloud.";
   }
 
   if (

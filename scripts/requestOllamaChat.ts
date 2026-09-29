@@ -23,7 +23,7 @@ const readOllamaMessageContent = (body: unknown): string | null => {
   return content;
 };
 
-/** One Ollama chat reply for Prompt SDLC. Null when Ollama is down or the model is missing. */
+/** One Ollama chat reply for Prompt optimizer. Null when Ollama is down or the model is missing. */
 export const requestOllamaChat = async (input: {
   readonly model: string;
   readonly prompt: string;

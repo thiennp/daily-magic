@@ -16,7 +16,7 @@ const readKind = (value: unknown): "writer" | "ollama" => {
     return kind;
   }
 
-  throw new Error("Unknown prompt SDLC model kind.");
+  throw new Error("Unknown prompt optimizer model kind.");
 };
 
 const readStatus = (value: unknown): PromptSdlcCycleStatus => {
@@ -25,7 +25,7 @@ const readStatus = (value: unknown): PromptSdlcCycleStatus => {
     return status;
   }
 
-  throw new Error("Unknown prompt SDLC cycle status.");
+  throw new Error("Unknown prompt optimizer cycle status.");
 };
 
 export const mapPromptSdlcCycleRow = (
@@ -51,7 +51,7 @@ export const mapPromptSdlcCycleRow = (
       return null;
     }
     if (!isPromptSdlcCallRole(role)) {
-      throw new Error("Unknown prompt SDLC call role.");
+      throw new Error("Unknown prompt optimizer call role.");
     }
     return role;
   })(),

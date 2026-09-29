@@ -336,7 +336,7 @@ describe("buildPromptSdlcLocalPageBody", () => {
     expect(html).toContain("When this prompt is used on a customer email");
     expect(html).not.toContain(goal);
     expect(html).toContain('href="/prompt-sdlc/guide"');
-    expect(guide).toContain("How Prompt SDLC works");
+    expect(guide).toContain("How the prompt optimizer works");
     expect(guide).toContain("Run this sample");
     expect(guide).toContain(
       `href="/prompt-sdlc?example=${PROMPT_SDLC_LOCAL_GUIDE_EXAMPLE}"`,

@@ -76,7 +76,7 @@ export const usePromptSdlcWorkspace = (fillExample: boolean) => {
     });
     setIsSubmitting(false);
     if (result.cycle === null) {
-      setErrorMessage(result.errorMessage ?? "Prompt SDLC failed.");
+      setErrorMessage(result.errorMessage ?? "The prompt optimizer failed.");
       return;
     }
     setCycle(result.cycle);

@@ -1,6 +1,6 @@
-# Prompt SDLC
+# Prompt optimizer
 
-The prompt optimizer in the console (**AWC**). `/prompt-sdlc` tells the person to run it in Agent Witch Live (`http://127.0.0.1:43347/prompt-sdlc`). The console does not run the loop. You choose the folder, the pass score, and the writers on Live. They run inside that folder so they can read the harness and the code. Bots on this Mac call `http://127.0.0.1:43347/prompt-sdlc/agent`.
+Console page for the prompt optimizer (**AWC**). `/prompt-sdlc` tells the person to run it in Agent Witch Live (`http://127.0.0.1:43347/prompt-sdlc`). The console does not run the loop. You choose the folder, the pass score, and the writers on Live. They run inside that folder so they can read the harness and the code. Bots on this Mac call `http://127.0.0.1:43347/prompt-sdlc/agent`.
 
 ## Registry
 

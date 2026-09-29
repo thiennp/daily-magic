@@ -1,4 +1,4 @@
-/** AWB migration adapter — Prompt SDLC proxy routes reach scripts/ here only. */
+/** AWB migration adapter — Prompt optimizer proxy routes reach scripts/ here only. */
 
 export {
   resolveWriterCliCommands,

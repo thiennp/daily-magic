@@ -1,4 +1,4 @@
-/** AWL migration adapter — Prompt SDLC domain shared with AWC until packages/shared absorbs it. */
+/** AWL migration adapter — Prompt optimizer domain shared with AWC until packages/shared absorbs it. */
 
 export type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
 export {

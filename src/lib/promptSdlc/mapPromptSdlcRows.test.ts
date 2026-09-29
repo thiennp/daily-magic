@@ -49,12 +49,12 @@ describe("mapPromptSdlcRows", () => {
   it("rejects an unknown status, kind, or role", () => {
     expect(() =>
       mapPromptSdlcCycleRow({ ...cycleRow, status: "draft" }),
-    ).toThrow("Unknown prompt SDLC cycle status.");
+    ).toThrow("Unknown prompt optimizer cycle status.");
     expect(() =>
       mapPromptSdlcCycleRow({ ...cycleRow, judge_kind: "cloud" }),
-    ).toThrow("Unknown prompt SDLC model kind.");
+    ).toThrow("Unknown prompt optimizer model kind.");
     expect(() =>
       mapPromptSdlcCycleRow({ ...cycleRow, pending_local_role: "score" }),
-    ).toThrow("Unknown prompt SDLC call role.");
+    ).toThrow("Unknown prompt optimizer call role.");
   });
 });

@@ -1,4 +1,4 @@
-# Prompt Lab (MVP) — prompt SDLC on Agent Witch
+# Prompt Lab (MVP) — workflow evaluation on Agent Witch
 
 **Status:** Agreed direction (dogfood slice). **Vertical:** official workflow `document-summary` first. **Pillar:** 2 (learn from usage) + evaluation gap vs external agent platforms.
 

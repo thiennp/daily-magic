@@ -25,7 +25,7 @@ export const buildPromptSdlcAgentGuidelineSection = (): {
   return {
     heading: "Optimize your own prompt",
     body: [
-      `Before you call send_task, or when you are about to save a prompt, run Prompt SDLC on this computer. Do this yourself. Do not ask the human to paste the prompt into a different optimizer.`,
+      `Before you call send_task, or when you are about to save a prompt, run the prompt optimizer on this computer. Do this yourself. Do not ask the human to paste the prompt into a different optimizer.`,
       `${PROMPT_SDLC_LOCAL_CONTEXT_REASON} ${AGENT_WITCH_PRODUCT_NAME} is different because the optimizer runs in that local context.`,
       `GET ${guide.url} lists the installed writers. POST JSON {"goal","prompt","workingDirectory","judge","improver","passScore","maxRounds"} to ${guide.url}. workingDirectory is required and must be the project folder. ${guide.writers} passScore is a whole number from 1 to 100. The default is 90. maxRounds is a whole number from 1 to 30. The default is 10.`,
       guide.poll,

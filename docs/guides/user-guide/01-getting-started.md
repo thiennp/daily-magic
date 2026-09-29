@@ -123,7 +123,7 @@ The Console **blocks Send** with a clear reason rather than failing silently ([r
 | Teams, invites, account menu             | [Chapter 2](02-accounts-and-sign-in.md)    |
 | Home layout and Mac status banner        | [Chapter 3](03-home-and-navigation.md)     |
 | Updates, wake, Mac app on `:43347`       | [Chapter 4](04-mac-connect-and-bridge.md)  |
-| Prompt SDLC on this Mac                  | [Chapter 4](04-mac-connect-and-bridge.md)  |
+| Prompt optimizer on this Mac             | [Chapter 4](04-mac-connect-and-bridge.md)  |
 | Composer, folders, continue conversation | [Chapter 5](05-tasks-dispatch-and-runs.md) |
 | Short targeted Q&A                       | [System Q&A index](../../qa/README.md)     |
 

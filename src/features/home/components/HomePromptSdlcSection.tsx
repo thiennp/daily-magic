@@ -11,7 +11,7 @@ export default function HomePromptSdlcSection(): ReactElement {
       className="scroll-mt-24 rounded-2xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-white/[0.02] sm:p-8"
     >
       <p className="text-sm font-medium uppercase tracking-wider text-gray-500">
-        Prompt SDLC
+        Prompt optimizer
       </p>
       <h2
         id="prompt-sdlc-heading"

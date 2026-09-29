@@ -17,7 +17,7 @@ export default function PromptSdlcPage(): ReactElement {
     <div className="space-y-6">
       <AppPageHeader
         title="Prompt optimizer"
-        description="Prompt SDLC is the prompt optimizer in the console. Run it in Agent Witch Live on this Mac. The judge and the improver run in the folder you choose, so they can read the Playbook and the code."
+        description="Run it in Agent Witch Live on this Mac. The judge and the improver run in the folder you choose, so they can read the Playbook and the code."
       />
       <ol
         className={`${APP_SURFACE_BODY_TEXT_CLASS} list-decimal space-y-2 pl-5`}

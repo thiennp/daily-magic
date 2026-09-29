@@ -71,7 +71,7 @@ export const renderPromptSdlcWizardGate = (
       : "";
 
   return `<section class="card sdlc-wizard-gate">
-    <p class="eyebrow">Prompt SDLC wizard</p>
+    <p class="eyebrow">Prompt optimizer</p>
     <h2>${stepTitle}</h2>
     ${variables}
     ${revisions}

@@ -48,9 +48,9 @@ One **dispatched execution** (Mac via Agent Witch or Cursor Cloud), with status,
 
 **Who may run what for whom**—targets, approvals, queue, and policies. Mac dispatch uses paired devices; Cursor Cloud uses stored API keys and cloud executor id `__cursor_cloud__`.
 
-## Prompt SDLC
+## Prompt optimizer
 
-The **prompt optimizer** in the console (**AWC**). The console page tells the person to run it in Agent Witch Live (**AWL**). The user supplies one prompt and a goal, chooses the judge and improver when more than one reasoning writer is installed, and chooses the folder those writers run in. The default folder is the home directory. Live then scores and rewrites the prompt until it passes or a small round cap is hit. It is not a workflow, a playbook, or a capability improvement.
+The console page (**AWC**) tells the person to run the prompt optimizer in Agent Witch Live (**AWL**). The user supplies one prompt and a goal, chooses the judge and improver when more than one reasoning writer is installed, and chooses the folder those writers run in. The default folder is the home directory. Live then scores and rewrites the prompt until it passes or a small round cap is hit. It is not a workflow, a playbook, or a capability improvement.
 
 ## Deployables (AWC, AWL, AWB, AWI)
 

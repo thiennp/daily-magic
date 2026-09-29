@@ -96,7 +96,7 @@ export const buildPromptSdlcLocalPageBody = (input: {
   const form = `<section class="card sdlc-compose">
       <div class="sdlc-form-head">
         <div>
-          <p class="eyebrow">Prompt SDLC</p>
+          <p class="eyebrow">Prompt optimizer</p>
           <h1>Optimize a prompt</h1>
         </div>
         <a class="btn btn-secondary" href="/prompt-sdlc/guide">Instructions and example</a>

@@ -21,12 +21,12 @@ export default function PromptSdlcGuidePage(): ReactElement {
   return (
     <div className="space-y-8">
       <AppPageHeader
-        title="How to use Prompt SDLC"
+        title="How to use the prompt optimizer"
         description="Paste a prompt and a goal in Agent Witch Live. A judge scores the prompt. If it misses, a second model rewrites it. You read the revisions when the loop stops. This console page does not run the optimizer."
       />
       <p>
         <Link href="/prompt-sdlc" className={APP_SURFACE_TEXT_LINK_CLASS}>
-          Back to Prompt SDLC
+          Back to the prompt optimizer
         </Link>
       </p>
       <section className="space-y-3">

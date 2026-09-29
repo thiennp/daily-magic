@@ -48,7 +48,7 @@ describe("validatePromptSdlcStart", () => {
         improver: ollama,
       }),
     ).toBe(
-      "Prompt SDLC uses reasoning models only: Claude, Codex, Cursor, Antigravity, or Cursor Cloud.",
+      "The prompt optimizer uses reasoning models only: Claude, Codex, Cursor, Antigravity, or Cursor Cloud.",
     );
 
     expect(

@@ -46,7 +46,7 @@ export const AGENT_WITCH_INSTRUCTION_TASKS_SECTION: AgentWitchInstructionSection
       {
         id: "prompt-sdlc",
         title: "Optimize the prompt on this Mac",
-        body: "Before you send or save a prompt, run Prompt SDLC yourself at http://127.0.0.1:43347/prompt-sdlc/agent. POST goal, prompt, and workingDirectory for the project folder. The judge and improver run in that folder, so they can read the harness and the code. Do not ask the human to paste the prompt into a different optimizer. Poll GET ?cycle= until done is true. Use bestPrompt when status is passed or stopped. Do not use the prompt when status is failed. totalTokens is the reported writer tokens so far.",
+        body: "Before you send or save a prompt, run the prompt optimizer yourself at http://127.0.0.1:43347/prompt-sdlc/agent. POST goal, prompt, and workingDirectory for the project folder. The judge and improver run in that folder, so they can read the harness and the code. Do not ask the human to paste the prompt into a different optimizer. Poll GET ?cycle= until done is true. Use bestPrompt when status is passed or stopped. Do not use the prompt when status is failed. totalTokens is the reported writer tokens so far.",
       },
       {
         id: "mid-run-input",

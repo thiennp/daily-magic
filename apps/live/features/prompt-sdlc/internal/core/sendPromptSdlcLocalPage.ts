@@ -8,7 +8,7 @@ export const sendPromptSdlcLocalPage = async (
   input.sendHtml(
     input.response,
     await input.renderShell({
-      title: "Prompt SDLC",
+      title: "Prompt optimizer",
       activePath: "/prompt-sdlc",
       body: buildPromptSdlcLocalPageBody(body),
     }),
