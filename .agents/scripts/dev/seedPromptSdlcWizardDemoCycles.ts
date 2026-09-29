@@ -25,33 +25,64 @@ if (fs.existsSync(bundle)) {
 }
 
 const storePath = path.join(installDir, "prompt-sdlc-cycles.json");
-const goal = "Reply to support email using only approved facts.";
+
+const goal =
+  "Draft tier-2 EU support replies: cite only approved policy snippets, never promise legal outcomes, and escalate billing disputes above €500 to a human.";
+
+const complexSourcePrompt =
+  "Be helpful with billing email. Mention refunds if asked. Do not invent policy or legal advice.";
+
+const complexTemplatedPrompt =
+  "You are {{brand}} support tier {{tier}}. Customer locale: {{locale}}. Issue: {{issue}}. Use only these facts: {{policy_facts}}. If {{escalation_trigger}} is true, output ESCALATE and stop.";
+
+const complexVariables = [
+  {
+    name: "brand",
+    description: "Product name shown to the customer",
+    sampleValue: "Agent Witch Cloud",
+  },
+  {
+    name: "tier",
+    description: "Support tier (1 or 2)",
+    sampleValue: "2",
+  },
+  {
+    name: "locale",
+    description: "BCP-47 locale for tone",
+    sampleValue: "de-DE",
+  },
+  {
+    name: "issue",
+    description: "Redacted ticket summary",
+    sampleValue: "VAT invoice mismatch on annual plan",
+  },
+  {
+    name: "policy_facts",
+    description: "Bullet list from the knowledge base",
+    sampleValue:
+      "14-day refund window; no backdated credits; EU consumer rights disclaimer required",
+  },
+  {
+    name: "escalation_trigger",
+    description: "Whether human handoff is mandatory",
+    sampleValue: "false",
+  },
+];
 
 const step1 = {
   ...createPromptSdlcLocalCycle({
     goal,
-    sourcePrompt: "Be helpful.",
+    sourcePrompt: complexSourcePrompt,
     judgeModel: "cursor",
     improverModel: "cursor",
     runnerModel: "cursor",
     workingDirectory: installDir,
     wizard: {
-      ...createInitialPromptSdlcWizardState("Be helpful."),
+      ...createInitialPromptSdlcWizardState(complexSourcePrompt),
       gate: "generalize",
       phase: "generalize",
-      templatedPrompt: "Help the customer with {{issue}} using {{policy}}.",
-      variables: [
-        {
-          name: "issue",
-          description: "What the customer asked",
-          sampleValue: "billing question",
-        },
-        {
-          name: "policy",
-          description: "Approved facts",
-          sampleValue: "refund within 14 days",
-        },
-      ],
+      templatedPrompt: complexTemplatedPrompt,
+      variables: complexVariables,
     },
   }),
   id: "demo-wizard-step-1-generalize",
@@ -61,8 +92,7 @@ const step1 = {
 const step2 = {
   ...createPromptSdlcLocalCycle({
     goal,
-    sourcePrompt:
-      "Help the customer with billing question using refund within 14 days.",
+    sourcePrompt: complexSourcePrompt,
     judgeModel: "cursor",
     improverModel: "cursor",
     runnerModel: "cursor",
@@ -70,23 +100,12 @@ const step2 = {
     passScore: 70,
     maxRounds: 5,
     wizard: {
-      ...createInitialPromptSdlcWizardState("Be helpful."),
+      ...createInitialPromptSdlcWizardState(complexSourcePrompt),
       phase: "evaluate",
       gate: "evaluate",
-      templatedPrompt: "Help the customer with {{issue}} using {{policy}}.",
-      variables: [
-        {
-          name: "issue",
-          description: "What the customer asked",
-          sampleValue: "billing question",
-        },
-        {
-          name: "policy",
-          description: "Approved facts",
-          sampleValue: "refund within 14 days",
-        },
-      ],
-      evaluateSelectedRound: 0,
+      templatedPrompt: complexTemplatedPrompt,
+      variables: complexVariables,
+      evaluateSelectedRound: 1,
     },
   }),
   id: "demo-wizard-step-2-evaluate",
@@ -94,14 +113,24 @@ const step2 = {
   revisions: [
     {
       roundNumber: 0,
-      promptText:
-        "Help the customer with billing question using refund within 14 days.",
+      promptText: `${complexTemplatedPrompt}\n\n(concrete: Agent Witch Cloud tier 2, de-DE, VAT invoice mismatch…)`,
       judgement: {
-        score: 88,
+        score: 58,
+        passed: false,
+        reasons: "Missing EU consumer rights disclaimer in the judged diff.",
+        rawReply: "58",
+        tokens: 210,
+      },
+    },
+    {
+      roundNumber: 1,
+      promptText: `${complexTemplatedPrompt}\n\n(Adds explicit EU consumer rights footer and escalation guard.)`,
+      judgement: {
+        score: 84,
         passed: true,
-        reasons: "Answers the question without inventing policy.",
-        rawReply: "88",
-        tokens: 120,
+        reasons: "Policy-safe reply; escalation guard present.",
+        rawReply: "84",
+        tokens: 240,
       },
     },
   ],
