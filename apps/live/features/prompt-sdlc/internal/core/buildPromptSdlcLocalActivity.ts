@@ -44,6 +44,27 @@ export const describePromptSdlcLocalActivity = (
       detail: "This panel keeps updating while the writer works on this Mac.",
     };
   }
+  if (cycle.status === "judging" && cycle.judgePromptTextOnly === true) {
+    if (cycle.judgeModel === PROMPT_SDLC_MANUAL_ACTOR) {
+      return {
+        title: `Score the prompt text for round ${cycle.currentRound + 1}.`,
+        detail:
+          "Wizard step 2 scores the prompt wording only. The runner executes modules in step 4.",
+      };
+    }
+    if (cycle.judgePhase === "scoring") {
+      return {
+        title: `${labelPromptSdlcLocalModel(cycle.judgeModel)} is scoring the prompt text for round ${cycle.currentRound + 1}.`,
+        detail:
+          "No folder run in step 2. This panel keeps updating, so the page is not stuck.",
+      };
+    }
+    return {
+      title: `${labelPromptSdlcLocalModel(cycle.judgeModel)} is scoring the prompt text for round ${cycle.currentRound + 1}.`,
+      detail:
+        "Wizard evaluate revises prompt wording before the runner executes in step 4.",
+    };
+  }
   if (
     cycle.status === "judging" &&
     cycle.judgeModel === PROMPT_SDLC_MANUAL_ACTOR

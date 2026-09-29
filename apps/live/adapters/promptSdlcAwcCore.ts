@@ -24,6 +24,7 @@ export {
   formatPromptSdlcRunDelay,
 } from "@/lib/promptSdlc/buildPromptSdlcJudgePrompt";
 export { buildPromptSdlcRunPrompt } from "@/lib/promptSdlc/buildPromptSdlcRunPrompt";
+export { buildPromptSdlcWizardEvaluateJudgePrompt } from "@/lib/promptSdlc/buildPromptSdlcWizardEvaluateJudgePrompt";
 export { buildPromptSdlcTokenReviewPrompt } from "@/lib/promptSdlc/buildPromptSdlcTokenReviewPrompt";
 export { findPromptSdlcEvidencePaths } from "@/lib/promptSdlc/findPromptSdlcEvidencePaths";
 export {
