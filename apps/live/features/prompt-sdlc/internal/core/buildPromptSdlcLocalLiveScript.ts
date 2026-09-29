@@ -56,5 +56,12 @@ export const PROMPT_SDLC_LOCAL_LIVE_SCRIPT = `<script>
     setTimeout(poll, 2000);
   };
   if (root.dataset.live === "true") setTimeout(poll, 2000);
+  const gateSlot = document.getElementById("prompt-sdlc-wizard-gate-slot");
+  const activeStep = document.getElementById("prompt-sdlc-wizard-active-step");
+  if (activeStep !== null) {
+    activeStep.scrollIntoView({ behavior: "smooth", block: "start" });
+  } else if (gateSlot !== null && gateSlot.querySelector(".sdlc-wizard-gate")) {
+    gateSlot.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
 })();
 </script>`;

@@ -58,7 +58,10 @@ export const renderPromptSdlcWizardGate = (
               ? ' <span class="sdlc-badge">Recommended</span>'
               : "";
             const checked =
-              wizard.selectedSplitOptionId === item.id ? " checked" : "";
+              wizard.selectedSplitOptionId === item.id ||
+              (wizard.selectedSplitOptionId === null && item.recommended)
+                ? " checked"
+                : "";
             return `<li class="sdlc-wizard-split-option"><label><input type="radio" name="wizardSplitOptionId" value="${escapeHtml(item.id)}" required${checked}> <strong>${escapeHtml(item.title)}</strong>${badge}<br><span class="muted">${escapeHtml(item.summary)} (${escapeHtml(item.topology)})</span></label>${renderPromptSdlcWizardSplitOptionChunks(item)}</li>`;
           })
           .join("")}</ul>`

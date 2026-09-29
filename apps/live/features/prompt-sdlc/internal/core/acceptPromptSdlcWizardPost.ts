@@ -207,6 +207,15 @@ export const tryAcceptPromptSdlcWizardPost = (input: {
         (item) => item.id === splitId,
       );
       if (option === undefined) {
+        const next: PromptSdlcLocalCycle = {
+          ...cycle,
+          errorMessage:
+            splitId.length === 0
+              ? "Choose one split option before continuing to Step 4."
+              : "That split option is no longer available. Pick another option or rerun Separate.",
+          updatedAt: new Date().toISOString(),
+        };
+        savePromptSdlcLocalCycle(input.storePath, next);
         redirect(cycleId);
         return true;
       }
