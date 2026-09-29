@@ -278,12 +278,12 @@ const dispatchWriterTask = async (
     configPath: config.layout.configPath,
   });
   const cliProbe = await probeLocalRunClis({
-    commands: {
+    commands: resolveWriterCliCommands({
       claudeCommand: config.claudeCommand,
       codexCommand: config.codexCommand,
       cursorCommand: config.cursorCommand,
       antigravityCommand: config.antigravityCommand,
-    },
+    }),
     writerAgent,
   }).catch(() => null);
   const estimateRequest =

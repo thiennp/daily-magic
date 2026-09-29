@@ -47,6 +47,17 @@ const defaultCursorCommand = (): string => {
   return DEFAULT_WRITER_CLI_COMMANDS.cursorCommand;
 };
 
+const resolveCursorCommand = (cursorCommand: string): string => {
+  const trimmed = cursorCommand.trim();
+  if (
+    !isNonEmptyString(trimmed) ||
+    trimmed === DEFAULT_WRITER_CLI_COMMANDS.cursorCommand
+  ) {
+    return defaultCursorCommand();
+  }
+  return trimmed;
+};
+
 const cursorAgentSubcommandArgs = (
   cursorCommand: string,
   tail: readonly string[],
@@ -78,9 +89,7 @@ export const resolveWriterCliCommands = (
     codexCommand: isNonEmptyString(codexCommand)
       ? codexCommand.trim()
       : DEFAULT_WRITER_CLI_COMMANDS.codexCommand,
-    cursorCommand: isNonEmptyString(cursorCommand)
-      ? cursorCommand.trim()
-      : defaultCursorCommand(),
+    cursorCommand: resolveCursorCommand(cursorCommand),
     antigravityCommand: isNonEmptyString(antigravityCommand)
       ? antigravityCommand.trim()
       : DEFAULT_WRITER_CLI_COMMANDS.antigravityCommand,

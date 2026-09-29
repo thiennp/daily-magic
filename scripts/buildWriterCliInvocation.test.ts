@@ -1,4 +1,6 @@
-import { describe, expect, it } from "vitest";
+import fs from "node:fs";
+
+import { describe, expect, it, vi } from "vitest";
 
 import {
   buildWriterCliInvocation,
@@ -149,6 +151,18 @@ describe("buildWriterCliInvocation", () => {
     expect(cursorCommandUsesStandaloneAgentBinary("cursor-agent")).toBe(true);
     expect(cursorCommandUsesStandaloneAgentBinary("cursor")).toBe(false);
     expect(cursorCommandUsesStandaloneAgentBinary("/opt/cursor")).toBe(false);
+  });
+
+  it("resolves default cursor placeholder to standalone agent when installed", () => {
+    const existsSpy = vi.spyOn(fs, "existsSync").mockImplementation((p) => {
+      return String(p).endsWith("/.local/bin/agent");
+    });
+    const resolved = resolveWriterCliCommands({ cursorCommand: "cursor" });
+    expect(resolved.cursorCommand).toMatch(/[/\\]agent$/);
+    expect(
+      buildWriterCliInvocation("cursor", "task", resolved)?.args,
+    ).not.toContain("agent");
+    existsSpy.mockRestore();
   });
 
   it("builds claude-cli session start invocation", () => {
