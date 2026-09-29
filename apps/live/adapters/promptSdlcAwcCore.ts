@@ -56,6 +56,7 @@ export { createInitialPromptSdlcWizardState } from "@/lib/promptSdlc/wizard/crea
 export { appendPromptSdlcWizardFeedback } from "@/lib/promptSdlc/wizard/appendPromptSdlcWizardFeedback";
 export { invalidatePromptSdlcWizardDownstream } from "@/lib/promptSdlc/wizard/invalidatePromptSdlcWizardDownstream";
 export { buildPromptSdlcGeneralizePrompt } from "@/lib/promptSdlc/wizard/buildPromptSdlcGeneralizePrompt";
+export { applyPromptSdlcWizardPlaceholdersToSplitOptions } from "@/lib/promptSdlc/wizard/applyPromptSdlcWizardPlaceholdersToSplitOptions";
 export { buildPromptSdlcSeparatePrompt } from "@/lib/promptSdlc/wizard/buildPromptSdlcSeparatePrompt";
 export { parsePromptSdlcGeneralizeReply } from "@/lib/promptSdlc/wizard/parsePromptSdlcGeneralizeReply";
 export { parsePromptSdlcSeparateReply } from "@/lib/promptSdlc/wizard/parsePromptSdlcSeparateReply";

@@ -95,7 +95,7 @@ describe("advancePromptSdlcWizardLocal", () => {
     expect(evaluating.judgePromptTextOnly).toBe(true);
   });
 
-  it("uses evaluated revision text when suggesting splits", async () => {
+  it("splits the templated prompt and restores placeholders in module text", async () => {
     let capturedPrompt = "";
     vi.spyOn(writerReply, "runPromptSdlcWriterReply").mockImplementation(
       async (input) => {
@@ -113,8 +113,8 @@ describe("advancePromptSdlcWizardLocal", () => {
                 modules: [
                   {
                     id: "m1",
-                    title: "Main",
-                    prompt: "Run task",
+                    title: "Apply",
+                    prompt: "Edit Comparison.tsx in src/components only.",
                     order: 0,
                   },
                 ],
@@ -137,7 +137,19 @@ describe("advancePromptSdlcWizardLocal", () => {
           ...createInitialPromptSdlcWizardState("Original template"),
           phase: "separate",
           gate: null,
-          templatedPrompt: "Original template",
+          templatedPrompt: "Edit {{targetFile}} under {{searchDir}}.",
+          variables: [
+            {
+              name: "targetFile",
+              description: "file",
+              sampleValue: "Comparison.tsx",
+            },
+            {
+              name: "searchDir",
+              description: "dir",
+              sampleValue: "src/components",
+            },
+          ],
           evaluateSelectedRound: 1,
           splitOptions: [],
         },
@@ -167,9 +179,16 @@ describe("advancePromptSdlcWizardLocal", () => {
     };
 
     const next = await advancePromptSdlcWizardLocal(cycle);
+    expect(capturedPrompt).toContain("Edit {{targetFile}} under {{searchDir}}");
     expect(capturedPrompt).toContain("Improved prompt from evaluate");
-    expect(capturedPrompt).not.toContain("Original template");
+    expect(capturedPrompt).toContain("do not paste sample values");
     expect(next.wizard?.gate).toBe("separate");
+    expect(next.wizard?.splitOptions[0]?.modules[0]?.prompt).toContain(
+      "{{targetFile}}",
+    );
+    expect(next.wizard?.splitOptions[0]?.modules[0]?.prompt).not.toContain(
+      "Comparison.tsx",
+    );
   });
 
   it("stays failed when evaluate judge returns no score instead of an empty step 2 gate", async () => {

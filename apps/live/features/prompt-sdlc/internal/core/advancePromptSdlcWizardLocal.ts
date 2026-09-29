@@ -1,5 +1,6 @@
 import {
   buildPromptSdlcGeneralizePrompt,
+  applyPromptSdlcWizardPlaceholdersToSplitOptions,
   buildPromptSdlcSeparatePrompt,
   isPromptSdlcTerminalStatus,
   parsePromptSdlcGeneralizeReply,
@@ -200,7 +201,7 @@ const runSeparate = async (
   if (writer === null) {
     return failCycle(cycle, "Choose a writer to suggest splits.");
   }
-  const evaluateHandoffPrompt = readPromptSdlcWizardEvaluatePromptText({
+  const evaluatedPromptReference = readPromptSdlcWizardEvaluatePromptText({
     wizard,
     revisions: cycle.revisions.map((item) => ({
       roundNumber: item.roundNumber,
@@ -210,7 +211,9 @@ const runSeparate = async (
   });
   const prompt = buildPromptSdlcSeparatePrompt({
     goal: cycle.goal,
-    templatedPrompt: evaluateHandoffPrompt,
+    templatedPrompt: wizard.templatedPrompt,
+    variables: wizard.variables,
+    evaluatedPromptReference,
     avoid: wizard.avoidByStep.separate,
     stepInstructions: wizard.pendingStepInstructions,
     lastAttemptSummary: lastAttemptSummaryForStep(cycle, "separate"),
@@ -226,7 +229,11 @@ const runSeparate = async (
     return pauseWizardWriterFailure(cycle, "separate", reply.errorMessage);
   }
   try {
-    const options = parsePromptSdlcSeparateReply(reply.text);
+    const rawOptions = parsePromptSdlcSeparateReply(reply.text);
+    const options = applyPromptSdlcWizardPlaceholdersToSplitOptions(
+      rawOptions,
+      wizard.variables,
+    );
     const nextWizard = recordPromptSdlcWizardAttempt({
       wizard: {
         ...wizard,
