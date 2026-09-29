@@ -145,7 +145,7 @@ const renderEvaluateBody = (cycle: PromptSdlcLocalCycle): string => {
         score: item.judgement?.score,
       })),
     });
-    return `<p class="muted">Selected round ${wizard.evaluateSelectedRound} carried into separate.</p><h2>Saved prompt</h2><pre class="mono">${escapeHtml(handoff)}</pre>`;
+    return `<p class="muted">Selected round ${wizard.evaluateSelectedRound} (concrete reference for step 3; split options use {{placeholders}} from the generalized template).</p><h2>Evaluated prompt</h2><pre class="mono">${escapeHtml(handoff)}</pre>`;
   }
   return `<p class="muted">Evaluate has not run yet.</p>`;
 };
