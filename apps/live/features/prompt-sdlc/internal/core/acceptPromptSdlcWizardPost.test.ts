@@ -165,4 +165,57 @@ describe("tryAcceptPromptSdlcWizardPost", () => {
     expect(saved?.wizard?.templatedPrompt).toBe("v1 chosen");
     expect(saved?.wizard?.evaluateSelectedRound).toBe(1);
   });
+
+  it("blocks evaluate continue when the selected revision scored 0", () => {
+    const storeDir = fs.mkdtempSync(
+      path.join(os.tmpdir(), "prompt-sdlc-post-eval-zero-"),
+    );
+    const storePath = path.join(storeDir, "prompt-sdlc-cycles.json");
+    const cycle = {
+      ...createPromptSdlcLocalCycle({
+        goal: "g",
+        sourcePrompt: "p",
+        judgeModel: "claude-cli",
+        improverModel: "claude-cli",
+        workingDirectory: storeDir,
+        wizard: {
+          ...createInitialPromptSdlcWizardState("template only"),
+          gate: "evaluate",
+          phase: "evaluate",
+          evaluateSelectedRound: 0,
+        },
+      }),
+      status: "wizard_paused" as const,
+      revisions: [
+        {
+          roundNumber: 0,
+          promptText: "v0",
+          judgement: {
+            score: 0,
+            passed: false,
+            reasons: "No changes",
+            rawReply: "",
+          },
+        },
+      ],
+    };
+    savePromptSdlcLocalCycle(storePath, cycle);
+
+    tryAcceptPromptSdlcWizardPost({
+      posted: new URLSearchParams({
+        intent: "wizard-continue",
+        cycleId: cycle.id,
+        wizardRevisionRound: "0",
+      }),
+      storePath,
+      response: {
+        writeHead: () => undefined,
+        end: () => undefined,
+      },
+    });
+
+    const saved = readPromptSdlcLocalCycle(storePath, cycle.id);
+    expect(saved?.wizard?.gate).toBe("evaluate");
+    expect(saved?.errorMessage).toContain("scored above 0");
+  });
 });

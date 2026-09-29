@@ -732,6 +732,30 @@ form.sdlc-wizard-feedback {
   flex-direction: column;
   gap: 0.65rem;
 }
+.sdlc-wizard-split-option {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.sdlc-wizard-chunks {
+  margin: 0.35rem 0 0 1.25rem;
+  padding-left: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.sdlc-wizard-chunk-prompt {
+  margin: 0.35rem 0 0;
+  font-size: 0.8125rem;
+  max-height: 8rem;
+  overflow: auto;
+}
+.sdlc-wizard-separated-summary {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
 .sdlc-wizard-vars li,
 .sdlc-wizard-revisions li,
 .sdlc-wizard-splits li { line-height: 1.45; }

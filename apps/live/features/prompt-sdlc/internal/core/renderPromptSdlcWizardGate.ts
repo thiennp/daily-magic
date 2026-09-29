@@ -1,5 +1,6 @@
 import { substitutePromptSdlcTemplate } from "../../../../adapters/promptSdlcAwcCore";
 
+import { renderPromptSdlcWizardSplitOptionChunks } from "./renderPromptSdlcWizardSplitChunks";
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
 
 const escapeHtml = (value: string): string =>
@@ -60,7 +61,9 @@ export const renderPromptSdlcWizardGate = (
             const badge = item.recommended
               ? ' <span class="sdlc-badge">Recommended</span>'
               : "";
-            return `<li><label><input type="radio" name="wizardSplitOptionId" value="${escapeHtml(item.id)}" required> <strong>${escapeHtml(item.title)}</strong>${badge}<br><span class="muted">${escapeHtml(item.summary)} (${escapeHtml(item.topology)})</span></label></li>`;
+            const checked =
+              wizard.selectedSplitOptionId === item.id ? " checked" : "";
+            return `<li class="sdlc-wizard-split-option"><label><input type="radio" name="wizardSplitOptionId" value="${escapeHtml(item.id)}" required${checked}> <strong>${escapeHtml(item.title)}</strong>${badge}<br><span class="muted">${escapeHtml(item.summary)} (${escapeHtml(item.topology)})</span></label>${renderPromptSdlcWizardSplitOptionChunks(item)}</li>`;
           })
           .join("")}</ul>`
       : "";

@@ -76,6 +76,10 @@ export const buildPromptSdlcLocalCycleSection = (
     tokenTotal > 0
       ? `<p class="muted">Tokens so far: ${formatPromptSdlcTokenCount(tokenTotal)}</p>`
       : "";
+  const wizardEvaluateJudge =
+    cycle.wizard !== undefined &&
+    cycle.status === "judging" &&
+    (cycle.wizard.phase === "evaluate" || cycle.wizard.gate === "evaluate");
   const manual = isPromptSdlcLocalManualWait(cycle)
     ? renderPromptSdlcLocalManualStep({
         role: cycle.status === "judging" ? "judge" : "improve",
@@ -89,6 +93,7 @@ export const buildPromptSdlcLocalCycleSection = (
             ? cycle.judgeInstructions
             : cycle.improverInstructions,
         run: current?.run ?? null,
+        minJudgeScore: wizardEvaluateJudge ? 1 : 0,
       })
     : "";
   const showScoreScale =

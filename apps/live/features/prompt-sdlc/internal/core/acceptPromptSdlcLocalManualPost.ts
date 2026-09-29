@@ -13,6 +13,8 @@ import {
 } from "./promptSdlcLocalStore";
 
 const JUDGE_ERROR = "Add a score from 0 to 100 and the reason for it.";
+const WIZARD_EVALUATE_JUDGE_ERROR =
+  "Add a score from 1 to 100 and the reason for it.";
 const IMPROVE_ERROR = "Write the next prompt.";
 const STEP_ERROR = "This step is not waiting for you.";
 
@@ -58,8 +60,24 @@ export const acceptPromptSdlcLocalManualPost = (input: {
     }
     const score = wholeScore(input.posted.get("score") ?? "");
     const reasons = (input.posted.get("reasons") ?? "").trim();
+    const wizardEvaluateStep =
+      cycle.wizard !== undefined &&
+      (cycle.wizard.phase === "evaluate" || cycle.wizard.gate === "evaluate");
     if (score === null || reasons.length === 0) {
-      return { kind: "invalid", cycle, errorMessage: JUDGE_ERROR };
+      return {
+        kind: "invalid",
+        cycle,
+        errorMessage: wizardEvaluateStep
+          ? WIZARD_EVALUATE_JUDGE_ERROR
+          : JUDGE_ERROR,
+      };
+    }
+    if (wizardEvaluateStep && score === 0) {
+      return {
+        kind: "invalid",
+        cycle,
+        errorMessage: WIZARD_EVALUATE_JUDGE_ERROR,
+      };
     }
     const tokenReview =
       cycle.revisions.find((item) => item.roundNumber === cycle.currentRound)

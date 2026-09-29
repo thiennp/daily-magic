@@ -16,9 +16,16 @@ import {
 } from "./promptSdlcLocalStore";
 import { ensurePromptSdlcLocalCycleRunning } from "./runPromptSdlcLocalCycle";
 import {
+  canContinuePromptSdlcWizardEvaluateRevision,
+  readPromptSdlcWizardEvaluateRevisionScore,
+} from "./readPromptSdlcWizardEvaluateRevisionScore";
+import {
   skipPromptSdlcWizardCurrentModule,
   stopPromptSdlcWizardRun,
 } from "./stopPromptSdlcWizard";
+
+const WIZARD_EVALUATE_SCORE_ERROR =
+  "Pick a revision scored above 0 before continuing to Separate.";
 
 const resumeWizardStepAfterWriterFailure = (
   cycle: PromptSdlcLocalCycle,
@@ -150,6 +157,20 @@ export const tryAcceptPromptSdlcWizardPost = (input: {
         selectedRound === null || selectedRound === ""
           ? cycle.wizard.evaluateSelectedRound
           : Number(selectedRound);
+      const revisionScore = readPromptSdlcWizardEvaluateRevisionScore(
+        cycle,
+        evaluateSelectedRound ?? -1,
+      );
+      if (!canContinuePromptSdlcWizardEvaluateRevision(revisionScore)) {
+        const next: PromptSdlcLocalCycle = {
+          ...cycle,
+          errorMessage: WIZARD_EVALUATE_SCORE_ERROR,
+          updatedAt: new Date().toISOString(),
+        };
+        savePromptSdlcLocalCycle(input.storePath, next);
+        redirect(cycleId);
+        return true;
+      }
       const wizardWithRound = {
         ...cycle.wizard,
         evaluateSelectedRound,

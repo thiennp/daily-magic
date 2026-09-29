@@ -25,7 +25,9 @@ export const renderPromptSdlcLocalManualStep = (input: {
   readonly avoid?: string | null;
   readonly instructions?: string | null;
   readonly run?: PromptSdlcLocalRun | null;
+  readonly minJudgeScore?: number;
 }): string => {
+  const minJudgeScore = input.minJudgeScore ?? 0;
   const hidden = `<input type="hidden" name="cycleId" value="${escapeHtml(input.cycleId)}">`;
   const instructions = input.instructions?.trim() ?? "";
   const instructionNote =
@@ -41,7 +43,7 @@ export const renderPromptSdlcLocalManualStep = (input: {
       ? ""
       : `${lookedAt.length === 0 ? "" : `<p class="muted">Looked at ${escapeHtml(lookedAt)}.</p>`}<pre class="mono">${escapeHtml(runBody.length === 0 ? run.output : runBody)}</pre><p class="muted">Tokens used: ${run.tokens === null ? "not reported" : String(run.tokens)}. Delay: ${formatPromptSdlcRunDelay(run.delayMs)}.</p>${tokenReview.length === 0 ? "" : `<p class="muted">Token review: ${escapeHtml(tokenReview)}</p>`}`;
   if (input.role === "judge") {
-    return `<form class="sdlc-manual" method="POST" action="/prompt-sdlc"><input type="hidden" name="intent" value="manual-judge">${hidden}${instructionNote}${runNote}<label class="field"><span class="field-label">Score</span><input class="input sdlc-manual-score" type="number" name="score" min="0" max="100" step="1" required></label><label class="field"><span class="field-label">Reason</span><textarea class="input textarea" name="reasons" rows="4" required></textarea></label><div class="actions"><button class="btn btn-primary" type="submit">Save score</button></div></form>`;
+    return `<form class="sdlc-manual" method="POST" action="/prompt-sdlc"><input type="hidden" name="intent" value="manual-judge">${hidden}${instructionNote}${runNote}<label class="field"><span class="field-label">Score</span><input class="input sdlc-manual-score" type="number" name="score" min="${minJudgeScore}" max="100" step="1" required></label><label class="field"><span class="field-label">Reason</span><textarea class="input textarea" name="reasons" rows="4" required></textarea></label><div class="actions"><button class="btn btn-primary" type="submit">Save score</button></div></form>`;
   }
 
   const avoid = input.avoid?.trim() ?? "";
