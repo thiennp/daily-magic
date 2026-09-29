@@ -13,6 +13,7 @@ import {
 import { displayPromptSdlcLocalFolder } from "./promptSdlcLocalFolder";
 import { readPromptSdlcFolderSkill } from "./readPromptSdlcFolderSkills";
 import { readPromptSdlcChosenWritersReady } from "./probePromptSdlcWriterReady";
+import { findResumablePromptSdlcWizardCycle } from "./findResumablePromptSdlcWizardCycle";
 import { ensurePromptSdlcLocalCycleRunning } from "./runPromptSdlcLocalCycle";
 import type { PromptSdlcLocalRouteInput } from "./tryHandlePromptSdlcLocalRequest";
 
@@ -41,6 +42,7 @@ export const presentPromptSdlcLocalComposer = async (input: {
           input.route.storePath,
           decision.judge,
           decision.improver,
+          decision.useWizard ? decision.runner : undefined,
         )
       : null;
   if (decision.kind === "start" && writerBlock !== null) {
@@ -61,6 +63,10 @@ export const presentPromptSdlcLocalComposer = async (input: {
       skillNotice: input.skillNotice,
       cycle: null,
       history: readPromptSdlcLocalCycles(input.route.storePath),
+      resumableWizardCycle: findResumablePromptSdlcWizardCycle(
+        readPromptSdlcLocalCycles(input.route.storePath),
+        null,
+      ),
     });
     return;
   }
@@ -80,8 +86,11 @@ export const presentPromptSdlcLocalComposer = async (input: {
       maxRounds: decision.maxRounds,
       ...(decision.useWizard
         ? {
-            wizard: createInitialPromptSdlcWizardState(decision.prompt),
-            runnerModel: decision.judge,
+            wizard: {
+              ...createInitialPromptSdlcWizardState(decision.prompt),
+              runnerInstructions: decision.runnerInstructions,
+            },
+            runnerModel: decision.runner,
           }
         : {}),
       ...(decision.judgeInstructions.length === 0
@@ -126,6 +135,8 @@ export const presentPromptSdlcLocalComposer = async (input: {
     improver: decision.improver,
     judgeInstructions: decision.judgeInstructions,
     improverInstructions: decision.improverInstructions,
+    runner: decision.runner,
+    runnerInstructions: decision.runnerInstructions,
     folder: decision.folder,
     passScore: decision.passScore,
     maxRounds: decision.maxRounds,
@@ -134,5 +145,9 @@ export const presentPromptSdlcLocalComposer = async (input: {
     skillNotice: input.skillNotice,
     cycle,
     history: readPromptSdlcLocalCycles(input.route.storePath),
+    resumableWizardCycle: findResumablePromptSdlcWizardCycle(
+      readPromptSdlcLocalCycles(input.route.storePath),
+      cycle?.id ?? null,
+    ),
   });
 };

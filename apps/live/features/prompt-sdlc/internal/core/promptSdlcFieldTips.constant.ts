@@ -62,6 +62,18 @@ export const PROMPT_SDLC_FIELD_TIPS = {
       "The run stops after this many scored rounds. 10 is the usual limit. It also stops when the score has not risen for 3 rounds.",
     example: "10",
   },
+  runner: {
+    title: "Runner",
+    practice:
+      "In the four-step wizard, the runner executes each module prompt in step 4. The judge scores the changes only.",
+    example: "Claude",
+  },
+  runnerInstructions: {
+    title: "Runner instructions",
+    practice:
+      "Optional. Sent with each module prompt when the runner executes. Use for folder context or output shape.",
+    example: "Write only to module-output.md in the project root.",
+  },
 } as const;
 
 export type PromptSdlcFieldTipId = keyof typeof PROMPT_SDLC_FIELD_TIPS;

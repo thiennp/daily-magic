@@ -1,0 +1,29 @@
+import type { PromptSdlcLocalWriterChoice } from "./promptSdlcLocalForm";
+import { renderPromptSdlcFieldHeading } from "./renderPromptSdlcFieldTip";
+
+const escapeHtml = (value: string): string =>
+  value
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;");
+
+export const renderPromptSdlcWizardRunnerFields = (input: {
+  readonly writers: readonly PromptSdlcLocalWriterChoice[];
+  readonly runner: string;
+  readonly runnerInstructions: string;
+}): string => {
+  const blank = `<option value=""${input.runner === "" ? " selected" : ""}>Choose</option>`;
+  const options = input.writers
+    .map(
+      (choice) =>
+        `<option value="${escapeHtml(choice.id)}"${choice.id === input.runner ? " selected" : ""}>${escapeHtml(choice.label)}</option>`,
+    )
+    .join("");
+  return `<div class="sdlc-block">
+    <p class="sdlc-block-title">Wizard — module runner (step 4)</p>
+    <p class="muted">The runner executes each module prompt. The judge scores only.</p>
+    <div class="field">${renderPromptSdlcFieldHeading("Runner", "runner")}<select class="input" name="runner" data-writer-select="runner" required>${blank}${options}</select></div>
+    <div class="field">${renderPromptSdlcFieldHeading("Runner instructions", "runnerInstructions")}<textarea class="input textarea sdlc-instruction" name="runnerInstructions" rows="3">${escapeHtml(input.runnerInstructions)}</textarea><span class="muted">Optional. Passed when the runner executes module prompts.</span></div>
+  </div>`;
+};

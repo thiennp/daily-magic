@@ -44,7 +44,9 @@ describe("buildPromptSdlcLocalPageBody", () => {
     expect(html).toContain('name="improverInstructions"');
     expect(html).toContain("Judge and improver");
     expect(html).toContain("When to stop");
-    expect(html.match(/class="sdlc-tip"/g)?.length).toBe(10);
+    expect(html.match(/class="sdlc-tip"/g)?.length).toBe(12);
+    expect(html).toContain('name="runner"');
+    expect(html).toContain('name="runnerInstructions"');
     expect(html).toContain(
       "If the prompt needs an input, put that input here.",
     );

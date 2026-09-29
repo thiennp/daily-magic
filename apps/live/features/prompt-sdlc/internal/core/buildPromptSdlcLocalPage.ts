@@ -23,6 +23,8 @@ import {
 } from "./renderPromptSdlcLocalSkillSelect";
 import { renderPromptSdlcFieldHeading } from "./renderPromptSdlcFieldTip";
 import { renderPromptSdlcWizardGate } from "./renderPromptSdlcWizardGate";
+import { renderPromptSdlcWizardResumeBanner } from "./renderPromptSdlcWizardResumeBanner";
+import { renderPromptSdlcWizardRunnerFields } from "./renderPromptSdlcWizardRunnerFields";
 import { renderPromptSdlcLocalWriterFields } from "./renderPromptSdlcLocalWriterFields";
 
 const escapeHtml = (value: string): string =>
@@ -41,6 +43,8 @@ export const buildPromptSdlcLocalPageBody = (input: {
   readonly improver: string;
   readonly judgeInstructions?: string;
   readonly improverInstructions?: string;
+  readonly runner?: string;
+  readonly runnerInstructions?: string;
   readonly folder: string;
   readonly passScore: string;
   readonly maxRounds?: string;
@@ -49,6 +53,7 @@ export const buildPromptSdlcLocalPageBody = (input: {
   readonly skillNotice?: string | null;
   readonly cycle: PromptSdlcLocalCycle | null;
   readonly history: readonly PromptSdlcLocalCycle[];
+  readonly resumableWizardCycle?: PromptSdlcLocalCycle | null;
 }): string => {
   const error =
     input.errorMessage === null
@@ -62,6 +67,11 @@ export const buildPromptSdlcLocalPageBody = (input: {
     input.cycle === null
       ? ""
       : `${PROMPT_SDLC_NODE_DIALOG}${PROMPT_SDLC_NODE_DIALOG_SCRIPT}`;
+  const resumableWizardCycle = input.resumableWizardCycle ?? null;
+  const resumeBanner =
+    resumableWizardCycle === null
+      ? ""
+      : renderPromptSdlcWizardResumeBanner(resumableWizardCycle);
   const wizardGate =
     input.cycle === null ? "" : renderPromptSdlcWizardGate(input.cycle);
   const cycle =
@@ -87,6 +97,11 @@ export const buildPromptSdlcLocalPageBody = (input: {
     improver: shown.improver,
     judgeInstructions: shown.judgeInstructions,
     improverInstructions: shown.improverInstructions,
+  });
+  const runnerFields = renderPromptSdlcWizardRunnerFields({
+    writers: input.writers,
+    runner: shown.runner,
+    runnerInstructions: shown.runnerInstructions,
   });
   const intro =
     "Set the goal and the prompt, then choose who scores and who rewrites. Instructions are optional.";
@@ -131,6 +146,7 @@ export const buildPromptSdlcLocalPageBody = (input: {
           <p class="sdlc-block-title">Judge and improver</p>
           ${writerFields}
         </div>
+        ${runnerFields}
         <div class="sdlc-block">
           <p class="sdlc-block-title">When to stop</p>
           <div class="sdlc-limits">
@@ -145,5 +161,5 @@ export const buildPromptSdlcLocalPageBody = (input: {
         </fieldset>
       </form>
     </section>`;
-  return `${error}${skillNotice}${wizardGate}${cycle}${nodeDialog}${live}${form}${renderPromptSdlcLocalHistory(input.history, input.cycle?.id ?? null)}${PROMPT_SDLC_LOCAL_FORM_SCRIPT}${PROMPT_SDLC_SKILL_SELECT_SCRIPT}`;
+  return `${error}${skillNotice}${resumeBanner}${wizardGate}${cycle}${nodeDialog}${live}${form}${renderPromptSdlcLocalHistory(input.history, input.cycle?.id ?? null)}${PROMPT_SDLC_LOCAL_FORM_SCRIPT}${PROMPT_SDLC_SKILL_SELECT_SCRIPT}`;
 };

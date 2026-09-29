@@ -49,6 +49,7 @@ export const answerPromptSdlcLocalManual = async (
     skillNotice: null,
     cycle: manual.cycle,
     history: readPromptSdlcLocalCycles(input.storePath),
+    resumableWizardCycle: null,
   });
   return true;
 };

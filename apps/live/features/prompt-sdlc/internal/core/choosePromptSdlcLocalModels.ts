@@ -80,3 +80,21 @@ export const readPromptSdlcLocalRunModels = (
 
   return { judge, improver };
 };
+
+export const readPromptSdlcLocalRunnerModel = (
+  installedWriterIds: readonly string[],
+  postedRunner: string | null,
+  fallbackJudge: PromptSdlcLocalActor,
+): (typeof PREFERENCE)[number] | null => {
+  const available = listPromptSdlcLocalWriters(installedWriterIds);
+  if (postedRunner === null || postedRunner.trim() === "") {
+    if (fallbackJudge !== PROMPT_SDLC_MANUAL_ACTOR) {
+      return fallbackJudge;
+    }
+    return available[0] ?? null;
+  }
+  if (postedRunner === PROMPT_SDLC_MANUAL_ACTOR) {
+    return null;
+  }
+  return available.find((writer) => writer === postedRunner) ?? null;
+};

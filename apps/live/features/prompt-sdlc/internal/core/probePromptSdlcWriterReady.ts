@@ -40,18 +40,21 @@ export const readPromptSdlcWriterReady = async (
   return { ok: true, message };
 };
 
+const distinctWriters = (writers: readonly string[]): readonly string[] => [
+  ...new Set(writers.filter((writer) => writer.length > 0)),
+];
+
 export const readPromptSdlcChosenWritersReady = async (
   storePath: string,
   judge: string,
   improver: string,
+  runner?: string,
 ): Promise<string | null> => {
-  const judgeStatus = await readPromptSdlcWriterReady(storePath, judge);
-  if (!judgeStatus.ok) {
-    return judgeStatus.message;
+  for (const writer of distinctWriters([judge, improver, runner ?? ""])) {
+    const status = await readPromptSdlcWriterReady(storePath, writer);
+    if (!status.ok) {
+      return status.message;
+    }
   }
-  if (improver === judge) {
-    return null;
-  }
-  const improverStatus = await readPromptSdlcWriterReady(storePath, improver);
-  return improverStatus.ok ? null : improverStatus.message;
+  return null;
 };

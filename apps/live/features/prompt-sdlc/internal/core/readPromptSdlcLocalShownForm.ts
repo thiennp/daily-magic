@@ -15,6 +15,8 @@ export const readPromptSdlcLocalShownForm = (input: {
   readonly improver: string;
   readonly judgeInstructions?: string;
   readonly improverInstructions?: string;
+  readonly runner?: string;
+  readonly runnerInstructions?: string;
   readonly cycle: PromptSdlcLocalCycle | null;
 }): {
   readonly goal: string;
@@ -26,6 +28,8 @@ export const readPromptSdlcLocalShownForm = (input: {
   readonly improver: string;
   readonly judgeInstructions: string;
   readonly improverInstructions: string;
+  readonly runner: string;
+  readonly runnerInstructions: string;
   readonly running: boolean;
 } => {
   const cycle = input.cycle;
@@ -40,6 +44,8 @@ export const readPromptSdlcLocalShownForm = (input: {
       improver: input.improver,
       judgeInstructions: input.judgeInstructions ?? "",
       improverInstructions: input.improverInstructions ?? "",
+      runner: input.runner ?? "",
+      runnerInstructions: input.runnerInstructions ?? "",
       running: false,
     };
   }
@@ -58,6 +64,11 @@ export const readPromptSdlcLocalShownForm = (input: {
     improver: cycle.improverModel,
     judgeInstructions: cycle.judgeInstructions ?? "",
     improverInstructions: cycle.improverInstructions ?? "",
+    runner:
+      cycle.runnerModel === undefined || cycle.runnerModel === "manual"
+        ? ""
+        : cycle.runnerModel,
+    runnerInstructions: cycle.wizard?.runnerInstructions ?? "",
     running:
       !isPromptSdlcTerminalStatus(cycle.status) &&
       cycle.status !== "wizard_paused",

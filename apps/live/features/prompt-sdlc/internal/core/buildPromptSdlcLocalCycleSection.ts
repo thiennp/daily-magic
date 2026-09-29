@@ -45,7 +45,7 @@ export const buildPromptSdlcLocalCycleSection = (
   );
   const stop = isPromptSdlcTerminalStatus(cycle.status)
     ? ""
-    : renderPromptSdlcLocalStopForm(cycle.id);
+    : renderPromptSdlcLocalStopForm(cycle);
   const best = renderPromptSdlcLocalBestPrompt(cycle);
   const error =
     cycle.errorMessage === null

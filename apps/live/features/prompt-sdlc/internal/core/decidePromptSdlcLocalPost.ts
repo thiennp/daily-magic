@@ -1,9 +1,13 @@
 import {
+  type HarnessWriterAgent,
   PROMPT_SDLC_PASS_SCORE,
   PROMPT_SDLC_WIZARD_MAX_ROUNDS,
   PROMPT_SDLC_WIZARD_PASS_SCORE,
 } from "../../../../adapters/promptSdlcAwcCore";
-import { readPromptSdlcLocalRunModels } from "./choosePromptSdlcLocalModels";
+import {
+  readPromptSdlcLocalRunnerModel,
+  readPromptSdlcLocalRunModels,
+} from "./choosePromptSdlcLocalModels";
 import {
   promptSdlcLocalMaxRoundsText,
   readPromptSdlcLocalMaxRounds,
@@ -24,21 +28,29 @@ type PromptSdlcLocalRunModels = NonNullable<
   ReturnType<typeof readPromptSdlcLocalRunModels>
 >;
 
+type PromptSdlcLocalStartBase = {
+  readonly kind: "start";
+  readonly goal: string;
+  readonly prompt: string;
+  readonly judge: PromptSdlcLocalRunModels["judge"];
+  readonly improver: PromptSdlcLocalRunModels["improver"];
+  readonly workingDirectory: string;
+  readonly passScore: number;
+  readonly maxRounds: number;
+  readonly sourceSkillFile: string;
+  readonly judgeInstructions: string;
+  readonly improverInstructions: string;
+};
+
 export type PromptSdlcLocalPostDecision =
-  | {
-      readonly kind: "start";
-      readonly goal: string;
-      readonly prompt: string;
-      readonly judge: PromptSdlcLocalRunModels["judge"];
-      readonly improver: PromptSdlcLocalRunModels["improver"];
-      readonly workingDirectory: string;
-      readonly passScore: number;
-      readonly maxRounds: number;
-      readonly sourceSkillFile: string;
-      readonly judgeInstructions: string;
-      readonly improverInstructions: string;
-      readonly useWizard: boolean;
-    }
+  | (PromptSdlcLocalStartBase & {
+      readonly useWizard: true;
+      readonly runner: HarnessWriterAgent;
+      readonly runnerInstructions: string;
+    })
+  | (PromptSdlcLocalStartBase & {
+      readonly useWizard: false;
+    })
   | {
       readonly kind: "form";
       readonly goal: string;
@@ -51,6 +63,8 @@ export type PromptSdlcLocalPostDecision =
       readonly improver: string;
       readonly judgeInstructions: string;
       readonly improverInstructions: string;
+      readonly runner: string;
+      readonly runnerInstructions: string;
     };
 
 export const decidePromptSdlcLocalPost = (input: {
@@ -75,6 +89,9 @@ export const decidePromptSdlcLocalPost = (input: {
     input.posted?.get("judgeInstructions")?.trim() ?? "";
   const improverInstructions =
     input.posted?.get("improverInstructions")?.trim() ?? "";
+  const runnerInstructions =
+    input.posted?.get("runnerInstructions")?.trim() ?? "";
+  const postedRunner = input.posted?.get("runner") ?? null;
   const form = (
     folder: string,
     errorMessage: string | null,
@@ -90,6 +107,8 @@ export const decidePromptSdlcLocalPost = (input: {
     improver: shown.improver,
     judgeInstructions,
     improverInstructions,
+    runner: postedRunner ?? "",
+    runnerInstructions,
   });
   if (input.posted === null) {
     return form(PROMPT_SDLC_LOCAL_DEFAULT_FOLDER, null);
@@ -143,6 +162,33 @@ export const decidePromptSdlcLocalPost = (input: {
     return form(typedFolder, maxRounds.errorMessage);
   }
 
+  if (useWizard) {
+    const runner = readPromptSdlcLocalRunnerModel(
+      input.installedIds,
+      postedRunner,
+      chosen.judge,
+    );
+    if (runner === null) {
+      return form(typedFolder, "Choose a runner for wizard step 4.");
+    }
+    return {
+      kind: "start",
+      goal: input.goal,
+      prompt: input.prompt,
+      judge: chosen.judge,
+      improver: chosen.improver,
+      workingDirectory: folder.path,
+      passScore: passScore.passScore,
+      maxRounds: maxRounds.maxRounds,
+      sourceSkillFile: input.posted.get("skillFile")?.trim() ?? "",
+      judgeInstructions,
+      improverInstructions,
+      useWizard: true,
+      runner,
+      runnerInstructions,
+    };
+  }
+
   return {
     kind: "start",
     goal: input.goal,
@@ -155,6 +201,6 @@ export const decidePromptSdlcLocalPost = (input: {
     sourceSkillFile: input.posted.get("skillFile")?.trim() ?? "",
     judgeInstructions,
     improverInstructions,
-    useWizard,
+    useWizard: false,
   };
 };

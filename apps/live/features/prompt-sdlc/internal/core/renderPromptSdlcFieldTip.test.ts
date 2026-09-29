@@ -34,6 +34,8 @@ describe("renderPromptSdlcFieldTip", () => {
       "improverInstructions",
       "passScore",
       "roundLimit",
+      "runner",
+      "runnerInstructions",
     ]);
   });
 });

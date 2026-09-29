@@ -19,6 +19,10 @@ export const closePromptSdlcLocalCycleAbort = (cycleId: string): void => {
   cycleAbortControllers.delete(cycleId);
 };
 
+export const abortPromptSdlcLocalCycleWriters = (cycleId: string): void => {
+  cycleAbortControllers.get(cycleId)?.abort();
+};
+
 /** Saves stopped, then SIGTERMs the writer so the next round does not start. */
 export const stopPromptSdlcLocalCycle = (
   storePath: string,
@@ -36,7 +40,7 @@ export const stopPromptSdlcLocalCycle = (
       errorMessage: PROMPT_SDLC_STOP_USER,
       updatedAt: new Date().toISOString(),
     });
-    cycleAbortControllers.get(cycleId)?.abort();
+    abortPromptSdlcLocalCycleWriters(cycleId);
   }
 
   return true;

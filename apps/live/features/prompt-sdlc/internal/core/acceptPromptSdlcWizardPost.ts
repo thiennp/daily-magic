@@ -15,6 +15,10 @@ import {
   savePromptSdlcLocalCycle,
 } from "./promptSdlcLocalStore";
 import { ensurePromptSdlcLocalCycleRunning } from "./runPromptSdlcLocalCycle";
+import {
+  skipPromptSdlcWizardCurrentModule,
+  stopPromptSdlcWizardRun,
+} from "./stopPromptSdlcWizard";
 
 const resumeWizardStepAfterWriterFailure = (
   cycle: PromptSdlcLocalCycle,
@@ -75,6 +79,20 @@ export const tryAcceptPromptSdlcWizardPost = (input: {
     });
     input.response.end();
   };
+
+  if (intent === "wizard-stop-all") {
+    const next = stopPromptSdlcWizardRun(cycle);
+    savePromptSdlcLocalCycle(input.storePath, next);
+    redirect(cycleId);
+    return true;
+  }
+
+  if (intent === "wizard-skip-module") {
+    const next = skipPromptSdlcWizardCurrentModule(cycle);
+    savePromptSdlcLocalCycle(input.storePath, next);
+    redirect(cycleId);
+    return true;
+  }
 
   if (intent === "wizard-feedback-rerun") {
     const feedback = posted.get("wizardFeedback")?.trim() ?? "";
@@ -147,6 +165,7 @@ export const tryAcceptPromptSdlcWizardPost = (input: {
       const next: PromptSdlcLocalCycle = {
         ...cycle,
         status: "judging",
+        errorMessage: null,
         wizard: {
           ...wizardWithRound,
           gate: null,
