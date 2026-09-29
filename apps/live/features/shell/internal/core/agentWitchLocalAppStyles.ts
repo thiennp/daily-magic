@@ -688,8 +688,79 @@ form.sdlc-form { display: flex; flex-direction: column; }
   border-radius: 0.75rem;
   background: var(--aw-zinc-50);
 }
-.sdlc-submit { display: flex; justify-content: flex-end; }
+.sdlc-submit {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
 .sdlc-submit .btn-primary { min-width: 8.5rem; }
+#prompt-sdlc-wizard-gate-slot { margin-bottom: 1.25rem; }
+.sdlc-wizard-gate,
+.sdlc-wizard-resume {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.sdlc-wizard-gate h2,
+.sdlc-wizard-resume h2 { margin: 0; }
+.sdlc-wizard-gate > p:first-of-type,
+.sdlc-wizard-resume .lede { margin: 0; }
+.sdlc-wizard-gate-lede { margin: 0; font-size: 0.9375rem; color: var(--aw-zinc-700); line-height: 1.5; }
+form.sdlc-wizard-feedback {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.sdlc-wizard-actions,
+.sdlc-wizard-interrupt-actions,
+.sdlc-wizard-resume .actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+}
+.sdlc-wizard-vars,
+.sdlc-wizard-revisions,
+.sdlc-wizard-splits {
+  margin: 0;
+  padding-left: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+.sdlc-wizard-vars li,
+.sdlc-wizard-revisions li,
+.sdlc-wizard-splits li { line-height: 1.45; }
+.sdlc-wizard-revisions label,
+.sdlc-wizard-splits label { display: block; cursor: pointer; }
+.sdlc-wizard-interrupt {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 0.25rem;
+}
+.sdlc-wizard-interrupt p { margin: 0; }
+.sdlc-badge {
+  display: inline-block;
+  margin-left: 0.35rem;
+  padding: 0.12rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  background: #dcfce7;
+  color: #166534;
+}
+.sdlc-runner-block .sdlc-writer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
 .sdlc-writers { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem 1.25rem; align-items: start; }
 .sdlc-limits { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(14rem, 0.9fr); gap: 1rem 1.5rem; align-items: start; }
 form.sdlc-form textarea.input.sdlc-instruction {

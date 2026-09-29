@@ -103,7 +103,7 @@ export const buildPromptSdlcLocalPageBody = (input: {
     runnerInstructions: shown.runnerInstructions,
   });
   const intro =
-    "Set the goal and the prompt, then choose who scores and who rewrites. Instructions are optional.";
+    "Set the goal and the prompt, then choose who scores, who rewrites, and who runs step 4. Run starts the wizard (generalize → evaluate → separate → optimize modules). Classic loop skips the wizard. Instructions are optional.";
   const locked = shown.running
     ? `<p class="sdlc-locked" data-sdlc-locked>This run is using these choices.</p>`
     : "";

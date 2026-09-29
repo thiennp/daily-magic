@@ -70,9 +70,19 @@ export const renderPromptSdlcWizardGate = (
       ? `<p>Module ${wizard.currentModuleIndex + 1} of ${wizard.modules.length}: ${escapeHtml(wizard.modules[wizard.currentModuleIndex]?.title ?? "")}</p><p class="muted">Sample run uses: ${escapeHtml(substitutePromptSdlcTemplate(wizard.templatedPrompt, wizard.variables))}</p>`
       : "";
 
+  const gateLede =
+    gate === "generalize"
+      ? "Review the templated prompt and variables. Continue to evaluate, or rerun this step with feedback."
+      : gate === "evaluate"
+        ? "Pick which revision to carry into the separate step, then continue. Rerun with feedback to judge again."
+        : gate === "separate"
+          ? "Choose a module split, then continue to optimize each module. Rerun with feedback to propose new options."
+          : "Review progress on this module. Continue when ready, or rerun with feedback.";
+
   return `<section class="card sdlc-wizard-gate">
     <p class="eyebrow">Prompt optimizer</p>
     <h2>${stepTitle}</h2>
+    <p class="sdlc-wizard-gate-lede">${gateLede}</p>
     ${variables}
     ${revisions}
     ${splits}
@@ -80,12 +90,12 @@ export const renderPromptSdlcWizardGate = (
     <form method="POST" action="/prompt-sdlc" class="sdlc-wizard-feedback">
       <input type="hidden" name="cycleId" value="${escapeHtml(cycle.id)}">
       <div class="field">
-        <label for="wizardFeedback">Feedback to rerun this step</label>
+        <label class="field-label" for="wizardFeedback">Feedback to rerun this step</label>
         <textarea class="input textarea" id="wizardFeedback" name="wizardFeedback" rows="3" placeholder="What should change?"></textarea>
       </div>
       <div class="field">
-        <label for="wizardStepInstructions">Extra instructions (optional)</label>
-        <textarea class="input textarea" id="wizardStepInstructions" name="wizardStepInstructions" rows="2"></textarea>
+        <label class="field-label" for="wizardStepInstructions">Extra instructions (optional)</label>
+        <textarea class="input textarea" id="wizardStepInstructions" name="wizardStepInstructions" rows="2" placeholder="Added to this step only when you rerun with feedback."></textarea>
       </div>
       <div class="sdlc-wizard-actions">
         <button class="btn btn-primary" type="submit" name="intent" value="wizard-continue">Continue</button>

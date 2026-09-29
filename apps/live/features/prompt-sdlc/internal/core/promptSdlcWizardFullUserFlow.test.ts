@@ -144,6 +144,8 @@ describe("prompt SDLC wizard full user flow (mocked writers)", () => {
       history: [],
     });
     expect(pageAtGeneralize).toContain("Do {{task}} well.");
+    expect(pageAtGeneralize).toContain("Continue to evaluate");
+    expect(pageAtGeneralize).toContain('class="sdlc-wizard-gate-lede"');
     expect(pageAtGeneralize).toContain('fieldset class="sdlc-fields" disabled');
 
     tryAcceptPromptSdlcWizardPost({
