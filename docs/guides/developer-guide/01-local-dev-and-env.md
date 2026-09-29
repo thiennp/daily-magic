@@ -76,7 +76,7 @@ npm run dev
 | `npm run start`    | `NODE_ENV=production tsx server.ts` | **Yes**                               |
 
 - **URL:** `http://localhost:3000` (default `PORT=3000`, `HOST=0.0.0.0`)
-- **Extra health:** `GET /api/health` on the Node server (not only Next routes)
+- **Process health:** `GET /api/health` on `server.ts` returns 200 as soon as the process listens. Pages stay **503** until Next is ready. See [awc-process-health.md](../../qa/awc-process-health.md).
 - **Test send UI:** `http://localhost:3000/ws-test`
 
 ADR: [0002 — Custom server for WebSocket](../../adr/0002-custom-server-for-agent-witch-websocket.md).

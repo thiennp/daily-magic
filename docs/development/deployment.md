@@ -8,6 +8,23 @@ See **ADR 0006** (`docs/adr/0006-production-hosting-and-neon.md`) and **ADR 0002
 
 Canonical origin: `https://www.agentwitch.com` (`docs/product/repo-name-and-hosting.md`).
 
+## Process health
+
+Railway probes `GET /api/health` (`healthcheckPath` in `railway.toml`, timeout 300 seconds). `server.ts` answers that path with HTTP 200 as soon as the process is listening. The body is JSON from `buildAgentWitchHealthPayload`:
+
+- `ok` is always `true` on this route. A database error does not fail the probe.
+- `release.label` is `AGENT_WITCH_SERVER_RELEASE_LABEL` (`src/lib/release/agentWitchServerReleaseLabel.constant.ts`). Bump it when a user-visible server fix must be visible without opening Railway. The console header badge shows `Live {label}` and the short commit when a SHA env var is set.
+- `release.commitSha` is the first non-empty of `RAILWAY_GIT_COMMIT_SHA`, `VERCEL_GIT_COMMIT_SHA`, and `GITHUB_SHA`.
+- `deviceSupersessionMigrationApplied` is true when `schema_migrations` contains `026-agent-witch-device-supersession.sql`. The result is cached for 60 seconds. A lookup error is reported as `false`.
+
+A 200 does not mean Next or the Mac WebSocket is ready. Other routes return **503** `Service starting` until `next.prepare()` finishes, and WebSocket upgrades are dropped until then. Neon connectivity is `GET /api/db/health`, which is a Next route and can 503 during startup.
+
+```bash
+curl -sS https://www.agentwitch.com/api/health
+```
+
+Full contract and pitfalls: [docs/qa/awc-process-health.md](../qa/awc-process-health.md).
+
 ## Database (Neon)
 
 Use Neon PostgreSQL. Set `DATABASE_URL` in the hosting provider (Railway, or Vercel for preview DB-only experiments).
