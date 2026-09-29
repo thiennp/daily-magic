@@ -33,6 +33,12 @@ export const buildPromptSdlcWizardSteps = (
   }
 
   const activeIndex = buildPromptSdlcWizardStepIndex(wizard);
+  const revealedThroughIndex = Math.max(
+    activeIndex,
+    wizard.phase === "optimize_modules" || wizard.gate === "optimize_modules"
+      ? 3
+      : activeIndex,
+  );
   const pausedAtGate = cycle.status === "wizard_paused";
   const isComplete = wizard.phase === "complete";
   const wizardSteps: PromptSdlcStep[] = WIZARD_STEP_LABELS.map(
@@ -52,11 +58,15 @@ export const buildPromptSdlcWizardSteps = (
     if (isComplete) {
       return true;
     }
-    return index <= activeIndex;
+    return index <= revealedThroughIndex;
   });
 
+  const showRoundStepsWhilePausedAtGate =
+    pausedAtGate &&
+    (wizard.gate === "evaluate" || wizard.gate === "optimize_modules");
   const roundSteps =
-    !pausedAtGate && shouldShowPromptSdlcWizardEvaluateRounds(wizard)
+    shouldShowPromptSdlcWizardEvaluateRounds(wizard) &&
+    (!pausedAtGate || showRoundStepsWhilePausedAtGate)
       ? buildPromptSdlcClassicRoundSteps(cycle)
       : [];
 

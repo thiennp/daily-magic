@@ -60,10 +60,7 @@ describe("prompt SDLC wizard full user flow (mocked writers)", () => {
             tokens: 8,
           };
         }
-        if (
-          input.prompt.includes("module splits") ||
-          input.prompt.includes("separate")
-        ) {
+        if (input.prompt.includes("split this prompt into smaller modules")) {
           return {
             ok: true,
             text: JSON.stringify({
@@ -218,5 +215,7 @@ describe("prompt SDLC wizard full user flow (mocked writers)", () => {
     });
     expect(pageAtSeparate).toContain("Step 3 — Separate");
     expect(pageAtSeparate).toContain("Single module");
+    expect(pageAtSeparate).toContain("sdlc-wizard-chunks");
+    expect(pageAtSeparate).toContain("Run the task");
   });
 });

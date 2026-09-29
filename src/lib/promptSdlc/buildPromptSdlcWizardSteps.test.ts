@@ -56,6 +56,18 @@ describe("buildPromptSdlcSteps wizard timeline", () => {
     expect(labels).not.toContain("Step 4 — Optimize modules");
   });
 
+  it("shows step 4 on the timeline once optimize modules starts", () => {
+    const labels = buildPromptSdlcSteps(
+      baseCycle({
+        status: "judging",
+        wizard: { phase: "optimize_modules", gate: null },
+      }),
+    ).map((step) => step.label);
+
+    expect(labels).toContain("Step 4 — Optimize modules");
+    expect(labels).toContain("Step 3 — Separate");
+  });
+
   it("shows step 3 at the separate gate, not step 4", () => {
     const labels = buildPromptSdlcSteps(
       baseCycle({

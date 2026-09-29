@@ -1,5 +1,7 @@
 import { substitutePromptSdlcTemplate } from "../../../../adapters/promptSdlcAwcCore";
 
+import { renderPromptSdlcWizardRevisionRoundList } from "./renderPromptSdlcWizardRevisionRoundList";
+import { renderPromptSdlcWizardSplitOptionChunks } from "./renderPromptSdlcWizardSplitChunks";
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
 
 const escapeHtml = (value: string): string =>
@@ -41,16 +43,11 @@ export const renderPromptSdlcWizardGate = (
 
   const revisions =
     gate === "evaluate"
-      ? `<ul class="sdlc-wizard-revisions">${cycle.revisions
-          .map((item) => {
-            const score = item.judgement?.score;
-            const label =
-              score === null || score === undefined
-                ? `Round ${item.roundNumber}`
-                : `Round ${item.roundNumber} — ${score}`;
-            return `<li><label><input type="radio" name="wizardRevisionRound" value="${item.roundNumber}"${wizard.evaluateSelectedRound === item.roundNumber ? " checked" : ""}> ${escapeHtml(label)}</label></li>`;
-          })
-          .join("")}</ul>`
+      ? renderPromptSdlcWizardRevisionRoundList({
+          cycle,
+          interactive: true,
+          selectedRound: wizard.evaluateSelectedRound,
+        })
       : "";
 
   const splits =
@@ -60,14 +57,24 @@ export const renderPromptSdlcWizardGate = (
             const badge = item.recommended
               ? ' <span class="sdlc-badge">Recommended</span>'
               : "";
-            return `<li><label><input type="radio" name="wizardSplitOptionId" value="${escapeHtml(item.id)}" required> <strong>${escapeHtml(item.title)}</strong>${badge}<br><span class="muted">${escapeHtml(item.summary)} (${escapeHtml(item.topology)})</span></label></li>`;
+            const checked =
+              wizard.selectedSplitOptionId === item.id ? " checked" : "";
+            return `<li class="sdlc-wizard-split-option"><label><input type="radio" name="wizardSplitOptionId" value="${escapeHtml(item.id)}" required${checked}> <strong>${escapeHtml(item.title)}</strong>${badge}<br><span class="muted">${escapeHtml(item.summary)} (${escapeHtml(item.topology)})</span></label>${renderPromptSdlcWizardSplitOptionChunks(item)}</li>`;
           })
           .join("")}</ul>`
       : "";
 
+  const moduleTitle =
+    wizard.modules[wizard.currentModuleIndex]?.title ?? "Module";
   const moduleNote =
     gate === "optimize_modules"
-      ? `<p>Module ${wizard.currentModuleIndex + 1} of ${wizard.modules.length}: ${escapeHtml(wizard.modules[wizard.currentModuleIndex]?.title ?? "")}</p><p class="muted">Sample run uses: ${escapeHtml(substitutePromptSdlcTemplate(wizard.templatedPrompt, wizard.variables))}</p>`
+      ? `<p>Module ${wizard.currentModuleIndex + 1} of ${wizard.modules.length}: ${escapeHtml(moduleTitle)}</p><p class="muted">Sample run uses: ${escapeHtml(substitutePromptSdlcTemplate(wizard.templatedPrompt, wizard.variables))}</p>${renderPromptSdlcWizardRevisionRoundList(
+          {
+            cycle,
+            interactive: false,
+            caption: `Scored rounds for “${moduleTitle}” (runner + judge).`,
+          },
+        )}`
       : "";
 
   const gateLede =
