@@ -162,7 +162,7 @@ describe("tryAcceptPromptSdlcWizardPost", () => {
 
     const saved = readPromptSdlcLocalCycle(storePath, cycle.id);
     expect(saved?.wizard?.phase).toBe("separate");
-    expect(saved?.wizard?.templatedPrompt).toBe("v1 chosen");
+    expect(saved?.wizard?.templatedPrompt).toBe("template only");
     expect(saved?.wizard?.evaluateSelectedRound).toBe(1);
   });
 

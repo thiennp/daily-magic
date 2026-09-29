@@ -10,6 +10,7 @@ const escapeHtml = (value: string): string =>
     .replaceAll('"', "&quot;");
 
 const renderRevision = (
+  cycle: PromptSdlcLocalCycle,
   revision: PromptSdlcLocalCycle["revisions"][number],
 ): string => {
   const score =
@@ -32,13 +33,20 @@ const renderRevision = (
     revision.roundNumber === 0
       ? "Source prompt"
       : `Revision ${revision.roundNumber}`;
+  const displayPrompt =
+    revision.roundNumber === 0 &&
+    cycle.wizard !== undefined &&
+    cycle.wizard.templatedPrompt.trim().length > 0
+      ? cycle.wizard.templatedPrompt
+      : revision.promptText;
   const body =
     writerFailure === null
-      ? `<pre class="mono">${escapeHtml(revision.promptText)}</pre>`
+      ? `<pre class="mono">${escapeHtml(displayPrompt)}</pre>`
       : `<div class="alert-error">${escapeHtml(writerFailure)}</div>`;
   return `<article class="card"><h2>${title}</h2><p class="muted">${score}</p>${reasons}${run}${body}</article>`;
 };
 
 export const renderPromptSdlcLocalRevisions = (
   cycle: PromptSdlcLocalCycle,
-): string => cycle.revisions.map(renderRevision).join("");
+): string =>
+  cycle.revisions.map((revision) => renderRevision(cycle, revision)).join("");
