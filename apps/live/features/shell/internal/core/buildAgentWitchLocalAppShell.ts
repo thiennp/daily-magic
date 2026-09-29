@@ -14,7 +14,7 @@ export type AgentWitchLocalAppNavPath =
   | "/writer-sessions"
   | "/harness"
   | "/writer-api"
-  | "/prompt-sdlc";
+  | "/prompt-optimizer";
 
 const LOGO_MARK_SVG = `<svg class="brand-mark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
   <path class="brand-mark-outline" d="M12 2L2 12l10 10 10-10L12 2z" />
@@ -29,7 +29,7 @@ const NAV_ITEMS: ReadonlyArray<{
 }> = [
   { href: "/", label: "Home" },
   { href: "/task", label: "Task" },
-  { href: "/prompt-sdlc", label: "Prompt optimizer" },
+  { href: "/prompt-optimizer", label: "Prompt optimizer" },
   { href: "/status", label: "Status" },
   { href: "/projects", label: "Projects" },
   { href: "/harness", label: "Harness" },

@@ -1,0 +1,136 @@
+import {
+  buildPromptSdlcSteps,
+  isPromptSdlcTerminalStatus,
+} from "../../../../adapters/promptSdlcAwcCore";
+import {
+  renderPromptSdlcLocalScoreScale,
+  renderPromptSdlcLocalStepTree,
+} from "./buildPromptSdlcLocalStepTree";
+import { renderPromptSdlcLocalBestPrompt } from "./renderPromptSdlcLocalBestPrompt";
+import { describePromptSdlcLocalActivity } from "./buildPromptSdlcLocalActivity";
+import { isPromptSdlcLocalManualWait } from "./isPromptSdlcLocalManualWait";
+import { mapPromptSdlcLocalCycleView } from "./mapPromptSdlcLocalCycleView";
+import { readPromptSdlcLocalImproverReference } from "./readPromptSdlcLocalImproverReference";
+import { renderPromptSdlcLocalManualStep } from "./renderPromptSdlcLocalManualStep";
+import { renderPromptSdlcLocalRevisions } from "./renderPromptSdlcLocalRevisions";
+import { renderPromptSdlcLocalStopForm } from "./renderPromptSdlcLocalStopForm";
+import {
+  formatPromptSdlcTokenCount,
+  sumPromptSdlcLocalTokens,
+} from "./sumPromptSdlcLocalTokens";
+import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
+import {
+  displayPromptSdlcLocalFolder,
+  promptSdlcLocalWorkingDirectory,
+} from "./promptSdlcLocalFolder";
+
+const escapeHtml = (value: string): string =>
+  value
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;");
+
+export const buildPromptSdlcLocalCycleSection = (
+  cycle: PromptSdlcLocalCycle,
+): string => {
+  const live =
+    !isPromptSdlcTerminalStatus(cycle.status) &&
+    cycle.status !== "wizard_paused" &&
+    !isPromptSdlcLocalManualWait(cycle);
+  const activity = describePromptSdlcLocalActivity(cycle);
+  const steps = renderPromptSdlcLocalStepTree(
+    buildPromptSdlcSteps(mapPromptSdlcLocalCycleView(cycle)),
+    cycle,
+  );
+  const stop = isPromptSdlcTerminalStatus(cycle.status)
+    ? ""
+    : renderPromptSdlcLocalStopForm(cycle);
+  const best = renderPromptSdlcLocalBestPrompt(cycle);
+  const error =
+    cycle.errorMessage === null
+      ? ""
+      : `<div class="alert-error">${escapeHtml(cycle.errorMessage)}</div>`;
+  const spinner = live
+    ? `<span class="sdlc-spin" aria-hidden="true"></span>`
+    : "";
+  const elapsed = live ? ` Working for <span data-elapsed>0s</span>.` : "";
+  const detail =
+    activity.detail.length === 0
+      ? ""
+      : `<p class="sdlc-run-detail muted">${escapeHtml(activity.detail)}${elapsed}</p>`;
+  const current = cycle.revisions.find(
+    (item) => item.roundNumber === cycle.currentRound,
+  );
+  const reference =
+    cycle.status === "improving"
+      ? readPromptSdlcLocalImproverReference(cycle)
+      : null;
+  const tokenTotal = sumPromptSdlcLocalTokens(cycle);
+  const wizardEvaluateJudge =
+    cycle.wizard !== undefined &&
+    cycle.status === "judging" &&
+    (cycle.wizard.phase === "evaluate" || cycle.wizard.gate === "evaluate");
+  const manual = isPromptSdlcLocalManualWait(cycle)
+    ? renderPromptSdlcLocalManualStep({
+        role: cycle.status === "judging" ? "judge" : "improve",
+        cycleId: cycle.id,
+        promptText: reference?.promptText ?? current?.promptText ?? "",
+        score: reference?.score ?? current?.judgement?.score ?? null,
+        reasons: reference?.reasons ?? current?.judgement?.reasons ?? null,
+        avoid: reference?.avoid ?? null,
+        instructions:
+          cycle.status === "judging"
+            ? cycle.judgeInstructions
+            : cycle.improverInstructions,
+        run: current?.run ?? null,
+        minJudgeScore: wizardEvaluateJudge ? 1 : 0,
+      })
+    : "";
+  const showScoreScale =
+    cycle.wizard === undefined ||
+    cycle.wizard.phase === "evaluate" ||
+    cycle.wizard.phase === "optimize_modules" ||
+    cycle.wizard.gate === "evaluate" ||
+    cycle.wizard.gate === "optimize_modules";
+  const scoreScale = showScoreScale
+    ? `<div class="sdlc-run-panel sdlc-run-panel-scoring"><h3 class="sdlc-run-panel-title">Scoring guide</h3>${renderPromptSdlcLocalScoreScale(cycle.passScore)}</div>`
+    : "";
+  const statusBadge = live
+    ? `<span class="sdlc-run-badge sdlc-run-badge-live">In progress</span>`
+    : cycle.status === "wizard_paused"
+      ? `<span class="sdlc-run-badge sdlc-run-badge-paused">Paused</span>`
+      : isPromptSdlcTerminalStatus(cycle.status)
+        ? `<span class="sdlc-run-badge sdlc-run-badge-done">Complete</span>`
+        : "";
+  const activityIcon = live
+    ? spinner
+    : `<span class="sdlc-run-status-dot" aria-hidden="true"></span>`;
+  const metaItems = [
+    typeof cycle.workingDirectory === "string" &&
+    cycle.workingDirectory.length > 0
+      ? `<li class="sdlc-run-meta-item"><span class="sdlc-run-meta-label">Folder</span> ${escapeHtml(displayPromptSdlcLocalFolder(promptSdlcLocalWorkingDirectory(cycle)))}</li>`
+      : "",
+    tokenTotal > 0
+      ? `<li class="sdlc-run-meta-item"><span class="sdlc-run-meta-label">Tokens</span> ${formatPromptSdlcTokenCount(tokenTotal)} so far</li>`
+      : "",
+  ].filter((item) => item.length > 0);
+  const meta =
+    metaItems.length === 0
+      ? ""
+      : `<ul class="sdlc-run-meta">${metaItems.join("")}</ul>`;
+  const actions =
+    stop.length === 0 ? "" : `<div class="sdlc-run-actions">${stop}</div>`;
+  const timeline = `<div class="sdlc-run-panel sdlc-run-panel-timeline"><h3 class="sdlc-run-panel-title">Progress</h3>${steps}</div>`;
+  const grid =
+    scoreScale.length === 0
+      ? `<div class="sdlc-run-grid sdlc-run-grid-single">${timeline}</div>`
+      : `<div class="sdlc-run-grid">${timeline}${scoreScale}</div>`;
+  const revisions = renderPromptSdlcLocalRevisions(cycle);
+  const promptsHistory =
+    revisions.length === 0
+      ? ""
+      : `<section class="sdlc-run-prompts" aria-labelledby="sdlc-run-prompts-heading"><h2 id="sdlc-run-prompts-heading" class="sdlc-run-prompts-heading">Prompt history</h2><div class="sdlc-run-prompts-list">${revisions}</div></section>`;
+
+  return `<section class="card sdlc-run" id="prompt-optimizer-run" data-live="${live ? "true" : "false"}" data-since="${escapeHtml(cycle.updatedAt)}" aria-busy="${live ? "true" : "false"}"><header class="sdlc-run-head"><div class="sdlc-run-head-top"><p class="eyebrow">This run</p>${statusBadge}</div><div class="sdlc-run-activity"><div class="sdlc-run-activity-icon">${activityIcon}</div><div class="sdlc-run-activity-copy"><h2 class="sdlc-run-title">${escapeHtml(activity.title)}</h2>${detail}</div></div>${meta}${actions}</header>${error}${grid}${manual}${best}</section>${promptsHistory}`;
+};

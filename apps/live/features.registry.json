@@ -113,10 +113,10 @@
       "notes": "Automation tick also consumed from AWI/AWB via script shims."
     },
     {
-      "slug": "prompt-sdlc",
+      "slug": "prompt-optimizer",
       "title": "Prompt optimizer",
       "fsaStatus": "fsa",
-      "featurePath": "apps/live/features/prompt-sdlc",
+      "featurePath": "apps/live/features/prompt-optimizer",
       "notes": "Local prompt judge and improver loop. Picks the best installed reasoning writers."
     }
   ]

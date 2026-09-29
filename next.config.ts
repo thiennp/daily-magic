@@ -13,6 +13,21 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       {
+        source: "/prompt-sdlc",
+        destination: "/prompt-optimizer",
+        permanent: true,
+      },
+      {
+        source: "/prompt-sdlc/:path*",
+        destination: "/prompt-optimizer/:path*",
+        permanent: true,
+      },
+      {
+        source: "/api/prompt-sdlc/:path*",
+        destination: "/api/prompt-optimizer/:path*",
+        permanent: true,
+      },
+      {
         source: "/:path*",
         has: [{ type: "host", value: "agentwitch.com" }],
         destination: "https://www.agentwitch.com/:path*",

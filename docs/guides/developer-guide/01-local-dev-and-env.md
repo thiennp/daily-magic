@@ -165,7 +165,7 @@ Routing map for which guide chapter matches a path: [guide-maintenance.map.json]
 | Topic                    | Link                                                                                                     |
 | ------------------------ | -------------------------------------------------------------------------------------------------------- |
 | User first run           | [user guide ch.1](../user-guide/01-getting-started.md)                                                   |
-| Prompt optimizer on Live | [prompt-sdlc.md](../../qa/prompt-sdlc.md) — `apps/live/features/prompt-sdlc`                             |
+| Prompt optimizer on Live | [prompt-sdlc.md](../../qa/prompt-optimizer.md) — `apps/live/features/prompt-optimizer`                   |
 | Test sign-in             | [Chapter 2](02-auth-and-test-login.md)                                                                   |
 | Architecture             | [Chapter 3](03-architecture-map.md)                                                                      |
 | Hosting / production     | [Chapter 8](08-deploy-hosting-neon.md) (when present)                                                    |

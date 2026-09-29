@@ -6,7 +6,7 @@ import { AGENT_WITCH_PRODUCT_NAME } from "@/lib/agentWitch/agentWitchProductName
 export default function HomePromptSdlcSection(): ReactElement {
   return (
     <section
-      id="prompt-sdlc"
+      id="prompt-optimizer"
       aria-labelledby="prompt-sdlc-heading"
       className="scroll-mt-24 rounded-2xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-white/[0.02] sm:p-8"
     >
@@ -29,7 +29,7 @@ export default function HomePromptSdlcSection(): ReactElement {
       </p>
       <p className="mt-4 flex flex-wrap gap-4">
         <Link
-          href="/prompt-sdlc"
+          href="/prompt-optimizer"
           className="text-sm font-medium text-gray-900 underline dark:text-white"
         >
           Open the prompt optimizer

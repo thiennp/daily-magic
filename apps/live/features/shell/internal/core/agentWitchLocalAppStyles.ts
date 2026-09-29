@@ -695,7 +695,7 @@ form.sdlc-form { display: flex; flex-direction: column; }
   gap: 0.75rem;
 }
 .sdlc-submit .btn-primary { min-width: 8.5rem; }
-#prompt-sdlc-wizard-gate-slot { margin-bottom: 1.25rem; }
+#prompt-optimizer-wizard-gate-slot { margin-bottom: 1.25rem; }
 .sdlc-wizard-gate,
 .sdlc-wizard-resume {
   display: flex;
@@ -707,6 +707,10 @@ form.sdlc-form { display: flex; flex-direction: column; }
 .sdlc-wizard-gate > p:first-of-type,
 .sdlc-wizard-resume .lede { margin: 0; }
 .sdlc-wizard-gate-lede { margin: 0; font-size: 0.9375rem; color: var(--aw-zinc-700); line-height: 1.5; }
+.sdlc-wizard-gate-active {
+  outline: 1px solid rgb(26 68 190 / 0.25);
+  background: linear-gradient(180deg, rgb(239 246 255 / 0.65), #fff 2.5rem);
+}
 form.sdlc-wizard-feedback {
   display: flex;
   flex-direction: column;

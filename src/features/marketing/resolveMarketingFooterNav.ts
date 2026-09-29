@@ -11,7 +11,7 @@ const FOOTER_PUBLIC_PRODUCT_LINKS: readonly MarketingFooterLink[] = [
   { label: "For agents", href: "/for-agents" },
   { label: "New task", href: buildAgentComposerHref() },
   { label: "Reports", href: "/reports" },
-  { label: "Prompt optimizer", href: "/prompt-sdlc" },
+  { label: "Prompt optimizer", href: "/prompt-optimizer" },
 ];
 
 const FOOTER_STAFF_PRODUCT_LINKS: readonly MarketingFooterLink[] = [

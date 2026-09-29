@@ -14,7 +14,7 @@ const promptOptimizerInTheProject: ShowcaseArticle = {
   ],
   tryNext: {
     label: "Open the prompt optimizer",
-    href: "/prompt-sdlc",
+    href: "/prompt-optimizer",
   },
   relatedShowcases: [
     {

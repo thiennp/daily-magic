@@ -4,8 +4,8 @@ import os from "node:os";
 import path from "node:path";
 
 import { createInitialPromptSdlcWizardState } from "../../../apps/live/adapters/promptSdlcAwcCore";
-import { createPromptSdlcLocalCycle } from "../../../apps/live/features/prompt-sdlc/internal/core/createPromptSdlcLocalCycle";
-import { savePromptSdlcLocalCycle } from "../../../apps/live/features/prompt-sdlc/internal/core/promptSdlcLocalStore";
+import { createPromptSdlcLocalCycle } from "../../../apps/live/features/prompt-optimizer/internal/core/createPromptSdlcLocalCycle";
+import { savePromptSdlcLocalCycle } from "../../../apps/live/features/prompt-optimizer/internal/core/promptSdlcLocalStore";
 
 const installDir =
   process.env.AWL_DEMO_INSTALL_DIR?.trim() ||
@@ -24,7 +24,7 @@ if (fs.existsSync(bundle)) {
   fs.copyFileSync(bundle, path.join(installDir, "app/agent-witch.js"));
 }
 
-const storePath = path.join(installDir, "prompt-sdlc-cycles.json");
+const storePath = path.join(installDir, "prompt-optimizer-cycles.json");
 
 const goal =
   "Draft tier-2 EU support replies: cite only approved policy snippets, never promise legal outcomes, and escalate billing disputes above €500 to a human.";

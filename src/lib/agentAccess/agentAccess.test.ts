@@ -60,7 +60,7 @@ describe("agent access registration", () => {
     expect(text).toContain("create_workflow");
     expect(text).toContain("install_harness");
     expect(text).toContain("~/.agent-witch/harness/");
-    expect(text).toContain("http://127.0.0.1:43347/prompt-sdlc/agent");
+    expect(text).toContain("http://127.0.0.1:43347/prompt-optimizer/agent");
     expect(text).toContain("workingDirectory");
     expect(text).toContain("Do not ask the human to paste the prompt");
     expect(text).toContain("There is no directory of other people's bots.");

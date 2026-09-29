@@ -28,9 +28,9 @@ export const PRIMARY_NAV: readonly AppNavItem[] = [
     isActive: (pathname) => pathname.startsWith("/reports"),
   },
   {
-    href: "/prompt-sdlc",
+    href: "/prompt-optimizer",
     label: "Prompt optimizer",
-    isActive: (pathname) => pathname.startsWith("/prompt-sdlc"),
+    isActive: (pathname) => pathname.startsWith("/prompt-optimizer"),
   },
   {
     href: "/library",
