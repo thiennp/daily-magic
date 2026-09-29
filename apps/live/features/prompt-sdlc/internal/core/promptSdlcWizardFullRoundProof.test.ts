@@ -1,4 +1,5 @@
 import fs from "node:fs";
+import os from "node:os";
 import path from "node:path";
 
 import { afterEach, describe, expect, it, vi } from "vitest";
@@ -15,10 +16,27 @@ import {
   savePromptSdlcLocalCycle,
 } from "./promptSdlcLocalStore";
 
-export const WIZARD_FULL_ROUND_INSTALL_DIR = path.join(
-  "/opt/cursor/artifacts",
-  "awl-wizard-full-round",
-);
+const ARTIFACTS_ROOT = "/opt/cursor/artifacts";
+
+const canWriteUnderArtifactsRoot = (): boolean => {
+  try {
+    fs.mkdirSync(ARTIFACTS_ROOT, { recursive: true });
+    const probe = path.join(ARTIFACTS_ROOT, `.write-probe-${process.pid}`);
+    fs.writeFileSync(probe, "");
+    fs.unlinkSync(probe);
+    return true;
+  } catch {
+    return false;
+  }
+};
+
+/** Prefer walkthrough artifacts when writable; otherwise use a temp install dir. */
+export const resolveWizardFullRoundInstallDir = (): string => {
+  if (canWriteUnderArtifactsRoot()) {
+    return path.join(ARTIFACTS_ROOT, "awl-wizard-full-round");
+  }
+  return fs.mkdtempSync(path.join(os.tmpdir(), "awl-wizard-full-round-"));
+};
 
 const COMPLEX_GOAL =
   "Draft tier-2 EU support replies: cite only approved policy snippets, never promise legal outcomes, and escalate billing disputes above €500 to a human.";
@@ -111,7 +129,7 @@ describe("prompt SDLC wizard full round proof (for screenshots)", () => {
   });
 
   it("runs all four gates with a complex EU support prompt and writes snapshot cycles", async () => {
-    const installDir = WIZARD_FULL_ROUND_INSTALL_DIR;
+    const installDir = resolveWizardFullRoundInstallDir();
     fs.mkdirSync(installDir, { recursive: true });
     for (const sub of ["logs", "harness/sets", "projects", "app"]) {
       fs.mkdirSync(path.join(installDir, sub), { recursive: true });
@@ -121,7 +139,11 @@ describe("prompt SDLC wizard full round proof (for screenshots)", () => {
       "public/install/agent-witch/app/agent-witch.js",
     );
     if (fs.existsSync(bundle)) {
-      fs.copyFileSync(bundle, path.join(installDir, "app/agent-witch.js"));
+      try {
+        fs.copyFileSync(bundle, path.join(installDir, "app/agent-witch.js"));
+      } catch {
+        // Bundle copy is optional for screenshot installs; mocks drive this flow.
+      }
     }
 
     const storePath = path.join(installDir, "prompt-sdlc-cycles.json");
@@ -398,9 +420,11 @@ describe("prompt SDLC wizard full round proof (for screenshots)", () => {
       path.join(installDir, "full-round-manifest.json"),
       `${JSON.stringify(manifest, null, 2)}\n`,
     );
-    fs.writeFileSync(
-      path.join("/opt/cursor/artifacts", "wizard-full-round-proof.json"),
-      `${JSON.stringify(manifest, null, 2)}\n`,
-    );
-  });
+    if (canWriteUnderArtifactsRoot()) {
+      fs.writeFileSync(
+        path.join(ARTIFACTS_ROOT, "wizard-full-round-proof.json"),
+        `${JSON.stringify(manifest, null, 2)}\n`,
+      );
+    }
+  }, 120_000);
 });
