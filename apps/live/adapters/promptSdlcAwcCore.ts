@@ -59,7 +59,10 @@ export { buildPromptSdlcSeparatePrompt } from "@/lib/promptSdlc/wizard/buildProm
 export { parsePromptSdlcGeneralizeReply } from "@/lib/promptSdlc/wizard/parsePromptSdlcGeneralizeReply";
 export { parsePromptSdlcSeparateReply } from "@/lib/promptSdlc/wizard/parsePromptSdlcSeparateReply";
 export { recordPromptSdlcWizardAttempt } from "@/lib/promptSdlc/wizard/recordPromptSdlcWizardAttempt";
-export { readPromptSdlcWizardTemplatedOrConcrete } from "@/lib/promptSdlc/wizard/readPromptSdlcWizardEvalPrompt";
+export {
+  readPromptSdlcWizardEvaluatePromptText,
+  readPromptSdlcWizardTemplatedOrConcrete,
+} from "@/lib/promptSdlc/wizard/readPromptSdlcWizardEvalPrompt";
 export { substitutePromptSdlcTemplate } from "@/lib/promptSdlc/wizard/substitutePromptSdlcTemplate";
 export type { PromptSdlcWizardSplitOption } from "@/lib/promptSdlc/wizard/types/PromptSdlcWizardSplitOption.type";
 export type { default as PromptSdlcWizardState } from "@/lib/promptSdlc/wizard/types/PromptSdlcWizardState.type";

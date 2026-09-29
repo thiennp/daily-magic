@@ -18,4 +18,5 @@ export const createInitialPromptSdlcWizardState = (
   modules: [],
   currentModuleIndex: 0,
   runnerInstructions: "",
+  pendingStepInstructions: "",
 });

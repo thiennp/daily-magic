@@ -3,4 +3,4 @@
  * without opening Railway (surfaced on GET /api/health).
  */
 export const AGENT_WITCH_SERVER_RELEASE_LABEL =
-  "2026-09-28-harness-pull-honesty";
+  "2026-09-29-prompt-optimizer-name";

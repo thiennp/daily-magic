@@ -32,4 +32,6 @@ export default interface PromptSdlcWizardState {
   readonly modules: readonly PromptSdlcWizardModuleRun[];
   readonly currentModuleIndex: number;
   readonly runnerInstructions: string;
+  /** Consumed on the next generalize/separate writer call (feedback rerun form). */
+  readonly pendingStepInstructions: string;
 }

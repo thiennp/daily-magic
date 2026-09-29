@@ -23,6 +23,7 @@ export const recordPromptSdlcWizardAttempt = (input: {
   };
   return {
     ...input.wizard,
+    pendingStepInstructions: "",
     attempts: [...input.wizard.attempts, attempt],
   };
 };

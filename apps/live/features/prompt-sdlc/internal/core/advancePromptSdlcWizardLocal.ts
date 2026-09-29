@@ -6,8 +6,10 @@ import {
   parsePromptSdlcSeparateReply,
   PROMPT_SDLC_WIZARD_MAX_ROUNDS,
   PROMPT_SDLC_WIZARD_PASS_SCORE,
+  readPromptSdlcWizardEvaluatePromptText,
   readPromptSdlcWizardTemplatedOrConcrete,
   recordPromptSdlcWizardAttempt,
+  selectPromptSdlcBestPrompt,
 } from "../../../../adapters/promptSdlcAwcCore";
 import { PROMPT_SDLC_MANUAL_ACTOR } from "./choosePromptSdlcLocalModels";
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
@@ -87,7 +89,7 @@ const runGeneralize = async (
     goal: cycle.goal,
     sourcePrompt,
     avoid: wizard.avoidByStep.generalize,
-    stepInstructions: "",
+    stepInstructions: wizard.pendingStepInstructions,
     lastAttemptSummary: lastAttemptSummaryForStep(cycle, "generalize"),
   });
   const reply = await runPromptSdlcWriterReply({
@@ -111,7 +113,10 @@ const runGeneralize = async (
       step: "generalize",
       output: parsed,
       userFeedback: null,
-      stepInstructions: null,
+      stepInstructions:
+        wizard.pendingStepInstructions.trim().length === 0
+          ? null
+          : wizard.pendingStepInstructions,
     });
     return pauseAtGate(
       {
@@ -141,11 +146,19 @@ const runSeparate = async (
   if (writer === null) {
     return failCycle(cycle, "Choose a writer to suggest splits.");
   }
+  const evaluateHandoffPrompt = readPromptSdlcWizardEvaluatePromptText({
+    wizard,
+    revisions: cycle.revisions.map((item) => ({
+      roundNumber: item.roundNumber,
+      promptText: item.promptText,
+      score: item.judgement?.score,
+    })),
+  });
   const prompt = buildPromptSdlcSeparatePrompt({
     goal: cycle.goal,
-    templatedPrompt: wizard.templatedPrompt,
+    templatedPrompt: evaluateHandoffPrompt,
     avoid: wizard.avoidByStep.separate,
-    stepInstructions: "",
+    stepInstructions: wizard.pendingStepInstructions,
     lastAttemptSummary: lastAttemptSummaryForStep(cycle, "separate"),
   });
   const reply = await runPromptSdlcWriterReply({
@@ -168,7 +181,10 @@ const runSeparate = async (
       step: "separate",
       output: { options },
       userFeedback: null,
-      stepInstructions: null,
+      stepInstructions:
+        wizard.pendingStepInstructions.trim().length === 0
+          ? null
+          : wizard.pendingStepInstructions,
     });
     return pauseAtGate(
       {
@@ -303,6 +319,28 @@ export const advancePromptSdlcWizardLocal = async (
         next.wizard.phase === "optimize_modules"
           ? "optimize_modules"
           : "evaluate";
+      if (gate === "evaluate" && next.wizard.evaluateSelectedRound === null) {
+        const best = selectPromptSdlcBestPrompt(
+          next.revisions.map((item) => ({
+            roundNumber: item.roundNumber,
+            promptText: item.promptText,
+            score: item.judgement?.score ?? 0,
+            reasons: item.judgement?.reasons ?? "",
+          })),
+        );
+        const defaultRound =
+          best?.roundNumber ?? next.revisions.at(-1)?.roundNumber ?? 0;
+        return pauseAtGate(
+          {
+            ...next,
+            wizard: {
+              ...next.wizard,
+              evaluateSelectedRound: defaultRound,
+            },
+          },
+          gate,
+        );
+      }
       return pauseAtGate(next, gate);
     }
     return next;
