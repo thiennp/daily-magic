@@ -74,6 +74,7 @@ export const decidePromptSdlcLocalPost = (input: {
   readonly goal: string;
   readonly prompt: string;
   readonly pickFolder: () => string | null;
+  readonly defaultFolder?: string;
 }): PromptSdlcLocalPostDecision => {
   const shown = shownPromptSdlcLocalWriters(
     input.selection,
@@ -111,7 +112,7 @@ export const decidePromptSdlcLocalPost = (input: {
     runnerInstructions,
   });
   if (input.posted === null) {
-    return form(PROMPT_SDLC_LOCAL_DEFAULT_FOLDER, null);
+    return form(input.defaultFolder ?? PROMPT_SDLC_LOCAL_DEFAULT_FOLDER, null);
   }
 
   const typedFolder =

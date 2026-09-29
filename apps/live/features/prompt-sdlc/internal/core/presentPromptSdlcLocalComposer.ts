@@ -11,6 +11,10 @@ import {
   savePromptSdlcLocalCycle,
 } from "./promptSdlcLocalStore";
 import { displayPromptSdlcLocalFolder } from "./promptSdlcLocalFolder";
+import {
+  freshPromptSdlcLocalComposerDefaults,
+  rememberPromptSdlcLocalPostedSelection,
+} from "./promptSdlcLocalPreferences";
 import { readPromptSdlcFolderSkill } from "./readPromptSdlcFolderSkills";
 import { readPromptSdlcChosenWritersReady } from "./probePromptSdlcWriterReady";
 import { findResumablePromptSdlcWizardCycle } from "./findResumablePromptSdlcWizardCycle";
@@ -27,15 +31,40 @@ export const presentPromptSdlcLocalComposer = async (input: {
   readonly skillNotice: string | null;
   readonly cycleId: string | null;
 }): Promise<void> => {
+  const fresh =
+    input.posted === null
+      ? freshPromptSdlcLocalComposerDefaults({
+          storePath: input.route.storePath,
+          installedIds: input.installedIds,
+          selection: input.selection,
+        })
+      : null;
   const decision = decidePromptSdlcLocalPost({
     posted: input.posted,
     installedIds: input.installedIds,
-    selection: input.selection,
+    selection: fresh?.selection ?? input.selection,
     goal: input.goal,
     prompt: input.prompt,
     pickFolder: () =>
       pickMacOsFolderDialog("Choose the folder this prompt should run in"),
+    ...(fresh === null ? {} : { defaultFolder: fresh.defaultFolder }),
   });
+  if (input.posted !== null) {
+    rememberPromptSdlcLocalPostedSelection({
+      storePath: input.route.storePath,
+      installedIds: input.installedIds,
+      posted: input.posted,
+      folder:
+        decision.kind === "start"
+          ? displayPromptSdlcLocalFolder(decision.workingDirectory)
+          : decision.folder,
+    });
+    if (input.posted.get("intent") === "remember") {
+      input.route.response.writeHead(204);
+      input.route.response.end();
+      return;
+    }
+  }
   const writerBlock =
     decision.kind === "start"
       ? await readPromptSdlcChosenWritersReady(

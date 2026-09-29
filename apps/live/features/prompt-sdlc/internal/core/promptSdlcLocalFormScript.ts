@@ -58,14 +58,37 @@ export const PROMPT_SDLC_LOCAL_FORM_SCRIPT = `<script>
     });
     paintReady();
   };
+  const rememberSelection = () => {
+    const form = document.querySelector("form.sdlc-form");
+    if (!(form instanceof HTMLFormElement)) return;
+    const fields = form.querySelector(".sdlc-fields");
+    if (fields instanceof HTMLFieldSetElement && fields.disabled) return;
+    const body = new URLSearchParams();
+    new FormData(form).forEach((value, key) => {
+      if (typeof value === "string") body.append(key, value);
+    });
+    body.set("intent", "remember");
+    void fetch("/prompt-sdlc", {
+      method: "POST",
+      headers: { "content-type": "application/x-www-form-urlencoded" },
+      body: body.toString(),
+      cache: "no-store",
+    }).catch(() => null);
+  };
   document.querySelectorAll("[data-writer-select]").forEach((select) => {
     select.addEventListener("change", () => {
+      rememberSelection();
       const slot = document.querySelector('[data-writer-status="' + select.dataset.writerSelect + '"]');
       if (!slot) return;
       slot.dataset.writer = select.value;
       void paintWriter(select.value);
     });
   });
+  const folderInput = document.querySelector('form.sdlc-form [name="folder"]');
+  if (folderInput instanceof HTMLInputElement) {
+    folderInput.addEventListener("change", rememberSelection);
+    folderInput.addEventListener("blur", rememberSelection);
+  }
   [...new Set(slots.map((slot) => slot.dataset.writer))].forEach((writer) => {
     if (writer) void paintWriter(writer);
   });

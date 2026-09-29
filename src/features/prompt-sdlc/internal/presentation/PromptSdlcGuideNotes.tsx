@@ -13,14 +13,16 @@ export default function PromptSdlcGuideNotes(): ReactElement {
         <p className={APP_SURFACE_BODY_TEXT_CLASS}>
           You choose the judge and the improver. Each list is the writers
           installed on this Mac, plus a choice to score or rewrite it yourself.
-          Nothing is selected until you choose. One installed writer can fill
-          both roles. Local and small models are not listed.
+          The next visit fills in the judge and improver you last chose. The
+          first visit leaves them blank until you choose. One installed writer
+          can fill both roles. Local and small models are not listed.
         </p>
         <p className={APP_SURFACE_BODY_TEXT_CLASS}>
           The writers run in the folder you choose, so they can read the
-          Playbook and the code. The default folder is your home directory.
-          Choose the project folder when the prompt is about that code. An
-          optimizer that runs somewhere else cannot see that folder.
+          Playbook and the code. The first visit uses your home directory. Later
+          visits use the last folder that still exists. Choose the project
+          folder when the prompt is about that code. An optimizer that runs
+          somewhere else cannot see that folder.
         </p>
       </section>
       <section className="space-y-3">

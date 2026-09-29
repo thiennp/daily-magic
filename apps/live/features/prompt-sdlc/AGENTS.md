@@ -1,9 +1,9 @@
 # Prompt optimizer — agent instructions
 
 1. The product surface is Agent Witch Live, not the console composer.
-2. Do not add a Mac picker. Judge and improver start blank until the user chooses. Each list includes I'll score it and I'll rewrite it. A writer that has passed its check is not checked again until that writer returns an error. A judge reply needs a score and a reason.
+2. Do not add a Mac picker. The page restores the last folder, judge, and improver. The first visit leaves judge and improver blank. Each list includes I'll score it and I'll rewrite it. A writer that has passed its check is not checked again until that writer returns an error. A judge reply needs a score and a reason.
 3. Do not use Ollama or other small local models.
-4. Writer calls run in the folder the user chose. The default is the home directory. Keep the reply file outside that folder.
+4. Writer calls run in the folder the user chose. The first visit uses the home directory. Later visits use the last folder that still exists. Keep the reply file outside that folder. The agent API does not read that saved choice.
 5. Bots call `GET` and `POST /prompt-sdlc/agent` on this Mac before they send a Task. One installed writer fills both roles when judge and improver are omitted. Do not accept `manual` on that API. The human page stays `/prompt-sdlc`.
 6. The loop stops when the score passes, at the round limit (default 10, whole numbers 1–30), or after 3 judged rounds that do not beat the best score. Finish ends the writer so the next round does not start, and that run counts as complete. The next rewrite always starts from the highest scoring prompt. A tie keeps the later round. Reasons from lower scores become an avoid list. Earlier prompt text is not sent. After 3 tries that do not beat the best, the stop includes those reasons.
 7. A timeline step opens the score, feedback, and saved prompt. After each scored round the page shows the tokens spent so far. After a folder is chosen, its skills can fill the prompt. A finished run shows the highest scoring prompt. Save as a skill uses that skill’s name, description, and file name, asks before replacing `.cursor/skills/<file>/SKILL.md`, and lets you edit the prompt. Bots use `bestPrompt` when status is `passed` or `stopped`. `totalTokens` is the reported writer tokens.
