@@ -40,6 +40,15 @@ export const describePromptSdlcLocalNodeDetail = (
   cycle: PromptSdlcLocalCycle,
   step: PromptSdlcStep,
 ): PromptSdlcLocalNodeDetail => {
+  if (step.id.startsWith("wizard-")) {
+    return {
+      title: step.label,
+      scoreLabel: null,
+      feedback: step.detail,
+      promptText: null,
+      promptNote: null,
+    };
+  }
   if (step.id === "end") {
     const best = selectPromptSdlcBestPrompt(
       cycle.revisions.map((revision) => ({

@@ -48,6 +48,7 @@ describe("buildPromptSdlcLocalPageBody", () => {
     expect(html).toContain("Run starts the wizard");
     expect(html).toContain("Classic loop skips the wizard");
     expect(html.match(/class="sdlc-tip"/g)?.length).toBe(12);
+    expect(html).toContain("Module runner");
     expect(html).toContain('name="runner"');
     expect(html).toContain('data-writer-status="runner"');
     expect(html).toContain('name="runnerInstructions"');
