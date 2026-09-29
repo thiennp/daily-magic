@@ -65,7 +65,7 @@ export default function AgentRunsList() {
       <EmptyStatePanel
         density="page"
         title={REPORTS_GUEST_EMPTY_COPY.title}
-        body="Reports are your Run history. After you connect a Mac and send a Task, every Run shows up here."
+        body="Reports are your Run history. After you connect a Mac and run a New task, every Run shows up here."
         primaryCta={{
           label: REPORTS_GUEST_EMPTY_COPY.primaryCtaLabel,
           href: CREATE_FREE_ACCOUNT_HREF,
