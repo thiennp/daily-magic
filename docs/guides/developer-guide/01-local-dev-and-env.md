@@ -129,6 +129,10 @@ npm run db:schema
 
 Migration `003-published-capabilities.sql` may log a harmless “constraint already exists” if `schema.sql` already created the FK — idempotent overlap is expected.
 
+### Writer CLIs (Prompt SDLC / dispatch)
+
+Cloud Agent images do **not** include Claude, Codex, or Cursor writer binaries. Prompt SDLC and dispatch **probe** what is on `PATH` (`scripts/dispatch/probeLocalRunClis.ts`). To use **Cursor** on a VM: `curl https://cursor.com/install | bash`, put `~/.local/bin` on `PATH`, and set **`CURSOR_API_KEY`** for headless runs. New Cursor installs ship the standalone **`agent`** binary; this repo prefers `~/.local/bin/agent` when present (legacy Mac installs still use `cursor agent …`). Override with `cursorCommand` in `~/.agent-witch/config.json` if needed.
+
 ---
 
 ## Mac client (optional local loop)

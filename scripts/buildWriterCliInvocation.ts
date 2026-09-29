@@ -1,3 +1,7 @@
+import fs from "node:fs";
+import os from "node:os";
+import path from "node:path";
+
 export interface WriterCliInvocation {
   readonly command: string;
   readonly args: readonly string[];
@@ -21,6 +25,35 @@ const DEFAULT_WRITER_CLI_COMMANDS: WriterCliCommands = {
 };
 
 const isNonEmptyString = (value: string): boolean => value.trim().length > 0;
+
+/** Cursor ships a standalone `agent` binary; older installs use `cursor agent …`. */
+export const cursorCommandUsesStandaloneAgentBinary = (
+  cursorCommand: string,
+): boolean => {
+  const base = path.basename(cursorCommand.trim()).toLowerCase();
+  return base === "agent" || base === "cursor-agent";
+};
+
+const defaultCursorCommand = (): string => {
+  const home = os.homedir();
+  const standaloneAgent = path.join(home, ".local", "bin", "agent");
+  if (fs.existsSync(standaloneAgent)) {
+    return standaloneAgent;
+  }
+  const cursorAgent = path.join(home, ".local", "bin", "cursor-agent");
+  if (fs.existsSync(cursorAgent)) {
+    return cursorAgent;
+  }
+  return DEFAULT_WRITER_CLI_COMMANDS.cursorCommand;
+};
+
+const cursorAgentSubcommandArgs = (
+  cursorCommand: string,
+  tail: readonly string[],
+): readonly string[] =>
+  cursorCommandUsesStandaloneAgentBinary(cursorCommand)
+    ? tail
+    : ["agent", ...tail];
 
 export const isHarnessWriterAgentId = (
   value: string,
@@ -47,7 +80,7 @@ export const resolveWriterCliCommands = (
       : DEFAULT_WRITER_CLI_COMMANDS.codexCommand,
     cursorCommand: isNonEmptyString(cursorCommand)
       ? cursorCommand.trim()
-      : DEFAULT_WRITER_CLI_COMMANDS.cursorCommand,
+      : defaultCursorCommand(),
     antigravityCommand: isNonEmptyString(antigravityCommand)
       ? antigravityCommand.trim()
       : DEFAULT_WRITER_CLI_COMMANDS.antigravityCommand,
@@ -73,7 +106,10 @@ export const buildWriterSessionStartInvocation = (
   }
 
   if (writerAgent === "cursor") {
-    return { command: commands.cursorCommand, args: ["agent", "-v"] };
+    return {
+      command: commands.cursorCommand,
+      args: cursorAgentSubcommandArgs(commands.cursorCommand, ["-v"]),
+    };
   }
 
   return { command: commands.antigravityCommand, args: ["--version"] };
@@ -117,8 +153,7 @@ export const buildWriterCliInvocation = (
   if (writerAgent === "cursor") {
     return {
       command: commands.cursorCommand,
-      args: [
-        "agent",
+      args: cursorAgentSubcommandArgs(commands.cursorCommand, [
         ...continueArgs,
         "-p",
         "--force",
@@ -126,7 +161,7 @@ export const buildWriterCliInvocation = (
         "--sandbox",
         "disabled",
         prompt,
-      ],
+      ]),
     };
   }
 

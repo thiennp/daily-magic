@@ -3,12 +3,15 @@ import { describe, expect, it } from "vitest";
 import {
   buildWriterCliInvocation,
   buildWriterSessionStartInvocation,
+  cursorCommandUsesStandaloneAgentBinary,
   isHarnessWriterAgentId,
   resolveWriterCliCommands,
 } from "./buildWriterCliInvocation";
 
 describe("buildWriterCliInvocation", () => {
-  const commands = resolveWriterCliCommands({});
+  const commands = resolveWriterCliCommands({
+    cursorCommand: "cursor",
+  });
 
   it("builds claude-cli invocation with full permissions", () => {
     expect(
@@ -126,6 +129,26 @@ describe("buildWriterCliInvocation", () => {
       command: "cursor",
       args: ["agent", "-v"],
     });
+  });
+
+  it("builds standalone cursor-agent session start invocation", () => {
+    const standalone = resolveWriterCliCommands({
+      cursorCommand: "/home/dev/.local/bin/agent",
+    });
+    expect(buildWriterSessionStartInvocation("cursor", standalone)).toEqual({
+      command: "/home/dev/.local/bin/agent",
+      args: ["-v"],
+    });
+    expect(
+      buildWriterCliInvocation("cursor", "task", standalone)?.args,
+    ).toEqual(["-p", "--force", "--trust", "--sandbox", "disabled", "task"]);
+  });
+
+  it("detects standalone cursor agent binaries by basename", () => {
+    expect(cursorCommandUsesStandaloneAgentBinary("agent")).toBe(true);
+    expect(cursorCommandUsesStandaloneAgentBinary("cursor-agent")).toBe(true);
+    expect(cursorCommandUsesStandaloneAgentBinary("cursor")).toBe(false);
+    expect(cursorCommandUsesStandaloneAgentBinary("/opt/cursor")).toBe(false);
   });
 
   it("builds claude-cli session start invocation", () => {
