@@ -1,5 +1,6 @@
 import type { PromptSdlcCycleStatus } from "@/lib/promptSdlc/PromptSdlcCycleStatus.constant";
 import type { PromptSdlcCallRole } from "@/lib/promptSdlc/types/PromptSdlcModelChoice.type";
+import type PromptSdlcWizardProgressView from "@/lib/promptSdlc/types/PromptSdlcWizardProgressView.type";
 
 export interface PromptSdlcJudgementView {
   readonly score: number | null;
@@ -35,4 +36,6 @@ export default interface PromptSdlcCycleView {
   readonly activeRunStatus: string | null;
   readonly pendingLocal: PromptSdlcPendingLocalCall | null;
   readonly revisions: readonly PromptSdlcRevisionView[];
+  /** When set, the timeline follows wizard steps (not classic rounds during step 1). */
+  readonly wizard?: PromptSdlcWizardProgressView;
 }

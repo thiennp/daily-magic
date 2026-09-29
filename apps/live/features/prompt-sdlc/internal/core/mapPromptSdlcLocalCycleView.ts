@@ -16,6 +16,14 @@ export const mapPromptSdlcLocalCycleView = (
   activeRunId: null,
   activeRunStatus: null,
   pendingLocal: null,
+  ...(cycle.wizard === undefined
+    ? {}
+    : {
+        wizard: {
+          phase: cycle.wizard.phase,
+          gate: cycle.wizard.gate,
+        },
+      }),
   revisions: cycle.revisions.map((revision) => ({
     id: `${cycle.id}-${revision.roundNumber}`,
     roundNumber: revision.roundNumber,
