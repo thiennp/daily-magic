@@ -7,6 +7,7 @@ import { describe, expect, it } from "vitest";
 import { buildPromptSdlcLocalCycleSection } from "./buildPromptSdlcLocalCycleSection";
 import { buildPromptSdlcLocalGuidePageBody } from "./buildPromptSdlcLocalGuidePage";
 import { buildPromptSdlcLocalPageBody } from "./buildPromptSdlcLocalPage";
+import { createInitialPromptSdlcWizardState } from "../../../../adapters/promptSdlcAwcCore";
 import { createPromptSdlcLocalCycle } from "./createPromptSdlcLocalCycle";
 import { PROMPT_SDLC_LOCAL_GUIDE_EXAMPLE } from "./promptSdlcLocalGuide.constant";
 import { promptSdlcLocalHistoryTitle } from "./promptSdlcLocalHistoryTitle";
@@ -454,10 +455,9 @@ describe("buildPromptSdlcLocalPageBody", () => {
       }),
       status: "wizard_paused" as const,
       wizard: {
-        step: "evaluate",
-        stepIndex: 1,
-        pendingStepInstructions: null,
-        runnerInstructions: "",
+        ...createInitialPromptSdlcWizardState("Be helpful."),
+        gate: "evaluate" as const,
+        phase: "evaluate" as const,
       },
     };
     const html = buildPromptSdlcLocalPageBody({
