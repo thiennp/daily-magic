@@ -33,7 +33,16 @@ export const PROMPT_SDLC_LOCAL_LIVE_SCRIPT = `<script>
     const incomingGateSlot = holder.querySelector("#prompt-sdlc-wizard-gate-slot");
     const gateSlot = document.getElementById("prompt-sdlc-wizard-gate-slot");
     if (incomingGateSlot !== null && gateSlot !== null) {
+      const hadGate = gateSlot.innerHTML.trim().length > 0;
       gateSlot.innerHTML = incomingGateSlot.innerHTML;
+      const hasGate = gateSlot.innerHTML.trim().length > 0;
+      if (hasGate && !hadGate) {
+        gateSlot.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+      if (hasGate) {
+        const fields = document.querySelector(".sdlc-fields");
+        if (fields instanceof HTMLFieldSetElement) fields.disabled = true;
+      }
     }
     const incoming = holder.querySelector("#prompt-sdlc-run");
     if (!incoming) {

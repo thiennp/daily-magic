@@ -69,8 +69,6 @@ export const readPromptSdlcLocalShownForm = (input: {
         ? ""
         : cycle.runnerModel,
     runnerInstructions: cycle.wizard?.runnerInstructions ?? "",
-    running:
-      !isPromptSdlcTerminalStatus(cycle.status) &&
-      cycle.status !== "wizard_paused",
+    running: !isPromptSdlcTerminalStatus(cycle.status),
   };
 };

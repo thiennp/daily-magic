@@ -130,11 +130,16 @@ export const PROMPT_SDLC_LOCAL_FORM_SCRIPT = `<script>
   }
   paintReady();
   document.addEventListener("sdlc-run-finished", () => {
-    const fields = document.querySelector(".sdlc-fields");
-    if (fields instanceof HTMLFieldSetElement) fields.disabled = false;
-    document.querySelector("[data-sdlc-locked]")?.remove();
-    if (button instanceof HTMLButtonElement) button.textContent = "Run";
-    paintReady();
+    const gateSlot = document.getElementById("prompt-sdlc-wizard-gate-slot");
+    const atWizardGate =
+      gateSlot !== null && gateSlot.innerHTML.trim().length > 0;
+    if (!atWizardGate) {
+      const fields = document.querySelector(".sdlc-fields");
+      if (fields instanceof HTMLFieldSetElement) fields.disabled = false;
+      document.querySelector("[data-sdlc-locked]")?.remove();
+      if (button instanceof HTMLButtonElement) button.textContent = "Run";
+      paintReady();
+    }
   });
 })();
 </script>`;
