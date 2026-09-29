@@ -43,7 +43,7 @@ const renderRevision = (
     writerFailure === null
       ? `<pre class="mono">${escapeHtml(displayPrompt)}</pre>`
       : `<div class="alert-error">${escapeHtml(writerFailure)}</div>`;
-  return `<article class="card"><h2>${title}</h2><p class="muted">${score}</p>${reasons}${run}${body}</article>`;
+  return `<article class="card sdlc-run-prompt-card"><h3 class="sdlc-run-prompt-card-title">${title}</h3><p class="muted sdlc-run-prompt-card-score">${score}</p>${reasons}${run}${body}</article>`;
 };
 
 export const renderPromptSdlcLocalRevisions = (

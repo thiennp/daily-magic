@@ -1,8 +1,4 @@
-export const PROMPT_SDLC_LOCAL_LIVE_STYLE = `<style>
-.sdlc-working { display: flex; gap: 0.75rem; align-items: flex-start; }
-.sdlc-spin { width: 0.95rem; height: 0.95rem; margin-top: 0.35rem; border: 2px solid #d0d5dd; border-top-color: #1a44be; border-radius: 50%; animation: sdlc-spin 0.8s linear infinite; flex: none; }
-@keyframes sdlc-spin { to { transform: rotate(360deg); } }
-</style>`;
+export const PROMPT_SDLC_LOCAL_LIVE_STYLE = "";
 
 export const PROMPT_SDLC_LOCAL_LIVE_SCRIPT = `<script>
 (() => {

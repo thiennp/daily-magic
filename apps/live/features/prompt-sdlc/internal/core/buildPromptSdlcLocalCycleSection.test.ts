@@ -24,5 +24,25 @@ describe("buildPromptSdlcLocalCycleSection", () => {
     expect(html).toContain('data-live="false"');
     expect(html).toContain("Wizard paused.");
     expect(html).not.toContain('class="sdlc-spin"');
+    expect(html).toContain('class="sdlc-run-badge sdlc-run-badge-paused"');
+    expect(html).toContain("sdlc-run-panel-title");
+    expect(html).toContain(">Progress<");
+  });
+
+  it("shows live badge and progress layout for active runs", () => {
+    const cycle = {
+      ...createPromptSdlcLocalCycle({
+        goal: "g",
+        sourcePrompt: "p",
+        judgeModel: "claude-cli",
+        improverModel: "claude-cli",
+      }),
+      status: "judging" as const,
+    };
+    const html = buildPromptSdlcLocalCycleSection(cycle);
+    expect(html).toContain('class="sdlc-run-badge sdlc-run-badge-live"');
+    expect(html).toContain('class="sdlc-run-activity"');
+    expect(html).toContain(">Scoring guide<");
+    expect(html).toContain('class="sdlc-tree"');
   });
 });

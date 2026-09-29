@@ -6,22 +6,24 @@ import { readPromptSdlcLocalShownForm } from "./readPromptSdlcLocalShownForm";
 
 describe("readPromptSdlcLocalShownForm", () => {
   it("keeps generalized templated prompt in the compose field after evaluate", () => {
-    const cycle = createPromptSdlcLocalCycle({
-      goal: "Goal",
-      sourcePrompt: "plain",
-      judgeModel: "claude-cli",
-      improverModel: "claude-cli",
-      workingDirectory: "/tmp",
-      wizard: {
-        ...createInitialPromptSdlcWizardState("plain"),
-        phase: "separate",
-        gate: null,
-        templatedPrompt: "Reply for {{issue}}",
-        variables: [
-          { name: "issue", description: "d", sampleValue: "billing" },
-        ],
-        evaluateSelectedRound: 1,
-      },
+    const cycle = {
+      ...createPromptSdlcLocalCycle({
+        goal: "Goal",
+        sourcePrompt: "plain",
+        judgeModel: "claude-cli",
+        improverModel: "claude-cli",
+        workingDirectory: "/tmp",
+        wizard: {
+          ...createInitialPromptSdlcWizardState("plain"),
+          phase: "separate",
+          gate: null,
+          templatedPrompt: "Reply for {{issue}}",
+          variables: [
+            { name: "issue", description: "d", sampleValue: "billing" },
+          ],
+          evaluateSelectedRound: 1,
+        },
+      }),
       revisions: [
         {
           roundNumber: 0,
@@ -34,7 +36,7 @@ describe("readPromptSdlcLocalShownForm", () => {
           judgement: { score: 90, passed: true, reasons: "ok", rawReply: "90" },
         },
       ],
-    });
+    };
     const shown = readPromptSdlcLocalShownForm({
       goal: "",
       prompt: "",
