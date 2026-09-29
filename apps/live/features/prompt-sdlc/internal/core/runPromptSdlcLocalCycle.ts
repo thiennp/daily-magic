@@ -3,7 +3,7 @@ import {
   probeLocalRunClis,
   resolveWriterCliCommands,
 } from "../../../../adapters/writerDispatch";
-import { advancePromptSdlcLocalCycle } from "./advancePromptSdlcLocalCycle";
+import { advancePromptSdlcWizardLocal } from "./advancePromptSdlcWizardLocal";
 import { isPromptSdlcLocalManualWait } from "./isPromptSdlcLocalManualWait";
 import {
   closePromptSdlcLocalCycleAbort,
@@ -45,13 +45,14 @@ const runUntilTerminal = async (
   if (
     cycle === null ||
     isPromptSdlcTerminalStatus(cycle.status) ||
+    cycle.status === "wizard_paused" ||
     isPromptSdlcLocalManualWait(cycle) ||
     signal.aborted
   ) {
     return;
   }
 
-  const next = await advancePromptSdlcLocalCycle(
+  const next = await advancePromptSdlcWizardLocal(
     cycle,
     (writer) => {
       forgetPromptSdlcWriterReady(storePath, writer);
@@ -87,6 +88,7 @@ export const ensurePromptSdlcLocalCycleRunning = (
   if (
     cycle === null ||
     isPromptSdlcTerminalStatus(cycle.status) ||
+    cycle.status === "wizard_paused" ||
     isPromptSdlcLocalManualWait(cycle)
   ) {
     return;

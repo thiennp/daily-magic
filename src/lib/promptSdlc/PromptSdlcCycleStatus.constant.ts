@@ -2,6 +2,7 @@ export const PROMPT_SDLC_CYCLE_STATUSES = [
   "judging",
   "improving",
   "awaiting_local",
+  "wizard_paused",
   "passed",
   "stopped",
   "failed",

@@ -22,6 +22,7 @@ import {
   renderPromptSdlcLocalSkillSelect,
 } from "./renderPromptSdlcLocalSkillSelect";
 import { renderPromptSdlcFieldHeading } from "./renderPromptSdlcFieldTip";
+import { renderPromptSdlcWizardGate } from "./renderPromptSdlcWizardGate";
 import { renderPromptSdlcLocalWriterFields } from "./renderPromptSdlcLocalWriterFields";
 
 const escapeHtml = (value: string): string =>
@@ -61,11 +62,14 @@ export const buildPromptSdlcLocalPageBody = (input: {
     input.cycle === null
       ? ""
       : `${PROMPT_SDLC_NODE_DIALOG}${PROMPT_SDLC_NODE_DIALOG_SCRIPT}`;
+  const wizardGate =
+    input.cycle === null ? "" : renderPromptSdlcWizardGate(input.cycle);
   const cycle =
     input.cycle === null ? "" : buildPromptSdlcLocalCycleSection(input.cycle);
   const live =
     input.cycle !== null &&
     !isPromptSdlcTerminalStatus(input.cycle.status) &&
+    input.cycle.status !== "wizard_paused" &&
     !isPromptSdlcLocalManualWait(input.cycle)
       ? `${PROMPT_SDLC_LOCAL_LIVE_STYLE}${PROMPT_SDLC_LOCAL_LIVE_SCRIPT}`
       : "";
@@ -136,9 +140,10 @@ export const buildPromptSdlcLocalPageBody = (input: {
         </div>
         <div class="sdlc-submit">
           <button class="btn btn-primary" type="submit" name="intent" value="run" data-sdlc-run data-can-run="${input.canRun ? "true" : "false"}" disabled>${runLabel}</button>
+          <button class="btn btn-secondary" type="submit" name="intent" value="run-classic" formnovalidate data-sdlc-run data-can-run="${input.canRun ? "true" : "false"}" disabled>Classic loop (90 / 10 rounds)</button>
         </div>
         </fieldset>
       </form>
     </section>`;
-  return `${error}${skillNotice}${cycle}${nodeDialog}${live}${form}${renderPromptSdlcLocalHistory(input.history, input.cycle?.id ?? null)}${PROMPT_SDLC_LOCAL_FORM_SCRIPT}${PROMPT_SDLC_SKILL_SELECT_SCRIPT}`;
+  return `${error}${skillNotice}${wizardGate}${cycle}${nodeDialog}${live}${form}${renderPromptSdlcLocalHistory(input.history, input.cycle?.id ?? null)}${PROMPT_SDLC_LOCAL_FORM_SCRIPT}${PROMPT_SDLC_SKILL_SELECT_SCRIPT}`;
 };

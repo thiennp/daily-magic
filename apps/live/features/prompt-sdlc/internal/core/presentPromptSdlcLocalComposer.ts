@@ -1,4 +1,6 @@
 import { pickMacOsFolderDialog } from "../../../projects/public-api/infrastructure";
+import { createInitialPromptSdlcWizardState } from "../../../../adapters/promptSdlcAwcCore";
+
 import { createPromptSdlcLocalCycle } from "./createPromptSdlcLocalCycle";
 import { decidePromptSdlcLocalPost } from "./decidePromptSdlcLocalPost";
 import { sendPromptSdlcLocalPage } from "./sendPromptSdlcLocalPage";
@@ -76,6 +78,12 @@ export const presentPromptSdlcLocalComposer = async (input: {
       workingDirectory: decision.workingDirectory,
       passScore: decision.passScore,
       maxRounds: decision.maxRounds,
+      ...(decision.useWizard
+        ? {
+            wizard: createInitialPromptSdlcWizardState(decision.prompt),
+            runnerModel: decision.judge,
+          }
+        : {}),
       ...(decision.judgeInstructions.length === 0
         ? {}
         : { judgeInstructions: decision.judgeInstructions }),

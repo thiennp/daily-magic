@@ -1,0 +1,35 @@
+import type PromptSdlcWizardAttempt from "./PromptSdlcWizardAttempt.type";
+import type {
+  PromptSdlcWizardGatePhase,
+  PromptSdlcWizardPhase,
+} from "./PromptSdlcWizardPhase.constant";
+import type { PromptSdlcWizardSplitOption } from "./PromptSdlcWizardSplitOption.type";
+import type PromptSdlcWizardVariable from "./PromptSdlcWizardVariable.type";
+
+export interface PromptSdlcWizardModuleRun {
+  readonly moduleId: string;
+  readonly title: string;
+  readonly prompt: string;
+  readonly status:
+    "pending" | "running" | "paused" | "passed" | "stopped" | "failed";
+  readonly selectedRevisionRound: number | null;
+}
+
+export default interface PromptSdlcWizardState {
+  readonly schemaVersion: number;
+  readonly phase: PromptSdlcWizardPhase;
+  /** When set, the UI shows Continue / feedback gate for this step. */
+  readonly gate: PromptSdlcWizardGatePhase | null;
+  readonly variables: readonly PromptSdlcWizardVariable[];
+  readonly templatedPrompt: string;
+  readonly attempts: readonly PromptSdlcWizardAttempt[];
+  readonly avoidByStep: Readonly<
+    Record<PromptSdlcWizardGatePhase, readonly string[]>
+  >;
+  readonly evaluateSelectedRound: number | null;
+  readonly splitOptions: readonly PromptSdlcWizardSplitOption[];
+  readonly selectedSplitOptionId: string | null;
+  readonly modules: readonly PromptSdlcWizardModuleRun[];
+  readonly currentModuleIndex: number;
+  readonly runnerInstructions: string;
+}

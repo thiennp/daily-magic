@@ -2,6 +2,7 @@ import {
   acceptPromptSdlcLocalSkillPost,
   readPromptSdlcSkillNotice,
 } from "./acceptPromptSdlcLocalSkillPost";
+import { tryAcceptPromptSdlcWizardPost } from "./acceptPromptSdlcWizardPost";
 import { answerPromptSdlcLocalManual } from "./answerPromptSdlcLocalManual";
 import { presentPromptSdlcLocalComposer } from "./presentPromptSdlcLocalComposer";
 import { redirectAfterPromptSdlcHistoryDelete } from "./redirectAfterPromptSdlcHistoryDelete";
@@ -22,6 +23,16 @@ export const servePromptSdlcLocalPage = async (
     input.method === "POST"
       ? new URLSearchParams(await input.readBody(input.request))
       : null;
+  if (
+    tryAcceptPromptSdlcWizardPost({
+      posted,
+      storePath: input.storePath,
+      response: input.response,
+    })
+  ) {
+    return;
+  }
+
   if (await answerPromptSdlcLocalManual(input, posted, selection)) {
     return;
   }

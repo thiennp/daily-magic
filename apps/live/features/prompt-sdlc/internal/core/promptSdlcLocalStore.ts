@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 
+import { appendPromptSdlcWizardEventLog } from "./appendPromptSdlcWizardEventLog";
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
 
 const droppedCycleIds = new Set<string>();
@@ -12,6 +13,16 @@ const isCycle = (value: unknown): value is PromptSdlcLocalCycle =>
   typeof value.id === "string" &&
   "revisions" in value &&
   Array.isArray(value.revisions);
+
+const writeCyclesFile = (
+  storePath: string,
+  cycles: readonly PromptSdlcLocalCycle[],
+): void => {
+  fs.mkdirSync(path.dirname(storePath), { recursive: true });
+  const tmpPath = `${storePath}.tmp`;
+  fs.writeFileSync(tmpPath, `${JSON.stringify(cycles, null, 2)}\n`);
+  fs.renameSync(tmpPath, storePath);
+};
 
 export const readPromptSdlcLocalCycles = (
   storePath: string,
@@ -43,8 +54,7 @@ export const deletePromptSdlcLocalCycle = (
   const next = readPromptSdlcLocalCycles(storePath).filter(
     (cycle) => cycle.id !== cycleId,
   );
-  fs.mkdirSync(path.dirname(storePath), { recursive: true });
-  fs.writeFileSync(storePath, `${JSON.stringify(next, null, 2)}\n`);
+  writeCyclesFile(storePath, next);
 };
 
 export const savePromptSdlcLocalCycle = (
@@ -59,6 +69,11 @@ export const savePromptSdlcLocalCycle = (
   const next = cycles.some((item) => item.id === cycle.id)
     ? cycles.map((item) => (item.id === cycle.id ? cycle : item))
     : [cycle, ...cycles];
-  fs.mkdirSync(path.dirname(storePath), { recursive: true });
-  fs.writeFileSync(storePath, `${JSON.stringify(next, null, 2)}\n`);
+  writeCyclesFile(storePath, next);
+  appendPromptSdlcWizardEventLog(storePath, {
+    cycleId: cycle.id,
+    kind: "cycle_saved",
+    phase: cycle.wizard?.phase,
+    detail: cycle.status,
+  });
 };

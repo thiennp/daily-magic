@@ -1,6 +1,7 @@
 import type {
   HarnessWriterAgent,
   PromptSdlcCycleStatus,
+  PromptSdlcWizardState,
 } from "../../../../adapters/promptSdlcAwcCore";
 
 export interface PromptSdlcLocalRun {
@@ -38,6 +39,7 @@ export interface PromptSdlcLocalCycle {
   readonly goal: string;
   readonly judgeModel: HarnessWriterAgent | "manual";
   readonly improverModel: HarnessWriterAgent | "manual";
+  readonly runnerModel?: HarnessWriterAgent | "manual";
   readonly workingDirectory?: string;
   readonly status: PromptSdlcCycleStatus;
   readonly currentRound: number;
@@ -56,4 +58,7 @@ export interface PromptSdlcLocalCycle {
   readonly improverInstructions?: string;
   /** Set while a judging round is running the prompt or scoring its output. */
   readonly judgePhase?: "running" | "scoring" | "reviewing";
+  readonly wizard?: PromptSdlcWizardState;
+  /** When true, the judge scores only; runnerModel executes the prompt. */
+  readonly judgeScoresOnly?: boolean;
 }

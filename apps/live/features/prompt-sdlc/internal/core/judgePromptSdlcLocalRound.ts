@@ -55,6 +55,16 @@ const withRun = (
 });
 
 const runnerFor = (cycle: PromptSdlcLocalCycle): string | null => {
+  if (cycle.judgeScoresOnly === true) {
+    const runner = cycle.runnerModel;
+    if (runner !== undefined && runner !== PROMPT_SDLC_MANUAL_ACTOR) {
+      return runner;
+    }
+    if (cycle.improverModel !== PROMPT_SDLC_MANUAL_ACTOR) {
+      return cycle.improverModel;
+    }
+    return null;
+  }
   if (cycle.judgeModel !== PROMPT_SDLC_MANUAL_ACTOR) {
     return cycle.judgeModel;
   }
@@ -91,7 +101,11 @@ const executePrompt = async (input: {
     workingDirectory,
     prompt: buildPromptSdlcRunPrompt({
       promptText: input.revision.promptText,
-      instructions: input.cycle.judgeInstructions,
+      instructions:
+        input.cycle.judgeScoresOnly === true
+          ? (input.cycle.wizard?.runnerInstructions ??
+            input.cycle.judgeInstructions)
+          : input.cycle.judgeInstructions,
     }),
     signal: input.signal,
   });

@@ -4,6 +4,8 @@ import {
   PROMPT_SDLC_MAX_ROUNDS,
   PROMPT_SDLC_PASS_SCORE,
 } from "../../../../adapters/promptSdlcAwcCore";
+import type { PromptSdlcWizardState } from "../../../../adapters/promptSdlcAwcCore";
+
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
 
 export const createPromptSdlcLocalCycle = (input: {
@@ -17,6 +19,8 @@ export const createPromptSdlcLocalCycle = (input: {
   readonly sourceSkill?: PromptSdlcLocalCycle["sourceSkill"];
   readonly judgeInstructions?: string;
   readonly improverInstructions?: string;
+  readonly wizard?: PromptSdlcWizardState;
+  readonly runnerModel?: PromptSdlcLocalCycle["runnerModel"];
 }): PromptSdlcLocalCycle => {
   const now = new Date().toISOString();
   return {
@@ -48,5 +52,9 @@ export const createPromptSdlcLocalCycle = (input: {
     ...(input.improverInstructions === undefined
       ? {}
       : { improverInstructions: input.improverInstructions }),
+    ...(input.wizard === undefined ? {} : { wizard: input.wizard }),
+    ...(input.runnerModel === undefined
+      ? {}
+      : { runnerModel: input.runnerModel }),
   };
 };

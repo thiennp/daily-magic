@@ -7,6 +7,7 @@ const STATUS_LABEL: Record<PromptSdlcCycleStatus, string> = {
   judging: "Judging",
   improving: "Improving",
   awaiting_local: "Waiting on the Mac",
+  wizard_paused: "Wizard — your turn",
   passed: "Passed",
   stopped: "Stopped",
   failed: "Failed",

@@ -19,7 +19,7 @@ describe("readPromptSdlcLocalPassScore", () => {
     const selection = describePromptSdlcLocalModels(["claude-cli"]);
     const decision = decidePromptSdlcLocalPost({
       posted: new URLSearchParams({
-        intent: "run",
+        intent: "run-classic",
         goal: "Stay in the facts.",
         prompt: "Be helpful.",
         folder: "~",
@@ -38,6 +38,7 @@ describe("readPromptSdlcLocalPassScore", () => {
     if (decision.kind === "start") {
       expect(decision.passScore).toBe(75);
       expect(decision.maxRounds).toBe(10);
+      expect(decision.useWizard).toBe(false);
     }
   });
 });

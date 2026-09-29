@@ -1,4 +1,8 @@
-import { PROMPT_SDLC_PASS_SCORE } from "../../../../adapters/promptSdlcAwcCore";
+import {
+  PROMPT_SDLC_PASS_SCORE,
+  PROMPT_SDLC_WIZARD_MAX_ROUNDS,
+  PROMPT_SDLC_WIZARD_PASS_SCORE,
+} from "../../../../adapters/promptSdlcAwcCore";
 import { readPromptSdlcLocalRunModels } from "./choosePromptSdlcLocalModels";
 import {
   promptSdlcLocalMaxRoundsText,
@@ -33,6 +37,7 @@ export type PromptSdlcLocalPostDecision =
       readonly sourceSkillFile: string;
       readonly judgeInstructions: string;
       readonly improverInstructions: string;
+      readonly useWizard: boolean;
     }
   | {
       readonly kind: "form";
@@ -100,6 +105,11 @@ export const decidePromptSdlcLocalPost = (input: {
     );
   }
 
+  const intent = input.posted.get("intent") ?? "";
+  if (intent !== "run" && intent !== "run-classic") {
+    return form(typedFolder, null);
+  }
+
   const startError = readPromptSdlcLocalStartError(input.goal, input.prompt);
   if (startError !== null) {
     return form(typedFolder, startError);
@@ -119,11 +129,16 @@ export const decidePromptSdlcLocalPost = (input: {
     return form(typedFolder, folder.errorMessage);
   }
 
-  const passScore = readPromptSdlcLocalPassScore(typedPassScore);
+  const useWizard = intent !== "run-classic";
+  const passScore = useWizard
+    ? { ok: true as const, passScore: PROMPT_SDLC_WIZARD_PASS_SCORE }
+    : readPromptSdlcLocalPassScore(typedPassScore);
   if (!passScore.ok) {
     return form(typedFolder, passScore.errorMessage);
   }
-  const maxRounds = readPromptSdlcLocalMaxRounds(typedMaxRounds);
+  const maxRounds = useWizard
+    ? { ok: true as const, maxRounds: PROMPT_SDLC_WIZARD_MAX_ROUNDS }
+    : readPromptSdlcLocalMaxRounds(typedMaxRounds);
   if (!maxRounds.ok) {
     return form(typedFolder, maxRounds.errorMessage);
   }
@@ -140,5 +155,6 @@ export const decidePromptSdlcLocalPost = (input: {
     sourceSkillFile: input.posted.get("skillFile")?.trim() ?? "",
     judgeInstructions,
     improverInstructions,
+    useWizard,
   };
 };
