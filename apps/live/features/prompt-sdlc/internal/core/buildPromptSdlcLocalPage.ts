@@ -22,7 +22,7 @@ import {
   renderPromptSdlcLocalSkillSelect,
 } from "./renderPromptSdlcLocalSkillSelect";
 import { renderPromptSdlcFieldHeading } from "./renderPromptSdlcFieldTip";
-import { renderPromptSdlcWizardGate } from "./renderPromptSdlcWizardGate";
+import { renderPromptSdlcWizardGateSlot } from "./renderPromptSdlcWizardGateSlot";
 import { renderPromptSdlcWizardResumeBanner } from "./renderPromptSdlcWizardResumeBanner";
 import { renderPromptSdlcWizardRunnerFields } from "./renderPromptSdlcWizardRunnerFields";
 import { renderPromptSdlcLocalWriterFields } from "./renderPromptSdlcLocalWriterFields";
@@ -72,8 +72,7 @@ export const buildPromptSdlcLocalPageBody = (input: {
     resumableWizardCycle === null
       ? ""
       : renderPromptSdlcWizardResumeBanner(resumableWizardCycle);
-  const wizardGate =
-    input.cycle === null ? "" : renderPromptSdlcWizardGate(input.cycle);
+  const wizardGateSlot = renderPromptSdlcWizardGateSlot(input.cycle);
   const cycle =
     input.cycle === null ? "" : buildPromptSdlcLocalCycleSection(input.cycle);
   const live =
@@ -161,5 +160,5 @@ export const buildPromptSdlcLocalPageBody = (input: {
         </fieldset>
       </form>
     </section>`;
-  return `${error}${skillNotice}${resumeBanner}${wizardGate}${cycle}${nodeDialog}${live}${form}${renderPromptSdlcLocalHistory(input.history, input.cycle?.id ?? null)}${PROMPT_SDLC_LOCAL_FORM_SCRIPT}${PROMPT_SDLC_SKILL_SELECT_SCRIPT}`;
+  return `${error}${skillNotice}${resumeBanner}${wizardGateSlot}${cycle}${nodeDialog}${live}${form}${renderPromptSdlcLocalHistory(input.history, input.cycle?.id ?? null)}${PROMPT_SDLC_LOCAL_FORM_SCRIPT}${PROMPT_SDLC_SKILL_SELECT_SCRIPT}`;
 };

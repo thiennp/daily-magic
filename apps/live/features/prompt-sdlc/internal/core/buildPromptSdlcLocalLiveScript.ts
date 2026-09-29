@@ -30,6 +30,11 @@ export const PROMPT_SDLC_LOCAL_LIVE_SCRIPT = `<script>
     }
     const holder = document.createElement("div");
     holder.innerHTML = await response.text();
+    const incomingGateSlot = holder.querySelector("#prompt-sdlc-wizard-gate-slot");
+    const gateSlot = document.getElementById("prompt-sdlc-wizard-gate-slot");
+    if (incomingGateSlot !== null && gateSlot !== null) {
+      gateSlot.innerHTML = incomingGateSlot.innerHTML;
+    }
     const incoming = holder.querySelector("#prompt-sdlc-run");
     if (!incoming) {
       setTimeout(poll, 2000);

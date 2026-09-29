@@ -1,6 +1,7 @@
 import type http from "node:http";
 
 import { buildPromptSdlcLocalCycleSection } from "./buildPromptSdlcLocalCycleSection";
+import { renderPromptSdlcWizardGateSlot } from "./renderPromptSdlcWizardGateSlot";
 import { readPromptSdlcLocalCycle } from "./promptSdlcLocalStore";
 import { ensurePromptSdlcLocalCycleRunning } from "./runPromptSdlcLocalCycle";
 
@@ -30,7 +31,9 @@ export const trySendPromptSdlcLocalRunFragment = (input: {
     "Cache-Control": "no-store",
   });
   input.response.end(
-    cycle === null ? "" : buildPromptSdlcLocalCycleSection(cycle),
+    cycle === null
+      ? ""
+      : `${renderPromptSdlcWizardGateSlot(cycle)}${buildPromptSdlcLocalCycleSection(cycle)}`,
   );
   return true;
 };
