@@ -44,20 +44,24 @@ export default function ShowcaseCard({
   const isFeatured = variant === "featured" || variant === "spotlight";
   const cover = resolveShowcaseArticleCoverImage(article);
   const href = `/showcases/${article.slug}`;
+  const storyLabel = `Read story: ${article.title}`;
 
   return (
     <article
       className={mergeMarketingClasses(
         MARKETING_SHOWCASE_CARD_BASE_CLASSES,
         VARIANT_CLASSES[variant],
+        "relative",
         className,
       )}
     >
+      <Link
+        href={href}
+        className="absolute inset-0 z-0 rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400/50 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-gray-900"
+        aria-label={storyLabel}
+      />
       {cover ? (
-        <Link
-          href={href}
-          className="-mx-6 -mt-6 mb-4 block overflow-hidden rounded-t-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400/50 focus-visible:ring-offset-2"
-        >
+        <div className="-mx-6 -mt-6 mb-4 overflow-hidden rounded-t-2xl">
           {/* eslint-disable-next-line @next/next/no-img-element -- curated showcase covers */}
           <img
             src={cover.src}
@@ -69,47 +73,43 @@ export default function ShowcaseCard({
               COVER_ASPECT_CLASSES[variant],
             )}
           />
-        </Link>
+        </div>
       ) : null}
-      <p
-        className={mergeMarketingClasses(
-          "text-xs font-semibold uppercase tracking-wide",
-          MARKETING_TEXT_MUTED_CLASSES,
-        )}
-      >
-        {article.category} · {article.readMinutes} min read
-      </p>
-      <h3
-        className={mergeMarketingClasses(
-          "mt-2 font-semibold",
-          MARKETING_TEXT_PRIMARY_CLASSES,
-          isFeatured ? "text-xl sm:text-2xl" : "text-lg",
-        )}
-      >
-        <Link
-          href={href}
-          className="rounded-sm transition hover:text-zinc-700 dark:hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400/50 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-gray-900"
+      <div className="relative z-10 pointer-events-none">
+        <p
+          className={mergeMarketingClasses(
+            "text-xs font-semibold uppercase tracking-wide",
+            MARKETING_TEXT_MUTED_CLASSES,
+          )}
+        >
+          {article.category} · {article.readMinutes} min read
+        </p>
+        <h3
+          className={mergeMarketingClasses(
+            "mt-2 font-semibold",
+            MARKETING_TEXT_PRIMARY_CLASSES,
+            isFeatured ? "text-xl sm:text-2xl" : "text-lg",
+          )}
         >
           {article.title}
-        </Link>
-      </h3>
-      <p
-        className={mergeMarketingClasses(
-          "mt-2 text-sm leading-relaxed",
-          MARKETING_TEXT_SECONDARY_CLASSES,
-        )}
-      >
-        {article.subtitle}
-      </p>
-      <Link
-        href={href}
-        className={mergeMarketingClasses(
-          "mt-4 inline-block text-sm",
-          MARKETING_TEXT_LINK_CLASSES,
-        )}
-      >
-        Read story →
-      </Link>
+        </h3>
+        <p
+          className={mergeMarketingClasses(
+            "mt-2 text-sm leading-relaxed",
+            MARKETING_TEXT_SECONDARY_CLASSES,
+          )}
+        >
+          {article.subtitle}
+        </p>
+        <span
+          className={mergeMarketingClasses(
+            "mt-4 inline-block text-sm",
+            MARKETING_TEXT_LINK_CLASSES,
+          )}
+        >
+          Read story →
+        </span>
+      </div>
     </article>
   );
 }

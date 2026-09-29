@@ -3,6 +3,8 @@ export const AUTOMATIONS_PAGE_COPY = {
   description:
     "Scheduled workflows run on your Mac via Agent Witch. Webhooks run through the server when your Mac is online.",
   createTitle: "New automation",
+  createIntro:
+    "Automations run a saved workflow on a schedule or when a webhook fires. Pick a workflow from your Library, name the automation, then choose when it runs on your Mac.",
   empty:
     "No automations yet. Schedule a workflow from Library or create one here.",
   runNow: "Run now",
