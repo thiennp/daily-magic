@@ -22,6 +22,7 @@ import {
   clearAgentWitchConnectionHealth,
   isAgentWitchConnectionHealthStale,
   readAgentWitchConnectionHealth,
+  resolveAgentWitchLocalWsConnected,
   writeAgentWitchConnectionHealth,
 } from "@agent-witch/install-connection-health";
 import {
@@ -1853,7 +1854,6 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
       if (config.email !== null) {
         console.log(`[agent-witch] Profile: ${config.email}`);
       }
-      writeAgentWitchConnectionHealth(config.layout, { wsUrl: config.wsUrl });
       configureAgentWitchRunCloudApi(
         resolveAgentWitchCloudApiConfig({
           wsUrl: config.wsUrl,
@@ -1969,7 +1969,9 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
     startLocalHealthCheck,
     stop,
     getStatus: () => ({
-      wsConnected: state.wsConnected,
+      wsConnected: resolveAgentWitchLocalWsConnected(config.layout, {
+        socketOpen: state.wsConnected,
+      }),
       lastHeartbeatAt: state.lastHeartbeatAt,
       wakeError: state.wakeError,
       linkCode: null,

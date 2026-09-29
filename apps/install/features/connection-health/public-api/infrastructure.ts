@@ -9,6 +9,8 @@ export {
   writeAgentWitchConnectionHealth,
 } from "../internal/core/agentWitchConnectionHealth";
 
+export { resolveAgentWitchLocalWsConnected } from "../internal/core/resolveAgentWitchLocalWsConnected";
+
 export {
   AGENT_WITCH_CONNECTION_HEALTH_FILE_NAME,
   AGENT_WITCH_CONNECTION_STALE_MS,

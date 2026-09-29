@@ -7,6 +7,7 @@ import { describe, expect, it } from "vitest";
 import { buildPromptSdlcLocalCycleSection } from "./buildPromptSdlcLocalCycleSection";
 import { buildPromptSdlcLocalGuidePageBody } from "./buildPromptSdlcLocalGuidePage";
 import { buildPromptSdlcLocalPageBody } from "./buildPromptSdlcLocalPage";
+import { createInitialPromptSdlcWizardState } from "../../../../adapters/promptSdlcAwcCore";
 import { createPromptSdlcLocalCycle } from "./createPromptSdlcLocalCycle";
 import { PROMPT_SDLC_LOCAL_GUIDE_EXAMPLE } from "./promptSdlcLocalGuide.constant";
 import { promptSdlcLocalHistoryTitle } from "./promptSdlcLocalHistoryTitle";
@@ -442,6 +443,41 @@ describe("buildPromptSdlcLocalPageBody", () => {
     expect(html.indexOf("sdlc-manual-verdict")).toBeLessThan(
       html.indexOf('name="prompt"'),
     );
+  });
+
+  it("shows a resume banner when another wizard run is paused", () => {
+    const paused = {
+      ...createPromptSdlcLocalCycle({
+        goal: "Resume this wizard run.",
+        sourcePrompt: "Be helpful.",
+        judgeModel: "claude-cli" as const,
+        improverModel: "codex" as const,
+      }),
+      status: "wizard_paused" as const,
+      wizard: {
+        ...createInitialPromptSdlcWizardState("Be helpful."),
+        gate: "evaluate" as const,
+        phase: "evaluate" as const,
+      },
+    };
+    const html = buildPromptSdlcLocalPageBody({
+      goal: "",
+      prompt: "",
+      modelNote: "",
+      writers: [],
+      judge: "",
+      improver: "",
+      folder: "~",
+      passScore: "90",
+      canRun: true,
+      errorMessage: null,
+      cycle: null,
+      history: [],
+      resumableWizardCycle: paused,
+    });
+
+    expect(html).toContain("Resume wizard");
+    expect(html).toContain(`cycle=${paused.id}`);
   });
 
   it("shows the tokens spent through each scored round", () => {
