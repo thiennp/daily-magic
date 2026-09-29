@@ -58,12 +58,7 @@ export const buildPromptSdlcLocalCycleSection = (
   const detail =
     activity.detail.length === 0
       ? ""
-      : `<p class="muted">${escapeHtml(activity.detail)}${elapsed}</p>`;
-  const folder =
-    typeof cycle.workingDirectory === "string" &&
-    cycle.workingDirectory.length > 0
-      ? `<p class="muted">Folder ${escapeHtml(displayPromptSdlcLocalFolder(promptSdlcLocalWorkingDirectory(cycle)))}</p>`
-      : "";
+      : `<p class="sdlc-run-detail muted">${escapeHtml(activity.detail)}${elapsed}</p>`;
   const current = cycle.revisions.find(
     (item) => item.roundNumber === cycle.currentRound,
   );
@@ -72,10 +67,6 @@ export const buildPromptSdlcLocalCycleSection = (
       ? readPromptSdlcLocalImproverReference(cycle)
       : null;
   const tokenTotal = sumPromptSdlcLocalTokens(cycle);
-  const tokens =
-    tokenTotal > 0
-      ? `<p class="muted">Tokens so far: ${formatPromptSdlcTokenCount(tokenTotal)}</p>`
-      : "";
   const wizardEvaluateJudge =
     cycle.wizard !== undefined &&
     cycle.status === "judging" &&
@@ -103,7 +94,43 @@ export const buildPromptSdlcLocalCycleSection = (
     cycle.wizard.gate === "evaluate" ||
     cycle.wizard.gate === "optimize_modules";
   const scoreScale = showScoreScale
-    ? renderPromptSdlcLocalScoreScale(cycle.passScore)
+    ? `<div class="sdlc-run-panel sdlc-run-panel-scoring"><h3 class="sdlc-run-panel-title">Scoring guide</h3>${renderPromptSdlcLocalScoreScale(cycle.passScore)}</div>`
     : "";
-  return `<section class="card" id="prompt-sdlc-run" data-live="${live ? "true" : "false"}" data-since="${escapeHtml(cycle.updatedAt)}" aria-busy="${live ? "true" : "false"}"><p class="eyebrow">This run</p><div class="sdlc-working">${spinner}<div><h2>${escapeHtml(activity.title)}</h2>${detail}${folder}${stop}</div></div>${error}${tokens}${scoreScale}${steps}${best}${manual}</section>${renderPromptSdlcLocalRevisions(cycle)}`;
+  const statusBadge = live
+    ? `<span class="sdlc-run-badge sdlc-run-badge-live">In progress</span>`
+    : cycle.status === "wizard_paused"
+      ? `<span class="sdlc-run-badge sdlc-run-badge-paused">Paused</span>`
+      : isPromptSdlcTerminalStatus(cycle.status)
+        ? `<span class="sdlc-run-badge sdlc-run-badge-done">Complete</span>`
+        : "";
+  const activityIcon = live
+    ? spinner
+    : `<span class="sdlc-run-status-dot" aria-hidden="true"></span>`;
+  const metaItems = [
+    typeof cycle.workingDirectory === "string" &&
+    cycle.workingDirectory.length > 0
+      ? `<li class="sdlc-run-meta-item"><span class="sdlc-run-meta-label">Folder</span> ${escapeHtml(displayPromptSdlcLocalFolder(promptSdlcLocalWorkingDirectory(cycle)))}</li>`
+      : "",
+    tokenTotal > 0
+      ? `<li class="sdlc-run-meta-item"><span class="sdlc-run-meta-label">Tokens</span> ${formatPromptSdlcTokenCount(tokenTotal)} so far</li>`
+      : "",
+  ].filter((item) => item.length > 0);
+  const meta =
+    metaItems.length === 0
+      ? ""
+      : `<ul class="sdlc-run-meta">${metaItems.join("")}</ul>`;
+  const actions =
+    stop.length === 0 ? "" : `<div class="sdlc-run-actions">${stop}</div>`;
+  const timeline = `<div class="sdlc-run-panel sdlc-run-panel-timeline"><h3 class="sdlc-run-panel-title">Progress</h3>${steps}</div>`;
+  const grid =
+    scoreScale.length === 0
+      ? `<div class="sdlc-run-grid sdlc-run-grid-single">${timeline}</div>`
+      : `<div class="sdlc-run-grid">${timeline}${scoreScale}</div>`;
+  const revisions = renderPromptSdlcLocalRevisions(cycle);
+  const promptsHistory =
+    revisions.length === 0
+      ? ""
+      : `<section class="sdlc-run-prompts" aria-labelledby="sdlc-run-prompts-heading"><h2 id="sdlc-run-prompts-heading" class="sdlc-run-prompts-heading">Prompt history</h2><div class="sdlc-run-prompts-list">${revisions}</div></section>`;
+
+  return `<section class="card sdlc-run" id="prompt-sdlc-run" data-live="${live ? "true" : "false"}" data-since="${escapeHtml(cycle.updatedAt)}" aria-busy="${live ? "true" : "false"}"><header class="sdlc-run-head"><div class="sdlc-run-head-top"><p class="eyebrow">This run</p>${statusBadge}</div><div class="sdlc-run-activity"><div class="sdlc-run-activity-icon">${activityIcon}</div><div class="sdlc-run-activity-copy"><h2 class="sdlc-run-title">${escapeHtml(activity.title)}</h2>${detail}</div></div>${meta}${actions}</header>${error}${grid}${manual}${best}</section>${promptsHistory}`;
 };

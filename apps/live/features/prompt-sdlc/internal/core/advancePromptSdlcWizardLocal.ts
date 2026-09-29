@@ -48,6 +48,37 @@ const pauseWizardWriterFailure = (
   };
 };
 
+const snapshotEvaluateWizardAttempt = (
+  cycle: PromptSdlcLocalCycle,
+): PromptSdlcLocalCycle => {
+  const wizard = cycle.wizard;
+  if (wizard === undefined) {
+    return cycle;
+  }
+  if (readPromptSdlcWizardScoredRevisions(cycle).length === 0) {
+    return cycle;
+  }
+  return {
+    ...cycle,
+    wizard: recordPromptSdlcWizardAttempt({
+      wizard,
+      step: "evaluate",
+      output: {
+        selectedRound: wizard.evaluateSelectedRound,
+        revisions: cycle.revisions.map((item) => ({
+          roundNumber: item.roundNumber,
+          promptText: item.promptText,
+          score: item.judgement?.score ?? null,
+          passed: item.judgement?.passed ?? null,
+          reasons: item.judgement?.reasons ?? null,
+        })),
+      },
+      userFeedback: null,
+      stepInstructions: null,
+    }),
+  };
+};
+
 const pauseAtGate = (
   cycle: PromptSdlcLocalCycle,
   gate: NonNullable<PromptSdlcLocalCycle["wizard"]>["gate"],
@@ -365,7 +396,7 @@ export const advancePromptSdlcWizardLocal = async (
         );
         const defaultRound =
           best?.roundNumber ?? next.revisions.at(-1)?.roundNumber ?? 0;
-        return pauseAtGate(
+        const paused = pauseAtGate(
           {
             ...next,
             wizard: {
@@ -375,8 +406,14 @@ export const advancePromptSdlcWizardLocal = async (
           },
           gate,
         );
+        return gate === "evaluate"
+          ? snapshotEvaluateWizardAttempt(paused)
+          : paused;
       }
-      return pauseAtGate(next, gate);
+      const paused = pauseAtGate(next, gate);
+      return gate === "evaluate"
+        ? snapshotEvaluateWizardAttempt(paused)
+        : paused;
     }
     return next;
   }

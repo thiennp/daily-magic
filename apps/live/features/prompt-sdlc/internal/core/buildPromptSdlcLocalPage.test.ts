@@ -148,7 +148,9 @@ describe("buildPromptSdlcLocalPageBody", () => {
     expect(html).toContain("Source prompt saved");
     expect(html).toContain("score for round 0...");
     expect(html).not.toContain("  |");
-    expect(html).toContain("Folder ~");
+    expect(html).toContain('class="sdlc-run-meta"');
+    expect(html).toContain('class="sdlc-run-meta-label">Folder</span>');
+    expect(html).toContain(" ~</li>");
     expect(html).toContain('data-live="true"');
     expect(html).toContain("data-elapsed");
     expect(html).toContain("fragment");
@@ -517,7 +519,8 @@ describe("buildPromptSdlcLocalPageBody", () => {
     const runningHtml = buildPromptSdlcLocalCycleSection(running);
     const finishedHtml = buildPromptSdlcLocalCycleSection(finished);
 
-    expect(runningHtml).toContain("Tokens so far: 1,500");
+    expect(runningHtml).toContain("sdlc-run-meta");
+    expect(runningHtml).toContain("1,500 so far");
     expect(runningHtml).toContain("1,500 tokens so far");
     expect(runningHtml).toContain(">Finish<");
     expect(finishedHtml).toContain("Finished.");

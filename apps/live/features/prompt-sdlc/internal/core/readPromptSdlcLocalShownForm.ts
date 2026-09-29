@@ -51,9 +51,14 @@ export const readPromptSdlcLocalShownForm = (input: {
   }
 
   const source = cycle.revisions.find((revision) => revision.roundNumber === 0);
+  const wizardTemplate = cycle.wizard?.templatedPrompt.trim() ?? "";
+  const prompt =
+    wizardTemplate.length > 0
+      ? wizardTemplate
+      : (source?.promptText ?? input.prompt);
   return {
     goal: cycle.goal,
-    prompt: source?.promptText ?? input.prompt,
+    prompt,
     folder:
       cycle.workingDirectory === undefined
         ? input.folder
