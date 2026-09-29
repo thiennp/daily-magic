@@ -31,13 +31,15 @@ export default function EmptyStatePanel({
   density,
 }: EmptyStatePanelProps) {
   const panelPadding = density === "page" ? "default" : "compact";
+  const titleClassName =
+    density === "page"
+      ? "text-xl font-semibold text-gray-900 dark:text-white sm:text-2xl"
+      : "text-lg font-semibold text-gray-800 dark:text-white/90";
 
   return (
     <AppPanel padding={panelPadding} className="mx-auto w-full max-w-lg">
-      <div className="flex flex-col gap-3">
-        <h2 className="text-base font-semibold text-gray-800 dark:text-white/90">
-          {title}
-        </h2>
+      <div className="flex flex-col gap-4">
+        <h2 className={titleClassName}>{title}</h2>
         <p className={APP_SURFACE_BODY_TEXT_CLASS}>{body}</p>
         <div className="flex flex-wrap items-center gap-3 pt-1">
           <Link

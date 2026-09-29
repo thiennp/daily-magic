@@ -17,26 +17,35 @@ export default function PromptSdlcPage(): ReactElement {
     <div className="space-y-6">
       <AppPageHeader
         title="Prompt optimizer"
-        description="Run the four-step wizard or the classic judge/improver loop in Agent Witch Live on this Mac. The console links you there; writers run in the project folder you choose."
+        description="Run the four-step wizard or the classic judge/improver loop in Agent Witch Live on this Mac. A judge scores your prompt; an improver rewrites it using your Playbook (team standards) and project code in the folder you choose."
       />
       <ol
-        className={`${APP_SURFACE_BODY_TEXT_CLASS} list-decimal space-y-2 pl-5`}
+        className={`${APP_SURFACE_BODY_TEXT_CLASS} max-w-xl list-decimal space-y-4 pl-5`}
       >
-        <li>Open Agent Witch Live on this Mac.</li>
-        <li>Paste the prompt and the goal, and choose the project folder.</li>
-        <li>Choose who scores the prompt and who rewrites it.</li>
+        <li>Install Agent Witch on your Mac if you have not already.</li>
+        <li>Open Agent Witch Live and open Prompt optimizer.</li>
+        <li>
+          Paste the prompt and goal, choose the project folder, then pick judge
+          and improver models.
+        </li>
       </ol>
-      <p>
+      <div className="flex flex-wrap items-center gap-3">
         <a
-          href={PROMPT_SDLC_AWL_PAGE_HREF}
+          href="/install/agent-witch"
           className={APP_SURFACE_CTA_PRIMARY_CLASS}
         >
-          Run it in Agent Witch Live
+          Install Agent Witch on this Mac
         </a>
-      </p>
+        <a
+          href={PROMPT_SDLC_AWL_PAGE_HREF}
+          className={APP_SURFACE_TEXT_LINK_CLASS}
+        >
+          Open in Agent Witch Live
+        </a>
+      </div>
       <p className={APP_SURFACE_BODY_TEXT_CLASS}>
-        Agent Witch Live is the Mac app at {PROMPT_SDLC_AWL_PAGE_HREF}. The
-        console does not run the optimizer.
+        Agent Witch Live is the Mac app ({PROMPT_SDLC_AWL_PAGE_HREF}). This
+        console page does not run the optimizer.
       </p>
       <p>
         <Link

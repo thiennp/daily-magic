@@ -34,11 +34,12 @@ export default function CreatePlaybookPanel({
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h2 className="text-lg font-semibold text-gray-800 dark:text-white/90">
-            Create workflow or agent
+            Create a Playbook
           </h2>
-          <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
-            Questions become a typed form. Then add human steps and specialists
-            for the Mac.
+          <p className="mt-1 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+            A Playbook is how Agent Witch runs Tasks on your Mac. Start with a
+            workflow or a single agent—questions become a typed form, then you
+            add human steps and specialists.
           </p>
         </div>
         <Button

@@ -34,7 +34,10 @@ export default function CreateAutomationForm({
       <h2 className="text-base font-semibold text-gray-800 dark:text-white/90">
         {AUTOMATIONS_PAGE_COPY.createTitle}
       </h2>
-      <div className="mt-4 space-y-4">
+      <p className="mt-2 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+        {AUTOMATIONS_PAGE_COPY.createIntro}
+      </p>
+      <div className="mt-4 space-y-6">
         <CreateAutomationBaseFields
           capabilities={capabilities}
           capabilityId={form.capabilityId}

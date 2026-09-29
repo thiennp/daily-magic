@@ -15,10 +15,15 @@ const useCapabilityTemplates = (): {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    void fetchCapabilityTemplates().then((loadedTemplates) => {
-      setTemplates(loadedTemplates);
-      setIsLoading(false);
-    });
+    void fetchCapabilityTemplates()
+      .then((loadedTemplates) => {
+        setTemplates(loadedTemplates);
+        setIsLoading(false);
+      })
+      .catch(() => {
+        setTemplates([]);
+        setIsLoading(false);
+      });
   }, []);
 
   return { templates, isLoading };
