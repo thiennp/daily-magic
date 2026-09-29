@@ -133,6 +133,17 @@ const step2 = {
         tokens: 240,
       },
     },
+    {
+      roundNumber: 2,
+      promptText: `${complexTemplatedPrompt}\n\n(Tighter escalation threshold and refund wording.)`,
+      judgement: {
+        score: 76,
+        passed: true,
+        reasons: "Slightly weaker clarity on locale tone.",
+        rawReply: "76",
+        tokens: 210,
+      },
+    },
   ],
 };
 
@@ -211,11 +222,35 @@ const step4 = {
       promptText:
         "Draft reply for billing question using refund within 14 days.",
       judgement: {
+        score: 72,
+        passed: true,
+        reasons: "Good but missing visible round log callout.",
+        rawReply: "72",
+        tokens: 80,
+      },
+    },
+    {
+      roundNumber: 1,
+      promptText:
+        "Draft reply; cite policy_facts; require runner+judge logs visible in UI.",
+      judgement: {
+        score: 88,
+        passed: true,
+        reasons: "Mentions round scores and runner/judge logs at optimize.",
+        rawReply: "88",
+        tokens: 95,
+      },
+    },
+    {
+      roundNumber: 2,
+      promptText:
+        "Final module prompt with escalation guard and EU disclaimer.",
+      judgement: {
         score: 92,
         passed: true,
         reasons: "Clear and policy-safe.",
         rawReply: "92",
-        tokens: 80,
+        tokens: 70,
       },
     },
   ],
