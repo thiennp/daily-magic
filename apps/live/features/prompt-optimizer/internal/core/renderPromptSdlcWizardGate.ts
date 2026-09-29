@@ -1,5 +1,9 @@
-import { substitutePromptSdlcTemplate } from "../../../../adapters/promptSdlcAwcCore";
+import {
+  buildPromptSdlcWizardSubstitutionMap,
+  substitutePromptSdlcTemplateValues,
+} from "../../../../adapters/promptSdlcAwcCore";
 
+import { renderPromptSdlcWizardModuleParameters } from "./renderPromptSdlcWizardModuleParameters";
 import { renderPromptSdlcWizardRevisionRoundList } from "./renderPromptSdlcWizardRevisionRoundList";
 import { renderPromptSdlcWizardSplitOptionChunks } from "./renderPromptSdlcWizardSplitChunks";
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
@@ -67,17 +71,31 @@ export const renderPromptSdlcWizardGate = (
           .join("")}</ul>`
       : "";
 
-  const moduleTitle =
-    wizard.modules[wizard.currentModuleIndex]?.title ?? "Module";
+  const moduleRun = wizard.modules[wizard.currentModuleIndex];
+  const moduleTitle = moduleRun?.title ?? "Module";
+  const modulePrompt = moduleRun?.prompt ?? "";
+  const moduleNeedsRun = moduleRun?.status === "pending";
   const moduleNote =
     gate === "optimize_modules"
-      ? `<p>Module ${wizard.currentModuleIndex + 1} of ${wizard.modules.length}: ${escapeHtml(moduleTitle)}</p><p class="muted">Sample run uses: ${escapeHtml(substitutePromptSdlcTemplate(wizard.templatedPrompt, wizard.variables))}</p>${renderPromptSdlcWizardRevisionRoundList(
-          {
-            cycle,
-            interactive: false,
-            caption: `Scored rounds for “${moduleTitle}” (runner + judge).`,
-          },
-        )}`
+      ? `<p>Module ${wizard.currentModuleIndex + 1} of ${wizard.modules.length}: ${escapeHtml(moduleTitle)}</p>${
+          moduleNeedsRun
+            ? renderPromptSdlcWizardModuleParameters({
+                cycle,
+                modulePrompt,
+              })
+            : ""
+        }<p class="muted">Test run prompt preview: ${escapeHtml(
+          substitutePromptSdlcTemplateValues(
+            modulePrompt,
+            buildPromptSdlcWizardSubstitutionMap(wizard),
+          ),
+        )}</p>${renderPromptSdlcWizardRevisionRoundList({
+          cycle,
+          interactive: false,
+          caption: moduleNeedsRun
+            ? "After you continue, the runner and judge score this module."
+            : `Scored rounds for “${moduleTitle}” (runner + judge).`,
+        })}`
       : "";
 
   const gateLede =
@@ -87,18 +105,20 @@ export const renderPromptSdlcWizardGate = (
         ? "Pick which revision to carry into the separate step, then continue. Rerun with feedback to judge again."
         : gate === "separate"
           ? "Choose a module split, then continue to optimize each module. Rerun with feedback to propose new options."
-          : "Review progress on this module. Continue when ready, or rerun with feedback.";
+          : moduleNeedsRun
+            ? "Set parameters for this module’s test run, then continue. Rerun with feedback to adjust the module prompt."
+            : "Review progress on this module. Continue when ready, or rerun with feedback.";
 
   return `<section class="card sdlc-wizard-gate">
     <p class="eyebrow">Prompt optimizer</p>
     <h2>${stepTitle}</h2>
     <p class="sdlc-wizard-gate-lede">${gateLede}</p>
+    <form method="POST" action="/prompt-optimizer" class="sdlc-wizard-feedback" id="sdlc-wizard-gate-form">
+      <input type="hidden" name="cycleId" value="${escapeHtml(cycle.id)}">
     ${variables}
     ${revisions}
     ${splits}
     ${moduleNote}
-    <form method="POST" action="/prompt-optimizer" class="sdlc-wizard-feedback">
-      <input type="hidden" name="cycleId" value="${escapeHtml(cycle.id)}">
       <div class="field">
         <label class="field-label" for="wizardFeedback">Feedback to rerun this step</label>
         <textarea class="input textarea" id="wizardFeedback" name="wizardFeedback" rows="3" placeholder="What should change?"></textarea>

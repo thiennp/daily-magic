@@ -105,6 +105,7 @@ import {
   buildDefaultUserProjectFolderPath,
   deferAgentWitchInstallBundleUpdate,
   deferAgentWitchLocalRestart,
+  ensureAgentWitchCoupledLiveAppHealth,
   endAgentWitchWriterWork,
   isAgentWitchWriterWorkInProgress,
   buildWriterCliInvocation,
@@ -2083,9 +2084,24 @@ const main = async (): Promise<void> => {
     // replaced after services start
   };
 
+  const ensureLiveAppReachableIfIdle = (): void => {
+    if (processHost.skipInProcessLive) {
+      return;
+    }
+    const layout = configs[0]?.layout;
+    if (layout === undefined) {
+      return;
+    }
+    if (isAgentWitchWriterWorkInProgress(layout)) {
+      return;
+    }
+    void ensureAgentWitchCoupledLiveAppHealth(layout.installDir);
+  };
+
   const inProcessServices = await startAgentWitchInProcessServices({
     skipInProcessBridge: processHost.skipInProcessBridge,
     reconnectWebSockets: reconnectWebSocketsIfStale,
+    ensureLiveAppReachable: ensureLiveAppReachableIfIdle,
     onLostMachineLease: () => {
       console.log(
         "[agent-witch] Lost machine lease to another process — shutting down.",

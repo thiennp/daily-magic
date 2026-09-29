@@ -34,6 +34,9 @@ export const invalidatePromptSdlcWizardDownstream = (
     currentModuleIndex: cleared.includes("optimize_modules")
       ? 0
       : wizard.currentModuleIndex,
+    parameterValues: cleared.includes("optimize_modules")
+      ? {}
+      : wizard.parameterValues,
     phase:
       fromStep === "generalize"
         ? "generalize"

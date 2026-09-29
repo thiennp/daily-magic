@@ -339,29 +339,49 @@ describe("prompt SDLC wizard full round proof (for screenshots)", () => {
         current?.status === "wizard_paused" &&
         current.wizard?.gate === "optimize_modules"
       );
-    }, "step 4 optimize gate");
+    }, "step 4 optimize gate (parameters)");
     gateTrace.push("optimize_modules");
     paused = readPromptSdlcLocalCycle(storePath, liveId)!;
-    snapshotCycle(storePath, "full-round-step-4-optimize", paused);
-    const page4 = pageBody(installDir, paused);
-    expect(page4).toContain("Step 4 — Optimize modules");
-    expect(page4).toContain("Separated modules");
-    expect(page4).toContain("Policy guard");
-    expect(page4).toContain("Scored rounds for");
-    expect(page4).toContain("Round 0 — 88");
-    expect(page4).toContain("Judge scored round 0");
+    snapshotCycle(storePath, "full-round-step-4-params", paused);
+    const page4Params = pageBody(installDir, paused);
+    expect(page4Params).toContain("Step 4 — Optimize modules");
+    expect(page4Params).toContain("Policy guard");
+    expect(page4Params).toContain("Parameters for this module run");
+    expect(page4Params).toContain('name="wizardParam_policy_facts"');
 
-    const continueWizard = (): void => {
+    const continueWizard = (extra?: Record<string, string>): void => {
       tryAcceptPromptSdlcWizardPost({
         posted: new URLSearchParams({
           intent: "wizard-continue",
           cycleId: liveId,
+          ...extra,
         }),
         storePath,
         response: noopResponse,
       });
       ensurePromptSdlcLocalCycleRunning(storePath, liveId);
     };
+    continueWizard({
+      wizardParam_policy_facts: COMPLEX_VARIABLES.find(
+        (item) => item.name === "policy_facts",
+      )!.sampleValue,
+    });
+    await waitUntil(() => {
+      const current = readPromptSdlcLocalCycle(storePath, liveId);
+      return (
+        current?.status === "wizard_paused" &&
+        current.wizard?.gate === "optimize_modules" &&
+        (current.revisions[0]?.judgement?.score ?? 0) > 0
+      );
+    }, "step 4 optimize gate after module 1 run");
+    paused = readPromptSdlcLocalCycle(storePath, liveId)!;
+    snapshotCycle(storePath, "full-round-step-4-optimize", paused);
+    const page4 = pageBody(installDir, paused);
+    expect(page4).toContain("Separated modules");
+    expect(page4).toContain("Scored rounds for");
+    expect(page4).toContain("Round 0 — 88");
+    expect(page4).toContain("Judge scored round 0");
+
     continueWizard();
     await waitUntil(() => {
       const current = readPromptSdlcLocalCycle(storePath, liveId);
@@ -390,7 +410,16 @@ describe("prompt SDLC wizard full round proof (for screenshots)", () => {
         afterStep4.status === "wizard_paused" &&
         afterStep4.wizard?.gate === "optimize_modules"
       ) {
-        continueWizard();
+        const modulePrompt =
+          afterStep4.wizard.modules[afterStep4.wizard.currentModuleIndex]
+            ?.prompt ?? "";
+        const extra: Record<string, string> = {};
+        for (const variable of COMPLEX_VARIABLES) {
+          if (modulePrompt.includes(`{{${variable.name}}}`)) {
+            extra[`wizardParam_${variable.name}`] = variable.sampleValue;
+          }
+        }
+        continueWizard(extra);
       }
     }
     ensurePromptSdlcLocalCycleRunning(storePath, liveId);

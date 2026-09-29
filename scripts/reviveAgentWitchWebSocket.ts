@@ -12,6 +12,7 @@ import type {
   AgentWitchWatchdogTargetStatus,
 } from "./agentWitchRevive.types";
 import { isAgentWitchLaunchAgentRunning } from "./isAgentWitchLaunchAgentRunning";
+import { ensureAgentWitchCoupledLiveAppHealth } from "./ensureAgentWitchCoupledLiveAppHealth";
 import { ensureAgentWitchCoupledWakeClientHealth } from "./ensureAgentWitchCoupledWakeClientHealth";
 import { kickstartAgentWitchLaunchAgent } from "./kickstartAgentWitchLaunchAgent";
 import { listAgentWitchLaunchTargets } from "./listAgentWitchLaunchTargets";
@@ -209,6 +210,7 @@ export const reviveAgentWitchWebSocket = async (input?: {
   const staleAfterMs = input?.staleAfterMs ?? AGENT_WITCH_CONNECTION_STALE_MS;
   const installDir = resolveAgentWitchInstallDir();
   await ensureAgentWitchCoupledWakeClientHealth(installDir);
+  await ensureAgentWitchCoupledLiveAppHealth(installDir);
   const targets = listAgentWitchLaunchTargets(installDir);
   const results: AgentWitchReviveTargetResult[] = [];
 

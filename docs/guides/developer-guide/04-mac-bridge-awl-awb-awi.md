@@ -116,6 +116,8 @@ Test from browser: **`/ws-test`** on AWC.
 | `com.agent-witch-watchdog` | `npm run agent-witch:watchdog`    |
 | `com.agent-witch-updater`  | `npm run agent-witch:self-update` |
 
+The watchdog and the in-process AWI timer probe **`http://127.0.0.1:43347/health`** (AWL) in addition to AWB wake `/health`. When Live is down but the install bundle exists, they **`launchctl kickstart`** the Agent Witch client LaunchAgents so AWL comes back (skipped while a writer task is in progress).
+
 Install bundle version API: `GET /install/agent-witch/version` (same integer the Console nav shows as `AWL {n}`).
 
 Self-update resolves the app origin from `config.json` `wsUrl`, then from `install-version.json` `appOrigin`. When both are missing, it uses `AGENT_WITCH_DEFAULT_ORIGIN` (`https://www.agentwitch.com`), the same default AWL uses for the update offer. A missing local bundle version still counts as older than the remote bundle.
