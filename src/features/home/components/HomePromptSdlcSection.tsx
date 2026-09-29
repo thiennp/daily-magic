@@ -24,8 +24,8 @@ export default function HomePromptSdlcSection(): ReactElement {
         the Playbook or the code on this Mac, so the score is not about this
         project. {AGENT_WITCH_PRODUCT_NAME} runs the judge and the improver in
         the folder you choose. They can read the harness and the code there, so
-        the score belongs to that context. Open Prompt optimizer in the console.
-        That page tells you to run it in Agent Witch Live.
+        the score belongs to that context. Open the prompt optimizer in the
+        console. That page tells you to run it in Agent Witch Live.
       </p>
       <p className="mt-4 flex flex-wrap gap-4">
         <Link
