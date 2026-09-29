@@ -12,7 +12,8 @@ import {
 
 describe("buildWriterCliInvocation", () => {
   const commands = resolveWriterCliCommands({
-    cursorCommand: "cursor",
+    // Non-default path so tests stay on `cursor agent` (not standalone `agent` on Cloud VMs).
+    cursorCommand: "/usr/bin/cursor",
   });
 
   it("builds claude-cli invocation with full permissions", () => {
@@ -68,7 +69,7 @@ describe("buildWriterCliInvocation", () => {
 
   it("builds cursor agent without sandbox", () => {
     expect(buildWriterCliInvocation("cursor", "write file", commands)).toEqual({
-      command: "cursor",
+      command: "/usr/bin/cursor",
       args: [
         "agent",
         "-p",
@@ -87,7 +88,7 @@ describe("buildWriterCliInvocation", () => {
         sessionTurn: "continue",
       }),
     ).toEqual({
-      command: "cursor",
+      command: "/usr/bin/cursor",
       args: [
         "agent",
         "--continue",
@@ -128,7 +129,7 @@ describe("buildWriterCliInvocation", () => {
 
   it("builds cursor session start invocation", () => {
     expect(buildWriterSessionStartInvocation("cursor", commands)).toEqual({
-      command: "cursor",
+      command: "/usr/bin/cursor",
       args: ["agent", "-v"],
     });
   });
