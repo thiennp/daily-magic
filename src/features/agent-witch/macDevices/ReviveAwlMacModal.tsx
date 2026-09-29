@@ -31,10 +31,11 @@ export default function ReviveAwlMacModal({
         command, and press Return.
       </p>
       <p className={`mt-2 text-sm text-gray-500 dark:text-gray-400`}>
-        Set <span className="font-mono">AW_HOME</span> in the script (do not run
-        commands with an empty <span className="font-mono">$AW_HOME</span>).
-        Ignore <span className="font-mono">com.agent-witch-live</span> unless
-        you installed Live as a separate service.
+        Paste and run the whole block so{" "}
+        <span className="font-mono">AW_HOME</span> is set before{" "}
+        <span className="font-mono">tail</span>. Ignore{" "}
+        <span className="font-mono">com.agent-witch-live</span> unless you
+        installed Live as a separate service.
       </p>
       <CopyableBashCommand command={command} variant="bash" />
     </Modal>

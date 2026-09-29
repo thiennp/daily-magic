@@ -19,17 +19,14 @@ export const probeAgentWitchLocalHealth = async (): Promise<boolean> => {
   }
 };
 
-/** Opens AWL Status when healthy; returns unavailable when :43347 is down. */
+/**
+ * Opens AWL Status in a new tab (sync, so popup blockers allow it), then probes
+ * `/health`. Returns `unavailable` when Live is down so callers can show revive UI.
+ */
 export const openAgentWitchLocalStatus =
   async (): Promise<OpenAgentWitchLocalStatusResult> => {
+    const statusUrl = `${AGENT_WITCH_LOCAL_APP_LOOPBACK_ORIGIN}${LOCAL_STATUS_PATH}`;
+    window.open(statusUrl, "_blank", "noopener,noreferrer");
     const healthy = await probeAgentWitchLocalHealth();
-    if (!healthy) {
-      return "unavailable";
-    }
-    window.open(
-      `${AGENT_WITCH_LOCAL_APP_LOOPBACK_ORIGIN}${LOCAL_STATUS_PATH}`,
-      "_blank",
-      "noopener,noreferrer",
-    );
-    return "opened";
+    return healthy ? "opened" : "unavailable";
   };
