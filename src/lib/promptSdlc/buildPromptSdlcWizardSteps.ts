@@ -61,8 +61,12 @@ export const buildPromptSdlcWizardSteps = (
     return index <= revealedThroughIndex;
   });
 
+  const showRoundStepsWhilePausedAtGate =
+    pausedAtGate &&
+    (wizard.gate === "evaluate" || wizard.gate === "optimize_modules");
   const roundSteps =
-    !pausedAtGate && shouldShowPromptSdlcWizardEvaluateRounds(wizard)
+    shouldShowPromptSdlcWizardEvaluateRounds(wizard) &&
+    (!pausedAtGate || showRoundStepsWhilePausedAtGate)
       ? buildPromptSdlcClassicRoundSteps(cycle)
       : [];
 

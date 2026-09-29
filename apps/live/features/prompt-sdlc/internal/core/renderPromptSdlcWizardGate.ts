@@ -1,5 +1,6 @@
 import { substitutePromptSdlcTemplate } from "../../../../adapters/promptSdlcAwcCore";
 
+import { renderPromptSdlcWizardRevisionRoundList } from "./renderPromptSdlcWizardRevisionRoundList";
 import { renderPromptSdlcWizardSplitOptionChunks } from "./renderPromptSdlcWizardSplitChunks";
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
 
@@ -42,16 +43,11 @@ export const renderPromptSdlcWizardGate = (
 
   const revisions =
     gate === "evaluate"
-      ? `<ul class="sdlc-wizard-revisions">${cycle.revisions
-          .map((item) => {
-            const score = item.judgement?.score;
-            const label =
-              score === null || score === undefined
-                ? `Round ${item.roundNumber}`
-                : `Round ${item.roundNumber} — ${score}`;
-            return `<li><label><input type="radio" name="wizardRevisionRound" value="${item.roundNumber}"${wizard.evaluateSelectedRound === item.roundNumber ? " checked" : ""}> ${escapeHtml(label)}</label></li>`;
-          })
-          .join("")}</ul>`
+      ? renderPromptSdlcWizardRevisionRoundList({
+          cycle,
+          interactive: true,
+          selectedRound: wizard.evaluateSelectedRound,
+        })
       : "";
 
   const splits =
@@ -68,9 +64,17 @@ export const renderPromptSdlcWizardGate = (
           .join("")}</ul>`
       : "";
 
+  const moduleTitle =
+    wizard.modules[wizard.currentModuleIndex]?.title ?? "Module";
   const moduleNote =
     gate === "optimize_modules"
-      ? `<p>Module ${wizard.currentModuleIndex + 1} of ${wizard.modules.length}: ${escapeHtml(wizard.modules[wizard.currentModuleIndex]?.title ?? "")}</p><p class="muted">Sample run uses: ${escapeHtml(substitutePromptSdlcTemplate(wizard.templatedPrompt, wizard.variables))}</p>`
+      ? `<p>Module ${wizard.currentModuleIndex + 1} of ${wizard.modules.length}: ${escapeHtml(moduleTitle)}</p><p class="muted">Sample run uses: ${escapeHtml(substitutePromptSdlcTemplate(wizard.templatedPrompt, wizard.variables))}</p>${renderPromptSdlcWizardRevisionRoundList(
+          {
+            cycle,
+            interactive: false,
+            caption: `Scored rounds for “${moduleTitle}” (runner + judge).`,
+          },
+        )}`
       : "";
 
   const gateLede =

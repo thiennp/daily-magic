@@ -190,7 +190,7 @@ describe("prompt SDLC wizard full round proof (for screenshots)", () => {
         }
         if (input.prompt.includes("Score the changes from 0 to 100")) {
           judgeCalls += 1;
-          const score = judgeCalls === 1 ? 58 : 84;
+          const score = judgeCalls % 2 === 1 ? 58 : 84;
           return {
             ok: true,
             text: JSON.stringify({
@@ -314,6 +314,10 @@ describe("prompt SDLC wizard full round proof (for screenshots)", () => {
     expect(page4).toContain("Step 4 — Optimize modules");
     expect(page4).toContain("Separated modules");
     expect(page4).toContain("Policy guard");
+    expect(page4).toContain("Scored rounds for");
+    expect(page4).toContain("Round 0 — 58");
+    expect(page4).toContain("Round 1 — 84");
+    expect(page4).toContain("Judge scored round 0");
 
     const continueWizard = (): void => {
       tryAcceptPromptSdlcWizardPost({
