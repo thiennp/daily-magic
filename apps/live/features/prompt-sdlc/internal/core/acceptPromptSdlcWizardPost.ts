@@ -16,6 +16,22 @@ import {
 } from "./promptSdlcLocalStore";
 import { ensurePromptSdlcLocalCycleRunning } from "./runPromptSdlcLocalCycle";
 
+const resumeWizardStepAfterWriterFailure = (
+  cycle: PromptSdlcLocalCycle,
+): PromptSdlcLocalCycle => ({
+  ...cycle,
+  status: "judging",
+  errorMessage: null,
+  wizard:
+    cycle.wizard === undefined
+      ? undefined
+      : {
+          ...cycle.wizard,
+          gate: null,
+        },
+  updatedAt: new Date().toISOString(),
+});
+
 const modulesFromSplit = (
   option: PromptSdlcWizardSplitOption,
 ): NonNullable<PromptSdlcLocalCycle["wizard"]>["modules"] =>
@@ -97,10 +113,13 @@ export const tryAcceptPromptSdlcWizardPost = (input: {
     }
 
     if (gate === "generalize") {
-      const next = beginPromptSdlcWizardEvaluate({
-        ...cycle,
-        wizard: { ...cycle.wizard, gate: null },
-      });
+      const writerFailed = (cycle.errorMessage?.trim().length ?? 0) > 0;
+      const next = writerFailed
+        ? resumeWizardStepAfterWriterFailure(cycle)
+        : beginPromptSdlcWizardEvaluate({
+            ...cycle,
+            wizard: { ...cycle.wizard, gate: null },
+          });
       savePromptSdlcLocalCycle(input.storePath, next);
       ensurePromptSdlcLocalCycleRunning(input.storePath, cycleId);
       redirect(cycleId);
@@ -144,6 +163,14 @@ export const tryAcceptPromptSdlcWizardPost = (input: {
     }
 
     if (gate === "separate") {
+      const writerFailed = (cycle.errorMessage?.trim().length ?? 0) > 0;
+      if (writerFailed) {
+        const next = resumeWizardStepAfterWriterFailure(cycle);
+        savePromptSdlcLocalCycle(input.storePath, next);
+        ensurePromptSdlcLocalCycleRunning(input.storePath, cycleId);
+        redirect(cycleId);
+        return true;
+      }
       const splitId = posted.get("wizardSplitOptionId")?.trim() ?? "";
       const option = cycle.wizard.splitOptions.find(
         (item) => item.id === splitId,
