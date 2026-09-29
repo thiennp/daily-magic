@@ -47,7 +47,7 @@ import {
 } from "@agent-witch/live-shell/presentation";
 import { buildAgentWitchLocalHomePageBody } from "@agent-witch/live-home/presentation";
 import { tryHandlePromptSdlcLocalRequest } from "../../../prompt-optimizer/public-api/infrastructure";
-import { resolvePromptOptimizerCyclesPath } from "@/lib/promptOptimizer/promptOptimizerDataFiles";
+import { resolvePromptOptimizerCyclesPath } from "../../../prompt-optimizer/internal/core/promptOptimizerLocalStorePaths";
 import {
   buildAgentWitchLocalEstimateHistoryPageBody,
   buildAgentWitchLocalTaskPageBody,
