@@ -10,6 +10,7 @@ export {
 } from "../internal/core/agentWitchConnectionHealth";
 
 export { resolveAgentWitchLocalWsConnected } from "../internal/core/resolveAgentWitchLocalWsConnected";
+export { shouldReviveAgentWitchWebSocketFromHealth } from "../internal/core/shouldReviveAgentWitchWebSocketFromHealth";
 
 export {
   AGENT_WITCH_CONNECTION_HEALTH_FILE_NAME,

@@ -23,6 +23,7 @@ import {
   isAgentWitchConnectionHealthStale,
   readAgentWitchConnectionHealth,
   resolveAgentWitchLocalWsConnected,
+  shouldReviveAgentWitchWebSocketFromHealth,
   writeAgentWitchConnectionHealth,
 } from "@agent-witch/install-connection-health";
 import {
@@ -1968,6 +1969,7 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
     connect,
     startLocalHealthCheck,
     stop,
+    hasMacSocketOpen: () => state.wsConnected,
     getStatus: () => ({
       wsConnected: resolveAgentWitchLocalWsConnected(config.layout, {
         socketOpen: state.wsConnected,
@@ -2061,17 +2063,19 @@ const main = async (): Promise<void> => {
 
   const reconnectWebSocketsIfStale = (): void => {
     configs.forEach((config, index) => {
-      const health = readAgentWitchConnectionHealth(config.layout);
-      if (
-        health !== null &&
-        !isAgentWitchConnectionHealthStale(
-          health,
-          AGENT_WITCH_CONNECTION_STALE_MS,
-        )
-      ) {
+      const client = clients[index];
+      if (client === undefined) {
         return;
       }
-      clients[index]?.reviveWebSocket();
+      const health = readAgentWitchConnectionHealth(config.layout);
+      const shouldRevive = shouldReviveAgentWitchWebSocketFromHealth(health, {
+        socketOpen: client.hasMacSocketOpen(),
+        staleAfterMs: AGENT_WITCH_CONNECTION_STALE_MS,
+      });
+      if (!shouldRevive) {
+        return;
+      }
+      client.reviveWebSocket();
     });
   };
 
