@@ -2,6 +2,7 @@ import { selectPromptSdlcBestPrompt } from "../../../../adapters/promptSdlcAwcCo
 import type { PromptSdlcStep } from "../../../../adapters/promptSdlcAwcCore";
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
 import { describePromptSdlcWriterTerminalFailure } from "./readPromptSdlcWriterOutput";
+import { renderPromptSdlcWizardStepModalBody } from "./renderPromptSdlcWizardStepModalBody";
 
 export interface PromptSdlcLocalNodeDetail {
   readonly title: string;
@@ -9,6 +10,7 @@ export interface PromptSdlcLocalNodeDetail {
   readonly feedback: string | null;
   readonly promptText: string | null;
   readonly promptNote: string | null;
+  readonly bodyHtml: string | null;
 }
 
 const roundFromStepId = (id: string): number | null => {
@@ -33,6 +35,7 @@ const detailForPrompt = (
     feedback,
     promptText: promptNote === null ? promptText : null,
     promptNote,
+    bodyHtml: null,
   };
 };
 
@@ -41,12 +44,14 @@ export const describePromptSdlcLocalNodeDetail = (
   step: PromptSdlcStep,
 ): PromptSdlcLocalNodeDetail => {
   if (step.id.startsWith("wizard-")) {
+    const bodyHtml = renderPromptSdlcWizardStepModalBody(cycle, step.id);
     return {
       title: step.label,
       scoreLabel: null,
       feedback: step.detail,
       promptText: null,
       promptNote: null,
+      bodyHtml: bodyHtml.trim().length === 0 ? null : bodyHtml,
     };
   }
   if (step.id === "end") {
@@ -65,6 +70,7 @@ export const describePromptSdlcLocalNodeDetail = (
         feedback: cycle.errorMessage,
         promptText: null,
         promptNote: null,
+        bodyHtml: null,
       };
     }
     return detailForPrompt(
@@ -88,6 +94,7 @@ export const describePromptSdlcLocalNodeDetail = (
       feedback: step.detail,
       promptText: null,
       promptNote: null,
+      bodyHtml: null,
     };
   }
 
