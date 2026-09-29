@@ -36,6 +36,7 @@ export const buildPromptSdlcLocalCycleSection = (
 ): string => {
   const live =
     !isPromptSdlcTerminalStatus(cycle.status) &&
+    cycle.status !== "wizard_paused" &&
     !isPromptSdlcLocalManualWait(cycle);
   const activity = describePromptSdlcLocalActivity(cycle);
   const steps = renderPromptSdlcLocalStepTree(

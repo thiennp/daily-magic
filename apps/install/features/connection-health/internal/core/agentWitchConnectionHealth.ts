@@ -54,6 +54,15 @@ export const readAgentWitchConnectionHealth = (
   }
 };
 
+export const clearAgentWitchConnectionHealth = (
+  layout: AgentWitchLocalLayout,
+): void => {
+  const healthPath = resolveAgentWitchConnectionHealthPath(layout);
+  if (fs.existsSync(healthPath)) {
+    fs.rmSync(healthPath, { force: true });
+  }
+};
+
 export const writeAgentWitchConnectionHealth = (
   layout: AgentWitchLocalLayout,
   input: {

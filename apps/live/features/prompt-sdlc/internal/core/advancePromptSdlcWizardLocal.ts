@@ -27,12 +27,33 @@ const failCycle = (
   updatedAt: new Date().toISOString(),
 });
 
+const pauseWizardWriterFailure = (
+  cycle: PromptSdlcLocalCycle,
+  gate: NonNullable<PromptSdlcLocalCycle["wizard"]>["gate"],
+  errorMessage: string,
+): PromptSdlcLocalCycle => {
+  if (cycle.wizard === undefined || gate === null) {
+    return failCycle(cycle, errorMessage);
+  }
+  return {
+    ...cycle,
+    status: "wizard_paused",
+    errorMessage,
+    wizard: {
+      ...cycle.wizard,
+      gate,
+    },
+    updatedAt: new Date().toISOString(),
+  };
+};
+
 const pauseAtGate = (
   cycle: PromptSdlcLocalCycle,
   gate: NonNullable<PromptSdlcLocalCycle["wizard"]>["gate"],
 ): PromptSdlcLocalCycle => ({
   ...cycle,
   status: "wizard_paused",
+  errorMessage: null,
   wizard:
     cycle.wizard === undefined
       ? undefined
@@ -100,7 +121,7 @@ const runGeneralize = async (
   });
   if (!reply.ok) {
     onWriterFailure?.(writer);
-    return failCycle(cycle, reply.errorMessage);
+    return pauseWizardWriterFailure(cycle, "generalize", reply.errorMessage);
   }
   try {
     const parsed = parsePromptSdlcGeneralizeReply(reply.text);
@@ -126,8 +147,9 @@ const runGeneralize = async (
       "generalize",
     );
   } catch (error) {
-    return failCycle(
+    return pauseWizardWriterFailure(
       cycle,
+      "generalize",
       error instanceof Error ? error.message : "Could not read generalization.",
     );
   }
@@ -169,7 +191,7 @@ const runSeparate = async (
   });
   if (!reply.ok) {
     onWriterFailure?.(writer);
-    return failCycle(cycle, reply.errorMessage);
+    return pauseWizardWriterFailure(cycle, "separate", reply.errorMessage);
   }
   try {
     const options = parsePromptSdlcSeparateReply(reply.text);
@@ -194,8 +216,9 @@ const runSeparate = async (
       "separate",
     );
   } catch (error) {
-    return failCycle(
+    return pauseWizardWriterFailure(
       cycle,
+      "separate",
       error instanceof Error ? error.message : "Could not read split options.",
     );
   }

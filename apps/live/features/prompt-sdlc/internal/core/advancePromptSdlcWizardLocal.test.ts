@@ -169,4 +169,36 @@ describe("advancePromptSdlcWizardLocal", () => {
     expect(capturedPrompt).not.toContain("Original template");
     expect(next.wizard?.gate).toBe("separate");
   });
+
+  it("pauses at the separate gate when the writer fails", async () => {
+    vi.spyOn(writerReply, "runPromptSdlcWriterReply").mockResolvedValue({
+      ok: false,
+      errorMessage: "The writer did not reply.",
+      stopped: false,
+    });
+
+    const cycle = {
+      ...createPromptSdlcLocalCycle({
+        goal: "Goal",
+        sourcePrompt: "p",
+        judgeModel: "claude-cli",
+        improverModel: "claude-cli",
+        workingDirectory: storeDir,
+        wizard: {
+          ...createInitialPromptSdlcWizardState("p"),
+          phase: "separate",
+          gate: null,
+          splitOptions: [],
+        },
+      }),
+      revisions: [
+        { roundNumber: 0, promptText: "evaluated prompt", judgement: null },
+      ],
+    };
+
+    const next = await advancePromptSdlcWizardLocal(cycle);
+    expect(next.status).toBe("wizard_paused");
+    expect(next.wizard?.gate).toBe("separate");
+    expect(next.errorMessage).toContain("writer");
+  });
 });
