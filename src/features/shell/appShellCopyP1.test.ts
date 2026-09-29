@@ -18,7 +18,7 @@ describe("COPY-P1 shell and auth labels", () => {
     expect(labels).toContain("Prompt optimizer");
     expect(
       PRIMARY_NAV.find((item) => item.label === "Prompt optimizer")?.href,
-    ).toBe("/prompt-sdlc");
+    ).toBe("/prompt-optimizer");
     expect(labels).not.toContain("Playbooks");
     expect(labels).not.toContain("Runs");
   });

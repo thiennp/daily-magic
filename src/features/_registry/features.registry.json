@@ -221,13 +221,13 @@
       "migrationStatus": "migrated"
     },
     {
-      "slug": "prompt-sdlc",
+      "slug": "prompt-optimizer",
       "title": "Prompt optimizer",
       "purpose": "Console pointer to the prompt optimizer on Agent Witch Live, which picks the best local reasoning writers.",
-      "featurePath": "src/features/prompt-sdlc",
-      "libPath": "src/lib/promptSdlc",
-      "routePaths": ["/prompt-sdlc", "/prompt-sdlc/guide"],
-      "apiPaths": ["/api/prompt-sdlc"],
+      "featurePath": "src/features/prompt-optimizer",
+      "libPath": "src/lib/promptOptimizer",
+      "routePaths": ["/prompt-optimizer", "/prompt-optimizer/guide"],
+      "apiPaths": ["/api/prompt-optimizer"],
       "dependsOn": ["dispatch", "agent-witch"],
       "migrationStatus": "migrated"
     }

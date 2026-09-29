@@ -46,7 +46,8 @@ import {
   buildAgentWitchLocalAppShell,
 } from "@agent-witch/live-shell/presentation";
 import { buildAgentWitchLocalHomePageBody } from "@agent-witch/live-home/presentation";
-import { tryHandlePromptSdlcLocalRequest } from "../../../prompt-sdlc/public-api/infrastructure";
+import { tryHandlePromptSdlcLocalRequest } from "../../../prompt-optimizer/public-api/infrastructure";
+import { resolvePromptOptimizerCyclesPath } from "@/lib/promptOptimizer/promptOptimizerDataFiles";
 import {
   buildAgentWitchLocalEstimateHistoryPageBody,
   buildAgentWitchLocalTaskPageBody,
@@ -520,9 +521,8 @@ export const startAgentWitchLocalApp = (input: {
           request,
           response,
           requestUrl: request.url ?? "/",
-          storePath: path.join(
+          storePath: resolvePromptOptimizerCyclesPath(
             path.dirname(input.layout.configPath),
-            "prompt-sdlc-cycles.json",
           ),
           readBody,
           sendHtml,

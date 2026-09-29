@@ -125,14 +125,14 @@ export const BRIDGE_ROUTE_CATALOG: readonly BridgeRouteCatalogRow[] = [
   },
   {
     method: "GET",
-    pathname: "/prompt-sdlc/models",
-    featureSlug: "prompt-sdlc-proxy",
+    pathname: "/prompt-optimizer/models",
+    featureSlug: "prompt-optimizer-proxy",
     parentSlug: "awc-proxy",
   },
   {
     method: "POST",
-    pathname: "/prompt-sdlc/chat",
-    featureSlug: "prompt-sdlc-proxy",
+    pathname: "/prompt-optimizer/chat",
+    featureSlug: "prompt-optimizer-proxy",
     parentSlug: "awc-proxy",
   },
 ];

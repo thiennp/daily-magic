@@ -10,15 +10,15 @@ import { createInitialPromptSdlcWizardState } from "../../../apps/live/adapters/
 import {
   PROMPT_SDLC_WIZARD_VERIFICATION_GOAL,
   PROMPT_SDLC_WIZARD_VERIFICATION_SOURCE_PROMPT,
-} from "../../../apps/live/features/prompt-sdlc/internal/core/promptSdlcWizardVerificationScenario";
-import { tryAcceptPromptSdlcWizardPost } from "../../../apps/live/features/prompt-sdlc/internal/core/acceptPromptSdlcWizardPost";
-import { createPromptSdlcLocalCycle } from "../../../apps/live/features/prompt-sdlc/internal/core/createPromptSdlcLocalCycle";
-import type { PromptSdlcLocalCycle } from "../../../apps/live/features/prompt-sdlc/internal/core/promptSdlcLocalCycle.type";
-import { ensurePromptSdlcLocalCycleRunning } from "../../../apps/live/features/prompt-sdlc/internal/core/runPromptSdlcLocalCycle";
+} from "../../../apps/live/features/prompt-optimizer/internal/core/promptSdlcWizardVerificationScenario";
+import { tryAcceptPromptSdlcWizardPost } from "../../../apps/live/features/prompt-optimizer/internal/core/acceptPromptSdlcWizardPost";
+import { createPromptSdlcLocalCycle } from "../../../apps/live/features/prompt-optimizer/internal/core/createPromptSdlcLocalCycle";
+import type { PromptSdlcLocalCycle } from "../../../apps/live/features/prompt-optimizer/internal/core/promptSdlcLocalCycle.type";
+import { ensurePromptSdlcLocalCycleRunning } from "../../../apps/live/features/prompt-optimizer/internal/core/runPromptSdlcLocalCycle";
 import {
   readPromptSdlcLocalCycle,
   savePromptSdlcLocalCycle,
-} from "../../../apps/live/features/prompt-sdlc/internal/core/promptSdlcLocalStore";
+} from "../../../apps/live/features/prompt-optimizer/internal/core/promptSdlcLocalStore";
 import { isPromptSdlcTerminalStatus } from "../../../apps/live/adapters/promptSdlcAwcCore";
 
 const installDir =
@@ -81,7 +81,7 @@ const pickBestRevisionRound = (cycle: PromptSdlcLocalCycle): number => {
 const writeResult = (cycle: PromptSdlcLocalCycle): void => {
   const outPath = path.join(
     "/opt/cursor/artifacts",
-    "prompt-sdlc-wizard-dogfood-result.md",
+    "prompt-optimizer-wizard-dogfood-result.md",
   );
   fs.mkdirSync(path.dirname(outPath), { recursive: true });
   const modules =
@@ -145,7 +145,7 @@ const main = async (): Promise<void> => {
     fs.copyFileSync(bundle, path.join(installDir, "app/agent-witch.js"));
   }
 
-  const storePath = path.join(installDir, "prompt-sdlc-cycles.json");
+  const storePath = path.join(installDir, "prompt-optimizer-cycles.json");
   const cycleId = "wizard-verification-dogfood";
   const existing = readPromptSdlcLocalCycle(storePath, cycleId);
   if (existing?.status === "passed") {

@@ -3,7 +3,7 @@ import {
   PROMPT_SDLC_AGENT_URL,
   PROMPT_SDLC_LIVE_PAGE_URL,
   PROMPT_SDLC_LOCAL_CONTEXT_REASON,
-} from "@/lib/promptSdlc/promptSdlcAgentContract.constant";
+} from "@/lib/promptOptimizer/promptSdlcAgentContract.constant";
 
 export const buildPromptSdlcAgentGuide = () => ({
   url: PROMPT_SDLC_AGENT_URL,

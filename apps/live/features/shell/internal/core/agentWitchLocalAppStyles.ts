@@ -695,7 +695,7 @@ form.sdlc-form { display: flex; flex-direction: column; }
   gap: 0.75rem;
 }
 .sdlc-submit .btn-primary { min-width: 8.5rem; }
-#prompt-sdlc-wizard-gate-slot { margin-bottom: 1.25rem; }
+#prompt-optimizer-wizard-gate-slot { margin-bottom: 1.25rem; }
 .sdlc-wizard-gate,
 .sdlc-wizard-resume {
   display: flex;

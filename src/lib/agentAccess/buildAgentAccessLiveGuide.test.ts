@@ -26,7 +26,7 @@ describe("live agent guide", () => {
       "https://www.agentwitch.com/api/agent-access/register",
     );
     expect(guide.promptSdlc.url).toBe(
-      "http://127.0.0.1:43347/prompt-sdlc/agent",
+      "http://127.0.0.1:43347/prompt-optimizer/agent",
     );
     expect(guide.promptSdlc.context).toContain("harness");
   });

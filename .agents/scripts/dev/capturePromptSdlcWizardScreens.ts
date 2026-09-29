@@ -30,7 +30,7 @@ const main = async (): Promise<void> => {
     viewport: { width: 1280, height: 1400 },
   });
   for (const shot of shots) {
-    const url = `${baseUrl}/prompt-sdlc?cycle=${encodeURIComponent(shot.cycleId)}`;
+    const url = `${baseUrl}/prompt-optimizer?cycle=${encodeURIComponent(shot.cycleId)}`;
     await page.goto(url, { waitUntil: "networkidle" });
     await page.screenshot({
       path: path.join(outDir, `${shot.name}.png`),
