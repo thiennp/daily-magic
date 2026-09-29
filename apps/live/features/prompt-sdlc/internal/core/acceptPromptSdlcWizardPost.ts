@@ -1,6 +1,7 @@
 import {
   appendPromptSdlcWizardFeedback,
   invalidatePromptSdlcWizardDownstream,
+  readPromptSdlcWizardEvaluatePromptText,
   type PromptSdlcWizardSplitOption,
 } from "../../../../adapters/promptSdlcAwcCore";
 
@@ -66,8 +67,13 @@ export const tryAcceptPromptSdlcWizardPost = (input: {
       redirect(cycleId);
       return true;
     }
+    const stepInstructions = posted.get("wizardStepInstructions")?.trim() ?? "";
     let wizard = appendPromptSdlcWizardFeedback(cycle.wizard, gate, feedback);
     wizard = invalidatePromptSdlcWizardDownstream(wizard, gate);
+    wizard = {
+      ...wizard,
+      pendingStepInstructions: stepInstructions,
+    };
     const next: PromptSdlcLocalCycle = {
       ...cycle,
       status: "judging",
@@ -107,14 +113,26 @@ export const tryAcceptPromptSdlcWizardPost = (input: {
         selectedRound === null || selectedRound === ""
           ? cycle.wizard.evaluateSelectedRound
           : Number(selectedRound);
+      const wizardWithRound = {
+        ...cycle.wizard,
+        evaluateSelectedRound,
+      };
+      const evaluatePrompt = readPromptSdlcWizardEvaluatePromptText({
+        wizard: wizardWithRound,
+        revisions: cycle.revisions.map((item) => ({
+          roundNumber: item.roundNumber,
+          promptText: item.promptText,
+          score: item.judgement?.score,
+        })),
+      });
       const next: PromptSdlcLocalCycle = {
         ...cycle,
         status: "judging",
         wizard: {
-          ...cycle.wizard,
+          ...wizardWithRound,
           gate: null,
           phase: "separate",
-          evaluateSelectedRound,
+          templatedPrompt: evaluatePrompt,
           splitOptions: [],
         },
         updatedAt: new Date().toISOString(),
