@@ -1,6 +1,8 @@
 import {
   appendPromptSdlcWizardFeedback,
   invalidatePromptSdlcWizardDownstream,
+  mergePromptSdlcWizardPostedParameterValues,
+  seedPromptSdlcWizardParameterValues,
   type PromptSdlcWizardSplitOption,
 } from "../../../../adapters/promptSdlcAwcCore";
 
@@ -219,33 +221,81 @@ export const tryAcceptPromptSdlcWizardPost = (input: {
         redirect(cycleId);
         return true;
       }
-      const next = beginPromptSdlcWizardModuleEvaluate(
-        {
-          ...cycle,
-          wizard: {
-            ...cycle.wizard,
-            gate: null,
-            selectedSplitOptionId: splitId,
-            modules: modulesFromSplit(option),
-            phase: "optimize_modules",
-          },
+      const modules = modulesFromSplit(option);
+      const next: PromptSdlcLocalCycle = {
+        ...cycle,
+        status: "wizard_paused",
+        errorMessage: null,
+        revisions: [],
+        wizard: {
+          ...cycle.wizard,
+          gate: "optimize_modules",
+          selectedSplitOptionId: splitId,
+          modules,
+          phase: "optimize_modules",
+          currentModuleIndex: 0,
+          parameterValues:
+            Object.keys(cycle.wizard.parameterValues ?? {}).length > 0
+              ? (cycle.wizard.parameterValues ?? {})
+              : seedPromptSdlcWizardParameterValues(cycle.wizard.variables),
         },
-        0,
-      );
+        updatedAt: new Date().toISOString(),
+      };
       savePromptSdlcLocalCycle(input.storePath, next);
-      ensurePromptSdlcLocalCycleRunning(input.storePath, cycleId);
       redirect(cycleId);
       return true;
     }
 
     if (gate === "optimize_modules") {
-      const index = cycle.wizard.currentModuleIndex + 1;
-      if (index >= cycle.wizard.modules.length) {
+      const moduleIndex = cycle.wizard.currentModuleIndex;
+      const moduleRun = cycle.wizard.modules[moduleIndex];
+      if (moduleRun === undefined) {
+        redirect(cycleId);
+        return true;
+      }
+
+      const mergedParams = mergePromptSdlcWizardPostedParameterValues({
+        wizard: cycle.wizard,
+        modulePrompt: moduleRun.prompt,
+        posted,
+      });
+      if (!mergedParams.ok) {
+        const next: PromptSdlcLocalCycle = {
+          ...cycle,
+          errorMessage: mergedParams.errorMessage,
+          updatedAt: new Date().toISOString(),
+        };
+        savePromptSdlcLocalCycle(input.storePath, next);
+        redirect(cycleId);
+        return true;
+      }
+
+      const wizardWithParams = {
+        ...cycle.wizard,
+        parameterValues: mergedParams.parameterValues,
+      };
+
+      if (moduleRun.status === "pending") {
+        const next = beginPromptSdlcWizardModuleEvaluate(
+          {
+            ...cycle,
+            wizard: { ...wizardWithParams, gate: null },
+          },
+          moduleIndex,
+        );
+        savePromptSdlcLocalCycle(input.storePath, next);
+        ensurePromptSdlcLocalCycleRunning(input.storePath, cycleId);
+        redirect(cycleId);
+        return true;
+      }
+
+      const nextIndex = moduleIndex + 1;
+      if (nextIndex >= cycle.wizard.modules.length) {
         const next: PromptSdlcLocalCycle = {
           ...cycle,
           status: "passed",
           wizard: {
-            ...cycle.wizard,
+            ...wizardWithParams,
             gate: null,
             phase: "complete",
           },
@@ -255,9 +305,20 @@ export const tryAcceptPromptSdlcWizardPost = (input: {
         redirect(cycleId);
         return true;
       }
-      const next = beginPromptSdlcWizardModuleEvaluate(cycle, index);
+
+      const next: PromptSdlcLocalCycle = {
+        ...cycle,
+        status: "wizard_paused",
+        errorMessage: null,
+        revisions: [],
+        wizard: {
+          ...wizardWithParams,
+          gate: "optimize_modules",
+          currentModuleIndex: nextIndex,
+        },
+        updatedAt: new Date().toISOString(),
+      };
       savePromptSdlcLocalCycle(input.storePath, next);
-      ensurePromptSdlcLocalCycleRunning(input.storePath, cycleId);
       redirect(cycleId);
       return true;
     }

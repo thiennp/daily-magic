@@ -218,4 +218,118 @@ describe("tryAcceptPromptSdlcWizardPost", () => {
     expect(saved?.wizard?.gate).toBe("evaluate");
     expect(saved?.errorMessage).toContain("scored above 0");
   });
+
+  it("continues from separate into step 4 gate with modules pending", () => {
+    const storeDir = fs.mkdtempSync(
+      path.join(os.tmpdir(), "prompt-sdlc-post-separate-"),
+    );
+    const storePath = path.join(storeDir, "prompt-optimizer-cycles.json");
+    const cycle = {
+      ...createPromptSdlcLocalCycle({
+        goal: "g",
+        sourcePrompt: "p",
+        judgeModel: "claude-cli",
+        improverModel: "claude-cli",
+        workingDirectory: storeDir,
+        wizard: {
+          ...createInitialPromptSdlcWizardState("Do {{x}}"),
+          gate: "separate",
+          phase: "separate",
+          variables: [{ name: "x", description: "d", sampleValue: "hello" }],
+          parameterValues: { x: "hello" },
+          splitOptions: [
+            {
+              id: "opt-a",
+              title: "One module",
+              summary: "s",
+              topology: "chain",
+              recommended: true,
+              modules: [
+                {
+                  id: "m1",
+                  title: "Main",
+                  prompt: "Run {{x}}",
+                  order: 0,
+                },
+              ],
+            },
+          ],
+        },
+      }),
+      status: "wizard_paused" as const,
+    };
+    savePromptSdlcLocalCycle(storePath, cycle);
+
+    tryAcceptPromptSdlcWizardPost({
+      posted: new URLSearchParams({
+        intent: "wizard-continue",
+        cycleId: cycle.id,
+        wizardSplitOptionId: "opt-a",
+      }),
+      storePath,
+      response: {
+        writeHead: () => undefined,
+        end: () => undefined,
+      },
+    });
+
+    const saved = readPromptSdlcLocalCycle(storePath, cycle.id);
+    expect(saved?.wizard?.gate).toBe("optimize_modules");
+    expect(saved?.status).toBe("wizard_paused");
+    expect(saved?.wizard?.modules[0]?.status).toBe("pending");
+    expect(saved?.wizard?.modules[0]?.prompt).toBe("Run {{x}}");
+  });
+
+  it("starts module evaluate from step 4 gate when parameters are posted", () => {
+    const storeDir = fs.mkdtempSync(
+      path.join(os.tmpdir(), "prompt-sdlc-post-step4-"),
+    );
+    const storePath = path.join(storeDir, "prompt-optimizer-cycles.json");
+    const cycle = {
+      ...createPromptSdlcLocalCycle({
+        goal: "g",
+        sourcePrompt: "p",
+        judgeModel: "claude-cli",
+        improverModel: "claude-cli",
+        workingDirectory: storeDir,
+        wizard: {
+          ...createInitialPromptSdlcWizardState("Do {{x}}"),
+          gate: "optimize_modules",
+          phase: "optimize_modules",
+          variables: [{ name: "x", description: "d", sampleValue: "hello" }],
+          parameterValues: { x: "hello" },
+          modules: [
+            {
+              moduleId: "m1",
+              title: "Main",
+              prompt: "Run {{x}}",
+              status: "pending",
+              selectedRevisionRound: null,
+            },
+          ],
+          currentModuleIndex: 0,
+        },
+      }),
+      status: "wizard_paused" as const,
+    };
+    savePromptSdlcLocalCycle(storePath, cycle);
+
+    tryAcceptPromptSdlcWizardPost({
+      posted: new URLSearchParams({
+        intent: "wizard-continue",
+        cycleId: cycle.id,
+        wizardParam_x: "custom",
+      }),
+      storePath,
+      response: {
+        writeHead: () => undefined,
+        end: () => undefined,
+      },
+    });
+
+    const saved = readPromptSdlcLocalCycle(storePath, cycle.id);
+    expect(saved?.status).toBe("judging");
+    expect(saved?.wizard?.gate).toBeNull();
+    expect(saved?.revisions[0]?.promptText).toBe("Run custom");
+  });
 });

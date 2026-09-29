@@ -34,4 +34,6 @@ export default interface PromptSdlcWizardState {
   readonly runnerInstructions: string;
   /** Consumed on the next generalize/separate writer call (feedback rerun form). */
   readonly pendingStepInstructions: string;
+  /** User-edited values for `{{placeholders}}` during Step 4 module runs. */
+  readonly parameterValues: Readonly<Record<string, string>>;
 }

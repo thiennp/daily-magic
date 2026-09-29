@@ -8,9 +8,12 @@ import {
   PROMPT_SDLC_WIZARD_MAX_ROUNDS,
   PROMPT_SDLC_WIZARD_PASS_SCORE,
   readPromptSdlcWizardEvaluatePromptText,
+  buildPromptSdlcWizardSubstitutionMap,
   readPromptSdlcWizardTemplatedOrConcrete,
   recordPromptSdlcWizardAttempt,
+  seedPromptSdlcWizardParameterValues,
   selectPromptSdlcBestPrompt,
+  substitutePromptSdlcTemplateValues,
 } from "../../../../adapters/promptSdlcAwcCore";
 import { PROMPT_SDLC_MANUAL_ACTOR } from "./choosePromptSdlcLocalModels";
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
@@ -163,6 +166,7 @@ const runGeneralize = async (
         ...wizard,
         templatedPrompt: parsed.templatedPrompt,
         variables: parsed.variables,
+        parameterValues: seedPromptSdlcWizardParameterValues(parsed.variables),
       },
       step: "generalize",
       output: parsed,
@@ -303,10 +307,11 @@ export const beginPromptSdlcWizardModuleEvaluate = (
   if (moduleRun === undefined) {
     return failCycle(cycle, "This module is missing.");
   }
-  const concrete = readPromptSdlcWizardTemplatedOrConcrete({
-    ...wizard,
-    templatedPrompt: moduleRun.prompt,
-  });
+  const substitution = buildPromptSdlcWizardSubstitutionMap(wizard);
+  const concrete = substitutePromptSdlcTemplateValues(
+    moduleRun.prompt,
+    substitution,
+  );
   const runner =
     cycle.runnerModel !== undefined &&
     cycle.runnerModel !== PROMPT_SDLC_MANUAL_ACTOR
@@ -418,9 +423,24 @@ export const advancePromptSdlcWizardLocal = async (
           : paused;
       }
       const paused = pauseAtGate(next, gate);
+      const withModulePaused =
+        gate === "optimize_modules" && paused.wizard !== undefined
+          ? {
+              ...paused,
+              wizard: {
+                ...paused.wizard,
+                modules: paused.wizard.modules.map((item, index) =>
+                  index === paused.wizard!.currentModuleIndex &&
+                  item.status === "running"
+                    ? { ...item, status: "paused" as const }
+                    : item,
+                ),
+              },
+            }
+          : paused;
       return gate === "evaluate"
-        ? snapshotEvaluateWizardAttempt(paused)
-        : paused;
+        ? snapshotEvaluateWizardAttempt(withModulePaused)
+        : withModulePaused;
     }
     return next;
   }

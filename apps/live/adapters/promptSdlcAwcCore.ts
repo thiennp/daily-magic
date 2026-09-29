@@ -53,6 +53,7 @@ export {
   PROMPT_SDLC_WIZARD_SCHEMA_VERSION,
 } from "@/lib/promptOptimizer/wizard/promptSdlcWizardLimits.constant";
 export { createInitialPromptSdlcWizardState } from "@/lib/promptOptimizer/wizard/createInitialPromptSdlcWizardState";
+export { normalizePromptSdlcWizardState } from "@/lib/promptOptimizer/wizard/normalizePromptSdlcWizardState";
 export { appendPromptSdlcWizardFeedback } from "@/lib/promptOptimizer/wizard/appendPromptSdlcWizardFeedback";
 export { invalidatePromptSdlcWizardDownstream } from "@/lib/promptOptimizer/wizard/invalidatePromptSdlcWizardDownstream";
 export { buildPromptSdlcGeneralizePrompt } from "@/lib/promptOptimizer/wizard/buildPromptSdlcGeneralizePrompt";
@@ -66,5 +67,15 @@ export {
   readPromptSdlcWizardTemplatedOrConcrete,
 } from "@/lib/promptOptimizer/wizard/readPromptSdlcWizardEvalPrompt";
 export { substitutePromptSdlcTemplate } from "@/lib/promptOptimizer/wizard/substitutePromptSdlcTemplate";
+export { substitutePromptSdlcTemplateValues } from "@/lib/promptOptimizer/wizard/substitutePromptSdlcTemplateValues";
+export { listPromptTemplatePlaceholders } from "@/lib/promptOptimizer/wizard/listPromptTemplatePlaceholders";
+export {
+  buildPromptSdlcWizardSubstitutionMap,
+  seedPromptSdlcWizardParameterValues,
+} from "@/lib/promptOptimizer/wizard/buildPromptSdlcWizardSubstitutionMap";
+export {
+  mergePromptSdlcWizardPostedParameterValues,
+  readPostedWizardParameterFieldName,
+} from "@/lib/promptOptimizer/wizard/mergePromptSdlcWizardPostedParameterValues";
 export type { PromptSdlcWizardSplitOption } from "@/lib/promptOptimizer/wizard/types/PromptSdlcWizardSplitOption.type";
 export type { default as PromptSdlcWizardState } from "@/lib/promptOptimizer/wizard/types/PromptSdlcWizardState.type";

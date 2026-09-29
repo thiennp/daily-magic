@@ -1,8 +1,20 @@
 import fs from "node:fs";
 import path from "node:path";
 
+import { normalizePromptSdlcWizardState } from "../../../../adapters/promptSdlcAwcCore";
+
 import { appendPromptSdlcWizardEventLog } from "./appendPromptSdlcWizardEventLog";
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
+
+const normalizePromptSdlcLocalCycle = (
+  cycle: PromptSdlcLocalCycle,
+): PromptSdlcLocalCycle =>
+  cycle.wizard === undefined
+    ? cycle
+    : {
+        ...cycle,
+        wizard: normalizePromptSdlcWizardState(cycle.wizard),
+      };
 
 const droppedCycleIds = new Set<string>();
 
@@ -33,7 +45,9 @@ export const readPromptSdlcLocalCycles = (
 
   try {
     const parsed: unknown = JSON.parse(fs.readFileSync(storePath, "utf8"));
-    return Array.isArray(parsed) ? parsed.filter(isCycle) : [];
+    return Array.isArray(parsed)
+      ? parsed.filter(isCycle).map(normalizePromptSdlcLocalCycle)
+      : [];
   } catch {
     return [];
   }

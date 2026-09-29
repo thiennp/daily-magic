@@ -24,6 +24,8 @@ export interface StartAgentWitchInProcessServicesInput {
    * reconnect only when connection health is stale (not on every tick).
    */
   readonly reconnectWebSockets?: () => void;
+  /** Probe AWL `:43347/health` and kickstart LaunchAgents when down. */
+  readonly ensureLiveAppReachable?: () => void;
   readonly onLostMachineLease?: () => void;
 }
 
@@ -47,6 +49,7 @@ export const startAgentWitchInProcessServices = async (
       return;
     }
     input.reconnectWebSockets?.();
+    input.ensureLiveAppReachable?.();
   }, AGENT_WITCH_IN_PROCESS_WATCHDOG_INTERVAL_MS);
 
   return {
