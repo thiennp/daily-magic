@@ -37,4 +37,23 @@ describe("restorePromptSdlcWizardPlaceholdersInText", () => {
     );
     expect(text).toBe("Use {{targetFile}} only");
   });
+
+  it("does not replace shorter samples inside new placeholder names", () => {
+    const text = restorePromptSdlcWizardPlaceholdersInText(
+      "work in src/components",
+      [
+        {
+          name: "searchDir",
+          description: "dir",
+          sampleValue: "src/components",
+        },
+        {
+          name: "dir",
+          description: "suffix",
+          sampleValue: "Dir",
+        },
+      ],
+    );
+    expect(text).toBe("work in {{searchDir}}");
+  });
 });
