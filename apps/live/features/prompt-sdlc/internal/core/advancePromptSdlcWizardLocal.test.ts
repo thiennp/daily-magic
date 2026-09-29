@@ -92,6 +92,7 @@ describe("advancePromptSdlcWizardLocal", () => {
     expect(evaluating.revisions[0]?.promptText).toBe("Do refactor ProfileCard");
     expect(evaluating.passScore).toBe(70);
     expect(evaluating.maxRounds).toBe(5);
+    expect(evaluating.judgePromptTextOnly).toBe(true);
   });
 
   it("uses evaluated revision text when suggesting splits", async () => {
@@ -174,7 +175,7 @@ describe("advancePromptSdlcWizardLocal", () => {
   it("stays failed when evaluate judge returns no score instead of an empty step 2 gate", async () => {
     vi.spyOn(writerReply, "runPromptSdlcWriterReply").mockImplementation(
       async (input) => {
-        if (input.prompt.includes("Score the changes from 0 to 100")) {
+        if (input.prompt.includes("wizard step 2 (evaluate revisions)")) {
           return { ok: true, text: "Thanks, looks good.", tokens: 3 };
         }
         return { ok: true, text: "writer output", tokens: 2 };

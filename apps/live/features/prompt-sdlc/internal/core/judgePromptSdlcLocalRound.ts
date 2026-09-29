@@ -2,6 +2,7 @@ import {
   buildPromptSdlcJudgePrompt,
   buildPromptSdlcRunPrompt,
   buildPromptSdlcTokenReviewPrompt,
+  buildPromptSdlcWizardEvaluateJudgePrompt,
   PROMPT_SDLC_STOP_USER,
 } from "../../../../adapters/promptSdlcAwcCore";
 import { applyPromptSdlcLocalJudgeReply } from "./applyPromptSdlcLocalReply";
@@ -55,6 +56,9 @@ const withRun = (
 });
 
 const runnerFor = (cycle: PromptSdlcLocalCycle): string | null => {
+  if (cycle.judgePromptTextOnly === true) {
+    return null;
+  }
   if (cycle.judgeScoresOnly === true) {
     const runner = cycle.runnerModel;
     if (runner !== undefined && runner !== PROMPT_SDLC_MANUAL_ACTOR) {
@@ -230,6 +234,45 @@ const reviewTokenSpend = async (input: {
   };
 };
 
+const judgeWizardEvaluatePromptText = async (input: {
+  readonly cycle: PromptSdlcLocalCycle;
+  readonly revision: PromptSdlcLocalRevision;
+  readonly onWriterFailure?: (writer: string) => void;
+  readonly signal?: AbortSignal;
+  readonly onProgress?: (cycle: PromptSdlcLocalCycle) => void;
+}): Promise<PromptSdlcLocalCycle> => {
+  const { cycle, revision } = input;
+  if (cycle.judgeModel === PROMPT_SDLC_MANUAL_ACTOR) {
+    return cycle;
+  }
+  const scoring = { ...cycle, judgePhase: "scoring" as const };
+  input.onProgress?.(scoring);
+  const reply = await runPromptSdlcWriterReply({
+    writerAgent: cycle.judgeModel,
+    workingDirectory: promptSdlcLocalWorkingDirectory(cycle),
+    prompt: buildPromptSdlcWizardEvaluateJudgePrompt({
+      goal: cycle.goal,
+      promptText: revision.promptText,
+      passScore: cycle.passScore,
+      instructions: cycle.judgeInstructions,
+    }),
+    signal: input.signal,
+  });
+  if (!reply.ok) {
+    if (reply.stopped === true || input.signal?.aborted === true) {
+      return stoppedCycle(scoring);
+    }
+    input.onWriterFailure?.(cycle.judgeModel);
+    return failCycle(scoring, reply.errorMessage);
+  }
+  const scored = applyPromptSdlcLocalJudgeReply(
+    scoring,
+    reply.text,
+    reply.tokens,
+  );
+  return { ...scored, judgePhase: undefined };
+};
+
 export const judgePromptSdlcLocalRound = async (input: {
   readonly cycle: PromptSdlcLocalCycle;
   readonly revision: PromptSdlcLocalRevision;
@@ -238,6 +281,9 @@ export const judgePromptSdlcLocalRound = async (input: {
   readonly onProgress?: (cycle: PromptSdlcLocalCycle) => void;
 }): Promise<PromptSdlcLocalCycle> => {
   const { cycle, revision } = input;
+  if (cycle.judgePromptTextOnly === true) {
+    return judgeWizardEvaluatePromptText(input);
+  }
   const runner = runnerFor(cycle);
   const executed = await resolvePromptRun({
     cycle,

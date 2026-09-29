@@ -210,7 +210,7 @@ describe("prompt SDLC wizard full round proof (for screenshots)", () => {
             tokens: 15,
           };
         }
-        if (input.prompt.includes("Score the changes from 0 to 100")) {
+        if (input.prompt.includes("wizard step 2 (evaluate revisions)")) {
           judgeCalls += 1;
           const score = judgeCalls % 2 === 1 ? 58 : 84;
           return {
@@ -220,9 +220,20 @@ describe("prompt SDLC wizard full round proof (for screenshots)", () => {
               passed: score >= 70,
               reasons:
                 score < 70
-                  ? "Missing EU disclaimer in the simulated folder diff."
-                  : "Policy-safe reply with escalation guard.",
+                  ? "Missing EU disclaimer in the prompt text."
+                  : "Policy-safe prompt with escalation guard.",
               rawReply: String(score),
+            }),
+            tokens: 20,
+          };
+        }
+        if (input.prompt.includes("Score the changes from 0 to 100")) {
+          return {
+            ok: true,
+            text: JSON.stringify({
+              score: 88,
+              passed: true,
+              reasons: "Module run evidence looks good.",
             }),
             tokens: 20,
           };
@@ -337,8 +348,7 @@ describe("prompt SDLC wizard full round proof (for screenshots)", () => {
     expect(page4).toContain("Separated modules");
     expect(page4).toContain("Policy guard");
     expect(page4).toContain("Scored rounds for");
-    expect(page4).toContain("Round 0 — 58");
-    expect(page4).toContain("Round 1 — 84");
+    expect(page4).toContain("Round 0 — 88");
     expect(page4).toContain("Judge scored round 0");
 
     const continueWizard = (): void => {

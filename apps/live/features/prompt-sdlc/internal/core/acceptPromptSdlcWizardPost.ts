@@ -186,6 +186,7 @@ export const tryAcceptPromptSdlcWizardPost = (input: {
       const next: PromptSdlcLocalCycle = {
         ...cycle,
         status: "judging",
+        judgePromptTextOnly: false,
         errorMessage: null,
         wizard: {
           ...wizardWithRound,

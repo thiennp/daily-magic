@@ -19,6 +19,9 @@ export const isPromptSdlcLocalManualWait = (
   const revision = cycle.revisions.find(
     (item) => item.roundNumber === cycle.currentRound,
   );
+  if (cycle.judgePromptTextOnly === true) {
+    return true;
+  }
   if (revision?.run !== undefined) {
     return true;
   }

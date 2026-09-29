@@ -61,4 +61,6 @@ export interface PromptSdlcLocalCycle {
   readonly wizard?: PromptSdlcWizardState;
   /** When true, the judge scores only; runnerModel executes the prompt. */
   readonly judgeScoresOnly?: boolean;
+  /** Wizard step 2: judge scores prompt text only; no folder run. */
+  readonly judgePromptTextOnly?: boolean;
 }
