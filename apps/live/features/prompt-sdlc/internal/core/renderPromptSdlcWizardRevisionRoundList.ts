@@ -1,4 +1,5 @@
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
+import { readPromptSdlcWizardScoredRevisions } from "./readPromptSdlcWizardScoredRevisions";
 
 const escapeHtml = (value: string): string =>
   value
@@ -13,13 +14,18 @@ export const renderPromptSdlcWizardRevisionRoundList = (input: {
   readonly selectedRound?: number | null;
   readonly caption?: string;
 }): string => {
-  const scored = input.cycle.revisions.filter(
-    (item) =>
-      item.judgement?.score !== null && item.judgement?.score !== undefined,
-  );
-  if (scored.length === 0) {
+  const scored = readPromptSdlcWizardScoredRevisions(input.cycle);
+  if (scored.length === 0 && input.cycle.revisions.length === 0) {
     return "";
   }
+  const emptyNotice =
+    scored.length === 0
+      ? `<div class="alert-error">No scored revisions yet. ${
+          input.interactive
+            ? "Check the run error above, then rerun this step with feedback or restart evaluate from Step 1."
+            : "Wait for runner and judge to finish this module."
+        }</div>`
+      : "";
   const caption =
     input.caption === undefined
       ? ""
@@ -29,7 +35,7 @@ export const renderPromptSdlcWizardRevisionRoundList = (input: {
       const score = item.judgement?.score;
       const label =
         score === null || score === undefined
-          ? `Round ${item.roundNumber}`
+          ? `Round ${item.roundNumber} — not scored`
           : `Round ${item.roundNumber} — ${score}`;
       const reason = item.judgement?.reasons?.trim() ?? "";
       const reasonLine =
@@ -44,5 +50,5 @@ export const renderPromptSdlcWizardRevisionRoundList = (input: {
       return `<li>${escapeHtml(label)}${reasonLine}</li>`;
     })
     .join("");
-  return `${caption}<ul class="sdlc-wizard-revisions sdlc-wizard-module-rounds">${items}</ul>`;
+  return `${emptyNotice}${caption}<ul class="sdlc-wizard-revisions sdlc-wizard-module-rounds">${items}</ul>`;
 };

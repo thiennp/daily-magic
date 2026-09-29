@@ -42,6 +42,7 @@ export type PromptSdlcLocalModelSelection = {
   readonly writers: readonly PromptSdlcLocalWriterChoice[];
   readonly judge: string;
   readonly improver: string;
+  readonly runner: string;
 };
 
 export const describePromptSdlcLocalModels = (
@@ -63,6 +64,7 @@ export const describePromptSdlcLocalModels = (
     writers,
     judge: "",
     improver: "",
+    runner: "",
   };
 };
 
@@ -85,9 +87,15 @@ export const shownPromptSdlcLocalWriters = (
   selection: PromptSdlcLocalModelSelection,
   postedJudge: string | null,
   postedImprover: string | null,
-): { readonly judge: string; readonly improver: string } => ({
+  postedRunner: string | null = null,
+): {
+  readonly judge: string;
+  readonly improver: string;
+  readonly runner: string;
+} => ({
   judge: shownActor(selection, postedJudge, selection.judge),
   improver: shownActor(selection, postedImprover, selection.improver),
+  runner: shownActor(selection, postedRunner, selection.runner),
 });
 
 export const readPromptSdlcLocalExampleFields = (

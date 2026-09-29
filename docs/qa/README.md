@@ -54,6 +54,7 @@ Open the top `sourcePath` under `docs/qa/` when present.
 | [awi-owns-update-local.md](awi-owns-update-local.md)                                       | Update local work is AWI; the button is AWC; `/update/run` is AWB                               |
 | [task-estimate-uses-ollama-sidecar.md](task-estimate-uses-ollama-sidecar.md)               | Task time estimate is a non-blocking Ollama sidecar; history RAG calibrates it                  |
 | [prompt-sdlc.md](prompt-sdlc.md)                                                           | Prompt optimizer on this Mac: writers run in the project folder; bots call `/prompt-sdlc/agent` |
+| [prompt-sdlc-wizard-verification.md](prompt-sdlc-wizard-verification.md)                   | Post-release checklist + dogfood prompt for wizard steps 1–4 (bundle 172+)                      |
 | [awc-process-health.md](awc-process-health.md)                                             | `GET /api/health`: process liveness, release label, migration flag; 200 before Next is ready    |
 | [prompt-lab-workflow-eval.md](prompt-lab-workflow-eval.md)                                 | Prompt Lab: workflow scenarios, baselines, usage/output reports for the prompt lifecycle        |
 

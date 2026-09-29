@@ -15,6 +15,7 @@ export type PromptSdlcLocalPreferences = {
   readonly folder: string;
   readonly judge: string;
   readonly improver: string;
+  readonly runner: string;
 };
 
 const REMEMBERED_INTENTS = ["remember", "choose-folder", "run", "run-classic"];
@@ -23,6 +24,7 @@ const emptyPreferences = (): PromptSdlcLocalPreferences => ({
   folder: PROMPT_SDLC_LOCAL_DEFAULT_FOLDER,
   judge: "",
   improver: "",
+  runner: "",
 });
 
 const preferencesPath = (storePath: string): string =>
@@ -49,6 +51,7 @@ export const readPromptSdlcLocalPreferences = (
       folder: folder.length === 0 ? PROMPT_SDLC_LOCAL_DEFAULT_FOLDER : folder,
       judge: readString(record.judge),
       improver: readString(record.improver),
+      runner: readString(record.runner),
     };
   } catch {
     return emptyPreferences();
@@ -101,17 +104,20 @@ export const savePromptSdlcLocalPreferences = (input: {
   readonly folder: string | null;
   readonly judge: string | null;
   readonly improver: string | null;
+  readonly runner: string | null;
 }): void => {
   const current = readPromptSdlcLocalPreferences(input.storePath);
   const preferences = {
     folder: nextFolder(input.folder, current.folder),
     judge: nextActor(input.judge, current.judge, input.installedIds),
     improver: nextActor(input.improver, current.improver, input.installedIds),
+    runner: nextActor(input.runner, current.runner, input.installedIds),
   };
   if (
     preferences.folder === current.folder &&
     preferences.judge === current.judge &&
-    preferences.improver === current.improver
+    preferences.improver === current.improver &&
+    preferences.runner === current.runner
   ) {
     return;
   }
@@ -148,6 +154,10 @@ export const freshPromptSdlcLocalComposerDefaults = (input: {
         preferences.improver,
         input.installedIds,
       ),
+      runner: rememberedPromptSdlcLocalActor(
+        preferences.runner,
+        input.installedIds,
+      ),
     },
     defaultFolder: rememberedPromptSdlcLocalFolder(preferences.folder),
   };
@@ -175,5 +185,6 @@ export const rememberPromptSdlcLocalPostedSelection = (input: {
           : input.folder,
     judge: input.posted.get("judge"),
     improver: input.posted.get("improver"),
+    runner: input.posted.get("runner"),
   });
 };

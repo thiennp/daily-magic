@@ -170,6 +170,43 @@ describe("advancePromptSdlcWizardLocal", () => {
     expect(next.wizard?.gate).toBe("separate");
   });
 
+  it("stays failed when evaluate judge returns no score instead of an empty step 2 gate", async () => {
+    vi.spyOn(writerReply, "runPromptSdlcWriterReply").mockImplementation(
+      async (input) => {
+        if (input.prompt.includes("Score the changes from 0 to 100")) {
+          return { ok: true, text: "Thanks, looks good.", tokens: 3 };
+        }
+        return { ok: true, text: "writer output", tokens: 2 };
+      },
+    );
+
+    const paused = createPromptSdlcLocalCycle({
+      goal: "Ship a refactor prompt.",
+      sourcePrompt: "Refactor ProfileCard.",
+      judgeModel: "claude-cli",
+      improverModel: "claude-cli",
+      workingDirectory: storeDir,
+      wizard: {
+        ...createInitialPromptSdlcWizardState("Refactor ProfileCard."),
+        gate: "generalize",
+        templatedPrompt: "Do {{task}}",
+        variables: [
+          { name: "task", description: "t", sampleValue: "refactor" },
+        ],
+      },
+    });
+    const evaluating = beginPromptSdlcWizardEvaluate({
+      ...paused,
+      status: "wizard_paused",
+      wizard: { ...paused.wizard!, gate: null },
+    });
+
+    const next = await advancePromptSdlcWizardLocal(evaluating);
+    expect(next.status).toBe("failed");
+    expect(next.wizard?.gate).toBeNull();
+    expect(next.errorMessage).toContain("score");
+  });
+
   it("pauses at the separate gate when the writer fails", async () => {
     vi.spyOn(writerReply, "runPromptSdlcWriterReply").mockResolvedValue({
       ok: false,

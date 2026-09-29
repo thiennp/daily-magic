@@ -16,6 +16,7 @@ import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
 import { promptSdlcLocalWorkingDirectory } from "./promptSdlcLocalFolder";
 import { runPromptSdlcWriterReply } from "./runPromptSdlcWriterReply";
 import { advancePromptSdlcLocalCycle } from "./advancePromptSdlcLocalCycle";
+import { readPromptSdlcWizardScoredRevisions } from "./readPromptSdlcWizardScoredRevisions";
 
 const failCycle = (
   cycle: PromptSdlcLocalCycle,
@@ -53,7 +54,7 @@ const pauseAtGate = (
 ): PromptSdlcLocalCycle => ({
   ...cycle,
   status: "wizard_paused",
-  errorMessage: null,
+  errorMessage: cycle.errorMessage,
   wizard:
     cycle.wizard === undefined
       ? undefined
@@ -342,6 +343,12 @@ export const advancePromptSdlcWizardLocal = async (
         next.wizard.phase === "optimize_modules"
           ? "optimize_modules"
           : "evaluate";
+      if (
+        gate === "evaluate" &&
+        readPromptSdlcWizardScoredRevisions(next).length === 0
+      ) {
+        return next;
+      }
       if (gate === "evaluate" && next.wizard.evaluateSelectedRound === null) {
         const best = selectPromptSdlcBestPrompt(
           next.revisions.map((item) => ({

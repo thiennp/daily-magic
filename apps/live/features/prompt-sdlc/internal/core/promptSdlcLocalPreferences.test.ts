@@ -29,6 +29,7 @@ describe("promptSdlcLocalPreferences", () => {
       folder: "~",
       judge: "",
       improver: "",
+      runner: "",
     });
   });
 
@@ -43,11 +44,13 @@ describe("promptSdlcLocalPreferences", () => {
       folder,
       judge: "claude-cli",
       improver: "manual",
+      runner: "cursor",
     });
     expect(readPromptSdlcLocalPreferences(storePath)).toEqual({
       folder: displayPromptSdlcLocalFolder(folder),
       judge: "claude-cli",
       improver: "manual",
+      runner: "cursor",
     });
 
     savePromptSdlcLocalPreferences({
@@ -56,11 +59,13 @@ describe("promptSdlcLocalPreferences", () => {
       folder: "/no/such/prompt-sdlc-folder",
       judge: "not-a-writer",
       improver: null,
+      runner: null,
     });
     expect(readPromptSdlcLocalPreferences(storePath)).toEqual({
       folder: displayPromptSdlcLocalFolder(folder),
       judge: "claude-cli",
       improver: "manual",
+      runner: "cursor",
     });
 
     savePromptSdlcLocalPreferences({
@@ -69,11 +74,13 @@ describe("promptSdlcLocalPreferences", () => {
       folder: null,
       judge: "",
       improver: "cursor",
+      runner: "claude-cli",
     });
     expect(readPromptSdlcLocalPreferences(storePath)).toEqual({
       folder: displayPromptSdlcLocalFolder(folder),
       judge: "",
       improver: "cursor",
+      runner: "claude-cli",
     });
   });
 
@@ -88,6 +95,7 @@ describe("promptSdlcLocalPreferences", () => {
       folder,
       judge: "claude-cli",
       improver: "manual",
+      runner: "claude-cli",
     });
     const fresh = freshPromptSdlcLocalComposerDefaults({
       storePath,
@@ -108,6 +116,7 @@ describe("promptSdlcLocalPreferences", () => {
       expect(decision.folder).toBe(displayPromptSdlcLocalFolder(folder));
       expect(decision.judge).toBe("claude-cli");
       expect(decision.improver).toBe("manual");
+      expect(decision.runner).toBe("claude-cli");
     }
 
     const dropped = freshPromptSdlcLocalComposerDefaults({
@@ -117,6 +126,7 @@ describe("promptSdlcLocalPreferences", () => {
     });
     expect(dropped.selection.judge).toBe("");
     expect(dropped.selection.improver).toBe("manual");
+    expect(dropped.selection.runner).toBe("");
     expect(dropped.defaultFolder).toBe(displayPromptSdlcLocalFolder(folder));
   });
 
@@ -131,6 +141,7 @@ describe("promptSdlcLocalPreferences", () => {
       folder,
       judge: "manual",
       improver: "manual",
+      runner: null,
     });
     fs.rmdirSync(folder);
     const fresh = freshPromptSdlcLocalComposerDefaults({
@@ -155,6 +166,7 @@ describe("promptSdlcLocalPreferences", () => {
       folder: saved,
       judge: "claude-cli",
       improver: "claude-cli",
+      runner: null,
     });
     const planned = planPromptSdlcAgentStart({
       body: {
@@ -186,12 +198,14 @@ describe("promptSdlcLocalPreferences", () => {
         folder: "~",
         judge: "claude-cli",
         improver: "manual",
+        runner: "claude-cli",
       }),
       folder: displayPromptSdlcLocalFolder(picked),
     });
     expect(readPromptSdlcLocalPreferences(storePath).folder).toBe(
       displayPromptSdlcLocalFolder(picked),
     );
+    expect(readPromptSdlcLocalPreferences(storePath).runner).toBe("claude-cli");
 
     rememberPromptSdlcLocalPostedSelection({
       storePath,

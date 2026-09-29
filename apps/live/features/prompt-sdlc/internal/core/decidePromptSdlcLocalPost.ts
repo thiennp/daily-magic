@@ -80,6 +80,7 @@ export const decidePromptSdlcLocalPost = (input: {
     input.selection,
     input.posted?.get("judge") ?? null,
     input.posted?.get("improver") ?? null,
+    input.posted?.get("runner") ?? null,
   );
   const typedPassScore =
     input.posted?.get("passScore") ?? String(PROMPT_SDLC_PASS_SCORE);
@@ -108,7 +109,7 @@ export const decidePromptSdlcLocalPost = (input: {
     improver: shown.improver,
     judgeInstructions,
     improverInstructions,
-    runner: postedRunner ?? "",
+    runner: shown.runner,
     runnerInstructions,
   });
   if (input.posted === null) {
