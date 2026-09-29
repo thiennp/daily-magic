@@ -345,8 +345,11 @@ export const advancePromptSdlcWizardLocal = async (
         next.wizard.phase === "optimize_modules"
           ? "optimize_modules"
           : "evaluate";
+      if (next.status === "failed") {
+        return next;
+      }
       if (
-        gate === "evaluate" &&
+        (gate === "evaluate" || gate === "optimize_modules") &&
         readPromptSdlcWizardScoredRevisions(next).length === 0
       ) {
         return next;

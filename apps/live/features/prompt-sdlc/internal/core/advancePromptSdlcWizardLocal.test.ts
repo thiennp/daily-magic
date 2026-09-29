@@ -8,6 +8,7 @@ import { createInitialPromptSdlcWizardState } from "../../../../adapters/promptS
 import {
   advancePromptSdlcWizardLocal,
   beginPromptSdlcWizardEvaluate,
+  beginPromptSdlcWizardModuleEvaluate,
 } from "./advancePromptSdlcWizardLocal";
 import { createPromptSdlcLocalCycle } from "./createPromptSdlcLocalCycle";
 import {
@@ -201,6 +202,58 @@ describe("advancePromptSdlcWizardLocal", () => {
       status: "wizard_paused",
       wizard: { ...paused.wizard!, gate: null },
     });
+
+    const next = await advancePromptSdlcWizardLocal(evaluating);
+    expect(next.status).toBe("failed");
+    expect(next.wizard?.gate).toBeNull();
+    expect(next.errorMessage).toContain("score");
+  });
+
+  it("stays failed when module judge returns no score instead of an empty step 4 gate", async () => {
+    vi.spyOn(writerReply, "runPromptSdlcWriterReply").mockImplementation(
+      async (input) => {
+        if (input.prompt.includes("Score the changes from 0 to 100")) {
+          return { ok: true, text: "Thanks, looks good.", tokens: 3 };
+        }
+        return { ok: true, text: "runner output", tokens: 2 };
+      },
+    );
+
+    const paused = createPromptSdlcLocalCycle({
+      goal: "Ship a refactor prompt.",
+      sourcePrompt: "Refactor ProfileCard.",
+      judgeModel: "claude-cli",
+      improverModel: "claude-cli",
+      runnerModel: "claude-cli",
+      workingDirectory: storeDir,
+      wizard: {
+        ...createInitialPromptSdlcWizardState("Refactor ProfileCard."),
+        phase: "optimize_modules",
+        gate: "optimize_modules",
+        templatedPrompt: "Do {{task}}",
+        variables: [
+          { name: "task", description: "t", sampleValue: "refactor" },
+        ],
+        modules: [
+          {
+            moduleId: "m1",
+            title: "Main",
+            prompt: "Do {{task}}",
+            status: "pending",
+            selectedRevisionRound: null,
+          },
+        ],
+        currentModuleIndex: 0,
+      },
+    });
+    const evaluating = beginPromptSdlcWizardModuleEvaluate(
+      {
+        ...paused,
+        status: "wizard_paused",
+        wizard: { ...paused.wizard!, gate: null },
+      },
+      0,
+    );
 
     const next = await advancePromptSdlcWizardLocal(evaluating);
     expect(next.status).toBe("failed");
