@@ -45,6 +45,8 @@ describe("buildPromptSdlcLocalPageBody", () => {
     expect(html).toContain('name="improverInstructions"');
     expect(html).toContain("Judge and improver");
     expect(html).toContain("When to stop");
+    expect(html).toContain("Run starts the wizard");
+    expect(html).toContain("Classic loop skips the wizard");
     expect(html.match(/class="sdlc-tip"/g)?.length).toBe(12);
     expect(html).toContain('name="runner"');
     expect(html).toContain('data-writer-status="runner"');
@@ -341,6 +343,8 @@ describe("buildPromptSdlcLocalPageBody", () => {
     expect(html).not.toContain(goal);
     expect(html).toContain('href="/prompt-sdlc/guide"');
     expect(guide).toContain("How the prompt optimizer works");
+    expect(guide).toContain("four-step wizard");
+    expect(guide).toContain("Classic loop");
     expect(guide).toContain("Run this sample");
     expect(guide).toContain(
       `href="/prompt-sdlc?example=${PROMPT_SDLC_LOCAL_GUIDE_EXAMPLE}"`,
@@ -348,7 +352,7 @@ describe("buildPromptSdlcLocalPageBody", () => {
     expect(guide).not.toContain('name="intent" value="run"');
     expect(guide).toContain("CUSTOMER_MESSAGE");
     expect(guide).toContain("Finish");
-    expect(guide).toContain("tokens spent so far");
+    expect(guide).toContain("tokens spent");
   });
 
   it("asks for a score of the output when the judge is you", () => {

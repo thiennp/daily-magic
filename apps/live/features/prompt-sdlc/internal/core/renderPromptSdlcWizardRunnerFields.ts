@@ -24,10 +24,12 @@ export const renderPromptSdlcWizardRunnerFields = (input: {
     input.runner.length === 0
       ? `<p class="muted" data-writer-status="runner" data-writer="">Choose who runs step 4.</p>`
       : `<p class="muted" data-writer-status="runner" data-writer="${escapeHtml(input.runner)}">Checking ${escapeHtml(input.writers.find((w) => w.id === input.runner)?.label ?? input.runner)}…</p>`;
-  return `<div class="sdlc-block">
+  return `<div class="sdlc-block sdlc-runner-block">
     <p class="sdlc-block-title">Wizard — module runner (step 4)</p>
     <p class="muted">The runner executes each module prompt. The judge scores only.</p>
-    <div class="field">${renderPromptSdlcFieldHeading("Runner", "runner")}<select class="input" name="runner" data-writer-select="runner" required>${blank}${options}</select>${runnerStatus}</div>
-    <div class="field">${renderPromptSdlcFieldHeading("Runner instructions", "runnerInstructions")}<textarea class="input textarea sdlc-instruction" name="runnerInstructions" rows="3">${escapeHtml(input.runnerInstructions)}</textarea><span class="muted">Optional. Passed when the runner executes module prompts.</span></div>
+    <div class="sdlc-writer">
+      <div class="field">${renderPromptSdlcFieldHeading("Runner", "runner")}<select class="input" name="runner" data-writer-select="runner" required>${blank}${options}</select>${runnerStatus}</div>
+      <div class="field">${renderPromptSdlcFieldHeading("Runner instructions", "runnerInstructions")}<textarea class="input textarea sdlc-instruction" name="runnerInstructions" rows="3">${escapeHtml(input.runnerInstructions)}</textarea><span class="muted">Optional. Passed when the runner executes module prompts.</span></div>
+    </div>
   </div>`;
 };
