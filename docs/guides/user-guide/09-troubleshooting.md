@@ -26,6 +26,27 @@ Try this order (most issues resolve without a fresh install):
 
 ---
 
+## Agent Witch Live not responding (`:43347`)
+
+**Symptoms**
+
+- `curl http://127.0.0.1:43347/health` fails and nothing is listening on port **43347**.
+- The console can still show your **Mac online** when the background client (AWI) and bridge (AWB) are running without Live bound.
+
+**Common mistakes**
+
+- **`$AW_HOME` unset** — paths like `/agent-witch.error.log` mean the variable was empty. Use `AW_HOME="$HOME/.agent-witch"` (production install) or `AW_HOME="$HOME/.local-agent-witch"` (localhost dev) before `tail` or `cat`.
+- **`com.agent-witch-live`** — that LaunchAgent exists only when Live runs as a separate service. Most installs use one **`com.agent-witch`** (or **`com.local-agent-witch`**) process that includes Live.
+- **Literal `PORT`** in wake URLs — read the bridge port from `"$AW_HOME/wake-port.json"` (often **47892**), then `curl -X POST "http://127.0.0.1:<port>/watchdog/revive"`.
+
+**Fix**
+
+1. In the console: **On this Mac → Status & settings**. If Live is down, use the **Revive Agent Witch Live** modal (copy the Terminal block).
+2. If `http://127.0.0.1:43347/status` still loads, use the **Revive local app** section on that page.
+3. Otherwise paste the revive script from the modal, then read `"$AW_HOME/agent-witch.error.log"` if health stays down after `launchctl kickstart`.
+
+---
+
 ## Send blocked — read the banner
 
 | Banner / reason (typical)                 | Meaning                                                              | What to do                                                                   |

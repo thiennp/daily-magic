@@ -8,7 +8,8 @@ import {
   MAC_DEVICE_LOCAL_STATUS_MENU_LABEL,
   MAC_DEVICE_ROW_THIS_MAC_SUBMENU_LABEL,
 } from "@/features/agent-witch/macDevices/macDeviceRowMenuCopy.constant";
-import { openAgentWitchLocalConsole } from "@/features/agent-witch/macDevices/openAgentWitchLocalConsole";
+import ReviveAwlMacModal from "@/features/agent-witch/macDevices/ReviveAwlMacModal";
+import { openAgentWitchLocalStatus } from "@/features/agent-witch/macDevices/openAgentWitchLocalStatus";
 import { renderMacDeviceRowMenuItem } from "@/features/agent-witch/macDevices/utils/renderMacDeviceRowMenuItem";
 import { runMacDeviceRowMenuAction } from "@/features/agent-witch/macDevices/utils/runMacDeviceRowMenuAction";
 import { ArrowUpIcon, ChevronDownIcon, TrashBinIcon } from "@/icons";
@@ -30,9 +31,24 @@ export default function MacDeviceRowThisMacMenuSection({
   onDeleteLocalScript,
 }: MacDeviceRowThisMacMenuSectionProps) {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [reviveAwlOpen, setReviveAwlOpen] = useState(false);
+
+  const openLocalStatus = (): void => {
+    void openAgentWitchLocalStatus().then((result) => {
+      if (result === "unavailable") {
+        setReviveAwlOpen(true);
+      }
+    });
+  };
 
   return (
     <li className="border-t border-gray-100 dark:border-gray-800">
+      <ReviveAwlMacModal
+        isOpen={reviveAwlOpen}
+        onClose={() => {
+          setReviveAwlOpen(false);
+        }}
+      />
       <DropdownItem
         onClick={() => {
           setIsExpanded((current) => !current);
@@ -50,10 +66,7 @@ export default function MacDeviceRowThisMacMenuSection({
         <ul className="flex flex-col pb-1">
           <li>
             <DropdownItem
-              onClick={runMacDeviceRowMenuAction(
-                closeMenu,
-                openAgentWitchLocalConsole,
-              )}
+              onClick={runMacDeviceRowMenuAction(closeMenu, openLocalStatus)}
               baseClassName={nestedItemClassName}
             >
               <span>{MAC_DEVICE_LOCAL_STATUS_MENU_LABEL}</span>

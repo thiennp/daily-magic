@@ -24,6 +24,7 @@ import {
 } from "@agent-witch/live-status-health";
 import {
   buildAgentWitchLocalHeartbeatElapsedMarkup,
+  buildAgentWitchReviveAwlStatusSection,
   buildAgentWitchLocalStatusTraceSection,
 } from "@agent-witch/live-status-health/presentation";
 import {
@@ -819,6 +820,8 @@ export const startAgentWitchLocalApp = (input: {
               linkCode: ensureLinkCode(),
               installBundleVersion: installBundle.installBundleVersion,
               installBundleUpdatedAt: installBundle.installBundleUpdatedAt,
+            })}${buildAgentWitchReviveAwlStatusSection({
+              installDir: input.layout.installDir,
             })}${buildAgentWitchLocalStatusTraceSection({
               entries: readAgentWitchLocalWsTrace(input.layout),
             })}`,
