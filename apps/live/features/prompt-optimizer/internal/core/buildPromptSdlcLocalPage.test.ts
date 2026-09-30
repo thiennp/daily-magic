@@ -60,8 +60,8 @@ describe("buildPromptSdlcLocalPageBody", () => {
     expect(html).toContain("Run starts the wizard");
     expect(html).not.toContain("run-classic");
     expect(html).not.toContain("Classic loop");
-    expect(html).not.toContain('data-sdlc-history-filter="classic"');
-    expect(html.match(/class="sdlc-tip"/g)?.length).toBe(10);
+    expect(html).not.toContain("sdlc-history-filter");
+    expect(html.match(/class="sdlc-tip"/g)?.length).toBe(12);
     expect(html).toContain("Module runner");
     expect(html).toContain('name="runner"');
     expect(html).toContain('data-writer-status="runner"');

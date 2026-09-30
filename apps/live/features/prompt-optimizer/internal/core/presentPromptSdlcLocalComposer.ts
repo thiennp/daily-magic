@@ -89,6 +89,7 @@ export const presentPromptSdlcLocalComposer = async (input: {
       improverInstructions: decision.improverInstructions,
       folder: displayPromptSdlcLocalFolder(decision.workingDirectory),
       passScore: String(decision.passScore),
+      modulePassScore: String(decision.modulePassScore),
       maxRounds: String(decision.maxRounds),
       canRun: true,
       errorMessage: writerBlock,
@@ -118,6 +119,7 @@ export const presentPromptSdlcLocalComposer = async (input: {
       maxRounds: decision.maxRounds,
       wizard: {
         ...createInitialPromptSdlcWizardState(decision.prompt),
+        modulePassScore: decision.modulePassScore,
         runnerInstructions: decision.runnerInstructions,
       },
       runnerModel: decision.runner,
@@ -181,6 +183,7 @@ export const presentPromptSdlcLocalComposer = async (input: {
     runnerInstructions: decision.runnerInstructions,
     folder: decision.folder,
     passScore: decision.passScore,
+    modulePassScore: decision.modulePassScore,
     maxRounds: decision.maxRounds,
     canRun: input.selection.canRun,
     errorMessage: decision.errorMessage,

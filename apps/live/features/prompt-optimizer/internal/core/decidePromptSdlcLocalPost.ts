@@ -1,6 +1,7 @@
 import {
   type HarnessWriterAgent,
   PROMPT_SDLC_WIZARD_MAX_ROUNDS,
+  PROMPT_SDLC_WIZARD_MODULE_PASS_SCORE,
   PROMPT_SDLC_WIZARD_PASS_SCORE,
 } from "../../../../adapters/promptSdlcAwcCore";
 import {
@@ -17,6 +18,7 @@ import {
   shownPromptSdlcLocalWriters,
   type PromptSdlcLocalModelSelection,
 } from "./promptSdlcLocalForm";
+import { readPromptSdlcLocalPassScore } from "./readPromptSdlcLocalPassScore";
 
 type PromptSdlcLocalRunModels = NonNullable<
   ReturnType<typeof readPromptSdlcLocalRunModels>
@@ -30,6 +32,7 @@ type PromptSdlcLocalStartBase = {
   readonly improver: PromptSdlcLocalRunModels["improver"];
   readonly workingDirectory: string;
   readonly passScore: number;
+  readonly modulePassScore: number;
   readonly maxRounds: number;
   readonly sourceSkillFile: string;
   readonly judgeInstructions: string;
@@ -46,6 +49,7 @@ export type PromptSdlcLocalPostDecision =
       readonly prompt: string;
       readonly folder: string;
       readonly passScore: string;
+      readonly modulePassScore: string;
       readonly maxRounds: string;
       readonly errorMessage: string | null;
       readonly judge: string;
@@ -55,6 +59,19 @@ export type PromptSdlcLocalPostDecision =
       readonly runner: string;
       readonly runnerInstructions: string;
     };
+
+const readPostedPassScoreString = (
+  posted: URLSearchParams | null,
+  field: string,
+  fallback: number,
+): string => {
+  const raw = posted?.get(field)?.trim() ?? "";
+  if (raw.length === 0) {
+    return String(fallback);
+  }
+  const parsed = readPromptSdlcLocalPassScore(raw);
+  return parsed.ok ? String(parsed.passScore) : String(fallback);
+};
 
 export const decidePromptSdlcLocalPost = (input: {
   readonly posted: URLSearchParams | null;
@@ -71,7 +88,16 @@ export const decidePromptSdlcLocalPost = (input: {
     input.posted?.get("improver") ?? null,
     input.posted?.get("runner") ?? null,
   );
-  const typedPassScore = String(PROMPT_SDLC_WIZARD_PASS_SCORE);
+  const typedPassScore = readPostedPassScoreString(
+    input.posted,
+    "passScore",
+    PROMPT_SDLC_WIZARD_PASS_SCORE,
+  );
+  const typedModulePassScore = readPostedPassScoreString(
+    input.posted,
+    "modulePassScore",
+    PROMPT_SDLC_WIZARD_MODULE_PASS_SCORE,
+  );
   const typedMaxRounds = String(PROMPT_SDLC_WIZARD_MAX_ROUNDS);
   const judgeInstructions =
     input.posted?.get("judgeInstructions")?.trim() ?? "";
@@ -89,6 +115,7 @@ export const decidePromptSdlcLocalPost = (input: {
     prompt: input.prompt,
     folder,
     passScore: typedPassScore,
+    modulePassScore: typedModulePassScore,
     maxRounds: typedMaxRounds,
     errorMessage,
     judge: shown.judge,
@@ -122,6 +149,19 @@ export const decidePromptSdlcLocalPost = (input: {
     return form(typedFolder, startError);
   }
 
+  const passParsed = readPromptSdlcLocalPassScore(
+    input.posted.get("passScore") ?? typedPassScore,
+  );
+  if (!passParsed.ok) {
+    return form(typedFolder, passParsed.errorMessage);
+  }
+  const modulePassParsed = readPromptSdlcLocalPassScore(
+    input.posted.get("modulePassScore") ?? typedModulePassScore,
+  );
+  if (!modulePassParsed.ok) {
+    return form(typedFolder, modulePassParsed.errorMessage);
+  }
+
   const chosen = readPromptSdlcLocalRunModels(
     input.installedIds,
     input.posted.get("judge"),
@@ -151,7 +191,8 @@ export const decidePromptSdlcLocalPost = (input: {
     judge: chosen.judge,
     improver: chosen.improver,
     workingDirectory: folder.path,
-    passScore: PROMPT_SDLC_WIZARD_PASS_SCORE,
+    passScore: passParsed.passScore,
+    modulePassScore: modulePassParsed.passScore,
     maxRounds: PROMPT_SDLC_WIZARD_MAX_ROUNDS,
     sourceSkillFile: input.posted.get("skillFile")?.trim() ?? "",
     judgeInstructions,

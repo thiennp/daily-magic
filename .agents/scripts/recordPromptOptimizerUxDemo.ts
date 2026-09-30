@@ -93,7 +93,6 @@ const main = async (): Promise<void> => {
     if (history instanceof HTMLDetailsElement) history.open = true;
   });
   await page.waitForTimeout(700);
-  await page.locator('[data-sdlc-history-filter="wizard"]').click();
   await page.waitForTimeout(900);
   await page
     .locator("#prompt-optimizer-wizard-module-results")

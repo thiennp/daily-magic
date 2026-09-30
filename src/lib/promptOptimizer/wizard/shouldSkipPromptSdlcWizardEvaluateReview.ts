@@ -15,6 +15,7 @@ export const shouldSkipPromptSdlcWizardEvaluateReview = (input: {
     } | null;
   }[];
   readonly wizard: { readonly evaluateSelectedRound: number | null };
+  readonly passScore: number;
 }): boolean => {
   const selectedRound =
     input.wizard.evaluateSelectedRound ??
@@ -35,5 +36,8 @@ export const shouldSkipPromptSdlcWizardEvaluateReview = (input: {
   if (revision === undefined) {
     return false;
   }
-  return passesPromptSdlcWizardEvaluateQualityGate(revision.judgement);
+  return passesPromptSdlcWizardEvaluateQualityGate(
+    revision.judgement,
+    input.passScore,
+  );
 };

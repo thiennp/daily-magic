@@ -15,13 +15,13 @@ describe("summarizePromptSdlcWizardCompletion", () => {
           status: "passed" as const,
           selectedRevisionRound: 0,
           statistics: {
-            bestScore: 80,
+            bestScore: 92,
             bestRound: 0,
             bestRunOutput: "out",
             rounds: [
               {
                 roundNumber: 0,
-                score: 80,
+                score: 92,
                 passed: true,
                 runOutput: "out",
                 tokens: 12,
@@ -70,7 +70,7 @@ describe("summarizePromptSdlcWizardCompletion", () => {
           status: "passed" as const,
           selectedRevisionRound: 0,
           statistics: {
-            bestScore: 70,
+            bestScore: 95,
             bestRound: 0,
             bestRunOutput: "out",
             rounds: [],

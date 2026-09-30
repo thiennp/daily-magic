@@ -3,7 +3,7 @@ import {
   isPromptSdlcTerminalStatus,
   summarizePromptSdlcWizardCompletion,
 } from "../../../../adapters/promptSdlcAwcCore";
-import { PROMPT_SDLC_WIZARD_PASS_SCORE } from "../../../../adapters/promptSdlcAwcCore";
+import { readPromptSdlcWizardModulePassScore } from "../../../../adapters/promptSdlcAwcCore";
 import {
   labelPromptSdlcLocalModel,
   PROMPT_SDLC_MANUAL_ACTOR,
@@ -168,9 +168,10 @@ export const describePromptSdlcLocalActivity = (
       const runner = cycle.runnerModel ?? cycle.judgeModel;
       const moduleIndex = wizard.currentModuleIndex + 1;
       const moduleTotal = wizard.modules.length;
+      const modulePassScore = readPromptSdlcWizardModulePassScore(wizard);
       return liveActivity(
         `${labelPromptSdlcLocalModel(runner)} is scoring module ${moduleIndex} of ${moduleTotal}.`,
-        `Step 4 runs one trial per module (pass ≥ ${PROMPT_SDLC_WIZARD_PASS_SCORE}). This panel keeps updating.`,
+        `Step 4 runs one trial per module (pass ≥ ${modulePassScore}). This panel keeps updating.`,
       );
     }
     return liveActivity(
@@ -188,9 +189,10 @@ export const describePromptSdlcLocalActivity = (
       const runner = cycle.runnerModel ?? cycle.judgeModel;
       const moduleIndex = wizard.currentModuleIndex + 1;
       const moduleTotal = wizard.modules.length;
+      const modulePassScore = readPromptSdlcWizardModulePassScore(wizard);
       return liveActivity(
         `${labelPromptSdlcLocalModel(runner)} is running module ${moduleIndex} of ${moduleTotal}.`,
-        `The runner executes the module prompt; the judge scores output (pass ≥ ${PROMPT_SDLC_WIZARD_PASS_SCORE}). This panel keeps updating.`,
+        `The runner executes the module prompt; the judge scores output (pass ≥ ${modulePassScore}). This panel keeps updating.`,
       );
     }
     return liveActivity(

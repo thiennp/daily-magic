@@ -7,6 +7,7 @@ describe("shouldSkipPromptSdlcWizardEvaluateReview", () => {
     expect(
       shouldSkipPromptSdlcWizardEvaluateReview({
         wizard: { evaluateSelectedRound: null },
+        passScore: 70,
         revisions: [
           {
             roundNumber: 0,
@@ -27,6 +28,7 @@ describe("shouldSkipPromptSdlcWizardEvaluateReview", () => {
     expect(
       shouldSkipPromptSdlcWizardEvaluateReview({
         wizard: { evaluateSelectedRound: null },
+        passScore: 70,
         revisions: [
           {
             roundNumber: 0,

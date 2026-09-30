@@ -19,6 +19,7 @@ export const autoContinuePromptSdlcWizardEvaluateGateIfNeeded = (
     !shouldSkipPromptSdlcWizardEvaluateReview({
       revisions: cycle.revisions,
       wizard,
+      passScore: cycle.passScore,
     })
   ) {
     return cycle;

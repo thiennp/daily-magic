@@ -1,5 +1,8 @@
 import { createEmptyPromptSdlcWizardAvoidByStep } from "./createEmptyPromptSdlcWizardAvoidByStep";
-import { PROMPT_SDLC_WIZARD_SCHEMA_VERSION } from "./promptSdlcWizardLimits.constant";
+import {
+  PROMPT_SDLC_WIZARD_MODULE_PASS_SCORE,
+  PROMPT_SDLC_WIZARD_SCHEMA_VERSION,
+} from "./promptSdlcWizardLimits.constant";
 import type PromptSdlcWizardState from "./types/PromptSdlcWizardState.type";
 
 export const createInitialPromptSdlcWizardState = (
@@ -21,4 +24,5 @@ export const createInitialPromptSdlcWizardState = (
   runnerInstructions: "",
   pendingStepInstructions: "",
   parameterValues: {},
+  modulePassScore: PROMPT_SDLC_WIZARD_MODULE_PASS_SCORE,
 });

@@ -20,8 +20,8 @@ describe("describePromptSdlcWizardModulePassStatus", () => {
         rounds: [],
       },
     };
-    expect(isPromptSdlcWizardModulePassed(wizardModule)).toBe(false);
-    expect(describePromptSdlcWizardModulePassStatus(wizardModule)).toBe(
+    expect(isPromptSdlcWizardModulePassed(wizardModule, 90)).toBe(false);
+    expect(describePromptSdlcWizardModulePassStatus(wizardModule, 90)).toBe(
       "Below pass (66)",
     );
   });

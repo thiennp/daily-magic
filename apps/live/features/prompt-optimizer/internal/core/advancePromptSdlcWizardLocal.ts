@@ -7,7 +7,7 @@ import {
   parsePromptSdlcSeparateReply,
   PROMPT_SDLC_WIZARD_MAX_ROUNDS,
   PROMPT_SDLC_WIZARD_MODULE_MAX_ROUNDS,
-  PROMPT_SDLC_WIZARD_PASS_SCORE,
+  readPromptSdlcWizardModulePassScore,
   readPromptSdlcWizardEvaluatePromptText,
   buildPromptSdlcWizardSubstitutionMap,
   readPromptSdlcWizardTemplatedOrConcrete,
@@ -340,7 +340,7 @@ export const beginPromptSdlcWizardEvaluate = (
     judgeScoresOnly: false,
     judgePromptTextOnly: true,
     currentRound: 0,
-    passScore: PROMPT_SDLC_WIZARD_PASS_SCORE,
+    passScore: cycle.passScore,
     maxRounds: PROMPT_SDLC_WIZARD_MAX_ROUNDS,
     errorMessage: null,
     revisions: [{ roundNumber: 0, promptText: concrete, judgement: null }],
@@ -385,8 +385,7 @@ export const beginPromptSdlcWizardModuleEvaluate = (
     judgePromptTextOnly: false,
     runnerModel: runner,
     currentRound: 0,
-    passScore: PROMPT_SDLC_WIZARD_PASS_SCORE,
-    maxRounds: PROMPT_SDLC_WIZARD_MODULE_MAX_ROUNDS,
+    passScore: readPromptSdlcWizardModulePassScore(wizard),
     errorMessage: null,
     revisions: [{ roundNumber: 0, promptText: concrete, judgement: null }],
     wizard: {
@@ -480,6 +479,7 @@ export const advancePromptSdlcWizardLocal = async (
         shouldSkipPromptSdlcWizardEvaluateReview({
           revisions: gateCandidate.revisions,
           wizard: gateCandidate.wizard!,
+          passScore: gateCandidate.passScore,
         })
       ) {
         const snapshotted = snapshotEvaluateWizardAttempt(

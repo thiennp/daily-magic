@@ -1660,8 +1660,6 @@ form.sdlc-form textarea.input {
   resize: none;
 }
 form.sdlc-form textarea.input[name="prompt"] { min-height: 12rem; }
-.sdlc-history-filter { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.75rem; }
-.sdlc-history-filter [aria-pressed="true"] { outline: 2px solid var(--accent, #2563eb); }
 .sdlc-history-details { margin-top: 0.5rem; }
 .sdlc-history-details-summary {
   cursor: pointer;

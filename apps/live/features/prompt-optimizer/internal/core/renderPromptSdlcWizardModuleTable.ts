@@ -1,5 +1,5 @@
 import {
-  PROMPT_SDLC_WIZARD_PASS_SCORE,
+  readPromptSdlcWizardModulePassScore,
   summarizePromptSdlcWizardCompletion,
 } from "../../../../adapters/promptSdlcAwcCore";
 
@@ -24,30 +24,32 @@ export const renderPromptSdlcWizardModuleTable = (
     return "";
   }
   const summary = summarizePromptSdlcWizardCompletion(wizard);
+  const modulePassScore = readPromptSdlcWizardModulePassScore(wizard);
   const headline =
     summary.terminalStatusSuggestion === "passed"
       ? ""
-      : describePromptSdlcWizardModuleTableHeadline(summary);
-  const nearPassFloor = PROMPT_SDLC_WIZARD_PASS_SCORE - 10;
+      : describePromptSdlcWizardModuleTableHeadline(summary, modulePassScore);
+  const nearPassFloor = modulePassScore - 10;
   const rows = summary.rows
     .map((row, index) => {
       const wizardModule = wizard.modules[index];
       const scoreCell =
-        row.bestScore === null
-          ? "—"
-          : `${row.bestScore} / ≥${PROMPT_SDLC_WIZARD_PASS_SCORE}`;
+        row.bestScore === null ? "—" : `${row.bestScore} / ≥${modulePassScore}`;
       const nearPass =
         row.bestScore !== null &&
         row.bestScore >= nearPassFloor &&
-        row.bestScore < PROMPT_SDLC_WIZARD_PASS_SCORE;
+        row.bestScore < modulePassScore;
       const rowClass = nearPass ? ' class="sdlc-score-near-pass"' : "";
       const statusLabel =
         wizardModule === undefined
           ? row.status
-          : describePromptSdlcWizardModulePassStatus(wizardModule);
+          : describePromptSdlcWizardModulePassStatus(
+              wizardModule,
+              modulePassScore,
+            );
       const statusCell =
         wizardModule !== undefined &&
-        isPromptSdlcWizardModulePassed(wizardModule)
+        isPromptSdlcWizardModulePassed(wizardModule, modulePassScore)
           ? `<span aria-label="Passed">✓</span>`
           : escapeHtml(statusLabel);
       return `<tr${rowClass}><td>${escapeHtml(row.title)}</td><td>${escapeHtml(scoreCell)}</td><td>${row.tokens ?? "—"}</td><td>${statusCell}</td></tr>`;

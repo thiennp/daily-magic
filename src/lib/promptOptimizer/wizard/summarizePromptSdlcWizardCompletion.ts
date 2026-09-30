@@ -1,4 +1,4 @@
-import { PROMPT_SDLC_WIZARD_PASS_SCORE } from "./promptSdlcWizardLimits.constant";
+import { readPromptSdlcWizardModulePassScore } from "./readPromptSdlcWizardModulePassScore";
 import type PromptSdlcWizardState from "./types/PromptSdlcWizardState.type";
 
 export type PromptSdlcWizardCompletionModuleRow = {
@@ -33,13 +33,15 @@ const sumRoundTokens = (
 
 const modulePassed = (
   module: PromptSdlcWizardState["modules"][number],
+  modulePassScore: number,
 ): boolean =>
   module.status === "passed" &&
-  (module.statistics?.bestScore ?? 0) >= PROMPT_SDLC_WIZARD_PASS_SCORE;
+  (module.statistics?.bestScore ?? 0) >= modulePassScore;
 
 export const summarizePromptSdlcWizardCompletion = (
   wizard: PromptSdlcWizardState,
 ): PromptSdlcWizardCompletionSummary => {
+  const modulePassScore = readPromptSdlcWizardModulePassScore(wizard);
   const rows = wizard.modules.map((module, index) => ({
     moduleId: module.moduleId,
     title: module.title,
@@ -49,7 +51,7 @@ export const summarizePromptSdlcWizardCompletion = (
   }));
   const totalModules = rows.length;
   const passedModuleCount = rows.filter((_, index) =>
-    modulePassed(wizard.modules[index]),
+    modulePassed(wizard.modules[index], modulePassScore),
   ).length;
   const terminalStatusSuggestion =
     totalModules > 0 && passedModuleCount === totalModules

@@ -1,7 +1,7 @@
 import {
   buildPromptSdlcWizardSubstitutionMap,
   collectPromptSdlcWizardCumulativeTokens,
-  PROMPT_SDLC_WIZARD_PASS_SCORE,
+  readPromptSdlcWizardModulePassScore,
   substitutePromptSdlcTemplateValues,
 } from "../../../../adapters/promptSdlcAwcCore";
 
@@ -28,6 +28,7 @@ export const renderPromptSdlcWizardGate = (
   }
 
   const gate = wizard.gate;
+  const modulePassScore = readPromptSdlcWizardModulePassScore(wizard);
   const stepTitle =
     gate === "generalize"
       ? "Step 1 — Generalize"
@@ -109,7 +110,7 @@ export const renderPromptSdlcWizardGate = (
         )}</p>${
           moduleRun?.statistics === null || moduleRun?.statistics === undefined
             ? ""
-            : `<p class="muted">Module stats: best ${moduleRun.statistics.bestScore ?? "—"} / ≥${PROMPT_SDLC_WIZARD_PASS_SCORE} (round ${moduleRun.statistics.bestRound ?? "—"}).</p>`
+            : `<p class="muted">Module stats: best ${moduleRun.statistics.bestScore ?? "—"} / ≥${modulePassScore} (round ${moduleRun.statistics.bestRound ?? "—"}).</p>`
         }${renderPromptSdlcWizardRevisionRoundList({
           cycle,
           interactive: false,

@@ -41,4 +41,6 @@ export default interface PromptSdlcWizardState {
   readonly pendingStepInstructions: string;
   /** User-edited values for `{{placeholders}}` during Step 4 module runs. */
   readonly parameterValues: Readonly<Record<string, string>>;
+  /** Minimum judge score for a module trial to pass in Step 4. */
+  readonly modulePassScore?: number;
 }

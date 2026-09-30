@@ -1,5 +1,5 @@
 import {
-  PROMPT_SDLC_WIZARD_PASS_SCORE,
+  readPromptSdlcWizardModulePassScore,
   summarizePromptSdlcWizardCompletion,
 } from "../../../../adapters/promptSdlcAwcCore";
 
@@ -87,7 +87,7 @@ export const describePromptSdlcWizardOutcomeStepHint = (
       }
       return `Lowest: ${lowestRow.title} (${lowestRow.bestScore}) · ${formatPromptSdlcTokenCount(totalTokens)} tokens`;
     }
-    return `${summary.passedModuleCount}/${summary.totalModules} passed · ≥ ${PROMPT_SDLC_WIZARD_PASS_SCORE}`;
+    return `${summary.passedModuleCount}/${summary.totalModules} passed · ≥ ${readPromptSdlcWizardModulePassScore(wizard)}`;
   }
   return "";
 };

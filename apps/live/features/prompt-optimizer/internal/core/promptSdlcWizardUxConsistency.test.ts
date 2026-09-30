@@ -28,8 +28,8 @@ describe("wizard UX consistency fixes", () => {
       status: "judging" as const,
     };
     const html = buildPromptSdlcLocalCycleSection(cycle);
-    expect(html).toContain("70 or higher passes");
-    expect(html).not.toContain("90 or higher passes");
+    expect(html).toContain("90 or higher passes");
+    expect(html).not.toContain("70 or higher passes");
   });
 
   it("describes step 4 runner activity instead of classic judge loop", () => {
@@ -59,7 +59,7 @@ describe("wizard UX consistency fixes", () => {
       status: "judging",
     });
     expect(activity.title).toContain("running module 1 of 1");
-    expect(activity.detail).toContain("pass ≥ 70");
+    expect(activity.detail).toContain("pass ≥ 90");
   });
 
   it("omits no-scored alert when module statistics already have a best score", () => {
@@ -140,7 +140,7 @@ describe("wizard UX consistency fixes", () => {
       status: "wizard_paused" as const,
     };
     const html = renderPromptSdlcWizardGate(cycle);
-    expect(html).toContain("best 82 / ≥70");
+    expect(html).toContain("best 82 / ≥90");
   });
 
   it("headline names below-pass modules explicitly", () => {
@@ -180,7 +180,8 @@ describe("wizard UX consistency fixes", () => {
     summarizePromptSdlcWizardCompletion(wizard);
     const headline = describePromptSdlcWizardModuleTableHeadline(
       summarizePromptSdlcWizardCompletion(wizard),
+      90,
     );
-    expect(headline).toContain("1 module scored below 70");
+    expect(headline).toContain("2 modules scored below 90");
   });
 });

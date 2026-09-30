@@ -60,9 +60,11 @@ export type { default as PromptSdlcCycleView } from "@/lib/promptOptimizer/types
 export {
   PROMPT_SDLC_WIZARD_MAX_ROUNDS,
   PROMPT_SDLC_WIZARD_MODULE_MAX_ROUNDS,
+  PROMPT_SDLC_WIZARD_MODULE_PASS_SCORE,
   PROMPT_SDLC_WIZARD_PASS_SCORE,
   PROMPT_SDLC_WIZARD_SCHEMA_VERSION,
 } from "@/lib/promptOptimizer/wizard/promptSdlcWizardLimits.constant";
+export { readPromptSdlcWizardModulePassScore } from "@/lib/promptOptimizer/wizard/readPromptSdlcWizardModulePassScore";
 export { PROMPT_SDLC_COMPOSE_INTRO } from "@/lib/promptOptimizer/promptSdlcComposeIntro.constant";
 export { createInitialPromptSdlcWizardState } from "@/lib/promptOptimizer/wizard/createInitialPromptSdlcWizardState";
 export { normalizePromptSdlcWizardState } from "@/lib/promptOptimizer/wizard/normalizePromptSdlcWizardState";

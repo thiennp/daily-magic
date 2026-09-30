@@ -34,6 +34,7 @@ describe("renderPromptSdlcFieldTip", () => {
       "improver",
       "improverInstructions",
       "passScore",
+      "modulePassScore",
       "roundLimit",
       "runner",
       "runnerInstructions",

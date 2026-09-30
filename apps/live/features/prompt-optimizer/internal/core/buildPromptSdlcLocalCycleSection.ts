@@ -1,5 +1,6 @@
 import {
-  PROMPT_SDLC_WIZARD_PASS_SCORE,
+  PROMPT_SDLC_WIZARD_MAX_ROUNDS,
+  readPromptSdlcWizardModulePassScore,
   summarizePromptSdlcWizardCompletion,
   buildPromptSdlcSteps,
   isPromptSdlcTerminalStatus,
@@ -137,7 +138,10 @@ export const buildPromptSdlcLocalCycleSection = (
     cycle.wizard.gate === "optimize_modules";
   const scoringGuidePassScore =
     cycle.wizard !== undefined && !wizardRunComplete
-      ? PROMPT_SDLC_WIZARD_PASS_SCORE
+      ? cycle.wizard.phase === "optimize_modules" ||
+        cycle.wizard.gate === "optimize_modules"
+        ? readPromptSdlcWizardModulePassScore(cycle.wizard)
+        : cycle.passScore
       : cycle.passScore;
   const scoreScale = showScoreScale
     ? `<div class="sdlc-run-panel sdlc-run-panel-scoring"><h3 class="sdlc-run-panel-title">Scoring guide</h3>${renderPromptSdlcLocalScoreScale(scoringGuidePassScore)}</div>`

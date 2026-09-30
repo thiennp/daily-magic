@@ -51,9 +51,15 @@ export const PROMPT_SDLC_FIELD_TIPS = {
       "Keep the reply under four sentences.\nInput: Where is my refund?\nWanted output: The ticket has no refund. Ask which order.",
   },
   passScore: {
-    title: "Pass score",
+    title: "Step 2 pass score",
     practice:
-      "The run passes at this score. 90 is the usual bar. Lower it when a useful prompt is enough.",
+      "Wizard Step 2 (evaluate) passes when the judge scores the templated prompt at or above this value. Default 70.",
+    example: "70",
+  },
+  modulePassScore: {
+    title: "Step 4 pass score",
+    practice:
+      "Wizard Step 4 (optimize modules) passes each module trial when the judge scores the run output at or above this value. Default 90.",
     example: "90",
   },
   roundLimit: {

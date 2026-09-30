@@ -117,6 +117,7 @@ const pageBody = (installDir: string, cycle: PromptSdlcLocalCycle): string =>
     improver: "claude-cli",
     folder: installDir,
     passScore: "70",
+    modulePassScore: "90",
     canRun: true,
     errorMessage: null,
     cycle,
@@ -228,11 +229,12 @@ describe("prompt SDLC wizard full round proof (for screenshots)", () => {
           };
         }
         if (input.prompt.includes("Score the changes from 0 to 100")) {
+          const moduleScore = 92;
           return {
             ok: true,
             text: JSON.stringify({
-              score: 88,
-              passed: true,
+              score: moduleScore,
+              passed: moduleScore >= 90,
               reasons: "Module run evidence looks good.",
             }),
             tokens: 20,
@@ -379,7 +381,7 @@ describe("prompt SDLC wizard full round proof (for screenshots)", () => {
     const page4 = pageBody(installDir, paused);
     expect(page4).toContain("Separated modules");
     expect(page4).toContain("Scored rounds for");
-    expect(page4).toContain("Trial run — 88");
+    expect(page4).toContain("Trial run — 92");
     expect(page4).toContain("Judge scored round 0");
 
     continueWizard();

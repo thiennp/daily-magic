@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   PROMPT_SDLC_WIZARD_MAX_ROUNDS,
+  PROMPT_SDLC_WIZARD_MODULE_PASS_SCORE,
   PROMPT_SDLC_WIZARD_PASS_SCORE,
 } from "../../../../adapters/promptSdlcAwcCore";
 import { decidePromptSdlcLocalPost } from "./decidePromptSdlcLocalPost";
@@ -27,6 +28,8 @@ describe("readPromptSdlcLocalPassScore", () => {
         goal: "Stay in the facts.",
         prompt: "Be helpful.",
         folder: "~",
+        passScore: "75",
+        modulePassScore: "88",
         judge: "claude-cli",
         improver: "claude-cli",
         runner: "claude-cli",
@@ -40,7 +43,8 @@ describe("readPromptSdlcLocalPassScore", () => {
 
     expect(decision.kind).toBe("start");
     if (decision.kind === "start") {
-      expect(decision.passScore).toBe(PROMPT_SDLC_WIZARD_PASS_SCORE);
+      expect(decision.passScore).toBe(75);
+      expect(decision.modulePassScore).toBe(88);
       expect(decision.maxRounds).toBe(PROMPT_SDLC_WIZARD_MAX_ROUNDS);
       expect(decision.runner).toBe("claude-cli");
     }

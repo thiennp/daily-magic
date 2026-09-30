@@ -9,7 +9,6 @@ import {
   PROMPT_SDLC_NODE_DIALOG,
   PROMPT_SDLC_NODE_DIALOG_SCRIPT,
 } from "./buildPromptSdlcLocalStepTree";
-import { PROMPT_SDLC_HISTORY_FILTER_SCRIPT } from "./promptSdlcHistoryFilterScript";
 import { PROMPT_SDLC_LOCAL_FORM_SCRIPT } from "./promptSdlcLocalFormScript";
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
 import type { PromptSdlcLocalWriterChoice } from "./promptSdlcLocalForm";
@@ -30,9 +29,11 @@ import { renderPromptSdlcLocalWriterFields } from "./renderPromptSdlcLocalWriter
 import {
   PROMPT_SDLC_COMPOSE_INTRO,
   PROMPT_SDLC_WIZARD_MAX_ROUNDS,
+  PROMPT_SDLC_WIZARD_MODULE_PASS_SCORE,
   PROMPT_SDLC_WIZARD_PASS_SCORE,
   isPromptSdlcTerminalStatus,
 } from "../../../../adapters/promptSdlcAwcCore";
+import { renderPromptSdlcLocalPassScoreField } from "./renderPromptSdlcLocalPassScore";
 const readComposeCanRun = (
   goal: string,
   prompt: string,
@@ -59,6 +60,7 @@ export const buildPromptSdlcLocalPageBody = (input: {
   readonly runnerInstructions?: string;
   readonly folder: string;
   readonly passScore: string;
+  readonly modulePassScore?: string;
   readonly maxRounds?: string;
   readonly canRun: boolean;
   readonly errorMessage: string | null;
@@ -104,6 +106,23 @@ export const buildPromptSdlcLocalPageBody = (input: {
     runner: shown.runner,
     runnerInstructions: shown.runnerInstructions,
   });
+  const qualityThresholdFields = `${renderPromptSdlcLocalPassScoreField({
+    fieldTipKey: "passScore",
+    label: "Step 2 pass score",
+    inputName: "passScore",
+    inputId: "sdlc-pass-step2",
+    passScore: shown.passScore,
+    defaultScore: PROMPT_SDLC_WIZARD_PASS_SCORE,
+    usualMark: PROMPT_SDLC_WIZARD_PASS_SCORE,
+  })}${renderPromptSdlcLocalPassScoreField({
+    fieldTipKey: "modulePassScore",
+    label: "Step 4 pass score",
+    inputName: "modulePassScore",
+    inputId: "sdlc-pass-step4",
+    passScore: shown.modulePassScore,
+    defaultScore: PROMPT_SDLC_WIZARD_MODULE_PASS_SCORE,
+    usualMark: PROMPT_SDLC_WIZARD_MODULE_PASS_SCORE,
+  })}`;
   const intro = PROMPT_SDLC_COMPOSE_INTRO;
   const locked = shown.running
     ? `<p class="sdlc-locked" data-sdlc-locked>This run is using these choices.</p>`
@@ -188,6 +207,7 @@ export const buildPromptSdlcLocalPageBody = (input: {
             ${renderPromptSdlcFieldHeading("Prompt", "prompt")}
             <textarea class="input textarea" name="prompt" rows="10" required>${escapeHtml(shown.prompt)}</textarea>
           </div>
+          ${qualityThresholdFields}
         </div>
           <div class="sdlc-compose-step-actions">
             <button type="button" class="btn btn-secondary" data-sdlc-compose-back>Back</button>
@@ -215,7 +235,7 @@ export const buildPromptSdlcLocalPageBody = (input: {
           <div class="sdlc-submit-bar" data-sdlc-submit-bar>
           <p class="sdlc-writer-summary" data-sdlc-writer-summary hidden></p>
           <p class="muted sdlc-run-hint" data-sdlc-run-hint role="status" hidden></p>
-          <p class="muted sdlc-wizard-limits-callout" data-sdlc-wizard-limits-callout">Wizard: pass score ${PROMPT_SDLC_WIZARD_PASS_SCORE}, up to ${PROMPT_SDLC_WIZARD_MAX_ROUNDS} scored revisions in Step 2; Step 4 runs one trial per module.</p>
+          <p class="muted sdlc-wizard-limits-callout" data-sdlc-wizard-limits-callout">Wizard: Step 2 pass ≥ ${escapeHtml(shown.passScore)}; Step 4 pass ≥ ${escapeHtml(shown.modulePassScore)}; up to ${PROMPT_SDLC_WIZARD_MAX_ROUNDS} scored revisions in Step 2; Step 4 runs one trial per module.</p>
           <div class="sdlc-compose-step-actions">
             <button type="button" class="btn btn-secondary" data-sdlc-compose-back>Back</button>
             <button class="btn btn-primary sdlc-run-wizard-btn" type="submit" name="intent" value="run" data-sdlc-run data-sdlc-run-wizard data-sdlc-run-state="${runButtonState}" data-can-run="${composeCanRun ? "true" : "false"}"${runButtonBusy}${shown.running ? " disabled" : ""}>${runButtonInner}</button>
@@ -227,6 +247,6 @@ export const buildPromptSdlcLocalPageBody = (input: {
       </details>
       </form>
     </section>`;
-  const scripts = `${PROMPT_SDLC_LOCAL_LIVE_STYLE}${PROMPT_SDLC_LOCAL_LIVE_SCRIPT}${PROMPT_SDLC_WIZARD_CLIENT_SCRIPT}${PROMPT_SDLC_LOCAL_FORM_SCRIPT}${PROMPT_SDLC_SKILL_SELECT_SCRIPT}${PROMPT_SDLC_HISTORY_FILTER_SCRIPT}`;
+  const scripts = `${PROMPT_SDLC_LOCAL_LIVE_STYLE}${PROMPT_SDLC_LOCAL_LIVE_SCRIPT}${PROMPT_SDLC_WIZARD_CLIENT_SCRIPT}${PROMPT_SDLC_LOCAL_FORM_SCRIPT}${PROMPT_SDLC_SKILL_SELECT_SCRIPT}`;
   return `${error}${skillNotice}${form}${resumeBanner}${cycle}${wizardGateSlot}${nodeDialog}${renderPromptSdlcLocalHistory(input.history, input.cycle?.id ?? null)}${scripts}`;
 };
