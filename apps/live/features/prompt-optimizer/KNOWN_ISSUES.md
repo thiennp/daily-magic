@@ -1,6 +1,10 @@
 # Prompt optimizer — known issues
 
-No open issues. Recent fixes (bundle **166–185**):
+No open issues. Recent fixes (bundle **166–186**):
+
+- Wizard completion uses honest **passed** vs **stopped** when not every module meets the wizard pass score; outcome table lists per-module score, tokens, and status (bundle **186**).
+- Compose: classic pass/round limits under **Classic loop options**, wizard limits callout, role-step table, collapsed instruction fields, runner prefilled from judge; history shows **Wizard · Step N**; field tips close on Escape with `aria-expanded` (bundle **186**).
+- Step 3 chain/parallel badges and explainer; Step 4 chain handoff preview with skip/no-output reasons; cumulative wizard tokens on gates when statistics exist (bundle **186**).
 
 - Classic loop submit button follows the same writer readiness as Run (`querySelectorAll("[data-sdlc-run]")`); run hint explains why buttons stay disabled (bundle **185**).
 - Agent API `POST /prompt-optimizer/agent` uses classic loop defaults (pass 90, max rounds 10) instead of wizard 70/5 (bundle **185**).
