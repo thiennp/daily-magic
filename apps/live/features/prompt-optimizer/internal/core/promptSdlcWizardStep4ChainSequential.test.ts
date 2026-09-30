@@ -9,6 +9,7 @@ import {
   PROMPT_SDLC_WIZARD_MODULE_MAX_ROUNDS,
 } from "../../../../adapters/promptSdlcAwcCore";
 import { advancePromptSdlcWizardLocal } from "./advancePromptSdlcWizardLocal";
+import { buildPromptSdlcLocalArtifactDocument } from "./buildPromptSdlcLocalArtifactDocument";
 import { buildPromptSdlcLocalPageBody } from "./buildPromptSdlcLocalPage";
 import { createPromptSdlcLocalCycle } from "./createPromptSdlcLocalCycle";
 import {
@@ -126,7 +127,10 @@ describe("wizard step 4 chain modules", () => {
     fs.mkdirSync(ARTIFACTS, { recursive: true });
     fs.writeFileSync(
       path.join(ARTIFACTS, "prompt-optimizer-step4-chain-gate.html"),
-      `<!DOCTYPE html><html><head><meta charset="utf-8"><title>Step 4</title><link rel="stylesheet" href="data:,"></head><body>${html}</body></html>`,
+      buildPromptSdlcLocalArtifactDocument({
+        title: "Step 4 — Optimize modules",
+        body: html,
+      }),
     );
     expect(html).toContain("Module stats: best 75");
   });
