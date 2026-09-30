@@ -156,6 +156,17 @@ export const PROMPT_SDLC_WIZARD_CLIENT_SCRIPT = `<script>
   const announceCopy = (message) => {
     const live = document.getElementById("sdlc-run-live-region");
     if (live instanceof HTMLElement) live.textContent = message;
+    const toast = document.getElementById("sdlc-run-toast");
+    if (!(toast instanceof HTMLElement)) return;
+    toast.textContent = message;
+    toast.hidden = false;
+    toast.classList.add("sdlc-run-toast-visible");
+    window.clearTimeout(announceCopy._hideTimer);
+    announceCopy._hideTimer = window.setTimeout(() => {
+      toast.hidden = true;
+      toast.classList.remove("sdlc-run-toast-visible");
+      toast.textContent = "";
+    }, 2800);
   };
 
   const copyTextWithFeedback = (button, text, okLabel, announceOk, announceFail) => {
@@ -168,7 +179,7 @@ export const PROMPT_SDLC_WIZARD_CLIENT_SCRIPT = `<script>
         announceCopy(announceOk);
         window.setTimeout(() => {
           button.textContent = previous;
-        }, 2000);
+        }, 2500);
       })
       .catch(() => {
         announceCopy(announceFail);

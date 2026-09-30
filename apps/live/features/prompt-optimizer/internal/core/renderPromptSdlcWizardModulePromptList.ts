@@ -16,7 +16,7 @@ export const renderPromptSdlcWizardModulePromptList = (
   }
   const items = wizard.modules
     .map((item) => {
-      return `<li class="sdlc-wizard-module-prompt"><strong>${escapeHtml(item.title)}</strong><div class="sdlc-wizard-module-prompt-row"><pre class="sdlc-pre sdlc-wizard-chunk-prompt">${escapeHtml(item.prompt)}</pre><button type="button" class="btn btn-secondary sdlc-wizard-copy-one" data-sdlc-copy-module-prompt>Copy</button></div></li>`;
+      return `<li class="sdlc-wizard-module-prompt"><strong>${escapeHtml(item.title)}</strong><div class="sdlc-wizard-module-prompt-row"><pre class="sdlc-pre sdlc-wizard-chunk-prompt">${escapeHtml(item.prompt)}</pre><button type="button" class="btn btn-secondary sdlc-wizard-copy-one sdlc-copy-feedback-btn" data-sdlc-copy-module-prompt>Copy prompt</button></div></li>`;
     })
     .join("");
   return `<ul class="sdlc-wizard-chunks sdlc-wizard-module-prompt-list">${items}</ul>`;

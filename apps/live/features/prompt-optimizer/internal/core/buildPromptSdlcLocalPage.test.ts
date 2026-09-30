@@ -603,7 +603,9 @@ describe("buildPromptSdlcLocalPageBody", () => {
     expect(html).toContain("Wizard finished");
     expect(html).toContain("Review settings");
     expect(html).toContain("prompt-optimizer-wizard-module-results");
-    expect(html).toContain("data-sdlc-copy-wizard-modules");
+    expect(html).toContain("Copy all prompts (Markdown)");
+    expect(html).toContain('id="sdlc-run-toast"');
+    expect(html).toContain("#prompt-optimizer-wizard-module-results");
     expect(html).toContain("4/4 wizard steps complete");
     expect(html).not.toContain("data-sdlc-jump-wizard-results");
     expect(html).toContain("New prompt");

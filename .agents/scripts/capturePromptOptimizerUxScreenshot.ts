@@ -11,7 +11,7 @@ import { buildPromptSdlcLocalPageBody } from "../../apps/live/features/prompt-op
 import { createPromptSdlcLocalCycle } from "../../apps/live/features/prompt-optimizer/internal/core/createPromptSdlcLocalCycle";
 
 const ARTIFACTS = "/opt/cursor/artifacts";
-const BUNDLE = "195";
+const BUNDLE = "196";
 
 const finishedWizard = (): ReturnType<typeof createPromptSdlcLocalCycle> => {
   const wizard = {
@@ -48,13 +48,13 @@ const finishedWizard = (): ReturnType<typeof createPromptSdlcLocalCycle> => {
         status: "passed" as const,
         selectedRevisionRound: null,
         statistics: {
-          bestScore: 78,
+          bestScore: 66,
           bestRound: 0,
           bestRunOutput: "Checklist output B",
           rounds: [
             {
               roundNumber: 0,
-              score: 78,
+              score: 66,
               passed: true,
               runOutput: "Checklist output B",
               tokens: 190,
@@ -67,8 +67,8 @@ const finishedWizard = (): ReturnType<typeof createPromptSdlcLocalCycle> => {
   summarizePromptSdlcWizardCompletion(wizard);
   return {
     ...createPromptSdlcLocalCycle({
-      goal: "Dogfood wizard UX bundle 195",
-      sourcePrompt: "Weak prompt",
+      goal: "Dogfood wizard UX bundle 196",
+      sourcePrompt: "Verify the feature works (vague starter prompt)",
       judgeModel: "claude-cli",
       improverModel: "claude-cli",
       runnerModel: "claude-cli",
@@ -169,6 +169,11 @@ const main = async (): Promise<void> => {
       history.open = true;
     }
   });
+  await page
+    .locator("#prompt-optimizer-wizard-module-results")
+    .scrollIntoViewIfNeeded();
+  await page.locator("[data-sdlc-copy-wizard-modules]").click();
+  await page.waitForTimeout(400);
   await page.screenshot({ path: pngPath, fullPage: true });
   await browser.close();
 

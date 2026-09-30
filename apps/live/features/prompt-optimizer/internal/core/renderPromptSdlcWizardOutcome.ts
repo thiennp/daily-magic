@@ -58,10 +58,12 @@ export const renderPromptSdlcWizardOutcome = (
     : `<div class="sdlc-wizard-outcome-head-actions"><button type="button" class="btn btn-secondary sdlc-wizard-outcome-toggle" data-sdlc-outcome-expand-all>Expand all</button><button type="button" class="btn btn-secondary sdlc-wizard-outcome-toggle" data-sdlc-outcome-collapse-all>Collapse all</button></div>`;
 
   const processBlock = wizardComplete
-    ? `<details class="sdlc-wizard-process-details"><summary class="sdlc-wizard-process-details-summary">Process details · steps 1–3</summary><div class="sdlc-wizard-process-details-body">${stepBodies}</div></details>`
+    ? `<div class="sdlc-wizard-process-details-body">${stepBodies}</div>`
     : stepBodies;
 
-  const panelTitle = wizardComplete ? "Process details" : "Step details";
+  const panelTitle = wizardComplete
+    ? "Process details · steps 1–3"
+    : "Step details";
 
   return `<div class="sdlc-run-panel sdlc-wizard-outcome" id="prompt-optimizer-wizard-outcome"><div class="sdlc-wizard-outcome-head"><h3 class="sdlc-run-panel-title">${panelTitle}</h3>${outcomeActions}</div>${processBlock}</div>`;
 };

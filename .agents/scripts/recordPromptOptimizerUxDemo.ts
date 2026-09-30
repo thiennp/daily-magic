@@ -11,7 +11,7 @@ import { buildPromptSdlcLocalPageBody } from "../../apps/live/features/prompt-op
 import { createPromptSdlcLocalCycle } from "../../apps/live/features/prompt-optimizer/internal/core/createPromptSdlcLocalCycle";
 
 const ARTIFACTS = "/opt/cursor/artifacts";
-const BUNDLE = "195";
+const BUNDLE = "196";
 
 const finishedWizard = (): ReturnType<typeof createPromptSdlcLocalCycle> => {
   const wizard = {
@@ -48,13 +48,13 @@ const finishedWizard = (): ReturnType<typeof createPromptSdlcLocalCycle> => {
         status: "passed" as const,
         selectedRevisionRound: null,
         statistics: {
-          bestScore: 78,
+          bestScore: 66,
           bestRound: 0,
           bestRunOutput: "Checklist output B",
           rounds: [
             {
               roundNumber: 0,
-              score: 78,
+              score: 66,
               passed: true,
               runOutput: "Checklist output B",
               tokens: 190,
@@ -67,8 +67,8 @@ const finishedWizard = (): ReturnType<typeof createPromptSdlcLocalCycle> => {
   summarizePromptSdlcWizardCompletion(wizard);
   return {
     ...createPromptSdlcLocalCycle({
-      goal: "Dogfood wizard UX bundle 195",
-      sourcePrompt: "Weak prompt",
+      goal: "Dogfood wizard UX bundle 196",
+      sourcePrompt: "Verify the feature works (vague starter prompt)",
       judgeModel: "claude-cli",
       improverModel: "claude-cli",
       runnerModel: "claude-cli",
@@ -113,16 +113,23 @@ const main = async (): Promise<void> => {
     ARTIFACTS,
     `prompt-optimizer-ux-bundle-${BUNDLE}.html`,
   );
+  const videoPath = path.join(
+    ARTIFACTS,
+    `prompt-optimizer-ux-bundle-${BUNDLE}-demo.mp4`,
+  );
   fs.writeFileSync(htmlPath, html);
 
   const browser = await chromium.launch({
-    headless: false,
-    slowMo: 350,
-    args: ["--start-maximized"],
+    headless: true,
+    slowMo: 280,
   });
   const context = await browser.newContext({
     viewport: { width: 1280, height: 900 },
     permissions: ["clipboard-read", "clipboard-write"],
+    recordVideo: {
+      dir: ARTIFACTS,
+      size: { width: 1280, height: 900 },
+    },
   });
   const page = await context.newPage();
   await page.goto(`file://${htmlPath}`, { waitUntil: "networkidle" });
@@ -132,17 +139,31 @@ const main = async (): Promise<void> => {
       history.open = true;
     }
   });
-  await page.waitForTimeout(1200);
+  await page.waitForTimeout(900);
+  await page.locator("#prompt-optimizer-run").scrollIntoViewIfNeeded();
+  await page.waitForTimeout(600);
   await page
     .locator("#prompt-optimizer-wizard-module-results")
     .scrollIntoViewIfNeeded();
-  await page.waitForTimeout(800);
+  await page.waitForTimeout(700);
   const copyAll = page.locator("[data-sdlc-copy-wizard-modules]");
   await copyAll.click();
-  await page.waitForTimeout(2200);
+  await page.waitForTimeout(2600);
   await page.locator("[data-sdlc-copy-module-prompt]").first().click();
-  await page.waitForTimeout(2200);
+  await page.waitForTimeout(2600);
+  await page
+    .locator(".sdlc-wizard-source-compare summary")
+    .click({ force: true });
+  await page.waitForTimeout(1200);
+
+  const video = page.video();
+  await page.close();
+  await context.close();
+  if (video !== null) {
+    await video.saveAs(videoPath);
+  }
   await browser.close();
+  console.log(`Wrote ${videoPath}`);
 };
 
 void main();

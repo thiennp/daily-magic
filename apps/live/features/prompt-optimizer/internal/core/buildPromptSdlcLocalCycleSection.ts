@@ -69,7 +69,7 @@ export const buildPromptSdlcLocalCycleSection = (
       summarizePromptSdlcWizardCompletion(cycle.wizard).passedModuleCount > 0);
   const successActions =
     activitySuccess && cycle.wizard !== undefined
-      ? `<p class="sdlc-run-success-actions"><a class="btn btn-primary" href="/prompt-optimizer?cycle=${escapeHtml(cycle.id)}&amp;export=wizard-markdown">Download report (.md)</a><button type="button" class="btn btn-secondary" data-sdlc-rerun-same title="Open compose with your last folder, models, and pass score">Re-run same settings</button></p><p class="muted sdlc-rerun-hint">Re-run keeps settings · New prompt clears the form.</p>`
+      ? `<p class="sdlc-run-success-actions"><a class="btn btn-primary" href="/prompt-optimizer?cycle=${escapeHtml(cycle.id)}&amp;export=wizard-markdown">Download report (.md)</a><a class="btn btn-secondary" href="#prompt-optimizer-wizard-module-results">View module results</a><button type="button" class="btn btn-secondary" data-sdlc-rerun-same title="Open compose with your last folder, models, and pass score">Re-run same settings</button></p><p class="muted sdlc-rerun-hint">Re-run keeps settings · New prompt clears the form.</p>`
       : "";
   const detailBlock =
     activity.detail.length === 0 && successActions.length === 0
@@ -171,7 +171,7 @@ export const buildPromptSdlcLocalCycleSection = (
   const runBody = wizardRunComplete
     ? `${error}${wizardModuleResults}${wizardOutcome}${manual}${best}`
     : `${error}${gridBlock}${manual}${wizardOutcome}${best}`;
-  const liveRegion = `<div id="sdlc-run-live-region" class="sdlc-sr-only" aria-live="polite" aria-atomic="true"></div>`;
+  const liveRegion = `<div id="sdlc-run-live-region" class="sdlc-sr-only" aria-live="polite" aria-atomic="true"></div><div id="sdlc-run-toast" class="sdlc-run-toast" role="status" aria-live="polite" hidden></div>`;
   const completeNote = wizardRunComplete
     ? `<p class="muted sdlc-run-complete-note">4/4 wizard steps complete.</p>`
     : "";

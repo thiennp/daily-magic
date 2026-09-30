@@ -711,6 +711,32 @@ form.sdlc-form { display: flex; flex-direction: column; }
   margin-bottom: 0.5rem;
 }
 .sdlc-wizard-module-results-head .sdlc-run-panel-title { margin: 0; }
+.sdlc-wizard-module-results-sub { margin: 0.15rem 0 0; font-size: 0.8125rem; }
+.sdlc-copy-feedback-btn { min-width: 11.5rem; justify-content: center; }
+.sdlc-run-toast {
+  position: fixed;
+  bottom: 1.25rem;
+  right: 1.25rem;
+  z-index: 40;
+  max-width: min(22rem, calc(100vw - 2rem));
+  padding: 0.65rem 1rem;
+  border-radius: var(--aw-radius-lg);
+  background: var(--aw-zinc-900);
+  color: #fff;
+  font-size: 0.875rem;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.2);
+  opacity: 0;
+  transform: translateY(0.35rem);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  pointer-events: none;
+}
+.sdlc-run-toast-visible { opacity: 1; transform: translateY(0); }
+.sdlc-wizard-source-compare { margin: 0 0 0.75rem; font-size: 0.875rem; }
+.sdlc-wizard-source-prompt { margin: 0.5rem 0 0; max-height: 8rem; overflow: auto; }
+.sdlc-wizard-outcome-table tr.sdlc-score-near-pass td:nth-child(2) {
+  color: #b45309;
+  font-weight: 600;
+}
 .sdlc-wizard-module-prompt-row {
   display: flex;
   flex-wrap: wrap;

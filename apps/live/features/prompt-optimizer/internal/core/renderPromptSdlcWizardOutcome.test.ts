@@ -24,7 +24,7 @@ describe("renderPromptSdlcWizardOutcome", () => {
       status: "stopped",
     });
     expect(html).toContain('id="prompt-optimizer-wizard-outcome"');
-    expect(html).toContain("Process details");
+    expect(html).toContain("Process details · steps 1–3");
   });
 
   it("renders process details without step 4 when the wizard is complete", () => {
@@ -66,7 +66,8 @@ describe("renderPromptSdlcWizardOutcome", () => {
       ...cycle,
       status: "passed",
     });
-    expect(html).toContain("sdlc-wizard-process-details");
+    expect(html).toContain("Process details · steps 1–3");
+    expect(html).not.toContain("sdlc-wizard-process-details-summary");
     expect(html).not.toContain("prompt-optimizer-wizard-outcome-wizard-4");
     expect(html).toContain("data-sdlc-outcome-expand-all");
     const moduleHtml = renderPromptSdlcWizardModuleResults({
@@ -75,7 +76,8 @@ describe("renderPromptSdlcWizardOutcome", () => {
     });
     expect(moduleHtml).toContain("prompt-optimizer-wizard-module-results");
     expect(moduleHtml).toContain("sdlc-wizard-outcome-table");
-    expect(moduleHtml).toContain("data-sdlc-copy-wizard-modules");
+    expect(moduleHtml).toContain("Copy all prompts (Markdown)");
+    expect(moduleHtml).toContain("sdlc-copy-feedback-btn");
   });
 
   it("returns empty for an in-progress wizard", () => {

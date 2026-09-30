@@ -25,6 +25,7 @@ export const renderPromptSdlcWizardModuleTable = (
     summary.terminalStatusSuggestion === "passed"
       ? ""
       : `${summary.passedModuleCount} of ${summary.totalModules} modules passed. Some modules were skipped, stopped, or below ${PROMPT_SDLC_WIZARD_PASS_SCORE}.`;
+  const nearPassFloor = PROMPT_SDLC_WIZARD_PASS_SCORE - 10;
   const rows = summary.rows
     .map((row) => {
       const scoreCell =
@@ -33,12 +34,17 @@ export const renderPromptSdlcWizardModuleTable = (
           : summary.terminalStatusSuggestion === "passed"
             ? `${row.bestScore} / ≥${PROMPT_SDLC_WIZARD_PASS_SCORE}`
             : String(row.bestScore);
+      const nearPass =
+        row.bestScore !== null &&
+        row.bestScore >= nearPassFloor &&
+        row.bestScore < PROMPT_SDLC_WIZARD_PASS_SCORE;
+      const rowClass = nearPass ? ' class="sdlc-score-near-pass"' : "";
       const statusCell =
         summary.terminalStatusSuggestion === "passed" &&
         row.status.toLowerCase() === "passed"
           ? `<span aria-label="Passed">✓</span>`
           : escapeHtml(row.status);
-      return `<tr><td>${escapeHtml(row.title)}</td><td>${escapeHtml(scoreCell)}</td><td>${row.tokens ?? "—"}</td><td>${statusCell}</td></tr>`;
+      return `<tr${rowClass}><td>${escapeHtml(row.title)}</td><td>${escapeHtml(scoreCell)}</td><td>${row.tokens ?? "—"}</td><td>${statusCell}</td></tr>`;
     })
     .join("");
   const headlineBlock =
