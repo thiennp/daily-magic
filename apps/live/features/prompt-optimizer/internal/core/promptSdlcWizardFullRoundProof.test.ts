@@ -212,7 +212,7 @@ describe("prompt SDLC wizard full round proof (for screenshots)", () => {
         }
         if (input.prompt.includes("wizard step 2 (evaluate revisions)")) {
           judgeCalls += 1;
-          const score = judgeCalls % 2 === 1 ? 58 : 84;
+          const score = judgeCalls % 2 === 1 ? 58 : 65;
           return {
             ok: true,
             text: JSON.stringify({
@@ -292,7 +292,7 @@ describe("prompt SDLC wizard full round proof (for screenshots)", () => {
     const page2 = pageBody(installDir, paused);
     expect(page2).toContain("Step 2 — Evaluate");
     expect(page2).toContain("Round 0 — 58");
-    expect(page2).toContain("Round 1 — 84");
+    expect(page2).toContain("Round 1 — 65");
     expect(page2).not.toContain("Step 3 — Separate");
     expect(paused.revisions.length).toBeGreaterThanOrEqual(2);
 

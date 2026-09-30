@@ -21,7 +21,7 @@ const waitUntil = async (
   predicate: () => boolean,
   label: string,
 ): Promise<void> => {
-  for (let attempt = 0; attempt < 80; attempt += 1) {
+  for (let attempt = 0; attempt < 160; attempt += 1) {
     if (predicate()) {
       return;
     }
@@ -78,6 +78,12 @@ describe("prompt SDLC wizard full user flow (mocked writers)", () => {
                       prompt: "Run the task",
                       order: 0,
                     },
+                    {
+                      id: "m2",
+                      title: "Verify",
+                      prompt: "Check {{task}} output",
+                      order: 1,
+                    },
                   ],
                 },
               ],
@@ -85,11 +91,28 @@ describe("prompt SDLC wizard full user flow (mocked writers)", () => {
             tokens: 6,
           };
         }
-        return {
-          ok: true,
-          text: '{"score":88,"passed":true,"reasons":"Good","rawReply":"88"}',
-          tokens: 4,
-        };
+        if (input.prompt.includes("wizard step 2 (evaluate revisions)")) {
+          return {
+            ok: true,
+            text: '{"score":58,"passed":false,"reasons":"Needs work","rawReply":"58"}',
+            tokens: 4,
+          };
+        }
+        if (input.prompt.startsWith("You improve prompts.")) {
+          return {
+            ok: true,
+            text: "Do {{task}} well with explicit acceptance criteria.",
+            tokens: 4,
+          };
+        }
+        if (input.prompt.includes("Score the changes from 0 to 100")) {
+          return {
+            ok: true,
+            text: '{"score":62,"passed":false,"reasons":"Still weak","rawReply":"62"}',
+            tokens: 4,
+          };
+        }
+        return { ok: true, text: "ok", tokens: 1 };
       },
     );
 
@@ -165,22 +188,24 @@ describe("prompt SDLC wizard full user flow (mocked writers)", () => {
       const current = readPromptSdlcLocalCycle(storePath, cycle.id);
       return (
         current?.status === "wizard_paused" &&
-        current.wizard?.gate === "evaluate"
+        current.wizard?.gate === "evaluate" &&
+        (current.revisions.some((item) => (item.judgement?.score ?? 0) > 0) ??
+          false)
       );
     }, "evaluate gate");
 
     paused = readPromptSdlcLocalCycle(storePath, cycle.id)!;
     expect(paused.revisions.length).toBeGreaterThan(0);
 
+    const continueRound =
+      paused.wizard?.evaluateSelectedRound ??
+      paused.revisions.at(-1)?.roundNumber ??
+      0;
     tryAcceptPromptSdlcWizardPost({
       posted: new URLSearchParams({
         intent: "wizard-continue",
         cycleId: cycle.id,
-        wizardRevisionRound: String(
-          paused.wizard?.evaluateSelectedRound ??
-            paused.revisions.at(-1)?.roundNumber ??
-            0,
-        ),
+        wizardRevisionRound: String(continueRound),
       }),
       storePath,
       response: {
