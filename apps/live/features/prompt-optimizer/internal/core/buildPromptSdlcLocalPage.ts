@@ -152,7 +152,7 @@ export const buildPromptSdlcLocalPageBody = (input: {
           ${writerFields}
         </div>
         ${runnerFields}
-        ${renderPromptSdlcWizardRoleStepTable()}
+        <div data-sdlc-wizard-only>${renderPromptSdlcWizardRoleStepTable()}</div>
         <details class="sdlc-classic-loop-options">
           <summary class="sdlc-block-title">Classic loop options</summary>
           <div class="sdlc-limits">
@@ -161,9 +161,11 @@ export const buildPromptSdlcLocalPageBody = (input: {
           </div>
         </details>
         <div class="sdlc-submit">
-          <p class="muted sdlc-wizard-limits-callout">Wizard: pass score ${PROMPT_SDLC_WIZARD_PASS_SCORE}, up to ${PROMPT_SDLC_WIZARD_MAX_ROUNDS} scored revisions in Step 2; Step 4 runs one trial per module.</p>
-          <button class="btn btn-primary" type="submit" name="intent" value="run" data-sdlc-run data-can-run="${input.canRun ? "true" : "false"}" disabled>${runLabel}</button>
-          <button class="btn btn-secondary" type="submit" name="intent" value="run-classic" formnovalidate data-sdlc-run data-can-run="${input.canRun ? "true" : "false"}" disabled>Classic loop (90 / 10 rounds)</button>
+          <p class="sdlc-writer-summary" data-sdlc-writer-summary hidden></p>
+          <p class="muted sdlc-wizard-limits-callout" data-sdlc-wizard-limits-callout">Wizard: pass score ${PROMPT_SDLC_WIZARD_PASS_SCORE}, up to ${PROMPT_SDLC_WIZARD_MAX_ROUNDS} scored revisions in Step 2; Step 4 runs one trial per module.</p>
+          <p class="muted sdlc-classic-limits-callout" data-sdlc-classic-limits-callout hidden>Classic loop uses the pass score and max rounds above.</p>
+          <button class="btn btn-primary" type="submit" name="intent" value="run" data-sdlc-run data-sdlc-run-wizard data-can-run="${input.canRun ? "true" : "false"}" disabled>${runLabel}</button>
+          <button class="btn btn-secondary" type="submit" name="intent" value="run-classic" formnovalidate data-sdlc-run data-sdlc-run-classic data-can-run="${input.canRun ? "true" : "false"}" disabled>Classic loop (90 / 10 rounds)</button>
           <p class="muted sdlc-run-hint" data-sdlc-run-hint hidden></p>
         </div>
         </fieldset>

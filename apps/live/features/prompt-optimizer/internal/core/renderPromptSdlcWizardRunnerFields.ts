@@ -24,7 +24,7 @@ export const renderPromptSdlcWizardRunnerFields = (input: {
     input.runner.length === 0
       ? `<p class="muted" data-writer-status="runner" data-writer="">Choose who runs step 4.</p>`
       : `<p class="muted" data-writer-status="runner" data-writer="${escapeHtml(input.runner)}">Checking ${escapeHtml(input.writers.find((w) => w.id === input.runner)?.label ?? input.runner)}…</p>`;
-  return `<div class="sdlc-block sdlc-runner-block">
+  return `<div class="sdlc-block sdlc-runner-block" data-sdlc-wizard-only>
     <p class="sdlc-block-title">Module runner</p>
     <p class="muted">Wizard step 4 only: the runner executes each module prompt; the judge scores only.</p>
     <div class="sdlc-writer">

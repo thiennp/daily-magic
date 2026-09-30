@@ -7,12 +7,11 @@ import {
   summarizePromptSdlcWizardCompletion,
 } from "../../apps/live/adapters/promptSdlcAwcCore";
 import { buildPromptSdlcLocalArtifactDocument } from "../../apps/live/features/prompt-optimizer/internal/core/buildPromptSdlcLocalArtifactDocument";
-import { buildPromptSdlcLocalCycleSection } from "../../apps/live/features/prompt-optimizer/internal/core/buildPromptSdlcLocalCycleSection";
 import { buildPromptSdlcLocalPageBody } from "../../apps/live/features/prompt-optimizer/internal/core/buildPromptSdlcLocalPage";
 import { createPromptSdlcLocalCycle } from "../../apps/live/features/prompt-optimizer/internal/core/createPromptSdlcLocalCycle";
-import { renderPromptSdlcWizardOutcome } from "../../apps/live/features/prompt-optimizer/internal/core/renderPromptSdlcWizardOutcome";
 
 const ARTIFACTS = "/opt/cursor/artifacts";
+const BUNDLE = "189";
 
 const finishedWizard = (): ReturnType<typeof createPromptSdlcLocalCycle> => {
   const wizard = {
@@ -68,7 +67,7 @@ const finishedWizard = (): ReturnType<typeof createPromptSdlcLocalCycle> => {
   summarizePromptSdlcWizardCompletion(wizard);
   return {
     ...createPromptSdlcLocalCycle({
-      goal: "Dogfood wizard UX bundle 188",
+      goal: "Dogfood wizard UX bundle 189",
       sourcePrompt: "Weak prompt",
       judgeModel: "claude-cli",
       improverModel: "claude-cli",
@@ -116,7 +115,7 @@ const history = (): ReturnType<typeof createPromptSdlcLocalCycle>[] => [
 
 const main = async (): Promise<void> => {
   const cycle = finishedWizard();
-  const compose = buildPromptSdlcLocalPageBody({
+  const body = buildPromptSdlcLocalPageBody({
     goal: "",
     prompt: "",
     modelNote: "Installed: Claude, Codex.",
@@ -132,24 +131,29 @@ const main = async (): Promise<void> => {
     maxRounds: "10",
     canRun: true,
     errorMessage: null,
-    cycle: null,
+    cycle,
     history: history(),
   });
 
-  const body = `${compose}${buildPromptSdlcLocalCycleSection(cycle)}${renderPromptSdlcWizardOutcome(cycle)}`;
   const html = buildPromptSdlcLocalArtifactDocument({
-    title: "Prompt optimizer — UX bundle 188",
+    title: `Prompt optimizer — UX bundle ${BUNDLE}`,
     body,
   });
 
   fs.mkdirSync(ARTIFACTS, { recursive: true });
-  const htmlPath = path.join(ARTIFACTS, "prompt-optimizer-ux-bundle-188.html");
-  const pngPath = path.join(ARTIFACTS, "prompt-optimizer-ux-bundle-188.png");
+  const htmlPath = path.join(
+    ARTIFACTS,
+    `prompt-optimizer-ux-bundle-${BUNDLE}.html`,
+  );
+  const pngPath = path.join(
+    ARTIFACTS,
+    `prompt-optimizer-ux-bundle-${BUNDLE}.png`,
+  );
   fs.writeFileSync(htmlPath, html);
 
   const browser = await chromium.launch();
   const page = await browser.newPage({
-    viewport: { width: 1280, height: 1600 },
+    viewport: { width: 1280, height: 1400 },
   });
   await page.goto(`file://${htmlPath}`, { waitUntil: "networkidle" });
   await page.screenshot({ path: pngPath, fullPage: true });

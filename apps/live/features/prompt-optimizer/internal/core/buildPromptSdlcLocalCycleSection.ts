@@ -129,8 +129,16 @@ export const buildPromptSdlcLocalCycleSection = (
       ? `<div class="sdlc-run-grid sdlc-run-grid-single">${timeline}</div>`
       : `<div class="sdlc-run-grid">${timeline}${scoreScale}</div>`;
   const revisions = renderPromptSdlcLocalRevisions(cycle);
+  const wizardOnlySourceRevision =
+    cycle.wizard !== undefined &&
+    isPromptSdlcTerminalStatus(cycle.status) &&
+    cycle.revisions.every(
+      (revision) =>
+        revision.roundNumber === 0 &&
+        (revision.judgement === undefined || revision.judgement === null),
+    );
   const promptsHistory =
-    revisions.length === 0
+    revisions.length === 0 || wizardOnlySourceRevision
       ? ""
       : `<section class="sdlc-run-prompts" aria-labelledby="sdlc-run-prompts-heading"><h2 id="sdlc-run-prompts-heading" class="sdlc-run-prompts-heading">Prompt history</h2><div class="sdlc-run-prompts-list">${revisions}</div></section>`;
 

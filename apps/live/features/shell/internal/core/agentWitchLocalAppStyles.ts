@@ -659,7 +659,12 @@ input.input[type="text"] {
 form.sdlc-form { display: flex; flex-direction: column; }
 .sdlc-compose .lede { margin-bottom: 1.25rem; }
 .sdlc-compose-mode { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-right: auto; }
-.sdlc-compose-mode [aria-pressed="true"] { outline: 2px solid var(--accent, #2563eb); }
+.sdlc-compose-mode [aria-pressed="true"] {
+  background: var(--aw-zinc-100);
+  outline: 2px solid var(--accent, #2563eb);
+}
+.sdlc-compose-viewing-result [data-writer-status] { display: none; }
+.sdlc-writer-summary { margin: 0 0 0.75rem; }
 .sdlc-page-run-context { margin: 0.75rem 0 0; max-width: 42rem; }
 .sdlc-compose-details { display: flex; flex-direction: column; gap: 1rem; }
 .sdlc-compose-summary {
@@ -956,7 +961,7 @@ form.sdlc-form textarea.input.sdlc-instruction {
 }
 .sdlc-run-badge-live { background: #dcfce7; color: #166534; }
 .sdlc-run-badge-paused { background: #fef9c3; color: #854d0e; }
-.sdlc-run-badge-done { background: var(--aw-zinc-100); color: var(--aw-zinc-600); }
+.sdlc-run-badge-done { background: #ecfdf5; color: #047857; }
 .sdlc-run-activity {
   display: flex;
   gap: 0.85rem;

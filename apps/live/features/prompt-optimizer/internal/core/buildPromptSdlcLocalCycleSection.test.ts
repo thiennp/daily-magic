@@ -45,4 +45,25 @@ describe("buildPromptSdlcLocalCycleSection", () => {
     expect(html).toContain(">Scoring guide<");
     expect(html).toContain('class="sdlc-tree"');
   });
+
+  it("renders wizard outcome exactly once and skips empty prompt history", () => {
+    const cycle = {
+      ...createPromptSdlcLocalCycle({
+        goal: "g",
+        sourcePrompt: "p",
+        judgeModel: "claude-cli",
+        improverModel: "claude-cli",
+        wizard: {
+          ...createInitialPromptSdlcWizardState("p"),
+          gate: null,
+          phase: "complete",
+          modules: [],
+        },
+      }),
+      status: "stopped" as const,
+    };
+    const html = buildPromptSdlcLocalCycleSection(cycle);
+    expect(html.match(/id="prompt-optimizer-wizard-outcome"/g)?.length).toBe(1);
+    expect(html).not.toContain("sdlc-run-prompts-heading");
+  });
 });

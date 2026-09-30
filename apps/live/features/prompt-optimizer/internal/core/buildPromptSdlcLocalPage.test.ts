@@ -537,4 +537,65 @@ describe("buildPromptSdlcLocalPageBody", () => {
     expect(finishedHtml).toContain("Finished");
     expect(finishedHtml).not.toContain(">Finish<");
   });
+
+  it("orders THIS RUN before collapsed History when viewing a cycle", () => {
+    const cycle = {
+      ...createPromptSdlcLocalCycle({
+        goal: "Goal",
+        sourcePrompt: "p",
+        judgeModel: "claude-cli",
+        improverModel: "claude-cli",
+        wizard: {
+          ...createInitialPromptSdlcWizardState("p"),
+          gate: null,
+          phase: "complete",
+          modules: [
+            {
+              moduleId: "m1",
+              title: "Main",
+              prompt: "p",
+              status: "passed",
+              selectedRevisionRound: 0,
+              statistics: {
+                bestScore: 80,
+                bestRound: 0,
+                bestRunOutput: "out",
+                rounds: [
+                  {
+                    roundNumber: 0,
+                    score: 80,
+                    passed: true,
+                    runOutput: "out",
+                    tokens: 1,
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      }),
+      id: "open-cycle",
+      status: "stopped" as const,
+    };
+    const html = buildPromptSdlcLocalPageBody({
+      goal: "",
+      prompt: "",
+      modelNote: "",
+      writers: [{ id: "claude-cli", label: "Claude" }],
+      judge: "claude-cli",
+      improver: "claude-cli",
+      folder: "~",
+      passScore: "90",
+      canRun: true,
+      errorMessage: null,
+      cycle,
+      history: [cycle],
+    });
+    expect(html.indexOf("prompt-optimizer-run")).toBeLessThan(
+      html.indexOf("prompt-optimizer-history"),
+    );
+    expect(html.match(/id="prompt-optimizer-wizard-outcome"/g)?.length).toBe(1);
+    expect(html).toContain("prompt-optimizer-history");
+    expect(html).toContain("Wizard finished");
+  });
 });

@@ -1,4 +1,7 @@
-import { isPromptSdlcTerminalStatus } from "../../../../adapters/promptSdlcAwcCore";
+import {
+  isPromptSdlcTerminalStatus,
+  summarizePromptSdlcWizardCompletion,
+} from "../../../../adapters/promptSdlcAwcCore";
 import {
   labelPromptSdlcLocalModel,
   PROMPT_SDLC_MANUAL_ACTOR,
@@ -143,12 +146,24 @@ export const describePromptSdlcLocalActivity = (
     );
     const message = cycle.errorMessage?.trim() ?? "";
     if (cycle.wizard !== undefined) {
+      const summary = summarizePromptSdlcWizardCompletion(cycle.wizard);
+      const modulesDone =
+        summary.totalModules > 0 &&
+        (cycle.wizard.phase === "complete" ||
+          summary.passedModuleCount > 0 ||
+          isPromptSdlcTerminalStatus(cycle.status));
+      const title =
+        modulesDone && summary.totalModules > 0
+          ? `Wizard finished — ${summary.passedModuleCount}/${summary.totalModules} modules passed`
+          : "Wizard stopped before all steps finished";
       return {
-        title: "Wizard ended.",
+        title,
         detail:
           message.length > 0
             ? message
-            : "Progress from finished steps is kept.",
+            : modulesDone
+              ? "Download the report below or start a new run from compose."
+              : "Progress from finished steps is kept.",
       };
     }
     const finished = (cycle.errorMessage ?? "").startsWith("Finished");

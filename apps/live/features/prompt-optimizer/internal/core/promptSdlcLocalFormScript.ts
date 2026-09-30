@@ -70,6 +70,44 @@ export const PROMPT_SDLC_LOCAL_FORM_SCRIPT = `<script>
         slots.some((slot) => slot.dataset.ready !== "true");
     });
     paintRunHint();
+    paintWriterSummary();
+  };
+  const paintWriterSummary = () => {
+    const summary = document.querySelector("[data-sdlc-writer-summary]");
+    const compose = document.getElementById("prompt-optimizer-compose");
+    if (compose instanceof HTMLElement) {
+      compose.classList.toggle("sdlc-compose-viewing-result", viewingFinishedRun);
+    }
+    if (!(summary instanceof HTMLElement)) return;
+    const blocked = slots.filter(
+      (slot) =>
+        slot.dataset.ready !== "true" &&
+        slot.classList.contains("alert-error"),
+    );
+    if (viewingFinishedRun) {
+      const anyWarn = slots.some(
+        (slot) =>
+          slot.classList.contains("alert-warn") ||
+          slot.classList.contains("alert-error"),
+      );
+      if (anyWarn) {
+        summary.hidden = false;
+        summary.className = "alert-warn sdlc-writer-summary";
+        summary.textContent =
+          "Writers were not verified for this finished run. Check CLI login before your next run.";
+        return;
+      }
+    } else if (blocked.length > 0) {
+      summary.hidden = false;
+      summary.className = "alert-error sdlc-writer-summary";
+      summary.textContent =
+        blocked[0].textContent?.trim() ||
+        "Fix the writer error above, then run again.";
+      return;
+    }
+    summary.hidden = true;
+    summary.textContent = "";
+    summary.className = "sdlc-writer-summary";
   };
   const paintWriter = async (writer) => {
     const targets = slots.filter((slot) => slot.dataset.writer === writer);
@@ -237,6 +275,17 @@ export const PROMPT_SDLC_LOCAL_FORM_SCRIPT = `<script>
     if (classicOptions instanceof HTMLDetailsElement) {
       classicOptions.open = mode === "classic";
     }
+    const wizardLimits = document.querySelector("[data-sdlc-wizard-limits-callout]");
+    const classicLimits = document.querySelector("[data-sdlc-classic-limits-callout]");
+    if (wizardLimits instanceof HTMLElement) {
+      wizardLimits.hidden = mode !== "wizard";
+    }
+    if (classicLimits instanceof HTMLElement) {
+      classicLimits.hidden = mode !== "classic";
+    }
+    document.querySelectorAll("[data-sdlc-wizard-only]").forEach((node) => {
+      if (node instanceof HTMLElement) node.hidden = mode !== "wizard";
+    });
     const wizardBtn = runButtons.find(
       (btn) => btn instanceof HTMLButtonElement && btn.value === "run",
     );
@@ -250,6 +299,10 @@ export const PROMPT_SDLC_LOCAL_FORM_SCRIPT = `<script>
     if (classicBtn instanceof HTMLButtonElement) {
       classicBtn.classList.toggle("btn-primary", mode === "classic");
       classicBtn.classList.toggle("btn-secondary", mode !== "classic");
+      classicBtn.hidden = mode !== "classic";
+    }
+    if (wizardBtn instanceof HTMLButtonElement) {
+      wizardBtn.hidden = mode !== "wizard";
     }
   };
   document.querySelectorAll("[data-sdlc-compose-mode]").forEach((btn) => {
@@ -270,7 +323,9 @@ export const PROMPT_SDLC_LOCAL_FORM_SCRIPT = `<script>
       if (fields instanceof HTMLFieldSetElement) fields.disabled = false;
       document.querySelector("[data-sdlc-locked]")?.remove();
       const details = document.getElementById("prompt-optimizer-compose-details");
-      if (details instanceof HTMLDetailsElement) details.open = true;
+      if (details instanceof HTMLDetailsElement) {
+        details.open = document.getElementById("prompt-optimizer-run") === null;
+      }
       runButtons.forEach((btn) => {
         if (!(btn instanceof HTMLButtonElement)) return;
         if (btn.value === "run-classic") {
