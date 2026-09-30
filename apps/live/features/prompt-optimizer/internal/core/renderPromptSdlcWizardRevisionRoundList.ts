@@ -15,11 +15,20 @@ export const renderPromptSdlcWizardRevisionRoundList = (input: {
   readonly caption?: string;
 }): string => {
   const scored = readPromptSdlcWizardScoredRevisions(input.cycle);
+  const wizard = input.cycle.wizard;
+  const moduleRun =
+    wizard !== undefined &&
+    (wizard.gate === "optimize_modules" || wizard.phase === "optimize_modules")
+      ? wizard.modules[wizard.currentModuleIndex]
+      : undefined;
+  const moduleBestScore = moduleRun?.statistics?.bestScore;
+  const hasModuleScore =
+    moduleBestScore !== null && moduleBestScore !== undefined;
   if (scored.length === 0 && input.cycle.revisions.length === 0) {
     return "";
   }
   const emptyNotice =
-    scored.length === 0
+    scored.length === 0 && !hasModuleScore
       ? `<div class="alert-error">No scored revisions yet. ${
           input.interactive
             ? "Check the run error above, then rerun this step with feedback or restart evaluate from Step 1."

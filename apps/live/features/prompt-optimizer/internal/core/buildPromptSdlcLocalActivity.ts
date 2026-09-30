@@ -2,6 +2,7 @@ import {
   isPromptSdlcTerminalStatus,
   summarizePromptSdlcWizardCompletion,
 } from "../../../../adapters/promptSdlcAwcCore";
+import { PROMPT_SDLC_WIZARD_PASS_SCORE } from "../../../../adapters/promptSdlcAwcCore";
 import {
   labelPromptSdlcLocalModel,
   PROMPT_SDLC_MANUAL_ACTOR,
@@ -98,6 +99,20 @@ export const describePromptSdlcLocalActivity = (
     };
   }
   if (cycle.status === "judging" && cycle.judgePhase === "scoring") {
+    const wizard = cycle.wizard;
+    if (
+      wizard !== undefined &&
+      (wizard.gate === "optimize_modules" ||
+        wizard.phase === "optimize_modules")
+    ) {
+      const runner = cycle.runnerModel ?? cycle.judgeModel;
+      const moduleIndex = wizard.currentModuleIndex + 1;
+      const moduleTotal = wizard.modules.length;
+      return {
+        title: `${labelPromptSdlcLocalModel(runner)} is scoring module ${moduleIndex} of ${moduleTotal}.`,
+        detail: `Step 4 runs one trial per module (pass ≥ ${PROMPT_SDLC_WIZARD_PASS_SCORE}). This panel keeps updating.`,
+      };
+    }
     return {
       title: `${labelPromptSdlcLocalModel(cycle.judgeModel)} is scoring the changes from round ${cycle.currentRound + 1}.`,
       detail:
@@ -105,6 +120,20 @@ export const describePromptSdlcLocalActivity = (
     };
   }
   if (cycle.status === "judging") {
+    const wizard = cycle.wizard;
+    if (
+      wizard !== undefined &&
+      (wizard.gate === "optimize_modules" ||
+        wizard.phase === "optimize_modules")
+    ) {
+      const runner = cycle.runnerModel ?? cycle.judgeModel;
+      const moduleIndex = wizard.currentModuleIndex + 1;
+      const moduleTotal = wizard.modules.length;
+      return {
+        title: `${labelPromptSdlcLocalModel(runner)} is running module ${moduleIndex} of ${moduleTotal}.`,
+        detail: `The runner executes the module prompt; the judge scores output (pass ≥ ${PROMPT_SDLC_WIZARD_PASS_SCORE}). This panel keeps updating.`,
+      };
+    }
     return {
       title: `${labelPromptSdlcLocalModel(cycle.judgeModel)} is running the prompt for round ${cycle.currentRound + 1}.`,
       detail:

@@ -1,7 +1,8 @@
 import {
+  PROMPT_SDLC_WIZARD_PASS_SCORE,
+  summarizePromptSdlcWizardCompletion,
   buildPromptSdlcSteps,
   isPromptSdlcTerminalStatus,
-  summarizePromptSdlcWizardCompletion,
 } from "../../../../adapters/promptSdlcAwcCore";
 import {
   renderPromptSdlcLocalScoreScale,
@@ -118,19 +119,23 @@ export const buildPromptSdlcLocalCycleSection = (
         minJudgeScore: wizardEvaluateJudge ? 1 : 0,
       })
     : "";
+  const wizardRunComplete =
+    cycle.wizard !== undefined &&
+    cycle.wizard.phase === "complete" &&
+    isPromptSdlcTerminalStatus(cycle.status);
   const showScoreScale =
     cycle.wizard === undefined ||
     cycle.wizard.phase === "evaluate" ||
     cycle.wizard.phase === "optimize_modules" ||
     cycle.wizard.gate === "evaluate" ||
     cycle.wizard.gate === "optimize_modules";
+  const scoringGuidePassScore =
+    cycle.wizard !== undefined && !wizardRunComplete
+      ? PROMPT_SDLC_WIZARD_PASS_SCORE
+      : cycle.passScore;
   const scoreScale = showScoreScale
-    ? `<div class="sdlc-run-panel sdlc-run-panel-scoring"><h3 class="sdlc-run-panel-title">Scoring guide</h3>${renderPromptSdlcLocalScoreScale(cycle.passScore)}</div>`
+    ? `<div class="sdlc-run-panel sdlc-run-panel-scoring"><h3 class="sdlc-run-panel-title">Scoring guide</h3>${renderPromptSdlcLocalScoreScale(scoringGuidePassScore)}</div>`
     : "";
-  const wizardRunComplete =
-    cycle.wizard !== undefined &&
-    cycle.wizard.phase === "complete" &&
-    isPromptSdlcTerminalStatus(cycle.status);
   const statusBadge = live
     ? `<span class="sdlc-run-badge sdlc-run-badge-live">In progress</span>`
     : cycle.status === "wizard_paused"
@@ -143,7 +148,9 @@ export const buildPromptSdlcLocalCycleSection = (
   const activityIcon = live
     ? spinner
     : activitySuccess
-      ? `<span class="sdlc-run-status-dot sdlc-run-status-dot-success" aria-hidden="true"></span>`
+      ? allModulesPassed
+        ? `<span class="sdlc-run-status-dot sdlc-run-status-dot-success" aria-hidden="true"></span>`
+        : `<span class="sdlc-run-status-dot sdlc-run-status-dot-partial" aria-hidden="true"></span>`
       : `<span class="sdlc-run-status-dot" aria-hidden="true"></span>`;
   const metaItems = [
     typeof cycle.workingDirectory === "string" &&

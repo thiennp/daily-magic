@@ -6,6 +6,7 @@ import {
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
 import { describePromptSdlcWizardModulePassStatus } from "./describePromptSdlcWizardModulePassStatus";
 import { isPromptSdlcWizardModulePassed } from "./describePromptSdlcWizardModulePassStatus";
+import { describePromptSdlcWizardModuleTableHeadline } from "./describePromptSdlcWizardModuleTableHeadline";
 
 const escapeHtml = (value: string): string =>
   value
@@ -26,7 +27,7 @@ export const renderPromptSdlcWizardModuleTable = (
   const headline =
     summary.terminalStatusSuggestion === "passed"
       ? ""
-      : `${summary.passedModuleCount} of ${summary.totalModules} modules passed. Some modules were skipped, stopped, or below ${PROMPT_SDLC_WIZARD_PASS_SCORE}.`;
+      : describePromptSdlcWizardModuleTableHeadline(summary);
   const nearPassFloor = PROMPT_SDLC_WIZARD_PASS_SCORE - 10;
   const rows = summary.rows
     .map((row, index) => {

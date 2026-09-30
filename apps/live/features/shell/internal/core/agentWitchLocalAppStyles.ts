@@ -1148,6 +1148,10 @@ form.sdlc-form textarea.input.sdlc-instruction {
   background: #22c55e;
   box-shadow: 0 0 0 3px #dcfce7;
 }
+.sdlc-run-status-dot-partial {
+  background: #f59e0b;
+  box-shadow: 0 0 0 3px #fef3c7;
+}
 .sdlc-wizard-outcome-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; }
 .sdlc-wizard-outcome-step-hint { font-weight: 400; font-size: 0.8125rem; }
 .sdlc-run-activity-copy { min-width: 0; flex: 1; }

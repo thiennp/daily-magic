@@ -12,7 +12,9 @@ export const PROMPT_SDLC_LOCAL_FORM_SCRIPT = `<script>
   const hint = document.querySelector("[data-sdlc-run-hint]");
   const slots = [...document.querySelectorAll("[data-writer-status]")];
   const viewingFinishedRun =
-    document.querySelector("#prompt-optimizer-run .sdlc-run-badge-done") !== null;
+    document.querySelector("#prompt-optimizer-run .sdlc-run-badge-done") !== null ||
+    document.querySelector("#prompt-optimizer-run .sdlc-run-badge-finished") !== null;
+  const staticPreview = window.location.protocol === "file:";
   const paintRunHint = () => {
     if (!(hint instanceof HTMLElement)) return;
     if (runButtons.length === 0) {
@@ -211,6 +213,15 @@ export const PROMPT_SDLC_LOCAL_FORM_SCRIPT = `<script>
     if (writer === "manual") {
       targets.forEach((slot) => {
         slot.textContent = "You will do this step.";
+        slot.dataset.ready = "true";
+        slot.className = "muted";
+      });
+      paintReady();
+      return;
+    }
+    if (staticPreview) {
+      targets.forEach((slot) => {
+        slot.textContent = "Writer check skipped (static preview).";
         slot.dataset.ready = "true";
         slot.className = "muted";
       });

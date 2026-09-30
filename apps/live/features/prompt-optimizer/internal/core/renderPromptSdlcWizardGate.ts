@@ -1,6 +1,7 @@
 import {
   buildPromptSdlcWizardSubstitutionMap,
   collectPromptSdlcWizardCumulativeTokens,
+  PROMPT_SDLC_WIZARD_PASS_SCORE,
   substitutePromptSdlcTemplateValues,
 } from "../../../../adapters/promptSdlcAwcCore";
 
@@ -83,6 +84,11 @@ export const renderPromptSdlcWizardGate = (
       : "";
 
   const moduleRun = wizard.modules[wizard.currentModuleIndex];
+  const moduleBusyAtGate =
+    gate === "optimize_modules" &&
+    moduleRun?.status === "running" &&
+    (cycle.status === "judging" || cycle.status === "improving");
+  const continueDisabled = moduleBusyAtGate ? " disabled" : "";
   const moduleTitle = moduleRun?.title ?? "Module";
   const modulePrompt = moduleRun?.prompt ?? "";
   const moduleNeedsRun = moduleRun?.status === "pending";
@@ -103,7 +109,7 @@ export const renderPromptSdlcWizardGate = (
         )}</p>${
           moduleRun?.statistics === null || moduleRun?.statistics === undefined
             ? ""
-            : `<p class="muted">Module stats: best ${moduleRun.statistics.bestScore ?? "—"} / ${cycle.passScore} (round ${moduleRun.statistics.bestRound ?? "—"}).</p>`
+            : `<p class="muted">Module stats: best ${moduleRun.statistics.bestScore ?? "—"} / ≥${PROMPT_SDLC_WIZARD_PASS_SCORE} (round ${moduleRun.statistics.bestRound ?? "—"}).</p>`
         }${renderPromptSdlcWizardRevisionRoundList({
           cycle,
           interactive: false,
@@ -154,7 +160,7 @@ export const renderPromptSdlcWizardGate = (
         <textarea class="input textarea" id="wizardStepInstructions" name="wizardStepInstructions" rows="2" placeholder="Added to this step only when you rerun with feedback."></textarea>
       </div>
       <div class="sdlc-wizard-actions">
-        <button class="btn btn-primary" type="submit" name="intent" value="wizard-continue">Continue</button>
+        <button class="btn btn-primary" type="submit" name="intent" value="wizard-continue"${continueDisabled}>Continue</button>
         <button class="btn btn-secondary" type="submit" name="intent" value="wizard-feedback-rerun" formnovalidate>Rerun with feedback</button>
       </div>
     </form>
