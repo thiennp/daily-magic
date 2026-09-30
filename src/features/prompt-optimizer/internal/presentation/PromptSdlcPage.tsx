@@ -30,12 +30,9 @@ export default function PromptSdlcPage(): ReactElement {
         </li>
       </ol>
       <div className="flex flex-wrap items-center gap-3">
-        <a
-          href="/install/agent-witch"
-          className={APP_SURFACE_CTA_PRIMARY_CLASS}
-        >
+        <Link href="/" className={APP_SURFACE_CTA_PRIMARY_CLASS}>
           Install Agent Witch on this Mac
-        </a>
+        </Link>
         <a
           href={PROMPT_SDLC_AWL_PAGE_HREF}
           className={APP_SURFACE_TEXT_LINK_CLASS}
