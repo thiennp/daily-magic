@@ -8,18 +8,66 @@ export const PROMPT_SDLC_LOCAL_FORM_SCRIPT = `<script>
     fit(area);
     area.addEventListener("input", () => fit(area));
   });
-  const button = document.querySelector("[data-sdlc-run]");
+  const runButtons = [...document.querySelectorAll("[data-sdlc-run]")];
+  const hint = document.querySelector("[data-sdlc-run-hint]");
   const slots = [...document.querySelectorAll("[data-writer-status]")];
-  const paintReady = () => {
-    if (!(button instanceof HTMLButtonElement)) return;
-    const fields = document.querySelector(".sdlc-fields");
-    if (fields instanceof HTMLFieldSetElement && fields.disabled) {
-      button.disabled = true;
+  const paintRunHint = () => {
+    if (!(hint instanceof HTMLElement)) return;
+    if (runButtons.length === 0) {
+      hint.textContent = "";
+      hint.hidden = true;
       return;
     }
-    button.disabled =
-      button.dataset.canRun !== "true" ||
-      slots.some((slot) => slot.dataset.ready !== "true");
+    const fields = document.querySelector(".sdlc-fields");
+    if (fields instanceof HTMLFieldSetElement && fields.disabled) {
+      hint.textContent = "This run is in progress. Use the gate or This run panel above.";
+      hint.hidden = false;
+      return;
+    }
+    const blocked = runButtons.some((btn) => btn instanceof HTMLButtonElement && btn.disabled);
+    if (!blocked) {
+      hint.textContent = "";
+      hint.hidden = true;
+      return;
+    }
+    if (runButtons.some((btn) => btn instanceof HTMLButtonElement && btn.dataset.canRun !== "true")) {
+      hint.textContent = "Fill in the goal and prompt before you run.";
+      hint.hidden = false;
+      return;
+    }
+    const pending = slots.find((slot) => slot.dataset.ready !== "true");
+    if (pending) {
+      const writer = pending.dataset.writer ?? "writer";
+      if (writer.length === 0) {
+        hint.textContent = "Choose who scores and who rewrites the prompt.";
+      } else if (writer === "manual") {
+        hint.textContent = "You chose a manual step. Run will pause when that step is due.";
+      } else if (pending.textContent === "Checking…") {
+        hint.textContent = "Checking that the chosen writer is ready…";
+      } else {
+        hint.textContent = pending.textContent.trim().length > 0 ? pending.textContent : "Fix the writer error above, then run again.";
+      }
+      hint.hidden = false;
+      return;
+    }
+    hint.textContent = "Run is not available yet.";
+    hint.hidden = false;
+  };
+  const paintReady = () => {
+    const fields = document.querySelector(".sdlc-fields");
+    const fieldsDisabled =
+      fields instanceof HTMLFieldSetElement && fields.disabled;
+    runButtons.forEach((btn) => {
+      if (!(btn instanceof HTMLButtonElement)) return;
+      if (fieldsDisabled) {
+        btn.disabled = true;
+        return;
+      }
+      btn.disabled =
+        btn.dataset.canRun !== "true" ||
+        slots.some((slot) => slot.dataset.ready !== "true");
+    });
+    paintRunHint();
   };
   const paintWriter = async (writer) => {
     const targets = slots.filter((slot) => slot.dataset.writer === writer);
@@ -139,7 +187,14 @@ export const PROMPT_SDLC_LOCAL_FORM_SCRIPT = `<script>
       document.querySelector("[data-sdlc-locked]")?.remove();
       const details = document.getElementById("prompt-optimizer-compose-details");
       if (details instanceof HTMLDetailsElement) details.open = true;
-      if (button instanceof HTMLButtonElement) button.textContent = "Run";
+      runButtons.forEach((btn) => {
+        if (!(btn instanceof HTMLButtonElement)) return;
+        if (btn.value === "run-classic") {
+          btn.textContent = "Classic loop (90 / 10 rounds)";
+        } else {
+          btn.textContent = "Run";
+        }
+      });
       paintReady();
     }
   });

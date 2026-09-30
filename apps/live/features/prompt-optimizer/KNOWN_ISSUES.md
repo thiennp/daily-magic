@@ -1,6 +1,9 @@
 # Prompt optimizer — known issues
 
-No open issues. Recent fixes (bundle **166–177**):
+No open issues. Recent fixes (bundle **166–185**):
+
+- Classic loop submit button follows the same writer readiness as Run (`querySelectorAll("[data-sdlc-run]")`); run hint explains why buttons stay disabled (bundle **185**).
+- Agent API `POST /prompt-optimizer/agent` uses classic loop defaults (pass 90, max rounds 10) instead of wizard 70/5 (bundle **185**).
 
 - Wizard steps stack in a collapsed accordion; Continue / Run update the page via live HTML fragments (no full reload). Compose stays on top, collapses after submit, and disabled fields use a light grey background.
 

@@ -53,6 +53,8 @@ describe("buildPromptSdlcLocalPageBody", () => {
     expect(html).toContain('name="runner"');
     expect(html).toContain('data-writer-status="runner"');
     expect(html).toContain('name="runnerInstructions"');
+    expect(html).toContain("data-sdlc-run-hint");
+    expect(html.match(/data-sdlc-run[^-]/g)?.length).toBe(2);
     expect(html).toContain(
       "If the prompt needs an input, put that input here.",
     );

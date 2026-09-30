@@ -64,7 +64,7 @@ export const planPromptSdlcAgentStart = (input: {
   }
 
   const posted = new URLSearchParams({
-    intent: "run",
+    intent: "run-classic",
     goal: input.body.goal,
     prompt: input.body.prompt,
     folder: input.body.workingDirectory,

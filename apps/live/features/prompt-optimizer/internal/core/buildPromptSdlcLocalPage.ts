@@ -145,6 +145,7 @@ export const buildPromptSdlcLocalPageBody = (input: {
         <div class="sdlc-submit">
           <button class="btn btn-primary" type="submit" name="intent" value="run" data-sdlc-run data-can-run="${input.canRun ? "true" : "false"}" disabled>${runLabel}</button>
           <button class="btn btn-secondary" type="submit" name="intent" value="run-classic" formnovalidate data-sdlc-run data-can-run="${input.canRun ? "true" : "false"}" disabled>Classic loop (90 / 10 rounds)</button>
+          <p class="muted sdlc-run-hint" data-sdlc-run-hint hidden></p>
         </div>
         </fieldset>
       </form>
