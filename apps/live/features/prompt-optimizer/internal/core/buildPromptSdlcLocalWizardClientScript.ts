@@ -120,14 +120,8 @@ export const PROMPT_SDLC_WIZARD_CLIENT_SCRIPT = `<script>
     (event) => {
       const form = event.target;
       if (!(form instanceof HTMLFormElement)) return;
-<<<<<<< HEAD
-      if (form.classList.contains("sdlc-form")) return;
-      const body = formDataFromSubmit(form, event.submitter);
-      const intent = body.get("intent");
-      if (typeof intent !== "string" || !intent.startsWith("wizard-")) return;
-=======
       const submitter = event.submitter;
-      const body = new FormData(form, submitter ?? undefined);
+      const body = formDataFromSubmit(form, submitter);
       const intent = body.get("intent");
       if (!shouldLivePost(form, intent)) return;
       const confirmMessage = readConfirmMessage(form, submitter);
@@ -135,7 +129,6 @@ export const PROMPT_SDLC_WIZARD_CLIENT_SCRIPT = `<script>
         event.preventDefault();
         return;
       }
->>>>>>> 6ef4858e (feat(awl): confirm and live fragment for Stop run / End wizard)
       event.preventDefault();
       void postLiveFragment(body);
     },
