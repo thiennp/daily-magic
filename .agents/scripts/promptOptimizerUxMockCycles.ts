@@ -6,7 +6,7 @@ import { buildPromptSdlcLocalArtifactDocument } from "../../apps/live/features/p
 import { buildPromptSdlcLocalPageBody } from "../../apps/live/features/prompt-optimizer/internal/core/buildPromptSdlcLocalPage";
 import { createPromptSdlcLocalCycle } from "../../apps/live/features/prompt-optimizer/internal/core/createPromptSdlcLocalCycle";
 
-export const PROMPT_OPTIMIZER_UX_BUNDLE = "197";
+export const PROMPT_OPTIMIZER_UX_BUNDLE = "198";
 
 export const promptOptimizerUxSharedForm = {
   goal: "E2E: Prompt Optimizer wizard chain — {{feature}} on AWL with export + partial pass",

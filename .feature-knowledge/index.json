@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "builtAt": "2026-09-30T09:00:39.918Z",
+  "builtAt": "2026-09-30T09:17:08.111Z",
   "idf": {
     "0": 3.550788354472039,
     "1": 2.5903264042847467,
@@ -50,10 +50,11 @@
     "158": 7.39024066706535,
     "159": 7.39024066706535,
     "162": 7.39024066706535,
-    "164": 6.697093486505405,
+    "164": 6.984775558957185,
     "165": 7.39024066706535,
     "172": 6.697093486505405,
     "180": 7.39024066706535,
+    "198": 7.39024066706535,
     "200": 5.4443305180100365,
     "204": 7.39024066706535,
     "300": 6.984775558957185,
@@ -8553,7 +8554,7 @@
       "vector": {
         "2": 0.4121272594799242,
         "162": 1.0557486667236213,
-        "164": 0.9567276409293435,
+        "164": 0.9978250798510264,
         "165": 1.0557486667236213,
         "symptom": 0.4650105871889991,
         "agent": 0.30356616494221617,
@@ -38742,9 +38743,9 @@
       "featureSlug": "docs",
       "sourcePath": "docs/guides/developer-guide/04-mac-bridge-awl-awb-awi.md",
       "section": "Install and config paths",
-      "text": "| Path                         | Contents                                                          |\n| ---------------------------- | ----------------------------------------------------------------- |\n| `~/.agent-witch/`            | Production-style install (LaunchAgents, config, harness)          |\n| `~/.local-agent-witch/`      | Localhost-origin dev install variant                              |\n| `~/.agent-witch/config.json` | Device identity, app origin — **not** production `wsUrl` override |\n| `~/.agent-witch/harness/`    | Harness file drops from browser install API                       |\n\nInstall bundle version: bump `AGENT_WITCH_INSTALL_BUNDLE_VERSION` in `apps/install/features/bundle/public-api/types.ts` whenever the shipped Mac client changes, including the prompt optimizer in `agent-witch.js`. `src/lib/agentWitch/agentWitchInstallBundleVersion.ts` re-exports that constant. A source change that is not rebuilt into `public/install/agent-witch/` does not update AWL. Current bundle: **164**. AWC’s primary nav brand (`AppShellNav`) renders that constant as `AWL {version}` under the product name so the Console chrome shows the latest compatible AWI/AWL bundle this deploy expects. That label is **not** per-device presence data—device rows still use each Mac’s reported install version.\n\n`agent.register` includes `platform`: `linux` when `process.platform` is `linux`, otherwise `mac`. The hub stores it with `updateAgentWitchDevicePlatform` (`resolveAgentRegisterPlatform`). The install script already posted platform; the dev WebSocket client does too.\n\n`AGENT_WITCH_SERVER_RELEASE_LABEL` (`src/lib/release/agentWitchServerReleaseLabel.constant.ts`) is surfaced on **`GET /api/health`** only. There is no in-app Live header badge (`AgentWitchServerReleaseBadge` / `useAgentWitchServerRelease` were removed).",
+      "text": "| Path                         | Contents                                                          |\n| ---------------------------- | ----------------------------------------------------------------- |\n| `~/.agent-witch/`            | Production-style install (LaunchAgents, config, harness)          |\n| `~/.local-agent-witch/`      | Localhost-origin dev install variant                              |\n| `~/.agent-witch/config.json` | Device identity, app origin — **not** production `wsUrl` override |\n| `~/.agent-witch/harness/`    | Harness file drops from browser install API                       |\n\nInstall bundle version: bump `AGENT_WITCH_INSTALL_BUNDLE_VERSION` in `apps/install/features/bundle/public-api/types.ts` whenever the shipped Mac client changes, including the prompt optimizer in `agent-witch.js`. `src/lib/agentWitch/agentWitchInstallBundleVersion.ts` re-exports that constant. A source change that is not rebuilt into `public/install/agent-witch/` does not update AWL. Current bundle: **198**. AWC’s primary nav brand (`AppShellNav`) renders that constant as `AWL {version}` under the product name so the Console chrome shows the latest compatible AWI/AWL bundle this deploy expects. That label is **not** per-device presence data—device rows still use each Mac’s reported install version.\n\n`agent.register` includes `platform`: `linux` when `process.platform` is `linux`, otherwise `mac`. The hub stores it with `updateAgentWitchDevicePlatform` (`resolveAgentRegisterPlatform`). The install script already posted platform; the dev WebSocket client does too.\n\n`AGENT_WITCH_SERVER_RELEASE_LABEL` (`src/lib/release/agentWitchServerReleaseLabel.constant.ts`) is surfaced on **`GET /api/health`** only. There is no in-app Live header badge (`AgentWitchServerReleaseBadge` / `useAgentWitchServerRelease` were removed).",
       "vector": {
-        "164": 0.8371366858131756,
+        "198": 0.9237800833831687,
         "path": 0.398193505959298,
         "contents": 0.8371366858131756,
         "agent-witch": 1.613831023175355,
@@ -70107,7 +70108,7 @@
       "section": "Two status lights",
       "text": "| What you see                                          | What flipped it                                                                                                              | What it leaves unset                   |\n| ----------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- | -------------------------------------- |\n| AWL home **Connected to cloud**, Status **Connected** | Fresh `connection-health.json` (`system.ack`) while the Mac socket is open (bundle **164+**; not merely `socket.on(\"open\")`) | Which cloud device row owns the socket |\n| AWC **Mac offline** / picker **Offline**              | `presenceTier === \"offline\"` on `GET /api/agent-witch/devices`                                                               | Whether some other socket is open      |\n| AWC **Mac reconnecting**                              | `live_other_instance` or `recent` (`last_seen_at` within 180s)                                                               | —                                      |\n| AWC **Mac online**                                    | Socket for that device id is on the Node serving the page                                                                    | —                                      |\n\n`agent.register` is what binds the open socket to a device. After the server accepts it, it inserts `agent_witch_connections` and touches `last_seen_at`. From then on that row is `live`, `live_other_instance`, or at least `recent` — the Home label is **Mac online** or **Mac reconnecting**.",
       "vector": {
-        "164": 0.9567276409293435,
+        "164": 0.9978250798510264,
         "what": 1.9279186550359777,
         "you": 0.4333616914822512,
         "see": 0.43428039010086406,
