@@ -9,6 +9,7 @@ import {
   PROMPT_SDLC_MANUAL_ACTOR,
 } from "./choosePromptSdlcLocalModels";
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
+import { describeUnusableJudgeReplyCause } from "./describeUnusableJudgeReplyCause";
 import { readPromptSdlcLocalUnusableReplyPreview } from "./readPromptSdlcLocalUnusableReplyPreview";
 import { describePromptSdlcWriterTerminalFailure } from "./readPromptSdlcWriterOutput";
 
@@ -44,10 +45,24 @@ const unusableReplyActivity = (
     readonly title: string;
     readonly detail: string;
   },
-): PromptSdlcLocalActivityDescription => ({
-  ...input,
-  replyPreview: readPromptSdlcLocalUnusableReplyPreview(cycle),
-});
+): PromptSdlcLocalActivityDescription => {
+  const replyPreview = readPromptSdlcLocalUnusableReplyPreview(cycle);
+  const cause =
+    replyPreview === null
+      ? null
+      : describeUnusableJudgeReplyCause(replyPreview);
+  const detail =
+    cause === null
+      ? input.detail
+      : input.detail.length === 0
+        ? cause
+        : `${input.detail} ${cause}`;
+  return {
+    title: input.title,
+    detail,
+    replyPreview,
+  };
+};
 
 const liveActivity = (
   title: string,

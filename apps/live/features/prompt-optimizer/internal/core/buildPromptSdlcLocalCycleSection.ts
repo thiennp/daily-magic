@@ -85,12 +85,18 @@ export const buildPromptSdlcLocalCycleSection = (
     activitySuccess && cycle.wizard !== undefined
       ? `<p class="sdlc-run-success-actions"><a class="btn btn-primary" href="/prompt-optimizer?cycle=${escapeHtml(cycle.id)}&amp;export=wizard-markdown">Download report (.md)</a><a class="btn btn-secondary" href="#prompt-optimizer-wizard-module-results" data-sdlc-view-module-results hidden>Jump to module table</a><button type="button" class="btn btn-secondary" data-sdlc-rerun-same title="Open compose with your last folder, models, and pass score">Re-run same settings</button></p><p class="muted sdlc-rerun-hint">Re-run keeps settings · New prompt clears the form.</p>`
       : "";
-  const detailBlock =
-    activity.detail.length === 0 && successActions.length === 0
+  const replyPreviewBlock =
+    activity.replyPreview === null || activity.replyPreview.length === 0
       ? ""
-      : activity.detail.length === 0
+      : `<p class="muted sdlc-run-reply-preview-label">Reply preview:</p><pre class="mono sdlc-run-reply-preview">${escapeHtml(activity.replyPreview)}</pre>`;
+  const detailBlock =
+    activity.detail.length === 0 &&
+    successActions.length === 0 &&
+    replyPreviewBlock.length === 0
+      ? ""
+      : activity.detail.length === 0 && replyPreviewBlock.length === 0
         ? ""
-        : `<p class="sdlc-run-detail muted">${escapeHtml(activity.detail)}${elapsed}</p>`;
+        : `<div class="sdlc-run-detail-block">${activity.detail.length === 0 ? "" : `<p class="sdlc-run-detail muted">${escapeHtml(activity.detail)}${elapsed}</p>`}${replyPreviewBlock}</div>`;
   const current = cycle.revisions.find(
     (item) => item.roundNumber === cycle.currentRound,
   );

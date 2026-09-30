@@ -77,6 +77,24 @@ export const describePromptSdlcWriterTerminalFailure = (
   return null;
 };
 
+/** Writer reply stored on a revision when judgement parsing failed. */
+export const readPromptSdlcStoredWriterReplyText = (
+  promptText: string,
+): string | null => {
+  const trimmed = promptText.trim();
+  if (trimmed.length === 0) {
+    return null;
+  }
+  const terminal = describePromptSdlcWriterTerminalFailure(trimmed);
+  if (terminal !== null) {
+    return trimmed;
+  }
+  return (
+    cliStatusLine(trimmed) ??
+    (looksLikeCliStatusReply(trimmed) ? trimmed : null)
+  );
+};
+
 export const buildPromptSdlcWriterArgs = (input: {
   readonly writerAgent: HarnessWriterAgentId;
   readonly baseArgs: readonly string[];
