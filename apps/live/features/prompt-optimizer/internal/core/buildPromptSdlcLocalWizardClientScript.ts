@@ -41,16 +41,22 @@ export const PROMPT_SDLC_WIZARD_CLIENT_SCRIPT = `<script>
     if (incomingGateSlot !== null && gateSlot !== null) {
       gateSlot.replaceWith(incomingGateSlot);
     } else if (incomingGateSlot !== null && gateSlot === null) {
+      const runAnchor = document.getElementById("prompt-optimizer-run");
+      const resume = document.querySelector(".sdlc-wizard-resume");
       const compose = document.getElementById("prompt-optimizer-compose");
-      compose?.insertAdjacentElement("afterend", incomingGateSlot);
+      const insertAfter =
+        runAnchor ?? resume ?? compose;
+      insertAfter?.insertAdjacentElement("afterend", incomingGateSlot);
     }
     const incomingRun = holder.querySelector("#prompt-optimizer-run");
     const run = document.getElementById("prompt-optimizer-run");
     if (incomingRun !== null && run !== null) {
       run.replaceWith(incomingRun);
     } else if (incomingRun !== null && run === null) {
-      const slot = document.getElementById("prompt-optimizer-wizard-gate-slot");
-      slot?.insertAdjacentElement("afterend", incomingRun);
+      const resume = document.querySelector(".sdlc-wizard-resume");
+      const compose = document.getElementById("prompt-optimizer-compose");
+      const insertAfter = resume ?? compose;
+      insertAfter?.insertAdjacentElement("afterend", incomingRun);
     }
     const incomingDialog = holder.querySelector("#sdlc-node-dialog");
     if (incomingDialog !== null && document.getElementById("sdlc-node-dialog") === null) {

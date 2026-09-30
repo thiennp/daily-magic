@@ -8,5 +8,5 @@ export const buildPromptSdlcLiveRunFragmentHtml = (
   cycle: PromptSdlcLocalCycle,
 ): string => {
   ensurePromptSdlcLocalCycleRunning(storePath, cycle.id);
-  return `${renderPromptSdlcWizardGateSlot(cycle)}${buildPromptSdlcLocalCycleSection(cycle)}`;
+  return `${buildPromptSdlcLocalCycleSection(cycle)}${renderPromptSdlcWizardGateSlot(cycle)}`;
 };

@@ -151,5 +151,5 @@ export const buildPromptSdlcLocalPageBody = (input: {
       </details>
     </section>`;
   const scripts = `${PROMPT_SDLC_LOCAL_LIVE_STYLE}${PROMPT_SDLC_LOCAL_LIVE_SCRIPT}${PROMPT_SDLC_WIZARD_CLIENT_SCRIPT}${PROMPT_SDLC_LOCAL_FORM_SCRIPT}${PROMPT_SDLC_SKILL_SELECT_SCRIPT}`;
-  return `${error}${skillNotice}${form}${resumeBanner}${wizardGateSlot}${cycle}${nodeDialog}${renderPromptSdlcLocalHistory(input.history, input.cycle?.id ?? null)}${scripts}`;
+  return `${error}${skillNotice}${form}${resumeBanner}${cycle}${wizardGateSlot}${nodeDialog}${renderPromptSdlcLocalHistory(input.history, input.cycle?.id ?? null)}${scripts}`;
 };

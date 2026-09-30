@@ -119,6 +119,9 @@ describe("buildPromptSdlcLocalPageBody", () => {
     expect(html.indexOf("Optimize a prompt")).toBeLessThan(
       html.indexOf("Claude is running the prompt for round 1."),
     );
+    expect(html.indexOf('id="prompt-optimizer-run"')).toBeLessThan(
+      html.indexOf('id="prompt-optimizer-wizard-gate-slot"'),
+    );
     expect(html).toContain("The reply stays inside the facts.");
     expect(html).toContain("Be helpful.");
     expect(html).toContain('value="claude-cli" selected');
