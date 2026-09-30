@@ -6,6 +6,8 @@ import { describe, expect, it } from "vitest";
 
 import { createPromptSdlcLocalCycle } from "./createPromptSdlcLocalCycle";
 import { answerPromptSdlcLocalManual } from "./answerPromptSdlcLocalManual";
+import { describePromptSdlcLocalModels } from "./promptSdlcLocalForm";
+import type { PromptSdlcLocalRouteInput } from "./tryHandlePromptSdlcLocalRequest";
 import {
   readPromptSdlcLocalCycle,
   savePromptSdlcLocalCycle,
@@ -27,11 +29,11 @@ describe("answerPromptSdlcLocalManual", () => {
 
     const chunks: Buffer[] = [];
     const response = {
-      writeHead: (_code: number, _headers: Record<string, string>) => {},
+      writeHead: () => {},
       end: (body: string) => {
         chunks.push(Buffer.from(body));
       },
-    };
+    } as http.ServerResponse;
 
     const handled = await answerPromptSdlcLocalManual(
       {
@@ -39,7 +41,12 @@ describe("answerPromptSdlcLocalManual", () => {
         response,
         requestUrl: "/prompt-optimizer",
         method: "POST",
-      },
+        pathname: "/prompt-optimizer",
+        request: {} as http.IncomingMessage,
+        readBody: async () => "",
+        sendHtml: () => {},
+        renderShell: async () => "",
+      } as PromptSdlcLocalRouteInput,
       new URLSearchParams({
         intent: "stop",
         cycleId: cycle.id,
