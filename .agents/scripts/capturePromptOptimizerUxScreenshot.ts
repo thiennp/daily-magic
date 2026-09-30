@@ -159,9 +159,11 @@ const main = async (): Promise<void> => {
   fs.writeFileSync(htmlPath, html);
 
   const browser = await chromium.launch();
-  const page = await browser.newPage({
+  const context = await browser.newContext({
     viewport: { width: 1280, height: 1400 },
+    permissions: ["clipboard-read", "clipboard-write"],
   });
+  const page = await context.newPage();
   await page.goto(`file://${htmlPath}`, { waitUntil: "networkidle" });
   await page.evaluate(() => {
     const history = document.getElementById("prompt-optimizer-history");
@@ -175,6 +177,7 @@ const main = async (): Promise<void> => {
   await page.locator("[data-sdlc-copy-wizard-modules]").click();
   await page.waitForTimeout(400);
   await page.screenshot({ path: pngPath, fullPage: true });
+  await context.close();
   await browser.close();
 
   console.log(`Wrote ${pngPath}`);
