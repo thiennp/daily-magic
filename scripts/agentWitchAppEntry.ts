@@ -1,5 +1,6 @@
 import { exitUnlessActiveMacOsConsoleUser } from "./guardMacOsConsoleUser";
 import { runAgentWitchReportCli } from "./agentWitchReportCli";
+import { isAgentWitchBundled } from "./agentWitchBundled.constant";
 import { isAgentWitchScriptEntryPoint } from "./isAgentWitchScriptEntryPoint";
 import { assertAgentWitchNodeRuntimeVersion } from "./assertAgentWitchNodeRuntimeVersion";
 
@@ -44,7 +45,11 @@ const runWakeCli = async (): Promise<void> => {
 };
 
 const run = async (): Promise<void> => {
-  if (!isAgentWitchScriptEntryPoint(import.meta.url)) {
+  if (
+    !isAgentWitchScriptEntryPoint(
+      isAgentWitchBundled() ? undefined : import.meta.url,
+    )
+  ) {
     return;
   }
 

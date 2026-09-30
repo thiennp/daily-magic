@@ -34,10 +34,12 @@ const buildAgentWitchInstallBundle = async (): Promise<void> => {
     legalComments: "none",
     logLevel: "info",
     banner: {
-      js: "#!/usr/bin/env node",
+      js: `#!/usr/bin/env node
+var __agentWitchImportMetaUrl=require("url").pathToFileURL(__filename).href;`,
     },
     define: {
       "process.env.AGENT_WITCH_BUNDLED": '"1"',
+      "import.meta.url": "__agentWitchImportMetaUrl",
     },
     external: ["node-pty"],
   });
