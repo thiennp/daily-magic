@@ -8,6 +8,8 @@
 
 **Still possible:** Replies truncated by the writer CLI token/output limit, or strings that contain unescaped `"` inside `templatedPrompt`, can still fail. Retry the step or add gate instructions to return compact single-line JSON.
 
+- Compose **Run** no longer hides the form before the live fragment inserts `#prompt-optimizer-run`; failed live POSTs reset the Run button (bundle **217**).
+
 No other open issues. Recent fixes (bundle **166–186**):
 
 - Wizard completion uses honest **passed** vs **stopped** when not every module meets the wizard pass score; outcome table lists per-module score, tokens, and status (bundle **186**).

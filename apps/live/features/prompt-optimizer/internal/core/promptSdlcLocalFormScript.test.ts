@@ -31,7 +31,10 @@ describe("PROMPT_SDLC_LOCAL_FORM_SCRIPT", () => {
 
   it("hides compose during an active run and restores it when finished", () => {
     expect(PROMPT_SDLC_LOCAL_FORM_SCRIPT).toContain("focusRunPanel");
+    expect(PROMPT_SDLC_LOCAL_FORM_SCRIPT).toContain("if (run === null) return");
     expect(PROMPT_SDLC_LOCAL_FORM_SCRIPT).toContain("sdlc-compose-run-focus");
+    expect(PROMPT_SDLC_LOCAL_FORM_SCRIPT).toContain("sdlc-run-start-failed");
+    expect(PROMPT_SDLC_LOCAL_FORM_SCRIPT).toContain("revertRunStartUi");
     expect(PROMPT_SDLC_LOCAL_FORM_SCRIPT).toContain("sdlc-run-finished");
     expect(PROMPT_SDLC_LOCAL_FORM_SCRIPT).toContain(
       'getElementById("prompt-optimizer-compose")',

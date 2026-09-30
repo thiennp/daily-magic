@@ -2,6 +2,8 @@
 export const PROMPT_SDLC_WIZARD_CLIENT_SCRIPT = `<script>
 (() => {
   const focusRunPanel = () => {
+    const run = document.getElementById("prompt-optimizer-run");
+    if (run === null) return;
     const compose = document.getElementById("prompt-optimizer-compose");
     if (
       compose instanceof HTMLElement &&
@@ -9,10 +11,7 @@ export const PROMPT_SDLC_WIZARD_CLIENT_SCRIPT = `<script>
     ) {
       compose.classList.add("sdlc-compose-run-focus");
     }
-    document.getElementById("prompt-optimizer-run")?.scrollIntoView({
-      behavior: "smooth",
-      block: "start",
-    });
+    run.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
   const lockCompose = () => {
@@ -86,9 +85,13 @@ export const PROMPT_SDLC_WIZARD_CLIENT_SCRIPT = `<script>
     if (incomingDialog !== null && document.getElementById("sdlc-node-dialog") === null) {
       document.body.appendChild(incomingDialog);
     }
-    if (!applied) return;
-    lockCompose();
-    if (!runApplied) {
+    if (!applied) {
+      document.dispatchEvent(new Event("sdlc-run-start-failed"));
+      return;
+    }
+    if (runApplied) {
+      lockCompose();
+    } else {
       focusActiveWizardStep();
     }
     const runAfter = document.getElementById("prompt-optimizer-run");
@@ -129,9 +132,15 @@ export const PROMPT_SDLC_WIZARD_CLIENT_SCRIPT = `<script>
       body,
       cache: "no-store",
     }).catch(() => null);
-    if (response === null || !response.ok) return false;
+    if (response === null || !response.ok) {
+      document.dispatchEvent(new Event("sdlc-run-start-failed"));
+      return false;
+    }
     const html = await response.text();
-    if (html.trim().length === 0) return false;
+    if (html.trim().length === 0) {
+      document.dispatchEvent(new Event("sdlc-run-start-failed"));
+      return false;
+    }
     applyLiveFragment(html);
     const cycleId = response.headers.get("X-Prompt-Sdlc-Cycle-Id");
     if (cycleId) {

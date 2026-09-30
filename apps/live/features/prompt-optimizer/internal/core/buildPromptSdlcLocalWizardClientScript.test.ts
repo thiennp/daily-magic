@@ -19,4 +19,15 @@ describe("PROMPT_SDLC_WIZARD_CLIENT_SCRIPT", () => {
     expect(PROMPT_SDLC_WIZARD_CLIENT_SCRIPT).toContain("sdlc-compose-step-4");
     expect(PROMPT_SDLC_WIZARD_CLIENT_SCRIPT).toContain("summaryStep.hidden");
   });
+
+  it("hides compose for run-focus only after the run panel exists", () => {
+    expect(PROMPT_SDLC_WIZARD_CLIENT_SCRIPT).toContain(
+      'const run = document.getElementById("prompt-optimizer-run")',
+    );
+    expect(PROMPT_SDLC_WIZARD_CLIENT_SCRIPT).toContain(
+      "if (run === null) return",
+    );
+    expect(PROMPT_SDLC_WIZARD_CLIENT_SCRIPT).toContain("sdlc-run-start-failed");
+    expect(PROMPT_SDLC_WIZARD_CLIENT_SCRIPT).toContain("if (runApplied)");
+  });
 });

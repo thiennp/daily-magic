@@ -40,6 +40,8 @@ export const PROMPT_SDLC_LOCAL_FORM_SCRIPT = `<script>
     runButton.textContent = RUN_LABEL;
   };
   const focusRunPanel = () => {
+    const run = document.getElementById("prompt-optimizer-run");
+    if (run === null) return;
     const compose = document.getElementById("prompt-optimizer-compose");
     if (
       compose instanceof HTMLElement &&
@@ -47,10 +49,14 @@ export const PROMPT_SDLC_LOCAL_FORM_SCRIPT = `<script>
     ) {
       compose.classList.add("sdlc-compose-run-focus");
     }
-    document.getElementById("prompt-optimizer-run")?.scrollIntoView({
-      behavior: "smooth",
-      block: "start",
-    });
+    run.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+  const revertRunStartUi = () => {
+    paintRunButton(false);
+    document
+      .getElementById("prompt-optimizer-compose")
+      ?.classList.remove("sdlc-compose-run-focus");
+    paintReady();
   };
   const paintRunButtonWaiting = () => {
     if (!(runButton instanceof HTMLButtonElement)) return;
@@ -603,6 +609,7 @@ export const PROMPT_SDLC_LOCAL_FORM_SCRIPT = `<script>
     showComposeStep(1);
   }
   paintReady();
+  document.addEventListener("sdlc-run-start-failed", revertRunStartUi);
   document.addEventListener("sdlc-run-finished", () => {
     const gateSlot = document.getElementById("prompt-optimizer-wizard-gate-slot");
     const atWizardGate =

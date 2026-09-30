@@ -43,7 +43,7 @@ ${r}`:r,s={...o,updatedAt:new Date().toISOString(),details:n};return eE(s),s},tE
 
 `)}}});var w2,_2,ri,oE,Ed,Bf=l(()=>{"use strict";Ld();ti();w2=new Set(Object.values(Pt)),_2=e=>w2.has(e),ri=(e,t)=>{let r=e.indexOf(t);if(r<0)return;let o=e[r+1];return typeof o=="string"&&o.trim().length>0?o.trim():void 0},oE=()=>{process.stdout.write(["Usage: agent-witch report write \\","  --key <report-key> \\","  --agent-run-id <run-id> \\","  --status in_progress|completed|failed|blocked \\","  --summary <plain-language status> \\","  [--details <optional notes>]",""].join(`
 `))},Ed=e=>{if(e[0]!=="write")return oE(),1;let r=ri(e,"--key"),o=ri(e,"--agent-run-id"),n=ri(e,"--status"),s=ri(e,"--summary"),i=ri(e,"--details");return r===void 0||o===void 0||n===void 0||s===void 0||!_2(n)?(oE(),1):(Qs({reportKey:r,agentRunId:o,status:n,userSummary:s,details:i}),0)}});var Fe,eo=l(()=>{"use strict";Fe=()=>!0});var Gf,nE,to,Rd=l(()=>{"use strict";Gf=m(require("node:path")),nE=require("node:url");eo();to=e=>{let t=process.argv[1];if(t===void 0)return!1;let r=Gf.default.resolve(t);return Fe()?r===Gf.default.resolve(__filename):e===void 0?!1:r===(0,nE.fileURLToPath)(e)}});var Cd,un,L2,WX,pn=l(()=>{"use strict";Cd="agent-witch.js",un="deps.tar.gz",L2="install.sh",WX={mainScript:`app/${Cd}`,depsArchive:`app/${un}`,installShell:L2}});var lE=l(()=>{"use strict";pn()});var cE=l(()=>{"use strict";pn();lE()});var oi,qf,kd,E2,ni,Le,gn,si,ii,ro,Kf=l(()=>{"use strict";oi=m(require("node:fs")),qf=m(require("node:path"));cE();V();kd="install-version.json",E2=e=>typeof e=="object"&&e!==null&&!Array.isArray(e),ni=(e=E())=>qf.default.join(e,kd),Le=(e=E())=>{let t=ni(e);if(!oi.default.existsSync(t))return null;try{let r=JSON.parse(oi.default.readFileSync(t,"utf8"));return!E2(r)||typeof r.bundleVersion!="string"||typeof r.appOrigin!="string"||typeof r.updatedAt!="string"?null:{bundleVersion:r.bundleVersion,appOrigin:r.appOrigin,updatedAt:r.updatedAt}}catch{return null}},gn=(e,t=E())=>{let r=ni(t);oi.default.mkdirSync(qf.default.dirname(r),{recursive:!0}),oi.default.writeFileSync(r,`${JSON.stringify(e,null,2)}
-`,"utf8")},si=(e=E())=>Le(e)?.bundleVersion??"216",ii=(e,t)=>{let r=Le(e);if(r!==null)return r;let o={bundleVersion:"216",appOrigin:t,updatedAt:new Date().toISOString()};return gn(o,e),o},ro=(e,t)=>{if(e===null)return!0;let r=Number.parseInt(e,10),o=Number.parseInt(t,10);return Number.isFinite(r)&&Number.isFinite(o)?o>r:e!==t}});var dE,oo,Jf,Yf,Xf,Td,wt,no,Zf=l(()=>{"use strict";dE=require("node:crypto"),oo=m(require("node:fs")),Jf=m(require("node:path"));V();Yf="self-update-log.ndjson",Xf=100,Td=(e=E())=>{let t=M(),r=t.installDir===e?t.logsDir:ln({installDir:e,profileEmail:t.profileEmail});return Jf.default.join(r,Yf)},wt=(e,t=E())=>{let r={id:(0,dE.randomUUID)(),recordedAt:e.recordedAt??new Date().toISOString(),event:e.event,ok:e.ok,message:e.message,localBundleVersion:e.localBundleVersion,remoteBundleVersion:e.remoteBundleVersion},o=Td(t);oo.default.mkdirSync(Jf.default.dirname(o),{recursive:!0});let n=oo.default.existsSync(o)?oo.default.readFileSync(o,"utf8").split(`
+`,"utf8")},si=(e=E())=>Le(e)?.bundleVersion??"217",ii=(e,t)=>{let r=Le(e);if(r!==null)return r;let o={bundleVersion:"217",appOrigin:t,updatedAt:new Date().toISOString()};return gn(o,e),o},ro=(e,t)=>{if(e===null)return!0;let r=Number.parseInt(e,10),o=Number.parseInt(t,10);return Number.isFinite(r)&&Number.isFinite(o)?o>r:e!==t}});var dE,oo,Jf,Yf,Xf,Td,wt,no,Zf=l(()=>{"use strict";dE=require("node:crypto"),oo=m(require("node:fs")),Jf=m(require("node:path"));V();Yf="self-update-log.ndjson",Xf=100,Td=(e=E())=>{let t=M(),r=t.installDir===e?t.logsDir:ln({installDir:e,profileEmail:t.profileEmail});return Jf.default.join(r,Yf)},wt=(e,t=E())=>{let r={id:(0,dE.randomUUID)(),recordedAt:e.recordedAt??new Date().toISOString(),event:e.event,ok:e.ok,message:e.message,localBundleVersion:e.localBundleVersion,remoteBundleVersion:e.remoteBundleVersion},o=Td(t);oo.default.mkdirSync(Jf.default.dirname(o),{recursive:!0});let n=oo.default.existsSync(o)?oo.default.readFileSync(o,"utf8").split(`
 `).filter(i=>i.trim().length>0):[],s=[...n.slice(Math.max(0,n.length-Xf+1)),JSON.stringify(r)];return oo.default.writeFileSync(o,`${s.join(`
 `)}
 `,"utf8"),r},no=(e=20,t=E())=>{let r=Td(t);if(!oo.default.existsSync(r))return[];let o=oo.default.readFileSync(r,"utf8").split(`
@@ -2427,6 +2427,8 @@ ${s}`:"The writer printed nothing. Use the changes above."].filter(a=>a.length>0
 </script>`});var iN,aN=l(()=>{"use strict";iN=`<script>
 (() => {
   const focusRunPanel = () => {
+    const run = document.getElementById("prompt-optimizer-run");
+    if (run === null) return;
     const compose = document.getElementById("prompt-optimizer-compose");
     if (
       compose instanceof HTMLElement &&
@@ -2434,10 +2436,7 @@ ${s}`:"The writer printed nothing. Use the changes above."].filter(a=>a.length>0
     ) {
       compose.classList.add("sdlc-compose-run-focus");
     }
-    document.getElementById("prompt-optimizer-run")?.scrollIntoView({
-      behavior: "smooth",
-      block: "start",
-    });
+    run.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
   const lockCompose = () => {
@@ -2511,9 +2510,13 @@ ${s}`:"The writer printed nothing. Use the changes above."].filter(a=>a.length>0
     if (incomingDialog !== null && document.getElementById("sdlc-node-dialog") === null) {
       document.body.appendChild(incomingDialog);
     }
-    if (!applied) return;
-    lockCompose();
-    if (!runApplied) {
+    if (!applied) {
+      document.dispatchEvent(new Event("sdlc-run-start-failed"));
+      return;
+    }
+    if (runApplied) {
+      lockCompose();
+    } else {
       focusActiveWizardStep();
     }
     const runAfter = document.getElementById("prompt-optimizer-run");
@@ -2554,9 +2557,15 @@ ${s}`:"The writer printed nothing. Use the changes above."].filter(a=>a.length>0
       body,
       cache: "no-store",
     }).catch(() => null);
-    if (response === null || !response.ok) return false;
+    if (response === null || !response.ok) {
+      document.dispatchEvent(new Event("sdlc-run-start-failed"));
+      return false;
+    }
     const html = await response.text();
-    if (html.trim().length === 0) return false;
+    if (html.trim().length === 0) {
+      document.dispatchEvent(new Event("sdlc-run-start-failed"));
+      return false;
+    }
     applyLiveFragment(html);
     const cycleId = response.headers.get("X-Prompt-Sdlc-Cycle-Id");
     if (cycleId) {
@@ -2803,6 +2812,8 @@ ${s}`:"The writer printed nothing. Use the changes above."].filter(a=>a.length>0
     runButton.textContent = RUN_LABEL;
   };
   const focusRunPanel = () => {
+    const run = document.getElementById("prompt-optimizer-run");
+    if (run === null) return;
     const compose = document.getElementById("prompt-optimizer-compose");
     if (
       compose instanceof HTMLElement &&
@@ -2810,10 +2821,14 @@ ${s}`:"The writer printed nothing. Use the changes above."].filter(a=>a.length>0
     ) {
       compose.classList.add("sdlc-compose-run-focus");
     }
-    document.getElementById("prompt-optimizer-run")?.scrollIntoView({
-      behavior: "smooth",
-      block: "start",
-    });
+    run.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+  const revertRunStartUi = () => {
+    paintRunButton(false);
+    document
+      .getElementById("prompt-optimizer-compose")
+      ?.classList.remove("sdlc-compose-run-focus");
+    paintReady();
   };
   const paintRunButtonWaiting = () => {
     if (!(runButton instanceof HTMLButtonElement)) return;
@@ -3366,6 +3381,7 @@ ${s}`:"The writer printed nothing. Use the changes above."].filter(a=>a.length>0
     showComposeStep(1);
   }
   paintReady();
+  document.addEventListener("sdlc-run-start-failed", revertRunStartUi);
   document.addEventListener("sdlc-run-finished", () => {
     const gateSlot = document.getElementById("prompt-optimizer-wizard-gate-slot");
     const atWizardGate =
