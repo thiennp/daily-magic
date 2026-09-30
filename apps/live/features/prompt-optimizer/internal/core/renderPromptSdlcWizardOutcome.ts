@@ -7,6 +7,7 @@ import {
   type PromptSdlcWizardOutcomeStepState,
 } from "./resolvePromptSdlcWizardOutcomeStepState";
 import { renderPromptSdlcWizardStepModalBody } from "./renderPromptSdlcWizardStepModalBody";
+import { renderPromptSdlcWizardStepPromptInfo } from "./renderPromptSdlcWizardStepPromptInfo";
 
 const renderOutcomeStepMark = (
   state: PromptSdlcWizardOutcomeStepState,
@@ -60,7 +61,10 @@ const renderOutcomeStep = (
   const stepState = resolvePromptSdlcWizardOutcomeStepState(cycle, stepId);
   const mark = renderOutcomeStepMark(stepState);
   const statusLabel = renderOutcomeStepStatusLabel(stepState);
-  const summaryLine = `${mark}<span class="sdlc-wizard-outcome-step-title">${escapeHtml(title)}</span>${statusLabel}<span class="muted sdlc-wizard-outcome-step-hint">${escapeHtml(hint)}</span>`;
+  const promptInfo = renderPromptSdlcWizardStepPromptInfo(cycle, stepId, {
+    forOutcomeSummary: true,
+  });
+  const summaryLine = `${mark}<span class="sdlc-wizard-outcome-step-title">${escapeHtml(title)}</span>${promptInfo}${statusLabel}<span class="muted sdlc-wizard-outcome-step-hint">${escapeHtml(hint)}</span>`;
   const openStep4 =
     stepId === "wizard-4" && wizard.phase === "complete" ? " open" : "";
   const openFailed =

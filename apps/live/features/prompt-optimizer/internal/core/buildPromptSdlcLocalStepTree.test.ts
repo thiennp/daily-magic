@@ -32,7 +32,7 @@ describe("renderPromptSdlcLocalStepTree", () => {
     );
     const html = renderPromptSdlcLocalStepTree(steps, judgingCycle);
     expect(html).toContain('data-sdlc-step-id="wizard-2"');
-    expect(html).toContain("prompt-optimizer-wizard-active-step");
+    expect(html).toContain('class="sdlc-node sdlc-node-active"');
     expect(html).toContain("<template><h2>Step 2");
     expect(PROMPT_SDLC_NODE_DIALOG_SCRIPT).toContain(":scope > template");
     expect(PROMPT_SDLC_NODE_DIALOG_SCRIPT).toContain(

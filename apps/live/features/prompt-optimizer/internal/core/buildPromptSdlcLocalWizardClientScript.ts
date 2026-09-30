@@ -43,16 +43,32 @@ export const PROMPT_SDLC_WIZARD_CLIENT_SCRIPT = `<script>
     focusRunPanel();
   };
 
-  const focusActiveWizardStep = () => {
+  let lastWizardAutofocusStepId = null;
+
+  const readWizardAutofocusStepId = () => {
     const active = document.getElementById("prompt-optimizer-wizard-active-step");
-    if (active !== null) {
-      active.scrollIntoView({ behavior: "smooth", block: "start" });
-      const focusTarget = active.querySelector(
-        "textarea, input:not([type=hidden]), button, select",
-      );
-      if (focusTarget instanceof HTMLElement) focusTarget.focus({ preventScroll: true });
-    }
+    if (!(active instanceof HTMLElement)) return null;
+    const stepId = active.dataset.sdlcStepId;
+    return typeof stepId === "string" && stepId.length > 0 ? stepId : null;
   };
+
+  const focusActiveWizardStep = () => {
+    const stepId = readWizardAutofocusStepId();
+    if (stepId === null) return;
+    if (stepId === lastWizardAutofocusStepId) return;
+    const active = document.getElementById("prompt-optimizer-wizard-active-step");
+    if (active === null) return;
+    lastWizardAutofocusStepId = stepId;
+    active.scrollIntoView({ behavior: "smooth", block: "start" });
+    const focusTarget = active.querySelector(
+      "textarea, input:not([type=hidden]), button, select",
+    );
+    if (focusTarget instanceof HTMLElement) focusTarget.focus({ preventScroll: true });
+  };
+
+  document.addEventListener("sdlc-run-finished", () => {
+    lastWizardAutofocusStepId = null;
+  });
 
   const applyLiveFragment = (html) => {
     const holder = document.createElement("div");
@@ -322,6 +338,15 @@ export const PROMPT_SDLC_WIZARD_CLIENT_SCRIPT = `<script>
     observer.observe(moduleResultsSection);
   }
 
-  focusActiveWizardStep();
+  const runOnLoad = document.getElementById("prompt-optimizer-run");
+  const runBusyOnLoad =
+    runOnLoad instanceof HTMLElement &&
+    runOnLoad.getAttribute("aria-busy") === "true";
+  const stepOnLoad = readWizardAutofocusStepId();
+  if (runBusyOnLoad && stepOnLoad !== null) {
+    lastWizardAutofocusStepId = stepOnLoad;
+  } else {
+    focusActiveWizardStep();
+  }
 })();
 </script>`;

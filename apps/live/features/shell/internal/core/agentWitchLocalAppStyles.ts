@@ -488,6 +488,41 @@ tbody tr:last-child td { border-bottom: none; }
   padding: 0.75rem 0.75rem 0;
 }
 
+.history-dialog-bar form {
+  margin: 0;
+}
+
+.history-dialog-close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: var(--aw-radius-lg);
+  background: transparent;
+  color: var(--aw-zinc-500);
+  cursor: pointer;
+  font: inherit;
+}
+
+.history-dialog-close:hover {
+  background: var(--aw-zinc-100);
+  color: var(--aw-zinc-700);
+}
+
+.history-dialog-close:focus-visible {
+  outline: 2px solid var(--aw-brand-600);
+  outline-offset: 2px;
+}
+
+.history-dialog-close-icon {
+  width: 1.125rem;
+  height: 1.125rem;
+  display: block;
+}
+
 .history-dialog-body {
   overflow: auto;
   max-height: calc(100vh - 5.5rem);
@@ -1197,6 +1232,18 @@ form.sdlc-wizard-feedback {
   box-shadow: none;
 }
 .sdlc-wizard-outcome-step-title { font-weight: 600; }
+.sdlc-wizard-active-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
+}
+.sdlc-exact-prompt-pre {
+  max-height: min(70vh, 28rem);
+  overflow: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
 .sdlc-wizard-outcome-status {
   flex: none;
   font-size: 0.6875rem;

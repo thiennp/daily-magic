@@ -137,11 +137,21 @@ export const renderPromptSdlcWizardGate = (
       ? ""
       : `<p class="muted sdlc-wizard-cumulative-tokens">Wizard tokens so far (reported): ${cumulativeTokens}</p>`;
 
+  const gateStepId =
+    gate === "generalize"
+      ? "wizard-1"
+      : gate === "evaluate"
+        ? "wizard-2"
+        : gate === "separate"
+          ? "wizard-3"
+          : "wizard-4";
   const activeClass =
     options?.active === true ? " sdlc-wizard-gate-active" : "";
-  const activeId =
-    options?.active === true ? ' id="prompt-optimizer-wizard-active-step"' : "";
-  return `<section class="card sdlc-wizard-gate${activeClass}"${activeId}>
+  const activeAttrs =
+    options?.active === true
+      ? ` id="prompt-optimizer-wizard-active-step" data-sdlc-step-id="${gateStepId}"`
+      : "";
+  return `<section class="card sdlc-wizard-gate${activeClass}"${activeAttrs}>
     <p class="eyebrow">Prompt optimizer</p>
     <h2>${stepTitle}</h2>
     <p class="sdlc-wizard-gate-lede">${gateLede}</p>

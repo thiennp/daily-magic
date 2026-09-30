@@ -30,4 +30,18 @@ describe("PROMPT_SDLC_WIZARD_CLIENT_SCRIPT", () => {
     expect(PROMPT_SDLC_WIZARD_CLIENT_SCRIPT).toContain("sdlc-run-start-failed");
     expect(PROMPT_SDLC_WIZARD_CLIENT_SCRIPT).toContain("if (runApplied)");
   });
+
+  it("autofocuses the wizard gate only when the active step id changes", () => {
+    expect(PROMPT_SDLC_WIZARD_CLIENT_SCRIPT).toContain(
+      "lastWizardAutofocusStepId",
+    );
+    expect(PROMPT_SDLC_WIZARD_CLIENT_SCRIPT).toContain(
+      "readWizardAutofocusStepId",
+    );
+    expect(PROMPT_SDLC_WIZARD_CLIENT_SCRIPT).toContain(
+      "stepId === lastWizardAutofocusStepId",
+    );
+    expect(PROMPT_SDLC_WIZARD_CLIENT_SCRIPT).toContain("dataset.sdlcStepId");
+    expect(PROMPT_SDLC_WIZARD_CLIENT_SCRIPT).toContain("runBusyOnLoad");
+  });
 });

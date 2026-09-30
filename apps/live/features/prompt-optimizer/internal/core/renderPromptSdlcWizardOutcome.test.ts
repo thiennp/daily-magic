@@ -119,6 +119,8 @@ describe("renderPromptSdlcWizardOutcome", () => {
     expect(html).toContain(
       'id="prompt-optimizer-wizard-outcome-wizard-2" open',
     );
+    expect(html).toContain("data-sdlc-wizard-step-prompt-info");
+    expect(html).toContain("wizard step 2 (evaluate revisions)");
   });
 
   it("returns empty for an in-progress wizard", () => {

@@ -1,4 +1,5 @@
 import { listAgentRunEstimateHistoryForDisplay } from "../../../../adapters/estimateHistory";
+import { renderAwlDialogCloseButton } from "../../../shell/internal/core/renderAwlDialogCloseButton";
 
 const escapeHtml = (value: string): string =>
   value
@@ -156,7 +157,7 @@ export const buildAgentWitchLocalEstimateHistoryPageBody = (input: {
         ${rendered.map((item) => item.template).join("")}
         <dialog id="history-detail" class="history-dialog" aria-label="Prompt detail">
           <div class="history-dialog-bar">
-            <button type="button" class="btn btn-secondary btn-compact" id="history-detail-close">Close</button>
+            ${renderAwlDialogCloseButton({ type: "button", id: "history-detail-close" })}
           </div>
           <div class="history-dialog-body" id="history-detail-body"></div>
         </dialog>

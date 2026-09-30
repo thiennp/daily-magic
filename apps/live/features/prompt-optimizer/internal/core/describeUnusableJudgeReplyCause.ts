@@ -25,6 +25,13 @@ export const describeUnusableJudgeReplyCause = (
       const message = messageMatch[1]
         .replaceAll("\\n", "\n")
         .replaceAll('\\"', '"');
+      if (
+        message.includes(
+          "not supported when using Codex with a ChatGPT account",
+        )
+      ) {
+        return `Codex could not run the judge — your default model in ~/.codex/config.toml is not available on a ChatGPT login (for example gpt-6.1-sol). Set model = "gpt-5.5" in that file, or run codex with -m gpt-5.5, then retry Step 2. API error: ${message}`;
+      }
       return `The judge CLI returned an error instead of a score: ${message}`;
     }
     return "The judge CLI returned an error event instead of a score JSON object.";

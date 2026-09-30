@@ -4,6 +4,7 @@ export const PROMPT_SDLC_LOCAL_LIVE_SCRIPT = `<script>
 (() => {
   let root = null;
   let pollTimer = null;
+  let lastWizardGateScrollStepId = null;
 
   const paintElapsed = () => {
     if (root === null) return;
@@ -35,8 +36,12 @@ export const PROMPT_SDLC_LOCAL_LIVE_SCRIPT = `<script>
     const fields = document.querySelector(".sdlc-fields");
     if (fields instanceof HTMLFieldSetElement) fields.disabled = true;
     const active = document.getElementById("prompt-optimizer-wizard-active-step");
-    if (active !== null) {
-      active.scrollIntoView({ behavior: "smooth", block: "start" });
+    if (active instanceof HTMLElement) {
+      const stepId = active.dataset.sdlcStepId ?? "";
+      if (stepId.length > 0 && stepId !== lastWizardGateScrollStepId) {
+        lastWizardGateScrollStepId = stepId;
+        active.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
     }
   };
   const poll = async () => {
@@ -59,6 +64,7 @@ export const PROMPT_SDLC_LOCAL_LIVE_SCRIPT = `<script>
     applyIncomingRun(incoming);
     document.dispatchEvent(new Event("sdlc-node-dialog-refresh"));
     if (root.dataset.live !== "true") {
+      lastWizardGateScrollStepId = null;
       document.dispatchEvent(new Event("sdlc-run-finished"));
       return;
     }

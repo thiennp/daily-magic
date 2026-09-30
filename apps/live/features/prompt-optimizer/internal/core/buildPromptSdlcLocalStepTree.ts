@@ -11,9 +11,11 @@ import {
   canShowPromptSdlcWizardTimelineSkip,
   PROMPT_SDLC_WIZARD_SKIP_STEP_CONFIRM,
 } from "./skipPromptSdlcWizardTimelineStep";
+import { renderAwlDialogCloseButton } from "../../../shell/internal/core/renderAwlDialogCloseButton";
 import { PROMPT_SDLC_INFO_ICON_HTML } from "./promptSdlcInfoIconHtml.constant";
 import { readPromptSdlcLocalUnusableReplyPreview } from "./readPromptSdlcLocalUnusableReplyPreview";
 import { renderPromptSdlcWizardPipeline } from "./renderPromptSdlcWizardPipeline";
+import { renderPromptSdlcWizardStepPromptInfo } from "./renderPromptSdlcWizardStepPromptInfo";
 import {
   formatPromptSdlcTokenCount,
   sumPromptSdlcLocalTokens,
@@ -81,7 +83,13 @@ const renderNode = (
       ? `<button type="button" class="sdlc-field-info sdlc-node-failure-info" data-sdlc-failure-reply-info aria-label="View model reply">${PROMPT_SDLC_INFO_ICON_HTML}</button><template data-sdlc-failure-reply><h2>Model reply</h2><pre class="mono">${escapeHtml(failureReplyPreview)}</pre></template>`
       : "";
 
-  return `<li class="sdlc-node sdlc-node-${nodeStateClass}" data-sdlc-step-id="${escapeHtml(step.id)}"${step.state === "active" && step.id.startsWith("wizard-") ? ' id="prompt-optimizer-wizard-active-step"' : ""}><div class="sdlc-node-row"><button type="button" class="sdlc-node-open"${outcomeStepLink} data-sdlc-node>${mark}<span class="sdlc-node-label">${escapeHtml(step.label)}${reason}${tokenNote}</span></button>${failureReplyInfo}${skip}</div>${pipeline}<template>${modal}</template></li>`;
+  const wizardStepPromptInfo =
+    step.id.startsWith("wizard-") &&
+    (step.state === "done" || step.state === "active" || isFailedEnd)
+      ? renderPromptSdlcWizardStepPromptInfo(cycle, step.id)
+      : "";
+
+  return `<li class="sdlc-node sdlc-node-${nodeStateClass}" data-sdlc-step-id="${escapeHtml(step.id)}"><div class="sdlc-node-row"><button type="button" class="sdlc-node-open"${outcomeStepLink} data-sdlc-node>${mark}<span class="sdlc-node-label">${escapeHtml(step.label)}${reason}${tokenNote}</span></button>${wizardStepPromptInfo}${failureReplyInfo}${skip}</div>${pipeline}<template>${modal}</template></li>`;
 };
 
 export const renderPromptSdlcLocalStepTree = (
@@ -100,7 +108,7 @@ export const renderPromptSdlcLocalScoreScale = (passScore: number): string => {
   return `<div class="sdlc-score" aria-label="What the score means">${bands}</div><p class="muted">${passScore} or higher passes. The score is how well the changes achieve the goal, including the tokens and the delay.</p>`;
 };
 
-export const PROMPT_SDLC_NODE_DIALOG = `<dialog id="sdlc-node-dialog" class="history-dialog"><div class="history-dialog-bar"><form method="dialog"><button class="btn btn-secondary" type="submit">Close</button></form></div><div class="history-dialog-body" data-sdlc-dialog-body></div></dialog>`;
+export const PROMPT_SDLC_NODE_DIALOG = `<dialog id="sdlc-node-dialog" class="history-dialog"><div class="history-dialog-bar"><form method="dialog">${renderAwlDialogCloseButton({ type: "submit" })}</form></div><div class="history-dialog-body" data-sdlc-dialog-body></div></dialog>`;
 
 export const PROMPT_SDLC_NODE_DIALOG_SCRIPT = `<script>
 (() => {
@@ -143,6 +151,18 @@ export const PROMPT_SDLC_NODE_DIALOG_SCRIPT = `<script>
     const info = target.closest("[data-sdlc-pipeline-info]");
     if (info instanceof HTMLElement) {
       const template = info.closest(".sdlc-pipeline-step")?.querySelector("template");
+      if (!(template instanceof HTMLTemplateElement)) return;
+      delete dialog.dataset.sdlcDialogStepId;
+      openFromTemplate(template, "");
+      return;
+    }
+    const stepPromptInfo = target.closest("[data-sdlc-wizard-step-prompt-info]");
+    if (stepPromptInfo instanceof HTMLElement) {
+      event.stopPropagation();
+      event.preventDefault();
+      const template = stepPromptInfo.parentElement?.querySelector(
+        "template[data-sdlc-wizard-step-prompt]",
+      );
       if (!(template instanceof HTMLTemplateElement)) return;
       delete dialog.dataset.sdlcDialogStepId;
       openFromTemplate(template, "");
