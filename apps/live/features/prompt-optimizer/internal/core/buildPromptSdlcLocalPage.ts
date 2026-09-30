@@ -122,8 +122,7 @@ export const buildPromptSdlcLocalPageBody = (input: {
           input.cycle !== null
             ? promptSdlcLocalHistoryTitle(input.cycle.goal)
             : promptSdlcLocalHistoryTitle(shown.goal);
-        const folderPreview = escapeHtml(shown.folder.trim() || "No folder");
-        return `<summary class="sdlc-compose-summary sdlc-compose-summary-collapsed"><span class="sdlc-compose-summary-chevron" aria-hidden="true">▸</span><span class="sdlc-compose-summary-copy"><span class="eyebrow">Compose</span><span class="sdlc-compose-summary-title">Edit goal &amp; prompt</span><span class="muted sdlc-compose-summary-preview">${escapeHtml(goalPreview)} · ${folderPreview}</span></span></summary>`;
+        return `<summary class="sdlc-compose-summary sdlc-compose-summary-collapsed"><span class="sdlc-compose-summary-chevron" aria-hidden="true">▸</span><span class="sdlc-compose-summary-copy"><span class="eyebrow">Compose</span><span class="sdlc-compose-summary-title">Review settings</span><span class="muted sdlc-compose-summary-preview">${escapeHtml(goalPreview)}</span><span class="muted sdlc-compose-summary-hint">Expand to edit fields — does not start a run. Use New prompt or Re-run below.</span></span></summary>`;
       })()
     : `<summary class="sdlc-compose-summary"><span class="eyebrow">Prompt optimizer</span> Optimize a prompt</summary>`;
   const composeViewingClass = viewingFinishedRun

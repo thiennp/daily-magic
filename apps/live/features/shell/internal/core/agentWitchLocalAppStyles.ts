@@ -700,6 +700,16 @@ form.sdlc-form { display: flex; flex-direction: column; }
   gap: 0.5rem;
   margin: 0.75rem 0 0;
 }
+.sdlc-run-result-shortcuts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0.75rem 0 0;
+}
+.sdlc-run-panel-timeline-compact { padding: 0.75rem 1rem; }
+.sdlc-run-progress-compact { margin: 0; display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.35rem 0.75rem; }
+.sdlc-run-progress-compact-title { margin: 0; font-size: 0.875rem; }
+.sdlc-compose-summary-hint { font-size: 0.8125rem; line-height: 1.35; }
 .sdlc-history-badge-viewing { background: #eff6ff; color: #1d4ed8; }
 .sdlc-history-item-viewing {
   background: #f8fafc;

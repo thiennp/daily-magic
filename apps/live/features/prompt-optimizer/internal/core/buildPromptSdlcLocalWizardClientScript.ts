@@ -153,6 +153,31 @@ export const PROMPT_SDLC_WIZARD_CLIENT_SCRIPT = `<script>
     if (details instanceof HTMLDetailsElement) details.open = false;
   }
 
+  const jumpToWizardModuleResults = () => {
+    const target = document.getElementById("prompt-optimizer-wizard-outcome-wizard-4");
+    if (target instanceof HTMLDetailsElement) {
+      target.open = true;
+      target.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
+
+  document.querySelectorAll("[data-sdlc-jump-wizard-results]").forEach((btn) => {
+    btn.addEventListener("click", jumpToWizardModuleResults);
+  });
+
+  document.querySelector("[data-sdlc-copy-wizard-modules]")?.addEventListener("click", () => {
+    const root = document.getElementById("prompt-optimizer-wizard-outcome-wizard-4");
+    if (root === null) return;
+    const chunks = [...root.querySelectorAll(".sdlc-wizard-chunk-prompt")]
+      .map((node) => node.textContent?.trim() ?? "")
+      .filter((text) => text.length > 0);
+    if (chunks.length === 0) return;
+    const text = chunks
+      .map((prompt, index) => \`## Module \${index + 1}\\n\\n\${prompt}\`)
+      .join("\\n\\n");
+    void navigator.clipboard.writeText(text).catch(() => undefined);
+  });
+
   const outcomeRoot = document.getElementById("prompt-optimizer-wizard-outcome");
   if (outcomeRoot !== null) {
     outcomeRoot.querySelector("[data-sdlc-outcome-expand-all]")?.addEventListener("click", () => {

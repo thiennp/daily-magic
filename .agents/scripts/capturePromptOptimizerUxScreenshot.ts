@@ -11,7 +11,7 @@ import { buildPromptSdlcLocalPageBody } from "../../apps/live/features/prompt-op
 import { createPromptSdlcLocalCycle } from "../../apps/live/features/prompt-optimizer/internal/core/createPromptSdlcLocalCycle";
 
 const ARTIFACTS = "/opt/cursor/artifacts";
-const BUNDLE = "193";
+const BUNDLE = "194";
 
 const finishedWizard = (): ReturnType<typeof createPromptSdlcLocalCycle> => {
   const wizard = {
@@ -67,7 +67,7 @@ const finishedWizard = (): ReturnType<typeof createPromptSdlcLocalCycle> => {
   summarizePromptSdlcWizardCompletion(wizard);
   return {
     ...createPromptSdlcLocalCycle({
-      goal: "Dogfood wizard UX bundle 193",
+      goal: "Dogfood wizard UX bundle 194",
       sourcePrompt: "Weak prompt",
       judgeModel: "claude-cli",
       improverModel: "claude-cli",

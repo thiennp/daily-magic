@@ -38,5 +38,5 @@ export const renderPromptSdlcWizardModuleTable = (
     .join("");
   const headlineBlock =
     headline.length === 0 ? "" : `<p class="muted">${escapeHtml(headline)}</p>`;
-  return `<div class="sdlc-wizard-outcome-module-table">${headlineBlock}<table class="sdlc-wizard-outcome-table"><caption class="sdlc-sr-only">Module scores</caption><thead><tr><th>Module</th><th>Best score</th><th>Tokens</th><th>Status</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+  return `<div class="sdlc-wizard-outcome-module-table">${headlineBlock}<table class="sdlc-wizard-outcome-table"><caption class="sdlc-sr-only">Module scores</caption><thead><tr><th>Module</th><th title="Score compared to pass threshold">Score / pass</th><th title="Runner tokens for best trial">Tokens</th><th>Status</th></tr></thead><tbody>${rows}</tbody></table></div>`;
 };

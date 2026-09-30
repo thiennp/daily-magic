@@ -44,11 +44,11 @@ export const renderPromptSdlcWizardOutcome = (
       const openStep4 =
         stepId === "wizard-4" && wizard.phase === "complete" ? " open" : "";
       const stepAnchor = `prompt-optimizer-wizard-outcome-${stepId}`;
-      return `<details class="sdlc-wizard-outcome-step" id="${stepAnchor}"${openStep4}><summary>${summaryLine}</summary><div class="sdlc-wizard-outcome-step-body">${body}</div></details>`;
+      return `<details class="sdlc-wizard-outcome-step" id="${stepAnchor}"${openStep4}><summary aria-controls="${stepAnchor}-body">${summaryLine}</summary><div class="sdlc-wizard-outcome-step-body" id="${stepAnchor}-body">${body}</div></details>`;
     })
     .join("");
 
-  const outcomeActions = `<div class="sdlc-wizard-outcome-head-actions"><button type="button" class="btn btn-secondary sdlc-wizard-outcome-toggle" data-sdlc-outcome-expand-all>Expand all</button><button type="button" class="btn btn-secondary sdlc-wizard-outcome-toggle" data-sdlc-outcome-collapse-all>Collapse all</button></div>`;
+  const outcomeActions = `<div class="sdlc-wizard-outcome-head-actions"><button type="button" class="btn btn-secondary sdlc-wizard-outcome-toggle" data-sdlc-outcome-expand-all>Expand all</button><button type="button" class="btn btn-secondary sdlc-wizard-outcome-toggle" data-sdlc-outcome-collapse-all>Collapse all</button><button type="button" class="btn btn-secondary sdlc-wizard-outcome-toggle" data-sdlc-jump-wizard-results>Go to results</button></div>`;
 
   return `<div class="sdlc-run-panel sdlc-wizard-outcome" id="prompt-optimizer-wizard-outcome"><div class="sdlc-wizard-outcome-head"><h3 class="sdlc-run-panel-title">Step details</h3>${outcomeActions}</div>${stepBodies}</div>`;
 };

@@ -218,7 +218,7 @@ const renderOptimizeBody = (cycle: PromptSdlcLocalCycle): string => {
         wizard.phase !== "complete" && index === wizard.currentModuleIndex
           ? " — in progress"
           : "";
-      return `<li><span class="muted">${escapeHtml(moduleLabel)}</span> <strong>${escapeHtml(item.title)}</strong> (${escapeHtml(item.status)})${escapeHtml(active)}<pre class="sdlc-pre sdlc-wizard-chunk-prompt">${escapeHtml(item.prompt)}</pre></li>`;
+      return `<li class="sdlc-wizard-module-prompt"><span class="muted">${escapeHtml(moduleLabel)}</span> <strong>${escapeHtml(item.title)}</strong>${escapeHtml(active)}<pre class="sdlc-pre sdlc-wizard-chunk-prompt">${escapeHtml(item.prompt)}</pre></li>`;
     })
     .join("");
   const rounds =
@@ -229,7 +229,7 @@ const renderOptimizeBody = (cycle: PromptSdlcLocalCycle): string => {
           caption: "Scored rounds for the current module (runner + judge).",
         })
       : "";
-  return `<ol class="sdlc-wizard-chunks">${moduleList}</ol>${rounds}`;
+  return `<ul class="sdlc-wizard-chunks">${moduleList}</ul>${rounds}`;
 };
 
 export const renderPromptSdlcWizardStepModalBody = (

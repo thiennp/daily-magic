@@ -4,6 +4,7 @@ import {
 } from "../../../../adapters/promptSdlcAwcCore";
 
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
+import { formatPromptSdlcTokenCount } from "./sumPromptSdlcLocalTokens";
 
 export const describePromptSdlcWizardOutcomeStepHint = (
   cycle: PromptSdlcLocalCycle,
@@ -66,7 +67,20 @@ export const describePromptSdlcWizardOutcomeStepHint = (
       summary.terminalStatusSuggestion === "passed" &&
       summary.passedModuleCount === summary.totalModules
     ) {
-      return `${summary.totalModules} modules · all passed`;
+      const lowest = summary.rows.reduce<number | null>((min, row) => {
+        if (row.bestScore === null) {
+          return min;
+        }
+        return min === null ? row.bestScore : Math.min(min, row.bestScore);
+      }, null);
+      const totalTokens = summary.rows.reduce(
+        (sum, row) => sum + (row.tokens ?? 0),
+        0,
+      );
+      if (lowest === null) {
+        return `${formatPromptSdlcTokenCount(totalTokens)} tokens total`;
+      }
+      return `Lowest score ${lowest} · ${formatPromptSdlcTokenCount(totalTokens)} tokens total`;
     }
     return `${summary.passedModuleCount}/${summary.totalModules} passed · ≥ ${PROMPT_SDLC_WIZARD_PASS_SCORE}`;
   }
