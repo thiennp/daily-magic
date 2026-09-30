@@ -36,10 +36,14 @@ export const renderPromptSdlcWizardResumeBanner = (
   const stepIndex = readPromptSdlcWizardActiveStepIndex(cycle);
   const stepIndexLine =
     stepIndex === null || stepIndex >= 4 ? "" : ` (step ${stepIndex + 1} of 4)`;
+  const pausedAt = new Date(cycle.updatedAt).toLocaleString(undefined, {
+    dateStyle: "medium",
+    timeStyle: "short",
+  });
   return `<section class="card sdlc-wizard-resume" role="status">
     <p class="eyebrow">Wizard in progress</p>
     <h2>Resume ${escapeHtml(title)}</h2>
-    <p class="lede">Paused at <strong>${escapeHtml(step)}</strong>${escapeHtml(stepIndexLine)}. Continue where you left off or open another run below.</p>
+    <p class="lede">Paused at <strong>${escapeHtml(step)}</strong>${escapeHtml(stepIndexLine)} (last updated ${escapeHtml(pausedAt)}). Continue where you left off or open another run below.</p>
     <div class="actions">
       <a class="btn btn-primary" href="/prompt-optimizer?cycle=${escapeHtml(cycle.id)}">Resume wizard</a>
     </div>

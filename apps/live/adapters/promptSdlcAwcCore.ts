@@ -66,6 +66,7 @@ export { collectPromptSdlcWizardModuleStatistics } from "@/lib/promptOptimizer/w
 export { finalizePromptSdlcWizardModuleRun } from "@/lib/promptOptimizer/wizard/finalizePromptSdlcWizardModuleRun";
 export { readPromptSdlcWizardChainPriorOutput } from "@/lib/promptOptimizer/wizard/readPromptSdlcWizardChainPriorOutput";
 export { summarizePromptSdlcWizardCompletion } from "@/lib/promptOptimizer/wizard/summarizePromptSdlcWizardCompletion";
+export { buildPromptSdlcWizardResultMarkdown } from "@/lib/promptOptimizer/wizard/buildPromptSdlcWizardResultMarkdown";
 export type {
   PromptSdlcWizardCompletionModuleRow,
   PromptSdlcWizardCompletionSummary,

@@ -23,6 +23,9 @@ const historyProgressLabel = (cycle: PromptSdlcLocalCycle): string => {
   return `${cycle.status} · Wizard · Step ${stepIndex + 1}`;
 };
 
+const historyKind = (cycle: PromptSdlcLocalCycle): "wizard" | "classic" =>
+  cycle.wizard === undefined ? "classic" : "wizard";
+
 const renderHistoryItem = (
   cycle: PromptSdlcLocalCycle,
   openCycleId: string | null,
@@ -31,7 +34,7 @@ const renderHistoryItem = (
     openCycleId === null
       ? ""
       : `<input type="hidden" name="openCycleId" value="${escapeHtml(openCycleId)}">`;
-  return `<li><div><a href="/prompt-optimizer?cycle=${escapeHtml(cycle.id)}">${escapeHtml(promptSdlcLocalHistoryTitle(cycle.goal))}</a><p class="muted">${escapeHtml(historyProgressLabel(cycle))}</p></div><form method="POST" action="/prompt-optimizer"><input type="hidden" name="intent" value="delete-history"><input type="hidden" name="cycleId" value="${escapeHtml(cycle.id)}">${open}<button class="btn btn-secondary" type="submit">Delete</button></form></li>`;
+  return `<li data-sdlc-history-kind="${historyKind(cycle)}"><div><a href="/prompt-optimizer?cycle=${escapeHtml(cycle.id)}">${escapeHtml(promptSdlcLocalHistoryTitle(cycle.goal))}</a><p class="muted">${escapeHtml(historyProgressLabel(cycle))}</p></div><form method="POST" action="/prompt-optimizer"><input type="hidden" name="intent" value="delete-history"><input type="hidden" name="cycleId" value="${escapeHtml(cycle.id)}">${open}<button class="btn btn-secondary" type="submit">Delete</button></form></li>`;
 };
 
 export const renderPromptSdlcLocalHistory = (
@@ -46,5 +49,10 @@ export const renderPromptSdlcLocalHistory = (
     .slice(0, 20)
     .map((cycle) => renderHistoryItem(cycle, openCycleId))
     .join("");
-  return `<section class="card"><h2>History</h2><ul class="sdlc-history">${items}</ul></section>`;
+  const filters = `<div class="sdlc-history-filter" role="group" aria-label="Filter history">
+    <button type="button" class="btn btn-secondary" data-sdlc-history-filter="all" aria-pressed="true">All</button>
+    <button type="button" class="btn btn-secondary" data-sdlc-history-filter="wizard" aria-pressed="false">Wizard</button>
+    <button type="button" class="btn btn-secondary" data-sdlc-history-filter="classic" aria-pressed="false">Classic</button>
+  </div>`;
+  return `<section class="card"><h2>History</h2>${filters}<ul class="sdlc-history">${items}</ul></section>`;
 };

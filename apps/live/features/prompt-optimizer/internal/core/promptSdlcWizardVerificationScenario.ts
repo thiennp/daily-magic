@@ -1,3 +1,5 @@
+export const PROMPT_SDLC_WIZARD_VERIFICATION_EXAMPLE = "wizard-verification";
+
 /** Dogfood + QA scenario: improve this prompt with the Prompt SDLC wizard (Run, not classic loop). */
 
 export const PROMPT_SDLC_WIZARD_VERIFICATION_GOAL =

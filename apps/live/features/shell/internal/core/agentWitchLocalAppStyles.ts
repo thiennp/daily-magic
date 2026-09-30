@@ -1156,6 +1156,9 @@ form.sdlc-form textarea.input {
   resize: none;
 }
 form.sdlc-form textarea.input[name="prompt"] { min-height: 12rem; }
+.sdlc-history-filter { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.75rem; }
+.sdlc-history-filter [aria-pressed="true"] { outline: 2px solid var(--accent, #2563eb); }
+.sdlc-form-head { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.75rem; }
 .sdlc-history { list-style: none; margin: 0.75rem 0 0; padding: 0; display: flex; flex-direction: column; gap: 1.25rem; }
 .sdlc-history li { margin: 0; display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
 .sdlc-history p { margin: 0.2rem 0 0; }

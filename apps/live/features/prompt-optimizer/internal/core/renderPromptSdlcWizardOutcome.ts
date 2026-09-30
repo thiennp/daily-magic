@@ -68,5 +68,7 @@ export const renderPromptSdlcWizardOutcome = (
     })
     .join("");
 
-  return `<section class="card sdlc-wizard-outcome" id="prompt-optimizer-wizard-outcome"><p class="eyebrow">Wizard outcome</p><h2>${escapeHtml(headline)}</h2>${modules}${stepBodies}</section>`;
+  const download = `<p class="actions"><a class="btn btn-secondary" href="/prompt-optimizer?cycle=${escapeHtml(cycle.id)}&amp;export=wizard-markdown">Download result (Markdown)</a></p>`;
+
+  return `<section class="card sdlc-wizard-outcome" id="prompt-optimizer-wizard-outcome"><p class="eyebrow">Wizard outcome</p><h2>${escapeHtml(headline)}</h2>${download}${modules}${stepBodies}</section>`;
 };

@@ -22,3 +22,4 @@ No open issues. Recent fixes (bundle **166–186**):
 - Wizard step 2 **evaluate** scores prompt revisions only; folder execution stays on step 4 **optimize** with the Runner (bundle **175**).
 - Wizard timeline step clicks open a modal with that step’s content (variables, evaluate rounds, splits, modules), not “Not scored yet.” (bundle **176**).
 - Wizard step 4 runs **one runner+judge round per module** (statistics on the review gate); **chain** splits hand off the prior module’s best runner output to the next module (bundle **184**).
+- Finished wizard runs can **download a Markdown summary** (`?cycle=&export=wizard-markdown`); History can filter **All / Wizard / Classic**; compose offers **Load wizard verification example** (bundle **187**).

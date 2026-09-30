@@ -9,6 +9,7 @@ import {
   PROMPT_SDLC_NODE_DIALOG,
   PROMPT_SDLC_NODE_DIALOG_SCRIPT,
 } from "./buildPromptSdlcLocalStepTree";
+import { PROMPT_SDLC_HISTORY_FILTER_SCRIPT } from "./promptSdlcHistoryFilterScript";
 import { PROMPT_SDLC_LOCAL_FORM_SCRIPT } from "./promptSdlcLocalFormScript";
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
 import type { PromptSdlcLocalWriterChoice } from "./promptSdlcLocalForm";
@@ -106,6 +107,7 @@ export const buildPromptSdlcLocalPageBody = (input: {
   const form = `<section class="card sdlc-compose" id="prompt-optimizer-compose">
       <div class="sdlc-form-head">
         <a class="btn btn-secondary" href="/prompt-optimizer/guide">Instructions and example</a>
+        <a class="btn btn-secondary" href="/prompt-optimizer?example=wizard-verification">Load wizard verification example</a>
       </div>
       <details class="sdlc-compose-details" id="prompt-optimizer-compose-details"${composeOpen}>
         <summary class="sdlc-compose-summary"><span class="eyebrow">Prompt optimizer</span> Optimize a prompt</summary>
@@ -158,6 +160,6 @@ export const buildPromptSdlcLocalPageBody = (input: {
       </form>
       </details>
     </section>`;
-  const scripts = `${PROMPT_SDLC_LOCAL_LIVE_STYLE}${PROMPT_SDLC_LOCAL_LIVE_SCRIPT}${PROMPT_SDLC_WIZARD_CLIENT_SCRIPT}${PROMPT_SDLC_LOCAL_FORM_SCRIPT}${PROMPT_SDLC_SKILL_SELECT_SCRIPT}`;
+  const scripts = `${PROMPT_SDLC_LOCAL_LIVE_STYLE}${PROMPT_SDLC_LOCAL_LIVE_SCRIPT}${PROMPT_SDLC_WIZARD_CLIENT_SCRIPT}${PROMPT_SDLC_LOCAL_FORM_SCRIPT}${PROMPT_SDLC_SKILL_SELECT_SCRIPT}${PROMPT_SDLC_HISTORY_FILTER_SCRIPT}`;
   return `${error}${skillNotice}${form}${resumeBanner}${cycle}${wizardGateSlot}${nodeDialog}${renderPromptSdlcLocalHistory(input.history, input.cycle?.id ?? null)}${scripts}`;
 };

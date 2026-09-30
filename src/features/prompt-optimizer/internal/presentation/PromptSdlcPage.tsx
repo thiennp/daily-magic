@@ -17,7 +17,7 @@ export default function PromptSdlcPage(): ReactElement {
     <div className="space-y-6">
       <AppPageHeader
         title="Prompt optimizer"
-        description="Run it in Agent Witch Live on this Mac. The judge and the improver run in the folder you choose, so they can read the Playbook and the code."
+        description="Run the four-step wizard or the classic judge/improver loop in Agent Witch Live on this Mac. The console links you there; writers run in the project folder you choose."
       />
       <ol
         className={`${APP_SURFACE_BODY_TEXT_CLASS} list-decimal space-y-2 pl-5`}
@@ -39,7 +39,10 @@ export default function PromptSdlcPage(): ReactElement {
         console does not run the optimizer.
       </p>
       <p>
-        <Link href="/prompt-optimizer/guide" className={APP_SURFACE_TEXT_LINK_CLASS}>
+        <Link
+          href="/prompt-optimizer/guide"
+          className={APP_SURFACE_TEXT_LINK_CLASS}
+        >
           How it works
         </Link>
         {" · "}

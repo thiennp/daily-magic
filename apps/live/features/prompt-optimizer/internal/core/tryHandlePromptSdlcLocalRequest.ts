@@ -2,6 +2,7 @@ import type http from "node:http";
 
 import { buildPromptSdlcLocalGuidePageBody } from "./buildPromptSdlcLocalGuidePage";
 import { servePromptSdlcLocalPage } from "./servePromptSdlcLocalPage";
+import { trySendPromptSdlcWizardMarkdownExport } from "./trySendPromptSdlcWizardMarkdownExport";
 import { trySendPromptSdlcLocalRunFragment } from "./trySendPromptSdlcLocalRunFragment";
 import { trySendPromptSdlcWriterCheck } from "./trySendPromptSdlcWriterCheck";
 import { writePromptSdlcAgentResponse } from "./writePromptSdlcAgentResponse";
@@ -93,6 +94,17 @@ export const tryHandlePromptSdlcLocalRequest = async (
       requestUrl: input.requestUrl,
       response: input.response,
       storePath: input.storePath,
+    })
+  ) {
+    return true;
+  }
+
+  if (
+    trySendPromptSdlcWizardMarkdownExport({
+      method: input.method,
+      requestUrl: input.requestUrl,
+      storePath: input.storePath,
+      response: input.response,
     })
   ) {
     return true;
