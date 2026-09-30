@@ -590,16 +590,37 @@ describe("buildPromptSdlcLocalPageBody", () => {
               status: "passed",
               selectedRevisionRound: 0,
               statistics: {
-                bestScore: 80,
+                bestScore: 82,
                 bestRound: 0,
                 bestRunOutput: "out",
                 rounds: [
                   {
                     roundNumber: 0,
-                    score: 80,
+                    score: 82,
                     passed: true,
                     runOutput: "out",
                     tokens: 1,
+                  },
+                ],
+              },
+            },
+            {
+              moduleId: "m2",
+              title: "Edge",
+              prompt: "p2",
+              status: "passed",
+              selectedRevisionRound: 0,
+              statistics: {
+                bestScore: 66,
+                bestRound: 0,
+                bestRunOutput: "out2",
+                rounds: [
+                  {
+                    roundNumber: 0,
+                    score: 66,
+                    passed: true,
+                    runOutput: "out2",
+                    tokens: 2,
                   },
                 ],
               },
@@ -638,7 +659,10 @@ describe("buildPromptSdlcLocalPageBody", () => {
     expect(html).toContain("prompt-optimizer-wizard-module-results");
     expect(html).toContain("Copy all prompts (Markdown)");
     expect(html).toContain('id="sdlc-run-toast"');
-    expect(html).toContain("#prompt-optimizer-wizard-module-results");
+    expect(html).toContain("Pipeline · steps 1–3");
+    expect(html).toContain("Below pass (66)");
+    expect(html).toContain("data-sdlc-view-module-results");
+    expect(html).toContain("sdlc-run-badge-finished");
     expect(html).toContain("4/4 wizard steps complete");
     expect(html).not.toContain("data-sdlc-jump-wizard-results");
     expect(html).toContain("New prompt");

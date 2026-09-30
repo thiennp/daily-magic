@@ -252,6 +252,24 @@ export const PROMPT_SDLC_WIZARD_CLIENT_SCRIPT = `<script>
     });
   }
 
+  const viewModuleLink = document.querySelector("[data-sdlc-view-module-results]");
+  const moduleResultsSection = document.getElementById(
+    "prompt-optimizer-wizard-module-results",
+  );
+  if (
+    viewModuleLink instanceof HTMLAnchorElement &&
+    moduleResultsSection !== null
+  ) {
+    viewModuleLink.hidden = false;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        viewModuleLink.hidden = entry.isIntersecting;
+      },
+      { threshold: 0.12, rootMargin: "-80px 0px 0px 0px" },
+    );
+    observer.observe(moduleResultsSection);
+  }
+
   focusActiveWizardStep();
 })();
 </script>`;

@@ -62,8 +62,12 @@ export const renderPromptSdlcWizardOutcome = (
     : stepBodies;
 
   const panelTitle = wizardComplete
-    ? "Process details · steps 1–3"
+    ? "Pipeline · steps 1–3 (Step 4 in Module results)"
     : "Step details";
 
-  return `<div class="sdlc-run-panel sdlc-wizard-outcome" id="prompt-optimizer-wizard-outcome"><div class="sdlc-wizard-outcome-head"><h3 class="sdlc-run-panel-title">${panelTitle}</h3>${outcomeActions}</div>${processBlock}</div>`;
+  const step4Note = wizardComplete
+    ? `<p class="muted sdlc-wizard-outcome-step4-note">Step 4 — Optimize modules is summarized in <a href="#prompt-optimizer-wizard-module-results">Module results</a> above.</p>`
+    : "";
+
+  return `<div class="sdlc-run-panel sdlc-wizard-outcome" id="prompt-optimizer-wizard-outcome"><div class="sdlc-wizard-outcome-head"><h3 class="sdlc-run-panel-title">${panelTitle}</h3>${outcomeActions}</div>${step4Note}${processBlock}</div>`;
 };

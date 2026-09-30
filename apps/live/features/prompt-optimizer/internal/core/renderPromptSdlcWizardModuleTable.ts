@@ -4,6 +4,8 @@ import {
 } from "../../../../adapters/promptSdlcAwcCore";
 
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
+import { describePromptSdlcWizardModulePassStatus } from "./describePromptSdlcWizardModulePassStatus";
+import { isPromptSdlcWizardModulePassed } from "./describePromptSdlcWizardModulePassStatus";
 
 const escapeHtml = (value: string): string =>
   value
@@ -27,23 +29,25 @@ export const renderPromptSdlcWizardModuleTable = (
       : `${summary.passedModuleCount} of ${summary.totalModules} modules passed. Some modules were skipped, stopped, or below ${PROMPT_SDLC_WIZARD_PASS_SCORE}.`;
   const nearPassFloor = PROMPT_SDLC_WIZARD_PASS_SCORE - 10;
   const rows = summary.rows
-    .map((row) => {
+    .map((row, index) => {
+      const module = wizard.modules[index];
       const scoreCell =
         row.bestScore === null
           ? "—"
-          : summary.terminalStatusSuggestion === "passed"
-            ? `${row.bestScore} / ≥${PROMPT_SDLC_WIZARD_PASS_SCORE}`
-            : String(row.bestScore);
+          : `${row.bestScore} / ≥${PROMPT_SDLC_WIZARD_PASS_SCORE}`;
       const nearPass =
         row.bestScore !== null &&
         row.bestScore >= nearPassFloor &&
         row.bestScore < PROMPT_SDLC_WIZARD_PASS_SCORE;
       const rowClass = nearPass ? ' class="sdlc-score-near-pass"' : "";
+      const statusLabel =
+        module === undefined
+          ? row.status
+          : describePromptSdlcWizardModulePassStatus(module);
       const statusCell =
-        summary.terminalStatusSuggestion === "passed" &&
-        row.status.toLowerCase() === "passed"
+        module !== undefined && isPromptSdlcWizardModulePassed(module)
           ? `<span aria-label="Passed">✓</span>`
-          : escapeHtml(row.status);
+          : escapeHtml(statusLabel);
       return `<tr${rowClass}><td>${escapeHtml(row.title)}</td><td>${escapeHtml(scoreCell)}</td><td>${row.tokens ?? "—"}</td><td>${statusCell}</td></tr>`;
     })
     .join("");

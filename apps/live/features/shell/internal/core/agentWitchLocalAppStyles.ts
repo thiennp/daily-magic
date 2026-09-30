@@ -715,7 +715,7 @@ form.sdlc-form { display: flex; flex-direction: column; }
 .sdlc-copy-feedback-btn { min-width: 11.5rem; justify-content: center; }
 .sdlc-run-toast {
   position: fixed;
-  bottom: 1.25rem;
+  top: 4.5rem;
   right: 1.25rem;
   z-index: 40;
   max-width: min(22rem, calc(100vw - 2rem));
@@ -1120,6 +1120,7 @@ form.sdlc-form textarea.input.sdlc-instruction {
 .sdlc-run-badge-live { background: #dcfce7; color: #166534; }
 .sdlc-run-badge-paused { background: #fef9c3; color: #854d0e; }
 .sdlc-run-badge-done { background: #ecfdf5; color: #047857; }
+.sdlc-run-badge-finished { background: #fffbeb; color: #92400e; }
 .sdlc-run-activity {
   display: flex;
   gap: 0.85rem;
@@ -1135,6 +1136,14 @@ form.sdlc-form textarea.input.sdlc-instruction {
   border-color: #a7f3d0;
 }
 .sdlc-run-activity-success .sdlc-run-title { color: #047857; }
+.sdlc-run-activity-partial {
+  background: #fffbeb;
+  border-radius: var(--aw-radius-lg);
+  padding: 0.65rem 0.75rem;
+  border: 1px solid #fde68a;
+}
+.sdlc-run-activity-partial .sdlc-run-title { color: #92400e; }
+.sdlc-wizard-outcome-step4-note { margin: 0 0 0.65rem; font-size: 0.8125rem; }
 .sdlc-run-status-dot-success {
   background: #22c55e;
   box-shadow: 0 0 0 3px #dcfce7;

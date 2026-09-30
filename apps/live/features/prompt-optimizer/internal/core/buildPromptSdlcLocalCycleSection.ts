@@ -61,15 +61,28 @@ export const buildPromptSdlcLocalCycleSection = (
     ? `<span class="sdlc-spin" aria-hidden="true"></span>`
     : "";
   const elapsed = live ? ` Working for <span data-elapsed>0s</span>.` : "";
+  const wizardSummary =
+    cycle.wizard !== undefined && cycle.wizard.phase === "complete"
+      ? summarizePromptSdlcWizardCompletion(cycle.wizard)
+      : null;
+  const allModulesPassed =
+    wizardSummary !== null &&
+    wizardSummary.totalModules > 0 &&
+    wizardSummary.passedModuleCount === wizardSummary.totalModules;
   const activitySuccess =
     !live &&
     cycle.wizard !== undefined &&
     isPromptSdlcTerminalStatus(cycle.status) &&
     (cycle.wizard.phase === "complete" ||
       summarizePromptSdlcWizardCompletion(cycle.wizard).passedModuleCount > 0);
+  const activityToneClass = activitySuccess
+    ? allModulesPassed
+      ? " sdlc-run-activity-success"
+      : " sdlc-run-activity-partial"
+    : "";
   const successActions =
     activitySuccess && cycle.wizard !== undefined
-      ? `<p class="sdlc-run-success-actions"><a class="btn btn-primary" href="/prompt-optimizer?cycle=${escapeHtml(cycle.id)}&amp;export=wizard-markdown">Download report (.md)</a><a class="btn btn-secondary" href="#prompt-optimizer-wizard-module-results">View module results</a><button type="button" class="btn btn-secondary" data-sdlc-rerun-same title="Open compose with your last folder, models, and pass score">Re-run same settings</button></p><p class="muted sdlc-rerun-hint">Re-run keeps settings · New prompt clears the form.</p>`
+      ? `<p class="sdlc-run-success-actions"><a class="btn btn-primary" href="/prompt-optimizer?cycle=${escapeHtml(cycle.id)}&amp;export=wizard-markdown">Download report (.md)</a><a class="btn btn-secondary" href="#prompt-optimizer-wizard-module-results" data-sdlc-view-module-results hidden>Jump to module table</a><button type="button" class="btn btn-secondary" data-sdlc-rerun-same title="Open compose with your last folder, models, and pass score">Re-run same settings</button></p><p class="muted sdlc-rerun-hint">Re-run keeps settings · New prompt clears the form.</p>`
       : "";
   const detailBlock =
     activity.detail.length === 0 && successActions.length === 0
@@ -114,12 +127,18 @@ export const buildPromptSdlcLocalCycleSection = (
   const scoreScale = showScoreScale
     ? `<div class="sdlc-run-panel sdlc-run-panel-scoring"><h3 class="sdlc-run-panel-title">Scoring guide</h3>${renderPromptSdlcLocalScoreScale(cycle.passScore)}</div>`
     : "";
+  const wizardRunComplete =
+    cycle.wizard !== undefined &&
+    cycle.wizard.phase === "complete" &&
+    isPromptSdlcTerminalStatus(cycle.status);
   const statusBadge = live
     ? `<span class="sdlc-run-badge sdlc-run-badge-live">In progress</span>`
     : cycle.status === "wizard_paused"
       ? `<span class="sdlc-run-badge sdlc-run-badge-paused">Paused</span>`
       : isPromptSdlcTerminalStatus(cycle.status)
-        ? `<span class="sdlc-run-badge sdlc-run-badge-done">Complete</span>`
+        ? wizardRunComplete && wizardSummary !== null && !allModulesPassed
+          ? `<span class="sdlc-run-badge sdlc-run-badge-finished">Finished</span>`
+          : `<span class="sdlc-run-badge sdlc-run-badge-done">Complete</span>`
         : "";
   const activityIcon = live
     ? spinner
@@ -141,10 +160,6 @@ export const buildPromptSdlcLocalCycleSection = (
       : `<ul class="sdlc-run-meta">${metaItems.join("")}</ul>`;
   const actions =
     stop.length === 0 ? "" : `<div class="sdlc-run-actions">${stop}</div>`;
-  const wizardRunComplete =
-    cycle.wizard !== undefined &&
-    cycle.wizard.phase === "complete" &&
-    isPromptSdlcTerminalStatus(cycle.status);
   const timeline = wizardRunComplete
     ? ""
     : `<div class="sdlc-run-panel sdlc-run-panel-timeline"><h3 class="sdlc-run-panel-title">Progress</h3>${steps}</div>`;
@@ -173,7 +188,7 @@ export const buildPromptSdlcLocalCycleSection = (
     : `${error}${gridBlock}${manual}${wizardOutcome}${best}`;
   const liveRegion = `<div id="sdlc-run-live-region" class="sdlc-sr-only" aria-live="polite" aria-atomic="true"></div><div id="sdlc-run-toast" class="sdlc-run-toast" role="status" aria-live="polite" hidden></div>`;
   const completeNote = wizardRunComplete
-    ? `<p class="muted sdlc-run-complete-note">4/4 wizard steps complete.</p>`
+    ? `<p class="muted sdlc-run-complete-note">4/4 wizard steps complete · Step 4 scores live in Module results.</p>`
     : "";
-  return `<section class="card sdlc-run" id="prompt-optimizer-run" data-live="${live ? "true" : "false"}" data-since="${escapeHtml(cycle.updatedAt)}" aria-busy="${live ? "true" : "false"}">${liveRegion}<header class="sdlc-run-head"><div class="sdlc-run-head-top"><p class="eyebrow">This run</p>${statusBadge}</div>${runGoalChip}<div class="sdlc-run-activity${activitySuccess ? " sdlc-run-activity-success" : ""}"${activitySuccess ? ' role="status"' : ""}><div class="sdlc-run-activity-icon">${activityIcon}</div><div class="sdlc-run-activity-copy"><h2 class="sdlc-run-title">${escapeHtml(activity.title)}</h2>${detailBlock}${successActions}${completeNote}</div></div>${meta}${actions}</header>${runBody}</section>${promptsHistory}`;
+  return `<section class="card sdlc-run" id="prompt-optimizer-run" data-live="${live ? "true" : "false"}" data-since="${escapeHtml(cycle.updatedAt)}" aria-busy="${live ? "true" : "false"}">${liveRegion}<header class="sdlc-run-head"><div class="sdlc-run-head-top"><p class="eyebrow">This run</p>${statusBadge}</div>${runGoalChip}<div class="sdlc-run-activity${activityToneClass}"${activitySuccess ? ' role="status"' : ""}><div class="sdlc-run-activity-icon">${activityIcon}</div><div class="sdlc-run-activity-copy"><h2 class="sdlc-run-title">${escapeHtml(activity.title)}</h2>${detailBlock}${successActions}${completeNote}</div></div>${meta}${actions}</header>${runBody}</section>${promptsHistory}`;
 };
