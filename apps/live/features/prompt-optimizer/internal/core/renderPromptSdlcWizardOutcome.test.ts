@@ -26,6 +26,50 @@ describe("renderPromptSdlcWizardOutcome", () => {
     expect(html).toContain("Wizard ended");
   });
 
+  it("renders a module summary table when modules exist", () => {
+    const cycle = createPromptSdlcLocalCycle({
+      goal: "g",
+      sourcePrompt: "p",
+      judgeModel: "claude-cli",
+      improverModel: "claude-cli",
+      wizard: {
+        ...createInitialPromptSdlcWizardState("p"),
+        gate: null,
+        phase: "complete",
+        modules: [
+          {
+            moduleId: "m1",
+            title: "Main",
+            prompt: "p",
+            status: "passed",
+            selectedRevisionRound: 0,
+            statistics: {
+              bestScore: 80,
+              bestRound: 0,
+              bestRunOutput: "out",
+              rounds: [
+                {
+                  roundNumber: 0,
+                  score: 80,
+                  passed: true,
+                  runOutput: "out",
+                  tokens: 5,
+                },
+              ],
+            },
+          },
+        ],
+      },
+    });
+    const html = renderPromptSdlcWizardOutcome({
+      ...cycle,
+      status: "passed",
+    });
+    expect(html).toContain("sdlc-wizard-outcome-table");
+    expect(html).toContain("Main");
+    expect(html).toContain("5");
+  });
+
   it("returns empty for an in-progress wizard", () => {
     const cycle = createPromptSdlcLocalCycle({
       goal: "g",

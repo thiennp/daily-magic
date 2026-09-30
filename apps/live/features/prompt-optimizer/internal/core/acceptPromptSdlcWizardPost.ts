@@ -3,6 +3,7 @@ import {
   invalidatePromptSdlcWizardDownstream,
   mergePromptSdlcWizardPostedParameterValues,
   seedPromptSdlcWizardParameterValues,
+  summarizePromptSdlcWizardCompletion,
   type PromptSdlcWizardSplitOption,
 } from "../../../../adapters/promptSdlcAwcCore";
 
@@ -315,9 +316,11 @@ export const tryAcceptPromptSdlcWizardPost = (input: {
 
       const nextIndex = moduleIndex + 1;
       if (nextIndex >= cycle.wizard.modules.length) {
+        const completion =
+          summarizePromptSdlcWizardCompletion(wizardWithParams);
         const next: PromptSdlcLocalCycle = {
           ...cycle,
-          status: "passed",
+          status: completion.terminalStatusSuggestion,
           wizard: {
             ...wizardWithParams,
             gate: null,

@@ -65,6 +65,13 @@ export { buildPromptSdlcWizardModuleRunPrompt } from "@/lib/promptOptimizer/wiza
 export { collectPromptSdlcWizardModuleStatistics } from "@/lib/promptOptimizer/wizard/collectPromptSdlcWizardModuleStatistics";
 export { finalizePromptSdlcWizardModuleRun } from "@/lib/promptOptimizer/wizard/finalizePromptSdlcWizardModuleRun";
 export { readPromptSdlcWizardChainPriorOutput } from "@/lib/promptOptimizer/wizard/readPromptSdlcWizardChainPriorOutput";
+export { summarizePromptSdlcWizardCompletion } from "@/lib/promptOptimizer/wizard/summarizePromptSdlcWizardCompletion";
+export type {
+  PromptSdlcWizardCompletionModuleRow,
+  PromptSdlcWizardCompletionSummary,
+} from "@/lib/promptOptimizer/wizard/summarizePromptSdlcWizardCompletion";
+export { collectPromptSdlcWizardCumulativeTokens } from "@/lib/promptOptimizer/wizard/collectPromptSdlcWizardCumulativeTokens";
+export type { default as PromptSdlcWizardChainPriorOutput } from "@/lib/promptOptimizer/wizard/types/PromptSdlcWizardChainPriorOutput.type";
 export { parsePromptSdlcGeneralizeReply } from "@/lib/promptOptimizer/wizard/parsePromptSdlcGeneralizeReply";
 export { parsePromptSdlcSeparateReply } from "@/lib/promptOptimizer/wizard/parsePromptSdlcSeparateReply";
 export { recordPromptSdlcWizardAttempt } from "@/lib/promptOptimizer/wizard/recordPromptSdlcWizardAttempt";

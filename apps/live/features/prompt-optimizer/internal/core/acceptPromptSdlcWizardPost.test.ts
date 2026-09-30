@@ -379,4 +379,75 @@ describe("tryAcceptPromptSdlcWizardPost", () => {
     expect(body).toContain("prompt-optimizer-wizard-gate-slot");
     expect(body).toContain("prompt-optimizer-run");
   });
+
+  it("marks the wizard stopped when the last module does not all pass", () => {
+    const storeDir = fs.mkdtempSync(
+      path.join(os.tmpdir(), "prompt-sdlc-post-complete-"),
+    );
+    const storePath = path.join(storeDir, "prompt-optimizer-cycles.json");
+    const cycle = {
+      ...createPromptSdlcLocalCycle({
+        goal: "g",
+        sourcePrompt: "p",
+        judgeModel: "claude-cli",
+        improverModel: "claude-cli",
+        workingDirectory: storeDir,
+        wizard: {
+          ...createInitialPromptSdlcWizardState("Do {{x}}"),
+          gate: "optimize_modules",
+          phase: "optimize_modules",
+          variables: [{ name: "x", description: "d", sampleValue: "hello" }],
+          parameterValues: { x: "hello" },
+          modules: [
+            {
+              moduleId: "m1",
+              title: "Main",
+              prompt: "Run {{x}}",
+              status: "passed",
+              selectedRevisionRound: 0,
+              statistics: {
+                bestScore: 80,
+                bestRound: 0,
+                bestRunOutput: "ok",
+                rounds: [],
+              },
+            },
+            {
+              moduleId: "m2",
+              title: "Tail",
+              prompt: "Run {{x}} again",
+              status: "stopped",
+              selectedRevisionRound: 0,
+              statistics: {
+                bestScore: 40,
+                bestRound: 0,
+                bestRunOutput: null,
+                rounds: [],
+              },
+            },
+          ],
+          currentModuleIndex: 1,
+        },
+      }),
+      status: "wizard_paused" as const,
+    };
+    savePromptSdlcLocalCycle(storePath, cycle);
+
+    tryAcceptPromptSdlcWizardPost({
+      posted: new URLSearchParams({
+        intent: "wizard-continue",
+        cycleId: cycle.id,
+        wizardParam_x: "hello",
+      }),
+      storePath,
+      response: {
+        writeHead: () => undefined,
+        end: () => undefined,
+      },
+    });
+
+    const saved = readPromptSdlcLocalCycle(storePath, cycle.id);
+    expect(saved?.status).toBe("stopped");
+    expect(saved?.wizard?.phase).toBe("complete");
+  });
 });

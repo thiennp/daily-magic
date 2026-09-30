@@ -37,6 +37,12 @@ export const renderPromptSdlcLocalBestPrompt = (
     return "";
   }
 
+  const wizardModuleCount = cycle.wizard?.modules.length ?? 0;
+  const wizardModuleWarning =
+    wizardModuleCount > 1
+      ? `<p class="muted sdlc-wizard-best-warning">This best prompt is from the last module’s trial run. Open the wizard outcome table for every module’s score and prompt.</p>`
+      : "";
+
   const failure = describePromptSdlcWriterTerminalFailure(best.promptText);
   const reasons =
     best.reasons === null || best.reasons.trim().length === 0
@@ -53,7 +59,11 @@ export const renderPromptSdlcLocalBestPrompt = (
         })
       : `<div class="alert-error">${escapeHtml(failure)}</div>`;
 
-  return `<section class="card" id="prompt-optimizer-best"><p class="eyebrow">Best prompt</p><h2>Round ${best.roundNumber} · Score ${best.score} / 100</h2>${reasons}${body}</section>`;
+  const roundLabel =
+    cycle.wizard !== undefined && wizardModuleCount > 0
+      ? `Trial run · Score ${best.score} / 100`
+      : `Round ${best.roundNumber} · Score ${best.score} / 100`;
+  return `<section class="card" id="prompt-optimizer-best"><p class="eyebrow">Best prompt</p><h2>${roundLabel}</h2>${wizardModuleWarning}${reasons}${body}</section>`;
 };
 
 const renderPromptSdlcLocalSkillForm = (input: {

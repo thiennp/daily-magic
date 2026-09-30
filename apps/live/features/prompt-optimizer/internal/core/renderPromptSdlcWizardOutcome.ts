@@ -1,4 +1,8 @@
-import { isPromptSdlcTerminalStatus } from "../../../../adapters/promptSdlcAwcCore";
+import {
+  isPromptSdlcTerminalStatus,
+  PROMPT_SDLC_WIZARD_PASS_SCORE,
+  summarizePromptSdlcWizardCompletion,
+} from "../../../../adapters/promptSdlcAwcCore";
 
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
 import { renderPromptSdlcWizardStepModalBody } from "./renderPromptSdlcWizardStepModalBody";
@@ -9,6 +13,25 @@ const escapeHtml = (value: string): string =>
     .replaceAll("<", "&lt;")
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;");
+
+const renderModuleTable = (cycle: PromptSdlcLocalCycle): string => {
+  const wizard = cycle.wizard;
+  if (wizard === undefined || wizard.modules.length === 0) {
+    return "";
+  }
+  const summary = summarizePromptSdlcWizardCompletion(wizard);
+  const headline =
+    summary.terminalStatusSuggestion === "passed"
+      ? `${summary.passedModuleCount} of ${summary.totalModules} modules passed (score ≥ ${PROMPT_SDLC_WIZARD_PASS_SCORE}).`
+      : `${summary.passedModuleCount} of ${summary.totalModules} modules passed. Some modules were skipped, stopped, or below ${PROMPT_SDLC_WIZARD_PASS_SCORE}.`;
+  const rows = summary.rows
+    .map(
+      (row) =>
+        `<tr><td>${escapeHtml(row.title)}</td><td>${row.bestScore ?? "—"}</td><td>${row.tokens ?? "—"}</td><td>${escapeHtml(row.status)}</td></tr>`,
+    )
+    .join("");
+  return `<h3>Modules</h3><p class="muted">${escapeHtml(headline)}</p><table class="sdlc-wizard-outcome-table"><thead><tr><th>Module</th><th>Best score</th><th>Tokens</th><th>Status</th></tr></thead><tbody>${rows}</tbody></table>`;
+};
 
 export const renderPromptSdlcWizardOutcome = (
   cycle: PromptSdlcLocalCycle,
@@ -25,15 +48,7 @@ export const renderPromptSdlcWizardOutcome = (
         ? "Wizard ended"
         : "Wizard stopped";
 
-  const modules =
-    wizard.modules.length === 0
-      ? ""
-      : `<h3>Modules</h3><ol class="sdlc-wizard-outcome-modules">${wizard.modules
-          .map(
-            (item) =>
-              `<li><strong>${escapeHtml(item.title)}</strong> — ${escapeHtml(item.status)}</li>`,
-          )
-          .join("")}</ol>`;
+  const modules = renderModuleTable(cycle);
 
   const stepBodies = ["wizard-1", "wizard-2", "wizard-3", "wizard-4"]
     .map((stepId) => {
