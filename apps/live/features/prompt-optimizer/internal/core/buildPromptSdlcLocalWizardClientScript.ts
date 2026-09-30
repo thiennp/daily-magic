@@ -67,6 +67,11 @@ export const PROMPT_SDLC_WIZARD_CLIENT_SCRIPT = `<script>
     document.dispatchEvent(new CustomEvent("sdlc-live-restart"));
   };
 
+  const formDataFromSubmit = (form, submitter) =>
+    submitter instanceof HTMLElement
+      ? new FormData(form, submitter)
+      : new FormData(form);
+
   const postLiveFragment = async (body) => {
     body.set("liveFragment", "1");
     const response = await fetch("/prompt-optimizer", {
@@ -93,10 +98,11 @@ export const PROMPT_SDLC_WIZARD_CLIENT_SCRIPT = `<script>
       const form = event.target;
       if (!(form instanceof HTMLFormElement)) return;
       if (form.classList.contains("sdlc-form")) return;
-      const intent = new FormData(form).get("intent");
+      const body = formDataFromSubmit(form, event.submitter);
+      const intent = body.get("intent");
       if (typeof intent !== "string" || !intent.startsWith("wizard-")) return;
       event.preventDefault();
-      void postLiveFragment(new FormData(form));
+      void postLiveFragment(body);
     },
     true,
   );
@@ -111,8 +117,7 @@ export const PROMPT_SDLC_WIZARD_CLIENT_SCRIPT = `<script>
         : "";
     if (intent !== "run") return;
     event.preventDefault();
-    const body = new FormData(form);
-    void postLiveFragment(body);
+    void postLiveFragment(formDataFromSubmit(form, submitter));
   });
 
   if (document.querySelector(".sdlc-fields[disabled]")) {
