@@ -117,6 +117,48 @@ describe("tryAcceptPromptSdlcWizardPost", () => {
     expect(saved?.errorMessage).toBeNull();
   });
 
+  it("skips the generalize timeline step into evaluate via wizard-skip-step", () => {
+    const storeDir = fs.mkdtempSync(
+      path.join(os.tmpdir(), "prompt-sdlc-post-skip-step-"),
+    );
+    const storePath = path.join(storeDir, "prompt-optimizer-cycles.json");
+    const cycle = {
+      ...createPromptSdlcLocalCycle({
+        goal: "g",
+        sourcePrompt: "p",
+        judgeModel: "claude-cli",
+        improverModel: "claude-cli",
+        workingDirectory: storeDir,
+        wizard: {
+          ...createInitialPromptSdlcWizardState("Do {{x}}"),
+          gate: "generalize",
+          templatedPrompt: "Do {{x}}",
+          variables: [{ name: "x", description: "d", sampleValue: "hello" }],
+        },
+      }),
+      status: "wizard_paused" as const,
+    };
+    savePromptSdlcLocalCycle(storePath, cycle);
+
+    tryAcceptPromptSdlcWizardPost({
+      posted: new URLSearchParams({
+        intent: "wizard-skip-step",
+        wizardStepId: "wizard-1",
+        cycleId: cycle.id,
+      }),
+      storePath,
+      response: {
+        writeHead: () => undefined,
+        end: () => undefined,
+      },
+    });
+
+    const saved = readPromptSdlcLocalCycle(storePath, cycle.id);
+    expect(saved?.wizard?.phase).toBe("evaluate");
+    expect(saved?.status).toBe("judging");
+    expect(saved?.wizard?.gate).toBeNull();
+  });
+
   it("retries generalize when Continue is used after a writer failure", () => {
     const storeDir = fs.mkdtempSync(
       path.join(os.tmpdir(), "prompt-sdlc-post-retry-"),

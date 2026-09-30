@@ -7,6 +7,10 @@ import { describePromptSdlcLocalNodeDetail } from "./describePromptSdlcLocalNode
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
 import { renderPromptSdlcLocalNodeModal } from "./renderPromptSdlcLocalNodeModal";
 import {
+  canShowPromptSdlcWizardTimelineSkip,
+  PROMPT_SDLC_WIZARD_SKIP_STEP_CONFIRM,
+} from "./skipPromptSdlcWizardTimelineStep";
+import {
   formatPromptSdlcTokenCount,
   sumPromptSdlcLocalTokens,
 } from "./sumPromptSdlcLocalTokens";
@@ -50,7 +54,11 @@ const renderNode = (
       ? ` data-sdlc-outcome-step="${escapeHtml(step.id)}"`
       : "";
 
-  return `<li class="sdlc-node sdlc-node-${step.state}"><button type="button" class="sdlc-node-open"${outcomeStepLink} data-sdlc-node>${mark}<span class="sdlc-node-label">${escapeHtml(step.label)}${reason}${tokenNote}</span></button><template>${modal}</template></li>`;
+  const skip = canShowPromptSdlcWizardTimelineSkip(cycle, step.id)
+    ? `<form method="POST" action="/prompt-optimizer" class="sdlc-node-skip sdlc-live-post" data-confirm-message="${escapeHtml(PROMPT_SDLC_WIZARD_SKIP_STEP_CONFIRM)}"><input type="hidden" name="cycleId" value="${escapeHtml(cycle.id)}"><input type="hidden" name="wizardStepId" value="${escapeHtml(step.id)}"><button class="btn btn-secondary sdlc-node-skip-btn" type="submit" name="intent" value="wizard-skip-step">Skip</button></form>`
+    : "";
+
+  return `<li class="sdlc-node sdlc-node-${step.state}"><div class="sdlc-node-row"><button type="button" class="sdlc-node-open"${outcomeStepLink} data-sdlc-node>${mark}<span class="sdlc-node-label">${escapeHtml(step.label)}${reason}${tokenNote}</span></button>${skip}</div><template>${modal}</template></li>`;
 };
 
 export const renderPromptSdlcLocalStepTree = (

@@ -22,6 +22,7 @@ import {
   canContinuePromptSdlcWizardEvaluateRevision,
   readPromptSdlcWizardEvaluateRevisionScore,
 } from "./readPromptSdlcWizardEvaluateRevisionScore";
+import { skipPromptSdlcWizardTimelineStep } from "./skipPromptSdlcWizardTimelineStep";
 import {
   skipPromptSdlcWizardCurrentModule,
   stopPromptSdlcWizardRun,
@@ -108,6 +109,17 @@ export const tryAcceptPromptSdlcWizardPost = (input: {
   if (intent === "wizard-skip-module") {
     const next = skipPromptSdlcWizardCurrentModule(cycle);
     savePromptSdlcLocalCycle(input.storePath, next);
+    finish(cycleId);
+    return true;
+  }
+
+  if (intent === "wizard-skip-step") {
+    const stepId = posted.get("wizardStepId")?.trim() ?? "";
+    const next = skipPromptSdlcWizardTimelineStep(cycle, stepId);
+    savePromptSdlcLocalCycle(input.storePath, next);
+    if (next.status === "judging") {
+      ensurePromptSdlcLocalCycleRunning(input.storePath, cycleId);
+    }
     finish(cycleId);
     return true;
   }

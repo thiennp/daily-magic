@@ -45,6 +45,7 @@ export {
   buildPromptSdlcSteps,
   type PromptSdlcStep,
 } from "@/lib/promptOptimizer/buildPromptSdlcSteps";
+export { buildPromptSdlcWizardStepIndex } from "@/lib/promptOptimizer/buildPromptSdlcWizardStepIndex";
 export { buildPromptSdlcScoreScale } from "@/lib/promptOptimizer/describePromptSdlcScore";
 export {
   PROMPT_SDLC_AGENT_BODY_ERROR,

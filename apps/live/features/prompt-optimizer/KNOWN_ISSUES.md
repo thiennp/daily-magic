@@ -13,6 +13,7 @@ No other open issues. Recent fixes (bundle **166–186**):
 - Wizard completion uses honest **passed** vs **stopped** when not every module meets the wizard pass score; outcome table lists per-module score, tokens, and status (bundle **186**).
 - Compose: wizard-only **Run** (classic loop removed from UI and `run-classic` intent); sticky bar spacing; Run shows spinner + `aria-busy` while starting; wizard resume card shows live status + **View inputs** for active runs (bundle **201**).
 - Step 3 chain/parallel badges and explainer; Step 4 chain handoff preview with skip/no-output reasons; cumulative wizard tokens on gates when statistics exist (bundle **186**).
+- Progress timeline **Skip** on the active wizard step (`wizard-skip-step`, bundle **215**) bypasses the current gate or running writers; step 4 Skip finishes the wizard (distinct from **Skip module**).
 
 - Compose `<details>` no longer uses `display:flex` on the element itself (that hid all fields in Chrome); body lives in `.sdlc-compose-details-body`. Sticky **Run** bar sits outside `<details>` (bundle **200**).
 - Compose **Run** stays enabled; `data-sdlc-run-hint` shows block reasons only after a blocked Run click (bundle **206**).

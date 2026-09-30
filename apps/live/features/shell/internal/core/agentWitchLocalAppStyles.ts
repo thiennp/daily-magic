@@ -1426,6 +1426,10 @@ form.sdlc-form textarea.input.sdlc-instruction {
 .sdlc-node { display: block; position: relative; padding-bottom: 1rem; }
 .sdlc-node:last-child { padding-bottom: 0; }
 .sdlc-node:not(:last-child)::after { content: ""; position: absolute; left: 0.42rem; top: 1.05rem; bottom: 0; width: 2px; background: #d0d5dd; }
+.sdlc-node-row { display: flex; align-items: flex-start; gap: 0.5rem; }
+.sdlc-node-row .sdlc-node-open { flex: 1; min-width: 0; }
+.sdlc-node-skip { flex-shrink: 0; margin: 0; padding: 0; }
+.sdlc-node-skip-btn { font-size: 0.75rem; line-height: 1.2; padding: 0.2rem 0.55rem; min-height: 0; }
 .sdlc-node-open { display: grid; grid-template-columns: 1.25rem minmax(0, 1fr); column-gap: 0.75rem; align-items: start; width: 100%; margin: 0; padding: 0; border: 0; background: none; color: inherit; font: inherit; text-align: left; cursor: pointer; }
 .sdlc-node-open:hover .sdlc-node-label,
 .sdlc-node-open:focus-visible .sdlc-node-label { text-decoration: underline; }
