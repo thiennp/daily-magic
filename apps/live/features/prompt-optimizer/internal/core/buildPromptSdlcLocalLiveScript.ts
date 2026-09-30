@@ -19,6 +19,11 @@ export const PROMPT_SDLC_LOCAL_LIVE_SCRIPT = `<script>
     if (root === null) return;
     root.dataset.live = incoming.dataset.live ?? "";
     root.dataset.since = incoming.dataset.since ?? "";
+    const busy = incoming.getAttribute("aria-busy");
+    root.setAttribute(
+      "aria-busy",
+      busy ?? (root.dataset.live === "true" ? "true" : "false"),
+    );
     root.innerHTML = incoming.innerHTML;
     paintElapsed();
   };

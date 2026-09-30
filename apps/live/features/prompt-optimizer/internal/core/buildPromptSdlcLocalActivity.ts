@@ -1,4 +1,5 @@
 import {
+  buildPromptSdlcWizardStepIndex,
   isPromptSdlcTerminalStatus,
   summarizePromptSdlcWizardCompletion,
 } from "../../../../adapters/promptSdlcAwcCore";
@@ -8,11 +9,58 @@ import {
   PROMPT_SDLC_MANUAL_ACTOR,
 } from "./choosePromptSdlcLocalModels";
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
+import { readPromptSdlcLocalUnusableReplyPreview } from "./readPromptSdlcLocalUnusableReplyPreview";
 import { describePromptSdlcWriterTerminalFailure } from "./readPromptSdlcWriterOutput";
+
+export type PromptSdlcLocalActivityDescription = {
+  readonly title: string;
+  readonly detail: string;
+  readonly replyPreview: string | null;
+};
+
+const WIZARD_STEP_SHORT_LABELS = [
+  "Generalize",
+  "Evaluate",
+  "Separate",
+  "Optimize modules",
+] as const;
+
+const wizardFailedActivityTitle = (
+  wizard: NonNullable<PromptSdlcLocalCycle["wizard"]>,
+): string => {
+  const index = buildPromptSdlcWizardStepIndex(wizard);
+  const short =
+    index >= 0 && index < WIZARD_STEP_SHORT_LABELS.length
+      ? WIZARD_STEP_SHORT_LABELS[index]
+      : null;
+  return short === null
+    ? "Wizard failed."
+    : `Step ${index + 1} — ${short} failed`;
+};
+
+const unusableReplyActivity = (
+  cycle: PromptSdlcLocalCycle,
+  input: {
+    readonly title: string;
+    readonly detail: string;
+  },
+): PromptSdlcLocalActivityDescription => ({
+  ...input,
+  replyPreview: readPromptSdlcLocalUnusableReplyPreview(cycle),
+});
+
+const liveActivity = (
+  title: string,
+  detail: string,
+): PromptSdlcLocalActivityDescription => ({
+  title,
+  detail,
+  replyPreview: null,
+});
 
 export const describePromptSdlcLocalActivity = (
   cycle: PromptSdlcLocalCycle,
-): { readonly title: string; readonly detail: string } => {
+): PromptSdlcLocalActivityDescription => {
   if (cycle.status === "wizard_paused") {
     const message = cycle.errorMessage?.trim() ?? "";
     return {
@@ -21,6 +69,7 @@ export const describePromptSdlcLocalActivity = (
         message.length > 0
           ? message
           : "Review the step above, then Continue or rerun with feedback.",
+      replyPreview: null,
     };
   }
   if (
@@ -31,10 +80,10 @@ export const describePromptSdlcLocalActivity = (
     !isPromptSdlcTerminalStatus(cycle.status)
   ) {
     const writer = cycle.judgeModel;
-    return {
-      title: `${labelPromptSdlcLocalModel(writer)} is suggesting module splits.`,
-      detail: "This panel keeps updating while the writer works on this Mac.",
-    };
+    return liveActivity(
+      `${labelPromptSdlcLocalModel(writer)} is suggesting module splits.`,
+      "This panel keeps updating while the writer works on this Mac.",
+    );
   }
   if (
     cycle.wizard !== undefined &&
@@ -43,31 +92,28 @@ export const describePromptSdlcLocalActivity = (
     !isPromptSdlcTerminalStatus(cycle.status)
   ) {
     const writer = cycle.judgeModel;
-    return {
-      title: `${labelPromptSdlcLocalModel(writer)} is generalizing your prompt.`,
-      detail: "This panel keeps updating while the writer works on this Mac.",
-    };
+    return liveActivity(
+      `${labelPromptSdlcLocalModel(writer)} is generalizing your prompt.`,
+      "This panel keeps updating while the writer works on this Mac.",
+    );
   }
   if (cycle.status === "judging" && cycle.judgePromptTextOnly === true) {
     if (cycle.judgeModel === PROMPT_SDLC_MANUAL_ACTOR) {
-      return {
-        title: `Score the prompt text for round ${cycle.currentRound + 1}.`,
-        detail:
-          "Wizard step 2 scores the prompt wording only. The runner executes modules in step 4.",
-      };
+      return liveActivity(
+        `Score the prompt text for round ${cycle.currentRound + 1}.`,
+        "Wizard step 2 scores the prompt wording only. The runner executes modules in step 4.",
+      );
     }
     if (cycle.judgePhase === "scoring") {
-      return {
-        title: `${labelPromptSdlcLocalModel(cycle.judgeModel)} is scoring the prompt text for round ${cycle.currentRound + 1}.`,
-        detail:
-          "No folder run in step 2. This panel keeps updating, so the page is not stuck.",
-      };
+      return liveActivity(
+        `${labelPromptSdlcLocalModel(cycle.judgeModel)} is scoring the prompt text for round ${cycle.currentRound + 1}.`,
+        "No folder run in step 2. This panel keeps updating, so the page is not stuck.",
+      );
     }
-    return {
-      title: `${labelPromptSdlcLocalModel(cycle.judgeModel)} is scoring the prompt text for round ${cycle.currentRound + 1}.`,
-      detail:
-        "Wizard evaluate revises prompt wording before the runner executes in step 4.",
-    };
+    return liveActivity(
+      `${labelPromptSdlcLocalModel(cycle.judgeModel)} is scoring the prompt text for round ${cycle.currentRound + 1}.`,
+      "Wizard evaluate revises prompt wording before the runner executes in step 4.",
+    );
   }
   if (
     cycle.status === "judging" &&
@@ -79,24 +125,23 @@ export const describePromptSdlcLocalActivity = (
         revision.run !== undefined,
     );
     if (!ran && cycle.improverModel !== PROMPT_SDLC_MANUAL_ACTOR) {
-      return {
-        title: `${labelPromptSdlcLocalModel(cycle.improverModel)} is running the prompt for round ${cycle.currentRound + 1}.`,
-        detail: "You score the changes after this run.",
-      };
+      return liveActivity(
+        `${labelPromptSdlcLocalModel(cycle.improverModel)} is running the prompt for round ${cycle.currentRound + 1}.`,
+        "You score the changes after this run.",
+      );
     }
-    return {
-      title: `Score the changes from round ${cycle.currentRound + 1}.`,
-      detail: ran
+    return liveActivity(
+      `Score the changes from round ${cycle.currentRound + 1}.`,
+      ran
         ? "Score the changes below. Weigh the tokens and the delay."
         : "Choose a writer as the judge so this Mac can run the prompt.",
-    };
+    );
   }
   if (cycle.status === "judging" && cycle.judgePhase === "reviewing") {
-    return {
-      title: `${labelPromptSdlcLocalModel(cycle.judgeModel)} is checking the tokens for round ${cycle.currentRound + 1}.`,
-      detail:
-        "A separate pass reads the token spend and suggests what to cut before the improver runs. This panel keeps updating, so the page is not stuck.",
-    };
+    return liveActivity(
+      `${labelPromptSdlcLocalModel(cycle.judgeModel)} is checking the tokens for round ${cycle.currentRound + 1}.`,
+      "A separate pass reads the token spend and suggests what to cut before the improver runs. This panel keeps updating, so the page is not stuck.",
+    );
   }
   if (cycle.status === "judging" && cycle.judgePhase === "scoring") {
     const wizard = cycle.wizard;
@@ -108,16 +153,15 @@ export const describePromptSdlcLocalActivity = (
       const runner = cycle.runnerModel ?? cycle.judgeModel;
       const moduleIndex = wizard.currentModuleIndex + 1;
       const moduleTotal = wizard.modules.length;
-      return {
-        title: `${labelPromptSdlcLocalModel(runner)} is scoring module ${moduleIndex} of ${moduleTotal}.`,
-        detail: `Step 4 runs one trial per module (pass ≥ ${PROMPT_SDLC_WIZARD_PASS_SCORE}). This panel keeps updating.`,
-      };
+      return liveActivity(
+        `${labelPromptSdlcLocalModel(runner)} is scoring module ${moduleIndex} of ${moduleTotal}.`,
+        `Step 4 runs one trial per module (pass ≥ ${PROMPT_SDLC_WIZARD_PASS_SCORE}). This panel keeps updating.`,
+      );
     }
-    return {
-      title: `${labelPromptSdlcLocalModel(cycle.judgeModel)} is scoring the changes from round ${cycle.currentRound + 1}.`,
-      detail:
-        "The score uses the git changes or the files the prompt names. This panel keeps updating, so the page is not stuck.",
-    };
+    return liveActivity(
+      `${labelPromptSdlcLocalModel(cycle.judgeModel)} is scoring the changes from round ${cycle.currentRound + 1}.`,
+      "The score uses the git changes or the files the prompt names. This panel keeps updating, so the page is not stuck.",
+    );
   }
   if (cycle.status === "judging") {
     const wizard = cycle.wizard;
@@ -129,16 +173,15 @@ export const describePromptSdlcLocalActivity = (
       const runner = cycle.runnerModel ?? cycle.judgeModel;
       const moduleIndex = wizard.currentModuleIndex + 1;
       const moduleTotal = wizard.modules.length;
-      return {
-        title: `${labelPromptSdlcLocalModel(runner)} is running module ${moduleIndex} of ${moduleTotal}.`,
-        detail: `The runner executes the module prompt; the judge scores output (pass ≥ ${PROMPT_SDLC_WIZARD_PASS_SCORE}). This panel keeps updating.`,
-      };
+      return liveActivity(
+        `${labelPromptSdlcLocalModel(runner)} is running module ${moduleIndex} of ${moduleTotal}.`,
+        `The runner executes the module prompt; the judge scores output (pass ≥ ${PROMPT_SDLC_WIZARD_PASS_SCORE}). This panel keeps updating.`,
+      );
     }
-    return {
-      title: `${labelPromptSdlcLocalModel(cycle.judgeModel)} is running the prompt for round ${cycle.currentRound + 1}.`,
-      detail:
-        "The judge runs the prompt, then reads the changes, then checks the tokens. This panel keeps updating, so the page is not stuck.",
-    };
+    return liveActivity(
+      `${labelPromptSdlcLocalModel(cycle.judgeModel)} is running the prompt for round ${cycle.currentRound + 1}.`,
+      "The judge runs the prompt, then reads the changes, then checks the tokens. This panel keeps updating, so the page is not stuck.",
+    );
   }
   if (
     cycle.status === "improving" &&
@@ -148,25 +191,23 @@ export const describePromptSdlcLocalActivity = (
       (revision) => revision.roundNumber === cycle.currentRound,
     )?.judgement;
     const reason = judgement?.reasons?.trim() ?? "";
-    return {
-      title: "Rewrite the prompt.",
-      detail:
-        judgement?.score === null ||
+    return liveActivity(
+      "Rewrite the prompt.",
+      judgement?.score === null ||
         judgement?.score === undefined ||
         reason.length === 0
-          ? "Write the next prompt yourself."
-          : `Score ${judgement.score} / 100. ${reason}`,
-    };
+        ? "Write the next prompt yourself."
+        : `Score ${judgement.score} / 100. ${reason}`,
+    );
   }
   if (cycle.status === "improving") {
-    return {
-      title: `${labelPromptSdlcLocalModel(cycle.improverModel)} is rewriting the prompt.`,
-      detail:
-        "That writer is working on this Mac. This panel keeps updating, so the page is not stuck.",
-    };
+    return liveActivity(
+      `${labelPromptSdlcLocalModel(cycle.improverModel)} is rewriting the prompt.`,
+      "That writer is working on this Mac. This panel keeps updating, so the page is not stuck.",
+    );
   }
   if (cycle.status === "passed") {
-    return { title: "This prompt passed.", detail: "" };
+    return { title: "This prompt passed.", detail: "", replyPreview: null };
   }
   if (cycle.status === "stopped") {
     const writerFailed = cycle.revisions.some(
@@ -193,27 +234,59 @@ export const describePromptSdlcLocalActivity = (
             : modulesDone
               ? ""
               : "Progress from finished steps is kept.",
+        replyPreview: null,
       };
     }
     const finished = (cycle.errorMessage ?? "").startsWith("Finished");
-    return {
-      title: finished ? "Finished." : "Stopped.",
+    const stoppedDetail =
+      message.length > 0
+        ? message
+        : writerFailed
+          ? "The improver returned a terminal error instead of a prompt, so the later scores are 0. This run is listed in History."
+          : "The best prompt is kept.";
+    return writerFailed
+      ? unusableReplyActivity(cycle, {
+          title: finished ? "Finished." : "Stopped.",
+          detail: stoppedDetail,
+        })
+      : {
+          title: finished ? "Finished." : "Stopped.",
+          detail: stoppedDetail,
+          replyPreview: null,
+        };
+  }
+  if (cycle.status === "failed") {
+    const message = cycle.errorMessage?.trim() ?? "";
+    const wizard = cycle.wizard;
+    const fallbackDetail =
+      "A writer or judge reply could not be used. Start a new run after fixing the issue.";
+    if (wizard !== undefined) {
+      return unusableReplyActivity(cycle, {
+        title: wizardFailedActivityTitle(wizard),
+        detail: message.length > 0 ? message : fallbackDetail,
+      });
+    }
+    return unusableReplyActivity(cycle, {
+      title: "This run failed.",
       detail:
         message.length > 0
           ? message
-          : writerFailed
-            ? "The improver returned a terminal error instead of a prompt, so the later scores are 0. This run is listed in History."
-            : "The best prompt is kept.",
-    };
+          : "A writer or judge reply could not be used.",
+    });
   }
   if (isPromptSdlcTerminalStatus(cycle.status)) {
-    return {
+    const message = cycle.errorMessage?.trim() ?? "";
+    return unusableReplyActivity(cycle, {
       title: "This run stopped because a reply could not be used.",
-      detail: "",
-    };
+      detail:
+        message.length > 0
+          ? message
+          : "A writer or judge reply could not be used.",
+    });
   }
   return {
     title: "Working on this Mac.",
     detail: "This panel keeps updating.",
+    replyPreview: null,
   };
 };

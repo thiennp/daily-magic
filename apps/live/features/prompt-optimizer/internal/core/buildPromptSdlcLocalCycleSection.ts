@@ -141,9 +141,11 @@ export const buildPromptSdlcLocalCycleSection = (
     : cycle.status === "wizard_paused"
       ? `<span class="sdlc-run-badge sdlc-run-badge-paused">Paused</span>`
       : isPromptSdlcTerminalStatus(cycle.status)
-        ? wizardRunComplete && wizardSummary !== null && !allModulesPassed
-          ? `<span class="sdlc-run-badge sdlc-run-badge-finished">Finished</span>`
-          : `<span class="sdlc-run-badge sdlc-run-badge-done">Complete</span>`
+        ? cycle.status === "failed"
+          ? `<span class="sdlc-run-badge sdlc-run-badge-failed">Failed</span>`
+          : wizardRunComplete && wizardSummary !== null && !allModulesPassed
+            ? `<span class="sdlc-run-badge sdlc-run-badge-finished">Finished</span>`
+            : `<span class="sdlc-run-badge sdlc-run-badge-done">Complete</span>`
         : "";
   const activityIcon = live
     ? spinner

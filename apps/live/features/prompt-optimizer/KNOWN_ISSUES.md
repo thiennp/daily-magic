@@ -28,6 +28,7 @@ No other open issues. Recent fixes (bundle **166–186**):
 
 - Step 1 **Generalize** auto-continues to evaluate when the writer returns a concrete templated prompt with **no** `variables` rows and **no** `{{placeholders}}` (bundle **210**).
 - Step 2 **Evaluate** auto-continues to separate when the best (or selected) revision passes the wizard quality gate (score ≥ 70, `passed: true`). Step 3 **Separate** auto-continues to Step 4 when the writer returns one option with a single module (bundle **212**).
+- Failed wizard runs show a **Failed** badge (not Complete), name the wizard step in the activity title, and surface `errorMessage` on the timeline **Failed** row and in the step modal (bundle **220**).
 - Generalize gate prompt appears after live poll without full reload.
 - Compose form stays locked at wizard gates (not unlocked by `sdlc-run-finished`).
 - Runner writer readiness is probed like judge/improver (`data-writer-status="runner"`).
