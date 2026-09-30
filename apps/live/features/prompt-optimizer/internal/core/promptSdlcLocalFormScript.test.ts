@@ -3,12 +3,10 @@ import { describe, expect, it } from "vitest";
 import { PROMPT_SDLC_LOCAL_FORM_SCRIPT } from "./promptSdlcLocalFormScript";
 
 describe("PROMPT_SDLC_LOCAL_FORM_SCRIPT", () => {
-  it("enables every run button and shows a hint element", () => {
-    expect(PROMPT_SDLC_LOCAL_FORM_SCRIPT).toContain(
-      'querySelectorAll("[data-sdlc-run]")',
-    );
-    expect(PROMPT_SDLC_LOCAL_FORM_SCRIPT).toContain("[data-sdlc-run-hint]");
-    expect(PROMPT_SDLC_LOCAL_FORM_SCRIPT).toContain("paintRunHint");
+  it("keeps run buttons enabled and surfaces block reasons in the hint", () => {
+    expect(PROMPT_SDLC_LOCAL_FORM_SCRIPT).toContain("btn.disabled = false");
+    expect(PROMPT_SDLC_LOCAL_FORM_SCRIPT).toContain("readRunBlockReason");
+    expect(PROMPT_SDLC_LOCAL_FORM_SCRIPT).toContain("[data-sdlc-submit-bar]");
   });
 
   it("closes field tips on Escape and tracks aria-expanded", () => {

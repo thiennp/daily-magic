@@ -6,7 +6,9 @@ No open issues. Recent fixes (bundle **166–186**):
 - Compose: classic pass/round limits under **Classic loop options**, wizard limits callout, role-step table, collapsed instruction fields, runner prefilled from judge; history shows **Wizard · Step N**; field tips close on Escape with `aria-expanded` (bundle **186**).
 - Step 3 chain/parallel badges and explainer; Step 4 chain handoff preview with skip/no-output reasons; cumulative wizard tokens on gates when statistics exist (bundle **186**).
 
-- Classic loop submit button follows the same writer readiness as Run (`querySelectorAll("[data-sdlc-run]")`); run hint explains why buttons stay disabled (bundle **185**).
+- Compose `<details>` no longer uses `display:flex` on the element itself (that hid all fields in Chrome); body lives in `.sdlc-compose-details-body`. Sticky **Run** bar sits outside `<details>` (bundle **200**).
+- Compose **Run** and **Classic loop** stay enabled; block reasons show in `data-sdlc-run-hint` (bundle **199**).
+- Removed **Suggest goals** from compose (bundle **200**).
 - Agent API `POST /prompt-optimizer/agent` uses classic loop defaults (pass 90, max rounds 10) instead of wizard 70/5 (bundle **185**).
 
 - Wizard steps stack in a collapsed accordion; Continue / Run update the page via live HTML fragments (no full reload). Compose stays on top, collapses after submit, and disabled fields use a light grey background.

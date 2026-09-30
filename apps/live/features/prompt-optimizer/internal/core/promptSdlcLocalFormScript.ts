@@ -20,48 +20,46 @@ export const PROMPT_SDLC_LOCAL_FORM_SCRIPT = `<script>
     if (runButtons.length === 0) {
       hint.textContent = "";
       hint.hidden = true;
+      hint.className = "muted sdlc-run-hint";
       return;
     }
-    const fields = document.querySelector(".sdlc-fields");
-    if (fields instanceof HTMLFieldSetElement && fields.disabled) {
-      hint.textContent = "This run is in progress. Use the gate or This run panel above.";
-      hint.hidden = false;
-      return;
-    }
-    const blocked = runButtons.some((btn) => btn instanceof HTMLButtonElement && btn.disabled);
-    if (!blocked) {
+    const reason = readRunBlockReason();
+    if (reason === null) {
       hint.textContent = "";
       hint.hidden = true;
+      hint.className = "muted sdlc-run-hint";
       return;
+    }
+    hint.textContent = reason;
+    hint.hidden = false;
+    hint.className = "alert-error sdlc-run-hint";
+  };
+  const readRunBlockReason = () => {
+    const fields = document.querySelector(".sdlc-fields");
+    if (fields instanceof HTMLFieldSetElement && fields.disabled) {
+      return "This run is in progress. Use the gate or This run panel above.";
     }
     const compose = readComposeFields();
     if (!compose.hasGoal || !compose.hasPrompt) {
-      hint.textContent = "Fill in the goal and prompt before you run.";
-      hint.hidden = false;
-      return;
-    }
-    if (runButtons.some((btn) => btn instanceof HTMLButtonElement && btn.dataset.canRun !== "true")) {
-      hint.textContent = "Fill in the goal and prompt before you run.";
-      hint.hidden = false;
-      return;
+      return "Fill in the goal and prompt before you run.";
     }
     const pending = slots.find((slot) => slot.dataset.ready !== "true");
     if (pending) {
       const writer = pending.dataset.writer ?? "writer";
       if (writer.length === 0) {
-        hint.textContent = "Choose who scores and who rewrites the prompt.";
-      } else if (writer === "manual") {
-        hint.textContent = "You chose a manual step. Run will pause when that step is due.";
-      } else if (pending.textContent === "Checking…") {
-        hint.textContent = "Checking that the chosen writer is ready…";
-      } else {
-        hint.textContent = pending.textContent.trim().length > 0 ? pending.textContent : "Fix the writer error above, then run again.";
+        return "Choose who scores and who rewrites the prompt.";
       }
-      hint.hidden = false;
-      return;
+      if (writer === "manual") {
+        return "You chose a manual step. Run will pause when that step is due.";
+      }
+      if (pending.textContent === "Checking…") {
+        return "Checking that the chosen writer is ready…";
+      }
+      return pending.textContent.trim().length > 0
+        ? pending.textContent.trim()
+        : "Fix the writer error above, then run again.";
     }
-    hint.textContent = "Run is not available yet.";
-    hint.hidden = false;
+    return null;
   };
   const readComposeFields = () => {
     const form = document.querySelector("form.sdlc-form");
@@ -85,79 +83,21 @@ export const PROMPT_SDLC_LOCAL_FORM_SCRIPT = `<script>
       judge: judgeText,
     };
   };
-  const syncGoalSuggestions = () => {
-    const block = document.querySelector(".sdlc-goal-suggestions");
-    if (!(block instanceof HTMLElement)) return;
-    const fields = readComposeFields();
-    const match =
-      block.dataset.suggestPrompt === fields.prompt &&
-      block.dataset.suggestFolder === fields.folder &&
-      block.dataset.suggestJudge === fields.judge;
-    if (!match) block.remove();
-  };
-  const bindGoalSuggestionRadios = () => {
-    const form = document.querySelector("form.sdlc-form");
-    const goal = form?.querySelector('[name="goal"]');
-    const block = document.querySelector(".sdlc-goal-suggestions");
-    if (!(goal instanceof HTMLTextAreaElement) || !(block instanceof HTMLElement)) {
-      return;
-    }
-    const goals = (() => {
-      try {
-        const parsed = JSON.parse(block.dataset.suggestGoals ?? "[]");
-        return Array.isArray(parsed) ? parsed.filter((item) => typeof item === "string") : [];
-      } catch {
-        return [];
-      }
-    })();
-    document.querySelectorAll('input[name="goalSuggestion"]').forEach((radio) => {
-      if (!(radio instanceof HTMLInputElement)) return;
-      radio.addEventListener("change", () => {
-        if (!radio.checked) return;
-        if (radio.value === "none") {
-          goal.focus();
-          return;
-        }
-        const index = Number(radio.value);
-        const picked = goals[index];
-        if (typeof picked === "string") {
-          goal.value = picked;
-          goal.dispatchEvent(new Event("input", { bubbles: true }));
-        }
-        paintReady();
-      });
-    });
-  };
   const paintReady = () => {
     const fields = document.querySelector(".sdlc-fields");
     const fieldsDisabled =
       fields instanceof HTMLFieldSetElement && fields.disabled;
     const compose = readComposeFields();
-    syncGoalSuggestions();
-    const suggestBtn = document.querySelector("[data-sdlc-suggest-goals]");
-    if (suggestBtn instanceof HTMLButtonElement) {
-      const judgeSlot = document.querySelector('[data-writer-status="judge"]');
-      const judgeReady =
-        compose.judge === "manual" ||
-        (judgeSlot instanceof HTMLElement && judgeSlot.dataset.ready === "true");
-      suggestBtn.disabled =
-        fieldsDisabled ||
-        !compose.hasPrompt ||
-        compose.judge.length === 0 ||
-        compose.judge === "manual" ||
-        !judgeReady;
-    }
     runButtons.forEach((btn) => {
       if (!(btn instanceof HTMLButtonElement)) return;
-      if (fieldsDisabled) {
-        btn.disabled = true;
-        return;
-      }
-      btn.disabled =
-        btn.dataset.canRun !== "true" ||
-        !compose.hasGoal ||
-        !compose.hasPrompt ||
-        slots.some((slot) => slot.dataset.ready !== "true");
+      btn.disabled = false;
+      const writersReady = slots.every((slot) => slot.dataset.ready === "true");
+      const canRun =
+        !fieldsDisabled &&
+        compose.hasGoal &&
+        compose.hasPrompt &&
+        writersReady;
+      btn.dataset.canRun = canRun ? "true" : "false";
     });
     paintRunHint();
     paintWriterSummary();
@@ -296,10 +236,7 @@ export const PROMPT_SDLC_LOCAL_FORM_SCRIPT = `<script>
   if (folderInput instanceof HTMLInputElement) {
     folderInput.addEventListener("change", rememberSelection);
     folderInput.addEventListener("blur", rememberSelection);
-    folderInput.addEventListener("input", () => {
-      syncGoalSuggestions();
-      paintReady();
-    });
+    folderInput.addEventListener("input", paintReady);
   }
   const goalInput = document.querySelector('form.sdlc-form [name="goal"]');
   const promptInput = document.querySelector('form.sdlc-form [name="prompt"]');
@@ -307,12 +244,8 @@ export const PROMPT_SDLC_LOCAL_FORM_SCRIPT = `<script>
     goalInput.addEventListener("input", paintReady);
   }
   if (promptInput instanceof HTMLTextAreaElement) {
-    promptInput.addEventListener("input", () => {
-      syncGoalSuggestions();
-      paintReady();
-    });
+    promptInput.addEventListener("input", paintReady);
   }
-  bindGoalSuggestionRadios();
   [...new Set(slots.map((slot) => slot.dataset.writer))].forEach((writer) => {
     if (writer) void paintWriter(writer);
   });
@@ -438,6 +371,25 @@ export const PROMPT_SDLC_LOCAL_FORM_SCRIPT = `<script>
       });
     });
   });
+  const form = document.querySelector("form.sdlc-form");
+  if (form instanceof HTMLFormElement) {
+    form.addEventListener("submit", (event) => {
+      const submitter = event.submitter;
+      if (!(submitter instanceof HTMLButtonElement)) return;
+      if (!submitter.hasAttribute("data-sdlc-run")) return;
+      const reason = readRunBlockReason();
+      if (reason !== null) {
+        event.preventDefault();
+        paintRunHint();
+        paintWriterSummary();
+        document.querySelector("[data-sdlc-submit-bar]")?.scrollIntoView({
+          behavior: "smooth",
+          block: "nearest",
+        });
+        submitter.focus({ preventScroll: true });
+      }
+    });
+  }
   paintReady();
   document.addEventListener("sdlc-run-finished", () => {
     const gateSlot = document.getElementById("prompt-optimizer-wizard-gate-slot");

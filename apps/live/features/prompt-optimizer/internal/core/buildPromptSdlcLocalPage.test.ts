@@ -55,47 +55,9 @@ describe("buildPromptSdlcLocalPageBody", () => {
     expect(html).toContain('data-writer-status="runner"');
     expect(html).toContain('name="runnerInstructions"');
     expect(html).toContain("data-sdlc-run-hint");
-    expect(html).toContain('value="run-classic"');
-    expect(html).toContain('name="intent" value="run"');
-    expect(html).toContain(
-      "If the prompt needs an input, put that input here.",
-    );
-    expect(html).toContain("How to use Goal");
-    expect(html).toContain("How to use Round limit");
-    expect(html).not.toContain('name="deviceId"');
-    expect(html).toContain('value="suggest-goals"');
-    expect(html).toContain("Suggest goals");
-    expect(html).toContain("data-sdlc-suggest-goals");
-  });
-
-  it("renders suggested goal radios when the server returns options", () => {
-    const html = buildPromptSdlcLocalPageBody({
-      goal: "",
-      prompt: "Weak prompt.",
-      modelNote: "",
-      writers: [{ id: "cursor", label: "Cursor" }],
-      judge: "cursor",
-      improver: "cursor",
-      folder: "~",
-      passScore: "90",
-      canRun: true,
-      errorMessage: null,
-      cycle: null,
-      history: [],
-      goalSuggestions: {
-        kind: "options",
-        suggestKey: "abc",
-        options: ["Measurable goal one.", "Measurable goal two."],
-        promptFingerprint: "Weak prompt.",
-        folderFingerprint: "~",
-        judgeFingerprint: "cursor",
-      },
-    });
-
-    expect(html).toContain("sdlc-goal-suggestions");
-    expect(html).toContain("None of these");
-    expect(html).toContain("Measurable goal one.");
-    expect(html).not.toContain('name="goalSuggestion" checked');
+    expect(html).toContain("data-sdlc-submit-bar");
+    expect(html).toContain("sdlc-compose-details-body");
+    expect(html).not.toContain("Suggest goals");
   });
 
   it("lets the user choose the judge and improver when several writers are installed", () => {

@@ -17,7 +17,6 @@ export const PROMPT_SDLC_WIZARD_CLIENT_SCRIPT = `<script>
     }
     const button = document.querySelector("[data-sdlc-run]");
     if (button instanceof HTMLButtonElement) {
-      button.disabled = true;
       button.textContent = "Running…";
     }
   };
