@@ -171,6 +171,10 @@ export const PROMPT_SDLC_WIZARD_CLIENT_SCRIPT = `<script>
         ? submitter.value
         : "";
     if (intent !== "run") return;
+    const summaryStep = document.getElementById("sdlc-compose-step-4");
+    if (summaryStep instanceof HTMLElement && summaryStep.hidden) {
+      return;
+    }
     event.preventDefault();
     void postLiveFragment(formDataFromSubmit(form, submitter));
   });

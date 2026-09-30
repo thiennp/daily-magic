@@ -561,34 +561,40 @@ export const PROMPT_SDLC_LOCAL_FORM_SCRIPT = `<script>
   });
   const form = document.querySelector("form.sdlc-form");
   if (form instanceof HTMLFormElement) {
-    form.addEventListener("submit", (event) => {
-      const submitter = event.submitter;
-      if (!(submitter instanceof HTMLButtonElement)) return;
-      if (!submitter.hasAttribute("data-sdlc-run-wizard")) return;
-      const reason = readRunBlockReason();
-      if (composeStep !== COMPOSE_STEP_COUNT) {
-        event.preventDefault();
-        showComposeStep(COMPOSE_STEP_COUNT);
-        paintComposeStepError(
-          "Review the summary on step 4 before you run.",
-        );
-        return;
-      }
-      if (reason !== null) {
-        event.preventDefault();
-        showRunBlockHint = true;
-        paintRunHint();
-        paintWriterSummary();
-        document.querySelector("[data-sdlc-submit-bar]")?.scrollIntoView({
-          behavior: "smooth",
-          block: "nearest",
-        });
-        submitter.focus({ preventScroll: true });
-        return;
-      }
-      paintRunButton(true);
-      focusRunPanel();
-    });
+    form.addEventListener(
+      "submit",
+      (event) => {
+        const submitter = event.submitter;
+        if (!(submitter instanceof HTMLButtonElement)) return;
+        if (!submitter.hasAttribute("data-sdlc-run-wizard")) return;
+        const reason = readRunBlockReason();
+        if (composeStep !== COMPOSE_STEP_COUNT) {
+          event.preventDefault();
+          event.stopImmediatePropagation();
+          showComposeStep(COMPOSE_STEP_COUNT);
+          paintComposeStepError(
+            "Review the summary on step 4 before you run.",
+          );
+          return;
+        }
+        if (reason !== null) {
+          event.preventDefault();
+          event.stopImmediatePropagation();
+          showRunBlockHint = true;
+          paintRunHint();
+          paintWriterSummary();
+          document.querySelector("[data-sdlc-submit-bar]")?.scrollIntoView({
+            behavior: "smooth",
+            block: "nearest",
+          });
+          submitter.focus({ preventScroll: true });
+          return;
+        }
+        paintRunButton(true);
+        focusRunPanel();
+      },
+      true,
+    );
   }
   const composeRoot = document.getElementById("prompt-optimizer-compose");
   if (composeRoot?.classList.contains("sdlc-compose-viewing-finished")) {

@@ -9,6 +9,7 @@ No open issues. Recent fixes (bundle **166–186**):
 - Compose `<details>` no longer uses `display:flex` on the element itself (that hid all fields in Chrome); body lives in `.sdlc-compose-details-body`. Sticky **Run** bar sits outside `<details>` (bundle **200**).
 - Compose **Run** stays enabled; `data-sdlc-run-hint` shows block reasons only after a blocked Run click (bundle **206**).
 - Compose is a four-step stepper (Project → Prompt and goal → CLI → Summary); **Run** and the sticky submit bar live on Summary only (bundle **207**).
+- Compose **Run** validation runs in capture phase before the wizard live POST so blocked clicks do not start a run (bundle **208**).
 - Removed **Suggest goals** from compose (bundle **200**).
 - Agent API `POST /prompt-optimizer/agent` starts wizard runs (pass 70, max rounds 5) like the compose form (bundle **201**).
 

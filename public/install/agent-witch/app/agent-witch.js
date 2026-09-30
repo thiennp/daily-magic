@@ -42,7 +42,7 @@ ${r}`:r,s={...n,updatedAt:new Date().toISOString(),details:o};return ME(s),s},NE
 
 `)}}});var BG,GG,Gs,DE,pd,Cf=l(()=>{"use strict";ud();Bs();BG=new Set(Object.values(Pt)),GG=e=>BG.has(e),Gs=(e,t)=>{let r=e.indexOf(t);if(r<0)return;let n=e[r+1];return typeof n=="string"&&n.trim().length>0?n.trim():void 0},DE=()=>{process.stdout.write(["Usage: agent-witch report write \\","  --key <report-key> \\","  --agent-run-id <run-id> \\","  --status in_progress|completed|failed|blocked \\","  --summary <plain-language status> \\","  [--details <optional notes>]",""].join(`
 `))},pd=e=>{if(e[0]!=="write")return DE(),1;let r=Gs(e,"--key"),n=Gs(e,"--agent-run-id"),o=Gs(e,"--status"),s=Gs(e,"--summary"),i=Gs(e,"--details");return r===void 0||n===void 0||o===void 0||s===void 0||!GG(o)?(DE(),1):(zs({reportKey:r,agentRunId:n,status:o,userSummary:s,details:i}),0)}});var it,ro=l(()=>{"use strict";it=()=>!0});var Tf,HE,Zr,md=l(()=>{"use strict";Tf=m(require("node:path")),HE=require("node:url");ro();Zr=e=>{let t=process.argv[1];if(t===void 0)return!1;let r=Tf.default.resolve(t);return it()?r===Tf.default.resolve(__filename):r===(0,HE.fileURLToPath)(e)}});var gd,no,KG,jY,oo=l(()=>{"use strict";gd="agent-witch.js",no="deps.tar.gz",KG="install.sh",jY={mainScript:`app/${gd}`,depsArchive:`app/${no}`,installShell:KG}});var UE=l(()=>{"use strict";oo()});var BE=l(()=>{"use strict";oo();UE()});var Vs,If,fd,JG,qs,Ee,io,Ks,Js,Qr,Of=l(()=>{"use strict";Vs=m(require("node:fs")),If=m(require("node:path"));BE();G();fd="install-version.json",JG=e=>typeof e=="object"&&e!==null&&!Array.isArray(e),qs=(e=L())=>If.default.join(e,fd),Ee=(e=L())=>{let t=qs(e);if(!Vs.default.existsSync(t))return null;try{let r=JSON.parse(Vs.default.readFileSync(t,"utf8"));return!JG(r)||typeof r.bundleVersion!="string"||typeof r.appOrigin!="string"||typeof r.updatedAt!="string"?null:{bundleVersion:r.bundleVersion,appOrigin:r.appOrigin,updatedAt:r.updatedAt}}catch{return null}},io=(e,t=L())=>{let r=qs(t);Vs.default.mkdirSync(If.default.dirname(r),{recursive:!0}),Vs.default.writeFileSync(r,`${JSON.stringify(e,null,2)}
-`,"utf8")},Ks=(e=L())=>Ee(e)?.bundleVersion??"207",Js=(e,t)=>{let r=Ee(e);if(r!==null)return r;let n={bundleVersion:"207",appOrigin:t,updatedAt:new Date().toISOString()};return io(n,e),n},Qr=(e,t)=>{if(e===null)return!0;let r=Number.parseInt(e,10),n=Number.parseInt(t,10);return Number.isFinite(r)&&Number.isFinite(n)?n>r:e!==t}});var GE,en,Mf,Nf,jf,hd,wt,tn,Df=l(()=>{"use strict";GE=require("node:crypto"),en=m(require("node:fs")),Mf=m(require("node:path"));G();Nf="self-update-log.ndjson",jf=100,hd=(e=L())=>{let t=M(),r=t.installDir===e?t.logsDir:Qn({installDir:e,profileEmail:t.profileEmail});return Mf.default.join(r,Nf)},wt=(e,t=L())=>{let r={id:(0,GE.randomUUID)(),recordedAt:e.recordedAt??new Date().toISOString(),event:e.event,ok:e.ok,message:e.message,localBundleVersion:e.localBundleVersion,remoteBundleVersion:e.remoteBundleVersion},n=hd(t);en.default.mkdirSync(Mf.default.dirname(n),{recursive:!0});let o=en.default.existsSync(n)?en.default.readFileSync(n,"utf8").split(`
+`,"utf8")},Ks=(e=L())=>Ee(e)?.bundleVersion??"208",Js=(e,t)=>{let r=Ee(e);if(r!==null)return r;let n={bundleVersion:"208",appOrigin:t,updatedAt:new Date().toISOString()};return io(n,e),n},Qr=(e,t)=>{if(e===null)return!0;let r=Number.parseInt(e,10),n=Number.parseInt(t,10);return Number.isFinite(r)&&Number.isFinite(n)?n>r:e!==t}});var GE,en,Mf,Nf,jf,hd,wt,tn,Df=l(()=>{"use strict";GE=require("node:crypto"),en=m(require("node:fs")),Mf=m(require("node:path"));G();Nf="self-update-log.ndjson",jf=100,hd=(e=L())=>{let t=M(),r=t.installDir===e?t.logsDir:Qn({installDir:e,profileEmail:t.profileEmail});return Mf.default.join(r,Nf)},wt=(e,t=L())=>{let r={id:(0,GE.randomUUID)(),recordedAt:e.recordedAt??new Date().toISOString(),event:e.event,ok:e.ok,message:e.message,localBundleVersion:e.localBundleVersion,remoteBundleVersion:e.remoteBundleVersion},n=hd(t);en.default.mkdirSync(Mf.default.dirname(n),{recursive:!0});let o=en.default.existsSync(n)?en.default.readFileSync(n,"utf8").split(`
 `).filter(i=>i.trim().length>0):[],s=[...o.slice(Math.max(0,o.length-jf+1)),JSON.stringify(r)];return en.default.writeFileSync(n,`${s.join(`
 `)}
 `,"utf8"),r},tn=(e=20,t=L())=>{let r=hd(t);if(!en.default.existsSync(r))return[];let n=en.default.readFileSync(r,"utf8").split(`
@@ -2604,6 +2604,10 @@ ${s}`:"The writer printed nothing. Use the changes above."].filter(a=>a.length>0
         ? submitter.value
         : "";
     if (intent !== "run") return;
+    const summaryStep = document.getElementById("sdlc-compose-step-4");
+    if (summaryStep instanceof HTMLElement && summaryStep.hidden) {
+      return;
+    }
     event.preventDefault();
     void postLiveFragment(formDataFromSubmit(form, submitter));
   });
@@ -3328,34 +3332,40 @@ ${s}`:"The writer printed nothing. Use the changes above."].filter(a=>a.length>0
   });
   const form = document.querySelector("form.sdlc-form");
   if (form instanceof HTMLFormElement) {
-    form.addEventListener("submit", (event) => {
-      const submitter = event.submitter;
-      if (!(submitter instanceof HTMLButtonElement)) return;
-      if (!submitter.hasAttribute("data-sdlc-run-wizard")) return;
-      const reason = readRunBlockReason();
-      if (composeStep !== COMPOSE_STEP_COUNT) {
-        event.preventDefault();
-        showComposeStep(COMPOSE_STEP_COUNT);
-        paintComposeStepError(
-          "Review the summary on step 4 before you run.",
-        );
-        return;
-      }
-      if (reason !== null) {
-        event.preventDefault();
-        showRunBlockHint = true;
-        paintRunHint();
-        paintWriterSummary();
-        document.querySelector("[data-sdlc-submit-bar]")?.scrollIntoView({
-          behavior: "smooth",
-          block: "nearest",
-        });
-        submitter.focus({ preventScroll: true });
-        return;
-      }
-      paintRunButton(true);
-      focusRunPanel();
-    });
+    form.addEventListener(
+      "submit",
+      (event) => {
+        const submitter = event.submitter;
+        if (!(submitter instanceof HTMLButtonElement)) return;
+        if (!submitter.hasAttribute("data-sdlc-run-wizard")) return;
+        const reason = readRunBlockReason();
+        if (composeStep !== COMPOSE_STEP_COUNT) {
+          event.preventDefault();
+          event.stopImmediatePropagation();
+          showComposeStep(COMPOSE_STEP_COUNT);
+          paintComposeStepError(
+            "Review the summary on step 4 before you run.",
+          );
+          return;
+        }
+        if (reason !== null) {
+          event.preventDefault();
+          event.stopImmediatePropagation();
+          showRunBlockHint = true;
+          paintRunHint();
+          paintWriterSummary();
+          document.querySelector("[data-sdlc-submit-bar]")?.scrollIntoView({
+            behavior: "smooth",
+            block: "nearest",
+          });
+          submitter.focus({ preventScroll: true });
+          return;
+        }
+        paintRunButton(true);
+        focusRunPanel();
+      },
+      true,
+    );
   }
   const composeRoot = document.getElementById("prompt-optimizer-compose");
   if (composeRoot?.classList.contains("sdlc-compose-viewing-finished")) {

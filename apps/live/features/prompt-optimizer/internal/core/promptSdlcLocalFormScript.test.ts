@@ -49,5 +49,7 @@ describe("PROMPT_SDLC_LOCAL_FORM_SCRIPT", () => {
     expect(PROMPT_SDLC_LOCAL_FORM_SCRIPT).toContain(
       "composeStep !== COMPOSE_STEP_COUNT",
     );
+    expect(PROMPT_SDLC_LOCAL_FORM_SCRIPT).toContain("stopImmediatePropagation");
+    expect(PROMPT_SDLC_LOCAL_FORM_SCRIPT).toContain("true,");
   });
 });

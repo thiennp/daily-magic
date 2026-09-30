@@ -16,5 +16,7 @@ describe("PROMPT_SDLC_WIZARD_CLIENT_SCRIPT", () => {
       "sdlc-compose-run-focus",
     );
     expect(PROMPT_SDLC_WIZARD_CLIENT_SCRIPT).toContain("focusRunPanel");
+    expect(PROMPT_SDLC_WIZARD_CLIENT_SCRIPT).toContain("sdlc-compose-step-4");
+    expect(PROMPT_SDLC_WIZARD_CLIENT_SCRIPT).toContain("summaryStep.hidden");
   });
 });
