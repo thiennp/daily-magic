@@ -1,5 +1,6 @@
 import { PROMPT_SDLC_MANUAL_ACTOR } from "./choosePromptSdlcLocalModels";
 import { stopPromptSdlcLocalCycle } from "./stopPromptSdlcLocalCycle";
+import { stopPromptSdlcWizardRun } from "./stopPromptSdlcWizard";
 import { appendPromptSdlcLocalTokenReview } from "./appendPromptSdlcLocalTokenReview";
 import {
   applyPromptSdlcLocalImproverReply,
@@ -38,6 +39,14 @@ export const acceptPromptSdlcLocalManualPost = (input: {
   const intent = input.posted.get("intent");
   if (intent === "stop") {
     const cycleId = input.posted.get("cycleId") ?? "";
+    const cycle = readPromptSdlcLocalCycle(input.storePath, cycleId);
+    if (cycle === null) {
+      return { kind: "missing" };
+    }
+    if (cycle.wizard !== undefined) {
+      savePromptSdlcLocalCycle(input.storePath, stopPromptSdlcWizardRun(cycle));
+      return { kind: "saved", cycleId };
+    }
     return stopPromptSdlcLocalCycle(input.storePath, cycleId)
       ? { kind: "saved", cycleId }
       : { kind: "missing" };

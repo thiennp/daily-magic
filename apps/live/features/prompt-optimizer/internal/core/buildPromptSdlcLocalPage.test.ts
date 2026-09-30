@@ -135,8 +135,8 @@ describe("buildPromptSdlcLocalPageBody", () => {
     expect(html).toContain('type="number" name="maxRounds"');
     expect(html).toContain('value="10"');
     expect(html).toContain('name="intent" value="stop"');
-    expect(html).toContain(">Finish<");
-    expect(html).toContain("This run counts as complete.");
+    expect(html).toContain(">Stop run<");
+    expect(html).toContain("This run is marked complete.");
     expect(html).toContain('type="range" name="passScore"');
     expect(html).toContain('value="90"');
     expect(html).toContain("sdlc-pass-range");
@@ -528,7 +528,7 @@ describe("buildPromptSdlcLocalPageBody", () => {
     expect(runningHtml).toContain("sdlc-run-meta");
     expect(runningHtml).toContain("1,500 so far");
     expect(runningHtml).toContain("1,500 tokens so far");
-    expect(runningHtml).toContain(">Finish<");
+    expect(runningHtml).toContain(">Stop run<");
     expect(finishedHtml).toContain("Finished.");
     expect(finishedHtml).toContain("Finished");
     expect(finishedHtml).not.toContain(">Finish<");

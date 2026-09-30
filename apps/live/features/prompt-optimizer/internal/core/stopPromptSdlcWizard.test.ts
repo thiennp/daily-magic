@@ -1,6 +1,9 @@
 import { describe, expect, it } from "vitest";
 
-import { createInitialPromptSdlcWizardState } from "../../../../adapters/promptSdlcAwcCore";
+import {
+  createInitialPromptSdlcWizardState,
+  PROMPT_SDLC_WIZARD_STOP_USER,
+} from "../../../../adapters/promptSdlcAwcCore";
 import { createPromptSdlcLocalCycle } from "./createPromptSdlcLocalCycle";
 import {
   skipPromptSdlcWizardCurrentModule,
@@ -45,6 +48,7 @@ describe("stopPromptSdlcWizard", () => {
       status: "judging",
     });
     expect(next.status).toBe("stopped");
+    expect(next.errorMessage).toBe(PROMPT_SDLC_WIZARD_STOP_USER);
     expect(next.wizard?.phase).toBe("complete");
   });
 

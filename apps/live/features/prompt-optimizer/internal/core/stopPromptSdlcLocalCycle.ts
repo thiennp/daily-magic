@@ -33,6 +33,10 @@ export const stopPromptSdlcLocalCycle = (
     return false;
   }
 
+  if (cycle.wizard !== undefined) {
+    return false;
+  }
+
   if (!isPromptSdlcTerminalStatus(cycle.status)) {
     savePromptSdlcLocalCycle(storePath, {
       ...cycle,

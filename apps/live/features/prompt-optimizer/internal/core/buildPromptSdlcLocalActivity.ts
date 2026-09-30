@@ -142,6 +142,15 @@ export const describePromptSdlcLocalActivity = (
         describePromptSdlcWriterTerminalFailure(revision.promptText) !== null,
     );
     const message = cycle.errorMessage?.trim() ?? "";
+    if (cycle.wizard !== undefined) {
+      return {
+        title: "Wizard ended.",
+        detail:
+          message.length > 0
+            ? message
+            : "Progress from finished steps is kept.",
+      };
+    }
     const finished = (cycle.errorMessage ?? "").startsWith("Finished");
     return {
       title: finished ? "Finished." : "Stopped.",

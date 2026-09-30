@@ -17,6 +17,9 @@ export const PROMPT_SDLC_STOP_STALL =
 
 export const PROMPT_SDLC_STOP_USER = "Finished. The best prompt is the result.";
 
+export const PROMPT_SDLC_WIZARD_STOP_USER =
+  "Wizard ended. Progress from finished steps is kept.";
+
 export const PROMPT_SDLC_GOAL_MAX_LENGTH = 2_000;
 
 export const PROMPT_SDLC_PROMPT_MAX_LENGTH = 20_000;

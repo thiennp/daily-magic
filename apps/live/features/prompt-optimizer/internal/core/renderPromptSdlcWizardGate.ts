@@ -6,6 +6,7 @@ import {
 import { renderPromptSdlcWizardModuleParameters } from "./renderPromptSdlcWizardModuleParameters";
 import { renderPromptSdlcWizardRevisionRoundList } from "./renderPromptSdlcWizardRevisionRoundList";
 import { renderPromptSdlcWizardSplitOptionChunks } from "./renderPromptSdlcWizardSplitChunks";
+import { renderPromptSdlcWizardGateEndForm } from "./renderPromptSdlcLocalStopForm";
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
 
 const escapeHtml = (value: string): string =>
@@ -137,5 +138,6 @@ export const renderPromptSdlcWizardGate = (
         <button class="btn btn-secondary" type="submit" name="intent" value="wizard-feedback-rerun" formnovalidate>Rerun with feedback</button>
       </div>
     </form>
+    ${renderPromptSdlcWizardGateEndForm(cycle)}
   </section>`;
 };

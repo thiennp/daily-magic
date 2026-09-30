@@ -12,6 +12,7 @@ export {
   PROMPT_SDLC_PASS_SCORE,
   PROMPT_SDLC_PROMPT_MAX_LENGTH,
   PROMPT_SDLC_STOP_USER,
+  PROMPT_SDLC_WIZARD_STOP_USER,
 } from "@/lib/promptOptimizer/promptSdlcLimits.constant";
 export {
   continueAfterImproveReply,

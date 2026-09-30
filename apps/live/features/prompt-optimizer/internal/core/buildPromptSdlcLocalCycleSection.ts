@@ -14,6 +14,7 @@ import { readPromptSdlcLocalImproverReference } from "./readPromptSdlcLocalImpro
 import { renderPromptSdlcLocalManualStep } from "./renderPromptSdlcLocalManualStep";
 import { renderPromptSdlcLocalRevisions } from "./renderPromptSdlcLocalRevisions";
 import { renderPromptSdlcLocalStopForm } from "./renderPromptSdlcLocalStopForm";
+import { renderPromptSdlcWizardOutcome } from "./renderPromptSdlcWizardOutcome";
 import {
   formatPromptSdlcTokenCount,
   sumPromptSdlcLocalTokens,
@@ -46,6 +47,7 @@ export const buildPromptSdlcLocalCycleSection = (
   const stop = isPromptSdlcTerminalStatus(cycle.status)
     ? ""
     : renderPromptSdlcLocalStopForm(cycle);
+  const wizardOutcome = renderPromptSdlcWizardOutcome(cycle);
   const best = renderPromptSdlcLocalBestPrompt(cycle);
   const error =
     cycle.errorMessage === null
@@ -132,5 +134,5 @@ export const buildPromptSdlcLocalCycleSection = (
       ? ""
       : `<section class="sdlc-run-prompts" aria-labelledby="sdlc-run-prompts-heading"><h2 id="sdlc-run-prompts-heading" class="sdlc-run-prompts-heading">Prompt history</h2><div class="sdlc-run-prompts-list">${revisions}</div></section>`;
 
-  return `<section class="card sdlc-run" id="prompt-optimizer-run" data-live="${live ? "true" : "false"}" data-since="${escapeHtml(cycle.updatedAt)}" aria-busy="${live ? "true" : "false"}"><header class="sdlc-run-head"><div class="sdlc-run-head-top"><p class="eyebrow">This run</p>${statusBadge}</div><div class="sdlc-run-activity"><div class="sdlc-run-activity-icon">${activityIcon}</div><div class="sdlc-run-activity-copy"><h2 class="sdlc-run-title">${escapeHtml(activity.title)}</h2>${detail}</div></div>${meta}${actions}</header>${error}${grid}${manual}${best}</section>${promptsHistory}`;
+  return `<section class="card sdlc-run" id="prompt-optimizer-run" data-live="${live ? "true" : "false"}" data-since="${escapeHtml(cycle.updatedAt)}" aria-busy="${live ? "true" : "false"}"><header class="sdlc-run-head"><div class="sdlc-run-head-top"><p class="eyebrow">This run</p>${statusBadge}</div><div class="sdlc-run-activity"><div class="sdlc-run-activity-icon">${activityIcon}</div><div class="sdlc-run-activity-copy"><h2 class="sdlc-run-title">${escapeHtml(activity.title)}</h2>${detail}</div></div>${meta}${actions}</header>${error}${grid}${manual}${wizardOutcome}${best}</section>${promptsHistory}`;
 };

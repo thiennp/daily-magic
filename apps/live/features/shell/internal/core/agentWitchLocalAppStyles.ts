@@ -350,6 +350,19 @@ code, .mono {
 }
 .btn-secondary:hover { background: var(--aw-zinc-50); border-color: var(--aw-zinc-400); }
 
+.btn-link {
+  height: auto;
+  padding: 0;
+  background: transparent;
+  color: var(--aw-brand-600);
+  border: none;
+  box-shadow: none;
+  font-weight: 500;
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+.btn-link:hover { color: var(--aw-brand-700); background: transparent; }
+
 .btn-compact {
   height: 2.25rem;
   padding: 0 0.85rem;
@@ -811,6 +824,30 @@ form.sdlc-wizard-feedback {
   margin-top: 0.25rem;
 }
 .sdlc-wizard-interrupt p { margin: 0; }
+.sdlc-wizard-gate-end {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--aw-zinc-200);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.75rem;
+}
+.sdlc-wizard-end-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.75rem;
+}
+.sdlc-wizard-outcome h2 { margin: 0.35rem 0 0.75rem; }
+.sdlc-wizard-outcome-modules { margin: 0.5rem 0 1rem; padding-left: 1.25rem; }
+.sdlc-wizard-outcome-step {
+  margin-top: 0.65rem;
+  border: 1px solid var(--aw-zinc-200);
+  border-radius: var(--aw-radius-lg);
+  padding: 0.35rem 0.75rem;
+}
+.sdlc-wizard-outcome-step-body { padding: 0.5rem 0 0.35rem; }
 .sdlc-badge {
   display: inline-block;
   margin-left: 0.35rem;
