@@ -64,6 +64,10 @@ export const PROMPT_SDLC_WIZARD_CLIENT_SCRIPT = `<script>
     }
     lockCompose();
     focusActiveWizardStep();
+    const runAfter = document.getElementById("prompt-optimizer-run");
+    if (runAfter instanceof HTMLElement && runAfter.dataset.live !== "true") {
+      document.dispatchEvent(new Event("sdlc-run-finished"));
+    }
     document.dispatchEvent(new CustomEvent("sdlc-live-restart"));
   };
 
@@ -71,6 +75,25 @@ export const PROMPT_SDLC_WIZARD_CLIENT_SCRIPT = `<script>
     submitter instanceof HTMLElement
       ? new FormData(form, submitter)
       : new FormData(form);
+
+  const readConfirmMessage = (form, submitter) => {
+    if (submitter instanceof HTMLElement) {
+      const fromButton = submitter.dataset.confirmMessage;
+      if (typeof fromButton === "string" && fromButton.length > 0) {
+        return fromButton;
+      }
+    }
+    const fromForm = form.dataset.confirmMessage;
+    return typeof fromForm === "string" && fromForm.length > 0 ? fromForm : "";
+  };
+
+  const shouldLivePost = (form, intent) => {
+    if (!(form instanceof HTMLFormElement)) return false;
+    if (form.classList.contains("sdlc-form")) return false;
+    if (typeof intent !== "string") return false;
+    if (intent === "stop") return true;
+    return intent.startsWith("wizard-");
+  };
 
   const postLiveFragment = async (body) => {
     body.set("liveFragment", "1");
@@ -97,10 +120,22 @@ export const PROMPT_SDLC_WIZARD_CLIENT_SCRIPT = `<script>
     (event) => {
       const form = event.target;
       if (!(form instanceof HTMLFormElement)) return;
+<<<<<<< HEAD
       if (form.classList.contains("sdlc-form")) return;
       const body = formDataFromSubmit(form, event.submitter);
       const intent = body.get("intent");
       if (typeof intent !== "string" || !intent.startsWith("wizard-")) return;
+=======
+      const submitter = event.submitter;
+      const body = new FormData(form, submitter ?? undefined);
+      const intent = body.get("intent");
+      if (!shouldLivePost(form, intent)) return;
+      const confirmMessage = readConfirmMessage(form, submitter);
+      if (confirmMessage.length > 0 && !window.confirm(confirmMessage)) {
+        event.preventDefault();
+        return;
+      }
+>>>>>>> 6ef4858e (feat(awl): confirm and live fragment for Stop run / End wizard)
       event.preventDefault();
       void postLiveFragment(body);
     },

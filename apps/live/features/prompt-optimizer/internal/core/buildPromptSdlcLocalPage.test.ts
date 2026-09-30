@@ -362,7 +362,7 @@ describe("buildPromptSdlcLocalPageBody", () => {
     );
     expect(guide).not.toContain('name="intent" value="run"');
     expect(guide).toContain("CUSTOMER_MESSAGE");
-    expect(guide).toContain("Finish");
+    expect(guide).toContain("Stop run");
     expect(guide).toContain("tokens spent");
   });
 

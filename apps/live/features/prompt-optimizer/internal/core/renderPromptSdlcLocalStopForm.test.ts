@@ -18,6 +18,7 @@ describe("renderPromptSdlcLocalStopForm", () => {
     const html = renderPromptSdlcLocalStopForm({ ...cycle, status: "judging" });
     expect(html).toContain('name="intent" value="stop"');
     expect(html).toContain(">Stop run<");
+    expect(html).toContain("data-confirm-message=");
     expect(html).not.toContain("End wizard");
   });
 
