@@ -17,6 +17,7 @@ import {
   readPromptSdlcLocalCycle,
   savePromptSdlcLocalCycle,
 } from "./promptSdlcLocalStore";
+import { resolveWritableCursorArtifactsDir } from "./resolveWritableCursorArtifactsDir";
 import * as writerReply from "./runPromptSdlcWriterReply";
 import type http from "node:http";
 
@@ -272,10 +273,9 @@ describe("prompt SDLC wizard does not skip step 2 (evaluate)", () => {
     expect(pageAtEvaluate).not.toContain("Step 3 — Separate");
 
     const proofPath = path.join(
-      "/opt/cursor/artifacts",
+      resolveWritableCursorArtifactsDir(),
       "wizard-step2-not-skipped-proof.json",
     );
-    fs.mkdirSync(path.dirname(proofPath), { recursive: true });
     fs.writeFileSync(
       proofPath,
       `${JSON.stringify(

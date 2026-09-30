@@ -16,9 +16,8 @@ import {
   readPromptSdlcLocalCycle,
   savePromptSdlcLocalCycle,
 } from "./promptSdlcLocalStore";
+import { resolveWritableCursorArtifactsDir } from "./resolveWritableCursorArtifactsDir";
 import * as writerReply from "./runPromptSdlcWriterReply";
-
-const ARTIFACTS = "/opt/cursor/artifacts";
 
 describe("wizard step 4 chain modules", () => {
   const storeDir = fs.mkdtempSync(
@@ -124,9 +123,9 @@ describe("wizard step 4 chain modules", () => {
       cycle: saved,
       history: [],
     });
-    fs.mkdirSync(ARTIFACTS, { recursive: true });
+    const artifactsDir = resolveWritableCursorArtifactsDir();
     fs.writeFileSync(
-      path.join(ARTIFACTS, "prompt-optimizer-step4-chain-gate.html"),
+      path.join(artifactsDir, "prompt-optimizer-step4-chain-gate.html"),
       buildPromptSdlcLocalArtifactDocument({
         title: "Step 4 — Optimize modules",
         body: html,
