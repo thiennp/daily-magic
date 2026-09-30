@@ -1,20 +1,27 @@
+import type PromptSdlcWizardChainPriorOutput from "./types/PromptSdlcWizardChainPriorOutput.type";
 import type PromptSdlcWizardState from "./types/PromptSdlcWizardState.type";
 
 /** Prior module runner output for chain topology (module at index - 1). */
 export const readPromptSdlcWizardChainPriorOutput = (
   wizard: PromptSdlcWizardState,
   moduleIndex: number,
-): string | null => {
-  if (wizard.selectedSplitTopology !== "chain" || moduleIndex <= 0) {
-    return null;
+): PromptSdlcWizardChainPriorOutput => {
+  if (wizard.selectedSplitTopology !== "chain") {
+    return { output: null, nullReason: "not-chain" };
+  }
+  if (moduleIndex <= 0) {
+    return { output: null, nullReason: "first-module" };
   }
   const prior = wizard.modules[moduleIndex - 1];
   if (prior === undefined) {
-    return null;
+    return { output: null, nullReason: "prior-missing" };
+  }
+  if (prior.status === "stopped") {
+    return { output: null, nullReason: "prior-skipped" };
   }
   const fromStats = prior.statistics?.bestRunOutput?.trim() ?? "";
   if (fromStats.length > 0) {
-    return fromStats;
+    return { output: fromStats, nullReason: null };
   }
-  return null;
+  return { output: null, nullReason: "prior-no-output" };
 };

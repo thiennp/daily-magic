@@ -2,8 +2,10 @@ import {
   buildPromptSdlcWizardSubstitutionMap,
   listPromptTemplatePlaceholders,
   readPostedWizardParameterFieldName,
+  readPromptSdlcWizardChainPriorOutput,
 } from "../../../../adapters/promptSdlcAwcCore";
 
+import { describePromptSdlcWizardChainPriorHandoff } from "./describePromptSdlcWizardChainPriorHandoff";
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
 
 const escapeHtml = (value: string): string =>
@@ -21,9 +23,17 @@ export const renderPromptSdlcWizardModuleParameters = (input: {
   if (wizard === undefined) {
     return "";
   }
+  const moduleIndex = wizard.currentModuleIndex;
+  const chainPrior = readPromptSdlcWizardChainPriorOutput(wizard, moduleIndex);
+  const chainHandoff =
+    moduleIndex > 0 || wizard.selectedSplitTopology === "chain"
+      ? `<div class="sdlc-wizard-chain-handoff"><h4>Chain handoff preview</h4><p class="muted">Runner instructions for this module can include the prior module’s output when topology is chain.</p><pre class="sdlc-pre sdlc-chain-prior-preview">${escapeHtml(describePromptSdlcWizardChainPriorHandoff(chainPrior))}</pre></div>`
+      : "";
   const placeholders = listPromptTemplatePlaceholders(input.modulePrompt);
   if (placeholders.length === 0) {
-    return "";
+    return chainHandoff.length > 0
+      ? `<div class="sdlc-wizard-module-params">${chainHandoff}</div>`
+      : "";
   }
   const substitution = buildPromptSdlcWizardSubstitutionMap(wizard);
   const fields = placeholders
@@ -46,5 +56,5 @@ export const renderPromptSdlcWizardModuleParameters = (input: {
       </div>`;
     })
     .join("");
-  return `<div class="sdlc-wizard-module-params"><h3>Parameters for this module run</h3>${fields}</div>`;
+  return `<div class="sdlc-wizard-module-params"><h3>Parameters for this module run</h3>${chainHandoff}${fields}</div>`;
 };

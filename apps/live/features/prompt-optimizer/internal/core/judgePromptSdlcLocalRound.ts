@@ -113,7 +113,7 @@ const executePrompt = async (input: {
           chainPriorOutput: readPromptSdlcWizardChainPriorOutput(
             input.cycle.wizard,
             input.cycle.wizard.currentModuleIndex,
-          ),
+          ).output,
           moduleTitle:
             input.cycle.wizard.modules[input.cycle.wizard.currentModuleIndex]
               ?.title ?? null,

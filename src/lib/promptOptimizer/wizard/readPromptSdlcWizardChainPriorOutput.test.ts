@@ -33,8 +33,14 @@ describe("readPromptSdlcWizardChainPriorOutput", () => {
       ],
       currentModuleIndex: 1,
     };
-    expect(readPromptSdlcWizardChainPriorOutput(wizard, 1)).toBe("output-one");
-    expect(readPromptSdlcWizardChainPriorOutput(wizard, 0)).toBeNull();
+    expect(readPromptSdlcWizardChainPriorOutput(wizard, 1)).toEqual({
+      output: "output-one",
+      nullReason: null,
+    });
+    expect(readPromptSdlcWizardChainPriorOutput(wizard, 0)).toEqual({
+      output: null,
+      nullReason: "first-module",
+    });
   });
 
   it("returns null for parallel splits", () => {
@@ -44,6 +50,39 @@ describe("readPromptSdlcWizardChainPriorOutput", () => {
       modules: [],
       currentModuleIndex: 1,
     };
-    expect(readPromptSdlcWizardChainPriorOutput(wizard, 1)).toBeNull();
+    expect(readPromptSdlcWizardChainPriorOutput(wizard, 1)).toEqual({
+      output: null,
+      nullReason: "not-chain",
+    });
+  });
+
+  it("explains when the prior module was skipped", () => {
+    const wizard = {
+      ...createInitialPromptSdlcWizardState("x"),
+      selectedSplitTopology: "chain" as const,
+      modules: [
+        {
+          moduleId: "m1",
+          title: "One",
+          prompt: "p1",
+          status: "stopped" as const,
+          selectedRevisionRound: null,
+          statistics: null,
+        },
+        {
+          moduleId: "m2",
+          title: "Two",
+          prompt: "p2",
+          status: "pending" as const,
+          selectedRevisionRound: null,
+          statistics: null,
+        },
+      ],
+      currentModuleIndex: 1,
+    };
+    expect(readPromptSdlcWizardChainPriorOutput(wizard, 1)).toEqual({
+      output: null,
+      nullReason: "prior-skipped",
+    });
   });
 });
