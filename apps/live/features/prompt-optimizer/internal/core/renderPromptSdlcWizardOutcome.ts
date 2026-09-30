@@ -1,11 +1,8 @@
-import {
-  isPromptSdlcTerminalStatus,
-  PROMPT_SDLC_WIZARD_PASS_SCORE,
-  summarizePromptSdlcWizardCompletion,
-} from "../../../../adapters/promptSdlcAwcCore";
+import { isPromptSdlcTerminalStatus } from "../../../../adapters/promptSdlcAwcCore";
 
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
 import { describePromptSdlcWizardOutcomeStepHint } from "./describePromptSdlcWizardOutcomeStepHint";
+import { renderPromptSdlcWizardModuleTable } from "./renderPromptSdlcWizardModuleTable";
 import { renderPromptSdlcWizardStepModalBody } from "./renderPromptSdlcWizardStepModalBody";
 
 const escapeHtml = (value: string): string =>
@@ -15,27 +12,6 @@ const escapeHtml = (value: string): string =>
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;");
 
-const renderModuleTable = (cycle: PromptSdlcLocalCycle): string => {
-  const wizard = cycle.wizard;
-  if (wizard === undefined || wizard.modules.length === 0) {
-    return "";
-  }
-  const summary = summarizePromptSdlcWizardCompletion(wizard);
-  const headline =
-    summary.terminalStatusSuggestion === "passed"
-      ? ""
-      : `${summary.passedModuleCount} of ${summary.totalModules} modules passed. Some modules were skipped, stopped, or below ${PROMPT_SDLC_WIZARD_PASS_SCORE}.`;
-  const rows = summary.rows
-    .map(
-      (row) =>
-        `<tr><td>${escapeHtml(row.title)}</td><td>${row.bestScore ?? "—"}</td><td>${row.tokens ?? "—"}</td><td>${escapeHtml(row.status)}</td></tr>`,
-    )
-    .join("");
-  const headlineBlock =
-    headline.length === 0 ? "" : `<p class="muted">${escapeHtml(headline)}</p>`;
-  return `<h3>Modules</h3>${headlineBlock}<table class="sdlc-wizard-outcome-table"><thead><tr><th>Module</th><th>Best score</th><th>Tokens</th><th>Status</th></tr></thead><tbody>${rows}</tbody></table>`;
-};
-
 export const renderPromptSdlcWizardOutcome = (
   cycle: PromptSdlcLocalCycle,
 ): string => {
@@ -44,13 +20,16 @@ export const renderPromptSdlcWizardOutcome = (
     return "";
   }
 
-  const modules = renderModuleTable(cycle);
+  const moduleTable = renderPromptSdlcWizardModuleTable(cycle);
 
   const stepBodies = ["wizard-1", "wizard-2", "wizard-3", "wizard-4"]
     .map((stepId) => {
-      const body = renderPromptSdlcWizardStepModalBody(cycle, stepId);
+      let body = renderPromptSdlcWizardStepModalBody(cycle, stepId);
       if (body.trim().length === 0) {
         return "";
+      }
+      if (stepId === "wizard-4" && moduleTable.length > 0) {
+        body = `${moduleTable}${body}`;
       }
       const title =
         stepId === "wizard-1"
@@ -64,9 +43,12 @@ export const renderPromptSdlcWizardOutcome = (
       const summaryLine = `${escapeHtml(title)} <span class="muted sdlc-wizard-outcome-step-hint">${escapeHtml(hint)}</span>`;
       const openStep4 =
         stepId === "wizard-4" && wizard.phase === "complete" ? " open" : "";
-      return `<details class="sdlc-wizard-outcome-step"${openStep4}><summary>${summaryLine}</summary><div class="sdlc-wizard-outcome-step-body">${body}</div></details>`;
+      const stepAnchor = `prompt-optimizer-wizard-outcome-${stepId}`;
+      return `<details class="sdlc-wizard-outcome-step" id="${stepAnchor}"${openStep4}><summary>${summaryLine}</summary><div class="sdlc-wizard-outcome-step-body">${body}</div></details>`;
     })
     .join("");
 
-  return `<div class="sdlc-run-panel sdlc-wizard-outcome" id="prompt-optimizer-wizard-outcome"><h3 class="sdlc-run-panel-title">Step details</h3>${modules}${stepBodies}</div>`;
+  const outcomeActions = `<div class="sdlc-wizard-outcome-head-actions"><button type="button" class="btn btn-secondary sdlc-wizard-outcome-toggle" data-sdlc-outcome-expand-all>Expand all</button><button type="button" class="btn btn-secondary sdlc-wizard-outcome-toggle" data-sdlc-outcome-collapse-all>Collapse all</button></div>`;
+
+  return `<div class="sdlc-run-panel sdlc-wizard-outcome" id="prompt-optimizer-wizard-outcome"><div class="sdlc-wizard-outcome-head"><h3 class="sdlc-run-panel-title">Step details</h3>${outcomeActions}</div>${stepBodies}</div>`;
 };

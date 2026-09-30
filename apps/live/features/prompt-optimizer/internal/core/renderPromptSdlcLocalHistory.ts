@@ -23,17 +23,23 @@ const renderHistoryItem = (
       : `<input type="hidden" name="openCycleId" value="${escapeHtml(openCycleId)}">`;
   const row = describePromptSdlcLocalHistoryRow(cycle);
   const when = formatPromptSdlcLocalRelativeTime(cycle.updatedAt);
+  const isViewing = openCycleId !== null && cycle.id === openCycleId;
+  const subtitleBase = isViewing
+    ? `${row.subtitle} · Shown above`
+    : row.subtitle;
   const subtitle =
-    when.length === 0 ? row.subtitle : `${row.subtitle} · ${when}`;
-  const viewing =
-    openCycleId !== null && cycle.id === openCycleId
-      ? `<span class="sdlc-history-badge sdlc-history-badge-viewing">Viewing</span>`
-      : "";
+    when.length === 0 ? subtitleBase : `${subtitleBase} · ${when}`;
+  const viewing = isViewing
+    ? `<span class="sdlc-history-badge sdlc-history-badge-viewing">Viewing</span>`
+    : "";
+  const statusBadge = isViewing
+    ? ""
+    : `<span class="${escapeHtml(row.badgeClass)}">${escapeHtml(row.badgeLabel)}</span>`;
   const resume =
     cycle.status === "wizard_paused"
       ? `<a class="btn btn-secondary sdlc-history-resume" href="/prompt-optimizer?cycle=${escapeHtml(cycle.id)}">Resume</a>`
       : "";
-  return `<li class="sdlc-history-item${openCycleId === cycle.id ? " sdlc-history-item-viewing" : ""}" data-sdlc-history-kind="${historyKind(cycle)}"><div class="sdlc-history-row-main">${viewing}<span class="${escapeHtml(row.badgeClass)}">${escapeHtml(row.badgeLabel)}</span><div class="sdlc-history-row-copy"><a href="/prompt-optimizer?cycle=${escapeHtml(cycle.id)}">${escapeHtml(promptSdlcLocalHistoryTitle(cycle.goal))}</a><p class="muted">${escapeHtml(subtitle)}</p></div></div><div class="sdlc-history-row-actions">${resume}<form method="POST" action="/prompt-optimizer"><input type="hidden" name="intent" value="delete-history"><input type="hidden" name="cycleId" value="${escapeHtml(cycle.id)}">${open}<button class="btn btn-link sdlc-history-delete" type="submit">Delete</button></form></div></li>`;
+  return `<li class="sdlc-history-item${openCycleId === cycle.id ? " sdlc-history-item-viewing" : ""}" data-sdlc-history-kind="${historyKind(cycle)}"><div class="sdlc-history-row-main">${viewing}${statusBadge}<div class="sdlc-history-row-copy"><a href="/prompt-optimizer?cycle=${escapeHtml(cycle.id)}">${escapeHtml(promptSdlcLocalHistoryTitle(cycle.goal))}</a><p class="muted">${escapeHtml(subtitle)}</p></div></div><div class="sdlc-history-row-actions">${resume}<form method="POST" action="/prompt-optimizer"><input type="hidden" name="intent" value="delete-history"><input type="hidden" name="cycleId" value="${escapeHtml(cycle.id)}">${open}<button class="btn btn-link sdlc-history-delete" type="submit">Delete</button></form></div></li>`;
 };
 
 export const renderPromptSdlcLocalHistory = (

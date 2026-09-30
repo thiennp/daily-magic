@@ -213,8 +213,12 @@ const renderOptimizeBody = (cycle: PromptSdlcLocalCycle): string => {
   }
   const moduleList = wizard.modules
     .map((item, index) => {
-      const active = index === wizard.currentModuleIndex ? " — current" : "";
-      return `<li><strong>${escapeHtml(item.title)}</strong> (${escapeHtml(item.status)})${escapeHtml(active)}<pre class="sdlc-pre sdlc-wizard-chunk-prompt">${escapeHtml(item.prompt)}</pre></li>`;
+      const moduleLabel = `Module ${index + 1} of ${wizard.modules.length}`;
+      const active =
+        wizard.phase !== "complete" && index === wizard.currentModuleIndex
+          ? " — in progress"
+          : "";
+      return `<li><span class="muted">${escapeHtml(moduleLabel)}</span> <strong>${escapeHtml(item.title)}</strong> (${escapeHtml(item.status)})${escapeHtml(active)}<pre class="sdlc-pre sdlc-wizard-chunk-prompt">${escapeHtml(item.prompt)}</pre></li>`;
     })
     .join("");
   const rounds =

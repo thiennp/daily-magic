@@ -1,6 +1,7 @@
 import {
   buildPromptSdlcScoreScale,
   type PromptSdlcStep,
+  isPromptSdlcTerminalStatus,
 } from "../../../../adapters/promptSdlcAwcCore";
 import { describePromptSdlcLocalNodeDetail } from "./describePromptSdlcLocalNodeDetail";
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
@@ -41,8 +42,15 @@ const renderNode = (
   const modal = renderPromptSdlcLocalNodeModal(
     describePromptSdlcLocalNodeDetail(cycle, step),
   );
+  const outcomeStepLink =
+    cycle.wizard !== undefined &&
+    cycle.wizard.phase === "complete" &&
+    isPromptSdlcTerminalStatus(cycle.status) &&
+    /^wizard-[1-4]$/.test(step.id)
+      ? ` data-sdlc-outcome-step="${escapeHtml(step.id)}"`
+      : "";
 
-  return `<li class="sdlc-node sdlc-node-${step.state}"><button type="button" class="sdlc-node-open" data-sdlc-node>${mark}<span class="sdlc-node-label">${escapeHtml(step.label)}${reason}${tokenNote}</span></button><template>${modal}</template></li>`;
+  return `<li class="sdlc-node sdlc-node-${step.state}"><button type="button" class="sdlc-node-open"${outcomeStepLink} data-sdlc-node>${mark}<span class="sdlc-node-label">${escapeHtml(step.label)}${reason}${tokenNote}</span></button><template>${modal}</template></li>`;
 };
 
 export const renderPromptSdlcLocalStepTree = (

@@ -62,6 +62,12 @@ export const describePromptSdlcWizardOutcomeStepHint = (
       return "No module trials yet";
     }
     const summary = summarizePromptSdlcWizardCompletion(wizard);
+    if (
+      summary.terminalStatusSuggestion === "passed" &&
+      summary.passedModuleCount === summary.totalModules
+    ) {
+      return `${summary.totalModules} modules · all passed`;
+    }
     return `${summary.passedModuleCount}/${summary.totalModules} passed · ≥ ${PROMPT_SDLC_WIZARD_PASS_SCORE}`;
   }
   return "";

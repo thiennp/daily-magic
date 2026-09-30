@@ -597,6 +597,8 @@ describe("buildPromptSdlcLocalPageBody", () => {
     expect(html.match(/id="prompt-optimizer-wizard-outcome"/g)?.length).toBe(1);
     expect(html).toContain("prompt-optimizer-history");
     expect(html).toContain("Wizard finished");
+    expect(html).toContain("Edit goal &amp; prompt");
+    expect(html).toContain("sdlc-compose-summary-preview");
     expect(html).toContain("data-sdlc-start-new-run");
     expect(html).toContain("New prompt");
     expect(html).toContain("sdlc-run-success-actions");

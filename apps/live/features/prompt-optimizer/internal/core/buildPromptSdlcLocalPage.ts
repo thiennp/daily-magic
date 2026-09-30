@@ -25,6 +25,7 @@ import {
 import { renderPromptSdlcFieldHeading } from "./renderPromptSdlcFieldTip";
 import { renderPromptSdlcWizardGateSlot } from "./renderPromptSdlcWizardGateSlot";
 import { renderPromptSdlcWizardResumeBanner } from "./renderPromptSdlcWizardResumeBanner";
+import { promptSdlcLocalHistoryTitle } from "./promptSdlcLocalHistoryTitle";
 import { renderPromptSdlcWizardRunnerFields } from "./renderPromptSdlcWizardRunnerFields";
 import { renderPromptSdlcWizardRoleStepTable } from "./renderPromptSdlcWizardRoleStepTable";
 import { renderPromptSdlcLocalWriterFields } from "./renderPromptSdlcLocalWriterFields";
@@ -116,7 +117,14 @@ export const buildPromptSdlcLocalPageBody = (input: {
     : `<a class="btn btn-secondary" href="/prompt-optimizer/guide">Instructions and example</a>
         <a class="btn btn-secondary" href="/prompt-optimizer?example=wizard-verification">Load wizard verification example</a>`;
   const composeSummary = viewingFinishedRun
-    ? `<summary class="sdlc-compose-summary sdlc-compose-summary-collapsed"><span class="eyebrow">Compose</span><span class="sdlc-compose-summary-title">Collapsed — expand to edit goal and prompt</span></summary>`
+    ? (() => {
+        const goalPreview =
+          input.cycle !== null
+            ? promptSdlcLocalHistoryTitle(input.cycle.goal)
+            : promptSdlcLocalHistoryTitle(shown.goal);
+        const folderPreview = escapeHtml(shown.folder.trim() || "No folder");
+        return `<summary class="sdlc-compose-summary sdlc-compose-summary-collapsed"><span class="sdlc-compose-summary-chevron" aria-hidden="true">▸</span><span class="sdlc-compose-summary-copy"><span class="eyebrow">Compose</span><span class="sdlc-compose-summary-title">Edit goal &amp; prompt</span><span class="muted sdlc-compose-summary-preview">${escapeHtml(goalPreview)} · ${folderPreview}</span></span></summary>`;
+      })()
     : `<summary class="sdlc-compose-summary"><span class="eyebrow">Prompt optimizer</span> Optimize a prompt</summary>`;
   const composeViewingClass = viewingFinishedRun
     ? " sdlc-compose-viewing-finished"

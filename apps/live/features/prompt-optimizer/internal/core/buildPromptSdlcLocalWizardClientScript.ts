@@ -152,6 +152,33 @@ export const PROMPT_SDLC_WIZARD_CLIENT_SCRIPT = `<script>
     const details = document.getElementById("prompt-optimizer-compose-details");
     if (details instanceof HTMLDetailsElement) details.open = false;
   }
+
+  const outcomeRoot = document.getElementById("prompt-optimizer-wizard-outcome");
+  if (outcomeRoot !== null) {
+    outcomeRoot.querySelector("[data-sdlc-outcome-expand-all]")?.addEventListener("click", () => {
+      outcomeRoot.querySelectorAll(".sdlc-wizard-outcome-step").forEach((node) => {
+        if (node instanceof HTMLDetailsElement) node.open = true;
+      });
+    });
+    outcomeRoot.querySelector("[data-sdlc-outcome-collapse-all]")?.addEventListener("click", () => {
+      outcomeRoot.querySelectorAll(".sdlc-wizard-outcome-step").forEach((node) => {
+        if (node instanceof HTMLDetailsElement) node.open = false;
+      });
+    });
+    document.querySelectorAll("[data-sdlc-outcome-step]").forEach((node) => {
+      node.addEventListener("click", (event) => {
+        const stepId = node instanceof HTMLElement ? node.dataset.sdlcOutcomeStep : null;
+        if (stepId === undefined || stepId === null || stepId.length === 0) return;
+        const target = document.getElementById(\`prompt-optimizer-wizard-outcome-\${stepId}\`);
+        if (!(target instanceof HTMLDetailsElement)) return;
+        event.preventDefault();
+        event.stopPropagation();
+        target.open = true;
+        target.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    });
+  }
+
   focusActiveWizardStep();
 })();
 </script>`;
