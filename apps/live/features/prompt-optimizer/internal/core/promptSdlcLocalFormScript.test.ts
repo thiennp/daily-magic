@@ -8,6 +8,9 @@ describe("PROMPT_SDLC_LOCAL_FORM_SCRIPT", () => {
     expect(PROMPT_SDLC_LOCAL_FORM_SCRIPT).toContain("paintRunButton");
     expect(PROMPT_SDLC_LOCAL_FORM_SCRIPT).toContain('aria-busy", "true"');
     expect(PROMPT_SDLC_LOCAL_FORM_SCRIPT).toContain(
+      'dataset.sdlcRunState === "waiting"',
+    );
+    expect(PROMPT_SDLC_LOCAL_FORM_SCRIPT).toContain(
       "runButton.disabled = !canRun",
     );
     expect(PROMPT_SDLC_LOCAL_FORM_SCRIPT).toContain("readRunBlockReason");

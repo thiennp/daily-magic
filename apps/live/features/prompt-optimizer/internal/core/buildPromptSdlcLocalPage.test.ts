@@ -389,6 +389,7 @@ describe("buildPromptSdlcLocalPageBody", () => {
 
     expect(html).toContain("Save score");
     expect(html).toContain("Waiting for you");
+    expect(html).toContain('data-sdlc-run-state="waiting"');
     expect(html).toContain('name="reasons"');
     expect(html).toContain("The ticket has no refund.");
     expect(html).toContain("Tokens used: 80");

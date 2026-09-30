@@ -11,6 +11,7 @@ export const PROMPT_SDLC_LOCAL_FORM_SCRIPT = `<script>
   const runButton = document.querySelector("[data-sdlc-run-wizard]");
   const hint = document.querySelector("[data-sdlc-run-hint]");
   const RUN_LABEL = "Run";
+  const WAITING_LABEL = "Waiting for you";
   const paintRunButton = (loading) => {
     if (!(runButton instanceof HTMLButtonElement)) return;
     if (loading) {
@@ -22,6 +23,12 @@ export const PROMPT_SDLC_LOCAL_FORM_SCRIPT = `<script>
     }
     runButton.removeAttribute("aria-busy");
     runButton.textContent = RUN_LABEL;
+  };
+  const paintRunButtonWaiting = () => {
+    if (!(runButton instanceof HTMLButtonElement)) return;
+    runButton.disabled = true;
+    runButton.removeAttribute("aria-busy");
+    runButton.textContent = WAITING_LABEL;
   };
   const slots = [...document.querySelectorAll("[data-writer-status]")];
   const viewingFinishedRun =
@@ -110,7 +117,11 @@ export const PROMPT_SDLC_LOCAL_FORM_SCRIPT = `<script>
         writersReady;
       runButton.dataset.canRun = canRun ? "true" : "false";
       if (fieldsDisabled) {
-        paintRunButton(true);
+        if (runButton.dataset.sdlcRunState === "waiting") {
+          paintRunButtonWaiting();
+        } else {
+          paintRunButton(true);
+        }
       } else {
         runButton.disabled = !canRun;
         paintRunButton(false);

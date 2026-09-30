@@ -132,6 +132,11 @@ export const buildPromptSdlcLocalPageBody = (input: {
         ? "Waiting for you"
         : `<span class="sdlc-spin" aria-hidden="true"></span> Running…`
       : "Run";
+  const runButtonState = waitingOnYou
+    ? "waiting"
+    : shown.running
+      ? "running"
+      : "idle";
   const runButtonBusy =
     shown.running && !waitingOnYou ? ' aria-busy="true"' : "";
   const form = `<section class="card sdlc-compose${composeViewingClass}" id="prompt-optimizer-compose">
@@ -181,7 +186,7 @@ export const buildPromptSdlcLocalPageBody = (input: {
           <p class="muted sdlc-run-hint" data-sdlc-run-hint role="status"></p>
           <div class="sdlc-submit">
           <p class="muted sdlc-wizard-limits-callout" data-sdlc-wizard-limits-callout">Wizard: pass score ${PROMPT_SDLC_WIZARD_PASS_SCORE}, up to ${PROMPT_SDLC_WIZARD_MAX_ROUNDS} scored revisions in Step 2; Step 4 runs one trial per module.</p>
-          <button class="btn btn-primary sdlc-run-wizard-btn" type="submit" name="intent" value="run" data-sdlc-run data-sdlc-run-wizard data-can-run="${composeCanRun ? "true" : "false"}"${runButtonBusy}${shown.running && !waitingOnYou ? " disabled" : ""}>${runButtonInner}</button>
+          <button class="btn btn-primary sdlc-run-wizard-btn" type="submit" name="intent" value="run" data-sdlc-run data-sdlc-run-wizard data-sdlc-run-state="${runButtonState}" data-can-run="${composeCanRun ? "true" : "false"}"${runButtonBusy}${shown.running && !waitingOnYou ? " disabled" : ""}>${runButtonInner}</button>
           </div>
         </div>
       </form>
