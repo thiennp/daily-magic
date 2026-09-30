@@ -8,6 +8,21 @@ export const PROMPT_SDLC_LOCAL_FORM_SCRIPT = `<script>
     fit(area);
     area.addEventListener("input", () => fit(area));
   });
+  document.querySelectorAll("[data-sdlc-compose-head-actions]").forEach((node) => {
+    node.addEventListener("click", (event) => {
+      event.stopPropagation();
+    });
+  });
+  const COMPOSE_STEP_COUNT = 4;
+  let composeStep = 1;
+  const composeStepError = document.querySelector("[data-sdlc-compose-step-error]");
+  const composeStepPanels = [
+    ...document.querySelectorAll("[data-sdlc-compose-step]"),
+  ];
+  const composeStepperItems = [
+    ...document.querySelectorAll("[data-sdlc-stepper-item]"),
+  ];
+  const composeReview = document.querySelector("[data-sdlc-compose-review]");
   const runButton = document.querySelector("[data-sdlc-run-wizard]");
   const hint = document.querySelector("[data-sdlc-run-hint]");
   const RUN_LABEL = "Run";
@@ -24,6 +39,19 @@ export const PROMPT_SDLC_LOCAL_FORM_SCRIPT = `<script>
     runButton.removeAttribute("aria-busy");
     runButton.textContent = RUN_LABEL;
   };
+  const focusRunPanel = () => {
+    const compose = document.getElementById("prompt-optimizer-compose");
+    if (
+      compose instanceof HTMLElement &&
+      !compose.classList.contains("sdlc-compose-viewing-finished")
+    ) {
+      compose.classList.add("sdlc-compose-run-focus");
+    }
+    document.getElementById("prompt-optimizer-run")?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  };
   const paintRunButtonWaiting = () => {
     if (!(runButton instanceof HTMLButtonElement)) return;
     runButton.disabled = true;
@@ -35,9 +63,17 @@ export const PROMPT_SDLC_LOCAL_FORM_SCRIPT = `<script>
     document.querySelector("#prompt-optimizer-run .sdlc-run-badge-done") !== null ||
     document.querySelector("#prompt-optimizer-run .sdlc-run-badge-finished") !== null;
   const staticPreview = window.location.protocol === "file:";
+  let showRunBlockHint = false;
+  const clearRunHint = () => {
+    showRunBlockHint = false;
+    if (!(hint instanceof HTMLElement)) return;
+    hint.textContent = "";
+    hint.hidden = true;
+    hint.className = "muted sdlc-run-hint";
+  };
   const paintRunHint = () => {
     if (!(hint instanceof HTMLElement)) return;
-    if (!(runButton instanceof HTMLButtonElement)) {
+    if (!showRunBlockHint) {
       hint.textContent = "";
       hint.hidden = true;
       hint.className = "muted sdlc-run-hint";
@@ -45,9 +81,7 @@ export const PROMPT_SDLC_LOCAL_FORM_SCRIPT = `<script>
     }
     const reason = readRunBlockReason();
     if (reason === null) {
-      hint.textContent = "";
-      hint.hidden = true;
-      hint.className = "muted sdlc-run-hint";
+      clearRunHint();
       return;
     }
     hint.textContent = reason;
@@ -81,24 +115,172 @@ export const PROMPT_SDLC_LOCAL_FORM_SCRIPT = `<script>
     }
     return null;
   };
+  const readSelectLabel = (select) => {
+    if (!(select instanceof HTMLSelectElement)) return "";
+    if (select.value.length === 0) return "";
+    const option = select.selectedOptions[0];
+    return option ? option.textContent.trim() : select.value;
+  };
+  const truncatePreview = (text, max = 220) => {
+    if (text.length <= max) return text;
+    return text.slice(0, max - 1) + "…";
+  };
+  const escapeComposeText = (value) =>
+    value
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;");
+  const paintComposeReview = () => {
+    if (!(composeReview instanceof HTMLElement)) return;
+    const compose = readComposeFields();
+    const judgeSelect = document.querySelector('[data-writer-select="judge"]');
+    const improverSelect = document.querySelector('[data-writer-select="improver"]');
+    const runnerSelect = document.querySelector('[data-writer-select="runner"]');
+    const judgeLabel = readSelectLabel(judgeSelect);
+    const improverLabel = readSelectLabel(improverSelect);
+    const runnerLabel = readSelectLabel(runnerSelect);
+    const folder = compose.folder.length > 0 ? escapeComposeText(compose.folder) : "—";
+    const goal = compose.hasGoal ? escapeComposeText(truncatePreview(compose.goal)) : "—";
+    const prompt = compose.hasPrompt
+      ? escapeComposeText(truncatePreview(compose.prompt))
+      : "—";
+    const judge = judgeLabel.length > 0 ? escapeComposeText(judgeLabel) : "—";
+    const improver =
+      improverLabel.length > 0 ? escapeComposeText(improverLabel) : "—";
+    const runner =
+      runnerLabel.length > 0
+        ? escapeComposeText(runnerLabel)
+        : "Not set (uses judge when step 4 runs)";
+    composeReview.innerHTML =
+      "<dt>Folder</dt><dd>" +
+      folder +
+      "</dd>" +
+      "<dt>Goal</dt><dd>" +
+      goal +
+      "</dd>" +
+      "<dt>Prompt</dt><dd><span class=" +
+      '"sdlc-compose-review-preview"' +
+      ">" +
+      prompt +
+      "</span></dd>" +
+      "<dt>Judge</dt><dd>" +
+      judge +
+      "</dd>" +
+      "<dt>Improver</dt><dd>" +
+      improver +
+      "</dd>" +
+      "<dt>Runner</dt><dd>" +
+      runner +
+      "</dd>";
+  };
+  const paintComposeStepError = (message) => {
+    if (!(composeStepError instanceof HTMLElement)) return;
+    if (message === null || message.length === 0) {
+      composeStepError.textContent = "";
+      composeStepError.hidden = true;
+      return;
+    }
+    composeStepError.textContent = message;
+    composeStepError.hidden = false;
+  };
+  const validateComposeStep = (step) => {
+    const compose = readComposeFields();
+    if (step === 1) {
+      if (compose.folder.length === 0) {
+        return "Choose a folder path or use Choose folder…";
+      }
+      return null;
+    }
+    if (step === 2) {
+      if (!compose.hasGoal || !compose.hasPrompt) {
+        return "Fill in the goal and the prompt before you continue.";
+      }
+      return null;
+    }
+    if (step === 3) {
+      const judgeSelect = document.querySelector('[data-writer-select="judge"]');
+      const improverSelect = document.querySelector('[data-writer-select="improver"]');
+      const judge =
+        judgeSelect instanceof HTMLSelectElement ? judgeSelect.value.trim() : "";
+      const improver =
+        improverSelect instanceof HTMLSelectElement
+          ? improverSelect.value.trim()
+          : "";
+      if (judge.length === 0 || improver.length === 0) {
+        return "Choose who scores and who rewrites the prompt.";
+      }
+      const pending = slots.find((slot) => slot.dataset.ready !== "true");
+      if (pending) {
+        const writer = pending.dataset.writer ?? "writer";
+        if (pending.textContent === "Checking…") {
+          return "Checking that the chosen writers are ready…";
+        }
+        if (pending.textContent.trim().length > 0) {
+          return pending.textContent.trim();
+        }
+        return "Fix the writer error above, then continue.";
+      }
+      return null;
+    }
+    return null;
+  };
+  const showComposeStep = (step) => {
+    const next = Math.min(COMPOSE_STEP_COUNT, Math.max(1, step));
+    clearRunHint();
+    composeStep = next;
+    composeStepPanels.forEach((panel) => {
+      if (!(panel instanceof HTMLElement)) return;
+      const panelStep = Number(panel.dataset.sdlcComposeStep ?? "0");
+      panel.hidden = panelStep !== next;
+    });
+    composeStepperItems.forEach((item) => {
+      if (!(item instanceof HTMLElement)) return;
+      const itemStep = Number(item.dataset.sdlcStepperItem ?? "0");
+      if (itemStep === next) {
+        item.setAttribute("aria-current", "step");
+      } else {
+        item.removeAttribute("aria-current");
+      }
+    });
+    paintComposeStepError(null);
+    if (next === COMPOSE_STEP_COUNT) {
+      paintComposeReview();
+      paintReady();
+      document.getElementById("sdlc-compose-step-4")?.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest",
+      });
+    }
+  };
   const readComposeFields = () => {
     const form = document.querySelector("form.sdlc-form");
     if (!(form instanceof HTMLFormElement)) {
-      return { hasGoal: false, hasPrompt: false, prompt: "", folder: "", judge: "" };
+      return {
+        hasGoal: false,
+        hasPrompt: false,
+        goal: "",
+        prompt: "",
+        folder: "",
+        judge: "",
+      };
     }
     const goal = form.querySelector('[name="goal"]');
     const prompt = form.querySelector('[name="prompt"]');
     const folder = form.querySelector('[name="folder"]');
     const judgeSelect = form.querySelector('[data-writer-select="judge"]');
-    const goalText = goal instanceof HTMLTextAreaElement ? goal.value.trim() : "";
-    const promptText = prompt instanceof HTMLTextAreaElement ? prompt.value.trim() : "";
+    const goalText = goal instanceof HTMLTextAreaElement ? goal.value : "";
+    const promptText = prompt instanceof HTMLTextAreaElement ? prompt.value : "";
+    const goalTrim = goalText.trim();
+    const promptTrim = promptText.trim();
     const folderText = folder instanceof HTMLInputElement ? folder.value.trim() : "";
     const judgeText =
       judgeSelect instanceof HTMLSelectElement ? judgeSelect.value.trim() : "";
     return {
-      hasGoal: goalText.length > 0,
-      hasPrompt: promptText.length > 0,
-      prompt: promptText,
+      hasGoal: goalTrim.length > 0,
+      hasPrompt: promptTrim.length > 0,
+      goal: goalTrim,
+      prompt: promptTrim,
       folder: folderText,
       judge: judgeText,
     };
@@ -123,7 +305,7 @@ export const PROMPT_SDLC_LOCAL_FORM_SCRIPT = `<script>
           paintRunButton(true);
         }
       } else {
-        runButton.disabled = !canRun;
+        runButton.disabled = false;
         paintRunButton(false);
       }
     }
@@ -166,6 +348,7 @@ export const PROMPT_SDLC_LOCAL_FORM_SCRIPT = `<script>
     summary.hidden = true;
     summary.textContent = "";
     summary.className = "sdlc-writer-summary";
+    if (composeStep === COMPOSE_STEP_COUNT) paintComposeReview();
   };
   const paintWriter = async (writer) => {
     const targets = slots.filter((slot) => slot.dataset.writer === writer);
@@ -249,6 +432,7 @@ export const PROMPT_SDLC_LOCAL_FORM_SCRIPT = `<script>
   };
   document.querySelectorAll("[data-writer-select]").forEach((select) => {
     select.addEventListener("change", () => {
+      clearRunHint();
       rememberSelection();
       const slot = document.querySelector('[data-writer-status="' + select.dataset.writerSelect + '"]');
       if (!slot) return;
@@ -264,16 +448,42 @@ export const PROMPT_SDLC_LOCAL_FORM_SCRIPT = `<script>
   if (folderInput instanceof HTMLInputElement) {
     folderInput.addEventListener("change", rememberSelection);
     folderInput.addEventListener("blur", rememberSelection);
-    folderInput.addEventListener("input", paintReady);
+    folderInput.addEventListener("input", () => {
+      clearRunHint();
+      paintReady();
+    });
   }
   const goalInput = document.querySelector('form.sdlc-form [name="goal"]');
   const promptInput = document.querySelector('form.sdlc-form [name="prompt"]');
   if (goalInput instanceof HTMLTextAreaElement) {
-    goalInput.addEventListener("input", paintReady);
+    goalInput.addEventListener("input", () => {
+      clearRunHint();
+      paintReady();
+      if (composeStep === COMPOSE_STEP_COUNT) paintComposeReview();
+    });
   }
   if (promptInput instanceof HTMLTextAreaElement) {
-    promptInput.addEventListener("input", paintReady);
+    promptInput.addEventListener("input", () => {
+      clearRunHint();
+      paintReady();
+      if (composeStep === COMPOSE_STEP_COUNT) paintComposeReview();
+    });
   }
+  document.querySelectorAll("[data-sdlc-compose-continue]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const reason = validateComposeStep(composeStep);
+      if (reason !== null) {
+        paintComposeStepError(reason);
+        return;
+      }
+      showComposeStep(composeStep + 1);
+    });
+  });
+  document.querySelectorAll("[data-sdlc-compose-back]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      showComposeStep(composeStep - 1);
+    });
+  });
   [...new Set(slots.map((slot) => slot.dataset.writer))].forEach((writer) => {
     if (writer) void paintWriter(writer);
   });
@@ -342,6 +552,7 @@ export const PROMPT_SDLC_LOCAL_FORM_SCRIPT = `<script>
     btn.addEventListener("click", () => {
       const details = document.getElementById("prompt-optimizer-compose-details");
       if (details instanceof HTMLDetailsElement) details.open = true;
+      showComposeStep(1);
       document.getElementById("prompt-optimizer-compose")?.scrollIntoView({
         behavior: "smooth",
         block: "start",
@@ -355,8 +566,17 @@ export const PROMPT_SDLC_LOCAL_FORM_SCRIPT = `<script>
       if (!(submitter instanceof HTMLButtonElement)) return;
       if (!submitter.hasAttribute("data-sdlc-run-wizard")) return;
       const reason = readRunBlockReason();
+      if (composeStep !== COMPOSE_STEP_COUNT) {
+        event.preventDefault();
+        showComposeStep(COMPOSE_STEP_COUNT);
+        paintComposeStepError(
+          "Review the summary on step 4 before you run.",
+        );
+        return;
+      }
       if (reason !== null) {
         event.preventDefault();
+        showRunBlockHint = true;
         paintRunHint();
         paintWriterSummary();
         document.querySelector("[data-sdlc-submit-bar]")?.scrollIntoView({
@@ -367,7 +587,14 @@ export const PROMPT_SDLC_LOCAL_FORM_SCRIPT = `<script>
         return;
       }
       paintRunButton(true);
+      focusRunPanel();
     });
+  }
+  const composeRoot = document.getElementById("prompt-optimizer-compose");
+  if (composeRoot?.classList.contains("sdlc-compose-viewing-finished")) {
+    showComposeStep(COMPOSE_STEP_COUNT);
+  } else {
+    showComposeStep(1);
   }
   paintReady();
   document.addEventListener("sdlc-run-finished", () => {
@@ -378,10 +605,13 @@ export const PROMPT_SDLC_LOCAL_FORM_SCRIPT = `<script>
       const fields = document.querySelector(".sdlc-fields");
       if (fields instanceof HTMLFieldSetElement) fields.disabled = false;
       document.querySelector("[data-sdlc-locked]")?.remove();
+      const compose = document.getElementById("prompt-optimizer-compose");
+      compose?.classList.remove("sdlc-compose-run-focus");
       const details = document.getElementById("prompt-optimizer-compose-details");
       if (details instanceof HTMLDetailsElement) {
         details.open = document.getElementById("prompt-optimizer-run") === null;
       }
+      showComposeStep(COMPOSE_STEP_COUNT);
       paintRunButton(false);
       paintReady();
     }

@@ -12,6 +12,9 @@ describe("PROMPT_SDLC_WIZARD_CLIENT_SCRIPT", () => {
       "formDataFromSubmit(form, submitter)",
     );
     expect(PROMPT_SDLC_WIZARD_CLIENT_SCRIPT).toContain("runApplied");
-    expect(PROMPT_SDLC_WIZARD_CLIENT_SCRIPT).toContain("if (runApplied) {");
+    expect(PROMPT_SDLC_WIZARD_CLIENT_SCRIPT).toContain(
+      "sdlc-compose-run-focus",
+    );
+    expect(PROMPT_SDLC_WIZARD_CLIENT_SCRIPT).toContain("focusRunPanel");
   });
 });
