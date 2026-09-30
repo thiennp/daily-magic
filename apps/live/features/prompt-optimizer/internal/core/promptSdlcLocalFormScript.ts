@@ -32,6 +32,12 @@ export const PROMPT_SDLC_LOCAL_FORM_SCRIPT = `<script>
       hint.hidden = true;
       return;
     }
+    const compose = readComposeFields();
+    if (!compose.hasGoal || !compose.hasPrompt) {
+      hint.textContent = "Fill in the goal and prompt before you run.";
+      hint.hidden = false;
+      return;
+    }
     if (runButtons.some((btn) => btn instanceof HTMLButtonElement && btn.dataset.canRun !== "true")) {
       hint.textContent = "Fill in the goal and prompt before you run.";
       hint.hidden = false;
@@ -55,10 +61,90 @@ export const PROMPT_SDLC_LOCAL_FORM_SCRIPT = `<script>
     hint.textContent = "Run is not available yet.";
     hint.hidden = false;
   };
+  const readComposeFields = () => {
+    const form = document.querySelector("form.sdlc-form");
+    if (!(form instanceof HTMLFormElement)) {
+      return { hasGoal: false, hasPrompt: false, prompt: "", folder: "", judge: "" };
+    }
+    const goal = form.querySelector('[name="goal"]');
+    const prompt = form.querySelector('[name="prompt"]');
+    const folder = form.querySelector('[name="folder"]');
+    const judgeSelect = form.querySelector('[data-writer-select="judge"]');
+    const goalText = goal instanceof HTMLTextAreaElement ? goal.value.trim() : "";
+    const promptText = prompt instanceof HTMLTextAreaElement ? prompt.value.trim() : "";
+    const folderText = folder instanceof HTMLInputElement ? folder.value.trim() : "";
+    const judgeText =
+      judgeSelect instanceof HTMLSelectElement ? judgeSelect.value.trim() : "";
+    return {
+      hasGoal: goalText.length > 0,
+      hasPrompt: promptText.length > 0,
+      prompt: promptText,
+      folder: folderText,
+      judge: judgeText,
+    };
+  };
+  const syncGoalSuggestions = () => {
+    const block = document.querySelector(".sdlc-goal-suggestions");
+    if (!(block instanceof HTMLElement)) return;
+    const fields = readComposeFields();
+    const match =
+      block.dataset.suggestPrompt === fields.prompt &&
+      block.dataset.suggestFolder === fields.folder &&
+      block.dataset.suggestJudge === fields.judge;
+    if (!match) block.remove();
+  };
+  const bindGoalSuggestionRadios = () => {
+    const form = document.querySelector("form.sdlc-form");
+    const goal = form?.querySelector('[name="goal"]');
+    const block = document.querySelector(".sdlc-goal-suggestions");
+    if (!(goal instanceof HTMLTextAreaElement) || !(block instanceof HTMLElement)) {
+      return;
+    }
+    const goals = (() => {
+      try {
+        const parsed = JSON.parse(block.dataset.suggestGoals ?? "[]");
+        return Array.isArray(parsed) ? parsed.filter((item) => typeof item === "string") : [];
+      } catch {
+        return [];
+      }
+    })();
+    document.querySelectorAll('input[name="goalSuggestion"]').forEach((radio) => {
+      if (!(radio instanceof HTMLInputElement)) return;
+      radio.addEventListener("change", () => {
+        if (!radio.checked) return;
+        if (radio.value === "none") {
+          goal.focus();
+          return;
+        }
+        const index = Number(radio.value);
+        const picked = goals[index];
+        if (typeof picked === "string") {
+          goal.value = picked;
+          goal.dispatchEvent(new Event("input", { bubbles: true }));
+        }
+        paintReady();
+      });
+    });
+  };
   const paintReady = () => {
     const fields = document.querySelector(".sdlc-fields");
     const fieldsDisabled =
       fields instanceof HTMLFieldSetElement && fields.disabled;
+    const compose = readComposeFields();
+    syncGoalSuggestions();
+    const suggestBtn = document.querySelector("[data-sdlc-suggest-goals]");
+    if (suggestBtn instanceof HTMLButtonElement) {
+      const judgeSlot = document.querySelector('[data-writer-status="judge"]');
+      const judgeReady =
+        compose.judge === "manual" ||
+        (judgeSlot instanceof HTMLElement && judgeSlot.dataset.ready === "true");
+      suggestBtn.disabled =
+        fieldsDisabled ||
+        !compose.hasPrompt ||
+        compose.judge.length === 0 ||
+        compose.judge === "manual" ||
+        !judgeReady;
+    }
     runButtons.forEach((btn) => {
       if (!(btn instanceof HTMLButtonElement)) return;
       if (fieldsDisabled) {
@@ -67,6 +153,8 @@ export const PROMPT_SDLC_LOCAL_FORM_SCRIPT = `<script>
       }
       btn.disabled =
         btn.dataset.canRun !== "true" ||
+        !compose.hasGoal ||
+        !compose.hasPrompt ||
         slots.some((slot) => slot.dataset.ready !== "true");
     });
     paintRunHint();
@@ -159,7 +247,23 @@ export const PROMPT_SDLC_LOCAL_FORM_SCRIPT = `<script>
   if (folderInput instanceof HTMLInputElement) {
     folderInput.addEventListener("change", rememberSelection);
     folderInput.addEventListener("blur", rememberSelection);
+    folderInput.addEventListener("input", () => {
+      syncGoalSuggestions();
+      paintReady();
+    });
   }
+  const goalInput = document.querySelector('form.sdlc-form [name="goal"]');
+  const promptInput = document.querySelector('form.sdlc-form [name="prompt"]');
+  if (goalInput instanceof HTMLTextAreaElement) {
+    goalInput.addEventListener("input", paintReady);
+  }
+  if (promptInput instanceof HTMLTextAreaElement) {
+    promptInput.addEventListener("input", () => {
+      syncGoalSuggestions();
+      paintReady();
+    });
+  }
+  bindGoalSuggestionRadios();
   [...new Set(slots.map((slot) => slot.dataset.writer))].forEach((writer) => {
     if (writer) void paintWriter(writer);
   });

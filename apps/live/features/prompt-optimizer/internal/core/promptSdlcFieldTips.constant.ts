@@ -2,7 +2,7 @@ export const PROMPT_SDLC_FIELD_TIPS = {
   goal: {
     title: "Goal",
     practice:
-      "Write the outcome a reader can check. Name who it is for and what must stay true.",
+      "Write the outcome a reader can check. Use Suggest goals for a few options from your prompt, or pick None of these and type your own. Run uses the text in this field.",
     example: "Reply to a support ticket using only facts in the ticket.",
   },
   prompt: {
