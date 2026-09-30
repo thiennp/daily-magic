@@ -50,6 +50,25 @@ vi.mock("./verifyAgentWitchReviveAfterKickstart", () => ({
   verifyAgentWitchReviveAfterKickstart: vi.fn(),
 }));
 
+vi.mock("./ensureAgentWitchCoupledLiveAppHealth", () => ({
+  ensureAgentWitchCoupledLiveAppHealth: vi.fn().mockResolvedValue({
+    ok: true,
+    liveReachable: true,
+    hollowInstall: false,
+    kickstartedLabels: [],
+  }),
+}));
+
+vi.mock("./ensureAgentWitchCoupledWakeClientHealth", () => ({
+  ensureAgentWitchCoupledWakeClientHealth: vi.fn().mockResolvedValue({
+    ok: true,
+    wakePortFileExists: true,
+    wakeReachable: true,
+    hollowInstall: false,
+    kickstartedLabels: [],
+  }),
+}));
+
 import { isActiveMacOsConsoleUser } from "./isActiveMacOsConsoleUser";
 import { readAgentWitchConnectionHealth } from "./agentWitchConnectionHealth";
 import { isAgentWitchLaunchAgentRunning } from "./isAgentWitchLaunchAgentRunning";
