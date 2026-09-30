@@ -1,6 +1,8 @@
-import { buildPromptSdlcGoalSuggestionPrompt } from "@/lib/promptOptimizer/buildPromptSdlcGoalSuggestionPrompt";
-import { computePromptSdlcGoalSuggestKey } from "@/lib/promptOptimizer/computePromptSdlcGoalSuggestKey";
-import { parsePromptSdlcGoalSuggestions } from "@/lib/promptOptimizer/parsePromptSdlcGoalSuggestions";
+import {
+  buildPromptSdlcGoalSuggestionPrompt,
+  computePromptSdlcGoalSuggestKey,
+  parsePromptSdlcGoalSuggestions,
+} from "../../../../adapters/promptSdlcAwcCore";
 
 import {
   PROMPT_SDLC_MANUAL_ACTOR,

@@ -25,6 +25,12 @@ export {
   formatPromptSdlcRunDelay,
 } from "@/lib/promptOptimizer/buildPromptSdlcJudgePrompt";
 export { buildPromptSdlcRunPrompt } from "@/lib/promptOptimizer/buildPromptSdlcRunPrompt";
+export { buildPromptSdlcGoalSuggestionPrompt } from "@/lib/promptOptimizer/buildPromptSdlcGoalSuggestionPrompt";
+export { computePromptSdlcGoalSuggestKey } from "@/lib/promptOptimizer/computePromptSdlcGoalSuggestKey";
+export {
+  parsePromptSdlcGoalSuggestions,
+  type PromptSdlcGoalSuggestionsParseResult,
+} from "@/lib/promptOptimizer/parsePromptSdlcGoalSuggestions";
 export { buildPromptSdlcWizardEvaluateJudgePrompt } from "@/lib/promptOptimizer/buildPromptSdlcWizardEvaluateJudgePrompt";
 export { buildPromptSdlcTokenReviewPrompt } from "@/lib/promptOptimizer/buildPromptSdlcTokenReviewPrompt";
 export { findPromptSdlcEvidencePaths } from "@/lib/promptOptimizer/findPromptSdlcEvidencePaths";
