@@ -15,6 +15,7 @@ export const createInitialPromptSdlcWizardState = (
   evaluateSelectedRound: null,
   splitOptions: [],
   selectedSplitOptionId: null,
+  selectedSplitTopology: null,
   modules: [],
   currentModuleIndex: 0,
   runnerInstructions: "",

@@ -4,6 +4,7 @@ import type {
   PromptSdlcWizardPhase,
 } from "./PromptSdlcWizardPhase.constant";
 import type { PromptSdlcWizardSplitOption } from "./PromptSdlcWizardSplitOption.type";
+import type PromptSdlcWizardModuleStatistics from "./PromptSdlcWizardModuleStatistics.type";
 import type PromptSdlcWizardVariable from "./PromptSdlcWizardVariable.type";
 
 export interface PromptSdlcWizardModuleRun {
@@ -13,6 +14,8 @@ export interface PromptSdlcWizardModuleRun {
   readonly status:
     "pending" | "running" | "paused" | "passed" | "stopped" | "failed";
   readonly selectedRevisionRound: number | null;
+  /** Scored rounds for this module (step 4 evaluation). */
+  readonly statistics?: PromptSdlcWizardModuleStatistics | null;
 }
 
 export default interface PromptSdlcWizardState {
@@ -29,6 +32,8 @@ export default interface PromptSdlcWizardState {
   readonly evaluateSelectedRound: number | null;
   readonly splitOptions: readonly PromptSdlcWizardSplitOption[];
   readonly selectedSplitOptionId: string | null;
+  /** From the chosen split option; drives chain handoff between modules. */
+  readonly selectedSplitTopology: "chain" | "parallel" | null;
   readonly modules: readonly PromptSdlcWizardModuleRun[];
   readonly currentModuleIndex: number;
   readonly runnerInstructions: string;

@@ -3,6 +3,8 @@ import {
   buildPromptSdlcRunPrompt,
   buildPromptSdlcTokenReviewPrompt,
   buildPromptSdlcWizardEvaluateJudgePrompt,
+  buildPromptSdlcWizardModuleRunPrompt,
+  readPromptSdlcWizardChainPriorOutput,
   PROMPT_SDLC_STOP_USER,
 } from "../../../../adapters/promptSdlcAwcCore";
 import { applyPromptSdlcLocalJudgeReply } from "./applyPromptSdlcLocalReply";
@@ -100,17 +102,34 @@ const executePrompt = async (input: {
     namedPaths: before.paths,
   });
   const startedMs = Date.now();
+  const moduleRunPrompt =
+    input.cycle.judgeScoresOnly === true &&
+    input.cycle.wizard?.phase === "optimize_modules"
+      ? buildPromptSdlcWizardModuleRunPrompt({
+          promptText: input.revision.promptText,
+          runnerInstructions:
+            input.cycle.wizard?.runnerInstructions ??
+            input.cycle.judgeInstructions,
+          chainPriorOutput: readPromptSdlcWizardChainPriorOutput(
+            input.cycle.wizard,
+            input.cycle.wizard.currentModuleIndex,
+          ),
+          moduleTitle:
+            input.cycle.wizard.modules[input.cycle.wizard.currentModuleIndex]
+              ?.title ?? null,
+        })
+      : buildPromptSdlcRunPrompt({
+          promptText: input.revision.promptText,
+          instructions:
+            input.cycle.judgeScoresOnly === true
+              ? (input.cycle.wizard?.runnerInstructions ??
+                input.cycle.judgeInstructions)
+              : input.cycle.judgeInstructions,
+        });
   const reply = await runPromptSdlcWriterReply({
     writerAgent: input.runner,
     workingDirectory,
-    prompt: buildPromptSdlcRunPrompt({
-      promptText: input.revision.promptText,
-      instructions:
-        input.cycle.judgeScoresOnly === true
-          ? (input.cycle.wizard?.runnerInstructions ??
-            input.cycle.judgeInstructions)
-          : input.cycle.judgeInstructions,
-    }),
+    prompt: moduleRunPrompt,
     signal: input.signal,
   });
   const evidence = reply.ok

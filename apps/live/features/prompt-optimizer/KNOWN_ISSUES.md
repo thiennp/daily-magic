@@ -12,4 +12,4 @@ No open issues. Recent fixes (bundle **166–176**):
 - Step 4 optimize gate uses the same failed-run behavior when module judge scoring fails (bundle **174**).
 - Wizard step 2 **evaluate** scores prompt revisions only; folder execution stays on step 4 **optimize** with the Runner (bundle **175**).
 - Wizard timeline step clicks open a modal with that step’s content (variables, evaluate rounds, splits, modules), not “Not scored yet.” (bundle **176**).
-- Wizard compose field and source prompt stay on the **generalized** `{{variables}}` template through steps 2–4; evaluate handoff no longer overwrites `templatedPrompt` (bundle **176**).
+- Wizard step 4 runs **one runner+judge round per module** (statistics on the review gate); **chain** splits hand off the prior module’s best runner output to the next module (bundle **184**).

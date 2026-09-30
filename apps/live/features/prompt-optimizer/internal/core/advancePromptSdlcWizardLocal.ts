@@ -6,6 +6,7 @@ import {
   parsePromptSdlcGeneralizeReply,
   parsePromptSdlcSeparateReply,
   PROMPT_SDLC_WIZARD_MAX_ROUNDS,
+  PROMPT_SDLC_WIZARD_MODULE_MAX_ROUNDS,
   PROMPT_SDLC_WIZARD_PASS_SCORE,
   readPromptSdlcWizardEvaluatePromptText,
   buildPromptSdlcWizardSubstitutionMap,
@@ -14,6 +15,8 @@ import {
   seedPromptSdlcWizardParameterValues,
   selectPromptSdlcBestPrompt,
   substitutePromptSdlcTemplateValues,
+  finalizePromptSdlcWizardModuleRun,
+  collectPromptSdlcWizardModuleStatistics,
 } from "../../../../adapters/promptSdlcAwcCore";
 import { PROMPT_SDLC_MANUAL_ACTOR } from "./choosePromptSdlcLocalModels";
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
@@ -76,6 +79,48 @@ const snapshotEvaluateWizardAttempt = (
           passed: item.judgement?.passed ?? null,
           reasons: item.judgement?.reasons ?? null,
         })),
+      },
+      userFeedback: null,
+      stepInstructions: null,
+    }),
+  };
+};
+
+const moduleCycleStatus = (
+  status: PromptSdlcLocalCycle["status"],
+): "passed" | "stopped" | "failed" => {
+  if (status === "passed") {
+    return "passed";
+  }
+  if (status === "failed") {
+    return "failed";
+  }
+  return "stopped";
+};
+
+const snapshotOptimizeModuleWizardAttempt = (
+  cycle: PromptSdlcLocalCycle,
+): PromptSdlcLocalCycle => {
+  const wizard = cycle.wizard;
+  if (wizard === undefined) {
+    return cycle;
+  }
+  const statistics = collectPromptSdlcWizardModuleStatistics({
+    revisions: cycle.revisions,
+  });
+  if (statistics.rounds.length === 0) {
+    return cycle;
+  }
+  const moduleRun = wizard.modules[wizard.currentModuleIndex];
+  return {
+    ...cycle,
+    wizard: recordPromptSdlcWizardAttempt({
+      wizard,
+      step: "optimize_modules",
+      output: {
+        moduleId: moduleRun?.moduleId ?? null,
+        moduleIndex: wizard.currentModuleIndex,
+        statistics,
       },
       userFeedback: null,
       stepInstructions: null,
@@ -328,7 +373,7 @@ export const beginPromptSdlcWizardModuleEvaluate = (
     runnerModel: runner,
     currentRound: 0,
     passScore: PROMPT_SDLC_WIZARD_PASS_SCORE,
-    maxRounds: PROMPT_SDLC_WIZARD_MAX_ROUNDS,
+    maxRounds: PROMPT_SDLC_WIZARD_MODULE_MAX_ROUNDS,
     errorMessage: null,
     revisions: [{ roundNumber: 0, promptText: concrete, judgement: null }],
     wizard: {
@@ -425,22 +470,31 @@ export const advancePromptSdlcWizardLocal = async (
       const paused = pauseAtGate(next, gate);
       const withModulePaused =
         gate === "optimize_modules" && paused.wizard !== undefined
-          ? {
-              ...paused,
-              wizard: {
-                ...paused.wizard,
-                modules: paused.wizard.modules.map((item, index) =>
-                  index === paused.wizard!.currentModuleIndex &&
-                  item.status === "running"
-                    ? { ...item, status: "paused" as const }
-                    : item,
-                ),
-              },
-            }
+          ? (() => {
+              const finalizedWizard = finalizePromptSdlcWizardModuleRun({
+                wizard: {
+                  ...paused.wizard!,
+                  modules: paused.wizard!.modules.map((item, index) =>
+                    index === paused.wizard!.currentModuleIndex &&
+                    item.status === "running"
+                      ? { ...item, status: "paused" as const }
+                      : item,
+                  ),
+                },
+                moduleIndex: paused.wizard!.currentModuleIndex,
+                revisions: paused.revisions,
+                cycleStatus: moduleCycleStatus(next.status),
+              });
+              return {
+                ...paused,
+                wizard: finalizedWizard,
+              };
+            })()
           : paused;
-      return gate === "evaluate"
-        ? snapshotEvaluateWizardAttempt(withModulePaused)
-        : withModulePaused;
+      if (gate === "evaluate") {
+        return snapshotEvaluateWizardAttempt(withModulePaused);
+      }
+      return snapshotOptimizeModuleWizardAttempt(withModulePaused);
     }
     return next;
   }

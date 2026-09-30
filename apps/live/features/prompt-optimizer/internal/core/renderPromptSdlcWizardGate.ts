@@ -89,7 +89,11 @@ export const renderPromptSdlcWizardGate = (
             modulePrompt,
             buildPromptSdlcWizardSubstitutionMap(wizard),
           ),
-        )}</p>${renderPromptSdlcWizardRevisionRoundList({
+        )}</p>${
+          moduleRun?.statistics === null || moduleRun?.statistics === undefined
+            ? ""
+            : `<p class="muted">Module stats: best ${moduleRun.statistics.bestScore ?? "—"} / ${cycle.passScore} (round ${moduleRun.statistics.bestRound ?? "—"}).</p>`
+        }${renderPromptSdlcWizardRevisionRoundList({
           cycle,
           interactive: false,
           caption: moduleNeedsRun
