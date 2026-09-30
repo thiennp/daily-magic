@@ -43,6 +43,17 @@ export const renderPromptSdlcWizardOutcome = (
 
   const modules = renderModuleTable(cycle);
 
+  const stepHint = (stepId: string): string => {
+    if (stepId === "wizard-4" && wizard.modules.length > 0) {
+      const summary = summarizePromptSdlcWizardCompletion(wizard);
+      return `${summary.passedModuleCount}/${summary.totalModules} modules · pass ≥ ${PROMPT_SDLC_WIZARD_PASS_SCORE}`;
+    }
+    if (stepId === "wizard-1" && wizard.templatedPrompt.trim().length > 0) {
+      return "Templated prompt ready";
+    }
+    return "";
+  };
+
   const stepBodies = ["wizard-1", "wizard-2", "wizard-3", "wizard-4"]
     .map((stepId) => {
       const body = renderPromptSdlcWizardStepModalBody(cycle, stepId);
@@ -57,11 +68,16 @@ export const renderPromptSdlcWizardOutcome = (
             : stepId === "wizard-3"
               ? "Step 3 — Separate"
               : "Step 4 — Optimize modules";
-      return `<details class="sdlc-wizard-outcome-step"><summary>${escapeHtml(title)}</summary><div class="sdlc-wizard-outcome-step-body">${body}</div></details>`;
+      const hint = stepHint(stepId);
+      const summaryLine =
+        hint.length === 0
+          ? escapeHtml(title)
+          : `${escapeHtml(title)} <span class="muted sdlc-wizard-outcome-step-hint">${escapeHtml(hint)}</span>`;
+      return `<details class="sdlc-wizard-outcome-step"><summary>${summaryLine}</summary><div class="sdlc-wizard-outcome-step-body">${body}</div></details>`;
     })
     .join("");
 
-  const download = `<p class="actions"><a class="btn btn-secondary" href="/prompt-optimizer?cycle=${escapeHtml(cycle.id)}&amp;export=wizard-markdown">Download report (.md)</a></p>`;
+  const download = `<p class="actions sdlc-wizard-outcome-actions"><a class="btn btn-secondary" href="/prompt-optimizer?cycle=${escapeHtml(cycle.id)}&amp;export=wizard-markdown">Download report (.md)</a><button type="button" class="btn btn-secondary" data-sdlc-start-new-run>Run again</button></p>`;
 
-  return `<div class="sdlc-run-panel sdlc-wizard-outcome" id="prompt-optimizer-wizard-outcome"><h3 class="sdlc-run-panel-title">Wizard result</h3><p class="muted sdlc-wizard-outcome-lede">Pass score for modules is ${PROMPT_SDLC_WIZARD_PASS_SCORE}. Token counts come from writer usage on this Mac.</p>${download}${modules}${stepBodies}</div>`;
+  return `<div class="sdlc-run-panel sdlc-wizard-outcome" id="prompt-optimizer-wizard-outcome"><h3 class="sdlc-run-panel-title">Wizard result</h3>${download}${modules}${stepBodies}</div>`;
 };

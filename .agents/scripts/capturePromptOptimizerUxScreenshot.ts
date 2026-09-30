@@ -11,7 +11,7 @@ import { buildPromptSdlcLocalPageBody } from "../../apps/live/features/prompt-op
 import { createPromptSdlcLocalCycle } from "../../apps/live/features/prompt-optimizer/internal/core/createPromptSdlcLocalCycle";
 
 const ARTIFACTS = "/opt/cursor/artifacts";
-const BUNDLE = "189";
+const BUNDLE = "190";
 
 const finishedWizard = (): ReturnType<typeof createPromptSdlcLocalCycle> => {
   const wizard = {
@@ -67,7 +67,7 @@ const finishedWizard = (): ReturnType<typeof createPromptSdlcLocalCycle> => {
   summarizePromptSdlcWizardCompletion(wizard);
   return {
     ...createPromptSdlcLocalCycle({
-      goal: "Dogfood wizard UX bundle 189",
+      goal: "Dogfood wizard UX bundle 190",
       sourcePrompt: "Weak prompt",
       judgeModel: "claude-cli",
       improverModel: "claude-cli",
@@ -156,6 +156,12 @@ const main = async (): Promise<void> => {
     viewport: { width: 1280, height: 1400 },
   });
   await page.goto(`file://${htmlPath}`, { waitUntil: "networkidle" });
+  await page.evaluate(() => {
+    const history = document.getElementById("prompt-optimizer-history");
+    if (history instanceof HTMLDetailsElement) {
+      history.open = true;
+    }
+  });
   await page.screenshot({ path: pngPath, fullPage: true });
   await browser.close();
 

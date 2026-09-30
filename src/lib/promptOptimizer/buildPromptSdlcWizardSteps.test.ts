@@ -81,4 +81,16 @@ describe("buildPromptSdlcSteps wizard timeline", () => {
       "Step 3 — Separate",
     ]);
   });
+
+  it("does not append a Stopped end node when the wizard phase is complete", () => {
+    const labels = buildPromptSdlcSteps(
+      baseCycle({
+        status: "stopped",
+        wizard: { phase: "complete", gate: null },
+      }),
+    ).map((step) => step.label);
+
+    expect(labels).not.toContain("Stopped");
+    expect(labels[labels.length - 1]).toBe("Step 4 — Optimize modules");
+  });
 });

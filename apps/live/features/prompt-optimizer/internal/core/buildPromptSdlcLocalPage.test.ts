@@ -597,5 +597,7 @@ describe("buildPromptSdlcLocalPageBody", () => {
     expect(html.match(/id="prompt-optimizer-wizard-outcome"/g)?.length).toBe(1);
     expect(html).toContain("prompt-optimizer-history");
     expect(html).toContain("Wizard finished");
+    expect(html).toContain("data-sdlc-start-new-run");
+    expect(html).not.toContain("sdlc-wizard-accordion");
   });
 });

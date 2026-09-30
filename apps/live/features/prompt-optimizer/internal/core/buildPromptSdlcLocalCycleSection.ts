@@ -1,6 +1,7 @@
 import {
   buildPromptSdlcSteps,
   isPromptSdlcTerminalStatus,
+  summarizePromptSdlcWizardCompletion,
 } from "../../../../adapters/promptSdlcAwcCore";
 import {
   renderPromptSdlcLocalScoreScale,
@@ -105,9 +106,17 @@ export const buildPromptSdlcLocalCycleSection = (
       : isPromptSdlcTerminalStatus(cycle.status)
         ? `<span class="sdlc-run-badge sdlc-run-badge-done">Complete</span>`
         : "";
+  const activitySuccess =
+    !live &&
+    cycle.wizard !== undefined &&
+    isPromptSdlcTerminalStatus(cycle.status) &&
+    (cycle.wizard.phase === "complete" ||
+      summarizePromptSdlcWizardCompletion(cycle.wizard).passedModuleCount > 0);
   const activityIcon = live
     ? spinner
-    : `<span class="sdlc-run-status-dot" aria-hidden="true"></span>`;
+    : activitySuccess
+      ? `<span class="sdlc-run-status-dot sdlc-run-status-dot-success" aria-hidden="true"></span>`
+      : `<span class="sdlc-run-status-dot" aria-hidden="true"></span>`;
   const metaItems = [
     typeof cycle.workingDirectory === "string" &&
     cycle.workingDirectory.length > 0
@@ -142,5 +151,5 @@ export const buildPromptSdlcLocalCycleSection = (
       ? ""
       : `<section class="sdlc-run-prompts" aria-labelledby="sdlc-run-prompts-heading"><h2 id="sdlc-run-prompts-heading" class="sdlc-run-prompts-heading">Prompt history</h2><div class="sdlc-run-prompts-list">${revisions}</div></section>`;
 
-  return `<section class="card sdlc-run" id="prompt-optimizer-run" data-live="${live ? "true" : "false"}" data-since="${escapeHtml(cycle.updatedAt)}" aria-busy="${live ? "true" : "false"}"><header class="sdlc-run-head"><div class="sdlc-run-head-top"><p class="eyebrow">This run</p>${statusBadge}</div><div class="sdlc-run-activity"><div class="sdlc-run-activity-icon">${activityIcon}</div><div class="sdlc-run-activity-copy"><h2 class="sdlc-run-title">${escapeHtml(activity.title)}</h2>${detail}</div></div>${meta}${actions}</header>${error}${grid}${manual}${wizardOutcome}${best}</section>${promptsHistory}`;
+  return `<section class="card sdlc-run" id="prompt-optimizer-run" data-live="${live ? "true" : "false"}" data-since="${escapeHtml(cycle.updatedAt)}" aria-busy="${live ? "true" : "false"}"><header class="sdlc-run-head"><div class="sdlc-run-head-top"><p class="eyebrow">This run</p>${statusBadge}</div><div class="sdlc-run-activity${activitySuccess ? " sdlc-run-activity-success" : ""}"><div class="sdlc-run-activity-icon">${activityIcon}</div><div class="sdlc-run-activity-copy"><h2 class="sdlc-run-title">${escapeHtml(activity.title)}</h2>${detail}</div></div>${meta}${actions}</header>${error}${grid}${manual}${wizardOutcome}${best}</section>${promptsHistory}`;
 };

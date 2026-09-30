@@ -162,7 +162,7 @@ export const describePromptSdlcLocalActivity = (
           message.length > 0
             ? message
             : modulesDone
-              ? "Download the report below or start a new run from compose."
+              ? "Use Download report below for a Markdown summary."
               : "Progress from finished steps is kept.",
       };
     }

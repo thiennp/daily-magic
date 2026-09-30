@@ -313,6 +313,16 @@ export const PROMPT_SDLC_LOCAL_FORM_SCRIPT = `<script>
     });
   });
   setComposeMode("wizard");
+  document.querySelectorAll("[data-sdlc-start-new-run]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const details = document.getElementById("prompt-optimizer-compose-details");
+      if (details instanceof HTMLDetailsElement) details.open = true;
+      document.getElementById("prompt-optimizer-compose")?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    });
+  });
   paintReady();
   document.addEventListener("sdlc-run-finished", () => {
     const gateSlot = document.getElementById("prompt-optimizer-wizard-gate-slot");

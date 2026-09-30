@@ -13,10 +13,16 @@ const WIZARD_STEP_LABELS = [
 ] as const;
 
 const terminalLabel = (cycle: PromptSdlcCycleView): string => {
+  if (cycle.wizard !== undefined && cycle.wizard.phase === "complete") {
+    return "Finished";
+  }
   if (cycle.status === "passed") {
     return "Passed";
   }
   if (cycle.status === "stopped") {
+    if (cycle.wizard?.phase === "complete") {
+      return "Finished";
+    }
     return (cycle.errorMessage ?? "").startsWith("Finished")
       ? "Finished"
       : "Stopped";
@@ -70,18 +76,17 @@ export const buildPromptSdlcWizardSteps = (
       ? buildPromptSdlcClassicRoundSteps(cycle)
       : [];
 
-  const endStep: readonly PromptSdlcStep[] = isPromptSdlcTerminalStatus(
-    cycle.status,
-  )
-    ? [
-        {
-          id: "end",
-          label: terminalLabel(cycle),
-          state: "done",
-          detail: cycle.errorMessage,
-        },
-      ]
-    : [];
+  const endStep: readonly PromptSdlcStep[] =
+    isPromptSdlcTerminalStatus(cycle.status) && !isComplete
+      ? [
+          {
+            id: "end",
+            label: terminalLabel(cycle),
+            state: "done",
+            detail: cycle.errorMessage,
+          },
+        ]
+      : [];
 
   return [...wizardSteps, ...roundSteps, ...endStep];
 };

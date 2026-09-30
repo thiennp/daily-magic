@@ -41,9 +41,14 @@ export const renderPromptSdlcLocalHistory = (
     <button type="button" class="btn btn-secondary" data-sdlc-history-filter="wizard" aria-pressed="false">Wizard</button>
     <button type="button" class="btn btn-secondary" data-sdlc-history-filter="classic" aria-pressed="false">Classic</button>
   </div>`;
+  const shownCount = Math.min(history.length, 20);
+  const historySummaryLabel =
+    shownCount === history.length
+      ? `History · ${history.length}`
+      : `History · ${shownCount} of ${history.length}`;
   const body = `<section class="card sdlc-history-card"><h2 class="sdlc-history-heading">History</h2>${filters}<ul class="sdlc-history">${items}</ul></section>`;
   if (openCycleId !== null) {
-    return `<details class="sdlc-history-details" id="prompt-optimizer-history"><summary class="sdlc-history-details-summary"><span class="eyebrow">Past runs</span> History</summary>${body}</details>`;
+    return `<details class="sdlc-history-details" id="prompt-optimizer-history"><summary class="sdlc-history-details-summary"><span class="eyebrow">Past runs</span> ${escapeHtml(historySummaryLabel)}</summary>${body}</details>`;
   }
   return body;
 };
