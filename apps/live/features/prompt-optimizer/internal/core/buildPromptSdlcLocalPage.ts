@@ -112,9 +112,12 @@ export const buildPromptSdlcLocalPageBody = (input: {
         <button type="button" class="btn btn-secondary" data-sdlc-compose-mode="classic" aria-pressed="false">Classic loop</button>
       </div>`;
   const composeHeadActions = viewingFinishedRun
-    ? `<button type="button" class="btn btn-primary" data-sdlc-start-new-run>Start new run</button>`
+    ? `<button type="button" class="btn btn-primary" data-sdlc-start-new-run title="Clear the form and set a new goal">New prompt</button>`
     : `<a class="btn btn-secondary" href="/prompt-optimizer/guide">Instructions and example</a>
         <a class="btn btn-secondary" href="/prompt-optimizer?example=wizard-verification">Load wizard verification example</a>`;
+  const composeSummary = viewingFinishedRun
+    ? `<summary class="sdlc-compose-summary sdlc-compose-summary-collapsed"><span class="eyebrow">Compose</span><span class="sdlc-compose-summary-title">Collapsed — expand to edit goal and prompt</span></summary>`
+    : `<summary class="sdlc-compose-summary"><span class="eyebrow">Prompt optimizer</span> Optimize a prompt</summary>`;
   const composeViewingClass = viewingFinishedRun
     ? " sdlc-compose-viewing-finished"
     : "";
@@ -124,7 +127,7 @@ export const buildPromptSdlcLocalPageBody = (input: {
         ${composeHeadActions}
       </div>
       <details class="sdlc-compose-details" id="prompt-optimizer-compose-details"${composeOpen}>
-        <summary class="sdlc-compose-summary"><span class="eyebrow">Prompt optimizer</span> Optimize a prompt</summary>
+        ${composeSummary}
       <p class="lede">${intro} ${escapeHtml(input.modelNote)}</p>
       <form class="sdlc-form" method="POST" action="/prompt-optimizer">
         <fieldset class="sdlc-fields"${shown.running ? " disabled" : ""}>

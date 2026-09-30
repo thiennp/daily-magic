@@ -313,7 +313,7 @@ export const PROMPT_SDLC_LOCAL_FORM_SCRIPT = `<script>
     });
   });
   setComposeMode("wizard");
-  document.querySelectorAll("[data-sdlc-start-new-run]").forEach((btn) => {
+  document.querySelectorAll("[data-sdlc-start-new-run], [data-sdlc-rerun-same]").forEach((btn) => {
     btn.addEventListener("click", () => {
       const details = document.getElementById("prompt-optimizer-compose-details");
       if (details instanceof HTMLDetailsElement) details.open = true;

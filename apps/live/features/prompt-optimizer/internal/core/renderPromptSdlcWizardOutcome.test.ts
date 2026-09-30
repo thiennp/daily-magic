@@ -23,7 +23,7 @@ describe("renderPromptSdlcWizardOutcome", () => {
       status: "stopped",
     });
     expect(html).toContain('id="prompt-optimizer-wizard-outcome"');
-    expect(html).toContain("Wizard result");
+    expect(html).toContain("Step details");
   });
 
   it("renders a module summary table when modules exist", () => {

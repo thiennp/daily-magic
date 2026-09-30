@@ -598,6 +598,9 @@ describe("buildPromptSdlcLocalPageBody", () => {
     expect(html).toContain("prompt-optimizer-history");
     expect(html).toContain("Wizard finished");
     expect(html).toContain("data-sdlc-start-new-run");
+    expect(html).toContain("New prompt");
+    expect(html).toContain("sdlc-run-success-actions");
+    expect(html).toContain("Download report (.md)");
     expect(html).not.toContain("sdlc-wizard-accordion");
   });
 });
