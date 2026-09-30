@@ -9,8 +9,16 @@ import { createPromptSdlcLocalCycle } from "../../apps/live/features/prompt-opti
 export const PROMPT_OPTIMIZER_UX_BUNDLE = "197";
 
 export const promptOptimizerUxSharedForm = {
-  goal: "Dogfood wizard UX bundle 197",
-  prompt: "Verify the feature works (vague starter prompt)",
+  goal: "E2E: Prompt Optimizer wizard chain — {{feature}} on AWL with export + partial pass",
+  prompt: `You are driving an Agent Witch Live verification run for {{feature}} in {{repo_root}}.
+
+Acceptance (must all appear in module outputs):
+1) Compose → Run wizard (generalize, evaluate ≥70, separate modules, optimize with runner evidence).
+2) Partial pass is OK: at least one module may score below threshold if others compensate in the report.
+3) Export Markdown module prompts and include {{acceptance_criteria}} for keyboard-only + screen-reader checks.
+4) Do not conflate AWC (www.agentwitch.com) with CHECK24 daily-magic URLs unless explicitly asked.
+
+Start from this weak instruction and improve it through the full 4-step wizard.`,
   modelNote: "Installed: Claude, Codex.",
   writers: [
     { id: "claude-cli", label: "Claude" },
@@ -29,16 +37,20 @@ export const promptOptimizerUxSharedForm = {
 export const finishedWizardCycle = (): ReturnType<
   typeof createPromptSdlcLocalCycle
 > => {
+  const wizardSeed =
+    "Verify {{feature}} in {{repo_root}} — {{acceptance_criteria}}";
   const wizard = {
-    ...createInitialPromptSdlcWizardState("Verify {{feature}} on Live"),
+    ...createInitialPromptSdlcWizardState(wizardSeed),
     gate: null,
     phase: "complete" as const,
-    templatedPrompt: "Verify {{feature}} on Live",
+    templatedPrompt:
+      "Run AWL wizard for {{feature}}: generalize placeholders, evaluate ≥70, split modules, optimize with runner logs from {{repo_root}}.",
     modules: [
       {
         moduleId: "m1",
-        title: "Generalize checklist",
-        prompt: "Check {{feature}}",
+        title: "Codegen + SDLC checklist",
+        prompt:
+          "Module A: Verify {{feature}} — run unit tests, capture runner output, map to {{acceptance_criteria}}.",
         status: "passed" as const,
         selectedRevisionRound: null,
         statistics: {
@@ -58,8 +70,9 @@ export const finishedWizardCycle = (): ReturnType<
       },
       {
         moduleId: "m2",
-        title: "Evaluate flow",
-        prompt: "Evaluate {{feature}}",
+        title: "UX + a11y review module",
+        prompt:
+          "Module B: Evaluate {{feature}} UX for keyboard-only flows; score against pass ≥70; cite gaps in {{acceptance_criteria}}.",
         status: "passed" as const,
         selectedRevisionRound: null,
         statistics: {
@@ -99,16 +112,20 @@ export const finishedWizardCycle = (): ReturnType<
 export const inProgressWizardCycle = (): ReturnType<
   typeof createPromptSdlcLocalCycle
 > => {
+  const wizardSeed =
+    "Verify {{feature}} in {{repo_root}} — {{acceptance_criteria}}";
   const wizard = {
-    ...createInitialPromptSdlcWizardState("Verify {{feature}} on Live"),
+    ...createInitialPromptSdlcWizardState(wizardSeed),
     gate: "optimize_modules" as const,
     phase: "optimize_modules" as const,
-    templatedPrompt: "Verify {{feature}} on Live",
+    templatedPrompt:
+      "Run AWL wizard for {{feature}}: generalize placeholders, evaluate ≥70, split modules, optimize with runner logs from {{repo_root}}.",
     modules: [
       {
         moduleId: "m1",
-        title: "Generalize checklist",
-        prompt: "Check {{feature}}",
+        title: "Codegen + SDLC checklist",
+        prompt:
+          "Module A: Verify {{feature}} — run unit tests, capture runner output, map to {{acceptance_criteria}}.",
         status: "passed" as const,
         selectedRevisionRound: null,
         statistics: {
@@ -128,8 +145,9 @@ export const inProgressWizardCycle = (): ReturnType<
       },
       {
         moduleId: "m2",
-        title: "Evaluate flow",
-        prompt: "Evaluate {{feature}}",
+        title: "UX + a11y review module",
+        prompt:
+          "Module B: Evaluate {{feature}} UX for keyboard-only flows; score against pass ≥70; cite gaps in {{acceptance_criteria}}.",
         status: "running" as const,
         selectedRevisionRound: null,
         statistics: {
