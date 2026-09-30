@@ -1,4 +1,5 @@
 import fs from "node:fs";
+import type http from "node:http";
 import os from "node:os";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
