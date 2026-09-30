@@ -914,7 +914,8 @@ form.sdlc-form textarea.input.sdlc-instruction {
 }
 .sdlc-tip:hover .sdlc-tip-panel,
 .sdlc-tip:focus .sdlc-tip-panel,
-.sdlc-tip:focus-visible .sdlc-tip-panel {
+.sdlc-tip:focus-visible .sdlc-tip-panel,
+.sdlc-tip[aria-expanded="true"] .sdlc-tip-panel {
   display: flex;
   flex-direction: column;
   gap: 0.35rem;

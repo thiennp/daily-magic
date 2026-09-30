@@ -1,5 +1,6 @@
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
 import { promptSdlcLocalHistoryTitle } from "./promptSdlcLocalHistoryTitle";
+import { readPromptSdlcWizardActiveStepIndex } from "./readPromptSdlcWizardActiveStepIndex";
 
 const escapeHtml = (value: string): string =>
   value
@@ -32,10 +33,13 @@ export const renderPromptSdlcWizardResumeBanner = (
   }
   const title = promptSdlcLocalHistoryTitle(cycle.goal);
   const step = stepLabel(wizard.gate);
+  const stepIndex = readPromptSdlcWizardActiveStepIndex(cycle);
+  const stepIndexLine =
+    stepIndex === null || stepIndex >= 4 ? "" : ` (step ${stepIndex + 1} of 4)`;
   return `<section class="card sdlc-wizard-resume" role="status">
     <p class="eyebrow">Wizard in progress</p>
     <h2>Resume ${escapeHtml(title)}</h2>
-    <p class="lede">Paused at <strong>${escapeHtml(step)}</strong>. Continue where you left off or open another run below.</p>
+    <p class="lede">Paused at <strong>${escapeHtml(step)}</strong>${escapeHtml(stepIndexLine)}. Continue where you left off or open another run below.</p>
     <div class="actions">
       <a class="btn btn-primary" href="/prompt-optimizer?cycle=${escapeHtml(cycle.id)}">Resume wizard</a>
     </div>

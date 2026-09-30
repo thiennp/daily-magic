@@ -1,5 +1,6 @@
 import {
   buildPromptSdlcWizardSubstitutionMap,
+  collectPromptSdlcWizardCumulativeTokens,
   substitutePromptSdlcTemplateValues,
 } from "../../../../adapters/promptSdlcAwcCore";
 
@@ -56,10 +57,18 @@ export const renderPromptSdlcWizardGate = (
         })
       : "";
 
+  const topologyExplainer =
+    gate === "separate"
+      ? `<p class="muted sdlc-topology-explainer"><strong>Chain</strong> runs modules in order; each module’s runner can see the previous module’s output. <strong>Parallel</strong> modules are independent.</p>`
+      : "";
   const splits =
     gate === "separate"
-      ? `<ul class="sdlc-wizard-splits">${wizard.splitOptions
+      ? `${topologyExplainer}<ul class="sdlc-wizard-splits">${wizard.splitOptions
           .map((item) => {
+            const topologyBadge =
+              item.topology === "chain"
+                ? ' <span class="sdlc-badge sdlc-badge-chain">Chain</span>'
+                : ' <span class="sdlc-badge sdlc-badge-parallel">Parallel</span>';
             const badge = item.recommended
               ? ' <span class="sdlc-badge">Recommended</span>'
               : "";
@@ -68,7 +77,7 @@ export const renderPromptSdlcWizardGate = (
               (wizard.selectedSplitOptionId === null && item.recommended)
                 ? " checked"
                 : "";
-            return `<li class="sdlc-wizard-split-option"><label><input type="radio" name="wizardSplitOptionId" value="${escapeHtml(item.id)}" required${checked}> <strong>${escapeHtml(item.title)}</strong>${badge}<br><span class="muted">${escapeHtml(item.summary)} (${escapeHtml(item.topology)})</span></label>${renderPromptSdlcWizardSplitOptionChunks(item)}</li>`;
+            return `<li class="sdlc-wizard-split-option"><label><input type="radio" name="wizardSplitOptionId" value="${escapeHtml(item.id)}" required${checked}> <strong>${escapeHtml(item.title)}</strong>${topologyBadge}${badge}<br><span class="muted">${escapeHtml(item.summary)}</span></label>${renderPromptSdlcWizardSplitOptionChunks(item)}</li>`;
           })
           .join("")}</ul>`
       : "";
@@ -115,6 +124,12 @@ export const renderPromptSdlcWizardGate = (
             ? "Set parameters for this module’s test run, then continue. Rerun with feedback to adjust the module prompt."
             : "Review progress on this module. Continue when ready, or rerun with feedback.";
 
+  const cumulativeTokens = collectPromptSdlcWizardCumulativeTokens(wizard);
+  const tokenLine =
+    cumulativeTokens === null
+      ? ""
+      : `<p class="muted sdlc-wizard-cumulative-tokens">Wizard tokens so far (reported): ${cumulativeTokens}</p>`;
+
   const activeClass =
     options?.active === true ? " sdlc-wizard-gate-active" : "";
   const activeId =
@@ -123,6 +138,7 @@ export const renderPromptSdlcWizardGate = (
     <p class="eyebrow">Prompt optimizer</p>
     <h2>${stepTitle}</h2>
     <p class="sdlc-wizard-gate-lede">${gateLede}</p>
+    ${tokenLine}
     <form method="POST" action="/prompt-optimizer" class="sdlc-wizard-feedback" id="sdlc-wizard-gate-form">
       <input type="hidden" name="cycleId" value="${escapeHtml(cycle.id)}">
     ${variables}

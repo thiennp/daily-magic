@@ -8,6 +8,7 @@ describe("renderPromptSdlcFieldTip", () => {
     const html = renderPromptSdlcFieldTip("judgeInstructions");
 
     expect(html).toContain('class="sdlc-tip"');
+    expect(html).toContain('aria-expanded="false"');
     expect(html).toContain('role="tooltip"');
     expect(html).toContain("Best practice");
     expect(html).toContain("Example");

@@ -15,7 +15,7 @@ const INFO_ICON = `<svg class="sdlc-tip-icon" xmlns="http://www.w3.org/2000/svg"
 export const renderPromptSdlcFieldTip = (id: PromptSdlcFieldTipId): string => {
   const tip = PROMPT_SDLC_FIELD_TIPS[id];
   const panelId = `sdlc-tip-${id}`;
-  return `<button type="button" class="sdlc-tip" aria-label="How to use ${escapeHtml(tip.title)}" aria-describedby="${panelId}">${INFO_ICON}<span class="sdlc-tip-panel" id="${panelId}" role="tooltip"><span class="sdlc-tip-kicker">Best practice</span><span class="sdlc-tip-copy">${escapeHtml(tip.practice)}</span><span class="sdlc-tip-kicker">Example</span><span class="sdlc-tip-example">${escapeHtml(tip.example)}</span></span></button>`;
+  return `<button type="button" class="sdlc-tip" aria-label="How to use ${escapeHtml(tip.title)}" aria-describedby="${panelId}" aria-expanded="false">${INFO_ICON}<span class="sdlc-tip-panel" id="${panelId}" role="tooltip"><span class="sdlc-tip-kicker">Best practice</span><span class="sdlc-tip-copy">${escapeHtml(tip.practice)}</span><span class="sdlc-tip-kicker">Example</span><span class="sdlc-tip-example">${escapeHtml(tip.example)}</span></span></button>`;
 };
 
 export const renderPromptSdlcFieldHeading = (
