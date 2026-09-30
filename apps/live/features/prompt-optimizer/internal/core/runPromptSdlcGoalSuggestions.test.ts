@@ -30,7 +30,11 @@ describe("runPromptSdlcGoalSuggestions", () => {
     vi.mocked(runPromptSdlcWriterReply).mockResolvedValue({
       ok: true,
       text: JSON.stringify({
-        options: ["First measurable goal.", "Second measurable goal."],
+        options: [
+          "src/foo.ts exports parseBar; npm run test passes.",
+          "Be helpful and vague.",
+          "vitest exits 0 for foo.test.ts.",
+        ],
       }),
       tokens: 10,
     });
@@ -47,6 +51,7 @@ describe("runPromptSdlcGoalSuggestions", () => {
     expect(result.kind).toBe("options");
     if (result.kind === "options") {
       expect(result.options).toHaveLength(2);
+      expect(result.options.some((item) => /helpful/i.test(item))).toBe(false);
       expect(result.promptFingerprint).toBe("Do something.");
     }
   });

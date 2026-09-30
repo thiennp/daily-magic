@@ -2,6 +2,7 @@ import {
   buildPromptSdlcGoalSuggestionPrompt,
   computePromptSdlcGoalSuggestKey,
   parsePromptSdlcGoalSuggestions,
+  preferMeasurablePromptSdlcGoalOptions,
 } from "../../../../adapters/promptSdlcAwcCore";
 
 import {
@@ -80,10 +81,18 @@ export const runPromptSdlcGoalSuggestions = async (input: {
     return { kind: "error", errorMessage: parsed.errorMessage };
   }
 
+  const options = preferMeasurablePromptSdlcGoalOptions(parsed.options);
+  if (options.length === 0) {
+    return {
+      kind: "error",
+      errorMessage: "No usable goal suggestions came back. Type your own goal.",
+    };
+  }
+
   return {
     kind: "options",
     suggestKey,
-    options: parsed.options,
+    options,
     promptFingerprint: prompt,
     folderFingerprint: typedFolder.trim(),
     judgeFingerprint: chosen.judge,
