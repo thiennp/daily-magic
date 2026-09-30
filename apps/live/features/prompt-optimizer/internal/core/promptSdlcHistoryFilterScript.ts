@@ -7,7 +7,7 @@ export const PROMPT_SDLC_HISTORY_FILTER_SCRIPT = `<script>
   const apply = (kind) => {
     items.forEach((item) => {
       if (!(item instanceof HTMLLIElement)) return;
-      const itemKind = item.dataset.sdlcHistoryKind ?? "classic";
+      const itemKind = item.dataset.sdlcHistoryKind ?? "legacy";
       item.hidden = kind !== "all" && itemKind !== kind;
     });
     buttons.forEach((button) => {

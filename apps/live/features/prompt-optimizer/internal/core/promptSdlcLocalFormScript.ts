@@ -277,42 +277,6 @@ export const PROMPT_SDLC_LOCAL_FORM_SCRIPT = `<script>
   [...new Set(slots.map((slot) => slot.dataset.writer))].forEach((writer) => {
     if (writer) void paintWriter(writer);
   });
-  const pass = document.querySelector("[data-sdlc-pass]");
-  const paintPass = () => {
-    if (!(pass instanceof HTMLInputElement)) return;
-    const score = Number(pass.value);
-    const weak = Math.floor(score / 2);
-    const close = Math.max(weak + 1, score - 20);
-    const scale = pass.parentElement;
-    if (scale) {
-      scale.style.setProperty("--sdlc-weak", weak + "%");
-      scale.style.setProperty("--sdlc-close", close + "%");
-      scale.style.setProperty("--sdlc-pass", score + "%");
-    }
-    const value = document.querySelector("[data-sdlc-pass-value]");
-    const legend = document.querySelector("[data-sdlc-pass-legend]");
-    if (value) value.textContent = String(score);
-    if (legend) {
-      legend.textContent =
-        "0–" +
-        (weak - 1) +
-        " bad · " +
-        weak +
-        "–" +
-        (close - 1) +
-        " weak · " +
-        close +
-        "–" +
-        (score - 1) +
-        " close · " +
-        score +
-        "–100 passes";
-    }
-  };
-  if (pass instanceof HTMLInputElement) {
-    pass.addEventListener("input", paintPass);
-    paintPass();
-  }
   const closeFieldTips = () => {
     document.querySelectorAll(".sdlc-tip[aria-expanded='true']").forEach((btn) => {
       if (btn instanceof HTMLButtonElement) btn.setAttribute("aria-expanded", "false");

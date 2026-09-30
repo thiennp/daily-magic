@@ -50,18 +50,6 @@ export const PROMPT_SDLC_FIELD_TIPS = {
     example:
       "Keep the reply under four sentences.\nInput: Where is my refund?\nWanted output: The ticket has no refund. Ask which order.",
   },
-  passScore: {
-    title: "Pass score",
-    practice:
-      "The run passes at this score. 90 is the usual bar. Lower it when a useful prompt is enough.",
-    example: "90",
-  },
-  roundLimit: {
-    title: "Round limit",
-    practice:
-      "The run stops after this many scored rounds. 10 is the usual limit. It also stops when the score has not risen for 3 rounds.",
-    example: "10",
-  },
   runner: {
     title: "Runner",
     practice:

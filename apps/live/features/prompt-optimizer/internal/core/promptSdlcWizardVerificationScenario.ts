@@ -1,6 +1,6 @@
 export const PROMPT_SDLC_WIZARD_VERIFICATION_EXAMPLE = "wizard-verification";
 
-/** Dogfood + QA scenario: improve this prompt with the Prompt SDLC wizard (Run, not classic loop). */
+/** Dogfood + QA scenario: improve this prompt with the Prompt SDLC wizard (Run). */
 
 export const PROMPT_SDLC_WIZARD_VERIFICATION_GOAL =
   "Produce a reusable skill template that teaches how to verify Prompt SDLC wizard steps 1–4 on Agent Witch Live (bundle 172+): generalize with {{variables}}, evaluate scored revisions (no score 0 continue), separate into module chunks, optimize each module with runner+judge round logs visible at step 4.";

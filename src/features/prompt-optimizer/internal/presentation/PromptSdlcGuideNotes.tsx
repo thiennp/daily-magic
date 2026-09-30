@@ -5,7 +5,6 @@ import {
   APP_SURFACE_SECTION_TITLE_CLASS,
 } from "@/components/surfaces/appSurfaceStyles.constant";
 
-import PromptSdlcGuideClassicSection from "./PromptSdlcGuideClassicSection";
 import PromptSdlcGuideWizardSection from "./PromptSdlcGuideWizardSection";
 
 export default function PromptSdlcGuideNotes(): ReactElement {
@@ -29,7 +28,17 @@ export default function PromptSdlcGuideNotes(): ReactElement {
         </p>
       </section>
       <PromptSdlcGuideWizardSection />
-      <PromptSdlcGuideClassicSection />
+      <section className="space-y-3">
+        <h2 className={APP_SURFACE_SECTION_TITLE_CLASS}>
+          Write the goal as the result
+        </h2>
+        <p className={APP_SURFACE_BODY_TEXT_CLASS}>
+          Say what a good run produces: whose question gets answered, which
+          facts may be used, and what must not be promised. The example goal is
+          that kind of result. A goal of &quot;Make it better&quot; leaves the
+          judge with nothing to score.
+        </p>
+      </section>
     </div>
   );
 }

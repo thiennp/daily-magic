@@ -32,7 +32,7 @@ curl -sS https://www.agentwitch.com/install/agent-witch/app/agent-witch.js | rg 
 
 | Step | Gate       | Pass criteria                                                                                                    |
 | ---- | ---------- | ---------------------------------------------------------------------------------------------------------------- |
-| 1    | Generalize | Templated prompt + variable list; timeline shows Step 1 only (no classic rounds).                                |
+| 1    | Generalize | Templated prompt + variable list; timeline shows Step 1 only (no evaluate revision rounds yet).                  |
 | 2    | Evaluate   | Two+ revisions with scores; Continue blocked on score 0; pick revision before Separate.                          |
 | 3    | Separate   | Each split option shows module **chunks** (title + prompt).                                                      |
 | 4    | Optimize   | Gate lists **Scored rounds for «module»**; timeline shows Judge scored round N; separated summary stays visible. |

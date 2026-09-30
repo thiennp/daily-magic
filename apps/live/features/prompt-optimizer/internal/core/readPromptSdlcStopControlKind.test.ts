@@ -26,7 +26,7 @@ describe("readPromptSdlcStopControlKind", () => {
     status: input.status,
   });
 
-  it("shows classic stop for a non-wizard run", () => {
+  it("shows Stop run for a legacy non-wizard run", () => {
     const cycle = createPromptSdlcLocalCycle({
       goal: "g",
       sourcePrompt: "p",
@@ -34,7 +34,7 @@ describe("readPromptSdlcStopControlKind", () => {
       improverModel: "claude-cli",
     });
     expect(readPromptSdlcStopControlKind({ ...cycle, status: "judging" })).toBe(
-      "classic",
+      "legacy_stop",
     );
   });
 
