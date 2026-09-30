@@ -785,6 +785,7 @@ form.sdlc-form { display: flex; flex-direction: column; }
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  padding-bottom: 0.75rem;
 }
 .sdlc-compose-summary {
   cursor: pointer;
@@ -849,9 +850,9 @@ form.sdlc-form { display: flex; flex-direction: column; }
   z-index: 30;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-  margin-top: 1rem;
-  padding: 0.85rem 0 0.25rem;
+  gap: 0.65rem;
+  margin-top: 1.25rem;
+  padding: 1rem 0 0.5rem;
   background: linear-gradient(
     180deg,
     rgba(255, 255, 255, 0) 0%,
@@ -862,15 +863,58 @@ form.sdlc-form { display: flex; flex-direction: column; }
   box-shadow: 0 -10px 28px rgba(15, 23, 42, 0.06);
 }
 .sdlc-submit-bar .sdlc-writer-summary { margin: 0; }
-.sdlc-submit-bar .sdlc-run-hint { margin: 0; }
+.sdlc-submit-bar .sdlc-run-hint {
+  margin: 0;
+  line-height: 1.45;
+}
+.sdlc-submit-bar .sdlc-run-hint.alert-error {
+  margin-top: 0.15rem;
+  margin-bottom: 0.1rem;
+}
+.sdlc-submit-bar .sdlc-wizard-limits-callout {
+  margin: 0;
+  line-height: 1.45;
+}
 .sdlc-submit {
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-end;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.65rem 0.75rem;
 }
 .sdlc-submit .btn-primary { min-width: 8.5rem; }
+.sdlc-run-wizard-btn[aria-busy="true"] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+.sdlc-wizard-resume-inputs { margin: 0; }
+.sdlc-wizard-resume-inputs summary {
+  list-style: none;
+  cursor: pointer;
+}
+.sdlc-wizard-resume-inputs summary::-webkit-details-marker { display: none; }
+.sdlc-wizard-resume-inputs-list {
+  margin: 0.75rem 0 0;
+  display: grid;
+  gap: 0.65rem;
+  font-size: 0.875rem;
+}
+.sdlc-wizard-resume-inputs-list dt {
+  font-weight: 600;
+  color: var(--aw-zinc-700);
+}
+.sdlc-wizard-resume-inputs-list dd {
+  margin: 0.15rem 0 0;
+  color: var(--aw-zinc-800);
+  white-space: pre-wrap;
+}
+.sdlc-wizard-resume-active .lede {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
 #prompt-optimizer-wizard-gate-slot { margin-bottom: 1.25rem; }
 .sdlc-wizard-accordion {
   display: flex;

@@ -73,7 +73,7 @@ export const presentPromptSdlcLocalComposer = async (input: {
           input.route.storePath,
           decision.judge,
           decision.improver,
-          decision.useWizard ? decision.runner : undefined,
+          decision.runner,
         )
       : null;
   if (decision.kind === "start" && writerBlock !== null) {
@@ -115,15 +115,11 @@ export const presentPromptSdlcLocalComposer = async (input: {
       workingDirectory: decision.workingDirectory,
       passScore: decision.passScore,
       maxRounds: decision.maxRounds,
-      ...(decision.useWizard
-        ? {
-            wizard: {
-              ...createInitialPromptSdlcWizardState(decision.prompt),
-              runnerInstructions: decision.runnerInstructions,
-            },
-            runnerModel: decision.runner,
-          }
-        : {}),
+      wizard: {
+        ...createInitialPromptSdlcWizardState(decision.prompt),
+        runnerInstructions: decision.runnerInstructions,
+      },
+      runnerModel: decision.runner,
       ...(decision.judgeInstructions.length === 0
         ? {}
         : { judgeInstructions: decision.judgeInstructions }),
@@ -144,7 +140,7 @@ export const presentPromptSdlcLocalComposer = async (input: {
     ensurePromptSdlcLocalCycleRunning(input.route.storePath, cycle.id);
     const liveFragment =
       input.posted !== null && input.posted.get("liveFragment") === "1";
-    if (liveFragment && decision.useWizard) {
+    if (liveFragment) {
       input.route.response.writeHead(200, {
         "Content-Type": "text/html; charset=utf-8",
         "Cache-Control": "no-store",

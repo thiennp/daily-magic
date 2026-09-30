@@ -18,7 +18,7 @@ export type PromptSdlcLocalPreferences = {
   readonly runner: string;
 };
 
-const REMEMBERED_INTENTS = ["remember", "choose-folder", "run", "run-classic"];
+const REMEMBERED_INTENTS = ["remember", "choose-folder", "run"];
 
 const emptyPreferences = (): PromptSdlcLocalPreferences => ({
   folder: PROMPT_SDLC_LOCAL_DEFAULT_FOLDER,

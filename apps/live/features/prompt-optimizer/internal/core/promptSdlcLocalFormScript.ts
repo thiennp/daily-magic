@@ -8,8 +8,21 @@ export const PROMPT_SDLC_LOCAL_FORM_SCRIPT = `<script>
     fit(area);
     area.addEventListener("input", () => fit(area));
   });
-  const runButtons = [...document.querySelectorAll("[data-sdlc-run]")];
+  const runButton = document.querySelector("[data-sdlc-run-wizard]");
   const hint = document.querySelector("[data-sdlc-run-hint]");
+  const RUN_LABEL = "Run";
+  const paintRunButton = (loading) => {
+    if (!(runButton instanceof HTMLButtonElement)) return;
+    if (loading) {
+      runButton.disabled = true;
+      runButton.setAttribute("aria-busy", "true");
+      runButton.innerHTML =
+        '<span class="sdlc-spin" aria-hidden="true"></span> Running…';
+      return;
+    }
+    runButton.removeAttribute("aria-busy");
+    runButton.textContent = RUN_LABEL;
+  };
   const slots = [...document.querySelectorAll("[data-writer-status]")];
   const viewingFinishedRun =
     document.querySelector("#prompt-optimizer-run .sdlc-run-badge-done") !== null ||
@@ -17,7 +30,7 @@ export const PROMPT_SDLC_LOCAL_FORM_SCRIPT = `<script>
   const staticPreview = window.location.protocol === "file:";
   const paintRunHint = () => {
     if (!(hint instanceof HTMLElement)) return;
-    if (runButtons.length === 0) {
+    if (!(runButton instanceof HTMLButtonElement)) {
       hint.textContent = "";
       hint.hidden = true;
       hint.className = "muted sdlc-run-hint";
@@ -88,17 +101,21 @@ export const PROMPT_SDLC_LOCAL_FORM_SCRIPT = `<script>
     const fieldsDisabled =
       fields instanceof HTMLFieldSetElement && fields.disabled;
     const compose = readComposeFields();
-    runButtons.forEach((btn) => {
-      if (!(btn instanceof HTMLButtonElement)) return;
-      btn.disabled = false;
+    if (runButton instanceof HTMLButtonElement) {
       const writersReady = slots.every((slot) => slot.dataset.ready === "true");
       const canRun =
         !fieldsDisabled &&
         compose.hasGoal &&
         compose.hasPrompt &&
         writersReady;
-      btn.dataset.canRun = canRun ? "true" : "false";
-    });
+      runButton.dataset.canRun = canRun ? "true" : "false";
+      if (fieldsDisabled) {
+        paintRunButton(true);
+      } else {
+        runButton.disabled = !canRun;
+        paintRunButton(false);
+      }
+    }
     paintRunHint();
     paintWriterSummary();
   };
@@ -310,57 +327,6 @@ export const PROMPT_SDLC_LOCAL_FORM_SCRIPT = `<script>
   document.addEventListener("keydown", (event) => {
     if (event.key === "Escape") closeFieldTips();
   });
-  const setComposeMode = (mode) => {
-    const form = document.querySelector("form.sdlc-form");
-    if (!(form instanceof HTMLFormElement)) return;
-    form.dataset.sdlcComposeMode = mode;
-    document.querySelectorAll("[data-sdlc-compose-mode]").forEach((btn) => {
-      if (!(btn instanceof HTMLButtonElement)) return;
-      const active = btn.dataset.sdlcComposeMode === mode;
-      btn.setAttribute("aria-pressed", active ? "true" : "false");
-    });
-    const classicOptions = document.querySelector(".sdlc-classic-loop-options");
-    if (classicOptions instanceof HTMLDetailsElement) {
-      classicOptions.open = mode === "classic";
-    }
-    const wizardLimits = document.querySelector("[data-sdlc-wizard-limits-callout]");
-    const classicLimits = document.querySelector("[data-sdlc-classic-limits-callout]");
-    if (wizardLimits instanceof HTMLElement) {
-      wizardLimits.hidden = mode !== "wizard";
-    }
-    if (classicLimits instanceof HTMLElement) {
-      classicLimits.hidden = mode !== "classic";
-    }
-    document.querySelectorAll("[data-sdlc-wizard-only]").forEach((node) => {
-      if (node instanceof HTMLElement) node.hidden = mode !== "wizard";
-    });
-    const wizardBtn = runButtons.find(
-      (btn) => btn instanceof HTMLButtonElement && btn.value === "run",
-    );
-    const classicBtn = runButtons.find(
-      (btn) => btn instanceof HTMLButtonElement && btn.value === "run-classic",
-    );
-    if (wizardBtn instanceof HTMLButtonElement) {
-      wizardBtn.classList.toggle("btn-primary", mode === "wizard");
-      wizardBtn.classList.toggle("btn-secondary", mode !== "wizard");
-    }
-    if (classicBtn instanceof HTMLButtonElement) {
-      classicBtn.classList.toggle("btn-primary", mode === "classic");
-      classicBtn.classList.toggle("btn-secondary", mode !== "classic");
-      classicBtn.hidden = mode !== "classic";
-    }
-    if (wizardBtn instanceof HTMLButtonElement) {
-      wizardBtn.hidden = mode !== "wizard";
-    }
-  };
-  document.querySelectorAll("[data-sdlc-compose-mode]").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      if (!(btn instanceof HTMLButtonElement)) return;
-      const mode = btn.dataset.sdlcComposeMode;
-      if (mode === "wizard" || mode === "classic") setComposeMode(mode);
-    });
-  });
-  setComposeMode("wizard");
   document.querySelectorAll("[data-sdlc-start-new-run], [data-sdlc-rerun-same]").forEach((btn) => {
     btn.addEventListener("click", () => {
       const details = document.getElementById("prompt-optimizer-compose-details");
@@ -376,7 +342,7 @@ export const PROMPT_SDLC_LOCAL_FORM_SCRIPT = `<script>
     form.addEventListener("submit", (event) => {
       const submitter = event.submitter;
       if (!(submitter instanceof HTMLButtonElement)) return;
-      if (!submitter.hasAttribute("data-sdlc-run")) return;
+      if (!submitter.hasAttribute("data-sdlc-run-wizard")) return;
       const reason = readRunBlockReason();
       if (reason !== null) {
         event.preventDefault();
@@ -387,7 +353,9 @@ export const PROMPT_SDLC_LOCAL_FORM_SCRIPT = `<script>
           block: "nearest",
         });
         submitter.focus({ preventScroll: true });
+        return;
       }
+      paintRunButton(true);
     });
   }
   paintReady();
@@ -403,14 +371,7 @@ export const PROMPT_SDLC_LOCAL_FORM_SCRIPT = `<script>
       if (details instanceof HTMLDetailsElement) {
         details.open = document.getElementById("prompt-optimizer-run") === null;
       }
-      runButtons.forEach((btn) => {
-        if (!(btn instanceof HTMLButtonElement)) return;
-        if (btn.value === "run-classic") {
-          btn.textContent = "Classic loop (90 / 10 rounds)";
-        } else {
-          btn.textContent = "Run";
-        }
-      });
+      paintRunButton(false);
       paintReady();
     }
   });

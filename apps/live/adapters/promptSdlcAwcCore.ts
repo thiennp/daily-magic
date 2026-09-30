@@ -61,6 +61,7 @@ export {
   PROMPT_SDLC_WIZARD_PASS_SCORE,
   PROMPT_SDLC_WIZARD_SCHEMA_VERSION,
 } from "@/lib/promptOptimizer/wizard/promptSdlcWizardLimits.constant";
+export { PROMPT_SDLC_COMPOSE_INTRO } from "@/lib/promptOptimizer/promptSdlcComposeIntro.constant";
 export { createInitialPromptSdlcWizardState } from "@/lib/promptOptimizer/wizard/createInitialPromptSdlcWizardState";
 export { normalizePromptSdlcWizardState } from "@/lib/promptOptimizer/wizard/normalizePromptSdlcWizardState";
 export { appendPromptSdlcWizardFeedback } from "@/lib/promptOptimizer/wizard/appendPromptSdlcWizardFeedback";

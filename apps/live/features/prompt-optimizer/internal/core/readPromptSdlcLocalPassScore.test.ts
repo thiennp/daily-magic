@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
 
+import {
+  PROMPT_SDLC_WIZARD_MAX_ROUNDS,
+  PROMPT_SDLC_WIZARD_PASS_SCORE,
+} from "../../../../adapters/promptSdlcAwcCore";
 import { decidePromptSdlcLocalPost } from "./decidePromptSdlcLocalPost";
 import { describePromptSdlcLocalModels } from "./promptSdlcLocalForm";
 import { readPromptSdlcLocalPassScore } from "./readPromptSdlcLocalPassScore";
@@ -15,17 +19,17 @@ describe("readPromptSdlcLocalPassScore", () => {
     expect(readPromptSdlcLocalPassScore("9.5").ok).toBe(false);
   });
 
-  it("starts a run with the posted pass score", () => {
+  it("starts a wizard run with wizard pass score and max rounds", () => {
     const selection = describePromptSdlcLocalModels(["claude-cli"]);
     const decision = decidePromptSdlcLocalPost({
       posted: new URLSearchParams({
-        intent: "run-classic",
+        intent: "run",
         goal: "Stay in the facts.",
         prompt: "Be helpful.",
         folder: "~",
-        passScore: "75",
         judge: "claude-cli",
         improver: "claude-cli",
+        runner: "claude-cli",
       }),
       installedIds: ["claude-cli"],
       selection,
@@ -36,9 +40,9 @@ describe("readPromptSdlcLocalPassScore", () => {
 
     expect(decision.kind).toBe("start");
     if (decision.kind === "start") {
-      expect(decision.passScore).toBe(75);
-      expect(decision.maxRounds).toBe(10);
-      expect(decision.useWizard).toBe(false);
+      expect(decision.passScore).toBe(PROMPT_SDLC_WIZARD_PASS_SCORE);
+      expect(decision.maxRounds).toBe(PROMPT_SDLC_WIZARD_MAX_ROUNDS);
+      expect(decision.runner).toBe("claude-cli");
     }
   });
 });

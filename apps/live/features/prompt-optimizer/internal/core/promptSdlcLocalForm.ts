@@ -13,12 +13,6 @@ import {
   PROMPT_SDLC_LOCAL_GUIDE_GOAL,
   PROMPT_SDLC_LOCAL_GUIDE_WEAK_PROMPT,
 } from "./promptSdlcLocalGuide.constant";
-import {
-  PROMPT_SDLC_WIZARD_VERIFICATION_EXAMPLE,
-  PROMPT_SDLC_WIZARD_VERIFICATION_GOAL,
-  PROMPT_SDLC_WIZARD_VERIFICATION_SOURCE_PROMPT,
-} from "./promptSdlcWizardVerificationScenario";
-
 export const readPromptSdlcLocalStartError = (
   goal: string,
   prompt: string,
@@ -107,12 +101,6 @@ export const shownPromptSdlcLocalWriters = (
 export const readPromptSdlcLocalExampleFields = (
   example: string | null,
 ): { readonly goal: string; readonly prompt: string } => {
-  if (example === PROMPT_SDLC_WIZARD_VERIFICATION_EXAMPLE) {
-    return {
-      goal: PROMPT_SDLC_WIZARD_VERIFICATION_GOAL,
-      prompt: PROMPT_SDLC_WIZARD_VERIFICATION_SOURCE_PROMPT,
-    };
-  }
   if (example === PROMPT_SDLC_LOCAL_GUIDE_EXAMPLE) {
     return {
       goal: PROMPT_SDLC_LOCAL_GUIDE_GOAL,
