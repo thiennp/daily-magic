@@ -92,6 +92,7 @@ export function useCapabilityTemplatePicker({
 
   return {
     isLoading,
+    isTemplatesCatalogEmpty: templates.length === 0,
     activeTab,
     workflowCount,
     agentCount,

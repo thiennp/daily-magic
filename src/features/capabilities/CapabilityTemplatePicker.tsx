@@ -39,7 +39,7 @@ export default function CapabilityTemplatePicker({
     );
   }
 
-  if (picker.displayedTemplates.length === 0 && picker.errorMessage === null) {
+  if (picker.isTemplatesCatalogEmpty && picker.errorMessage === null) {
     return (
       <p className="text-sm text-gray-600 dark:text-gray-400">
         Starter templates are not available right now. Try again in a moment or

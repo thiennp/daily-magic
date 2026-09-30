@@ -61,7 +61,7 @@ export default function ShowcaseCard({
         aria-label={storyLabel}
       />
       {cover ? (
-        <div className="-mx-6 -mt-6 mb-4 overflow-hidden rounded-t-2xl">
+        <div className="-mx-6 -mt-6 mb-4 overflow-hidden rounded-t-2xl pointer-events-none">
           {/* eslint-disable-next-line @next/next/no-img-element -- curated showcase covers */}
           <img
             src={cover.src}
