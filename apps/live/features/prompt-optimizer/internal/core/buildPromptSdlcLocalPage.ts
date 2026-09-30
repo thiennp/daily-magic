@@ -143,7 +143,7 @@ export const buildPromptSdlcLocalPageBody = (input: {
         ${composeMode}
         ${composeHeadActions}
       </div>
-      <form class="sdlc-form" method="POST" action="/prompt-optimizer">
+      <form class="sdlc-form" method="POST" action="/prompt-optimizer" enctype="application/x-www-form-urlencoded">
       <details class="sdlc-compose-details" id="prompt-optimizer-compose-details"${composeOpen}>
         ${composeSummary}
         <div class="sdlc-compose-details-body">

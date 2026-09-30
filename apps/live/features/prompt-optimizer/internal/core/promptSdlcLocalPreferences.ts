@@ -146,18 +146,19 @@ export const freshPromptSdlcLocalComposerDefaults = (input: {
   return {
     selection: {
       ...input.selection,
-      judge: rememberedPromptSdlcLocalActor(
-        preferences.judge,
-        input.installedIds,
-      ),
-      improver: rememberedPromptSdlcLocalActor(
-        preferences.improver,
-        input.installedIds,
-      ),
-      runner: rememberedPromptSdlcLocalActor(
-        preferences.runner,
-        input.installedIds,
-      ),
+      judge:
+        rememberedPromptSdlcLocalActor(preferences.judge, input.installedIds) ||
+        input.selection.judge,
+      improver:
+        rememberedPromptSdlcLocalActor(
+          preferences.improver,
+          input.installedIds,
+        ) || input.selection.improver,
+      runner:
+        rememberedPromptSdlcLocalActor(
+          preferences.runner,
+          input.installedIds,
+        ) || input.selection.runner,
     },
     defaultFolder: rememberedPromptSdlcLocalFolder(preferences.folder),
   };

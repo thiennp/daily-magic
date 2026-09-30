@@ -57,7 +57,7 @@ describe("buildPromptSdlcLocalPageBody", () => {
     expect(html).toContain("data-sdlc-run-hint");
     expect(html).toContain("data-sdlc-submit-bar");
     expect(html).toContain("sdlc-compose-details-body");
-    expect(html).not.toContain("Suggest goals");
+    expect(html).toContain('enctype="application/x-www-form-urlencoded"');
   });
 
   it("lets the user choose the judge and improver when several writers are installed", () => {

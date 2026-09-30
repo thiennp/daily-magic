@@ -62,14 +62,15 @@ export const describePromptSdlcLocalModels = (
     writers.length === 0
       ? "No reasoning model is installed. You can score and rewrite the prompt yourself."
       : `Installed: ${writers.map((writer) => writer.label).join(", ")}.`;
+  const soleWriter = models?.judge ?? "";
   return {
     note,
     canRun: true,
     models,
     writers,
-    judge: "",
-    improver: "",
-    runner: "",
+    judge: soleWriter,
+    improver: models?.improver ?? soleWriter,
+    runner: soleWriter,
   };
 };
 

@@ -10,6 +10,7 @@ import {
   describePromptSdlcLocalModels,
   readPromptSdlcLocalExampleFields,
 } from "./promptSdlcLocalForm";
+import { parsePromptSdlcLocalPostedBody } from "./parsePromptSdlcLocalPostedBody";
 import { readPromptSdlcInstalledWriters } from "./runPromptSdlcLocalCycle";
 import type { PromptSdlcLocalRouteInput } from "./tryHandlePromptSdlcLocalRequest";
 
@@ -21,7 +22,10 @@ export const servePromptSdlcLocalPage = async (
   const selection = describePromptSdlcLocalModels(installedIds);
   const posted =
     input.method === "POST"
-      ? new URLSearchParams(await input.readBody(input.request))
+      ? parsePromptSdlcLocalPostedBody(
+          input.request.headers["content-type"],
+          await input.readBody(input.request),
+        )
       : null;
   if (
     tryAcceptPromptSdlcWizardPost({
