@@ -59,5 +59,8 @@ describe("PROMPT_SDLC_LOCAL_FORM_SCRIPT", () => {
   it("fills the goal field when a quick-fill chip is clicked", () => {
     expect(PROMPT_SDLC_LOCAL_FORM_SCRIPT).toContain("[data-sdlc-goal-preset]");
     expect(PROMPT_SDLC_LOCAL_FORM_SCRIPT).toContain("dataset.sdlcGoalPreset");
+    expect(PROMPT_SDLC_LOCAL_FORM_SCRIPT).toContain(
+      "paintComposeStepError(null)",
+    );
   });
 });

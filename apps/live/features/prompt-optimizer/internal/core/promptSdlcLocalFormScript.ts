@@ -490,6 +490,7 @@ export const PROMPT_SDLC_LOCAL_FORM_SCRIPT = `<script>
       composeForm?.querySelector('[name="goal"]') ?? goalInput;
     if (!(goal instanceof HTMLTextAreaElement)) return;
     goal.value = preset;
+    paintComposeStepError(null);
     goal.dispatchEvent(new Event("input", { bubbles: true }));
     goal.focus();
   });
