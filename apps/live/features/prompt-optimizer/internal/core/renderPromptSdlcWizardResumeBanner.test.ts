@@ -46,4 +46,26 @@ describe("renderPromptSdlcWizardResumeBanner", () => {
     expect(html).toContain("View inputs");
     expect(html).toContain("Open this run");
   });
+
+  it("shows the evaluate step while judging when the gate is not set yet", () => {
+    const active = {
+      ...createPromptSdlcLocalCycle({
+        goal: "Running wizard.",
+        sourcePrompt: "Be helpful.",
+        judgeModel: "claude-cli" as const,
+        improverModel: "codex" as const,
+        wizard: {
+          ...createInitialPromptSdlcWizardState("Be helpful."),
+          phase: "evaluate" as const,
+          gate: null,
+        },
+        runnerModel: "claude-cli" as const,
+      }),
+      status: "judging" as const,
+      judgePromptTextOnly: true,
+    };
+    const html = renderPromptSdlcWizardResumeBanner(active);
+    expect(html).toContain("Step 2 — Evaluate");
+    expect(html).toContain("(step 2 of 4)");
+  });
 });
