@@ -1,4 +1,7 @@
-import { isPromptSdlcTerminalStatus } from "../../../../adapters/promptSdlcAwcCore";
+import {
+  isPromptSdlcTerminalStatus,
+  summarizePromptSdlcWizardCompletion,
+} from "../../../../adapters/promptSdlcAwcCore";
 
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
 import { readPromptSdlcWizardActiveStepIndex } from "./readPromptSdlcWizardActiveStepIndex";
@@ -36,6 +39,21 @@ export const describePromptSdlcLocalHistoryRow = (
     };
   }
   if (isPromptSdlcTerminalStatus(cycle.status)) {
+    if (cycle.wizard.phase === "complete") {
+      const summary = summarizePromptSdlcWizardCompletion(cycle.wizard);
+      const lowest = summary.rows.reduce<number | null>((min, row) => {
+        if (row.bestScore === null) {
+          return min;
+        }
+        return min === null ? row.bestScore : Math.min(min, row.bestScore);
+      }, null);
+      const lowestNote = lowest === null ? "" : ` · lowest ${lowest}`;
+      return {
+        badgeClass: "sdlc-history-badge sdlc-history-badge-done",
+        badgeLabel: "Complete",
+        subtitle: `Wizard · ${summary.passedModuleCount}/${summary.totalModules} modules${lowestNote}`,
+      };
+    }
     return {
       badgeClass: "sdlc-history-badge sdlc-history-badge-done",
       badgeLabel: "Complete",

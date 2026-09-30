@@ -591,8 +591,8 @@ describe("buildPromptSdlcLocalPageBody", () => {
       cycle,
       history: [cycle],
     });
-    expect(html.indexOf("prompt-optimizer-wizard-outcome")).toBeLessThan(
-      html.indexOf("sdlc-run-panel-timeline-compact"),
+    expect(html.indexOf("prompt-optimizer-wizard-module-results")).toBeLessThan(
+      html.indexOf("prompt-optimizer-wizard-outcome"),
     );
     expect(html.indexOf("prompt-optimizer-run")).toBeLessThan(
       html.indexOf("prompt-optimizer-history"),
@@ -602,9 +602,10 @@ describe("buildPromptSdlcLocalPageBody", () => {
     expect(html).toContain("prompt-optimizer-history");
     expect(html).toContain("Wizard finished");
     expect(html).toContain("Review settings");
-    expect(html).toContain("data-sdlc-jump-wizard-results");
+    expect(html).toContain("prompt-optimizer-wizard-module-results");
     expect(html).toContain("data-sdlc-copy-wizard-modules");
     expect(html).toContain("4/4 wizard steps complete");
+    expect(html).not.toContain("data-sdlc-jump-wizard-results");
     expect(html).toContain("New prompt");
     expect(html).toContain("sdlc-run-success-actions");
     expect(html).toContain("Download report (.md)");

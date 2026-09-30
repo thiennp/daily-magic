@@ -67,20 +67,25 @@ export const describePromptSdlcWizardOutcomeStepHint = (
       summary.terminalStatusSuggestion === "passed" &&
       summary.passedModuleCount === summary.totalModules
     ) {
-      const lowest = summary.rows.reduce<number | null>((min, row) => {
+      const lowestRow = summary.rows.reduce<
+        (typeof summary.rows)[number] | null
+      >((best, row) => {
         if (row.bestScore === null) {
-          return min;
+          return best;
         }
-        return min === null ? row.bestScore : Math.min(min, row.bestScore);
+        if (best === null || best.bestScore === null) {
+          return row;
+        }
+        return row.bestScore < best.bestScore ? row : best;
       }, null);
       const totalTokens = summary.rows.reduce(
         (sum, row) => sum + (row.tokens ?? 0),
         0,
       );
-      if (lowest === null) {
+      if (lowestRow === null || lowestRow.bestScore === null) {
         return `${formatPromptSdlcTokenCount(totalTokens)} tokens total`;
       }
-      return `Lowest score ${lowest} · ${formatPromptSdlcTokenCount(totalTokens)} tokens total`;
+      return `Lowest: ${lowestRow.title} (${lowestRow.bestScore}) · ${formatPromptSdlcTokenCount(totalTokens)} tokens`;
     }
     return `${summary.passedModuleCount}/${summary.totalModules} passed · ≥ ${PROMPT_SDLC_WIZARD_PASS_SCORE}`;
   }

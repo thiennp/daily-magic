@@ -33,7 +33,12 @@ export const renderPromptSdlcWizardModuleTable = (
           : summary.terminalStatusSuggestion === "passed"
             ? `${row.bestScore} / ≥${PROMPT_SDLC_WIZARD_PASS_SCORE}`
             : String(row.bestScore);
-      return `<tr><td>${escapeHtml(row.title)}</td><td>${escapeHtml(scoreCell)}</td><td>${row.tokens ?? "—"}</td><td>${escapeHtml(row.status)}</td></tr>`;
+      const statusCell =
+        summary.terminalStatusSuggestion === "passed" &&
+        row.status.toLowerCase() === "passed"
+          ? `<span aria-label="Passed">✓</span>`
+          : escapeHtml(row.status);
+      return `<tr><td>${escapeHtml(row.title)}</td><td>${escapeHtml(scoreCell)}</td><td>${row.tokens ?? "—"}</td><td>${statusCell}</td></tr>`;
     })
     .join("");
   const headlineBlock =

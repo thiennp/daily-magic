@@ -39,7 +39,10 @@ const renderHistoryItem = (
     cycle.status === "wizard_paused"
       ? `<a class="btn btn-secondary sdlc-history-resume" href="/prompt-optimizer?cycle=${escapeHtml(cycle.id)}">Resume</a>`
       : "";
-  return `<li class="sdlc-history-item${openCycleId === cycle.id ? " sdlc-history-item-viewing" : ""}" data-sdlc-history-kind="${historyKind(cycle)}"><div class="sdlc-history-row-main">${viewing}${statusBadge}<div class="sdlc-history-row-copy"><a href="/prompt-optimizer?cycle=${escapeHtml(cycle.id)}">${escapeHtml(promptSdlcLocalHistoryTitle(cycle.goal))}</a><p class="muted">${escapeHtml(subtitle)}</p></div></div><div class="sdlc-history-row-actions">${resume}<form method="POST" action="/prompt-optimizer"><input type="hidden" name="intent" value="delete-history"><input type="hidden" name="cycleId" value="${escapeHtml(cycle.id)}">${open}<button class="btn btn-link sdlc-history-delete" type="submit">Delete</button></form></div></li>`;
+  const deleteForm = isViewing
+    ? ""
+    : `<form method="POST" action="/prompt-optimizer" onsubmit="return confirm('Delete this run from history?');"><input type="hidden" name="intent" value="delete-history"><input type="hidden" name="cycleId" value="${escapeHtml(cycle.id)}">${open}<button class="btn btn-link sdlc-history-delete" type="submit">Delete</button></form>`;
+  return `<li class="sdlc-history-item${openCycleId === cycle.id ? " sdlc-history-item-viewing" : ""}" data-sdlc-history-kind="${historyKind(cycle)}"><div class="sdlc-history-row-main">${viewing}${statusBadge}<div class="sdlc-history-row-copy"><a href="/prompt-optimizer?cycle=${escapeHtml(cycle.id)}">${escapeHtml(promptSdlcLocalHistoryTitle(cycle.goal))}</a><p class="muted">${escapeHtml(subtitle)}</p></div></div><div class="sdlc-history-row-actions">${resume}${deleteForm}</div></li>`;
 };
 
 export const renderPromptSdlcLocalHistory = (

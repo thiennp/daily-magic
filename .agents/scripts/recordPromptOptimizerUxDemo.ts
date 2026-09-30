@@ -81,45 +81,6 @@ const finishedWizard = (): ReturnType<typeof createPromptSdlcLocalCycle> => {
   };
 };
 
-const history = (): ReturnType<typeof createPromptSdlcLocalCycle>[] => {
-  const now = Date.now();
-  const iso = (offsetMs: number): string =>
-    new Date(now - offsetMs).toISOString();
-  return [
-    finishedWizard(),
-    {
-      ...createPromptSdlcLocalCycle({
-        goal: "Classic loop sample",
-        sourcePrompt: "Fix tests",
-        judgeModel: "codex",
-        improverModel: "codex",
-        workingDirectory: "/tmp",
-      }),
-      id: "hist-classic",
-      status: "passed",
-      currentRound: 3,
-      updatedAt: iso(1000 * 60 * 45),
-    },
-    {
-      ...createPromptSdlcLocalCycle({
-        goal: "Paused wizard run",
-        sourcePrompt: "p",
-        judgeModel: "claude-cli",
-        improverModel: "claude-cli",
-        wizard: {
-          ...createInitialPromptSdlcWizardState("p"),
-          gate: "evaluate",
-          phase: "evaluate",
-        },
-      }),
-      id: "hist-wizard-paused",
-      status: "wizard_paused",
-      currentRound: 0,
-      updatedAt: iso(1000 * 60 * 60 * 5),
-    },
-  ];
-};
-
 const main = async (): Promise<void> => {
   const cycle = finishedWizard();
   const body = buildPromptSdlcLocalPageBody({
@@ -139,11 +100,11 @@ const main = async (): Promise<void> => {
     canRun: true,
     errorMessage: null,
     cycle,
-    history: history(),
+    history: [cycle],
   });
 
   const html = buildPromptSdlcLocalArtifactDocument({
-    title: `Prompt optimizer — UX bundle ${BUNDLE}`,
+    title: `Prompt optimizer — UX bundle ${BUNDLE} demo`,
     body,
   });
 
@@ -152,16 +113,18 @@ const main = async (): Promise<void> => {
     ARTIFACTS,
     `prompt-optimizer-ux-bundle-${BUNDLE}.html`,
   );
-  const pngPath = path.join(
-    ARTIFACTS,
-    `prompt-optimizer-ux-bundle-${BUNDLE}.png`,
-  );
   fs.writeFileSync(htmlPath, html);
 
-  const browser = await chromium.launch();
-  const page = await browser.newPage({
-    viewport: { width: 1280, height: 1400 },
+  const browser = await chromium.launch({
+    headless: false,
+    slowMo: 350,
+    args: ["--start-maximized"],
   });
+  const context = await browser.newContext({
+    viewport: { width: 1280, height: 900 },
+    permissions: ["clipboard-read", "clipboard-write"],
+  });
+  const page = await context.newPage();
   await page.goto(`file://${htmlPath}`, { waitUntil: "networkidle" });
   await page.evaluate(() => {
     const history = document.getElementById("prompt-optimizer-history");
@@ -169,10 +132,17 @@ const main = async (): Promise<void> => {
       history.open = true;
     }
   });
-  await page.screenshot({ path: pngPath, fullPage: true });
+  await page.waitForTimeout(1200);
+  await page
+    .locator("#prompt-optimizer-wizard-module-results")
+    .scrollIntoViewIfNeeded();
+  await page.waitForTimeout(800);
+  const copyAll = page.locator("[data-sdlc-copy-wizard-modules]");
+  await copyAll.click();
+  await page.waitForTimeout(2200);
+  await page.locator("[data-sdlc-copy-module-prompt]").first().click();
+  await page.waitForTimeout(2200);
   await browser.close();
-
-  console.log(`Wrote ${pngPath}`);
 };
 
 void main();

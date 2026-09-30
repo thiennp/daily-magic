@@ -4,7 +4,7 @@
  */
 
 /** Bump when any install bundle artifact changes (shell, JS, deps). */
-export const AGENT_WITCH_INSTALL_BUNDLE_VERSION = "194";
+export const AGENT_WITCH_INSTALL_BUNDLE_VERSION = "195";
 
 /** Env / manifest key for the bundle version constant. */
 export const AWI_INSTALL_BUNDLE_VERSION_CANONICAL_KEY =

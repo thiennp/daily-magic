@@ -62,7 +62,7 @@ describe("describePromptSdlcWizardOutcomeStepHint step 4", () => {
       },
     });
     const hint = describePromptSdlcWizardOutcomeStepHint(cycle, "wizard-4");
-    expect(hint).toContain("Lowest score 78");
+    expect(hint).toContain("Lowest: B (78)");
     expect(hint).toContain("430");
     expect(hint).not.toContain("all passed");
   });

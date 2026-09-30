@@ -16,6 +16,7 @@ import { renderPromptSdlcLocalManualStep } from "./renderPromptSdlcLocalManualSt
 import { renderPromptSdlcLocalRevisions } from "./renderPromptSdlcLocalRevisions";
 import { renderPromptSdlcLocalStopForm } from "./renderPromptSdlcLocalStopForm";
 import { renderPromptSdlcWizardOutcome } from "./renderPromptSdlcWizardOutcome";
+import { renderPromptSdlcWizardModuleResults } from "./renderPromptSdlcWizardModuleResults";
 import {
   formatPromptSdlcTokenCount,
   sumPromptSdlcLocalTokens,
@@ -50,6 +51,7 @@ export const buildPromptSdlcLocalCycleSection = (
     ? ""
     : renderPromptSdlcLocalStopForm(cycle);
   const wizardOutcome = renderPromptSdlcWizardOutcome(cycle);
+  const wizardModuleResults = renderPromptSdlcWizardModuleResults(cycle);
   const best = renderPromptSdlcLocalBestPrompt(cycle);
   const error =
     cycle.errorMessage === null
@@ -65,20 +67,12 @@ export const buildPromptSdlcLocalCycleSection = (
     isPromptSdlcTerminalStatus(cycle.status) &&
     (cycle.wizard.phase === "complete" ||
       summarizePromptSdlcWizardCompletion(cycle.wizard).passedModuleCount > 0);
-  const successShortcuts =
-    activitySuccess &&
-    cycle.wizard !== undefined &&
-    cycle.wizard.phase === "complete"
-      ? `<p class="sdlc-run-result-shortcuts"><button type="button" class="btn btn-secondary" data-sdlc-jump-wizard-results>Jump to module results</button><button type="button" class="btn btn-secondary" data-sdlc-copy-wizard-modules>Copy module prompts</button></p>`
-      : "";
   const successActions =
     activitySuccess && cycle.wizard !== undefined
-      ? `${successShortcuts}<p class="sdlc-run-success-actions"><a class="btn btn-primary" href="/prompt-optimizer?cycle=${escapeHtml(cycle.id)}&amp;export=wizard-markdown">Download report (.md)</a><button type="button" class="btn btn-secondary" data-sdlc-rerun-same title="Open compose with your last folder, models, and pass score">Re-run same settings</button></p><p class="muted sdlc-rerun-hint">Re-run opens compose with your last folder, models, and pass score. New prompt clears the form for a different goal.</p>`
+      ? `<p class="sdlc-run-success-actions"><a class="btn btn-primary" href="/prompt-optimizer?cycle=${escapeHtml(cycle.id)}&amp;export=wizard-markdown">Download report (.md)</a><button type="button" class="btn btn-secondary" data-sdlc-rerun-same title="Open compose with your last folder, models, and pass score">Re-run same settings</button></p><p class="muted sdlc-rerun-hint">Re-run keeps settings · New prompt clears the form.</p>`
       : "";
   const detailBlock =
-    activity.detail.length === 0 &&
-    successActions.length === 0 &&
-    successShortcuts.length === 0
+    activity.detail.length === 0 && successActions.length === 0
       ? ""
       : activity.detail.length === 0
         ? ""
@@ -152,10 +146,11 @@ export const buildPromptSdlcLocalCycleSection = (
     cycle.wizard.phase === "complete" &&
     isPromptSdlcTerminalStatus(cycle.status);
   const timeline = wizardRunComplete
-    ? `<div class="sdlc-run-panel sdlc-run-panel-timeline sdlc-run-panel-timeline-compact"><p class="sdlc-run-progress-compact"><span class="sdlc-run-panel-title sdlc-run-progress-compact-title">Progress</span> <span class="muted">4/4 wizard steps complete.</span></p></div>`
+    ? ""
     : `<div class="sdlc-run-panel sdlc-run-panel-timeline"><h3 class="sdlc-run-panel-title">Progress</h3>${steps}</div>`;
-  const grid =
-    scoreScale.length === 0
+  const gridBlock = wizardRunComplete
+    ? ""
+    : scoreScale.length === 0
       ? `<div class="sdlc-run-grid sdlc-run-grid-single">${timeline}</div>`
       : `<div class="sdlc-run-grid">${timeline}${scoreScale}</div>`;
   const revisions = renderPromptSdlcLocalRevisions(cycle);
@@ -174,7 +169,11 @@ export const buildPromptSdlcLocalCycleSection = (
 
   const runGoalChip = `<p class="sdlc-run-goal" title="${escapeHtml(cycle.goal.trim())}">${escapeHtml(promptSdlcLocalHistoryTitle(cycle.goal))}</p>`;
   const runBody = wizardRunComplete
-    ? `${error}${wizardOutcome}${grid}${manual}${best}`
-    : `${error}${grid}${manual}${wizardOutcome}${best}`;
-  return `<section class="card sdlc-run" id="prompt-optimizer-run" data-live="${live ? "true" : "false"}" data-since="${escapeHtml(cycle.updatedAt)}" aria-busy="${live ? "true" : "false"}"><header class="sdlc-run-head"><div class="sdlc-run-head-top"><p class="eyebrow">This run</p>${statusBadge}</div>${runGoalChip}<div class="sdlc-run-activity${activitySuccess ? " sdlc-run-activity-success" : ""}"${activitySuccess ? ' role="status"' : ""}><div class="sdlc-run-activity-icon">${activityIcon}</div><div class="sdlc-run-activity-copy"><h2 class="sdlc-run-title">${escapeHtml(activity.title)}</h2>${detailBlock}${successActions}</div></div>${meta}${actions}</header>${runBody}</section>${promptsHistory}`;
+    ? `${error}${wizardModuleResults}${wizardOutcome}${manual}${best}`
+    : `${error}${gridBlock}${manual}${wizardOutcome}${best}`;
+  const liveRegion = `<div id="sdlc-run-live-region" class="sdlc-sr-only" aria-live="polite" aria-atomic="true"></div>`;
+  const completeNote = wizardRunComplete
+    ? `<p class="muted sdlc-run-complete-note">4/4 wizard steps complete.</p>`
+    : "";
+  return `<section class="card sdlc-run" id="prompt-optimizer-run" data-live="${live ? "true" : "false"}" data-since="${escapeHtml(cycle.updatedAt)}" aria-busy="${live ? "true" : "false"}">${liveRegion}<header class="sdlc-run-head"><div class="sdlc-run-head-top"><p class="eyebrow">This run</p>${statusBadge}</div>${runGoalChip}<div class="sdlc-run-activity${activitySuccess ? " sdlc-run-activity-success" : ""}"${activitySuccess ? ' role="status"' : ""}><div class="sdlc-run-activity-icon">${activityIcon}</div><div class="sdlc-run-activity-copy"><h2 class="sdlc-run-title">${escapeHtml(activity.title)}</h2>${detailBlock}${successActions}${completeNote}</div></div>${meta}${actions}</header>${runBody}</section>${promptsHistory}`;
 };

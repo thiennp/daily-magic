@@ -153,20 +153,33 @@ export const PROMPT_SDLC_WIZARD_CLIENT_SCRIPT = `<script>
     if (details instanceof HTMLDetailsElement) details.open = false;
   }
 
-  const jumpToWizardModuleResults = () => {
-    const target = document.getElementById("prompt-optimizer-wizard-outcome-wizard-4");
-    if (target instanceof HTMLDetailsElement) {
-      target.open = true;
-      target.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
+  const announceCopy = (message) => {
+    const live = document.getElementById("sdlc-run-live-region");
+    if (live instanceof HTMLElement) live.textContent = message;
   };
 
-  document.querySelectorAll("[data-sdlc-jump-wizard-results]").forEach((btn) => {
-    btn.addEventListener("click", jumpToWizardModuleResults);
-  });
+  const copyTextWithFeedback = (button, text, okLabel, announceOk, announceFail) => {
+    if (!(button instanceof HTMLButtonElement)) return;
+    const previous = button.textContent ?? "";
+    void navigator.clipboard
+      .writeText(text)
+      .then(() => {
+        button.textContent = okLabel;
+        announceCopy(announceOk);
+        window.setTimeout(() => {
+          button.textContent = previous;
+        }, 2000);
+      })
+      .catch(() => {
+        announceCopy(announceFail);
+      });
+  };
 
-  document.querySelector("[data-sdlc-copy-wizard-modules]")?.addEventListener("click", () => {
-    const root = document.getElementById("prompt-optimizer-wizard-outcome-wizard-4");
+  const moduleResultsRoot = () =>
+    document.getElementById("prompt-optimizer-wizard-module-results");
+
+  document.querySelector("[data-sdlc-copy-wizard-modules]")?.addEventListener("click", (event) => {
+    const root = moduleResultsRoot();
     if (root === null) return;
     const chunks = [...root.querySelectorAll(".sdlc-wizard-chunk-prompt")]
       .map((node) => node.textContent?.trim() ?? "")
@@ -175,7 +188,31 @@ export const PROMPT_SDLC_WIZARD_CLIENT_SCRIPT = `<script>
     const text = chunks
       .map((prompt, index) => \`## Module \${index + 1}\\n\\n\${prompt}\`)
       .join("\\n\\n");
-    void navigator.clipboard.writeText(text).catch(() => undefined);
+    const button = event.currentTarget;
+    copyTextWithFeedback(
+      button,
+      text,
+      "Copied ✓",
+      "All module prompts copied to clipboard.",
+      "Could not copy module prompts.",
+    );
+  });
+
+  document.querySelectorAll("[data-sdlc-copy-module-prompt]").forEach((btn) => {
+    btn.addEventListener("click", (event) => {
+      const button = event.currentTarget;
+      const row = button instanceof HTMLElement ? button.closest(".sdlc-wizard-module-prompt-row") : null;
+      const pre = row?.querySelector(".sdlc-wizard-chunk-prompt");
+      const text = pre?.textContent?.trim() ?? "";
+      if (text.length === 0) return;
+      copyTextWithFeedback(
+        button,
+        text,
+        "Copied ✓",
+        "Module prompt copied to clipboard.",
+        "Could not copy module prompt.",
+      );
+    });
   });
 
   const outcomeRoot = document.getElementById("prompt-optimizer-wizard-outcome");

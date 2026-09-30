@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import { createInitialPromptSdlcWizardState } from "../../../../adapters/promptSdlcAwcCore";
 import { createPromptSdlcLocalCycle } from "./createPromptSdlcLocalCycle";
+import { renderPromptSdlcWizardModuleResults } from "./renderPromptSdlcWizardModuleResults";
 import { renderPromptSdlcWizardOutcome } from "./renderPromptSdlcWizardOutcome";
 
 describe("renderPromptSdlcWizardOutcome", () => {
@@ -23,10 +24,10 @@ describe("renderPromptSdlcWizardOutcome", () => {
       status: "stopped",
     });
     expect(html).toContain('id="prompt-optimizer-wizard-outcome"');
-    expect(html).toContain("Step details");
+    expect(html).toContain("Process details");
   });
 
-  it("renders a module summary table when modules exist", () => {
+  it("renders process details without step 4 when the wizard is complete", () => {
     const cycle = createPromptSdlcLocalCycle({
       goal: "g",
       sourcePrompt: "p",
@@ -65,15 +66,16 @@ describe("renderPromptSdlcWizardOutcome", () => {
       ...cycle,
       status: "passed",
     });
-    expect(html).toContain("sdlc-wizard-outcome-table");
-    expect(html).toContain("Main");
-    expect(html).toContain("5");
-    expect(html).toContain(
-      'id="prompt-optimizer-wizard-outcome-wizard-4" open',
-    );
-    expect(html).toContain("prompt-optimizer-wizard-outcome-wizard-4");
-    expect(html).not.toContain("<h3>Modules</h3>");
+    expect(html).toContain("sdlc-wizard-process-details");
+    expect(html).not.toContain("prompt-optimizer-wizard-outcome-wizard-4");
     expect(html).toContain("data-sdlc-outcome-expand-all");
+    const moduleHtml = renderPromptSdlcWizardModuleResults({
+      ...cycle,
+      status: "passed",
+    });
+    expect(moduleHtml).toContain("prompt-optimizer-wizard-module-results");
+    expect(moduleHtml).toContain("sdlc-wizard-outcome-table");
+    expect(moduleHtml).toContain("data-sdlc-copy-wizard-modules");
   });
 
   it("returns empty for an in-progress wizard", () => {
