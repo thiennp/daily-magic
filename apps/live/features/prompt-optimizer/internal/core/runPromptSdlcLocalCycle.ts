@@ -10,6 +10,7 @@ import {
   openPromptSdlcLocalCycleAbort,
 } from "./stopPromptSdlcLocalCycle";
 import { forgetPromptSdlcWriterReady } from "./promptSdlcWriterReadyStore";
+import { preparePromptSdlcLocalCycleForRun } from "./preparePromptSdlcLocalCycleForRun";
 import {
   readPromptSdlcLocalCycle,
   savePromptSdlcLocalCycle,
@@ -41,13 +42,15 @@ const runUntilTerminal = async (
   cycleId: string,
   signal: AbortSignal,
 ): Promise<void> => {
-  const cycle = readPromptSdlcLocalCycle(storePath, cycleId);
+  const stored = readPromptSdlcLocalCycle(storePath, cycleId);
+  if (stored === null || signal.aborted) {
+    return;
+  }
+  const cycle = preparePromptSdlcLocalCycleForRun(storePath, stored);
   if (
-    cycle === null ||
     isPromptSdlcTerminalStatus(cycle.status) ||
     cycle.status === "wizard_paused" ||
-    isPromptSdlcLocalManualWait(cycle) ||
-    signal.aborted
+    isPromptSdlcLocalManualWait(cycle)
   ) {
     return;
   }
@@ -84,9 +87,12 @@ export const ensurePromptSdlcLocalCycleRunning = (
     return;
   }
 
-  const cycle = readPromptSdlcLocalCycle(storePath, cycleId);
+  const stored = readPromptSdlcLocalCycle(storePath, cycleId);
+  if (stored === null) {
+    return;
+  }
+  const cycle = preparePromptSdlcLocalCycleForRun(storePath, stored);
   if (
-    cycle === null ||
     isPromptSdlcTerminalStatus(cycle.status) ||
     cycle.status === "wizard_paused" ||
     isPromptSdlcLocalManualWait(cycle)

@@ -1,6 +1,14 @@
 # Prompt optimizer — known issues
 
-No open issues. Recent fixes (bundle **166–186**):
+## Writer JSON parse failures (generalize / separate)
+
+**Symptom:** `#prompt-optimizer-run` shows an `alert-error` such as “The writer JSON was cut off…” or a raw `JSON.parse` message after wizard **generalize** or **separate** runs.
+
+**Fixed (code):** Wizard replies are parsed with brace-aware `readJsonObjects` (not `lastIndexOf("}")`), with a repair pass for unescaped newlines inside JSON strings. Trailing prose that contains `}` no longer corrupts the slice.
+
+**Still possible:** Replies truncated by the writer CLI token/output limit, or strings that contain unescaped `"` inside `templatedPrompt`, can still fail. Retry the step or add gate instructions to return compact single-line JSON.
+
+No other open issues. Recent fixes (bundle **166–186**):
 
 - Wizard completion uses honest **passed** vs **stopped** when not every module meets the wizard pass score; outcome table lists per-module score, tokens, and status (bundle **186**).
 - Compose: wizard-only **Run** (classic loop removed from UI and `run-classic` intent); sticky bar spacing; Run shows spinner + `aria-busy` while starting; wizard resume card shows live status + **View inputs** for active runs (bundle **201**).
@@ -15,6 +23,8 @@ No open issues. Recent fixes (bundle **166–186**):
 
 - Wizard steps stack in a collapsed accordion; Continue / Run update the page via live HTML fragments (no full reload). While a run is active, `#prompt-optimizer-compose` is hidden (`sdlc-compose-run-focus`) so **This run** and wizard gates stay in view; finished runs show the collapsed compose summary. Live poll attaches after wizard Run even when `#prompt-optimizer-run` was not in the first paint.
 
+- Step 1 **Generalize** auto-continues to evaluate when the writer returns a concrete templated prompt with **no** `variables` rows and **no** `{{placeholders}}` (bundle **210**).
+- Step 2 **Evaluate** auto-continues to separate when the best (or selected) revision passes the wizard quality gate (score ≥ 70, `passed: true`). Step 3 **Separate** auto-continues to Step 4 when the writer returns one option with a single module (bundle **212**).
 - Generalize gate prompt appears after live poll without full reload.
 - Compose form stays locked at wizard gates (not unlocked by `sdlc-run-finished`).
 - Runner writer readiness is probed like judge/improver (`data-writer-status="runner"`).

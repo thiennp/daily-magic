@@ -91,6 +91,11 @@ export {
 export { substitutePromptSdlcTemplate } from "@/lib/promptOptimizer/wizard/substitutePromptSdlcTemplate";
 export { substitutePromptSdlcTemplateValues } from "@/lib/promptOptimizer/wizard/substitutePromptSdlcTemplateValues";
 export { listPromptTemplatePlaceholders } from "@/lib/promptOptimizer/wizard/listPromptTemplatePlaceholders";
+export { shouldSkipPromptSdlcWizardGeneralizeReview } from "@/lib/promptOptimizer/wizard/shouldSkipPromptSdlcWizardGeneralizeReview";
+export { shouldSkipPromptSdlcWizardEvaluateReview } from "@/lib/promptOptimizer/wizard/shouldSkipPromptSdlcWizardEvaluateReview";
+export { shouldSkipPromptSdlcWizardSeparateReview } from "@/lib/promptOptimizer/wizard/shouldSkipPromptSdlcWizardSeparateReview";
+export { passesPromptSdlcWizardEvaluateQualityGate } from "@/lib/promptOptimizer/wizard/passesPromptSdlcWizardEvaluateQualityGate";
+export { modulesFromPromptSdlcWizardSplitOption } from "@/lib/promptOptimizer/wizard/modulesFromPromptSdlcWizardSplitOption";
 export {
   buildPromptSdlcWizardSubstitutionMap,
   seedPromptSdlcWizardParameterValues,

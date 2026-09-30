@@ -147,7 +147,7 @@ describe("prompt SDLC wizard does not skip step 2 (evaluate)", () => {
         }
         if (input.prompt.includes("wizard step 2 (evaluate revisions)")) {
           judgeCalls += 1;
-          const score = judgeCalls === 1 ? 58 : 84;
+          const score = judgeCalls === 1 ? 58 : 65;
           return {
             ok: true,
             text: JSON.stringify({
@@ -269,7 +269,7 @@ describe("prompt SDLC wizard does not skip step 2 (evaluate)", () => {
     expect(pageAtEvaluate).toContain("Step 2 — Evaluate");
     expect(pageAtEvaluate).toContain("{{escalation_trigger}}");
     expect(pageAtEvaluate).toContain("Round 0 — 58");
-    expect(pageAtEvaluate).toContain("Round 1 — 84");
+    expect(pageAtEvaluate).toContain("Round 1 — 65");
     expect(pageAtEvaluate).not.toContain("Step 3 — Separate");
 
     const proofPath = path.join(

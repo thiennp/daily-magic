@@ -27,6 +27,35 @@ describe("advancePromptSdlcWizardLocal", () => {
     vi.restoreAllMocks();
   });
 
+  it("skips the step 1 gate when generalize has no variables or placeholders", async () => {
+    vi.spyOn(writerReply, "runPromptSdlcWriterReply").mockResolvedValue({
+      ok: true,
+      text: JSON.stringify({
+        templatedPrompt: "Answer only from the ticket text.",
+        variables: [],
+      }),
+      tokens: 8,
+    });
+
+    const cycle = createPromptSdlcLocalCycle({
+      goal: "Stay factual.",
+      sourcePrompt: "Be helpful.",
+      judgeModel: "claude-cli",
+      improverModel: "claude-cli",
+      workingDirectory: storeDir,
+      wizard: createInitialPromptSdlcWizardState("Be helpful."),
+    });
+
+    const next = await advancePromptSdlcWizardLocal(cycle);
+
+    expect(next.status).toBe("judging");
+    expect(next.wizard?.phase).toBe("evaluate");
+    expect(next.wizard?.gate).toBeNull();
+    expect(next.revisions[0]?.promptText).toBe(
+      "Answer only from the ticket text.",
+    );
+  });
+
   it("generalizes then pauses at the step 1 gate", async () => {
     vi.spyOn(writerReply, "runPromptSdlcWriterReply").mockResolvedValue({
       ok: true,
@@ -182,13 +211,10 @@ describe("advancePromptSdlcWizardLocal", () => {
     expect(capturedPrompt).toContain("Edit {{targetFile}} under {{searchDir}}");
     expect(capturedPrompt).toContain("Improved prompt from evaluate");
     expect(capturedPrompt).toContain("do not paste sample values");
-    expect(next.wizard?.gate).toBe("separate");
-    expect(next.wizard?.splitOptions[0]?.modules[0]?.prompt).toContain(
-      "{{targetFile}}",
-    );
-    expect(next.wizard?.splitOptions[0]?.modules[0]?.prompt).not.toContain(
-      "Comparison.tsx",
-    );
+    expect(next.wizard?.gate).toBe("optimize_modules");
+    expect(next.wizard?.phase).toBe("optimize_modules");
+    expect(next.wizard?.modules[0]?.prompt).toContain("{{targetFile}}");
+    expect(next.wizard?.modules[0]?.prompt).not.toContain("Comparison.tsx");
   });
 
   it("stays failed when evaluate judge returns no score instead of an empty step 2 gate", async () => {

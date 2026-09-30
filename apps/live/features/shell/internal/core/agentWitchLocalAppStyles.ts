@@ -500,6 +500,10 @@ tbody tr:last-child td { border-bottom: none; }
   font-weight: 600;
 }
 
+.history-dialog-body .sdlc-node-dialog-goal {
+  margin: 0.5rem 0 0.75rem;
+}
+
 pre {
   margin: 0.75rem 0 0;
   padding: 0.75rem;
@@ -872,6 +876,9 @@ form.sdlc-form { display: flex; flex-direction: column; }
 .sdlc-compose-step .sdlc-submit-bar {
   margin-top: 0;
   padding-top: 0.75rem;
+}
+.sdlc-compose-step[data-sdlc-compose-step="4"] .sdlc-submit.sdlc-compose-step-actions {
+  padding-top: 0.65rem;
 }
 .sdlc-compose-summary {
   cursor: pointer;

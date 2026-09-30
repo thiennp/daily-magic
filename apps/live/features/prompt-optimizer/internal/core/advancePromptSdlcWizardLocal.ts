@@ -17,7 +17,12 @@ import {
   substitutePromptSdlcTemplateValues,
   finalizePromptSdlcWizardModuleRun,
   collectPromptSdlcWizardModuleStatistics,
+  shouldSkipPromptSdlcWizardGeneralizeReview,
+  shouldSkipPromptSdlcWizardEvaluateReview,
+  shouldSkipPromptSdlcWizardSeparateReview,
 } from "../../../../adapters/promptSdlcAwcCore";
+import { beginPromptSdlcWizardOptimizeModulesAfterSeparate } from "./beginPromptSdlcWizardOptimizeModulesAfterSeparate";
+import { beginPromptSdlcWizardSeparateAfterEvaluate } from "./beginPromptSdlcWizardSeparateAfterEvaluate";
 import { PROMPT_SDLC_MANUAL_ACTOR } from "./choosePromptSdlcLocalModels";
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
 import { promptSdlcLocalWorkingDirectory } from "./promptSdlcLocalFolder";
@@ -134,7 +139,7 @@ const pauseAtGate = (
 ): PromptSdlcLocalCycle => ({
   ...cycle,
   status: "wizard_paused",
-  errorMessage: cycle.errorMessage,
+  errorMessage: null,
   wizard:
     cycle.wizard === undefined
       ? undefined
@@ -221,13 +226,17 @@ const runGeneralize = async (
           ? null
           : wizard.pendingStepInstructions,
     });
-    return pauseAtGate(
-      {
-        ...cycle,
-        wizard: nextWizard,
-      },
-      "generalize",
-    );
+    const withWizard = {
+      ...cycle,
+      wizard: nextWizard,
+    };
+    if (shouldSkipPromptSdlcWizardGeneralizeReview(nextWizard)) {
+      return beginPromptSdlcWizardEvaluate({
+        ...withWizard,
+        wizard: { ...nextWizard, gate: null },
+      });
+    }
+    return pauseAtGate(withWizard, "generalize");
   } catch (error) {
     return pauseWizardWriterFailure(
       cycle,
@@ -296,13 +305,17 @@ const runSeparate = async (
           ? null
           : wizard.pendingStepInstructions,
     });
-    return pauseAtGate(
-      {
-        ...cycle,
-        wizard: nextWizard,
-      },
-      "separate",
-    );
+    const withOptions = {
+      ...cycle,
+      wizard: nextWizard,
+    };
+    if (shouldSkipPromptSdlcWizardSeparateReview(options)) {
+      return beginPromptSdlcWizardOptimizeModulesAfterSeparate(
+        withOptions,
+        options[0],
+      );
+    }
+    return pauseAtGate(withOptions, "separate");
   } catch (error) {
     return pauseWizardWriterFailure(
       cycle,
@@ -442,6 +455,7 @@ export const advancePromptSdlcWizardLocal = async (
       ) {
         return next;
       }
+      let gateCandidate = next;
       if (gate === "evaluate" && next.wizard.evaluateSelectedRound === null) {
         const best = selectPromptSdlcBestPrompt(
           next.revisions.map((item) => ({
@@ -453,21 +467,27 @@ export const advancePromptSdlcWizardLocal = async (
         );
         const defaultRound =
           best?.roundNumber ?? next.revisions.at(-1)?.roundNumber ?? 0;
-        const paused = pauseAtGate(
-          {
-            ...next,
-            wizard: {
-              ...next.wizard,
-              evaluateSelectedRound: defaultRound,
-            },
+        gateCandidate = {
+          ...next,
+          wizard: {
+            ...next.wizard,
+            evaluateSelectedRound: defaultRound,
           },
-          gate,
-        );
-        return gate === "evaluate"
-          ? snapshotEvaluateWizardAttempt(paused)
-          : paused;
+        };
       }
-      const paused = pauseAtGate(next, gate);
+      if (
+        gate === "evaluate" &&
+        shouldSkipPromptSdlcWizardEvaluateReview({
+          revisions: gateCandidate.revisions,
+          wizard: gateCandidate.wizard!,
+        })
+      ) {
+        const snapshotted = snapshotEvaluateWizardAttempt(
+          pauseAtGate(gateCandidate, gate),
+        );
+        return beginPromptSdlcWizardSeparateAfterEvaluate(snapshotted);
+      }
+      const paused = pauseAtGate(gateCandidate, gate);
       const withModulePaused =
         gate === "optimize_modules" && paused.wizard !== undefined
           ? (() => {

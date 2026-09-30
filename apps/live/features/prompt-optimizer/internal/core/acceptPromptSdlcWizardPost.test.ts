@@ -59,6 +59,64 @@ describe("tryAcceptPromptSdlcWizardPost", () => {
     expect(saved?.revisions[0]?.promptText).toBe("Do hello");
   });
 
+  it("continues into evaluate when generalize output exists despite a stale error message", () => {
+    const storeDir = fs.mkdtempSync(
+      path.join(os.tmpdir(), "prompt-sdlc-post-stale-err-"),
+    );
+    const storePath = path.join(storeDir, "prompt-optimizer-cycles.json");
+    const cycle = {
+      ...createPromptSdlcLocalCycle({
+        goal: "g",
+        sourcePrompt: "p",
+        judgeModel: "claude-cli",
+        improverModel: "claude-cli",
+        workingDirectory: storeDir,
+        wizard: {
+          ...createInitialPromptSdlcWizardState("Do {{x}}"),
+          gate: "generalize",
+          templatedPrompt: "Do {{x}}",
+          variables: [{ name: "x", description: "d", sampleValue: "hello" }],
+          attempts: [
+            {
+              id: "attempt-generalize-1",
+              step: "generalize",
+              attemptNumber: 1,
+              output: {
+                templatedPrompt: "Do {{x}}",
+                variables: [
+                  { name: "x", description: "d", sampleValue: "hello" },
+                ],
+              },
+              userFeedback: null,
+              stepInstructions: null,
+              createdAt: "2026-01-01T00:00:00.000Z",
+            },
+          ],
+        },
+      }),
+      status: "wizard_paused" as const,
+      errorMessage: "Old writer error from a prior attempt.",
+    };
+    savePromptSdlcLocalCycle(storePath, cycle);
+
+    tryAcceptPromptSdlcWizardPost({
+      posted: new URLSearchParams({
+        intent: "wizard-continue",
+        cycleId: cycle.id,
+      }),
+      storePath,
+      response: {
+        writeHead: () => undefined,
+        end: () => undefined,
+      },
+    });
+
+    const saved = readPromptSdlcLocalCycle(storePath, cycle.id);
+    expect(saved?.wizard?.phase).toBe("evaluate");
+    expect(saved?.status).toBe("judging");
+    expect(saved?.errorMessage).toBeNull();
+  });
+
   it("retries generalize when Continue is used after a writer failure", () => {
     const storeDir = fs.mkdtempSync(
       path.join(os.tmpdir(), "prompt-sdlc-post-retry-"),

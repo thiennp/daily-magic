@@ -19,6 +19,7 @@ import {
 import { readPromptSdlcFolderSkill } from "./readPromptSdlcFolderSkills";
 import { readPromptSdlcChosenWritersReady } from "./probePromptSdlcWriterReady";
 import { findResumablePromptSdlcWizardCycle } from "./findResumablePromptSdlcWizardCycle";
+import { preparePromptSdlcLocalCycleForRun } from "./preparePromptSdlcLocalCycleForRun";
 import { ensurePromptSdlcLocalCycleRunning } from "./runPromptSdlcLocalCycle";
 import type { PromptSdlcLocalRouteInput } from "./tryHandlePromptSdlcLocalRequest";
 
@@ -158,11 +159,12 @@ export const presentPromptSdlcLocalComposer = async (input: {
     return;
   }
 
-  const cycle =
+  let cycle =
     input.cycleId === null
       ? null
       : readPromptSdlcLocalCycle(input.route.storePath, input.cycleId);
   if (cycle !== null) {
+    cycle = preparePromptSdlcLocalCycleForRun(input.route.storePath, cycle);
     ensurePromptSdlcLocalCycleRunning(input.route.storePath, cycle.id);
   }
 

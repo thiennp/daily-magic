@@ -2,15 +2,15 @@ import {
   appendPromptSdlcWizardFeedback,
   invalidatePromptSdlcWizardDownstream,
   mergePromptSdlcWizardPostedParameterValues,
-  seedPromptSdlcWizardParameterValues,
   summarizePromptSdlcWizardCompletion,
-  type PromptSdlcWizardSplitOption,
 } from "../../../../adapters/promptSdlcAwcCore";
 
 import {
   beginPromptSdlcWizardEvaluate,
   beginPromptSdlcWizardModuleEvaluate,
 } from "./advancePromptSdlcWizardLocal";
+import { beginPromptSdlcWizardOptimizeModulesAfterSeparate } from "./beginPromptSdlcWizardOptimizeModulesAfterSeparate";
+import { beginPromptSdlcWizardSeparateAfterEvaluate } from "./beginPromptSdlcWizardSeparateAfterEvaluate";
 import { buildPromptSdlcLiveRunFragmentHtml } from "./buildPromptSdlcLiveRunFragmentHtml";
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
 import {
@@ -45,20 +45,6 @@ const resumeWizardStepAfterWriterFailure = (
         },
   updatedAt: new Date().toISOString(),
 });
-
-const modulesFromSplit = (
-  option: PromptSdlcWizardSplitOption,
-): NonNullable<PromptSdlcLocalCycle["wizard"]>["modules"] =>
-  [...option.modules]
-    .sort((left, right) => left.order - right.order)
-    .map((item) => ({
-      moduleId: item.id,
-      title: item.title,
-      prompt: item.prompt,
-      status: "pending" as const,
-      selectedRevisionRound: null,
-      statistics: null,
-    }));
 
 export const tryAcceptPromptSdlcWizardPost = (input: {
   readonly posted: URLSearchParams | null;
@@ -143,6 +129,7 @@ export const tryAcceptPromptSdlcWizardPost = (input: {
     const next: PromptSdlcLocalCycle = {
       ...cycle,
       status: "judging",
+      errorMessage: null,
       wizard: {
         ...wizard,
         gate: null,
@@ -163,7 +150,12 @@ export const tryAcceptPromptSdlcWizardPost = (input: {
     }
 
     if (gate === "generalize") {
-      const writerFailed = (cycle.errorMessage?.trim().length ?? 0) > 0;
+      const hasSuccessfulGeneralizeAttempt = cycle.wizard.attempts.some(
+        (item) => item.step === "generalize",
+      );
+      const writerFailed =
+        (cycle.errorMessage?.trim().length ?? 0) > 0 &&
+        !hasSuccessfulGeneralizeAttempt;
       const next = writerFailed
         ? resumeWizardStepAfterWriterFailure(cycle)
         : beginPromptSdlcWizardEvaluate({
@@ -196,23 +188,13 @@ export const tryAcceptPromptSdlcWizardPost = (input: {
         finish(cycleId);
         return true;
       }
-      const wizardWithRound = {
-        ...cycle.wizard,
-        evaluateSelectedRound,
-      };
-      const next: PromptSdlcLocalCycle = {
+      const next = beginPromptSdlcWizardSeparateAfterEvaluate({
         ...cycle,
-        status: "judging",
-        judgePromptTextOnly: false,
-        errorMessage: null,
         wizard: {
-          ...wizardWithRound,
-          gate: null,
-          phase: "separate",
-          splitOptions: [],
+          ...cycle.wizard,
+          evaluateSelectedRound,
         },
-        updatedAt: new Date().toISOString(),
-      };
+      });
       savePromptSdlcLocalCycle(input.storePath, next);
       ensurePromptSdlcLocalCycleRunning(input.storePath, cycleId);
       finish(cycleId);
@@ -220,7 +202,9 @@ export const tryAcceptPromptSdlcWizardPost = (input: {
     }
 
     if (gate === "separate") {
-      const writerFailed = (cycle.errorMessage?.trim().length ?? 0) > 0;
+      const writerFailed =
+        (cycle.errorMessage?.trim().length ?? 0) > 0 &&
+        cycle.wizard.splitOptions.length === 0;
       if (writerFailed) {
         const next = resumeWizardStepAfterWriterFailure(cycle);
         savePromptSdlcLocalCycle(input.storePath, next);
@@ -245,27 +229,10 @@ export const tryAcceptPromptSdlcWizardPost = (input: {
         finish(cycleId);
         return true;
       }
-      const modules = modulesFromSplit(option);
-      const next: PromptSdlcLocalCycle = {
-        ...cycle,
-        status: "wizard_paused",
-        errorMessage: null,
-        revisions: [],
-        wizard: {
-          ...cycle.wizard,
-          gate: "optimize_modules",
-          selectedSplitOptionId: splitId,
-          selectedSplitTopology: option.topology,
-          modules,
-          phase: "optimize_modules",
-          currentModuleIndex: 0,
-          parameterValues:
-            Object.keys(cycle.wizard.parameterValues ?? {}).length > 0
-              ? (cycle.wizard.parameterValues ?? {})
-              : seedPromptSdlcWizardParameterValues(cycle.wizard.variables),
-        },
-        updatedAt: new Date().toISOString(),
-      };
+      const next = beginPromptSdlcWizardOptimizeModulesAfterSeparate(
+        cycle,
+        option,
+      );
       savePromptSdlcLocalCycle(input.storePath, next);
       finish(cycleId);
       return true;

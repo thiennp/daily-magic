@@ -36,6 +36,8 @@ describe("wizard step timeline modal", () => {
       }),
     );
     expect(html).toContain("Step 1 — Generalize");
+    expect(html).toContain("<dt>Goal</dt>");
+    expect(html).toContain("Ship a skill.");
     expect(html).toContain("{{issue}}");
     expect(html).toContain("Templated prompt");
     expect(html).not.toContain("Not scored yet");

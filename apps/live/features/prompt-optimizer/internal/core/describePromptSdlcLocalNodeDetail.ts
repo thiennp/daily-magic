@@ -6,6 +6,7 @@ import { renderPromptSdlcWizardStepModalBody } from "./renderPromptSdlcWizardSte
 
 export interface PromptSdlcLocalNodeDetail {
   readonly title: string;
+  readonly goal: string | null;
   readonly scoreLabel: string | null;
   readonly feedback: string | null;
   readonly promptText: string | null;
@@ -22,15 +23,22 @@ const roundFromStepId = (id: string): number | null => {
   return Number.isInteger(round) ? round : null;
 };
 
+const readCycleGoal = (cycle: PromptSdlcLocalCycle): string | null => {
+  const trimmed = cycle.goal.trim();
+  return trimmed.length === 0 ? null : trimmed;
+};
+
 const detailForPrompt = (
   title: string,
   promptText: string,
   score: number | null,
   feedback: string | null,
+  goal: string | null,
 ): PromptSdlcLocalNodeDetail => {
   const promptNote = describePromptSdlcWriterTerminalFailure(promptText);
   return {
     title,
+    goal,
     scoreLabel: score === null ? null : `Score ${score} / 100`,
     feedback,
     promptText: promptNote === null ? promptText : null,
@@ -43,10 +51,12 @@ export const describePromptSdlcLocalNodeDetail = (
   cycle: PromptSdlcLocalCycle,
   step: PromptSdlcStep,
 ): PromptSdlcLocalNodeDetail => {
+  const goal = readCycleGoal(cycle);
   if (step.id.startsWith("wizard-")) {
     const bodyHtml = renderPromptSdlcWizardStepModalBody(cycle, step.id);
     return {
       title: step.label,
+      goal,
       scoreLabel: null,
       feedback: step.detail,
       promptText: null,
@@ -66,6 +76,7 @@ export const describePromptSdlcLocalNodeDetail = (
     if (best === null) {
       return {
         title: step.label,
+        goal,
         scoreLabel: null,
         feedback: cycle.errorMessage,
         promptText: null,
@@ -78,6 +89,7 @@ export const describePromptSdlcLocalNodeDetail = (
       best.promptText,
       best.score,
       best.reasons,
+      goal,
     );
   }
 
@@ -90,6 +102,7 @@ export const describePromptSdlcLocalNodeDetail = (
   if (revision === undefined) {
     return {
       title: step.label,
+      goal,
       scoreLabel: null,
       feedback: step.detail,
       promptText: null,
@@ -103,5 +116,6 @@ export const describePromptSdlcLocalNodeDetail = (
     revision.promptText,
     revision.judgement?.score ?? null,
     revision.judgement?.reasons ?? step.detail,
+    goal,
   );
 };
