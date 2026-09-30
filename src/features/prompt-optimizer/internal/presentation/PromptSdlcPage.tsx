@@ -17,7 +17,7 @@ export default function PromptSdlcPage(): ReactElement {
     <div className="space-y-6">
       <AppPageHeader
         title="Prompt optimizer"
-        description="Run the four-step wizard or the classic judge/improver loop in Agent Witch Live on this Mac. A judge scores your prompt; an improver rewrites it using your Playbook (team standards) and project code in the folder you choose."
+        description="Run the four-step prompt optimizer wizard in Agent Witch Live on this Mac. A judge scores your prompt; a runner executes module trials; writers use your Playbook (team standards) and project code in the folder you choose."
       />
       <ol
         className={`${APP_SURFACE_BODY_TEXT_CLASS} max-w-xl list-decimal space-y-4 pl-5`}

@@ -1,6 +1,5 @@
 import {
   type HarnessWriterAgent,
-  PROMPT_SDLC_PASS_SCORE,
   PROMPT_SDLC_WIZARD_MAX_ROUNDS,
   PROMPT_SDLC_WIZARD_PASS_SCORE,
 } from "../../../../adapters/promptSdlcAwcCore";
@@ -8,11 +7,6 @@ import {
   readPromptSdlcLocalRunnerModel,
   readPromptSdlcLocalRunModels,
 } from "./choosePromptSdlcLocalModels";
-import {
-  promptSdlcLocalMaxRoundsText,
-  readPromptSdlcLocalMaxRounds,
-} from "./readPromptSdlcLocalMaxRounds";
-import { readPromptSdlcLocalPassScore } from "./readPromptSdlcLocalPassScore";
 import {
   displayPromptSdlcLocalFolder,
   PROMPT_SDLC_LOCAL_DEFAULT_FOLDER,
@@ -40,17 +34,12 @@ type PromptSdlcLocalStartBase = {
   readonly sourceSkillFile: string;
   readonly judgeInstructions: string;
   readonly improverInstructions: string;
+  readonly runner: HarnessWriterAgent;
+  readonly runnerInstructions: string;
 };
 
 export type PromptSdlcLocalPostDecision =
-  | (PromptSdlcLocalStartBase & {
-      readonly useWizard: true;
-      readonly runner: HarnessWriterAgent;
-      readonly runnerInstructions: string;
-    })
-  | (PromptSdlcLocalStartBase & {
-      readonly useWizard: false;
-    })
+  | PromptSdlcLocalStartBase
   | {
       readonly kind: "form";
       readonly goal: string;
@@ -82,11 +71,8 @@ export const decidePromptSdlcLocalPost = (input: {
     input.posted?.get("improver") ?? null,
     input.posted?.get("runner") ?? null,
   );
-  const typedPassScore =
-    input.posted?.get("passScore") ?? String(PROMPT_SDLC_PASS_SCORE);
-  const typedMaxRounds = promptSdlcLocalMaxRoundsText(
-    input.posted?.get("maxRounds") ?? null,
-  );
+  const typedPassScore = String(PROMPT_SDLC_WIZARD_PASS_SCORE);
+  const typedMaxRounds = String(PROMPT_SDLC_WIZARD_MAX_ROUNDS);
   const judgeInstructions =
     input.posted?.get("judgeInstructions")?.trim() ?? "";
   const improverInstructions =
@@ -127,7 +113,7 @@ export const decidePromptSdlcLocalPost = (input: {
   }
 
   const intent = input.posted.get("intent") ?? "";
-  if (intent !== "run" && intent !== "run-classic") {
+  if (intent !== "run") {
     return form(typedFolder, null);
   }
 
@@ -150,47 +136,14 @@ export const decidePromptSdlcLocalPost = (input: {
     return form(typedFolder, folder.errorMessage);
   }
 
-  const useWizard = intent !== "run-classic";
-  const passScore = useWizard
-    ? { ok: true as const, passScore: PROMPT_SDLC_WIZARD_PASS_SCORE }
-    : readPromptSdlcLocalPassScore(typedPassScore);
-  if (!passScore.ok) {
-    return form(typedFolder, passScore.errorMessage);
+  const runner = readPromptSdlcLocalRunnerModel(
+    input.installedIds,
+    postedRunner,
+    chosen.judge,
+  );
+  if (runner === null) {
+    return form(typedFolder, "Choose a runner for wizard step 4.");
   }
-  const maxRounds = useWizard
-    ? { ok: true as const, maxRounds: PROMPT_SDLC_WIZARD_MAX_ROUNDS }
-    : readPromptSdlcLocalMaxRounds(typedMaxRounds);
-  if (!maxRounds.ok) {
-    return form(typedFolder, maxRounds.errorMessage);
-  }
-
-  if (useWizard) {
-    const runner = readPromptSdlcLocalRunnerModel(
-      input.installedIds,
-      postedRunner,
-      chosen.judge,
-    );
-    if (runner === null) {
-      return form(typedFolder, "Choose a runner for wizard step 4.");
-    }
-    return {
-      kind: "start",
-      goal: input.goal,
-      prompt: input.prompt,
-      judge: chosen.judge,
-      improver: chosen.improver,
-      workingDirectory: folder.path,
-      passScore: passScore.passScore,
-      maxRounds: maxRounds.maxRounds,
-      sourceSkillFile: input.posted.get("skillFile")?.trim() ?? "",
-      judgeInstructions,
-      improverInstructions,
-      useWizard: true,
-      runner,
-      runnerInstructions,
-    };
-  }
-
   return {
     kind: "start",
     goal: input.goal,
@@ -198,11 +151,12 @@ export const decidePromptSdlcLocalPost = (input: {
     judge: chosen.judge,
     improver: chosen.improver,
     workingDirectory: folder.path,
-    passScore: passScore.passScore,
-    maxRounds: maxRounds.maxRounds,
+    passScore: PROMPT_SDLC_WIZARD_PASS_SCORE,
+    maxRounds: PROMPT_SDLC_WIZARD_MAX_ROUNDS,
     sourceSkillFile: input.posted.get("skillFile")?.trim() ?? "",
     judgeInstructions,
     improverInstructions,
-    useWizard: false,
+    runner,
+    runnerInstructions,
   };
 };

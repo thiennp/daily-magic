@@ -1,13 +1,13 @@
 import { describe, expect, it } from "vitest";
 
 import {
-  PROMPT_SDLC_MAX_ROUNDS,
-  PROMPT_SDLC_PASS_SCORE,
+  PROMPT_SDLC_WIZARD_MAX_ROUNDS,
+  PROMPT_SDLC_WIZARD_PASS_SCORE,
 } from "../../../../adapters/promptSdlcAwcCore";
 import { planPromptSdlcAgentStart } from "./planPromptSdlcAgentStart";
 
 describe("planPromptSdlcAgentStart", () => {
-  it("uses classic defaults 90/10 when body omits pass score and max rounds", () => {
+  it("uses wizard defaults when body omits pass score and max rounds", () => {
     const plan = planPromptSdlcAgentStart({
       body: {
         goal: "Test",
@@ -22,12 +22,13 @@ describe("planPromptSdlcAgentStart", () => {
     });
     expect(plan).toMatchObject({
       ok: true,
-      passScore: PROMPT_SDLC_PASS_SCORE,
-      maxRounds: PROMPT_SDLC_MAX_ROUNDS,
+      passScore: PROMPT_SDLC_WIZARD_PASS_SCORE,
+      maxRounds: PROMPT_SDLC_WIZARD_MAX_ROUNDS,
+      runner: "codex",
     });
   });
 
-  it("keeps custom pass score and max rounds from the agent body", () => {
+  it("still starts a wizard run when body includes legacy pass score fields", () => {
     const plan = planPromptSdlcAgentStart({
       body: {
         goal: "Test",
@@ -42,8 +43,8 @@ describe("planPromptSdlcAgentStart", () => {
     });
     expect(plan).toMatchObject({
       ok: true,
-      passScore: 85,
-      maxRounds: 3,
+      passScore: PROMPT_SDLC_WIZARD_PASS_SCORE,
+      maxRounds: PROMPT_SDLC_WIZARD_MAX_ROUNDS,
     });
   });
 });

@@ -15,10 +15,14 @@ export const PROMPT_SDLC_WIZARD_CLIENT_SCRIPT = `<script>
       locked.textContent = "This run is using these choices.";
       fields?.prepend(locked);
     }
-    const button = document.querySelector("[data-sdlc-run]");
+    const button = document.querySelector("[data-sdlc-run-wizard]");
     if (button instanceof HTMLButtonElement) {
-      button.textContent = "Running…";
+      button.disabled = true;
+      button.setAttribute("aria-busy", "true");
+      button.innerHTML =
+        '<span class="sdlc-spin" aria-hidden="true"></span> Running…';
     }
+    document.querySelector(".sdlc-wizard-resume-paused")?.remove();
   };
 
   const focusActiveWizardStep = () => {

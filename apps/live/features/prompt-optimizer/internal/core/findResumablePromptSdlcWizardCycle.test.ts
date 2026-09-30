@@ -31,4 +31,26 @@ describe("findResumablePromptSdlcWizardCycle", () => {
     ).toBe(paused.id);
     expect(findResumablePromptSdlcWizardCycle([paused], paused.id)).toBeNull();
   });
+
+  it("returns an actively running wizard when it is not the open cycle", () => {
+    const active = {
+      ...createPromptSdlcLocalCycle({
+        goal: "Still running",
+        sourcePrompt: "p",
+        judgeModel: "claude-cli",
+        improverModel: "claude-cli",
+        wizard: createInitialPromptSdlcWizardState("p"),
+      }),
+      status: "judging" as const,
+    };
+    const open = createPromptSdlcLocalCycle({
+      goal: "other",
+      sourcePrompt: "p",
+      judgeModel: "claude-cli",
+      improverModel: "claude-cli",
+    });
+    expect(
+      findResumablePromptSdlcWizardCycle([open, active], open.id)?.id,
+    ).toBe(active.id);
+  });
 });

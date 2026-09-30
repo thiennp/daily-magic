@@ -1,3 +1,4 @@
+import { createInitialPromptSdlcWizardState } from "../../../../adapters/promptSdlcAwcCore";
 import { createPromptSdlcLocalCycle } from "./createPromptSdlcLocalCycle";
 import { buildPromptSdlcAgentCatalog } from "./buildPromptSdlcAgentCatalog";
 import { buildPromptSdlcAgentSnapshot } from "./buildPromptSdlcAgentSnapshot";
@@ -15,6 +16,7 @@ export interface PromptSdlcAgentHandlers {
     storePath: string,
     judge: string,
     improver: string,
+    runner?: string,
   ) => Promise<string | null>;
   readonly startCycle: (storePath: string, cycleId: string) => void;
 }
@@ -83,6 +85,7 @@ export const servePromptSdlcAgent = async (input: {
     input.storePath,
     plan.judge,
     plan.improver,
+    plan.runner,
   );
   if (writerBlock !== null) {
     return {
@@ -103,6 +106,8 @@ export const servePromptSdlcAgent = async (input: {
     workingDirectory: plan.workingDirectory,
     passScore: plan.passScore,
     maxRounds: plan.maxRounds,
+    wizard: createInitialPromptSdlcWizardState(plan.prompt),
+    runnerModel: plan.runner,
   });
   savePromptSdlcLocalCycle(input.storePath, cycle);
   input.handlers.startCycle(input.storePath, cycle.id);

@@ -1,8 +1,4 @@
-import {
-  PROMPT_SDLC_AGENT_MANUAL_ERROR,
-  PROMPT_SDLC_MAX_ROUNDS,
-  PROMPT_SDLC_PASS_SCORE,
-} from "../../../../adapters/promptSdlcAwcCore";
+import { PROMPT_SDLC_AGENT_MANUAL_ERROR } from "../../../../adapters/promptSdlcAwcCore";
 import {
   PROMPT_SDLC_MANUAL_ACTOR,
   type PromptSdlcLocalActor,
@@ -27,6 +23,7 @@ export const planPromptSdlcAgentStart = (input: {
       readonly prompt: string;
       readonly judge: PromptSdlcLocalActor;
       readonly improver: PromptSdlcLocalActor;
+      readonly runner: PromptSdlcLocalActor;
       readonly workingDirectory: string;
       readonly passScore: number;
       readonly maxRounds: number;
@@ -64,14 +61,13 @@ export const planPromptSdlcAgentStart = (input: {
   }
 
   const posted = new URLSearchParams({
-    intent: "run-classic",
+    intent: "run",
     goal: input.body.goal,
     prompt: input.body.prompt,
     folder: input.body.workingDirectory,
-    passScore: input.body.passScore ?? String(PROMPT_SDLC_PASS_SCORE),
-    maxRounds: input.body.maxRounds ?? String(PROMPT_SDLC_MAX_ROUNDS),
     judge,
     improver,
+    runner: judge,
   });
 
   const decision = decidePromptSdlcLocalPost({
@@ -96,6 +92,7 @@ export const planPromptSdlcAgentStart = (input: {
     prompt: decision.prompt,
     judge: decision.judge,
     improver: decision.improver,
+    runner: decision.runner as PromptSdlcLocalActor,
     workingDirectory: decision.workingDirectory,
     passScore: decision.passScore,
     maxRounds: decision.maxRounds,

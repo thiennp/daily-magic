@@ -16,8 +16,6 @@ import type { PromptSdlcLocalWriterChoice } from "./promptSdlcLocalForm";
 import { readPromptSdlcLocalShownForm } from "./readPromptSdlcLocalShownForm";
 import { renderPromptSdlcLocalHistory } from "./renderPromptSdlcLocalHistory";
 import { listPromptSdlcFolderSkills } from "./readPromptSdlcFolderSkills";
-import { renderPromptSdlcLocalMaxRounds } from "./renderPromptSdlcLocalMaxRounds";
-import { renderPromptSdlcLocalPassScore } from "./renderPromptSdlcLocalPassScore";
 import {
   PROMPT_SDLC_SKILL_SELECT_SCRIPT,
   renderPromptSdlcLocalSkillSelect,
@@ -30,6 +28,7 @@ import { renderPromptSdlcWizardRunnerFields } from "./renderPromptSdlcWizardRunn
 import { renderPromptSdlcWizardRoleStepTable } from "./renderPromptSdlcWizardRoleStepTable";
 import { renderPromptSdlcLocalWriterFields } from "./renderPromptSdlcLocalWriterFields";
 import {
+  PROMPT_SDLC_COMPOSE_INTRO,
   PROMPT_SDLC_WIZARD_MAX_ROUNDS,
   PROMPT_SDLC_WIZARD_PASS_SCORE,
   isPromptSdlcTerminalStatus,
@@ -93,11 +92,6 @@ export const buildPromptSdlcLocalPageBody = (input: {
     shown.prompt,
     input.canRun,
   );
-  const runLabel = waitingOnYou
-    ? "Waiting for you"
-    : shown.running
-      ? "Running…"
-      : "Run";
   const writerFields = renderPromptSdlcLocalWriterFields({
     writers: input.writers,
     judge: shown.judge,
@@ -110,22 +104,16 @@ export const buildPromptSdlcLocalPageBody = (input: {
     runner: shown.runner,
     runnerInstructions: shown.runnerInstructions,
   });
-  const intro =
-    "Set the goal and the prompt, then choose who scores, who rewrites, and who runs step 4. Run starts the wizard (generalize → evaluate → separate → optimize modules). Classic loop skips the wizard. Instructions are optional.";
+  const intro = PROMPT_SDLC_COMPOSE_INTRO;
   const locked = shown.running
     ? `<p class="sdlc-locked" data-sdlc-locked>This run is using these choices.</p>`
     : "";
   const viewingFinishedRun =
     input.cycle !== null && isPromptSdlcTerminalStatus(input.cycle.status);
   const composeOpen = viewingFinishedRun ? "" : " open";
-  const composeMode = `<div class="sdlc-compose-mode" role="group" aria-label="Run mode">
-        <button type="button" class="btn btn-secondary" data-sdlc-compose-mode="wizard" aria-pressed="true">Wizard</button>
-        <button type="button" class="btn btn-secondary" data-sdlc-compose-mode="classic" aria-pressed="false">Classic loop</button>
-      </div>`;
   const composeHeadActions = viewingFinishedRun
     ? `<button type="button" class="btn btn-primary" data-sdlc-start-new-run title="Clear the form and set a new goal">New prompt</button>`
-    : `<a class="btn btn-secondary" href="/prompt-optimizer/guide">Instructions and example</a>
-        <a class="btn btn-secondary" href="/prompt-optimizer?example=wizard-verification">Load wizard verification example</a>`;
+    : `<a class="btn btn-secondary" href="/prompt-optimizer/guide">Instructions and example</a>`;
   const composeSummary = viewingFinishedRun
     ? (() => {
         const goalPreview =
@@ -138,9 +126,16 @@ export const buildPromptSdlcLocalPageBody = (input: {
   const composeViewingClass = viewingFinishedRun
     ? " sdlc-compose-viewing-finished"
     : "";
+  const runButtonInner =
+    waitingOnYou || shown.running
+      ? waitingOnYou
+        ? "Waiting for you"
+        : `<span class="sdlc-spin" aria-hidden="true"></span> Running…`
+      : "Run";
+  const runButtonBusy =
+    shown.running && !waitingOnYou ? ' aria-busy="true"' : "";
   const form = `<section class="card sdlc-compose${composeViewingClass}" id="prompt-optimizer-compose">
       <div class="sdlc-form-head">
-        ${composeMode}
         ${composeHeadActions}
       </div>
       <form class="sdlc-form" method="POST" action="/prompt-optimizer">
@@ -178,13 +173,6 @@ export const buildPromptSdlcLocalPageBody = (input: {
         </div>
         ${runnerFields}
         <div data-sdlc-wizard-only>${renderPromptSdlcWizardRoleStepTable()}</div>
-        <details class="sdlc-classic-loop-options">
-          <summary class="sdlc-block-title">Classic loop options</summary>
-          <div class="sdlc-limits">
-            ${renderPromptSdlcLocalPassScore(shown.passScore)}
-            ${renderPromptSdlcLocalMaxRounds(shown.maxRounds)}
-          </div>
-        </details>
         </fieldset>
         </div>
       </details>
@@ -193,9 +181,7 @@ export const buildPromptSdlcLocalPageBody = (input: {
           <p class="muted sdlc-run-hint" data-sdlc-run-hint role="status"></p>
           <div class="sdlc-submit">
           <p class="muted sdlc-wizard-limits-callout" data-sdlc-wizard-limits-callout">Wizard: pass score ${PROMPT_SDLC_WIZARD_PASS_SCORE}, up to ${PROMPT_SDLC_WIZARD_MAX_ROUNDS} scored revisions in Step 2; Step 4 runs one trial per module.</p>
-          <p class="muted sdlc-classic-limits-callout" data-sdlc-classic-limits-callout hidden>Classic loop uses the pass score and max rounds above.</p>
-          <button class="btn btn-primary" type="submit" name="intent" value="run" data-sdlc-run data-sdlc-run-wizard data-can-run="${composeCanRun ? "true" : "false"}">${runLabel}</button>
-          <button class="btn btn-secondary" type="submit" name="intent" value="run-classic" formnovalidate data-sdlc-run data-sdlc-run-classic data-can-run="${composeCanRun ? "true" : "false"}">Classic loop (90 / 10 rounds)</button>
+          <button class="btn btn-primary sdlc-run-wizard-btn" type="submit" name="intent" value="run" data-sdlc-run data-sdlc-run-wizard data-can-run="${composeCanRun ? "true" : "false"}"${runButtonBusy}${shown.running && !waitingOnYou ? " disabled" : ""}>${runButtonInner}</button>
           </div>
         </div>
       </form>

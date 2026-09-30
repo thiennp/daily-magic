@@ -45,11 +45,11 @@ describe("buildPromptSdlcLocalPageBody", () => {
     expect(html).toContain('name="judgeInstructions"');
     expect(html).toContain('name="improverInstructions"');
     expect(html).toContain("Judge and improver");
-    expect(html).toContain("Classic loop options");
     expect(html).toContain("sdlc-wizard-limits-callout");
     expect(html).toContain("Run starts the wizard");
-    expect(html).toContain("Classic loop skips the wizard");
-    expect(html.match(/class="sdlc-tip"/g)?.length).toBe(12);
+    expect(html).not.toContain("run-classic");
+    expect(html).not.toContain("Classic loop");
+    expect(html.match(/class="sdlc-tip"/g)?.length).toBe(10);
     expect(html).toContain("Module runner");
     expect(html).toContain('name="runner"');
     expect(html).toContain('data-writer-status="runner"');
@@ -128,24 +128,14 @@ describe("buildPromptSdlcLocalPageBody", () => {
     expect(html).toContain('fieldset class="sdlc-fields" disabled');
     expect(html).toContain('id="prompt-optimizer-compose-details" open');
     expect(html).toContain("This run is using these choices.");
+    expect(html).toContain("sdlc-spin");
     expect(html).toContain("Running…");
     expect(html).toContain("What the score means");
     expect(html).toContain("0–44 bad");
     expect(html).toContain("90–100 passes");
-    expect(html).toContain('type="number" name="maxRounds"');
-    expect(html).toContain('value="10"');
     expect(html).toContain('name="intent" value="stop"');
     expect(html).toContain(">Stop run<");
     expect(html).toContain("This run is marked complete.");
-    expect(html).toContain('type="range" name="passScore"');
-    expect(html).toContain('value="90"');
-    expect(html).toContain("sdlc-pass-range");
-    expect(html).toContain("sdlc-pass-bar");
-    expect(html).toContain("The bar fades from a weak score to a pass.");
-    expect(html).toContain("The mark is the usual 90.");
-    expect(html).toContain(
-      "0–44 bad · 45–69 weak · 70–89 close · 90–100 passes",
-    );
     expect(html).toContain('class="sdlc-tree"');
     expect(html).toContain("sdlc-node-done");
     expect(html).toContain("sdlc-node-active");
@@ -351,15 +341,14 @@ describe("buildPromptSdlcLocalPageBody", () => {
     expect(html).toContain('href="/prompt-optimizer/guide"');
     expect(guide).toContain("How the prompt optimizer works");
     expect(guide).toContain("four-step wizard");
-    expect(guide).toContain("Classic loop");
+    expect(guide).toContain("pass score <strong>70</strong>");
     expect(guide).toContain("Run this sample");
     expect(guide).toContain(
       `href="/prompt-optimizer?example=${PROMPT_SDLC_LOCAL_GUIDE_EXAMPLE}"`,
     );
     expect(guide).not.toContain('name="intent" value="run"');
     expect(guide).toContain("CUSTOMER_MESSAGE");
-    expect(guide).toContain("Stop run");
-    expect(guide).toContain("tokens spent");
+    expect(guide).toContain("totalTokens");
   });
 
   it("asks for a score of the output when the judge is you", () => {
@@ -491,7 +480,10 @@ describe("buildPromptSdlcLocalPageBody", () => {
     });
 
     expect(html).toContain("Resume wizard");
+    expect(html).toContain("View inputs");
     expect(html).toContain(`cycle=${paused.id}`);
+    expect(html).not.toContain("run-classic");
+    expect(html).not.toContain("wizard-verification");
   });
 
   it("shows the tokens spent through each scored round", () => {
