@@ -34,6 +34,32 @@ import {
   PROMPT_SDLC_WIZARD_PASS_SCORE,
   isPromptSdlcTerminalStatus,
 } from "../../../../adapters/promptSdlcAwcCore";
+import type { PromptSdlcGoalSuggestionsUi } from "./runPromptSdlcGoalSuggestions";
+import { renderPromptSdlcGoalSuggestions } from "./renderPromptSdlcGoalSuggestions";
+
+const readComposeCanRun = (
+  goal: string,
+  prompt: string,
+  baseCanRun: boolean,
+): boolean => baseCanRun && goal.trim().length > 0 && prompt.trim().length > 0;
+
+const renderGoalSuggestionsBlock = (
+  goalSuggestions: PromptSdlcGoalSuggestionsUi | null | undefined,
+): string => {
+  if (goalSuggestions === null || goalSuggestions === undefined) {
+    return "";
+  }
+  if (goalSuggestions.kind === "error") {
+    return `<div class="alert-error sdlc-goal-suggestions-error">${escapeHtml(goalSuggestions.errorMessage)}</div>`;
+  }
+  return renderPromptSdlcGoalSuggestions({
+    suggestKey: goalSuggestions.suggestKey,
+    options: goalSuggestions.options,
+    promptFingerprint: goalSuggestions.promptFingerprint,
+    folderFingerprint: goalSuggestions.folderFingerprint,
+    judgeFingerprint: goalSuggestions.judgeFingerprint,
+  });
+};
 
 const escapeHtml = (value: string): string =>
   value
@@ -62,6 +88,7 @@ export const buildPromptSdlcLocalPageBody = (input: {
   readonly cycle: PromptSdlcLocalCycle | null;
   readonly history: readonly PromptSdlcLocalCycle[];
   readonly resumableWizardCycle?: PromptSdlcLocalCycle | null;
+  readonly goalSuggestions?: PromptSdlcGoalSuggestionsUi | null;
 }): string => {
   const error =
     input.errorMessage === null
@@ -83,6 +110,14 @@ export const buildPromptSdlcLocalPageBody = (input: {
   const waitingOnYou =
     input.cycle !== null && isPromptSdlcLocalManualWait(input.cycle);
   const shown = readPromptSdlcLocalShownForm(input);
+  const composeCanRun = readComposeCanRun(
+    shown.goal,
+    shown.prompt,
+    input.canRun,
+  );
+  const goalSuggestionsBlock = renderGoalSuggestionsBlock(
+    input.goalSuggestions,
+  );
   const runLabel = waitingOnYou
     ? "Waiting for you"
     : shown.running
@@ -144,6 +179,10 @@ export const buildPromptSdlcLocalPageBody = (input: {
           <div class="field">
             ${renderPromptSdlcFieldHeading("Goal", "goal")}
             <textarea class="input textarea" name="goal" rows="4" required>${escapeHtml(shown.goal)}</textarea>
+            <div class="sdlc-goal-suggest-actions">
+              <button class="btn btn-secondary" type="submit" name="intent" value="suggest-goals" formnovalidate data-sdlc-suggest-goals ${shown.running ? "disabled" : ""}>Suggest goals</button>
+            </div>
+            ${goalSuggestionsBlock}
           </div>
           <div class="field">
             ${renderPromptSdlcFieldHeading("Prompt", "prompt")}
@@ -178,8 +217,8 @@ export const buildPromptSdlcLocalPageBody = (input: {
           <p class="sdlc-writer-summary" data-sdlc-writer-summary hidden></p>
           <p class="muted sdlc-wizard-limits-callout" data-sdlc-wizard-limits-callout">Wizard: pass score ${PROMPT_SDLC_WIZARD_PASS_SCORE}, up to ${PROMPT_SDLC_WIZARD_MAX_ROUNDS} scored revisions in Step 2; Step 4 runs one trial per module.</p>
           <p class="muted sdlc-classic-limits-callout" data-sdlc-classic-limits-callout hidden>Classic loop uses the pass score and max rounds above.</p>
-          <button class="btn btn-primary" type="submit" name="intent" value="run" data-sdlc-run data-sdlc-run-wizard data-can-run="${input.canRun ? "true" : "false"}" disabled>${runLabel}</button>
-          <button class="btn btn-secondary" type="submit" name="intent" value="run-classic" formnovalidate data-sdlc-run data-sdlc-run-classic data-can-run="${input.canRun ? "true" : "false"}" disabled>Classic loop (90 / 10 rounds)</button>
+          <button class="btn btn-primary" type="submit" name="intent" value="run" data-sdlc-run data-sdlc-run-wizard data-can-run="${composeCanRun ? "true" : "false"}" disabled>${runLabel}</button>
+          <button class="btn btn-secondary" type="submit" name="intent" value="run-classic" formnovalidate data-sdlc-run data-sdlc-run-classic data-can-run="${composeCanRun ? "true" : "false"}" disabled>Classic loop (90 / 10 rounds)</button>
           <p class="muted sdlc-run-hint" data-sdlc-run-hint hidden></p>
         </div>
         </fieldset>

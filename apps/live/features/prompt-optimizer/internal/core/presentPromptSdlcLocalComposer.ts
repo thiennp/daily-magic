@@ -1,5 +1,8 @@
 import { pickMacOsFolderDialog } from "../../../projects/public-api/infrastructure";
-import { createInitialPromptSdlcWizardState } from "../../../../adapters/promptSdlcAwcCore";
+import {
+  createInitialPromptSdlcWizardState,
+  isPromptSdlcTerminalStatus,
+} from "../../../../adapters/promptSdlcAwcCore";
 
 import { buildPromptSdlcLiveRunFragmentHtml } from "./buildPromptSdlcLiveRunFragmentHtml";
 import { createPromptSdlcLocalCycle } from "./createPromptSdlcLocalCycle";
@@ -20,6 +23,7 @@ import { readPromptSdlcFolderSkill } from "./readPromptSdlcFolderSkills";
 import { readPromptSdlcChosenWritersReady } from "./probePromptSdlcWriterReady";
 import { findResumablePromptSdlcWizardCycle } from "./findResumablePromptSdlcWizardCycle";
 import { ensurePromptSdlcLocalCycleRunning } from "./runPromptSdlcLocalCycle";
+import { runPromptSdlcGoalSuggestions } from "./runPromptSdlcGoalSuggestions";
 import type { PromptSdlcLocalRouteInput } from "./tryHandlePromptSdlcLocalRequest";
 
 export const presentPromptSdlcLocalComposer = async (input: {
@@ -50,6 +54,53 @@ export const presentPromptSdlcLocalComposer = async (input: {
       pickMacOsFolderDialog("Choose the folder this prompt should run in"),
     ...(fresh === null ? {} : { defaultFolder: fresh.defaultFolder }),
   });
+
+  if (input.posted?.get("intent") === "suggest-goals") {
+    const openCycle =
+      input.cycleId === null
+        ? null
+        : readPromptSdlcLocalCycle(input.route.storePath, input.cycleId);
+    const goalSuggestions =
+      openCycle !== null && !isPromptSdlcTerminalStatus(openCycle.status)
+        ? {
+            kind: "error" as const,
+            errorMessage: "Finish or stop this run before suggesting goals.",
+          }
+        : await runPromptSdlcGoalSuggestions({
+            installedIds: input.installedIds,
+            posted: input.posted,
+            prompt: input.prompt,
+          });
+    if (decision.kind === "form") {
+      await sendPromptSdlcLocalPage(input.route, {
+        goal: decision.goal,
+        prompt: decision.prompt,
+        modelNote: input.selection.note,
+        writers: input.selection.writers,
+        judge: decision.judge,
+        improver: decision.improver,
+        judgeInstructions: decision.judgeInstructions,
+        improverInstructions: decision.improverInstructions,
+        runner: decision.runner,
+        runnerInstructions: decision.runnerInstructions,
+        folder: decision.folder,
+        passScore: decision.passScore,
+        maxRounds: decision.maxRounds,
+        canRun: input.selection.canRun,
+        errorMessage: decision.errorMessage,
+        skillNotice: input.skillNotice,
+        cycle: openCycle,
+        history: readPromptSdlcLocalCycles(input.route.storePath),
+        resumableWizardCycle: findResumablePromptSdlcWizardCycle(
+          readPromptSdlcLocalCycles(input.route.storePath),
+          openCycle?.id ?? null,
+        ),
+        goalSuggestions,
+      });
+    }
+    return;
+  }
+
   if (input.posted !== null) {
     rememberPromptSdlcLocalPostedSelection({
       storePath: input.route.storePath,
