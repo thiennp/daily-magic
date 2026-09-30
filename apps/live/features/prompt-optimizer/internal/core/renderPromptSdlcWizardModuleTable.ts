@@ -30,7 +30,7 @@ export const renderPromptSdlcWizardModuleTable = (
   const nearPassFloor = PROMPT_SDLC_WIZARD_PASS_SCORE - 10;
   const rows = summary.rows
     .map((row, index) => {
-      const module = wizard.modules[index];
+      const wizardModule = wizard.modules[index];
       const scoreCell =
         row.bestScore === null
           ? "—"
@@ -41,11 +41,12 @@ export const renderPromptSdlcWizardModuleTable = (
         row.bestScore < PROMPT_SDLC_WIZARD_PASS_SCORE;
       const rowClass = nearPass ? ' class="sdlc-score-near-pass"' : "";
       const statusLabel =
-        module === undefined
+        wizardModule === undefined
           ? row.status
-          : describePromptSdlcWizardModulePassStatus(module);
+          : describePromptSdlcWizardModulePassStatus(wizardModule);
       const statusCell =
-        module !== undefined && isPromptSdlcWizardModulePassed(module)
+        wizardModule !== undefined &&
+        isPromptSdlcWizardModulePassed(wizardModule)
           ? `<span aria-label="Passed">✓</span>`
           : escapeHtml(statusLabel);
       return `<tr${rowClass}><td>${escapeHtml(row.title)}</td><td>${escapeHtml(scoreCell)}</td><td>${row.tokens ?? "—"}</td><td>${statusCell}</td></tr>`;

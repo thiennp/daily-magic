@@ -7,7 +7,7 @@ import {
 
 describe("describePromptSdlcWizardModulePassStatus", () => {
   it("treats passed status with low score as below pass", () => {
-    const module = {
+    const wizardModule = {
       moduleId: "m1",
       title: "T",
       prompt: "p",
@@ -20,8 +20,8 @@ describe("describePromptSdlcWizardModulePassStatus", () => {
         rounds: [],
       },
     };
-    expect(isPromptSdlcWizardModulePassed(module)).toBe(false);
-    expect(describePromptSdlcWizardModulePassStatus(module)).toBe(
+    expect(isPromptSdlcWizardModulePassed(wizardModule)).toBe(false);
+    expect(describePromptSdlcWizardModulePassStatus(wizardModule)).toBe(
       "Below pass (66)",
     );
   });
