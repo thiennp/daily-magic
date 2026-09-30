@@ -9,7 +9,7 @@ describe("PROMPT_SDLC_WIZARD_CLIENT_SCRIPT", () => {
       "new FormData(form, submitter)",
     );
     expect(PROMPT_SDLC_WIZARD_CLIENT_SCRIPT).toContain(
-      "formDataFromSubmit(form, event.submitter)",
+      "formDataFromSubmit(form, submitter)",
     );
   });
 });
