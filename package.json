@@ -17,6 +17,7 @@
     "agent-witch:self-update": "tsx scripts/agent-witch-self-update.ts",
     "agent-witch:test-writer-session-stream": "tsx scripts/testWriterSessionStreamLocal.ts",
     "awl:smoke": "tsx .agents/scripts/dev/startAwlLinuxSmoke.ts",
+    "awl:demo:prompt-optimizer-wizard": "tsx .agents/scripts/dev/recordPromptOptimizerAwlLiveWizardDemo.ts",
     "eval:prompt-sdlc": "vitest run .agents/scripts/dev/evalPromptSdlcGoalSuggestions.test.ts .agents/scripts/dev/evalPromptSdlcClassicPrompts.test.ts",
     "agent-witch:install": "bash scripts/install-agent-witch.sh",
     "pretest": "npm run build:agent-witch",
