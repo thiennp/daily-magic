@@ -2212,6 +2212,7 @@ ${s}`:"The writer printed nothing. Use the changes above."].filter(a=>a.length>0
 (() => {
   let root = null;
   let pollTimer = null;
+
   const paintElapsed = () => {
     if (root === null) return;
     const slot = root.querySelector("[data-elapsed]");
@@ -2318,6 +2319,7 @@ ${s}`:"The writer printed nothing. Use the changes above."].filter(a=>a.length>0
     const holder = document.createElement("div");
     holder.innerHTML = html;
     let applied = false;
+    let runApplied = false;
     const incomingGateSlot = holder.querySelector("#prompt-optimizer-wizard-gate-slot");
     const gateSlot = document.getElementById("prompt-optimizer-wizard-gate-slot");
     if (incomingGateSlot !== null && gateSlot !== null) {
@@ -2337,12 +2339,14 @@ ${s}`:"The writer printed nothing. Use the changes above."].filter(a=>a.length>0
     if (incomingRun !== null && run !== null) {
       run.replaceWith(incomingRun);
       applied = true;
+      runApplied = true;
     } else if (incomingRun !== null && run === null) {
       const resume = document.querySelector(".sdlc-wizard-resume");
       const compose = document.getElementById("prompt-optimizer-compose");
       const insertAfter = resume ?? compose;
       insertAfter?.insertAdjacentElement("afterend", incomingRun);
       applied = true;
+      runApplied = true;
     }
     const incomingDialog = holder.querySelector("#sdlc-node-dialog");
     if (incomingDialog !== null && document.getElementById("sdlc-node-dialog") === null) {
@@ -2350,11 +2354,14 @@ ${s}`:"The writer printed nothing. Use the changes above."].filter(a=>a.length>0
     }
     if (!applied) return;
     lockCompose();
-    focusActiveWizardStep();
-    document.getElementById("prompt-optimizer-run")?.scrollIntoView({
-      behavior: "smooth",
-      block: "start",
-    });
+    if (runApplied) {
+      document.getElementById("prompt-optimizer-run")?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    } else {
+      focusActiveWizardStep();
+    }
     const runAfter = document.getElementById("prompt-optimizer-run");
     if (runAfter instanceof HTMLElement && runAfter.dataset.live !== "true") {
       document.dispatchEvent(new Event("sdlc-run-finished"));
@@ -3058,17 +3065,17 @@ Wanted output: The ticket has no refund. Ask which order.`},passScore:{title:"Pa
       <div class="field">${Pe("Runner","runner")}<select class="input" name="runner" data-writer-select="runner" required>${t}${r}</select>${n}</div>
       <details class="sdlc-instruction-details"><summary class="sdlc-instruction-summary">${Pe("Runner instructions","runnerInstructions")}</summary><div class="field"><textarea class="input textarea sdlc-instruction" name="runnerInstructions" rows="3">${Za(e.runnerInstructions)}</textarea><span class="muted">Optional. Passed when the runner executes module prompts.</span></div></details>
     </div>
-  </div>`}});var sN,iN=l(()=>{"use strict";sN=()=>'<table class="sdlc-role-step-table"><caption class="muted">Who does what in the wizard</caption><thead><tr><th>Role</th><th>Wizard</th><th>Classic loop</th></tr></thead><tbody><tr><td>Judge</td><td>Steps 2 and 4 (scores only)</td><td>Every round</td></tr><tr><td>Improver</td><td>\u2014</td><td>Rewrites after each score</td></tr><tr><td>Runner</td><td>Step 4 (executes module prompts)</td><td>\u2014</td></tr></tbody></table>'});var Zo,aN,lN,cN,dN,uN=l(()=>{"use strict";Nn();Zo=e=>e.replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;"),aN=(e,t,r,n,o)=>{let s=`<option value=""${r===""?" selected":""}>Choose</option>`,i=n.map(c=>`<option value="${Zo(c.id)}"${c.id===r?" selected":""}>${Zo(c.label)}</option>`).join(""),a=`<option value="manual"${r==="manual"?" selected":""}>${Zo(o)}</option>`;return`<div class="field">${Pe(t,e==="judge"?"judge":"improver")}<select class="input" name="${e}" data-writer-select="${e}">${s}${i}${a}</select></div>`},lN=(e,t,r)=>{if(t.length===0)return`<p class="muted" data-writer-status="${e}" data-writer="">Choose who does this step.</p>`;if(t==="manual")return`<p class="muted" data-writer-status="${e}" data-writer="manual" data-ready="true">You will do this step.</p>`;let n=r.find(o=>o.id===t)?.label??t;return`<p class="muted" data-writer-status="${e}" data-writer="${Zo(t)}">Checking ${Zo(n)}\u2026</p>`},cN=(e,t,r,n,o)=>`<details class="sdlc-instruction-details"><summary class="sdlc-instruction-summary">${Pe(t,o)}</summary><div class="field"><textarea class="input textarea sdlc-instruction" name="${e}" rows="3">${Zo(r)}</textarea><span class="muted">${n}</span></div></details>`,dN=e=>{let t=`<div class="sdlc-writer">${aN("judge","Judge",e.judge,e.writers,"I'll score it")}${lN("judge",e.judge,e.writers)}${cN("judgeInstructions","Instructions for the judge",e.judgeInstructions??"","Optional. Used with the goal when scoring.","judgeInstructions")}</div>`,r=`<div class="sdlc-writer">${aN("improver","Improver",e.improver,e.writers,"I'll rewrite it")}${lN("improver",e.improver,e.writers)}${cN("improverInstructions","Instructions for the improver",e.improverInstructions??"","Optional. Used with the goal when rewriting.","improverInstructions")}</div>`;return`<div class="sdlc-writers">${t}${r}</div>`}});var f8,jn,pN,mN=l(()=>{"use strict";Ga();iP();EM();kM();vp();TM();IM();MM();FM();hP();KM();YM();eN();Nn();aP();rN();qa();oN();iN();uN();C();f8=(e,t,r)=>r&&e.trim().length>0&&t.trim().length>0,jn=e=>e.replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;"),pN=e=>{let t=e.errorMessage===null?"":`<div class="alert-error">${jn(e.errorMessage)}</div>`,r=(e.skillNotice??null)===null?"":`<div class="alert-success">${jn(e.skillNotice??"")}</div>`,n=`${PI}${wI}`,o=e.resumableWizardCycle??null,s=o===null?"":tN(o),i=Kp(e.cycle),a=e.cycle===null?"":Vp(e.cycle),c=e.cycle!==null&&Tt(e.cycle),d=OM(e),p=f8(d.goal,d.prompt,e.canRun),f=c?"Waiting for you":d.running?"Running\u2026":"Run",b=dN({writers:e.writers,judge:d.judge,improver:d.improver,judgeInstructions:d.judgeInstructions,improverInstructions:d.improverInstructions}),h=nN({writers:e.writers,runner:d.runner,runnerInstructions:d.runnerInstructions}),y="Set the goal and the prompt, then choose who scores, who rewrites, and who runs step 4. Run starts the wizard (generalize \u2192 evaluate \u2192 separate \u2192 optimize modules). Classic loop skips the wizard. Instructions are optional.",u=d.running?'<p class="sdlc-locked" data-sdlc-locked>This run is using these choices.</p>':"",S=e.cycle!==null&&k(e.cycle.status),A=S?"":" open",g=`<div class="sdlc-compose-mode" role="group" aria-label="Run mode">
+  </div>`}});var sN,iN=l(()=>{"use strict";sN=()=>'<table class="sdlc-role-step-table"><caption class="muted">Who does what in the wizard</caption><thead><tr><th>Role</th><th>Wizard</th><th>Classic loop</th></tr></thead><tbody><tr><td>Judge</td><td>Steps 2 and 4 (scores only)</td><td>Every round</td></tr><tr><td>Improver</td><td>\u2014</td><td>Rewrites after each score</td></tr><tr><td>Runner</td><td>Step 4 (executes module prompts)</td><td>\u2014</td></tr></tbody></table>'});var Zo,aN,lN,cN,dN,uN=l(()=>{"use strict";Nn();Zo=e=>e.replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;"),aN=(e,t,r,n,o)=>{let s=`<option value=""${r===""?" selected":""}>Choose</option>`,i=n.map(c=>`<option value="${Zo(c.id)}"${c.id===r?" selected":""}>${Zo(c.label)}</option>`).join(""),a=`<option value="manual"${r==="manual"?" selected":""}>${Zo(o)}</option>`;return`<div class="field">${Pe(t,e==="judge"?"judge":"improver")}<select class="input" name="${e}" data-writer-select="${e}">${s}${i}${a}</select></div>`},lN=(e,t,r)=>{if(t.length===0)return`<p class="muted" data-writer-status="${e}" data-writer="">Choose who does this step.</p>`;if(t==="manual")return`<p class="muted" data-writer-status="${e}" data-writer="manual" data-ready="true">You will do this step.</p>`;let n=r.find(o=>o.id===t)?.label??t;return`<p class="muted" data-writer-status="${e}" data-writer="${Zo(t)}">Checking ${Zo(n)}\u2026</p>`},cN=(e,t,r,n,o)=>`<details class="sdlc-instruction-details"><summary class="sdlc-instruction-summary">${Pe(t,o)}</summary><div class="field"><textarea class="input textarea sdlc-instruction" name="${e}" rows="3">${Zo(r)}</textarea><span class="muted">${n}</span></div></details>`,dN=e=>{let t=`<div class="sdlc-writer">${aN("judge","Judge",e.judge,e.writers,"I'll score it")}${lN("judge",e.judge,e.writers)}${cN("judgeInstructions","Instructions for the judge",e.judgeInstructions??"","Optional. Used with the goal when scoring.","judgeInstructions")}</div>`,r=`<div class="sdlc-writer">${aN("improver","Improver",e.improver,e.writers,"I'll rewrite it")}${lN("improver",e.improver,e.writers)}${cN("improverInstructions","Instructions for the improver",e.improverInstructions??"","Optional. Used with the goal when rewriting.","improverInstructions")}</div>`;return`<div class="sdlc-writers">${t}${r}</div>`}});var f8,jn,pN,mN=l(()=>{"use strict";Ga();iP();EM();kM();vp();TM();IM();MM();FM();hP();KM();YM();eN();Nn();aP();rN();qa();oN();iN();uN();C();f8=(e,t,r)=>r&&e.trim().length>0&&t.trim().length>0,jn=e=>e.replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;"),pN=e=>{let t=e.errorMessage===null?"":`<div class="alert-error">${jn(e.errorMessage)}</div>`,r=(e.skillNotice??null)===null?"":`<div class="alert-success">${jn(e.skillNotice??"")}</div>`,n=`${PI}${wI}`,o=e.resumableWizardCycle??null,s=o===null?"":tN(o),i=Kp(e.cycle),a=e.cycle===null?"":Vp(e.cycle),c=e.cycle!==null&&Tt(e.cycle),d=OM(e),p=f8(d.goal,d.prompt,e.canRun),f=c?"Waiting for you":d.running?"Running\u2026":"Run",b=dN({writers:e.writers,judge:d.judge,improver:d.improver,judgeInstructions:d.judgeInstructions,improverInstructions:d.improverInstructions}),h=nN({writers:e.writers,runner:d.runner,runnerInstructions:d.runnerInstructions}),y="Set the goal and the prompt, then choose who scores, who rewrites, and who runs step 4. Run starts the wizard (generalize \u2192 evaluate \u2192 separate \u2192 optimize modules). Classic loop skips the wizard. Instructions are optional.",u=d.running?'<p class="sdlc-locked" data-sdlc-locked>This run is using these choices.</p>':"",A=e.cycle!==null&&k(e.cycle.status),S=A?"":" open",g=`<div class="sdlc-compose-mode" role="group" aria-label="Run mode">
         <button type="button" class="btn btn-secondary" data-sdlc-compose-mode="wizard" aria-pressed="true">Wizard</button>
         <button type="button" class="btn btn-secondary" data-sdlc-compose-mode="classic" aria-pressed="false">Classic loop</button>
-      </div>`,w=S?'<button type="button" class="btn btn-primary" data-sdlc-start-new-run title="Clear the form and set a new goal">New prompt</button>':`<a class="btn btn-secondary" href="/prompt-optimizer/guide">Instructions and example</a>
-        <a class="btn btn-secondary" href="/prompt-optimizer?example=wizard-verification">Load wizard verification example</a>`,_=S?(()=>{let T=e.cycle!==null?Xt(e.cycle.goal):Xt(d.goal);return`<summary class="sdlc-compose-summary sdlc-compose-summary-collapsed"><span class="sdlc-compose-summary-chevron" aria-hidden="true">\u25B8</span><span class="sdlc-compose-summary-copy"><span class="eyebrow">Compose</span><span class="sdlc-compose-summary-title">Review settings</span><span class="muted sdlc-compose-summary-preview">${jn(T)}</span><span class="muted sdlc-compose-summary-hint">Expand to edit fields \u2014 does not start a run. Use New prompt or Re-run below.</span></span></summary>`})():'<summary class="sdlc-compose-summary"><span class="eyebrow">Prompt optimizer</span> Optimize a prompt</summary>',L=`<section class="card sdlc-compose${S?" sdlc-compose-viewing-finished":""}" id="prompt-optimizer-compose">
+      </div>`,w=A?'<button type="button" class="btn btn-primary" data-sdlc-start-new-run title="Clear the form and set a new goal">New prompt</button>':`<a class="btn btn-secondary" href="/prompt-optimizer/guide">Instructions and example</a>
+        <a class="btn btn-secondary" href="/prompt-optimizer?example=wizard-verification">Load wizard verification example</a>`,_=A?(()=>{let T=e.cycle!==null?Xt(e.cycle.goal):Xt(d.goal);return`<summary class="sdlc-compose-summary sdlc-compose-summary-collapsed"><span class="sdlc-compose-summary-chevron" aria-hidden="true">\u25B8</span><span class="sdlc-compose-summary-copy"><span class="eyebrow">Compose</span><span class="sdlc-compose-summary-title">Review settings</span><span class="muted sdlc-compose-summary-preview">${jn(T)}</span><span class="muted sdlc-compose-summary-hint">Expand to edit fields \u2014 does not start a run. Use New prompt or Re-run below.</span></span></summary>`})():'<summary class="sdlc-compose-summary"><span class="eyebrow">Prompt optimizer</span> Optimize a prompt</summary>',L=`<section class="card sdlc-compose${A?" sdlc-compose-viewing-finished":""}" id="prompt-optimizer-compose">
       <div class="sdlc-form-head">
         ${g}
         ${w}
       </div>
       <form class="sdlc-form" method="POST" action="/prompt-optimizer">
-      <details class="sdlc-compose-details" id="prompt-optimizer-compose-details"${A}>
+      <details class="sdlc-compose-details" id="prompt-optimizer-compose-details"${S}>
         ${_}
         <div class="sdlc-compose-details-body">
       <p class="lede">${y} ${jn(e.modelNote)}</p>

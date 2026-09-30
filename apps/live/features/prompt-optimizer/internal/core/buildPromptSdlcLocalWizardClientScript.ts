@@ -36,6 +36,7 @@ export const PROMPT_SDLC_WIZARD_CLIENT_SCRIPT = `<script>
     const holder = document.createElement("div");
     holder.innerHTML = html;
     let applied = false;
+    let runApplied = false;
     const incomingGateSlot = holder.querySelector("#prompt-optimizer-wizard-gate-slot");
     const gateSlot = document.getElementById("prompt-optimizer-wizard-gate-slot");
     if (incomingGateSlot !== null && gateSlot !== null) {
@@ -55,12 +56,14 @@ export const PROMPT_SDLC_WIZARD_CLIENT_SCRIPT = `<script>
     if (incomingRun !== null && run !== null) {
       run.replaceWith(incomingRun);
       applied = true;
+      runApplied = true;
     } else if (incomingRun !== null && run === null) {
       const resume = document.querySelector(".sdlc-wizard-resume");
       const compose = document.getElementById("prompt-optimizer-compose");
       const insertAfter = resume ?? compose;
       insertAfter?.insertAdjacentElement("afterend", incomingRun);
       applied = true;
+      runApplied = true;
     }
     const incomingDialog = holder.querySelector("#sdlc-node-dialog");
     if (incomingDialog !== null && document.getElementById("sdlc-node-dialog") === null) {
@@ -68,11 +71,14 @@ export const PROMPT_SDLC_WIZARD_CLIENT_SCRIPT = `<script>
     }
     if (!applied) return;
     lockCompose();
-    focusActiveWizardStep();
-    document.getElementById("prompt-optimizer-run")?.scrollIntoView({
-      behavior: "smooth",
-      block: "start",
-    });
+    if (runApplied) {
+      document.getElementById("prompt-optimizer-run")?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    } else {
+      focusActiveWizardStep();
+    }
     const runAfter = document.getElementById("prompt-optimizer-run");
     if (runAfter instanceof HTMLElement && runAfter.dataset.live !== "true") {
       document.dispatchEvent(new Event("sdlc-run-finished"));

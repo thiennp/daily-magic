@@ -11,5 +11,7 @@ describe("PROMPT_SDLC_WIZARD_CLIENT_SCRIPT", () => {
     expect(PROMPT_SDLC_WIZARD_CLIENT_SCRIPT).toContain(
       "formDataFromSubmit(form, submitter)",
     );
+    expect(PROMPT_SDLC_WIZARD_CLIENT_SCRIPT).toContain("runApplied");
+    expect(PROMPT_SDLC_WIZARD_CLIENT_SCRIPT).toContain("if (runApplied) {");
   });
 });
