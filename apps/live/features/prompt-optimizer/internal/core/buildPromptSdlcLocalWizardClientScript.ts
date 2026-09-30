@@ -1,11 +1,23 @@
 /** Client-side wizard UX: live fragment apply, no full reload on gate submit or wizard Run. */
 export const PROMPT_SDLC_WIZARD_CLIENT_SCRIPT = `<script>
 (() => {
+  const focusRunPanel = () => {
+    const compose = document.getElementById("prompt-optimizer-compose");
+    if (
+      compose instanceof HTMLElement &&
+      !compose.classList.contains("sdlc-compose-viewing-finished")
+    ) {
+      compose.classList.add("sdlc-compose-run-focus");
+    }
+    document.getElementById("prompt-optimizer-run")?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  };
+
   const lockCompose = () => {
     const fields = document.querySelector(".sdlc-fields");
     if (fields instanceof HTMLFieldSetElement) fields.disabled = true;
-    const details = document.getElementById("prompt-optimizer-compose-details");
-    if (details instanceof HTMLDetailsElement) details.open = true;
     document.querySelector("[data-sdlc-locked]")?.remove();
     const compose = document.getElementById("prompt-optimizer-compose");
     if (compose) {
@@ -23,6 +35,7 @@ export const PROMPT_SDLC_WIZARD_CLIENT_SCRIPT = `<script>
         '<span class="sdlc-spin" aria-hidden="true"></span> Running…';
     }
     document.querySelector(".sdlc-wizard-resume-paused")?.remove();
+    focusRunPanel();
   };
 
   const focusActiveWizardStep = () => {
@@ -75,12 +88,7 @@ export const PROMPT_SDLC_WIZARD_CLIENT_SCRIPT = `<script>
     }
     if (!applied) return;
     lockCompose();
-    if (runApplied) {
-      document.getElementById("prompt-optimizer-run")?.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-      });
-    } else {
+    if (!runApplied) {
       focusActiveWizardStep();
     }
     const runAfter = document.getElementById("prompt-optimizer-run");
@@ -168,12 +176,12 @@ export const PROMPT_SDLC_WIZARD_CLIENT_SCRIPT = `<script>
   });
 
   if (document.querySelector(".sdlc-fields[disabled]")) {
-    const details = document.getElementById("prompt-optimizer-compose-details");
-    const viewingFinished = document
-      .getElementById("prompt-optimizer-compose")
-      ?.classList.contains("sdlc-compose-viewing-finished");
-    if (details instanceof HTMLDetailsElement) {
-      details.open = viewingFinished !== true;
+    const compose = document.getElementById("prompt-optimizer-compose");
+    if (
+      compose instanceof HTMLElement &&
+      !compose.classList.contains("sdlc-compose-viewing-finished")
+    ) {
+      compose.classList.add("sdlc-compose-run-focus");
     }
   }
 

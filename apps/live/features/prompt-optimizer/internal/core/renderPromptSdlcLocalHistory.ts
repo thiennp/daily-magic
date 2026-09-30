@@ -60,7 +60,6 @@ export const renderPromptSdlcLocalHistory = (
   const filters = `<div class="sdlc-history-filter" role="group" aria-label="Filter history">
     <button type="button" class="btn btn-secondary" data-sdlc-history-filter="all" aria-pressed="true">All</button>
     <button type="button" class="btn btn-secondary" data-sdlc-history-filter="wizard" aria-pressed="false">Wizard</button>
-    <button type="button" class="btn btn-secondary" data-sdlc-history-filter="classic" aria-pressed="false">Classic</button>
   </div>`;
   const shownCount = Math.min(history.length, 20);
   const historySummaryLabel =

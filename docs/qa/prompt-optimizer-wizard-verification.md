@@ -13,9 +13,9 @@ Ship **bundle 172+** on `https://www.agentwitch.com`, update the Mac install, op
 
 ## Verification source prompt (improve this with the wizard)
 
-**Goal:** `PROMPT_SDLC_WIZARD_VERIFICATION_GOAL` in `promptSdlcWizardVerificationScenario.ts`.
+**Goal:** `PROMPT_SDLC_WIZARD_VERIFICATION_GOAL` in `.agents/scripts/dev/promptSdlcWizardVerificationDogfood.constants.ts`.
 
-**Starting prompt (weak — for dogfood):** `PROMPT_SDLC_WIZARD_VERIFICATION_SOURCE_PROMPT`.
+**Starting prompt (weak — for dogfood):** `PROMPT_SDLC_WIZARD_VERIFICATION_SOURCE_PROMPT` (same file).
 
 **After wizard dogfood (2026-09-29):** `PROMPT_SDLC_WIZARD_VERIFICATION_IMPROVED_PROMPT` — produces `.cursor/skills/verify-prompt-optimizer-wizard/SKILL.md` with full steps 1–4. Artifact: `/opt/cursor/artifacts/prompt-optimizer-wizard-dogfood-result.md` (dev VM).
 
@@ -50,7 +50,7 @@ Resumes a non-terminal cycle in `AWL_DOGFOOD_INSTALL_DIR` (default `/opt/cursor/
 ## Related
 
 - [prompt-sdlc.md](prompt-sdlc.md)
-- `apps/live/features/prompt-optimizer/internal/core/promptSdlcWizardVerificationScenario.ts`
+- `.agents/scripts/dev/promptSdlcWizardVerificationDogfood.constants.ts`
 
 ## Last reviewed
 

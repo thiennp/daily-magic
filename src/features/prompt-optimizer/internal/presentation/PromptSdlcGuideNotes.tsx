@@ -5,7 +5,6 @@ import {
   APP_SURFACE_SECTION_TITLE_CLASS,
 } from "@/components/surfaces/appSurfaceStyles.constant";
 
-import PromptSdlcGuideClassicSection from "./PromptSdlcGuideClassicSection";
 import PromptSdlcGuideWizardSection from "./PromptSdlcGuideWizardSection";
 
 export default function PromptSdlcGuideNotes(): ReactElement {
@@ -29,7 +28,6 @@ export default function PromptSdlcGuideNotes(): ReactElement {
         </p>
       </section>
       <PromptSdlcGuideWizardSection />
-      <PromptSdlcGuideClassicSection />
     </div>
   );
 }

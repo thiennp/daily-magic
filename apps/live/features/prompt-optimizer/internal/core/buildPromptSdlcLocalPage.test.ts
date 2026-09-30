@@ -30,6 +30,17 @@ describe("buildPromptSdlcLocalPageBody", () => {
     });
 
     expect(html).toContain("prompt-optimizer-compose-details");
+    expect(html).toContain("sdlc-compose-head");
+    expect(html).toContain("data-sdlc-compose-head-actions");
+    expect(html).toContain("Instructions and example");
+    const composeSummaryStart = html.indexOf(
+      'class="sdlc-compose-summary sdlc-compose-head"',
+    );
+    expect(composeSummaryStart).toBeGreaterThan(-1);
+    expect(html.indexOf("Optimize a prompt", composeSummaryStart)).toBeLessThan(
+      html.indexOf("Instructions and example", composeSummaryStart),
+    );
+    expect(html).not.toContain('<div class="sdlc-form-head">');
     expect(html.indexOf('class="sdlc-form"')).toBeLessThan(
       html.indexOf("prompt-optimizer-wizard-gate-slot"),
     );
@@ -49,6 +60,7 @@ describe("buildPromptSdlcLocalPageBody", () => {
     expect(html).toContain("Run starts the wizard");
     expect(html).not.toContain("run-classic");
     expect(html).not.toContain("Classic loop");
+    expect(html).not.toContain('data-sdlc-history-filter="classic"');
     expect(html.match(/class="sdlc-tip"/g)?.length).toBe(10);
     expect(html).toContain("Module runner");
     expect(html).toContain('name="runner"');
@@ -56,7 +68,22 @@ describe("buildPromptSdlcLocalPageBody", () => {
     expect(html).toContain('name="runnerInstructions"');
     expect(html).toContain("data-sdlc-run-hint");
     expect(html).toContain("data-sdlc-submit-bar");
+    expect(html).toContain('data-can-run="false"');
+    expect(html).toContain(">Run<");
+    expect(html).not.toMatch(/data-sdlc-run-wizard[^>]* disabled/);
     expect(html).toContain("sdlc-compose-details-body");
+    expect(html).toContain("data-sdlc-compose-stepper");
+    expect(html).toContain('data-sdlc-compose-step="1"');
+    expect(html).toContain('data-sdlc-compose-step="4"');
+    expect(html).toContain("sdlc-compose-step-title");
+    expect(html).toContain(">Project</h3>");
+    expect(html).toContain(">Summary</h3>");
+    expect(html).toContain("data-sdlc-compose-continue");
+    expect(html).toContain("data-sdlc-compose-back");
+    expect(html).toContain("data-sdlc-compose-review");
+    expect(html.indexOf('data-sdlc-compose-step="4"')).toBeLessThan(
+      html.indexOf("data-sdlc-submit-bar"),
+    );
     expect(html).toContain('enctype="application/x-www-form-urlencoded"');
   });
 
@@ -126,10 +153,12 @@ describe("buildPromptSdlcLocalPageBody", () => {
     expect(html).toContain('value="claude-cli" selected');
     expect(html).toContain('value="codex" selected');
     expect(html).toContain('fieldset class="sdlc-fields" disabled');
-    expect(html).toContain('id="prompt-optimizer-compose-details" open');
+    expect(html).not.toContain('id="prompt-optimizer-compose-details" open');
+    expect(html).toContain("sdlc-compose-run-focus");
     expect(html).toContain("This run is using these choices.");
     expect(html).toContain("sdlc-spin");
     expect(html).toContain("Running…");
+    expect(html).toMatch(/data-sdlc-run-wizard[^>]* disabled/);
     expect(html).toContain("What the score means");
     expect(html).toContain("0–44 bad");
     expect(html).toContain("90–100 passes");
@@ -341,7 +370,7 @@ describe("buildPromptSdlcLocalPageBody", () => {
     expect(html).toContain('href="/prompt-optimizer/guide"');
     expect(guide).toContain("How the prompt optimizer works");
     expect(guide).toContain("four-step wizard");
-    expect(guide).toContain("pass score <strong>70</strong>");
+    expect(guide).toContain("pass <strong>70</strong>");
     expect(guide).toContain("Run this sample");
     expect(guide).toContain(
       `href="/prompt-optimizer?example=${PROMPT_SDLC_LOCAL_GUIDE_EXAMPLE}"`,
@@ -390,6 +419,7 @@ describe("buildPromptSdlcLocalPageBody", () => {
     expect(html).toContain("Save score");
     expect(html).toContain("Waiting for you");
     expect(html).toContain('data-sdlc-run-state="waiting"');
+    expect(html).toMatch(/data-sdlc-run-wizard[^>]* disabled/);
     expect(html).toContain('name="reasons"');
     expect(html).toContain("The ticket has no refund.");
     expect(html).toContain("Tokens used: 80");

@@ -658,13 +658,8 @@ input.input[type="text"] {
 .textarea { min-height: 6rem; resize: vertical; font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 0.8125rem; }
 form.sdlc-form { display: flex; flex-direction: column; }
 .sdlc-compose .lede { margin-bottom: 1.25rem; }
-.sdlc-compose-mode { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-right: auto; }
-.sdlc-compose-mode [aria-pressed="true"] {
-  background: var(--aw-zinc-100);
-  outline: 2px solid var(--accent, #2563eb);
-}
+.sdlc-compose.sdlc-compose-run-focus:not(.sdlc-compose-viewing-finished) { display: none; }
 .sdlc-compose-viewing-result [data-writer-status] { display: none; }
-.sdlc-compose-viewing-finished .sdlc-compose-mode { display: none; }
 .sdlc-compose-viewing-finished .sdlc-compose-summary-collapsed {
   min-height: 3rem;
   padding: 0.65rem 0.85rem;
@@ -787,6 +782,97 @@ form.sdlc-form { display: flex; flex-direction: column; }
   gap: 1rem;
   padding-bottom: 0.75rem;
 }
+.sdlc-compose-stepper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.5rem;
+  margin: 0 0 0.25rem;
+  padding: 0;
+  list-style: none;
+}
+.sdlc-compose-stepper-item {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.25rem 0.55rem;
+  border-radius: 999px;
+  border: 1px solid var(--aw-zinc-200);
+  background: var(--aw-zinc-50);
+  font-size: 0.75rem;
+  color: var(--aw-zinc-600);
+}
+.sdlc-compose-stepper-item[aria-current="step"] {
+  border-color: #2563eb;
+  background: #eff6ff;
+  color: #1d4ed8;
+  font-weight: 600;
+}
+.sdlc-compose-stepper-item[aria-current="step"] .sdlc-compose-stepper-index {
+  background: #2563eb;
+  color: #fff;
+}
+.sdlc-compose-stepper-index {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 999px;
+  background: var(--aw-zinc-200);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  line-height: 1;
+}
+.sdlc-compose-stepper-label { white-space: nowrap; }
+.sdlc-compose-step { display: flex; flex-direction: column; gap: 1rem; }
+.sdlc-compose-step[hidden] { display: none !important; }
+.sdlc-compose-step-title {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--aw-zinc-900);
+}
+.sdlc-compose-step-lede { margin: 0; font-size: 0.875rem; line-height: 1.45; }
+.sdlc-compose-step-error { margin: 0; }
+.sdlc-block-flush { gap: 1rem; }
+.sdlc-block-flush + .sdlc-block-flush { padding-top: 0; border-top: 0; }
+.sdlc-compose-step-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.5rem 0.65rem;
+  padding-top: 0.25rem;
+}
+.sdlc-compose-review {
+  margin: 0;
+  display: grid;
+  gap: 0.65rem 1rem;
+  grid-template-columns: minmax(5.5rem, auto) 1fr;
+  font-size: 0.875rem;
+}
+.sdlc-compose-review dt {
+  margin: 0;
+  font-weight: 600;
+  color: var(--aw-zinc-600);
+}
+.sdlc-compose-review dd {
+  margin: 0;
+  color: var(--aw-zinc-900);
+  word-break: break-word;
+}
+.sdlc-compose-review-preview {
+  display: block;
+  margin-top: 0.2rem;
+  font-size: 0.8125rem;
+  color: var(--aw-zinc-600);
+  white-space: pre-wrap;
+  max-height: 6rem;
+  overflow: auto;
+}
+.sdlc-compose-step .sdlc-submit-bar {
+  margin-top: 0;
+  padding-top: 0.75rem;
+}
 .sdlc-compose-summary {
   cursor: pointer;
   font-size: 1.35rem;
@@ -798,10 +884,32 @@ form.sdlc-form { display: flex; flex-direction: column; }
   align-items: baseline;
   gap: 0.5rem 0.75rem;
 }
+.sdlc-compose-head {
+  width: 100%;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem 1rem;
+  margin-bottom: 0.5rem;
+}
+.sdlc-compose-summary-leading {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem 0.75rem;
+}
+.sdlc-compose-viewing-finished .sdlc-compose-head {
+  align-items: flex-start;
+}
+.sdlc-compose-viewing-finished .sdlc-compose-summary-leading {
+  align-items: flex-start;
+}
 .sdlc-compose-summary::-webkit-details-marker { display: none; }
 .sdlc-compose-summary .eyebrow { margin: 0; }
-.sdlc-form-head { display: flex; justify-content: flex-end; align-items: flex-start; gap: 1rem; margin-bottom: 0.5rem; }
-.sdlc-form-head .btn { flex: none; margin-top: 0.15rem; }
+.sdlc-form-head-actions { flex: none; margin-left: auto; }
+.sdlc-form-head-actions .btn { flex: none; margin-top: 0; }
 .sdlc-fields {
   border: 0;
   margin: 0;
@@ -845,22 +953,12 @@ form.sdlc-form { display: flex; flex-direction: column; }
   background: var(--aw-zinc-50);
 }
 .sdlc-submit-bar {
-  position: sticky;
-  bottom: 0;
-  z-index: 30;
   display: flex;
   flex-direction: column;
   gap: 0.65rem;
   margin-top: 1.25rem;
-  padding: 1rem 0 0.5rem;
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0) 0%,
-    rgba(255, 255, 255, 0.92) 28%,
-    #fff 55%
-  );
+  padding-top: 1rem;
   border-top: 1px solid var(--aw-zinc-200);
-  box-shadow: 0 -10px 28px rgba(15, 23, 42, 0.06);
 }
 .sdlc-submit-bar .sdlc-writer-summary { margin: 0; }
 .sdlc-submit-bar .sdlc-run-hint {
@@ -876,11 +974,23 @@ form.sdlc-form { display: flex; flex-direction: column; }
   line-height: 1.45;
 }
 .sdlc-submit {
+  position: sticky;
+  bottom: 0;
+  z-index: 30;
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-end;
   align-items: center;
   gap: 0.65rem 0.75rem;
+  margin: 0 -0.05rem;
+  padding: 0.65rem 0 0.5rem;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.92) 28%,
+    #fff 55%
+  );
+  box-shadow: 0 -10px 28px rgba(15, 23, 42, 0.06);
 }
 .sdlc-submit .btn-primary { min-width: 8.5rem; }
 .sdlc-run-wizard-btn[aria-busy="true"] {
@@ -1417,7 +1527,6 @@ form.sdlc-form textarea.input {
 form.sdlc-form textarea.input[name="prompt"] { min-height: 12rem; }
 .sdlc-history-filter { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.75rem; }
 .sdlc-history-filter [aria-pressed="true"] { outline: 2px solid var(--accent, #2563eb); }
-.sdlc-form-head { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.75rem; }
 .sdlc-history-details { margin-top: 0.5rem; }
 .sdlc-history-details-summary {
   cursor: pointer;
