@@ -30,6 +30,9 @@ export const invalidatePromptSdlcWizardDownstream = (
     selectedSplitOptionId: cleared.includes("separate")
       ? null
       : wizard.selectedSplitOptionId,
+    selectedSplitTopology: cleared.includes("separate")
+      ? null
+      : wizard.selectedSplitTopology,
     modules: cleared.includes("optimize_modules") ? [] : wizard.modules,
     currentModuleIndex: cleared.includes("optimize_modules")
       ? 0

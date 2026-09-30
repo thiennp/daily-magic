@@ -4,6 +4,7 @@ import path from "node:path";
 
 import { describe, expect, it } from "vitest";
 
+import { createInitialPromptSdlcWizardState } from "../../../../adapters/promptSdlcAwcCore";
 import { createPromptSdlcLocalCycle } from "./createPromptSdlcLocalCycle";
 import { readPromptSdlcLocalCycle } from "./promptSdlcLocalStore";
 
@@ -17,6 +18,7 @@ describe("promptSdlcLocalStore", () => {
       judgeModel: "claude-cli",
       improverModel: "claude-cli",
       workingDirectory: storeDir,
+      wizard: createInitialPromptSdlcWizardState("p"),
     });
     const legacyOnDisk = {
       ...cycle,
@@ -30,5 +32,6 @@ describe("promptSdlcLocalStore", () => {
 
     const loaded = readPromptSdlcLocalCycle(storePath, cycle.id);
     expect(loaded?.wizard?.parameterValues).toEqual({});
+    expect(loaded?.wizard?.selectedSplitTopology).toBeNull();
   });
 });

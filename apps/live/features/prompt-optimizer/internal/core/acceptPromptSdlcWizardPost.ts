@@ -56,6 +56,7 @@ const modulesFromSplit = (
       prompt: item.prompt,
       status: "pending" as const,
       selectedRevisionRound: null,
+      statistics: null,
     }));
 
 export const tryAcceptPromptSdlcWizardPost = (input: {
@@ -253,6 +254,7 @@ export const tryAcceptPromptSdlcWizardPost = (input: {
           ...cycle.wizard,
           gate: "optimize_modules",
           selectedSplitOptionId: splitId,
+          selectedSplitTopology: option.topology,
           modules,
           phase: "optimize_modules",
           currentModuleIndex: 0,

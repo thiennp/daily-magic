@@ -7,4 +7,9 @@ export const normalizePromptSdlcWizardState = (
   ...wizard,
   parameterValues: wizard.parameterValues ?? {},
   pendingStepInstructions: wizard.pendingStepInstructions ?? "",
+  selectedSplitTopology: wizard.selectedSplitTopology ?? null,
+  modules: wizard.modules.map((module) => ({
+    ...module,
+    statistics: module.statistics ?? null,
+  })),
 });

@@ -50,6 +50,7 @@ export {
 export type { default as PromptSdlcCycleView } from "@/lib/promptOptimizer/types/PromptSdlcCycleView.type";
 export {
   PROMPT_SDLC_WIZARD_MAX_ROUNDS,
+  PROMPT_SDLC_WIZARD_MODULE_MAX_ROUNDS,
   PROMPT_SDLC_WIZARD_PASS_SCORE,
   PROMPT_SDLC_WIZARD_SCHEMA_VERSION,
 } from "@/lib/promptOptimizer/wizard/promptSdlcWizardLimits.constant";
@@ -60,6 +61,10 @@ export { invalidatePromptSdlcWizardDownstream } from "@/lib/promptOptimizer/wiza
 export { buildPromptSdlcGeneralizePrompt } from "@/lib/promptOptimizer/wizard/buildPromptSdlcGeneralizePrompt";
 export { applyPromptSdlcWizardPlaceholdersToSplitOptions } from "@/lib/promptOptimizer/wizard/applyPromptSdlcWizardPlaceholdersToSplitOptions";
 export { buildPromptSdlcSeparatePrompt } from "@/lib/promptOptimizer/wizard/buildPromptSdlcSeparatePrompt";
+export { buildPromptSdlcWizardModuleRunPrompt } from "@/lib/promptOptimizer/wizard/buildPromptSdlcWizardModuleRunPrompt";
+export { collectPromptSdlcWizardModuleStatistics } from "@/lib/promptOptimizer/wizard/collectPromptSdlcWizardModuleStatistics";
+export { finalizePromptSdlcWizardModuleRun } from "@/lib/promptOptimizer/wizard/finalizePromptSdlcWizardModuleRun";
+export { readPromptSdlcWizardChainPriorOutput } from "@/lib/promptOptimizer/wizard/readPromptSdlcWizardChainPriorOutput";
 export { parsePromptSdlcGeneralizeReply } from "@/lib/promptOptimizer/wizard/parsePromptSdlcGeneralizeReply";
 export { parsePromptSdlcSeparateReply } from "@/lib/promptOptimizer/wizard/parsePromptSdlcSeparateReply";
 export { recordPromptSdlcWizardAttempt } from "@/lib/promptOptimizer/wizard/recordPromptSdlcWizardAttempt";
