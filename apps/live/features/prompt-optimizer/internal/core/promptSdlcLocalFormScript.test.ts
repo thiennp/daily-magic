@@ -55,4 +55,9 @@ describe("PROMPT_SDLC_LOCAL_FORM_SCRIPT", () => {
     expect(PROMPT_SDLC_LOCAL_FORM_SCRIPT).toContain("stopImmediatePropagation");
     expect(PROMPT_SDLC_LOCAL_FORM_SCRIPT).toContain("true,");
   });
+
+  it("fills the goal field when a quick-fill chip is clicked", () => {
+    expect(PROMPT_SDLC_LOCAL_FORM_SCRIPT).toContain("[data-sdlc-goal-preset]");
+    expect(PROMPT_SDLC_LOCAL_FORM_SCRIPT).toContain("dataset.sdlcGoalPreset");
+  });
 });

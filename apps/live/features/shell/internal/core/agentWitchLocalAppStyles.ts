@@ -823,6 +823,38 @@ form.sdlc-form { display: flex; flex-direction: column; }
   gap: 1rem;
   padding-bottom: 0.75rem;
 }
+.sdlc-goal-presets {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem 0.4rem;
+  margin: 0.35rem 0 0.5rem;
+}
+.sdlc-goal-presets-label {
+  font-size: 0.75rem;
+  margin-right: 0.15rem;
+}
+.sdlc-goal-preset-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  border: 1px solid var(--aw-zinc-200);
+  background: var(--aw-zinc-50);
+  font-size: 0.75rem;
+  line-height: 1.3;
+  color: var(--aw-zinc-700);
+  cursor: pointer;
+}
+.sdlc-goal-preset-chip:hover {
+  border-color: var(--aw-zinc-300);
+  background: #fff;
+  color: var(--aw-zinc-900);
+}
+.sdlc-goal-preset-chip:focus-visible {
+  outline: 2px solid rgb(26 68 190 / 0.45);
+  outline-offset: 2px;
+}
 .sdlc-compose-stepper {
   display: flex;
   flex-wrap: wrap;

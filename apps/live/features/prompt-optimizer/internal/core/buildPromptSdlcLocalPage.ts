@@ -33,6 +33,7 @@ import {
   PROMPT_SDLC_WIZARD_PASS_SCORE,
   isPromptSdlcTerminalStatus,
 } from "../../../../adapters/promptSdlcAwcCore";
+import { renderPromptSdlcLocalGoalPresets } from "./renderPromptSdlcLocalGoalPresets";
 import { renderPromptSdlcLocalPassScoreField } from "./renderPromptSdlcLocalPassScore";
 const readComposeCanRun = (
   goal: string,
@@ -203,6 +204,7 @@ export const buildPromptSdlcLocalPageBody = (input: {
           <div class="sdlc-block sdlc-block-flush">
           <div class="field">
             ${renderPromptSdlcFieldHeading("Goal", "goal")}
+            ${renderPromptSdlcLocalGoalPresets()}
             <textarea class="input textarea" name="goal" rows="4" required>${escapeHtml(shown.goal)}</textarea>
           </div>
           <div class="field">

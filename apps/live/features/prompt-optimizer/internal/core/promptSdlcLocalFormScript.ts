@@ -476,8 +476,23 @@ export const PROMPT_SDLC_LOCAL_FORM_SCRIPT = `<script>
       paintReady();
     });
   }
+  const composeForm = document.querySelector("form.sdlc-form");
   const goalInput = document.querySelector('form.sdlc-form [name="goal"]');
   const promptInput = document.querySelector('form.sdlc-form [name="prompt"]');
+  composeForm?.addEventListener("click", (event) => {
+    const target = event.target;
+    if (!(target instanceof Element)) return;
+    const chip = target.closest("[data-sdlc-goal-preset]");
+    if (!(chip instanceof HTMLButtonElement)) return;
+    const preset = chip.dataset.sdlcGoalPreset?.trim() ?? "";
+    if (preset.length === 0) return;
+    const goal =
+      composeForm?.querySelector('[name="goal"]') ?? goalInput;
+    if (!(goal instanceof HTMLTextAreaElement)) return;
+    goal.value = preset;
+    goal.dispatchEvent(new Event("input", { bubbles: true }));
+    goal.focus();
+  });
   if (goalInput instanceof HTMLTextAreaElement) {
     goalInput.addEventListener("input", () => {
       clearRunHint();
