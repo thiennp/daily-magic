@@ -33,7 +33,7 @@ describe("answerPromptSdlcLocalManual", () => {
       end: (body: string) => {
         chunks.push(Buffer.from(body));
       },
-    } as http.ServerResponse;
+    } as unknown as http.ServerResponse;
 
     const handled = await answerPromptSdlcLocalManual(
       {
@@ -52,7 +52,7 @@ describe("answerPromptSdlcLocalManual", () => {
         cycleId: cycle.id,
         liveFragment: "1",
       }),
-      { writers: [], note: "", canRun: false },
+      describePromptSdlcLocalModels([]),
     );
 
     expect(handled).toBe(true);
