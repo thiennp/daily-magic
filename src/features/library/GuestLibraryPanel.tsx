@@ -28,9 +28,9 @@ export default function GuestLibraryPanel({
 
   return (
     <div className="space-y-8">
-      <p className="text-sm text-gray-600 dark:text-gray-400">
-        Build workflows here without an account. Saves stay on this browser
-        until you{" "}
+      <p className="text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+        Draft Playbooks here without an account. A Playbook is how Agent Witch
+        knows what to do on your Mac. Saves stay on this browser until you{" "}
         <Link
           href={buildSignInHref("/library")}
           className="font-medium text-brand-600 hover:underline dark:text-brand-400"

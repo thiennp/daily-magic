@@ -70,7 +70,7 @@ export default function HomeMarketingPopularPresetsGrid({
               >
                 <p
                   className={mergeMarketingClasses(
-                    "text-xs font-medium uppercase tracking-wider",
+                    "text-xs font-medium tracking-wide",
                     MARKETING_EYEBROW_TEXT_CLASSES,
                   )}
                 >

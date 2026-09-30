@@ -51,12 +51,12 @@ export default function MarketingLegalPageLayout({
         >
           {intro}
         </p>
-        <div className="mt-12 space-y-10 border-t border-zinc-200/80 pt-10 dark:border-gray-800">
+        <div className="mt-12 space-y-12 border-t border-zinc-200/80 pt-10 dark:border-gray-800">
           {sections.map((section) => (
             <section key={section.heading}>
               <h2
                 className={mergeMarketingClasses(
-                  "text-xl font-semibold tracking-tight",
+                  "text-2xl font-semibold tracking-tight",
                   MARKETING_TEXT_PRIMARY_CLASSES,
                 )}
               >
@@ -64,7 +64,7 @@ export default function MarketingLegalPageLayout({
               </h2>
               <p
                 className={mergeMarketingClasses(
-                  "mt-3 text-base leading-relaxed",
+                  "mt-4 text-base leading-7",
                   MARKETING_TEXT_SECONDARY_CLASSES,
                 )}
               >

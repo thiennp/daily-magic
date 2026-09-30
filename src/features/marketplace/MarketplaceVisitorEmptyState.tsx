@@ -34,11 +34,13 @@ export default function MarketplaceVisitorEmptyState() {
           id="marketplace-empty-heading"
           className={APP_SURFACE_SECTION_TITLE_CLASS}
         >
-          Try a free starter workflow
+          Try a free starter Playbook
         </h2>
-        <p className={`mt-2 max-w-2xl ${APP_SURFACE_BODY_TEXT_CLASS}`}>
-          Pick a ready-made workflow below. Sign in to save it to your Library
-          and run it on your Mac.
+        <p
+          className={`mt-2 max-w-2xl leading-relaxed ${APP_SURFACE_BODY_TEXT_CLASS}`}
+        >
+          Pick a ready-made starter below. Sign in to save it to your Library
+          and run it as a Task on your Mac.
         </p>
       </div>
       <HomeMarketingPopularPresetsGrid presets={presets} />
