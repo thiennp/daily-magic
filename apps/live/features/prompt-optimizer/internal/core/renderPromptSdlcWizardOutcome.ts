@@ -23,7 +23,7 @@ const renderModuleTable = (cycle: PromptSdlcLocalCycle): string => {
   const summary = summarizePromptSdlcWizardCompletion(wizard);
   const headline =
     summary.terminalStatusSuggestion === "passed"
-      ? `${summary.passedModuleCount} of ${summary.totalModules} modules passed (score ≥ ${PROMPT_SDLC_WIZARD_PASS_SCORE}).`
+      ? ""
       : `${summary.passedModuleCount} of ${summary.totalModules} modules passed. Some modules were skipped, stopped, or below ${PROMPT_SDLC_WIZARD_PASS_SCORE}.`;
   const rows = summary.rows
     .map(
@@ -31,7 +31,9 @@ const renderModuleTable = (cycle: PromptSdlcLocalCycle): string => {
         `<tr><td>${escapeHtml(row.title)}</td><td>${row.bestScore ?? "—"}</td><td>${row.tokens ?? "—"}</td><td>${escapeHtml(row.status)}</td></tr>`,
     )
     .join("");
-  return `<h3>Modules</h3><p class="muted">${escapeHtml(headline)}</p><table class="sdlc-wizard-outcome-table"><thead><tr><th>Module</th><th>Best score</th><th>Tokens</th><th>Status</th></tr></thead><tbody>${rows}</tbody></table>`;
+  const headlineBlock =
+    headline.length === 0 ? "" : `<p class="muted">${escapeHtml(headline)}</p>`;
+  return `<h3>Modules</h3>${headlineBlock}<table class="sdlc-wizard-outcome-table"><thead><tr><th>Module</th><th>Best score</th><th>Tokens</th><th>Status</th></tr></thead><tbody>${rows}</tbody></table>`;
 };
 
 export const renderPromptSdlcWizardOutcome = (
@@ -60,7 +62,9 @@ export const renderPromptSdlcWizardOutcome = (
               : "Step 4 — Optimize modules";
       const hint = describePromptSdlcWizardOutcomeStepHint(cycle, stepId);
       const summaryLine = `${escapeHtml(title)} <span class="muted sdlc-wizard-outcome-step-hint">${escapeHtml(hint)}</span>`;
-      return `<details class="sdlc-wizard-outcome-step"><summary>${summaryLine}</summary><div class="sdlc-wizard-outcome-step-body">${body}</div></details>`;
+      const openStep4 =
+        stepId === "wizard-4" && wizard.phase === "complete" ? " open" : "";
+      return `<details class="sdlc-wizard-outcome-step"${openStep4}><summary>${summaryLine}</summary><div class="sdlc-wizard-outcome-step-body">${body}</div></details>`;
     })
     .join("");
 

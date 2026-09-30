@@ -11,7 +11,7 @@ import { buildPromptSdlcLocalPageBody } from "../../apps/live/features/prompt-op
 import { createPromptSdlcLocalCycle } from "../../apps/live/features/prompt-optimizer/internal/core/createPromptSdlcLocalCycle";
 
 const ARTIFACTS = "/opt/cursor/artifacts";
-const BUNDLE = "191";
+const BUNDLE = "192";
 
 const finishedWizard = (): ReturnType<typeof createPromptSdlcLocalCycle> => {
   const wizard = {
@@ -67,7 +67,7 @@ const finishedWizard = (): ReturnType<typeof createPromptSdlcLocalCycle> => {
   summarizePromptSdlcWizardCompletion(wizard);
   return {
     ...createPromptSdlcLocalCycle({
-      goal: "Dogfood wizard UX bundle 191",
+      goal: "Dogfood wizard UX bundle 192",
       sourcePrompt: "Weak prompt",
       judgeModel: "claude-cli",
       improverModel: "claude-cli",
@@ -81,37 +81,44 @@ const finishedWizard = (): ReturnType<typeof createPromptSdlcLocalCycle> => {
   };
 };
 
-const history = (): ReturnType<typeof createPromptSdlcLocalCycle>[] => [
-  finishedWizard(),
-  {
-    ...createPromptSdlcLocalCycle({
-      goal: "Classic loop sample",
-      sourcePrompt: "Fix tests",
-      judgeModel: "codex",
-      improverModel: "codex",
-      workingDirectory: "/tmp",
-    }),
-    id: "hist-classic",
-    status: "passed",
-    currentRound: 3,
-  },
-  {
-    ...createPromptSdlcLocalCycle({
-      goal: "Paused wizard run",
-      sourcePrompt: "p",
-      judgeModel: "claude-cli",
-      improverModel: "claude-cli",
-      wizard: {
-        ...createInitialPromptSdlcWizardState("p"),
-        gate: "evaluate",
-        phase: "evaluate",
-      },
-    }),
-    id: "hist-wizard-paused",
-    status: "wizard_paused",
-    currentRound: 0,
-  },
-];
+const history = (): ReturnType<typeof createPromptSdlcLocalCycle>[] => {
+  const now = Date.now();
+  const iso = (offsetMs: number): string =>
+    new Date(now - offsetMs).toISOString();
+  return [
+    finishedWizard(),
+    {
+      ...createPromptSdlcLocalCycle({
+        goal: "Classic loop sample",
+        sourcePrompt: "Fix tests",
+        judgeModel: "codex",
+        improverModel: "codex",
+        workingDirectory: "/tmp",
+      }),
+      id: "hist-classic",
+      status: "passed",
+      currentRound: 3,
+      updatedAt: iso(1000 * 60 * 45),
+    },
+    {
+      ...createPromptSdlcLocalCycle({
+        goal: "Paused wizard run",
+        sourcePrompt: "p",
+        judgeModel: "claude-cli",
+        improverModel: "claude-cli",
+        wizard: {
+          ...createInitialPromptSdlcWizardState("p"),
+          gate: "evaluate",
+          phase: "evaluate",
+        },
+      }),
+      id: "hist-wizard-paused",
+      status: "wizard_paused",
+      currentRound: 0,
+      updatedAt: iso(1000 * 60 * 60 * 5),
+    },
+  ];
+};
 
 const main = async (): Promise<void> => {
   const cycle = finishedWizard();

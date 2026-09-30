@@ -983,6 +983,8 @@ form.sdlc-form textarea.input.sdlc-instruction {
 .sdlc-run-head { display: flex; flex-direction: column; gap: 0.75rem; }
 .sdlc-run-head-top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.5rem 1rem; }
 .sdlc-run-head-top .eyebrow { margin-bottom: 0; }
+.sdlc-run-goal { margin: 0.35rem 0 0.75rem; font-size: 1.05rem; font-weight: 600; line-height: 1.35; color: var(--text-primary, inherit); }
+.sdlc-rerun-hint { margin: 0.35rem 0 0; font-size: 0.875rem; }
 .sdlc-run-badge {
   font-size: 0.6875rem;
   font-weight: 600;

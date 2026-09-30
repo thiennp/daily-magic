@@ -147,6 +147,29 @@ const renderEvaluateBody = (cycle: PromptSdlcLocalCycle): string => {
     });
     return `<p class="muted">Selected round ${wizard.evaluateSelectedRound} (concrete reference for step 3; split options use {{placeholders}} from the generalized template).</p><h2>Evaluated prompt</h2><pre class="mono">${escapeHtml(handoff)}</pre>`;
   }
+  const evaluateFinished =
+    wizard.phase === "complete" ||
+    (wizard.gate === null && wizard.modules.length > 0);
+  if (evaluateFinished) {
+    const scoredRevisions = cycle.revisions.filter(
+      (revision) =>
+        revision.judgement !== null && revision.judgement !== undefined,
+    );
+    if (scoredRevisions.length > 0) {
+      const list = scoredRevisions
+        .map((revision) => {
+          const score = revision.judgement?.score ?? "—";
+          return `<li>Round ${revision.roundNumber} — score ${score}</li>`;
+        })
+        .join("");
+      return `<p class="muted">Evaluate finished — scored prompt revisions before module optimization.</p><ul class="sdlc-wizard-revisions">${list}</ul>`;
+    }
+    const template = wizard.templatedPrompt.trim();
+    if (template.length > 0) {
+      return `<p class="muted">Evaluate finished. Prompt-text scoring completed before module optimization.</p><h2>Generalized template</h2><pre class="sdlc-pre">${escapeHtml(template)}</pre>`;
+    }
+    return `<p class="muted">Evaluate finished. Scoring details were not stored in this run export.</p>`;
+  }
   return `<p class="muted">Evaluate has not run yet.</p>`;
 };
 
@@ -156,6 +179,15 @@ const renderSeparateBody = (cycle: PromptSdlcLocalCycle): string => {
     return "";
   }
   if (wizard.splitOptions.length === 0) {
+    if (wizard.modules.length > 0) {
+      const moduleItems = wizard.modules
+        .map(
+          (item) =>
+            `<li><strong>${escapeHtml(item.title)}</strong> <span class="muted">(${escapeHtml(item.status)})</span></li>`,
+        )
+        .join("");
+      return `<p class="muted">Separate finished — ${wizard.modules.length} module${wizard.modules.length === 1 ? "" : "s"} defined for step 4.</p><ul class="sdlc-wizard-chunks">${moduleItems}</ul>`;
+    }
     return `<p class="muted">No split options yet.</p>`;
   }
   const options = wizard.splitOptions

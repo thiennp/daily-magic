@@ -68,6 +68,7 @@ describe("renderPromptSdlcWizardOutcome", () => {
     expect(html).toContain("sdlc-wizard-outcome-table");
     expect(html).toContain("Main");
     expect(html).toContain("5");
+    expect(html).toContain('class="sdlc-wizard-outcome-step" open');
   });
 
   it("returns empty for an in-progress wizard", () => {
