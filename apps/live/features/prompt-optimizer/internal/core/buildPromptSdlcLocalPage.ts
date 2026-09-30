@@ -216,7 +216,7 @@ export const buildPromptSdlcLocalPageBody = (input: {
           <p class="sdlc-writer-summary" data-sdlc-writer-summary hidden></p>
           <p class="muted sdlc-run-hint" data-sdlc-run-hint role="status" hidden></p>
           <p class="muted sdlc-wizard-limits-callout" data-sdlc-wizard-limits-callout">Wizard: pass score ${PROMPT_SDLC_WIZARD_PASS_SCORE}, up to ${PROMPT_SDLC_WIZARD_MAX_ROUNDS} scored revisions in Step 2; Step 4 runs one trial per module.</p>
-          <div class="sdlc-submit sdlc-compose-step-actions">
+          <div class="sdlc-compose-step-actions">
             <button type="button" class="btn btn-secondary" data-sdlc-compose-back>Back</button>
             <button class="btn btn-primary sdlc-run-wizard-btn" type="submit" name="intent" value="run" data-sdlc-run data-sdlc-run-wizard data-sdlc-run-state="${runButtonState}" data-can-run="${composeCanRun ? "true" : "false"}"${runButtonBusy}${shown.running ? " disabled" : ""}>${runButtonInner}</button>
           </div>

@@ -877,9 +877,6 @@ form.sdlc-form { display: flex; flex-direction: column; }
   margin-top: 0;
   padding-top: 0.75rem;
 }
-.sdlc-compose-step[data-sdlc-compose-step="4"] .sdlc-submit.sdlc-compose-step-actions {
-  padding-top: 0.65rem;
-}
 .sdlc-compose-summary {
   cursor: pointer;
   font-size: 1.35rem;
@@ -980,26 +977,7 @@ form.sdlc-form { display: flex; flex-direction: column; }
   margin: 0;
   line-height: 1.45;
 }
-.sdlc-submit {
-  position: sticky;
-  bottom: 0;
-  z-index: 30;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-  align-items: center;
-  gap: 0.65rem 0.75rem;
-  margin: 0 -0.05rem;
-  padding: 0.65rem 0 0.5rem;
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0) 0%,
-    rgba(255, 255, 255, 0.92) 28%,
-    #fff 55%
-  );
-  box-shadow: 0 -10px 28px rgba(15, 23, 42, 0.06);
-}
-.sdlc-submit .btn-primary { min-width: 8.5rem; }
+.sdlc-compose-step-actions .btn-primary { min-width: 8.5rem; }
 .sdlc-run-wizard-btn[aria-busy="true"] {
   display: inline-flex;
   align-items: center;
