@@ -123,15 +123,31 @@ export const PROMPT_SDLC_LOCAL_FORM_SCRIPT = `<script>
       cache: "no-store",
     }).catch(() => null);
   };
+  const syncRunnerFromJudge = () => {
+    const judgeSelect = document.querySelector('[data-writer-select="judge"]');
+    const runnerSelect = document.querySelector('[data-writer-select="runner"]');
+    if (!(judgeSelect instanceof HTMLSelectElement)) return;
+    if (!(runnerSelect instanceof HTMLSelectElement)) return;
+    if (runnerSelect.value.length > 0) return;
+    if (judgeSelect.value.length === 0 || judgeSelect.value === "manual") return;
+    runnerSelect.value = judgeSelect.value;
+    const slot = document.querySelector('[data-writer-status="runner"]');
+    if (slot instanceof HTMLElement) slot.dataset.writer = judgeSelect.value;
+    void paintWriter(judgeSelect.value);
+  };
   document.querySelectorAll("[data-writer-select]").forEach((select) => {
     select.addEventListener("change", () => {
       rememberSelection();
       const slot = document.querySelector('[data-writer-status="' + select.dataset.writerSelect + '"]');
       if (!slot) return;
       slot.dataset.writer = select.value;
+      if (select instanceof HTMLSelectElement && select.dataset.writerSelect === "judge") {
+        syncRunnerFromJudge();
+      }
       void paintWriter(select.value);
     });
   });
+  syncRunnerFromJudge();
   const folderInput = document.querySelector('form.sdlc-form [name="folder"]');
   if (folderInput instanceof HTMLInputElement) {
     folderInput.addEventListener("change", rememberSelection);
@@ -176,6 +192,31 @@ export const PROMPT_SDLC_LOCAL_FORM_SCRIPT = `<script>
     pass.addEventListener("input", paintPass);
     paintPass();
   }
+  const closeFieldTips = () => {
+    document.querySelectorAll(".sdlc-tip[aria-expanded='true']").forEach((btn) => {
+      if (btn instanceof HTMLButtonElement) btn.setAttribute("aria-expanded", "false");
+    });
+  };
+  document.querySelectorAll(".sdlc-tip").forEach((btn) => {
+    if (!(btn instanceof HTMLButtonElement)) return;
+    const open = () => {
+      closeFieldTips();
+      btn.setAttribute("aria-expanded", "true");
+    };
+    btn.addEventListener("focus", open);
+    btn.addEventListener("click", () => {
+      const expanded = btn.getAttribute("aria-expanded") === "true";
+      if (expanded) {
+        btn.setAttribute("aria-expanded", "false");
+      } else {
+        open();
+      }
+    });
+    btn.addEventListener("blur", () => btn.setAttribute("aria-expanded", "false"));
+  });
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") closeFieldTips();
+  });
   paintReady();
   document.addEventListener("sdlc-run-finished", () => {
     const gateSlot = document.getElementById("prompt-optimizer-wizard-gate-slot");

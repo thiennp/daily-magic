@@ -10,4 +10,10 @@ describe("PROMPT_SDLC_LOCAL_FORM_SCRIPT", () => {
     expect(PROMPT_SDLC_LOCAL_FORM_SCRIPT).toContain("[data-sdlc-run-hint]");
     expect(PROMPT_SDLC_LOCAL_FORM_SCRIPT).toContain("paintRunHint");
   });
+
+  it("closes field tips on Escape and tracks aria-expanded", () => {
+    expect(PROMPT_SDLC_LOCAL_FORM_SCRIPT).toContain('event.key === "Escape"');
+    expect(PROMPT_SDLC_LOCAL_FORM_SCRIPT).toContain("aria-expanded");
+    expect(PROMPT_SDLC_LOCAL_FORM_SCRIPT).toContain("syncRunnerFromJudge");
+  });
 });

@@ -29,7 +29,7 @@ export const renderPromptSdlcWizardRunnerFields = (input: {
     <p class="muted">Wizard step 4 only: the runner executes each module prompt; the judge scores only.</p>
     <div class="sdlc-writer">
       <div class="field">${renderPromptSdlcFieldHeading("Runner", "runner")}<select class="input" name="runner" data-writer-select="runner" required>${blank}${options}</select>${runnerStatus}</div>
-      <div class="field">${renderPromptSdlcFieldHeading("Runner instructions", "runnerInstructions")}<textarea class="input textarea sdlc-instruction" name="runnerInstructions" rows="3">${escapeHtml(input.runnerInstructions)}</textarea><span class="muted">Optional. Passed when the runner executes module prompts.</span></div>
+      <details class="sdlc-instruction-details"><summary class="sdlc-instruction-summary">${renderPromptSdlcFieldHeading("Runner instructions", "runnerInstructions")}</summary><div class="field"><textarea class="input textarea sdlc-instruction" name="runnerInstructions" rows="3">${escapeHtml(input.runnerInstructions)}</textarea><span class="muted">Optional. Passed when the runner executes module prompts.</span></div></details>
     </div>
   </div>`;
 };

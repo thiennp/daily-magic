@@ -30,13 +30,18 @@ export const renderPromptSdlcWizardRevisionRoundList = (input: {
     input.caption === undefined
       ? ""
       : `<p class="muted">${escapeHtml(input.caption)}</p>`;
+  const step4Trial =
+    input.cycle.wizard?.gate === "optimize_modules" ||
+    input.cycle.wizard?.phase === "optimize_modules";
+  const roundPrefix = (roundNumber: number): string =>
+    step4Trial && roundNumber === 0 ? "Trial run" : `Round ${roundNumber}`;
   const items = input.cycle.revisions
     .map((item) => {
       const score = item.judgement?.score;
       const label =
         score === null || score === undefined
-          ? `Round ${item.roundNumber} — not scored`
-          : `Round ${item.roundNumber} — ${score}`;
+          ? `${roundPrefix(item.roundNumber)} — not scored`
+          : `${roundPrefix(item.roundNumber)} — ${score}`;
       const reason = item.judgement?.reasons?.trim() ?? "";
       const reasonLine =
         reason.length === 0

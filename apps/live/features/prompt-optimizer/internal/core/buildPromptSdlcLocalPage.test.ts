@@ -45,7 +45,8 @@ describe("buildPromptSdlcLocalPageBody", () => {
     expect(html).toContain('name="judgeInstructions"');
     expect(html).toContain('name="improverInstructions"');
     expect(html).toContain("Judge and improver");
-    expect(html).toContain("When to stop");
+    expect(html).toContain("Classic loop options");
+    expect(html).toContain("sdlc-wizard-limits-callout");
     expect(html).toContain("Run starts the wizard");
     expect(html).toContain("Classic loop skips the wizard");
     expect(html.match(/class="sdlc-tip"/g)?.length).toBe(12);

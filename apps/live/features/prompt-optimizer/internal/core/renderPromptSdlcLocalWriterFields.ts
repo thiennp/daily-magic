@@ -47,8 +47,9 @@ const renderInstruction = (
   label: string,
   value: string,
   hint: string,
+  tipId: "judgeInstructions" | "improverInstructions",
 ): string =>
-  `<div class="field">${renderPromptSdlcFieldHeading(label, name === "judgeInstructions" ? "judgeInstructions" : "improverInstructions")}<textarea class="input textarea sdlc-instruction" name="${name}" rows="3">${escapeHtml(value)}</textarea><span class="muted">${hint}</span></div>`;
+  `<details class="sdlc-instruction-details"><summary class="sdlc-instruction-summary">${renderPromptSdlcFieldHeading(label, tipId)}</summary><div class="field"><textarea class="input textarea sdlc-instruction" name="${name}" rows="3">${escapeHtml(value)}</textarea><span class="muted">${hint}</span></div></details>`;
 
 export const renderPromptSdlcLocalWriterFields = (input: {
   readonly writers: readonly PromptSdlcLocalWriterChoice[];
@@ -57,7 +58,7 @@ export const renderPromptSdlcLocalWriterFields = (input: {
   readonly judgeInstructions?: string;
   readonly improverInstructions?: string;
 }): string => {
-  const judgeCard = `<div class="sdlc-writer">${renderWriterSelect("judge", "Judge", input.judge, input.writers, "I'll score it")}${renderWriterStatus("judge", input.judge, input.writers)}${renderInstruction("judgeInstructions", "Instructions for the judge", input.judgeInstructions ?? "", "Optional. Used with the goal when scoring.")}</div>`;
-  const improverCard = `<div class="sdlc-writer">${renderWriterSelect("improver", "Improver", input.improver, input.writers, "I'll rewrite it")}${renderWriterStatus("improver", input.improver, input.writers)}${renderInstruction("improverInstructions", "Instructions for the improver", input.improverInstructions ?? "", "Optional. Used with the goal when rewriting.")}</div>`;
+  const judgeCard = `<div class="sdlc-writer">${renderWriterSelect("judge", "Judge", input.judge, input.writers, "I'll score it")}${renderWriterStatus("judge", input.judge, input.writers)}${renderInstruction("judgeInstructions", "Instructions for the judge", input.judgeInstructions ?? "", "Optional. Used with the goal when scoring.", "judgeInstructions")}</div>`;
+  const improverCard = `<div class="sdlc-writer">${renderWriterSelect("improver", "Improver", input.improver, input.writers, "I'll rewrite it")}${renderWriterStatus("improver", input.improver, input.writers)}${renderInstruction("improverInstructions", "Instructions for the improver", input.improverInstructions ?? "", "Optional. Used with the goal when rewriting.", "improverInstructions")}</div>`;
   return `<div class="sdlc-writers">${judgeCard}${improverCard}</div>`;
 };

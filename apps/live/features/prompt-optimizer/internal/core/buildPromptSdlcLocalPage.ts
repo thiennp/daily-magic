@@ -25,7 +25,12 @@ import { renderPromptSdlcFieldHeading } from "./renderPromptSdlcFieldTip";
 import { renderPromptSdlcWizardGateSlot } from "./renderPromptSdlcWizardGateSlot";
 import { renderPromptSdlcWizardResumeBanner } from "./renderPromptSdlcWizardResumeBanner";
 import { renderPromptSdlcWizardRunnerFields } from "./renderPromptSdlcWizardRunnerFields";
+import { renderPromptSdlcWizardRoleStepTable } from "./renderPromptSdlcWizardRoleStepTable";
 import { renderPromptSdlcLocalWriterFields } from "./renderPromptSdlcLocalWriterFields";
+import {
+  PROMPT_SDLC_WIZARD_MAX_ROUNDS,
+  PROMPT_SDLC_WIZARD_PASS_SCORE,
+} from "../../../../adapters/promptSdlcAwcCore";
 
 const escapeHtml = (value: string): string =>
   value
@@ -97,7 +102,7 @@ export const buildPromptSdlcLocalPageBody = (input: {
   const locked = shown.running
     ? `<p class="sdlc-locked" data-sdlc-locked>This run is using these choices.</p>`
     : "";
-  const composeOpen = shown.running ? "" : " open";
+  const composeOpen = input.cycle !== null || shown.running ? "" : " open";
   const form = `<section class="card sdlc-compose" id="prompt-optimizer-compose">
       <div class="sdlc-form-head">
         <a class="btn btn-secondary" href="/prompt-optimizer/guide">Instructions and example</a>
@@ -135,14 +140,16 @@ export const buildPromptSdlcLocalPageBody = (input: {
           ${writerFields}
         </div>
         ${runnerFields}
-        <div class="sdlc-block">
-          <p class="sdlc-block-title">When to stop</p>
+        ${renderPromptSdlcWizardRoleStepTable()}
+        <details class="sdlc-classic-loop-options">
+          <summary class="sdlc-block-title">Classic loop options</summary>
           <div class="sdlc-limits">
             ${renderPromptSdlcLocalPassScore(shown.passScore)}
             ${renderPromptSdlcLocalMaxRounds(shown.maxRounds)}
           </div>
-        </div>
+        </details>
         <div class="sdlc-submit">
+          <p class="muted sdlc-wizard-limits-callout">Wizard: pass score ${PROMPT_SDLC_WIZARD_PASS_SCORE}, up to ${PROMPT_SDLC_WIZARD_MAX_ROUNDS} scored revisions in Step 2; Step 4 runs one trial per module.</p>
           <button class="btn btn-primary" type="submit" name="intent" value="run" data-sdlc-run data-can-run="${input.canRun ? "true" : "false"}" disabled>${runLabel}</button>
           <button class="btn btn-secondary" type="submit" name="intent" value="run-classic" formnovalidate data-sdlc-run data-can-run="${input.canRun ? "true" : "false"}" disabled>Classic loop (90 / 10 rounds)</button>
           <p class="muted sdlc-run-hint" data-sdlc-run-hint hidden></p>
