@@ -196,8 +196,10 @@ export const buildPromptSdlcLocalPageBody = (input: {
             <button type="button" class="btn btn-primary" data-sdlc-compose-continue>Continue</button>
           </div>
         </div>
+        <input type="hidden" name="orchestratorSkillFile" value="" data-orchestrator-skill-file>
         <div class="sdlc-compose-step" data-sdlc-compose-step="2" id="sdlc-compose-step-2" hidden>
           <h3 class="sdlc-compose-step-title">Prompt and goal</h3>
+          <p class="muted sdlc-compose-orchestrator-note" data-orchestrator-skill-note hidden></p>
           <div class="sdlc-block sdlc-block-flush">
           <div class="field">
             ${renderPromptSdlcFieldHeading("Goal", "goal")}

@@ -37,5 +37,7 @@ describe("renderPromptSdlcWizardAccordion", () => {
     expect(html.indexOf("</details>")).toBeLessThan(
       html.indexOf("prompt-optimizer-wizard-active-step"),
     );
+    expect(html).toContain("wizard-retry-step");
+    expect(html).toContain("Retry this step");
   });
 });

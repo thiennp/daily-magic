@@ -78,6 +78,13 @@ export { collectPromptSdlcWizardModuleStatistics } from "@/lib/promptOptimizer/w
 export { finalizePromptSdlcWizardModuleRun } from "@/lib/promptOptimizer/wizard/finalizePromptSdlcWizardModuleRun";
 export { readPromptSdlcWizardChainPriorOutput } from "@/lib/promptOptimizer/wizard/readPromptSdlcWizardChainPriorOutput";
 export { summarizePromptSdlcWizardCompletion } from "@/lib/promptOptimizer/wizard/summarizePromptSdlcWizardCompletion";
+export { buildPromptSdlcWizardAdditionalSkillSuggestionsJudgePrompt } from "@/lib/promptOptimizer/wizard/buildPromptSdlcWizardAdditionalSkillSuggestionsJudgePrompt";
+export {
+  parsePromptSdlcWizardAdditionalSkillSuggestions,
+  type PromptSdlcWizardAdditionalSkillSuggestionsParseResult,
+} from "@/lib/promptOptimizer/wizard/parsePromptSdlcWizardAdditionalSkillSuggestions";
+export { markPromptSdlcWizardRunComplete } from "@/lib/promptOptimizer/wizard/markPromptSdlcWizardRunComplete";
+export { seedPromptSdlcWizardOrchestratorSkill } from "@/lib/promptOptimizer/wizard/seedPromptSdlcWizardOrchestratorSkill";
 export { buildPromptSdlcWizardResultMarkdown } from "@/lib/promptOptimizer/wizard/buildPromptSdlcWizardResultMarkdown";
 export type {
   PromptSdlcWizardCompletionModuleRow,

@@ -4,6 +4,7 @@ import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
 import { readPromptSdlcWizardActiveStepIndex } from "./readPromptSdlcWizardActiveStepIndex";
 import { renderPromptSdlcWizardGate } from "./renderPromptSdlcWizardGate";
 import { renderPromptSdlcWizardStepInProgress } from "./renderPromptSdlcWizardStepInProgress";
+import { renderPromptSdlcWizardAccordionStepRetry } from "./renderPromptSdlcWizardAccordionStepRetry";
 import { renderPromptSdlcWizardStepModalBody } from "./renderPromptSdlcWizardStepModalBody";
 
 const STEP_TITLES: Record<
@@ -27,11 +28,13 @@ const renderCompletedStep = (
   cycle: PromptSdlcLocalCycle,
   stepId: string,
   title: string,
-): string =>
-  `<details class="sdlc-wizard-accordion-item">
+): string => {
+  const retry = renderPromptSdlcWizardAccordionStepRetry(cycle, stepId);
+  return `<details class="sdlc-wizard-accordion-item">
   <summary class="sdlc-wizard-accordion-summary">${escapeHtml(title)}</summary>
-  <div class="sdlc-wizard-accordion-body">${renderPromptSdlcWizardStepModalBody(cycle, stepId)}</div>
+  <div class="sdlc-wizard-accordion-body">${retry}${renderPromptSdlcWizardStepModalBody(cycle, stepId)}</div>
 </details>`;
+};
 
 export const renderPromptSdlcWizardAccordion = (
   cycle: PromptSdlcLocalCycle,

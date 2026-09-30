@@ -9,6 +9,7 @@ import {
   beginPromptSdlcWizardEvaluate,
   beginPromptSdlcWizardModuleEvaluate,
 } from "./advancePromptSdlcWizardLocal";
+import { completePromptSdlcLocalWizardCycle } from "./completePromptSdlcLocalWizardCycle";
 import { beginPromptSdlcWizardOptimizeModulesAfterSeparate } from "./beginPromptSdlcWizardOptimizeModulesAfterSeparate";
 import { beginPromptSdlcWizardSeparateAfterEvaluate } from "./beginPromptSdlcWizardSeparateAfterEvaluate";
 import { buildPromptSdlcLiveRunFragmentHtml } from "./buildPromptSdlcLiveRunFragmentHtml";
@@ -22,6 +23,7 @@ import {
   canContinuePromptSdlcWizardEvaluateRevision,
   readPromptSdlcWizardEvaluateRevisionScore,
 } from "./readPromptSdlcWizardEvaluateRevisionScore";
+import { retryPromptSdlcWizardAccordionStep } from "./retryPromptSdlcWizardAccordionStep";
 import { skipPromptSdlcWizardTimelineStep } from "./skipPromptSdlcWizardTimelineStep";
 import {
   skipPromptSdlcWizardCurrentModule,
@@ -102,6 +104,7 @@ export const tryAcceptPromptSdlcWizardPost = (input: {
   if (intent === "wizard-stop-all") {
     const next = stopPromptSdlcWizardRun(cycle);
     savePromptSdlcLocalCycle(input.storePath, next);
+    ensurePromptSdlcLocalCycleRunning(input.storePath, cycleId);
     finish(cycleId);
     return true;
   }
@@ -113,11 +116,22 @@ export const tryAcceptPromptSdlcWizardPost = (input: {
     return true;
   }
 
+  if (intent === "wizard-retry-step") {
+    const stepId = posted.get("wizardStepId")?.trim() ?? "";
+    const next = retryPromptSdlcWizardAccordionStep(cycle, stepId);
+    savePromptSdlcLocalCycle(input.storePath, next);
+    finish(cycleId);
+    return true;
+  }
+
   if (intent === "wizard-skip-step") {
     const stepId = posted.get("wizardStepId")?.trim() ?? "";
     const next = skipPromptSdlcWizardTimelineStep(cycle, stepId);
     savePromptSdlcLocalCycle(input.storePath, next);
-    if (next.status === "judging") {
+    if (
+      next.status === "judging" ||
+      next.wizard?.additionalSkillSuggestionsStatus === "pending"
+    ) {
       ensurePromptSdlcLocalCycleRunning(input.storePath, cycleId);
     }
     finish(cycleId);
@@ -297,17 +311,15 @@ export const tryAcceptPromptSdlcWizardPost = (input: {
       if (nextIndex >= cycle.wizard.modules.length) {
         const completion =
           summarizePromptSdlcWizardCompletion(wizardWithParams);
-        const next: PromptSdlcLocalCycle = {
-          ...cycle,
-          status: completion.terminalStatusSuggestion,
-          wizard: {
-            ...wizardWithParams,
-            gate: null,
-            phase: "complete",
+        const next = completePromptSdlcLocalWizardCycle(
+          {
+            ...cycle,
+            wizard: wizardWithParams,
           },
-          updatedAt: new Date().toISOString(),
-        };
+          completion.terminalStatusSuggestion,
+        );
         savePromptSdlcLocalCycle(input.storePath, next);
+        ensurePromptSdlcLocalCycleRunning(input.storePath, cycleId);
         finish(cycleId);
         return true;
       }

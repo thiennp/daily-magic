@@ -7,6 +7,7 @@ import {
 } from "../../../../adapters/promptSdlcAwcCore";
 
 import { beginPromptSdlcWizardEvaluate } from "./advancePromptSdlcWizardLocal";
+import { completePromptSdlcLocalWizardCycle } from "./completePromptSdlcLocalWizardCycle";
 import { beginPromptSdlcWizardOptimizeModulesAfterSeparate } from "./beginPromptSdlcWizardOptimizeModulesAfterSeparate";
 import { beginPromptSdlcWizardSeparateAfterEvaluate } from "./beginPromptSdlcWizardSeparateAfterEvaluate";
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
@@ -104,20 +105,16 @@ const completeWizardAfterSkippingOptimize = (
       ? module
       : { ...module, status: "stopped" as const },
   );
-  const wizardComplete = {
+  const wizardWithModules = {
     ...wizard,
     modules,
     gate: null,
-    phase: "complete" as const,
   };
-  const completion = summarizePromptSdlcWizardCompletion(wizardComplete);
-  return {
-    ...cycle,
-    status: completion.terminalStatusSuggestion,
-    errorMessage: null,
-    wizard: wizardComplete,
-    updatedAt: new Date().toISOString(),
-  };
+  const completion = summarizePromptSdlcWizardCompletion(wizardWithModules);
+  return completePromptSdlcLocalWizardCycle(
+    { ...cycle, errorMessage: null, wizard: wizardWithModules },
+    completion.terminalStatusSuggestion,
+  );
 };
 
 /** User bypasses the current wizard step (timeline Skip). Aborts writers when needed. */

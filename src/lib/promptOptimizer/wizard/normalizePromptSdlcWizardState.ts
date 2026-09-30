@@ -15,4 +15,10 @@ export const normalizePromptSdlcWizardState = (
     ...module,
     statistics: module.statistics ?? null,
   })),
+  orchestratorSkill: wizard.orchestratorSkill ?? null,
+  additionalSkillSuggestions: wizard.additionalSkillSuggestions ?? [],
+  additionalSkillSuggestionsStatus:
+    wizard.additionalSkillSuggestionsStatus ?? "idle",
+  additionalSkillSuggestionsSummary:
+    wizard.additionalSkillSuggestionsSummary ?? null,
 });

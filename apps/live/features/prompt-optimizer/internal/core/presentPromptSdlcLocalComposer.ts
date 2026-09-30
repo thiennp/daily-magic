@@ -1,5 +1,8 @@
 import { pickMacOsFolderDialog } from "../../../projects/public-api/infrastructure";
-import { createInitialPromptSdlcWizardState } from "../../../../adapters/promptSdlcAwcCore";
+import {
+  createInitialPromptSdlcWizardState,
+  seedPromptSdlcWizardOrchestratorSkill,
+} from "../../../../adapters/promptSdlcAwcCore";
 
 import { buildPromptSdlcLiveRunFragmentHtml } from "./buildPromptSdlcLiveRunFragmentHtml";
 import { createPromptSdlcLocalCycle } from "./createPromptSdlcLocalCycle";
@@ -117,11 +120,20 @@ export const presentPromptSdlcLocalComposer = async (input: {
       workingDirectory: decision.workingDirectory,
       passScore: decision.passScore,
       maxRounds: decision.maxRounds,
-      wizard: {
-        ...createInitialPromptSdlcWizardState(decision.prompt),
-        modulePassScore: decision.modulePassScore,
-        runnerInstructions: decision.runnerInstructions,
-      },
+      wizard: seedPromptSdlcWizardOrchestratorSkill(
+        {
+          ...createInitialPromptSdlcWizardState(decision.prompt),
+          modulePassScore: decision.modulePassScore,
+          runnerInstructions: decision.runnerInstructions,
+        },
+        sourceSkill === null
+          ? null
+          : {
+              fileName: sourceSkill.fileName,
+              name: sourceSkill.name,
+              description: sourceSkill.description,
+            },
+      ),
       runnerModel: decision.runner,
       ...(decision.judgeInstructions.length === 0
         ? {}

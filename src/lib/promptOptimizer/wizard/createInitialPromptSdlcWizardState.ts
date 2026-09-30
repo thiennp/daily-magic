@@ -25,4 +25,8 @@ export const createInitialPromptSdlcWizardState = (
   pendingStepInstructions: "",
   parameterValues: {},
   modulePassScore: PROMPT_SDLC_WIZARD_MODULE_PASS_SCORE,
+  orchestratorSkill: null,
+  additionalSkillSuggestions: [],
+  additionalSkillSuggestionsStatus: "idle",
+  additionalSkillSuggestionsSummary: null,
 });

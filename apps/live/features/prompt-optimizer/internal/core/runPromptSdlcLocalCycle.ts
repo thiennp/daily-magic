@@ -4,6 +4,7 @@ import {
   resolveWriterCliCommands,
 } from "../../../../adapters/writerDispatch";
 import { advancePromptSdlcWizardLocal } from "./advancePromptSdlcWizardLocal";
+import { fetchPromptSdlcWizardAdditionalSkillSuggestions } from "./fetchPromptSdlcWizardAdditionalSkillSuggestions";
 import { isPromptSdlcLocalManualWait } from "./isPromptSdlcLocalManualWait";
 import {
   closePromptSdlcLocalCycleAbort,
@@ -47,11 +48,25 @@ const runUntilTerminal = async (
     return;
   }
   const cycle = preparePromptSdlcLocalCycleForRun(storePath, stored);
+  const skillSuggestionsPending =
+    cycle.wizard?.phase === "complete" &&
+    cycle.wizard.additionalSkillSuggestionsStatus === "pending";
   if (
-    isPromptSdlcTerminalStatus(cycle.status) ||
+    (isPromptSdlcTerminalStatus(cycle.status) && !skillSuggestionsPending) ||
     cycle.status === "wizard_paused" ||
     isPromptSdlcLocalManualWait(cycle)
   ) {
+    return;
+  }
+  if (skillSuggestionsPending) {
+    const withSkills = await fetchPromptSdlcWizardAdditionalSkillSuggestions(
+      cycle,
+      signal,
+      (writer) => {
+        forgetPromptSdlcWriterReady(storePath, writer);
+      },
+    );
+    savePromptSdlcLocalCycle(storePath, withSkills);
     return;
   }
 
@@ -74,9 +89,18 @@ const runUntilTerminal = async (
     return;
   }
   savePromptSdlcLocalCycle(storePath, next);
-  if (!isPromptSdlcTerminalStatus(next.status)) {
-    await runUntilTerminal(storePath, cycleId, signal);
+  if (isPromptSdlcTerminalStatus(next.status)) {
+    const withSkills = await fetchPromptSdlcWizardAdditionalSkillSuggestions(
+      next,
+      signal,
+      (writer) => {
+        forgetPromptSdlcWriterReady(storePath, writer);
+      },
+    );
+    savePromptSdlcLocalCycle(storePath, withSkills);
+    return;
   }
+  await runUntilTerminal(storePath, cycleId, signal);
 };
 
 export const ensurePromptSdlcLocalCycleRunning = (
@@ -92,8 +116,11 @@ export const ensurePromptSdlcLocalCycleRunning = (
     return;
   }
   const cycle = preparePromptSdlcLocalCycleForRun(storePath, stored);
+  const skillSuggestionsPending =
+    cycle.wizard?.phase === "complete" &&
+    cycle.wizard.additionalSkillSuggestionsStatus === "pending";
   if (
-    isPromptSdlcTerminalStatus(cycle.status) ||
+    (isPromptSdlcTerminalStatus(cycle.status) && !skillSuggestionsPending) ||
     cycle.status === "wizard_paused" ||
     isPromptSdlcLocalManualWait(cycle)
   ) {

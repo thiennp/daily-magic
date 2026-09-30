@@ -67,7 +67,7 @@ const renderNode = (
       : "";
 
   const skip = canShowPromptSdlcWizardTimelineSkip(cycle, step.id)
-    ? `<form method="POST" action="/prompt-optimizer" class="sdlc-node-skip sdlc-live-post" data-confirm-message="${escapeHtml(PROMPT_SDLC_WIZARD_SKIP_STEP_CONFIRM)}"><input type="hidden" name="cycleId" value="${escapeHtml(cycle.id)}"><input type="hidden" name="wizardStepId" value="${escapeHtml(step.id)}"><button class="btn btn-secondary sdlc-node-skip-btn" type="submit" name="intent" value="wizard-skip-step">Skip</button></form>`
+    ? `<form method="POST" action="/prompt-optimizer" class="sdlc-node-skip sdlc-live-post" data-confirm-message="${escapeHtml(PROMPT_SDLC_WIZARD_SKIP_STEP_CONFIRM)}"><input type="hidden" name="cycleId" value="${escapeHtml(cycle.id)}"><input type="hidden" name="wizardStepId" value="${escapeHtml(step.id)}"><button class="btn btn-link sdlc-node-skip-link" type="submit" name="intent" value="wizard-skip-step">Skip</button></form>`
     : "";
   const pipeline =
     step.state === "active" && step.id.startsWith("wizard-")
@@ -89,7 +89,7 @@ const renderNode = (
       ? renderPromptSdlcWizardStepPromptInfo(cycle, step.id)
       : "";
 
-  return `<li class="sdlc-node sdlc-node-${nodeStateClass}" data-sdlc-step-id="${escapeHtml(step.id)}"><div class="sdlc-node-row"><button type="button" class="sdlc-node-open"${outcomeStepLink} data-sdlc-node>${mark}<span class="sdlc-node-label">${escapeHtml(step.label)}${reason}${tokenNote}</span></button>${wizardStepPromptInfo}${failureReplyInfo}${skip}</div>${pipeline}<template>${modal}</template></li>`;
+  return `<li class="sdlc-node sdlc-node-${nodeStateClass}" data-sdlc-step-id="${escapeHtml(step.id)}"><div class="sdlc-node-row"><button type="button" class="sdlc-node-open"${outcomeStepLink} data-sdlc-node>${mark}<span class="sdlc-node-label">${escapeHtml(step.label)}${reason}${tokenNote}</span></button><div class="sdlc-node-row-actions">${skip}${wizardStepPromptInfo}${failureReplyInfo}</div></div>${pipeline}<template>${modal}</template></li>`;
 };
 
 export const renderPromptSdlcLocalStepTree = (
@@ -174,6 +174,20 @@ export const PROMPT_SDLC_NODE_DIALOG_SCRIPT = `<script>
       event.preventDefault();
       const template = failureInfo.parentElement?.querySelector(
         "template[data-sdlc-failure-reply]",
+      );
+      if (!(template instanceof HTMLTemplateElement)) return;
+      delete dialog.dataset.sdlcDialogStepId;
+      openFromTemplate(template, "");
+      return;
+    }
+    const revisionJudgeInfo = target.closest(
+      "[data-sdlc-revision-judge-prompt-info]",
+    );
+    if (revisionJudgeInfo instanceof HTMLElement) {
+      event.stopPropagation();
+      event.preventDefault();
+      const template = revisionJudgeInfo.parentElement?.querySelector(
+        "template[data-sdlc-revision-judge-prompt]",
       );
       if (!(template instanceof HTMLTemplateElement)) return;
       delete dialog.dataset.sdlcDialogStepId;

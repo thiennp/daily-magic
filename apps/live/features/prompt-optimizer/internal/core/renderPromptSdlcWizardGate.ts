@@ -5,10 +5,12 @@ import {
   substitutePromptSdlcTemplateValues,
 } from "../../../../adapters/promptSdlcAwcCore";
 
+import { renderPromptSdlcWizardGeneralizeGateFields } from "./renderPromptSdlcWizardGeneralizeReview";
 import { renderPromptSdlcWizardModuleParameters } from "./renderPromptSdlcWizardModuleParameters";
 import { renderPromptSdlcWizardRevisionRoundList } from "./renderPromptSdlcWizardRevisionRoundList";
-import { renderPromptSdlcWizardSplitOptionChunks } from "./renderPromptSdlcWizardSplitChunks";
 import { renderPromptSdlcWizardGateEndForm } from "./renderPromptSdlcLocalStopForm";
+import { renderPromptSdlcWizardSkillSuggestions } from "./renderPromptSdlcWizardSkillSuggestions";
+import { renderPromptSdlcWizardSplitOptionDetail } from "./renderPromptSdlcWizardSplitOptionDetail";
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
 
 const escapeHtml = (value: string): string =>
@@ -40,16 +42,11 @@ export const renderPromptSdlcWizardGate = (
 
   const variables =
     gate === "generalize"
-      ? `<ul class="sdlc-wizard-vars">${wizard.variables
-          .map(
-            (item) =>
-              `<li><strong>{{${escapeHtml(item.name)}}}</strong> — ${escapeHtml(item.description)} (sample: ${escapeHtml(item.sampleValue)})</li>`,
-          )
-          .join(
-            "",
-          )}</ul><pre class="sdlc-pre">${escapeHtml(wizard.templatedPrompt)}</pre>`
+      ? renderPromptSdlcWizardGeneralizeGateFields(wizard)
       : "";
 
+  const skillSuggestions =
+    gate === "evaluate" ? renderPromptSdlcWizardSkillSuggestions(cycle) : "";
   const revisions =
     gate === "evaluate"
       ? renderPromptSdlcWizardRevisionRoundList({
@@ -79,7 +76,7 @@ export const renderPromptSdlcWizardGate = (
               (wizard.selectedSplitOptionId === null && item.recommended)
                 ? " checked"
                 : "";
-            return `<li class="sdlc-wizard-split-option"><label><input type="radio" name="wizardSplitOptionId" value="${escapeHtml(item.id)}" required${checked}> <strong>${escapeHtml(item.title)}</strong>${topologyBadge}${badge}<br><span class="muted">${escapeHtml(item.summary)}</span></label>${renderPromptSdlcWizardSplitOptionChunks(item)}</li>`;
+            return `<li class="sdlc-wizard-split-option"><label class="sdlc-wizard-split-option-label"><input type="radio" name="wizardSplitOptionId" value="${escapeHtml(item.id)}" required${checked}> <strong>${escapeHtml(item.title)}</strong>${topologyBadge}${badge}</label>${renderPromptSdlcWizardSplitOptionDetail(cycle, item)}</li>`;
           })
           .join("")}</ul>`
       : "";
@@ -159,6 +156,7 @@ export const renderPromptSdlcWizardGate = (
     <form method="POST" action="/prompt-optimizer" class="sdlc-wizard-feedback" id="sdlc-wizard-gate-form">
       <input type="hidden" name="cycleId" value="${escapeHtml(cycle.id)}">
     ${variables}
+    ${skillSuggestions}
     ${revisions}
     ${splits}
     ${moduleNote}

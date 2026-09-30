@@ -194,7 +194,10 @@ export const decidePromptSdlcLocalPost = (input: {
     passScore: passParsed.passScore,
     modulePassScore: modulePassParsed.passScore,
     maxRounds: PROMPT_SDLC_WIZARD_MAX_ROUNDS,
-    sourceSkillFile: input.posted.get("skillFile")?.trim() ?? "",
+    sourceSkillFile:
+      input.posted.get("skillFile")?.trim() ??
+      input.posted.get("orchestratorSkillFile")?.trim() ??
+      "",
     judgeInstructions,
     improverInstructions,
     runner,

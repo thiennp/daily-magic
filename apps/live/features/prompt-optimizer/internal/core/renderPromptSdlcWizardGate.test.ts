@@ -36,4 +36,36 @@ describe("renderPromptSdlcWizardGate", () => {
     expect(radio).toBeGreaterThan(formOpen);
     expect(radio).toBeLessThan(formClose);
   });
+
+  it("shows parent prompt and wrapped split options on separate gate", () => {
+    const cycle = createPromptSdlcLocalCycle({
+      goal: "g",
+      sourcePrompt: "Parent handoff text",
+      judgeModel: "claude-cli",
+      improverModel: "claude-cli",
+      workingDirectory: "/tmp",
+      wizard: {
+        ...createInitialPromptSdlcWizardState("Parent handoff text"),
+        gate: "separate",
+        phase: "separate",
+        evaluateSelectedRound: null,
+        splitOptions: [
+          {
+            id: "opt-a",
+            title: "Option A",
+            summary: "s",
+            topology: "chain",
+            recommended: true,
+            modules: [{ id: "m1", title: "M", prompt: "p", order: 0 }],
+          },
+        ],
+      },
+    });
+    const html = renderPromptSdlcWizardGate(cycle);
+    expect(html).toContain("Orchestration for this option");
+    expect(html).toContain("Separated module prompts");
+    expect(html).toContain("Parent handoff text");
+    expect(html).not.toContain("Orchestrator prompt (parent)");
+    expect(html).toContain('class="sdlc-wizard-split-option"');
+  });
 });

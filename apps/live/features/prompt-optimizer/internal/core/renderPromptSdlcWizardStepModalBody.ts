@@ -2,12 +2,13 @@ import {
   isPromptSdlcTerminalStatus,
   readPromptSdlcWizardEvaluatePromptText,
   readPromptSdlcWizardTemplatedOrConcrete,
-  substitutePromptSdlcTemplate,
 } from "../../../../adapters/promptSdlcAwcCore";
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
 import { renderPromptSdlcWizardPipelineModalSummary } from "./renderPromptSdlcWizardPipeline";
+import { renderPromptSdlcWizardGeneralizeReview } from "./renderPromptSdlcWizardGeneralizeReview";
 import { renderPromptSdlcWizardRevisionRoundList } from "./renderPromptSdlcWizardRevisionRoundList";
-import { renderPromptSdlcWizardSplitOptionChunks } from "./renderPromptSdlcWizardSplitChunks";
+import { renderPromptSdlcWizardRevisionRoundJudgePromptInfo } from "./renderPromptSdlcWizardRevisionRoundJudgePromptInfo";
+import { renderPromptSdlcWizardSplitOptionDetail } from "./renderPromptSdlcWizardSplitOptionDetail";
 
 const escapeHtml = (value: string): string =>
   value
@@ -153,32 +154,11 @@ const renderGeneralizeBody = (cycle: PromptSdlcLocalCycle): string => {
   if (wizard === undefined) {
     return "";
   }
-  const vars =
-    wizard.variables.length === 0
-      ? `<p class="muted">No variables yet.</p>`
-      : `<ul class="sdlc-wizard-vars">${wizard.variables
-          .map(
-            (item) =>
-              `<li><strong>{{${escapeHtml(item.name)}}}</strong> — ${escapeHtml(item.description)} (sample: ${escapeHtml(item.sampleValue)})</li>`,
-          )
-          .join("")}</ul>`;
-  const template = wizard.templatedPrompt.trim();
-  const templateBlock =
-    template.length === 0
-      ? `<p class="muted">No templated prompt yet.</p>`
-      : `<h2>Templated prompt</h2><pre class="sdlc-pre">${escapeHtml(template)}</pre>`;
-  const concrete = substitutePromptSdlcTemplate(
-    wizard.templatedPrompt,
-    wizard.variables,
-  ).trim();
-  const sampleBlock =
-    concrete.length === 0 || concrete === template
-      ? ""
-      : `<h2>Sample with variables filled</h2><pre class="sdlc-pre">${escapeHtml(concrete)}</pre>`;
-  return `${vars}${templateBlock}${sampleBlock}`;
+  return renderPromptSdlcWizardGeneralizeReview(wizard);
 };
 
 const renderEvaluateRevisionListFromSnapshots = (
+  cycle: PromptSdlcLocalCycle,
   revisions: readonly EvaluateRevisionSnapshot[],
   selectedRound: number | null,
 ): string => {
@@ -194,7 +174,12 @@ const renderEvaluateRevisionListFromSnapshots = (
         reason.length === 0
           ? ""
           : `<br><span class="muted">${escapeHtml(reason)}</span>`;
-      return `<li>${escapeHtml(score)}${selected}${reasonLine}</li>`;
+      const judgeInfo = renderPromptSdlcWizardRevisionRoundJudgePromptInfo({
+        cycle,
+        roundNumber: item.roundNumber,
+        promptText: item.promptText,
+      });
+      return `<li class="sdlc-wizard-revision-row"><span class="sdlc-wizard-revision-title">${escapeHtml(score)}${selected}</span>${judgeInfo}${reasonLine}</li>`;
     })
     .join("");
   return `<ul class="sdlc-wizard-revisions">${items}</ul>`;
@@ -217,6 +202,7 @@ const renderEvaluateBody = (cycle: PromptSdlcLocalCycle): string => {
   const snapshot = readEvaluateAttemptRevisions(cycle);
   if (snapshot !== null) {
     return `<p class="muted">Scored revisions from step 2 evaluate.</p>${renderEvaluateRevisionListFromSnapshots(
+      cycle,
       snapshot,
       wizard.evaluateSelectedRound,
     )}`;
@@ -282,7 +268,7 @@ const renderSeparateBody = (cycle: PromptSdlcLocalCycle): string => {
         : "";
       const selected =
         wizard.selectedSplitOptionId === item.id ? " (selected)" : "";
-      return `<li class="sdlc-wizard-split-option"><strong>${escapeHtml(item.title)}</strong>${badge}${escapeHtml(selected)}<br><span class="muted">${escapeHtml(item.summary)} (${escapeHtml(item.topology)})</span>${renderPromptSdlcWizardSplitOptionChunks(item)}</li>`;
+      return `<li class="sdlc-wizard-split-option"><strong>${escapeHtml(item.title)}</strong>${badge}${escapeHtml(selected)}${renderPromptSdlcWizardSplitOptionDetail(cycle, item)}</li>`;
     })
     .join("");
   return `<ul class="sdlc-wizard-splits">${options}</ul>`;

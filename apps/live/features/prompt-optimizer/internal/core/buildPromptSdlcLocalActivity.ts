@@ -239,18 +239,25 @@ export const describePromptSdlcLocalActivity = (
         (cycle.wizard.phase === "complete" ||
           summary.passedModuleCount > 0 ||
           isPromptSdlcTerminalStatus(cycle.status));
+      const skillPending =
+        cycle.wizard.additionalSkillSuggestionsStatus === "pending";
       const title =
         modulesDone && summary.totalModules > 0
           ? `Wizard finished — ${summary.passedModuleCount}/${summary.totalModules} modules passed`
           : "Wizard stopped before all steps finished";
+      const skillDetail = skillPending
+        ? "The judge is reading the run summary and suggesting additional skills."
+        : "";
       return {
         title,
         detail:
           message.length > 0
             ? message
-            : modulesDone
-              ? ""
-              : "Progress from finished steps is kept.",
+            : skillDetail.length > 0
+              ? skillDetail
+              : modulesDone
+                ? ""
+                : "Progress from finished steps is kept.",
         replyPreview: null,
       };
     }
