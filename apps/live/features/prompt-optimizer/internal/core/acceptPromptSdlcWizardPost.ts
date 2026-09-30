@@ -97,7 +97,7 @@ export const tryAcceptPromptSdlcWizardPost = (input: {
     }
     const saved = readPromptSdlcLocalCycle(input.storePath, id);
     if (saved === null) {
-      input.response.writeHead(404);
+      input.response.writeHead(404, {});
       input.response.end();
       return;
     }
