@@ -645,7 +645,21 @@ input.input[type="text"] {
 .textarea { min-height: 6rem; resize: vertical; font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 0.8125rem; }
 form.sdlc-form { display: flex; flex-direction: column; }
 .sdlc-compose .lede { margin-bottom: 1.25rem; }
-.sdlc-form-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; }
+.sdlc-compose-details { display: flex; flex-direction: column; gap: 1rem; }
+.sdlc-compose-summary {
+  cursor: pointer;
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: var(--aw-zinc-900);
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem 0.75rem;
+}
+.sdlc-compose-summary::-webkit-details-marker { display: none; }
+.sdlc-compose-summary .eyebrow { margin: 0; }
+.sdlc-form-head { display: flex; justify-content: flex-end; align-items: flex-start; gap: 1rem; margin-bottom: 0.5rem; }
 .sdlc-form-head .btn { flex: none; margin-top: 0.15rem; }
 .sdlc-fields {
   border: 0;
@@ -661,6 +675,7 @@ form.sdlc-form { display: flex; flex-direction: column; }
 .sdlc-fields:disabled select {
   color: var(--aw-zinc-900);
   -webkit-text-fill-color: var(--aw-zinc-900);
+  background: var(--aw-zinc-100);
   opacity: 1;
 }
 .sdlc-fields:disabled .btn { opacity: 0.55; }
@@ -696,6 +711,30 @@ form.sdlc-form { display: flex; flex-direction: column; }
 }
 .sdlc-submit .btn-primary { min-width: 8.5rem; }
 #prompt-optimizer-wizard-gate-slot { margin-bottom: 1.25rem; }
+.sdlc-wizard-accordion {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+.sdlc-wizard-accordion-item {
+  border: 1px solid var(--aw-zinc-200);
+  border-radius: 0.75rem;
+  background: var(--aw-zinc-50);
+  padding: 0.35rem 0.85rem 0.85rem;
+}
+.sdlc-wizard-accordion-summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--aw-zinc-800);
+  padding: 0.45rem 0;
+  list-style: none;
+}
+.sdlc-wizard-accordion-summary::-webkit-details-marker { display: none; }
+.sdlc-wizard-accordion-body {
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--aw-zinc-200);
+  margin-top: 0.35rem;
+}
 .sdlc-wizard-gate,
 .sdlc-wizard-resume {
   display: flex;

@@ -137,6 +137,8 @@ export const PROMPT_SDLC_LOCAL_FORM_SCRIPT = `<script>
       const fields = document.querySelector(".sdlc-fields");
       if (fields instanceof HTMLFieldSetElement) fields.disabled = false;
       document.querySelector("[data-sdlc-locked]")?.remove();
+      const details = document.getElementById("prompt-optimizer-compose-details");
+      if (details instanceof HTMLDetailsElement) details.open = true;
       if (button instanceof HTMLButtonElement) button.textContent = "Run";
       paintReady();
     }

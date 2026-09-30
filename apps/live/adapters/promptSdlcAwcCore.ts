@@ -79,3 +79,7 @@ export {
 } from "@/lib/promptOptimizer/wizard/mergePromptSdlcWizardPostedParameterValues";
 export type { PromptSdlcWizardSplitOption } from "@/lib/promptOptimizer/wizard/types/PromptSdlcWizardSplitOption.type";
 export type { default as PromptSdlcWizardState } from "@/lib/promptOptimizer/wizard/types/PromptSdlcWizardState.type";
+export {
+  PROMPT_SDLC_WIZARD_GATE_PHASES,
+  type PromptSdlcWizardGatePhase,
+} from "@/lib/promptOptimizer/wizard/types/PromptSdlcWizardPhase.constant";

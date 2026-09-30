@@ -29,8 +29,9 @@ describe("buildPromptSdlcLocalPageBody", () => {
       history: [],
     });
 
+    expect(html).toContain("prompt-optimizer-compose-details");
     expect(html.indexOf('class="sdlc-form"')).toBeLessThan(
-      html.indexOf("scrollHeight"),
+      html.indexOf("prompt-optimizer-wizard-gate-slot"),
     );
     expect(html).toContain("Judge: Claude. Improver: Claude.");
     expect(html.indexOf('class="sdlc-form"')).toBeLessThan(
@@ -115,9 +116,9 @@ describe("buildPromptSdlcLocalPageBody", () => {
       history: [],
     });
 
-    expect(
+    expect(html.indexOf("Optimize a prompt")).toBeLessThan(
       html.indexOf("Claude is running the prompt for round 1."),
-    ).toBeLessThan(html.indexOf("Optimize a prompt"));
+    );
     expect(html).toContain("The reply stays inside the facts.");
     expect(html).toContain("Be helpful.");
     expect(html).toContain('value="claude-cli" selected');
@@ -448,9 +449,11 @@ describe("buildPromptSdlcLocalPageBody", () => {
       "Score 40 / 100. The prompt never names the facts it may use.",
     );
     expect(html).toContain("Save revision");
-    expect(html.indexOf("sdlc-manual-verdict")).toBeLessThan(
-      html.indexOf('name="prompt"'),
-    );
+    const improveForm = html.indexOf('intent" value="manual-improve"');
+    const verdictAt = html.indexOf("sdlc-manual-verdict", improveForm);
+    const manualPromptAt = html.indexOf('name="prompt"', verdictAt);
+    expect(verdictAt).toBeGreaterThan(improveForm);
+    expect(verdictAt).toBeLessThan(manualPromptAt);
   });
 
   it("shows a resume banner when another wizard run is paused", () => {

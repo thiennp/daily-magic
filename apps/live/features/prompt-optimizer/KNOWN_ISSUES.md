@@ -1,6 +1,8 @@
 # Prompt optimizer — known issues
 
-No open issues. Recent fixes (bundle **166–176**):
+No open issues. Recent fixes (bundle **166–177**):
+
+- Wizard steps stack in a collapsed accordion; Continue / Run update the page via live HTML fragments (no full reload). Compose stays on top, collapses after submit, and disabled fields use a light grey background.
 
 - Generalize gate prompt appears after live poll without full reload.
 - Compose form stays locked at wizard gates (not unlocked by `sdlc-run-finished`).

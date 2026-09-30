@@ -10,6 +10,7 @@ import {
   beginPromptSdlcWizardEvaluate,
   beginPromptSdlcWizardModuleEvaluate,
 } from "./advancePromptSdlcWizardLocal";
+import { buildPromptSdlcLiveRunFragmentHtml } from "./buildPromptSdlcLiveRunFragmentHtml";
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
 import {
   readPromptSdlcLocalCycle,
@@ -62,13 +63,14 @@ export const tryAcceptPromptSdlcWizardPost = (input: {
   readonly storePath: string;
   readonly response: {
     writeHead: (code: number, headers: Record<string, string>) => void;
-    end: () => void;
+    end: (body?: string) => void;
   };
 }): boolean => {
   const posted = input.posted;
   if (posted === null) {
     return false;
   }
+  const liveFragment = posted.get("liveFragment") === "1";
   const intent = posted.get("intent") ?? "";
   if (!intent.startsWith("wizard-")) {
     return false;
@@ -88,17 +90,37 @@ export const tryAcceptPromptSdlcWizardPost = (input: {
     input.response.end();
   };
 
+  const finish = (id: string): void => {
+    if (!liveFragment) {
+      redirect(id);
+      return;
+    }
+    const saved = readPromptSdlcLocalCycle(input.storePath, id);
+    if (saved === null) {
+      input.response.writeHead(404);
+      input.response.end();
+      return;
+    }
+    input.response.writeHead(200, {
+      "Content-Type": "text/html; charset=utf-8",
+      "Cache-Control": "no-store",
+    });
+    input.response.end(
+      buildPromptSdlcLiveRunFragmentHtml(input.storePath, saved),
+    );
+  };
+
   if (intent === "wizard-stop-all") {
     const next = stopPromptSdlcWizardRun(cycle);
     savePromptSdlcLocalCycle(input.storePath, next);
-    redirect(cycleId);
+    finish(cycleId);
     return true;
   }
 
   if (intent === "wizard-skip-module") {
     const next = skipPromptSdlcWizardCurrentModule(cycle);
     savePromptSdlcLocalCycle(input.storePath, next);
-    redirect(cycleId);
+    finish(cycleId);
     return true;
   }
 
@@ -106,7 +128,7 @@ export const tryAcceptPromptSdlcWizardPost = (input: {
     const feedback = posted.get("wizardFeedback")?.trim() ?? "";
     const gate = cycle.wizard.gate;
     if (gate === null || feedback.length === 0) {
-      redirect(cycleId);
+      finish(cycleId);
       return true;
     }
     const stepInstructions = posted.get("wizardStepInstructions")?.trim() ?? "";
@@ -127,14 +149,14 @@ export const tryAcceptPromptSdlcWizardPost = (input: {
     };
     savePromptSdlcLocalCycle(input.storePath, next);
     ensurePromptSdlcLocalCycleRunning(input.storePath, cycleId);
-    redirect(cycleId);
+    finish(cycleId);
     return true;
   }
 
   if (intent === "wizard-continue") {
     const gate = cycle.wizard.gate;
     if (gate === null) {
-      redirect(cycleId);
+      finish(cycleId);
       return true;
     }
 
@@ -148,7 +170,7 @@ export const tryAcceptPromptSdlcWizardPost = (input: {
           });
       savePromptSdlcLocalCycle(input.storePath, next);
       ensurePromptSdlcLocalCycleRunning(input.storePath, cycleId);
-      redirect(cycleId);
+      finish(cycleId);
       return true;
     }
 
@@ -169,7 +191,7 @@ export const tryAcceptPromptSdlcWizardPost = (input: {
           updatedAt: new Date().toISOString(),
         };
         savePromptSdlcLocalCycle(input.storePath, next);
-        redirect(cycleId);
+        finish(cycleId);
         return true;
       }
       const wizardWithRound = {
@@ -191,7 +213,7 @@ export const tryAcceptPromptSdlcWizardPost = (input: {
       };
       savePromptSdlcLocalCycle(input.storePath, next);
       ensurePromptSdlcLocalCycleRunning(input.storePath, cycleId);
-      redirect(cycleId);
+      finish(cycleId);
       return true;
     }
 
@@ -201,7 +223,7 @@ export const tryAcceptPromptSdlcWizardPost = (input: {
         const next = resumeWizardStepAfterWriterFailure(cycle);
         savePromptSdlcLocalCycle(input.storePath, next);
         ensurePromptSdlcLocalCycleRunning(input.storePath, cycleId);
-        redirect(cycleId);
+        finish(cycleId);
         return true;
       }
       const splitId = posted.get("wizardSplitOptionId")?.trim() ?? "";
@@ -218,7 +240,7 @@ export const tryAcceptPromptSdlcWizardPost = (input: {
           updatedAt: new Date().toISOString(),
         };
         savePromptSdlcLocalCycle(input.storePath, next);
-        redirect(cycleId);
+        finish(cycleId);
         return true;
       }
       const modules = modulesFromSplit(option);
@@ -242,7 +264,7 @@ export const tryAcceptPromptSdlcWizardPost = (input: {
         updatedAt: new Date().toISOString(),
       };
       savePromptSdlcLocalCycle(input.storePath, next);
-      redirect(cycleId);
+      finish(cycleId);
       return true;
     }
 
@@ -250,7 +272,7 @@ export const tryAcceptPromptSdlcWizardPost = (input: {
       const moduleIndex = cycle.wizard.currentModuleIndex;
       const moduleRun = cycle.wizard.modules[moduleIndex];
       if (moduleRun === undefined) {
-        redirect(cycleId);
+        finish(cycleId);
         return true;
       }
 
@@ -266,7 +288,7 @@ export const tryAcceptPromptSdlcWizardPost = (input: {
           updatedAt: new Date().toISOString(),
         };
         savePromptSdlcLocalCycle(input.storePath, next);
-        redirect(cycleId);
+        finish(cycleId);
         return true;
       }
 
@@ -285,7 +307,7 @@ export const tryAcceptPromptSdlcWizardPost = (input: {
         );
         savePromptSdlcLocalCycle(input.storePath, next);
         ensurePromptSdlcLocalCycleRunning(input.storePath, cycleId);
-        redirect(cycleId);
+        finish(cycleId);
         return true;
       }
 
@@ -302,7 +324,7 @@ export const tryAcceptPromptSdlcWizardPost = (input: {
           updatedAt: new Date().toISOString(),
         };
         savePromptSdlcLocalCycle(input.storePath, next);
-        redirect(cycleId);
+        finish(cycleId);
         return true;
       }
 
@@ -319,11 +341,11 @@ export const tryAcceptPromptSdlcWizardPost = (input: {
         updatedAt: new Date().toISOString(),
       };
       savePromptSdlcLocalCycle(input.storePath, next);
-      redirect(cycleId);
+      finish(cycleId);
       return true;
     }
   }
 
-  redirect(cycleId);
+  finish(cycleId);
   return true;
 };

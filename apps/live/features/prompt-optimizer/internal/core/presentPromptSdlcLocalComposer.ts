@@ -1,6 +1,7 @@
 import { pickMacOsFolderDialog } from "../../../projects/public-api/infrastructure";
 import { createInitialPromptSdlcWizardState } from "../../../../adapters/promptSdlcAwcCore";
 
+import { buildPromptSdlcLiveRunFragmentHtml } from "./buildPromptSdlcLiveRunFragmentHtml";
 import { createPromptSdlcLocalCycle } from "./createPromptSdlcLocalCycle";
 import { decidePromptSdlcLocalPost } from "./decidePromptSdlcLocalPost";
 import { sendPromptSdlcLocalPage } from "./sendPromptSdlcLocalPage";
@@ -140,6 +141,19 @@ export const presentPromptSdlcLocalComposer = async (input: {
     });
     savePromptSdlcLocalCycle(input.route.storePath, cycle);
     ensurePromptSdlcLocalCycleRunning(input.route.storePath, cycle.id);
+    const liveFragment =
+      input.posted !== null && input.posted.get("liveFragment") === "1";
+    if (liveFragment && decision.useWizard) {
+      input.route.response.writeHead(200, {
+        "Content-Type": "text/html; charset=utf-8",
+        "Cache-Control": "no-store",
+        "X-Prompt-Sdlc-Cycle-Id": cycle.id,
+      });
+      input.route.response.end(
+        buildPromptSdlcLiveRunFragmentHtml(input.route.storePath, cycle),
+      );
+      return;
+    }
     input.route.response.writeHead(303, {
       Location: `/prompt-optimizer?cycle=${encodeURIComponent(cycle.id)}`,
     });

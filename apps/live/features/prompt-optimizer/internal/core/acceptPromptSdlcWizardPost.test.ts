@@ -332,4 +332,51 @@ describe("tryAcceptPromptSdlcWizardPost", () => {
     expect(saved?.wizard?.gate).toBeNull();
     expect(saved?.revisions[0]?.promptText).toBe("Run custom");
   });
+
+  it("returns a live HTML fragment instead of redirecting when liveFragment is set", () => {
+    const storeDir = fs.mkdtempSync(
+      path.join(os.tmpdir(), "prompt-sdlc-live-"),
+    );
+    const storePath = path.join(storeDir, "prompt-optimizer-cycles.json");
+    const cycle = {
+      ...createPromptSdlcLocalCycle({
+        goal: "g",
+        sourcePrompt: "p",
+        judgeModel: "claude-cli",
+        improverModel: "claude-cli",
+        workingDirectory: storeDir,
+        wizard: {
+          ...createInitialPromptSdlcWizardState("Do {{x}}"),
+          gate: "generalize",
+          templatedPrompt: "Do {{x}}",
+          variables: [{ name: "x", description: "d", sampleValue: "hello" }],
+        },
+      }),
+      status: "wizard_paused" as const,
+    };
+    savePromptSdlcLocalCycle(storePath, cycle);
+
+    let status = 0;
+    let body = "";
+    tryAcceptPromptSdlcWizardPost({
+      posted: new URLSearchParams({
+        intent: "wizard-continue",
+        cycleId: cycle.id,
+        liveFragment: "1",
+      }),
+      storePath,
+      response: {
+        writeHead: (code: number) => {
+          status = code;
+        },
+        end: (chunk?: string) => {
+          body = chunk ?? "";
+        },
+      },
+    });
+
+    expect(status).toBe(200);
+    expect(body).toContain("prompt-optimizer-wizard-gate-slot");
+    expect(body).toContain("prompt-optimizer-run");
+  });
 });

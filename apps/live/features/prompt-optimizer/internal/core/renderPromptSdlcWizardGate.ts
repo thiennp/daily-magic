@@ -17,6 +17,7 @@ const escapeHtml = (value: string): string =>
 
 export const renderPromptSdlcWizardGate = (
   cycle: PromptSdlcLocalCycle,
+  options?: { readonly active?: boolean },
 ): string => {
   const wizard = cycle.wizard;
   if (wizard === undefined || wizard.gate === null) {
@@ -109,7 +110,11 @@ export const renderPromptSdlcWizardGate = (
             ? "Set parameters for this module’s test run, then continue. Rerun with feedback to adjust the module prompt."
             : "Review progress on this module. Continue when ready, or rerun with feedback.";
 
-  return `<section class="card sdlc-wizard-gate">
+  const activeClass =
+    options?.active === true ? " sdlc-wizard-gate-active" : "";
+  const activeId =
+    options?.active === true ? ' id="prompt-optimizer-wizard-active-step"' : "";
+  return `<section class="card sdlc-wizard-gate${activeClass}"${activeId}>
     <p class="eyebrow">Prompt optimizer</p>
     <h2>${stepTitle}</h2>
     <p class="sdlc-wizard-gate-lede">${gateLede}</p>

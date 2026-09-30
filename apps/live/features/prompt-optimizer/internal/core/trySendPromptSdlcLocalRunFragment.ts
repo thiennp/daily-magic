@@ -1,9 +1,7 @@
 import type http from "node:http";
 
-import { buildPromptSdlcLocalCycleSection } from "./buildPromptSdlcLocalCycleSection";
-import { renderPromptSdlcWizardGateSlot } from "./renderPromptSdlcWizardGateSlot";
+import { buildPromptSdlcLiveRunFragmentHtml } from "./buildPromptSdlcLiveRunFragmentHtml";
 import { readPromptSdlcLocalCycle } from "./promptSdlcLocalStore";
-import { ensurePromptSdlcLocalCycleRunning } from "./runPromptSdlcLocalCycle";
 
 export const trySendPromptSdlcLocalRunFragment = (input: {
   readonly method: string;
@@ -23,9 +21,6 @@ export const trySendPromptSdlcLocalRunFragment = (input: {
     cycleId === null
       ? null
       : readPromptSdlcLocalCycle(input.storePath, cycleId);
-  if (cycle !== null) {
-    ensurePromptSdlcLocalCycleRunning(input.storePath, cycle.id);
-  }
   input.response.writeHead(200, {
     "Content-Type": "text/html; charset=utf-8",
     "Cache-Control": "no-store",
@@ -33,7 +28,7 @@ export const trySendPromptSdlcLocalRunFragment = (input: {
   input.response.end(
     cycle === null
       ? ""
-      : `${renderPromptSdlcWizardGateSlot(cycle)}${buildPromptSdlcLocalCycleSection(cycle)}`,
+      : buildPromptSdlcLiveRunFragmentHtml(input.storePath, cycle),
   );
   return true;
 };

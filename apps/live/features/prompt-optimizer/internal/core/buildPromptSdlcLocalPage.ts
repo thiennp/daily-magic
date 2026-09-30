@@ -1,10 +1,10 @@
 import { isPromptSdlcLocalManualWait } from "./isPromptSdlcLocalManualWait";
-import { isPromptSdlcTerminalStatus } from "../../../../adapters/promptSdlcAwcCore";
 import { buildPromptSdlcLocalCycleSection } from "./buildPromptSdlcLocalCycleSection";
 import {
   PROMPT_SDLC_LOCAL_LIVE_SCRIPT,
   PROMPT_SDLC_LOCAL_LIVE_STYLE,
 } from "./buildPromptSdlcLocalLiveScript";
+import { PROMPT_SDLC_WIZARD_CLIENT_SCRIPT } from "./buildPromptSdlcLocalWizardClientScript";
 import {
   PROMPT_SDLC_NODE_DIALOG,
   PROMPT_SDLC_NODE_DIALOG_SCRIPT,
@@ -63,10 +63,7 @@ export const buildPromptSdlcLocalPageBody = (input: {
     (input.skillNotice ?? null) === null
       ? ""
       : `<div class="alert-success">${escapeHtml(input.skillNotice ?? "")}</div>`;
-  const nodeDialog =
-    input.cycle === null
-      ? ""
-      : `${PROMPT_SDLC_NODE_DIALOG}${PROMPT_SDLC_NODE_DIALOG_SCRIPT}`;
+  const nodeDialog = `${PROMPT_SDLC_NODE_DIALOG}${PROMPT_SDLC_NODE_DIALOG_SCRIPT}`;
   const resumableWizardCycle = input.resumableWizardCycle ?? null;
   const resumeBanner =
     resumableWizardCycle === null
@@ -75,13 +72,6 @@ export const buildPromptSdlcLocalPageBody = (input: {
   const wizardGateSlot = renderPromptSdlcWizardGateSlot(input.cycle);
   const cycle =
     input.cycle === null ? "" : buildPromptSdlcLocalCycleSection(input.cycle);
-  const live =
-    input.cycle !== null &&
-    !isPromptSdlcTerminalStatus(input.cycle.status) &&
-    input.cycle.status !== "wizard_paused" &&
-    !isPromptSdlcLocalManualWait(input.cycle)
-      ? `${PROMPT_SDLC_LOCAL_LIVE_STYLE}${PROMPT_SDLC_LOCAL_LIVE_SCRIPT}`
-      : "";
   const waitingOnYou =
     input.cycle !== null && isPromptSdlcLocalManualWait(input.cycle);
   const shown = readPromptSdlcLocalShownForm(input);
@@ -107,14 +97,13 @@ export const buildPromptSdlcLocalPageBody = (input: {
   const locked = shown.running
     ? `<p class="sdlc-locked" data-sdlc-locked>This run is using these choices.</p>`
     : "";
-  const form = `<section class="card sdlc-compose">
+  const composeOpen = shown.running ? "" : " open";
+  const form = `<section class="card sdlc-compose" id="prompt-optimizer-compose">
       <div class="sdlc-form-head">
-        <div>
-          <p class="eyebrow">Prompt optimizer</p>
-          <h1>Optimize a prompt</h1>
-        </div>
         <a class="btn btn-secondary" href="/prompt-optimizer/guide">Instructions and example</a>
       </div>
+      <details class="sdlc-compose-details" id="prompt-optimizer-compose-details"${composeOpen}>
+        <summary class="sdlc-compose-summary"><span class="eyebrow">Prompt optimizer</span> Optimize a prompt</summary>
       <p class="lede">${intro} ${escapeHtml(input.modelNote)}</p>
       <form class="sdlc-form" method="POST" action="/prompt-optimizer">
         <fieldset class="sdlc-fields"${shown.running ? " disabled" : ""}>
@@ -159,6 +148,8 @@ export const buildPromptSdlcLocalPageBody = (input: {
         </div>
         </fieldset>
       </form>
+      </details>
     </section>`;
-  return `${error}${skillNotice}${resumeBanner}${wizardGateSlot}${cycle}${nodeDialog}${live}${form}${renderPromptSdlcLocalHistory(input.history, input.cycle?.id ?? null)}${PROMPT_SDLC_LOCAL_FORM_SCRIPT}${PROMPT_SDLC_SKILL_SELECT_SCRIPT}`;
+  const scripts = `${PROMPT_SDLC_LOCAL_LIVE_STYLE}${PROMPT_SDLC_LOCAL_LIVE_SCRIPT}${PROMPT_SDLC_WIZARD_CLIENT_SCRIPT}${PROMPT_SDLC_LOCAL_FORM_SCRIPT}${PROMPT_SDLC_SKILL_SELECT_SCRIPT}`;
+  return `${error}${skillNotice}${form}${resumeBanner}${wizardGateSlot}${cycle}${nodeDialog}${renderPromptSdlcLocalHistory(input.history, input.cycle?.id ?? null)}${scripts}`;
 };
