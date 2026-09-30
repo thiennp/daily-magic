@@ -71,33 +71,37 @@ export const presentPromptSdlcLocalComposer = async (input: {
             posted: input.posted,
             prompt: input.prompt,
           });
-    if (decision.kind === "form") {
-      await sendPromptSdlcLocalPage(input.route, {
-        goal: decision.goal,
-        prompt: decision.prompt,
-        modelNote: input.selection.note,
-        writers: input.selection.writers,
-        judge: decision.judge,
-        improver: decision.improver,
-        judgeInstructions: decision.judgeInstructions,
-        improverInstructions: decision.improverInstructions,
-        runner: decision.runner,
-        runnerInstructions: decision.runnerInstructions,
-        folder: decision.folder,
-        passScore: decision.passScore,
-        maxRounds: decision.maxRounds,
-        canRun: input.selection.canRun,
-        errorMessage: decision.errorMessage,
-        skillNotice: input.skillNotice,
-        cycle: openCycle,
-        history: readPromptSdlcLocalCycles(input.route.storePath),
-        resumableWizardCycle: findResumablePromptSdlcWizardCycle(
-          readPromptSdlcLocalCycles(input.route.storePath),
-          openCycle?.id ?? null,
-        ),
-        goalSuggestions,
-      });
+    if (decision.kind !== "form") {
+      input.route.response.writeHead(500);
+      input.route.response.end("Could not show goal suggestions.");
+      return;
     }
+
+    await sendPromptSdlcLocalPage(input.route, {
+      goal: decision.goal,
+      prompt: decision.prompt,
+      modelNote: input.selection.note,
+      writers: input.selection.writers,
+      judge: decision.judge,
+      improver: decision.improver,
+      judgeInstructions: decision.judgeInstructions,
+      improverInstructions: decision.improverInstructions,
+      runner: decision.runner,
+      runnerInstructions: decision.runnerInstructions,
+      folder: decision.folder,
+      passScore: decision.passScore,
+      maxRounds: decision.maxRounds,
+      canRun: input.selection.canRun,
+      errorMessage: decision.errorMessage,
+      skillNotice: input.skillNotice,
+      cycle: openCycle,
+      history: readPromptSdlcLocalCycles(input.route.storePath),
+      resumableWizardCycle: findResumablePromptSdlcWizardCycle(
+        readPromptSdlcLocalCycles(input.route.storePath),
+        openCycle?.id ?? null,
+      ),
+      goalSuggestions,
+    });
     return;
   }
 
