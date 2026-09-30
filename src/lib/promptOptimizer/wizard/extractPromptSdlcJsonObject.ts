@@ -1,5 +1,7 @@
 import { readJsonObjects } from "@/lib/promptOptimizer/readJsonObjects";
 
+import { normalizeWriterJsonCandidate } from "./normalizeWriterJsonCandidate";
+
 const stripMarkdownFence = (raw: string): string => {
   const trimmed = raw.trim();
   const fence = trimmed.match(/```(?:json)?\s*([\s\S]*?)```/);
@@ -76,13 +78,16 @@ const formatJsonExtractError = (cause: unknown): Error => {
     /unexpected end of json/i.test(detail) ||
     /bad control character/i.test(detail)
       ? "The writer JSON was cut off or had unescaped line breaks or quotes in text fields. Run the step again, or add step instructions to reply with compact single-line JSON."
-      : "The writer reply was not valid JSON.";
+      : /Expected property name or '}'/i.test(detail) ||
+          /Expected double-quoted property name/i.test(detail)
+        ? "The writer reply was not strict JSON (often single-quoted keys or trailing commas). Run the step again, or add step instructions to reply with compact single-line JSON using double quotes."
+        : "The writer reply was not valid JSON.";
   return new Error(`${friendly} (${detail})`);
 };
 
 /** Pulls the first complete JSON object from a writer reply. */
 export const extractPromptSdlcJsonObject = (raw: string): unknown => {
-  const candidate = stripMarkdownFence(raw);
+  const candidate = normalizeWriterJsonCandidate(stripMarkdownFence(raw));
   const direct = readLastJsonObject(candidate);
   if (direct !== null) {
     return direct;

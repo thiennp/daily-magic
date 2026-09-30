@@ -36,4 +36,27 @@ Note: avoid stray } characters in prompts.`;
       /cut off or had unescaped line breaks/i,
     );
   });
+
+  it("repairs single-quoted keys and values from the writer", () => {
+    const payload = {
+      templatedPrompt: "Do {{task}}",
+      variables: [{ name: "task", description: "d", sampleValue: "s" }],
+    };
+    const raw = `{ 'templatedPrompt': 'Do {{task}}', 'variables': [{ 'name': 'task', 'description': 'd', 'sampleValue': 's' }] }`;
+
+    expect(extractPromptSdlcJsonObject(raw)).toEqual(payload);
+    expect(parsePromptSdlcGeneralizeReply(raw).templatedPrompt).toBe(
+      "Do {{task}}",
+    );
+  });
+
+  it("repairs trailing commas and a leading json label", () => {
+    const raw = `json
+{"templatedPrompt":"Hi","variables":[],}`;
+
+    expect(extractPromptSdlcJsonObject(raw)).toEqual({
+      templatedPrompt: "Hi",
+      variables: [],
+    });
+  });
 });

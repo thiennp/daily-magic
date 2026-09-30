@@ -4,7 +4,7 @@
 
 **Symptom:** `#prompt-optimizer-run` shows an `alert-error` such as “The writer JSON was cut off…” or a raw `JSON.parse` message after wizard **generalize** or **separate** runs.
 
-**Fixed (code):** Wizard replies are parsed with brace-aware `readJsonObjects` (not `lastIndexOf("}")`), with a repair pass for unescaped newlines inside JSON strings. Trailing prose that contains `}` no longer corrupts the slice.
+**Fixed (code):** Wizard replies are parsed with brace-aware `readJsonObjects` (not `lastIndexOf("}")`), with repair passes for unescaped newlines inside JSON strings, JavaScript-style **single-quoted** keys/values, trailing commas, a leading `json` label, and UTF-8 BOM. Trailing prose that contains `}` no longer corrupts the slice.
 
 **Still possible:** Replies truncated by the writer CLI token/output limit, or strings that contain unescaped `"` inside `templatedPrompt`, can still fail. Retry the step or add gate instructions to return compact single-line JSON.
 
