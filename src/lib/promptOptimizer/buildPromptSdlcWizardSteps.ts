@@ -70,23 +70,45 @@ export const buildPromptSdlcWizardSteps = (
   const showRoundStepsWhilePausedAtGate =
     pausedAtGate &&
     (wizard.gate === "evaluate" || wizard.gate === "optimize_modules");
-  const roundSteps =
+  const classicRoundSteps = buildPromptSdlcClassicRoundSteps(cycle);
+  const preWizardRoundSteps = classicRoundSteps.filter(
+    (step) => step.id === "round-0",
+  );
+  const evaluateRoundSteps =
     shouldShowPromptSdlcWizardEvaluateRounds(wizard) &&
     (!pausedAtGate || showRoundStepsWhilePausedAtGate)
-      ? buildPromptSdlcClassicRoundSteps(cycle)
+      ? classicRoundSteps.filter((step) => step.id !== "round-0")
       : [];
 
-  const endStep: readonly PromptSdlcStep[] =
-    isPromptSdlcTerminalStatus(cycle.status) && !isComplete
-      ? [
-          {
-            id: "end",
-            label: terminalLabel(cycle),
-            state: "done",
-            detail: cycle.errorMessage,
-          },
-        ]
-      : [];
+  const terminal = isPromptSdlcTerminalStatus(cycle.status) && !isComplete;
+  const endStep: readonly PromptSdlcStep[] = terminal
+    ? [
+        {
+          id: "end",
+          label: terminalLabel(cycle),
+          state: "done",
+          detail: cycle.errorMessage,
+        },
+      ]
+    : [];
 
-  return [...wizardSteps, ...roundSteps, ...endStep];
+  if (terminal && endStep.length > 0) {
+    const failedBeforeWizardIndex = Math.min(activeIndex, wizardSteps.length);
+    const completedWizardSteps = wizardSteps
+      .slice(0, failedBeforeWizardIndex)
+      .map((step) => ({ ...step, state: "done" as const }));
+    return [
+      ...preWizardRoundSteps,
+      ...completedWizardSteps,
+      ...endStep,
+      ...evaluateRoundSteps,
+    ];
+  }
+
+  return [
+    ...preWizardRoundSteps,
+    ...wizardSteps,
+    ...evaluateRoundSteps,
+    ...endStep,
+  ];
 };

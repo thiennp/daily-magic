@@ -1,6 +1,10 @@
-import { selectPromptSdlcBestPrompt } from "../../../../adapters/promptSdlcAwcCore";
+import {
+  readPromptSdlcEndStepFailureMessage,
+  selectPromptSdlcBestPrompt,
+} from "../../../../adapters/promptSdlcAwcCore";
 import type { PromptSdlcStep } from "../../../../adapters/promptSdlcAwcCore";
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
+import { readPromptSdlcLocalUnusableReplyPreview } from "./readPromptSdlcLocalUnusableReplyPreview";
 import { describePromptSdlcWriterTerminalFailure } from "./readPromptSdlcWriterOutput";
 import { renderPromptSdlcWizardStepModalBody } from "./renderPromptSdlcWizardStepModalBody";
 
@@ -65,6 +69,19 @@ export const describePromptSdlcLocalNodeDetail = (
     };
   }
   if (step.id === "end") {
+    const failureMessage = readPromptSdlcEndStepFailureMessage(cycle, step);
+    if (failureMessage !== null) {
+      const replyPreview = readPromptSdlcLocalUnusableReplyPreview(cycle);
+      return {
+        title: step.label,
+        goal,
+        scoreLabel: null,
+        feedback: failureMessage,
+        promptText: replyPreview,
+        promptNote: null,
+        bodyHtml: null,
+      };
+    }
     const best = selectPromptSdlcBestPrompt(
       cycle.revisions.map((revision) => ({
         roundNumber: revision.roundNumber,

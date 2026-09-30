@@ -47,6 +47,7 @@ export {
 } from "@/lib/promptOptimizer/buildPromptSdlcSteps";
 export { buildPromptSdlcWizardStepIndex } from "@/lib/promptOptimizer/buildPromptSdlcWizardStepIndex";
 export { buildPromptSdlcScoreScale } from "@/lib/promptOptimizer/describePromptSdlcScore";
+export { readPromptSdlcEndStepFailureMessage } from "@/lib/promptOptimizer/readPromptSdlcEndStepFailureMessage";
 export {
   PROMPT_SDLC_AGENT_BODY_ERROR,
   PROMPT_SDLC_AGENT_MANUAL_ERROR,
@@ -97,6 +98,8 @@ export { shouldSkipPromptSdlcWizardEvaluateReview } from "@/lib/promptOptimizer/
 export { shouldSkipPromptSdlcWizardSeparateReview } from "@/lib/promptOptimizer/wizard/shouldSkipPromptSdlcWizardSeparateReview";
 export { passesPromptSdlcWizardEvaluateQualityGate } from "@/lib/promptOptimizer/wizard/passesPromptSdlcWizardEvaluateQualityGate";
 export { modulesFromPromptSdlcWizardSplitOption } from "@/lib/promptOptimizer/wizard/modulesFromPromptSdlcWizardSplitOption";
+export { buildPromptSdlcWizardPipelineSteps } from "@/lib/promptOptimizer/wizard/buildPromptSdlcWizardPipelineSteps";
+export type { PromptSdlcWizardPipelineStep } from "@/lib/promptOptimizer/wizard/types/PromptSdlcWizardPipelineStep.type";
 export {
   buildPromptSdlcWizardSubstitutionMap,
   seedPromptSdlcWizardParameterValues,

@@ -2,7 +2,35 @@ import { isPromptSdlcTerminalStatus } from "../../../../adapters/promptSdlcAwcCo
 
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
 import { describePromptSdlcWizardOutcomeStepHint } from "./describePromptSdlcWizardOutcomeStepHint";
+import {
+  resolvePromptSdlcWizardOutcomeStepState,
+  type PromptSdlcWizardOutcomeStepState,
+} from "./resolvePromptSdlcWizardOutcomeStepState";
 import { renderPromptSdlcWizardStepModalBody } from "./renderPromptSdlcWizardStepModalBody";
+
+const renderOutcomeStepMark = (
+  state: PromptSdlcWizardOutcomeStepState,
+): string => {
+  if (state === "done") {
+    return `<span class="sdlc-wizard-outcome-mark sdlc-wizard-outcome-mark-done" aria-hidden="true"></span>`;
+  }
+  if (state === "failed") {
+    return `<span class="sdlc-wizard-outcome-mark sdlc-wizard-outcome-mark-failed" aria-hidden="true"></span>`;
+  }
+  return `<span class="sdlc-wizard-outcome-mark sdlc-wizard-outcome-mark-pending" aria-hidden="true"></span>`;
+};
+
+const renderOutcomeStepStatusLabel = (
+  state: PromptSdlcWizardOutcomeStepState,
+): string => {
+  if (state === "done") {
+    return `<span class="sdlc-wizard-outcome-status sdlc-wizard-outcome-status-done">Finished</span>`;
+  }
+  if (state === "failed") {
+    return `<span class="sdlc-wizard-outcome-status sdlc-wizard-outcome-status-failed">Stopped here</span>`;
+  }
+  return `<span class="sdlc-wizard-outcome-status sdlc-wizard-outcome-status-pending">Not reached</span>`;
+};
 
 const escapeHtml = (value: string): string =>
   value
@@ -29,11 +57,16 @@ const renderOutcomeStep = (
           ? "Step 3 — Separate"
           : "Step 4 — Optimize modules";
   const hint = describePromptSdlcWizardOutcomeStepHint(cycle, stepId);
-  const summaryLine = `${escapeHtml(title)} <span class="muted sdlc-wizard-outcome-step-hint">${escapeHtml(hint)}</span>`;
+  const stepState = resolvePromptSdlcWizardOutcomeStepState(cycle, stepId);
+  const mark = renderOutcomeStepMark(stepState);
+  const statusLabel = renderOutcomeStepStatusLabel(stepState);
+  const summaryLine = `${mark}<span class="sdlc-wizard-outcome-step-title">${escapeHtml(title)}</span>${statusLabel}<span class="muted sdlc-wizard-outcome-step-hint">${escapeHtml(hint)}</span>`;
   const openStep4 =
     stepId === "wizard-4" && wizard.phase === "complete" ? " open" : "";
+  const openFailed =
+    stepState === "failed" && stepId !== "wizard-4" ? " open" : "";
   const stepAnchor = `prompt-optimizer-wizard-outcome-${stepId}`;
-  return `<details class="sdlc-wizard-outcome-step" id="${stepAnchor}"${openStep4}><summary aria-controls="${stepAnchor}-body">${summaryLine}</summary><div class="sdlc-wizard-outcome-step-body" id="${stepAnchor}-body">${body}</div></details>`;
+  return `<details class="sdlc-wizard-outcome-step sdlc-wizard-outcome-step-${stepState}" id="${stepAnchor}"${openStep4}${openFailed}><summary aria-controls="${stepAnchor}-body">${summaryLine}</summary><div class="sdlc-wizard-outcome-step-body" id="${stepAnchor}-body">${body}</div></details>`;
 };
 
 export const renderPromptSdlcWizardOutcome = (

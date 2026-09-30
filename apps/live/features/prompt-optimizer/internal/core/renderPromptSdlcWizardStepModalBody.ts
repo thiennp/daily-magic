@@ -1,8 +1,11 @@
 import {
+  isPromptSdlcTerminalStatus,
   readPromptSdlcWizardEvaluatePromptText,
+  readPromptSdlcWizardTemplatedOrConcrete,
   substitutePromptSdlcTemplate,
 } from "../../../../adapters/promptSdlcAwcCore";
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
+import { renderPromptSdlcWizardPipelineModalSummary } from "./renderPromptSdlcWizardPipeline";
 import { renderPromptSdlcWizardRevisionRoundList } from "./renderPromptSdlcWizardRevisionRoundList";
 import { renderPromptSdlcWizardSplitOptionChunks } from "./renderPromptSdlcWizardSplitChunks";
 
@@ -12,6 +15,88 @@ const escapeHtml = (value: string): string =>
     .replaceAll("<", "&lt;")
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;");
+
+const WIZARD_STEP_PHASE: Record<string, string> = {
+  "wizard-1": "generalize",
+  "wizard-2": "evaluate",
+  "wizard-3": "separate",
+  "wizard-4": "optimize_modules",
+};
+
+const renderTruncatedPromptBlock = (
+  heading: string,
+  text: string,
+  maxPreview = 320,
+): string => {
+  const trimmed = text.trim();
+  if (trimmed.length === 0) {
+    return "";
+  }
+  const preview =
+    trimmed.length <= maxPreview
+      ? `<pre class="sdlc-pre">${escapeHtml(trimmed)}</pre>`
+      : `<p class="sdlc-pre-preview mono">${escapeHtml(trimmed.slice(0, maxPreview))}…</p><details class="sdlc-pre-expand"><summary>Show full text</summary><pre class="sdlc-pre">${escapeHtml(trimmed)}</pre></details>`;
+  return `<h2>${escapeHtml(heading)}</h2>${preview}`;
+};
+
+const renderEvaluateTargetSection = (cycle: PromptSdlcLocalCycle): string => {
+  const wizard = cycle.wizard;
+  if (wizard === undefined || wizard.phase !== "evaluate") {
+    return "";
+  }
+  const templated = wizard.templatedPrompt.trim();
+  const concrete = readPromptSdlcWizardTemplatedOrConcrete(wizard).trim();
+  const reference = readPromptSdlcWizardEvaluatePromptText({
+    wizard,
+    revisions: cycle.revisions.map((item) => ({
+      roundNumber: item.roundNumber,
+      promptText: item.promptText,
+      score: item.judgement?.score,
+    })),
+  }).trim();
+  const inLiveEvaluate =
+    wizard.gate === null && !isPromptSdlcTerminalStatus(cycle.status);
+  const primary =
+    inLiveEvaluate && concrete.length > 0
+      ? concrete
+      : reference.length > 0
+        ? reference
+        : templated;
+  if (primary.length === 0) {
+    return `<h2>What is being evaluated</h2><p class="muted">Generalized prompt text will appear here once step 1 finishes.</p>`;
+  }
+  const note =
+    reference.length > 0
+      ? `<p class="muted">Prompt-text judge scores this revision (no folder run).</p>`
+      : `<p class="muted">Prompt-text judge scores templated prompt revisions.</p>`;
+  return `${note}${renderTruncatedPromptBlock("What is being evaluated", primary)}`;
+};
+
+const renderWizardStepPipelineSection = (
+  cycle: PromptSdlcLocalCycle,
+  stepId: string,
+): string => {
+  const wizard = cycle.wizard;
+  if (wizard === undefined || isPromptSdlcTerminalStatus(cycle.status)) {
+    return "";
+  }
+  const phase = WIZARD_STEP_PHASE[stepId];
+  if (phase === undefined || wizard.phase !== phase) {
+    return "";
+  }
+  return renderPromptSdlcWizardPipelineModalSummary(cycle);
+};
+
+const wrapWizardStepModalBody = (
+  cycle: PromptSdlcLocalCycle,
+  stepId: string,
+  inner: string,
+): string => {
+  const pipeline = renderWizardStepPipelineSection(cycle, stepId);
+  const evaluateTarget =
+    stepId === "wizard-2" ? renderEvaluateTargetSection(cycle) : "";
+  return `${pipeline}${evaluateTarget}${inner}`;
+};
 
 type EvaluateRevisionSnapshot = {
   readonly roundNumber: number;
@@ -238,13 +323,17 @@ export const renderPromptSdlcWizardStepModalBody = (
 ): string => {
   switch (stepId) {
     case "wizard-1":
-      return renderGeneralizeBody(cycle);
+      return wrapWizardStepModalBody(
+        cycle,
+        stepId,
+        renderGeneralizeBody(cycle),
+      );
     case "wizard-2":
-      return renderEvaluateBody(cycle);
+      return wrapWizardStepModalBody(cycle, stepId, renderEvaluateBody(cycle));
     case "wizard-3":
-      return renderSeparateBody(cycle);
+      return wrapWizardStepModalBody(cycle, stepId, renderSeparateBody(cycle));
     case "wizard-4":
-      return renderOptimizeBody(cycle);
+      return wrapWizardStepModalBody(cycle, stepId, renderOptimizeBody(cycle));
     default:
       return "";
   }

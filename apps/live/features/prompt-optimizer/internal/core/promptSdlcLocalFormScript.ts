@@ -53,9 +53,14 @@ export const PROMPT_SDLC_LOCAL_FORM_SCRIPT = `<script>
   };
   const revertRunStartUi = () => {
     paintRunButton(false);
-    document
-      .getElementById("prompt-optimizer-compose")
-      ?.classList.remove("sdlc-compose-run-focus");
+    const compose = document.getElementById("prompt-optimizer-compose");
+    compose?.classList.remove("sdlc-compose-run-focus");
+    compose?.classList.remove("sdlc-compose-run-started");
+    document.querySelectorAll(".sdlc-compose-step-actions").forEach((node) => {
+      if (node instanceof HTMLElement) {
+        node.hidden = false;
+      }
+    });
     paintReady();
   };
   const paintRunButtonWaiting = () => {
@@ -596,8 +601,22 @@ export const PROMPT_SDLC_LOCAL_FORM_SCRIPT = `<script>
           submitter.focus({ preventScroll: true });
           return;
         }
-        paintRunButton(true);
-        focusRunPanel();
+        const run = document.getElementById("prompt-optimizer-run");
+        if (run !== null) {
+          const details = document.getElementById("prompt-optimizer-compose-details");
+          if (details instanceof HTMLDetailsElement) {
+            details.open = false;
+          }
+          document
+            .getElementById("prompt-optimizer-compose")
+            ?.classList.add("sdlc-compose-run-started");
+          document.querySelectorAll(".sdlc-compose-step-actions").forEach((node) => {
+            if (node instanceof HTMLElement) {
+              node.hidden = true;
+            }
+          });
+          run.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
       },
       true,
     );
@@ -620,6 +639,12 @@ export const PROMPT_SDLC_LOCAL_FORM_SCRIPT = `<script>
       document.querySelector("[data-sdlc-locked]")?.remove();
       const compose = document.getElementById("prompt-optimizer-compose");
       compose?.classList.remove("sdlc-compose-run-focus");
+      compose?.classList.remove("sdlc-compose-run-started");
+      document.querySelectorAll(".sdlc-compose-step-actions").forEach((node) => {
+        if (node instanceof HTMLElement) {
+          node.hidden = false;
+        }
+      });
       const details = document.getElementById("prompt-optimizer-compose-details");
       if (details instanceof HTMLDetailsElement) {
         details.open = document.getElementById("prompt-optimizer-run") === null;

@@ -1,16 +1,22 @@
 /** Client-side wizard UX: live fragment apply, no full reload on gate submit or wizard Run. */
 export const PROMPT_SDLC_WIZARD_CLIENT_SCRIPT = `<script>
 (() => {
+  const enterComposeRunStarted = () => {
+    const compose = document.getElementById("prompt-optimizer-compose");
+    const details = document.getElementById("prompt-optimizer-compose-details");
+    if (details instanceof HTMLDetailsElement) {
+      details.open = false;
+    }
+    if (compose instanceof HTMLElement) {
+      compose.classList.add("sdlc-compose-run-started");
+      compose.classList.remove("sdlc-compose-run-focus");
+    }
+  };
+
   const focusRunPanel = () => {
     const run = document.getElementById("prompt-optimizer-run");
     if (run === null) return;
-    const compose = document.getElementById("prompt-optimizer-compose");
-    if (
-      compose instanceof HTMLElement &&
-      !compose.classList.contains("sdlc-compose-viewing-finished")
-    ) {
-      compose.classList.add("sdlc-compose-run-focus");
-    }
+    enterComposeRunStarted();
     run.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
@@ -26,13 +32,13 @@ export const PROMPT_SDLC_WIZARD_CLIENT_SCRIPT = `<script>
       locked.textContent = "This run is using these choices.";
       fields?.prepend(locked);
     }
-    const button = document.querySelector("[data-sdlc-run-wizard]");
-    if (button instanceof HTMLButtonElement) {
-      button.disabled = true;
-      button.setAttribute("aria-busy", "true");
-      button.innerHTML =
-        '<span class="sdlc-spin" aria-hidden="true"></span> Running…';
-    }
+    document
+      .querySelectorAll(".sdlc-compose-step-actions")
+      .forEach((node) => {
+        if (node instanceof HTMLElement) {
+          node.hidden = true;
+        }
+      });
     document.querySelector(".sdlc-wizard-resume-paused")?.remove();
     focusRunPanel();
   };
@@ -99,6 +105,7 @@ export const PROMPT_SDLC_WIZARD_CLIENT_SCRIPT = `<script>
       document.dispatchEvent(new Event("sdlc-run-finished"));
     }
     document.dispatchEvent(new CustomEvent("sdlc-live-restart"));
+    document.dispatchEvent(new Event("sdlc-node-dialog-refresh"));
   };
 
   const formDataFromSubmit = (form, submitter) =>

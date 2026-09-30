@@ -14,7 +14,9 @@ export const renderPromptSdlcLocalNodeModal = (
     detail.bodyHtml !== null
       ? ""
       : detail.scoreLabel === null
-        ? `<p class="muted">Not scored yet.</p>`
+        ? detail.feedback === null || detail.feedback.trim().length === 0
+          ? `<p class="muted">Not scored yet.</p>`
+          : ""
         : `<p class="muted">${escapeHtml(detail.scoreLabel)}</p>`;
   const body =
     detail.bodyHtml === null
@@ -24,12 +26,16 @@ export const renderPromptSdlcLocalNodeModal = (
     detail.feedback === null || detail.feedback.trim().length === 0
       ? ""
       : `<h2>Feedback</h2><p>${escapeHtml(detail.feedback.trim())}</p>`;
+  const promptHeading =
+    detail.title === "Failed" && detail.promptText !== null
+      ? "Model reply"
+      : "Saved prompt";
   const prompt =
     detail.promptNote !== null
       ? `<div class="alert-error">${escapeHtml(detail.promptNote)}</div>`
       : detail.promptText === null
         ? ""
-        : `<h2>Saved prompt</h2><pre class="mono">${escapeHtml(detail.promptText)}</pre>`;
+        : `<h2>${escapeHtml(promptHeading)}</h2><pre class="mono">${escapeHtml(detail.promptText)}</pre>`;
   const goal =
     detail.goal === null
       ? ""

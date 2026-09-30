@@ -57,6 +57,7 @@ export const PROMPT_SDLC_LOCAL_LIVE_SCRIPT = `<script>
       return;
     }
     applyIncomingRun(incoming);
+    document.dispatchEvent(new Event("sdlc-node-dialog-refresh"));
     if (root.dataset.live !== "true") {
       document.dispatchEvent(new Event("sdlc-run-finished"));
       return;

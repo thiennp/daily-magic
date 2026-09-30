@@ -80,6 +80,47 @@ describe("renderPromptSdlcWizardOutcome", () => {
     expect(moduleHtml).toContain("sdlc-copy-feedback-btn");
   });
 
+  it("highlights finished, failed, and pending steps on a failed evaluate run", () => {
+    const cycle = createPromptSdlcLocalCycle({
+      goal: "g",
+      sourcePrompt: "p",
+      judgeModel: "codex",
+      improverModel: "codex",
+      wizard: {
+        ...createInitialPromptSdlcWizardState("p"),
+        phase: "evaluate",
+        gate: null,
+        templatedPrompt: "Hello",
+      },
+    });
+    const html = renderPromptSdlcWizardOutcome({
+      ...cycle,
+      status: "failed",
+      errorMessage: "The judge reply needs a score and a reason.",
+      revisions: [
+        {
+          roundNumber: 0,
+          promptText: "p",
+          judgement: {
+            score: null,
+            passed: null,
+            reasons: null,
+            rawReply: "nope",
+            tokens: null,
+          },
+        },
+      ],
+    });
+    expect(html).toContain("sdlc-wizard-outcome-step-done");
+    expect(html).toContain("sdlc-wizard-outcome-step-failed");
+    expect(html).toContain("sdlc-wizard-outcome-step-pending");
+    expect(html).toContain("Stopped here");
+    expect(html).toContain("Not reached");
+    expect(html).toContain(
+      'id="prompt-optimizer-wizard-outcome-wizard-2" open',
+    );
+  });
+
   it("returns empty for an in-progress wizard", () => {
     const cycle = createPromptSdlcLocalCycle({
       goal: "g",
