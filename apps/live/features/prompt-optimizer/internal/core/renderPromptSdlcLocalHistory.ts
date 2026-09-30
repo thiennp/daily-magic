@@ -1,6 +1,6 @@
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
+import { describePromptSdlcLocalHistoryRow } from "./describePromptSdlcLocalHistoryRow";
 import { promptSdlcLocalHistoryTitle } from "./promptSdlcLocalHistoryTitle";
-import { readPromptSdlcWizardActiveStepIndex } from "./readPromptSdlcWizardActiveStepIndex";
 
 const escapeHtml = (value: string): string =>
   value
@@ -8,20 +8,6 @@ const escapeHtml = (value: string): string =>
     .replaceAll("<", "&lt;")
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;");
-
-const historyProgressLabel = (cycle: PromptSdlcLocalCycle): string => {
-  if (cycle.wizard === undefined) {
-    return `round ${cycle.currentRound}`;
-  }
-  const stepIndex = readPromptSdlcWizardActiveStepIndex(cycle);
-  if (stepIndex === null) {
-    return `${cycle.status} · wizard`;
-  }
-  if (stepIndex >= 4) {
-    return `${cycle.status} · Wizard complete`;
-  }
-  return `${cycle.status} · Wizard · Step ${stepIndex + 1}`;
-};
 
 const historyKind = (cycle: PromptSdlcLocalCycle): "wizard" | "classic" =>
   cycle.wizard === undefined ? "classic" : "wizard";
@@ -34,7 +20,8 @@ const renderHistoryItem = (
     openCycleId === null
       ? ""
       : `<input type="hidden" name="openCycleId" value="${escapeHtml(openCycleId)}">`;
-  return `<li data-sdlc-history-kind="${historyKind(cycle)}"><div><a href="/prompt-optimizer?cycle=${escapeHtml(cycle.id)}">${escapeHtml(promptSdlcLocalHistoryTitle(cycle.goal))}</a><p class="muted">${escapeHtml(historyProgressLabel(cycle))}</p></div><form method="POST" action="/prompt-optimizer"><input type="hidden" name="intent" value="delete-history"><input type="hidden" name="cycleId" value="${escapeHtml(cycle.id)}">${open}<button class="btn btn-secondary" type="submit">Delete</button></form></li>`;
+  const row = describePromptSdlcLocalHistoryRow(cycle);
+  return `<li data-sdlc-history-kind="${historyKind(cycle)}"><div class="sdlc-history-row-main"><span class="${escapeHtml(row.badgeClass)}">${escapeHtml(row.badgeLabel)}</span><div class="sdlc-history-row-copy"><a href="/prompt-optimizer?cycle=${escapeHtml(cycle.id)}">${escapeHtml(promptSdlcLocalHistoryTitle(cycle.goal))}</a><p class="muted">${escapeHtml(row.subtitle)}</p></div></div><form method="POST" action="/prompt-optimizer"><input type="hidden" name="intent" value="delete-history"><input type="hidden" name="cycleId" value="${escapeHtml(cycle.id)}">${open}<button class="btn btn-secondary" type="submit">Delete</button></form></li>`;
 };
 
 export const renderPromptSdlcLocalHistory = (
@@ -54,5 +41,9 @@ export const renderPromptSdlcLocalHistory = (
     <button type="button" class="btn btn-secondary" data-sdlc-history-filter="wizard" aria-pressed="false">Wizard</button>
     <button type="button" class="btn btn-secondary" data-sdlc-history-filter="classic" aria-pressed="false">Classic</button>
   </div>`;
-  return `<section class="card"><h2>History</h2>${filters}<ul class="sdlc-history">${items}</ul></section>`;
+  const body = `<section class="card sdlc-history-card"><h2 class="sdlc-history-heading">History</h2>${filters}<ul class="sdlc-history">${items}</ul></section>`;
+  if (openCycleId !== null) {
+    return `<details class="sdlc-history-details" id="prompt-optimizer-history"><summary class="sdlc-history-details-summary"><span class="eyebrow">Past runs</span> History</summary>${body}</details>`;
+  }
+  return body;
 };

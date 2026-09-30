@@ -31,6 +31,7 @@ import { renderPromptSdlcLocalWriterFields } from "./renderPromptSdlcLocalWriter
 import {
   PROMPT_SDLC_WIZARD_MAX_ROUNDS,
   PROMPT_SDLC_WIZARD_PASS_SCORE,
+  isPromptSdlcTerminalStatus,
 } from "../../../../adapters/promptSdlcAwcCore";
 
 const escapeHtml = (value: string): string =>
@@ -104,8 +105,17 @@ export const buildPromptSdlcLocalPageBody = (input: {
     ? `<p class="sdlc-locked" data-sdlc-locked>This run is using these choices.</p>`
     : "";
   const composeOpen = input.cycle !== null || shown.running ? "" : " open";
+  const runContext =
+    input.cycle !== null && isPromptSdlcTerminalStatus(input.cycle.status)
+      ? `<p class="muted sdlc-page-run-context">This run is finished. Expand <strong>Optimize a prompt</strong> to start another, or open a row in History.</p>`
+      : "";
+  const composeMode = `<div class="sdlc-compose-mode" role="group" aria-label="Run mode">
+        <button type="button" class="btn btn-secondary" data-sdlc-compose-mode="wizard" aria-pressed="true">Wizard</button>
+        <button type="button" class="btn btn-secondary" data-sdlc-compose-mode="classic" aria-pressed="false">Classic loop</button>
+      </div>`;
   const form = `<section class="card sdlc-compose" id="prompt-optimizer-compose">
       <div class="sdlc-form-head">
+        ${composeMode}
         <a class="btn btn-secondary" href="/prompt-optimizer/guide">Instructions and example</a>
         <a class="btn btn-secondary" href="/prompt-optimizer?example=wizard-verification">Load wizard verification example</a>
       </div>
@@ -161,5 +171,5 @@ export const buildPromptSdlcLocalPageBody = (input: {
       </details>
     </section>`;
   const scripts = `${PROMPT_SDLC_LOCAL_LIVE_STYLE}${PROMPT_SDLC_LOCAL_LIVE_SCRIPT}${PROMPT_SDLC_WIZARD_CLIENT_SCRIPT}${PROMPT_SDLC_LOCAL_FORM_SCRIPT}${PROMPT_SDLC_SKILL_SELECT_SCRIPT}${PROMPT_SDLC_HISTORY_FILTER_SCRIPT}`;
-  return `${error}${skillNotice}${form}${resumeBanner}${cycle}${wizardGateSlot}${nodeDialog}${renderPromptSdlcLocalHistory(input.history, input.cycle?.id ?? null)}${scripts}`;
+  return `${error}${skillNotice}${form}${runContext}${resumeBanner}${cycle}${wizardGateSlot}${nodeDialog}${renderPromptSdlcLocalHistory(input.history, input.cycle?.id ?? null)}${scripts}`;
 };

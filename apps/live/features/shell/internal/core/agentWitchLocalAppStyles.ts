@@ -658,6 +658,9 @@ input.input[type="text"] {
 .textarea { min-height: 6rem; resize: vertical; font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 0.8125rem; }
 form.sdlc-form { display: flex; flex-direction: column; }
 .sdlc-compose .lede { margin-bottom: 1.25rem; }
+.sdlc-compose-mode { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-right: auto; }
+.sdlc-compose-mode [aria-pressed="true"] { outline: 2px solid var(--accent, #2563eb); }
+.sdlc-page-run-context { margin: 0.75rem 0 0; max-width: 42rem; }
 .sdlc-compose-details { display: flex; flex-direction: column; gap: 1rem; }
 .sdlc-compose-summary {
   cursor: pointer;
@@ -1159,6 +1162,32 @@ form.sdlc-form textarea.input[name="prompt"] { min-height: 12rem; }
 .sdlc-history-filter { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.75rem; }
 .sdlc-history-filter [aria-pressed="true"] { outline: 2px solid var(--accent, #2563eb); }
 .sdlc-form-head { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.75rem; }
+.sdlc-history-details { margin-top: 0.5rem; }
+.sdlc-history-details-summary {
+  cursor: pointer;
+  font-size: 1.125rem;
+  font-weight: 600;
+  list-style: none;
+  margin: 0;
+  padding: 0.25rem 0;
+}
+.sdlc-history-details-summary::-webkit-details-marker { display: none; }
+.sdlc-history-details-summary .eyebrow { display: block; margin-bottom: 0.15rem; }
+.sdlc-history-heading { margin: 0; font-size: 1.125rem; }
+.sdlc-history-badge {
+  border-radius: 999px;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  padding: 0.2rem 0.55rem;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.sdlc-history-badge-done { background: #ecfdf5; color: #047857; }
+.sdlc-history-badge-live { background: #eff6ff; color: #1d4ed8; }
+.sdlc-history-badge-paused { background: #fffbeb; color: #b45309; }
+.sdlc-history-row-main { align-items: flex-start; display: flex; gap: 0.65rem; min-width: 0; }
+.sdlc-history-row-copy { min-width: 0; }
 .sdlc-history { list-style: none; margin: 0.75rem 0 0; padding: 0; display: flex; flex-direction: column; gap: 1.25rem; }
 .sdlc-history li { margin: 0; display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
 .sdlc-history p { margin: 0.2rem 0 0; }

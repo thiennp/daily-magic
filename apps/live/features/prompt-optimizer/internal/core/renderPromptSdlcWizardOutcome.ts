@@ -41,13 +41,6 @@ export const renderPromptSdlcWizardOutcome = (
     return "";
   }
 
-  const headline =
-    cycle.status === "passed"
-      ? "Wizard complete"
-      : cycle.status === "stopped"
-        ? "Wizard ended"
-        : "Wizard stopped";
-
   const modules = renderModuleTable(cycle);
 
   const stepBodies = ["wizard-1", "wizard-2", "wizard-3", "wizard-4"]
@@ -68,7 +61,7 @@ export const renderPromptSdlcWizardOutcome = (
     })
     .join("");
 
-  const download = `<p class="actions"><a class="btn btn-secondary" href="/prompt-optimizer?cycle=${escapeHtml(cycle.id)}&amp;export=wizard-markdown">Download result (Markdown)</a></p>`;
+  const download = `<p class="actions"><a class="btn btn-secondary" href="/prompt-optimizer?cycle=${escapeHtml(cycle.id)}&amp;export=wizard-markdown">Download report (.md)</a></p>`;
 
-  return `<section class="card sdlc-wizard-outcome" id="prompt-optimizer-wizard-outcome"><p class="eyebrow">Wizard outcome</p><h2>${escapeHtml(headline)}</h2>${download}${modules}${stepBodies}</section>`;
+  return `<div class="sdlc-run-panel sdlc-wizard-outcome" id="prompt-optimizer-wizard-outcome"><h3 class="sdlc-run-panel-title">Wizard result</h3><p class="muted sdlc-wizard-outcome-lede">Pass score for modules is ${PROMPT_SDLC_WIZARD_PASS_SCORE}. Token counts come from writer usage on this Mac.</p>${download}${modules}${stepBodies}</div>`;
 };

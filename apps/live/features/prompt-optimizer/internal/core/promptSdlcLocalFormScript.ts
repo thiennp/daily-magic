@@ -11,6 +11,8 @@ export const PROMPT_SDLC_LOCAL_FORM_SCRIPT = `<script>
   const runButtons = [...document.querySelectorAll("[data-sdlc-run]")];
   const hint = document.querySelector("[data-sdlc-run-hint]");
   const slots = [...document.querySelectorAll("[data-writer-status]")];
+  const viewingFinishedRun =
+    document.querySelector("#prompt-optimizer-run .sdlc-run-badge-done") !== null;
   const paintRunHint = () => {
     if (!(hint instanceof HTMLElement)) return;
     if (runButtons.length === 0) {
@@ -101,6 +103,11 @@ export const PROMPT_SDLC_LOCAL_FORM_SCRIPT = `<script>
     const ok = body !== null && body.ok === true;
     targets.forEach((slot) => {
       slot.textContent = message;
+      if (viewingFinishedRun && !ok) {
+        slot.dataset.ready = "true";
+        slot.className = "alert-warn";
+        return;
+      }
       slot.dataset.ready = ok ? "true" : "false";
       slot.className = ok ? "muted" : "alert-error";
     });
@@ -217,6 +224,42 @@ export const PROMPT_SDLC_LOCAL_FORM_SCRIPT = `<script>
   document.addEventListener("keydown", (event) => {
     if (event.key === "Escape") closeFieldTips();
   });
+  const setComposeMode = (mode) => {
+    const form = document.querySelector("form.sdlc-form");
+    if (!(form instanceof HTMLFormElement)) return;
+    form.dataset.sdlcComposeMode = mode;
+    document.querySelectorAll("[data-sdlc-compose-mode]").forEach((btn) => {
+      if (!(btn instanceof HTMLButtonElement)) return;
+      const active = btn.dataset.sdlcComposeMode === mode;
+      btn.setAttribute("aria-pressed", active ? "true" : "false");
+    });
+    const classicOptions = document.querySelector(".sdlc-classic-loop-options");
+    if (classicOptions instanceof HTMLDetailsElement) {
+      classicOptions.open = mode === "classic";
+    }
+    const wizardBtn = runButtons.find(
+      (btn) => btn instanceof HTMLButtonElement && btn.value === "run",
+    );
+    const classicBtn = runButtons.find(
+      (btn) => btn instanceof HTMLButtonElement && btn.value === "run-classic",
+    );
+    if (wizardBtn instanceof HTMLButtonElement) {
+      wizardBtn.classList.toggle("btn-primary", mode === "wizard");
+      wizardBtn.classList.toggle("btn-secondary", mode !== "wizard");
+    }
+    if (classicBtn instanceof HTMLButtonElement) {
+      classicBtn.classList.toggle("btn-primary", mode === "classic");
+      classicBtn.classList.toggle("btn-secondary", mode !== "classic");
+    }
+  };
+  document.querySelectorAll("[data-sdlc-compose-mode]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      if (!(btn instanceof HTMLButtonElement)) return;
+      const mode = btn.dataset.sdlcComposeMode;
+      if (mode === "wizard" || mode === "classic") setComposeMode(mode);
+    });
+  });
+  setComposeMode("wizard");
   paintReady();
   document.addEventListener("sdlc-run-finished", () => {
     const gateSlot = document.getElementById("prompt-optimizer-wizard-gate-slot");
