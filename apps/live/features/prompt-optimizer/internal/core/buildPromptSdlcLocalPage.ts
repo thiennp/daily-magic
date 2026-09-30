@@ -115,9 +115,9 @@ export const buildPromptSdlcLocalPageBody = (input: {
   const locked = shown.running
     ? `<p class="sdlc-locked" data-sdlc-locked>This run is using these choices.</p>`
     : "";
-  const composeOpen = input.cycle !== null || shown.running ? "" : " open";
   const viewingFinishedRun =
     input.cycle !== null && isPromptSdlcTerminalStatus(input.cycle.status);
+  const composeOpen = viewingFinishedRun ? "" : " open";
   const composeMode = `<div class="sdlc-compose-mode" role="group" aria-label="Run mode">
         <button type="button" class="btn btn-secondary" data-sdlc-compose-mode="wizard" aria-pressed="true">Wizard</button>
         <button type="button" class="btn btn-secondary" data-sdlc-compose-mode="classic" aria-pressed="false">Classic loop</button>

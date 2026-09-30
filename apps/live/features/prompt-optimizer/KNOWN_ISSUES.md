@@ -11,7 +11,7 @@ No open issues. Recent fixes (bundle **166–186**):
 - Removed **Suggest goals** from compose (bundle **200**).
 - Agent API `POST /prompt-optimizer/agent` uses classic loop defaults (pass 90, max rounds 10) instead of wizard 70/5 (bundle **185**).
 
-- Wizard steps stack in a collapsed accordion; Continue / Run update the page via live HTML fragments (no full reload). Compose stays on top, collapses after submit, and disabled fields use a light grey background.
+- Wizard steps stack in a collapsed accordion; Continue / Run update the page via live HTML fragments (no full reload). While a run is active, compose stays **expanded** (fields disabled) so settings stay visible; only finished runs collapse compose. Live poll attaches after wizard Run even when `#prompt-optimizer-run` was not in the first paint.
 
 - Generalize gate prompt appears after live poll without full reload.
 - Compose form stays locked at wizard gates (not unlocked by `sdlc-run-finished`).

@@ -126,6 +126,7 @@ describe("buildPromptSdlcLocalPageBody", () => {
     expect(html).toContain('value="claude-cli" selected');
     expect(html).toContain('value="codex" selected');
     expect(html).toContain('fieldset class="sdlc-fields" disabled');
+    expect(html).toContain('id="prompt-optimizer-compose-details" open');
     expect(html).toContain("This run is using these choices.");
     expect(html).toContain("Running…");
     expect(html).toContain("What the score means");

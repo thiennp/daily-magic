@@ -5,7 +5,7 @@ export const PROMPT_SDLC_WIZARD_CLIENT_SCRIPT = `<script>
     const fields = document.querySelector(".sdlc-fields");
     if (fields instanceof HTMLFieldSetElement) fields.disabled = true;
     const details = document.getElementById("prompt-optimizer-compose-details");
-    if (details instanceof HTMLDetailsElement) details.open = false;
+    if (details instanceof HTMLDetailsElement) details.open = true;
     document.querySelector("[data-sdlc-locked]")?.remove();
     const compose = document.getElementById("prompt-optimizer-compose");
     if (compose) {
@@ -35,10 +35,12 @@ export const PROMPT_SDLC_WIZARD_CLIENT_SCRIPT = `<script>
   const applyLiveFragment = (html) => {
     const holder = document.createElement("div");
     holder.innerHTML = html;
+    let applied = false;
     const incomingGateSlot = holder.querySelector("#prompt-optimizer-wizard-gate-slot");
     const gateSlot = document.getElementById("prompt-optimizer-wizard-gate-slot");
     if (incomingGateSlot !== null && gateSlot !== null) {
       gateSlot.replaceWith(incomingGateSlot);
+      applied = true;
     } else if (incomingGateSlot !== null && gateSlot === null) {
       const runAnchor = document.getElementById("prompt-optimizer-run");
       const resume = document.querySelector(".sdlc-wizard-resume");
@@ -46,23 +48,31 @@ export const PROMPT_SDLC_WIZARD_CLIENT_SCRIPT = `<script>
       const insertAfter =
         runAnchor ?? resume ?? compose;
       insertAfter?.insertAdjacentElement("afterend", incomingGateSlot);
+      applied = true;
     }
     const incomingRun = holder.querySelector("#prompt-optimizer-run");
     const run = document.getElementById("prompt-optimizer-run");
     if (incomingRun !== null && run !== null) {
       run.replaceWith(incomingRun);
+      applied = true;
     } else if (incomingRun !== null && run === null) {
       const resume = document.querySelector(".sdlc-wizard-resume");
       const compose = document.getElementById("prompt-optimizer-compose");
       const insertAfter = resume ?? compose;
       insertAfter?.insertAdjacentElement("afterend", incomingRun);
+      applied = true;
     }
     const incomingDialog = holder.querySelector("#sdlc-node-dialog");
     if (incomingDialog !== null && document.getElementById("sdlc-node-dialog") === null) {
       document.body.appendChild(incomingDialog);
     }
+    if (!applied) return;
     lockCompose();
     focusActiveWizardStep();
+    document.getElementById("prompt-optimizer-run")?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
     const runAfter = document.getElementById("prompt-optimizer-run");
     if (runAfter instanceof HTMLElement && runAfter.dataset.live !== "true") {
       document.dispatchEvent(new Event("sdlc-run-finished"));
@@ -149,7 +159,12 @@ export const PROMPT_SDLC_WIZARD_CLIENT_SCRIPT = `<script>
 
   if (document.querySelector(".sdlc-fields[disabled]")) {
     const details = document.getElementById("prompt-optimizer-compose-details");
-    if (details instanceof HTMLDetailsElement) details.open = false;
+    const viewingFinished = document
+      .getElementById("prompt-optimizer-compose")
+      ?.classList.contains("sdlc-compose-viewing-finished");
+    if (details instanceof HTMLDetailsElement) {
+      details.open = viewingFinished !== true;
+    }
   }
 
   const announceCopy = (message) => {

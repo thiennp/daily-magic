@@ -2,9 +2,11 @@ export const PROMPT_SDLC_LOCAL_LIVE_STYLE = "";
 
 export const PROMPT_SDLC_LOCAL_LIVE_SCRIPT = `<script>
 (() => {
-  let root = document.getElementById("prompt-optimizer-run");
-  if (!root) return;
+  let root = null;
+  let pollTimer = null;
+
   const paintElapsed = () => {
+    if (root === null) return;
     const slot = root.querySelector("[data-elapsed]");
     const since = root.dataset.since;
     if (!slot || !since) return;
@@ -14,6 +16,7 @@ export const PROMPT_SDLC_LOCAL_LIVE_SCRIPT = `<script>
     slot.textContent = minutes > 0 ? minutes + "m " + rest + "s" : seconds + "s";
   };
   const applyIncomingRun = (incoming) => {
+    if (root === null) return;
     root.dataset.live = incoming.dataset.live ?? "";
     root.dataset.since = incoming.dataset.since ?? "";
     root.innerHTML = incoming.innerHTML;
@@ -31,9 +34,8 @@ export const PROMPT_SDLC_LOCAL_LIVE_SCRIPT = `<script>
       active.scrollIntoView({ behavior: "smooth", block: "start" });
     }
   };
-  let pollTimer = null;
   const poll = async () => {
-    if (root.dataset.live !== "true") return;
+    if (root === null || root.dataset.live !== "true") return;
     const url = new URL(location.href);
     url.searchParams.set("fragment", "run");
     const response = await fetch(url, { cache: "no-store" }).catch(() => null);
@@ -58,15 +60,18 @@ export const PROMPT_SDLC_LOCAL_LIVE_SCRIPT = `<script>
   };
   const startPoll = () => {
     if (pollTimer !== null) clearTimeout(pollTimer);
-    if (root.dataset.live === "true") pollTimer = setTimeout(poll, 2000);
+    pollTimer = null;
+    if (root !== null && root.dataset.live === "true") {
+      pollTimer = setTimeout(poll, 2000);
+    }
   };
-  paintElapsed();
-  setInterval(paintElapsed, 1000);
-  startPoll();
-  document.addEventListener("sdlc-live-restart", () => {
+  const attach = () => {
     root = document.getElementById("prompt-optimizer-run");
-    if (!root) return;
+    paintElapsed();
     startPoll();
-  });
+  };
+  attach();
+  setInterval(paintElapsed, 1000);
+  document.addEventListener("sdlc-live-restart", attach);
 })();
 </script>`;

@@ -2210,9 +2210,10 @@ ${s}`:"The writer printed nothing. Use the changes above."].filter(a=>a.length>0
 </details>`,sM=e=>{let t=e.wizard;if(t===void 0)return"";let r=Xo(e);if(r===null)return"";let n=Rn.slice(0,r).map((i,a)=>XK(e,`wizard-${a+1}`,JK[i])),o=t.gate!==null?tM(e,{active:!0}):nM(e),s=r>=Rn.length?"":o;return`<div class="sdlc-wizard-accordion" id="prompt-optimizer-wizard-accordion">${n.join("")}${s}</div>`}});var Kp,aP=l(()=>{"use strict";iM();bp();C();Kp=e=>{if(e===null||e.wizard!==void 0&&k(e.status))return'<div id="prompt-optimizer-wizard-gate-slot"></div>';let t=sM(e),r=gI(e);return`<div id="prompt-optimizer-wizard-gate-slot">${t}${r}</div>`}});var lP,aM,lM,Jp,cM,Yp=l(()=>{"use strict";C();Je();lP=new Map,aM=e=>{let t=new AbortController;return lP.set(e,t),t.signal},lM=e=>{lP.delete(e)},Jp=e=>{lP.get(e)?.abort()},cM=(e,t)=>{let r=J(e,t);return r===null||r.wizard!==void 0?!1:(k(r.status)||(G(e,{...r,status:"stopped",errorMessage:Ln,updatedAt:new Date().toISOString()}),Jp(t)),!0)}});var Ka,Xp,dM,cP,uM,pM,mM,gM,dP=l(()=>{"use strict";Ka=m(require("node:fs")),Xp=m(require("node:path")),dM=e=>Xp.default.join(Xp.default.dirname(e),"prompt-optimizer-writer-ready.json"),cP=e=>{let t=dM(e);if(!Ka.default.existsSync(t))return{};try{let r=JSON.parse(Ka.default.readFileSync(t,"utf8"));return typeof r=="object"&&r!==null?r:{}}catch{return{}}},uM=(e,t)=>{Ka.default.mkdirSync(Xp.default.dirname(e),{recursive:!0}),Ka.default.writeFileSync(dM(e),`${JSON.stringify(t,null,2)}
 `)},pM=(e,t)=>cP(e)[t]?.message??null,mM=(e,t,r)=>{uM(e,{...cP(e),[t]:{message:r}})},gM=(e,t)=>{let r=cP(e);r[t]!==void 0&&uM(e,Object.fromEntries(Object.entries(r).filter(([n])=>n!==t)))}});var uP,Zp,Qp,fM,Me,Mn=l(()=>{"use strict";C();Na();tP();Ga();Yp();dP();Je();uP=new Set,Zp={atMs:0,ids:[]},Qp=async()=>{if(Date.now()-Zp.atMs<3e4)return Zp.ids;let e=await mt({commands:ie({})});return Zp.atMs=Date.now(),Zp.ids=e.installedWriterIds,e.installedWriterIds},fM=async(e,t,r)=>{let n=J(e,t);if(n===null||k(n.status)||n.status==="wizard_paused"||Tt(n)||r.aborted)return;let o=await bO(n,i=>{gM(e,i)},r,i=>{J(e,t)?.status==="stopped"||r.aborted||G(e,i)});J(e,t)?.status==="stopped"||r.aborted||(G(e,o),k(o.status)||await fM(e,t,r))},Me=(e,t)=>{if(uP.has(t))return;let r=J(e,t);if(r===null||k(r.status)||r.status==="wizard_paused"||Tt(r))return;uP.add(t);let n=aM(t);fM(e,t,n).finally(()=>{uP.delete(t),lM(t)})}});var Ir,Ja=l(()=>{"use strict";iP();aP();Mn();Ir=(e,t)=>(Me(e,t.id),`${Vp(t)}${Kp(t)}`)});var hM,yM,SM=l(()=>{"use strict";hM=(e,t)=>e.revisions.find(n=>n.roundNumber===t)?.judgement?.score??null,yM=e=>e!==null&&e>0});var em,AM,pP=l(()=>{"use strict";C();Yp();em=e=>(Jp(e.id),{...e,status:"stopped",errorMessage:JA,wizard:e.wizard===void 0?void 0:{...e.wizard,gate:null,phase:"complete"},updatedAt:new Date().toISOString()}),AM=e=>{let t=e.wizard;if(t===void 0||t.phase!=="optimize_modules")return e;Jp(e.id);let r=t.currentModuleIndex,n=t.modules.map((o,s)=>s===r?{...o,status:"stopped"}:o);return{...e,status:"wizard_paused",errorMessage:null,wizard:{...t,modules:n,gate:"optimize_modules"},updatedAt:new Date().toISOString()}}});var ZK,bM,QK,PM,wM=l(()=>{"use strict";C();tP();Ja();Je();Mn();SM();pP();ZK="Pick a revision scored above 0 before continuing to Separate.",bM=e=>({...e,status:"judging",errorMessage:null,wizard:e.wizard===void 0?void 0:{...e.wizard,gate:null},updatedAt:new Date().toISOString()}),QK=e=>[...e.modules].sort((t,r)=>t.order-r.order).map(t=>({moduleId:t.id,title:t.title,prompt:t.prompt,status:"pending",selectedRevisionRound:null,statistics:null})),PM=e=>{let t=e.posted;if(t===null)return!1;let r=t.get("liveFragment")==="1",n=t.get("intent")??"";if(!n.startsWith("wizard-"))return!1;let o=t.get("cycleId")?.trim()??"",s=J(e.storePath,o);if(s===null||s.wizard===void 0)return e.response.writeHead(303,{Location:"/prompt-optimizer"}),e.response.end(),!0;let i=c=>{e.response.writeHead(303,{Location:`/prompt-optimizer?cycle=${encodeURIComponent(c)}`}),e.response.end()},a=c=>{if(!r){i(c);return}let d=J(e.storePath,c);if(d===null){e.response.writeHead(404,{}),e.response.end();return}e.response.writeHead(200,{"Content-Type":"text/html; charset=utf-8","Cache-Control":"no-store"}),e.response.end(Ir(e.storePath,d))};if(n==="wizard-stop-all"){let c=em(s);return G(e.storePath,c),a(o),!0}if(n==="wizard-skip-module"){let c=AM(s);return G(e.storePath,c),a(o),!0}if(n==="wizard-feedback-rerun"){let c=t.get("wizardFeedback")?.trim()??"",d=s.wizard.gate;if(d===null||c.length===0)return a(o),!0;let p=t.get("wizardStepInstructions")?.trim()??"",f=yb(s.wizard,d,c);f=Sb(f,d),f={...f,pendingStepInstructions:p};let b={...s,status:"judging",wizard:{...f,gate:null},updatedAt:new Date().toISOString()};return G(e.storePath,b),Me(e.storePath,o),a(o),!0}if(n==="wizard-continue"){let c=s.wizard.gate;if(c===null)return a(o),!0;if(c==="generalize"){let p=(s.errorMessage?.trim().length??0)>0?bM(s):SO({...s,wizard:{...s.wizard,gate:null}});return G(e.storePath,p),Me(e.storePath,o),a(o),!0}if(c==="evaluate"){let d=t.get("wizardRevisionRound"),p=d===null||d===""?s.wizard.evaluateSelectedRound:Number(d),f=hM(s,p??-1);if(!yM(f)){let y={...s,errorMessage:ZK,updatedAt:new Date().toISOString()};return G(e.storePath,y),a(o),!0}let b={...s.wizard,evaluateSelectedRound:p},h={...s,status:"judging",judgePromptTextOnly:!1,errorMessage:null,wizard:{...b,gate:null,phase:"separate",splitOptions:[]},updatedAt:new Date().toISOString()};return G(e.storePath,h),Me(e.storePath,o),a(o),!0}if(c==="separate"){if((s.errorMessage?.trim().length??0)>0){let y=bM(s);return G(e.storePath,y),Me(e.storePath,o),a(o),!0}let p=t.get("wizardSplitOptionId")?.trim()??"",f=s.wizard.splitOptions.find(y=>y.id===p);if(f===void 0){let y={...s,errorMessage:p.length===0?"Choose one split option before continuing to Step 4.":"That split option is no longer available. Pick another option or rerun Separate.",updatedAt:new Date().toISOString()};return G(e.storePath,y),a(o),!0}let b=QK(f),h={...s,status:"wizard_paused",errorMessage:null,revisions:[],wizard:{...s.wizard,gate:"optimize_modules",selectedSplitOptionId:p,selectedSplitTopology:f.topology,modules:b,phase:"optimize_modules",currentModuleIndex:0,parameterValues:Object.keys(s.wizard.parameterValues??{}).length>0?s.wizard.parameterValues??{}:Oa(s.wizard.variables)},updatedAt:new Date().toISOString()};return G(e.storePath,h),a(o),!0}if(c==="optimize_modules"){let d=s.wizard.currentModuleIndex,p=s.wizard.modules[d];if(p===void 0)return a(o),!0;let f=Ob({wizard:s.wizard,modulePrompt:p.prompt,posted:t});if(!f.ok){let u={...s,errorMessage:f.errorMessage,updatedAt:new Date().toISOString()};return G(e.storePath,u),a(o),!0}let b={...s.wizard,parameterValues:f.parameterValues};if(p.status==="pending"){let u=AO({...s,wizard:{...b,gate:null}},d);return G(e.storePath,u),Me(e.storePath,o),a(o),!0}let h=d+1;if(h>=s.wizard.modules.length){let u=ge(b),A={...s,status:u.terminalStatusSuggestion,wizard:{...b,gate:null,phase:"complete"},updatedAt:new Date().toISOString()};return G(e.storePath,A),a(o),!0}let y={...s,status:"wizard_paused",errorMessage:null,revisions:[],wizard:{...b,gate:"optimize_modules",currentModuleIndex:h},updatedAt:new Date().toISOString()};return G(e.storePath,y),a(o),!0}}return a(o),!0}});var e8,_M,t8,mP,r8,vM,WM=l(()=>{"use strict";He();Yp();pP();Vb();Op();Ga();Je();e8="Add a score from 0 to 100 and the reason for it.",_M="Add a score from 1 to 100 and the reason for it.",t8="Write the next prompt.",mP="This step is not waiting for you.",r8=e=>{let t=Number(e);return/^\d{1,3}$/.test(e)&&t>=0&&t<=100?t:null},vM=e=>{let t=e.posted.get("intent");if(t==="stop"){let i=e.posted.get("cycleId")??"",a=J(e.storePath,i);return a===null?{kind:"missing"}:a.wizard!==void 0?(G(e.storePath,em(a)),{kind:"saved",cycleId:i}):cM(e.storePath,i)?{kind:"saved",cycleId:i}:{kind:"missing"}}if(t!=="manual-judge"&&t!=="manual-improve")return{kind:"ignored"};let r=e.posted.get("cycleId")??"",n=J(e.storePath,r);if(n===null||!Tt(n))return n===null?{kind:"missing"}:{kind:"invalid",cycle:n,errorMessage:mP};if(t==="manual-judge"){if(n.judgeModel!==x)return{kind:"invalid",cycle:n,errorMessage:mP};let i=r8(e.posted.get("score")??""),a=(e.posted.get("reasons")??"").trim(),c=n.wizard!==void 0&&(n.wizard.phase==="evaluate"||n.wizard.gate==="evaluate");if(i===null||a.length===0)return{kind:"invalid",cycle:n,errorMessage:c?_M:e8};if(c&&i===0)return{kind:"invalid",cycle:n,errorMessage:_M};let d=n.revisions.find(f=>f.roundNumber===n.currentRound)?.run?.tokenReview??"",p=Mp(Ua(n,JSON.stringify({score:i,passed:i>=n.passScore,reasons:a})),d);return G(e.storePath,p),{kind:"saved",cycleId:n.id}}if(n.improverModel!==x)return{kind:"invalid",cycle:n,errorMessage:mP};let o=(e.posted.get("prompt")??"").trim();if(o.length===0)return{kind:"invalid",cycle:n,errorMessage:t8};let s=Ip(n,o);return G(e.storePath,s),{kind:"saved",cycleId:n.id}}});var LM,EM=l(()=>{"use strict";LM=`<script>
 (() => {
-  let root = document.getElementById("prompt-optimizer-run");
-  if (!root) return;
+  let root = null;
+  let pollTimer = null;
   const paintElapsed = () => {
+    if (root === null) return;
     const slot = root.querySelector("[data-elapsed]");
     const since = root.dataset.since;
     if (!slot || !since) return;
@@ -2222,6 +2223,7 @@ ${s}`:"The writer printed nothing. Use the changes above."].filter(a=>a.length>0
     slot.textContent = minutes > 0 ? minutes + "m " + rest + "s" : seconds + "s";
   };
   const applyIncomingRun = (incoming) => {
+    if (root === null) return;
     root.dataset.live = incoming.dataset.live ?? "";
     root.dataset.since = incoming.dataset.since ?? "";
     root.innerHTML = incoming.innerHTML;
@@ -2239,9 +2241,8 @@ ${s}`:"The writer printed nothing. Use the changes above."].filter(a=>a.length>0
       active.scrollIntoView({ behavior: "smooth", block: "start" });
     }
   };
-  let pollTimer = null;
   const poll = async () => {
-    if (root.dataset.live !== "true") return;
+    if (root === null || root.dataset.live !== "true") return;
     const url = new URL(location.href);
     url.searchParams.set("fragment", "run");
     const response = await fetch(url, { cache: "no-store" }).catch(() => null);
@@ -2266,16 +2267,19 @@ ${s}`:"The writer printed nothing. Use the changes above."].filter(a=>a.length>0
   };
   const startPoll = () => {
     if (pollTimer !== null) clearTimeout(pollTimer);
-    if (root.dataset.live === "true") pollTimer = setTimeout(poll, 2000);
+    pollTimer = null;
+    if (root !== null && root.dataset.live === "true") {
+      pollTimer = setTimeout(poll, 2000);
+    }
   };
-  paintElapsed();
-  setInterval(paintElapsed, 1000);
-  startPoll();
-  document.addEventListener("sdlc-live-restart", () => {
+  const attach = () => {
     root = document.getElementById("prompt-optimizer-run");
-    if (!root) return;
+    paintElapsed();
     startPoll();
-  });
+  };
+  attach();
+  setInterval(paintElapsed, 1000);
+  document.addEventListener("sdlc-live-restart", attach);
 })();
 </script>`});var RM,kM=l(()=>{"use strict";RM=`<script>
 (() => {
@@ -2283,7 +2287,7 @@ ${s}`:"The writer printed nothing. Use the changes above."].filter(a=>a.length>0
     const fields = document.querySelector(".sdlc-fields");
     if (fields instanceof HTMLFieldSetElement) fields.disabled = true;
     const details = document.getElementById("prompt-optimizer-compose-details");
-    if (details instanceof HTMLDetailsElement) details.open = false;
+    if (details instanceof HTMLDetailsElement) details.open = true;
     document.querySelector("[data-sdlc-locked]")?.remove();
     const compose = document.getElementById("prompt-optimizer-compose");
     if (compose) {
@@ -2313,10 +2317,12 @@ ${s}`:"The writer printed nothing. Use the changes above."].filter(a=>a.length>0
   const applyLiveFragment = (html) => {
     const holder = document.createElement("div");
     holder.innerHTML = html;
+    let applied = false;
     const incomingGateSlot = holder.querySelector("#prompt-optimizer-wizard-gate-slot");
     const gateSlot = document.getElementById("prompt-optimizer-wizard-gate-slot");
     if (incomingGateSlot !== null && gateSlot !== null) {
       gateSlot.replaceWith(incomingGateSlot);
+      applied = true;
     } else if (incomingGateSlot !== null && gateSlot === null) {
       const runAnchor = document.getElementById("prompt-optimizer-run");
       const resume = document.querySelector(".sdlc-wizard-resume");
@@ -2324,23 +2330,31 @@ ${s}`:"The writer printed nothing. Use the changes above."].filter(a=>a.length>0
       const insertAfter =
         runAnchor ?? resume ?? compose;
       insertAfter?.insertAdjacentElement("afterend", incomingGateSlot);
+      applied = true;
     }
     const incomingRun = holder.querySelector("#prompt-optimizer-run");
     const run = document.getElementById("prompt-optimizer-run");
     if (incomingRun !== null && run !== null) {
       run.replaceWith(incomingRun);
+      applied = true;
     } else if (incomingRun !== null && run === null) {
       const resume = document.querySelector(".sdlc-wizard-resume");
       const compose = document.getElementById("prompt-optimizer-compose");
       const insertAfter = resume ?? compose;
       insertAfter?.insertAdjacentElement("afterend", incomingRun);
+      applied = true;
     }
     const incomingDialog = holder.querySelector("#sdlc-node-dialog");
     if (incomingDialog !== null && document.getElementById("sdlc-node-dialog") === null) {
       document.body.appendChild(incomingDialog);
     }
+    if (!applied) return;
     lockCompose();
     focusActiveWizardStep();
+    document.getElementById("prompt-optimizer-run")?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
     const runAfter = document.getElementById("prompt-optimizer-run");
     if (runAfter instanceof HTMLElement && runAfter.dataset.live !== "true") {
       document.dispatchEvent(new Event("sdlc-run-finished"));
@@ -2427,7 +2441,12 @@ ${s}`:"The writer printed nothing. Use the changes above."].filter(a=>a.length>0
 
   if (document.querySelector(".sdlc-fields[disabled]")) {
     const details = document.getElementById("prompt-optimizer-compose-details");
-    if (details instanceof HTMLDetailsElement) details.open = false;
+    const viewingFinished = document
+      .getElementById("prompt-optimizer-compose")
+      ?.classList.contains("sdlc-compose-viewing-finished");
+    if (details instanceof HTMLDetailsElement) {
+      details.open = viewingFinished !== true;
+    }
   }
 
   const announceCopy = (message) => {
@@ -3039,7 +3058,7 @@ Wanted output: The ticket has no refund. Ask which order.`},passScore:{title:"Pa
       <div class="field">${Pe("Runner","runner")}<select class="input" name="runner" data-writer-select="runner" required>${t}${r}</select>${n}</div>
       <details class="sdlc-instruction-details"><summary class="sdlc-instruction-summary">${Pe("Runner instructions","runnerInstructions")}</summary><div class="field"><textarea class="input textarea sdlc-instruction" name="runnerInstructions" rows="3">${Za(e.runnerInstructions)}</textarea><span class="muted">Optional. Passed when the runner executes module prompts.</span></div></details>
     </div>
-  </div>`}});var sN,iN=l(()=>{"use strict";sN=()=>'<table class="sdlc-role-step-table"><caption class="muted">Who does what in the wizard</caption><thead><tr><th>Role</th><th>Wizard</th><th>Classic loop</th></tr></thead><tbody><tr><td>Judge</td><td>Steps 2 and 4 (scores only)</td><td>Every round</td></tr><tr><td>Improver</td><td>\u2014</td><td>Rewrites after each score</td></tr><tr><td>Runner</td><td>Step 4 (executes module prompts)</td><td>\u2014</td></tr></tbody></table>'});var Zo,aN,lN,cN,dN,uN=l(()=>{"use strict";Nn();Zo=e=>e.replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;"),aN=(e,t,r,n,o)=>{let s=`<option value=""${r===""?" selected":""}>Choose</option>`,i=n.map(c=>`<option value="${Zo(c.id)}"${c.id===r?" selected":""}>${Zo(c.label)}</option>`).join(""),a=`<option value="manual"${r==="manual"?" selected":""}>${Zo(o)}</option>`;return`<div class="field">${Pe(t,e==="judge"?"judge":"improver")}<select class="input" name="${e}" data-writer-select="${e}">${s}${i}${a}</select></div>`},lN=(e,t,r)=>{if(t.length===0)return`<p class="muted" data-writer-status="${e}" data-writer="">Choose who does this step.</p>`;if(t==="manual")return`<p class="muted" data-writer-status="${e}" data-writer="manual" data-ready="true">You will do this step.</p>`;let n=r.find(o=>o.id===t)?.label??t;return`<p class="muted" data-writer-status="${e}" data-writer="${Zo(t)}">Checking ${Zo(n)}\u2026</p>`},cN=(e,t,r,n,o)=>`<details class="sdlc-instruction-details"><summary class="sdlc-instruction-summary">${Pe(t,o)}</summary><div class="field"><textarea class="input textarea sdlc-instruction" name="${e}" rows="3">${Zo(r)}</textarea><span class="muted">${n}</span></div></details>`,dN=e=>{let t=`<div class="sdlc-writer">${aN("judge","Judge",e.judge,e.writers,"I'll score it")}${lN("judge",e.judge,e.writers)}${cN("judgeInstructions","Instructions for the judge",e.judgeInstructions??"","Optional. Used with the goal when scoring.","judgeInstructions")}</div>`,r=`<div class="sdlc-writer">${aN("improver","Improver",e.improver,e.writers,"I'll rewrite it")}${lN("improver",e.improver,e.writers)}${cN("improverInstructions","Instructions for the improver",e.improverInstructions??"","Optional. Used with the goal when rewriting.","improverInstructions")}</div>`;return`<div class="sdlc-writers">${t}${r}</div>`}});var f8,jn,pN,mN=l(()=>{"use strict";Ga();iP();EM();kM();vp();TM();IM();MM();FM();hP();KM();YM();eN();Nn();aP();rN();qa();oN();iN();uN();C();f8=(e,t,r)=>r&&e.trim().length>0&&t.trim().length>0,jn=e=>e.replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;"),pN=e=>{let t=e.errorMessage===null?"":`<div class="alert-error">${jn(e.errorMessage)}</div>`,r=(e.skillNotice??null)===null?"":`<div class="alert-success">${jn(e.skillNotice??"")}</div>`,n=`${PI}${wI}`,o=e.resumableWizardCycle??null,s=o===null?"":tN(o),i=Kp(e.cycle),a=e.cycle===null?"":Vp(e.cycle),c=e.cycle!==null&&Tt(e.cycle),d=OM(e),p=f8(d.goal,d.prompt,e.canRun),f=c?"Waiting for you":d.running?"Running\u2026":"Run",b=dN({writers:e.writers,judge:d.judge,improver:d.improver,judgeInstructions:d.judgeInstructions,improverInstructions:d.improverInstructions}),h=nN({writers:e.writers,runner:d.runner,runnerInstructions:d.runnerInstructions}),y="Set the goal and the prompt, then choose who scores, who rewrites, and who runs step 4. Run starts the wizard (generalize \u2192 evaluate \u2192 separate \u2192 optimize modules). Classic loop skips the wizard. Instructions are optional.",u=d.running?'<p class="sdlc-locked" data-sdlc-locked>This run is using these choices.</p>':"",A=e.cycle!==null||d.running?"":" open",S=e.cycle!==null&&k(e.cycle.status),g=`<div class="sdlc-compose-mode" role="group" aria-label="Run mode">
+  </div>`}});var sN,iN=l(()=>{"use strict";sN=()=>'<table class="sdlc-role-step-table"><caption class="muted">Who does what in the wizard</caption><thead><tr><th>Role</th><th>Wizard</th><th>Classic loop</th></tr></thead><tbody><tr><td>Judge</td><td>Steps 2 and 4 (scores only)</td><td>Every round</td></tr><tr><td>Improver</td><td>\u2014</td><td>Rewrites after each score</td></tr><tr><td>Runner</td><td>Step 4 (executes module prompts)</td><td>\u2014</td></tr></tbody></table>'});var Zo,aN,lN,cN,dN,uN=l(()=>{"use strict";Nn();Zo=e=>e.replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;"),aN=(e,t,r,n,o)=>{let s=`<option value=""${r===""?" selected":""}>Choose</option>`,i=n.map(c=>`<option value="${Zo(c.id)}"${c.id===r?" selected":""}>${Zo(c.label)}</option>`).join(""),a=`<option value="manual"${r==="manual"?" selected":""}>${Zo(o)}</option>`;return`<div class="field">${Pe(t,e==="judge"?"judge":"improver")}<select class="input" name="${e}" data-writer-select="${e}">${s}${i}${a}</select></div>`},lN=(e,t,r)=>{if(t.length===0)return`<p class="muted" data-writer-status="${e}" data-writer="">Choose who does this step.</p>`;if(t==="manual")return`<p class="muted" data-writer-status="${e}" data-writer="manual" data-ready="true">You will do this step.</p>`;let n=r.find(o=>o.id===t)?.label??t;return`<p class="muted" data-writer-status="${e}" data-writer="${Zo(t)}">Checking ${Zo(n)}\u2026</p>`},cN=(e,t,r,n,o)=>`<details class="sdlc-instruction-details"><summary class="sdlc-instruction-summary">${Pe(t,o)}</summary><div class="field"><textarea class="input textarea sdlc-instruction" name="${e}" rows="3">${Zo(r)}</textarea><span class="muted">${n}</span></div></details>`,dN=e=>{let t=`<div class="sdlc-writer">${aN("judge","Judge",e.judge,e.writers,"I'll score it")}${lN("judge",e.judge,e.writers)}${cN("judgeInstructions","Instructions for the judge",e.judgeInstructions??"","Optional. Used with the goal when scoring.","judgeInstructions")}</div>`,r=`<div class="sdlc-writer">${aN("improver","Improver",e.improver,e.writers,"I'll rewrite it")}${lN("improver",e.improver,e.writers)}${cN("improverInstructions","Instructions for the improver",e.improverInstructions??"","Optional. Used with the goal when rewriting.","improverInstructions")}</div>`;return`<div class="sdlc-writers">${t}${r}</div>`}});var f8,jn,pN,mN=l(()=>{"use strict";Ga();iP();EM();kM();vp();TM();IM();MM();FM();hP();KM();YM();eN();Nn();aP();rN();qa();oN();iN();uN();C();f8=(e,t,r)=>r&&e.trim().length>0&&t.trim().length>0,jn=e=>e.replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;"),pN=e=>{let t=e.errorMessage===null?"":`<div class="alert-error">${jn(e.errorMessage)}</div>`,r=(e.skillNotice??null)===null?"":`<div class="alert-success">${jn(e.skillNotice??"")}</div>`,n=`${PI}${wI}`,o=e.resumableWizardCycle??null,s=o===null?"":tN(o),i=Kp(e.cycle),a=e.cycle===null?"":Vp(e.cycle),c=e.cycle!==null&&Tt(e.cycle),d=OM(e),p=f8(d.goal,d.prompt,e.canRun),f=c?"Waiting for you":d.running?"Running\u2026":"Run",b=dN({writers:e.writers,judge:d.judge,improver:d.improver,judgeInstructions:d.judgeInstructions,improverInstructions:d.improverInstructions}),h=nN({writers:e.writers,runner:d.runner,runnerInstructions:d.runnerInstructions}),y="Set the goal and the prompt, then choose who scores, who rewrites, and who runs step 4. Run starts the wizard (generalize \u2192 evaluate \u2192 separate \u2192 optimize modules). Classic loop skips the wizard. Instructions are optional.",u=d.running?'<p class="sdlc-locked" data-sdlc-locked>This run is using these choices.</p>':"",S=e.cycle!==null&&k(e.cycle.status),A=S?"":" open",g=`<div class="sdlc-compose-mode" role="group" aria-label="Run mode">
         <button type="button" class="btn btn-secondary" data-sdlc-compose-mode="wizard" aria-pressed="true">Wizard</button>
         <button type="button" class="btn btn-secondary" data-sdlc-compose-mode="classic" aria-pressed="false">Classic loop</button>
       </div>`,w=S?'<button type="button" class="btn btn-primary" data-sdlc-start-new-run title="Clear the form and set a new goal">New prompt</button>':`<a class="btn btn-secondary" href="/prompt-optimizer/guide">Instructions and example</a>
