@@ -31,6 +31,7 @@ export {
   parsePromptSdlcGoalSuggestions,
   type PromptSdlcGoalSuggestionsParseResult,
 } from "@/lib/promptOptimizer/parsePromptSdlcGoalSuggestions";
+export { preferMeasurablePromptSdlcGoalOptions } from "@/lib/promptOptimizer/preferMeasurablePromptSdlcGoalOptions";
 export { buildPromptSdlcWizardEvaluateJudgePrompt } from "@/lib/promptOptimizer/buildPromptSdlcWizardEvaluateJudgePrompt";
 export { buildPromptSdlcTokenReviewPrompt } from "@/lib/promptOptimizer/buildPromptSdlcTokenReviewPrompt";
 export { findPromptSdlcEvidencePaths } from "@/lib/promptOptimizer/findPromptSdlcEvidencePaths";
