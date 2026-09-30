@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "builtAt": "2026-09-30T10:55:22.990Z",
+  "builtAt": "2026-09-30T11:22:42.364Z",
   "idf": {
     "0": 3.549949076202044,
     "1": 2.5894871260147516,
@@ -55,7 +55,7 @@
     "172": 6.696254208235409,
     "180": 7.3894013887953545,
     "200": 5.443491239740041,
-    "201": 7.3894013887953545,
+    "202": 7.3894013887953545,
     "204": 7.3894013887953545,
     "300": 6.983936280687191,
     "404": 6.983936280687191,
@@ -38737,9 +38737,9 @@
       "featureSlug": "docs",
       "sourcePath": "docs/guides/developer-guide/04-mac-bridge-awl-awb-awi.md",
       "section": "Install and config paths",
-      "text": "| Path                         | Contents                                                          |\n| ---------------------------- | ----------------------------------------------------------------- |\n| `~/.agent-witch/`            | Production-style install (LaunchAgents, config, harness)          |\n| `~/.local-agent-witch/`      | Localhost-origin dev install variant                              |\n| `~/.agent-witch/config.json` | Device identity, app origin — **not** production `wsUrl` override |\n| `~/.agent-witch/harness/`    | Harness file drops from browser install API                       |\n\nInstall bundle version: bump `AGENT_WITCH_INSTALL_BUNDLE_VERSION` in `apps/install/features/bundle/public-api/types.ts` whenever the shipped Mac client changes, including the prompt optimizer in `agent-witch.js`. `src/lib/agentWitch/agentWitchInstallBundleVersion.ts` re-exports that constant. A source change that is not rebuilt into `public/install/agent-witch/` does not update AWL. Current bundle: **201**. AWC’s primary nav brand (`AppShellNav`) renders that constant as `AWL {version}` under the product name so the Console chrome shows the latest compatible AWI/AWL bundle this deploy expects. That label is **not** per-device presence data—device rows still use each Mac’s reported install version.\n\n`agent.register` includes `platform`: `linux` when `process.platform` is `linux`, otherwise `mac`. The hub stores it with `updateAgentWitchDevicePlatform` (`resolveAgentRegisterPlatform`). The install script already posted platform; the dev WebSocket client does too.\n\n`AGENT_WITCH_SERVER_RELEASE_LABEL` (`src/lib/release/agentWitchServerReleaseLabel.constant.ts`) is surfaced on **`GET /api/health`** only. There is no in-app Live header badge (`AgentWitchServerReleaseBadge` / `useAgentWitchServerRelease` were removed).",
+      "text": "| Path                         | Contents                                                          |\n| ---------------------------- | ----------------------------------------------------------------- |\n| `~/.agent-witch/`            | Production-style install (LaunchAgents, config, harness)          |\n| `~/.local-agent-witch/`      | Localhost-origin dev install variant                              |\n| `~/.agent-witch/config.json` | Device identity, app origin — **not** production `wsUrl` override |\n| `~/.agent-witch/harness/`    | Harness file drops from browser install API                       |\n\nInstall bundle version: bump `AGENT_WITCH_INSTALL_BUNDLE_VERSION` in `apps/install/features/bundle/public-api/types.ts` whenever the shipped Mac client changes, including the prompt optimizer in `agent-witch.js`. `src/lib/agentWitch/agentWitchInstallBundleVersion.ts` re-exports that constant. A source change that is not rebuilt into `public/install/agent-witch/` does not update AWL. Current bundle: **202**. AWC’s primary nav brand (`AppShellNav`) renders that constant as `AWL {version}` under the product name so the Console chrome shows the latest compatible AWI/AWL bundle this deploy expects. That label is **not** per-device presence data—device rows still use each Mac’s reported install version.\n\n`agent.register` includes `platform`: `linux` when `process.platform` is `linux`, otherwise `mac`. The hub stores it with `updateAgentWitchDevicePlatform` (`resolveAgentRegisterPlatform`). The install script already posted platform; the dev WebSocket client does too.\n\n`AGENT_WITCH_SERVER_RELEASE_LABEL` (`src/lib/release/agentWitchServerReleaseLabel.constant.ts`) is surfaced on **`GET /api/health`** only. There is no in-app Live header badge (`AgentWitchServerReleaseBadge` / `useAgentWitchServerRelease` were removed).",
       "vector": {
-        "201": 0.9236751735994193,
+        "202": 0.9236751735994193,
         "path": 0.3980885961755486,
         "contents": 0.8370317760294261,
         "agent-witch": 1.6133064742566083,
