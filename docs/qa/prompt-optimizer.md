@@ -63,6 +63,7 @@ The prompt optimizer is in the console at `/prompt-optimizer`. That page tells y
 - Requires a non-empty prompt, a valid folder, and an installed judge writer (not **I'll score it**).
 - The judge writer returns JSON `{"options":["…","…","…"]}`; the page shows radios (none pre-selected) plus **None of these — type my own**.
 - Changing the prompt, folder, or judge clears stale suggestions. The agent API (`POST /prompt-optimizer/agent`) still requires `goal` in the JSON body; it does not run suggest-goals.
+- Vague writer options (for example “be helpful”) are dropped when at least one measurable option remains. Regression fixtures: `npx vitest run .agents/scripts/dev/evalPromptSdlcGoalSuggestions.test.ts` and `.agents/scripts/dev/evalPromptSdlcClassicPrompts.test.ts` (mock writer JSON; no live LLM).
 
 ## Last reviewed
 
