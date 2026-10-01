@@ -6,6 +6,7 @@
 
 - PNG captures: `npm run storybook:wave:capture -- AWC|AWL <pageId> <round>`
 - Reviewer must open **every** status × viewport file in that round (see `manifest.json` in the round folder).
+- **`ui` role:** follow **`ui-deep-inspection.md`** — zoomed sections + `obviousVisualDefects` field (enforced by `record-agent`).
 
 ## Scoring
 
@@ -26,7 +27,7 @@ When **below 95**, also require:
 | ----------- | ------------------------------------------------------------------------------------------------------- |
 | **ux**      | Hierarchy, scan path, responsive AWC, CTAs, trust, friction, a11y (focus, labels, contrast at a glance) |
 | **copy**    | Voice, clarity, empty/error/loading tone, accuracy vs product, no placeholder garbage                   |
-| **ui**      | Tailwind/styleguide alignment, component consistency, density, states visually distinct                 |
+| **ui**      | Styleguide + **deep zoom** (cards, pre/code blocks, borders, overflow, icons). Obvious defects → `mustFix`, not only `quickWins` — see `ui-deep-inspection.md` |
 | **product** | Story matches real AWC/AWL intent; fixtures believable; flows not misleading                            |
 
 ## JSON template
@@ -59,6 +60,25 @@ Save under `docs/storybook/wave-qa/reviews/<AWC|AWL>/<pageId>/round-<n>/<role>-r
   "quickWins": ["Tighten eyebrow-to-headline spacing on desktop"]
 }
 ```
+
+**`ui` reviews** also require:
+
+```json
+"zoomedSections": ["hero-desktop-ready", "for-your-ai-pre-desktop-ready"],
+"obviousVisualDefects": "none"
+```
+
+Use `"obviousVisualDefects": "present"` when any blocking item in `ui-deep-inspection.md` applies; then `passed` must be `false` until fixed.
+
+## Final audit (after all 34 pages first-pass)
+
+When every page has ux–product recorded once, coordinator runs **audit round** (`captureRound` label `audit-1` in reviews path):
+
+1. Re-capture **ready** (and error if page has known state bugs) for each **already-passed** page.
+2. **Only `ui` (+ optional `ux`)** — new reviewer A/B with `ui-deep-inspection.md`; may **revoke** `passed` and open fix PRs.
+3. Do **not** declare program complete until audit `ui` passes or user accepts documented exceptions.
+
+Record audit reviews under `reviews/.../round-audit-1/`.
 
 Record when both A and B exist:
 

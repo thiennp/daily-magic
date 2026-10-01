@@ -28,6 +28,10 @@ export interface AgentWaveQaReview {
   readonly topIssues: readonly string[];
   readonly mustFix: readonly string[];
   readonly quickWins: readonly string[];
+  /** Required when role is `ui` — which blocks were zoom-inspected. */
+  readonly zoomedSections?: readonly string[];
+  /** Required when role is `ui` — `present` blocks pass until fixed. */
+  readonly obviousVisualDefects?: "none" | "present";
 }
 
 export interface AgentWaveQaReviewValidationError {
@@ -239,6 +243,50 @@ export const validateAgentWaveQaReview = (
         field: "scoreBreakdown",
         message: `pointsDeducted must sum to ${expectedDeduction} (100 − scoreOverall)`,
       });
+    }
+  }
+
+  const role = o.role;
+  if (role === "ui") {
+    const zoomed = o.zoomedSections;
+    if (
+      !Array.isArray(zoomed) ||
+      zoomed.length < 3 ||
+      !zoomed.every((s) => isNonEmptyString(s))
+    ) {
+      errors.push({
+        field: "zoomedSections",
+        message:
+          "ui reviews require zoomedSections (≥3 non-empty strings) per ui-deep-inspection.md",
+      });
+    }
+    const defects = o.obviousVisualDefects;
+    if (defects !== "none" && defects !== "present") {
+      errors.push({
+        field: "obviousVisualDefects",
+        message: 'ui reviews require obviousVisualDefects "none" or "present"',
+      });
+    }
+    if (
+      defects === "present" &&
+      typeof o.passed === "boolean" &&
+      o.passed === true
+    ) {
+      errors.push({
+        field: "passed",
+        message:
+          "ui cannot pass while obviousVisualDefects is present — fix or score < 95",
+      });
+    }
+    if (defects === "present") {
+      const mustFix = o.mustFix;
+      if (!Array.isArray(mustFix) || mustFix.length === 0) {
+        errors.push({
+          field: "mustFix",
+          message:
+            "ui with obviousVisualDefects present requires at least one mustFix",
+        });
+      }
     }
   }
 

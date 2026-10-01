@@ -58,6 +58,46 @@ describe("validateAgentWaveQaReview", () => {
     expect(result.errors.some((e) => e.field === "scoreOverall")).toBe(true);
   });
 
+  it("requires ui reviews to declare zoomedSections and obviousVisualDefects", () => {
+    const result = validateAgentWaveQaReview({
+      ...validAwcReview,
+      role: "ui",
+      scoreDesktop: 98,
+      scoreMobile: 96,
+      scoreOverall: 97,
+      scoreBreakdown: [
+        {
+          area: "hero",
+          pointsDeducted: 3,
+          reason: "Minor spacing nit on trust strip.",
+        },
+      ],
+      zoomedSections: ["hero-ready-desktop", "cards-ready-desktop", "footer-ready-mobile"],
+      obviousVisualDefects: "none",
+    });
+    expect(result.ok).toBe(true);
+  });
+
+  it("rejects ui pass when obviousVisualDefects is present", () => {
+    const result = validateAgentWaveQaReview({
+      ...validAwcReview,
+      role: "ui",
+      scoreOverall: 97,
+      passed: true,
+      scoreBreakdown: [
+        {
+          area: "pre-border",
+          pointsDeducted: 3,
+          reason: "Horizontal rule cuts through pre block.",
+        },
+      ],
+      zoomedSections: ["a", "b", "c"],
+      obviousVisualDefects: "present",
+      mustFix: ["Fix For-your-AI pre border overlap"],
+    });
+    expect(result.ok).toBe(false);
+  });
+
   it("requires AWL scoreMobile to be null", () => {
     const result = validateAgentWaveQaReview({
       ...validAwcReview,
