@@ -5,6 +5,7 @@ import {
   resolvePromptSdlcMaxTrials,
   type HarnessWriterAgent,
 } from "../../../../adapters/promptSdlcAwcCore";
+import { resolvePromptSdlcMaxTrials } from "../../../../adapters/promptSdlcAwcCore";
 import { PROMPT_SDLC_MANUAL_ACTOR } from "./choosePromptSdlcLocalModels";
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
 import { applyPromptSdlcBudgetGuard } from "./applyPromptSdlcBudgetGuard";
@@ -48,10 +49,13 @@ export const applyPromptSdlcLocalJudgeReply = (
     promptText: revision?.promptText ?? "",
     improver: writerChoice(cycle.improverModel),
     round: cycle.currentRound,
-    maxRounds: resolvePromptSdlcMaxTrials({
-      maxRounds: cycle.maxRounds,
-      costControls: cycle.costControls,
-    }),
+    maxRounds:
+      cycle.wizard?.phase === "optimize_modules"
+        ? resolvePromptSdlcMaxTrials({
+            maxRounds: cycle.maxRounds,
+            costControls: cycle.costControls,
+          })
+        : cycle.maxRounds,
     earlyStopFlat:
       cycle.costControls?.earlyStop === false
         ? 1_000_000

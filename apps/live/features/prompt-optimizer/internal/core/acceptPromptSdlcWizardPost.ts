@@ -7,6 +7,9 @@ import {
   PROMPT_SDLC_BUDGET_CONFIRM_REQUIRED,
   summarizePromptSdlcWizardCompletion,
 } from "../../../../adapters/promptSdlcAwcCore";
+import { confirmPromptSdlcCostBudget } from "../../../../adapters/promptSdlcAwcCore";
+import { isPromptSdlcCostBudgetConfirmed } from "../../../../adapters/promptSdlcAwcCore";
+import { PROMPT_SDLC_BUDGET_CONFIRM_REQUIRED } from "../../../../adapters/promptSdlcAwcCore";
 
 import {
   beginPromptSdlcWizardEvaluate,
@@ -267,13 +270,9 @@ export const tryAcceptPromptSdlcWizardPost = (input: {
     }
 
     if (gate === "optimize_modules") {
-      const wizardForStep = cycle.wizard;
-      if (wizardForStep === undefined) {
-        finish(cycleId);
-        return true;
-      }
-      const moduleIndex = wizardForStep.currentModuleIndex;
-      const moduleRun = wizardForStep.modules[moduleIndex];
+      const wizardState = cycle.wizard;
+      const moduleIndex = wizardState.currentModuleIndex;
+      const moduleRun = wizardState.modules[moduleIndex];
       if (moduleRun === undefined) {
         finish(cycleId);
         return true;
@@ -319,7 +318,7 @@ export const tryAcceptPromptSdlcWizardPost = (input: {
       }
 
       const mergedParams = mergePromptSdlcWizardPostedParameterValues({
-        wizard: wizardForStep,
+        wizard: wizardState,
         modulePrompt: moduleRun.prompt,
         posted,
       });
@@ -334,8 +333,8 @@ export const tryAcceptPromptSdlcWizardPost = (input: {
         return true;
       }
 
-      const wizardWithParams: typeof wizardForStep = {
-        ...wizardForStep,
+      const wizardWithParams = {
+        ...wizardState,
         parameterValues: mergedParams.parameterValues,
       };
 
@@ -354,7 +353,7 @@ export const tryAcceptPromptSdlcWizardPost = (input: {
       }
 
       const nextIndex = moduleIndex + 1;
-      if (nextIndex >= wizardForStep.modules.length) {
+      if (nextIndex >= wizardState.modules.length) {
         const completion =
           summarizePromptSdlcWizardCompletion(wizardWithParams);
         const next = completePromptSdlcLocalWizardCycle(

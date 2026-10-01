@@ -4,6 +4,7 @@ import {
   seedPromptSdlcWizardParameterValues,
   type PromptSdlcWizardSplitOption,
 } from "../../../../adapters/promptSdlcAwcCore";
+import { seedPromptSdlcStep4CostProposal } from "../../../../adapters/promptSdlcAwcCore";
 
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
 
