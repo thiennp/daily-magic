@@ -87,11 +87,13 @@ describe("project ACL request→approve", () => {
     sqlMock.mockImplementation(async (strings: TemplateStringsArray) => {
       const q = String(strings);
       if (q.includes("CREATE TABLE")) return [];
-      if (q.includes("UPDATE project_access_requests")) {
-        return [{ ...requestRow, status: "approved" }];
-      }
-      if (q.includes("INSERT INTO project_memberships")) {
-        return [memberRow];
+      if (q.includes("WITH approved_request AS")) {
+        return [
+          {
+            request_row: requestRow,
+            member_row: memberRow,
+          },
+        ];
       }
       if (q.includes("INSERT INTO project_access_audit")) return [];
       return [];

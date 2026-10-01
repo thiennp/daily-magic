@@ -24,7 +24,7 @@ export default function AwcProjectAccessPanel({
   const onAddFolder = async (
     machineOrDeviceRef: string,
     folderPath: string,
-  ) => {
+  ): Promise<boolean> => {
     const result = await addProjectFolderRef({
       projectId,
       machineOrDeviceRef,
@@ -36,6 +36,7 @@ export default function AwcProjectAccessPanel({
     if (result.ok) {
       await access.reload();
     }
+    return result.ok;
   };
 
   const onRemoveFolder = async (refId: string) => {
@@ -66,7 +67,7 @@ export default function AwcProjectAccessPanel({
       />
       <AwcProjectAccessFolderRefs
         folderRefs={access.folderRefs}
-        onAdd={(machine, folder) => void onAddFolder(machine, folder)}
+        onAdd={(machine, folder) => onAddFolder(machine, folder)}
         onRemove={(id) => void onRemoveFolder(id)}
       />
       {access.message ? (

@@ -37,8 +37,13 @@ export const approveProjectAccessRequest = async (input: {
 
   await ensureProjectAclSchema();
   const sql = getSql();
-  const requestRows = asRowArray(
+  const membershipId = randomUUID();
+  const scopes = [...PROJECT_ACL_DEFAULT_MEMBER_SCOPES];
+  const teamLabel = input.teamLabel ?? null;
+
+  const combinedRows = asRowArray(
     await sql`
+<<<<<<< HEAD
       UPDATE project_access_requests
       SET status = 'approved',
           decided_by_user_id = ${input.ownerUserId},
@@ -48,34 +53,62 @@ export const approveProjectAccessRequest = async (input: {
         AND status = 'pending'
         AND expires_at > NOW()
       RETURNING *
+=======
+      WITH approved_request AS (
+        UPDATE project_access_requests
+        SET status = 'approved',
+            decided_by_user_id = ${input.ownerUserId},
+            decided_at = NOW()
+        WHERE id = ${input.requestId}
+          AND project_id = ${input.projectId}
+          AND status = 'pending'
+        RETURNING *
+      ),
+      new_member AS (
+        INSERT INTO project_memberships (
+          id, project_id, user_id, role, status, team_label, scopes
+        )
+        SELECT
+          ${membershipId},
+          ${input.projectId},
+          approved_request.requester_user_id,
+          'member',
+          'active',
+          ${teamLabel},
+          ${scopes}
+        FROM approved_request
+        RETURNING *
+      )
+      SELECT
+        to_jsonb(approved_request) AS request_row,
+        to_jsonb(new_member) AS member_row
+      FROM approved_request
+      INNER JOIN new_member ON true
+>>>>>>> 77eb5235 (fix(projects): atomic ACL approve and keep folder ref on failed add)
     `,
   );
-  if (requestRows.length === 0) {
+
+  if (combinedRows.length === 0) {
     return { ok: false, code: "not_pending" };
   }
-  const request = mapProjectAccessRequestRow(requestRows[0]);
-  const scopes = [...PROJECT_ACL_DEFAULT_MEMBER_SCOPES];
-  const memberRows = asRowArray(
-    await sql`
-      INSERT INTO project_memberships (
-        id, project_id, user_id, role, status, team_label, scopes
-      )
-      VALUES (
-        ${randomUUID()},
-        ${input.projectId},
-        ${request.requesterUserId},
-        'member',
-        'active',
-        ${input.teamLabel ?? null},
-        ${scopes}
-      )
-      RETURNING *
-    `,
-  );
-  if (memberRows.length === 0) {
-    return { ok: false, code: "not_found" };
+
+  const requestPayload = combinedRows[0].request_row;
+  const memberPayload = combinedRows[0].member_row;
+  if (
+    requestPayload === null ||
+    typeof requestPayload !== "object" ||
+    memberPayload === null ||
+    typeof memberPayload !== "object"
+  ) {
+    return { ok: false, code: "not_pending" };
   }
-  const membership = mapProjectMembershipRow(memberRows[0]);
+
+  const request = mapProjectAccessRequestRow(
+    requestPayload as Record<string, unknown>,
+  );
+  const membership = mapProjectMembershipRow(
+    memberPayload as Record<string, unknown>,
+  );
   await writeProjectAccessAudit({
     projectId: input.projectId,
     actorUserId: input.ownerUserId,

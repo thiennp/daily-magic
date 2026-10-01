@@ -12,7 +12,10 @@ interface FolderRefRow {
 
 interface AwcProjectAccessFolderRefsProps {
   readonly folderRefs: readonly FolderRefRow[];
-  readonly onAdd: (machineOrDeviceRef: string, folderPath: string) => void;
+  readonly onAdd: (
+    machineOrDeviceRef: string,
+    folderPath: string,
+  ) => Promise<boolean> | boolean;
   readonly onRemove: (refId: string) => void;
 }
 
@@ -71,9 +74,13 @@ export default function AwcProjectAccessFolderRefs({
           type="button"
           className="rounded-md bg-gray-900 px-3 py-1 text-xs text-white dark:bg-white dark:text-gray-900"
           onClick={() => {
-            onAdd(machineRef, folderPath);
-            setMachineRef("");
-            setFolderPath("");
+            void (async () => {
+              const added = await onAdd(machineRef, folderPath);
+              if (added) {
+                setMachineRef("");
+                setFolderPath("");
+              }
+            })();
           }}
         >
           {copy.addFolderRef}
