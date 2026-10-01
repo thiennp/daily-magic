@@ -2,9 +2,9 @@ import {
   collectPromptSdlcPriorRounds,
   continueAfterImproveReply,
   continueAfterJudgeReply,
+  resolvePromptSdlcMaxTrials,
   type HarnessWriterAgent,
 } from "../../../../adapters/promptSdlcAwcCore";
-import { resolvePromptSdlcMaxTrials } from "@/lib/promptOptimizer/resolvePromptSdlcMaxTrials";
 import { PROMPT_SDLC_MANUAL_ACTOR } from "./choosePromptSdlcLocalModels";
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
 import { applyPromptSdlcBudgetGuard } from "./applyPromptSdlcBudgetGuard";

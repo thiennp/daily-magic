@@ -1,8 +1,8 @@
-import { confirmPromptSdlcCostBudget } from "@/lib/promptOptimizer/confirmPromptSdlcCostBudget";
 import { isNumber, isType, isUndefinedOr } from "guardz";
 
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
 
+import { confirmPromptSdlcCostBudget } from "../../../../adapters/promptSdlcAwcCore";
 interface PromptSdlcAgentBudgetConfirmJson {
   readonly intent: "confirm_budget";
   readonly confirmedTokenBudget: number;
@@ -19,7 +19,10 @@ const isConfirmBody = isType<PromptSdlcAgentBudgetConfirmJson>({
 });
 
 export type ParsePromptSdlcAgentBudgetConfirmResult =
-  | { readonly kind: "confirm"; readonly body: PromptSdlcAgentBudgetConfirmJson }
+  | {
+      readonly kind: "confirm";
+      readonly body: PromptSdlcAgentBudgetConfirmJson;
+    }
   | { readonly kind: "invalid"; readonly error: string }
   | { readonly kind: "other" };
 

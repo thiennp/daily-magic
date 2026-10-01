@@ -1,8 +1,10 @@
 import {
-  type HarnessWriterAgent,
+  PROMPT_SDLC_DEFAULT_MAX_TRIALS,
   PROMPT_SDLC_WIZARD_MAX_ROUNDS,
   PROMPT_SDLC_WIZARD_MODULE_PASS_SCORE,
   PROMPT_SDLC_WIZARD_PASS_SCORE,
+  type HarnessWriterAgent,
+  type PromptSdlcCostControls,
 } from "../../../../adapters/promptSdlcAwcCore";
 import {
   readPromptSdlcLocalRunnerModel,
@@ -23,8 +25,6 @@ import {
   costControlsFromKnobs,
   readPromptSdlcCostControlKnobs,
 } from "./readPromptSdlcCostControls";
-import type { PromptSdlcCostControls } from "@/lib/promptOptimizer/types/PromptSdlcCostControl.type";
-import { PROMPT_SDLC_DEFAULT_MAX_TRIALS } from "@/lib/promptOptimizer/promptSdlcCostControl.constant";
 
 type PromptSdlcLocalRunModels = NonNullable<
   ReturnType<typeof readPromptSdlcLocalRunModels>
@@ -121,9 +121,7 @@ export const decidePromptSdlcLocalPost = (input: {
     String(PROMPT_SDLC_DEFAULT_MAX_TRIALS);
   const typedMaxSpendUsd = input.posted?.get("maxSpendUsd")?.trim() ?? "";
   const typedEarlyStop =
-    input.posted === null
-      ? true
-      : input.posted.has("earlyStop");
+    input.posted === null ? true : input.posted.has("earlyStop");
   const form = (
     folder: string,
     errorMessage: string | null,

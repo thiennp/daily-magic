@@ -1,12 +1,12 @@
 import {
   PROMPT_SDLC_DEFAULT_MAX_TRIALS,
   PROMPT_SDLC_MAX_TRIALS_LIMIT,
-} from "@/lib/promptOptimizer/promptSdlcCostControl.constant";
-import { defaultPromptSdlcCostControls } from "@/lib/promptOptimizer/createEmptyPromptSdlcCostControl";
+  defaultPromptSdlcCostControls,
+} from "../../../../adapters/promptSdlcAwcCore";
 import type {
   PromptSdlcCostControlKnobs,
   PromptSdlcCostControls,
-} from "@/lib/promptOptimizer/types/PromptSdlcCostControl.type";
+} from "../../../../adapters/promptSdlcAwcCore";
 
 export type ReadPromptSdlcCostControlsResult =
   | { readonly ok: true; readonly knobs: PromptSdlcCostControlKnobs }
@@ -24,7 +24,11 @@ const parsePositiveInt = (
     return null;
   }
   const value = Number(raw);
-  if (!Number.isInteger(value) || value < 1 || value > PROMPT_SDLC_MAX_TRIALS_LIMIT) {
+  if (
+    !Number.isInteger(value) ||
+    value < 1 ||
+    value > PROMPT_SDLC_MAX_TRIALS_LIMIT
+  ) {
     return null;
   }
   return value;
@@ -79,7 +83,8 @@ export const readPromptSdlcCostControlKnobs = (posted: {
   if (flatParsed === null) {
     return {
       ok: false,
-      errorMessage: "Early-stop flat rounds must be a whole number from 1 to 30.",
+      errorMessage:
+        "Early-stop flat rounds must be a whole number from 1 to 30.",
     };
   }
   return {

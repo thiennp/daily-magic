@@ -1,9 +1,9 @@
 import type {
   HarnessWriterAgent,
+  PromptSdlcCostControls,
   PromptSdlcCycleStatus,
   PromptSdlcWizardState,
 } from "../../../../adapters/promptSdlcAwcCore";
-import type { PromptSdlcCostControls } from "@/lib/promptOptimizer/types/PromptSdlcCostControl.type";
 import type { PromptSdlcWriterErrorKind } from "./readPromptSdlcWriterOutput";
 
 export interface PromptSdlcLocalRun {

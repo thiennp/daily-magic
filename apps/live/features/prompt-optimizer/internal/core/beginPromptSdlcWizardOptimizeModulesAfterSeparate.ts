@@ -1,9 +1,9 @@
 import {
   modulesFromPromptSdlcWizardSplitOption,
+  seedPromptSdlcStep4CostProposal,
   seedPromptSdlcWizardParameterValues,
   type PromptSdlcWizardSplitOption,
 } from "../../../../adapters/promptSdlcAwcCore";
-import { seedPromptSdlcStep4CostProposal } from "@/lib/promptOptimizer/proposePromptSdlcCostBudget";
 
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
 

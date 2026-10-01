@@ -1,9 +1,9 @@
-/** @deprecated Prefer @/lib/promptOptimizer/proposePromptSdlcCostBudget */
+/** @deprecated Prefer ../../../../adapters/promptSdlcAwcCore */
 export {
   proposePromptSdlcCostBudget as proposePromptSdlcStep4Budget,
   applyPromptSdlcCostProposal,
   seedPromptSdlcStep4CostProposal,
-} from "@/lib/promptOptimizer/proposePromptSdlcCostBudget";
-export { defaultPromptSdlcCostControls } from "@/lib/promptOptimizer/createEmptyPromptSdlcCostControl";
-export { confirmPromptSdlcCostBudget as confirmPromptSdlcCostCeiling } from "@/lib/promptOptimizer/confirmPromptSdlcCostBudget";
-export { estimatePromptSdlcSpendUsd as recomputeEstimatedSpendUsd } from "@/lib/promptOptimizer/estimatePromptSdlcSpendUsd";
+  defaultPromptSdlcCostControls,
+  confirmPromptSdlcCostBudget as confirmPromptSdlcCostCeiling,
+  estimatePromptSdlcSpendUsd as recomputeEstimatedSpendUsd,
+} from "../../../../adapters/promptSdlcAwcCore";

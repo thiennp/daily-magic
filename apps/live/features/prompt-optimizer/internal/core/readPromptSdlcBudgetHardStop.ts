@@ -1,5 +1,5 @@
-/** @deprecated Prefer @/lib/promptOptimizer/readPromptSdlcBudgetStop */
+/** @deprecated Prefer ../../../../adapters/promptSdlcAwcCore */
 export {
-  readPromptSdlcBudgetStop as readPromptSdlcBudgetHardStop,
+  readPromptSdlcBudgetStop,
   isPromptSdlcCostBudgetConfirmed,
-} from "@/lib/promptOptimizer/readPromptSdlcBudgetStop";
+} from "../../../../adapters/promptSdlcAwcCore";

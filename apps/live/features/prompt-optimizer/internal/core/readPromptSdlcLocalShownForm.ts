@@ -1,10 +1,10 @@
 import {
   isPromptSdlcTerminalStatus,
+  PROMPT_SDLC_DEFAULT_MAX_TRIALS,
   PROMPT_SDLC_MAX_ROUNDS,
   PROMPT_SDLC_WIZARD_MODULE_PASS_SCORE,
   readPromptSdlcWizardModulePassScore,
 } from "../../../../adapters/promptSdlcAwcCore";
-import { PROMPT_SDLC_DEFAULT_MAX_TRIALS } from "@/lib/promptOptimizer/promptSdlcCostControl.constant";
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
 import { displayPromptSdlcLocalFolder } from "./promptSdlcLocalFolder";
 
@@ -82,7 +82,9 @@ export const readPromptSdlcLocalShownForm = (input: {
     passScore: String(cycle.passScore),
     modulePassScore: String(readPromptSdlcWizardModulePassScore(cycle.wizard)),
     maxRounds: String(cycle.maxRounds),
-    maxTrials: String(cycle.costControls?.maxTrials ?? PROMPT_SDLC_DEFAULT_MAX_TRIALS),
+    maxTrials: String(
+      cycle.costControls?.maxTrials ?? PROMPT_SDLC_DEFAULT_MAX_TRIALS,
+    ),
     maxSpendUsd:
       cycle.costControls?.maxSpendUsd === null ||
       cycle.costControls?.maxSpendUsd === undefined

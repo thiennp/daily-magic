@@ -1,14 +1,15 @@
 import { describe, expect, it } from "vitest";
 
-import { confirmPromptSdlcCostBudget } from "@/lib/promptOptimizer/confirmPromptSdlcCostBudget";
-import { defaultPromptSdlcCostControls } from "@/lib/promptOptimizer/createEmptyPromptSdlcCostControl";
-import { seedPromptSdlcStep4CostProposal } from "@/lib/promptOptimizer/proposePromptSdlcCostBudget";
-
 import { applyPromptSdlcBudgetGuard } from "./applyPromptSdlcBudgetGuard";
 import { buildPromptSdlcAgentSnapshot } from "./buildPromptSdlcAgentSnapshot";
 import { createPromptSdlcLocalCycle } from "./createPromptSdlcLocalCycle";
 import { derivePromptSdlcAgentOutcome } from "./derivePromptSdlcAgentOutcome";
 
+import {
+  confirmPromptSdlcCostBudget,
+  defaultPromptSdlcCostControls,
+  seedPromptSdlcStep4CostProposal,
+} from "../../../../adapters/promptSdlcAwcCore";
 describe("cost control honesty (budget_exceeded → useThisPrompt false)", () => {
   it("maps budget_exceeded outcome and keeps useThisPrompt false", () => {
     expect(
