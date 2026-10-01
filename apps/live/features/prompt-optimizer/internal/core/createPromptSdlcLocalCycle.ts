@@ -6,6 +6,8 @@ import {
   type PromptSdlcCostControls,
   type PromptSdlcWizardState,
 } from "../../../../adapters/promptSdlcAwcCore";
+import os from "node:os";
+
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
 
 export const createPromptSdlcLocalCycle = (input: {

@@ -3,7 +3,6 @@ import {
   PROMPT_SDLC_DEFAULT_MAX_TRIALS,
   PROMPT_SDLC_MAX_ROUNDS,
   PROMPT_SDLC_WIZARD_MODULE_PASS_SCORE,
-  PROMPT_SDLC_DEFAULT_MAX_TRIALS,
   readPromptSdlcWizardModulePassScore,
 } from "../../../../adapters/promptSdlcAwcCore";
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
