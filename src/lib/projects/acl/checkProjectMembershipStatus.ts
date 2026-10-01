@@ -1,3 +1,4 @@
+import { expireStaleProjectAccessRequestsForRequester } from "@/lib/projects/acl/expireStaleProjectAccessRequests";
 import { getActiveProjectMembership } from "@/lib/projects/acl/getActiveProjectMembership";
 import { ensureProjectAclSchema } from "@/lib/projects/acl/ensureProjectAclSchema";
 import { getUserProjectById } from "@/lib/projects/userProjectQueries";
@@ -23,6 +24,10 @@ export const checkProjectMembershipStatus = async (
     return "active";
   }
 
+  await expireStaleProjectAccessRequestsForRequester({
+    projectId,
+    requesterUserId: userId,
+  });
   await ensureProjectAclSchema();
   const sql = getSql();
   const pending = asRowArray(
@@ -31,6 +36,7 @@ export const checkProjectMembershipStatus = async (
       WHERE project_id = ${projectId}
         AND requester_user_id = ${userId}
         AND status = 'pending'
+        AND expires_at > NOW()
       LIMIT 1
     `,
   );

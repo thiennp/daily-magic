@@ -46,6 +46,7 @@ export const approveProjectAccessRequest = async (input: {
       WHERE id = ${input.requestId}
         AND project_id = ${input.projectId}
         AND status = 'pending'
+        AND expires_at > NOW()
       RETURNING *
     `,
   );

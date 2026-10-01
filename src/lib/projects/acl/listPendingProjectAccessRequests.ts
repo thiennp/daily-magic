@@ -14,6 +14,7 @@ export const listPendingProjectAccessRequests = async (
       FROM project_access_requests
       WHERE project_id = ${projectId}
         AND status = 'pending'
+        AND expires_at > NOW()
       ORDER BY created_at ASC
     `,
   );
