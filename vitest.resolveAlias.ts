@@ -74,6 +74,10 @@ export const vitestResolveAlias: Record<string, string> = {
     ROOT,
     "./apps/install/features/runtime-client/public-api/types.ts",
   ),
+  "@agent-witch/install-runtime-client/presentation": path.resolve(
+    ROOT,
+    "./apps/install/features/runtime-client/public-api/presentation.ts",
+  ),
   "@agent-witch/install-runtime-client": path.resolve(
     ROOT,
     "./apps/install/features/runtime-client/public-api/infrastructure.ts",
@@ -105,6 +109,10 @@ export const vitestResolveAlias: Record<string, string> = {
   "@agent-witch/install-self-update/types": path.resolve(
     ROOT,
     "./apps/install/features/self-update/public-api/types.ts",
+  ),
+  "@agent-witch/install-self-update/presentation": path.resolve(
+    ROOT,
+    "./apps/install/features/self-update/public-api/presentation.ts",
   ),
   "@agent-witch/install-self-update": path.resolve(
     ROOT,

@@ -1,15 +1,10 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import {
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-  type RefObject,
-} from "react";
+import { useCallback, useRef, useState, type RefObject } from "react";
 
-import patchUserProjectName from "@/features/projects/utils/patchUserProjectName";
+import saveAwcProjectRenameDraft from "@/features/projects/hooks/saveAwcProjectRenameDraft";
+import useAwcProjectRenameEditKeyboard from "@/features/projects/hooks/useAwcProjectRenameEditKeyboard";
 
 const useAwcProjectRename = (input: {
   readonly projectId: string;
@@ -35,6 +30,18 @@ const useAwcProjectRename = (input: {
   const [isSaving, setIsSaving] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
+  const renamePropsKey = `${input.initialName}\0${input.startInEditMode}`;
+  const [lastRenamePropsKey, setLastRenamePropsKey] = useState(renamePropsKey);
+  if (lastRenamePropsKey !== renamePropsKey) {
+    setLastRenamePropsKey(renamePropsKey);
+    setName(input.initialName);
+    setDraft(input.initialName);
+    if (input.startInEditMode) {
+      setIsEditing(true);
+      setErrorMessage(null);
+    }
+  }
+
   const clearRenameQuery = useCallback((): void => {
     router.replace(`/projects/${encodeURIComponent(input.projectId)}`, {
       scroll: false,
@@ -54,52 +61,28 @@ const useAwcProjectRename = (input: {
     clearRenameQuery();
   }, [clearRenameQuery, name]);
 
-  useEffect(() => {
-    if (!isEditing) {
-      return;
-    }
-
-    const onKeyDown = (event: KeyboardEvent): void => {
-      if (event.key === "Escape") {
-        event.preventDefault();
-        cancelEditing();
-      }
-    };
-
-    window.addEventListener("keydown", onKeyDown);
-    const frame = requestAnimationFrame(() => {
-      inputRef.current?.focus();
-      inputRef.current?.select();
-    });
-
-    return () => {
-      window.removeEventListener("keydown", onKeyDown);
-      cancelAnimationFrame(frame);
-    };
-  }, [cancelEditing, isEditing]);
+  useAwcProjectRenameEditKeyboard(isEditing, cancelEditing, inputRef);
 
   const saveDraft = useCallback(async (): Promise<void> => {
-    const trimmed = draft.trim();
-    if (trimmed.length === 0) {
-      setErrorMessage("Enter a project name.");
-      return;
-    }
-
-    if (trimmed === name) {
-      setIsEditing(false);
-      setErrorMessage(null);
-      clearRenameQuery();
-      return;
-    }
-
     setIsSaving(true);
     setErrorMessage(null);
 
-    const result = await patchUserProjectName(input.projectId, trimmed);
+    const result = await saveAwcProjectRenameDraft({
+      projectId: input.projectId,
+      draft,
+      currentName: name,
+    });
     setIsSaving(false);
 
-    if (result.kind === "error") {
+    if (result.kind === "validation" || result.kind === "error") {
       setErrorMessage(result.message);
+      return;
+    }
+
+    if (result.kind === "unchanged") {
+      setIsEditing(false);
+      setErrorMessage(null);
+      clearRenameQuery();
       return;
     }
 

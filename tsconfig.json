@@ -55,6 +55,9 @@
       "@agent-witch/install-watchdog/types": [
         "./apps/install/features/watchdog/public-api/types.ts"
       ],
+      "@agent-witch/install-runtime-client/presentation": [
+        "./apps/install/features/runtime-client/public-api/presentation.ts"
+      ],
       "@agent-witch/install-runtime-client": [
         "./apps/install/features/runtime-client/public-api/infrastructure.ts"
       ],
@@ -81,6 +84,9 @@
       ],
       "@agent-witch/install-self-update/types": [
         "./apps/install/features/self-update/public-api/types.ts"
+      ],
+      "@agent-witch/install-self-update/presentation": [
+        "./apps/install/features/self-update/public-api/presentation.ts"
       ],
       "@agent-witch/install-self-update": [
         "./apps/install/features/self-update/public-api/infrastructure.ts"

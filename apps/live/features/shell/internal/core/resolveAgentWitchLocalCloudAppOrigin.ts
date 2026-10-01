@@ -4,7 +4,7 @@ import { AGENT_WITCH_DEFAULT_ORIGIN } from "@agent-witch/shared/network";
 import { AGENT_WITCH_PROD_INSTALL_DIR_NAME } from "@agent-witch/install-layout/types";
 import { resolveAgentWitchInstallDir } from "@agent-witch/install-layout";
 import { readAgentWitchRunConfig } from "@agent-witch/install-runtime-client";
-import { resolveAgentWitchAppOriginFromWsUrl } from "@agent-witch/install-self-update";
+import { resolveAgentWitchAppOriginFromWsUrl } from "@agent-witch/install-self-update/presentation";
 import type { AgentWitchInstallVersionRecord } from "@agent-witch/install-self-update/types";
 
 export const resolveAgentWitchLocalCloudAppOrigin = (

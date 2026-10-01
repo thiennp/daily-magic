@@ -10,7 +10,7 @@ import { renderPromptSdlcLocalNodeModal } from "./renderPromptSdlcLocalNodeModal
 import {
   canShowPromptSdlcWizardTimelineSkip,
   PROMPT_SDLC_WIZARD_SKIP_STEP_CONFIRM,
-} from "./skipPromptSdlcWizardTimelineStep";
+} from "./skipPromptSdlcWizardTimelineStepUi";
 import { renderAwlDialogCloseButton } from "../../../shell/internal/core/renderAwlDialogCloseButton";
 import { PROMPT_SDLC_INFO_ICON_HTML } from "./promptSdlcInfoIconHtml.constant";
 import { readPromptSdlcLocalUnusableReplyPreview } from "./readPromptSdlcLocalUnusableReplyPreview";

@@ -1,4 +1,4 @@
-import { parseClaudeCliPrintResult } from "../../../../adapters/writerDispatch";
+import { parseClaudeCliPrintResult } from "../../../../adapters/writerDispatchPresentation";
 
 const USAGE_PAIR =
   /"(?:input_tokens|inputTokens)"\s*:\s*(\d+)[\s\S]{0,240}?"(?:output_tokens|outputTokens)"\s*:\s*(\d+)/g;

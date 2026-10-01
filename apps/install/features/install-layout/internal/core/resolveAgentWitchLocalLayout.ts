@@ -29,6 +29,10 @@ import {
 import type { AgentWitchLocalLayout } from "../../public-api/types";
 
 import { resolveAgentWitchBundleAppDir } from "./resolveAgentWitchBundleAppDir";
+import {
+  isAgentWitchLocalInstallDir,
+  resolveAgentWitchLaunchAgentPrefix as resolveLaunchAgentPrefixFromInstallDir,
+} from "./resolveAgentWitchLaunchAgentPrefix.util";
 
 const moduleDirname = resolveAgentWitchBundleAppDir();
 
@@ -151,15 +155,11 @@ export const resolveAgentWitchDeviceKeypairPath = (
   return path.join(layout.installDir, AGENT_WITCH_DEVICE_KEYPAIR_FILE_NAME);
 };
 
-export const isAgentWitchLocalInstallDir = (installDir: string): boolean =>
-  path.basename(installDir) === AGENT_WITCH_LOCAL_INSTALL_DIR_NAME;
+export { isAgentWitchLocalInstallDir } from "./resolveAgentWitchLaunchAgentPrefix.util";
 
 export const resolveAgentWitchLaunchAgentPrefix = (
   installDir: string = resolveAgentWitchInstallDir(),
-): string =>
-  isAgentWitchLocalInstallDir(installDir)
-    ? AGENT_WITCH_LOCAL_LAUNCH_AGENT_PREFIX
-    : AGENT_WITCH_PROD_LAUNCH_AGENT_PREFIX;
+): string => resolveLaunchAgentPrefixFromInstallDir(installDir);
 
 export const resolveAgentWitchDefaultWakePort = (
   installDir: string = resolveAgentWitchInstallDir(),

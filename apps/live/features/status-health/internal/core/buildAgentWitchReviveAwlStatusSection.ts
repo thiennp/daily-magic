@@ -1,7 +1,16 @@
 import path from "node:path";
 
-import { resolveAgentWitchLaunchAgentPrefix } from "@agent-witch/install-layout";
+import {
+  AGENT_WITCH_LOCAL_INSTALL_DIR_NAME,
+  AGENT_WITCH_LOCAL_LAUNCH_AGENT_PREFIX,
+  AGENT_WITCH_PROD_LAUNCH_AGENT_PREFIX,
+} from "@agent-witch/install-layout/types";
 import { AGENT_WITCH_LIVE_APP_PORT } from "@agent-witch/shared/network";
+
+const resolveAgentWitchLaunchAgentPrefix = (installDir: string): string =>
+  path.basename(installDir) === AGENT_WITCH_LOCAL_INSTALL_DIR_NAME
+    ? AGENT_WITCH_LOCAL_LAUNCH_AGENT_PREFIX
+    : AGENT_WITCH_PROD_LAUNCH_AGENT_PREFIX;
 
 const escapeHtml = (value: string): string =>
   value

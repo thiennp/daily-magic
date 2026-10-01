@@ -1,6 +1,20 @@
-import { resolveAgentWitchLaunchAgentPrefix } from "@agent-witch/install-layout";
+import { resolveAgentWitchLaunchAgentPrefix } from "@agent-witch/install-layout/presentation";
+import { AGENT_WITCH_PROD_INSTALL_DIR_NAME } from "@agent-witch/install-layout/types";
+import os from "node:os";
+import path from "node:path";
 
-const launchAgentPrefix = resolveAgentWitchLaunchAgentPrefix();
+const resolveDefaultInstallDirForLaunchLabels = (): string => {
+  const fromEnv = process.env.AGENT_WITCH_HOME?.trim();
+  if (fromEnv !== undefined && fromEnv.length > 0) {
+    return path.resolve(fromEnv);
+  }
+
+  return path.join(os.homedir(), AGENT_WITCH_PROD_INSTALL_DIR_NAME);
+};
+
+const launchAgentPrefix = resolveAgentWitchLaunchAgentPrefix(
+  resolveDefaultInstallDirForLaunchLabels(),
+);
 
 export const AGENT_WITCH_WAKE_LAUNCH_AGENT_LABEL = `${launchAgentPrefix}-wake`;
 

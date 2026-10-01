@@ -1,5 +1,5 @@
-import type { HarnessWriterAgentId } from "../../../../adapters/writerDispatch";
-import { parseClaudeCliPrintResult } from "../../../../adapters/writerDispatch";
+import type { HarnessWriterAgentId } from "../../../../adapters/writerDispatchPresentation";
+import { parseClaudeCliPrintResult } from "../../../../adapters/writerDispatchPresentation";
 import { readPromptSdlcWriterTokens } from "./readPromptSdlcWriterTokens";
 
 export type PromptSdlcWriterResult =

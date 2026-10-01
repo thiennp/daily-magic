@@ -2,7 +2,7 @@ import {
   WRITER_API_KEY_CONSOLE_LINKS,
   maskWriterApiKeyForDisplay,
   resolveWriterApiModelSelectValue,
-} from "@agent-witch/install-runtime-client";
+} from "@agent-witch/install-runtime-client/presentation";
 import type {
   WriterApiProvider,
   WriterApiSecretsFile,
