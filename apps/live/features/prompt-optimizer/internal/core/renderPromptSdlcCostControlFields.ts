@@ -1,7 +1,7 @@
 import {
   PROMPT_SDLC_DEFAULT_MAX_TRIALS,
   PROMPT_SDLC_MAX_TRIALS_LIMIT,
-} from "@/lib/promptOptimizer/promptSdlcCostControl.constant";
+} from "../../../../adapters/promptSdlcAwcCore";
 import { PROMPT_SDLC_COST_COPY } from "./promptSdlcCostControl.constant";
 import { renderPromptSdlcFieldHeading } from "./renderPromptSdlcFieldTip";
 

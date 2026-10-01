@@ -2,4 +2,4 @@
 export {
   readPromptSdlcBudgetStop as readPromptSdlcBudgetHardStop,
   isPromptSdlcCostBudgetConfirmed,
-} from "@/lib/promptOptimizer/readPromptSdlcBudgetStop";
+} from "../../../../adapters/promptSdlcAwcCore";

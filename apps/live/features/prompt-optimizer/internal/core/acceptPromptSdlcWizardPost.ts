@@ -4,9 +4,9 @@ import {
   mergePromptSdlcWizardPostedParameterValues,
   summarizePromptSdlcWizardCompletion,
 } from "../../../../adapters/promptSdlcAwcCore";
-import { confirmPromptSdlcCostBudget } from "@/lib/promptOptimizer/confirmPromptSdlcCostBudget";
-import { isPromptSdlcCostBudgetConfirmed } from "@/lib/promptOptimizer/readPromptSdlcBudgetStop";
-import { PROMPT_SDLC_BUDGET_CONFIRM_REQUIRED } from "@/lib/promptOptimizer/promptSdlcCostControl.constant";
+import { confirmPromptSdlcCostBudget } from "../../../../adapters/promptSdlcAwcCore";
+import { isPromptSdlcCostBudgetConfirmed } from "../../../../adapters/promptSdlcAwcCore";
+import { PROMPT_SDLC_BUDGET_CONFIRM_REQUIRED } from "../../../../adapters/promptSdlcAwcCore";
 
 import {
   beginPromptSdlcWizardEvaluate,
@@ -267,8 +267,9 @@ export const tryAcceptPromptSdlcWizardPost = (input: {
     }
 
     if (gate === "optimize_modules") {
-      const moduleIndex = cycle.wizard.currentModuleIndex;
-      const moduleRun = cycle.wizard.modules[moduleIndex];
+      const wizard = cycle.wizard;
+      const moduleIndex = wizard.currentModuleIndex;
+      const moduleRun = wizard.modules[moduleIndex];
       if (moduleRun === undefined) {
         finish(cycleId);
         return true;
@@ -313,14 +314,8 @@ export const tryAcceptPromptSdlcWizardPost = (input: {
         savePromptSdlcLocalCycle(input.storePath, cycle);
       }
 
-      // Reassigning cycle drops the wizard narrowing from the top of this function.
-      if (cycle.wizard === undefined) {
-        finish(cycleId);
-        return true;
-      }
-
       const mergedParams = mergePromptSdlcWizardPostedParameterValues({
-        wizard: cycle.wizard,
+        wizard,
         modulePrompt: moduleRun.prompt,
         posted,
       });
@@ -336,7 +331,7 @@ export const tryAcceptPromptSdlcWizardPost = (input: {
       }
 
       const wizardWithParams = {
-        ...cycle.wizard,
+        ...wizard,
         parameterValues: mergedParams.parameterValues,
       };
 
@@ -355,7 +350,7 @@ export const tryAcceptPromptSdlcWizardPost = (input: {
       }
 
       const nextIndex = moduleIndex + 1;
-      if (nextIndex >= cycle.wizard.modules.length) {
+      if (nextIndex >= wizard.modules.length) {
         const completion =
           summarizePromptSdlcWizardCompletion(wizardWithParams);
         const next = completePromptSdlcLocalWizardCycle(

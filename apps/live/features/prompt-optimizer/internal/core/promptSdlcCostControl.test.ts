@@ -1,18 +1,18 @@
 import { describe, expect, it } from "vitest";
 
 import { createInitialPromptSdlcWizardState } from "../../../../adapters/promptSdlcAwcCore";
-import { confirmPromptSdlcCostBudget } from "@/lib/promptOptimizer/confirmPromptSdlcCostBudget";
-import { defaultPromptSdlcCostControls } from "@/lib/promptOptimizer/createEmptyPromptSdlcCostControl";
+import { confirmPromptSdlcCostBudget } from "../../../../adapters/promptSdlcAwcCore";
+import { defaultPromptSdlcCostControls } from "../../../../adapters/promptSdlcAwcCore";
 import {
   PROMPT_SDLC_DEFAULT_MAX_TRIALS,
   PROMPT_SDLC_STEP4_TOKENS_PER_MODULE_TRIAL,
-} from "@/lib/promptOptimizer/promptSdlcCostControl.constant";
+} from "../../../../adapters/promptSdlcAwcCore";
 import {
   proposePromptSdlcCostBudget,
   seedPromptSdlcStep4CostProposal,
-} from "@/lib/promptOptimizer/proposePromptSdlcCostBudget";
-import { readPromptSdlcBudgetStop } from "@/lib/promptOptimizer/readPromptSdlcBudgetStop";
-import { estimatePromptSdlcSpendUsd } from "@/lib/promptOptimizer/estimatePromptSdlcSpendUsd";
+} from "../../../../adapters/promptSdlcAwcCore";
+import { readPromptSdlcBudgetStop } from "../../../../adapters/promptSdlcAwcCore";
+import { estimatePromptSdlcSpendUsd } from "../../../../adapters/promptSdlcAwcCore";
 
 import { beginPromptSdlcWizardOptimizeModulesAfterSeparate } from "./beginPromptSdlcWizardOptimizeModulesAfterSeparate";
 import { buildPromptSdlcAgentSnapshot } from "./buildPromptSdlcAgentSnapshot";
@@ -63,7 +63,10 @@ describe("prompt optimizer cost-control UI bind", () => {
   });
 
   it("uses targetTokenBudget proposal (+ proposedTokenBudget alias in snapshot)", () => {
-    const proposal = proposePromptSdlcCostBudget({ moduleCount: 3, maxTrials: 1 });
+    const proposal = proposePromptSdlcCostBudget({
+      moduleCount: 3,
+      maxTrials: 1,
+    });
     expect(proposal.stub).toBe(true);
     expect(proposal.targetTokenBudget).toBe(
       3 * PROMPT_SDLC_STEP4_TOKENS_PER_MODULE_TRIAL,

@@ -348,8 +348,8 @@ describe("prompt SDLC wizard full round proof (for screenshots)", () => {
     const page4Params = pageBody(installDir, paused);
     expect(page4Params).toContain("Step 4 — Optimize modules");
     expect(page4Params).toContain("Policy guard");
-    expect(page4Params).toContain("Parameters for this module run");
-    expect(page4Params).toContain('name="wizardParam_policy_facts"');
+    expect(page4Params).toContain("Confirm Step 4 cost ceiling");
+    expect(page4Params).toContain('name="confirmedTokenBudget"');
 
     const continueWizard = (extra?: Record<string, string>): void => {
       const live = readPromptSdlcLocalCycle(storePath, liveId);

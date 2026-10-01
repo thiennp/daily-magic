@@ -6,6 +6,7 @@ import { describePromptSdlcWizardModuleTableHeadline } from "./describePromptSdl
 import { describePromptSdlcLocalActivity } from "./buildPromptSdlcLocalActivity";
 import { createPromptSdlcLocalCycle } from "./createPromptSdlcLocalCycle";
 import { buildPromptSdlcLocalCycleSection } from "./buildPromptSdlcLocalCycleSection";
+import { confirmedPromptSdlcCostControlsForTests } from "./promptSdlcCostControlTestFixtures";
 import { renderPromptSdlcWizardGate } from "./renderPromptSdlcWizardGate";
 import { renderPromptSdlcWizardRevisionRoundList } from "./renderPromptSdlcWizardRevisionRoundList";
 
@@ -116,6 +117,7 @@ describe("wizard UX consistency fixes", () => {
         judgeModel: "claude-cli",
         improverModel: "claude-cli",
         passScore: 90,
+        costControls: confirmedPromptSdlcCostControlsForTests(),
         wizard: {
           ...createInitialPromptSdlcWizardState("p"),
           gate: "optimize_modules",

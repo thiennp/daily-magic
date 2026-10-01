@@ -14,7 +14,7 @@ export {
   PROMPT_SDLC_BUDGET_CONFIRM_REQUIRED,
   PROMPT_SDLC_SOFT_WARN_BUDGET,
   PROMPT_SDLC_STOP_BUDGET_EXCEEDED,
-} from "@/lib/promptOptimizer/promptSdlcCostControl.constant";
+} from "../../../../adapters/promptSdlcAwcCore";
 
 export const PROMPT_SDLC_COST_COPY = {
   knobsSectionTitle: "Cost controls",
