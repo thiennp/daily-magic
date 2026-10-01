@@ -62,7 +62,7 @@ describe("buildPromptSdlcLocalPageBody", () => {
     expect(html).not.toContain("Classic loop");
     expect(html).not.toContain('data-sdlc-history-filter="classic"');
     expect(html).toContain("No runs yet.");
-    expect(html.match(/class="sdlc-tip"/g)?.length).toBe(10);
+    expect(html.match(/class="sdlc-tip"/g)?.length).toBe(14);
     expect(html).toContain("Module runner");
     expect(html).toContain('name="runner"');
     expect(html).toContain('data-writer-status="runner"');
@@ -371,7 +371,7 @@ describe("buildPromptSdlcLocalPageBody", () => {
     expect(html).toContain('href="/prompt-optimizer/guide"');
     expect(guide).toContain("How the prompt optimizer works");
     expect(guide).toContain("four-step wizard");
-    expect(guide).toContain("pass <strong>70</strong>");
+    expect(guide).toContain("pass score <strong>70</strong>");
     expect(guide).toContain("Run this sample");
     expect(guide).toContain(
       `href="/prompt-optimizer?example=${PROMPT_SDLC_LOCAL_GUIDE_EXAMPLE}"`,

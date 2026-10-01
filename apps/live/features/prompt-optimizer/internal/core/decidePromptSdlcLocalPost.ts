@@ -121,8 +121,10 @@ export const decidePromptSdlcLocalPost = (input: {
     input.posted?.get("maxTrials")?.trim() ||
     String(PROMPT_SDLC_DEFAULT_MAX_TRIALS);
   const typedMaxSpendUsd = input.posted?.get("maxSpendUsd")?.trim() ?? "";
-  const typedEarlyStop =
-    input.posted === null ? true : input.posted.has("earlyStop");
+  const typedEarlyStop = readEarlyStopCheckboxFromPosted(
+    input.posted ?? new URLSearchParams(),
+    input.posted?.get("intent") ?? "",
+  );
   const form = (
     folder: string,
     errorMessage: string | null,
