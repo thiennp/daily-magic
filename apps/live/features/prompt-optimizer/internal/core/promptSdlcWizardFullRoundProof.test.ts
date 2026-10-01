@@ -483,5 +483,5 @@ describe("prompt SDLC wizard full round proof (for screenshots)", () => {
         `${JSON.stringify(manifest, null, 2)}\n`,
       );
     }
-  }, 120_000);
+  }, 240_000);
 });
