@@ -1,0 +1,29 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "B",
+  "deployable": "AWC",
+  "pageId": "automations",
+  "role": "copy",
+  "captureRound": 1,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/automations/round-1/manifest.json",
+  "scoreDesktop": 98,
+  "scoreMobile": 98,
+  "scoreOverall": 98,
+  "passed": true,
+  "scoreBreakdown": [
+    {
+      "area": "error-copy-action",
+      "pointsDeducted": 1,
+      "reason": "Load failure panel is clear; Try again could mention Mac sync only when sync fails, not list fetch."
+    },
+    {
+      "area": "webhook-hint",
+      "pointsDeducted": 1,
+      "reason": "Page description mentions webhooks but create form defaults to schedule without inline webhook hint until trigger changes."
+    }
+  ],
+  "whyBelowThreshold": "",
+  "topIssues": [],
+  "mustFix": [],
+  "quickWins": []
+}

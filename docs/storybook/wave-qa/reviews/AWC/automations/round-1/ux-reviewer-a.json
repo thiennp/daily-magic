@@ -1,0 +1,31 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "A",
+  "deployable": "AWC",
+  "pageId": "automations",
+  "role": "ux",
+  "captureRound": 1,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/automations/round-1/manifest.json",
+  "scoreDesktop": 98,
+  "scoreMobile": 97,
+  "scoreOverall": 98,
+  "passed": true,
+  "scoreBreakdown": [
+    {
+      "area": "mobile-form-scroll",
+      "pointsDeducted": 1,
+      "reason": "Create form plus automation card exceeds first viewport; primary list actions require scroll on 390px."
+    },
+    {
+      "area": "loading-skeleton",
+      "pointsDeducted": 1,
+      "reason": "Loading story shows plain text footer instead of skeleton for list region while form is already interactive."
+    }
+  ],
+  "whyBelowThreshold": "",
+  "topIssues": [
+    "Mobile first screen is form-heavy before existing automations"
+  ],
+  "mustFix": [],
+  "quickWins": ["Skeleton for automations list while capabilities load"]
+}

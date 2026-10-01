@@ -1,0 +1,30 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "B",
+  "deployable": "AWC",
+  "pageId": "automations",
+  "role": "ui",
+  "captureRound": 1,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/automations/round-1/manifest.json",
+  "scoreDesktop": 100,
+  "scoreMobile": 100,
+  "scoreOverall": 100,
+  "passed": true,
+  "scoreBreakdown": [],
+  "whyBelowThreshold": "",
+  "topIssues": [
+    "Zoom crops under round-1/ui-zoom/ready-automation-card-zoom.png and ready-desktop-viewport.png"
+  ],
+  "mustFix": [],
+  "quickWins": [],
+  "zoomedSections": [
+    "page-header-desktop-ready",
+    "schedule-fields-desktop-ready",
+    "automation-actions-desktop-ready",
+    "load-error-panel-desktop-error",
+    "mobile-nav-footer-ready-viewport",
+    "empty-state-desktop-empty"
+  ],
+  "obviousVisualDefects": "none",
+  "visualEvidenceMethod": "computerUse"
+}
