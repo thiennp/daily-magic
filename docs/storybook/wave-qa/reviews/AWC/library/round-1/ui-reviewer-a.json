@@ -1,0 +1,31 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "A",
+  "deployable": "AWC",
+  "pageId": "library",
+  "role": "ui",
+  "captureRound": 1,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/library/round-1/manifest.json",
+  "scoreDesktop": 97,
+  "scoreMobile": 96,
+  "scoreOverall": 97,
+  "passed": true,
+  "scoreBreakdown": [
+    {
+      "area": "ready-density",
+      "pointsDeducted": 2,
+      "reason": "Expanded sample workflow editor dominates ready desktop capture; card padding and field stacks feel dense versus sidebar whitespace."
+    },
+    {
+      "area": "error-panel-weight",
+      "pointsDeducted": 1,
+      "reason": "Error retry panel uses outline button while empty state uses filled primary; hierarchy is correct but error block is visually light for a failure state."
+    }
+  ],
+  "whyBelowThreshold": "",
+  "topIssues": ["Ready story visual density"],
+  "mustFix": [],
+  "quickWins": [
+    "Use compact error panel border tint consistent with dispatch failure banners"
+  ]
+}

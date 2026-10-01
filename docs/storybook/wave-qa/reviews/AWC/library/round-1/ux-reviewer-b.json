@@ -1,0 +1,34 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "B",
+  "deployable": "AWC",
+  "pageId": "library",
+  "role": "ux",
+  "captureRound": 1,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/library/round-1/manifest.json",
+  "scoreDesktop": 96,
+  "scoreMobile": 95,
+  "scoreOverall": 96,
+  "passed": true,
+  "scoreBreakdown": [
+    {
+      "area": "empty-dual-panel",
+      "pointsDeducted": 1,
+      "reason": "Signed-in empty state stacks Create a Playbook and empty-state card; both compete as primary next steps."
+    },
+    {
+      "area": "mobile-guest-nav-overlap",
+      "pointsDeducted": 3,
+      "reason": "390px guest capture places bottom tab bar over the first template card edge; still tappable but tight."
+    }
+  ],
+  "whyBelowThreshold": "",
+  "topIssues": [
+    "Empty signed-in hierarchy",
+    "Mobile guest template grid vs bottom nav"
+  ],
+  "mustFix": [],
+  "quickWins": [
+    "Add scroll margin under guest template grid on narrow viewports"
+  ]
+}

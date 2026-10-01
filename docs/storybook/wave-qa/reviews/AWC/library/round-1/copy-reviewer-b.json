@@ -1,0 +1,34 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "B",
+  "deployable": "AWC",
+  "pageId": "library",
+  "role": "copy",
+  "captureRound": 1,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/library/round-1/manifest.json",
+  "scoreDesktop": 97,
+  "scoreMobile": 96,
+  "scoreOverall": 97,
+  "passed": true,
+  "scoreBreakdown": [
+    {
+      "area": "tasks-capitalization",
+      "pointsDeducted": 1,
+      "reason": "Create Playbook card capitalizes Tasks while adjacent lines use lowercase workflow language."
+    },
+    {
+      "area": "sample-status-line",
+      "pointsDeducted": 1,
+      "reason": "Ready capture shows PUBLISHED in all caps inside card metadata; readable but louder than surrounding body copy."
+    },
+    {
+      "area": "empty-marketplace-article",
+      "pointsDeducted": 1,
+      "reason": "Empty panel says Save one from Marketplace without the when helpful."
+    }
+  ],
+  "whyBelowThreshold": "",
+  "topIssues": ["Minor voice consistency on library empties"],
+  "mustFix": [],
+  "quickWins": ["Harmonize Tasks/tasks in Create Playbook explainer"]
+}

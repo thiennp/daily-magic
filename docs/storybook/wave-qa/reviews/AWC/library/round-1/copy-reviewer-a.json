@@ -1,0 +1,31 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "A",
+  "deployable": "AWC",
+  "pageId": "library",
+  "role": "copy",
+  "captureRound": 1,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/library/round-1/manifest.json",
+  "scoreDesktop": 98,
+  "scoreMobile": 97,
+  "scoreOverall": 98,
+  "passed": true,
+  "scoreBreakdown": [
+    {
+      "area": "guest-sync-repeat",
+      "pointsDeducted": 1,
+      "reason": "Sign-in/sync newest copy appears in header, body paragraph, and footer CTA on guest captures."
+    },
+    {
+      "area": "error-tone",
+      "pointsDeducted": 1,
+      "reason": "Error panel copy is clear but generic; does not name playbooks vs templates separately."
+    }
+  ],
+  "whyBelowThreshold": "",
+  "topIssues": ["Guest sync messaging repetition"],
+  "mustFix": [],
+  "quickWins": [
+    "Trim middle guest paragraph once header states browser draft behavior"
+  ]
+}

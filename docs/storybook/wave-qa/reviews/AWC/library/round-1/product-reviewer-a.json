@@ -1,0 +1,29 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "A",
+  "deployable": "AWC",
+  "pageId": "library",
+  "role": "product",
+  "captureRound": 1,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/library/round-1/manifest.json",
+  "scoreDesktop": 98,
+  "scoreMobile": 97,
+  "scoreOverall": 98,
+  "passed": true,
+  "scoreBreakdown": [
+    {
+      "area": "ready-fixture-fidelity",
+      "pointsDeducted": 1,
+      "reason": "Ready story now shows sample workflow with Mac run actions; believable though edit mode open exaggerates typical list view."
+    },
+    {
+      "area": "guest-templates-fidelity",
+      "pointsDeducted": 1,
+      "reason": "Guest templates catalog renders real presets; save-to-browser CTA matches guest draft product path."
+    }
+  ],
+  "whyBelowThreshold": "",
+  "topIssues": [],
+  "mustFix": [],
+  "quickWins": ["Storybook-only: start sample card collapsed in ready capture"]
+}
