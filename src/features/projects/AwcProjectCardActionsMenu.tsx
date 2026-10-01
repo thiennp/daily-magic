@@ -4,6 +4,7 @@ import { useId, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 
 import { Dropdown } from "@/components/ui/dropdown/Dropdown";
+import AppIcon from "@/components/ui/icon/AppIcon";
 import AwcProjectCardActionsMenuItems from "@/features/projects/AwcProjectCardActionsMenuItems";
 import type { ProjectEditOnMacCta } from "@/features/projects/utils/resolveProjectEditOnMacCta";
 import { MoreDotIcon } from "@/icons";
@@ -53,7 +54,7 @@ export default function AwcProjectCardActionsMenu({
           setIsOpen((current) => !current);
         }}
       >
-        <MoreDotIcon className="h-5 w-5" />
+        <AppIcon icon={MoreDotIcon} size="md" />
       </button>
       <Dropdown
         isOpen={isOpen}
