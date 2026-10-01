@@ -177,6 +177,13 @@ describe("promptSdlcLocalPreferences", () => {
         improver: "cursor",
         passScore: null,
         maxRounds: null,
+        maxTrials: null,
+        maxSpendUsd: null,
+        earlyStop: null,
+        earlyStopFlatRounds: null,
+        confirmedTokenBudget: null,
+        confirmedMaxSpendUsd: null,
+        rateUsdPer1kTokens: null,
       },
       installedIds: ["claude-cli", "cursor"],
     });
