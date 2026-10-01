@@ -4,7 +4,7 @@ import path from "node:path";
 import { execFileSync } from "node:child_process";
 import { afterEach, describe, expect, it } from "vitest";
 
-import { buildGitSubprocessEnv } from "@/lib/git/buildGitSubprocessEnv";
+import { buildGitSubprocessEnv } from "@agent-witch/shared";
 
 import { captureAgentWitchGitWorktreeSnapshot } from "./captureAgentWitchGitWorktreeSnapshot";
 import { formatAgentWitchGitWorktreeVerdict } from "./formatAgentWitchGitWorktreeVerdict";

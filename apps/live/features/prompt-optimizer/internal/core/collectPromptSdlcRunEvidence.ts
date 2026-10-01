@@ -2,7 +2,7 @@ import { spawnSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 
-import { buildGitSubprocessEnv } from "@/lib/git/buildGitSubprocessEnv";
+import { buildGitSubprocessEnv } from "@agent-witch/shared";
 
 import { findPromptSdlcEvidencePaths } from "../../../../adapters/promptSdlcAwcCore";
 

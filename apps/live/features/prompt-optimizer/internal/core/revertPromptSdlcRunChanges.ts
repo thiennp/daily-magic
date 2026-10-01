@@ -3,7 +3,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 
-import { buildGitSubprocessEnv } from "@/lib/git/buildGitSubprocessEnv";
+import { buildGitSubprocessEnv } from "@agent-witch/shared";
 
 const MAX_FILE_BYTES = 8_000_000;
 const MAX_CACHE_BYTES = 16_000_000;

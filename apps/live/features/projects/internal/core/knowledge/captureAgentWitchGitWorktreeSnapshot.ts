@@ -1,7 +1,7 @@
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 
-import { buildGitSubprocessEnv } from "@/lib/git/buildGitSubprocessEnv";
+import { buildGitSubprocessEnv } from "@agent-witch/shared";
 
 const execFileAsync = promisify(execFile);
 

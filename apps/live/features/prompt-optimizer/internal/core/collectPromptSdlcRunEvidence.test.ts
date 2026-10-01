@@ -5,7 +5,7 @@ import path from "node:path";
 
 import { describe, expect, it } from "vitest";
 
-import { buildGitSubprocessEnv } from "@/lib/git/buildGitSubprocessEnv";
+import { buildGitSubprocessEnv } from "@agent-witch/shared";
 
 import {
   describePromptSdlcRunEvidence,
