@@ -74,3 +74,8 @@ export const HOME_MARKETING_STEPS_COPY = {
     },
   ],
 } as const;
+
+
+/** G3/G4 — keep Lessons and skills-rag off the hero; optional footnote only. */
+export const HOME_MARKETING_HONESTY_FOOTNOTE =
+  "Lessons memory is evolving (ask for the structured Lessons design if you need it). Skills-rag / feature-knowledge stays in power-user docs — not the landing hero.";

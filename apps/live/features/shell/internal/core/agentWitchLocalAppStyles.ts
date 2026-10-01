@@ -1865,6 +1865,22 @@ form.sdlc-form textarea.input[name="prompt"] { min-height: 12rem; }
   white-space: nowrap;
 }
 .sdlc-history-badge-done { background: #ecfdf5; color: #047857; }
+
+.sdlc-history-badge-passed { background: color-mix(in srgb, #059669 14%, #fff); color: #047857; }
+.sdlc-history-badge-failed { background: color-mix(in srgb, #dc2626 12%, #fff); color: #b91c1c; }
+.sdlc-history-badge-stopped { background: color-mix(in srgb, #d97706 14%, #fff); color: #b45309; }
+.sdlc-outcome-badge { display: inline-flex; align-items: center; border-radius: 999px; padding: 0.15rem 0.65rem; font-size: 0.75rem; font-weight: 600; }
+.sdlc-outcome-badge-passed { background: color-mix(in srgb, #059669 14%, #fff); color: #047857; }
+.sdlc-outcome-badge-failed { background: color-mix(in srgb, #dc2626 12%, #fff); color: #b91c1c; }
+.sdlc-outcome-badge-stopped { background: color-mix(in srgb, #d97706 14%, #fff); color: #b45309; }
+.sdlc-module-status-passed { font-weight: 600; color: #047857; }
+.sdlc-module-status-failed { font-weight: 600; color: #b91c1c; }
+.sdlc-module-status-stopped { font-weight: 600; color: #b45309; }
+.sdlc-best-outcome-row { margin: 0.35rem 0 0.5rem; }
+.sdlc-timeout-tip { cursor: help; }
+.sdlc-best-readonly { margin-top: 0.75rem; }
+.sdlc-best-readonly summary { cursor: pointer; font-weight: 600; }
+
 .sdlc-history-badge-live { background: #eff6ff; color: #1d4ed8; }
 .sdlc-history-badge-paused { background: #fffbeb; color: #b45309; }
 .sdlc-history-row-main { align-items: flex-start; display: flex; gap: 0.65rem; min-width: 0; }

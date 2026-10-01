@@ -5,6 +5,7 @@ import {
 
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
 import { readPromptSdlcWizardActiveStepIndex } from "./readPromptSdlcWizardActiveStepIndex";
+import { labelPromptSdlcErrorKind } from "./labelPromptSdlcErrorKind";
 
 export type PromptSdlcLocalHistoryRowPresentation = {
   readonly badgeClass: string;
@@ -15,7 +16,30 @@ export type PromptSdlcLocalHistoryRowPresentation = {
 export const describePromptSdlcLocalHistoryRow = (
   cycle: PromptSdlcLocalCycle,
 ): PromptSdlcLocalHistoryRowPresentation => {
+  const errorKindLabel = labelPromptSdlcErrorKind(cycle.errorKind);
+
   if (cycle.wizard === undefined) {
+    if (cycle.status === "passed") {
+      return {
+        badgeClass: "sdlc-history-badge sdlc-history-badge-passed",
+        badgeLabel: "Passed",
+        subtitle: `Classic · revision round ${cycle.currentRound}`,
+      };
+    }
+    if (cycle.status === "failed") {
+      return {
+        badgeClass: "sdlc-history-badge sdlc-history-badge-failed",
+        badgeLabel: errorKindLabel ?? "Failed",
+        subtitle: `Classic · revision round ${cycle.currentRound}`,
+      };
+    }
+    if (cycle.status === "stopped") {
+      return {
+        badgeClass: "sdlc-history-badge sdlc-history-badge-stopped",
+        badgeLabel: errorKindLabel ?? "Stopped",
+        subtitle: `Classic · revision round ${cycle.currentRound}`,
+      };
+    }
     if (isPromptSdlcTerminalStatus(cycle.status)) {
       return {
         badgeClass: "sdlc-history-badge sdlc-history-badge-done",
@@ -38,7 +62,26 @@ export const describePromptSdlcLocalHistoryRow = (
       subtitle: `Wizard · step ${stepIndex + 1} of 4`,
     };
   }
-  if (isPromptSdlcTerminalStatus(cycle.status)) {
+  if (cycle.status === "passed") {
+    const summary = summarizePromptSdlcWizardCompletion(cycle.wizard);
+    const modulesNote =
+      summary.totalModules > 0
+        ? ` · ${summary.passedModuleCount}/${summary.totalModules} modules`
+        : "";
+    return {
+      badgeClass: "sdlc-history-badge sdlc-history-badge-passed",
+      badgeLabel: "Passed",
+      subtitle: `Wizard${modulesNote}`,
+    };
+  }
+  if (cycle.status === "failed") {
+    return {
+      badgeClass: "sdlc-history-badge sdlc-history-badge-failed",
+      badgeLabel: errorKindLabel ?? "Failed",
+      subtitle: "Wizard · fail-clean (not success)",
+    };
+  }
+  if (cycle.status === "stopped") {
     if (cycle.wizard.phase === "complete") {
       const summary = summarizePromptSdlcWizardCompletion(cycle.wizard);
       const lowest = summary.rows.reduce<number | null>((min, row) => {
@@ -49,11 +92,18 @@ export const describePromptSdlcLocalHistoryRow = (
       }, null);
       const lowestNote = lowest === null ? "" : ` · lowest ${lowest}`;
       return {
-        badgeClass: "sdlc-history-badge sdlc-history-badge-done",
-        badgeLabel: "Complete",
+        badgeClass: "sdlc-history-badge sdlc-history-badge-stopped",
+        badgeLabel: errorKindLabel ?? "Stopped",
         subtitle: `Wizard · ${summary.passedModuleCount}/${summary.totalModules} modules${lowestNote}`,
       };
     }
+    return {
+      badgeClass: "sdlc-history-badge sdlc-history-badge-stopped",
+      badgeLabel: errorKindLabel ?? "Stopped",
+      subtitle: "Wizard · incomplete",
+    };
+  }
+  if (isPromptSdlcTerminalStatus(cycle.status)) {
     return {
       badgeClass: "sdlc-history-badge sdlc-history-badge-done",
       badgeLabel: "Complete",

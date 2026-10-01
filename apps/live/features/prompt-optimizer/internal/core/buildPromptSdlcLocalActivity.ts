@@ -12,6 +12,7 @@ import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
 import { describeUnusableJudgeReplyCause } from "./describeUnusableJudgeReplyCause";
 import { readPromptSdlcLocalUnusableReplyPreview } from "./readPromptSdlcLocalUnusableReplyPreview";
 import { describePromptSdlcWriterTerminalFailure } from "./readPromptSdlcWriterOutput";
+import { labelPromptSdlcErrorKind } from "./labelPromptSdlcErrorKind";
 
 export type PromptSdlcLocalActivityDescription = {
   readonly title: string;
@@ -282,16 +283,19 @@ export const describePromptSdlcLocalActivity = (
   if (cycle.status === "failed") {
     const message = cycle.errorMessage?.trim() ?? "";
     const wizard = cycle.wizard;
+    const kindLabel = labelPromptSdlcErrorKind(cycle.errorKind);
     const fallbackDetail =
       "A writer or judge reply could not be used. Start a new run after fixing the issue.";
+    const kindSuffix =
+      kindLabel === null ? "" : ` (${kindLabel} — not success)`;
     if (wizard !== undefined) {
       return unusableReplyActivity(cycle, {
-        title: wizardFailedActivityTitle(wizard),
+        title: `${wizardFailedActivityTitle(wizard)}${kindSuffix}`,
         detail: message.length > 0 ? message : fallbackDetail,
       });
     }
     return unusableReplyActivity(cycle, {
-      title: "This run failed.",
+      title: kindLabel !== null ? `This run failed — ${kindLabel}.` : "This run failed.",
       detail:
         message.length > 0
           ? message

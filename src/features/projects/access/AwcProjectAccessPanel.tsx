@@ -3,6 +3,7 @@
 import AwcProjectAccessFolderRefs from "@/features/projects/access/AwcProjectAccessFolderRefs";
 import AwcProjectAccessMembersList from "@/features/projects/access/AwcProjectAccessMembersList";
 import AwcProjectAccessPendingList from "@/features/projects/access/AwcProjectAccessPendingList";
+import AwcProjectActivityFeed from "@/features/projects/access/AwcProjectActivityFeed";
 import { AWC_PROJECT_ACCESS_COPY } from "@/features/projects/access/awcProjectAccessCopy.constant";
 import { useAwcProjectAccess } from "@/features/projects/access/hooks/useAwcProjectAccess";
 import {
@@ -53,11 +54,11 @@ export default function AwcProjectAccessPanel({
         {copy.title}
       </h2>
       <p className={`text-sm ${APP_SURFACE_BODY_TEXT_CLASS}`}>{copy.intro}</p>
-      <p className="text-xs text-amber-800 dark:text-amber-200/90">
-        {copy.proposedFeedCallout}
-      </p>
       <p className="text-xs text-gray-500 dark:text-gray-400">
         {copy.revokeHint}
+      </p>
+      <p className="rounded-md border border-gray-200/80 bg-gray-50/80 px-3 py-2 text-xs text-gray-700 dark:border-gray-800/80 dark:bg-gray-950/40 dark:text-gray-300">
+        {copy.firstConnectNote}
       </p>
       <AwcProjectAccessPendingList
         pending={access.pending}
@@ -73,6 +74,7 @@ export default function AwcProjectAccessPanel({
         onAdd={(machine, folder) => onAddFolder(machine, folder)}
         onRemove={(id) => void onRemoveFolder(id)}
       />
+      <AwcProjectActivityFeed projectId={projectId} />
       {access.message ? (
         <p className="text-sm text-gray-600 dark:text-gray-400">
           {access.message}

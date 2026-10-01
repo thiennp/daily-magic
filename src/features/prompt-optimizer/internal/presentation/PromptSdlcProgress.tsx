@@ -1,6 +1,8 @@
 import type { ReactElement } from "react";
 
+import PromptSdlcCycleOutcomeBadges from "@/features/prompt-optimizer/internal/presentation/PromptSdlcCycleOutcomeBadges";
 import { buildPromptSdlcSteps } from "@/lib/promptOptimizer/buildPromptSdlcSteps";
+import { isPromptSdlcTerminalStatus } from "@/lib/promptOptimizer/PromptSdlcCycleStatus.constant";
 import type PromptSdlcCycleView from "@/lib/promptOptimizer/types/PromptSdlcCycleView.type";
 
 interface PromptSdlcProgressProps {
@@ -11,12 +13,21 @@ export default function PromptSdlcProgress({
   cycle,
 }: PromptSdlcProgressProps): ReactElement {
   const steps = buildPromptSdlcSteps(cycle);
+  const latest = cycle.revisions[cycle.revisions.length - 1] ?? null;
+  const showUseThisHint = isPromptSdlcTerminalStatus(cycle.status);
 
   return (
     <section className="space-y-3">
       <h2 className="text-sm font-medium text-gray-800 dark:text-white/90">
         This run
       </h2>
+      <PromptSdlcCycleOutcomeBadges
+        status={cycle.status}
+        errorKind={cycle.errorKind ?? null}
+        passed={latest?.judgement?.passed ?? null}
+        score={latest?.judgement?.score ?? null}
+        showUseThisHint={showUseThisHint}
+      />
       <ol className="space-y-2">
         {steps.map((step) => (
           <li

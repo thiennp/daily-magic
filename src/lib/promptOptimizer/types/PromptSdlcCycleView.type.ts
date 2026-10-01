@@ -32,6 +32,8 @@ export default interface PromptSdlcCycleView {
   readonly maxRounds: number;
   readonly passScore: number;
   readonly errorMessage: string | null;
+  /** Distinct fail-clean kind when status is failed/stopped. */
+  readonly errorKind?: string | null;
   readonly activeRunId: string | null;
   readonly activeRunStatus: string | null;
   readonly pendingLocal: PromptSdlcPendingLocalCall | null;

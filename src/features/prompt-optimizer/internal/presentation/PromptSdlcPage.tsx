@@ -11,6 +11,7 @@ import {
   PROMPT_SDLC_AWL_GUIDE_HREF,
   PROMPT_SDLC_AWL_PAGE_HREF,
 } from "@/features/prompt-optimizer/internal/presentation/promptSdlcAwlHref.constant";
+import { PROMPT_SDLC_OUTCOME_COPY } from "@/features/prompt-optimizer/internal/presentation/promptSdlcOutcomeLabels.constant";
 
 export default function PromptSdlcPage(): ReactElement {
   return (
@@ -29,6 +30,15 @@ export default function PromptSdlcPage(): ReactElement {
           and improver models.
         </li>
       </ol>
+      <p
+        className={`max-w-xl rounded-lg border border-amber-200/80 bg-amber-50/70 px-3 py-2 text-sm text-amber-950 dark:border-amber-900/50 dark:bg-amber-950/30 dark:text-amber-100`}
+        title={PROMPT_SDLC_OUTCOME_COPY.recommendTimeoutTip}
+      >
+        <strong>Honesty chrome:</strong> cycle badges show{" "}
+        <strong>passed</strong> / failed / timeout / interrupt / no_reply
+        unmistakably. {PROMPT_SDLC_OUTCOME_COPY.useThisOnlyWhenPassed} Hover
+        “fail-clean timeout” in the Mac app for recommendTimeoutMs budgets.
+      </p>
       <div className="flex flex-wrap items-center gap-3">
         <Link href="/" className={APP_SURFACE_CTA_PRIMARY_CLASS}>
           Install Agent Witch on this Mac

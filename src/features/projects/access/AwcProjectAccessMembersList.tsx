@@ -13,13 +13,16 @@ interface AwcProjectAccessMembersListProps {
   readonly onRevoke: (membershipId: string) => void;
 }
 
+export const awcProjectAccessMemberAnchorId = (userId: string): string =>
+  `access-member-${encodeURIComponent(userId)}`;
+
 export default function AwcProjectAccessMembersList({
   members,
   onRevoke,
 }: AwcProjectAccessMembersListProps) {
   const copy = AWC_PROJECT_ACCESS_COPY;
   return (
-    <div>
+    <div id="project-access-members">
       <h3 className="text-sm font-medium text-gray-800 dark:text-white/90">
         {copy.membersHeading}
       </h3>
@@ -30,7 +33,8 @@ export default function AwcProjectAccessMembersList({
           {members.map((member) => (
             <li
               key={member.id}
-              className="flex flex-wrap items-center justify-between gap-2 text-sm"
+              id={awcProjectAccessMemberAnchorId(member.userId)}
+              className="flex flex-wrap items-center justify-between gap-2 scroll-mt-20 rounded-md text-sm target:ring-2 target:ring-amber-400/80"
             >
               <span className="text-gray-800 dark:text-white/90">
                 {member.userId}

@@ -24,6 +24,12 @@ Multi-bot / multi-machine agent teams that need:
 2. **Prompt Optimizer** — 4-step wizard with evaluate scores; reuse winners as Playbooks
 3. **Harness / Playbooks** — durable patterns you reload on the next Task
 
+
+## Honesty footnotes (not hero)
+
+- **Lessons / Error RAG** memory is evolving (partial Mac-local today). Ask for the structured Lessons design if you need it — do not treat it as a shipped multi-team content feature.
+- **Skills-rag / feature-knowledge** retrieval exists for power users and docs — it is **not** the landing hero.
+
 ## Related
 
 - [Project Access ACL](./project-access-acl.md)

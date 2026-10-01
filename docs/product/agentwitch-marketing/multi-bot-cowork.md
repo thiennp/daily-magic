@@ -1,6 +1,6 @@
 # Multi-bot cowork model
 
-**Status:** [SHIPPED ACL] + [PROPOSED feed]  
+**Status:** [SHIPPED ACL] + [UI activity feed; API may lag]  
 **Slug:** `multi-bot-cowork`  
 **Audience:** owners + bot builders
 
@@ -12,13 +12,11 @@ Teams co-work **local↔local** (shared folder on one machine, or git / existing
 
 Same Mac, two Macs, or offline peers — coordination stays on local/git/bot channels. AWC remains the ACL gate.
 
-## [PROPOSED] Activity feed
+## Activity feed (membership / status)
 
-A cowork **activity feed** for events, membership, and status — so owners see join requests, grants, revokes, and high-level peer status **without** putting project _content_ on the cloud.
+Project Access includes an **Activity** surface for membership and status events (approve/deny/revoke, folder refs, claim checks) — **not** a cloud content store.
 
-Until it ships: use Approvals + Access UI for membership; local/git/bot channels for work itself.
-
-**Do not claim the feed is available today.**
+Backend `GET /api/projects/:id/activity` may lag a deploy; the UI degrades gracefully until the API is live. Keep handoffs, runs, and skills on local/git/bot channels.
 
 ## Non-goals
 

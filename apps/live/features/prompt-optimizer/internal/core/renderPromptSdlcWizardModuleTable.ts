@@ -50,8 +50,12 @@ export const renderPromptSdlcWizardModuleTable = (
       const statusCell =
         wizardModule !== undefined &&
         isPromptSdlcWizardModulePassed(wizardModule, modulePassScore)
-          ? `<span aria-label="Passed">✓</span>`
-          : escapeHtml(statusLabel);
+          ? `<span class="sdlc-module-status sdlc-module-status-passed" aria-label="Passed">Passed</span>`
+          : statusLabel === "Failed"
+            ? `<span class="sdlc-module-status sdlc-module-status-failed" aria-label="Failed">Failed</span>`
+            : statusLabel === "Stopped"
+              ? `<span class="sdlc-module-status sdlc-module-status-stopped" aria-label="Stopped">Stopped</span>`
+              : escapeHtml(statusLabel);
       return `<tr${rowClass}><td>${escapeHtml(row.title)}</td><td>${escapeHtml(scoreCell)}</td><td>${row.tokens ?? "—"}</td><td>${statusCell}</td></tr>`;
     })
     .join("");
