@@ -16,6 +16,18 @@ describe("resolveProjectListCardTitle", () => {
     });
   });
 
+  it("treats default project names case-insensitively (MF-01)", () => {
+    expect(
+      resolveProjectListCardTitle({
+        name: "default",
+        folderPath: "~/repos/daily-magic",
+      }),
+    ).toEqual({
+      primary: "daily-magic",
+      secondaryLabel: DEFAULT_USER_PROJECT_NAME,
+    });
+  });
+
   it("keeps human-chosen names as primary", () => {
     expect(
       resolveProjectListCardTitle({
