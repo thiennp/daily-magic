@@ -1,0 +1,24 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "B",
+  "deployable": "AWC",
+  "pageId": "home-signed-in",
+  "role": "copy",
+  "captureRound": 1,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/home-signed-in/round-1/manifest.json",
+  "scoreDesktop": 97,
+  "scoreMobile": 97,
+  "scoreOverall": 97,
+  "passed": true,
+  "scoreBreakdown": [
+    {
+      "area": "status-banner-copy",
+      "pointsDeducted": 3,
+      "reason": "Meta banners (loading/empty/error) are developer-facing; tone is fine but not user-facing product copy."
+    }
+  ],
+  "whyBelowThreshold": "",
+  "topIssues": ["Storybook-only status banner voice"],
+  "mustFix": [],
+  "quickWins": []
+}

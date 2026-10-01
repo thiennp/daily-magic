@@ -1,0 +1,24 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "A",
+  "deployable": "AWC",
+  "pageId": "home-marketing",
+  "role": "ui",
+  "captureRound": 1,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/home-marketing/round-1/manifest.json",
+  "scoreDesktop": 99,
+  "scoreMobile": 97,
+  "scoreOverall": 98,
+  "passed": true,
+  "scoreBreakdown": [
+    {
+      "area": "combined-deductions",
+      "pointsDeducted": 2,
+      "reason": "[for-ai-dark-tokens] For-your-AI card includes dark: utility classes inside an otherwise light marketing shell; harmless in Storybook but slightly inconsistent. [mobile-card-density] Preset workflow cards stack with similar elevation; category labels could use more vertical rhythm on 390px capture. [mobile-cta-stack] Full-width hero buttons stack cleanly but secondary outline button height matches primary, reducing hierarchy by a hair."
+    }
+  ],
+  "whyBelowThreshold": "",
+  "topIssues": ["Light-shell dark: classes on one section"],
+  "mustFix": [],
+  "quickWins": ["Align For-your-AI surfaces with marketing light tokens only"]
+}

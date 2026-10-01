@@ -67,6 +67,18 @@ const pauseWizardWriterFailure = (
   };
 };
 
+const isPromptSdlcWizardTerminalWriterFailure = (reply: {
+  readonly errorMessage: string;
+  readonly errorKind?: PromptSdlcWriterErrorKind;
+}): boolean => {
+  const errorKind = classifyPromptSdlcWriterErrorKind(reply);
+  return (
+    isPromptSdlcWriterTimeoutError(reply) ||
+    errorKind === "usage_limit" ||
+    errorKind === "action_required"
+  );
+};
+
 const failOrPauseWizardWriter = (
   cycle: PromptSdlcLocalCycle,
   gate: NonNullable<PromptSdlcLocalCycle["wizard"]>["gate"],
@@ -76,7 +88,7 @@ const failOrPauseWizardWriter = (
     readonly errorKind?: PromptSdlcWriterErrorKind;
   },
 ): PromptSdlcLocalCycle => {
-  if (isPromptSdlcWriterTimeoutError(reply)) {
+  if (isPromptSdlcWizardTerminalWriterFailure(reply)) {
     return failCycle(
       cycle,
       reply.errorMessage,

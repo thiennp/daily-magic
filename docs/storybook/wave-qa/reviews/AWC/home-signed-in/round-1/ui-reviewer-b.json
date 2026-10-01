@@ -1,0 +1,24 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "B",
+  "deployable": "AWC",
+  "pageId": "home-signed-in",
+  "role": "ui",
+  "captureRound": 1,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/home-signed-in/round-1/manifest.json",
+  "scoreDesktop": 97,
+  "scoreMobile": 97,
+  "scoreOverall": 97,
+  "passed": true,
+  "scoreBreakdown": [
+    {
+      "area": "loading-state-density",
+      "pointsDeducted": 3,
+      "reason": "Loading story still shows full marketing blocks beneath the checking-Mac hero; skeleton could be lighter."
+    }
+  ],
+  "whyBelowThreshold": "",
+  "topIssues": ["Loading visual weight"],
+  "mustFix": [],
+  "quickWins": []
+}

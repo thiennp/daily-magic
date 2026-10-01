@@ -2,6 +2,7 @@ import {
   collectPromptSdlcPriorRounds,
   continueAfterImproveReply,
   continueAfterJudgeReply,
+  resolvePromptSdlcMaxTrials,
   type HarnessWriterAgent,
 } from "../../../../adapters/promptSdlcAwcCore";
 import { resolvePromptSdlcMaxTrials } from "../../../../adapters/promptSdlcAwcCore";
