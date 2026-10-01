@@ -175,12 +175,56 @@ export const validateAgentWaveQaReview = (
   if (typeof o.passed !== "boolean") {
     errors.push({ field: "passed", message: "Must be a boolean" });
   } else if (isScore(scoreOverall)) {
-    const shouldPass = scoreOverall >= 95;
+    const shouldPass = scoreOverall >= 97;
     if (o.passed !== shouldPass) {
       errors.push({
         field: "passed",
-        message: `Must be ${shouldPass} when scoreOverall is ${scoreOverall}`,
+        message: `Must be ${shouldPass} when scoreOverall is ${scoreOverall} (quality bar ≥97)`,
       });
+    }
+  }
+
+  if (typeof o.passed === "boolean" && o.passed === true) {
+    const mustFix = o.mustFix;
+    if (!Array.isArray(mustFix) || mustFix.length > 0) {
+      errors.push({
+        field: "mustFix",
+        message: "Passed reviews must have an empty mustFix[]",
+      });
+    }
+    if (isScore(scoreOverall) && scoreOverall < 100) {
+      const breakdown = o.scoreBreakdown;
+      if (!Array.isArray(breakdown) || breakdown.length === 0) {
+        errors.push({
+          field: "scoreBreakdown",
+          message:
+            "Passed with scoreOverall < 100 requires scoreBreakdown (polish-only deductions)",
+        });
+      } else {
+        let deducted = 0;
+        for (const item of breakdown) {
+          if (typeof item === "object" && item !== null) {
+            const points = (item as Record<string, unknown>).pointsDeducted;
+            if (typeof points === "number" && Number.isFinite(points)) {
+              deducted += points;
+            }
+          }
+        }
+        const polishBudget = 100 - scoreOverall;
+        if (deducted > polishBudget) {
+          errors.push({
+            field: "scoreBreakdown",
+            message: "Passed reviews cannot hide extra deductions in breakdown",
+          });
+        }
+        if (deducted > 3) {
+          errors.push({
+            field: "scoreBreakdown",
+            message:
+              "Passed with scoreOverall < 100 allows at most 3 total polish points — fix and recapture",
+          });
+        }
+      }
     }
   }
 
@@ -249,18 +293,28 @@ export const validateAgentWaveQaReview = (
   const role = o.role;
   if (role === "ui") {
     const zoomed = o.zoomedSections;
+    const defects = o.obviousVisualDefects;
+    const minZoom = typeof o.passed === "boolean" && o.passed === true ? 5 : 3;
     if (
       !Array.isArray(zoomed) ||
-      zoomed.length < 3 ||
+      zoomed.length < minZoom ||
       !zoomed.every((s) => isNonEmptyString(s))
     ) {
       errors.push({
         field: "zoomedSections",
-        message:
-          "ui reviews require zoomedSections (≥3 non-empty strings) per ui-deep-inspection.md",
+        message: `ui reviews require zoomedSections (≥${minZoom} non-empty strings) per ui-deep-inspection.md`,
       });
     }
-    const defects = o.obviousVisualDefects;
+    if (
+      typeof o.passed === "boolean" &&
+      o.passed === true &&
+      defects !== "none"
+    ) {
+      errors.push({
+        field: "obviousVisualDefects",
+        message: 'ui pass requires obviousVisualDefects "none"',
+      });
+    }
     if (defects !== "none" && defects !== "present") {
       errors.push({
         field: "obviousVisualDefects",
@@ -275,7 +329,7 @@ export const validateAgentWaveQaReview = (
       errors.push({
         field: "passed",
         message:
-          "ui cannot pass while obviousVisualDefects is present — fix or score < 95",
+          "ui cannot pass while obviousVisualDefects is present — fix or score < 97",
       });
     }
     if (defects === "present") {
@@ -290,20 +344,20 @@ export const validateAgentWaveQaReview = (
     }
   }
 
-  if (isScore(scoreOverall) && scoreOverall < 95) {
+  if (isScore(scoreOverall) && scoreOverall < 97) {
     const why = o.whyBelowThreshold;
     if (!isNonEmptyString(why) || why.trim().length < 40) {
       errors.push({
         field: "whyBelowThreshold",
         message:
-          "Required (≥40 chars) when scoreOverall < 95 for the next improve round",
+          "Required (≥40 chars) when scoreOverall < 97 for the next improve round",
       });
     }
     const mustFix = o.mustFix;
     if (!Array.isArray(mustFix) || mustFix.length === 0) {
       errors.push({
         field: "mustFix",
-        message: "At least one mustFix item when scoreOverall < 95",
+        message: "At least one mustFix item when scoreOverall < 97",
       });
     }
   }

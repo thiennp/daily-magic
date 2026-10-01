@@ -24,17 +24,17 @@ Record zoom targets in review JSON: `zoomedSections: string[]` (e.g. `"for-your-
 
 Treat as **blocking for `ui` pass** unless fixed in the same round:
 
-| Defect | Examples |
-| ------ | -------- |
-| **Broken chrome** | Border or divider cutting through a child block; double borders; card outline interrupted |
-| **Overflow / clip** | Text or URL clipped in `<pre>`; horizontal scroll unintentional; images cropped wrong |
-| **Theme mismatch** | `dark:` utilities on marketing-light Storybook; inverted surfaces that look accidental |
-| **Misaligned stacks** | Buttons/links different heights without intent; uneven card heights in a row |
-| **Broken media** | Missing/broken icons (common Storybook SVG issue) |
+| Defect                | Examples                                                                                  |
+| --------------------- | ----------------------------------------------------------------------------------------- |
+| **Broken chrome**     | Border or divider cutting through a child block; double borders; card outline interrupted |
+| **Overflow / clip**   | Text or URL clipped in `<pre>`; horizontal scroll unintentional; images cropped wrong     |
+| **Theme mismatch**    | `dark:` utilities on marketing-light Storybook; inverted surfaces that look accidental    |
+| **Misaligned stacks** | Buttons/links different heights without intent; uneven card heights in a row              |
+| **Broken media**      | Missing/broken icons (common Storybook SVG issue)                                         |
 
 If any blocking defect exists: set `obviousVisualDefects: "present"`, list in `mustFix[]`, **`passed: false`** (or fix + recapture then `obviousVisualDefects: "none"`).
 
-If none after zoom: `obviousVisualDefects: "none"` and may pass at ≥95 with deductions in `scoreBreakdown`.
+If none after zoom: `obviousVisualDefects: "none"` and may pass at **≥97** with **≤3** total polish deductions (see `quality-bar.md`).
 
 ## Reference regression
 

@@ -33,7 +33,7 @@ const brief = `
 ## Rules
 
 - Agent-only scores for ux, copy, ui, product. \`reviewMethod: "agent"\` in JSON.
-- Read: \`docs/storybook/wave-qa/reviewer-rubric.md\`, skill \`.cursor/skills/skill-storybook-page-wave-qa/SKILL.md\`
+- Read: \`quality-bar.md\`, \`reviewer-rubric.md\`, \`ui-deep-inspection.md\`, skill \`skill-storybook-page-wave-qa\`
 - Forbidden: Playwright subjective rubric / bulk automate.
 
 ## Steps
@@ -47,8 +47,9 @@ const brief = `
    - Fix mustFix in product or \`src/utils/storybook/*\`; recapture if visuals changed
    - Reviewer B: separate review → \`...-reviewer-b.json\`
    - \`npm run storybook:wave:record-agent -- ${deployable} ${pageId} <role> <a.json> <b.json>\`
-   - Commit after each role passes: \`wave-qa(${deployable} ${pageId}): <role> agent A+B ≥95%\`
-5. When all four roles pass: run \`npm run ci\`, merge to \`main\`, \`git push origin main\` (no PR).
+   - AWC public pages: \`computerUse\` zoom for ui/ux; ≥5 \`zoomedSections\` on ui pass.
+   - Commit after each role passes: \`wave-qa(${deployable} ${pageId}): <role> agent A+B ≥97%\`
+5. \`storybook:wave:validate\` + \`storybook:wave:objective-gates\` (tester/dx). When **all six roles** pass: \`npm run ci\`, push \`main\` (no PR).
 6. Return: scores per role, PR URL, list of files changed.
 
 Do not work on other catalog pages.

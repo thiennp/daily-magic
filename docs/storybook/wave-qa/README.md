@@ -19,7 +19,7 @@ npm run storybook:wave:capture -- AWC home-marketing 1
 npm run storybook:wave:record-agent -- AWC home-marketing ux path/a.json path/b.json
 ```
 
-Rubric + JSON shape: **`reviewer-rubric.md`**. **`ui`** also requires **`ui-deep-inspection.md`**.
+Rubric: **`reviewer-rubric.md`**. Strict bar: **`quality-bar.md`**. **`ui`:** **`ui-deep-inspection.md`**.
 
 After all 34 pages first-pass: mandatory **final UI audit** (`round-audit-1`) — see skill + **`coordinator.md`**.
 

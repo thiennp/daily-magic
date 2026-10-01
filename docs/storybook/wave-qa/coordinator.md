@@ -23,14 +23,15 @@ Copy the printed brief into a **cloud** background agent. Subagent must:
 
 - Build/serve Storybook, `storybook:wave:capture` for that page only.
 - For each role `ux` → `copy` → `ui` → `product`: reviewer A + B (PNG evidence), fix `mustFix`, save JSON under `docs/storybook/wave-qa/reviews/`, `storybook:wave:record-agent`.
-- Commit + push to **`main`** when that page’s four roles pass (or merge subagent branch into `main` after **`npm run ci`**).
+- Run **tester + dx** on the same Storybook build; commit + push **`main`** only when **all six roles** pass (`quality-bar.md`).
 - **Do not** open PRs for wave QA. Do **not** touch other pages’ review files.
 
 ## Parallelism
 
 - **Never** two subagents on the same page.
 - Different pages = different branches → safe parallel cloud agents.
-- `progress.json` conflicts: subagent branches should **rebase on main** before final merge; prefer recording all four roles on one branch in one PR per page.
+- `progress.json` conflicts: rebase on `main` before push; one page per branch until merged.
+- **Strict bar:** read `quality-bar.md` — no sympathy scores; AWC `ui`/`ux` on public pages use **computerUse** zoom evidence.
 
 ## Main agent report
 
@@ -40,7 +41,7 @@ After spawning: list page id, branch name, PR URL when available, and `progress.
 
 After **all 34 pages** complete first-pass ux–product:
 
-1. Spawn cloud subagents with brief: *audit ui only, round-audit-1, read `ui-deep-inspection.md`*.
+1. Spawn cloud subagents with brief: _audit ui only, round-audit-1, read `ui-deep-inspection.md`_.
 2. Start with pages merged earliest (**`home-marketing`**, **`login`**, …) — highest risk of shallow first pass.
 3. Revoke + fix + push fixes to `main` when audit finds `obviousVisualDefects: "present"` (CI green first).
 4. Coordinator does **not** report “100% complete” until audit wave finishes.

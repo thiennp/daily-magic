@@ -12,23 +12,23 @@
 
 - `scoreDesktop` / `scoreMobile` (AWC): 0–100 per viewport; **AWL:** set `scoreMobile` to `null`, `scoreOverall` = desktop.
 - `scoreOverall`: for AWC, average desktop + mobile (round to integer) unless role-specific weighting is documented in notes.
-- **Pass:** `scoreOverall >= 95` for **both** reviewer A and B in the same round after fixes.
+- **Pass:** `scoreOverall >= 97` for **both** reviewer A and B (see **`quality-bar.md`**). Passed reviews: **empty `mustFix[]`**, at most **3** polish points if score &lt; 100.
 
 When **any** score is below 100, fill `scoreBreakdown[]` with `{ area, pointsDeducted, reason }` so the next round knows what to fix.
 
-When **below 95**, also require:
+When **below 97**, also require:
 
 - `whyBelowThreshold` (≥40 characters)
 - `mustFix[]` (actionable items)
 
 ## Role lenses
 
-| Role        | Evaluate                                                                                                |
-| ----------- | ------------------------------------------------------------------------------------------------------- |
-| **ux**      | Hierarchy, scan path, responsive AWC, CTAs, trust, friction, a11y (focus, labels, contrast at a glance) |
-| **copy**    | Voice, clarity, empty/error/loading tone, accuracy vs product, no placeholder garbage                   |
+| Role        | Evaluate                                                                                                                                                       |
+| ----------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **ux**      | Hierarchy, scan path, responsive AWC, CTAs, trust, friction, a11y (focus, labels, contrast at a glance)                                                        |
+| **copy**    | Voice, clarity, empty/error/loading tone, accuracy vs product, no placeholder garbage                                                                          |
 | **ui**      | Styleguide + **deep zoom** (cards, pre/code blocks, borders, overflow, icons). Obvious defects → `mustFix`, not only `quickWins` — see `ui-deep-inspection.md` |
-| **product** | Story matches real AWC/AWL intent; fixtures believable; flows not misleading                            |
+| **product** | Story matches real AWC/AWL intent; fixtures believable; flows not misleading                                                                                   |
 
 ## JSON template
 

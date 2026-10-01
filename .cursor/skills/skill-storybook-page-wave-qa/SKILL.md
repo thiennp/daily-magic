@@ -26,20 +26,20 @@ Canonical: `docs/storybook/README.md`, `docs/storybook/wave-qa/README.md`, `docs
 
 1. **ux | copy | ui | product** — scores from **subagent or human** only, with PNG evidence. `reviewMethod` must be `"agent"` in JSON.
 2. **Forbidden** for passing subjective roles: `evaluateSubjectiveWaveQa.ts`, Playwright rubric bulk record, or `notes` containing `Rubric A=`.
-3. **Below 100:** `scoreBreakdown[]` with `reason` per deduction. **Below 95:** `whyBelowThreshold` + `mustFix[]` for the next fix round.
+3. **Quality bar:** `docs/storybook/wave-qa/quality-bar.md` — pass **≥97**, empty `mustFix` on pass, ≤3 polish points if score &lt; 100. **Below 97:** `whyBelowThreshold` + `mustFix[]`.
 4. **tester | dx** — objective only (`storybook:wave:validate`, manifest test, `storybook:wave:objective-gates`).
 5. Do **not** mark `main` “done” until all 34 pages × 6 roles pass with agent evidence **and** the **final UI audit** completes (below).
 6. **`ui` role:** subagents **must** follow `docs/storybook/wave-qa/ui-deep-inspection.md` — zoom blocks, `zoomedSections`, `obviousVisualDefects`. Stray borders through `<pre>`/cards, clip, accidental `dark:` on marketing = **`present`** → fix or fail; never “quick win only.”
 
 ## Definitions
 
-| Term           | Meaning                                                                     |
-| -------------- | --------------------------------------------------------------------------- |
-| **Wave**       | One catalog page — all Storybook statuses                                   |
-| **Role order** | `ux` → `copy` → `ui` → `product` → `tester` → `dx`                          |
-| **Pass**       | `scoreOverall >= 95` from reviewer **A** and **B** (same round after fixes) |
-| **AWC**        | Desktop 1280×900 + mobile 390×844 captures                                  |
-| **AWL**        | Desktop only                                                                |
+| Term           | Meaning                                                                        |
+| -------------- | ------------------------------------------------------------------------------ |
+| **Wave**       | One catalog page — all Storybook statuses                                      |
+| **Role order** | `ux` → `copy` → `ui` → `product` → `tester` → `dx`                             |
+| **Pass**       | `scoreOverall >= 97`, A + B agree within 3 pts; **6 roles** before `main` push |
+| **AWC**        | Desktop 1280×900 + mobile 390×844 captures                                     |
+| **AWL**        | Desktop only                                                                   |
 
 Progress: `docs/storybook/wave-qa/progress.json` · Catalog: `scripts/storybookWaveQa/storybookWavePageCatalog.ts`.
 

@@ -11,17 +11,11 @@ const validAwcReview = {
   captureRound: 1,
   captureRef:
     "/opt/cursor/artifacts/storybook-waves/AWC/home-marketing/round-1/manifest.json",
-  scoreDesktop: 96,
-  scoreMobile: 94,
-  scoreOverall: 95,
+  scoreDesktop: 100,
+  scoreMobile: 100,
+  scoreOverall: 100,
   passed: true,
-  scoreBreakdown: [
-    {
-      area: "mobile-cta",
-      pointsDeducted: 5,
-      reason: "Secondary link competes with primary CTA on narrow viewport.",
-    },
-  ],
+  scoreBreakdown: [],
   whyBelowThreshold: "",
   topIssues: [],
   mustFix: [],
@@ -62,17 +56,24 @@ describe("validateAgentWaveQaReview", () => {
     const result = validateAgentWaveQaReview({
       ...validAwcReview,
       role: "ui",
-      scoreDesktop: 98,
-      scoreMobile: 96,
-      scoreOverall: 97,
+      scoreDesktop: 99,
+      scoreMobile: 99,
+      scoreOverall: 99,
+      passed: true,
       scoreBreakdown: [
         {
           area: "hero",
-          pointsDeducted: 3,
+          pointsDeducted: 1,
           reason: "Minor spacing nit on trust strip.",
         },
       ],
-      zoomedSections: ["hero-ready-desktop", "cards-ready-desktop", "footer-ready-mobile"],
+      zoomedSections: [
+        "hero-ready-desktop",
+        "cards-ready-desktop",
+        "footer-ready-mobile",
+        "pre-block-desktop",
+        "cta-band-mobile",
+      ],
       obviousVisualDefects: "none",
     });
     expect(result.ok).toBe(true);
@@ -94,6 +95,25 @@ describe("validateAgentWaveQaReview", () => {
       zoomedSections: ["a", "b", "c"],
       obviousVisualDefects: "present",
       mustFix: ["Fix For-your-AI pre border overlap"],
+    });
+    expect(result.ok).toBe(false);
+  });
+
+  it("rejects pass at 95 with large deductions (quality bar ≥97)", () => {
+    const result = validateAgentWaveQaReview({
+      ...validAwcReview,
+      scoreDesktop: 96,
+      scoreMobile: 94,
+      scoreOverall: 95,
+      passed: true,
+      scoreBreakdown: [
+        {
+          area: "mobile-cta",
+          pointsDeducted: 5,
+          reason:
+            "Secondary link competes with primary CTA on narrow viewport.",
+        },
+      ],
     });
     expect(result.ok).toBe(false);
   });
