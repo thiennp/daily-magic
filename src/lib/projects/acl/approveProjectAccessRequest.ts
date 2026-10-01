@@ -43,17 +43,6 @@ export const approveProjectAccessRequest = async (input: {
 
   const combinedRows = asRowArray(
     await sql`
-<<<<<<< HEAD
-      UPDATE project_access_requests
-      SET status = 'approved',
-          decided_by_user_id = ${input.ownerUserId},
-          decided_at = NOW()
-      WHERE id = ${input.requestId}
-        AND project_id = ${input.projectId}
-        AND status = 'pending'
-        AND expires_at > NOW()
-      RETURNING *
-=======
       WITH approved_request AS (
         UPDATE project_access_requests
         SET status = 'approved',
@@ -62,6 +51,7 @@ export const approveProjectAccessRequest = async (input: {
         WHERE id = ${input.requestId}
           AND project_id = ${input.projectId}
           AND status = 'pending'
+          AND expires_at > NOW()
         RETURNING *
       ),
       new_member AS (
@@ -84,7 +74,6 @@ export const approveProjectAccessRequest = async (input: {
         to_jsonb(new_member) AS member_row
       FROM approved_request
       INNER JOIN new_member ON true
->>>>>>> 77eb5235 (fix(projects): atomic ACL approve and keep folder ref on failed add)
     `,
   );
 
