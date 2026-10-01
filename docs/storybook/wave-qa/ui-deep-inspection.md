@@ -34,7 +34,7 @@ Treat as **blocking for `ui` pass** unless fixed in the same round:
 
 If any blocking defect exists: set `obviousVisualDefects: "present"`, list in `mustFix[]`, **`passed: false`** (or fix + recapture then `obviousVisualDefects: "none"`).
 
-If none after zoom: `obviousVisualDefects: "none"` and may pass at **≥97** with **≤3** total polish deductions (see `quality-bar.md`).
+If none after zoom: `obviousVisualDefects: "none"`, **`visualEvidenceMethod: "computerUse"`** (AWC), and pass only at **100/100** — no polish deductions on `ui` (see `quality-bar.md`).
 
 ## Reference regression
 

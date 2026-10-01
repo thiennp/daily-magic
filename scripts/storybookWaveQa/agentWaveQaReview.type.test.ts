@@ -52,31 +52,52 @@ describe("validateAgentWaveQaReview", () => {
     expect(result.errors.some((e) => e.field === "scoreOverall")).toBe(true);
   });
 
-  it("requires ui reviews to declare zoomedSections and obviousVisualDefects", () => {
+  it("requires ui pass at 100/100 with computerUse zoom evidence", () => {
     const result = validateAgentWaveQaReview({
       ...validAwcReview,
       role: "ui",
-      scoreDesktop: 99,
-      scoreMobile: 99,
-      scoreOverall: 99,
+      scoreDesktop: 100,
+      scoreMobile: 100,
+      scoreOverall: 100,
       passed: true,
-      scoreBreakdown: [
-        {
-          area: "hero",
-          pointsDeducted: 1,
-          reason: "Minor spacing nit on trust strip.",
-        },
-      ],
+      scoreBreakdown: [],
       zoomedSections: [
         "hero-ready-desktop",
         "cards-ready-desktop",
         "footer-ready-mobile",
         "pre-block-desktop",
         "cta-band-mobile",
+        "nav-ready-mobile",
       ],
       obviousVisualDefects: "none",
+      visualEvidenceMethod: "computerUse",
     });
     expect(result.ok).toBe(true);
+  });
+
+  it("rejects ui pass below 100 or without computerUse on AWC", () => {
+    const at99 = validateAgentWaveQaReview({
+      ...validAwcReview,
+      role: "ui",
+      scoreDesktop: 100,
+      scoreMobile: 98,
+      scoreOverall: 99,
+      passed: true,
+      scoreBreakdown: [],
+      zoomedSections: ["a", "b", "c", "d", "e", "f"],
+      obviousVisualDefects: "none",
+      visualEvidenceMethod: "computerUse",
+    });
+    expect(at99.ok).toBe(false);
+
+    const noZoomTool = validateAgentWaveQaReview({
+      ...validAwcReview,
+      role: "ui",
+      zoomedSections: ["a", "b", "c", "d", "e", "f"],
+      obviousVisualDefects: "none",
+      visualEvidenceMethod: "manual-zoom-png",
+    });
+    expect(noZoomTool.ok).toBe(false);
   });
 
   it("rejects ui pass when obviousVisualDefects is present", () => {

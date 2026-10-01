@@ -23,7 +23,7 @@ export interface AgentWaveQaReview {
     readonly pointsDeducted: number;
     readonly reason: string;
   }[];
-  /** Required when scoreOverall < 95 — guides next fix round. */
+  /** Required when below role pass floor — guides next fix round. */
   readonly whyBelowThreshold: string;
   readonly topIssues: readonly string[];
   readonly mustFix: readonly string[];
@@ -32,7 +32,15 @@ export interface AgentWaveQaReview {
   readonly zoomedSections?: readonly string[];
   /** Required when role is `ui` — `present` blocks pass until fixed. */
   readonly obviousVisualDefects?: "none" | "present";
+  /** AWC `ui` pass: must be `computerUse` (zoom crops), not full-page glance only. */
+  readonly visualEvidenceMethod?: "computerUse" | "manual-zoom-png";
 }
+
+/** ux | copy | product — subjective pass floor. */
+export const WAVE_QA_SUBJECTIVE_PASS_SCORE = 97;
+
+/** `ui` — immediately visible; no polish passes. */
+export const WAVE_QA_UI_PASS_SCORE = 100;
 
 export interface AgentWaveQaReviewValidationError {
   readonly field: string;
@@ -172,14 +180,20 @@ export const validateAgentWaveQaReview = (
     });
   }
 
+  const roleForThreshold = o.role;
+  const passScoreFloor =
+    roleForThreshold === "ui"
+      ? WAVE_QA_UI_PASS_SCORE
+      : WAVE_QA_SUBJECTIVE_PASS_SCORE;
+
   if (typeof o.passed !== "boolean") {
     errors.push({ field: "passed", message: "Must be a boolean" });
   } else if (isScore(scoreOverall)) {
-    const shouldPass = scoreOverall >= 97;
+    const shouldPass = scoreOverall >= passScoreFloor;
     if (o.passed !== shouldPass) {
       errors.push({
         field: "passed",
-        message: `Must be ${shouldPass} when scoreOverall is ${scoreOverall} (quality bar ≥97)`,
+        message: `Must be ${shouldPass} when scoreOverall is ${scoreOverall} (role ${String(roleForThreshold)} pass floor ${passScoreFloor})`,
       });
     }
   }
@@ -217,11 +231,14 @@ export const validateAgentWaveQaReview = (
             message: "Passed reviews cannot hide extra deductions in breakdown",
           });
         }
-        if (deducted > 3) {
+        const polishCap = roleForThreshold === "ui" ? 0 : 3;
+        if (deducted > polishCap) {
           errors.push({
             field: "scoreBreakdown",
             message:
-              "Passed with scoreOverall < 100 allows at most 3 total polish points — fix and recapture",
+              roleForThreshold === "ui"
+                ? "ui pass requires scoreOverall 100 — no polish deductions"
+                : "Passed with scoreOverall < 100 allows at most 3 total polish points — fix and recapture",
           });
         }
       }
@@ -294,7 +311,7 @@ export const validateAgentWaveQaReview = (
   if (role === "ui") {
     const zoomed = o.zoomedSections;
     const defects = o.obviousVisualDefects;
-    const minZoom = typeof o.passed === "boolean" && o.passed === true ? 5 : 3;
+    const minZoom = typeof o.passed === "boolean" && o.passed === true ? 6 : 3;
     if (
       !Array.isArray(zoomed) ||
       zoomed.length < minZoom ||
@@ -342,22 +359,60 @@ export const validateAgentWaveQaReview = (
         });
       }
     }
+
+    if (typeof o.passed === "boolean" && o.passed === true) {
+      if (isScore(scoreOverall) && scoreOverall < WAVE_QA_UI_PASS_SCORE) {
+        errors.push({
+          field: "scoreOverall",
+          message: `ui pass requires scoreOverall ${WAVE_QA_UI_PASS_SCORE}`,
+        });
+      }
+      const uiBreakdown = o.scoreBreakdown;
+      if (Array.isArray(uiBreakdown) && uiBreakdown.length > 0) {
+        errors.push({
+          field: "scoreBreakdown",
+          message: "ui pass requires empty scoreBreakdown (perfect pixels)",
+        });
+      }
+      if (
+        deployable === "AWC" &&
+        isScore(scoreDesktop) &&
+        isScore(scoreMobile) &&
+        (scoreDesktop < WAVE_QA_UI_PASS_SCORE ||
+          scoreMobile < WAVE_QA_UI_PASS_SCORE)
+      ) {
+        errors.push({
+          field: "scoreDesktop",
+          message: `AWC ui pass requires scoreDesktop and scoreMobile both ${WAVE_QA_UI_PASS_SCORE}`,
+        });
+      }
+      if (deployable === "AWC") {
+        const evidence = o.visualEvidenceMethod;
+        if (evidence !== "computerUse") {
+          errors.push({
+            field: "visualEvidenceMethod",
+            message:
+              'AWC ui pass requires visualEvidenceMethod "computerUse" (zoom crops)',
+          });
+        }
+      }
+    }
   }
 
-  if (isScore(scoreOverall) && scoreOverall < 97) {
+  const belowFloor = isScore(scoreOverall) && scoreOverall < passScoreFloor;
+  if (belowFloor) {
     const why = o.whyBelowThreshold;
     if (!isNonEmptyString(why) || why.trim().length < 40) {
       errors.push({
         field: "whyBelowThreshold",
-        message:
-          "Required (≥40 chars) when scoreOverall < 97 for the next improve round",
+        message: `Required (≥40 chars) when scoreOverall < ${passScoreFloor} for the next improve round`,
       });
     }
     const mustFix = o.mustFix;
     if (!Array.isArray(mustFix) || mustFix.length === 0) {
       errors.push({
         field: "mustFix",
-        message: "At least one mustFix item when scoreOverall < 97",
+        message: `At least one mustFix item when scoreOverall < ${passScoreFloor}`,
       });
     }
   }

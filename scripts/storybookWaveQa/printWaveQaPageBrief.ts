@@ -43,11 +43,11 @@ const brief = `
 3. \`STORYBOOK_BASE_URL=http://127.0.0.1:6008 npm run storybook:wave:capture -- ${deployable} ${pageId} 1\`
 4. For each role in order (ux → copy → ui → product):
    - Reviewer A: all PNGs + manifest → JSON \`docs/storybook/wave-qa/reviews/${deployable}/${pageId}/round-1/<role>-reviewer-a.json\`
-   - **ui only:** read \`docs/storybook/wave-qa/ui-deep-inspection.md\`; zoom every card/pre/form; set \`zoomedSections\` + \`obviousVisualDefects\` (\`none\` | \`present\`). If \`present\`, \`mustFix\` + \`passed: false\` until fixed.
+   - **ui only:** \`ui-deep-inspection.md\`; **computerUse** zoom; pass only **100/100** AWC (both viewports), \`visualEvidenceMethod: "computerUse"\`, ≥6 \`zoomedSections\`, \`obviousVisualDefects\` (\`none\` | \`present\`).
    - Fix mustFix in product or \`src/utils/storybook/*\`; recapture if visuals changed
    - Reviewer B: separate review → \`...-reviewer-b.json\`
    - \`npm run storybook:wave:record-agent -- ${deployable} ${pageId} <role> <a.json> <b.json>\`
-   - AWC public pages: \`computerUse\` zoom for ui/ux; ≥5 \`zoomedSections\` on ui pass.
+   - AWC: \`computerUse\` mandatory for **ui** pass; optional but recommended for ux on marketing/auth.
    - Commit after each role passes: \`wave-qa(${deployable} ${pageId}): <role> agent A+B ≥97%\`
 5. \`storybook:wave:validate\` + \`storybook:wave:objective-gates\` (tester/dx). When **all six roles** pass: \`npm run ci\`, push \`main\` (no PR).
 6. Return: scores per role, PR URL, list of files changed.

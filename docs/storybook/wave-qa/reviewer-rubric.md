@@ -12,7 +12,7 @@
 
 - `scoreDesktop` / `scoreMobile` (AWC): 0–100 per viewport; **AWL:** set `scoreMobile` to `null`, `scoreOverall` = desktop.
 - `scoreOverall`: for AWC, average desktop + mobile (round to integer) unless role-specific weighting is documented in notes.
-- **Pass:** `scoreOverall >= 97` for **both** reviewer A and B (see **`quality-bar.md`**). Passed reviews: **empty `mustFix[]`**, at most **3** polish points if score &lt; 100.
+- **Pass:** **ux | copy | product:** `scoreOverall >= 97`, A + B, empty `mustFix[]`, ≤3 polish pts if &lt; 100. **`ui`:** **100** on each AWC viewport (or AWL desktop), empty `scoreBreakdown`, `visualEvidenceMethod: "computerUse"` (AWC). See **`quality-bar.md`**.
 
 When **any** score is below 100, fill `scoreBreakdown[]` with `{ area, pointsDeducted, reason }` so the next round knows what to fix.
 
@@ -64,8 +64,16 @@ Save under `docs/storybook/wave-qa/reviews/<AWC|AWL>/<pageId>/round-<n>/<role>-r
 **`ui` reviews** also require:
 
 ```json
-"zoomedSections": ["hero-desktop-ready", "for-your-ai-pre-desktop-ready"],
-"obviousVisualDefects": "none"
+"zoomedSections": [
+  "hero-desktop-ready",
+  "for-your-ai-pre-desktop-ready",
+  "cards-desktop-ready",
+  "forms-mobile-ready",
+  "footer-desktop-ready",
+  "nav-mobile-ready"
+],
+"obviousVisualDefects": "none",
+"visualEvidenceMethod": "computerUse"
 ```
 
 Use `"obviousVisualDefects": "present"` when any blocking item in `ui-deep-inspection.md` applies; then `passed` must be `false` until fixed.

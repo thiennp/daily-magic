@@ -4,15 +4,17 @@ Goal: shipped Storybook catalog pages must feel **production-grade**, not “goo
 
 ## Non-negotiables
 
-| Rule                                                        | Why                                                                                               |
-| ----------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
-| **All 6 roles pass** before push to `main`                  | ux–product without tester/dx lets broken stories and missing manifests ship.                      |
-| **No open `mustFix` on pass**                               | If it must be fixed, it is not done.                                                              |
-| **Pass score ≥ 97** (not 95) for ux, copy, ui, product      | 95 with five points of “known jank” reads cheap in production.                                    |
-| **`ui` + `obviousVisualDefects: "none"`**                   | Any blocking visual defect fails until code + recapture.                                          |
-| **Reviewer B independent**                                  | B must not read A’s JSON first; scores within 3 points or escalate (third reviewer or fix-first). |
-| **`computerUse` for AWC `ui` (and `ux` on marketing/auth)** | Zoom crops are mandatory evidence, not optional narrative.                                        |
-| **`npm run ci` green** before every `main` push             | Railway deploys from `main`.                                                                      |
+| Rule                                                            | Why                                                                                               |
+| --------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
+| **All 6 roles pass** before push to `main`                      | ux–product without tester/dx lets broken stories and missing manifests ship.                      |
+| **No open `mustFix` on pass**                                   | If it must be fixed, it is not done.                                                              |
+| **Pass ≥ 97** for ux, copy, product (≤3 polish pts if &lt; 100) | Known jank at 95 reads cheap in production.                                                       |
+| **`ui` pass = 100/100** (AWC desktop **and** mobile)            | UI is what users see first — no “almost perfect” ship.                                            |
+| **`ui` + `obviousVisualDefects: "none"`**                       | Any blocking visual defect fails until code + recapture.                                          |
+| **AWC `ui` + `visualEvidenceMethod: "computerUse"`**            | Full-page PNG glance is not a UI review.                                                          |
+| **Reviewer B independent**                                      | B must not read A’s JSON first; scores within 3 points or escalate (third reviewer or fix-first). |
+| **`computerUse` for AWC `ui` (and `ux` on marketing/auth)**     | Zoom crops are mandatory evidence, not optional narrative.                                        |
+| **`npm run ci` green** before every `main` push                 | Railway deploys from `main`.                                                                      |
 
 Enforced in `record-agent` validation where noted in `reviewer-rubric.md`.
 
@@ -43,11 +45,13 @@ Score as **ui** (or **ux** when it blocks comprehension), set `obviousVisualDefe
 - Read every visible string on every PNG; flag inconsistent product terms (Agent Witch vs daily-magic).
 - Error/empty copy must tell the user **what to do next**.
 
-### ui
+### ui (highest bar)
 
-- Follow `ui-deep-inspection.md` plus **≥5** `zoomedSections` on pass.
-- Attach or reference **zoom PNG paths** in `captureRef` notes or review folder when possible.
+- **Pass only at 100** on every viewport (AWC: `scoreDesktop` and `scoreMobile` both 100). No `scoreBreakdown` on pass.
+- Follow `ui-deep-inspection.md` plus **≥6** `zoomedSections` on pass (one per checklist area).
+- **`visualEvidenceMethod: "computerUse"`** on AWC — save zoom crops under artifacts; cite paths in `topIssues` or review notes.
 - Compare to **https://www.agentwitch.com** same route when it exists; log drift in `topIssues`.
+- Any “I’d notice in 2 seconds” defect → fix before pass, not `quickWins`.
 
 ### product
 

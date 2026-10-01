@@ -33,13 +33,13 @@ Canonical: `docs/storybook/README.md`, `docs/storybook/wave-qa/README.md`, `docs
 
 ## Definitions
 
-| Term           | Meaning                                                                        |
-| -------------- | ------------------------------------------------------------------------------ |
-| **Wave**       | One catalog page — all Storybook statuses                                      |
-| **Role order** | `ux` → `copy` → `ui` → `product` → `tester` → `dx`                             |
-| **Pass**       | `scoreOverall >= 97`, A + B agree within 3 pts; **6 roles** before `main` push |
-| **AWC**        | Desktop 1280×900 + mobile 390×844 captures                                     |
-| **AWL**        | Desktop only                                                                   |
+| Term           | Meaning                                                                                              |
+| -------------- | ---------------------------------------------------------------------------------------------------- |
+| **Wave**       | One catalog page — all Storybook statuses                                                            |
+| **Role order** | `ux` → `copy` → `ui` → `product` → `tester` → `dx`                                                   |
+| **Pass**       | ux/copy/product **≥97**; **`ui` = 100** per viewport + `computerUse`; **6 roles** before `main` push |
+| **AWC**        | Desktop 1280×900 + mobile 390×844 captures                                                           |
+| **AWL**        | Desktop only                                                                                         |
 
 Progress: `docs/storybook/wave-qa/progress.json` · Catalog: `scripts/storybookWaveQa/storybookWavePageCatalog.ts`.
 
