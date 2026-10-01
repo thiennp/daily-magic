@@ -7,6 +7,8 @@ import {
 } from "../../../../adapters/promptSdlcAwcCore";
 import type { PromptSdlcWizardState } from "../../../../adapters/promptSdlcAwcCore";
 
+import { defaultPromptSdlcCostControls } from "@/lib/promptOptimizer/createEmptyPromptSdlcCostControl";
+import type { PromptSdlcCostControls } from "@/lib/promptOptimizer/types/PromptSdlcCostControl.type";
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
 
 export const createPromptSdlcLocalCycle = (input: {
@@ -22,6 +24,7 @@ export const createPromptSdlcLocalCycle = (input: {
   readonly improverInstructions?: string;
   readonly wizard?: PromptSdlcWizardState;
   readonly runnerModel?: PromptSdlcLocalCycle["runnerModel"];
+  readonly costControls?: PromptSdlcCostControls;
 }): PromptSdlcLocalCycle => {
   const now = new Date().toISOString();
   return {
@@ -61,5 +64,6 @@ export const createPromptSdlcLocalCycle = (input: {
     ...(input.runnerModel === undefined
       ? {}
       : { runnerModel: input.runnerModel }),
+    costControls: input.costControls ?? defaultPromptSdlcCostControls(),
   };
 };

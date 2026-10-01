@@ -4,6 +4,7 @@ import type {
   PromptSdlcWizardState,
 } from "../../../../adapters/promptSdlcAwcCore";
 import type { PromptSdlcWriterErrorKind } from "./readPromptSdlcWriterOutput";
+import type { PromptSdlcCostControls } from "@/lib/promptOptimizer/types/PromptSdlcCostControl.type";
 
 export interface PromptSdlcLocalRun {
   readonly output: string;
@@ -53,6 +54,8 @@ export interface PromptSdlcLocalCycle {
   readonly errorMessage: string | null;
   /** Distinct writer failure kind for agent/billing outcomes. */
   readonly errorKind?: PromptSdlcWriterErrorKind;
+  /** Spend / trial ceilings; proposal + confirm before Step 4. */
+  readonly costControls?: PromptSdlcCostControls;
   readonly createdAt: string;
   readonly updatedAt: string;
   readonly revisions: readonly PromptSdlcLocalRevision[];

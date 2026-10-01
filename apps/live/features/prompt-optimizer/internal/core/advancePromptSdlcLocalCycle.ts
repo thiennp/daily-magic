@@ -12,6 +12,7 @@ import {
 } from "./readPromptSdlcWriterOutput";
 import { PROMPT_SDLC_MANUAL_ACTOR } from "./choosePromptSdlcLocalModels";
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
+import { applyPromptSdlcBudgetGuard } from "./applyPromptSdlcBudgetGuard";
 import { promptSdlcLocalWorkingDirectory } from "./promptSdlcLocalFolder";
 import {
   resolvePromptSdlcWriterTimeoutMs,
@@ -65,6 +66,11 @@ export const advancePromptSdlcLocalCycle = async (
   signal?: AbortSignal,
   onProgress?: (cycle: PromptSdlcLocalCycle) => void,
 ): Promise<PromptSdlcLocalCycle> => {
+  const guarded = applyPromptSdlcBudgetGuard(cycle);
+  if (guarded.status === "failed" && guarded.errorKind === "budget_exceeded") {
+    return guarded;
+  }
+  cycle = guarded;
   const revision = cycle.revisions.find(
     (item) => item.roundNumber === cycle.currentRound,
   );

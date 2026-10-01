@@ -48,6 +48,28 @@ export const buildPromptSdlcAgentSnapshot = (cycle: PromptSdlcLocalCycle) => {
     round: cycle.currentRound,
     errorMessage: cycle.errorMessage,
     errorKind,
+    costControls: cycle.costControls
+      ? {
+          maxTrials: cycle.costControls.maxTrials,
+          maxSpendUsd: cycle.costControls.maxSpendUsd,
+          earlyStop: cycle.costControls.earlyStop,
+          earlyStopFlatRounds: cycle.costControls.earlyStopFlatRounds,
+          // Proposal — Product bind: targetTokenBudget + estimatedSpendUsd
+          targetTokenBudget: cycle.costControls.targetTokenBudget,
+          // Alias for UI stubs that still read proposedTokenBudget
+          proposedTokenBudget: cycle.costControls.targetTokenBudget,
+          estimatedSpendUsd: cycle.costControls.estimatedSpendUsd,
+          rateUsdPer1kTokens: cycle.costControls.rateUsdPer1kTokens,
+          proposalStub: cycle.costControls.proposalStub,
+          confirmedTokenBudget: cycle.costControls.confirmedTokenBudget,
+          confirmedMaxSpendUsd: cycle.costControls.confirmedMaxSpendUsd,
+          budgetConfirmed: cycle.costControls.budgetConfirmed,
+          confirmationRequired: !cycle.costControls.budgetConfirmed,
+          softWarnFired: cycle.costControls.softWarnFired,
+          softWarnMessage: cycle.costControls.softWarnMessage,
+          budgetExceeded: cycle.costControls.budgetExceeded,
+        }
+      : null,
     context: PROMPT_SDLC_LOCAL_CONTEXT_REASON,
     page: `${PROMPT_SDLC_LIVE_PAGE_URL}?cycle=${encodeURIComponent(cycle.id)}`,
   };

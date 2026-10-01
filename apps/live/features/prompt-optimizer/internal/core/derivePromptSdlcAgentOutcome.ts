@@ -13,6 +13,7 @@ export type PromptSdlcAgentOutcome =
   | "no_reply"
   | "usage_limit"
   | "action_required"
+  | "budget_exceeded"
   | "judging"
   | "improving"
   | "awaiting_local"
@@ -40,6 +41,9 @@ export const derivePromptSdlcAgentOutcome = (input: {
   }
   if (input.errorKind === "action_required") {
     return "action_required";
+  }
+  if (input.errorKind === "budget_exceeded") {
+    return "budget_exceeded";
   }
   if (input.status === "failed") {
     return "failed";

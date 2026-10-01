@@ -30,6 +30,7 @@ export const continueAfterJudgeReply = (input: {
   readonly priorRounds?: readonly PromptSdlcPriorRound[];
   readonly round?: number;
   readonly maxRounds?: number;
+  readonly earlyStopFlat?: number | null;
 }): {
   readonly verdict: PromptSdlcVerdict | null;
   readonly continuation: PromptSdlcContinuation;
@@ -63,6 +64,7 @@ export const continueAfterJudgeReply = (input: {
     reasons: scored.map((item) => item.reasons),
     round,
     maxRounds: input.maxRounds ?? PROMPT_SDLC_MAX_ROUNDS,
+    earlyStopFlat: input.earlyStopFlat,
   });
   if (stop !== null) {
     return { verdict, continuation: stop };

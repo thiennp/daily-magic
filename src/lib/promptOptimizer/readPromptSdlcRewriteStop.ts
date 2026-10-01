@@ -18,11 +18,18 @@ export const formatPromptSdlcStallStop = (
   return `${PROMPT_SDLC_STOP_STALL} Avoid: ${lines.join("; ")}.`;
 };
 
+/**
+ * Round-limit or flat-score early-stop (clean stop; best prompt kept).
+ * Flat early-stop uses earlyStopFlat when set, else PROMPT_SDLC_STALL_ROUNDS.
+ * Behavior: status "stopped" (not failed) — useThisPrompt stays false; only passed is usable.
+ */
 export const readPromptSdlcRewriteStop = (input: {
   readonly scores: readonly number[];
   readonly reasons?: readonly string[];
   readonly round: number;
   readonly maxRounds: number;
+  /** Override stall threshold (Product earlyStopFlat knob). */
+  readonly earlyStopFlat?: number | null;
 }): { readonly type: "stopped"; readonly errorMessage: string } | null => {
   if (input.round + 1 >= input.maxRounds) {
     return {
@@ -31,9 +38,15 @@ export const readPromptSdlcRewriteStop = (input: {
     };
   }
 
-  if (
-    countPromptSdlcNonImprovingRounds(input.scores) >= PROMPT_SDLC_STALL_ROUNDS
-  ) {
+  const stallLimit =
+    input.earlyStopFlat !== undefined &&
+    input.earlyStopFlat !== null &&
+    Number.isFinite(input.earlyStopFlat) &&
+    input.earlyStopFlat >= 1
+      ? Math.floor(input.earlyStopFlat)
+      : PROMPT_SDLC_STALL_ROUNDS;
+
+  if (countPromptSdlcNonImprovingRounds(input.scores) >= stallLimit) {
     const pairs = input.scores.map((score, index) => ({
       score,
       reasons: input.reasons?.[index] ?? "",

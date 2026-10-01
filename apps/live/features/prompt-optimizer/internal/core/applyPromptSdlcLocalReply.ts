@@ -4,8 +4,10 @@ import {
   continueAfterJudgeReply,
   type HarnessWriterAgent,
 } from "../../../../adapters/promptSdlcAwcCore";
+import { resolvePromptSdlcMaxTrials } from "@/lib/promptOptimizer/resolvePromptSdlcMaxTrials";
 import { PROMPT_SDLC_MANUAL_ACTOR } from "./choosePromptSdlcLocalModels";
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
+import { applyPromptSdlcBudgetGuard } from "./applyPromptSdlcBudgetGuard";
 
 const writerChoice = (
   actor: PromptSdlcLocalCycle["judgeModel"],
@@ -46,7 +48,14 @@ export const applyPromptSdlcLocalJudgeReply = (
     promptText: revision?.promptText ?? "",
     improver: writerChoice(cycle.improverModel),
     round: cycle.currentRound,
-    maxRounds: cycle.maxRounds,
+    maxRounds: resolvePromptSdlcMaxTrials({
+      maxRounds: cycle.maxRounds,
+      costControls: cycle.costControls,
+    }),
+    earlyStopFlat:
+      cycle.costControls?.earlyStop === false
+        ? 1_000_000
+        : cycle.costControls?.earlyStopFlatRounds,
     priorRounds: collectPromptSdlcPriorRounds(
       cycle.revisions.map((item) => ({
         roundNumber: item.roundNumber,
@@ -67,16 +76,16 @@ export const applyPromptSdlcLocalJudgeReply = (
   );
   const updatedAt = new Date().toISOString();
   if (result.continuation.type === "call") {
-    return {
+    return applyPromptSdlcBudgetGuard({
       ...cycle,
       revisions,
       status: "improving",
       judgePhase: undefined,
       updatedAt,
-    };
+    });
   }
 
-  return {
+  return applyPromptSdlcBudgetGuard({
     ...cycle,
     revisions,
     judgePhase: undefined,
@@ -86,7 +95,7 @@ export const applyPromptSdlcLocalJudgeReply = (
         ? null
         : result.continuation.errorMessage,
     updatedAt,
-  };
+  });
 };
 
 export const applyPromptSdlcLocalImproverReply = (
