@@ -1,0 +1,29 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "B",
+  "deployable": "AWC",
+  "pageId": "reports",
+  "role": "ui",
+  "captureRound": 1,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/reports/round-1/manifest.json",
+  "scoreDesktop": 97,
+  "scoreMobile": 95,
+  "scoreOverall": 96,
+  "passed": true,
+  "scoreBreakdown": [
+    {
+      "area": "mobile-run-again-button",
+      "pointsDeducted": 3,
+      "reason": "Run again outline button wraps below text links on 390px ready capture; touch targets remain OK but the action row feels stacked."
+    },
+    {
+      "area": "storybook-status-banner",
+      "pointsDeducted": 1,
+      "reason": "Yellow Storybook preview banners add visual noise above app chrome on loading/empty/error captures."
+    }
+  ],
+  "whyBelowThreshold": "",
+  "topIssues": ["Mobile action row stacking on run card"],
+  "mustFix": [],
+  "quickWins": []
+}

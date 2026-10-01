@@ -19,6 +19,7 @@ export function useAgentRunsList(input: {
 }): {
   readonly runs: ReturnType<typeof buildViewerAgentRunsList>;
   readonly isLoading: boolean;
+  readonly loadFailed: boolean;
   readonly refresh: () => void;
 } {
   const { data: session } = useSession();
@@ -28,7 +29,7 @@ export function useAgentRunsList(input: {
   const bumpCache = useCallback(() => {
     setCacheVersion((current) => current + 1);
   }, []);
-  const { apiRuns, isLoading, refresh } = useAgentRunsRemoteSync({
+  const { apiRuns, isLoading, loadFailed, refresh } = useAgentRunsRemoteSync({
     enabled: true,
     statusFilter: input.statusFilter,
     scopeFilter: input.scopeFilter,
@@ -79,5 +80,5 @@ export function useAgentRunsList(input: {
     };
   }, [bumpCache]);
 
-  return { runs, isLoading, refresh };
+  return { runs, isLoading, loadFailed, refresh };
 }

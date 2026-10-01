@@ -1,0 +1,29 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "B",
+  "deployable": "AWC",
+  "pageId": "reports",
+  "role": "copy",
+  "captureRound": 1,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/reports/round-1/manifest.json",
+  "scoreDesktop": 98,
+  "scoreMobile": 97,
+  "scoreOverall": 98,
+  "passed": true,
+  "scoreBreakdown": [
+    {
+      "area": "error-panel-tone",
+      "pointsDeducted": 1,
+      "reason": "Could not load your reports is plain; matches library pattern but could name Run history once for vocabulary reinforcement."
+    },
+    {
+      "area": "empty-secondary-cta",
+      "pointsDeducted": 1,
+      "reason": "Browse Marketplace on empty signed-in state is accurate yet slightly tangential to reports-first intent."
+    }
+  ],
+  "whyBelowThreshold": "",
+  "topIssues": [],
+  "mustFix": [],
+  "quickWins": ["Mirror library retry copy consistency across AWC list pages"]
+}

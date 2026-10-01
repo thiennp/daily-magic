@@ -2436,36 +2436,281 @@
       "statuses": ["loading", "guest", "empty", "error", "ready"],
       "roles": {
         "ux": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+          "passed": true,
+          "score": 96,
+          "round": 1,
+          "reviewerA": 97,
+          "reviewerB": 96,
+          "notes": "Agent A=97 B=96 (round 1).\nA deductions: mobile-bottom-nav -2: 390px ready capture stacks filters above a tall run card; bottom tab bar shortens visible prompt preview without scroll hint. | error-retry-placement -1: Try again sits below filters on error state; hierarchy is clear but retry is one beat lower than the failure headline.\nB deductions: loading-vs-ready-filters -2: Loading state shows Scope/Status controls before skeleton list; signed-out users never see filters, so the loading story feels slightly ahead of data. | mobile-clear-history -2: Clear all history wraps below filters on 390px ready capture, adding a third scan stop before the card.",
+          "agentFeedback": {
+            "reviewerA": {
+              "reviewMethod": "agent",
+              "reviewer": "A",
+              "deployable": "AWC",
+              "pageId": "reports",
+              "role": "ux",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/reports/round-1/manifest.json",
+              "scoreDesktop": 98,
+              "scoreMobile": 96,
+              "scoreOverall": 97,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "mobile-bottom-nav",
+                  "pointsDeducted": 2,
+                  "reason": "390px ready capture stacks filters above a tall run card; bottom tab bar shortens visible prompt preview without scroll hint."
+                },
+                {
+                  "area": "error-retry-placement",
+                  "pointsDeducted": 1,
+                  "reason": "Try again sits below filters on error state; hierarchy is clear but retry is one beat lower than the failure headline."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": ["Mobile chrome vs long run card"],
+              "mustFix": [],
+              "quickWins": [
+                "Add scroll padding under run cards on narrow viewports"
+              ]
+            },
+            "reviewerB": {
+              "reviewMethod": "agent",
+              "reviewer": "B",
+              "deployable": "AWC",
+              "pageId": "reports",
+              "role": "ux",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/reports/round-1/manifest.json",
+              "scoreDesktop": 97,
+              "scoreMobile": 95,
+              "scoreOverall": 96,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "loading-vs-ready-filters",
+                  "pointsDeducted": 2,
+                  "reason": "Loading state shows Scope/Status controls before skeleton list; signed-out users never see filters, so the loading story feels slightly ahead of data."
+                },
+                {
+                  "area": "mobile-clear-history",
+                  "pointsDeducted": 2,
+                  "reason": "Clear all history wraps below filters on 390px ready capture, adding a third scan stop before the card."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": ["Filter chrome visible during loading skeleton"],
+              "mustFix": [],
+              "quickWins": [
+                "Consider hiding filters until first fetch resolves"
+              ]
+            }
+          }
         },
         "copy": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 99,
+          "reviewerB": 98,
+          "notes": "Agent A=99 B=98 (round 1).\nA deductions: guest-tertiary-link -1: Your first task in 5 minutes is accurate but slightly marketing-heavy next to sober Run history explainer.\nB deductions: error-panel-tone -1: Could not load your reports is plain; matches library pattern but could name Run history once for vocabulary reinforcement. | empty-secondary-cta -1: Browse Marketplace on empty signed-in state is accurate yet slightly tangential to reports-first intent.",
+          "agentFeedback": {
+            "reviewerA": {
+              "reviewMethod": "agent",
+              "reviewer": "A",
+              "deployable": "AWC",
+              "pageId": "reports",
+              "role": "copy",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/reports/round-1/manifest.json",
+              "scoreDesktop": 99,
+              "scoreMobile": 98,
+              "scoreOverall": 99,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "guest-tertiary-link",
+                  "pointsDeducted": 1,
+                  "reason": "Your first task in 5 minutes is accurate but slightly marketing-heavy next to sober Run history explainer."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": [],
+              "mustFix": [],
+              "quickWins": []
+            },
+            "reviewerB": {
+              "reviewMethod": "agent",
+              "reviewer": "B",
+              "deployable": "AWC",
+              "pageId": "reports",
+              "role": "copy",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/reports/round-1/manifest.json",
+              "scoreDesktop": 98,
+              "scoreMobile": 97,
+              "scoreOverall": 98,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "error-panel-tone",
+                  "pointsDeducted": 1,
+                  "reason": "Could not load your reports is plain; matches library pattern but could name Run history once for vocabulary reinforcement."
+                },
+                {
+                  "area": "empty-secondary-cta",
+                  "pointsDeducted": 1,
+                  "reason": "Browse Marketplace on empty signed-in state is accurate yet slightly tangential to reports-first intent."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": [],
+              "mustFix": [],
+              "quickWins": [
+                "Mirror library retry copy consistency across AWC list pages"
+              ]
+            }
+          }
         },
         "ui": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+          "passed": true,
+          "score": 96,
+          "round": 1,
+          "reviewerA": 97,
+          "reviewerB": 96,
+          "notes": "Agent A=97 B=96 (round 1).\nA deductions: run-card-density -2: Ready desktop card packs badge, metadata, estimate row, monospace prompt, and four actions; still readable but dense vs TailAdmin list cards elsewhere. | error-panel-width -1: Load failure panel max-w-lg is narrower than empty-state card, so error and empty states feel like different components.\nB deductions: mobile-run-again-button -3: Run again outline button wraps below text links on 390px ready capture; touch targets remain OK but the action row feels stacked. | storybook-status-banner -1: Yellow Storybook preview banners add visual noise above app chrome on loading/empty/error captures.",
+          "agentFeedback": {
+            "reviewerA": {
+              "reviewMethod": "agent",
+              "reviewer": "A",
+              "deployable": "AWC",
+              "pageId": "reports",
+              "role": "ui",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/reports/round-1/manifest.json",
+              "scoreDesktop": 98,
+              "scoreMobile": 96,
+              "scoreOverall": 97,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "run-card-density",
+                  "pointsDeducted": 2,
+                  "reason": "Ready desktop card packs badge, metadata, estimate row, monospace prompt, and four actions; still readable but dense vs TailAdmin list cards elsewhere."
+                },
+                {
+                  "area": "error-panel-width",
+                  "pointsDeducted": 1,
+                  "reason": "Load failure panel max-w-lg is narrower than empty-state card, so error and empty states feel like different components."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": ["Run card action row busy on desktop"],
+              "mustFix": [],
+              "quickWins": [
+                "Align error panel max width with empty-state page density"
+              ]
+            },
+            "reviewerB": {
+              "reviewMethod": "agent",
+              "reviewer": "B",
+              "deployable": "AWC",
+              "pageId": "reports",
+              "role": "ui",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/reports/round-1/manifest.json",
+              "scoreDesktop": 97,
+              "scoreMobile": 95,
+              "scoreOverall": 96,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "mobile-run-again-button",
+                  "pointsDeducted": 3,
+                  "reason": "Run again outline button wraps below text links on 390px ready capture; touch targets remain OK but the action row feels stacked."
+                },
+                {
+                  "area": "storybook-status-banner",
+                  "pointsDeducted": 1,
+                  "reason": "Yellow Storybook preview banners add visual noise above app chrome on loading/empty/error captures."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": ["Mobile action row stacking on run card"],
+              "mustFix": [],
+              "quickWins": []
+            }
+          }
         },
         "product": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+          "passed": true,
+          "score": 97,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 97,
+          "notes": "Agent A=98 B=97 (round 1).\nA deductions: ready-fixture-believability -1: Sample run uses future-dated timestamp and identical requester/executor emails; acceptable for Storybook but slightly synthetic. | error-story-fidelity -1: MSW 500 now surfaces inline retry panel; filters still imply list may exist underneath, which is accurate for partial failure.\nB deductions: guest-flow-accuracy -2: Guest story correctly hides filters and explains Run history; sidebar still lists Reports as if signed-in nav is fully available. | empty-vs-error-distinction -1: Empty and error states now diverge clearly after loadFailed panel; both keep filters visible which matches signed-in catalog intent.",
+          "agentFeedback": {
+            "reviewerA": {
+              "reviewMethod": "agent",
+              "reviewer": "A",
+              "deployable": "AWC",
+              "pageId": "reports",
+              "role": "product",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/reports/round-1/manifest.json",
+              "scoreDesktop": 98,
+              "scoreMobile": 97,
+              "scoreOverall": 98,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "ready-fixture-believability",
+                  "pointsDeducted": 1,
+                  "reason": "Sample run uses future-dated timestamp and identical requester/executor emails; acceptable for Storybook but slightly synthetic."
+                },
+                {
+                  "area": "error-story-fidelity",
+                  "pointsDeducted": 1,
+                  "reason": "MSW 500 now surfaces inline retry panel; filters still imply list may exist underneath, which is accurate for partial failure."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": [],
+              "mustFix": [],
+              "quickWins": [
+                "Add second run row in ready fixture to show list density"
+              ]
+            },
+            "reviewerB": {
+              "reviewMethod": "agent",
+              "reviewer": "B",
+              "deployable": "AWC",
+              "pageId": "reports",
+              "role": "product",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/reports/round-1/manifest.json",
+              "scoreDesktop": 97,
+              "scoreMobile": 96,
+              "scoreOverall": 97,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "guest-flow-accuracy",
+                  "pointsDeducted": 2,
+                  "reason": "Guest story correctly hides filters and explains Run history; sidebar still lists Reports as if signed-in nav is fully available."
+                },
+                {
+                  "area": "empty-vs-error-distinction",
+                  "pointsDeducted": 1,
+                  "reason": "Empty and error states now diverge clearly after loadFailed panel; both keep filters visible which matches signed-in catalog intent."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": [],
+              "mustFix": [],
+              "quickWins": []
+            }
+          }
         },
         "tester": {
           "passed": true,
@@ -2484,7 +2729,7 @@
           "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
         }
       },
-      "allRolesPassed": false
+      "allRolesPassed": true
     },
     {
       "order": 12,
