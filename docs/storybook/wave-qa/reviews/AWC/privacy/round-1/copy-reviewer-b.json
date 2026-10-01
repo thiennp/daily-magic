@@ -1,0 +1,24 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "B",
+  "deployable": "AWC",
+  "pageId": "privacy",
+  "role": "copy",
+  "captureRound": 1,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/privacy/round-1/manifest.json",
+  "scoreDesktop": 98,
+  "scoreMobile": 98,
+  "scoreOverall": 98,
+  "passed": true,
+  "scoreBreakdown": [
+    {
+      "area": "product-name-consistency",
+      "pointsDeducted": 2,
+      "reason": "Intro alternates quoted Agent Witch with agentwitch.com hostname; consistent branding but slightly repetitive on first paragraph."
+    }
+  ],
+  "whyBelowThreshold": "",
+  "topIssues": ["Intro repetition"],
+  "mustFix": [],
+  "quickWins": ["Tighten intro to one product name mention"]
+}

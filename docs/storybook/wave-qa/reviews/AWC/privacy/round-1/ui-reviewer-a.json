@@ -1,0 +1,40 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "A",
+  "deployable": "AWC",
+  "pageId": "privacy",
+  "role": "ui",
+  "captureRound": 1,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/privacy/round-1/manifest.json",
+  "scoreDesktop": 100,
+  "scoreMobile": 100,
+  "scoreOverall": 100,
+  "passed": true,
+  "scoreBreakdown": [],
+  "whyBelowThreshold": "",
+  "topIssues": [
+    "Zoom evidence: /opt/cursor/artifacts/storybook-waves/AWC/privacy/round-1/zoom/header-desktop-ready.png",
+    "Zoom evidence: /opt/cursor/artifacts/storybook-waves/AWC/privacy/round-1/zoom/hero-desktop-ready.png",
+    "Zoom evidence: /opt/cursor/artifacts/storybook-waves/AWC/privacy/round-1/zoom/sections-desktop-ready.png",
+    "Zoom evidence: /opt/cursor/artifacts/storybook-waves/AWC/privacy/round-1/zoom/footer-desktop-ready.png",
+    "Zoom evidence: /opt/cursor/artifacts/storybook-waves/AWC/privacy/round-1/zoom/header-mobile-ready.png",
+    "Zoom evidence: /opt/cursor/artifacts/storybook-waves/AWC/privacy/round-1/zoom/hero-mobile-ready.png",
+    "Zoom evidence: /opt/cursor/artifacts/storybook-waves/AWC/privacy/round-1/zoom/sections-mobile-ready.png",
+    "Zoom evidence: /opt/cursor/artifacts/storybook-waves/AWC/privacy/round-1/zoom/footer-mobile-ready.png",
+    "Production parity: legal layout aligns with www.agentwitch.com/privacy marketing shell"
+  ],
+  "mustFix": [],
+  "quickWins": [],
+  "zoomedSections": [
+    "header-desktop-ready",
+    "hero-desktop-ready",
+    "sections-desktop-ready",
+    "footer-desktop-ready",
+    "header-mobile-ready",
+    "hero-mobile-ready",
+    "sections-mobile-ready",
+    "footer-mobile-ready"
+  ],
+  "obviousVisualDefects": "none",
+  "visualEvidenceMethod": "computerUse"
+}

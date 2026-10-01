@@ -1,0 +1,24 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "B",
+  "deployable": "AWC",
+  "pageId": "privacy",
+  "role": "ux",
+  "captureRound": 1,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/privacy/round-1/manifest.json",
+  "scoreDesktop": 98,
+  "scoreMobile": 98,
+  "scoreOverall": 98,
+  "passed": true,
+  "scoreBreakdown": [
+    {
+      "area": "mobile-menu-discovery",
+      "pointsDeducted": 2,
+      "reason": "Marketing Menu control hides secondary nav until opened; legal readers may miss Reports/Styleguide without opening menu first."
+    }
+  ],
+  "whyBelowThreshold": "",
+  "topIssues": ["Mobile nav behind Menu label"],
+  "mustFix": [],
+  "quickWins": ["Keep Privacy/Terms in footer band (already present)"]
+}
