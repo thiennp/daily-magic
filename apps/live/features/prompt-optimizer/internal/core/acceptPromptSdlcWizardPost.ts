@@ -291,8 +291,7 @@ export const tryAcceptPromptSdlcWizardPost = (input: {
         const confirmed = confirmPromptSdlcCostBudget({
           existing: cycle.costControls,
           confirmedTokenBudget: Number(tokenRaw),
-          confirmedMaxSpendUsd:
-            spendRaw.length === 0 ? null : Number(spendRaw),
+          confirmedMaxSpendUsd: spendRaw.length === 0 ? null : Number(spendRaw),
           rateUsdPer1kTokens: cycle.costControls?.rateUsdPer1kTokens,
         });
         if (!confirmed.ok) {
@@ -312,6 +311,12 @@ export const tryAcceptPromptSdlcWizardPost = (input: {
           updatedAt: new Date().toISOString(),
         };
         savePromptSdlcLocalCycle(input.storePath, cycle);
+      }
+
+      // Reassigning cycle drops the wizard narrowing from the top of this function.
+      if (cycle.wizard === undefined) {
+        finish(cycleId);
+        return true;
       }
 
       const mergedParams = mergePromptSdlcWizardPostedParameterValues({
