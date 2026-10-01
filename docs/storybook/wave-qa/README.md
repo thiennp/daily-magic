@@ -21,7 +21,7 @@ npm run storybook:wave:record-agent -- AWC home-marketing ux path/a.json path/b.
 
 Rubric: **`reviewer-rubric.md`**. Strict bar: **`quality-bar.md`**. **`ui`:** **`ui-deep-inspection.md`**.
 
-After all 34 pages first-pass sequential queue: mandatory **UX audit all pages** (`QUEUE_UX_AUDIT.md`), then **final UI audit** (`round-audit-1`) — see **`coordinator.md`**.
+After first-pass **34/34**: nine catalog waves — UX, UI, copy, product, performance, tester, dx, a11y, interaction — see **`QUEUE_POST_COMPLETION_WAVES.md`** and **`CATALOG_ORDER_34.md`**.
 
 ## Commands
 

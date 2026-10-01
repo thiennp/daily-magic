@@ -32,4 +32,4 @@ Do not start row N until row N−1 has `allRolesPassed: true` on `main`.
 
 **Already complete (round 1):** home-marketing, login, home-signed-in, project-detail, library, marketplace, reports, report-detail, automations — included again in the **post-sequential UX audit** (`QUEUE_UX_AUDIT.md`).
 
-**After this queue (all rows `done` on `main`):** run **UX re-check for all 34 pages** one-by-one — same strict gate, **ux role only** — see **`QUEUE_UX_AUDIT.md`**. Then mandatory **ui** `round-audit-1` per `coordinator.md`.
+**After this queue (34/34 on `main`):** run post-completion waves in **`QUEUE_POST_COMPLETION_WAVES.md`** (UX → UI → **copy** → **product** → **performance** → tester → dx → a11y → interaction). One page per step, one concern per wave.

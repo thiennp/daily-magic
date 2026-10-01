@@ -46,11 +46,16 @@ After **all 34 pages** have `allRolesPassed: true` on `main` (sequential queue +
 3. AWC marketing/auth/doc pages: **computerUse** walk + zoom evidence on ux where `quality-bar.md` requires it.
 4. Do **not** start the UI audit wave until UX audit queue is fully `done`.
 
-## Final UI audit (mandatory)
+## Post-completion waves (mandatory)
 
-After **UX audit wave** completes (and first-pass ux–product was already done):
+After first-pass **34/34** on `main`, run **nine full-catalog waves** in order — see **`QUEUE_POST_COMPLETION_WAVES.md`**:
 
-1. Spawn cloud subagents with brief: _audit ui only, round-audit-1, read `ui-deep-inspection.md`_.
-2. Start with pages merged earliest (**`home-marketing`**, **`login`**, …) — highest risk of shallow first pass.
-3. Revoke + fix + push fixes to `main` when audit finds `obviousVisualDefects: "present"` (CI green first).
-4. Coordinator does **not** report “100% complete” until audit wave finishes.
+1. UX → 2. UI → 3. **Copy (text)** → 4. **Product (features)** → 5. **Performance** → 6. Tester → 7. DX → 8. Accessibility → 9. Interaction (AWC).
+
+Each wave: **one page at a time**, same strict gate as first pass. Set **`CURRENT_WAVE.md`** + **`CURRENT_PAGE.md`**.
+
+## Final UI audit (wave 2)
+
+Wave **`ui-audit-1`** in the master plan — ui only, `ui-deep-inspection.md`, ui **100** on AWC. Highest-risk pages first in catalog order unless `CURRENT_PAGE` says otherwise.
+
+Coordinator does **not** report “100% complete” until **`QUEUE_POST_COMPLETION_WAVES.md`** + **`COMPLETE.md`** are satisfied.

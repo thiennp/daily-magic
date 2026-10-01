@@ -16,44 +16,9 @@
 | **Branch**            | `cursor/wave-qa-ux-audit-<deployable-lower>-<pageId>-b63b`                                                                                                                  |
 | **Ship**              | `npm run ci` green → push `main` (or draft PR if integration requires) per `coordinator.md`                                                                                 |
 
-## Catalog order (34 pages)
+## Catalog order
 
-Process in **this** order (matches `storybookWavePageCatalog.ts`):
-
-1. AWC `home-marketing`
-2. AWC `login`
-3. AWC `home-signed-in`
-4. AWC `for-agents`
-5. AWC `setup-writer`
-6. AWC `privacy`
-7. AWC `terms`
-8. AWC `projects`
-9. AWC `project-detail`
-10. AWC `library`
-11. AWC `marketplace`
-12. AWC `reports`
-13. AWC `report-detail`
-14. AWC `automations`
-15. AWC `prompt-optimizer`
-16. AWC `prompt-optimizer-guide`
-17. AWC `connection-lab`
-18. AWC `showcases`
-19. AWC `admin-users`
-20. AWC `admin-groups`
-21. AWL `home`
-22. AWL `task`
-23. AWL `prompt-optimizer`
-24. AWL `prompt-optimizer-guide`
-25. AWL `status`
-26. AWL `projects`
-27. AWL `project`
-28. AWL `harness`
-29. AWL `writer-api`
-30. AWL `knowledge`
-31. AWL `history`
-32. AWL `writer-sessions`
-33. AWL `errors`
-34. AWL `traffic`
+**`CATALOG_ORDER_34.md`** (34 pages, same order every wave).
 
 ## Coordinator
 
@@ -61,4 +26,4 @@ While UX audit runs, set `CURRENT_PAGE.md` to the active row and track progress 
 
 ## After UX audit
 
-Mandatory **final UI audit** (`round-audit-1`, ui-only) — see `coordinator.md` § Final UI audit. Do not report “wave QA complete” until **both** UX audit and UI audit waves finish.
+Continue **`QUEUE_POST_COMPLETION_WAVES.md`** (UI → copy → product → performance → tester → dx → a11y → interaction). Do not report “wave QA complete” until all waves in that doc are 34/34.
