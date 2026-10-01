@@ -45,7 +45,7 @@ export default function AwcProjectsPanel() {
         isLoading={isLoading}
         loadFailed={loadFailed}
         onRetryLoad={() => {
-          void refreshProjects();
+          void refreshProjects({ showLoading: true });
         }}
         searchQuery={searchQuery}
         projects={projects}

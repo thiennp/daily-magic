@@ -9,17 +9,17 @@ describe("useUserProjects", () => {
       "utf8",
     );
 
-    expect(loader).toContain("setLoadFailed(true)");
-    expect(loader).toContain("runUserProjectsFetch");
+    expect(loader).toContain("fetchUserProjectsForLoader");
+    expect(loader).toContain("loadGenerationRef");
+    expect(loader).toContain("showLoading");
     expect(
       readFileSync(
         join(
           process.cwd(),
-          "src/features/agent/hooks/utils/applyUserProjectsFetchOutcome.ts",
+          "src/features/agent/hooks/utils/fetchUserProjectsForLoader.ts",
         ),
         "utf8",
       ),
-    ).toContain("!outcome.ok");
-    expect(loader).toContain("loadGenerationRef");
+    ).toContain("runUserProjectsFetch");
   });
 });

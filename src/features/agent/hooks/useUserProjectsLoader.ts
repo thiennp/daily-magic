@@ -2,10 +2,13 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 
-import { runUserProjectsFetch } from "@/features/agent/hooks/runUserProjectsFetch";
-import { applyUserProjectsFetchOutcome } from "@/features/agent/hooks/utils/applyUserProjectsFetchOutcome";
+import { fetchUserProjectsForLoader } from "@/features/agent/hooks/utils/fetchUserProjectsForLoader";
 import type ProjectCompositionCounts from "@/lib/projects/types/ProjectCompositionCounts.type";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
+
+export type RefreshUserProjectsOptions = {
+  readonly showLoading?: boolean;
+};
 
 export function useUserProjectsLoader(deviceId: string): {
   readonly projects: readonly UserProjectRecord[];
@@ -14,7 +17,9 @@ export function useUserProjectsLoader(deviceId: string): {
   >;
   readonly isLoading: boolean;
   readonly loadFailed: boolean;
-  readonly refreshProjects: () => Promise<void>;
+  readonly refreshProjects: (
+    options?: RefreshUserProjectsOptions,
+  ) => Promise<void>;
   readonly setProjects: (
     value:
       | readonly UserProjectRecord[]
@@ -30,72 +35,48 @@ export function useUserProjectsLoader(deviceId: string): {
   const [loadFailed, setLoadFailed] = useState(false);
   const loadGenerationRef = useRef(0);
 
-  const applyOutcome = useCallback(
-    (
-      outcome: Awaited<ReturnType<typeof runUserProjectsFetch>>,
+  const runFetch = useCallback(
+    async (
       generation: number,
-    ): void => {
-      if (loadGenerationRef.current !== generation) {
-        return;
-      }
-
-      applyUserProjectsFetchOutcome(outcome, {
+      showLoading: boolean,
+      isCancelled?: () => boolean,
+    ): Promise<void> => {
+      await fetchUserProjectsForLoader({
+        deviceId,
+        generation,
+        showLoading,
+        loadGenerationRef,
+        isCancelled,
         setProjects,
         setCompositionCountsByProjectId,
         setLoadFailed,
         setIsLoading,
       });
     },
-    [],
+    [deviceId],
   );
 
-  const refreshProjects = useCallback(async (): Promise<void> => {
-    const generation = loadGenerationRef.current + 1;
-    loadGenerationRef.current = generation;
-    setIsLoading(true);
-    setLoadFailed(false);
-
-    try {
-      applyOutcome(await runUserProjectsFetch(deviceId), generation);
-    } catch {
-      if (loadGenerationRef.current === generation) {
-        setLoadFailed(true);
-        setIsLoading(false);
-      }
-    }
-  }, [applyOutcome, deviceId]);
+  const refreshProjects = useCallback(
+    async (options?: RefreshUserProjectsOptions): Promise<void> => {
+      const showLoading = options?.showLoading ?? false;
+      const generation = loadGenerationRef.current + 1;
+      loadGenerationRef.current = generation;
+      await runFetch(generation, showLoading);
+    },
+    [runFetch],
+  );
 
   useEffect(() => {
     const controller = new AbortController();
     const generation = loadGenerationRef.current + 1;
     loadGenerationRef.current = generation;
 
-    const load = async (): Promise<void> => {
-      setIsLoading(true);
-      setLoadFailed(false);
-
-      try {
-        const outcome = await runUserProjectsFetch(deviceId);
-        if (!controller.signal.aborted) {
-          applyOutcome(outcome, generation);
-        }
-      } catch {
-        if (
-          !controller.signal.aborted &&
-          loadGenerationRef.current === generation
-        ) {
-          setLoadFailed(true);
-          setIsLoading(false);
-        }
-      }
-    };
-
-    void load();
+    void runFetch(generation, true, () => controller.signal.aborted);
 
     return () => {
       controller.abort();
     };
-  }, [applyOutcome, deviceId]);
+  }, [runFetch]);
 
   useEffect(() => {
     const onFocus = (): void => {

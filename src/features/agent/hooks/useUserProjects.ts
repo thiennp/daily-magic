@@ -2,7 +2,10 @@
 
 import { useCallback } from "react";
 
-import { useUserProjectsLoader } from "@/features/agent/hooks/useUserProjectsLoader";
+import {
+  useUserProjectsLoader,
+  type RefreshUserProjectsOptions,
+} from "@/features/agent/hooks/useUserProjectsLoader";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
 import type ProjectCompositionCounts from "@/lib/projects/types/ProjectCompositionCounts.type";
 
@@ -13,7 +16,9 @@ export function useUserProjects(deviceId: string): {
   >;
   readonly isLoading: boolean;
   readonly loadFailed: boolean;
-  readonly refreshProjects: () => Promise<void>;
+  readonly refreshProjects: (
+    options?: RefreshUserProjectsOptions,
+  ) => Promise<void>;
   readonly addProject: (project: UserProjectRecord) => void;
   readonly removeProject: (projectId: string) => void;
 } {
