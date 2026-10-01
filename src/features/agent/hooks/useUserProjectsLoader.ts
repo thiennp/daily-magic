@@ -59,6 +59,11 @@ export function useUserProjectsLoader(deviceId: string): {
   const refreshProjects = useCallback(
     async (options?: RefreshUserProjectsOptions): Promise<void> => {
       const showLoading = options?.showLoading ?? false;
+      if (!showLoading) {
+        await runFetch(loadGenerationRef.current, showLoading);
+        return;
+      }
+
       const generation = loadGenerationRef.current + 1;
       loadGenerationRef.current = generation;
       await runFetch(generation, showLoading);
