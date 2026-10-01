@@ -268,8 +268,9 @@ export const tryAcceptPromptSdlcWizardPost = (input: {
     }
 
     if (gate === "optimize_modules") {
-      const moduleIndex = cycle.wizard.currentModuleIndex;
-      const moduleRun = cycle.wizard.modules[moduleIndex];
+      const wizard = cycle.wizard;
+      const moduleIndex = wizard.currentModuleIndex;
+      const moduleRun = wizard.modules[moduleIndex];
       if (moduleRun === undefined) {
         finish(cycleId);
         return true;
@@ -292,8 +293,7 @@ export const tryAcceptPromptSdlcWizardPost = (input: {
         const confirmed = confirmPromptSdlcCostBudget({
           existing: cycle.costControls,
           confirmedTokenBudget: Number(tokenRaw),
-          confirmedMaxSpendUsd:
-            spendRaw.length === 0 ? null : Number(spendRaw),
+          confirmedMaxSpendUsd: spendRaw.length === 0 ? null : Number(spendRaw),
           rateUsdPer1kTokens: cycle.costControls?.rateUsdPer1kTokens,
         });
         if (!confirmed.ok) {
@@ -316,7 +316,7 @@ export const tryAcceptPromptSdlcWizardPost = (input: {
       }
 
       const mergedParams = mergePromptSdlcWizardPostedParameterValues({
-        wizard: cycle.wizard,
+        wizard,
         modulePrompt: moduleRun.prompt,
         posted,
       });
@@ -332,7 +332,7 @@ export const tryAcceptPromptSdlcWizardPost = (input: {
       }
 
       const wizardWithParams = {
-        ...cycle.wizard,
+        ...wizard,
         parameterValues: mergedParams.parameterValues,
       };
 
@@ -351,7 +351,7 @@ export const tryAcceptPromptSdlcWizardPost = (input: {
       }
 
       const nextIndex = moduleIndex + 1;
-      if (nextIndex >= cycle.wizard.modules.length) {
+      if (nextIndex >= wizard.modules.length) {
         const completion =
           summarizePromptSdlcWizardCompletion(wizardWithParams);
         const next = completePromptSdlcLocalWizardCycle(
