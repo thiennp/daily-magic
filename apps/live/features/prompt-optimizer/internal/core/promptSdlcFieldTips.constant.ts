@@ -43,6 +43,18 @@ export const PROMPT_SDLC_FIELD_TIPS = {
       "Choose who rewrites the prompt when the score is under the pass score. I'll rewrite it when you want to edit the next prompt yourself.",
     example: "Codex",
   },
+  passScore: {
+    title: "Step 2 pass score",
+    practice:
+      "Wizard Step 2 (evaluate) passes when the judge scores the templated prompt at or above this value. Default 70.",
+    example: "70",
+  },
+  modulePassScore: {
+    title: "Step 4 pass score",
+    practice:
+      "Wizard Step 4 (optimize modules) passes each module trial when the judge scores the run output at or above this value. Default 90.",
+    example: "90",
+  },
   improverInstructions: {
     title: "Instructions for the improver",
     practice:

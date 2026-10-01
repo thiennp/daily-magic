@@ -2,8 +2,8 @@ import {
   PROMPT_SDLC_DEFAULT_MAX_TRIALS,
   PROMPT_SDLC_WIZARD_MAX_ROUNDS,
   PROMPT_SDLC_WIZARD_MODULE_PASS_SCORE,
-  PROMPT_SDLC_DEFAULT_MAX_TRIALS,
   PROMPT_SDLC_WIZARD_PASS_SCORE,
+  type HarnessWriterAgent,
   type PromptSdlcCostControls,
 } from "../../../../adapters/promptSdlcAwcCore";
 import {
@@ -23,7 +23,6 @@ import {
 import { readPromptSdlcLocalPassScore } from "./readPromptSdlcLocalPassScore";
 import {
   costControlsFromKnobs,
-  readEarlyStopCheckboxFromPosted,
   readPromptSdlcCostControlKnobs,
 } from "./readPromptSdlcCostControls";
 type PromptSdlcLocalRunModels = NonNullable<

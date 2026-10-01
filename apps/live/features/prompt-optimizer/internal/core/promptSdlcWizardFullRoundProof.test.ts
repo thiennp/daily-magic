@@ -372,33 +372,6 @@ describe("prompt SDLC wizard full round proof (for screenshots)", () => {
     }, "step 4 cost confirm gate");
     gateTrace.push("optimize_modules");
     paused = readPromptSdlcLocalCycle(storePath, liveId)!;
-    const continueWizard = (extra?: Record<string, string>): void => {
-      const live = readPromptSdlcLocalCycle(storePath, liveId);
-      const budgetFields: Record<string, string> = {};
-      if (
-        live?.wizard?.gate === "optimize_modules" &&
-        live.costControls &&
-        !live.costControls.budgetConfirmed
-      ) {
-        budgetFields.confirmedTokenBudget = String(
-          live.costControls.targetTokenBudget ?? 8000,
-        );
-        budgetFields.confirmedMaxSpendUsd = String(
-          live.costControls.estimatedSpendUsd ?? 0.08,
-        );
-      }
-      tryAcceptPromptSdlcWizardPost({
-        posted: new URLSearchParams({
-          intent: "wizard-continue",
-          cycleId: liveId,
-          ...budgetFields,
-          ...extra,
-        }),
-        storePath,
-        response: noopResponse,
-      });
-      ensurePromptSdlcLocalCycleRunning(storePath, liveId);
-    };
 
     snapshotCycle(storePath, "full-round-step-4-confirm", paused);
     const page4Confirm = pageBody(installDir, paused);
