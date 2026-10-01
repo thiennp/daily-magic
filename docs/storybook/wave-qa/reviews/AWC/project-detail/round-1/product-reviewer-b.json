@@ -1,0 +1,29 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "B",
+  "deployable": "AWC",
+  "pageId": "project-detail",
+  "role": "product",
+  "captureRound": 1,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/project-detail/round-1/manifest.json",
+  "scoreDesktop": 98,
+  "scoreMobile": 95,
+  "scoreOverall": 97,
+  "passed": true,
+  "scoreBreakdown": [
+    {
+      "area": "fixture-project",
+      "pointsDeducted": 2,
+      "reason": "daily-magic sample repo path and ACL sections match AWC registry intent."
+    },
+    {
+      "area": "empty-error-stories",
+      "pointsDeducted": 1,
+      "reason": "Empty/error stories now show realistic not-found and API failure panels instead of full ready chrome."
+    }
+  ],
+  "whyBelowThreshold": "",
+  "topIssues": [],
+  "mustFix": [],
+  "quickWins": []
+}

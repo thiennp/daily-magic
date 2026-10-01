@@ -6,6 +6,7 @@ import {
   buildDeployablePageStories,
   deployablePagesMeta,
 } from "@/utils/storybook/buildDeployablePageStories";
+import resolveAwcStorybookNavigationPath from "@/utils/storybook/resolveAwcStorybookNavigationPath";
 import type { StorybookPageStatus } from "@/utils/storybook/storybookPageStatus.constant";
 
 const entryById = new Map(
@@ -34,6 +35,13 @@ export const awcPageStories = buildDeployablePageStories(
     path: entry.path,
     statuses: entry.statuses,
     parametersForStatus: (status) => ({
+      nextjs: {
+        appDirectory: true,
+        navigation: {
+          pathname: resolveAwcStorybookNavigationPath(entry.path),
+          query: {},
+        },
+      },
       msw: {
         handlers: createAwcStorybookMswHandlers(status),
       },

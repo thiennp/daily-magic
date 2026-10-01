@@ -1,0 +1,24 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "B",
+  "deployable": "AWC",
+  "pageId": "project-detail",
+  "role": "copy",
+  "captureRound": 1,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/project-detail/round-1/manifest.json",
+  "scoreDesktop": 98,
+  "scoreMobile": 95,
+  "scoreOverall": 97,
+  "passed": true,
+  "scoreBreakdown": [
+    {
+      "area": "acl-wall",
+      "pointsDeducted": 3,
+      "reason": "Project Access intro is accurate but long on mobile ready capture; token warning is easy to miss."
+    }
+  ],
+  "whyBelowThreshold": "",
+  "topIssues": [],
+  "mustFix": [],
+  "quickWins": ["Bold the agent-access token warning in Project Access"]
+}

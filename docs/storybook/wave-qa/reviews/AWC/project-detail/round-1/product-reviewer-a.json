@@ -1,0 +1,29 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "A",
+  "deployable": "AWC",
+  "pageId": "project-detail",
+  "role": "product",
+  "captureRound": 1,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/project-detail/round-1/manifest.json",
+  "scoreDesktop": 97,
+  "scoreMobile": 96,
+  "scoreOverall": 97,
+  "passed": true,
+  "scoreBreakdown": [
+    {
+      "area": "cloud-vs-local",
+      "pointsDeducted": 2,
+      "reason": "Rename-on-cloud vs edit-on-Mac story is believable; composition still shows zeros on ready capture."
+    },
+    {
+      "area": "activity-backend",
+      "pointsDeducted": 1,
+      "reason": "Activity API placeholder matches KNOWN deploy gap; does not misrepresent shipped backend."
+    }
+  ],
+  "whyBelowThreshold": "",
+  "topIssues": [],
+  "mustFix": [],
+  "quickWins": ["Seed composition counts in ready story for marketing fidelity"]
+}

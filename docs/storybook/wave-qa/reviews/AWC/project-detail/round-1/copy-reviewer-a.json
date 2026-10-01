@@ -1,0 +1,29 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "A",
+  "deployable": "AWC",
+  "pageId": "project-detail",
+  "role": "copy",
+  "captureRound": 1,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/project-detail/round-1/manifest.json",
+  "scoreDesktop": 97,
+  "scoreMobile": 96,
+  "scoreOverall": 97,
+  "passed": true,
+  "scoreBreakdown": [
+    {
+      "area": "error-empty-tone",
+      "pointsDeducted": 2,
+      "reason": "Empty vs error messages are distinct and actionable; Activity API deploy caveat repeats ACL copy above."
+    },
+    {
+      "area": "storybook-mac-label",
+      "pointsDeducted": 1,
+      "reason": "Ready state says Storybook Mac — acceptable fixture label but slightly meta for product copy review."
+    }
+  ],
+  "whyBelowThreshold": "",
+  "topIssues": [],
+  "mustFix": [],
+  "quickWins": ["Shorten Activity section lead-in once API ships"]
+}

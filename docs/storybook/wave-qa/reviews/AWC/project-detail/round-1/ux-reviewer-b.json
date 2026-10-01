@@ -1,0 +1,29 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "B",
+  "deployable": "AWC",
+  "pageId": "project-detail",
+  "role": "ux",
+  "captureRound": 1,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/project-detail/round-1/manifest.json",
+  "scoreDesktop": 97,
+  "scoreMobile": 96,
+  "scoreOverall": 97,
+  "passed": true,
+  "scoreBreakdown": [
+    {
+      "area": "state-differentiation",
+      "pointsDeducted": 2,
+      "reason": "Loading/empty/error bodies are clear; ready state still dense — Project Access competes with rename/Mac CTA on first scan."
+    },
+    {
+      "area": "nav-active",
+      "pointsDeducted": 1,
+      "reason": "Projects nav highlight is correct after pathname fix; bottom nav still duplicates wayfinding on mobile."
+    }
+  ],
+  "whyBelowThreshold": "",
+  "topIssues": [],
+  "mustFix": [],
+  "quickWins": ["Collapse Project Access behind disclosure on mobile story"]
+}

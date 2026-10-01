@@ -1,14 +1,11 @@
-import AppPageHeader from "@/components/surfaces/AppPageHeader";
 import AutomationsPageLayout from "@/features/pages/layouts/AutomationsPageLayout";
 import LibraryPageLayout from "@/features/pages/layouts/LibraryPageLayout";
 import MarketplacePageLayout from "@/features/pages/layouts/MarketplacePageLayout";
 import ProjectsPageLayout from "@/features/pages/layouts/ProjectsPageLayout";
 import ReportsPageLayout from "@/features/pages/layouts/ReportsPageLayout";
-import AwcProjectDetailPanel from "@/features/projects/AwcProjectDetailPanel";
-import { APP_PAGE_STACK_CLASS } from "@/features/shell/appPageLayout.constant";
 import AwcHomeSignedInStoryView from "@/utils/storybook/AwcHomeSignedInStoryView";
+import AwcProjectDetailStoryView from "@/utils/storybook/AwcProjectDetailStoryView";
 import type { AwcStorybookPageEntry } from "@/utils/storybook/awc/awcStorybookPageEntry.type";
-import { AWC_STORYBOOK_SAMPLE_PROJECT } from "@/utils/storybook/awcStorybookFixtures";
 import type { StorybookPageStatus } from "@/utils/storybook/storybookPageStatus.constant";
 
 const appStatuses: readonly StorybookPageStatus[] = [
@@ -50,12 +47,7 @@ export const AWC_CORE_APP_PAGE_ENTRIES: readonly AwcStorybookPageEntry[] = [
     path: "/projects/:projectId",
     shell: "app-narrow",
     statuses: signedInStatuses,
-    renderBody: () => (
-      <div className={APP_PAGE_STACK_CLASS}>
-        <AppPageHeader title="Project details" />
-        <AwcProjectDetailPanel project={AWC_STORYBOOK_SAMPLE_PROJECT} />
-      </div>
-    ),
+    renderBody: (status) => <AwcProjectDetailStoryView status={status} />,
   },
   {
     id: "library",
