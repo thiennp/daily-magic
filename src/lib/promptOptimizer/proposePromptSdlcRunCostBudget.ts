@@ -4,6 +4,7 @@ import {
   PROMPT_SDLC_PREVIEW_STEP4_MODULE_COUNT,
   PROMPT_SDLC_STEP4_TOKENS_PER_MODULE_TRIAL,
 } from "@/lib/promptOptimizer/promptSdlcCostControl.constant";
+import { PROMPT_SDLC_WIZARD_MAX_ROUNDS } from "@/lib/promptOptimizer/wizard/promptSdlcWizardLimits.constant";
 import { estimatePromptSdlcSpendUsd } from "@/lib/promptOptimizer/estimatePromptSdlcSpendUsd";
 import { defaultPromptSdlcCostControls } from "@/lib/promptOptimizer/createEmptyPromptSdlcCostControl";
 import { applyPromptSdlcCostProposal } from "@/lib/promptOptimizer/proposePromptSdlcCostBudget";
@@ -36,7 +37,10 @@ export const proposePromptSdlcRunCostBudget = (input: {
     return live;
   }
 
-  const earlyRounds = Math.max(1, Math.floor(input.maxRounds ?? 3));
+  const earlyRounds = Math.max(
+    1,
+    Math.floor(input.maxRounds ?? PROMPT_SDLC_WIZARD_MAX_ROUNDS),
+  );
   const trials = Math.max(
     1,
     Math.floor(input.maxTrials ?? PROMPT_SDLC_DEFAULT_MAX_TRIALS),

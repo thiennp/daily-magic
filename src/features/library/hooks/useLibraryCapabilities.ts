@@ -51,6 +51,8 @@ export function useLibraryCapabilities(
             (data as { capabilities: PublishedCapabilityRecord[] })
               .capabilities,
           );
+        } else {
+          setLoadFailed(true);
         }
       } catch {
         setLoadFailed(true);
