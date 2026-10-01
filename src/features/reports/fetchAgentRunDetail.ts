@@ -1,11 +1,15 @@
+import type { AgentRunDetailFetchOutcome } from "@/features/reports/types/AgentRunDetailFetchOutcome.type";
 import type EnrichedAgentRunRecord from "@/lib/dispatch/types/EnrichedAgentRunRecord.type";
 
 export async function fetchAgentRunDetail(
   runId: string,
-): Promise<EnrichedAgentRunRecord | null> {
+): Promise<AgentRunDetailFetchOutcome> {
   const response = await fetch(`/api/agent-runs/${runId}`);
+  if (response.status === 404) {
+    return { status: "not_found" };
+  }
   if (!response.ok) {
-    return null;
+    return { status: "error" };
   }
 
   const data: unknown = await response.json();
@@ -15,8 +19,11 @@ export async function fetchAgentRunDetail(
     "run" in data &&
     typeof (data as { run: EnrichedAgentRunRecord }).run === "object"
   ) {
-    return (data as { run: EnrichedAgentRunRecord }).run;
+    return {
+      status: "ok",
+      run: (data as { run: EnrichedAgentRunRecord }).run,
+    };
   }
 
-  return null;
+  return { status: "error" };
 }

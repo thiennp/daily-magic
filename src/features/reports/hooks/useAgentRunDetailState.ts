@@ -18,6 +18,7 @@ export function useAgentRunDetailState(runId: string): {
   readonly run: EnrichedAgentRunRecord | null;
   readonly feedback: CapabilityFeedbackRecord | null;
   readonly isLoading: boolean;
+  readonly loadError: boolean;
   readonly setFeedback: (feedback: CapabilityFeedbackRecord) => void;
   readonly reloadRun: () => Promise<void>;
 } {
@@ -26,17 +27,21 @@ export function useAgentRunDetailState(runId: string): {
     cachedRun ? toEnrichedAgentRun(cachedRun) : null,
   );
   const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
   const [sseActive, setSseActive] = useState(false);
   const { feedback, setFeedback } = useAgentRunDetailFeedback(runId, true);
 
   const reloadRun = useCallback(async (): Promise<void> => {
-    const nextRun = await fetchAgentRunDetail(runId);
-    if (nextRun !== null) {
-      upsertAgentRunLocalCache(nextRun);
-      setRun(nextRun);
+    const outcome = await fetchAgentRunDetail(runId);
+    if (outcome.status === "ok") {
+      upsertAgentRunLocalCache(outcome.run);
+      setRun(outcome.run);
+      setLoadError(false);
+    } else if (outcome.status === "error" && run === null) {
+      setLoadError(true);
     }
     setIsLoading(false);
-  }, [runId]);
+  }, [run, runId]);
 
   useAgentRunRecordSync((updatedRun) => {
     if (updatedRun.id === runId) {
@@ -59,14 +64,19 @@ export function useAgentRunDetailState(runId: string): {
   useEffect(() => {
     const lifecycle = { active: true };
 
-    void fetchAgentRunDetail(runId).then((nextRun) => {
+    void fetchAgentRunDetail(runId).then((outcome) => {
       if (!lifecycle.active) {
         return;
       }
 
-      if (nextRun !== null) {
-        upsertAgentRunLocalCache(nextRun);
-        setRun(nextRun);
+      if (outcome.status === "ok") {
+        upsertAgentRunLocalCache(outcome.run);
+        setRun(outcome.run);
+        setLoadError(false);
+      } else if (outcome.status === "error") {
+        setLoadError(true);
+      } else {
+        setLoadError(false);
       }
       setIsLoading(false);
     });
@@ -82,5 +92,5 @@ export function useAgentRunDetailState(runId: string): {
     };
   }, [reloadRun, runId, sseActive]);
 
-  return { run, feedback, isLoading, setFeedback, reloadRun };
+  return { run, feedback, isLoading, loadError, setFeedback, reloadRun };
 }
