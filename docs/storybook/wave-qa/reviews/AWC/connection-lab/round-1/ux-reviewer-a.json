@@ -1,0 +1,24 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "A",
+  "deployable": "AWC",
+  "pageId": "connection-lab",
+  "role": "ux",
+  "captureRound": 1,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/connection-lab/round-1/manifest.json",
+  "scoreDesktop": 99,
+  "scoreMobile": 98,
+  "scoreOverall": 99,
+  "passed": true,
+  "scoreBreakdown": [
+    {
+      "area": "mobile-composer-length",
+      "pointsDeducted": 1,
+      "reason": "Long vertical stack on 390px requires substantial scroll before Send; acceptable for internal lab page."
+    }
+  ],
+  "whyBelowThreshold": "",
+  "topIssues": [],
+  "mustFix": [],
+  "quickWins": []
+}

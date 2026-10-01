@@ -1,0 +1,24 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "B",
+  "deployable": "AWC",
+  "pageId": "connection-lab",
+  "role": "product",
+  "captureRound": 1,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/connection-lab/round-1/manifest.json",
+  "scoreDesktop": 98,
+  "scoreMobile": 98,
+  "scoreOverall": 98,
+  "passed": true,
+  "scoreBreakdown": [
+    {
+      "area": "demo-update-banner",
+      "pointsDeducted": 2,
+      "reason": "Update-needed banner reflects storybook fixture version skew; acceptable for lab but worth noting in demos."
+    }
+  ],
+  "whyBelowThreshold": "",
+  "topIssues": [],
+  "mustFix": [],
+  "quickWins": []
+}

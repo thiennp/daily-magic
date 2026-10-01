@@ -1,0 +1,24 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "B",
+  "deployable": "AWC",
+  "pageId": "connection-lab",
+  "role": "ux",
+  "captureRound": 1,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/connection-lab/round-1/manifest.json",
+  "scoreDesktop": 98,
+  "scoreMobile": 98,
+  "scoreOverall": 98,
+  "passed": true,
+  "scoreBreakdown": [
+    {
+      "area": "scenario-chip-scan",
+      "pointsDeducted": 2,
+      "reason": "Six scenario chips compete for attention on first scan; purpose text helps but power-user density is high."
+    }
+  ],
+  "whyBelowThreshold": "",
+  "topIssues": [],
+  "mustFix": [],
+  "quickWins": []
+}

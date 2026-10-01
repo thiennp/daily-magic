@@ -1,0 +1,24 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "A",
+  "deployable": "AWC",
+  "pageId": "connection-lab",
+  "role": "copy",
+  "captureRound": 1,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/connection-lab/round-1/manifest.json",
+  "scoreDesktop": 98,
+  "scoreMobile": 98,
+  "scoreOverall": 98,
+  "passed": true,
+  "scoreBreakdown": [
+    {
+      "area": "error-story-banner",
+      "pointsDeducted": 2,
+      "reason": "Error status uses generic Storybook chrome copy rather than product-specific connection failure guidance."
+    }
+  ],
+  "whyBelowThreshold": "",
+  "topIssues": ["Error state banner is placeholder Storybook messaging"],
+  "mustFix": [],
+  "quickWins": []
+}

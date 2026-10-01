@@ -1,0 +1,31 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "B",
+  "deployable": "AWC",
+  "pageId": "connection-lab",
+  "role": "ui",
+  "captureRound": 1,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/connection-lab/round-1/manifest.json",
+  "scoreDesktop": 100,
+  "scoreMobile": 100,
+  "scoreOverall": 100,
+  "passed": true,
+  "scoreBreakdown": [],
+  "whyBelowThreshold": "",
+  "topIssues": [
+    "Project badge folder icon renders via AppIcon after fix; no clipped pre blocks on this page."
+  ],
+  "mustFix": [],
+  "quickWins": [],
+  "zoomedSections": [
+    "scenario-header-desktop-ready",
+    "devices-panel-desktop-ready",
+    "mac-picker-desktop-ready",
+    "project-badge-desktop-ready",
+    "update-banner-desktop-ready",
+    "scenario-header-mobile-ready",
+    "error-banner-desktop-error"
+  ],
+  "obviousVisualDefects": "none",
+  "visualEvidenceMethod": "computerUse"
+}
