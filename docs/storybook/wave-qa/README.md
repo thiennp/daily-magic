@@ -21,3 +21,10 @@ npm run storybook:wave:capture -- AWC home-marketing 1
 Screenshots: `/opt/cursor/artifacts/storybook-waves/{AWC|AWL}/{pageId}/round-{n}/`
 
 Progress: `progress.json` in this folder.
+
+## Weekly (Saturday)
+
+- **Skill:** `.cursor/skills/skill-storybook-page-wave-qa/SKILL.md`
+- **Command:** `.cursor/commands/command-storybook-wave-qa-weekly.md`
+- **CI:** `.github/workflows/storybook-wave-qa-weekly.yml` (Saturday 02:00 UTC)
+- **Local / CI capture:** `npm run storybook:wave:weekly` → `storybook-wave-captures/`

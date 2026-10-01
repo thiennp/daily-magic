@@ -14,7 +14,9 @@ import {
   storybookStoryUrl,
 } from "./storybookWavePageCatalog";
 
-const ARTIFACTS_ROOT = "/opt/cursor/artifacts/storybook-waves";
+const ARTIFACTS_ROOT =
+  process.env.STORYBOOK_WAVE_OUTPUT_DIR?.trim() ||
+  "/opt/cursor/artifacts/storybook-waves";
 const STORYBOOK_BASE =
   process.env.STORYBOOK_BASE_URL?.trim() || "http://127.0.0.1:6008";
 

@@ -94,4 +94,6 @@ STORYBOOK_BASE_URL=http://127.0.0.1:6008 npm run storybook:wave:capture -- AWC h
 STORYBOOK_BASE_URL=http://127.0.0.1:6008 npm run storybook:wave:capture-all
 ```
 
-Screenshots: `/opt/cursor/artifacts/storybook-waves/{AWC|AWL}/{pageId}/round-{n}/`.
+Screenshots: `/opt/cursor/artifacts/storybook-waves/{AWC|AWL}/{pageId}/round-{n}/` (local) or `storybook-wave-captures/` (weekly CI).
+
+**Skill (agent + Saturday schedule):** `.cursor/skills/skill-storybook-page-wave-qa/SKILL.md` · `npm run storybook:wave:weekly`

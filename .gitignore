@@ -25,6 +25,7 @@
 /build
 /dist/
 /storybook-static/
+/storybook-wave-captures/
 
 # misc
 .DS_Store
