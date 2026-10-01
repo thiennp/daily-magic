@@ -1,4 +1,7 @@
-import { PROMPT_SDLC_AGENT_MANUAL_ERROR } from "../../../../adapters/promptSdlcAwcCore";
+import {
+  PROMPT_SDLC_AGENT_MANUAL_ERROR,
+  type PromptSdlcCostControls,
+} from "../../../../adapters/promptSdlcAwcCore";
 import {
   PROMPT_SDLC_MANUAL_ACTOR,
   type PromptSdlcLocalActor,
@@ -27,6 +30,7 @@ export const planPromptSdlcAgentStart = (input: {
       readonly workingDirectory: string;
       readonly passScore: number;
       readonly maxRounds: number;
+      readonly costControls: PromptSdlcCostControls;
     }
   | {
       readonly ok: false;
@@ -69,6 +73,19 @@ export const planPromptSdlcAgentStart = (input: {
     improver,
     runner: judge,
   });
+  if (input.body.maxTrials != null) {
+    posted.set("maxTrials", String(input.body.maxTrials));
+  }
+  if (input.body.maxSpendUsd != null) {
+    posted.set("maxSpendUsd", String(input.body.maxSpendUsd));
+  }
+  // Default early-stop ON for agents (compose checkbox default). Explicit false omits the flag.
+  if (input.body.earlyStop !== false) {
+    posted.set("earlyStop", "on");
+  }
+  if (input.body.earlyStopFlatRounds != null) {
+    posted.set("earlyStopFlatRounds", String(input.body.earlyStopFlatRounds));
+  }
 
   const decision = decidePromptSdlcLocalPost({
     posted,
@@ -96,5 +113,6 @@ export const planPromptSdlcAgentStart = (input: {
     workingDirectory: decision.workingDirectory,
     passScore: decision.passScore,
     maxRounds: decision.maxRounds,
+    costControls: decision.costControls,
   };
 };

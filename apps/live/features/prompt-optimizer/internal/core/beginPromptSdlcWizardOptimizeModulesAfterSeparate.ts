@@ -20,9 +20,12 @@ export const beginPromptSdlcWizardOptimizeModulesAfterSeparate = (
     return cycle;
   }
   const modules = modulesFromPromptSdlcWizardSplitOption(option);
+  const writerId =
+    cycle.judgeModel === "manual" ? null : cycle.judgeModel;
   const costControls = seedPromptSdlcStep4CostProposal({
     moduleCount: modules.length,
     existing: cycle.costControls,
+    writerId,
   });
   return {
     ...cycle,

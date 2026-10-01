@@ -21,3 +21,12 @@ export const PROMPT_SDLC_SOFT_WARN_BUDGET =
 
 export const PROMPT_SDLC_BUDGET_CONFIRM_REQUIRED =
   "Confirm the Step 4 token and spend budget before optimizing modules.";
+
+/** Heuristic tokens assumed per early wizard round (generalize / evaluate / separate). */
+export const PROMPT_SDLC_EARLY_TOKENS_PER_ROUND = 4_000;
+
+/**
+ * Default module count for pre-run Step4 preview before Separate picks a split.
+ * Replaced by real moduleCount when seedPromptSdlcStep4CostProposal runs.
+ */
+export const PROMPT_SDLC_PREVIEW_STEP4_MODULE_COUNT = 2;
