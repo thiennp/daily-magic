@@ -86,6 +86,18 @@ export const PROMPT_SDLC_FIELD_TIPS = {
       "Hard dollar ceiling for Step 4 (confirmedMaxSpendUsd). Soft warn near the limit; hard stop fails with budget_exceeded.",
     example: "0.24",
   },
+  passScore: {
+    title: "Step 2 pass score",
+    practice:
+      "The evaluate step stops when a revision reaches this score, or when it hits the round limit.",
+    example: "75",
+  },
+  modulePassScore: {
+    title: "Step 4 pass score",
+    practice:
+      "Each module in step 4 passes when the judge score reaches this number.",
+    example: "88",
+  },
 } as const;
 
 export type PromptSdlcFieldTipId = keyof typeof PROMPT_SDLC_FIELD_TIPS;

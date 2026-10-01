@@ -4,9 +4,7 @@ import {
   continueAfterJudgeReply,
   resolvePromptSdlcMaxTrials,
   type HarnessWriterAgent,
-  resolvePromptSdlcMaxTrials,
 } from "../../../../adapters/promptSdlcAwcCore";
-import { resolvePromptSdlcMaxTrials } from "../../../../adapters/promptSdlcAwcCore";
 import { PROMPT_SDLC_MANUAL_ACTOR } from "./choosePromptSdlcLocalModels";
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
 import { applyPromptSdlcBudgetGuard } from "./applyPromptSdlcBudgetGuard";
