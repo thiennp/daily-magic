@@ -895,36 +895,257 @@
       "statuses": ["loading", "empty", "error", "ready"],
       "roles": {
         "ux": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+          "passed": true,
+          "score": 97,
+          "round": 1,
+          "reviewerA": 97,
+          "reviewerB": 98,
+          "notes": "Agent A=97 B=98 (round 1).\nA deductions: mobile-bottom-nav -2: Fixed bottom tab bar interrupts the vertical scan from setup hero to projects on 390px. | status-banners -1: Loading/empty/error Storybook banners are clear but add a thin extra band above the shell header.\nB deductions: mobile-density -2: Three-column dashboard collapses to a long scroll; primary CTA remains findable but requires more swipes on mobile.",
+          "agentFeedback": {
+            "reviewerA": {
+              "reviewMethod": "agent",
+              "reviewer": "A",
+              "deployable": "AWC",
+              "pageId": "home-signed-in",
+              "role": "ux",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/home-signed-in/round-1/manifest.json",
+              "scoreDesktop": 98,
+              "scoreMobile": 96,
+              "scoreOverall": 97,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "mobile-bottom-nav",
+                  "pointsDeducted": 2,
+                  "reason": "Fixed bottom tab bar interrupts the vertical scan from setup hero to projects on 390px."
+                },
+                {
+                  "area": "status-banners",
+                  "pointsDeducted": 1,
+                  "reason": "Loading/empty/error Storybook banners are clear but add a thin extra band above the shell header."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": ["Mobile chrome competes with dashboard hierarchy"],
+              "mustFix": [],
+              "quickWins": [
+                "Tuck marketing accordion below the fold on mobile captures"
+              ]
+            },
+            "reviewerB": {
+              "reviewMethod": "agent",
+              "reviewer": "B",
+              "deployable": "AWC",
+              "pageId": "home-signed-in",
+              "role": "ux",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/home-signed-in/round-1/manifest.json",
+              "scoreDesktop": 99,
+              "scoreMobile": 97,
+              "scoreOverall": 98,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "mobile-density",
+                  "pointsDeducted": 2,
+                  "reason": "Three-column dashboard collapses to a long scroll; primary CTA remains findable but requires more swipes on mobile."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": ["Long mobile scroll for full dashboard"],
+              "mustFix": [],
+              "quickWins": []
+            }
+          }
         },
         "copy": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+          "passed": true,
+          "score": 97,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 97,
+          "notes": "Agent A=98 B=97 (round 1).\nA deductions: storybook-user-label -2: Header still reads Storybook User rather than a realistic display name; acceptable for fixtures but slightly off-brand in screenshots.\nB deductions: status-banner-copy -3: Meta banners (loading/empty/error) are developer-facing; tone is fine but not user-facing product copy.",
+          "agentFeedback": {
+            "reviewerA": {
+              "reviewMethod": "agent",
+              "reviewer": "A",
+              "deployable": "AWC",
+              "pageId": "home-signed-in",
+              "role": "copy",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/home-signed-in/round-1/manifest.json",
+              "scoreDesktop": 98,
+              "scoreMobile": 98,
+              "scoreOverall": 98,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "storybook-user-label",
+                  "pointsDeducted": 2,
+                  "reason": "Header still reads Storybook User rather than a realistic display name; acceptable for fixtures but slightly off-brand in screenshots."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": ["Fixture display name in header"],
+              "mustFix": [],
+              "quickWins": [
+                "Use AWC_STORYBOOK_USER.name in session chrome when wired"
+              ]
+            },
+            "reviewerB": {
+              "reviewMethod": "agent",
+              "reviewer": "B",
+              "deployable": "AWC",
+              "pageId": "home-signed-in",
+              "role": "copy",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/home-signed-in/round-1/manifest.json",
+              "scoreDesktop": 97,
+              "scoreMobile": 97,
+              "scoreOverall": 97,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "status-banner-copy",
+                  "pointsDeducted": 3,
+                  "reason": "Meta banners (loading/empty/error) are developer-facing; tone is fine but not user-facing product copy."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": ["Storybook-only status banner voice"],
+              "mustFix": [],
+              "quickWins": []
+            }
+          }
         },
         "ui": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+          "passed": true,
+          "score": 97,
+          "round": 1,
+          "reviewerA": 97,
+          "reviewerB": 97,
+          "notes": "Agent A=97 B=97 (round 1).\nA deductions: mobile-nav-overlap -2: Horizontal nav row between cards on 390px looks like mid-page tabs rather than shell chrome. | status-banner-chrome -1: Amber status strip uses a different radius than TailAdmin cards; minor styleguide drift.\nB deductions: loading-state-density -3: Loading story still shows full marketing blocks beneath the checking-Mac hero; skeleton could be lighter.",
+          "agentFeedback": {
+            "reviewerA": {
+              "reviewMethod": "agent",
+              "reviewer": "A",
+              "deployable": "AWC",
+              "pageId": "home-signed-in",
+              "role": "ui",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/home-signed-in/round-1/manifest.json",
+              "scoreDesktop": 98,
+              "scoreMobile": 96,
+              "scoreOverall": 97,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "mobile-nav-overlap",
+                  "pointsDeducted": 2,
+                  "reason": "Horizontal nav row between cards on 390px looks like mid-page tabs rather than shell chrome."
+                },
+                {
+                  "area": "status-banner-chrome",
+                  "pointsDeducted": 1,
+                  "reason": "Amber status strip uses a different radius than TailAdmin cards; minor styleguide drift."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": ["Mobile nav placement"],
+              "mustFix": [],
+              "quickWins": ["Align banner padding with AppShell header rhythm"]
+            },
+            "reviewerB": {
+              "reviewMethod": "agent",
+              "reviewer": "B",
+              "deployable": "AWC",
+              "pageId": "home-signed-in",
+              "role": "ui",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/home-signed-in/round-1/manifest.json",
+              "scoreDesktop": 97,
+              "scoreMobile": 97,
+              "scoreOverall": 97,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "loading-state-density",
+                  "pointsDeducted": 3,
+                  "reason": "Loading story still shows full marketing blocks beneath the checking-Mac hero; skeleton could be lighter."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": ["Loading visual weight"],
+              "mustFix": [],
+              "quickWins": []
+            }
+          }
         },
         "product": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+          "passed": true,
+          "score": 97,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 97,
+          "notes": "Agent A=98 B=97 (round 1).\nA deductions: empty-state-fidelity -2: Empty MSW still shows setup-complete chrome from shared layout; empty story could emphasize zero projects more.\nB deductions: ready-fixture-believability -2: Sample project name daily-magic is accurate for repo but may confuse external reviewers. | error-state-surface -2: Error banner does not show inline API error panels; acceptable for catalog smoke but not full failure UX.",
+          "agentFeedback": {
+            "reviewerA": {
+              "reviewMethod": "agent",
+              "reviewer": "A",
+              "deployable": "AWC",
+              "pageId": "home-signed-in",
+              "role": "product",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/home-signed-in/round-1/manifest.json",
+              "scoreDesktop": 99,
+              "scoreMobile": 97,
+              "scoreOverall": 98,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "empty-state-fidelity",
+                  "pointsDeducted": 2,
+                  "reason": "Empty MSW still shows setup-complete chrome from shared layout; empty story could emphasize zero projects more."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": ["Empty vs ready visual overlap"],
+              "mustFix": [],
+              "quickWins": [
+                "Differentiate empty fixtures in a later story pass"
+              ]
+            },
+            "reviewerB": {
+              "reviewMethod": "agent",
+              "reviewer": "B",
+              "deployable": "AWC",
+              "pageId": "home-signed-in",
+              "role": "product",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/home-signed-in/round-1/manifest.json",
+              "scoreDesktop": 98,
+              "scoreMobile": 96,
+              "scoreOverall": 97,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "ready-fixture-believability",
+                  "pointsDeducted": 2,
+                  "reason": "Sample project name daily-magic is accurate for repo but may confuse external reviewers."
+                },
+                {
+                  "area": "error-state-surface",
+                  "pointsDeducted": 2,
+                  "reason": "Error banner does not show inline API error panels; acceptable for catalog smoke but not full failure UX."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": ["Error story is banner-only"],
+              "mustFix": [],
+              "quickWins": []
+            }
+          }
         },
         "tester": {
           "passed": true,
@@ -943,7 +1164,7 @@
           "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
         }
       },
-      "allRolesPassed": false
+      "allRolesPassed": true
     },
     {
       "order": 7,

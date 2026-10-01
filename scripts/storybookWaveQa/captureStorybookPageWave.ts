@@ -59,11 +59,15 @@ const waitForStoryCanvas = async (
   storyUrl: string,
   outfile: string,
   viewport: { width: number; height: number },
+  status: string,
 ): Promise<void> => {
   const context = await browser.newContext({ viewport });
   const page = await context.newPage();
-  await page.goto(storyUrl, { waitUntil: "networkidle", timeout: 120_000 });
-  await page.waitForTimeout(2500);
+  await page.goto(storyUrl, {
+    waitUntil: "domcontentloaded",
+    timeout: 120_000,
+  });
+  await page.waitForTimeout(status === "loading" ? 2500 : 5500);
   await page.locator(".sb-show-errordisplay").waitFor({
     state: "hidden",
     timeout: 90_000,
@@ -117,7 +121,7 @@ const main = async (): Promise<void> => {
       const viewport = VIEWPORTS[viewportName];
       const fileName = `${status}-${viewportName}.png`;
       const outfile = path.join(outDir, fileName);
-      await waitForStoryCanvas(browser, storyUrl, outfile, viewport);
+      await waitForStoryCanvas(browser, storyUrl, outfile, viewport, status);
       manifest.captures.push({
         status,
         viewport: viewportName,
