@@ -1,0 +1,32 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "B",
+  "deployable": "AWC",
+  "pageId": "setup-writer",
+  "role": "ui",
+  "captureRound": 1,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/setup-writer/round-1/manifest.json",
+  "scoreDesktop": 100,
+  "scoreMobile": 100,
+  "scoreOverall": 100,
+  "passed": true,
+  "scoreBreakdown": [],
+  "whyBelowThreshold": "",
+  "topIssues": [
+    "Zoom evidence: /opt/cursor/artifacts/storybook-waves/AWC/setup-writer/round-1/zoom/writer-cards-mobile-ready.png",
+    "Zoom evidence: /opt/cursor/artifacts/storybook-waves/AWC/setup-writer/round-1/zoom/footer-bottom-mobile-ready.png",
+    "Dark-mode hint text uses gray-400 on cards — readable after footer padding fix"
+  ],
+  "mustFix": [],
+  "quickWins": [],
+  "zoomedSections": [
+    "hero-desktop-ready",
+    "writer-cards-desktop-ready",
+    "footer-desktop-ready",
+    "writer-cards-mobile-ready",
+    "footer-mobile-ready",
+    "footer-bottom-mobile-ready"
+  ],
+  "obviousVisualDefects": "none",
+  "visualEvidenceMethod": "computerUse"
+}

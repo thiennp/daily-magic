@@ -1,0 +1,24 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "B",
+  "deployable": "AWC",
+  "pageId": "setup-writer",
+  "role": "ux",
+  "captureRound": 1,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/setup-writer/round-1/manifest.json",
+  "scoreDesktop": 98,
+  "scoreMobile": 98,
+  "scoreOverall": 98,
+  "passed": true,
+  "scoreBreakdown": [
+    {
+      "area": "primary-action-scan",
+      "pointsDeducted": 2,
+      "reason": "All four writer rows share equal weight; first-time users may hesitate between Cursor and Claude before reading hints."
+    }
+  ],
+  "whyBelowThreshold": "",
+  "topIssues": ["Equal-weight writer choices"],
+  "mustFix": [],
+  "quickWins": ["Highlight last-used writer when session provides one"]
+}
