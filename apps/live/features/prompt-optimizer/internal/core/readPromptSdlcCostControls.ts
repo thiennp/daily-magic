@@ -1,11 +1,9 @@
 import {
+  defaultPromptSdlcCostControls,
   PROMPT_SDLC_DEFAULT_MAX_TRIALS,
   PROMPT_SDLC_MAX_TRIALS_LIMIT,
-  defaultPromptSdlcCostControls,
-} from "../../../../adapters/promptSdlcAwcCore";
-import type {
-  PromptSdlcCostControlKnobs,
-  PromptSdlcCostControls,
+  type PromptSdlcCostControlKnobs,
+  type PromptSdlcCostControls,
 } from "../../../../adapters/promptSdlcAwcCore";
 
 export type ReadPromptSdlcCostControlsResult =

@@ -7,6 +7,7 @@ import { describePromptSdlcLocalActivity } from "./buildPromptSdlcLocalActivity"
 import { createPromptSdlcLocalCycle } from "./createPromptSdlcLocalCycle";
 import { confirmedPromptSdlcCostControlsForTests } from "./promptSdlcCostControlTestFixtures";
 import { buildPromptSdlcLocalCycleSection } from "./buildPromptSdlcLocalCycleSection";
+import { confirmedPromptSdlcCostControlsForTests } from "./promptSdlcCostControlTestFixtures";
 import { renderPromptSdlcWizardGate } from "./renderPromptSdlcWizardGate";
 import { renderPromptSdlcWizardRevisionRoundList } from "./renderPromptSdlcWizardRevisionRoundList";
 
@@ -140,6 +141,7 @@ describe("wizard UX consistency fixes", () => {
         },
       }),
       status: "wizard_paused" as const,
+      costControls: confirmedPromptSdlcCostControlsForTests({ moduleCount: 1 }),
     };
     const html = renderPromptSdlcWizardGate(cycle);
     expect(html).toContain("best 82 / ≥90");
