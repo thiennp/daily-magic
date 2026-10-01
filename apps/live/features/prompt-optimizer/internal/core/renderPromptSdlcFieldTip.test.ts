@@ -39,6 +39,8 @@ describe("renderPromptSdlcFieldTip", () => {
       "maxSpendUsd",
       "confirmedTokenBudget",
       "confirmedMaxSpendUsd",
+      "passScore",
+      "modulePassScore",
     ]);
   });
 });
