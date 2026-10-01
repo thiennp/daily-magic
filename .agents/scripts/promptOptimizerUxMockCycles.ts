@@ -185,13 +185,13 @@ export const promptOptimizerUxHistory = (): ReturnType<
     finishedWizardCycle(),
     {
       ...createPromptSdlcLocalCycle({
-        goal: "Classic loop sample",
+        goal: "Legacy loop sample",
         sourcePrompt: "Fix tests",
         judgeModel: "codex",
         improverModel: "codex",
         workingDirectory: "/tmp",
       }),
-      id: "hist-classic",
+      id: "hist-legacy",
       status: "passed",
       currentRound: 3,
       updatedAt: iso(1000 * 60 * 45),

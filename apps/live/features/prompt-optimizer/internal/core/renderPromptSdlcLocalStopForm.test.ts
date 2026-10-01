@@ -8,7 +8,7 @@ import {
 } from "./renderPromptSdlcLocalStopForm";
 
 describe("renderPromptSdlcLocalStopForm", () => {
-  it("renders Stop run for a classic loop", () => {
+  it("renders Stop run for a legacy non-wizard loop", () => {
     const cycle = createPromptSdlcLocalCycle({
       goal: "g",
       sourcePrompt: "p",

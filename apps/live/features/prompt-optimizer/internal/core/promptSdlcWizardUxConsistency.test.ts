@@ -8,6 +8,7 @@ import { describePromptSdlcLocalActivity } from "./buildPromptSdlcLocalActivity"
 import { createPromptSdlcLocalCycle } from "./createPromptSdlcLocalCycle";
 import { confirmedPromptSdlcCostControlsForTests } from "./promptSdlcCostControlTestFixtures";
 import { buildPromptSdlcLocalCycleSection } from "./buildPromptSdlcLocalCycleSection";
+import { confirmedPromptSdlcCostControlsForTests } from "./promptSdlcCostControlTestFixtures";
 import { renderPromptSdlcWizardGate } from "./renderPromptSdlcWizardGate";
 import { renderPromptSdlcWizardRevisionRoundList } from "./renderPromptSdlcWizardRevisionRoundList";
 
@@ -34,7 +35,7 @@ describe("wizard UX consistency fixes", () => {
     expect(html).not.toContain("70 or higher passes");
   });
 
-  it("describes step 4 runner activity instead of classic judge loop", () => {
+  it("describes step 4 runner activity for the wizard optimize phase", () => {
     const activity = describePromptSdlcLocalActivity({
       ...createPromptSdlcLocalCycle({
         goal: "g",

@@ -526,46 +526,6 @@ export const PROMPT_SDLC_LOCAL_FORM_SCRIPT = `<script>
   [...new Set(slots.map((slot) => slot.dataset.writer))].forEach((writer) => {
     if (writer) void paintWriter(writer);
   });
-  const paintPassRange = (pass) => {
-    if (!(pass instanceof HTMLInputElement)) return;
-    const score = Number(pass.value);
-    const weak = Math.floor(score / 2);
-    const close = Math.max(weak + 1, score - 20);
-    const group = pass.closest("[data-sdlc-pass-group]");
-    const scale = group?.querySelector(".sdlc-pass-scale");
-    if (scale instanceof HTMLElement) {
-      scale.style.setProperty("--sdlc-weak", weak + "%");
-      scale.style.setProperty("--sdlc-close", close + "%");
-      scale.style.setProperty("--sdlc-pass", score + "%");
-    }
-    const value = group?.querySelector("[data-sdlc-pass-value]");
-    const legend = group?.querySelector("[data-sdlc-pass-legend]");
-    if (value) value.textContent = String(score);
-    if (legend) {
-      legend.textContent =
-        "0–" +
-        (weak - 1) +
-        " bad · " +
-        weak +
-        "–" +
-        (close - 1) +
-        " weak · " +
-        close +
-        "–" +
-        (score - 1) +
-        " close · " +
-        score +
-        "–100 passes";
-    }
-  };
-  document.querySelectorAll("[data-sdlc-pass]").forEach((pass) => {
-    if (!(pass instanceof HTMLInputElement)) return;
-    pass.addEventListener("input", () => {
-      paintPassRange(pass);
-      paintComposeReview();
-    });
-    paintPassRange(pass);
-  });
   const closeFieldTips = () => {
     document.querySelectorAll(".sdlc-tip[aria-expanded='true']").forEach((btn) => {
       if (btn instanceof HTMLButtonElement) btn.setAttribute("aria-expanded", "false");

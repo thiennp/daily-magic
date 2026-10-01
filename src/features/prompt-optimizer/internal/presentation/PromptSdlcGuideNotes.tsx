@@ -30,13 +30,13 @@ export default function PromptSdlcGuideNotes(): ReactElement {
       <PromptSdlcGuideWizardSection />
       <section className="space-y-3">
         <h2 className={APP_SURFACE_SECTION_TITLE_CLASS}>
-          What this playground is not
+          Write the goal as the result
         </h2>
         <p className={APP_SURFACE_BODY_TEXT_CLASS}>
-          Prompt Optimizer improves how agents work — evaluate scores, module
-          trials, and Playbook reuse. It does not triage Slack or Outlook; those
-          stay with specialist bots. Agent Witch Cloud stays ACL + registry, not
-          a store for optimizer transcripts as a content bus.
+          Say what a good run produces: whose question gets answered, which
+          facts may be used, and what must not be promised. The example goal is
+          that kind of result. A goal of &quot;Make it better&quot; leaves the
+          judge with nothing to score.
         </p>
       </section>
     </div>

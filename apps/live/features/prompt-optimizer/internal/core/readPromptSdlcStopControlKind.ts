@@ -3,7 +3,7 @@ import { isPromptSdlcTerminalStatus } from "../../../../adapters/promptSdlcAwcCo
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
 
 export type PromptSdlcStopControlKind =
-  "none" | "classic" | "wizard_end_only" | "wizard_module_interrupt";
+  "none" | "legacy_stop" | "wizard_end_only" | "wizard_module_interrupt";
 
 /** Which stop control belongs in the This run panel (not wizard gates). */
 export const readPromptSdlcStopControlKind = (
@@ -14,7 +14,7 @@ export const readPromptSdlcStopControlKind = (
   }
   const wizard = cycle.wizard;
   if (wizard === undefined) {
-    return "classic";
+    return "legacy_stop";
   }
   if (cycle.status === "wizard_paused") {
     return "none";
