@@ -1,0 +1,29 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "A",
+  "deployable": "AWC",
+  "pageId": "home-signed-in",
+  "role": "ui",
+  "captureRound": 1,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/home-signed-in/round-1/manifest.json",
+  "scoreDesktop": 98,
+  "scoreMobile": 96,
+  "scoreOverall": 97,
+  "passed": true,
+  "scoreBreakdown": [
+    {
+      "area": "mobile-nav-overlap",
+      "pointsDeducted": 2,
+      "reason": "Horizontal nav row between cards on 390px looks like mid-page tabs rather than shell chrome."
+    },
+    {
+      "area": "status-banner-chrome",
+      "pointsDeducted": 1,
+      "reason": "Amber status strip uses a different radius than TailAdmin cards; minor styleguide drift."
+    }
+  ],
+  "whyBelowThreshold": "",
+  "topIssues": ["Mobile nav placement"],
+  "mustFix": [],
+  "quickWins": ["Align banner padding with AppShell header rhythm"]
+}

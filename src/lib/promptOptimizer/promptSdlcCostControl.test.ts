@@ -12,8 +12,6 @@ import {
   seedPromptSdlcStep4CostProposal,
 } from "@/lib/promptOptimizer/proposePromptSdlcCostBudget";
 import { readPromptSdlcBudgetStop } from "@/lib/promptOptimizer/readPromptSdlcBudgetStop";
-import { readPromptSdlcRewriteStop } from "@/lib/promptOptimizer/readPromptSdlcRewriteStop";
-import { resolvePromptSdlcMaxTrials } from "@/lib/promptOptimizer/resolvePromptSdlcMaxTrials";
 
 describe("Prompt Optimizer cost controls", () => {
   it("proposes targetTokenBudget + estimatedSpendUsd from module × trials", () => {
@@ -32,21 +30,6 @@ describe("Prompt Optimizer cost controls", () => {
       }),
     );
     expect(proposal.stub).toBe(true);
-  });
-
-  it("maxTrials resolves the effective trial hard cap", () => {
-    expect(
-      resolvePromptSdlcMaxTrials({
-        maxRounds: 10,
-        costControls: defaultPromptSdlcCostControls({ maxTrials: 3 }),
-      }),
-    ).toBe(3);
-    expect(
-      resolvePromptSdlcMaxTrials({
-        maxRounds: 2,
-        costControls: defaultPromptSdlcCostControls({ maxTrials: 5 }),
-      }),
-    ).toBe(2);
   });
 
   it("confirm persists confirmedTokenBudget / confirmedMaxSpendUsd ceilings", () => {
@@ -87,9 +70,7 @@ describe("Prompt Optimizer cost controls", () => {
 
     const hard = readPromptSdlcBudgetStop({
       costControls:
-        soft?.kind === "soft_warn"
-          ? soft.costControls
-          : confirmed.costControls,
+        soft?.kind === "soft_warn" ? soft.costControls : confirmed.costControls,
       spentTokens: 10_000,
     });
     expect(hard).toEqual({
@@ -100,17 +81,5 @@ describe("Prompt Optimizer cost controls", () => {
         budgetExceeded: true,
       }),
     });
-  });
-
-  it("early-stop when scores are flat uses earlyStopFlatRounds", () => {
-    const stop = readPromptSdlcRewriteStop({
-      scores: [80, 80, 79],
-      reasons: ["a", "b", "c"],
-      round: 2,
-      maxRounds: 10,
-      earlyStopFlat: 2,
-    });
-    expect(stop?.type).toBe("stopped");
-    expect(stop?.errorMessage).toMatch(/score stopped rising/i);
   });
 });

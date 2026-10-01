@@ -48,6 +48,20 @@ const parseUsd = (
   return { ok: true, value: Math.round(value * 10_000) / 10_000 };
 };
 
+/** HTML checkboxes omit the field when unchecked; only `intent=run` treats absence as off. */
+export const readEarlyStopCheckboxFromPosted = (
+  posted: URLSearchParams,
+  intent: string,
+): boolean => {
+  if (posted.has("earlyStop")) {
+    return true;
+  }
+  if (intent === "run") {
+    return false;
+  }
+  return true;
+};
+
 export const readPromptSdlcCostControlKnobs = (posted: {
   readonly maxTrials?: string | null;
   readonly maxSpendUsd?: string | null;

@@ -369,4 +369,37 @@ describe("advancePromptSdlcWizardLocal", () => {
     expect(next.errorKind).toBe("writer_timeout");
     expect(next.errorMessage).toContain("timed out after");
   });
+
+  it("fails the cycle when generalize/separate hits usage_limit (not wizard_paused)", async () => {
+    vi.spyOn(writerReply, "runPromptSdlcWriterReply").mockResolvedValue({
+      ok: false,
+      errorMessage:
+        "Error: You've hit your monthly usage limit for Cursor agent.",
+      errorKind: "usage_limit",
+    });
+
+    const cycle = {
+      ...createPromptSdlcLocalCycle({
+        goal: "Goal",
+        sourcePrompt: "p",
+        judgeModel: "claude-cli",
+        improverModel: "claude-cli",
+        workingDirectory: storeDir,
+        wizard: {
+          ...createInitialPromptSdlcWizardState("p"),
+          phase: "separate",
+          gate: null,
+          splitOptions: [],
+        },
+      }),
+      revisions: [
+        { roundNumber: 0, promptText: "evaluated prompt", judgement: null },
+      ],
+    };
+
+    const next = await advancePromptSdlcWizardLocal(cycle);
+    expect(next.status).toBe("failed");
+    expect(next.errorKind).toBe("usage_limit");
+    expect(next.wizard?.gate).toBeNull();
+  });
 });

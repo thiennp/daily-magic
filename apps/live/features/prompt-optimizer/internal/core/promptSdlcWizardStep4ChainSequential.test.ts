@@ -111,6 +111,10 @@ describe("wizard step 4 chain modules", () => {
     ).toBe(true);
 
     const saved = readPromptSdlcLocalCycle(storePath, cycle.id)!;
+    const savedForPage = {
+      ...saved,
+      costControls: confirmedPromptSdlcCostControlsForTests({ moduleCount: 2 }),
+    };
     const html = buildPromptSdlcLocalPageBody({
       goal: "Chain test",
       prompt: "",
@@ -122,7 +126,7 @@ describe("wizard step 4 chain modules", () => {
       passScore: "70",
       canRun: true,
       errorMessage: null,
-      cycle: saved,
+      cycle: savedForPage,
       history: [],
     });
     const artifactsDir = resolveWritableCursorArtifactsDir();

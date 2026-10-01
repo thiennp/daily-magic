@@ -140,6 +140,7 @@ describe("wizard UX consistency fixes", () => {
         },
       }),
       status: "wizard_paused" as const,
+      costControls: confirmedPromptSdlcCostControlsForTests({ moduleCount: 1 }),
     };
     const html = renderPromptSdlcWizardGate(cycle);
     expect(html).toContain("best 82 / ≥90");

@@ -10,19 +10,19 @@ export default function LoginPage() {
   return (
     <MarketingShell showSignIn={false} showFooter={false}>
       <div className="mx-auto grid max-w-5xl gap-10 lg:grid-cols-2 lg:items-center">
-        <div>
+        <div className="order-2 lg:order-1">
           <h1 className="text-3xl font-semibold tracking-tight text-gray-900 sm:text-4xl">
             {LOGIN_PAGE_COPY.title}
           </h1>
           <p className="mt-4 text-base text-gray-600">
             {LOGIN_PAGE_COPY.description}
           </p>
-          <div className="mt-8">
+          <div className="mt-8 hidden sm:block">
             <MarketingTrustStrip />
           </div>
         </div>
 
-        <MarketingCard>
+        <MarketingCard className="order-1 lg:order-2">
           <h2 className="text-xl font-semibold text-gray-900">Sign in</h2>
           <p className="mt-2 text-sm text-gray-600">
             Use your email link or Google account to continue.
@@ -31,10 +31,14 @@ export default function LoginPage() {
             <Suspense
               fallback={<div className="text-sm text-gray-500">Loading…</div>}
             >
-              <LoginForm defaultCallbackUrl="/" />
+              <LoginForm defaultCallbackUrl="/" appearance="marketing" />
             </Suspense>
           </div>
         </MarketingCard>
+
+        <div className="order-3 sm:hidden">
+          <MarketingTrustStrip />
+        </div>
       </div>
     </MarketingShell>
   );

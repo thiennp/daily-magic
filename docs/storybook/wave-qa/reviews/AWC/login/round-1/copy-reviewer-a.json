@@ -1,0 +1,18 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "A",
+  "deployable": "AWC",
+  "pageId": "login",
+  "role": "copy",
+  "captureRound": 1,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/login/round-1/manifest.json",
+  "scoreDesktop": 100,
+  "scoreMobile": 100,
+  "scoreOverall": 100,
+  "passed": true,
+  "scoreBreakdown": [],
+  "whyBelowThreshold": "",
+  "topIssues": [],
+  "mustFix": [],
+  "quickWins": []
+}
