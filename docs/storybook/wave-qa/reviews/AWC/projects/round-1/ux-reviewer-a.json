@@ -1,0 +1,31 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "A",
+  "deployable": "AWC",
+  "pageId": "projects",
+  "role": "ux",
+  "captureRound": 1,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/projects/round-1/manifest.json",
+  "scoreDesktop": 97,
+  "scoreMobile": 95,
+  "scoreOverall": 96,
+  "passed": true,
+  "scoreBreakdown": [
+    {
+      "area": "mobile-bottom-nav",
+      "pointsDeducted": 3,
+      "reason": "Fixed bottom tab bar crowds the New project form and Save project CTA on 390px ready capture."
+    },
+    {
+      "area": "error-vs-empty",
+      "pointsDeducted": 1,
+      "reason": "Error Storybook state still reads like empty (no projects yet) so failure UX is not distinguishable at a glance."
+    }
+  ],
+  "whyBelowThreshold": "",
+  "topIssues": ["Mobile chrome competes with create-project form"],
+  "mustFix": [],
+  "quickWins": [
+    "Surface a distinct inline error panel when /api/projects fails"
+  ]
+}

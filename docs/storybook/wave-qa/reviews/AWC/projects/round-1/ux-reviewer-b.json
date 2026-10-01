@@ -1,0 +1,36 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "B",
+  "deployable": "AWC",
+  "pageId": "projects",
+  "role": "ux",
+  "captureRound": 1,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/projects/round-1/manifest.json",
+  "scoreDesktop": 96,
+  "scoreMobile": 96,
+  "scoreOverall": 96,
+  "passed": true,
+  "scoreBreakdown": [
+    {
+      "area": "loading-dual-message",
+      "pointsDeducted": 2,
+      "reason": "Loading projects line sits above the full New project form, which can feel like two parallel tasks during fetch."
+    },
+    {
+      "area": "mobile-project-card",
+      "pointsDeducted": 1,
+      "reason": "Ready mobile card kebab and path truncation are usable but tight against the search field."
+    },
+    {
+      "area": "error-state",
+      "pointsDeducted": 1,
+      "reason": "Error preview banner does not pair with an in-panel recovery message; body mirrors empty state."
+    }
+  ],
+  "whyBelowThreshold": "",
+  "topIssues": ["Error story should not masquerade as empty"],
+  "mustFix": [],
+  "quickWins": [
+    "Add retry link beside loading/error banners in Storybook only if product adds API error UI"
+  ]
+}
