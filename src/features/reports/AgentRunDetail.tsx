@@ -27,7 +27,11 @@ export default function AgentRunDetail({ runId }: AgentRunDetailProps) {
   }
 
   if (loadError && run === null) {
-    return <AgentRunDetailLoadErrorPanel onRetry={() => void reloadRun()} />;
+    return (
+      <AgentRunDetailLoadErrorPanel
+        onRetry={() => void reloadRun({ showLoading: true })}
+      />
+    );
   }
 
   if (run === null) {

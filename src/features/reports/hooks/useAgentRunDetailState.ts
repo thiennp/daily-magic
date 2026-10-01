@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import {
   getAgentRunLocalCache,
@@ -20,10 +20,15 @@ export function useAgentRunDetailState(runId: string): {
   readonly isLoading: boolean;
   readonly loadError: boolean;
   readonly setFeedback: (feedback: CapabilityFeedbackRecord) => void;
-  readonly reloadRun: () => Promise<void>;
+  readonly reloadRun: (options?: {
+    readonly showLoading?: boolean;
+  }) => Promise<void>;
 } {
   const cachedRun = getAgentRunLocalCache(runId);
   const [run, setRun] = useState<EnrichedAgentRunRecord | null>(() =>
+    cachedRun ? toEnrichedAgentRun(cachedRun) : null,
+  );
+  const runRef = useRef<EnrichedAgentRunRecord | null>(
     cachedRun ? toEnrichedAgentRun(cachedRun) : null,
   );
   const [isLoading, setIsLoading] = useState(true);
@@ -31,17 +36,35 @@ export function useAgentRunDetailState(runId: string): {
   const [sseActive, setSseActive] = useState(false);
   const { feedback, setFeedback } = useAgentRunDetailFeedback(runId, true);
 
-  const reloadRun = useCallback(async (): Promise<void> => {
-    const outcome = await fetchAgentRunDetail(runId);
-    if (outcome.status === "ok") {
-      upsertAgentRunLocalCache(outcome.run);
-      setRun(outcome.run);
-      setLoadError(false);
-    } else if (outcome.status === "error" && run === null) {
-      setLoadError(true);
-    }
-    setIsLoading(false);
-  }, [run, runId]);
+  useEffect(() => {
+    runRef.current = run;
+  }, [run]);
+
+  const reloadRun = useCallback(
+    async (options?: { readonly showLoading?: boolean }): Promise<void> => {
+      const showLoading = options?.showLoading === true;
+      if (showLoading) {
+        setIsLoading(true);
+        setLoadError(false);
+      }
+
+      const outcome = await fetchAgentRunDetail(runId);
+      if (outcome.status === "ok") {
+        upsertAgentRunLocalCache(outcome.run);
+        setRun(outcome.run);
+        setLoadError(false);
+      } else if (outcome.status === "not_found") {
+        setLoadError(false);
+      } else if (outcome.status === "error" && runRef.current === null) {
+        setLoadError(true);
+      }
+
+      if (showLoading) {
+        setIsLoading(false);
+      }
+    },
+    [runId],
+  );
 
   useAgentRunRecordSync((updatedRun) => {
     if (updatedRun.id === runId) {
@@ -83,7 +106,7 @@ export function useAgentRunDetailState(runId: string): {
 
     const pollMs = sseActive ? POLL_INTERVAL_MS * 12 : POLL_INTERVAL_MS * 6;
     const timer = setInterval(() => {
-      void reloadRun();
+      void reloadRun({ showLoading: false });
     }, pollMs);
 
     return () => {

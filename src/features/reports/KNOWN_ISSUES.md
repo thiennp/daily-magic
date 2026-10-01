@@ -58,6 +58,14 @@
 
 **Fix:** Drive the list from dashboard-bus cache patches (`AGENT_RUNS_LOCAL_CACHE_UPDATED_EVENT`); keep `useAgentRunsRemoteSync` slow poll (~60s) as a safety net only. `useAgentRunsList.test.ts` (REPORTS-006).
 
+## REPORTS-010 — Report detail stuck on load-error after 404 poll
+
+**Symptom:** `/reports/[runId]` showed “Could not load this run” even when the API returned 404 (run missing), and **Try again** did not show a loading state.
+
+**Cause:** Background `reloadRun` polls did not clear `loadError` on `not_found`, and every poll called `setIsLoading(false)`. Manual retry reused the same silent reload path.
+
+**Fix:** Clear `loadError` on `not_found` in `reloadRun`, use `showLoading: true` only for manual retry (poll/SSE stay silent), and read `run` via a ref so `reloadRun` stays stable. `useAgentRunDetailState.test.ts` (REPORTS-010).
+
 ## REPORTS-009 — Reports list flashed skeleton every ~60s after load-error UX
 
 **Symptom:** Signed-in `/reports` briefly swapped the run list for the loading skeleton about once per minute even when data was already on screen.
