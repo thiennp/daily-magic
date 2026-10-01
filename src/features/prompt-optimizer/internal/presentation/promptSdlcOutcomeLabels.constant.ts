@@ -5,6 +5,8 @@ export type PromptSdlcUiErrorKind =
   | "writer_timeout"
   | "writer_interrupted"
   | "writer_no_reply"
+  | "usage_limit"
+  | "action_required"
   | "timeout"
   | "interrupt"
   | "no_reply";
@@ -16,12 +18,14 @@ export const PROMPT_SDLC_OUTCOME_COPY = {
   timeout: "Timeout",
   interrupt: "Interrupt",
   no_reply: "No reply",
+  usage_limit: "Usage limit",
+  action_required: "Action required",
   useThisOnlyWhenPassed:
-    "Use this prompt only when status is passed — timeout, interrupt, and no_reply are failed kinds, not success.",
+    "Use this prompt only when status is passed — timeout, interrupt, no_reply, usage_limit, and action_required are failed kinds, not success.",
   recommendTimeoutTip:
     "Module writers use a fail-clean timeout budget (~600s lane). Judge/heuristic recommendTimeoutMs may tune budgets; stuck writers may escalate with SIGKILL. Timeout→improver (T4) is parked.",
   failCleanTip:
-    "Timeout, interrupt, and no_reply fail cleanly — never silent success.",
+    "Timeout, interrupt, no_reply, usage_limit, and action_required fail cleanly — never silent success.",
 } as const;
 
 export const labelPromptSdlcErrorKind = (
@@ -29,6 +33,12 @@ export const labelPromptSdlcErrorKind = (
 ): string | null => {
   if (errorKind === null || errorKind === undefined) {
     return null;
+  }
+  if (errorKind === "usage_limit") {
+    return PROMPT_SDLC_OUTCOME_COPY.usage_limit;
+  }
+  if (errorKind === "action_required") {
+    return PROMPT_SDLC_OUTCOME_COPY.action_required;
   }
   const normalized = errorKind.replace(/^writer_/, "");
   if (normalized === "timeout") {

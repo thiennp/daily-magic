@@ -42,7 +42,11 @@ describe("readPromptSdlcWriterOutput", () => {
         stderr: "",
         replyFileText: raw,
       }),
-    ).toEqual({ ok: false, errorMessage: raw });
+    ).toEqual({
+      ok: false,
+      errorMessage: raw,
+      errorKind: "action_required",
+    });
   });
 
   it("asks Codex to run outside a git repo and keeps the last message", () => {

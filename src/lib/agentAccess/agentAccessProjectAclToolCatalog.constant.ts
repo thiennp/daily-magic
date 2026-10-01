@@ -76,17 +76,4 @@ export const AGENT_ACCESS_PROJECT_ACL_TOOLS: readonly AgentAccessToolDefinition[
         additionalProperties: false,
       },
     },
-    {
-      name: "mint_allow_claim",
-      description:
-        "Mint a short-lived ACL allow-claim for local peer sync gating. Not a content token. Validation re-checks membership.",
-      inputSchema: {
-        type: "object",
-        properties: {
-          projectId: { type: "string" },
-        },
-        required: ["projectId"],
-        additionalProperties: false,
-      },
-    },
   ] as const;

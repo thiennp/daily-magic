@@ -7,15 +7,9 @@ import type {
   AwcProjectActivityFirstConnectMeta,
   FetchProjectActivityResult,
 } from "@/features/projects/access/types/awcProjectActivityEvent.type";
+import { PROJECT_ACTIVITY_SAFE_DETAIL_KEYS } from "@/lib/projects/acl/projectActivityAllowlist.constant";
 
-const SAFE_DETAIL_KEYS = [
-  "requestId",
-  "membershipId",
-  "folderRefId",
-  "subjectUserId",
-  "outcome",
-  "status",
-] as const;
+const SAFE_DETAIL_KEYS = PROJECT_ACTIVITY_SAFE_DETAIL_KEYS;
 
 const asSafeDetail = (
   value: unknown,

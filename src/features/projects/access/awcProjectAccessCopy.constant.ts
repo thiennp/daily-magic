@@ -1,4 +1,4 @@
-import { AWC_PROJECT_ACCESS_FIRST_CONNECT } from "@/features/projects/access/awcProjectAccessFirstConnect.constant";
+import { PROJECT_ACL_FIRST_CONNECT } from "@/lib/projects/acl/projectAclFirstConnect.constant";
 
 export const AWC_PROJECT_ACCESS_COPY = {
   title: "Project Access",
@@ -7,7 +7,7 @@ export const AWC_PROJECT_ACCESS_COPY = {
   pendingHeading: "Pending requests",
   pendingEmpty: "No pending access requests.",
   membersHeading: "Members",
-  membersEmpty: `No approved members yet. ${AWC_PROJECT_ACCESS_FIRST_CONNECT.emptyStateNote}`,
+  membersEmpty: `No approved members yet. ${PROJECT_ACL_FIRST_CONNECT.emptyStateNote}`,
   folderRefsHeading: "Folder refs",
   folderRefsHint:
     "Many machines × many folders. Paths only — project files stay on local machines.",
@@ -21,11 +21,11 @@ export const AWC_PROJECT_ACCESS_COPY = {
   machineRefPlaceholder: "Machine or device ref",
   folderPathPlaceholder: "Folder path",
   remove: "Remove",
-  firstConnectRole: AWC_PROJECT_ACCESS_FIRST_CONNECT.role,
-  firstConnectNote: AWC_PROJECT_ACCESS_FIRST_CONNECT.emptyStateNote,
+  firstConnectRole: PROJECT_ACL_FIRST_CONNECT.role,
+  firstConnectNote: PROJECT_ACL_FIRST_CONNECT.emptyStateNote,
   activityHeading: "Activity",
   activityHonesty:
-    "Membership and status events — not a cloud content store.",
+    "Membership and status events via list_project_activity / GET …/activity — not a cloud content store.",
   activityFilterLabel: "Filter",
   activityFilterAll: "All types",
   activityLoading: "Loading activity…",

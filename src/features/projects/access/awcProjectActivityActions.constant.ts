@@ -1,19 +1,13 @@
-/** Allowlisted G1 activity actions — membership/status only, never content. */
-export const AWC_PROJECT_ACTIVITY_ACTIONS = [
-  "request",
-  "approve",
-  "deny",
-  "revoke",
-  "add_folder_ref",
-  "remove_folder_ref",
-  "allow_claim_ok",
-  "allow_claim_deny",
-  "membership_check_ok",
-  "membership_check_deny",
-] as const;
+import {
+  isProjectActivityAllowlistedAction,
+  PROJECT_ACTIVITY_ALLOWLISTED_ACTIONS,
+  type ProjectActivityAction,
+} from "@/lib/projects/acl/projectActivityAllowlist.constant";
 
-export type AwcProjectActivityAction =
-  (typeof AWC_PROJECT_ACTIVITY_ACTIONS)[number];
+/** Allowlisted G1 activity actions — exact bind to API PROJECT_ACTIVITY_ALLOWLISTED_ACTIONS. */
+export const AWC_PROJECT_ACTIVITY_ACTIONS = PROJECT_ACTIVITY_ALLOWLISTED_ACTIONS;
+
+export type AwcProjectActivityAction = ProjectActivityAction;
 
 export const AWC_PROJECT_ACTIVITY_ACTION_LABELS: Record<
   AwcProjectActivityAction,
@@ -34,4 +28,4 @@ export const AWC_PROJECT_ACTIVITY_ACTION_LABELS: Record<
 export const isAwcProjectActivityAction = (
   value: string,
 ): value is AwcProjectActivityAction =>
-  (AWC_PROJECT_ACTIVITY_ACTIONS as readonly string[]).includes(value);
+  isProjectActivityAllowlistedAction(value);

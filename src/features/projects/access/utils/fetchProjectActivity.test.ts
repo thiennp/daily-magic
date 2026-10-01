@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { fetchProjectActivity } from "@/features/projects/access/utils/fetchProjectActivity";
+import { PROJECT_ACL_FIRST_CONNECT } from "@/lib/projects/acl/projectAclFirstConnect.constant";
 
 describe("fetchProjectActivity", () => {
   afterEach(() => {
@@ -20,7 +21,7 @@ describe("fetchProjectActivity", () => {
     }
   });
 
-  it("parses allowlisted events and filters by action", async () => {
+  it("parses allowlisted events, firstConnect, and filters by action", async () => {
     vi.stubGlobal(
       "fetch",
       vi.fn(
@@ -48,8 +49,22 @@ describe("fetchProjectActivity", () => {
                   at: "2026-10-01T11:00:00.000Z",
                   detail: {},
                 },
+                {
+                  id: "e3",
+                  projectId: "p1",
+                  action: "handoff",
+                  actorUserId: "owner",
+                  targetUserId: null,
+                  at: "2026-10-01T12:00:00.000Z",
+                  detail: {},
+                },
               ],
               nextCursor: null,
+              firstConnect: {
+                role: PROJECT_ACL_FIRST_CONNECT.role,
+                scopes: PROJECT_ACL_FIRST_CONNECT.scopes,
+                note: PROJECT_ACL_FIRST_CONNECT.emptyStateNote,
+              },
             }),
             { status: 200, headers: { "Content-Type": "application/json" } },
           ),
@@ -66,6 +81,16 @@ describe("fetchProjectActivity", () => {
       // reason must not leak from unsafe detail
       expect(result.events[0]?.detail).not.toHaveProperty("reason");
       expect(result.events[0]?.detail.subjectUserId).toBe("bot-a");
+      expect(result.firstConnect).not.toBeNull();
+      expect(result.firstConnect?.role).toBe("member");
+      expect(result.firstConnect?.scopes).toEqual([
+        "acl:self",
+        "project:meta",
+        "peer_sync",
+      ]);
+      expect(result.firstConnect?.note).toContain(
+        PROJECT_ACL_FIRST_CONNECT.emptyStateNote,
+      );
     }
   });
 });
