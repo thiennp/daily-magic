@@ -1,0 +1,29 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "A",
+  "deployable": "AWC",
+  "pageId": "projects",
+  "role": "copy",
+  "captureRound": 1,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/projects/round-1/manifest.json",
+  "scoreDesktop": 98,
+  "scoreMobile": 97,
+  "scoreOverall": 98,
+  "passed": true,
+  "scoreBreakdown": [
+    {
+      "area": "cowork-hint",
+      "pointsDeducted": 1,
+      "reason": "ACL/registry paragraph is accurate but dense; AWC acronym may need glossary context for new operators."
+    },
+    {
+      "area": "arrow-style",
+      "pointsDeducted": 1,
+      "reason": "Open a project -> Project Access uses ASCII arrow instead of typographic arrow used elsewhere."
+    }
+  ],
+  "whyBelowThreshold": "",
+  "topIssues": [],
+  "mustFix": [],
+  "quickWins": ["Use → in the Project Access hint for consistency"]
+}

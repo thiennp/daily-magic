@@ -1,0 +1,31 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "A",
+  "deployable": "AWC",
+  "pageId": "projects",
+  "role": "ui",
+  "captureRound": 1,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/projects/round-1/manifest.json",
+  "scoreDesktop": 98,
+  "scoreMobile": 96,
+  "scoreOverall": 97,
+  "passed": true,
+  "scoreBreakdown": [
+    {
+      "area": "mobile-form-spacing",
+      "pointsDeducted": 2,
+      "reason": "Dashed New project panel sits flush against bottom nav on mobile ready/empty captures."
+    },
+    {
+      "area": "project-card-menu",
+      "pointsDeducted": 1,
+      "reason": "Kebab control alignment is correct after icon fix; minor vertical offset vs title baseline on desktop."
+    }
+  ],
+  "whyBelowThreshold": "",
+  "topIssues": [],
+  "mustFix": [],
+  "quickWins": [
+    "Add pb-safe padding on app-narrow Storybook shell for mobile captures"
+  ]
+}
