@@ -5,7 +5,6 @@ import {
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
 import { sumPromptSdlcLocalTokens } from "./sumPromptSdlcLocalTokens";
 
-import { readPromptSdlcBudgetStop } from "../../../../adapters/promptSdlcAwcCore";
 /** Spent tokens for budget checks: wizard cumulative when present, else cycle sum. */
 export const readPromptSdlcCycleSpentTokens = (
   cycle: PromptSdlcLocalCycle,

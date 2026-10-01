@@ -1,5 +1,3 @@
-import os from "node:os";
-
 import {
   defaultPromptSdlcCostControls,
   PROMPT_SDLC_MAX_ROUNDS,

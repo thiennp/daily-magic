@@ -148,5 +148,4 @@ export type {
   PromptSdlcCostProposal,
   PromptSdlcCostConfirm,
   PromptSdlcCostControlKnobs,
-  PromptSdlcCostControl,
 } from "@/lib/promptOptimizer/types/PromptSdlcCostControl.type";

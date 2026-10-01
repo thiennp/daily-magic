@@ -6,7 +6,6 @@ import {
   PROMPT_SDLC_DEFAULT_MAX_TRIALS,
   readPromptSdlcWizardModulePassScore,
 } from "../../../../adapters/promptSdlcAwcCore";
-import { PROMPT_SDLC_DEFAULT_MAX_TRIALS } from "../../../../adapters/promptSdlcAwcCore";
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
 import { displayPromptSdlcLocalFolder } from "./promptSdlcLocalFolder";
 

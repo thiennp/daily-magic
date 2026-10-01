@@ -1,6 +1,7 @@
-import { isPromptSdlcTerminalStatus } from "../../../../adapters/promptSdlcAwcCore";
-import { summarizePromptSdlcWizardCompletion } from "../../../../adapters/promptSdlcAwcCore";
-
+import {
+  isPromptSdlcTerminalStatus,
+  summarizePromptSdlcWizardCompletion,
+} from "../../../../adapters/promptSdlcAwcCore";
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
 import { renderPromptSdlcWizardModulePromptList } from "./renderPromptSdlcWizardModulePromptList";
 import { renderPromptSdlcWizardModuleTable } from "./renderPromptSdlcWizardModuleTable";

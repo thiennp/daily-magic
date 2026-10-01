@@ -2,8 +2,8 @@ import {
   buildPromptSdlcWizardStepIndex,
   isPromptSdlcTerminalStatus,
   summarizePromptSdlcWizardCompletion,
+  readPromptSdlcWizardModulePassScore,
 } from "../../../../adapters/promptSdlcAwcCore";
-import { readPromptSdlcWizardModulePassScore } from "../../../../adapters/promptSdlcAwcCore";
 import {
   labelPromptSdlcLocalModel,
   PROMPT_SDLC_MANUAL_ACTOR,
@@ -295,7 +295,10 @@ export const describePromptSdlcLocalActivity = (
       });
     }
     return unusableReplyActivity(cycle, {
-      title: kindLabel !== null ? `This run failed — ${kindLabel}.` : "This run failed.",
+      title:
+        kindLabel !== null
+          ? `This run failed — ${kindLabel}.`
+          : "This run failed.",
       detail:
         message.length > 0
           ? message

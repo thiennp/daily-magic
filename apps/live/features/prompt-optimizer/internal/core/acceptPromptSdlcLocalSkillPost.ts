@@ -1,5 +1,7 @@
-import { isPromptSdlcTerminalStatus } from "../../../../adapters/promptSdlcAwcCore";
-import { selectPromptSdlcBestPrompt } from "../../../../adapters/promptSdlcAwcCore";
+import {
+  isPromptSdlcTerminalStatus,
+  selectPromptSdlcBestPrompt,
+} from "../../../../adapters/promptSdlcAwcCore";
 import { readPromptSdlcLocalCycle } from "./promptSdlcLocalStore";
 import { promptSdlcLocalWorkingDirectory } from "./promptSdlcLocalFolder";
 import { describePromptSdlcWriterTerminalFailure } from "./readPromptSdlcWriterOutput";
@@ -53,7 +55,10 @@ export const acceptPromptSdlcLocalSkillPost = (input: {
   const back = (query: string): string =>
     `/prompt-optimizer?cycle=${encodeURIComponent(cycleId)}&${query}`;
   if (cycle === null) {
-    return { kind: "redirect", location: "/prompt-optimizer?skillError=missing" };
+    return {
+      kind: "redirect",
+      location: "/prompt-optimizer?skillError=missing",
+    };
   }
   if (!isPromptSdlcTerminalStatus(cycle.status)) {
     return { kind: "redirect", location: back("skillError=working") };
