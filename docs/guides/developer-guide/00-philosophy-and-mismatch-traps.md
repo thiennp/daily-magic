@@ -10,8 +10,8 @@ Same product contract as the [user guide ch.0](../user-guide/00-philosophy-and-v
 | --------------- | -------------------------------------------------------------------------------------- |
 | **daily-magic** | Git repository folder and historical name                                              |
 | **Agent Witch** | Product brand; production origin **https://www.agentwitch.com**                        |
-| **AWC**         | Cloud console (this Next.js app + `server.ts`)                                         |
-| **AWL**         | Mac-local UI at `http://127.0.0.1:43347`                                               |
+| **AWC**         | **Agent Witch Cloud** (this Next.js app + `server.ts` at www.agentwitch.com)           |
+| **AWL**         | **Agent Witch Local** — Mac-local UI at `http://127.0.0.1:43347`                       |
 | **AWB**         | Loopback bridge (`127.0.0.1:47892` / `47893`) — `/health`, `/identity`                 |
 | **AWI**         | Install/runtime: Mac LaunchAgents, or x86_64 Linux systemd user unit, `~/.agent-witch` |
 

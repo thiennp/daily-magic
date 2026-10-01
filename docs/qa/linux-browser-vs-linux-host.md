@@ -11,15 +11,15 @@
 
 ## Short answer
 
-**The website can be used from Linux.** Agent Witch Console (AWC) at `https://www.agentwitch.com` is a normal browser app. A Linux desktop can sign in, read Runs, and send Tasks to a host that is already live.
+**The website can be used from Linux.** Agent Witch Cloud (AWC) at `https://www.agentwitch.com` is a normal browser app. A Linux desktop can sign in, read Runs, and send Tasks to a host that is already live.
 
-**Running the agent on that Linux machine is a separate, narrower path.** The install script can pair an **x86_64 Linux** host (AWI) with `platform: "linux"`, a systemd user unit, and the same WebSocket dispatch rules as a Mac. Desktop Linux Home shows that install command. The device picker labels the row **Linux device**. **Agent Witch Live (AWL)** and the loopback bridge (**AWB**, “this computer”) stay **Mac-only**. Many status lines still say “Your Mac”.
+**Running the agent on that Linux machine is a separate, narrower path.** The install script can pair an **x86_64 Linux** host (AWI) with `platform: "linux"`, a systemd user unit, and the same WebSocket dispatch rules as a Mac. Desktop Linux Home shows that install command. The device picker labels the row **Linux device**. **Agent Witch Local (AWL)** and the loopback bridge (**AWB**, “this computer”) stay **Mac-only**. Many status lines still say “Your Mac”.
 
 ## Details
 
 | Surface                                        | Linux today                                                                                                      | What people mean by “access”           |
 | ---------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- | -------------------------------------- |
-| **AWC** Console (`www.agentwitch.com`)         | Yes, any desktop browser                                                                                         | Open the product, sign in, watch Runs  |
+| **AWC** Cloud (`www.agentwitch.com`)           | Yes, any desktop browser                                                                                         | Open the product, sign in, watch Runs  |
 | **AWI** host (runs Tasks in a real shell)      | Yes on **x86_64** with `curl`, `tar`, and a systemd **user** session (or foreground). Same pairing token as Mac. | “Install Agent Witch on this computer” |
 | **AWL** (`http://127.0.0.1:43347`)             | No. Mac-local UI                                                                                                 | Projects, folders, local knowledge     |
 | **AWB** identity (`127.0.0.1:47892` / `47893`) | No. The browser probes identity only when the user agent is **macOS**                                            | “This computer” / “this Mac” badge     |

@@ -12,13 +12,13 @@ export const buildAgentWitchLocalHarnessInstalledSection = (input: {
   readonly cloudAppOrigin: string;
 }): string => {
   const installLink = `${input.cloudAppOrigin.replace(/\/$/, "")}/marketplace`;
-  const managePlaybooks = `<a class="field-link" href="${escapeHtml(installLink)}" target="_blank" rel="noopener noreferrer">Browse playbooks in Agent Witch Console</a>`;
+  const managePlaybooks = `<a class="field-link" href="${escapeHtml(installLink)}" target="_blank" rel="noopener noreferrer">Browse playbooks in Agent Witch Cloud</a>`;
 
   if (input.installed.sets.length === 0) {
     return `<section class="card harness-installed">
       <p class="eyebrow">Playbooks</p>
       <h2>Installed on this Mac</h2>
-      <p class="lede">Nothing installed yet. Install playbooks in Agent Witch Console — files land in your profile harness on this Mac. ${managePlaybooks}</p>
+      <p class="lede">Nothing installed yet. Install playbooks in Agent Witch Cloud — files land in your profile harness on this Mac. ${managePlaybooks}</p>
     </section>`;
   }
 
@@ -39,7 +39,7 @@ export const buildAgentWitchLocalHarnessInstalledSection = (input: {
   return `<section class="card harness-installed">
       <p class="eyebrow">Playbooks</p>
       <h2>Installed on this Mac</h2>
-      <p class="lede">${input.installed.sets.length} set(s) from Agent Witch Live. Link them to a repository under <a href="/projects">Projects</a>. ${managePlaybooks}</p>
+      <p class="lede">${input.installed.sets.length} set(s) from Agent Witch Local. Link them to a repository under <a href="/projects">Projects</a>. ${managePlaybooks}</p>
       ${manifestMeta}
       <ul class="harness-installed-set-list">${setRows}</ul>
     </section>`;

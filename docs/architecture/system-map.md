@@ -4,7 +4,7 @@
 
 ```mermaid
 flowchart LR
-  AWC[AWC Console\nBrowser + Next.js]
+  AWC[AWC Cloud\nBrowser + Next.js]
   Node[Node server\nserver.ts]
   Hub[Agent Witch hub\nin-process]
   Mac[AWI · AWL :43347 · AWB :47892]

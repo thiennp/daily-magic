@@ -28,7 +28,7 @@ const buildCompositionList = (
     .map(
       (item) => `<li class="harness-installed-set">
         <p><strong>${escapeHtml(item.name)}</strong>${item.versionLabel ? ` <span class="muted mono">v${escapeHtml(item.versionLabel)}</span>` : ""}</p>
-        <p class="muted">Bound in Agent Witch Console — materialize from Harness tab or pull into repo (coming soon).</p>
+        <p class="muted">Bound in Agent Witch Cloud — materialize from Harness tab or pull into repo (coming soon).</p>
       </li>`,
     )
     .join("")}</ul>`;
@@ -45,7 +45,7 @@ const buildEmptyHarnessTab = (): string => `<div class="stack">
 const buildBoundHarnessPullTab = (project: AgentWitchProjectView): string =>
   `<form method="POST" action="/projects/pull-bound-harness" class="stack">
         <input type="hidden" name="projectId" value="${escapeHtml(project.id)}" />
-        <p class="lede">This project’s playbook is linked in Agent Witch Console. Pull writes those files into this repo’s <code>.cursor</code> tree.</p>
+        <p class="lede">This project’s playbook is linked in Agent Witch Cloud. Pull writes those files into this repo’s <code>.cursor</code> tree.</p>
         <div class="actions">
           <button class="btn btn-primary" type="submit">Pull into repo</button>
         </div>
@@ -102,7 +102,7 @@ const buildKnowledgeTab = (input: {
       : `${input.candidateCount} lessons ready to promote`;
 
   return `<section class="stack">
-      <p class="lede">${escapeHtml(label)} from recent runs. Review in Agent Witch Console or promote below.</p>
+      <p class="lede">${escapeHtml(label)} from recent runs. Review in Agent Witch Cloud or promote below.</p>
       <form method="POST" action="/project/knowledge/promote-all" class="actions">
         <input type="hidden" name="projectId" value="${escapeHtml(input.projectId)}" />
         <button class="btn btn-secondary" type="submit">Mark all as promoted (metadata)</button>

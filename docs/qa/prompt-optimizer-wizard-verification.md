@@ -5,7 +5,7 @@
 - verify prompt SDLC wizard steps 1 2 3 4
 - dogfood prompt optimizer wizard bundle 172
 - wizard evaluate separate optimize round logs step 4
-- kiểm tra wizard prompt optimizer Agent Witch Live
+- kiểm tra wizard prompt optimizer Agent Witch Local
 
 ## Short answer
 

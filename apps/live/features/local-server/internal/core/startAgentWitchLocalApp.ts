@@ -168,7 +168,7 @@ const loadCloudProjectsForLocalApp = async (
       ok: false,
       projects: [],
       message:
-        "Mac client config missing — pair this Mac in Agent Witch Console to load projects.",
+        "Mac client config missing — pair this Mac in Agent Witch Cloud to load projects.",
     };
   }
 

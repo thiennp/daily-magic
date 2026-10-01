@@ -13,7 +13,7 @@ Vocabulary: [Chapter 0](00-philosophy-and-vocabulary.md). One runtime, many surf
 | User-facing idea | What it is                                                        | Where it lives                                                  |
 | ---------------- | ----------------------------------------------------------------- | --------------------------------------------------------------- |
 | **Playbook**     | Saved behavior: prompts, rules, templates                         | **Library**, marketplace listings, harness files on the **Mac** |
-| **Capability**   | A published **agent offering** (metadata, version, policy)        | Cloud (Agent Witch Console)                                     |
+| **Capability**   | A published **agent offering** (metadata, version, policy)        | Cloud (Agent Witch Cloud)                                       |
 | **Workflow**     | A capability shape with a **form** (and sometimes a step graph)   | Cloud                                                           |
 | **Harness**      | Rules/skills/commands **on disk** under `~/.agent-witch/harness/` | Your **Mac**                                                    |
 
@@ -68,7 +68,7 @@ Marketplace **Install** always asks for a **project** and a **Mac**. The listing
 
 **Start a task** on the install success screen opens New task on that same project, not on Default.
 
-On the Mac, open the same **project** in Agent Witch Live. **Pull into repo** writes the linked playbook into that folder’s `.cursor` tree. If the playbook is already on the Mac, you confirm the sets and pull. If it is only linked in Console, the same button still writes the official playbook files. The project folder must sit under your home directory.
+On the Mac, open the same **project** in Agent Witch Local. **Pull into repo** writes the linked playbook into that folder’s `.cursor` tree. If the playbook is already on the Mac, you confirm the sets and pull. If it is only linked in Console, the same button still writes the official playbook files. The project folder must sit under your home directory.
 
 Each marketplace card includes a **How to use** section (steps, prerequisites, supported writers: Anthropic, OpenAI, Cursor, Google).
 
@@ -102,7 +102,7 @@ When you save a workflow to library, you are saving a **playbook** you can rerun
 
 The console cannot browse your Mac’s disk directly. Set **repository / project folder** via:
 
-- **Agent Witch Live** on the Mac (`127.0.0.1:43347`), or
+- **Agent Witch Local** on the Mac (`127.0.0.1:43347`), or
 - Local **bridge** folder picker when the browser runs on that **Mac**.
 
 See [AWC project folder picker](../../qa/awc-project-folder-path-picker.md) and [AWC vs AWL projects source of truth](../../qa/awc-awl-projects-source-of-truth.md).

@@ -39,7 +39,7 @@ export const buildAgentWitchLocalProjectsPageBody = (input: {
   const cloudBanner = buildAgentWitchLocalCloudBanner({
     cloudAppOrigin: input.cloudAppOrigin,
     manageHref: `${input.cloudAppOrigin}/projects`,
-    manageLabel: "Manage projects in Agent Witch Console",
+    manageLabel: "Manage projects in Agent Witch Cloud",
     body: "Projects are created in the browser. This page chooses their folders on this Mac and links playbooks into each repo’s .cursor tree.",
     syncMessage: input.syncMessage,
     syncOk: input.syncOk,
@@ -47,7 +47,7 @@ export const buildAgentWitchLocalProjectsPageBody = (input: {
 
   const projectRows =
     input.projects.length === 0
-      ? `<p class="empty">No projects loaded yet. Create one in Agent Witch Console, then refresh this page.</p>`
+      ? `<p class="empty">No projects loaded yet. Create one in Agent Witch Cloud, then refresh this page.</p>`
       : `<ul class="project-list">${input.projects
           .map((project) => {
             const counts = input.compositionCountsByProjectId?.[project.id];
@@ -71,7 +71,7 @@ export const buildAgentWitchLocalProjectsPageBody = (input: {
   return `${flash}${cloudBanner}<section class="card">
       <p class="eyebrow">Repositories</p>
       <h1>Projects on this Mac</h1>
-      <p class="lede">Synced from Agent Witch Console for this paired Mac only. Choose a folder per project, then link harness sets into each repo’s <code>.cursor</code> tree (tracked in <code>.agent-witch/materialization.json</code>).</p>
+      <p class="lede">Synced from Agent Witch Cloud for this paired Mac only. Choose a folder per project, then link harness sets into each repo’s <code>.cursor</code> tree (tracked in <code>.agent-witch/materialization.json</code>).</p>
       ${projectRows}
     </section>`;
 };

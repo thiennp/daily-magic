@@ -52,7 +52,7 @@ export default function AwcProjectDetailPanel({
       </p>
       <h2 className={APP_SURFACE_SECTION_TITLE_CLASS}>{project.name}</h2>
       <p className={`mt-1 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
-        View-only on the web. Edit on {deviceDisplayName} in Agent Witch Live.
+        View-only on the web. Edit on {deviceDisplayName} in Agent Witch Local.
       </p>
       <div className="mt-4 flex flex-col gap-3 rounded-xl border border-gray-200/80 bg-gray-50/80 p-4 dark:border-gray-800/80 dark:bg-white/[0.03] sm:flex-row sm:items-center sm:justify-between">
         <AwcProjectPresenceBadge

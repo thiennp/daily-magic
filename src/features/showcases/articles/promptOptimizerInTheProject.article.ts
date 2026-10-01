@@ -9,7 +9,7 @@ const promptOptimizerInTheProject: ShowcaseArticle = {
   supportLevel: "full",
   readMinutes: 3,
   whatYouNeed: [
-    "Agent Witch Live on this Mac",
+    "Agent Witch Local on this Mac",
     "A project folder the prompt is about",
   ],
   tryNext: {
@@ -32,7 +32,7 @@ const promptOptimizerInTheProject: ShowcaseArticle = {
     {
       heading: "What you do",
       bullets: [
-        "Open the prompt optimizer in Agent Witch Live on this Mac",
+        "Open the prompt optimizer in Agent Witch Local on this Mac",
         "Paste the prompt and the goal, and choose the project folder",
         "Choose who scores the prompt and who rewrites it, or do one of those steps yourself",
         "Set the pass score. The usual mark is 90",

@@ -2,13 +2,13 @@
 
 ## Query aliases
 
-- delete Mac from Agent Witch Console
+- delete Mac from Agent Witch Cloud
 - remove device forgets local connection
 - unknown identity wipes AWI AWB
 - xoa may mac tren agentwitch
 - AWC dong y xoa Mac thi local xoa ket noi
 - does deleting a Mac uninstall Ollama
-- deleted Mac still running Agent Witch Live
+- deleted Mac still running Agent Witch Local
 
 ## Short answer
 

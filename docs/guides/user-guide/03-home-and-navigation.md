@@ -185,5 +185,5 @@ Exact paths may shift; trust nav labels over memorizing URLs.
 - Runs New task Playbooks nav, solo vs team shell
 - trang chu Agent Witch, dieu huong, trang thai Mac
 - where is New task, Mac status banner meaning
-- Agent Witch Console primary navigation marketplace library
+- Agent Witch Cloud primary navigation marketplace library
 - team learning Runs library nav, tiet kiem ngữ cảnh tim run cu

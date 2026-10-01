@@ -1,6 +1,6 @@
 # Prompt optimizer — agent instructions
 
-1. The product surface is Agent Witch Live, not the console composer.
+1. The product surface is Agent Witch Local, not the console composer.
 2. Do not add a Mac picker. The page restores the last folder, judge, and improver. The first visit leaves judge and improver blank. Each list includes I'll score it and I'll rewrite it. A writer that has passed its check is not checked again until that writer returns an error. A judge reply needs a score and a reason.
 3. Do not use Ollama or other small local models.
 4. Writer calls run in the folder the user chose. The first visit uses the home directory. Later visits use the last folder that still exists. Keep the reply file outside that folder. The agent API does not read that saved choice.

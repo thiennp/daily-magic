@@ -17,13 +17,13 @@ export default function PromptSdlcPage(): ReactElement {
     <div className="space-y-6">
       <AppPageHeader
         title="Prompt optimizer"
-        description="Run the four-step prompt optimizer wizard in Agent Witch Live on this Mac. A judge scores your prompt; a runner executes module trials; writers use your Playbook (team standards) and project code in the folder you choose."
+        description="Run the four-step prompt optimizer wizard in Agent Witch Local on this Mac. A judge scores your prompt; a runner executes module trials; writers use your Playbook (team standards) and project code in the folder you choose."
       />
       <ol
         className={`${APP_SURFACE_BODY_TEXT_CLASS} max-w-xl list-decimal space-y-4 pl-5`}
       >
         <li>Install Agent Witch on your Mac if you have not already.</li>
-        <li>Open Agent Witch Live and open Prompt optimizer.</li>
+        <li>Open Agent Witch Local and open Prompt optimizer.</li>
         <li>
           Paste the prompt and goal, choose the project folder, then pick judge
           and improver models.
@@ -37,11 +37,11 @@ export default function PromptSdlcPage(): ReactElement {
           href={PROMPT_SDLC_AWL_PAGE_HREF}
           className={APP_SURFACE_TEXT_LINK_CLASS}
         >
-          Open in Agent Witch Live
+          Open in Agent Witch Local
         </a>
       </div>
       <p className={APP_SURFACE_BODY_TEXT_CLASS}>
-        Agent Witch Live is the Mac app ({PROMPT_SDLC_AWL_PAGE_HREF}). This
+        Agent Witch Local is the Mac app ({PROMPT_SDLC_AWL_PAGE_HREF}). This
         console page does not run the optimizer.
       </p>
       <p>
@@ -56,7 +56,7 @@ export default function PromptSdlcPage(): ReactElement {
           href={PROMPT_SDLC_AWL_GUIDE_HREF}
           className={APP_SURFACE_TEXT_LINK_CLASS}
         >
-          Instructions in Agent Witch Live
+          Instructions in Agent Witch Local
         </a>
       </p>
     </div>

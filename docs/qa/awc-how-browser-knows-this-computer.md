@@ -3,7 +3,7 @@
 ## Query aliases
 
 - AWC this computer badge
-- How does Agent Witch Console know my Mac
+- How does Agent Witch Cloud know my Mac
 - this Mac vs Connect this Mac
 - tokenHash pairing token local identity
 - lam sao AWC biet may cua nguoi dung la may nao

@@ -41,7 +41,7 @@ Full table: [Agent Witch deployables](../../product/agent-witch-deployables.md).
 ## Trust boundary: cloud vs Mac
 
 ```text
-Browser (you)  ──HTTPS──►  Agent Witch Console + Postgres (runs, workflows, accounts)
+Browser (you)  ──HTTPS──►  Agent Witch Cloud + Postgres (runs, workflows, accounts)
                               │
                               │ WebSocket hub (paired Mac only)
                               ▼
@@ -122,7 +122,7 @@ Agent Witch is built for teams who accept that **running an agent on a Mac is eq
 
 ## Multi-instance production (brief)
 
-Agent Witch Console may run on more than one server replica. **Writer dispatch** requires the live Mac WebSocket on the node handling your send request. During deploys or load balancing, you may briefly see **Reconnecting** even when AWI on the Mac is healthy. The product fails closed rather than dropping **Tasks** on the wrong node.
+Agent Witch Cloud may run on more than one server replica. **Writer dispatch** requires the live Mac WebSocket on the node handling your send request. During deploys or load balancing, you may briefly see **Reconnecting** even when AWI on the Mac is healthy. The product fails closed rather than dropping **Tasks** on the wrong node.
 
 User impact and mitigations: [AWC Mac reconnecting vs local live](../../qa/awc-mac-reconnecting-vs-local-live.md) · OPEN-002 in [Agent Witch KNOWN_ISSUES](../../../src/features/agent-witch/KNOWN_ISSUES.md).
 

@@ -37,7 +37,7 @@ Architecture for multi-instance presence and the dispatch outbox: `docs/adr/0005
 
 ## OPEN-004 — AWL Status showed WebSocket connected after the socket closed
 
-**Symptom:** Agent Witch Live **Status** could show **Connected** for up to ~2 minutes after the Mac client disconnected, while **agentwitch.com** already listed the Mac as offline or reconnecting.
+**Symptom:** Agent Witch Local **Status** could show **Connected** for up to ~2 minutes after the Mac client disconnected, while **agentwitch.com** already listed the Mac as offline or reconnecting.
 
 **Cause:** `connection-health.json` kept a fresh `lastAckAt` until it aged out; AWL reads that file in a separate process from the WebSocket client.
 

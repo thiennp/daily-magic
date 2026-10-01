@@ -12,7 +12,7 @@ Read **`CLAUDE.md`** for project overview, stack, and verification commands.
 - **Product / production:** **Agent Witch** at **`https://www.agentwitch.com`** (same codebase).
 - **Not Agent Witch:** `daily-magic.d.energie.check24.de` and other CHECK24 hosts — do not use for Mac `wsUrl` or deploy recovery unless the user explicitly says so.
 
-**Deployables (abbrev):** **AWC** Console (cloud) · **AWL** Live (`:43347`) · **AWB** Bridge (`47892`/`47893`) · **AWI** Install (Mac bundle). See **`docs/product/agent-witch-deployables.md`** · rule **`rules-agent-witch-deployables.mdc`**.
+**Deployables (abbrev):** **AWC** Cloud (`www.agentwitch.com`) · **AWL** Local (`:43347`) · **AWB** Bridge (`47892`/`47893`) · **AWI** Install (Mac bundle). See **`docs/product/agent-witch-deployables.md`** · rule **`rules-agent-witch-deployables.mdc`**. AWC = **Agent Witch Cloud** (not “Console”); AWL = **Agent Witch Local** (not “Live”); legacy folders `apps/console/` and `apps/live/`.
 
 Details: **`docs/product/repo-name-and-hosting.md`** · rule **`rules-product-hosting-boundaries.mdc`**.
 

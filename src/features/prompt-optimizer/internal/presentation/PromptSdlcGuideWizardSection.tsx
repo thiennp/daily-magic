@@ -10,7 +10,7 @@ export default function PromptSdlcGuideWizardSection(): ReactElement {
     <section className="space-y-3">
       <h2 className={APP_SURFACE_SECTION_TITLE_CLASS}>Four-step wizard</h2>
       <p className={APP_SURFACE_BODY_TEXT_CLASS}>
-        <strong>Run</strong> in Agent Witch Live starts the wizard: (1)
+        <strong>Run</strong> in Agent Witch Local starts the wizard: (1)
         generalize placeholders, (2) evaluate revisions (pass 70, up to five
         rounds; judge scores prompt text only), (3) separate into modules (chain
         or parallel), (4) optimize each module with one runner trial and judge

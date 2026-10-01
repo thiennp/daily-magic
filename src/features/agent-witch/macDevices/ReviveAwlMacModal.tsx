@@ -21,10 +21,10 @@ export default function ReviveAwlMacModal({
   return (
     <Modal isOpen={isOpen} onClose={onClose} className="max-w-lg p-6">
       <h2 className="pr-10 text-lg font-semibold text-gray-900 dark:text-white/90">
-        Revive Agent Witch Live
+        Revive Agent Witch Local
       </h2>
       <p className={`mt-3 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
-        Agent Witch Live is not responding on{" "}
+        Agent Witch Local is not responding on{" "}
         <span className="font-mono text-sm">127.0.0.1:43347</span>. The cloud
         can still show your Mac as online when the background client (AWI) and
         bridge (AWB) are running. On this Mac, open Terminal, paste this

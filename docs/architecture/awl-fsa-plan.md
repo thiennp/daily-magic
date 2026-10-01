@@ -1,7 +1,7 @@
 # AWL Fractal Slice Architecture plan
 
 **Status:** AWL slices migrated (`fsaStatus: fsa` on all registry slugs). Entry: `apps/live/entry/startLocalAppServer.ts`; shim: `scripts/agentWitchLocalApp.ts`.  
-**Deployable:** **AWL** — Agent Witch Live (`apps/live/`).  
+**Deployable:** **AWL** — Agent Witch Local (`apps/live/`).  
 **Policy:** [ADR 0007](../adr/0007-fractal-slice-architecture.md) · **Deployables:** [agent-witch-deployables.md](../product/agent-witch-deployables.md) · **Registry:** `apps/live/features.registry.json`.
 
 ## Goal
@@ -14,11 +14,11 @@ Cross-deployable contracts: **`@agent-witch/shared`** (live port/origins), **`@a
 
 ```mermaid
 flowchart TB
-  subgraph AWC["AWC — Console"]
+  subgraph AWC["AWC — Cloud"]
     React["src/features/* React UI"]
   end
 
-  subgraph AWL["AWL — Live :43347"]
+  subgraph AWL["AWL — Local :43347"]
     Entry["apps/live/entry/"]
     Features["apps/live/features/*"]
     Legacy["scripts/agentWitchLocalApp.ts"]

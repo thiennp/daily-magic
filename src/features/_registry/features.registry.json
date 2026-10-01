@@ -223,7 +223,7 @@
     {
       "slug": "prompt-optimizer",
       "title": "Prompt optimizer",
-      "purpose": "Console pointer to the prompt optimizer on Agent Witch Live, which picks the best local reasoning writers.",
+      "purpose": "Console pointer to the prompt optimizer on Agent Witch Local, which picks the best local reasoning writers.",
       "featurePath": "src/features/prompt-optimizer",
       "libPath": "src/lib/promptOptimizer",
       "routePaths": ["/prompt-optimizer", "/prompt-optimizer/guide"],

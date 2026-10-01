@@ -4,8 +4,8 @@ Target home for the four Agent Witch **deployables**. Code still lives mostly un
 
 | Abbr | Folder                 | Name                |
 | ---- | ---------------------- | ------------------- |
-| AWC  | [`console/`](console/) | Agent Witch Console |
-| AWL  | [`live/`](live/)       | Agent Witch Live    |
+| AWC  | [`console/`](console/) | Agent Witch Cloud   |
+| AWL  | [`live/`](live/)       | Agent Witch Local   |
 | AWB  | [`bridge/`](bridge/)   | Agent Witch Bridge  |
 | AWI  | [`install/`](install/) | Agent Witch Install |
 
