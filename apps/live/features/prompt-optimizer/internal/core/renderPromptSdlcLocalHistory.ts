@@ -66,7 +66,7 @@ export const renderPromptSdlcLocalHistory = (
     shownCount === history.length
       ? `History · ${history.length}`
       : `History · ${shownCount} of ${history.length}`;
-  const body = `<section class="card sdlc-history-card"><h2 class="sdlc-history-heading">History</h2><ul class="sdlc-history">${items}</ul></section>`;
+  const body = `<section class="card sdlc-history-card"><h2 class="sdlc-history-heading">History</h2>${filters}<ul class="sdlc-history">${items}</ul></section>`;
   if (openCycleId !== null) {
     return `<details class="sdlc-history-details" id="prompt-optimizer-history" aria-labelledby="prompt-optimizer-history-summary"><summary class="sdlc-history-details-summary" id="prompt-optimizer-history-summary"><span class="eyebrow">Past runs</span> ${escapeHtml(historySummaryLabel)}</summary>${body}</details>`;
   }
