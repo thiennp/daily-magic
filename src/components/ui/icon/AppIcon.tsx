@@ -1,16 +1,17 @@
-import type { FC, SVGProps } from "react";
 import { twMerge } from "tailwind-merge";
 
 import {
   APP_ICON_SIZE_CLASS,
   type AppIconSize,
 } from "@/components/ui/icon/appIconSize.constant";
+import type { AppIconComponent } from "@/components/ui/icon/appIconComponent.type";
 import { APP_ICON_SVG_CLASS } from "@/components/ui/icon/appIconSvgClass.constant";
+import { resolveAppIconRenderTarget } from "@/components/ui/icon/resolveAppIconRenderTarget";
 
-export type AppIconComponent = FC<SVGProps<SVGSVGElement>>;
+export type { AppIconComponent } from "@/components/ui/icon/appIconComponent.type";
 
 interface AppIconProps {
-  readonly icon: AppIconComponent;
+  readonly icon: AppIconComponent | { readonly default: unknown };
   readonly size?: AppIconSize;
   readonly className?: string;
   readonly iconClassName?: string;
@@ -18,12 +19,13 @@ interface AppIconProps {
 }
 
 export default function AppIcon({
-  icon: Icon,
+  icon,
   size = "md",
   className,
   iconClassName,
   label,
 }: AppIconProps) {
+  const target = resolveAppIconRenderTarget(icon);
   const isDecorative = label === undefined;
 
   return (
@@ -37,7 +39,15 @@ export default function AppIcon({
       aria-label={label}
       role={isDecorative ? undefined : "img"}
     >
-      <Icon className={twMerge(APP_ICON_SVG_CLASS, iconClassName)} />
+      {target.kind === "component" ? (
+        <target.Icon className={twMerge(APP_ICON_SVG_CLASS, iconClassName)} />
+      ) : (
+        <img
+          src={target.src}
+          alt=""
+          className={twMerge(APP_ICON_SVG_CLASS, iconClassName)}
+        />
+      )}
     </span>
   );
 }

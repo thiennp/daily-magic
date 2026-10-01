@@ -1,0 +1,2013 @@
+{
+  "passThreshold": 95,
+  "currentRole": "ux",
+  "currentPageIndex": 0,
+  "pages": [
+    {
+      "order": 0,
+      "deployable": "AWC",
+      "id": "home-marketing",
+      "title": "Home (marketing)",
+      "path": "/",
+      "statuses": ["ready"],
+      "roles": {
+        "ux": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "copy": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "ui": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "product": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "tester": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "dx": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        }
+      },
+      "allRolesPassed": false
+    },
+    {
+      "order": 1,
+      "deployable": "AWC",
+      "id": "login",
+      "title": "Login",
+      "path": "/login",
+      "statuses": ["ready"],
+      "roles": {
+        "ux": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "copy": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "ui": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "product": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "tester": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "dx": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        }
+      },
+      "allRolesPassed": false
+    },
+    {
+      "order": 2,
+      "deployable": "AWC",
+      "id": "for-agents",
+      "title": "For agents",
+      "path": "/for-agents",
+      "statuses": ["ready"],
+      "roles": {
+        "ux": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "copy": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "ui": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "product": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "tester": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "dx": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        }
+      },
+      "allRolesPassed": false
+    },
+    {
+      "order": 3,
+      "deployable": "AWC",
+      "id": "setup-writer",
+      "title": "Setup writer",
+      "path": "/setup/writer",
+      "statuses": ["ready"],
+      "roles": {
+        "ux": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "copy": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "ui": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "product": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "tester": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "dx": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        }
+      },
+      "allRolesPassed": false
+    },
+    {
+      "order": 4,
+      "deployable": "AWC",
+      "id": "privacy",
+      "title": "Privacy",
+      "path": "/privacy",
+      "statuses": ["ready"],
+      "roles": {
+        "ux": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "copy": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "ui": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "product": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "tester": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "dx": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        }
+      },
+      "allRolesPassed": false
+    },
+    {
+      "order": 5,
+      "deployable": "AWC",
+      "id": "terms",
+      "title": "Terms",
+      "path": "/terms",
+      "statuses": ["ready"],
+      "roles": {
+        "ux": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "copy": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "ui": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "product": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "tester": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "dx": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        }
+      },
+      "allRolesPassed": false
+    },
+    {
+      "order": 6,
+      "deployable": "AWC",
+      "id": "home-signed-in",
+      "title": "Home (signed in)",
+      "path": "/",
+      "statuses": ["loading", "empty", "error", "ready"],
+      "roles": {
+        "ux": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "copy": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "ui": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "product": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "tester": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "dx": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        }
+      },
+      "allRolesPassed": false
+    },
+    {
+      "order": 7,
+      "deployable": "AWC",
+      "id": "projects",
+      "title": "Projects",
+      "path": "/projects",
+      "statuses": ["loading", "empty", "error", "ready"],
+      "roles": {
+        "ux": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "copy": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "ui": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "product": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "tester": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "dx": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        }
+      },
+      "allRolesPassed": false
+    },
+    {
+      "order": 8,
+      "deployable": "AWC",
+      "id": "project-detail",
+      "title": "Project detail",
+      "path": "/projects/:projectId",
+      "statuses": ["loading", "empty", "error", "ready"],
+      "roles": {
+        "ux": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "copy": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "ui": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "product": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "tester": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "dx": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        }
+      },
+      "allRolesPassed": false
+    },
+    {
+      "order": 9,
+      "deployable": "AWC",
+      "id": "library",
+      "title": "Library",
+      "path": "/library",
+      "statuses": ["loading", "guest", "empty", "error", "ready"],
+      "roles": {
+        "ux": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "copy": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "ui": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "product": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "tester": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "dx": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        }
+      },
+      "allRolesPassed": false
+    },
+    {
+      "order": 10,
+      "deployable": "AWC",
+      "id": "marketplace",
+      "title": "Marketplace",
+      "path": "/marketplace",
+      "statuses": ["loading", "guest", "empty", "error", "ready"],
+      "roles": {
+        "ux": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "copy": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "ui": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "product": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "tester": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "dx": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        }
+      },
+      "allRolesPassed": false
+    },
+    {
+      "order": 11,
+      "deployable": "AWC",
+      "id": "reports",
+      "title": "Reports",
+      "path": "/reports",
+      "statuses": ["loading", "guest", "empty", "error", "ready"],
+      "roles": {
+        "ux": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "copy": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "ui": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "product": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "tester": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "dx": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        }
+      },
+      "allRolesPassed": false
+    },
+    {
+      "order": 12,
+      "deployable": "AWC",
+      "id": "report-detail",
+      "title": "Report detail",
+      "path": "/reports/:runId",
+      "statuses": ["loading", "empty", "error", "ready"],
+      "roles": {
+        "ux": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "copy": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "ui": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "product": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "tester": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "dx": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        }
+      },
+      "allRolesPassed": false
+    },
+    {
+      "order": 13,
+      "deployable": "AWC",
+      "id": "automations",
+      "title": "Automations",
+      "path": "/automations",
+      "statuses": ["loading", "empty", "error", "ready"],
+      "roles": {
+        "ux": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "copy": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "ui": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "product": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "tester": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "dx": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        }
+      },
+      "allRolesPassed": false
+    },
+    {
+      "order": 14,
+      "deployable": "AWC",
+      "id": "prompt-optimizer",
+      "title": "Prompt optimizer",
+      "path": "/prompt-optimizer",
+      "statuses": ["ready"],
+      "roles": {
+        "ux": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "copy": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "ui": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "product": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "tester": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "dx": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        }
+      },
+      "allRolesPassed": false
+    },
+    {
+      "order": 15,
+      "deployable": "AWC",
+      "id": "prompt-optimizer-guide",
+      "title": "Prompt optimizer guide",
+      "path": "/prompt-optimizer/guide",
+      "statuses": ["ready"],
+      "roles": {
+        "ux": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "copy": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "ui": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "product": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "tester": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "dx": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        }
+      },
+      "allRolesPassed": false
+    },
+    {
+      "order": 16,
+      "deployable": "AWC",
+      "id": "connection-lab",
+      "title": "Connection lab",
+      "path": "/connection-lab",
+      "statuses": ["ready", "error"],
+      "roles": {
+        "ux": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "copy": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "ui": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "product": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "tester": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "dx": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        }
+      },
+      "allRolesPassed": false
+    },
+    {
+      "order": 17,
+      "deployable": "AWC",
+      "id": "showcases",
+      "title": "Showcases",
+      "path": "/showcases",
+      "statuses": ["ready"],
+      "roles": {
+        "ux": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "copy": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "ui": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "product": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "tester": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "dx": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        }
+      },
+      "allRolesPassed": false
+    },
+    {
+      "order": 18,
+      "deployable": "AWC",
+      "id": "admin-users",
+      "title": "Admin users",
+      "path": "/admin/users",
+      "statuses": ["ready", "empty"],
+      "roles": {
+        "ux": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "copy": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "ui": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "product": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "tester": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "dx": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        }
+      },
+      "allRolesPassed": false
+    },
+    {
+      "order": 19,
+      "deployable": "AWC",
+      "id": "admin-groups",
+      "title": "Admin groups",
+      "path": "/admin/groups",
+      "statuses": ["ready", "empty", "error"],
+      "roles": {
+        "ux": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "copy": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "ui": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "product": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "tester": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "dx": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        }
+      },
+      "allRolesPassed": false
+    },
+    {
+      "order": 20,
+      "deployable": "AWL",
+      "id": "home",
+      "title": "Home",
+      "path": "/",
+      "statuses": ["ready", "empty", "error"],
+      "roles": {
+        "ux": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "copy": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "ui": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "product": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "tester": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "dx": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        }
+      },
+      "allRolesPassed": false
+    },
+    {
+      "order": 21,
+      "deployable": "AWL",
+      "id": "task",
+      "title": "Task",
+      "path": "/task",
+      "statuses": ["ready", "empty", "error"],
+      "roles": {
+        "ux": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "copy": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "ui": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "product": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "tester": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "dx": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        }
+      },
+      "allRolesPassed": false
+    },
+    {
+      "order": 22,
+      "deployable": "AWL",
+      "id": "prompt-optimizer",
+      "title": "Prompt optimizer",
+      "path": "/prompt-optimizer",
+      "statuses": ["ready", "empty", "error", "loading"],
+      "roles": {
+        "ux": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "copy": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "ui": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "product": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "tester": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "dx": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        }
+      },
+      "allRolesPassed": false
+    },
+    {
+      "order": 23,
+      "deployable": "AWL",
+      "id": "prompt-optimizer-guide",
+      "title": "Prompt optimizer guide",
+      "path": "/prompt-optimizer/guide",
+      "statuses": ["ready"],
+      "roles": {
+        "ux": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "copy": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "ui": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "product": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "tester": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "dx": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        }
+      },
+      "allRolesPassed": false
+    },
+    {
+      "order": 24,
+      "deployable": "AWL",
+      "id": "status",
+      "title": "Status",
+      "path": "/status",
+      "statuses": ["ready", "empty", "error"],
+      "roles": {
+        "ux": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "copy": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "ui": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "product": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "tester": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "dx": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        }
+      },
+      "allRolesPassed": false
+    },
+    {
+      "order": 25,
+      "deployable": "AWL",
+      "id": "projects",
+      "title": "Projects",
+      "path": "/projects",
+      "statuses": ["ready", "empty", "error"],
+      "roles": {
+        "ux": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "copy": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "ui": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "product": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "tester": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "dx": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        }
+      },
+      "allRolesPassed": false
+    },
+    {
+      "order": 26,
+      "deployable": "AWL",
+      "id": "project",
+      "title": "Project editor",
+      "path": "/project",
+      "statuses": ["ready", "empty", "error"],
+      "roles": {
+        "ux": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "copy": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "ui": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "product": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "tester": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "dx": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        }
+      },
+      "allRolesPassed": false
+    },
+    {
+      "order": 27,
+      "deployable": "AWL",
+      "id": "harness",
+      "title": "Harness",
+      "path": "/harness",
+      "statuses": ["ready", "empty", "error"],
+      "roles": {
+        "ux": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "copy": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "ui": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "product": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "tester": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "dx": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        }
+      },
+      "allRolesPassed": false
+    },
+    {
+      "order": 28,
+      "deployable": "AWL",
+      "id": "writer-api",
+      "title": "Writer API",
+      "path": "/writer-api",
+      "statuses": ["ready", "error"],
+      "roles": {
+        "ux": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "copy": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "ui": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "product": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "tester": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "dx": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        }
+      },
+      "allRolesPassed": false
+    },
+    {
+      "order": 29,
+      "deployable": "AWL",
+      "id": "knowledge",
+      "title": "Knowledge",
+      "path": "/knowledge",
+      "statuses": ["ready", "empty"],
+      "roles": {
+        "ux": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "copy": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "ui": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "product": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "tester": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "dx": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        }
+      },
+      "allRolesPassed": false
+    },
+    {
+      "order": 30,
+      "deployable": "AWL",
+      "id": "history",
+      "title": "History",
+      "path": "/history",
+      "statuses": ["ready", "empty"],
+      "roles": {
+        "ux": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "copy": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "ui": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "product": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "tester": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "dx": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        }
+      },
+      "allRolesPassed": false
+    },
+    {
+      "order": 31,
+      "deployable": "AWL",
+      "id": "writer-sessions",
+      "title": "Transcripts",
+      "path": "/writer-sessions",
+      "statuses": ["ready", "empty"],
+      "roles": {
+        "ux": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "copy": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "ui": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "product": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "tester": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "dx": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        }
+      },
+      "allRolesPassed": false
+    },
+    {
+      "order": 32,
+      "deployable": "AWL",
+      "id": "errors",
+      "title": "Errors",
+      "path": "/errors",
+      "statuses": ["ready", "empty", "error"],
+      "roles": {
+        "ux": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "copy": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "ui": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "product": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "tester": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "dx": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        }
+      },
+      "allRolesPassed": false
+    },
+    {
+      "order": 33,
+      "deployable": "AWL",
+      "id": "traffic",
+      "title": "Traffic",
+      "path": "/traffic",
+      "statuses": ["ready", "empty"],
+      "roles": {
+        "ux": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "copy": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "ui": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "product": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "tester": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        },
+        "dx": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": ""
+        }
+      },
+      "allRolesPassed": false
+    }
+  ]
+}
