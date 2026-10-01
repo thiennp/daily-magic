@@ -20,7 +20,7 @@ Canonical: `docs/storybook/README.md`, `docs/storybook/wave-qa/README.md`, `docs
 - **Do not** capture, review PNGs, or fix UI on the main thread.
 - Spawn **cloud** subagents (`run_in_background`) — **one page per subagent**, branch `cursor/wave-qa-<awc|awl>-<pageId>-b63b`.
 - Brief: `npm run storybook:wave:page-brief -- AWC <pageId>` — see `docs/storybook/wave-qa/coordinator.md`.
-- Push/PR **per page** when that page’s ux–product roles pass; merge to `main` incrementally.
+- **Push to `main` directly** per page (no PRs). Run **`npm run ci`** before every push; Railway fails if `main` is red.
 
 ## Hard rules
 

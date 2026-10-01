@@ -48,7 +48,7 @@ const brief = `
    - Reviewer B: separate review → \`...-reviewer-b.json\`
    - \`npm run storybook:wave:record-agent -- ${deployable} ${pageId} <role> <a.json> <b.json>\`
    - Commit after each role passes: \`wave-qa(${deployable} ${pageId}): <role> agent A+B ≥95%\`
-5. When all four roles pass for this page: push branch, open **draft** PR to \`main\`.
+5. When all four roles pass: run \`npm run ci\`, merge to \`main\`, \`git push origin main\` (no PR).
 6. Return: scores per role, PR URL, list of files changed.
 
 Do not work on other catalog pages.

@@ -3,8 +3,8 @@
 The **main agent does not** capture, score, or fix pages. It:
 
 1. Keeps `progress.json` queue state honest (`reset-agent-roles` after policy changes).
-2. Spawns **one cloud subagent per catalog page** (own branch → push → PR when all 4 agent roles pass for that page).
-3. Merges PRs to `main` as they land (or asks user to merge); never waits for all 34 pages.
+2. Spawns **one cloud subagent per catalog page** (short-lived branch optional).
+3. **Ship to `main` directly** — no PRs. After `npm run ci` passes locally (or green GitHub Actions on the commit), `git push origin main`. Never push with a red CI (Railway deploys from `main`).
 
 ## Subagent branch naming
 
@@ -23,8 +23,8 @@ Copy the printed brief into a **cloud** background agent. Subagent must:
 
 - Build/serve Storybook, `storybook:wave:capture` for that page only.
 - For each role `ux` → `copy` → `ui` → `product`: reviewer A + B (PNG evidence), fix `mustFix`, save JSON under `docs/storybook/wave-qa/reviews/`, `storybook:wave:record-agent`.
-- Commit + push **only when that page’s four roles pass** (or partial commits per role with message `wave-qa(AWC home-marketing): ux pass round 1`).
-- Open/update draft PR to `main`; do **not** touch other pages’ review files.
+- Commit + push to **`main`** when that page’s four roles pass (or merge subagent branch into `main` after **`npm run ci`**).
+- **Do not** open PRs for wave QA. Do **not** touch other pages’ review files.
 
 ## Parallelism
 
@@ -42,5 +42,5 @@ After **all 34 pages** complete first-pass ux–product:
 
 1. Spawn cloud subagents with brief: *audit ui only, round-audit-1, read `ui-deep-inspection.md`*.
 2. Start with pages merged earliest (**`home-marketing`**, **`login`**, …) — highest risk of shallow first pass.
-3. Revoke + fix + re-merge any page where audit finds `obviousVisualDefects: "present"`.
+3. Revoke + fix + push fixes to `main` when audit finds `obviousVisualDefects: "present"` (CI green first).
 4. Coordinator does **not** report “100% complete” until audit wave finishes.
