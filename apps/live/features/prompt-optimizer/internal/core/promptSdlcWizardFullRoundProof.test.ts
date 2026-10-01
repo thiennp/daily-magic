@@ -341,15 +341,12 @@ describe("prompt SDLC wizard full round proof (for screenshots)", () => {
         current?.status === "wizard_paused" &&
         current.wizard?.gate === "optimize_modules"
       );
-    }, "step 4 optimize gate (parameters)");
+    }, "step 4 cost confirm gate");
     gateTrace.push("optimize_modules");
     paused = readPromptSdlcLocalCycle(storePath, liveId)!;
-    snapshotCycle(storePath, "full-round-step-4-params", paused);
-    const page4Params = pageBody(installDir, paused);
-    expect(page4Params).toContain("Step 4 — Optimize modules");
-    expect(page4Params).toContain("Policy guard");
-    expect(page4Params).toContain("Parameters for this module run");
-    expect(page4Params).toContain('name="wizardParam_policy_facts"');
+    snapshotCycle(storePath, "full-round-step-4-confirm", paused);
+    const page4Confirm = pageBody(installDir, paused);
+    expect(page4Confirm).toContain("Confirm Step 4 cost ceiling");
 
     const continueWizard = (extra?: Record<string, string>): void => {
       const live = readPromptSdlcLocalCycle(storePath, liveId);
@@ -378,6 +375,7 @@ describe("prompt SDLC wizard full round proof (for screenshots)", () => {
       });
       ensurePromptSdlcLocalCycleRunning(storePath, liveId);
     };
+
     continueWizard({
       wizardParam_policy_facts: COMPLEX_VARIABLES.find(
         (item) => item.name === "policy_facts",

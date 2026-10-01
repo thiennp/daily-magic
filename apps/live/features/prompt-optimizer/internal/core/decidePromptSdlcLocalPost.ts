@@ -23,8 +23,8 @@ import {
   costControlsFromKnobs,
   readPromptSdlcCostControlKnobs,
 } from "./readPromptSdlcCostControls";
-import type { PromptSdlcCostControls } from "@/lib/promptOptimizer/types/PromptSdlcCostControl.type";
-import { PROMPT_SDLC_DEFAULT_MAX_TRIALS } from "@/lib/promptOptimizer/promptSdlcCostControl.constant";
+import type { PromptSdlcCostControls } from "../../../../adapters/promptSdlcAwcCore";
+import { PROMPT_SDLC_DEFAULT_MAX_TRIALS } from "../../../../adapters/promptSdlcAwcCore";
 
 type PromptSdlcLocalRunModels = NonNullable<
   ReturnType<typeof readPromptSdlcLocalRunModels>
@@ -121,9 +121,7 @@ export const decidePromptSdlcLocalPost = (input: {
     String(PROMPT_SDLC_DEFAULT_MAX_TRIALS);
   const typedMaxSpendUsd = input.posted?.get("maxSpendUsd")?.trim() ?? "";
   const typedEarlyStop =
-    input.posted === null
-      ? true
-      : input.posted.has("earlyStop");
+    input.posted === null ? true : input.posted.has("earlyStop");
   const form = (
     folder: string,
     errorMessage: string | null,

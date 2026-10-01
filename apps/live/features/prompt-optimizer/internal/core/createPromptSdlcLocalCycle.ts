@@ -7,8 +7,8 @@ import {
 } from "../../../../adapters/promptSdlcAwcCore";
 import type { PromptSdlcWizardState } from "../../../../adapters/promptSdlcAwcCore";
 
-import { defaultPromptSdlcCostControls } from "@/lib/promptOptimizer/createEmptyPromptSdlcCostControl";
-import type { PromptSdlcCostControls } from "@/lib/promptOptimizer/types/PromptSdlcCostControl.type";
+import { defaultPromptSdlcCostControls } from "../../../../adapters/promptSdlcAwcCore";
+import type { PromptSdlcCostControls } from "../../../../adapters/promptSdlcAwcCore";
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
 
 export const createPromptSdlcLocalCycle = (input: {
