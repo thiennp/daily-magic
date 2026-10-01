@@ -1,0 +1,29 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "A",
+  "deployable": "AWC",
+  "pageId": "report-detail",
+  "role": "ux",
+  "captureRound": 1,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/report-detail/round-1/manifest.json",
+  "scoreDesktop": 98,
+  "scoreMobile": 96,
+  "scoreOverall": 97,
+  "passed": true,
+  "scoreBreakdown": [
+    {
+      "area": "mobile-scroll-length",
+      "pointsDeducted": 2,
+      "reason": "Ready mobile stacks run card, CTAs, and feedback form; bottom tab bar reduces visible prompt without scroll affordance."
+    },
+    {
+      "area": "empty-state-minimal",
+      "pointsDeducted": 1,
+      "reason": "Empty/not-found is a single line without link back to Reports list; back nav only appears on ready state."
+    }
+  ],
+  "whyBelowThreshold": "",
+  "topIssues": ["Mobile ready scroll depth", "Empty state lacks back link"],
+  "mustFix": [],
+  "quickWins": ["Add Back to Reports on empty/not-found states"]
+}

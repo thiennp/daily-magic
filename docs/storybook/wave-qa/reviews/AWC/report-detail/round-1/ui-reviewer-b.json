@@ -1,0 +1,36 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "B",
+  "deployable": "AWC",
+  "pageId": "report-detail",
+  "role": "ui",
+  "captureRound": 1,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/report-detail/round-1/manifest.json",
+  "scoreDesktop": 97,
+  "scoreMobile": 96,
+  "scoreOverall": 97,
+  "passed": true,
+  "zoomedSections": [
+    "empty-desktop-not-found-copy",
+    "error-mobile-retry-card",
+    "ready-desktop-metadata-grid",
+    "ready-mobile-success-badge"
+  ],
+  "obviousVisualDefects": "none",
+  "scoreBreakdown": [
+    {
+      "area": "pre-block-padding",
+      "pointsDeducted": 2,
+      "reason": "Prompt and result pre blocks have even padding; no stray borders through cards after whitespace-pre-wrap fix."
+    },
+    {
+      "area": "loading-state-sparse",
+      "pointsDeducted": 1,
+      "reason": "Loading is text-only without skeleton; matches product but visually sparse in Storybook chrome."
+    }
+  ],
+  "whyBelowThreshold": "",
+  "topIssues": [],
+  "mustFix": [],
+  "quickWins": []
+}

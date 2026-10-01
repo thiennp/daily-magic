@@ -1,0 +1,29 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "B",
+  "deployable": "AWC",
+  "pageId": "report-detail",
+  "role": "ux",
+  "captureRound": 1,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/report-detail/round-1/manifest.json",
+  "scoreDesktop": 97,
+  "scoreMobile": 95,
+  "scoreOverall": 96,
+  "passed": true,
+  "scoreBreakdown": [
+    {
+      "area": "error-retry-hierarchy",
+      "pointsDeducted": 2,
+      "reason": "Error card Try again is clear; Storybook error banner competes slightly with in-app headline on first scan."
+    },
+    {
+      "area": "mobile-feedback-below-fold",
+      "pointsDeducted": 2,
+      "reason": "Feedback form on ready mobile requires long scroll past primary CTAs."
+    }
+  ],
+  "whyBelowThreshold": "",
+  "topIssues": [],
+  "mustFix": [],
+  "quickWins": ["Consider sticky Back to Reports on mobile ready"]
+}

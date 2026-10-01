@@ -2740,36 +2740,293 @@
       "statuses": ["loading", "empty", "error", "ready"],
       "roles": {
         "ux": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+          "passed": true,
+          "score": 96,
+          "round": 1,
+          "reviewerA": 97,
+          "reviewerB": 96,
+          "notes": "Agent A=97 B=96 (round 1).\nA deductions: mobile-scroll-length -2: Ready mobile stacks run card, CTAs, and feedback form; bottom tab bar reduces visible prompt without scroll affordance. | empty-state-minimal -1: Empty/not-found is a single line without link back to Reports list; back nav only appears on ready state.\nB deductions: error-retry-hierarchy -2: Error card Try again is clear; Storybook error banner competes slightly with in-app headline on first scan. | mobile-feedback-below-fold -2: Feedback form on ready mobile requires long scroll past primary CTAs.",
+          "agentFeedback": {
+            "reviewerA": {
+              "reviewMethod": "agent",
+              "reviewer": "A",
+              "deployable": "AWC",
+              "pageId": "report-detail",
+              "role": "ux",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/report-detail/round-1/manifest.json",
+              "scoreDesktop": 98,
+              "scoreMobile": 96,
+              "scoreOverall": 97,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "mobile-scroll-length",
+                  "pointsDeducted": 2,
+                  "reason": "Ready mobile stacks run card, CTAs, and feedback form; bottom tab bar reduces visible prompt without scroll affordance."
+                },
+                {
+                  "area": "empty-state-minimal",
+                  "pointsDeducted": 1,
+                  "reason": "Empty/not-found is a single line without link back to Reports list; back nav only appears on ready state."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": [
+                "Mobile ready scroll depth",
+                "Empty state lacks back link"
+              ],
+              "mustFix": [],
+              "quickWins": ["Add Back to Reports on empty/not-found states"]
+            },
+            "reviewerB": {
+              "reviewMethod": "agent",
+              "reviewer": "B",
+              "deployable": "AWC",
+              "pageId": "report-detail",
+              "role": "ux",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/report-detail/round-1/manifest.json",
+              "scoreDesktop": 97,
+              "scoreMobile": 95,
+              "scoreOverall": 96,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "error-retry-hierarchy",
+                  "pointsDeducted": 2,
+                  "reason": "Error card Try again is clear; Storybook error banner competes slightly with in-app headline on first scan."
+                },
+                {
+                  "area": "mobile-feedback-below-fold",
+                  "pointsDeducted": 2,
+                  "reason": "Feedback form on ready mobile requires long scroll past primary CTAs."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": [],
+              "mustFix": [],
+              "quickWins": ["Consider sticky Back to Reports on mobile ready"]
+            }
+          }
         },
         "copy": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 99,
+          "reviewerB": 98,
+          "notes": "Agent A=99 B=98 (round 1).\nA deductions: loading-ellipsis -1: Loading copy uses typographic ellipsis in UI (Loading run…) consistent with product; Storybook banner is separate.\nB deductions: error-vs-empty-distinction -1: Not-found vs load-error messages now differ appropriately; empty line could mention Reports index. | fixture-realism -1: Ready fixture repeats result string in prose and code block; acceptable Storybook duplication.",
+          "agentFeedback": {
+            "reviewerA": {
+              "reviewMethod": "agent",
+              "reviewer": "A",
+              "deployable": "AWC",
+              "pageId": "report-detail",
+              "role": "copy",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/report-detail/round-1/manifest.json",
+              "scoreDesktop": 99,
+              "scoreMobile": 98,
+              "scoreOverall": 99,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "loading-ellipsis",
+                  "pointsDeducted": 1,
+                  "reason": "Loading copy uses typographic ellipsis in UI (Loading run…) consistent with product; Storybook banner is separate."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": [],
+              "mustFix": [],
+              "quickWins": []
+            },
+            "reviewerB": {
+              "reviewMethod": "agent",
+              "reviewer": "B",
+              "deployable": "AWC",
+              "pageId": "report-detail",
+              "role": "copy",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/report-detail/round-1/manifest.json",
+              "scoreDesktop": 98,
+              "scoreMobile": 97,
+              "scoreOverall": 98,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "error-vs-empty-distinction",
+                  "pointsDeducted": 1,
+                  "reason": "Not-found vs load-error messages now differ appropriately; empty line could mention Reports index."
+                },
+                {
+                  "area": "fixture-realism",
+                  "pointsDeducted": 1,
+                  "reason": "Ready fixture repeats result string in prose and code block; acceptable Storybook duplication."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": [],
+              "mustFix": [],
+              "quickWins": []
+            }
+          }
         },
         "ui": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+          "passed": true,
+          "score": 97,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 97,
+          "notes": "Agent A=98 B=97 (round 1).\nA deductions: send-feedback-button-weight -1: Send feedback uses lighter brand tint than primary Continue conversation; intentional secondary but slightly muted. | mobile-cta-gap -1: Continue conversation / Run again pair sits close to bottom tab bar on 390px ready capture.\nB deductions: pre-block-padding -2: Prompt and result pre blocks have even padding; no stray borders through cards after whitespace-pre-wrap fix. | loading-state-sparse -1: Loading is text-only without skeleton; matches product but visually sparse in Storybook chrome.",
+          "agentFeedback": {
+            "reviewerA": {
+              "reviewMethod": "agent",
+              "reviewer": "A",
+              "deployable": "AWC",
+              "pageId": "report-detail",
+              "role": "ui",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/report-detail/round-1/manifest.json",
+              "scoreDesktop": 98,
+              "scoreMobile": 97,
+              "scoreOverall": 98,
+              "passed": true,
+              "zoomedSections": [
+                "error-desktop-error-panel",
+                "ready-desktop-prompt-pre-block",
+                "ready-desktop-run-status-banner",
+                "ready-mobile-prompt-pre-block",
+                "ready-mobile-feedback-card"
+              ],
+              "obviousVisualDefects": "none",
+              "scoreBreakdown": [
+                {
+                  "area": "send-feedback-button-weight",
+                  "pointsDeducted": 1,
+                  "reason": "Send feedback uses lighter brand tint than primary Continue conversation; intentional secondary but slightly muted."
+                },
+                {
+                  "area": "mobile-cta-gap",
+                  "pointsDeducted": 1,
+                  "reason": "Continue conversation / Run again pair sits close to bottom tab bar on 390px ready capture."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": [],
+              "mustFix": [],
+              "quickWins": [
+                "Add pb-safe on mobile app shell for report detail actions"
+              ]
+            },
+            "reviewerB": {
+              "reviewMethod": "agent",
+              "reviewer": "B",
+              "deployable": "AWC",
+              "pageId": "report-detail",
+              "role": "ui",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/report-detail/round-1/manifest.json",
+              "scoreDesktop": 97,
+              "scoreMobile": 96,
+              "scoreOverall": 97,
+              "passed": true,
+              "zoomedSections": [
+                "empty-desktop-not-found-copy",
+                "error-mobile-retry-card",
+                "ready-desktop-metadata-grid",
+                "ready-mobile-success-badge"
+              ],
+              "obviousVisualDefects": "none",
+              "scoreBreakdown": [
+                {
+                  "area": "pre-block-padding",
+                  "pointsDeducted": 2,
+                  "reason": "Prompt and result pre blocks have even padding; no stray borders through cards after whitespace-pre-wrap fix."
+                },
+                {
+                  "area": "loading-state-sparse",
+                  "pointsDeducted": 1,
+                  "reason": "Loading is text-only without skeleton; matches product but visually sparse in Storybook chrome."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": [],
+              "mustFix": [],
+              "quickWins": []
+            }
+          }
         },
         "product": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+          "passed": true,
+          "score": 97,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 97,
+          "notes": "Agent A=98 B=97 (round 1).\nA deductions: ready-fixture-believability -1: Sample run shows plausible Slack status task with timing under estimate; requester equals executor as Storybook default. | feedback-visibility -1: Feedback form shown for completed run matches requester session; believable for signed-in Storybook user.\nB deductions: error-story-fidelity -2: MSW 500 now maps to retry panel aligned with reports list pattern; distinct from 404 empty story. | empty-story-fidelity -1: Empty MSW 404 shows not-found copy consistent with production deep link to missing run.",
+          "agentFeedback": {
+            "reviewerA": {
+              "reviewMethod": "agent",
+              "reviewer": "A",
+              "deployable": "AWC",
+              "pageId": "report-detail",
+              "role": "product",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/report-detail/round-1/manifest.json",
+              "scoreDesktop": 98,
+              "scoreMobile": 97,
+              "scoreOverall": 98,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "ready-fixture-believability",
+                  "pointsDeducted": 1,
+                  "reason": "Sample run shows plausible Slack status task with timing under estimate; requester equals executor as Storybook default."
+                },
+                {
+                  "area": "feedback-visibility",
+                  "pointsDeducted": 1,
+                  "reason": "Feedback form shown for completed run matches requester session; believable for signed-in Storybook user."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": [],
+              "mustFix": [],
+              "quickWins": [
+                "Add running-state story in a future wave for terminal live view"
+              ]
+            },
+            "reviewerB": {
+              "reviewMethod": "agent",
+              "reviewer": "B",
+              "deployable": "AWC",
+              "pageId": "report-detail",
+              "role": "product",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/report-detail/round-1/manifest.json",
+              "scoreDesktop": 97,
+              "scoreMobile": 96,
+              "scoreOverall": 97,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "error-story-fidelity",
+                  "pointsDeducted": 2,
+                  "reason": "MSW 500 now maps to retry panel aligned with reports list pattern; distinct from 404 empty story."
+                },
+                {
+                  "area": "empty-story-fidelity",
+                  "pointsDeducted": 1,
+                  "reason": "Empty MSW 404 shows not-found copy consistent with production deep link to missing run."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": [],
+              "mustFix": [],
+              "quickWins": []
+            }
+          }
         },
         "tester": {
           "passed": true,
@@ -2788,7 +3045,7 @@
           "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
         }
       },
-      "allRolesPassed": false
+      "allRolesPassed": true
     },
     {
       "order": 13,

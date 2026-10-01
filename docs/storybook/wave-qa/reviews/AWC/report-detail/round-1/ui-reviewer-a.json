@@ -1,0 +1,37 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "A",
+  "deployable": "AWC",
+  "pageId": "report-detail",
+  "role": "ui",
+  "captureRound": 1,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/report-detail/round-1/manifest.json",
+  "scoreDesktop": 98,
+  "scoreMobile": 97,
+  "scoreOverall": 98,
+  "passed": true,
+  "zoomedSections": [
+    "error-desktop-error-panel",
+    "ready-desktop-prompt-pre-block",
+    "ready-desktop-run-status-banner",
+    "ready-mobile-prompt-pre-block",
+    "ready-mobile-feedback-card"
+  ],
+  "obviousVisualDefects": "none",
+  "scoreBreakdown": [
+    {
+      "area": "send-feedback-button-weight",
+      "pointsDeducted": 1,
+      "reason": "Send feedback uses lighter brand tint than primary Continue conversation; intentional secondary but slightly muted."
+    },
+    {
+      "area": "mobile-cta-gap",
+      "pointsDeducted": 1,
+      "reason": "Continue conversation / Run again pair sits close to bottom tab bar on 390px ready capture."
+    }
+  ],
+  "whyBelowThreshold": "",
+  "topIssues": [],
+  "mustFix": [],
+  "quickWins": ["Add pb-safe on mobile app shell for report detail actions"]
+}

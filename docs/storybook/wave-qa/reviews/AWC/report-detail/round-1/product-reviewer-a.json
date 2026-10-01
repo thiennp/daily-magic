@@ -1,0 +1,31 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "A",
+  "deployable": "AWC",
+  "pageId": "report-detail",
+  "role": "product",
+  "captureRound": 1,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/report-detail/round-1/manifest.json",
+  "scoreDesktop": 98,
+  "scoreMobile": 97,
+  "scoreOverall": 98,
+  "passed": true,
+  "scoreBreakdown": [
+    {
+      "area": "ready-fixture-believability",
+      "pointsDeducted": 1,
+      "reason": "Sample run shows plausible Slack status task with timing under estimate; requester equals executor as Storybook default."
+    },
+    {
+      "area": "feedback-visibility",
+      "pointsDeducted": 1,
+      "reason": "Feedback form shown for completed run matches requester session; believable for signed-in Storybook user."
+    }
+  ],
+  "whyBelowThreshold": "",
+  "topIssues": [],
+  "mustFix": [],
+  "quickWins": [
+    "Add running-state story in a future wave for terminal live view"
+  ]
+}
