@@ -1,7 +1,7 @@
 # Library — known issues
 
-| ID          | Symptom                                                                                   | Fix / test                                                                                                         |
-| ----------- | ----------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
-| LIBRARY-001 | Duplicate template installs cluttered New task with identical workflow rows and no delete | Archive from picker trash (AGENT-035); Library **Remove** archives workflows and agents                            |
-| LIBRARY-002 | Guest browser drafts did not sync if user signed in without visiting `/library` first     | `GuestLibraryDraftSyncListener` in `AppShell`; event `agentwitch.guest-library-drafts-synced` refreshes library UI |
-| LIBRARY-003 | `/api/capabilities/mine` failure showed empty library (same as no playbooks)              | `LibraryPanel` shows retry panel when fetch fails; regression: `LibraryPanel.test.ts`                              |
+| ID          | Symptom                                                                                        | Fix / test                                                                                                                        |
+| ----------- | ---------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| LIBRARY-001 | Duplicate template installs cluttered New task with identical workflow rows and no delete      | Archive from picker trash (AGENT-035); Library **Remove** archives workflows and agents                                           |
+| LIBRARY-002 | Guest browser drafts did not sync if user signed in without visiting `/library` first          | `GuestLibraryDraftSyncListener` in `AppShell`; event `agentwitch.guest-library-drafts-synced` refreshes library UI                |
+| LIBRARY-003 | `/api/capabilities/mine` failure or malformed body showed empty library (same as no playbooks) | `LibraryPanel` retry panel + `useLibraryCapabilities` sets `loadFailed`; `LibraryPanel.test.ts`, `useLibraryCapabilities.test.ts` |

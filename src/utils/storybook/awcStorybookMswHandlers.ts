@@ -1,11 +1,13 @@
-import { delay, http, HttpResponse } from "msw";
+import { http, HttpResponse } from "msw";
 
 import type { StorybookPageStatus } from "@/utils/storybook/storybookPageStatus.constant";
 import { AWC_STORYBOOK_SAMPLE_PROJECT } from "@/utils/storybook/awcStorybookFixtures";
+import { awcStorybookCapabilityTemplateSuccessHandlers } from "@/utils/storybook/awcStorybookMswCapabilityHandlers";
 import {
-  awcStorybookCapabilityTemplateErrorHandlers,
-  awcStorybookCapabilityTemplateSuccessHandlers,
-} from "@/utils/storybook/awcStorybookMswCapabilityHandlers";
+  awcStorybookMswErrorHandlers,
+  awcStorybookMswInfiniteHandlers,
+} from "@/utils/storybook/awcStorybookMswLoadingAndErrorHandlers";
+import { createAwcStorybookMarketplaceSuccessHandler } from "@/utils/storybook/awcStorybookMswMarketplaceHandlers";
 import {
   AWC_STORYBOOK_SAMPLE_CAPABILITY,
   AWC_STORYBOOK_SAMPLE_DEVICE,
@@ -19,61 +21,15 @@ const disconnectedCursorCloudSummary = {
   connectedAt: null,
 };
 
-const infiniteHandlers = [
-  http.get("/api/cursor-cloud/connection", async () => {
-    await delay("infinite");
-  }),
-  http.get("/api/agent-witch/devices", async () => {
-    await delay("infinite");
-  }),
-  http.get("/api/projects", async () => {
-    await delay("infinite");
-  }),
-  http.get("/api/agent-runs", async () => {
-    await delay("infinite");
-  }),
-  http.get("/api/agent-runs/:runId", async () => {
-    await delay("infinite");
-  }),
-  http.get("/api/capabilities/mine", async () => {
-    await delay("infinite");
-  }),
-  http.get("/api/capabilities/templates", async () => {
-    await delay("infinite");
-  }),
-];
-
-const errorHandlers = [
-  http.get("/api/cursor-cloud/connection", () =>
-    HttpResponse.json({ error: "Server error" }, { status: 500 }),
-  ),
-  http.get("/api/agent-witch/devices", () =>
-    HttpResponse.json({ error: "Server error" }, { status: 500 }),
-  ),
-  http.get("/api/projects", () =>
-    HttpResponse.json({ error: "Server error" }, { status: 500 }),
-  ),
-  http.get("/api/agent-runs", () =>
-    HttpResponse.json({ error: "Server error" }, { status: 500 }),
-  ),
-  http.get("/api/agent-runs/:runId", () =>
-    HttpResponse.json({ error: "Server error" }, { status: 500 }),
-  ),
-  http.get("/api/capabilities/mine", () =>
-    HttpResponse.json({ error: "Server error" }, { status: 500 }),
-  ),
-  ...awcStorybookCapabilityTemplateErrorHandlers,
-];
-
 export const createAwcStorybookMswHandlers = (
   status: StorybookPageStatus,
 ): ReturnType<typeof http.get>[] => {
   if (status === "loading") {
-    return infiniteHandlers;
+    return awcStorybookMswInfiniteHandlers;
   }
 
   if (status === "error") {
-    return errorHandlers;
+    return awcStorybookMswErrorHandlers;
   }
 
   const hasData = status !== "empty" && status !== "guest";
@@ -115,6 +71,7 @@ export const createAwcStorybookMswHandlers = (
     http.get("/api/capabilities/mine", () =>
       HttpResponse.json({ capabilities }),
     ),
+    createAwcStorybookMarketplaceSuccessHandler(status),
     ...awcStorybookCapabilityTemplateSuccessHandlers,
   ];
 };
