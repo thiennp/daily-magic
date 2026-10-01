@@ -12,7 +12,7 @@
 
 The Projects list is visually consistent with the rest of AWC (TailAdmin surfaces, search, card grid, overflow menus) but **does not yet read as a polished SaaS workspace** when the account holds many projects. Duplicate default names, truncated paths, internal Mac labels in presence strings, and always-zero composition counts force users to parse every card. Intro copy correctly explains ACL-only cloud scope but is **long and repetitive** for a page users revisit daily.
 
-**`executiveScore`: 64**
+**`executiveScore`: 52**
 
 ---
 
@@ -59,7 +59,7 @@ The Projects list is visually consistent with the rest of AWC (TailAdmin surface
 ]
 ```
 
-Weighted score: **64** (rounded).
+Weighted score: **52** (dimension scores × weights, rounded).
 
 ---
 
