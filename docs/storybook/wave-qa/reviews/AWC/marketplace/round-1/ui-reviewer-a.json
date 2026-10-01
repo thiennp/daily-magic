@@ -1,0 +1,31 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "A",
+  "deployable": "AWC",
+  "pageId": "marketplace",
+  "role": "ui",
+  "captureRound": 1,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/marketplace/round-1/manifest.json",
+  "scoreDesktop": 98,
+  "scoreMobile": 96,
+  "scoreOverall": 97,
+  "passed": true,
+  "scoreBreakdown": [
+    {
+      "area": "card-description-clamp",
+      "pointsDeducted": 2,
+      "reason": "Starter cards use line-clamp that truncates body copy unevenly across categories on desktop grid."
+    },
+    {
+      "area": "mobile-nav-layer",
+      "pointsDeducted": 1,
+      "reason": "Bottom tab bar stacks above long marketplace scroll on 390px full-page capture, creating a duplicated chrome band in screenshots."
+    }
+  ],
+  "whyBelowThreshold": "",
+  "topIssues": ["Uneven card clamp", "Mobile nav layering in captures"],
+  "mustFix": [],
+  "quickWins": [
+    "Normalize min-height on starter cards so clamp lines align in the grid"
+  ]
+}

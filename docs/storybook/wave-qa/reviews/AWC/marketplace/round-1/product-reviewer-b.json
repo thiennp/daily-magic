@@ -1,0 +1,31 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "B",
+  "deployable": "AWC",
+  "pageId": "marketplace",
+  "role": "product",
+  "captureRound": 1,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/marketplace/round-1/manifest.json",
+  "scoreDesktop": 98,
+  "scoreMobile": 97,
+  "scoreOverall": 98,
+  "passed": true,
+  "scoreBreakdown": [
+    {
+      "area": "guest-vs-signed-in",
+      "pointsDeducted": 1,
+      "reason": "Guest teammate gate correctly hides org listings; signed-in empty still shows team upsell — believable but not demonstrating a populated teammate row."
+    },
+    {
+      "area": "mac-run-promise",
+      "pointsDeducted": 1,
+      "reason": "Header promises run on your Mac; starter cards do not restate Mac writer requirement in the grid (acceptable given global nav context)."
+    }
+  ],
+  "whyBelowThreshold": "",
+  "topIssues": ["Teammate listing demo gap in empty signed-in story"],
+  "mustFix": [],
+  "quickWins": [
+    "Add one sample teammate listing in ready fixture to show install affordance"
+  ]
+}

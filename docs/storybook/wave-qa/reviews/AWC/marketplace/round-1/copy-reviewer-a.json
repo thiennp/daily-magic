@@ -1,0 +1,31 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "A",
+  "deployable": "AWC",
+  "pageId": "marketplace",
+  "role": "copy",
+  "captureRound": 1,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/marketplace/round-1/manifest.json",
+  "scoreDesktop": 98,
+  "scoreMobile": 96,
+  "scoreOverall": 97,
+  "passed": true,
+  "scoreBreakdown": [
+    {
+      "area": "playbook-capitalization",
+      "pointsDeducted": 1,
+      "reason": "Section title uses capital P in Playbook while body copy lowercases playbook; minor voice inconsistency."
+    },
+    {
+      "area": "loading-chrome",
+      "pointsDeducted": 2,
+      "reason": "Storybook loading ribbon copy is meta (Waiting for data) rather than product tone, though expected for the loading state capture."
+    }
+  ],
+  "whyBelowThreshold": "",
+  "topIssues": ["Playbook casing", "Storybook-only loading ribbon"],
+  "mustFix": [],
+  "quickWins": [
+    "Align Playbook/playbook casing in free-starter section header and helper line"
+  ]
+}

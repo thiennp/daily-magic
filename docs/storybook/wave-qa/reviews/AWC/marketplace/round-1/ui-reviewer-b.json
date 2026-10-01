@@ -1,0 +1,31 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "B",
+  "deployable": "AWC",
+  "pageId": "marketplace",
+  "role": "ui",
+  "captureRound": 1,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/marketplace/round-1/manifest.json",
+  "scoreDesktop": 97,
+  "scoreMobile": 95,
+  "scoreOverall": 96,
+  "passed": true,
+  "scoreBreakdown": [
+    {
+      "area": "state-banners",
+      "pointsDeducted": 2,
+      "reason": "Loading/error/empty Storybook ribbons use distinct colors but share similar height; ready state has no complementary inline state chip."
+    },
+    {
+      "area": "mobile-starter-density",
+      "pointsDeducted": 2,
+      "reason": "Single-column starter stack is long on mobile; spacing between cards is consistent but pushes auth CTAs far down the fold."
+    }
+  ],
+  "whyBelowThreshold": "",
+  "topIssues": ["Storybook state chrome", "Mobile vertical length"],
+  "mustFix": [],
+  "quickWins": [
+    "Tighten vertical rhythm between starter cards on max-sm breakpoints"
+  ]
+}

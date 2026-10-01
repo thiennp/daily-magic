@@ -1,0 +1,31 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "B",
+  "deployable": "AWC",
+  "pageId": "marketplace",
+  "role": "copy",
+  "captureRound": 1,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/marketplace/round-1/manifest.json",
+  "scoreDesktop": 97,
+  "scoreMobile": 97,
+  "scoreOverall": 97,
+  "passed": true,
+  "scoreBreakdown": [
+    {
+      "area": "teammate-empty-tone",
+      "pointsDeducted": 2,
+      "reason": "Signed-in empty teammates card leans on future tense (show up here) without a crisp next step beyond browse starters."
+    },
+    {
+      "area": "guest-gate-clarity",
+      "pointsDeducted": 1,
+      "reason": "Guest teammate gate copy is accurate but could name Library save benefit in one line to mirror the starter section."
+    }
+  ],
+  "whyBelowThreshold": "",
+  "topIssues": ["Teammate empty state voice", "Guest gate benefit line"],
+  "mustFix": [],
+  "quickWins": [
+    "Mirror Library save line from starter intro in guest teammate gate"
+  ]
+}
