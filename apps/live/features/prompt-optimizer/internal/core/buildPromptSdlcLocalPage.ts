@@ -13,6 +13,7 @@ import { PROMPT_SDLC_LOCAL_FORM_SCRIPT } from "./promptSdlcLocalFormScript";
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
 import type { PromptSdlcLocalWriterChoice } from "./promptSdlcLocalForm";
 import { readPromptSdlcLocalShownForm } from "./readPromptSdlcLocalShownForm";
+import { PROMPT_SDLC_HISTORY_FILTER_SCRIPT } from "./promptSdlcHistoryFilterScript";
 import { renderPromptSdlcLocalHistory } from "./renderPromptSdlcLocalHistory";
 import { listPromptSdlcFolderSkills } from "./readPromptSdlcFolderSkills";
 import {
@@ -261,6 +262,8 @@ export const buildPromptSdlcLocalPageBody = (input: {
       </details>
       </form>
     </section>`;
-  const scripts = `${PROMPT_SDLC_LOCAL_LIVE_STYLE}${PROMPT_SDLC_LOCAL_LIVE_SCRIPT}${PROMPT_SDLC_WIZARD_CLIENT_SCRIPT}${PROMPT_SDLC_LOCAL_FORM_SCRIPT}${PROMPT_SDLC_SKILL_SELECT_SCRIPT}`;
+  const historyFilterScript =
+    input.history.length > 0 ? PROMPT_SDLC_HISTORY_FILTER_SCRIPT : "";
+  const scripts = `${PROMPT_SDLC_LOCAL_LIVE_STYLE}${PROMPT_SDLC_LOCAL_LIVE_SCRIPT}${PROMPT_SDLC_WIZARD_CLIENT_SCRIPT}${PROMPT_SDLC_LOCAL_FORM_SCRIPT}${PROMPT_SDLC_SKILL_SELECT_SCRIPT}${historyFilterScript}`;
   return `${error}${skillNotice}${form}${resumeBanner}${cycle}${wizardGateSlot}${nodeDialog}${renderPromptSdlcLocalHistory(input.history, input.cycle?.id ?? null)}${scripts}`;
 };
