@@ -22,6 +22,19 @@ Screenshots: `/opt/cursor/artifacts/storybook-waves/{AWC|AWL}/{pageId}/round-{n}
 
 Progress: `progress.json` in this folder.
 
+## Subjective rubric (ux | copy | ui | product)
+
+After `npm run storybook:build` and serving `storybook-static` on port 6008:
+
+```bash
+STORYBOOK_BASE_URL=http://127.0.0.1:6008 npm run storybook:wave:subjective-eval > /tmp/wave-qa-a.json
+STRICT=1 STORYBOOK_BASE_URL=http://127.0.0.1:6008 npm run storybook:wave:subjective-eval > /tmp/wave-qa-b.json
+npm run storybook:wave:subjective-record -- /tmp/wave-qa-a.json /tmp/wave-qa-b.json
+npm run storybook:wave:objective-gates
+```
+
+Reviewer B uses `STRICT=1`. Spot-check PNG reviews remain optional; both eval JSON files must pass before recording.
+
 ## Weekly (Saturday)
 
 - **Skill:** `.cursor/skills/skill-storybook-page-wave-qa/SKILL.md`

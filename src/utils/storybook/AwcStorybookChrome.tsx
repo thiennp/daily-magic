@@ -9,6 +9,7 @@ import AppShell from "@/features/shell/AppShell";
 import { APP_SHELL_NARROW_CONTENT_CLASS } from "@/features/shell/appShellContentWidth.constant";
 import type { StorybookPageStatus } from "@/utils/storybook/storybookPageStatus.constant";
 import AwcStorybookSessionProvider from "@/utils/storybook/AwcStorybookSessionProvider";
+import AwcStorybookStatusBanner from "@/utils/storybook/AwcStorybookStatusBanner";
 
 export type AwcStorybookShellVariant =
   "none" | "app" | "app-narrow" | "marketing" | "admin";
@@ -45,6 +46,7 @@ export default function AwcStorybookChrome({
     <ThemeProvider>
       <AuthSessionProvider>
         <AwcStorybookSessionProvider status={status}>
+          <AwcStorybookStatusBanner status={status} />
           <SidebarProvider>
             <AgentWitchDashboardProvider>
               <SendTaskModalProvider>{inner}</SendTaskModalProvider>

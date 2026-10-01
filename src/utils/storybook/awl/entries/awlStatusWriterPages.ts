@@ -22,10 +22,16 @@ export const AWL_STATUS_WRITER_PAGE_ENTRIES: readonly AwlStorybookPageEntry[] =
           status === "empty"
             ? buildAgentWitchLocalHeartbeatElapsedMarkup(null)
             : buildAgentWitchLocalHeartbeatElapsedMarkup(AWL_STORYBOOK_NOW);
+        const lede =
+          status === "empty"
+            ? "No heartbeat yet — empty connection state in this Storybook preview."
+            : status === "error"
+              ? "Bridge stale in story fixture."
+              : "Bridge healthy in story fixture.";
         return `<section class="card">
         <p class="eyebrow">Connection</p>
         <h1>Status</h1>
-        <p class="lede">Bridge ${status === "error" ? "stale" : "healthy"} in story fixture.</p>
+        <p class="lede">${lede}</p>
         ${heartbeat}
       </section>${buildAgentWitchReviveAwlStatusSection({ installDir: "/Users/storybook/.agent-witch" })}`;
       },
