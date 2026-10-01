@@ -50,6 +50,7 @@
     ".agents/scripts/lib": ["*.ts"],
     ".cursor/harness": ["*.json", "*.md"],
     ".cursor/rules": ["*.mdc", "README.md"],
+    ".storybook": ["*.ts"],
     "{root}": [
       "package.json",
       "tsconfig.json",

@@ -1,0 +1,57 @@
+"use client";
+
+import { SidebarProvider } from "@/context/SidebarContext";
+import { ThemeProvider } from "@/context/ThemeContext";
+import { SendTaskModalProvider } from "@/features/agent/SendTaskModalProvider";
+import { AgentWitchDashboardProvider } from "@/features/agent-witch/dashboard/AgentWitchDashboardProvider";
+import AuthSessionProvider from "@/features/auth/AuthSessionProvider";
+import AppShell from "@/features/shell/AppShell";
+import { APP_SHELL_NARROW_CONTENT_CLASS } from "@/features/shell/appShellContentWidth.constant";
+import type { StorybookPageStatus } from "@/utils/storybook/storybookPageStatus.constant";
+import AwcStorybookSessionProvider from "@/utils/storybook/AwcStorybookSessionProvider";
+
+export type AwcStorybookShellVariant =
+  "none" | "app" | "app-narrow" | "marketing" | "admin";
+
+export default function AwcStorybookChrome({
+  status,
+  shell,
+  children,
+}: {
+  readonly status: StorybookPageStatus;
+  readonly shell: AwcStorybookShellVariant;
+  readonly children: React.ReactNode;
+}) {
+  const inner = (() => {
+    switch (shell) {
+      case "none":
+        return children;
+      case "marketing":
+        return children;
+      case "admin":
+        return children;
+      case "app-narrow":
+        return (
+          <AppShell contentClassName={APP_SHELL_NARROW_CONTENT_CLASS}>
+            {children}
+          </AppShell>
+        );
+      case "app":
+        return <AppShell>{children}</AppShell>;
+    }
+  })();
+
+  return (
+    <ThemeProvider>
+      <AuthSessionProvider>
+        <AwcStorybookSessionProvider status={status}>
+          <SidebarProvider>
+            <AgentWitchDashboardProvider>
+              <SendTaskModalProvider>{inner}</SendTaskModalProvider>
+            </AgentWitchDashboardProvider>
+          </SidebarProvider>
+        </AwcStorybookSessionProvider>
+      </AuthSessionProvider>
+    </ThemeProvider>
+  );
+}
