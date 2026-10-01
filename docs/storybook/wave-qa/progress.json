@@ -1,7 +1,7 @@
 {
   "passThreshold": 95,
   "currentRole": "ux",
-  "currentPageIndex": 3,
+  "currentPageIndex": 4,
   "pages": [
     {
       "order": 0,
@@ -945,36 +945,259 @@
       "statuses": ["ready"],
       "roles": {
         "ux": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Agent A=98 B=98 (round 1).\nA deductions: mobile-scroll-depth -2: Four writer cards plus footer guidance require noticeable scroll on 390px before the Writer API note is fully readable above the bottom nav.\nB deductions: primary-action-scan -2: All four writer rows share equal weight; first-time users may hesitate between Cursor and Claude before reading hints.",
+          "agentFeedback": {
+            "reviewerA": {
+              "reviewMethod": "agent",
+              "reviewer": "A",
+              "deployable": "AWC",
+              "pageId": "setup-writer",
+              "role": "ux",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/setup-writer/round-1/manifest.json",
+              "scoreDesktop": 99,
+              "scoreMobile": 97,
+              "scoreOverall": 98,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "mobile-scroll-depth",
+                  "pointsDeducted": 2,
+                  "reason": "Four writer cards plus footer guidance require noticeable scroll on 390px before the Writer API note is fully readable above the bottom nav."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": ["Mobile scroll to footer guidance"],
+              "mustFix": [],
+              "quickWins": [
+                "Sticky page title on mobile while choosing a writer"
+              ]
+            },
+            "reviewerB": {
+              "reviewMethod": "agent",
+              "reviewer": "B",
+              "deployable": "AWC",
+              "pageId": "setup-writer",
+              "role": "ux",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/setup-writer/round-1/manifest.json",
+              "scoreDesktop": 98,
+              "scoreMobile": 98,
+              "scoreOverall": 98,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "primary-action-scan",
+                  "pointsDeducted": 2,
+                  "reason": "All four writer rows share equal weight; first-time users may hesitate between Cursor and Claude before reading hints."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": ["Equal-weight writer choices"],
+              "mustFix": [],
+              "quickWins": [
+                "Highlight last-used writer when session provides one"
+              ]
+            }
+          }
         },
         "copy": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+          "passed": true,
+          "score": 99,
+          "round": 1,
+          "reviewerA": 100,
+          "reviewerB": 99,
+          "notes": "Agent A=100 B=99 (round 1).\nA: no deductions.\nB deductions: bridge-clarity -1: Second footer sentence explains WebSocket bridge vs local UI; accurate but dense for skimmers.",
+          "agentFeedback": {
+            "reviewerA": {
+              "reviewMethod": "agent",
+              "reviewer": "A",
+              "deployable": "AWC",
+              "pageId": "setup-writer",
+              "role": "copy",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/setup-writer/round-1/manifest.json",
+              "scoreDesktop": 100,
+              "scoreMobile": 100,
+              "scoreOverall": 100,
+              "passed": true,
+              "scoreBreakdown": [],
+              "whyBelowThreshold": "",
+              "topIssues": [],
+              "mustFix": [],
+              "quickWins": []
+            },
+            "reviewerB": {
+              "reviewMethod": "agent",
+              "reviewer": "B",
+              "deployable": "AWC",
+              "pageId": "setup-writer",
+              "role": "copy",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/setup-writer/round-1/manifest.json",
+              "scoreDesktop": 99,
+              "scoreMobile": 99,
+              "scoreOverall": 99,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "bridge-clarity",
+                  "pointsDeducted": 1,
+                  "reason": "Second footer sentence explains WebSocket bridge vs local UI; accurate but dense for skimmers."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": [],
+              "mustFix": [],
+              "quickWins": []
+            }
+          }
         },
         "ui": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+          "passed": true,
+          "score": 100,
+          "round": 1,
+          "reviewerA": 100,
+          "reviewerB": 100,
+          "notes": "Agent A=100 B=100 (round 1).\nA: no deductions.\nB: no deductions.",
+          "agentFeedback": {
+            "reviewerA": {
+              "reviewMethod": "agent",
+              "reviewer": "A",
+              "deployable": "AWC",
+              "pageId": "setup-writer",
+              "role": "ui",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/setup-writer/round-1/manifest.json",
+              "scoreDesktop": 100,
+              "scoreMobile": 100,
+              "scoreOverall": 100,
+              "passed": true,
+              "scoreBreakdown": [],
+              "whyBelowThreshold": "",
+              "topIssues": [
+                "Zoom evidence: /opt/cursor/artifacts/storybook-waves/AWC/setup-writer/round-1/zoom/hero-desktop-ready.png",
+                "Zoom evidence: /opt/cursor/artifacts/storybook-waves/AWC/setup-writer/round-1/zoom/writer-cards-desktop-ready.png",
+                "Zoom evidence: /opt/cursor/artifacts/storybook-waves/AWC/setup-writer/round-1/zoom/footer-desktop-ready.png",
+                "Zoom evidence: /opt/cursor/artifacts/storybook-waves/AWC/setup-writer/round-1/zoom/writer-cards-mobile-ready.png",
+                "Zoom evidence: /opt/cursor/artifacts/storybook-waves/AWC/setup-writer/round-1/zoom/footer-mobile-ready.png",
+                "Zoom evidence: /opt/cursor/artifacts/storybook-waves/AWC/setup-writer/round-1/zoom/footer-bottom-mobile-ready.png",
+                "Production parity: matches signed-in app shell on www.agentwitch.com/setup/writer"
+              ],
+              "mustFix": [],
+              "quickWins": [],
+              "zoomedSections": [
+                "hero-desktop-ready",
+                "writer-cards-desktop-ready",
+                "footer-desktop-ready",
+                "sidebar-desktop-ready",
+                "header-desktop-ready",
+                "hero-mobile-ready",
+                "writer-cards-mobile-ready",
+                "footer-mobile-ready",
+                "footer-bottom-mobile-ready"
+              ],
+              "obviousVisualDefects": "none",
+              "visualEvidenceMethod": "computerUse"
+            },
+            "reviewerB": {
+              "reviewMethod": "agent",
+              "reviewer": "B",
+              "deployable": "AWC",
+              "pageId": "setup-writer",
+              "role": "ui",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/setup-writer/round-1/manifest.json",
+              "scoreDesktop": 100,
+              "scoreMobile": 100,
+              "scoreOverall": 100,
+              "passed": true,
+              "scoreBreakdown": [],
+              "whyBelowThreshold": "",
+              "topIssues": [
+                "Zoom evidence: /opt/cursor/artifacts/storybook-waves/AWC/setup-writer/round-1/zoom/writer-cards-mobile-ready.png",
+                "Zoom evidence: /opt/cursor/artifacts/storybook-waves/AWC/setup-writer/round-1/zoom/footer-bottom-mobile-ready.png",
+                "Dark-mode hint text uses gray-400 on cards — readable after footer padding fix"
+              ],
+              "mustFix": [],
+              "quickWins": [],
+              "zoomedSections": [
+                "hero-desktop-ready",
+                "writer-cards-desktop-ready",
+                "footer-desktop-ready",
+                "writer-cards-mobile-ready",
+                "footer-mobile-ready",
+                "footer-bottom-mobile-ready"
+              ],
+              "obviousVisualDefects": "none",
+              "visualEvidenceMethod": "computerUse"
+            }
+          }
         },
         "product": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Agent A=98 B=98 (round 1).\nA deductions: mac-dependency -2: Page assumes a linked Mac; honest copy but still a hard prerequisite for first-run demos without a live client.\nB deductions: api-key-path -2: Writer API escape hatch is below the fold on mobile; acceptable but easy to miss during onboarding.",
+          "agentFeedback": {
+            "reviewerA": {
+              "reviewMethod": "agent",
+              "reviewer": "A",
+              "deployable": "AWC",
+              "pageId": "setup-writer",
+              "role": "product",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/setup-writer/round-1/manifest.json",
+              "scoreDesktop": 98,
+              "scoreMobile": 98,
+              "scoreOverall": 98,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "mac-dependency",
+                  "pointsDeducted": 2,
+                  "reason": "Page assumes a linked Mac; honest copy but still a hard prerequisite for first-run demos without a live client."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": ["Requires Mac bridge for live ensure flow"],
+              "mustFix": [],
+              "quickWins": [
+                "Storybook fixture could show success status row for PM walkthrough"
+              ]
+            },
+            "reviewerB": {
+              "reviewMethod": "agent",
+              "reviewer": "B",
+              "deployable": "AWC",
+              "pageId": "setup-writer",
+              "role": "product",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/setup-writer/round-1/manifest.json",
+              "scoreDesktop": 99,
+              "scoreMobile": 97,
+              "scoreOverall": 98,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "api-key-path",
+                  "pointsDeducted": 2,
+                  "reason": "Writer API escape hatch is below the fold on mobile; acceptable but easy to miss during onboarding."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": ["Writer API note placement on mobile"],
+              "mustFix": [],
+              "quickWins": []
+            }
+          }
         },
         "tester": {
           "passed": true,
@@ -993,7 +1216,7 @@
           "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
         }
       },
-      "allRolesPassed": false
+      "allRolesPassed": true
     },
     {
       "order": 4,

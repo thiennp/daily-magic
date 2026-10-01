@@ -1,0 +1,24 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "A",
+  "deployable": "AWC",
+  "pageId": "setup-writer",
+  "role": "ux",
+  "captureRound": 1,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/setup-writer/round-1/manifest.json",
+  "scoreDesktop": 99,
+  "scoreMobile": 97,
+  "scoreOverall": 98,
+  "passed": true,
+  "scoreBreakdown": [
+    {
+      "area": "mobile-scroll-depth",
+      "pointsDeducted": 2,
+      "reason": "Four writer cards plus footer guidance require noticeable scroll on 390px before the Writer API note is fully readable above the bottom nav."
+    }
+  ],
+  "whyBelowThreshold": "",
+  "topIssues": ["Mobile scroll to footer guidance"],
+  "mustFix": [],
+  "quickWins": ["Sticky page title on mobile while choosing a writer"]
+}

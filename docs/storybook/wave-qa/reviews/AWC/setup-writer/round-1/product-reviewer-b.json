@@ -1,0 +1,24 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "B",
+  "deployable": "AWC",
+  "pageId": "setup-writer",
+  "role": "product",
+  "captureRound": 1,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/setup-writer/round-1/manifest.json",
+  "scoreDesktop": 99,
+  "scoreMobile": 97,
+  "scoreOverall": 98,
+  "passed": true,
+  "scoreBreakdown": [
+    {
+      "area": "api-key-path",
+      "pointsDeducted": 2,
+      "reason": "Writer API escape hatch is below the fold on mobile; acceptable but easy to miss during onboarding."
+    }
+  ],
+  "whyBelowThreshold": "",
+  "topIssues": ["Writer API note placement on mobile"],
+  "mustFix": [],
+  "quickWins": []
+}

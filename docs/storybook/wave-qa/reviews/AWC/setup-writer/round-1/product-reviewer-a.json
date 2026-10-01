@@ -1,0 +1,26 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "A",
+  "deployable": "AWC",
+  "pageId": "setup-writer",
+  "role": "product",
+  "captureRound": 1,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/setup-writer/round-1/manifest.json",
+  "scoreDesktop": 98,
+  "scoreMobile": 98,
+  "scoreOverall": 98,
+  "passed": true,
+  "scoreBreakdown": [
+    {
+      "area": "mac-dependency",
+      "pointsDeducted": 2,
+      "reason": "Page assumes a linked Mac; honest copy but still a hard prerequisite for first-run demos without a live client."
+    }
+  ],
+  "whyBelowThreshold": "",
+  "topIssues": ["Requires Mac bridge for live ensure flow"],
+  "mustFix": [],
+  "quickWins": [
+    "Storybook fixture could show success status row for PM walkthrough"
+  ]
+}

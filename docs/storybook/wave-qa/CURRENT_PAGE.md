@@ -4,14 +4,14 @@
 
 | Field      | Value                                                                                                       |
 | ---------- | ----------------------------------------------------------------------------------------------------------- |
-| **Page**   | AWC `setup-writer` (`/setup/writer`)                                                                        |
+| **Page**   | AWC `privacy` (`/privacy`)                                                                                  |
 | **Round**  | **1**                                                                                                       |
-| **Branch** | `cursor/wave-qa-awc-setup-writer-b63b`                                                                      |
+| **Branch** | `cursor/wave-qa-awc-privacy-b63b`                                                                           |
 | **Gate**   | ui **100/100** desktop+mobile, `computerUse` + ≥6 zooms; ux/copy/product **≥97**; tester+dx objective gates |
 
 ## After this page
 
-**Completed:** AWC `for-agents` round 1 (`allRolesPassed: true` on branch `cursor/wave-qa-awc-for-agents-b63b`). Next: AWC `setup-writer` only.
+**Completed:** AWC `setup-writer` round 1 (`allRolesPassed: true` on branch `cursor/wave-qa-awc-setup-writer-b63b`). Next: AWC `privacy` only.
 
 ## Coordinator
 
