@@ -1,12 +1,15 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import type { AwcProjectActivityAction } from "@/features/projects/access/awcProjectActivityActions.constant";
 import { fetchProjectActivity } from "@/features/projects/access/utils/fetchProjectActivity";
 import type AwcProjectActivityEvent from "@/features/projects/access/types/awcProjectActivityEvent.type";
 
-export const useAwcProjectActivity = (projectId: string) => {
+export const useAwcProjectActivity = (
+  projectId: string,
+  refreshSignal: number = 0,
+) => {
   const [events, setEvents] = useState<readonly AwcProjectActivityEvent[]>([]);
   const [filter, setFilter] = useState<AwcProjectActivityAction | "all">("all");
   const [isLoading, setIsLoading] = useState(true);
@@ -31,15 +34,19 @@ export const useAwcProjectActivity = (projectId: string) => {
     setIsLoading(false);
   }, [projectId, filter]);
 
+  const loadGenerationRef = useRef(0);
+
   useEffect(() => {
-    const controller = new AbortController();
+    const generation = loadGenerationRef.current + 1;
+    loadGenerationRef.current = generation;
+
     const load = async (): Promise<void> => {
       setIsLoading(true);
       const result = await fetchProjectActivity({
         projectId,
         actionFilter: filter,
       });
-      if (controller.signal.aborted) {
+      if (loadGenerationRef.current !== generation) {
         return;
       }
       if (result.ok) {
@@ -54,10 +61,7 @@ export const useAwcProjectActivity = (projectId: string) => {
       setIsLoading(false);
     };
     void load();
-    return () => {
-      controller.abort();
-    };
-  }, [projectId, filter]);
+  }, [projectId, filter, refreshSignal]);
 
   return {
     events,

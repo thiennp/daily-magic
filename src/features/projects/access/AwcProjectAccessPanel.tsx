@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+
 import AwcProjectAccessFolderRefs from "@/features/projects/access/AwcProjectAccessFolderRefs";
 import AwcProjectAccessMembersList from "@/features/projects/access/AwcProjectAccessMembersList";
 import AwcProjectAccessPendingList from "@/features/projects/access/AwcProjectAccessPendingList";
@@ -20,6 +22,10 @@ export default function AwcProjectAccessPanel({
   projectId,
 }: AwcProjectAccessPanelProps) {
   const access = useAwcProjectAccess(projectId);
+  const [activityRefreshSignal, setActivityRefreshSignal] = useState(0);
+  const bumpActivityFeed = () => {
+    setActivityRefreshSignal((value) => value + 1);
+  };
   const copy = AWC_PROJECT_ACCESS_COPY;
 
   const onAddFolder = async (
@@ -62,19 +68,28 @@ export default function AwcProjectAccessPanel({
       </p>
       <AwcProjectAccessPendingList
         pending={access.pending}
-        onApprove={(id) => void access.approve(id)}
-        onDeny={(id) => void access.deny(id)}
+        onApprove={(id) => {
+          void access.approve(id).then(bumpActivityFeed);
+        }}
+        onDeny={(id) => {
+          void access.deny(id).then(bumpActivityFeed);
+        }}
       />
       <AwcProjectAccessMembersList
         members={access.members}
-        onRevoke={(id) => void access.revoke(id)}
+        onRevoke={(id) => {
+          void access.revoke(id).then(bumpActivityFeed);
+        }}
       />
       <AwcProjectAccessFolderRefs
         folderRefs={access.folderRefs}
         onAdd={(machine, folder) => onAddFolder(machine, folder)}
         onRemove={(id) => void onRemoveFolder(id)}
       />
-      <AwcProjectActivityFeed projectId={projectId} />
+      <AwcProjectActivityFeed
+        projectId={projectId}
+        refreshSignal={activityRefreshSignal}
+      />
       {access.message ? (
         <p className="text-sm text-gray-600 dark:text-gray-400">
           {access.message}

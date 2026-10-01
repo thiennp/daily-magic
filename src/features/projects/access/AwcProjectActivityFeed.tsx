@@ -6,46 +6,21 @@ import {
   type AwcProjectActivityAction,
 } from "@/features/projects/access/awcProjectActivityActions.constant";
 import { AWC_PROJECT_ACCESS_COPY } from "@/features/projects/access/awcProjectAccessCopy.constant";
+import AwcProjectActivityFeedList from "@/features/projects/access/AwcProjectActivityFeedList";
 import { useAwcProjectActivity } from "@/features/projects/access/hooks/useAwcProjectActivity";
 import { APP_SURFACE_BODY_TEXT_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
 
 interface AwcProjectActivityFeedProps {
   readonly projectId: string;
+  /** Bump after membership mutations so the feed refetches audit events. */
+  readonly refreshSignal?: number;
 }
-
-const memberAnchorId = (userId: string): string =>
-  `access-member-${encodeURIComponent(userId)}`;
-
-const formatWhen = (iso: string): string => {
-  const date = new Date(iso);
-  if (Number.isNaN(date.getTime())) {
-    return iso;
-  }
-  return date.toLocaleString(undefined, {
-    dateStyle: "medium",
-    timeStyle: "short",
-  });
-};
-
-const subjectUserId = (event: {
-  readonly targetUserId: string | null;
-  readonly actorUserId: string;
-  readonly detail: Readonly<Record<string, string | boolean | null>>;
-}): string | null => {
-  if (event.targetUserId !== null && event.targetUserId.length > 0) {
-    return event.targetUserId;
-  }
-  const fromDetail = event.detail.subjectUserId;
-  if (typeof fromDetail === "string" && fromDetail.length > 0) {
-    return fromDetail;
-  }
-  return null;
-};
 
 export default function AwcProjectActivityFeed({
   projectId,
+  refreshSignal = 0,
 }: AwcProjectActivityFeedProps) {
-  const activity = useAwcProjectActivity(projectId);
+  const activity = useAwcProjectActivity(projectId, refreshSignal);
   const copy = AWC_PROJECT_ACCESS_COPY;
 
   const onFilterChange = (value: string) => {
@@ -100,47 +75,7 @@ export default function AwcProjectActivityFeed({
         <p className="text-sm text-gray-500">{copy.activityEmpty}</p>
       ) : null}
 
-      {activity.events.length > 0 ? (
-        <ul className="space-y-2">
-          {activity.events.map((event) => {
-            const subject = subjectUserId(event);
-            const label =
-              AWC_PROJECT_ACTIVITY_ACTION_LABELS[event.action] ?? event.action;
-            return (
-              <li
-                key={event.id}
-                className="rounded-lg border border-gray-200/80 px-3 py-2 text-sm dark:border-gray-800/80"
-              >
-                <div className="flex flex-wrap items-baseline justify-between gap-2">
-                  <span className="font-medium text-gray-800 dark:text-white/90">
-                    {label}
-                  </span>
-                  <time
-                    className="text-xs text-gray-500 dark:text-gray-400"
-                    dateTime={event.at}
-                  >
-                    {formatWhen(event.at)}
-                  </time>
-                </div>
-                <p className="mt-1 text-xs text-gray-600 dark:text-gray-400">
-                  Actor {event.actorUserId}
-                  {subject !== null ? (
-                    <>
-                      {" · "}
-                      <a
-                        href={`#${memberAnchorId(subject)}`}
-                        className="underline underline-offset-2 hover:text-gray-900 dark:hover:text-white"
-                      >
-                        Member {subject}
-                      </a>
-                    </>
-                  ) : null}
-                </p>
-              </li>
-            );
-          })}
-        </ul>
-      ) : null}
+      <AwcProjectActivityFeedList events={activity.events} />
 
       <p className="text-xs text-gray-500 dark:text-gray-400">
         {copy.activityNonGoals}
