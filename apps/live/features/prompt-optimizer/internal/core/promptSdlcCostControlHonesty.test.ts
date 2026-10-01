@@ -1,8 +1,10 @@
 import { describe, expect, it } from "vitest";
 
-import { confirmPromptSdlcCostBudget } from "@/lib/promptOptimizer/confirmPromptSdlcCostBudget";
-import { defaultPromptSdlcCostControls } from "@/lib/promptOptimizer/createEmptyPromptSdlcCostControl";
-import { seedPromptSdlcStep4CostProposal } from "@/lib/promptOptimizer/proposePromptSdlcCostBudget";
+import {
+  confirmPromptSdlcCostBudget,
+  defaultPromptSdlcCostControls,
+  seedPromptSdlcStep4CostProposal,
+} from "../../../../adapters/promptSdlcAwcCore";
 
 import { applyPromptSdlcBudgetGuard } from "./applyPromptSdlcBudgetGuard";
 import { buildPromptSdlcAgentSnapshot } from "./buildPromptSdlcAgentSnapshot";
