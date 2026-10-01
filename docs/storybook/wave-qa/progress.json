@@ -2112,36 +2112,301 @@
       "statuses": ["loading", "guest", "empty", "error", "ready"],
       "roles": {
         "ux": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+          "passed": true,
+          "score": 97,
+          "round": 1,
+          "reviewerA": 97,
+          "reviewerB": 97,
+          "notes": "Agent A=97 B=97 (round 1).\nA deductions: desktop-card-truncation -1: Several free-starter cards clip descriptions with ellipses on 1280px, hiding install context until hover or drill-in. | mobile-bottom-nav -2: 390px captures show the fixed bottom tab bar overlapping mid-scroll starter cards; CTAs remain reachable but scan path is interrupted.\nB deductions: error-state-signal -2: Error Storybook banner is the only failure signal; starter grid still reads like ready, so failure UX is easy to miss. | guest-cta-repeat -1: Guest capture repeats Create account / Sign in below starters and again in teammate gate; hierarchy is clear but slightly noisy.",
+          "agentFeedback": {
+            "reviewerA": {
+              "reviewMethod": "agent",
+              "reviewer": "A",
+              "deployable": "AWC",
+              "pageId": "marketplace",
+              "role": "ux",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/marketplace/round-1/manifest.json",
+              "scoreDesktop": 98,
+              "scoreMobile": 95,
+              "scoreOverall": 97,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "desktop-card-truncation",
+                  "pointsDeducted": 1,
+                  "reason": "Several free-starter cards clip descriptions with ellipses on 1280px, hiding install context until hover or drill-in."
+                },
+                {
+                  "area": "mobile-bottom-nav",
+                  "pointsDeducted": 2,
+                  "reason": "390px captures show the fixed bottom tab bar overlapping mid-scroll starter cards; CTAs remain reachable but scan path is interrupted."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": [
+                "Mobile chrome vs long starter list",
+                "Card copy truncation on desktop"
+              ],
+              "mustFix": [],
+              "quickWins": [
+                "Add scroll padding under free-starter stack on narrow viewports"
+              ]
+            },
+            "reviewerB": {
+              "reviewMethod": "agent",
+              "reviewer": "B",
+              "deployable": "AWC",
+              "pageId": "marketplace",
+              "role": "ux",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/marketplace/round-1/manifest.json",
+              "scoreDesktop": 97,
+              "scoreMobile": 96,
+              "scoreOverall": 97,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "error-state-signal",
+                  "pointsDeducted": 2,
+                  "reason": "Error Storybook banner is the only failure signal; starter grid still reads like ready, so failure UX is easy to miss."
+                },
+                {
+                  "area": "guest-cta-repeat",
+                  "pointsDeducted": 1,
+                  "reason": "Guest capture repeats Create account / Sign in below starters and again in teammate gate; hierarchy is clear but slightly noisy."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": [
+                "Error vs ready distinction",
+                "Repeated guest auth CTAs"
+              ],
+              "mustFix": [],
+              "quickWins": [
+                "Pair error banner with inline marketplace fetch failure panel in Storybook error fixture"
+              ]
+            }
+          }
         },
         "copy": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+          "passed": true,
+          "score": 97,
+          "round": 1,
+          "reviewerA": 97,
+          "reviewerB": 97,
+          "notes": "Agent A=97 B=97 (round 1).\nA deductions: playbook-capitalization -1: Section title uses capital P in Playbook while body copy lowercases playbook; minor voice inconsistency. | loading-chrome -2: Storybook loading ribbon copy is meta (Waiting for data) rather than product tone, though expected for the loading state capture.\nB deductions: teammate-empty-tone -2: Signed-in empty teammates card leans on future tense (show up here) without a crisp next step beyond browse starters. | guest-gate-clarity -1: Guest teammate gate copy is accurate but could name Library save benefit in one line to mirror the starter section.",
+          "agentFeedback": {
+            "reviewerA": {
+              "reviewMethod": "agent",
+              "reviewer": "A",
+              "deployable": "AWC",
+              "pageId": "marketplace",
+              "role": "copy",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/marketplace/round-1/manifest.json",
+              "scoreDesktop": 98,
+              "scoreMobile": 96,
+              "scoreOverall": 97,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "playbook-capitalization",
+                  "pointsDeducted": 1,
+                  "reason": "Section title uses capital P in Playbook while body copy lowercases playbook; minor voice inconsistency."
+                },
+                {
+                  "area": "loading-chrome",
+                  "pointsDeducted": 2,
+                  "reason": "Storybook loading ribbon copy is meta (Waiting for data) rather than product tone, though expected for the loading state capture."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": ["Playbook casing", "Storybook-only loading ribbon"],
+              "mustFix": [],
+              "quickWins": [
+                "Align Playbook/playbook casing in free-starter section header and helper line"
+              ]
+            },
+            "reviewerB": {
+              "reviewMethod": "agent",
+              "reviewer": "B",
+              "deployable": "AWC",
+              "pageId": "marketplace",
+              "role": "copy",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/marketplace/round-1/manifest.json",
+              "scoreDesktop": 97,
+              "scoreMobile": 97,
+              "scoreOverall": 97,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "teammate-empty-tone",
+                  "pointsDeducted": 2,
+                  "reason": "Signed-in empty teammates card leans on future tense (show up here) without a crisp next step beyond browse starters."
+                },
+                {
+                  "area": "guest-gate-clarity",
+                  "pointsDeducted": 1,
+                  "reason": "Guest teammate gate copy is accurate but could name Library save benefit in one line to mirror the starter section."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": [
+                "Teammate empty state voice",
+                "Guest gate benefit line"
+              ],
+              "mustFix": [],
+              "quickWins": [
+                "Mirror Library save line from starter intro in guest teammate gate"
+              ]
+            }
+          }
         },
         "ui": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+          "passed": true,
+          "score": 96,
+          "round": 1,
+          "reviewerA": 97,
+          "reviewerB": 96,
+          "notes": "Agent A=97 B=96 (round 1).\nA deductions: card-description-clamp -2: Starter cards use line-clamp that truncates body copy unevenly across categories on desktop grid. | mobile-nav-layer -1: Bottom tab bar stacks above long marketplace scroll on 390px full-page capture, creating a duplicated chrome band in screenshots.\nB deductions: state-banners -2: Loading/error/empty Storybook ribbons use distinct colors but share similar height; ready state has no complementary inline state chip. | mobile-starter-density -2: Single-column starter stack is long on mobile; spacing between cards is consistent but pushes auth CTAs far down the fold.",
+          "agentFeedback": {
+            "reviewerA": {
+              "reviewMethod": "agent",
+              "reviewer": "A",
+              "deployable": "AWC",
+              "pageId": "marketplace",
+              "role": "ui",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/marketplace/round-1/manifest.json",
+              "scoreDesktop": 98,
+              "scoreMobile": 96,
+              "scoreOverall": 97,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "card-description-clamp",
+                  "pointsDeducted": 2,
+                  "reason": "Starter cards use line-clamp that truncates body copy unevenly across categories on desktop grid."
+                },
+                {
+                  "area": "mobile-nav-layer",
+                  "pointsDeducted": 1,
+                  "reason": "Bottom tab bar stacks above long marketplace scroll on 390px full-page capture, creating a duplicated chrome band in screenshots."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": [
+                "Uneven card clamp",
+                "Mobile nav layering in captures"
+              ],
+              "mustFix": [],
+              "quickWins": [
+                "Normalize min-height on starter cards so clamp lines align in the grid"
+              ]
+            },
+            "reviewerB": {
+              "reviewMethod": "agent",
+              "reviewer": "B",
+              "deployable": "AWC",
+              "pageId": "marketplace",
+              "role": "ui",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/marketplace/round-1/manifest.json",
+              "scoreDesktop": 97,
+              "scoreMobile": 95,
+              "scoreOverall": 96,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "state-banners",
+                  "pointsDeducted": 2,
+                  "reason": "Loading/error/empty Storybook ribbons use distinct colors but share similar height; ready state has no complementary inline state chip."
+                },
+                {
+                  "area": "mobile-starter-density",
+                  "pointsDeducted": 2,
+                  "reason": "Single-column starter stack is long on mobile; spacing between cards is consistent but pushes auth CTAs far down the fold."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": ["Storybook state chrome", "Mobile vertical length"],
+              "mustFix": [],
+              "quickWins": [
+                "Tighten vertical rhythm between starter cards on max-sm breakpoints"
+              ]
+            }
+          }
         },
         "product": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 99,
+          "reviewerB": 98,
+          "notes": "Agent A=99 B=98 (round 1).\nA deductions: error-fixture-fidelity -1: Error state does not surface a failed marketplace fetch UI; fixtures still show full starter catalog like ready.\nB deductions: guest-vs-signed-in -1: Guest teammate gate correctly hides org listings; signed-in empty still shows team upsell — believable but not demonstrating a populated teammate row. | mac-run-promise -1: Header promises run on your Mac; starter cards do not restate Mac writer requirement in the grid (acceptable given global nav context).",
+          "agentFeedback": {
+            "reviewerA": {
+              "reviewMethod": "agent",
+              "reviewer": "A",
+              "deployable": "AWC",
+              "pageId": "marketplace",
+              "role": "product",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/marketplace/round-1/manifest.json",
+              "scoreDesktop": 99,
+              "scoreMobile": 98,
+              "scoreOverall": 99,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "error-fixture-fidelity",
+                  "pointsDeducted": 1,
+                  "reason": "Error state does not surface a failed marketplace fetch UI; fixtures still show full starter catalog like ready."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": [],
+              "mustFix": [],
+              "quickWins": [
+                "Storybook error fixture could stub empty listings plus inline retry for teammate fetch only"
+              ]
+            },
+            "reviewerB": {
+              "reviewMethod": "agent",
+              "reviewer": "B",
+              "deployable": "AWC",
+              "pageId": "marketplace",
+              "role": "product",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/marketplace/round-1/manifest.json",
+              "scoreDesktop": 98,
+              "scoreMobile": 97,
+              "scoreOverall": 98,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "guest-vs-signed-in",
+                  "pointsDeducted": 1,
+                  "reason": "Guest teammate gate correctly hides org listings; signed-in empty still shows team upsell — believable but not demonstrating a populated teammate row."
+                },
+                {
+                  "area": "mac-run-promise",
+                  "pointsDeducted": 1,
+                  "reason": "Header promises run on your Mac; starter cards do not restate Mac writer requirement in the grid (acceptable given global nav context)."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": [
+                "Teammate listing demo gap in empty signed-in story"
+              ],
+              "mustFix": [],
+              "quickWins": [
+                "Add one sample teammate listing in ready fixture to show install affordance"
+              ]
+            }
+          }
         },
         "tester": {
           "passed": true,
@@ -2160,7 +2425,7 @@
           "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
         }
       },
-      "allRolesPassed": false
+      "allRolesPassed": true
     },
     {
       "order": 11,

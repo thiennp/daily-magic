@@ -1,0 +1,26 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "A",
+  "deployable": "AWC",
+  "pageId": "marketplace",
+  "role": "product",
+  "captureRound": 1,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/marketplace/round-1/manifest.json",
+  "scoreDesktop": 99,
+  "scoreMobile": 98,
+  "scoreOverall": 99,
+  "passed": true,
+  "scoreBreakdown": [
+    {
+      "area": "error-fixture-fidelity",
+      "pointsDeducted": 1,
+      "reason": "Error state does not surface a failed marketplace fetch UI; fixtures still show full starter catalog like ready."
+    }
+  ],
+  "whyBelowThreshold": "",
+  "topIssues": [],
+  "mustFix": [],
+  "quickWins": [
+    "Storybook error fixture could stub empty listings plus inline retry for teammate fetch only"
+  ]
+}
