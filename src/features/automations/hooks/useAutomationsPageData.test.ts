@@ -16,5 +16,6 @@ describe("useAutomationsPageData", () => {
     expect(source).toContain("setLoadFailed(true)");
     expect(source).toMatch(/!automationsResponse\.ok/);
     expect(source).toMatch(/!capabilitiesResponse\.ok/);
+    expect(source).toContain("loadGenerationRef");
   });
 });

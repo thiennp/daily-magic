@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import type AgentAutomationRecord from "@/lib/automations/types/AgentAutomationRecord.type";
 import type PublishedCapabilityRecord from "@/lib/capabilities/types/PublishedCapabilityRecord.type";
@@ -27,7 +27,14 @@ export function useAutomationsPageData(refreshKey = 0): {
     setReloadNonce((nonce) => nonce + 1);
   }, []);
 
+  const loadGenerationRef = useRef(0);
+
   useEffect(() => {
+    const generation = loadGenerationRef.current + 1;
+    loadGenerationRef.current = generation;
+
+    const isStale = (): boolean => loadGenerationRef.current !== generation;
+
     const loadPageData = async (): Promise<void> => {
       setIsLoading(true);
       setLoadFailed(false);
@@ -38,12 +45,18 @@ export function useAutomationsPageData(refreshKey = 0): {
         ]);
 
         if (!automationsResponse.ok || !capabilitiesResponse.ok) {
-          setLoadFailed(true);
+          if (!isStale()) {
+            setLoadFailed(true);
+          }
           return;
         }
 
         const automationsData: unknown = await automationsResponse.json();
         const capabilitiesData: unknown = await capabilitiesResponse.json();
+
+        if (isStale()) {
+          return;
+        }
 
         if (
           typeof automationsData === "object" &&
@@ -56,7 +69,7 @@ export function useAutomationsPageData(refreshKey = 0): {
             (automationsData as { automations: AgentAutomationRecord[] })
               .automations,
           );
-        } else {
+        } else if (!isStale()) {
           setLoadFailed(true);
           return;
         }
@@ -76,13 +89,17 @@ export function useAutomationsPageData(refreshKey = 0): {
               (item) => item.type === CapabilityType.WORKFLOW,
             ),
           );
-        } else {
+        } else if (!isStale()) {
           setLoadFailed(true);
         }
       } catch {
-        setLoadFailed(true);
+        if (!isStale()) {
+          setLoadFailed(true);
+        }
       } finally {
-        setIsLoading(false);
+        if (!isStale()) {
+          setIsLoading(false);
+        }
       }
     };
 

@@ -1,0 +1,5 @@
+# Automations — known issues
+
+| ID              | Symptom                                                                       | Root cause                                                                                                                              | Fix                                                                                                                             |
+| --------------- | ----------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| AUTOMATIONS-001 | After creating an automation, list briefly showed load error or stuck loading | Overlapping `refreshKey` / `reload` fetches; a slower earlier request could set `loadFailed` or clear `isLoading` after a newer success | Ignore stale responses via `loadGenerationRef` in `useAutomationsPageData`. `useAutomationsPageData.test.ts` (AUTOMATIONS-001). |
