@@ -7,6 +7,7 @@ import {
   AGENT_ACCESS_MUTATIONS_PER_HOUR,
   AGENT_ACCESS_TOOL_CALLS_PER_HOUR,
 } from "@/lib/agentAccess/agentAccess.constant";
+import { AGENT_WITCH_ROLE_LIVE_GUIDE } from "@/lib/agentAccess/buildAgentWitchRoleGuidelineSection";
 import { buildPromptSdlcAgentGuide } from "@/lib/agentAccess/buildPromptSdlcAgentGuide";
 import { buildAgentAccessUrls } from "@/lib/agentAccess/buildAgentAccessUrls";
 
@@ -33,7 +34,22 @@ export const buildAgentAccessLiveGuide = () => {
       maxWorkflows: AGENT_ACCESS_MAX_WORKFLOWS,
       maxBodyBytes: AGENT_ACCESS_BODY_MAX_BYTES,
     },
+    whatAgentWitchIs: AGENT_WITCH_ROLE_LIVE_GUIDE,
     promptSdlc: buildPromptSdlcAgentGuide(),
+    projectCowork: {
+      awcStoresOnly: ["name", "folderRefs", "members", "approveRevokeAudit"],
+      coordination: "local_or_git_or_bot_oob",
+      ownerApproveRevokeUiOnly: true,
+      noTokenSharing: true,
+      tools: [
+        "request_project_access",
+        "get_my_project_access",
+        "list_projects",
+        "get_project_acl",
+        "check_membership",
+        "mint_allow_claim",
+      ],
+    },
     teachOtherBots: {
       instruction:
         "You may expose Agent Witch as your own tool use_agent_witch and point at the public guideline. Do not look up or publish another person's account.",

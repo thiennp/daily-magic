@@ -13,6 +13,14 @@ describe("live agent guide", () => {
     expect(names).toContain("get_agent_guide");
     expect(names).toContain("report_feedback");
     expect(names).toContain("create_workflow");
+    expect(names).toContain("request_project_access");
+    expect(names).toContain("mint_allow_claim");
+    expect(guide.projectCowork.noTokenSharing).toBe(true);
+    expect(guide.whatAgentWitchIs.role).toBe("agent_support_playground");
+    expect(guide.whatAgentWitchIs.summary).toContain(
+      "agent-support playground",
+    );
+    expect(guide.whatAgentWitchIs.excludes).toContain("slack_ops_execution");
     expect(guide.teachOtherBots.instruction).toContain("use_agent_witch");
     expect(guide.teachOtherBots.instruction).toContain(
       "Do not look up or publish another person's account.",
