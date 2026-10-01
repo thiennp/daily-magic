@@ -12,36 +12,371 @@
       "statuses": ["ready"],
       "roles": {
         "ux": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+          "passed": true,
+          "score": 96,
+          "round": 1,
+          "reviewerA": 97,
+          "reviewerB": 96,
+          "notes": "Agent A=97 B=96 (round 1).\nA deductions: desktop-cta-pairing -1: Primary and secondary hero CTAs share equal visual weight; scan path still lands on account creation but secondary link could defer further on wide layouts. | desktop-midpage-interrupt -1: For-your-AI block appears before feature grid and pulls attention away from the signup column on first scroll. | mobile-auth-below-fold -3: On 390px capture the Create free account card sits well below hero CTAs, adding scroll before users reach the inline sign-in form. | mobile-length -2: Marketing story is very long on mobile; final CTA band is far from hero, increasing fatigue before repeat conversion.\nB deductions: desktop-trust-timing -2: Trust strip metrics appear under hero CTAs but product preview mock competes for attention in the right column on first paint. | desktop-showcases-depth -1: Showcase grids add depth without sticky wayfinding; returning to signup requires scrolling back up. | mobile-menu-cta -2: Header Create account button is small relative to hero; menu label alone may not signal full marketing nav on first visit. | mobile-form-stack -3: Auth form stacks below lengthy hero copy and numbered steps before users see Google/email fields on the ready capture.",
+          "agentFeedback": {
+            "reviewerA": {
+              "reviewMethod": "agent",
+              "reviewer": "A",
+              "deployable": "AWC",
+              "pageId": "home-marketing",
+              "role": "ux",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/home-marketing/round-1/manifest.json",
+              "scoreDesktop": 98,
+              "scoreMobile": 95,
+              "scoreOverall": 97,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "desktop-cta-pairing",
+                  "pointsDeducted": 1,
+                  "reason": "Primary and secondary hero CTAs share equal visual weight; scan path still lands on account creation but secondary link could defer further on wide layouts."
+                },
+                {
+                  "area": "desktop-midpage-interrupt",
+                  "pointsDeducted": 1,
+                  "reason": "For-your-AI block appears before feature grid and pulls attention away from the signup column on first scroll."
+                },
+                {
+                  "area": "mobile-auth-below-fold",
+                  "pointsDeducted": 3,
+                  "reason": "On 390px capture the Create free account card sits well below hero CTAs, adding scroll before users reach the inline sign-in form."
+                },
+                {
+                  "area": "mobile-length",
+                  "pointsDeducted": 2,
+                  "reason": "Marketing story is very long on mobile; final CTA band is far from hero, increasing fatigue before repeat conversion."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": [
+                "Mobile signup card placement",
+                "Long mobile scroll to footer CTA"
+              ],
+              "mustFix": [],
+              "quickWins": [
+                "Anchor mobile users to #get-started after primary hero CTA tap"
+              ]
+            },
+            "reviewerB": {
+              "reviewMethod": "agent",
+              "reviewer": "B",
+              "deployable": "AWC",
+              "pageId": "home-marketing",
+              "role": "ux",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/home-marketing/round-1/manifest.json",
+              "scoreDesktop": 97,
+              "scoreMobile": 95,
+              "scoreOverall": 96,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "desktop-trust-timing",
+                  "pointsDeducted": 2,
+                  "reason": "Trust strip metrics appear under hero CTAs but product preview mock competes for attention in the right column on first paint."
+                },
+                {
+                  "area": "desktop-showcases-depth",
+                  "pointsDeducted": 1,
+                  "reason": "Showcase grids add depth without sticky wayfinding; returning to signup requires scrolling back up."
+                },
+                {
+                  "area": "mobile-menu-cta",
+                  "pointsDeducted": 2,
+                  "reason": "Header Create account button is small relative to hero; menu label alone may not signal full marketing nav on first visit."
+                },
+                {
+                  "area": "mobile-form-stack",
+                  "pointsDeducted": 3,
+                  "reason": "Auth form stacks below lengthy hero copy and numbered steps before users see Google/email fields on the ready capture."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": [
+                "Mobile path to sign-in form",
+                "Showcase length without jump links"
+              ],
+              "mustFix": [],
+              "quickWins": [
+                "Repeat sticky Create account in mobile header after scroll"
+              ]
+            }
+          }
         },
         "copy": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+          "passed": true,
+          "score": 96,
+          "round": 1,
+          "reviewerA": 97,
+          "reviewerB": 96,
+          "notes": "Agent A=97 B=96 (round 1).\nA deductions: announcement-acl -2: Top bar says Project Access ACL; ACL reads as engineering jargon on a marketing surface. | eyebrow-harness -1: Hero eyebrow leads with Harness; philosophy prefers Playbook/Mac vocabulary over harness on user-facing surfaces. | hero-approve-capitalization -1: Mid-sentence capitalized Approve in hero paragraph breaks reading flow. | mobile-announcement-density -1: Announcement line wraps awkwardly on 390px, slightly obscuring the Agent Witch value prop on first screen.\nB deductions: evaluate-scores-jargon -2: Hero and features repeat evaluate scores; accurate but heavy for first-touch marketing readers. | specialist-bots-clause -1: Slack and Outlook ops sentence is precise yet dense in the opening paragraph. | for-ai-harness -2: For-your-AI section mentions harness in body copy where Playbook or project wording would match vocabulary rules. | preset-dialog-tone -1: Sign-in-first dialog is clear; minutes promise is slightly generic compared to concrete Mac install step nearby.",
+          "agentFeedback": {
+            "reviewerA": {
+              "reviewMethod": "agent",
+              "reviewer": "A",
+              "deployable": "AWC",
+              "pageId": "home-marketing",
+              "role": "copy",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/home-marketing/round-1/manifest.json",
+              "scoreDesktop": 97,
+              "scoreMobile": 96,
+              "scoreOverall": 97,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "announcement-acl",
+                  "pointsDeducted": 2,
+                  "reason": "Top bar says Project Access ACL; ACL reads as engineering jargon on a marketing surface."
+                },
+                {
+                  "area": "eyebrow-harness",
+                  "pointsDeducted": 1,
+                  "reason": "Hero eyebrow leads with Harness; philosophy prefers Playbook/Mac vocabulary over harness on user-facing surfaces."
+                },
+                {
+                  "area": "hero-approve-capitalization",
+                  "pointsDeducted": 1,
+                  "reason": "Mid-sentence capitalized Approve in hero paragraph breaks reading flow."
+                },
+                {
+                  "area": "mobile-announcement-density",
+                  "pointsDeducted": 1,
+                  "reason": "Announcement line wraps awkwardly on 390px, slightly obscuring the Agent Witch value prop on first screen."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": ["ACL in announcement", "Harness eyebrow"],
+              "mustFix": [],
+              "quickWins": [
+                "Rename announcement to Project Access without ACL",
+                "Use Playbooks-first eyebrow"
+              ]
+            },
+            "reviewerB": {
+              "reviewMethod": "agent",
+              "reviewer": "B",
+              "deployable": "AWC",
+              "pageId": "home-marketing",
+              "role": "copy",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/home-marketing/round-1/manifest.json",
+              "scoreDesktop": 96,
+              "scoreMobile": 96,
+              "scoreOverall": 96,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "evaluate-scores-jargon",
+                  "pointsDeducted": 2,
+                  "reason": "Hero and features repeat evaluate scores; accurate but heavy for first-touch marketing readers."
+                },
+                {
+                  "area": "specialist-bots-clause",
+                  "pointsDeducted": 1,
+                  "reason": "Slack and Outlook ops sentence is precise yet dense in the opening paragraph."
+                },
+                {
+                  "area": "for-ai-harness",
+                  "pointsDeducted": 2,
+                  "reason": "For-your-AI section mentions harness in body copy where Playbook or project wording would match vocabulary rules."
+                },
+                {
+                  "area": "preset-dialog-tone",
+                  "pointsDeducted": 1,
+                  "reason": "Sign-in-first dialog is clear; minutes promise is slightly generic compared to concrete Mac install step nearby."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": [
+                "evaluate scores density",
+                "harness mention in For your AI"
+              ],
+              "mustFix": [],
+              "quickWins": [
+                "Swap harness for project folder in For-your-AI paragraph"
+              ]
+            }
+          }
         },
         "ui": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+          "passed": true,
+          "score": 97,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 97,
+          "notes": "Agent A=98 B=97 (round 1).\nA deductions: for-ai-dark-tokens -1: For-your-AI card includes dark: utility classes inside an otherwise light marketing shell; harmless in Storybook but slightly inconsistent. | mobile-card-density -2: Preset workflow cards stack with similar elevation; category labels could use more vertical rhythm on 390px capture. | mobile-cta-stack -1: Full-width hero buttons stack cleanly but secondary outline button height matches primary, reducing hierarchy by a hair.\nB deductions: showcase-thumbnail-crop -1: Some showcase tiles crop screenshots tightly on desktop; still readable but borderline on smaller breakpoints. | feature-icon-alignment -1: Feature trio icons align well; middle card preview mock is slightly shorter than neighbors creating subtle height mismatch. | mobile-header-blur -2: Sticky header backdrop blur is subtle on mobile capture; border carries most separation from hero. | mobile-trust-strip -2: Trust metrics wrap to two rows on narrow width; spacing between rows feels tight versus hero whitespace.",
+          "agentFeedback": {
+            "reviewerA": {
+              "reviewMethod": "agent",
+              "reviewer": "A",
+              "deployable": "AWC",
+              "pageId": "home-marketing",
+              "role": "ui",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/home-marketing/round-1/manifest.json",
+              "scoreDesktop": 99,
+              "scoreMobile": 97,
+              "scoreOverall": 98,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "for-ai-dark-tokens",
+                  "pointsDeducted": 1,
+                  "reason": "For-your-AI card includes dark: utility classes inside an otherwise light marketing shell; harmless in Storybook but slightly inconsistent."
+                },
+                {
+                  "area": "mobile-card-density",
+                  "pointsDeducted": 2,
+                  "reason": "Preset workflow cards stack with similar elevation; category labels could use more vertical rhythm on 390px capture."
+                },
+                {
+                  "area": "mobile-cta-stack",
+                  "pointsDeducted": 1,
+                  "reason": "Full-width hero buttons stack cleanly but secondary outline button height matches primary, reducing hierarchy by a hair."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": ["Light-shell dark: classes on one section"],
+              "mustFix": [],
+              "quickWins": [
+                "Align For-your-AI surfaces with marketing light tokens only"
+              ]
+            },
+            "reviewerB": {
+              "reviewMethod": "agent",
+              "reviewer": "B",
+              "deployable": "AWC",
+              "pageId": "home-marketing",
+              "role": "ui",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/home-marketing/round-1/manifest.json",
+              "scoreDesktop": 98,
+              "scoreMobile": 96,
+              "scoreOverall": 97,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "showcase-thumbnail-crop",
+                  "pointsDeducted": 1,
+                  "reason": "Some showcase tiles crop screenshots tightly on desktop; still readable but borderline on smaller breakpoints."
+                },
+                {
+                  "area": "feature-icon-alignment",
+                  "pointsDeducted": 1,
+                  "reason": "Feature trio icons align well; middle card preview mock is slightly shorter than neighbors creating subtle height mismatch."
+                },
+                {
+                  "area": "mobile-header-blur",
+                  "pointsDeducted": 2,
+                  "reason": "Sticky header backdrop blur is subtle on mobile capture; border carries most separation from hero."
+                },
+                {
+                  "area": "mobile-trust-strip",
+                  "pointsDeducted": 2,
+                  "reason": "Trust metrics wrap to two rows on narrow width; spacing between rows feels tight versus hero whitespace."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": [
+                "Showcase tile crops",
+                "Mobile trust strip spacing"
+              ],
+              "mustFix": [],
+              "quickWins": ["Add gap-y between trust metrics on sm breakpoint"]
+            }
+          }
         },
         "product": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+          "passed": true,
+          "score": 97,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 97,
+          "notes": "Agent A=98 B=97 (round 1).\nA deductions: auth-storybook-limit -1: Google sign-in is present as UI chrome; story cannot demonstrate real OAuth, which is acceptable but worth noting for reviewers. | mobile-marketplace-path -2: Preset cards imply marketplace flows that require sign-in; mobile capture does not surface that gating until dialog interaction.\nB deductions: mac-install-honesty -2: Steps promise one install command; story does not show terminal snippet inline (lives post sign-in), slightly understating setup friction. | optimizer-claims -1: Copy states evaluate passes; aligns with product pillars but north-star honesty footnote is not visible on capture. | runner-labels -1: Product preview uses runner: mac-* labels that read as infra fixtures; believable for power users, less so for executives skimming mobile. | agent-access-section -1: For-your-AI block is accurate to Agent Access capability yet may surprise buyers expecting only human signup on landing.",
+          "agentFeedback": {
+            "reviewerA": {
+              "reviewMethod": "agent",
+              "reviewer": "A",
+              "deployable": "AWC",
+              "pageId": "home-marketing",
+              "role": "product",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/home-marketing/round-1/manifest.json",
+              "scoreDesktop": 99,
+              "scoreMobile": 97,
+              "scoreOverall": 98,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "auth-storybook-limit",
+                  "pointsDeducted": 1,
+                  "reason": "Google sign-in is present as UI chrome; story cannot demonstrate real OAuth, which is acceptable but worth noting for reviewers."
+                },
+                {
+                  "area": "mobile-marketplace-path",
+                  "pointsDeducted": 2,
+                  "reason": "Preset cards imply marketplace flows that require sign-in; mobile capture does not surface that gating until dialog interaction."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": ["Sign-in gating on preset examples"],
+              "mustFix": [],
+              "quickWins": [
+                "Add footnote on preset section that marketplace requires account"
+              ]
+            },
+            "reviewerB": {
+              "reviewMethod": "agent",
+              "reviewer": "B",
+              "deployable": "AWC",
+              "pageId": "home-marketing",
+              "role": "product",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/home-marketing/round-1/manifest.json",
+              "scoreDesktop": 97,
+              "scoreMobile": 96,
+              "scoreOverall": 97,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "mac-install-honesty",
+                  "pointsDeducted": 2,
+                  "reason": "Steps promise one install command; story does not show terminal snippet inline (lives post sign-in), slightly understating setup friction."
+                },
+                {
+                  "area": "optimizer-claims",
+                  "pointsDeducted": 1,
+                  "reason": "Copy states evaluate passes; aligns with product pillars but north-star honesty footnote is not visible on capture."
+                },
+                {
+                  "area": "runner-labels",
+                  "pointsDeducted": 1,
+                  "reason": "Product preview uses runner: mac-* labels that read as infra fixtures; believable for power users, less so for executives skimming mobile."
+                },
+                {
+                  "area": "agent-access-section",
+                  "pointsDeducted": 1,
+                  "reason": "For-your-AI block is accurate to Agent Access capability yet may surprise buyers expecting only human signup on landing."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": [
+                "Install command not shown in story",
+                "AI self-register section prominence"
+              ],
+              "mustFix": [],
+              "quickWins": [
+                "Surface honesty footnote near Prompt Optimizer mentions"
+              ]
+            }
+          }
         },
         "tester": {
           "passed": true,
@@ -60,7 +395,7 @@
           "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
         }
       },
-      "allRolesPassed": false
+      "allRolesPassed": true
     },
     {
       "order": 1,
