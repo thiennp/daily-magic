@@ -25,8 +25,11 @@ const main = async (): Promise<void> => {
       });
       const pw = await context.newPage();
       try {
-        await pw.goto(url, { waitUntil: "networkidle", timeout: 120_000 });
-        await pw.waitForTimeout(1500);
+        await pw.goto(url, {
+          waitUntil: "domcontentloaded",
+          timeout: 120_000,
+        });
+        await pw.waitForTimeout(status === "loading" ? 2500 : 5500);
         const hasError = await pw.locator(".sb-show-errordisplay").count();
         if (hasError > 0) {
           const text = await pw
