@@ -31,6 +31,10 @@ export const Dropdown: React.FC<DropdownProps> = ({
   });
 
   useEffect(() => {
+    if (!isOpen) {
+      return;
+    }
+
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as Node;
       if (
@@ -48,7 +52,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [onClose, toggleRef]);
+  }, [isOpen, onClose, toggleRef]);
 
   if (!isOpen) return null;
 
