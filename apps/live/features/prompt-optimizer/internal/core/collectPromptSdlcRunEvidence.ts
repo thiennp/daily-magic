@@ -2,6 +2,8 @@ import { spawnSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 
+import { buildGitSubprocessEnv } from "@/lib/git/buildGitSubprocessEnv";
+
 import { findPromptSdlcEvidencePaths } from "../../../../adapters/promptSdlcAwcCore";
 
 const MAX_TEXT = 4000;
@@ -17,6 +19,7 @@ export interface PromptSdlcWorkspaceSnapshot {
 const gitText = (cwd: string, args: readonly string[]): string | null => {
   const result = spawnSync("git", [...args], {
     cwd,
+    env: buildGitSubprocessEnv(),
     encoding: "utf8",
     timeout: 8000,
   });

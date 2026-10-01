@@ -4,4 +4,5 @@ export type {
   PromptSdlcCostConfirm,
   PromptSdlcCostControlKnobs,
   PromptSdlcCostControls,
+  PromptSdlcCostControl,
 } from "../../../../adapters/promptSdlcAwcCore";

@@ -1,6 +1,8 @@
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 
+import { buildGitSubprocessEnv } from "@/lib/git/buildGitSubprocessEnv";
+
 const execFileAsync = promisify(execFile);
 
 export interface AgentWitchGitWorktreeSnapshot {
@@ -10,14 +12,6 @@ export interface AgentWitchGitWorktreeSnapshot {
   readonly shortstat: string | null;
 }
 
-const gitEnv = (): NodeJS.ProcessEnv => {
-  const env = { ...process.env };
-  delete env.GIT_DIR;
-  delete env.GIT_WORK_TREE;
-  delete env.GIT_INDEX_FILE;
-  return env;
-};
-
 const runGit = async (
   cwd: string,
   args: readonly string[],
@@ -25,7 +19,7 @@ const runGit = async (
   try {
     const { stdout } = await execFileAsync("git", args, {
       cwd,
-      env: gitEnv(),
+      env: buildGitSubprocessEnv(),
       maxBuffer: 1024 * 1024,
     });
     return stdout.trim();

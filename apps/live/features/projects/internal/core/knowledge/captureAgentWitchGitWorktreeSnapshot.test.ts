@@ -4,18 +4,12 @@ import path from "node:path";
 import { execFileSync } from "node:child_process";
 import { afterEach, describe, expect, it } from "vitest";
 
+import { buildGitSubprocessEnv } from "@/lib/git/buildGitSubprocessEnv";
+
 import { captureAgentWitchGitWorktreeSnapshot } from "./captureAgentWitchGitWorktreeSnapshot";
 import { formatAgentWitchGitWorktreeVerdict } from "./formatAgentWitchGitWorktreeVerdict";
 
 const tempDirs: string[] = [];
-
-const gitEnv = (): NodeJS.ProcessEnv => {
-  const env = { ...process.env };
-  delete env.GIT_DIR;
-  delete env.GIT_WORK_TREE;
-  delete env.GIT_INDEX_FILE;
-  return env;
-};
 
 afterEach(() => {
   for (const dir of tempDirs.splice(0)) {
@@ -24,7 +18,7 @@ afterEach(() => {
 });
 
 const git = (dir: string, args: readonly string[]): void => {
-  execFileSync("git", args, { cwd: dir, env: gitEnv() });
+  execFileSync("git", args, { cwd: dir, env: buildGitSubprocessEnv() });
 };
 
 const initGitRepo = (dir: string): void => {

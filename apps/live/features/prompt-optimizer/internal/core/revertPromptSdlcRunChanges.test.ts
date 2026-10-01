@@ -5,13 +5,19 @@ import path from "node:path";
 
 import { describe, expect, it } from "vitest";
 
+import { buildGitSubprocessEnv } from "@/lib/git/buildGitSubprocessEnv";
+
 import {
   capturePromptSdlcRestorePoint,
   revertPromptSdlcRunChanges,
 } from "./revertPromptSdlcRunChanges";
 
 const git = (cwd: string, args: readonly string[]): void => {
-  execFileSync("git", [...args], { cwd, stdio: "ignore" });
+  execFileSync("git", [...args], {
+    cwd,
+    env: buildGitSubprocessEnv(),
+    stdio: "ignore",
+  });
 };
 
 describe("revertPromptSdlcRunChanges", () => {
@@ -74,6 +80,7 @@ describe("revertPromptSdlcRunChanges", () => {
     git(cwd, ["commit", "-m", "start"]);
     const head = execFileSync("git", ["rev-parse", "HEAD"], {
       cwd,
+      env: buildGitSubprocessEnv(),
       encoding: "utf8",
     }).trim();
     fs.writeFileSync(path.join(cwd, "keep.md"), "keep\n");
@@ -91,6 +98,7 @@ describe("revertPromptSdlcRunChanges", () => {
     expect(
       execFileSync("git", ["rev-parse", "HEAD"], {
         cwd,
+        env: buildGitSubprocessEnv(),
         encoding: "utf8",
       }).trim(),
     ).toBe(head);
