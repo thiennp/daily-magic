@@ -1,7 +1,7 @@
 {
   "passThreshold": 95,
   "currentRole": "ux",
-  "currentPageIndex": 2,
+  "currentPageIndex": 3,
   "pages": [
     {
       "order": 0,
@@ -659,36 +659,263 @@
       "statuses": ["ready"],
       "roles": {
         "ux": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Agent A=98 B=98 (round 1).\nA deductions: mobile-scroll-depth -2: Long agent guideline on 390px requires substantial scroll before later sections (prompt optimizer, ACL); acceptable for a doc but adds fatigue on first visit.\nB deductions: scan-path -2: Three-second scan lands on title and intro; Live tools list is dense before procedural Register section—still clear for agents but not scannable like marketing hero pages.",
+          "agentFeedback": {
+            "reviewerA": {
+              "reviewMethod": "agent",
+              "reviewer": "A",
+              "deployable": "AWC",
+              "pageId": "for-agents",
+              "role": "ux",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/for-agents/round-1/manifest.json",
+              "scoreDesktop": 98,
+              "scoreMobile": 98,
+              "scoreOverall": 98,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "mobile-scroll-depth",
+                  "pointsDeducted": 2,
+                  "reason": "Long agent guideline on 390px requires substantial scroll before later sections (prompt optimizer, ACL); acceptable for a doc but adds fatigue on first visit."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": ["Mobile scroll length for full guideline"],
+              "mustFix": [],
+              "quickWins": [
+                "Optional in-page anchor links for Live tools and Register sections"
+              ]
+            },
+            "reviewerB": {
+              "reviewMethod": "agent",
+              "reviewer": "B",
+              "deployable": "AWC",
+              "pageId": "for-agents",
+              "role": "ux",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/for-agents/round-1/manifest.json",
+              "scoreDesktop": 99,
+              "scoreMobile": 97,
+              "scoreOverall": 98,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "scan-path",
+                  "pointsDeducted": 2,
+                  "reason": "Three-second scan lands on title and intro; Live tools list is dense before procedural Register section—still clear for agents but not scannable like marketing hero pages."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": [
+                "Dense Live tools block before step-by-step Register"
+              ],
+              "mustFix": [],
+              "quickWins": [
+                "Consider numbering major sections for faster agent parsing"
+              ]
+            }
+          }
         },
         "copy": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+          "passed": true,
+          "score": 99,
+          "round": 1,
+          "reviewerA": 100,
+          "reviewerB": 99,
+          "notes": "Agent A=100 B=99 (round 1).\nA: no deductions.\nB deductions: tool-list-density -1: Live tools entries run together as name plus description in one paragraph; still readable but slightly monotonous.",
+          "agentFeedback": {
+            "reviewerA": {
+              "reviewMethod": "agent",
+              "reviewer": "A",
+              "deployable": "AWC",
+              "pageId": "for-agents",
+              "role": "copy",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/for-agents/round-1/manifest.json",
+              "scoreDesktop": 100,
+              "scoreMobile": 100,
+              "scoreOverall": 100,
+              "passed": true,
+              "scoreBreakdown": [],
+              "whyBelowThreshold": "",
+              "topIssues": [],
+              "mustFix": [],
+              "quickWins": []
+            },
+            "reviewerB": {
+              "reviewMethod": "agent",
+              "reviewer": "B",
+              "deployable": "AWC",
+              "pageId": "for-agents",
+              "role": "copy",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/for-agents/round-1/manifest.json",
+              "scoreDesktop": 99,
+              "scoreMobile": 99,
+              "scoreOverall": 99,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "tool-list-density",
+                  "pointsDeducted": 1,
+                  "reason": "Live tools entries run together as name plus description in one paragraph; still readable but slightly monotonous."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": [],
+              "mustFix": [],
+              "quickWins": ["Optional bold tool names in Live tools list"]
+            }
+          }
         },
         "ui": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+          "passed": true,
+          "score": 100,
+          "round": 1,
+          "reviewerA": 100,
+          "reviewerB": 100,
+          "notes": "Agent A=100 B=100 (round 1).\nA: no deductions.\nB: no deductions.",
+          "agentFeedback": {
+            "reviewerA": {
+              "reviewMethod": "agent",
+              "reviewer": "A",
+              "deployable": "AWC",
+              "pageId": "for-agents",
+              "role": "ui",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/for-agents/round-1/manifest.json",
+              "scoreDesktop": 100,
+              "scoreMobile": 100,
+              "scoreOverall": 100,
+              "passed": true,
+              "scoreBreakdown": [],
+              "whyBelowThreshold": "",
+              "topIssues": [
+                "Zoom evidence: /opt/cursor/artifacts/storybook-waves/AWC/for-agents/round-1/zoom/hero-desktop-ready.png",
+                "Zoom evidence: /opt/cursor/artifacts/storybook-waves/AWC/for-agents/round-1/zoom/live-tools-desktop-ready.png",
+                "Zoom evidence: /opt/cursor/artifacts/storybook-waves/AWC/for-agents/round-1/zoom/register-block-desktop-ready.png",
+                "Zoom evidence: /opt/cursor/artifacts/storybook-waves/AWC/for-agents/round-1/zoom/prompt-sdlc-desktop-ready.png",
+                "Zoom evidence: /opt/cursor/artifacts/storybook-waves/AWC/for-agents/round-1/zoom/url-wrap-mobile-ready.png",
+                "Production parity: static doc matches www.agentwitch.com/for-agents intent (no app chrome)"
+              ],
+              "mustFix": [],
+              "quickWins": [],
+              "zoomedSections": [
+                "hero-desktop-ready",
+                "live-tools-desktop-ready",
+                "register-block-desktop-ready",
+                "prompt-sdlc-desktop-ready",
+                "discovery-desktop-ready",
+                "acl-desktop-ready",
+                "hero-mobile-ready",
+                "live-tools-mobile-ready",
+                "url-wrap-mobile-ready"
+              ],
+              "obviousVisualDefects": "none",
+              "visualEvidenceMethod": "computerUse"
+            },
+            "reviewerB": {
+              "reviewMethod": "agent",
+              "reviewer": "B",
+              "deployable": "AWC",
+              "pageId": "for-agents",
+              "role": "ui",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/for-agents/round-1/manifest.json",
+              "scoreDesktop": 100,
+              "scoreMobile": 100,
+              "scoreOverall": 100,
+              "passed": true,
+              "scoreBreakdown": [],
+              "whyBelowThreshold": "",
+              "topIssues": [
+                "Mobile overflow verified fixed (document scrollWidth 390); zoom: url-wrap-mobile-ready.png",
+                "Marketing light surface consistent; dark: tokens on body text inert in Storybook light theme"
+              ],
+              "mustFix": [],
+              "quickWins": [],
+              "zoomedSections": [
+                "hero-desktop-ready",
+                "live-tools-desktop-ready",
+                "register-block-desktop-ready",
+                "prompt-sdlc-desktop-ready",
+                "discovery-desktop-ready",
+                "hero-mobile-ready",
+                "live-tools-mobile-ready",
+                "url-wrap-mobile-ready"
+              ],
+              "obviousVisualDefects": "none",
+              "visualEvidenceMethod": "computerUse"
+            }
+          }
         },
         "product": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 99,
+          "reviewerB": 98,
+          "notes": "Agent A=99 B=98 (round 1).\nA deductions: story-fidelity -1: Ready story renders full static guideline without auth chrome—matches production AGENT-ACCESS-001 intent; no misleading signed-in shell.\nB deductions: demo-honesty -2: Guideline references live localhost AWL endpoints; accurate for Mac agents but worth calling out in demos that prompt optimizer requires local AWL.",
+          "agentFeedback": {
+            "reviewerA": {
+              "reviewMethod": "agent",
+              "reviewer": "A",
+              "deployable": "AWC",
+              "pageId": "for-agents",
+              "role": "product",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/for-agents/round-1/manifest.json",
+              "scoreDesktop": 99,
+              "scoreMobile": 99,
+              "scoreOverall": 99,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "story-fidelity",
+                  "pointsDeducted": 1,
+                  "reason": "Ready story renders full static guideline without auth chrome—matches production AGENT-ACCESS-001 intent; no misleading signed-in shell."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": [],
+              "mustFix": [],
+              "quickWins": [
+                "Demo to PM: emphasize this is the agent onboarding doc, not console UI"
+              ]
+            },
+            "reviewerB": {
+              "reviewMethod": "agent",
+              "reviewer": "B",
+              "deployable": "AWC",
+              "pageId": "for-agents",
+              "role": "product",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/for-agents/round-1/manifest.json",
+              "scoreDesktop": 98,
+              "scoreMobile": 98,
+              "scoreOverall": 98,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "demo-honesty",
+                  "pointsDeducted": 2,
+                  "reason": "Guideline references live localhost AWL endpoints; accurate for Mac agents but worth calling out in demos that prompt optimizer requires local AWL."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": [
+                "Local AWL prompt optimizer section assumes Mac runtime"
+              ],
+              "mustFix": [],
+              "quickWins": []
+            }
+          }
         },
         "tester": {
           "passed": true,
@@ -707,7 +934,7 @@
           "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
         }
       },
-      "allRolesPassed": false
+      "allRolesPassed": true
     },
     {
       "order": 3,

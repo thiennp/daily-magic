@@ -16,7 +16,7 @@ export default function AgentAccessGuidelinePage(): ReactElement {
 
   return (
     <article
-      className={`${MARKETING_LIGHT_SURFACE_CLASS} ${MARKETING_PAGE_BACKGROUND_CLASSES} min-h-screen px-6 py-10`}
+      className={`${MARKETING_LIGHT_SURFACE_CLASS} ${MARKETING_PAGE_BACKGROUND_CLASSES} min-h-screen break-words px-6 py-10 [overflow-wrap:anywhere]`}
     >
       <div className="mx-auto max-w-3xl">
         <h1
