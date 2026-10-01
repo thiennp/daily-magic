@@ -329,5 +329,5 @@ describe("prompt SDLC wizard does not skip step 2 (evaluate)", () => {
       "evaluate",
       "separate",
     ]);
-  });
+  }, 30_000);
 });

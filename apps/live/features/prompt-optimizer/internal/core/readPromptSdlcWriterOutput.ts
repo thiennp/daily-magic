@@ -60,7 +60,11 @@ export const classifyPromptSdlcWriterErrorKind = (input: {
   if (ACTION_REQUIRED_ERROR.test(input.errorMessage)) {
     return "action_required";
   }
-  if (/budget[_ ]?exceeded|token budget|spend ceiling|max spend/i.test(input.errorMessage)) {
+  if (
+    /budget[_ ]?exceeded|token budget|spend ceiling|max spend/i.test(
+      input.errorMessage,
+    )
+  ) {
     return "budget_exceeded";
   }
   return undefined;

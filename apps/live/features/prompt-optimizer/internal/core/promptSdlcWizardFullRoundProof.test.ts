@@ -375,6 +375,7 @@ describe("prompt SDLC wizard full round proof (for screenshots)", () => {
     snapshotCycle(storePath, "full-round-step-4-confirm", paused);
     const page4Confirm = pageBody(installDir, paused);
     expect(page4Confirm).toContain("Confirm Step 4 cost ceiling");
+    expect(page4Confirm).toContain("Policy guard");
 
     continueWizard({
       wizardParam_policy_facts: COMPLEX_VARIABLES.find(

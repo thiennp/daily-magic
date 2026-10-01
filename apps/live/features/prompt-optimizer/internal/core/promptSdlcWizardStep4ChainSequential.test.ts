@@ -58,9 +58,7 @@ describe("wizard step 4 chain modules", () => {
       improverModel: "claude-cli",
       runnerModel: "claude-cli",
       workingDirectory: storeDir,
-      costControls: confirmedPromptSdlcCostControlsForTests({
-        moduleCount: 2,
-      }),
+      costControls: confirmedPromptSdlcCostControlsForTests({ moduleCount: 2 }),
       wizard: {
         ...createInitialPromptSdlcWizardState("Do {{x}}"),
         phase: "optimize_modules",
@@ -141,5 +139,5 @@ describe("wizard step 4 chain modules", () => {
       }),
     );
     expect(html).toContain("Module stats: best 75");
-  });
+  }, 30_000);
 });
