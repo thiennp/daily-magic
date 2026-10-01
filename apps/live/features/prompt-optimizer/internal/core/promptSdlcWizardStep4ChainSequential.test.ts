@@ -18,7 +18,6 @@ import {
   savePromptSdlcLocalCycle,
 } from "./promptSdlcLocalStore";
 import { resolveWritableCursorArtifactsDir } from "./resolveWritableCursorArtifactsDir";
-import { confirmedPromptSdlcCostControlsForTests } from "./promptSdlcCostControlTestFixtures";
 import * as writerReply from "./runPromptSdlcWriterReply";
 
 describe("wizard step 4 chain modules", () => {
