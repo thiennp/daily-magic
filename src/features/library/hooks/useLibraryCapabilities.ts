@@ -10,12 +10,20 @@ export function useLibraryCapabilities(
 ): {
   readonly capabilities: readonly PublishedCapabilityRecord[];
   readonly isLoading: boolean;
+  readonly loadFailed: boolean;
+  readonly reload: () => void;
   readonly removeCapability: (capabilityId: string) => void;
 } {
   const [capabilities, setCapabilities] = useState<
     readonly PublishedCapabilityRecord[]
   >([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [loadFailed, setLoadFailed] = useState(false);
+  const [reloadNonce, setReloadNonce] = useState(0);
+
+  const reload = useCallback((): void => {
+    setReloadNonce((nonce) => nonce + 1);
+  }, []);
 
   useEffect(() => {
     if (!enabled) {
@@ -24,9 +32,11 @@ export function useLibraryCapabilities(
 
     const loadLibrary = async (): Promise<void> => {
       setIsLoading(true);
+      setLoadFailed(false);
       try {
         const response = await fetch("/api/capabilities/mine");
         if (!response.ok) {
+          setLoadFailed(true);
           return;
         }
 
@@ -42,13 +52,15 @@ export function useLibraryCapabilities(
               .capabilities,
           );
         }
+      } catch {
+        setLoadFailed(true);
       } finally {
         setIsLoading(false);
       }
     };
 
     void loadLibrary();
-  }, [enabled, refreshKey]);
+  }, [enabled, refreshKey, reloadNonce]);
 
   const removeCapability = useCallback((capabilityId: string): void => {
     setCapabilities((current) =>
@@ -59,6 +71,8 @@ export function useLibraryCapabilities(
   return {
     capabilities,
     isLoading: enabled && isLoading,
+    loadFailed: enabled && loadFailed,
+    reload,
     removeCapability,
   };
 }

@@ -3,6 +3,11 @@ import { delay, http, HttpResponse } from "msw";
 import type { StorybookPageStatus } from "@/utils/storybook/storybookPageStatus.constant";
 import { AWC_STORYBOOK_SAMPLE_PROJECT } from "@/utils/storybook/awcStorybookFixtures";
 import {
+  awcStorybookCapabilityTemplateErrorHandlers,
+  awcStorybookCapabilityTemplateSuccessHandlers,
+} from "@/utils/storybook/awcStorybookMswCapabilityHandlers";
+import {
+  AWC_STORYBOOK_SAMPLE_CAPABILITY,
   AWC_STORYBOOK_SAMPLE_DEVICE,
   AWC_STORYBOOK_SAMPLE_RUN,
 } from "@/utils/storybook/awcStorybookMswSampleData";
@@ -33,6 +38,9 @@ const infiniteHandlers = [
   http.get("/api/capabilities/mine", async () => {
     await delay("infinite");
   }),
+  http.get("/api/capabilities/templates", async () => {
+    await delay("infinite");
+  }),
 ];
 
 const errorHandlers = [
@@ -54,6 +62,7 @@ const errorHandlers = [
   http.get("/api/capabilities/mine", () =>
     HttpResponse.json({ error: "Server error" }, { status: 500 }),
   ),
+  ...awcStorybookCapabilityTemplateErrorHandlers,
 ];
 
 export const createAwcStorybookMswHandlers = (
@@ -71,6 +80,7 @@ export const createAwcStorybookMswHandlers = (
   const devices = hasData ? [AWC_STORYBOOK_SAMPLE_DEVICE] : [];
   const projects = hasData ? [AWC_STORYBOOK_SAMPLE_PROJECT] : [];
   const runs = hasData ? [AWC_STORYBOOK_SAMPLE_RUN] : [];
+  const capabilities = hasData ? [AWC_STORYBOOK_SAMPLE_CAPABILITY] : [];
 
   return [
     http.get("/api/cursor-cloud/connection", () =>
@@ -103,7 +113,8 @@ export const createAwcStorybookMswHandlers = (
       });
     }),
     http.get("/api/capabilities/mine", () =>
-      HttpResponse.json({ capabilities: [] }),
+      HttpResponse.json({ capabilities }),
     ),
+    ...awcStorybookCapabilityTemplateSuccessHandlers,
   ];
 };

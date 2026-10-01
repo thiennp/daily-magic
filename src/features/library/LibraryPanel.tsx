@@ -9,6 +9,8 @@ import { resolveLibrarySignedInEmptyBody } from "@/lib/copy/resolveSoloTeamSurfa
 import { useLibraryCapabilities } from "@/features/library/hooks/useLibraryCapabilities";
 import buildAgentComposerHref from "@/lib/library/buildAgentComposerHref";
 import { CapabilityStatus } from "@/lib/capabilities/CapabilityStatus.constant";
+import AppPanel from "@/components/surfaces/AppPanel";
+import Button from "@/components/ui/button/Button";
 
 interface LibraryPanelProps {
   readonly refreshKey?: number;
@@ -22,8 +24,12 @@ export default function LibraryPanel({
   const { sessionState } = useGuestSessionState();
   const { teamNavEnabled } = useShellNavContext();
   const capabilitiesEnabled = sessionState === "signed_in";
-  const { capabilities, isLoading: isCapabilitiesLoading } =
-    useLibraryCapabilities(refreshKey, capabilitiesEnabled);
+  const {
+    capabilities,
+    isLoading: isCapabilitiesLoading,
+    loadFailed,
+    reload,
+  } = useLibraryCapabilities(refreshKey, capabilitiesEnabled);
   const libraryItems = capabilities.filter(
     (capability) => capability.status !== CapabilityStatus.ARCHIVED,
   );
@@ -37,6 +43,27 @@ export default function LibraryPanel({
 
   if (isLoading) {
     return <EmptyStatePanelSkeleton />;
+  }
+
+  if (loadFailed) {
+    return (
+      <AppPanel padding="compact" className="mx-auto w-full max-w-lg">
+        <div className="flex flex-col gap-3">
+          <p className="text-sm font-medium text-gray-800 dark:text-white/90">
+            Could not load your library
+          </p>
+          <p className="text-sm text-gray-600 dark:text-gray-400">
+            Something went wrong while fetching your playbooks. Try again in a
+            moment.
+          </p>
+          <div>
+            <Button size="sm" variant="outline" onClick={reload}>
+              Try again
+            </Button>
+          </div>
+        </div>
+      </AppPanel>
+    );
   }
 
   if (libraryItems.length === 0) {
