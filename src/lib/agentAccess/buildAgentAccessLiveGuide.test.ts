@@ -21,6 +21,12 @@ describe("live agent guide", () => {
       "agent-support playground",
     );
     expect(guide.whatAgentWitchIs.excludes).toContain("slack_ops_execution");
+    expect(guide.whatAgentWitchIs.excludes).toContain("cloud_content_bus");
+    expect(guide.whatAgentWitchIs.includes).toContain("project_access_acl");
+    expect(guide.promptSdlc.billingHonesty).toMatch(
+      /useThisPrompt only on passed/,
+    );
+    expect(guide.promptSdlc.poll).toMatch(/no_reply/);
     expect(guide.teachOtherBots.instruction).toContain("use_agent_witch");
     expect(guide.teachOtherBots.instruction).toContain(
       "Do not look up or publish another person's account.",

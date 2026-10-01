@@ -23,6 +23,20 @@ export default function PromptSdlcGuideWizardSection(): ReactElement {
         wizard pass score; otherwise it ends as <strong>stopped</strong> but
         still shows the best prompts per module.
       </p>
+      <p className={APP_SURFACE_BODY_TEXT_CLASS}>
+        <strong>Billing honesty:</strong> only <strong>passed</strong> counts as
+        billable-success — use this prompt only when status is{" "}
+        <strong>passed</strong>. Timeout, interrupt, and no_reply are distinct
+        failed kinds (not silent success). Stuck writers may escalate with
+        SIGKILL. Judge or heuristic <code>recommendTimeoutMs</code> may tune
+        budgets. Module timeout policy continues to evolve; timeout→improver
+        (T4) is parked.
+      </p>
+      <p className={APP_SURFACE_BODY_TEXT_CLASS}>
+        Install writers before you expect the wizard to finish. Empty installed
+        writers means a blocked playground, not a broken claim. Winners export
+        as skills / Playbooks for reuse.
+      </p>
     </section>
   );
 }

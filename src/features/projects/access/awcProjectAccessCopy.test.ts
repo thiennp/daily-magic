@@ -10,6 +10,7 @@ describe("project ACL surface copy", () => {
     const blobs = [
       AWC_PROJECT_ACCESS_COPY.intro,
       AWC_PROJECT_ACCESS_COPY.revokeHint,
+      AWC_PROJECT_ACCESS_COPY.proposedFeedCallout,
       AWC_PROJECT_COWORK_HELP_COPY.short,
       buildProjectAclAgentGuidelineSection().body.join(" "),
       PROJECT_PEER_SYNC_GUIDELINE.ownerControls,
@@ -23,5 +24,9 @@ describe("project ACL surface copy", () => {
     expect(blobs).toMatch(/Revoke/i);
     expect(blobs.toLowerCase()).toMatch(/token/);
     expect(blobs.toLowerCase()).not.toMatch(/share.*token.*with teammates/);
+    expect(blobs.toLowerCase()).toMatch(/acl/);
+    expect(blobs).toMatch(/proposed/i);
+    expect(blobs.toLowerCase()).toMatch(/activity feed/);
+    expect(blobs.toLowerCase()).toMatch(/not shipped/);
   });
 });

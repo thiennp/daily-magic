@@ -53,6 +53,9 @@ export default function AwcProjectAccessPanel({
         {copy.title}
       </h2>
       <p className={`text-sm ${APP_SURFACE_BODY_TEXT_CLASS}`}>{copy.intro}</p>
+      <p className="text-xs text-amber-800 dark:text-amber-200/90">
+        {copy.proposedFeedCallout}
+      </p>
       <p className="text-xs text-gray-500 dark:text-gray-400">
         {copy.revokeHint}
       </p>

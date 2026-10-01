@@ -22,7 +22,7 @@ export default function PromptSdlcGuidePage(): ReactElement {
     <div className="space-y-8">
       <AppPageHeader
         title="How to use the prompt optimizer"
-        description="Paste a prompt and a goal in Agent Witch Local. A judge scores the prompt. If it misses, a second model rewrites it. You read the revisions when the loop stops. This console page does not run the optimizer."
+        description="Paste a prompt and a goal in Agent Witch Local. A judge scores the prompt. If it misses, a second model rewrites it. Only passed outcomes count as success for reuse; timeouts and no-reply fail cleanly. This console page does not run the optimizer."
       />
       <p>
         <Link href="/prompt-optimizer" className={APP_SURFACE_TEXT_LINK_CLASS}>
