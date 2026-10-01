@@ -6,9 +6,9 @@ import { summarizePromptSdlcWizardCompletion } from "../../../../adapters/prompt
 import { describePromptSdlcWizardModuleTableHeadline } from "./describePromptSdlcWizardModuleTableHeadline";
 import { describePromptSdlcLocalActivity } from "./buildPromptSdlcLocalActivity";
 import { createPromptSdlcLocalCycle } from "./createPromptSdlcLocalCycle";
-import { confirmedPromptSdlcCostControlsForTests } from "./promptSdlcCostControlTestFixtures";
+
 import { buildPromptSdlcLocalCycleSection } from "./buildPromptSdlcLocalCycleSection";
-import { confirmedPromptSdlcCostControlsForTests } from "./promptSdlcCostControlTestFixtures";
+
 import { renderPromptSdlcWizardGate } from "./renderPromptSdlcWizardGate";
 import { renderPromptSdlcWizardRevisionRoundList } from "./renderPromptSdlcWizardRevisionRoundList";
 

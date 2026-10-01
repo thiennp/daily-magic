@@ -11,8 +11,6 @@ import type {
   PromptSdlcWizardState,
 } from "../../../../adapters/promptSdlcAwcCore";
 
-import { defaultPromptSdlcCostControls } from "../../../../adapters/promptSdlcAwcCore";
-import type { PromptSdlcCostControls } from "../../../../adapters/promptSdlcAwcCore";
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
 
 export const createPromptSdlcLocalCycle = (input: {

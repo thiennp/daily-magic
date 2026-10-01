@@ -4,7 +4,7 @@ import type {
   PromptSdlcCycleStatus,
   PromptSdlcWizardState,
 } from "../../../../adapters/promptSdlcAwcCore";
-import type { PromptSdlcCostControls } from "../../../../adapters/promptSdlcAwcCore";
+
 import type { PromptSdlcWriterErrorKind } from "./readPromptSdlcWriterOutput";
 
 export interface PromptSdlcLocalRun {

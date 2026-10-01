@@ -26,8 +26,6 @@ import {
   readEarlyStopCheckboxFromPosted,
   readPromptSdlcCostControlKnobs,
 } from "./readPromptSdlcCostControls";
-import type { PromptSdlcCostControls } from "../../../../adapters/promptSdlcAwcCore";
-import { PROMPT_SDLC_DEFAULT_MAX_TRIALS } from "../../../../adapters/promptSdlcAwcCore";
 
 type PromptSdlcLocalRunModels = NonNullable<
   ReturnType<typeof readPromptSdlcLocalRunModels>

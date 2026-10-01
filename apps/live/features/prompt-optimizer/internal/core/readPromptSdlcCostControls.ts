@@ -3,7 +3,7 @@ import {
   PROMPT_SDLC_DEFAULT_MAX_TRIALS,
   PROMPT_SDLC_MAX_TRIALS_LIMIT,
 } from "../../../../adapters/promptSdlcAwcCore";
-import { defaultPromptSdlcCostControls } from "../../../../adapters/promptSdlcAwcCore";
+
 import type {
   PromptSdlcCostControlKnobs,
   PromptSdlcCostControls,
