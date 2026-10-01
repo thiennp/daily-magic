@@ -1,0 +1,24 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "B",
+  "deployable": "AWC",
+  "pageId": "home-signed-in",
+  "role": "ux",
+  "captureRound": 1,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/home-signed-in/round-1/manifest.json",
+  "scoreDesktop": 99,
+  "scoreMobile": 97,
+  "scoreOverall": 98,
+  "passed": true,
+  "scoreBreakdown": [
+    {
+      "area": "mobile-density",
+      "pointsDeducted": 2,
+      "reason": "Three-column dashboard collapses to a long scroll; primary CTA remains findable but requires more swipes on mobile."
+    }
+  ],
+  "whyBelowThreshold": "",
+  "topIssues": ["Long mobile scroll for full dashboard"],
+  "mustFix": [],
+  "quickWins": []
+}
