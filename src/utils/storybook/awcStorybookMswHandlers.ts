@@ -1,7 +1,7 @@
 import { http, HttpResponse } from "msw";
 
 import type { StorybookPageStatus } from "@/utils/storybook/storybookPageStatus.constant";
-import { AWC_STORYBOOK_SAMPLE_PROJECT } from "@/utils/storybook/awcStorybookFixtures";
+import { AWC_STORYBOOK_SAMPLE_PROJECTS } from "@/utils/storybook/awcStorybookFixtures";
 import { awcStorybookCapabilityTemplateSuccessHandlers } from "@/utils/storybook/awcStorybookMswCapabilityHandlers";
 import {
   awcStorybookMswErrorHandlers,
@@ -35,7 +35,7 @@ export const createAwcStorybookMswHandlers = (
 
   const hasData = status !== "empty" && status !== "guest";
   const devices = hasData ? [AWC_STORYBOOK_SAMPLE_DEVICE] : [];
-  const projects = hasData ? [AWC_STORYBOOK_SAMPLE_PROJECT] : [];
+  const projects = hasData ? [...AWC_STORYBOOK_SAMPLE_PROJECTS] : [];
   const runs = hasData ? [AWC_STORYBOOK_SAMPLE_RUN] : [];
   const capabilities = hasData ? [AWC_STORYBOOK_SAMPLE_CAPABILITY] : [];
 
@@ -51,9 +51,19 @@ export const createAwcStorybookMswHandlers = (
         projects,
         compositionCountsByProjectId: hasData
           ? {
-              [AWC_STORYBOOK_SAMPLE_PROJECT.id]: {
+              [AWC_STORYBOOK_SAMPLE_PROJECTS[0].id]: {
                 harness: 1,
                 workflow: 0,
+                agent: 0,
+              },
+              [AWC_STORYBOOK_SAMPLE_PROJECTS[1].id]: {
+                harness: 0,
+                workflow: 0,
+                agent: 0,
+              },
+              [AWC_STORYBOOK_SAMPLE_PROJECTS[2].id]: {
+                harness: 2,
+                workflow: 1,
                 agent: 0,
               },
             }

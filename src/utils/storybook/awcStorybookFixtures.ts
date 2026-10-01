@@ -19,6 +19,31 @@ export const AWC_STORYBOOK_SAMPLE_PROJECT: UserProjectRecord = {
   updatedAt: "2026-03-01T00:00:00.000Z",
 };
 
+export const AWC_STORYBOOK_SAMPLE_PROJECTS: readonly UserProjectRecord[] = [
+  AWC_STORYBOOK_SAMPLE_PROJECT,
+  {
+    id: "proj-storybook-2",
+    ownerUserId: "user-storybook",
+    name: "Default",
+    folderPath:
+      "/Users/storybook/.agent-witch/profiles/storybook@agentwitch.com/infusiontv",
+    deviceId: null,
+    lastUsedAt: "2026-02-15T00:00:00.000Z",
+    createdAt: "2026-01-15T00:00:00.000Z",
+    updatedAt: "2026-02-15T00:00:00.000Z",
+  },
+  {
+    id: "proj-storybook-3",
+    ownerUserId: "user-storybook",
+    name: "Default",
+    folderPath: "/Users/storybook/code/agent-witch",
+    deviceId: "device-storybook-1",
+    lastUsedAt: "2026-03-10T00:00:00.000Z",
+    createdAt: "2026-02-01T00:00:00.000Z",
+    updatedAt: "2026-03-10T00:00:00.000Z",
+  },
+];
+
 export const AWC_STORYBOOK_SAMPLE_ADMIN_USERS = [
   {
     id: "user-storybook",

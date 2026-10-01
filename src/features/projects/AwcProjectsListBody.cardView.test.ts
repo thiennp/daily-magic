@@ -31,5 +31,9 @@ describe("Awc projects card view", () => {
     expect(menuItems).toContain("View details");
     expect(menuItems).toContain("Assign tasks");
     expect(menuItems).toContain("Edit");
+    expect(card).toContain("pointer-events-auto");
+    expect(readSource("src/components/ui/dropdown/Dropdown.tsx")).toContain(
+      "useDropdownMenuKeyboard",
+    );
   });
 });
