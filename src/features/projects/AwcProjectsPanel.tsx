@@ -20,6 +20,7 @@ export default function AwcProjectsPanel() {
     projects,
     compositionCountsByProjectId,
     isLoading,
+    loadFailed,
     addProject,
     refreshProjects,
     removeProject,
@@ -42,6 +43,10 @@ export default function AwcProjectsPanel() {
       ) : null}
       <AwcProjectsListBody
         isLoading={isLoading}
+        loadFailed={loadFailed}
+        onRetryLoad={() => {
+          void refreshProjects();
+        }}
         searchQuery={searchQuery}
         projects={projects}
         visibleProjects={visibleProjects}
@@ -54,21 +59,23 @@ export default function AwcProjectsPanel() {
           void refreshProjects();
         }}
       />
-      <div className="mt-6 border-t border-gray-200 pt-4 dark:border-gray-800">
-        <h3 className="text-sm font-medium text-gray-800 dark:text-white/90">
-          New project
-        </h3>
-        <SendTaskComposerCreateProjectForm
-          deviceId={defaultDeviceId}
-          onProjectCreated={(project) => {
-            addProject(project);
-            void refreshProjects();
-          }}
-          onSelect={() => {
-            void refreshProjects();
-          }}
-        />
-      </div>
+      {!isLoading ? (
+        <div className="mt-6 border-t border-gray-200 pt-4 pb-2 max-md:mb-4 dark:border-gray-800">
+          <h3 className="text-sm font-medium text-gray-800 dark:text-white/90">
+            New project
+          </h3>
+          <SendTaskComposerCreateProjectForm
+            deviceId={defaultDeviceId}
+            onProjectCreated={(project) => {
+              addProject(project);
+              void refreshProjects();
+            }}
+            onSelect={() => {
+              void refreshProjects();
+            }}
+          />
+        </div>
+      ) : null}
     </AppPanel>
   );
 }

@@ -4,6 +4,8 @@ import Link from "next/link";
 
 import type { MyMacDevice } from "@/features/agent/hooks/useMyMacDevices";
 import AwcProjectCard from "@/features/projects/AwcProjectCard";
+import AwcProjectsListLoadErrorPanel from "@/features/projects/AwcProjectsListLoadErrorPanel";
+import { AWC_PROJECTS_PAGE_COPY } from "@/features/projects/awcProjectsPageCopy.constant";
 import { APP_SURFACE_TEXT_LINK_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
 import type ProjectCompositionCounts from "@/lib/projects/types/ProjectCompositionCounts.type";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
@@ -16,6 +18,8 @@ const EMPTY_COMPOSITION_COUNTS: ProjectCompositionCounts = {
 
 interface AwcProjectsListBodyProps {
   readonly isLoading: boolean;
+  readonly loadFailed: boolean;
+  readonly onRetryLoad: () => void;
   readonly searchQuery: string;
   readonly projects: readonly UserProjectRecord[];
   readonly visibleProjects: readonly UserProjectRecord[];
@@ -30,6 +34,8 @@ interface AwcProjectsListBodyProps {
 
 export default function AwcProjectsListBody({
   isLoading,
+  loadFailed,
+  onRetryLoad,
   searchQuery,
   projects,
   visibleProjects,
@@ -47,17 +53,27 @@ export default function AwcProjectsListBody({
     );
   }
 
+  if (loadFailed) {
+    return (
+      <AwcProjectsListLoadErrorPanel
+        onRetry={() => {
+          onRetryLoad();
+        }}
+      />
+    );
+  }
+
   if (projects.length === 0) {
     return (
       <div className="mt-6 flex flex-col items-center gap-3 py-6 text-center">
         <p className="text-sm font-medium text-gray-800 dark:text-white/90">
-          No projects yet.
+          {AWC_PROJECTS_PAGE_COPY.emptyTitle}
         </p>
         <p className="max-w-sm text-sm text-gray-500 dark:text-gray-400">
-          Connect a Mac, then add the first repo it should work on.
+          {AWC_PROJECTS_PAGE_COPY.emptyBody}
         </p>
         <Link href="/" className={APP_SURFACE_TEXT_LINK_CLASS}>
-          Go to home to connect a Mac
+          {AWC_PROJECTS_PAGE_COPY.emptyHomeLink}
         </Link>
       </div>
     );

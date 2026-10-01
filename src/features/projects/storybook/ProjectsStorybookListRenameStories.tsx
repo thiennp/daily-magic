@@ -71,6 +71,8 @@ const ProjectsStorybookListRenameStories = ({
         />
         <AwcProjectsListBody
           isLoading={false}
+          loadFailed={false}
+          onRetryLoad={() => {}}
           searchQuery=""
           projects={[
             PROJECTS_STORYBOOK_SAMPLE_PROJECT,

@@ -18,6 +18,7 @@ describe("Awc projects card view", () => {
       "src/features/projects/AwcProjectCardActionsMenuItems.tsx",
     );
 
+    expect(listBody).toContain("AwcProjectsListLoadErrorPanel");
     expect(listBody).toContain("AwcProjectCard");
     expect(listBody).toContain("grid grid-cols-1 gap-3 sm:grid-cols-2");
     expect(card).toContain("AwcProjectCardActionsMenu");

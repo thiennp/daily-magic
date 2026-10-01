@@ -60,9 +60,9 @@ export default function SendTaskComposerCreateProjectForm({
 
   return (
     <div className="mt-5 rounded-xl border border-dashed border-gray-200 p-4 dark:border-gray-800">
-      <h3 className="text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">
+      <p className="text-xs font-medium text-gray-500 dark:text-gray-400">
         Save a new project
-      </h3>
+      </p>
       <label className="mt-3 block text-sm font-medium text-gray-800 dark:text-white/90">
         Name
         <input

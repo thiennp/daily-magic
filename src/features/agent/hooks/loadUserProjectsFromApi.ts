@@ -1,12 +1,20 @@
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
 import type ProjectCompositionCounts from "@/lib/projects/types/ProjectCompositionCounts.type";
 
-export type LoadUserProjectsFromApiResult = {
+export type LoadUserProjectsFromApiSuccess = {
+  readonly ok: true;
   readonly projects: readonly UserProjectRecord[];
   readonly compositionCountsByProjectId: Readonly<
     Record<string, ProjectCompositionCounts>
   >;
 };
+
+export type LoadUserProjectsFromApiFailure = {
+  readonly ok: false;
+};
+
+export type LoadUserProjectsFromApiResult =
+  LoadUserProjectsFromApiSuccess | LoadUserProjectsFromApiFailure;
 
 const loadUserProjectsFromApi = async (
   deviceId: string,
@@ -16,7 +24,7 @@ const loadUserProjectsFromApi = async (
   const response = await fetch(`/api/projects${query}`);
 
   if (!response.ok) {
-    return { projects: [], compositionCountsByProjectId: {} };
+    return { ok: false };
   }
 
   const data: unknown = await response.json();
@@ -33,12 +41,13 @@ const loadUserProjectsFromApi = async (
     };
 
     return {
+      ok: true,
       projects: record.projects,
       compositionCountsByProjectId: record.compositionCountsByProjectId ?? {},
     };
   }
 
-  return { projects: [], compositionCountsByProjectId: {} };
+  return { ok: false };
 };
 
 export default loadUserProjectsFromApi;
