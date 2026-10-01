@@ -1,0 +1,29 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "A",
+  "deployable": "AWC",
+  "pageId": "projects",
+  "role": "product",
+  "captureRound": 1,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/projects/round-1/manifest.json",
+  "scoreDesktop": 97,
+  "scoreMobile": 96,
+  "scoreOverall": 97,
+  "passed": true,
+  "scoreBreakdown": [
+    {
+      "area": "ready-fixture",
+      "pointsDeducted": 1,
+      "reason": "Sample harness count line is subtle; operators might miss that workflows/agents are zero in the fixture."
+    },
+    {
+      "area": "error-story-fidelity",
+      "pointsDeducted": 2,
+      "reason": "MSW 500 still renders empty-state copy; catalog documents failure banner only, not true operator recovery."
+    }
+  ],
+  "whyBelowThreshold": "",
+  "topIssues": ["Error state does not reflect API failure in panel"],
+  "mustFix": [],
+  "quickWins": ["Add error branch in AwcProjectsListBody when fetch fails"]
+}

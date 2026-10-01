@@ -1,0 +1,34 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "B",
+  "deployable": "AWC",
+  "pageId": "projects",
+  "role": "product",
+  "captureRound": 1,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/projects/round-1/manifest.json",
+  "scoreDesktop": 96,
+  "scoreMobile": 96,
+  "scoreOverall": 96,
+  "passed": true,
+  "scoreBreakdown": [
+    {
+      "area": "error-catalog",
+      "pointsDeducted": 2,
+      "reason": "Error MSW handler does not change list body; same limitation noted on home-signed-in wave."
+    },
+    {
+      "area": "loading-story",
+      "pointsDeducted": 1,
+      "reason": "Loading story keeps New project form visible while list fetch is pending, unlike a gated production load."
+    },
+    {
+      "area": "empty-mac-prereq",
+      "pointsDeducted": 1,
+      "reason": "Empty state link to home is correct but does not mention installing AWI when no Mac exists yet."
+    }
+  ],
+  "whyBelowThreshold": "",
+  "topIssues": [],
+  "mustFix": [],
+  "quickWins": []
+}
