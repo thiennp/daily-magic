@@ -2,8 +2,8 @@ import {
   PROMPT_SDLC_DEFAULT_MAX_TRIALS,
   PROMPT_SDLC_WIZARD_MAX_ROUNDS,
   PROMPT_SDLC_WIZARD_MODULE_PASS_SCORE,
-  PROMPT_SDLC_DEFAULT_MAX_TRIALS,
   PROMPT_SDLC_WIZARD_PASS_SCORE,
+  type HarnessWriterAgent,
   type PromptSdlcCostControls,
 } from "../../../../adapters/promptSdlcAwcCore";
 import {
@@ -26,6 +26,7 @@ import {
   readEarlyStopCheckboxFromPosted,
   readPromptSdlcCostControlKnobs,
 } from "./readPromptSdlcCostControls";
+
 type PromptSdlcLocalRunModels = NonNullable<
   ReturnType<typeof readPromptSdlcLocalRunModels>
 >;
@@ -120,8 +121,11 @@ export const decidePromptSdlcLocalPost = (input: {
     input.posted?.get("maxTrials")?.trim() ||
     String(PROMPT_SDLC_DEFAULT_MAX_TRIALS);
   const typedMaxSpendUsd = input.posted?.get("maxSpendUsd")?.trim() ?? "";
+  const postedIntent = input.posted?.get("intent") ?? "";
   const typedEarlyStop =
-    input.posted === null ? true : input.posted.has("earlyStop");
+    input.posted === null
+      ? true
+      : readEarlyStopCheckboxFromPosted(input.posted, postedIntent);
   const form = (
     folder: string,
     errorMessage: string | null,

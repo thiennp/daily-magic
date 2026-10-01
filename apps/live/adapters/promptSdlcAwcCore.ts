@@ -128,8 +128,6 @@ export {
   PROMPT_SDLC_STOP_BUDGET_EXCEEDED,
   PROMPT_SDLC_SOFT_WARN_BUDGET,
   PROMPT_SDLC_BUDGET_CONFIRM_REQUIRED,
-  PROMPT_SDLC_SOFT_WARN_BUDGET,
-  PROMPT_SDLC_STEP4_TOKENS_PER_MODULE_TRIAL,
 } from "@/lib/promptOptimizer/promptSdlcCostControl.constant";
 export { estimatePromptSdlcSpendUsd } from "@/lib/promptOptimizer/estimatePromptSdlcSpendUsd";
 export { defaultPromptSdlcCostControls } from "@/lib/promptOptimizer/createEmptyPromptSdlcCostControl";
