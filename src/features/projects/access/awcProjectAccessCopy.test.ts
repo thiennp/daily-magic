@@ -26,9 +26,9 @@ describe("project ACL surface copy", () => {
     expect(blobs.toLowerCase()).toMatch(/token/);
     expect(blobs.toLowerCase()).not.toMatch(/share.*token.*with teammates/);
     expect(blobs.toLowerCase()).toMatch(/acl/);
-    expect(blobs).toMatch(/proposed/i);
-    expect(blobs.toLowerCase()).toMatch(/activity feed/);
-    expect(blobs.toLowerCase()).toMatch(/not shipped/);
+    expect(blobs.toLowerCase()).toMatch(/activity/);
+    expect(blobs.toLowerCase()).toMatch(/membership/);
+    expect(blobs.toLowerCase()).toMatch(/list_project_activity/);
   });
 
   it("documents first-connect member role on Access empty state", () => {
