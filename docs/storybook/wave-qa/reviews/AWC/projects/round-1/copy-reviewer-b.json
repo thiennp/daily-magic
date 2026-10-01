@@ -1,0 +1,29 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "B",
+  "deployable": "AWC",
+  "pageId": "projects",
+  "role": "copy",
+  "captureRound": 1,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/projects/round-1/manifest.json",
+  "scoreDesktop": 97,
+  "scoreMobile": 97,
+  "scoreOverall": 97,
+  "passed": true,
+  "scoreBreakdown": [
+    {
+      "area": "empty-state",
+      "pointsDeducted": 2,
+      "reason": "Go to home to connect a Mac is clear; could mention Projects after Mac is online for tighter funnel."
+    },
+    {
+      "area": "new-project-label",
+      "pointsDeducted": 1,
+      "reason": "SAVE A NEW PROJECT all-caps label feels slightly louder than adjacent section title New project."
+    }
+  ],
+  "whyBelowThreshold": "",
+  "topIssues": [],
+  "mustFix": [],
+  "quickWins": []
+}
