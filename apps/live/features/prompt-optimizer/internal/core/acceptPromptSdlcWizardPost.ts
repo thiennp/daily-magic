@@ -32,7 +32,6 @@ import {
   skipPromptSdlcWizardCurrentModule,
   stopPromptSdlcWizardRun,
 } from "./stopPromptSdlcWizard";
-
 const WIZARD_EVALUATE_SCORE_ERROR =
   "Pick a revision scored above 0 before continuing to Separate.";
 

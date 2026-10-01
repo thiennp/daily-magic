@@ -38,6 +38,10 @@ describe("renderPromptSdlcFieldTip", () => {
       "roundLimit",
       "runner",
       "runnerInstructions",
+      "maxTrials",
+      "maxSpendUsd",
+      "confirmedTokenBudget",
+      "confirmedMaxSpendUsd",
     ]);
   });
 });

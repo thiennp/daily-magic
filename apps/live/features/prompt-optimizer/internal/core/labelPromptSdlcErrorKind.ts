@@ -13,6 +13,9 @@ export const labelPromptSdlcErrorKind = (
   if (errorKind === "action_required") {
     return "Action required";
   }
+  if (errorKind === "budget_exceeded") {
+    return "Budget exceeded";
+  }
   const normalized = String(errorKind).replace(/^writer_/, "");
   if (normalized === "timeout") {
     return "Timeout";

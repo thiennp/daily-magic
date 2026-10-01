@@ -6,7 +6,10 @@ import PromptSdlcGuidePage from "@/features/prompt-optimizer/internal/presentati
 import PromptSdlcPage from "@/features/prompt-optimizer/internal/presentation/PromptSdlcPage";
 import ShowcasesIndexPageLayout from "@/features/showcases/ShowcasesIndexPageLayout";
 import type { AwcStorybookPageEntry } from "@/utils/storybook/awc/awcStorybookPageEntry.type";
-import { AWC_STORYBOOK_SAMPLE_GROUPS } from "@/utils/storybook/awcStorybookFixtures";
+import {
+  AWC_STORYBOOK_SAMPLE_ADMIN_USERS,
+  AWC_STORYBOOK_SAMPLE_GROUPS,
+} from "@/utils/storybook/awcStorybookFixtures";
 import type { StorybookPageStatus } from "@/utils/storybook/storybookPageStatus.constant";
 
 const signedInStatuses: readonly StorybookPageStatus[] = [
@@ -24,7 +27,12 @@ export const AWC_SECONDARY_APP_PAGE_ENTRIES: readonly AwcStorybookPageEntry[] =
       path: "/reports/:runId",
       shell: "app",
       statuses: signedInStatuses,
-      renderBody: () => <ReportDetailPageLayout runId="run-storybook-1" />,
+      renderBody: () => (
+        <>
+          <h1 className="sr-only">Report detail</h1>
+          <ReportDetailPageLayout runId="run-storybook-1" />
+        </>
+      ),
     },
     {
       id: "prompt-optimizer",
@@ -64,7 +72,13 @@ export const AWC_SECONDARY_APP_PAGE_ENTRIES: readonly AwcStorybookPageEntry[] =
       path: "/admin/users",
       shell: "admin",
       statuses: ["ready", "empty"],
-      renderBody: () => <UserManagementPanel initialUsers={[]} />,
+      renderBody: (status) => (
+        <UserManagementPanel
+          initialUsers={
+            status === "empty" ? [] : [...AWC_STORYBOOK_SAMPLE_ADMIN_USERS]
+          }
+        />
+      ),
     },
     {
       id: "admin-groups",

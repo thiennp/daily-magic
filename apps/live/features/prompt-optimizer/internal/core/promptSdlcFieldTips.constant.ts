@@ -80,6 +80,30 @@ export const PROMPT_SDLC_FIELD_TIPS = {
       "Optional. Sent with each module prompt when the runner executes. Use for folder context or output shape.",
     example: "Write only to module-output.md in the project root.",
   },
+  maxTrials: {
+    title: "Max trials",
+    practice:
+      "Caps how many runner+judge trials Step 4 may run per module (AW maxTrials). Default 1. Hard stop if spend/token ceilings trip first.",
+    example: "1",
+  },
+  maxSpendUsd: {
+    title: "Max spend (USD)",
+    practice:
+      "Optional compose-time dollar ceiling (AW maxSpendUsd). Before Step 4 you confirm confirmedMaxSpendUsd; hard stop uses errorKind budget_exceeded.",
+    example: "2.50",
+  },
+  confirmedTokenBudget: {
+    title: "Confirmed token budget",
+    practice:
+      "Hard token ceiling for Step 4 after you approve or edit the judge proposal (confirmedTokenBudget).",
+    example: "24000",
+  },
+  confirmedMaxSpendUsd: {
+    title: "Confirmed max spend (USD)",
+    practice:
+      "Hard dollar ceiling for Step 4 (confirmedMaxSpendUsd). Soft warn near the limit; hard stop fails with budget_exceeded.",
+    example: "0.24",
+  },
 } as const;
 
 export type PromptSdlcFieldTipId = keyof typeof PROMPT_SDLC_FIELD_TIPS;

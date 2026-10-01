@@ -21,6 +21,7 @@ import {
 } from "./renderPromptSdlcLocalSkillSelect";
 import { renderPromptSdlcFieldHeading } from "./renderPromptSdlcFieldTip";
 import { renderPromptSdlcWizardGateSlot } from "./renderPromptSdlcWizardGateSlot";
+import { renderPromptSdlcCostControlFields } from "./renderPromptSdlcCostControlFields";
 import { renderPromptSdlcWizardResumeBanner } from "./renderPromptSdlcWizardResumeBanner";
 import { promptSdlcLocalHistoryTitle } from "./promptSdlcLocalHistoryTitle";
 import { renderPromptSdlcWizardRunnerFields } from "./renderPromptSdlcWizardRunnerFields";
@@ -63,6 +64,9 @@ export const buildPromptSdlcLocalPageBody = (input: {
   readonly passScore: string;
   readonly modulePassScore?: string;
   readonly maxRounds?: string;
+  readonly maxTrials?: string;
+  readonly maxSpendUsd?: string;
+  readonly earlyStop?: boolean;
   readonly canRun: boolean;
   readonly errorMessage: string | null;
   readonly skillNotice?: string | null;
@@ -124,6 +128,11 @@ export const buildPromptSdlcLocalPageBody = (input: {
     defaultScore: PROMPT_SDLC_WIZARD_MODULE_PASS_SCORE,
     usualMark: PROMPT_SDLC_WIZARD_MODULE_PASS_SCORE,
   })}`;
+  const costControlFields = renderPromptSdlcCostControlFields({
+    maxTrials: shown.maxTrials,
+    maxSpendUsd: shown.maxSpendUsd,
+    earlyStop: shown.earlyStop,
+  });
   const intro = PROMPT_SDLC_COMPOSE_INTRO;
   const locked = shown.running
     ? `<p class="sdlc-locked" data-sdlc-locked>This run is using these choices.</p>`
@@ -212,6 +221,7 @@ export const buildPromptSdlcLocalPageBody = (input: {
             <textarea class="input textarea" name="prompt" rows="10" required>${escapeHtml(shown.prompt)}</textarea>
           </div>
           ${qualityThresholdFields}
+          ${costControlFields}
         </div>
           <div class="sdlc-compose-step-actions">
             <button type="button" class="btn btn-secondary" data-sdlc-compose-back>Back</button>

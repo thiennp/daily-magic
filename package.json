@@ -67,6 +67,8 @@
     "storybook:wave:capture-all": "tsx scripts/storybookWaveQa/captureAllStorybookPageWaves.ts",
     "storybook:wave:validate": "tsx scripts/storybookWaveQa/validateAllStorybookStories.ts",
     "storybook:wave:objective-gates": "tsx scripts/storybookWaveQa/applyObjectiveWaveQaGates.ts",
+    "storybook:wave:subjective-eval": "tsx scripts/storybookWaveQa/evaluateSubjectiveWaveQa.ts",
+    "storybook:wave:subjective-record": "tsx scripts/storybookWaveQa/recordSubjectiveWaveQa.ts",
     "storybook:wave:weekly": "npm run storybook:build && STORYBOOK_WAVE_OUTPUT_DIR=storybook-wave-captures tsx scripts/storybookWaveQa/runWeeklyStorybookWaveCapture.ts"
   },
   "overrides": {

@@ -41,3 +41,10 @@ No other open issues. Recent fixes (bundle **166–186**):
 - Wizard timeline step clicks open a modal with that step’s content (variables, evaluate rounds, splits, modules), not “Not scored yet.” (bundle **176**).
 - Wizard step 4 runs **one runner+judge round per module** (statistics on the review gate); **chain** splits hand off the prior module’s best runner output to the next module (bundle **184**).
 - Finished wizard runs can **download a Markdown summary** (`?cycle=&export=wizard-markdown`); History filters **All / Wizard** (legacy non-wizard rows still list under All) (bundle **203**).
+
+## Cost-control UI (in flight with AW API)
+
+- Compose knobs: `maxTrials`, `maxSpendUsd`, `earlyStop`.
+- Before Step 4, confirm panel requires Approve/Edit of `proposedTokenBudget` / `estimatedSpendUsd` → posts `confirmedTokenBudget` / `confirmedMaxSpendUsd`.
+- Judge proposal is a **stub** until `feat/aw-optimizer-cost-control-api` lands real values; see `COST_CONTROL.md`.
+- Hard stop chrome: `errorKind: budget_exceeded` badge; `useThisPrompt` only on `passed`.
