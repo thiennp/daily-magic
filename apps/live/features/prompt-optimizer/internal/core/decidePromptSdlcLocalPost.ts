@@ -23,6 +23,7 @@ import {
 import { readPromptSdlcLocalPassScore } from "./readPromptSdlcLocalPassScore";
 import {
   costControlsFromKnobs,
+  readEarlyStopCheckboxFromPosted,
   readPromptSdlcCostControlKnobs,
 } from "./readPromptSdlcCostControls";
 
@@ -121,7 +122,12 @@ export const decidePromptSdlcLocalPost = (input: {
     String(PROMPT_SDLC_DEFAULT_MAX_TRIALS);
   const typedMaxSpendUsd = input.posted?.get("maxSpendUsd")?.trim() ?? "";
   const typedEarlyStop =
-    input.posted === null ? true : input.posted.has("earlyStop");
+    input.posted === null
+      ? true
+      : readEarlyStopCheckboxFromPosted(
+          input.posted,
+          input.posted.get("intent") ?? "",
+        );
   const form = (
     folder: string,
     errorMessage: string | null,

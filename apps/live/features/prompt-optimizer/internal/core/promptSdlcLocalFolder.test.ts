@@ -25,9 +25,9 @@ describe("promptSdlcLocalFolder", () => {
     );
     const resolved = resolvePromptSdlcLocalFolder(folder);
     expect(resolved.ok && resolved.path).toBe(folder);
-    expect(resolvePromptSdlcLocalFolder("/no/such/prompt-optimizer-folder").ok).toBe(
-      false,
-    );
+    expect(
+      resolvePromptSdlcLocalFolder("/no/such/prompt-optimizer-folder").ok,
+    ).toBe(false);
   });
 
   it("uses the picked folder without starting a run", () => {
@@ -50,6 +50,7 @@ describe("promptSdlcLocalFolder", () => {
     if (decision.kind === "form") {
       expect(decision.folder).toBe("~/Documents");
       expect(decision.goal).toBe("Stay in the facts.");
+      expect(decision.earlyStop).toBe(true);
     }
   });
 });
