@@ -1,0 +1,29 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "B",
+  "deployable": "AWC",
+  "pageId": "home-signed-in",
+  "role": "product",
+  "captureRound": 1,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/home-signed-in/round-1/manifest.json",
+  "scoreDesktop": 98,
+  "scoreMobile": 96,
+  "scoreOverall": 97,
+  "passed": true,
+  "scoreBreakdown": [
+    {
+      "area": "ready-fixture-believability",
+      "pointsDeducted": 2,
+      "reason": "Sample project name daily-magic is accurate for repo but may confuse external reviewers."
+    },
+    {
+      "area": "error-state-surface",
+      "pointsDeducted": 2,
+      "reason": "Error banner does not show inline API error panels; acceptable for catalog smoke but not full failure UX."
+    }
+  ],
+  "whyBelowThreshold": "",
+  "topIssues": ["Error story is banner-only"],
+  "mustFix": [],
+  "quickWins": []
+}
