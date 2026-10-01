@@ -6,15 +6,6 @@ export type AppIconRenderTarget =
   | { readonly kind: "component"; readonly Icon: AppIconComponent }
   | { readonly kind: "image"; readonly src: string };
 
-const readDefaultExport = (
-  icon: AppIconComponent | { readonly default: unknown },
-): unknown => {
-  if (typeof icon === "function") {
-    return icon;
-  }
-  return icon.default;
-};
-
 const readImageSrc = (value: unknown): string | null => {
   if (typeof value === "string" && value.length > 0) {
     return value;
