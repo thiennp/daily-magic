@@ -15,7 +15,7 @@ Agent Witch Console (AWC) at `https://www.agentwitch.com`. Signed-in user sees *
 
 ## Deliverable
 
-Write **`docs/product/audits/awc-projects-ui-granular-2026-10-01.md`** with:
+Write **`docs/product/audits/awc-projects-ui-independent-2026-10-01.md`** with:
 
 - **Executive score** 0–100 for “production-ready signed-in shell + projects page” with **scoreBreakdown** (brand/logo placement, global header, nav model, spatial hierarchy, density, typography, alignment, interactive affordances, accessibility hints, copy clarity, empty/error states if visible).
 - **Checklist** at smallest practical detail (each item: observed / expected / severity P0–P3).

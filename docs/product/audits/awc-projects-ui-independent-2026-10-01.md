@@ -64,6 +64,18 @@ Same `AppShell` pattern likely affects **library, reports, automations, marketpl
 
 Any process that scored Storybook PNGs **without** requiring “desktop app shell = sidebar + main” would **miss** this, because Storybook **replicates the same `AppShell` markup**. Passing screenshots only proves **fidelity to current code**, not fitness for production UX.
 
+## mustFix
+
+1. **P0 — Desktop signed-in shell:** Replace stacked nav card + narrow column with a persistent desktop layout (sidebar or collapsible rail + fluid main canvas). Implement in `AppShell` so library, reports, automations, marketplace, and projects share one model.
+2. **P1 — Information hierarchy:** Page H1 and primary content must not sit below a floating nav card; nav belongs in lateral chrome, not above the title in the content column.
+3. **P1 — `app-narrow` scope:** When narrow max-width is used, apply it to the main content column only—not nav and main together inside `max-w-4xl`.
+
+## niceToHave
+
+- **P2 — Projects density:** Use more horizontal space for the project grid on desktop (1280px+).
+- **P2 — Chrome copy:** Reduce dev-facing noise (e.g. AWL version string) on customer-facing projects surfaces.
+- **P3 — Registry line:** Revisit vertical weight of ACL/registry note above search when shell is fixed.
+
 ## Recommended direction (no commitment to wave QA process)
 
 1. **Design decision:** Define one AWC signed-in shell for desktop (e.g. `lg:grid` with fixed nav width + fluid main, full `max-w-[1600px]` canvas).

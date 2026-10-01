@@ -6,7 +6,7 @@
 
 Read **only** this file (must exist before you start):
 
-`docs/product/audits/awc-projects-ui-granular-2026-10-01.md`
+`docs/product/audits/awc-projects-ui-independent-2026-10-01.md`
 
 Implement **mustFix** items in priority order. Prefer a single fix in `AppShell` / nav that fixes all signed-in AWC routes using default shell, not one-off page hacks.
 

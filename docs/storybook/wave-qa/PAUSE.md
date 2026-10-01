@@ -7,4 +7,4 @@
 - Do not spawn new per-page wave QA subagents.
 - Do not record new `passed: true` for ux–product without expert sign-off + production parity check.
 
-**Active work:** UI expert audit → `docs/storybook/wave-qa/audits/AWC-projects-ui-expert.md` (in progress).
+**Active work:** UI expert audit → `docs/product/audits/awc-projects-ui-independent-2026-10-01.md`.
