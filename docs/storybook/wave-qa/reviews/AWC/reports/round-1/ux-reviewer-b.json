@@ -1,0 +1,29 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "B",
+  "deployable": "AWC",
+  "pageId": "reports",
+  "role": "ux",
+  "captureRound": 1,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/reports/round-1/manifest.json",
+  "scoreDesktop": 97,
+  "scoreMobile": 95,
+  "scoreOverall": 96,
+  "passed": true,
+  "scoreBreakdown": [
+    {
+      "area": "loading-vs-ready-filters",
+      "pointsDeducted": 2,
+      "reason": "Loading state shows Scope/Status controls before skeleton list; signed-out users never see filters, so the loading story feels slightly ahead of data."
+    },
+    {
+      "area": "mobile-clear-history",
+      "pointsDeducted": 2,
+      "reason": "Clear all history wraps below filters on 390px ready capture, adding a third scan stop before the card."
+    }
+  ],
+  "whyBelowThreshold": "",
+  "topIssues": ["Filter chrome visible during loading skeleton"],
+  "mustFix": [],
+  "quickWins": ["Consider hiding filters until first fetch resolves"]
+}

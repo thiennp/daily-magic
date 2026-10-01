@@ -1,0 +1,29 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "B",
+  "deployable": "AWC",
+  "pageId": "reports",
+  "role": "product",
+  "captureRound": 1,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/reports/round-1/manifest.json",
+  "scoreDesktop": 97,
+  "scoreMobile": 96,
+  "scoreOverall": 97,
+  "passed": true,
+  "scoreBreakdown": [
+    {
+      "area": "guest-flow-accuracy",
+      "pointsDeducted": 2,
+      "reason": "Guest story correctly hides filters and explains Run history; sidebar still lists Reports as if signed-in nav is fully available."
+    },
+    {
+      "area": "empty-vs-error-distinction",
+      "pointsDeducted": 1,
+      "reason": "Empty and error states now diverge clearly after loadFailed panel; both keep filters visible which matches signed-in catalog intent."
+    }
+  ],
+  "whyBelowThreshold": "",
+  "topIssues": [],
+  "mustFix": [],
+  "quickWins": []
+}

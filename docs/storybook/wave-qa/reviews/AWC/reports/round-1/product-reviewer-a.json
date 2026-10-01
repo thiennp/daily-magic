@@ -1,0 +1,29 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "A",
+  "deployable": "AWC",
+  "pageId": "reports",
+  "role": "product",
+  "captureRound": 1,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/reports/round-1/manifest.json",
+  "scoreDesktop": 98,
+  "scoreMobile": 97,
+  "scoreOverall": 98,
+  "passed": true,
+  "scoreBreakdown": [
+    {
+      "area": "ready-fixture-believability",
+      "pointsDeducted": 1,
+      "reason": "Sample run uses future-dated timestamp and identical requester/executor emails; acceptable for Storybook but slightly synthetic."
+    },
+    {
+      "area": "error-story-fidelity",
+      "pointsDeducted": 1,
+      "reason": "MSW 500 now surfaces inline retry panel; filters still imply list may exist underneath, which is accurate for partial failure."
+    }
+  ],
+  "whyBelowThreshold": "",
+  "topIssues": [],
+  "mustFix": [],
+  "quickWins": ["Add second run row in ready fixture to show list density"]
+}

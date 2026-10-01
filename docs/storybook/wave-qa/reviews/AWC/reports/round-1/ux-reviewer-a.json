@@ -1,0 +1,29 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "A",
+  "deployable": "AWC",
+  "pageId": "reports",
+  "role": "ux",
+  "captureRound": 1,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/reports/round-1/manifest.json",
+  "scoreDesktop": 98,
+  "scoreMobile": 96,
+  "scoreOverall": 97,
+  "passed": true,
+  "scoreBreakdown": [
+    {
+      "area": "mobile-bottom-nav",
+      "pointsDeducted": 2,
+      "reason": "390px ready capture stacks filters above a tall run card; bottom tab bar shortens visible prompt preview without scroll hint."
+    },
+    {
+      "area": "error-retry-placement",
+      "pointsDeducted": 1,
+      "reason": "Try again sits below filters on error state; hierarchy is clear but retry is one beat lower than the failure headline."
+    }
+  ],
+  "whyBelowThreshold": "",
+  "topIssues": ["Mobile chrome vs long run card"],
+  "mustFix": [],
+  "quickWins": ["Add scroll padding under run cards on narrow viewports"]
+}

@@ -1,0 +1,29 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "A",
+  "deployable": "AWC",
+  "pageId": "reports",
+  "role": "ui",
+  "captureRound": 1,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/reports/round-1/manifest.json",
+  "scoreDesktop": 98,
+  "scoreMobile": 96,
+  "scoreOverall": 97,
+  "passed": true,
+  "scoreBreakdown": [
+    {
+      "area": "run-card-density",
+      "pointsDeducted": 2,
+      "reason": "Ready desktop card packs badge, metadata, estimate row, monospace prompt, and four actions; still readable but dense vs TailAdmin list cards elsewhere."
+    },
+    {
+      "area": "error-panel-width",
+      "pointsDeducted": 1,
+      "reason": "Load failure panel max-w-lg is narrower than empty-state card, so error and empty states feel like different components."
+    }
+  ],
+  "whyBelowThreshold": "",
+  "topIssues": ["Run card action row busy on desktop"],
+  "mustFix": [],
+  "quickWins": ["Align error panel max width with empty-state page density"]
+}
