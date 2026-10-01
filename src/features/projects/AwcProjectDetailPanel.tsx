@@ -93,7 +93,8 @@ export default function AwcProjectDetailPanel({
             Composition
           </dt>
           <dd className="mt-0.5 text-gray-800 dark:text-white/90">
-            {formatProjectCompositionCountsLine(counts)}
+            {formatProjectCompositionCountsLine(counts) ??
+              "Composition on Mac — open in Agent Witch Local"}
           </dd>
         </div>
       </dl>

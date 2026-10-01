@@ -10,6 +10,8 @@ import useAwcProjectDevicePresentation from "@/features/projects/hooks/useAwcPro
 import { shouldShowProjectEditOnMacHelperText } from "@/features/projects/utils/resolveProjectEditOnMacCta";
 import { APP_SURFACE_NESTED_CARD_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
 import formatProjectCompositionCountsLine from "@/lib/projects/formatProjectCompositionCountsLine";
+import formatProjectFolderPathForList from "@/features/projects/utils/formatProjectFolderPathForList";
+import resolveProjectListCardTitle from "@/features/projects/utils/resolveProjectListCardTitle";
 import type ProjectCompositionCounts from "@/lib/projects/types/ProjectCompositionCounts.type";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
 
@@ -38,6 +40,9 @@ export default function AwcProjectCard({
   });
 
   const editHelperId = useId();
+  const listTitle = resolveProjectListCardTitle(project);
+  const folderPathDisplay = formatProjectFolderPathForList(project.folderPath);
+  const compositionLine = formatProjectCompositionCountsLine(compositionCounts);
   const showHelperText =
     editCta.helperText !== null &&
     shouldShowProjectEditOnMacHelperText(editCta.state);
@@ -50,22 +55,27 @@ export default function AwcProjectCard({
       <Link
         href={detailHref}
         className="absolute inset-0 z-0 rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/40"
-        aria-label={`Open project ${project.name}`}
+        aria-label={`Open project ${listTitle.primary}`}
       />
       <div className="relative z-10 flex min-w-0 flex-col pointer-events-none">
         <div className="flex min-w-0 items-start justify-between gap-2">
           <div className="min-w-0 flex-1">
             <h3
               className="truncate text-sm font-medium text-gray-800 dark:text-white/90"
-              title={project.name}
+              title={listTitle.primary}
             >
-              {project.name}
+              {listTitle.primary}
             </h3>
+            {listTitle.secondaryLabel !== null ? (
+              <p className="text-[11px] font-medium uppercase tracking-wide text-gray-400 dark:text-gray-500">
+                {listTitle.secondaryLabel}
+              </p>
+            ) : null}
             <p
-              className="mt-0.5 truncate text-xs text-gray-500 dark:text-gray-400"
-              title={project.folderPath}
+              className="mt-0.5 line-clamp-2 break-all text-xs text-gray-500 dark:text-gray-400"
+              title={folderPathDisplay.full}
             >
-              {project.folderPath}
+              {folderPathDisplay.display}
             </p>
           </div>
           <div className="pointer-events-auto">
@@ -83,9 +93,11 @@ export default function AwcProjectCard({
             statusIcon={presence.statusIcon}
             text={presence.text}
           />
-          <p className="text-xs text-gray-500 dark:text-gray-400">
-            {formatProjectCompositionCountsLine(compositionCounts)}
-          </p>
+          {compositionLine !== null ? (
+            <p className="text-xs text-gray-500 dark:text-gray-400">
+              {compositionLine}
+            </p>
+          ) : null}
         </div>
         {showHelperText ? (
           <p
