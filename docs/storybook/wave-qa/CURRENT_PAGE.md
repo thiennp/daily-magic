@@ -4,14 +4,14 @@
 
 | Field      | Value                                                                                                       |
 | ---------- | ----------------------------------------------------------------------------------------------------------- |
-| **Page**   | AWC `privacy` (`/privacy`)                                                                                  |
+| **Page**   | AWC `terms` (`/terms`)                                                                                      |
 | **Round**  | **1**                                                                                                       |
-| **Branch** | `cursor/wave-qa-awc-privacy-b63b`                                                                           |
+| **Branch** | `cursor/wave-qa-awc-terms-b63b`                                                                             |
 | **Gate**   | ui **100/100** desktop+mobile, `computerUse` + ≥6 zooms; ux/copy/product **≥97**; tester+dx objective gates |
 
 ## After this page
 
-**Completed:** AWC `setup-writer` round 1 (`allRolesPassed: true` on `main`, PR #221). In progress: AWC `privacy` on `cursor/wave-qa-awc-privacy-b63b`.
+**Completed:** AWC `privacy` round 1 (`allRolesPassed: true` on `main`, PR #222). In progress: AWC `terms` on `cursor/wave-qa-awc-terms-b63b`.
 
 ## Coordinator
 

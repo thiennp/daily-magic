@@ -7,8 +7,8 @@ Do not start row N until row N−1 has `allRolesPassed: true` on `main`.
 | done    | AWC        | **projects**           | Round 2 complete on `main` |
 | done    | AWC        | **for-agents**         | Round 1 merged to `main`   |
 | done    | AWC        | **setup-writer**       | Round 1 merged to `main`   |
-| **now** | AWC        | **privacy**            | see `CURRENT_PAGE.md`      |
-| 5       | AWC        | terms                  |                            |
+| done    | AWC        | **privacy**            | Round 1 merged to `main`   |
+| **now** | AWC        | **terms**              | see `CURRENT_PAGE.md`      |
 | 6       | AWC        | prompt-optimizer       |                            |
 | 7       | AWC        | prompt-optimizer-guide |                            |
 | 8       | AWC        | connection-lab         |                            |
