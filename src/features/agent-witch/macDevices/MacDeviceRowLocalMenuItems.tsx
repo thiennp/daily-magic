@@ -1,5 +1,6 @@
 "use client";
 
+import AppIcon from "@/components/ui/icon/AppIcon";
 import { ArrowUpIcon, TrashBinIcon } from "@/icons";
 import { renderMacDeviceRowMenuItem } from "@/features/agent-witch/macDevices/utils/renderMacDeviceRowMenuItem";
 import { runMacDeviceRowMenuAction } from "@/features/agent-witch/macDevices/utils/runMacDeviceRowMenuAction";
@@ -32,14 +33,14 @@ export default function MacDeviceRowLocalMenuItems({
       {onUpdateLocal
         ? renderMacDeviceRowMenuItem(
             runMacDeviceRowMenuAction(closeMenu, onUpdateLocal),
-            <ArrowUpIcon className="h-4 w-4 shrink-0" />,
+            <AppIcon icon={ArrowUpIcon} size="sm" />,
             "Update local",
           )
         : null}
       {onDeleteLocalScript
         ? renderMacDeviceRowMenuItem(
             runMacDeviceRowMenuAction(closeMenu, onDeleteLocalScript),
-            <TrashBinIcon className="h-4 w-4 shrink-0" />,
+            <AppIcon icon={TrashBinIcon} size="sm" />,
             "Delete local script",
             true,
           )

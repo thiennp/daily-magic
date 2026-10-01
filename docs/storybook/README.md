@@ -82,3 +82,18 @@ Catalog code: `src/utils/storybook/awl/`. Manifest: `awlStorybookPageManifest.co
 ## Tests
 
 `src/utils/storybook/pageStoryManifest.test.ts` keeps manifests aligned with render catalogs.
+
+## Page wave QA (UX / copy / UI / product / tester / DX)
+
+One wave = one catalog page (all statuses). Process and progress file: `docs/storybook/wave-qa/README.md`.
+
+```bash
+npm run storybook:build
+cd storybook-static && python3 -m http.server 6008   # separate terminal
+STORYBOOK_BASE_URL=http://127.0.0.1:6008 npm run storybook:wave:capture -- AWC home-marketing 1
+STORYBOOK_BASE_URL=http://127.0.0.1:6008 npm run storybook:wave:capture-all
+```
+
+Screenshots: `/opt/cursor/artifacts/storybook-waves/{AWC|AWL}/{pageId}/round-{n}/` (local) or `storybook-wave-captures/` (weekly CI).
+
+**Skill (agent + Saturday schedule):** `.cursor/skills/skill-storybook-page-wave-qa/SKILL.md` · `npm run storybook:wave:weekly`

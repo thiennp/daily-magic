@@ -6,6 +6,13 @@ const preview: Preview = {
   parameters: {
     layout: "fullscreen",
     controls: { hideNoControlsWarning: true },
+    nextjs: {
+      appDirectory: true,
+      navigation: {
+        pathname: "/",
+        query: {},
+      },
+    },
   },
 };
 
