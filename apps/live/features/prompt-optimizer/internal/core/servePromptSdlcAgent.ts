@@ -4,6 +4,10 @@ import { buildPromptSdlcAgentCatalog } from "./buildPromptSdlcAgentCatalog";
 import { buildPromptSdlcAgentSnapshot } from "./buildPromptSdlcAgentSnapshot";
 import { describePromptSdlcLocalModels } from "./promptSdlcLocalForm";
 import { parsePromptSdlcAgentBody } from "./parsePromptSdlcAgentBody";
+import {
+  applyPromptSdlcAgentBudgetConfirm,
+  parsePromptSdlcAgentBudgetConfirmBody,
+} from "./confirmPromptSdlcAgentBudget";
 import { planPromptSdlcAgentStart } from "./planPromptSdlcAgentStart";
 import {
   readPromptSdlcLocalCycle,
@@ -52,6 +56,40 @@ export const servePromptSdlcAgent = async (input: {
   }
   if (input.method !== "POST") {
     return { status: 405, body: { ok: false, error: "Use GET or POST." } };
+  }
+
+  // Confirm Step 4 ceilings on an existing cycle (?cycle= + intent confirm_budget).
+  if (cycleId !== null) {
+    const confirmParsed = parsePromptSdlcAgentBudgetConfirmBody(input.rawBody);
+    if (confirmParsed.kind === "other") {
+      return {
+        status: 400,
+        body: {
+          ok: false,
+          error:
+            "POST ?cycle= expects intent confirm_budget with confirmedTokenBudget.",
+        },
+      };
+    }
+    if (confirmParsed.kind === "invalid") {
+      return { status: 400, body: { ok: false, error: confirmParsed.error } };
+    }
+    const existing = readPromptSdlcLocalCycle(input.storePath, cycleId);
+    if (existing === null) {
+      return {
+        status: 404,
+        body: { ok: false, error: "That run is not on this Mac." },
+      };
+    }
+    const applied = applyPromptSdlcAgentBudgetConfirm(
+      existing,
+      confirmParsed.body,
+    );
+    if (!applied.ok) {
+      return { status: 400, body: { ok: false, error: applied.error } };
+    }
+    savePromptSdlcLocalCycle(input.storePath, applied.cycle);
+    return { status: 200, body: buildPromptSdlcAgentSnapshot(applied.cycle) };
   }
 
   const parsed = parsePromptSdlcAgentBody(input.rawBody);

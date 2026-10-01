@@ -4,6 +4,9 @@ import {
   mergePromptSdlcWizardPostedParameterValues,
   summarizePromptSdlcWizardCompletion,
 } from "../../../../adapters/promptSdlcAwcCore";
+import { confirmPromptSdlcCostBudget } from "@/lib/promptOptimizer/confirmPromptSdlcCostBudget";
+import { isPromptSdlcCostBudgetConfirmed } from "@/lib/promptOptimizer/readPromptSdlcBudgetStop";
+import { PROMPT_SDLC_BUDGET_CONFIRM_REQUIRED } from "@/lib/promptOptimizer/promptSdlcCostControl.constant";
 
 import {
   beginPromptSdlcWizardEvaluate,
@@ -67,7 +70,7 @@ export const tryAcceptPromptSdlcWizardPost = (input: {
     return false;
   }
   const cycleId = posted.get("cycleId")?.trim() ?? "";
-  const cycle = readPromptSdlcLocalCycle(input.storePath, cycleId);
+  let cycle = readPromptSdlcLocalCycle(input.storePath, cycleId);
   if (cycle === null || cycle.wizard === undefined) {
     input.response.writeHead(303, { Location: "/prompt-optimizer" });
     input.response.end();
@@ -270,6 +273,46 @@ export const tryAcceptPromptSdlcWizardPost = (input: {
       if (moduleRun === undefined) {
         finish(cycleId);
         return true;
+      }
+
+      // Pre-Step4: require confirmedTokenBudget / confirmedMaxSpendUsd before trials.
+      if (!isPromptSdlcCostBudgetConfirmed(cycle.costControls)) {
+        const tokenRaw = posted.get("confirmedTokenBudget")?.trim() ?? "";
+        const spendRaw = posted.get("confirmedMaxSpendUsd")?.trim() ?? "";
+        if (tokenRaw.length === 0) {
+          const next: PromptSdlcLocalCycle = {
+            ...cycle,
+            errorMessage: PROMPT_SDLC_BUDGET_CONFIRM_REQUIRED,
+            updatedAt: new Date().toISOString(),
+          };
+          savePromptSdlcLocalCycle(input.storePath, next);
+          finish(cycleId);
+          return true;
+        }
+        const confirmed = confirmPromptSdlcCostBudget({
+          existing: cycle.costControls,
+          confirmedTokenBudget: Number(tokenRaw),
+          confirmedMaxSpendUsd:
+            spendRaw.length === 0 ? null : Number(spendRaw),
+          rateUsdPer1kTokens: cycle.costControls?.rateUsdPer1kTokens,
+        });
+        if (!confirmed.ok) {
+          const next: PromptSdlcLocalCycle = {
+            ...cycle,
+            errorMessage: confirmed.errorMessage,
+            updatedAt: new Date().toISOString(),
+          };
+          savePromptSdlcLocalCycle(input.storePath, next);
+          finish(cycleId);
+          return true;
+        }
+        cycle = {
+          ...cycle,
+          costControls: confirmed.costControls,
+          errorMessage: null,
+          updatedAt: new Date().toISOString(),
+        };
+        savePromptSdlcLocalCycle(input.storePath, cycle);
       }
 
       const mergedParams = mergePromptSdlcWizardPostedParameterValues({

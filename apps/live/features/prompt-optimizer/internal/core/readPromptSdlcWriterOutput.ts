@@ -7,7 +7,8 @@ export type PromptSdlcWriterErrorKind =
   | "writer_interrupted"
   | "writer_no_reply"
   | "usage_limit"
-  | "action_required";
+  | "action_required"
+  | "budget_exceeded";
 
 export type PromptSdlcWriterResult =
   | { readonly ok: true; readonly text: string; readonly tokens: number | null }

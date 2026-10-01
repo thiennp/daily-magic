@@ -29,3 +29,11 @@ Score, threshold, `passed` boolean, judge reasons.
 Finer billing meters than “passed = billable-success,” or that Step 4 always finishes when writers stall.
 
 One sentence: _You pay for passed evaluate success; `useThisPrompt` only on `passed`; timeout / interrupt / no_reply fail cleanly (SIGKILL on stuck writers)._
+
+## Cost controls (API `feat/aw-optimizer-cost-control-api`)
+
+- Before Step 4: judge proposal exposes **`targetTokenBudget`** + **`estimatedSpendUsd`** (+ optional `rateUsdPer1kTokens`).
+- User must confirm → **`confirmedTokenBudget`** / **`confirmedMaxSpendUsd`** hard ceilings (`budgetConfirmed`).
+- Soft warn near ceiling; hard stop → `errorKind: budget_exceeded`, status `failed`, **`useThisPrompt` false** (only `passed` billable/usable).
+- Knobs: `maxTrials`, `maxSpendUsd`, `earlyStop` / `earlyStopFlatRounds`.
+- Flat-score early-stop remains a clean **`stopped`** (best prompt kept); not `budget_exceeded`.

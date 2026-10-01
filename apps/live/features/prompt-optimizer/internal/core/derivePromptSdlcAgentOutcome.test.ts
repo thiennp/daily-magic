@@ -47,6 +47,12 @@ describe("derivePromptSdlcAgentOutcome + errorKind honesty", () => {
       }),
     ).toBe("action_required");
     expect(
+      derivePromptSdlcAgentOutcome({
+        status: "failed",
+        errorKind: "budget_exceeded",
+      }),
+    ).toBe("budget_exceeded");
+    expect(
       derivePromptSdlcAgentOutcome({ status: "failed", errorKind: undefined }),
     ).toBe("failed");
   });
@@ -134,6 +140,18 @@ describe("derivePromptSdlcAgentOutcome + errorKind honesty", () => {
       useThisPrompt: false,
       outcome: "usage_limit",
       errorKind: "usage_limit",
+    });
+    expect(
+      buildPromptSdlcAgentSnapshot({
+        ...base,
+        status: "failed",
+        errorMessage: "budget exceeded",
+        errorKind: "budget_exceeded",
+      }),
+    ).toMatchObject({
+      useThisPrompt: false,
+      outcome: "budget_exceeded",
+      errorKind: "budget_exceeded",
     });
   });
 });

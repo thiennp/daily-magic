@@ -7,6 +7,7 @@ import { describe, expect, it } from "vitest";
 import { createInitialPromptSdlcWizardState } from "../../../../adapters/promptSdlcAwcCore";
 import { tryAcceptPromptSdlcWizardPost } from "./acceptPromptSdlcWizardPost";
 import { createPromptSdlcLocalCycle } from "./createPromptSdlcLocalCycle";
+import { confirmedPromptSdlcCostControlsForTests } from "./promptSdlcCostControlTestFixtures";
 import {
   readPromptSdlcLocalCycle,
   savePromptSdlcLocalCycle,
@@ -331,6 +332,7 @@ describe("tryAcceptPromptSdlcWizardPost", () => {
         judgeModel: "claude-cli",
         improverModel: "claude-cli",
         workingDirectory: storeDir,
+        costControls: confirmedPromptSdlcCostControlsForTests({ moduleCount: 2 }),
         wizard: {
           ...createInitialPromptSdlcWizardState("Do {{x}}"),
           gate: "separate",
@@ -392,6 +394,7 @@ describe("tryAcceptPromptSdlcWizardPost", () => {
         judgeModel: "claude-cli",
         improverModel: "claude-cli",
         workingDirectory: storeDir,
+        costControls: confirmedPromptSdlcCostControlsForTests({ moduleCount: 2 }),
         wizard: {
           ...createInitialPromptSdlcWizardState("Do {{x}}"),
           gate: "optimize_modules",
@@ -419,6 +422,8 @@ describe("tryAcceptPromptSdlcWizardPost", () => {
         intent: "wizard-continue",
         cycleId: cycle.id,
         wizardParam_x: "custom",
+        confirmedTokenBudget: "8000",
+        confirmedMaxSpendUsd: "0.08",
       }),
       storePath,
       response: {
@@ -492,6 +497,7 @@ describe("tryAcceptPromptSdlcWizardPost", () => {
         judgeModel: "claude-cli",
         improverModel: "claude-cli",
         workingDirectory: storeDir,
+        costControls: confirmedPromptSdlcCostControlsForTests({ moduleCount: 2 }),
         wizard: {
           ...createInitialPromptSdlcWizardState("Do {{x}}"),
           gate: "optimize_modules",
@@ -538,6 +544,8 @@ describe("tryAcceptPromptSdlcWizardPost", () => {
         intent: "wizard-continue",
         cycleId: cycle.id,
         wizardParam_x: "hello",
+        confirmedTokenBudget: "8000",
+        confirmedMaxSpendUsd: "0.08",
       }),
       storePath,
       response: {

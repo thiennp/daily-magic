@@ -117,3 +117,31 @@ export {
   PROMPT_SDLC_WIZARD_GATE_PHASES,
   type PromptSdlcWizardGatePhase,
 } from "@/lib/promptOptimizer/wizard/types/PromptSdlcWizardPhase.constant";
+
+export {
+  PROMPT_SDLC_DEFAULT_MAX_TRIALS,
+  PROMPT_SDLC_MAX_TRIALS_LIMIT,
+  PROMPT_SDLC_DEFAULT_RATE_USD_PER_1K_TOKENS,
+  PROMPT_SDLC_BUDGET_SOFT_WARN_RATIO,
+  PROMPT_SDLC_STOP_BUDGET_EXCEEDED,
+  PROMPT_SDLC_BUDGET_CONFIRM_REQUIRED,
+} from "@/lib/promptOptimizer/promptSdlcCostControl.constant";
+export { estimatePromptSdlcSpendUsd } from "@/lib/promptOptimizer/estimatePromptSdlcSpendUsd";
+export { defaultPromptSdlcCostControls } from "@/lib/promptOptimizer/createEmptyPromptSdlcCostControl";
+export {
+  proposePromptSdlcCostBudget,
+  applyPromptSdlcCostProposal,
+  seedPromptSdlcStep4CostProposal,
+} from "@/lib/promptOptimizer/proposePromptSdlcCostBudget";
+export { confirmPromptSdlcCostBudget } from "@/lib/promptOptimizer/confirmPromptSdlcCostBudget";
+export {
+  readPromptSdlcBudgetStop,
+  isPromptSdlcCostBudgetConfirmed,
+} from "@/lib/promptOptimizer/readPromptSdlcBudgetStop";
+export { resolvePromptSdlcMaxTrials } from "@/lib/promptOptimizer/resolvePromptSdlcMaxTrials";
+export type {
+  PromptSdlcCostControls,
+  PromptSdlcCostProposal,
+  PromptSdlcCostConfirm,
+  PromptSdlcCostControlKnobs,
+} from "@/lib/promptOptimizer/types/PromptSdlcCostControl.type";
