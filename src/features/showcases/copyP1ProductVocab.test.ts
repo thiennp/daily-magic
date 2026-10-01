@@ -21,7 +21,7 @@ const APP_BOTTOM_NAV_PATH = join(
 );
 const REPORTS_LIST_PATH = join(
   process.cwd(),
-  "src/features/reports/AgentRunsList.tsx",
+  "src/features/reports/AgentRunsListSignedInContent.tsx",
 );
 const SOLO_SURFACE_COPY_PATH = join(
   process.cwd(),
