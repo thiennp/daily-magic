@@ -1,0 +1,24 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "B",
+  "deployable": "AWC",
+  "pageId": "privacy",
+  "role": "product",
+  "captureRound": 1,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/privacy/round-1/manifest.json",
+  "scoreDesktop": 99,
+  "scoreMobile": 99,
+  "scoreOverall": 99,
+  "passed": true,
+  "scoreBreakdown": [
+    {
+      "area": "demo-readiness",
+      "pointsDeducted": 1,
+      "reason": "Story honestly represents the live /privacy route structure and Mac-task data handling themes for enterprise demos."
+    }
+  ],
+  "whyBelowThreshold": "",
+  "topIssues": [],
+  "mustFix": [],
+  "quickWins": ["Pair with Terms story in sales deck footer links"]
+}

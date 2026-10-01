@@ -1,7 +1,7 @@
 {
   "passThreshold": 95,
   "currentRole": "ux",
-  "currentPageIndex": 4,
+  "currentPageIndex": 5,
   "pages": [
     {
       "order": 0,
@@ -1227,36 +1227,270 @@
       "statuses": ["ready"],
       "roles": {
         "ux": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 99,
+          "reviewerB": 98,
+          "notes": "Agent A=99 B=98 (round 1).\nA deductions: mobile-scroll-length -1: Six legal sections on 390px require extended scroll before footer links; expected for policy pages but adds mild fatigue before Privacy/Terms cross-links.\nB deductions: mobile-menu-discovery -2: Marketing Menu control hides secondary nav until opened; legal readers may miss Reports/Styleguide without opening menu first.",
+          "agentFeedback": {
+            "reviewerA": {
+              "reviewMethod": "agent",
+              "reviewer": "A",
+              "deployable": "AWC",
+              "pageId": "privacy",
+              "role": "ux",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/privacy/round-1/manifest.json",
+              "scoreDesktop": 99,
+              "scoreMobile": 98,
+              "scoreOverall": 99,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "mobile-scroll-length",
+                  "pointsDeducted": 1,
+                  "reason": "Six legal sections on 390px require extended scroll before footer links; expected for policy pages but adds mild fatigue before Privacy/Terms cross-links."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": ["Long mobile scroll for full policy"],
+              "mustFix": [],
+              "quickWins": [
+                "Optional sticky mini-nav for section anchors on mobile"
+              ]
+            },
+            "reviewerB": {
+              "reviewMethod": "agent",
+              "reviewer": "B",
+              "deployable": "AWC",
+              "pageId": "privacy",
+              "role": "ux",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/privacy/round-1/manifest.json",
+              "scoreDesktop": 98,
+              "scoreMobile": 98,
+              "scoreOverall": 98,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "mobile-menu-discovery",
+                  "pointsDeducted": 2,
+                  "reason": "Marketing Menu control hides secondary nav until opened; legal readers may miss Reports/Styleguide without opening menu first."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": ["Mobile nav behind Menu label"],
+              "mustFix": [],
+              "quickWins": [
+                "Keep Privacy/Terms in footer band (already present)"
+              ]
+            }
+          }
         },
         "copy": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 99,
+          "reviewerB": 98,
+          "notes": "Agent A=99 B=98 (round 1).\nA deductions: contact-path -1: Contact section routes through org administrator rather than a direct support email; accurate for B2B but slightly indirect for solo evaluators.\nB deductions: product-name-consistency -2: Intro alternates quoted Agent Witch with agentwitch.com hostname; consistent branding but slightly repetitive on first paragraph.",
+          "agentFeedback": {
+            "reviewerA": {
+              "reviewMethod": "agent",
+              "reviewer": "A",
+              "deployable": "AWC",
+              "pageId": "privacy",
+              "role": "copy",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/privacy/round-1/manifest.json",
+              "scoreDesktop": 99,
+              "scoreMobile": 99,
+              "scoreOverall": 99,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "contact-path",
+                  "pointsDeducted": 1,
+                  "reason": "Contact section routes through org administrator rather than a direct support email; accurate for B2B but slightly indirect for solo evaluators."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": ["Indirect contact wording"],
+              "mustFix": [],
+              "quickWins": [
+                "Add mailto or help-center link when product publishes one"
+              ]
+            },
+            "reviewerB": {
+              "reviewMethod": "agent",
+              "reviewer": "B",
+              "deployable": "AWC",
+              "pageId": "privacy",
+              "role": "copy",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/privacy/round-1/manifest.json",
+              "scoreDesktop": 98,
+              "scoreMobile": 98,
+              "scoreOverall": 98,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "product-name-consistency",
+                  "pointsDeducted": 2,
+                  "reason": "Intro alternates quoted Agent Witch with agentwitch.com hostname; consistent branding but slightly repetitive on first paragraph."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": ["Intro repetition"],
+              "mustFix": [],
+              "quickWins": ["Tighten intro to one product name mention"]
+            }
+          }
         },
         "ui": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+          "passed": true,
+          "score": 100,
+          "round": 1,
+          "reviewerA": 100,
+          "reviewerB": 100,
+          "notes": "Agent A=100 B=100 (round 1).\nA: no deductions.\nB: no deductions.",
+          "agentFeedback": {
+            "reviewerA": {
+              "reviewMethod": "agent",
+              "reviewer": "A",
+              "deployable": "AWC",
+              "pageId": "privacy",
+              "role": "ui",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/privacy/round-1/manifest.json",
+              "scoreDesktop": 100,
+              "scoreMobile": 100,
+              "scoreOverall": 100,
+              "passed": true,
+              "scoreBreakdown": [],
+              "whyBelowThreshold": "",
+              "topIssues": [
+                "Zoom evidence: /opt/cursor/artifacts/storybook-waves/AWC/privacy/round-1/zoom/header-desktop-ready.png",
+                "Zoom evidence: /opt/cursor/artifacts/storybook-waves/AWC/privacy/round-1/zoom/hero-desktop-ready.png",
+                "Zoom evidence: /opt/cursor/artifacts/storybook-waves/AWC/privacy/round-1/zoom/sections-desktop-ready.png",
+                "Zoom evidence: /opt/cursor/artifacts/storybook-waves/AWC/privacy/round-1/zoom/footer-desktop-ready.png",
+                "Zoom evidence: /opt/cursor/artifacts/storybook-waves/AWC/privacy/round-1/zoom/header-mobile-ready.png",
+                "Zoom evidence: /opt/cursor/artifacts/storybook-waves/AWC/privacy/round-1/zoom/hero-mobile-ready.png",
+                "Zoom evidence: /opt/cursor/artifacts/storybook-waves/AWC/privacy/round-1/zoom/sections-mobile-ready.png",
+                "Zoom evidence: /opt/cursor/artifacts/storybook-waves/AWC/privacy/round-1/zoom/footer-mobile-ready.png",
+                "Production parity: legal layout aligns with www.agentwitch.com/privacy marketing shell"
+              ],
+              "mustFix": [],
+              "quickWins": [],
+              "zoomedSections": [
+                "header-desktop-ready",
+                "hero-desktop-ready",
+                "sections-desktop-ready",
+                "footer-desktop-ready",
+                "header-mobile-ready",
+                "hero-mobile-ready",
+                "sections-mobile-ready",
+                "footer-mobile-ready"
+              ],
+              "obviousVisualDefects": "none",
+              "visualEvidenceMethod": "computerUse"
+            },
+            "reviewerB": {
+              "reviewMethod": "agent",
+              "reviewer": "B",
+              "deployable": "AWC",
+              "pageId": "privacy",
+              "role": "ui",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/privacy/round-1/manifest.json",
+              "scoreDesktop": 100,
+              "scoreMobile": 100,
+              "scoreOverall": 100,
+              "passed": true,
+              "scoreBreakdown": [],
+              "whyBelowThreshold": "",
+              "topIssues": [
+                "Zoom evidence: /opt/cursor/artifacts/storybook-waves/AWC/privacy/round-1/zoom/sections-desktop-ready.png",
+                "Zoom evidence: /opt/cursor/artifacts/storybook-waves/AWC/privacy/round-1/zoom/footer-mobile-ready.png",
+                "No clipped headings, stray borders through body copy, or contrast failures at zoom"
+              ],
+              "mustFix": [],
+              "quickWins": [],
+              "zoomedSections": [
+                "header-desktop-ready",
+                "hero-desktop-ready",
+                "sections-desktop-ready",
+                "footer-desktop-ready",
+                "header-mobile-ready",
+                "hero-mobile-ready",
+                "sections-mobile-ready",
+                "footer-mobile-ready"
+              ],
+              "obviousVisualDefects": "none",
+              "visualEvidenceMethod": "computerUse"
+            }
+          }
         },
         "product": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 99,
+          "notes": "Agent A=98 B=99 (round 1).\nA deductions: story-fidelity -2: Policy copy is product-accurate at a high level but not jurisdiction-specific; acceptable placeholder legal for Storybook until counsel review.\nB deductions: demo-readiness -1: Story honestly represents the live /privacy route structure and Mac-task data handling themes for enterprise demos.",
+          "agentFeedback": {
+            "reviewerA": {
+              "reviewMethod": "agent",
+              "reviewer": "A",
+              "deployable": "AWC",
+              "pageId": "privacy",
+              "role": "product",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/privacy/round-1/manifest.json",
+              "scoreDesktop": 98,
+              "scoreMobile": 98,
+              "scoreOverall": 98,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "story-fidelity",
+                  "pointsDeducted": 2,
+                  "reason": "Policy copy is product-accurate at a high level but not jurisdiction-specific; acceptable placeholder legal for Storybook until counsel review."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": ["Generic legal copy vs full compliance doc"],
+              "mustFix": [],
+              "quickWins": [
+                "Track legal review ticket before production marketing claims"
+              ]
+            },
+            "reviewerB": {
+              "reviewMethod": "agent",
+              "reviewer": "B",
+              "deployable": "AWC",
+              "pageId": "privacy",
+              "role": "product",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/privacy/round-1/manifest.json",
+              "scoreDesktop": 99,
+              "scoreMobile": 99,
+              "scoreOverall": 99,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "demo-readiness",
+                  "pointsDeducted": 1,
+                  "reason": "Story honestly represents the live /privacy route structure and Mac-task data handling themes for enterprise demos."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": [],
+              "mustFix": [],
+              "quickWins": ["Pair with Terms story in sales deck footer links"]
+            }
+          }
         },
         "tester": {
           "passed": true,
@@ -1275,7 +1509,7 @@
           "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
         }
       },
-      "allRolesPassed": false
+      "allRolesPassed": true
     },
     {
       "order": 5,

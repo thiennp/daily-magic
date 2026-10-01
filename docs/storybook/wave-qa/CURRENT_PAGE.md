@@ -11,7 +11,7 @@
 
 ## After this page
 
-**Completed:** AWC `setup-writer` round 1 (`allRolesPassed: true` on branch `cursor/wave-qa-awc-setup-writer-b63b`). Next: AWC `privacy` only.
+**Completed:** AWC `setup-writer` round 1 (`allRolesPassed: true` on `main`, PR #221). In progress: AWC `privacy` on `cursor/wave-qa-awc-privacy-b63b`.
 
 ## Coordinator
 

@@ -1,0 +1,24 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "A",
+  "deployable": "AWC",
+  "pageId": "privacy",
+  "role": "copy",
+  "captureRound": 1,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/privacy/round-1/manifest.json",
+  "scoreDesktop": 99,
+  "scoreMobile": 99,
+  "scoreOverall": 99,
+  "passed": true,
+  "scoreBreakdown": [
+    {
+      "area": "contact-path",
+      "pointsDeducted": 1,
+      "reason": "Contact section routes through org administrator rather than a direct support email; accurate for B2B but slightly indirect for solo evaluators."
+    }
+  ],
+  "whyBelowThreshold": "",
+  "topIssues": ["Indirect contact wording"],
+  "mustFix": [],
+  "quickWins": ["Add mailto or help-center link when product publishes one"]
+}
