@@ -7,6 +7,7 @@ npm run ci || exit 1
 branch=$(git symbolic-ref --short HEAD 2>/dev/null || true)
 if [ "$branch" = "main" ]; then
   echo "Syncing main with origin/main after CI (avoid push race)..."
+  git checkout -- public/install/agent-witch/app/agent-witch.js public/install/agent-witch/app/deps.tar.gz 2>/dev/null || true
   git fetch origin main
   git rebase origin/main || exit 1
 fi
