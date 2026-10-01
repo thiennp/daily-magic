@@ -60,11 +60,9 @@ describe("buildPromptSdlcLocalPageBody", () => {
     expect(html).toContain("Run starts the wizard");
     expect(html).not.toContain("run-classic");
     expect(html).not.toContain("Classic loop");
-    expect(html).not.toContain("sdlc-history-filter");
-    expect(html.match(/class="sdlc-tip"/g)?.length).toBe(14);
-    expect(html).toContain('name="maxTrials"');
-    expect(html).toContain('name="maxSpendUsd"');
-    expect(html).toContain('name="earlyStop"');
+    expect(html).not.toContain('data-sdlc-history-filter="classic"');
+    expect(html).toContain("No runs yet.");
+    expect(html.match(/class="sdlc-tip"/g)?.length).toBe(10);
     expect(html).toContain("Module runner");
     expect(html).toContain('name="runner"');
     expect(html).toContain('data-writer-status="runner"');
@@ -658,5 +656,33 @@ describe("buildPromptSdlcLocalPageBody", () => {
     expect(html).toContain("sdlc-run-success-actions");
     expect(html).toContain("Download report (.md)");
     expect(html).not.toContain("sdlc-wizard-accordion");
+  });
+
+  it("filters history without a Classic button", () => {
+    const cycle = createPromptSdlcLocalCycle({
+      goal: "Ship the wizard",
+      sourcePrompt: "p",
+      judgeModel: "claude-cli",
+      improverModel: "claude-cli",
+      wizard: createInitialPromptSdlcWizardState("p"),
+    });
+    const html = buildPromptSdlcLocalPageBody({
+      goal: "",
+      prompt: "",
+      modelNote: "",
+      writers: [{ id: "claude-cli", label: "Claude" }],
+      judge: "claude-cli",
+      improver: "claude-cli",
+      folder: "~",
+      passScore: "70",
+      canRun: true,
+      errorMessage: null,
+      cycle: null,
+      history: [cycle],
+    });
+    expect(html).toContain('data-sdlc-history-filter="all"');
+    expect(html).toContain('data-sdlc-history-filter="wizard"');
+    expect(html).not.toContain('data-sdlc-history-filter="classic"');
+    expect(html).toContain('data-sdlc-history-kind="wizard"');
   });
 });

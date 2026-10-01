@@ -1,6 +1,6 @@
 # Prompt optimizer
 
-Console page for the prompt optimizer (**AWC**). `/prompt-optimizer` tells the person to run it in Agent Witch Local (`http://127.0.0.1:43347/prompt-optimizer`). The console does not run the loop. You choose the folder, the pass score, and the writers on Live. They run inside that folder so they can read the harness and the code. Bots on this Mac call `http://127.0.0.1:43347/prompt-optimizer/agent`.
+Console page for the prompt optimizer (**AWC**). `/prompt-optimizer` tells the person to run it in Agent Witch Live (`http://127.0.0.1:43347/prompt-optimizer`). The console does not run the wizard. You choose the folder and the writers on Live. **Run** starts the four-step wizard so writers can read the harness and the code in that folder. Bots on this Mac call `http://127.0.0.1:43347/prompt-optimizer/agent` (same wizard).
 
 ## Registry
 
@@ -11,14 +11,14 @@ Console page for the prompt optimizer (**AWC**). `/prompt-optimizer` tells the p
 
 ## Product concepts
 
-The prompt is the artifact. A cycle stores the source prompt, each revision, and each judgement. The loop stops when the score reaches the pass score, at the round limit (default 10), or after 3 judged rounds that do not beat the best score. Finish ends the writers and counts the run as complete. After each scored round the page shows the tokens spent so far. The next rewrite always starts from the highest scoring prompt. Reasons from lower scores become an avoid list. Earlier prompt text is not sent again. After 3 tries that do not beat the best, the stop includes those reasons. After a folder is chosen, its skills can fill the prompt. A finished run shows the highest scoring prompt. Save as a skill uses that skill’s name, description, and file name, and asks before replacing an existing file. On Agent Witch Local, judge and improver are installed reasoning writers, or you. Live fills in the last folder, judge, and improver on the next visit. Local and small models are not used. The console composer still lists Cursor Cloud for an older path; the page people open only links to Live.
+The prompt is the artifact. A wizard cycle stores generalize / evaluate / separate / optimize-module state. Evaluate uses pass score **70** and up to **5** scored revisions; step 4 runs one runner trial per module. **End wizard** or **Skip module** stops writers during a wizard run. After a folder is chosen, its skills can fill the prompt. A finished wizard shows the best prompts per module. Save as a skill uses that skill’s name, description, and file name, and asks before replacing an existing file. On Agent Witch Live, judge, improver, and runner are installed reasoning writers, or you. Live fills in the last folder and roles on the next visit. Local and small models are not used.
 
 This feature does not write `capability_improvements` and does not run a workflow graph.
 
 ## Routes
 
-- `/prompt-optimizer` and `/prompt-optimizer/guide` live in the console app chrome and tell the person to run the loop in Agent Witch Local.
-- The loop itself is `http://127.0.0.1:43347/prompt-optimizer`.
+- `/prompt-optimizer` and `/prompt-optimizer/guide` live in the console app chrome and tell the person to run the wizard in Agent Witch Live.
+- The wizard itself is `http://127.0.0.1:43347/prompt-optimizer`.
 
 ## APIs
 

@@ -44,13 +44,13 @@ export const describePromptSdlcLocalHistoryRow = (
       return {
         badgeClass: "sdlc-history-badge sdlc-history-badge-done",
         badgeLabel: "Complete",
-        subtitle: `Classic · revision round ${cycle.currentRound}`,
+        subtitle: `Legacy · revision round ${cycle.currentRound}`,
       };
     }
     return {
       badgeClass: "sdlc-history-badge sdlc-history-badge-live",
       badgeLabel: "In progress",
-      subtitle: `Classic · revision round ${cycle.currentRound}`,
+      subtitle: `Legacy · revision round ${cycle.currentRound}`,
     };
   }
 

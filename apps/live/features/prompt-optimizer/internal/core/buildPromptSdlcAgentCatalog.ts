@@ -2,6 +2,8 @@ import {
   PROMPT_SDLC_AGENT_URL,
   PROMPT_SDLC_LIVE_PAGE_URL,
   PROMPT_SDLC_LOCAL_CONTEXT_REASON,
+  PROMPT_SDLC_WIZARD_MAX_ROUNDS,
+  PROMPT_SDLC_WIZARD_PASS_SCORE,
 } from "../../../../adapters/promptSdlcAwcCore";
 import type { PromptSdlcLocalWriterChoice } from "./promptSdlcLocalForm";
 
@@ -25,8 +27,8 @@ export const buildPromptSdlcAgentCatalog = (
         workingDirectory: "absolute project folder on this Mac",
         judge: sole ?? "installed writer id",
         improver: sole ?? "installed writer id",
-        passScore: 90,
-        maxRounds: 10,
+        passScore: PROMPT_SDLC_WIZARD_PASS_SCORE,
+        maxRounds: PROMPT_SDLC_WIZARD_MAX_ROUNDS,
       },
     },
     poll: `GET ${PROMPT_SDLC_AGENT_URL}?cycle=<cycleId> until done is true.`,

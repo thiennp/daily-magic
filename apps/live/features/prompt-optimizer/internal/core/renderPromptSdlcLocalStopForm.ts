@@ -8,14 +8,14 @@ const escapeHtml = (value: string): string =>
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;");
 
-const CONFIRM_STOP_CLASSIC =
+const CONFIRM_STOP_LEGACY =
   "Stop this run? Writers will stop and the best prompt is kept.";
 const CONFIRM_END_WIZARD =
   "End the wizard? Writers will stop and progress from finished steps is kept.";
 const CONFIRM_SKIP_MODULE = "Skip this module and pause at the step gate?";
 
-const classicStopForm = (cycleId: string): string =>
-  `<form method="POST" action="/prompt-optimizer" class="sdlc-live-post" data-confirm-message="${escapeHtml(CONFIRM_STOP_CLASSIC)}"><input type="hidden" name="intent" value="stop"><input type="hidden" name="cycleId" value="${escapeHtml(cycleId)}"><button class="btn btn-secondary" type="submit">Stop run</button><span class="muted">Stops the writers and keeps the best prompt. This run is marked complete.</span></form>`;
+const legacyStopForm = (cycleId: string): string =>
+  `<form method="POST" action="/prompt-optimizer" class="sdlc-live-post" data-confirm-message="${escapeHtml(CONFIRM_STOP_LEGACY)}"><input type="hidden" name="intent" value="stop"><input type="hidden" name="cycleId" value="${escapeHtml(cycleId)}"><button class="btn btn-secondary" type="submit">Stop run</button><span class="muted">Stops the writers and keeps the best prompt. This run is marked complete.</span></form>`;
 
 const wizardEndForm = (cycleId: string): string =>
   `<form method="POST" action="/prompt-optimizer" class="sdlc-wizard-end-actions sdlc-live-post" data-confirm-message="${escapeHtml(CONFIRM_END_WIZARD)}"><input type="hidden" name="cycleId" value="${escapeHtml(cycleId)}"><button class="btn btn-secondary" type="submit" name="intent" value="wizard-stop-all">End wizard</button><span class="muted">Stops all writers and closes the wizard. You keep progress from finished steps.</span></form>`;
@@ -43,8 +43,8 @@ export const renderPromptSdlcLocalStopForm = (
   if (kind === "none") {
     return "";
   }
-  if (kind === "classic") {
-    return classicStopForm(cycle.id);
+  if (kind === "legacy_stop") {
+    return legacyStopForm(cycle.id);
   }
   if (kind === "wizard_end_only") {
     return wizardEndForm(cycle.id);
