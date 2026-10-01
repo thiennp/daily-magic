@@ -1,0 +1,39 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "B",
+  "deployable": "AWC",
+  "pageId": "home-marketing",
+  "role": "copy",
+  "captureRound": 1,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/home-marketing/round-1/manifest.json",
+  "scoreDesktop": 96,
+  "scoreMobile": 96,
+  "scoreOverall": 96,
+  "passed": true,
+  "scoreBreakdown": [
+    {
+      "area": "evaluate-scores-jargon",
+      "pointsDeducted": 2,
+      "reason": "Hero and features repeat evaluate scores; accurate but heavy for first-touch marketing readers."
+    },
+    {
+      "area": "specialist-bots-clause",
+      "pointsDeducted": 1,
+      "reason": "Slack and Outlook ops sentence is precise yet dense in the opening paragraph."
+    },
+    {
+      "area": "for-ai-harness",
+      "pointsDeducted": 2,
+      "reason": "For-your-AI section mentions harness in body copy where Playbook or project wording would match vocabulary rules."
+    },
+    {
+      "area": "preset-dialog-tone",
+      "pointsDeducted": 1,
+      "reason": "Sign-in-first dialog is clear; minutes promise is slightly generic compared to concrete Mac install step nearby."
+    }
+  ],
+  "whyBelowThreshold": "",
+  "topIssues": ["evaluate scores density", "harness mention in For your AI"],
+  "mustFix": [],
+  "quickWins": ["Swap harness for project folder in For-your-AI paragraph"]
+}
