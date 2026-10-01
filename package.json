@@ -29,6 +29,7 @@
     "harness:script-shims": "tsx .agents/scripts/write-awl-script-shims.ts",
     "test:watch": "vitest",
     "test:e2e": "playwright test",
+    "test:e2e:storybook": "playwright test --config=playwright.storybook.config.ts",
     "test:e2e:install": "playwright install chromium",
     "test:e2e:shipped-install": "playwright test --config=playwright.shipped-install.config.ts",
     "test:shipped-install-blackbox": "tsx scripts/runShippedInstallBlackbox.ts",

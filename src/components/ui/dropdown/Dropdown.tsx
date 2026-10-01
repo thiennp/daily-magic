@@ -3,6 +3,7 @@ import type React from "react";
 import { useEffect, useRef } from "react";
 
 import { isDocumentMouseDownOutsideDropdown } from "@/components/ui/dropdown/isDocumentMouseDownOutsideDropdown.util";
+import { useDropdownMenuKeyboard } from "@/components/ui/dropdown/useDropdownMenuKeyboard.util";
 
 interface DropdownProps {
   isOpen: boolean;
@@ -21,6 +22,13 @@ export const Dropdown: React.FC<DropdownProps> = ({
   toggleRef,
 }) => {
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useDropdownMenuKeyboard({
+    isOpen,
+    onClose,
+    panelRef: dropdownRef,
+    toggleRef,
+  });
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
