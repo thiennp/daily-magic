@@ -1,0 +1,24 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "A",
+  "deployable": "AWC",
+  "pageId": "automations",
+  "role": "product",
+  "captureRound": 1,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/automations/round-1/manifest.json",
+  "scoreDesktop": 99,
+  "scoreMobile": 98,
+  "scoreOverall": 99,
+  "passed": true,
+  "scoreBreakdown": [
+    {
+      "area": "ready-fixture",
+      "pointsDeducted": 1,
+      "reason": "Sample automation schedule and next-run dates are plausible for demo; webhook path not shown in ready fixture."
+    }
+  ],
+  "whyBelowThreshold": "",
+  "topIssues": [],
+  "mustFix": [],
+  "quickWins": ["Add webhook automation row in ready fixture later"]
+}

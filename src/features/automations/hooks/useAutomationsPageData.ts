@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import type AgentAutomationRecord from "@/lib/automations/types/AgentAutomationRecord.type";
 import type PublishedCapabilityRecord from "@/lib/capabilities/types/PublishedCapabilityRecord.type";
@@ -10,6 +10,8 @@ export function useAutomationsPageData(refreshKey = 0): {
   readonly automations: readonly AgentAutomationRecord[];
   readonly capabilities: readonly PublishedCapabilityRecord[];
   readonly isLoading: boolean;
+  readonly loadFailed: boolean;
+  readonly reload: () => void;
 } {
   const [automations, setAutomations] = useState<
     readonly AgentAutomationRecord[]
@@ -18,15 +20,28 @@ export function useAutomationsPageData(refreshKey = 0): {
     readonly PublishedCapabilityRecord[]
   >([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [loadFailed, setLoadFailed] = useState(false);
+  const [reloadNonce, setReloadNonce] = useState(0);
+
+  const reload = useCallback((): void => {
+    setReloadNonce((nonce) => nonce + 1);
+  }, []);
 
   useEffect(() => {
     const loadPageData = async (): Promise<void> => {
       setIsLoading(true);
+      setLoadFailed(false);
       try {
         const [automationsResponse, capabilitiesResponse] = await Promise.all([
           fetch("/api/automations"),
           fetch("/api/capabilities/mine"),
         ]);
+
+        if (!automationsResponse.ok || !capabilitiesResponse.ok) {
+          setLoadFailed(true);
+          return;
+        }
+
         const automationsData: unknown = await automationsResponse.json();
         const capabilitiesData: unknown = await capabilitiesResponse.json();
 
@@ -41,6 +56,9 @@ export function useAutomationsPageData(refreshKey = 0): {
             (automationsData as { automations: AgentAutomationRecord[] })
               .automations,
           );
+        } else {
+          setLoadFailed(true);
+          return;
         }
 
         if (
@@ -58,14 +76,24 @@ export function useAutomationsPageData(refreshKey = 0): {
               (item) => item.type === CapabilityType.WORKFLOW,
             ),
           );
+        } else {
+          setLoadFailed(true);
         }
+      } catch {
+        setLoadFailed(true);
       } finally {
         setIsLoading(false);
       }
     };
 
     void loadPageData();
-  }, [refreshKey]);
+  }, [refreshKey, reloadNonce]);
 
-  return { automations, capabilities, isLoading };
+  return {
+    automations,
+    capabilities,
+    isLoading,
+    loadFailed,
+    reload,
+  };
 }

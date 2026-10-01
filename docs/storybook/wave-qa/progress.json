@@ -3056,36 +3056,274 @@
       "statuses": ["loading", "empty", "error", "ready"],
       "roles": {
         "ux": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+          "passed": true,
+          "score": 97,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 97,
+          "notes": "Agent A=98 B=97 (round 1).\nA deductions: mobile-form-scroll -1: Create form plus automation card exceeds first viewport; primary list actions require scroll on 390px. | loading-skeleton -1: Loading story shows plain text footer instead of skeleton for list region while form is already interactive.\nB deductions: error-recovery -1: Error story keeps create form enabled while list shows retry panel; acceptable but splits attention. | empty-workflow-picker -2: Empty fixture offers no workflows in picker; user must infer Library step though copy mentions it.",
+          "agentFeedback": {
+            "reviewerA": {
+              "reviewMethod": "agent",
+              "reviewer": "A",
+              "deployable": "AWC",
+              "pageId": "automations",
+              "role": "ux",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/automations/round-1/manifest.json",
+              "scoreDesktop": 98,
+              "scoreMobile": 97,
+              "scoreOverall": 98,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "mobile-form-scroll",
+                  "pointsDeducted": 1,
+                  "reason": "Create form plus automation card exceeds first viewport; primary list actions require scroll on 390px."
+                },
+                {
+                  "area": "loading-skeleton",
+                  "pointsDeducted": 1,
+                  "reason": "Loading story shows plain text footer instead of skeleton for list region while form is already interactive."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": [
+                "Mobile first screen is form-heavy before existing automations"
+              ],
+              "mustFix": [],
+              "quickWins": [
+                "Skeleton for automations list while capabilities load"
+              ]
+            },
+            "reviewerB": {
+              "reviewMethod": "agent",
+              "reviewer": "B",
+              "deployable": "AWC",
+              "pageId": "automations",
+              "role": "ux",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/automations/round-1/manifest.json",
+              "scoreDesktop": 98,
+              "scoreMobile": 96,
+              "scoreOverall": 97,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "error-recovery",
+                  "pointsDeducted": 1,
+                  "reason": "Error story keeps create form enabled while list shows retry panel; acceptable but splits attention."
+                },
+                {
+                  "area": "empty-workflow-picker",
+                  "pointsDeducted": 2,
+                  "reason": "Empty fixture offers no workflows in picker; user must infer Library step though copy mentions it."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": [],
+              "mustFix": [],
+              "quickWins": ["Link empty-state helper text to /library"]
+            }
+          }
         },
         "copy": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 99,
+          "reviewerB": 98,
+          "notes": "Agent A=99 B=98 (round 1).\nA deductions: enabled-label -1: Card status uses ENABLED in all caps while form copy uses sentence case elsewhere.\nB deductions: error-copy-action -1: Load failure panel is clear; Try again could mention Mac sync only when sync fails, not list fetch. | webhook-hint -1: Page description mentions webhooks but create form defaults to schedule without inline webhook hint until trigger changes.",
+          "agentFeedback": {
+            "reviewerA": {
+              "reviewMethod": "agent",
+              "reviewer": "A",
+              "deployable": "AWC",
+              "pageId": "automations",
+              "role": "copy",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/automations/round-1/manifest.json",
+              "scoreDesktop": 99,
+              "scoreMobile": 98,
+              "scoreOverall": 99,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "enabled-label",
+                  "pointsDeducted": 1,
+                  "reason": "Card status uses ENABLED in all caps while form copy uses sentence case elsewhere."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": [],
+              "mustFix": [],
+              "quickWins": [
+                "Align automation card status casing with Paused label"
+              ]
+            },
+            "reviewerB": {
+              "reviewMethod": "agent",
+              "reviewer": "B",
+              "deployable": "AWC",
+              "pageId": "automations",
+              "role": "copy",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/automations/round-1/manifest.json",
+              "scoreDesktop": 98,
+              "scoreMobile": 98,
+              "scoreOverall": 98,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "error-copy-action",
+                  "pointsDeducted": 1,
+                  "reason": "Load failure panel is clear; Try again could mention Mac sync only when sync fails, not list fetch."
+                },
+                {
+                  "area": "webhook-hint",
+                  "pointsDeducted": 1,
+                  "reason": "Page description mentions webhooks but create form defaults to schedule without inline webhook hint until trigger changes."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": [],
+              "mustFix": [],
+              "quickWins": []
+            }
+          }
         },
         "ui": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+          "passed": true,
+          "score": 100,
+          "round": 1,
+          "reviewerA": 100,
+          "reviewerB": 100,
+          "notes": "Agent A=100 B=100 (round 1).\nA: no deductions.\nB: no deductions.",
+          "agentFeedback": {
+            "reviewerA": {
+              "reviewMethod": "agent",
+              "reviewer": "A",
+              "deployable": "AWC",
+              "pageId": "automations",
+              "role": "ui",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/automations/round-1/manifest.json",
+              "scoreDesktop": 100,
+              "scoreMobile": 100,
+              "scoreOverall": 100,
+              "passed": true,
+              "scoreBreakdown": [],
+              "whyBelowThreshold": "",
+              "topIssues": [
+                "Viewport zoom evidence: ui-zoom/ready-mobile-viewport.png (bottom nav anchored correctly; full-page wave capture artifact only)"
+              ],
+              "mustFix": [],
+              "quickWins": [],
+              "zoomedSections": [
+                "create-form-desktop-ready",
+                "automation-card-desktop-ready",
+                "error-panel-desktop-error",
+                "create-form-mobile-ready-viewport",
+                "automation-card-mobile-zoom",
+                "header-actions-mobile-ready"
+              ],
+              "obviousVisualDefects": "none",
+              "visualEvidenceMethod": "computerUse"
+            },
+            "reviewerB": {
+              "reviewMethod": "agent",
+              "reviewer": "B",
+              "deployable": "AWC",
+              "pageId": "automations",
+              "role": "ui",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/automations/round-1/manifest.json",
+              "scoreDesktop": 100,
+              "scoreMobile": 100,
+              "scoreOverall": 100,
+              "passed": true,
+              "scoreBreakdown": [],
+              "whyBelowThreshold": "",
+              "topIssues": [
+                "Zoom crops under round-1/ui-zoom/ready-automation-card-zoom.png and ready-desktop-viewport.png"
+              ],
+              "mustFix": [],
+              "quickWins": [],
+              "zoomedSections": [
+                "page-header-desktop-ready",
+                "schedule-fields-desktop-ready",
+                "automation-actions-desktop-ready",
+                "load-error-panel-desktop-error",
+                "mobile-nav-footer-ready-viewport",
+                "empty-state-desktop-empty"
+              ],
+              "obviousVisualDefects": "none",
+              "visualEvidenceMethod": "computerUse"
+            }
+          }
         },
         "product": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 99,
+          "reviewerB": 98,
+          "notes": "Agent A=99 B=98 (round 1).\nA deductions: ready-fixture -1: Sample automation schedule and next-run dates are plausible for demo; webhook path not shown in ready fixture.\nB deductions: msw-coverage -1: Automations list now mocked for all statuses; empty still omits workflows which matches zero-library account. | error-honesty -1: Error story shows fetch failure panel aligned with production behavior after loadFailed handling.",
+          "agentFeedback": {
+            "reviewerA": {
+              "reviewMethod": "agent",
+              "reviewer": "A",
+              "deployable": "AWC",
+              "pageId": "automations",
+              "role": "product",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/automations/round-1/manifest.json",
+              "scoreDesktop": 99,
+              "scoreMobile": 98,
+              "scoreOverall": 99,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "ready-fixture",
+                  "pointsDeducted": 1,
+                  "reason": "Sample automation schedule and next-run dates are plausible for demo; webhook path not shown in ready fixture."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": [],
+              "mustFix": [],
+              "quickWins": ["Add webhook automation row in ready fixture later"]
+            },
+            "reviewerB": {
+              "reviewMethod": "agent",
+              "reviewer": "B",
+              "deployable": "AWC",
+              "pageId": "automations",
+              "role": "product",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/automations/round-1/manifest.json",
+              "scoreDesktop": 98,
+              "scoreMobile": 97,
+              "scoreOverall": 98,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "msw-coverage",
+                  "pointsDeducted": 1,
+                  "reason": "Automations list now mocked for all statuses; empty still omits workflows which matches zero-library account."
+                },
+                {
+                  "area": "error-honesty",
+                  "pointsDeducted": 1,
+                  "reason": "Error story shows fetch failure panel aligned with production behavior after loadFailed handling."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": [],
+              "mustFix": [],
+              "quickWins": []
+            }
+          }
         },
         "tester": {
           "passed": true,
@@ -3104,7 +3342,7 @@
           "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
         }
       },
-      "allRolesPassed": false
+      "allRolesPassed": true
     },
     {
       "order": 14,

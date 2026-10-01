@@ -15,4 +15,8 @@ export const AUTOMATIONS_PAGE_COPY = {
   webhookUrlTitle: "Webhook URL",
   syncFailed:
     "Saved in Agent Witch, but could not sync to this Mac. Re-run Agent Witch install or open Automations again.",
+  loadFailedTitle: "Could not load automations",
+  loadFailedBody:
+    "Something went wrong while fetching your scheduled workflows. Try again in a moment.",
+  loadFailedRetry: "Try again",
 } as const;

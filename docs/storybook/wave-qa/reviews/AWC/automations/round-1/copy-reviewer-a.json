@@ -1,0 +1,24 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "A",
+  "deployable": "AWC",
+  "pageId": "automations",
+  "role": "copy",
+  "captureRound": 1,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/automations/round-1/manifest.json",
+  "scoreDesktop": 99,
+  "scoreMobile": 98,
+  "scoreOverall": 99,
+  "passed": true,
+  "scoreBreakdown": [
+    {
+      "area": "enabled-label",
+      "pointsDeducted": 1,
+      "reason": "Card status uses ENABLED in all caps while form copy uses sentence case elsewhere."
+    }
+  ],
+  "whyBelowThreshold": "",
+  "topIssues": [],
+  "mustFix": [],
+  "quickWins": ["Align automation card status casing with Paused label"]
+}

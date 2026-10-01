@@ -7,6 +7,7 @@ import {
   awcStorybookMswErrorHandlers,
   awcStorybookMswInfiniteHandlers,
 } from "@/utils/storybook/awcStorybookMswLoadingAndErrorHandlers";
+import { createAwcStorybookAutomationsSuccessHandler } from "@/utils/storybook/awcStorybookMswAutomationsHandlers";
 import { createAwcStorybookMarketplaceSuccessHandler } from "@/utils/storybook/awcStorybookMswMarketplaceHandlers";
 import {
   AWC_STORYBOOK_SAMPLE_CAPABILITY,
@@ -71,6 +72,7 @@ export const createAwcStorybookMswHandlers = (
     http.get("/api/capabilities/mine", () =>
       HttpResponse.json({ capabilities }),
     ),
+    createAwcStorybookAutomationsSuccessHandler(hasData),
     createAwcStorybookMarketplaceSuccessHandler(status),
     ...awcStorybookCapabilityTemplateSuccessHandlers,
   ];

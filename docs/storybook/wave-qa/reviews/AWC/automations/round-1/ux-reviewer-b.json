@@ -1,0 +1,29 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "B",
+  "deployable": "AWC",
+  "pageId": "automations",
+  "role": "ux",
+  "captureRound": 1,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/automations/round-1/manifest.json",
+  "scoreDesktop": 98,
+  "scoreMobile": 96,
+  "scoreOverall": 97,
+  "passed": true,
+  "scoreBreakdown": [
+    {
+      "area": "error-recovery",
+      "pointsDeducted": 1,
+      "reason": "Error story keeps create form enabled while list shows retry panel; acceptable but splits attention."
+    },
+    {
+      "area": "empty-workflow-picker",
+      "pointsDeducted": 2,
+      "reason": "Empty fixture offers no workflows in picker; user must infer Library step though copy mentions it."
+    }
+  ],
+  "whyBelowThreshold": "",
+  "topIssues": [],
+  "mustFix": [],
+  "quickWins": ["Link empty-state helper text to /library"]
+}

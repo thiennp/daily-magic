@@ -1,0 +1,29 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "B",
+  "deployable": "AWC",
+  "pageId": "automations",
+  "role": "product",
+  "captureRound": 1,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/automations/round-1/manifest.json",
+  "scoreDesktop": 98,
+  "scoreMobile": 97,
+  "scoreOverall": 98,
+  "passed": true,
+  "scoreBreakdown": [
+    {
+      "area": "msw-coverage",
+      "pointsDeducted": 1,
+      "reason": "Automations list now mocked for all statuses; empty still omits workflows which matches zero-library account."
+    },
+    {
+      "area": "error-honesty",
+      "pointsDeducted": 1,
+      "reason": "Error story shows fetch failure panel aligned with production behavior after loadFailed handling."
+    }
+  ],
+  "whyBelowThreshold": "",
+  "topIssues": [],
+  "mustFix": [],
+  "quickWins": []
+}
