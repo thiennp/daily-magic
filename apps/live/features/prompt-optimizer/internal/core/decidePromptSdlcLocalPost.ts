@@ -211,6 +211,7 @@ export const decidePromptSdlcLocalPost = (input: {
     maxTrials: input.posted.get("maxTrials"),
     maxSpendUsd: input.posted.get("maxSpendUsd"),
     earlyStop: input.posted.has("earlyStop") ? "on" : "off",
+    earlyStopFlatRounds: input.posted.get("earlyStopFlatRounds"),
   });
   if (!costParsed.ok) {
     return form(typedFolder, costParsed.errorMessage);

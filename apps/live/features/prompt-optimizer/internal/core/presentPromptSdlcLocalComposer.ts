@@ -1,6 +1,7 @@
 import { pickMacOsFolderDialog } from "../../../projects/public-api/infrastructure";
 import {
   createInitialPromptSdlcWizardState,
+  seedPromptSdlcRunCostProposal,
   seedPromptSdlcWizardOrchestratorSkill,
 } from "../../../../adapters/promptSdlcAwcCore";
 
@@ -118,6 +119,11 @@ export const presentPromptSdlcLocalComposer = async (input: {
       decision.workingDirectory,
       decision.sourceSkillFile,
     );
+    const costControls = seedPromptSdlcRunCostProposal({
+      existing: decision.costControls,
+      maxRounds: decision.maxRounds,
+      writerId: decision.judge === "manual" ? null : decision.judge,
+    });
     const cycle = createPromptSdlcLocalCycle({
       goal: decision.goal,
       sourcePrompt: decision.prompt,
@@ -126,7 +132,7 @@ export const presentPromptSdlcLocalComposer = async (input: {
       workingDirectory: decision.workingDirectory,
       passScore: decision.passScore,
       maxRounds: decision.maxRounds,
-      costControls: decision.costControls,
+      costControls,
       wizard: seedPromptSdlcWizardOrchestratorSkill(
         {
           ...createInitialPromptSdlcWizardState(decision.prompt),

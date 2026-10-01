@@ -286,4 +286,67 @@ describe("servePromptSdlcAgent", () => {
       error: "Send a JSON object.",
     });
   });
+
+  it("returns cost PREDICTION without starting (intent estimate_budget)", async () => {
+    const result = await servePromptSdlcAgent({
+      method: "POST",
+      requestUrl: "/prompt-optimizer/agent",
+      rawBody: JSON.stringify({
+        intent: "estimate_budget",
+        writerId: "codex",
+        maxTrials: 2,
+        maxRounds: 3,
+      }),
+      storePath: storePath(),
+      handlers: handlersFor(["codex"]),
+    });
+    expect(result.status).toBe(200);
+    expect(result.body).toMatchObject({
+      ok: true,
+      intent: "estimate_budget",
+      proposalStub: true,
+      confirmationRequired: true,
+    });
+    const body = result.body as {
+      estimatedSpendUsd: number;
+      targetTokenBudget: number;
+    };
+    expect(body.targetTokenBudget).toBeGreaterThan(0);
+    expect(body.estimatedSpendUsd).toBeGreaterThan(0);
+  });
+
+  it("seeds cost PREDICTION on start and accepts confirmed ceilings", async () => {
+    const handlers = handlersFor(["codex"]);
+    const pathToStore = storePath();
+    const result = await servePromptSdlcAgent({
+      method: "POST",
+      requestUrl: "/prompt-optimizer/agent",
+      rawBody: JSON.stringify({
+        goal: "Stay inside the repo",
+        prompt: "Fix the failing test",
+        workingDirectory: os.homedir(),
+        maxTrials: 2,
+        maxSpendUsd: 0.5,
+        confirmedTokenBudget: 20_000,
+        confirmedMaxSpendUsd: 0.5,
+      }),
+      storePath: pathToStore,
+      handlers,
+    });
+    expect(result.status).toBe(200);
+    expect(result.body).toMatchObject({
+      ok: true,
+      costControls: expect.objectContaining({
+        budgetConfirmed: true,
+        confirmedTokenBudget: 20_000,
+        confirmedMaxSpendUsd: 0.5,
+        maxTrials: 2,
+      }),
+    });
+    const body = result.body as {
+      costControls: { estimatedSpendUsd: number | null; targetTokenBudget: number | null };
+    };
+    expect(body.costControls.targetTokenBudget).toBeGreaterThan(0);
+    expect(body.costControls.estimatedSpendUsd).toBeGreaterThan(0);
+  });
 });

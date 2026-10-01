@@ -26,6 +26,13 @@ describe("parsePromptSdlcAgentBody", () => {
         improver: "codex",
         passScore: "90",
         maxRounds: null,
+        maxTrials: null,
+        maxSpendUsd: null,
+        earlyStop: null,
+        earlyStopFlatRounds: null,
+        confirmedTokenBudget: null,
+        confirmedMaxSpendUsd: null,
+        rateUsdPer1kTokens: null,
       },
     });
   });
@@ -43,6 +50,8 @@ describe("parsePromptSdlcAgentBody", () => {
     expect(parsed.ok && parsed.body.improver).toBe(null);
     expect(parsed.ok && parsed.body.passScore).toBe(null);
     expect(parsed.ok && parsed.body.maxRounds).toBe(null);
+    expect(parsed.ok && parsed.body.maxTrials).toBe(null);
+    expect(parsed.ok && parsed.body.confirmedTokenBudget).toBe(null);
     expect(parsed.ok && parsed.body.workingDirectory).toBe("~/repo");
   });
 

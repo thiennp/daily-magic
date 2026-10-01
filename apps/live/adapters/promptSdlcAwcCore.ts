@@ -132,9 +132,17 @@ export { estimatePromptSdlcSpendUsd } from "@/lib/promptOptimizer/estimatePrompt
 export { defaultPromptSdlcCostControls } from "@/lib/promptOptimizer/createEmptyPromptSdlcCostControl";
 export {
   proposePromptSdlcCostBudget,
+  proposePromptSdlcRunCostBudget,
   applyPromptSdlcCostProposal,
   seedPromptSdlcStep4CostProposal,
+  seedPromptSdlcRunCostProposal,
 } from "@/lib/promptOptimizer/proposePromptSdlcCostBudget";
+export { resolvePromptSdlcWriterRateUsdPer1k } from "@/lib/promptOptimizer/resolvePromptSdlcWriterRateUsdPer1k";
+export {
+  PROMPT_SDLC_EARLY_TOKENS_PER_ROUND,
+  PROMPT_SDLC_PREVIEW_STEP4_MODULE_COUNT,
+  PROMPT_SDLC_STEP4_TOKENS_PER_MODULE_TRIAL,
+} from "@/lib/promptOptimizer/promptSdlcCostControl.constant";
 export { confirmPromptSdlcCostBudget } from "@/lib/promptOptimizer/confirmPromptSdlcCostBudget";
 export {
   readPromptSdlcBudgetStop,
