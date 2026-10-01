@@ -1,3 +1,7 @@
+import { AGENT_AUTOMATION_LAST_RUN_STATUSES } from "@/lib/automations/AgentAutomationLastRunStatus.constant";
+import { AGENT_AUTOMATION_SCHEDULE_PRESETS } from "@/lib/automations/AgentAutomationSchedulePreset.constant";
+import { AGENT_AUTOMATION_TRIGGER_TYPES } from "@/lib/automations/AgentAutomationTriggerType.constant";
+import type AgentAutomationRecord from "@/lib/automations/types/AgentAutomationRecord.type";
 import { CapabilityStatus } from "@/lib/capabilities/CapabilityStatus.constant";
 import { CapabilityType } from "@/lib/capabilities/CapabilityType.constant";
 import { CapabilityVisibility } from "@/lib/capabilities/CapabilityVisibility.constant";
@@ -86,4 +90,28 @@ export const AWC_STORYBOOK_SAMPLE_RUN: EnrichedAgentRunRecord = {
   reportSummary: "Completed · 50s · exit 0",
   estimateSeconds: 120,
   actualSeconds: 50,
+};
+
+export const AWC_STORYBOOK_SAMPLE_AUTOMATION: AgentAutomationRecord = {
+  id: "auto-storybook-daily",
+  ownerUserId: "user-storybook",
+  capabilityId: AWC_STORYBOOK_SAMPLE_CAPABILITY.id,
+  deviceId: AWC_STORYBOOK_SAMPLE_DEVICE.id,
+  executorUserId: "user-storybook",
+  name: "Daily PR summary",
+  triggerType: AGENT_AUTOMATION_TRIGGER_TYPES.SCHEDULE,
+  schedulePreset: AGENT_AUTOMATION_SCHEDULE_PRESETS.DAILY,
+  scheduleHour: 9,
+  scheduleTimezone: "UTC",
+  webhookSecretPrefix: null,
+  fieldValues: {},
+  projectId: AWC_STORYBOOK_SAMPLE_PROJECT.id,
+  localPrompt: null,
+  enabled: true,
+  lastRunAt: "2026-09-30T09:00:00.000Z",
+  nextRunAt: "2026-10-02T09:00:00.000Z",
+  lastRunStatus: AGENT_AUTOMATION_LAST_RUN_STATUSES.OK,
+  lastError: null,
+  createdAt: "2026-09-01T00:00:00.000Z",
+  updatedAt: "2026-09-30T09:05:00.000Z",
 };

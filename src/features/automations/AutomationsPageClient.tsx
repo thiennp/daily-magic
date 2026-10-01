@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useSearchParams } from "next/navigation";
 
 import AutomationCard from "@/features/automations/AutomationCard";
+import AutomationsListLoadErrorPanel from "@/features/automations/AutomationsListLoadErrorPanel";
 import CreateAutomationForm from "@/features/automations/CreateAutomationForm";
 import { AUTOMATIONS_PAGE_COPY } from "@/features/automations/automationsPageCopy.constant";
 import { syncAutomationsToLocalMac } from "@/features/automations/submitAutomationActions";
@@ -14,7 +15,7 @@ export default function AutomationsPageClient() {
   const initialCapabilityId = searchParams.get("capabilityId") ?? undefined;
   const [refreshKey, setRefreshKey] = useState(0);
   const [syncWarning, setSyncWarning] = useState<string | null>(null);
-  const { automations, capabilities, isLoading } =
+  const { automations, capabilities, isLoading, loadFailed, reload } =
     useAutomationsPageData(refreshKey);
 
   const refreshAndSync = async (): Promise<void> => {
@@ -37,7 +38,9 @@ export default function AutomationsPageClient() {
           {syncWarning}
         </p>
       ) : null}
-      {isLoading ? (
+      {loadFailed ? (
+        <AutomationsListLoadErrorPanel onRetry={reload} />
+      ) : isLoading ? (
         <p className="text-sm text-gray-500 dark:text-gray-400">Loading…</p>
       ) : automations.length === 0 ? (
         <p className="text-sm text-gray-600 dark:text-gray-400">

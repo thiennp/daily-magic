@@ -1,6 +1,8 @@
 import { delay, http, HttpResponse } from "msw";
 
+import { awcStorybookAutomationsLoadingHandler } from "@/utils/storybook/awcStorybookMswAutomationsHandlers";
 import { awcStorybookCapabilityTemplateErrorHandlers } from "@/utils/storybook/awcStorybookMswCapabilityHandlers";
+import { awcStorybookAutomationsErrorHandler } from "@/utils/storybook/awcStorybookMswAutomationsHandlers";
 import {
   awcStorybookMarketplaceErrorHandler,
   awcStorybookMarketplaceLoadingHandler,
@@ -25,6 +27,7 @@ export const awcStorybookMswInfiniteHandlers = [
   http.get("/api/capabilities/mine", async () => {
     await delay("infinite");
   }),
+  awcStorybookAutomationsLoadingHandler,
   http.get("/api/capabilities/templates", async () => {
     await delay("infinite");
   }),
@@ -50,6 +53,7 @@ export const awcStorybookMswErrorHandlers = [
   http.get("/api/capabilities/mine", () =>
     HttpResponse.json({ error: "Server error" }, { status: 500 }),
   ),
+  awcStorybookAutomationsErrorHandler,
   awcStorybookMarketplaceErrorHandler,
   ...awcStorybookCapabilityTemplateErrorHandlers,
 ];
