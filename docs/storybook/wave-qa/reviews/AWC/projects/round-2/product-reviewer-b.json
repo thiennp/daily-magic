@@ -1,0 +1,29 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "B",
+  "deployable": "AWC",
+  "pageId": "projects",
+  "role": "product",
+  "captureRound": 2,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/projects/round-2/manifest.json",
+  "scoreDesktop": 98,
+  "scoreMobile": 98,
+  "scoreOverall": 98,
+  "passed": true,
+  "scoreBreakdown": [
+    {
+      "area": "loading-story",
+      "pointsDeducted": 1,
+      "reason": "Loading story no longer shows create form during fetch; aligns closer with gated production load."
+    },
+    {
+      "area": "shell-parity",
+      "pointsDeducted": 1,
+      "reason": "Desktop sidebar + header brand match post-PR#216 shell; mobile bottom nav remains Storybook-only chrome."
+    }
+  ],
+  "whyBelowThreshold": "",
+  "topIssues": [],
+  "mustFix": [],
+  "quickWins": []
+}

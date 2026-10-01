@@ -1,0 +1,29 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "A",
+  "deployable": "AWC",
+  "pageId": "projects",
+  "role": "ux",
+  "captureRound": 2,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/projects/round-2/manifest.json",
+  "scoreDesktop": 98,
+  "scoreMobile": 98,
+  "scoreOverall": 98,
+  "passed": true,
+  "scoreBreakdown": [
+    {
+      "area": "error-story-banner",
+      "pointsDeducted": 1,
+      "reason": "Storybook error strip still stacks above the in-panel recovery card; product error is clear but chrome is slightly redundant."
+    },
+    {
+      "area": "mobile-scroll-depth",
+      "pointsDeducted": 1,
+      "reason": "Ready mobile still requires scroll to reach Save project after three cards; acceptable for registry page."
+    }
+  ],
+  "whyBelowThreshold": "",
+  "topIssues": [],
+  "mustFix": [],
+  "quickWins": []
+}

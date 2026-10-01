@@ -1,0 +1,32 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "B",
+  "deployable": "AWC",
+  "pageId": "projects",
+  "role": "ui",
+  "captureRound": 2,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/projects/round-2/manifest.json",
+  "scoreDesktop": 100,
+  "scoreMobile": 100,
+  "scoreOverall": 100,
+  "passed": true,
+  "scoreBreakdown": [],
+  "whyBelowThreshold": "",
+  "topIssues": [
+    "Zoom crops: /opt/cursor/artifacts/storybook-waves/AWC/projects/round-2/ui-zooms"
+  ],
+  "mustFix": [],
+  "quickWins": [],
+  "zoomedSections": [
+    "header-sidebar-desktop-ready (/opt/cursor/artifacts/storybook-waves/AWC/projects/round-2/ui-zooms/header-sidebar.png)",
+    "project-cards-desktop-ready (/opt/cursor/artifacts/storybook-waves/AWC/projects/round-2/ui-zooms/project-cards.png)",
+    "new-project-form-desktop-ready (/opt/cursor/artifacts/storybook-waves/AWC/projects/round-2/ui-zooms/new-project-form.png)",
+    "mobile-header-ready (/opt/cursor/artifacts/storybook-waves/AWC/projects/round-2/ui-zooms/mobile-header.png)",
+    "mobile-cards-ready (/opt/cursor/artifacts/storybook-waves/AWC/projects/round-2/ui-zooms/mobile-cards.png)",
+    "mobile-form-nav-ready (/opt/cursor/artifacts/storybook-waves/AWC/projects/round-2/ui-zooms/mobile-form-nav.png)",
+    "error-panel-desktop (/opt/cursor/artifacts/storybook-waves/AWC/projects/round-2/ui-zooms/error-panel.png)",
+    "error-panel-mobile (/opt/cursor/artifacts/storybook-waves/AWC/projects/round-2/ui-zooms/error-panel-mobile.png)"
+  ],
+  "obviousVisualDefects": "none",
+  "visualEvidenceMethod": "computerUse"
+}

@@ -1176,117 +1176,108 @@
       "roles": {
         "ux": {
           "passed": true,
-          "score": 96,
-          "round": 1,
-          "reviewerA": 96,
-          "reviewerB": 96,
-          "notes": "Agent A=96 B=96 (round 1).\nA deductions: mobile-bottom-nav -3: Fixed bottom tab bar crowds the New project form and Save project CTA on 390px ready capture. | error-vs-empty -1: Error Storybook state still reads like empty (no projects yet) so failure UX is not distinguishable at a glance.\nB deductions: loading-dual-message -2: Loading projects line sits above the full New project form, which can feel like two parallel tasks during fetch. | mobile-project-card -1: Ready mobile card kebab and path truncation are usable but tight against the search field. | error-state -1: Error preview banner does not pair with an in-panel recovery message; body mirrors empty state.",
-          "agentFeedback": {
-            "reviewerA": {
-              "reviewMethod": "agent",
-              "reviewer": "A",
-              "deployable": "AWC",
-              "pageId": "projects",
-              "role": "ux",
-              "captureRound": 1,
-              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/projects/round-1/manifest.json",
-              "scoreDesktop": 97,
-              "scoreMobile": 95,
-              "scoreOverall": 96,
-              "passed": true,
-              "scoreBreakdown": [
-                {
-                  "area": "mobile-bottom-nav",
-                  "pointsDeducted": 3,
-                  "reason": "Fixed bottom tab bar crowds the New project form and Save project CTA on 390px ready capture."
-                },
-                {
-                  "area": "error-vs-empty",
-                  "pointsDeducted": 1,
-                  "reason": "Error Storybook state still reads like empty (no projects yet) so failure UX is not distinguishable at a glance."
-                }
-              ],
-              "whyBelowThreshold": "",
-              "topIssues": ["Mobile chrome competes with create-project form"],
-              "mustFix": [],
-              "quickWins": [
-                "Surface a distinct inline error panel when /api/projects fails"
-              ]
-            },
-            "reviewerB": {
-              "reviewMethod": "agent",
-              "reviewer": "B",
-              "deployable": "AWC",
-              "pageId": "projects",
-              "role": "ux",
-              "captureRound": 1,
-              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/projects/round-1/manifest.json",
-              "scoreDesktop": 96,
-              "scoreMobile": 96,
-              "scoreOverall": 96,
-              "passed": true,
-              "scoreBreakdown": [
-                {
-                  "area": "loading-dual-message",
-                  "pointsDeducted": 2,
-                  "reason": "Loading projects line sits above the full New project form, which can feel like two parallel tasks during fetch."
-                },
-                {
-                  "area": "mobile-project-card",
-                  "pointsDeducted": 1,
-                  "reason": "Ready mobile card kebab and path truncation are usable but tight against the search field."
-                },
-                {
-                  "area": "error-state",
-                  "pointsDeducted": 1,
-                  "reason": "Error preview banner does not pair with an in-panel recovery message; body mirrors empty state."
-                }
-              ],
-              "whyBelowThreshold": "",
-              "topIssues": ["Error story should not masquerade as empty"],
-              "mustFix": [],
-              "quickWins": [
-                "Add retry link beside loading/error banners in Storybook only if product adds API error UI"
-              ]
-            }
-          }
-        },
-        "copy": {
-          "passed": true,
-          "score": 97,
-          "round": 1,
+          "score": 98,
+          "round": 2,
           "reviewerA": 98,
-          "reviewerB": 97,
-          "notes": "Agent A=98 B=97 (round 1).\nA deductions: cowork-hint -1: ACL/registry paragraph is accurate but dense; AWC acronym may need glossary context for new operators. | arrow-style -1: Open a project -> Project Access uses ASCII arrow instead of typographic arrow used elsewhere.\nB deductions: empty-state -2: Go to home to connect a Mac is clear; could mention Projects after Mac is online for tighter funnel. | new-project-label -1: SAVE A NEW PROJECT all-caps label feels slightly louder than adjacent section title New project.",
+          "reviewerB": 98,
+          "notes": "Agent A=98 B=98 (round 2).\nA deductions: error-story-banner -1: Storybook error strip still stacks above the in-panel recovery card; product error is clear but chrome is slightly redundant. | mobile-scroll-depth -1: Ready mobile still requires scroll to reach Save project after three cards; acceptable for registry page.\nB deductions: loading-simplicity -1: Loading story now hides create form; single loading line is clear with sidebar context. | mobile-bottom-nav -1: Extra bottom padding reduces overlap with New project CTA; minor density remains on 390px ready.",
           "agentFeedback": {
             "reviewerA": {
               "reviewMethod": "agent",
               "reviewer": "A",
               "deployable": "AWC",
               "pageId": "projects",
-              "role": "copy",
-              "captureRound": 1,
-              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/projects/round-1/manifest.json",
+              "role": "ux",
+              "captureRound": 2,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/projects/round-2/manifest.json",
               "scoreDesktop": 98,
-              "scoreMobile": 97,
+              "scoreMobile": 98,
               "scoreOverall": 98,
               "passed": true,
               "scoreBreakdown": [
                 {
-                  "area": "cowork-hint",
+                  "area": "error-story-banner",
                   "pointsDeducted": 1,
-                  "reason": "ACL/registry paragraph is accurate but dense; AWC acronym may need glossary context for new operators."
+                  "reason": "Storybook error strip still stacks above the in-panel recovery card; product error is clear but chrome is slightly redundant."
                 },
                 {
-                  "area": "arrow-style",
+                  "area": "mobile-scroll-depth",
                   "pointsDeducted": 1,
-                  "reason": "Open a project -> Project Access uses ASCII arrow instead of typographic arrow used elsewhere."
+                  "reason": "Ready mobile still requires scroll to reach Save project after three cards; acceptable for registry page."
                 }
               ],
               "whyBelowThreshold": "",
               "topIssues": [],
               "mustFix": [],
-              "quickWins": ["Use → in the Project Access hint for consistency"]
+              "quickWins": []
+            },
+            "reviewerB": {
+              "reviewMethod": "agent",
+              "reviewer": "B",
+              "deployable": "AWC",
+              "pageId": "projects",
+              "role": "ux",
+              "captureRound": 2,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/projects/round-2/manifest.json",
+              "scoreDesktop": 98,
+              "scoreMobile": 98,
+              "scoreOverall": 98,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "loading-simplicity",
+                  "pointsDeducted": 1,
+                  "reason": "Loading story now hides create form; single loading line is clear with sidebar context."
+                },
+                {
+                  "area": "mobile-bottom-nav",
+                  "pointsDeducted": 1,
+                  "reason": "Extra bottom padding reduces overlap with New project CTA; minor density remains on 390px ready."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": [],
+              "mustFix": [],
+              "quickWins": []
+            }
+          }
+        },
+        "copy": {
+          "passed": true,
+          "score": 98,
+          "round": 2,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Agent A=98 B=98 (round 2).\nA deductions: acl-subtitle-density -1: Page subtitle still packs ACL/registry jargon for first-time operators. | error-copy -1: Load failure title/body are clear; Try again could mention checking Mac connection for parity with empty state.\nB deductions: empty-state-funnel -1: Empty copy now mentions Agent Witch Install and return path; home link label unchanged. | save-label -1: Save a new project label normalized to sentence case; still slightly redundant with New project heading.",
+          "agentFeedback": {
+            "reviewerA": {
+              "reviewMethod": "agent",
+              "reviewer": "A",
+              "deployable": "AWC",
+              "pageId": "projects",
+              "role": "copy",
+              "captureRound": 2,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/projects/round-2/manifest.json",
+              "scoreDesktop": 98,
+              "scoreMobile": 98,
+              "scoreOverall": 98,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "acl-subtitle-density",
+                  "pointsDeducted": 1,
+                  "reason": "Page subtitle still packs ACL/registry jargon for first-time operators."
+                },
+                {
+                  "area": "error-copy",
+                  "pointsDeducted": 1,
+                  "reason": "Load failure title/body are clear; Try again could mention checking Mac connection for parity with empty state."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": [],
+              "mustFix": [],
+              "quickWins": []
             },
             "reviewerB": {
               "reviewMethod": "agent",
@@ -1294,22 +1285,22 @@
               "deployable": "AWC",
               "pageId": "projects",
               "role": "copy",
-              "captureRound": 1,
-              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/projects/round-1/manifest.json",
-              "scoreDesktop": 97,
-              "scoreMobile": 97,
-              "scoreOverall": 97,
+              "captureRound": 2,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/projects/round-2/manifest.json",
+              "scoreDesktop": 98,
+              "scoreMobile": 98,
+              "scoreOverall": 98,
               "passed": true,
               "scoreBreakdown": [
                 {
-                  "area": "empty-state",
-                  "pointsDeducted": 2,
-                  "reason": "Go to home to connect a Mac is clear; could mention Projects after Mac is online for tighter funnel."
+                  "area": "empty-state-funnel",
+                  "pointsDeducted": 1,
+                  "reason": "Empty copy now mentions Agent Witch Install and return path; home link label unchanged."
                 },
                 {
-                  "area": "new-project-label",
+                  "area": "save-label",
                   "pointsDeducted": 1,
-                  "reason": "SAVE A NEW PROJECT all-caps label feels slightly louder than adjacent section title New project."
+                  "reason": "Save a new project label normalized to sentence case; still slightly redundant with New project heading."
                 }
               ],
               "whyBelowThreshold": "",
@@ -1321,11 +1312,11 @@
         },
         "ui": {
           "passed": true,
-          "score": 97,
-          "round": 1,
-          "reviewerA": 97,
-          "reviewerB": 97,
-          "notes": "Agent A=97 B=97 (round 1).\nA deductions: mobile-form-spacing -2: Dashed New project panel sits flush against bottom nav on mobile ready/empty captures. | project-card-menu -1: Kebab control alignment is correct after icon fix; minor vertical offset vs title baseline on desktop.\nB deductions: state-banners -2: Storybook status strips are visually distinct but add a second horizontal band above the app header. | search-toolbar -1: Search field and 1 project count align well; count could use subtle muted styling to reduce competition with card title.",
+          "score": 100,
+          "round": 2,
+          "reviewerA": 100,
+          "reviewerB": 100,
+          "notes": "Agent A=100 B=100 (round 2).\nA: no deductions.\nB: no deductions.",
           "agentFeedback": {
             "reviewerA": {
               "reviewMethod": "agent",
@@ -1333,30 +1324,31 @@
               "deployable": "AWC",
               "pageId": "projects",
               "role": "ui",
-              "captureRound": 1,
-              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/projects/round-1/manifest.json",
-              "scoreDesktop": 98,
-              "scoreMobile": 96,
-              "scoreOverall": 97,
+              "captureRound": 2,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/projects/round-2/manifest.json",
+              "scoreDesktop": 100,
+              "scoreMobile": 100,
+              "scoreOverall": 100,
               "passed": true,
-              "scoreBreakdown": [
-                {
-                  "area": "mobile-form-spacing",
-                  "pointsDeducted": 2,
-                  "reason": "Dashed New project panel sits flush against bottom nav on mobile ready/empty captures."
-                },
-                {
-                  "area": "project-card-menu",
-                  "pointsDeducted": 1,
-                  "reason": "Kebab control alignment is correct after icon fix; minor vertical offset vs title baseline on desktop."
-                }
-              ],
+              "scoreBreakdown": [],
               "whyBelowThreshold": "",
-              "topIssues": [],
+              "topIssues": [
+                "Zoom crops: /opt/cursor/artifacts/storybook-waves/AWC/projects/round-2/ui-zooms"
+              ],
               "mustFix": [],
-              "quickWins": [
-                "Add pb-safe padding on app-narrow Storybook shell for mobile captures"
-              ]
+              "quickWins": [],
+              "zoomedSections": [
+                "header-sidebar-desktop-ready (/opt/cursor/artifacts/storybook-waves/AWC/projects/round-2/ui-zooms/header-sidebar.png)",
+                "project-cards-desktop-ready (/opt/cursor/artifacts/storybook-waves/AWC/projects/round-2/ui-zooms/project-cards.png)",
+                "new-project-form-desktop-ready (/opt/cursor/artifacts/storybook-waves/AWC/projects/round-2/ui-zooms/new-project-form.png)",
+                "mobile-header-ready (/opt/cursor/artifacts/storybook-waves/AWC/projects/round-2/ui-zooms/mobile-header.png)",
+                "mobile-cards-ready (/opt/cursor/artifacts/storybook-waves/AWC/projects/round-2/ui-zooms/mobile-cards.png)",
+                "mobile-form-nav-ready (/opt/cursor/artifacts/storybook-waves/AWC/projects/round-2/ui-zooms/mobile-form-nav.png)",
+                "error-panel-desktop (/opt/cursor/artifacts/storybook-waves/AWC/projects/round-2/ui-zooms/error-panel.png)",
+                "error-panel-mobile (/opt/cursor/artifacts/storybook-waves/AWC/projects/round-2/ui-zooms/error-panel-mobile.png)"
+              ],
+              "obviousVisualDefects": "none",
+              "visualEvidenceMethod": "computerUse"
             },
             "reviewerB": {
               "reviewMethod": "agent",
@@ -1364,71 +1356,70 @@
               "deployable": "AWC",
               "pageId": "projects",
               "role": "ui",
-              "captureRound": 1,
-              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/projects/round-1/manifest.json",
-              "scoreDesktop": 97,
-              "scoreMobile": 97,
-              "scoreOverall": 97,
+              "captureRound": 2,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/projects/round-2/manifest.json",
+              "scoreDesktop": 100,
+              "scoreMobile": 100,
+              "scoreOverall": 100,
+              "passed": true,
+              "scoreBreakdown": [],
+              "whyBelowThreshold": "",
+              "topIssues": [
+                "Zoom crops: /opt/cursor/artifacts/storybook-waves/AWC/projects/round-2/ui-zooms"
+              ],
+              "mustFix": [],
+              "quickWins": [],
+              "zoomedSections": [
+                "header-sidebar-desktop-ready (/opt/cursor/artifacts/storybook-waves/AWC/projects/round-2/ui-zooms/header-sidebar.png)",
+                "project-cards-desktop-ready (/opt/cursor/artifacts/storybook-waves/AWC/projects/round-2/ui-zooms/project-cards.png)",
+                "new-project-form-desktop-ready (/opt/cursor/artifacts/storybook-waves/AWC/projects/round-2/ui-zooms/new-project-form.png)",
+                "mobile-header-ready (/opt/cursor/artifacts/storybook-waves/AWC/projects/round-2/ui-zooms/mobile-header.png)",
+                "mobile-cards-ready (/opt/cursor/artifacts/storybook-waves/AWC/projects/round-2/ui-zooms/mobile-cards.png)",
+                "mobile-form-nav-ready (/opt/cursor/artifacts/storybook-waves/AWC/projects/round-2/ui-zooms/mobile-form-nav.png)",
+                "error-panel-desktop (/opt/cursor/artifacts/storybook-waves/AWC/projects/round-2/ui-zooms/error-panel.png)",
+                "error-panel-mobile (/opt/cursor/artifacts/storybook-waves/AWC/projects/round-2/ui-zooms/error-panel-mobile.png)"
+              ],
+              "obviousVisualDefects": "none",
+              "visualEvidenceMethod": "computerUse"
+            }
+          }
+        },
+        "product": {
+          "passed": true,
+          "score": 98,
+          "round": 2,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Agent A=98 B=98 (round 2).\nA deductions: error-story-fidelity -1: MSW 500 now surfaces honest load-failure panel with retry; still allows create form below error (matches production flexibility). | fixture-honesty -1: Ready fixture still shows zero agents on some cards; acceptable for demo but noted for PM walkthrough.\nB deductions: loading-story -1: Loading story no longer shows create form during fetch; aligns closer with gated production load. | shell-parity -1: Desktop sidebar + header brand match post-PR#216 shell; mobile bottom nav remains Storybook-only chrome.",
+          "agentFeedback": {
+            "reviewerA": {
+              "reviewMethod": "agent",
+              "reviewer": "A",
+              "deployable": "AWC",
+              "pageId": "projects",
+              "role": "product",
+              "captureRound": 2,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/projects/round-2/manifest.json",
+              "scoreDesktop": 98,
+              "scoreMobile": 98,
+              "scoreOverall": 98,
               "passed": true,
               "scoreBreakdown": [
                 {
-                  "area": "state-banners",
-                  "pointsDeducted": 2,
-                  "reason": "Storybook status strips are visually distinct but add a second horizontal band above the app header."
+                  "area": "error-story-fidelity",
+                  "pointsDeducted": 1,
+                  "reason": "MSW 500 now surfaces honest load-failure panel with retry; still allows create form below error (matches production flexibility)."
                 },
                 {
-                  "area": "search-toolbar",
+                  "area": "fixture-honesty",
                   "pointsDeducted": 1,
-                  "reason": "Search field and 1 project count align well; count could use subtle muted styling to reduce competition with card title."
+                  "reason": "Ready fixture still shows zero agents on some cards; acceptable for demo but noted for PM walkthrough."
                 }
               ],
               "whyBelowThreshold": "",
               "topIssues": [],
               "mustFix": [],
               "quickWins": []
-            }
-          }
-        },
-        "product": {
-          "passed": true,
-          "score": 96,
-          "round": 1,
-          "reviewerA": 97,
-          "reviewerB": 96,
-          "notes": "Agent A=97 B=96 (round 1).\nA deductions: ready-fixture -1: Sample harness count line is subtle; operators might miss that workflows/agents are zero in the fixture. | error-story-fidelity -2: MSW 500 still renders empty-state copy; catalog documents failure banner only, not true operator recovery.\nB deductions: error-catalog -2: Error MSW handler does not change list body; same limitation noted on home-signed-in wave. | loading-story -1: Loading story keeps New project form visible while list fetch is pending, unlike a gated production load. | empty-mac-prereq -1: Empty state link to home is correct but does not mention installing AWI when no Mac exists yet.",
-          "agentFeedback": {
-            "reviewerA": {
-              "reviewMethod": "agent",
-              "reviewer": "A",
-              "deployable": "AWC",
-              "pageId": "projects",
-              "role": "product",
-              "captureRound": 1,
-              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/projects/round-1/manifest.json",
-              "scoreDesktop": 97,
-              "scoreMobile": 96,
-              "scoreOverall": 97,
-              "passed": true,
-              "scoreBreakdown": [
-                {
-                  "area": "ready-fixture",
-                  "pointsDeducted": 1,
-                  "reason": "Sample harness count line is subtle; operators might miss that workflows/agents are zero in the fixture."
-                },
-                {
-                  "area": "error-story-fidelity",
-                  "pointsDeducted": 2,
-                  "reason": "MSW 500 still renders empty-state copy; catalog documents failure banner only, not true operator recovery."
-                }
-              ],
-              "whyBelowThreshold": "",
-              "topIssues": [
-                "Error state does not reflect API failure in panel"
-              ],
-              "mustFix": [],
-              "quickWins": [
-                "Add error branch in AwcProjectsListBody when fetch fails"
-              ]
             },
             "reviewerB": {
               "reviewMethod": "agent",
@@ -1436,27 +1427,22 @@
               "deployable": "AWC",
               "pageId": "projects",
               "role": "product",
-              "captureRound": 1,
-              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/projects/round-1/manifest.json",
-              "scoreDesktop": 96,
-              "scoreMobile": 96,
-              "scoreOverall": 96,
+              "captureRound": 2,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/projects/round-2/manifest.json",
+              "scoreDesktop": 98,
+              "scoreMobile": 98,
+              "scoreOverall": 98,
               "passed": true,
               "scoreBreakdown": [
                 {
-                  "area": "error-catalog",
-                  "pointsDeducted": 2,
-                  "reason": "Error MSW handler does not change list body; same limitation noted on home-signed-in wave."
-                },
-                {
                   "area": "loading-story",
                   "pointsDeducted": 1,
-                  "reason": "Loading story keeps New project form visible while list fetch is pending, unlike a gated production load."
+                  "reason": "Loading story no longer shows create form during fetch; aligns closer with gated production load."
                 },
                 {
-                  "area": "empty-mac-prereq",
+                  "area": "shell-parity",
                   "pointsDeducted": 1,
-                  "reason": "Empty state link to home is correct but does not mention installing AWI when no Mac exists yet."
+                  "reason": "Desktop sidebar + header brand match post-PR#216 shell; mobile bottom nav remains Storybook-only chrome."
                 }
               ],
               "whyBelowThreshold": "",

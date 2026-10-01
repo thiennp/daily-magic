@@ -1,0 +1,29 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "A",
+  "deployable": "AWC",
+  "pageId": "projects",
+  "role": "copy",
+  "captureRound": 2,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/projects/round-2/manifest.json",
+  "scoreDesktop": 98,
+  "scoreMobile": 98,
+  "scoreOverall": 98,
+  "passed": true,
+  "scoreBreakdown": [
+    {
+      "area": "acl-subtitle-density",
+      "pointsDeducted": 1,
+      "reason": "Page subtitle still packs ACL/registry jargon for first-time operators."
+    },
+    {
+      "area": "error-copy",
+      "pointsDeducted": 1,
+      "reason": "Load failure title/body are clear; Try again could mention checking Mac connection for parity with empty state."
+    }
+  ],
+  "whyBelowThreshold": "",
+  "topIssues": [],
+  "mustFix": [],
+  "quickWins": []
+}

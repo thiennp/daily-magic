@@ -1,0 +1,29 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "A",
+  "deployable": "AWC",
+  "pageId": "projects",
+  "role": "product",
+  "captureRound": 2,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/projects/round-2/manifest.json",
+  "scoreDesktop": 98,
+  "scoreMobile": 98,
+  "scoreOverall": 98,
+  "passed": true,
+  "scoreBreakdown": [
+    {
+      "area": "error-story-fidelity",
+      "pointsDeducted": 1,
+      "reason": "MSW 500 now surfaces honest load-failure panel with retry; still allows create form below error (matches production flexibility)."
+    },
+    {
+      "area": "fixture-honesty",
+      "pointsDeducted": 1,
+      "reason": "Ready fixture still shows zero agents on some cards; acceptable for demo but noted for PM walkthrough."
+    }
+  ],
+  "whyBelowThreshold": "",
+  "topIssues": [],
+  "mustFix": [],
+  "quickWins": []
+}

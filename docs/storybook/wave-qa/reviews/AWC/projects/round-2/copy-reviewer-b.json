@@ -1,0 +1,29 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "B",
+  "deployable": "AWC",
+  "pageId": "projects",
+  "role": "copy",
+  "captureRound": 2,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/projects/round-2/manifest.json",
+  "scoreDesktop": 98,
+  "scoreMobile": 98,
+  "scoreOverall": 98,
+  "passed": true,
+  "scoreBreakdown": [
+    {
+      "area": "empty-state-funnel",
+      "pointsDeducted": 1,
+      "reason": "Empty copy now mentions Agent Witch Install and return path; home link label unchanged."
+    },
+    {
+      "area": "save-label",
+      "pointsDeducted": 1,
+      "reason": "Save a new project label normalized to sentence case; still slightly redundant with New project heading."
+    }
+  ],
+  "whyBelowThreshold": "",
+  "topIssues": [],
+  "mustFix": [],
+  "quickWins": []
+}

@@ -1,0 +1,29 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "B",
+  "deployable": "AWC",
+  "pageId": "projects",
+  "role": "ux",
+  "captureRound": 2,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/projects/round-2/manifest.json",
+  "scoreDesktop": 98,
+  "scoreMobile": 98,
+  "scoreOverall": 98,
+  "passed": true,
+  "scoreBreakdown": [
+    {
+      "area": "loading-simplicity",
+      "pointsDeducted": 1,
+      "reason": "Loading story now hides create form; single loading line is clear with sidebar context."
+    },
+    {
+      "area": "mobile-bottom-nav",
+      "pointsDeducted": 1,
+      "reason": "Extra bottom padding reduces overlap with New project CTA; minor density remains on 390px ready."
+    }
+  ],
+  "whyBelowThreshold": "",
+  "topIssues": [],
+  "mustFix": [],
+  "quickWins": []
+}
