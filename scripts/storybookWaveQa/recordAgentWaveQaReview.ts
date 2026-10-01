@@ -13,6 +13,7 @@ import {
   type StorybookWaveAgentRole,
   validateAgentWaveQaReview,
 } from "./agentWaveQaReview.type";
+import { syncWaveQaProgressCursor } from "./syncWaveQaProgressCursor";
 const PROGRESS_PATH = path.join(
   process.cwd(),
   "docs/storybook/wave-qa/progress.json",
@@ -97,6 +98,8 @@ const main = (): void => {
   }
 
   const progress = JSON.parse(fs.readFileSync(PROGRESS_PATH, "utf8")) as {
+    currentRole: string;
+    currentPageIndex: number;
     pages: Array<{
       deployable: string;
       id: string;
@@ -143,6 +146,10 @@ const main = (): void => {
   };
 
   row.allRolesPassed = Object.values(row.roles).every((r) => r.passed);
+
+  const cursor = syncWaveQaProgressCursor(progress);
+  progress.currentPageIndex = cursor.currentPageIndex;
+  progress.currentRole = cursor.currentRole;
 
   fs.writeFileSync(
     PROGRESS_PATH,
