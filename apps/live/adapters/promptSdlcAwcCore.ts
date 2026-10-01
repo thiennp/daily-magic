@@ -122,6 +122,8 @@ export {
   PROMPT_SDLC_DEFAULT_MAX_TRIALS,
   PROMPT_SDLC_MAX_TRIALS_LIMIT,
   PROMPT_SDLC_STEP4_TOKENS_PER_MODULE_TRIAL,
+  PROMPT_SDLC_EARLY_TOKENS_PER_ROUND,
+  PROMPT_SDLC_PREVIEW_STEP4_MODULE_COUNT,
   PROMPT_SDLC_DEFAULT_RATE_USD_PER_1K_TOKENS,
   PROMPT_SDLC_BUDGET_SOFT_WARN_RATIO,
   PROMPT_SDLC_STOP_BUDGET_EXCEEDED,
@@ -138,11 +140,6 @@ export {
   seedPromptSdlcRunCostProposal,
 } from "@/lib/promptOptimizer/proposePromptSdlcCostBudget";
 export { resolvePromptSdlcWriterRateUsdPer1k } from "@/lib/promptOptimizer/resolvePromptSdlcWriterRateUsdPer1k";
-export {
-  PROMPT_SDLC_EARLY_TOKENS_PER_ROUND,
-  PROMPT_SDLC_PREVIEW_STEP4_MODULE_COUNT,
-  PROMPT_SDLC_STEP4_TOKENS_PER_MODULE_TRIAL,
-} from "@/lib/promptOptimizer/promptSdlcCostControl.constant";
 export { confirmPromptSdlcCostBudget } from "@/lib/promptOptimizer/confirmPromptSdlcCostBudget";
 export {
   readPromptSdlcBudgetStop,
