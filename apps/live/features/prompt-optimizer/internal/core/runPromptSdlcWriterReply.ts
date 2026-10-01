@@ -203,7 +203,7 @@ export const runPromptSdlcWriterReply = (input: {
     const stderrChunks: Buffer[] = [];
     const state = {
       settled: false,
-      stopping: false,
+      stopReason: null as "timeout" | "abort" | null,
       timer: undefined as NodeJS.Timeout | undefined,
     };
     const child = spawn(invocation.command, [...args], {
@@ -219,10 +219,10 @@ export const runPromptSdlcWriterReply = (input: {
       resolve(value);
     };
     bindPromptSdlcWriterAbort(child, input.signal, finish, () => {
-      state.stopping = true;
+      state.stopReason = "abort";
     });
     state.timer = setTimeout(() => {
-      state.stopping = true;
+      state.stopReason = "timeout";
       void terminatePromptSdlcWriterChild(child).then((killSignal) => {
         finish({
           ok: false,
@@ -245,19 +245,25 @@ export const runPromptSdlcWriterReply = (input: {
       }),
     );
     child.on("close", () => {
-      if (state.stopping || state.settled) {
+      if (state.settled) {
         return;
       }
       const replyFileText = fs.existsSync(replyPath)
         ? fs.readFileSync(replyPath, "utf8")
         : null;
-      finish(
-        readPromptSdlcWriterOutput({
-          writerAgent,
-          stdout: Buffer.concat(stdoutChunks).toString("utf8"),
-          stderr: Buffer.concat(stderrChunks).toString("utf8"),
-          replyFileText,
-        }),
-      );
+      const result = readPromptSdlcWriterOutput({
+        writerAgent,
+        stdout: Buffer.concat(stdoutChunks).toString("utf8"),
+        stderr: Buffer.concat(stderrChunks).toString("utf8"),
+        replyFileText,
+      });
+      if (result.ok && state.stopReason !== "abort") {
+        finish(result);
+        return;
+      }
+      if (state.stopReason !== null) {
+        return;
+      }
+      finish(result);
     });
   });

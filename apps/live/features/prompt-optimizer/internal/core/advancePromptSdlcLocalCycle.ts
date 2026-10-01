@@ -5,7 +5,11 @@ import {
 import { applyPromptSdlcLocalImproverReply } from "./applyPromptSdlcLocalReply";
 import { judgePromptSdlcLocalRound } from "./judgePromptSdlcLocalRound";
 import { readPromptSdlcLocalImproverReference } from "./readPromptSdlcLocalImproverReference";
-import type { PromptSdlcWriterResult } from "./readPromptSdlcWriterOutput";
+import {
+  classifyPromptSdlcWriterErrorKind,
+  type PromptSdlcWriterErrorKind,
+  type PromptSdlcWriterResult,
+} from "./readPromptSdlcWriterOutput";
 import { PROMPT_SDLC_MANUAL_ACTOR } from "./choosePromptSdlcLocalModels";
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
 import { promptSdlcLocalWorkingDirectory } from "./promptSdlcLocalFolder";
@@ -17,10 +21,12 @@ import {
 const failCycle = (
   cycle: PromptSdlcLocalCycle,
   errorMessage: string,
+  errorKind?: PromptSdlcWriterErrorKind,
 ): PromptSdlcLocalCycle => ({
   ...cycle,
   status: "failed",
   errorMessage,
+  errorKind,
   updatedAt: new Date().toISOString(),
 });
 
@@ -28,6 +34,7 @@ const stoppedCycle = (cycle: PromptSdlcLocalCycle): PromptSdlcLocalCycle => ({
   ...cycle,
   status: "stopped",
   errorMessage: PROMPT_SDLC_STOP_USER,
+  errorKind: "writer_interrupted",
   updatedAt: new Date().toISOString(),
 });
 
@@ -45,7 +52,11 @@ const replyOrStop = (
     return stoppedCycle(cycle);
   }
   onWriterFailure?.(writer);
-  return failCycle(cycle, reply.errorMessage);
+  return failCycle(
+    cycle,
+    reply.errorMessage,
+    classifyPromptSdlcWriterErrorKind(reply),
+  );
 };
 
 export const advancePromptSdlcLocalCycle = async (
