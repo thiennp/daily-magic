@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { createInitialPromptSdlcWizardState } from "../../../../adapters/promptSdlcAwcCore";
+import { confirmedPromptSdlcCostControlsForTests } from "./promptSdlcCostControlTestFixtures";
 import { summarizePromptSdlcWizardCompletion } from "../../../../adapters/promptSdlcAwcCore";
 import { describePromptSdlcWizardModuleTableHeadline } from "./describePromptSdlcWizardModuleTableHeadline";
 import { describePromptSdlcLocalActivity } from "./buildPromptSdlcLocalActivity";

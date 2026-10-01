@@ -369,7 +369,7 @@ describe("prompt SDLC wizard full round proof (for screenshots)", () => {
         current?.status === "wizard_paused" &&
         current.wizard?.gate === "optimize_modules"
       );
-    }, "step 4 optimize gate (parameters)");
+    }, "step 4 cost confirm gate");
     gateTrace.push("optimize_modules");
     paused = readPromptSdlcLocalCycle(storePath, liveId)!;
     const continueWizard = (extra?: Record<string, string>): void => {
