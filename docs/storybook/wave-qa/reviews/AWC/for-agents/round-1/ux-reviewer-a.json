@@ -1,0 +1,26 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "A",
+  "deployable": "AWC",
+  "pageId": "for-agents",
+  "role": "ux",
+  "captureRound": 1,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/for-agents/round-1/manifest.json",
+  "scoreDesktop": 98,
+  "scoreMobile": 98,
+  "scoreOverall": 98,
+  "passed": true,
+  "scoreBreakdown": [
+    {
+      "area": "mobile-scroll-depth",
+      "pointsDeducted": 2,
+      "reason": "Long agent guideline on 390px requires substantial scroll before later sections (prompt optimizer, ACL); acceptable for a doc but adds fatigue on first visit."
+    }
+  ],
+  "whyBelowThreshold": "",
+  "topIssues": ["Mobile scroll length for full guideline"],
+  "mustFix": [],
+  "quickWins": [
+    "Optional in-page anchor links for Live tools and Register sections"
+  ]
+}

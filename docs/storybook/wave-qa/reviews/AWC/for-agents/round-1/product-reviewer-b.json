@@ -1,0 +1,24 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "B",
+  "deployable": "AWC",
+  "pageId": "for-agents",
+  "role": "product",
+  "captureRound": 1,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/for-agents/round-1/manifest.json",
+  "scoreDesktop": 98,
+  "scoreMobile": 98,
+  "scoreOverall": 98,
+  "passed": true,
+  "scoreBreakdown": [
+    {
+      "area": "demo-honesty",
+      "pointsDeducted": 2,
+      "reason": "Guideline references live localhost AWL endpoints; accurate for Mac agents but worth calling out in demos that prompt optimizer requires local AWL."
+    }
+  ],
+  "whyBelowThreshold": "",
+  "topIssues": ["Local AWL prompt optimizer section assumes Mac runtime"],
+  "mustFix": [],
+  "quickWins": []
+}

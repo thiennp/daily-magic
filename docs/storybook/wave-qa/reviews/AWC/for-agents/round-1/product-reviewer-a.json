@@ -1,0 +1,26 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "A",
+  "deployable": "AWC",
+  "pageId": "for-agents",
+  "role": "product",
+  "captureRound": 1,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/for-agents/round-1/manifest.json",
+  "scoreDesktop": 99,
+  "scoreMobile": 99,
+  "scoreOverall": 99,
+  "passed": true,
+  "scoreBreakdown": [
+    {
+      "area": "story-fidelity",
+      "pointsDeducted": 1,
+      "reason": "Ready story renders full static guideline without auth chrome—matches production AGENT-ACCESS-001 intent; no misleading signed-in shell."
+    }
+  ],
+  "whyBelowThreshold": "",
+  "topIssues": [],
+  "mustFix": [],
+  "quickWins": [
+    "Demo to PM: emphasize this is the agent onboarding doc, not console UI"
+  ]
+}

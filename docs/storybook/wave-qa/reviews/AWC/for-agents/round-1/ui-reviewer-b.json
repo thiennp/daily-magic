@@ -1,0 +1,33 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "B",
+  "deployable": "AWC",
+  "pageId": "for-agents",
+  "role": "ui",
+  "captureRound": 1,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/for-agents/round-1/manifest.json",
+  "scoreDesktop": 100,
+  "scoreMobile": 100,
+  "scoreOverall": 100,
+  "passed": true,
+  "scoreBreakdown": [],
+  "whyBelowThreshold": "",
+  "topIssues": [
+    "Mobile overflow verified fixed (document scrollWidth 390); zoom: url-wrap-mobile-ready.png",
+    "Marketing light surface consistent; dark: tokens on body text inert in Storybook light theme"
+  ],
+  "mustFix": [],
+  "quickWins": [],
+  "zoomedSections": [
+    "hero-desktop-ready",
+    "live-tools-desktop-ready",
+    "register-block-desktop-ready",
+    "prompt-sdlc-desktop-ready",
+    "discovery-desktop-ready",
+    "hero-mobile-ready",
+    "live-tools-mobile-ready",
+    "url-wrap-mobile-ready"
+  ],
+  "obviousVisualDefects": "none",
+  "visualEvidenceMethod": "computerUse"
+}

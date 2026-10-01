@@ -1,0 +1,24 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "B",
+  "deployable": "AWC",
+  "pageId": "for-agents",
+  "role": "ux",
+  "captureRound": 1,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/for-agents/round-1/manifest.json",
+  "scoreDesktop": 99,
+  "scoreMobile": 97,
+  "scoreOverall": 98,
+  "passed": true,
+  "scoreBreakdown": [
+    {
+      "area": "scan-path",
+      "pointsDeducted": 2,
+      "reason": "Three-second scan lands on title and intro; Live tools list is dense before procedural Register section—still clear for agents but not scannable like marketing hero pages."
+    }
+  ],
+  "whyBelowThreshold": "",
+  "topIssues": ["Dense Live tools block before step-by-step Register"],
+  "mustFix": [],
+  "quickWins": ["Consider numbering major sections for faster agent parsing"]
+}
