@@ -48,6 +48,7 @@ export const AWL_PROJECTS_AND_HARNESS_PAGE_ENTRIES: readonly AwlStorybookPageEnt
       buildBody: (status) =>
         buildAgentWitchLocalProjectEditorPageBody({
           project: AWL_STORYBOOK_SAMPLE_PROJECT,
+          cloudAppOrigin: AWL_STORYBOOK_CLOUD_ORIGIN,
           installed: AWL_STORYBOOK_EMPTY_INSTALLED,
           linkedSetSlugs: [],
           composition: null,
