@@ -17,10 +17,12 @@ export type AwcStorybookShellVariant =
 export default function AwcStorybookChrome({
   status,
   shell,
+  renderPrimaryNav = true,
   children,
 }: {
   readonly status: StorybookPageStatus;
   readonly shell: AwcStorybookShellVariant;
+  readonly renderPrimaryNav?: boolean;
   readonly children: React.ReactNode;
 }) {
   const inner = (() => {
@@ -38,7 +40,9 @@ export default function AwcStorybookChrome({
           </AppShell>
         );
       case "app":
-        return <AppShell>{children}</AppShell>;
+        return (
+          <AppShell renderPrimaryNav={renderPrimaryNav}>{children}</AppShell>
+        );
     }
   })();
 
