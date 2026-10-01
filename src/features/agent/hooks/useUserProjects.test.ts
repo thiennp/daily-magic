@@ -11,7 +11,15 @@ describe("useUserProjects", () => {
 
     expect(loader).toContain("setLoadFailed(true)");
     expect(loader).toContain("runUserProjectsFetch");
-    expect(loader).toContain("!outcome.ok");
+    expect(
+      readFileSync(
+        join(
+          process.cwd(),
+          "src/features/agent/hooks/utils/applyUserProjectsFetchOutcome.ts",
+        ),
+        "utf8",
+      ),
+    ).toContain("!outcome.ok");
     expect(loader).toContain("loadGenerationRef");
   });
 });
