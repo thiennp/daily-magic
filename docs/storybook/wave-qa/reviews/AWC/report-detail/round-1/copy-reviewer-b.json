@@ -1,0 +1,29 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "B",
+  "deployable": "AWC",
+  "pageId": "report-detail",
+  "role": "copy",
+  "captureRound": 1,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/report-detail/round-1/manifest.json",
+  "scoreDesktop": 98,
+  "scoreMobile": 97,
+  "scoreOverall": 98,
+  "passed": true,
+  "scoreBreakdown": [
+    {
+      "area": "error-vs-empty-distinction",
+      "pointsDeducted": 1,
+      "reason": "Not-found vs load-error messages now differ appropriately; empty line could mention Reports index."
+    },
+    {
+      "area": "fixture-realism",
+      "pointsDeducted": 1,
+      "reason": "Ready fixture repeats result string in prose and code block; acceptable Storybook duplication."
+    }
+  ],
+  "whyBelowThreshold": "",
+  "topIssues": [],
+  "mustFix": [],
+  "quickWins": []
+}

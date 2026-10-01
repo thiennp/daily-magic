@@ -1,0 +1,29 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "B",
+  "deployable": "AWC",
+  "pageId": "report-detail",
+  "role": "product",
+  "captureRound": 1,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/report-detail/round-1/manifest.json",
+  "scoreDesktop": 97,
+  "scoreMobile": 96,
+  "scoreOverall": 97,
+  "passed": true,
+  "scoreBreakdown": [
+    {
+      "area": "error-story-fidelity",
+      "pointsDeducted": 2,
+      "reason": "MSW 500 now maps to retry panel aligned with reports list pattern; distinct from 404 empty story."
+    },
+    {
+      "area": "empty-story-fidelity",
+      "pointsDeducted": 1,
+      "reason": "Empty MSW 404 shows not-found copy consistent with production deep link to missing run."
+    }
+  ],
+  "whyBelowThreshold": "",
+  "topIssues": [],
+  "mustFix": [],
+  "quickWins": []
+}

@@ -1,0 +1,24 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "A",
+  "deployable": "AWC",
+  "pageId": "report-detail",
+  "role": "copy",
+  "captureRound": 1,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/report-detail/round-1/manifest.json",
+  "scoreDesktop": 99,
+  "scoreMobile": 98,
+  "scoreOverall": 99,
+  "passed": true,
+  "scoreBreakdown": [
+    {
+      "area": "loading-ellipsis",
+      "pointsDeducted": 1,
+      "reason": "Loading copy uses typographic ellipsis in UI (Loading run…) consistent with product; Storybook banner is separate."
+    }
+  ],
+  "whyBelowThreshold": "",
+  "topIssues": [],
+  "mustFix": [],
+  "quickWins": []
+}

@@ -5,6 +5,7 @@ import { useSession } from "next-auth/react";
 
 import AgentRunDetailContent from "@/features/reports/AgentRunDetailContent";
 import AgentRunDetailDeleteButton from "@/features/reports/AgentRunDetailDeleteButton";
+import AgentRunDetailLoadErrorPanel from "@/features/reports/AgentRunDetailLoadErrorPanel";
 import AgentRunFeedbackForm from "@/features/feedback/AgentRunFeedbackForm";
 import FeedbackSubmittedNotice from "@/features/feedback/FeedbackSubmittedNotice";
 import { useAgentRunDetailState } from "@/features/reports/hooks/useAgentRunDetailState";
@@ -16,13 +17,17 @@ interface AgentRunDetailProps {
 
 export default function AgentRunDetail({ runId }: AgentRunDetailProps) {
   const { data: session } = useSession();
-  const { run, feedback, isLoading, setFeedback } =
+  const { run, feedback, isLoading, loadError, setFeedback, reloadRun } =
     useAgentRunDetailState(runId);
 
   if (isLoading) {
     return (
       <p className="text-sm text-gray-500 dark:text-gray-400">Loading run…</p>
     );
+  }
+
+  if (loadError && run === null) {
+    return <AgentRunDetailLoadErrorPanel onRetry={() => void reloadRun()} />;
   }
 
   if (run === null) {
