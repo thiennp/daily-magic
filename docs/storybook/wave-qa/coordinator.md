@@ -17,6 +17,8 @@ Example: `cursor/wave-qa-awc-home-marketing-b63b`
 npm run storybook:wave:page-brief -- AWC home-marketing
 ```
 
+Serve captures with `python3 -m http.server 6008` inside `storybook-static` (avoid `npx serve` — it redirects `/iframe.html` and breaks capture).
+
 Copy the printed brief into a **cloud** background agent. Subagent must:
 
 - Build/serve Storybook, `storybook:wave:capture` for that page only.
