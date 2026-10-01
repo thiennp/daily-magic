@@ -21,12 +21,14 @@ export function useAgentRunsRemoteSync(input: {
 }): {
   readonly apiRuns: readonly EnrichedAgentRunRecord[];
   readonly isLoading: boolean;
+  readonly loadFailed: boolean;
   readonly refresh: () => void;
 } {
   const { enabled, statusFilter, scopeFilter, groupFilter, onCacheUpdated } =
     input;
   const [apiRuns, setApiRuns] = useState<readonly EnrichedAgentRunRecord[]>([]);
   const [isLoading, setIsLoading] = useState(enabled);
+  const [loadFailed, setLoadFailed] = useState(false);
   const refreshRef = useRef<() => void>(() => {});
 
   useEffect(() => {
@@ -35,6 +37,8 @@ export function useAgentRunsRemoteSync(input: {
     }
 
     const loadRuns = async (): Promise<void> => {
+      setIsLoading(true);
+      setLoadFailed(false);
       const query = buildAgentRunsQueryString({
         status: statusFilter === "all" ? undefined : statusFilter,
         scope: scopeFilter,
@@ -43,6 +47,7 @@ export function useAgentRunsRemoteSync(input: {
       const response = await fetch(`/api/agent-runs${query}`);
 
       if (!response.ok) {
+        setLoadFailed(true);
         onCacheUpdated();
         setIsLoading(false);
         return;
@@ -83,6 +88,7 @@ export function useAgentRunsRemoteSync(input: {
   return {
     apiRuns,
     isLoading,
+    loadFailed: enabled && loadFailed,
     refresh: () => {
       refreshRef.current();
     },

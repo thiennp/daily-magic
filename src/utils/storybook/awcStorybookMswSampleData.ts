@@ -8,6 +8,9 @@ import {
   SAMPLE_WORKFLOW_FIELDS,
 } from "@/lib/capabilities/sampleWorkflowCapability.constant";
 import type PublishedCapabilityRecord from "@/lib/capabilities/types/PublishedCapabilityRecord.type";
+import { AgentRunStatus } from "@/lib/dispatch/AgentRunStatus.constant";
+import { DispatchPolicy } from "@/lib/dispatch/DispatchPolicy.constant";
+import type EnrichedAgentRunRecord from "@/lib/dispatch/types/EnrichedAgentRunRecord.type";
 import {
   AWC_STORYBOOK_SAMPLE_PROJECT,
   AWC_STORYBOOK_USER,
@@ -51,15 +54,36 @@ export const AWC_STORYBOOK_SAMPLE_CAPABILITY: PublishedCapabilityRecord = {
   updatedAt: "2026-03-01T00:00:00.000Z",
 };
 
-export const AWC_STORYBOOK_SAMPLE_RUN = {
+export const AWC_STORYBOOK_SAMPLE_RUN: EnrichedAgentRunRecord = {
   id: "run-storybook-1",
-  status: "succeeded",
-  title: "Storybook sample run",
+  groupId: null,
+  requesterUserId: "user-storybook",
+  executorUserId: "user-storybook",
+  requesterEmail: AWC_STORYBOOK_USER.email,
+  executorEmail: AWC_STORYBOOK_USER.email,
+  requesterName: AWC_STORYBOOK_USER.name,
+  executorName: AWC_STORYBOOK_USER.name,
+  prompt:
+    "Summarize open PRs for daily-magic and post a short status to Slack.",
+  status: AgentRunStatus.COMPLETED,
+  dispatchPolicy: DispatchPolicy.OPEN,
+  resultOutput: "Posted status update to #engineering.",
+  resultExitCode: 0,
+  resultOutcomeCode: null,
+  denialReason: null,
   createdAt: "2026-10-01T00:00:00.000Z",
   updatedAt: "2026-10-01T00:01:00.000Z",
+  startedAt: "2026-10-01T00:00:10.000Z",
+  completedAt: "2026-10-01T00:01:00.000Z",
+  approvalExpiresAt: null,
+  capabilityId: "cap-storybook-sample",
+  capabilityVersionId: "ver-storybook-sample",
   deviceId: AWC_STORYBOOK_SAMPLE_DEVICE.id,
   projectId: AWC_STORYBOOK_SAMPLE_PROJECT.id,
-  capabilityName: "Weekly team status",
-  requesterUserId: "user-storybook",
-  ownerUserId: AWC_STORYBOOK_USER.email,
+  compositionSnapshotId: null,
+  writerAgent: "cursor-cli",
+  lastRunHeartbeatAt: null,
+  reportSummary: "Completed · 50s · exit 0",
+  estimateSeconds: 120,
+  actualSeconds: 50,
 };
