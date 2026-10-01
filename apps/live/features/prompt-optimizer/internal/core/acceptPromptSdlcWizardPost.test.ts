@@ -332,7 +332,9 @@ describe("tryAcceptPromptSdlcWizardPost", () => {
         judgeModel: "claude-cli",
         improverModel: "claude-cli",
         workingDirectory: storeDir,
-        costControls: confirmedPromptSdlcCostControlsForTests({ moduleCount: 2 }),
+        costControls: confirmedPromptSdlcCostControlsForTests({
+          moduleCount: 2,
+        }),
         wizard: {
           ...createInitialPromptSdlcWizardState("Do {{x}}"),
           gate: "separate",
@@ -394,7 +396,9 @@ describe("tryAcceptPromptSdlcWizardPost", () => {
         judgeModel: "claude-cli",
         improverModel: "claude-cli",
         workingDirectory: storeDir,
-        costControls: confirmedPromptSdlcCostControlsForTests({ moduleCount: 2 }),
+        costControls: confirmedPromptSdlcCostControlsForTests({
+          moduleCount: 2,
+        }),
         wizard: {
           ...createInitialPromptSdlcWizardState("Do {{x}}"),
           gate: "optimize_modules",
@@ -497,7 +501,9 @@ describe("tryAcceptPromptSdlcWizardPost", () => {
         judgeModel: "claude-cli",
         improverModel: "claude-cli",
         workingDirectory: storeDir,
-        costControls: confirmedPromptSdlcCostControlsForTests({ moduleCount: 2 }),
+        costControls: confirmedPromptSdlcCostControlsForTests({
+          moduleCount: 2,
+        }),
         wizard: {
           ...createInitialPromptSdlcWizardState("Do {{x}}"),
           gate: "optimize_modules",

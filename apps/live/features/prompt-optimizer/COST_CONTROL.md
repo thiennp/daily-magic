@@ -7,20 +7,20 @@ API on main: `#192` / `e28df08b` (`feat/aw-optimizer-cost-control-api` squash)
 
 ### Proposal (judge→UI, before Step4)
 
-| Key | Meaning |
-| --- | --- |
-| `targetTokenBudget` | Judge-proposed token target |
+| Key                   | Meaning                                              |
+| --------------------- | ---------------------------------------------------- |
+| `targetTokenBudget`   | Judge-proposed token target                          |
 | `proposedTokenBudget` | Alias ≡ `targetTokenBudget` (snapshot + form hidden) |
-| `estimatedSpendUsd` | Estimated $ for that target |
-| `rateUsdPer1kTokens` | Optional; UI recomputes $ when tokens edited |
+| `estimatedSpendUsd`   | Estimated $ for that target                          |
+| `rateUsdPer1kTokens`  | Optional; UI recomputes $ when tokens edited         |
 
 ### Confirm (UI→API hard ceiling)
 
-| Key | Meaning |
-| --- | --- |
+| Key                    | Meaning                          |
+| ---------------------- | -------------------------------- |
 | `confirmedTokenBudget` | User-approved token hard ceiling |
-| `confirmedMaxSpendUsd` | User-approved $ hard ceiling |
-| `budgetConfirmed` | `true` after confirm |
+| `confirmedMaxSpendUsd` | User-approved $ hard ceiling     |
+| `budgetConfirmed`      | `true` after confirm             |
 
 Confirm via **wizard-continue** on `optimize_modules` with those fields (also agent `intent: confirm_budget`).
 

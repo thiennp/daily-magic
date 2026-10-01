@@ -4,6 +4,7 @@ import {
   continueAfterJudgeReply,
   resolvePromptSdlcMaxTrials,
   type HarnessWriterAgent,
+  resolvePromptSdlcMaxTrials,
 } from "../../../../adapters/promptSdlcAwcCore";
 import { resolvePromptSdlcMaxTrials } from "../../../../adapters/promptSdlcAwcCore";
 import { PROMPT_SDLC_MANUAL_ACTOR } from "./choosePromptSdlcLocalModels";
@@ -50,7 +51,7 @@ export const applyPromptSdlcLocalJudgeReply = (
     improver: writerChoice(cycle.improverModel),
     round: cycle.currentRound,
     maxRounds:
-      // maxTrials caps Step 4 module trials. Step 2 and classic loops keep maxRounds.
+      // Step 4 trial cap. Evaluate and classic rounds keep cycle.maxRounds.
       cycle.wizard?.phase === "optimize_modules"
         ? resolvePromptSdlcMaxTrials({
             maxRounds: cycle.maxRounds,
