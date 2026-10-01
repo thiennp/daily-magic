@@ -1,98 +1,90 @@
 ---
 name: skill-storybook-page-wave-qa
 description: >-
-  Weekly Storybook page wave QA for AWC and AWL: capture all statuses per page,
-  alternating subagent reviews (UX → copy → UI → product → tester → DX) until ≥95%,
-  fix product/storybook, update progress.json. Use for scheduled Saturday runs or manual QA.
+  Weekly Storybook page wave QA for AWC and AWL: PNG capture, subagent reviewers
+  (UX → copy → UI → product → tester → DX) until ≥95% with explicit score rationale.
+  No automated subjective scoring. Incremental commits per page/role batch.
 ---
 
 # Storybook page wave QA
 
 ## When to use
 
-- User asks for Storybook UI/UX QA, wave review, or weekly page QA.
-- **Scheduled:** Saturday weekly job (GitHub Actions + optional Cursor timer) — run this skill end-to-end.
-- **Manual:** One page or full catalog before a UI release.
+- Storybook UI/UX/copy/product QA, wave review, or Saturday weekly run.
+- **Incremental delivery:** finish capture + agent review for one page (or one role across pages), record, **commit/push**, then continue — do not attempt all 34 pages in one session.
 
-Canonical docs: `docs/storybook/README.md`, `docs/storybook/wave-qa/README.md`.
+Canonical: `docs/storybook/README.md`, `docs/storybook/wave-qa/README.md`, `docs/storybook/wave-qa/reviewer-rubric.md`.
+
+## Coordinator (main agent)
+
+- **Do not** capture, review PNGs, or fix UI on the main thread.
+- Spawn **cloud** subagents (`run_in_background`) — **one page per subagent**, branch `cursor/wave-qa-<awc|awl>-<pageId>-b63b`.
+- Brief: `npm run storybook:wave:page-brief -- AWC <pageId>` — see `docs/storybook/wave-qa/coordinator.md`.
+- Push/PR **per page** when that page’s ux–product roles pass; merge to `main` incrementally.
+
+## Hard rules
+
+1. **ux | copy | ui | product** — scores from **subagent or human** only, with PNG evidence. `reviewMethod` must be `"agent"` in JSON.
+2. **Forbidden** for passing subjective roles: `evaluateSubjectiveWaveQa.ts`, Playwright rubric bulk record, or `notes` containing `Rubric A=`.
+3. **Below 100:** `scoreBreakdown[]` with `reason` per deduction. **Below 95:** `whyBelowThreshold` + `mustFix[]` for the next fix round.
+4. **tester | dx** — objective only (`storybook:wave:validate`, manifest test, `storybook:wave:objective-gates`).
+5. Do **not** mark `main` “done” until all 34 pages × 6 roles pass with agent evidence.
 
 ## Definitions
 
-| Term     | Meaning                                                                     |
-| -------- | --------------------------------------------------------------------------- |
-| **Wave** | One catalog page — all Storybook statuses for that page                     |
-| **Role** | `ux` → `copy` → `ui` → `product` → `tester` → `dx` (in that order per page) |
-| **Pass** | `scoreOverall >= 95` from **both** reviewer A and B in the same round       |
-| **AWC**  | Desktop **1280×900** + mobile **390×844**                                   |
-| **AWL**  | Desktop only                                                                |
+| Term           | Meaning                                                                     |
+| -------------- | --------------------------------------------------------------------------- |
+| **Wave**       | One catalog page — all Storybook statuses                                   |
+| **Role order** | `ux` → `copy` → `ui` → `product` → `tester` → `dx`                          |
+| **Pass**       | `scoreOverall >= 95` from reviewer **A** and **B** (same round after fixes) |
+| **AWC**        | Desktop 1280×900 + mobile 390×844 captures                                  |
+| **AWL**        | Desktop only                                                                |
 
-Catalog: `scripts/storybookWaveQa/storybookWavePageCatalog.ts` (34 pages).  
-Progress: `docs/storybook/wave-qa/progress.json` (run `npm run storybook:wave:init` if empty).
-
-## Weekly automation (Saturday)
-
-**CI (repo):** `.github/workflows/storybook-wave-qa-weekly.yml` — Saturday 02:00 UTC (`cron: 0 2 * * 6`), uploads screenshot artifacts.
-
-```bash
-npm run storybook:wave:weekly
-```
-
-**Cloud agent:** On timer or user request, run the full **Agent loop** below after CI capture (or run `storybook:wave:weekly` locally).
+Progress: `docs/storybook/wave-qa/progress.json` · Catalog: `scripts/storybookWaveQa/storybookWavePageCatalog.ts`.
 
 ## Agent loop (one page, one role)
 
-1. **Capture** (increment `round` after fixes):
+1. **Build + serve** Storybook static (`:6008`).
+2. **Capture** (bump `round` only after code/fixture changes):
 
    ```bash
-   npm run storybook:build
-   # Terminal A: cd storybook-static && python3 -m http.server 6008
-   STORYBOOK_BASE_URL=http://127.0.0.1:6008 npm run storybook:wave:capture -- AWC <pageId> <round>
+   npm run storybook:wave:capture -- AWC <pageId> <round>
    ```
 
    Artifacts: `/opt/cursor/artifacts/storybook-waves/{AWC|AWL}/{pageId}/round-{n}/`
 
-2. **Reviewer A** (generalPurpose): attach all PNGs for that page/round; rubric for role; return JSON:
-   `{"scoreDesktop":n,"scoreMobile":n,"scoreOverall":n,"passed":bool,"topIssues":[],"mustFix":[],"quickWins":[]}`
+3. **Reviewer A** (`generalPurpose` or `computerUse`): attach **all** PNGs + `manifest.json`; role lens from `reviewer-rubric.md`; output **one JSON file** per rubric template (`reviewer: "A"`).
 
-3. **Fix** `mustFix` in product code or `src/utils/storybook/*` (fixtures, MSW, chrome). Minimize scope.
+4. **Fix** `mustFix` in product or `src/utils/storybook/*`; recapture same round if visuals changed.
 
-4. **Recapture** same round number only after fixes → **Reviewer B** (different subagent, same JSON).  
-   Repeat A → fix → B until `passed` for both reviewers.
+5. **Reviewer B** — **different** subagent; same evidence; `reviewer: "B"`.
 
-5. **Record** in `progress.json` for that page’s role: scores, round, `passed: true`, short `notes`.
+6. **Record** only when both JSON files validate:
 
-6. **Next role** on same page, then **next page** when all six roles pass.
+   ```bash
+   npm run storybook:wave:record-agent -- AWC <pageId> <role> reviews/...-a.json reviews/...-b.json
+   ```
 
-Do **not** push `main` until **all 34 pages × 6 roles** pass (≥95% reviewer A **and** B per role). Use a feature branch + draft PR until then.
+7. Next role on same page, then next page. **Commit** after each page (or small batch) that gains new `passed: true` roles.
 
-**Objective gates (automated, not a substitute for UX/copy/UI/product):**
+## Reset after invalid (automated) passes
 
-- `npm run storybook:wave:validate` — all catalog stories render (tester gate).
-- `npx vitest run src/utils/storybook/pageStoryManifest.test.ts` — catalog alignment (dx gate).
-- `npm run storybook:wave:objective-gates` — writes tester + dx scores into `progress.json` after the above pass.
+```bash
+npm run storybook:wave:reset-agent-roles
+```
 
-Weekly CI (`storybook:wave:weekly`) runs build, capture, and validate. The **Saturday agent** must still complete ux → copy → ui → product loops per page until the full matrix is ≥95%.
+## Objective gates (not a substitute for design review)
 
-## Subagent personas (prompt snippets)
+```bash
+npm run storybook:wave:validate
+npx vitest run src/utils/storybook/pageStoryManifest.test.ts
+npm run storybook:wave:objective-gates
+```
 
-- **UX:** hierarchy, spacing, responsive AWC, CTAs, nav, trust, a11y hints.
-- **Copy:** voice, clarity, i18n-ready strings, error/empty tone, marketing accuracy.
-- **UI:** Tailwind consistency, components vs styleguide, states (loading/empty/error).
-- **Product:** flows match AWC/AWL product intent; fixtures believable.
-- **Tester:** all statuses for the page exercised; MSW/error paths credible.
-- **DX:** story names, catalog/manifest alignment, regen `storybook:generate` if needed.
+## Weekly CI
 
-## Verification
-
-- `npx vitest run src/utils/storybook/pageStoryManifest.test.ts`
-- `npm run storybook:build` must succeed
-- After substantive fixes: `npm run typecheck` and targeted tests
+`.github/workflows/storybook-wave-qa-weekly.yml` — capture + validate. **Agent** still runs ux→product loops from `progress.json`.
 
 ## Reporting
 
-Use `skill-agent-verification-reporting` tables. End weekly run with:
-
-- Pages completed this week (role × page)
-- Blockers
-- Link to CI artifact or `/opt/cursor/artifacts/storybook-waves/` samples
-- Whether `main` merge is allowed (only if full matrix ≥95%)
+Tables per `skill-agent-verification-reporting`. State: pages completed, open `mustFix` from last failed role, artifact paths.

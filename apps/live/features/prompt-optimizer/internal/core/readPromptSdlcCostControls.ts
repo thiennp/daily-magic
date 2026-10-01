@@ -1,4 +1,5 @@
 import {
+  defaultPromptSdlcCostControls,
   PROMPT_SDLC_DEFAULT_MAX_TRIALS,
   PROMPT_SDLC_MAX_TRIALS_LIMIT,
 } from "../../../../adapters/promptSdlcAwcCore";
@@ -48,6 +49,20 @@ const parseUsd = (
     return { ok: false };
   }
   return { ok: true, value: Math.round(value * 10_000) / 10_000 };
+};
+
+/** HTML checkboxes omit the field when unchecked; only `intent=run` treats absence as off. */
+export const readEarlyStopCheckboxFromPosted = (
+  posted: URLSearchParams,
+  intent: string,
+): boolean => {
+  if (posted.has("earlyStop")) {
+    return true;
+  }
+  if (intent === "run") {
+    return false;
+  }
+  return true;
 };
 
 export const readPromptSdlcCostControlKnobs = (posted: {

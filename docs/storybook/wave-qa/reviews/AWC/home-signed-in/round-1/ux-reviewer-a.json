@@ -1,0 +1,29 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "A",
+  "deployable": "AWC",
+  "pageId": "home-signed-in",
+  "role": "ux",
+  "captureRound": 1,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/home-signed-in/round-1/manifest.json",
+  "scoreDesktop": 98,
+  "scoreMobile": 96,
+  "scoreOverall": 97,
+  "passed": true,
+  "scoreBreakdown": [
+    {
+      "area": "mobile-bottom-nav",
+      "pointsDeducted": 2,
+      "reason": "Fixed bottom tab bar interrupts the vertical scan from setup hero to projects on 390px."
+    },
+    {
+      "area": "status-banners",
+      "pointsDeducted": 1,
+      "reason": "Loading/empty/error Storybook banners are clear but add a thin extra band above the shell header."
+    }
+  ],
+  "whyBelowThreshold": "",
+  "topIssues": ["Mobile chrome competes with dashboard hierarchy"],
+  "mustFix": [],
+  "quickWins": ["Tuck marketing accordion below the fold on mobile captures"]
+}

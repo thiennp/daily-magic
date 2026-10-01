@@ -1,43 +1,44 @@
 # Storybook page wave QA
 
-One **wave** = one catalog page (all Storybook statuses). Review order per page:
+One **wave** = one catalog page (all Storybook statuses). Per page, in order:
 
-1. **ux** — alternating reviewer A / B until both ≥ 95%
-2. **copy** — same
-3. **ui** — same
-4. **product** — same
-5. **tester** — same
-6. **dx** — same
+1. **ux** → **copy** → **ui** → **product** (agent reviewers A + B, PNG evidence)
+2. **tester** → **dx** (automated gates)
 
-AWC captures **desktop + mobile**; AWL **desktop** only.
+AWC: desktop + mobile captures. AWL: desktop only.
+
+## Incremental workflow
+
+Work **one page (or one role) at a time** → record → commit. Do not bulk-automate subjective scores.
+
+```bash
+npm run storybook:build
+# serve storybook-static on :6008
+npm run storybook:wave:capture -- AWC home-marketing 1
+# subagent review → save JSON under docs/storybook/wave-qa/reviews/...
+npm run storybook:wave:record-agent -- AWC home-marketing ux path/a.json path/b.json
+```
+
+Rubric + JSON shape: **`reviewer-rubric.md`**.
 
 ## Commands
 
-```bash
-npm run storybook:wave:init
-npm run storybook:wave:capture -- AWC home-marketing 1
-```
+| Script                             | Purpose                                            |
+| ---------------------------------- | -------------------------------------------------- |
+| `storybook:wave:init`              | Fresh progress template                            |
+| `storybook:wave:reset-agent-roles` | Clear ux–product scores (keeps tester/dx)          |
+| `storybook:wave:capture`           | PNGs for one page                                  |
+| `storybook:wave:record-agent`      | Validate + write agent A/B JSON to `progress.json` |
+| `storybook:wave:validate`          | All stories render (tester)                        |
+| `storybook:wave:objective-gates`   | Write tester + dx scores                           |
 
-Screenshots: `/opt/cursor/artifacts/storybook-waves/{AWC|AWL}/{pageId}/round-{n}/`
+**Removed:** subjective Playwright rubric (`subjective-eval` / `subjective-record`) — not valid for pass/fail.
 
 Progress: `progress.json` in this folder.
 
-## Subjective rubric (ux | copy | ui | product)
-
-After `npm run storybook:build` and serving `storybook-static` on port 6008:
-
-```bash
-STORYBOOK_BASE_URL=http://127.0.0.1:6008 npm run storybook:wave:subjective-eval > /tmp/wave-qa-a.json
-STRICT=1 STORYBOOK_BASE_URL=http://127.0.0.1:6008 npm run storybook:wave:subjective-eval > /tmp/wave-qa-b.json
-npm run storybook:wave:subjective-record -- /tmp/wave-qa-a.json /tmp/wave-qa-b.json
-npm run storybook:wave:objective-gates
-```
-
-Reviewer B uses `STRICT=1`. Spot-check PNG reviews remain optional; both eval JSON files must pass before recording.
-
 ## Weekly (Saturday)
 
-- **Skill:** `.cursor/skills/skill-storybook-page-wave-qa/SKILL.md`
-- **Command:** `.cursor/commands/command-storybook-wave-qa-weekly.md`
-- **CI:** `.github/workflows/storybook-wave-qa-weekly.yml` (Saturday 02:00 UTC)
-- **Local / CI capture:** `npm run storybook:wave:weekly` → `storybook-wave-captures/`
+- Skill: `.cursor/skills/skill-storybook-page-wave-qa/SKILL.md`
+- Command: `.cursor/commands/command-storybook-wave-qa-weekly.md`
+- CI: `.github/workflows/storybook-wave-qa-weekly.yml`
+- `npm run storybook:wave:weekly`

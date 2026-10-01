@@ -1,0 +1,24 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "B",
+  "deployable": "AWC",
+  "pageId": "login",
+  "role": "product",
+  "captureRound": 1,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/login/round-1/manifest.json",
+  "scoreDesktop": 97,
+  "scoreMobile": 97,
+  "scoreOverall": 97,
+  "passed": true,
+  "scoreBreakdown": [
+    {
+      "area": "callback-default",
+      "pointsDeducted": 3,
+      "reason": "Default callback to home is correct but not surfaced in the story UI for power users."
+    }
+  ],
+  "whyBelowThreshold": "",
+  "topIssues": [],
+  "mustFix": [],
+  "quickWins": []
+}

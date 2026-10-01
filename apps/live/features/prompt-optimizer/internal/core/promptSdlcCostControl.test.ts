@@ -4,6 +4,10 @@ import { createInitialPromptSdlcWizardState } from "../../../../adapters/promptS
 import { confirmPromptSdlcCostBudget } from "../../../../adapters/promptSdlcAwcCore";
 import { defaultPromptSdlcCostControls } from "../../../../adapters/promptSdlcAwcCore";
 import {
+  confirmPromptSdlcCostBudget,
+  defaultPromptSdlcCostControls,
+  estimatePromptSdlcSpendUsd,
+  proposePromptSdlcCostBudget,
   PROMPT_SDLC_DEFAULT_MAX_TRIALS,
   PROMPT_SDLC_STEP4_TOKENS_PER_MODULE_TRIAL,
 } from "../../../../adapters/promptSdlcAwcCore";
@@ -20,7 +24,10 @@ import { createPromptSdlcLocalCycle } from "./createPromptSdlcLocalCycle";
 import { derivePromptSdlcAgentOutcome } from "./derivePromptSdlcAgentOutcome";
 import { describePromptSdlcOutcomeBadge } from "./describePromptSdlcOutcomeBadge";
 import { PROMPT_SDLC_COST_COPY } from "./promptSdlcCostControl.constant";
-import { readPromptSdlcCostControlKnobs } from "./readPromptSdlcCostControls";
+import {
+  readEarlyStopCheckboxFromPosted,
+  readPromptSdlcCostControlKnobs,
+} from "./readPromptSdlcCostControls";
 import {
   renderPromptSdlcCostConfirmPanel,
   shouldShowPromptSdlcCostConfirm,
@@ -41,6 +48,27 @@ describe("prompt optimizer cost-control UI bind", () => {
       softWarnFired: false,
       targetTokenBudget: null,
     });
+  });
+
+  it("defaults earlyStop on unless intent=run omits the checkbox", () => {
+    expect(
+      readEarlyStopCheckboxFromPosted(
+        new URLSearchParams({ intent: "choose-folder" }),
+        "choose-folder",
+      ),
+    ).toBe(true);
+    expect(
+      readEarlyStopCheckboxFromPosted(
+        new URLSearchParams({ intent: "run" }),
+        "run",
+      ),
+    ).toBe(false);
+    expect(
+      readEarlyStopCheckboxFromPosted(
+        new URLSearchParams({ intent: "run", earlyStop: "on" }),
+        "run",
+      ),
+    ).toBe(true);
   });
 
   it("parses compose knobs including earlyStopFlatRounds", () => {

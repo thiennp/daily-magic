@@ -16,7 +16,11 @@ const renderAwcPage = (
   entry: AwcStorybookPageEntry,
   status: StorybookPageStatus,
 ) => (
-  <AwcStorybookChrome status={status} shell={entry.shell}>
+  <AwcStorybookChrome
+    status={status}
+    shell={entry.shell}
+    renderPrimaryNav={entry.renderPrimaryNav ?? true}
+  >
     {entry.renderBody(status)}
   </AwcStorybookChrome>
 );

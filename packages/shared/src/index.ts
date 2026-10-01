@@ -1,4 +1,5 @@
 export * from "./deployables";
+export * from "./git";
 export * from "./network";
 export * from "./ui";
 export {

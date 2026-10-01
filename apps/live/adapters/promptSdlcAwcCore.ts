@@ -124,6 +124,7 @@ export {
   PROMPT_SDLC_DEFAULT_RATE_USD_PER_1K_TOKENS,
   PROMPT_SDLC_BUDGET_SOFT_WARN_RATIO,
   PROMPT_SDLC_STOP_BUDGET_EXCEEDED,
+  PROMPT_SDLC_SOFT_WARN_BUDGET,
   PROMPT_SDLC_BUDGET_CONFIRM_REQUIRED,
   PROMPT_SDLC_SOFT_WARN_BUDGET,
   PROMPT_SDLC_STEP4_TOKENS_PER_MODULE_TRIAL,
@@ -143,6 +144,7 @@ export {
 export { resolvePromptSdlcMaxTrials } from "@/lib/promptOptimizer/resolvePromptSdlcMaxTrials";
 export type {
   PromptSdlcCostControls,
+  PromptSdlcCostControl,
   PromptSdlcCostProposal,
   PromptSdlcCostConfirm,
   PromptSdlcCostControlKnobs,

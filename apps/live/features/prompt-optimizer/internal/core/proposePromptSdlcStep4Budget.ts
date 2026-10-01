@@ -1,4 +1,4 @@
-/** @deprecated Prefer @/lib/promptOptimizer/proposePromptSdlcCostBudget */
+/** @deprecated Prefer ../../../../adapters/promptSdlcAwcCore */
 export {
   proposePromptSdlcCostBudget as proposePromptSdlcStep4Budget,
   applyPromptSdlcCostProposal,

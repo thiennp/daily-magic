@@ -7,7 +7,17 @@ import {
   AWC_STORYBOOK_SAMPLE_RUN,
 } from "@/utils/storybook/awcStorybookMswSampleData";
 
+const disconnectedCursorCloudSummary = {
+  connected: false,
+  apiKeyName: null,
+  cursorUserEmail: null,
+  connectedAt: null,
+};
+
 const infiniteHandlers = [
+  http.get("/api/cursor-cloud/connection", async () => {
+    await delay("infinite");
+  }),
   http.get("/api/agent-witch/devices", async () => {
     await delay("infinite");
   }),
@@ -26,6 +36,9 @@ const infiniteHandlers = [
 ];
 
 const errorHandlers = [
+  http.get("/api/cursor-cloud/connection", () =>
+    HttpResponse.json({ error: "Server error" }, { status: 500 }),
+  ),
   http.get("/api/agent-witch/devices", () =>
     HttpResponse.json({ error: "Server error" }, { status: 500 }),
   ),
@@ -60,6 +73,9 @@ export const createAwcStorybookMswHandlers = (
   const runs = hasData ? [AWC_STORYBOOK_SAMPLE_RUN] : [];
 
   return [
+    http.get("/api/cursor-cloud/connection", () =>
+      HttpResponse.json(disconnectedCursorCloudSummary),
+    ),
     http.get("/api/agent-witch/devices", () =>
       HttpResponse.json({ devices, serverInstallBundleVersion: "200" }),
     ),

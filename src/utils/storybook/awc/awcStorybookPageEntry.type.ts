@@ -6,6 +6,8 @@ export interface AwcStorybookPageEntry {
   readonly title: string;
   readonly path: string;
   readonly shell: AwcStorybookShellVariant;
+  /** Match production AppShell when primary nav lives in page body (e.g. home dashboard). */
+  readonly renderPrimaryNav?: boolean;
   readonly statuses: readonly StorybookPageStatus[];
   readonly renderBody: (status: StorybookPageStatus) => React.ReactElement;
 }
