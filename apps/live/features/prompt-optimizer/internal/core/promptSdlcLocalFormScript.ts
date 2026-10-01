@@ -163,8 +163,15 @@ export const PROMPT_SDLC_LOCAL_FORM_SCRIPT = `<script>
       runnerLabel.length > 0
         ? escapeComposeText(runnerLabel)
         : "Not set (uses judge when step 4 runs)";
-    const passStep2 = form.querySelector('[name="passScore"]');
-    const passStep4 = form.querySelector('[name="modulePassScore"]');
+    const composeFormEl = document.querySelector("form.sdlc-form");
+    const passStep2 =
+      composeFormEl instanceof HTMLFormElement
+        ? composeFormEl.querySelector('[name="passScore"]')
+        : null;
+    const passStep4 =
+      composeFormEl instanceof HTMLFormElement
+        ? composeFormEl.querySelector('[name="modulePassScore"]')
+        : null;
     const passStep2Text =
       passStep2 instanceof HTMLInputElement ? passStep2.value : "70";
     const passStep4Text =
