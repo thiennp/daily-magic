@@ -25,6 +25,7 @@ interface AwcProjectsListBodyProps {
   readonly devices: readonly MyMacDevice[];
   readonly displayNameById: ReadonlyMap<string, string>;
   readonly localTokenHash: string | null;
+  readonly onProjectDeleted?: (projectId: string) => void;
 }
 
 export default function AwcProjectsListBody({
@@ -36,6 +37,7 @@ export default function AwcProjectsListBody({
   devices,
   displayNameById,
   localTokenHash,
+  onProjectDeleted,
 }: AwcProjectsListBodyProps) {
   if (isLoading) {
     return (
@@ -82,6 +84,9 @@ export default function AwcProjectsListBody({
             devices={devices}
             displayNameById={displayNameById}
             localTokenHash={localTokenHash}
+            onProjectDeleted={() => {
+              onProjectDeleted?.(project.id);
+            }}
           />
         </li>
       ))}

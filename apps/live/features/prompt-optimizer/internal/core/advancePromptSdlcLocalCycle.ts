@@ -5,19 +5,29 @@ import {
 import { applyPromptSdlcLocalImproverReply } from "./applyPromptSdlcLocalReply";
 import { judgePromptSdlcLocalRound } from "./judgePromptSdlcLocalRound";
 import { readPromptSdlcLocalImproverReference } from "./readPromptSdlcLocalImproverReference";
-import type { PromptSdlcWriterResult } from "./readPromptSdlcWriterOutput";
+import {
+  classifyPromptSdlcWriterErrorKind,
+  type PromptSdlcWriterErrorKind,
+  type PromptSdlcWriterResult,
+} from "./readPromptSdlcWriterOutput";
 import { PROMPT_SDLC_MANUAL_ACTOR } from "./choosePromptSdlcLocalModels";
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
+import { applyPromptSdlcBudgetGuard } from "./applyPromptSdlcBudgetGuard";
 import { promptSdlcLocalWorkingDirectory } from "./promptSdlcLocalFolder";
-import { runPromptSdlcWriterReply } from "./runPromptSdlcWriterReply";
+import {
+  resolvePromptSdlcWriterTimeoutMs,
+  runPromptSdlcWriterReply,
+} from "./runPromptSdlcWriterReply";
 
 const failCycle = (
   cycle: PromptSdlcLocalCycle,
   errorMessage: string,
+  errorKind?: PromptSdlcWriterErrorKind,
 ): PromptSdlcLocalCycle => ({
   ...cycle,
   status: "failed",
   errorMessage,
+  errorKind,
   updatedAt: new Date().toISOString(),
 });
 
@@ -25,6 +35,7 @@ const stoppedCycle = (cycle: PromptSdlcLocalCycle): PromptSdlcLocalCycle => ({
   ...cycle,
   status: "stopped",
   errorMessage: PROMPT_SDLC_STOP_USER,
+  errorKind: "writer_interrupted",
   updatedAt: new Date().toISOString(),
 });
 
@@ -42,7 +53,11 @@ const replyOrStop = (
     return stoppedCycle(cycle);
   }
   onWriterFailure?.(writer);
-  return failCycle(cycle, reply.errorMessage);
+  return failCycle(
+    cycle,
+    reply.errorMessage,
+    classifyPromptSdlcWriterErrorKind(reply),
+  );
 };
 
 export const advancePromptSdlcLocalCycle = async (
@@ -51,6 +66,11 @@ export const advancePromptSdlcLocalCycle = async (
   signal?: AbortSignal,
   onProgress?: (cycle: PromptSdlcLocalCycle) => void,
 ): Promise<PromptSdlcLocalCycle> => {
+  const guarded = applyPromptSdlcBudgetGuard(cycle);
+  if (guarded.status === "failed" && guarded.errorKind === "budget_exceeded") {
+    return guarded;
+  }
+  cycle = guarded;
   const revision = cycle.revisions.find(
     (item) => item.roundNumber === cycle.currentRound,
   );
@@ -96,6 +116,7 @@ export const advancePromptSdlcLocalCycle = async (
       instructions: cycle.improverInstructions,
     }),
     signal,
+    timeoutMs: resolvePromptSdlcWriterTimeoutMs(),
   });
   const stopped = replyOrStop(
     cycle,

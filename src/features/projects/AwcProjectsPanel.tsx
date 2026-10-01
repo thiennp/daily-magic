@@ -10,6 +10,7 @@ import AwcProjectsListBody from "@/features/projects/AwcProjectsListBody";
 import AwcProjectsToolbar from "@/features/projects/AwcProjectsToolbar";
 import useLocalMacBrowserContext from "@/features/home/hooks/useLocalMacBrowserContext";
 import { filterAwcProjectsByQuery } from "@/features/projects/utils/filterAwcProjectsByQuery";
+import { AWC_PROJECT_COWORK_HELP_COPY } from "@/features/projects/access/awcProjectCoworkHelpCopy.constant";
 import AppPanel from "@/components/surfaces/AppPanel";
 
 export default function AwcProjectsPanel() {
@@ -22,6 +23,7 @@ export default function AwcProjectsPanel() {
     isLoading,
     addProject,
     refreshProjects,
+    removeProject,
   } = useUserProjects("");
   const [searchQuery, setSearchQuery] = useState("");
   const visibleProjects = useMemo(
@@ -31,6 +33,9 @@ export default function AwcProjectsPanel() {
 
   return (
     <AppPanel padding="compact">
+      <p className="mb-4 text-xs text-gray-500 dark:text-gray-400">
+        {AWC_PROJECT_COWORK_HELP_COPY.listHint}
+      </p>
       {!isLoading && projects.length > 0 ? (
         <AwcProjectsToolbar
           searchQuery={searchQuery}
@@ -48,6 +53,10 @@ export default function AwcProjectsPanel() {
         devices={devices}
         displayNameById={displayNameById}
         localTokenHash={localTokenHash}
+        onProjectDeleted={(projectId) => {
+          removeProject(projectId);
+          void refreshProjects();
+        }}
       />
       <div className="mt-6 border-t border-gray-200 pt-4 dark:border-gray-800">
         <h3 className="text-sm font-medium text-gray-800 dark:text-white/90">

@@ -37,7 +37,7 @@ describe("buildPromptSdlcSteps wizard timeline", () => {
       }),
     ).map((step) => step.label);
 
-    expect(labels).toEqual(["Step 1 — Generalize"]);
+    expect(labels).toEqual(["Source prompt saved", "Step 1 — Generalize"]);
     expect(labels.some((label) => label.toLowerCase().includes("round"))).toBe(
       false,
     );
@@ -51,8 +51,9 @@ describe("buildPromptSdlcSteps wizard timeline", () => {
       }),
     ).map((step) => step.label);
 
-    expect(labels[0]).toBe("Step 1 — Generalize");
-    expect(labels[1]).toBe("Step 2 — Evaluate");
+    expect(labels[0]).toBe("Source prompt saved");
+    expect(labels[1]).toBe("Step 1 — Generalize");
+    expect(labels[2]).toBe("Step 2 — Evaluate");
     expect(labels).not.toContain("Step 4 — Optimize modules");
   });
 
@@ -76,6 +77,7 @@ describe("buildPromptSdlcSteps wizard timeline", () => {
     ).map((step) => step.label);
 
     expect(labels).toEqual([
+      "Source prompt saved",
       "Step 1 — Generalize",
       "Step 2 — Evaluate",
       "Step 3 — Separate",

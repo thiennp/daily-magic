@@ -1,5 +1,6 @@
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
 import { readPromptSdlcWizardScoredRevisions } from "./readPromptSdlcWizardScoredRevisions";
+import { renderPromptSdlcWizardRevisionRoundJudgePromptInfo } from "./renderPromptSdlcWizardRevisionRoundJudgePromptInfo";
 
 const escapeHtml = (value: string): string =>
   value
@@ -56,12 +57,18 @@ export const renderPromptSdlcWizardRevisionRoundList = (input: {
         reason.length === 0
           ? ""
           : `<br><span class="muted">${escapeHtml(reason)}</span>`;
+      const judgeInfo = renderPromptSdlcWizardRevisionRoundJudgePromptInfo({
+        cycle: input.cycle,
+        roundNumber: item.roundNumber,
+        promptText: item.promptText,
+        run: item.run,
+      });
       if (input.interactive) {
         const checked =
           input.selectedRound === item.roundNumber ? " checked" : "";
-        return `<li><label><input type="radio" name="wizardRevisionRound" value="${item.roundNumber}"${checked}> ${escapeHtml(label)}</label>${reasonLine}</li>`;
+        return `<li class="sdlc-wizard-revision-row"><label class="sdlc-wizard-revision-label"><input type="radio" name="wizardRevisionRound" value="${item.roundNumber}"${checked}> <span class="sdlc-wizard-revision-title">${escapeHtml(label)}</span></label>${judgeInfo}${reasonLine}</li>`;
       }
-      return `<li>${escapeHtml(label)}${reasonLine}</li>`;
+      return `<li class="sdlc-wizard-revision-row"><span class="sdlc-wizard-revision-title">${escapeHtml(label)}</span>${judgeInfo}${reasonLine}</li>`;
     })
     .join("");
   return `${emptyNotice}${caption}<ul class="sdlc-wizard-revisions sdlc-wizard-module-rounds">${items}</ul>`;

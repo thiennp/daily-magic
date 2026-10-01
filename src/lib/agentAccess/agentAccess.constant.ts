@@ -33,6 +33,8 @@ export const AGENT_ACCESS_MUTATING_TOOLS = [
   "create_workflow",
   "install_harness",
   "get_install_command",
+  "request_project_access",
+  "mint_allow_claim",
 ] as const;
 
 export const AGENT_ACCESS_MCP_PROTOCOL_VERSION = "2025-03-26";

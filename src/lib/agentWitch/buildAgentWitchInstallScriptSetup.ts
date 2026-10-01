@@ -20,7 +20,7 @@ import {
 import { buildAgentWitchInstallScriptRegisterLaunchAgentFn } from "@/lib/agentWitch/buildAgentWitchInstallScriptRegisterLaunchAgent";
 import { buildAgentWitchInstallScriptWakePortAllocation } from "@/lib/agentWitch/buildAgentWitchInstallScriptWakePortAllocation";
 import { buildAgentWitchInstallScriptNodeRuntime } from "@/lib/agentWitch/buildAgentWitchInstallScriptNodeRuntime";
-import { buildAgentWitchInstallScriptOllama } from "@agent-witch/install-self-update";
+import { buildAgentWitchInstallScriptOllama } from "@agent-witch/install-self-update/presentation";
 import { buildAgentWitchInstallScriptUpdateVersionSummary } from "@/lib/agentWitch/buildAgentWitchInstallScriptUpdateVersionSummary";
 import { buildAgentWitchInstallScriptWriterBootstrap } from "@/lib/agentWitch/buildAgentWitchInstallScriptWriterBootstrap";
 

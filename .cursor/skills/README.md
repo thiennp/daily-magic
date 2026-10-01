@@ -8,6 +8,7 @@
 | `skill-testing-extended-patterns`         | Extended testing patterns          |
 | `skill-architecture-performance-examples` | Performance habits                 |
 | `skill-agent-verification-reporting`      | Verification report tables         |
+| `skill-storybook-page-wave-qa`            | Weekly AWC/AWL Storybook page QA   |
 
 Removed: Bitbucket workflows, Sentry/Jira triage, hybrid RAG (EnergyCenter-only).
 

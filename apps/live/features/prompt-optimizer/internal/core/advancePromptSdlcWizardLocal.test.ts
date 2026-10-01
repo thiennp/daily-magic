@@ -27,6 +27,35 @@ describe("advancePromptSdlcWizardLocal", () => {
     vi.restoreAllMocks();
   });
 
+  it("skips the step 1 gate when generalize has no variables or placeholders", async () => {
+    vi.spyOn(writerReply, "runPromptSdlcWriterReply").mockResolvedValue({
+      ok: true,
+      text: JSON.stringify({
+        templatedPrompt: "Answer only from the ticket text.",
+        variables: [],
+      }),
+      tokens: 8,
+    });
+
+    const cycle = createPromptSdlcLocalCycle({
+      goal: "Stay factual.",
+      sourcePrompt: "Be helpful.",
+      judgeModel: "claude-cli",
+      improverModel: "claude-cli",
+      workingDirectory: storeDir,
+      wizard: createInitialPromptSdlcWizardState("Be helpful."),
+    });
+
+    const next = await advancePromptSdlcWizardLocal(cycle);
+
+    expect(next.status).toBe("judging");
+    expect(next.wizard?.phase).toBe("evaluate");
+    expect(next.wizard?.gate).toBeNull();
+    expect(next.revisions[0]?.promptText).toBe(
+      "Answer only from the ticket text.",
+    );
+  });
+
   it("generalizes then pauses at the step 1 gate", async () => {
     vi.spyOn(writerReply, "runPromptSdlcWriterReply").mockResolvedValue({
       ok: true,
@@ -182,13 +211,10 @@ describe("advancePromptSdlcWizardLocal", () => {
     expect(capturedPrompt).toContain("Edit {{targetFile}} under {{searchDir}}");
     expect(capturedPrompt).toContain("Improved prompt from evaluate");
     expect(capturedPrompt).toContain("do not paste sample values");
-    expect(next.wizard?.gate).toBe("separate");
-    expect(next.wizard?.splitOptions[0]?.modules[0]?.prompt).toContain(
-      "{{targetFile}}",
-    );
-    expect(next.wizard?.splitOptions[0]?.modules[0]?.prompt).not.toContain(
-      "Comparison.tsx",
-    );
+    expect(next.wizard?.gate).toBe("optimize_modules");
+    expect(next.wizard?.phase).toBe("optimize_modules");
+    expect(next.wizard?.modules[0]?.prompt).toContain("{{targetFile}}");
+    expect(next.wizard?.modules[0]?.prompt).not.toContain("Comparison.tsx");
   });
 
   it("stays failed when evaluate judge returns no score instead of an empty step 2 gate", async () => {
@@ -310,5 +336,70 @@ describe("advancePromptSdlcWizardLocal", () => {
     expect(next.status).toBe("wizard_paused");
     expect(next.wizard?.gate).toBe("separate");
     expect(next.errorMessage).toContain("writer");
+  });
+
+  it("fails the cycle when generalize/separate writer times out", async () => {
+    vi.spyOn(writerReply, "runPromptSdlcWriterReply").mockResolvedValue({
+      ok: false,
+      errorMessage: "The writer timed out after 180000ms.",
+      errorKind: "writer_timeout",
+    });
+
+    const cycle = {
+      ...createPromptSdlcLocalCycle({
+        goal: "Goal",
+        sourcePrompt: "p",
+        judgeModel: "claude-cli",
+        improverModel: "claude-cli",
+        workingDirectory: storeDir,
+        wizard: {
+          ...createInitialPromptSdlcWizardState("p"),
+          phase: "separate",
+          gate: null,
+          splitOptions: [],
+        },
+      }),
+      revisions: [
+        { roundNumber: 0, promptText: "evaluated prompt", judgement: null },
+      ],
+    };
+
+    const next = await advancePromptSdlcWizardLocal(cycle);
+    expect(next.status).toBe("failed");
+    expect(next.errorKind).toBe("writer_timeout");
+    expect(next.errorMessage).toContain("timed out after");
+  });
+
+  it("fails the cycle when generalize/separate hits usage_limit (not wizard_paused)", async () => {
+    vi.spyOn(writerReply, "runPromptSdlcWriterReply").mockResolvedValue({
+      ok: false,
+      errorMessage:
+        "Error: You've hit your monthly usage limit for Cursor agent.",
+      errorKind: "usage_limit",
+    });
+
+    const cycle = {
+      ...createPromptSdlcLocalCycle({
+        goal: "Goal",
+        sourcePrompt: "p",
+        judgeModel: "claude-cli",
+        improverModel: "claude-cli",
+        workingDirectory: storeDir,
+        wizard: {
+          ...createInitialPromptSdlcWizardState("p"),
+          phase: "separate",
+          gate: null,
+          splitOptions: [],
+        },
+      }),
+      revisions: [
+        { roundNumber: 0, promptText: "evaluated prompt", judgement: null },
+      ],
+    };
+
+    const next = await advancePromptSdlcWizardLocal(cycle);
+    expect(next.status).toBe("failed");
+    expect(next.errorKind).toBe("usage_limit");
+    expect(next.wizard?.gate).toBeNull();
   });
 });

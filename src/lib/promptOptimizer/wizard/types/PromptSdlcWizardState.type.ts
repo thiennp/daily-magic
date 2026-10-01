@@ -4,7 +4,10 @@ import type {
   PromptSdlcWizardPhase,
 } from "./PromptSdlcWizardPhase.constant";
 import type { PromptSdlcWizardSplitOption } from "./PromptSdlcWizardSplitOption.type";
+import type PromptSdlcWizardAdditionalSkillSuggestion from "./PromptSdlcWizardAdditionalSkillSuggestion.type";
 import type PromptSdlcWizardModuleStatistics from "./PromptSdlcWizardModuleStatistics.type";
+import type PromptSdlcWizardOrchestratorSkill from "./PromptSdlcWizardOrchestratorSkill.type";
+import type { PromptSdlcWizardSkillSuggestionsStatus } from "./PromptSdlcWizardSkillSuggestionsStatus.constant";
 import type PromptSdlcWizardVariable from "./PromptSdlcWizardVariable.type";
 
 export interface PromptSdlcWizardModuleRun {
@@ -41,4 +44,12 @@ export default interface PromptSdlcWizardState {
   readonly pendingStepInstructions: string;
   /** User-edited values for `{{placeholders}}` during Step 4 module runs. */
   readonly parameterValues: Readonly<Record<string, string>>;
+  /** Minimum judge score for a module trial to pass in Step 4. */
+  readonly modulePassScore?: number;
+  /** Compose-time orchestrator skill; prompt text may change in Step 2, identity stays. */
+  readonly orchestratorSkill: PromptSdlcWizardOrchestratorSkill | null;
+  readonly additionalSkillSuggestions: readonly PromptSdlcWizardAdditionalSkillSuggestion[];
+  readonly additionalSkillSuggestionsStatus: PromptSdlcWizardSkillSuggestionsStatus;
+  /** Short judge read of the run summary when suggestions were produced. */
+  readonly additionalSkillSuggestionsSummary: string | null;
 }

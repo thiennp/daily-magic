@@ -1,16 +1,20 @@
 import {
   appendPromptSdlcWizardFeedback,
+  confirmPromptSdlcCostBudget,
   invalidatePromptSdlcWizardDownstream,
+  isPromptSdlcCostBudgetConfirmed,
   mergePromptSdlcWizardPostedParameterValues,
-  seedPromptSdlcWizardParameterValues,
+  PROMPT_SDLC_BUDGET_CONFIRM_REQUIRED,
   summarizePromptSdlcWizardCompletion,
-  type PromptSdlcWizardSplitOption,
 } from "../../../../adapters/promptSdlcAwcCore";
 
 import {
   beginPromptSdlcWizardEvaluate,
   beginPromptSdlcWizardModuleEvaluate,
 } from "./advancePromptSdlcWizardLocal";
+import { completePromptSdlcLocalWizardCycle } from "./completePromptSdlcLocalWizardCycle";
+import { beginPromptSdlcWizardOptimizeModulesAfterSeparate } from "./beginPromptSdlcWizardOptimizeModulesAfterSeparate";
+import { beginPromptSdlcWizardSeparateAfterEvaluate } from "./beginPromptSdlcWizardSeparateAfterEvaluate";
 import { buildPromptSdlcLiveRunFragmentHtml } from "./buildPromptSdlcLiveRunFragmentHtml";
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
 import {
@@ -22,11 +26,12 @@ import {
   canContinuePromptSdlcWizardEvaluateRevision,
   readPromptSdlcWizardEvaluateRevisionScore,
 } from "./readPromptSdlcWizardEvaluateRevisionScore";
+import { retryPromptSdlcWizardAccordionStep } from "./retryPromptSdlcWizardAccordionStep";
+import { skipPromptSdlcWizardTimelineStep } from "./skipPromptSdlcWizardTimelineStep";
 import {
   skipPromptSdlcWizardCurrentModule,
   stopPromptSdlcWizardRun,
 } from "./stopPromptSdlcWizard";
-
 const WIZARD_EVALUATE_SCORE_ERROR =
   "Pick a revision scored above 0 before continuing to Separate.";
 
@@ -46,20 +51,6 @@ const resumeWizardStepAfterWriterFailure = (
   updatedAt: new Date().toISOString(),
 });
 
-const modulesFromSplit = (
-  option: PromptSdlcWizardSplitOption,
-): NonNullable<PromptSdlcLocalCycle["wizard"]>["modules"] =>
-  [...option.modules]
-    .sort((left, right) => left.order - right.order)
-    .map((item) => ({
-      moduleId: item.id,
-      title: item.title,
-      prompt: item.prompt,
-      status: "pending" as const,
-      selectedRevisionRound: null,
-      statistics: null,
-    }));
-
 export const tryAcceptPromptSdlcWizardPost = (input: {
   readonly posted: URLSearchParams | null;
   readonly storePath: string;
@@ -78,7 +69,7 @@ export const tryAcceptPromptSdlcWizardPost = (input: {
     return false;
   }
   const cycleId = posted.get("cycleId")?.trim() ?? "";
-  const cycle = readPromptSdlcLocalCycle(input.storePath, cycleId);
+  let cycle = readPromptSdlcLocalCycle(input.storePath, cycleId);
   if (cycle === null || cycle.wizard === undefined) {
     input.response.writeHead(303, { Location: "/prompt-optimizer" });
     input.response.end();
@@ -115,6 +106,7 @@ export const tryAcceptPromptSdlcWizardPost = (input: {
   if (intent === "wizard-stop-all") {
     const next = stopPromptSdlcWizardRun(cycle);
     savePromptSdlcLocalCycle(input.storePath, next);
+    ensurePromptSdlcLocalCycleRunning(input.storePath, cycleId);
     finish(cycleId);
     return true;
   }
@@ -122,6 +114,28 @@ export const tryAcceptPromptSdlcWizardPost = (input: {
   if (intent === "wizard-skip-module") {
     const next = skipPromptSdlcWizardCurrentModule(cycle);
     savePromptSdlcLocalCycle(input.storePath, next);
+    finish(cycleId);
+    return true;
+  }
+
+  if (intent === "wizard-retry-step") {
+    const stepId = posted.get("wizardStepId")?.trim() ?? "";
+    const next = retryPromptSdlcWizardAccordionStep(cycle, stepId);
+    savePromptSdlcLocalCycle(input.storePath, next);
+    finish(cycleId);
+    return true;
+  }
+
+  if (intent === "wizard-skip-step") {
+    const stepId = posted.get("wizardStepId")?.trim() ?? "";
+    const next = skipPromptSdlcWizardTimelineStep(cycle, stepId);
+    savePromptSdlcLocalCycle(input.storePath, next);
+    if (
+      next.status === "judging" ||
+      next.wizard?.additionalSkillSuggestionsStatus === "pending"
+    ) {
+      ensurePromptSdlcLocalCycleRunning(input.storePath, cycleId);
+    }
     finish(cycleId);
     return true;
   }
@@ -143,6 +157,7 @@ export const tryAcceptPromptSdlcWizardPost = (input: {
     const next: PromptSdlcLocalCycle = {
       ...cycle,
       status: "judging",
+      errorMessage: null,
       wizard: {
         ...wizard,
         gate: null,
@@ -163,7 +178,12 @@ export const tryAcceptPromptSdlcWizardPost = (input: {
     }
 
     if (gate === "generalize") {
-      const writerFailed = (cycle.errorMessage?.trim().length ?? 0) > 0;
+      const hasSuccessfulGeneralizeAttempt = cycle.wizard.attempts.some(
+        (item) => item.step === "generalize",
+      );
+      const writerFailed =
+        (cycle.errorMessage?.trim().length ?? 0) > 0 &&
+        !hasSuccessfulGeneralizeAttempt;
       const next = writerFailed
         ? resumeWizardStepAfterWriterFailure(cycle)
         : beginPromptSdlcWizardEvaluate({
@@ -196,23 +216,13 @@ export const tryAcceptPromptSdlcWizardPost = (input: {
         finish(cycleId);
         return true;
       }
-      const wizardWithRound = {
-        ...cycle.wizard,
-        evaluateSelectedRound,
-      };
-      const next: PromptSdlcLocalCycle = {
+      const next = beginPromptSdlcWizardSeparateAfterEvaluate({
         ...cycle,
-        status: "judging",
-        judgePromptTextOnly: false,
-        errorMessage: null,
         wizard: {
-          ...wizardWithRound,
-          gate: null,
-          phase: "separate",
-          splitOptions: [],
+          ...cycle.wizard,
+          evaluateSelectedRound,
         },
-        updatedAt: new Date().toISOString(),
-      };
+      });
       savePromptSdlcLocalCycle(input.storePath, next);
       ensurePromptSdlcLocalCycleRunning(input.storePath, cycleId);
       finish(cycleId);
@@ -220,7 +230,9 @@ export const tryAcceptPromptSdlcWizardPost = (input: {
     }
 
     if (gate === "separate") {
-      const writerFailed = (cycle.errorMessage?.trim().length ?? 0) > 0;
+      const writerFailed =
+        (cycle.errorMessage?.trim().length ?? 0) > 0 &&
+        cycle.wizard.splitOptions.length === 0;
       if (writerFailed) {
         const next = resumeWizardStepAfterWriterFailure(cycle);
         savePromptSdlcLocalCycle(input.storePath, next);
@@ -245,42 +257,69 @@ export const tryAcceptPromptSdlcWizardPost = (input: {
         finish(cycleId);
         return true;
       }
-      const modules = modulesFromSplit(option);
-      const next: PromptSdlcLocalCycle = {
-        ...cycle,
-        status: "wizard_paused",
-        errorMessage: null,
-        revisions: [],
-        wizard: {
-          ...cycle.wizard,
-          gate: "optimize_modules",
-          selectedSplitOptionId: splitId,
-          selectedSplitTopology: option.topology,
-          modules,
-          phase: "optimize_modules",
-          currentModuleIndex: 0,
-          parameterValues:
-            Object.keys(cycle.wizard.parameterValues ?? {}).length > 0
-              ? (cycle.wizard.parameterValues ?? {})
-              : seedPromptSdlcWizardParameterValues(cycle.wizard.variables),
-        },
-        updatedAt: new Date().toISOString(),
-      };
+      const next = beginPromptSdlcWizardOptimizeModulesAfterSeparate(
+        cycle,
+        option,
+      );
       savePromptSdlcLocalCycle(input.storePath, next);
       finish(cycleId);
       return true;
     }
 
     if (gate === "optimize_modules") {
-      const moduleIndex = cycle.wizard.currentModuleIndex;
-      const moduleRun = cycle.wizard.modules[moduleIndex];
+      const wizardForStep = cycle.wizard;
+      if (wizardForStep === undefined) {
+        finish(cycleId);
+        return true;
+      }
+      const moduleIndex = wizardForStep.currentModuleIndex;
+      const moduleRun = wizardForStep.modules[moduleIndex];
       if (moduleRun === undefined) {
         finish(cycleId);
         return true;
       }
 
+      // Pre-Step4: require confirmedTokenBudget / confirmedMaxSpendUsd before trials.
+      if (!isPromptSdlcCostBudgetConfirmed(cycle.costControls)) {
+        const tokenRaw = posted.get("confirmedTokenBudget")?.trim() ?? "";
+        const spendRaw = posted.get("confirmedMaxSpendUsd")?.trim() ?? "";
+        if (tokenRaw.length === 0) {
+          const next: PromptSdlcLocalCycle = {
+            ...cycle,
+            errorMessage: PROMPT_SDLC_BUDGET_CONFIRM_REQUIRED,
+            updatedAt: new Date().toISOString(),
+          };
+          savePromptSdlcLocalCycle(input.storePath, next);
+          finish(cycleId);
+          return true;
+        }
+        const confirmed = confirmPromptSdlcCostBudget({
+          existing: cycle.costControls,
+          confirmedTokenBudget: Number(tokenRaw),
+          confirmedMaxSpendUsd: spendRaw.length === 0 ? null : Number(spendRaw),
+          rateUsdPer1kTokens: cycle.costControls?.rateUsdPer1kTokens,
+        });
+        if (!confirmed.ok) {
+          const next: PromptSdlcLocalCycle = {
+            ...cycle,
+            errorMessage: confirmed.errorMessage,
+            updatedAt: new Date().toISOString(),
+          };
+          savePromptSdlcLocalCycle(input.storePath, next);
+          finish(cycleId);
+          return true;
+        }
+        cycle = {
+          ...cycle,
+          costControls: confirmed.costControls,
+          errorMessage: null,
+          updatedAt: new Date().toISOString(),
+        };
+        savePromptSdlcLocalCycle(input.storePath, cycle);
+      }
+
       const mergedParams = mergePromptSdlcWizardPostedParameterValues({
-        wizard: cycle.wizard,
+        wizard: wizardForStep,
         modulePrompt: moduleRun.prompt,
         posted,
       });
@@ -295,8 +334,8 @@ export const tryAcceptPromptSdlcWizardPost = (input: {
         return true;
       }
 
-      const wizardWithParams = {
-        ...cycle.wizard,
+      const wizardWithParams: typeof wizardForStep = {
+        ...wizardForStep,
         parameterValues: mergedParams.parameterValues,
       };
 
@@ -315,20 +354,18 @@ export const tryAcceptPromptSdlcWizardPost = (input: {
       }
 
       const nextIndex = moduleIndex + 1;
-      if (nextIndex >= cycle.wizard.modules.length) {
+      if (nextIndex >= wizardForStep.modules.length) {
         const completion =
           summarizePromptSdlcWizardCompletion(wizardWithParams);
-        const next: PromptSdlcLocalCycle = {
-          ...cycle,
-          status: completion.terminalStatusSuggestion,
-          wizard: {
-            ...wizardWithParams,
-            gate: null,
-            phase: "complete",
+        const next = completePromptSdlcLocalWizardCycle(
+          {
+            ...cycle,
+            wizard: wizardWithParams,
           },
-          updatedAt: new Date().toISOString(),
-        };
+          completion.terminalStatusSuggestion,
+        );
         savePromptSdlcLocalCycle(input.storePath, next);
+        ensurePromptSdlcLocalCycleRunning(input.storePath, cycleId);
         finish(cycleId);
         return true;
       }

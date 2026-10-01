@@ -359,7 +359,7 @@ const dispatchWriterTask = async (
       payload: {
         exitCode: -1,
         output:
-          "This project has no folder on this Mac yet. Open Agent Witch Live and set the project folder before running tasks.",
+          "This project has no folder on this Mac yet. Open Agent Witch Local and set the project folder before running tasks.",
         ...(agentRunId !== undefined ? { agentRunId } : {}),
       },
       requestId,
@@ -1389,7 +1389,7 @@ const createAgentWitchClient = (config: AgentWitchConfig) => {
             payload: {
               exitCode: -1,
               output:
-                "This project has no folder on this Mac yet. Open Agent Witch Live and set the project folder before running tasks.",
+                "This project has no folder on this Mac yet. Open Agent Witch Local and set the project folder before running tasks.",
               ...(agentRunId !== undefined ? { agentRunId } : {}),
             },
             requestId,

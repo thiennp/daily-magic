@@ -25,12 +25,6 @@ export {
   formatPromptSdlcRunDelay,
 } from "@/lib/promptOptimizer/buildPromptSdlcJudgePrompt";
 export { buildPromptSdlcRunPrompt } from "@/lib/promptOptimizer/buildPromptSdlcRunPrompt";
-export { buildPromptSdlcGoalSuggestionPrompt } from "@/lib/promptOptimizer/buildPromptSdlcGoalSuggestionPrompt";
-export { computePromptSdlcGoalSuggestKey } from "@/lib/promptOptimizer/computePromptSdlcGoalSuggestKey";
-export {
-  parsePromptSdlcGoalSuggestions,
-  type PromptSdlcGoalSuggestionsParseResult,
-} from "@/lib/promptOptimizer/parsePromptSdlcGoalSuggestions";
 export { preferMeasurablePromptSdlcGoalOptions } from "@/lib/promptOptimizer/preferMeasurablePromptSdlcGoalOptions";
 export { buildPromptSdlcWizardEvaluateJudgePrompt } from "@/lib/promptOptimizer/buildPromptSdlcWizardEvaluateJudgePrompt";
 export { buildPromptSdlcTokenReviewPrompt } from "@/lib/promptOptimizer/buildPromptSdlcTokenReviewPrompt";
@@ -45,7 +39,9 @@ export {
   buildPromptSdlcSteps,
   type PromptSdlcStep,
 } from "@/lib/promptOptimizer/buildPromptSdlcSteps";
+export { buildPromptSdlcWizardStepIndex } from "@/lib/promptOptimizer/buildPromptSdlcWizardStepIndex";
 export { buildPromptSdlcScoreScale } from "@/lib/promptOptimizer/describePromptSdlcScore";
+export { readPromptSdlcEndStepFailureMessage } from "@/lib/promptOptimizer/readPromptSdlcEndStepFailureMessage";
 export {
   PROMPT_SDLC_AGENT_BODY_ERROR,
   PROMPT_SDLC_AGENT_MANUAL_ERROR,
@@ -58,9 +54,11 @@ export type { default as PromptSdlcCycleView } from "@/lib/promptOptimizer/types
 export {
   PROMPT_SDLC_WIZARD_MAX_ROUNDS,
   PROMPT_SDLC_WIZARD_MODULE_MAX_ROUNDS,
+  PROMPT_SDLC_WIZARD_MODULE_PASS_SCORE,
   PROMPT_SDLC_WIZARD_PASS_SCORE,
   PROMPT_SDLC_WIZARD_SCHEMA_VERSION,
 } from "@/lib/promptOptimizer/wizard/promptSdlcWizardLimits.constant";
+export { readPromptSdlcWizardModulePassScore } from "@/lib/promptOptimizer/wizard/readPromptSdlcWizardModulePassScore";
 export { PROMPT_SDLC_COMPOSE_INTRO } from "@/lib/promptOptimizer/promptSdlcComposeIntro.constant";
 export { createInitialPromptSdlcWizardState } from "@/lib/promptOptimizer/wizard/createInitialPromptSdlcWizardState";
 export { normalizePromptSdlcWizardState } from "@/lib/promptOptimizer/wizard/normalizePromptSdlcWizardState";
@@ -74,6 +72,13 @@ export { collectPromptSdlcWizardModuleStatistics } from "@/lib/promptOptimizer/w
 export { finalizePromptSdlcWizardModuleRun } from "@/lib/promptOptimizer/wizard/finalizePromptSdlcWizardModuleRun";
 export { readPromptSdlcWizardChainPriorOutput } from "@/lib/promptOptimizer/wizard/readPromptSdlcWizardChainPriorOutput";
 export { summarizePromptSdlcWizardCompletion } from "@/lib/promptOptimizer/wizard/summarizePromptSdlcWizardCompletion";
+export { buildPromptSdlcWizardAdditionalSkillSuggestionsJudgePrompt } from "@/lib/promptOptimizer/wizard/buildPromptSdlcWizardAdditionalSkillSuggestionsJudgePrompt";
+export {
+  parsePromptSdlcWizardAdditionalSkillSuggestions,
+  type PromptSdlcWizardAdditionalSkillSuggestionsParseResult,
+} from "@/lib/promptOptimizer/wizard/parsePromptSdlcWizardAdditionalSkillSuggestions";
+export { markPromptSdlcWizardRunComplete } from "@/lib/promptOptimizer/wizard/markPromptSdlcWizardRunComplete";
+export { seedPromptSdlcWizardOrchestratorSkill } from "@/lib/promptOptimizer/wizard/seedPromptSdlcWizardOrchestratorSkill";
 export { buildPromptSdlcWizardResultMarkdown } from "@/lib/promptOptimizer/wizard/buildPromptSdlcWizardResultMarkdown";
 export type {
   PromptSdlcWizardCompletionModuleRow,
@@ -91,6 +96,13 @@ export {
 export { substitutePromptSdlcTemplate } from "@/lib/promptOptimizer/wizard/substitutePromptSdlcTemplate";
 export { substitutePromptSdlcTemplateValues } from "@/lib/promptOptimizer/wizard/substitutePromptSdlcTemplateValues";
 export { listPromptTemplatePlaceholders } from "@/lib/promptOptimizer/wizard/listPromptTemplatePlaceholders";
+export { shouldSkipPromptSdlcWizardGeneralizeReview } from "@/lib/promptOptimizer/wizard/shouldSkipPromptSdlcWizardGeneralizeReview";
+export { shouldSkipPromptSdlcWizardEvaluateReview } from "@/lib/promptOptimizer/wizard/shouldSkipPromptSdlcWizardEvaluateReview";
+export { shouldSkipPromptSdlcWizardSeparateReview } from "@/lib/promptOptimizer/wizard/shouldSkipPromptSdlcWizardSeparateReview";
+export { passesPromptSdlcWizardEvaluateQualityGate } from "@/lib/promptOptimizer/wizard/passesPromptSdlcWizardEvaluateQualityGate";
+export { modulesFromPromptSdlcWizardSplitOption } from "@/lib/promptOptimizer/wizard/modulesFromPromptSdlcWizardSplitOption";
+export { buildPromptSdlcWizardPipelineSteps } from "@/lib/promptOptimizer/wizard/buildPromptSdlcWizardPipelineSteps";
+export type { PromptSdlcWizardPipelineStep } from "@/lib/promptOptimizer/wizard/types/PromptSdlcWizardPipelineStep.type";
 export {
   buildPromptSdlcWizardSubstitutionMap,
   seedPromptSdlcWizardParameterValues,
@@ -105,3 +117,34 @@ export {
   PROMPT_SDLC_WIZARD_GATE_PHASES,
   type PromptSdlcWizardGatePhase,
 } from "@/lib/promptOptimizer/wizard/types/PromptSdlcWizardPhase.constant";
+
+export {
+  PROMPT_SDLC_DEFAULT_MAX_TRIALS,
+  PROMPT_SDLC_MAX_TRIALS_LIMIT,
+  PROMPT_SDLC_DEFAULT_RATE_USD_PER_1K_TOKENS,
+  PROMPT_SDLC_BUDGET_SOFT_WARN_RATIO,
+  PROMPT_SDLC_STOP_BUDGET_EXCEEDED,
+  PROMPT_SDLC_SOFT_WARN_BUDGET,
+  PROMPT_SDLC_BUDGET_CONFIRM_REQUIRED,
+  PROMPT_SDLC_STEP4_TOKENS_PER_MODULE_TRIAL,
+} from "@/lib/promptOptimizer/promptSdlcCostControl.constant";
+export { estimatePromptSdlcSpendUsd } from "@/lib/promptOptimizer/estimatePromptSdlcSpendUsd";
+export { defaultPromptSdlcCostControls } from "@/lib/promptOptimizer/createEmptyPromptSdlcCostControl";
+export {
+  proposePromptSdlcCostBudget,
+  applyPromptSdlcCostProposal,
+  seedPromptSdlcStep4CostProposal,
+} from "@/lib/promptOptimizer/proposePromptSdlcCostBudget";
+export { confirmPromptSdlcCostBudget } from "@/lib/promptOptimizer/confirmPromptSdlcCostBudget";
+export {
+  readPromptSdlcBudgetStop,
+  isPromptSdlcCostBudgetConfirmed,
+} from "@/lib/promptOptimizer/readPromptSdlcBudgetStop";
+export { resolvePromptSdlcMaxTrials } from "@/lib/promptOptimizer/resolvePromptSdlcMaxTrials";
+export type {
+  PromptSdlcCostControls,
+  PromptSdlcCostControl,
+  PromptSdlcCostProposal,
+  PromptSdlcCostConfirm,
+  PromptSdlcCostControlKnobs,
+} from "@/lib/promptOptimizer/types/PromptSdlcCostControl.type";

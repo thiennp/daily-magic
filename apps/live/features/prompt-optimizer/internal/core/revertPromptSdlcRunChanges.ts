@@ -3,6 +3,8 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 
+import { buildGitSubprocessEnv } from "@agent-witch/shared";
+
 const MAX_FILE_BYTES = 8_000_000;
 const MAX_CACHE_BYTES = 16_000_000;
 
@@ -37,6 +39,7 @@ interface PromptSdlcCacheSnapshot {
 const gitText = (cwd: string, args: readonly string[]): string | null => {
   const result = spawnSync("git", [...args], {
     cwd,
+    env: buildGitSubprocessEnv(),
     encoding: "utf8",
     timeout: 8000,
   });
@@ -47,7 +50,11 @@ const gitText = (cwd: string, args: readonly string[]): string | null => {
 };
 
 const gitOk = (cwd: string, args: readonly string[]): boolean =>
-  spawnSync("git", [...args], { cwd, timeout: 8000 }).status === 0;
+  spawnSync("git", [...args], {
+    cwd,
+    env: buildGitSubprocessEnv(),
+    timeout: 8000,
+  }).status === 0;
 
 const statusMap = (cwd: string): Readonly<Record<string, string>> => {
   const raw = gitText(cwd, ["status", "--porcelain=v1", "-uall"]);

@@ -10,7 +10,7 @@ export const PROMPT_OPTIMIZER_UX_BUNDLE = "198";
 
 export const promptOptimizerUxSharedForm = {
   goal: "E2E: Prompt Optimizer wizard chain — {{feature}} on AWL with export + partial pass",
-  prompt: `You are driving an Agent Witch Live verification run for {{feature}} in {{repo_root}}.
+  prompt: `You are driving an Agent Witch Local verification run for {{feature}} in {{repo_root}}.
 
 Acceptance (must all appear in module outputs):
 1) Compose → Run wizard (generalize, evaluate ≥70, separate modules, optimize with runner evidence).

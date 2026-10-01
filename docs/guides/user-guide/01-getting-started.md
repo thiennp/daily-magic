@@ -4,7 +4,7 @@ This chapter walks you from zero to **one completed Run** with live terminal out
 
 That path is the **easy authoring** pillar in practice: one prompt on **New task**, no workflow builder required. Team templates and structured **Workflows** come later when you need them ([Chapter 6](06-workflows-and-checkpoints.md)).
 
-**Production URL:** [https://www.agentwitch.com](https://www.agentwitch.com) (Agent Witch Console). The git repo is named `daily-magic`; the product you use in the browser is **Agent Witch**, not CHECK24 `daily-magic.*` hosts unless your organization says otherwise ([repo name & hosting](../../product/repo-name-and-hosting.md)).
+**Production URL:** [https://www.agentwitch.com](https://www.agentwitch.com) (Agent Witch Cloud). The git repo is named `daily-magic`; the product you use in the browser is **Agent Witch**, not CHECK24 `daily-magic.*` hosts unless your organization says otherwise ([repo name & hosting](../../product/repo-name-and-hosting.md)).
 
 ---
 

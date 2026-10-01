@@ -23,13 +23,13 @@ describe("describePromptSdlcWizardOutcomeStepHint step 4", () => {
             status: "passed",
             selectedRevisionRound: null,
             statistics: {
-              bestScore: 82,
+              bestScore: 95,
               bestRound: 0,
               bestRunOutput: "o",
               rounds: [
                 {
                   roundNumber: 0,
-                  score: 82,
+                  score: 95,
                   passed: true,
                   runOutput: "o",
                   tokens: 240,
@@ -44,13 +44,13 @@ describe("describePromptSdlcWizardOutcomeStepHint step 4", () => {
             status: "passed",
             selectedRevisionRound: null,
             statistics: {
-              bestScore: 78,
+              bestScore: 91,
               bestRound: 0,
               bestRunOutput: "o2",
               rounds: [
                 {
                   roundNumber: 0,
-                  score: 78,
+                  score: 91,
                   passed: true,
                   runOutput: "o2",
                   tokens: 190,
@@ -62,7 +62,7 @@ describe("describePromptSdlcWizardOutcomeStepHint step 4", () => {
       },
     });
     const hint = describePromptSdlcWizardOutcomeStepHint(cycle, "wizard-4");
-    expect(hint).toContain("Lowest: B (78)");
+    expect(hint).toContain("Lowest: B (91)");
     expect(hint).toContain("430");
     expect(hint).not.toContain("all passed");
   });

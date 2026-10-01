@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 
 import { Dropdown } from "@/components/ui/dropdown/Dropdown";
+import AppIcon from "@/components/ui/icon/AppIcon";
 import { MoreDotIcon } from "@/icons";
 import MacDeviceRowMenuItems from "@/features/agent-witch/macDevices/MacDeviceRowMenuItems";
 
@@ -59,7 +60,7 @@ export default function MacDeviceRowMenu({
           setIsOpen((current) => !current);
         }}
       >
-        <MoreDotIcon className="h-5 w-5" />
+        <AppIcon icon={MoreDotIcon} size="md" />
       </button>
       <Dropdown
         isOpen={isOpen}

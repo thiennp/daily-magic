@@ -11,7 +11,7 @@ import { isAgentWitchBundled } from "./agentWitchBundled.constant";
 import { runAgentWitchReportCli } from "./agentWitchReportCli";
 import { isAgentWitchScriptEntryPoint } from "./isAgentWitchScriptEntryPoint";
 
-if (isAgentWitchScriptEntryPoint(import.meta.url) && !isAgentWitchBundled()) {
+if (!isAgentWitchBundled() && isAgentWitchScriptEntryPoint(import.meta.url)) {
   const reportArgvIndex = process.argv.indexOf("report");
   if (reportArgvIndex >= 0) {
     process.exit(runAgentWitchReportCli(process.argv.slice(reportArgvIndex)));

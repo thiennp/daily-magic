@@ -6,7 +6,7 @@ import {
 } from "@/features/prompt-optimizer/internal/presentation/promptSdlcAwlHref.constant";
 
 describe("promptSdlcAwlHref", () => {
-  it("sends the run to Agent Witch Live", () => {
+  it("sends the run to Agent Witch Local", () => {
     expect(PROMPT_SDLC_AWL_PAGE_HREF).toBe(
       "http://127.0.0.1:43347/prompt-optimizer",
     );

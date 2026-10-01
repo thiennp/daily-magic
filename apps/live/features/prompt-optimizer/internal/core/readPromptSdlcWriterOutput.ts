@@ -1,6 +1,14 @@
-import type { HarnessWriterAgentId } from "../../../../adapters/writerDispatch";
-import { parseClaudeCliPrintResult } from "../../../../adapters/writerDispatch";
+import type { HarnessWriterAgentId } from "../../../../adapters/writerDispatchPresentation";
+import { parseClaudeCliPrintResult } from "../../../../adapters/writerDispatchPresentation";
 import { readPromptSdlcWriterTokens } from "./readPromptSdlcWriterTokens";
+
+export type PromptSdlcWriterErrorKind =
+  | "writer_timeout"
+  | "writer_interrupted"
+  | "writer_no_reply"
+  | "usage_limit"
+  | "action_required"
+  | "budget_exceeded";
 
 export type PromptSdlcWriterResult =
   | { readonly ok: true; readonly text: string; readonly tokens: number | null }
@@ -8,7 +16,55 @@ export type PromptSdlcWriterResult =
       readonly ok: false;
       readonly errorMessage: string;
       readonly stopped?: boolean;
+      readonly errorKind?: PromptSdlcWriterErrorKind;
+      readonly killSignal?: "SIGTERM" | "SIGKILL";
     };
+
+/** Timeout-shaped writer failure (message or explicit kind). */
+export const isPromptSdlcWriterTimeoutError = (input: {
+  readonly errorMessage: string;
+  readonly errorKind?: PromptSdlcWriterErrorKind;
+}): boolean =>
+  input.errorKind === "writer_timeout" ||
+  /timed out after/i.test(input.errorMessage);
+
+/** Cursor monthly usage / quota — not a writer timeout. */
+const USAGE_LIMIT_ERROR =
+  /usage limit|monthly (usage )?limit|hit your (usage )?limit|quota|insufficient credit|resource[_ ]?exhausted|billing|subscription required|rate limit/i;
+
+/** Cursor ActionRequiredError and similar hard stops that need human action. */
+const ACTION_REQUIRED_ERROR =
+  /ActionRequiredError|action required|authentication required|please run .+login|not logged in|login required|unauthorized|invalid api key|api[_ ]?key/i;
+
+export const classifyPromptSdlcWriterErrorKind = (input: {
+  readonly errorMessage: string;
+  readonly stopped?: boolean;
+  readonly errorKind?: PromptSdlcWriterErrorKind;
+}): PromptSdlcWriterErrorKind | undefined => {
+  if (input.errorKind !== undefined) {
+    return input.errorKind;
+  }
+  if (input.stopped === true) {
+    return "writer_interrupted";
+  }
+  if (/timed out after/i.test(input.errorMessage)) {
+    return "writer_timeout";
+  }
+  if (/did not reply/i.test(input.errorMessage)) {
+    return "writer_no_reply";
+  }
+  // Prefer usage_limit over action_required when both could match (quota/billing).
+  if (USAGE_LIMIT_ERROR.test(input.errorMessage)) {
+    return "usage_limit";
+  }
+  if (ACTION_REQUIRED_ERROR.test(input.errorMessage)) {
+    return "action_required";
+  }
+  if (/budget[_ ]?exceeded|token budget|spend ceiling|max spend/i.test(input.errorMessage)) {
+    return "budget_exceeded";
+  }
+  return undefined;
+};
 
 const CODEX_TRUST_ERROR =
   "Codex stopped with a terminal error (not a trusted git directory) and did not return a prompt.";
@@ -77,6 +133,24 @@ export const describePromptSdlcWriterTerminalFailure = (
   return null;
 };
 
+/** Writer reply stored on a revision when judgement parsing failed. */
+export const readPromptSdlcStoredWriterReplyText = (
+  promptText: string,
+): string | null => {
+  const trimmed = promptText.trim();
+  if (trimmed.length === 0) {
+    return null;
+  }
+  const terminal = describePromptSdlcWriterTerminalFailure(trimmed);
+  if (terminal !== null) {
+    return trimmed;
+  }
+  return (
+    cliStatusLine(trimmed) ??
+    (looksLikeCliStatusReply(trimmed) ? trimmed : null)
+  );
+};
+
 export const buildPromptSdlcWriterArgs = (input: {
   readonly writerAgent: HarnessWriterAgentId;
   readonly baseArgs: readonly string[];
@@ -118,7 +192,12 @@ export const readPromptSdlcWriterOutput = (input: {
     stderr: input.stderr,
   });
   if (cliFailure !== null) {
-    return { ok: false, errorMessage: cliFailure };
+    const errorKind = classifyPromptSdlcWriterErrorKind({
+      errorMessage: cliFailure,
+    });
+    return errorKind === undefined
+      ? { ok: false, errorMessage: cliFailure }
+      : { ok: false, errorMessage: cliFailure, errorKind };
   }
 
   const tokens = readPromptSdlcWriterTokens(
@@ -139,5 +218,9 @@ export const readPromptSdlcWriterOutput = (input: {
     input.stdout.trim().length > 0 ? input.stdout.trim() : input.stderr.trim();
   return text.length > 0
     ? { ok: true, text, tokens }
-    : { ok: false, errorMessage: "The writer did not reply." };
+    : {
+        ok: false,
+        errorMessage: "The writer did not reply.",
+        errorKind: "writer_no_reply",
+      };
 };

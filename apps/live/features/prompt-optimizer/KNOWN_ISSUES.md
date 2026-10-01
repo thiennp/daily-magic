@@ -5,14 +5,20 @@ No open issues. Recent fixes (bundle **166–202**):
 - Wizard completion uses honest **passed** vs **stopped** when not every module meets the wizard pass score; outcome table lists per-module score, tokens, and status (bundle **186**).
 - Compose: wizard-only **Run** (classic loop removed from UI, history filter, and guides; `run-classic` intent gone); sticky bar spacing; Run shows spinner + `aria-busy` while starting; wizard resume card shows live status + **View inputs** for active runs (bundle **202**).
 - Step 3 chain/parallel badges and explainer; Step 4 chain handoff preview with skip/no-output reasons; cumulative wizard tokens on gates when statistics exist (bundle **186**).
+- Progress timeline **Skip** on the active wizard step (`wizard-skip-step`, bundle **215**) bypasses the current gate or running writers; step 4 Skip finishes the wizard (distinct from **Skip module**).
 
 - Compose `<details>` no longer uses `display:flex` on the element itself (that hid all fields in Chrome); body lives in `.sdlc-compose-details-body`. Sticky **Run** bar sits outside `<details>` (bundle **200**).
-- Compose **Run** stays enabled; block reasons show in `data-sdlc-run-hint` (bundle **199**).
+- Compose **Run** stays enabled; `data-sdlc-run-hint` shows block reasons only after a blocked Run click (bundle **206**).
+- Compose is a four-step stepper (Project → Prompt and goal → CLI → Summary); **Run** and the sticky submit bar live on Summary only (bundle **207**).
+- Compose **Run** validation runs in capture phase before the wizard live POST so blocked clicks do not start a run (bundle **208**).
 - Removed **Suggest goals** from compose (bundle **200**).
 - Agent API `POST /prompt-optimizer/agent` starts wizard runs (pass 70, max rounds 5) like the compose form (bundle **202**).
 
-- Wizard steps stack in a collapsed accordion; Continue / Run update the page via live HTML fragments (no full reload). While a run is active, compose stays **expanded** (fields disabled) so settings stay visible; only finished runs collapse compose. Live poll attaches after wizard Run even when `#prompt-optimizer-run` was not in the first paint.
+- Wizard steps stack in a collapsed accordion; Continue / Run update the page via live HTML fragments (no full reload). While a run is active, `#prompt-optimizer-compose` is hidden (`sdlc-compose-run-focus`) so **This run** and wizard gates stay in view; finished runs show the collapsed compose summary. Live poll attaches after wizard Run even when `#prompt-optimizer-run` was not in the first paint.
 
+- Step 1 **Generalize** auto-continues to evaluate when the writer returns a concrete templated prompt with **no** `variables` rows and **no** `{{placeholders}}` (bundle **210**).
+- Step 2 **Evaluate** auto-continues to separate when the best (or selected) revision passes the wizard quality gate (score ≥ 70, `passed: true`). Step 3 **Separate** auto-continues to Step 4 when the writer returns one option with a single module (bundle **212**).
+- Failed wizard runs show a **Failed** badge (not Complete), name the wizard step in the activity title, and surface `errorMessage` on the timeline **Failed** row and in the step modal (bundle **220**).
 - Generalize gate prompt appears after live poll without full reload.
 - Compose form stays locked at wizard gates (not unlocked by `sdlc-run-finished`).
 - Runner writer readiness is probed like judge/improver (`data-writer-status="runner"`).

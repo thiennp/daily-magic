@@ -10,7 +10,7 @@ import { createInitialPromptSdlcWizardState } from "../../../apps/live/adapters/
 import {
   PROMPT_SDLC_WIZARD_VERIFICATION_GOAL,
   PROMPT_SDLC_WIZARD_VERIFICATION_SOURCE_PROMPT,
-} from "../../../apps/live/features/prompt-optimizer/internal/core/promptSdlcWizardVerificationScenario";
+} from "./promptSdlcWizardVerificationDogfood.constants";
 import { tryAcceptPromptSdlcWizardPost } from "../../../apps/live/features/prompt-optimizer/internal/core/acceptPromptSdlcWizardPost";
 import { createPromptSdlcLocalCycle } from "../../../apps/live/features/prompt-optimizer/internal/core/createPromptSdlcLocalCycle";
 import type { PromptSdlcLocalCycle } from "../../../apps/live/features/prompt-optimizer/internal/core/promptSdlcLocalCycle.type";

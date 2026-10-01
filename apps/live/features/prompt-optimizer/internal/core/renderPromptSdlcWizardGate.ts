@@ -1,15 +1,21 @@
 import {
   buildPromptSdlcWizardSubstitutionMap,
   collectPromptSdlcWizardCumulativeTokens,
-  PROMPT_SDLC_WIZARD_PASS_SCORE,
+  readPromptSdlcWizardModulePassScore,
   substitutePromptSdlcTemplateValues,
 } from "../../../../adapters/promptSdlcAwcCore";
 
+import { renderPromptSdlcWizardGeneralizeGateFields } from "./renderPromptSdlcWizardGeneralizeReview";
 import { renderPromptSdlcWizardModuleParameters } from "./renderPromptSdlcWizardModuleParameters";
 import { renderPromptSdlcWizardRevisionRoundList } from "./renderPromptSdlcWizardRevisionRoundList";
-import { renderPromptSdlcWizardSplitOptionChunks } from "./renderPromptSdlcWizardSplitChunks";
 import { renderPromptSdlcWizardGateEndForm } from "./renderPromptSdlcLocalStopForm";
+import { renderPromptSdlcWizardSkillSuggestions } from "./renderPromptSdlcWizardSkillSuggestions";
+import { renderPromptSdlcWizardSplitOptionDetail } from "./renderPromptSdlcWizardSplitOptionDetail";
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
+import {
+  renderPromptSdlcCostConfirmPanel,
+  shouldShowPromptSdlcCostConfirm,
+} from "./renderPromptSdlcCostConfirmPanel";
 
 const escapeHtml = (value: string): string =>
   value
@@ -28,6 +34,10 @@ export const renderPromptSdlcWizardGate = (
   }
 
   const gate = wizard.gate;
+  if (shouldShowPromptSdlcCostConfirm(cycle)) {
+    return renderPromptSdlcCostConfirmPanel(cycle);
+  }
+  const modulePassScore = readPromptSdlcWizardModulePassScore(wizard);
   const stepTitle =
     gate === "generalize"
       ? "Step 1 — Generalize"
@@ -39,16 +49,11 @@ export const renderPromptSdlcWizardGate = (
 
   const variables =
     gate === "generalize"
-      ? `<ul class="sdlc-wizard-vars">${wizard.variables
-          .map(
-            (item) =>
-              `<li><strong>{{${escapeHtml(item.name)}}}</strong> — ${escapeHtml(item.description)} (sample: ${escapeHtml(item.sampleValue)})</li>`,
-          )
-          .join(
-            "",
-          )}</ul><pre class="sdlc-pre">${escapeHtml(wizard.templatedPrompt)}</pre>`
+      ? renderPromptSdlcWizardGeneralizeGateFields(wizard)
       : "";
 
+  const skillSuggestions =
+    gate === "evaluate" ? renderPromptSdlcWizardSkillSuggestions(cycle) : "";
   const revisions =
     gate === "evaluate"
       ? renderPromptSdlcWizardRevisionRoundList({
@@ -78,7 +83,7 @@ export const renderPromptSdlcWizardGate = (
               (wizard.selectedSplitOptionId === null && item.recommended)
                 ? " checked"
                 : "";
-            return `<li class="sdlc-wizard-split-option"><label><input type="radio" name="wizardSplitOptionId" value="${escapeHtml(item.id)}" required${checked}> <strong>${escapeHtml(item.title)}</strong>${topologyBadge}${badge}<br><span class="muted">${escapeHtml(item.summary)}</span></label>${renderPromptSdlcWizardSplitOptionChunks(item)}</li>`;
+            return `<li class="sdlc-wizard-split-option"><label class="sdlc-wizard-split-option-label"><input type="radio" name="wizardSplitOptionId" value="${escapeHtml(item.id)}" required${checked}> <strong>${escapeHtml(item.title)}</strong>${topologyBadge}${badge}</label>${renderPromptSdlcWizardSplitOptionDetail(cycle, item)}</li>`;
           })
           .join("")}</ul>`
       : "";
@@ -109,7 +114,7 @@ export const renderPromptSdlcWizardGate = (
         )}</p>${
           moduleRun?.statistics === null || moduleRun?.statistics === undefined
             ? ""
-            : `<p class="muted">Module stats: best ${moduleRun.statistics.bestScore ?? "—"} / ≥${PROMPT_SDLC_WIZARD_PASS_SCORE} (round ${moduleRun.statistics.bestRound ?? "—"}).</p>`
+            : `<p class="muted">Module stats: best ${moduleRun.statistics.bestScore ?? "—"} / ≥${modulePassScore} (round ${moduleRun.statistics.bestRound ?? "—"}).</p>`
         }${renderPromptSdlcWizardRevisionRoundList({
           cycle,
           interactive: false,
@@ -136,11 +141,21 @@ export const renderPromptSdlcWizardGate = (
       ? ""
       : `<p class="muted sdlc-wizard-cumulative-tokens">Wizard tokens so far (reported): ${cumulativeTokens}</p>`;
 
+  const gateStepId =
+    gate === "generalize"
+      ? "wizard-1"
+      : gate === "evaluate"
+        ? "wizard-2"
+        : gate === "separate"
+          ? "wizard-3"
+          : "wizard-4";
   const activeClass =
     options?.active === true ? " sdlc-wizard-gate-active" : "";
-  const activeId =
-    options?.active === true ? ' id="prompt-optimizer-wizard-active-step"' : "";
-  return `<section class="card sdlc-wizard-gate${activeClass}"${activeId}>
+  const activeAttrs =
+    options?.active === true
+      ? ` id="prompt-optimizer-wizard-active-step" data-sdlc-step-id="${gateStepId}"`
+      : "";
+  return `<section class="card sdlc-wizard-gate${activeClass}"${activeAttrs}>
     <p class="eyebrow">Prompt optimizer</p>
     <h2>${stepTitle}</h2>
     <p class="sdlc-wizard-gate-lede">${gateLede}</p>
@@ -148,6 +163,7 @@ export const renderPromptSdlcWizardGate = (
     <form method="POST" action="/prompt-optimizer" class="sdlc-wizard-feedback" id="sdlc-wizard-gate-form">
       <input type="hidden" name="cycleId" value="${escapeHtml(cycle.id)}">
     ${variables}
+    ${skillSuggestions}
     ${revisions}
     ${splits}
     ${moduleNote}

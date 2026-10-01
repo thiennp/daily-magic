@@ -5,23 +5,23 @@
 <plist version="1.0">
 <dict>
   <key>Label</key>
-  <string>${Kr(e.launchAgentLabel)}</string>
+  <string>${Lo(e.launchAgentLabel)}</string>
   <key>ProgramArguments</key>
   <array>
-    <string>${Kr(e.runPath)}</string>
+    <string>${Lo(e.runPath)}</string>
   </array>
   <key>WorkingDirectory</key>
-  <string>${Kr(e.installDir)}</string>
+  <string>${Lo(e.installDir)}</string>
   <key>EnvironmentVariables</key>
   <dict>
     <key>HOME</key>
-    <string>${Kr(e.homeDir)}</string>
+    <string>${Lo(e.homeDir)}</string>
     <key>PATH</key>
-    <string>${Kr(t)}</string>
+    <string>${Lo(t)}</string>
     <key>AGENT_WITCH_HOME</key>
-    <string>${Kr(e.installDir)}</string>
+    <string>${Lo(e.installDir)}</string>
     <key>AGENT_WITCH_WAKE_PORT</key>
-    <string>${Kr(String(e.wakePort))}</string>
+    <string>${Lo(String(e.wakePort))}</string>
   </dict>
   <key>RunAtLoad</key>
   <true/>
@@ -188,7 +188,7 @@ ${r}`:r}});var Wd,ph=l(()=>{"use strict";Wd={anthropic:"claude-sonnet-4-20250514
             <input type="checkbox" name="applySet" value="${Ie(n.slug)}"${t.size===0||t.has(n.slug)?" checked":""} />
             <span><strong>${Ie(n.name)}</strong> <span class="muted mono">(${Ie(n.slug)})</span></span>
           </label>
-          <p class="muted">${n.itemCount} item(s)</p>
+          <p class="muted">${o.itemCount} item(s)</p>
         </li>`).join("")}</ul>`;return`<form method="POST" action="/projects/link-harness" class="stack">
         <input type="hidden" name="projectId" value="${Ie(e.project.id)}" />
         <p class="field-label">Installed</p>
@@ -210,10 +210,10 @@ ${r}`:r}});var Wd,ph=l(()=>{"use strict";Wd={anthropic:"claude-sonnet-4-20250514
       <p class="muted mono">${Ie(e.project.projectFolderPath)}</p>
       <div class="actions"><a class="btn btn-secondary" href="/projects/select-folder?projectId=${encodeURIComponent(e.project.id)}">Change folder\u2026</a></div>
       <nav class="project-tabs" aria-label="Project composition">
-        ${n("harness",`Harness (${r.harness})`)}
-        ${n("workflows",`Workflows (${r.workflow})`)}
-        ${n("agents",`Agents (${r.agent})`)}
-        ${n("knowledge",`Knowledge (${e.knowledgeCandidateCount})`)}
+        ${o("harness",`Harness (${r.harness})`)}
+        ${o("workflows",`Workflows (${r.workflow})`)}
+        ${o("agents",`Agents (${r.agent})`)}
+        ${o("knowledge",`Knowledge (${e.knowledgeCandidateCount})`)}
       </nav>
       <div class="project-tab-panel">
         ${i}
@@ -277,7 +277,7 @@ ${r}`:r}});var Wd,ph=l(()=>{"use strict";Wd={anthropic:"claude-sonnet-4-20250514
       <p class="lede">Tail of the Agent Witch client stderr log on this Mac (newest lines at the bottom). New entries are prefixed with a UTC timestamp (<code>YYYY-MM-DDTHH:MM:SSZ</code>).</p>
       <p class="muted mono">${lA(e.errorLogPath)} \xB7 ${e.byteSize.toLocaleString("en-US")} bytes</p>
       ${t}
-      ${n}
+      ${o}
       <form method="POST" action="/api/errors/clear" class="actions" style="margin-bottom:12px">
         <button class="btn btn-ghost" type="submit">Clear error log</button>
       </form>
@@ -334,8 +334,8 @@ ${r}`:r}});var Wd,ph=l(()=>{"use strict";Wd={anthropic:"claude-sonnet-4-20250514
           <tbody>${e.entries.map((r,n)=>{let o=r.formatOk?'<span class="badge badge-online">OK</span>':`<span class="badge badge-warn">${vn(r.formatError??"bad")}</span>`,s=r.kind==="ws_message"?vn(r.direction):vn(r.kind),i=`trace-body-${n}`,a=vn(DV(r.body));return`<tr>
         <td title="${vn(r.at)}">${vn(r.at.slice(11,19))}</td>
         <td>${s}</td>
-        <td><code>${vn(r.command)}</code></td>
-        <td>${o}</td>
+        <td><code>${on(r.command)}</code></td>
+        <td>${n}</td>
         <td>
           <button type="button" class="btn btn-secondary btn-compact" onclick="const el=document.getElementById('${i}'); if(el){el.hidden=!el.hidden;}">body</button>
           <pre id="${i}" class="trace-body-pre" hidden>${a}</pre>
@@ -347,7 +347,7 @@ ${r}`:r}});var Wd,ph=l(()=>{"use strict";Wd={anthropic:"claude-sonnet-4-20250514
 launchctl kickstart -k "gui/$(id -u)/${t}"
 sleep 2
 curl -sS -m 5 http://127.0.0.1:${43347}/health`;return`<section class="card">
-    <p class="eyebrow">Agent Witch Live</p>
+    <p class="eyebrow">Agent Witch Local</p>
     <h2>Revive local app (:${43347})</h2>
     <p class="lede muted">If this page loaded but the prompt optimizer or other Live pages fail, or if Agent Witch Console cannot open Status, restart the Mac client below. <code>com.agent-witch-live</code> only exists when Live runs as a separate LaunchAgent; most installs use one <code>${mx(t)}</code> process that includes Live.</p>
     <p class="muted">On this Mac, open Terminal, paste, and press Return:</p>
@@ -364,7 +364,7 @@ curl -sS -m 5 http://127.0.0.1:${43347}/health`;return`<section class="card">
 `).filter(Boolean),s=[];for(let i of o)try{s.push(JSON.parse(i))}catch{}return s},CA=async e=>{let t=Yt(e.text),r=kA(t);if(r.length===0)return 0;let n=Hx(e.layout,e.projectFolderPath,e.projectId);if(n===null)return 0;ua.default.mkdirSync(Dx.default.dirname(n),{recursive:!0});let o=0;for(let s of r){let i=await pa(s);if(i===null)continue;let a={id:`${Date.now()}-${o}`,text:s,embedding:i,createdAt:new Date().toISOString(),...e.source!==void 0?{source:e.source}:{}};ua.default.appendFileSync(n,`${JSON.stringify(a)}
 `,"utf8"),o+=1}return tp(n),o},Ho=async e=>{let t=await pa(e.query);if(t===null)return[];let r=e.minScore??0,s=Do(e.layout,e.projectFolderPath,e.projectId).map(i=>({chunk:i,score:QV(t,i.embedding)})).filter(i=>i.score>=r).sort((i,a)=>a.score-i.score).slice(0,e.limit??5).map(i=>i.chunk);return jx({layout:e.layout,chunkIds:s.map(i=>i.id),projectFolderPath:e.projectFolderPath,projectId:e.projectId}),s},TA=e=>e.length===0?"":`Local knowledge (from this Mac):
 
-${e.map((r,n)=>`[${n+1}] ${r.text}`).join(`
+${e.map((r,o)=>`[${o+1}] ${r.text}`).join(`
 
 `)}
 
@@ -374,7 +374,7 @@ ${e.map((r,n)=>`[${n+1}] ${r.text}`).join(`
 `).filter(Boolean),r=[];for(let n of t)try{r.push(JSON.parse(n))}catch{}return r},tq=(e,t)=>{let r=Math.min(e.length,t.length),n=0,o=0,s=0;for(let i=0;i<r;i+=1){let a=e[i]??0,c=t[i]??0;n+=a*c,o+=a*a,s+=c*c}return o===0||s===0?0:n/(Math.sqrt(o)*Math.sqrt(s))},IA=async e=>{let t=Wn(e);if(t===null)return 0;let r=Yt(e.text),n=kA(r,600);if(n.length===0)return 0;let o=t.errorChunksFilePath;ma.default.mkdirSync($x.default.dirname(o),{recursive:!0});let s=0;for(let i of n.slice(0,3)){let a=await pa(i);if(a===null)continue;let c={id:`err-${Date.now()}-${s}`,text:i,embedding:a,createdAt:new Date().toISOString(),source:e.source??"run.failure"};ma.default.appendFileSync(o,`${JSON.stringify(c)}
 `,"utf8"),s+=1}return tp(o,200),s},OA=async e=>{let t=Wn(e);if(t===null)return[];let r=await pa(e.query);if(r===null)return[];let n=e.minScore??.3;return eq(t.errorChunksFilePath).map(s=>({chunk:s,score:tq(r,s.embedding)})).filter(s=>s.score>=n).sort((s,i)=>i.score-s.score).slice(0,e.limit??3).map(s=>s.chunk)},MA=e=>e.length===0?"":`Past failures on this Mac (avoid repeating):
 
-${e.map((r,n)=>`[${n+1}] ${r.text}`).join(`
+${e.map((r,o)=>`[${o+1}] ${r.text}`).join(`
 
 `)}
 
@@ -385,24 +385,24 @@ ${e.map((r,n)=>`[${n+1}] ${r.text}`).join(`
 
 :root {
   color-scheme: light;
-  --aw-zinc-50: ${me.gray50};
-  --aw-zinc-100: ${me.gray100};
-  --aw-zinc-200: ${me.gray200};
-  --aw-zinc-400: ${me.gray400};
-  --aw-zinc-500: ${me.gray500};
-  --aw-zinc-600: ${me.gray600};
-  --aw-zinc-700: ${me.gray700};
-  --aw-zinc-800: ${me.gray900};
-  --aw-zinc-900: ${me.gray900};
-  --aw-brand-600: ${me.brand600};
-  --aw-brand-700: ${me.brand700};
-  --aw-brand-50: ${me.brand50};
-  --aw-emerald-50: ${me.success50};
-  --aw-emerald-700: ${me.success700};
-  --aw-amber-50: ${me.warning50};
-  --aw-amber-900: ${me.warning900};
-  --aw-red-50: ${me.error50};
-  --aw-red-700: ${me.error700};
+  --aw-zinc-50: ${ye.gray50};
+  --aw-zinc-100: ${ye.gray100};
+  --aw-zinc-200: ${ye.gray200};
+  --aw-zinc-400: ${ye.gray400};
+  --aw-zinc-500: ${ye.gray500};
+  --aw-zinc-600: ${ye.gray600};
+  --aw-zinc-700: ${ye.gray700};
+  --aw-zinc-800: ${ye.gray900};
+  --aw-zinc-900: ${ye.gray900};
+  --aw-brand-600: ${ye.brand600};
+  --aw-brand-700: ${ye.brand700};
+  --aw-brand-50: ${ye.brand50};
+  --aw-emerald-50: ${ye.success50};
+  --aw-emerald-700: ${ye.success700};
+  --aw-amber-50: ${ye.warning50};
+  --aw-amber-900: ${ye.warning900};
+  --aw-red-50: ${ye.error50};
+  --aw-red-700: ${ye.error700};
   --aw-radius-lg: 0.5rem;
   --aw-radius-xl: 0.75rem;
   --aw-radius-2xl: 1rem;
@@ -727,6 +727,16 @@ code, .mono {
 }
 .btn-secondary:hover { background: var(--aw-zinc-50); border-color: var(--aw-zinc-400); }
 
+.btn-danger {
+  background: #fff;
+  color: var(--aw-error-600, #dc2626);
+  border: 1px solid color-mix(in srgb, var(--aw-error-600, #dc2626) 35%, transparent);
+  box-shadow: var(--aw-shadow-sm);
+}
+.btn-danger:hover {
+  background: color-mix(in srgb, var(--aw-error-600, #dc2626) 8%, #fff);
+}
+
 .btn-link {
   height: auto;
   padding: 0;
@@ -865,6 +875,41 @@ tbody tr:last-child td { border-bottom: none; }
   padding: 0.75rem 0.75rem 0;
 }
 
+.history-dialog-bar form {
+  margin: 0;
+}
+
+.history-dialog-close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: var(--aw-radius-lg);
+  background: transparent;
+  color: var(--aw-zinc-500);
+  cursor: pointer;
+  font: inherit;
+}
+
+.history-dialog-close:hover {
+  background: var(--aw-zinc-100);
+  color: var(--aw-zinc-700);
+}
+
+.history-dialog-close:focus-visible {
+  outline: 2px solid var(--aw-brand-600);
+  outline-offset: 2px;
+}
+
+.history-dialog-close-icon {
+  width: 1.125rem;
+  height: 1.125rem;
+  display: block;
+}
+
 .history-dialog-body {
   overflow: auto;
   max-height: calc(100vh - 5.5rem);
@@ -875,6 +920,10 @@ tbody tr:last-child td { border-bottom: none; }
   margin: 1rem 0 0;
   font-size: 0.875rem;
   font-weight: 600;
+}
+
+.history-dialog-body .sdlc-node-dialog-goal {
+  margin: 0.5rem 0 0.75rem;
 }
 
 pre {
@@ -1035,13 +1084,10 @@ input.input[type="text"] {
 .textarea { min-height: 6rem; resize: vertical; font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 0.8125rem; }
 form.sdlc-form { display: flex; flex-direction: column; }
 .sdlc-compose .lede { margin-bottom: 1.25rem; }
-.sdlc-compose-mode { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-right: auto; }
-.sdlc-compose-mode [aria-pressed="true"] {
-  background: var(--aw-zinc-100);
-  outline: 2px solid var(--accent, #2563eb);
-}
+.sdlc-compose.sdlc-compose-run-focus:not(.sdlc-compose-viewing-finished) { display: none; }
+.sdlc-compose-run-started:not(.sdlc-compose-viewing-finished) .sdlc-compose-details-body { display: none; }
+.sdlc-compose-run-started .sdlc-compose-step-actions { display: none !important; }
 .sdlc-compose-viewing-result [data-writer-status] { display: none; }
-.sdlc-compose-viewing-finished .sdlc-compose-mode { display: none; }
 .sdlc-compose-viewing-finished .sdlc-compose-summary-collapsed {
   min-height: 3rem;
   padding: 0.65rem 0.85rem;
@@ -1175,10 +1221,32 @@ form.sdlc-form { display: flex; flex-direction: column; }
   align-items: baseline;
   gap: 0.5rem 0.75rem;
 }
+.sdlc-compose-head {
+  width: 100%;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem 1rem;
+  margin-bottom: 0.5rem;
+}
+.sdlc-compose-summary-leading {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem 0.75rem;
+}
+.sdlc-compose-viewing-finished .sdlc-compose-head {
+  align-items: flex-start;
+}
+.sdlc-compose-viewing-finished .sdlc-compose-summary-leading {
+  align-items: flex-start;
+}
 .sdlc-compose-summary::-webkit-details-marker { display: none; }
 .sdlc-compose-summary .eyebrow { margin: 0; }
-.sdlc-form-head { display: flex; justify-content: flex-end; align-items: flex-start; gap: 1rem; margin-bottom: 0.5rem; }
-.sdlc-form-head .btn { flex: none; margin-top: 0.15rem; }
+.sdlc-form-head-actions { flex: none; margin-left: auto; }
+.sdlc-form-head-actions .btn { flex: none; margin-top: 0; }
 .sdlc-fields {
   border: 0;
   margin: 0;
@@ -1222,9 +1290,6 @@ form.sdlc-form { display: flex; flex-direction: column; }
   background: var(--aw-zinc-50);
 }
 .sdlc-submit-bar {
-  position: sticky;
-  bottom: 0;
-  z-index: 30;
   display: flex;
   flex-direction: column;
   gap: 0.65rem;
@@ -1237,7 +1302,6 @@ form.sdlc-form { display: flex; flex-direction: column; }
     #fff 55%
   );
   border-top: 1px solid var(--aw-zinc-200);
-  box-shadow: 0 -10px 28px rgba(15, 23, 42, 0.06);
 }
 .sdlc-submit-bar .sdlc-writer-summary { margin: 0; }
 .sdlc-submit-bar .sdlc-run-hint {
@@ -1350,17 +1414,76 @@ form.sdlc-wizard-feedback {
 }
 .sdlc-wizard-vars,
 .sdlc-wizard-revisions,
-.sdlc-wizard-splits {
-  margin: 0;
-  padding-left: 1.25rem;
+.sdlc-wizard-parent-prompt {
+  margin: 0 0 1.25rem;
+  padding: 1rem 1.1rem;
+  border: 1px solid var(--aw-zinc-200);
+  border-radius: 0.75rem;
+  background: #fff;
   display: flex;
   flex-direction: column;
   gap: 0.65rem;
 }
+.sdlc-wizard-parent-prompt-title {
+  margin: 0;
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+.sdlc-wizard-parent-prompt-body {
+  margin: 0;
+  max-height: min(40vh, 16rem);
+  overflow: auto;
+}
+.sdlc-wizard-splits {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
 .sdlc-wizard-split-option {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.65rem;
+  padding: 1rem 1.1rem;
+  border: 1px solid var(--aw-zinc-200);
+  border-radius: 0.75rem;
+  background: var(--aw-zinc-50);
+  box-shadow: var(--aw-shadow-sm);
+}
+.sdlc-wizard-split-option-label {
+  display: block;
+  cursor: pointer;
+}
+.sdlc-wizard-split-option-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  margin-top: 0.15rem;
+  padding-top: 0.65rem;
+  border-top: 1px solid var(--aw-zinc-200);
+}
+.sdlc-wizard-split-orchestration {
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.45;
+}
+.sdlc-wizard-split-parent-details {
+  margin: 0;
+}
+.sdlc-wizard-split-parent-summary {
+  cursor: pointer;
+  font-size: 0.8125rem;
+  color: var(--aw-brand-600);
+}
+.sdlc-wizard-split-modules-heading {
+  margin: 0;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+.sdlc-topology-explainer {
+  margin: 0 0 1rem;
 }
 .sdlc-wizard-chunks {
   margin: 0.35rem 0 0 1.25rem;
@@ -1375,6 +1498,13 @@ form.sdlc-wizard-feedback {
   max-height: 8rem;
   overflow: auto;
 }
+.sdlc-wizard-step-retry {
+  margin: 0 0 0.75rem;
+  padding: 0;
+}
+.sdlc-wizard-step-retry-btn {
+  font-size: 0.8125rem;
+}
 .sdlc-wizard-separated-summary {
   margin-top: 1rem;
   display: flex;
@@ -1386,6 +1516,22 @@ form.sdlc-wizard-feedback {
 .sdlc-wizard-splits li { line-height: 1.45; }
 .sdlc-wizard-revisions label,
 .sdlc-wizard-splits label { display: block; cursor: pointer; }
+.sdlc-wizard-revision-row {
+  display: block;
+  line-height: 1.45;
+}
+.sdlc-wizard-revision-label {
+  display: inline;
+  cursor: pointer;
+}
+.sdlc-wizard-revision-title {
+  font-weight: 600;
+}
+.sdlc-wizard-revision-row .sdlc-wizard-revision-judge-info {
+  display: inline-flex;
+  vertical-align: middle;
+  margin: 0 0 0 0.2rem;
+}
 .sdlc-wizard-interrupt {
   display: flex;
   flex-direction: column;
@@ -1441,12 +1587,81 @@ form.sdlc-wizard-feedback {
   border-radius: var(--aw-radius-lg);
   padding: 0.35rem 0.75rem;
 }
+.sdlc-wizard-outcome-step-done {
+  border-color: #bbf7d0;
+  background: #f0fdf4;
+}
+.sdlc-wizard-outcome-step-failed {
+  border-color: #fecaca;
+  background: #fef2f2;
+  box-shadow: 0 0 0 1px #fecaca;
+}
+.sdlc-wizard-outcome-step-pending {
+  border-color: var(--aw-zinc-200);
+  background: var(--aw-zinc-50);
+  opacity: 0.92;
+}
+.sdlc-wizard-outcome-mark {
+  flex: none;
+  width: 0.95rem;
+  height: 0.95rem;
+  margin-top: 0.1rem;
+  border-radius: 999px;
+  position: relative;
+}
+.sdlc-wizard-outcome-mark-done {
+  background: #166534;
+  box-shadow: 0 0 0 3px #dcfce7;
+}
+.sdlc-wizard-outcome-mark-failed {
+  background: #b91c1c;
+  box-shadow: 0 0 0 3px #fee2e2;
+}
+.sdlc-wizard-outcome-mark-pending {
+  background: transparent;
+  border: 2px solid var(--aw-zinc-300);
+  box-shadow: none;
+}
+.sdlc-wizard-outcome-step-title { font-weight: 600; }
+.sdlc-wizard-active-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
+}
+.sdlc-exact-prompt-pre {
+  max-height: min(70vh, 28rem);
+  overflow: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.sdlc-wizard-outcome-status {
+  flex: none;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 0.1rem 0.45rem;
+  border-radius: 999px;
+}
+.sdlc-wizard-outcome-status-done {
+  color: #166534;
+  background: #dcfce7;
+}
+.sdlc-wizard-outcome-status-failed {
+  color: #b91c1c;
+  background: #fee2e2;
+}
+.sdlc-wizard-outcome-status-pending {
+  color: var(--aw-zinc-600);
+  background: var(--aw-zinc-100);
+}
 .sdlc-wizard-outcome-step > summary {
   cursor: pointer;
   list-style: none;
   display: flex;
   flex-wrap: wrap;
-  align-items: baseline;
+  align-items: center;
   gap: 0.35rem;
 }
 .sdlc-wizard-outcome-step > summary::-webkit-details-marker { display: none; }
@@ -1567,6 +1782,15 @@ form.sdlc-form textarea.input.sdlc-instruction {
 .sdlc-run-badge-paused { background: #fef9c3; color: #854d0e; }
 .sdlc-run-badge-done { background: #ecfdf5; color: #047857; }
 .sdlc-run-badge-finished { background: #fffbeb; color: #92400e; }
+.sdlc-run-badge-failed { background: #fee2e2; color: #991b1b; }
+.sdlc-run-badge-budget { background: #ffedd5; color: #9a3412; box-shadow: inset 0 0 0 1px #fdba74; }
+.sdlc-history-badge-failed { background: #fee2e2; color: #991b1b; }
+.sdlc-cost-confirm .sdlc-cost-proposal { display: grid; gap: 0.5rem; margin: 0.75rem 0 1rem; }
+.sdlc-cost-confirm .sdlc-cost-proposal > div { display: flex; justify-content: space-between; gap: 1rem; }
+.sdlc-cost-confirm .sdlc-cost-proposal dt { color: var(--aw-zinc-500); }
+.sdlc-cost-confirm .sdlc-cost-proposal dd { margin: 0; font-weight: 600; font-variant-numeric: tabular-nums; }
+.sdlc-cost-controls { margin-top: 0.75rem; }
+.sdlc-cost-early-stop .sdlc-checkbox-label { display: flex; gap: 0.5rem; align-items: flex-start; }
 .sdlc-run-activity {
   display: flex;
   gap: 0.85rem;
@@ -1603,6 +1827,21 @@ form.sdlc-form textarea.input.sdlc-instruction {
 .sdlc-run-activity-copy { min-width: 0; flex: 1; }
 .sdlc-run-title { margin: 0; font-size: 1.125rem; font-weight: 600; line-height: 1.35; color: var(--aw-zinc-900); }
 .sdlc-run-detail { margin: 0.35rem 0 0; }
+.sdlc-run-detail-block { margin-top: 0.35rem; }
+.sdlc-run-reply-preview-label { margin: 0.5rem 0 0.25rem; font-size: 0.8125rem; }
+.sdlc-run-reply-preview {
+  margin: 0;
+  max-height: min(50vh, 28rem);
+  overflow: auto;
+  padding: 0.5rem 0.65rem;
+  font-size: 0.75rem;
+  line-height: 1.35;
+  white-space: pre-wrap;
+  word-break: break-word;
+  background: var(--sdlc-reply-preview-bg, #f4f4f5);
+  border: 1px solid var(--sdlc-reply-preview-border, #e4e4e7);
+  border-radius: 0.375rem;
+}
 .sdlc-run-status-dot {
   width: 0.65rem;
   height: 0.65rem;
@@ -1686,13 +1925,100 @@ form.sdlc-form textarea.input.sdlc-instruction {
 .sdlc-node { display: block; position: relative; padding-bottom: 1rem; }
 .sdlc-node:last-child { padding-bottom: 0; }
 .sdlc-node:not(:last-child)::after { content: ""; position: absolute; left: 0.42rem; top: 1.05rem; bottom: 0; width: 2px; background: #d0d5dd; }
+.sdlc-node-row { display: flex; align-items: flex-start; gap: 0.5rem; }
+.sdlc-node-row .sdlc-node-open { flex: 1; min-width: 0; }
+.sdlc-node-row-actions {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 0.05rem;
+}
+.sdlc-node-skip { flex-shrink: 0; margin: 0; padding: 0; }
+.sdlc-node-skip-link {
+  font-size: 0.8125rem;
+  line-height: 1.2;
+  min-height: 0;
+  white-space: nowrap;
+}
 .sdlc-node-open { display: grid; grid-template-columns: 1.25rem minmax(0, 1fr); column-gap: 0.75rem; align-items: start; width: 100%; margin: 0; padding: 0; border: 0; background: none; color: inherit; font: inherit; text-align: left; cursor: pointer; }
 .sdlc-node-open:hover .sdlc-node-label,
 .sdlc-node-open:focus-visible .sdlc-node-label { text-decoration: underline; }
 .sdlc-node-mark { width: 0.95rem; height: 0.95rem; margin-top: 0.15rem; border-radius: 999px; background: #166534; box-shadow: 0 0 0 4px #dcfce7; position: relative; z-index: 1; }
+.sdlc-node-mark-failed { background: #b91c1c; box-shadow: 0 0 0 4px #fee2e2; }
+.sdlc-node-reason-failed { color: #b91c1c; }
 .sdlc-node-active .sdlc-spin { margin-top: 0.15rem; position: relative; z-index: 1; }
 .sdlc-node-label { line-height: 1.4; padding-top: 0.05rem; }
 .sdlc-node-reason { display: block; margin-top: 0.25rem; color: var(--aw-zinc-700); font-size: 0.8125rem; }
+.sdlc-pipeline {
+  list-style: none;
+  margin: 0.65rem 0 0 2rem;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+.sdlc-pipeline-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8125rem;
+  line-height: 1.35;
+}
+.sdlc-pipeline-label { flex: 1; min-width: 0; color: var(--aw-zinc-800); }
+.sdlc-pipeline-mark {
+  width: 0.65rem;
+  height: 0.65rem;
+  border-radius: 999px;
+  border: 2px solid var(--aw-zinc-300);
+  flex-shrink: 0;
+}
+.sdlc-pipeline-mark-done {
+  border-color: #166534;
+  background: #166534;
+  box-shadow: none;
+}
+.sdlc-pipeline-step-active .sdlc-pipeline-label { font-weight: 600; color: var(--aw-zinc-900); }
+.sdlc-pipeline-step-pending .sdlc-pipeline-label { color: var(--aw-zinc-500); }
+.sdlc-pipeline-modal { margin-left: 0; margin-top: 0.5rem; }
+.sdlc-wizard-step-modal .sdlc-pre-preview {
+  margin: 0.35rem 0 0;
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  color: var(--aw-zinc-800);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.sdlc-wizard-step-modal .sdlc-pre-expand { margin-top: 0.35rem; }
+.sdlc-pipeline-terminal {
+  margin-top: 0.5rem;
+  padding: 0.65rem 0.75rem;
+  font-size: 0.75rem;
+  max-height: 10rem;
+  overflow: auto;
+  background: var(--aw-zinc-900);
+  color: #e4e4e7;
+  border-radius: 0.5rem;
+}
+.sdlc-field-info {
+  flex-shrink: 0;
+  width: 1.25rem;
+  height: 1.25rem;
+  padding: 0;
+  border: 1px solid var(--aw-zinc-300);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--aw-zinc-600);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+}
+.sdlc-field-info:hover,
+.sdlc-field-info:focus-visible {
+  border-color: var(--aw-brand-500);
+  color: var(--aw-brand-600);
+}
 .sdlc-manual { display: flex; flex-direction: column; gap: 0.75rem; margin-top: 1rem; }
 .sdlc-manual-verdict { margin: 0; }
 .sdlc-manual textarea.input { min-height: 6rem; }
@@ -1792,9 +2118,6 @@ form.sdlc-form textarea.input {
   resize: none;
 }
 form.sdlc-form textarea.input[name="prompt"] { min-height: 12rem; }
-.sdlc-history-filter { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.75rem; }
-.sdlc-history-filter [aria-pressed="true"] { outline: 2px solid var(--accent, #2563eb); }
-.sdlc-form-head { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.75rem; }
 .sdlc-history-details { margin-top: 0.5rem; }
 .sdlc-history-details-summary {
   cursor: pointer;
@@ -1817,6 +2140,22 @@ form.sdlc-form textarea.input[name="prompt"] { min-height: 12rem; }
   white-space: nowrap;
 }
 .sdlc-history-badge-done { background: #ecfdf5; color: #047857; }
+
+.sdlc-history-badge-passed { background: color-mix(in srgb, #059669 14%, #fff); color: #047857; }
+.sdlc-history-badge-failed { background: color-mix(in srgb, #dc2626 12%, #fff); color: #b91c1c; }
+.sdlc-history-badge-stopped { background: color-mix(in srgb, #d97706 14%, #fff); color: #b45309; }
+.sdlc-outcome-badge { display: inline-flex; align-items: center; border-radius: 999px; padding: 0.15rem 0.65rem; font-size: 0.75rem; font-weight: 600; }
+.sdlc-outcome-badge-passed { background: color-mix(in srgb, #059669 14%, #fff); color: #047857; }
+.sdlc-outcome-badge-failed { background: color-mix(in srgb, #dc2626 12%, #fff); color: #b91c1c; }
+.sdlc-outcome-badge-stopped { background: color-mix(in srgb, #d97706 14%, #fff); color: #b45309; }
+.sdlc-module-status-passed { font-weight: 600; color: #047857; }
+.sdlc-module-status-failed { font-weight: 600; color: #b91c1c; }
+.sdlc-module-status-stopped { font-weight: 600; color: #b45309; }
+.sdlc-best-outcome-row { margin: 0.35rem 0 0.5rem; }
+.sdlc-timeout-tip { cursor: help; }
+.sdlc-best-readonly { margin-top: 0.75rem; }
+.sdlc-best-readonly summary { cursor: pointer; font-weight: 600; }
+
 .sdlc-history-badge-live { background: #eff6ff; color: #1d4ed8; }
 .sdlc-history-badge-paused { background: #fffbeb; color: #b45309; }
 .sdlc-history-row-main { align-items: flex-start; display: flex; gap: 0.65rem; min-width: 0; }
@@ -1932,6 +2271,13 @@ form.sdlc-form textarea.input[name="prompt"] { min-height: 12rem; }
 .project-tab { border: 1px solid var(--aw-zinc-200); border-radius: 9999px; font-size: 0.8125rem; padding: 0.35rem 0.75rem; text-decoration: none; color: inherit; }
 .project-tab-active { background: var(--aw-zinc-900); border-color: var(--aw-zinc-900); color: #fff; }
 .project-tab-panel { margin-top: 0.5rem; }
+.project-cloud-actions { margin-top: 0.75rem; }
+.inline-form { display: inline; }
+.danger-zone {
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid color-mix(in srgb, var(--aw-error-600, #dc2626) 25%, var(--aw-zinc-200));
+}
 .project-list-title-row { align-items: center; display: flex; flex-wrap: wrap; gap: 0.35rem 0.5rem; }
 .project-live-badge {
   background: var(--aw-emerald-50);
@@ -2015,7 +2361,7 @@ form.sdlc-form textarea.input[name="prompt"] { min-height: 12rem; }
       ${i}
       <div class="site-header-actions">
         <nav class="site-nav site-nav-header" aria-label="Local bridge">${t}</nav>
-        ${n}
+        ${o}
         <a class="btn btn-secondary cloud-open-link" href="${r}" target="_blank" rel="noopener noreferrer" aria-label="Open Agent Witch cloud at ${r}">Open cloud \u2197</a>
       </div>
     </div>
@@ -2044,7 +2390,7 @@ form.sdlc-form textarea.input[name="prompt"] { min-height: 12rem; }
       <p class="lede">Your on-machine control panel: bridge health, harness, run memory, and traffic \u2014 only on this Mac.</p>
       <div class="home-hero-badges">
         ${t}
-        <span class="muted">Install bundle <code>${$o(e.installBundleVersion)}</code></span>
+        <span class="muted">Install bundle <code>${Is(e.installBundleVersion)}</code></span>
         <span class="muted">Last heartbeat \xB7 ${a}</span>
       </div>
     </section>
@@ -2065,13 +2411,13 @@ form.sdlc-form textarea.input[name="prompt"] { min-height: 12rem; }
         <p class="home-card-eyebrow">Setup</p>
         <h2 class="home-card-title">Harness</h2>
         <p class="home-card-lede">View installed sets, apply them to a project <code>.cursor</code>, or import from repos.</p>
-        <p class="home-card-meta">${$o(r)}</p>
+        <p class="home-card-meta">${Is(r)}</p>
       </a>
       <a class="home-card" href="/knowledge">
         <p class="home-card-eyebrow">Memory</p>
         <h2 class="home-card-title">Knowledge</h2>
         <p class="home-card-lede">Browse and search local RAG chunks written after agent runs on this Mac.</p>
-        <p class="home-card-meta">${$o(n)}</p>
+        <p class="home-card-meta">${Is(o)}</p>
       </a>
       <a class="home-card" href="/writer-sessions">
         <p class="home-card-eyebrow">Memory</p>
@@ -2083,13 +2429,13 @@ form.sdlc-form textarea.input[name="prompt"] { min-height: 12rem; }
         <p class="home-card-eyebrow">Diagnostics</p>
         <h2 class="home-card-title">Error log</h2>
         <p class="home-card-lede">Tail of client stderr \u2014 crashes, module errors, and bridge failures on this Mac.</p>
-        <p class="home-card-meta">${$o(s)}</p>
+        <p class="home-card-meta">${Is(s)}</p>
       </a>
       <a class="home-card" href="/traffic">
         <p class="home-card-eyebrow">Debug</p>
         <h2 class="home-card-title">Traffic</h2>
         <p class="home-card-lede">See frames sent and received between this Mac and the cloud bridge.</p>
-        <p class="home-card-meta">${$o(o)}</p>
+        <p class="home-card-meta">${Is(n)}</p>
       </a>
     </div>`}});var Jx=l(()=>{"use strict";Kx()});var k,sp=l(()=>{"use strict";k=e=>e==="passed"||e==="stopped"||e==="failed"});var Yx,VA,Ln,qA,fa=l(()=>{"use strict";Yx="Stopped at the round limit. The best prompt is kept.",VA="Stopped because the score stopped rising. The best prompt is kept.",Ln="Finished. The best prompt is the result.",qA="Wizard ended. Progress from finished steps is kept."});var ha,KA=l(()=>{"use strict";ha=e=>{let t=e.avoid?.trim()??"",r=t.length===0?[]:["","Avoid:",t,"","Do not repeat anything in Avoid."],n=e.instructions?.trim()??"",o=n.length===0?[]:["","Instructions:",n];return["You improve prompts.","Do not edit files. Do not run tools. Do not score the prompt.","Reply with only the improved prompt text, no commentary.","","Goal:",e.goal.trim(),...o,"","Current prompt:","This is the highest scoring version so far. Start from it.",e.promptText.trim(),"",`Judge score: ${e.score}`,"Judge reasons:",e.reasons.trim(),...r,"","The score describes the changes, the tokens used, and the delay. A token review may say how to spend less. Change the prompt so the next run does better.",n.length===0?"Write the next prompt.":"Write the next prompt. Follow the goal and the instructions."].join(`
 `)}});var oq,sq,ya,Xx,ip=l(()=>{"use strict";oq=/\n+|;\s+/,sq=e=>e.length>280?`${e.slice(0,279)}\u2026`:e,ya=e=>e.reduce((t,r)=>{if(t.length>=12)return t;let n=r.split(oq).map(o=>o.replace(/^[-*]\s*/,"").trim()).filter(o=>o.length>0).reduce((o,s)=>{if(t.length+o.length>=12)return o;let i=s.toLowerCase();return[...t,...o].some(c=>c.toLowerCase()===i)?o:[...o,sq(s)]},[]);return[...t,...n]},[]),Xx=e=>{let t=ya(e);return t.length===0?null:t.map(r=>`- ${r}`).join(`
@@ -2101,7 +2447,7 @@ form.sdlc-form textarea.input[name="prompt"] { min-height: 12rem; }
 `)});var fq,hq,yq,ab,b0=l(()=>{"use strict";fq=/[A-Za-z0-9_./~-]{3,180}/g,hq=/\.(?:ts|tsx|js|jsx|mjs|cjs|md|json|css|html|py|go|rs|sql|yml|yaml|toml|txt|sh)$/i,yq=e=>{if(e.includes("://")||e.startsWith("http"))return!1;let t=e.replace(/^[~./]+/,"");if(t.length===0||t.includes(".."))return!1;let r=t.split("/")[0]??"";return t.includes("/")&&r.includes(".")?!1:t.includes("/")||hq.test(t)},ab=(e,t=12)=>{let r=[];for(let n of e.matchAll(fq)){let o=n[0].replace(/\.+$/,"");if(!(!yq(o)||r.includes(o))&&(r.push(o),r.length>=t))break}return r}});var wa,P0=l(()=>{"use strict";wa=(e,t)=>e.flatMap(r=>{let n=r.reasons?.trim()??"";return r.roundNumber>=t||r.score===null||n.length===0?[]:[{roundNumber:r.roundNumber,promptText:r.promptText,score:r.score,reasons:n}]}).sort((r,n)=>r.roundNumber-n.roundNumber)});var up,lb,w0,cb,db=l(()=>{"use strict";up=e=>Math.floor(e/2),lb=e=>Math.max(up(e)+1,e-20),w0=(e,t)=>e>=t?"passes":e>=lb(t)?"close":e>=up(t)?"weak":"bad",cb=e=>[{band:"bad",label:`0\u2013${up(e)-1} bad`},{band:"weak",label:`${up(e)}\u2013${lb(e)-1} weak`},{band:"close",label:`${lb(e)}\u2013${e-1} close`},{band:"passes",label:`${e}\u2013100 passes`}]});var pp,ub=l(()=>{"use strict";db();pp=e=>{let t=e.status==="judging"||e.status==="awaiting_local"&&e.pendingLocal?.role==="judge",r=e.status==="improving"||e.status==="awaiting_local"&&e.pendingLocal?.role==="improve",n=e.revisions.flatMap(s=>{let i={id:`round-${s.roundNumber}`,label:s.roundNumber===0?"Source prompt saved":`Revision ${s.roundNumber} saved`,state:"done",detail:null};return s.judgement!==null&&s.judgement.score!==null?[i,{id:`score-${s.roundNumber}`,label:`Judge scored round ${s.roundNumber}: ${s.judgement.score} / 100 (${w0(s.judgement.score,e.passScore)})`,state:"done",detail:s.judgement.reasons}]:t&&e.currentRound===s.roundNumber?[i,{id:`score-${s.roundNumber}`,label:`score for round ${s.roundNumber}...`,state:"active",detail:e.judgeModel}]:[i]}),o=r?[{id:"rewrite",label:`revision ${e.currentRound+1}...`,state:"active",detail:e.improverModel}]:[];return[...n,...o]}});var _0,v0=l(()=>{"use strict";_0=e=>e.gate!==null?e.gate==="generalize"?0:e.gate==="evaluate"?1:e.gate==="separate"?2:3:e.phase==="generalize"?0:e.phase==="evaluate"?1:e.phase==="separate"?2:e.phase==="optimize_modules"?3:4});var W0,L0=l(()=>{"use strict";W0=e=>e.phase==="evaluate"||e.gate==="evaluate"||e.phase==="optimize_modules"||e.gate==="optimize_modules"});var Sq,Aq,E0,R0=l(()=>{"use strict";sp();ub();v0();L0();Sq=["Step 1 \u2014 Generalize","Step 2 \u2014 Evaluate","Step 3 \u2014 Separate","Step 4 \u2014 Optimize modules"],Aq=e=>e.wizard!==void 0&&e.wizard.phase==="complete"?"Finished":e.status==="passed"?"Passed":e.status==="stopped"?e.wizard?.phase==="complete"||(e.errorMessage??"").startsWith("Finished")?"Finished":"Stopped":"Failed",E0=e=>{let t=e.wizard;if(t===void 0)return[];let r=_0(t),n=Math.max(r,t.phase==="optimize_modules"||t.gate==="optimize_modules"?3:r),o=e.status==="wizard_paused",s=t.phase==="complete",i=Sq.map((p,g)=>{let b=!s&&!o&&g===r?"active":"done";return{id:`wizard-${g+1}`,label:p,state:b,detail:null}}).filter((p,g)=>s?!0:g<=n),a=o&&(t.gate==="evaluate"||t.gate==="optimize_modules"),c=W0(t)&&(!o||a)?pp(e):[],d=k(e.status)&&!s?[{id:"end",label:Aq(e),state:"done",detail:e.errorMessage}]:[];return[...i,...c,...d]}});var bq,pb,k0=l(()=>{"use strict";sp();ub();R0();bq=e=>e.status==="passed"?"Passed":e.status==="stopped"?(e.errorMessage??"").startsWith("Finished")?"Finished":"Stopped":"Failed",pb=e=>{if(e.wizard!==void 0)return E0(e);let t=pp(e),r=k(e.status)?[{id:"end",label:bq(e),state:"done",detail:e.errorMessage}]:[];return[...t,...r]}});var C0=l(()=>{"use strict";Bt()});var T0,_a,va,zo,mp,mb,x0=l(()=>{"use strict";C0();T0="/prompt-optimizer/agent",_a=`${Ut}${T0}`,va=`${Ut}/prompt-optimizer`,zo="The prompt optimizer runs the judge and improver inside the project folder on this Mac, so they can read the harness and the code. An optimizer that runs somewhere else cannot see that folder, so its score is not reliable for this context.",mp=`goal, prompt, and workingDirectory are required. workingDirectory is the project folder on this Mac. ${zo}`,mb="This API runs installed writers. Score or rewrite by hand on the prompt optimizer page."});var kr=l(()=>{"use strict"});var gb,I0=l(()=>{"use strict";gb="Set the goal and the prompt, then choose who scores, who rewrites, and who runs step 4. Run starts the wizard (generalize \u2192 evaluate \u2192 separate \u2192 optimize modules). Instructions are optional."});var O0,M0=l(()=>{"use strict";O0=()=>({generalize:[],evaluate:[],separate:[],optimize_modules:[]})});var Wa,j0=l(()=>{"use strict";M0();kr();Wa=e=>({schemaVersion:3,phase:"generalize",gate:null,variables:[],templatedPrompt:e.trim(),attempts:[],avoidByStep:O0(),evaluateSelectedRound:null,splitOptions:[],selectedSplitOptionId:null,selectedSplitTopology:null,modules:[],currentModuleIndex:0,runnerInstructions:"",pendingStepInstructions:"",parameterValues:{}})});var fb,D0=l(()=>{"use strict";fb=e=>({...e,parameterValues:e.parameterValues??{},pendingStepInstructions:e.pendingStepInstructions??"",selectedSplitTopology:e.selectedSplitTopology??null,modules:e.modules.map(t=>({...t,statistics:t.statistics??null}))})});var hb,H0=l(()=>{"use strict";kr();hb=(e,t,r)=>{let n=r.trim();if(n.length===0)return e;let o=e.avoidByStep[t]??[],s=[n,...o].slice(0,12);return{...e,avoidByStep:{...e.avoidByStep,[t]:s},gate:null}}});var $0,yb,F0=l(()=>{"use strict";$0=["generalize","evaluate","separate","optimize_modules"],yb=(e,t)=>{let r=$0.indexOf(t);if(r===-1)return e;let n=$0.slice(r+1);return n.length===0?{...e,gate:null}:{...e,gate:null,evaluateSelectedRound:n.includes("evaluate")?null:e.evaluateSelectedRound,splitOptions:n.includes("separate")?[]:e.splitOptions,selectedSplitOptionId:n.includes("separate")?null:e.selectedSplitOptionId,selectedSplitTopology:n.includes("separate")?null:e.selectedSplitTopology,modules:n.includes("optimize_modules")?[]:e.modules,currentModuleIndex:n.includes("optimize_modules")?0:e.currentModuleIndex,parameterValues:n.includes("optimize_modules")?{}:e.parameterValues,phase:t==="generalize"?"generalize":t==="evaluate"?"evaluate":t==="separate"?"separate":"optimize_modules"}}});var gp,Sb=l(()=>{"use strict";ip();gp=e=>{let t=ya(e);return t.length===0?"":["Avoid:",...t.map(r=>`- ${r}`)].join(`
 `)}});var Ab,z0=l(()=>{"use strict";Sb();Ab=e=>{let t=gp(e.avoid),r=e.stepInstructions.trim().length===0?"":`Extra instructions:
 ${e.stepInstructions.trim()}
-`,n=e.lastAttemptSummary.trim().length===0?"":`Last attempt (fix this):
+`,o=e.lastAttemptSummary.trim().length===0?"":`Last attempt (fix this):
 ${e.lastAttemptSummary.trim()}
 `;return["Generalize the prompt below for reuse as a skill or template.","Pull concrete values (names, paths, IDs, component names) into variables.","Use placeholders {{variableName}} in the templated prompt (camelCase names).","Keep the same intent as the goal.","",`Goal:
 ${e.goal.trim()}`,"",`Source prompt:
@@ -2109,9 +2455,9 @@ ${e.sourcePrompt.trim()}`,"",r,n,t,"","Reply with JSON only, no markdown fences:
 `)}});var wq,_q,vq,U0,B0=l(()=>{"use strict";wq=e=>e.replace(/[.*+?^${}()|[\]\\]/g,"\\$&"),_q=/^\{\{[a-zA-Z0-9_-]+\}\}$/,vq=(e,t)=>{let{masked:r,tokens:n}=t.reduce((o,s)=>{let i=s.sampleValue.trim();if(i.length===0)return o;let a=new RegExp(wq(i),"g"),c=[...o.tokens];return{masked:o.masked.replace(a,()=>{let p=`\0PO${c.length}\0`;return c.push(`{{${s.name}}}`),p}),tokens:c}},{masked:e,tokens:[]});return n.reduce((o,s,i)=>o.replace(`\0PO${i}\0`,s),r)},U0=(e,t)=>{let r=[...t].sort((o,s)=>s.sampleValue.length-o.sampleValue.length);return e.split(/(\{\{[a-zA-Z0-9_-]+\}\})/g).map(o=>_q.test(o)?o:vq(o,r)).join("")}});var bb,G0=l(()=>{"use strict";B0();bb=(e,t)=>e.map(r=>({...r,modules:r.modules.map(n=>({...n,prompt:U0(n.prompt,t)}))}))});var Wq,wb,V0=l(()=>{"use strict";kr();Sb();Wq=e=>e.length===0?"":["Variables (every module prompt must use {{name}} placeholders; do not paste sample values):",...e.map(r=>`- {{${r.name}}}: ${r.description.trim()} (sample: ${r.sampleValue.trim()})`),""].join(`
 `),wb=e=>{let t=gp(e.avoid),r=e.stepInstructions.trim().length===0?"":`Extra instructions:
 ${e.stepInstructions.trim()}
-`,n=e.lastAttemptSummary.trim().length===0?"":`Last attempt (fix this):
+`,o=e.lastAttemptSummary.trim().length===0?"":`Last attempt (fix this):
 ${e.lastAttemptSummary.trim()}
-`,o=e.evaluatedPromptReference.trim().length===0?"":`Evaluated wording reference (structure only; module prompts must still use {{placeholders}}, not literals from this text):
+`,n=e.evaluatedPromptReference.trim().length===0?"":`Evaluated wording reference (structure only; module prompts must still use {{placeholders}}, not literals from this text):
 ${e.evaluatedPromptReference.trim()}
 `,s=Wq(e.variables);return["Suggest ways to split this prompt into smaller modules for maintenance and faster evaluation.","Split the templated prompt below. Keep every {{variableName}} placeholder in each module prompt.","Do not substitute sample values or concrete paths, file names, or IDs into module prompts.",`Return at most ${3} options.`,"Mark exactly one option recommended:true (best accuracy per token).","topology is chain or parallel.","Each module needs id, title, prompt, order (0-based).","",`Goal:
 ${e.goal.trim()}`,"",s,`Templated prompt:
@@ -2133,15 +2479,91 @@ ${e.templatedPrompt.trim()}`,"",o,r,n,t,"","Reply with JSON only:",'{"options":[
   const dialog = document.getElementById("sdlc-node-dialog");
   const body = dialog?.querySelector("[data-sdlc-dialog-body]");
   if (!dialog || !body) return;
+  const readNodeTemplate = (node) => {
+    if (!(node instanceof Element)) return null;
+    const direct = node.querySelector(":scope > template");
+    return direct instanceof HTMLTemplateElement ? direct : null;
+  };
+  const readStepId = (node) => {
+    if (!(node instanceof HTMLElement)) return "";
+    const stepId = node.dataset.sdlcStepId;
+    return typeof stepId === "string" ? stepId : "";
+  };
+  const openFromTemplate = (template, stepId) => {
+    if (!(template instanceof HTMLTemplateElement)) return;
+    body.replaceChildren(template.content.cloneNode(true));
+    if (stepId.length > 0) {
+      dialog.dataset.sdlcDialogStepId = stepId;
+    } else {
+      delete dialog.dataset.sdlcDialogStepId;
+    }
+    dialog.showModal();
+  };
+  const refreshOpenDialog = () => {
+    if (!dialog.open) return;
+    const stepId = dialog.dataset.sdlcDialogStepId ?? "";
+    if (stepId.length === 0) return;
+    const node = document.querySelector('[data-sdlc-step-id="' + stepId + '"]');
+    const template = readNodeTemplate(node);
+    if (template === null) return;
+    body.replaceChildren(template.content.cloneNode(true));
+  };
+  document.addEventListener("sdlc-node-dialog-refresh", refreshOpenDialog);
   document.addEventListener("click", (event) => {
     const target = event.target;
     if (!(target instanceof Element)) return;
+    const info = target.closest("[data-sdlc-pipeline-info]");
+    if (info instanceof HTMLElement) {
+      const template = info.closest(".sdlc-pipeline-step")?.querySelector("template");
+      if (!(template instanceof HTMLTemplateElement)) return;
+      delete dialog.dataset.sdlcDialogStepId;
+      openFromTemplate(template, "");
+      return;
+    }
+    const stepPromptInfo = target.closest("[data-sdlc-wizard-step-prompt-info]");
+    if (stepPromptInfo instanceof HTMLElement) {
+      event.stopPropagation();
+      event.preventDefault();
+      const template = stepPromptInfo.parentElement?.querySelector(
+        "template[data-sdlc-wizard-step-prompt]",
+      );
+      if (!(template instanceof HTMLTemplateElement)) return;
+      delete dialog.dataset.sdlcDialogStepId;
+      openFromTemplate(template, "");
+      return;
+    }
+    const failureInfo = target.closest("[data-sdlc-failure-reply-info]");
+    if (failureInfo instanceof HTMLElement) {
+      event.stopPropagation();
+      event.preventDefault();
+      const template = failureInfo.parentElement?.querySelector(
+        "template[data-sdlc-failure-reply]",
+      );
+      if (!(template instanceof HTMLTemplateElement)) return;
+      delete dialog.dataset.sdlcDialogStepId;
+      openFromTemplate(template, "");
+      return;
+    }
+    const revisionJudgeInfo = target.closest(
+      "[data-sdlc-revision-judge-prompt-info]",
+    );
+    if (revisionJudgeInfo instanceof HTMLElement) {
+      event.stopPropagation();
+      event.preventDefault();
+      const template = revisionJudgeInfo.parentElement?.querySelector(
+        "template[data-sdlc-revision-judge-prompt]",
+      );
+      if (!(template instanceof HTMLTemplateElement)) return;
+      delete dialog.dataset.sdlcDialogStepId;
+      openFromTemplate(template, "");
+      return;
+    }
     const opener = target.closest("[data-sdlc-node]");
     if (!opener) return;
-    const template = opener.parentElement?.querySelector("template");
-    if (!template) return;
-    body.replaceChildren(template.content.cloneNode(true));
-    dialog.showModal();
+    const node = opener.closest(".sdlc-node");
+    const template = readNodeTemplate(node);
+    if (template === null) return;
+    openFromTemplate(template, readStepId(node));
   });
 })();
 </script>`});var _p,vp,Wp,vI,Db=l(()=>{"use strict";_p="support-reply",vp="When this prompt is used on a customer email, the reply answers the question they asked, uses only facts present in the thread, and offers a refund only when the policy text allows that exact case.",Wp=["You are a support agent. Read the customer's email and write a helpful, professional reply.","Solve their problem. If they ask for a refund, follow the refund policy.","Keep the tone warm."].join(`
@@ -2209,11 +2631,12 @@ ${s}`:"The writer printed nothing. Use the changes above."].filter(a=>a.length>0
     <p class="sdlc-wizard-gate-lede">${S}</p>
     ${f}
     <form method="POST" action="/prompt-optimizer" class="sdlc-wizard-feedback" id="sdlc-wizard-gate-form">
-      <input type="hidden" name="cycleId" value="${It(e.id)}">
-    ${s}
+      <input type="hidden" name="cycleId" value="${cc(e.id)}">
     ${i}
+    ${a}
     ${c}
-    ${u}
+    ${p}
+    ${b}
       <div class="field">
         <label class="field-label" for="wizardFeedback">Feedback to rerun this step</label>
         <textarea class="input textarea" id="wizardFeedback" name="wizardFeedback" rows="3" placeholder="What should change?"></textarea>
@@ -2230,22 +2653,22 @@ ${s}`:"The writer printed nothing. Use the changes above."].filter(a=>a.length>0
     ${IO(e)}
   </section>`}});var FK,rM,nM=l(()=>{"use strict";C();FK=e=>e.replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;"),rM=e=>{let t=e.wizard;if(t===void 0||t.gate!==null||e.status==="wizard_paused"||k(e.status))return"";if(t.phase==="separate"&&t.splitOptions.length===0)return`<section class="card sdlc-wizard-gate sdlc-wizard-gate-active" id="prompt-optimizer-wizard-active-step">
     <p class="eyebrow">Step 3 \u2014 Separate</p>
-    <h2>Suggesting module splits</h2>
+    ${r("wizard-3","Suggesting module splits")}
     <p class="muted">The writer is proposing split options. <strong>This run</strong> above updates while it works.</p>
     <p><a class="btn btn-secondary" href="#prompt-optimizer-run">Jump to This run</a></p>
-  </section>`;if(t.phase==="optimize_modules"&&t.modules.length>0){let r=t.currentModuleIndex,o=t.modules[r]?.title??"Module";return`<section class="card sdlc-wizard-gate sdlc-wizard-gate-active" id="prompt-optimizer-wizard-active-step">
+  </section>`;if(t.phase==="optimize_modules"&&t.modules.length>0){let o=t.currentModuleIndex,s=t.modules[o]?.title??"Module";return`<section class="card sdlc-wizard-gate sdlc-wizard-gate-active" id="prompt-optimizer-wizard-active-step" data-sdlc-step-id="wizard-4">
     <p class="eyebrow">Step 4 \u2014 Optimize modules</p>
     <h2>Module ${r+1} of ${t.modules.length}: ${FK(o)}</h2>
     <p class="muted">The runner executes this module in your folder, then the judge scores it. When the round finishes, the Step 4 review gate appears here. Until then, watch <strong>This run</strong> above.</p>
     <p><a class="btn btn-secondary" href="#prompt-optimizer-run">Jump to This run</a></p>
-  </section>`}return t.phase==="evaluate"?`<section class="card sdlc-wizard-gate sdlc-wizard-gate-active" id="prompt-optimizer-wizard-active-step">
+  </section>`}return t.phase==="evaluate"?`<section class="card sdlc-wizard-gate sdlc-wizard-gate-active" id="prompt-optimizer-wizard-active-step" data-sdlc-step-id="wizard-2">
     <p class="eyebrow">Step 2 \u2014 Evaluate</p>
-    <h2>Scoring prompt revisions</h2>
+    ${r("wizard-2","Scoring prompt revisions")}
     <p class="muted">The judge is revising and scoring prompt text. <strong>This run</strong> above updates while it works.</p>
     <p><a class="btn btn-secondary" href="#prompt-optimizer-run">Jump to This run</a></p>
-  </section>`:t.phase==="generalize"?`<section class="card sdlc-wizard-gate sdlc-wizard-gate-active" id="prompt-optimizer-wizard-active-step">
+  </section>`:t.phase==="generalize"?`<section class="card sdlc-wizard-gate sdlc-wizard-gate-active" id="prompt-optimizer-wizard-active-step" data-sdlc-step-id="wizard-1">
     <p class="eyebrow">Step 1 \u2014 Generalize</p>
-    <h2>Generalizing your prompt</h2>
+    ${r("wizard-1","Generalizing your prompt")}
     <p class="muted">The writer is building {{variables}}. <strong>This run</strong> above updates while it works.</p>
     <p><a class="btn btn-secondary" href="#prompt-optimizer-run">Jump to This run</a></p>
   </section>`:""}});var zK,UK,BK,oM,sM=l(()=>{"use strict";C();Vp();tM();nM();Ap();zK={generalize:"Step 1 \u2014 Generalize",evaluate:"Step 2 \u2014 Evaluate",separate:"Step 3 \u2014 Separate",optimize_modules:"Step 4 \u2014 Optimize modules"},UK=e=>e.replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;"),BK=(e,t,r)=>`<details class="sdlc-wizard-accordion-item">
@@ -2256,6 +2679,7 @@ ${s}`:"The writer printed nothing. Use the changes above."].filter(a=>a.length>0
 (() => {
   let root = null;
   let pollTimer = null;
+  let lastWizardGateScrollStepId = null;
 
   const paintElapsed = () => {
     if (root === null) return;
@@ -2271,6 +2695,11 @@ ${s}`:"The writer printed nothing. Use the changes above."].filter(a=>a.length>0
     if (root === null) return;
     root.dataset.live = incoming.dataset.live ?? "";
     root.dataset.since = incoming.dataset.since ?? "";
+    const busy = incoming.getAttribute("aria-busy");
+    root.setAttribute(
+      "aria-busy",
+      busy ?? (root.dataset.live === "true" ? "true" : "false"),
+    );
     root.innerHTML = incoming.innerHTML;
     paintElapsed();
   };
@@ -2282,8 +2711,12 @@ ${s}`:"The writer printed nothing. Use the changes above."].filter(a=>a.length>0
     const fields = document.querySelector(".sdlc-fields");
     if (fields instanceof HTMLFieldSetElement) fields.disabled = true;
     const active = document.getElementById("prompt-optimizer-wizard-active-step");
-    if (active !== null) {
-      active.scrollIntoView({ behavior: "smooth", block: "start" });
+    if (active instanceof HTMLElement) {
+      const stepId = active.dataset.sdlcStepId ?? "";
+      if (stepId.length > 0 && stepId !== lastWizardGateScrollStepId) {
+        lastWizardGateScrollStepId = stepId;
+        active.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
     }
   };
   const poll = async () => {
@@ -2304,7 +2737,9 @@ ${s}`:"The writer printed nothing. Use the changes above."].filter(a=>a.length>0
       return;
     }
     applyIncomingRun(incoming);
+    document.dispatchEvent(new Event("sdlc-node-dialog-refresh"));
     if (root.dataset.live !== "true") {
+      lastWizardGateScrollStepId = null;
       document.dispatchEvent(new Event("sdlc-run-finished"));
       return;
     }
@@ -2328,11 +2763,28 @@ ${s}`:"The writer printed nothing. Use the changes above."].filter(a=>a.length>0
 })();
 </script>`});var EM,RM=l(()=>{"use strict";EM=`<script>
 (() => {
+  const enterComposeRunStarted = () => {
+    const compose = document.getElementById("prompt-optimizer-compose");
+    const details = document.getElementById("prompt-optimizer-compose-details");
+    if (details instanceof HTMLDetailsElement) {
+      details.open = false;
+    }
+    if (compose instanceof HTMLElement) {
+      compose.classList.add("sdlc-compose-run-started");
+      compose.classList.remove("sdlc-compose-run-focus");
+    }
+  };
+
+  const focusRunPanel = () => {
+    const run = document.getElementById("prompt-optimizer-run");
+    if (run === null) return;
+    enterComposeRunStarted();
+    run.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
   const lockCompose = () => {
     const fields = document.querySelector(".sdlc-fields");
     if (fields instanceof HTMLFieldSetElement) fields.disabled = true;
-    const details = document.getElementById("prompt-optimizer-compose-details");
-    if (details instanceof HTMLDetailsElement) details.open = true;
     document.querySelector("[data-sdlc-locked]")?.remove();
     const compose = document.getElementById("prompt-optimizer-compose");
     if (compose) {
@@ -2353,15 +2805,22 @@ ${s}`:"The writer printed nothing. Use the changes above."].filter(a=>a.length>0
   };
 
   const focusActiveWizardStep = () => {
+    const stepId = readWizardAutofocusStepId();
+    if (stepId === null) return;
+    if (stepId === lastWizardAutofocusStepId) return;
     const active = document.getElementById("prompt-optimizer-wizard-active-step");
-    if (active !== null) {
-      active.scrollIntoView({ behavior: "smooth", block: "start" });
-      const focusTarget = active.querySelector(
-        "textarea, input:not([type=hidden]), button, select",
-      );
-      if (focusTarget instanceof HTMLElement) focusTarget.focus({ preventScroll: true });
-    }
+    if (active === null) return;
+    lastWizardAutofocusStepId = stepId;
+    active.scrollIntoView({ behavior: "smooth", block: "start" });
+    const focusTarget = active.querySelector(
+      "textarea, input:not([type=hidden]), button, select",
+    );
+    if (focusTarget instanceof HTMLElement) focusTarget.focus({ preventScroll: true });
   };
+
+  document.addEventListener("sdlc-run-finished", () => {
+    lastWizardAutofocusStepId = null;
+  });
 
   const applyLiveFragment = (html) => {
     const holder = document.createElement("div");
@@ -2400,13 +2859,12 @@ ${s}`:"The writer printed nothing. Use the changes above."].filter(a=>a.length>0
     if (incomingDialog !== null && document.getElementById("sdlc-node-dialog") === null) {
       document.body.appendChild(incomingDialog);
     }
-    if (!applied) return;
-    lockCompose();
+    if (!applied) {
+      document.dispatchEvent(new Event("sdlc-run-start-failed"));
+      return;
+    }
     if (runApplied) {
-      document.getElementById("prompt-optimizer-run")?.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-      });
+      lockCompose();
     } else {
       focusActiveWizardStep();
     }
@@ -2415,6 +2873,7 @@ ${s}`:"The writer printed nothing. Use the changes above."].filter(a=>a.length>0
       document.dispatchEvent(new Event("sdlc-run-finished"));
     }
     document.dispatchEvent(new CustomEvent("sdlc-live-restart"));
+    document.dispatchEvent(new Event("sdlc-node-dialog-refresh"));
   };
 
   const formDataFromSubmit = (form, submitter) =>
@@ -2448,9 +2907,15 @@ ${s}`:"The writer printed nothing. Use the changes above."].filter(a=>a.length>0
       body,
       cache: "no-store",
     }).catch(() => null);
-    if (response === null || !response.ok) return false;
+    if (response === null || !response.ok) {
+      document.dispatchEvent(new Event("sdlc-run-start-failed"));
+      return false;
+    }
     const html = await response.text();
-    if (html.trim().length === 0) return false;
+    if (html.trim().length === 0) {
+      document.dispatchEvent(new Event("sdlc-run-start-failed"));
+      return false;
+    }
     applyLiveFragment(html);
     const cycleId = response.headers.get("X-Prompt-Sdlc-Cycle-Id");
     if (cycleId) {
@@ -2490,17 +2955,21 @@ ${s}`:"The writer printed nothing. Use the changes above."].filter(a=>a.length>0
         ? submitter.value
         : "";
     if (intent !== "run") return;
+    const summaryStep = document.getElementById("sdlc-compose-step-4");
+    if (summaryStep instanceof HTMLElement && summaryStep.hidden) {
+      return;
+    }
     event.preventDefault();
     void postLiveFragment(formDataFromSubmit(form, submitter));
   });
 
   if (document.querySelector(".sdlc-fields[disabled]")) {
-    const details = document.getElementById("prompt-optimizer-compose-details");
-    const viewingFinished = document
-      .getElementById("prompt-optimizer-compose")
-      ?.classList.contains("sdlc-compose-viewing-finished");
-    if (details instanceof HTMLDetailsElement) {
-      details.open = viewingFinished !== true;
+    const compose = document.getElementById("prompt-optimizer-compose");
+    if (
+      compose instanceof HTMLElement &&
+      !compose.classList.contains("sdlc-compose-viewing-finished")
+    ) {
+      compose.classList.add("sdlc-compose-run-focus");
     }
   }
 
@@ -2621,7 +3090,16 @@ ${s}`:"The writer printed nothing. Use the changes above."].filter(a=>a.length>0
     observer.observe(moduleResultsSection);
   }
 
-  focusActiveWizardStep();
+  const runOnLoad = document.getElementById("prompt-optimizer-run");
+  const runBusyOnLoad =
+    runOnLoad instanceof HTMLElement &&
+    runOnLoad.getAttribute("aria-busy") === "true";
+  const stepOnLoad = readWizardAutofocusStepId();
+  if (runBusyOnLoad && stepOnLoad !== null) {
+    lastWizardAutofocusStepId = stepOnLoad;
+  } else {
+    focusActiveWizardStep();
+  }
 })();
 </script>`});var kM,CM=l(()=>{"use strict";kM=`<script>
 (() => {
@@ -2688,6 +3166,14 @@ ${s}`:"The writer printed nothing. Use the changes above."].filter(a=>a.length>0
     document.querySelector("#prompt-optimizer-run .sdlc-run-badge-done") !== null ||
     document.querySelector("#prompt-optimizer-run .sdlc-run-badge-finished") !== null;
   const staticPreview = window.location.protocol === "file:";
+  let showRunBlockHint = false;
+  const clearRunHint = () => {
+    showRunBlockHint = false;
+    if (!(hint instanceof HTMLElement)) return;
+    hint.textContent = "";
+    hint.hidden = true;
+    hint.className = "muted sdlc-run-hint";
+  };
   const paintRunHint = () => {
     if (!(hint instanceof HTMLElement)) return;
     if (!(runButton instanceof HTMLButtonElement)) {
@@ -2698,9 +3184,7 @@ ${s}`:"The writer printed nothing. Use the changes above."].filter(a=>a.length>0
     }
     const reason = readRunBlockReason();
     if (reason === null) {
-      hint.textContent = "";
-      hint.hidden = true;
-      hint.className = "muted sdlc-run-hint";
+      clearRunHint();
       return;
     }
     hint.textContent = reason;
@@ -2734,24 +3218,184 @@ ${s}`:"The writer printed nothing. Use the changes above."].filter(a=>a.length>0
     }
     return null;
   };
+  const readSelectLabel = (select) => {
+    if (!(select instanceof HTMLSelectElement)) return "";
+    if (select.value.length === 0) return "";
+    const option = select.selectedOptions[0];
+    return option ? option.textContent.trim() : select.value;
+  };
+  const truncatePreview = (text, max = 220) => {
+    if (text.length <= max) return text;
+    return text.slice(0, max - 1) + "\u2026";
+  };
+  const escapeComposeText = (value) =>
+    value
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;");
+  const paintComposeReview = () => {
+    if (!(composeReview instanceof HTMLElement)) return;
+    const compose = readComposeFields();
+    const judgeSelect = document.querySelector('[data-writer-select="judge"]');
+    const improverSelect = document.querySelector('[data-writer-select="improver"]');
+    const runnerSelect = document.querySelector('[data-writer-select="runner"]');
+    const judgeLabel = readSelectLabel(judgeSelect);
+    const improverLabel = readSelectLabel(improverSelect);
+    const runnerLabel = readSelectLabel(runnerSelect);
+    const folder = compose.folder.length > 0 ? escapeComposeText(compose.folder) : "\u2014";
+    const goal = compose.hasGoal ? escapeComposeText(truncatePreview(compose.goal)) : "\u2014";
+    const prompt = compose.hasPrompt
+      ? escapeComposeText(truncatePreview(compose.prompt))
+      : "\u2014";
+    const judge = judgeLabel.length > 0 ? escapeComposeText(judgeLabel) : "\u2014";
+    const improver =
+      improverLabel.length > 0 ? escapeComposeText(improverLabel) : "\u2014";
+    const runner =
+      runnerLabel.length > 0
+        ? escapeComposeText(runnerLabel)
+        : "Not set (uses judge when step 4 runs)";
+    const passStep2 = form.querySelector('[name="passScore"]');
+    const passStep4 = form.querySelector('[name="modulePassScore"]');
+    const passStep2Text =
+      passStep2 instanceof HTMLInputElement ? passStep2.value : "70";
+    const passStep4Text =
+      passStep4 instanceof HTMLInputElement ? passStep4.value : "90";
+    composeReview.innerHTML =
+      "<dt>Folder</dt><dd>" +
+      folder +
+      "</dd>" +
+      "<dt>Goal</dt><dd>" +
+      goal +
+      "</dd>" +
+      "<dt>Prompt</dt><dd><span class=" +
+      '"sdlc-compose-review-preview"' +
+      ">" +
+      prompt +
+      "</span></dd>" +
+      "<dt>Judge</dt><dd>" +
+      judge +
+      "</dd>" +
+      "<dt>Improver</dt><dd>" +
+      improver +
+      "</dd>" +
+      "<dt>Runner</dt><dd>" +
+      runner +
+      "</dd>" +
+      "<dt>Step 2 pass</dt><dd>" +
+      escapeComposeText(passStep2Text) +
+      "</dd>" +
+      "<dt>Step 4 pass</dt><dd>" +
+      escapeComposeText(passStep4Text) +
+      "</dd>";
+  };
+  const paintComposeStepError = (message) => {
+    if (!(composeStepError instanceof HTMLElement)) return;
+    if (message === null || message.length === 0) {
+      composeStepError.textContent = "";
+      composeStepError.hidden = true;
+      return;
+    }
+    composeStepError.textContent = message;
+    composeStepError.hidden = false;
+  };
+  const validateComposeStep = (step) => {
+    const compose = readComposeFields();
+    if (step === 1) {
+      if (compose.folder.length === 0) {
+        return "Choose a folder path or use Choose folder\u2026";
+      }
+      return null;
+    }
+    if (step === 2) {
+      if (!compose.hasGoal || !compose.hasPrompt) {
+        return "Fill in the goal and the prompt before you continue.";
+      }
+      return null;
+    }
+    if (step === 3) {
+      const judgeSelect = document.querySelector('[data-writer-select="judge"]');
+      const improverSelect = document.querySelector('[data-writer-select="improver"]');
+      const judge =
+        judgeSelect instanceof HTMLSelectElement ? judgeSelect.value.trim() : "";
+      const improver =
+        improverSelect instanceof HTMLSelectElement
+          ? improverSelect.value.trim()
+          : "";
+      if (judge.length === 0 || improver.length === 0) {
+        return "Choose who scores and who rewrites the prompt.";
+      }
+      const pending = slots.find((slot) => slot.dataset.ready !== "true");
+      if (pending) {
+        const writer = pending.dataset.writer ?? "writer";
+        if (pending.textContent === "Checking\u2026") {
+          return "Checking that the chosen writers are ready\u2026";
+        }
+        if (pending.textContent.trim().length > 0) {
+          return pending.textContent.trim();
+        }
+        return "Fix the writer error above, then continue.";
+      }
+      return null;
+    }
+    return null;
+  };
+  const showComposeStep = (step) => {
+    const next = Math.min(COMPOSE_STEP_COUNT, Math.max(1, step));
+    clearRunHint();
+    composeStep = next;
+    composeStepPanels.forEach((panel) => {
+      if (!(panel instanceof HTMLElement)) return;
+      const panelStep = Number(panel.dataset.sdlcComposeStep ?? "0");
+      panel.hidden = panelStep !== next;
+    });
+    composeStepperItems.forEach((item) => {
+      if (!(item instanceof HTMLElement)) return;
+      const itemStep = Number(item.dataset.sdlcStepperItem ?? "0");
+      if (itemStep === next) {
+        item.setAttribute("aria-current", "step");
+      } else {
+        item.removeAttribute("aria-current");
+      }
+    });
+    paintComposeStepError(null);
+    if (next === COMPOSE_STEP_COUNT) {
+      paintComposeReview();
+      paintReady();
+      document.getElementById("sdlc-compose-step-4")?.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest",
+      });
+    }
+  };
   const readComposeFields = () => {
     const form = document.querySelector("form.sdlc-form");
     if (!(form instanceof HTMLFormElement)) {
-      return { hasGoal: false, hasPrompt: false, prompt: "", folder: "", judge: "" };
+      return {
+        hasGoal: false,
+        hasPrompt: false,
+        goal: "",
+        prompt: "",
+        folder: "",
+        judge: "",
+      };
     }
     const goal = form.querySelector('[name="goal"]');
     const prompt = form.querySelector('[name="prompt"]');
     const folder = form.querySelector('[name="folder"]');
     const judgeSelect = form.querySelector('[data-writer-select="judge"]');
-    const goalText = goal instanceof HTMLTextAreaElement ? goal.value.trim() : "";
-    const promptText = prompt instanceof HTMLTextAreaElement ? prompt.value.trim() : "";
+    const goalText = goal instanceof HTMLTextAreaElement ? goal.value : "";
+    const promptText = prompt instanceof HTMLTextAreaElement ? prompt.value : "";
+    const goalTrim = goalText.trim();
+    const promptTrim = promptText.trim();
     const folderText = folder instanceof HTMLInputElement ? folder.value.trim() : "";
     const judgeText =
       judgeSelect instanceof HTMLSelectElement ? judgeSelect.value.trim() : "";
     return {
-      hasGoal: goalText.length > 0,
-      hasPrompt: promptText.length > 0,
-      prompt: promptText,
+      hasGoal: goalTrim.length > 0,
+      hasPrompt: promptTrim.length > 0,
+      goal: goalTrim,
+      prompt: promptTrim,
       folder: folderText,
       judge: judgeText,
     };
@@ -2819,6 +3463,7 @@ ${s}`:"The writer printed nothing. Use the changes above."].filter(a=>a.length>0
     summary.hidden = true;
     summary.textContent = "";
     summary.className = "sdlc-writer-summary";
+    if (composeStep === COMPOSE_STEP_COUNT) paintComposeReview();
   };
   const paintWriter = async (writer) => {
     const targets = slots.filter((slot) => slot.dataset.writer === writer);
@@ -2902,6 +3547,7 @@ ${s}`:"The writer printed nothing. Use the changes above."].filter(a=>a.length>0
   };
   document.querySelectorAll("[data-writer-select]").forEach((select) => {
     select.addEventListener("change", () => {
+      clearRunHint();
       rememberSelection();
       const slot = document.querySelector('[data-writer-status="' + select.dataset.writerSelect + '"]');
       if (!slot) return;
@@ -2917,16 +3563,58 @@ ${s}`:"The writer printed nothing. Use the changes above."].filter(a=>a.length>0
   if (folderInput instanceof HTMLInputElement) {
     folderInput.addEventListener("change", rememberSelection);
     folderInput.addEventListener("blur", rememberSelection);
-    folderInput.addEventListener("input", paintReady);
+    folderInput.addEventListener("input", () => {
+      clearRunHint();
+      paintReady();
+    });
   }
+  const composeForm = document.querySelector("form.sdlc-form");
   const goalInput = document.querySelector('form.sdlc-form [name="goal"]');
   const promptInput = document.querySelector('form.sdlc-form [name="prompt"]');
+  composeForm?.addEventListener("click", (event) => {
+    const target = event.target;
+    if (!(target instanceof Element)) return;
+    const chip = target.closest("[data-sdlc-goal-preset]");
+    if (!(chip instanceof HTMLButtonElement)) return;
+    const preset = chip.dataset.sdlcGoalPreset?.trim() ?? "";
+    if (preset.length === 0) return;
+    const goal =
+      composeForm?.querySelector('[name="goal"]') ?? goalInput;
+    if (!(goal instanceof HTMLTextAreaElement)) return;
+    goal.value = preset;
+    paintComposeStepError(null);
+    goal.dispatchEvent(new Event("input", { bubbles: true }));
+    goal.focus();
+  });
   if (goalInput instanceof HTMLTextAreaElement) {
-    goalInput.addEventListener("input", paintReady);
+    goalInput.addEventListener("input", () => {
+      clearRunHint();
+      paintReady();
+      if (composeStep === COMPOSE_STEP_COUNT) paintComposeReview();
+    });
   }
   if (promptInput instanceof HTMLTextAreaElement) {
-    promptInput.addEventListener("input", paintReady);
+    promptInput.addEventListener("input", () => {
+      clearRunHint();
+      paintReady();
+      if (composeStep === COMPOSE_STEP_COUNT) paintComposeReview();
+    });
   }
+  document.querySelectorAll("[data-sdlc-compose-continue]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const reason = validateComposeStep(composeStep);
+      if (reason !== null) {
+        paintComposeStepError(reason);
+        return;
+      }
+      showComposeStep(composeStep + 1);
+    });
+  });
+  document.querySelectorAll("[data-sdlc-compose-back]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      showComposeStep(composeStep - 1);
+    });
+  });
   [...new Set(slots.map((slot) => slot.dataset.writer))].forEach((writer) => {
     if (writer) void paintWriter(writer);
   });
@@ -2959,6 +3647,7 @@ ${s}`:"The writer printed nothing. Use the changes above."].filter(a=>a.length>0
     btn.addEventListener("click", () => {
       const details = document.getElementById("prompt-optimizer-compose-details");
       if (details instanceof HTMLDetailsElement) details.open = true;
+      showComposeStep(1);
       document.getElementById("prompt-optimizer-compose")?.scrollIntoView({
         behavior: "smooth",
         block: "start",
@@ -2987,6 +3676,7 @@ ${s}`:"The writer printed nothing. Use the changes above."].filter(a=>a.length>0
     });
   }
   paintReady();
+  document.addEventListener("sdlc-run-start-failed", revertRunStartUi);
   document.addEventListener("sdlc-run-finished", () => {
     const gateSlot = document.getElementById("prompt-optimizer-wizard-gate-slot");
     const atWizardGate =
@@ -2995,6 +3685,14 @@ ${s}`:"The writer printed nothing. Use the changes above."].filter(a=>a.length>0
       const fields = document.querySelector(".sdlc-fields");
       if (fields instanceof HTMLFieldSetElement) fields.disabled = false;
       document.querySelector("[data-sdlc-locked]")?.remove();
+      const compose = document.getElementById("prompt-optimizer-compose");
+      compose?.classList.remove("sdlc-compose-run-focus");
+      compose?.classList.remove("sdlc-compose-run-started");
+      document.querySelectorAll(".sdlc-compose-step-actions").forEach((node) => {
+        if (node instanceof HTMLElement) {
+          node.hidden = false;
+        }
+      });
       const details = document.getElementById("prompt-optimizer-compose-details");
       if (details instanceof HTMLDetailsElement) {
         details.open = document.getElementById("prompt-optimizer-run") === null;
@@ -3025,6 +3723,27 @@ Wanted output: The ticket has no refund. Ask which order.`},runner:{title:"Runne
   } catch {
     skills = [];
   }
+  const orchestratorInput = document.querySelector("[data-orchestrator-skill-file]");
+  const orchestratorNote = document.querySelector("[data-orchestrator-skill-note]");
+  const paintOrchestratorNote = (fileName) => {
+    if (!(orchestratorNote instanceof HTMLElement)) return;
+    if (typeof fileName !== "string" || fileName.length === 0) {
+      orchestratorNote.textContent = "";
+      orchestratorNote.hidden = true;
+      return;
+    }
+    orchestratorNote.textContent =
+      "Orchestrator skill: " +
+      fileName +
+      ". The prompt may change in Step 2 evaluate; this skill keeps the orchestrator role.";
+    orchestratorNote.hidden = false;
+  };
+  const setOrchestratorFile = (fileName) => {
+    if (orchestratorInput instanceof HTMLInputElement) {
+      orchestratorInput.value = fileName;
+    }
+    paintOrchestratorNote(fileName);
+  };
   select.addEventListener("change", () => {
     const skill = skills.find((item) => item.fileName === select.value);
     const prompt = document.querySelector('textarea[name="prompt"]');
@@ -3032,7 +3751,11 @@ Wanted output: The ticket has no refund. Ask which order.`},runner:{title:"Runne
     if (typeof skill.promptText !== "string") return;
     prompt.value = skill.promptText;
     prompt.dispatchEvent(new Event("input"));
+    setOrchestratorFile(select.value);
   });
+  if (select.value.length > 0) {
+    setOrchestratorFile(select.value);
+  }
 })();
 </script>`});var Ce,JM,n8,YM,XM,ZM,QM=l(()=>{"use strict";C();tP();Me();Ga();Vp();Ce=e=>e.replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;"),JM=e=>e==="generalize"?"Step 1 \u2014 Generalize":e==="evaluate"?"Step 2 \u2014 Evaluate":e==="separate"?"Step 3 \u2014 Separate":"Step 4 \u2014 Optimize modules",n8=e=>{let t=e.wizard?.templatedPrompt.trim()??"";return t.length>0?t:e.revisions.find(n=>n.roundNumber===0)?.promptText??""},YM=e=>e===x?"You":be(e),XM=e=>{let t=n8(e),r=e.runnerModel===void 0||e.runnerModel==="manual"?"\u2014":be(e.runnerModel);return`<details class="sdlc-wizard-resume-inputs">
     <summary class="btn btn-secondary">View inputs</summary>
@@ -3198,7 +3921,7 @@ Wanted output: The ticket has no refund. Ask which order.`},runner:{title:"Runne
       </tr>`,template:`<template id="${g}">
         <p class="eyebrow">${er(c)}</p>
         <h2>Input</h2>
-        <pre>${er(i)}</pre>
+        <pre>${xr(i)}</pre>
         <h2>Output</h2>
         <pre>${er(a)}</pre>
         <p>Time: estimated ${dm(o.estimateSeconds)} \xB7 actual ${dm(o.actualSeconds)} \xB7 ${er(d)}</p>
@@ -3209,12 +3932,12 @@ Wanted output: The ticket has no refund. Ask which order.`},runner:{title:"Runne
       <p class="lede">Every prompt on this Mac. Select a row to read the input, output, and estimate.</p>
       ${r.length===0?'<p class="empty">No prompt history yet.</p>':`<div class="table-wrap history-table-wrap"><table id="history-table">
           <thead><tr><th>Prompt</th><th>Writer</th><th>Estimated</th><th>Actual</th><th>Comparison</th><th>Estimated tokens</th><th>Actual tokens</th><th>Token comparison</th></tr></thead>
-          <tbody>${r.map(o=>o.row).join("")}</tbody>
+          <tbody>${r.map(n=>n.row).join("")}</tbody>
         </table></div>
-        ${r.map(o=>o.template).join("")}
+        ${r.map(n=>n.template).join("")}
         <dialog id="history-detail" class="history-dialog" aria-label="Prompt detail">
           <div class="history-dialog-bar">
-            <button type="button" class="btn btn-secondary btn-compact" id="history-detail-close">Close</button>
+            ${bg({type:"button",id:"history-detail-close"})}
           </div>
           <div class="history-dialog-body" id="history-detail-body"></div>
         </dialog>
@@ -3222,8 +3945,6 @@ Wanted output: The ticket has no refund. Ask which order.`},runner:{title:"Runne
     </section>`}});var gj=l(()=>{"use strict";tj();mj()});var ts,D8,H8,MP,fj=l(()=>{"use strict";ts=e=>e.replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;"),D8=(e,t,r)=>{let n=ts(t),o=ts(r);return`<article class="transcript-turn">
   <p class="eyebrow">Turn ${e+1}</p>
   <h3 class="transcript-role">User</h3>
-  <pre class="transcript-body">${n}</pre>
-  <h3 class="transcript-role">Assistant</h3>
   <pre class="transcript-body">${o}</pre>
 </article>`},H8=e=>{let t=e.projectFolderPath!==null?`<p class="muted mono">${ts(e.projectFolderPath)}</p>`:'<p class="muted">No project folder</p>',r=e.turns.length>0?e.turns.map((n,o)=>D8(o,n.userPrompt,n.assistantOutput)).join(""):'<p class="muted">No turns recorded yet.</p>';return`<section class="card transcript-session">
     <p class="eyebrow">${ts(e.writerAgent)}</p>
@@ -3240,7 +3961,7 @@ Wanted output: The ticket has no refund. Ask which order.`},runner:{title:"Runne
 `).filter(Boolean),s=[];for(let i of o)try{s.push(JSON.parse(i))}catch{}return s},jP=e=>{let t=Sj(e.layout,e.projectFolderPath,e.projectId);if(t===null)return;let r={...e.entry,prompt:Yt(e.entry.prompt),output:Yt(e.entry.output)};nl.default.mkdirSync(yj.default.dirname(t),{recursive:!0}),nl.default.appendFileSync(t,`${JSON.stringify(r)}
 `,"utf8")},DP=(e,t=5)=>e.length===0?"":`Recent project memory:
 
-${e.slice(-t).reverse().map((o,s)=>{let i=o.prompt.length>240?`${o.prompt.slice(0,240)}\u2026`:o.prompt,a=o.output.length>400?`${o.output.slice(0,400)}\u2026`:o.output;return`[${s+1}] Prompt: ${i}
+${e.slice(-t).reverse().map((n,s)=>{let i=n.prompt.length>240?`${n.prompt.slice(0,240)}\u2026`:n.prompt,a=n.output.length>400?`${n.output.slice(0,400)}\u2026`:n.output;return`[${s+1}] Prompt: ${i}
 Result: ${a}`}).join(`
 
 `)}
@@ -3252,7 +3973,7 @@ Result: ${a}`}).join(`
 
 `).trim(),F8=(e,t)=>e.length<=t?e:`\u2026${e.slice(-t)}`,ol=e=>{let t=e.maxOutputCharsPerTurn??4e3,r=e.maxTotalChars??12e3;if(e.turns.length===0)return"";let n=[],o=0;for(let s=e.turns.length-1;s>=0;s-=1){let i=e.turns[s],a=i.userPrompt.trim().length>0?`User: ${i.userPrompt.trim()}`:null,c=$8(i.assistantOutput),d=c.length>0?`Assistant: ${F8(c,t)}`:null,p=[a,d].filter(g=>g!==null).join(`
 
-`);if(p.length!==0){if(o+p.length>r&&n.length>0)break;n.unshift(p),o+=p.length}}return n.join(`
+`);if(p.length!==0){if(n+p.length>r&&o.length>0)break;o.unshift(p),n+=p.length}}return o.join(`
 
 `)},pm=e=>{let t=e.userMessage.trim(),r=ol({turns:e.priorTurns,maxOutputCharsPerTurn:e.maxOutputCharsPerTurn,maxTotalChars:e.maxTotalChars});return r.length===0?t:["Continue the same task on this Mac using the prior conversation as context.","","<prior_context>",r,"</prior_context>","","New message:",t].join(`
 `)}});var Ot,sl,zP,z8,U8,$P,B8,UP,mm,bj,Pj,G8,rs,BP,FP,wj,V8,_j,ns,gm,il,q8,al,GP,fm,hm,vj=l(()=>{"use strict";Ot=m(require("node:fs")),sl=m(require("node:path")),zP=require("node:crypto");HP();z8="writer-sessions",U8="active-index.json",$P=e=>typeof e=="object"&&e!==null&&!Array.isArray(e),B8=e=>e==="claude-cli"||e==="codex"||e==="cursor"||e==="antigravity",UP=e=>{if(e===void 0)return null;let t=e.trim();return t.length>0?t:null},mm=e=>{let t=sl.default.join(e.installDir,z8);return Ot.default.mkdirSync(t,{recursive:!0}),t},bj=e=>sl.default.join(mm(e),U8),Pj=(e,t)=>sl.default.join(mm(e),`${t}.canonical.json`),G8=(e,t)=>sl.default.join(mm(e),`${t}.continuation.json`),rs=e=>`${e.writerAgent}\0${e.projectFolderPath??""}`,BP=e=>{let t=bj(e);if(!Ot.default.existsSync(t))return{entries:[]};try{let r=JSON.parse(Ot.default.readFileSync(t,"utf8"));if(!$P(r)||!Array.isArray(r.entries))return{entries:[]};let n=[];for(let o of r.entries){if(!$P(o)||typeof o.sessionId!="string")continue;let s=typeof o.writerAgent=="string"?o.writerAgent:"";if(!B8(s))continue;let i=typeof o.projectFolderPath=="string"?o.projectFolderPath:(o.projectFolderPath===null,null);n.push({writerAgent:s,projectFolderPath:i,sessionId:o.sessionId})}return{entries:n}}catch{return{entries:[]}}},FP=(e,t)=>{Ot.default.writeFileSync(bj(e),JSON.stringify(t,null,2))},wj=(e,t)=>{Ot.default.writeFileSync(Pj(e,t.sessionId),JSON.stringify(t,null,2))},V8=(e,t)=>{Ot.default.writeFileSync(G8(e,t.sessionId),JSON.stringify(t,null,2))},_j=(e,t)=>{let r=ol({turns:t.turns});V8(e,{sessionId:t.sessionId,injectionBody:r,updatedAt:t.updatedAt})},ns=(e,t)=>{let r=Pj(e,t);if(!Ot.default.existsSync(r))return null;try{let n=JSON.parse(Ot.default.readFileSync(r,"utf8"));return!$P(n)||typeof n.sessionId!="string"?null:n}catch{return null}},gm=(e,t=20)=>{let r=mm(e),n=Ot.default.readdirSync(r,{withFileTypes:!0}).filter(s=>s.isFile()&&s.name.endsWith(".canonical.json")),o=[];for(let s of n){let i=s.name.replace(/\.canonical\.json$/,""),a=ns(e,i);a!==null&&o.push(a)}return o.toSorted((s,i)=>i.updatedAt.localeCompare(s.updatedAt)).slice(0,t)},il=(e,t,r)=>{let n=UP(r);return BP(e).entries.find(i=>rs(i)===rs({writerAgent:t,projectFolderPath:n}))?.sessionId??null},q8=(e,t,r,n)=>{let o=BP(e),s=rs({writerAgent:t,projectFolderPath:r}),i=[...o.entries.filter(a=>rs(a)!==s),{writerAgent:t,projectFolderPath:r,sessionId:n}];FP(e,{entries:i})},al=(e,t,r)=>{let n=(0,zP.randomUUID)(),o=new Date().toISOString(),s=UP(r),i={sessionId:n,writerAgent:t,projectFolderPath:s,turns:[],createdAt:o,updatedAt:o};return wj(e,i),_j(e,i),q8(e,t,s,n),n},GP=(e,t,r)=>{let n=il(e,t,r);return n!==null?n:al(e,t,r)},fm=(e,t,r)=>{let n=UP(r),o=BP(e);if(n===null&&r===void 0){FP(e,{entries:o.entries.filter(i=>i.writerAgent!==t)});return}let s=rs({writerAgent:t,projectFolderPath:n});FP(e,{entries:o.entries.filter(i=>rs(i)!==s)})},hm=e=>{let t=GP(e.layout,e.writerAgent,e.projectFolderPath),r=ns(e.layout,t);if(r===null)return;let n={id:(0,zP.randomUUID)(),...e.agentRunId!==void 0?{agentRunId:e.agentRunId}:{},userPrompt:e.userPrompt,assistantOutput:e.assistantOutput,createdAt:new Date().toISOString()},o={...r,turns:[...r.turns,n],updatedAt:n.createdAt};wj(e.layout,o),_j(e.layout,o)}});var K8,J8,ym,VP,Wj=l(()=>{"use strict";K8=(e,t)=>e==="cli_continue"?"minimal":t>3500?"full":e==="source_run_seed"||e==="transcript_seed"||t<80?"standard":"full",J8=e=>{if(e.contextBudget==="minimal")return{injectMemory:!1,memoryEntryLimit:0,ragLimit:0,ragMinScore:1};if(e.contextBudget==="standard"){let t=e.continuationStrategy==="none"&&e.userPromptCharacterCount<80;return{injectMemory:!0,memoryEntryLimit:3,ragLimit:t?2:3,ragMinScore:t?.4:.35}}return{injectMemory:!0,memoryEntryLimit:e.userPromptCharacterCount>3500?8:5,ragLimit:5,ragMinScore:.25}},ym=e=>e.sessionContinuation&&e.supportsWriterSessionContinuation&&e.isWriterConversationStarted?"continue":"first",VP=e=>{let t=ym(e),r=t==="continue"?"cli_continue":e.sessionContinuation&&e.hasSourceRunId?"source_run_seed":e.sessionContinuation&&e.hasCanonicalTurns?"transcript_seed":"none",n=K8(r,e.userPromptCharacterCount),o=J8({contextBudget:n,continuationStrategy:r,userPromptCharacterCount:e.userPromptCharacterCount});return{sessionTurn:t,continuationStrategy:r,contextBudget:n,...o}}});var Sm=l(()=>{"use strict";Aj();vj();HP();Wj()});var Lj=l(()=>{"use strict";gh()});var He,X8,Z8,qP,KP,JP,Ej=l(()=>{"use strict";ae();Lj();He=e=>e.replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;"),X8=(e,t)=>{let r=e[t]?.apiKey;return r!==void 0&&r.length>0?"Saved":"Not set"},Z8=(e,t,r)=>{let n=e[t]?.apiKey;if(n!==void 0&&n.length>0){let o=Od(n);return`value="${He(o)}" placeholder="Paste a new key to replace"`}return`placeholder="${He(r)}"`},qP=(e,t,r,n,o)=>{let s=zh[t];return`<label class="field">
@@ -3269,7 +3990,7 @@ Result: ${a}`}).join(`
         <fieldset class="field">
           <span class="field-label">Execution</span>
           <label><input type="radio" name="writerExecutionBackend" value="cli"${r} /> Local CLI (default)</label>
-          <label><input type="radio" name="writerExecutionBackend" value="api"${n} /> API key + Agent Witch script</label>
+          <label><input type="radio" name="writerExecutionBackend" value="api"${o} /> API key + Agent Witch script</label>
         </fieldset>
         <p class="muted">Maps: Claude \u2192 Anthropic, Codex \u2192 OpenAI, Antigravity \u2192 Google Gemini. Cursor still requires CLI or Cursor Cloud on the website.</p>
         ${qP(e.secrets,"anthropic","anthropicApiKey","Anthropic","sk-ant-\u2026")}
@@ -3309,7 +4030,7 @@ Result: ${a}`}).join(`
             data-source-path="${t(r.item.sourcePath)}"
             title="${t(r.item.relativePath)}"
           >
-            <span class="harness-tree-file-name">${t(n)}</span>
+            <span class="harness-tree-file-name">${t(o)}</span>
             <span class="muted harness-tree-file-kind">${t(r.item.kind)}</span>
           </button>
           <pre class="harness-tree-preview-body" hidden></pre>
@@ -3544,11 +4265,11 @@ Result: ${a}`}).join(`
       </section>`:"",d=a?"":`<section class="card">
       <p class="eyebrow">Advanced</p>
       <h1>Import from disk</h1>
-      <p class="lede">Scan a folder for existing <code>.cursor</code> rules and copy them into the profile harness on this Mac. Prefer installing playbooks from Agent Witch Live when possible.</p>
+      <p class="lede">Scan a folder for existing <code>.cursor</code> rules and copy them into the profile harness on this Mac. Prefer installing playbooks from Agent Witch Cloud when possible.</p>
       <div class="stack">
         <label class="field">
           <span class="field-label">Scan folder (required)</span>
-          <input class="input" id="scanFolder" name="scanFolder" type="text" value="${Or(e.scanFolder)}" placeholder="~" autocomplete="off" data-last-reveal-scan="${Or(s)}" />
+          <input class="input" id="scanFolder" name="scanFolder" type="text" value="${mo(e.scanFolder)}" placeholder="~" autocomplete="off" data-last-reveal-scan="${mo(s)}" />
         </label>
         <div class="actions">
           <div>
@@ -3571,9 +4292,9 @@ Result: ${a}`}).join(`
                 <input type="checkbox" name="includeSet" value="${c}" />
                 Include in submit
               </label>
-              <input type="hidden" name="setSlug-${c}" value="${Or(a.proposedSlug)}" />
+              <input type="hidden" name="setSlug-${c}" value="${mo(a.proposedSlug)}" />
               <input type="hidden" name="setGroupIndex-${c}" value="${s}" />
-              <p class="muted mono">${Or(a.sourceRoot)}</p>
+              <p class="muted mono">${mo(a.sourceRoot)}</p>
               <details class="harness-tree-root">
                 <summary class="harness-tree-root-summary">${g} file(s)</summary>
                 <ul class="harness-tree harness-tree-root-list">${p}</ul>
@@ -3581,7 +4302,7 @@ Result: ${a}`}).join(`
             </div>`}).join("");return`<section class="card harness-group">
           <label class="field harness-group-name-field">
             <span class="field-label">Name before upload</span>
-            <input class="input harness-group-title-input" type="text" name="groupLabel-${s}" value="${Or(n)}" autocomplete="off" />
+            <input class="input harness-group-title-input" type="text" name="groupLabel-${s}" value="${mo(o)}" autocomplete="off" />
           </label>
           ${i}
         </section>`}).join("");return`<form method="POST" action="/harness/submit">
@@ -3597,7 +4318,7 @@ Result: ${a}`}).join(`
                   <span class="muted mono">${cl(o.projectFolderPath)}</span>
                   ${i}
                 </a>
-                <div class="actions">${c}${a}</div>
+                <div class="actions">${c}${a}${p}${m}</div>
               </li>`}).join("")}</ul>`;return`${t}${r}<section class="card">
       <p class="eyebrow">Repositories</p>
       <h1>Projects on this Mac</h1>
@@ -3615,7 +4336,7 @@ ${e.challenge}`;return pw(e.serverPublicKey,t,e.serverAttestation)}});var Sw=l((
       <p class="eyebrow">Local bridge</p>
       <h1>Status</h1>
       <p class="lede">Connection and pairing details for Agent Witch on this Mac.</p>
-      ${o}
+      ${n}
       <div class="meta-grid">
         <div class="meta-item"><span class="meta-label">WebSocket</span><span class="meta-value">${t}</span></div>
         <div class="meta-item"><span class="meta-label">Last heartbeat</span><span class="meta-value">${aa(e.status.lastHeartbeatAt)}</span></div>
@@ -3624,7 +4345,7 @@ ${e.challenge}`;return pw(e.serverPublicKey,t,e.serverAttestation)}});var Sw=l((
         <div class="meta-item"><span class="meta-label">Install bundle</span><span class="meta-value"><code>${oe(e.installBundleVersion)}</code>${e.installBundleUpdatedAt!==null?` <span class="muted">\xB7 ${oe(ww(e.installBundleUpdatedAt))}</span>`:""}</span></div>
         <div class="meta-item"><span class="meta-label">Public key</span><span class="meta-value muted mono">${oe(e.status.publicKeyRaw.slice(0,24))}\u2026</span></div>
       </div>
-      ${n}
+      ${o}
       ${s}
     </section>`},lD=e=>{let r=new URL(e??"/",`http://127.0.0.1:${43347}`).searchParams.get("update");return r==="ok"?"ok":r==="failed"?"failed":r==="started"?"started":null},cD=e=>{let r=new URL(e??"/",`http://127.0.0.1:${43347}`).searchParams.get("error")?.trim()??"";return r.length===0?null:r.slice(0,uD)},ul=e=>{let t=Pw.default.join(e.layout.installDir,"link-code.txt"),r=()=>Le(e.layout.installDir),n=()=>{let h=r();return{installBundleVersion:bm(h),installBundleUpdatedAt:h?.updatedAt??null,installVersion:h}},o=async h=>{let y=h.installVersion??r(),u=await i(),S=UA(u),A=h.updateFlash??null,f=BA(A),w=p4(A,h.updateError??null);return FA({title:h.title,activePath:h.activePath,body:h.body,cloudAppOrigin:tr(y),installBundleVersionLabel:bm(y),prependBody:`${f}${w}${S}`,headerUpdateButtonHtml:zA(u)})},s=null,i=async()=>{let h=Date.now();if(s!==null&&h-s.cachedAtMs<6e4)return s.offer;let y=await tw(e.layout);return s={cachedAtMs:h,offer:y},y},a=()=>{s=null},c=!1,d=async h=>{if(a(),!(await i()).updateAvailable){h.writeHead(303,{Location:"/?update=ok"}),h.end();return}if(c){h.writeHead(303,{Location:bw("An update is already running.")}),h.end();return}c=!0;try{let u=await sw(),S=u.ok?"/?update=ok":bw(u.message);h.writeHead(303,{Location:S}),h.end()}catch(u){let S=u instanceof Error&&u.message.trim().length>0?u.message:"Install bundle update failed.";h.writeHead(303,{Location:bw(S)}),h.end()}finally{c=!1,a()}},p=async(h,y)=>{let u=y==="Project not found"?"That project is not available on this Mac.":"That page does not exist on this Mac.",S=n(),A=await o({title:y,activePath:y==="Project not found"?"/projects":"/",installVersion:S.installVersion,body:`<section class="card">
       <h1>${oe(y)}</h1>
@@ -3635,7 +4356,7 @@ ${e.challenge}`;return pw(e.serverPublicKey,t,e.serverAttestation)}});var Sw=l((
               <h1>WS traffic log</h1>
               <p class="lede">Frames sent and received, plus local bridge actions.</p>
               ${L}
-              ${v}
+              ${C}
               <form method="POST" action="/api/traffic/clear" class="actions" style="margin-bottom:12px">
                 <button class="btn btn-ghost" type="submit">Clear traffic</button>
               </form>

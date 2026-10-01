@@ -1,5 +1,6 @@
 import { PROMPT_SDLC_WIZARD_STOP_USER } from "../../../../adapters/promptSdlcAwcCore";
 
+import { completePromptSdlcLocalWizardCycle } from "./completePromptSdlcLocalWizardCycle";
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
 import { abortPromptSdlcLocalCycleWriters } from "./stopPromptSdlcLocalCycle";
 
@@ -8,18 +9,8 @@ export const stopPromptSdlcWizardRun = (
 ): PromptSdlcLocalCycle => {
   abortPromptSdlcLocalCycleWriters(cycle.id);
   return {
-    ...cycle,
-    status: "stopped",
+    ...completePromptSdlcLocalWizardCycle(cycle, "stopped"),
     errorMessage: PROMPT_SDLC_WIZARD_STOP_USER,
-    wizard:
-      cycle.wizard === undefined
-        ? undefined
-        : {
-            ...cycle.wizard,
-            gate: null,
-            phase: "complete",
-          },
-    updatedAt: new Date().toISOString(),
   };
 };
 

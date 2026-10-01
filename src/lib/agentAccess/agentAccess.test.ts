@@ -63,6 +63,18 @@ describe("agent access registration", () => {
     expect(text).toContain("http://127.0.0.1:43347/prompt-optimizer/agent");
     expect(text).toContain("workingDirectory");
     expect(text).toContain("Do not ask the human to paste the prompt");
+    expect(guideline.sections[0]?.heading).toBe("What Agent Witch is");
+    expect(text).toContain("agent-support playground");
+    expect(text).toContain("Prompt Optimizer");
+    expect(text).toContain("not a concrete ops executor");
+    expect(text).toContain("Slack");
+    expect(
+      guideline.sections.some(
+        (section) => section.heading === "Project cowork ACL",
+      ),
+    ).toBe(true);
+    expect(text).toContain("Approves or Denies");
+    expect(text).toContain("approve/revoke audit");
     expect(text).toContain("There is no directory of other people's bots.");
     expect(text).not.toContain("Pass this to another bot");
   });

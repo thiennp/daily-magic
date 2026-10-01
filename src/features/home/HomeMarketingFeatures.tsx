@@ -1,6 +1,9 @@
 import Link from "next/link";
 
-import { HOME_MARKETING_FEATURES_COPY } from "@/features/home/constants/homeMarketingLandingCopy.constant";
+import {
+  HOME_MARKETING_FEATURES_COPY,
+  HOME_MARKETING_HONESTY_FOOTNOTE,
+} from "@/features/home/constants/homeMarketingLandingCopy.constant";
 import MarketingDarkBand from "@/features/marketing/MarketingDarkBand";
 import MarketingFeatureCard from "@/features/marketing/MarketingFeatureCard";
 import { MARKETING_FEATURE_ITEMS } from "@/features/marketing/marketingFeatureItems.constant";
@@ -53,6 +56,14 @@ export default function HomeMarketingFeatures() {
           {copy.footerLink}
         </Link>
         .
+      </p>
+      <p
+        className={mergeMarketingClasses(
+          "mt-3 text-xs",
+          MARKETING_TEXT_SECONDARY_CLASSES,
+        )}
+      >
+        {HOME_MARKETING_HONESTY_FOOTNOTE}
       </p>
     </section>
   );

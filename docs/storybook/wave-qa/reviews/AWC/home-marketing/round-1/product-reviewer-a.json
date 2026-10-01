@@ -1,0 +1,26 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "A",
+  "deployable": "AWC",
+  "pageId": "home-marketing",
+  "role": "product",
+  "captureRound": 1,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/home-marketing/round-1/manifest.json",
+  "scoreDesktop": 99,
+  "scoreMobile": 97,
+  "scoreOverall": 98,
+  "passed": true,
+  "scoreBreakdown": [
+    {
+      "area": "combined-deductions",
+      "pointsDeducted": 2,
+      "reason": "[auth-storybook-limit] Google sign-in is present as UI chrome; story cannot demonstrate real OAuth, which is acceptable but worth noting for reviewers. [mobile-marketplace-path] Preset cards imply marketplace flows that require sign-in; mobile capture does not surface that gating until dialog interaction."
+    }
+  ],
+  "whyBelowThreshold": "",
+  "topIssues": ["Sign-in gating on preset examples"],
+  "mustFix": [],
+  "quickWins": [
+    "Add footnote on preset section that marketplace requires account"
+  ]
+}

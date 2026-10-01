@@ -223,12 +223,12 @@ flowchart LR
 ├──────────────────────────────────────────────────────────────────────────┤
 │  daily-magic                                                            │
 │  /Users/alex/code/daily-magic                                           │
-│  ☁ Synced to Agent Witch Console                                        │
+│  ☁ Synced to Agent Witch Cloud                                        │
 │  3 Harness · 2 Workflows · 5 Agents           [ Open project → ]        │
 │  ── ── ── ── ── ── ── ── ── ── ── ── ── ── ── ── ── ── ── ── ── ── ──    │
 │  scratch-experiments                                                    │
 │  /Users/alex/code/scratch                                               │
-│  ⚠ Local only — not visible in Agent Witch Console                      │
+│  ⚠ Local only — not visible in Agent Witch Cloud                      │
 │  0 Harness · 0 Workflows · 0 Agents           [ Open project → ]        │
 └──────────────────────────────────────────────────────────────────────────┘
 ```
@@ -240,7 +240,7 @@ flowchart LR
 │ Projects on this Mac                                                     │
 │                                                                            │
 │              No projects on this Mac yet.                                │
-│    Add a folder here, or add one from Agent Witch Console and choose    │
+│    Add a folder here, or add one from Agent Witch Cloud and choose    │
 │                       this Mac to store it on.                           │
 │                                                                            │
 │                          [ + Add project ]                               │
@@ -265,7 +265,7 @@ flowchart LR
 ├──────────────────────────────────────────────────────────────────────────┤
 │ daily-magic                                     [ ✎ Rename ]  [ Delete ]│
 │ /Users/alex/code/daily-magic                    [ Change folder ]       │
-│ ☁ Synced to Agent Witch Console                                        │
+│ ☁ Synced to Agent Witch Cloud                                        │
 ├──────────────────────────────────────────────────────────────────────────┤
 │  [ Harness (3) ]    Workflows (2)    Agents (5)                         │
 │  ──────────────                                                          │
@@ -302,7 +302,7 @@ flowchart LR
 ┌────────────────────────────────────────────┐
 │ Delete "daily-magic"?                       │
 │                                              │
-│ This removes it from Agent Witch Console    │
+│ This removes it from Agent Witch Cloud    │
 │ and this Mac's project list. The folder on  │
 │ disk is not deleted.                        │
 │                                              │

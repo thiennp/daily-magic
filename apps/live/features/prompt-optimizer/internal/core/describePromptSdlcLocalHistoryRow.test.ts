@@ -5,7 +5,7 @@ import { createPromptSdlcLocalCycle } from "./createPromptSdlcLocalCycle";
 import { describePromptSdlcLocalHistoryRow } from "./describePromptSdlcLocalHistoryRow";
 
 describe("describePromptSdlcLocalHistoryRow", () => {
-  it("labels a finished wizard run", () => {
+  it("labels a passed wizard run as Passed", () => {
     const cycle = createPromptSdlcLocalCycle({
       goal: "g",
       sourcePrompt: "p",
@@ -22,8 +22,23 @@ describe("describePromptSdlcLocalHistoryRow", () => {
       ...cycle,
       status: "passed",
     });
-    expect(row.badgeLabel).toBe("Complete");
+    expect(row.badgeLabel).toBe("Passed");
     expect(row.subtitle).toContain("Wizard");
+  });
+
+  it("labels timeout failures unmistakably", () => {
+    const cycle = createPromptSdlcLocalCycle({
+      goal: "g",
+      sourcePrompt: "p",
+      judgeModel: "claude-cli",
+      improverModel: "claude-cli",
+    });
+    const row = describePromptSdlcLocalHistoryRow({
+      ...cycle,
+      status: "failed",
+      errorKind: "writer_timeout",
+    });
+    expect(row.badgeLabel).toBe("Timeout");
   });
 
   it("labels a paused wizard at step 2", () => {

@@ -1,5 +1,6 @@
 import { buildAgentWitchLocalCloudBanner } from "../../../shell/internal/core/buildAgentWitchLocalCloudBanner";
 import type AgentWitchProjectView from "./agentWitchProjectView.type";
+import isDefaultAgentWitchProjectName from "./isDefaultAgentWitchProjectName";
 
 const escapeHtml = (value: string): string =>
   value
@@ -39,7 +40,7 @@ export const buildAgentWitchLocalProjectsPageBody = (input: {
   const cloudBanner = buildAgentWitchLocalCloudBanner({
     cloudAppOrigin: input.cloudAppOrigin,
     manageHref: `${input.cloudAppOrigin}/projects`,
-    manageLabel: "Manage projects in Agent Witch Console",
+    manageLabel: "Manage projects in Agent Witch Cloud",
     body: "Projects are created in the browser. This page chooses their folders on this Mac and links playbooks into each repo’s .cursor tree.",
     syncMessage: input.syncMessage,
     syncOk: input.syncOk,
@@ -47,7 +48,7 @@ export const buildAgentWitchLocalProjectsPageBody = (input: {
 
   const projectRows =
     input.projects.length === 0
-      ? `<p class="empty">No projects loaded yet. Create one in Agent Witch Console, then refresh this page.</p>`
+      ? `<p class="empty">No projects loaded yet. Create one in Agent Witch Cloud, then refresh this page.</p>`
       : `<ul class="project-list">${input.projects
           .map((project) => {
             const counts = input.compositionCountsByProjectId?.[project.id];
@@ -57,13 +58,21 @@ export const buildAgentWitchLocalProjectsPageBody = (input: {
                 : "";
             const chooseFolder = `<a class="btn btn-secondary" href="/projects/select-folder?projectId=${encodeURIComponent(project.id)}">Choose folder…</a>`;
             const openProject = `<a class="btn btn-primary btn-compact" href="/project?id=${encodeURIComponent(project.id)}">Open project →</a>`;
+            const renameHref = `${input.cloudAppOrigin.replace(/\/$/, "")}/projects/${encodeURIComponent(project.id)}?rename=1`;
+            const renameBtn = `<a class="btn btn-secondary btn-compact" href="${escapeHtml(renameHref)}" target="_blank" rel="noopener noreferrer">Rename…</a>`;
+            const deleteBtn = isDefaultAgentWitchProjectName(project.name)
+              ? ""
+              : `<form method="POST" action="/projects/delete" class="inline-form" onsubmit="return confirm('Delete this project from Agent Witch Cloud? The folder on this Mac stays.');">
+                  <input type="hidden" name="projectId" value="${escapeHtml(project.id)}" />
+                  <button class="btn btn-danger btn-compact" type="submit">Delete</button>
+                </form>`;
             return `<li class="project-list-item">
                 <a class="project-list-link" href="/project?id=${encodeURIComponent(project.id)}">
                   <strong>${escapeHtml(project.name)}</strong>
                   <span class="muted mono">${escapeHtml(project.projectFolderPath)}</span>
                   ${countsLine}
                 </a>
-                <div class="actions">${openProject}${chooseFolder}</div>
+                <div class="actions">${openProject}${chooseFolder}${renameBtn}${deleteBtn}</div>
               </li>`;
           })
           .join("")}</ul>`;
@@ -71,7 +80,7 @@ export const buildAgentWitchLocalProjectsPageBody = (input: {
   return `${flash}${cloudBanner}<section class="card">
       <p class="eyebrow">Repositories</p>
       <h1>Projects on this Mac</h1>
-      <p class="lede">Synced from Agent Witch Console for this paired Mac only. Choose a folder per project, then link harness sets into each repo’s <code>.cursor</code> tree (tracked in <code>.agent-witch/materialization.json</code>).</p>
+      <p class="lede">Synced from Agent Witch Cloud for this paired Mac only. Choose a folder per project, then link harness sets into each repo’s <code>.cursor</code> tree (tracked in <code>.agent-witch/materialization.json</code>).</p>
       ${projectRows}
     </section>`;
 };

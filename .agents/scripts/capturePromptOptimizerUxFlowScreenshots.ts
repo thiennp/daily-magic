@@ -124,9 +124,8 @@ const main = async (): Promise<void> => {
     const history = document.getElementById("prompt-optimizer-history");
     if (history instanceof HTMLDetailsElement) history.open = true;
   });
-  await page.locator('[data-sdlc-history-filter="wizard"]').click();
   await page.waitForTimeout(400);
-  paths.push(await shot(page, "10-history-wizard-filter", bundle));
+  paths.push(await shot(page, "10-history-list", bundle));
 
   await page
     .locator(

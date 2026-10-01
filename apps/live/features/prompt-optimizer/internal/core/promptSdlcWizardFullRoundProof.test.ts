@@ -117,6 +117,7 @@ const pageBody = (installDir: string, cycle: PromptSdlcLocalCycle): string =>
     improver: "claude-cli",
     folder: installDir,
     passScore: "70",
+    modulePassScore: "90",
     canRun: true,
     errorMessage: null,
     cycle,
@@ -212,7 +213,7 @@ describe("prompt SDLC wizard full round proof (for screenshots)", () => {
         }
         if (input.prompt.includes("wizard step 2 (evaluate revisions)")) {
           judgeCalls += 1;
-          const score = judgeCalls % 2 === 1 ? 58 : 84;
+          const score = judgeCalls % 2 === 1 ? 58 : 65;
           return {
             ok: true,
             text: JSON.stringify({
@@ -228,11 +229,12 @@ describe("prompt SDLC wizard full round proof (for screenshots)", () => {
           };
         }
         if (input.prompt.includes("Score the changes from 0 to 100")) {
+          const moduleScore = 92;
           return {
             ok: true,
             text: JSON.stringify({
-              score: 88,
-              passed: true,
+              score: moduleScore,
+              passed: moduleScore >= 90,
               reasons: "Module run evidence looks good.",
             }),
             tokens: 20,
@@ -254,6 +256,34 @@ describe("prompt SDLC wizard full round proof (for screenshots)", () => {
     });
     savePromptSdlcLocalCycle(storePath, { ...cycle, id: liveId });
     ensurePromptSdlcLocalCycleRunning(storePath, liveId);
+
+    const continueWizard = (extra?: Record<string, string>): void => {
+      const live = readPromptSdlcLocalCycle(storePath, liveId);
+      const budgetFields: Record<string, string> = {};
+      if (
+        live?.wizard?.gate === "optimize_modules" &&
+        live.costControls &&
+        !live.costControls.budgetConfirmed
+      ) {
+        budgetFields.confirmedTokenBudget = String(
+          live.costControls.targetTokenBudget ?? 8000,
+        );
+        budgetFields.confirmedMaxSpendUsd = String(
+          live.costControls.estimatedSpendUsd ?? 0.08,
+        );
+      }
+      tryAcceptPromptSdlcWizardPost({
+        posted: new URLSearchParams({
+          intent: "wizard-continue",
+          cycleId: liveId,
+          ...budgetFields,
+          ...extra,
+        }),
+        storePath,
+        response: noopResponse,
+      });
+      ensurePromptSdlcLocalCycleRunning(storePath, liveId);
+    };
 
     await waitUntil(() => {
       const current = readPromptSdlcLocalCycle(storePath, liveId);
@@ -292,7 +322,7 @@ describe("prompt SDLC wizard full round proof (for screenshots)", () => {
     const page2 = pageBody(installDir, paused);
     expect(page2).toContain("Step 2 — Evaluate");
     expect(page2).toContain("Round 0 — 58");
-    expect(page2).toContain("Round 1 — 84");
+    expect(page2).toContain("Round 1 — 65");
     expect(page2).not.toContain("Step 3 — Separate");
     expect(paused.revisions.length).toBeGreaterThanOrEqual(2);
 
@@ -346,21 +376,9 @@ describe("prompt SDLC wizard full round proof (for screenshots)", () => {
     const page4Params = pageBody(installDir, paused);
     expect(page4Params).toContain("Step 4 — Optimize modules");
     expect(page4Params).toContain("Policy guard");
-    expect(page4Params).toContain("Parameters for this module run");
-    expect(page4Params).toContain('name="wizardParam_policy_facts"');
+    expect(page4Params).toContain("Confirm Step 4 cost ceiling");
+    expect(page4Params).toContain('name="confirmedTokenBudget"');
 
-    const continueWizard = (extra?: Record<string, string>): void => {
-      tryAcceptPromptSdlcWizardPost({
-        posted: new URLSearchParams({
-          intent: "wizard-continue",
-          cycleId: liveId,
-          ...extra,
-        }),
-        storePath,
-        response: noopResponse,
-      });
-      ensurePromptSdlcLocalCycleRunning(storePath, liveId);
-    };
     continueWizard({
       wizardParam_policy_facts: COMPLEX_VARIABLES.find(
         (item) => item.name === "policy_facts",
@@ -379,7 +397,7 @@ describe("prompt SDLC wizard full round proof (for screenshots)", () => {
     const page4 = pageBody(installDir, paused);
     expect(page4).toContain("Separated modules");
     expect(page4).toContain("Scored rounds for");
-    expect(page4).toContain("Trial run — 88");
+    expect(page4).toContain("Trial run — 92");
     expect(page4).toContain("Judge scored round 0");
 
     continueWizard();
@@ -465,5 +483,5 @@ describe("prompt SDLC wizard full round proof (for screenshots)", () => {
         `${JSON.stringify(manifest, null, 2)}\n`,
       );
     }
-  }, 120_000);
+  }, 240_000);
 });

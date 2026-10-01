@@ -14,7 +14,7 @@ Cross-deployable contracts stay in **`@agent-witch/shared`** (`packages/shared/`
 
 ```mermaid
 flowchart TB
-  subgraph AWC["AWC — Console"]
+  subgraph AWC["AWC — Cloud"]
     AppInstall["src/app/install/*"]
     LibInstall["src/lib/agentWitch install script + bundle build"]
     Hub["WebSocket hub /api/agent-witch/ws"]
@@ -27,7 +27,7 @@ flowchart TB
     Runtime["scripts/agent-witch.ts (legacy entry)"]
   end
 
-  subgraph AWL["AWL — Live :43347"]
+  subgraph AWL["AWL — Local :43347"]
     LocalApp["scripts/agentWitchLocalApp*"]
   end
 

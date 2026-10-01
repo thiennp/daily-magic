@@ -4,7 +4,7 @@
   "deployables": [
     {
       "id": "AWC",
-      "name": "Agent Witch Console",
+      "name": "Agent Witch Cloud",
       "slug": "console",
       "folder": "apps/console",
       "description": "Cloud control plane: Next.js App Router, APIs, WebSocket hub",
@@ -13,7 +13,7 @@
     },
     {
       "id": "AWL",
-      "name": "Agent Witch Live",
+      "name": "Agent Witch Local",
       "slug": "live",
       "folder": "apps/live",
       "description": "Mac-local web app: tasks, projects, playbooks, memory, Mac health",

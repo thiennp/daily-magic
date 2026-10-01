@@ -12,13 +12,13 @@ import { advancePromptSdlcWizardLocal } from "./advancePromptSdlcWizardLocal";
 import { buildPromptSdlcLocalArtifactDocument } from "./buildPromptSdlcLocalArtifactDocument";
 import { buildPromptSdlcLocalPageBody } from "./buildPromptSdlcLocalPage";
 import { createPromptSdlcLocalCycle } from "./createPromptSdlcLocalCycle";
+import { confirmedPromptSdlcCostControlsForTests } from "./promptSdlcCostControlTestFixtures";
 import {
   readPromptSdlcLocalCycle,
   savePromptSdlcLocalCycle,
 } from "./promptSdlcLocalStore";
+import { resolveWritableCursorArtifactsDir } from "./resolveWritableCursorArtifactsDir";
 import * as writerReply from "./runPromptSdlcWriterReply";
-
-const ARTIFACTS = "/opt/cursor/artifacts";
 
 describe("wizard step 4 chain modules", () => {
   const storeDir = fs.mkdtempSync(
@@ -57,6 +57,7 @@ describe("wizard step 4 chain modules", () => {
       improverModel: "claude-cli",
       runnerModel: "claude-cli",
       workingDirectory: storeDir,
+      costControls: confirmedPromptSdlcCostControlsForTests(),
       wizard: {
         ...createInitialPromptSdlcWizardState("Do {{x}}"),
         phase: "optimize_modules",
@@ -110,6 +111,10 @@ describe("wizard step 4 chain modules", () => {
     ).toBe(true);
 
     const saved = readPromptSdlcLocalCycle(storePath, cycle.id)!;
+    const savedForPage = {
+      ...saved,
+      costControls: confirmedPromptSdlcCostControlsForTests({ moduleCount: 2 }),
+    };
     const html = buildPromptSdlcLocalPageBody({
       goal: "Chain test",
       prompt: "",
@@ -121,12 +126,12 @@ describe("wizard step 4 chain modules", () => {
       passScore: "70",
       canRun: true,
       errorMessage: null,
-      cycle: saved,
+      cycle: savedForPage,
       history: [],
     });
-    fs.mkdirSync(ARTIFACTS, { recursive: true });
+    const artifactsDir = resolveWritableCursorArtifactsDir();
     fs.writeFileSync(
-      path.join(ARTIFACTS, "prompt-optimizer-step4-chain-gate.html"),
+      path.join(artifactsDir, "prompt-optimizer-step4-chain-gate.html"),
       buildPromptSdlcLocalArtifactDocument({
         title: "Step 4 — Optimize modules",
         body: html,

@@ -2,7 +2,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 
-import { expandAgentWitchProjectFolderPath } from "../../../projects/public-api/infrastructure";
+import expandAgentWitchProjectFolderPath from "../../../projects/internal/core/expandAgentWitchProjectFolderPath";
 
 export const PROMPT_SDLC_LOCAL_DEFAULT_FOLDER = "~";
 

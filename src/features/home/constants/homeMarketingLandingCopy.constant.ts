@@ -5,16 +5,16 @@ import {
 } from "@/features/home/constants/homeMarketingAuthCallbackHrefs.constant";
 
 export const HOME_MARKETING_HERO_COPY = {
-  eyebrow: "Agent operations, for the whole company",
-  title: "Delegate AI work to Macs your organization controls.",
-  description: `${AGENT_WITCH_PRODUCT_NAME} routes tasks from a shared dashboard to Mac runners your team already owns, applies your approval policy before anything sensitive ships, and keeps a full record of every run.`,
+  eyebrow: "Harness, memory, and Playbooks",
+  title: "Turn agent work on your Mac into scored, reusable Playbooks.",
+  description: `${AGENT_WITCH_PRODUCT_NAME} is the playground for multi-bot teams: improve prompts with evaluate scores, Approve who joins a project, and keep Tasks and Runs on Macs you control. Slack and Outlook ops stay with specialist bots.`,
   cta: "Create free account",
-  secondaryCta: "Review security model",
+  secondaryCta: "See Access and Optimizer",
   secondaryCtaHref: "#features-heading",
   steps: [
-    "Pick a ready-made workflow—or make your own",
-    "Add your Mac as the worker—it runs the jobs you set up",
-    "Run your agents—or your whole company's—from your phone, from anywhere, with automation or a schedule",
+    "Open a project and connect your Mac",
+    "Approve bots into Project Access—no token sharing",
+    "Run Prompt Optimizer until evaluate passes; save a Playbook",
   ],
 } as const;
 
@@ -40,17 +40,17 @@ export const HOME_MARKETING_POPULAR_PRESET_DIALOG_COPY = {
 } as const;
 
 export const HOME_MARKETING_FEATURES_COPY = {
-  eyebrow: "Built for organizations",
-  title: "Free company setup that is fast, governed, and effective",
+  eyebrow: "Built for agent teams",
+  title: "Playground for Macs, Access, and Prompt Optimizer",
   description:
-    "Most teams connect their first Macs and delegate agent work in about 15 minutes—with security rules, approvals, and shared visibility built in.",
+    "Connect Macs, Approve project membership, and harden prompts with evaluate scores—so Tasks and Runs stay governed while Slack and Outlook stay with specialist bots.",
   footerPrefix: "Ready to roll out?",
   footerLink: "Create free account and set up your organization",
 } as const;
 
 export const HOME_MARKETING_STEPS_COPY = {
   eyebrow: "How it works",
-  title: "Four steps to your first automation",
+  title: "Four steps to your first Playbook",
   steps: [
     {
       title: "Sign in",
@@ -59,18 +59,23 @@ export const HOME_MARKETING_STEPS_COPY = {
     },
     {
       title: "Add your Mac",
-      body: "One install command—then your computer runs the jobs.",
+      body: "One install command—then your computer runs the Tasks.",
       href: homeMarketingSignInCallbackHomeHref,
     },
     {
-      title: "Pick a workflow",
-      body: "Start from a template below or build your own.",
-      href: "#popular-presets-heading",
+      title: "Approve Access",
+      body: "Bots request project membership; you Approve, Deny, or Revoke.",
+      href: "#features-heading",
     },
     {
-      title: "Run or automate",
-      body: "Run once, on a schedule, or share with your team.",
+      title: "Optimize and reuse",
+      body: "Run Prompt Optimizer until evaluate passes; save as a Playbook.",
       href: homeMarketingSignInCallbackAutomationsHref,
     },
   ],
 } as const;
+
+
+/** G3/G4 — keep Lessons and skills-rag off the hero; optional footnote only. */
+export const HOME_MARKETING_HONESTY_FOOTNOTE =
+  "Lessons memory is evolving (ask for the structured Lessons design if you need it). Skills-rag / feature-knowledge stays in power-user docs — not the landing hero.";

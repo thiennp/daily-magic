@@ -82,6 +82,7 @@ import {
   resolveAgentWitchCloudApiConfig,
   syncProjectHarnessBindingsToCloud,
   updateAgentWitchCloudProjectFolder,
+  deleteAgentWitchCloudProject,
 } from "@agent-witch/live-projects";
 import { AGENT_WITCH_PAIRING_TOKEN_HEADER } from "../../../projects/internal/core/agentWitchDeviceAuth.constant";
 import fetchProjectCompositionFromCloud from "../../../projects/internal/core/fetchProjectCompositionFromCloud";
@@ -168,7 +169,7 @@ const loadCloudProjectsForLocalApp = async (
       ok: false,
       projects: [],
       message:
-        "Mac client config missing — pair this Mac in Agent Witch Console to load projects.",
+        "Mac client config missing — pair this Mac in Agent Witch Cloud to load projects.",
     };
   }
 
@@ -885,6 +886,12 @@ export const startAgentWitchLocalApp = (input: {
         const flashError =
           url.searchParams.get("folderError") === "1"
             ? "Could not save the selected folder to Agent Witch. Check the Mac connection and try again."
+            : url.searchParams.get("deleteError") === "1"
+              ? "Could not delete the project in Agent Witch Cloud. Check pairing on Status."
+              : null;
+        const flashMessage =
+          url.searchParams.get("deleted") === "1"
+            ? "Project removed from Agent Witch Cloud. Your Mac folders were not deleted."
             : null;
         const listRunConfig = readAgentWitchRunConfig();
         const listCloudConfig =
@@ -926,7 +933,7 @@ export const startAgentWitchLocalApp = (input: {
               cloudAppOrigin,
               syncMessage: cloudProjects.message,
               syncOk: cloudProjects.ok,
-              flashMessage: null,
+              flashMessage,
               flashError,
             }),
           }),
@@ -979,6 +986,38 @@ export const startAgentWitchLocalApp = (input: {
         return;
       }
 
+      if (method === "POST" && pathname === "/projects/delete") {
+        const rawBody = await readBody(request);
+        const projectId =
+          new URLSearchParams(rawBody).get("projectId")?.trim() ?? "";
+        const runConfig = readAgentWitchRunConfig();
+        const cloudConfig =
+          runConfig === null
+            ? null
+            : resolveAgentWitchCloudApiConfig({
+                wsUrl: runConfig.wsUrl,
+                pairingToken: runConfig.pairingToken,
+              });
+
+        if (cloudConfig === null || projectId.length === 0) {
+          response.writeHead(303, { Location: "/projects?deleteError=1" });
+          response.end();
+          return;
+        }
+
+        const deleteResult = await deleteAgentWitchCloudProject(
+          cloudConfig,
+          projectId,
+        );
+        response.writeHead(303, {
+          Location: deleteResult.ok
+            ? "/projects?deleted=1"
+            : "/projects?deleteError=1",
+        });
+        response.end();
+        return;
+      }
+
       if (method === "GET" && pathname === "/project") {
         const url = new URL(
           request.url ?? "/",
@@ -986,6 +1025,9 @@ export const startAgentWitchLocalApp = (input: {
         );
         const projectId = url.searchParams.get("id")?.trim() ?? "";
         const installBundle = buildInstallBundleStatus();
+        const cloudAppOrigin = resolveAgentWitchLocalCloudAppOrigin(
+          installBundle.installVersion,
+        );
         const cloudProjects = await loadCloudProjectsForLocalApp(input.layout);
         const project = findAgentWitchProjectById(
           cloudProjects.projects,
@@ -1070,6 +1112,7 @@ export const startAgentWitchLocalApp = (input: {
             installVersion: installBundle.installVersion,
             body: buildAgentWitchLocalProjectEditorPageBody({
               project,
+              cloudAppOrigin,
               installed: readInstalledLocalHarnessSnapshot(input.layout),
               linkedSetSlugs: listLinkedHarnessSetSlugsFromProjectFolder(
                 project.projectFolderPath,
@@ -1136,6 +1179,9 @@ export const startAgentWitchLocalApp = (input: {
 
         if (!applyResult.ok) {
           const installBundle = buildInstallBundleStatus();
+          const cloudAppOrigin = resolveAgentWitchLocalCloudAppOrigin(
+            installBundle.installVersion,
+          );
           sendHtml(
             response,
             await buildLocalAppShell({
@@ -1144,6 +1190,7 @@ export const startAgentWitchLocalApp = (input: {
               installVersion: installBundle.installVersion,
               body: buildAgentWitchLocalProjectEditorPageBody({
                 project,
+                cloudAppOrigin,
                 installed: readInstalledLocalHarnessSnapshot(input.layout),
                 linkedSetSlugs: listLinkedHarnessSetSlugsFromProjectFolder(
                   project.projectFolderPath,

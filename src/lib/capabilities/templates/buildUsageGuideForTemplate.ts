@@ -20,7 +20,7 @@ const buildUsageGuideForTemplate = (
     prerequisites: [
       "A paired Mac with Agent Witch running (or Cursor Cloud API key for cloud-only runs).",
       "A project linked to that Mac with a folder path set before you pull playbook files into the repo.",
-      "Sign in to Agent Witch Console — marketplace install saves to your library and links the listing to the project you pick.",
+      "Sign in to Agent Witch Cloud — marketplace install saves to your library and links the listing to the project you pick.",
     ],
     steps: isWorkflow
       ? [
@@ -30,7 +30,7 @@ const buildUsageGuideForTemplate = (
           },
           {
             title: "Pull playbook into the repo (Mac)",
-            body: "On the Mac, open Agent Witch Live → the same project → **Pull into repo** so rules/skills copy into the project’s `.cursor/` tree and `project.json` updates.",
+            body: "On the Mac, open Agent Witch Local → the same project → **Pull into repo** so rules/skills copy into the project’s `.cursor/` tree and `project.json` updates.",
           },
           {
             title: "Run the workflow",

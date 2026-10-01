@@ -46,6 +46,63 @@ describe("buildPromptSdlcLocalCycleSection", () => {
     expect(html).toContain('class="sdlc-tree"');
   });
 
+  it("shows Failed badge and wizard step activity when evaluate judge fails", () => {
+    const cycle = {
+      ...createPromptSdlcLocalCycle({
+        goal: "Save tokens",
+        sourcePrompt: "p",
+        judgeModel: "codex",
+        improverModel: "codex",
+        wizard: {
+          ...createInitialPromptSdlcWizardState("p"),
+          phase: "evaluate",
+          gate: null,
+        },
+      }),
+      status: "failed" as const,
+      errorMessage: "The judge reply needs a score and a reason.",
+      currentRound: 0,
+      revisions: [
+        {
+          roundNumber: 0,
+          promptText: "p",
+          judgement: {
+            score: null,
+            passed: null,
+            reasons: null,
+            rawReply: "Looks good to me — no JSON score here.",
+            tokens: null,
+          },
+        },
+      ],
+    };
+    const html = buildPromptSdlcLocalCycleSection(cycle);
+    expect(html).toContain('class="sdlc-run-badge sdlc-run-badge-failed"');
+    expect(html).toContain("Failed</span>");
+    expect(html).toContain("Step 2 — Evaluate failed");
+    expect(html).toContain("The judge reply needs a score and a reason.");
+    expect(html).toContain("Reply preview:");
+    expect(html).toContain("Looks good to me");
+    expect(html).toContain('class="mono sdlc-run-reply-preview"');
+    expect(html).toContain('class="sdlc-node sdlc-node-failed"');
+    expect(html).toContain('class="sdlc-node-reason sdlc-node-reason-failed"');
+    expect(html).toContain("data-sdlc-failure-reply-info");
+    expect(html).toContain("data-sdlc-failure-reply");
+    expect(html).not.toContain('data-sdlc-step-id="wizard-2"');
+    const tree = html.slice(
+      html.indexOf('class="sdlc-tree"'),
+      html.indexOf("</ol>", html.indexOf('class="sdlc-tree"')),
+    );
+    expect(tree.indexOf("Source prompt saved")).toBeLessThan(
+      tree.indexOf("Step 1 — Generalize"),
+    );
+    expect(tree.indexOf("sdlc-node-failed")).toBeGreaterThan(
+      tree.indexOf("Step 1 — Generalize"),
+    );
+    expect(html).toContain("<h2>Feedback</h2>");
+    expect(html).toContain('aria-busy="false"');
+  });
+
   it("renders wizard outcome exactly once and skips empty prompt history", () => {
     const cycle = {
       ...createPromptSdlcLocalCycle({

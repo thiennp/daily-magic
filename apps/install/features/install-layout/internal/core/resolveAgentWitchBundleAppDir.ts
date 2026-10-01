@@ -11,6 +11,8 @@ export const resolveAgentWitchBundleAppDir = (): string => {
     if (entry !== undefined && entry.trim().length > 0) {
       return path.dirname(path.resolve(entry));
     }
+
+    return path.dirname(path.resolve(__filename));
   }
 
   return path.dirname(fileURLToPath(import.meta.url));

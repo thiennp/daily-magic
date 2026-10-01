@@ -1,5 +1,5 @@
 import { AGENT_WITCH_PAIRING_TOKEN_HEADER } from "./agentWitchDeviceAuth.constant";
-import { resolveAgentWitchAppOriginFromWsUrl } from "@agent-witch/install-self-update";
+import { resolveAgentWitchAppOriginFromWsUrl } from "@agent-witch/install-self-update/presentation";
 
 export interface AgentWitchCloudApiConfig {
   readonly appOrigin: string;

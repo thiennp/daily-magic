@@ -89,7 +89,7 @@ export const selectAgentWitchProjectFolderFromWakeServer = async (
   if (!updated) {
     return {
       ok: false,
-      errorMessage: "Could not save the folder to Agent Witch Console.",
+      errorMessage: "Could not save the folder to Agent Witch Cloud.",
     };
   }
 

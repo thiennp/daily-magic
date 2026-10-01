@@ -9,20 +9,20 @@ export interface MarketingFeatureItem {
 
 export const MARKETING_FEATURE_ITEMS: readonly MarketingFeatureItem[] = [
   {
-    title: "Live in about 15 minutes",
-    body: "Create free workspace, connect Mac agents, and share workflows—most organizations run their first jobs the same day.",
+    title: "Mac Tasks and Playbooks",
+    body: "Connect Macs you control, run Tasks, and turn winning prompts into reusable Playbooks—most teams complete a first Run the same day.",
     preview: "dispatch",
     emphasized: true,
   },
   {
-    title: "Security your company controls",
-    body: "Set organization-wide rules and require manager approval before sensitive jobs run on a teammate's Mac.",
+    title: "Project Access you control",
+    body: "Approve, Deny, or Revoke who may join a project. Folder refs stay registry-only—no shared tokens, no cloud content bus.",
     preview: "approve",
     emphasized: true,
   },
   {
-    title: "Shared visibility across teams",
-    body: "Every run is recorded so managers and teammates see what was delegated, approved, and delivered.",
+    title: "Prompt Optimizer with honest scores",
+    body: "Evaluate scores, pass only on passed outcomes, and reuse winners as Playbooks. Timeout, interrupt, and no_reply fail cleanly—not silent success.",
     preview: "report",
   },
 ] as const;

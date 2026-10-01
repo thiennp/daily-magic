@@ -12,6 +12,36 @@ describe("PROMPT_SDLC_WIZARD_CLIENT_SCRIPT", () => {
       "formDataFromSubmit(form, submitter)",
     );
     expect(PROMPT_SDLC_WIZARD_CLIENT_SCRIPT).toContain("runApplied");
-    expect(PROMPT_SDLC_WIZARD_CLIENT_SCRIPT).toContain("if (runApplied) {");
+    expect(PROMPT_SDLC_WIZARD_CLIENT_SCRIPT).toContain(
+      "sdlc-compose-run-focus",
+    );
+    expect(PROMPT_SDLC_WIZARD_CLIENT_SCRIPT).toContain("focusRunPanel");
+    expect(PROMPT_SDLC_WIZARD_CLIENT_SCRIPT).toContain("sdlc-compose-step-4");
+    expect(PROMPT_SDLC_WIZARD_CLIENT_SCRIPT).toContain("summaryStep.hidden");
+  });
+
+  it("hides compose for run-focus only after the run panel exists", () => {
+    expect(PROMPT_SDLC_WIZARD_CLIENT_SCRIPT).toContain(
+      'const run = document.getElementById("prompt-optimizer-run")',
+    );
+    expect(PROMPT_SDLC_WIZARD_CLIENT_SCRIPT).toContain(
+      "if (run === null) return",
+    );
+    expect(PROMPT_SDLC_WIZARD_CLIENT_SCRIPT).toContain("sdlc-run-start-failed");
+    expect(PROMPT_SDLC_WIZARD_CLIENT_SCRIPT).toContain("if (runApplied)");
+  });
+
+  it("autofocuses the wizard gate only when the active step id changes", () => {
+    expect(PROMPT_SDLC_WIZARD_CLIENT_SCRIPT).toContain(
+      "lastWizardAutofocusStepId",
+    );
+    expect(PROMPT_SDLC_WIZARD_CLIENT_SCRIPT).toContain(
+      "readWizardAutofocusStepId",
+    );
+    expect(PROMPT_SDLC_WIZARD_CLIENT_SCRIPT).toContain(
+      "stepId === lastWizardAutofocusStepId",
+    );
+    expect(PROMPT_SDLC_WIZARD_CLIENT_SCRIPT).toContain("dataset.sdlcStepId");
+    expect(PROMPT_SDLC_WIZARD_CLIENT_SCRIPT).toContain("runBusyOnLoad");
   });
 });

@@ -47,7 +47,7 @@ describe("sumPromptSdlcLocalTokens", () => {
     expect(buildPromptSdlcAgentSnapshot(cycle)).toMatchObject({
       status: "stopped",
       done: true,
-      useThisPrompt: true,
+      useThisPrompt: false,
       totalTokens: 175,
       bestPrompt: "Name the facts.",
       bestScore: 80,

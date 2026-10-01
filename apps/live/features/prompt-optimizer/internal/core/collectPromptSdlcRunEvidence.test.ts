@@ -5,13 +5,19 @@ import path from "node:path";
 
 import { describe, expect, it } from "vitest";
 
+import { buildGitSubprocessEnv } from "@agent-witch/shared";
+
 import {
   describePromptSdlcRunEvidence,
   readPromptSdlcWorkspaceSnapshot,
 } from "./collectPromptSdlcRunEvidence";
 
 const git = (cwd: string, args: readonly string[]): void => {
-  execFileSync("git", [...args], { cwd, stdio: "ignore" });
+  execFileSync("git", [...args], {
+    cwd,
+    env: buildGitSubprocessEnv(),
+    stdio: "ignore",
+  });
 };
 
 describe("collectPromptSdlcRunEvidence", () => {

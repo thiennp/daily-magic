@@ -4,7 +4,7 @@
 
 - Add your Mac when AWL is already running
 - Connect this Mac after deleting the Mac on the Console
-- outdated Agent Witch Live reconnect
+- outdated Agent Witch Local reconnect
 - deleted device still running on the Mac
 - identity is not linked but local app is open
 - AWL outdated or disconnected then Connect this Mac

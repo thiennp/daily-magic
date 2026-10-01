@@ -1,5 +1,6 @@
 "use client";
 
+import AppIcon from "@/components/ui/icon/AppIcon";
 import { PaperPlaneIcon, PencilIcon, TrashBinIcon } from "@/icons";
 import MacDeviceRowLocalMenuItems from "@/features/agent-witch/macDevices/MacDeviceRowLocalMenuItems";
 import MacDeviceRowThisMacMenuSection from "@/features/agent-witch/macDevices/MacDeviceRowThisMacMenuSection";
@@ -33,7 +34,7 @@ export default function MacDeviceRowMenuItems({
     <ul className="flex flex-col">
       {renderMacDeviceRowMenuItem(
         runMacDeviceRowMenuAction(closeMenu, onEdit),
-        <PencilIcon className="h-4 w-4 shrink-0" />,
+        <AppIcon icon={PencilIcon} size="sm" />,
         "Edit",
       )}
       {showThisMacSubmenu ? (
@@ -63,14 +64,14 @@ export default function MacDeviceRowMenuItems({
       {onDelegateTask
         ? renderMacDeviceRowMenuItem(
             runMacDeviceRowMenuAction(closeMenu, onDelegateTask),
-            <PaperPlaneIcon className="h-4 w-4 shrink-0" />,
+            <AppIcon icon={PaperPlaneIcon} size="sm" />,
             "Delegate task",
           )
         : null}
       {onDelete
         ? renderMacDeviceRowMenuItem(
             runMacDeviceRowMenuAction(closeMenu, onDelete),
-            <TrashBinIcon className="h-4 w-4 shrink-0" />,
+            <AppIcon icon={TrashBinIcon} size="sm" />,
             "Delete",
             true,
           )

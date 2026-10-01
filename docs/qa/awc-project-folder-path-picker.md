@@ -5,7 +5,7 @@
 - change project path from AWC click input select folder
 - AWC folder picker native file dialog
 - user co the thay doi duong dan project tu AWC bang cach click vao input va select folder tu local computer khong
-- chọn folder project Agent Witch Console
+- chọn folder project Agent Witch Cloud
 - showDirectoryPicker project folder
 - Folder path (optional, cannot be changed later)
 - setup project path from local app
@@ -17,7 +17,7 @@
 
 ## Short answer
 
-**Not from AWC.** The browser cannot verify a real Mac POSIX path, and AWC no longer exposes a **Choose on this Mac** control on Projects or Home. Set the optional folder when creating a project, or change folders in **Agent Witch Live (AWL)** on the Mac that stores the repo. AWB still exposes `POST /projects/select-folder` for AWL and direct Mac flows.
+**Not from AWC.** The browser cannot verify a real Mac POSIX path, and AWC no longer exposes a **Choose on this Mac** control on Projects or Home. Set the optional folder when creating a project, or change folders in **Agent Witch Local (AWL)** on the Mac that stores the repo. AWB still exposes `POST /projects/select-folder` for AWL and direct Mac flows.
 
 ## Details
 

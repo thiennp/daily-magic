@@ -24,7 +24,7 @@
 | Self-update / kickstart      | Kickstart assumed the on-disk plist was loadable              | `ensureAgentWitchLaunchAgentPlist` rewrites missing/invalid XML (AGENT-067) then bootstraps                 |
 | AWL **Update**               | Always posted to default `:47892`; did not repair plist first | Rewrites invalid plist, then posts to `resolveAgentWitchRuntimeWakePort()` (`wake-port.json`, else default) |
 
-If cloud still says **This Mac identity is not linked**, the pairing token under `~/.agent-witch` is not a claimed device. That is separate from the plist bug: run **Connect this Mac** from Agent Witch Console (AWC) Home while signed in.
+If cloud still says **This Mac identity is not linked**, the pairing token under `~/.agent-witch` is not a claimed device. That is separate from the plist bug: run **Connect this Mac** from Agent Witch Cloud (AWC) Home while signed in.
 
 ## Related
 

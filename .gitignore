@@ -24,6 +24,8 @@
 # production
 /build
 /dist/
+/storybook-static/
+/storybook-wave-captures/
 
 # misc
 .DS_Store
@@ -55,3 +57,6 @@ next-env.d.ts
 # e2e runtime artifacts (scenarios and docs in e2e/ are tracked)
 /.e2e/cleanup-log.ndjson
 /.e2e/screenshots/
+
+# Local marketing pack import (do not commit)
+.marketing-pack-import/

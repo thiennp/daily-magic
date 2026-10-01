@@ -50,7 +50,7 @@ One **dispatched execution** (Mac via Agent Witch or Cursor Cloud), with status,
 
 ## Prompt optimizer
 
-The console page (**AWC**) tells the person to run the prompt optimizer in Agent Witch Live (**AWL**). The user supplies one prompt and a goal, chooses the judge and improver when more than one reasoning writer is installed, and chooses the folder those writers run in. The default folder is the home directory. Live then scores and rewrites the prompt until it passes or a small round cap is hit. It is not a workflow, a playbook, or a capability improvement.
+The console page (**AWC**) tells the person to run the prompt optimizer in Agent Witch Local (**AWL**). The user supplies one prompt and a goal, chooses the judge and improver when more than one reasoning writer is installed, and chooses the folder those writers run in. The default folder is the home directory. Live then scores and rewrites the prompt until it passes or a small round cap is hit. It is not a workflow, a playbook, or a capability improvement.
 
 ## Deployables (AWC, AWL, AWB, AWI)
 
@@ -58,8 +58,8 @@ Four named apps in one repo. See [agent-witch-deployables.md](agent-witch-deploy
 
 | Abbr    | Meaning                                                                    |
 | ------- | -------------------------------------------------------------------------- |
-| **AWC** | **Console** — cloud control plane (`www.agentwitch.com`)                   |
-| **AWL** | **Live** — Mac-local web app (`http://127.0.0.1:43347`)                    |
+| **AWC** | **Cloud** — Agent Witch Cloud control plane (`www.agentwitch.com`)         |
+| **AWL** | **Local** — Agent Witch Local Mac app (`http://127.0.0.1:43347`)           |
 | **AWB** | **Bridge** — Mac loopback HTTP for browser-on-same-Mac (`47892` / `47893`) |
 | **AWI** | **Install** — Mac bundle, runtime, LaunchAgents                            |
 

@@ -6,3 +6,7 @@ export {
   isLocalAgentWitchOrigin,
   resolveAgentWitchAppHome,
 } from "../internal/core/resolveAgentWitchAppHome";
+export {
+  isAgentWitchLocalInstallDir,
+  resolveAgentWitchLaunchAgentPrefix,
+} from "../internal/core/resolveAgentWitchLaunchAgentPrefix.util";

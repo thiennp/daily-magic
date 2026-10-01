@@ -3,7 +3,10 @@
 import Link from "next/link";
 
 import useMyMacDevices from "@/features/agent/hooks/useMyMacDevices";
+import AwcProjectAccessPanel from "@/features/projects/access/AwcProjectAccessPanel";
+import AwcProjectDeleteControl from "@/features/projects/AwcProjectDeleteControl";
 import AwcProjectEditOnMacActions from "@/features/projects/AwcProjectEditOnMacActions";
+import AwcProjectNameEditor from "@/features/projects/AwcProjectNameEditor";
 import AwcProjectPresenceBadge from "@/features/projects/AwcProjectPresenceBadge";
 import AwcProjectReadOnlyCompositionSections from "@/features/projects/AwcProjectReadOnlyCompositionSections";
 import useAwcProjectComposition from "@/features/projects/hooks/useAwcProjectComposition";
@@ -12,18 +15,17 @@ import { shouldShowProjectEditOnMacHelperText } from "@/features/projects/utils/
 import formatProjectCompositionCountsLine from "@/lib/projects/formatProjectCompositionCountsLine";
 import useLocalMacBrowserContext from "@/features/home/hooks/useLocalMacBrowserContext";
 import AppPanel from "@/components/surfaces/AppPanel";
-import {
-  APP_SURFACE_BODY_TEXT_CLASS,
-  APP_SURFACE_SECTION_TITLE_CLASS,
-} from "@/components/surfaces/appSurfaceStyles.constant";
+import { APP_SURFACE_BODY_TEXT_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
 
 interface AwcProjectDetailPanelProps {
   readonly project: UserProjectRecord;
+  readonly startRename?: boolean;
 }
 
 export default function AwcProjectDetailPanel({
   project,
+  startRename = false,
 }: AwcProjectDetailPanelProps) {
   const { localTokenHash } = useLocalMacBrowserContext();
   const { devices, displayNameById } = useMyMacDevices();
@@ -50,9 +52,14 @@ export default function AwcProjectDetailPanel({
           ← All projects
         </Link>
       </p>
-      <h2 className={APP_SURFACE_SECTION_TITLE_CLASS}>{project.name}</h2>
-      <p className={`mt-1 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
-        View-only on the web. Edit on {deviceDisplayName} in Agent Witch Live.
+      <AwcProjectNameEditor
+        projectId={project.id}
+        initialName={project.name}
+        startInEditMode={startRename}
+      />
+      <p className={`mt-2 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
+        Rename here in Agent Witch Cloud. Choose folders and playbooks on{" "}
+        {deviceDisplayName} in Agent Witch Local.
       </p>
       <div className="mt-4 flex flex-col gap-3 rounded-xl border border-gray-200/80 bg-gray-50/80 p-4 dark:border-gray-800/80 dark:bg-white/[0.03] sm:flex-row sm:items-center sm:justify-between">
         <AwcProjectPresenceBadge
@@ -95,6 +102,8 @@ export default function AwcProjectDetailPanel({
         items={items}
         isLoading={isCompositionLoading}
       />
+      <AwcProjectAccessPanel projectId={project.id} />
+      <AwcProjectDeleteControl project={project} variant="detail" />
     </AppPanel>
   );
 }

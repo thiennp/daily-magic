@@ -1,10 +1,14 @@
 import {
+  isPromptSdlcTerminalStatus,
   readPromptSdlcWizardEvaluatePromptText,
-  substitutePromptSdlcTemplate,
+  readPromptSdlcWizardTemplatedOrConcrete,
 } from "../../../../adapters/promptSdlcAwcCore";
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
+import { renderPromptSdlcWizardPipelineModalSummary } from "./renderPromptSdlcWizardPipeline";
+import { renderPromptSdlcWizardGeneralizeReview } from "./renderPromptSdlcWizardGeneralizeReview";
 import { renderPromptSdlcWizardRevisionRoundList } from "./renderPromptSdlcWizardRevisionRoundList";
-import { renderPromptSdlcWizardSplitOptionChunks } from "./renderPromptSdlcWizardSplitChunks";
+import { renderPromptSdlcWizardRevisionRoundJudgePromptInfo } from "./renderPromptSdlcWizardRevisionRoundJudgePromptInfo";
+import { renderPromptSdlcWizardSplitOptionDetail } from "./renderPromptSdlcWizardSplitOptionDetail";
 
 const escapeHtml = (value: string): string =>
   value
@@ -12,6 +16,88 @@ const escapeHtml = (value: string): string =>
     .replaceAll("<", "&lt;")
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;");
+
+const WIZARD_STEP_PHASE: Record<string, string> = {
+  "wizard-1": "generalize",
+  "wizard-2": "evaluate",
+  "wizard-3": "separate",
+  "wizard-4": "optimize_modules",
+};
+
+const renderTruncatedPromptBlock = (
+  heading: string,
+  text: string,
+  maxPreview = 320,
+): string => {
+  const trimmed = text.trim();
+  if (trimmed.length === 0) {
+    return "";
+  }
+  const preview =
+    trimmed.length <= maxPreview
+      ? `<pre class="sdlc-pre">${escapeHtml(trimmed)}</pre>`
+      : `<p class="sdlc-pre-preview mono">${escapeHtml(trimmed.slice(0, maxPreview))}…</p><details class="sdlc-pre-expand"><summary>Show full text</summary><pre class="sdlc-pre">${escapeHtml(trimmed)}</pre></details>`;
+  return `<h2>${escapeHtml(heading)}</h2>${preview}`;
+};
+
+const renderEvaluateTargetSection = (cycle: PromptSdlcLocalCycle): string => {
+  const wizard = cycle.wizard;
+  if (wizard === undefined || wizard.phase !== "evaluate") {
+    return "";
+  }
+  const templated = wizard.templatedPrompt.trim();
+  const concrete = readPromptSdlcWizardTemplatedOrConcrete(wizard).trim();
+  const reference = readPromptSdlcWizardEvaluatePromptText({
+    wizard,
+    revisions: cycle.revisions.map((item) => ({
+      roundNumber: item.roundNumber,
+      promptText: item.promptText,
+      score: item.judgement?.score,
+    })),
+  }).trim();
+  const inLiveEvaluate =
+    wizard.gate === null && !isPromptSdlcTerminalStatus(cycle.status);
+  const primary =
+    inLiveEvaluate && concrete.length > 0
+      ? concrete
+      : reference.length > 0
+        ? reference
+        : templated;
+  if (primary.length === 0) {
+    return `<h2>What is being evaluated</h2><p class="muted">Generalized prompt text will appear here once step 1 finishes.</p>`;
+  }
+  const note =
+    reference.length > 0
+      ? `<p class="muted">Prompt-text judge scores this revision (no folder run).</p>`
+      : `<p class="muted">Prompt-text judge scores templated prompt revisions.</p>`;
+  return `${note}${renderTruncatedPromptBlock("What is being evaluated", primary)}`;
+};
+
+const renderWizardStepPipelineSection = (
+  cycle: PromptSdlcLocalCycle,
+  stepId: string,
+): string => {
+  const wizard = cycle.wizard;
+  if (wizard === undefined || isPromptSdlcTerminalStatus(cycle.status)) {
+    return "";
+  }
+  const phase = WIZARD_STEP_PHASE[stepId];
+  if (phase === undefined || wizard.phase !== phase) {
+    return "";
+  }
+  return renderPromptSdlcWizardPipelineModalSummary(cycle);
+};
+
+const wrapWizardStepModalBody = (
+  cycle: PromptSdlcLocalCycle,
+  stepId: string,
+  inner: string,
+): string => {
+  const pipeline = renderWizardStepPipelineSection(cycle, stepId);
+  const evaluateTarget =
+    stepId === "wizard-2" ? renderEvaluateTargetSection(cycle) : "";
+  return `${pipeline}${evaluateTarget}${inner}`;
+};
 
 type EvaluateRevisionSnapshot = {
   readonly roundNumber: number;
@@ -68,32 +154,11 @@ const renderGeneralizeBody = (cycle: PromptSdlcLocalCycle): string => {
   if (wizard === undefined) {
     return "";
   }
-  const vars =
-    wizard.variables.length === 0
-      ? `<p class="muted">No variables yet.</p>`
-      : `<ul class="sdlc-wizard-vars">${wizard.variables
-          .map(
-            (item) =>
-              `<li><strong>{{${escapeHtml(item.name)}}}</strong> — ${escapeHtml(item.description)} (sample: ${escapeHtml(item.sampleValue)})</li>`,
-          )
-          .join("")}</ul>`;
-  const template = wizard.templatedPrompt.trim();
-  const templateBlock =
-    template.length === 0
-      ? `<p class="muted">No templated prompt yet.</p>`
-      : `<h2>Templated prompt</h2><pre class="sdlc-pre">${escapeHtml(template)}</pre>`;
-  const concrete = substitutePromptSdlcTemplate(
-    wizard.templatedPrompt,
-    wizard.variables,
-  ).trim();
-  const sampleBlock =
-    concrete.length === 0 || concrete === template
-      ? ""
-      : `<h2>Sample with variables filled</h2><pre class="sdlc-pre">${escapeHtml(concrete)}</pre>`;
-  return `${vars}${templateBlock}${sampleBlock}`;
+  return renderPromptSdlcWizardGeneralizeReview(wizard);
 };
 
 const renderEvaluateRevisionListFromSnapshots = (
+  cycle: PromptSdlcLocalCycle,
   revisions: readonly EvaluateRevisionSnapshot[],
   selectedRound: number | null,
 ): string => {
@@ -109,7 +174,12 @@ const renderEvaluateRevisionListFromSnapshots = (
         reason.length === 0
           ? ""
           : `<br><span class="muted">${escapeHtml(reason)}</span>`;
-      return `<li>${escapeHtml(score)}${selected}${reasonLine}</li>`;
+      const judgeInfo = renderPromptSdlcWizardRevisionRoundJudgePromptInfo({
+        cycle,
+        roundNumber: item.roundNumber,
+        promptText: item.promptText,
+      });
+      return `<li class="sdlc-wizard-revision-row"><span class="sdlc-wizard-revision-title">${escapeHtml(score)}${selected}</span>${judgeInfo}${reasonLine}</li>`;
     })
     .join("");
   return `<ul class="sdlc-wizard-revisions">${items}</ul>`;
@@ -132,6 +202,7 @@ const renderEvaluateBody = (cycle: PromptSdlcLocalCycle): string => {
   const snapshot = readEvaluateAttemptRevisions(cycle);
   if (snapshot !== null) {
     return `<p class="muted">Scored revisions from step 2 evaluate.</p>${renderEvaluateRevisionListFromSnapshots(
+      cycle,
       snapshot,
       wizard.evaluateSelectedRound,
     )}`;
@@ -197,7 +268,7 @@ const renderSeparateBody = (cycle: PromptSdlcLocalCycle): string => {
         : "";
       const selected =
         wizard.selectedSplitOptionId === item.id ? " (selected)" : "";
-      return `<li class="sdlc-wizard-split-option"><strong>${escapeHtml(item.title)}</strong>${badge}${escapeHtml(selected)}<br><span class="muted">${escapeHtml(item.summary)} (${escapeHtml(item.topology)})</span>${renderPromptSdlcWizardSplitOptionChunks(item)}</li>`;
+      return `<li class="sdlc-wizard-split-option"><strong>${escapeHtml(item.title)}</strong>${badge}${escapeHtml(selected)}${renderPromptSdlcWizardSplitOptionDetail(cycle, item)}</li>`;
     })
     .join("");
   return `<ul class="sdlc-wizard-splits">${options}</ul>`;
@@ -238,13 +309,17 @@ export const renderPromptSdlcWizardStepModalBody = (
 ): string => {
   switch (stepId) {
     case "wizard-1":
-      return renderGeneralizeBody(cycle);
+      return wrapWizardStepModalBody(
+        cycle,
+        stepId,
+        renderGeneralizeBody(cycle),
+      );
     case "wizard-2":
-      return renderEvaluateBody(cycle);
+      return wrapWizardStepModalBody(cycle, stepId, renderEvaluateBody(cycle));
     case "wizard-3":
-      return renderSeparateBody(cycle);
+      return wrapWizardStepModalBody(cycle, stepId, renderSeparateBody(cycle));
     case "wizard-4":
-      return renderOptimizeBody(cycle);
+      return wrapWizardStepModalBody(cycle, stepId, renderOptimizeBody(cycle));
     default:
       return "";
   }

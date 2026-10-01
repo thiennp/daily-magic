@@ -1,6 +1,7 @@
 import type AgentWitchProjectView from "./agentWitchProjectView.type";
 import type { InstalledLocalHarnessSnapshot } from "../../../harness/internal/core/readInstalledLocalHarnessSnapshot";
 import type { CloudProjectComposition } from "./fetchProjectCompositionFromCloud";
+import isDefaultAgentWitchProjectName from "./isDefaultAgentWitchProjectName";
 
 export type ProjectEditorTab = "harness" | "workflows" | "agents" | "knowledge";
 
@@ -28,7 +29,7 @@ const buildCompositionList = (
     .map(
       (item) => `<li class="harness-installed-set">
         <p><strong>${escapeHtml(item.name)}</strong>${item.versionLabel ? ` <span class="muted mono">v${escapeHtml(item.versionLabel)}</span>` : ""}</p>
-        <p class="muted">Bound in Agent Witch Console — materialize from Harness tab or pull into repo (coming soon).</p>
+        <p class="muted">Bound in Agent Witch Cloud — materialize from Harness tab or pull into repo (coming soon).</p>
       </li>`,
     )
     .join("")}</ul>`;
@@ -45,7 +46,7 @@ const buildEmptyHarnessTab = (): string => `<div class="stack">
 const buildBoundHarnessPullTab = (project: AgentWitchProjectView): string =>
   `<form method="POST" action="/projects/pull-bound-harness" class="stack">
         <input type="hidden" name="projectId" value="${escapeHtml(project.id)}" />
-        <p class="lede">This project’s playbook is linked in Agent Witch Console. Pull writes those files into this repo’s <code>.cursor</code> tree.</p>
+        <p class="lede">This project’s playbook is linked in Agent Witch Cloud. Pull writes those files into this repo’s <code>.cursor</code> tree.</p>
         <div class="actions">
           <button class="btn btn-primary" type="submit">Pull into repo</button>
         </div>
@@ -102,7 +103,7 @@ const buildKnowledgeTab = (input: {
       : `${input.candidateCount} lessons ready to promote`;
 
   return `<section class="stack">
-      <p class="lede">${escapeHtml(label)} from recent runs. Review in Agent Witch Console or promote below.</p>
+      <p class="lede">${escapeHtml(label)} from recent runs. Review in Agent Witch Cloud or promote below.</p>
       <form method="POST" action="/project/knowledge/promote-all" class="actions">
         <input type="hidden" name="projectId" value="${escapeHtml(input.projectId)}" />
         <button class="btn btn-secondary" type="submit">Mark all as promoted (metadata)</button>
@@ -113,6 +114,7 @@ const buildKnowledgeTab = (input: {
 
 export const buildAgentWitchLocalProjectEditorPageBody = (input: {
   readonly project: AgentWitchProjectView;
+  readonly cloudAppOrigin: string;
   readonly installed: InstalledLocalHarnessSnapshot;
   readonly linkedSetSlugs: readonly string[];
   readonly composition: CloudProjectComposition | null;
@@ -168,10 +170,27 @@ export const buildAgentWitchLocalProjectEditorPageBody = (input: {
     });
   }
 
+  const renameHref = `${input.cloudAppOrigin.replace(/\/$/, "")}/projects/${encodeURIComponent(input.project.id)}?rename=1`;
+  const cloudManageActions = `<div class="actions project-cloud-actions">
+      <a class="btn btn-secondary" href="${escapeHtml(renameHref)}" target="_blank" rel="noopener noreferrer">Rename in Agent Witch Cloud…</a>
+    </div>`;
+
+  const deleteBlock = isDefaultAgentWitchProjectName(input.project.name)
+    ? ""
+    : `<section class="danger-zone stack">
+        <p class="field-label">Danger zone</p>
+        <p class="muted">Removes this project from Agent Witch Cloud only. The folder on this Mac is not deleted.</p>
+        <form method="POST" action="/projects/delete" class="actions" onsubmit="return confirm('Delete this project from Agent Witch Cloud? Your repo folder on this Mac will stay.');">
+          <input type="hidden" name="projectId" value="${escapeHtml(input.project.id)}" />
+          <button class="btn btn-danger" type="submit">Delete project</button>
+        </form>
+      </section>`;
+
   return `${flash}<section class="card">
       <p class="eyebrow"><a href="/projects">Projects</a></p>
       <h1>${escapeHtml(input.project.name)}</h1>
       <p class="muted mono">${escapeHtml(input.project.projectFolderPath)}</p>
+      ${cloudManageActions}
       <div class="actions"><a class="btn btn-secondary" href="/projects/select-folder?projectId=${encodeURIComponent(input.project.id)}">Change folder…</a></div>
       <nav class="project-tabs" aria-label="Project composition">
         ${tabLink("harness", `Harness (${counts.harness})`)}
@@ -182,5 +201,5 @@ export const buildAgentWitchLocalProjectEditorPageBody = (input: {
       <div class="project-tab-panel">
         ${tabBody}
       </div>
-    </section>`;
+    </section>${deleteBlock}`;
 };

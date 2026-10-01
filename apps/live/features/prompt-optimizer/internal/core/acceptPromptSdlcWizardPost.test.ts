@@ -7,6 +7,7 @@ import { describe, expect, it } from "vitest";
 import { createInitialPromptSdlcWizardState } from "../../../../adapters/promptSdlcAwcCore";
 import { tryAcceptPromptSdlcWizardPost } from "./acceptPromptSdlcWizardPost";
 import { createPromptSdlcLocalCycle } from "./createPromptSdlcLocalCycle";
+import { confirmedPromptSdlcCostControlsForTests } from "./promptSdlcCostControlTestFixtures";
 import {
   readPromptSdlcLocalCycle,
   savePromptSdlcLocalCycle,
@@ -57,6 +58,106 @@ describe("tryAcceptPromptSdlcWizardPost", () => {
     expect(saved?.wizard?.phase).toBe("evaluate");
     expect(saved?.status).toBe("judging");
     expect(saved?.revisions[0]?.promptText).toBe("Do hello");
+  });
+
+  it("continues into evaluate when generalize output exists despite a stale error message", () => {
+    const storeDir = fs.mkdtempSync(
+      path.join(os.tmpdir(), "prompt-sdlc-post-stale-err-"),
+    );
+    const storePath = path.join(storeDir, "prompt-optimizer-cycles.json");
+    const cycle = {
+      ...createPromptSdlcLocalCycle({
+        goal: "g",
+        sourcePrompt: "p",
+        judgeModel: "claude-cli",
+        improverModel: "claude-cli",
+        workingDirectory: storeDir,
+        wizard: {
+          ...createInitialPromptSdlcWizardState("Do {{x}}"),
+          gate: "generalize",
+          templatedPrompt: "Do {{x}}",
+          variables: [{ name: "x", description: "d", sampleValue: "hello" }],
+          attempts: [
+            {
+              id: "attempt-generalize-1",
+              step: "generalize",
+              attemptNumber: 1,
+              output: {
+                templatedPrompt: "Do {{x}}",
+                variables: [
+                  { name: "x", description: "d", sampleValue: "hello" },
+                ],
+              },
+              userFeedback: null,
+              stepInstructions: null,
+              createdAt: "2026-01-01T00:00:00.000Z",
+            },
+          ],
+        },
+      }),
+      status: "wizard_paused" as const,
+      errorMessage: "Old writer error from a prior attempt.",
+    };
+    savePromptSdlcLocalCycle(storePath, cycle);
+
+    tryAcceptPromptSdlcWizardPost({
+      posted: new URLSearchParams({
+        intent: "wizard-continue",
+        cycleId: cycle.id,
+      }),
+      storePath,
+      response: {
+        writeHead: () => undefined,
+        end: () => undefined,
+      },
+    });
+
+    const saved = readPromptSdlcLocalCycle(storePath, cycle.id);
+    expect(saved?.wizard?.phase).toBe("evaluate");
+    expect(saved?.status).toBe("judging");
+    expect(saved?.errorMessage).toBeNull();
+  });
+
+  it("skips the generalize timeline step into evaluate via wizard-skip-step", () => {
+    const storeDir = fs.mkdtempSync(
+      path.join(os.tmpdir(), "prompt-sdlc-post-skip-step-"),
+    );
+    const storePath = path.join(storeDir, "prompt-optimizer-cycles.json");
+    const cycle = {
+      ...createPromptSdlcLocalCycle({
+        goal: "g",
+        sourcePrompt: "p",
+        judgeModel: "claude-cli",
+        improverModel: "claude-cli",
+        workingDirectory: storeDir,
+        wizard: {
+          ...createInitialPromptSdlcWizardState("Do {{x}}"),
+          gate: "generalize",
+          templatedPrompt: "Do {{x}}",
+          variables: [{ name: "x", description: "d", sampleValue: "hello" }],
+        },
+      }),
+      status: "wizard_paused" as const,
+    };
+    savePromptSdlcLocalCycle(storePath, cycle);
+
+    tryAcceptPromptSdlcWizardPost({
+      posted: new URLSearchParams({
+        intent: "wizard-skip-step",
+        wizardStepId: "wizard-1",
+        cycleId: cycle.id,
+      }),
+      storePath,
+      response: {
+        writeHead: () => undefined,
+        end: () => undefined,
+      },
+    });
+
+    const saved = readPromptSdlcLocalCycle(storePath, cycle.id);
+    expect(saved?.wizard?.phase).toBe("evaluate");
+    expect(saved?.status).toBe("judging");
+    expect(saved?.wizard?.gate).toBeNull();
   });
 
   it("retries generalize when Continue is used after a writer failure", () => {
@@ -231,6 +332,7 @@ describe("tryAcceptPromptSdlcWizardPost", () => {
         judgeModel: "claude-cli",
         improverModel: "claude-cli",
         workingDirectory: storeDir,
+        costControls: confirmedPromptSdlcCostControlsForTests({ moduleCount: 2 }),
         wizard: {
           ...createInitialPromptSdlcWizardState("Do {{x}}"),
           gate: "separate",
@@ -292,6 +394,7 @@ describe("tryAcceptPromptSdlcWizardPost", () => {
         judgeModel: "claude-cli",
         improverModel: "claude-cli",
         workingDirectory: storeDir,
+        costControls: confirmedPromptSdlcCostControlsForTests({ moduleCount: 2 }),
         wizard: {
           ...createInitialPromptSdlcWizardState("Do {{x}}"),
           gate: "optimize_modules",
@@ -319,6 +422,8 @@ describe("tryAcceptPromptSdlcWizardPost", () => {
         intent: "wizard-continue",
         cycleId: cycle.id,
         wizardParam_x: "custom",
+        confirmedTokenBudget: "8000",
+        confirmedMaxSpendUsd: "0.08",
       }),
       storePath,
       response: {
@@ -392,6 +497,7 @@ describe("tryAcceptPromptSdlcWizardPost", () => {
         judgeModel: "claude-cli",
         improverModel: "claude-cli",
         workingDirectory: storeDir,
+        costControls: confirmedPromptSdlcCostControlsForTests({ moduleCount: 2 }),
         wizard: {
           ...createInitialPromptSdlcWizardState("Do {{x}}"),
           gate: "optimize_modules",
@@ -438,6 +544,8 @@ describe("tryAcceptPromptSdlcWizardPost", () => {
         intent: "wizard-continue",
         cycleId: cycle.id,
         wizardParam_x: "hello",
+        confirmedTokenBudget: "8000",
+        confirmedMaxSpendUsd: "0.08",
       }),
       storePath,
       response: {
@@ -449,5 +557,62 @@ describe("tryAcceptPromptSdlcWizardPost", () => {
     const saved = readPromptSdlcLocalCycle(storePath, cycle.id);
     expect(saved?.status).toBe("stopped");
     expect(saved?.wizard?.phase).toBe("complete");
+  });
+
+  it("confirms Step 4 cost ceiling before optimize continue", () => {
+    const storeDir = fs.mkdtempSync(
+      path.join(os.tmpdir(), "prompt-sdlc-post-budget-"),
+    );
+    const storePath = path.join(storeDir, "prompt-optimizer-cycles.json");
+    const cycle = {
+      ...createPromptSdlcLocalCycle({
+        goal: "g",
+        sourcePrompt: "p",
+        judgeModel: "claude-cli",
+        improverModel: "claude-cli",
+        workingDirectory: storeDir,
+        wizard: {
+          ...createInitialPromptSdlcWizardState("Do {{x}}"),
+          gate: "optimize_modules",
+          phase: "optimize_modules",
+          variables: [{ name: "x", description: "d", sampleValue: "hello" }],
+          parameterValues: { x: "hello" },
+          modules: [
+            {
+              moduleId: "m1",
+              title: "Main",
+              prompt: "Run {{x}}",
+              status: "pending",
+              selectedRevisionRound: null,
+            },
+          ],
+          currentModuleIndex: 0,
+        },
+      }),
+      status: "wizard_paused" as const,
+    };
+    savePromptSdlcLocalCycle(storePath, cycle);
+
+    tryAcceptPromptSdlcWizardPost({
+      posted: new URLSearchParams({
+        intent: "wizard-continue",
+        cycleId: cycle.id,
+        confirmedTokenBudget: "12000",
+        confirmedMaxSpendUsd: "0.5",
+        wizardParam_x: "hello",
+      }),
+      storePath,
+      response: {
+        writeHead: () => undefined,
+        end: () => undefined,
+      },
+    });
+
+    const saved = readPromptSdlcLocalCycle(storePath, cycle.id);
+    expect(saved?.costControls?.budgetConfirmed).toBe(true);
+    expect(saved?.costControls?.confirmedTokenBudget).toBe(12000);
+    expect(saved?.costControls?.confirmedMaxSpendUsd).toBe(0.5);
+    // wizard-continue with confirm fields also starts the pending module trial
+    expect(saved?.status).toBe("judging");
   });
 });

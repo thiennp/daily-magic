@@ -1,0 +1,2763 @@
+{
+  "passThreshold": 95,
+  "currentRole": "ux",
+  "currentPageIndex": 2,
+  "pages": [
+    {
+      "order": 0,
+      "deployable": "AWC",
+      "id": "home-marketing",
+      "title": "Home (marketing)",
+      "path": "/",
+      "statuses": ["ready"],
+      "roles": {
+        "ux": {
+          "passed": true,
+          "score": 96,
+          "round": 1,
+          "reviewerA": 97,
+          "reviewerB": 96,
+          "notes": "Agent A=97 B=96 (round 1).\nA deductions: desktop-cta-pairing -1: Primary and secondary hero CTAs share equal visual weight; scan path still lands on account creation but secondary link could defer further on wide layouts. | desktop-midpage-interrupt -1: For-your-AI block appears before feature grid and pulls attention away from the signup column on first scroll. | mobile-auth-below-fold -3: On 390px capture the Create free account card sits well below hero CTAs, adding scroll before users reach the inline sign-in form. | mobile-length -2: Marketing story is very long on mobile; final CTA band is far from hero, increasing fatigue before repeat conversion.\nB deductions: desktop-trust-timing -2: Trust strip metrics appear under hero CTAs but product preview mock competes for attention in the right column on first paint. | desktop-showcases-depth -1: Showcase grids add depth without sticky wayfinding; returning to signup requires scrolling back up. | mobile-menu-cta -2: Header Create account button is small relative to hero; menu label alone may not signal full marketing nav on first visit. | mobile-form-stack -3: Auth form stacks below lengthy hero copy and numbered steps before users see Google/email fields on the ready capture.",
+          "agentFeedback": {
+            "reviewerA": {
+              "reviewMethod": "agent",
+              "reviewer": "A",
+              "deployable": "AWC",
+              "pageId": "home-marketing",
+              "role": "ux",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/home-marketing/round-1/manifest.json",
+              "scoreDesktop": 98,
+              "scoreMobile": 95,
+              "scoreOverall": 97,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "desktop-cta-pairing",
+                  "pointsDeducted": 1,
+                  "reason": "Primary and secondary hero CTAs share equal visual weight; scan path still lands on account creation but secondary link could defer further on wide layouts."
+                },
+                {
+                  "area": "desktop-midpage-interrupt",
+                  "pointsDeducted": 1,
+                  "reason": "For-your-AI block appears before feature grid and pulls attention away from the signup column on first scroll."
+                },
+                {
+                  "area": "mobile-auth-below-fold",
+                  "pointsDeducted": 3,
+                  "reason": "On 390px capture the Create free account card sits well below hero CTAs, adding scroll before users reach the inline sign-in form."
+                },
+                {
+                  "area": "mobile-length",
+                  "pointsDeducted": 2,
+                  "reason": "Marketing story is very long on mobile; final CTA band is far from hero, increasing fatigue before repeat conversion."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": [
+                "Mobile signup card placement",
+                "Long mobile scroll to footer CTA"
+              ],
+              "mustFix": [],
+              "quickWins": [
+                "Anchor mobile users to #get-started after primary hero CTA tap"
+              ]
+            },
+            "reviewerB": {
+              "reviewMethod": "agent",
+              "reviewer": "B",
+              "deployable": "AWC",
+              "pageId": "home-marketing",
+              "role": "ux",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/home-marketing/round-1/manifest.json",
+              "scoreDesktop": 97,
+              "scoreMobile": 95,
+              "scoreOverall": 96,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "desktop-trust-timing",
+                  "pointsDeducted": 2,
+                  "reason": "Trust strip metrics appear under hero CTAs but product preview mock competes for attention in the right column on first paint."
+                },
+                {
+                  "area": "desktop-showcases-depth",
+                  "pointsDeducted": 1,
+                  "reason": "Showcase grids add depth without sticky wayfinding; returning to signup requires scrolling back up."
+                },
+                {
+                  "area": "mobile-menu-cta",
+                  "pointsDeducted": 2,
+                  "reason": "Header Create account button is small relative to hero; menu label alone may not signal full marketing nav on first visit."
+                },
+                {
+                  "area": "mobile-form-stack",
+                  "pointsDeducted": 3,
+                  "reason": "Auth form stacks below lengthy hero copy and numbered steps before users see Google/email fields on the ready capture."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": [
+                "Mobile path to sign-in form",
+                "Showcase length without jump links"
+              ],
+              "mustFix": [],
+              "quickWins": [
+                "Repeat sticky Create account in mobile header after scroll"
+              ]
+            }
+          }
+        },
+        "copy": {
+          "passed": true,
+          "score": 96,
+          "round": 1,
+          "reviewerA": 97,
+          "reviewerB": 96,
+          "notes": "Agent A=97 B=96 (round 1).\nA deductions: announcement-acl -2: Top bar says Project Access ACL; ACL reads as engineering jargon on a marketing surface. | eyebrow-harness -1: Hero eyebrow leads with Harness; philosophy prefers Playbook/Mac vocabulary over harness on user-facing surfaces. | hero-approve-capitalization -1: Mid-sentence capitalized Approve in hero paragraph breaks reading flow. | mobile-announcement-density -1: Announcement line wraps awkwardly on 390px, slightly obscuring the Agent Witch value prop on first screen.\nB deductions: evaluate-scores-jargon -2: Hero and features repeat evaluate scores; accurate but heavy for first-touch marketing readers. | specialist-bots-clause -1: Slack and Outlook ops sentence is precise yet dense in the opening paragraph. | for-ai-harness -2: For-your-AI section mentions harness in body copy where Playbook or project wording would match vocabulary rules. | preset-dialog-tone -1: Sign-in-first dialog is clear; minutes promise is slightly generic compared to concrete Mac install step nearby.",
+          "agentFeedback": {
+            "reviewerA": {
+              "reviewMethod": "agent",
+              "reviewer": "A",
+              "deployable": "AWC",
+              "pageId": "home-marketing",
+              "role": "copy",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/home-marketing/round-1/manifest.json",
+              "scoreDesktop": 97,
+              "scoreMobile": 96,
+              "scoreOverall": 97,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "announcement-acl",
+                  "pointsDeducted": 2,
+                  "reason": "Top bar says Project Access ACL; ACL reads as engineering jargon on a marketing surface."
+                },
+                {
+                  "area": "eyebrow-harness",
+                  "pointsDeducted": 1,
+                  "reason": "Hero eyebrow leads with Harness; philosophy prefers Playbook/Mac vocabulary over harness on user-facing surfaces."
+                },
+                {
+                  "area": "hero-approve-capitalization",
+                  "pointsDeducted": 1,
+                  "reason": "Mid-sentence capitalized Approve in hero paragraph breaks reading flow."
+                },
+                {
+                  "area": "mobile-announcement-density",
+                  "pointsDeducted": 1,
+                  "reason": "Announcement line wraps awkwardly on 390px, slightly obscuring the Agent Witch value prop on first screen."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": ["ACL in announcement", "Harness eyebrow"],
+              "mustFix": [],
+              "quickWins": [
+                "Rename announcement to Project Access without ACL",
+                "Use Playbooks-first eyebrow"
+              ]
+            },
+            "reviewerB": {
+              "reviewMethod": "agent",
+              "reviewer": "B",
+              "deployable": "AWC",
+              "pageId": "home-marketing",
+              "role": "copy",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/home-marketing/round-1/manifest.json",
+              "scoreDesktop": 96,
+              "scoreMobile": 96,
+              "scoreOverall": 96,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "evaluate-scores-jargon",
+                  "pointsDeducted": 2,
+                  "reason": "Hero and features repeat evaluate scores; accurate but heavy for first-touch marketing readers."
+                },
+                {
+                  "area": "specialist-bots-clause",
+                  "pointsDeducted": 1,
+                  "reason": "Slack and Outlook ops sentence is precise yet dense in the opening paragraph."
+                },
+                {
+                  "area": "for-ai-harness",
+                  "pointsDeducted": 2,
+                  "reason": "For-your-AI section mentions harness in body copy where Playbook or project wording would match vocabulary rules."
+                },
+                {
+                  "area": "preset-dialog-tone",
+                  "pointsDeducted": 1,
+                  "reason": "Sign-in-first dialog is clear; minutes promise is slightly generic compared to concrete Mac install step nearby."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": [
+                "evaluate scores density",
+                "harness mention in For your AI"
+              ],
+              "mustFix": [],
+              "quickWins": [
+                "Swap harness for project folder in For-your-AI paragraph"
+              ]
+            }
+          }
+        },
+        "ui": {
+          "passed": true,
+          "score": 97,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 97,
+          "notes": "Agent A=98 B=97 (round 1).\nA deductions: for-ai-dark-tokens -1: For-your-AI card includes dark: utility classes inside an otherwise light marketing shell; harmless in Storybook but slightly inconsistent. | mobile-card-density -2: Preset workflow cards stack with similar elevation; category labels could use more vertical rhythm on 390px capture. | mobile-cta-stack -1: Full-width hero buttons stack cleanly but secondary outline button height matches primary, reducing hierarchy by a hair.\nB deductions: showcase-thumbnail-crop -1: Some showcase tiles crop screenshots tightly on desktop; still readable but borderline on smaller breakpoints. | feature-icon-alignment -1: Feature trio icons align well; middle card preview mock is slightly shorter than neighbors creating subtle height mismatch. | mobile-header-blur -2: Sticky header backdrop blur is subtle on mobile capture; border carries most separation from hero. | mobile-trust-strip -2: Trust metrics wrap to two rows on narrow width; spacing between rows feels tight versus hero whitespace.",
+          "agentFeedback": {
+            "reviewerA": {
+              "reviewMethod": "agent",
+              "reviewer": "A",
+              "deployable": "AWC",
+              "pageId": "home-marketing",
+              "role": "ui",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/home-marketing/round-1/manifest.json",
+              "scoreDesktop": 99,
+              "scoreMobile": 97,
+              "scoreOverall": 98,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "for-ai-dark-tokens",
+                  "pointsDeducted": 1,
+                  "reason": "For-your-AI card includes dark: utility classes inside an otherwise light marketing shell; harmless in Storybook but slightly inconsistent."
+                },
+                {
+                  "area": "mobile-card-density",
+                  "pointsDeducted": 2,
+                  "reason": "Preset workflow cards stack with similar elevation; category labels could use more vertical rhythm on 390px capture."
+                },
+                {
+                  "area": "mobile-cta-stack",
+                  "pointsDeducted": 1,
+                  "reason": "Full-width hero buttons stack cleanly but secondary outline button height matches primary, reducing hierarchy by a hair."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": ["Light-shell dark: classes on one section"],
+              "mustFix": [],
+              "quickWins": [
+                "Align For-your-AI surfaces with marketing light tokens only"
+              ]
+            },
+            "reviewerB": {
+              "reviewMethod": "agent",
+              "reviewer": "B",
+              "deployable": "AWC",
+              "pageId": "home-marketing",
+              "role": "ui",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/home-marketing/round-1/manifest.json",
+              "scoreDesktop": 98,
+              "scoreMobile": 96,
+              "scoreOverall": 97,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "showcase-thumbnail-crop",
+                  "pointsDeducted": 1,
+                  "reason": "Some showcase tiles crop screenshots tightly on desktop; still readable but borderline on smaller breakpoints."
+                },
+                {
+                  "area": "feature-icon-alignment",
+                  "pointsDeducted": 1,
+                  "reason": "Feature trio icons align well; middle card preview mock is slightly shorter than neighbors creating subtle height mismatch."
+                },
+                {
+                  "area": "mobile-header-blur",
+                  "pointsDeducted": 2,
+                  "reason": "Sticky header backdrop blur is subtle on mobile capture; border carries most separation from hero."
+                },
+                {
+                  "area": "mobile-trust-strip",
+                  "pointsDeducted": 2,
+                  "reason": "Trust metrics wrap to two rows on narrow width; spacing between rows feels tight versus hero whitespace."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": [
+                "Showcase tile crops",
+                "Mobile trust strip spacing"
+              ],
+              "mustFix": [],
+              "quickWins": ["Add gap-y between trust metrics on sm breakpoint"]
+            }
+          }
+        },
+        "product": {
+          "passed": true,
+          "score": 97,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 97,
+          "notes": "Agent A=98 B=97 (round 1).\nA deductions: auth-storybook-limit -1: Google sign-in is present as UI chrome; story cannot demonstrate real OAuth, which is acceptable but worth noting for reviewers. | mobile-marketplace-path -2: Preset cards imply marketplace flows that require sign-in; mobile capture does not surface that gating until dialog interaction.\nB deductions: mac-install-honesty -2: Steps promise one install command; story does not show terminal snippet inline (lives post sign-in), slightly understating setup friction. | optimizer-claims -1: Copy states evaluate passes; aligns with product pillars but north-star honesty footnote is not visible on capture. | runner-labels -1: Product preview uses runner: mac-* labels that read as infra fixtures; believable for power users, less so for executives skimming mobile. | agent-access-section -1: For-your-AI block is accurate to Agent Access capability yet may surprise buyers expecting only human signup on landing.",
+          "agentFeedback": {
+            "reviewerA": {
+              "reviewMethod": "agent",
+              "reviewer": "A",
+              "deployable": "AWC",
+              "pageId": "home-marketing",
+              "role": "product",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/home-marketing/round-1/manifest.json",
+              "scoreDesktop": 99,
+              "scoreMobile": 97,
+              "scoreOverall": 98,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "auth-storybook-limit",
+                  "pointsDeducted": 1,
+                  "reason": "Google sign-in is present as UI chrome; story cannot demonstrate real OAuth, which is acceptable but worth noting for reviewers."
+                },
+                {
+                  "area": "mobile-marketplace-path",
+                  "pointsDeducted": 2,
+                  "reason": "Preset cards imply marketplace flows that require sign-in; mobile capture does not surface that gating until dialog interaction."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": ["Sign-in gating on preset examples"],
+              "mustFix": [],
+              "quickWins": [
+                "Add footnote on preset section that marketplace requires account"
+              ]
+            },
+            "reviewerB": {
+              "reviewMethod": "agent",
+              "reviewer": "B",
+              "deployable": "AWC",
+              "pageId": "home-marketing",
+              "role": "product",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/home-marketing/round-1/manifest.json",
+              "scoreDesktop": 97,
+              "scoreMobile": 96,
+              "scoreOverall": 97,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "mac-install-honesty",
+                  "pointsDeducted": 2,
+                  "reason": "Steps promise one install command; story does not show terminal snippet inline (lives post sign-in), slightly understating setup friction."
+                },
+                {
+                  "area": "optimizer-claims",
+                  "pointsDeducted": 1,
+                  "reason": "Copy states evaluate passes; aligns with product pillars but north-star honesty footnote is not visible on capture."
+                },
+                {
+                  "area": "runner-labels",
+                  "pointsDeducted": 1,
+                  "reason": "Product preview uses runner: mac-* labels that read as infra fixtures; believable for power users, less so for executives skimming mobile."
+                },
+                {
+                  "area": "agent-access-section",
+                  "pointsDeducted": 1,
+                  "reason": "For-your-AI block is accurate to Agent Access capability yet may surprise buyers expecting only human signup on landing."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": [
+                "Install command not shown in story",
+                "AI self-register section prominence"
+              ],
+              "mustFix": [],
+              "quickWins": [
+                "Surface honesty footnote near Prompt Optimizer mentions"
+              ]
+            }
+          }
+        },
+        "tester": {
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: all statuses render (storybook:wave:validate)."
+        },
+        "dx": {
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
+        }
+      },
+      "allRolesPassed": true
+    },
+    {
+      "order": 1,
+      "deployable": "AWC",
+      "id": "login",
+      "title": "Login",
+      "path": "/login",
+      "statuses": ["ready"],
+      "roles": {
+        "ux": {
+          "passed": true,
+          "score": 97,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 97,
+          "notes": "Agent A=98 B=97 (round 1).\nA deductions: mobile-header-cta -2: Header Create account button slightly competes with the in-card sign-in primary action on 390px.\nB deductions: mobile-scroll-depth -3: Trust stats below the fold on mobile require one extra scroll after the sign-in card.",
+          "agentFeedback": {
+            "reviewerA": {
+              "reviewMethod": "agent",
+              "reviewer": "A",
+              "deployable": "AWC",
+              "pageId": "login",
+              "role": "ux",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/login/round-1/manifest.json",
+              "scoreDesktop": 98,
+              "scoreMobile": 97,
+              "scoreOverall": 98,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "mobile-header-cta",
+                  "pointsDeducted": 2,
+                  "reason": "Header Create account button slightly competes with the in-card sign-in primary action on 390px."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": [],
+              "mustFix": [],
+              "quickWins": []
+            },
+            "reviewerB": {
+              "reviewMethod": "agent",
+              "reviewer": "B",
+              "deployable": "AWC",
+              "pageId": "login",
+              "role": "ux",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/login/round-1/manifest.json",
+              "scoreDesktop": 97,
+              "scoreMobile": 97,
+              "scoreOverall": 97,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "mobile-scroll-depth",
+                  "pointsDeducted": 3,
+                  "reason": "Trust stats below the fold on mobile require one extra scroll after the sign-in card."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": [],
+              "mustFix": [],
+              "quickWins": []
+            }
+          }
+        },
+        "copy": {
+          "passed": true,
+          "score": 99,
+          "round": 1,
+          "reviewerA": 100,
+          "reviewerB": 99,
+          "notes": "Agent A=100 B=99 (round 1).\nA: no deductions.\nB deductions: trust-stat-em-dash -1: Minor typography: em dash in trust stat line could match marketing styleguide spacing.",
+          "agentFeedback": {
+            "reviewerA": {
+              "reviewMethod": "agent",
+              "reviewer": "A",
+              "deployable": "AWC",
+              "pageId": "login",
+              "role": "copy",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/login/round-1/manifest.json",
+              "scoreDesktop": 100,
+              "scoreMobile": 100,
+              "scoreOverall": 100,
+              "passed": true,
+              "scoreBreakdown": [],
+              "whyBelowThreshold": "",
+              "topIssues": [],
+              "mustFix": [],
+              "quickWins": []
+            },
+            "reviewerB": {
+              "reviewMethod": "agent",
+              "reviewer": "B",
+              "deployable": "AWC",
+              "pageId": "login",
+              "role": "copy",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/login/round-1/manifest.json",
+              "scoreDesktop": 99,
+              "scoreMobile": 98,
+              "scoreOverall": 99,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "trust-stat-em-dash",
+                  "pointsDeducted": 1,
+                  "reason": "Minor typography: em dash in trust stat line could match marketing styleguide spacing."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": [],
+              "mustFix": [],
+              "quickWins": []
+            }
+          }
+        },
+        "ui": {
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Agent A=98 B=98 (round 1).\nA deductions: divider-or-weight -2: OR divider between Google and email is very light; still readable at a glance.\nB deductions: google-button-border -2: Google outline button border is slightly lighter than marketing card edge on desktop.",
+          "agentFeedback": {
+            "reviewerA": {
+              "reviewMethod": "agent",
+              "reviewer": "A",
+              "deployable": "AWC",
+              "pageId": "login",
+              "role": "ui",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/login/round-1/manifest.json",
+              "scoreDesktop": 98,
+              "scoreMobile": 98,
+              "scoreOverall": 98,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "divider-or-weight",
+                  "pointsDeducted": 2,
+                  "reason": "OR divider between Google and email is very light; still readable at a glance."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": [],
+              "mustFix": [],
+              "quickWins": []
+            },
+            "reviewerB": {
+              "reviewMethod": "agent",
+              "reviewer": "B",
+              "deployable": "AWC",
+              "pageId": "login",
+              "role": "ui",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/login/round-1/manifest.json",
+              "scoreDesktop": 97,
+              "scoreMobile": 98,
+              "scoreOverall": 98,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "google-button-border",
+                  "pointsDeducted": 2,
+                  "reason": "Google outline button border is slightly lighter than marketing card edge on desktop."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": [],
+              "mustFix": [],
+              "quickWins": []
+            }
+          }
+        },
+        "product": {
+          "passed": true,
+          "score": 97,
+          "round": 1,
+          "reviewerA": 99,
+          "reviewerB": 97,
+          "notes": "Agent A=99 B=97 (round 1).\nA deductions: storybook-auth-mock -1: Story shows ready state without live OAuth; acceptable for catalog but not a full auth flow demo.\nB deductions: callback-default -3: Default callback to home is correct but not surfaced in the story UI for power users.",
+          "agentFeedback": {
+            "reviewerA": {
+              "reviewMethod": "agent",
+              "reviewer": "A",
+              "deployable": "AWC",
+              "pageId": "login",
+              "role": "product",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/login/round-1/manifest.json",
+              "scoreDesktop": 99,
+              "scoreMobile": 98,
+              "scoreOverall": 99,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "storybook-auth-mock",
+                  "pointsDeducted": 1,
+                  "reason": "Story shows ready state without live OAuth; acceptable for catalog but not a full auth flow demo."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": [],
+              "mustFix": [],
+              "quickWins": []
+            },
+            "reviewerB": {
+              "reviewMethod": "agent",
+              "reviewer": "B",
+              "deployable": "AWC",
+              "pageId": "login",
+              "role": "product",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/login/round-1/manifest.json",
+              "scoreDesktop": 97,
+              "scoreMobile": 97,
+              "scoreOverall": 97,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "callback-default",
+                  "pointsDeducted": 3,
+                  "reason": "Default callback to home is correct but not surfaced in the story UI for power users."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": [],
+              "mustFix": [],
+              "quickWins": []
+            }
+          }
+        },
+        "tester": {
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: all statuses render (storybook:wave:validate)."
+        },
+        "dx": {
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
+        }
+      },
+      "allRolesPassed": true
+    },
+    {
+      "order": 2,
+      "deployable": "AWC",
+      "id": "for-agents",
+      "title": "For agents",
+      "path": "/for-agents",
+      "statuses": ["ready"],
+      "roles": {
+        "ux": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "copy": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "ui": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "product": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "tester": {
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: all statuses render (storybook:wave:validate)."
+        },
+        "dx": {
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
+        }
+      },
+      "allRolesPassed": false
+    },
+    {
+      "order": 3,
+      "deployable": "AWC",
+      "id": "setup-writer",
+      "title": "Setup writer",
+      "path": "/setup/writer",
+      "statuses": ["ready"],
+      "roles": {
+        "ux": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "copy": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "ui": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "product": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "tester": {
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: all statuses render (storybook:wave:validate)."
+        },
+        "dx": {
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
+        }
+      },
+      "allRolesPassed": false
+    },
+    {
+      "order": 4,
+      "deployable": "AWC",
+      "id": "privacy",
+      "title": "Privacy",
+      "path": "/privacy",
+      "statuses": ["ready"],
+      "roles": {
+        "ux": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "copy": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "ui": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "product": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "tester": {
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: all statuses render (storybook:wave:validate)."
+        },
+        "dx": {
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
+        }
+      },
+      "allRolesPassed": false
+    },
+    {
+      "order": 5,
+      "deployable": "AWC",
+      "id": "terms",
+      "title": "Terms",
+      "path": "/terms",
+      "statuses": ["ready"],
+      "roles": {
+        "ux": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "copy": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "ui": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "product": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "tester": {
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: all statuses render (storybook:wave:validate)."
+        },
+        "dx": {
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
+        }
+      },
+      "allRolesPassed": false
+    },
+    {
+      "order": 6,
+      "deployable": "AWC",
+      "id": "home-signed-in",
+      "title": "Home (signed in)",
+      "path": "/",
+      "statuses": ["loading", "empty", "error", "ready"],
+      "roles": {
+        "ux": {
+          "passed": true,
+          "score": 97,
+          "round": 1,
+          "reviewerA": 97,
+          "reviewerB": 98,
+          "notes": "Agent A=97 B=98 (round 1).\nA deductions: mobile-bottom-nav -2: Fixed bottom tab bar interrupts the vertical scan from setup hero to projects on 390px. | status-banners -1: Loading/empty/error Storybook banners are clear but add a thin extra band above the shell header.\nB deductions: mobile-density -2: Three-column dashboard collapses to a long scroll; primary CTA remains findable but requires more swipes on mobile.",
+          "agentFeedback": {
+            "reviewerA": {
+              "reviewMethod": "agent",
+              "reviewer": "A",
+              "deployable": "AWC",
+              "pageId": "home-signed-in",
+              "role": "ux",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/home-signed-in/round-1/manifest.json",
+              "scoreDesktop": 98,
+              "scoreMobile": 96,
+              "scoreOverall": 97,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "mobile-bottom-nav",
+                  "pointsDeducted": 2,
+                  "reason": "Fixed bottom tab bar interrupts the vertical scan from setup hero to projects on 390px."
+                },
+                {
+                  "area": "status-banners",
+                  "pointsDeducted": 1,
+                  "reason": "Loading/empty/error Storybook banners are clear but add a thin extra band above the shell header."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": ["Mobile chrome competes with dashboard hierarchy"],
+              "mustFix": [],
+              "quickWins": [
+                "Tuck marketing accordion below the fold on mobile captures"
+              ]
+            },
+            "reviewerB": {
+              "reviewMethod": "agent",
+              "reviewer": "B",
+              "deployable": "AWC",
+              "pageId": "home-signed-in",
+              "role": "ux",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/home-signed-in/round-1/manifest.json",
+              "scoreDesktop": 99,
+              "scoreMobile": 97,
+              "scoreOverall": 98,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "mobile-density",
+                  "pointsDeducted": 2,
+                  "reason": "Three-column dashboard collapses to a long scroll; primary CTA remains findable but requires more swipes on mobile."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": ["Long mobile scroll for full dashboard"],
+              "mustFix": [],
+              "quickWins": []
+            }
+          }
+        },
+        "copy": {
+          "passed": true,
+          "score": 97,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 97,
+          "notes": "Agent A=98 B=97 (round 1).\nA deductions: storybook-user-label -2: Header still reads Storybook User rather than a realistic display name; acceptable for fixtures but slightly off-brand in screenshots.\nB deductions: status-banner-copy -3: Meta banners (loading/empty/error) are developer-facing; tone is fine but not user-facing product copy.",
+          "agentFeedback": {
+            "reviewerA": {
+              "reviewMethod": "agent",
+              "reviewer": "A",
+              "deployable": "AWC",
+              "pageId": "home-signed-in",
+              "role": "copy",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/home-signed-in/round-1/manifest.json",
+              "scoreDesktop": 98,
+              "scoreMobile": 98,
+              "scoreOverall": 98,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "storybook-user-label",
+                  "pointsDeducted": 2,
+                  "reason": "Header still reads Storybook User rather than a realistic display name; acceptable for fixtures but slightly off-brand in screenshots."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": ["Fixture display name in header"],
+              "mustFix": [],
+              "quickWins": [
+                "Use AWC_STORYBOOK_USER.name in session chrome when wired"
+              ]
+            },
+            "reviewerB": {
+              "reviewMethod": "agent",
+              "reviewer": "B",
+              "deployable": "AWC",
+              "pageId": "home-signed-in",
+              "role": "copy",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/home-signed-in/round-1/manifest.json",
+              "scoreDesktop": 97,
+              "scoreMobile": 97,
+              "scoreOverall": 97,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "status-banner-copy",
+                  "pointsDeducted": 3,
+                  "reason": "Meta banners (loading/empty/error) are developer-facing; tone is fine but not user-facing product copy."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": ["Storybook-only status banner voice"],
+              "mustFix": [],
+              "quickWins": []
+            }
+          }
+        },
+        "ui": {
+          "passed": true,
+          "score": 97,
+          "round": 1,
+          "reviewerA": 97,
+          "reviewerB": 97,
+          "notes": "Agent A=97 B=97 (round 1).\nA deductions: mobile-nav-overlap -2: Horizontal nav row between cards on 390px looks like mid-page tabs rather than shell chrome. | status-banner-chrome -1: Amber status strip uses a different radius than TailAdmin cards; minor styleguide drift.\nB deductions: loading-state-density -3: Loading story still shows full marketing blocks beneath the checking-Mac hero; skeleton could be lighter.",
+          "agentFeedback": {
+            "reviewerA": {
+              "reviewMethod": "agent",
+              "reviewer": "A",
+              "deployable": "AWC",
+              "pageId": "home-signed-in",
+              "role": "ui",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/home-signed-in/round-1/manifest.json",
+              "scoreDesktop": 98,
+              "scoreMobile": 96,
+              "scoreOverall": 97,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "mobile-nav-overlap",
+                  "pointsDeducted": 2,
+                  "reason": "Horizontal nav row between cards on 390px looks like mid-page tabs rather than shell chrome."
+                },
+                {
+                  "area": "status-banner-chrome",
+                  "pointsDeducted": 1,
+                  "reason": "Amber status strip uses a different radius than TailAdmin cards; minor styleguide drift."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": ["Mobile nav placement"],
+              "mustFix": [],
+              "quickWins": ["Align banner padding with AppShell header rhythm"]
+            },
+            "reviewerB": {
+              "reviewMethod": "agent",
+              "reviewer": "B",
+              "deployable": "AWC",
+              "pageId": "home-signed-in",
+              "role": "ui",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/home-signed-in/round-1/manifest.json",
+              "scoreDesktop": 97,
+              "scoreMobile": 97,
+              "scoreOverall": 97,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "loading-state-density",
+                  "pointsDeducted": 3,
+                  "reason": "Loading story still shows full marketing blocks beneath the checking-Mac hero; skeleton could be lighter."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": ["Loading visual weight"],
+              "mustFix": [],
+              "quickWins": []
+            }
+          }
+        },
+        "product": {
+          "passed": true,
+          "score": 97,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 97,
+          "notes": "Agent A=98 B=97 (round 1).\nA deductions: empty-state-fidelity -2: Empty MSW still shows setup-complete chrome from shared layout; empty story could emphasize zero projects more.\nB deductions: ready-fixture-believability -2: Sample project name daily-magic is accurate for repo but may confuse external reviewers. | error-state-surface -2: Error banner does not show inline API error panels; acceptable for catalog smoke but not full failure UX.",
+          "agentFeedback": {
+            "reviewerA": {
+              "reviewMethod": "agent",
+              "reviewer": "A",
+              "deployable": "AWC",
+              "pageId": "home-signed-in",
+              "role": "product",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/home-signed-in/round-1/manifest.json",
+              "scoreDesktop": 99,
+              "scoreMobile": 97,
+              "scoreOverall": 98,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "empty-state-fidelity",
+                  "pointsDeducted": 2,
+                  "reason": "Empty MSW still shows setup-complete chrome from shared layout; empty story could emphasize zero projects more."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": ["Empty vs ready visual overlap"],
+              "mustFix": [],
+              "quickWins": [
+                "Differentiate empty fixtures in a later story pass"
+              ]
+            },
+            "reviewerB": {
+              "reviewMethod": "agent",
+              "reviewer": "B",
+              "deployable": "AWC",
+              "pageId": "home-signed-in",
+              "role": "product",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/home-signed-in/round-1/manifest.json",
+              "scoreDesktop": 98,
+              "scoreMobile": 96,
+              "scoreOverall": 97,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "ready-fixture-believability",
+                  "pointsDeducted": 2,
+                  "reason": "Sample project name daily-magic is accurate for repo but may confuse external reviewers."
+                },
+                {
+                  "area": "error-state-surface",
+                  "pointsDeducted": 2,
+                  "reason": "Error banner does not show inline API error panels; acceptable for catalog smoke but not full failure UX."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": ["Error story is banner-only"],
+              "mustFix": [],
+              "quickWins": []
+            }
+          }
+        },
+        "tester": {
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: all statuses render (storybook:wave:validate)."
+        },
+        "dx": {
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
+        }
+      },
+      "allRolesPassed": true
+    },
+    {
+      "order": 7,
+      "deployable": "AWC",
+      "id": "projects",
+      "title": "Projects",
+      "path": "/projects",
+      "statuses": ["loading", "empty", "error", "ready"],
+      "roles": {
+        "ux": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "copy": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "ui": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "product": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "tester": {
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: all statuses render (storybook:wave:validate)."
+        },
+        "dx": {
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
+        }
+      },
+      "allRolesPassed": false
+    },
+    {
+      "order": 8,
+      "deployable": "AWC",
+      "id": "project-detail",
+      "title": "Project detail",
+      "path": "/projects/:projectId",
+      "statuses": ["loading", "empty", "error", "ready"],
+      "roles": {
+        "ux": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "copy": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "ui": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "product": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "tester": {
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: all statuses render (storybook:wave:validate)."
+        },
+        "dx": {
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
+        }
+      },
+      "allRolesPassed": false
+    },
+    {
+      "order": 9,
+      "deployable": "AWC",
+      "id": "library",
+      "title": "Library",
+      "path": "/library",
+      "statuses": ["loading", "guest", "empty", "error", "ready"],
+      "roles": {
+        "ux": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "copy": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "ui": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "product": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "tester": {
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: all statuses render (storybook:wave:validate)."
+        },
+        "dx": {
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
+        }
+      },
+      "allRolesPassed": false
+    },
+    {
+      "order": 10,
+      "deployable": "AWC",
+      "id": "marketplace",
+      "title": "Marketplace",
+      "path": "/marketplace",
+      "statuses": ["loading", "guest", "empty", "error", "ready"],
+      "roles": {
+        "ux": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "copy": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "ui": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "product": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "tester": {
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: all statuses render (storybook:wave:validate)."
+        },
+        "dx": {
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
+        }
+      },
+      "allRolesPassed": false
+    },
+    {
+      "order": 11,
+      "deployable": "AWC",
+      "id": "reports",
+      "title": "Reports",
+      "path": "/reports",
+      "statuses": ["loading", "guest", "empty", "error", "ready"],
+      "roles": {
+        "ux": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "copy": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "ui": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "product": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "tester": {
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: all statuses render (storybook:wave:validate)."
+        },
+        "dx": {
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
+        }
+      },
+      "allRolesPassed": false
+    },
+    {
+      "order": 12,
+      "deployable": "AWC",
+      "id": "report-detail",
+      "title": "Report detail",
+      "path": "/reports/:runId",
+      "statuses": ["loading", "empty", "error", "ready"],
+      "roles": {
+        "ux": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "copy": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "ui": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "product": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "tester": {
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: all statuses render (storybook:wave:validate)."
+        },
+        "dx": {
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
+        }
+      },
+      "allRolesPassed": false
+    },
+    {
+      "order": 13,
+      "deployable": "AWC",
+      "id": "automations",
+      "title": "Automations",
+      "path": "/automations",
+      "statuses": ["loading", "empty", "error", "ready"],
+      "roles": {
+        "ux": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "copy": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "ui": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "product": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "tester": {
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: all statuses render (storybook:wave:validate)."
+        },
+        "dx": {
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
+        }
+      },
+      "allRolesPassed": false
+    },
+    {
+      "order": 14,
+      "deployable": "AWC",
+      "id": "prompt-optimizer",
+      "title": "Prompt optimizer",
+      "path": "/prompt-optimizer",
+      "statuses": ["ready"],
+      "roles": {
+        "ux": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "copy": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "ui": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "product": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "tester": {
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: all statuses render (storybook:wave:validate)."
+        },
+        "dx": {
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
+        }
+      },
+      "allRolesPassed": false
+    },
+    {
+      "order": 15,
+      "deployable": "AWC",
+      "id": "prompt-optimizer-guide",
+      "title": "Prompt optimizer guide",
+      "path": "/prompt-optimizer/guide",
+      "statuses": ["ready"],
+      "roles": {
+        "ux": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "copy": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "ui": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "product": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "tester": {
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: all statuses render (storybook:wave:validate)."
+        },
+        "dx": {
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
+        }
+      },
+      "allRolesPassed": false
+    },
+    {
+      "order": 16,
+      "deployable": "AWC",
+      "id": "connection-lab",
+      "title": "Connection lab",
+      "path": "/connection-lab",
+      "statuses": ["ready", "error"],
+      "roles": {
+        "ux": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "copy": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "ui": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "product": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "tester": {
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: all statuses render (storybook:wave:validate)."
+        },
+        "dx": {
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
+        }
+      },
+      "allRolesPassed": false
+    },
+    {
+      "order": 17,
+      "deployable": "AWC",
+      "id": "showcases",
+      "title": "Showcases",
+      "path": "/showcases",
+      "statuses": ["ready"],
+      "roles": {
+        "ux": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "copy": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "ui": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "product": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "tester": {
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: all statuses render (storybook:wave:validate)."
+        },
+        "dx": {
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
+        }
+      },
+      "allRolesPassed": false
+    },
+    {
+      "order": 18,
+      "deployable": "AWC",
+      "id": "admin-users",
+      "title": "Admin users",
+      "path": "/admin/users",
+      "statuses": ["ready", "empty"],
+      "roles": {
+        "ux": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "copy": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "ui": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "product": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "tester": {
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: all statuses render (storybook:wave:validate)."
+        },
+        "dx": {
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
+        }
+      },
+      "allRolesPassed": false
+    },
+    {
+      "order": 19,
+      "deployable": "AWC",
+      "id": "admin-groups",
+      "title": "Admin groups",
+      "path": "/admin/groups",
+      "statuses": ["ready", "empty", "error"],
+      "roles": {
+        "ux": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "copy": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "ui": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "product": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "tester": {
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: all statuses render (storybook:wave:validate)."
+        },
+        "dx": {
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
+        }
+      },
+      "allRolesPassed": false
+    },
+    {
+      "order": 20,
+      "deployable": "AWL",
+      "id": "home",
+      "title": "Home",
+      "path": "/",
+      "statuses": ["ready", "empty", "error"],
+      "roles": {
+        "ux": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "copy": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "ui": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "product": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "tester": {
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: all statuses render (storybook:wave:validate)."
+        },
+        "dx": {
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
+        }
+      },
+      "allRolesPassed": false
+    },
+    {
+      "order": 21,
+      "deployable": "AWL",
+      "id": "task",
+      "title": "Task",
+      "path": "/task",
+      "statuses": ["ready", "empty", "error"],
+      "roles": {
+        "ux": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "copy": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "ui": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "product": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "tester": {
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: all statuses render (storybook:wave:validate)."
+        },
+        "dx": {
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
+        }
+      },
+      "allRolesPassed": false
+    },
+    {
+      "order": 22,
+      "deployable": "AWL",
+      "id": "prompt-optimizer",
+      "title": "Prompt optimizer",
+      "path": "/prompt-optimizer",
+      "statuses": ["ready", "empty", "error", "loading"],
+      "roles": {
+        "ux": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "copy": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "ui": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "product": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "tester": {
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: all statuses render (storybook:wave:validate)."
+        },
+        "dx": {
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
+        }
+      },
+      "allRolesPassed": false
+    },
+    {
+      "order": 23,
+      "deployable": "AWL",
+      "id": "prompt-optimizer-guide",
+      "title": "Prompt optimizer guide",
+      "path": "/prompt-optimizer/guide",
+      "statuses": ["ready"],
+      "roles": {
+        "ux": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "copy": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "ui": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "product": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "tester": {
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: all statuses render (storybook:wave:validate)."
+        },
+        "dx": {
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
+        }
+      },
+      "allRolesPassed": false
+    },
+    {
+      "order": 24,
+      "deployable": "AWL",
+      "id": "status",
+      "title": "Status",
+      "path": "/status",
+      "statuses": ["ready", "empty", "error"],
+      "roles": {
+        "ux": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "copy": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "ui": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "product": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "tester": {
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: all statuses render (storybook:wave:validate)."
+        },
+        "dx": {
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
+        }
+      },
+      "allRolesPassed": false
+    },
+    {
+      "order": 25,
+      "deployable": "AWL",
+      "id": "projects",
+      "title": "Projects",
+      "path": "/projects",
+      "statuses": ["ready", "empty", "error"],
+      "roles": {
+        "ux": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "copy": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "ui": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "product": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "tester": {
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: all statuses render (storybook:wave:validate)."
+        },
+        "dx": {
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
+        }
+      },
+      "allRolesPassed": false
+    },
+    {
+      "order": 26,
+      "deployable": "AWL",
+      "id": "project",
+      "title": "Project editor",
+      "path": "/project",
+      "statuses": ["ready", "empty", "error"],
+      "roles": {
+        "ux": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "copy": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "ui": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "product": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "tester": {
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: all statuses render (storybook:wave:validate)."
+        },
+        "dx": {
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
+        }
+      },
+      "allRolesPassed": false
+    },
+    {
+      "order": 27,
+      "deployable": "AWL",
+      "id": "harness",
+      "title": "Harness",
+      "path": "/harness",
+      "statuses": ["ready", "empty", "error"],
+      "roles": {
+        "ux": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "copy": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "ui": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "product": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "tester": {
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: all statuses render (storybook:wave:validate)."
+        },
+        "dx": {
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
+        }
+      },
+      "allRolesPassed": false
+    },
+    {
+      "order": 28,
+      "deployable": "AWL",
+      "id": "writer-api",
+      "title": "Writer API",
+      "path": "/writer-api",
+      "statuses": ["ready", "error"],
+      "roles": {
+        "ux": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "copy": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "ui": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "product": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "tester": {
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: all statuses render (storybook:wave:validate)."
+        },
+        "dx": {
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
+        }
+      },
+      "allRolesPassed": false
+    },
+    {
+      "order": 29,
+      "deployable": "AWL",
+      "id": "knowledge",
+      "title": "Knowledge",
+      "path": "/knowledge",
+      "statuses": ["ready", "empty"],
+      "roles": {
+        "ux": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "copy": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "ui": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "product": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "tester": {
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: all statuses render (storybook:wave:validate)."
+        },
+        "dx": {
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
+        }
+      },
+      "allRolesPassed": false
+    },
+    {
+      "order": 30,
+      "deployable": "AWL",
+      "id": "history",
+      "title": "History",
+      "path": "/history",
+      "statuses": ["ready", "empty"],
+      "roles": {
+        "ux": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "copy": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "ui": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "product": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "tester": {
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: all statuses render (storybook:wave:validate)."
+        },
+        "dx": {
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
+        }
+      },
+      "allRolesPassed": false
+    },
+    {
+      "order": 31,
+      "deployable": "AWL",
+      "id": "writer-sessions",
+      "title": "Transcripts",
+      "path": "/writer-sessions",
+      "statuses": ["ready", "empty"],
+      "roles": {
+        "ux": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "copy": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "ui": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "product": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "tester": {
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: all statuses render (storybook:wave:validate)."
+        },
+        "dx": {
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
+        }
+      },
+      "allRolesPassed": false
+    },
+    {
+      "order": 32,
+      "deployable": "AWL",
+      "id": "errors",
+      "title": "Errors",
+      "path": "/errors",
+      "statuses": ["ready", "empty", "error"],
+      "roles": {
+        "ux": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "copy": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "ui": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "product": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "tester": {
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: all statuses render (storybook:wave:validate)."
+        },
+        "dx": {
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
+        }
+      },
+      "allRolesPassed": false
+    },
+    {
+      "order": 33,
+      "deployable": "AWL",
+      "id": "traffic",
+      "title": "Traffic",
+      "path": "/traffic",
+      "statuses": ["ready", "empty"],
+      "roles": {
+        "ux": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "copy": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "ui": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "product": {
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+        },
+        "tester": {
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: all statuses render (storybook:wave:validate)."
+        },
+        "dx": {
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
+        }
+      },
+      "allRolesPassed": false
+    }
+  ]
+}

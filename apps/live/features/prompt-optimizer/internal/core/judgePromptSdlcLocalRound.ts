@@ -24,15 +24,25 @@ import type {
   PromptSdlcLocalRun,
 } from "./promptSdlcLocalCycle.type";
 import { promptSdlcLocalWorkingDirectory } from "./promptSdlcLocalFolder";
-import { runPromptSdlcWriterReply } from "./runPromptSdlcWriterReply";
+import {
+  classifyPromptSdlcWriterErrorKind,
+  type PromptSdlcWriterErrorKind,
+} from "./readPromptSdlcWriterOutput";
+import {
+  recommendPromptSdlcWriterTimeoutMs,
+  resolvePromptSdlcWriterTimeoutMs,
+  runPromptSdlcWriterReply,
+} from "./runPromptSdlcWriterReply";
 
 const failCycle = (
   cycle: PromptSdlcLocalCycle,
   errorMessage: string,
+  errorKind?: PromptSdlcWriterErrorKind,
 ): PromptSdlcLocalCycle => ({
   ...cycle,
   status: "failed",
   errorMessage,
+  errorKind,
   judgePhase: undefined,
   updatedAt: new Date().toISOString(),
 });
@@ -41,6 +51,7 @@ const stoppedCycle = (cycle: PromptSdlcLocalCycle): PromptSdlcLocalCycle => ({
   ...cycle,
   status: "stopped",
   errorMessage: PROMPT_SDLC_STOP_USER,
+  errorKind: "writer_interrupted",
   judgePhase: undefined,
   updatedAt: new Date().toISOString(),
 });
@@ -87,7 +98,11 @@ const executePrompt = async (input: {
   readonly signal?: AbortSignal;
   readonly onWriterFailure?: (writer: string) => void;
 }): Promise<
-  | { readonly ok: true; readonly run: PromptSdlcLocalRun }
+  | {
+      readonly ok: true;
+      readonly run: PromptSdlcLocalRun;
+      readonly cycle: PromptSdlcLocalCycle;
+    }
   | { readonly ok: false; readonly cycle: PromptSdlcLocalCycle }
 > => {
   const workingDirectory = promptSdlcLocalWorkingDirectory(input.cycle);
@@ -126,11 +141,28 @@ const executePrompt = async (input: {
                 input.cycle.judgeInstructions)
               : input.cycle.judgeInstructions,
         });
+  const isOptimizeModuleRun =
+    input.cycle.judgeScoresOnly === true &&
+    input.cycle.wizard?.phase === "optimize_modules";
+  const recommendedTimeoutMs = recommendPromptSdlcWriterTimeoutMs({
+    promptText: input.revision.promptText,
+    isModuleRun: isOptimizeModuleRun,
+  });
+  const timeoutMs = resolvePromptSdlcWriterTimeoutMs({
+    isModuleRun: isOptimizeModuleRun,
+    timeoutMs: recommendedTimeoutMs,
+  });
+  const revisionWithTimeout: PromptSdlcLocalRevision = {
+    ...input.revision,
+    timeoutBudgetMs: timeoutMs,
+    timeoutSource: "recommended",
+  };
   const reply = await runPromptSdlcWriterReply({
     writerAgent: input.runner,
     workingDirectory,
     prompt: moduleRunPrompt,
     signal: input.signal,
+    timeoutMs,
   });
   const evidence = reply.ok
     ? describePromptSdlcRunEvidence({
@@ -140,18 +172,33 @@ const executePrompt = async (input: {
       })
     : null;
   const reverted = revertPromptSdlcRunChanges(restorePoint);
+  const cycleWithTimeoutBudget: PromptSdlcLocalCycle = {
+    ...input.cycle,
+    revisions: input.cycle.revisions.map((item) =>
+      item.roundNumber === input.cycle.currentRound
+        ? revisionWithTimeout
+        : item,
+    ),
+  };
   if (!reply.ok) {
     if (reply.stopped === true || input.signal?.aborted === true) {
-      return { ok: false, cycle: stoppedCycle(input.cycle) };
+      return { ok: false, cycle: stoppedCycle(cycleWithTimeoutBudget) };
     }
     input.onWriterFailure?.(input.runner);
-    return { ok: false, cycle: failCycle(input.cycle, reply.errorMessage) };
+    return {
+      ok: false,
+      cycle: failCycle(
+        cycleWithTimeoutBudget,
+        reply.errorMessage,
+        classifyPromptSdlcWriterErrorKind(reply),
+      ),
+    };
   }
   if (!reverted.ok || evidence === null) {
     return {
       ok: false,
       cycle: failCycle(
-        input.cycle,
+        cycleWithTimeoutBudget,
         reverted.ok
           ? "Could not put the folder back after the run."
           : reverted.errorMessage,
@@ -160,6 +207,7 @@ const executePrompt = async (input: {
   }
   return {
     ok: true,
+    cycle: cycleWithTimeoutBudget,
     run: {
       output: reply.text.trim(),
       tokens: reply.tokens,
@@ -177,12 +225,16 @@ const resolvePromptRun = async (input: {
   readonly signal?: AbortSignal;
   readonly onWriterFailure?: (writer: string) => void;
 }): Promise<
-  | { readonly ok: true; readonly run: PromptSdlcLocalRun }
+  | {
+      readonly ok: true;
+      readonly run: PromptSdlcLocalRun;
+      readonly cycle: PromptSdlcLocalCycle;
+    }
   | { readonly ok: false; readonly cycle: PromptSdlcLocalCycle }
   | null
 > => {
   if (input.revision.run !== undefined) {
-    return { ok: true, run: input.revision.run };
+    return { ok: true, run: input.revision.run, cycle: input.cycle };
   }
   if (input.runner === null) {
     return null;
@@ -282,7 +334,11 @@ const judgeWizardEvaluatePromptText = async (input: {
       return stoppedCycle(scoring);
     }
     input.onWriterFailure?.(cycle.judgeModel);
-    return failCycle(scoring, reply.errorMessage);
+    return failCycle(
+      scoring,
+      reply.errorMessage,
+      classifyPromptSdlcWriterErrorKind(reply),
+    );
   }
   const scored = applyPromptSdlcLocalJudgeReply(
     scoring,
@@ -319,7 +375,9 @@ export const judgePromptSdlcLocalRound = async (input: {
   }
 
   const scoring =
-    revision.run === undefined ? withRun(cycle, executed.run) : cycle;
+    revision.run === undefined
+      ? withRun(executed.cycle, executed.run)
+      : executed.cycle;
   if (revision.run === undefined) {
     input.onProgress?.(scoring);
   }
@@ -356,7 +414,11 @@ export const judgePromptSdlcLocalRound = async (input: {
       return stoppedCycle(scoring);
     }
     input.onWriterFailure?.(cycle.judgeModel);
-    return failCycle(scoring, reply.errorMessage);
+    return failCycle(
+      scoring,
+      reply.errorMessage,
+      classifyPromptSdlcWriterErrorKind(reply),
+    );
   }
 
   const review = await reviewTokenSpend({

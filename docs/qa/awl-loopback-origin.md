@@ -1,9 +1,9 @@
-# What URL does Agent Witch Live (AWL) use?
+# What URL does Agent Witch Local (AWL) use?
 
 ## Query aliases
 
 - AWL origin 127.0.0.1:43347
-- Agent Witch Live URL
+- Agent Witch Local URL
 - local.agentwitch.com never works
 - http://local.agentwitch.com/
 - AWL hostname

@@ -4,12 +4,14 @@ import {
   resolveWriterCliCommands,
 } from "../../../../adapters/writerDispatch";
 import { advancePromptSdlcWizardLocal } from "./advancePromptSdlcWizardLocal";
+import { fetchPromptSdlcWizardAdditionalSkillSuggestions } from "./fetchPromptSdlcWizardAdditionalSkillSuggestions";
 import { isPromptSdlcLocalManualWait } from "./isPromptSdlcLocalManualWait";
 import {
   closePromptSdlcLocalCycleAbort,
   openPromptSdlcLocalCycleAbort,
 } from "./stopPromptSdlcLocalCycle";
 import { forgetPromptSdlcWriterReady } from "./promptSdlcWriterReadyStore";
+import { preparePromptSdlcLocalCycleForRun } from "./preparePromptSdlcLocalCycleForRun";
 import {
   readPromptSdlcLocalCycle,
   savePromptSdlcLocalCycle,
@@ -41,14 +43,30 @@ const runUntilTerminal = async (
   cycleId: string,
   signal: AbortSignal,
 ): Promise<void> => {
-  const cycle = readPromptSdlcLocalCycle(storePath, cycleId);
+  const stored = readPromptSdlcLocalCycle(storePath, cycleId);
+  if (stored === null || signal.aborted) {
+    return;
+  }
+  const cycle = preparePromptSdlcLocalCycleForRun(storePath, stored);
+  const skillSuggestionsPending =
+    cycle.wizard?.phase === "complete" &&
+    cycle.wizard.additionalSkillSuggestionsStatus === "pending";
   if (
-    cycle === null ||
-    isPromptSdlcTerminalStatus(cycle.status) ||
+    (isPromptSdlcTerminalStatus(cycle.status) && !skillSuggestionsPending) ||
     cycle.status === "wizard_paused" ||
-    isPromptSdlcLocalManualWait(cycle) ||
-    signal.aborted
+    isPromptSdlcLocalManualWait(cycle)
   ) {
+    return;
+  }
+  if (skillSuggestionsPending) {
+    const withSkills = await fetchPromptSdlcWizardAdditionalSkillSuggestions(
+      cycle,
+      signal,
+      (writer) => {
+        forgetPromptSdlcWriterReady(storePath, writer);
+      },
+    );
+    savePromptSdlcLocalCycle(storePath, withSkills);
     return;
   }
 
@@ -71,9 +89,18 @@ const runUntilTerminal = async (
     return;
   }
   savePromptSdlcLocalCycle(storePath, next);
-  if (!isPromptSdlcTerminalStatus(next.status)) {
-    await runUntilTerminal(storePath, cycleId, signal);
+  if (isPromptSdlcTerminalStatus(next.status)) {
+    const withSkills = await fetchPromptSdlcWizardAdditionalSkillSuggestions(
+      next,
+      signal,
+      (writer) => {
+        forgetPromptSdlcWriterReady(storePath, writer);
+      },
+    );
+    savePromptSdlcLocalCycle(storePath, withSkills);
+    return;
   }
+  await runUntilTerminal(storePath, cycleId, signal);
 };
 
 export const ensurePromptSdlcLocalCycleRunning = (
@@ -84,10 +111,16 @@ export const ensurePromptSdlcLocalCycleRunning = (
     return;
   }
 
-  const cycle = readPromptSdlcLocalCycle(storePath, cycleId);
+  const stored = readPromptSdlcLocalCycle(storePath, cycleId);
+  if (stored === null) {
+    return;
+  }
+  const cycle = preparePromptSdlcLocalCycleForRun(storePath, stored);
+  const skillSuggestionsPending =
+    cycle.wizard?.phase === "complete" &&
+    cycle.wizard.additionalSkillSuggestionsStatus === "pending";
   if (
-    cycle === null ||
-    isPromptSdlcTerminalStatus(cycle.status) ||
+    (isPromptSdlcTerminalStatus(cycle.status) && !skillSuggestionsPending) ||
     cycle.status === "wizard_paused" ||
     isPromptSdlcLocalManualWait(cycle)
   ) {

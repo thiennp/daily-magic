@@ -20,13 +20,13 @@ Try this order (most issues resolve without a fresh install):
 
 1. **Refresh** the Home page or Mac device list (tab focus retries local identity on macOS).
 2. Read the **Send** banner on **New task**—it names one primary reason ([send readiness codes](../../agent-witch/send-readiness-reason-codes.md)).
-3. On the **Mac**, open **Agent Witch Live** (`http://127.0.0.1:43347`) → Status / Traffic: is the WebSocket connected?
+3. On the **Mac**, open **Agent Witch Local** (`http://127.0.0.1:43347`) → Status / Traffic: is the WebSocket connected?
 4. **Retry** the **Task** after ~10–30 seconds (common after console deploys).
 5. Only then: **Update local** or self-update (see [Install bundle update](#install-bundle-update-stale-or-blocked-send) below).
 
 ---
 
-## Agent Witch Live not responding (`:43347`)
+## Agent Witch Local not responding (`:43347`)
 
 **Symptoms**
 
@@ -41,7 +41,7 @@ Try this order (most issues resolve without a fresh install):
 
 **Fix**
 
-1. In the console: **On this Mac → Status & settings** (or **Status & settings on this Mac** on Home). The console opens `http://127.0.0.1:43347/status` and shows the **Revive Agent Witch Live** modal when health is down—copy the Terminal block from the modal.
+1. In the console: **On this Mac → Status & settings** (or **Status & settings on this Mac** on Home). The console opens `http://127.0.0.1:43347/status` and shows the **Revive Agent Witch Local** modal when health is down—copy the Terminal block from the modal.
 2. If `http://127.0.0.1:43347/status` still loads, use the **Revive local app** section on that page.
 3. Otherwise paste the revive script from the modal, then read `"$AW_HOME/agent-witch.error.log"` if health stays down after `launchctl kickstart`.
 
@@ -96,7 +96,7 @@ Do **not** point a production Mac at CHECK24 `daily-magic.*` URLs unless your or
 **Symptoms**
 
 - Message like: _The selected Mac is reconnecting. Your task will send when it checks in._
-- **Agent Witch Live** or local bridge looks fine, but **New task** still blocks **Send**.
+- **Agent Witch Local** or local bridge looks fine, but **New task** still blocks **Send**.
 - Picker shows **Reconnecting (another server)** or **Seen recently**.
 
 **Cause**
@@ -225,7 +225,7 @@ If you do not see **this Mac** on macOS: bridge not running, wrong port, or sign
 
 ## Project folder wrong or missing
 
-Console cannot pick Mac folders remotely. Use **Agent Witch Live** or local folder picker.
+Console cannot pick Mac folders remotely. Use **Agent Witch Local** or local folder picker.
 
 [AWC project folder picker](../../qa/awc-project-folder-path-picker.md) · [AWC vs AWL projects](../../qa/awc-awl-projects-source-of-truth.md).
 

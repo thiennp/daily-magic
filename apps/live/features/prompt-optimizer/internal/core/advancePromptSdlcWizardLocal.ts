@@ -7,7 +7,7 @@ import {
   parsePromptSdlcSeparateReply,
   PROMPT_SDLC_WIZARD_MAX_ROUNDS,
   PROMPT_SDLC_WIZARD_MODULE_MAX_ROUNDS,
-  PROMPT_SDLC_WIZARD_PASS_SCORE,
+  readPromptSdlcWizardModulePassScore,
   readPromptSdlcWizardEvaluatePromptText,
   buildPromptSdlcWizardSubstitutionMap,
   readPromptSdlcWizardTemplatedOrConcrete,
@@ -17,10 +17,20 @@ import {
   substitutePromptSdlcTemplateValues,
   finalizePromptSdlcWizardModuleRun,
   collectPromptSdlcWizardModuleStatistics,
+  shouldSkipPromptSdlcWizardGeneralizeReview,
+  shouldSkipPromptSdlcWizardEvaluateReview,
+  shouldSkipPromptSdlcWizardSeparateReview,
 } from "../../../../adapters/promptSdlcAwcCore";
+import { beginPromptSdlcWizardOptimizeModulesAfterSeparate } from "./beginPromptSdlcWizardOptimizeModulesAfterSeparate";
+import { beginPromptSdlcWizardSeparateAfterEvaluate } from "./beginPromptSdlcWizardSeparateAfterEvaluate";
 import { PROMPT_SDLC_MANUAL_ACTOR } from "./choosePromptSdlcLocalModels";
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
 import { promptSdlcLocalWorkingDirectory } from "./promptSdlcLocalFolder";
+import {
+  classifyPromptSdlcWriterErrorKind,
+  isPromptSdlcWriterTimeoutError,
+  type PromptSdlcWriterErrorKind,
+} from "./readPromptSdlcWriterOutput";
 import { runPromptSdlcWriterReply } from "./runPromptSdlcWriterReply";
 import { advancePromptSdlcLocalCycle } from "./advancePromptSdlcLocalCycle";
 import { readPromptSdlcWizardScoredRevisions } from "./readPromptSdlcWizardScoredRevisions";
@@ -28,10 +38,12 @@ import { readPromptSdlcWizardScoredRevisions } from "./readPromptSdlcWizardScore
 const failCycle = (
   cycle: PromptSdlcLocalCycle,
   errorMessage: string,
+  errorKind?: PromptSdlcWriterErrorKind,
 ): PromptSdlcLocalCycle => ({
   ...cycle,
   status: "failed",
   errorMessage,
+  errorKind,
   updatedAt: new Date().toISOString(),
 });
 
@@ -53,6 +65,37 @@ const pauseWizardWriterFailure = (
     },
     updatedAt: new Date().toISOString(),
   };
+};
+
+const isPromptSdlcWizardTerminalWriterFailure = (reply: {
+  readonly errorMessage: string;
+  readonly errorKind?: PromptSdlcWriterErrorKind;
+}): boolean => {
+  const errorKind = classifyPromptSdlcWriterErrorKind(reply);
+  return (
+    isPromptSdlcWriterTimeoutError(reply) ||
+    errorKind === "usage_limit" ||
+    errorKind === "action_required"
+  );
+};
+
+const failOrPauseWizardWriter = (
+  cycle: PromptSdlcLocalCycle,
+  gate: NonNullable<PromptSdlcLocalCycle["wizard"]>["gate"],
+  reply: {
+    readonly errorMessage: string;
+    readonly stopped?: boolean;
+    readonly errorKind?: PromptSdlcWriterErrorKind;
+  },
+): PromptSdlcLocalCycle => {
+  if (isPromptSdlcWizardTerminalWriterFailure(reply)) {
+    return failCycle(
+      cycle,
+      reply.errorMessage,
+      classifyPromptSdlcWriterErrorKind(reply),
+    );
+  }
+  return pauseWizardWriterFailure(cycle, gate, reply.errorMessage);
 };
 
 const snapshotEvaluateWizardAttempt = (
@@ -134,7 +177,7 @@ const pauseAtGate = (
 ): PromptSdlcLocalCycle => ({
   ...cycle,
   status: "wizard_paused",
-  errorMessage: cycle.errorMessage,
+  errorMessage: null,
   wizard:
     cycle.wizard === undefined
       ? undefined
@@ -202,7 +245,7 @@ const runGeneralize = async (
   });
   if (!reply.ok) {
     onWriterFailure?.(writer);
-    return pauseWizardWriterFailure(cycle, "generalize", reply.errorMessage);
+    return failOrPauseWizardWriter(cycle, "generalize", reply);
   }
   try {
     const parsed = parsePromptSdlcGeneralizeReply(reply.text);
@@ -221,13 +264,17 @@ const runGeneralize = async (
           ? null
           : wizard.pendingStepInstructions,
     });
-    return pauseAtGate(
-      {
-        ...cycle,
-        wizard: nextWizard,
-      },
-      "generalize",
-    );
+    const withWizard = {
+      ...cycle,
+      wizard: nextWizard,
+    };
+    if (shouldSkipPromptSdlcWizardGeneralizeReview(nextWizard)) {
+      return beginPromptSdlcWizardEvaluate({
+        ...withWizard,
+        wizard: { ...nextWizard, gate: null },
+      });
+    }
+    return pauseAtGate(withWizard, "generalize");
   } catch (error) {
     return pauseWizardWriterFailure(
       cycle,
@@ -275,7 +322,7 @@ const runSeparate = async (
   });
   if (!reply.ok) {
     onWriterFailure?.(writer);
-    return pauseWizardWriterFailure(cycle, "separate", reply.errorMessage);
+    return failOrPauseWizardWriter(cycle, "separate", reply);
   }
   try {
     const rawOptions = parsePromptSdlcSeparateReply(reply.text);
@@ -296,13 +343,17 @@ const runSeparate = async (
           ? null
           : wizard.pendingStepInstructions,
     });
-    return pauseAtGate(
-      {
-        ...cycle,
-        wizard: nextWizard,
-      },
-      "separate",
-    );
+    const withOptions = {
+      ...cycle,
+      wizard: nextWizard,
+    };
+    if (shouldSkipPromptSdlcWizardSeparateReview(options)) {
+      return beginPromptSdlcWizardOptimizeModulesAfterSeparate(
+        withOptions,
+        options[0],
+      );
+    }
+    return pauseAtGate(withOptions, "separate");
   } catch (error) {
     return pauseWizardWriterFailure(
       cycle,
@@ -327,7 +378,7 @@ export const beginPromptSdlcWizardEvaluate = (
     judgeScoresOnly: false,
     judgePromptTextOnly: true,
     currentRound: 0,
-    passScore: PROMPT_SDLC_WIZARD_PASS_SCORE,
+    passScore: cycle.passScore,
     maxRounds: PROMPT_SDLC_WIZARD_MAX_ROUNDS,
     errorMessage: null,
     revisions: [{ roundNumber: 0, promptText: concrete, judgement: null }],
@@ -372,8 +423,7 @@ export const beginPromptSdlcWizardModuleEvaluate = (
     judgePromptTextOnly: false,
     runnerModel: runner,
     currentRound: 0,
-    passScore: PROMPT_SDLC_WIZARD_PASS_SCORE,
-    maxRounds: PROMPT_SDLC_WIZARD_MODULE_MAX_ROUNDS,
+    passScore: readPromptSdlcWizardModulePassScore(wizard),
     errorMessage: null,
     revisions: [{ roundNumber: 0, promptText: concrete, judgement: null }],
     wizard: {
@@ -442,6 +492,7 @@ export const advancePromptSdlcWizardLocal = async (
       ) {
         return next;
       }
+      let gateCandidate = next;
       if (gate === "evaluate" && next.wizard.evaluateSelectedRound === null) {
         const best = selectPromptSdlcBestPrompt(
           next.revisions.map((item) => ({
@@ -453,21 +504,28 @@ export const advancePromptSdlcWizardLocal = async (
         );
         const defaultRound =
           best?.roundNumber ?? next.revisions.at(-1)?.roundNumber ?? 0;
-        const paused = pauseAtGate(
-          {
-            ...next,
-            wizard: {
-              ...next.wizard,
-              evaluateSelectedRound: defaultRound,
-            },
+        gateCandidate = {
+          ...next,
+          wizard: {
+            ...next.wizard,
+            evaluateSelectedRound: defaultRound,
           },
-          gate,
-        );
-        return gate === "evaluate"
-          ? snapshotEvaluateWizardAttempt(paused)
-          : paused;
+        };
       }
-      const paused = pauseAtGate(next, gate);
+      if (
+        gate === "evaluate" &&
+        shouldSkipPromptSdlcWizardEvaluateReview({
+          revisions: gateCandidate.revisions,
+          wizard: gateCandidate.wizard!,
+          passScore: gateCandidate.passScore,
+        })
+      ) {
+        const snapshotted = snapshotEvaluateWizardAttempt(
+          pauseAtGate(gateCandidate, gate),
+        );
+        return beginPromptSdlcWizardSeparateAfterEvaluate(snapshotted);
+      }
+      const paused = pauseAtGate(gateCandidate, gate);
       const withModulePaused =
         gate === "optimize_modules" && paused.wizard !== undefined
           ? (() => {

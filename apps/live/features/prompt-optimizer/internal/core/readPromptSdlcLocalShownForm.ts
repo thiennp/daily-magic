@@ -1,6 +1,9 @@
 import {
   isPromptSdlcTerminalStatus,
+  PROMPT_SDLC_DEFAULT_MAX_TRIALS,
   PROMPT_SDLC_MAX_ROUNDS,
+  PROMPT_SDLC_WIZARD_MODULE_PASS_SCORE,
+  readPromptSdlcWizardModulePassScore,
 } from "../../../../adapters/promptSdlcAwcCore";
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
 import { displayPromptSdlcLocalFolder } from "./promptSdlcLocalFolder";
@@ -10,7 +13,11 @@ export const readPromptSdlcLocalShownForm = (input: {
   readonly prompt: string;
   readonly folder: string;
   readonly passScore: string;
+  readonly modulePassScore?: string;
   readonly maxRounds?: string;
+  readonly maxTrials?: string;
+  readonly maxSpendUsd?: string;
+  readonly earlyStop?: boolean;
   readonly judge: string;
   readonly improver: string;
   readonly judgeInstructions?: string;
@@ -23,7 +30,11 @@ export const readPromptSdlcLocalShownForm = (input: {
   readonly prompt: string;
   readonly folder: string;
   readonly passScore: string;
+  readonly modulePassScore: string;
   readonly maxRounds: string;
+  readonly maxTrials: string;
+  readonly maxSpendUsd: string;
+  readonly earlyStop: boolean;
   readonly judge: string;
   readonly improver: string;
   readonly judgeInstructions: string;
@@ -39,7 +50,12 @@ export const readPromptSdlcLocalShownForm = (input: {
       prompt: input.prompt,
       folder: input.folder,
       passScore: input.passScore,
+      modulePassScore:
+        input.modulePassScore ?? String(PROMPT_SDLC_WIZARD_MODULE_PASS_SCORE),
       maxRounds: input.maxRounds ?? String(PROMPT_SDLC_MAX_ROUNDS),
+      maxTrials: input.maxTrials ?? String(PROMPT_SDLC_DEFAULT_MAX_TRIALS),
+      maxSpendUsd: input.maxSpendUsd ?? "",
+      earlyStop: input.earlyStop ?? true,
       judge: input.judge,
       improver: input.improver,
       judgeInstructions: input.judgeInstructions ?? "",
@@ -64,7 +80,17 @@ export const readPromptSdlcLocalShownForm = (input: {
         ? input.folder
         : displayPromptSdlcLocalFolder(cycle.workingDirectory),
     passScore: String(cycle.passScore),
+    modulePassScore: String(readPromptSdlcWizardModulePassScore(cycle.wizard)),
     maxRounds: String(cycle.maxRounds),
+    maxTrials: String(
+      cycle.costControls?.maxTrials ?? PROMPT_SDLC_DEFAULT_MAX_TRIALS,
+    ),
+    maxSpendUsd:
+      cycle.costControls?.maxSpendUsd === null ||
+      cycle.costControls?.maxSpendUsd === undefined
+        ? ""
+        : String(cycle.costControls.maxSpendUsd),
+    earlyStop: cycle.costControls?.earlyStop ?? true,
     judge: cycle.judgeModel,
     improver: cycle.improverModel,
     judgeInstructions: cycle.judgeInstructions ?? "",

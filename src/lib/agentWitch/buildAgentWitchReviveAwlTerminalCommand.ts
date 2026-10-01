@@ -9,7 +9,7 @@ const resolveHostnameForReviveCommand = (): string => {
 };
 
 /**
- * Terminal steps to restart Agent Witch Live (`:43347`) on the Mac in front of the browser.
+ * Terminal steps to restart Agent Witch Local (`:43347`) on the Mac in front of the browser.
  * Uses the production vs localhost LaunchAgent prefix from the current AWC hostname.
  */
 export const buildAgentWitchReviveAwlTerminalCommand = (

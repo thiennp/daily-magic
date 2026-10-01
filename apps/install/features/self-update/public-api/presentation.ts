@@ -1,5 +1,5 @@
 /**
- * AWI slice `self-update` — public-api/presentation (FSA placeholder).
- * Migrate exports from legacy paths listed in features.registry.json.
+ * AWI slice `self-update` — browser-safe helpers (no install bundle I/O).
  */
-export {};
+export { resolveAgentWitchAppOriginFromWsUrl } from "../internal/core/resolveAgentWitchAppOriginFromWsUrl";
+export { buildAgentWitchInstallScriptOllama } from "../internal/core/buildAgentWitchEnsureOllamaShell";

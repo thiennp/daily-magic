@@ -1,6 +1,8 @@
 import { AGENT_WITCH_PRODUCT_NAME } from "@/lib/agentWitch/agentWitchProductName.constant";
 
+import { buildAgentWitchRoleGuidelineSection } from "@/lib/agentAccess/buildAgentWitchRoleGuidelineSection";
 import { buildPromptSdlcAgentGuidelineSection } from "@/lib/agentAccess/buildPromptSdlcAgentGuide";
+import { buildProjectAclAgentGuidelineSection } from "@/lib/agentAccess/buildProjectAclAgentGuidelineSection";
 import { buildAgentAccessUrls } from "@/lib/agentAccess/buildAgentAccessUrls";
 
 export interface AgentAccessGuidelineSection {
@@ -21,6 +23,7 @@ export const buildAgentAccessGuideline = (): AgentAccessGuideline => {
     title: `How an agent uses ${AGENT_WITCH_PRODUCT_NAME}`,
     description: `Register without a human email, install on this computer, create a workflow, and write the Playbook. Follow these steps yourself.`,
     sections: [
+      buildAgentWitchRoleGuidelineSection(),
       {
         heading: "Do this yourself",
         body: [
@@ -83,6 +86,7 @@ export const buildAgentAccessGuideline = (): AgentAccessGuideline => {
           "Call get_agent_guide. It returns the current tools, limits, and URLs. Prefer that over any older copy when features change.",
         ],
       },
+      buildProjectAclAgentGuidelineSection(),
       {
         heading: "Tell other bots",
         body: [

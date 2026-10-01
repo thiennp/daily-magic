@@ -1,7 +1,20 @@
-import path from "node:path";
-
-import { resolveAgentWitchLaunchAgentPrefix } from "@agent-witch/install-layout";
+import {
+  AGENT_WITCH_LOCAL_INSTALL_DIR_NAME,
+  AGENT_WITCH_LOCAL_LAUNCH_AGENT_PREFIX,
+  AGENT_WITCH_PROD_LAUNCH_AGENT_PREFIX,
+} from "@agent-witch/install-layout/types";
 import { AGENT_WITCH_LIVE_APP_PORT } from "@agent-witch/shared/network";
+
+const installDirBasename = (installDir: string): string => {
+  const trimmed = installDir.replace(/\/$/, "");
+  const slashIndex = trimmed.lastIndexOf("/");
+  return slashIndex === -1 ? trimmed : trimmed.slice(slashIndex + 1);
+};
+
+const resolveLaunchAgentPrefixForInstallDir = (installDir: string): string =>
+  installDirBasename(installDir) === AGENT_WITCH_LOCAL_INSTALL_DIR_NAME
+    ? AGENT_WITCH_LOCAL_LAUNCH_AGENT_PREFIX
+    : AGENT_WITCH_PROD_LAUNCH_AGENT_PREFIX;
 
 const escapeHtml = (value: string): string =>
   value
@@ -13,17 +26,17 @@ const escapeHtml = (value: string): string =>
 export const buildAgentWitchReviveAwlStatusSection = (input: {
   readonly installDir: string;
 }): string => {
-  const prefix = resolveAgentWitchLaunchAgentPrefix(input.installDir);
-  const installDirName = path.basename(input.installDir);
+  const prefix = resolveLaunchAgentPrefixForInstallDir(input.installDir);
+  const installDirName = installDirBasename(input.installDir);
   const command = `AW_HOME="$HOME/${installDirName}"
 launchctl kickstart -k "gui/$(id -u)/${prefix}"
 sleep 2
 curl -sS -m 5 http://127.0.0.1:${AGENT_WITCH_LIVE_APP_PORT}/health`;
 
   return `<section class="card">
-    <p class="eyebrow">Agent Witch Live</p>
+    <p class="eyebrow">Agent Witch Local</p>
     <h2>Revive local app (:${AGENT_WITCH_LIVE_APP_PORT})</h2>
-    <p class="lede muted">If this page loaded but the prompt optimizer or other Live pages fail, or if Agent Witch Console cannot open Status, restart the Mac client below. <code>com.agent-witch-live</code> only exists when Live runs as a separate LaunchAgent; most installs use one <code>${escapeHtml(prefix)}</code> process that includes Live.</p>
+    <p class="lede muted">If this page loaded but the prompt optimizer or other Live pages fail, or if Agent Witch Cloud cannot open Status, restart the Mac client below. <code>com.agent-witch-live</code> only exists when Live runs as a separate LaunchAgent; most installs use one <code>${escapeHtml(prefix)}</code> process that includes Live.</p>
     <p class="muted">On this Mac, open Terminal, paste, and press Return:</p>
     <pre class="sdlc-pre mono">${escapeHtml(command)}</pre>
     <p class="muted">Then check logs: <code>tail -40 "$AW_HOME/agent-witch.error.log"</code></p>

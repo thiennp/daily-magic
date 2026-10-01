@@ -6,6 +6,7 @@ import { trySendPromptSdlcWizardMarkdownExport } from "./trySendPromptSdlcWizard
 import { trySendPromptSdlcLocalRunFragment } from "./trySendPromptSdlcLocalRunFragment";
 import { trySendPromptSdlcWriterCheck } from "./trySendPromptSdlcWriterCheck";
 import { writePromptSdlcAgentResponse } from "./writePromptSdlcAgentResponse";
+import { writePromptSdlcFolderSkillsQueryResponse } from "./writePromptSdlcFolderSkillsQueryResponse";
 
 export interface PromptSdlcLocalRouteInput {
   readonly method: string;
@@ -60,7 +61,8 @@ export const tryHandlePromptSdlcLocalRequest = async (
   if (
     input.pathname !== "/prompt-optimizer" &&
     input.pathname !== "/prompt-optimizer/guide" &&
-    input.pathname !== "/prompt-optimizer/agent"
+    input.pathname !== "/prompt-optimizer/agent" &&
+    input.pathname !== "/prompt-optimizer/skills/query"
   ) {
     return false;
   }
@@ -73,6 +75,11 @@ export const tryHandlePromptSdlcLocalRequest = async (
 
   if (input.pathname === "/prompt-optimizer/agent") {
     await writePromptSdlcAgentResponse(input);
+    return true;
+  }
+
+  if (input.pathname === "/prompt-optimizer/skills/query") {
+    await writePromptSdlcFolderSkillsQueryResponse(input);
     return true;
   }
 

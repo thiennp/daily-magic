@@ -1,11 +1,28 @@
 /** Client-side wizard UX: live fragment apply, no full reload on gate submit or wizard Run. */
 export const PROMPT_SDLC_WIZARD_CLIENT_SCRIPT = `<script>
 (() => {
+  const enterComposeRunStarted = () => {
+    const compose = document.getElementById("prompt-optimizer-compose");
+    const details = document.getElementById("prompt-optimizer-compose-details");
+    if (details instanceof HTMLDetailsElement) {
+      details.open = false;
+    }
+    if (compose instanceof HTMLElement) {
+      compose.classList.add("sdlc-compose-run-started");
+      compose.classList.remove("sdlc-compose-run-focus");
+    }
+  };
+
+  const focusRunPanel = () => {
+    const run = document.getElementById("prompt-optimizer-run");
+    if (run === null) return;
+    enterComposeRunStarted();
+    run.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
   const lockCompose = () => {
     const fields = document.querySelector(".sdlc-fields");
     if (fields instanceof HTMLFieldSetElement) fields.disabled = true;
-    const details = document.getElementById("prompt-optimizer-compose-details");
-    if (details instanceof HTMLDetailsElement) details.open = true;
     document.querySelector("[data-sdlc-locked]")?.remove();
     const compose = document.getElementById("prompt-optimizer-compose");
     if (compose) {
@@ -15,26 +32,43 @@ export const PROMPT_SDLC_WIZARD_CLIENT_SCRIPT = `<script>
       locked.textContent = "This run is using these choices.";
       fields?.prepend(locked);
     }
-    const button = document.querySelector("[data-sdlc-run-wizard]");
-    if (button instanceof HTMLButtonElement) {
-      button.disabled = true;
-      button.setAttribute("aria-busy", "true");
-      button.innerHTML =
-        '<span class="sdlc-spin" aria-hidden="true"></span> Running…';
-    }
+    document
+      .querySelectorAll(".sdlc-compose-step-actions")
+      .forEach((node) => {
+        if (node instanceof HTMLElement) {
+          node.hidden = true;
+        }
+      });
     document.querySelector(".sdlc-wizard-resume-paused")?.remove();
+    focusRunPanel();
+  };
+
+  let lastWizardAutofocusStepId = null;
+
+  const readWizardAutofocusStepId = () => {
+    const active = document.getElementById("prompt-optimizer-wizard-active-step");
+    if (!(active instanceof HTMLElement)) return null;
+    const stepId = active.dataset.sdlcStepId;
+    return typeof stepId === "string" && stepId.length > 0 ? stepId : null;
   };
 
   const focusActiveWizardStep = () => {
+    const stepId = readWizardAutofocusStepId();
+    if (stepId === null) return;
+    if (stepId === lastWizardAutofocusStepId) return;
     const active = document.getElementById("prompt-optimizer-wizard-active-step");
-    if (active !== null) {
-      active.scrollIntoView({ behavior: "smooth", block: "start" });
-      const focusTarget = active.querySelector(
-        "textarea, input:not([type=hidden]), button, select",
-      );
-      if (focusTarget instanceof HTMLElement) focusTarget.focus({ preventScroll: true });
-    }
+    if (active === null) return;
+    lastWizardAutofocusStepId = stepId;
+    active.scrollIntoView({ behavior: "smooth", block: "start" });
+    const focusTarget = active.querySelector(
+      "textarea, input:not([type=hidden]), button, select",
+    );
+    if (focusTarget instanceof HTMLElement) focusTarget.focus({ preventScroll: true });
   };
+
+  document.addEventListener("sdlc-run-finished", () => {
+    lastWizardAutofocusStepId = null;
+  });
 
   const applyLiveFragment = (html) => {
     const holder = document.createElement("div");
@@ -73,13 +107,12 @@ export const PROMPT_SDLC_WIZARD_CLIENT_SCRIPT = `<script>
     if (incomingDialog !== null && document.getElementById("sdlc-node-dialog") === null) {
       document.body.appendChild(incomingDialog);
     }
-    if (!applied) return;
-    lockCompose();
+    if (!applied) {
+      document.dispatchEvent(new Event("sdlc-run-start-failed"));
+      return;
+    }
     if (runApplied) {
-      document.getElementById("prompt-optimizer-run")?.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-      });
+      lockCompose();
     } else {
       focusActiveWizardStep();
     }
@@ -88,6 +121,7 @@ export const PROMPT_SDLC_WIZARD_CLIENT_SCRIPT = `<script>
       document.dispatchEvent(new Event("sdlc-run-finished"));
     }
     document.dispatchEvent(new CustomEvent("sdlc-live-restart"));
+    document.dispatchEvent(new Event("sdlc-node-dialog-refresh"));
   };
 
   const formDataFromSubmit = (form, submitter) =>
@@ -121,9 +155,15 @@ export const PROMPT_SDLC_WIZARD_CLIENT_SCRIPT = `<script>
       body,
       cache: "no-store",
     }).catch(() => null);
-    if (response === null || !response.ok) return false;
+    if (response === null || !response.ok) {
+      document.dispatchEvent(new Event("sdlc-run-start-failed"));
+      return false;
+    }
     const html = await response.text();
-    if (html.trim().length === 0) return false;
+    if (html.trim().length === 0) {
+      document.dispatchEvent(new Event("sdlc-run-start-failed"));
+      return false;
+    }
     applyLiveFragment(html);
     const cycleId = response.headers.get("X-Prompt-Sdlc-Cycle-Id");
     if (cycleId) {
@@ -163,17 +203,21 @@ export const PROMPT_SDLC_WIZARD_CLIENT_SCRIPT = `<script>
         ? submitter.value
         : "";
     if (intent !== "run") return;
+    const summaryStep = document.getElementById("sdlc-compose-step-4");
+    if (summaryStep instanceof HTMLElement && summaryStep.hidden) {
+      return;
+    }
     event.preventDefault();
     void postLiveFragment(formDataFromSubmit(form, submitter));
   });
 
   if (document.querySelector(".sdlc-fields[disabled]")) {
-    const details = document.getElementById("prompt-optimizer-compose-details");
-    const viewingFinished = document
-      .getElementById("prompt-optimizer-compose")
-      ?.classList.contains("sdlc-compose-viewing-finished");
-    if (details instanceof HTMLDetailsElement) {
-      details.open = viewingFinished !== true;
+    const compose = document.getElementById("prompt-optimizer-compose");
+    if (
+      compose instanceof HTMLElement &&
+      !compose.classList.contains("sdlc-compose-viewing-finished")
+    ) {
+      compose.classList.add("sdlc-compose-run-focus");
     }
   }
 
@@ -294,6 +338,15 @@ export const PROMPT_SDLC_WIZARD_CLIENT_SCRIPT = `<script>
     observer.observe(moduleResultsSection);
   }
 
-  focusActiveWizardStep();
+  const runOnLoad = document.getElementById("prompt-optimizer-run");
+  const runBusyOnLoad =
+    runOnLoad instanceof HTMLElement &&
+    runOnLoad.getAttribute("aria-busy") === "true";
+  const stepOnLoad = readWizardAutofocusStepId();
+  if (runBusyOnLoad && stepOnLoad !== null) {
+    lastWizardAutofocusStepId = stepOnLoad;
+  } else {
+    focusActiveWizardStep();
+  }
 })();
 </script>`;

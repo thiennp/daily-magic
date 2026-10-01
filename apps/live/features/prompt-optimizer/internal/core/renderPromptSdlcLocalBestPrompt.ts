@@ -4,6 +4,7 @@ import {
 } from "../../../../adapters/promptSdlcAwcCore";
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
 import { promptSdlcLocalWorkingDirectory } from "./promptSdlcLocalFolder";
+import { labelPromptSdlcErrorKind } from "./labelPromptSdlcErrorKind";
 import { describePromptSdlcWriterTerminalFailure } from "./readPromptSdlcWriterOutput";
 import {
   promptSdlcSkillExists,
@@ -48,22 +49,33 @@ export const renderPromptSdlcLocalBestPrompt = (
     best.reasons === null || best.reasons.trim().length === 0
       ? ""
       : `<p>${escapeHtml(best.reasons.trim())}</p>`;
+  const useThisPrompt = cycle.status === "passed";
+  const errorKindLabel = labelPromptSdlcErrorKind(cycle.errorKind);
+  const outcomeBadge =
+    cycle.status === "passed"
+      ? `<span class="sdlc-outcome-badge sdlc-outcome-badge-passed">Passed</span>`
+      : cycle.status === "failed"
+        ? `<span class="sdlc-outcome-badge sdlc-outcome-badge-failed">${escapeHtml(errorKindLabel ?? "Failed")}</span>`
+        : `<span class="sdlc-outcome-badge sdlc-outcome-badge-stopped">${escapeHtml(errorKindLabel ?? "Stopped")}</span>`;
+  const timeoutTip = `<p class="muted sdlc-timeout-tip" title="Module writers use a fail-clean timeout budget (~600s). Judge/heuristic recommendTimeoutMs may tune budgets; stuck writers may escalate with SIGKILL.">Fail-clean: timeout / interrupt / no_reply ≠ success. useThisPrompt only when passed.</p>`;
   const body =
-    failure === null
-      ? renderPromptSdlcLocalSkillForm({
-          cycleId: cycle.id,
-          goal: cycle.goal,
-          promptText: best.promptText,
-          workingDirectory: promptSdlcLocalWorkingDirectory(cycle),
-          sourceSkill: cycle.sourceSkill,
-        })
-      : `<div class="alert-error">${escapeHtml(failure)}</div>`;
+    failure !== null
+      ? `<div class="alert-error">${escapeHtml(failure)}</div>`
+      : useThisPrompt
+        ? renderPromptSdlcLocalSkillForm({
+            cycleId: cycle.id,
+            goal: cycle.goal,
+            promptText: best.promptText,
+            workingDirectory: promptSdlcLocalWorkingDirectory(cycle),
+            sourceSkill: cycle.sourceSkill,
+          })
+        : `<div class="alert-error">Do not use this prompt as a passed outcome (${escapeHtml(errorKindLabel ?? cycle.status)}). Save-as-skill is available only when status is passed.</div><details class="sdlc-best-readonly"><summary>View best prompt text</summary><pre class="sdlc-pre">${escapeHtml(best.promptText)}</pre></details>`;
 
   const roundLabel =
     cycle.wizard !== undefined && wizardModuleCount > 0
       ? `Trial run · Score ${best.score} / 100`
       : `Round ${best.roundNumber} · Score ${best.score} / 100`;
-  return `<section class="card" id="prompt-optimizer-best"><p class="eyebrow">Best prompt</p><h2>${roundLabel}</h2>${wizardModuleWarning}${reasons}${body}</section>`;
+  return `<section class="card" id="prompt-optimizer-best"><p class="eyebrow">Best prompt</p><div class="sdlc-best-outcome-row">${outcomeBadge}</div><h2>${roundLabel}</h2>${timeoutTip}${wizardModuleWarning}${reasons}${body}</section>`;
 };
 
 const renderPromptSdlcLocalSkillForm = (input: {

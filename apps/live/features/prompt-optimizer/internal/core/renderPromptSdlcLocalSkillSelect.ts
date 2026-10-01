@@ -45,6 +45,27 @@ export const PROMPT_SDLC_SKILL_SELECT_SCRIPT = `<script>
   } catch {
     skills = [];
   }
+  const orchestratorInput = document.querySelector("[data-orchestrator-skill-file]");
+  const orchestratorNote = document.querySelector("[data-orchestrator-skill-note]");
+  const paintOrchestratorNote = (fileName) => {
+    if (!(orchestratorNote instanceof HTMLElement)) return;
+    if (typeof fileName !== "string" || fileName.length === 0) {
+      orchestratorNote.textContent = "";
+      orchestratorNote.hidden = true;
+      return;
+    }
+    orchestratorNote.textContent =
+      "Orchestrator skill: " +
+      fileName +
+      ". The prompt may change in Step 2 evaluate; this skill keeps the orchestrator role.";
+    orchestratorNote.hidden = false;
+  };
+  const setOrchestratorFile = (fileName) => {
+    if (orchestratorInput instanceof HTMLInputElement) {
+      orchestratorInput.value = fileName;
+    }
+    paintOrchestratorNote(fileName);
+  };
   select.addEventListener("change", () => {
     const skill = skills.find((item) => item.fileName === select.value);
     const prompt = document.querySelector('textarea[name="prompt"]');
@@ -52,6 +73,10 @@ export const PROMPT_SDLC_SKILL_SELECT_SCRIPT = `<script>
     if (typeof skill.promptText !== "string") return;
     prompt.value = skill.promptText;
     prompt.dispatchEvent(new Event("input"));
+    setOrchestratorFile(select.value);
   });
+  if (select.value.length > 0) {
+    setOrchestratorFile(select.value);
+  }
 })();
 </script>`;

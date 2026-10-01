@@ -17,8 +17,8 @@ Four apps share the repo; each gets its own `apps/<slug>/features/` tree over ti
 
 | Abbr    | Name                | Target folder   | Today (main paths)                                       |
 | ------- | ------------------- | --------------- | -------------------------------------------------------- |
-| **AWC** | Agent Witch Console | `apps/console/` | `src/app/`, `server.ts`, `src/features/`, `src/lib/`     |
-| **AWL** | Agent Witch Live    | `apps/live/`    | `scripts/agentWitchLocalApp*` (`:43347`)                 |
+| **AWC** | Agent Witch Cloud   | `apps/console/` | `src/app/`, `server.ts`, `src/features/`, `src/lib/`     |
+| **AWL** | Agent Witch Local   | `apps/live/`    | `scripts/agentWitchLocalApp*` (`:43347`)                 |
 | **AWB** | Agent Witch Bridge  | `apps/bridge/`  | `scripts/agent-witch-wake-server.ts` (`47892` / `47893`) |
 | **AWI** | Agent Witch Install | `apps/install/` | `public/install/agent-witch/`, `scripts/agent-witch.ts`  |
 

@@ -1,5 +1,8 @@
 import { pickMacOsFolderDialog } from "../../../projects/public-api/infrastructure";
-import { createInitialPromptSdlcWizardState } from "../../../../adapters/promptSdlcAwcCore";
+import {
+  createInitialPromptSdlcWizardState,
+  seedPromptSdlcWizardOrchestratorSkill,
+} from "../../../../adapters/promptSdlcAwcCore";
 
 import { buildPromptSdlcLiveRunFragmentHtml } from "./buildPromptSdlcLiveRunFragmentHtml";
 import { createPromptSdlcLocalCycle } from "./createPromptSdlcLocalCycle";
@@ -19,6 +22,7 @@ import {
 import { readPromptSdlcFolderSkill } from "./readPromptSdlcFolderSkills";
 import { readPromptSdlcChosenWritersReady } from "./probePromptSdlcWriterReady";
 import { findResumablePromptSdlcWizardCycle } from "./findResumablePromptSdlcWizardCycle";
+import { preparePromptSdlcLocalCycleForRun } from "./preparePromptSdlcLocalCycleForRun";
 import { ensurePromptSdlcLocalCycleRunning } from "./runPromptSdlcLocalCycle";
 import type { PromptSdlcLocalRouteInput } from "./tryHandlePromptSdlcLocalRequest";
 
@@ -88,7 +92,14 @@ export const presentPromptSdlcLocalComposer = async (input: {
       improverInstructions: decision.improverInstructions,
       folder: displayPromptSdlcLocalFolder(decision.workingDirectory),
       passScore: String(decision.passScore),
+      modulePassScore: String(decision.modulePassScore),
       maxRounds: String(decision.maxRounds),
+      maxTrials: String(decision.costControls.maxTrials),
+      maxSpendUsd:
+        decision.costControls.maxSpendUsd === null
+          ? ""
+          : String(decision.costControls.maxSpendUsd),
+      earlyStop: decision.costControls.earlyStop,
       canRun: true,
       errorMessage: writerBlock,
       skillNotice: input.skillNotice,
@@ -115,10 +126,21 @@ export const presentPromptSdlcLocalComposer = async (input: {
       workingDirectory: decision.workingDirectory,
       passScore: decision.passScore,
       maxRounds: decision.maxRounds,
-      wizard: {
-        ...createInitialPromptSdlcWizardState(decision.prompt),
-        runnerInstructions: decision.runnerInstructions,
-      },
+      costControls: decision.costControls,
+      wizard: seedPromptSdlcWizardOrchestratorSkill(
+        {
+          ...createInitialPromptSdlcWizardState(decision.prompt),
+          modulePassScore: decision.modulePassScore,
+          runnerInstructions: decision.runnerInstructions,
+        },
+        sourceSkill === null
+          ? null
+          : {
+              fileName: sourceSkill.fileName,
+              name: sourceSkill.name,
+              description: sourceSkill.description,
+            },
+      ),
       runnerModel: decision.runner,
       ...(decision.judgeInstructions.length === 0
         ? {}
@@ -158,11 +180,12 @@ export const presentPromptSdlcLocalComposer = async (input: {
     return;
   }
 
-  const cycle =
+  let cycle =
     input.cycleId === null
       ? null
       : readPromptSdlcLocalCycle(input.route.storePath, input.cycleId);
   if (cycle !== null) {
+    cycle = preparePromptSdlcLocalCycleForRun(input.route.storePath, cycle);
     ensurePromptSdlcLocalCycleRunning(input.route.storePath, cycle.id);
   }
 
@@ -179,7 +202,11 @@ export const presentPromptSdlcLocalComposer = async (input: {
     runnerInstructions: decision.runnerInstructions,
     folder: decision.folder,
     passScore: decision.passScore,
+    modulePassScore: decision.modulePassScore,
     maxRounds: decision.maxRounds,
+    maxTrials: decision.maxTrials,
+    maxSpendUsd: decision.maxSpendUsd,
+    earlyStop: decision.earlyStop,
     canRun: input.selection.canRun,
     errorMessage: decision.errorMessage,
     skillNotice: input.skillNotice,

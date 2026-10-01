@@ -15,19 +15,37 @@ const escapeHtml = (value: string): string =>
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;");
 
-const stepLabel = (
-  gate: NonNullable<PromptSdlcLocalCycle["wizard"]>["gate"],
-): string => {
-  if (gate === "generalize") {
+type PromptSdlcWizardStepKey =
+  "generalize" | "evaluate" | "separate" | "optimize_modules";
+
+const stepLabel = (step: PromptSdlcWizardStepKey): string => {
+  if (step === "generalize") {
     return "Step 1 — Generalize";
   }
-  if (gate === "evaluate") {
+  if (step === "evaluate") {
     return "Step 2 — Evaluate";
   }
-  if (gate === "separate") {
+  if (step === "separate") {
     return "Step 3 — Separate";
   }
   return "Step 4 — Optimize modules";
+};
+
+const readWizardStepKey = (
+  wizard: NonNullable<PromptSdlcLocalCycle["wizard"]>,
+): PromptSdlcWizardStepKey | null => {
+  if (wizard.gate !== null) {
+    return wizard.gate;
+  }
+  if (
+    wizard.phase === "generalize" ||
+    wizard.phase === "evaluate" ||
+    wizard.phase === "separate" ||
+    wizard.phase === "optimize_modules"
+  ) {
+    return wizard.phase;
+  }
+  return null;
 };
 
 const readShownPrompt = (cycle: PromptSdlcLocalCycle): string => {
@@ -81,7 +99,8 @@ export const renderPromptSdlcWizardResumeBanner = (
 
   if (active) {
     const activity = describePromptSdlcLocalActivity(cycle);
-    const step = wizard.gate === null ? "" : stepLabel(wizard.gate);
+    const stepKey = readWizardStepKey(wizard);
+    const step = stepKey === null ? "" : stepLabel(stepKey);
     const stepIndex = readPromptSdlcWizardActiveStepIndex(cycle);
     const stepLine =
       step.length === 0
@@ -101,7 +120,8 @@ export const renderPromptSdlcWizardResumeBanner = (
   </section>`;
   }
 
-  const step = stepLabel(wizard.gate);
+  const pausedStepKey = readWizardStepKey(wizard);
+  const step = pausedStepKey === null ? "Wizard" : stepLabel(pausedStepKey);
   const stepIndex = readPromptSdlcWizardActiveStepIndex(cycle);
   const stepIndexLine =
     stepIndex === null || stepIndex >= 4 ? "" : ` (step ${stepIndex + 1} of 4)`;

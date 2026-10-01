@@ -1,0 +1,27 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "B",
+  "deployable": "AWC",
+  "pageId": "home-marketing",
+  "role": "ux",
+  "captureRound": 1,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/home-marketing/round-1/manifest.json",
+  "scoreDesktop": 97,
+  "scoreMobile": 95,
+  "scoreOverall": 96,
+  "passed": true,
+  "scoreBreakdown": [
+    {
+      "area": "combined-deductions",
+      "pointsDeducted": 4,
+      "reason": "[desktop-trust-timing] Trust strip metrics appear under hero CTAs but product preview mock competes for attention in the right column on first paint. [desktop-showcases-depth] Showcase grids add depth without sticky wayfinding; returning to signup requires scrolling back up. [mobile-menu-cta] Header Create account button is small relative to hero; menu label alone may not signal full marketing nav on first visit. [mobile-form-stack] Auth form stacks below lengthy hero copy and numbered steps before users see Google/email fields on the ready capture."
+    }
+  ],
+  "whyBelowThreshold": "",
+  "topIssues": [
+    "Mobile path to sign-in form",
+    "Showcase length without jump links"
+  ],
+  "mustFix": [],
+  "quickWins": ["Repeat sticky Create account in mobile header after scroll"]
+}

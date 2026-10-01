@@ -209,9 +209,9 @@ describe("buildAgentWitchLocalHarnessPageBody", () => {
       importSectionExpanded: false,
     });
 
-    expect(html).toContain("Install playbooks in Agent Witch Console");
+    expect(html).toContain("Install playbooks in Agent Witch Cloud");
     expect(html).toContain('href="https://www.agentwitch.com/marketplace"');
-    expect(html).not.toContain("Install playbooks on Agent Witch Live");
+    expect(html).not.toContain("Install playbooks on Agent Witch Local");
   });
 
   it("shows a status line under Choose folder when the picker cannot run", () => {
