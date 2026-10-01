@@ -1,0 +1,29 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "B",
+  "deployable": "AWC",
+  "pageId": "library",
+  "role": "product",
+  "captureRound": 1,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/library/round-1/manifest.json",
+  "scoreDesktop": 97,
+  "scoreMobile": 96,
+  "scoreOverall": 97,
+  "passed": true,
+  "scoreBreakdown": [
+    {
+      "area": "error-story-fidelity",
+      "pointsDeducted": 2,
+      "reason": "Error MSW now maps to in-panel Could not load your library with retry; distinct from empty state."
+    },
+    {
+      "area": "empty-vs-ready",
+      "pointsDeducted": 1,
+      "reason": "Empty signed-in story still shows create panel plus empty card while ready shows populated sample; states are distinguishable."
+    }
+  ],
+  "whyBelowThreshold": "",
+  "topIssues": [],
+  "mustFix": [],
+  "quickWins": []
+}

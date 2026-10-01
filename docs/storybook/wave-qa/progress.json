@@ -9,9 +9,7 @@
       "id": "home-marketing",
       "title": "Home (marketing)",
       "path": "/",
-      "statuses": [
-        "ready"
-      ],
+      "statuses": ["ready"],
       "roles": {
         "ux": {
           "passed": true,
@@ -154,10 +152,7 @@
                 }
               ],
               "whyBelowThreshold": "",
-              "topIssues": [
-                "ACL in announcement",
-                "Harness eyebrow"
-              ],
+              "topIssues": ["ACL in announcement", "Harness eyebrow"],
               "mustFix": [],
               "quickWins": [
                 "Rename announcement to Project Access without ACL",
@@ -248,9 +243,7 @@
                 }
               ],
               "whyBelowThreshold": "",
-              "topIssues": [
-                "Light-shell dark: classes on one section"
-              ],
+              "topIssues": ["Light-shell dark: classes on one section"],
               "mustFix": [],
               "quickWins": [
                 "Align For-your-AI surfaces with marketing light tokens only"
@@ -296,9 +289,7 @@
                 "Mobile trust strip spacing"
               ],
               "mustFix": [],
-              "quickWins": [
-                "Add gap-y between trust metrics on sm breakpoint"
-              ]
+              "quickWins": ["Add gap-y between trust metrics on sm breakpoint"]
             }
           }
         },
@@ -335,9 +326,7 @@
                 }
               ],
               "whyBelowThreshold": "",
-              "topIssues": [
-                "Sign-in gating on preset examples"
-              ],
+              "topIssues": ["Sign-in gating on preset examples"],
               "mustFix": [],
               "quickWins": [
                 "Add footnote on preset section that marketplace requires account"
@@ -414,9 +403,7 @@
       "id": "login",
       "title": "Login",
       "path": "/login",
-      "statuses": [
-        "ready"
-      ],
+      "statuses": ["ready"],
       "roles": {
         "ux": {
           "passed": true,
@@ -669,9 +656,7 @@
       "id": "for-agents",
       "title": "For agents",
       "path": "/for-agents",
-      "statuses": [
-        "ready"
-      ],
+      "statuses": ["ready"],
       "roles": {
         "ux": {
           "passed": false,
@@ -730,9 +715,7 @@
       "id": "setup-writer",
       "title": "Setup writer",
       "path": "/setup/writer",
-      "statuses": [
-        "ready"
-      ],
+      "statuses": ["ready"],
       "roles": {
         "ux": {
           "passed": false,
@@ -791,9 +774,7 @@
       "id": "privacy",
       "title": "Privacy",
       "path": "/privacy",
-      "statuses": [
-        "ready"
-      ],
+      "statuses": ["ready"],
       "roles": {
         "ux": {
           "passed": false,
@@ -852,9 +833,7 @@
       "id": "terms",
       "title": "Terms",
       "path": "/terms",
-      "statuses": [
-        "ready"
-      ],
+      "statuses": ["ready"],
       "roles": {
         "ux": {
           "passed": false,
@@ -913,12 +892,7 @@
       "id": "home-signed-in",
       "title": "Home (signed in)",
       "path": "/",
-      "statuses": [
-        "loading",
-        "empty",
-        "error",
-        "ready"
-      ],
+      "statuses": ["loading", "empty", "error", "ready"],
       "roles": {
         "ux": {
           "passed": true,
@@ -953,9 +927,7 @@
                 }
               ],
               "whyBelowThreshold": "",
-              "topIssues": [
-                "Mobile chrome competes with dashboard hierarchy"
-              ],
+              "topIssues": ["Mobile chrome competes with dashboard hierarchy"],
               "mustFix": [],
               "quickWins": [
                 "Tuck marketing accordion below the fold on mobile captures"
@@ -981,9 +953,7 @@
                 }
               ],
               "whyBelowThreshold": "",
-              "topIssues": [
-                "Long mobile scroll for full dashboard"
-              ],
+              "topIssues": ["Long mobile scroll for full dashboard"],
               "mustFix": [],
               "quickWins": []
             }
@@ -1017,9 +987,7 @@
                 }
               ],
               "whyBelowThreshold": "",
-              "topIssues": [
-                "Fixture display name in header"
-              ],
+              "topIssues": ["Fixture display name in header"],
               "mustFix": [],
               "quickWins": [
                 "Use AWC_STORYBOOK_USER.name in session chrome when wired"
@@ -1045,9 +1013,7 @@
                 }
               ],
               "whyBelowThreshold": "",
-              "topIssues": [
-                "Storybook-only status banner voice"
-              ],
+              "topIssues": ["Storybook-only status banner voice"],
               "mustFix": [],
               "quickWins": []
             }
@@ -1086,13 +1052,9 @@
                 }
               ],
               "whyBelowThreshold": "",
-              "topIssues": [
-                "Mobile nav placement"
-              ],
+              "topIssues": ["Mobile nav placement"],
               "mustFix": [],
-              "quickWins": [
-                "Align banner padding with AppShell header rhythm"
-              ]
+              "quickWins": ["Align banner padding with AppShell header rhythm"]
             },
             "reviewerB": {
               "reviewMethod": "agent",
@@ -1114,9 +1076,7 @@
                 }
               ],
               "whyBelowThreshold": "",
-              "topIssues": [
-                "Loading visual weight"
-              ],
+              "topIssues": ["Loading visual weight"],
               "mustFix": [],
               "quickWins": []
             }
@@ -1150,9 +1110,7 @@
                 }
               ],
               "whyBelowThreshold": "",
-              "topIssues": [
-                "Empty vs ready visual overlap"
-              ],
+              "topIssues": ["Empty vs ready visual overlap"],
               "mustFix": [],
               "quickWins": [
                 "Differentiate empty fixtures in a later story pass"
@@ -1183,9 +1141,7 @@
                 }
               ],
               "whyBelowThreshold": "",
-              "topIssues": [
-                "Error story is banner-only"
-              ],
+              "topIssues": ["Error story is banner-only"],
               "mustFix": [],
               "quickWins": []
             }
@@ -1216,12 +1172,7 @@
       "id": "projects",
       "title": "Projects",
       "path": "/projects",
-      "statuses": [
-        "loading",
-        "empty",
-        "error",
-        "ready"
-      ],
+      "statuses": ["loading", "empty", "error", "ready"],
       "roles": {
         "ux": {
           "passed": true,
@@ -1256,9 +1207,7 @@
                 }
               ],
               "whyBelowThreshold": "",
-              "topIssues": [
-                "Mobile chrome competes with create-project form"
-              ],
+              "topIssues": ["Mobile chrome competes with create-project form"],
               "mustFix": [],
               "quickWins": [
                 "Surface a distinct inline error panel when /api/projects fails"
@@ -1294,9 +1243,7 @@
                 }
               ],
               "whyBelowThreshold": "",
-              "topIssues": [
-                "Error story should not masquerade as empty"
-              ],
+              "topIssues": ["Error story should not masquerade as empty"],
               "mustFix": [],
               "quickWins": [
                 "Add retry link beside loading/error banners in Storybook only if product adds API error UI"
@@ -1339,9 +1286,7 @@
               "whyBelowThreshold": "",
               "topIssues": [],
               "mustFix": [],
-              "quickWins": [
-                "Use → in the Project Access hint for consistency"
-              ]
+              "quickWins": ["Use → in the Project Access hint for consistency"]
             },
             "reviewerB": {
               "reviewMethod": "agent",
@@ -1546,12 +1491,7 @@
       "id": "project-detail",
       "title": "Project detail",
       "path": "/projects/:projectId",
-      "statuses": [
-        "loading",
-        "empty",
-        "error",
-        "ready"
-      ],
+      "statuses": ["loading", "empty", "error", "ready"],
       "roles": {
         "ux": {
           "passed": true,
@@ -1581,9 +1521,7 @@
                 }
               ],
               "whyBelowThreshold": "",
-              "topIssues": [
-                "Mobile scroll length on ready state"
-              ],
+              "topIssues": ["Mobile scroll length on ready state"],
               "mustFix": [],
               "quickWins": [
                 "Anchor Danger zone with sticky subnav on narrow widths"
@@ -1657,9 +1595,7 @@
               "whyBelowThreshold": "",
               "topIssues": [],
               "mustFix": [],
-              "quickWins": [
-                "Shorten Activity section lead-in once API ships"
-              ]
+              "quickWins": ["Shorten Activity section lead-in once API ships"]
             },
             "reviewerB": {
               "reviewMethod": "agent",
@@ -1854,45 +1790,299 @@
       "id": "library",
       "title": "Library",
       "path": "/library",
-      "statuses": [
-        "loading",
-        "guest",
-        "empty",
-        "error",
-        "ready"
-      ],
+      "statuses": ["loading", "guest", "empty", "error", "ready"],
       "roles": {
         "ux": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+          "passed": true,
+          "score": 96,
+          "round": 1,
+          "reviewerA": 97,
+          "reviewerB": 96,
+          "notes": "Agent A=97 B=96 (round 1).\nA deductions: ready-sample-edit-scroll -2: Sample playbook opens in full edit mode on ready capture, pushing Run/Copy actions far down on first paint. | guest-copy-repeat -1: Guest header and body both explain browser-only drafts before templates; scan path repeats sync messaging.\nB deductions: empty-dual-panel -1: Signed-in empty state stacks Create a Playbook and empty-state card; both compete as primary next steps. | mobile-guest-nav-overlap -3: 390px guest capture places bottom tab bar over the first template card edge; still tappable but tight.",
+          "agentFeedback": {
+            "reviewerA": {
+              "reviewMethod": "agent",
+              "reviewer": "A",
+              "deployable": "AWC",
+              "pageId": "library",
+              "role": "ux",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/library/round-1/manifest.json",
+              "scoreDesktop": 97,
+              "scoreMobile": 96,
+              "scoreOverall": 97,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "ready-sample-edit-scroll",
+                  "pointsDeducted": 2,
+                  "reason": "Sample playbook opens in full edit mode on ready capture, pushing Run/Copy actions far down on first paint."
+                },
+                {
+                  "area": "guest-copy-repeat",
+                  "pointsDeducted": 1,
+                  "reason": "Guest header and body both explain browser-only drafts before templates; scan path repeats sync messaging."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": ["Ready story is long when sample opens expanded"],
+              "mustFix": [],
+              "quickWins": [
+                "Collapse sample edit by default in Storybook ready fixture only"
+              ]
+            },
+            "reviewerB": {
+              "reviewMethod": "agent",
+              "reviewer": "B",
+              "deployable": "AWC",
+              "pageId": "library",
+              "role": "ux",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/library/round-1/manifest.json",
+              "scoreDesktop": 96,
+              "scoreMobile": 95,
+              "scoreOverall": 96,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "empty-dual-panel",
+                  "pointsDeducted": 1,
+                  "reason": "Signed-in empty state stacks Create a Playbook and empty-state card; both compete as primary next steps."
+                },
+                {
+                  "area": "mobile-guest-nav-overlap",
+                  "pointsDeducted": 3,
+                  "reason": "390px guest capture places bottom tab bar over the first template card edge; still tappable but tight."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": [
+                "Empty signed-in hierarchy",
+                "Mobile guest template grid vs bottom nav"
+              ],
+              "mustFix": [],
+              "quickWins": [
+                "Add scroll margin under guest template grid on narrow viewports"
+              ]
+            }
+          }
         },
         "copy": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+          "passed": true,
+          "score": 97,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 97,
+          "notes": "Agent A=98 B=97 (round 1).\nA deductions: guest-sync-repeat -1: Sign-in/sync newest copy appears in header, body paragraph, and footer CTA on guest captures. | error-tone -1: Error panel copy is clear but generic; does not name playbooks vs templates separately.\nB deductions: tasks-capitalization -1: Create Playbook card capitalizes Tasks while adjacent lines use lowercase workflow language. | sample-status-line -1: Ready capture shows PUBLISHED in all caps inside card metadata; readable but louder than surrounding body copy. | empty-marketplace-article -1: Empty panel says Save one from Marketplace without the when helpful.",
+          "agentFeedback": {
+            "reviewerA": {
+              "reviewMethod": "agent",
+              "reviewer": "A",
+              "deployable": "AWC",
+              "pageId": "library",
+              "role": "copy",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/library/round-1/manifest.json",
+              "scoreDesktop": 98,
+              "scoreMobile": 97,
+              "scoreOverall": 98,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "guest-sync-repeat",
+                  "pointsDeducted": 1,
+                  "reason": "Sign-in/sync newest copy appears in header, body paragraph, and footer CTA on guest captures."
+                },
+                {
+                  "area": "error-tone",
+                  "pointsDeducted": 1,
+                  "reason": "Error panel copy is clear but generic; does not name playbooks vs templates separately."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": ["Guest sync messaging repetition"],
+              "mustFix": [],
+              "quickWins": [
+                "Trim middle guest paragraph once header states browser draft behavior"
+              ]
+            },
+            "reviewerB": {
+              "reviewMethod": "agent",
+              "reviewer": "B",
+              "deployable": "AWC",
+              "pageId": "library",
+              "role": "copy",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/library/round-1/manifest.json",
+              "scoreDesktop": 97,
+              "scoreMobile": 96,
+              "scoreOverall": 97,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "tasks-capitalization",
+                  "pointsDeducted": 1,
+                  "reason": "Create Playbook card capitalizes Tasks while adjacent lines use lowercase workflow language."
+                },
+                {
+                  "area": "sample-status-line",
+                  "pointsDeducted": 1,
+                  "reason": "Ready capture shows PUBLISHED in all caps inside card metadata; readable but louder than surrounding body copy."
+                },
+                {
+                  "area": "empty-marketplace-article",
+                  "pointsDeducted": 1,
+                  "reason": "Empty panel says Save one from Marketplace without the when helpful."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": ["Minor voice consistency on library empties"],
+              "mustFix": [],
+              "quickWins": [
+                "Harmonize Tasks/tasks in Create Playbook explainer"
+              ]
+            }
+          }
         },
         "ui": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+          "passed": true,
+          "score": 96,
+          "round": 1,
+          "reviewerA": 97,
+          "reviewerB": 96,
+          "notes": "Agent A=97 B=96 (round 1).\nA deductions: ready-density -2: Expanded sample workflow editor dominates ready desktop capture; card padding and field stacks feel dense versus sidebar whitespace. | error-panel-weight -1: Error retry panel uses outline button while empty state uses filled primary; hierarchy is correct but error block is visually light for a failure state.\nB deductions: guest-template-grid -1: Guest desktop template cards align well but Save buttons vary slightly in vertical position when descriptions wrap to three lines. | mobile-template-tabs -3: Workflow/Agent tab counts wrap on 390px; still legible but tight against card grid.",
+          "agentFeedback": {
+            "reviewerA": {
+              "reviewMethod": "agent",
+              "reviewer": "A",
+              "deployable": "AWC",
+              "pageId": "library",
+              "role": "ui",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/library/round-1/manifest.json",
+              "scoreDesktop": 97,
+              "scoreMobile": 96,
+              "scoreOverall": 97,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "ready-density",
+                  "pointsDeducted": 2,
+                  "reason": "Expanded sample workflow editor dominates ready desktop capture; card padding and field stacks feel dense versus sidebar whitespace."
+                },
+                {
+                  "area": "error-panel-weight",
+                  "pointsDeducted": 1,
+                  "reason": "Error retry panel uses outline button while empty state uses filled primary; hierarchy is correct but error block is visually light for a failure state."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": ["Ready story visual density"],
+              "mustFix": [],
+              "quickWins": [
+                "Use compact error panel border tint consistent with dispatch failure banners"
+              ]
+            },
+            "reviewerB": {
+              "reviewMethod": "agent",
+              "reviewer": "B",
+              "deployable": "AWC",
+              "pageId": "library",
+              "role": "ui",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/library/round-1/manifest.json",
+              "scoreDesktop": 96,
+              "scoreMobile": 95,
+              "scoreOverall": 96,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "guest-template-grid",
+                  "pointsDeducted": 1,
+                  "reason": "Guest desktop template cards align well but Save buttons vary slightly in vertical position when descriptions wrap to three lines."
+                },
+                {
+                  "area": "mobile-template-tabs",
+                  "pointsDeducted": 3,
+                  "reason": "Workflow/Agent tab counts wrap on 390px; still legible but tight against card grid."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": ["Template card grid alignment on guest mobile"],
+              "mustFix": [],
+              "quickWins": ["Equalize template card min-height in picker grid"]
+            }
+          }
         },
         "product": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+          "passed": true,
+          "score": 97,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 97,
+          "notes": "Agent A=98 B=97 (round 1).\nA deductions: ready-fixture-fidelity -1: Ready story now shows sample workflow with Mac run actions; believable though edit mode open exaggerates typical list view. | guest-templates-fidelity -1: Guest templates catalog renders real presets; save-to-browser CTA matches guest draft product path.\nB deductions: error-story-fidelity -2: Error MSW now maps to in-panel Could not load your library with retry; distinct from empty state. | empty-vs-ready -1: Empty signed-in story still shows create panel plus empty card while ready shows populated sample; states are distinguishable.",
+          "agentFeedback": {
+            "reviewerA": {
+              "reviewMethod": "agent",
+              "reviewer": "A",
+              "deployable": "AWC",
+              "pageId": "library",
+              "role": "product",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/library/round-1/manifest.json",
+              "scoreDesktop": 98,
+              "scoreMobile": 97,
+              "scoreOverall": 98,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "ready-fixture-fidelity",
+                  "pointsDeducted": 1,
+                  "reason": "Ready story now shows sample workflow with Mac run actions; believable though edit mode open exaggerates typical list view."
+                },
+                {
+                  "area": "guest-templates-fidelity",
+                  "pointsDeducted": 1,
+                  "reason": "Guest templates catalog renders real presets; save-to-browser CTA matches guest draft product path."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": [],
+              "mustFix": [],
+              "quickWins": [
+                "Storybook-only: start sample card collapsed in ready capture"
+              ]
+            },
+            "reviewerB": {
+              "reviewMethod": "agent",
+              "reviewer": "B",
+              "deployable": "AWC",
+              "pageId": "library",
+              "role": "product",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/library/round-1/manifest.json",
+              "scoreDesktop": 97,
+              "scoreMobile": 96,
+              "scoreOverall": 97,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "error-story-fidelity",
+                  "pointsDeducted": 2,
+                  "reason": "Error MSW now maps to in-panel Could not load your library with retry; distinct from empty state."
+                },
+                {
+                  "area": "empty-vs-ready",
+                  "pointsDeducted": 1,
+                  "reason": "Empty signed-in story still shows create panel plus empty card while ready shows populated sample; states are distinguishable."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": [],
+              "mustFix": [],
+              "quickWins": []
+            }
+          }
         },
         "tester": {
           "passed": true,
@@ -1911,7 +2101,7 @@
           "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
         }
       },
-      "allRolesPassed": false
+      "allRolesPassed": true
     },
     {
       "order": 10,
@@ -1919,13 +2109,7 @@
       "id": "marketplace",
       "title": "Marketplace",
       "path": "/marketplace",
-      "statuses": [
-        "loading",
-        "guest",
-        "empty",
-        "error",
-        "ready"
-      ],
+      "statuses": ["loading", "guest", "empty", "error", "ready"],
       "roles": {
         "ux": {
           "passed": false,
@@ -1984,13 +2168,7 @@
       "id": "reports",
       "title": "Reports",
       "path": "/reports",
-      "statuses": [
-        "loading",
-        "guest",
-        "empty",
-        "error",
-        "ready"
-      ],
+      "statuses": ["loading", "guest", "empty", "error", "ready"],
       "roles": {
         "ux": {
           "passed": false,
@@ -2049,12 +2227,7 @@
       "id": "report-detail",
       "title": "Report detail",
       "path": "/reports/:runId",
-      "statuses": [
-        "loading",
-        "empty",
-        "error",
-        "ready"
-      ],
+      "statuses": ["loading", "empty", "error", "ready"],
       "roles": {
         "ux": {
           "passed": false,
@@ -2113,12 +2286,7 @@
       "id": "automations",
       "title": "Automations",
       "path": "/automations",
-      "statuses": [
-        "loading",
-        "empty",
-        "error",
-        "ready"
-      ],
+      "statuses": ["loading", "empty", "error", "ready"],
       "roles": {
         "ux": {
           "passed": false,
@@ -2177,9 +2345,7 @@
       "id": "prompt-optimizer",
       "title": "Prompt optimizer",
       "path": "/prompt-optimizer",
-      "statuses": [
-        "ready"
-      ],
+      "statuses": ["ready"],
       "roles": {
         "ux": {
           "passed": false,
@@ -2238,9 +2404,7 @@
       "id": "prompt-optimizer-guide",
       "title": "Prompt optimizer guide",
       "path": "/prompt-optimizer/guide",
-      "statuses": [
-        "ready"
-      ],
+      "statuses": ["ready"],
       "roles": {
         "ux": {
           "passed": false,
@@ -2299,10 +2463,7 @@
       "id": "connection-lab",
       "title": "Connection lab",
       "path": "/connection-lab",
-      "statuses": [
-        "ready",
-        "error"
-      ],
+      "statuses": ["ready", "error"],
       "roles": {
         "ux": {
           "passed": false,
@@ -2361,9 +2522,7 @@
       "id": "showcases",
       "title": "Showcases",
       "path": "/showcases",
-      "statuses": [
-        "ready"
-      ],
+      "statuses": ["ready"],
       "roles": {
         "ux": {
           "passed": false,
@@ -2422,10 +2581,7 @@
       "id": "admin-users",
       "title": "Admin users",
       "path": "/admin/users",
-      "statuses": [
-        "ready",
-        "empty"
-      ],
+      "statuses": ["ready", "empty"],
       "roles": {
         "ux": {
           "passed": false,
@@ -2484,11 +2640,7 @@
       "id": "admin-groups",
       "title": "Admin groups",
       "path": "/admin/groups",
-      "statuses": [
-        "ready",
-        "empty",
-        "error"
-      ],
+      "statuses": ["ready", "empty", "error"],
       "roles": {
         "ux": {
           "passed": false,
@@ -2547,11 +2699,7 @@
       "id": "home",
       "title": "Home",
       "path": "/",
-      "statuses": [
-        "ready",
-        "empty",
-        "error"
-      ],
+      "statuses": ["ready", "empty", "error"],
       "roles": {
         "ux": {
           "passed": false,
@@ -2610,11 +2758,7 @@
       "id": "task",
       "title": "Task",
       "path": "/task",
-      "statuses": [
-        "ready",
-        "empty",
-        "error"
-      ],
+      "statuses": ["ready", "empty", "error"],
       "roles": {
         "ux": {
           "passed": false,
@@ -2673,12 +2817,7 @@
       "id": "prompt-optimizer",
       "title": "Prompt optimizer",
       "path": "/prompt-optimizer",
-      "statuses": [
-        "ready",
-        "empty",
-        "error",
-        "loading"
-      ],
+      "statuses": ["ready", "empty", "error", "loading"],
       "roles": {
         "ux": {
           "passed": false,
@@ -2737,9 +2876,7 @@
       "id": "prompt-optimizer-guide",
       "title": "Prompt optimizer guide",
       "path": "/prompt-optimizer/guide",
-      "statuses": [
-        "ready"
-      ],
+      "statuses": ["ready"],
       "roles": {
         "ux": {
           "passed": false,
@@ -2798,11 +2935,7 @@
       "id": "status",
       "title": "Status",
       "path": "/status",
-      "statuses": [
-        "ready",
-        "empty",
-        "error"
-      ],
+      "statuses": ["ready", "empty", "error"],
       "roles": {
         "ux": {
           "passed": false,
@@ -2861,11 +2994,7 @@
       "id": "projects",
       "title": "Projects",
       "path": "/projects",
-      "statuses": [
-        "ready",
-        "empty",
-        "error"
-      ],
+      "statuses": ["ready", "empty", "error"],
       "roles": {
         "ux": {
           "passed": false,
@@ -2924,11 +3053,7 @@
       "id": "project",
       "title": "Project editor",
       "path": "/project",
-      "statuses": [
-        "ready",
-        "empty",
-        "error"
-      ],
+      "statuses": ["ready", "empty", "error"],
       "roles": {
         "ux": {
           "passed": false,
@@ -2987,11 +3112,7 @@
       "id": "harness",
       "title": "Harness",
       "path": "/harness",
-      "statuses": [
-        "ready",
-        "empty",
-        "error"
-      ],
+      "statuses": ["ready", "empty", "error"],
       "roles": {
         "ux": {
           "passed": false,
@@ -3050,10 +3171,7 @@
       "id": "writer-api",
       "title": "Writer API",
       "path": "/writer-api",
-      "statuses": [
-        "ready",
-        "error"
-      ],
+      "statuses": ["ready", "error"],
       "roles": {
         "ux": {
           "passed": false,
@@ -3112,10 +3230,7 @@
       "id": "knowledge",
       "title": "Knowledge",
       "path": "/knowledge",
-      "statuses": [
-        "ready",
-        "empty"
-      ],
+      "statuses": ["ready", "empty"],
       "roles": {
         "ux": {
           "passed": false,
@@ -3174,10 +3289,7 @@
       "id": "history",
       "title": "History",
       "path": "/history",
-      "statuses": [
-        "ready",
-        "empty"
-      ],
+      "statuses": ["ready", "empty"],
       "roles": {
         "ux": {
           "passed": false,
@@ -3236,10 +3348,7 @@
       "id": "writer-sessions",
       "title": "Transcripts",
       "path": "/writer-sessions",
-      "statuses": [
-        "ready",
-        "empty"
-      ],
+      "statuses": ["ready", "empty"],
       "roles": {
         "ux": {
           "passed": false,
@@ -3298,11 +3407,7 @@
       "id": "errors",
       "title": "Errors",
       "path": "/errors",
-      "statuses": [
-        "ready",
-        "empty",
-        "error"
-      ],
+      "statuses": ["ready", "empty", "error"],
       "roles": {
         "ux": {
           "passed": false,
@@ -3361,10 +3466,7 @@
       "id": "traffic",
       "title": "Traffic",
       "path": "/traffic",
-      "statuses": [
-        "ready",
-        "empty"
-      ],
+      "statuses": ["ready", "empty"],
       "roles": {
         "ux": {
           "passed": false,

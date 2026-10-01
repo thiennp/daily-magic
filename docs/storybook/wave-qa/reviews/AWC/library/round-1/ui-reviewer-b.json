@@ -1,0 +1,29 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "B",
+  "deployable": "AWC",
+  "pageId": "library",
+  "role": "ui",
+  "captureRound": 1,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/library/round-1/manifest.json",
+  "scoreDesktop": 96,
+  "scoreMobile": 95,
+  "scoreOverall": 96,
+  "passed": true,
+  "scoreBreakdown": [
+    {
+      "area": "guest-template-grid",
+      "pointsDeducted": 1,
+      "reason": "Guest desktop template cards align well but Save buttons vary slightly in vertical position when descriptions wrap to three lines."
+    },
+    {
+      "area": "mobile-template-tabs",
+      "pointsDeducted": 3,
+      "reason": "Workflow/Agent tab counts wrap on 390px; still legible but tight against card grid."
+    }
+  ],
+  "whyBelowThreshold": "",
+  "topIssues": ["Template card grid alignment on guest mobile"],
+  "mustFix": [],
+  "quickWins": ["Equalize template card min-height in picker grid"]
+}
