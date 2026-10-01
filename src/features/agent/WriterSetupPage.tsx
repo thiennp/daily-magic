@@ -2,33 +2,11 @@
 
 import { useCallback, useState } from "react";
 
+import WriterSetupPageFooter from "@/features/agent/components/WriterSetupPageFooter";
 import HarnessWriterAgentMark from "@/features/agent/icons/HarnessWriterAgentMark";
+import { ensureWriterOnMac } from "@/features/agent/utils/ensureWriterOnMac.util";
 import { WRITER_SETUP_OPTIONS } from "@/features/agent/writerSetupOptions.constant";
 import type { HarnessWriterAgent } from "@/lib/agentWitch/harness/types/HarnessWriterAgent.constant";
-import { AGENT_WITCH_LOCAL_APP_ORIGIN } from "@/lib/agentWitch/agentWitchLocalAppPort.constant";
-
-const ensureWriterOnMac = async (
-  writerAgent: HarnessWriterAgent,
-): Promise<string> => {
-  const response = await fetch("/api/agent-witch/writer/ensure", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ writerAgent }),
-  });
-  const body: unknown = await response.json();
-  if (!response.ok) {
-    if (
-      typeof body === "object" &&
-      body !== null &&
-      "error" in body &&
-      typeof (body as { error: unknown }).error === "string"
-    ) {
-      return (body as { error: string }).error;
-    }
-    return "Could not reach your Mac.";
-  }
-  return "Ensure command sent to your Mac over WebSocket.";
-};
 
 export default function WriterSetupPage() {
   const [busyWriter, setBusyWriter] = useState<HarnessWriterAgent | null>(null);
@@ -59,7 +37,7 @@ export default function WriterSetupPage() {
   }, []);
 
   return (
-    <main className="mx-auto max-w-2xl px-4 py-10">
+    <main className="mx-auto max-w-2xl px-4 py-10 pb-32 md:pb-10">
       <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">
         Choose an AI for your Mac
       </h1>
@@ -83,7 +61,7 @@ export default function WriterSetupPage() {
                 <span className="block font-medium text-gray-900 dark:text-white">
                   {writer.label}
                 </span>
-                <span className="block text-sm text-gray-500">
+                <span className="block text-sm text-gray-500 dark:text-gray-400">
                   {statusByWriter[writer.id] ?? writer.hint}
                 </span>
               </span>
@@ -91,21 +69,7 @@ export default function WriterSetupPage() {
           </li>
         ))}
       </ul>
-      <p className="mt-6 text-sm text-gray-500">
-        Prefer API keys instead of installing CLIs? On the Mac, open{" "}
-        <a
-          href={`${AGENT_WITCH_LOCAL_APP_ORIGIN}/writer-api`}
-          className="font-medium text-zinc-700 underline-offset-4 hover:text-zinc-900 hover:underline"
-        >
-          Writer API
-        </a>{" "}
-        in the local Agent Witch UI ({AGENT_WITCH_LOCAL_APP_ORIGIN}). Keys stay
-        on that machine only.
-      </p>
-      <p className="mt-3 text-sm text-gray-500">
-        For traffic and knowledge, use the same local UI. Connection status here
-        comes from the live WebSocket bridge, not that page.
-      </p>
+      <WriterSetupPageFooter />
     </main>
   );
 }
