@@ -39,7 +39,7 @@ export const buildAgentWitchLocalHarnessInstalledSection = (input: {
   return `<section class="card harness-installed">
       <p class="eyebrow">Playbooks</p>
       <h2>Installed on this Mac</h2>
-      <p class="lede">${input.installed.sets.length} set(s) from Agent Witch Local. Link them to a repository under <a href="/projects">Projects</a>. ${managePlaybooks}</p>
+      <p class="lede">${input.installed.sets.length} set(s) installed from Agent Witch Cloud. Link them to a repository under <a href="/projects">Projects</a>. ${managePlaybooks}</p>
       ${manifestMeta}
       <ul class="harness-installed-set-list">${setRows}</ul>
     </section>`;

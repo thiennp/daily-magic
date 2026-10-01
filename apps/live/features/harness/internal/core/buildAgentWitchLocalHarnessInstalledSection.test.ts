@@ -22,6 +22,8 @@ describe("buildAgentWitchLocalHarnessInstalledSection", () => {
     expect(html).toContain("Demo");
     expect(html).not.toContain('action="/harness/apply-to-project"');
     expect(html).toContain('href="/projects"');
+    expect(html).toContain("installed from Agent Witch Cloud");
+    expect(html).not.toContain("from Agent Witch Local");
     expect(html).toContain("Browse playbooks in Agent Witch Cloud");
     expect(html).toContain('href="https://www.agentwitch.com/marketplace"');
     expect(html).not.toContain("Browse playbooks on Agent Witch Local");
