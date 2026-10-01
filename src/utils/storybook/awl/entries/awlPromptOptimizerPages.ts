@@ -9,7 +9,7 @@ const buildPromptOptimizerFixtureBody = (
     return `<section class="card"><h1>Prompt optimizer</h1><p class="muted">Checking writers…</p></section>`;
   }
   if (status === "empty") {
-    return `<section class="card"><h1>Prompt optimizer</h1><p class="empty">Add a goal and prompt to start the wizard.</p></section>`;
+    return `<section class="card"><h1>Prompt optimizer</h1><p class="empty">No saved goals yet. Add a goal and prompt to start the wizard.</p></section>`;
   }
   const error =
     status === "error"
@@ -17,7 +17,8 @@ const buildPromptOptimizerFixtureBody = (
       : "";
   return `<section class="card">
     <p class="eyebrow">Prompt optimizer</p>
-    <h1>Ship Storybook coverage</h1>
+    <h1>Prompt optimizer</h1>
+    <h2>Ship Storybook coverage</h2>
     ${error}
     <p class="lede">Goal and prompt fields populated for Storybook preview.</p>
     <form class="sdlc-form">
