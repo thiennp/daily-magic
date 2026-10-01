@@ -1,6 +1,7 @@
 import { listPendingProjectAccessRequests } from "@/lib/projects/acl/listPendingProjectAccessRequests";
 import { listProjectMembershipsForProject } from "@/lib/projects/acl/listProjectMembershipsForProject";
 import { getUserProjectById } from "@/lib/projects/userProjectQueries";
+import { PROJECT_ACL_FIRST_CONNECT } from "@/lib/projects/acl/projectAclFirstConnect.constant";
 import { requireAuth } from "@/lib/auth/requireAuth";
 
 export const dynamic = "force-dynamic";
@@ -33,5 +34,10 @@ export async function GET(
     project: { id: project.id, name: project.name },
     members,
     pendingRequests,
+    firstConnect: {
+      role: PROJECT_ACL_FIRST_CONNECT.role,
+      scopes: PROJECT_ACL_FIRST_CONNECT.scopes,
+      note: PROJECT_ACL_FIRST_CONNECT.emptyStateNote,
+    },
   });
 }

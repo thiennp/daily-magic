@@ -4,6 +4,7 @@ import {
   PROMPT_SDLC_LOCAL_CONTEXT_REASON,
   selectPromptSdlcBestPrompt,
 } from "../../../../adapters/promptSdlcAwcCore";
+import { derivePromptSdlcAgentOutcome } from "./derivePromptSdlcAgentOutcome";
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
 import { sumPromptSdlcLocalTokens } from "./sumPromptSdlcLocalTokens";
 
@@ -18,12 +19,19 @@ export const buildPromptSdlcAgentSnapshot = (cycle: PromptSdlcLocalCycle) => {
     })),
   );
   const done = isPromptSdlcTerminalStatus(cycle.status);
+  const errorKind = cycle.errorKind ?? null;
+  const outcome = derivePromptSdlcAgentOutcome({
+    status: cycle.status,
+    errorKind,
+  });
 
   return {
     ok: true as const,
     cycleId: cycle.id,
     status: cycle.status,
+    outcome,
     done,
+    /** Bundle 242 / G2: useThisPrompt only when status === passed. */
     useThisPrompt: cycle.status === "passed",
     totalTokens: sumPromptSdlcLocalTokens(cycle),
     prompt: latest?.promptText ?? "",
@@ -39,7 +47,7 @@ export const buildPromptSdlcAgentSnapshot = (cycle: PromptSdlcLocalCycle) => {
     passScore: cycle.passScore,
     round: cycle.currentRound,
     errorMessage: cycle.errorMessage,
-    errorKind: cycle.errorKind ?? null,
+    errorKind,
     context: PROMPT_SDLC_LOCAL_CONTEXT_REASON,
     page: `${PROMPT_SDLC_LIVE_PAGE_URL}?cycle=${encodeURIComponent(cycle.id)}`,
   };
