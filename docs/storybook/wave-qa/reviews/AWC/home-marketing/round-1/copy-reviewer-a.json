@@ -1,0 +1,42 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "A",
+  "deployable": "AWC",
+  "pageId": "home-marketing",
+  "role": "copy",
+  "captureRound": 1,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/home-marketing/round-1/manifest.json",
+  "scoreDesktop": 97,
+  "scoreMobile": 96,
+  "scoreOverall": 97,
+  "passed": true,
+  "scoreBreakdown": [
+    {
+      "area": "announcement-acl",
+      "pointsDeducted": 2,
+      "reason": "Top bar says Project Access ACL; ACL reads as engineering jargon on a marketing surface."
+    },
+    {
+      "area": "eyebrow-harness",
+      "pointsDeducted": 1,
+      "reason": "Hero eyebrow leads with Harness; philosophy prefers Playbook/Mac vocabulary over harness on user-facing surfaces."
+    },
+    {
+      "area": "hero-approve-capitalization",
+      "pointsDeducted": 1,
+      "reason": "Mid-sentence capitalized Approve in hero paragraph breaks reading flow."
+    },
+    {
+      "area": "mobile-announcement-density",
+      "pointsDeducted": 1,
+      "reason": "Announcement line wraps awkwardly on 390px, slightly obscuring the Agent Witch value prop on first screen."
+    }
+  ],
+  "whyBelowThreshold": "",
+  "topIssues": ["ACL in announcement", "Harness eyebrow"],
+  "mustFix": [],
+  "quickWins": [
+    "Rename announcement to Project Access without ACL",
+    "Use Playbooks-first eyebrow"
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "B",
+  "deployable": "AWC",
+  "pageId": "home-marketing",
+  "role": "ui",
+  "captureRound": 1,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/home-marketing/round-1/manifest.json",
+  "scoreDesktop": 98,
+  "scoreMobile": 96,
+  "scoreOverall": 97,
+  "passed": true,
+  "scoreBreakdown": [
+    {
+      "area": "showcase-thumbnail-crop",
+      "pointsDeducted": 1,
+      "reason": "Some showcase tiles crop screenshots tightly on desktop; still readable but borderline on smaller breakpoints."
+    },
+    {
+      "area": "feature-icon-alignment",
+      "pointsDeducted": 1,
+      "reason": "Feature trio icons align well; middle card preview mock is slightly shorter than neighbors creating subtle height mismatch."
+    },
+    {
+      "area": "mobile-header-blur",
+      "pointsDeducted": 2,
+      "reason": "Sticky header backdrop blur is subtle on mobile capture; border carries most separation from hero."
+    },
+    {
+      "area": "mobile-trust-strip",
+      "pointsDeducted": 2,
+      "reason": "Trust metrics wrap to two rows on narrow width; spacing between rows feels tight versus hero whitespace."
+    }
+  ],
+  "whyBelowThreshold": "",
+  "topIssues": ["Showcase tile crops", "Mobile trust strip spacing"],
+  "mustFix": [],
+  "quickWins": ["Add gap-y between trust metrics on sm breakpoint"]
+}
