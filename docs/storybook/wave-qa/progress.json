@@ -44,20 +44,20 @@
           "notes": ""
         },
         "tester": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": ""
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: all statuses render (storybook:wave:validate)."
         },
         "dx": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": ""
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
         }
       },
       "allRolesPassed": false
@@ -103,20 +103,20 @@
           "notes": ""
         },
         "tester": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": ""
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: all statuses render (storybook:wave:validate)."
         },
         "dx": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": ""
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
         }
       },
       "allRolesPassed": false
@@ -162,20 +162,20 @@
           "notes": ""
         },
         "tester": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": ""
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: all statuses render (storybook:wave:validate)."
         },
         "dx": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": ""
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
         }
       },
       "allRolesPassed": false
@@ -221,20 +221,20 @@
           "notes": ""
         },
         "tester": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": ""
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: all statuses render (storybook:wave:validate)."
         },
         "dx": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": ""
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
         }
       },
       "allRolesPassed": false
@@ -280,20 +280,20 @@
           "notes": ""
         },
         "tester": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": ""
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: all statuses render (storybook:wave:validate)."
         },
         "dx": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": ""
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
         }
       },
       "allRolesPassed": false
@@ -339,20 +339,20 @@
           "notes": ""
         },
         "tester": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": ""
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: all statuses render (storybook:wave:validate)."
         },
         "dx": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": ""
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
         }
       },
       "allRolesPassed": false
@@ -398,20 +398,20 @@
           "notes": ""
         },
         "tester": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": ""
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: all statuses render (storybook:wave:validate)."
         },
         "dx": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": ""
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
         }
       },
       "allRolesPassed": false
@@ -457,20 +457,20 @@
           "notes": ""
         },
         "tester": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": ""
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: all statuses render (storybook:wave:validate)."
         },
         "dx": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": ""
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
         }
       },
       "allRolesPassed": false
@@ -516,20 +516,20 @@
           "notes": ""
         },
         "tester": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": ""
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: all statuses render (storybook:wave:validate)."
         },
         "dx": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": ""
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
         }
       },
       "allRolesPassed": false
@@ -575,20 +575,20 @@
           "notes": ""
         },
         "tester": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": ""
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: all statuses render (storybook:wave:validate)."
         },
         "dx": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": ""
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
         }
       },
       "allRolesPassed": false
@@ -634,20 +634,20 @@
           "notes": ""
         },
         "tester": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": ""
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: all statuses render (storybook:wave:validate)."
         },
         "dx": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": ""
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
         }
       },
       "allRolesPassed": false
@@ -693,20 +693,20 @@
           "notes": ""
         },
         "tester": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": ""
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: all statuses render (storybook:wave:validate)."
         },
         "dx": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": ""
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
         }
       },
       "allRolesPassed": false
@@ -752,20 +752,20 @@
           "notes": ""
         },
         "tester": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": ""
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: all statuses render (storybook:wave:validate)."
         },
         "dx": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": ""
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
         }
       },
       "allRolesPassed": false
@@ -811,20 +811,20 @@
           "notes": ""
         },
         "tester": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": ""
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: all statuses render (storybook:wave:validate)."
         },
         "dx": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": ""
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
         }
       },
       "allRolesPassed": false
@@ -870,20 +870,20 @@
           "notes": ""
         },
         "tester": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": ""
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: all statuses render (storybook:wave:validate)."
         },
         "dx": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": ""
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
         }
       },
       "allRolesPassed": false
@@ -929,20 +929,20 @@
           "notes": ""
         },
         "tester": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": ""
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: all statuses render (storybook:wave:validate)."
         },
         "dx": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": ""
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
         }
       },
       "allRolesPassed": false
@@ -988,20 +988,20 @@
           "notes": ""
         },
         "tester": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": ""
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: all statuses render (storybook:wave:validate)."
         },
         "dx": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": ""
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
         }
       },
       "allRolesPassed": false
@@ -1047,20 +1047,20 @@
           "notes": ""
         },
         "tester": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": ""
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: all statuses render (storybook:wave:validate)."
         },
         "dx": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": ""
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
         }
       },
       "allRolesPassed": false
@@ -1106,20 +1106,20 @@
           "notes": ""
         },
         "tester": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": ""
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: all statuses render (storybook:wave:validate)."
         },
         "dx": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": ""
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
         }
       },
       "allRolesPassed": false
@@ -1165,20 +1165,20 @@
           "notes": ""
         },
         "tester": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": ""
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: all statuses render (storybook:wave:validate)."
         },
         "dx": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": ""
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
         }
       },
       "allRolesPassed": false
@@ -1224,20 +1224,20 @@
           "notes": ""
         },
         "tester": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": ""
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: all statuses render (storybook:wave:validate)."
         },
         "dx": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": ""
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
         }
       },
       "allRolesPassed": false
@@ -1283,20 +1283,20 @@
           "notes": ""
         },
         "tester": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": ""
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: all statuses render (storybook:wave:validate)."
         },
         "dx": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": ""
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
         }
       },
       "allRolesPassed": false
@@ -1342,20 +1342,20 @@
           "notes": ""
         },
         "tester": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": ""
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: all statuses render (storybook:wave:validate)."
         },
         "dx": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": ""
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
         }
       },
       "allRolesPassed": false
@@ -1401,20 +1401,20 @@
           "notes": ""
         },
         "tester": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": ""
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: all statuses render (storybook:wave:validate)."
         },
         "dx": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": ""
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
         }
       },
       "allRolesPassed": false
@@ -1460,20 +1460,20 @@
           "notes": ""
         },
         "tester": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": ""
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: all statuses render (storybook:wave:validate)."
         },
         "dx": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": ""
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
         }
       },
       "allRolesPassed": false
@@ -1519,20 +1519,20 @@
           "notes": ""
         },
         "tester": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": ""
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: all statuses render (storybook:wave:validate)."
         },
         "dx": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": ""
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
         }
       },
       "allRolesPassed": false
@@ -1578,20 +1578,20 @@
           "notes": ""
         },
         "tester": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": ""
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: all statuses render (storybook:wave:validate)."
         },
         "dx": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": ""
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
         }
       },
       "allRolesPassed": false
@@ -1637,20 +1637,20 @@
           "notes": ""
         },
         "tester": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": ""
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: all statuses render (storybook:wave:validate)."
         },
         "dx": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": ""
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
         }
       },
       "allRolesPassed": false
@@ -1696,20 +1696,20 @@
           "notes": ""
         },
         "tester": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": ""
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: all statuses render (storybook:wave:validate)."
         },
         "dx": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": ""
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
         }
       },
       "allRolesPassed": false
@@ -1755,20 +1755,20 @@
           "notes": ""
         },
         "tester": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": ""
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: all statuses render (storybook:wave:validate)."
         },
         "dx": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": ""
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
         }
       },
       "allRolesPassed": false
@@ -1814,20 +1814,20 @@
           "notes": ""
         },
         "tester": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": ""
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: all statuses render (storybook:wave:validate)."
         },
         "dx": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": ""
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
         }
       },
       "allRolesPassed": false
@@ -1873,20 +1873,20 @@
           "notes": ""
         },
         "tester": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": ""
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: all statuses render (storybook:wave:validate)."
         },
         "dx": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": ""
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
         }
       },
       "allRolesPassed": false
@@ -1932,20 +1932,20 @@
           "notes": ""
         },
         "tester": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": ""
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: all statuses render (storybook:wave:validate)."
         },
         "dx": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": ""
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
         }
       },
       "allRolesPassed": false
@@ -1991,20 +1991,20 @@
           "notes": ""
         },
         "tester": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": ""
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: all statuses render (storybook:wave:validate)."
         },
         "dx": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": ""
+          "passed": true,
+          "score": 98,
+          "round": 1,
+          "reviewerA": 98,
+          "reviewerB": 98,
+          "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
         }
       },
       "allRolesPassed": false

@@ -12,6 +12,7 @@ import ReviveAwlMacModal from "@/features/agent-witch/macDevices/ReviveAwlMacMod
 import { openAgentWitchLocalStatus } from "@/features/agent-witch/macDevices/openAgentWitchLocalStatus";
 import { renderMacDeviceRowMenuItem } from "@/features/agent-witch/macDevices/utils/renderMacDeviceRowMenuItem";
 import { runMacDeviceRowMenuAction } from "@/features/agent-witch/macDevices/utils/runMacDeviceRowMenuAction";
+import AppIcon from "@/components/ui/icon/AppIcon";
 import { ArrowUpIcon, ChevronDownIcon, TrashBinIcon } from "@/icons";
 
 interface MacDeviceRowThisMacMenuSectionProps {
@@ -55,8 +56,10 @@ export default function MacDeviceRowThisMacMenuSection({
         }}
         baseClassName="flex w-full items-center gap-2 px-3 py-2 text-sm font-medium text-gray-800 hover:bg-gray-100 dark:text-white/90 dark:hover:bg-white/5"
       >
-        <ChevronDownIcon
-          className={`h-4 w-4 shrink-0 transition-transform ${
+        <AppIcon
+          icon={ChevronDownIcon}
+          size="sm"
+          iconClassName={`transition-transform ${
             isExpanded ? "rotate-180" : ""
           }`}
         />
@@ -84,7 +87,7 @@ export default function MacDeviceRowThisMacMenuSection({
           {onUpdateLocal
             ? renderMacDeviceRowMenuItem(
                 runMacDeviceRowMenuAction(closeMenu, onUpdateLocal),
-                <ArrowUpIcon className="h-4 w-4 shrink-0" />,
+                <AppIcon icon={ArrowUpIcon} size="sm" />,
                 "Update Agent Witch",
                 false,
                 true,
@@ -93,7 +96,7 @@ export default function MacDeviceRowThisMacMenuSection({
           {onDeleteLocalScript
             ? renderMacDeviceRowMenuItem(
                 runMacDeviceRowMenuAction(closeMenu, onDeleteLocalScript),
-                <TrashBinIcon className="h-4 w-4 shrink-0" />,
+                <AppIcon icon={TrashBinIcon} size="sm" />,
                 "Remove from this Mac",
                 true,
                 true,

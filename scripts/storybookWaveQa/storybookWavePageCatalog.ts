@@ -49,7 +49,36 @@ export const buildStorybookStoryId = (
   pageId: string,
   status: StorybookPageStatus,
 ): string => {
-  const titleSegment = deployable === "AWC" ? "awc-pages" : "awl-pages";
+  const titleSegment = (() => {
+    if (deployable === "AWC") {
+      return "awc-pages";
+    }
+    if (pageId === "prompt-optimizer" || pageId === "prompt-optimizer-guide") {
+      return "awl-prompt-optimizer";
+    }
+    if (pageId === "home" || pageId === "task") {
+      return "awl-pages-home-task";
+    }
+    if (
+      pageId === "status" ||
+      pageId === "writer-api" ||
+      pageId === "writer-sessions"
+    ) {
+      return "awl-pages-status-writer";
+    }
+    if (pageId === "projects" || pageId === "project" || pageId === "harness") {
+      return "awl-pages-projects-harness";
+    }
+    if (
+      pageId === "knowledge" ||
+      pageId === "history" ||
+      pageId === "errors" ||
+      pageId === "traffic"
+    ) {
+      return "awl-pages-diagnostics";
+    }
+    return "awl-pages";
+  })();
   const exportKey = `${pageId.replaceAll("-", "_")}_${status}`;
   const storySlug = exportKey.replaceAll("_", "-");
   return `${titleSegment}--${storySlug}`;

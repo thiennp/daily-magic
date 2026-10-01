@@ -1,5 +1,3 @@
-import path from "node:path";
-
 import {
   AGENT_WITCH_LOCAL_INSTALL_DIR_NAME,
   AGENT_WITCH_LOCAL_LAUNCH_AGENT_PREFIX,
@@ -7,8 +5,14 @@ import {
 } from "@agent-witch/install-layout/types";
 import { AGENT_WITCH_LIVE_APP_PORT } from "@agent-witch/shared/network";
 
-const resolveAgentWitchLaunchAgentPrefix = (installDir: string): string =>
-  path.basename(installDir) === AGENT_WITCH_LOCAL_INSTALL_DIR_NAME
+const installDirBasename = (installDir: string): string => {
+  const trimmed = installDir.replace(/\/$/, "");
+  const slashIndex = trimmed.lastIndexOf("/");
+  return slashIndex === -1 ? trimmed : trimmed.slice(slashIndex + 1);
+};
+
+const resolveLaunchAgentPrefixForInstallDir = (installDir: string): string =>
+  installDirBasename(installDir) === AGENT_WITCH_LOCAL_INSTALL_DIR_NAME
     ? AGENT_WITCH_LOCAL_LAUNCH_AGENT_PREFIX
     : AGENT_WITCH_PROD_LAUNCH_AGENT_PREFIX;
 
@@ -22,8 +26,8 @@ const escapeHtml = (value: string): string =>
 export const buildAgentWitchReviveAwlStatusSection = (input: {
   readonly installDir: string;
 }): string => {
-  const prefix = resolveAgentWitchLaunchAgentPrefix(input.installDir);
-  const installDirName = path.basename(input.installDir);
+  const prefix = resolveLaunchAgentPrefixForInstallDir(input.installDir);
+  const installDirName = installDirBasename(input.installDir);
   const command = `AW_HOME="$HOME/${installDirName}"
 launchctl kickstart -k "gui/$(id -u)/${prefix}"
 sleep 2

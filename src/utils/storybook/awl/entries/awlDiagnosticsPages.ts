@@ -1,5 +1,4 @@
 import { buildAgentWitchLocalErrorLogPageBody } from "@agent-witch/live-diagnostics/presentation";
-import { buildAgentWitchLocalEstimateHistoryPageBody } from "@agent-witch/live-tasks/presentation";
 
 import type { AwlStorybookPageEntry } from "@/utils/storybook/awl/awlStorybookPageEntry.type";
 import { withAwlStorybookShell } from "@/utils/storybook/awl/withAwlStorybookShell";
@@ -22,10 +21,10 @@ export const AWL_DIAGNOSTICS_PAGE_ENTRIES: readonly AwlStorybookPageEntry[] = [
     path: "/history",
     activePath: "/history",
     statuses: ["ready", "empty"],
-    buildBody: () =>
-      buildAgentWitchLocalEstimateHistoryPageBody({
-        reportsDir: "/Users/storybook/.agent-witch/reports",
-      }),
+    buildBody: (status) =>
+      status === "empty"
+        ? `<section class="card"><h1>Estimate history</h1><p class="empty">No runs recorded yet.</p></section>`
+        : `<section class="card"><h1>Estimate history</h1><div class="table-wrap"><table><thead><tr><th>Task</th><th>Writer</th><th>Estimate</th><th>Actual</th></tr></thead><tbody><tr><td>Storybook fixture</td><td>Cursor</td><td>2m</td><td>1m 48s</td></tr></tbody></table></div></section>`,
   }),
   withAwlStorybookShell({
     id: "errors",

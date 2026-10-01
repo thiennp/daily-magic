@@ -65,6 +65,13 @@ const main = async (): Promise<void> => {
         STORYBOOK_WAVE_OUTPUT_DIR: outputDir,
       },
     );
+    await run(
+      "npx",
+      ["tsx", "scripts/storybookWaveQa/validateAllStorybookStories.ts"],
+      {
+        STORYBOOK_BASE_URL: BASE_URL,
+      },
+    );
   } finally {
     serve.kill("SIGTERM");
   }
