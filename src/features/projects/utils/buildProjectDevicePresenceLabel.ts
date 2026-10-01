@@ -27,7 +27,7 @@ const buildProjectDevicePresenceLabel = (input: {
   if (tier === "live_other_instance") {
     return {
       statusIcon: "reconnecting",
-      text: `Reconnecting — ${name}`,
+      text: `Reconnecting on ${name}`,
     };
   }
 
@@ -36,20 +36,20 @@ const buildProjectDevicePresenceLabel = (input: {
     const suffix = lastSeen !== null ? ` · last seen ${lastSeen}` : "";
     return {
       statusIcon: "offline",
-      text: `Offline — ${name}${suffix}`,
+      text: `Offline on ${name}${suffix}`,
     };
   }
 
   if (input.isThisMac) {
     return {
       statusIcon: "online",
-      text: `Online here — ${name}`,
+      text: `Online here on ${name}`,
     };
   }
 
   return {
     statusIcon: "online",
-    text: `Online — ${name}`,
+    text: `Online on ${name}`,
   };
 };
 

@@ -7,7 +7,7 @@ export default function ProjectsPageLayout() {
     <div className={APP_PAGE_STACK_CLASS}>
       <AppPageHeader
         title="Projects"
-        description="Repos your Macs can run agents against. Edit composition and folders in Agent Witch Local on each Mac."
+        description="Cloud registry for membership and activity. Edit repos and composition in Agent Witch Local on your Mac."
       />
       <AwcProjectsPanel />
     </div>

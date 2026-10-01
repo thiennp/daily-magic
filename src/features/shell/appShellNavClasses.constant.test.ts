@@ -13,14 +13,10 @@ describe("appShellNavClasses.constant", () => {
     expect(APP_SHELL_NAV_LINK_INACTIVE_CLASSES).not.toContain("zinc");
   });
 
-  it("styles desktop primary nav as a card panel, not a fixed left rail", () => {
-    expect(APP_SHELL_DESKTOP_NAV_CLASS).toContain("rounded-2xl");
-    expect(APP_SHELL_DESKTOP_NAV_CLASS).toContain("border");
-    expect(APP_SHELL_DESKTOP_NAV_CLASS).toContain("bg-white");
+  it("P0-SHELL: desktop primary nav is a left rail column (not an in-content card)", () => {
     expect(APP_SHELL_DESKTOP_NAV_CLASS).toContain("hidden");
     expect(APP_SHELL_DESKTOP_NAV_CLASS).toContain("md:flex");
-    expect(APP_SHELL_DESKTOP_NAV_CLASS).not.toContain("fixed");
-    expect(APP_SHELL_DESKTOP_NAV_CLASS).not.toContain("inset-y-0");
-    expect(APP_SHELL_DESKTOP_NAV_CLASS).not.toContain("w-56");
+    expect(APP_SHELL_DESKTOP_NAV_CLASS).not.toContain("rounded-2xl");
+    expect(APP_SHELL_DESKTOP_NAV_CLASS).not.toContain("border-gray");
   });
 });
