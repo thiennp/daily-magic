@@ -1,0 +1,42 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "B",
+  "deployable": "AWC",
+  "pageId": "home-marketing",
+  "role": "product",
+  "captureRound": 1,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/home-marketing/round-1/manifest.json",
+  "scoreDesktop": 97,
+  "scoreMobile": 96,
+  "scoreOverall": 97,
+  "passed": true,
+  "scoreBreakdown": [
+    {
+      "area": "mac-install-honesty",
+      "pointsDeducted": 2,
+      "reason": "Steps promise one install command; story does not show terminal snippet inline (lives post sign-in), slightly understating setup friction."
+    },
+    {
+      "area": "optimizer-claims",
+      "pointsDeducted": 1,
+      "reason": "Copy states evaluate passes; aligns with product pillars but north-star honesty footnote is not visible on capture."
+    },
+    {
+      "area": "runner-labels",
+      "pointsDeducted": 1,
+      "reason": "Product preview uses runner: mac-* labels that read as infra fixtures; believable for power users, less so for executives skimming mobile."
+    },
+    {
+      "area": "agent-access-section",
+      "pointsDeducted": 1,
+      "reason": "For-your-AI block is accurate to Agent Access capability yet may surprise buyers expecting only human signup on landing."
+    }
+  ],
+  "whyBelowThreshold": "",
+  "topIssues": [
+    "Install command not shown in story",
+    "AI self-register section prominence"
+  ],
+  "mustFix": [],
+  "quickWins": ["Surface honesty footnote near Prompt Optimizer mentions"]
+}
