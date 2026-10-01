@@ -58,6 +58,14 @@
 
 **Fix:** Drive the list from dashboard-bus cache patches (`AGENT_RUNS_LOCAL_CACHE_UPDATED_EVENT`); keep `useAgentRunsRemoteSync` slow poll (~60s) as a safety net only. `useAgentRunsList.test.ts` (REPORTS-006).
 
+## REPORTS-009 — Reports list flashed skeleton every ~60s after load-error UX
+
+**Symptom:** Signed-in `/reports` briefly swapped the run list for the loading skeleton about once per minute even when data was already on screen.
+
+**Cause:** `useAgentRunsRemoteSync` set `isLoading` true at the start of every fetch, including the background safety-net poll.
+
+**Fix:** Only show loading on initial/filter fetch and manual retry (`showLoading: true`); keep poll refreshes silent (`showLoading: false`). Handle network failures with `loadFailed` + `finally` so loading cannot stick. `useAgentRunsRemoteSync.test.ts` (REPORTS-009).
+
 ## REPORTS-008 — Marketplace run → Reports detail felt empty while Mac was working
 
 **Symptom:** After installing a marketplace capability and running on Mac, `/reports/[runId]` showed only the prompt and terminal placeholder—no `reportSummary` from heartbeats, stale “Job not found” copy, and no reconnect hint when the dashboard WebSocket dropped.

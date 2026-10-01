@@ -36,48 +36,59 @@ export function useAgentRunsRemoteSync(input: {
       return;
     }
 
-    const loadRuns = async (): Promise<void> => {
-      setIsLoading(true);
+    const loadRuns = async (options: {
+      readonly showLoading: boolean;
+    }): Promise<void> => {
+      if (options.showLoading) {
+        setIsLoading(true);
+      }
       setLoadFailed(false);
-      const query = buildAgentRunsQueryString({
-        status: statusFilter === "all" ? undefined : statusFilter,
-        scope: scopeFilter,
-        groupId: scopeFilter === AgentRunScope.GROUP ? groupFilter : undefined,
-      });
-      const response = await fetch(`/api/agent-runs${query}`);
 
-      if (!response.ok) {
+      try {
+        const query = buildAgentRunsQueryString({
+          status: statusFilter === "all" ? undefined : statusFilter,
+          scope: scopeFilter,
+          groupId:
+            scopeFilter === AgentRunScope.GROUP ? groupFilter : undefined,
+        });
+        const response = await fetch(`/api/agent-runs${query}`);
+
+        if (!response.ok) {
+          setLoadFailed(true);
+          onCacheUpdated();
+          return;
+        }
+
+        const data: unknown = await response.json();
+        const nextApiRuns =
+          typeof data === "object" &&
+          data !== null &&
+          "runs" in data &&
+          Array.isArray((data as { runs: unknown }).runs)
+            ? (data as { runs: EnrichedAgentRunRecord[] }).runs
+            : [];
+
+        for (const run of nextApiRuns) {
+          upsertAgentRunLocalCache(run);
+        }
+
+        setApiRuns(nextApiRuns);
+        onCacheUpdated();
+      } catch {
         setLoadFailed(true);
         onCacheUpdated();
+      } finally {
         setIsLoading(false);
-        return;
       }
-
-      const data: unknown = await response.json();
-      const nextApiRuns =
-        typeof data === "object" &&
-        data !== null &&
-        "runs" in data &&
-        Array.isArray((data as { runs: unknown }).runs)
-          ? (data as { runs: EnrichedAgentRunRecord[] }).runs
-          : [];
-
-      for (const run of nextApiRuns) {
-        upsertAgentRunLocalCache(run);
-      }
-
-      setApiRuns(nextApiRuns);
-      onCacheUpdated();
-      setIsLoading(false);
     };
 
     refreshRef.current = () => {
-      void loadRuns();
+      void loadRuns({ showLoading: true });
     };
 
-    void loadRuns();
+    void loadRuns({ showLoading: true });
     const timer = setInterval(() => {
-      void loadRuns();
+      void loadRuns({ showLoading: false });
     }, POLL_INTERVAL_MS * 12);
 
     return () => {
