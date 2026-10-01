@@ -143,6 +143,7 @@ export {
 export { resolvePromptSdlcMaxTrials } from "@/lib/promptOptimizer/resolvePromptSdlcMaxTrials";
 export type {
   PromptSdlcCostControls,
+  PromptSdlcCostControl,
   PromptSdlcCostProposal,
   PromptSdlcCostConfirm,
   PromptSdlcCostControlKnobs,
