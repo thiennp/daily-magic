@@ -27,6 +27,8 @@ export default function AwcProjectPresenceBadge({
 }: AwcProjectPresenceBadgeProps) {
   return (
     <p
+      role="status"
+      aria-label={`Mac status: ${text}`}
       className={`inline-flex items-center gap-1.5 text-xs ${TEXT_CLASS_BY_STATUS[statusIcon]}`}
     >
       <span

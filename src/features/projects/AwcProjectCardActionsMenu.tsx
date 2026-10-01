@@ -11,14 +11,18 @@ import buildAgentComposerHref from "@/lib/library/buildAgentComposerHref";
 
 interface AwcProjectCardActionsMenuProps {
   readonly projectId: string;
+  readonly projectName: string;
   readonly editCta: ProjectEditOnMacCta;
   readonly editHelperId: string | undefined;
+  readonly onProjectDeleted?: () => void;
 }
 
 export default function AwcProjectCardActionsMenu({
   projectId,
+  projectName,
   editCta,
   editHelperId,
+  onProjectDeleted,
 }: AwcProjectCardActionsMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
@@ -44,7 +48,7 @@ export default function AwcProjectCardActionsMenu({
         aria-haspopup="menu"
         aria-expanded={isOpen}
         aria-controls={isOpen ? menuId : undefined}
-        className="dropdown-toggle inline-flex h-8 w-8 items-center justify-center rounded-md text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-200"
+        className="dropdown-toggle inline-flex h-11 w-11 items-center justify-center rounded-md text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-200 sm:h-8 sm:w-8"
         onClick={() => {
           setIsOpen((current) => !current);
         }}
@@ -55,15 +59,17 @@ export default function AwcProjectCardActionsMenu({
         isOpen={isOpen}
         onClose={closeMenu}
         toggleRef={toggleRef}
-        className="w-48 py-1 dark:bg-gray-dark"
+        className="w-52 py-1 dark:bg-gray-dark"
       >
         <ul id={menuId} role="menu" aria-label="Project actions">
           <AwcProjectCardActionsMenuItems
             projectId={projectId}
+            projectName={projectName}
             assignTasksHref={assignTasksHref}
             editCta={editCta}
             editHelperId={editHelperId}
             onClose={closeMenu}
+            onProjectDeleted={onProjectDeleted}
           />
         </ul>
       </Dropdown>

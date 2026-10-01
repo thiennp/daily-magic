@@ -15,10 +15,13 @@ const emptyInstalled: InstalledLocalHarnessSnapshot = {
   sets: [],
 };
 
+const cloudAppOrigin = "https://www.agentwitch.com";
+
 describe("buildAgentWitchLocalProjectEditorPageBody", () => {
   it("makes Pull into repo a working Harness link when nothing is installed (AWL-P1)", () => {
     const html = buildAgentWitchLocalProjectEditorPageBody({
       project,
+      cloudAppOrigin,
       installed: emptyInstalled,
       linkedSetSlugs: [],
       composition: null,
@@ -36,6 +39,7 @@ describe("buildAgentWitchLocalProjectEditorPageBody", () => {
   it("pulls a Console-linked playbook when nothing is installed locally (MARKETPLACE-009)", () => {
     const html = buildAgentWitchLocalProjectEditorPageBody({
       project,
+      cloudAppOrigin,
       installed: emptyInstalled,
       linkedSetSlugs: [],
       composition: {
@@ -74,6 +78,7 @@ describe("buildAgentWitchLocalProjectEditorPageBody", () => {
 
     const html = buildAgentWitchLocalProjectEditorPageBody({
       project,
+      cloudAppOrigin,
       installed,
       linkedSetSlugs: [],
       composition: null,

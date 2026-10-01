@@ -1,5 +1,6 @@
 import { buildAgentWitchLocalCloudBanner } from "../../../shell/internal/core/buildAgentWitchLocalCloudBanner";
 import type AgentWitchProjectView from "./agentWitchProjectView.type";
+import isDefaultAgentWitchProjectName from "./isDefaultAgentWitchProjectName";
 
 const escapeHtml = (value: string): string =>
   value
@@ -57,13 +58,21 @@ export const buildAgentWitchLocalProjectsPageBody = (input: {
                 : "";
             const chooseFolder = `<a class="btn btn-secondary" href="/projects/select-folder?projectId=${encodeURIComponent(project.id)}">Choose folder…</a>`;
             const openProject = `<a class="btn btn-primary btn-compact" href="/project?id=${encodeURIComponent(project.id)}">Open project →</a>`;
+            const renameHref = `${input.cloudAppOrigin.replace(/\/$/, "")}/projects/${encodeURIComponent(project.id)}?rename=1`;
+            const renameBtn = `<a class="btn btn-secondary btn-compact" href="${escapeHtml(renameHref)}" target="_blank" rel="noopener noreferrer">Rename…</a>`;
+            const deleteBtn = isDefaultAgentWitchProjectName(project.name)
+              ? ""
+              : `<form method="POST" action="/projects/delete" class="inline-form" onsubmit="return confirm('Delete this project from Agent Witch Cloud? The folder on this Mac stays.');">
+                  <input type="hidden" name="projectId" value="${escapeHtml(project.id)}" />
+                  <button class="btn btn-danger btn-compact" type="submit">Delete</button>
+                </form>`;
             return `<li class="project-list-item">
                 <a class="project-list-link" href="/project?id=${encodeURIComponent(project.id)}">
                   <strong>${escapeHtml(project.name)}</strong>
                   <span class="muted mono">${escapeHtml(project.projectFolderPath)}</span>
                   ${countsLine}
                 </a>
-                <div class="actions">${openProject}${chooseFolder}</div>
+                <div class="actions">${openProject}${chooseFolder}${renameBtn}${deleteBtn}</div>
               </li>`;
           })
           .join("")}</ul>`;

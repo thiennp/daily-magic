@@ -44,6 +44,8 @@ export { syncAgentWitchLocalProjectsFromCloud } from "../internal/core/syncAgent
 
 export { updateAgentWitchCloudProjectFolder } from "../internal/core/updateAgentWitchCloudProjectFolder";
 
+export { deleteAgentWitchCloudProject } from "../internal/core/deleteAgentWitchCloudProject";
+
 export { migrateLegacyProjectsRegistryToCloud } from "../internal/core/migrateLegacyProjectsRegistryToCloud";
 
 export { readLegacyAgentWitchProjectsRegistry } from "../internal/core/readLegacyAgentWitchProjectsRegistry";

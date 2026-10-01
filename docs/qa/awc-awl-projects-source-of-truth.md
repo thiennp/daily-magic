@@ -15,14 +15,17 @@ On disk under each repo, **`.agent-witch/`** (and linked `.cursor` harness files
 
 ## Details
 
-| Concern                         | Location                                                               |
-| ------------------------------- | ---------------------------------------------------------------------- |
-| Create / rename project         | AWC `/projects` (session auth → `/api/projects`)                       |
-| Choose folder on Mac            | AWL folder picker → `PATCH /api/agent-witch/projects/:id`              |
-| AWL project list                | `GET /api/agent-witch/projects` (pairing token), in memory per request |
-| Harness / RAG / memory per repo | `<repo>/.agent-witch/` on the Mac                                      |
+| Concern                         | Location                                                                            |
+| ------------------------------- | ----------------------------------------------------------------------------------- |
+| Create / rename project         | AWC `/projects` (session auth → `/api/projects`)                                    |
+| Rename UI                       | AWC project detail or card menu → `/projects/:id?rename=1` (autofocus)              |
+| Delete project (Neon only)      | AWC card menu or detail danger zone → `DELETE /api/projects/:id`                    |
+| Delete from AWL                 | AWL list or project page → `DELETE /api/agent-witch/projects/:id` (Mac folder kept) |
+| Choose folder on Mac            | AWL folder picker → `PATCH /api/agent-witch/projects/:id`                           |
+| AWL project list                | `GET /api/agent-witch/projects` (pairing token), in memory per request              |
+| Harness / RAG / memory per repo | `<repo>/.agent-witch/` on the Mac                                                   |
 
-Create projects in the browser first; AWL only maps cloud projects to folders and manages repo-local harness.
+Create projects in the browser first; AWL only maps cloud projects to folders and manages repo-local harness. **Deleting** removes the `user_projects` row (and related cloud bindings) only — it does not delete the repo directory on disk. The **Default** project cannot be deleted.
 
 ### One-time migration
 
@@ -35,4 +38,4 @@ If `~/.agent-witch/harness/projects-registry.json` still exists from older insta
 
 ## Last reviewed
 
-2026-09-17
+2026-10-01

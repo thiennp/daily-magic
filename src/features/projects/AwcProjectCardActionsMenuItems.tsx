@@ -1,26 +1,32 @@
 import { DropdownItem } from "@/components/ui/dropdown/DropdownItem";
+import AwcProjectDeleteControl from "@/features/projects/AwcProjectDeleteControl";
+import buildAwcProjectDetailHref from "@/lib/projects/buildAwcProjectDetailHref";
 import type { ProjectEditOnMacCta } from "@/features/projects/utils/resolveProjectEditOnMacCta";
 
 const MENU_ITEM_CLASS =
-  "block w-full px-3 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-white/5";
+  "block min-h-11 w-full px-3 py-2.5 text-left text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-white/5 sm:min-h-0 sm:py-2";
 
 const MENU_ITEM_DISABLED_CLASS =
   "block w-full cursor-not-allowed px-3 py-2 text-left text-sm text-gray-400 dark:text-gray-500";
 
 interface AwcProjectCardActionsMenuItemsProps {
   readonly projectId: string;
+  readonly projectName: string;
   readonly assignTasksHref: string;
   readonly editCta: ProjectEditOnMacCta;
   readonly editHelperId: string | undefined;
   readonly onClose: () => void;
+  readonly onProjectDeleted?: () => void;
 }
 
 export default function AwcProjectCardActionsMenuItems({
   projectId,
+  projectName,
   assignTasksHref,
   editCta,
   editHelperId,
   onClose,
+  onProjectDeleted,
 }: AwcProjectCardActionsMenuItemsProps) {
   return (
     <>
@@ -32,6 +38,16 @@ export default function AwcProjectCardActionsMenuItems({
           onItemClick={onClose}
         >
           View details
+        </DropdownItem>
+      </li>
+      <li role="none">
+        <DropdownItem
+          tag="a"
+          href={buildAwcProjectDetailHref(projectId, "rename")}
+          baseClassName={MENU_ITEM_CLASS}
+          onItemClick={onClose}
+        >
+          Rename
         </DropdownItem>
       </li>
       <li role="none">
@@ -54,7 +70,7 @@ export default function AwcProjectCardActionsMenuItems({
             className={MENU_ITEM_CLASS}
             onClick={onClose}
           >
-            Edit
+            Edit on Mac
           </a>
         ) : (
           <button
@@ -64,10 +80,18 @@ export default function AwcProjectCardActionsMenuItems({
             aria-describedby={editHelperId}
             className={MENU_ITEM_DISABLED_CLASS}
           >
-            Edit
+            Edit on Mac
           </button>
         )}
       </li>
+      <AwcProjectDeleteControl
+        project={{ id: projectId, name: projectName }}
+        variant="menu"
+        onDeleted={() => {
+          onClose();
+          onProjectDeleted?.();
+        }}
+      />
     </>
   );
 }

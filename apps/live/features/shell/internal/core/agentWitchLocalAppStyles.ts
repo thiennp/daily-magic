@@ -350,6 +350,16 @@ code, .mono {
 }
 .btn-secondary:hover { background: var(--aw-zinc-50); border-color: var(--aw-zinc-400); }
 
+.btn-danger {
+  background: #fff;
+  color: var(--aw-error-600, #dc2626);
+  border: 1px solid color-mix(in srgb, var(--aw-error-600, #dc2626) 35%, transparent);
+  box-shadow: var(--aw-shadow-sm);
+}
+.btn-danger:hover {
+  background: color-mix(in srgb, var(--aw-error-600, #dc2626) 8%, #fff);
+}
+
 .btn-link {
   height: auto;
   padding: 0;
@@ -1970,6 +1980,13 @@ form.sdlc-form textarea.input[name="prompt"] { min-height: 12rem; }
 .project-tab { border: 1px solid var(--aw-zinc-200); border-radius: 9999px; font-size: 0.8125rem; padding: 0.35rem 0.75rem; text-decoration: none; color: inherit; }
 .project-tab-active { background: var(--aw-zinc-900); border-color: var(--aw-zinc-900); color: #fff; }
 .project-tab-panel { margin-top: 0.5rem; }
+.project-cloud-actions { margin-top: 0.75rem; }
+.inline-form { display: inline; }
+.danger-zone {
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid color-mix(in srgb, var(--aw-error-600, #dc2626) 25%, var(--aw-zinc-200));
+}
 .project-list-title-row { align-items: center; display: flex; flex-wrap: wrap; gap: 0.35rem 0.5rem; }
 .project-live-badge {
   background: var(--aw-emerald-50);

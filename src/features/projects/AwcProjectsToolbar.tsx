@@ -44,8 +44,20 @@ export default function AwcProjectsToolbar({
           onChange={(event) => onSearchQueryChange(event.target.value)}
           placeholder="Search projects…"
           aria-label="Search projects"
-          className={`${APP_SURFACE_FIELD_CLASS} pl-9`}
+          className={`${APP_SURFACE_FIELD_CLASS} pl-9 ${trimmedQuery === "" ? "" : "pr-9"}`}
         />
+        {trimmedQuery !== "" ? (
+          <button
+            type="button"
+            aria-label="Clear search"
+            className="absolute right-2 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-md text-gray-400 hover:bg-gray-100 hover:text-gray-600 dark:hover:bg-white/5 dark:hover:text-gray-200"
+            onClick={() => {
+              onSearchQueryChange("");
+            }}
+          >
+            ×
+          </button>
+        ) : null}
       </div>
       <p className="text-xs text-gray-500 dark:text-gray-400">{countLabel}</p>
     </div>

@@ -14,6 +14,7 @@ import {
   resolveAgentWitchCloudApiConfig,
   syncProjectHarnessBindingsToCloud,
 } from "./agentWitchCloudApi";
+import { AGENT_WITCH_DEFAULT_ORIGIN } from "@agent-witch/shared/network";
 
 export type PullBoundHarnessPostResult =
   | { readonly kind: "not_found" }
@@ -22,6 +23,7 @@ export type PullBoundHarnessPostResult =
 
 const failurePage = (input: {
   readonly layout: AgentWitchLocalLayout;
+  readonly cloudAppOrigin: string;
   readonly project: {
     readonly id: string;
     readonly name: string;
@@ -33,6 +35,7 @@ const failurePage = (input: {
   title: input.project.name,
   body: buildAgentWitchLocalProjectEditorPageBody({
     project: input.project,
+    cloudAppOrigin: input.cloudAppOrigin,
     installed: readInstalledLocalHarnessSnapshot(input.layout),
     linkedSetSlugs: listLinkedHarnessSetSlugsFromProjectFolder(
       input.project.projectFolderPath,
@@ -68,6 +71,7 @@ export const handlePullBoundHarnessPost = async (input: {
     wsUrl: runConfig.wsUrl,
     pairingToken: runConfig.pairingToken,
   });
+  const cloudAppOrigin = cloudConfig?.appOrigin ?? AGENT_WITCH_DEFAULT_ORIGIN;
   const bundles =
     cloudConfig === null
       ? null
@@ -76,6 +80,7 @@ export const handlePullBoundHarnessPost = async (input: {
   if (bundles === null) {
     return failurePage({
       layout: input.layout,
+      cloudAppOrigin,
       project,
       errorMessage:
         "Could not load the linked playbook from Agent Witch Cloud.",
@@ -91,6 +96,7 @@ export const handlePullBoundHarnessPost = async (input: {
   if (!applyResult.ok) {
     return failurePage({
       layout: input.layout,
+      cloudAppOrigin,
       project,
       errorMessage: applyResult.errorMessage,
     });

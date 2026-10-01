@@ -12,10 +12,12 @@ export const dynamic = "force-dynamic";
 
 interface ProjectsDetailPageProps {
   readonly params: Promise<{ projectId: string }>;
+  readonly searchParams: Promise<{ rename?: string }>;
 }
 
 export default async function ProjectDetailPage({
   params,
+  searchParams,
 }: ProjectsDetailPageProps) {
   const actor = await getAuthActor();
 
@@ -24,6 +26,8 @@ export default async function ProjectDetailPage({
   }
 
   const { projectId } = await params;
+  const query = await searchParams;
+  const startRename = query.rename === "1" || query.rename === "true";
   const project = await getUserProjectById(projectId.trim());
 
   if (project === null || project.ownerUserId !== actor.id) {
@@ -34,7 +38,7 @@ export default async function ProjectDetailPage({
     <AppShell contentClassName={APP_SHELL_NARROW_CONTENT_CLASS}>
       <div className={APP_PAGE_STACK_CLASS}>
         <AppPageHeader title="Project details" />
-        <AwcProjectDetailPanel project={project} />
+        <AwcProjectDetailPanel project={project} startRename={startRename} />
       </div>
     </AppShell>
   );
