@@ -133,6 +133,8 @@ export const buildPromptSdlcLocalPageBody = (input: {
     maxTrials: shown.maxTrials,
     maxSpendUsd: shown.maxSpendUsd,
     earlyStop: shown.earlyStop,
+    writerId: shown.judge === "manual" ? null : shown.judge,
+    maxRounds: PROMPT_SDLC_WIZARD_MAX_ROUNDS,
   });
   const intro = PROMPT_SDLC_COMPOSE_INTRO;
   const locked = shown.running

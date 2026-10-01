@@ -1,10 +1,15 @@
 /**
  * Optimizer cost-control UI copy.
- * Contract: src/lib/promptOptimizer (API on main via #192).
+ * Contract: src/lib/promptOptimizer (API on main via #192; prediction eng @
+ * feat/aw-optimizer-cost-prediction).
  * Proposal: targetTokenBudget (+ alias proposedTokenBudget), estimatedSpendUsd, rateUsdPer1kTokens?
  * Confirm POST: confirmedTokenBudget, confirmedMaxSpendUsd → budgetConfirmed
  * Knobs: maxTrials, maxSpendUsd, earlyStop, earlyStopFlatRounds
  * Hard stop: errorKind budget_exceeded; flat early-stop = clean stopped
+ *
+ * Product call (compose PREDICTION): always show live estimate; auto-confirm
+ * from maxSpendUsd when filled (warn if estimate > ceiling); Step4 panel only
+ * when maxSpendUsd unset. Agents POST confirmed* and skip the panel.
  */
 
 export {
@@ -25,14 +30,23 @@ export const PROMPT_SDLC_COST_COPY = {
   earlyStopLabel: "Early-stop when scores flat",
   earlyStopHint:
     "Stop when judged scores stop rising. That is a clean stopped outcome — not budget_exceeded.",
+  estimateSectionTitle: "Estimated run cost",
+  estimateSectionLede:
+    "Live heuristic before Run (proposePromptSdlcRunCostBudget). Updates when trials or judge writer change. Agent dry-run: intent estimate_budget.",
+  targetTokenLabel: "Estimated token budget",
+  estimatedSpendLabel: "Estimated spend (USD)",
+  rateChipLabel: "Writer rate",
+  rateLabel: "Rate (USD / 1k tokens)",
+  autoConfirmHint:
+    "Max spend filled → Run auto-confirms that ceiling (no extra panel). Leave empty to confirm explicitly at Step 4.",
+  estimateOverCeilingWarn:
+    "Estimate is above max spend. Run still auto-confirms the ceiling you set; the hard stop may fire earlier.",
   confirmTitle: "Confirm Step 4 cost ceiling",
   confirmLede:
     "Review the judge-proposed token target (targetTokenBudget) and estimated dollar budget. Approve or edit, then Step 4 runs under this hard ceiling.",
   proposedTokenLabel: "Proposed token budget (targetTokenBudget)",
-  estimatedSpendLabel: "Estimated spend (USD)",
   confirmedTokenLabel: "Confirmed token budget",
   confirmedSpendLabel: "Confirmed max spend (USD)",
-  rateLabel: "Rate (USD / 1k tokens)",
   stubProposalNote:
     "Proposal uses targetTokenBudget + estimatedSpendUsd (stub heuristic until the judge fills them).",
   approveLabel: "Approve and start Step 4",

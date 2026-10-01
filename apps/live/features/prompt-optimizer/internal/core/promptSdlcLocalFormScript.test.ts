@@ -63,4 +63,15 @@ describe("PROMPT_SDLC_LOCAL_FORM_SCRIPT", () => {
       "paintComposeStepError(null)",
     );
   });
+
+  it("live-binds compose cost PREDICTION estimate and writer rate chip", () => {
+    expect(PROMPT_SDLC_LOCAL_FORM_SCRIPT).toContain("paintCostEstimate");
+    expect(PROMPT_SDLC_LOCAL_FORM_SCRIPT).toContain("data-sdlc-estimated-spend");
+    expect(PROMPT_SDLC_LOCAL_FORM_SCRIPT).toContain("data-sdlc-writer-rate-chip");
+    expect(PROMPT_SDLC_LOCAL_FORM_SCRIPT).toContain("data-sdlc-estimate-over-ceiling");
+    expect(PROMPT_SDLC_LOCAL_FORM_SCRIPT).toContain("COST_WRITER_RATES");
+    expect(PROMPT_SDLC_LOCAL_FORM_SCRIPT).toContain("codex");
+    expect(PROMPT_SDLC_LOCAL_FORM_SCRIPT).toContain("readCostEstimate");
+  });
+
 });

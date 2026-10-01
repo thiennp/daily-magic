@@ -4,6 +4,7 @@ import {
   seedPromptSdlcRunCostProposal,
   seedPromptSdlcWizardOrchestratorSkill,
 } from "../../../../adapters/promptSdlcAwcCore";
+import { autoConfirmPromptSdlcCostFromMaxSpend } from "./autoConfirmPromptSdlcCostFromMaxSpend";
 
 import { buildPromptSdlcLiveRunFragmentHtml } from "./buildPromptSdlcLiveRunFragmentHtml";
 import { createPromptSdlcLocalCycle } from "./createPromptSdlcLocalCycle";
@@ -119,11 +120,13 @@ export const presentPromptSdlcLocalComposer = async (input: {
       decision.workingDirectory,
       decision.sourceSkillFile,
     );
-    const costControls = seedPromptSdlcRunCostProposal({
-      existing: decision.costControls,
-      maxRounds: decision.maxRounds,
-      writerId: decision.judge === "manual" ? null : decision.judge,
-    });
+    const costControls = autoConfirmPromptSdlcCostFromMaxSpend(
+      seedPromptSdlcRunCostProposal({
+        existing: decision.costControls,
+        maxRounds: decision.maxRounds,
+        writerId: decision.judge === "manual" ? null : decision.judge,
+      }),
+    );
     const cycle = createPromptSdlcLocalCycle({
       goal: decision.goal,
       sourcePrompt: decision.prompt,

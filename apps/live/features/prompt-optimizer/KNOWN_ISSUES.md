@@ -1,5 +1,11 @@
 # Prompt optimizer — known issues
 
+## Cost PREDICTION UI (bundle **203**, branch `feat/aw-optimizer-cost-prediction-ui`)
+
+- Compose always shows live `estimatedSpendUsd` / `targetTokenBudget` (`data-sdlc-estimated-spend`) + writer rate chip before Run.
+- **Product call:** when `maxSpendUsd` is filled → auto-confirm from that ceiling (compose start + Step4); warn if estimate exceeds ceiling but do **not** block with a panel. When unset → Step4 explicit confirm panel. Agents POST `confirmed*` and skip the panel.
+- Eng contract: `feat/aw-optimizer-cost-prediction` @ `63a9670f`. No Step4 spend/writer trials in this Product bind.
+
 No open issues. Recent fixes (bundle **166–202**):
 
 - Wizard completion uses honest **passed** vs **stopped** when not every module meets the wizard pass score; outcome table lists per-module score, tokens, and status (bundle **186**).

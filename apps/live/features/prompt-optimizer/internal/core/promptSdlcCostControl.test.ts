@@ -4,11 +4,17 @@ import {
   defaultPromptSdlcCostControls,
   estimatePromptSdlcSpendUsd,
   proposePromptSdlcCostBudget,
+  proposePromptSdlcRunCostBudget,
   PROMPT_SDLC_DEFAULT_MAX_TRIALS,
   PROMPT_SDLC_STEP4_TOKENS_PER_MODULE_TRIAL,
+  resolvePromptSdlcWriterRateUsdPer1k,
   seedPromptSdlcStep4CostProposal,
   readPromptSdlcBudgetStop,
 } from "../../../../adapters/promptSdlcAwcCore";
+import {
+  autoConfirmPromptSdlcCostFromMaxSpend,
+  isPromptSdlcEstimateOverMaxSpend,
+} from "./autoConfirmPromptSdlcCostFromMaxSpend";
 import { describe, expect, it } from "vitest";
 
 import { beginPromptSdlcWizardOptimizeModulesAfterSeparate } from "./beginPromptSdlcWizardOptimizeModulesAfterSeparate";
@@ -124,10 +130,17 @@ describe("prompt optimizer cost-control UI bind", () => {
       maxTrials: "1",
       maxSpendUsd: "",
       earlyStop: true,
+      writerId: "codex",
     });
     expect(fields).toContain('name="maxTrials"');
     expect(fields).toContain('name="maxSpendUsd"');
     expect(fields).toContain('name="earlyStop"');
+    expect(fields).toContain("data-sdlc-estimated-spend");
+    expect(fields).toContain("data-sdlc-target-tokens");
+    expect(fields).toContain("data-sdlc-writer-rate-chip");
+    expect(fields).toContain("data-sdlc-cost-estimate");
+    const codexRate = resolvePromptSdlcWriterRateUsdPer1k("codex");
+    expect(fields).toContain(`$${codexRate.toFixed(4)}`);
 
     const withProposal = beginPromptSdlcWizardOptimizeModulesAfterSeparate(
       createPromptSdlcLocalCycle({
@@ -245,4 +258,88 @@ describe("prompt optimizer cost-control UI bind", () => {
       }),
     ).toBe("stopped");
   });
+
+  it("binds compose live run-cost PREDICTION for codex rate", () => {
+    const proposal = proposePromptSdlcRunCostBudget({
+      maxRounds: 5,
+      maxTrials: 1,
+      writerId: "codex",
+    });
+    const fields = renderPromptSdlcCostControlFields({
+      maxTrials: "1",
+      maxSpendUsd: "",
+      earlyStop: true,
+      writerId: "codex",
+      maxRounds: 5,
+    });
+    expect(fields).toContain(`data-sdlc-estimated-spend>$${proposal.estimatedSpendUsd.toFixed(4)}`);
+    expect(fields).toContain(String(proposal.targetTokenBudget));
+  });
+
+  it("auto-confirms from maxSpendUsd and warns when estimate exceeds ceiling", () => {
+    const seeded = seedPromptSdlcStep4CostProposal({
+      moduleCount: 2,
+      existing: defaultPromptSdlcCostControls({
+        maxTrials: 1,
+        maxSpendUsd: 0.01,
+        earlyStop: true,
+        earlyStopFlatRounds: 3,
+      }),
+      writerId: "codex",
+    });
+    expect(seeded.budgetConfirmed).toBe(false);
+    expect(
+      isPromptSdlcEstimateOverMaxSpend({
+        estimatedSpendUsd: seeded.estimatedSpendUsd,
+        maxSpendUsd: 0.01,
+      }),
+    ).toBe(true);
+    const auto = autoConfirmPromptSdlcCostFromMaxSpend(seeded);
+    expect(auto.budgetConfirmed).toBe(true);
+    expect(auto.confirmedMaxSpendUsd).toBe(0.01);
+    expect(auto.confirmedTokenBudget).toBe(seeded.targetTokenBudget);
+
+    const noCeiling = autoConfirmPromptSdlcCostFromMaxSpend(
+      seedPromptSdlcStep4CostProposal({ moduleCount: 2, writerId: "codex" }),
+    );
+    expect(noCeiling.budgetConfirmed).toBe(false);
+  });
+
+  it("skips Step4 confirm panel when maxSpendUsd auto-confirms", () => {
+    const option = {
+      id: "opt-1",
+      title: "Two modules",
+      summary: "Parallel",
+      recommended: true,
+      topology: "parallel" as const,
+      modules: [
+        { id: "m1", title: "A", prompt: "do A", order: 0 },
+        { id: "m2", title: "B", prompt: "do B", order: 1 },
+      ],
+    };
+    const cycle = beginPromptSdlcWizardOptimizeModulesAfterSeparate(
+      createPromptSdlcLocalCycle({
+        goal: "Auto confirm",
+        sourcePrompt: "x",
+        judgeModel: "codex",
+        improverModel: "codex",
+        costControls: defaultPromptSdlcCostControls({
+          maxTrials: 1,
+          maxSpendUsd: 5,
+          earlyStop: true,
+          earlyStopFlatRounds: 3,
+        }),
+        wizard: {
+          ...createInitialPromptSdlcWizardState("x"),
+          gate: "separate",
+          phase: "separate",
+        },
+      }),
+      option,
+    );
+    expect(cycle.costControls?.budgetConfirmed).toBe(true);
+    expect(cycle.costControls?.confirmedMaxSpendUsd).toBe(5);
+    expect(shouldShowPromptSdlcCostConfirm(cycle)).toBe(false);
+  });
+
 });

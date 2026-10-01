@@ -4,12 +4,15 @@ import {
   seedPromptSdlcWizardParameterValues,
   type PromptSdlcWizardSplitOption,
 } from "../../../../adapters/promptSdlcAwcCore";
+import { autoConfirmPromptSdlcCostFromMaxSpend } from "./autoConfirmPromptSdlcCostFromMaxSpend";
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
 
 /**
  * Same transition as wizard-continue from the separate gate.
- * Seeds pre-Step4 cost proposal (targetTokenBudget + estimatedSpendUsd);
- * budgetConfirmed stays false until the user confirms.
+ * Seeds pre-Step4 cost proposal (targetTokenBudget + estimatedSpendUsd).
+ * Product call: when maxSpendUsd was filled at compose, auto-confirm from that
+ * ceiling (skip explicit panel). When unset, budgetConfirmed stays false until
+ * the user confirms on the Step4 panel. Agents may already send confirmed*.
  */
 export const beginPromptSdlcWizardOptimizeModulesAfterSeparate = (
   cycle: PromptSdlcLocalCycle,
@@ -22,11 +25,12 @@ export const beginPromptSdlcWizardOptimizeModulesAfterSeparate = (
   const modules = modulesFromPromptSdlcWizardSplitOption(option);
   const writerId =
     cycle.judgeModel === "manual" ? null : cycle.judgeModel;
-  const costControls = seedPromptSdlcStep4CostProposal({
+  const seeded = seedPromptSdlcStep4CostProposal({
     moduleCount: modules.length,
     existing: cycle.costControls,
     writerId,
   });
+  const costControls = autoConfirmPromptSdlcCostFromMaxSpend(seeded);
   return {
     ...cycle,
     status: "wizard_paused",

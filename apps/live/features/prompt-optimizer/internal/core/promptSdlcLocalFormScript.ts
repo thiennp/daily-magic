@@ -195,7 +195,108 @@ export const PROMPT_SDLC_LOCAL_FORM_SCRIPT = `<script>
       "</dd>" +
       "<dt>Step 4 pass</dt><dd>" +
       escapeComposeText(passStep4Text) +
+      "</dd>" +
+      "<dt>Est. tokens</dt><dd>" +
+      escapeComposeText(String(readCostEstimate().targetTokenBudget)) +
+      "</dd>" +
+      "<dt>Est. spend</dt><dd>$" +
+      escapeComposeText(readCostEstimate().estimatedSpendUsd.toFixed(4)) +
       "</dd>";
+  };
+  const COST_EARLY_TOKENS_PER_ROUND = 4000;
+  const COST_PREVIEW_STEP4_MODULES = 2;
+  const COST_STEP4_TOKENS_PER_MODULE_TRIAL = 8000;
+  const COST_WIZARD_MAX_ROUNDS = 5;
+  const COST_DEFAULT_RATE = 0.01;
+  const COST_WRITER_RATES = {
+    "claude-cli": 0.009,
+    codex: 0.008,
+    cursor: 0.01,
+    "cursor-cloud": 0.01,
+    antigravity: 0.01,
+  };
+  const resolveWriterRate = (writerId) => {
+    const id = typeof writerId === "string" ? writerId.trim() : "";
+    if (id.length === 0 || id === "manual") return COST_DEFAULT_RATE;
+    const rate = COST_WRITER_RATES[id];
+    return typeof rate === "number" ? rate : COST_DEFAULT_RATE;
+  };
+  const estimateSpendUsd = (tokens, rate) => {
+    if (!Number.isFinite(tokens) || !Number.isFinite(rate) || tokens < 0 || rate < 0) {
+      return 0;
+    }
+    return Math.round((tokens / 1000) * rate * 10000) / 10000;
+  };
+  const readCostEstimate = () => {
+    const trialsInput = document.querySelector("[data-sdlc-max-trials]");
+    const trialsRaw =
+      trialsInput instanceof HTMLInputElement ? Number(trialsInput.value) : 1;
+    const trials =
+      Number.isInteger(trialsRaw) && trialsRaw >= 1 ? trialsRaw : 1;
+    const judgeSelect = document.querySelector('[data-writer-select="judge"]');
+    const writerId =
+      judgeSelect instanceof HTMLSelectElement ? judgeSelect.value.trim() : "";
+    const rate = resolveWriterRate(writerId);
+    const earlyTokens = COST_WIZARD_MAX_ROUNDS * COST_EARLY_TOKENS_PER_ROUND;
+    const step4Tokens =
+      COST_PREVIEW_STEP4_MODULES * trials * COST_STEP4_TOKENS_PER_MODULE_TRIAL;
+    const targetTokenBudget = earlyTokens + step4Tokens;
+    return {
+      targetTokenBudget,
+      estimatedSpendUsd: estimateSpendUsd(targetTokenBudget, rate),
+      rateUsdPer1kTokens: rate,
+      writerId: writerId.length === 0 || writerId === "manual" ? "default" : writerId,
+    };
+  };
+  const paintCostEstimate = () => {
+    const estimateRoot = document.querySelector("[data-sdlc-cost-estimate]");
+    if (!(estimateRoot instanceof HTMLElement)) return;
+    const proposal = readCostEstimate();
+    const tokensEl = estimateRoot.querySelector("[data-sdlc-target-tokens]");
+    const spendEl = estimateRoot.querySelector("[data-sdlc-estimated-spend]");
+    const rateChip = estimateRoot.querySelector("[data-sdlc-writer-rate-chip]");
+    const tokensInput = document.querySelector(
+      "[data-sdlc-target-token-budget-input]",
+    );
+    const spendInput = document.querySelector("[data-sdlc-estimated-spend-input]");
+    const rateInput = document.querySelector("[data-sdlc-cost-rate]");
+    const overEl = document.querySelector("[data-sdlc-estimate-over-ceiling]");
+    const maxSpendInput = document.querySelector("[data-sdlc-max-spend-usd]");
+    if (tokensEl instanceof HTMLElement) {
+      tokensEl.textContent = proposal.targetTokenBudget.toLocaleString("en-US");
+    }
+    if (spendEl instanceof HTMLElement) {
+      spendEl.textContent = "$" + proposal.estimatedSpendUsd.toFixed(4);
+    }
+    if (rateChip instanceof HTMLElement) {
+      rateChip.textContent =
+        "$" +
+        proposal.rateUsdPer1kTokens.toFixed(4) +
+        " / 1k · " +
+        proposal.writerId;
+      rateChip.dataset.writerId = proposal.writerId;
+    }
+    if (tokensInput instanceof HTMLInputElement) {
+      tokensInput.value = String(proposal.targetTokenBudget);
+    }
+    if (spendInput instanceof HTMLInputElement) {
+      spendInput.value = String(proposal.estimatedSpendUsd);
+    }
+    if (rateInput instanceof HTMLInputElement) {
+      rateInput.value = String(proposal.rateUsdPer1kTokens);
+    }
+    if (overEl instanceof HTMLElement) {
+      const spendRaw =
+        maxSpendInput instanceof HTMLInputElement
+          ? maxSpendInput.value.trim()
+          : "";
+      const ceiling = spendRaw.length === 0 ? null : Number(spendRaw);
+      const over =
+        ceiling !== null &&
+        Number.isFinite(ceiling) &&
+        proposal.estimatedSpendUsd > ceiling;
+      overEl.hidden = !over;
+    }
   };
   const paintComposeStepError = (message) => {
     if (!(composeStepError instanceof HTMLElement)) return;
@@ -267,6 +368,7 @@ export const PROMPT_SDLC_LOCAL_FORM_SCRIPT = `<script>
       }
     });
     paintComposeStepError(null);
+    paintCostEstimate();
     if (next === COMPOSE_STEP_COUNT) {
       paintComposeReview();
       paintReady();
@@ -508,6 +610,18 @@ export const PROMPT_SDLC_LOCAL_FORM_SCRIPT = `<script>
       if (composeStep === COMPOSE_STEP_COUNT) paintComposeReview();
     });
   }
+  const refreshCostEstimate = () => {
+    paintCostEstimate();
+    if (composeStep === COMPOSE_STEP_COUNT) paintComposeReview();
+  };
+  document
+    .querySelectorAll(
+      "[data-sdlc-max-trials], [data-sdlc-max-spend-usd], [data-writer-select='judge']",
+    )
+    .forEach((node) => {
+      node.addEventListener("input", refreshCostEstimate);
+      node.addEventListener("change", refreshCostEstimate);
+    });
   document.querySelectorAll("[data-sdlc-compose-continue]").forEach((btn) => {
     btn.addEventListener("click", () => {
       const reason = validateComposeStep(composeStep);
@@ -619,6 +733,7 @@ export const PROMPT_SDLC_LOCAL_FORM_SCRIPT = `<script>
   } else {
     showComposeStep(1);
   }
+  paintCostEstimate();
   paintReady();
   document.addEventListener("sdlc-run-start-failed", revertRunStartUi);
   document.addEventListener("sdlc-run-finished", () => {

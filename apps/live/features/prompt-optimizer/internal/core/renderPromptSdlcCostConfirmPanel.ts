@@ -4,6 +4,7 @@ import {
   PROMPT_SDLC_BUDGET_CONFIRM_REQUIRED,
   PROMPT_SDLC_SOFT_WARN_BUDGET,
 } from "../../../../adapters/promptSdlcAwcCore";
+import { isPromptSdlcEstimateOverMaxSpend } from "./autoConfirmPromptSdlcCostFromMaxSpend";
 import { PROMPT_SDLC_COST_COPY } from "./promptSdlcCostControl.constant";
 import { renderPromptSdlcFieldHeading } from "./renderPromptSdlcFieldTip";
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
@@ -50,6 +51,12 @@ export const renderPromptSdlcCostConfirmPanel = (
     controls.softWarnFired === true
       ? `<p class="alert-warn sdlc-cost-soft-warn" data-sdlc-cost-soft-warn>${escapeHtml(controls.softWarnMessage ?? PROMPT_SDLC_SOFT_WARN_BUDGET)}</p>`
       : "";
+  const overCeilingWarn = isPromptSdlcEstimateOverMaxSpend({
+    estimatedSpendUsd: estimated,
+    maxSpendUsd: controls.maxSpendUsd,
+  })
+    ? `<p class="alert-warn sdlc-cost-estimate-over" data-sdlc-estimate-over-ceiling>${escapeHtml(PROMPT_SDLC_COST_COPY.estimateOverCeilingWarn)}</p>`
+    : "";
   const moduleCount = cycle.wizard?.modules.length ?? 0;
   const moduleLine =
     moduleCount > 0
@@ -63,6 +70,7 @@ export const renderPromptSdlcCostConfirmPanel = (
   ${moduleLine}
   ${stubNote}
   ${softWarn}
+  ${overCeilingWarn}
   <p class="muted sdlc-cost-confirm-required" hidden>${escapeHtml(PROMPT_SDLC_BUDGET_CONFIRM_REQUIRED)}</p>
   <form method="POST" action="/prompt-optimizer" class="sdlc-wizard-feedback sdlc-cost-confirm-form" id="sdlc-wizard-cost-confirm-form">
     <input type="hidden" name="cycleId" value="${escapeHtml(cycle.id)}">

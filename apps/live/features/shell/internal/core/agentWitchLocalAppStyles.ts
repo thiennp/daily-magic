@@ -1524,6 +1524,24 @@ form.sdlc-form textarea.input.sdlc-instruction {
 .sdlc-cost-confirm .sdlc-cost-proposal dd { margin: 0; font-weight: 600; font-variant-numeric: tabular-nums; }
 .sdlc-cost-controls { margin-top: 0.75rem; }
 .sdlc-cost-early-stop .sdlc-checkbox-label { display: flex; gap: 0.5rem; align-items: flex-start; }
+.sdlc-cost-estimate { margin-top: 1rem; padding-top: 0.75rem; border-top: 1px solid var(--aw-zinc-200); }
+.sdlc-cost-estimate-proposal { display: grid; gap: 0.4rem; margin: 0.5rem 0 0.75rem; }
+.sdlc-cost-estimate-proposal > div { display: flex; justify-content: space-between; gap: 1rem; }
+.sdlc-cost-estimate-proposal dt { color: var(--aw-zinc-500); }
+.sdlc-cost-estimate-proposal dd { margin: 0; font-weight: 600; font-variant-numeric: tabular-nums; }
+.sdlc-cost-rate-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+  background: var(--aw-zinc-100);
+  border: 1px solid var(--aw-zinc-200);
+  font-size: 0.85em;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.sdlc-cost-estimate-over { margin: 0.5rem 0 0; }
 .sdlc-run-activity {
   display: flex;
   gap: 0.85rem;
