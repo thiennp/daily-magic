@@ -1,0 +1,21 @@
+---
+description: Query AWL folder skills (.cursor/skills) before inventing new ones
+globs:
+alwaysApply: false
+---
+
+# AWL folder skills — query before inventing
+
+Product skills for Prompt Optimizer / AgentWitch Live live under the chosen **workingDirectory** as `.cursor/skills/*/SKILL.md` (filesystem), not Account Library and not `.feature-knowledge`.
+
+Before inventing a new skill or playbook on a Mac running AWL:
+
+1. **Query** folder skills:
+   ```bash
+   curl -sS -X POST http://127.0.0.1:43347/prompt-optimizer/skills/query \
+     -H 'content-type: application/json' \
+     -d '{"workingDirectory":"/path/to/repo","query":"your task","limit":5}'
+   ```
+2. If a hit is a good fit, adapt that skill. Only propose a new skill when nothing matches and the task is reusable.
+
+Do not write skill catalog entries into `.feature-knowledge/index.json`.

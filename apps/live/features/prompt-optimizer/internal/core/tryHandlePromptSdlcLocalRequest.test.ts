@@ -52,4 +52,9 @@ describe("tryHandlePromptSdlcLocalRequest agent path", () => {
     expect(agent).toMatchObject({ claimed: true, status: 405 });
     expect(other).toMatchObject({ claimed: false, status: 0 });
   });
+
+  it("claims the folder-skills query path", async () => {
+    const skills = await route("POST", "/prompt-optimizer/skills/query");
+    expect(skills.claimed).toBe(true);
+  });
 });
