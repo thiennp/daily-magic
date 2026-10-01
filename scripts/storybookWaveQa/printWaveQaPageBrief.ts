@@ -43,6 +43,7 @@ const brief = `
 3. \`STORYBOOK_BASE_URL=http://127.0.0.1:6008 npm run storybook:wave:capture -- ${deployable} ${pageId} 1\`
 4. For each role in order (ux → copy → ui → product):
    - Reviewer A: all PNGs + manifest → JSON \`docs/storybook/wave-qa/reviews/${deployable}/${pageId}/round-1/<role>-reviewer-a.json\`
+   - **ui only:** read \`docs/storybook/wave-qa/ui-deep-inspection.md\`; zoom every card/pre/form; set \`zoomedSections\` + \`obviousVisualDefects\` (\`none\` | \`present\`). If \`present\`, \`mustFix\` + \`passed: false\` until fixed.
    - Fix mustFix in product or \`src/utils/storybook/*\`; recapture if visuals changed
    - Reviewer B: separate review → \`...-reviewer-b.json\`
    - \`npm run storybook:wave:record-agent -- ${deployable} ${pageId} <role> <a.json> <b.json>\`

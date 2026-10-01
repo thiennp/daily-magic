@@ -35,3 +35,12 @@ Copy the printed brief into a **cloud** background agent. Subagent must:
 ## Main agent report
 
 After spawning: list page id, branch name, PR URL when available, and `progress.json` counts (`passed` roles / 204).
+
+## Final UI audit (mandatory)
+
+After **all 34 pages** complete first-pass ux–product:
+
+1. Spawn cloud subagents with brief: *audit ui only, round-audit-1, read `ui-deep-inspection.md`*.
+2. Start with pages merged earliest (**`home-marketing`**, **`login`**, …) — highest risk of shallow first pass.
+3. Revoke + fix + re-merge any page where audit finds `obviousVisualDefects: "present"`.
+4. Coordinator does **not** report “100% complete” until audit wave finishes.

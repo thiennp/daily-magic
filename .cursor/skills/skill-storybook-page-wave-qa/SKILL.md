@@ -28,7 +28,8 @@ Canonical: `docs/storybook/README.md`, `docs/storybook/wave-qa/README.md`, `docs
 2. **Forbidden** for passing subjective roles: `evaluateSubjectiveWaveQa.ts`, Playwright rubric bulk record, or `notes` containing `Rubric A=`.
 3. **Below 100:** `scoreBreakdown[]` with `reason` per deduction. **Below 95:** `whyBelowThreshold` + `mustFix[]` for the next fix round.
 4. **tester | dx** — objective only (`storybook:wave:validate`, manifest test, `storybook:wave:objective-gates`).
-5. Do **not** mark `main` “done” until all 34 pages × 6 roles pass with agent evidence.
+5. Do **not** mark `main` “done” until all 34 pages × 6 roles pass with agent evidence **and** the **final UI audit** completes (below).
+6. **`ui` role:** subagents **must** follow `docs/storybook/wave-qa/ui-deep-inspection.md` — zoom blocks, `zoomedSections`, `obviousVisualDefects`. Stray borders through `<pre>`/cards, clip, accidental `dark:` on marketing = **`present`** → fix or fail; never “quick win only.”
 
 ## Definitions
 
@@ -53,7 +54,7 @@ Progress: `docs/storybook/wave-qa/progress.json` · Catalog: `scripts/storybookW
 
    Artifacts: `/opt/cursor/artifacts/storybook-waves/{AWC|AWL}/{pageId}/round-{n}/`
 
-3. **Reviewer A** (`generalPurpose` or `computerUse`): attach **all** PNGs + `manifest.json`; role lens from `reviewer-rubric.md`; output **one JSON file** per rubric template (`reviewer: "A"`).
+3. **Reviewer A** (`generalPurpose` or `computerUse`): attach **all** PNGs + `manifest.json`; role lens from `reviewer-rubric.md`; for **`ui`**, also `ui-deep-inspection.md` and **crop/zoom** screenshots of each card/code block. Output **one JSON file** per rubric template (`reviewer: "A"`).
 
 4. **Fix** `mustFix` in product or `src/utils/storybook/*`; recapture same round if visuals changed.
 
@@ -80,6 +81,17 @@ npm run storybook:wave:validate
 npx vitest run src/utils/storybook/pageStoryManifest.test.ts
 npm run storybook:wave:objective-gates
 ```
+
+## Final audit (after first-pass matrix)
+
+When 34/34 pages have ux–product recorded:
+
+1. Coordinator spawns **one subagent per previously-passed page** (or batched by deployable) — **audit only `ui`** (optional `ux`).
+2. Capture `round-audit-1`; compare Storybook PNG to production URL when route exists.
+3. If `obviousVisualDefects: "present"` → reset that page’s `ui` (and `allRolesPassed`) in `progress.json`, fix product UI, re-run normal role loop for affected roles.
+4. **Re-audit home-marketing first** (known For-your-AI regression class).
+
+Program **not complete** until audit passes or exceptions are logged in `docs/storybook/wave-qa/audit-exceptions.md` (human-approved).
 
 ## Weekly CI
 
