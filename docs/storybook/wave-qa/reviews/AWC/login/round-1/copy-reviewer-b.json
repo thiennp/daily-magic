@@ -1,0 +1,24 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "B",
+  "deployable": "AWC",
+  "pageId": "login",
+  "role": "copy",
+  "captureRound": 1,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/login/round-1/manifest.json",
+  "scoreDesktop": 99,
+  "scoreMobile": 100,
+  "scoreOverall": 99,
+  "passed": true,
+  "scoreBreakdown": [
+    {
+      "area": "trust-stat-em-dash",
+      "pointsDeducted": 1,
+      "reason": "Minor typography: em dash in trust stat line could match marketing styleguide spacing."
+    }
+  ],
+  "whyBelowThreshold": "",
+  "topIssues": [],
+  "mustFix": [],
+  "quickWins": []
+}
