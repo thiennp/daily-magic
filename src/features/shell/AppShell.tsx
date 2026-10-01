@@ -35,10 +35,19 @@ export default function AppShell({
 
   const showHeaderBrand = renderPrimaryNav || sidebar !== undefined;
 
+  const embeddedPrimaryNav = renderPrimaryNav ? (
+    <div className="mb-6 max-w-[20rem]">
+      <AppShellNav placement="embedded" />
+    </div>
+  ) : null;
+
   const pageBody = sidebar ? (
     <div className="mx-auto grid max-w-[1600px] gap-6 px-4 py-6 pb-24 lg:grid-cols-[240px_1fr] lg:px-6 md:pb-6">
       {sidebar}
-      <main className={mainColumnClassName}>{children}</main>
+      <main className={mainColumnClassName}>
+        {embeddedPrimaryNav}
+        {children}
+      </main>
     </div>
   ) : renderPrimaryNav ? (
     <div className="mx-auto w-full max-w-[1600px] px-4 pb-24 pt-6 sm:px-6 md:pb-6 lg:px-6">
