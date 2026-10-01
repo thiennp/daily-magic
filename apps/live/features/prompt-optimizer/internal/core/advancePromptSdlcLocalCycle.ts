@@ -9,7 +9,10 @@ import type { PromptSdlcWriterResult } from "./readPromptSdlcWriterOutput";
 import { PROMPT_SDLC_MANUAL_ACTOR } from "./choosePromptSdlcLocalModels";
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
 import { promptSdlcLocalWorkingDirectory } from "./promptSdlcLocalFolder";
-import { runPromptSdlcWriterReply } from "./runPromptSdlcWriterReply";
+import {
+  resolvePromptSdlcWriterTimeoutMs,
+  runPromptSdlcWriterReply,
+} from "./runPromptSdlcWriterReply";
 
 const failCycle = (
   cycle: PromptSdlcLocalCycle,
@@ -96,6 +99,10 @@ export const advancePromptSdlcLocalCycle = async (
       instructions: cycle.improverInstructions,
     }),
     signal,
+    timeoutMs: resolvePromptSdlcWriterTimeoutMs({
+      phase: cycle.wizard?.phase,
+      isModuleRun: cycle.wizard?.phase === "optimize_modules",
+    }),
   });
   const stopped = replyOrStop(
     cycle,

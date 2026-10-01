@@ -24,7 +24,10 @@ import type {
   PromptSdlcLocalRun,
 } from "./promptSdlcLocalCycle.type";
 import { promptSdlcLocalWorkingDirectory } from "./promptSdlcLocalFolder";
-import { runPromptSdlcWriterReply } from "./runPromptSdlcWriterReply";
+import {
+  resolvePromptSdlcWriterTimeoutMs,
+  runPromptSdlcWriterReply,
+} from "./runPromptSdlcWriterReply";
 
 const failCycle = (
   cycle: PromptSdlcLocalCycle,
@@ -126,11 +129,18 @@ const executePrompt = async (input: {
                 input.cycle.judgeInstructions)
               : input.cycle.judgeInstructions,
         });
+  const isOptimizeModuleRun =
+    input.cycle.judgeScoresOnly === true &&
+    input.cycle.wizard?.phase === "optimize_modules";
   const reply = await runPromptSdlcWriterReply({
     writerAgent: input.runner,
     workingDirectory,
     prompt: moduleRunPrompt,
     signal: input.signal,
+    timeoutMs: resolvePromptSdlcWriterTimeoutMs({
+      phase: input.cycle.wizard?.phase,
+      isModuleRun: isOptimizeModuleRun,
+    }),
   });
   const evidence = reply.ok
     ? describePromptSdlcRunEvidence({
