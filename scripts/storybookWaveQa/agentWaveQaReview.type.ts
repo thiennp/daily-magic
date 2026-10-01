@@ -38,6 +38,28 @@ export interface AgentWaveQaReviewValidationError {
 const isNonEmptyString = (value: unknown): value is string =>
   typeof value === "string" && value.trim().length > 0;
 
+const AGENT_ROLES: readonly StorybookWaveAgentRole[] = [
+  "ux",
+  "copy",
+  "ui",
+  "product",
+];
+
+const isAgentRole = (value: unknown): value is StorybookWaveAgentRole =>
+  typeof value === "string" &&
+  (AGENT_ROLES as readonly string[]).includes(value);
+
+const isScore = (value: unknown): value is number =>
+  typeof value === "number" &&
+  Number.isFinite(value) &&
+  value >= 0 &&
+  value <= 100;
+
+const expectedAwcOverall = (
+  scoreDesktop: number,
+  scoreMobile: number,
+): number => Math.round((scoreDesktop + scoreMobile) / 2);
+
 export const validateAgentWaveQaReview = (
   raw: unknown,
 ):
@@ -59,18 +81,108 @@ export const validateAgentWaveQaReview = (
     });
   }
 
-  const scores = ["scoreDesktop", "scoreOverall"] as const;
-  for (const key of scores) {
-    const n = o[key];
-    if (typeof n !== "number" || n < 0 || n > 100) {
-      errors.push({ field: key, message: "Must be a number 0–100" });
+  if (o.reviewer !== "A" && o.reviewer !== "B") {
+    errors.push({ field: "reviewer", message: 'Must be "A" or "B"' });
+  }
+
+  const deployable = o.deployable;
+  if (deployable !== "AWC" && deployable !== "AWL") {
+    errors.push({ field: "deployable", message: 'Must be "AWC" or "AWL"' });
+  }
+
+  if (!isAgentRole(o.role)) {
+    errors.push({
+      field: "role",
+      message: "Must be ux, copy, ui, or product",
+    });
+  }
+
+  if (!isNonEmptyString(o.pageId)) {
+    errors.push({ field: "pageId", message: "Required non-empty string" });
+  }
+
+  const captureRound = o.captureRound;
+  if (
+    typeof captureRound !== "number" ||
+    !Number.isInteger(captureRound) ||
+    captureRound < 1
+  ) {
+    errors.push({
+      field: "captureRound",
+      message: "Must be an integer ≥ 1",
+    });
+  }
+
+  if (!isNonEmptyString(o.captureRef)) {
+    errors.push({ field: "captureRef", message: "Required non-empty string" });
+  }
+
+  const scoreDesktop = o.scoreDesktop;
+  if (!isScore(scoreDesktop)) {
+    errors.push({ field: "scoreDesktop", message: "Must be a number 0–100" });
+  }
+
+  const scoreMobile = o.scoreMobile;
+  if (deployable === "AWL") {
+    if (scoreMobile !== null) {
+      errors.push({
+        field: "scoreMobile",
+        message: "AWL reviews must set scoreMobile to null",
+      });
     }
+  } else if (deployable === "AWC" && !isScore(scoreMobile)) {
+    errors.push({
+      field: "scoreMobile",
+      message: "AWC reviews require scoreMobile 0–100",
+    });
   }
 
   const scoreOverall = o.scoreOverall;
+  if (!isScore(scoreOverall)) {
+    errors.push({ field: "scoreOverall", message: "Must be a number 0–100" });
+  }
+
+  if (
+    deployable === "AWC" &&
+    isScore(scoreDesktop) &&
+    isScore(scoreMobile) &&
+    isScore(scoreOverall) &&
+    expectedAwcOverall(scoreDesktop, scoreMobile) !== scoreOverall
+  ) {
+    errors.push({
+      field: "scoreOverall",
+      message:
+        "AWC scoreOverall must equal Math.round((scoreDesktop + scoreMobile) / 2)",
+    });
+  }
+
+  if (
+    deployable === "AWL" &&
+    isScore(scoreDesktop) &&
+    isScore(scoreOverall) &&
+    scoreDesktop !== scoreOverall
+  ) {
+    errors.push({
+      field: "scoreOverall",
+      message: "AWL scoreOverall must equal scoreDesktop",
+    });
+  }
+
+  if (typeof o.passed !== "boolean") {
+    errors.push({ field: "passed", message: "Must be a boolean" });
+  } else if (isScore(scoreOverall)) {
+    const shouldPass = scoreOverall >= 95;
+    if (o.passed !== shouldPass) {
+      errors.push({
+        field: "passed",
+        message: `Must be ${shouldPass} when scoreOverall is ${scoreOverall}`,
+      });
+    }
+  }
+
   const breakdown = o.scoreBreakdown;
   if (
-    typeof scoreOverall === "number" &&
+    isScore(scoreOverall) &&
     scoreOverall < 100 &&
     (!Array.isArray(breakdown) || breakdown.length === 0)
   ) {
@@ -80,7 +192,57 @@ export const validateAgentWaveQaReview = (
     });
   }
 
-  if (typeof scoreOverall === "number" && scoreOverall < 95) {
+  if (
+    isScore(scoreOverall) &&
+    Array.isArray(breakdown) &&
+    breakdown.length > 0
+  ) {
+    let deducted = 0;
+    for (const [index, item] of breakdown.entries()) {
+      if (typeof item !== "object" || item === null) {
+        errors.push({
+          field: `scoreBreakdown[${index}]`,
+          message: "Must be an object",
+        });
+        continue;
+      }
+      const row = item as Record<string, unknown>;
+      if (!isNonEmptyString(row.area)) {
+        errors.push({
+          field: `scoreBreakdown[${index}].area`,
+          message: "Required non-empty string",
+        });
+      }
+      const points = row.pointsDeducted;
+      if (
+        typeof points !== "number" ||
+        !Number.isFinite(points) ||
+        points <= 0
+      ) {
+        errors.push({
+          field: `scoreBreakdown[${index}].pointsDeducted`,
+          message: "Must be a positive number",
+        });
+      } else {
+        deducted += points;
+      }
+      if (!isNonEmptyString(row.reason)) {
+        errors.push({
+          field: `scoreBreakdown[${index}].reason`,
+          message: "Required non-empty string",
+        });
+      }
+    }
+    const expectedDeduction = 100 - scoreOverall;
+    if (scoreOverall < 100 && Math.abs(deducted - expectedDeduction) > 0.01) {
+      errors.push({
+        field: "scoreBreakdown",
+        message: `pointsDeducted must sum to ${expectedDeduction} (100 − scoreOverall)`,
+      });
+    }
+  }
+
+  if (isScore(scoreOverall) && scoreOverall < 95) {
     const why = o.whyBelowThreshold;
     if (!isNonEmptyString(why) || why.trim().length < 40) {
       errors.push({
