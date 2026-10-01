@@ -12,24 +12,9 @@
   "passed": true,
   "scoreBreakdown": [
     {
-      "area": "desktop-trust-timing",
-      "pointsDeducted": 2,
-      "reason": "Trust strip metrics appear under hero CTAs but product preview mock competes for attention in the right column on first paint."
-    },
-    {
-      "area": "desktop-showcases-depth",
-      "pointsDeducted": 1,
-      "reason": "Showcase grids add depth without sticky wayfinding; returning to signup requires scrolling back up."
-    },
-    {
-      "area": "mobile-menu-cta",
-      "pointsDeducted": 2,
-      "reason": "Header Create account button is small relative to hero; menu label alone may not signal full marketing nav on first visit."
-    },
-    {
-      "area": "mobile-form-stack",
-      "pointsDeducted": 3,
-      "reason": "Auth form stacks below lengthy hero copy and numbered steps before users see Google/email fields on the ready capture."
+      "area": "combined-deductions",
+      "pointsDeducted": 4,
+      "reason": "[desktop-trust-timing] Trust strip metrics appear under hero CTAs but product preview mock competes for attention in the right column on first paint. [desktop-showcases-depth] Showcase grids add depth without sticky wayfinding; returning to signup requires scrolling back up. [mobile-menu-cta] Header Create account button is small relative to hero; menu label alone may not signal full marketing nav on first visit. [mobile-form-stack] Auth form stacks below lengthy hero copy and numbered steps before users see Google/email fields on the ready capture."
     }
   ],
   "whyBelowThreshold": "",

@@ -12,24 +12,9 @@
   "passed": true,
   "scoreBreakdown": [
     {
-      "area": "mac-install-honesty",
-      "pointsDeducted": 2,
-      "reason": "Steps promise one install command; story does not show terminal snippet inline (lives post sign-in), slightly understating setup friction."
-    },
-    {
-      "area": "optimizer-claims",
-      "pointsDeducted": 1,
-      "reason": "Copy states evaluate passes; aligns with product pillars but north-star honesty footnote is not visible on capture."
-    },
-    {
-      "area": "runner-labels",
-      "pointsDeducted": 1,
-      "reason": "Product preview uses runner: mac-* labels that read as infra fixtures; believable for power users, less so for executives skimming mobile."
-    },
-    {
-      "area": "agent-access-section",
-      "pointsDeducted": 1,
-      "reason": "For-your-AI block is accurate to Agent Access capability yet may surprise buyers expecting only human signup on landing."
+      "area": "combined-deductions",
+      "pointsDeducted": 3,
+      "reason": "[mac-install-honesty] Steps promise one install command; story does not show terminal snippet inline (lives post sign-in), slightly understating setup friction. [optimizer-claims] Copy states evaluate passes; aligns with product pillars but north-star honesty footnote is not visible on capture. [runner-labels] Product preview uses runner: mac-* labels that read as infra fixtures; believable for power users, less so for executives skimming mobile. [agent-access-section] For-your-AI block is accurate to Agent Access capability yet may surprise buyers expecting only human signup on landing."
     }
   ],
   "whyBelowThreshold": "",

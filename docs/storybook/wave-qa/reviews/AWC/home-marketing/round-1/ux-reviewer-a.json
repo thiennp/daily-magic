@@ -12,24 +12,9 @@
   "passed": true,
   "scoreBreakdown": [
     {
-      "area": "desktop-cta-pairing",
-      "pointsDeducted": 1,
-      "reason": "Primary and secondary hero CTAs share equal visual weight; scan path still lands on account creation but secondary link could defer further on wide layouts."
-    },
-    {
-      "area": "desktop-midpage-interrupt",
-      "pointsDeducted": 1,
-      "reason": "For-your-AI block appears before feature grid and pulls attention away from the signup column on first scroll."
-    },
-    {
-      "area": "mobile-auth-below-fold",
+      "area": "combined-deductions",
       "pointsDeducted": 3,
-      "reason": "On 390px capture the Create free account card sits well below hero CTAs, adding scroll before users reach the inline sign-in form."
-    },
-    {
-      "area": "mobile-length",
-      "pointsDeducted": 2,
-      "reason": "Marketing story is very long on mobile; final CTA band is far from hero, increasing fatigue before repeat conversion."
+      "reason": "[desktop-cta-pairing] Primary and secondary hero CTAs share equal visual weight; scan path still lands on account creation but secondary link could defer further on wide layouts. [desktop-midpage-interrupt] For-your-AI block appears before feature grid and pulls attention away from the signup column on first scroll. [mobile-auth-below-fold] On 390px capture the Create free account card sits well below hero CTAs, adding scroll before users reach the inline sign-in form. [mobile-length] Marketing story is very long on mobile; final CTA band is far from hero, increasing fatigue before repeat conversion."
     }
   ],
   "whyBelowThreshold": "",

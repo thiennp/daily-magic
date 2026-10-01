@@ -12,24 +12,9 @@
   "passed": true,
   "scoreBreakdown": [
     {
-      "area": "announcement-acl",
-      "pointsDeducted": 2,
-      "reason": "Top bar says Project Access ACL; ACL reads as engineering jargon on a marketing surface."
-    },
-    {
-      "area": "eyebrow-harness",
-      "pointsDeducted": 1,
-      "reason": "Hero eyebrow leads with Harness; philosophy prefers Playbook/Mac vocabulary over harness on user-facing surfaces."
-    },
-    {
-      "area": "hero-approve-capitalization",
-      "pointsDeducted": 1,
-      "reason": "Mid-sentence capitalized Approve in hero paragraph breaks reading flow."
-    },
-    {
-      "area": "mobile-announcement-density",
-      "pointsDeducted": 1,
-      "reason": "Announcement line wraps awkwardly on 390px, slightly obscuring the Agent Witch value prop on first screen."
+      "area": "combined-deductions",
+      "pointsDeducted": 3,
+      "reason": "[announcement-acl] Top bar says Project Access ACL; ACL reads as engineering jargon on a marketing surface. [eyebrow-harness] Hero eyebrow leads with Harness; philosophy prefers Playbook/Mac vocabulary over harness on user-facing surfaces. [hero-approve-capitalization] Mid-sentence capitalized Approve in hero paragraph breaks reading flow. [mobile-announcement-density] Announcement line wraps awkwardly on 390px, slightly obscuring the Agent Witch value prop on first screen."
     }
   ],
   "whyBelowThreshold": "",

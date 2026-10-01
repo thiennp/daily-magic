@@ -12,14 +12,9 @@
   "passed": true,
   "scoreBreakdown": [
     {
-      "area": "auth-storybook-limit",
-      "pointsDeducted": 1,
-      "reason": "Google sign-in is present as UI chrome; story cannot demonstrate real OAuth, which is acceptable but worth noting for reviewers."
-    },
-    {
-      "area": "mobile-marketplace-path",
+      "area": "combined-deductions",
       "pointsDeducted": 2,
-      "reason": "Preset cards imply marketplace flows that require sign-in; mobile capture does not surface that gating until dialog interaction."
+      "reason": "[auth-storybook-limit] Google sign-in is present as UI chrome; story cannot demonstrate real OAuth, which is acceptable but worth noting for reviewers. [mobile-marketplace-path] Preset cards imply marketplace flows that require sign-in; mobile capture does not surface that gating until dialog interaction."
     }
   ],
   "whyBelowThreshold": "",

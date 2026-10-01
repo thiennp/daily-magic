@@ -12,24 +12,9 @@
   "passed": true,
   "scoreBreakdown": [
     {
-      "area": "evaluate-scores-jargon",
-      "pointsDeducted": 2,
-      "reason": "Hero and features repeat evaluate scores; accurate but heavy for first-touch marketing readers."
-    },
-    {
-      "area": "specialist-bots-clause",
-      "pointsDeducted": 1,
-      "reason": "Slack and Outlook ops sentence is precise yet dense in the opening paragraph."
-    },
-    {
-      "area": "for-ai-harness",
-      "pointsDeducted": 2,
-      "reason": "For-your-AI section mentions harness in body copy where Playbook or project wording would match vocabulary rules."
-    },
-    {
-      "area": "preset-dialog-tone",
-      "pointsDeducted": 1,
-      "reason": "Sign-in-first dialog is clear; minutes promise is slightly generic compared to concrete Mac install step nearby."
+      "area": "combined-deductions",
+      "pointsDeducted": 4,
+      "reason": "[evaluate-scores-jargon] Hero and features repeat evaluate scores; accurate but heavy for first-touch marketing readers. [specialist-bots-clause] Slack and Outlook ops sentence is precise yet dense in the opening paragraph. [for-ai-harness] For-your-AI section mentions harness in body copy where Playbook or project wording would match vocabulary rules. [preset-dialog-tone] Sign-in-first dialog is clear; minutes promise is slightly generic compared to concrete Mac install step nearby."
     }
   ],
   "whyBelowThreshold": "",
