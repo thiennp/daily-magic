@@ -11,6 +11,7 @@ import {
 import {
   bindPromptSdlcWriterAbort,
   PROMPT_SDLC_WRITER_STOPPED,
+  terminatePromptSdlcWriterChild,
 } from "./bindPromptSdlcWriterAbort";
 import {
   buildPromptSdlcWriterArgs,
@@ -34,8 +35,15 @@ export const PROMPT_SDLC_WRITER_DEFAULT_TIMEOUT_MS = 180_000;
  */
 export const PROMPT_SDLC_WRITER_OPTIMIZE_MODULE_RUN_TIMEOUT_MS = 600_000;
 
+/** Floor for recommended per-run writer budgets. */
+export const PROMPT_SDLC_WRITER_TIMEOUT_FLOOR_MS = 120_000;
+
+/** Hard ceiling for recommended per-run writer budgets. */
+export const PROMPT_SDLC_WRITER_TIMEOUT_CEILING_MS = 900_000;
+
 const DRY_RUN_ENV = "AGENT_WITCH_PROMPT_SDLC_WRITER_DRY_RUN";
 const OPTIMIZE_TIMEOUT_ENV = "AGENT_WITCH_WRITER_OPTIMIZE_TIMEOUT_MS";
+const CEILING_TIMEOUT_ENV = "AGENT_WITCH_WRITER_TIMEOUT_CEILING_MS";
 
 const parsePositiveInt = (raw: string | undefined): number | null => {
   if (raw === undefined || raw.trim().length === 0) {
@@ -43,6 +51,48 @@ const parsePositiveInt = (raw: string | undefined): number | null => {
   }
   const value = Number.parseInt(raw, 10);
   return Number.isFinite(value) && value > 0 ? value : null;
+};
+
+/**
+ * Pure-ish banded timeout recommendation from prompt length.
+ * Module runs stay at least the optimize default (or env override).
+ */
+export const recommendPromptSdlcWriterTimeoutMs = (input: {
+  readonly promptText: string;
+  readonly isModuleRun?: boolean;
+  readonly ceilingMs?: number;
+}): number => {
+  const length = input.promptText.length;
+  let recommended: number;
+  if (length < 2_000) {
+    recommended = 180_000;
+  } else if (length < 6_000) {
+    recommended = 300_000;
+  } else if (length < 12_000) {
+    recommended = 450_000;
+  } else {
+    recommended = 600_000;
+  }
+
+  if (input.isModuleRun === true) {
+    const envOptimize = parsePositiveInt(process.env[OPTIMIZE_TIMEOUT_ENV]);
+    recommended =
+      envOptimize ??
+      Math.max(recommended, PROMPT_SDLC_WRITER_OPTIMIZE_MODULE_RUN_TIMEOUT_MS);
+  }
+
+  const ceiling =
+    input.ceilingMs !== undefined &&
+    Number.isFinite(input.ceilingMs) &&
+    input.ceilingMs > 0
+      ? input.ceilingMs
+      : (parsePositiveInt(process.env[CEILING_TIMEOUT_ENV]) ??
+        PROMPT_SDLC_WRITER_TIMEOUT_CEILING_MS);
+
+  return Math.min(
+    ceiling,
+    Math.max(PROMPT_SDLC_WRITER_TIMEOUT_FLOOR_MS, recommended),
+  );
 };
 
 /** Writer timeout; optimize **module runs** (step 4 execute) get the longer budget. */
@@ -153,6 +203,7 @@ export const runPromptSdlcWriterReply = (input: {
     const stderrChunks: Buffer[] = [];
     const state = {
       settled: false,
+      stopping: false,
       timer: undefined as NodeJS.Timeout | undefined,
     };
     const child = spawn(invocation.command, [...args], {
@@ -167,12 +218,18 @@ export const runPromptSdlcWriterReply = (input: {
       clearTimeout(state.timer);
       resolve(value);
     };
-    bindPromptSdlcWriterAbort(child, input.signal, finish);
+    bindPromptSdlcWriterAbort(child, input.signal, finish, () => {
+      state.stopping = true;
+    });
     state.timer = setTimeout(() => {
-      child.kill("SIGTERM");
-      finish({
-        ok: false,
-        errorMessage: formatPromptSdlcWriterTimeoutMessage(timeoutMs),
+      state.stopping = true;
+      void terminatePromptSdlcWriterChild(child).then((killSignal) => {
+        finish({
+          ok: false,
+          errorMessage: formatPromptSdlcWriterTimeoutMessage(timeoutMs),
+          errorKind: "writer_timeout",
+          killSignal,
+        });
       });
     }, timeoutMs);
     child.stdout.on("data", (chunk: Buffer | string) => {
@@ -188,6 +245,9 @@ export const runPromptSdlcWriterReply = (input: {
       }),
     );
     child.on("close", () => {
+      if (state.stopping || state.settled) {
+        return;
+      }
       const replyFileText = fs.existsSync(replyPath)
         ? fs.readFileSync(replyPath, "utf8")
         : null;

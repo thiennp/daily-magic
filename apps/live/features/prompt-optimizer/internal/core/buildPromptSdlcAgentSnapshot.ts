@@ -24,7 +24,7 @@ export const buildPromptSdlcAgentSnapshot = (cycle: PromptSdlcLocalCycle) => {
     cycleId: cycle.id,
     status: cycle.status,
     done,
-    useThisPrompt: cycle.status === "passed" || cycle.status === "stopped",
+    useThisPrompt: cycle.status === "passed",
     totalTokens: sumPromptSdlcLocalTokens(cycle),
     prompt: latest?.promptText ?? "",
     bestPrompt: best?.promptText ?? null,
@@ -39,6 +39,7 @@ export const buildPromptSdlcAgentSnapshot = (cycle: PromptSdlcLocalCycle) => {
     passScore: cycle.passScore,
     round: cycle.currentRound,
     errorMessage: cycle.errorMessage,
+    errorKind: cycle.errorKind ?? null,
     context: PROMPT_SDLC_LOCAL_CONTEXT_REASON,
     page: `${PROMPT_SDLC_LIVE_PAGE_URL}?cycle=${encodeURIComponent(cycle.id)}`,
   };

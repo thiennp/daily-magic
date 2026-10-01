@@ -2,13 +2,46 @@ import type { HarnessWriterAgentId } from "../../../../adapters/writerDispatchPr
 import { parseClaudeCliPrintResult } from "../../../../adapters/writerDispatchPresentation";
 import { readPromptSdlcWriterTokens } from "./readPromptSdlcWriterTokens";
 
+export type PromptSdlcWriterErrorKind =
+  "writer_timeout" | "writer_interrupted" | "writer_no_reply";
+
 export type PromptSdlcWriterResult =
   | { readonly ok: true; readonly text: string; readonly tokens: number | null }
   | {
       readonly ok: false;
       readonly errorMessage: string;
       readonly stopped?: boolean;
+      readonly errorKind?: PromptSdlcWriterErrorKind;
+      readonly killSignal?: "SIGTERM" | "SIGKILL";
     };
+
+/** Timeout-shaped writer failure (message or explicit kind). */
+export const isPromptSdlcWriterTimeoutError = (input: {
+  readonly errorMessage: string;
+  readonly errorKind?: PromptSdlcWriterErrorKind;
+}): boolean =>
+  input.errorKind === "writer_timeout" ||
+  /timed out after/i.test(input.errorMessage);
+
+export const classifyPromptSdlcWriterErrorKind = (input: {
+  readonly errorMessage: string;
+  readonly stopped?: boolean;
+  readonly errorKind?: PromptSdlcWriterErrorKind;
+}): PromptSdlcWriterErrorKind | undefined => {
+  if (input.errorKind !== undefined) {
+    return input.errorKind;
+  }
+  if (input.stopped === true) {
+    return "writer_interrupted";
+  }
+  if (/timed out after/i.test(input.errorMessage)) {
+    return "writer_timeout";
+  }
+  if (/did not reply/i.test(input.errorMessage)) {
+    return "writer_no_reply";
+  }
+  return undefined;
+};
 
 const CODEX_TRUST_ERROR =
   "Codex stopped with a terminal error (not a trusted git directory) and did not return a prompt.";
@@ -157,5 +190,9 @@ export const readPromptSdlcWriterOutput = (input: {
     input.stdout.trim().length > 0 ? input.stdout.trim() : input.stderr.trim();
   return text.length > 0
     ? { ok: true, text, tokens }
-    : { ok: false, errorMessage: "The writer did not reply." };
+    : {
+        ok: false,
+        errorMessage: "The writer did not reply.",
+        errorKind: "writer_no_reply",
+      };
 };

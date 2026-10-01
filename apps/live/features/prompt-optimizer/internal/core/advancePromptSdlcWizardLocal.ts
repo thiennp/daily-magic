@@ -26,6 +26,11 @@ import { beginPromptSdlcWizardSeparateAfterEvaluate } from "./beginPromptSdlcWiz
 import { PROMPT_SDLC_MANUAL_ACTOR } from "./choosePromptSdlcLocalModels";
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
 import { promptSdlcLocalWorkingDirectory } from "./promptSdlcLocalFolder";
+import {
+  classifyPromptSdlcWriterErrorKind,
+  isPromptSdlcWriterTimeoutError,
+  type PromptSdlcWriterErrorKind,
+} from "./readPromptSdlcWriterOutput";
 import { runPromptSdlcWriterReply } from "./runPromptSdlcWriterReply";
 import { advancePromptSdlcLocalCycle } from "./advancePromptSdlcLocalCycle";
 import { readPromptSdlcWizardScoredRevisions } from "./readPromptSdlcWizardScoredRevisions";
@@ -33,10 +38,12 @@ import { readPromptSdlcWizardScoredRevisions } from "./readPromptSdlcWizardScore
 const failCycle = (
   cycle: PromptSdlcLocalCycle,
   errorMessage: string,
+  errorKind?: PromptSdlcWriterErrorKind,
 ): PromptSdlcLocalCycle => ({
   ...cycle,
   status: "failed",
   errorMessage,
+  errorKind,
   updatedAt: new Date().toISOString(),
 });
 
@@ -58,6 +65,25 @@ const pauseWizardWriterFailure = (
     },
     updatedAt: new Date().toISOString(),
   };
+};
+
+const failOrPauseWizardWriter = (
+  cycle: PromptSdlcLocalCycle,
+  gate: NonNullable<PromptSdlcLocalCycle["wizard"]>["gate"],
+  reply: {
+    readonly errorMessage: string;
+    readonly stopped?: boolean;
+    readonly errorKind?: PromptSdlcWriterErrorKind;
+  },
+): PromptSdlcLocalCycle => {
+  if (isPromptSdlcWriterTimeoutError(reply)) {
+    return failCycle(
+      cycle,
+      reply.errorMessage,
+      classifyPromptSdlcWriterErrorKind(reply),
+    );
+  }
+  return pauseWizardWriterFailure(cycle, gate, reply.errorMessage);
 };
 
 const snapshotEvaluateWizardAttempt = (
@@ -207,7 +233,7 @@ const runGeneralize = async (
   });
   if (!reply.ok) {
     onWriterFailure?.(writer);
-    return pauseWizardWriterFailure(cycle, "generalize", reply.errorMessage);
+    return failOrPauseWizardWriter(cycle, "generalize", reply);
   }
   try {
     const parsed = parsePromptSdlcGeneralizeReply(reply.text);
@@ -284,7 +310,7 @@ const runSeparate = async (
   });
   if (!reply.ok) {
     onWriterFailure?.(writer);
-    return pauseWizardWriterFailure(cycle, "separate", reply.errorMessage);
+    return failOrPauseWizardWriter(cycle, "separate", reply);
   }
   try {
     const rawOptions = parsePromptSdlcSeparateReply(reply.text);

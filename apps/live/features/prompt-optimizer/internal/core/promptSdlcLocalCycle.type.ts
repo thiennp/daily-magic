@@ -3,6 +3,7 @@ import type {
   PromptSdlcCycleStatus,
   PromptSdlcWizardState,
 } from "../../../../adapters/promptSdlcAwcCore";
+import type { PromptSdlcWriterErrorKind } from "./readPromptSdlcWriterOutput";
 
 export interface PromptSdlcLocalRun {
   readonly output: string;
@@ -32,6 +33,10 @@ export interface PromptSdlcLocalRevision {
   readonly writerTokens?: number | null;
   /** Output of running this prompt, plus the tokens and delay of that run. */
   readonly run?: PromptSdlcLocalRun;
+  /** Writer timeout budget used for this revision's execute (when set). */
+  readonly timeoutBudgetMs?: number;
+  /** How timeoutBudgetMs was chosen. */
+  readonly timeoutSource?: "recommended" | "explicit" | "default";
 }
 
 export interface PromptSdlcLocalCycle {
@@ -46,6 +51,8 @@ export interface PromptSdlcLocalCycle {
   readonly passScore: number;
   readonly maxRounds: number;
   readonly errorMessage: string | null;
+  /** Distinct writer failure kind for agent/billing outcomes. */
+  readonly errorKind?: PromptSdlcWriterErrorKind;
   readonly createdAt: string;
   readonly updatedAt: string;
   readonly revisions: readonly PromptSdlcLocalRevision[];

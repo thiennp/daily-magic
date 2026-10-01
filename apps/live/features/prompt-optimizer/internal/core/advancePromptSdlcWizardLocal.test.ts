@@ -337,4 +337,36 @@ describe("advancePromptSdlcWizardLocal", () => {
     expect(next.wizard?.gate).toBe("separate");
     expect(next.errorMessage).toContain("writer");
   });
+
+  it("fails the cycle when generalize/separate writer times out", async () => {
+    vi.spyOn(writerReply, "runPromptSdlcWriterReply").mockResolvedValue({
+      ok: false,
+      errorMessage: "The writer timed out after 180000ms.",
+      errorKind: "writer_timeout",
+    });
+
+    const cycle = {
+      ...createPromptSdlcLocalCycle({
+        goal: "Goal",
+        sourcePrompt: "p",
+        judgeModel: "claude-cli",
+        improverModel: "claude-cli",
+        workingDirectory: storeDir,
+        wizard: {
+          ...createInitialPromptSdlcWizardState("p"),
+          phase: "separate",
+          gate: null,
+          splitOptions: [],
+        },
+      }),
+      revisions: [
+        { roundNumber: 0, promptText: "evaluated prompt", judgement: null },
+      ],
+    };
+
+    const next = await advancePromptSdlcWizardLocal(cycle);
+    expect(next.status).toBe("failed");
+    expect(next.errorKind).toBe("writer_timeout");
+    expect(next.errorMessage).toContain("timed out after");
+  });
 });
