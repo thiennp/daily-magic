@@ -84,6 +84,16 @@ const readPostedPassScoreString = (
   return parsed.ok ? String(parsed.passScore) : String(fallback);
 };
 
+const readPostedPassScoreForRun = (
+  posted: URLSearchParams,
+  field: string,
+  fallbackScoreString: string,
+): ReturnType<typeof readPromptSdlcLocalPassScore> => {
+  const raw = posted.get(field)?.trim() ?? "";
+  const text = raw.length === 0 ? fallbackScoreString : raw;
+  return readPromptSdlcLocalPassScore(text);
+};
+
 export const decidePromptSdlcLocalPost = (input: {
   readonly posted: URLSearchParams | null;
   readonly installedIds: readonly string[];
@@ -172,14 +182,18 @@ export const decidePromptSdlcLocalPost = (input: {
     return form(typedFolder, startError);
   }
 
-  const passParsed = readPromptSdlcLocalPassScore(
-    input.posted.get("passScore") ?? typedPassScore,
+  const passParsed = readPostedPassScoreForRun(
+    input.posted,
+    "passScore",
+    typedPassScore,
   );
   if (!passParsed.ok) {
     return form(typedFolder, passParsed.errorMessage);
   }
-  const modulePassParsed = readPromptSdlcLocalPassScore(
-    input.posted.get("modulePassScore") ?? typedModulePassScore,
+  const modulePassParsed = readPostedPassScoreForRun(
+    input.posted,
+    "modulePassScore",
+    typedModulePassScore,
   );
   if (!modulePassParsed.ok) {
     return form(typedFolder, modulePassParsed.errorMessage);
