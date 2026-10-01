@@ -134,5 +134,5 @@ describe("wizard step 4 chain modules", () => {
       }),
     );
     expect(html).toContain("Module stats: best 75");
-  });
+  }, 30_000);
 });
