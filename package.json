@@ -123,6 +123,7 @@
     "structure-validation": "^0.0.14",
     "tailwindcss": "^4",
     "typescript": "^5",
+    "vite": "^6.4.3",
     "vitest": "5.0.2"
   }
 }
