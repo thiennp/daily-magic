@@ -138,7 +138,6 @@ const executePrompt = async (input: {
     prompt: moduleRunPrompt,
     signal: input.signal,
     timeoutMs: resolvePromptSdlcWriterTimeoutMs({
-      phase: input.cycle.wizard?.phase,
       isModuleRun: isOptimizeModuleRun,
     }),
   });

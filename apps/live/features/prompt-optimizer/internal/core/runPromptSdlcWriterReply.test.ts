@@ -18,15 +18,9 @@ describe("resolvePromptSdlcWriterTimeoutMs", () => {
     expect(resolvePromptSdlcWriterTimeoutMs()).toBe(
       PROMPT_SDLC_WRITER_DEFAULT_TIMEOUT_MS,
     );
-    expect(resolvePromptSdlcWriterTimeoutMs({ phase: "evaluate" })).toBe(
-      PROMPT_SDLC_WRITER_DEFAULT_TIMEOUT_MS,
+    expect(resolvePromptSdlcWriterTimeoutMs({ isModuleRun: true })).toBe(
+      PROMPT_SDLC_WRITER_OPTIMIZE_MODULE_RUN_TIMEOUT_MS,
     );
-    expect(
-      resolvePromptSdlcWriterTimeoutMs({
-        phase: "optimize_modules",
-        isModuleRun: true,
-      }),
-    ).toBe(PROMPT_SDLC_WRITER_OPTIMIZE_MODULE_RUN_TIMEOUT_MS);
   });
 
   it("honors AGENT_WITCH_WRITER_OPTIMIZE_TIMEOUT_MS for optimize runs", () => {

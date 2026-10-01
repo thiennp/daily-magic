@@ -99,10 +99,7 @@ export const advancePromptSdlcLocalCycle = async (
       instructions: cycle.improverInstructions,
     }),
     signal,
-    timeoutMs: resolvePromptSdlcWriterTimeoutMs({
-      phase: cycle.wizard?.phase,
-      isModuleRun: cycle.wizard?.phase === "optimize_modules",
-    }),
+    timeoutMs: resolvePromptSdlcWriterTimeoutMs(),
   });
   const stopped = replyOrStop(
     cycle,

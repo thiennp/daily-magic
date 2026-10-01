@@ -45,9 +45,8 @@ const parsePositiveInt = (raw: string | undefined): number | null => {
   return Number.isFinite(value) && value > 0 ? value : null;
 };
 
-/** Phase-aware writer timeout; optimize module runs get the longer budget. */
+/** Writer timeout; optimize **module runs** (step 4 execute) get the longer budget. */
 export const resolvePromptSdlcWriterTimeoutMs = (input?: {
-  readonly phase?: string | null;
   readonly isModuleRun?: boolean;
   readonly timeoutMs?: number;
 }): number => {
@@ -58,9 +57,7 @@ export const resolvePromptSdlcWriterTimeoutMs = (input?: {
   ) {
     return input.timeoutMs;
   }
-  const optimizeRun =
-    input?.isModuleRun === true || input?.phase === "optimize_modules";
-  if (optimizeRun) {
+  if (input?.isModuleRun === true) {
     return (
       parsePositiveInt(process.env[OPTIMIZE_TIMEOUT_ENV]) ??
       PROMPT_SDLC_WRITER_OPTIMIZE_MODULE_RUN_TIMEOUT_MS
