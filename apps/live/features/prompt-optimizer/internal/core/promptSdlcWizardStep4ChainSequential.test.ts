@@ -12,6 +12,7 @@ import { advancePromptSdlcWizardLocal } from "./advancePromptSdlcWizardLocal";
 import { buildPromptSdlcLocalArtifactDocument } from "./buildPromptSdlcLocalArtifactDocument";
 import { buildPromptSdlcLocalPageBody } from "./buildPromptSdlcLocalPage";
 import { createPromptSdlcLocalCycle } from "./createPromptSdlcLocalCycle";
+import { confirmedPromptSdlcCostControlsForTests } from "./promptSdlcCostControlTestFixtures";
 import {
   readPromptSdlcLocalCycle,
   savePromptSdlcLocalCycle,
@@ -56,6 +57,7 @@ describe("wizard step 4 chain modules", () => {
       improverModel: "claude-cli",
       runnerModel: "claude-cli",
       workingDirectory: storeDir,
+      costControls: confirmedPromptSdlcCostControlsForTests({ moduleCount: 2 }),
       wizard: {
         ...createInitialPromptSdlcWizardState("Do {{x}}"),
         phase: "optimize_modules",
