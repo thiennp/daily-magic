@@ -1,0 +1,29 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "B",
+  "deployable": "AWC",
+  "pageId": "projects",
+  "role": "ui",
+  "captureRound": 1,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/projects/round-1/manifest.json",
+  "scoreDesktop": 97,
+  "scoreMobile": 97,
+  "scoreOverall": 97,
+  "passed": true,
+  "scoreBreakdown": [
+    {
+      "area": "state-banners",
+      "pointsDeducted": 2,
+      "reason": "Storybook status strips are visually distinct but add a second horizontal band above the app header."
+    },
+    {
+      "area": "search-toolbar",
+      "pointsDeducted": 1,
+      "reason": "Search field and 1 project count align well; count could use subtle muted styling to reduce competition with card title."
+    }
+  ],
+  "whyBelowThreshold": "",
+  "topIssues": [],
+  "mustFix": [],
+  "quickWins": []
+}
