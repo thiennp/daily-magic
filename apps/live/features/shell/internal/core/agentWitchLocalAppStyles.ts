@@ -1516,6 +1516,14 @@ form.sdlc-form textarea.input.sdlc-instruction {
 .sdlc-run-badge-done { background: #ecfdf5; color: #047857; }
 .sdlc-run-badge-finished { background: #fffbeb; color: #92400e; }
 .sdlc-run-badge-failed { background: #fee2e2; color: #991b1b; }
+.sdlc-run-badge-budget { background: #ffedd5; color: #9a3412; box-shadow: inset 0 0 0 1px #fdba74; }
+.sdlc-history-badge-failed { background: #fee2e2; color: #991b1b; }
+.sdlc-cost-confirm .sdlc-cost-proposal { display: grid; gap: 0.5rem; margin: 0.75rem 0 1rem; }
+.sdlc-cost-confirm .sdlc-cost-proposal > div { display: flex; justify-content: space-between; gap: 1rem; }
+.sdlc-cost-confirm .sdlc-cost-proposal dt { color: var(--aw-zinc-500); }
+.sdlc-cost-confirm .sdlc-cost-proposal dd { margin: 0; font-weight: 600; font-variant-numeric: tabular-nums; }
+.sdlc-cost-controls { margin-top: 0.75rem; }
+.sdlc-cost-early-stop .sdlc-checkbox-label { display: flex; gap: 0.5rem; align-items: flex-start; }
 .sdlc-run-activity {
   display: flex;
   gap: 0.85rem;

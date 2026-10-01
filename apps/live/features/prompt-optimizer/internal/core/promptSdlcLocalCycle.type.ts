@@ -3,8 +3,8 @@ import type {
   PromptSdlcCycleStatus,
   PromptSdlcWizardState,
 } from "../../../../adapters/promptSdlcAwcCore";
-import type { PromptSdlcWriterErrorKind } from "./readPromptSdlcWriterOutput";
 import type { PromptSdlcCostControls } from "@/lib/promptOptimizer/types/PromptSdlcCostControl.type";
+import type { PromptSdlcWriterErrorKind } from "./readPromptSdlcWriterOutput";
 
 export interface PromptSdlcLocalRun {
   readonly output: string;

@@ -558,4 +558,61 @@ describe("tryAcceptPromptSdlcWizardPost", () => {
     expect(saved?.status).toBe("stopped");
     expect(saved?.wizard?.phase).toBe("complete");
   });
+
+  it("confirms Step 4 cost ceiling before optimize continue", () => {
+    const storeDir = fs.mkdtempSync(
+      path.join(os.tmpdir(), "prompt-sdlc-post-budget-"),
+    );
+    const storePath = path.join(storeDir, "prompt-optimizer-cycles.json");
+    const cycle = {
+      ...createPromptSdlcLocalCycle({
+        goal: "g",
+        sourcePrompt: "p",
+        judgeModel: "claude-cli",
+        improverModel: "claude-cli",
+        workingDirectory: storeDir,
+        wizard: {
+          ...createInitialPromptSdlcWizardState("Do {{x}}"),
+          gate: "optimize_modules",
+          phase: "optimize_modules",
+          variables: [{ name: "x", description: "d", sampleValue: "hello" }],
+          parameterValues: { x: "hello" },
+          modules: [
+            {
+              moduleId: "m1",
+              title: "Main",
+              prompt: "Run {{x}}",
+              status: "pending",
+              selectedRevisionRound: null,
+            },
+          ],
+          currentModuleIndex: 0,
+        },
+      }),
+      status: "wizard_paused" as const,
+    };
+    savePromptSdlcLocalCycle(storePath, cycle);
+
+    tryAcceptPromptSdlcWizardPost({
+      posted: new URLSearchParams({
+        intent: "wizard-continue",
+        cycleId: cycle.id,
+        confirmedTokenBudget: "12000",
+        confirmedMaxSpendUsd: "0.5",
+        wizardParam_x: "hello",
+      }),
+      storePath,
+      response: {
+        writeHead: () => undefined,
+        end: () => undefined,
+      },
+    });
+
+    const saved = readPromptSdlcLocalCycle(storePath, cycle.id);
+    expect(saved?.costControls?.budgetConfirmed).toBe(true);
+    expect(saved?.costControls?.confirmedTokenBudget).toBe(12000);
+    expect(saved?.costControls?.confirmedMaxSpendUsd).toBe(0.5);
+    // wizard-continue with confirm fields also starts the pending module trial
+    expect(saved?.status).toBe("judging");
+  });
 });

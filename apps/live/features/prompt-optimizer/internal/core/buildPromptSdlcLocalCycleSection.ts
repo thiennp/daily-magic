@@ -23,6 +23,7 @@ import {
   formatPromptSdlcTokenCount,
   sumPromptSdlcLocalTokens,
 } from "./sumPromptSdlcLocalTokens";
+import { describePromptSdlcOutcomeBadge } from "./describePromptSdlcOutcomeBadge";
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
 import {
   displayPromptSdlcLocalFolder,
@@ -146,13 +147,20 @@ export const buildPromptSdlcLocalCycleSection = (
   const scoreScale = showScoreScale
     ? `<div class="sdlc-run-panel sdlc-run-panel-scoring"><h3 class="sdlc-run-panel-title">Scoring guide</h3>${renderPromptSdlcLocalScoreScale(scoringGuidePassScore)}</div>`
     : "";
+  const failedOutcomeBadge =
+    cycle.status === "failed"
+      ? describePromptSdlcOutcomeBadge({
+          status: cycle.status,
+          errorKind: cycle.errorKind,
+        })
+      : null;
   const statusBadge = live
     ? `<span class="sdlc-run-badge sdlc-run-badge-live">In progress</span>`
     : cycle.status === "wizard_paused"
       ? `<span class="sdlc-run-badge sdlc-run-badge-paused">Paused</span>`
       : isPromptSdlcTerminalStatus(cycle.status)
-        ? cycle.status === "failed"
-          ? `<span class="sdlc-run-badge sdlc-run-badge-failed">Failed</span>`
+        ? failedOutcomeBadge !== null
+          ? `<span class="${failedOutcomeBadge.badgeClass}">${failedOutcomeBadge.badgeLabel}</span>`
           : wizardRunComplete && wizardSummary !== null && !allModulesPassed
             ? `<span class="sdlc-run-badge sdlc-run-badge-finished">Finished</span>`
             : `<span class="sdlc-run-badge sdlc-run-badge-done">Complete</span>`

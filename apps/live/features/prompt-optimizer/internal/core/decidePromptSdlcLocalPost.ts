@@ -19,6 +19,12 @@ import {
   type PromptSdlcLocalModelSelection,
 } from "./promptSdlcLocalForm";
 import { readPromptSdlcLocalPassScore } from "./readPromptSdlcLocalPassScore";
+import {
+  costControlsFromKnobs,
+  readPromptSdlcCostControlKnobs,
+} from "./readPromptSdlcCostControls";
+import type { PromptSdlcCostControls } from "@/lib/promptOptimizer/types/PromptSdlcCostControl.type";
+import { PROMPT_SDLC_DEFAULT_MAX_TRIALS } from "@/lib/promptOptimizer/promptSdlcCostControl.constant";
 
 type PromptSdlcLocalRunModels = NonNullable<
   ReturnType<typeof readPromptSdlcLocalRunModels>
@@ -39,6 +45,7 @@ type PromptSdlcLocalStartBase = {
   readonly improverInstructions: string;
   readonly runner: HarnessWriterAgent;
   readonly runnerInstructions: string;
+  readonly costControls: PromptSdlcCostControls;
 };
 
 export type PromptSdlcLocalPostDecision =
@@ -58,6 +65,9 @@ export type PromptSdlcLocalPostDecision =
       readonly improverInstructions: string;
       readonly runner: string;
       readonly runnerInstructions: string;
+      readonly maxTrials: string;
+      readonly maxSpendUsd: string;
+      readonly earlyStop: boolean;
     };
 
 const readPostedPassScoreString = (
@@ -106,6 +116,14 @@ export const decidePromptSdlcLocalPost = (input: {
   const runnerInstructions =
     input.posted?.get("runnerInstructions")?.trim() ?? "";
   const postedRunner = input.posted?.get("runner") ?? null;
+  const typedMaxTrials =
+    input.posted?.get("maxTrials")?.trim() ||
+    String(PROMPT_SDLC_DEFAULT_MAX_TRIALS);
+  const typedMaxSpendUsd = input.posted?.get("maxSpendUsd")?.trim() ?? "";
+  const typedEarlyStop =
+    input.posted === null
+      ? true
+      : input.posted.has("earlyStop");
   const form = (
     folder: string,
     errorMessage: string | null,
@@ -124,6 +142,9 @@ export const decidePromptSdlcLocalPost = (input: {
     improverInstructions,
     runner: shown.runner,
     runnerInstructions,
+    maxTrials: typedMaxTrials,
+    maxSpendUsd: typedMaxSpendUsd,
+    earlyStop: typedEarlyStop,
   });
   if (input.posted === null) {
     return form(input.defaultFolder ?? PROMPT_SDLC_LOCAL_DEFAULT_FOLDER, null);
@@ -184,6 +205,15 @@ export const decidePromptSdlcLocalPost = (input: {
   if (runner === null) {
     return form(typedFolder, "Choose a runner for wizard step 4.");
   }
+  const costParsed = readPromptSdlcCostControlKnobs({
+    maxTrials: input.posted.get("maxTrials"),
+    maxSpendUsd: input.posted.get("maxSpendUsd"),
+    earlyStop: input.posted.has("earlyStop") ? "on" : "off",
+  });
+  if (!costParsed.ok) {
+    return form(typedFolder, costParsed.errorMessage);
+  }
+
   return {
     kind: "start",
     goal: input.goal,
@@ -202,5 +232,6 @@ export const decidePromptSdlcLocalPost = (input: {
     improverInstructions,
     runner,
     runnerInstructions,
+    costControls: costControlsFromKnobs(costParsed.knobs),
   };
 };

@@ -12,6 +12,10 @@ import { renderPromptSdlcWizardGateEndForm } from "./renderPromptSdlcLocalStopFo
 import { renderPromptSdlcWizardSkillSuggestions } from "./renderPromptSdlcWizardSkillSuggestions";
 import { renderPromptSdlcWizardSplitOptionDetail } from "./renderPromptSdlcWizardSplitOptionDetail";
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
+import {
+  renderPromptSdlcCostConfirmPanel,
+  shouldShowPromptSdlcCostConfirm,
+} from "./renderPromptSdlcCostConfirmPanel";
 
 const escapeHtml = (value: string): string =>
   value
@@ -30,6 +34,9 @@ export const renderPromptSdlcWizardGate = (
   }
 
   const gate = wizard.gate;
+  if (shouldShowPromptSdlcCostConfirm(cycle)) {
+    return renderPromptSdlcCostConfirmPanel(cycle);
+  }
   const modulePassScore = readPromptSdlcWizardModulePassScore(wizard);
   const stepTitle =
     gate === "generalize"

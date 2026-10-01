@@ -61,7 +61,10 @@ describe("buildPromptSdlcLocalPageBody", () => {
     expect(html).not.toContain("run-classic");
     expect(html).not.toContain("Classic loop");
     expect(html).not.toContain("sdlc-history-filter");
-    expect(html.match(/class="sdlc-tip"/g)?.length).toBe(12);
+    expect(html.match(/class="sdlc-tip"/g)?.length).toBe(14);
+    expect(html).toContain('name="maxTrials"');
+    expect(html).toContain('name="maxSpendUsd"');
+    expect(html).toContain('name="earlyStop"');
     expect(html).toContain("Module runner");
     expect(html).toContain('name="runner"');
     expect(html).toContain('data-writer-status="runner"');

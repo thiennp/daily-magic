@@ -94,6 +94,12 @@ export const presentPromptSdlcLocalComposer = async (input: {
       passScore: String(decision.passScore),
       modulePassScore: String(decision.modulePassScore),
       maxRounds: String(decision.maxRounds),
+      maxTrials: String(decision.costControls.maxTrials),
+      maxSpendUsd:
+        decision.costControls.maxSpendUsd === null
+          ? ""
+          : String(decision.costControls.maxSpendUsd),
+      earlyStop: decision.costControls.earlyStop,
       canRun: true,
       errorMessage: writerBlock,
       skillNotice: input.skillNotice,
@@ -120,6 +126,7 @@ export const presentPromptSdlcLocalComposer = async (input: {
       workingDirectory: decision.workingDirectory,
       passScore: decision.passScore,
       maxRounds: decision.maxRounds,
+      costControls: decision.costControls,
       wizard: seedPromptSdlcWizardOrchestratorSkill(
         {
           ...createInitialPromptSdlcWizardState(decision.prompt),
@@ -197,6 +204,9 @@ export const presentPromptSdlcLocalComposer = async (input: {
     passScore: decision.passScore,
     modulePassScore: decision.modulePassScore,
     maxRounds: decision.maxRounds,
+    maxTrials: decision.maxTrials,
+    maxSpendUsd: decision.maxSpendUsd,
+    earlyStop: decision.earlyStop,
     canRun: input.selection.canRun,
     errorMessage: decision.errorMessage,
     skillNotice: input.skillNotice,
