@@ -57,7 +57,9 @@ describe("wizard step 4 chain modules", () => {
       improverModel: "claude-cli",
       runnerModel: "claude-cli",
       workingDirectory: storeDir,
-      costControls: confirmedPromptSdlcCostControlsForTests(),
+      costControls: confirmedPromptSdlcCostControlsForTests({
+        moduleCount: 2,
+      }),
       wizard: {
         ...createInitialPromptSdlcWizardState("Do {{x}}"),
         phase: "optimize_modules",

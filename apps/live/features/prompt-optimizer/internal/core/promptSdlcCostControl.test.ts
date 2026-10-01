@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 
 import { createInitialPromptSdlcWizardState } from "../../../../adapters/promptSdlcAwcCore";
+import { confirmPromptSdlcCostBudget } from "../../../../adapters/promptSdlcAwcCore";
+import { defaultPromptSdlcCostControls } from "../../../../adapters/promptSdlcAwcCore";
 import {
   confirmPromptSdlcCostBudget,
   defaultPromptSdlcCostControls,
@@ -8,9 +10,13 @@ import {
   proposePromptSdlcCostBudget,
   PROMPT_SDLC_DEFAULT_MAX_TRIALS,
   PROMPT_SDLC_STEP4_TOKENS_PER_MODULE_TRIAL,
-  readPromptSdlcBudgetStop,
+} from "../../../../adapters/promptSdlcAwcCore";
+import {
+  proposePromptSdlcCostBudget,
   seedPromptSdlcStep4CostProposal,
 } from "../../../../adapters/promptSdlcAwcCore";
+import { readPromptSdlcBudgetStop } from "../../../../adapters/promptSdlcAwcCore";
+import { estimatePromptSdlcSpendUsd } from "../../../../adapters/promptSdlcAwcCore";
 
 import { beginPromptSdlcWizardOptimizeModulesAfterSeparate } from "./beginPromptSdlcWizardOptimizeModulesAfterSeparate";
 import { buildPromptSdlcAgentSnapshot } from "./buildPromptSdlcAgentSnapshot";

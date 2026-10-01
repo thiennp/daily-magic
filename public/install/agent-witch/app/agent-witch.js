@@ -5,23 +5,23 @@
 <plist version="1.0">
 <dict>
   <key>Label</key>
-  <string>${Lo(e.launchAgentLabel)}</string>
+  <string>${Co(e.launchAgentLabel)}</string>
   <key>ProgramArguments</key>
   <array>
-    <string>${Lo(e.runPath)}</string>
+    <string>${Co(e.runPath)}</string>
   </array>
   <key>WorkingDirectory</key>
-  <string>${Lo(e.installDir)}</string>
+  <string>${Co(e.installDir)}</string>
   <key>EnvironmentVariables</key>
   <dict>
     <key>HOME</key>
-    <string>${Lo(e.homeDir)}</string>
+    <string>${Co(e.homeDir)}</string>
     <key>PATH</key>
-    <string>${Lo(t)}</string>
+    <string>${Co(t)}</string>
     <key>AGENT_WITCH_HOME</key>
-    <string>${Lo(e.installDir)}</string>
+    <string>${Co(e.installDir)}</string>
     <key>AGENT_WITCH_WAKE_PORT</key>
-    <string>${Lo(String(e.wakePort))}</string>
+    <string>${Co(String(e.wakePort))}</string>
   </dict>
   <key>RunAtLoad</key>
   <true/>
@@ -334,7 +334,7 @@ ${r}`:r}});var Wd,ph=l(()=>{"use strict";Wd={anthropic:"claude-sonnet-4-20250514
           <tbody>${e.entries.map((r,n)=>{let o=r.formatOk?'<span class="badge badge-online">OK</span>':`<span class="badge badge-warn">${vn(r.formatError??"bad")}</span>`,s=r.kind==="ws_message"?vn(r.direction):vn(r.kind),i=`trace-body-${n}`,a=vn(DV(r.body));return`<tr>
         <td title="${vn(r.at)}">${vn(r.at.slice(11,19))}</td>
         <td>${s}</td>
-        <td><code>${on(r.command)}</code></td>
+        <td><code>${rn(r.command)}</code></td>
         <td>${n}</td>
         <td>
           <button type="button" class="btn btn-secondary btn-compact" onclick="const el=document.getElementById('${i}'); if(el){el.hidden=!el.hidden;}">body</button>
@@ -2390,7 +2390,7 @@ form.sdlc-form textarea.input[name="prompt"] { min-height: 12rem; }
       <p class="lede">Your on-machine control panel: bridge health, harness, run memory, and traffic \u2014 only on this Mac.</p>
       <div class="home-hero-badges">
         ${t}
-        <span class="muted">Install bundle <code>${Is(e.installBundleVersion)}</code></span>
+        <span class="muted">Install bundle <code>${Rs(e.installBundleVersion)}</code></span>
         <span class="muted">Last heartbeat \xB7 ${a}</span>
       </div>
     </section>
@@ -2411,13 +2411,13 @@ form.sdlc-form textarea.input[name="prompt"] { min-height: 12rem; }
         <p class="home-card-eyebrow">Setup</p>
         <h2 class="home-card-title">Harness</h2>
         <p class="home-card-lede">View installed sets, apply them to a project <code>.cursor</code>, or import from repos.</p>
-        <p class="home-card-meta">${Is(r)}</p>
+        <p class="home-card-meta">${Rs(r)}</p>
       </a>
       <a class="home-card" href="/knowledge">
         <p class="home-card-eyebrow">Memory</p>
         <h2 class="home-card-title">Knowledge</h2>
         <p class="home-card-lede">Browse and search local RAG chunks written after agent runs on this Mac.</p>
-        <p class="home-card-meta">${Is(o)}</p>
+        <p class="home-card-meta">${Rs(o)}</p>
       </a>
       <a class="home-card" href="/writer-sessions">
         <p class="home-card-eyebrow">Memory</p>
@@ -2429,13 +2429,13 @@ form.sdlc-form textarea.input[name="prompt"] { min-height: 12rem; }
         <p class="home-card-eyebrow">Diagnostics</p>
         <h2 class="home-card-title">Error log</h2>
         <p class="home-card-lede">Tail of client stderr \u2014 crashes, module errors, and bridge failures on this Mac.</p>
-        <p class="home-card-meta">${Is(s)}</p>
+        <p class="home-card-meta">${Rs(s)}</p>
       </a>
       <a class="home-card" href="/traffic">
         <p class="home-card-eyebrow">Debug</p>
         <h2 class="home-card-title">Traffic</h2>
         <p class="home-card-lede">See frames sent and received between this Mac and the cloud bridge.</p>
-        <p class="home-card-meta">${Is(n)}</p>
+        <p class="home-card-meta">${Rs(n)}</p>
       </a>
     </div>`}});var Jx=l(()=>{"use strict";Kx()});var k,sp=l(()=>{"use strict";k=e=>e==="passed"||e==="stopped"||e==="failed"});var Yx,VA,Ln,qA,fa=l(()=>{"use strict";Yx="Stopped at the round limit. The best prompt is kept.",VA="Stopped because the score stopped rising. The best prompt is kept.",Ln="Finished. The best prompt is the result.",qA="Wizard ended. Progress from finished steps is kept."});var ha,KA=l(()=>{"use strict";ha=e=>{let t=e.avoid?.trim()??"",r=t.length===0?[]:["","Avoid:",t,"","Do not repeat anything in Avoid."],n=e.instructions?.trim()??"",o=n.length===0?[]:["","Instructions:",n];return["You improve prompts.","Do not edit files. Do not run tools. Do not score the prompt.","Reply with only the improved prompt text, no commentary.","","Goal:",e.goal.trim(),...o,"","Current prompt:","This is the highest scoring version so far. Start from it.",e.promptText.trim(),"",`Judge score: ${e.score}`,"Judge reasons:",e.reasons.trim(),...r,"","The score describes the changes, the tokens used, and the delay. A token review may say how to spend less. Change the prompt so the next run does better.",n.length===0?"Write the next prompt.":"Write the next prompt. Follow the goal and the instructions."].join(`
 `)}});var oq,sq,ya,Xx,ip=l(()=>{"use strict";oq=/\n+|;\s+/,sq=e=>e.length>280?`${e.slice(0,279)}\u2026`:e,ya=e=>e.reduce((t,r)=>{if(t.length>=12)return t;let n=r.split(oq).map(o=>o.replace(/^[-*]\s*/,"").trim()).filter(o=>o.length>0).reduce((o,s)=>{if(t.length+o.length>=12)return o;let i=s.toLowerCase();return[...t,...o].some(c=>c.toLowerCase()===i)?o:[...o,sq(s)]},[]);return[...t,...n]},[]),Xx=e=>{let t=ya(e);return t.length===0?null:t.map(r=>`- ${r}`).join(`
@@ -2631,7 +2631,7 @@ ${s}`:"The writer printed nothing. Use the changes above."].filter(a=>a.length>0
     <p class="sdlc-wizard-gate-lede">${S}</p>
     ${f}
     <form method="POST" action="/prompt-optimizer" class="sdlc-wizard-feedback" id="sdlc-wizard-gate-form">
-      <input type="hidden" name="cycleId" value="${cc(e.id)}">
+      <input type="hidden" name="cycleId" value="${ac(e.id)}">
     ${i}
     ${a}
     ${c}
@@ -3937,7 +3937,7 @@ Wanted output: The ticket has no refund. Ask which order.`},runner:{title:"Runne
         ${r.map(n=>n.template).join("")}
         <dialog id="history-detail" class="history-dialog" aria-label="Prompt detail">
           <div class="history-dialog-bar">
-            ${bg({type:"button",id:"history-detail-close"})}
+            ${hg({type:"button",id:"history-detail-close"})}
           </div>
           <div class="history-dialog-body" id="history-detail-body"></div>
         </dialog>
@@ -4269,7 +4269,7 @@ Result: ${a}`}).join(`
       <div class="stack">
         <label class="field">
           <span class="field-label">Scan folder (required)</span>
-          <input class="input" id="scanFolder" name="scanFolder" type="text" value="${mo(e.scanFolder)}" placeholder="~" autocomplete="off" data-last-reveal-scan="${mo(s)}" />
+          <input class="input" id="scanFolder" name="scanFolder" type="text" value="${po(e.scanFolder)}" placeholder="~" autocomplete="off" data-last-reveal-scan="${po(s)}" />
         </label>
         <div class="actions">
           <div>
@@ -4292,9 +4292,9 @@ Result: ${a}`}).join(`
                 <input type="checkbox" name="includeSet" value="${c}" />
                 Include in submit
               </label>
-              <input type="hidden" name="setSlug-${c}" value="${mo(a.proposedSlug)}" />
+              <input type="hidden" name="setSlug-${c}" value="${po(a.proposedSlug)}" />
               <input type="hidden" name="setGroupIndex-${c}" value="${s}" />
-              <p class="muted mono">${mo(a.sourceRoot)}</p>
+              <p class="muted mono">${po(a.sourceRoot)}</p>
               <details class="harness-tree-root">
                 <summary class="harness-tree-root-summary">${g} file(s)</summary>
                 <ul class="harness-tree harness-tree-root-list">${p}</ul>
@@ -4302,7 +4302,7 @@ Result: ${a}`}).join(`
             </div>`}).join("");return`<section class="card harness-group">
           <label class="field harness-group-name-field">
             <span class="field-label">Name before upload</span>
-            <input class="input harness-group-title-input" type="text" name="groupLabel-${s}" value="${mo(o)}" autocomplete="off" />
+            <input class="input harness-group-title-input" type="text" name="groupLabel-${s}" value="${po(o)}" autocomplete="off" />
           </label>
           ${i}
         </section>`}).join("");return`<form method="POST" action="/harness/submit">
@@ -4355,7 +4355,7 @@ ${e.challenge}`;return pw(e.serverPublicKey,t,e.serverAttestation)}});var Sw=l((
               <p class="eyebrow">Diagnostics</p>
               <h1>WS traffic log</h1>
               <p class="lede">Frames sent and received, plus local bridge actions.</p>
-              ${L}
+              ${k}
               ${C}
               <form method="POST" action="/api/traffic/clear" class="actions" style="margin-bottom:12px">
                 <button class="btn btn-ghost" type="submit">Clear traffic</button>
