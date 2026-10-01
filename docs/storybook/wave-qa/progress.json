@@ -12,36 +12,36 @@
       "statuses": ["ready"],
       "roles": {
         "ux": {
-          "passed": true,
-          "score": 96,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 96,
-          "notes": "Rubric A=100 B=96."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "copy": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "ui": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "product": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "tester": {
           "passed": true,
@@ -60,7 +60,7 @@
           "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
         }
       },
-      "allRolesPassed": true
+      "allRolesPassed": false
     },
     {
       "order": 1,
@@ -71,36 +71,36 @@
       "statuses": ["ready"],
       "roles": {
         "ux": {
-          "passed": true,
-          "score": 96,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 96,
-          "notes": "Rubric A=100 B=96."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "copy": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "ui": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "product": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "tester": {
           "passed": true,
@@ -119,7 +119,7 @@
           "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
         }
       },
-      "allRolesPassed": true
+      "allRolesPassed": false
     },
     {
       "order": 2,
@@ -130,36 +130,36 @@
       "statuses": ["ready"],
       "roles": {
         "ux": {
-          "passed": true,
-          "score": 96,
-          "round": 1,
-          "reviewerA": 97,
-          "reviewerB": 96,
-          "notes": "Rubric A=97 B=96."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "copy": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "ui": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "product": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "tester": {
           "passed": true,
@@ -178,7 +178,7 @@
           "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
         }
       },
-      "allRolesPassed": true
+      "allRolesPassed": false
     },
     {
       "order": 3,
@@ -189,36 +189,36 @@
       "statuses": ["ready"],
       "roles": {
         "ux": {
-          "passed": true,
-          "score": 96,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 96,
-          "notes": "Rubric A=100 B=96."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "copy": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "ui": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "product": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "tester": {
           "passed": true,
@@ -237,7 +237,7 @@
           "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
         }
       },
-      "allRolesPassed": true
+      "allRolesPassed": false
     },
     {
       "order": 4,
@@ -248,36 +248,36 @@
       "statuses": ["ready"],
       "roles": {
         "ux": {
-          "passed": true,
-          "score": 96,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 96,
-          "notes": "Rubric A=100 B=96."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "copy": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "ui": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "product": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "tester": {
           "passed": true,
@@ -296,7 +296,7 @@
           "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
         }
       },
-      "allRolesPassed": true
+      "allRolesPassed": false
     },
     {
       "order": 5,
@@ -307,36 +307,36 @@
       "statuses": ["ready"],
       "roles": {
         "ux": {
-          "passed": true,
-          "score": 96,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 96,
-          "notes": "Rubric A=100 B=96."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "copy": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "ui": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "product": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "tester": {
           "passed": true,
@@ -355,7 +355,7 @@
           "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
         }
       },
-      "allRolesPassed": true
+      "allRolesPassed": false
     },
     {
       "order": 6,
@@ -366,36 +366,36 @@
       "statuses": ["loading", "empty", "error", "ready"],
       "roles": {
         "ux": {
-          "passed": true,
-          "score": 96,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 96,
-          "notes": "Rubric A=100 B=96."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "copy": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "ui": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "product": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "tester": {
           "passed": true,
@@ -414,7 +414,7 @@
           "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
         }
       },
-      "allRolesPassed": true
+      "allRolesPassed": false
     },
     {
       "order": 7,
@@ -425,36 +425,36 @@
       "statuses": ["loading", "empty", "error", "ready"],
       "roles": {
         "ux": {
-          "passed": true,
-          "score": 96,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 96,
-          "notes": "Rubric A=100 B=96."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "copy": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "ui": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "product": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "tester": {
           "passed": true,
@@ -473,7 +473,7 @@
           "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
         }
       },
-      "allRolesPassed": true
+      "allRolesPassed": false
     },
     {
       "order": 8,
@@ -484,36 +484,36 @@
       "statuses": ["loading", "empty", "error", "ready"],
       "roles": {
         "ux": {
-          "passed": true,
-          "score": 96,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 96,
-          "notes": "Rubric A=100 B=96."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "copy": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "ui": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "product": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "tester": {
           "passed": true,
@@ -532,7 +532,7 @@
           "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
         }
       },
-      "allRolesPassed": true
+      "allRolesPassed": false
     },
     {
       "order": 9,
@@ -543,36 +543,36 @@
       "statuses": ["loading", "guest", "empty", "error", "ready"],
       "roles": {
         "ux": {
-          "passed": true,
-          "score": 96,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 96,
-          "notes": "Rubric A=100 B=96."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "copy": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "ui": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "product": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "tester": {
           "passed": true,
@@ -591,7 +591,7 @@
           "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
         }
       },
-      "allRolesPassed": true
+      "allRolesPassed": false
     },
     {
       "order": 10,
@@ -602,36 +602,36 @@
       "statuses": ["loading", "guest", "empty", "error", "ready"],
       "roles": {
         "ux": {
-          "passed": true,
-          "score": 96,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 96,
-          "notes": "Rubric A=100 B=96."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "copy": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "ui": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "product": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "tester": {
           "passed": true,
@@ -650,7 +650,7 @@
           "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
         }
       },
-      "allRolesPassed": true
+      "allRolesPassed": false
     },
     {
       "order": 11,
@@ -661,36 +661,36 @@
       "statuses": ["loading", "guest", "empty", "error", "ready"],
       "roles": {
         "ux": {
-          "passed": true,
-          "score": 96,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 96,
-          "notes": "Rubric A=100 B=96."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "copy": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "ui": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "product": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "tester": {
           "passed": true,
@@ -709,7 +709,7 @@
           "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
         }
       },
-      "allRolesPassed": true
+      "allRolesPassed": false
     },
     {
       "order": 12,
@@ -720,36 +720,36 @@
       "statuses": ["loading", "empty", "error", "ready"],
       "roles": {
         "ux": {
-          "passed": true,
-          "score": 96,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 96,
-          "notes": "Rubric A=100 B=96."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "copy": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "ui": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "product": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "tester": {
           "passed": true,
@@ -768,7 +768,7 @@
           "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
         }
       },
-      "allRolesPassed": true
+      "allRolesPassed": false
     },
     {
       "order": 13,
@@ -779,36 +779,36 @@
       "statuses": ["loading", "empty", "error", "ready"],
       "roles": {
         "ux": {
-          "passed": true,
-          "score": 96,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 96,
-          "notes": "Rubric A=100 B=96."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "copy": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "ui": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "product": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "tester": {
           "passed": true,
@@ -827,7 +827,7 @@
           "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
         }
       },
-      "allRolesPassed": true
+      "allRolesPassed": false
     },
     {
       "order": 14,
@@ -838,36 +838,36 @@
       "statuses": ["ready"],
       "roles": {
         "ux": {
-          "passed": true,
-          "score": 96,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 96,
-          "notes": "Rubric A=100 B=96."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "copy": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "ui": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "product": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "tester": {
           "passed": true,
@@ -886,7 +886,7 @@
           "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
         }
       },
-      "allRolesPassed": true
+      "allRolesPassed": false
     },
     {
       "order": 15,
@@ -897,36 +897,36 @@
       "statuses": ["ready"],
       "roles": {
         "ux": {
-          "passed": true,
-          "score": 96,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 96,
-          "notes": "Rubric A=100 B=96."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "copy": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "ui": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "product": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "tester": {
           "passed": true,
@@ -945,7 +945,7 @@
           "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
         }
       },
-      "allRolesPassed": true
+      "allRolesPassed": false
     },
     {
       "order": 16,
@@ -956,36 +956,36 @@
       "statuses": ["ready", "error"],
       "roles": {
         "ux": {
-          "passed": true,
-          "score": 96,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 96,
-          "notes": "Rubric A=100 B=96."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "copy": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "ui": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "product": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "tester": {
           "passed": true,
@@ -1004,7 +1004,7 @@
           "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
         }
       },
-      "allRolesPassed": true
+      "allRolesPassed": false
     },
     {
       "order": 17,
@@ -1015,36 +1015,36 @@
       "statuses": ["ready"],
       "roles": {
         "ux": {
-          "passed": true,
-          "score": 96,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 96,
-          "notes": "Rubric A=100 B=96."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "copy": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "ui": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "product": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "tester": {
           "passed": true,
@@ -1063,7 +1063,7 @@
           "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
         }
       },
-      "allRolesPassed": true
+      "allRolesPassed": false
     },
     {
       "order": 18,
@@ -1074,36 +1074,36 @@
       "statuses": ["ready", "empty"],
       "roles": {
         "ux": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "copy": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "ui": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "product": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "tester": {
           "passed": true,
@@ -1122,7 +1122,7 @@
           "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
         }
       },
-      "allRolesPassed": true
+      "allRolesPassed": false
     },
     {
       "order": 19,
@@ -1133,36 +1133,36 @@
       "statuses": ["ready", "empty", "error"],
       "roles": {
         "ux": {
-          "passed": true,
-          "score": 96,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 96,
-          "notes": "Rubric A=100 B=96."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "copy": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "ui": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "product": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "tester": {
           "passed": true,
@@ -1181,7 +1181,7 @@
           "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
         }
       },
-      "allRolesPassed": true
+      "allRolesPassed": false
     },
     {
       "order": 20,
@@ -1192,36 +1192,36 @@
       "statuses": ["ready", "empty", "error"],
       "roles": {
         "ux": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "copy": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "ui": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "product": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "tester": {
           "passed": true,
@@ -1240,7 +1240,7 @@
           "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
         }
       },
-      "allRolesPassed": true
+      "allRolesPassed": false
     },
     {
       "order": 21,
@@ -1251,36 +1251,36 @@
       "statuses": ["ready", "empty", "error"],
       "roles": {
         "ux": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "copy": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "ui": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "product": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "tester": {
           "passed": true,
@@ -1299,7 +1299,7 @@
           "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
         }
       },
-      "allRolesPassed": true
+      "allRolesPassed": false
     },
     {
       "order": 22,
@@ -1310,36 +1310,36 @@
       "statuses": ["ready", "empty", "error", "loading"],
       "roles": {
         "ux": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "copy": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "ui": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "product": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "tester": {
           "passed": true,
@@ -1358,7 +1358,7 @@
           "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
         }
       },
-      "allRolesPassed": true
+      "allRolesPassed": false
     },
     {
       "order": 23,
@@ -1369,36 +1369,36 @@
       "statuses": ["ready"],
       "roles": {
         "ux": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "copy": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "ui": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "product": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "tester": {
           "passed": true,
@@ -1417,7 +1417,7 @@
           "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
         }
       },
-      "allRolesPassed": true
+      "allRolesPassed": false
     },
     {
       "order": 24,
@@ -1428,36 +1428,36 @@
       "statuses": ["ready", "empty", "error"],
       "roles": {
         "ux": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "copy": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "ui": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "product": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "tester": {
           "passed": true,
@@ -1476,7 +1476,7 @@
           "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
         }
       },
-      "allRolesPassed": true
+      "allRolesPassed": false
     },
     {
       "order": 25,
@@ -1487,36 +1487,36 @@
       "statuses": ["ready", "empty", "error"],
       "roles": {
         "ux": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "copy": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "ui": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "product": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "tester": {
           "passed": true,
@@ -1535,7 +1535,7 @@
           "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
         }
       },
-      "allRolesPassed": true
+      "allRolesPassed": false
     },
     {
       "order": 26,
@@ -1546,36 +1546,36 @@
       "statuses": ["ready", "empty", "error"],
       "roles": {
         "ux": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "copy": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "ui": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "product": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "tester": {
           "passed": true,
@@ -1594,7 +1594,7 @@
           "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
         }
       },
-      "allRolesPassed": true
+      "allRolesPassed": false
     },
     {
       "order": 27,
@@ -1605,36 +1605,36 @@
       "statuses": ["ready", "empty", "error"],
       "roles": {
         "ux": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "copy": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "ui": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "product": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "tester": {
           "passed": true,
@@ -1653,7 +1653,7 @@
           "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
         }
       },
-      "allRolesPassed": true
+      "allRolesPassed": false
     },
     {
       "order": 28,
@@ -1664,36 +1664,36 @@
       "statuses": ["ready", "error"],
       "roles": {
         "ux": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "copy": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "ui": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "product": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "tester": {
           "passed": true,
@@ -1712,7 +1712,7 @@
           "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
         }
       },
-      "allRolesPassed": true
+      "allRolesPassed": false
     },
     {
       "order": 29,
@@ -1723,36 +1723,36 @@
       "statuses": ["ready", "empty"],
       "roles": {
         "ux": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "copy": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "ui": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "product": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "tester": {
           "passed": true,
@@ -1771,7 +1771,7 @@
           "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
         }
       },
-      "allRolesPassed": true
+      "allRolesPassed": false
     },
     {
       "order": 30,
@@ -1782,36 +1782,36 @@
       "statuses": ["ready", "empty"],
       "roles": {
         "ux": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "copy": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "ui": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "product": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "tester": {
           "passed": true,
@@ -1830,7 +1830,7 @@
           "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
         }
       },
-      "allRolesPassed": true
+      "allRolesPassed": false
     },
     {
       "order": 31,
@@ -1841,36 +1841,36 @@
       "statuses": ["ready", "empty"],
       "roles": {
         "ux": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "copy": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "ui": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "product": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "tester": {
           "passed": true,
@@ -1889,7 +1889,7 @@
           "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
         }
       },
-      "allRolesPassed": true
+      "allRolesPassed": false
     },
     {
       "order": 32,
@@ -1900,36 +1900,36 @@
       "statuses": ["ready", "empty", "error"],
       "roles": {
         "ux": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "copy": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "ui": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "product": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "tester": {
           "passed": true,
@@ -1948,7 +1948,7 @@
           "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
         }
       },
-      "allRolesPassed": true
+      "allRolesPassed": false
     },
     {
       "order": 33,
@@ -1959,36 +1959,36 @@
       "statuses": ["ready", "empty"],
       "roles": {
         "ux": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "copy": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "ui": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "product": {
-          "passed": true,
-          "score": 100,
-          "round": 1,
-          "reviewerA": 100,
-          "reviewerB": 100,
-          "notes": "Rubric A=100 B=100."
+          "passed": false,
+          "score": null,
+          "round": 0,
+          "reviewerA": null,
+          "reviewerB": null,
+          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
         },
         "tester": {
           "passed": true,
@@ -2007,7 +2007,7 @@
           "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
         }
       },
-      "allRolesPassed": true
+      "allRolesPassed": false
     }
   ]
 }
