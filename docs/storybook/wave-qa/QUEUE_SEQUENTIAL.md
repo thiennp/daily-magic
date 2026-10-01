@@ -30,4 +30,6 @@ Do not start row N until row N−1 has `allRolesPassed: true` on `main`.
 | 24      | AWL        | errors                 |                            |
 | 25      | AWL        | traffic                |                            |
 
-**Already complete (round 1):** home-marketing, login, home-signed-in, project-detail, library, marketplace, reports, report-detail, automations — may need **ui audit wave** later per `coordinator.md`; not in this queue until sequential pass finishes or coordinator reopens them.
+**Already complete (round 1):** home-marketing, login, home-signed-in, project-detail, library, marketplace, reports, report-detail, automations — included again in the **post-sequential UX audit** (`QUEUE_UX_AUDIT.md`).
+
+**After this queue (all rows `done` on `main`):** run **UX re-check for all 34 pages** one-by-one — same strict gate, **ux role only** — see **`QUEUE_UX_AUDIT.md`**. Then mandatory **ui** `round-audit-1` per `coordinator.md`.

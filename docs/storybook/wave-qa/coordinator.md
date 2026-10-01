@@ -37,9 +37,18 @@ Copy the printed brief into a **cloud** background agent. Subagent must:
 
 After spawning: list page id, branch name, PR URL when available, and `progress.json` counts (`passed` roles / 204).
 
+## Post-sequential UX audit (mandatory)
+
+After **all 34 pages** have `allRolesPassed: true` on `main` (sequential queue + any stragglers):
+
+1. Follow **`QUEUE_UX_AUDIT.md`** — **ux only**, one page at a time, same subagent discipline as first pass.
+2. Recapture when fixes land; reviewer A + B JSON under `reviews/.../ux-audit-1/`.
+3. AWC marketing/auth/doc pages: **computerUse** walk + zoom evidence on ux where `quality-bar.md` requires it.
+4. Do **not** start the UI audit wave until UX audit queue is fully `done`.
+
 ## Final UI audit (mandatory)
 
-After **all 34 pages** complete first-pass ux–product:
+After **UX audit wave** completes (and first-pass ux–product was already done):
 
 1. Spawn cloud subagents with brief: _audit ui only, round-audit-1, read `ui-deep-inspection.md`_.
 2. Start with pages merged earliest (**`home-marketing`**, **`login`**, …) — highest risk of shallow first pass.
