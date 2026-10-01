@@ -63,7 +63,15 @@ npm run storybook:wave:weekly
 
 6. **Next role** on same page, then **next page** when all six roles pass.
 
-Do **not** push `main` until **all 34 pages × 6 roles** pass. Use a feature branch + draft PR until then.
+Do **not** push `main` until **all 34 pages × 6 roles** pass (≥95% reviewer A **and** B per role). Use a feature branch + draft PR until then.
+
+**Objective gates (automated, not a substitute for UX/copy/UI/product):**
+
+- `npm run storybook:wave:validate` — all catalog stories render (tester gate).
+- `npx vitest run src/utils/storybook/pageStoryManifest.test.ts` — catalog alignment (dx gate).
+- `npm run storybook:wave:objective-gates` — writes tester + dx scores into `progress.json` after the above pass.
+
+Weekly CI (`storybook:wave:weekly`) runs build, capture, and validate. The **Saturday agent** must still complete ux → copy → ui → product loops per page until the full matrix is ≥95%.
 
 ## Subagent personas (prompt snippets)
 
