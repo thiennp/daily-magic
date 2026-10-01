@@ -3,6 +3,7 @@
 import Link from "next/link";
 
 import useMyMacDevices from "@/features/agent/hooks/useMyMacDevices";
+import AwcProjectAccessPanel from "@/features/projects/access/AwcProjectAccessPanel";
 import AwcProjectDeleteControl from "@/features/projects/AwcProjectDeleteControl";
 import AwcProjectEditOnMacActions from "@/features/projects/AwcProjectEditOnMacActions";
 import AwcProjectNameEditor from "@/features/projects/AwcProjectNameEditor";
@@ -101,6 +102,7 @@ export default function AwcProjectDetailPanel({
         items={items}
         isLoading={isCompositionLoading}
       />
+      <AwcProjectAccessPanel projectId={project.id} />
       <AwcProjectDeleteControl project={project} variant="detail" />
     </AppPanel>
   );
