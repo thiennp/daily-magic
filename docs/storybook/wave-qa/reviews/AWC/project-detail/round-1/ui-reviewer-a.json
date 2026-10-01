@@ -1,0 +1,29 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "A",
+  "deployable": "AWC",
+  "pageId": "project-detail",
+  "role": "ui",
+  "captureRound": 1,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/project-detail/round-1/manifest.json",
+  "scoreDesktop": 98,
+  "scoreMobile": 96,
+  "scoreOverall": 97,
+  "passed": true,
+  "scoreBreakdown": [
+    {
+      "area": "mobile-bottom-padding",
+      "pointsDeducted": 2,
+      "reason": "Delete project button sits close to fixed bottom nav on mobile ready capture."
+    },
+    {
+      "area": "error-color",
+      "pointsDeducted": 1,
+      "reason": "Error state heading uses error token correctly; empty state could use subtler emphasis vs error red."
+    }
+  ],
+  "whyBelowThreshold": "",
+  "topIssues": [],
+  "mustFix": [],
+  "quickWins": ["Add pb-24 on app-narrow main for mobile Storybook captures"]
+}

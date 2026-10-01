@@ -35,7 +35,10 @@ export default function AwcStorybookChrome({
         return children;
       case "app-narrow":
         return (
-          <AppShell contentClassName={APP_SHELL_NARROW_CONTENT_CLASS}>
+          <AppShell
+            contentClassName={APP_SHELL_NARROW_CONTENT_CLASS}
+            renderPrimaryNav={renderPrimaryNav}
+          >
             {children}
           </AppShell>
         );

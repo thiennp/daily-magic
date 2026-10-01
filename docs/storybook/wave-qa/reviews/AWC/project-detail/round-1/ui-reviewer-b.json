@@ -1,0 +1,29 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "B",
+  "deployable": "AWC",
+  "pageId": "project-detail",
+  "role": "ui",
+  "captureRound": 1,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/project-detail/round-1/manifest.json",
+  "scoreDesktop": 97,
+  "scoreMobile": 96,
+  "scoreOverall": 97,
+  "passed": true,
+  "scoreBreakdown": [
+    {
+      "area": "panel-rhythm",
+      "pointsDeducted": 2,
+      "reason": "AppPanel sections align with styleguide; Project Access inner borders slightly heavy vs Projects list."
+    },
+    {
+      "area": "desktop-nav-card",
+      "pointsDeducted": 1,
+      "reason": "Primary nav card above narrow content matches AWC pattern; Projects active state reads clearly."
+    }
+  ],
+  "whyBelowThreshold": "",
+  "topIssues": [],
+  "mustFix": [],
+  "quickWins": []
+}

@@ -1,0 +1,24 @@
+{
+  "reviewMethod": "agent",
+  "reviewer": "A",
+  "deployable": "AWC",
+  "pageId": "project-detail",
+  "role": "ux",
+  "captureRound": 1,
+  "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/project-detail/round-1/manifest.json",
+  "scoreDesktop": 98,
+  "scoreMobile": 95,
+  "scoreOverall": 97,
+  "passed": true,
+  "scoreBreakdown": [
+    {
+      "area": "mobile-scroll-depth",
+      "pointsDeducted": 3,
+      "reason": "Ready mobile capture is long; Danger zone and Delete sit far below fold with bottom tab bar always visible."
+    }
+  ],
+  "whyBelowThreshold": "",
+  "topIssues": ["Mobile scroll length on ready state"],
+  "mustFix": [],
+  "quickWins": ["Anchor Danger zone with sticky subnav on narrow widths"]
+}

@@ -9,7 +9,9 @@
       "id": "home-marketing",
       "title": "Home (marketing)",
       "path": "/",
-      "statuses": ["ready"],
+      "statuses": [
+        "ready"
+      ],
       "roles": {
         "ux": {
           "passed": true,
@@ -152,7 +154,10 @@
                 }
               ],
               "whyBelowThreshold": "",
-              "topIssues": ["ACL in announcement", "Harness eyebrow"],
+              "topIssues": [
+                "ACL in announcement",
+                "Harness eyebrow"
+              ],
               "mustFix": [],
               "quickWins": [
                 "Rename announcement to Project Access without ACL",
@@ -243,7 +248,9 @@
                 }
               ],
               "whyBelowThreshold": "",
-              "topIssues": ["Light-shell dark: classes on one section"],
+              "topIssues": [
+                "Light-shell dark: classes on one section"
+              ],
               "mustFix": [],
               "quickWins": [
                 "Align For-your-AI surfaces with marketing light tokens only"
@@ -289,7 +296,9 @@
                 "Mobile trust strip spacing"
               ],
               "mustFix": [],
-              "quickWins": ["Add gap-y between trust metrics on sm breakpoint"]
+              "quickWins": [
+                "Add gap-y between trust metrics on sm breakpoint"
+              ]
             }
           }
         },
@@ -326,7 +335,9 @@
                 }
               ],
               "whyBelowThreshold": "",
-              "topIssues": ["Sign-in gating on preset examples"],
+              "topIssues": [
+                "Sign-in gating on preset examples"
+              ],
               "mustFix": [],
               "quickWins": [
                 "Add footnote on preset section that marketplace requires account"
@@ -403,7 +414,9 @@
       "id": "login",
       "title": "Login",
       "path": "/login",
-      "statuses": ["ready"],
+      "statuses": [
+        "ready"
+      ],
       "roles": {
         "ux": {
           "passed": true,
@@ -656,7 +669,9 @@
       "id": "for-agents",
       "title": "For agents",
       "path": "/for-agents",
-      "statuses": ["ready"],
+      "statuses": [
+        "ready"
+      ],
       "roles": {
         "ux": {
           "passed": false,
@@ -715,7 +730,9 @@
       "id": "setup-writer",
       "title": "Setup writer",
       "path": "/setup/writer",
-      "statuses": ["ready"],
+      "statuses": [
+        "ready"
+      ],
       "roles": {
         "ux": {
           "passed": false,
@@ -774,7 +791,9 @@
       "id": "privacy",
       "title": "Privacy",
       "path": "/privacy",
-      "statuses": ["ready"],
+      "statuses": [
+        "ready"
+      ],
       "roles": {
         "ux": {
           "passed": false,
@@ -833,7 +852,9 @@
       "id": "terms",
       "title": "Terms",
       "path": "/terms",
-      "statuses": ["ready"],
+      "statuses": [
+        "ready"
+      ],
       "roles": {
         "ux": {
           "passed": false,
@@ -892,7 +913,12 @@
       "id": "home-signed-in",
       "title": "Home (signed in)",
       "path": "/",
-      "statuses": ["loading", "empty", "error", "ready"],
+      "statuses": [
+        "loading",
+        "empty",
+        "error",
+        "ready"
+      ],
       "roles": {
         "ux": {
           "passed": true,
@@ -927,7 +953,9 @@
                 }
               ],
               "whyBelowThreshold": "",
-              "topIssues": ["Mobile chrome competes with dashboard hierarchy"],
+              "topIssues": [
+                "Mobile chrome competes with dashboard hierarchy"
+              ],
               "mustFix": [],
               "quickWins": [
                 "Tuck marketing accordion below the fold on mobile captures"
@@ -953,7 +981,9 @@
                 }
               ],
               "whyBelowThreshold": "",
-              "topIssues": ["Long mobile scroll for full dashboard"],
+              "topIssues": [
+                "Long mobile scroll for full dashboard"
+              ],
               "mustFix": [],
               "quickWins": []
             }
@@ -987,7 +1017,9 @@
                 }
               ],
               "whyBelowThreshold": "",
-              "topIssues": ["Fixture display name in header"],
+              "topIssues": [
+                "Fixture display name in header"
+              ],
               "mustFix": [],
               "quickWins": [
                 "Use AWC_STORYBOOK_USER.name in session chrome when wired"
@@ -1013,7 +1045,9 @@
                 }
               ],
               "whyBelowThreshold": "",
-              "topIssues": ["Storybook-only status banner voice"],
+              "topIssues": [
+                "Storybook-only status banner voice"
+              ],
               "mustFix": [],
               "quickWins": []
             }
@@ -1052,9 +1086,13 @@
                 }
               ],
               "whyBelowThreshold": "",
-              "topIssues": ["Mobile nav placement"],
+              "topIssues": [
+                "Mobile nav placement"
+              ],
               "mustFix": [],
-              "quickWins": ["Align banner padding with AppShell header rhythm"]
+              "quickWins": [
+                "Align banner padding with AppShell header rhythm"
+              ]
             },
             "reviewerB": {
               "reviewMethod": "agent",
@@ -1076,7 +1114,9 @@
                 }
               ],
               "whyBelowThreshold": "",
-              "topIssues": ["Loading visual weight"],
+              "topIssues": [
+                "Loading visual weight"
+              ],
               "mustFix": [],
               "quickWins": []
             }
@@ -1110,7 +1150,9 @@
                 }
               ],
               "whyBelowThreshold": "",
-              "topIssues": ["Empty vs ready visual overlap"],
+              "topIssues": [
+                "Empty vs ready visual overlap"
+              ],
               "mustFix": [],
               "quickWins": [
                 "Differentiate empty fixtures in a later story pass"
@@ -1141,7 +1183,9 @@
                 }
               ],
               "whyBelowThreshold": "",
-              "topIssues": ["Error story is banner-only"],
+              "topIssues": [
+                "Error story is banner-only"
+              ],
               "mustFix": [],
               "quickWins": []
             }
@@ -1172,7 +1216,12 @@
       "id": "projects",
       "title": "Projects",
       "path": "/projects",
-      "statuses": ["loading", "empty", "error", "ready"],
+      "statuses": [
+        "loading",
+        "empty",
+        "error",
+        "ready"
+      ],
       "roles": {
         "ux": {
           "passed": true,
@@ -1207,7 +1256,9 @@
                 }
               ],
               "whyBelowThreshold": "",
-              "topIssues": ["Mobile chrome competes with create-project form"],
+              "topIssues": [
+                "Mobile chrome competes with create-project form"
+              ],
               "mustFix": [],
               "quickWins": [
                 "Surface a distinct inline error panel when /api/projects fails"
@@ -1243,7 +1294,9 @@
                 }
               ],
               "whyBelowThreshold": "",
-              "topIssues": ["Error story should not masquerade as empty"],
+              "topIssues": [
+                "Error story should not masquerade as empty"
+              ],
               "mustFix": [],
               "quickWins": [
                 "Add retry link beside loading/error banners in Storybook only if product adds API error UI"
@@ -1286,7 +1339,9 @@
               "whyBelowThreshold": "",
               "topIssues": [],
               "mustFix": [],
-              "quickWins": ["Use → in the Project Access hint for consistency"]
+              "quickWins": [
+                "Use → in the Project Access hint for consistency"
+              ]
             },
             "reviewerB": {
               "reviewMethod": "agent",
@@ -1491,39 +1546,288 @@
       "id": "project-detail",
       "title": "Project detail",
       "path": "/projects/:projectId",
-      "statuses": ["loading", "empty", "error", "ready"],
+      "statuses": [
+        "loading",
+        "empty",
+        "error",
+        "ready"
+      ],
       "roles": {
         "ux": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+          "passed": true,
+          "score": 97,
+          "round": 1,
+          "reviewerA": 97,
+          "reviewerB": 97,
+          "notes": "Agent A=97 B=97 (round 1).\nA deductions: mobile-scroll-depth -3: Ready mobile capture is long; Danger zone and Delete sit far below fold with bottom tab bar always visible.\nB deductions: state-differentiation -2: Loading/empty/error bodies are clear; ready state still dense — Project Access competes with rename/Mac CTA on first scan. | nav-active -1: Projects nav highlight is correct after pathname fix; bottom nav still duplicates wayfinding on mobile.",
+          "agentFeedback": {
+            "reviewerA": {
+              "reviewMethod": "agent",
+              "reviewer": "A",
+              "deployable": "AWC",
+              "pageId": "project-detail",
+              "role": "ux",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/project-detail/round-1/manifest.json",
+              "scoreDesktop": 98,
+              "scoreMobile": 95,
+              "scoreOverall": 97,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "mobile-scroll-depth",
+                  "pointsDeducted": 3,
+                  "reason": "Ready mobile capture is long; Danger zone and Delete sit far below fold with bottom tab bar always visible."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": [
+                "Mobile scroll length on ready state"
+              ],
+              "mustFix": [],
+              "quickWins": [
+                "Anchor Danger zone with sticky subnav on narrow widths"
+              ]
+            },
+            "reviewerB": {
+              "reviewMethod": "agent",
+              "reviewer": "B",
+              "deployable": "AWC",
+              "pageId": "project-detail",
+              "role": "ux",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/project-detail/round-1/manifest.json",
+              "scoreDesktop": 97,
+              "scoreMobile": 96,
+              "scoreOverall": 97,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "state-differentiation",
+                  "pointsDeducted": 2,
+                  "reason": "Loading/empty/error bodies are clear; ready state still dense — Project Access competes with rename/Mac CTA on first scan."
+                },
+                {
+                  "area": "nav-active",
+                  "pointsDeducted": 1,
+                  "reason": "Projects nav highlight is correct after pathname fix; bottom nav still duplicates wayfinding on mobile."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": [],
+              "mustFix": [],
+              "quickWins": [
+                "Collapse Project Access behind disclosure on mobile story"
+              ]
+            }
+          }
         },
         "copy": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+          "passed": true,
+          "score": 97,
+          "round": 1,
+          "reviewerA": 97,
+          "reviewerB": 97,
+          "notes": "Agent A=97 B=97 (round 1).\nA deductions: error-empty-tone -2: Empty vs error messages are distinct and actionable; Activity API deploy caveat repeats ACL copy above. | storybook-mac-label -1: Ready state says Storybook Mac — acceptable fixture label but slightly meta for product copy review.\nB deductions: acl-wall -3: Project Access intro is accurate but long on mobile ready capture; token warning is easy to miss.",
+          "agentFeedback": {
+            "reviewerA": {
+              "reviewMethod": "agent",
+              "reviewer": "A",
+              "deployable": "AWC",
+              "pageId": "project-detail",
+              "role": "copy",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/project-detail/round-1/manifest.json",
+              "scoreDesktop": 97,
+              "scoreMobile": 96,
+              "scoreOverall": 97,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "error-empty-tone",
+                  "pointsDeducted": 2,
+                  "reason": "Empty vs error messages are distinct and actionable; Activity API deploy caveat repeats ACL copy above."
+                },
+                {
+                  "area": "storybook-mac-label",
+                  "pointsDeducted": 1,
+                  "reason": "Ready state says Storybook Mac — acceptable fixture label but slightly meta for product copy review."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": [],
+              "mustFix": [],
+              "quickWins": [
+                "Shorten Activity section lead-in once API ships"
+              ]
+            },
+            "reviewerB": {
+              "reviewMethod": "agent",
+              "reviewer": "B",
+              "deployable": "AWC",
+              "pageId": "project-detail",
+              "role": "copy",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/project-detail/round-1/manifest.json",
+              "scoreDesktop": 98,
+              "scoreMobile": 95,
+              "scoreOverall": 97,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "acl-wall",
+                  "pointsDeducted": 3,
+                  "reason": "Project Access intro is accurate but long on mobile ready capture; token warning is easy to miss."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": [],
+              "mustFix": [],
+              "quickWins": [
+                "Bold the agent-access token warning in Project Access"
+              ]
+            }
+          }
         },
         "ui": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+          "passed": true,
+          "score": 97,
+          "round": 1,
+          "reviewerA": 97,
+          "reviewerB": 97,
+          "notes": "Agent A=97 B=97 (round 1).\nA deductions: mobile-bottom-padding -2: Delete project button sits close to fixed bottom nav on mobile ready capture. | error-color -1: Error state heading uses error token correctly; empty state could use subtler emphasis vs error red.\nB deductions: panel-rhythm -2: AppPanel sections align with styleguide; Project Access inner borders slightly heavy vs Projects list. | desktop-nav-card -1: Primary nav card above narrow content matches AWC pattern; Projects active state reads clearly.",
+          "agentFeedback": {
+            "reviewerA": {
+              "reviewMethod": "agent",
+              "reviewer": "A",
+              "deployable": "AWC",
+              "pageId": "project-detail",
+              "role": "ui",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/project-detail/round-1/manifest.json",
+              "scoreDesktop": 98,
+              "scoreMobile": 96,
+              "scoreOverall": 97,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "mobile-bottom-padding",
+                  "pointsDeducted": 2,
+                  "reason": "Delete project button sits close to fixed bottom nav on mobile ready capture."
+                },
+                {
+                  "area": "error-color",
+                  "pointsDeducted": 1,
+                  "reason": "Error state heading uses error token correctly; empty state could use subtler emphasis vs error red."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": [],
+              "mustFix": [],
+              "quickWins": [
+                "Add pb-24 on app-narrow main for mobile Storybook captures"
+              ]
+            },
+            "reviewerB": {
+              "reviewMethod": "agent",
+              "reviewer": "B",
+              "deployable": "AWC",
+              "pageId": "project-detail",
+              "role": "ui",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/project-detail/round-1/manifest.json",
+              "scoreDesktop": 97,
+              "scoreMobile": 96,
+              "scoreOverall": 97,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "panel-rhythm",
+                  "pointsDeducted": 2,
+                  "reason": "AppPanel sections align with styleguide; Project Access inner borders slightly heavy vs Projects list."
+                },
+                {
+                  "area": "desktop-nav-card",
+                  "pointsDeducted": 1,
+                  "reason": "Primary nav card above narrow content matches AWC pattern; Projects active state reads clearly."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": [],
+              "mustFix": [],
+              "quickWins": []
+            }
+          }
         },
         "product": {
-          "passed": false,
-          "score": null,
-          "round": 0,
-          "reviewerA": null,
-          "reviewerB": null,
-          "notes": "Pending agent reviewer A + B (see skill-storybook-page-wave-qa)."
+          "passed": true,
+          "score": 97,
+          "round": 1,
+          "reviewerA": 97,
+          "reviewerB": 97,
+          "notes": "Agent A=97 B=97 (round 1).\nA deductions: cloud-vs-local -2: Rename-on-cloud vs edit-on-Mac story is believable; composition still shows zeros on ready capture. | activity-backend -1: Activity API placeholder matches KNOWN deploy gap; does not misrepresent shipped backend.\nB deductions: fixture-project -2: daily-magic sample repo path and ACL sections match AWC registry intent. | empty-error-stories -1: Empty/error stories now show realistic not-found and API failure panels instead of full ready chrome.",
+          "agentFeedback": {
+            "reviewerA": {
+              "reviewMethod": "agent",
+              "reviewer": "A",
+              "deployable": "AWC",
+              "pageId": "project-detail",
+              "role": "product",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/project-detail/round-1/manifest.json",
+              "scoreDesktop": 97,
+              "scoreMobile": 96,
+              "scoreOverall": 97,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "cloud-vs-local",
+                  "pointsDeducted": 2,
+                  "reason": "Rename-on-cloud vs edit-on-Mac story is believable; composition still shows zeros on ready capture."
+                },
+                {
+                  "area": "activity-backend",
+                  "pointsDeducted": 1,
+                  "reason": "Activity API placeholder matches KNOWN deploy gap; does not misrepresent shipped backend."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": [],
+              "mustFix": [],
+              "quickWins": [
+                "Seed composition counts in ready story for marketing fidelity"
+              ]
+            },
+            "reviewerB": {
+              "reviewMethod": "agent",
+              "reviewer": "B",
+              "deployable": "AWC",
+              "pageId": "project-detail",
+              "role": "product",
+              "captureRound": 1,
+              "captureRef": "/opt/cursor/artifacts/storybook-waves/AWC/project-detail/round-1/manifest.json",
+              "scoreDesktop": 98,
+              "scoreMobile": 95,
+              "scoreOverall": 97,
+              "passed": true,
+              "scoreBreakdown": [
+                {
+                  "area": "fixture-project",
+                  "pointsDeducted": 2,
+                  "reason": "daily-magic sample repo path and ACL sections match AWC registry intent."
+                },
+                {
+                  "area": "empty-error-stories",
+                  "pointsDeducted": 1,
+                  "reason": "Empty/error stories now show realistic not-found and API failure panels instead of full ready chrome."
+                }
+              ],
+              "whyBelowThreshold": "",
+              "topIssues": [],
+              "mustFix": [],
+              "quickWins": []
+            }
+          }
         },
         "tester": {
           "passed": true,
@@ -1542,7 +1846,7 @@
           "notes": "Objective gate: manifest/catalog alignment (pageStoryManifest.test.ts)."
         }
       },
-      "allRolesPassed": false
+      "allRolesPassed": true
     },
     {
       "order": 9,
@@ -1550,7 +1854,13 @@
       "id": "library",
       "title": "Library",
       "path": "/library",
-      "statuses": ["loading", "guest", "empty", "error", "ready"],
+      "statuses": [
+        "loading",
+        "guest",
+        "empty",
+        "error",
+        "ready"
+      ],
       "roles": {
         "ux": {
           "passed": false,
@@ -1609,7 +1919,13 @@
       "id": "marketplace",
       "title": "Marketplace",
       "path": "/marketplace",
-      "statuses": ["loading", "guest", "empty", "error", "ready"],
+      "statuses": [
+        "loading",
+        "guest",
+        "empty",
+        "error",
+        "ready"
+      ],
       "roles": {
         "ux": {
           "passed": false,
@@ -1668,7 +1984,13 @@
       "id": "reports",
       "title": "Reports",
       "path": "/reports",
-      "statuses": ["loading", "guest", "empty", "error", "ready"],
+      "statuses": [
+        "loading",
+        "guest",
+        "empty",
+        "error",
+        "ready"
+      ],
       "roles": {
         "ux": {
           "passed": false,
@@ -1727,7 +2049,12 @@
       "id": "report-detail",
       "title": "Report detail",
       "path": "/reports/:runId",
-      "statuses": ["loading", "empty", "error", "ready"],
+      "statuses": [
+        "loading",
+        "empty",
+        "error",
+        "ready"
+      ],
       "roles": {
         "ux": {
           "passed": false,
@@ -1786,7 +2113,12 @@
       "id": "automations",
       "title": "Automations",
       "path": "/automations",
-      "statuses": ["loading", "empty", "error", "ready"],
+      "statuses": [
+        "loading",
+        "empty",
+        "error",
+        "ready"
+      ],
       "roles": {
         "ux": {
           "passed": false,
@@ -1845,7 +2177,9 @@
       "id": "prompt-optimizer",
       "title": "Prompt optimizer",
       "path": "/prompt-optimizer",
-      "statuses": ["ready"],
+      "statuses": [
+        "ready"
+      ],
       "roles": {
         "ux": {
           "passed": false,
@@ -1904,7 +2238,9 @@
       "id": "prompt-optimizer-guide",
       "title": "Prompt optimizer guide",
       "path": "/prompt-optimizer/guide",
-      "statuses": ["ready"],
+      "statuses": [
+        "ready"
+      ],
       "roles": {
         "ux": {
           "passed": false,
@@ -1963,7 +2299,10 @@
       "id": "connection-lab",
       "title": "Connection lab",
       "path": "/connection-lab",
-      "statuses": ["ready", "error"],
+      "statuses": [
+        "ready",
+        "error"
+      ],
       "roles": {
         "ux": {
           "passed": false,
@@ -2022,7 +2361,9 @@
       "id": "showcases",
       "title": "Showcases",
       "path": "/showcases",
-      "statuses": ["ready"],
+      "statuses": [
+        "ready"
+      ],
       "roles": {
         "ux": {
           "passed": false,
@@ -2081,7 +2422,10 @@
       "id": "admin-users",
       "title": "Admin users",
       "path": "/admin/users",
-      "statuses": ["ready", "empty"],
+      "statuses": [
+        "ready",
+        "empty"
+      ],
       "roles": {
         "ux": {
           "passed": false,
@@ -2140,7 +2484,11 @@
       "id": "admin-groups",
       "title": "Admin groups",
       "path": "/admin/groups",
-      "statuses": ["ready", "empty", "error"],
+      "statuses": [
+        "ready",
+        "empty",
+        "error"
+      ],
       "roles": {
         "ux": {
           "passed": false,
@@ -2199,7 +2547,11 @@
       "id": "home",
       "title": "Home",
       "path": "/",
-      "statuses": ["ready", "empty", "error"],
+      "statuses": [
+        "ready",
+        "empty",
+        "error"
+      ],
       "roles": {
         "ux": {
           "passed": false,
@@ -2258,7 +2610,11 @@
       "id": "task",
       "title": "Task",
       "path": "/task",
-      "statuses": ["ready", "empty", "error"],
+      "statuses": [
+        "ready",
+        "empty",
+        "error"
+      ],
       "roles": {
         "ux": {
           "passed": false,
@@ -2317,7 +2673,12 @@
       "id": "prompt-optimizer",
       "title": "Prompt optimizer",
       "path": "/prompt-optimizer",
-      "statuses": ["ready", "empty", "error", "loading"],
+      "statuses": [
+        "ready",
+        "empty",
+        "error",
+        "loading"
+      ],
       "roles": {
         "ux": {
           "passed": false,
@@ -2376,7 +2737,9 @@
       "id": "prompt-optimizer-guide",
       "title": "Prompt optimizer guide",
       "path": "/prompt-optimizer/guide",
-      "statuses": ["ready"],
+      "statuses": [
+        "ready"
+      ],
       "roles": {
         "ux": {
           "passed": false,
@@ -2435,7 +2798,11 @@
       "id": "status",
       "title": "Status",
       "path": "/status",
-      "statuses": ["ready", "empty", "error"],
+      "statuses": [
+        "ready",
+        "empty",
+        "error"
+      ],
       "roles": {
         "ux": {
           "passed": false,
@@ -2494,7 +2861,11 @@
       "id": "projects",
       "title": "Projects",
       "path": "/projects",
-      "statuses": ["ready", "empty", "error"],
+      "statuses": [
+        "ready",
+        "empty",
+        "error"
+      ],
       "roles": {
         "ux": {
           "passed": false,
@@ -2553,7 +2924,11 @@
       "id": "project",
       "title": "Project editor",
       "path": "/project",
-      "statuses": ["ready", "empty", "error"],
+      "statuses": [
+        "ready",
+        "empty",
+        "error"
+      ],
       "roles": {
         "ux": {
           "passed": false,
@@ -2612,7 +2987,11 @@
       "id": "harness",
       "title": "Harness",
       "path": "/harness",
-      "statuses": ["ready", "empty", "error"],
+      "statuses": [
+        "ready",
+        "empty",
+        "error"
+      ],
       "roles": {
         "ux": {
           "passed": false,
@@ -2671,7 +3050,10 @@
       "id": "writer-api",
       "title": "Writer API",
       "path": "/writer-api",
-      "statuses": ["ready", "error"],
+      "statuses": [
+        "ready",
+        "error"
+      ],
       "roles": {
         "ux": {
           "passed": false,
@@ -2730,7 +3112,10 @@
       "id": "knowledge",
       "title": "Knowledge",
       "path": "/knowledge",
-      "statuses": ["ready", "empty"],
+      "statuses": [
+        "ready",
+        "empty"
+      ],
       "roles": {
         "ux": {
           "passed": false,
@@ -2789,7 +3174,10 @@
       "id": "history",
       "title": "History",
       "path": "/history",
-      "statuses": ["ready", "empty"],
+      "statuses": [
+        "ready",
+        "empty"
+      ],
       "roles": {
         "ux": {
           "passed": false,
@@ -2848,7 +3236,10 @@
       "id": "writer-sessions",
       "title": "Transcripts",
       "path": "/writer-sessions",
-      "statuses": ["ready", "empty"],
+      "statuses": [
+        "ready",
+        "empty"
+      ],
       "roles": {
         "ux": {
           "passed": false,
@@ -2907,7 +3298,11 @@
       "id": "errors",
       "title": "Errors",
       "path": "/errors",
-      "statuses": ["ready", "empty", "error"],
+      "statuses": [
+        "ready",
+        "empty",
+        "error"
+      ],
       "roles": {
         "ux": {
           "passed": false,
@@ -2966,7 +3361,10 @@
       "id": "traffic",
       "title": "Traffic",
       "path": "/traffic",
-      "statuses": ["ready", "empty"],
+      "statuses": [
+        "ready",
+        "empty"
+      ],
       "roles": {
         "ux": {
           "passed": false,
