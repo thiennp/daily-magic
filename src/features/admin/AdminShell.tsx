@@ -13,6 +13,7 @@ export default function AdminShell({
   return (
     <AdminGroupsSidebarProvider>
       <AppShell
+        renderPrimaryNav={false}
         showDevicesRail={false}
         sidebar={
           <div className="space-y-4 lg:sticky lg:top-24">
