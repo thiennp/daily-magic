@@ -42,7 +42,6 @@ export const useAwcProjectActivity = (
 
   useEffect(() => {
     if (!enabled) {
-      setIsLoading(false);
       return;
     }
 
@@ -76,7 +75,7 @@ export const useAwcProjectActivity = (
     events,
     filter,
     setFilter,
-    isLoading,
+    isLoading: enabled ? isLoading : false,
     unavailable,
     message,
     reload,
