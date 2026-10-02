@@ -9,14 +9,14 @@ export interface MarketingFeatureItem {
 
 export const MARKETING_FEATURE_ITEMS: readonly MarketingFeatureItem[] = [
   {
-    title: "Mac Tasks and Playbooks",
-    body: "Connect Macs you control, run Tasks, and turn winning prompts into reusable Playbooks—most teams complete a first Run the same day.",
+    title: "Bot-to-bot project connect",
+    body: "Invite (Copy / MCP redeem), wait for owner Approve, list_project_peers, then project_dispatch send/receive by nickname. Optional leave_project; dual Bearer keeps awc_proj_ for project-scoped MCP.",
     preview: "dispatch",
     emphasized: true,
   },
   {
     title: "Project Access you control",
-    body: "Approve, Deny, or Revoke who may join a project. Folder refs stay registry-only—no shared tokens, no cloud content bus.",
+    body: "Approve, Deny, or Revoke who may join. Folder refs stay registry-only—no shared tokens, no cloud content bus. Activity shows leave / Left project when a bot self-disconnects.",
     preview: "approve",
     emphasized: true,
   },

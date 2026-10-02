@@ -34,8 +34,15 @@ describe("buildProjectInviteAgentPrompt", () => {
     expect(prompt).toContain("get_my_project_access");
     expect(prompt).toContain("rotate_project_api_key");
     expect(prompt).toContain("awc_proj_");
-    expect(prompt).toMatch(/MCP accepts agent-access Bearer OR active awc_proj_/i);
+    expect(prompt).toMatch(
+      /Dual-Bearer|MCP accepts agent-access Bearer OR active awc_proj_/i,
+    );
     expect(prompt).toMatch(/project-scoped tools/i);
+    expect(prompt).toMatch(/You MAY use awc_proj_/i);
+    expect(prompt).toContain("list_project_peers");
+    expect(prompt).toContain("list_project_inbox");
+    expect(prompt).toContain("check_membership");
+    expect(prompt).toMatch(/awc_proj_ alone 401s|cannot call non-project/i);
     expect(prompt).toContain("get_project_acl");
     expect(prompt).toContain("list_project_peers");
     expect(prompt).toMatch(/REQUIRED/i);
@@ -43,9 +50,11 @@ describe("buildProjectInviteAgentPrompt", () => {
     expect(prompt).toContain("teamLabel");
     expect(prompt).toContain("isAgent");
     expect(prompt).toContain("isOwner");
-    expect(prompt).toMatch(/from self/i);
-    expect(prompt).toMatch(/owner included/i);
-    expect(prompt).toMatch(/Empty peers besides the owner is normal/i);
+    expect(prompt).toMatch(/Expect self|from self/i);
+    expect(prompt).toMatch(/isOwner/i);
+    expect(prompt).toMatch(
+      /empty peers is less common|Empty peers besides the owner is normal/i,
+    );
     expect(prompt).toMatch(/print a clear human summary/i);
     expect(prompt).toContain("project_dispatch");
     expect(prompt).toMatch(/toProjectDisplayName|toTeamLabel/);
@@ -58,17 +67,32 @@ describe("buildProjectInviteAgentPrompt", () => {
     expect(prompt).toMatch(/Start with sinceCatalogVersion 0|start with 0/i);
     expect(prompt).toMatch(/entries\[\]\.adapt|adaptHint|tools\[\]|connect/);
     expect(prompt).toMatch(/tell your user briefly|catalog advanced/i);
-    expect(prompt).toMatch(/Store returned catalogVersion|store.*catalogVersion/i);
-    expect(prompt).toMatch(/Keep your agent-access MCP Bearer|keep agent-access Bearer/i);
-    expect(prompt).toMatch(/do NOT swap to awc_proj_/i);
+    expect(prompt).toMatch(
+      /Store returned catalogVersion|store.*catalogVersion/i,
+    );
+    expect(prompt).toMatch(
+      /agent-access Bearer|check_product_updates is catalog-wide/i,
+    );
+    expect(prompt).toMatch(
+      /awc_proj_ alone 401s|do NOT swap to awc_proj_|required\/preferred/i,
+    );
+    expect(prompt).toMatch(/Dual-auth|Dual-Bearer|project-scoped/i);
     expect(prompt).not.toMatch(/memory pull|pull memory|project memory/i);
     expect(prompt).not.toMatch(/open this URL/i);
     expect(prompt).not.toContain("https://example.com/invite/p/tok-xyz");
     expect(prompt).toContain("Project: Demo (proj-1)");
     expect(prompt).toContain("leave_project");
     expect(prompt).toMatch(/"confirm":\s*true/);
-    expect(prompt).toMatch(/no owner Approve needed|does not need to Approve your leave/i);
-    expect(prompt).toMatch(/do NOT call leave_project with awc_proj_|agent-access MCP Bearer only/i);
+    expect(prompt).toMatch(
+      /no owner Approve needed|does not need to Approve your leave/i,
+    );
+    expect(prompt).toMatch(
+      /agent-access only for leave_project|do NOT call leave_project with awc_proj_|agent-access MCP Bearer only/i,
+    );
+    expect(prompt).toMatch(
+      /not on the awc_proj_|do NOT call leave_project with awc_proj_/i,
+    );
+    expect(prompt).toMatch(/Left project|leave \//i);
     expect(prompt).toMatch(/cannot revoke others/i);
   });
 
