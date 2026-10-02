@@ -1,13 +1,10 @@
 import Button from "@/components/ui/button/Button";
+import formatAdminUserKindLabel from "@/features/admin/utils/formatAdminUserKindLabel";
+import formatAdminUserLastActivity from "@/features/admin/utils/formatAdminUserLastActivity";
 import formatGlobalRole from "@/lib/auth/formatGlobalRole";
-import type { GlobalRoleValue } from "@/lib/auth/roles";
+import type AdminUserRecord from "@/lib/auth/types/AdminUserRecord.type";
 
-interface UserItem {
-  readonly id: string;
-  readonly email: string;
-  readonly name: string | null;
-  readonly globalRole: string;
-}
+type UserItem = AdminUserRecord;
 
 interface UsersTableProps {
   readonly users: readonly UserItem[];
@@ -26,7 +23,9 @@ export default function UsersTable({
         <thead>
           <tr className="border-b border-gray-200 dark:border-gray-800">
             <th className="px-3 py-2">Email</th>
+            <th className="px-3 py-2">Kind</th>
             <th className="px-3 py-2">Global role</th>
+            <th className="px-3 py-2">Last activity</th>
             <th className="px-3 py-2">Actions</th>
           </tr>
         </thead>
@@ -37,8 +36,12 @@ export default function UsersTable({
               className="border-b border-gray-100 dark:border-gray-800/80"
             >
               <td className="px-3 py-2">{user.email}</td>
+              <td className="px-3 py-2">{formatAdminUserKindLabel(user.kind)}</td>
               <td className="px-3 py-2">
-                {formatGlobalRole(user.globalRole as GlobalRoleValue)}
+                {formatGlobalRole(user.globalRole)}
+              </td>
+              <td className="px-3 py-2">
+                {formatAdminUserLastActivity(user.lastActivityAt)}
               </td>
               <td className="px-3 py-2">
                 <Button
