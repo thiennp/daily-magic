@@ -1,10 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { resetProjectAclSchemaEnsureForTests } from "@/lib/projects/acl/ensureProjectAclSchema";
-import {
-  LEAVE_MEMBER_ROW,
-  LEAVE_PROJECT,
-} from "@/lib/projects/acl/leaveProjectMembership.fixtures";
+import { LEAVE_PROJECT } from "@/lib/projects/acl/leaveProjectMembership.fixtures";
 import { leaveProjectMembership } from "@/lib/projects/acl/leaveProjectMembership";
 import { createLeaveSqlMockImplementation } from "@/lib/projects/acl/leaveProjectMembership.testUtils";
 import { revokeProjectApiKeysForMembership } from "@/lib/projects/acl/projectApiKeys/revokeProjectApiKeysForMembership";
@@ -36,7 +33,7 @@ describe("leaveProjectMembership happy path", () => {
     resetProjectAclSchemaEnsureForTests();
   });
 
-  it("revokes active membership, disables webhooks, revokes keys, audits leave", async () => {
+  it("revokes active membership, disables webhooks, revokes keys without audit INSERT", async () => {
     sqlMock.mockImplementation(createLeaveSqlMockImplementation());
     const result = await leaveProjectMembership({
       projectId: "proj-1",
@@ -61,17 +58,7 @@ describe("leaveProjectMembership happy path", () => {
     const auditCalls = sqlMock.mock.calls.filter((call) =>
       String(call[0]).includes("INSERT INTO project_access_audit"),
     );
-    expect(auditCalls.length).toBeGreaterThanOrEqual(2);
-    const auditActions = auditCalls.map((call) =>
-      call
-        .slice(1)
-        .find(
-          (v) => v === "leave" || v === "webhook.disable" || v === "revoke",
-        ),
-    );
-    expect(auditActions).toContain("webhook.disable");
-    expect(auditActions).toContain("leave");
-    expect(auditActions).not.toContain("revoke");
+    expect(auditCalls).toHaveLength(0);
     const purgeSql = sqlMock.mock.calls.map((call) => String(call[0]));
     expect(
       purgeSql.some((query) =>

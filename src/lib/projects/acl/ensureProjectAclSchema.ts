@@ -11,7 +11,7 @@ export const resetProjectAclSchemaEnsureForTests = (): void => {
   state.promise = null;
 };
 
-/** Idempotent CREATE for ACL tables (full DDL also in 041/044/045 migrations). */
+/** Idempotent CREATE for ACL tables (full DDL in migrations; audit table dropped 049). */
 export const ensureProjectAclSchema = async (): Promise<void> => {
   if (state.ensured) {
     return;
@@ -48,13 +48,6 @@ export const ensureProjectAclSchema = async (): Promise<void> => {
       ADD COLUMN IF NOT EXISTS team_label TEXT`;
     await sql`ALTER TABLE project_access_requests
       ADD COLUMN IF NOT EXISTS suggested_project_display_name TEXT`;
-    await sql`CREATE TABLE IF NOT EXISTS project_access_audit (
-      id TEXT PRIMARY KEY DEFAULT gen_random_uuid()::text,
-      project_id TEXT NOT NULL REFERENCES user_projects(id) ON DELETE CASCADE,
-      actor_user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-      action TEXT NOT NULL, target_user_id TEXT,
-      at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-      detail JSONB NOT NULL DEFAULT '{}'::jsonb)`;
     await sql`CREATE TABLE IF NOT EXISTS project_folder_refs (
       id TEXT PRIMARY KEY DEFAULT gen_random_uuid()::text,
       project_id TEXT NOT NULL REFERENCES user_projects(id) ON DELETE CASCADE,
