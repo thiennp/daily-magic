@@ -31,6 +31,24 @@ export type ApproveProjectAccessResult =
         | "display_name_taken";
     };
 
+/** Owner-provided name wins; else pending suggestion (when still present). */
+const resolveEffectiveApproveName = (input: {
+  readonly ownerProjectDisplayName?: string | null;
+  readonly suggestedProjectDisplayName: string | null;
+}): string | null | undefined => {
+  const owner = input.ownerProjectDisplayName;
+  if (typeof owner === "string" && owner.trim().length > 0) {
+    return owner;
+  }
+  if (
+    typeof input.suggestedProjectDisplayName === "string" &&
+    input.suggestedProjectDisplayName.trim().length > 0
+  ) {
+    return input.suggestedProjectDisplayName;
+  }
+  return owner;
+};
+
 export const approveProjectAccessRequest = async (input: {
   readonly projectId: string;
   readonly requestId: string;
@@ -60,7 +78,10 @@ export const approveProjectAccessRequest = async (input: {
   const requesterIsAgent = await isAgentUserId(pending.requesterUserId);
   const nameResult = resolveApproveDisplayName({
     requesterIsAgent,
-    projectDisplayName: input.projectDisplayName,
+    projectDisplayName: resolveEffectiveApproveName({
+      ownerProjectDisplayName: input.projectDisplayName,
+      suggestedProjectDisplayName: pending.suggestedProjectDisplayName,
+    }),
   });
   if (!nameResult.ok) return { ok: false, code: nameResult.code };
 

@@ -35,7 +35,7 @@ export const buildProjectInviteAgentPrompt = (input: {
   }
 
   const urls = buildAgentAccessUrls();
-  const redeemJson = `{ "token": "${token}" }`;
+  const redeemJson = `{ "token": "${token}", "suggestedProjectDisplayName": "<unique nickname>" }`;
   const projectIdHint =
     input.projectId?.trim() || "<projectId from redeem response>";
   const nl = String.fromCharCode(10);
@@ -47,12 +47,12 @@ export const buildProjectInviteAgentPrompt = (input: {
     `   a) Install/connect MCP: HTTP MCP at ${urls.mcpUrl} (Bearer after register), discovery ${urls.discoveryUrl}, guideline ${urls.guidelineUrl} / ${urls.origin}/llms.txt; OR`,
     `   b) REST: POST ${urls.registerUrl} body { "method": "none", "displayName": "<your bot name>" } → store bearer; then POST ${urls.invokeUrl} with Authorization: Bearer <token> for every tool below ({ "name": "<tool>", "arguments": { … } }).`,
     "",
-    "2. Call redeem_project_invite with JSON:",
+    "2. Call redeem_project_invite with JSON (MAY include suggestedProjectDisplayName — unique nickname, 2–32 letters, single spaces OK):",
     `   ${redeemJson}`,
-    "   Save projectId from the response. (Optional later: suggestedProjectDisplayName when the API accepts it — omit for now.)",
+    "   Or omit suggestedProjectDisplayName / pass only { \"token\": \"…\" }. If DISPLAY_NAME_TAKEN / INVALID_DISPLAY_NAME, pick another name and retry. Save projectId from the response.",
     "",
     "3. AFTER redeem — talk to YOUR USER (do not busy-poll forever):",
-    "   Tell them: wait for the project owner to Approve you in Agent Witch Cloud (and set your project nickname), then come back and confirm to you that you were Approved.",
+    "   Tell them: wait for the project owner to Approve you in Agent Witch Cloud (nickname prefills from your suggestion; owner may change it), then come back and confirm to you that you were Approved.",
     `   You may optionally check get_my_project_access { "projectId": "${projectIdHint}" } once to note pending — but the primary UX is wait + user confirm, not silent polling loops.`,
     "",
     "4. ON USER CONFIRM post-Approve (only then) — keep your agent-access MCP Bearer session:",

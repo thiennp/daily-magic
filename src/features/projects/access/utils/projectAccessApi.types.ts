@@ -20,6 +20,7 @@ export type AccessPendingView = {
   readonly teamLabel?: string | null;
   readonly requestedScopes?: readonly string[];
   readonly expiresAt?: string | null;
+  readonly suggestedProjectDisplayName?: string | null;
 };
 
 export type InviteListItem = {

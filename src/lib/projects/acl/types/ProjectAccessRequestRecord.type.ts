@@ -17,4 +17,6 @@ export default interface ProjectAccessRequestRecord {
   readonly expiresAt: string;
   readonly inviteId: string | null;
   readonly teamLabel: string | null;
+  /** Agent nickname suggestion from invite redeem; owner may override on Approve. */
+  readonly suggestedProjectDisplayName: string | null;
 }

@@ -30,6 +30,8 @@ export type PendingRequestView = {
   readonly reason: string | null;
   readonly createdAt: string;
   readonly expiresAt: string | null;
+  /** Agent redeem suggestion for Approve UI prefill; owner may override. */
+  readonly suggestedProjectDisplayName: string | null;
 };
 
 export const buildMembershipViews = async (
@@ -74,6 +76,7 @@ export const buildPendingRequestViews = async (
       reason: p.reason,
       createdAt: p.createdAt,
       expiresAt: p.expiresAt,
+      suggestedProjectDisplayName: p.suggestedProjectDisplayName,
     };
   });
 };

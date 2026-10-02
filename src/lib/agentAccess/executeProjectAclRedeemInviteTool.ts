@@ -3,6 +3,25 @@ import type { AgentAccessToolCallResult } from "@/lib/agentAccess/handleAgentAcc
 import { agentAccessTextResult } from "@/lib/agentAccess/requireAgentAccessActor";
 import { normalizeProjectInviteTokenArg } from "@/lib/projects/acl/invites/extractProjectInviteTokenFromUrl";
 import { redeemProjectInvite } from "@/lib/projects/acl/invites/redeemProjectInvite";
+import { toPublicAccessErrorCode } from "@/lib/projects/acl/mapProjectAccessError";
+
+const readSuggestedDisplayName = (args: unknown): string | null => {
+  if (args === null || typeof args !== "object") {
+    return null;
+  }
+  const record = args as {
+    suggestedProjectDisplayName?: unknown;
+    projectDisplayName?: unknown;
+  };
+  if (typeof record.suggestedProjectDisplayName === "string") {
+    return record.suggestedProjectDisplayName;
+  }
+  // Alias accepted for convenience (catalog documents suggestedProjectDisplayName).
+  if (typeof record.projectDisplayName === "string") {
+    return record.projectDisplayName;
+  }
+  return null;
+};
 
 export const executeProjectAclRedeemInviteTool = async (input: {
   readonly actor: AgentAccessActor;
@@ -24,11 +43,22 @@ export const executeProjectAclRedeemInviteTool = async (input: {
       true,
     );
   }
+  const suggested = readSuggestedDisplayName(input.args);
   const result = await redeemProjectInvite({
     token: normalizeProjectInviteTokenArg(token),
     actorUserId: input.actor.id,
+    suggestedProjectDisplayName: suggested,
   });
   if (!result.ok) {
+    if (
+      result.code === "display_name_taken" ||
+      result.code === "display_name_invalid" ||
+      result.code === "display_name_reserved" ||
+      result.code === "display_name_required"
+    ) {
+      const code = toPublicAccessErrorCode(result.code);
+      return agentAccessTextResult({ ok: false, error: code, code }, true);
+    }
     // Generic error for invalid tokens (A7) — still distinguish already_* for auth'd agents.
     const error =
       result.code === "invalid_token" || result.code === "exhausted"
@@ -42,7 +72,10 @@ export const executeProjectAclRedeemInviteTool = async (input: {
     namingRequired: true,
     projectId: result.projectId,
     requestId: result.request.id,
+    suggestedProjectDisplayName: result.suggestedProjectDisplayName,
     message:
-      "Invite redeemed. Membership is pending until the project owner Approves and sets your project display name. No scoped key yet.",
+      result.suggestedProjectDisplayName !== null
+        ? "Invite redeemed. Membership is pending until the project owner Approves. Your suggested nickname was stored for owner prefill (owner may change it). No scoped key yet."
+        : "Invite redeemed. Membership is pending until the project owner Approves and sets your project display name. No scoped key yet.",
   });
 };
