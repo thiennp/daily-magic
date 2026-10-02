@@ -3,19 +3,11 @@
 import { useState } from "react";
 import { twMerge } from "tailwind-merge";
 
-import AwcProjectAccessFolderRefs from "@/features/projects/access/AwcProjectAccessFolderRefs";
-import AwcProjectAccessMembersList from "@/features/projects/access/AwcProjectAccessMembersList";
-import AwcProjectAccessPendingList from "@/features/projects/access/AwcProjectAccessPendingList";
+import AwcProjectAccessPanelBody from "@/features/projects/access/AwcProjectAccessPanelBody";
 import AwcProjectActivityFeed from "@/features/projects/access/AwcProjectActivityFeed";
-import AwcProjectInvitesPanel from "@/features/projects/access/invites/AwcProjectInvitesPanel";
 import { AWC_PROJECT_ACCESS_COPY } from "@/features/projects/access/awcProjectAccessCopy.constant";
 import { useAwcProjectAccess } from "@/features/projects/access/hooks/useAwcProjectAccess";
-import {
-  addProjectFolderRef,
-  removeProjectFolderRef,
-} from "@/features/projects/access/utils/mutateProjectFolderRefs";
 import { APP_SURFACE_BODY_TEXT_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
-import { mapProjectAccessError } from "@/lib/projects/acl/mapProjectAccessError";
 
 interface AwcProjectAccessPanelProps {
   readonly projectId: string;
@@ -65,69 +57,12 @@ export default function AwcProjectAccessPanel({
       ) : null}
 
       {!access.isLoading && !access.loadError ? (
-        <>
-          <AwcProjectInvitesPanel
-            invites={access.invites}
-            createdInviteUrl={access.createdInviteUrl}
-            createdInviteToken={access.createdInviteToken}
-            projectId={projectId}
-            projectName={access.projectName}
-            onCreate={() => void access.createInvite().then(bump)}
-            onRevoke={(id) => void access.revokeInvite(id).then(bump)}
-            onClearCreatedUrl={clearCreatedInvite}
-          />
-          <AwcProjectAccessPendingList
-            projectId={projectId}
-            pending={access.pending}
-            onApprove={async (id, name) => {
-              const result = await access.approve(id, name);
-              bump();
-              return result;
-            }}
-            onDeny={(id) => void access.deny(id).then(bump)}
-          />
-          <AwcProjectAccessMembersList
-            members={access.members}
-            onRevoke={(id) => void access.revoke(id).then(bump)}
-            onRename={async (membershipId, projectDisplayName) => {
-              const result = await access.renameMember(
-                membershipId,
-                projectDisplayName,
-              );
-              bump();
-              return result;
-            }}
-          />
-          <AwcProjectAccessFolderRefs
-            folderRefs={access.folderRefs}
-            onAdd={async (machineOrDeviceRef, folderPath) => {
-              const result = await addProjectFolderRef({
-                projectId,
-                machineOrDeviceRef,
-                folderPath,
-              });
-              access.setMessage(
-                result.ok
-                  ? "Folder ref added."
-                  : mapProjectAccessError(result.errorMessage, "Failed."),
-              );
-              if (result.ok) await access.reload();
-              return result.ok;
-            }}
-            onRemove={(refId) => {
-              void removeProjectFolderRef({ projectId, refId }).then(
-                async (result) => {
-                  access.setMessage(
-                    result.ok
-                      ? "Folder ref removed."
-                      : mapProjectAccessError(result.errorMessage, "Failed."),
-                  );
-                  await access.reload();
-                },
-              );
-            }}
-          />
-        </>
+        <AwcProjectAccessPanelBody
+          projectId={projectId}
+          access={access}
+          bump={bump}
+          clearCreatedInvite={clearCreatedInvite}
+        />
       ) : null}
 
       {access.message ? (
