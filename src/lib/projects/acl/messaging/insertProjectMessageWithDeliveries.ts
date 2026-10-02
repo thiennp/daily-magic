@@ -1,0 +1,58 @@
+import { randomUUID } from "node:crypto";
+
+import { getSql } from "@/lib/db";
+
+type Recipient = { readonly id: string; readonly user_id: string };
+
+export const insertProjectMessageWithDeliveries = async (input: {
+  readonly projectId: string;
+  readonly senderMembershipId: string;
+  readonly senderUserId: string;
+  readonly toMembershipId: string | null;
+  readonly toUserId: string | null;
+  readonly toTeamLabel: string | null;
+  readonly toProjectDisplayName: string | null;
+  readonly kind: string;
+  readonly summary: string;
+  readonly refsJson: string;
+  readonly recipients: readonly Recipient[];
+}): Promise<string> => {
+  const sql = getSql();
+  const messageId = randomUUID();
+  await sql`
+    INSERT INTO project_messages (
+      id, project_id, sender_membership_id, sender_user_id,
+      to_membership_id, to_user_id, to_team_label, to_project_display_name,
+      kind, summary, refs
+    )
+    VALUES (
+      ${messageId},
+      ${input.projectId},
+      ${input.senderMembershipId},
+      ${input.senderUserId},
+      ${input.toMembershipId},
+      ${input.toUserId},
+      ${input.toTeamLabel},
+      ${input.toProjectDisplayName},
+      ${input.kind},
+      ${input.summary},
+      ${input.refsJson}::jsonb
+    )
+  `;
+  for (const recipient of input.recipients) {
+    await sql`
+      INSERT INTO project_message_deliveries (
+        id, message_id, membership_id, attempt, status
+      )
+      VALUES (
+        ${randomUUID()},
+        ${messageId},
+        ${recipient.id},
+        0,
+        'pending'
+      )
+      ON CONFLICT DO NOTHING
+    `;
+  }
+  return messageId;
+};

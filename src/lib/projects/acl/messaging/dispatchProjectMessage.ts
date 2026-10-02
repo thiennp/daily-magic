@@ -1,13 +1,11 @@
-import { randomUUID } from "node:crypto";
-
 import { ensureProjectAclSchema } from "@/lib/projects/acl/ensureProjectAclSchema";
 import { getActiveProjectMembership } from "@/lib/projects/acl/getActiveProjectMembership";
 import { assertProjectMessageDispatchRateLimits } from "@/lib/projects/acl/messaging/assertProjectMessageDispatchRateLimits";
+import { insertProjectMessageWithDeliveries } from "@/lib/projects/acl/messaging/insertProjectMessageWithDeliveries";
 import { parseProjectDispatchPayload } from "@/lib/projects/acl/messaging/parseProjectDispatchPayload";
 import { purgeExpiredProjectMessages } from "@/lib/projects/acl/messaging/purgeExpiredProjectMessages";
 import { resolveDispatchRecipients } from "@/lib/projects/acl/messaging/resolveDispatchRecipients";
 import { writeProjectAccessAudit } from "@/lib/projects/acl/writeProjectAccessAudit";
-import { getSql } from "@/lib/db";
 
 export type DispatchProjectMessageResult =
   | {
@@ -41,7 +39,6 @@ export const dispatchProjectMessage = async (input: {
   }
 
   await ensureProjectAclSchema();
-  // Opportunistic TTL purge (throttled) so Softvale gets cleanup without a cron.
   await purgeExpiredProjectMessages();
 
   const rate = await assertProjectMessageDispatchRateLimits({
@@ -61,45 +58,20 @@ export const dispatchProjectMessage = async (input: {
     return { ok: false, code: resolved.code };
   }
 
-  const sql = getSql();
-  const messageId = randomUUID();
-  const refsJson = JSON.stringify(parsed.refs);
   const primary = resolved.recipients[0];
-  await sql`
-    INSERT INTO project_messages (
-      id, project_id, sender_membership_id, sender_user_id,
-      to_membership_id, to_user_id, to_team_label, to_project_display_name,
-      kind, summary, refs
-    )
-    VALUES (
-      ${messageId},
-      ${input.projectId},
-      ${sender.id},
-      ${input.actorUserId},
-      ${parsed.toProjectDisplayName ? primary.id : null},
-      ${parsed.toProjectDisplayName ? primary.user_id : null},
-      ${parsed.toTeamLabel},
-      ${parsed.toProjectDisplayName},
-      ${parsed.kind},
-      ${parsed.summary},
-      ${refsJson}::jsonb
-    )
-  `;
-  for (const recipient of resolved.recipients) {
-    await sql`
-      INSERT INTO project_message_deliveries (
-        id, message_id, membership_id, attempt, status
-      )
-      VALUES (
-        ${randomUUID()},
-        ${messageId},
-        ${recipient.id},
-        0,
-        'pending'
-      )
-      ON CONFLICT DO NOTHING
-    `;
-  }
+  const messageId = await insertProjectMessageWithDeliveries({
+    projectId: input.projectId,
+    senderMembershipId: sender.id,
+    senderUserId: input.actorUserId,
+    toMembershipId: parsed.toProjectDisplayName ? primary.id : null,
+    toUserId: parsed.toProjectDisplayName ? primary.user_id : null,
+    toTeamLabel: parsed.toTeamLabel,
+    toProjectDisplayName: parsed.toProjectDisplayName,
+    kind: parsed.kind,
+    summary: parsed.summary,
+    refsJson: JSON.stringify(parsed.refs),
+    recipients: resolved.recipients,
+  });
   await writeProjectAccessAudit({
     projectId: input.projectId,
     actorUserId: input.actorUserId,
