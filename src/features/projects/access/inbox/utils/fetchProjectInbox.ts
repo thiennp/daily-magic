@@ -22,23 +22,27 @@ const readJson = async (response: Response): Promise<unknown | null> => {
 };
 
 /**
- * Thin UI client for GET /api/projects/[projectId]/inbox.
- * Soft-degrades on 404 until eng messaging batch is live.
+ * Owner Messages panel: GET …/inbox?scope=project (full peer↔peer + Owner log).
+ * Soft-degrades on 404 until eng clear/log PR is live.
  */
 export const fetchProjectInbox = async (input: {
   readonly projectId: string;
   readonly since?: string;
+  readonly cursor?: string;
   readonly limit?: number;
 }): Promise<FetchProjectInboxResult> => {
   const params = new URLSearchParams();
+  params.set("scope", "project");
   if (input.since !== undefined && input.since.length > 0) {
     params.set("since", input.since);
+  }
+  if (input.cursor !== undefined && input.cursor.length > 0) {
+    params.set("cursor", input.cursor);
   }
   if (input.limit !== undefined) {
     params.set("limit", String(input.limit));
   }
-  const qs = params.toString();
-  const url = `/api/projects/${encodeURIComponent(input.projectId)}/inbox${qs.length > 0 ? `?${qs}` : ""}`;
+  const url = `/api/projects/${encodeURIComponent(input.projectId)}/inbox?${params.toString()}`;
 
   const response = await fetch(url, { cache: "no-store" }).catch(() => null);
   if (response === null) {
@@ -48,14 +52,14 @@ export const fetchProjectInbox = async (input: {
     return softFail(
       true,
       false,
-      "Inbox API not available on this deploy yet — bot messages will appear here once messaging lands.",
+      "Messages API not available on this deploy yet — full project log lands with eng clear/log.",
     );
   }
   if (response.status === 403) {
     return softFail(
       false,
       true,
-      "Only the project owner can view Project Inbox.",
+      "Only the project owner can view project Messages.",
     );
   }
 
@@ -75,7 +79,7 @@ export const fetchProjectInbox = async (input: {
       response.status === 403,
       typeof body.errorMessage === "string"
         ? body.errorMessage
-        : "Could not load inbox.",
+        : "Could not load messages.",
     );
   }
 
@@ -90,6 +94,11 @@ export const fetchProjectInbox = async (input: {
       typeof body.projectId === "string" && body.projectId.length > 0
         ? body.projectId
         : input.projectId,
+    scope: "project",
     messages,
+    nextCursor:
+      typeof body.nextCursor === "string" && body.nextCursor.length > 0
+        ? body.nextCursor
+        : null,
   };
 };

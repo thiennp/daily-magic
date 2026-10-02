@@ -8,6 +8,11 @@ export default interface AwcProjectInboxMessage {
   readonly summary: string;
   readonly refs: AwcProjectInboxRefs;
   readonly fromProjectDisplayName: string | null;
+  readonly fromMembershipId: string | null;
+  readonly toProjectDisplayName: string | null;
+  readonly toMembershipId: string | null;
+  readonly toUserId: string | null;
+  readonly toTeamLabel: string | null;
   readonly createdAt: string;
   readonly ackedAt: string | null;
 }
@@ -16,7 +21,9 @@ export type FetchProjectInboxResult =
   | {
       readonly ok: true;
       readonly projectId: string;
+      readonly scope: "project";
       readonly messages: readonly AwcProjectInboxMessage[];
+      readonly nextCursor: string | null;
     }
   | {
       readonly ok: false;
@@ -38,5 +45,17 @@ export type DispatchProjectInboxResult =
   | {
       readonly ok: false;
       readonly code: string | null;
+      readonly errorMessage: string;
+    };
+
+export type ClearProjectInboxResult =
+  | {
+      readonly ok: true;
+      readonly deletedMessages: number;
+      readonly deletedDeliveries: number;
+    }
+  | {
+      readonly ok: false;
+      readonly unavailable: boolean;
       readonly errorMessage: string;
     };

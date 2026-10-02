@@ -1,9 +1,11 @@
 "use client";
 
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 
 import AwcProjectAccessSection from "@/features/projects/access/AwcProjectAccessSection";
 import { AWC_PROJECT_INBOX_COPY } from "@/features/projects/access/inbox/awcProjectInboxCopy.constant";
+import AwcProjectInboxClearBar from "@/features/projects/access/inbox/AwcProjectInboxClearBar";
+import AwcProjectInboxClearConfirmModal from "@/features/projects/access/inbox/AwcProjectInboxClearConfirmModal";
 import AwcProjectInboxDispatchForm from "@/features/projects/access/inbox/AwcProjectInboxDispatchForm";
 import AwcProjectInboxMessageList from "@/features/projects/access/inbox/AwcProjectInboxMessageList";
 import { useAwcProjectInbox } from "@/features/projects/access/inbox/hooks/useAwcProjectInbox";
@@ -21,6 +23,7 @@ export default function AwcProjectInboxSection({
 }: AwcProjectInboxSectionProps) {
   const copy = AWC_PROJECT_INBOX_COPY;
   const inbox = useAwcProjectInbox(projectId, enabled);
+  const [confirmOpen, setConfirmOpen] = useState(false);
   const reloadSilent = inbox.reloadSilent;
   const onTick = useCallback(() => {
     void reloadSilent();
@@ -39,6 +42,11 @@ export default function AwcProjectInboxSection({
       count={inbox.unavailable ? undefined : inbox.messages.length}
       alertCount={inbox.messages.length > 0}
     >
+      <AwcProjectInboxClearBar
+        clearing={inbox.clearing}
+        toast={inbox.clearToast}
+        onRequestClear={() => setConfirmOpen(true)}
+      />
       {inbox.isLoading ? (
         <p className="text-xs text-gray-400">{copy.loading}</p>
       ) : null}
@@ -48,16 +56,23 @@ export default function AwcProjectInboxSection({
         </p>
       ) : null}
       {!inbox.isLoading && !inbox.unavailable ? (
-        <AwcProjectInboxMessageList
-          messages={inbox.messages}
-          onAck={(messageId) => {
-            void inbox.ack(messageId);
-          }}
-        />
+        <AwcProjectInboxMessageList messages={inbox.messages} />
       ) : null}
       <AwcProjectInboxDispatchForm
         projectId={projectId}
         members={inbox.members}
+      />
+      <AwcProjectInboxClearConfirmModal
+        isOpen={confirmOpen}
+        clearing={inbox.clearing}
+        onClose={() => setConfirmOpen(false)}
+        onConfirm={() => {
+          void inbox.clearAll().then((ok) => {
+            if (ok) {
+              setConfirmOpen(false);
+            }
+          });
+        }}
       />
     </AwcProjectAccessSection>
   );

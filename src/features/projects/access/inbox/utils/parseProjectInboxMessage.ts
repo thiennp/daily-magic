@@ -18,6 +18,9 @@ const asRefs = (value: unknown): AwcProjectInboxRefs => {
   return out;
 };
 
+const asOptionalString = (value: unknown): string | null =>
+  typeof value === "string" && value.length > 0 ? value : null;
+
 export const parseProjectInboxMessage = (
   value: unknown,
 ): AwcProjectInboxMessage | null => {
@@ -37,18 +40,18 @@ export const parseProjectInboxMessage = (
   ) {
     return null;
   }
-  const fromProjectDisplayName =
-    typeof row.fromProjectDisplayName === "string"
-      ? row.fromProjectDisplayName
-      : null;
-  const ackedAt = typeof row.ackedAt === "string" ? row.ackedAt : null;
   return {
     messageId,
     kind,
     summary,
     refs: asRefs(row.refs),
-    fromProjectDisplayName,
+    fromProjectDisplayName: asOptionalString(row.fromProjectDisplayName),
+    fromMembershipId: asOptionalString(row.fromMembershipId),
+    toProjectDisplayName: asOptionalString(row.toProjectDisplayName),
+    toMembershipId: asOptionalString(row.toMembershipId),
+    toUserId: asOptionalString(row.toUserId),
+    toTeamLabel: asOptionalString(row.toTeamLabel),
     createdAt,
-    ackedAt,
+    ackedAt: typeof row.ackedAt === "string" ? row.ackedAt : null,
   };
 };

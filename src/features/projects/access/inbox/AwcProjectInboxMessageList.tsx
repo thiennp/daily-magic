@@ -1,13 +1,11 @@
 "use client";
 
-import { AWC_PROJECT_ACCESS_CTA } from "@/features/projects/access/awcProjectAccessCta.constant";
 import { AWC_PROJECT_INBOX_COPY } from "@/features/projects/access/inbox/awcProjectInboxCopy.constant";
 import type AwcProjectInboxMessage from "@/features/projects/access/inbox/types/awcProjectInboxMessage.type";
 import { APP_SURFACE_BODY_TEXT_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
 
 interface AwcProjectInboxMessageListProps {
   readonly messages: readonly AwcProjectInboxMessage[];
-  readonly onAck: (messageId: string) => void;
 }
 
 const formatWhen = (iso: string): string => {
@@ -18,9 +16,14 @@ const formatWhen = (iso: string): string => {
   return date.toLocaleString();
 };
 
+const routeLabel = (row: AwcProjectInboxMessage): string => {
+  const from = row.fromProjectDisplayName ?? AWC_PROJECT_INBOX_COPY.fromUnknown;
+  const to = row.toProjectDisplayName ?? AWC_PROJECT_INBOX_COPY.toUnknown;
+  return `${from} → ${to}`;
+};
+
 export default function AwcProjectInboxMessageList({
   messages,
-  onAck,
 }: AwcProjectInboxMessageListProps) {
   const copy = AWC_PROJECT_INBOX_COPY;
 
@@ -35,27 +38,17 @@ export default function AwcProjectInboxMessageList({
           key={row.messageId}
           className="rounded-lg border border-gray-200/70 bg-gray-50/60 px-3 py-2 dark:border-gray-800/70 dark:bg-white/[0.03]"
         >
-          <div className="flex flex-wrap items-start justify-between gap-2">
-            <div className="min-w-0 flex-1">
-              <p className="text-[11px] font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">
-                {row.kind}
-              </p>
-              <p className={`mt-0.5 text-sm ${APP_SURFACE_BODY_TEXT_CLASS}`}>
-                {row.summary}
-              </p>
-              <p className="mt-1 text-[11px] text-gray-500 dark:text-gray-400">
-                {copy.fromLabel}:{" "}
-                {row.fromProjectDisplayName ?? copy.fromUnknown} ·{" "}
-                {formatWhen(row.createdAt)}
-              </p>
-            </div>
-            <button
-              type="button"
-              className={AWC_PROJECT_ACCESS_CTA.secondary}
-              onClick={() => onAck(row.messageId)}
-            >
-              {copy.ack}
-            </button>
+          <div className="min-w-0">
+            <p className="text-[11px] font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">
+              {row.kind}
+            </p>
+            <p className={`mt-0.5 text-sm ${APP_SURFACE_BODY_TEXT_CLASS}`}>
+              {row.summary}
+            </p>
+            <p className="mt-1 text-[11px] text-gray-500 dark:text-gray-400">
+              {routeLabel(row)} · {formatWhen(row.createdAt)} ·{" "}
+              {row.ackedAt !== null ? copy.ackedLabel : copy.unackedLabel}
+            </p>
           </div>
         </li>
       ))}
