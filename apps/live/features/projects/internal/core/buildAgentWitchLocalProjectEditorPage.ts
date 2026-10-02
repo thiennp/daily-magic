@@ -43,14 +43,58 @@ const buildEmptyHarnessTab = (): string => `<div class="stack">
         </div>
       </div>`;
 
-const buildBoundHarnessPullTab = (project: AgentWitchProjectView): string =>
-  `<form method="POST" action="/projects/pull-bound-harness" class="stack">
-        <input type="hidden" name="projectId" value="${escapeHtml(project.id)}" />
-        <p class="lede">This project’s playbook is linked in Agent Witch Cloud. Pull writes those files into this repo’s <code>.cursor</code> tree.</p>
+const buildBoundHarnessPullTab = (input: {
+  readonly project: AgentWitchProjectView;
+  readonly alreadyInRepo: boolean;
+}): string => {
+  const lede = input.alreadyInRepo
+    ? `This repo already has playbook files in <code>.cursor</code> (tracked in <code>.agent-witch/materialization.json</code>). Pull again only if you want to refresh them from Agent Witch Cloud.`
+    : `This project’s playbook is linked in Agent Witch Cloud. Pull writes those files into this repo’s <code>.cursor</code> tree.`;
+  const buttonLabel = input.alreadyInRepo ? "Update in repo" : "Pull into repo";
+
+  return `<form method="POST" action="/projects/pull-bound-harness" class="stack">
+        <input type="hidden" name="projectId" value="${escapeHtml(input.project.id)}" />
+        <p class="lede">${lede}</p>
         <div class="actions">
-          <button class="btn btn-primary" type="submit">Pull into repo</button>
+          <button class="btn btn-primary" type="submit">${buttonLabel}</button>
         </div>
       </form>`;
+};
+
+const buildAlreadyMaterializedWithoutProfileTab = (input: {
+  readonly project: AgentWitchProjectView;
+  readonly linkedSetSlugs: readonly string[];
+  readonly boundHarnessCount: number;
+}): string => {
+  const setList = `<ul class="harness-installed-set-list">${input.linkedSetSlugs
+    .map(
+      (slug) => `<li class="harness-installed-set">
+        <p><strong>${escapeHtml(slug)}</strong> <span class="muted">already in this repo</span></p>
+      </li>`,
+    )
+    .join("")}</ul>`;
+
+  if (input.boundHarnessCount > 0) {
+    return `<div class="stack">
+        <p class="field-label">In this repo</p>
+        <p class="lede">Playbook files are already materialized under this folder’s <code>.cursor</code> tree. The Mac profile harness is empty — refresh from Agent Witch Cloud only if you need an update.</p>
+        ${setList}
+        <form method="POST" action="/projects/pull-bound-harness" class="actions">
+          <input type="hidden" name="projectId" value="${escapeHtml(input.project.id)}" />
+          <button class="btn btn-secondary" type="submit">Update in repo</button>
+        </form>
+      </div>`;
+  }
+
+  return `<div class="stack">
+        <p class="field-label">In this repo</p>
+        <p class="lede">Playbook files are already materialized under this folder’s <code>.cursor</code> tree. Open Harness to install sets on this Mac if you want to change them.</p>
+        ${setList}
+        <div class="actions">
+          <a class="btn btn-secondary" href="/harness">Open Harness</a>
+        </div>
+      </div>`;
+};
 
 const buildHarnessTab = (input: {
   readonly project: AgentWitchProjectView;
@@ -58,14 +102,34 @@ const buildHarnessTab = (input: {
   readonly linkedSetSlugs: readonly string[];
   readonly boundHarnessCount: number;
 }): string => {
+  const linked = new Set(input.linkedSetSlugs);
+
   if (input.installed.sets.length === 0) {
+    if (linked.size > 0) {
+      return buildAlreadyMaterializedWithoutProfileTab({
+        project: input.project,
+        linkedSetSlugs: input.linkedSetSlugs,
+        boundHarnessCount: input.boundHarnessCount,
+      });
+    }
     if (input.boundHarnessCount > 0) {
-      return buildBoundHarnessPullTab(input.project);
+      return buildBoundHarnessPullTab({
+        project: input.project,
+        alreadyInRepo: false,
+      });
     }
     return buildEmptyHarnessTab();
   }
 
-  const linked = new Set(input.linkedSetSlugs);
+  const linkedInstalledCount = input.installed.sets.filter((set) =>
+    linked.has(set.slug),
+  ).length;
+  const alreadyInRepo = linkedInstalledCount > 0;
+  const lede = alreadyInRepo
+    ? `These sets are already in this repo’s <code>.cursor</code> tree (see <code>.agent-witch/materialization.json</code>). Update to refresh from the Mac harness, or uncheck a set to remove only the files that ledger recorded.`
+    : `Check the sets to write into this repo&apos;s <code>.cursor</code> tree, then pull.`;
+  const buttonLabel = alreadyInRepo ? "Update in repo" : "Pull into repo";
+
   const setRows = `<ul class="harness-installed-set-list">${input.installed.sets
     .map(
       (set) => `<li class="harness-installed-set">
@@ -73,7 +137,7 @@ const buildHarnessTab = (input: {
             <input type="checkbox" name="applySet" value="${escapeHtml(set.slug)}"${linked.size === 0 || linked.has(set.slug) ? " checked" : ""} />
             <span><strong>${escapeHtml(set.name)}</strong> <span class="muted mono">(${escapeHtml(set.slug)})</span></span>
           </label>
-          <p class="muted">${set.itemCount} item(s)</p>
+          <p class="muted">${set.itemCount} item(s)${linked.has(set.slug) ? ` · <span class="muted">in repo</span>` : ""}</p>
         </li>`,
     )
     .join("")}</ul>`;
@@ -81,10 +145,10 @@ const buildHarnessTab = (input: {
   return `<form method="POST" action="/projects/link-harness" class="stack">
         <input type="hidden" name="projectId" value="${escapeHtml(input.project.id)}" />
         <p class="field-label">Installed</p>
-        <p class="lede">Check the sets to write into this repo&apos;s <code>.cursor</code> tree, then pull.</p>
+        <p class="lede">${lede}</p>
         ${setRows}
         <div class="actions">
-          <button class="btn btn-primary" type="submit">Pull into repo</button>
+          <button class="btn btn-primary" type="submit">${buttonLabel}</button>
         </div>
       </form>`;
 };
