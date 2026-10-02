@@ -6,8 +6,8 @@ import {
   loadAwcProjectInbox,
   type AwcProjectInboxSnapshot,
 } from "@/features/projects/access/inbox/hooks/loadAwcProjectInbox";
+import { useAwcProjectInboxClear } from "@/features/projects/access/inbox/hooks/useAwcProjectInboxClear";
 import type AwcProjectInboxMessage from "@/features/projects/access/inbox/types/awcProjectInboxMessage.type";
-import { ackProjectInboxMessage } from "@/features/projects/access/inbox/utils/ackProjectInboxMessage";
 import type { AccessMembershipView } from "@/features/projects/access/utils/projectAccessApi.types";
 
 const emptyMembers: readonly AccessMembershipView[] = [];
@@ -77,21 +77,9 @@ export const useAwcProjectInbox = (
     void load();
   }, [projectId, enabled, applySnapshot]);
 
-  const ack = useCallback(
-    async (messageId: string): Promise<boolean> => {
-      const result = await ackProjectInboxMessage({ projectId, messageId });
-      if (result.ok) {
-        setMessages((current) =>
-          current.filter((row) => row.messageId !== messageId),
-        );
-      }
-      return result.ok;
-    },
-    [projectId],
-  );
-
   const reloadLoud = useCallback(() => reload(false), [reload]);
   const reloadSilent = useCallback(() => reload(true), [reload]);
+  const clear = useAwcProjectInboxClear({ projectId, reloadSilent });
 
   return {
     messages,
@@ -100,8 +88,10 @@ export const useAwcProjectInbox = (
     unavailable,
     forbidden,
     message,
+    clearing: clear.clearing,
+    clearToast: clear.clearToast,
     reload: reloadLoud,
     reloadSilent,
-    ack,
+    clearAll: clear.clearAll,
   };
 };
