@@ -43,6 +43,7 @@ describe("project ACL surface copy", () => {
       "acl:self",
       "project:meta",
       "peer_sync",
+      "msg:dispatch",
     ]);
     expect(AWC_PROJECT_ACCESS_COPY.membersEmpty).toContain(
       PROJECT_ACL_FIRST_CONNECT.emptyStateNote,

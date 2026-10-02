@@ -12,6 +12,10 @@ vi.mock("@/lib/db", () => ({
   asRowArray: (rows: unknown) => (Array.isArray(rows) ? rows : []),
 }));
 
+vi.mock("@/lib/projects/acl/projectApiKeys/revokeProjectApiKeysForMembership", () => ({
+  revokeProjectApiKeysForMembership: vi.fn(async () => 0),
+}));
+
 vi.mock("@/lib/projects/userProjectQueries", () => ({
   getUserProjectById: vi.fn(async () => ({
     id: "proj-1",
@@ -34,7 +38,8 @@ const memberRow = {
   role: "member",
   status: "active",
   team_label: null,
-  scopes: ["acl:self", "project:meta", "peer_sync"],
+  scopes: ["acl:self", "project:meta", "peer_sync", "msg:dispatch"],
+  project_display_name: "Buni",
   created_at: "2026-10-01T00:00:00.000Z",
   revoked_at: null,
 };

@@ -15,4 +15,6 @@ export default interface ProjectAccessRequestRecord {
   readonly decidedAt: string | null;
   readonly createdAt: string;
   readonly expiresAt: string;
+  readonly inviteId: string | null;
+  readonly teamLabel: string | null;
 }

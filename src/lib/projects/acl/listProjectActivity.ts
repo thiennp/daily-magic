@@ -1,6 +1,9 @@
 import { ensureProjectAclSchema } from "@/lib/projects/acl/ensureProjectAclSchema";
 import mapProjectAccessAuditRow from "@/lib/projects/acl/mapProjectAccessAuditRow";
-import { PROJECT_ACTIVITY_ALLOWLISTED_ACTIONS } from "@/lib/projects/acl/projectActivityAllowlist.constant";
+import {
+  isProjectActivityAllowlistedAction,
+  PROJECT_ACTIVITY_ALLOWLISTED_ACTIONS,
+} from "@/lib/projects/acl/projectActivityAllowlist.constant";
 import { resolveProjectAclAccess } from "@/lib/projects/acl/resolveProjectAclAccess";
 import { sanitizeProjectActivityDetail } from "@/lib/projects/acl/sanitizeProjectActivityDetail";
 import type ProjectActivityEvent from "@/lib/projects/acl/types/ProjectActivityEvent.type";
@@ -88,6 +91,9 @@ export const listProjectActivity = async (input: {
   for (const row of rows) {
     const record = mapProjectAccessAuditRow(row);
     if (record === null) {
+      continue;
+    }
+    if (!isProjectActivityAllowlistedAction(record.action)) {
       continue;
     }
     mapped.push({

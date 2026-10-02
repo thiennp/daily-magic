@@ -1,3 +1,4 @@
+import { ensureProjectInviteHooksSchema } from "@/lib/projects/acl/ensureProjectInviteHooksSchema";
 import { getSql } from "@/lib/db";
 
 const state: { ensured: boolean; promise: Promise<void> | null } = {
@@ -10,7 +11,7 @@ export const resetProjectAclSchemaEnsureForTests = (): void => {
   state.promise = null;
 };
 
-/** Idempotent CREATE for ACL tables (full DDL also in 041 migration). */
+/** Idempotent CREATE for ACL tables (full DDL also in 041/044/045 migrations). */
 export const ensureProjectAclSchema = async (): Promise<void> => {
   if (state.ensured) {
     return;
@@ -27,7 +28,10 @@ export const ensureProjectAclSchema = async (): Promise<void> => {
       user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
       role TEXT NOT NULL, status TEXT NOT NULL, team_label TEXT,
       scopes TEXT[] NOT NULL DEFAULT ARRAY[]::TEXT[],
+      project_display_name TEXT,
       created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(), revoked_at TIMESTAMPTZ)`;
+    await sql`ALTER TABLE project_memberships
+      ADD COLUMN IF NOT EXISTS project_display_name TEXT`;
     await sql`CREATE TABLE IF NOT EXISTS project_access_requests (
       id TEXT PRIMARY KEY DEFAULT gen_random_uuid()::text,
       project_id TEXT NOT NULL REFERENCES user_projects(id) ON DELETE CASCADE,
@@ -36,7 +40,12 @@ export const ensureProjectAclSchema = async (): Promise<void> => {
       requested_scopes TEXT[] NOT NULL DEFAULT ARRAY[]::TEXT[],
       status TEXT NOT NULL, decided_by_user_id TEXT, decided_at TIMESTAMPTZ,
       created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-      expires_at TIMESTAMPTZ NOT NULL DEFAULT (NOW() + INTERVAL '14 days'))`;
+      expires_at TIMESTAMPTZ NOT NULL DEFAULT (NOW() + INTERVAL '14 days'),
+      invite_id TEXT, team_label TEXT)`;
+    await sql`ALTER TABLE project_access_requests
+      ADD COLUMN IF NOT EXISTS invite_id TEXT`;
+    await sql`ALTER TABLE project_access_requests
+      ADD COLUMN IF NOT EXISTS team_label TEXT`;
     await sql`CREATE TABLE IF NOT EXISTS project_access_audit (
       id TEXT PRIMARY KEY DEFAULT gen_random_uuid()::text,
       project_id TEXT NOT NULL REFERENCES user_projects(id) ON DELETE CASCADE,
@@ -50,6 +59,7 @@ export const ensureProjectAclSchema = async (): Promise<void> => {
       machine_or_device_ref TEXT NOT NULL, folder_path TEXT NOT NULL,
       created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
       updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW())`;
+    await ensureProjectInviteHooksSchema();
     state.ensured = true;
   })();
 

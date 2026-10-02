@@ -3,7 +3,7 @@ import { PROJECT_ACL_FIRST_CONNECT } from "@/lib/projects/acl/projectAclFirstCon
 export const AWC_PROJECT_ACCESS_COPY = {
   title: "Project Access",
   intro:
-    "Agent Witch Cloud is an ACL + registry for this project: name, folder refs, members, and approve/revoke audit only. After Approve, co-work is local↔local (shared folder, git, or bot channels) — not a cloud content bus. Do not share agent-access tokens.",
+    "Agent Witch Cloud is an ACL + registry for this project: name, folder refs, members, and approve/revoke audit only. After Approve, co-work is local↔local (shared folder, git, or bot channels) — not a cloud content bus. Do not share agent-access tokens — use invite links + project-scoped keys.",
   pendingHeading: "Pending requests",
   pendingEmpty: "No pending access requests.",
   membersHeading: "Members",
@@ -34,4 +34,21 @@ export const AWC_PROJECT_ACCESS_COPY = {
     "Activity API not available on this deploy yet — membership and status events will appear here once the backend lands.",
   activityNonGoals:
     "No transcripts, run logs, or prompt bodies — those stay on local machines.",
+  invitesHeading: "Bot invites",
+  invitesIntro:
+    "Create a one-time invite URL for a specialist bot. Redeem creates a pending request — you Approve and pick a project nickname. Never paste your agent-access token.",
+  invitesEmpty: "No invites yet.",
+  invitesCreate: "Create invite",
+  invitesCopyUrl: "Copy URL",
+  invitesRevoke: "Revoke",
+  invitesUrlCopied: "Invite URL copied — share once; it will not be shown again.",
+  invitesCreatedOnce:
+    "Copy this URL now. It is shown once and is a bearer secret.",
+  displayNameLabel: "Project nickname (bots)",
+  displayNameHint:
+    "Required for agents. Unique per project (case-insensitive). Prefills a free preset.",
+  displayNameRequired: "Choose a project nickname before Approve.",
+  displayNameTaken: "That nickname is taken — pick another.",
+  rename: "Rename",
+  memberUuidMuted: "id",
 } as const;
