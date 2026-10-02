@@ -19,7 +19,7 @@ export const AGENT_ACCESS_PROJECT_INVITE_HOOKS_TOOLS: readonly AgentAccessToolDe
     {
       name: "project_dispatch",
       description:
-        "Send a thin metadata message to a peer by toProjectDisplayName (primary) or toTeamLabel. No broadcast in v1. summary ≤512 chars; allowlisted refs only.",
+        "Send thin protocol metadata to a peer by toProjectDisplayName (primary) or toTeamLabel. No broadcast/media/blobs/bodies. summary ≤200 chars; allowlisted refs (prUrl|commitSha|localPath|allowClaimId) only; bulky payloads via P2P/localPath.",
       inputSchema: {
         type: "object",
         properties: {
@@ -50,7 +50,7 @@ export const AGENT_ACCESS_PROJECT_INVITE_HOOKS_TOOLS: readonly AgentAccessToolDe
     },
     {
       name: "ack_project_message",
-      description: "Acknowledge a project inbox message by messageId.",
+      description: "Ack a project inbox message by messageId (hard-deletes the row + deliveries).",
       inputSchema: {
         type: "object",
         properties: { messageId: { type: "string" } },

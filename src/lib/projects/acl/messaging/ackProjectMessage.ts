@@ -37,17 +37,16 @@ export const ackProjectMessage = async (input: {
   if (!addressed) {
     return { ok: false, code: "forbidden" };
   }
+  // Delete-on-ack: hard-delete row; CASCADE clears project_message_deliveries.
   await sql`
-    UPDATE project_messages
-    SET acked_at = NOW()
+    DELETE FROM project_messages
     WHERE id = ${input.messageId}
-      AND acked_at IS NULL
   `;
   await writeProjectAccessAudit({
     projectId,
     actorUserId: input.actorUserId,
     action: "msg.ack",
-    detail: { messageId: input.messageId },
+    detail: { messageId: input.messageId, deleted: true },
   });
   return { ok: true, messageId: input.messageId };
 };

@@ -2,7 +2,9 @@ import { randomUUID } from "node:crypto";
 
 import { ensureProjectAclSchema } from "@/lib/projects/acl/ensureProjectAclSchema";
 import { getActiveProjectMembership } from "@/lib/projects/acl/getActiveProjectMembership";
+import { assertProjectMessageDispatchRateLimits } from "@/lib/projects/acl/messaging/assertProjectMessageDispatchRateLimits";
 import { parseProjectDispatchPayload } from "@/lib/projects/acl/messaging/parseProjectDispatchPayload";
+import { purgeExpiredProjectMessages } from "@/lib/projects/acl/messaging/purgeExpiredProjectMessages";
 import { resolveDispatchRecipients } from "@/lib/projects/acl/messaging/resolveDispatchRecipients";
 import { writeProjectAccessAudit } from "@/lib/projects/acl/writeProjectAccessAudit";
 import { getSql } from "@/lib/db";
@@ -39,6 +41,16 @@ export const dispatchProjectMessage = async (input: {
   }
 
   await ensureProjectAclSchema();
+  // Opportunistic TTL purge (throttled) so Softvale gets cleanup without a cron.
+  await purgeExpiredProjectMessages();
+
+  const rate = await assertProjectMessageDispatchRateLimits({
+    senderMembershipId: sender.id,
+  });
+  if (!rate.ok) {
+    return { ok: false, code: rate.code };
+  }
+
   const resolved = await resolveDispatchRecipients({
     projectId: input.projectId,
     actorUserId: input.actorUserId,
