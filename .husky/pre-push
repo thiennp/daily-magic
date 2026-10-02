@@ -2,12 +2,21 @@
 # Git sets GIT_DIR/GIT_WORK_TREE/GIT_* for hooks; nested `git` in vitest would
 # otherwise hit this repo instead of mkdtemp sandboxes and hang or mutate HEAD.
 repo_root=$(pwd)
-git_dir="$repo_root/.git"
+saved_git_dir="${GIT_DIR:-}"
+saved_git_work_tree="${GIT_WORK_TREE:-}"
 unset GIT_DIR GIT_WORK_TREE GIT_INDEX_FILE GIT_OBJECT_DIRECTORY GIT_ALTERNATE_OBJECT_DIRECTORIES GIT_PREFIX GIT_EXEC_PATH GIT_QUARANTINE_PATH GIT_REFLOG_ACTION GIT_TEMPLATE_DIR GIT_CEILING_DIRECTORIES GIT_COMMON_DIR
 echo "Running CI parity checks (npm run ci) before push..."
 npm run ci || exit 1
-export GIT_DIR="$git_dir"
-export GIT_WORK_TREE="$repo_root"
+if [ -n "$saved_git_dir" ]; then
+  export GIT_DIR="$saved_git_dir"
+elif [ -e "$repo_root/.git" ]; then
+  export GIT_DIR="$repo_root/.git"
+fi
+if [ -n "$saved_git_work_tree" ]; then
+  export GIT_WORK_TREE="$saved_git_work_tree"
+else
+  export GIT_WORK_TREE="$repo_root"
+fi
 branch=$(git symbolic-ref --short HEAD 2>/dev/null || true)
 if [ "$branch" = "main" ]; then
   echo "Syncing main with origin/main after CI (avoid push race)..."
