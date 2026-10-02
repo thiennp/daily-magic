@@ -73,10 +73,19 @@ export const leaveProjectMembership = async (input: {
     return { ok: false, code: "not_active" };
   }
   const membership = mapProjectMembershipRow(rows[0]);
-  await applyLeaveProjectMembershipSideEffects({
-    projectId: input.projectId,
-    actorUserId: input.actorUserId,
-    membership,
-  });
+  // Membership is already revoked — side-effect failures must not turn success into HTTP 500.
+  try {
+    await applyLeaveProjectMembershipSideEffects({
+      projectId: input.projectId,
+      actorUserId: input.actorUserId,
+      membership,
+    });
+  } catch (error) {
+    console.error("leave_project side effects failed after revoke", {
+      projectId: input.projectId,
+      membershipId: membership.id,
+      error,
+    });
+  }
   return { ok: true, status: "revoked", membership };
 };

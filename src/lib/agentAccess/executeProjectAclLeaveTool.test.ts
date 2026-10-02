@@ -96,7 +96,7 @@ describe("leave_project MCP tool", () => {
       ok: boolean;
       status: string;
     };
-    expect(body).toMatchObject({ ok: true, status: "revoked" });
+    expect(body).toMatchObject({ ok: true, confirm: true, status: "revoked" });
   });
 
   it("rejects owner", async () => {

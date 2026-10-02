@@ -56,6 +56,7 @@ export const executeProjectAclLeaveTool = async (input: {
 
   return agentAccessTextResult({
     ok: true,
+    confirm: true,
     status: "revoked",
     projectId: parsed.projectId,
     membershipId: result.membership.id,

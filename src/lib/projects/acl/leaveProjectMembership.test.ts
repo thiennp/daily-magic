@@ -4,9 +4,9 @@ import { resetProjectAclSchemaEnsureForTests } from "@/lib/projects/acl/ensurePr
 import {
   LEAVE_MEMBER_ROW,
   LEAVE_PROJECT,
-  revokedLeaveMemberRow,
 } from "@/lib/projects/acl/leaveProjectMembership.fixtures";
 import { leaveProjectMembership } from "@/lib/projects/acl/leaveProjectMembership";
+import { createLeaveSqlMockImplementation } from "@/lib/projects/acl/leaveProjectMembership.testUtils";
 import { revokeProjectApiKeysForMembership } from "@/lib/projects/acl/projectApiKeys/revokeProjectApiKeysForMembership";
 
 const sqlMock = vi.fn();
@@ -16,9 +16,12 @@ vi.mock("@/lib/db", () => ({
   asRowArray: (rows: unknown) => (Array.isArray(rows) ? rows : []),
 }));
 
-vi.mock("@/lib/projects/acl/projectApiKeys/revokeProjectApiKeysForMembership", () => ({
-  revokeProjectApiKeysForMembership: vi.fn(async () => 0),
-}));
+vi.mock(
+  "@/lib/projects/acl/projectApiKeys/revokeProjectApiKeysForMembership",
+  () => ({
+    revokeProjectApiKeysForMembership: vi.fn(async () => 0),
+  }),
+);
 
 vi.mock("@/lib/projects/userProjectQueries", () => ({
   getUserProjectById: vi.fn(async (projectId: string) =>
@@ -34,20 +37,7 @@ describe("leaveProjectMembership happy path", () => {
   });
 
   it("revokes active membership, disables webhooks, revokes keys, audits leave", async () => {
-    sqlMock.mockImplementation(async (strings: TemplateStringsArray) => {
-      const q = String(strings);
-      if (q.includes("CREATE TABLE")) return [];
-      if (q.includes("FROM project_memberships") && q.includes("SELECT")) {
-        return [LEAVE_MEMBER_ROW];
-      }
-      if (q.includes("UPDATE project_memberships")) {
-        return [revokedLeaveMemberRow()];
-      }
-      if (q.includes("UPDATE project_membership_webhooks")) return [];
-      if (q.includes("INSERT INTO project_access_audit")) return [];
-      return [];
-    });
-
+    sqlMock.mockImplementation(createLeaveSqlMockImplementation());
     const result = await leaveProjectMembership({
       projectId: "proj-1",
       actorUserId: "bot-1",
@@ -75,36 +65,51 @@ describe("leaveProjectMembership happy path", () => {
     const auditActions = auditCalls.map((call) =>
       call
         .slice(1)
-        .find((v) => v === "leave" || v === "webhook.disable" || v === "revoke"),
+        .find(
+          (v) => v === "leave" || v === "webhook.disable" || v === "revoke",
+        ),
     );
     expect(auditActions).toContain("webhook.disable");
     expect(auditActions).toContain("leave");
     expect(auditActions).not.toContain("revoke");
     const purgeSql = sqlMock.mock.calls.map((call) => String(call[0]));
-    expect(purgeSql.some((query) => query.includes("DELETE FROM project_message_deliveries"))).toBe(true);
-    expect(purgeSql.some((query) => query.includes("DELETE FROM project_messages"))).toBe(true);
-    expect(purgeSql.some((query) => query.includes("DELETE FROM project_membership_webhooks"))).toBe(true);
+    expect(
+      purgeSql.some((query) =>
+        query.includes("DELETE FROM project_message_deliveries"),
+      ),
+    ).toBe(true);
+    expect(
+      purgeSql.some((query) => query.includes("DELETE FROM project_messages")),
+    ).toBe(true);
+    expect(
+      purgeSql.some((query) =>
+        query.includes("DELETE FROM project_membership_webhooks"),
+      ),
+    ).toBe(true);
   });
 
   it("allows leave from naming_required", async () => {
-    sqlMock.mockImplementation(async (strings: TemplateStringsArray) => {
-      const q = String(strings);
-      if (q.includes("CREATE TABLE")) return [];
-      if (q.includes("FROM project_memberships") && q.includes("SELECT")) {
-        return [{ ...LEAVE_MEMBER_ROW, status: "naming_required" }];
-      }
-      if (q.includes("UPDATE project_memberships")) {
-        return [revokedLeaveMemberRow()];
-      }
-      if (q.includes("UPDATE project_membership_webhooks")) return [];
-      if (q.includes("INSERT INTO project_access_audit")) return [];
-      return [];
-    });
-
+    sqlMock.mockImplementation(
+      createLeaveSqlMockImplementation({ status: "naming_required" }),
+    );
     const result = await leaveProjectMembership({
       projectId: "proj-1",
       actorUserId: "bot-1",
     });
     expect(result.ok).toBe(true);
+  });
+
+  it("returns ok after revoke even if leave audit side effects throw", async () => {
+    sqlMock.mockImplementation(
+      createLeaveSqlMockImplementation({ throwOnAudit: true }),
+    );
+    const result = await leaveProjectMembership({
+      projectId: "proj-1",
+      actorUserId: "bot-1",
+    });
+    expect(result.ok).toBe(true);
+    if (result.ok) {
+      expect(result.status).toBe("revoked");
+    }
   });
 });
