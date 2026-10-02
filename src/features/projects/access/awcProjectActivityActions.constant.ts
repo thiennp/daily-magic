@@ -34,6 +34,7 @@ export const AWC_PROJECT_ACTIVITY_ACTION_LABELS: Record<
   "membership.rename_display": "Nickname renamed",
   "msg.dispatch": "Message dispatched",
   "msg.ack": "Message acked",
+  "msg.clear": "Messages cleared",
   "webhook.register": "Webhook registered",
   "webhook.update": "Webhook updated",
   "webhook.disable": "Webhook disabled",
