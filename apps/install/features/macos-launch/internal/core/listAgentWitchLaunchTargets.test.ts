@@ -49,4 +49,24 @@ describe("listAgentWitchLaunchTargets (AGENT-059)", () => {
       },
     ]);
   });
+
+  it("HOME-063: uses active-profile.json email when multiple profiles exist", () => {
+    const installDir = createTempInstallDir();
+    for (const profileEmail of ["a@example.com", "b@example.com"]) {
+      const profileDir = path.join(installDir, "profiles", profileEmail);
+      fs.mkdirSync(profileDir, { recursive: true });
+      fs.writeFileSync(path.join(profileDir, "config.json"), "{}");
+    }
+    fs.writeFileSync(
+      path.join(installDir, "active-profile.json"),
+      `${JSON.stringify({ email: "b@example.com" })}\n`,
+    );
+
+    expect(listAgentWitchLaunchTargets(installDir)).toEqual([
+      {
+        profileEmail: "b@example.com",
+        launchAgentLabel: "com.agent-witch",
+      },
+    ]);
+  });
 });

@@ -1,10 +1,9 @@
 import os from "node:os";
 
 import {
-  hashPairingToken,
   listAgentWitchLaunchTargets,
   listAgentWitchLocalTokenHashes,
-  readAgentWitchRunConfig,
+  resolveAgentWitchWakeIdentityPrimaryTokenHash,
   resolveAgentWitchWakePort,
 } from "../../../../../adapters/runtimeProbe";
 import type {
@@ -26,9 +25,7 @@ export const buildAgentWitchWakeHealthResponse =
 export const buildAgentWitchWakeIdentityResponse =
   (): AgentWitchWakeIdentityResponse => {
     const targets = listAgentWitchLaunchTargets();
-    const pairingToken = readAgentWitchRunConfig()?.pairingToken.trim() ?? "";
-    const tokenHash =
-      pairingToken.length > 0 ? hashPairingToken(pairingToken) : null;
+    const tokenHash = resolveAgentWitchWakeIdentityPrimaryTokenHash();
     const tokenHashes = listAgentWitchLocalTokenHashes();
     return {
       hostname: os.hostname(),

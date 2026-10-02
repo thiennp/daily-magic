@@ -2,6 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 
 import {
+  readActiveProfileEmailFromFile,
   resolveAgentWitchInstallDir,
   resolveAgentWitchLaunchAgentPrefix,
   sanitizeProfileEmailForDir,
@@ -32,10 +33,11 @@ export const listAgentWitchLaunchTargets = (
 ): readonly AgentWitchLaunchTarget[] => {
   const launchAgentLabel = resolveAgentWitchLaunchAgentPrefix(installDir);
   const profileEmails = listProfileEmails(installDir);
+  const activeProfileEmail = readActiveProfileEmailFromFile(installDir);
 
   return [
     {
-      profileEmail: profileEmails[0] ?? null,
+      profileEmail: activeProfileEmail ?? profileEmails[0] ?? null,
       launchAgentLabel,
     },
   ];

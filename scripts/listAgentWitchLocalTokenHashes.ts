@@ -10,7 +10,7 @@ import {
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === "object" && value !== null && !Array.isArray(value);
 
-const readPairingTokenHashFromConfigPath = (
+export const readPairingTokenHashFromConfigPath = (
   configPath: string,
 ): string | null => {
   if (!fs.existsSync(configPath)) {

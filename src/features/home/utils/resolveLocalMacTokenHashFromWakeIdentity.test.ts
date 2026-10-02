@@ -52,4 +52,28 @@ describe("resolveLocalMacTokenHashFromWakeIdentity", () => {
       }),
     ).toBeNull();
   });
+
+  it("HOME-063: adopts active profile hash when cookie is another local profile and only active is reachable", () => {
+    expect(
+      resolveLocalMacTokenHashFromWakeIdentity({
+        currentTokenHash: "legacy-profile-hash",
+        activeTokenHash: "live-active-profile-hash",
+        localTokenHashes: ["live-active-profile-hash", "legacy-profile-hash"],
+        currentTokenHashMatchesReachableDevice: false,
+        activeTokenHashMatchesReachableDevice: true,
+      }),
+    ).toBe("live-active-profile-hash");
+  });
+
+  it("HOME-063: keeps current when it is the reachable match even if active differs", () => {
+    expect(
+      resolveLocalMacTokenHashFromWakeIdentity({
+        currentTokenHash: "hash-b",
+        activeTokenHash: "hash-a",
+        localTokenHashes: ["hash-a", "hash-b"],
+        currentTokenHashMatchesReachableDevice: true,
+        activeTokenHashMatchesReachableDevice: false,
+      }),
+    ).toBe("hash-b");
+  });
 });

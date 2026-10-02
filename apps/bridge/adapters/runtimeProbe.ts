@@ -1,6 +1,7 @@
 import hashPairingToken from "../../../scripts/hashPairingToken";
 import { listAgentWitchLaunchTargets } from "@agent-witch/install-macos-launch";
 import { listAgentWitchLocalTokenHashes } from "../../../scripts/listAgentWitchLocalTokenHashes";
+import { resolveAgentWitchWakeIdentityPrimaryTokenHash } from "../../../scripts/resolveAgentWitchWakeIdentityPrimaryTokenHash";
 import { readAgentWitchRunConfig } from "@agent-witch/install-runtime-client";
 import { resolveAgentWitchWakePort } from "../../../scripts/agentWitchWakeConstants";
 
@@ -9,5 +10,6 @@ export {
   listAgentWitchLaunchTargets,
   listAgentWitchLocalTokenHashes,
   readAgentWitchRunConfig,
+  resolveAgentWitchWakeIdentityPrimaryTokenHash,
   resolveAgentWitchWakePort,
 };

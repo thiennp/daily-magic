@@ -39,7 +39,7 @@
 - Request: `GET http://127.0.0.1:{port}/identity` (CORS to localhost). Look for **`127.0.0.1`**, not `www.agentwitch.com`.
 - AWL Status/Traffic shows WebSocket `agent.register` + `device.auth.attestation`, not this HTTP `/identity` call.
 - Signed-out marketing Home does not probe. Signed-in AWC retries on tab focus if the first probe failed (HOME-050).
-- Response includes `tokenHash` and optionally `tokenHashes` from local install config (`readAgentWitchRunConfig` / profile tokens on the Mac).
+- Response includes `tokenHash` (active profile from `active-profile.json`) and `tokenHashes` for every local profile pairing token on the Mac.
 - The browser stores the resolved hash in client state (`localMacTokenHashStore`); it may also be seeded from a URL query param after install flows.
 
 ### Match rule

@@ -8,6 +8,8 @@ export const resolveLocalMacTokenHashFromWakeIdentity = (input: {
   readonly currentTokenHash: string | null;
   readonly activeTokenHash: string | null;
   readonly localTokenHashes: readonly string[];
+  readonly currentTokenHashMatchesReachableDevice?: boolean;
+  readonly activeTokenHashMatchesReachableDevice?: boolean;
 }): string | null => {
   const normalize = (value: string | null | undefined): string | null => {
     if (value === null || value === undefined) {
@@ -22,6 +24,21 @@ export const resolveLocalMacTokenHashFromWakeIdentity = (input: {
   const localHashes = input.localTokenHashes
     .map((hash) => normalize(hash))
     .filter((hash): hash is string => hash !== null);
+
+  const currentReachable =
+    input.currentTokenHashMatchesReachableDevice === true;
+  const activeReachable = input.activeTokenHashMatchesReachableDevice === true;
+
+  if (
+    current !== null &&
+    active !== null &&
+    current !== active &&
+    !currentReachable &&
+    activeReachable &&
+    localHashes.includes(active)
+  ) {
+    return active;
+  }
 
   if (current !== null) {
     if (localHashes.length === 0) {

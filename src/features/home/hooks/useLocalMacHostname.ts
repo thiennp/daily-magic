@@ -10,14 +10,12 @@ import {
   getPairedDevicesSnapshotOrEmpty,
   pairedDevicesResource,
 } from "@/features/agent-witch/pairedDevicesResource";
-import {
-  readAgentWitchLocalHostCookie,
-  setAgentWitchLocalHostCookie,
-} from "@/features/agent-witch/utils/agentWitchLocalHostCookie";
+import { readAgentWitchLocalHostCookie } from "@/features/agent-witch/utils/agentWitchLocalHostCookie";
 import { isAgentWitchWakeIdentityProbeSuppressed } from "@/features/agent-witch/utils/agentWitchWakeIdentityProbeSession";
 import { collectUniqueWakePorts } from "@/features/agent-witch/utils/collectUniqueWakePorts";
 import { resolveLocalTokenHashMatchesReachableDevice } from "@/features/agent-witch/utils/resolveLocalTokenHashMatchesReachableDevice";
 import { resolveShouldProbeWakeIdentityInBrowser } from "@/features/agent-witch/utils/resolveShouldProbeWakeIdentityInBrowser";
+import useApplyWakeIdentityLocalTokenHash from "@/features/home/hooks/useApplyWakeIdentityLocalTokenHash";
 import useProbeLocalMacWakeIdentity from "@/features/home/hooks/useProbeLocalMacWakeIdentity";
 import { consumeLocalTokenHashQueryParam } from "@/features/home/utils/consumeLocalTokenHashQueryParam";
 import detectBrowserOperatingSystem from "@/features/home/utils/detectBrowserOperatingSystem";
@@ -27,8 +25,6 @@ import {
   setLocalMacTokenHash,
   subscribeLocalMacTokenHash,
 } from "@/features/home/utils/localMacTokenHashStore";
-import { resolveLocalMacTokenHashFromWakeIdentity } from "@/features/home/utils/resolveLocalMacTokenHashFromWakeIdentity";
-
 const subscribeToOperatingSystem = (): (() => void) => () => undefined;
 
 const getServerOperatingSystemSnapshot = (): "other" => "other";
@@ -106,24 +102,10 @@ const useLocalMacHostname = (): {
   }, []);
 
   useProbeLocalMacWakeIdentity(isMacBrowser, extraWakePorts);
-
-  useEffect(() => {
-    const identity = identitySnapshot.identity;
-    if (identity === null) {
-      return;
-    }
-
-    setAgentWitchLocalHostCookie(identity.hostname);
-
-    const nextTokenHash = resolveLocalMacTokenHashFromWakeIdentity({
-      currentTokenHash: getLocalMacTokenHashSnapshot(),
-      activeTokenHash: identity.tokenHash,
-      localTokenHashes: identity.tokenHashes,
-    });
-    if (nextTokenHash !== null) {
-      setLocalMacTokenHash(nextTokenHash);
-    }
-  }, [identitySnapshot.identity]);
+  useApplyWakeIdentityLocalTokenHash(
+    identitySnapshot.identity,
+    pairedDevicesSnapshot,
+  );
 
   return {
     localHostname,

@@ -620,6 +620,18 @@ Document every production bug or UX regression here. Each entry must link to a t
 
 ---
 
+## HOME-063 — Multi-profile Mac: wake `/identity` primary hash ≠ live agent
+
+**Symptom:** Your Devices showed a live named Mac (e.g. **Grey - Check**, online, current bundle) plus offline **Your Mac** and **Connect this Mac**, while AWL Status proved the WebSocket used the **active** profile (`active-profile.json`). AWB `/identity` still advertised another profile’s `tokenHash` when a legacy profile folder remained on disk.
+
+**Root cause:** Wake `tokenHash` came from `readAgentWitchRunConfig()` without pinning `active-profile.json`. With two local pairing tokens, the browser cookie could match only the offline placeholder (HOME-062) even though the LaunchAgent heartbeated with the active profile hash.
+
+**Fix:** `resolveAgentWitchWakeIdentityPrimaryTokenHash` sets wake `tokenHash` from `active-profile.json`. `listAgentWitchLaunchTargets` reports that email. AWC adopts the active wake hash when the cookie is another local profile and only the active hash matches a reachable device. Install bundle **249**.
+
+**Regression tests:** `resolveAgentWitchWakeIdentityPrimaryTokenHash.test.ts`, `listAgentWitchLaunchTargets.test.ts`, `resolveLocalMacTokenHashFromWakeIdentity.test.ts`, `applyWakeIdentityToLocalMacTokenHash` via `useApplyWakeIdentityLocalTokenHash` (HOME-063).
+
+---
+
 ## HOME-062 — Duplicate this Mac: offline “Your Mac” badge + Connect this computer
 
 **Symptom:** Your Devices showed a grey offline row and a separate **Your Mac** row with the **this Mac** badge, or **Connect this Mac** / **This computer** alongside a badged offline placeholder, while the live install on the same machine was running.
