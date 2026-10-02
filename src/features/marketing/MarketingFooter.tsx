@@ -3,7 +3,6 @@
 import Link from "next/link";
 
 import useStyleguideNavAccess from "@/features/auth/hooks/useStyleguideNavAccess";
-import { AGENT_WITCH_PRODUCT_NAME } from "@/lib/agentWitch/agentWitchProductName.constant";
 import MarketingFooterLegalBar from "@/features/marketing/MarketingFooterLegalBar";
 import {
   FOOTER_ADMIN_LINKS,
@@ -11,11 +10,7 @@ import {
   shouldShowMarketingFooterAdmin,
 } from "@/features/marketing/resolveMarketingFooterNav";
 import { MARKETING_TEXT_LINK_CLASSES } from "@/features/marketing/marketingInteractiveClasses.constant";
-import {
-  MARKETING_TEXT_PRIMARY_CLASSES,
-  MARKETING_TEXT_SECONDARY_CLASSES,
-  MARKETING_TEXT_MUTED_CLASSES,
-} from "@/features/marketing/marketingSurfaceClasses.constant";
+import { MARKETING_TEXT_MUTED_CLASSES } from "@/features/marketing/marketingSurfaceClasses.constant";
 import { mergeMarketingClasses } from "@/features/marketing/mergeMarketingClasses";
 
 export default function MarketingFooter() {
@@ -25,58 +20,7 @@ export default function MarketingFooter() {
 
   return (
     <footer className="border-t border-gray-200 bg-white">
-      <div
-        className={mergeMarketingClasses(
-          "mx-auto grid max-w-6xl gap-10 px-6 py-12",
-          showStaffLinks
-            ? "md:grid-cols-[1.2fr_1fr_1fr]"
-            : "md:grid-cols-[1.2fr_1fr]",
-        )}
-      >
-        <div>
-          <p
-            className={mergeMarketingClasses(
-              "text-sm font-semibold",
-              MARKETING_TEXT_PRIMARY_CLASSES,
-            )}
-          >
-            {AGENT_WITCH_PRODUCT_NAME}
-          </p>
-          <p
-            className={mergeMarketingClasses(
-              "mt-2 max-w-xs text-sm",
-              MARKETING_TEXT_SECONDARY_CLASSES,
-            )}
-          >
-            Send AI tasks to your team&apos;s Macs with approval rules and a
-            clear history of every job.
-          </p>
-        </div>
-        <div>
-          <p
-            className={mergeMarketingClasses(
-              "text-xs font-semibold uppercase tracking-wide",
-              MARKETING_TEXT_MUTED_CLASSES,
-            )}
-          >
-            Product
-          </p>
-          <ul className="mt-3 space-y-2">
-            {productLinks.map((link) => (
-              <li key={link.href}>
-                <Link
-                  href={link.href}
-                  className={mergeMarketingClasses(
-                    "text-sm",
-                    MARKETING_TEXT_LINK_CLASSES,
-                  )}
-                >
-                  {link.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
+      <div className="mx-auto max-w-6xl space-y-10 px-6 py-12">
         {showAdminLinks ? (
           <div>
             <p
@@ -104,6 +48,31 @@ export default function MarketingFooter() {
             </ul>
           </div>
         ) : null}
+        <div>
+          <p
+            className={mergeMarketingClasses(
+              "text-xs font-semibold uppercase tracking-wide",
+              MARKETING_TEXT_MUTED_CLASSES,
+            )}
+          >
+            Product
+          </p>
+          <ul className="mt-3 flex flex-wrap gap-x-4 gap-y-2">
+            {productLinks.map((link) => (
+              <li key={link.href}>
+                <Link
+                  href={link.href}
+                  className={mergeMarketingClasses(
+                    "text-sm",
+                    MARKETING_TEXT_LINK_CLASSES,
+                  )}
+                >
+                  {link.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
       <MarketingFooterLegalBar />
     </footer>

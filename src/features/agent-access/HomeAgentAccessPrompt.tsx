@@ -61,7 +61,7 @@ export default function HomeAgentAccessPrompt(): ReactElement {
         </a>
         .
       </p>
-      <pre className="mt-5 overflow-auto rounded-xl bg-gray-950 p-4 text-left text-sm leading-relaxed text-gray-100">
+      <pre className="mt-5 overflow-x-hidden whitespace-pre-wrap break-words rounded-xl bg-gray-950 p-4 text-left text-sm leading-relaxed text-gray-100">
         {prompt}
       </pre>
       <div

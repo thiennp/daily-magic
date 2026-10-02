@@ -62,10 +62,6 @@ export const MARKETING_ICON_TILE_CLASSES = [
   "bg-brand-50/80 text-brand-600 shadow-sm ring-1 ring-brand-500/10",
 ].join(" ");
 
-/** Stats / trust metric dividers */
-export const MARKETING_METRIC_DIVIDER_CLASSES =
-  "border-brand-200/80 lg:divide-brand-200/80";
-
 export const MARKETING_METRIC_VALUE_CLASSES =
   "text-2xl font-extrabold tracking-tight text-gray-900 sm:text-3xl";
 
