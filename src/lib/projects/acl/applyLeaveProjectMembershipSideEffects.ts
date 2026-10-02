@@ -3,7 +3,11 @@ import { revokeProjectApiKeysForMembership } from "@/lib/projects/acl/projectApi
 import type ProjectMembershipRecord from "@/lib/projects/acl/types/ProjectMembershipRecord.type";
 import { writeProjectAccessAudit } from "@/lib/projects/acl/writeProjectAccessAudit";
 
-/** Disable webhooks, revoke project keys, audit leave — mirrors owner revoke side effects. */
+/**
+ * Disable webhooks, revoke project keys, audit leave — mirrors owner revoke side effects.
+ * Membership lifecycle only: must not call assertProjectMessageDispatchRateLimits /
+ * dispatchProjectMessage (leaving is not a user dispatch).
+ */
 export const applyLeaveProjectMembershipSideEffects = async (input: {
   readonly projectId: string;
   readonly actorUserId: string;
