@@ -43,7 +43,7 @@ describe("resolveLocalMacTokenHashFromWakeIdentity", () => {
     ).toBe("live-install");
   });
 
-  it("HOME-061: clears stale cookie when multiple local hashes remain", () => {
+  it("HOME-061: clears stale cookie when multiple local hashes remain and no reachable hint", () => {
     expect(
       resolveLocalMacTokenHashFromWakeIdentity({
         currentTokenHash: "stale-offline-claim",
@@ -51,6 +51,19 @@ describe("resolveLocalMacTokenHashFromWakeIdentity", () => {
         localTokenHashes: ["hash-a", "hash-b"],
       }),
     ).toBeNull();
+  });
+
+  it("HOME-064: adopts sole reachable local hash for orphan install-token cookies", () => {
+    expect(
+      resolveLocalMacTokenHashFromWakeIdentity({
+        currentTokenHash: "orphan-install-token-claim",
+        activeTokenHash: "active-profile-hash",
+        localTokenHashes: ["active-profile-hash", "live-profile-hash"],
+        soleReachableLocalTokenHash: "live-profile-hash",
+        currentTokenHashMatchesReachableDevice: false,
+        activeTokenHashMatchesReachableDevice: false,
+      }),
+    ).toBe("live-profile-hash");
   });
 
   it("HOME-063: adopts active profile hash when cookie is another local profile and only active is reachable", () => {

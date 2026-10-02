@@ -6,6 +6,7 @@ import {
 } from "@agent-witch/install-layout";
 import { AGENT_WITCH_PROFILES_DIR_NAME } from "@agent-witch/install-layout/types";
 
+import { resolveConnectedProfileWakeIdentityPrimaryTokenHash } from "./resolveConnectedProfileWakeIdentityPrimaryTokenHash";
 import hashPairingToken from "./hashPairingToken";
 import { readPairingTokenHashFromConfigPath } from "./listAgentWitchLocalTokenHashes";
 import { readAgentWitchRunConfig } from "@agent-witch/install-runtime-client";
@@ -17,6 +18,12 @@ import { readAgentWitchRunConfig } from "@agent-witch/install-runtime-client";
 export const resolveAgentWitchWakeIdentityPrimaryTokenHash = (
   installDir: string = resolveAgentWitchInstallDir(),
 ): string | null => {
+  const connectedProfileHash =
+    resolveConnectedProfileWakeIdentityPrimaryTokenHash(installDir);
+  if (connectedProfileHash !== null) {
+    return connectedProfileHash;
+  }
+
   const activeProfileEmail = readActiveProfileEmailFromFile(installDir);
   if (activeProfileEmail !== null) {
     const fromActiveProfile = readPairingTokenHashFromConfigPath(

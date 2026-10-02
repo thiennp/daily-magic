@@ -620,6 +620,18 @@ Document every production bug or UX regression here. Each entry must link to a t
 
 ---
 
+## HOME-064 — Orphan install-token cookie vs live Grey - Check row
+
+**Symptom:** **Grey - Check** was online but **Connect this Mac** stayed visible; **Your Mac** was an offline placeholder. Cookie `agent_witch_local_token_hash` held an install-token claim hash not present under `~/.agent-witch/profiles`, while the live row used another local profile token. Wake `tokenHash` followed `active-profile.json` but the hub heartbeat used the connected profile.
+
+**Root cause:** HOME-063 only remapped cookies across **on-disk** profile hashes and preferred **active** wake `tokenHash` when reachable. Orphan claims and active-vs-connected profile drift were unchanged.
+
+**Fix:** `resolveSoleReachableLocalTokenHash` + wake identity resolution adopt the **only** reachable device hash that matches a local install token. AWB primary `tokenHash` prefers the profile with freshest non-stale `connection-health.json`. Install bundle **250**.
+
+**Regression tests:** `resolveSoleReachableLocalTokenHash.test.ts`, `resolveLocalMacTokenHashFromWakeIdentity.test.ts`, `resolveConnectedProfileWakeIdentityPrimaryTokenHash.test.ts` (HOME-064).
+
+---
+
 ## HOME-063 — Multi-profile Mac: wake `/identity` primary hash ≠ live agent
 
 **Symptom:** Your Devices showed a live named Mac (e.g. **Grey - Check**, online, current bundle) plus offline **Your Mac** and **Connect this Mac**, while AWL Status proved the WebSocket used the **active** profile (`active-profile.json`). AWB `/identity` still advertised another profile’s `tokenHash` when a legacy profile folder remained on disk.

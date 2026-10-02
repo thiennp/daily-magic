@@ -1,5 +1,6 @@
 import type { LocalAgentWitchIdentitySnapshot } from "@/features/agent-witch/localAgentWitchIdentitySnapshot.type";
 import { resolveLocalTokenHashMatchesReachableDevice } from "@/features/agent-witch/utils/resolveLocalTokenHashMatchesReachableDevice";
+import { resolveSoleReachableLocalTokenHash } from "@/features/agent-witch/utils/resolveSoleReachableLocalTokenHash";
 import type { MacDevicePresence } from "@/features/agent-witch/online-wake/macDevicePresence";
 import { resolveLocalMacTokenHashFromWakeIdentity } from "@/features/home/utils/resolveLocalMacTokenHashFromWakeIdentity";
 
@@ -11,11 +12,16 @@ export const applyWakeIdentityToLocalMacTokenHash = (input: {
   })[];
 }): string | null => {
   const activeTokenHash = input.identity.tokenHash;
+  const soleReachableLocalTokenHash = resolveSoleReachableLocalTokenHash({
+    devices: input.devices,
+    localTokenHashes: input.identity.tokenHashes,
+  });
 
   return resolveLocalMacTokenHashFromWakeIdentity({
     currentTokenHash: input.currentTokenHash,
     activeTokenHash,
     localTokenHashes: input.identity.tokenHashes,
+    soleReachableLocalTokenHash,
     currentTokenHashMatchesReachableDevice:
       resolveLocalTokenHashMatchesReachableDevice({
         localTokenHash: input.currentTokenHash,
