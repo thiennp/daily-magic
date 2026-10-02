@@ -37,7 +37,14 @@ export const buildAgentAccessLiveGuide = () => {
     whatAgentWitchIs: AGENT_WITCH_ROLE_LIVE_GUIDE,
     promptSdlc: buildPromptSdlcAgentGuide(),
     projectCowork: {
-      awcStoresOnly: ["name", "folderRefs", "repoUrls", "defaultBranch", "members", "approveRevokeAudit"],
+      awcStoresOnly: [
+        "name",
+        "folderRefs",
+        "repoUrls",
+        "defaultBranch",
+        "members",
+        "approveRevokeAudit",
+      ],
       coordination: "local_or_git_or_bot_oob",
       ownerApproveRevokeUiOnly: true,
       noTokenSharing: true,
@@ -49,6 +56,12 @@ export const buildAgentAccessLiveGuide = () => {
         "check_membership",
         "mint_allow_claim",
       ],
+    },
+    productUpdates: {
+      tool: "check_product_updates",
+      sinceArg: "sinceCatalogVersion",
+      startSince: 0,
+      hint: "After active membership and periodically, call check_product_updates with last seen catalogVersion; adapt from entries; keep agent-access Bearer.",
     },
     teachOtherBots: {
       instruction:

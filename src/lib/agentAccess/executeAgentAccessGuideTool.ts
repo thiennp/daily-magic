@@ -7,6 +7,7 @@ import {
   recordAgentAccessBucketAttempt,
 } from "@/lib/agentAccess/consumeAgentAccessBucket";
 import { ensureAgentAccessSchema } from "@/lib/agentAccess/ensureAgentAccessSchema";
+import { executeCheckProductUpdatesTool } from "@/lib/agentAccess/executeCheckProductUpdatesTool";
 import { hashAgentAccessToken } from "@/lib/agentAccess/hashAgentAccessToken";
 import type { AgentAccessToolCallResult } from "@/lib/agentAccess/handleAgentAccessMcpRequest";
 import { openAgentFeedbackGitHubIssue } from "@/lib/agentAccess/openAgentFeedbackGitHubIssue";
@@ -45,6 +46,10 @@ export const executeAgentAccessGuideTool = async (input: {
       ok: true,
       guide: buildAgentAccessLiveGuide(),
     });
+  }
+
+  if (input.name === "check_product_updates") {
+    return executeCheckProductUpdatesTool(input.args);
   }
 
   if (input.name !== "report_feedback") {

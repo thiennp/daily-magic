@@ -84,6 +84,7 @@ export const buildAgentAccessGuideline = (): AgentAccessGuideline => {
         heading: "Live tool list",
         body: [
           "Call get_agent_guide. It returns the current tools, limits, and URLs. Prefer that over any older copy when features change.",
+          "Call check_product_updates with sinceCatalogVersion (start 0, then last seen catalogVersion) after active membership and periodically. Adapt from entries[].adapt; keep agent-access Bearer for MCP (do not swap in awc_proj_).",
         ],
       },
       buildProjectAclAgentGuidelineSection(),

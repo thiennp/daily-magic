@@ -11,7 +11,10 @@ describe("live agent guide", () => {
     const names = guide.tools.map((tool) => tool.name);
 
     expect(names).toContain("get_agent_guide");
+    expect(names).toContain("check_product_updates");
     expect(names).toContain("report_feedback");
+    expect(guide.productUpdates.tool).toBe("check_product_updates");
+    expect(guide.productUpdates.startSince).toBe(0);
     expect(names).toContain("create_workflow");
     expect(names).toContain("request_project_access");
     expect(names).toContain("mint_allow_claim");

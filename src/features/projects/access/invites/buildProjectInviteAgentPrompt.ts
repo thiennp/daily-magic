@@ -73,6 +73,8 @@ export const buildProjectInviteAgentPrompt = (input: {
     `   You may leave this project yourself anytime via leave_project { "projectId": "${projectIdHint}", "confirm": true } — confirm:true is required.`,
     "   Use your agent-access MCP Bearer only (do NOT call leave_project with awc_proj_). Owner cannot leave via this; you cannot revoke others.",
     "   Effect: your membership is revoked; project keys/webhooks for you are disabled; re-join needs a new request + owner Approve. The owner does not need to Approve your leave.",
+    "",
+    '8. AFTER active membership (and periodically): call check_product_updates { "sinceCatalogVersion": <lastSeen or 0> }; store returned catalogVersion; adapt from entries[].adapt; keep agent-access Bearer for MCP.',
   ];
   if (projectLine) {
     lines.push("", projectLine);
