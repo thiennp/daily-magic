@@ -21,6 +21,8 @@ vi.mock("@/lib/projects/userProjectQueries", () => ({
           deviceId: "mac-1",
           name: "Demo",
           folderPath: "/tmp/demo",
+          repoUrls: [],
+          defaultBranch: null,
           lastUsedAt: null,
           createdAt: "2026-10-01T00:00:00.000Z",
           updatedAt: "2026-10-01T00:00:00.000Z",

@@ -9,6 +9,8 @@ const buildProject = (name: string, folderPath: string): UserProjectRecord => ({
   deviceId: null,
   name,
   folderPath,
+  repoUrls: [],
+  defaultBranch: null,
   lastUsedAt: null,
   createdAt: "2026-01-01T00:00:00.000Z",
   updatedAt: "2026-01-01T00:00:00.000Z",

@@ -41,3 +41,51 @@ describe("parseUserProjectBody", () => {
     });
   });
 });
+
+  it("accepts optional repoUrls and defaultBranch on create", () => {
+    expect(
+      parseCreateUserProjectBody(
+        {
+          name: "Daily Magic",
+          folderPath: "~/Projects/daily-magic",
+          repoUrls: ["https://github.com/org/daily-magic.git"],
+          defaultBranch: "main",
+        },
+        "owner@example.com",
+      ),
+    ).toEqual({
+      name: "Daily Magic",
+      folderPath: "~/Projects/daily-magic",
+      deviceId: undefined,
+      repoUrls: ["https://github.com/org/daily-magic.git"],
+      defaultBranch: "main",
+    });
+  });
+
+  it("rejects create payloads with credentialed repo URLs", () => {
+    expect(
+      parseCreateUserProjectBody(
+        {
+          name: "Daily Magic",
+          folderPath: "~/Projects/daily-magic",
+          repoUrls: ["https://user:pass@github.com/org/repo.git"],
+        },
+        "owner@example.com",
+      ),
+    ).toBeNull();
+  });
+
+  it("accepts repoUrls-only updates", () => {
+    expect(
+      parseUpdateUserProjectBody({
+        repoUrls: ["git@github.com:org/repo.git"],
+        defaultBranch: null,
+      }),
+    ).toEqual({
+      kind: "ok",
+      input: {
+        repoUrls: ["git@github.com:org/repo.git"],
+        defaultBranch: null,
+      },
+    });
+  });

@@ -8,6 +8,7 @@ export const PROJECT_PEER_SYNC_GUIDELINE = {
   awcStoresOnly: [
     "project name",
     "folder refs (machine × folder path strings)",
+    "optional repo URLs + default branch (metadata only)",
     "allowed members/bots",
     "approve + revoke audit (who/when)",
   ],

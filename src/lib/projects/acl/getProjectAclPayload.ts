@@ -12,6 +12,8 @@ export type GetProjectAclPayloadResult =
         readonly machineOrDeviceRef: string;
         readonly folderPath: string;
       }[];
+      readonly repoUrls: readonly string[];
+      readonly defaultBranch: string | null;
       readonly scopes: readonly ProjectAclScope[];
       readonly relation: "owner" | "member";
     }
@@ -23,7 +25,7 @@ const summarizeFolderRef = (ref: ProjectFolderRefRecord) => ({
   folderPath: ref.folderPath,
 });
 
-/** name + folder refs + self scopes only — no content. */
+/** name + folder refs + repo URLs + self scopes only — no content. */
 export const getProjectAclPayload = async (input: {
   readonly projectId: string;
   readonly actorUserId: string;
@@ -45,6 +47,8 @@ export const getProjectAclPayload = async (input: {
     ok: true,
     name: access.project.name,
     folderRefs: folderRefs.map(summarizeFolderRef),
+    repoUrls: access.project.repoUrls,
+    defaultBranch: access.project.defaultBranch,
     scopes: access.scopes,
     relation: access.isOwner ? "owner" : "member",
   };

@@ -11,6 +11,8 @@ export const PROJECTS_STORYBOOK_SAMPLE_PROJECT: UserProjectRecord = {
   deviceId: "storybook-mac-1",
   name: "daily-magic",
   folderPath: "/Users/me/code/daily-magic",
+  repoUrls: [],
+  defaultBranch: null,
   lastUsedAt: now,
   createdAt: now,
   updatedAt: now,

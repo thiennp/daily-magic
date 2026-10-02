@@ -1,16 +1,21 @@
 import buildDefaultProjectFolderPath from "@/lib/projects/buildDefaultProjectFolderPath";
 import type { ParseUpdateUserProjectBodyResult } from "@/lib/projects/parseUpdateUserProjectBodyResult.type";
+import { parseOptionalProjectRepoFields } from "@/lib/projects/validateProjectRepoUrls";
 import { normalizeValidatedProjectFolderPath } from "@/lib/projects/validateProjectFolderPath";
 
 export interface CreateUserProjectInput {
   readonly name: string;
   readonly folderPath: string;
   readonly deviceId?: string | null;
+  readonly repoUrls?: readonly string[];
+  readonly defaultBranch?: string | null;
 }
 
 export interface UpdateUserProjectInput {
   readonly name?: string;
   readonly deviceId?: string | null;
+  readonly repoUrls?: readonly string[];
+  readonly defaultBranch?: string | null;
 }
 
 const parseOptionalDeviceId = (value: unknown): string | null | undefined => {
@@ -76,10 +81,21 @@ export const parseCreateUserProjectBody = (
     return null;
   }
 
+  const repoFields = parseOptionalProjectRepoFields(record);
+  if (!repoFields.ok) {
+    return null;
+  }
+
   return {
     name,
     folderPath,
     deviceId: parseOptionalDeviceId(record.deviceId),
+    ...(repoFields.repoUrls !== undefined
+      ? { repoUrls: repoFields.repoUrls }
+      : {}),
+    ...(repoFields.defaultBranch !== undefined
+      ? { defaultBranch: repoFields.defaultBranch }
+      : {}),
   };
 };
 
@@ -104,7 +120,17 @@ export const parseUpdateUserProjectBody = (
     return { kind: "invalid" };
   }
 
-  if (name === undefined && deviceId === undefined) {
+  const repoFields = parseOptionalProjectRepoFields(record);
+  if (!repoFields.ok) {
+    return { kind: "invalid" };
+  }
+
+  if (
+    name === undefined &&
+    deviceId === undefined &&
+    repoFields.repoUrls === undefined &&
+    repoFields.defaultBranch === undefined
+  ) {
     return { kind: "invalid" };
   }
 
@@ -113,6 +139,12 @@ export const parseUpdateUserProjectBody = (
     input: {
       ...(name !== undefined ? { name } : {}),
       ...(deviceId !== undefined ? { deviceId } : {}),
+      ...(repoFields.repoUrls !== undefined
+        ? { repoUrls: repoFields.repoUrls }
+        : {}),
+      ...(repoFields.defaultBranch !== undefined
+        ? { defaultBranch: repoFields.defaultBranch }
+        : {}),
     },
   };
 };
