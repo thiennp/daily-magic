@@ -18,8 +18,13 @@ describe("live agent guide", () => {
     expect(guide.projectCowork.noTokenSharing).toBe(true);
     expect(guide.projectCowork.tools).toContain("list_project_peers");
     expect(guide.projectCowork.tools).toContain("project_dispatch");
+    expect(guide.projectCowork.tools).toContain("register_project_webhook");
     expect(guide.projectCowork.tools).toContain("list_project_inbox");
+    expect(guide.projectCowork.tools).toContain("ack_project_message");
     expect(guide.projectCowork.tools).toContain("rotate_project_api_key");
+    expect(guide.projectCowork.tools.indexOf("register_project_webhook")).toBeLessThan(
+      guide.projectCowork.tools.indexOf("list_project_inbox"),
+    );
     expect(guide.whatAgentWitchIs.role).toBe("agent_support_playground");
     expect(guide.whatAgentWitchIs.summary).toContain(
       "agent-support playground",

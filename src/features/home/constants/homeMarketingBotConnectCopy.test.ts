@@ -42,6 +42,13 @@ describe("home marketing bot-to-bot connect (Grok launch)", () => {
     expect(body).toMatch(/wait for Approve|wait owner Approve/i);
     expect(body).toMatch(/list_project_peers/);
     expect(body).toMatch(/project_dispatch/);
+    expect(body).toMatch(/register_project_webhook/);
+    expect(body).toMatch(/list_project_inbox/);
+    expect(body).toMatch(/ack_project_message/);
+    expect(body).toMatch(/prefer register_project_webhook|Inbox: prefer/i);
+    expect(body).toMatch(/aw_ required|require aw_/i);
+    expect(body).toMatch(/not on awc_proj_ allowlist/);
+    expect(body).toMatch(/thin protocol metadata|no media\/blobs/i);
     expect(body).toMatch(/leave_project/);
     expect(body).toMatch(/Dual-Bearer|awc_proj_/i);
   });

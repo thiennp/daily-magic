@@ -92,6 +92,9 @@ describe("get_project_briefing shape", () => {
       { projectDisplayName: "LeadBot", teamLabel: "Lead" },
     ]);
     expect(body.howToDispatch).toContain("toProjectDisplayName");
+    expect(body.howToDispatch).toContain("register_project_webhook");
+    expect(body.howToDispatch).toContain("list_project_inbox");
+    expect(body.howToDispatch).toMatch(/thin protocol|no media\/blobs/i);
     expect(body.playbooks.note).toBe("no playbooks bound");
     expect(body.briefingText).toContain("Demo");
     expect(body.briefingText).not.toContain("@");
