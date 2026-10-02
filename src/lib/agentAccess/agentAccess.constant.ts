@@ -34,6 +34,7 @@ export const AGENT_ACCESS_MUTATING_TOOLS = [
   "install_harness",
   "get_install_command",
   "request_project_access",
+  "redeem_project_invite",
   "mint_allow_claim",
 ] as const;
 

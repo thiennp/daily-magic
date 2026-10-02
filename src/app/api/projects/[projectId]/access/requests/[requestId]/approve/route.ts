@@ -16,18 +16,29 @@ export async function POST(
 
   const { projectId, requestId } = await context.params;
   const body: unknown = await request.json().catch(() => ({}));
+  const payload =
+    body !== null && typeof body === "object"
+      ? (body as Record<string, unknown>)
+      : {};
   const teamLabel =
-    body !== null &&
-    typeof body === "object" &&
-    typeof (body as { teamLabel?: unknown }).teamLabel === "string"
-      ? (body as { teamLabel: string }).teamLabel
-      : null;
+    typeof payload.teamLabel === "string" ? payload.teamLabel : null;
+  const projectDisplayName =
+    typeof payload.projectDisplayName === "string"
+      ? payload.projectDisplayName
+      : payload.projectDisplayName === null
+        ? null
+        : undefined;
+  const scopes = Array.isArray(payload.scopes)
+    ? payload.scopes.filter((s): s is string => typeof s === "string")
+    : null;
 
   const result = await approveProjectAccessRequest({
     projectId,
     requestId,
     ownerUserId: actor.id,
     teamLabel,
+    projectDisplayName,
+    scopes,
   });
 
   if (!result.ok) {
@@ -36,10 +47,18 @@ export async function POST(
         ? 403
         : result.code === "not_found"
           ? 404
-          : 409;
+          : result.code === "display_name_taken"
+            ? 409
+            : result.code === "display_name_reserved"
+              ? 422
+              : result.code === "display_name_required" ||
+                  result.code === "display_name_invalid"
+                ? 400
+                : 409;
     return Response.json({ ok: false, errorMessage: result.code }, { status });
   }
 
+  // Do not return projectApiKey plaintext to owner session (A2 / A6).
   return Response.json({
     ok: true,
     request: result.request,

@@ -1,5 +1,6 @@
 import { ensureProjectAclSchema } from "@/lib/projects/acl/ensureProjectAclSchema";
 import mapProjectMembershipRow from "@/lib/projects/acl/mapProjectMembershipRow";
+import { revokeProjectApiKeysForMembership } from "@/lib/projects/acl/projectApiKeys/revokeProjectApiKeysForMembership";
 import type ProjectMembershipRecord from "@/lib/projects/acl/types/ProjectMembershipRecord.type";
 import { writeProjectAccessAudit } from "@/lib/projects/acl/writeProjectAccessAudit";
 import { getUserProjectById } from "@/lib/projects/userProjectQueries";
@@ -33,7 +34,7 @@ export const revokeProjectMembership = async (input: {
       SET status = 'revoked', revoked_at = NOW()
       WHERE id = ${input.membershipId}
         AND project_id = ${input.projectId}
-        AND status = 'active'
+        AND status IN ('active', 'naming_required')
         AND role = 'member'
       RETURNING *
     `,
@@ -42,6 +43,12 @@ export const revokeProjectMembership = async (input: {
     return { ok: false, code: "not_active" };
   }
   const membership = mapProjectMembershipRow(rows[0]);
+  await revokeProjectApiKeysForMembership({
+    projectId: input.projectId,
+    membershipId: membership.id,
+    actorUserId: input.ownerUserId,
+    targetUserId: membership.userId,
+  });
   await writeProjectAccessAudit({
     projectId: input.projectId,
     actorUserId: input.ownerUserId,

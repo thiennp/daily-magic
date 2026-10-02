@@ -12,6 +12,22 @@ vi.mock("@/lib/db", () => ({
   asRowArray: (rows: unknown) => (Array.isArray(rows) ? rows : []),
 }));
 
+vi.mock("@/lib/projects/acl/isAgentUser", () => ({
+  isAgentUserId: vi.fn(async () => true),
+  loadUserProfilesByIds: vi.fn(async () => new Map()),
+}));
+
+vi.mock("@/lib/projects/acl/projectApiKeys/mintProjectApiKey", () => ({
+  mintProjectApiKey: vi.fn(async () => ({
+    ok: true,
+    keyId: "key-1",
+    plaintext: "awc_proj_test",
+    prefix: "awc_proj_",
+    last4: "test",
+    scopes: ["acl:self"],
+  })),
+}));
+
 vi.mock("@/lib/projects/userProjectQueries", () => ({
   getUserProjectById: vi.fn(async (projectId: string) =>
     projectId === "proj-1"
@@ -43,6 +59,8 @@ const requestRow = {
   decided_at: null,
   created_at: "2026-10-01T00:00:00.000Z",
   expires_at: "2026-10-15T00:00:00.000Z",
+  invite_id: null,
+  team_label: null,
 };
 
 const memberRow = {
@@ -52,7 +70,8 @@ const memberRow = {
   role: "member",
   status: "active",
   team_label: null,
-  scopes: ["acl:self", "project:meta", "peer_sync"],
+  scopes: ["acl:self", "project:meta", "peer_sync", "msg:dispatch"],
+  project_display_name: "Buni",
   created_at: "2026-10-01T00:00:00.000Z",
   revoked_at: null,
 };
@@ -88,11 +107,14 @@ describe("project ACL request→approve", () => {
 
     sqlMock.mockImplementation(async (strings: TemplateStringsArray) => {
       const q = String(strings);
-      if (q.includes("CREATE TABLE")) return [];
+      if (q.includes("CREATE TABLE") || q.includes("ALTER TABLE")) return [];
+      if (q.includes("FROM project_access_requests") && q.includes("pending")) {
+        return [{ ...requestRow, status: "pending" }];
+      }
       if (q.includes("WITH approved_request AS")) {
         return [
           {
-            request_row: requestRow,
+            request_row: { ...requestRow, status: "approved" },
             member_row: memberRow,
           },
         ];
@@ -105,6 +127,7 @@ describe("project ACL request→approve", () => {
       projectId: "proj-1",
       requestId: "req-1",
       ownerUserId: "owner-1",
+      projectDisplayName: "Buni",
     });
     expect(approved.ok).toBe(true);
 

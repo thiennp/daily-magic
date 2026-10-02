@@ -1,3 +1,8 @@
+import { handleProjectAccessPatch } from "@/app/api/projects/[projectId]/access/patchAccessAction";
+import {
+  buildMembershipViews,
+  buildPendingRequestViews,
+} from "@/lib/projects/acl/buildProjectAccessViews";
 import { listPendingProjectAccessRequests } from "@/lib/projects/acl/listPendingProjectAccessRequests";
 import { listProjectMembershipsForProject } from "@/lib/projects/acl/listProjectMembershipsForProject";
 import { getUserProjectById } from "@/lib/projects/userProjectQueries";
@@ -24,9 +29,13 @@ export async function GET(
     );
   }
 
-  const [members, pendingRequests] = await Promise.all([
+  const [memberRows, pendingRows] = await Promise.all([
     listProjectMembershipsForProject(projectId),
     listPendingProjectAccessRequests(projectId),
+  ]);
+  const [members, pendingRequests] = await Promise.all([
+    buildMembershipViews(memberRows),
+    buildPendingRequestViews(pendingRows),
   ]);
 
   return Response.json({
@@ -39,5 +48,26 @@ export async function GET(
       scopes: PROJECT_ACL_FIRST_CONNECT.scopes,
       note: PROJECT_ACL_FIRST_CONNECT.emptyStateNote,
     },
+  });
+}
+
+export async function PATCH(
+  request: Request,
+  context: { params: Promise<{ readonly projectId: string }> },
+): Promise<Response> {
+  const { actor, error } = await requireAuth();
+  if (error || !actor) {
+    return error;
+  }
+  const { projectId } = await context.params;
+  const body: unknown = await request.json().catch(() => ({}));
+  const payload =
+    body !== null && typeof body === "object"
+      ? (body as Record<string, unknown>)
+      : {};
+  return handleProjectAccessPatch({
+    projectId,
+    ownerUserId: actor.id,
+    body: payload,
   });
 }

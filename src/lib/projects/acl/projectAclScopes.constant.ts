@@ -4,6 +4,7 @@ export const PROJECT_ACL_SCOPES = [
   "project:meta",
   "peer_sync",
   "folder_ref:propose",
+  "msg:dispatch",
 ] as const;
 
 export type ProjectAclScope = (typeof PROJECT_ACL_SCOPES)[number];
@@ -12,6 +13,7 @@ export const PROJECT_ACL_DEFAULT_MEMBER_SCOPES: readonly ProjectAclScope[] = [
   "acl:self",
   "project:meta",
   "peer_sync",
+  "msg:dispatch",
 ] as const;
 
 export const isProjectAclScope = (value: string): value is ProjectAclScope =>
