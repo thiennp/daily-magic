@@ -80,6 +80,10 @@ describe("leaveProjectMembership happy path", () => {
     expect(auditActions).toContain("webhook.disable");
     expect(auditActions).toContain("leave");
     expect(auditActions).not.toContain("revoke");
+    const purgeSql = sqlMock.mock.calls.map((call) => String(call[0]));
+    expect(purgeSql.some((query) => query.includes("DELETE FROM project_message_deliveries"))).toBe(true);
+    expect(purgeSql.some((query) => query.includes("DELETE FROM project_messages"))).toBe(true);
+    expect(purgeSql.some((query) => query.includes("DELETE FROM project_membership_webhooks"))).toBe(true);
   });
 
   it("allows leave from naming_required", async () => {

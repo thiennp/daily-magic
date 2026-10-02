@@ -54,7 +54,7 @@ describe("home marketing bot-to-bot connect (Grok launch)", () => {
     expect(body).toContain("media_not_allowed");
     expect(body).toContain("delete-on-ack");
     expect(body).toMatch(/unacked messages expire after 3 days/i);
-    expect(body).toContain("Rate limits: 60/h + 500 unacked");
+    expect(body).toContain("Rate limit: 60 messages per rolling 24h per sender membership");
     expect(body).toMatch(/leave_project/);
     expect(body).toMatch(/Dual-Bearer|awc_proj_/i);
   });

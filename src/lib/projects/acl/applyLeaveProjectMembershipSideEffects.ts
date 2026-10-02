@@ -1,7 +1,7 @@
+import { purgeProjectMembershipData } from "@/lib/projects/acl/purgeProjectMembershipData";
 import { revokeProjectApiKeysForMembership } from "@/lib/projects/acl/projectApiKeys/revokeProjectApiKeysForMembership";
 import type ProjectMembershipRecord from "@/lib/projects/acl/types/ProjectMembershipRecord.type";
 import { writeProjectAccessAudit } from "@/lib/projects/acl/writeProjectAccessAudit";
-import { getSql } from "@/lib/db";
 
 /** Disable webhooks, revoke project keys, audit leave — mirrors owner revoke side effects. */
 export const applyLeaveProjectMembershipSideEffects = async (input: {
@@ -9,13 +9,10 @@ export const applyLeaveProjectMembershipSideEffects = async (input: {
   readonly actorUserId: string;
   readonly membership: ProjectMembershipRecord;
 }): Promise<void> => {
-  const sql = getSql();
-  await sql`
-    UPDATE project_membership_webhooks
-    SET enabled = FALSE, revoke_generation = revoke_generation + 1, updated_at = NOW()
-    WHERE membership_id = ${input.membership.id}
-      AND project_id = ${input.projectId}
-  `;
+  await purgeProjectMembershipData({
+    projectId: input.projectId,
+    membership: input.membership,
+  });
   await writeProjectAccessAudit({
     projectId: input.projectId,
     actorUserId: input.actorUserId,

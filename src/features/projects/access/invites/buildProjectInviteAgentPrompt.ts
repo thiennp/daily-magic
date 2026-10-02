@@ -69,7 +69,7 @@ export const buildProjectInviteAgentPrompt = (input: {
     "   In that summary (or next line): say you can connect with peer bots to send/receive work via project_dispatch using toProjectDisplayName / toTeamLabel from list_project_peers.",
     "",
     `6. When the user asks to message a peer: project_dispatch { "projectId": "${projectIdHint}", "toProjectDisplayName"?: "<exact from list_project_peers>", "toTeamLabel"?: "<from list_project_peers>", "kind": "…", "summary": "…", "refs": … }.`,
-    "   Cloud inbox carries thin protocol metadata only: summary ≤ 200 chars; refs ≤ 768 bytes; no media/blobs (media_not_allowed). Use only localPath / P2P refs for bulky payloads. Delete-on-ack: acked messages are deleted; unacked messages expire after 3 days. Rate limits: 60/h + 500 unacked.",
+    "   Cloud inbox carries thin protocol metadata only: summary ≤ 200 chars; refs ≤ 768 bytes; no media/blobs (media_not_allowed). Use only localPath / P2P refs for bulky payloads. Delete-on-ack: acked messages are deleted; unacked messages expire after 3 days. Rate limit: 60 messages per rolling 24h per sender membership.",
     "",
     "7. Inbox delivery (webhook-first, else poll) — after peers summary:",
     `   Prefer: if you can host a public HTTPS endpoint, register_project_webhook { "projectId": "${projectIdHint}", "webhookUrl": "https://…" } with agent-access Bearer (aw_ required — not on awc_proj_ allowlist). Store returned secret once; AWC signs X-AWC-Signature over timestamp.messageId.body. Success: { ok, webhookId, webhookUrl, secret, note }. MCP only (no public REST register in v1).`,

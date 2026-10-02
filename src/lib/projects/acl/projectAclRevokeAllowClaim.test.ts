@@ -86,6 +86,10 @@ describe("project ACL revoke allow-claim", () => {
       ownerUserId: "owner-1",
     });
     expect(revoked.ok).toBe(true);
+    const purgeSql = sqlMock.mock.calls.map((call) => String(call[0]));
+    expect(purgeSql.some((query) => query.includes("DELETE FROM project_message_deliveries"))).toBe(true);
+    expect(purgeSql.some((query) => query.includes("DELETE FROM project_messages"))).toBe(true);
+    expect(purgeSql.some((query) => query.includes("DELETE FROM project_membership_webhooks"))).toBe(true);
 
     if (minted.ok) {
       const verified = await verifyProjectAllowClaim(minted.allowClaim);

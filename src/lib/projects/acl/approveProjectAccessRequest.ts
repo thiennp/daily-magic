@@ -1,6 +1,7 @@
 import { randomUUID } from "node:crypto";
 
 import { ensureProjectAclSchema } from "@/lib/projects/acl/ensureProjectAclSchema";
+import { notifyProjectPeersOfMembershipJoin } from "@/lib/projects/acl/messaging/notifyProjectPeersOfMembershipJoin";
 import { finalizeApprovedMembership } from "@/lib/projects/acl/finalizeApprovedMembership";
 import { insertApprovedMembership } from "@/lib/projects/acl/insertApprovedMembership";
 import { isAgentUserId } from "@/lib/projects/acl/isAgentUser";
@@ -95,6 +96,12 @@ export const approveProjectAccessRequest = async (input: {
     membership: inserted.membership,
     displayName: nameResult.displayName,
     mintKey: requesterIsAgent,
+  });
+  await notifyProjectPeersOfMembershipJoin({
+    projectId: input.projectId,
+    membershipId: inserted.membership.id,
+    userId: inserted.membership.userId,
+    projectDisplayName: inserted.membership.projectDisplayName,
   });
 
   return {

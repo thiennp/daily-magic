@@ -1,7 +1,8 @@
 import { normalizeProjectDisplayNameKey } from "@/lib/projects/acl/displayNames/normalizeProjectDisplayName";
+import { getUserProjectById } from "@/lib/projects/userProjectQueries";
 import { asRowArray, getSql } from "@/lib/db";
 
-export type DispatchRecipient = { readonly id: string; readonly user_id: string };
+export type DispatchRecipient = { readonly id: string | null; readonly user_id: string };
 
 export const resolveDispatchRecipients = async (input: {
   readonly projectId: string;
@@ -13,6 +14,13 @@ export const resolveDispatchRecipients = async (input: {
   | { readonly ok: false; readonly code: "recipient_not_found" | "fanout_cap" }
 > => {
   const sql = getSql();
+  if (input.toProjectDisplayName?.trim().toLowerCase() === "owner") {
+    const project = await getUserProjectById(input.projectId);
+    if (project === null || project.ownerUserId === input.actorUserId) {
+      return { ok: false, code: "recipient_not_found" };
+    }
+    return { ok: true, recipients: [{ id: null, user_id: project.ownerUserId }] };
+  }
   if (input.toProjectDisplayName) {
     const key = normalizeProjectDisplayNameKey(input.toProjectDisplayName);
     const rows = asRowArray(

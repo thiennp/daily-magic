@@ -12,10 +12,8 @@ export const PROJECT_MESSAGE_REFS_MAX_BYTES = 768;
 export const PROJECT_MESSAGE_REF_VALUE_MAX_CHARS = 256;
 /** Unacked messages older than this are hard-deleted (CASCADE deliveries). */
 export const PROJECT_MESSAGE_UNACKED_TTL_DAYS = 3;
-/** Max dispatches from one membership in a rolling 1h window. */
-export const PROJECT_MESSAGE_DISPATCH_HOURLY_LIMIT = 60;
-/** Max still-unacked (acked_at IS NULL) messages from one membership. */
-export const PROJECT_MESSAGE_DISPATCH_UNACKED_LIMIT = 500;
+/** Max dispatches from one membership in a rolling 24h window. */
+export const PROJECT_MESSAGE_DISPATCH_DAILY_LIMIT = 60;
 /** Throttle for opportunistic purge (ensure / dispatch / list_inbox). */
 export const PROJECT_MESSAGE_PURGE_MIN_INTERVAL_MS = 3_600_000;
 

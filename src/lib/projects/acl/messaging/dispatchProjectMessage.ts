@@ -43,6 +43,7 @@ export const dispatchProjectMessage = async (input: {
 
   const rate = await assertProjectMessageDispatchRateLimits({
     senderMembershipId: sender.id,
+    senderUserId: input.actorUserId,
   });
   if (!rate.ok) {
     return { ok: false, code: rate.code };
@@ -70,7 +71,10 @@ export const dispatchProjectMessage = async (input: {
     kind: parsed.kind,
     summary: parsed.summary,
     refsJson: JSON.stringify(parsed.refs),
-    recipients: resolved.recipients,
+    recipients: resolved.recipients.filter(
+      (recipient): recipient is { id: string; user_id: string } =>
+        recipient.id !== null,
+    ),
   });
   await writeProjectAccessAudit({
     projectId: input.projectId,

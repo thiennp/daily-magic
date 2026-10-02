@@ -1,5 +1,6 @@
 import { ensureProjectAclSchema } from "@/lib/projects/acl/ensureProjectAclSchema";
 import mapProjectMembershipRow from "@/lib/projects/acl/mapProjectMembershipRow";
+import { purgeProjectMembershipData } from "@/lib/projects/acl/purgeProjectMembershipData";
 import { revokeProjectApiKeysForMembership } from "@/lib/projects/acl/projectApiKeys/revokeProjectApiKeysForMembership";
 import type ProjectMembershipRecord from "@/lib/projects/acl/types/ProjectMembershipRecord.type";
 import { writeProjectAccessAudit } from "@/lib/projects/acl/writeProjectAccessAudit";
@@ -43,12 +44,10 @@ export const revokeProjectMembership = async (input: {
     return { ok: false, code: "not_active" };
   }
   const membership = mapProjectMembershipRow(rows[0]);
-  await sql`
-    UPDATE project_membership_webhooks
-    SET enabled = FALSE, revoke_generation = revoke_generation + 1, updated_at = NOW()
-    WHERE membership_id = ${membership.id}
-      AND project_id = ${input.projectId}
-  `;
+  await purgeProjectMembershipData({
+    projectId: input.projectId,
+    membership,
+  });
   await writeProjectAccessAudit({
     projectId: input.projectId,
     actorUserId: input.ownerUserId,
