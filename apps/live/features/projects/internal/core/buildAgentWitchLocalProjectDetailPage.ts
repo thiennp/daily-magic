@@ -25,7 +25,7 @@ export const buildAgentWitchLocalProjectDetailPageBody = (input: {
 
   const setRows =
     input.installed.sets.length === 0
-      ? `<p class="empty">No harness on this Mac yet. Use <a href="/harness?import=1">Harness → Import</a> first.</p>`
+      ? `<p class="empty">No playbook on this Mac yet. Use <a href="/harness?import=1">Harness → Import</a> first.</p>`
       : `<ul class="harness-installed-set-list">${input.installed.sets
           .map(
             (set) => `<li class="harness-installed-set">
@@ -43,13 +43,13 @@ export const buildAgentWitchLocalProjectDetailPageBody = (input: {
       <h1>${escapeHtml(input.project.name)}</h1>
       <p class="muted mono">${escapeHtml(input.project.projectFolderPath)}</p>
       <div class="actions"><a class="btn btn-secondary" href="/projects/select-folder?projectId=${encodeURIComponent(input.project.id)}">Choose another folder…</a></div>
-      <p class="lede">Linked harness sets materialize into this repo&apos;s <code>.cursor</code> tree with a ledger in <code>.agent-witch/materialization.json</code>. Unchecking a set removes only the files that ledger recorded.</p>
+      <p class="lede">Linked playbooks materialize into this repo&apos;s <code>.cursor</code> tree with a ledger in <code>.agent-witch/materialization.json</code>. Unchecking a playbook removes only the files that ledger recorded.</p>
       <form method="POST" action="/projects/link-harness" class="stack">
         <input type="hidden" name="projectId" value="${escapeHtml(input.project.id)}" />
-        <p class="field-label">Harness sets</p>
+        <p class="field-label">Playbooks</p>
         ${setRows}
         <div class="actions">
-          <button class="btn btn-primary" type="submit"${input.installed.sets.length === 0 ? " disabled" : ""}>Save linked harness</button>
+          <button class="btn btn-primary" type="submit"${input.installed.sets.length === 0 ? " disabled" : ""}>Save linked playbooks</button>
         </div>
       </form>
     </section>`;

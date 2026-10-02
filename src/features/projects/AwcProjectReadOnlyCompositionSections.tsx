@@ -9,7 +9,7 @@ interface AwcProjectReadOnlyCompositionSectionsProps {
 const SECTION_ORDER = ["harness", "workflow", "agent"] as const;
 
 const SECTION_TITLES: Record<(typeof SECTION_ORDER)[number], string> = {
-  harness: "Harness",
+  harness: "Playbooks",
   workflow: "Workflows",
   agent: "Agents",
 };

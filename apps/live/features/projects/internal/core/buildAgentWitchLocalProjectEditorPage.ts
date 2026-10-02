@@ -29,7 +29,7 @@ const buildCompositionList = (
     .map(
       (item) => `<li class="harness-installed-set">
         <p><strong>${escapeHtml(item.name)}</strong>${item.versionLabel ? ` <span class="muted mono">v${escapeHtml(item.versionLabel)}</span>` : ""}</p>
-        <p class="muted">Bound in Agent Witch Cloud — materialize from Harness tab or pull into repo (coming soon).</p>
+        <p class="muted">Bound in Agent Witch Cloud — materialize from the Playbooks tab or pull into repo (coming soon).</p>
       </li>`,
     )
     .join("")}</ul>`;
@@ -37,7 +37,7 @@ const buildCompositionList = (
 
 const buildEmptyHarnessTab = (): string => `<div class="stack">
         <p class="field-label">Installed</p>
-        <p class="empty" id="harness-empty">No harness on this Mac yet. Install from the Harness page, then return here to write it into this repo.</p>
+        <p class="empty" id="harness-empty">No playbook on this Mac yet. Install from the Harness page, then return here to write it into this repo.</p>
         <div class="actions">
           <a class="btn btn-primary" href="/harness" aria-describedby="harness-empty">Pull into repo</a>
         </div>
@@ -71,7 +71,7 @@ const buildAlreadyMaterializedWithoutProfileTab = (input: {
     .map(
       (slug) => `<li class="harness-installed-set">
         <p><strong>${escapeHtml(slug)}</strong> <span class="muted">already in this repo</span></p>
-        <form method="POST" action="/projects/remove-harness-set" class="inline-form" onsubmit="return confirm('Remove ledgered files for this set from the repo? The Mac profile harness stays.');">
+        <form method="POST" action="/projects/remove-harness-set" class="inline-form" onsubmit="return confirm('Remove this playbook from the repo? Files stay installed on this Mac.');">
           <input type="hidden" name="projectId" value="${escapeHtml(input.project.id)}" />
           <input type="hidden" name="setSlug" value="${escapeHtml(slug)}" />
           <button class="btn btn-danger btn-compact" type="submit">Remove from repo</button>
@@ -83,7 +83,7 @@ const buildAlreadyMaterializedWithoutProfileTab = (input: {
   if (input.boundHarnessCount > 0) {
     return `<div class="stack">
         <p class="field-label">In this repo</p>
-        <p class="lede">Playbook files are already materialized under this folder’s <code>.cursor</code> tree. The Mac profile harness is empty — refresh from Agent Witch Cloud only if you need an update.</p>
+        <p class="lede">This project’s playbook is already in this repo’s <code>.cursor</code> tree. Nothing is installed in the Mac profile — refresh from Agent Witch Cloud only if you need an update.</p>
         ${setList}
         <form method="POST" action="/projects/pull-bound-harness" class="actions">
           <input type="hidden" name="projectId" value="${escapeHtml(input.project.id)}" />
@@ -94,7 +94,7 @@ const buildAlreadyMaterializedWithoutProfileTab = (input: {
 
   return `<div class="stack">
         <p class="field-label">In this repo</p>
-        <p class="lede">Playbook files are already materialized under this folder’s <code>.cursor</code> tree. Open Harness to install sets on this Mac if you want to change them.</p>
+        <p class="lede">This project’s playbook is already in this repo’s <code>.cursor</code> tree. Open Harness to install playbooks on this Mac if you want to change them.</p>
         ${setList}
         <div class="actions">
           <a class="btn btn-secondary" href="/harness">Open Harness</a>
@@ -132,8 +132,8 @@ const buildHarnessTab = (input: {
   ).length;
   const alreadyInRepo = linkedInstalledCount > 0;
   const lede = alreadyInRepo
-    ? `These sets are already in this repo’s <code>.cursor</code> tree (see <code>.agent-witch/materialization.json</code>). Refresh from the Mac harness only if you need an update. Use Remove from repo on a set to delete only the files that ledger recorded.`
-    : `Check the sets to write into this repo&apos;s <code>.cursor</code> tree, then pull.`;
+    ? `These playbooks are already in this repo’s <code>.cursor</code> tree (see <code>.agent-witch/materialization.json</code>). Refresh only if you need an update. Use Remove from repo on a playbook to delete only the files that ledger recorded.`
+    : `Check the playbooks to write into this repo&apos;s <code>.cursor</code> tree, then pull.`;
   const buttonLabel = alreadyInRepo ? "Refresh in repo…" : "Pull into repo";
   const buttonClass = alreadyInRepo ? "btn btn-secondary" : "btn btn-primary";
 
@@ -141,7 +141,7 @@ const buildHarnessTab = (input: {
     .map((set) => {
       const inRepo = linked.has(set.slug);
       const removeControl = inRepo
-        ? `<form method="POST" action="/projects/remove-harness-set" class="inline-form" onsubmit="return confirm('Remove ledgered files for this set from the repo? The Mac profile harness stays.');">
+        ? `<form method="POST" action="/projects/remove-harness-set" class="inline-form" onsubmit="return confirm('Remove this playbook from the repo? Files stay installed on this Mac.');">
             <input type="hidden" name="projectId" value="${escapeHtml(input.project.id)}" />
             <input type="hidden" name="setSlug" value="${escapeHtml(set.slug)}" />
             <button class="btn btn-danger btn-compact" type="submit">Remove from repo</button>
@@ -252,9 +252,11 @@ export const buildAgentWitchLocalProjectEditorPageBody = (input: {
     });
   }
 
-  const renameHref = `${input.cloudAppOrigin.replace(/\/$/, "")}/projects/${encodeURIComponent(input.project.id)}?rename=1`;
+  const cloudProjectHref = `${input.cloudAppOrigin.replace(/\/$/, "")}/projects/${encodeURIComponent(input.project.id)}`;
+  const renameHref = `${cloudProjectHref}?rename=1`;
   const cloudManageActions = `<div class="actions project-cloud-actions">
-      <a class="btn btn-secondary" href="${escapeHtml(renameHref)}" target="_blank" rel="noopener noreferrer">Rename in Agent Witch Cloud…</a>
+      <a class="btn btn-secondary" href="${escapeHtml(cloudProjectHref)}" target="_blank" rel="noopener noreferrer">Open in Agent Witch Cloud</a>
+      <a class="btn btn-secondary btn-compact" href="${escapeHtml(renameHref)}" target="_blank" rel="noopener noreferrer">Rename…</a>
     </div>`;
 
   const deleteBlock = isDefaultAgentWitchProjectName(input.project.name)
@@ -275,7 +277,7 @@ export const buildAgentWitchLocalProjectEditorPageBody = (input: {
       ${cloudManageActions}
       <div class="actions"><a class="btn btn-secondary" href="/projects/select-folder?projectId=${encodeURIComponent(input.project.id)}">Change folder…</a></div>
       <nav class="project-tabs" aria-label="Project composition">
-        ${tabLink("harness", `Harness (${counts.harness})`)}
+        ${tabLink("harness", `Playbooks (${counts.harness})`)}
         ${tabLink("workflows", `Workflows (${counts.workflow})`)}
         ${tabLink("agents", `Agents (${counts.agent})`)}
         ${tabLink("knowledge", `Knowledge (${input.knowledgeCandidateCount})`)}

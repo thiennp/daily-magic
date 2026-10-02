@@ -89,7 +89,7 @@ describe("buildAgentWitchLocalProjectEditorPageBody", () => {
     expect(html).toContain('action="/projects/link-harness"');
     expect(html).toContain('form="link-harness-form" class="btn btn-primary" type="submit">Pull into repo</button>');
     expect(html).toContain('value="check24-style-guide" checked');
-    expect(html).toContain("Check the sets to write into this repo");
+    expect(html).toContain("Check the playbooks to write into this repo");
     expect(html).not.toContain(" disabled");
   });
 
@@ -115,7 +115,7 @@ describe("buildAgentWitchLocalProjectEditorPageBody", () => {
     expect(html).toContain('action="/projects/remove-harness-set"');
     expect(html).toContain('name="setSlug" value="check24-style-guide"');
     expect(html).toContain('class="btn btn-danger btn-compact" type="submit">Remove from repo</button>');
-    expect(html).toContain("return confirm('Remove ledgered files for this set from the repo? The Mac profile harness stays.')");
+    expect(html).toContain("return confirm('Remove this playbook from the repo? Files stay installed on this Mac.')");
   });
 
   it("does not offer first-time Pull when ledger already has sets but profile harness is empty", () => {
@@ -140,7 +140,7 @@ describe("buildAgentWitchLocalProjectEditorPageBody", () => {
       activeTab: "harness",
     });
 
-    expect(html).toContain("already materialized");
+    expect(html).toContain("already in this repo");
     expect(html).toContain('class="btn btn-secondary" type="submit">Refresh in repo…</button>');
     expect(html).not.toContain('type="submit">Pull into repo</button>');
     expect(html).not.toContain('type="submit">Update in repo</button>');
@@ -166,4 +166,24 @@ describe("buildAgentWitchLocalProjectEditorPageBody", () => {
     expect(html).not.toContain("Remove from repo");
     expect(html).not.toContain('action="/projects/remove-harness-set"');
   });
+
+  it("offers Open in Agent Witch Cloud and labels the composition tab Playbooks", () => {
+    const html = buildAgentWitchLocalProjectEditorPageBody({
+      project,
+      cloudAppOrigin,
+      installed: emptyInstalled,
+      linkedSetSlugs: [],
+      composition: null,
+      knowledgeCandidateCount: 0,
+      activeTab: "harness",
+    });
+
+    expect(html).toContain(">Open in Agent Witch Cloud</a>");
+    expect(html).toContain('href="https://www.agentwitch.com/projects/proj-1"');
+    expect(html).toContain(">Rename…</a>");
+    expect(html).toContain("Playbooks (0)");
+    expect(html).not.toContain("Harness (0)");
+    expect(html).toContain("No playbook on this Mac yet");
+  });
+
 });
