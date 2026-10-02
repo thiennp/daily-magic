@@ -42,7 +42,10 @@ describe("buildProjectInviteAgentPrompt", () => {
     expect(prompt).toContain("projectDisplayName");
     expect(prompt).toContain("teamLabel");
     expect(prompt).toContain("isAgent");
-    expect(prompt).toMatch(/Empty peers is normal/i);
+    expect(prompt).toContain("isOwner");
+    expect(prompt).toMatch(/from self/i);
+    expect(prompt).toMatch(/owner included/i);
+    expect(prompt).toMatch(/Empty peers besides the owner is normal/i);
     expect(prompt).toMatch(/print a clear human summary/i);
     expect(prompt).toContain("project_dispatch");
     expect(prompt).toMatch(/toProjectDisplayName|toTeamLabel/);

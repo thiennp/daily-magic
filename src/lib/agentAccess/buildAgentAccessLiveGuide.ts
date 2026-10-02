@@ -48,6 +48,10 @@ export const buildAgentAccessLiveGuide = () => {
         "get_project_acl",
         "check_membership",
         "mint_allow_claim",
+        "list_project_peers",
+        "project_dispatch",
+        "list_project_inbox",
+        "rotate_project_api_key",
       ],
     },
     teachOtherBots: {

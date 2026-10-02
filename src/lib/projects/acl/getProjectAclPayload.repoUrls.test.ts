@@ -41,6 +41,12 @@ describe("getProjectAclPayload repoUrls AuthZ", () => {
       const q = String(strings);
       if (q.includes("CREATE TABLE")) return [];
       if (q.includes("FROM project_folder_refs")) return [];
+      if (q.includes("FROM users")) {
+        return [{ name: "Owner Name", email: "owner@example.com" }];
+      }
+      if (q.includes("FROM project_memberships") || q.includes("JOIN users")) {
+        return [];
+      }
       return [];
     });
 
@@ -53,6 +59,8 @@ describe("getProjectAclPayload repoUrls AuthZ", () => {
     expect(payload.repoUrls).toEqual(["https://github.com/org/demo.git"]);
     expect(payload.defaultBranch).toBe("main");
     expect(payload.relation).toBe("owner");
+    expect(payload.self).toBeDefined();
+    expect(payload.peers).toEqual([]);
   });
 
   it("active member with project:meta reads repoUrls", async () => {
@@ -60,6 +68,10 @@ describe("getProjectAclPayload repoUrls AuthZ", () => {
     sqlMock.mockImplementation(async (strings: TemplateStringsArray) => {
       const q = String(strings);
       if (q.includes("CREATE TABLE")) return [];
+      if (q.includes("FROM project_folder_refs")) return [];
+      if (q.includes("JOIN users") && q.includes("project_memberships")) {
+        return [];
+      }
       if (q.includes("FROM project_memberships")) {
         return [
           {
@@ -70,12 +82,18 @@ describe("getProjectAclPayload repoUrls AuthZ", () => {
             status: "active",
             team_label: null,
             scopes: ["acl:self", "project:meta", "peer_sync"],
+            project_display_name: null,
             created_at: "2026-10-01T00:00:00.000Z",
             revoked_at: null,
           },
         ];
       }
-      if (q.includes("FROM project_folder_refs")) return [];
+      if (q.includes("SELECT email FROM users")) {
+        return [{ email: "member@agents.agentwitch.com" }];
+      }
+      if (q.includes("FROM users") && q.includes("WHERE id =")) {
+        return [{ name: "Owner Name", email: "owner@example.com" }];
+      }
       return [];
     });
 
@@ -88,6 +106,8 @@ describe("getProjectAclPayload repoUrls AuthZ", () => {
     expect(payload.repoUrls).toEqual(["https://github.com/org/demo.git"]);
     expect(payload.defaultBranch).toBe("main");
     expect(payload.relation).toBe("member");
+    expect(payload.self.projectDisplayName).toBeNull();
+    expect(payload.peers.some((p) => p.isOwner)).toBe(true);
   });
 
   it("non-member cannot read repoUrls", async () => {

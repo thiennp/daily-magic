@@ -89,7 +89,11 @@ export const executeProjectAclInboxPeerTools = async (input: {
         true,
       );
     }
-    return agentAccessTextResult({ ok: true, peers: result.peers });
+    return agentAccessTextResult({
+      ok: true,
+      self: result.self,
+      peers: result.peers,
+    });
   }
 
   return null;
