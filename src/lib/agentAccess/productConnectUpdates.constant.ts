@@ -1,4 +1,5 @@
 import type { ProductConnectUpdateEntry } from "@/lib/agentAccess/productConnectUpdatesMeta.constant";
+import { PRODUCT_CONNECT_UPDATES_RECENT } from "@/lib/agentAccess/productConnectUpdatesRecent.constant";
 
 export const PRODUCT_CONNECT_UPDATES: readonly ProductConnectUpdateEntry[] = [
   {
@@ -88,26 +89,5 @@ export const PRODUCT_CONNECT_UPDATES: readonly ProductConnectUpdateEntry[] = [
     adapt:
       "After active membership and periodically, call check_product_updates; store catalogVersion; keep agent-access Bearer.",
   },
-  {
-    id: "owner-inbox-dispatch-60-day",
-    catalogVersion: 9,
-    at: "2026-10-02",
-    kind: "changelog",
-    title: "Owner address + 60/day inbox",
-    summary:
-      "project_dispatch to the human with toProjectDisplayName: \"Owner\". Rate limit is 60/day (hourly + 500 unacked removed). peer.joined goes to peers + owner inbox; owner tasks show fromProjectDisplayName Owner.",
-    adapt:
-      "Use \"Owner\" for human dispatch (not account name). Expect peer.joined on Approve and from Owner on owner-assigned tasks. Cap sends at 60/day.",
-  },
-  {
-    id: "project-message-caps-300",
-    catalogVersion: 10,
-    at: "2026-10-02",
-    kind: "breaking",
-    title: "Dispatch caps: 300/hour + 300 unread",
-    summary:
-      "project_dispatch / owner inbox: rolling 300/hour per sender + max 300 unread project_messages rows. No 60/day. Messaging tools (project_dispatch, ack_project_message) no longer share the agent-access mutation bucket (20/h). Codes: rate_limited_hourly, unread_cap. Ack or Clear all frees unread slots.",
-    adapt:
-      "Expect rate_limited_hourly / unread_cap (429). Ack promptly; owner Clear all resets unread. Do not treat messaging as mutation-bucket limited.",
-  },
+  ...PRODUCT_CONNECT_UPDATES_RECENT,
 ];
