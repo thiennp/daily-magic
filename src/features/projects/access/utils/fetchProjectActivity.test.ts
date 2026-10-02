@@ -87,6 +87,7 @@ describe("fetchProjectActivity", () => {
         "acl:self",
         "project:meta",
         "peer_sync",
+        "msg:dispatch",
       ]);
       expect(result.firstConnect?.note).toContain(
         PROJECT_ACL_FIRST_CONNECT.emptyStateNote,
