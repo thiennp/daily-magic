@@ -8,13 +8,13 @@ Production **Agent Witch** is **`https://www.agentwitch.com`** (repo folder **da
 
 Writer dispatch and the Mac bridge need a **long-lived Node process** with `getAgentWitchHub()` on `globalThis` (ADR **0005**). The same process that accepts `POST /api/agent-runs/dispatch` must hold the live hub WebSocket for that Mac (or use hub dispatch relay).
 
-| Requirement              | Implementation                                                                                                     |
-| ------------------------ | ------------------------------------------------------------------------------------------------------------------ |
-| WebSocket upgrade        | Root `server.ts` — `/api/agent-witch/ws`                                                                           |
-| Production start         | `npm start` → `NODE_ENV=production tsx server.ts`                                                                  |
-| Shipped host             | **Docker on Railway** — `Dockerfile`, `railway.toml`                                                               |
-| Health                   | `GET /api/health` — process 200 before Next is ready. See [awc-process-health.md](../../qa/awc-process-health.md). |
-| Migrations before deploy | `preDeployCommand`: `npm run db:migrate`                                                                           |
+| Requirement              | Implementation                                                                                                                                      |
+| ------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| WebSocket upgrade        | Root `server.ts` — `/api/agent-witch/ws`                                                                                                            |
+| Production start         | `npm start` → `NODE_ENV=production tsx server.ts`                                                                                                   |
+| Shipped host             | **Docker on Railway** — `Dockerfile`, `railway.toml`                                                                                                |
+| Health                   | `GET /api/health` — process 200 before Next is ready. See [awc-process-health.md](../../qa/awc-process-health.md).                                  |
+| Migrations before deploy | `preDeployCommand`: `npm run db:migrate`. Concurrent deploys take one transaction advisory lock and skip a filename already in `schema_migrations`. |
 
 Local dev: `npm run dev` (same upgrade path on `http://localhost:3000`). Use `npm run dev:next` only when you explicitly do not need the WebSocket bridge.
 
