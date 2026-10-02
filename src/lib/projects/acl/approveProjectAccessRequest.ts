@@ -5,7 +5,7 @@ import { finalizeApprovedMembership } from "@/lib/projects/acl/finalizeApprovedM
 import { insertApprovedMembership } from "@/lib/projects/acl/insertApprovedMembership";
 import { isAgentUserId } from "@/lib/projects/acl/isAgentUser";
 import mapProjectAccessRequestRow from "@/lib/projects/acl/mapProjectAccessRequestRow";
-import { PROJECT_ACL_DEFAULT_MEMBER_SCOPES } from "@/lib/projects/acl/projectAclScopes.constant";
+import { resolveApproveMembershipScopes } from "@/lib/projects/acl/resolveApproveMembershipScopes";
 import { resolveApproveDisplayName } from "@/lib/projects/acl/resolveApproveDisplayName";
 import type ProjectAccessRequestRecord from "@/lib/projects/acl/types/ProjectAccessRequestRecord.type";
 import type ProjectMembershipRecord from "@/lib/projects/acl/types/ProjectMembershipRecord.type";
@@ -64,16 +64,11 @@ export const approveProjectAccessRequest = async (input: {
   });
   if (!nameResult.ok) return { ok: false, code: nameResult.code };
 
-  const scopes =
-    Array.isArray(input.scopes) && input.scopes.length > 0
-      ? PROJECT_ACL_DEFAULT_MEMBER_SCOPES.filter((s) =>
-          (input.scopes as readonly string[]).includes(s),
-        )
-      : pending.requestedScopes.length > 0
-        ? [...pending.requestedScopes]
-        : [...PROJECT_ACL_DEFAULT_MEMBER_SCOPES];
-  const effectiveScopes =
-    scopes.length > 0 ? scopes : [...PROJECT_ACL_DEFAULT_MEMBER_SCOPES];
+  const effectiveScopes = resolveApproveMembershipScopes({
+    ownerScopes: input.scopes,
+    requestedScopes: pending.requestedScopes,
+    requesterIsAgent,
+  });
   const teamLabel =
     input.teamLabel ??
     (pendingRows[0].team_label ? String(pendingRows[0].team_label) : null);
