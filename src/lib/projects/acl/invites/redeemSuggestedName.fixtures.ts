@@ -1,0 +1,30 @@
+export const REDEEM_SUGGEST_INVITE_ROW = {
+  id: "inv-1",
+  project_id: "proj-1",
+  created_by_user_id: "owner-1",
+  token_hash: "hash",
+  team_label: null,
+  scopes: ["acl:self", "project:meta", "peer_sync"],
+  max_uses: 1,
+  uses_remaining: 0,
+  expires_at: "2026-10-09T00:00:00.000Z",
+  revoked_at: null,
+  created_at: "2026-10-02T00:00:00.000Z",
+};
+
+export const redeemSuggestPendingRow = (suggestion: string | null) => ({
+  id: "req-1",
+  project_id: "proj-1",
+  requester_user_id: "bot-1",
+  invited_by_user_id: "owner-1",
+  reason: "invite_redeem",
+  requested_scopes: ["acl:self", "project:meta", "peer_sync"],
+  status: "pending",
+  decided_by_user_id: null,
+  decided_at: null,
+  created_at: "2026-10-02T00:00:00.000Z",
+  expires_at: "2026-10-16T00:00:00.000Z",
+  invite_id: "inv-1",
+  team_label: null,
+  suggested_project_display_name: suggestion,
+});

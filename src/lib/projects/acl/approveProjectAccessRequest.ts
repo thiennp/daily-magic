@@ -7,6 +7,7 @@ import { isAgentUserId } from "@/lib/projects/acl/isAgentUser";
 import mapProjectAccessRequestRow from "@/lib/projects/acl/mapProjectAccessRequestRow";
 import { resolveApproveMembershipScopes } from "@/lib/projects/acl/resolveApproveMembershipScopes";
 import { resolveApproveDisplayName } from "@/lib/projects/acl/resolveApproveDisplayName";
+import { resolveEffectiveApproveDisplayName } from "@/lib/projects/acl/resolveEffectiveApproveDisplayName";
 import type ProjectAccessRequestRecord from "@/lib/projects/acl/types/ProjectAccessRequestRecord.type";
 import type ProjectMembershipRecord from "@/lib/projects/acl/types/ProjectMembershipRecord.type";
 import { getUserProjectById } from "@/lib/projects/userProjectQueries";
@@ -30,24 +31,6 @@ export type ApproveProjectAccessResult =
         | "display_name_reserved"
         | "display_name_taken";
     };
-
-/** Owner-provided name wins; else pending suggestion (when still present). */
-const resolveEffectiveApproveName = (input: {
-  readonly ownerProjectDisplayName?: string | null;
-  readonly suggestedProjectDisplayName: string | null;
-}): string | null | undefined => {
-  const owner = input.ownerProjectDisplayName;
-  if (typeof owner === "string" && owner.trim().length > 0) {
-    return owner;
-  }
-  if (
-    typeof input.suggestedProjectDisplayName === "string" &&
-    input.suggestedProjectDisplayName.trim().length > 0
-  ) {
-    return input.suggestedProjectDisplayName;
-  }
-  return owner;
-};
 
 export const approveProjectAccessRequest = async (input: {
   readonly projectId: string;
@@ -78,7 +61,7 @@ export const approveProjectAccessRequest = async (input: {
   const requesterIsAgent = await isAgentUserId(pending.requesterUserId);
   const nameResult = resolveApproveDisplayName({
     requesterIsAgent,
-    projectDisplayName: resolveEffectiveApproveName({
+    projectDisplayName: resolveEffectiveApproveDisplayName({
       ownerProjectDisplayName: input.projectDisplayName,
       suggestedProjectDisplayName: pending.suggestedProjectDisplayName,
     }),

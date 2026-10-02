@@ -45,13 +45,13 @@ vi.mock("@/lib/projects/userProjectQueries", () => ({
   ),
 }));
 
-describe("approve auto-applies pending suggestion", () => {
+describe("approve owner name wins over suggestion", () => {
   beforeEach(() => {
     sqlMock.mockReset();
     resetProjectAclSchemaEnsureForTests();
   });
 
-  it("auto-applies when owner omits projectDisplayName", async () => {
+  it("uses owner-sent name when provided", async () => {
     sqlMock.mockImplementation(async (strings: TemplateStringsArray, ...values: unknown[]) => {
       const q = String(strings);
       if (q.includes("CREATE TABLE") || q.includes("ALTER TABLE")) return [];
@@ -63,7 +63,7 @@ describe("approve auto-applies pending suggestion", () => {
         }];
       }
       if (q.includes("WITH approved_request AS")) {
-        expect(values).toContain("Soft Vale");
+        expect(values).toContain("Owner Pick");
         return [{
           request_row: {
             ...ACL_APPROVE_REQUEST_ROW,
@@ -72,7 +72,7 @@ describe("approve auto-applies pending suggestion", () => {
           },
           member_row: {
             ...ACL_APPROVE_MEMBER_ROW,
-            project_display_name: "Soft Vale",
+            project_display_name: "Owner Pick",
           },
         }];
       }
@@ -83,9 +83,10 @@ describe("approve auto-applies pending suggestion", () => {
       projectId: "proj-1",
       requestId: "req-1",
       ownerUserId: "owner-1",
+      projectDisplayName: "Owner Pick",
     });
     expect(approved.ok).toBe(true);
     if (!approved.ok) return;
-    expect(approved.membership.projectDisplayName).toBe("Soft Vale");
+    expect(approved.membership.projectDisplayName).toBe("Owner Pick");
   });
 });
