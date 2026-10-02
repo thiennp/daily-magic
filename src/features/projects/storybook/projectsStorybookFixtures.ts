@@ -83,3 +83,64 @@ export const PROJECTS_STORYBOOK_COMPOSITION_ITEMS: readonly ProjectCompositionIt
       versionLabel: null,
     },
   ];
+
+export const PROJECTS_STORYBOOK_DISPLAY_NAME_PRESETS = {
+  presets: ["Ada", "Buni", "Conti", "Scripti", "Mira"],
+  available: ["Ada", "Conti", "Scripti", "Mira"],
+  suggested: "Ada",
+} as const;
+
+export const PROJECTS_STORYBOOK_INVITES = [
+  {
+    inviteId: "invite-listed-1",
+    createdAt: now,
+    expiresAt: "2026-10-09T00:00:00.000Z",
+    revokedAt: null,
+    maxUses: 1,
+    usesRemaining: 1,
+    teamLabel: "specialist",
+    scopes: ["acl:self", "project:meta"],
+  },
+] as const;
+
+export const PROJECTS_STORYBOOK_ACCESS_MEMBERS = [
+  {
+    id: "mem-owner",
+    userId: "storybook-owner",
+    role: "owner" as const,
+    status: "active" as const,
+    teamLabel: null,
+    scopes: ["acl:self", "project:meta"],
+    projectDisplayName: null,
+    isAgent: false,
+    displayName: "Thien",
+    createdAt: now,
+    revokedAt: null,
+  },
+  {
+    id: "mem-agent-buni",
+    userId: "agent-uuid-buni",
+    role: "member" as const,
+    status: "active" as const,
+    teamLabel: "specialist",
+    scopes: ["acl:self", "project:meta", "peer_sync"],
+    projectDisplayName: "Buni",
+    isAgent: true,
+    createdAt: now,
+    revokedAt: null,
+  },
+] as const;
+
+export const PROJECTS_STORYBOOK_ACCESS_PENDING = [
+  {
+    id: "pending-agent-1",
+    requesterUserId: "agent-uuid-pending",
+    requesterIsAgent: true,
+    requesterLabel: "Grok Bot pending",
+    requestedScopes: ["acl:self", "project:meta"],
+    teamLabel: null,
+    reason: "invite redeem",
+    createdAt: now,
+    expiresAt: null,
+  },
+] as const;

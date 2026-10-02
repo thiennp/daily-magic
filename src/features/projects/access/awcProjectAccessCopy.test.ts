@@ -12,6 +12,7 @@ describe("project ACL surface copy", () => {
   it("states ACL-only cloud, local cowork, UI revoke, no token sharing", () => {
     const blobs = [
       AWC_PROJECT_ACCESS_COPY.intro,
+      AWC_PROJECT_ACCESS_COPY.invitesIntro,
       AWC_PROJECT_ACCESS_COPY.revokeHint,
       AWC_PROJECT_ACCESS_COPY.activityHonesty,
       AWC_PROJECT_ACCESS_COPY.membersEmpty,
@@ -29,6 +30,11 @@ describe("project ACL surface copy", () => {
     expect(blobs).toMatch(/Revoke/i);
     expect(blobs.toLowerCase()).toMatch(/token/);
     expect(blobs.toLowerCase()).not.toMatch(/share.*token.*with teammates/);
+    expect(blobs.toLowerCase()).toMatch(/never paste or share your agent-access token/);
+    expect(blobs.toLowerCase()).toMatch(/invite url/);
+    expect(blobs.toLowerCase()).not.toMatch(
+      /share your agent-access token with the specialist/,
+    );
     expect(blobs.toLowerCase()).toMatch(/acl/);
     expect(blobs.toLowerCase()).toMatch(/membership and status events/);
     expect(blobs.toLowerCase()).toMatch(/not a cloud content store/);

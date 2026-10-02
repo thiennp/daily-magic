@@ -1,5 +1,6 @@
 "use client";
 
+import ProjectsStorybookAccessStories from "@/features/projects/storybook/ProjectsStorybookAccessStories";
 import ProjectsStorybookCardStateStories from "@/features/projects/storybook/ProjectsStorybookCardStateStories";
 import ProjectsStorybookDetailStory from "@/features/projects/storybook/ProjectsStorybookDetailStory";
 import ProjectsStorybookListRenameStories from "@/features/projects/storybook/ProjectsStorybookListRenameStories";
@@ -16,6 +17,7 @@ const ProjectsStorybookStories = ({
     <ProjectsStorybookCardStateStories viewport={viewport} />
     <ProjectsStorybookListRenameStories viewport={viewport} />
     <ProjectsStorybookDetailStory viewport={viewport} />
+    <ProjectsStorybookAccessStories viewport={viewport} />
   </>
 );
 

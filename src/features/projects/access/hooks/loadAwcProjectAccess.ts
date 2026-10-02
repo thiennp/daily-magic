@@ -1,19 +1,14 @@
+import type {
+  AwcMembershipView,
+  AwcPendingRequestView,
+} from "@/features/projects/access/types/awcProjectAccessContract.type";
 import {
   fetchProjectAccess,
   fetchProjectFolderRefs,
 } from "@/features/projects/access/utils/projectAccessApi";
 
-export type AwcProjectAccessMember = {
-  readonly id: string;
-  readonly userId: string;
-  readonly teamLabel: string | null;
-};
-
-export type AwcProjectAccessPending = {
-  readonly id: string;
-  readonly requesterUserId: string;
-  readonly reason: string | null;
-};
+export type AwcProjectAccessMember = AwcMembershipView;
+export type AwcProjectAccessPending = AwcPendingRequestView;
 
 export type AwcProjectAccessFolderRef = {
   readonly id: string;
@@ -36,8 +31,8 @@ export const loadAwcProjectAccess = async (
   ]);
 
   return {
-    members: access.ok ? (access.members ?? []) : [],
-    pending: access.ok ? (access.pendingRequests ?? []) : [],
+    members: access.ok ? access.members : [],
+    pending: access.ok ? access.pendingRequests : [],
     folderRefs: folders.ok ? (folders.folderRefs ?? []) : [],
   };
 };

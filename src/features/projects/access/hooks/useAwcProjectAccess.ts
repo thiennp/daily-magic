@@ -8,7 +8,10 @@ import {
   type AwcProjectAccessMember,
   type AwcProjectAccessPending,
 } from "@/features/projects/access/hooks/loadAwcProjectAccess";
-import { postProjectAccessAction } from "@/features/projects/access/utils/projectAccessApi";
+import type { AwcAccessActionResult } from "@/features/projects/access/types/awcProjectAccessContract.type";
+import { patchProjectAccess } from "@/features/projects/access/utils/patchProjectAccess";
+import { buildApproveAccessPayload } from "@/features/projects/access/utils/projectDisplayName.helpers";
+import { renameProjectMembership } from "@/features/projects/access/utils/renameProjectMembership";
 
 export const useAwcProjectAccess = (projectId: string) => {
   const [members, setMembers] = useState<readonly AwcProjectAccessMember[]>([]);
@@ -59,28 +62,63 @@ export const useAwcProjectAccess = (projectId: string) => {
     };
   }, [projectId]);
 
-  const approve = async (requestId: string) => {
-    const result = await postProjectAccessAction(
-      `/api/projects/${projectId}/access/requests/${requestId}/approve`,
+  const approve = async (input: {
+    readonly requestId: string;
+    readonly requesterIsAgent: boolean;
+    readonly projectDisplayName?: string;
+  }): Promise<AwcAccessActionResult> => {
+    const built = buildApproveAccessPayload(input);
+    if (!built.ok) {
+      setMessage(built.errorMessage);
+      return { ok: false, status: 400, errorMessage: built.errorMessage, code: "name_invalid" };
+    }
+    const result = await patchProjectAccess(projectId, built.body);
+    setMessage(
+      result.ok ? "Approved." : (result.errorMessage ?? "Failed."),
     );
-    setMessage(result.ok ? "Approved." : (result.errorMessage ?? "Failed."));
-    await reload();
+    if (result.ok) {
+      await reload();
+    }
+    return result;
   };
 
   const deny = async (requestId: string) => {
-    const result = await postProjectAccessAction(
-      `/api/projects/${projectId}/access/requests/${requestId}/deny`,
-    );
+    const result = await patchProjectAccess(projectId, {
+      requestId,
+      action: "deny",
+    });
     setMessage(result.ok ? "Denied." : (result.errorMessage ?? "Failed."));
-    await reload();
+    if (result.ok) {
+      await reload();
+    }
+    return result;
   };
 
   const revoke = async (membershipId: string) => {
-    const result = await postProjectAccessAction(
-      `/api/projects/${projectId}/access/members/${membershipId}/revoke`,
-    );
+    const result = await patchProjectAccess(projectId, {
+      requestId: membershipId,
+      action: "revoke",
+    });
     setMessage(result.ok ? "Revoked." : (result.errorMessage ?? "Failed."));
-    await reload();
+    if (result.ok) {
+      await reload();
+    }
+    return result;
+  };
+
+  const rename = async (membershipId: string, projectDisplayName: string) => {
+    const result = await renameProjectMembership({
+      projectId,
+      membershipId,
+      projectDisplayName,
+    });
+    setMessage(
+      result.ok ? "Nickname updated." : (result.errorMessage ?? "Failed."),
+    );
+    if (result.ok) {
+      await reload();
+    }
+    return result;
   };
 
   return {
@@ -93,6 +131,7 @@ export const useAwcProjectAccess = (projectId: string) => {
     approve,
     deny,
     revoke,
+    rename,
     setFolderRefs,
     setMessage,
   };

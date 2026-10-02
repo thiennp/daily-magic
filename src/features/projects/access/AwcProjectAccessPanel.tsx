@@ -3,6 +3,8 @@
 import { useState } from "react";
 
 import AwcProjectAccessFolderRefs from "@/features/projects/access/AwcProjectAccessFolderRefs";
+import AwcProjectAccessHooksChrome from "@/features/projects/access/AwcProjectAccessHooksChrome";
+import AwcProjectAccessInvitesSection from "@/features/projects/access/AwcProjectAccessInvitesSection";
 import AwcProjectAccessMembersList from "@/features/projects/access/AwcProjectAccessMembersList";
 import AwcProjectAccessPendingList from "@/features/projects/access/AwcProjectAccessPendingList";
 import AwcProjectActivityFeed from "@/features/projects/access/AwcProjectActivityFeed";
@@ -70,20 +72,41 @@ export default function AwcProjectAccessPanel({
       <p className="rounded-md border border-gray-200/80 bg-gray-50/80 px-3 py-2 text-xs text-gray-700 dark:border-gray-800/80 dark:bg-gray-950/40 dark:text-gray-300">
         {copy.firstConnectNote}
       </p>
+      <AwcProjectAccessInvitesSection
+        projectId={projectId}
+        onChanged={bumpActivityFeed}
+      />
+      <AwcProjectAccessHooksChrome />
       <AwcProjectAccessPendingList
+        projectId={projectId}
         pending={access.pending}
-        onApprove={(id) => {
-          void access.approve(id).then(bumpActivityFeed);
+        onApprove={async (input) => {
+          const result = await access.approve(input);
+          if (result.ok) {
+            bumpActivityFeed();
+          }
+          return result;
         }}
         onDeny={(id) => {
-          void access.deny(id).then(bumpActivityFeed);
+          void access.deny(id).then((result) => {
+            if (result.ok) {
+              bumpActivityFeed();
+            }
+          });
         }}
       />
       <AwcProjectAccessMembersList
         members={access.members}
         onRevoke={(id) => {
-          void access.revoke(id).then(bumpActivityFeed);
+          void access.revoke(id).then((result) => {
+            if (result.ok) {
+              bumpActivityFeed();
+            }
+          });
         }}
+        onRename={async (membershipId, projectDisplayName) =>
+          access.rename(membershipId, projectDisplayName)
+        }
       />
       <AwcProjectAccessFolderRefs
         folderRefs={access.folderRefs}
