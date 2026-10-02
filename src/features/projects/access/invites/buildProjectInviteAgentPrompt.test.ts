@@ -23,7 +23,8 @@ describe("buildProjectInviteAgentPrompt", () => {
       projectName: "Demo",
     });
     expect(prompt).toContain("redeem_project_invite");
-    expect(prompt).toContain('{ "token": "tok-xyz" }');
+    expect(prompt).toContain('"token": "tok-xyz"');
+    expect(prompt).toContain("suggestedProjectDisplayName");
     expect(prompt).toMatch(/no connector/i);
     expect(prompt).toContain(urls.mcpUrl);
     expect(prompt).toContain(urls.registerUrl);
@@ -101,7 +102,7 @@ describe("buildProjectInviteAgentPrompt", () => {
       inviteUrl: "https://example.com/invite/p/from-url",
       token: "explicit-tok",
     });
-    expect(prompt).toContain('{ "token": "explicit-tok" }');
+    expect(prompt).toContain('"token": "explicit-tok"');
     expect(prompt).not.toContain("from-url");
   });
 });

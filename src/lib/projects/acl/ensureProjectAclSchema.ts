@@ -46,6 +46,8 @@ export const ensureProjectAclSchema = async (): Promise<void> => {
       ADD COLUMN IF NOT EXISTS invite_id TEXT`;
     await sql`ALTER TABLE project_access_requests
       ADD COLUMN IF NOT EXISTS team_label TEXT`;
+    await sql`ALTER TABLE project_access_requests
+      ADD COLUMN IF NOT EXISTS suggested_project_display_name TEXT`;
     await sql`CREATE TABLE IF NOT EXISTS project_access_audit (
       id TEXT PRIMARY KEY DEFAULT gen_random_uuid()::text,
       project_id TEXT NOT NULL REFERENCES user_projects(id) ON DELETE CASCADE,

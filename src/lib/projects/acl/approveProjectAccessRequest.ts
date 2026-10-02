@@ -7,6 +7,7 @@ import { isAgentUserId } from "@/lib/projects/acl/isAgentUser";
 import mapProjectAccessRequestRow from "@/lib/projects/acl/mapProjectAccessRequestRow";
 import { resolveApproveMembershipScopes } from "@/lib/projects/acl/resolveApproveMembershipScopes";
 import { resolveApproveDisplayName } from "@/lib/projects/acl/resolveApproveDisplayName";
+import { resolveEffectiveApproveDisplayName } from "@/lib/projects/acl/resolveEffectiveApproveDisplayName";
 import type ProjectAccessRequestRecord from "@/lib/projects/acl/types/ProjectAccessRequestRecord.type";
 import type ProjectMembershipRecord from "@/lib/projects/acl/types/ProjectMembershipRecord.type";
 import { getUserProjectById } from "@/lib/projects/userProjectQueries";
@@ -60,7 +61,10 @@ export const approveProjectAccessRequest = async (input: {
   const requesterIsAgent = await isAgentUserId(pending.requesterUserId);
   const nameResult = resolveApproveDisplayName({
     requesterIsAgent,
-    projectDisplayName: input.projectDisplayName,
+    projectDisplayName: resolveEffectiveApproveDisplayName({
+      ownerProjectDisplayName: input.projectDisplayName,
+      suggestedProjectDisplayName: pending.suggestedProjectDisplayName,
+    }),
   });
   if (!nameResult.ok) return { ok: false, code: nameResult.code };
 

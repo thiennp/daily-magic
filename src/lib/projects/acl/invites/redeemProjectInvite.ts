@@ -1,15 +1,12 @@
-import { randomUUID } from "node:crypto";
-
 import { checkProjectMembershipStatus } from "@/lib/projects/acl/checkProjectMembershipStatus";
 import {
   claimProjectInviteToken,
   restoreProjectInviteUse,
 } from "@/lib/projects/acl/invites/claimProjectInviteToken";
-import mapProjectAccessRequestRow from "@/lib/projects/acl/mapProjectAccessRequestRow";
+import { insertRedeemPendingAccessRequest } from "@/lib/projects/acl/invites/insertRedeemPendingAccessRequest";
+import { resolveRedeemSuggestedDisplayName } from "@/lib/projects/acl/invites/resolveRedeemSuggestedDisplayName";
 import { PROJECT_ACL_DEFAULT_MEMBER_SCOPES } from "@/lib/projects/acl/projectAclScopes.constant";
 import type ProjectAccessRequestRecord from "@/lib/projects/acl/types/ProjectAccessRequestRecord.type";
-import { writeProjectAccessAudit } from "@/lib/projects/acl/writeProjectAccessAudit";
-import { asRowArray, getSql } from "@/lib/db";
 
 export type RedeemProjectInviteResult =
   | {
@@ -18,6 +15,7 @@ export type RedeemProjectInviteResult =
       readonly request: ProjectAccessRequestRecord;
       readonly status: "pending";
       readonly namingRequired: true;
+      readonly suggestedProjectDisplayName: string | null;
     }
   | {
       readonly ok: false;
@@ -26,12 +24,17 @@ export type RedeemProjectInviteResult =
         | "already_member"
         | "already_pending"
         | "owner"
-        | "exhausted";
+        | "exhausted"
+        | "display_name_invalid"
+        | "display_name_reserved"
+        | "display_name_required"
+        | "display_name_taken";
     };
 
 export const redeemProjectInvite = async (input: {
   readonly token: string;
   readonly actorUserId: string;
+  readonly suggestedProjectDisplayName?: string | null;
 }): Promise<RedeemProjectInviteResult> => {
   const claimed = await claimProjectInviteToken(input.token);
   if (!claimed.ok) {
@@ -55,57 +58,39 @@ export const redeemProjectInvite = async (input: {
     return { ok: false, code: "already_pending" };
   }
 
+  const nameResult = await resolveRedeemSuggestedDisplayName({
+    projectId: invite.projectId,
+    suggestedProjectDisplayName: input.suggestedProjectDisplayName,
+  });
+  if (!nameResult.ok) {
+    await restoreProjectInviteUse(invite.id);
+    return { ok: false, code: nameResult.code };
+  }
+
   const scopes =
     invite.scopes.length > 0
       ? [...invite.scopes]
       : [...PROJECT_ACL_DEFAULT_MEMBER_SCOPES];
-  const sql = getSql();
-  try {
-    const rows = asRowArray(
-      await sql`
-        INSERT INTO project_access_requests (
-          id, project_id, requester_user_id, invited_by_user_id, reason,
-          requested_scopes, status, invite_id, team_label
-        )
-        VALUES (
-          ${randomUUID()},
-          ${invite.projectId},
-          ${input.actorUserId},
-          ${invite.createdByUserId},
-          ${"invite_redeem"},
-          ${scopes},
-          'pending',
-          ${invite.id},
-          ${invite.teamLabel}
-        )
-        RETURNING *
-      `,
-    );
-    if (rows.length === 0) {
-      await restoreProjectInviteUse(invite.id);
-      return { ok: false, code: "already_pending" };
-    }
-    const request = mapProjectAccessRequestRow(rows[0]);
-    await writeProjectAccessAudit({
-      projectId: invite.projectId,
-      actorUserId: input.actorUserId,
-      action: "invite.redeem",
-      targetUserId: input.actorUserId,
-      detail: {
-        inviteId: invite.id,
-        requestId: request.id,
-        usesRemaining: invite.usesRemaining,
-      },
-    });
-    return {
-      ok: true,
-      projectId: invite.projectId,
-      request,
-      status: "pending",
-      namingRequired: true,
-    };
-  } catch {
+  const inserted = await insertRedeemPendingAccessRequest({
+    projectId: invite.projectId,
+    actorUserId: input.actorUserId,
+    invitedByUserId: invite.createdByUserId,
+    inviteId: invite.id,
+    teamLabel: invite.teamLabel,
+    scopes,
+    suggestedName: nameResult.name,
+    usesRemaining: invite.usesRemaining,
+  });
+  if (!inserted.ok) {
     await restoreProjectInviteUse(invite.id);
     return { ok: false, code: "already_pending" };
   }
+  return {
+    ok: true,
+    projectId: invite.projectId,
+    request: inserted.request,
+    status: "pending",
+    namingRequired: true,
+    suggestedProjectDisplayName: nameResult.name,
+  };
 };

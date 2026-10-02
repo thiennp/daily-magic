@@ -13,6 +13,7 @@ interface PendingRequest {
   readonly reason: string | null;
   readonly requesterIsAgent?: boolean;
   readonly requesterLabel?: string | null;
+  readonly suggestedProjectDisplayName?: string | null;
 }
 
 interface AwcProjectAccessPendingListProps {
@@ -49,7 +50,12 @@ export default function AwcProjectAccessPendingList({
 
   const nameFor = (req: PendingRequest): string =>
     names[req.id] ??
-    (req.requesterIsAgent !== false ? suggested : "");
+    (req.suggestedProjectDisplayName &&
+    req.suggestedProjectDisplayName.trim().length > 0
+      ? req.suggestedProjectDisplayName.trim()
+      : req.requesterIsAgent !== false
+        ? suggested
+        : "");
 
   return (
     <div>

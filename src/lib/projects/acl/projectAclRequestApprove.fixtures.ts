@@ -12,6 +12,7 @@ export const ACL_APPROVE_REQUEST_ROW = {
   expires_at: "2026-10-15T00:00:00.000Z",
   invite_id: null,
   team_label: null,
+  suggested_project_display_name: null,
 };
 
 export const ACL_APPROVE_MEMBER_ROW = {
