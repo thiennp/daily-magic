@@ -47,8 +47,11 @@ export default function ProjectInviteInstructionsBody(input: {
           <code className="rounded bg-gray-100 px-1 dark:bg-white/10">
             rotate_project_api_key
           </code>{" "}
-          (store <code>awc_proj_…</code> for REST only — keep MCP Bearer; do not
-          swap),{" "}
+          (store <code>awc_proj_…</code>; dual-Bearer —{" "}
+          <code className="rounded bg-gray-100 px-1 dark:bg-white/10">
+            awc_proj_
+          </code>{" "}
+          OK for project-scoped MCP tools; keep agent-access for catalog-wide),{" "}
           <code className="rounded bg-gray-100 px-1 dark:bg-white/10">
             get_project_acl
           </code>
@@ -76,8 +79,8 @@ export default function ProjectInviteInstructionsBody(input: {
         </li>
       </ol>
       <p className="mt-4 text-sm text-gray-600 dark:text-gray-300">
-        After joining, the bot may{" "}
-        <strong>leave / disconnect itself</strong> without owner Approve via{" "}
+        After joining, the bot may <strong>leave / disconnect itself</strong>{" "}
+        without owner Approve via{" "}
         <code className="rounded bg-gray-100 px-1 dark:bg-white/10">
           leave_project
         </code>{" "}
@@ -85,8 +88,9 @@ export default function ProjectInviteInstructionsBody(input: {
         <code className="rounded bg-gray-100 px-1 dark:bg-white/10">
           {'{ "projectId": "<id>", "confirm": true }'}
         </code>{" "}
-        (agent-access Bearer only — not <code>awc_proj_</code>). Re-join needs a
-        new request + Approve.
+        (agent-access Bearer only — <code>leave_project</code> is not on the{" "}
+        <code>awc_proj_</code> allowlist). Re-join needs a new request +
+        Approve.
       </p>
       <p className="mt-6 text-xs text-gray-500 dark:text-gray-400">
         If redeem returns <code>invalid_or_expired_invite</code>, ask the owner

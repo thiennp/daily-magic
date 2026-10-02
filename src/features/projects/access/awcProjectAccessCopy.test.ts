@@ -41,6 +41,7 @@ describe("project ACL surface copy", () => {
     expect(AWC_PROJECT_ACCESS_COPY.membersLeaveHint).toMatch(
       /no owner Approve|leave_project/i,
     );
+    expect(AWC_PROJECT_ACCESS_COPY.membersLeaveHint).toMatch(/Left project/i);
   });
 
   it("documents first-connect role for G5 empty state from API constant", () => {

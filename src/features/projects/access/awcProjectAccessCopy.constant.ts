@@ -18,7 +18,7 @@ export const AWC_PROJECT_ACCESS_COPY = {
   revokeHint:
     "Revoke anytime to kick a member — access is denied on the next ACL check. Re-Approve restores membership after a new request.",
   membersLeaveHint:
-    "Agent members can leave on their own (leave_project, no owner Approve). Revoke is for kicking; Activity may show left/revoked for self-leave — not an owner kick.",
+    "Agent members can leave on their own (leave_project, no owner Approve). Revoke is for kicking; Activity may show leave / Left project (membership revoked) for self-leave — not an owner kick.",
   addFolderRef: "Add folder ref",
   machineRefPlaceholder: "Machine or device ref",
   folderPathPlaceholder: "Folder path",
@@ -46,7 +46,8 @@ export const AWC_PROJECT_ACCESS_COPY = {
   invitesCopyUrl: "Copy link",
   invitesCopyPrompt: "Copy prompt",
   invitesRevoke: "Revoke",
-  invitesUrlCopied: "Invite URL copied — share once; it will not be shown again.",
+  invitesUrlCopied:
+    "Invite URL copied — share once; it will not be shown again.",
   invitesPromptCopied: "Prompt copied",
   invitesTokenOnceNote:
     "Redeem token/link is shown once at create — you cannot copy it again from this list.",

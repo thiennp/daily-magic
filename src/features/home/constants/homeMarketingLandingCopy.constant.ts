@@ -1,20 +1,17 @@
 import { AGENT_WITCH_PRODUCT_NAME } from "@/lib/agentWitch/agentWitchProductName.constant";
-import {
-  homeMarketingSignInCallbackAutomationsHref,
-  homeMarketingSignInCallbackHomeHref,
-} from "@/features/home/constants/homeMarketingAuthCallbackHrefs.constant";
+import { homeMarketingSignInCallbackAutomationsHref } from "@/features/home/constants/homeMarketingAuthCallbackHrefs.constant";
 
 export const HOME_MARKETING_HERO_COPY = {
   eyebrow: "Harness, memory, and Playbooks",
   title: "Turn agent work on your Mac into scored, reusable Playbooks.",
-  description: `${AGENT_WITCH_PRODUCT_NAME} is the playground for multi-bot teams: improve prompts with evaluate scores, Approve who joins a project, and keep Tasks and Runs on Macs you control. Slack and Outlook ops stay with specialist bots.`,
+  description: `${AGENT_WITCH_PRODUCT_NAME} is the playground for multi-bot teams: invite bots into a project, Approve membership, enable peers and project_dispatch, and harden prompts with evaluate scores. Tasks and Runs stay on Macs you control. Slack and Outlook ops stay with specialist bots.`,
   cta: "Create free account",
   secondaryCta: "See Access and Optimizer",
   secondaryCtaHref: "#features-heading",
   steps: [
-    "Open a project and connect your Mac",
-    "Approve bots into Project Access—no token sharing",
-    "Run Prompt Optimizer until evaluate passes; save a Playbook",
+    "Invite a bot (Copy prompt / MCP redeem) into your project",
+    "Approve in Project Access—no token sharing",
+    "Peers list + project_dispatch; Optimize until evaluate passes",
   ],
 } as const;
 
@@ -41,16 +38,16 @@ export const HOME_MARKETING_POPULAR_PRESET_DIALOG_COPY = {
 
 export const HOME_MARKETING_FEATURES_COPY = {
   eyebrow: "Built for agent teams",
-  title: "Playground for Macs, Access, and Prompt Optimizer",
+  title: "Bot-to-bot connect, Access, and Prompt Optimizer",
   description:
-    "Connect Macs, Approve project membership, and harden prompts with evaluate scores—so Tasks and Runs stay governed while Slack and Outlook stay with specialist bots.",
+    "Invite bots, Approve who joins, then peers list and project_dispatch send/receive—harden prompts with evaluate scores. Tasks and Runs stay governed; Slack and Outlook stay with specialist bots.",
   footerPrefix: "Ready to roll out?",
   footerLink: "Create free account and set up your organization",
 } as const;
 
 export const HOME_MARKETING_STEPS_COPY = {
   eyebrow: "How it works",
-  title: "Four steps to your first Playbook",
+  title: "Four steps to multi-bot cowork",
   steps: [
     {
       title: "Sign in",
@@ -58,13 +55,13 @@ export const HOME_MARKETING_STEPS_COPY = {
       href: "#get-started",
     },
     {
-      title: "Add your Mac",
-      body: "One install command—then your computer runs the Tasks.",
-      href: homeMarketingSignInCallbackHomeHref,
+      title: "Invite a bot",
+      body: "Copy prompt or share invite URL; bot redeems via MCP—then waits for your Approve.",
+      href: "#features-heading",
     },
     {
-      title: "Approve Access",
-      body: "Bots request project membership; you Approve, Deny, or Revoke.",
+      title: "Peers and dispatch",
+      body: "After Approve, bots list_project_peers and project_dispatch by nickname. Optional leave_project anytime.",
       href: "#features-heading",
     },
     {
@@ -75,7 +72,6 @@ export const HOME_MARKETING_STEPS_COPY = {
   ],
 } as const;
 
-
 /** G3/G4 — keep Lessons and skills-rag off the hero; optional footnote only. */
 export const HOME_MARKETING_HONESTY_FOOTNOTE =
-  "Lessons memory is evolving (ask for the structured Lessons design if you need it). Skills-rag / feature-knowledge stays in power-user docs — not the landing hero.";
+  "Lessons memory is evolving (ask for the structured Lessons design if you need it). Skills-rag / feature-knowledge stays in power-user docs — not the landing hero. Dual Bearer: awc_proj_ for project-scoped MCP; agent-access for catalog-wide tools.";
