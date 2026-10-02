@@ -18,6 +18,18 @@ describe("revokePendingInstallDevicesForUser (HOME-059)", () => {
     sqlMock.mockClear();
   });
 
+  it("HOME-065: revokes all placeholders when the account already has a live Mac", async () => {
+    await revokePendingInstallDevicesForUser({
+      userId: "user-1",
+      hasLiveMac: true,
+    });
+
+    expect(sqlMock).toHaveBeenCalledTimes(1);
+    const revokeSql = sqlTextOf(sqlMock.mock.calls[0] ?? []);
+    expect(revokeSql).toContain("SET revoked_at = NOW()");
+    expect(revokeSql).not.toContain("ORDER BY newest.claimed_at DESC");
+  });
+
   it("revokes extra unlabeled install placeholders and keeps the newest", async () => {
     await revokePendingInstallDevicesForUser({ userId: "user-1" });
 

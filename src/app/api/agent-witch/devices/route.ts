@@ -37,13 +37,19 @@ export async function GET(): Promise<Response> {
 
   try {
     await ensureAgentWitchDeviceSchema();
-    await revokePendingInstallDevicesForUser({ userId: actor.id });
+    const hub = getAgentWitchHub();
     const localLiveDeviceIds = await collectLiveAgentWitchDeviceIdsForUser(
-      getAgentWitchHub(),
+      hub,
       actor.id,
     );
     const remoteLiveDeviceIds =
       await listFreshRegistryDeviceIdsOnOtherInstances(actor.id);
+    const hasLiveMac =
+      localLiveDeviceIds.size > 0 || remoteLiveDeviceIds.size > 0;
+    await revokePendingInstallDevicesForUser({
+      userId: actor.id,
+      hasLiveMac,
+    });
     await consolidateDuplicateAgentWitchDevicesForUser({
       userId: actor.id,
       preferDeviceIds: localLiveDeviceIds,

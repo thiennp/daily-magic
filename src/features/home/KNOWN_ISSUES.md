@@ -620,6 +620,18 @@ Document every production bug or UX regression here. Each entry must link to a t
 
 ---
 
+## HOME-065 — Ghost “Your Mac” while a real Mac is live
+
+**Symptom:** **Grey - Check** (or another named Mac) was online and **this Mac** worked, but an offline **Your Mac** placeholder still appeared after repeated **Connect this Mac** clicks.
+
+**Root cause:** `revokePendingInstallDevicesForUser` (HOME-059) always kept the newest unlabeled placeholder so in-flight Connect flows had a claim row. That row stayed visible after the account already had a live agent connection.
+
+**Fix:** On `GET /api/agent-witch/devices`, when the user has at least one **live** Mac (local hub socket or fresh registry on another instance), revoke **all** placeholders. Install-token still uses the HOME-059 path (keep newest) so a new claim is not deleted before pairing.
+
+**Regression tests:** `revokePendingInstallDevicesForUser.test.ts`, devices route wiring (HOME-065).
+
+---
+
 ## HOME-064 — Orphan install-token cookie vs live Grey - Check row
 
 **Symptom:** **Grey - Check** was online but **Connect this Mac** stayed visible; **Your Mac** was an offline placeholder. Cookie `agent_witch_local_token_hash` held an install-token claim hash not present under `~/.agent-witch/profiles`, while the live row used another local profile token. Wake `tokenHash` followed `active-profile.json` but the hub heartbeat used the connected profile.
