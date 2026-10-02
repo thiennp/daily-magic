@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { twMerge } from "tailwind-merge";
 
 import AwcProjectAccessFolderRefs from "@/features/projects/access/AwcProjectAccessFolderRefs";
 import AwcProjectAccessMembersList from "@/features/projects/access/AwcProjectAccessMembersList";
@@ -31,7 +32,10 @@ export default function AwcProjectAccessPanel({
 
   return (
     <section
-      className={`mt-8 space-y-4 rounded-xl border border-gray-200/80 p-4 dark:border-gray-800/80 ${className}`.trimEnd()}
+      className={twMerge(
+        "mt-8 space-y-4 rounded-xl border border-gray-200/80 p-4 dark:border-gray-800/80",
+        className,
+      )}
     >
       <h2 className="text-base font-semibold text-gray-900 dark:text-white">
         {copy.title}

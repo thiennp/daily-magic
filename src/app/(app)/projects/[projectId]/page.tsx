@@ -4,7 +4,6 @@ import AwcProjectDetailPanel from "@/features/projects/AwcProjectDetailPanel";
 import AppShell from "@/features/shell/AppShell";
 import AppPageHeader from "@/components/surfaces/AppPageHeader";
 import { APP_PAGE_STACK_CLASS } from "@/features/shell/appPageLayout.constant";
-import { APP_SHELL_NARROW_CONTENT_CLASS } from "@/features/shell/appShellContentWidth.constant";
 import { getAuthActor } from "@/lib/auth/auth";
 import { getUserProjectById } from "@/lib/projects/userProjectQueries";
 
@@ -35,7 +34,7 @@ export default async function ProjectDetailPage({
   }
 
   return (
-    <AppShell contentClassName={APP_SHELL_NARROW_CONTENT_CLASS}>
+    <AppShell>
       <div className={APP_PAGE_STACK_CLASS}>
         <AppPageHeader title="Project details" />
         <AwcProjectDetailPanel project={project} startRename={startRename} />
