@@ -31,10 +31,12 @@ export const getProjectBriefing = async (input: {
   });
   const peers =
     peersResult.ok
-      ? peersResult.peers.map((peer) => ({
-          projectDisplayName: peer.projectDisplayName,
-          teamLabel: peer.teamLabel,
-        }))
+      ? peersResult.peers
+          .filter((peer) => !peer.isOwner)
+          .map((peer) => ({
+            projectDisplayName: peer.projectDisplayName,
+            teamLabel: peer.teamLabel,
+          }))
       : [];
 
   const boundHarnessSetSlugs = await listBoundHarnessSlugsForProject(
