@@ -26,8 +26,20 @@ export const dispatchProjectMessageFromOwner = async (input: {
         ? body.kind
         : "task.assign",
   });
-  if (!parsed.ok || parsed.toProjectDisplayName === null || parsed.toTeamLabel !== null) {
+  // Owner → bot: exactly one of toMembershipId | toProjectDisplayName (no teamLabel / Owner).
+  if (
+    !parsed.ok ||
+    parsed.toTeamLabel !== null ||
+    (parsed.toMembershipId === null && parsed.toProjectDisplayName === null) ||
+    (parsed.toMembershipId !== null && parsed.toProjectDisplayName !== null)
+  ) {
     return { ok: false, code: parsed.ok ? "peer_required" : parsed.code };
+  }
+  if (
+    parsed.toProjectDisplayName !== null &&
+    parsed.toProjectDisplayName.trim().toLowerCase() === "owner"
+  ) {
+    return { ok: false, code: "peer_required" };
   }
 
   await ensureProjectAclSchema();
@@ -42,6 +54,7 @@ export const dispatchProjectMessageFromOwner = async (input: {
   const resolved = await resolveDispatchRecipients({
     projectId: input.projectId,
     actorUserId: input.ownerUserId,
+    toMembershipId: parsed.toMembershipId,
     toProjectDisplayName: parsed.toProjectDisplayName,
     toTeamLabel: null,
   });

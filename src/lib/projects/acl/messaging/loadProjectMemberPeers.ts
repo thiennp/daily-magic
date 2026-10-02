@@ -24,7 +24,7 @@ export const loadActiveMemberPeers = async (input: {
   const sql = getSql();
   const rows = asRowArray(
     await sql`
-      SELECT m.project_display_name, m.team_label, u.email
+      SELECT m.id, m.project_display_name, m.team_label, u.email
       FROM project_memberships m
       JOIN users u ON u.id = m.user_id
       WHERE m.project_id = ${input.projectId}
@@ -33,6 +33,7 @@ export const loadActiveMemberPeers = async (input: {
     `,
   );
   return rows.map((row) => ({
+    membershipId: row.id ? String(row.id) : null,
     projectDisplayName: row.project_display_name
       ? String(row.project_display_name)
       : null,

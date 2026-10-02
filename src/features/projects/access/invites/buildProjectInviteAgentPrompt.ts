@@ -4,8 +4,8 @@ import { extractProjectInviteTokenFromUrl } from "@/lib/projects/acl/invites/ext
 export { extractProjectInviteTokenFromUrl };
 
 /**
- * Agent clipboard prompt — install/connect if needed, redeem, wait for owner
- * Approve (user confirm), then pull ACL/peers and print a human summary.
+ * Agent clipboard prompt — install/connect if needed, redeem, check access
+ * (skip Approve wait when already active), then pull ACL/peers and summarize.
  */
 export const buildProjectInviteAgentPrompt = (input: {
   readonly inviteUrl: string;
@@ -49,13 +49,15 @@ export const buildProjectInviteAgentPrompt = (input: {
     "",
     "2. Call redeem_project_invite with JSON (MAY include suggestedProjectDisplayName — unique nickname, 2–32 letters, single spaces OK):",
     `   ${redeemJson}`,
-    '   Or omit suggestedProjectDisplayName / pass only { "token": "…" }. If DISPLAY_NAME_TAKEN / INVALID_DISPLAY_NAME, pick another name and retry. Save projectId from the response.',
+    '   Or omit suggestedProjectDisplayName / pass only { "token": "…" }. If DISPLAY_NAME_TAKEN / INVALID_DISPLAY_NAME, pick another name and retry. Save projectId from the response. Redeem/request may return status: "active" immediately (same-owner / invite auto-approve) or "pending".',
     "",
-    "3. AFTER redeem — talk to YOUR USER (do not busy-poll forever):",
-    "   Tell them: wait for the project owner to Approve you in Agent Witch Cloud (nickname prefills from your suggestion; owner may change it), then come back and confirm to you that you were Approved.",
-    `   You may optionally check get_my_project_access { "projectId": "${projectIdHint}" } once to note pending — but the primary UX is wait + user confirm, not silent polling loops.`,
+    "3. AFTER redeem — MUST check get_my_project_access (do not busy-poll forever):",
+    `   Call get_my_project_access { "projectId": "${projectIdHint}" }.`,
+    '   If status is active (or owner): skip “wait for Approve” — continue to step 4 now (bots the owner owns / invite redeem may join without Approve).',
+    "   If status is pending: Tell your user: wait for the project owner to Approve you in Agent Witch Cloud (nickname prefills from your suggestion; owner may change it), then come back and confirm to you that you were Approved. Primary UX is wait + user confirm, not silent polling loops.",
+    "   MAY note: Bots you own can join without Approve; others stay Pending.",
     "",
-    "4. ON USER CONFIRM post-Approve (only then) — keep your agent-access MCP Bearer session:",
+    "4. WHEN status is active (right after redeem if already active, or after user confirms Approve if pending) — keep your agent-access MCP Bearer session:",
     `   a) get_my_project_access { "projectId": "${projectIdHint}" } until status is active (if not yet). When active|owner, response may include briefing once.`,
     `   b) REQUIRED once: get_project_briefing { "projectId": "${projectIdHint}" } for project name, your display name/teamLabel, peers, how to project_dispatch, and bound playbooks.`,
     `   c) rotate_project_api_key { "projectId": "${projectIdHint}" } once — store awc_proj_… (plaintext once).`,
@@ -63,14 +65,15 @@ export const buildProjectInviteAgentPrompt = (input: {
     "      Prefer agent-access Bearer for register_project_webhook and ack_project_message; awc_proj_ is also allowed for those. You MAY use awc_proj_ as MCP Bearer for other project-scoped calls. Keep agent-access for full MCP / catalog-wide tools (whoami, runs, workflows, check_product_updates, leave_project). awc_proj_ alone 401s on non-project tools — do not drop agent-access if you still need them.",
     `   d) get_project_acl { "projectId": "${projectIdHint}" } — includes peers + self when available.`,
     `   e) REQUIRED: list_project_peers { "projectId": "${projectIdHint}" }.`,
-    "      Note your projectDisplayName from self. Expect peers[] with projectDisplayName, teamLabel, isAgent, isOwner (owner included as isOwner: true); empty peers besides the owner is normal if you are the only member. Use exact toProjectDisplayName for dispatch — do not invent names.",
+    "      Note your projectDisplayName and membershipId from self (membershipId may be absent until API ships — graceful). Expect peers[] with membershipId?, projectDisplayName, teamLabel, isAgent, isOwner (owner included as isOwner: true); empty peers besides the owner is normal if you are the only member.",
+    "      MUST prefer toMembershipId for peer-bot project_dispatch when membershipId is present. Fallback: exact toProjectDisplayName / toTeamLabel — do not invent names. Re-list peers after any rename; old nickname may still resolve for ~7 days (alias TTL).",
     "",
     "5. BEFORE any further work: print a clear human summary to your user covering project name, folder/repo refs, your nickname (self), peer nicknames (projectDisplayName) and teamLabels, and how to work on this project.",
-    "   In that summary (or next line): say you can connect with peer bots to send/receive work via project_dispatch using toProjectDisplayName / toTeamLabel from list_project_peers.",
+    "   In that summary (or next line): say you can connect with peer bots to send/receive work via project_dispatch preferring toMembershipId from list_project_peers (else toProjectDisplayName / toTeamLabel).",
     "",
     `6. When messaging the human owner: project_dispatch { "projectId": "${projectIdHint}", "toProjectDisplayName": "Owner", "kind": "…", "summary": "…", "refs"?: … } — reserved address (case-insensitive). Do NOT use the owner's account name from list_project_peers (peers still show isOwner: true).`,
-    `   When messaging a peer bot: project_dispatch { "projectId": "${projectIdHint}", "toProjectDisplayName"?: "<exact from list_project_peers>", "toTeamLabel"?: "<from list_project_peers>", "kind": "…", "summary": "…", "refs": … }.`,
-    "   On Approve, peers + owner inbox receive peer.joined. Owner-assigned tasks arrive with fromProjectDisplayName === \"Owner\"; ack with ack_project_message.",
+    `   When messaging a peer bot: prefer project_dispatch { "projectId": "${projectIdHint}", "toMembershipId": "<UUID from list_project_peers>", "kind": "…", "summary": "…", "refs": … }. Exactly one of toMembershipId | toProjectDisplayName | toTeamLabel. Fallback when membershipId missing: toProjectDisplayName / toTeamLabel from list_project_peers.`,
+    "   On Approve (or same-owner auto-approve), peers + owner inbox receive peer.joined. Owner-assigned tasks arrive with fromProjectDisplayName === \"Owner\"; ack with ack_project_message.",
     "   Cloud inbox carries thin protocol metadata only: summary ≤ 200 chars; refs ≤ 768 bytes; no media/blobs (media_not_allowed). Use only localPath / P2P refs for bulky payloads. Delete-on-ack: acked messages are deleted; unacked messages expire after 3 days. Rate limits: 300/hour (rolling) + max 300 unread (ack/clear frees slots).",
     "",
     "7. Inbox delivery (webhook-first, else poll) — after peers summary:",
@@ -82,7 +85,7 @@ export const buildProjectInviteAgentPrompt = (input: {
     "8. Leaving / disconnecting (no owner Approve needed):",
     `   You may leave this project yourself anytime via leave_project { "projectId": "${projectIdHint}", "confirm": true } — confirm:true is required.`,
     "   Bearer: agent-access only for leave_project (not on the awc_proj_ project-scoped allowlist — awc_proj_ would 401). Owner cannot leave via this; you cannot revoke others.",
-    "   Effect: your membership is revoked; project keys/webhooks for you are disabled; leave / Left project (not an owner kick). Prefer list_project_peers or Members for who remains. Re-join needs a new request + owner Approve. The owner does not need to Approve your leave.",
+    "   Effect: your membership is revoked; project keys/webhooks for you are disabled; leave / Left project (not an owner kick). Prefer list_project_peers or Members for who remains. Re-join needs a new request + owner Approve (unless same-owner auto-approve applies again). The owner does not need to Approve your leave.",
     "   MUST on leave or owner Revoke: delete all project-scoped routines for this project (inbox poll cadence, Softvale watches, and any other project-tied scheduled/event watches) so they cannot leak work or keep polling after access ends.",
     "",
     "9. Product updates — after connect / post-Approve summary, and periodically while active:",

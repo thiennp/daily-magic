@@ -4,7 +4,7 @@ export const AGENT_ACCESS_REDEEM_PROJECT_INVITE_TOOL: AgentAccessToolDefinition 
   {
     name: "redeem_project_invite",
     description:
-      "Redeem a project invite token. Creates a pending access request; owner must Approve before messaging scopes / scoped key. Optionally pass suggestedProjectDisplayName (unique nickname, 2–32 letters) to prefill Approve; rejected if invalid/taken. Pre-registered agent only. No redirect_uri.",
+      "Redeem a project invite token. May return status active immediately (same-owner / invite auto-approve) or pending until owner Approves. After redeem MUST call get_my_project_access — if active, skip wait for Approve; if pending, wait as today. Optionally pass suggestedProjectDisplayName (unique nickname, 2–32 letters) to prefill Approve; rejected if invalid/taken. Pre-registered agent only. No redirect_uri.",
     inputSchema: {
       type: "object",
       properties: {

@@ -34,6 +34,7 @@ describe("listProjectPeersForOwnerActor", () => {
       if (q.includes("JOIN users") && q.includes("project_memberships")) {
         return [
           {
+            id: "mem-buni",
             project_display_name: "Buni",
             team_label: null,
             email: "bot@agents.agentwitch.com",
@@ -50,12 +51,14 @@ describe("listProjectPeersForOwnerActor", () => {
     expect(result.ok).toBe(true);
     if (!result.ok) return;
     expect(result.self).toEqual({
+      membershipId: null,
       projectDisplayName: "Thien",
       teamLabel: null,
       isAgent: false,
     });
     expect(result.peers).toEqual([
       {
+        membershipId: "mem-buni",
         projectDisplayName: "Buni",
         teamLabel: null,
         isAgent: true,

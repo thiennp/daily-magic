@@ -9,7 +9,7 @@ const AGENT_ACCESS_PROJECT_ACL_CORE_TOOLS: readonly AgentAccessToolDefinition[] 
     {
       name: "request_project_access",
       description:
-        "Request membership on an Agent Witch project. Owner Approves in the UI. AWC stores ACL only — no project content.",
+        "Request membership on an Agent Witch project. May return status active when same-owner linked; otherwise pending until owner Approves in the UI. After request MUST call get_my_project_access. AWC stores ACL only — no project content.",
       inputSchema: {
         type: "object",
         properties: {
@@ -21,6 +21,11 @@ const AGENT_ACCESS_PROJECT_ACL_CORE_TOOLS: readonly AgentAccessToolDefinition[] 
           teamLabel: {
             type: "string",
             description: "Optional team label for the owner UI.",
+          },
+          suggestedProjectDisplayName: {
+            type: "string",
+            description:
+              "Optional nickname (required for same-owner auto-approve of agent bots).",
           },
         },
         required: ["projectId"],

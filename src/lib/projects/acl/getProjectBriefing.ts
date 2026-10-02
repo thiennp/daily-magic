@@ -34,6 +34,7 @@ export const getProjectBriefing = async (input: {
       ? peersResult.peers
           .filter((peer) => !peer.isOwner)
           .map((peer) => ({
+            membershipId: peer.membershipId ?? null,
             projectDisplayName: peer.projectDisplayName,
             teamLabel: peer.teamLabel,
           }))
@@ -46,6 +47,7 @@ export const getProjectBriefing = async (input: {
     projectId: input.projectId,
     projectName: access.project.name,
     caller: {
+      membershipId: access.membership?.id ?? null,
       projectDisplayName: access.membership?.projectDisplayName ?? null,
       teamLabel: access.membership?.teamLabel ?? null,
     },

@@ -58,16 +58,19 @@ describe("listProjectPeers member roster", () => {
       if (q.includes("JOIN users") && q.includes("project_memberships")) {
         return [
           {
+            id: "mem-nameless",
             project_display_name: null,
             team_label: null,
             email: "nameless@agents.agentwitch.com",
           },
           {
+            id: "mem-zed",
             project_display_name: "Zed",
             team_label: "beta",
             email: "zed@agents.agentwitch.com",
           },
           {
+            id: "mem-ada",
             project_display_name: "Ada",
             team_label: null,
             email: "ada@agents.agentwitch.com",
@@ -84,6 +87,7 @@ describe("listProjectPeers member roster", () => {
     expect(result.ok).toBe(true);
     if (!result.ok) return;
     expect(result.self).toEqual({
+      membershipId: "mem-self",
       projectDisplayName: "Buni",
       teamLabel: "alpha",
       isAgent: true,
@@ -95,10 +99,14 @@ describe("listProjectPeers member roster", () => {
       null,
     ]);
     expect(result.peers.find((p) => p.isOwner)).toEqual({
+      membershipId: null,
       projectDisplayName: "Thien",
       teamLabel: null,
       isAgent: false,
       isOwner: true,
+    });
+    expect(result.peers.find((p) => p.projectDisplayName === "Ada")).toMatchObject({
+      membershipId: "mem-ada",
     });
     expect(
       result.peers.filter((p) => !p.isOwner).every((p) => p.isOwner === false),

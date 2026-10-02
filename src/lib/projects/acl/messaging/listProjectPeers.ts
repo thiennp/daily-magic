@@ -35,6 +35,7 @@ export const listProjectPeers = async (input: {
 
   const isAgent = await isAgentUserId(input.actorUserId);
   const self: ProjectPeerSelf = {
+    membershipId: membership.id,
     projectDisplayName: membership.projectDisplayName,
     teamLabel: membership.teamLabel,
     isAgent,

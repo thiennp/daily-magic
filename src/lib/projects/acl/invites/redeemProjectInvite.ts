@@ -1,4 +1,6 @@
+import { approveProjectAccessRequest } from "@/lib/projects/acl/approveProjectAccessRequest";
 import { checkProjectMembershipStatus } from "@/lib/projects/acl/checkProjectMembershipStatus";
+import { isAgentUserId } from "@/lib/projects/acl/isAgentUser";
 import {
   claimProjectInviteToken,
   restoreProjectInviteUse,
@@ -7,6 +9,8 @@ import { insertRedeemPendingAccessRequest } from "@/lib/projects/acl/invites/ins
 import { resolveRedeemSuggestedDisplayName } from "@/lib/projects/acl/invites/resolveRedeemSuggestedDisplayName";
 import { PROJECT_ACL_DEFAULT_MEMBER_SCOPES } from "@/lib/projects/acl/projectAclScopes.constant";
 import type ProjectAccessRequestRecord from "@/lib/projects/acl/types/ProjectAccessRequestRecord.type";
+import type ProjectMembershipRecord from "@/lib/projects/acl/types/ProjectMembershipRecord.type";
+import { getUserProjectById } from "@/lib/projects/userProjectQueries";
 
 export type RedeemProjectInviteResult =
   | {
@@ -16,6 +20,18 @@ export type RedeemProjectInviteResult =
       readonly status: "pending";
       readonly namingRequired: true;
       readonly suggestedProjectDisplayName: string | null;
+      readonly membership?: undefined;
+      readonly projectApiKey?: undefined;
+    }
+  | {
+      readonly ok: true;
+      readonly projectId: string;
+      readonly request: ProjectAccessRequestRecord;
+      readonly status: "active";
+      readonly namingRequired: false;
+      readonly suggestedProjectDisplayName: string | null;
+      readonly membership: ProjectMembershipRecord;
+      readonly projectApiKey: string | null;
     }
   | {
       readonly ok: false;
@@ -31,6 +47,11 @@ export type RedeemProjectInviteResult =
         | "display_name_taken";
     };
 
+/**
+ * Softvale-fast invite-as-consent: successful redeem with a usable display
+ * name auto-finalizes active membership (owner issued the invite).
+ * Agents without suggestedProjectDisplayName stay pending (naming required).
+ */
 export const redeemProjectInvite = async (input: {
   readonly token: string;
   readonly actorUserId: string;
@@ -85,12 +106,61 @@ export const redeemProjectInvite = async (input: {
     await restoreProjectInviteUse(invite.id);
     return { ok: false, code: "already_pending" };
   }
+
+  const requesterIsAgent = await isAgentUserId(input.actorUserId);
+  const canAutoApprove =
+    !requesterIsAgent || nameResult.name !== null;
+  if (!canAutoApprove) {
+    return {
+      ok: true,
+      projectId: invite.projectId,
+      request: inserted.request,
+      status: "pending",
+      namingRequired: true,
+      suggestedProjectDisplayName: nameResult.name,
+    };
+  }
+
+  const project = await getUserProjectById(invite.projectId);
+  if (project === null) {
+    return {
+      ok: true,
+      projectId: invite.projectId,
+      request: inserted.request,
+      status: "pending",
+      namingRequired: true,
+      suggestedProjectDisplayName: nameResult.name,
+    };
+  }
+
+  const approved = await approveProjectAccessRequest({
+    projectId: invite.projectId,
+    requestId: inserted.request.id,
+    ownerUserId: project.ownerUserId,
+    teamLabel: invite.teamLabel,
+    projectDisplayName: nameResult.name,
+    scopes,
+  });
+  if (!approved.ok) {
+    // Leave pending for owner Approve (e.g. race on display name).
+    return {
+      ok: true,
+      projectId: invite.projectId,
+      request: inserted.request,
+      status: "pending",
+      namingRequired: true,
+      suggestedProjectDisplayName: nameResult.name,
+    };
+  }
+
   return {
     ok: true,
     projectId: invite.projectId,
-    request: inserted.request,
-    status: "pending",
-    namingRequired: true,
+    request: approved.request,
+    status: "active",
+    namingRequired: false,
     suggestedProjectDisplayName: nameResult.name,
+    membership: approved.membership,
+    projectApiKey: approved.projectApiKey,
   };
 };

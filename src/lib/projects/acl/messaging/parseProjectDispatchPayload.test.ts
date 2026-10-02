@@ -4,7 +4,7 @@ import { parseProjectDispatchPayload } from "@/lib/projects/acl/messaging/parseP
 import { PROJECT_MESSAGE_SUMMARY_MAX_CHARS } from "@/lib/projects/acl/messaging/projectMessage.constants";
 
 describe("parseProjectDispatchPayload (A3.4)", () => {
-  it("requires toProjectDisplayName or toTeamLabel; rejects broadcast", () => {
+  it("requires exactly one of toMembershipId | toProjectDisplayName | toTeamLabel; rejects broadcast", () => {
     expect(
       parseProjectDispatchPayload({
         kind: "handoff",
@@ -26,6 +26,21 @@ describe("parseProjectDispatchPayload (A3.4)", () => {
         toProjectDisplayName: "Owner",
       }).ok,
     ).toBe(true);
+    expect(
+      parseProjectDispatchPayload({
+        kind: "task",
+        summary: "by id",
+        toMembershipId: "mem-1",
+      }).ok,
+    ).toBe(true);
+    expect(
+      parseProjectDispatchPayload({
+        kind: "task",
+        summary: "both",
+        toMembershipId: "mem-1",
+        toProjectDisplayName: "Buni",
+      }).ok,
+    ).toBe(false);
   });
 
   it("caps summary and allowlists refs", () => {

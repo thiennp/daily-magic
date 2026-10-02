@@ -55,6 +55,16 @@ export const ensureProjectAclSchema = async (): Promise<void> => {
       created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
       updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW())`;
     await ensureProjectInviteHooksSchema();
+    await sql`CREATE TABLE IF NOT EXISTS project_membership_display_name_aliases (
+      id TEXT PRIMARY KEY DEFAULT gen_random_uuid()::text,
+      project_id TEXT NOT NULL REFERENCES user_projects(id) ON DELETE CASCADE,
+      membership_id TEXT NOT NULL REFERENCES project_memberships(id) ON DELETE CASCADE,
+      display_name TEXT NOT NULL,
+      display_name_key TEXT NOT NULL,
+      expires_at TIMESTAMPTZ NOT NULL,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW())`;
+    await sql`CREATE INDEX IF NOT EXISTS project_membership_display_name_aliases_lookup_idx
+      ON project_membership_display_name_aliases (project_id, display_name_key, expires_at)`;
     // Softvale: memberships approved from pre-msg:dispatch requested_scopes.
     await sql`
       UPDATE project_memberships

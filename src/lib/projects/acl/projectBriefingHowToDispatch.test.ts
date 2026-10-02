@@ -18,6 +18,8 @@ describe("PROJECT_BRIEFING_HOW_TO_DISPATCH", () => {
     expect(PROJECT_BRIEFING_HOW_TO_DISPATCH).toContain(
       'toProjectDisplayName: "Owner"',
     );
+    expect(PROJECT_BRIEFING_HOW_TO_DISPATCH).toContain("toMembershipId");
+    expect(PROJECT_BRIEFING_HOW_TO_DISPATCH).toMatch(/~7 days|alias TTL/i);
     expect(PROJECT_BRIEFING_HOW_TO_DISPATCH).toContain("peer.joined");
     expect(PROJECT_BRIEFING_HOW_TO_DISPATCH).toMatch(/MUST on connect \(webhook-first\)/i);
     expect(PROJECT_BRIEFING_HOW_TO_DISPATCH).toMatch(/MUST poll list_project_inbox/i);

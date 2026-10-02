@@ -53,6 +53,7 @@ export const dispatchProjectMessage = async (input: {
   const resolved = await resolveDispatchRecipients({
     projectId: input.projectId,
     actorUserId: input.actorUserId,
+    toMembershipId: parsed.toMembershipId,
     toProjectDisplayName: parsed.toProjectDisplayName,
     toTeamLabel: parsed.toTeamLabel,
   });
@@ -61,12 +62,14 @@ export const dispatchProjectMessage = async (input: {
   }
 
   const primary = resolved.recipients[0];
+  const addressedByMembershipOrName =
+    parsed.toMembershipId !== null || parsed.toProjectDisplayName !== null;
   const messageId = await insertProjectMessageWithDeliveries({
     projectId: input.projectId,
     senderMembershipId: sender.id,
     senderUserId: input.actorUserId,
-    toMembershipId: parsed.toProjectDisplayName ? primary.id : null,
-    toUserId: parsed.toProjectDisplayName ? primary.user_id : null,
+    toMembershipId: addressedByMembershipOrName ? primary.id : null,
+    toUserId: addressedByMembershipOrName ? primary.user_id : null,
     toTeamLabel: parsed.toTeamLabel,
     toProjectDisplayName: parsed.toProjectDisplayName,
     kind: parsed.kind,
@@ -85,6 +88,7 @@ export const dispatchProjectMessage = async (input: {
       messageId,
       kind: parsed.kind,
       recipientCount: resolved.recipients.length,
+      toMembershipId: parsed.toMembershipId,
       toProjectDisplayName: parsed.toProjectDisplayName,
       toTeamLabel: parsed.toTeamLabel,
     },

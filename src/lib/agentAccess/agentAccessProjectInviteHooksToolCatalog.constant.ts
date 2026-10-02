@@ -19,10 +19,15 @@ export const AGENT_ACCESS_PROJECT_INVITE_HOOKS_TOOLS: readonly AgentAccessToolDe
     {
       name: "project_dispatch",
       description:
-        "Send thin protocol metadata by toProjectDisplayName (primary) or toTeamLabel. Address the human with toProjectDisplayName: \"Owner\" (reserved). No broadcast/media/blobs/bodies. summary ≤200 chars; allowlisted refs (prUrl|commitSha|localPath|allowClaimId) only; bulky payloads via P2P/localPath. Rate 300/hour + max 300 unread.",      inputSchema: {
+        "Send thin protocol metadata. Prefer toMembershipId (UUID from list_project_peers) for peer bots; keep toProjectDisplayName: \"Owner\" for the human; else toProjectDisplayName / toTeamLabel. Exactly one of toMembershipId | toProjectDisplayName | toTeamLabel. No broadcast/media/blobs/bodies. summary ≤200 chars; allowlisted refs (prUrl|commitSha|localPath|allowClaimId) only; bulky payloads via P2P/localPath. Rate 300/hour + max 300 unread.",
+      inputSchema: {
         type: "object",
         properties: {
           projectId: { type: "string" },
+          toMembershipId: {
+            type: "string",
+            description: "Preferred stable peer membership UUID from list_project_peers.",
+          },
           toProjectDisplayName: { type: "string" },
           toTeamLabel: { type: "string" },
           kind: { type: "string" },
@@ -60,7 +65,7 @@ export const AGENT_ACCESS_PROJECT_INVITE_HOOKS_TOOLS: readonly AgentAccessToolDe
     {
       name: "list_project_peers",
       description:
-        "List self + active peers (members and owner): projectDisplayName, teamLabel, isAgent, isOwner. Requires active membership. No UUID required for bot UX.",
+        "List self + active peers (members and owner): membershipId (when present), projectDisplayName, teamLabel, isAgent, isOwner. Prefer toMembershipId for peer dispatch. Requires active membership.",
       inputSchema: {
         type: "object",
         properties: { projectId: { type: "string" } },
@@ -71,7 +76,7 @@ export const AGENT_ACCESS_PROJECT_INVITE_HOOKS_TOOLS: readonly AgentAccessToolDe
     {
       name: "get_project_briefing",
       description:
-        "Active-member onboard briefing: project name, your display name/teamLabel, peers (display names only), how to project_dispatch, and bound playbook harness slugs. Call once after Approve.",
+        "Active-member onboard briefing: project name, your display name/teamLabel, peers (membershipId when present + display names), how to project_dispatch (prefer toMembershipId for peers), and bound playbook harness slugs. Call once when active.",
       inputSchema: {
         type: "object",
         properties: { projectId: { type: "string" } },

@@ -17,6 +17,7 @@ export const parseRequestProjectAccessArgs = (
   readonly projectId: string;
   readonly reason: string | null;
   readonly teamLabel: string | null;
+  readonly suggestedProjectDisplayName: string | null;
 } | null => {
   const base = parseProjectIdArgs(args);
   if (base === null || args === null || typeof args !== "object") {
@@ -25,11 +26,16 @@ export const parseRequestProjectAccessArgs = (
   const record = args as {
     reason?: unknown;
     teamLabel?: unknown;
+    suggestedProjectDisplayName?: unknown;
+    projectDisplayName?: unknown;
   };
   return {
     projectId: base.projectId,
     reason: readString(record.reason),
     teamLabel: readString(record.teamLabel),
+    suggestedProjectDisplayName:
+      readString(record.suggestedProjectDisplayName) ??
+      readString(record.projectDisplayName),
   };
 };
 

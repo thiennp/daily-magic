@@ -8,10 +8,14 @@ export type ParsedProjectDispatch =
       readonly kind: string;
       readonly summary: string;
       readonly refs: Readonly<Record<string, string>>;
+      readonly toMembershipId: string | null;
       readonly toProjectDisplayName: string | null;
       readonly toTeamLabel: string | null;
     }
   | { readonly ok: false; readonly code: string };
+
+const asNonEmptyString = (value: unknown): string | null =>
+  typeof value === "string" && value.trim().length > 0 ? value.trim() : null;
 
 export const parseProjectDispatchPayload = (
   args: unknown,
@@ -35,19 +39,18 @@ export const parseProjectDispatchPayload = (
   if (summaryHasForbiddenContent(summary)) {
     return { ok: false, code: "forbidden_content" };
   }
-  const toProjectDisplayName =
-    typeof body.toProjectDisplayName === "string" &&
-    body.toProjectDisplayName.trim().length > 0
-      ? body.toProjectDisplayName.trim()
-      : null;
+  const toMembershipId = asNonEmptyString(body.toMembershipId);
+  const toProjectDisplayName = asNonEmptyString(body.toProjectDisplayName);
+  const toTeamLabelRaw = asNonEmptyString(body.toTeamLabel);
   const toTeamLabel =
-    typeof body.toTeamLabel === "string" && body.toTeamLabel.trim().length > 0
-      ? body.toTeamLabel.trim().slice(0, 64)
-      : null;
-  if (toProjectDisplayName === null && toTeamLabel === null) {
+    toTeamLabelRaw !== null ? toTeamLabelRaw.slice(0, 64) : null;
+  const addressCount = [toMembershipId, toProjectDisplayName, toTeamLabel].filter(
+    (value) => value !== null,
+  ).length;
+  if (addressCount === 0) {
     return { ok: false, code: "address_required" };
   }
-  if (toProjectDisplayName !== null && toTeamLabel !== null) {
+  if (addressCount > 1) {
     return { ok: false, code: "single_recipient_required" };
   }
   if (body.broadcast === true || body.toUserId) {
@@ -62,6 +65,7 @@ export const parseProjectDispatchPayload = (
     kind,
     summary,
     refs: parsedRefs.refs,
+    toMembershipId,
     toProjectDisplayName,
     toTeamLabel,
   };

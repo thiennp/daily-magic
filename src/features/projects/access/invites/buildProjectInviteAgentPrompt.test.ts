@@ -15,7 +15,7 @@ describe("buildProjectInviteAgentPrompt", () => {
     ).toBe("abcTOKEN123");
   });
 
-  it("builds connect + wait-Approve + peers summary with MCP Bearer note", () => {
+  it("builds connect + check-access + peers summary with MCP Bearer note", () => {
     const urls = buildAgentAccessUrls();
     const prompt = buildProjectInviteAgentPrompt({
       inviteUrl: "https://example.com/invite/p/tok-xyz",
@@ -32,7 +32,12 @@ describe("buildProjectInviteAgentPrompt", () => {
     expect(prompt).toMatch(/wait for the project owner to Approve/i);
     expect(prompt).toMatch(/come back and confirm/i);
     expect(prompt).toMatch(/do not busy-poll|not silent polling/i);
+    expect(prompt).toMatch(/skip.*wait for Approve|If status is active/i);
+    expect(prompt).toMatch(/Bots you own can join without Approve/i);
     expect(prompt).toContain("get_my_project_access");
+    expect(prompt).toContain("toMembershipId");
+    expect(prompt).toMatch(/prefer toMembershipId|MUST prefer toMembershipId/i);
+    expect(prompt).toMatch(/~7 days|alias TTL/i);
     expect(prompt).toContain("rotate_project_api_key");
     expect(prompt).toContain("awc_proj_");
     expect(prompt).toMatch(
@@ -58,7 +63,7 @@ describe("buildProjectInviteAgentPrompt", () => {
     );
     expect(prompt).toMatch(/print a clear human summary/i);
     expect(prompt).toContain("project_dispatch");
-    expect(prompt).toMatch(/toProjectDisplayName|toTeamLabel/);
+    expect(prompt).toMatch(/toMembershipId|toProjectDisplayName|toTeamLabel/);
     expect(prompt).toMatch(/get_project_briefing/i);
     expect(prompt).toContain("check_product_updates");
     expect(prompt).toMatch(/sinceCatalogVersion/);

@@ -66,6 +66,21 @@ export const executeProjectAclRedeemInviteTool = async (input: {
         : result.code;
     return agentAccessTextResult({ ok: false, error, code: error }, true);
   }
+  if (result.status === "active") {
+    return agentAccessTextResult({
+      ok: true,
+      status: "active",
+      namingRequired: false,
+      projectId: result.projectId,
+      requestId: result.request.id,
+      membershipId: result.membership.id,
+      projectDisplayName: result.membership.projectDisplayName,
+      projectApiKey: result.projectApiKey,
+      suggestedProjectDisplayName: result.suggestedProjectDisplayName,
+      message:
+        "Invite redeemed and membership is active (invite auto-approve). Call get_my_project_access; skip wait for Approve. Prefer rotate_project_api_key if you need a fresh awc_proj_ key.",
+    });
+  }
   return agentAccessTextResult({
     ok: true,
     status: "pending",
@@ -75,7 +90,7 @@ export const executeProjectAclRedeemInviteTool = async (input: {
     suggestedProjectDisplayName: result.suggestedProjectDisplayName,
     message:
       result.suggestedProjectDisplayName !== null
-        ? "Invite redeemed. Membership is pending until the project owner Approves. Your suggested nickname was stored for owner prefill (owner may change it). No scoped key yet."
-        : "Invite redeemed. Membership is pending until the project owner Approves and sets your project display name. No scoped key yet.",
+        ? "Invite redeemed. Membership is pending until the project owner Approves. Your suggested nickname was stored for owner prefill (owner may change it). No scoped key yet. Call get_my_project_access."
+        : "Invite redeemed. Membership is pending until the project owner Approves and sets your project display name. No scoped key yet. Call get_my_project_access.",
   });
 };

@@ -44,6 +44,7 @@ export const loadOwnerPeer = async (input: {
   );
   const { name, email } = mapOwnerUserRow(rows[0]);
   return {
+    membershipId: null,
     projectDisplayName: name,
     teamLabel: null,
     isAgent: email !== null && isAgentAccessSyntheticEmail(email),
@@ -65,6 +66,7 @@ export const loadOwnerSelf = async (
   );
   const { name, email } = mapOwnerUserRow(rows[0]);
   return {
+    membershipId: null,
     projectDisplayName: name,
     teamLabel: null,
     isAgent: email !== null && isAgentAccessSyntheticEmail(email),

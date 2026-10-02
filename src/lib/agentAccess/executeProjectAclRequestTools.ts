@@ -27,6 +27,7 @@ export const executeProjectAclRequestTools = async (input: {
       requesterUserId: input.actor.id,
       reason: parsed.reason,
       teamLabel: parsed.teamLabel,
+      suggestedProjectDisplayName: parsed.suggestedProjectDisplayName,
     });
     if (!result.ok) {
       return agentAccessTextResult(
@@ -34,11 +35,26 @@ export const executeProjectAclRequestTools = async (input: {
         true,
       );
     }
+    if (result.status === "active") {
+      return agentAccessTextResult({
+        ok: true,
+        status: "active",
+        requestId: result.request.id,
+        projectId: result.request.projectId,
+        membershipId: result.membership.id,
+        projectDisplayName: result.membership.projectDisplayName,
+        projectApiKey: result.projectApiKey,
+        message:
+          "Access granted (same-owner auto-approve). Call get_my_project_access; skip wait for Approve.",
+      });
+    }
     return agentAccessTextResult({
       ok: true,
       status: "pending",
       requestId: result.request.id,
       projectId: result.request.projectId,
+      message:
+        "Access request pending. Call get_my_project_access; wait for owner Approve unless status becomes active.",
     });
   }
 

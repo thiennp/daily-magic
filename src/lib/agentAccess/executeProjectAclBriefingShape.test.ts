@@ -47,6 +47,7 @@ const mockActiveMemberSql = async (strings: TemplateStringsArray) => {
   if (q.includes("JOIN users") && q.includes("project_memberships")) {
     return [
       {
+        id: "mem-lead",
         project_display_name: "LeadBot",
         team_label: "Lead",
         email: "peer@agents.agentwitch.com",
@@ -85,13 +86,19 @@ describe("get_project_briefing shape", () => {
     expect(body.ok).toBe(true);
     expect(body.projectName).toBe("Demo");
     expect(body.caller).toEqual({
+      membershipId: "mem-1",
       projectDisplayName: "AgentWitch",
       teamLabel: "NRG",
     });
     expect(body.peers).toEqual([
-      { projectDisplayName: "LeadBot", teamLabel: "Lead" },
+      {
+        membershipId: "mem-lead",
+        projectDisplayName: "LeadBot",
+        teamLabel: "Lead",
+      },
     ]);
     expect(body.howToDispatch).toContain("toProjectDisplayName");
+    expect(body.howToDispatch).toContain("toMembershipId");
     expect(body.howToDispatch).toContain("register_project_webhook");
     expect(body.howToDispatch).toContain("list_project_inbox");
     expect(body.howToDispatch).toMatch(/MUST on connect \(webhook-first\)/i);

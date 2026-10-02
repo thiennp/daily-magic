@@ -1,5 +1,7 @@
 import { ensureProjectAclSchema } from "@/lib/projects/acl/ensureProjectAclSchema";
+import { storeProjectDisplayNameAlias } from "@/lib/projects/acl/displayNames/storeProjectDisplayNameAlias";
 import { validateProjectDisplayName } from "@/lib/projects/acl/displayNames/normalizeProjectDisplayName";
+import { notifyProjectPeersOfMembershipRename } from "@/lib/projects/acl/messaging/notifyProjectPeersOfMembershipRename";
 import mapProjectMembershipRow from "@/lib/projects/acl/mapProjectMembershipRow";
 import type ProjectMembershipRecord from "@/lib/projects/acl/types/ProjectMembershipRecord.type";
 import { writeProjectAccessAudit } from "@/lib/projects/acl/writeProjectAccessAudit";
@@ -45,6 +47,25 @@ export const renameProjectMembershipDisplayName = async (input: {
 
   await ensureProjectAclSchema();
   const sql = getSql();
+  const existingRows = asRowArray(
+    await sql`
+      SELECT *
+      FROM project_memberships
+      WHERE id = ${input.membershipId}
+        AND project_id = ${input.projectId}
+        AND status = 'active'
+        AND role = 'member'
+      LIMIT 1
+    `,
+  );
+  if (existingRows.length === 0) {
+    return { ok: false, code: "not_active" };
+  }
+  const previousDisplayName =
+    existingRows[0].project_display_name
+      ? String(existingRows[0].project_display_name)
+      : null;
+
   const updateResult = await (async (): Promise<
     | { readonly ok: true; readonly rows: Record<string, unknown>[] }
     | { readonly ok: false; readonly code: "display_name_taken" }
@@ -84,6 +105,24 @@ export const renameProjectMembershipDisplayName = async (input: {
     return { ok: false, code: "not_active" };
   }
   const membership = mapProjectMembershipRow(rows[0]);
+  if (
+    previousDisplayName !== null &&
+    previousDisplayName.trim().toLocaleLowerCase("en-US") !==
+      validated.name.trim().toLocaleLowerCase("en-US")
+  ) {
+    await storeProjectDisplayNameAlias({
+      projectId: input.projectId,
+      membershipId: membership.id,
+      previousDisplayName,
+    });
+    await notifyProjectPeersOfMembershipRename({
+      projectId: input.projectId,
+      membershipId: membership.id,
+      userId: membership.userId,
+      previousDisplayName,
+      projectDisplayName: validated.name,
+    });
+  }
   await writeProjectAccessAudit({
     projectId: input.projectId,
     actorUserId: input.ownerUserId,
@@ -92,9 +131,7 @@ export const renameProjectMembershipDisplayName = async (input: {
     detail: {
       membershipId: membership.id,
       projectDisplayName: validated.name,
-      previous: rows[0].project_display_name
-        ? String(rows[0].project_display_name)
-        : null,
+      previous: previousDisplayName,
     },
   });
   return { ok: true, membership };
