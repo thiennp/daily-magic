@@ -60,6 +60,13 @@ export const ensureProjectAclSchema = async (): Promise<void> => {
       created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
       updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW())`;
     await ensureProjectInviteHooksSchema();
+    // Softvale: memberships approved from pre-msg:dispatch requested_scopes.
+    await sql`
+      UPDATE project_memberships
+      SET scopes = array_append(scopes, 'msg:dispatch')
+      WHERE status = 'active'
+        AND role = 'member'
+        AND NOT ('msg:dispatch' = ANY (scopes))`;
     state.ensured = true;
   })();
 
