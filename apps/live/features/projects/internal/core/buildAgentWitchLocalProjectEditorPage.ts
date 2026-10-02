@@ -50,13 +50,14 @@ const buildBoundHarnessPullTab = (input: {
   const lede = input.alreadyInRepo
     ? `This repo already has playbook files in <code>.cursor</code> (tracked in <code>.agent-witch/materialization.json</code>). Pull again only if you want to refresh them from Agent Witch Cloud.`
     : `This project’s playbook is linked in Agent Witch Cloud. Pull writes those files into this repo’s <code>.cursor</code> tree.`;
-  const buttonLabel = input.alreadyInRepo ? "Update in repo" : "Pull into repo";
+  const buttonLabel = input.alreadyInRepo ? "Refresh in repo…" : "Pull into repo";
+  const buttonClass = input.alreadyInRepo ? "btn btn-secondary" : "btn btn-primary";
 
   return `<form method="POST" action="/projects/pull-bound-harness" class="stack">
         <input type="hidden" name="projectId" value="${escapeHtml(input.project.id)}" />
         <p class="lede">${lede}</p>
         <div class="actions">
-          <button class="btn btn-primary" type="submit">${buttonLabel}</button>
+          <button class="${buttonClass}" type="submit">${buttonLabel}</button>
         </div>
       </form>`;
 };
@@ -70,6 +71,11 @@ const buildAlreadyMaterializedWithoutProfileTab = (input: {
     .map(
       (slug) => `<li class="harness-installed-set">
         <p><strong>${escapeHtml(slug)}</strong> <span class="muted">already in this repo</span></p>
+        <form method="POST" action="/projects/remove-harness-set" class="inline-form" onsubmit="return confirm('Remove ledgered files for this set from the repo? The Mac profile harness stays.');">
+          <input type="hidden" name="projectId" value="${escapeHtml(input.project.id)}" />
+          <input type="hidden" name="setSlug" value="${escapeHtml(slug)}" />
+          <button class="btn btn-danger btn-compact" type="submit">Remove from repo</button>
+        </form>
       </li>`,
     )
     .join("")}</ul>`;
@@ -81,7 +87,7 @@ const buildAlreadyMaterializedWithoutProfileTab = (input: {
         ${setList}
         <form method="POST" action="/projects/pull-bound-harness" class="actions">
           <input type="hidden" name="projectId" value="${escapeHtml(input.project.id)}" />
-          <button class="btn btn-secondary" type="submit">Update in repo</button>
+          <button class="btn btn-secondary" type="submit">Refresh in repo…</button>
         </form>
       </div>`;
   }
@@ -126,31 +132,43 @@ const buildHarnessTab = (input: {
   ).length;
   const alreadyInRepo = linkedInstalledCount > 0;
   const lede = alreadyInRepo
-    ? `These sets are already in this repo’s <code>.cursor</code> tree (see <code>.agent-witch/materialization.json</code>). Update to refresh from the Mac harness, or uncheck a set to remove only the files that ledger recorded.`
+    ? `These sets are already in this repo’s <code>.cursor</code> tree (see <code>.agent-witch/materialization.json</code>). Refresh from the Mac harness only if you need an update. Use Remove from repo on a set to delete only the files that ledger recorded.`
     : `Check the sets to write into this repo&apos;s <code>.cursor</code> tree, then pull.`;
-  const buttonLabel = alreadyInRepo ? "Update in repo" : "Pull into repo";
+  const buttonLabel = alreadyInRepo ? "Refresh in repo…" : "Pull into repo";
+  const buttonClass = alreadyInRepo ? "btn btn-secondary" : "btn btn-primary";
 
   const setRows = `<ul class="harness-installed-set-list">${input.installed.sets
-    .map(
-      (set) => `<li class="harness-installed-set">
+    .map((set) => {
+      const inRepo = linked.has(set.slug);
+      const removeControl = inRepo
+        ? `<form method="POST" action="/projects/remove-harness-set" class="inline-form" onsubmit="return confirm('Remove ledgered files for this set from the repo? The Mac profile harness stays.');">
+            <input type="hidden" name="projectId" value="${escapeHtml(input.project.id)}" />
+            <input type="hidden" name="setSlug" value="${escapeHtml(set.slug)}" />
+            <button class="btn btn-danger btn-compact" type="submit">Remove from repo</button>
+          </form>`
+        : "";
+      return `<li class="harness-installed-set">
           <label class="check-row">
-            <input type="checkbox" name="applySet" value="${escapeHtml(set.slug)}"${linked.size === 0 || linked.has(set.slug) ? " checked" : ""} />
+            <input form="link-harness-form" type="checkbox" name="applySet" value="${escapeHtml(set.slug)}"${linked.size === 0 || inRepo ? " checked" : ""} />
             <span><strong>${escapeHtml(set.name)}</strong> <span class="muted mono">(${escapeHtml(set.slug)})</span></span>
           </label>
-          <p class="muted">${set.itemCount} item(s)${linked.has(set.slug) ? ` · <span class="muted">in repo</span>` : ""}</p>
-        </li>`,
-    )
+          <p class="muted">${set.itemCount} item(s)${inRepo ? ` · <span class="muted">in repo</span>` : ""}</p>
+          ${removeControl}
+        </li>`;
+    })
     .join("")}</ul>`;
 
-  return `<form method="POST" action="/projects/link-harness" class="stack">
-        <input type="hidden" name="projectId" value="${escapeHtml(input.project.id)}" />
-        <p class="field-label">Installed</p>
-        <p class="lede">${lede}</p>
+  return `<div class="stack">
+        <form id="link-harness-form" method="POST" action="/projects/link-harness">
+          <input type="hidden" name="projectId" value="${escapeHtml(input.project.id)}" />
+          <p class="field-label">Installed</p>
+          <p class="lede">${lede}</p>
+        </form>
         ${setRows}
         <div class="actions">
-          <button class="btn btn-primary" type="submit">${buttonLabel}</button>
+          <button form="link-harness-form" class="${buttonClass}" type="submit">${buttonLabel}</button>
         </div>
-      </form>`;
+      </div>`;
 };
 
 const buildKnowledgeTab = (input: {

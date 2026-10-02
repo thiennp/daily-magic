@@ -71,7 +71,7 @@ describe("buildAgentWitchLocalProjectEditorPageBody", () => {
     });
 
     expect(html).toContain('action="/projects/pull-bound-harness"');
-    expect(html).toContain('type="submit">Pull into repo</button>');
+    expect(html).toContain('class="btn btn-primary" type="submit">Pull into repo</button>');
     expect(html).not.toContain('href="/harness"');
   });
 
@@ -87,13 +87,13 @@ describe("buildAgentWitchLocalProjectEditorPageBody", () => {
     });
 
     expect(html).toContain('action="/projects/link-harness"');
-    expect(html).toContain('type="submit">Pull into repo</button>');
+    expect(html).toContain('form="link-harness-form" class="btn btn-primary" type="submit">Pull into repo</button>');
     expect(html).toContain('value="check24-style-guide" checked');
     expect(html).toContain("Check the sets to write into this repo");
     expect(html).not.toContain(" disabled");
   });
 
-  it("shows Update in repo when harness sets are already materialized in the folder", () => {
+  it("shows secondary Refresh in repo when harness sets are already materialized in the folder", () => {
     const html = buildAgentWitchLocalProjectEditorPageBody({
       project,
       cloudAppOrigin,
@@ -105,11 +105,17 @@ describe("buildAgentWitchLocalProjectEditorPageBody", () => {
     });
 
     expect(html).toContain('action="/projects/link-harness"');
-    expect(html).toContain('type="submit">Update in repo</button>');
+    expect(html).toContain('form="link-harness-form" class="btn btn-secondary" type="submit">Refresh in repo…</button>');
     expect(html).not.toContain('type="submit">Pull into repo</button>');
+    expect(html).not.toContain('type="submit">Update in repo</button>');
+    expect(html).not.toContain('btn-primary" type="submit">Refresh in repo');
     expect(html).toContain("already in this repo");
     expect(html).toContain("in repo");
     expect(html).toContain('value="check24-style-guide" checked');
+    expect(html).toContain('action="/projects/remove-harness-set"');
+    expect(html).toContain('name="setSlug" value="check24-style-guide"');
+    expect(html).toContain('class="btn btn-danger btn-compact" type="submit">Remove from repo</button>');
+    expect(html).toContain("return confirm('Remove ledgered files for this set from the repo? The Mac profile harness stays.')");
   });
 
   it("does not offer first-time Pull when ledger already has sets but profile harness is empty", () => {
@@ -135,9 +141,29 @@ describe("buildAgentWitchLocalProjectEditorPageBody", () => {
     });
 
     expect(html).toContain("already materialized");
-    expect(html).toContain('type="submit">Update in repo</button>');
+    expect(html).toContain('class="btn btn-secondary" type="submit">Refresh in repo…</button>');
     expect(html).not.toContain('type="submit">Pull into repo</button>');
+    expect(html).not.toContain('type="submit">Update in repo</button>');
     expect(html).toContain('action="/projects/pull-bound-harness"');
     expect(html).toContain("template-vibe-coding-app-feature");
+    expect(html).toContain('action="/projects/remove-harness-set"');
+    expect(html).toContain('name="setSlug" value="template-vibe-coding-app-feature"');
+    expect(html).toContain('class="btn btn-danger btn-compact" type="submit">Remove from repo</button>');
+  });
+
+  it("does not show Remove from repo for installed sets that are not yet in the repo", () => {
+    const html = buildAgentWitchLocalProjectEditorPageBody({
+      project,
+      cloudAppOrigin,
+      installed: installedWithOneSet,
+      linkedSetSlugs: [],
+      composition: null,
+      knowledgeCandidateCount: 0,
+      activeTab: "harness",
+    });
+
+    expect(html).toContain('form="link-harness-form" class="btn btn-primary" type="submit">Pull into repo</button>');
+    expect(html).not.toContain("Remove from repo");
+    expect(html).not.toContain('action="/projects/remove-harness-set"');
   });
 });
