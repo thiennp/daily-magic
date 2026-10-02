@@ -5,8 +5,16 @@ import { useState } from "react";
 
 import Button from "@/components/ui/button/Button";
 import { createUserProjectFromComposer } from "@/features/agent/utils/createUserProjectFromComposer";
+import AwcProjectRepoUrlsFields, {
+  buildRepoUrlsPayload,
+  type AwcProjectRepoUrlsFieldsValue,
+} from "@/features/projects/repoUrls/AwcProjectRepoUrlsFields";
 import buildDefaultProjectFolderPath from "@/lib/projects/buildDefaultProjectFolderPath";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
+import {
+  validateDefaultBranch,
+  validateProjectRepoUrls,
+} from "@/lib/projects/validateProjectRepoUrls";
 
 interface SendTaskComposerCreateProjectFormProps {
   readonly deviceId: string;
@@ -22,6 +30,10 @@ export default function SendTaskComposerCreateProjectForm({
   const { data: session } = useSession();
   const [name, setName] = useState("");
   const [folderPath, setFolderPath] = useState("");
+  const [repoFields, setRepoFields] = useState<AwcProjectRepoUrlsFieldsValue>({
+    repoUrls: [""],
+    defaultBranch: "",
+  });
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
 
@@ -36,6 +48,18 @@ export default function SendTaskComposerCreateProjectForm({
       return;
     }
 
+    const payload = buildRepoUrlsPayload(repoFields);
+    const urlsCheck = validateProjectRepoUrls(payload.repoUrls);
+    if (!urlsCheck.ok) {
+      setErrorMessage(urlsCheck.error);
+      return;
+    }
+    const branchCheck = validateDefaultBranch(payload.defaultBranch);
+    if (!branchCheck.ok) {
+      setErrorMessage(branchCheck.error);
+      return;
+    }
+
     setIsSaving(true);
     setErrorMessage(null);
 
@@ -44,6 +68,8 @@ export default function SendTaskComposerCreateProjectForm({
         name,
         folderPath,
         deviceId,
+        repoUrls: urlsCheck.repoUrls,
+        defaultBranch: branchCheck.defaultBranch,
       });
 
       if (!result.ok) {
@@ -91,6 +117,13 @@ export default function SendTaskComposerCreateProjectForm({
         Witch Live on your Mac. RAG and memory are stored under{" "}
         <code className="text-[11px]">.agent-witch/</code> inside the folder.
       </p>
+      <div className="mt-4 border-t border-gray-100 pt-4 dark:border-gray-800">
+        <AwcProjectRepoUrlsFields
+          value={repoFields}
+          onChange={setRepoFields}
+          disabled={isSaving}
+        />
+      </div>
       {errorMessage !== null ? (
         <p className="mt-2 text-sm text-error-600 dark:text-error-400">
           {errorMessage}
