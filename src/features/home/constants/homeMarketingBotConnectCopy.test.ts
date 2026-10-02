@@ -46,8 +46,13 @@ describe("home marketing bot-to-bot connect (Grok launch)", () => {
     expect(body).toMatch(/list_project_inbox/);
     expect(body).toMatch(/ack_project_message/);
     expect(body).toMatch(/prefer register_project_webhook|Inbox: prefer/i);
-    expect(body).toMatch(/aw_ required|require aw_/i);
-    expect(body).toMatch(/not on awc_proj_ allowlist/);
+    expect(body).toMatch(
+      /Prefer agent-access \(aw_\) for register_project_webhook and ack_project_message/i,
+    );
+    expect(body).toMatch(
+      /register_project_webhook, ack_project_message, rotate_project_api_key/,
+    );
+    expect(body).not.toMatch(/not on awc_proj_ allowlist/);
     expect(body).toMatch(/thin protocol metadata|no media\/blobs/i);
     expect(body).toContain("summary ≤ 200 chars");
     expect(body).toContain("refs ≤ 768 bytes");
@@ -57,5 +62,7 @@ describe("home marketing bot-to-bot connect (Grok launch)", () => {
     expect(body).toContain("Rate limit: 60 messages per rolling 24h per sender membership");
     expect(body).toMatch(/leave_project/);
     expect(body).toMatch(/Dual-Bearer|awc_proj_/i);
+    expect(body).toMatch(/register_project_webhook/);
+    expect(body).toMatch(/list_project_inbox|ack_project_message/);
   });
 });

@@ -59,8 +59,8 @@ export const buildProjectInviteAgentPrompt = (input: {
     `   a) get_my_project_access { "projectId": "${projectIdHint}" } until status is active (if not yet). When active|owner, response may include briefing once.`,
     `   b) REQUIRED once: get_project_briefing { "projectId": "${projectIdHint}" } for project name, your display name/teamLabel, peers, how to project_dispatch, and bound playbooks.`,
     `   c) rotate_project_api_key { "projectId": "${projectIdHint}" } once — store awc_proj_… (plaintext once).`,
-    "      MCP accepts agent-access Bearer OR active awc_proj_ for project-scoped tools (list_project_peers, get_project_acl, get_my_project_access, project_dispatch, list_project_inbox, rotate_project_api_key, check_membership).",
-    "      You MAY use awc_proj_ as MCP Bearer for those project-scoped calls. Keep agent-access for full MCP / catalog-wide tools (whoami, runs, workflows, check_product_updates, leave_project, register_project_webhook, ack_project_message). awc_proj_ alone 401s on non-project tools — do not drop agent-access if you still need them.",
+    "      MCP accepts agent-access Bearer OR active awc_proj_ for project-scoped tools (list_project_peers, get_project_acl, get_my_project_access, project_dispatch, list_project_inbox, register_project_webhook, ack_project_message, rotate_project_api_key, check_membership).",
+    "      Prefer agent-access Bearer for register_project_webhook and ack_project_message; awc_proj_ is also allowed for those. You MAY use awc_proj_ as MCP Bearer for other project-scoped calls. Keep agent-access for full MCP / catalog-wide tools (whoami, runs, workflows, check_product_updates, leave_project). awc_proj_ alone 401s on non-project tools — do not drop agent-access if you still need them.",
     `   d) get_project_acl { "projectId": "${projectIdHint}" } — includes peers + self when available.`,
     `   e) REQUIRED: list_project_peers { "projectId": "${projectIdHint}" }.`,
     "      Note your projectDisplayName from self. Expect peers[] with projectDisplayName, teamLabel, isAgent, isOwner (owner included as isOwner: true); empty peers besides the owner is normal if you are the only member. Use exact toProjectDisplayName for dispatch — do not invent names.",
@@ -72,8 +72,9 @@ export const buildProjectInviteAgentPrompt = (input: {
     "   Cloud inbox carries thin protocol metadata only: summary ≤ 200 chars; refs ≤ 768 bytes; no media/blobs (media_not_allowed). Use only localPath / P2P refs for bulky payloads. Delete-on-ack: acked messages are deleted; unacked messages expire after 3 days. Rate limit: 60 messages per rolling 24h per sender membership.",
     "",
     "7. Inbox delivery (webhook-first, else poll) — after peers summary:",
-    `   Prefer: if you can host a public HTTPS endpoint, register_project_webhook { "projectId": "${projectIdHint}", "webhookUrl": "https://…" } with agent-access Bearer (aw_ required — not on awc_proj_ allowlist). Store returned secret once; AWC signs X-AWC-Signature over timestamp.messageId.body. Success: { ok, webhookId, webhookUrl, secret, note }. MCP only (no public REST register in v1).`,
-    `   Else: poll list_project_inbox { "projectId": "${projectIdHint}", "since"?: "<ISO>", "limit"?: <n> } then ack_project_message { "messageId": "<id>" } (ack needs agent-access Bearer).`,
+    `   Prefer: if you can host a public HTTPS endpoint, register_project_webhook({ "projectId": "${projectIdHint}", "webhookUrl": "https://…" }) — store secret once; AWC signs X-AWC-Signature over timestamp.messageId.body. Success: { ok, webhookId, webhookUrl, secret, note }. MCP only (no public REST register in v1).`,
+    `   Else: poll list_project_inbox { "projectId": "${projectIdHint}", "since"?: "<ISO>", "limit"?: <n> } then ack_project_message { "messageId": "<id>" }.`,
+    "   Prefer agent-access Bearer for register_project_webhook and ack_project_message; awc_proj_ also allowed for those tools.",
     "",
     "8. Leaving / disconnecting (no owner Approve needed):",
     `   You may leave this project yourself anytime via leave_project { "projectId": "${projectIdHint}", "confirm": true } — confirm:true is required.`,
@@ -85,7 +86,7 @@ export const buildProjectInviteAgentPrompt = (input: {
     "   Start with sinceCatalogVersion 0 after join; afterwards pass the last catalogVersion you stored.",
     "   Response includes catalogVersion, entries[], tools[], connect, and adaptHint.",
     "   When hasUpdates (catalog advances): adapt behavior from entries[].adapt, tools, connect, and adaptHint; tell your user briefly that the product catalog advanced.",
-    "   Store returned catalogVersion for the next call. check_product_updates is catalog-wide — use agent-access Bearer (required/preferred); awc_proj_ alone 401s. Dual-auth: awc_proj_ OK only for project-scoped tools listed in step 4c. register_project_webhook and ack_project_message require agent-access Bearer (aw_).",
+    "   Store returned catalogVersion for the next call. check_product_updates is catalog-wide — use agent-access Bearer (required/preferred); awc_proj_ alone 401s. Dual-auth: awc_proj_ OK only for project-scoped tools listed in step 4c; prefer agent-access for register_project_webhook and ack_project_message.",
   ];
   if (projectLine) {
     lines.push("", projectLine);

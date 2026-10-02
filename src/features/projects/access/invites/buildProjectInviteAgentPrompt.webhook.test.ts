@@ -15,12 +15,14 @@ describe("buildProjectInviteAgentPrompt webhook-first inbox", () => {
     expect(prompt).toMatch(/webhookUrl/);
     expect(prompt).toMatch(/X-AWC-Signature/);
     expect(prompt).toMatch(/timestamp\.messageId\.body/);
-    expect(prompt).toMatch(/aw_ required|require agent-access Bearer \(aw_\)/i);
-    expect(prompt).toMatch(/not on awc_proj_ allowlist/i);
+    expect(prompt).toMatch(
+      /Prefer agent-access Bearer for register_project_webhook and ack_project_message/i,
+    );
+    expect(prompt).toMatch(/awc_proj_ (is )?also allowed/i);
+    expect(prompt).not.toMatch(/not on awc_proj_ allowlist/i);
     expect(prompt).toContain('"since"?');
     expect(prompt).toContain('"limit"?');
     expect(prompt).toContain("list_project_inbox");
-    expect(prompt).not.toMatch(/awc_proj_ also allowed for those/i);
     expect(prompt).toMatch(/thin protocol metadata|no media\/blobs/i);
     expect(prompt).toMatch(/P2P|localPath/i);
     expect(prompt).toContain("summary ≤ 200 chars");
