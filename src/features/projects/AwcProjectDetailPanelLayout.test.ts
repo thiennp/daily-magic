@@ -14,6 +14,9 @@ describe("AwcProjectDetailPanel layout", () => {
       /xl:grid-cols-\[minmax\(0,1fr\)_minmax\(18rem,22rem\)\]/,
     );
     expect(detailPanelSource).toMatch(/<aside[\s\S]*AwcProjectAccessPanel/);
+    expect(detailPanelSource).toMatch(
+      /AwcProjectDeleteControl[\s\S]*variant="detail"/,
+    );
     expect(detailPanelSource).not.toMatch(
       /AwcProjectRepoUrlsSection[\s\S]*AwcProjectAccessPanel[\s\S]*AwcProjectDeleteControl/,
     );

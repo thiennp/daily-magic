@@ -1,7 +1,6 @@
 "use client";
 
 import AwcProjectRepoUrlsSection from "@/features/projects/repoUrls/AwcProjectRepoUrlsSection";
-import AwcProjectDeleteControl from "@/features/projects/AwcProjectDeleteControl";
 import AwcProjectEditOnMacActions from "@/features/projects/AwcProjectEditOnMacActions";
 import AwcProjectNameEditor from "@/features/projects/AwcProjectNameEditor";
 import AwcProjectPresenceBadge from "@/features/projects/AwcProjectPresenceBadge";
@@ -92,7 +91,6 @@ export default function AwcProjectDetailPrimaryColumn({
         isLoading={isCompositionLoading}
       />
       <AwcProjectRepoUrlsSection project={project} />
-      <AwcProjectDeleteControl project={project} variant="detail" />
     </div>
   );
 }

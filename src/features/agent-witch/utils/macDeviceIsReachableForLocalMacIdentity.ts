@@ -8,10 +8,5 @@ export const macDeviceIsReachableForLocalMacIdentity = (
   device: MacDevicePresence,
 ): boolean => {
   const tier = resolveMacPresenceTier(device);
-  return (
-    tier === "live" ||
-    tier === "live_other_instance" ||
-    tier === "recent" ||
-    device.isConnected
-  );
+  return tier === "live" || tier === "live_other_instance" || tier === "recent";
 };

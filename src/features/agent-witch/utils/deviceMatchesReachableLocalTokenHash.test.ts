@@ -30,4 +30,18 @@ describe("deviceMatchesReachableLocalTokenHash", () => {
       ),
     ).toBe(true);
   });
+
+  it("is false when presence tier is offline even if isConnected is stale", () => {
+    expect(
+      deviceMatchesReachableLocalTokenHash(
+        {
+          tokenHash: "stale-hash",
+          isConnected: true,
+          isOnline: false,
+          presenceTier: "offline",
+        },
+        "stale-hash",
+      ),
+    ).toBe(false);
+  });
 });
