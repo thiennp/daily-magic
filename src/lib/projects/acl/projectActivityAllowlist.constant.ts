@@ -26,6 +26,7 @@ export const PROJECT_ACTIVITY_ALLOWLISTED_ACTIONS = [
   "membership.rename_display",
   "msg.dispatch",
   "msg.ack",
+  "msg.clear",
   "webhook.register",
   "webhook.update",
   "webhook.disable",
@@ -57,4 +58,6 @@ export const PROJECT_ACTIVITY_SAFE_DETAIL_KEYS = [
   "recipientCount",
   "kind",
   "count",
+  "deletedMessages",
+  "deletedDeliveries",
 ] as const;

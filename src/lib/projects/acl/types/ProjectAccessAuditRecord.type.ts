@@ -21,6 +21,7 @@ export type ProjectAccessAuditAction =
   | "webhook.disable"
   | "msg.dispatch"
   | "msg.ack"
+  | "msg.clear"
   | "membership.set_display_name"
   | "membership.rename_display";
 
