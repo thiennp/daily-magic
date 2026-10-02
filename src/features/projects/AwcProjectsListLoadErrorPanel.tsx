@@ -9,7 +9,7 @@ export default function AwcProjectsListLoadErrorPanel({
   onRetry,
 }: AwcProjectsListLoadErrorPanelProps) {
   return (
-    <div className="mt-4 flex flex-col gap-3">
+    <div className="flex flex-col gap-3 py-6">
       <p className="text-sm font-medium text-gray-800 dark:text-white/90">
         {AWC_PROJECTS_PAGE_COPY.loadFailedTitle}
       </p>

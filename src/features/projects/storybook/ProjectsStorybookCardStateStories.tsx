@@ -41,7 +41,7 @@ const ProjectsStorybookCardStateStories = ({
 
     <ProjectsStorybookFrame
       title="Project card · Mac offline"
-      description="Edit on Mac disabled with last-seen helper text."
+      description="Edit on Mac disabled with last-seen helper text. Delete project stays available (cloud record only)."
       viewport={viewport}
     >
       <AwcProjectCard

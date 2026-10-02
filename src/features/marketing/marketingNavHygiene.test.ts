@@ -36,6 +36,17 @@ describe("marketing nav hygiene", () => {
     expect(offenders).toEqual([]);
   });
 
+  it("does not expose staff styleguide or a Menu label in the marketing header", () => {
+    const headerSource = readFileSync(
+      join(process.cwd(), "src/features/marketing/MarketingHeaderNav.tsx"),
+      "utf8",
+    );
+
+    expect(headerSource).not.toContain("/styleguide");
+    expect(headerSource).not.toMatch(/>\s*Styleguide\s*</);
+    expect(headerSource).not.toMatch(/>\s*Menu\s*</);
+  });
+
   it("uses existing auth entry for signup CTA", () => {
     const headerSource = readFileSync(
       join(process.cwd(), "src/features/marketing/MarketingHeaderNav.tsx"),

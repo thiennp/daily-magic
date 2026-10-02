@@ -1,5 +1,5 @@
 import { DropdownItem } from "@/components/ui/dropdown/DropdownItem";
-import AwcProjectDeleteControl from "@/features/projects/AwcProjectDeleteControl";
+import AwcProjectDeleteMenuItem from "@/features/projects/AwcProjectDeleteMenuItem";
 import buildAwcProjectDetailHref from "@/lib/projects/buildAwcProjectDetailHref";
 import type { ProjectEditOnMacCta } from "@/features/projects/utils/resolveProjectEditOnMacCta";
 
@@ -12,6 +12,7 @@ const MENU_ITEM_DISABLED_CLASS =
 interface AwcProjectCardActionsMenuItemsProps {
   readonly projectId: string;
   readonly projectName: string;
+  readonly isDefaultProject: boolean;
   readonly assignTasksHref: string;
   readonly editCta: ProjectEditOnMacCta;
   readonly editHelperId: string | undefined;
@@ -22,6 +23,7 @@ interface AwcProjectCardActionsMenuItemsProps {
 export default function AwcProjectCardActionsMenuItems({
   projectId,
   projectName,
+  isDefaultProject,
   assignTasksHref,
   editCta,
   editHelperId,
@@ -84,14 +86,16 @@ export default function AwcProjectCardActionsMenuItems({
           </button>
         )}
       </li>
-      <AwcProjectDeleteControl
-        project={{ id: projectId, name: projectName }}
-        variant="menu"
-        onDeleted={() => {
-          onClose();
-          onProjectDeleted?.();
-        }}
-      />
+      {isDefaultProject ? null : (
+        <AwcProjectDeleteMenuItem
+          projectId={projectId}
+          projectName={projectName}
+          onDeleted={() => {
+            onClose();
+            onProjectDeleted?.();
+          }}
+        />
+      )}
     </>
   );
 }

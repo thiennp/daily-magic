@@ -2,7 +2,7 @@
 
 import AppShellBottomNav from "@/features/shell/AppShellBottomNav";
 import AppShellHeader from "@/features/shell/AppShellHeader";
-import AppShellNav from "@/features/shell/AppShellNav";
+import AppShellSidebar from "@/features/shell/AppShellSidebar";
 import {
   APP_SHELL_NARROW_CONTENT_CLASS,
   APP_SHELL_NARROW_MAIN_CLASS,
@@ -18,8 +18,10 @@ interface AppShellProps {
   readonly children: React.ReactNode;
   readonly sidebar?: React.ReactNode;
   readonly contentClassName?: string;
-  /** When false, the page places desktop primary nav (e.g. home devices column). */
+  /** When false, hide the desktop primary nav + devices sidebar column. */
   readonly renderPrimaryNav?: boolean;
+  /** When false, primary nav still renders but Your Devices is omitted (e.g. admin). */
+  readonly showDevicesRail?: boolean;
 }
 
 export default function AppShell({
@@ -27,6 +29,7 @@ export default function AppShell({
   sidebar,
   contentClassName,
   renderPrimaryNav = true,
+  showDevicesRail = true,
 }: AppShellProps) {
   const mainColumnClassName =
     contentClassName === APP_SHELL_NARROW_CONTENT_CLASS
@@ -36,11 +39,7 @@ export default function AppShell({
   const showHeaderBrand = renderPrimaryNav || sidebar !== undefined;
 
   const primaryNavAside = renderPrimaryNav ? (
-    <aside className="hidden md:block">
-      <div className="sticky top-[5.25rem]">
-        <AppShellNav />
-      </div>
-    </aside>
+    <AppShellSidebar showDevicesRail={showDevicesRail} />
   ) : null;
 
   const pageBody = sidebar ? (

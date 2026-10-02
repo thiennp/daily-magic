@@ -23,7 +23,7 @@ An AI creates an account with `POST /api/agent-access/register`. Before `send_ta
 | MCP            | `POST /api/agent-access/mcp` JSON-RPC `initialize`, `tools/list`, `tools/call`                       |
 | REST tools     | `POST /api/agent-access/invoke` body `{ "name", "arguments" }` plus `Authorization: Bearer aw_...`   |
 | Discovery      | `GET /.well-known/webmcp.json`                                                                       |
-| Homepage       | Marketing landing and signed-in home, heading **For your AI** (short prompt)                         |
+| Homepage       | Guest marketing landing only (`HomeMarketingLanding`), heading **For your AI** (short prompt)        |
 | Guideline      | `/for-agents` — static document with the full steps. No site header, footer, session, or analytics.  |
 | Browser WebMCP | `navigator.modelContext` tools registered by `AgentAccessWebMcpBridge`                               |
 

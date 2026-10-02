@@ -8,7 +8,7 @@ import { MARKETING_TRUST_ITEMS } from "@/features/marketing/marketingTrustItems.
 export default function MarketingTrustStrip() {
   return (
     <ul
-      className="grid grid-cols-1 gap-6 py-8 sm:grid-cols-2 lg:grid-cols-4 lg:gap-8"
+      className="grid grid-cols-4 gap-8 py-8"
       aria-label="Trust and security highlights"
     >
       {MARKETING_TRUST_ITEMS.map((item) => (

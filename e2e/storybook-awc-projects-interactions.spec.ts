@@ -43,6 +43,9 @@ test.describe("AWC Projects — Storybook interactions", () => {
     await expect(
       menu.getByRole("menuitem", { name: "Assign tasks" }),
     ).toBeVisible();
+    await expect(
+      menu.getByRole("menuitem", { name: "Delete project" }),
+    ).toBeVisible();
     await page.locator("body").click({ position: { x: 8, y: 8 } });
     await expect(menu).toBeHidden();
   });

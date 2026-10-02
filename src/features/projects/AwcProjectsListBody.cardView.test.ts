@@ -33,6 +33,18 @@ describe("Awc projects card view", () => {
     expect(menuItems).toContain("Assign tasks");
     expect(menuItems).toContain("Edit");
     expect(card).toContain("pointer-events-auto");
+    expect(menuItems).toContain("AwcProjectDeleteMenuItem");
+    expect(menuItems).toContain("isDefaultProject");
+    expect(menuItems).not.toContain("localTokenHash");
+    expect(
+      readSource("src/features/projects/hooks/useDeleteUserProject.ts"),
+    ).toContain('method: "DELETE"');
+    expect(
+      readSource("src/features/projects/hooks/useDeleteUserProject.ts"),
+    ).toContain("/api/projects/");
+    expect(readSource("src/components/ui/dropdown/Dropdown.tsx")).toContain(
+      "createPortal",
+    );
     expect(readSource("src/components/ui/dropdown/Dropdown.tsx")).toContain(
       "useDropdownMenuKeyboard",
     );

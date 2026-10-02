@@ -71,10 +71,6 @@ export default function HomeMarketingHero() {
               {HOME_MARKETING_HERO_COPY.secondaryCta}
             </Link>
           </nav>
-
-          <div className="mt-6 lg:hidden">
-            <MarketingTrustStrip />
-          </div>
         </div>
 
         <aside aria-label="Sign in and product preview" className="space-y-5">
@@ -83,7 +79,7 @@ export default function HomeMarketingHero() {
         </aside>
       </header>
 
-      <div className="hidden lg:block">
+      <div className="hidden md:block">
         <MarketingTrustStrip />
       </div>
     </section>

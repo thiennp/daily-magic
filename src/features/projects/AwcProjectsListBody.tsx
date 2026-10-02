@@ -47,7 +47,7 @@ export default function AwcProjectsListBody({
 }: AwcProjectsListBodyProps) {
   if (isLoading) {
     return (
-      <p className="mt-4 text-sm text-gray-500 dark:text-gray-400">
+      <p className="py-6 text-center text-sm text-gray-500 dark:text-gray-400">
         Loading projects…
       </p>
     );
@@ -65,7 +65,7 @@ export default function AwcProjectsListBody({
 
   if (projects.length === 0) {
     return (
-      <div className="mt-6 flex flex-col items-center gap-3 py-6 text-center">
+      <div className="flex flex-col items-center gap-3 py-6 text-center">
         <p className="text-sm font-medium text-gray-800 dark:text-white/90">
           {AWC_PROJECTS_PAGE_COPY.emptyTitle}
         </p>

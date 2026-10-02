@@ -62,9 +62,9 @@ export const MARKETING_ICON_TILE_CLASSES = [
   "bg-brand-50/80 text-brand-600 shadow-sm ring-1 ring-brand-500/10",
 ].join(" ");
 
-/** Vertical dividers between trust metrics (multi-column sm+ only; no mobile stack) */
+/** Vertical dividers between trust metrics (4-column md+; strip hidden below md on home) */
 export const MARKETING_METRIC_DIVIDER_CLASSES =
-  "sm:even:border-l sm:even:border-brand-200/80 sm:even:pl-6 lg:border-l lg:border-brand-200/80 lg:pl-6 lg:first:border-l-0";
+  "border-l border-brand-200/80 pl-6 first:border-l-0";
 
 export const MARKETING_METRIC_VALUE_CLASSES =
   "text-2xl font-extrabold tracking-tight text-gray-900 sm:text-3xl";

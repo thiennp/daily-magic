@@ -1,13 +1,11 @@
 "use client";
 
-import HomeAgentAccessPrompt from "@/features/agent-access/HomeAgentAccessPrompt";
 import HomePromptSdlcSection from "@/features/home/components/HomePromptSdlcSection";
 import MyOfferingsPanel from "@/features/capabilities/MyOfferingsPanel";
 import TeamDirectoryPanel from "@/features/capabilities/TeamDirectoryPanel";
 import FeedbackInboxPanel from "@/features/feedback/FeedbackInboxPanel";
 import ImprovementReviewPanel from "@/features/improvements/ImprovementReviewPanel";
 import MarketplaceHomePromo from "@/features/marketplace/MarketplaceHomePromo";
-import HomeConnectedMacsPanel from "@/features/home/HomeConnectedMacsPanel";
 import HomeOnboardingMainPanel from "@/features/home/HomeOnboardingMainPanel";
 import HomeProjectsPanel from "@/features/home/HomeProjectsPanel";
 import HomeLinkAccountGate from "@/features/home/HomeLinkAccountGate";
@@ -41,11 +39,6 @@ export default function AwcHomeSignedInStoryView() {
           <aside className={HOME_LEFT_RAIL_CLASS}>
             <HomeOnboardingChecklist />
             <HomeOnboardingAutomateNudge />
-            <HomeConnectedMacsPanel
-              installCommand={AWC_STORYBOOK_INSTALL_COMMAND}
-              isWebSocketSupported={true}
-              host={STORY_HOST}
-            />
           </aside>
 
           <main className={HOME_MAIN_COLUMN_CLASS}>
@@ -70,7 +63,6 @@ export default function AwcHomeSignedInStoryView() {
       </HomeLinkAccountGate>
       <div className={HOME_DASHBOARD_GRID_CLASS}>
         <div className={HOME_MAIN_COLUMN_CLASS}>
-          <HomeAgentAccessPrompt />
           <HomePromptSdlcSection />
           <HomeCollapsibleMarketingShowcases />
         </div>

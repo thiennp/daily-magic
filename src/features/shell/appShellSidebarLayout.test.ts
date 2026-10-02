@@ -11,9 +11,24 @@ describe("AppShell sidebar layout", () => {
     );
 
     expect(source).toContain("const primaryNavAside = renderPrimaryNav");
+    expect(source).toContain(
+      "<AppShellSidebar showDevicesRail={showDevicesRail} />",
+    );
     expect(source).toMatch(
       /sidebar \? \([\s\S]*\{primaryNavAside\}[\s\S]*\{sidebar\}[\s\S]*\{children\}/,
     );
     expect(source).not.toContain('placement="embedded"');
+  });
+
+  it("pins Your Devices at the bottom of the desktop sidebar", () => {
+    const sidebarSource = readFileSync(
+      join(process.cwd(), "src/features/shell/AppShellSidebar.tsx"),
+      "utf8",
+    );
+
+    expect(sidebarSource).toContain("AppShellNav");
+    expect(sidebarSource).toContain("AppShellDevicesPanel");
+    expect(sidebarSource).toContain("mt-auto");
+    expect(sidebarSource).toContain("flex-col");
   });
 });

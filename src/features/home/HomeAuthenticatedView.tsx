@@ -1,11 +1,9 @@
-import HomeAgentAccessPrompt from "@/features/agent-access/HomeAgentAccessPrompt";
 import HomePromptSdlcSection from "@/features/home/components/HomePromptSdlcSection";
 import MyOfferingsPanel from "@/features/capabilities/MyOfferingsPanel";
 import TeamDirectoryPanel from "@/features/capabilities/TeamDirectoryPanel";
 import FeedbackInboxPanel from "@/features/feedback/FeedbackInboxPanel";
 import ImprovementReviewPanel from "@/features/improvements/ImprovementReviewPanel";
 import MarketplaceHomePromo from "@/features/marketplace/MarketplaceHomePromo";
-import HomeConnectedMacsPanel from "@/features/home/HomeConnectedMacsPanel";
 import HomeOnboardingMainPanel from "@/features/home/HomeOnboardingMainPanel";
 import HomeProjectsPanel from "@/features/home/HomeProjectsPanel";
 import HomeLinkAccountGate from "@/features/home/HomeLinkAccountGate";
@@ -56,11 +54,6 @@ export default async function HomeAuthenticatedView({
           <aside className={HOME_LEFT_RAIL_CLASS}>
             <HomeOnboardingChecklist />
             <HomeOnboardingAutomateNudge />
-            <HomeConnectedMacsPanel
-              installCommand={installCommand}
-              isWebSocketSupported={isWebSocketSupported}
-              host={host}
-            />
           </aside>
 
           <main className={HOME_MAIN_COLUMN_CLASS}>
@@ -85,7 +78,6 @@ export default async function HomeAuthenticatedView({
       </HomeLinkAccountGate>
       <div className={HOME_DASHBOARD_GRID_CLASS}>
         <div className={HOME_MAIN_COLUMN_CLASS}>
-          <HomeAgentAccessPrompt />
           <HomePromptSdlcSection />
           <HomeCollapsibleMarketingShowcases />
         </div>

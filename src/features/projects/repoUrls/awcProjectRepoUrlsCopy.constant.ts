@@ -1,8 +1,8 @@
 import { PROJECT_REPO_URLS_MAX } from "@/lib/projects/validateProjectRepoUrls";
 
 export const AWC_PROJECT_REPO_URLS_COPY = {
-  heading: "Git remotes",
-  hint: `Optional HTTPS or SSH git URLs (max ${PROJECT_REPO_URLS_MAX}). No embedded credentials. Complementary to folder refs — paths stay on local machines.`,
+  heading: "Git remotes (optional)",
+  hint: `HTTPS or SSH git URLs (max ${PROJECT_REPO_URLS_MAX}). No embedded credentials. Complementary to folder refs — paths stay on local machines.`,
   empty: "No git remotes yet.",
   urlLabel: "Repo URL",
   urlPlaceholder: "https://github.com/org/repo.git or git@host:path",

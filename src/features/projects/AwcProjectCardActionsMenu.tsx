@@ -7,6 +7,7 @@ import { Dropdown } from "@/components/ui/dropdown/Dropdown";
 import AppIcon from "@/components/ui/icon/AppIcon";
 import AwcProjectCardActionsMenuItems from "@/features/projects/AwcProjectCardActionsMenuItems";
 import type { ProjectEditOnMacCta } from "@/features/projects/utils/resolveProjectEditOnMacCta";
+import isDefaultUserProject from "@/lib/projects/isDefaultUserProject";
 import { MoreDotIcon } from "@/icons";
 import buildAgentComposerHref from "@/lib/library/buildAgentComposerHref";
 
@@ -66,6 +67,7 @@ export default function AwcProjectCardActionsMenu({
           <AwcProjectCardActionsMenuItems
             projectId={projectId}
             projectName={projectName}
+            isDefaultProject={isDefaultUserProject({ name: projectName })}
             assignTasksHref={assignTasksHref}
             editCta={editCta}
             editHelperId={editHelperId}

@@ -9,6 +9,7 @@ import { COMPANIES_ENTITY_LABEL } from "@/lib/admin/companyGroupCopy.constant";
 const ADMIN_NAV = [
   { href: "/admin/groups", label: COMPANIES_ENTITY_LABEL },
   { href: "/admin/users", label: "Users" },
+  { href: "/styleguide", label: "Styleguide" },
 ] as const;
 
 export default function AdminSidebar() {
@@ -24,7 +25,10 @@ export default function AdminSidebar() {
         className="flex flex-row flex-wrap gap-2 lg:flex-col lg:gap-1"
       >
         {ADMIN_NAV.map((item) => {
-          const isActive = pathname === item.href;
+          const isActive =
+            item.href === "/styleguide"
+              ? pathname.startsWith("/styleguide")
+              : pathname === item.href;
 
           return (
             <Link

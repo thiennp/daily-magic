@@ -45,6 +45,21 @@ describe("HomeAuthenticatedView showcases", () => {
     expect(source).toMatch(/HOME_MAIN_COLUMN_CLASS[\s\S]*<HomeProjectsPanel/);
   });
 
+  it("does not render the guest-only For your AI prompt on signed-in home", () => {
+    const source = readFileSync(
+      join(
+        dirname(fileURLToPath(import.meta.url)),
+        "HomeAuthenticatedView.tsx",
+      ),
+      "utf8",
+    );
+
+    expect(source).not.toContain("HomeAgentAccessPrompt");
+    expect(source).not.toContain(
+      'from "@/features/agent-access/HomeAgentAccessPrompt"',
+    );
+  });
+
   it("HOME-023: keeps showcases in the main center column, not full shell width", () => {
     const source = readFileSync(
       join(

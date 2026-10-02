@@ -1,8 +1,10 @@
 "use client";
 import type React from "react";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 
 import { isDocumentMouseDownOutsideDropdown } from "@/components/ui/dropdown/isDocumentMouseDownOutsideDropdown.util";
+import { useDropdownFixedPanelRect } from "@/components/ui/dropdown/useDropdownFixedPanelRect.util";
 import { useDropdownMenuKeyboard } from "@/components/ui/dropdown/useDropdownMenuKeyboard.util";
 
 interface DropdownProps {
@@ -14,6 +16,9 @@ interface DropdownProps {
   toggleRef?: React.RefObject<HTMLElement | null>;
 }
 
+const DROPDOWN_PANEL_BASE_CLASS =
+  "rounded-xl border border-gray-200 bg-white shadow-theme-lg dark:border-gray-800 dark:bg-gray-dark";
+
 export const Dropdown: React.FC<DropdownProps> = ({
   isOpen,
   onClose,
@@ -22,6 +27,13 @@ export const Dropdown: React.FC<DropdownProps> = ({
   toggleRef,
 }) => {
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const [canPortal, setCanPortal] = useState(false);
+  const useFixedPortal = toggleRef !== undefined;
+  const fixedRect = useDropdownFixedPanelRect(
+    isOpen && useFixedPortal,
+    toggleRef,
+    dropdownRef,
+  );
 
   useDropdownMenuKeyboard({
     isOpen,
@@ -29,6 +41,10 @@ export const Dropdown: React.FC<DropdownProps> = ({
     panelRef: dropdownRef,
     toggleRef,
   });
+
+  useEffect(() => {
+    setCanPortal(true);
+  }, []);
 
   useEffect(() => {
     if (!isOpen) {
@@ -56,12 +72,27 @@ export const Dropdown: React.FC<DropdownProps> = ({
 
   if (!isOpen) return null;
 
-  return (
+  const panelClassName = useFixedPortal
+    ? `fixed z-[200] ${DROPDOWN_PANEL_BASE_CLASS} ${className}`
+    : `absolute z-40 right-0 mt-2 ${DROPDOWN_PANEL_BASE_CLASS} ${className}`;
+
+  const panel = (
     <div
       ref={dropdownRef}
-      className={`absolute z-40  right-0 mt-2  rounded-xl border border-gray-200 bg-white  shadow-theme-lg dark:border-gray-800 dark:bg-gray-dark ${className}`}
+      className={panelClassName}
+      style={
+        useFixedPortal && fixedRect !== null
+          ? { top: fixedRect.top, left: fixedRect.left }
+          : undefined
+      }
     >
       {children}
     </div>
   );
+
+  if (useFixedPortal && canPortal) {
+    return createPortal(panel, document.body);
+  }
+
+  return panel;
 };

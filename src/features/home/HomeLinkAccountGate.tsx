@@ -5,12 +5,7 @@ import { useCallback, type ReactNode } from "react";
 import AppHero from "@/components/surfaces/AppHero";
 import HomeConnectComputerGuide from "@/features/home/HomeConnectComputerGuide";
 import { MAC_WORKER_BENEFIT_COPY } from "@/lib/copy/macWorkerBenefitCopy.constant";
-import HomeConnectedMacsPanel from "@/features/home/HomeConnectedMacsPanel";
-import {
-  HOME_DASHBOARD_GRID_CLASS,
-  HOME_LEFT_RAIL_CLASS,
-  HOME_MAIN_COLUMN_CLASS,
-} from "@/features/home/homeDashboardLayout.constant";
+import { HOME_MAIN_COLUMN_CLASS } from "@/features/home/homeDashboardLayout.constant";
 import useHomeConnectedMacs from "@/features/home/hooks/useHomeConnectedMacs";
 import useCursorCloudConnection from "@/features/home/hooks/useCursorCloudConnection";
 import {
@@ -84,24 +79,15 @@ function HomeLinkAccountGateContent({
 
   if (dashboardMode === "connect") {
     return (
-      <div className={HOME_DASHBOARD_GRID_CLASS}>
-        <aside className={HOME_LEFT_RAIL_CLASS}>
-          <HomeConnectedMacsPanel
-            installCommand={installCommand}
-            isWebSocketSupported={isWebSocketSupported}
-            host={host}
-          />
-        </aside>
-        <main className={HOME_MAIN_COLUMN_CLASS}>
-          <HomeConnectComputerGuide
-            appOrigin={appOrigin}
-            installCommand={installCommand}
-            isWebSocketSupported={isWebSocketSupported}
-            host={host}
-            onLinked={handleLinked}
-          />
-        </main>
-      </div>
+      <main className={HOME_MAIN_COLUMN_CLASS}>
+        <HomeConnectComputerGuide
+          appOrigin={appOrigin}
+          installCommand={installCommand}
+          isWebSocketSupported={isWebSocketSupported}
+          host={host}
+          onLinked={handleLinked}
+        />
+      </main>
     );
   }
 
