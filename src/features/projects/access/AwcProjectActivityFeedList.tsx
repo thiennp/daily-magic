@@ -3,6 +3,7 @@ import type AwcProjectActivityEvent from "@/features/projects/access/types/awcPr
 import {
   awcProjectActivityMemberAnchorId,
   formatAwcProjectActivityWhen,
+  humanizeAwcProjectActivityDetailValue,
   resolveAwcProjectActivitySubjectUserId,
 } from "@/features/projects/access/utils/awcProjectActivityDisplay.util";
 
@@ -22,7 +23,20 @@ export default function AwcProjectActivityFeedList({
       {events.map((event) => {
         const subject = resolveAwcProjectActivitySubjectUserId(event);
         const label =
-          AWC_PROJECT_ACTIVITY_ACTION_LABELS[event.action] ?? event.action;
+          AWC_PROJECT_ACTIVITY_ACTION_LABELS[event.action] ??
+          humanizeAwcProjectActivityDetailValue(event.action);
+        const outcome =
+          typeof event.detail.outcome === "string"
+            ? humanizeAwcProjectActivityDetailValue(event.detail.outcome)
+            : null;
+        const status =
+          typeof event.detail.status === "string"
+            ? humanizeAwcProjectActivityDetailValue(event.detail.status)
+            : null;
+        const nickname =
+          typeof event.detail.projectDisplayName === "string"
+            ? event.detail.projectDisplayName
+            : null;
         return (
           <li
             key={event.id}
@@ -52,6 +66,9 @@ export default function AwcProjectActivityFeedList({
                   </a>
                 </>
               ) : null}
+              {nickname ? <> · Nickname {nickname}</> : null}
+              {outcome ? <> · {outcome}</> : null}
+              {status && status !== outcome ? <> · {status}</> : null}
             </p>
           </li>
         );

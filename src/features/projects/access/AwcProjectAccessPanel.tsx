@@ -15,6 +15,7 @@ import {
   removeProjectFolderRef,
 } from "@/features/projects/access/utils/mutateProjectFolderRefs";
 import { APP_SURFACE_BODY_TEXT_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
+import { mapProjectAccessError } from "@/lib/projects/acl/mapProjectAccessError";
 
 interface AwcProjectAccessPanelProps {
   readonly projectId: string;
@@ -29,6 +30,11 @@ export default function AwcProjectAccessPanel({
   const [activityRefreshSignal, setActivityRefreshSignal] = useState(0);
   const bump = () => setActivityRefreshSignal((v) => v + 1);
   const copy = AWC_PROJECT_ACCESS_COPY;
+
+  const clearCreatedInvite = () => {
+    access.setCreatedInviteUrl(null);
+    access.setCreatedInviteToken(null);
+  };
 
   return (
     <section
@@ -45,65 +51,85 @@ export default function AwcProjectAccessPanel({
       <p className="rounded-md border border-gray-200/80 bg-gray-50/80 px-3 py-2 text-xs text-gray-700 dark:border-gray-800/80 dark:bg-gray-950/40 dark:text-gray-300">
         {copy.firstConnectNote}
       </p>
-      {access.loadError ? (
-        <p className="text-sm text-red-600 dark:text-red-400">{access.loadError}</p>
+
+      {access.isLoading ? (
+        <p className="text-sm text-gray-500">{copy.loading}</p>
       ) : null}
-      <AwcProjectInvitesPanel
-        invites={access.invites}
-        createdInviteUrl={access.createdInviteUrl}
-        projectId={projectId}
-        projectName={access.projectName}
-        onCreate={() => void access.createInvite().then(bump)}
-        onRevoke={(id) => void access.revokeInvite(id).then(bump)}
-        onClearCreatedUrl={() => access.setCreatedInviteUrl(null)}
-      />
-      <AwcProjectAccessPendingList
-        projectId={projectId}
-        pending={access.pending}
-        onApprove={async (id, name) => {
-          const result = await access.approve(id, name);
-          bump();
-          return result;
-        }}
-        onDeny={(id) => void access.deny(id).then(bump)}
-      />
-      <AwcProjectAccessMembersList
-        members={access.members}
-        onRevoke={(id) => void access.revoke(id).then(bump)}
-        onRename={async (membershipId, projectDisplayName) => {
-          const result = await access.renameMember(
-            membershipId,
-            projectDisplayName,
-          );
-          bump();
-          return result;
-        }}
-      />
-      <AwcProjectAccessFolderRefs
-        folderRefs={access.folderRefs}
-        onAdd={async (machineOrDeviceRef, folderPath) => {
-          const result = await addProjectFolderRef({
-            projectId,
-            machineOrDeviceRef,
-            folderPath,
-          });
-          access.setMessage(
-            result.ok ? "Folder ref added." : (result.errorMessage ?? "Failed."),
-          );
-          if (result.ok) await access.reload();
-          return result.ok;
-        }}
-        onRemove={(refId) => {
-          void removeProjectFolderRef({ projectId, refId }).then(async (result) => {
-            access.setMessage(
-              result.ok
-                ? "Folder ref removed."
-                : (result.errorMessage ?? "Failed."),
-            );
-            await access.reload();
-          });
-        }}
-      />
+
+      {access.loadError ? (
+        <p className="rounded-md border border-amber-200/80 bg-amber-50/80 px-3 py-2 text-sm text-amber-900 dark:border-amber-900/50 dark:bg-amber-950/40 dark:text-amber-100">
+          {/owner|forbidden/i.test(access.loadError)
+            ? copy.forbidden
+            : access.loadError}
+        </p>
+      ) : null}
+
+      {!access.isLoading && !access.loadError ? (
+        <>
+          <AwcProjectInvitesPanel
+            invites={access.invites}
+            createdInviteUrl={access.createdInviteUrl}
+            createdInviteToken={access.createdInviteToken}
+            projectId={projectId}
+            projectName={access.projectName}
+            onCreate={() => void access.createInvite().then(bump)}
+            onRevoke={(id) => void access.revokeInvite(id).then(bump)}
+            onClearCreatedUrl={clearCreatedInvite}
+          />
+          <AwcProjectAccessPendingList
+            projectId={projectId}
+            pending={access.pending}
+            onApprove={async (id, name) => {
+              const result = await access.approve(id, name);
+              bump();
+              return result;
+            }}
+            onDeny={(id) => void access.deny(id).then(bump)}
+          />
+          <AwcProjectAccessMembersList
+            members={access.members}
+            onRevoke={(id) => void access.revoke(id).then(bump)}
+            onRename={async (membershipId, projectDisplayName) => {
+              const result = await access.renameMember(
+                membershipId,
+                projectDisplayName,
+              );
+              bump();
+              return result;
+            }}
+          />
+          <AwcProjectAccessFolderRefs
+            folderRefs={access.folderRefs}
+            onAdd={async (machineOrDeviceRef, folderPath) => {
+              const result = await addProjectFolderRef({
+                projectId,
+                machineOrDeviceRef,
+                folderPath,
+              });
+              access.setMessage(
+                result.ok
+                  ? "Folder ref added."
+                  : mapProjectAccessError(result.errorMessage, "Failed."),
+              );
+              if (result.ok) await access.reload();
+              return result.ok;
+            }}
+            onRemove={(refId) => {
+              void removeProjectFolderRef({ projectId, refId }).then(
+                async (result) => {
+                  access.setMessage(
+                    result.ok
+                      ? "Folder ref removed."
+                      : mapProjectAccessError(result.errorMessage, "Failed."),
+                  );
+                  await access.reload();
+                },
+              );
+            }}
+          />
+        </>
+      ) : null}
+
       {access.message ? (
         <p className="text-sm text-gray-600 dark:text-gray-300">{access.message}</p>
       ) : null}

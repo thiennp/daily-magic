@@ -12,12 +12,18 @@ export const useAwcProjectInviteActions = (input: {
   readonly reload: () => Promise<void>;
   readonly setMessage: (message: string | null) => void;
   readonly setCreatedInviteUrl: (url: string | null) => void;
+  readonly setCreatedInviteToken: (token: string | null) => void;
 }) => {
   const createInvite = async () => {
     const result = await createProjectInviteApi(input.projectId, {});
     if (result.url) {
       input.setCreatedInviteUrl(result.url);
-      input.setMessage("Invite created — copy the URL or prompt now.");
+      input.setCreatedInviteToken(
+        typeof result.token === "string" && result.token.length > 0
+          ? result.token
+          : null,
+      );
+      input.setMessage("Invite created — copy the link or prompt now.");
     } else {
       input.setMessage(
         mapProjectAccessError(

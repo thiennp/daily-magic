@@ -1,3 +1,5 @@
+import { mapProjectAccessError } from "@/lib/projects/acl/mapProjectAccessError";
+
 export const awcProjectActivityMemberAnchorId = (userId: string): string =>
   `access-member-${encodeURIComponent(userId)}`;
 
@@ -26,3 +28,8 @@ export const resolveAwcProjectActivitySubjectUserId = (event: {
   }
   return null;
 };
+
+/** Humanize snake_case / dotted failure codes in activity detail. */
+export const humanizeAwcProjectActivityDetailValue = (
+  value: string,
+): string => mapProjectAccessError(value, value);

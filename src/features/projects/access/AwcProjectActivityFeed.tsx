@@ -9,6 +9,7 @@ import { AWC_PROJECT_ACCESS_COPY } from "@/features/projects/access/awcProjectAc
 import AwcProjectActivityFeedList from "@/features/projects/access/AwcProjectActivityFeedList";
 import { useAwcProjectActivity } from "@/features/projects/access/hooks/useAwcProjectActivity";
 import { APP_SURFACE_BODY_TEXT_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
+import { mapProjectAccessError } from "@/lib/projects/acl/mapProjectAccessError";
 
 interface AwcProjectActivityFeedProps {
   readonly projectId: string;
@@ -65,7 +66,9 @@ export default function AwcProjectActivityFeed({
 
       {activity.unavailable ? (
         <p className="rounded-md border border-amber-200/80 bg-amber-50/80 px-3 py-2 text-xs text-amber-900 dark:border-amber-900/50 dark:bg-amber-950/40 dark:text-amber-100">
-          {activity.message ?? copy.activityUnavailable}
+          {activity.message
+            ? mapProjectAccessError(activity.message, activity.message)
+            : copy.activityUnavailable}
         </p>
       ) : null}
 

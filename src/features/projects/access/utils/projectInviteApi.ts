@@ -35,6 +35,7 @@ export const createProjectInviteApi = async (
   return response.json() as Promise<{
     readonly inviteId?: string;
     readonly url?: string;
+    readonly token?: string;
     readonly expiresAt?: string;
     readonly maxUses?: number;
     readonly usesRemaining?: number;

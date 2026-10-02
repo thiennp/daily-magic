@@ -16,11 +16,11 @@ export type ProjectDisplayNameValidation =
     };
 
 /**
- * Letters (any script) + combining marks, apostrophe, hyphen, and single spaces.
- * Multi-space runs rejected (Product UI rejects; do not collapse).
- * Applied after trim — leading/trailing spaces never stored.
+ * Letter tokens separated by single spaces only (Product-aligned).
+ * Length 2–32 checked after trim. Blocks @ /, controls, reserved, double spaces.
  */
-const NAME_RE = /^[\p{L}][\p{L}\p{M}'\- ]{0,31}$/u;
+const NAME_RE =
+  /^\p{L}[\p{L}\p{M}'-]*(?: \p{L}[\p{L}\p{M}'-]*)*$/u;
 
 export const validateProjectDisplayName = (
   raw: unknown,

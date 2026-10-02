@@ -14,16 +14,27 @@ describe("buildProjectInviteAgentPrompt", () => {
     ).toBe("abcTOKEN123");
   });
 
-  it("builds short actionable agent prompt with redeem_project_invite", () => {
+  it("builds MCP-only prompt with redeem_project_invite token JSON", () => {
     const prompt = buildProjectInviteAgentPrompt({
       inviteUrl: "https://example.com/invite/p/tok-xyz",
       projectId: "proj-1",
       projectName: "Demo",
     });
     expect(prompt).toContain("redeem_project_invite");
-    expect(prompt).toContain("token: tok-xyz");
-    expect(prompt).toContain("https://example.com/invite/p/tok-xyz");
+    expect(prompt).toContain('{ "token": "tok-xyz" }');
+    expect(prompt).toMatch(/pending/i);
+    expect(prompt).toMatch(/do not open a browser/i);
+    expect(prompt).not.toMatch(/open this URL/i);
+    expect(prompt).not.toContain("https://example.com/invite/p/tok-xyz");
     expect(prompt).toContain("Project: Demo (proj-1)");
-    expect(prompt).toMatch(/Approve/i);
+  });
+
+  it("prefers explicit token over URL parse", () => {
+    const prompt = buildProjectInviteAgentPrompt({
+      inviteUrl: "https://example.com/invite/p/from-url",
+      token: "explicit-tok",
+    });
+    expect(prompt).toContain('{ "token": "explicit-tok" }');
+    expect(prompt).not.toContain("from-url");
   });
 });

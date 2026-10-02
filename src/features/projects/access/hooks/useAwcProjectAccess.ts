@@ -26,6 +26,7 @@ export const useAwcProjectAccess = (projectId: string) => {
   const [message, setMessage] = useState<string | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [createdInviteUrl, setCreatedInviteUrl] = useState<string | null>(null);
+  const [createdInviteToken, setCreatedInviteToken] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   const applySnapshot = useCallback(
@@ -88,6 +89,7 @@ export const useAwcProjectAccess = (projectId: string) => {
     reload,
     setMessage: setFriendlyMessage,
     setCreatedInviteUrl,
+    setCreatedInviteToken,
   });
 
   const approve = async (requestId: string, projectDisplayName?: string) => {
@@ -142,7 +144,9 @@ export const useAwcProjectAccess = (projectId: string) => {
     message,
     loadError,
     createdInviteUrl,
+    createdInviteToken,
     setCreatedInviteUrl,
+    setCreatedInviteToken,
     isLoading,
     reload,
     approve,

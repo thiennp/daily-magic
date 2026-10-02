@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import {
   awcProjectActivityMemberAnchorId,
   formatAwcProjectActivityWhen,
+  humanizeAwcProjectActivityDetailValue,
   resolveAwcProjectActivitySubjectUserId,
 } from "@/features/projects/access/utils/awcProjectActivityDisplay.util";
 
@@ -34,6 +35,15 @@ describe("awcProjectActivityDisplay", () => {
     expect(formatAwcProjectActivityWhen("not-a-date")).toBe("not-a-date");
     expect(formatAwcProjectActivityWhen("2026-10-01T10:00:00.000Z")).toMatch(
       /2026/,
+    );
+  });
+
+  it("humanizes snake_case detail codes", () => {
+    expect(humanizeAwcProjectActivityDetailValue("display_name_taken")).toBe(
+      "That project nickname is already taken.",
+    );
+    expect(humanizeAwcProjectActivityDetailValue("allow_claim_deny")).not.toMatch(
+      /_/,
     );
   });
 });

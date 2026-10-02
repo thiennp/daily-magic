@@ -61,6 +61,7 @@ export async function POST(
     {
       inviteId: result.invite.id,
       url: result.url,
+      token: result.token,
       expiresAt: result.invite.expiresAt,
       maxUses: result.invite.maxUses,
       usesRemaining: result.invite.usesRemaining,
