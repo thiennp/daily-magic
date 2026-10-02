@@ -1,4 +1,5 @@
 import type { ProductConnectUpdateEntry } from "@/lib/agentAccess/productConnectUpdatesMeta.constant";
+import { PRODUCT_CONNECT_UPDATES_RECENT } from "@/lib/agentAccess/productConnectUpdatesRecent.constant";
 
 export const PRODUCT_CONNECT_UPDATES: readonly ProductConnectUpdateEntry[] = [
   {
@@ -88,15 +89,5 @@ export const PRODUCT_CONNECT_UPDATES: readonly ProductConnectUpdateEntry[] = [
     adapt:
       "After active membership and periodically, call check_product_updates; store catalogVersion; keep agent-access Bearer.",
   },
-  {
-    id: "owner-inbox-dispatch-60-day",
-    catalogVersion: 9,
-    at: "2026-10-02",
-    kind: "changelog",
-    title: "Owner address + 60/day inbox",
-    summary:
-      "project_dispatch to the human with toProjectDisplayName: \"Owner\". Rate limit is 60/day (hourly + 500 unacked removed). peer.joined goes to peers + owner inbox; owner tasks show fromProjectDisplayName Owner.",
-    adapt:
-      "Use \"Owner\" for human dispatch (not account name). Expect peer.joined on Approve and from Owner on owner-assigned tasks. Cap sends at 60/day.",
-  },
+  ...PRODUCT_CONNECT_UPDATES_RECENT,
 ];

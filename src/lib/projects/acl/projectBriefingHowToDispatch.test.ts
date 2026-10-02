@@ -13,7 +13,8 @@ describe("PROJECT_BRIEFING_HOW_TO_DISPATCH", () => {
       "unacked messages expire after 3 days",
     );
     expect(PROJECT_BRIEFING_HOW_TO_DISPATCH).toContain(
-      "Rate limits: 60/day (rolling 24h)",    );
+      "Rate limits: 300/hour (rolling) + max 300 unread (ack/clear frees slots)",
+    );
     expect(PROJECT_BRIEFING_HOW_TO_DISPATCH).toContain(
       'toProjectDisplayName: "Owner"',
     );

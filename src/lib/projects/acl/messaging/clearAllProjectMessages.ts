@@ -14,9 +14,9 @@ export type ClearAllProjectMessagesResult =
 /**
  * Owner-only project-wide wipe of project_messages (+ CASCADE deliveries).
  * Does NOT revoke memberships or delete webhook registrations.
- * Deleting message rows also resets the sender-keyed 60/day dispatch counters
- * for messages that lived in this project (counters are COUNT of message rows,
- * not a separate table).
+ * Deleting message rows resets the project unread cap (COUNT of rows) and
+ * frees hourly-cap volume that lived in this project (hourly is also a COUNT
+ * of message rows, not a separate table).
  */
 export const clearAllProjectMessages = async (input: {
   readonly projectId: string;

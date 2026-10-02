@@ -33,6 +33,7 @@ export const dispatchProjectMessageFromOwner = async (input: {
   await ensureProjectAclSchema();
   await purgeExpiredProjectMessages();
   const rate = await assertProjectMessageDispatchRateLimits({
+    projectId: input.projectId,
     senderMembershipId: null,
     senderUserId: input.ownerUserId,
   });

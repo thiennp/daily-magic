@@ -1,21 +1,31 @@
 import {
-  PROJECT_MESSAGE_DISPATCH_DAILY_LIMIT,
+  PROJECT_MESSAGE_HOURLY_CAP,
   PROJECT_MESSAGE_LIFECYCLE_KINDS,
+  PROJECT_MESSAGE_UNREAD_CAP,
 } from "@/lib/projects/acl/messaging/projectMessage.constants";
 import { asRowArray, getSql } from "@/lib/db";
 
 export type ProjectMessageRateLimitResult =
   | { readonly ok: true }
-  | { readonly ok: false; readonly code: "rate_limited_daily" };
+  | {
+      readonly ok: false;
+      readonly code: "rate_limited_hourly" | "unread_cap";
+    };
 
-/** Daily cap for user/owner dispatches only — lifecycle kinds (peer.joined/left) excluded. */
+/**
+ * Dispatch path caps (no 60/day; messaging tools skip agent-access mutate bucket):
+ * 1) per-sender rolling 1h user/owner dispatches (lifecycle kinds excluded)
+ * 2) project-wide unread = COUNT of project_messages rows (delete-on-ack)
+ */
 export const assertProjectMessageDispatchRateLimits = async (input: {
+  readonly projectId: string;
   readonly senderMembershipId: string | null;
   readonly senderUserId: string;
 }): Promise<ProjectMessageRateLimitResult> => {
   const sql = getSql();
   const lifecycleKinds = [...PROJECT_MESSAGE_LIFECYCLE_KINDS];
-  const dailyRows = asRowArray(
+
+  const hourlyRows = asRowArray(
     await sql`
       SELECT COUNT(*)::int AS c
       FROM project_messages
@@ -27,12 +37,24 @@ export const assertProjectMessageDispatchRateLimits = async (input: {
           )
         )
         AND NOT (kind = ANY(${lifecycleKinds}::text[]))
-        AND created_at > NOW() - INTERVAL '24 hours'
+        AND created_at > NOW() - INTERVAL '1 hour'
     `,
   );
-  const dailyCount = Number(dailyRows[0]?.c ?? 0);
-  if (dailyCount >= PROJECT_MESSAGE_DISPATCH_DAILY_LIMIT) {
-    return { ok: false, code: "rate_limited_daily" };
+  const hourlyCount = Number(hourlyRows[0]?.c ?? 0);
+  if (hourlyCount >= PROJECT_MESSAGE_HOURLY_CAP) {
+    return { ok: false, code: "rate_limited_hourly" };
+  }
+
+  const unreadRows = asRowArray(
+    await sql`
+      SELECT COUNT(*)::int AS c
+      FROM project_messages
+      WHERE project_id = ${input.projectId}
+    `,
+  );
+  const unreadCount = Number(unreadRows[0]?.c ?? 0);
+  if (unreadCount >= PROJECT_MESSAGE_UNREAD_CAP) {
+    return { ok: false, code: "unread_cap" };
   }
 
   return { ok: true };

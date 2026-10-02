@@ -36,8 +36,6 @@ export const AGENT_ACCESS_MUTATING_TOOLS = [
   "request_project_access",
   "redeem_project_invite",
   "rotate_project_api_key",
-  "ack_project_message",
-  "project_dispatch",
   "register_project_webhook",
   "mint_allow_claim",
 ] as const;
