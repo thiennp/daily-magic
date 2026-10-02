@@ -1,7 +1,10 @@
 import type { ReactElement, ReactNode } from "react";
 
-export const PROMPT_SDLC_FIELD_CLASS =
-  "mt-2 w-full rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm dark:border-gray-700 dark:bg-gray-800";
+import AwcFormField, {
+  AWC_FORM_CONTROL_CLASS,
+} from "@/components/form/AwcFormField";
+
+export const PROMPT_SDLC_FIELD_CLASS = AWC_FORM_CONTROL_CLASS;
 
 interface PromptSdlcFieldProps {
   readonly id: string;
@@ -15,14 +18,8 @@ export default function PromptSdlcField({
   children,
 }: PromptSdlcFieldProps): ReactElement {
   return (
-    <div>
-      <label
-        className="block text-sm font-medium text-gray-800 dark:text-white/90"
-        htmlFor={id}
-      >
-        {label}
-      </label>
+    <AwcFormField id={id} label={label}>
       {children}
-    </div>
+    </AwcFormField>
   );
 }

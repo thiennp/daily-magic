@@ -1,9 +1,18 @@
 import Link from "next/link";
 import type { ReactElement } from "react";
 
+import HomePromptOptimizerComposeCard from "@/features/home/components/HomePromptOptimizerComposeCard";
 import { AGENT_WITCH_PRODUCT_NAME } from "@/lib/agentWitch/agentWitchProductName.constant";
 
-export default function HomePromptSdlcSection(): ReactElement {
+interface HomePromptSdlcSectionProps {
+  readonly showComposeForm?: boolean;
+  readonly storybookPreview?: boolean;
+}
+
+export default function HomePromptSdlcSection({
+  showComposeForm = false,
+  storybookPreview = false,
+}: HomePromptSdlcSectionProps = {}): ReactElement {
   return (
     <section
       id="prompt-optimizer"
@@ -41,6 +50,9 @@ export default function HomePromptSdlcSection(): ReactElement {
           Why this score is reliable
         </Link>
       </p>
+      {showComposeForm ? (
+        <HomePromptOptimizerComposeCard storybookPreview={storybookPreview} />
+      ) : null}
     </section>
   );
 }

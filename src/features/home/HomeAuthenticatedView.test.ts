@@ -60,6 +60,18 @@ describe("HomeAuthenticatedView showcases", () => {
     );
   });
 
+  it("shows the prompt optimizer compose form on signed-in home", () => {
+    const source = readFileSync(
+      join(
+        dirname(fileURLToPath(import.meta.url)),
+        "HomeAuthenticatedView.tsx",
+      ),
+      "utf8",
+    );
+
+    expect(source).toContain("<HomePromptSdlcSection showComposeForm");
+  });
+
   it("HOME-023: keeps showcases in the main center column, not full shell width", () => {
     const source = readFileSync(
       join(

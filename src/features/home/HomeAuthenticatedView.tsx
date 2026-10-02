@@ -78,7 +78,7 @@ export default async function HomeAuthenticatedView({
       </HomeLinkAccountGate>
       <div className={HOME_DASHBOARD_GRID_CLASS}>
         <div className={HOME_MAIN_COLUMN_CLASS}>
-          <HomePromptSdlcSection />
+          <HomePromptSdlcSection showComposeForm />
           <HomeCollapsibleMarketingShowcases />
         </div>
       </div>

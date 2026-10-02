@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "builtAt": "2026-10-02T07:11:12.125Z",
+  "builtAt": "2026-10-02T07:19:20.511Z",
   "idf": {
     "0": 3.564230191662831,
     "1": 2.605847244303372,
@@ -82,7 +82,7 @@
     "223": 7.543911845564792,
     "241": 7.543911845564792,
     "242": 7.543911845564792,
-    "247": 7.543911845564792,
+    "248": 7.543911845564792,
     "300": 7.138446737456627,
     "403": 7.138446737456627,
     "404": 6.627621113690637,
@@ -17095,7 +17095,7 @@
       "featureSlug": "shell",
       "sourcePath": "src/features/shell/KNOWN_ISSUES.md",
       "section": "App shell — known issues",
-      "text": "| ID        | Symptom                                                                                       | Fix / test                                                                                            |\n| --------- | --------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |\n| SHELL-001 | New task provider lived inside per-page `AppShell`, so route changes remounted the live panel | Provider moved to root layout; sticky dock in AGENT-030                                               |\n| SHELL-002 | Primary nav exposed Library / Marketplace / Reports before core loop                          | UX-001: Home → New task → Reports; workflow onboarding optional (`docs/product/ux-simplification.md`) |\n| SHELL-003 | Team-only nav and admin link shown without group context                                      | `filterAppNavForShellContext` gates Automations + admin; Marketplace always (solo harness install)    |\n| SHELL-004 | Your Devices only in `hidden md:block` sidebar — missing on mobile after home rail move       | `AppShell` `mobileDevicesRail` (`md:hidden`); admin uses `showDevicesRail={false}`; `appShellSidebarLayout.test.ts` |",
+      "text": "| ID        | Symptom                                                                                       | Fix / test                                                                                                          |\n| --------- | --------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |\n| SHELL-001 | New task provider lived inside per-page `AppShell`, so route changes remounted the live panel | Provider moved to root layout; sticky dock in AGENT-030                                                             |\n| SHELL-002 | Primary nav exposed Library / Marketplace / Reports before core loop                          | UX-001: Home → New task → Reports; workflow onboarding optional (`docs/product/ux-simplification.md`)               |\n| SHELL-003 | Team-only nav and admin link shown without group context                                      | `filterAppNavForShellContext` gates Automations + admin; Marketplace always (solo harness install)                  |\n| SHELL-004 | Your Devices only in `hidden md:block` sidebar — missing on mobile after home rail move       | `AppShell` `mobileDevicesRail` (`md:hidden`); admin uses `showDevicesRail={false}`; `appShellSidebarLayout.test.ts` |",
       "vector": {
         "id": 1.324793049694474,
         "symptom": 1.1283429207350402,
@@ -40120,9 +40120,9 @@
       "featureSlug": "docs",
       "sourcePath": "docs/guides/developer-guide/04-mac-bridge-awl-awb-awi.md",
       "section": "Install and config paths",
-      "text": "| Path                         | Contents                                                          |\n| ---------------------------- | ----------------------------------------------------------------- |\n| `~/.agent-witch/`            | Production-style install (LaunchAgents, config, harness)          |\n| `~/.local-agent-witch/`      | Localhost-origin dev install variant                              |\n| `~/.agent-witch/config.json` | Device identity, app origin — **not** production `wsUrl` override |\n| `~/.agent-witch/harness/`    | Harness file drops from browser install API                       |\n\nInstall bundle version: bump `AGENT_WITCH_INSTALL_BUNDLE_VERSION` in `apps/install/features/bundle/public-api/types.ts` whenever the shipped Mac client changes, including the prompt optimizer in `agent-witch.js`. `src/lib/agentWitch/agentWitchInstallBundleVersion.ts` re-exports that constant. A source change that is not rebuilt into `public/install/agent-witch/` does not update AWL. Current bundle: **247**. AWC’s primary nav brand (`AppShellNav`) renders that constant as `AWL {version}` under the product name so the Console chrome shows the latest compatible AWI/AWL bundle this deploy expects. That label is **not** per-device presence data—device rows still use each Mac’s reported install version.\n\n`agent.register` includes `platform`: `linux` when `process.platform` is `linux`, otherwise `mac`. The hub stores it with `updateAgentWitchDevicePlatform` (`resolveAgentRegisterPlatform`). The install script already posted platform; the dev WebSocket client does too.\n\n`AGENT_WITCH_SERVER_RELEASE_LABEL` (`src/lib/release/agentWitchServerReleaseLabel.constant.ts`) is surfaced on **`GET /api/health`** only. There is no in-app Live header badge (`AgentWitchServerReleaseBadge` / `useAgentWitchServerRelease` were removed).",
+      "text": "| Path                         | Contents                                                          |\n| ---------------------------- | ----------------------------------------------------------------- |\n| `~/.agent-witch/`            | Production-style install (LaunchAgents, config, harness)          |\n| `~/.local-agent-witch/`      | Localhost-origin dev install variant                              |\n| `~/.agent-witch/config.json` | Device identity, app origin — **not** production `wsUrl` override |\n| `~/.agent-witch/harness/`    | Harness file drops from browser install API                       |\n\nInstall bundle version: bump `AGENT_WITCH_INSTALL_BUNDLE_VERSION` in `apps/install/features/bundle/public-api/types.ts` whenever the shipped Mac client changes, including the prompt optimizer in `agent-witch.js`. `src/lib/agentWitch/agentWitchInstallBundleVersion.ts` re-exports that constant. A source change that is not rebuilt into `public/install/agent-witch/` does not update AWL. Current bundle: **248**. AWC’s primary nav brand (`AppShellNav`) renders that constant as `AWL {version}` under the product name so the Console chrome shows the latest compatible AWI/AWL bundle this deploy expects. That label is **not** per-device presence data—device rows still use each Mac’s reported install version.\n\n`agent.register` includes `platform`: `linux` when `process.platform` is `linux`, otherwise `mac`. The hub stores it with `updateAgentWitchDevicePlatform` (`resolveAgentRegisterPlatform`). The install script already posted platform; the dev WebSocket client does too.\n\n`AGENT_WITCH_SERVER_RELEASE_LABEL` (`src/lib/release/agentWitchServerReleaseLabel.constant.ts`) is surfaced on **`GET /api/health`** only. There is no in-app Live header badge (`AgentWitchServerReleaseBadge` / `useAgentWitchServerRelease` were removed).",
       "vector": {
-        "247": 0.942988980695599,
+        "248": 0.942988980695599,
         "path": 0.4016473131598076,
         "contents": 0.8563455831256058,
         "agent-witch": 1.6997538310375186,

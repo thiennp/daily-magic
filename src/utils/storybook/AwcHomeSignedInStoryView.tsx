@@ -63,7 +63,7 @@ export default function AwcHomeSignedInStoryView() {
       </HomeLinkAccountGate>
       <div className={HOME_DASHBOARD_GRID_CLASS}>
         <div className={HOME_MAIN_COLUMN_CLASS}>
-          <HomePromptSdlcSection />
+          <HomePromptSdlcSection showComposeForm storybookPreview />
           <HomeCollapsibleMarketingShowcases />
         </div>
       </div>

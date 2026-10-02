@@ -22,8 +22,16 @@ const buildPromptOptimizerFixtureBody = (
     ${error}
     <p class="lede">Goal and prompt fields populated for Storybook preview.</p>
     <form class="sdlc-form">
-      <label>Goal<input name="goal" value="Ship Storybook coverage" /></label>
-      <label>Prompt<textarea name="prompt">You are improving AWC/AWL page previews.</textarea></label>
+      <fieldset class="sdlc-fields">
+        <div class="field">
+          <span class="field-label">Goal</span>
+          <textarea class="input textarea" name="goal" rows="4">Ship Storybook coverage</textarea>
+        </div>
+        <div class="field">
+          <span class="field-label">Prompt</span>
+          <textarea class="input textarea" name="prompt" rows="10">You are improving AWC/AWL page previews.</textarea>
+        </div>
+      </fieldset>
       <button type="button" class="btn btn-primary" ${status === "ready" ? "" : "disabled"}>Run wizard</button>
     </form>
   </section>`;
