@@ -34,8 +34,8 @@ describe("buildProjectInviteAgentPrompt", () => {
     expect(prompt).toContain("get_my_project_access");
     expect(prompt).toContain("rotate_project_api_key");
     expect(prompt).toContain("awc_proj_");
-    expect(prompt).toMatch(/do NOT replace your MCP Authorization Bearer/i);
-    expect(prompt).toMatch(/does not accept awc_proj_/i);
+    expect(prompt).toMatch(/MCP accepts agent-access Bearer OR active awc_proj_/i);
+    expect(prompt).toMatch(/project-scoped tools/i);
     expect(prompt).toContain("get_project_acl");
     expect(prompt).toContain("list_project_peers");
     expect(prompt).toMatch(/REQUIRED/i);

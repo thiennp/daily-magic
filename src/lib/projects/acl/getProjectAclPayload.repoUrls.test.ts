@@ -1,10 +1,12 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { getProjectAclPayload } from "@/lib/projects/acl/getProjectAclPayload";
+import { getProjectAclPayloadRepoUrlsBaseProject } from "@/lib/projects/acl/getProjectAclPayload.repoUrls.fixtures";
 import { resetProjectAclSchemaEnsureForTests } from "@/lib/projects/acl/ensureProjectAclSchema";
 import { getUserProjectById } from "@/lib/projects/userProjectQueries";
 
 const sqlMock = vi.fn();
+const baseProject = getProjectAclPayloadRepoUrlsBaseProject;
 
 vi.mock("@/lib/db", () => ({
   getSql: () => sqlMock,
@@ -14,19 +16,6 @@ vi.mock("@/lib/db", () => ({
 vi.mock("@/lib/projects/userProjectQueries", () => ({
   getUserProjectById: vi.fn(),
 }));
-
-const baseProject = {
-  id: "proj-1",
-  ownerUserId: "owner-1",
-  deviceId: null,
-  name: "Demo",
-  folderPath: "/tmp",
-  repoUrls: ["https://github.com/org/demo.git"],
-  defaultBranch: "main",
-  lastUsedAt: null,
-  createdAt: "2026-10-01T00:00:00.000Z",
-  updatedAt: "2026-10-01T00:00:00.000Z",
-};
 
 describe("getProjectAclPayload repoUrls AuthZ", () => {
   beforeEach(() => {
@@ -108,21 +97,5 @@ describe("getProjectAclPayload repoUrls AuthZ", () => {
     expect(payload.relation).toBe("member");
     expect(payload.self.projectDisplayName).toBeNull();
     expect(payload.peers.some((p) => p.isOwner)).toBe(true);
-  });
-
-  it("non-member cannot read repoUrls", async () => {
-    vi.mocked(getUserProjectById).mockResolvedValue(baseProject);
-    sqlMock.mockImplementation(async (strings: TemplateStringsArray) => {
-      const q = String(strings);
-      if (q.includes("CREATE TABLE")) return [];
-      if (q.includes("FROM project_memberships")) return [];
-      return [];
-    });
-
-    const payload = await getProjectAclPayload({
-      projectId: "proj-1",
-      actorUserId: "stranger-1",
-    });
-    expect(payload).toEqual({ ok: false, code: "forbidden" });
   });
 });

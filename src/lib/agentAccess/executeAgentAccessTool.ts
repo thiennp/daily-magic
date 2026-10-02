@@ -6,14 +6,13 @@ import { executeAgentAccessRunTool } from "@/lib/agentAccess/executeAgentAccessR
 import { executeAgentAccessSendTask } from "@/lib/agentAccess/executeAgentAccessSendTask";
 import { executeAgentAccessWorkflowTool } from "@/lib/agentAccess/executeAgentAccessWorkflowTool";
 import { guardAgentAccessToolUse } from "@/lib/agentAccess/guardAgentAccessToolUse";
+import { guardProjectApiKeyToolUse } from "@/lib/agentAccess/guardProjectApiKeyToolUse";
 import type { AgentAccessToolCallResult } from "@/lib/agentAccess/handleAgentAccessMcpRequest";
-import { readBearerAgentAccessToken } from "@/lib/agentAccess/hashAgentAccessToken";
 import {
-  agentAccessTextResult,
-  agentAccessUnauthorized,
-  isAgentAccessActor,
-  requireAgentAccessActor,
-} from "@/lib/agentAccess/requireAgentAccessActor";
+  isMcpBearerAuth,
+  resolveMcpBearerAuth,
+} from "@/lib/agentAccess/resolveMcpBearerAuth";
+import { agentAccessTextResult } from "@/lib/agentAccess/requireAgentAccessActor";
 
 export const executeAgentAccessTool = async (input: {
   readonly name: string;
@@ -25,22 +24,33 @@ export const executeAgentAccessTool = async (input: {
     return executeAgentAccessRegisterTool(input.args, input.ip);
   }
 
-  const actor = await requireAgentAccessActor(input.authorization);
-  if (!isAgentAccessActor(actor)) {
-    return actor;
+  const auth = await resolveMcpBearerAuth(input.authorization);
+  if (!isMcpBearerAuth(auth)) {
+    return auth;
   }
 
-  const token = readBearerAgentAccessToken(input.authorization);
-  if (token === null) return agentAccessUnauthorized();
+  if (auth.kind === "project_api_key") {
+    const projectGate = guardProjectApiKeyToolUse({
+      name: input.name,
+      args: input.args,
+      projectAuth: auth.projectAuth,
+    });
+    if (projectGate !== null) {
+      return projectGate;
+    }
+  }
 
   const gated = await guardAgentAccessToolUse({
     name: input.name,
-    token,
-    userId: actor.id,
+    token: auth.token,
+    userId: auth.actor.id,
   });
   if (gated !== null) {
     return gated;
   }
+
+  const actor = auth.actor;
+  const token = auth.token;
 
   const accountResult = await executeAgentAccessAccountTools({
     actor,

@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { listProjectPeers } from "@/lib/projects/acl/messaging/listProjectPeers";
-import { listProjectPeersBaseProject } from "@/lib/projects/acl/messaging/listProjectPeers.fixtures";
+import { getProjectAclPayload } from "@/lib/projects/acl/getProjectAclPayload";
+import { getProjectAclPayloadRepoUrlsBaseProject } from "@/lib/projects/acl/getProjectAclPayload.repoUrls.fixtures";
 import { resetProjectAclSchemaEnsureForTests } from "@/lib/projects/acl/ensureProjectAclSchema";
 import { getUserProjectById } from "@/lib/projects/userProjectQueries";
 
@@ -16,15 +16,17 @@ vi.mock("@/lib/projects/userProjectQueries", () => ({
   getUserProjectById: vi.fn(),
 }));
 
-describe("listProjectPeers", () => {
+describe("getProjectAclPayload repoUrls forbidden", () => {
   beforeEach(() => {
     sqlMock.mockReset();
     resetProjectAclSchemaEnsureForTests();
     vi.mocked(getUserProjectById).mockReset();
-    vi.mocked(getUserProjectById).mockResolvedValue(listProjectPeersBaseProject);
   });
 
-  it("forbids non-members", async () => {
+  it("non-member cannot read repoUrls", async () => {
+    vi.mocked(getUserProjectById).mockResolvedValue(
+      getProjectAclPayloadRepoUrlsBaseProject,
+    );
     sqlMock.mockImplementation(async (strings: TemplateStringsArray) => {
       const q = String(strings);
       if (q.includes("CREATE TABLE")) return [];
@@ -32,8 +34,10 @@ describe("listProjectPeers", () => {
       return [];
     });
 
-    await expect(
-      listProjectPeers({ projectId: "proj-1", actorUserId: "bot-1" }),
-    ).resolves.toEqual({ ok: false, code: "forbidden" });
+    const payload = await getProjectAclPayload({
+      projectId: "proj-1",
+      actorUserId: "stranger-1",
+    });
+    expect(payload).toEqual({ ok: false, code: "forbidden" });
   });
 });
