@@ -10,15 +10,9 @@ import HomeOnboardingMainPanel from "@/features/home/HomeOnboardingMainPanel";
 import HomeProjectsPanel from "@/features/home/HomeProjectsPanel";
 import HomeLinkAccountGate from "@/features/home/HomeLinkAccountGate";
 import HomeCollapsibleMarketingShowcases from "@/features/home/HomeCollapsibleMarketingShowcases";
-import HomeOnboardingAutomateNudge from "@/features/home/HomeOnboardingAutomateNudge";
-import HomeOnboardingChecklist from "@/features/home/HomeOnboardingChecklist";
+import HomeDashboardGrid from "@/features/home/HomeDashboardGrid";
+import HomeDashboardLowerSection from "@/features/home/HomeDashboardLowerSection";
 import HomeSetupSection from "@/features/home/HomeSetupSection";
-import {
-  HOME_DASHBOARD_GRID_CLASS,
-  HOME_LEFT_RAIL_CLASS,
-  HOME_MAIN_COLUMN_CLASS,
-  HOME_RIGHT_RAIL_CLASS,
-} from "@/features/home/homeDashboardLayout.constant";
 import {
   AWC_STORYBOOK_INSTALL_COMMAND,
   AWC_STORYBOOK_USER,
@@ -34,39 +28,37 @@ export default function AwcHomeSignedInStoryView() {
         installCommand={AWC_STORYBOOK_INSTALL_COMMAND}
         isWebSocketSupported={true}
         host={STORY_HOST}
+        below={
+          <HomeDashboardLowerSection>
+            <HomePromptSdlcSection showComposeForm storybookPreview />
+            <HomeCollapsibleMarketingShowcases />
+          </HomeDashboardLowerSection>
+        }
       >
-        <div className={HOME_DASHBOARD_GRID_CLASS}>
-          <aside className={HOME_LEFT_RAIL_CLASS}>
-            <HomeOnboardingChecklist />
-            <HomeOnboardingAutomateNudge />
-          </aside>
-
-          <main className={HOME_MAIN_COLUMN_CLASS}>
-            <HomeOnboardingMainPanel
-              user={AWC_STORYBOOK_USER}
-              installCommand={AWC_STORYBOOK_INSTALL_COMMAND}
-              isWebSocketSupported={true}
-              host={STORY_HOST}
-            />
-            <HomeProjectsPanel />
-            <MyOfferingsPanel />
-            <TeamDirectoryPanel />
-          </main>
-
-          <aside className={HOME_RIGHT_RAIL_CLASS}>
-            <FeedbackInboxPanel />
-            <ImprovementReviewPanel />
-            <MarketplaceHomePromo />
-            <HomeSetupSection />
-          </aside>
-        </div>
+        <HomeDashboardGrid
+          main={
+            <>
+              <HomeOnboardingMainPanel
+                user={AWC_STORYBOOK_USER}
+                installCommand={AWC_STORYBOOK_INSTALL_COMMAND}
+                isWebSocketSupported={true}
+                host={STORY_HOST}
+              />
+              <HomeProjectsPanel />
+              <MyOfferingsPanel />
+              <TeamDirectoryPanel />
+            </>
+          }
+          right={
+            <>
+              <FeedbackInboxPanel />
+              <ImprovementReviewPanel />
+              <MarketplaceHomePromo />
+              <HomeSetupSection />
+            </>
+          }
+        />
       </HomeLinkAccountGate>
-      <div className={HOME_DASHBOARD_GRID_CLASS}>
-        <div className={HOME_MAIN_COLUMN_CLASS}>
-          <HomePromptSdlcSection showComposeForm storybookPreview />
-          <HomeCollapsibleMarketingShowcases />
-        </div>
-      </div>
     </>
   );
 }

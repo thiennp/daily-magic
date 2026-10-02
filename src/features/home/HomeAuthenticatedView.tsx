@@ -8,15 +8,9 @@ import HomeOnboardingMainPanel from "@/features/home/HomeOnboardingMainPanel";
 import HomeProjectsPanel from "@/features/home/HomeProjectsPanel";
 import HomeLinkAccountGate from "@/features/home/HomeLinkAccountGate";
 import HomeCollapsibleMarketingShowcases from "@/features/home/HomeCollapsibleMarketingShowcases";
-import HomeOnboardingAutomateNudge from "@/features/home/HomeOnboardingAutomateNudge";
-import HomeOnboardingChecklist from "@/features/home/HomeOnboardingChecklist";
+import HomeDashboardGrid from "@/features/home/HomeDashboardGrid";
+import HomeDashboardLowerSection from "@/features/home/HomeDashboardLowerSection";
 import HomeSetupSection from "@/features/home/HomeSetupSection";
-import {
-  HOME_DASHBOARD_GRID_CLASS,
-  HOME_LEFT_RAIL_CLASS,
-  HOME_MAIN_COLUMN_CLASS,
-  HOME_RIGHT_RAIL_CLASS,
-} from "@/features/home/homeDashboardLayout.constant";
 import { buildAppOriginFromHeaders } from "@/lib/agentWitch/buildAgentWitchInstallUrls";
 import { buildLocalAgentInstallUrlsFromHeaders } from "@/lib/agentWitch/buildLocalAgentInstallCommand";
 import { isAgentWitchWebSocketAvailableForHost } from "@/lib/agentWitch/isAgentWitchWebSocketAvailable";
@@ -43,20 +37,21 @@ export default async function HomeAuthenticatedView({
   const isWebSocketSupported = isAgentWitchWebSocketAvailableForHost(host);
 
   return (
-    <>
-      <HomeLinkAccountGate
-        appOrigin={appOrigin}
-        installCommand={installCommand}
-        isWebSocketSupported={isWebSocketSupported}
-        host={host}
-      >
-        <div className={HOME_DASHBOARD_GRID_CLASS}>
-          <aside className={HOME_LEFT_RAIL_CLASS}>
-            <HomeOnboardingChecklist />
-            <HomeOnboardingAutomateNudge />
-          </aside>
-
-          <main className={HOME_MAIN_COLUMN_CLASS}>
+    <HomeLinkAccountGate
+      appOrigin={appOrigin}
+      installCommand={installCommand}
+      isWebSocketSupported={isWebSocketSupported}
+      host={host}
+      below={
+        <HomeDashboardLowerSection>
+          <HomePromptSdlcSection showComposeForm />
+          <HomeCollapsibleMarketingShowcases />
+        </HomeDashboardLowerSection>
+      }
+    >
+      <HomeDashboardGrid
+        main={
+          <>
             <HomeOnboardingMainPanel
               user={user}
               installCommand={installCommand}
@@ -66,22 +61,17 @@ export default async function HomeAuthenticatedView({
             <HomeProjectsPanel />
             <MyOfferingsPanel />
             <TeamDirectoryPanel />
-          </main>
-
-          <aside className={HOME_RIGHT_RAIL_CLASS}>
+          </>
+        }
+        right={
+          <>
             <FeedbackInboxPanel />
             <ImprovementReviewPanel />
             <MarketplaceHomePromo />
             <HomeSetupSection />
-          </aside>
-        </div>
-      </HomeLinkAccountGate>
-      <div className={HOME_DASHBOARD_GRID_CLASS}>
-        <div className={HOME_MAIN_COLUMN_CLASS}>
-          <HomePromptSdlcSection showComposeForm />
-          <HomeCollapsibleMarketingShowcases />
-        </div>
-      </div>
-    </>
+          </>
+        }
+      />
+    </HomeLinkAccountGate>
   );
 }

@@ -5,7 +5,9 @@ import { useCallback, type ReactNode } from "react";
 import AppHero from "@/components/surfaces/AppHero";
 import HomeConnectComputerGuide from "@/features/home/HomeConnectComputerGuide";
 import { MAC_WORKER_BENEFIT_COPY } from "@/lib/copy/macWorkerBenefitCopy.constant";
-import { HOME_MAIN_COLUMN_CLASS } from "@/features/home/homeDashboardLayout.constant";
+import { HOME_MAIN_COLUMN_WITHOUT_LEFT_RAIL_CLASS } from "@/features/home/homeDashboardLayout.constant";
+import { HomeLeftRailVisibilityProvider } from "@/features/home/HomeLeftRailVisibility";
+import useHomeLeftRailVisible from "@/features/home/hooks/useHomeLeftRailVisible";
 import useHomeConnectedMacs from "@/features/home/hooks/useHomeConnectedMacs";
 import useCursorCloudConnection from "@/features/home/hooks/useCursorCloudConnection";
 import {
@@ -14,12 +16,14 @@ import {
 } from "@/features/home/PairedDeviceContext";
 import { OnboardingStepsProvider } from "@/features/home/hooks/useOnboardingSteps";
 import { resolveHomeDashboardMode } from "@/features/home/utils/resolveHomeDashboardMode";
+
 interface HomeLinkAccountGateProps {
   readonly appOrigin: string;
   readonly installCommand: string;
   readonly isWebSocketSupported: boolean;
   readonly host: string;
   readonly children: ReactNode;
+  readonly below?: ReactNode;
 }
 
 export default function HomeLinkAccountGate({
@@ -28,6 +32,7 @@ export default function HomeLinkAccountGate({
   isWebSocketSupported,
   host,
   children,
+  below,
 }: HomeLinkAccountGateProps) {
   return (
     <PairedDeviceProvider>
@@ -37,6 +42,7 @@ export default function HomeLinkAccountGate({
           installCommand={installCommand}
           isWebSocketSupported={isWebSocketSupported}
           host={host}
+          below={below}
         >
           {children}
         </HomeLinkAccountGateContent>
@@ -51,6 +57,7 @@ function HomeLinkAccountGateContent({
   isWebSocketSupported,
   host,
   children,
+  below,
 }: HomeLinkAccountGateProps) {
   const { markPaired } = usePairedDeviceContext();
   const { devices, isLoading } = useHomeConnectedMacs();
@@ -64,22 +71,20 @@ function HomeLinkAccountGateContent({
   const handleLinked = useCallback(() => {
     markPaired();
   }, [markPaired]);
-
-  if (dashboardMode === "loading") {
-    return (
-      <main className={HOME_MAIN_COLUMN_CLASS}>
+  const onboardingLeftRailVisible = useHomeLeftRailVisible();
+  const showLeftRail =
+    dashboardMode === "dashboard" && onboardingLeftRailVisible;
+  const board =
+    dashboardMode === "loading" ? (
+      <main className={HOME_MAIN_COLUMN_WITHOUT_LEFT_RAIL_CLASS}>
         <AppHero variant="plain">
           <p className="text-sm text-gray-500 dark:text-gray-400">
             {MAC_WORKER_BENEFIT_COPY.checkingMacReady}
           </p>
         </AppHero>
       </main>
-    );
-  }
-
-  if (dashboardMode === "connect") {
-    return (
-      <main className={HOME_MAIN_COLUMN_CLASS}>
+    ) : dashboardMode === "connect" ? (
+      <main className={HOME_MAIN_COLUMN_WITHOUT_LEFT_RAIL_CLASS}>
         <HomeConnectComputerGuide
           appOrigin={appOrigin}
           installCommand={installCommand}
@@ -88,8 +93,14 @@ function HomeLinkAccountGateContent({
           onLinked={handleLinked}
         />
       </main>
+    ) : (
+      children
     );
-  }
 
-  return children;
+  return (
+    <HomeLeftRailVisibilityProvider showLeftRail={showLeftRail}>
+      {board}
+      {below}
+    </HomeLeftRailVisibilityProvider>
+  );
 }

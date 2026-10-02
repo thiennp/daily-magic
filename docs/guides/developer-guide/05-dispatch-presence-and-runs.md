@@ -138,6 +138,10 @@ E2E examples: `e2e/self-delegate.spec.ts`, `e2e/progress-detail.spec.ts` (wait o
 
 ---
 
+## Home dashboard columns
+
+Signed-in Home (`HomeAuthenticatedView`) keeps onboarding in a left rail only while `shouldShowHomeLeftRail` is true and the dashboard mode is `dashboard`. When the checklist and automate nudge are hidden, `resolveHomeDashboardLayoutClasses(false)` drops the `xl` first track so main content is not offset by an empty 320px column (HOME-064). Prompt optimizer and showcases use `HomeDashboardLowerSection` with the same classes.
+
 ## Related
 
 | Topic                 | Link                                                                               |

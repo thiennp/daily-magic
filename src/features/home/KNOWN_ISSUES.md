@@ -660,6 +660,18 @@ Document every production bug or UX regression here. Each entry must link to a t
 
 ---
 
+## HOME-064 — Empty onboarding column still reserved on Home
+
+**Symptom:** After onboarding hints were hidden, Home still reserved a ~320px left column. The main welcome and projects panels sat in a narrow track beside a blank rail.
+
+**Root cause:** `HomeOnboardingChecklist` and `HomeOnboardingAutomateNudge` return null when hidden (HOME-017), but the dashboard grid always used `xl:grid-cols-[minmax(17.5rem,20rem)_…]` and `xl:col-start-2` on the main column. An empty `<aside>` still occupied the first track.
+
+**Fix:** Reserve the left rail only while the checklist or automate nudge should show, and only in dashboard mode. Otherwise the grid starts the main column in track 1. The prompt optimizer and showcases use the same layout so they stay aligned with that column.
+
+**Regression tests:** `shouldShowHomeLeftRail.test.ts`, `resolveHomeDashboardLayoutClasses.test.ts`, `HomeAuthenticatedView.test.ts` (HOME-064).
+
+---
+
 ## Adding issues
 
-Use the next ID (`HOME-062`, …). Include symptom, root cause, fix paths, and test file.
+Use the next ID (`HOME-065`, …). Include symptom, root cause, fix paths, and test file.

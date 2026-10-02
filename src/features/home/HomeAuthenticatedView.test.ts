@@ -42,7 +42,8 @@ describe("HomeAuthenticatedView showcases", () => {
     );
 
     expect(source).toContain('from "@/features/home/HomeProjectsPanel"');
-    expect(source).toMatch(/HOME_MAIN_COLUMN_CLASS[\s\S]*<HomeProjectsPanel/);
+    expect(source).toContain("<HomeDashboardGrid");
+    expect(source).toMatch(/main=\{[\s\S]*<HomeProjectsPanel/);
   });
 
   it("does not render the guest-only For your AI prompt on signed-in home", () => {
@@ -81,10 +82,25 @@ describe("HomeAuthenticatedView showcases", () => {
       "utf8",
     );
 
-    expect(source).toContain("HOME_DASHBOARD_GRID_CLASS");
-    expect(source).toContain("HOME_MAIN_COLUMN_CLASS");
+    expect(source).toContain("<HomeDashboardLowerSection>");
     expect(source).toMatch(
-      /HOME_DASHBOARD_GRID_CLASS[\s\S]*HOME_MAIN_COLUMN_CLASS[\s\S]*HomeCollapsibleMarketingShowcases/,
+      /HomeDashboardLowerSection[\s\S]*HomeCollapsibleMarketingShowcases/,
     );
+
+    const lowerSectionSource = readFileSync(
+      join(
+        dirname(fileURLToPath(import.meta.url)),
+        "HomeDashboardLowerSection.tsx",
+      ),
+      "utf8",
+    );
+    const gridSource = readFileSync(
+      join(dirname(fileURLToPath(import.meta.url)), "HomeDashboardGrid.tsx"),
+      "utf8",
+    );
+
+    expect(lowerSectionSource).toContain("layout.mainColumnClassName");
+    expect(gridSource).toContain("layout.showLeftRail");
+    expect(gridSource).toMatch(/layout\.showLeftRail \? \([\s\S]*<aside/);
   });
 });
