@@ -5,7 +5,7 @@ import {
   parseProjectIdArgs,
   parseRequestProjectAccessArgs,
 } from "@/lib/agentAccess/parseAgentAccessProjectAclArgs";
-import { checkProjectMembershipStatus } from "@/lib/projects/acl/checkProjectMembershipStatus";
+import { buildMyProjectAccessPayload } from "@/lib/projects/acl/buildMyProjectAccessPayload";
 import { createProjectAccessRequest } from "@/lib/projects/acl/createProjectAccessRequest";
 import { listProjectsForAclActor } from "@/lib/projects/acl/listProjectsForAclActor";
 
@@ -50,15 +50,11 @@ export const executeProjectAclRequestTools = async (input: {
         true,
       );
     }
-    const status = await checkProjectMembershipStatus(
-      parsed.projectId,
-      input.actor.id,
-    );
-    return agentAccessTextResult({
-      ok: true,
+    const payload = await buildMyProjectAccessPayload({
       projectId: parsed.projectId,
-      status,
+      actorUserId: input.actor.id,
     });
+    return agentAccessTextResult(payload);
   }
 
   if (input.name === "list_projects") {

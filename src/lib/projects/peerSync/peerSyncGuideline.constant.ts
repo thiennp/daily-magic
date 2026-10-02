@@ -25,6 +25,7 @@ export const PROJECT_PEER_SYNC_GUIDELINE = {
     "get_my_project_access",
     "list_projects",
     "get_project_acl",
+    "get_project_briefing",
     "check_membership",
     "leave_project",
     "mint_allow_claim",
