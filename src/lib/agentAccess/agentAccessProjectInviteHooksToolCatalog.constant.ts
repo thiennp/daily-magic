@@ -61,7 +61,7 @@ export const AGENT_ACCESS_PROJECT_INVITE_HOOKS_TOOLS: readonly AgentAccessToolDe
     {
       name: "list_project_peers",
       description:
-        "List active peers: projectDisplayName, teamLabel, isAgent. No UUID required for bot UX.",
+        "List self + active peers (members and owner): projectDisplayName, teamLabel, isAgent, isOwner. Requires active membership. No UUID required for bot UX.",
       inputSchema: {
         type: "object",
         properties: { projectId: { type: "string" } },

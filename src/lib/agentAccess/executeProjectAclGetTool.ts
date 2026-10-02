@@ -38,6 +38,8 @@ export const executeProjectAclGetTool = async (input: {
     defaultBranch: payload.defaultBranch,
     scopes: payload.scopes,
     relation: payload.relation,
+    self: payload.self,
+    peers: payload.peers,
     firstConnect: {
       role: PROJECT_ACL_FIRST_CONNECT.role,
       scopes: PROJECT_ACL_FIRST_CONNECT.scopes,

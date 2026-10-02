@@ -19,6 +19,10 @@ describe("live agent guide", () => {
     expect(names).toContain("request_project_access");
     expect(names).toContain("mint_allow_claim");
     expect(guide.projectCowork.noTokenSharing).toBe(true);
+    expect(guide.projectCowork.tools).toContain("list_project_peers");
+    expect(guide.projectCowork.tools).toContain("project_dispatch");
+    expect(guide.projectCowork.tools).toContain("list_project_inbox");
+    expect(guide.projectCowork.tools).toContain("rotate_project_api_key");
     expect(guide.whatAgentWitchIs.role).toBe("agent_support_playground");
     expect(guide.whatAgentWitchIs.summary).toContain(
       "agent-support playground",
