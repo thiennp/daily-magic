@@ -44,7 +44,7 @@ const AGENT_ACCESS_PROJECT_ACL_CORE_TOOLS: readonly AgentAccessToolDefinition[] 
     {
       name: "get_my_project_access",
       description:
-        "Return your membership status for a project: none | pending | active | revoked | owner.",
+        "Return your membership status for a project: none | pending | active | revoked | owner. When active|owner, includes onboard briefing once (same shape as get_project_briefing).",
       inputSchema: {
         type: "object",
         properties: {

@@ -1,6 +1,7 @@
 import type { AgentAccessActor } from "@/lib/agentAccess/resolveAgentAccessActor";
 import type { AgentAccessToolCallResult } from "@/lib/agentAccess/handleAgentAccessMcpRequest";
 import { executeProjectAclActivityTool } from "@/lib/agentAccess/executeProjectAclActivityTool";
+import { executeProjectAclBriefingTool } from "@/lib/agentAccess/executeProjectAclBriefingTool";
 import { executeProjectAclCheckMembershipTool } from "@/lib/agentAccess/executeProjectAclCheckMembershipTool";
 import { executeProjectAclClaimTools } from "@/lib/agentAccess/executeProjectAclClaimTools";
 import { executeProjectAclGetTool } from "@/lib/agentAccess/executeProjectAclGetTool";
@@ -29,6 +30,10 @@ export const executeAgentAccessProjectAclTool = async (input: {
   const requestResult = await executeProjectAclRequestTools(input);
   if (requestResult !== null) {
     return requestResult;
+  }
+  const briefingResult = await executeProjectAclBriefingTool(input);
+  if (briefingResult !== null) {
+    return briefingResult;
   }
   const getResult = await executeProjectAclGetTool(input);
   if (getResult !== null) {

@@ -70,6 +70,17 @@ export const AGENT_ACCESS_PROJECT_INVITE_HOOKS_TOOLS: readonly AgentAccessToolDe
       },
     },
     {
+      name: "get_project_briefing",
+      description:
+        "Active-member onboard briefing: project name, your display name/teamLabel, peers (display names only), how to project_dispatch, and bound playbook harness slugs. Call once after Approve.",
+      inputSchema: {
+        type: "object",
+        properties: { projectId: { type: "string" } },
+        required: ["projectId"],
+        additionalProperties: false,
+      },
+    },
+    {
       name: "rotate_project_api_key",
       description:
         "Rotate your project-scoped API key (awc_proj_). Same scopes; plaintext once.",
