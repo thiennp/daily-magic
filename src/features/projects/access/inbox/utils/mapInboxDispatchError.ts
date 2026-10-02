@@ -6,9 +6,13 @@ export const mapInboxDispatchError = (
 ): string => {
   if (
     result.code === "rate_limited" ||
-    result.code === "rate_limited_daily"
+    result.code === "rate_limited_daily" ||
+    result.code === "rate_limited_hourly"
   ) {
     return AWC_PROJECT_INBOX_COPY.dispatchRateLimited;
+  }
+  if (result.code === "unread_cap") {
+    return AWC_PROJECT_INBOX_COPY.dispatchUnreadCap;
   }
   if (result.code === "recipient_not_found") {
     return AWC_PROJECT_INBOX_COPY.dispatchRecipientMissing;

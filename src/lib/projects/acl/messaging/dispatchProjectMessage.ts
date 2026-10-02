@@ -42,6 +42,7 @@ export const dispatchProjectMessage = async (input: {
   await purgeExpiredProjectMessages();
 
   const rate = await assertProjectMessageDispatchRateLimits({
+    projectId: input.projectId,
     senderMembershipId: sender.id,
     senderUserId: input.actorUserId,
   });

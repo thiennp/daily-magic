@@ -63,7 +63,7 @@ export const dispatchProjectInboxMessage = async (input: {
   const code =
     codeFromField ??
     (errorMessage !== null &&
-    /^(rate_limited|rate_limited_daily|recipient_not_found)/.test(errorMessage)
+    /^(rate_limited|rate_limited_daily|rate_limited_hourly|unread_cap|recipient_not_found)/.test(errorMessage)
       ? errorMessage
       : null);
 

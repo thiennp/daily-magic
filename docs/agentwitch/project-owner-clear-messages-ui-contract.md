@@ -79,7 +79,7 @@ Wipe scope:
 
 - Deletes **all** `project_messages` for `projectId` and their `project_message_deliveries` (webhook delivery outbox rows).
 - Does **not** revoke memberships or delete `project_membership_webhooks` registrations (bots stay connected).
-- Daily dispatch rate limit (60/day) is a **COUNT of `project_messages` rows** in the last 24h keyed by sender membership / owner user — clearing this project removes those rows and **unblocks** senders for volume that lived in this project.
+- Dispatch caps: **300/hour** (rolling, per sender membership / owner user, lifecycle kinds excluded) and **max 300 unread** (`COUNT(*)` of `project_messages` for this `projectId`). Env: `AWC_PROJECT_MESSAGE_HOURLY_CAP`, `AWC_PROJECT_MESSAGE_UNREAD_CAP` (defaults 300). Error codes: `rate_limited_hourly`, `unread_cap`. Clearing this project deletes those rows and **resets unread** (and frees hourly volume that lived here). Messaging tools do **not** share the agent-access mutation bucket.
 
 Audit: `project_access_audit.action = "msg.clear"` with detail `{ deletedMessages, deletedDeliveries, count }` (Activity label: “Messages cleared”).
 
