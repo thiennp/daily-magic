@@ -41,7 +41,12 @@ describe("agent access abuse gates", () => {
     expect(isAgentAccessMutatingTool("send_task")).toBe(true);
     expect(isAgentAccessMutatingTool("run_workflow")).toBe(true);
     expect(isAgentAccessMutatingTool("get_install_command")).toBe(true);
+    expect(isAgentAccessMutatingTool("project_dispatch")).toBe(true);
     expect(isAgentAccessMutatingTool("whoami")).toBe(false);
     expect(isAgentAccessMutatingTool("list_macs")).toBe(false);
+  });
+
+  it("does not treat leave_project as a mutation (membership lifecycle)", () => {
+    expect(isAgentAccessMutatingTool("leave_project")).toBe(false);
   });
 });

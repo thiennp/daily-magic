@@ -7,7 +7,7 @@ import { resolveDispatchRecipients } from "@/lib/projects/acl/messaging/resolveD
 import { writeProjectAccessAudit } from "@/lib/projects/acl/writeProjectAccessAudit";
 
 export type DispatchProjectMessageFromOwnerResult =
-  | { readonly ok: true; readonly messageId: string }
+  | { readonly ok: true; readonly messageId: string; readonly recipientCount: number }
   | { readonly ok: false; readonly code: string };
 
 export const dispatchProjectMessageFromOwner = async (input: {
@@ -71,5 +71,5 @@ export const dispatchProjectMessageFromOwner = async (input: {
     targetUserId: recipient.user_id,
     detail: { messageId, kind: parsed.kind, recipientCount: 1, fromOwner: true },
   });
-  return { ok: true, messageId };
+  return { ok: true, messageId, recipientCount: 1 };
 };

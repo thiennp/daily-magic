@@ -28,6 +28,7 @@ describe("assertProjectMessageDispatchRateLimits", () => {
     expect(result).toEqual({ ok: true });
     expect(sqlMock).toHaveBeenCalledTimes(1);
     expect(String(sqlMock.mock.calls[0]?.[0])).toContain("INTERVAL '24 hours'");
+    expect(String(sqlMock.mock.calls[0]?.[0])).toContain("NOT (kind = ANY(");
     expect(String(sqlMock.mock.calls[0]?.[0])).not.toContain("INTERVAL '1 hour'");
     expect(String(sqlMock.mock.calls[0]?.[0])).not.toContain("acked_at IS NULL");
   });
