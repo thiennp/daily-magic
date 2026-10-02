@@ -116,7 +116,8 @@ export default function AwcProjectAccessPendingList({
                             }
                           } else {
                             setErrors((e) => {
-                              const { [req.id]: _, ...rest } = e;
+                              const rest = { ...e };
+                              delete rest[req.id];
                               return rest;
                             });
                           }

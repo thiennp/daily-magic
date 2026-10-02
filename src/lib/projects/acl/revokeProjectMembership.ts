@@ -43,6 +43,19 @@ export const revokeProjectMembership = async (input: {
     return { ok: false, code: "not_active" };
   }
   const membership = mapProjectMembershipRow(rows[0]);
+  await sql`
+    UPDATE project_membership_webhooks
+    SET enabled = FALSE, revoke_generation = revoke_generation + 1, updated_at = NOW()
+    WHERE membership_id = ${membership.id}
+      AND project_id = ${input.projectId}
+  `;
+  await writeProjectAccessAudit({
+    projectId: input.projectId,
+    actorUserId: input.ownerUserId,
+    action: "webhook.disable",
+    targetUserId: membership.userId,
+    detail: { membershipId: membership.id },
+  });
   await revokeProjectApiKeysForMembership({
     projectId: input.projectId,
     membershipId: membership.id,

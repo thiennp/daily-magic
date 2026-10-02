@@ -4,6 +4,7 @@ import { executeProjectAclActivityTool } from "@/lib/agentAccess/executeProjectA
 import { executeProjectAclCheckMembershipTool } from "@/lib/agentAccess/executeProjectAclCheckMembershipTool";
 import { executeProjectAclClaimTools } from "@/lib/agentAccess/executeProjectAclClaimTools";
 import { executeProjectAclGetTool } from "@/lib/agentAccess/executeProjectAclGetTool";
+import { executeProjectAclInviteHooksTools } from "@/lib/agentAccess/executeProjectAclInviteHooksTools";
 import { executeProjectAclRedeemInviteTool } from "@/lib/agentAccess/executeProjectAclRedeemInviteTool";
 import { executeProjectAclRequestTools } from "@/lib/agentAccess/executeProjectAclRequestTools";
 
@@ -12,6 +13,10 @@ export const executeAgentAccessProjectAclTool = async (input: {
   readonly name: string;
   readonly args: unknown;
 }): Promise<AgentAccessToolCallResult | null> => {
+  const hooksResult = await executeProjectAclInviteHooksTools(input);
+  if (hooksResult !== null) {
+    return hooksResult;
+  }
   const redeemResult = await executeProjectAclRedeemInviteTool(input);
   if (redeemResult !== null) {
     return redeemResult;
