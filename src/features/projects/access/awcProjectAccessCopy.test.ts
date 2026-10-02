@@ -65,6 +65,7 @@ describe("project ACL surface copy", () => {
     ]);
     expect(AWC_PROJECT_ACTIVITY_ACTIONS).toContain("approve");
     expect(AWC_PROJECT_ACTIVITY_ACTIONS).toContain("revoke");
+    expect(AWC_PROJECT_ACTIVITY_ACTIONS).toContain("leave");
     expect(AWC_PROJECT_ACTIVITY_ACTIONS as readonly string[]).not.toContain(
       "handoff",
     );

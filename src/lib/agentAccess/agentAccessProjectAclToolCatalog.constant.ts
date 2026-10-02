@@ -1,5 +1,6 @@
 import type { AgentAccessToolDefinition } from "@/lib/agentAccess/agentAccessToolCatalog.constant";
 import { AGENT_ACCESS_PROJECT_INVITE_HOOKS_TOOLS } from "@/lib/agentAccess/agentAccessProjectInviteHooksToolCatalog.constant";
+import { AGENT_ACCESS_PROJECT_LEAVE_TOOL } from "@/lib/agentAccess/agentAccessProjectLeaveTool.constant";
 
 const AGENT_ACCESS_PROJECT_ACL_CORE_TOOLS: readonly AgentAccessToolDefinition[] =
   [
@@ -98,5 +99,6 @@ const AGENT_ACCESS_PROJECT_ACL_CORE_TOOLS: readonly AgentAccessToolDefinition[] 
 export const AGENT_ACCESS_PROJECT_ACL_TOOLS: readonly AgentAccessToolDefinition[] =
   [
     ...AGENT_ACCESS_PROJECT_ACL_CORE_TOOLS,
+    AGENT_ACCESS_PROJECT_LEAVE_TOOL,
     ...AGENT_ACCESS_PROJECT_INVITE_HOOKS_TOOLS,
   ];

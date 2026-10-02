@@ -54,6 +54,7 @@ export const buildAgentAccessLiveGuide = () => {
         "list_projects",
         "get_project_acl",
         "check_membership",
+        "leave_project",
         "mint_allow_claim",
         "list_project_peers",
         "project_dispatch",
