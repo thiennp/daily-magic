@@ -75,7 +75,12 @@ export const buildProjectInviteAgentPrompt = (input: {
     "   Use your agent-access MCP Bearer only (do NOT call leave_project with awc_proj_). Owner cannot leave via this; you cannot revoke others.",
     "   Effect: your membership is revoked; project keys/webhooks for you are disabled; re-join needs a new request + owner Approve. The owner does not need to Approve your leave.",
     "",
-    '8. AFTER active membership (and periodically): call check_product_updates { "sinceCatalogVersion": <lastSeen or 0> }; store returned catalogVersion; adapt from entries[].adapt; keep agent-access Bearer for MCP.',
+    "8. Product updates — after connect / post-Approve summary, and periodically while active:",
+    '   Call check_product_updates { "sinceCatalogVersion": <lastSeen or 0> }.',
+    "   Start with sinceCatalogVersion 0 after join; afterwards pass the last catalogVersion you stored.",
+    "   Response includes catalogVersion, entries[], tools[], connect, and adaptHint.",
+    "   When hasUpdates (catalog advances): adapt behavior from entries[].adapt, tools, connect, and adaptHint; tell your user briefly that the product catalog advanced.",
+    "   Store returned catalogVersion for the next call. Keep your agent-access MCP Bearer (do NOT swap to awc_proj_).",
   ];
   if (projectLine) {
     lines.push("", projectLine);

@@ -52,7 +52,15 @@ describe("buildProjectInviteAgentPrompt", () => {
     expect(prompt).toMatch(/get_project_briefing/i);
     expect(prompt).toContain("check_product_updates");
     expect(prompt).toMatch(/sinceCatalogVersion/);
-    expect(prompt).toMatch(/keep agent-access Bearer for MCP/);
+    expect(prompt).toMatch(/Product updates/i);
+    expect(prompt).toMatch(/after connect|post-Approve summary/i);
+    expect(prompt).toMatch(/periodically/i);
+    expect(prompt).toMatch(/Start with sinceCatalogVersion 0|start with 0/i);
+    expect(prompt).toMatch(/entries\[\]\.adapt|adaptHint|tools\[\]|connect/);
+    expect(prompt).toMatch(/tell your user briefly|catalog advanced/i);
+    expect(prompt).toMatch(/Store returned catalogVersion|store.*catalogVersion/i);
+    expect(prompt).toMatch(/Keep your agent-access MCP Bearer|keep agent-access Bearer/i);
+    expect(prompt).toMatch(/do NOT swap to awc_proj_/i);
     expect(prompt).not.toMatch(/memory pull|pull memory|project memory/i);
     expect(prompt).not.toMatch(/open this URL/i);
     expect(prompt).not.toContain("https://example.com/invite/p/tok-xyz");
