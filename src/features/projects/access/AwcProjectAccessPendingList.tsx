@@ -59,9 +59,9 @@ export default function AwcProjectAccessPendingList({
 
   return (
     <div>
-      <h3 className="text-sm font-medium text-gray-800 dark:text-white/90">
+      <h4 className="text-xs font-semibold uppercase tracking-wide text-gray-600 dark:text-gray-300">
         {copy.pendingHeading}
-      </h3>
+      </h4>
       {pending.length === 0 ? (
         <p className="mt-1 text-sm text-gray-500">{copy.pendingEmpty}</p>
       ) : (

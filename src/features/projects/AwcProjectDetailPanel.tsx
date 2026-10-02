@@ -37,10 +37,10 @@ export default function AwcProjectDetailPanel({
   } = useAwcProjectComposition(project.id);
 
   return (
-    <div className="grid grid-cols-1 gap-8 xl:grid-cols-[minmax(0,1fr)_minmax(18rem,22rem)] xl:items-start xl:gap-10">
+    <div className="grid grid-cols-1 gap-8 xl:grid-cols-[minmax(0,1fr)_minmax(20rem,24rem)] xl:items-start xl:gap-8">
       <div className="min-w-0 xl:col-start-1 xl:row-start-1">
         <AppPanel padding="compact">
-          <p className="mb-4">
+          <p className="mb-5">
             <Link
               href="/projects"
               className="text-sm font-medium text-brand-600 hover:text-brand-700 dark:text-brand-400"

@@ -3,19 +3,12 @@
 import { useState } from "react";
 import { twMerge } from "tailwind-merge";
 
-import AwcProjectAccessFolderRefs from "@/features/projects/access/AwcProjectAccessFolderRefs";
-import AwcProjectAccessMembersList from "@/features/projects/access/AwcProjectAccessMembersList";
-import AwcProjectAccessPendingList from "@/features/projects/access/AwcProjectAccessPendingList";
+import AwcProjectAccessPanelBody from "@/features/projects/access/AwcProjectAccessPanelBody";
 import AwcProjectActivityFeed from "@/features/projects/access/AwcProjectActivityFeed";
-import AwcProjectInvitesPanel from "@/features/projects/access/invites/AwcProjectInvitesPanel";
 import { AWC_PROJECT_ACCESS_COPY } from "@/features/projects/access/awcProjectAccessCopy.constant";
 import { useAwcProjectAccess } from "@/features/projects/access/hooks/useAwcProjectAccess";
-import {
-  addProjectFolderRef,
-  removeProjectFolderRef,
-} from "@/features/projects/access/utils/mutateProjectFolderRefs";
 import { APP_SURFACE_BODY_TEXT_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
-import { mapProjectAccessError } from "@/lib/projects/acl/mapProjectAccessError";
+import { APP_SURFACE_EYEBROW_TEXT_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
 
 interface AwcProjectAccessPanelProps {
   readonly projectId: string;
@@ -30,27 +23,22 @@ export default function AwcProjectAccessPanel({
   const [activityRefreshSignal, setActivityRefreshSignal] = useState(0);
   const bump = () => setActivityRefreshSignal((v) => v + 1);
   const copy = AWC_PROJECT_ACCESS_COPY;
-
-  const clearCreatedInvite = () => {
-    access.setCreatedInviteUrl(null);
-    access.setCreatedInviteToken(null);
-  };
+  const ownerReady = !access.isLoading && !access.loadError;
 
   return (
     <section
       className={twMerge(
-        "mt-8 space-y-4 rounded-xl border border-gray-200/80 p-4 dark:border-gray-800/80",
+        "space-y-4 rounded-2xl border border-gray-200/80 bg-white/80 p-4 shadow-sm dark:border-gray-800/80 dark:bg-gray-950/40",
         className,
       )}
     >
-      <h2 className="text-base font-semibold text-gray-900 dark:text-white">
-        {copy.title}
-      </h2>
-      <p className={`text-sm ${APP_SURFACE_BODY_TEXT_CLASS}`}>{copy.intro}</p>
-      <p className="text-xs text-gray-500 dark:text-gray-400">{copy.revokeHint}</p>
-      <p className="rounded-md border border-gray-200/80 bg-gray-50/80 px-3 py-2 text-xs text-gray-700 dark:border-gray-800/80 dark:bg-gray-950/40 dark:text-gray-300">
-        {copy.firstConnectNote}
-      </p>
+      <header className="space-y-1">
+        <p className={APP_SURFACE_EYEBROW_TEXT_CLASS}>{copy.eyebrow}</p>
+        <h2 className="text-base font-semibold text-gray-900 dark:text-white">
+          {copy.title}
+        </h2>
+        <p className={`text-sm ${APP_SURFACE_BODY_TEXT_CLASS}`}>{copy.intro}</p>
+      </header>
 
       {access.isLoading ? (
         <p className="text-sm text-gray-500">{copy.loading}</p>
@@ -64,75 +52,18 @@ export default function AwcProjectAccessPanel({
         </p>
       ) : null}
 
-      {!access.isLoading && !access.loadError ? (
-        <>
-          <AwcProjectInvitesPanel
-            invites={access.invites}
-            createdInviteUrl={access.createdInviteUrl}
-            createdInviteToken={access.createdInviteToken}
-            projectId={projectId}
-            projectName={access.projectName}
-            onCreate={() => void access.createInvite().then(bump)}
-            onRevoke={(id) => void access.revokeInvite(id).then(bump)}
-            onClearCreatedUrl={clearCreatedInvite}
-          />
-          <AwcProjectAccessPendingList
-            projectId={projectId}
-            pending={access.pending}
-            onApprove={async (id, name) => {
-              const result = await access.approve(id, name);
-              bump();
-              return result;
-            }}
-            onDeny={(id) => void access.deny(id).then(bump)}
-          />
-          <AwcProjectAccessMembersList
-            members={access.members}
-            onRevoke={(id) => void access.revoke(id).then(bump)}
-            onRename={async (membershipId, projectDisplayName) => {
-              const result = await access.renameMember(
-                membershipId,
-                projectDisplayName,
-              );
-              bump();
-              return result;
-            }}
-          />
-          <AwcProjectAccessFolderRefs
-            folderRefs={access.folderRefs}
-            onAdd={async (machineOrDeviceRef, folderPath) => {
-              const result = await addProjectFolderRef({
-                projectId,
-                machineOrDeviceRef,
-                folderPath,
-              });
-              access.setMessage(
-                result.ok
-                  ? "Folder ref added."
-                  : mapProjectAccessError(result.errorMessage, "Failed."),
-              );
-              if (result.ok) await access.reload();
-              return result.ok;
-            }}
-            onRemove={(refId) => {
-              void removeProjectFolderRef({ projectId, refId }).then(
-                async (result) => {
-                  access.setMessage(
-                    result.ok
-                      ? "Folder ref removed."
-                      : mapProjectAccessError(result.errorMessage, "Failed."),
-                  );
-                  await access.reload();
-                },
-              );
-            }}
-          />
-        </>
+      {ownerReady ? (
+        <AwcProjectAccessPanelBody
+          projectId={projectId}
+          access={access}
+          onMutate={bump}
+        />
       ) : null}
 
       {access.message ? (
         <p className="text-sm text-gray-600 dark:text-gray-300">{access.message}</p>
       ) : null}
+
       <AwcProjectActivityFeed
         projectId={projectId}
         refreshSignal={activityRefreshSignal}

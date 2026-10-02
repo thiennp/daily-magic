@@ -18,6 +18,8 @@ interface AwcProjectInvitesPanelProps {
   readonly onCreate: () => void;
   readonly onRevoke: (inviteId: string) => void;
   readonly onClearCreatedUrl: () => void;
+  /** When nested under AccessSection, skip local heading/intro. */
+  readonly hideChrome?: boolean;
 }
 
 export default function AwcProjectInvitesPanel({
@@ -29,6 +31,7 @@ export default function AwcProjectInvitesPanel({
   onCreate,
   onRevoke,
   onClearCreatedUrl,
+  hideChrome = false,
 }: AwcProjectInvitesPanelProps) {
   const copy = AWC_PROJECT_ACCESS_COPY;
   const [nowMs] = useState(() => Date.now());
@@ -48,13 +51,17 @@ export default function AwcProjectInvitesPanel({
 
   return (
     <div>
-      <h3 className="text-sm font-medium text-gray-800 dark:text-white/90">
-        {copy.invitesHeading}
-      </h3>
-      <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
-        {copy.invitesIntro}
-      </p>
-      <p className="mt-1 text-[11px] text-gray-500 dark:text-gray-400">
+      {hideChrome ? null : (
+        <>
+          <h3 className="text-sm font-medium text-gray-800 dark:text-white/90">
+            {copy.invitesHeading}
+          </h3>
+          <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+            {copy.invitesIntro}
+          </p>
+        </>
+      )}
+      <p className="text-[11px] text-gray-500 dark:text-gray-400">
         {copy.invitesTokenOnceNote}
       </p>
       {createdInviteUrl ? (

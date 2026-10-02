@@ -19,8 +19,7 @@ export const AGENT_ACCESS_PROJECT_INVITE_HOOKS_TOOLS: readonly AgentAccessToolDe
     {
       name: "project_dispatch",
       description:
-        "Send thin protocol metadata to a peer by toProjectDisplayName (use reserved Owner for the project owner) or toTeamLabel. No broadcast/media/blobs/bodies. summary ≤200 chars; allowlisted refs (prUrl|commitSha|localPath|allowClaimId) only; bulky payloads via P2P/localPath.",
-      inputSchema: {
+        "Send thin protocol metadata by toProjectDisplayName (primary) or toTeamLabel. Address the human with toProjectDisplayName: \"Owner\" (reserved). No broadcast/media/blobs/bodies. summary ≤200 chars; allowlisted refs (prUrl|commitSha|localPath|allowClaimId) only; bulky payloads via P2P/localPath. Rate 60/day.",      inputSchema: {
         type: "object",
         properties: {
           projectId: { type: "string" },

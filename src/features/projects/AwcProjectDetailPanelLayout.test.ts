@@ -16,7 +16,7 @@ const detailPageSource = readFileSync(
 describe("AwcProjectDetailPanel layout", () => {
   it("places Project Access in a page-level right column on xl wide screens", () => {
     expect(detailPanelSource).toMatch(
-      /xl:grid-cols-\[minmax\(0,1fr\)_minmax\(18rem,22rem\)\]/,
+      /xl:grid-cols-\[minmax\(0,1fr\)_minmax\(20rem,24rem\)\]/,
     );
     expect(detailPanelSource).toMatch(/<aside[\s\S]*AwcProjectAccessPanel/);
     expect(detailPanelSource).toMatch(

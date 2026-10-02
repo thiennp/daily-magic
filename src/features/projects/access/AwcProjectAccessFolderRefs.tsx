@@ -17,12 +17,14 @@ interface AwcProjectAccessFolderRefsProps {
     folderPath: string,
   ) => Promise<boolean> | boolean;
   readonly onRemove: (refId: string) => void;
+  readonly hideChrome?: boolean;
 }
 
 export default function AwcProjectAccessFolderRefs({
   folderRefs,
   onAdd,
   onRemove,
+  hideChrome = false,
 }: AwcProjectAccessFolderRefsProps) {
   const copy = AWC_PROJECT_ACCESS_COPY;
   const [machineRef, setMachineRef] = useState("");
@@ -30,10 +32,14 @@ export default function AwcProjectAccessFolderRefs({
 
   return (
     <div>
-      <h3 className="text-sm font-medium text-gray-800 dark:text-white/90">
-        {copy.folderRefsHeading}
-      </h3>
-      <p className="mt-1 text-xs text-gray-500">{copy.folderRefsHint}</p>
+      {hideChrome ? null : (
+        <>
+          <h3 className="text-sm font-medium text-gray-800 dark:text-white/90">
+            {copy.folderRefsHeading}
+          </h3>
+          <p className="mt-1 text-xs text-gray-500">{copy.folderRefsHint}</p>
+        </>
+      )}
       {folderRefs.length === 0 ? (
         <p className="mt-1 text-sm text-gray-500">{copy.folderRefsEmpty}</p>
       ) : (

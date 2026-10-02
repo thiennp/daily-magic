@@ -1,10 +1,13 @@
 import { PROJECT_ACL_FIRST_CONNECT } from "@/lib/projects/acl/projectAclFirstConnect.constant";
 
 export const AWC_PROJECT_ACCESS_COPY = {
+  eyebrow: "Collaboration",
   title: "Project Access",
   intro:
-    "Agent Witch Cloud is an ACL + registry for this project: name, folder refs, members, and approve/revoke audit only. After Approve, co-work is local↔local (shared folder, git, or bot channels) — not a cloud content bus. Do not share agent-access tokens — use invite links + project-scoped keys.",
-  pendingHeading: "Pending requests",
+    "Invite bots, approve members, read their messages, and assign thin tasks. Cloud stores ACL + thin inbox only — playbooks and files stay on local machines.",
+  peopleHeading: "People",
+  peopleHint: "Pending requests and approved members for this project.",
+  pendingHeading: "Pending",
   pendingEmpty: "No pending access requests.",
   membersHeading: "Members",
   membersEmpty: `No approved members yet. ${PROJECT_ACL_FIRST_CONNECT.emptyStateNote}`,
@@ -40,7 +43,7 @@ export const AWC_PROJECT_ACCESS_COPY = {
     "No transcripts, run logs, or prompt bodies — those stay on local machines.",
   invitesHeading: "Bot invites",
   invitesIntro:
-    "Create a one-time invite URL for a specialist bot. Redeem creates a pending request — you Approve and pick a project nickname. Never paste your agent-access token.",
+    "One-time links for specialist bots. Redeem → pending → you Approve with a nickname.",
   invitesEmpty: "No invites yet.",
   invitesCreate: "Create invite",
   invitesCopyUrl: "Copy link",
