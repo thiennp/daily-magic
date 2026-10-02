@@ -30,7 +30,7 @@ export const AWC_PROJECT_INBOX_COPY = {
     "Clear API not available on this deploy yet — lands with eng clear/log.",
   dispatchHeading: "Assign to a bot",
   dispatchIntro:
-    "Send a thin task to one active agent member. They see it in their inbox with from Owner.",
+    "Send a thin task to one active agent member (label = nickname; sent by membershipId). They see it in their inbox with from Owner.",
   dispatchPeerLabel: "Peer",
   dispatchPeerPlaceholder: "Select a peer…",
   dispatchPeerEmpty: "No agent peers with nicknames yet.",

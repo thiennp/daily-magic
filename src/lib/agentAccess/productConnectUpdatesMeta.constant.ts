@@ -14,7 +14,7 @@ export interface ProductConnectUpdateEntry {
 }
 
 /** Bump whenever PRODUCT_CONNECT_UPDATES entries change. */
-export const PRODUCT_CONNECT_UPDATES_CATALOG_VERSION = 11;
+export const PRODUCT_CONNECT_UPDATES_CATALOG_VERSION = 12;
 
 export const PRODUCT_CONNECT_METHOD_SUMMARY = {
   mcpBearer: "agent-access",
@@ -22,7 +22,7 @@ export const PRODUCT_CONNECT_METHOD_SUMMARY = {
   projectScopedKeyMcpAuth: false,
   inviteRedeem: "redeem_project_invite",
   peers: "list_project_peers",
-  dispatch: "project_dispatch by toProjectDisplayName (Owner targets the human owner)",
+  dispatch: "project_dispatch prefer toMembershipId for peers; toProjectDisplayName Owner for human",
 } as const;
 
 export const PRODUCT_CONNECT_UPDATES_ADAPT_HINT =

@@ -36,4 +36,15 @@ export const PRODUCT_CONNECT_UPDATES_RECENT: readonly ProductConnectUpdateEntry[
       adapt:
         "Expect rate_limited_hourly / unread_cap (429). Ack promptly; owner Clear all resets unread. Do not treat messaging as mutation-bucket limited.",
     },
+    {
+      id: "connect-speed-auto-approve-membership-id",
+      catalogVersion: 12,
+      at: "2026-10-02",
+      kind: "connect",
+      title: "Same-owner auto-approve + toMembershipId dispatch",
+      summary:
+        "After redeem_project_invite / request_project_access, MUST call get_my_project_access: if active, skip wait for Approve; if pending, wait as today. Bots you own can join without Approve; strangers stay Pending. list_project_peers / get_project_acl may expose membershipId on self+peers. project_dispatch MUST prefer toMembershipId for peer bots; keep toProjectDisplayName: \"Owner\" for the human; exactly one of toMembershipId | toProjectDisplayName | toTeamLabel. Re-list peers after rename; old nickname may resolve ~7 days.",
+      adapt:
+        "Check get_my_project_access after redeem/request. Prefer toMembershipId from list_project_peers for peer dispatch; re-list after rename. Do not promise Socket Mode, paid relay, hosted webhook, Grok auto-wake, or faster poll defaults.",
+    },
   ];

@@ -9,14 +9,14 @@ const FIELD =
 
 interface AwcProjectInboxDispatchFieldsProps {
   readonly peers: readonly InboxDispatchPeerOption[];
-  readonly peerName: string;
+  readonly peerMembershipId: string;
   readonly summary: string;
   readonly kind: string;
   readonly prUrl: string;
   readonly commitSha: string;
   readonly localPath: string;
   readonly allowClaimId: string;
-  readonly onPeerName: (value: string) => void;
+  readonly onPeerMembershipId: (value: string) => void;
   readonly onSummary: (value: string) => void;
   readonly onKind: (value: string) => void;
   readonly onPrUrl: (value: string) => void;
@@ -27,14 +27,14 @@ interface AwcProjectInboxDispatchFieldsProps {
 
 export default function AwcProjectInboxDispatchFields({
   peers,
-  peerName,
+  peerMembershipId,
   summary,
   kind,
   prUrl,
   commitSha,
   localPath,
   allowClaimId,
-  onPeerName,
+  onPeerMembershipId,
   onSummary,
   onKind,
   onPrUrl,
@@ -49,12 +49,12 @@ export default function AwcProjectInboxDispatchFields({
         {copy.dispatchPeerLabel}
         <select
           className={FIELD}
-          value={peerName}
-          onChange={(event) => onPeerName(event.target.value)}
+          value={peerMembershipId}
+          onChange={(event) => onPeerMembershipId(event.target.value)}
         >
           <option value="">{copy.dispatchPeerPlaceholder}</option>
           {peers.map((peer) => (
-            <option key={peer.membershipId} value={peer.projectDisplayName}>
+            <option key={peer.membershipId} value={peer.membershipId}>
               {peer.projectDisplayName}
             </option>
           ))}

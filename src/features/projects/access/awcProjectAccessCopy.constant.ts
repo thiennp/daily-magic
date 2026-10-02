@@ -6,9 +6,12 @@ export const AWC_PROJECT_ACCESS_COPY = {
   intro:
     "Invite bots, approve members, read their messages, and assign thin tasks. Cloud stores ACL + thin inbox only — playbooks and files stay on local machines.",
   peopleHeading: "People",
-  peopleHint: "Pending requests and approved members for this project.",
+  peopleHint:
+    "Pending requests and approved members for this project. Bots you own can join without Approve; others stay Pending.",
   pendingHeading: "Pending",
   pendingEmpty: "No pending access requests.",
+  autoApprovedBanner: "Auto-approved — bot joined without Approve.",
+  autoApprovedBadge: "Auto-approved",
   membersHeading: "Members",
   membersEmpty: `No approved members yet. ${PROJECT_ACL_FIRST_CONNECT.emptyStateNote}`,
   folderRefsHeading: "Folder refs",
@@ -37,7 +40,7 @@ export const AWC_PROJECT_ACCESS_COPY = {
   firstConnectNote: PROJECT_ACL_FIRST_CONNECT.emptyStateNote,
   invitesHeading: "Bot invites",
   invitesIntro:
-    "One-time links for specialist bots. Redeem → pending → you Approve with a nickname.",
+    "One-time links for specialist bots. Redeem may join immediately for bots you own; strangers stay Pending until you Approve with a nickname.",
   invitesEmpty: "No invites yet.",
   invitesCreate: "Create invite",
   invitesCopyUrl: "Copy link",
@@ -63,7 +66,7 @@ export const AWC_PROJECT_ACCESS_COPY = {
   rename: "Rename",
   renameSave: "Save nickname",
   renameCancel: "Cancel",
-  renameHint: "2–32 letters, single spaces OK",
+  renameHint: "2–32 letters, single spaces OK. Old nickname works for ~7 days.",
   memberUuidMuted: "id",
   memberNoNickname: "No nickname",
   loading: "Loading Project Access…",

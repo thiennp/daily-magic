@@ -18,6 +18,7 @@ interface MemberRow {
 
 interface AwcProjectAccessMembersListProps {
   readonly members: readonly MemberRow[];
+  readonly recentlyAutoApprovedIds?: readonly string[];
   readonly onRevoke: (membershipId: string) => void;
   readonly onRename: (
     membershipId: string,
@@ -27,6 +28,7 @@ interface AwcProjectAccessMembersListProps {
 
 export default function AwcProjectAccessMembersList({
   members,
+  recentlyAutoApprovedIds = [],
   onRevoke,
   onRename,
 }: AwcProjectAccessMembersListProps) {
@@ -51,6 +53,7 @@ export default function AwcProjectAccessMembersList({
             <AwcProjectAccessMemberRow
               key={member.id}
               member={member}
+              autoApproved={recentlyAutoApprovedIds.includes(member.id)}
               editing={editingId === member.id}
               editValue={editValue}
               onEditValue={setEditValue}

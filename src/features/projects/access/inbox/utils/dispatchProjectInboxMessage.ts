@@ -14,14 +14,14 @@ const readJson = async (response: Response): Promise<unknown | null> => {
 /** POST /api/projects/:projectId/inbox/dispatch — owner → bot. */
 export const dispatchProjectInboxMessage = async (input: {
   readonly projectId: string;
-  readonly toProjectDisplayName: string;
+  readonly toMembershipId: string;
   readonly summary: string;
   readonly kind?: string;
   readonly refs?: AwcProjectInboxRefs;
 }): Promise<DispatchProjectInboxResult> => {
   const url = `/api/projects/${encodeURIComponent(input.projectId)}/inbox/dispatch`;
   const bodyPayload: Record<string, unknown> = {
-    toProjectDisplayName: input.toProjectDisplayName,
+    toMembershipId: input.toMembershipId,
     summary: input.summary,
   };
   if (input.kind !== undefined && input.kind.trim().length > 0) {

@@ -49,6 +49,9 @@ describe("project ACL surface copy", () => {
     expect(AWC_PROJECT_ACCESS_COPY.membersLeaveHint).toMatch(/Members/i);
     expect(AWC_PROJECT_ACCESS_COPY).not.toHaveProperty("activityHeading");
     expect(AWC_PROJECT_ACCESS_COPY).not.toHaveProperty("activityHonesty");
+    expect(AWC_PROJECT_ACCESS_COPY.peopleHint).toMatch(/Bots you own can join without Approve/i);
+    expect(AWC_PROJECT_ACCESS_COPY.renameHint).toMatch(/~7 days/i);
+    expect(AWC_PROJECT_ACCESS_COPY.autoApprovedBanner).toMatch(/Auto-approved/i);
   });
 
   it("documents first-connect role for G5 empty state from API constant", () => {

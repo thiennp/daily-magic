@@ -14,6 +14,7 @@ interface MemberRow {
 
 interface AwcProjectAccessMemberRowProps {
   readonly member: MemberRow;
+  readonly autoApproved?: boolean;
   readonly editing: boolean;
   readonly editValue: string;
   readonly onEditValue: (value: string) => void;
@@ -25,6 +26,7 @@ interface AwcProjectAccessMemberRowProps {
 
 export default function AwcProjectAccessMemberRow({
   member,
+  autoApproved = false,
   editing,
   editValue,
   onEditValue,
@@ -56,6 +58,11 @@ export default function AwcProjectAccessMemberRow({
         {member.teamLabel ? (
           <span className="ml-1 text-xs text-gray-500">
             ({member.teamLabel})
+          </span>
+        ) : null}
+        {autoApproved ? (
+          <span className="ml-2 rounded-full bg-emerald-100 px-1.5 py-0.5 text-[10px] font-medium text-emerald-800 dark:bg-emerald-950/50 dark:text-emerald-200">
+            {copy.autoApprovedBadge}
           </span>
         ) : null}
       </span>

@@ -24,6 +24,14 @@ export default function AwcProjectAccessPanelBody({
 
   return (
     <div className="space-y-3">
+      {access.autoApprovedBanner ? (
+        <p
+          role="status"
+          className="rounded-md border border-emerald-200 bg-emerald-50 px-2 py-1.5 text-xs font-medium text-emerald-800 dark:border-emerald-900/60 dark:bg-emerald-950/40 dark:text-emerald-200"
+        >
+          {access.autoApprovedBanner}
+        </p>
+      ) : null}
       <AwcProjectAccessSection
         id="project-access-people"
         title={copy.peopleHeading}
@@ -40,6 +48,7 @@ export default function AwcProjectAccessPanelBody({
         <div className="border-t border-gray-200/70 pt-3 dark:border-gray-800/70">
           <AwcProjectAccessMembersList
             members={access.members}
+            recentlyAutoApprovedIds={access.recentlyAutoApprovedIds}
             onRevoke={(id) => void access.revoke(id)}
             onRename={async (membershipId, projectDisplayName) =>
               access.renameMember(membershipId, projectDisplayName)

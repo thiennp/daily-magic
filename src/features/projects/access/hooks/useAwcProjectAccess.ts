@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 
 import {
   loadAwcProjectAccess,
@@ -13,6 +13,7 @@ import { useAwcProjectAccessInitialLoad } from "@/features/projects/access/hooks
 import { useAwcProjectAccessLivePoll } from "@/features/projects/access/hooks/useAwcProjectAccessLivePoll";
 import { useAwcProjectAccessMutations } from "@/features/projects/access/hooks/useAwcProjectAccessMutations";
 import { useAwcProjectInviteActions } from "@/features/projects/access/hooks/useAwcProjectInviteActions";
+import { AWC_PROJECT_ACCESS_COPY } from "@/features/projects/access/awcProjectAccessCopy.constant";
 import { mapProjectAccessError } from "@/lib/projects/acl/mapProjectAccessError";
 
 export const useAwcProjectAccess = (projectId: string) => {
@@ -32,9 +33,41 @@ export const useAwcProjectAccess = (projectId: string) => {
     null,
   );
   const [isLoading, setIsLoading] = useState(true);
+  const [autoApprovedBanner, setAutoApprovedBanner] = useState<string | null>(
+    null,
+  );
+  const [recentlyAutoApprovedIds, setRecentlyAutoApprovedIds] = useState<
+    readonly string[]
+  >([]);
+  const knownMemberIdsRef = useRef<ReadonlySet<string> | null>(null);
+  const skipAutoApproveDetectRef = useRef(false);
+  const bannerTimerRef = useRef<number | null>(null);
 
   const applySnapshot = useCallback(
     (snapshot: Awaited<ReturnType<typeof loadAwcProjectAccess>>) => {
+      const nextIds = new Set(snapshot.members.map((member) => member.id));
+      const prevIds = knownMemberIdsRef.current;
+      if (
+        prevIds !== null &&
+        !skipAutoApproveDetectRef.current &&
+        snapshot.ok
+      ) {
+        const added = [...nextIds].filter((id) => !prevIds.has(id));
+        if (added.length > 0) {
+          setAutoApprovedBanner(AWC_PROJECT_ACCESS_COPY.autoApprovedBanner);
+          setRecentlyAutoApprovedIds(added);
+          if (bannerTimerRef.current !== null) {
+            window.clearTimeout(bannerTimerRef.current);
+          }
+          bannerTimerRef.current = window.setTimeout(() => {
+            setAutoApprovedBanner(null);
+            setRecentlyAutoApprovedIds([]);
+            bannerTimerRef.current = null;
+          }, 4000);
+        }
+      }
+      knownMemberIdsRef.current = nextIds;
+      skipAutoApproveDetectRef.current = false;
       setMembers(snapshot.members);
       setPending(snapshot.pending);
       setFolderRefs(snapshot.folderRefs);
@@ -78,6 +111,14 @@ export const useAwcProjectAccess = (projectId: string) => {
     setMessage: setFriendlyMessage,
   });
 
+  const approve = useCallback(
+    async (requestId: string, projectDisplayName?: string) => {
+      skipAutoApproveDetectRef.current = true;
+      return mutations.approve(requestId, projectDisplayName);
+    },
+    [mutations],
+  );
+
   return {
     members,
     pending,
@@ -93,8 +134,11 @@ export const useAwcProjectAccess = (projectId: string) => {
     isLoading,
     reload,
     ...mutations,
+    approve,
     ...inviteActions,
     setFolderRefs,
     setMessage: setFriendlyMessage,
+    autoApprovedBanner,
+    recentlyAutoApprovedIds,
   };
 };

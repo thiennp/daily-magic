@@ -24,7 +24,7 @@ export default function AwcProjectInboxDispatchForm({
 }: AwcProjectInboxDispatchFormProps) {
   const copy = AWC_PROJECT_INBOX_COPY;
   const peers = inboxDispatchPeerOptions(members);
-  const [peerName, setPeerName] = useState("");
+  const [peerMembershipId, setPeerMembershipId] = useState("");
   const [summary, setSummary] = useState("");
   const [kind, setKind] = useState("");
   const [prUrl, setPrUrl] = useState("");
@@ -43,7 +43,7 @@ export default function AwcProjectInboxDispatchForm({
     if (busy) return;
     const trimmed = summary.trim();
     if (
-      peerName.length === 0 ||
+      peerMembershipId.length === 0 ||
       trimmed.length === 0 ||
       trimmed.length > SUMMARY_MAX
     ) {
@@ -53,7 +53,7 @@ export default function AwcProjectInboxDispatchForm({
     setBusy(true);
     void dispatchProjectInboxMessage({
       projectId,
-      toProjectDisplayName: peerName,
+      toMembershipId: peerMembershipId,
       summary: trimmed,
       kind: kind.trim() || undefined,
       refs: buildInboxDispatchRefs({ prUrl, commitSha, localPath, allowClaimId }),
@@ -80,14 +80,14 @@ export default function AwcProjectInboxDispatchForm({
       <p className="text-xs text-gray-500 dark:text-gray-400">{copy.dispatchIntro}</p>
       <AwcProjectInboxDispatchFields
         peers={peers}
-        peerName={peerName}
+        peerMembershipId={peerMembershipId}
         summary={summary}
         kind={kind}
         prUrl={prUrl}
         commitSha={commitSha}
         localPath={localPath}
         allowClaimId={allowClaimId}
-        onPeerName={setPeerName}
+        onPeerMembershipId={setPeerMembershipId}
         onSummary={setSummary}
         onKind={setKind}
         onPrUrl={setPrUrl}
