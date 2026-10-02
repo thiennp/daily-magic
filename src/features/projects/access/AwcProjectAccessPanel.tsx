@@ -16,10 +16,12 @@ import { APP_SURFACE_BODY_TEXT_CLASS } from "@/components/surfaces/appSurfaceSty
 
 interface AwcProjectAccessPanelProps {
   readonly projectId: string;
+  readonly className?: string;
 }
 
 export default function AwcProjectAccessPanel({
   projectId,
+  className = "",
 }: AwcProjectAccessPanelProps) {
   const access = useAwcProjectAccess(projectId);
   const [activityRefreshSignal, setActivityRefreshSignal] = useState(0);
@@ -55,7 +57,9 @@ export default function AwcProjectAccessPanel({
   };
 
   return (
-    <section className="mt-8 space-y-4 rounded-xl border border-gray-200/80 p-4 dark:border-gray-800/80">
+    <section
+      className={`mt-8 space-y-4 rounded-xl border border-gray-200/80 p-4 dark:border-gray-800/80 ${className}`.trimEnd()}
+    >
       <h2 className="text-base font-semibold text-gray-900 dark:text-white">
         {copy.title}
       </h2>

@@ -1,18 +1,17 @@
 import { deviceMatchesReachableLocalTokenHash } from "@/features/agent-witch/utils/deviceMatchesReachableLocalTokenHash";
 import type { MacDevicePresence } from "@/features/agent-witch/online-wake/macDevicePresence";
 
-export const resolveLocalTokenHashMatchesReachableDevice = (input: {
+/**
+ * this Mac badge in Your Devices — token match on a live/recent row only (HOME-061 / HOME-062).
+ */
+export const resolveHomeMacDeviceIsThisMac = (input: {
   readonly localTokenHash: string | null;
-  readonly devices: readonly (MacDevicePresence & {
-    readonly tokenHash: string | null;
-  })[];
+  readonly device: MacDevicePresence & { readonly tokenHash: string | null };
 }): boolean => {
   const localTokenHash = input.localTokenHash;
   if (localTokenHash === null) {
     return false;
   }
 
-  return input.devices.some((device) =>
-    deviceMatchesReachableLocalTokenHash(device, localTokenHash),
-  );
+  return deviceMatchesReachableLocalTokenHash(input.device, localTokenHash);
 };

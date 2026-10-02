@@ -1,4 +1,5 @@
-import { deviceMatchesLocalTokenHash } from "@/features/agent-witch/online-wake";
+import { deviceMatchesReachableLocalTokenHash } from "@/features/agent-witch/utils/deviceMatchesReachableLocalTokenHash";
+import type { MacPresenceTier } from "@/features/agent-witch/online-wake/macDevicePresence";
 import type { BrowserOperatingSystem } from "@/features/home/utils/detectBrowserOperatingSystem";
 
 export const resolveShouldShowConnectThisMac = (input: {
@@ -6,7 +7,12 @@ export const resolveShouldShowConnectThisMac = (input: {
   readonly localTokenHash: string | null;
   readonly isCheckingLocalHostname: boolean;
   readonly isMobileBrowser: boolean;
-  readonly devices: readonly { readonly tokenHash?: string | null }[];
+  readonly devices: readonly {
+    readonly tokenHash?: string | null;
+    readonly isConnected?: boolean;
+    readonly isOnline?: boolean;
+    readonly presenceTier?: MacPresenceTier;
+  }[];
 }): boolean => {
   if (input.isCheckingLocalHostname || input.isMobileBrowser) {
     return false;
@@ -28,7 +34,16 @@ export const resolveShouldShowConnectThisMac = (input: {
     return true;
   }
 
+  const localTokenHash = input.localTokenHash ?? "";
   return !input.devices.some((device) =>
-    deviceMatchesLocalTokenHash(device.tokenHash, input.localTokenHash ?? ""),
+    deviceMatchesReachableLocalTokenHash(
+      {
+        tokenHash: device.tokenHash ?? null,
+        isConnected: device.isConnected ?? false,
+        isOnline: device.isOnline ?? false,
+        presenceTier: device.presenceTier,
+      },
+      localTokenHash,
+    ),
   );
 };

@@ -4,19 +4,11 @@ import Link from "next/link";
 
 import useMyMacDevices from "@/features/agent/hooks/useMyMacDevices";
 import AwcProjectAccessPanel from "@/features/projects/access/AwcProjectAccessPanel";
-import AwcProjectRepoUrlsSection from "@/features/projects/repoUrls/AwcProjectRepoUrlsSection";
-import AwcProjectDeleteControl from "@/features/projects/AwcProjectDeleteControl";
-import AwcProjectEditOnMacActions from "@/features/projects/AwcProjectEditOnMacActions";
-import AwcProjectNameEditor from "@/features/projects/AwcProjectNameEditor";
-import AwcProjectPresenceBadge from "@/features/projects/AwcProjectPresenceBadge";
-import AwcProjectReadOnlyCompositionSections from "@/features/projects/AwcProjectReadOnlyCompositionSections";
+import AwcProjectDetailPrimaryColumn from "@/features/projects/AwcProjectDetailPrimaryColumn";
 import useAwcProjectComposition from "@/features/projects/hooks/useAwcProjectComposition";
 import useAwcProjectDevicePresentation from "@/features/projects/hooks/useAwcProjectDevicePresentation";
-import { shouldShowProjectEditOnMacHelperText } from "@/features/projects/utils/resolveProjectEditOnMacCta";
-import formatProjectCompositionCountsLine from "@/lib/projects/formatProjectCompositionCountsLine";
 import useLocalMacBrowserContext from "@/features/home/hooks/useLocalMacBrowserContext";
 import AppPanel from "@/components/surfaces/AppPanel";
-import { APP_SURFACE_BODY_TEXT_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
 import type UserProjectRecord from "@/lib/projects/types/UserProjectRecord.type";
 
 interface AwcProjectDetailPanelProps {
@@ -53,60 +45,21 @@ export default function AwcProjectDetailPanel({
           ← All projects
         </Link>
       </p>
-      <AwcProjectNameEditor
-        projectId={project.id}
-        initialName={project.name}
-        startInEditMode={startRename}
-      />
-      <p className={`mt-2 ${APP_SURFACE_BODY_TEXT_CLASS}`}>
-        Rename here in Agent Witch Cloud. Choose folders and playbooks on{" "}
-        {deviceDisplayName} in Agent Witch Local.
-      </p>
-      <div className="mt-4 flex flex-col gap-3 rounded-xl border border-gray-200/80 bg-gray-50/80 p-4 dark:border-gray-800/80 dark:bg-white/[0.03] sm:flex-row sm:items-center sm:justify-between">
-        <AwcProjectPresenceBadge
-          statusIcon={presence.statusIcon}
-          text={presence.text}
-        />
-        <AwcProjectEditOnMacActions
+      <div className="grid grid-cols-1 gap-8 xl:grid-cols-[minmax(0,1fr)_minmax(18rem,22rem)] xl:items-start xl:gap-10">
+        <AwcProjectDetailPrimaryColumn
+          project={project}
+          startRename={startRename}
+          deviceDisplayName={deviceDisplayName}
+          presence={presence}
           editCta={editCta}
-          size="compact"
-          layout="buttonOnly"
-          fullWidthOnMobile
+          counts={counts}
+          items={items}
+          isCompositionLoading={isCompositionLoading}
         />
+        <aside className="min-w-0 xl:sticky xl:top-6">
+          <AwcProjectAccessPanel projectId={project.id} className="xl:mt-0" />
+        </aside>
       </div>
-      {editCta.helperText !== null &&
-      shouldShowProjectEditOnMacHelperText(editCta.state) ? (
-        <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
-          {editCta.helperText}
-        </p>
-      ) : null}
-      <dl className="mt-4 space-y-3 text-sm">
-        <div>
-          <dt className="text-xs font-medium text-gray-500 dark:text-gray-400">
-            Folder
-          </dt>
-          <dd className="mt-0.5 text-gray-800 dark:text-white/90">
-            {project.folderPath}
-          </dd>
-        </div>
-        <div>
-          <dt className="text-xs font-medium text-gray-500 dark:text-gray-400">
-            Composition
-          </dt>
-          <dd className="mt-0.5 text-gray-800 dark:text-white/90">
-            {formatProjectCompositionCountsLine(counts) ??
-              "Composition on Mac — open in Agent Witch Local"}
-          </dd>
-        </div>
-      </dl>
-      <AwcProjectReadOnlyCompositionSections
-        deviceDisplayName={deviceDisplayName}
-        items={items}
-        isLoading={isCompositionLoading}
-      />
-      <AwcProjectRepoUrlsSection project={project} />
-      <AwcProjectAccessPanel projectId={project.id} />
-      <AwcProjectDeleteControl project={project} variant="detail" />
     </AppPanel>
   );
 }

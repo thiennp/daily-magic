@@ -620,7 +620,17 @@ Document every production bug or UX regression here. Each entry must link to a t
 
 ---
 
-## Adding issues
+## HOME-062 — Duplicate this Mac: offline “Your Mac” badge + Connect this computer
+
+**Symptom:** Your Devices showed a grey offline row and a separate **Your Mac** row with the **this Mac** badge, or **Connect this Mac** / **This computer** alongside a badged offline placeholder, while the live install on the same machine was running.
+
+**Root cause:** The **this Mac** badge and Connect-this-Mac hide logic used token-hash match only. A stale `agent_witch_local_token_hash` cookie could still match an old offline cloud row (generic **Your Mac**, no bundle version) while the live AWB install used a different hash (HOME-061 wake refresh not applied yet to badge gating).
+
+**Fix:** Badge and “already linked” gating require a **reachable** device row (`live` / `recent` / bridge connected). Offline hash-only matches no longer get the badge; Connect this Mac stays visible until a reachable row matches the browser hash (wake probe can then refresh the cookie).
+
+**Regression tests:** `resolveHomeMacDeviceIsThisMac.test.ts`, `deviceMatchesReachableLocalTokenHash.test.ts`, `resolveShouldShowConnectThisMac.tokenIdentity.test.ts` (HOME-062).
+
+---
 
 ## HOME-061 — this Mac badge stuck on an offline “Your Mac” while another Mac is Online
 
