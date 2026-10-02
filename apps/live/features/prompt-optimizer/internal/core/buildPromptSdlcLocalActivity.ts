@@ -10,7 +10,10 @@ import {
 } from "./choosePromptSdlcLocalModels";
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
 import { describeUnusableJudgeReplyCause } from "./describeUnusableJudgeReplyCause";
-import { readPromptSdlcLocalUnusableReplyPreview } from "./readPromptSdlcLocalUnusableReplyPreview";
+import {
+  readPromptSdlcLocalUnusableReplyPreview,
+  truncatePromptSdlcLocalReplyPreview,
+} from "./readPromptSdlcLocalUnusableReplyPreview";
 import { describePromptSdlcWriterTerminalFailure } from "./readPromptSdlcWriterOutput";
 import { labelPromptSdlcErrorKind } from "./labelPromptSdlcErrorKind";
 
@@ -79,13 +82,17 @@ export const describePromptSdlcLocalActivity = (
 ): PromptSdlcLocalActivityDescription => {
   if (cycle.status === "wizard_paused") {
     const message = cycle.errorMessage?.trim() ?? "";
+    const replyPreview = readPromptSdlcLocalUnusableReplyPreview(cycle);
     return {
       title: "Wizard paused.",
       detail:
         message.length > 0
           ? message
           : "Review the step above, then Continue or rerun with feedback.",
-      replyPreview: null,
+      replyPreview:
+        replyPreview === null
+          ? null
+          : truncatePromptSdlcLocalReplyPreview(replyPreview),
     };
   }
   if (

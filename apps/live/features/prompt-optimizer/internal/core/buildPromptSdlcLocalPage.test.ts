@@ -81,6 +81,8 @@ describe("buildPromptSdlcLocalPageBody", () => {
     expect(html).toContain(">Summary</h3>");
     expect(html).toContain("data-sdlc-compose-continue");
     expect(html).toContain("data-sdlc-compose-back");
+    expect(html).toContain("data-sdlc-compose-skip-to-summary");
+    expect(html).toContain("Skip to summary");
     expect(html).toContain("data-sdlc-compose-review");
     expect(html.indexOf('data-sdlc-compose-step="4"')).toBeLessThan(
       html.indexOf("data-sdlc-submit-bar"),
@@ -655,7 +657,7 @@ describe("buildPromptSdlcLocalPageBody", () => {
     expect(html).toContain("New prompt");
     expect(html).toContain("sdlc-run-success-actions");
     expect(html).toContain("Download report (.md)");
-    expect(html).not.toContain("sdlc-wizard-accordion");
+    expect(html).not.toContain('id="prompt-optimizer-wizard-accordion"');
   });
 
   it("filters history without a Classic button", () => {

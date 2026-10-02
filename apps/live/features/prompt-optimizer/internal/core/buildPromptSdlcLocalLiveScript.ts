@@ -32,7 +32,10 @@ export const PROMPT_SDLC_LOCAL_LIVE_SCRIPT = `<script>
     const incomingGateSlot = holder.querySelector("#prompt-optimizer-wizard-gate-slot");
     const gateSlot = document.getElementById("prompt-optimizer-wizard-gate-slot");
     if (incomingGateSlot === null || gateSlot === null) return;
+    const accordionDom = window.__promptSdlcWizardAccordionDom;
+    const openAccordionSteps = accordionDom?.readOpen() ?? new Set();
     gateSlot.replaceWith(incomingGateSlot);
+    accordionDom?.restoreOpen(openAccordionSteps);
     const fields = document.querySelector(".sdlc-fields");
     if (fields instanceof HTMLFieldSetElement) fields.disabled = true;
     const active = document.getElementById("prompt-optimizer-wizard-active-step");

@@ -180,6 +180,20 @@ export const PROMPT_SDLC_NODE_DIALOG_SCRIPT = `<script>
       openFromTemplate(template, "");
       return;
     }
+    const revisionPromptInfo = target.closest(
+      "[data-sdlc-revision-round-prompt-info]",
+    );
+    if (revisionPromptInfo instanceof HTMLElement) {
+      event.stopPropagation();
+      event.preventDefault();
+      const template = revisionPromptInfo.parentElement?.querySelector(
+        "template[data-sdlc-revision-round-prompt]",
+      );
+      if (!(template instanceof HTMLTemplateElement)) return;
+      delete dialog.dataset.sdlcDialogStepId;
+      openFromTemplate(template, "");
+      return;
+    }
     const revisionJudgeInfo = target.closest(
       "[data-sdlc-revision-judge-prompt-info]",
     );

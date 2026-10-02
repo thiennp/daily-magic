@@ -52,4 +52,6 @@ export default interface PromptSdlcWizardState {
   readonly additionalSkillSuggestionsStatus: PromptSdlcWizardSkillSuggestionsStatus;
   /** Short judge read of the run summary when suggestions were produced. */
   readonly additionalSkillSuggestionsSummary: string | null;
+  /** Raw writer text when generalize/separate JSON parsing failed (for UI/debug). */
+  readonly lastWriterParseFailureReply: string | null;
 }

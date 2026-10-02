@@ -37,6 +37,7 @@ describe("renderPromptSdlcWizardRevisionRoundJudgePromptInfo", () => {
       interactive: false,
     });
     expect(html).toContain("Round 1 — 35");
+    expect(html).toContain("data-sdlc-revision-round-prompt-info");
     expect(html).toContain("data-sdlc-revision-judge-prompt-info");
     expect(html).toContain("Revise this prompt");
     expect(html).toContain("Judge prompt — Round 1");

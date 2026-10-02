@@ -31,6 +31,7 @@ describe("renderPromptSdlcWizardAccordion", () => {
     };
     const html = renderPromptSdlcWizardAccordion(cycle);
     expect(html).toContain("sdlc-wizard-accordion-item");
+    expect(html).toContain('data-sdlc-wizard-accordion-step="wizard-1"');
     expect(html).toContain("Step 1 — Generalize");
     expect(html).toContain("prompt-optimizer-wizard-active-step");
     expect(html).toContain("Step 2 — Evaluate");

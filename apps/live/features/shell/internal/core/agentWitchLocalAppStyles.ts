@@ -728,6 +728,9 @@ form.sdlc-form { display: flex; flex-direction: column; }
 .sdlc-compose.sdlc-compose-run-focus:not(.sdlc-compose-viewing-finished) { display: none; }
 .sdlc-compose-run-started:not(.sdlc-compose-viewing-finished) .sdlc-compose-details-body { display: none; }
 .sdlc-compose-run-started .sdlc-compose-step-actions { display: none !important; }
+.sdlc-compose-run-started:not(.sdlc-compose-viewing-finished) [data-sdlc-compose-head-actions] {
+  display: none !important;
+}
 .sdlc-compose-viewing-result [data-writer-status] { display: none; }
 .sdlc-compose-viewing-finished .sdlc-compose-summary-collapsed {
   min-height: 3rem;
@@ -940,9 +943,14 @@ form.sdlc-form { display: flex; flex-direction: column; }
 .sdlc-compose-step-actions {
   display: flex;
   flex-wrap: wrap;
-  justify-content: flex-end;
+  justify-content: flex-start;
+  align-items: center;
   gap: 0.5rem 0.65rem;
   padding-top: 0.25rem;
+}
+.sdlc-compose-step-actions .btn-primary,
+.sdlc-compose-step-actions .sdlc-run-wizard-btn {
+  margin-left: auto;
 }
 .sdlc-compose-review {
   margin: 0;
@@ -1278,6 +1286,7 @@ form.sdlc-wizard-feedback {
 .sdlc-wizard-revision-title {
   font-weight: 600;
 }
+.sdlc-wizard-revision-row .sdlc-wizard-revision-prompt-info,
 .sdlc-wizard-revision-row .sdlc-wizard-revision-judge-info {
   display: inline-flex;
   vertical-align: middle;

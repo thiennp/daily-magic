@@ -30,7 +30,7 @@ const renderCompletedStep = (
   title: string,
 ): string => {
   const retry = renderPromptSdlcWizardAccordionStepRetry(cycle, stepId);
-  return `<details class="sdlc-wizard-accordion-item">
+  return `<details class="sdlc-wizard-accordion-item" data-sdlc-wizard-accordion-step="${escapeHtml(stepId)}">
   <summary class="sdlc-wizard-accordion-summary">${escapeHtml(title)}</summary>
   <div class="sdlc-wizard-accordion-body">${retry}${renderPromptSdlcWizardStepModalBody(cycle, stepId)}</div>
 </details>`;

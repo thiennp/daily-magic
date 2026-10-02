@@ -338,6 +338,42 @@ describe("advancePromptSdlcWizardLocal", () => {
     expect(next.errorMessage).toContain("writer");
   });
 
+  it("stores the writer reply when separate JSON parsing fails", async () => {
+    const broken = '{"options":[{"id":"opt-1","title":"x","prompt":"unclosed';
+    vi.spyOn(writerReply, "runPromptSdlcWriterReply").mockResolvedValue({
+      ok: true,
+      text: broken,
+      tokens: 10,
+    });
+
+    const cycle = {
+      ...createPromptSdlcLocalCycle({
+        goal: "Goal",
+        sourcePrompt: "p",
+        judgeModel: "claude-cli",
+        improverModel: "claude-cli",
+        workingDirectory: storeDir,
+        wizard: {
+          ...createInitialPromptSdlcWizardState("p"),
+          phase: "separate",
+          gate: null,
+          splitOptions: [],
+          templatedPrompt: "Do {{task}}",
+          variables: [{ name: "task", description: "d", sampleValue: "s" }],
+        },
+      }),
+      revisions: [
+        { roundNumber: 0, promptText: "evaluated prompt", judgement: null },
+      ],
+    };
+
+    const next = await advancePromptSdlcWizardLocal(cycle);
+    expect(next.status).toBe("wizard_paused");
+    expect(next.wizard?.gate).toBe("separate");
+    expect(next.wizard?.lastWriterParseFailureReply).toBe(broken);
+    expect(next.errorMessage).toMatch(/JSON/i);
+  });
+
   it("fails the cycle when generalize/separate writer times out", async () => {
     vi.spyOn(writerReply, "runPromptSdlcWriterReply").mockResolvedValue({
       ok: false,

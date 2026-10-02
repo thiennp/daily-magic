@@ -28,6 +28,10 @@ const readRevisionReplyText = (
 export const readPromptSdlcLocalUnusableReplyPreview = (
   cycle: PromptSdlcLocalCycle,
 ): string | null => {
+  const wizardReply = cycle.wizard?.lastWriterParseFailureReply?.trim() ?? "";
+  if (wizardReply.length > 0) {
+    return wizardReply;
+  }
   const byRound = cycle.revisions.find(
     (revision) => revision.roundNumber === cycle.currentRound,
   );

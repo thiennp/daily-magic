@@ -16,6 +16,7 @@ import {
   renderPromptSdlcCostConfirmPanel,
   shouldShowPromptSdlcCostConfirm,
 } from "./renderPromptSdlcCostConfirmPanel";
+import { renderPromptSdlcWizardWriterParseFailureReply } from "./renderPromptSdlcWizardWriterParseFailureReply";
 
 const escapeHtml = (value: string): string =>
   value
@@ -140,6 +141,13 @@ export const renderPromptSdlcWizardGate = (
     cumulativeTokens === null
       ? ""
       : `<p class="muted sdlc-wizard-cumulative-tokens">Wizard tokens so far (reported): ${cumulativeTokens}</p>`;
+  const parseFailureReply =
+    cycle.errorMessage !== null &&
+    (wizard.lastWriterParseFailureReply?.trim().length ?? 0) > 0
+      ? renderPromptSdlcWizardWriterParseFailureReply(
+          wizard.lastWriterParseFailureReply ?? "",
+        )
+      : "";
 
   const gateStepId =
     gate === "generalize"
@@ -159,6 +167,7 @@ export const renderPromptSdlcWizardGate = (
     <p class="eyebrow">Prompt optimizer</p>
     <h2>${stepTitle}</h2>
     <p class="sdlc-wizard-gate-lede">${gateLede}</p>
+    ${parseFailureReply}
     ${tokenLine}
     <form method="POST" action="/prompt-optimizer" class="sdlc-wizard-feedback" id="sdlc-wizard-gate-form">
       <input type="hidden" name="cycleId" value="${escapeHtml(cycle.id)}">

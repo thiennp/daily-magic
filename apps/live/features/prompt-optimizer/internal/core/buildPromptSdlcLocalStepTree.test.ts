@@ -36,6 +36,9 @@ describe("renderPromptSdlcLocalStepTree", () => {
     expect(html).toContain("<template><h2>Step 2");
     expect(PROMPT_SDLC_NODE_DIALOG_SCRIPT).toContain(":scope > template");
     expect(PROMPT_SDLC_NODE_DIALOG_SCRIPT).toContain(
+      "data-sdlc-revision-round-prompt-info",
+    );
+    expect(PROMPT_SDLC_NODE_DIALOG_SCRIPT).toContain(
       "sdlc-node-dialog-refresh",
     );
   });

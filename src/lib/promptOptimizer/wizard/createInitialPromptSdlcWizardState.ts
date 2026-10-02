@@ -29,4 +29,5 @@ export const createInitialPromptSdlcWizardState = (
   additionalSkillSuggestions: [],
   additionalSkillSuggestionsStatus: "idle",
   additionalSkillSuggestionsSummary: null,
+  lastWriterParseFailureReply: null,
 });

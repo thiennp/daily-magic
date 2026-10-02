@@ -8,6 +8,7 @@ import { renderPromptSdlcWizardPipelineModalSummary } from "./renderPromptSdlcWi
 import { renderPromptSdlcWizardGeneralizeReview } from "./renderPromptSdlcWizardGeneralizeReview";
 import { renderPromptSdlcWizardRevisionRoundList } from "./renderPromptSdlcWizardRevisionRoundList";
 import { renderPromptSdlcWizardRevisionRoundJudgePromptInfo } from "./renderPromptSdlcWizardRevisionRoundJudgePromptInfo";
+import { renderPromptSdlcWizardRevisionRoundPromptInfo } from "./renderPromptSdlcWizardRevisionRoundPromptInfo";
 import { renderPromptSdlcWizardSplitOptionDetail } from "./renderPromptSdlcWizardSplitOptionDetail";
 
 const escapeHtml = (value: string): string =>
@@ -174,12 +175,17 @@ const renderEvaluateRevisionListFromSnapshots = (
         reason.length === 0
           ? ""
           : `<br><span class="muted">${escapeHtml(reason)}</span>`;
+      const roundLabel = `Round ${item.roundNumber}`;
+      const promptInfo = renderPromptSdlcWizardRevisionRoundPromptInfo({
+        roundLabel,
+        promptText: item.promptText,
+      });
       const judgeInfo = renderPromptSdlcWizardRevisionRoundJudgePromptInfo({
         cycle,
         roundNumber: item.roundNumber,
         promptText: item.promptText,
       });
-      return `<li class="sdlc-wizard-revision-row"><span class="sdlc-wizard-revision-title">${escapeHtml(score)}${selected}</span>${judgeInfo}${reasonLine}</li>`;
+      return `<li class="sdlc-wizard-revision-row"><span class="sdlc-wizard-revision-title">${escapeHtml(score)}${selected}</span>${promptInfo}${judgeInfo}${reasonLine}</li>`;
     })
     .join("");
   return `<ul class="sdlc-wizard-revisions">${items}</ul>`;
@@ -230,7 +236,18 @@ const renderEvaluateBody = (cycle: PromptSdlcLocalCycle): string => {
       const list = scoredRevisions
         .map((revision) => {
           const score = revision.judgement?.score ?? "—";
-          return `<li>Round ${revision.roundNumber} — score ${score}</li>`;
+          const title = `Round ${revision.roundNumber} — score ${score}`;
+          const promptInfo = renderPromptSdlcWizardRevisionRoundPromptInfo({
+            roundLabel: `Round ${revision.roundNumber}`,
+            promptText: revision.promptText,
+          });
+          const judgeInfo = renderPromptSdlcWizardRevisionRoundJudgePromptInfo({
+            cycle,
+            roundNumber: revision.roundNumber,
+            promptText: revision.promptText,
+            run: revision.run,
+          });
+          return `<li class="sdlc-wizard-revision-row"><span class="sdlc-wizard-revision-title">${escapeHtml(title)}</span>${promptInfo}${judgeInfo}</li>`;
         })
         .join("");
       return `<p class="muted">Evaluate finished — scored prompt revisions before module optimization.</p><ul class="sdlc-wizard-revisions">${list}</ul>`;

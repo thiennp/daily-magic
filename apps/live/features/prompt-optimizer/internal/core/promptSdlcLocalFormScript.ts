@@ -51,6 +51,13 @@ export const PROMPT_SDLC_LOCAL_FORM_SCRIPT = `<script>
     }
     run.scrollIntoView({ behavior: "smooth", block: "start" });
   };
+  const setComposeHeadActionsHidden = (hidden) => {
+    document.querySelectorAll("[data-sdlc-compose-head-actions]").forEach((node) => {
+      if (node instanceof HTMLElement) {
+        node.hidden = hidden;
+      }
+    });
+  };
   const revertRunStartUi = () => {
     paintRunButton(false);
     const compose = document.getElementById("prompt-optimizer-compose");
@@ -61,6 +68,7 @@ export const PROMPT_SDLC_LOCAL_FORM_SCRIPT = `<script>
         node.hidden = false;
       }
     });
+    setComposeHeadActionsHidden(false);
     paintReady();
   };
   const paintRunButtonWaiting = () => {
@@ -644,6 +652,12 @@ export const PROMPT_SDLC_LOCAL_FORM_SCRIPT = `<script>
       showComposeStep(composeStep - 1);
     });
   });
+  document.querySelectorAll("[data-sdlc-compose-skip-to-summary]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      paintComposeStepError(null);
+      showComposeStep(COMPOSE_STEP_COUNT);
+    });
+  });
   [...new Set(slots.map((slot) => slot.dataset.writer))].forEach((writer) => {
     if (writer) void paintWriter(writer);
   });
@@ -723,6 +737,7 @@ export const PROMPT_SDLC_LOCAL_FORM_SCRIPT = `<script>
           document
             .getElementById("prompt-optimizer-compose")
             ?.classList.add("sdlc-compose-run-started");
+          setComposeHeadActionsHidden(true);
           document.querySelectorAll(".sdlc-compose-step-actions").forEach((node) => {
             if (node instanceof HTMLElement) {
               node.hidden = true;
@@ -759,6 +774,7 @@ export const PROMPT_SDLC_LOCAL_FORM_SCRIPT = `<script>
           node.hidden = false;
         }
       });
+      setComposeHeadActionsHidden(false);
       const details = document.getElementById("prompt-optimizer-compose-details");
       if (details instanceof HTMLDetailsElement) {
         details.open = document.getElementById("prompt-optimizer-run") === null;

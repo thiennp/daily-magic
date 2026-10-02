@@ -21,4 +21,5 @@ export const normalizePromptSdlcWizardState = (
     wizard.additionalSkillSuggestionsStatus ?? "idle",
   additionalSkillSuggestionsSummary:
     wizard.additionalSkillSuggestionsSummary ?? null,
+  lastWriterParseFailureReply: wizard.lastWriterParseFailureReply ?? null,
 });

@@ -10,6 +10,7 @@ import {
   PROMPT_SDLC_NODE_DIALOG_SCRIPT,
 } from "./buildPromptSdlcLocalStepTree";
 import { PROMPT_SDLC_LOCAL_FORM_SCRIPT } from "./promptSdlcLocalFormScript";
+import { PROMPT_SDLC_WIZARD_ACCORDION_DOM_SCRIPT } from "./promptSdlcWizardAccordionDomScript";
 import type { PromptSdlcLocalCycle } from "./promptSdlcLocalCycle.type";
 import type { PromptSdlcLocalWriterChoice } from "./promptSdlcLocalForm";
 import { readPromptSdlcLocalShownForm } from "./readPromptSdlcLocalShownForm";
@@ -42,6 +43,9 @@ const readComposeCanRun = (
   prompt: string,
   baseCanRun: boolean,
 ): boolean => baseCanRun && goal.trim().length > 0 && prompt.trim().length > 0;
+
+const PROMPT_SDLC_COMPOSE_SKIP_TO_SUMMARY_BUTTON =
+  '<button type="button" class="btn btn-link sdlc-compose-skip-summary" data-sdlc-compose-skip-to-summary>Skip to summary</button>';
 
 const escapeHtml = (value: string): string =>
   value
@@ -206,6 +210,7 @@ export const buildPromptSdlcLocalPageBody = (input: {
         ${renderPromptSdlcLocalSkillSelect(listPromptSdlcFolderSkills(shown.folder))}
         </div>
           <div class="sdlc-compose-step-actions">
+            ${PROMPT_SDLC_COMPOSE_SKIP_TO_SUMMARY_BUTTON}
             <button type="button" class="btn btn-primary" data-sdlc-compose-continue>Continue</button>
           </div>
         </div>
@@ -228,6 +233,7 @@ export const buildPromptSdlcLocalPageBody = (input: {
         </div>
           <div class="sdlc-compose-step-actions">
             <button type="button" class="btn btn-secondary" data-sdlc-compose-back>Back</button>
+            ${PROMPT_SDLC_COMPOSE_SKIP_TO_SUMMARY_BUTTON}
             <button type="button" class="btn btn-primary" data-sdlc-compose-continue>Continue</button>
           </div>
         </div>
@@ -242,6 +248,7 @@ export const buildPromptSdlcLocalPageBody = (input: {
         ${renderPromptSdlcWizardRoleStepTable()}
           <div class="sdlc-compose-step-actions">
             <button type="button" class="btn btn-secondary" data-sdlc-compose-back>Back</button>
+            ${PROMPT_SDLC_COMPOSE_SKIP_TO_SUMMARY_BUTTON}
             <button type="button" class="btn btn-primary" data-sdlc-compose-continue>Continue</button>
           </div>
         </div>
@@ -266,6 +273,6 @@ export const buildPromptSdlcLocalPageBody = (input: {
     </section>`;
   const historyFilterScript =
     input.history.length > 0 ? PROMPT_SDLC_HISTORY_FILTER_SCRIPT : "";
-  const scripts = `${PROMPT_SDLC_LOCAL_LIVE_STYLE}${PROMPT_SDLC_LOCAL_LIVE_SCRIPT}${PROMPT_SDLC_WIZARD_CLIENT_SCRIPT}${PROMPT_SDLC_LOCAL_FORM_SCRIPT}${PROMPT_SDLC_SKILL_SELECT_SCRIPT}${historyFilterScript}`;
+  const scripts = `${PROMPT_SDLC_LOCAL_LIVE_STYLE}${PROMPT_SDLC_WIZARD_ACCORDION_DOM_SCRIPT}${PROMPT_SDLC_LOCAL_LIVE_SCRIPT}${PROMPT_SDLC_WIZARD_CLIENT_SCRIPT}${PROMPT_SDLC_LOCAL_FORM_SCRIPT}${PROMPT_SDLC_SKILL_SELECT_SCRIPT}${historyFilterScript}`;
   return `${error}${skillNotice}${form}${resumeBanner}${cycle}${wizardGateSlot}${nodeDialog}${renderPromptSdlcLocalHistory(input.history, input.cycle?.id ?? null)}${scripts}`;
 };

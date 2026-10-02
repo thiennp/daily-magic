@@ -35,6 +35,9 @@ describe("PROMPT_SDLC_LOCAL_FORM_SCRIPT", () => {
     expect(PROMPT_SDLC_LOCAL_FORM_SCRIPT).toContain("sdlc-compose-run-focus");
     expect(PROMPT_SDLC_LOCAL_FORM_SCRIPT).toContain("sdlc-run-start-failed");
     expect(PROMPT_SDLC_LOCAL_FORM_SCRIPT).toContain("revertRunStartUi");
+    expect(PROMPT_SDLC_LOCAL_FORM_SCRIPT).toContain(
+      "setComposeHeadActionsHidden",
+    );
     expect(PROMPT_SDLC_LOCAL_FORM_SCRIPT).toContain("sdlc-run-finished");
     expect(PROMPT_SDLC_LOCAL_FORM_SCRIPT).toContain(
       'getElementById("prompt-optimizer-compose")',
@@ -48,6 +51,9 @@ describe("PROMPT_SDLC_LOCAL_FORM_SCRIPT", () => {
       "[data-sdlc-compose-continue]",
     );
     expect(PROMPT_SDLC_LOCAL_FORM_SCRIPT).toContain("[data-sdlc-compose-back]");
+    expect(PROMPT_SDLC_LOCAL_FORM_SCRIPT).toContain(
+      "[data-sdlc-compose-skip-to-summary]",
+    );
     expect(PROMPT_SDLC_LOCAL_FORM_SCRIPT).toContain("paintComposeReview");
     expect(PROMPT_SDLC_LOCAL_FORM_SCRIPT).toContain(
       "composeStep !== COMPOSE_STEP_COUNT",
@@ -66,12 +72,17 @@ describe("PROMPT_SDLC_LOCAL_FORM_SCRIPT", () => {
 
   it("live-binds compose cost PREDICTION estimate and writer rate chip", () => {
     expect(PROMPT_SDLC_LOCAL_FORM_SCRIPT).toContain("paintCostEstimate");
-    expect(PROMPT_SDLC_LOCAL_FORM_SCRIPT).toContain("data-sdlc-estimated-spend");
-    expect(PROMPT_SDLC_LOCAL_FORM_SCRIPT).toContain("data-sdlc-writer-rate-chip");
-    expect(PROMPT_SDLC_LOCAL_FORM_SCRIPT).toContain("data-sdlc-estimate-over-ceiling");
+    expect(PROMPT_SDLC_LOCAL_FORM_SCRIPT).toContain(
+      "data-sdlc-estimated-spend",
+    );
+    expect(PROMPT_SDLC_LOCAL_FORM_SCRIPT).toContain(
+      "data-sdlc-writer-rate-chip",
+    );
+    expect(PROMPT_SDLC_LOCAL_FORM_SCRIPT).toContain(
+      "data-sdlc-estimate-over-ceiling",
+    );
     expect(PROMPT_SDLC_LOCAL_FORM_SCRIPT).toContain("COST_WRITER_RATES");
     expect(PROMPT_SDLC_LOCAL_FORM_SCRIPT).toContain("codex");
     expect(PROMPT_SDLC_LOCAL_FORM_SCRIPT).toContain("readCostEstimate");
   });
-
 });

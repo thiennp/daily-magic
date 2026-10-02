@@ -20,7 +20,7 @@ No open issues. Recent fixes (bundle **166–202**):
 - Removed **Suggest goals** from compose (bundle **200**).
 - Agent API `POST /prompt-optimizer/agent` starts wizard runs (pass 70, max rounds 5) like the compose form (bundle **202**).
 
-- Wizard steps stack in a collapsed accordion; Continue / Run update the page via live HTML fragments (no full reload). While a run is active, `#prompt-optimizer-compose` is hidden (`sdlc-compose-run-focus`) so **This run** and wizard gates stay in view; finished runs show the collapsed compose summary. Live poll attaches after wizard Run even when `#prompt-optimizer-run` was not in the first paint.
+- Wizard steps stack in a collapsed accordion; expanding a completed step stays open across live gate updates while the run advances. Generalize/separate JSON parse failures store `lastWriterParseFailureReply` on the wizard blob and surface a **View writer reply** control on the gate and in **This run** preview. Continue / Run update the page via live HTML fragments (no full reload). While a run is active, `#prompt-optimizer-compose` is hidden (`sdlc-compose-run-focus`) so **This run** and wizard gates stay in view; finished runs show the collapsed compose summary. Live poll attaches after wizard Run even when `#prompt-optimizer-run` was not in the first paint.
 
 - Step 1 **Generalize** auto-continues to evaluate when the writer returns a concrete templated prompt with **no** `variables` rows and **no** `{{placeholders}}` (bundle **210**).
 - Step 2 **Evaluate** auto-continues to separate when the best (or selected) revision passes the wizard quality gate (score ≥ 70, `passed: true`). Step 3 **Separate** auto-continues to Step 4 when the writer returns one option with a single module (bundle **212**).

@@ -11,6 +11,11 @@ export const PROMPT_SDLC_WIZARD_CLIENT_SCRIPT = `<script>
       compose.classList.add("sdlc-compose-run-started");
       compose.classList.remove("sdlc-compose-run-focus");
     }
+    document.querySelectorAll("[data-sdlc-compose-head-actions]").forEach((node) => {
+      if (node instanceof HTMLElement) {
+        node.hidden = true;
+      }
+    });
   };
 
   const focusRunPanel = () => {
@@ -77,8 +82,11 @@ export const PROMPT_SDLC_WIZARD_CLIENT_SCRIPT = `<script>
     let runApplied = false;
     const incomingGateSlot = holder.querySelector("#prompt-optimizer-wizard-gate-slot");
     const gateSlot = document.getElementById("prompt-optimizer-wizard-gate-slot");
+    const accordionDom = window.__promptSdlcWizardAccordionDom;
+    const openAccordionSteps = accordionDom?.readOpen() ?? new Set();
     if (incomingGateSlot !== null && gateSlot !== null) {
       gateSlot.replaceWith(incomingGateSlot);
+      accordionDom?.restoreOpen(openAccordionSteps);
       applied = true;
     } else if (incomingGateSlot !== null && gateSlot === null) {
       const runAnchor = document.getElementById("prompt-optimizer-run");
@@ -87,6 +95,7 @@ export const PROMPT_SDLC_WIZARD_CLIENT_SCRIPT = `<script>
       const insertAfter =
         runAnchor ?? resume ?? compose;
       insertAfter?.insertAdjacentElement("afterend", incomingGateSlot);
+      accordionDom?.restoreOpen(openAccordionSteps);
       applied = true;
     }
     const incomingRun = holder.querySelector("#prompt-optimizer-run");
