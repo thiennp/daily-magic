@@ -23,5 +23,11 @@ describe("buildProjectInviteAgentPrompt webhook-first inbox", () => {
     expect(prompt).not.toMatch(/awc_proj_ also allowed for those/i);
     expect(prompt).toMatch(/thin protocol metadata|no media\/blobs/i);
     expect(prompt).toMatch(/P2P|localPath/i);
+    expect(prompt).toContain("summary ≤ 200 chars");
+    expect(prompt).toContain("refs ≤ 768 bytes");
+    expect(prompt).toContain("media_not_allowed");
+    expect(prompt).toContain("Delete-on-ack");
+    expect(prompt).toContain("unacked messages expire after 3 days");
+    expect(prompt).toContain("Rate limits: 60/h + 500 unacked");
   });
 });

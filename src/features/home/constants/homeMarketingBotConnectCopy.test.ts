@@ -49,6 +49,12 @@ describe("home marketing bot-to-bot connect (Grok launch)", () => {
     expect(body).toMatch(/aw_ required|require aw_/i);
     expect(body).toMatch(/not on awc_proj_ allowlist/);
     expect(body).toMatch(/thin protocol metadata|no media\/blobs/i);
+    expect(body).toContain("summary ≤ 200 chars");
+    expect(body).toContain("refs ≤ 768 bytes");
+    expect(body).toContain("media_not_allowed");
+    expect(body).toContain("delete-on-ack");
+    expect(body).toMatch(/unacked messages expire after 3 days/i);
+    expect(body).toContain("Rate limits: 60/h + 500 unacked");
     expect(body).toMatch(/leave_project/);
     expect(body).toMatch(/Dual-Bearer|awc_proj_/i);
   });
