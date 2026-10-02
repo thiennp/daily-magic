@@ -23,7 +23,7 @@ describe("COPY-P1 shell and auth labels", () => {
     expect(labels).not.toContain("Runs");
   });
 
-  it("uses aligned labels in mobile bottom nav", () => {
+  it("uses aligned labels in mobile nav destinations (header Menu)", () => {
     const labels = BOTTOM_NAV.map((item) => item.label);
     expect(labels).toEqual([
       "Home",

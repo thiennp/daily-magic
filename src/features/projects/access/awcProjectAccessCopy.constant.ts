@@ -24,6 +24,8 @@ export const AWC_PROJECT_ACCESS_COPY = {
   firstConnectRole: PROJECT_ACL_FIRST_CONNECT.role,
   firstConnectNote: PROJECT_ACL_FIRST_CONNECT.emptyStateNote,
   activityHeading: "Activity",
+  activityToggleShow: "Show activity",
+  activityToggleHide: "Hide activity",
   activityHonesty:
     "Membership and status events via list_project_activity / GET …/activity — not a cloud content store.",
   activityFilterLabel: "Filter",

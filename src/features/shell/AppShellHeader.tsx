@@ -8,6 +8,7 @@ import AppIcon from "@/components/ui/icon/AppIcon";
 import { ThemeToggleButton } from "@/components/common/ThemeToggleButton";
 import UserDropdown from "@/components/header/UserDropdown";
 import useStyleguideNavAccess from "@/features/auth/hooks/useStyleguideNavAccess";
+import AppShellMobileNavMenu from "@/features/shell/AppShellMobileNavMenu";
 import buildAgentComposerHref from "@/lib/library/buildAgentComposerHref";
 import { AGENT_WITCH_INSTALL_BUNDLE_VERSION } from "@/lib/agentWitch/agentWitchInstallBundleVersion";
 import { AGENT_WITCH_PRODUCT_NAME } from "@/lib/agentWitch/agentWitchProductName.constant";
@@ -51,11 +52,14 @@ export default function AppShellHeader({
             href={buildAgentComposerHref()}
             aria-label="New task"
             title="New task"
-            className={APP_SURFACE_CTA_PRIMARY_ICON_CLASS}
+            className={`${APP_SURFACE_CTA_PRIMARY_ICON_CLASS} hidden md:inline-flex`}
           >
             <AppIcon icon={BoltIcon} size="md" />
           </Link>
-          <ThemeToggleButton />
+          <div className="hidden md:block">
+            <ThemeToggleButton />
+          </div>
+          <AppShellMobileNavMenu />
           <UserDropdown showStyleguide={showStyleguide} />
         </div>
       </div>

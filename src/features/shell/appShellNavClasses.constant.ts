@@ -1,4 +1,4 @@
-/** Desktop primary nav — left rail in AppShell grid (mobile uses bottom nav). */
+/** Desktop primary nav — left rail in AppShell grid (mobile uses header Menu). */
 export const APP_SHELL_DESKTOP_NAV_CLASS = [
   "hidden w-full flex-col gap-4 md:flex",
 ].join(" ");

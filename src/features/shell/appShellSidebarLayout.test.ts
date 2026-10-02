@@ -43,4 +43,11 @@ describe("AppShell sidebar layout", () => {
     expect(sidebarSource).toContain("mt-auto");
     expect(sidebarSource).toContain("flex-col");
   });
+  it("SHELL-005: does not render fixed bottom nav (moved to header Menu)", () => {
+    const source = readFileSync(
+      join(process.cwd(), "src/features/shell/AppShell.tsx"),
+      "utf8",
+    );
+    expect(source).not.toContain("AppShellBottomNav");
+  });
 });

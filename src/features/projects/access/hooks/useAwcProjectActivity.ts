@@ -9,14 +9,18 @@ import type AwcProjectActivityEvent from "@/features/projects/access/types/awcPr
 export const useAwcProjectActivity = (
   projectId: string,
   refreshSignal: number = 0,
+  enabled: boolean = true,
 ) => {
   const [events, setEvents] = useState<readonly AwcProjectActivityEvent[]>([]);
   const [filter, setFilter] = useState<AwcProjectActivityAction | "all">("all");
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(enabled);
   const [unavailable, setUnavailable] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
 
   const reload = useCallback(async () => {
+    if (!enabled) {
+      return;
+    }
     setIsLoading(true);
     const result = await fetchProjectActivity({
       projectId,
@@ -32,11 +36,16 @@ export const useAwcProjectActivity = (
       setMessage(result.errorMessage);
     }
     setIsLoading(false);
-  }, [projectId, filter]);
+  }, [projectId, filter, enabled]);
 
   const loadGenerationRef = useRef(0);
 
   useEffect(() => {
+    if (!enabled) {
+      setIsLoading(false);
+      return;
+    }
+
     const generation = loadGenerationRef.current + 1;
     loadGenerationRef.current = generation;
 
@@ -61,7 +70,7 @@ export const useAwcProjectActivity = (
       setIsLoading(false);
     };
     void load();
-  }, [projectId, filter, refreshSignal]);
+  }, [projectId, filter, refreshSignal, enabled]);
 
   return {
     events,
