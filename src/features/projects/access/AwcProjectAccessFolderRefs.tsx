@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 
+import AwcProjectAccessFolderRefsForm from "@/features/projects/access/AwcProjectAccessFolderRefsForm";
 import { AWC_PROJECT_ACCESS_COPY } from "@/features/projects/access/awcProjectAccessCopy.constant";
 
 interface FolderRefRow {
@@ -31,7 +32,7 @@ export default function AwcProjectAccessFolderRefs({
   const [folderPath, setFolderPath] = useState("");
 
   return (
-    <div>
+    <div className="space-y-3">
       {hideChrome ? null : (
         <>
           <h3 className="text-sm font-medium text-gray-800 dark:text-white/90">
@@ -41,9 +42,11 @@ export default function AwcProjectAccessFolderRefs({
         </>
       )}
       {folderRefs.length === 0 ? (
-        <p className="mt-1 text-sm text-gray-500">{copy.folderRefsEmpty}</p>
+        <p className="rounded-lg border border-dashed border-gray-200 bg-gray-50/60 px-3 py-2.5 text-sm text-gray-600 dark:border-gray-800 dark:bg-white/[0.02] dark:text-gray-400">
+          {copy.folderRefsEmpty}
+        </p>
       ) : (
-        <ul className="mt-2 space-y-2">
+        <ul className="space-y-2">
           {folderRefs.map((ref) => (
             <li
               key={ref.id}
@@ -63,35 +66,21 @@ export default function AwcProjectAccessFolderRefs({
           ))}
         </ul>
       )}
-      <div className="mt-3 flex flex-col gap-2 sm:flex-row">
-        <input
-          className="flex-1 rounded-md border px-2 py-1 text-sm"
-          placeholder={copy.machineRefPlaceholder}
-          value={machineRef}
-          onChange={(event) => setMachineRef(event.target.value)}
-        />
-        <input
-          className="flex-1 rounded-md border px-2 py-1 text-sm"
-          placeholder={copy.folderPathPlaceholder}
-          value={folderPath}
-          onChange={(event) => setFolderPath(event.target.value)}
-        />
-        <button
-          type="button"
-          className="rounded-md bg-gray-900 px-3 py-1 text-xs text-white dark:bg-white dark:text-gray-900"
-          onClick={() => {
-            void (async () => {
-              const added = await onAdd(machineRef, folderPath);
-              if (added) {
-                setMachineRef("");
-                setFolderPath("");
-              }
-            })();
-          }}
-        >
-          {copy.addFolderRef}
-        </button>
-      </div>
+      <AwcProjectAccessFolderRefsForm
+        machineRef={machineRef}
+        folderPath={folderPath}
+        onMachineRef={setMachineRef}
+        onFolderPath={setFolderPath}
+        onAdd={() => {
+          void (async () => {
+            const added = await onAdd(machineRef, folderPath);
+            if (added) {
+              setMachineRef("");
+              setFolderPath("");
+            }
+          })();
+        }}
+      />
     </div>
   );
 }

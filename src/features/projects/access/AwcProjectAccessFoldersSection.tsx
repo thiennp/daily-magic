@@ -29,7 +29,7 @@ export default function AwcProjectAccessFoldersSection({
       id="project-access-folders"
       title={copy.folderRefsHeading}
       hint={copy.folderRefsHint}
-      count={folderRefs.length}
+      count={folderRefs.length > 0 ? folderRefs.length : undefined}
     >
       <AwcProjectAccessFolderRefs
         folderRefs={folderRefs}

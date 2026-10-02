@@ -13,8 +13,17 @@ export const AWC_PROJECT_ACCESS_COPY = {
   membersEmpty: `No approved members yet. ${PROJECT_ACL_FIRST_CONNECT.emptyStateNote}`,
   folderRefsHeading: "Folder refs",
   folderRefsHint:
-    "Many machines × many folders. Paths only — project files stay on local machines.",
-  folderRefsEmpty: "No folder refs yet. Add machine + folder path strings.",
+    "Map machines to local folders (many × many). Registry only — files stay on those machines.",
+  folderRefsEmpty:
+    "No folder refs yet. Register a machine (or device) and a local folder path below.",
+  folderRefsFormHint:
+    "Each ref is a machine id/label + path string. AWC stores the mapping, not the files.",
+  machineRefLabel: "Machine or device",
+  machineRefPlaceholder: "e.g. MacBook Pro or device id",
+  machineRefHelp: "Which machine holds the folder — label or device id.",
+  folderPathLabel: "Folder path",
+  folderPathPlaceholder: "e.g. ~/code/daily-magic",
+  folderPathHelp: "Absolute or ~ path on that machine.",
   approve: "Approve",
   deny: "Deny",
   revoke: "Revoke",
@@ -23,8 +32,6 @@ export const AWC_PROJECT_ACCESS_COPY = {
   membersLeaveHint:
     "Agent members can leave on their own (leave_project, no owner Approve). Revoke is for kicking; Activity may show leave / Left project (membership revoked) for self-leave — not an owner kick.",
   addFolderRef: "Add folder ref",
-  machineRefPlaceholder: "Machine or device ref",
-  folderPathPlaceholder: "Folder path",
   remove: "Remove",
   firstConnectRole: PROJECT_ACL_FIRST_CONNECT.role,
   firstConnectNote: PROJECT_ACL_FIRST_CONNECT.emptyStateNote,
