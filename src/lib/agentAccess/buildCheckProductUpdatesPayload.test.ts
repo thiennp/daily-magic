@@ -5,10 +5,10 @@ import {
   filterProductConnectUpdatesSince,
 } from "@/lib/agentAccess/buildCheckProductUpdatesPayload";
 import { parseCheckProductUpdatesArgs } from "@/lib/agentAccess/parseCheckProductUpdatesArgs";
+import { PRODUCT_CONNECT_UPDATES } from "@/lib/agentAccess/productConnectUpdates.constant";
 import {
-  PRODUCT_CONNECT_UPDATES,
   PRODUCT_CONNECT_UPDATES_CATALOG_VERSION,
-} from "@/lib/agentAccess/productConnectUpdates.constant";
+} from "@/lib/agentAccess/productConnectUpdatesMeta.constant";
 
 describe("check_product_updates filtering", () => {
   it("returns all entries when sinceCatalogVersion is 0", () => {

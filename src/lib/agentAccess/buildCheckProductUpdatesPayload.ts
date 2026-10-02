@@ -1,11 +1,11 @@
 import { AGENT_ACCESS_TOOLS } from "@/lib/agentAccess/agentAccessTools.constant";
+import { PRODUCT_CONNECT_UPDATES } from "@/lib/agentAccess/productConnectUpdates.constant";
 import {
   PRODUCT_CONNECT_METHOD_SUMMARY,
-  PRODUCT_CONNECT_UPDATES,
   PRODUCT_CONNECT_UPDATES_ADAPT_HINT,
   PRODUCT_CONNECT_UPDATES_CATALOG_VERSION,
   type ProductConnectUpdateEntry,
-} from "@/lib/agentAccess/productConnectUpdates.constant";
+} from "@/lib/agentAccess/productConnectUpdatesMeta.constant";
 import { readAgentWitchServerRelease } from "@/lib/release/readAgentWitchServerRelease";
 
 export const filterProductConnectUpdatesSince = (
