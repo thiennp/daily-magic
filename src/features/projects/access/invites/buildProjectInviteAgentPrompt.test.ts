@@ -47,6 +47,9 @@ describe("buildProjectInviteAgentPrompt", () => {
     expect(prompt).toContain("project_dispatch");
     expect(prompt).toMatch(/toProjectDisplayName|toTeamLabel/);
     expect(prompt).toMatch(/get_project_briefing/i);
+    expect(prompt).toContain("check_product_updates");
+    expect(prompt).toMatch(/sinceCatalogVersion/);
+    expect(prompt).toMatch(/keep agent-access Bearer for MCP/);
     expect(prompt).not.toMatch(/memory pull|pull memory|project memory/i);
     expect(prompt).not.toMatch(/open this URL/i);
     expect(prompt).not.toContain("https://example.com/invite/p/tok-xyz");
