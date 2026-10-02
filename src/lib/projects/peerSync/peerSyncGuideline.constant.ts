@@ -19,13 +19,14 @@ export const PROJECT_PEER_SYNC_GUIDELINE = {
     "skills, memory, or knowledge for cowork",
   ],
   ownerControls:
-    "Owner Approves and Revokes in the AWC UI only (v1). Revoke anytime → immediate AuthZ deny. No token sharing.",
+    "Owner Approves and Revokes others in the AWC UI only (v1). Members may leave_project (confirm:true) to self-disconnect with no owner approval. Revoke/leave → immediate AuthZ deny. No token sharing.",
   tools: [
     "request_project_access",
     "get_my_project_access",
     "list_projects",
     "get_project_acl",
     "check_membership",
+    "leave_project",
     "mint_allow_claim",
     "list_project_peers",
     "project_dispatch",

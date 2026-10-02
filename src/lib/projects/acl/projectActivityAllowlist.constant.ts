@@ -9,6 +9,7 @@ export const PROJECT_ACTIVITY_ALLOWLISTED_ACTIONS = [
   "approve",
   "deny",
   "revoke",
+  "leave",
   "add_folder_ref",
   "remove_folder_ref",
   "allow_claim_ok",

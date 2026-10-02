@@ -77,3 +77,14 @@ export const parseListProjectActivityArgs = (
     limit: limit !== undefined && Number.isFinite(limit) ? limit : undefined,
   };
 };
+
+export const parseLeaveProjectArgs = (
+  args: unknown,
+): { readonly projectId: string; readonly confirm: boolean } | null => {
+  const base = parseProjectIdArgs(args);
+  if (base === null || args === null || typeof args !== "object") {
+    return null;
+  }
+  const confirm = (args as { confirm?: unknown }).confirm === true;
+  return { projectId: base.projectId, confirm };
+};

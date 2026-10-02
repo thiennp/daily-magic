@@ -17,6 +17,7 @@ export const AWC_PROJECT_ACTIVITY_ACTION_LABELS: Record<
   approve: "Approved",
   deny: "Denied",
   revoke: "Revoked",
+  leave: "Left project",
   add_folder_ref: "Folder ref added",
   remove_folder_ref: "Folder ref removed",
   allow_claim_ok: "Allow-claim ok",

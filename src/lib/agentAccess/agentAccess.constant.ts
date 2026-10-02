@@ -34,6 +34,7 @@ export const AGENT_ACCESS_MUTATING_TOOLS = [
   "install_harness",
   "get_install_command",
   "request_project_access",
+  "leave_project",
   "redeem_project_invite",
   "rotate_project_api_key",
   "ack_project_message",

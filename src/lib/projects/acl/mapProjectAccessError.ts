@@ -29,6 +29,9 @@ const PROJECT_ACCESS_ERROR_MESSAGES: Readonly<Record<string, string>> = {
   already_pending: "A request is already pending.",
   invalid_token: "Invite link is invalid or expired.",
   owner: "Project owners do not need an access request.",
+  already_left: "You already left this project.",
+  confirm_required: "Pass confirm:true to leave this project.",
+  owner_cannot_leave: "Project owners cannot leave via leave_project.",
   misconfigured: "Project Access is misconfigured. Try again later.",
 };
 

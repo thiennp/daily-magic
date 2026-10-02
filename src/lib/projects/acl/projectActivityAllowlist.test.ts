@@ -6,6 +6,7 @@ import { sanitizeProjectActivityDetail } from "@/lib/projects/acl/sanitizeProjec
 describe("project activity allowlist", () => {
   it("allowlists membership/status actions and strips unsafe detail", () => {
     expect(PROJECT_ACTIVITY_ALLOWLISTED_ACTIONS).toContain("request");
+    expect(PROJECT_ACTIVITY_ALLOWLISTED_ACTIONS).toContain("leave");
     expect(PROJECT_ACTIVITY_ALLOWLISTED_ACTIONS).toContain("allow_claim_ok");
     expect(PROJECT_ACTIVITY_ALLOWLISTED_ACTIONS).toContain(
       "membership_check_deny",

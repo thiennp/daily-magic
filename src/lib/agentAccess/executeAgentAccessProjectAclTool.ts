@@ -6,6 +6,7 @@ import { executeProjectAclClaimTools } from "@/lib/agentAccess/executeProjectAcl
 import { executeProjectAclGetTool } from "@/lib/agentAccess/executeProjectAclGetTool";
 import { executeProjectAclInviteHooksTools } from "@/lib/agentAccess/executeProjectAclInviteHooksTools";
 import { executeProjectAclRedeemInviteTool } from "@/lib/agentAccess/executeProjectAclRedeemInviteTool";
+import { executeProjectAclLeaveTool } from "@/lib/agentAccess/executeProjectAclLeaveTool";
 import { executeProjectAclRequestTools } from "@/lib/agentAccess/executeProjectAclRequestTools";
 
 export const executeAgentAccessProjectAclTool = async (input: {
@@ -20,6 +21,10 @@ export const executeAgentAccessProjectAclTool = async (input: {
   const redeemResult = await executeProjectAclRedeemInviteTool(input);
   if (redeemResult !== null) {
     return redeemResult;
+  }
+  const leaveResult = await executeProjectAclLeaveTool(input);
+  if (leaveResult !== null) {
+    return leaveResult;
   }
   const requestResult = await executeProjectAclRequestTools(input);
   if (requestResult !== null) {

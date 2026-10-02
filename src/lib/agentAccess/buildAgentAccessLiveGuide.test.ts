@@ -17,6 +17,8 @@ describe("live agent guide", () => {
     expect(guide.productUpdates.startSince).toBe(0);
     expect(names).toContain("create_workflow");
     expect(names).toContain("request_project_access");
+    expect(names).toContain("leave_project");
+    expect(guide.projectCowork.tools).toContain("leave_project");
     expect(names).toContain("mint_allow_claim");
     expect(guide.projectCowork.noTokenSharing).toBe(true);
     expect(guide.projectCowork.tools).toContain("list_project_peers");
