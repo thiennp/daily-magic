@@ -1663,7 +1663,7 @@ export const startAgentWitchLocalApp = (input: {
             title: "Knowledge",
             activePath: "/knowledge",
             installVersion: installBundle.installVersion,
-            body: `<section class="card">
+            body: `<section class="card stack">
               <p class="eyebrow">Local RAG</p>
               <h1>Knowledge</h1>
               <p class="lede">Indexed chunks from finished agent turns on this Mac. Retrieval counts update when dispatch injects a chunk into the next writer prompt.</p>
@@ -1671,7 +1671,8 @@ export const startAgentWitchLocalApp = (input: {
                 <input class="input" name="q" value="${escapeHtml(q)}" placeholder="Search local knowledge" aria-label="Search local knowledge" />
                 <button class="btn btn-primary" type="submit">Search</button>
               </form>
-            </section>${suggestionsHtml}${list}${buildKnowledgeEmptyHtml(q, chunks.length)}`,
+              ${buildKnowledgeEmptyHtml(q, chunks.length)}
+            </section>${suggestionsHtml}${list}`,
           }),
         );
         return;

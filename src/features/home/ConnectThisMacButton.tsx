@@ -14,6 +14,7 @@ interface ConnectThisMacButtonProps {
   readonly isWebSocketSupported: boolean;
   readonly host: string;
   readonly className?: string;
+  readonly fullWidth?: boolean;
 }
 
 const subscribeToOperatingSystem = () => () => undefined;
@@ -25,6 +26,7 @@ export default function ConnectThisMacButton({
   isWebSocketSupported,
   host,
   className = APP_SURFACE_CTA_SECONDARY_SM_CLASS,
+  fullWidth = false,
 }: ConnectThisMacButtonProps) {
   const operatingSystem = useSyncExternalStore(
     subscribeToOperatingSystem,
@@ -50,7 +52,13 @@ export default function ConnectThisMacButton({
 
   return (
     <>
-      <div className="flex w-full flex-col gap-2 sm:w-auto">
+      <div
+        className={
+          fullWidth
+            ? "flex w-full flex-col gap-2"
+            : "flex w-full flex-col gap-2 sm:w-auto"
+        }
+      >
         <button
           type="button"
           className={className}

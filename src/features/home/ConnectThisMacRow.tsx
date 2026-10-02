@@ -1,5 +1,6 @@
 "use client";
 
+import { APP_SURFACE_CTA_PRIMARY_SM_CLASS } from "@/components/surfaces/appSurfaceStyles.constant";
 import MacDeviceIcon from "@/features/agent-witch/macDevices/MacDeviceIcon";
 import { resolveMacDeviceIconClassName } from "@/features/agent-witch/macDevices/utils/resolveMacDeviceIconClassName";
 import ConnectThisMacButton from "@/features/home/ConnectThisMacButton";
@@ -18,8 +19,8 @@ export default function ConnectThisMacRow({
   return (
     <li>
       <div className="rounded-lg border border-dashed border-gray-200 bg-gray-50/80 px-3 py-3 dark:border-gray-700 dark:bg-white/[0.02]">
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-          <div className="flex min-w-0 flex-1 items-start gap-3">
+        <div className="flex flex-col gap-3">
+          <div className="flex min-w-0 items-start gap-3">
             <MacDeviceIcon
               className={resolveMacDeviceIconClassName(
                 false,
@@ -39,6 +40,8 @@ export default function ConnectThisMacRow({
             installCommand={installCommand}
             isWebSocketSupported={isWebSocketSupported}
             host={host}
+            fullWidth
+            className={`${APP_SURFACE_CTA_PRIMARY_SM_CLASS} w-full`}
           />
         </div>
       </div>

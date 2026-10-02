@@ -12,8 +12,8 @@ export const AWL_DIAGNOSTICS_PAGE_ENTRIES: readonly AwlStorybookPageEntry[] = [
     statuses: ["ready", "empty"],
     buildBody: (status) =>
       status === "empty"
-        ? `<section class="card"><h1>Knowledge</h1><p class="empty">No chunks indexed yet.</p></section>`
-        : `<section class="card"><h1>Knowledge</h1><p>12 chunks indexed (fixture).</p></section>`,
+        ? `<section class="card stack"><h1>Knowledge</h1><p class="empty">No chunks indexed yet.</p></section>`
+        : `<section class="card stack"><h1>Knowledge</h1><p>12 chunks indexed (fixture).</p></section>`,
   }),
   withAwlStorybookShell({
     id: "history",

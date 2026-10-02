@@ -251,6 +251,10 @@ h1 {
   color: var(--aw-zinc-600);
 }
 
+.card h1 + .empty {
+  margin-top: 1rem;
+}
+
 .muted { color: var(--aw-zinc-500); font-size: 0.875rem; }
 
 .meta-grid {
@@ -573,6 +577,13 @@ pre {
   text-align: center;
 }
 
+h1 + .empty,
+h2 + .empty,
+.search-row + .empty,
+.project-tab-panel > .empty {
+  margin-top: 0.75rem;
+}
+
 .alert-error {
   margin-top: 1rem;
   padding: 0.75rem 1rem;
@@ -671,6 +682,13 @@ pre {
 }
 
 .stack { display: flex; flex-direction: column; gap: 0.75rem; }
+
+.task-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.task-form > .actions { margin-top: 0.25rem; }
 
 .field {
   display: flex;
