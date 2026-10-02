@@ -32,7 +32,11 @@ describe("home marketing bot-to-bot connect (Grok launch)", () => {
     expect(MARKETING_FEATURE_ITEMS[0]?.body).toMatch(/list_project_peers/);
     expect(MARKETING_FEATURE_ITEMS[0]?.body).toMatch(/project_dispatch/);
     expect(MARKETING_FEATURE_ITEMS[0]?.body).toMatch(/leave_project/);
+    expect(MARKETING_FEATURE_ITEMS[0]?.body).toMatch(/MUST delete project-scoped routines/i);
     expect(MARKETING_FEATURE_ITEMS[1]?.body).toMatch(/Left project/i);
+    expect(HOME_MARKETING_STEPS_COPY.steps.map((s) => s.body).join(" ")).toMatch(
+      /MUST delete project-scoped routines on leave or Revoke/i,
+    );
   });
 
   it("for-agents Project cowork ACL documents the full connect path", () => {
@@ -45,7 +49,14 @@ describe("home marketing bot-to-bot connect (Grok launch)", () => {
     expect(body).toMatch(/register_project_webhook/);
     expect(body).toMatch(/list_project_inbox/);
     expect(body).toMatch(/ack_project_message/);
-    expect(body).toMatch(/prefer register_project_webhook|Inbox: prefer/i);
+    expect(body).toMatch(/MUST on connect \(webhook-first\)|Inbox: MUST/i);
+    expect(body).toMatch(/MUST poll list_project_inbox|else MUST poll/i);
+    expect(body).toMatch(/MUST ack_project_message/i);
+    expect(body).toMatch(/every 30 seconds while actively working/i);
+    expect(body).toMatch(/every 10 minutes when idle/i);
+    expect(body).toMatch(/MUST on leave or owner Revoke/i);
+    expect(body).toMatch(/delete all project-scoped routines/i);
+    expect(body).toMatch(/Softvale watches/i);
     expect(body).toMatch(
       /Prefer agent-access \(aw_\) for register_project_webhook and ack_project_message/i,
     );

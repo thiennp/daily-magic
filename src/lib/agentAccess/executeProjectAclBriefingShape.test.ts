@@ -94,6 +94,14 @@ describe("get_project_briefing shape", () => {
     expect(body.howToDispatch).toContain("toProjectDisplayName");
     expect(body.howToDispatch).toContain("register_project_webhook");
     expect(body.howToDispatch).toContain("list_project_inbox");
+    expect(body.howToDispatch).toMatch(/MUST on connect \(webhook-first\)/i);
+    expect(body.howToDispatch).toMatch(/MUST poll list_project_inbox/i);
+    expect(body.howToDispatch).toMatch(/MUST ack_project_message/i);
+    expect(body.howToDispatch).toMatch(/every 30 seconds while actively working/i);
+    expect(body.howToDispatch).toMatch(/every 10 minutes when idle/i);
+    expect(body.howToDispatch).toMatch(
+      /On leave or owner Revoke MUST delete all project-scoped routines/i,
+    );
     expect(body.howToDispatch).toMatch(/thin protocol|no media\/blobs/i);
     expect(body.playbooks.note).toBe("no playbooks bound");
     expect(body.briefingText).toContain("Demo");

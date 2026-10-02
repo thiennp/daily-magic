@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import { buildProjectInviteAgentPrompt } from "@/features/projects/access/invites/buildProjectInviteAgentPrompt";
 
 describe("buildProjectInviteAgentPrompt webhook-first inbox", () => {
-  it("prefers register_project_webhook then list_project_inbox + ack", () => {
+  it("MUST register_project_webhook first, else poll + ack with session cadence", () => {
     const prompt = buildProjectInviteAgentPrompt({
       inviteUrl: "https://example.com/invite/p/tok-xyz",
       projectId: "proj-1",
@@ -33,5 +33,14 @@ describe("buildProjectInviteAgentPrompt webhook-first inbox", () => {
     expect(prompt).toContain("Rate limits: 300/hour (rolling) + max 300 unread (ack/clear frees slots)");
     expect(prompt).toContain('"toProjectDisplayName": "Owner"');
     expect(prompt).toContain("peer.joined");
-    expect(prompt).toContain('fromProjectDisplayName === "Owner"');  });
+    expect(prompt).toContain('fromProjectDisplayName === "Owner"');
+    expect(prompt).toMatch(/MUST on connect \(webhook-first\)/i);
+    expect(prompt).toMatch(/Else MUST poll list_project_inbox/i);
+    expect(prompt).toMatch(/MUST ack_project_message/i);
+    expect(prompt).toMatch(/every 30 seconds while actively working/i);
+    expect(prompt).toMatch(/every 10 minutes when idle/i);
+    expect(prompt).toMatch(/MUST on leave or owner Revoke/i);
+    expect(prompt).toMatch(/delete all project-scoped routines/i);
+    expect(prompt).toMatch(/Softvale watches/i);
+  });
 });

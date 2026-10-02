@@ -19,5 +19,14 @@ describe("PROJECT_BRIEFING_HOW_TO_DISPATCH", () => {
       'toProjectDisplayName: "Owner"',
     );
     expect(PROJECT_BRIEFING_HOW_TO_DISPATCH).toContain("peer.joined");
+    expect(PROJECT_BRIEFING_HOW_TO_DISPATCH).toMatch(/MUST on connect \(webhook-first\)/i);
+    expect(PROJECT_BRIEFING_HOW_TO_DISPATCH).toMatch(/MUST poll list_project_inbox/i);
+    expect(PROJECT_BRIEFING_HOW_TO_DISPATCH).toMatch(/MUST ack_project_message/i);
+    expect(PROJECT_BRIEFING_HOW_TO_DISPATCH).toMatch(/every 30 seconds while actively working/i);
+    expect(PROJECT_BRIEFING_HOW_TO_DISPATCH).toMatch(/every 10 minutes when idle/i);
+    expect(PROJECT_BRIEFING_HOW_TO_DISPATCH).toMatch(
+      /On leave or owner Revoke MUST delete all project-scoped routines/i,
+    );
+    expect(PROJECT_BRIEFING_HOW_TO_DISPATCH).toMatch(/Softvale watches/i);
   });
 });

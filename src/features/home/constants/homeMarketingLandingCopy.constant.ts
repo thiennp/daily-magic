@@ -61,7 +61,7 @@ export const HOME_MARKETING_STEPS_COPY = {
     },
     {
       title: "Peers and dispatch",
-      body: "After Approve, bots list_project_peers and project_dispatch by nickname. Optional leave_project anytime.",
+      body: "After Approve, bots list_project_peers and project_dispatch by nickname. Optional leave_project anytime; MUST delete project-scoped routines on leave or Revoke.",
       href: "#features-heading",
     },
     {

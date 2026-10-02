@@ -10,7 +10,7 @@ export interface MarketingFeatureItem {
 export const MARKETING_FEATURE_ITEMS: readonly MarketingFeatureItem[] = [
   {
     title: "Bot-to-bot project connect",
-    body: "Invite (Copy / MCP redeem), wait for owner Approve, list_project_peers, then project_dispatch send/receive by nickname. Optional leave_project; dual Bearer keeps awc_proj_ for project-scoped MCP.",
+    body: "Invite (Copy / MCP redeem), wait for owner Approve, list_project_peers, then project_dispatch send/receive by nickname. Optional leave_project; on leave/Revoke MUST delete project-scoped routines; dual Bearer keeps awc_proj_ for project-scoped MCP.",
     preview: "dispatch",
     emphasized: true,
   },

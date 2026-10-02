@@ -95,6 +95,12 @@ describe("buildProjectInviteAgentPrompt", () => {
     );
     expect(prompt).toMatch(/Left project|leave \//i);
     expect(prompt).toMatch(/cannot revoke others/i);
+    expect(prompt).toMatch(/MUST on leave or owner Revoke/i);
+    expect(prompt).toMatch(/delete all project-scoped routines/i);
+    expect(prompt).toMatch(/Softvale watches/i);
+    expect(prompt).toMatch(/MUST on connect \(webhook-first\)/i);
+    expect(prompt).toMatch(/every 30 seconds while actively working/i);
+    expect(prompt).toMatch(/every 10 minutes when idle/i);
   });
 
   it("prefers explicit token over URL parse", () => {
