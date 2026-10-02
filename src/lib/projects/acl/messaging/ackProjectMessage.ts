@@ -1,5 +1,6 @@
 import { ensureProjectAclSchema } from "@/lib/projects/acl/ensureProjectAclSchema";
 import { getActiveProjectMembership } from "@/lib/projects/acl/getActiveProjectMembership";
+import { getUserProjectById } from "@/lib/projects/userProjectQueries";
 import { writeProjectAccessAudit } from "@/lib/projects/acl/writeProjectAccessAudit";
 import { asRowArray, getSql } from "@/lib/db";
 
@@ -26,14 +27,16 @@ export const ackProjectMessage = async (input: {
     projectId,
     input.actorUserId,
   );
-  if (membership === null) {
+  const project = await getUserProjectById(projectId);
+  const isOwner = project?.ownerUserId === input.actorUserId;
+  if (membership === null && !isOwner) {
     return { ok: false, code: "forbidden" };
   }
   const toUserId = rows[0].to_user_id ? String(rows[0].to_user_id) : null;
   const toTeam = rows[0].to_team_label ? String(rows[0].to_team_label) : null;
   const addressed =
     toUserId === input.actorUserId ||
-    (toTeam !== null && toTeam === membership.teamLabel);
+    (toTeam !== null && membership !== null && toTeam === membership.teamLabel);
   if (!addressed) {
     return { ok: false, code: "forbidden" };
   }

@@ -41,7 +41,7 @@ export const PRODUCT_CONNECT_UPDATES: readonly ProductConnectUpdateEntry[] = [
     kind: "mcp_tool",
     title: "project_dispatch by display name",
     summary:
-      "project_dispatch accepts toProjectDisplayName / toTeamLabel from list_project_peers.",
+      "project_dispatch accepts toProjectDisplayName / toTeamLabel from list_project_peers; use reserved Owner for the human owner.",
     adapt:
       "Dispatch with exact toProjectDisplayName from peers; do not invent names.",
   },

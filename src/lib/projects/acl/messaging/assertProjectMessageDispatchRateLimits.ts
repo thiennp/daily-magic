@@ -1,44 +1,32 @@
-import {
-  PROJECT_MESSAGE_DISPATCH_HOURLY_LIMIT,
-  PROJECT_MESSAGE_DISPATCH_UNACKED_LIMIT,
-} from "@/lib/projects/acl/messaging/projectMessage.constants";
+import { PROJECT_MESSAGE_DISPATCH_DAILY_LIMIT } from "@/lib/projects/acl/messaging/projectMessage.constants";
 import { asRowArray, getSql } from "@/lib/db";
 
 export type ProjectMessageRateLimitResult =
   | { readonly ok: true }
-  | {
-      readonly ok: false;
-      readonly code: "rate_limited_hourly" | "rate_limited_unacked";
-    };
+  | { readonly ok: false; readonly code: "rate_limited_daily" };
 
 export const assertProjectMessageDispatchRateLimits = async (input: {
-  readonly senderMembershipId: string;
+  readonly senderMembershipId: string | null;
+  readonly senderUserId: string;
 }): Promise<ProjectMessageRateLimitResult> => {
   const sql = getSql();
-  const hourlyRows = asRowArray(
+  const dailyRows = asRowArray(
     await sql`
       SELECT COUNT(*)::int AS c
       FROM project_messages
-      WHERE sender_membership_id = ${input.senderMembershipId}
-        AND created_at > NOW() - INTERVAL '1 hour'
+      WHERE (
+          sender_membership_id = ${input.senderMembershipId}
+          OR (
+            sender_membership_id IS NULL
+            AND sender_user_id = ${input.senderUserId}
+          )
+        )
+        AND created_at > NOW() - INTERVAL '24 hours'
     `,
   );
-  const hourlyCount = Number(hourlyRows[0]?.c ?? 0);
-  if (hourlyCount >= PROJECT_MESSAGE_DISPATCH_HOURLY_LIMIT) {
-    return { ok: false, code: "rate_limited_hourly" };
-  }
-
-  const unackedRows = asRowArray(
-    await sql`
-      SELECT COUNT(*)::int AS c
-      FROM project_messages
-      WHERE sender_membership_id = ${input.senderMembershipId}
-        AND acked_at IS NULL
-    `,
-  );
-  const unackedCount = Number(unackedRows[0]?.c ?? 0);
-  if (unackedCount >= PROJECT_MESSAGE_DISPATCH_UNACKED_LIMIT) {
-    return { ok: false, code: "rate_limited_unacked" };
+  const dailyCount = Number(dailyRows[0]?.c ?? 0);
+  if (dailyCount >= PROJECT_MESSAGE_DISPATCH_DAILY_LIMIT) {
+    return { ok: false, code: "rate_limited_daily" };
   }
 
   return { ok: true };

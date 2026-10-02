@@ -1,6 +1,7 @@
 import { ensureProjectAclSchema } from "@/lib/projects/acl/ensureProjectAclSchema";
 import { purgeExpiredProjectMessages } from "@/lib/projects/acl/messaging/purgeExpiredProjectMessages";
 import { getActiveProjectMembership } from "@/lib/projects/acl/getActiveProjectMembership";
+import { getUserProjectById } from "@/lib/projects/userProjectQueries";
 import { asRowArray, getSql } from "@/lib/db";
 
 export type ProjectInboxMessage = {
@@ -9,6 +10,7 @@ export type ProjectInboxMessage = {
   readonly summary: string;
   readonly refs: Readonly<Record<string, unknown>>;
   readonly fromProjectDisplayName: string | null;
+  readonly fromMembershipId: string | null;
   readonly createdAt: string;
   readonly ackedAt: string | null;
 };
@@ -27,9 +29,12 @@ export const listProjectInbox = async (input: {
     input.projectId,
     input.actorUserId,
   );
-  if (membership === null) {
+  const project = await getUserProjectById(input.projectId);
+  const isOwner = project?.ownerUserId === input.actorUserId;
+  if (membership === null && !isOwner) {
     return { ok: false, code: "forbidden" };
   }
+  const teamLabel = membership?.teamLabel ?? null;
   await ensureProjectAclSchema();
   await purgeExpiredProjectMessages();
   const sql = getSql();
@@ -47,7 +52,7 @@ export const listProjectInbox = async (input: {
               m.to_user_id = ${input.actorUserId}
               OR (
                 m.to_team_label IS NOT NULL
-                AND m.to_team_label = ${membership.teamLabel}
+                AND m.to_team_label = ${teamLabel}
               )
             )
             AND m.created_at > ${since}::timestamptz
@@ -64,7 +69,7 @@ export const listProjectInbox = async (input: {
               m.to_user_id = ${input.actorUserId}
               OR (
                 m.to_team_label IS NOT NULL
-                AND m.to_team_label = ${membership.teamLabel}
+                AND m.to_team_label = ${teamLabel}
               )
             )
           ORDER BY m.created_at DESC
@@ -81,8 +86,13 @@ export const listProjectInbox = async (input: {
         row.refs !== null && typeof row.refs === "object"
           ? (row.refs as Record<string, unknown>)
           : {},
-      fromProjectDisplayName: row.sender_display_name
-        ? String(row.sender_display_name)
+      fromProjectDisplayName: row.sender_membership_id === null
+        ? "Owner"
+        : row.sender_display_name
+          ? String(row.sender_display_name)
+          : null,
+      fromMembershipId: row.sender_membership_id
+        ? String(row.sender_membership_id)
         : null,
       createdAt: String(row.created_at),
       ackedAt: row.acked_at ? String(row.acked_at) : null,

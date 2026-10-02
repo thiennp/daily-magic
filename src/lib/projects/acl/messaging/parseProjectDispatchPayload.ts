@@ -47,6 +47,9 @@ export const parseProjectDispatchPayload = (
   if (toProjectDisplayName === null && toTeamLabel === null) {
     return { ok: false, code: "address_required" };
   }
+  if (toProjectDisplayName !== null && toTeamLabel !== null) {
+    return { ok: false, code: "single_recipient_required" };
+  }
   if (body.broadcast === true || body.toUserId) {
     return { ok: false, code: "broadcast_disabled" };
   }

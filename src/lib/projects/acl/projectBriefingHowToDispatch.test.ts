@@ -13,7 +13,7 @@ describe("PROJECT_BRIEFING_HOW_TO_DISPATCH", () => {
       "unacked messages expire after 3 days",
     );
     expect(PROJECT_BRIEFING_HOW_TO_DISPATCH).toContain(
-      "Rate limits: 60/h + 500 unacked",
+      "Rate limit: 60 messages per rolling 24h per sender membership",
     );
   });
 });

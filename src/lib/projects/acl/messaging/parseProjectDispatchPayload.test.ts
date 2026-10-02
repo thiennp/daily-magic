@@ -19,6 +19,13 @@ describe("parseProjectDispatchPayload (A3.4)", () => {
         toProjectDisplayName: "Buni",
       }).ok,
     ).toBe(true);
+    expect(
+      parseProjectDispatchPayload({
+        kind: "task",
+        summary: "owner update",
+        toProjectDisplayName: "Owner",
+      }).ok,
+    ).toBe(true);
   });
 
   it("caps summary and allowlists refs", () => {

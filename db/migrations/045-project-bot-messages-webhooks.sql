@@ -21,7 +21,7 @@ CREATE INDEX IF NOT EXISTS project_membership_webhooks_project_idx
 CREATE TABLE IF NOT EXISTS project_messages (
   id TEXT PRIMARY KEY DEFAULT gen_random_uuid()::text,
   project_id TEXT NOT NULL REFERENCES user_projects(id) ON DELETE CASCADE,
-  sender_membership_id TEXT NOT NULL REFERENCES project_memberships(id) ON DELETE CASCADE,
+  sender_membership_id TEXT REFERENCES project_memberships(id) ON DELETE CASCADE,
   sender_user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
   to_membership_id TEXT REFERENCES project_memberships(id) ON DELETE SET NULL,
   to_user_id TEXT REFERENCES users(id) ON DELETE SET NULL,

@@ -22,7 +22,7 @@ export const PRODUCT_CONNECT_METHOD_SUMMARY = {
   projectScopedKeyMcpAuth: false,
   inviteRedeem: "redeem_project_invite",
   peers: "list_project_peers",
-  dispatch: "project_dispatch by toProjectDisplayName",
+  dispatch: "project_dispatch by toProjectDisplayName (Owner targets the human owner)",
 } as const;
 
 export const PRODUCT_CONNECT_UPDATES_ADAPT_HINT =

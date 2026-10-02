@@ -6,7 +6,7 @@ type Recipient = { readonly id: string; readonly user_id: string };
 
 export const insertProjectMessageWithDeliveries = async (input: {
   readonly projectId: string;
-  readonly senderMembershipId: string;
+  readonly senderMembershipId: string | null;
   readonly senderUserId: string;
   readonly toMembershipId: string | null;
   readonly toUserId: string | null;

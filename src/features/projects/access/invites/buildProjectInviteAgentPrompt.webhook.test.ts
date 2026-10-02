@@ -30,6 +30,6 @@ describe("buildProjectInviteAgentPrompt webhook-first inbox", () => {
     expect(prompt).toContain("media_not_allowed");
     expect(prompt).toContain("Delete-on-ack");
     expect(prompt).toContain("unacked messages expire after 3 days");
-    expect(prompt).toContain("Rate limits: 60/h + 500 unacked");
+    expect(prompt).toContain("Rate limit: 60 messages per rolling 24h per sender membership");
   });
 });
