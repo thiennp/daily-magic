@@ -19,6 +19,9 @@ export const createUserProject = async (
   }
 
   const projectId = randomUUID();
+  const repoUrls = [...(input.repoUrls ?? [])];
+  const defaultBranch =
+    input.defaultBranch === undefined ? null : input.defaultBranch;
   const sql = getSql();
   const rows = asRowArray(
     await sql`
@@ -27,14 +30,18 @@ export const createUserProject = async (
         owner_user_id,
         device_id,
         name,
-        folder_path
+        folder_path,
+        repo_urls,
+        default_branch
       )
       VALUES (
         ${projectId},
         ${ownerUserId},
         ${linkedDeviceId},
         ${input.name},
-        ${input.folderPath}
+        ${input.folderPath},
+        ${repoUrls},
+        ${defaultBranch}
       )
       RETURNING *
     `,
@@ -53,6 +60,8 @@ export const updateUserProject = async (
   input: {
     readonly name?: string;
     readonly deviceId?: string | null;
+    readonly repoUrls?: readonly string[];
+    readonly defaultBranch?: string | null;
   },
 ): Promise<UserProjectRecord | null> => {
   const existing = await getUserProjectById(projectId);
@@ -60,6 +69,13 @@ export const updateUserProject = async (
   if (existing === null || existing.ownerUserId !== ownerUserId) {
     return null;
   }
+
+  const nextRepoUrls =
+    input.repoUrls !== undefined ? [...input.repoUrls] : [...existing.repoUrls];
+  const nextDefaultBranch =
+    input.defaultBranch !== undefined
+      ? input.defaultBranch
+      : existing.defaultBranch;
 
   const sql = getSql();
   const rows = asRowArray(
@@ -70,6 +86,8 @@ export const updateUserProject = async (
         device_id = ${
           input.deviceId !== undefined ? input.deviceId : existing.deviceId
         },
+        repo_urls = ${nextRepoUrls},
+        default_branch = ${nextDefaultBranch},
         updated_at = NOW()
       WHERE id = ${projectId}
         AND owner_user_id = ${ownerUserId}

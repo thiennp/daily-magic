@@ -37,7 +37,7 @@ export const buildAgentAccessLiveGuide = () => {
     whatAgentWitchIs: AGENT_WITCH_ROLE_LIVE_GUIDE,
     promptSdlc: buildPromptSdlcAgentGuide(),
     projectCowork: {
-      awcStoresOnly: ["name", "folderRefs", "members", "approveRevokeAudit"],
+      awcStoresOnly: ["name", "folderRefs", "repoUrls", "defaultBranch", "members", "approveRevokeAudit"],
       coordination: "local_or_git_or_bot_oob",
       ownerApproveRevokeUiOnly: true,
       noTokenSharing: true,

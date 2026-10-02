@@ -34,6 +34,8 @@ export const executeProjectAclGetTool = async (input: {
     ok: true,
     name: payload.name,
     folderRefs: payload.folderRefs,
+    repoUrls: payload.repoUrls,
+    defaultBranch: payload.defaultBranch,
     scopes: payload.scopes,
     relation: payload.relation,
     firstConnect: {

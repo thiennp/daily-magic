@@ -563,6 +563,8 @@ CREATE TABLE IF NOT EXISTS user_projects (
   device_id TEXT REFERENCES agent_witch_devices(id) ON DELETE SET NULL,
   name TEXT NOT NULL,
   folder_path TEXT,
+  repo_urls TEXT[] NOT NULL DEFAULT '{}'::TEXT[],
+  default_branch TEXT,
   last_used_at TIMESTAMPTZ,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()

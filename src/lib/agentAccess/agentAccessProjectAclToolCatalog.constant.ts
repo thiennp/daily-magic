@@ -49,7 +49,7 @@ export const AGENT_ACCESS_PROJECT_ACL_TOOLS: readonly AgentAccessToolDefinition[
     {
       name: "get_project_acl",
       description:
-        "Read project name, folder refs, and your scopes. Denied if not owner or active member. No content.",
+        "Read project name, folder refs, repoUrls, defaultBranch, and your scopes. Denied if not owner or active member. No content.",
       inputSchema: {
         type: "object",
         properties: {

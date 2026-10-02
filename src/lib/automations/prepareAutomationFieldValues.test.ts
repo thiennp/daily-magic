@@ -49,6 +49,8 @@ describe("prepareAutomationFieldValues", () => {
       name: "Daily Magic",
       folderPath:
         "~/.agent-witch/profiles/owner@example.com/projects/daily-magic",
+      repoUrls: [],
+      defaultBranch: null,
       lastUsedAt: null,
       createdAt: "2026-01-01T00:00:00.000Z",
       updatedAt: "2026-01-01T00:00:00.000Z",

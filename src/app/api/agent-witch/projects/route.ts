@@ -7,6 +7,20 @@ import { listUserProjectsForOwner } from "@/lib/projects/userProjectQueries";
 
 export const dynamic = "force-dynamic";
 
+const summarizeDeviceProject = (project: {
+  readonly id: string;
+  readonly name: string;
+  readonly folderPath: string;
+  readonly repoUrls: readonly string[];
+  readonly defaultBranch: string | null;
+}) => ({
+  id: project.id,
+  name: project.name,
+  folderPath: project.folderPath,
+  repoUrls: project.repoUrls,
+  defaultBranch: project.defaultBranch,
+});
+
 export async function GET(request: Request): Promise<Response> {
   const auth = await requireAgentWitchDeviceAuth(request);
 
@@ -36,11 +50,7 @@ export async function GET(request: Request): Promise<Response> {
 
   return Response.json({
     ok: true,
-    projects: projects.map((project) => ({
-      id: project.id,
-      name: project.name,
-      folderPath: project.folderPath,
-    })),
+    projects: projects.map(summarizeDeviceProject),
   });
 }
 
@@ -75,6 +85,8 @@ export async function POST(request: Request): Promise<Response> {
       name: parsed.name,
       folderPath: parsed.folderPath,
       deviceId: parsed.deviceId ?? auth.device.id,
+      repoUrls: parsed.repoUrls,
+      defaultBranch: parsed.defaultBranch,
     });
 
     if (project === null) {
@@ -86,11 +98,7 @@ export async function POST(request: Request): Promise<Response> {
 
     return Response.json({
       ok: true,
-      project: {
-        id: project.id,
-        name: project.name,
-        folderPath: project.folderPath,
-      },
+      project: summarizeDeviceProject(project),
     });
   } catch (caught) {
     const message =

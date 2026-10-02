@@ -15,6 +15,8 @@ const project = (
   folderPath:
     overrides.folderPath ??
     "~/.agent-witch/profiles/owner@example.com/projects/default",
+  repoUrls: overrides.repoUrls ?? [],
+  defaultBranch: overrides.defaultBranch ?? null,
   lastUsedAt: null,
   createdAt: "2026-01-01T00:00:00.000Z",
   updatedAt: "2026-01-01T00:00:00.000Z",
