@@ -2,9 +2,9 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { clearAllProjectMessages } from "@/lib/projects/acl/messaging/clearAllProjectMessages";
 import { resetProjectAclSchemaEnsureForTests } from "@/lib/projects/acl/ensureProjectAclSchema";
+import { getUserProjectById } from "@/lib/projects/userProjectQueries";
 
 const sqlMock = vi.fn();
-const getUserProjectById = vi.fn();
 
 vi.mock("@/lib/db", () => ({
   getSql: () => sqlMock,
@@ -12,7 +12,10 @@ vi.mock("@/lib/db", () => ({
 }));
 
 vi.mock("@/lib/projects/userProjectQueries", () => ({
-  getUserProjectById: (...args: unknown[]) => getUserProjectById(...args),
+  getUserProjectById: vi.fn(async () => ({
+    id: "proj-1",
+    ownerUserId: "owner-1",
+  })),
 }));
 
 vi.mock("@/lib/projects/acl/writeProjectAccessAudit", () => ({
@@ -22,12 +25,11 @@ vi.mock("@/lib/projects/acl/writeProjectAccessAudit", () => ({
 describe("clearAllProjectMessages errors", () => {
   beforeEach(() => {
     sqlMock.mockReset();
-    getUserProjectById.mockReset();
-    resetProjectAclSchemaEnsureForTests();
-    getUserProjectById.mockResolvedValue({
+    vi.mocked(getUserProjectById).mockResolvedValue({
       id: "proj-1",
       ownerUserId: "owner-1",
-    });
+    } as never);
+    resetProjectAclSchemaEnsureForTests();
   });
 
   it("requires confirm:true", async () => {
@@ -50,7 +52,7 @@ describe("clearAllProjectMessages errors", () => {
   });
 
   it("returns not_found when project missing", async () => {
-    getUserProjectById.mockResolvedValueOnce(null);
+    vi.mocked(getUserProjectById).mockResolvedValueOnce(null);
     const result = await clearAllProjectMessages({
       projectId: "missing",
       actorUserId: "owner-1",

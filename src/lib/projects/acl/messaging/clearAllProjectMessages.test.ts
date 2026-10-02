@@ -2,10 +2,10 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { clearAllProjectMessages } from "@/lib/projects/acl/messaging/clearAllProjectMessages";
 import { resetProjectAclSchemaEnsureForTests } from "@/lib/projects/acl/ensureProjectAclSchema";
+import { getUserProjectById } from "@/lib/projects/userProjectQueries";
+import { writeProjectAccessAudit } from "@/lib/projects/acl/writeProjectAccessAudit";
 
 const sqlMock = vi.fn();
-const writeAudit = vi.fn(async () => undefined);
-const getUserProjectById = vi.fn();
 
 vi.mock("@/lib/db", () => ({
   getSql: () => sqlMock,
@@ -13,11 +13,14 @@ vi.mock("@/lib/db", () => ({
 }));
 
 vi.mock("@/lib/projects/userProjectQueries", () => ({
-  getUserProjectById: (...args: unknown[]) => getUserProjectById(...args),
+  getUserProjectById: vi.fn(async () => ({
+    id: "proj-1",
+    ownerUserId: "owner-1",
+  })),
 }));
 
 vi.mock("@/lib/projects/acl/writeProjectAccessAudit", () => ({
-  writeProjectAccessAudit: (...args: unknown[]) => writeAudit(...args),
+  writeProjectAccessAudit: vi.fn(async () => undefined),
 }));
 
 const schemaStub = async (strings: TemplateStringsArray) => {
@@ -33,13 +36,12 @@ const schemaStub = async (strings: TemplateStringsArray) => {
 describe("clearAllProjectMessages happy path", () => {
   beforeEach(() => {
     sqlMock.mockReset();
-    writeAudit.mockClear();
-    getUserProjectById.mockReset();
-    resetProjectAclSchemaEnsureForTests();
-    getUserProjectById.mockResolvedValue({
+    vi.mocked(writeProjectAccessAudit).mockClear();
+    vi.mocked(getUserProjectById).mockResolvedValue({
       id: "proj-1",
       ownerUserId: "owner-1",
-    });
+    } as never);
+    resetProjectAclSchemaEnsureForTests();
   });
 
   it("wipes messages+deliveries, audits msg.clear, idempotent at 0", async () => {
@@ -66,7 +68,7 @@ describe("clearAllProjectMessages happy path", () => {
       deletedMessages: 1,
       deletedDeliveries: 2,
     });
-    expect(writeAudit).toHaveBeenCalledWith(
+    expect(writeProjectAccessAudit).toHaveBeenCalledWith(
       expect.objectContaining({
         action: "msg.clear",
         detail: expect.objectContaining({
@@ -82,7 +84,7 @@ describe("clearAllProjectMessages happy path", () => {
     ).toBe(false);
 
     sqlMock.mockReset();
-    writeAudit.mockClear();
+    vi.mocked(writeProjectAccessAudit).mockClear();
     resetProjectAclSchemaEnsureForTests();
     sqlMock.mockImplementation(async (strings: TemplateStringsArray) => {
       const stub = await schemaStub(strings);

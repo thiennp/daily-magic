@@ -3,9 +3,9 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { listProjectMessageLog } from "@/lib/projects/acl/messaging/listProjectMessageLog";
 import { resetProjectAclSchemaEnsureForTests } from "@/lib/projects/acl/ensureProjectAclSchema";
 import { resetProjectMessagePurgeForTests } from "@/lib/projects/acl/messaging/purgeExpiredProjectMessages";
+import { getUserProjectById } from "@/lib/projects/userProjectQueries";
 
 const sqlMock = vi.fn();
-const getUserProjectById = vi.fn();
 
 vi.mock("@/lib/db", () => ({
   getSql: () => sqlMock,
@@ -13,19 +13,21 @@ vi.mock("@/lib/db", () => ({
 }));
 
 vi.mock("@/lib/projects/userProjectQueries", () => ({
-  getUserProjectById: (...args: unknown[]) => getUserProjectById(...args),
+  getUserProjectById: vi.fn(async () => ({
+    id: "proj-1",
+    ownerUserId: "owner-1",
+  })),
 }));
 
 describe("listProjectMessageLog", () => {
   beforeEach(() => {
     sqlMock.mockReset();
-    getUserProjectById.mockReset();
-    resetProjectAclSchemaEnsureForTests();
-    resetProjectMessagePurgeForTests();
-    getUserProjectById.mockResolvedValue({
+    vi.mocked(getUserProjectById).mockResolvedValue({
       id: "proj-1",
       ownerUserId: "owner-1",
-    });
+    } as never);
+    resetProjectAclSchemaEnsureForTests();
+    resetProjectMessagePurgeForTests();
   });
 
   it("forbids non-owners", async () => {
