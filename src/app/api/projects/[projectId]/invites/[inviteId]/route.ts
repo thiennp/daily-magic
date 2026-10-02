@@ -1,4 +1,5 @@
 import { revokeProjectInvite } from "@/lib/projects/acl/invites/revokeProjectInvite";
+import { projectAccessErrorJson } from "@/lib/projects/acl/mapProjectAccessError";
 import { requireAuth } from "@/lib/auth/requireAuth";
 
 export const dynamic = "force-dynamic";
@@ -26,7 +27,7 @@ export async function DELETE(
         : result.code === "not_found"
           ? 404
           : 409;
-    return Response.json({ ok: false, errorMessage: result.code }, { status });
+    return projectAccessErrorJson(result.code, status);
   }
   return new Response(null, { status: 204 });
 }

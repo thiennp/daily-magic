@@ -1,4 +1,5 @@
 import { approveProjectAccessRequest } from "@/lib/projects/acl/approveProjectAccessRequest";
+import { projectAccessErrorJson } from "@/lib/projects/acl/mapProjectAccessError";
 
 export const handleApproveAccessPatch = async (input: {
   readonly projectId: string;
@@ -39,7 +40,7 @@ export const handleApproveAccessPatch = async (input: {
                   result.code === "display_name_invalid"
                 ? 400
                 : 409;
-    return Response.json({ ok: false, errorMessage: result.code }, { status });
+    return projectAccessErrorJson(result.code, status);
   }
   return Response.json({
     ok: true,

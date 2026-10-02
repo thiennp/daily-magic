@@ -1,11 +1,17 @@
 "use client";
 
+import { useState } from "react";
+
 import { AWC_PROJECT_ACCESS_COPY } from "@/features/projects/access/awcProjectAccessCopy.constant";
+import { AWC_PROJECT_ACCESS_CTA } from "@/features/projects/access/awcProjectAccessCta.constant";
+import { buildProjectInviteAgentPrompt } from "@/features/projects/access/invites/buildProjectInviteAgentPrompt";
 import type { AwcProjectAccessInvite } from "@/features/projects/access/hooks/loadAwcProjectAccess";
 
 interface AwcProjectInvitesPanelProps {
   readonly invites: readonly AwcProjectAccessInvite[];
   readonly createdInviteUrl: string | null;
+  readonly projectId: string;
+  readonly projectName?: string | null;
   readonly onCreate: () => void;
   readonly onRevoke: (inviteId: string) => void;
   readonly onClearCreatedUrl: () => void;
@@ -14,11 +20,20 @@ interface AwcProjectInvitesPanelProps {
 export default function AwcProjectInvitesPanel({
   invites,
   createdInviteUrl,
+  projectId,
+  projectName = null,
   onCreate,
   onRevoke,
   onClearCreatedUrl,
 }: AwcProjectInvitesPanelProps) {
   const copy = AWC_PROJECT_ACCESS_COPY;
+  const [toast, setToast] = useState<string | null>(null);
+
+  const showToast = (message: string) => {
+    setToast(message);
+    window.setTimeout(() => setToast(null), 2500);
+  };
+
   return (
     <div>
       <h3 className="text-sm font-medium text-gray-800 dark:text-white/90">
@@ -35,30 +50,53 @@ export default function AwcProjectInvitesPanel({
           <code className="mt-1 block break-all text-amber-950 dark:text-amber-100">
             {createdInviteUrl}
           </code>
-          <div className="mt-2 flex gap-2">
+          <div className="mt-2 flex flex-wrap gap-2">
             <button
               type="button"
-              className="rounded-md bg-brand-600 px-2 py-1 text-xs text-white"
+              className={AWC_PROJECT_ACCESS_CTA.primary}
               onClick={() => {
-                void navigator.clipboard.writeText(createdInviteUrl);
+                void navigator.clipboard.writeText(createdInviteUrl).then(() => {
+                  showToast(copy.invitesUrlCopied);
+                });
               }}
             >
               {copy.invitesCopyUrl}
             </button>
             <button
               type="button"
-              className="rounded-md border px-2 py-1 text-xs"
+              className={AWC_PROJECT_ACCESS_CTA.secondary}
+              onClick={() => {
+                const prompt = buildProjectInviteAgentPrompt({
+                  inviteUrl: createdInviteUrl,
+                  projectId,
+                  projectName,
+                });
+                void navigator.clipboard.writeText(prompt).then(() => {
+                  showToast(copy.invitesPromptCopied);
+                });
+              }}
+            >
+              {copy.invitesCopyPrompt}
+            </button>
+            <button
+              type="button"
+              className={AWC_PROJECT_ACCESS_CTA.secondary}
               onClick={onClearCreatedUrl}
             >
               Dismiss
             </button>
           </div>
+          {toast ? (
+            <p className="mt-2 text-[11px] font-medium text-amber-900 dark:text-amber-100">
+              {toast}
+            </p>
+          ) : null}
         </div>
       ) : null}
       <div className="mt-2">
         <button
           type="button"
-          className="rounded-md bg-brand-600 px-2 py-1 text-xs text-white"
+          className={AWC_PROJECT_ACCESS_CTA.primary}
           onClick={onCreate}
         >
           {copy.invitesCreate}
@@ -84,7 +122,7 @@ export default function AwcProjectInvitesPanel({
               {!invite.revokedAt && invite.usesRemaining > 0 ? (
                 <button
                   type="button"
-                  className="rounded-md border border-red-300 px-2 py-1 text-xs text-red-700"
+                  className={AWC_PROJECT_ACCESS_CTA.danger}
                   onClick={() => onRevoke(invite.inviteId)}
                 >
                   {copy.invitesRevoke}

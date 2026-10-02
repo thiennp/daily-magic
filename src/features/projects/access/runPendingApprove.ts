@@ -1,4 +1,5 @@
 import { AWC_PROJECT_ACCESS_COPY } from "@/features/projects/access/awcProjectAccessCopy.constant";
+import { mapProjectAccessError } from "@/lib/projects/acl/mapProjectAccessError";
 
 export const runPendingApprove = async (input: {
   readonly requestId: string;
@@ -22,10 +23,11 @@ export const runPendingApprove = async (input: {
     input.needsName ? input.nameValue : undefined,
   );
   if (!result.ok) {
+    const raw = result.errorMessage;
     const msg =
-      result.errorMessage === "display_name_taken"
+      raw === "display_name_taken" || raw === "DISPLAY_NAME_TAKEN"
         ? copy.displayNameTaken
-        : (result.errorMessage ?? "Failed.");
+        : mapProjectAccessError(raw, "Failed.");
     input.setError(msg);
     if (input.available.length > 0) {
       const next =

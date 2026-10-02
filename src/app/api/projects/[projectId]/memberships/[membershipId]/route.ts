@@ -1,4 +1,5 @@
 import { renameProjectMembershipDisplayName } from "@/lib/projects/acl/displayNames/renameProjectMembershipDisplayName";
+import { projectAccessErrorJson } from "@/lib/projects/acl/mapProjectAccessError";
 import { requireAuth } from "@/lib/auth/requireAuth";
 
 export const dynamic = "force-dynamic";
@@ -42,7 +43,7 @@ export async function PATCH(
             : result.code === "display_name_reserved"
               ? 422
               : 400;
-    return Response.json({ ok: false, errorMessage: result.code }, { status });
+    return projectAccessErrorJson(result.code, status);
   }
   return Response.json({ ok: true, membership: result.membership });
 }

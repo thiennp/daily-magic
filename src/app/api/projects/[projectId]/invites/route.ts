@@ -1,6 +1,7 @@
 import { createProjectInvite } from "@/lib/projects/acl/invites/createProjectInvite";
 import { listProjectInvites } from "@/lib/projects/acl/invites/listProjectInvites";
 import { toInviteListItem } from "@/lib/projects/acl/invites/toInviteListItem";
+import { projectAccessErrorJson } from "@/lib/projects/acl/mapProjectAccessError";
 import { requireAuth } from "@/lib/auth/requireAuth";
 
 export const dynamic = "force-dynamic";
@@ -20,7 +21,7 @@ export async function GET(
   });
   if (!result.ok) {
     const status = result.code === "forbidden" ? 403 : 404;
-    return Response.json({ ok: false, errorMessage: result.code }, { status });
+    return projectAccessErrorJson(result.code, status);
   }
   return Response.json({
     invites: result.invites.map(toInviteListItem),
@@ -54,7 +55,7 @@ export async function POST(
   if (!result.ok) {
     const status =
       result.code === "forbidden" ? 403 : result.code === "not_found" ? 404 : 400;
-    return Response.json({ ok: false, errorMessage: result.code }, { status });
+    return projectAccessErrorJson(result.code, status);
   }
   return Response.json(
     {

@@ -1,6 +1,7 @@
 import { listProjectFolderRefs } from "@/lib/projects/acl/listProjectFolderRefs";
 import { upsertProjectFolderRef } from "@/lib/projects/acl/upsertProjectFolderRef";
 import { getUserProjectById } from "@/lib/projects/userProjectQueries";
+import { projectAccessErrorJson } from "@/lib/projects/acl/mapProjectAccessError";
 import { requireAuth } from "@/lib/auth/requireAuth";
 
 export const dynamic = "force-dynamic";
@@ -66,7 +67,7 @@ export async function POST(
         : result.code === "not_found"
           ? 404
           : 400;
-    return Response.json({ ok: false, errorMessage: result.code }, { status });
+    return projectAccessErrorJson(result.code, status);
   }
 
   return Response.json({ ok: true, folderRef: result.folderRef });

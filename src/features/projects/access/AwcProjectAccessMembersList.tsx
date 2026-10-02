@@ -4,6 +4,7 @@ import { useState } from "react";
 
 import AwcProjectAccessMemberRow from "@/features/projects/access/AwcProjectAccessMemberRow";
 import { AWC_PROJECT_ACCESS_COPY } from "@/features/projects/access/awcProjectAccessCopy.constant";
+import { mapProjectAccessError } from "@/lib/projects/acl/mapProjectAccessError";
 
 export { awcProjectAccessMemberAnchorId } from "@/features/projects/access/awcProjectAccessMemberAnchor";
 
@@ -55,6 +56,10 @@ export default function AwcProjectAccessMembersList({
                 setEditValue(member.projectDisplayName ?? "");
                 setError(null);
               }}
+              onCancelEdit={() => {
+                setEditingId(null);
+                setError(null);
+              }}
               onSaveRename={() => {
                 void onRename(member.id, editValue).then((result) => {
                   if (result.ok) {
@@ -62,9 +67,10 @@ export default function AwcProjectAccessMembersList({
                     setError(null);
                   } else {
                     setError(
-                      result.errorMessage === "display_name_taken"
-                        ? copy.displayNameTaken
-                        : (result.errorMessage ?? "Failed."),
+                      mapProjectAccessError(
+                        result.errorMessage,
+                        "Failed to rename.",
+                      ),
                     );
                   }
                 });

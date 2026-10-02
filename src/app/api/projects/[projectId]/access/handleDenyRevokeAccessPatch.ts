@@ -1,5 +1,6 @@
 import { denyProjectAccessRequest } from "@/lib/projects/acl/denyProjectAccessRequest";
 import { revokeProjectMembership } from "@/lib/projects/acl/revokeProjectMembership";
+import { projectAccessErrorJson } from "@/lib/projects/acl/mapProjectAccessError";
 
 export const handleDenyAccessPatch = async (input: {
   readonly projectId: string;
@@ -24,7 +25,7 @@ export const handleDenyAccessPatch = async (input: {
         : result.code === "not_found"
           ? 404
           : 409;
-    return Response.json({ ok: false, errorMessage: result.code }, { status });
+    return projectAccessErrorJson(result.code, status);
   }
   return Response.json({ ok: true, request: result.request });
 };
@@ -59,7 +60,7 @@ export const handleRevokeAccessPatch = async (input: {
         : result.code === "not_found"
           ? 404
           : 409;
-    return Response.json({ ok: false, errorMessage: result.code }, { status });
+    return projectAccessErrorJson(result.code, status);
   }
   return Response.json({ ok: true, membership: result.membership });
 };

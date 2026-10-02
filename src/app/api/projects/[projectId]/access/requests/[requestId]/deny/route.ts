@@ -1,4 +1,5 @@
 import { denyProjectAccessRequest } from "@/lib/projects/acl/denyProjectAccessRequest";
+import { projectAccessErrorJson } from "@/lib/projects/acl/mapProjectAccessError";
 import { requireAuth } from "@/lib/auth/requireAuth";
 
 export const dynamic = "force-dynamic";
@@ -28,7 +29,7 @@ export async function POST(
         : result.code === "not_found"
           ? 404
           : 409;
-    return Response.json({ ok: false, errorMessage: result.code }, { status });
+    return projectAccessErrorJson(result.code, status);
   }
 
   return Response.json({ ok: true, request: result.request });

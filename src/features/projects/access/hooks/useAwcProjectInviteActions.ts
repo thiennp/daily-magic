@@ -5,6 +5,7 @@ import {
   renameMembershipDisplayNameApi,
   revokeProjectInviteApi,
 } from "@/features/projects/access/utils/projectAccessApi";
+import { mapProjectAccessError } from "@/lib/projects/acl/mapProjectAccessError";
 
 export const useAwcProjectInviteActions = (input: {
   readonly projectId: string;
@@ -16,9 +17,14 @@ export const useAwcProjectInviteActions = (input: {
     const result = await createProjectInviteApi(input.projectId, {});
     if (result.url) {
       input.setCreatedInviteUrl(result.url);
-      input.setMessage("Invite created — copy the URL now.");
+      input.setMessage("Invite created — copy the URL or prompt now.");
     } else {
-      input.setMessage(result.errorMessage ?? "Failed to create invite.");
+      input.setMessage(
+        mapProjectAccessError(
+          result.errorMessage,
+          "Failed to create invite.",
+        ),
+      );
     }
     await input.reload();
   };
@@ -26,7 +32,9 @@ export const useAwcProjectInviteActions = (input: {
   const revokeInvite = async (inviteId: string) => {
     const result = await revokeProjectInviteApi(input.projectId, inviteId);
     input.setMessage(
-      result.ok ? "Invite revoked." : (result.errorMessage ?? "Failed."),
+      result.ok
+        ? "Invite revoked."
+        : mapProjectAccessError(result.errorMessage, "Failed."),
     );
     await input.reload();
   };
@@ -40,11 +48,12 @@ export const useAwcProjectInviteActions = (input: {
       membershipId,
       projectDisplayName,
     );
-    input.setMessage(
-      result.ok ? "Renamed." : (result.errorMessage ?? "Failed."),
-    );
+    const errorMessage = result.ok
+      ? undefined
+      : mapProjectAccessError(result.errorMessage, "Failed.");
+    input.setMessage(result.ok ? "Renamed." : (errorMessage ?? "Failed."));
     await input.reload();
-    return result;
+    return { ok: result.ok, errorMessage };
   };
 
   return { createInvite, revokeInvite, renameMember };

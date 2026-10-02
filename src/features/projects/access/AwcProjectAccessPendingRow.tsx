@@ -1,6 +1,7 @@
 "use client";
 
 import { AWC_PROJECT_ACCESS_COPY } from "@/features/projects/access/awcProjectAccessCopy.constant";
+import { AWC_PROJECT_ACCESS_CTA } from "@/features/projects/access/awcProjectAccessCta.constant";
 
 interface PendingRequest {
   readonly id: string;
@@ -42,14 +43,14 @@ export default function AwcProjectAccessPendingRow({
         <span className="flex gap-2">
           <button
             type="button"
-            className="rounded-md bg-brand-600 px-2 py-1 text-xs text-white"
+            className={AWC_PROJECT_ACCESS_CTA.primary}
             onClick={onApprove}
           >
             {copy.approve}
           </button>
           <button
             type="button"
-            className="rounded-md border px-2 py-1 text-xs"
+            className={AWC_PROJECT_ACCESS_CTA.secondary}
             onClick={onDeny}
           >
             {copy.deny}

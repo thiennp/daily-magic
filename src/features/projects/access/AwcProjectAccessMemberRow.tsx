@@ -1,6 +1,7 @@
 "use client";
 
 import { AWC_PROJECT_ACCESS_COPY } from "@/features/projects/access/awcProjectAccessCopy.constant";
+import { AWC_PROJECT_ACCESS_CTA } from "@/features/projects/access/awcProjectAccessCta.constant";
 import { awcProjectAccessMemberAnchorId } from "@/features/projects/access/awcProjectAccessMemberAnchor";
 
 interface MemberRow {
@@ -18,6 +19,7 @@ interface AwcProjectAccessMemberRowProps {
   readonly onEditValue: (value: string) => void;
   readonly onStartEdit: () => void;
   readonly onSaveRename: () => void;
+  readonly onCancelEdit: () => void;
   readonly onRevoke: () => void;
 }
 
@@ -28,48 +30,67 @@ export default function AwcProjectAccessMemberRow({
   onEditValue,
   onStartEdit,
   onSaveRename,
+  onCancelEdit,
   onRevoke,
 }: AwcProjectAccessMemberRowProps) {
   const copy = AWC_PROJECT_ACCESS_COPY;
+  const mutedId = `${copy.memberUuidMuted} ${member.userId.slice(0, 8)}…`;
   return (
     <li
       id={awcProjectAccessMemberAnchorId(member.userId)}
       className="flex flex-wrap items-center justify-between gap-2 scroll-mt-20 rounded-md text-sm target:ring-2 target:ring-amber-400/80"
     >
       <span className="text-gray-800 dark:text-white/90">
-        {member.isAgent && member.projectDisplayName ? (
+        {member.isAgent ? (
           <>
-            <span className="font-medium">{member.projectDisplayName}</span>
-            <span className="ml-2 text-xs text-gray-400">
-              {copy.memberUuidMuted} {member.userId.slice(0, 8)}…
+            <span className="font-medium">
+              {member.projectDisplayName?.trim()
+                ? member.projectDisplayName
+                : copy.memberNoNickname}
             </span>
+            <span className="ml-2 text-xs text-gray-400">{mutedId}</span>
           </>
         ) : (
-          member.userId
+          <span className="text-xs text-gray-500">{member.userId}</span>
         )}
-        {member.teamLabel ? ` (${member.teamLabel})` : ""}
+        {member.teamLabel ? (
+          <span className="ml-1 text-xs text-gray-500">
+            ({member.teamLabel})
+          </span>
+        ) : null}
       </span>
-      <span className="flex gap-2">
+      <span className="flex flex-wrap gap-2">
         {member.isAgent ? (
           editing ? (
-            <>
-              <input
-                className="rounded-md border px-1 text-xs"
-                value={editValue}
-                onChange={(e) => onEditValue(e.target.value)}
-              />
-              <button
-                type="button"
-                className="rounded-md bg-brand-600 px-2 py-1 text-xs text-white"
-                onClick={onSaveRename}
-              >
-                Save
-              </button>
-            </>
+            <span className="flex flex-col gap-1">
+              <span className="flex flex-wrap items-center gap-2">
+                <input
+                  className="rounded-md border px-1 text-xs"
+                  value={editValue}
+                  aria-label={copy.displayNameLabel}
+                  onChange={(e) => onEditValue(e.target.value)}
+                />
+                <button
+                  type="button"
+                  className={AWC_PROJECT_ACCESS_CTA.primary}
+                  onClick={onSaveRename}
+                >
+                  {copy.renameSave}
+                </button>
+                <button
+                  type="button"
+                  className={AWC_PROJECT_ACCESS_CTA.secondary}
+                  onClick={onCancelEdit}
+                >
+                  {copy.renameCancel}
+                </button>
+              </span>
+              <span className="text-[11px] text-gray-500">{copy.renameHint}</span>
+            </span>
           ) : (
             <button
               type="button"
-              className="rounded-md border px-2 py-1 text-xs"
+              className={AWC_PROJECT_ACCESS_CTA.secondary}
               onClick={onStartEdit}
             >
               {copy.rename}
@@ -78,7 +99,7 @@ export default function AwcProjectAccessMemberRow({
         ) : null}
         <button
           type="button"
-          className="rounded-md border border-red-300 px-2 py-1 text-xs text-red-700"
+          className={AWC_PROJECT_ACCESS_CTA.danger}
           onClick={onRevoke}
         >
           {copy.revoke}

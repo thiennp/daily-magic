@@ -15,7 +15,12 @@ export type ProjectDisplayNameValidation =
       readonly code: "missing" | "invalid" | "reserved" | "too_long" | "too_short";
     };
 
-const NAME_RE = /^[\p{L}][\p{L}\p{M}'-]{0,31}$/u;
+/**
+ * Letters (any script) + combining marks, apostrophe, hyphen, and single spaces.
+ * Multi-space runs rejected (Product UI rejects; do not collapse).
+ * Applied after trim — leading/trailing spaces never stored.
+ */
+const NAME_RE = /^[\p{L}][\p{L}\p{M}'\- ]{0,31}$/u;
 
 export const validateProjectDisplayName = (
   raw: unknown,
@@ -33,7 +38,11 @@ export const validateProjectDisplayName = (
   if (name.length > 32) {
     return { ok: false, code: "too_long" };
   }
-  if (/[\u0000-\u001f\u007f]/.test(name) || /[/@]/.test(name)) {
+  if (
+    /[\u0000-\u001f\u007f]/.test(name) ||
+    /[/@]/.test(name) ||
+    /\s{2,}/.test(name)
+  ) {
     return { ok: false, code: "invalid" };
   }
   if (!NAME_RE.test(name)) {

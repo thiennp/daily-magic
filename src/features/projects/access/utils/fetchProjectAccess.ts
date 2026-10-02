@@ -9,6 +9,7 @@ export const fetchProjectAccess = async (projectId: string) => {
   });
   return response.json() as Promise<{
     readonly ok: boolean;
+    readonly project?: { readonly id: string; readonly name: string };
     readonly members?: readonly AccessMembershipView[];
     readonly pendingRequests?: readonly AccessPendingView[];
     readonly errorMessage?: string;

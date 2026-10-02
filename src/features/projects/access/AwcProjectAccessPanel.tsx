@@ -45,9 +45,14 @@ export default function AwcProjectAccessPanel({
       <p className="rounded-md border border-gray-200/80 bg-gray-50/80 px-3 py-2 text-xs text-gray-700 dark:border-gray-800/80 dark:bg-gray-950/40 dark:text-gray-300">
         {copy.firstConnectNote}
       </p>
+      {access.loadError ? (
+        <p className="text-sm text-red-600 dark:text-red-400">{access.loadError}</p>
+      ) : null}
       <AwcProjectInvitesPanel
         invites={access.invites}
         createdInviteUrl={access.createdInviteUrl}
+        projectId={projectId}
+        projectName={access.projectName}
         onCreate={() => void access.createInvite().then(bump)}
         onRevoke={(id) => void access.revokeInvite(id).then(bump)}
         onClearCreatedUrl={() => access.setCreatedInviteUrl(null)}

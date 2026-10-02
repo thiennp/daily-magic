@@ -93,6 +93,7 @@ describe("project invite + display name security (A1/A2/A10)", () => {
   it("rejects reserved/invalid display names", () => {
     expect(validateProjectDisplayName("owner").ok).toBe(false);
     expect(validateProjectDisplayName("Buni").ok).toBe(true);
+    expect(validateProjectDisplayName("Soft Vale").ok).toBe(true);
     expect(validateProjectDisplayName("bad/name").ok).toBe(false);
   });
 
